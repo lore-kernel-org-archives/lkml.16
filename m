@@ -1,109 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B54C1E1A3B;
-	Fri,  6 Jun 2025 06:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B0324E4A1
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 06:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749191195; cv=none; b=Jd3qCeYLVdG9SS91aPyY1QZdFfctNQdFRhQvE+KnGI5t534wUXDi1wx/tMBUCXx7jSsIW/YcPxjQltVbHDQuDDx0xp9vRGZpIzIWWUlya3bT+CvD4CnmE3f+FYng/YS+1n8j9v4OytEPlPjtmKKA2W2CmhkDqKZWSBilXMWltWM=
+	t=1749191274; cv=none; b=U85bqmc4NyG31nTFCXIiXsZBJAC3q3XUijZgEJniWtjYvdamjk/8kLFdQhwsHb5do1KGeCawOPuiI7sbmqbs/EIxQXvsI1rx7ZdFd/aUuxK8olhu1skA1HvnJWBsDP1bE6iPBvvM5BOJLcY4A/xlU8VX0lzt1MsSv8Cru3VkQQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749191195; c=relaxed/simple;
-	bh=JU0mgop2few5Pt6Dq9+ZtVDzm94WKdjmkUHwV6dtdYI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wyt4KHjv2z/x3+fO5F/aojsvC6qVgADsYDmqmxVHYGoPfN3yyh/GmZo75wLZAZj+K6KAyF1QUZoWrTLXG5EG/1s+Gj0AX64Q/QaFYS1S5YVt9z2qEvg5fpW7ubn6ILEjcPuyRLpXEeLB/UyVeXxZJf0tdi4oefDpxaMDV+1OOQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e8sxWCEU; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749191274; c=relaxed/simple;
+	bh=/6CeuiLut9XVucvvljmh0853EV7UDDXs/x4UmqOUs3c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MvCsvDacjtj+adb3TnN00E3UR6xn+TjuHTO5pc41xrkij7f2A0GZ+z42W3F2ROnBwsiVaktC9QXO/de5phJsOfBz/MWR9uqmtqf59L5+reb1spCNPrGPg6vnBU9hMnAnHDSeWc7+Y6ZvRfNJ+7CdoYRWsxebB6dAwK1F2MDEZL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ccwLfdR0; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e8sxWCEU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749191193; x=1780727193;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=JU0mgop2few5Pt6Dq9+ZtVDzm94WKdjmkUHwV6dtdYI=;
-  b=e8sxWCEUFW5lT5rslrmUtGH7KrVkCmV6KEWiJTBiD1vPA4dJtUoQGdnv
-   bQkMx2QMJMhoMaEiq/dO9CRvTrC1V6SjM+U5XeicGRYHUaVd0Q0TuOL7E
-   2DXpltiUZtoHU+KsAw5iif+bjP7fPOlw92BbTZxJ+DH0zQtd0CyDZl1yh
-   UKWjvLQFNFBBtXmf+Vd/4gH4YcP+3O/jkhPxrTRqViLCh1MJCJXaU30Iu
-   hESO9CzXGF/8VWnkWOflGaRTH//kyAh2V/GS154gNTzo4mqo9z6UHNmes
-   J4qZ6t75t88FpefCzLaUSuSEGGJrpovb02/exwTXW8i7EBF3fROty3ehx
-   A==;
-X-CSE-ConnectionGUID: l6WLGGuXQuKqUstgml7oFQ==
-X-CSE-MsgGUID: AVvvcZ+fR2ujsKDsHilqyQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="73864453"
-X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
-   d="scan'208";a="73864453"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 23:26:33 -0700
-X-CSE-ConnectionGUID: E8/CkPXtQm+K4/yvZjVXYQ==
-X-CSE-MsgGUID: s/578i+CRfmWvgroYersIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
-   d="scan'208";a="150761251"
-Received: from emr.sh.intel.com ([10.112.229.56])
-  by orviesa004.jf.intel.com with ESMTP; 05 Jun 2025 23:26:28 -0700
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Andrew Zaborowski <andrew.zaborowski@intel.com>,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH] perf/x86/intel: Use early_initcall() to hook bts_init()
-Date: Fri,  6 Jun 2025 11:16:06 +0000
-Message-ID: <20250606111606.84350-1-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ccwLfdR0"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-551fc6d4a76so1817972e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 23:27:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749191271; x=1749796071; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tzDIUNzlZzE8Exp7uJq4kZitY7Z7cIX3lYetygV3xS4=;
+        b=ccwLfdR0IpV1glLUzc1+Xu6FyVNb/ivfzuHJWR5+qGlW24b8FUvS066pHN2aOINM/I
+         QKXLx2d5uOoy9Mc0pYTCeAov5snRps/KgNzYXSBAehKAmgYMYD11z5/Ck3czJRpk0AkU
+         Z3ajccxUdJRmMYOhE4wXETyppgIagL5iFLsKN27xx57bFTgtR8/mZ0cbUWH9Kc9IZHLN
+         E4m0OxR4SrnTjMxk42DUpyxwGcukd1vnXiX+Qux08mHu86xvRgA9V1RrQQGtsyR6jbfx
+         oalKdz7gnj0xUei1pwHlbJS9Ux+OAA60z4lKhHYKzXjaVAv+BQ7Ug6prqT0sohbxRTMF
+         m7lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749191271; x=1749796071;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tzDIUNzlZzE8Exp7uJq4kZitY7Z7cIX3lYetygV3xS4=;
+        b=k4qYp0aA38F8XOasPEuGI0NPEGR0rUtu34prnavKqgNSW1hXgTbgsv4s0CadXuRoY0
+         jpaTJCn2Wh6e4ZuoPaFJj5pNcO8hsWwIFA+oOwKRp6oZJk8HCqtWxUjlgCtezfyZ5oR2
+         X6tW25NI3rQpxOqtaHt4rEXOSJ3olhv4pcOBtEPJoXxW752+dJTvybGSjkvLgqHdVycW
+         t2d/487XSLFKPuPsuD5Dqfv6caUWjIbiwUJoetgnnxJ+alfi3Uod4Q0r6gzffZL51fst
+         SZNKvAPyjdcFRX2+X19GaRmARArZjS8B+mA48aGUQJ/dPVfPeY6Eub4nCNVRMHb3/SUw
+         e2lg==
+X-Forwarded-Encrypted: i=1; AJvYcCXmrH/iplEwMYuaUBj7Ldk+pAdXQyManKtVEH1NafksVeSXl8l1l1LEt7WjsIMnUU8HhZY3u75d/W7bwp0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeIZxrAHnwYfh/6psgFHD2ot8vgVUQb33lhCcguGgJdOY8zLdr
+	SBgnPYCvU2X5nqp6VgJaD/XdfhXsTdPnSpUNXB9/giFg2ZbDjnLSFRSU2xQF0Q6dzAqQXf7uO8t
+	LBf8bjSICFTBSn2lpT4n8l80c9k1QXWy7X1m6zRc=
+X-Gm-Gg: ASbGncvzhL6fXKE2a2brEDaeEifhFDdagkGsC1e5tw4KGkOC1HVLhHE0UGafKwIibym
+	tsoBujvNbhMAXggAQO37d8o6MR21F338Kkyj71O/X97T9Dm3UR67H/9Bi9aRQrP0aD6ex004cYh
+	cAEP0FrWdkz6ctxgYvrfqLcDAVsNZZSUfq
+X-Google-Smtp-Source: AGHT+IGeMMe/IEfSmGHrjkKKtJpK9PNQS0qXxBBszE1Swm/h32AeISc6HAC99hfCMUixWLwv1PU+pXk6joS65XpGV3c=
+X-Received: by 2002:a05:6512:1294:b0:553:543d:d963 with SMTP id
+ 2adb3069b0e04-55366c30244mr466930e87.36.1749191271080; Thu, 05 Jun 2025
+ 23:27:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250605164733.737543-1-mjguzik@gmail.com> <20250605190054.GH30486@noisy.programming.kicks-ass.net>
+ <CAFULd4b1dQO3biWvRoHfpyE-Bot0urmWDzxfO0dEverzuQOpdA@mail.gmail.com>
+In-Reply-To: <CAFULd4b1dQO3biWvRoHfpyE-Bot0urmWDzxfO0dEverzuQOpdA@mail.gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Fri, 6 Jun 2025 08:27:39 +0200
+X-Gm-Features: AX0GCFvjfb_7FBAh99GgftH7Lniw5WfTdcvevEmNBvdRrc32to_dxITK1kHneUs
+Message-ID: <CAFULd4Zito-1VasojoL7qZdu_yggDgQL_0qMSv6ZBrtMe3i1zA@mail.gmail.com>
+Subject: Re: [PATCH v2] x86: prevent gcc from emitting rep movsq/stosq for
+ inlined ops
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Mateusz Guzik <mjguzik@gmail.com>, torvalds@linux-foundation.org, mingo@redhat.com, 
+	x86@kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-After the commit 'd971342d38bf ("perf/x86/intel: Decouple BTS
- initialization from PEBS initialization")' is introduced, x86_pmu.bts
-would initialized in bts_init() which is hooked by arch_initcall().
+On Fri, Jun 6, 2025 at 8:13=E2=80=AFAM Uros Bizjak <ubizjak@gmail.com> wrot=
+e:
+>
+> On Thu, Jun 5, 2025 at 9:00=E2=80=AFPM Peter Zijlstra <peterz@infradead.o=
+rg> wrote:
+> >
+> > On Thu, Jun 05, 2025 at 06:47:33PM +0200, Mateusz Guzik wrote:
+> > > gcc is over eager to use rep movsq/stosq (starts above 40 bytes), whi=
+ch
+> > > comes with a significant penalty on CPUs without the respective fast
+> > > short ops bits (FSRM/FSRS).
+> >
+> > I don't suppose there's a magic compiler toggle to make it emit prefix
+> > padded 'rep movs'/'rep stos' variants such that they are 5 bytes each,
+> > right?
+> >
+> > Something like:
+> >
+> >    2e 2e 2e f3 a4          cs cs rep movsb %ds:(%rsi),%es:(%rdi)
+>
+> This won't fly, because gas complains:
+>
+> z.s: Assembler messages:
+> z.s:1: Error: same type of prefix used twice
 
-Whereas init_hw_perf_events() is hooked by early_initcall(). Once the
-core PMU is initialized, nmi watchdog initialization is called
-immediately before bts_init() is called. It leads to the BTS buffer is
-not really initialized since bts_init() is not called and x86_pmu.bts is
-still false at that time. Worse, BTS buffer would never be initialized
-then unless all core PMU events are freed and reserve_ds_buffers()
-is called again.
+However, it is possible to use " cs ; cs ; cs ; rep movsb". We can add
+a compile flag to the compiler, and it will be able to emit the
+desired sequence.
 
-Thus aligning with init_hw_perf_events(), use early_initcall() to hook
-bts_init() to ensure x86_pmu.bts is initialized before nmi watchdog
-initialization.
-
-Fixes: d971342d38bf ("perf/x86/intel: Decouple BTS initialization from PEBS initialization")
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- arch/x86/events/intel/bts.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
-index 9560f693fac0..f0d9729ed255 100644
---- a/arch/x86/events/intel/bts.c
-+++ b/arch/x86/events/intel/bts.c
-@@ -642,4 +642,4 @@ static __init int bts_init(void)
- 
- 	return perf_pmu_register(&bts_pmu, "intel_bts", -1);
- }
--arch_initcall(bts_init);
-+early_initcall(bts_init);
-
-base-commit: e7d952cc39fca34386ec9f15f68cb2eaac01b5ae
--- 
-2.43.0
-
+Uros.
