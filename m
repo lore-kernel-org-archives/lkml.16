@@ -1,316 +1,190 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2049.outbound.protection.outlook.com [40.107.93.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537407FD;
-	Fri,  6 Jun 2025 04:37:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749184674; cv=none; b=l0P7SS7aQrhLXmCqPJqLGBufYF2yR1dWD9TgGTZ/CYHOl79++fupCS0GgJ1MxjguCqqmA3ZYxay+b2svcmnjLyFlQLI4JBAfOmOYYs7ctFWHDptKkFBY96hqvK0IUyoj2j6jeVA4OtXWCHf2z9wO7XDrK7cOFkSr+ofpcbObPAs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749184674; c=relaxed/simple;
-	bh=ooa8GUCrOJx9dyOpO2RqFlntCiLyJrV5MKBPBO4VX1Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PjHViCFpV+jnE+C0vLD9kzj3XI19qod67zRyB9klroq4dSYmN4KS5XlPWHCEhBCMBUkK5pogIAy933vWgQcsHQyqZ6AuH5cZQYKms3g63ektSSwlCEBssArc4jdheZNtHPoNldtQQ4I26YiMyuvk+nKimeCmopW86qQJCH9RmQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nE6DMEI2; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C76B1FB3;
+	Fri,  6 Jun 2025 04:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749185211; cv=fail; b=A1s7ecz1YOxwadarOGxZo3ZDheXC2XWYZBsJCCRmoh8+AfLUsHGNmdjEys+7yMs68hqpzfFustVj61wnpgmEM9ACObKzgCaC0ecKho8erH5CR3vN8j/tx2v4QDhGoyQkrVRiXEMkfuMAJqSQeQ/pfRHfOv6h0//FWovZGXofKJQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749185211; c=relaxed/simple;
+	bh=+opEEGLq3Yv8bpVx1bAPq0fYi4cwRvXeqzJMaIeN+k4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EfAtuAkDxoIFyq09ijsVv5Yr2qk1T8qBmolcFtg+aaPsiCq/CklLsl2ZaIa1SIpXmH5DEd6tYMl94aWcPhhBVmZXK16WIuAkq4U7O8OjxKo8PVwZp5tZZp/GlK2pteSmvBfI4zj3ri5xy4NZ9t9dUqwmNQuYZK2dqxWG/1RBhSs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=L161cLuS; arc=fail smtp.client-ip=40.107.93.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nE6DMEI2"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4a5903bceffso19810401cf.3;
-        Thu, 05 Jun 2025 21:37:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749184671; x=1749789471; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HkteYriPiUEQMk2PJvli3NF55JAHjvDo7DBgrBsNFMo=;
-        b=nE6DMEI2Kfp2t3C8mCQhC5lAeBGde4uCUOMBysCYgsStyfKrxJLe5fbo3eYHecayda
-         Y+/No4+FE8ht1menbyP+TKu5lZe64wY5CajDDYjQnXxlYbJltNYiba0H2L5wdFdLqJiO
-         7zZtuEt8KhZsqykGyG9DjIr1lRt8P8fOeaFUs0A2hXYIr6K80f+FuybcHjTtvr36qHVV
-         PTA4hmyEvxLRJcPjpaYtpZFL1jCOYvnUfjqGXn5avyPIs+AJfX4wdKeytZbLbiJ5yZdj
-         b8INsnP52a3PT4cNvweJi9uDVuFYE0eHDZB5SNtVgVio/KrhdnOZz+CJSxJlFKkdkM+I
-         JsJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749184671; x=1749789471;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HkteYriPiUEQMk2PJvli3NF55JAHjvDo7DBgrBsNFMo=;
-        b=HZmTsBZsjjO0EApDmNl4RaZqRcg5GX+BwWKGywFQ6ffTQUUGyOll4dDSkIbS4WIoYQ
-         xkum1jwyvf/IZnpqejPWG8fCbaAwMuzqzWQFjadr/ArSaza3P4qWneIlBeywmc2CfaQD
-         2LC/x0FtYDQGLi6sne/xaRla8voldgU6A0YYuUF0071og15ie8qTOW4wJyQf60m30CYb
-         IY4df8hVe0OZFrrauf6gd1RLQR4nVUJwrXzr9KM3wEgSqvcE/sisBnRKIC4h/GIgvpqA
-         HO6A3yzWVjGstzV8cFhyMfoOzAP/1pfucKevk6Qf1SwWDXwIEg7dVq87tGAQYqAeoqx5
-         NVug==
-X-Forwarded-Encrypted: i=1; AJvYcCVQsNhtPWzEwcZiZ8N44G0yO4zCBDAigRSttTxbwjoX4PRkFLwAlkETvo1tB0tW3W1/mbOSNeBSCjfRpCsFBIk=@vger.kernel.org, AJvYcCW5HWgRNv/2SdxkWYq/fhlOWIJEgUrUbqkJ5BDhh2DUH0XYV6+zjHQUCLuRdaasUydYXaV8/jCaf1c=@vger.kernel.org, AJvYcCWd0KcC4NPHgc81128aLHYWLvM5rYgAGFuIpg9L1AyRpMDxO9bnVprG33AC9aS3IgvmfpIdrLlVXyJP6EA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0tX7NI3GYp6XteAWhgMNa4FbR45qYxPxCa65YFAsNDFeYO0ou
-	i3NrUT+s2/yAeXulGgdL6J/NzS3d2b4cDmghMsT2zWYKO/c8L6sTYLRA
-X-Gm-Gg: ASbGnctvmeUsfZTOGcmcGSWHvPjpHEhBsSZzCoZo61dtNElm8XhjoACWBVQ+Mq1xob1
-	5FrA3u5keglb5nkE2an/EyblRaIHFRdIIF1eMPHmWaAVP7bHsM8byaRtrNhNwVMqsK4ZVaPMrm2
-	SRY5ccGh1SDPKGnM6UHGYgSjU1hE6hruB5buqxFEuRdPNWpqAytB/gT1cGKoYHLzQ5IrRQu2MCC
-	MPmG49NjcjefiY2qjU3Jqd4SwlNPsgxTqZsMVjijgWDTf94F7u9AJn0xyJriRcLk+2Yx8/go/FR
-	5R0Qg2rcZtMZhLbyl9+MDsJ8jb8nMevxW7Ac1iAWQBh1uoIKrPYW1l/72xu+AMIdOqJlrS9kXY0
-	Uj7n71H55jmRnX+47w9IEN4y45LCsjh1yTrdoFo5dRQ==
-X-Google-Smtp-Source: AGHT+IFY2+q/lUJAOCrxM2SmV33llI67uyb8wDjBujMIP4xppmeXWzRNEO7tA51VgA6njyFvsdVvZg==
-X-Received: by 2002:a05:622a:2287:b0:4a4:4da5:8b55 with SMTP id d75a77b69052e-4a5b9d39e8cmr39828631cf.28.1749184670927;
-        Thu, 05 Jun 2025 21:37:50 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a611150830sm7192311cf.10.2025.06.05.21.37.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 21:37:50 -0700 (PDT)
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfauth.phl.internal (Postfix) with ESMTP id D5C711200043;
-	Fri,  6 Jun 2025 00:37:49 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-11.internal (MEProxy); Fri, 06 Jun 2025 00:37:49 -0400
-X-ME-Sender: <xms:nXBCaARGqRTaW9aRl-8OIGEYBnxwpSN6TCmrvcjPf3Zn5XDobvZTSw>
-    <xme:nXBCaNyDoCxcHWrpURtuXjKSZ6rh4ADXLvlTZhl8c6UhjEUYcx1srFLtgdcCP7TAo
-    yvPJeKuH35I-HrYUw>
-X-ME-Received: <xmr:nXBCaN0kAIXOxrP3NKtrE9OEInPXWujrNWHkC94wLi1_xTEusDjW51_G1g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdegiedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtuden
-    ucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrd
-    gtohhmqeenucggtffrrghtthgvrhhnpeeiffejheejledukeefieekgfetveejiedtveek
-    gffhteekvdeijeefgedtffevgfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuve
-    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdo
-    mhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejke
-    ehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgr
-    mhgvpdhnsggprhgtphhtthhopedujedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoh
-    epvhhirhgvshhhrdhkuhhmrghrsehlihhnrghrohdrohhrghdprhgtphhtthhopehrrghf
-    rggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephihurhihrdhnohhrohhvsehgmh
-    grihhlrdgtohhmpdhrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehgrg
-    hrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhho
-    thhonhhmrghilhdrtghomhdprhgtphhtthhopehlohhsshhinheskhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtoheprgdrhhhinhgusghorhhgsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:nXBCaECszaj6AWhUm-DpDYTroJO4DtviIZZN17zSYmm4J2b1YZbbAQ>
-    <xmx:nXBCaJibly_LEZRs51Bz-r5azCuXvUzoyJ9skQFID8WQtn9cWFYBEw>
-    <xmx:nXBCaApsXjr34ukFfCAasE8aOBr6R5B5CuK6akOzcKvPNmOQHlk0Rw>
-    <xmx:nXBCaMiNGmezyO6VI4WzeKl5-4PhYyKbm661fxHvEdJpDGTnYMqNXw>
-    <xmx:nXBCaATbwO5-MsvXBGPnxecO_3ogOig0Pr_dRyje4DJfVr7IvuaJKTow>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 6 Jun 2025 00:37:49 -0400 (EDT)
-Date: Thu, 5 Jun 2025 21:37:47 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH] rust: cpumask: Validate CPU number in set() and clear()
-Message-ID: <aEJwm16HSwCyt7aB@Mac.home>
-References: <8b5fc7889a7aacbd9f1f7412c99f02c736bde190.1749183428.git.viresh.kumar@linaro.org>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="L161cLuS"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JvvNzVCcEZlqPLTlcpLt/Nw3gcjdBiwhUz8DpGiU2LykE+heikMi60rA2oP2ky9+JqZzsokYWJQf7SeKctkbR1hQEiiEvZ/kvVO0wsPqEJsR1mr4xV5/bnEmkFReu5iiwylZnK3LCpnEaqlhXGAlbXVwcbN3Em1UFtG9uYc6rdebHMPoF358F08XyNkSR1OPP7HoUrr2BEX+6GYPYM55IfPbl0fBaJkFBGRi/5HeoHh957MXO4eoMhmsvwXEehwuRk/JIN4EeuypdC0DrNyUYZDsSq21CjKOx7qCt2k2yxND7quvy7DWZxgTRHT7Auw071r3dQd00ysDCr2mpCTtvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EDMBr25Rd5V/4UNv3zTo9MCi6cLNrHYng1lWkmFyUmA=;
+ b=FTcDdNMTCo7qKxcV6L9EY7P0zPCMDU0ZBM+ERKH4JdJL++oD94uYVrPkKwAds6pH1Ypgb+vgz6dKgiWP7ZTuzgFigRUD5YCyu7A/SnMJbU2wjFoCLMHUps2IgO59uTI9kebDWhrtjbR9N5JVC5F8OQy3msDSkLes2b2tLCct/MJH7SwKs00OitK9LjqQPWqqsi615FTyQa/saDzyQ9twJyPMmCInirAgDWe54c9rjX1U/Go/6Y6KfXyUmZgFLQix/+A15Wo4K3gs4QULvA4cQzNc5EsfYCB1cplmOFLupTTavjMvHm2dbMk4fMKxyGL9Sl/ShxVqqad4PG4ZL5fNCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=amd.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EDMBr25Rd5V/4UNv3zTo9MCi6cLNrHYng1lWkmFyUmA=;
+ b=L161cLuSOXA+uQ+QpbQpk5BhOXXyOpIbnvsAZXjEvXGC/boKaCDwutYtTDOJ2eezMO4xit7IvI3s8KHrmPHX2XIKzE+oFVS1q83GF+udmAqtcLxgRpxHNDx7p2usAHolupsnb4WCWKbCNBVyPTgOan1ieyPgjVjT9h9oBmNaY+4caKkojhdxj7ZHuuwXdUyz0v1w2CPL4X+py4ASgkU4gW3YQJBTluxmLnaAN/E0nGhVXC7L0UZ3PQT9aEWWbFSPKPF+l6d0uhiPCEJpz/JvW3igb/RbY+9DDpnowmA3ulx3USTZTGkba2Zq1YFI5eFH1rwQQy3G0q1cl5m/0U40Hg==
+Received: from MW4PR04CA0172.namprd04.prod.outlook.com (2603:10b6:303:85::27)
+ by PH8PR12MB7181.namprd12.prod.outlook.com (2603:10b6:510:22a::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.32; Fri, 6 Jun
+ 2025 04:46:45 +0000
+Received: from SJ5PEPF00000204.namprd05.prod.outlook.com
+ (2603:10b6:303:85:cafe::bd) by MW4PR04CA0172.outlook.office365.com
+ (2603:10b6:303:85::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.19 via Frontend Transport; Fri,
+ 6 Jun 2025 04:46:45 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SJ5PEPF00000204.mail.protection.outlook.com (10.167.244.37) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8792.29 via Frontend Transport; Fri, 6 Jun 2025 04:46:44 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 5 Jun 2025
+ 21:46:32 -0700
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 5 Jun
+ 2025 21:46:32 -0700
+Received: from Asurada-Nvidia (10.127.8.14) by mail.nvidia.com (10.129.68.9)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Thu, 5 Jun 2025 21:46:30 -0700
+Date: Thu, 5 Jun 2025 21:46:28 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: <kevin.tian@intel.com>, <corbet@lwn.net>, <will@kernel.org>,
+	<bagasdotme@gmail.com>, <robin.murphy@arm.com>, <joro@8bytes.org>,
+	<thierry.reding@gmail.com>, <vdumpa@nvidia.com>, <jonathanh@nvidia.com>,
+	<shuah@kernel.org>, <jsnitsel@redhat.com>, <nathan@kernel.org>,
+	<peterz@infradead.org>, <yi.l.liu@intel.com>, <mshavit@google.com>,
+	<praan@google.com>, <zhangzekun11@huawei.com>, <iommu@lists.linux.dev>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <patches@lists.linux.dev>,
+	<mochs@nvidia.com>, <alok.a.tiwari@oracle.com>, <vasant.hegde@amd.com>,
+	<dwmw2@infradead.org>, <baolu.lu@linux.intel.com>
+Subject: Re: [PATCH v5 10/29] iommufd: Abstract iopt_pin_pages and
+ iopt_unpin_pages helpers
+Message-ID: <aEJypNAzkGGT375k@Asurada-Nvidia>
+References: <cover.1747537752.git.nicolinc@nvidia.com>
+ <49f7143c1b513049fd8158278a11d9f8b6c837d3.1747537752.git.nicolinc@nvidia.com>
+ <20250528171754.GY61950@nvidia.com>
+ <aEEY28ZXH+NqiE+T@Asurada-Nvidia>
+ <20250605151648.GD19710@nvidia.com>
+ <aEHOI522eucrOZyI@Asurada-Nvidia>
+ <20250605194034.GF19710@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <8b5fc7889a7aacbd9f1f7412c99f02c736bde190.1749183428.git.viresh.kumar@linaro.org>
+In-Reply-To: <20250605194034.GF19710@nvidia.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF00000204:EE_|PH8PR12MB7181:EE_
+X-MS-Office365-Filtering-Correlation-Id: 699a4de5-c5a2-4073-9ca2-08dda4b523a7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|1800799024|36860700013|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?hzgwbogu5Hwb6Bg92lwYHmC1OWuoUGYVGV3KTDtA7Ubx1IFkSzbmIzsVYLje?=
+ =?us-ascii?Q?hFC9Mkg4HQ/sp2bQkcV37R7c2Hd3N4s3umYIJz1WNiXHHRQ8eEuHmi4nG1FK?=
+ =?us-ascii?Q?k3Nb5AjCHLp+kHpnF8FTePrELgXOPVfapUNYpNpZqpzJrO5yXrgALsW3Vqet?=
+ =?us-ascii?Q?Cm9z7NbP/v8CoUGt65k4v8WSbNcUF5rxdOcPi60xKYKaS4z6SRXjviGsbftC?=
+ =?us-ascii?Q?p0EYLucx+nQR+n5E2wrHELSKg+TwbSPfgQFrZPDCw+XrY1A3I86/NQZ6G/uD?=
+ =?us-ascii?Q?dqV2BoVXEBu17GjPCC7lwTrZNnUPqlUmut2RmrN+r1WokoL8Xi0ZHF88AD8V?=
+ =?us-ascii?Q?kCm0BNPOey4TS6kpUSZNNsJi5sEhq3galp0M0NLFjU3PgUlgk0YxM0Klyv1C?=
+ =?us-ascii?Q?xvrUKQ60D8rEe3EBAk1sMnj/s3HZ8+TMp+iS0x0jy9yJs3jHvv71OA+2DssM?=
+ =?us-ascii?Q?TsKqf9TRw/sXPcqNxW32IjkVHRRegnRvqTlPHgHTbaTbjtItLHea7BDoR2Hf?=
+ =?us-ascii?Q?HJjmOb0/HK+TzfiAFVSGLdVuo5YVPsbQdeiLj2mzdxj8TVGAyerISpOSxoCw?=
+ =?us-ascii?Q?A1R55nzkmSLJca5hNhAwIITOFzcD2Zn6LNmZoIprzeX/Lx5XR7FvTUEpTx5b?=
+ =?us-ascii?Q?Ur/Nc45f+JNY6OnxJ8XmflnkqkVKjLk5UukFNQdTslq62A08FbF6UWte3VnI?=
+ =?us-ascii?Q?4LoJgVVokWgfmFNg0wTaPhBz25bH4KYpa88Y7YyPGMlx+ITDJn9qKdD6FNss?=
+ =?us-ascii?Q?DSak1tIpnirLJyj9ame3Tz8WS4B0Dr6LYDLANC5jBCq6Up+GHEWbOSL5IKPB?=
+ =?us-ascii?Q?Fm8M7z1idAsi3uDdZO9zeGY5Kwz4ijLD2gFW/Iwd+wnCsvF93OrlFCNpKm9Z?=
+ =?us-ascii?Q?f23uC8GEaHTsHlTpkm1DJrCaT1qFNVXlNYqdsyGL64J//X/UVIUk4M8A8Etz?=
+ =?us-ascii?Q?hbGMYAo/zyki07YX5nQNeZBjMr/AHA37dO+jLJ11VwWLi8DzSOLx9HvRvRUT?=
+ =?us-ascii?Q?1v21FGXMzwLSz4a/tg5Unntg2Isttsj5Usxi6oD+nvUDUzvwioYGlQrgeohu?=
+ =?us-ascii?Q?w0GtiVYAkx5NdRBwJ2IdhDOwDPJ7BiDQNGkiC2dtrgPdbBv0n6sf+DKpzM2n?=
+ =?us-ascii?Q?xs0fahXBmAByz311zb5DQ/G6t+LtbJV7viixGODBnwQ6ybWryzfwH67M5A/Q?=
+ =?us-ascii?Q?d1n0Vkzbtu2XU9r0DgnylrbHWfOwkCodcQUSIPEf4mFogHVttWosG4R3BqFN?=
+ =?us-ascii?Q?2Bo6dRXmvZy7uOUEyMUIZaY6II4aKV5hy5dt3yudQMOVvy5qupLDXL2WIiMj?=
+ =?us-ascii?Q?DUTxWFP2hWnIRJo755OGRhmnUrbSV2vG/JH43Os4HDZqM9UEIOw2MT4LzYRj?=
+ =?us-ascii?Q?xk0gd/J/wNst7SnePCC1r0LmThNlL3dR+TsJE7jtgyygWl0fCCEI+ftWA62y?=
+ =?us-ascii?Q?j7InS8luWdX9ez6f0buTYk9/gexI6WL3OtWP1Y7uiFcJ+8HKrP44+mC3XkOg?=
+ =?us-ascii?Q?BDn3i/H+g8RcOITYxnYs6MG3imrK/Rskoder?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(36860700013)(376014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2025 04:46:44.9665
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 699a4de5-c5a2-4073-9ca2-08dda4b523a7
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF00000204.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7181
 
-On Fri, Jun 06, 2025 at 09:47:28AM +0530, Viresh Kumar wrote:
-> The C `cpumask_{set|clear}_cpu()` APIs emit a warning when given an
-> invalid CPU number - but only if `CONFIG_DEBUG_PER_CPU_MAPS=y` is set.
+On Thu, Jun 05, 2025 at 04:40:34PM -0300, Jason Gunthorpe wrote:
+> On Thu, Jun 05, 2025 at 10:04:35AM -0700, Nicolin Chen wrote:
+> > On Thu, Jun 05, 2025 at 12:16:48PM -0300, Jason Gunthorpe wrote:
+> > > On Wed, Jun 04, 2025 at 09:11:07PM -0700, Nicolin Chen wrote:
+> > > 
+> > > > I found the entire ictx would be locked by iommufd_access_create(),
+> > > > then the release fop couldn't even get invoked to destroy objects.
+> > > 
+> > > Yes, that makes sense..
+> > > 
+> > > It looks to me like you can safely leave ictx as NULL instead of
+> > > adding a flag? That would be nicer than leaving a unrefcounted
+> > > pointer floating around..
+> > 
+> > Hmm, there are a few iommufd_get_object calls using access->ictx
+> > in iommufd_access_attach() and iommufd_access_destroy().
 > 
-> Meanwhile, `cpumask_weight()` only considers CPUs up to `nr_cpu_ids`,
-> which can cause inconsistencies: a CPU number greater than `nr_cpu_ids`
-> may be set in the mask, yet the weight calculation won't reflect it.
+> I counted:
 > 
-> This leads to doctest failures when `nr_cpu_ids < 4`, as the test tries
-> to set CPUs 2 and 3:
-> 
->   rust_doctest_kernel_cpumask_rs_0.location: rust/kernel/cpumask.rs:180
->   rust_doctest_kernel_cpumask_rs_0: ASSERTION FAILED at rust/kernel/cpumask.rs:190
-> 
-> Fix this by validating the CPU number in the Rust `set()` and `clear()`
-> methods to prevent out-of-bounds modifications.
-> 
+> iommufd_access_change_ioas_id
+>  * Don't call this
+> iommufd_access_destroy_object
+>  * Don't put if null
+> iommufd_access_create
+>  * Don't set it
+> iommufd_access_destroy
+>  * Call iommufd_object_destroy_user directly
+> iommufd_access_notify_unmap
+>  * Check for null access->ops->unmap and skip the lock_obj/put_obj
 
-Thanks for the quick fix!
+Yea. And I added a set of lighter "_internal" helpers so the caller
+side looks consistent:
 
-While this can fix the current problem, but it's not a good solution for
-the long run. Because outside a test, we should never use an arbitrary
-i32 as a cpu number (we usually get it from smp_processor_id(), or
-something else). So the `< nr_cpu_ids` testing is not necessary in
-normal use cases.
+	access = iommufd_access_create_internal(viommu->ictx);
+	rc = iommufd_access_attach_internal(access, viommu->hwpt->ioas);
+	...
+	iommufd_access_detach_internal(access);
+	iommufd_access_destroy_internal(ictx, access);
 
-We should instead provide a wrapper for cpu id:
-
-    /// # Invariants
-    ///
-    /// The number is always in [0..nr_cpu_ids) range.
-    pub struct CpuId(i32);
-
-and
-
-    impl CpuId {
-        /// # Safety
-	/// Callers must ensure `i` is a valid cpu id (i.e. 0 <= i <
-	/// nr_cpu_ids).
-        pub unsafe fn from_i32_unchecked(i: i32) -> Self {
-	    // INVARIANT: The function safety guarantees `i` is a valid
-	    // cpu id.
-	    CpuId(id);
-	}
-
-	pub fn from_i32(i: i32) -> Option<Self> {
-	    if i < 0 || i >= nr_cpu_ids {
-	        None
-	    } else {
-	        // SAFETY: `i` has just been checked as a valid cpu id.
-	        Some(unsafe { Self::from_i32_unchecked(i) })
-	    }
-	}
-
-	pub fn current() -> Self {
-	    // SAFETY: smp_processor_id() always return valid cpu id.
-	    unsafe { Self::from_i32_unchecked(smp_processor_id()) }
-	}
-    }
-
-All `Cpumask` functions then take `CpuId` instead of `i32` as the
-parameter. Needless to say if we were to have a cpumask_next() wrapper,
-the return value will be `CpuId` (or `Option<CpuId>`), i.e. if a bit was
-set in a cpumask, then it must represent a correct cpu id.
-
-Make sense?
-
-> Fixes: 8961b8cb3099 ("rust: cpumask: Add initial abstractions")
-> Reported-by: Miguel Ojeda <ojeda@kernel.org>
-> Closes: https://lore.kernel.org/all/87qzzy3ric.fsf@kernel.org/
-> Reported-by: Andreas Hindborg <a.hindborg@kernel.org>
-> Closes: https://lore.kernel.org/all/87qzzy3ric.fsf@kernel.org/
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/cpufreq/rcpufreq_dt.rs |  2 +-
->  rust/kernel/cpumask.rs         | 49 +++++++++++++++++++++++-----------
->  2 files changed, 34 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/rcpufreq_dt.rs b/drivers/cpufreq/rcpufreq_dt.rs
-> index 94ed81644fe1..f396c8f35069 100644
-> --- a/drivers/cpufreq/rcpufreq_dt.rs
-> +++ b/drivers/cpufreq/rcpufreq_dt.rs
-> @@ -70,7 +70,7 @@ fn init(policy: &mut cpufreq::Policy) -> Result<Self::PData> {
->          let dev = unsafe { cpu::from_cpu(cpu)? };
->          let mut mask = CpumaskVar::new_zero(GFP_KERNEL)?;
->  
-> -        mask.set(cpu);
-> +        mask.set(cpu)?;
->  
->          let token = find_supply_names(dev, cpu)
->              .map(|names| {
-> diff --git a/rust/kernel/cpumask.rs b/rust/kernel/cpumask.rs
-> index c90bfac9346a..75d4ce916b4f 100644
-> --- a/rust/kernel/cpumask.rs
-> +++ b/rust/kernel/cpumask.rs
-> @@ -37,13 +37,14 @@
->  /// use kernel::bindings;
->  /// use kernel::cpumask::Cpumask;
->  ///
-> -/// fn set_clear_cpu(ptr: *mut bindings::cpumask, set_cpu: u32, clear_cpu: i32) {
-> +/// fn set_clear_cpu(ptr: *mut bindings::cpumask, set_cpu: u32, clear_cpu: i32) -> Result {
->  ///     // SAFETY: The `ptr` is valid for writing and remains valid for the lifetime of the
->  ///     // returned reference.
->  ///     let mask = unsafe { Cpumask::as_mut_ref(ptr) };
->  ///
-> -///     mask.set(set_cpu);
-> -///     mask.clear(clear_cpu);
-> +///     mask.set(set_cpu)?;
-> +///     mask.clear(clear_cpu)?;
-> +///     Ok(())
->  /// }
->  /// ```
->  #[repr(transparent)]
-> @@ -90,9 +91,15 @@ pub fn as_raw(&self) -> *mut bindings::cpumask {
->      /// This mismatches kernel naming convention and corresponds to the C
->      /// function `__cpumask_set_cpu()`.
->      #[inline]
-> -    pub fn set(&mut self, cpu: u32) {
-> +    pub fn set(&mut self, cpu: u32) -> Result {
-> +        // SAFETY: It is safe to read `nr_cpu_ids`.
-> +        if unsafe { cpu >= bindings::nr_cpu_ids } {
-> +            return Err(EINVAL);
-> +        }
-> +
->          // SAFETY: By the type invariant, `self.as_raw` is a valid argument to `__cpumask_set_cpu`.
->          unsafe { bindings::__cpumask_set_cpu(cpu, self.as_raw()) };
-> +        Ok(())
->      }
->  
->      /// Clear `cpu` in the cpumask.
-> @@ -101,10 +108,16 @@ pub fn set(&mut self, cpu: u32) {
->      /// This mismatches kernel naming convention and corresponds to the C
->      /// function `__cpumask_clear_cpu()`.
->      #[inline]
-> -    pub fn clear(&mut self, cpu: i32) {
-> +    pub fn clear(&mut self, cpu: i32) -> Result {
-> +        // SAFETY: It is safe to read `nr_cpu_ids`.
-> +        if unsafe { cpu as u32 >= bindings::nr_cpu_ids } {
-
-You probably want to check whether `bindings::nr_cpu_ids` can be
-accessible if NR_CPUS == 1 or CONFIG_FORCE_NR_CPUS=y, because then
-nr_cpu_ids is a macro definition.
-
-Regards,
-Boqun
-
-> +            return Err(EINVAL);
-> +        }
-> +
->          // SAFETY: By the type invariant, `self.as_raw` is a valid argument to
->          // `__cpumask_clear_cpu`.
->          unsafe { bindings::__cpumask_clear_cpu(cpu, self.as_raw()) };
-> +        Ok(())
->      }
->  
->      /// Test `cpu` in the cpumask.
-> @@ -180,19 +193,23 @@ pub fn copy(&self, dstp: &mut Self) {
->  /// ```
->  /// use kernel::cpumask::CpumaskVar;
->  ///
-> -/// let mut mask = CpumaskVar::new_zero(GFP_KERNEL).unwrap();
-> +/// fn cpumask_test() -> Result {
-> +///     let mut mask = CpumaskVar::new_zero(GFP_KERNEL).unwrap();
->  ///
-> -/// assert!(mask.empty());
-> -/// mask.set(2);
-> -/// assert!(mask.test(2));
-> -/// mask.set(3);
-> -/// assert!(mask.test(3));
-> -/// assert_eq!(mask.weight(), 2);
-> +///     assert!(mask.empty());
-> +///     mask.set(2)?;
-> +///     assert!(mask.test(2));
-> +///     mask.set(3)?;
-> +///     assert!(mask.test(3));
-> +///     assert_eq!(mask.weight(), 2);
->  ///
-> -/// let mask2 = CpumaskVar::try_clone(&mask).unwrap();
-> -/// assert!(mask2.test(2));
-> -/// assert!(mask2.test(3));
-> -/// assert_eq!(mask2.weight(), 2);
-> +///     let mask2 = CpumaskVar::try_clone(&mask).unwrap();
-> +///     assert!(mask2.test(2));
-> +///     assert!(mask2.test(3));
-> +///     assert_eq!(mask2.weight(), 2);
-> +///
-> +///     Ok(())
-> +/// }
->  /// ```
->  pub struct CpumaskVar {
->      #[cfg(CONFIG_CPUMASK_OFFSTACK)]
-> -- 
-> 2.31.1.272.g89b43f80a514
-> 
+Thanks
+Nicolin
