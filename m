@@ -1,95 +1,182 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sg-1-13.ptr.blmpb.com (sg-1-13.ptr.blmpb.com [118.26.132.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D143234;
-	Fri,  6 Jun 2025 04:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809C63234
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 04:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749183908; cv=none; b=E8EfxA9PAdJrXseLLQGT1/Wml8UXeMSXFxu3C1c8xDRvtKRasjAlO4la/ljFOcthC35+hgIEYnS0cx/pU8RiazznVtqIP1uVx80S1M5n+PvXJTI4RzvHIWsMLY06jEG/70cScJRw3fwphTJqD+pi9FozjIPr3VanIVeLQlOML94=
+	t=1749183975; cv=none; b=NNCeArGDEvp22JxtR56syoQQl3fB5gWTIDcEiORQ5Dog1h5aRlZH9putbfivZVhqH+ThB+ym5tu0Jn8EgrP0txsMbs8CDDvBjaAqjHH63n7IuG+fXRCkP6cuQlJsuInpJx12SjCPPMlABSDycLwforxldmVlkOVd/eAAfVpoobU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749183908; c=relaxed/simple;
-	bh=jWs0GMla51yiYCkT98ds2y58nfOLoUvbpGt+kdMkuXM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o+bMOZeGTjGVe+N+hTCWrN29V/vyacuiR9FQI8onyZi334e4qhgaGP8q8e06M4gsQ/DXaSG2RDEhuW3VcP6enmOzpkwV0I/U5COBTAcBHwITJ7tBM7jHJKM9+wY2Trn6OqY+cllkaeP9eBOkGZDE4kBLvHXUBvu/kf2QCM5uTww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=wfmCj/QT; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1749183975; c=relaxed/simple;
+	bh=Am7HXR3Njlqss4G5BEuoNyLPBqJ+LbLJG8/4zJZ6BHI=;
+	h=Content-Type:To:Subject:Date:Message-Id:Mime-Version:In-Reply-To:
+	 References:Cc:From; b=BskR0UHHntLRueiUH93GjN1ObFA3xKBFR5mMg+b1+th1jJXgHqAazbJ1J0bFXFCxO4nf6hcivi9Fqm+e5/pJ6Pasw0QMJzPW1VBYdko+NnY8MWICgZTABsCPNNb23/mtnPEg6O3TTKk1GQnxwpIz7GRjE4iLiZPHROpsqvClEkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com; spf=pass smtp.mailfrom=lanxincomputing.com; dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b=2k8niFS8; arc=none smtp.client-ip=118.26.132.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lanxincomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="wfmCj/QT"
+	dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b="2k8niFS8"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=+6zkQOBycn4uT+YeUBvYpDwM+Bb5loLxwP/2YHCEYEk=; b=wfmCj/QTQNiEiytDpCOpRd7VAF
-	m/+HqmyUkdZK+yI3TWqqoiTR5XycUTfRqgtZPzhJ8xH8mFz/DGqQgLBt/qsooU2og5x8tD3FXAiyZ
-	MzO/BonImYGyy2O8vbJ5ilICwRHib3Tmoi9JtvotXF8EnabqAn/Y+Vwz8Kv8H3ltht6Zv8svJShuS
-	oD9IYhjIAL2cmFMj5rsuSZIx9EIxG9CQCvyQfEriOuRTfEzEhlpTAIlWJvC8//vJqCf6gWrFRTAI0
-	CbLOYtjs2LSxCDIbz0ABo22r71KK0ekv/3LVi7c1uCBiJwEY7EBPsCaab9m82bRPeShKaXw2SB/6h
-	Dl+PA+HA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uNOdZ-0000000BhLE-41rW;
-	Fri, 06 Jun 2025 04:25:02 +0000
-Date: Fri, 6 Jun 2025 05:25:01 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Lizhi Xu <lizhi.xu@windriver.com>
-Cc: syzbot+598057afa0f49e62bd23@syzkaller.appspotmail.com,
-	almaz.alexandrovich@paragon-software.com,
-	linux-kernel@vger.kernel.org, ntfs3@lists.linux.dev,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] fs/ntfs3: Add sanity check for file name
-Message-ID: <20250606042501.GR299672@ZenIV>
-References: <68407923.a00a0220.d8eae.008f.GAE@google.com>
- <20250606035125.1693536-1-lizhi.xu@windriver.com>
+ s=s1; d=lanxincomputing-com.20200927.dkim.feishu.cn; t=1749183964;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=k4UTS9zfNjzXfbqFSh5F0rYTKZrQ+NdfqBJ4iEJ2ZhY=;
+ b=2k8niFS88KxGFPALcAa38Jw7sjrdwkPfFMEAG4B+kHpqVcQaqxkmiSconxOGziNmUoQHty
+ e0a7hSMCrinssRtK8F49jZJ9RdIH5pNsIymNZjv5B/WdMk/sLmxDwwLhbfqAU1LpwFu6Mg
+ C9WYcOHcDNOLVqrlYTJ2tUf9Q+s5DcpNiKBdFneD39adoT7UDg5kA6+BMYkLwGp6s9/Alu
+ gRwQXR5jb8QhOFJXHVD+vx/6YYkDYbPkDDnJrOyMOSzLj3s5s112GRPpjpRQL1BAuSELwZ
+ /mFoiXwcOkfdWcw/8vIiXsksp+i8EzNL49xfCKxqOFxFr6NPkaIXuOkb9y9CIw==
+Content-Type: text/plain; charset=UTF-8
+To: "Anup Patel" <apatel@ventanamicro.com>, 
+	"Atish Patra" <atish.patra@linux.dev>
+Subject: Re: [PATCH 05/13] RISC-V: KVM: Rename and move kvm_riscv_local_tlb_sanitize()
+Date: Fri, 6 Jun 2025 12:25:59 +0800
+Message-Id: <321c0f23-9e9f-4626-8b0d-b805c7cdf5ad@lanxincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250606035125.1693536-1-lizhi.xu@windriver.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Mime-Version: 1.0
+X-Original-From: Nutty Liu <liujingqi@lanxincomputing.com>
+Content-Transfer-Encoding: 7bit
+Received: from [127.0.0.1] ([180.165.23.184]) by smtp.feishu.cn with ESMTPS; Fri, 06 Jun 2025 12:26:01 +0800
+In-Reply-To: <20250605061458.196003-6-apatel@ventanamicro.com>
+Content-Language: en-US
+X-Lms-Return-Path: <lba+268426dda+015927+vger.kernel.org+liujingqi@lanxincomputing.com>
+References: <20250605061458.196003-1-apatel@ventanamicro.com> <20250605061458.196003-6-apatel@ventanamicro.com>
+Cc: "Palmer Dabbelt" <palmer@dabbelt.com>, 
+	"Paul Walmsley" <paul.walmsley@sifive.com>, 
+	"Alexandre Ghiti" <alex@ghiti.fr>, 
+	"Andrew Jones" <ajones@ventanamicro.com>, 
+	"Anup Patel" <anup@brainfault.org>, <kvm@vger.kernel.org>, 
+	<kvm-riscv@lists.infradead.org>, <linux-riscv@lists.infradead.org>, 
+	<linux-kernel@vger.kernel.org>
+From: "Nutty Liu" <liujingqi@lanxincomputing.com>
+User-Agent: Mozilla Thunderbird
 
-On Fri, Jun 06, 2025 at 11:51:24AM +0800, Lizhi Xu wrote:
-> The length of the file name should be smaller than the directory entry size.
-> 
-> Reported-by: syzbot+598057afa0f49e62bd23@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=598057afa0f49e62bd23
-> Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>
+On 6/5/2025 2:14 PM, Anup Patel wrote:
+> The kvm_riscv_local_tlb_sanitize() deals with sanitizing current
+> VMID related TLB mappings when a VCPU is moved from one host CPU
+> to another.
+>
+> Let's move kvm_riscv_local_tlb_sanitize() to VMID management
+> sources and rename it to kvm_riscv_gstage_vmid_sanitize().
+>
+> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
 > ---
->  fs/ntfs3/dir.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/fs/ntfs3/dir.c b/fs/ntfs3/dir.c
-> index b6da80c69ca6..b31bc9cbfa35 100644
-> --- a/fs/ntfs3/dir.c
-> +++ b/fs/ntfs3/dir.c
-> @@ -304,6 +304,9 @@ static inline bool ntfs_dir_emit(struct ntfs_sb_info *sbi,
->  	if (sbi->options->nohidden && (fname->dup.fa & FILE_ATTRIBUTE_HIDDEN))
->  		return true;
->  
-> +	if (fname->name_len > le16_to_cpu(e->size) - sizeof(struct NTFS_DE))
-> +		return true;
+>   arch/riscv/include/asm/kvm_host.h |  3 +--
+>   arch/riscv/kvm/tlb.c              | 23 -----------------------
+>   arch/riscv/kvm/vcpu.c             |  4 ++--
+>   arch/riscv/kvm/vmid.c             | 23 +++++++++++++++++++++++
+>   4 files changed, 26 insertions(+), 27 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
+> index 85cfebc32e4c..134adc30af52 100644
+> --- a/arch/riscv/include/asm/kvm_host.h
+> +++ b/arch/riscv/include/asm/kvm_host.h
+> @@ -327,8 +327,6 @@ void kvm_riscv_local_hfence_vvma_gva(unsigned long vmid,
+>   				     unsigned long order);
+>   void kvm_riscv_local_hfence_vvma_all(unsigned long vmid);
+>   
+> -void kvm_riscv_local_tlb_sanitize(struct kvm_vcpu *vcpu);
+> -
+>   void kvm_riscv_fence_i_process(struct kvm_vcpu *vcpu);
+>   void kvm_riscv_hfence_gvma_vmid_all_process(struct kvm_vcpu *vcpu);
+>   void kvm_riscv_hfence_vvma_all_process(struct kvm_vcpu *vcpu);
+> @@ -376,6 +374,7 @@ unsigned long kvm_riscv_gstage_vmid_bits(void);
+>   int kvm_riscv_gstage_vmid_init(struct kvm *kvm);
+>   bool kvm_riscv_gstage_vmid_ver_changed(struct kvm_vmid *vmid);
+>   void kvm_riscv_gstage_vmid_update(struct kvm_vcpu *vcpu);
+> +void kvm_riscv_gstage_vmid_sanitize(struct kvm_vcpu *vcpu);
+>   
+>   int kvm_riscv_setup_default_irq_routing(struct kvm *kvm, u32 lines);
+>   
+> diff --git a/arch/riscv/kvm/tlb.c b/arch/riscv/kvm/tlb.c
+> index 2f91ea5f8493..b3461bfd9756 100644
+> --- a/arch/riscv/kvm/tlb.c
+> +++ b/arch/riscv/kvm/tlb.c
+> @@ -156,29 +156,6 @@ void kvm_riscv_local_hfence_vvma_all(unsigned long vmid)
+>   	csr_write(CSR_HGATP, hgatp);
+>   }
+>   
+> -void kvm_riscv_local_tlb_sanitize(struct kvm_vcpu *vcpu)
+> -{
+> -	unsigned long vmid;
+> -
+> -	if (!kvm_riscv_gstage_vmid_bits() ||
+> -	    vcpu->arch.last_exit_cpu == vcpu->cpu)
+> -		return;
+> -
+> -	/*
+> -	 * On RISC-V platforms with hardware VMID support, we share same
+> -	 * VMID for all VCPUs of a particular Guest/VM. This means we might
+> -	 * have stale G-stage TLB entries on the current Host CPU due to
+> -	 * some other VCPU of the same Guest which ran previously on the
+> -	 * current Host CPU.
+> -	 *
+> -	 * To cleanup stale TLB entries, we simply flush all G-stage TLB
+> -	 * entries by VMID whenever underlying Host CPU changes for a VCPU.
+> -	 */
+> -
+> -	vmid = READ_ONCE(vcpu->kvm->arch.vmid.vmid);
+> -	kvm_riscv_local_hfence_gvma_vmid_all(vmid);
+> -}
+> -
+>   void kvm_riscv_fence_i_process(struct kvm_vcpu *vcpu)
+>   {
+>   	kvm_riscv_vcpu_pmu_incr_fw(vcpu, SBI_PMU_FW_FENCE_I_RCVD);
+> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+> index f98a1894d55b..cc7d00bcf345 100644
+> --- a/arch/riscv/kvm/vcpu.c
+> +++ b/arch/riscv/kvm/vcpu.c
+> @@ -961,12 +961,12 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>   		}
+>   
+>   		/*
+> -		 * Cleanup stale TLB enteries
+> +		 * Sanitize VMID mappings cached (TLB) on current CPU
+>   		 *
+>   		 * Note: This should be done after G-stage VMID has been
+>   		 * updated using kvm_riscv_gstage_vmid_ver_changed()
+>   		 */
+> -		kvm_riscv_local_tlb_sanitize(vcpu);
+> +		kvm_riscv_gstage_vmid_sanitize(vcpu);
+>   
+>   		trace_kvm_entry(vcpu);
+>   
+> diff --git a/arch/riscv/kvm/vmid.c b/arch/riscv/kvm/vmid.c
+> index ddc98714ce8e..92c01255f86f 100644
+> --- a/arch/riscv/kvm/vmid.c
+> +++ b/arch/riscv/kvm/vmid.c
+> @@ -122,3 +122,26 @@ void kvm_riscv_gstage_vmid_update(struct kvm_vcpu *vcpu)
+>   	kvm_for_each_vcpu(i, v, vcpu->kvm)
+>   		kvm_make_request(KVM_REQ_UPDATE_HGATP, v);
+>   }
+> +
+> +void kvm_riscv_gstage_vmid_sanitize(struct kvm_vcpu *vcpu)
+> +{
+> +	unsigned long vmid;
+> +
+> +	if (!kvm_riscv_gstage_vmid_bits() ||
+> +	    vcpu->arch.last_exit_cpu == vcpu->cpu)
+> +		return;
+> +
+> +	/*
+> +	 * On RISC-V platforms with hardware VMID support, we share same
+> +	 * VMID for all VCPUs of a particular Guest/VM. This means we might
+> +	 * have stale G-stage TLB entries on the current Host CPU due to
+> +	 * some other VCPU of the same Guest which ran previously on the
+> +	 * current Host CPU.
+> +	 *
+> +	 * To cleanup stale TLB entries, we simply flush all G-stage TLB
+> +	 * entries by VMID whenever underlying Host CPU changes for a VCPU.
+> +	 */
+> +
+> +	vmid = READ_ONCE(vcpu->kvm->arch.vmid.vmid);
+> +	kvm_riscv_local_hfence_gvma_vmid_all(vmid);
+> +}
 
-And if e->size happens to be e.g. 0?  Note that (unsigned short)0 - sizeof(whatever)
-ends up being a large unsigned.
+Thanks.
 
-unsigned short gets promoted to int.  sizeof is size_t - whatever it is,
-it's an unsigned integer type, with rank no lower than that of int.
-
-Since we have the entire range of unsigned short representable by int on all
-architectures we care about, we get unsigned short promoted to int (preserving
-the value) and then to size_t (value taken modulo range of size_t, i.e.
-the original unsigned short value preserved).  Incidentally, even on a target
-where sizeof(unsigned short) == sizeof(int) we'd still get an unsigned result -
-unsigned short would be promoted to unsigned int, and mix of two unsigned
-integer types gets converted to whichever has the higher rank.
-
-IOW, comparison in
-	if (fname->name_len > le16_to_cpu(e->size) - sizeof(struct NTFS_DE))
-is going to be an unsigned one.  AFAICS, fname->name_len is u8, so just
-turn that check into
-	if (sizeof(struct NTFS_DE) + fname->name_len > le16_to_cpu(e->size))
-and be done with that - comparison is, again, unsigned, but there's no
-possibility of wraparounds in that variant.
+Reviewed-by: Nutty Liu<liujingqi@lanxincomputing.com>
