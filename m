@@ -1,48 +1,53 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370C17260B;
-	Fri,  6 Jun 2025 00:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55AF0219ED;
+	Fri,  6 Jun 2025 00:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749171145; cv=none; b=ZFM6LJSsyODKA7voH4HPEyRj3D+mbWQgzBzgSqMCTOzcoEpSvzga/etooF/KVS2DcPBqEhVbkOp0DXG6ALQktTX4NMXEdQd8ZhFpGU1QaBAaElL+WTvbBfQ+fDc1iiNDHDcTE34NEqkwF132xdIGkoBPlcnvJhCusM6taHdExKQ=
+	t=1749171148; cv=none; b=LSFz2KHFAENVPGAeTevgU0GKsXSvuzHZhuL/gyRIK3BtiSAGtrIkR87fay8Ls27BZ2BlwdNXbjsvw1egRauyDmHxNFZNAYCm0YmqxqZEWAaQO+vUeDFJWvvZfVxhYVoxoM69McSZJxTlag3HpYlQcnCTwaJ3ViAH6zyXiWlNOZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749171145; c=relaxed/simple;
-	bh=eS57/pN+S5Dd75SrRQwTgxbYugcwWMqW5JyuABRuh+s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NuJKe3euzeP6LTZsVwgFiyEAIdOxggucaLepBCSNfRNUyVitgc+aTniR0tLLcGCeyPsknYiy2/7qPaHI8RZulpnYJmB1mRnsD75T08xbzY776fjlF7aYGPKqO2M0cs83/N9P8fvQGt9ZXarGuBGqyg2lC63PHFJYDndL/qVpCNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Ke3xXNgc; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749171148; c=relaxed/simple;
+	bh=3DRvx+lFIAOZUmOucYVxB4j4OKPo1Gg9f4hnHA6H340=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=GE+xqq4x3TI3d4aAZar5NeFco8sKizdlOAXk3kv2MEgbZkO4oMBgSBGFE0RTSuUQSyF//aIO4jpdDFnC91GBqIondf91x+Oi/TEswJF5HWLViiLsmhcrB8mKhp0O64cJ5dR1DLF8qLCEC/EtBT4TDh9TbNRS7sXiqSSTgYOqKV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yx7m+AUb; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Ke3xXNgc"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 555HV3Gk006413;
-	Fri, 6 Jun 2025 00:52:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	UCBpsvz66JjBKHfl3pb3+0oEc8ZCz1XAGiU3khXplyc=; b=Ke3xXNgcW81klfiX
-	yTeWmKCI00zQfufzYW6QiL4t8t2yop50iWsnVT0qHUISFuPA8K870bYRMK6ENfXR
-	cFKpw6y7T5yjEw826rzGaguHudwpOI9kRoBjXAU+Nai+3yMqr9FYaY0Vrl4J7j5u
-	lmXbMlJO+m9qq6rG0Zdb55bAXvuST0MCGwCDdDE4SYU9oH7wXfCLCOAPvDETQ9dl
-	oQu2q4MJFleyTnSetkR/U0XtrWod/gD5e6yIiHFN1TxKsL5bFQdjTiWbo+tHdiAS
-	VIY0ZAWluiZ1XPZ9gcTUjT6v+5i7J5+h0LX1kjTvAHNKS1MYq9C17jdtRJItYiFv
-	rOxzYg==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8t3171-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Jun 2025 00:52:18 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5560qHbC020097
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 6 Jun 2025 00:52:17 GMT
-Received: from [10.133.33.151] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 5 Jun 2025
- 17:52:15 -0700
-Message-ID: <d3ec49ab-964b-4c50-a6ea-534b6c6e336b@quicinc.com>
-Date: Fri, 6 Jun 2025 08:52:13 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yx7m+AUb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749171146; x=1780707146;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=3DRvx+lFIAOZUmOucYVxB4j4OKPo1Gg9f4hnHA6H340=;
+  b=Yx7m+AUb7Z5P5RCPswvbZBxNuE1gngFwmACLr4bB8BjpwIJ2b2TTuFqy
+   p9PMUJqO9pRbK/hO2MSIjiDsN0144yCFOn41/yC+udmiK7hWaO0eaQUo4
+   Sv2pfvx1VAceEK2paNsfRrhacpT1zmId9rg35H2qBVbEH32cq+qiA44sy
+   2uA7dxXGGT0maQIy+GDgOmxunHRwEOssEtRJgVs8/gnYGOUDTD4xDgCGV
+   jfYxOtJMyoosKecp0hCbKISF54L9fqT3+cA+3NaCZWtiNfixsGKbLqIxK
+   hu9H2ppzPyX6n3JiwgybCYYLSPBAL7ZSabk3zB9rE8LLO2DGNnBbxs/ok
+   w==;
+X-CSE-ConnectionGUID: JQZI+8+xT0aVDQxBAj/HMw==
+X-CSE-MsgGUID: V043/yQDTeKCWkYcY4LryA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51174765"
+X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
+   d="scan'208";a="51174765"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 17:52:25 -0700
+X-CSE-ConnectionGUID: 8D7J7V8NQMyRfqOFCZYrIg==
+X-CSE-MsgGUID: UStmp1LVSa+xLhpZ9WOv5g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
+   d="scan'208";a="146636598"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 17:52:25 -0700
+Received: from [10.124.222.132] (unknown [10.124.222.132])
+	by linux.intel.com (Postfix) with ESMTP id 7934D20B5736;
+	Thu,  5 Jun 2025 17:52:23 -0700 (PDT)
+Message-ID: <a8d687e4-03d3-4d08-9149-757349704207@linux.intel.com>
+Date: Thu, 5 Jun 2025 17:52:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,99 +55,162 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] wifi: ath11k: fix dest ring-buffer corruption
-To: Baochen Qiang <quic_bqiang@quicinc.com>, Johan Hovold <johan@kernel.org>
-CC: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-        Johan Hovold
-	<johan+linaro@kernel.org>,
-        Jeff Johnson <jjohnson@kernel.org>, <linux-wireless@vger.kernel.org>,
-        <ath11k@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <20250526114803.2122-1-johan+linaro@kernel.org>
- <20250526114803.2122-2-johan+linaro@kernel.org>
- <026b710f-b50f-4302-ad4f-36932c2558ff@quicinc.com>
- <aD1axxSAJsbUfnHH@hovoldconsulting.com>
- <5268c9ba-16cf-4d3a-87df-bbe0ddd3d584@quicinc.com>
- <aD7h0OOoGjVm8pDK@hovoldconsulting.com>
- <01634993-80b1-496e-8453-e94b2efe658c@quicinc.com>
- <50555c1a-c200-4ac0-8dfb-424ff121b41d@oss.qualcomm.com>
- <03354d56-ed21-47e0-a52e-14f559ff3bfb@quicinc.com>
- <aEFupJ_nd9ryaTVt@hovoldconsulting.com>
- <bc2afbd6-2876-4f36-81cf-ad8960588a02@quicinc.com>
+Subject: Re: [PATCH v9 16/16] CXL/PCI: Disable CXL protocol error interrupts
+ during CXL Port cleanup
+To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, bp@alien8.de,
+ ming.li@zohomail.com, shiju.jose@huawei.com, dan.carpenter@linaro.org,
+ Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+ yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
+ uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
+ ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-17-terry.bowman@amd.com>
 Content-Language: en-US
-From: Miaoqing Pan <quic_miaoqing@quicinc.com>
-In-Reply-To: <bc2afbd6-2876-4f36-81cf-ad8960588a02@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250603172239.159260-17-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: bpv9PPtnWrUeLTb_ewSdNnALa-97ssFI
-X-Authority-Analysis: v=2.4 cv=EPcG00ZC c=1 sm=1 tr=0 ts=68423bc2 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=DTG5F7EvfL9Zed4wNp8A:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: bpv9PPtnWrUeLTb_ewSdNnALa-97ssFI
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDAwNiBTYWx0ZWRfX1MIuAVmexSUO
- 1qdaYDVejhNw38eBR9e62NOLMxLP08mq9wxWvNS7AM1z+m4WviqBdAZ+k1oQxTqYVdeQ+DkIMP2
- mG/yPIOqGitTVKYdZWvGRZP4BgFio9LPioqMYC4V4308UQTsV0Rv3R0OdVIowYTw7zAoAnEB6x0
- YdQxK18tYe7Hoz0PeXgXQtDQ//oEZA5OhEDrK6ei7DXLTv3kV6nfiGA5sboH9dOTtEQlgWVDZjP
- 3UpNggZh7yuyjTl0CCF14LcGl07FxG3oPH2o+EU9v4CJH112Wuzix/aXWqkmkG+aeQhs1bCn6hM
- J5ALNU3/1MWuxcMnfRHLV8rrsGNLaxKGTEPYq0sCUbgV95jrBuX8AmQwhRsKb1doS1qx+fzmeWS
- bU0rqx2czURCmo8e1K5MEF9lswTWMd3vH2WB07iko6p5APZ2yZaGyLMwwW+bihqzz244O2lM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-05_08,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501 phishscore=0
- impostorscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0 mlxscore=0
- clxscore=1015 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506060006
 
 
+On 6/3/25 10:22 AM, Terry Bowman wrote:
+> During CXL device cleanup the CXL PCIe Port device interrupts remain
+> enabled. This potentially allows unnecessary interrupt processing on
+> behalf of the CXL errors while the device is destroyed.
+>
+> Disable CXL protocol errors by setting the CXL devices' AER mask register.
+>
+> Introduce pci_aer_mask_internal_errors() similar to pci_aer_unmask_internal_errors().
+>
+> Introduce cxl_mask_prot_interrupts() to call pci_aer_mask_internal_errors().
+> Add calls to cxl_mask_prot_interrupts() within CXL Port teardown for CXL
+> Root Ports, CXL Downstream Switch Ports, CXL Upstream Switch Ports, and CXL
+> Endpoints. Follow the same "bottom-up" approach used during CXL Port
+> teardown.
+>
+> Implement cxl_mask_prot_interrupts() in a header file to avoid introducing
+> Kconfig ifdefs in cxl/core/port.c.
+>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> ---
 
-On 6/5/2025 6:54 PM, Baochen Qiang wrote:
-> 
-> 
-> On 6/5/2025 6:17 PM, Johan Hovold wrote:
->> On Thu, Jun 05, 2025 at 12:01:29PM +0800, Miaoqing Pan wrote:
->>> On 6/5/2025 12:24 AM, Jeff Johnson wrote:
->>>> On 6/3/2025 7:34 PM, Miaoqing Pan wrote:
->>>>> We previously had extensive discussions on this topic in the
->>>>> https://lore.kernel.org/linux-wireless/ecfe850c-b263-4bee-b888-c34178e690fc@quicinc.com/
->>>>> thread. On my platform, dma_rmb() did not work as expected. The issue
->>>>> only disappeared after disabling PCIe endpoint relaxed ordering in
->>>>> firmware side. So it seems that HP was updated (Memory write) before
->>>>> descriptor (Memory write), which led to the problem.
->>>>
->>>> Have all ath11k and ath12k firmware been updated to prevent this problem from
->>>> the firmware side?
->>>>
->>> No, as this is not a widespread issue, and addressing it would require
->>> modifying the core underlying modules of the firmware. Therefore, we
->>> chose not to proceed with that approach but instead used the workaround
->>> patch I previously submitted.
-> 
-> If firmware has a concern, how about doing it in host? As I know it is only a register in
-> PCI config space?
-> 
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-No, host can only configure the RC, while the initialization of the EP 
-can only be configured on the firmware side.
+>   drivers/cxl/core/port.c |  6 ++++++
+>   drivers/cxl/cxl.h       |  8 ++++++++
+>   drivers/pci/pcie/aer.c  | 21 +++++++++++++++++++++
+>   include/linux/aer.h     |  1 +
+>   4 files changed, 36 insertions(+)
+>
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 07b9bb0f601f..6aaaad002a7f 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -1433,6 +1433,9 @@ EXPORT_SYMBOL_NS_GPL(cxl_endpoint_autoremove, "CXL");
+>    */
+>   static void delete_switch_port(struct cxl_port *port)
+>   {
+> +	cxl_mask_prot_interrupts(port->uport_dev);
+> +	cxl_mask_prot_interrupts(port->parent_dport->dport_dev);
+> +
+>   	devm_release_action(port->dev.parent, cxl_unlink_parent_dport, port);
+>   	devm_release_action(port->dev.parent, cxl_unlink_uport, port);
+>   	devm_release_action(port->dev.parent, unregister_port, port);
+> @@ -1446,6 +1449,7 @@ static void reap_dports(struct cxl_port *port)
+>   	device_lock_assert(&port->dev);
+>   
+>   	xa_for_each(&port->dports, index, dport) {
+> +		cxl_mask_prot_interrupts(dport->dport_dev);
+>   		devm_release_action(&port->dev, cxl_dport_unlink, dport);
+>   		devm_release_action(&port->dev, cxl_dport_remove, dport);
+>   		devm_kfree(&port->dev, dport);
+> @@ -1476,6 +1480,8 @@ static void cxl_detach_ep(void *data)
+>   {
+>   	struct cxl_memdev *cxlmd = data;
+>   
+> +	cxl_mask_prot_interrupts(cxlmd->cxlds->dev);
+> +
+>   	for (int i = cxlmd->depth - 1; i >= 1; i--) {
+>   		struct cxl_port *port, *parent_port;
+>   		struct detach_ctx ctx = {
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 2c1c00466a25..2753db3d473e 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -12,6 +12,7 @@
+>   #include <linux/node.h>
+>   #include <linux/io.h>
+>   #include <linux/pci.h>
+> +#include <linux/aer.h>
+>   
+>   extern const struct nvdimm_security_ops *cxl_security_ops;
+>   
+> @@ -771,9 +772,16 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
+>   #ifdef CONFIG_PCIEAER_CXL
+>   void cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport);
+>   void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host);
+> +static inline void cxl_mask_prot_interrupts(struct device *dev)
+> +{
+> +	struct pci_dev *pdev __free(pci_dev_put) = pci_dev_get(to_pci_dev(dev));
+> +
+> +	pci_aer_mask_internal_errors(pdev);
+> +}
+>   #else
+>   static inline void cxl_dport_init_ras_reporting(struct cxl_dport *dport,
+>   						struct device *host) { }
+> +static inline void cxl_mask_prot_interrupts(struct device *dev) { }
+>   #endif
+>   
+>   struct cxl_decoder *to_cxl_decoder(struct device *dev);
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 2d202ad1453a..69230cf87d79 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -979,6 +979,27 @@ void pci_aer_unmask_internal_errors(struct pci_dev *dev)
+>   }
+>   EXPORT_SYMBOL_NS_GPL(pci_aer_unmask_internal_errors, "CXL");
+>   
+> +/**
+> + * pci_aer_mask_internal_errors - mask internal errors
+> + * @dev: pointer to the pcie_dev data structure
+> + *
+> + * Masks internal errors in the Uncorrectable and Correctable Error
+> + * Mask registers.
+> + *
+> + * Note: AER must be enabled and supported by the device which must be
+> + * checked in advance, e.g. with pcie_aer_is_native().
+> + */
+> +void pci_aer_mask_internal_errors(struct pci_dev *dev)
+> +{
+> +	int aer = dev->aer_cap;
+> +
+> +	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_UNCOR_MASK,
+> +				       0, PCI_ERR_UNC_INTN);
+> +	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_COR_MASK,
+> +				       0, PCI_ERR_COR_INTERNAL);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(pci_aer_mask_internal_errors, "CXL");
+> +
+>   static bool is_cxl_mem_dev(struct pci_dev *dev)
+>   {
+>   	/*
+> diff --git a/include/linux/aer.h b/include/linux/aer.h
+> index 74600e75705f..41167ad3797a 100644
+> --- a/include/linux/aer.h
+> +++ b/include/linux/aer.h
+> @@ -108,5 +108,6 @@ int cper_severity_to_aer(int cper_severity);
+>   void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
+>   		       int severity, struct aer_capability_regs *aer_regs);
+>   void pci_aer_unmask_internal_errors(struct pci_dev *dev);
+> +void pci_aer_mask_internal_errors(struct pci_dev *dev);
+>   #endif //_AER_H_
+>   
 
->>
->> I strongly suggest you fix this at the firmware level rather than try to
->> work around it in the kernel to avoid playing whack-a-mole whenever a
->> new (hard to track down) bug shows up.
->>
->> The barriers should be enough, but if they are not then the firmware
->> must be fixed.
->>
->> Johan
-> 
-This is beyond our control. After nearly three months of effort, we have 
-decided to abandon it.
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
