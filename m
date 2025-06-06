@@ -1,121 +1,103 @@
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DE870800
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 14:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071A72B9A5;
+	Fri,  6 Jun 2025 14:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749219932; cv=none; b=kX4W0/PCtMlWZVE48T179rXVnMHswtbCABG7c0Hg1cuttWC17rNQVdG5qIP/9uQDBmUGhIfoOGj4axahslcwJbUWQIPNe3grKe3OdfA7T3OdTAmMiJpgwM5HMwx6FokBrwdfxk9W/tZ0eQayHIK25IMcpj3kxV3h180x4GY6VKo=
+	t=1749219987; cv=none; b=OY/xVxivZpJZax4jSOP93uXiEwxqQamuIdh2cp6wxEfWULPJucBBbIzBP8UBK6Y2Q3vfG9XJt8zmz1K+n/Dr8bmq1nAoK/pdwKEOUG1DItPGlAqZQwp4rquGomMIChTq0t4XqsC+yw4JHEuFmNNbNZNgO9iz/RTX/LT8AvoeX2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749219932; c=relaxed/simple;
-	bh=0/Xbc5DoXdOonGdb1FnWFrx7HW4T9hMU9U0+W+iph0U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=loGzlILwL+9rEX4JL/+H22+0yIdPaGDcOkPIabAn3iVnWEGdYgQUXKo2Hw0MkvhlVzQBRnusZ7acvHk8x87RwrnW0Y4yWZX7G/1z6YtYV46FAhDuCGNvgOlIFZMHFSTg1hqzqW47h+SZlJMMAZ/shf1cUbr85Fi5YqCs69J0MCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=XdRPICfS; arc=none smtp.client-ip=209.85.167.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1749219987; c=relaxed/simple;
+	bh=XfnyRTF9cyYzPGBVpgr2ODnE1deAYbYcyIcYxtMRycc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WD7ZZjuI2DbmFk3Bt3FocNVBDNNtvh3snpsLfRLcY5dOXt4dNHzYucLoTiDkX5kHNrjqbIYCEUMSwU58gzL4y/LSkApds5Xzu/lT1iY5Xlea2Ob0G1clZG1lIaeOEcjq1tzDtwkGxvfc+iS9SbDtTnXObahL0F+oPVQllcsBqCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g/YrrZDb; arc=none smtp.client-ip=209.85.217.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="XdRPICfS"
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-4034118aeb7so622754b6e.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 07:25:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/YrrZDb"
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4e59af1f0e7so619611137.0;
+        Fri, 06 Jun 2025 07:26:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1749219928; x=1749824728; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RAaimuBfQTz1EHGQEWzx7YSWNC+FbUyMuJtQhEefSSo=;
-        b=XdRPICfSOhvpOxOyKQJpQ+zbmOT8qydVb6MreHYvTciFJ3SuzvzTPfh3t7srKLyp6/
-         EDrrxP/6Y+lzYIuBVxyJpfsrsTbC+uzgD2/yNiFofGuN7c7hIpNowl5xxTc0EfB0l5Va
-         pQVHO26DkptM7jMa+VLUCaw/J+xPvBjbGS5EN932RQkpdCCaGQhCO9JXYbi2fM+PHR+h
-         meyNsiz9cEPZdB+APSVLPWBYz2zvof8FTv3wOSE/UpcfJ2F6eAwFOruyAZrHbLieC/sd
-         H1u5kVRQo53kfMm4FWdXYWxBMTm/+jsPIpk66T4+Px9xWusSWxffuSJiWQm9ifAGnH6t
-         KPnQ==
+        d=gmail.com; s=20230601; t=1749219985; x=1749824785; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XfnyRTF9cyYzPGBVpgr2ODnE1deAYbYcyIcYxtMRycc=;
+        b=g/YrrZDbhdoEhU5yDdf8I9o5F/JxgFrDNT48SYbGo7t8mUs2AEAlFlrwapPiPi7o1n
+         WpAaKx9cC3Cz5/zXNrgXMl7HY8xIY28Ol5A1CZ1ZxYLqg3+r52z+SEhwoy+plVRFmstX
+         /XYEz3moccqwsCQfMwZ3GtY16AUysXW/qehDEOlraDl7k6Vr97V1rgAMVF4iepmhoV0F
+         2i+gZwfk5Nj4bNJey4q9w/pGV3TBC0Wve8K4gvBJlog42a/XKtNuR4pPokXSK1PCAuvo
+         o1E4YzdX4zUDypPDnC2IV5nM52IEC6VcKXj4wLAZXN0taRTxEMO6iHQlzV++k8lvXuTa
+         jjGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749219928; x=1749824728;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RAaimuBfQTz1EHGQEWzx7YSWNC+FbUyMuJtQhEefSSo=;
-        b=GQOkzOmom4d/Z3slq4Uk2v7Hc8evssGU9+CNMwyzA6p5xOwKkxrmB0CJ2qd3OXgZbc
-         /S9666Kv+qVCIdrF9aX6Ue+aywg43emPg4AJZR5Gx9oA/SOUZX+97ubVP+HHdA4fB4TF
-         U03NdQtfD2DGEy9p6GvqV0ZrZT+eVT/2tI4+KuJiF41rMcyyV/c5gNaT9o6iyujU3JIl
-         SoXxs1mpl//QhiVh0gjUB/4rE/jcGSRgNoagJiAuZy9qVOvLXR605V4nTVxJmD8ffHu+
-         bY+1RfUqtcsepA04PXO+9y6RTdarawlqqRscihJmj4RE62gTFmAA/RfCk/TuiyWb0oEB
-         Wo0A==
-X-Forwarded-Encrypted: i=1; AJvYcCWXVECtQg7as1WEMlwyCNScVi1gI/1bMEIlQ7qTCoUeFgnRdZKqSFlRYqP+gLeaopvRmuUsw8ey+2zxhFk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCWcgnqkjCipE3kPZ/VLH7cL1gbdH8Kz6uNHx65lCqL28f7b5Z
-	KewdxZpyIPBeVd4zPpfSssBGcFZ5laTEmsq/pv0gdlDlpXE0TuO4EfKdvqbGfBQxqwrS9AOjxdu
-	XlD5M
-X-Gm-Gg: ASbGncvU031Qqy4+C8s2E/ILGc0srSTzrg0LuzHwiTEG6YZtI9LyPXHLCIQHwywPZiC
-	d6d76OUHqS5buJ9ZU3+PaWF5s7/qxfB5yvLnRpgO/5t5BymRnYTyXmVxcO98GI2cVXsonURtewa
-	7RVb3/4Xhe5Gt/mPpM7PFL38QG70k9YTYfKwgpUvBkqiRXRfpHd3yAzEV6xC7q5d69j1+UNoyC9
-	rDMlFE8JHMVrKWoG6j3jAJTjDEpxIty+p9/ohohTBIdcpXZ09JxZQMSD+drnH/InLm7KXP1IRur
-	mYYBQlKDQQFwy6yHR8ScnB4LTbgivEKbgBzzyv6zRXh8vXxG+nXclwrQIlmk0CYnN33i
-X-Google-Smtp-Source: AGHT+IF5km4CtDvHDOVe+SIqNmRZERGMS28Qi8RaU8LfNaXvtlGLcevIJqxza9IXKdKeERufgQAQHg==
-X-Received: by 2002:a05:6e02:3093:b0:3dd:cb92:f12f with SMTP id e9e14a558f8ab-3ddce4100demr44053855ab.12.1749219916570;
-        Fri, 06 Jun 2025 07:25:16 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3ddcf253213sm4120495ab.51.2025.06.06.07.25.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 07:25:15 -0700 (PDT)
-Message-ID: <783d14e8-0627-492d-b06f-f0adee2064d6@kernel.dk>
-Date: Fri, 6 Jun 2025 08:25:15 -0600
+        d=1e100.net; s=20230601; t=1749219985; x=1749824785;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XfnyRTF9cyYzPGBVpgr2ODnE1deAYbYcyIcYxtMRycc=;
+        b=ln0ZIzDyHTwPJxtLt1D14BVwoutn8QJBQKfPnzY9ysz/dLYk6pakDSnENWCrOZJUBw
+         aWsDgUbGKkLxO6C/Q5fhX9JIHzi0yrOEGd6lslN2x+EVU0iUeRMMPZbiQ+FiS3lDU41R
+         2+EVHDNjc3YXogojh+Sno6iDZ/ZNe7Xc+XDv6/TRF/BEme6BfnjM/24EWSzfGSQXBHyv
+         e8Vx/s92JLX7RGrojxgSxDzlX9U2ZlJ8SJkKmYVUzGEkRJb5bk+4wBHphA72J+qWEqHJ
+         nAzswUWgPTHm1aKyHfyi70iTc6dqfJtSwpK75qHFYctOKp0/ZMyUUmXFB0AmWMYgKEuV
+         nd1w==
+X-Forwarded-Encrypted: i=1; AJvYcCV3ufsZnUPhlK1fwdI0Ya53N7ldX3AZ39u93CglBk5X+rxsT8eQ6YBdTvVpjzzwzm8la7ZArCLnusoXgu7/@vger.kernel.org, AJvYcCV49fTg5fEzQs/zwJLV3JSbkse9ja/OcttPKi0SgRV5Do0q7HioD0eD6pScwa+N4F5nmiuBejTL1vbcskEAjkA=@vger.kernel.org, AJvYcCXAlmIfUr6VaTqhKGyhoDzI0Z1BDx/IrMoaee9L9xYXtIStIQ14GGaMqiKOtfH0RKfsSD0nM1vWH6iZ@vger.kernel.org, AJvYcCXnUNgl1HbDGsIeANovFiQgNzpXbpvHxzxxy3V+fg8Iy7k2XORsEQAtl3EQYYjTB4XlnrN4gnhOC7tQNQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxd02TrfNahnt9Fc3vQGOwR6TdJGvbH6OpZAdwXmvggpVqMcnEV
+	UkQ8uRT2Qe8suE+x0VpR0pWH20eBbX1lWS7tCqUDEcLa2WnKj5DjgdLXEgvdY4kMM64Zizauyjq
+	gmyE31CS1hCd3TvTJ5gU1lnkKwDa/UOI=
+X-Gm-Gg: ASbGncuqvagTs7Cl5XpKSVXirIRq1qNgQPPiQOBAFJYa/KU+H/O4AeNtX6OyWykpXZc
+	QqpONhIUYeJA+Z80LuRhzK8GRia9kJKviOGi9fyPhOdTkbW4k6S9bm3/N0Ebai8BfJpcCo1zTo+
+	jdFxBe82jEGGKTq1c1MC/6YStAS/wMuvoQ68SDY2BX
+X-Google-Smtp-Source: AGHT+IHtfcCyCFZ6TdHUHESBhIqNCBUddX3O7P9LGH4zDo9p4z3LAVOg5NAYcVejVe51KzO/kmt6J7IoLoJyDzPVH/g=
+X-Received: by 2002:a05:6122:2a45:b0:52f:2a3:4bd6 with SMTP id
+ 71dfb90a1353d-530e47d7084mr3572334e0c.3.1749219984860; Fri, 06 Jun 2025
+ 07:26:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 2/5] io_uring/bpf: add stubs for bpf struct_ops
-To: Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org
-Cc: Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <cover.1749214572.git.asml.silence@gmail.com>
- <e2cd83fa47ed6e7e6c4e9207e66204e97371a37c.1749214572.git.asml.silence@gmail.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <e2cd83fa47ed6e7e6c4e9207e66204e97371a37c.1749214572.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250605161956.3658374-1-igor.korotin.linux@gmail.com>
+ <20250605162726.3659792-1-igor.korotin@yahoo.com> <aELyEqg0GrkC8oZY@pollux>
+In-Reply-To: <aELyEqg0GrkC8oZY@pollux>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+Date: Fri, 6 Jun 2025 15:26:13 +0100
+X-Gm-Features: AX0GCFtw9v0O2vZnp5UZfhE6lx1eLBBwkxj8gJtRKsSFion-e94P9ebf93MfPIQ
+Message-ID: <CAG7QV91AWpOk7VUcE-B1MLkEQPDB0Y=zsBOBf6MhHVYh1aEGQA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] rust: driver: Add ACPI id table support to Adapter trait
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Igor Korotin <igor.korotin@yahoo.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	devicetree@vger.kernel.org, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Len Brown <lenb@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
+	Alex Hung <alex.hung@amd.com>, Tamir Duberstein <tamird@gmail.com>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Xiangfei Ding <dingxiangfei2009@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/6/25 7:57 AM, Pavel Begunkov wrote:
-> diff --git a/io_uring/bpf.h b/io_uring/bpf.h
-> new file mode 100644
-> index 000000000000..a61c489d306b
-> --- /dev/null
-> +++ b/io_uring/bpf.h
-> @@ -0,0 +1,26 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#ifndef IOU_BPF_H
-> +#define IOU_BPF_H
-> +
-> +#include <linux/io_uring_types.h>
-> +#include <linux/bpf.h>
-> +
-> +#include "io_uring.h"
-> +
-> +struct io_uring_ops {
-> +};
-> +
-> +static inline bool io_bpf_attached(struct io_ring_ctx *ctx)
-> +{
-> +	return IS_ENABLED(CONFIG_BPF) && ctx->bpf_ops != NULL;
-> +}
-> +
-> +#ifdef CONFIG_BPF
-> +void io_unregister_bpf_ops(struct io_ring_ctx *ctx);
-> +#else
-> +static inline void io_unregister_bpf_ops(struct io_ring_ctx *ctx)
-> +{
-> +}
-> +#endif
+On Fri, Jun 6, 2025 at 2:50=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> w=
+rote:
+> However, I don't understand why we need this and the subsequent
+> is_acpi_device_node() and is_of_node() checks.
 
-Should be
+The idea is to avoid unnecessary table lookups when both OF and ACPI
+match tables are present. If we already know the fwnode type, these
+simple pointer comparisons (is_acpi_device_node() / is_of_node()) let
+us skip the irrelevant match function.
 
-#ifdef IO_URING_BPF
+Those checks are cheap (just pointer comparisons), while
+acpi_match_device() and of_match_device() iterate over tables.
 
-here.
+So yeah, it=E2=80=99s a bit ugly, but it can save some CPU cycles during en=
+umeration.
 
--- 
-Jens Axboe
+Thanks,
+Igor
