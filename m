@@ -1,107 +1,120 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE111DD9AD
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 05:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842D04683;
+	Fri,  6 Jun 2025 05:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749188293; cv=none; b=bmrRLp8L/YbA6szPdzqtdxIuE3H0lglt2nuIrG3xww3/ItqJb/SKx1YXOx31N9avgKmRY+UxquMSrmnbEhaJv4o0Xm6qsOB/JrzwHWsBMtWLf9ZytJBZKa1eptWZFtuPdOVILNByq74rckh4jJg1/Ey2lBqx2iFvNVQGypvsO9k=
+	t=1749188363; cv=none; b=RwewRTzmNIXkvlk4FARDI/lEGsHheJfU4SCprlhWqKp0FMdoND5fjvSpq+v0XxnMsCZU2MD4NsdyPLPF+M33xqCxoJrjE/9MIfSWc2wtBD+ISx546wLF3oVQ4Ej03caZ+VfJSdMKWdco29Qi5CsH424kR/qIXlgncaqsR3okwV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749188293; c=relaxed/simple;
-	bh=D1qVR2rPayReMgS7NuJBE2UqOfY1+vud49wAOQyN/PM=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=pIvXnD9lNL+W05euu4sZWE4R4aSpmMuOXh3sMSH86iHg5KDx4apHJNXVUAShXW12wOAht3bENMcp8t2PkcnKQcGonPpbjHwev2A4DGIPrh+PFrLeZO7hSL32wtVlIyPoqPSzuk3Vve4ULgjobRQH/P/AE63Tm9dbPBPdrc59NU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--suleiman.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XxOvmFZm; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--suleiman.bounces.google.com
+	s=arc-20240116; t=1749188363; c=relaxed/simple;
+	bh=o8RlcqjH020t6cnNSSuuuBu98bfVAoUiPLdHUxYqCh4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=nUFvjapfI/wox0DdOx2G/GjDRFB4oJaoEwH93edVZt4OEU9ZxBc/BcZoVb3WrKnTmFedm5xZwwm4JWXFosI4//uIbx3O9Tjuf0Rm8NBul2zXnkZkKMr826EK6LoGvbaK2kOUNs/FsfcqsOZqORffenUlBobVbSg3ZPEMZFtIxOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YaJfhICn; arc=none smtp.client-ip=209.85.166.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XxOvmFZm"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-70e5e6ab756so26038507b3.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 22:38:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YaJfhICn"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3d8020ba858so19124685ab.0;
+        Thu, 05 Jun 2025 22:39:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749188289; x=1749793089; darn=vger.kernel.org;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6e8z1Y0PM6ePVKE7akB6cAIu/1nUvlhiiiW5g/fTl7g=;
-        b=XxOvmFZmkyvXXM5HPZVYYOZOigbgPLy0WvllSrC1no/0ls2nPRqoBIYeQdIfHheQiT
-         ufHOma0j6SWjHeZPRGCYaNl8rdNzek5PpLBSmx4Gu22I+Plxd3AveP0q2RlQG7hDzVHD
-         2nZLkTiJDd5PjZAkqeV+abNhRScSlAu+wSFrMbJ/wasgVUna7EYP2GeCEEYzk3IaO5N8
-         yG0iFXolvH6NTtxX/+SbPYWHDHJ2hneLJjaXKwWvgnH9Sk6/tUx5G/Hr3de4mqkE6Jj2
-         rQYmez+B02HFI1K4qStzk5seSLJz5rOtoLKZ1SCaIAIVxTcmGBxjPe3cuLljZR4NLdLo
-         NZdg==
+        d=gmail.com; s=20230601; t=1749188360; x=1749793160; darn=vger.kernel.org;
+        h=mime-version:user-agent:message-id:date:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3ooi63Df6cKZmgkR5pcmfMZuFURKVHlT/9pTZXYzQVU=;
+        b=YaJfhICn0bUyWXNE/3UEH1Gw5vGU15PZpMIw5dVg3nTaYeAA+wOEhOg3OZNVhQz2Mv
+         7hlDe9bo+z+bGzzEyQdxM+5VbzN38bmu2dN2/fF57UE7IgxqFGdif2r7SMwjj4fmWIkI
+         +Me6l49bA9usKUmg/M1HT6K+OPapb1wgyW7bVGkjxLxlUCvTw3Hx072yH0HKIerijJTb
+         WxlP+d+SrJrCmj8nuiVu+zPRK+H7/ocvb1fHqrDQpqzfZJEKaADO/m+w5zJo1LYxr2oQ
+         p/NygpbPC+6eDviA4S7XCoCxL4SyJ25w2j5H93rIqWcv3B3nwWSrLxm7kcKW92hOD6TY
+         ej5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749188289; x=1749793089;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6e8z1Y0PM6ePVKE7akB6cAIu/1nUvlhiiiW5g/fTl7g=;
-        b=X2Mw5ue4igmfrzkYoZie+O0xh0ZDSriVUY6NOqw/5MuFs+UzAw+eAeIZNGyft3a5Ey
-         x2VhQpF3Qh4R0JgeqT/mClenVKHGlGRQx/4z6SiQuo0eeaRLsu5NkEWSxvEryM6shm9d
-         WJ7GSIYoehCzZ30RxQ0O86bojwbfXOWyg4sA8O7qoeq5xpPT8IvLtSn0/7csVScBuVDC
-         IqpGl+9GWFOHv8KOrFpxmrykwcMIU6biJruJvUVxTwzOQPP6jcsI6/pAHfYFlAYJIFLg
-         8eTbp8ijM8a0j1MFHZdnRhxdgovp2TwT2hn9VHTL8yX1js6P7q4Hztt6vd190JUQBLoV
-         ZTIg==
-X-Forwarded-Encrypted: i=1; AJvYcCWGk4zWN9V4NyHnPn/R97T7wm/1MYHHVQrNl6NDeqQ/x2IcoBWsob9h08b9CdnSSgQ83Bk+5va9rQZQE74=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/2XTiR2ayZik5xyPJInLsFmYkJ5fThU0yYtd6VNWyKKcwtiON
-	FiVq532+NJZ1uTL+KIiWjvIjC3v0t83GgNuJLVc/Xq9WOPimVGlOlJsHDeI6V/FRYPQN2NgPtYl
-	VL0QUFDXv1dcuig==
-X-Google-Smtp-Source: AGHT+IFS+GD65k0hSub3v9ULn9x30VGz/G+3YfG6wahC/QEoNt85ySmK2qp8MyMrEf3ggnp2Rl7EW06pkn5awA==
-X-Received: from suleiman1.tok.corp.google.com ([2401:fa00:8f:203:b09c:3d84:6735:a65])
- (user=suleiman job=sendgmr) by 2002:a25:a44:0:b0:e7d:c44b:a4a6 with SMTP id
- 3f1490d57ef6-e81a25deabbmr3028276.8.1749188289448; Thu, 05 Jun 2025 22:38:09
- -0700 (PDT)
-Date: Fri,  6 Jun 2025 14:36:50 +0900
-In-Reply-To: <20250606052301.810338-1-suleiman@google.com>
-Message-Id: <20250606053650.863215-1-suleiman@google.com>
+        d=1e100.net; s=20230601; t=1749188360; x=1749793160;
+        h=mime-version:user-agent:message-id:date:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3ooi63Df6cKZmgkR5pcmfMZuFURKVHlT/9pTZXYzQVU=;
+        b=tWqfxhTiZEzseIBP15FLN6MfsiKBhlasbN6nirngprTFpIPZAmWpqZQKa0qDaqEtSQ
+         QGOjZKGzWqrjHRTSPA3ymjWKn9Ne/FMzajHe//LxCcXg5sfssp1iyT321p6RojK52rll
+         CS27wukwAjbT4nLR3MjxxWisqXeeeSKgEyIvMoebnqAgINETI94soefcsvP0UT00KmrC
+         yr2b6IjXF8HIWbZQPslhHz4FzihvWpVO0NUm3B6nPmSKKD6KW3DY26cArla9q3SWofJ8
+         62pBI5+7hyzO3PeYTl5wGfRLBIMWBh+DPHQK2T0cH6HQQsWUrXhruKolNdLgpLyvAck5
+         ua+A==
+X-Forwarded-Encrypted: i=1; AJvYcCU9YwpM0iDpRB4r8/EPsG1GwkL58OXPLPgJV0DhXbq4u0heiUoYpOG2wyLuOApQdbW/x4xcZeupYA==@vger.kernel.org, AJvYcCWOeBi4MiJEYLA9Gft3LXkNnFH9ecQ9upD5occXULaXJSJ8bpOw0eZ9s+daTZeOPZku9bK6yQxRV4cWGT7s@vger.kernel.org, AJvYcCXIvr3dSVzC7KMssixQZ7ldcAj/erHuHJeWKX2E8/SppHkuSHlded7PjIvK9tmRffdMWWm/2O+WbOpQJ/6m@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAHswQJekcgBhM+SW9lEGJsHUapJF0Ha3a0eHOJcoxeTwu1e0s
+	l96BzfnT4E9bsZfbe9ElwEvANfrRsWKd1Rzcu+9HAaMeoaxW+dq7ujQhP8vZWA==
+X-Gm-Gg: ASbGncsaW1eFZZf6PSsf8CL34l6GXiHPpHdZtpAFu2QjUc9wYCt5GPumTeSN9VtfC7j
+	md7zVGKAQmKerzIkF/j1mr314QP4mK+UpBdUPukbLAlmx/i1BviA77ueAgmyVB020JN2IJng5fZ
+	w8DYHcQR6sGUUwUU2G4vNsA9rZ9vJUYNPV399UP3pGGv/j/uvoKdjA1xZk1O1jm48yHulLPkwgm
+	JsMdfwp6CjR98O7ecOseO05dk5G5sWQUz4D/5cV4hSP2K6I1XvnvSmFn4YfeVBCoJqi1RFc3JaO
+	dE9Q2KspGX/vqdlF6y7scxBKYYt+eph0kaklD5A6kx8=
+X-Google-Smtp-Source: AGHT+IHjvKIb+jmUvZ/4ixHeEKPXHLIp8U4t0v4kDP1vQRIWl9N4o6yKRPpMc0daawZJQrHDOZ+cIA==
+X-Received: by 2002:a17:90b:56c7:b0:312:1ac5:c7c7 with SMTP id 98e67ed59e1d1-313472d0834mr3903892a91.2.1749188349923;
+        Thu, 05 Jun 2025 22:39:09 -0700 (PDT)
+Received: from fedora ([2601:646:8081:3770::9eb])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3134b044d91sm523389a91.2.2025.06.05.22.39.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 22:39:09 -0700 (PDT)
+From: Collin Funk <collin.funk1@gmail.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Stephen Smalley <stephen.smalley.work@gmail.com>,
+  linux-fsdevel@vger.kernel.org,  brauner@kernel.org,
+  linux-kernel@vger.kernel.org,  selinux@vger.kernel.org,
+  eggert@cs.ucla.edu,  bug-gnulib@gnu.org
+Subject: Re: [PATCH] fs/xattr.c: fix simple_xattr_list()
+In-Reply-To: <CAHC9VhRUqpubkuFFVCfiMN4jDiEhXQvJ91vHjrM5d9e4bEopaw@mail.gmail.com>
+References: <20250605164852.2016-1-stephen.smalley.work@gmail.com>
+	<CAHC9VhQ-f-n+0g29MpBB3_om-e=vDqSC3h+Vn_XzpK2zpqamdQ@mail.gmail.com>
+	<CAHC9VhRUqpubkuFFVCfiMN4jDiEhXQvJ91vHjrM5d9e4bEopaw@mail.gmail.com>
+Date: Thu, 05 Jun 2025 22:39:08 -0700
+Message-ID: <87plfhsa2r.fsf@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250606052301.810338-1-suleiman@google.com>
-X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
-Subject: [RESEND][PATCH] tools/resolve_btfids: Fix build when cross compiling
- kernel with clang.
-From: Suleiman Souhlal <suleiman@google.com>
-To: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, Ian Rogers <irogers@google.com>, 
-	ssouhlal@freebsd.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, Suleiman Souhlal <suleiman@google.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain
 
-When cross compiling the kernel with clang, we need to override
-CLANG_CROSS_FLAGS when preparing the step libraries for
-resolve_btfids.
+Paul Moore <paul@paul-moore.com> writes:
 
-Prior to commit d1d096312176 ("tools: fix annoying "mkdir -p ..." logs
-when building tools in parallel"), MAKEFLAGS would have been set to a
-value that wouldn't set a value for CLANG_CROSS_FLAGS, hiding the
-fact that we weren't properly overriding it.
+>> <stephen.smalley.work@gmail.com> wrote:
+>> >
+>> > commit 8b0ba61df5a1 ("fs/xattr.c: fix simple_xattr_list to always
+>> > include security.* xattrs") failed to reset err after the call to
+>> > security_inode_listsecurity(), which returns the length of the
+>> > returned xattr name. This results in simple_xattr_list() incorrectly
+>> > returning this length even if a POSIX acl is also set on the inode.
+>> >
+>> > Reported-by: Collin Funk <collin.funk1@gmail.com>
+>> > Closes: https://lore.kernel.org/selinux/8734ceal7q.fsf@gmail.com/
+>> > Reported-by: Paul Eggert <eggert@cs.ucla.edu>
+>> > Closes: https://bugzilla.redhat.com/show_bug.cgi?id=2369561
+>> > Fixes: 8b0ba61df5a1 ("fs/xattr.c: fix simple_xattr_list to always include security.* xattrs")
+>> >
+>> > Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+>> > ---
+>> >  fs/xattr.c | 1 +
+>> >  1 file changed, 1 insertion(+)
+>>
+>> Reviewed-by: Paul Moore <paul@paul-moore.com>
+>
+> Resending this as it appears that Stephen's original posting had a
+> typo in the VFS mailing list.  The original post can be found in the
+> SELinux archives:
+>
+> https://lore.kernel.org/selinux/20250605164852.2016-1-stephen.smalley.work@gmail.com/
 
-Cc: stable@vger.kernel.org
-Fixes: 56a2df7615fa ("tools/resolve_btfids: Compile resolve_btfids as host program")
-Signed-off-by: Suleiman Souhlal <suleiman@google.com>
----
- tools/bpf/resolve_btfids/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi, responding to this message since it has the correct lists.
 
-diff --git a/tools/bpf/resolve_btfids/Makefile b/tools/bpf/resolve_btfids/Makefile
-index afbddea3a39c..ce1b556dfa90 100644
---- a/tools/bpf/resolve_btfids/Makefile
-+++ b/tools/bpf/resolve_btfids/Makefile
-@@ -17,7 +17,7 @@ endif
- 
- # Overrides for the prepare step libraries.
- HOST_OVERRIDES := AR="$(HOSTAR)" CC="$(HOSTCC)" LD="$(HOSTLD)" ARCH="$(HOSTARCH)" \
--		  CROSS_COMPILE="" EXTRA_CFLAGS="$(HOSTCFLAGS)"
-+		  CROSS_COMPILE="" CLANG_CROSS_FLAGS="" EXTRA_CFLAGS="$(HOSTCFLAGS)"
- 
- RM      ?= rm
- HOSTCC  ?= gcc
--- 
-2.50.0.rc0.642.g800a2b2222-goog
+I just booted into a kernel with this patch applied and confirm that it
+fixes the Gnulib tests that were failing.
 
+Reviewed-by: Collin Funk <collin.funk1@gmail.com>
+Tested-by: Collin Funk <collin.funk1@gmail.com>
+
+Thanks for the fix.
+
+Collin
