@@ -1,136 +1,100 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A321E2614
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 07:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372B47FD;
+	Fri,  6 Jun 2025 07:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749195740; cv=none; b=Spr2FZsBTa3uWkSVdN2T9nzo7FeLFLoJeWj2Vlmp/WH7MX+SjVwXX2CgsTO6R42gPADV9MMINNQ8z+eXkvJdaMiaJeq4Nd+pFMCkI1F2FTi/T8Ny1e76IjsVUblDkzkZ8fam+FAEmHdaaHspqZFF/M/yZDMJOwJjDaBRGO61SQU=
+	t=1749195807; cv=none; b=UpgPt1gTNGBDbmu1G6OiguLwo3DimuanL6iBDVnips1LI/FlOxLLoOYAY/4u2LE6rNngUIBfRMoA7OJr+QShZ2vyHkPY/uILIfTZ6Y9ZZp4j7cHDG+8DgqLhowFRlckqoUFt8qlweStMCBbRXbyZ6x1xmTbPOOovnE2eRKSI16w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749195740; c=relaxed/simple;
-	bh=JrXEu9V00IDwc0gs2Fk3u6thmp4myUk90+/KCMWMqHY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fy34UhK7elqhbibmMHrGNoQhOEVF9x33PPWSnJpe7FS1/6PLie/pzAuQ6Q/fyXieEwfVyM+DjvDepaDJpGchzKUY9fH3/tiCesO94G27RTJuKpjktJhuqRiitByv2V7Y4inHTzKPcQFExndncoviCOAqQTGJCpxEvcqYCY+qBKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NyqdMCWH; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749195807; c=relaxed/simple;
+	bh=pL+c8rM/f0Lmikugk0/0+1Z85wAvi81Ttm6NT/gOM2o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n8jJrlQgOGbnoDIcZ2gn4y8F9I0RxI3MIYTVc08ZH8bghGm0Cx2QflVJst4sqi9lCRTnyDGvO9hz96+0vpPPTkdh0GkkWZLjyz/aZoro0facbEvWRGi+PTJTowv30aMS69IQ7Z9d8+5QDuLJtDuTYg7uHzuAdJI0iBTsmx7Yn18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aoFf50Xs; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NyqdMCWH"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4508287895dso18710025e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 00:42:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749195736; x=1749800536; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Px7TUkiGLJQvkjO/71jKrxllILzPLzGA5siX95GH57I=;
-        b=NyqdMCWHOoSp2C6ntTQEqAHoDzvLQxSzWsiWJAkHHcYmtu17UbnJEBc7fHWIC0FiIY
-         yIOmjDrh873M0nLI5oenX6cHZd3aZF9LqNHPiHITxZH1D9u4LZHew0+ym7sqrWHf29jJ
-         LLQ5AymDNct9M3rtrUb/FLTLlxRbp8JArLr00m1buxCJZldgV9fj89XjNmzsEtoPBlng
-         gkfGjW6E+t1xLNUFMa8eWfjtZu4t1b2ikwjyenzfrjB5wNJwC9W//VGgrsAE+BioVOHJ
-         wKRmCgpB5026ihZfvenShxWmLicm+cGPLAHYUndNNgHbVfx/aXI61EfMYJxrpxNP2uyO
-         LvFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749195736; x=1749800536;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Px7TUkiGLJQvkjO/71jKrxllILzPLzGA5siX95GH57I=;
-        b=YDFMEKbtzkRRJke7Tyv5giPWAOu7G1Ms/c4OtQDSAkOCOIxFR72DuMHA/mdfA6W6+X
-         y0nCkyyFrdi2cFQzqyYmMQE+xumnyueFTTe2l1/URd576j0k0aLGGik44hHVYK9wbqkM
-         wpwEDGpJTXrHayLdxYTQItNym8+lrvtUjwtvD0GB7M9h9yHo6BAvSY6IO+hTSSZkvc/z
-         gnimSGPKMCr1dh0zrISySfR2D7D6pSpru6jULMr9CtpIxU0plB0QBEeWs9ejwUib0b5x
-         yeQY1ESz6eo5QIra4MR2AJNjpSXm4Q7jGuZfFegKyvC9bMywJUFNtIKl9XNpqgTdfBi6
-         BGhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV/EJPoZHF2ZgMyYl2N0XnoP/fruDDZRwGjytc709QnTbVarIEONFKPPHtPhX/Qww/rxm0wKy826IMxG5g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysfxC2/XeB3UWwYX5eWRaAwfDJbypxS1krVevo38ucdAn2qjDa
-	3u8+qf+jpRtTJv0HTCWqv0wt07XDxBoH2FVNk/hfbJSBJTj7OwL37R16BQcVDJD06Gs=
-X-Gm-Gg: ASbGncuxfWsIP1uX6ILH4mTLFS4/Y+HHvAeNCN2YhM1nGpViP/ITAPIJUjuNuQ5LdsL
-	yLTtqSEO4up43ACRH3kxXpcSjHrij7Q+SvENcjZQDYlupkzwQ/Cp7uJryJuCaTDdnTSXw8dLYX0
-	8Z/ejfTDWVLKYxV7pOpCuBg1R/oK/xHnr06Tq0zTaa0FZoX68lxYmzZSDSHLj5xSavxrIkJ8FCR
-	ptUjamG40fE0fGu5r6UqKfRNpHV2Nz3dxOmiQ/YrflcgpG6eK8BsaGPHt9ocM83zRHRWAqoxPbg
-	EZEVpmPl57SWs6JHr0JbJ42ZZmsrgfZ4W0+9houZGJHxMbVKyd9Pf010EIVNDH8TseJu7SKDJid
-	HZNCr
-X-Google-Smtp-Source: AGHT+IEDJ6Qm0Ur3ac3Ih5jAsMWLAgYjL99/0S8sUsnqlAT4/rYCzrAkgc1FBvTgHlungYhO6iFY8w==
-X-Received: by 2002:a05:600c:4f90:b0:44a:b468:87b1 with SMTP id 5b1f17b1804b1-45201506dd3mr20374865e9.4.1749195736011;
-        Fri, 06 Jun 2025 00:42:16 -0700 (PDT)
-Received: from [192.168.1.221] ([5.30.189.74])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4526e056138sm12622585e9.5.2025.06.06.00.42.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 00:42:15 -0700 (PDT)
-Message-ID: <ff77f70e-344d-4b8a-a27f-c8287d49339c@linaro.org>
-Date: Fri, 6 Jun 2025 10:42:11 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aoFf50Xs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749195806; x=1780731806;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pL+c8rM/f0Lmikugk0/0+1Z85wAvi81Ttm6NT/gOM2o=;
+  b=aoFf50XslGqvB/dRaPY+KIIbAK9Em6OVmcTJZr3xdnMIJux0b4fyeGvA
+   syY+bO25SpHkca1YyDernCexVr+IV3qu28Z77MRe4aKusjfgB/FtNVO52
+   Q06fPUzEOBhCDZy7pparTn9OflVCs3HjrBsrW4kFj/ZssiMuqNxloyG+b
+   Jn8okWkbQoY5+o6n46FaSSLg/KYcLArBk0NN21clFUcvlwlhHvHbfMDEx
+   Km1EJCT1dgrh0qdtFwEdyGPbfF0XRvH3/zEIG6HSNiz3/HmDELyYMebm3
+   cCCA9qESDT4aMNn8rWM/jOS95H0fhp+Vn+QW9UxCIlMwiBj0jMhIizgeq
+   g==;
+X-CSE-ConnectionGUID: 9fTli2ysQYWVh8glriz0Lw==
+X-CSE-MsgGUID: m575OFcyTmCJT6TNTJK1zg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="54998663"
+X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
+   d="scan'208";a="54998663"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 00:43:25 -0700
+X-CSE-ConnectionGUID: 5e6Dzf6nT42rRraoqgprKg==
+X-CSE-MsgGUID: 24/8OSH8Q6OToOAibQGDZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
+   d="scan'208";a="146716524"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 06 Jun 2025 00:43:22 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uNRjU-0004p7-0G;
+	Fri, 06 Jun 2025 07:43:20 +0000
+Date: Fri, 6 Jun 2025 15:43:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gustavo Silva <gustavograzs@gmail.com>,
+	Alex Lanzano <lanzano.alex@gmail.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Gustavo Silva <gustavograzs@gmail.com>
+Subject: Re: [PATCH v2 1/3] iio: imu: bmi270: add channel for step counter
+Message-ID: <202506061501.4kluId3d-lkp@intel.com>
+References: <20250605-bmi270-events-v2-1-8b2c07d0c213@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: mediatek: Fix a flag reuse error in
- mtk_cqdma_tx_status()
-To: Qiu-ji Chen <chenqiuji666@gmail.com>, sean.wang@mediatek.com,
- vkoul@kernel.org, matthias.bgg@gmail.com,
- angelogioacchino.delregno@collabora.com
-Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
- baijiaju1990@gmail.com, stable@vger.kernel.org,
- kernel test robot <lkp@intel.com>
-References: <20250606071709.4738-1-chenqiuji666@gmail.com>
-Content-Language: en-US
-From: Eugen Hristev <eugen.hristev@linaro.org>
-In-Reply-To: <20250606071709.4738-1-chenqiuji666@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250605-bmi270-events-v2-1-8b2c07d0c213@gmail.com>
 
+Hi Gustavo,
 
+kernel test robot noticed the following build errors:
 
-On 6/6/25 10:17, Qiu-ji Chen wrote:
-> Fixed a flag reuse bug in the mtk_cqdma_tx_status() function.
-> 
-> Fixes: 157ae5ffd76a ("dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_status()")
-> Cc: stable@vger.kernel.org
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202505270641.MStzJUfU-lkp@intel.com/
-> Signed-off-by: Qiu-ji Chen <chenqiuji666@gmail.com>
-> ---
->  drivers/dma/mediatek/mtk-cqdma.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
-> index 47c8adfdc155..f7b870d2ca90 100644
-> --- a/drivers/dma/mediatek/mtk-cqdma.c
-> +++ b/drivers/dma/mediatek/mtk-cqdma.c
-> @@ -441,18 +441,19 @@ static enum dma_status mtk_cqdma_tx_status(struct dma_chan *c,
->  	struct mtk_cqdma_vdesc *cvd;
->  	struct virt_dma_desc *vd;
->  	enum dma_status ret;
-> -	unsigned long flags;
-> +	unsigned long pc_flags;
-> +	unsigned long vc_flags;
->  	size_t bytes = 0;
->  
->  	ret = dma_cookie_status(c, cookie, txstate);
->  	if (ret == DMA_COMPLETE || !txstate)
->  		return ret;
->  
-> -	spin_lock_irqsave(&cvc->pc->lock, flags);
-> -	spin_lock_irqsave(&cvc->vc.lock, flags);
-> +	spin_lock_irqsave(&cvc->pc->lock, pc_flags);
-> +	spin_lock_irqsave(&cvc->vc.lock, vc_flags);
->  	vd = mtk_cqdma_find_active_desc(c, cookie);
-> -	spin_unlock_irqrestore(&cvc->vc.lock, flags);
-> -	spin_unlock_irqrestore(&cvc->pc->lock, flags);
-> +	spin_unlock_irqrestore(&cvc->vc.lock, vc_flags);
-> +	spin_unlock_irqrestore(&cvc->pc->lock, pc_flags);
->  
->  	if (vd) {
->  		cvd = to_cqdma_vdesc(vd);
+[auto build test ERROR on b475195fecc79a1a6e7fb0846aaaab0a1a4cb2e6]
 
-If the first spin_lock_irqsave already saved the irq flags and disabled
-them, would it be meaningful to actually use a simple spin_lock for the
-second lock ? Or rather spin_lock_nested since there is a second nested
-lock taken ?
+url:    https://github.com/intel-lab-lkp/linux/commits/Gustavo-Silva/iio-imu-bmi270-add-channel-for-step-counter/20250606-061020
+base:   b475195fecc79a1a6e7fb0846aaaab0a1a4cb2e6
+patch link:    https://lore.kernel.org/r/20250605-bmi270-events-v2-1-8b2c07d0c213%40gmail.com
+patch subject: [PATCH v2 1/3] iio: imu: bmi270: add channel for step counter
+config: sh-randconfig-002-20250606 (https://download.01.org/0day-ci/archive/20250606/202506061501.4kluId3d-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250606/202506061501.4kluId3d-lkp@intel.com/reproduce)
 
-Eugen
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506061501.4kluId3d-lkp@intel.com/
 
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+WARNING: modpost: missing MODULE_DESCRIPTION() in lib/tests/slub_kunit.o
+>> ERROR: modpost: "__cmpxchg_called_with_bad_pointer" [drivers/iio/imu/bmi270/bmi270_core.ko] undefined!
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
