@@ -1,79 +1,45 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE9F195FE8;
-	Fri,  6 Jun 2025 01:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53836125DF;
+	Fri,  6 Jun 2025 01:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749174659; cv=none; b=QpnrdkGzejRjY0IhILN+rRhd/fk/wgnXCUXwH7xQyBw40URVe1SXhdk90gUsOYIfA6Bxrv7wlcoaeQwJUljYiTZWQDzvQBPkc50tquHccto3mJEZ/sgTzNZxNbz+HVJaL8nJXUJwyoV9rjrzpri7SF1TDmO5LiFpFfXZDD9pS20=
+	t=1749174968; cv=none; b=WWQehQkeIqeBMpG68CXqL0DcKSZQuXnFgSttwq34hHgXpvM31Hv/nGtNDkcQTPsWrVchN/e4Pyjh6o/8yI4Kgt2NVG3M+ksPa9LoAshX9EjSlanvckUh2JX8WFA/g7u1YcQXx5yr1FIbWp6pg6pfMv/ssPrxgVEFtNn/56w3+3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749174659; c=relaxed/simple;
-	bh=N05hR/hxwfDBOUnGdQrZDfk14X/CwEcpp+IGoFxatVU=;
+	s=arc-20240116; t=1749174968; c=relaxed/simple;
+	bh=C5//pQcnTZbOFzfaGvl6vHYS6lL+oPJHSLrCeE3Yuz0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sWV5/pCfUh1vWdEfmmtQSHATm24GI8+3b17WLl9IdRoggRPU+7kpii6ieCB/mbw9gpWz9GeGbVBsVo8xsR+PyffSNS+JyCMHFQcSTblqPPCnX7BZyXj6Z+6Om528LxgHqy3GcE9SjW5/GrLDmPk0zvoueU9F9wj0S892TCTF4Wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FzAMIT6z; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=H2PszaSkV3eWiLf/QpUGyhiLRxUl+TLFUGW+r3aLiZaRjjSu5WE19s15/AoRvwkZnVCsIFTuZSpnB8qMI/paDC/62mZ94UQo13cPfUWlA4hkdqzYj68yCYNbebk97xBKWTYEc1cj5awYPxKUIj4+gTWRCt8xqsnfqove9UOi4lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQ9U5hIl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FzAMIT6z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749174657; x=1780710657;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=N05hR/hxwfDBOUnGdQrZDfk14X/CwEcpp+IGoFxatVU=;
-  b=FzAMIT6z/ZGGrYPlWDRiOyovF7htXFx9E+JGwKULkhWwNmaZ0oeZm0ql
-   QRm3vmw4PQ/VMbBuM5dG9a9G1+T1WN+p+DmDp/8C4riWJqZmSf3uc0SBF
-   7serjF7xQL2SlKMnMfbq3+XBOWUoGIYy3Ppheml46oULexlBKmf20JEnr
-   ORYrdAln82cKVIWX5lEE/K5Ssb6ehDTGOwK1QgOvuUMiMK0HleeDKHTCX
-   RVsGyGuC1R0rsrBj07qfU0W7WdbNqlN/MQcoQRELeIMwvyHdB4z26S3Xe
-   qb7k8zrmD2aq+aGgYawcYfoEn53IZZdj+g/2y8hZorirTfiAglcj/KXM7
-   Q==;
-X-CSE-ConnectionGUID: lYNSpG20T8un92epqQphlg==
-X-CSE-MsgGUID: vYZWQZyCQCCLLmFerFnY5A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51020260"
-X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="51020260"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 18:50:57 -0700
-X-CSE-ConnectionGUID: HG5uRUl6TOafNSK4RUho7w==
-X-CSE-MsgGUID: rFJR7U6qTuizDoxEFvDV1Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="150514856"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 05 Jun 2025 18:50:52 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uNMEL-0004dV-0J;
-	Fri, 06 Jun 2025 01:50:49 +0000
-Date: Fri, 6 Jun 2025 09:50:46 +0800
-From: kernel test robot <lkp@intel.com>
-To: Igor Korotin <igor.korotin.linux@gmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Alex Hung <alex.hung@amd.com>, Tamir Duberstein <tamird@gmail.com>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Xiangfei Ding <dingxiangfei2009@gmail.com>,
-	Igor Korotin <igor.korotin.linux@gmail.com>
-Subject: Re: [PATCH v2 3/5] rust: driver: Add ACPI id table support to
- Adapter trait
-Message-ID: <202506060941.Q8GECvnj-lkp@intel.com>
-References: <20250605165109.3663553-1-igor.korotin.linux@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQ9U5hIl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 539E3C4CEE7;
+	Fri,  6 Jun 2025 01:56:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749174967;
+	bh=C5//pQcnTZbOFzfaGvl6vHYS6lL+oPJHSLrCeE3Yuz0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PQ9U5hIlCsmv2KoKgCVcs6YgL78tNZOrTmTxoqZlyvGf1kvvYiFd6uvhE1O4B/Vfv
+	 75QD08qB15FzoOlJ9Ju2B5+KxNw6CId7EMMQCN3O1WP8UU7C3j8SimQkOBI7+D4aMh
+	 LQ8bn9nWaUwiPj9tLxL6h2OFny2UNbQS1QmGcNHDLmdhuvl4AEx8NB1wL3i+2VvRCL
+	 ouXJHq1uBcT/B2v1UoHfp8ahoobj9UGpYB4CSOT3JZlTkQ6ASIV+goKYIJGb+l0DR6
+	 Ng4hf1at6tgOb0DczcfYSrP8sz64ShKyRA8UF/bhFa6MTQFnH0OBNjiOeTVNmaGBdX
+	 /7ZiQPTEz6TuQ==
+Date: Thu, 5 Jun 2025 20:56:05 -0500
+From: Rob Herring <robh@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+Subject: Re: [PATCH 1/1] dt-bindings: clock: convert lpc1850-cgu.txt to yaml
+ format
+Message-ID: <20250606015605.GA3750566-robh@kernel.org>
+References: <20250602143143.943086-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,117 +48,281 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250605165109.3663553-1-igor.korotin.linux@gmail.com>
+In-Reply-To: <20250602143143.943086-1-Frank.Li@nxp.com>
 
-Hi Igor,
+On Mon, Jun 02, 2025 at 10:31:42AM -0400, Frank Li wrote:
+> Convert lpc1850-cgu.txt to yaml format.
+> 
+> Additional changes:
+> - remove extra clock source nodes in example.
+> - remove clock consumer in example.
+> - remove clock-output-names and clock-clock-indices from required list to
+>   match existed dts.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  .../devicetree/bindings/clock/lpc1850-cgu.txt | 131 ------------------
+>  .../bindings/clock/nxp,lpc1850-cgu.yaml       | 102 ++++++++++++++
+>  2 files changed, 102 insertions(+), 131 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/lpc1850-cgu.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/nxp,lpc1850-cgu.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/lpc1850-cgu.txt b/Documentation/devicetree/bindings/clock/lpc1850-cgu.txt
+> deleted file mode 100644
+> index 2cc32a9a945a7..0000000000000
+> --- a/Documentation/devicetree/bindings/clock/lpc1850-cgu.txt
+> +++ /dev/null
+> @@ -1,131 +0,0 @@
+> -* NXP LPC1850 Clock Generation Unit (CGU)
+> -
+> -The CGU generates multiple independent clocks for the core and the
+> -peripheral blocks of the LPC18xx. Each independent clock is called
+> -a base clock and itself is one of the inputs to the two Clock
+> -Control Units (CCUs) which control the branch clocks to the
+> -individual peripherals.
+> -
+> -The CGU selects the inputs to the clock generators from multiple
+> -clock sources, controls the clock generation, and routes the outputs
+> -of the clock generators through the clock source bus to the output
+> -stages. Each output stage provides an independent clock source and
+> -corresponds to one of the base clocks for the LPC18xx.
+> -
+> - - Above text taken from NXP LPC1850 User Manual.
+> -
+> -
+> -This binding uses the common clock binding:
+> -    Documentation/devicetree/bindings/clock/clock-bindings.txt
+> -
+> -Required properties:
+> -- compatible:
+> -	Should be "nxp,lpc1850-cgu"
+> -- reg:
+> -	Shall define the base and range of the address space
+> -	containing clock control registers
+> -- #clock-cells:
+> -	Shall have value <1>.  The permitted clock-specifier values
+> -	are the base clock numbers defined below.
+> -- clocks:
+> -	Shall contain a list of phandles for the external input
+> -	sources to the CGU. The list shall be in the following
+> -	order: xtal, 32khz, enet_rx_clk, enet_tx_clk, gp_clkin.
+> -- clock-indices:
+> -	Shall be an ordered list of numbers defining the base clock
+> -	number provided by the CGU.
+> -- clock-output-names:
+> -	Shall be an ordered list of strings defining the names of
+> -	the clocks provided by the CGU.
+> -
+> -Which base clocks that are available on the CGU depends on the
+> -specific LPC part. Base clocks are numbered from 0 to 27.
+> -
+> -Number:		Name:			Description:
+> - 0		BASE_SAFE_CLK		Base safe clock (always on) for WWDT
+> - 1		BASE_USB0_CLK		Base clock for USB0
+> - 2		BASE_PERIPH_CLK		Base clock for Cortex-M0SUB subsystem,
+> -					SPI, and SGPIO
+> - 3		BASE_USB1_CLK		Base clock for USB1
+> - 4		BASE_CPU_CLK		System base clock for ARM Cortex-M core
+> -					and APB peripheral blocks #0 and #2
+> - 5		BASE_SPIFI_CLK		Base clock for SPIFI
+> - 6		BASE_SPI_CLK		Base clock for SPI
+> - 7		BASE_PHY_RX_CLK		Base clock for Ethernet PHY Receive clock
+> - 8		BASE_PHY_TX_CLK		Base clock for Ethernet PHY Transmit clock
+> - 9		BASE_APB1_CLK		Base clock for APB peripheral block # 1
+> -10		BASE_APB3_CLK		Base clock for APB peripheral block # 3
+> -11		BASE_LCD_CLK		Base clock for LCD
+> -12		BASE_ADCHS_CLK		Base clock for ADCHS
+> -13		BASE_SDIO_CLK		Base clock for SD/MMC
+> -14		BASE_SSP0_CLK		Base clock for SSP0
+> -15		BASE_SSP1_CLK		Base clock for SSP1
+> -16		BASE_UART0_CLK		Base clock for UART0
+> -17		BASE_UART1_CLK		Base clock for UART1
+> -18		BASE_UART2_CLK		Base clock for UART2
+> -19		BASE_UART3_CLK		Base clock for UART3
+> -20		BASE_OUT_CLK		Base clock for CLKOUT pin
+> -24-21		-			Reserved
+> -25		BASE_AUDIO_CLK		Base clock for audio system (I2S)
+> -26 		BASE_CGU_OUT0_CLK	Base clock for CGU_OUT0 clock output
+> -27 		BASE_CGU_OUT1_CLK	Base clock for CGU_OUT1 clock output
+> -
+> -BASE_PERIPH_CLK and BASE_SPI_CLK is only available on LPC43xx.
+> -BASE_ADCHS_CLK is only available on LPC4370.
+> -
+> -
+> -Example board file:
+> -
+> -/ {
+> -	clocks {
+> -		xtal: xtal {
+> -			compatible = "fixed-clock";
+> -			#clock-cells = <0>;
+> -			clock-frequency = <12000000>;
+> -		};
+> -
+> -		xtal32: xtal32 {
+> -			compatible = "fixed-clock";
+> -			#clock-cells = <0>;
+> -			clock-frequency = <32768>;
+> -		};
+> -
+> -		enet_rx_clk: enet_rx_clk {
+> -			compatible = "fixed-clock";
+> -			#clock-cells = <0>;
+> -			clock-frequency = <0>;
+> -			clock-output-names = "enet_rx_clk";
+> -		};
+> -
+> -		enet_tx_clk: enet_tx_clk {
+> -			compatible = "fixed-clock";
+> -			#clock-cells = <0>;
+> -			clock-frequency = <0>;
+> -			clock-output-names = "enet_tx_clk";
+> -		};
+> -
+> -		gp_clkin: gp_clkin {
+> -			compatible = "fixed-clock";
+> -			#clock-cells = <0>;
+> -			clock-frequency = <0>;
+> -			clock-output-names = "gp_clkin";
+> -		};
+> -	};
+> -
+> -	soc {
+> -		cgu: clock-controller@40050000 {
+> -			compatible = "nxp,lpc1850-cgu";
+> -			reg = <0x40050000 0x1000>;
+> -			#clock-cells = <1>;
+> -			clocks = <&xtal>, <&creg_clk 1>, <&enet_rx_clk>, <&enet_tx_clk>, <&gp_clkin>;
+> -		};
+> -
+> -		/* A CGU and CCU clock consumer */
+> -		lcdc: lcdc@40008000 {
+> -			...
+> -			clocks = <&cgu BASE_LCD_CLK>, <&ccu1 CLK_CPU_LCD>;
+> -			clock-names = "clcdclk", "apb_pclk";
+> -			...
+> -		};
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/clock/nxp,lpc1850-cgu.yaml b/Documentation/devicetree/bindings/clock/nxp,lpc1850-cgu.yaml
+> new file mode 100644
+> index 0000000000000..319bd2705c422
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/nxp,lpc1850-cgu.yaml
+> @@ -0,0 +1,102 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/nxp,lpc1850-cgu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP LPC1850 Clock Generation Unit (CGU)
+> +
+> +description:
 
-kernel test robot noticed the following build errors:
+Needs '>'.
 
-[auto build test ERROR on char-misc/char-misc-testing]
-[also build test ERROR on char-misc/char-misc-next char-misc/char-misc-linus v6.15]
-[cannot apply to rust/rust-next driver-core/driver-core-testing driver-core/driver-core-next driver-core/driver-core-linus linus/master next-20250605]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> +  The CGU generates multiple independent clocks for the core and the
+> +  peripheral blocks of the LPC18xx. Each independent clock is called
+> +  a base clock and itself is one of the inputs to the two Clock
+> +  Control Units (CCUs) which control the branch clocks to the
+> +  individual peripherals.
+> +
+> +  The CGU selects the inputs to the clock generators from multiple
+> +  clock sources, controls the clock generation, and routes the outputs
+> +  of the clock generators through the clock source bus to the output
+> +  stages. Each output stage provides an independent clock source and
+> +  corresponds to one of the base clocks for the LPC18xx.
+> +
+> +  Above text taken from NXP LPC1850 User Manual.
+> +
+> +maintainers:
+> +  - Frank Li <Frank.Li@nxp.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: nxp,lpc1850-cgu
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +    description: |
+> +      Which base clocks that are available on the CGU depends on the
+> +      specific LPC part. Base clocks are numbered from 0 to 27.
+> +
+> +      Number:         Name:                   Description:
+> +       0              BASE_SAFE_CLK           Base safe clock (always on) for WWDT
+> +       1              BASE_USB0_CLK           Base clock for USB0
+> +       2              BASE_PERIPH_CLK         Base clock for Cortex-M0SUB subsystem,
+> +                                        SPI, and SGPIO
+> +       3              BASE_USB1_CLK           Base clock for USB1
+> +       4              BASE_CPU_CLK            System base clock for ARM Cortex-M core
+> +                                        and APB peripheral blocks #0 and #2
+> +       5              BASE_SPIFI_CLK          Base clock for SPIFI
+> +       6              BASE_SPI_CLK            Base clock for SPI
+> +       7              BASE_PHY_RX_CLK         Base clock for Ethernet PHY Receive clock
+> +       8              BASE_PHY_TX_CLK         Base clock for Ethernet PHY Transmit clock
+> +       9              BASE_APB1_CLK           Base clock for APB peripheral block # 1
+> +      10              BASE_APB3_CLK           Base clock for APB peripheral block # 3
+> +      11              BASE_LCD_CLK            Base clock for LCD
+> +      12              BASE_ADCHS_CLK          Base clock for ADCHS
+> +      13              BASE_SDIO_CLK           Base clock for SD/MMC
+> +      14              BASE_SSP0_CLK           Base clock for SSP0
+> +      15              BASE_SSP1_CLK           Base clock for SSP1
+> +      16              BASE_UART0_CLK          Base clock for UART0
+> +      17              BASE_UART1_CLK          Base clock for UART1
+> +      18              BASE_UART2_CLK          Base clock for UART2
+> +      19              BASE_UART3_CLK          Base clock for UART3
+> +      20              BASE_OUT_CLK            Base clock for CLKOUT pin
+> +      24-21           -                       Reserved
+> +      25              BASE_AUDIO_CLK          Base clock for audio system (I2S)
+> +      26              BASE_CGU_OUT0_CLK       Base clock for CGU_OUT0 clock output
+> +      27              BASE_CGU_OUT1_CLK       Base clock for CGU_OUT1 clock output
+> +
+> +      BASE_PERIPH_CLK and BASE_SPI_CLK is only available on LPC43xx.
+> +      BASE_ADCHS_CLK is only available on LPC4370.
+> +
+> +  clocks:
+> +    maxItems: 5
+> +
+> +  clock-indices:
+> +    maxItems: 5
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Igor-Korotin/rust-acpi-add-acpi-DeviceId-abstraction/20250606-042551
-base:   char-misc/char-misc-testing
-patch link:    https://lore.kernel.org/r/20250605165109.3663553-1-igor.korotin.linux%40gmail.com
-patch subject: [PATCH v2 3/5] rust: driver: Add ACPI id table support to Adapter trait
-config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/20250606/202506060941.Q8GECvnj-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250606/202506060941.Q8GECvnj-lkp@intel.com/reproduce)
+1-28 entries should be valid.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506060941.Q8GECvnj-lkp@intel.com/
+> +
+> +  clock-output-names:
+> +    items:
+> +      - const: xtal
+> +      - const: creg_clk
+> +      - const: enet_rx_clk
+> +      - const: enet_tx_clk
+> +      - const: gp_clkin
 
-All errors (new ones prefixed by >>):
+This looks like names of the inputs, not the outputs. There wasn't any 
+clock-names on the original though. You don't have to document the names 
+in clock-output-names, just how many entries.
 
-   PATH=/opt/cross/clang-18/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-   INFO PATH=/opt/cross/rustc-1.78.0-bindgen-0.65.1/cargo/bin:/opt/cross/clang-18/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-   /usr/bin/timeout -k 100 12h /usr/bin/make KCFLAGS= -Wno-error=return-type -Wreturn-type -funsigned-char -Wundef W=1 --keep-going LLVM=1 -j32 -C source O=/kbuild/obj/consumer/x86_64-rhel-9.4-rust ARCH=x86_64 SHELL=/bin/bash rustfmtcheck
-   make: Entering directory '/kbuild/src/consumer'
-   make[1]: Entering directory '/kbuild/obj/consumer/x86_64-rhel-9.4-rust'
-   Diff in rust/kernel/acpi.rs at line 59:
-            $crate::module_device_table!("acpi", $module_table_name, $table_name);
-        };
-    }
-   -
-    
->> Diff in rust/kernel/driver.rs at line 6:
-    //! register using the [`Registration`] class.
-    
->>  use crate::error::{Error, Result};
-   -use crate::{device, of, acpi, str::CStr, try_pin_init, types::Opaque, ThisModule};
-   +use crate::{acpi, device, of, str::CStr, try_pin_init, types::Opaque, ThisModule};
-    use core::pin::Pin;
-    use pin_init::{pin_data, pinned_drop, PinInit};
-    
-   Diff in rust/kernel/driver.rs at line 211:
-        /// associated with a [`device::Device`].
-        fn id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
-            // SAFETY: `id_info` is called from `Adapter::probe_callback` with a valid `dev` argument.
-   -        let fwnode = unsafe{ (*dev.as_raw()).fwnode};
-   +        let fwnode = unsafe { (*dev.as_raw()).fwnode };
-    
-            // SAFETY: `bindings::is_acpi_device_node` checks `fwnode` before accessing `fwnode->ops`,
-            // and only compares it with the address of `acpi_device_fwnode_ops`.
->> Diff in rust/kernel/platform.rs at line 5:
-    //! C header: [`include/linux/platform_device.h`](srctree/include/linux/platform_device.h)
-    
-    use crate::{
-   -    acpi,
-   -    bindings, device, driver,
-   +    acpi, bindings, device, driver,
-        error::{to_result, Result},
-        of,
-        prelude::*,
-   Diff in rust/kernel/acpi.rs at line 59:
-            $crate::module_device_table!("acpi", $module_table_name, $table_name);
-        };
-    }
-   -
-    
->> Diff in rust/kernel/platform.rs at line 5:
-    //! C header: [`include/linux/platform_device.h`](srctree/include/linux/platform_device.h)
-    
-    use crate::{
-   -    acpi,
-   -    bindings, device, driver,
-   +    acpi, bindings, device, driver,
-        error::{to_result, Result},
-        of,
-        prelude::*,
->> Diff in rust/kernel/driver.rs at line 6:
-    //! register using the [`Registration`] class.
-    
->>  use crate::error::{Error, Result};
-   -use crate::{device, of, acpi, str::CStr, try_pin_init, types::Opaque, ThisModule};
-   +use crate::{acpi, device, of, str::CStr, try_pin_init, types::Opaque, ThisModule};
-    use core::pin::Pin;
-    use pin_init::{pin_data, pinned_drop, PinInit};
-    
-   Diff in rust/kernel/driver.rs at line 211:
-        /// associated with a [`device::Device`].
-        fn id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
-            // SAFETY: `id_info` is called from `Adapter::probe_callback` with a valid `dev` argument.
-   -        let fwnode = unsafe{ (*dev.as_raw()).fwnode};
-   +        let fwnode = unsafe { (*dev.as_raw()).fwnode };
-    
-            // SAFETY: `bindings::is_acpi_device_node` checks `fwnode` before accessing `fwnode->ops`,
-            // and only compares it with the address of `acpi_device_fwnode_ops`.
-   make[1]: Leaving directory '/kbuild/obj/consumer/x86_64-rhel-9.4-rust'
-   make[2]: *** [Makefile:1826: rustfmt] Error 123
-   make[1]: *** [Makefile:248: __sub-make] Error 2
-   make[2]: Target 'rustfmtcheck' not remade because of errors.
-   make[1]: Target 'rustfmtcheck' not remade because of errors.
-   make: *** [Makefile:248: __sub-make] Error 2
-   make: Target 'rustfmtcheck' not remade because of errors.
-   make: Leaving directory '/kbuild/src/consumer'
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - '#clock-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    clock-controller@40050000 {
+> +        compatible = "nxp,lpc1850-cgu";
+> +        reg = <0x40050000 0x1000>;
+> +        #clock-cells = <1>;
+> +        clocks = <&xtal>, <&creg_clk 1>, <&enet_rx_clk>, <&enet_tx_clk>, <&gp_clkin>;
+> +    };
+> +
+> -- 
+> 2.34.1
+> 
