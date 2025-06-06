@@ -1,154 +1,135 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0B51624DD
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 08:58:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9CC25F793;
+	Fri,  6 Jun 2025 09:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749200310; cv=none; b=Ez0/V8DVuMmiieBerC12k2JihdvbvjLV/Pu541+dJIkXFgeSZyXeMNTK+8zIGyRUy6O9308qILT+ZikdsRHY6VQFVu2YwOJdGzkXD946CDApr0Qh4Zfui/yLiKVaUn7mXCEazujWj0C7MuwjWBOLsaswbjthh2VegG1LGAkVqYs=
+	t=1749200415; cv=none; b=WyYsWckDQzhFzBDB8iBHFkZlVo9p1zunYZ8ULUBZeup+IbwgdL2Gpy0TTBjIJ2GhDQ3RSziKVXsrltfb4r6sDcbmPygMBoztQk1I6OHttyncHJoxYoEl20qNOjlzwPZUcdmMTEIhejADroYwaK06OzK2sLTr1de2gV6HNH56i00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749200310; c=relaxed/simple;
-	bh=qb8DMH4gF6S93MskjiiEecUdSv/LDFJZcaoLws8MM/w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rwWSiC/pFbgYn29WqZvgg9HtQW8K/4Ge2xWMtw7RvaCHcew4tF9ZwhU2XhaU9oj++qOalDMQWFzkkI4imJpRpGOEVkZKra/61tTiqPsenWns/eK3UTZwHot7xct/GLikv7S38NCw6T19y/cosMD+nJ0Kk4mwzwJB0m2/bjKRikw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=KUlKyzwx; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1749200415; c=relaxed/simple;
+	bh=xNHwIpVHeWC+mE1P2Ks1p+kDy+CdkMZCOyr72R8daRE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LtMTsEKtILe4RNXtbcpj77sv2HL7Ca5/EArfagyk6gYm1LFY1s6o68pa1eQC5Ttc0oGaV9IXKsaQHEV31RTKmgNf98LDcTJuKiteeaYX0TnUlxm9L7vMLx8qoGa3VxdWEO2Epf20X+s3sVBAp0CzRVCzPz9xcYWtbunt7yFXcyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sDyefeYI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="KUlKyzwx"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-231e8553248so19304575ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 01:58:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1749200307; x=1749805107; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ymOcQmc1za1KFmVBfx7ccy1EEL2Tdf1lKKtdHUAzlqI=;
-        b=KUlKyzwx6ptV/yUOBej77ZFnR+jio2oOFcE8nkKpWul7damnoAE/ZoZ9yDtjQEPVUD
-         +k0tKrfJAHH5ZuEvHKWHGmD/7t/TSZcDS1oFbDJ2ZGT0bHqRj6cMT1V6rZVEL82lpPS4
-         fycYB5M7xkLWEvID1HS+xjgWN6QXcihua4E+rgwKJXhaZV3SH1qcmHwJMn8xHY3lisVD
-         nLInNXeJLgMs5cxXJUK5xdqP+UJPzah3cGnpFEShC1fhaZmL0y4C7ppxL1DV4Msh/Fey
-         BhGcq2U2Mi78rmp3pp4stXK1rNJodel+b+DajCCJ/S3qiNSqkvAojzK56yX4cDBkwzey
-         Pn3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749200307; x=1749805107;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ymOcQmc1za1KFmVBfx7ccy1EEL2Tdf1lKKtdHUAzlqI=;
-        b=WrxYg+i7CeubJbehlU+unnFIutqViI4laa6Ym9PNFWoJlVAwr3oyNjpOC2pim5UGOY
-         ux3qtc68Dl0kpJQczkoIhzBS2fLAmuy9fceRhVQSwAGGMsoylhm3TfgIoN0t9IxxqZZ5
-         xXD4DqPSM7uphSo8+y803Y/f/OkLdZK6yKiSBKruprW2gHaN9VYLgTBgLt9n9iEeZXdj
-         6eRiPp5HNc+Ibi4rq87HPcTBSWzgtYWn1jkRsaLlCheSOxp4NgwiMEztKO4H+zrvRw22
-         Ve4qjJ5hllR0tzhn5hxjiCob+Q3b+7xCz2jj79IeEFBNSyixpHHsvlVQfJaozsfGjqUa
-         w1mw==
-X-Forwarded-Encrypted: i=1; AJvYcCX7iHC48sOlaxHKOrbGt/ZYF2aSC58nv++knoyG6iWSOqTxsgMGXRBvSkI0mIvXHYcxT4iRfd53L1kJvKM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxN5jnloHzpXoc6TxkW/Dv7Q6D/PhqvixG1wSFkLo3nnzCzYK/B
-	WgaySYIsENu7i6T8rQyqio1+n7Qn/afa/SpxGP8B7SOtYMvOudXkzgMrgv3k27bZuO8=
-X-Gm-Gg: ASbGncsGk+1Uii1/7n6JER5HuvfM/9blSfDEX1TWvB9jgy7hWYtBHEhFOm1zWw5MBNP
-	CrLT2muNmYxu0cpp4hCgjSQwKSIIceFVKlMSi8bePuTN7Yd+LCVhX8oTaDgtLUvQbgo23vjizo2
-	bG7M8k4F4Uz4k6SNeb17o5SzYiNvEw8EgVYlLQSOvvcCciMI+cAu1L/SQ7aGcW6vLMJdoK9i3GN
-	/nTa6nbrbXVtDMMD/GbskzE2rET/LJ1itZiJA2uyVlP3Jy9Znkhq+V9stDifhsGi3J1L10GsEsO
-	xiHwJP1l86fYUigQ+bVsOQXk9mt7YajAHbtkcY5fm0g8kIsTRa9pEPydwKyL7PMtF8DwOASUlGG
-	vJws=
-X-Google-Smtp-Source: AGHT+IGSu1cXHwIHRp8Sg3wueJ136zK9blpmz4N1Qjg/nEzAL2VqPuiwWwZjy4fAHlq7m7EMtekxZA==
-X-Received: by 2002:a17:903:40cb:b0:235:7c6:ebbf with SMTP id d9443c01a7336-23601d82e5cmr39668735ad.35.1749200306814;
-        Fri, 06 Jun 2025 01:58:26 -0700 (PDT)
-Received: from localhost.localdomain ([203.208.189.12])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236034037a4sm8121785ad.141.2025.06.06.01.58.22
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 06 Jun 2025 01:58:26 -0700 (PDT)
-From: lizhe.67@bytedance.com
-To: david@redhat.com
-Cc: akpm@linux-foundation.org,
-	dev.jain@arm.com,
-	jgg@ziepe.ca,
-	jhubbard@nvidia.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	lizhe.67@bytedance.com,
-	muchun.song@linux.dev,
-	peterx@redhat.com
-Subject: Re: [PATCH v4] gup: optimize longterm pin_user_pages() for large folio
-Date: Fri,  6 Jun 2025 16:58:19 +0800
-Message-ID: <20250606085819.89839-1-lizhe.67@bytedance.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <a6559d96-5018-43ea-8d51-4467f5f0d759@redhat.com>
-References: <a6559d96-5018-43ea-8d51-4467f5f0d759@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sDyefeYI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57DC8C4CEEB;
+	Fri,  6 Jun 2025 09:00:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749200414;
+	bh=xNHwIpVHeWC+mE1P2Ks1p+kDy+CdkMZCOyr72R8daRE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sDyefeYI157FNH1aszpofzkfeeMkkuM1s9Z1o7gBDjducPeG0nAxFkO4y5gunuDG7
+	 ogXA36f7wH53CO3U7nzv1p/9dfz3RiN1o1RgyRpLD/L73poLScECVIfuj8EZCNTv3p
+	 zYOyzqTKKea8twIq/Da9YgjuGt5nSnPPkZFuD4om6yIDPTZyp3fRFgMD6AsIsvjWTu
+	 dVCbMOJ9oBkp3GmQyLFL6x99yU1m3rJfbmy0jXfag/5iGJ7V64SoNs+HG6wljSpqvZ
+	 rx0eF6cFVuTqcsoBBB8RqJWCyTVuxFddCxnZhx/kIijf1Fxe8qGWk+9kgUW7EbXQ0N
+	 GJNEiHv1RT+Fg==
+Date: Fri, 6 Jun 2025 11:00:12 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Brian Masney <bmasney@redhat.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
+	Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, 
+	Alberto Ruiz <aruiz@redhat.com>
+Subject: Re: [PATCH v2 04/10] clk: test: introduce clk_dummy_div for a mock
+ divider
+Message-ID: <20250606-screeching-pigeon-of-judgment-dacc1b@houat>
+References: <20250528-clk-wip-v2-v2-0-0d2c2f220442@redhat.com>
+ <20250528-clk-wip-v2-v2-4-0d2c2f220442@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="exdw6jl56rzsynhl"
+Content-Disposition: inline
+In-Reply-To: <20250528-clk-wip-v2-v2-4-0d2c2f220442@redhat.com>
 
-On Fri, 6 Jun 2025 10:50:34 +0200, david@redhat.com wrote:
 
-> On 06.06.25 10:27, lizhe.67@bytedance.com wrote:
-> > On Fri, 6 Jun 2025 09:58:45 +0200, david@redhat.com wrote:
-> > 
-> >> On 06.06.25 09:37, lizhe.67@bytedance.com wrote:
-> >>> On Fri, 6 Jun 2025 10:37:42 +0800, david@redhat.com wrote:
-> >>>
-> >>>>>      * Returns the number of collected folios. Return value is always >= 0.
-> >>>>>      */
-> >>>>> @@ -2324,16 +2349,12 @@ static void collect_longterm_unpinnable_folios(
-> >>>>>     		struct list_head *movable_folio_list,
-> >>>>>     		struct pages_or_folios *pofs)
-> >>>>>     {
-> >>>>> -	struct folio *prev_folio = NULL;
-> >>>>>     	bool drain_allow = true;
-> >>>>> -	unsigned long i;
-> >>>>> -
-> >>>>> -	for (i = 0; i < pofs->nr_entries; i++) {
-> >>>>> -		struct folio *folio = pofs_get_folio(pofs, i);
-> >>>>> +	struct folio *folio;
-> >>>>> +	long i = 0;
-> >>>>>     
-> >>>>> -		if (folio == prev_folio)
-> >>>>> -			continue;
-> >>>>> -		prev_folio = folio;
-> >>>>> +	for (folio = pofs_get_folio(pofs, i); folio;
-> >>>>> +		 folio = pofs_next_folio(folio, pofs, &i)) {
-> >>>>
-> >>>> Nit: indentation is still off?
-> >>>
-> >>> In my editor (vim with ts=4), after applying this patch, the folio on
-> >>> this line would be positioned directly below the folio on the previous
-> >>> line.
-> >>
-> >> Documentation/process/coding-style.rst
-> >>
-> >> "Tabs are 8 characters"
-> >>
-> >> :)
-> >>
-> >> Good choice on using vim. This is what I have in my .vimrc regarding tabs
-> >>
-> >> set tabstop=8
-> >> set shiftwidth=8
-> >> set noexpandtab
-> >>
-> >> set smartindent
-> >> set cindent
-> > 
-> > I truly appreciate your correction and guidance. I sincerely apologize
-> > for the formatting issue that I've caused.
-> > 
-> > I noticed that Andrew has already integrated this patch into the mm-new
-> > branch.
-> 
-> mm-new is for new stuff, unless it's in mm-unstable -> mm-stable, it's 
-> still considered rather "experimental".
-> 
-> > I'm just wondering if there's still a need for me to send out a
-> > v5 patch. I'm happy to do whatever is necessary to ensure everything is
-> > in order.
-> 
-> Feel free to just send a simple fixup as reply to this patch.
+--exdw6jl56rzsynhl
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 04/10] clk: test: introduce clk_dummy_div for a mock
+ divider
+MIME-Version: 1.0
 
-Thank you. I'll send a fixup reply right away.
+On Wed, May 28, 2025 at 07:16:50PM -0400, Brian Masney wrote:
+> This is used to mock up a divider in the clk kunit tests.
+>=20
+> Signed-off-by: Brian Masney <bmasney@redhat.com>
+> ---
+>  drivers/clk/clk_test.c | 41 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>=20
+> diff --git a/drivers/clk/clk_test.c b/drivers/clk/clk_test.c
+> index 1b34d54ec9c610ffa3e91b06f5a5180e0395e26f..4908fb9c0c46e34063ecf696e=
+49b48510da44538 100644
+> --- a/drivers/clk/clk_test.c
+> +++ b/drivers/clk/clk_test.c
+> @@ -140,6 +140,47 @@ static const struct clk_ops clk_dummy_single_parent_=
+ops =3D {
+>  	.get_parent =3D clk_dummy_single_get_parent,
+>  };
+> =20
+> +// 4 ought to be enough for anybody
+> +#define CLK_DUMMY_DIV_WIDTH 4
+> +
+> +struct clk_dummy_div {
+> +	struct clk_hw hw;
+> +	unsigned int div;
+> +};
+> +
+> +static unsigned long clk_dummy_div_recalc_rate(struct clk_hw *hw,
+> +					       unsigned long parent_rate)
+> +{
+> +	struct clk_dummy_div *div =3D container_of(hw, struct clk_dummy_div, hw=
+);
+> +
+> +	return divider_recalc_rate(hw, parent_rate, div->div, NULL,
+> +				   CLK_DIVIDER_ROUND_CLOSEST, CLK_DUMMY_DIV_WIDTH);
+> +}
+> +
+> +static long clk_dummy_div_round_rate(struct clk_hw *hw, unsigned long ra=
+te,
+> +				     unsigned long *parent_rate)
+> +{
+> +	return divider_round_rate(hw, rate, parent_rate, NULL,
+> +				  CLK_DUMMY_DIV_WIDTH, CLK_DIVIDER_ROUND_CLOSEST);
+> +}
+> +
+> +static int clk_dummy_div_set_rate(struct clk_hw *hw, unsigned long rate,
+> +				  unsigned long parent_rate)
+> +{
+> +	struct clk_dummy_div *div =3D container_of(hw, struct clk_dummy_div, hw=
+);
+> +
+> +	div->div =3D divider_get_val(rate, parent_rate, NULL, CLK_DUMMY_DIV_WID=
+TH,
+> +				   CLK_DIVIDER_ROUND_CLOSEST);
+> +
+> +	return 0;
+> +}
 
-Thanks,
-Zhe
+I wonder if we should use CLK_DIVIDER_ONE_BASED too, that way we would
+catch any improperly initialized structure.
+
+Maxime
+
+--exdw6jl56rzsynhl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaEKuGwAKCRAnX84Zoj2+
+doDPAYDyd2YH/7g4mNgLjfHV9eB9s2Tt0o1q2WR7+GtOlW32oMr2LKAx2/wykc71
+o0VyCsEBfAy/YwfHxrcWAZzNulk/TchV6luX5ADYTKAUrs/CMZzoTSoK8s75HJYa
+KLT0qgmOcw==
+=B35y
+-----END PGP SIGNATURE-----
+
+--exdw6jl56rzsynhl--
