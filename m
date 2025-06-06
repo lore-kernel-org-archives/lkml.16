@@ -1,143 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53ADB1FAA;
-	Fri,  6 Jun 2025 05:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450A7125DF
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 05:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749186796; cv=none; b=bTtTpsMrIz59Fucf7YycsUYbVAEAalBxKaLBxTe+tvsH7wYc7/2pVGa+SI8rS7ZIsw1RWCUQ7XM9DAROtLHAsoAqF0kdUwnprCmAXRMzpgltikiz2ihcfk90D3w8pGWjIKFRtqk0WbBoddU9DOYT/taEvy7fpdrI+302+Hxvl2o=
+	t=1749186979; cv=none; b=n9BXWhdB4f0VKpERwOSq3f78WcIgPauXwLj551w4vhMmoEfwYXx1XY7jHSf7b0zRW3DN+VBMxrcC+RBEXgHmTjqw1Dr7FOCr4Pk39w3OSrmh7dGMLKaE+9zbRekOD/UJebC6+31afQ5xUXCtaq6xNimIsiA62HDKCAhm69pxZMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749186796; c=relaxed/simple;
-	bh=AQKFGhsxgo0BIr9xTB/1Yd2Je/V8W3jZBUx3MvDWR8I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nddNWa06jRXeGWpYa3C+Ne/jKZYYSBCfBJZX++gdtqQoQg1sEzYRgLIRQUnT8TNS+vW0xDrFpdPcPa3Tm5vZuIZW6KmDwhSbi4pkZ6gbqqrna3gOf0+sil0p3W1l/Ajf7d9XWiNSgiQ4fsJAkrldAsHQdyD2PV7FGRdTcO8ooVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PjEX/Cgk; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PjEX/Cgk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24C77C4AF0B;
-	Fri,  6 Jun 2025 05:13:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749186796;
-	bh=AQKFGhsxgo0BIr9xTB/1Yd2Je/V8W3jZBUx3MvDWR8I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=PjEX/Cgk66x0JibO8nGIrIbOeUgD86ou+DoCfXeVEN1GKIxE/4a8C0CdIFdYN50KJ
-	 Ny8RzV1s8Kt7fBRWCdMT0xhauT4I+xw9Xw9sb29A3+DpOr0BtPL7q//9MruZwe0ZvR
-	 Jsz3YcmJai7SOZEEyWUJs0JWfuvRzrPqs86CnlgFjFPYVixzz5byjJSIm5Od0OEirf
-	 VS8VFVwVj0g+TvV4yiU1aCvcZntxoIJcR1pxM8p4Jvv96xl281vlOLqSNuNOneOZc7
-	 mNIxxV7M2MEwbxfY18IdHhUFwzYkSao/MTr8iWLrOJSdnTtWO/llBQAem5bl1DQfVC
-	 iHnLuKFqvMNUA==
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-32a64f8480eso27527781fa.1;
-        Thu, 05 Jun 2025 22:13:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUS0VtlmOO1tVjg48G4HzaGuEvnhJyWW9mTwb0foiKlj94+HOnuPzdy5J7nCbh7uYlYqKXr+WQDTiKeuA4=@vger.kernel.org, AJvYcCVaT5iotqNhWNUZx4/V4N/OiYBvi+ONH8Wq7fOnWyR9MZhY2ZQeBSb9lBZ95TmVcj2l1scue0W0rk2pzKPn@vger.kernel.org, AJvYcCW8JczYHT5vcWjJK3Y320YVlZLYYSvKKSPO2+rDGRk4U2vikNJMemGLB3N6u911gp+9GeWdidDDIEb2QCCbeA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2i2eH7A5susaeEqXJep1wg7v2RD/EgBIquVDX5qmn79ADeEo3
-	q3c7YDIGGD78q+QC6rhpCsHJFnhgdFCXjOSctb8M1wTXH/ewl2XrEXxqzjGP8fD0/0xZm5k4Cs7
-	BLdHe5fKli+Kj/tgs4Y1VH7MYjy5F2cI=
-X-Google-Smtp-Source: AGHT+IHbkPRvX6Z0dchWkNRtq7wvCU3la1oqMarRLD78GvdVfaGUutRPCMWy2/WoaMOMqE33X1vpr0BK54oeUG/XpCI=
-X-Received: by 2002:a05:6512:3d22:b0:550:e04d:2b66 with SMTP id
- 2adb3069b0e04-55366c3049bmr358074e87.17.1749186794807; Thu, 05 Jun 2025
- 22:13:14 -0700 (PDT)
+	s=arc-20240116; t=1749186979; c=relaxed/simple;
+	bh=IxwqCHrACqYgymgSUXeVUNou/uoy837foUaUXgA+0k8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=V9CxZdUvZ19f16ziUdM8KunjwkTZT+DYAFyRfolwQk0MgtR7uvhsj+xN/faojlmGSAPwxjsHWvX8QbMkW7j5Zl4hQ1lznrU0jVjB8HIT8TZIrG/93G/NfqiUmFnQkFhmCWfZkPyvxlwcAkKbwNPQXEOzy3AhM0my1NKyb5ZHP1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddd02c8bffso4232405ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 22:16:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749186977; x=1749791777;
+        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cCYACXMzeBDcelPE4ghIGAS5eRuewYDXuoVSiKWHsIc=;
+        b=hrfGEdthVz36P5SC43T7h6HaoryZrtb/peJBS2dudFXkPBx+2YF78W+sfsJz1U9+xh
+         5WGh7S37/HQq4vF7YjuT+35gNPc8fs5iFxhRUqeLJQpTYsv03qFnxvQ5oCn/A7IkmNVd
+         FPlURPR3pPPNsPU9a/rlPXE55ZwGipG+I01TocFnzUHhKxCnNNVx6Lju0vaVVFLo+Og/
+         rRBsXgy5wnSmnvvJylef0/SwISXl5CNnD7jb1UkAzjuPjUOJC2zjqHELeAJqtSU6dePU
+         HI++DGZqeI5hCoN+nEVg1sPGnnf3ONFODetQdcIrZonPseGYORCQ3PpSqdUxFIk4w+mP
+         YjwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWOwr76l6nnsLUNuWQCK9xfUOIkL6Yeta1uJfBhdPdOUzEAO9IjN2h1bGCQ7qCBZXGPWNfSQMIlqlgga2A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnMFt4mjJVJ8qO8G0bAtgmL7nEZqAom7x71NgV3xTFyJPngMr2
+	LA4loJfHM4BH9JIYtJeNEb7u0vZWw8oubuONfZ4/eQPXZChfCwobMwpWl3ua0z7WP+m2mZ1n8Yu
+	7A0IF5i/dgAzgKti2u5c1rhTSq90KC5j6CuD98vdLlfAC0+ULIk+R2ax0emM=
+X-Google-Smtp-Source: AGHT+IGhuvLpAqQS7I+2m7Z9XzaPSkpAbybNsBDhKs5bekdBoj/OxhLRNHPqegbI4xxKRxzGwDGBXZgJ2CNvGDnzLy8AZrhAqumS
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1748335606.git.legion@kernel.org> <ecf0ebdda5bcf82464ed1cebbf50afdcd8b5b23a.1748335606.git.legion@kernel.org>
- <CAK7LNARm1+L0CrE8TYrFaipfOX4pjEJ7Uz7dn=3g+26PER6jNg@mail.gmail.com>
- <aD1f0CZfbsMR61OX@example.org> <CAK7LNATt+=k3sYU4FWM22aJzzH_a7_1FkO5S=LW7L-Z7K4CQhQ@mail.gmail.com>
- <aD3xFzKQbxaIo60a@example.org>
-In-Reply-To: <aD3xFzKQbxaIo60a@example.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Fri, 6 Jun 2025 14:12:38 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS-nL--pe98-AUKkdHpd9Ph-A0USUmk7QL7_PtUaqfzvQ@mail.gmail.com>
-X-Gm-Features: AX0GCFs4m3Tl9uhbLkzLOApFdwiFxOWwe5hdViPIxmKzD3M7a8xFttM0u9nkjX8
-Message-ID: <CAK7LNAS-nL--pe98-AUKkdHpd9Ph-A0USUmk7QL7_PtUaqfzvQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/6] modpost: Make mod_device_table aliases more unique
-To: Alexey Gladkov <legion@kernel.org>
-Cc: Petr Pavlu <petr.pavlu@suse.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org
+X-Received: by 2002:a05:6e02:74a:b0:3dd:cdff:2160 with SMTP id
+ e9e14a558f8ab-3ddce505a66mr23928265ab.17.1749186977327; Thu, 05 Jun 2025
+ 22:16:17 -0700 (PDT)
+Date: Thu, 05 Jun 2025 22:16:17 -0700
+In-Reply-To: <4a7f4d21-8b1c-4616-82bb-210395215035@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <684279a1.050a0220.2461cf.0038.GAE@google.com>
+Subject: Re: [syzbot] [usb?] KASAN: slab-use-after-free Read in raw_event_queue_add
+From: syzbot <syzbot+1e3edf922962b5ea40a4@syzkaller.appspotmail.com>
+To: ipravdin.official@gmail.com
+Cc: ipravdin.official@gmail.com, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 3, 2025 at 3:44=E2=80=AFAM Alexey Gladkov <legion@kernel.org> w=
-rote:
+> #syz test
+
+This crash does not have a reproducer. I cannot test it.
+
 >
-> On Tue, Jun 03, 2025 at 03:00:07AM +0900, Masahiro Yamada wrote:
-> > On Mon, Jun 2, 2025 at 5:24=E2=80=AFPM Alexey Gladkov <legion@kernel.or=
-g> wrote:
-> > >
-> > > On Mon, Jun 02, 2025 at 04:52:36PM +0900, Masahiro Yamada wrote:
-> > > > On Tue, May 27, 2025 at 6:08=E2=80=AFPM Alexey Gladkov <legion@kern=
-el.org> wrote:
-> > > > >
-> > > > > In order to avoid symbol conflicts if they appear in the same bin=
-ary, a
-> > > > > more unique alias identifier can be generated.
-> > > > >
-> > > > > Signed-off-by: Alexey Gladkov <legion@kernel.org>
-> > > > > Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
-> > > > > ---
-> > > > >  include/linux/module.h   | 14 ++++++++++++--
-> > > > >  scripts/mod/file2alias.c | 18 ++++++++++++++----
-> > > > >  2 files changed, 26 insertions(+), 6 deletions(-)
-> > > > >
-> > > > > diff --git a/include/linux/module.h b/include/linux/module.h
-> > > > > index 88048561360f..e7506684069d 100644
-> > > > > --- a/include/linux/module.h
-> > > > > +++ b/include/linux/module.h
-> > > > > @@ -249,10 +249,20 @@ struct module_kobject *lookup_or_create_mod=
-ule_kobject(const char *name);
-> > > > >  /* What your module does. */
-> > > > >  #define MODULE_DESCRIPTION(_description) MODULE_INFO(description=
-, _description)
-> > > > >
-> > > > > +/* Format: __mod_device_table__<counter>__kmod_<modname>__<type>=
-__<name> */
-> > > >
-> > > > This format relies on module-name mangling, but
-> > > > I hope we will be able to stop doing it some day.
-> > >
-> > > I didn't like this approach either when I found out how it was
-> > > implemented.
-> >
-> > Yeah, I dislike it.
-> >
-> > I hope we can stop this historical mistake:
-> > https://lore.kernel.org/lkml/20250602130609.402581-1-masahiroy@kernel.o=
-rg/
-> >
-> > Once we stop doing that, __KBUILD_MODNAME will not match to KBUILD_MODN=
-AME.
+> diff --git a/drivers/usb/gadget/legacy/raw_gadget.c b/drivers/usb/gadget/legacy/raw_gadget.c
+> index 20165e1582d9..d7fca01afbf1 100644
+> --- a/drivers/usb/gadget/legacy/raw_gadget.c
+> +++ b/drivers/usb/gadget/legacy/raw_gadget.c
+> @@ -120,9 +120,13 @@ static struct usb_raw_event *raw_event_queue_fetch(
+>  static void raw_event_queue_destroy(struct raw_event_queue *queue)
+>  {
+>         int i;
+> +       unsigned long flags;
+>  
+> +       spin_lock_irqsave(&queue->lock, flags);
+>         for (i = 0; i < queue->size; i++)
+>                 kfree(queue->events[i]);
+> +       spin_unlock_irqrestore(&queue->lock, flags);
+> +
+>         queue->size = 0;
+>  }
 >
-> Do I understand you correctly that I cannot use __KBUILD_MODNAME now ?
-
-Honestly, I dislike __KBUILD_MODNAME, but I know it is more challenging.
-
-So, at least you need to fix the rust issue.
-
-
-
-
-> > Also, you need to be careful about the rust side, as
-> > you did not take care of it.
-> >
-> > https://github.com/torvalds/linux/blob/v6.15/rust/kernel/device_id.rs#L=
-157
+> Ivan Pravdin
 >
-> Oh. This will make it much more complicated because I don't know rust
-> well. :(
->
-> I found a few more issues with modules when they compile as part of the
-> kernel, but was hoping to fix them after these patches.
->
-> --
-> Rgrds, legion
->
-
-
---=20
-Best Regards
-Masahiro Yamada
