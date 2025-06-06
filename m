@@ -1,255 +1,126 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE24286D5B
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 11:18:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F7E19D880
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 11:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749208685; cv=none; b=pBkeULyRVM8srhJH6uIk+RWZUBQe5vjiW4IEJHF6qug4zU+ZN0+iJaPx53GO8aTb3xLny7194IFiZi6kiIoetUvQl8lV+DYj4wt55gr0Z/p1tvEizL0y9MGMYZ9jY6ldyZ2WRD4jodRE361Ec4TrOGsvq3G1kCr5hxJYWVfvFR0=
+	t=1749208805; cv=none; b=OfsVp8wT5h8oYOhrjvhXlXJaCwxfc7FpWv0pixiOJc5dFz6tYF1Qf+hF6dCuHiBjIRY3wprLjLIXk0mraMBwD/h+hfrf3xITCGo8YskP7h9eeXpNfw68VtZnaiXNHjsPg93JqNN98JZLg0pxCCkuk2eRHS18onoLXUcxcHy2f00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749208685; c=relaxed/simple;
-	bh=2Zf9PqQ/xdsUa49ohUw4b0FzbCTktzpyC6txhBl+f2M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YaDDHyrzCHNxESzpZv6tcEOYCGrOTLBBfcjKmiy0yN6InGi4aB4ExG/15wxhixt3Cb+j+noBffbAM4UZy/dC29S3GgbCzHrJiTzjRWPYXZHAkuYMpewUMt6ARnx9cpr5b+EAMf2hDBpRbNB0H0yvg+F/OwvZ9WAt45Tm5aOVgFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=DBKCcI3b; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1749208805; c=relaxed/simple;
+	bh=USdClpSVqld8qSLsJmF5UBqX++/lI09ziLNHsV+mc0s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=naUxyhanSdvWih4Oc8k5P0xIfi3bWzYXMDClqdh0WVzag20b/KXySw6LFcmCLZT0ZXLTATybLF51TIrpiXjcmwbN5GWEP07DllWHxWNeuoWleInSDbVka4BiYENu5IRREQe7Rk+kxfCf8kvDqvbfqjxF73FfoT8Zk3rIncOmFFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=u0CDmtcy; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="DBKCcI3b"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-601f278369bso3965751a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 04:18:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="u0CDmtcy"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-442f9043f56so10948855e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 04:20:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1749208679; x=1749813479; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K9UeLBEeNgVFZxNvwdqTWlF8knLYtgrdcWBf2xtn+Ko=;
-        b=DBKCcI3bfOOqblSO59w3vot2T5GnEqknF0Su7dLvhZMIBNr8p9BZ95rbGQbs3j4WpD
-         qbCqEYY4hLdbAhb3jWAM/2NyRD+25CDi5k5tBlusNs7gxbHSWTpwAc18MRXAolRyD/x9
-         KHxaM76gTLUXbwsQtU4VVHC9Bbe1B05dEhSP0wcTErxGdzmOdauyErGGZNi/yIENpjcr
-         GS5mcAYz5FliR/9cUX2FdYs6igndNfZ2S4ql5b9CBk2K4gfygovFfhGcqB8fFbjJwjBu
-         FKDBTtlIxndAzYjsRtVlNuF7Sit+Yo82+6a4us7WK2tZKW+ZsAnHZwe0U5HmIM7NYLlN
-         dvkg==
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1749208799; x=1749813599; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MuQ7ElMFujECmYhgfOt92ztzf79cPNjqJC1YxZVfkjk=;
+        b=u0CDmtcyJQO2+isOBmvt98vI8uIspiM4cTPZwGOvfWsegbf32lu/gjt16nz6BGq2ko
+         mLk0oG3tn79OfjdaA0ts9QSuhYPsR/T7APcj4Mk7mxNDUv5zSuKuPagRDb9Ku9oo2waF
+         afEJ1qOGZnjwo9cw86cz8hA+MB7X+vUr+jNXPa7aij4WIRswv2FTnY0CiMIRyw8JSpic
+         6TMvKIdmN5PFqwNqdvX8K6A3n7RO2QVxzkYpw1ys2LlOJzA9bDcY3Z9gUtZO1RfZn/mD
+         0iy4vzXKCi58AHhghJO9UsxhmfRWoFzd7jn7SBU3KFp6n/eaNw9ApwvVh2AfQOWnl68L
+         198Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749208679; x=1749813479;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K9UeLBEeNgVFZxNvwdqTWlF8knLYtgrdcWBf2xtn+Ko=;
-        b=ZjEorTLqctYVJdS+3VVpehc01GTofFH7L75/dg0DKT8giBTwEUiIhPFd/9Xk78L2YV
-         NdXJU5YZ2DlV1alm+eXsIyKZie2NFJbB0LkK3NOJn2kG5AqJg7ACoVTV8hc9OKoPYf/a
-         y5IAqSba9w4WXG4TBxkT2NiOxjFyyDhKeBM10q9Gw72L2rWAsD7poO1UqQhXcNZ3jTuN
-         j60DzNi4LKTg1zjD7mw/0fLDCJ9u5Rw33G3EnWGMoME42Udim/kc2CujFiUJjTwlGafE
-         InW7cppwvui6e7Bgf2j/yUB5VMSSP5cnwqVh5JMAkre0/AUSuFBq2nLMGHkwPTOEBdyA
-         X9WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWeIbN3wukOSbftPkFfaB4aaPB5EC1IAZewGRTRomm9AYEAHvv7mcJPuymQp0ooJZ3iIuf5JWHxlZT3Wd8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxgxzx0PSynYrUvOpmmNZilx0VCnmP0A6rVVlCorbpad3jk6Gjc
-	R9CI/vN0kn1B5Jk2Y5eTsRftxc0j/dk1zIbYJmbefireqhqo2VGZ1FOFpEuJCIj6W0g=
-X-Gm-Gg: ASbGnctA84QVRqBfXsKUby5uM+8gpbb/nx1ExbWU1VzLsuUvWWXwvs+oGnrJp/d5Y9W
-	Timq+pphXPSwc9RrQp3WP2I5dAw+naLWbSkfHRMZ4r/jLXYE8vzfsm3+n6v7ulyUKpTV5p0C2cd
-	0ZA4ZYXTeSeP+s53fI88LLyKxfXRULyYqgEme/DwKWiSmlG0bjlpkWdbKkFutnMd9m+xi+I1a5R
-	nYBceli4lgtJ9p2BjXRYPs7PCCem5tEFjShILGeW8yv1+jfnmUBHZKQ9yr7op2NlcLkSa/4xdlA
-	QqIY76XF/TjwmqASOtatwNZOOyyLpiYSjnwH4QfvpSWZwunxu2maWevt8xoCg4zP5BiG6ObPZVa
-	hzrliXw==
-X-Google-Smtp-Source: AGHT+IG4VTq1mx5DeffErAs95tbKPfwNXjlN3PvJEQqp28QpBbWUEU9bT6nIWpBgMvdagmloO4L2qg==
-X-Received: by 2002:a17:907:d24:b0:adb:41b1:feca with SMTP id a640c23a62f3a-ade1ab99b91mr213537666b.61.1749208678682;
-        Fri, 06 Jun 2025 04:17:58 -0700 (PDT)
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.126])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc7b566sm98704566b.164.2025.06.06.04.17.57
+        d=1e100.net; s=20230601; t=1749208799; x=1749813599;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MuQ7ElMFujECmYhgfOt92ztzf79cPNjqJC1YxZVfkjk=;
+        b=OwvLhau4KOi54LQAui5Huv1LPC3RcSxo5sB3e0iQ/gkbgNcwVH431wS7kZf/EzZnD3
+         xxwZfaBJKoqN9F8BLGupUd0YPXAGbdszvSLJ8uMVKpoVU4j+i/AAAGdplTHzqydAbvMX
+         eV/nwEKERzvM2M0gjMte+F2Uc8JuIqygVd0LHUo8Vffs0xFuJizh9wqLQQBUCFl+ar4z
+         zV6oaG3UCLMQB4hhKOjey3+JfyDV3dH5CamSzFpAGugqjIMokyg8IzeD8XSkoVNkHUwg
+         tKRRn1T+xkMbJf1DEBZ89WiBTM/Eq8p09T2vwLwNuw++DrmpDiSCo3vw4FAjHdGubabF
+         SxIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUgVqDP+bhGcL1CmC2GDKnSyMslODtx6aXsOPqBpu2kCS/PUulvaWF+jGyZ0YwUXVt6rXuigPkU1f6VKtA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxODMpRjK2KdqDZTxMwq0DAdyNbFRPAfEcW+I9UnuwewXk85RKS
+	GKuEF5W77hVhwey4GI6vcjTdZhDEZykivybJQuGobQ8QZRQpZ9/GYZu/i5b4ka9pcVQ=
+X-Gm-Gg: ASbGncs3WxK/rqzsHwFuJ1Expkq1PNocyq2KmGR6Ls8UUEgDdtAs0s1snlm3ZqZ1LTw
+	eRTNMf18riznDMl5Xq++KsTmWIp3+Dj9MzVEXdYUbDNpBfrdrK5YG773fHjc7RzBi9SBAwQEW5R
+	LnEnrgLQmXgabLxl+RRfpzsUkcR6J8CLHyboxVyj+taEYb90TxaWX19uFyzqV31FqEoKARmlqg8
+	SQMX4LIlR4YI9lF5wrJicWFoakEvGO8QdaT3TN6Wjsdiw25t0NL26vQ40A4W/9ga83tnRVudbMM
+	ofeV8fMQJXKf93YQ0E9r57TOJ4LYmMHK0tj+6k71WBdKCEbFIaDoDTmezyIwkES60IIA5w==
+X-Google-Smtp-Source: AGHT+IH2MrdFxFyb1RgZrJq3QgVItnUJDGd7Nbi2wT4HljZC4pDIqfq4GTUxdydboY7ZnYyQOl6GGg==
+X-Received: by 2002:a05:600c:3e10:b0:450:d204:34ca with SMTP id 5b1f17b1804b1-452013bb9a4mr33700405e9.18.1749208799424;
+        Fri, 06 Jun 2025 04:19:59 -0700 (PDT)
+Received: from localhost ([2a02:8071:6401:180:da11:6260:39d6:12c])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4526e056138sm18262385e9.5.2025.06.06.04.19.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 04:17:58 -0700 (PDT)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	dakr@kernel.org,
-	len.brown@intel.com,
-	pavel@kernel.org,
-	ulf.hansson@linaro.org,
-	jic23@kernel.org,
-	daniel.lezcano@linaro.org,
-	dmitry.torokhov@gmail.com
-Cc: claudiu.beznea@tuxon.dev,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	bhelgaas@google.com,
-	geert@linux-m68k.org,
-	linux-iio@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	fabrizio.castro.jz@renesas.com,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v3 1/2] PM: domains: Add devres variant for dev_pm_domain_attach()
-Date: Fri,  6 Jun 2025 14:17:48 +0300
-Message-ID: <20250606111749.3142348-2-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250606111749.3142348-1-claudiu.beznea.uj@bp.renesas.com>
-References: <20250606111749.3142348-1-claudiu.beznea.uj@bp.renesas.com>
+        Fri, 06 Jun 2025 04:19:58 -0700 (PDT)
+Date: Fri, 6 Jun 2025 13:19:53 +0200
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Wupeng Ma <mawupeng1@huawei.com>
+Cc: akpm@linux-foundation.org, vbabka@suse.cz, surenb@google.com,
+	jackmanb@google.com, ziy@nvidia.com, wangkefeng.wang@huawei.com,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] mm: Drain PCP during direct reclaim
+Message-ID: <20250606111953.GB1118@cmpxchg.org>
+References: <20250606065930.3535912-1-mawupeng1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250606065930.3535912-1-mawupeng1@huawei.com>
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Fri, Jun 06, 2025 at 02:59:30PM +0800, Wupeng Ma wrote:
+> Memory retained in Per-CPU Pages (PCP) caches can prevent hugepage
+> allocations from succeeding despite sufficient free system memory. This
+> occurs because:
+> 1. Hugepage allocations don't actively trigger PCP draining
+> 2. Direct reclaim path fails to trigger drain_all_pages() when:
+>    a) All zone pages are free/hugetlb (!did_some_progress)
+>    b) Compaction skips due to costly order watermarks (COMPACT_SKIPPED)
 
-The dev_pm_domain_attach() function is typically used in bus code alongside
-dev_pm_domain_detach(), often following patterns like:
+This doesn't sound quite right. Direct reclaim skips when compaction
+is suitable. Compaction says COMPACT_SKIPPED when it *isn't* suitable.
 
-static int bus_probe(struct device *_dev)
-{
-    struct bus_driver *drv = to_bus_driver(dev->driver);
-    struct bus_device *dev = to_bus_device(_dev);
-    int ret;
+So if direct reclaim didn't drain, presumably compaction ran but
+returned COMPLETE or PARTIAL_SKIPPED because the freelist checks in
+__compact_finished() never succeed due to the pcp?
 
-    // ...
+> @@ -4137,28 +4137,22 @@ __alloc_pages_direct_reclaim(gfp_t gfp_mask, unsigned int order,
+>  {
+>  	struct page *page = NULL;
+>  	unsigned long pflags;
+> -	bool drained = false;
+>  
+>  	psi_memstall_enter(&pflags);
+>  	*did_some_progress = __perform_reclaim(gfp_mask, order, ac);
+> -	if (unlikely(!(*did_some_progress)))
+> -		goto out;
+> -
+> -retry:
+> -	page = get_page_from_freelist(gfp_mask, order, alloc_flags, ac);
+> +	if (likely(*did_some_progress))
+> +		page = get_page_from_freelist(gfp_mask, order, alloc_flags, ac);
+>  
+>  	/*
+>  	 * If an allocation failed after direct reclaim, it could be because
+>  	 * pages are pinned on the per-cpu lists or in high alloc reserves.
+>  	 * Shrink them and try again
+>  	 */
+> -	if (!page && !drained) {
+> +	if (!page) {
+>  		unreserve_highatomic_pageblock(ac, false);
+>  		drain_all_pages(NULL);
+> -		drained = true;
+> -		goto retry;
+> +		page = get_page_from_freelist(gfp_mask, order, alloc_flags, ac);
 
-    ret = dev_pm_domain_attach(_dev, true);
-    if (ret)
-        return ret;
+This seems like the wrong place to fix the issue.
 
-    if (drv->probe)
-        ret = drv->probe(dev);
-
-    // ...
-}
-
-static void bus_remove(struct device *_dev)
-{
-    struct bus_driver *drv = to_bus_driver(dev->driver);
-    struct bus_device *dev = to_bus_device(_dev);
-
-    if (drv->remove)
-        drv->remove(dev);
-    dev_pm_domain_detach(_dev);
-}
-
-When the driver's probe function uses devres-managed resources that depend
-on the power domain state, those resources are released later during
-device_unbind_cleanup().
-
-Releasing devres-managed resources that depend on the power domain state
-after detaching the device from its PM domain can cause failures.
-
-For example, if the driver uses devm_pm_runtime_enable() in its probe
-function, and the device's clocks are managed by the PM domain, then
-during removal the runtime PM is disabled in device_unbind_cleanup() after
-the clocks have been removed from the PM domain. It may happen that the
-devm_pm_runtime_enable() action causes the device to be runtime-resumed.
-If the driver specific runtime PM APIs access registers directly, this
-will lead to accessing device registers without clocks being enabled.
-Similar issues may occur with other devres actions that access device
-registers.
-
-Add devm_pm_domain_attach(). When replacing the dev_pm_domain_attach() and
-dev_pm_domain_detach() in bus probe and bus remove, it ensures that the
-device is detached from its PM domain in device_unbind_cleanup(), only
-after all driver's devres-managed resources have been release.
-
-For flexibility, the implemented devm_pm_domain_attach() has 2 state
-arguments, one for the domain state on attach, one for the domain state on
-detach.
-
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
-
-Changes in v3:
-- dropped devm_pm_domain_detach_off(), devm_pm_domain_detach_on()
-  and use a single function devm_pm_domain_detach()
-
-Changes in v2:
-- none; this patch is new
-
- drivers/base/power/common.c | 50 +++++++++++++++++++++++++++++++++++++
- include/linux/pm_domain.h   |  6 +++++
- 2 files changed, 56 insertions(+)
-
-diff --git a/drivers/base/power/common.c b/drivers/base/power/common.c
-index 781968a128ff..82ea20b343f5 100644
---- a/drivers/base/power/common.c
-+++ b/drivers/base/power/common.c
-@@ -115,6 +115,56 @@ int dev_pm_domain_attach(struct device *dev, bool power_on)
- }
- EXPORT_SYMBOL_GPL(dev_pm_domain_attach);
- 
-+/**
-+ * devm_pm_domain_detach - devres action for devm_pm_domain_attach() to
-+ * detach a device from its domain.
-+ * @dev: device to detach.
-+ * @res: indicate if the device should be powered off
-+ *
-+ * This function reverse the actions from devm_pm_domain_attach().
-+ * It will be invoked during the remove phase from drivers implicitly.
-+ */
-+static void devm_pm_domain_detach(struct device *dev, void *res)
-+{
-+	bool *power_off = res;
-+
-+	dev_pm_domain_detach(dev, *power_off);
-+}
-+
-+/**
-+ * devm_pm_domain_attach - devres-enabled version of dev_pm_domain_attach()
-+ * @dev: Device to attach.
-+ * @power_on: Use to indicate whether we should power on the device
-+ *            when attaching.
-+ *
-+ * NOTE: this will also handle calling dev_pm_domain_detach() for
-+ * you during remove phase.
-+ *
-+ * Returns 0 on successfully attached PM domain, or a negative error code in
-+ * case of a failure.
-+ */
-+int devm_pm_domain_attach(struct device *dev, bool power_on)
-+{
-+	bool *power_off;
-+	int ret;
-+
-+	power_off = devres_alloc(devm_pm_domain_detach, sizeof(*power_off), GFP_KERNEL);
-+	if (!power_off)
-+		return -ENOMEM;
-+
-+	ret = dev_pm_domain_attach(dev, power_on);
-+	if (ret) {
-+		devres_free(power_off);
-+		return ret;
-+	}
-+
-+	*power_off = power_on;
-+	devres_add(dev, power_off);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(devm_pm_domain_attach);
-+
- /**
-  * dev_pm_domain_attach_by_id - Associate a device with one of its PM domains.
-  * @dev: The device used to lookup the PM domain.
-diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-index 0b18160901a2..f78b6b4dd734 100644
---- a/include/linux/pm_domain.h
-+++ b/include/linux/pm_domain.h
-@@ -509,6 +509,7 @@ struct device *dev_pm_domain_attach_by_name(struct device *dev,
- int dev_pm_domain_attach_list(struct device *dev,
- 			      const struct dev_pm_domain_attach_data *data,
- 			      struct dev_pm_domain_list **list);
-+int devm_pm_domain_attach(struct device *dev, bool power_on);
- int devm_pm_domain_attach_list(struct device *dev,
- 			       const struct dev_pm_domain_attach_data *data,
- 			       struct dev_pm_domain_list **list);
-@@ -539,6 +540,11 @@ static inline int dev_pm_domain_attach_list(struct device *dev,
- 	return 0;
- }
- 
-+static inline int devm_pm_domain_attach(struct device *dev, bool power_on)
-+{
-+	return 0;
-+}
-+
- static inline int devm_pm_domain_attach_list(struct device *dev,
- 					     const struct dev_pm_domain_attach_data *data,
- 					     struct dev_pm_domain_list **list)
--- 
-2.43.0
-
+Kcompactd has a drain_all_pages() call. Move that to compact_zone(),
+so that it also applies to the try_to_compact_pages() path?
