@@ -1,72 +1,53 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C78F14F98;
-	Fri,  6 Jun 2025 03:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC08F14F98;
+	Fri,  6 Jun 2025 03:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749179120; cv=none; b=o5xVcPuy5+CCFeGCrYLFbiIWQ4dIeCR//acoBHZZqdoTAbnkSdnAU4fRpkcGJ7Zqzh9EzHfs/DHzu23yMmwgBF3yjppUxhXtPYRWOS9S5RHF/MHSo3HbIHsOCS4mcVaQA5Hpkkf6hVI3d5HigoWfM2qL3+puoyCyuCpj+OiLxqg=
+	t=1749179159; cv=none; b=b7gWbjiupToae2BeBk29bouicQ7mHZw//wiZOeBvJL+M9TwtEIlip6uEBrpgucaFBqJYGMCpTBZ8CbwFi0ZDsomrEGKQ/O+3mrk1XlvcVF3FixO7Ej20X0FF4srtA5kpxYfTdryeg3ZNPHOl6dQehIQdPK+4SdQDs4m1m7jG+aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749179120; c=relaxed/simple;
-	bh=qvxfTohsQcakb1JOVyty8LHhkWl895U5JULIp9uIpAM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DHWzNwqHudowEcCkbLxzbu7Gj+ApHOPgFBbbuCMnjzDV4NaLJdEWEX9Umsh8yRjAC3Y2qVDyUHa9WwwmZ+kL8QOZYl7WJ26x1JhWkPtc5DOD4WybHoV7CLBvwuGZH7QVPMTuikuPSPZJlILJ8Gl6eC3VxrKnlndXM7Ph8L0nb2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=knWAdjF7; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749179159; c=relaxed/simple;
+	bh=KHGFMaZE4Rzua4WevqCtNsMm7jbCTpM8wx1yap/Lns0=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hsomA+LDeS17ia04nB7haP69z1n04ZEox41oFTviws0fAPWfqhpzCgAhcYmkmA+wQd2IA8bVhttDlBBFxTh0bm0uhbbt9pZLY+ixkKHglfaO7u2b4fDAXXC2M80nqhpUEG8HtOfYTTOPZVOAsr4GbcMkwN9N3GXlWjew3nBgS8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=eGneFpvL; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="knWAdjF7"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-742c27df0daso1656784b3a.1;
-        Thu, 05 Jun 2025 20:05:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749179118; x=1749783918; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=c/2WAUKpAG8ell30qVj88kLBNlacicp6gf1yYc6ekd0=;
-        b=knWAdjF7ib8GK9FEx691VBBn2pUMRwC/oZB+QIFTKhGzpNE7asvFnyugGl6uLqtORJ
-         ffmlqNKhyhQSpI1u17JanvnELaRgwIyH4/LD9VHFCXluqcOOfsgGmZRTaTNw368Rxu6I
-         16Y54YsXiMvHNdBz52wvE0JcSr5KBNY8AsmWfPwTy3IKR31uhyZSKWvmY4GaRfIs+7gd
-         2tasK9uMKLEwn7Slg24qzLyVD5k5Bc2H36Lh+J3Vjq0riIJYCKoPJVwMgtTN5foOppSs
-         KoACmMYk8cy3NtcMy6GmiQvh+SjC4ZqKCxHOfAXtGrk9NaQhcpqVwsF35vbvUOHHMSdl
-         9mPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749179118; x=1749783918;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=c/2WAUKpAG8ell30qVj88kLBNlacicp6gf1yYc6ekd0=;
-        b=awu2c7m/UR8jaZd+8E2ajwO/i2l/3u1H3Q8daq+2lk6YV/lTmffDWNlL3slLrwYjPI
-         q9tpr5/Dig4CbphmBsjnW7ycYr78TCtIiDiIQglJF8U6l74EJzx4C+DZuzSBsrgki1ey
-         0qCPr0i56bBmgg+vvNeW7lBDBiGOkUzGAhSHOzGBvK2NdhiJt8ps8MfF/wFtYFsX0X5i
-         wjLDC5wiwlYUYa9c7LNBTyIwdsl/IGOwA6LiKflVUCzm6S86a/dKjrjzffJmUoy6hzPK
-         ZMPjhmDWyhzzT4UKvdu9971LeBWdZ3JY5Cp4hE2rD5eTXsf/u0ZBmGgbWds7qqzNVder
-         zLdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU086O/uuiZ9NHVH6T1tKmVXAy0DkQpleynBnGMP9XYPNapuCXYwzAdLBPOsXGuEZs4kkT8WIZC@vger.kernel.org, AJvYcCUWETFAD51BTAFpaMO52dTc64yEw1wZ9O+6uDkRNQtFYCZhVNQSoKOev+zQHDO5upWhPW+3k5BLGwJbiNE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwargGceC2BQzxjzH94LmFhc+OwB3bUAcxsGM4vSs4xqZqKCfGq
-	1yxdb2wvehZpHD14zPYy8TcOIECW1NN6a6P69bZTaAEkuTFxg7r9HIpB
-X-Gm-Gg: ASbGncuwjM6J61E9KZyjKYN8XK8KXR79HtLBZnf7Y4O7tPXYqUePdoPxlJS3I6hyYrN
-	CsGfaJoZaVjIj6lNNqvj09kWiLxogBuwkPc/1ZtaPs7HChSNk6vXpA2/C5MXSU8l9oAhH56lBGH
-	rLJaYUjwZrEWq0HMUNfzg+BrpTT0NBkycSQMHSzSD3zPTsJAjfxlyWsCan3AiYc+nTa5VeectJm
-	ls8TGP1E/MfLuU/tffvqkXJDONeIgNsK5/QJ+hJH5CClnQdAuliKI1l0mc9XtTyx15o99SCJXcZ
-	hdkCXmMXcU9ufJUyJ03n/FCBJZhKSX2ZHRznK30nBfmc7HAviNz+GFsMQDoOVHqIjCwpvAFMomE
-	wBw==
-X-Google-Smtp-Source: AGHT+IEevhfR4kZLewqgPQkOOJ3rbgAG83iZSMjkBdMA2R41iU+N7gZPtZFk4A9IQWIJQrVxQTVJqg==
-X-Received: by 2002:a05:6a21:600b:b0:1f5:64a4:aeac with SMTP id adf61e73a8af0-21ee25e02fcmr2177323637.33.1749179117554;
-        Thu, 05 Jun 2025 20:05:17 -0700 (PDT)
-Received: from localhost.localdomain ([124.127.236.5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0e9d36sm350696b3a.157.2025.06.05.20.05.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 20:05:17 -0700 (PDT)
-From: Gui-Dong Han <hanguidong02@gmail.com>
-To: hverkuil@xs4all.nl,
-	mchehab@kernel.org
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	baijiaju1990@gmail.com,
-	Gui-Dong Han <hanguidong02@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] media: rainshadow-cec: fix TOCTOU race condition in rain_interrupt()
-Date: Fri,  6 Jun 2025 03:04:59 +0000
-Message-Id: <20250606030459.487276-1-hanguidong02@gmail.com>
+	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="eGneFpvL"
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 55635nMQ22715425, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
+	t=1749179149; bh=TSLyLk9wHkv/TXeJyn5hX7quEcNOqXLmOOcUYhqXfZE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type;
+	b=eGneFpvL25qxMWdXgEPwS/STWO4gq8MmabZVeiG6VnYcs5eXnGFBArfgTgqVVKzET
+	 PJva3T2o05zsQ2YDLfWPFc21IDF4US6nnT/NvlxsL44KtNEqbfTwmmWr2Z8aBzddxH
+	 HjvLVmR9EF0aJPhwVAa1qSJT05qKVM7jce6exCD59BGS8O+4hiOIKk5BAtqgfChhw2
+	 PHcDJFg07wjEPqgDzE+y+vbInGwo5Amrk7rRZkZ1trgqrW0IUBbvvAofI6QmMefBUM
+	 hO+ZhP93gKvkkE+DhkGnqYLXPiIctOSYHWobK+qt5fWo+5OV3YtG++afO1RSglmvRB
+	 K1oxq5u9+vTFQ==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 55635nMQ22715425
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 6 Jun 2025 11:05:49 +0800
+Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 6 Jun 2025 11:05:49 +0800
+Received: from RTEXH36506.realtek.com.tw (172.21.6.27) by
+ RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 6 Jun 2025 11:05:48 +0800
+Received: from localhost (172.22.144.1) by RTEXH36506.realtek.com.tw
+ (172.21.6.27) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Fri, 6 Jun 2025 11:05:48 +0800
+From: Ricky Wu <ricky_wu@realtek.com>
+To: <linux-kernel@vger.kernel.org>, <ulf.hansson@linaro.org>,
+        <linux-mmc@vger.kernel.org>, <viro@zeniv.linux.org.uk>,
+        <ricky_wu@realtek.com>
+Subject: [PATCH v3] mmc: rtsx: usb add 74 clocks in poweron flow
+Date: Fri, 6 Jun 2025 11:05:45 +0800
+Message-ID: <20250606030545.1743961-1-ricky_wu@realtek.com>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -75,52 +56,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-In the interrupt handler rain_interrupt(), the buffer full check on
-rain->buf_len is performed before acquiring rain->buf_lock. This
-creates a Time-of-Check to Time-of-Use (TOCTOU) race condition, as
-rain->buf_len is concurrently accessed and modified in the work
-handler rain_irq_work_handler() under the same lock.
+SD spec definition:
+"Host provides at least 74 Clocks before issuing first command"
 
-Multiple interrupt invocations can race, with each reading buf_len
-before it becomes full and then proceeding. This can lead to both
-interrupts attempting to write to the buffer, incrementing buf_len
-beyond its capacity (DATA_SIZE) and causing a buffer overflow.
+add issue the clocks when power_mode is POWER_UP
+and stop the signal when power_mode is POWER_up to POWER_ON
 
-Fix this bug by moving the spin_lock() to before the buffer full
-check. This ensures that the check and the subsequent buffer modification
-are performed atomically, preventing the race condition. An corresponding
-spin_unlock() is added to the overflow path to correctly release the
-lock.
-
-This possible bug was found by an experimental static analysis tool
-developed by our team.
-
-Fixes: 0f314f6c2e77 ("[media] rainshadow-cec: new RainShadow Tech HDMI CEC driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gui-Dong Han <hanguidong02@gmail.com>
+Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
 ---
- drivers/media/cec/usb/rainshadow/rainshadow-cec.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+v2: remove delay 100ms in power_on
+v3: Use switch-case instead of if statements
+---
+ drivers/mmc/host/rtsx_usb_sdmmc.c | 36 ++++++++++++++++++++++---------
+ 1 file changed, 26 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/media/cec/usb/rainshadow/rainshadow-cec.c b/drivers/media/cec/usb/rainshadow/rainshadow-cec.c
-index ee870ea1a886..6f8d6797c614 100644
---- a/drivers/media/cec/usb/rainshadow/rainshadow-cec.c
-+++ b/drivers/media/cec/usb/rainshadow/rainshadow-cec.c
-@@ -171,11 +171,12 @@ static irqreturn_t rain_interrupt(struct serio *serio, unsigned char data,
+diff --git a/drivers/mmc/host/rtsx_usb_sdmmc.c b/drivers/mmc/host/rtsx_usb_sdmmc.c
+index d229c2b83ea9..1c808cfb44ff 100644
+--- a/drivers/mmc/host/rtsx_usb_sdmmc.c
++++ b/drivers/mmc/host/rtsx_usb_sdmmc.c
+@@ -1014,24 +1014,40 @@ static int sd_set_power_mode(struct rtsx_usb_sdmmc *host,
+ 		unsigned char power_mode)
  {
- 	struct rain *rain = serio_get_drvdata(serio);
+ 	int err;
++	struct rtsx_ucr *ucr = host->ucr;
  
-+	spin_lock(&rain->buf_lock);
- 	if (rain->buf_len == DATA_SIZE) {
-+		spin_unlock(&rain->buf_lock);
- 		dev_warn_once(rain->dev, "buffer overflow\n");
- 		return IRQ_HANDLED;
+-	if (power_mode != MMC_POWER_OFF)
+-		power_mode = MMC_POWER_ON;
+-
+-	if (power_mode == host->power_mode)
+-		return 0;
+-
+-	if (power_mode == MMC_POWER_OFF) {
++	switch (power_mode) {
++	case MMC_POWER_OFF:
++		if (host->power_mode == MMC_POWER_OFF)
++			return 0;
+ 		err = sd_power_off(host);
+ 		pm_runtime_put_noidle(sdmmc_dev(host));
+-	} else {
++		break;
++	case MMC_POWER_UP:
++	case MMC_POWER_ON:
++		if (host->power_mode == MMC_POWER_ON) {
++			return 0;
++		} else if (host->power_mode == MMC_POWER_UP) {
++			/* stop to send the clock signals */
++			rtsx_usb_write_register(ucr, SD_BUS_STAT, SD_CLK_TOGGLE_EN, 0x00);
++			host->power_mode = power_mode;
++			return 0;
++		}
+ 		pm_runtime_get_noresume(sdmmc_dev(host));
+ 		err = sd_power_on(host);
++		break;
++	default:
++		return 0;
  	}
--	spin_lock(&rain->buf_lock);
- 	rain->buf_len++;
- 	rain->buf[rain->buf_wr_idx] = data;
- 	rain->buf_wr_idx = (rain->buf_wr_idx + 1) & 0xff;
++	if (!err) {
++		if (power_mode == MMC_POWER_UP) {
++			/* issue the clock signals to card */
++			rtsx_usb_write_register(ucr, SD_BUS_STAT, SD_CLK_TOGGLE_EN,
++				SD_CLK_TOGGLE_EN);
++		}
+ 
+-	if (!err)
+ 		host->power_mode = power_mode;
+-
++	}
+ 	return err;
+ }
+ 
 -- 
 2.25.1
 
