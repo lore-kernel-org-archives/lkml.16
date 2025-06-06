@@ -1,135 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9CC25F793;
-	Fri,  6 Jun 2025 09:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A2A283FFA
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 09:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749200415; cv=none; b=WyYsWckDQzhFzBDB8iBHFkZlVo9p1zunYZ8ULUBZeup+IbwgdL2Gpy0TTBjIJ2GhDQ3RSziKVXsrltfb4r6sDcbmPygMBoztQk1I6OHttyncHJoxYoEl20qNOjlzwPZUcdmMTEIhejADroYwaK06OzK2sLTr1de2gV6HNH56i00=
+	t=1749200424; cv=none; b=VH1gJ432h09aJvhqF4YMQ2LVQf35e1um/cWUPQfUlQLzPiP6uzN4fkh2jDOE+NI9oabspo3O/CQqbi5O3pQ5Et26pGU313NdPFYUNnrmoUqJFQa4Ov07JTXLDO9Wae6BKKXA8Dxk7dLOxBvql5TUXBbSUvLFiFGffOs/mu0kkKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749200415; c=relaxed/simple;
-	bh=xNHwIpVHeWC+mE1P2Ks1p+kDy+CdkMZCOyr72R8daRE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LtMTsEKtILe4RNXtbcpj77sv2HL7Ca5/EArfagyk6gYm1LFY1s6o68pa1eQC5Ttc0oGaV9IXKsaQHEV31RTKmgNf98LDcTJuKiteeaYX0TnUlxm9L7vMLx8qoGa3VxdWEO2Epf20X+s3sVBAp0CzRVCzPz9xcYWtbunt7yFXcyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sDyefeYI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749200424; c=relaxed/simple;
+	bh=/eAfRKkG8umOInYvuV8Ox5HGkToOXh0S4FrQTBYSvyQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=HmxU/vLjRDI23fOZryxJ+B8fj1hQEnGn/qV8+E+GzlZUm2Jt+CnL3sYp4dOKISHu+erXRydy0CiGfoTLjt3AaJ8R/jYeuIjGvR3Oxm6hNnM+eQzRXpnFLkan8TfJi/xg89CPVKZ9maWpLn94jTLsH2CECks09dfkgGVCQTsbEBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JjREHAPf; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sDyefeYI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57DC8C4CEEB;
-	Fri,  6 Jun 2025 09:00:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749200414;
-	bh=xNHwIpVHeWC+mE1P2Ks1p+kDy+CdkMZCOyr72R8daRE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sDyefeYI157FNH1aszpofzkfeeMkkuM1s9Z1o7gBDjducPeG0nAxFkO4y5gunuDG7
-	 ogXA36f7wH53CO3U7nzv1p/9dfz3RiN1o1RgyRpLD/L73poLScECVIfuj8EZCNTv3p
-	 zYOyzqTKKea8twIq/Da9YgjuGt5nSnPPkZFuD4om6yIDPTZyp3fRFgMD6AsIsvjWTu
-	 dVCbMOJ9oBkp3GmQyLFL6x99yU1m3rJfbmy0jXfag/5iGJ7V64SoNs+HG6wljSpqvZ
-	 rx0eF6cFVuTqcsoBBB8RqJWCyTVuxFddCxnZhx/kIijf1Fxe8qGWk+9kgUW7EbXQ0N
-	 GJNEiHv1RT+Fg==
-Date: Fri, 6 Jun 2025 11:00:12 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Brian Masney <bmasney@redhat.com>
-Cc: Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, 
-	Alberto Ruiz <aruiz@redhat.com>
-Subject: Re: [PATCH v2 04/10] clk: test: introduce clk_dummy_div for a mock
- divider
-Message-ID: <20250606-screeching-pigeon-of-judgment-dacc1b@houat>
-References: <20250528-clk-wip-v2-v2-0-0d2c2f220442@redhat.com>
- <20250528-clk-wip-v2-v2-4-0d2c2f220442@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JjREHAPf"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-445135eb689so10179345e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 02:00:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749200419; x=1749805219; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5PC5oMgoZ+UFSPHr55ppMv4d7kRuQFao40OCKHLwKl8=;
+        b=JjREHAPfKYRGWGxqGODL4We4LZkBxVTp2vT/lu8JFm0oeYuiVyVCwnU/FWJFY/3ngw
+         xxpdtorNYBP1MFgIUXclTVcWKCcxG4i1wYtiUK56dCgCVAe3GHHjnYCTTtohXfVaUHv1
+         iqtBO5gByfdZvCTfNd5KUXum9IVIXIoM9hK8QNPkoKkVMcjRTPpF3g7arFlOOojx/Wj+
+         9NaT42Xp7e8YCXPRBHMwyz6zakJmpb8ORrEXREgraHH5InfUqz4Ey3FoPX/z5r2GS6r3
+         om6y2P67yRM6C4rKkI10dSFElAzJALRIh8rR+OfH7cRrdVcLeChxJsJFFuv7JGe5rF0Q
+         yWdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749200419; x=1749805219;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5PC5oMgoZ+UFSPHr55ppMv4d7kRuQFao40OCKHLwKl8=;
+        b=u5C5koy/K3HePLXrb9HIH0ZN/Zhvxr4jisOUU+T0Yg5CfawgTjBuOELeTELGcUKNGS
+         JmMtoguFJpUkqM9UZx/fn9O+IYyaTuAsVXeLa6i/XyMb5DoVtOI4Qbifc0XL4prxwXdc
+         D6od1IlmlFcy3NNGNIwUyHAHux8D9UICka6ypwz8mOnSJaaZgb82ZM0fyd26rH3O4o6U
+         /hkaZAD1BneVVB7BOlokSdNE6WdSY94ufBYiU3wO1MoGIG9h8694aJDlqec/2r36n8/U
+         +WsWTWRiHUS0mZXhc/9ZsfDNQgrKvRlW2KPhLhjsP8ChnlQGi9+uzMhwXAifiQ8ln+5s
+         00PA==
+X-Forwarded-Encrypted: i=1; AJvYcCUqPmgQHruaChl5XHCSmq8wU2eICL1bi6Q56U/d0upJB9iwD3vp0fqk99/UJzgWQmFnA0uv3/BotDDLGP4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5QXzQeNHdtGmQo/claNLUd4z/ZN208jDLSPczOaNIA4RV7AFD
+	m6lsWOnQzTCuW39GRCWpWykCTPSYnQ7IdIIhAWb67/MYeTlw7ClvNv2lX8Vl34TBIrQC6oO4Zfd
+	pSAg7klrVmtN8DVxgWQ==
+X-Google-Smtp-Source: AGHT+IH/QYbvsS/U9rVKnUtVrlndHv1MOMIqsNE73OS3DtORTGUsobRwG7K0tQKguV825pTOaG1xyT76+ZRfs+s=
+X-Received: from wmsr2.prod.google.com ([2002:a05:600c:8b02:b0:450:da87:cebb])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:c177:b0:450:cac5:45e7 with SMTP id 5b1f17b1804b1-45201417bfbmr24715585e9.1.1749200419659;
+ Fri, 06 Jun 2025 02:00:19 -0700 (PDT)
+Date: Fri, 6 Jun 2025 09:00:17 +0000
+In-Reply-To: <20250603205416.49281-2-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="exdw6jl56rzsynhl"
-Content-Disposition: inline
-In-Reply-To: <20250528-clk-wip-v2-v2-4-0d2c2f220442@redhat.com>
+Mime-Version: 1.0
+References: <20250603205416.49281-1-dakr@kernel.org> <20250603205416.49281-2-dakr@kernel.org>
+Message-ID: <aEKuIRI6UvgCZ-z5@google.com>
+Subject: Re: [PATCH 1/3] rust: completion: implement initial abstraction
+From: Alice Ryhl <aliceryhl@google.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org, 
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org, 
+	tmgross@umich.edu, chrisi.schrefl@gmail.com, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>
+Content-Type: text/plain; charset="utf-8"
 
+On Tue, Jun 03, 2025 at 10:48:50PM +0200, Danilo Krummrich wrote:
+> Implement a minimal abstraction for the completion synchronization
+> primitive.
+> 
+> This initial abstraction only adds complete_all() and
+> wait_for_completion(), since that is what is required for the subsequent
+> Devres patch.
+> 
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ben Segall <bsegall@google.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Valentin Schneider <vschneid@redhat.com>
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 
---exdw6jl56rzsynhl
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 04/10] clk: test: introduce clk_dummy_div for a mock
- divider
-MIME-Version: 1.0
-
-On Wed, May 28, 2025 at 07:16:50PM -0400, Brian Masney wrote:
-> This is used to mock up a divider in the clk kunit tests.
->=20
-> Signed-off-by: Brian Masney <bmasney@redhat.com>
-> ---
->  drivers/clk/clk_test.c | 41 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->=20
-> diff --git a/drivers/clk/clk_test.c b/drivers/clk/clk_test.c
-> index 1b34d54ec9c610ffa3e91b06f5a5180e0395e26f..4908fb9c0c46e34063ecf696e=
-49b48510da44538 100644
-> --- a/drivers/clk/clk_test.c
-> +++ b/drivers/clk/clk_test.c
-> @@ -140,6 +140,47 @@ static const struct clk_ops clk_dummy_single_parent_=
-ops =3D {
->  	.get_parent =3D clk_dummy_single_get_parent,
->  };
-> =20
-> +// 4 ought to be enough for anybody
-> +#define CLK_DUMMY_DIV_WIDTH 4
-> +
-> +struct clk_dummy_div {
-> +	struct clk_hw hw;
-> +	unsigned int div;
-> +};
-> +
-> +static unsigned long clk_dummy_div_recalc_rate(struct clk_hw *hw,
-> +					       unsigned long parent_rate)
-> +{
-> +	struct clk_dummy_div *div =3D container_of(hw, struct clk_dummy_div, hw=
-);
-> +
-> +	return divider_recalc_rate(hw, parent_rate, div->div, NULL,
-> +				   CLK_DIVIDER_ROUND_CLOSEST, CLK_DUMMY_DIV_WIDTH);
-> +}
-> +
-> +static long clk_dummy_div_round_rate(struct clk_hw *hw, unsigned long ra=
-te,
-> +				     unsigned long *parent_rate)
-> +{
-> +	return divider_round_rate(hw, rate, parent_rate, NULL,
-> +				  CLK_DUMMY_DIV_WIDTH, CLK_DIVIDER_ROUND_CLOSEST);
-> +}
-> +
-> +static int clk_dummy_div_set_rate(struct clk_hw *hw, unsigned long rate,
-> +				  unsigned long parent_rate)
-> +{
-> +	struct clk_dummy_div *div =3D container_of(hw, struct clk_dummy_div, hw=
-);
-> +
-> +	div->div =3D divider_get_val(rate, parent_rate, NULL, CLK_DUMMY_DIV_WID=
-TH,
-> +				   CLK_DIVIDER_ROUND_CLOSEST);
-> +
-> +	return 0;
-> +}
-
-I wonder if we should use CLK_DIVIDER_ONE_BASED too, that way we would
-catch any improperly initialized structure.
-
-Maxime
-
---exdw6jl56rzsynhl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaEKuGwAKCRAnX84Zoj2+
-doDPAYDyd2YH/7g4mNgLjfHV9eB9s2Tt0o1q2WR7+GtOlW32oMr2LKAx2/wykc71
-o0VyCsEBfAy/YwfHxrcWAZzNulk/TchV6luX5ADYTKAUrs/CMZzoTSoK8s75HJYa
-KLT0qgmOcw==
-=B35y
------END PGP SIGNATURE-----
-
---exdw6jl56rzsynhl--
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
