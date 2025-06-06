@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F0E288538
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 12:06:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D948288517
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 12:06:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749211572; cv=none; b=ETKPmf+M65LlUG+kwx6QX60ReAn+tm0nUsK5v3u8MHA5HIsTNgNje2czUHBR9+kykBswXvN1EhKi0KcYzbZYUTvKx9QjC9OG9s3NDhJfPN9rUtwevT5HEzUop2F7fowYvOVEfbIMQMgfxy6ntuoGNl8N+BWnZl/9ge0TFj6w4wI=
+	t=1749211581; cv=none; b=IQWbrs6t84Epa0OE4qvd2583jU0aWrw14cIsGr48RF7YN9KqeYuOuax6z1h6mxhAUOdGPA2SRbsEh6z1iloHy7rMsrGlZ7WNZhrxoPiIu8w47kTWfh22SQ/lz7QWHihu+QpaWnSgviH90qXodznk6780153XhC/7cdz8cYo+XEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749211572; c=relaxed/simple;
-	bh=J106FO0fiVsdh9zXFS0LOxsLt2GsSFvwk862Ry5I9ok=;
+	s=arc-20240116; t=1749211581; c=relaxed/simple;
+	bh=YChnwPKjQ5Co6nll2v+KEbNjJtvS29A9fQfFAOtkapE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gH9dzg0jYaHrSBtaLGc1/yA/j+pVuGSjTR3YZrj9aKCxhBP44Ott3OiM0CoMkBTQ7C5YQrtYD+Usfp0rArCbic3Il1c+Qvl4Bg3/td50f9Szcaxxer+5kNtUnAs8ZJwwyZSIiSo/h3jliT0mEIZ316aAjblDdvX7iL24PEttuGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HhwP6uRP; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=dBzj4pCu7/zRuLNtrKC6I8GirlU911OcXcawEmUEmJSefpBZ5hvataHlIHsN4/m7vusA0cH7Lsj72Nb0JA2Uul3SAN1IqcBB5uJgovJzRrQQHn33OjTvnqyGM3zQv48wcg8gQyhdZooJuZR35+5Dp56OZEdrmi8F1JtZSA8j9fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dyJJ/CT1; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HhwP6uRP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dyJJ/CT1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749211570;
+	s=mimecast20190719; t=1749211577;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FTTN7phXKaXaCmL5oHxlSPISQmHyCcHScf0EMG0hRFc=;
-	b=HhwP6uRPlwT8C7x/6ZU7HyDHHxEFuPPuZUzqA1GtfBN/sxDBaAU+ACdCnKw5gKK+Iiy3Zz
-	21K19hhiUHj0rKEgy7KoPcz3NWsKjnC3xxZVuopS1ELJZEgnfdAftorbXZUGRLfv/rcN2d
-	omHdCCwBtOi5kh3J9Jb8UODKc6VhdHk=
+	bh=P3qImNDgs5IKpXU7/qApHixAm6FFP9iiOGE/4sAcQeA=;
+	b=dyJJ/CT1LWOcr3OvGA6oddBFyWh6fBfSNYw44DqUW/3N0YHyPhfFCKKL/Hppda99IcdhBg
+	9RP27HPs3VGrEjhjCG/TIvqhI6taNxBrcAI0q1uFXvl9MEsfs6cWvQz8eTQOqGr7Fzmbb6
+	kYT+S1ON+HWaDYvZAShtXQVpUq4QkOQ=
 Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-86-OWhFJ6N8OmKmUd8G9WGDbg-1; Fri,
- 06 Jun 2025 08:06:04 -0400
-X-MC-Unique: OWhFJ6N8OmKmUd8G9WGDbg-1
-X-Mimecast-MFC-AGG-ID: OWhFJ6N8OmKmUd8G9WGDbg_1749211562
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-590-toXoOkylOterjQg5xUPlQg-1; Fri,
+ 06 Jun 2025 08:06:14 -0400
+X-MC-Unique: toXoOkylOterjQg5xUPlQg-1
+X-Mimecast-MFC-AGG-ID: toXoOkylOterjQg5xUPlQg_1749211572
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3A7FF1800871;
-	Fri,  6 Jun 2025 12:06:02 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 09DBC1800EC5;
+	Fri,  6 Jun 2025 12:06:12 +0000 (UTC)
 Received: from hydra.redhat.com (unknown [10.44.33.65])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EE2C318002A5;
-	Fri,  6 Jun 2025 12:05:56 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B9DA718003FD;
+	Fri,  6 Jun 2025 12:06:02 +0000 (UTC)
 From: Jocelyn Falempe <jfalempe@redhat.com>
 To: Jani Nikula <jani.nikula@linux.intel.com>,
 	Rodrigo Vivi <rodrigo.vivi@intel.com>,
@@ -61,9 +61,9 @@ To: Jani Nikula <jani.nikula@linux.intel.com>,
 	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
 Cc: Jocelyn Falempe <jfalempe@redhat.com>
-Subject: [PATCH v8 3/9] drm/i915/display: Add a disable_tiling() for skl planes
-Date: Fri,  6 Jun 2025 13:48:07 +0200
-Message-ID: <20250606120519.753928-4-jfalempe@redhat.com>
+Subject: [PATCH v8 4/9] drm/ttm: Add ttm_bo_kmap_try_from_panic()
+Date: Fri,  6 Jun 2025 13:48:08 +0200
+Message-ID: <20250606120519.753928-5-jfalempe@redhat.com>
 In-Reply-To: <20250606120519.753928-1-jfalempe@redhat.com>
 References: <20250606120519.753928-1-jfalempe@redhat.com>
 Precedence: bulk
@@ -72,66 +72,75 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-drm_panic draws in linear framebuffer, so it's easier to re-use the
-current framebuffer, and disable tiling in the panic handler, to show
-the panic screen.
-
-This assumes that the alignment restriction is always smaller in
-linear than in tiled.
-It also assumes that the linear framebuffer size is always smaller
-than the tiled.
+If the ttm bo is backed by pages, then it's possible to safely kmap
+one page at a time, using kmap_try_from_panic().
+Unfortunately there is no way to do the same with ioremap, so it
+only supports the kmap case.
+This is needed for proper drm_panic support with xe driver.
 
 Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
 ---
 
-v7:
- * Reword commit message about alignment/size when disabling tiling (Ville Syrjälä)
+v8:
+ * Added in v8
 
- .../drm/i915/display/skl_universal_plane.c    | 20 +++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/gpu/drm/ttm/ttm_bo_util.c | 27 +++++++++++++++++++++++++++
+ include/drm/ttm/ttm_bo.h          |  1 +
+ 2 files changed, 28 insertions(+)
 
-diff --git a/drivers/gpu/drm/i915/display/skl_universal_plane.c b/drivers/gpu/drm/i915/display/skl_universal_plane.c
-index c7b336359a5e..ffcf50443c0c 100644
---- a/drivers/gpu/drm/i915/display/skl_universal_plane.c
-+++ b/drivers/gpu/drm/i915/display/skl_universal_plane.c
-@@ -2791,6 +2791,25 @@ static u8 tgl_plane_caps(struct intel_display *display,
- 	return caps;
+diff --git a/drivers/gpu/drm/ttm/ttm_bo_util.c b/drivers/gpu/drm/ttm/ttm_bo_util.c
+index 15cab9bda17f..9c3f3b379c2a 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo_util.c
++++ b/drivers/gpu/drm/ttm/ttm_bo_util.c
+@@ -377,6 +377,33 @@ static int ttm_bo_kmap_ttm(struct ttm_buffer_object *bo,
+ 	return (!map->virtual) ? -ENOMEM : 0;
  }
  
-+static void skl_disable_tiling(struct intel_plane *plane)
++/**
++ *
++ * ttm_bo_kmap_try_from_panic
++ *
++ * @bo: The buffer object
++ * @page: The page to map
++ *
++ * Sets up a kernel virtual mapping using kmap_local_page_try_from_panic().
++ * This can safely be called from the panic handler, if you make sure the bo
++ * is the one being displayed, so is properly allocated, and won't be modified.
++ *
++ * Returns the vaddr, that you can use to write to the bo, and that you should
++ * pass to kunmap_local() when you're done with this page, or NULL if the bo
++ * is in iomem.
++ */
++void *ttm_bo_kmap_try_from_panic(struct ttm_buffer_object *bo, unsigned long page)
 +{
-+	struct intel_plane_state *state = to_intel_plane_state(plane->base.state);
-+	struct intel_display *display = to_intel_display(plane);
-+	u32 stride = state->view.color_plane[0].scanout_stride / 64;
-+	u32 plane_ctl;
++	if (page + 1 > PFN_UP(bo->resource->size))
++		return NULL;
 +
-+	plane_ctl = intel_de_read(display, PLANE_CTL(plane->pipe, plane->id));
-+	plane_ctl &= ~PLANE_CTL_TILED_MASK;
++	if (!bo->resource->bus.is_iomem && bo->ttm->pages && bo->ttm->pages[page])
++		return kmap_local_page_try_from_panic(bo->ttm->pages[page]);
 +
-+	intel_de_write_fw(display, PLANE_STRIDE(plane->pipe, plane->id),
-+			  PLANE_STRIDE_(stride));
-+
-+	intel_de_write_fw(display, PLANE_CTL(plane->pipe, plane->id), plane_ctl);
-+
-+	intel_de_write_fw(display, PLANE_SURF(plane->pipe, plane->id),
-+			  skl_plane_surf(state, 0));
++	return NULL;
 +}
++EXPORT_SYMBOL(ttm_bo_kmap_try_from_panic);
 +
- struct intel_plane *
- skl_universal_plane_create(struct intel_display *display,
- 			   enum pipe pipe, enum plane_id plane_id)
-@@ -2837,6 +2856,7 @@ skl_universal_plane_create(struct intel_display *display,
- 		plane->max_height = skl_plane_max_height;
- 		plane->min_cdclk = skl_plane_min_cdclk;
- 	}
-+	plane->disable_tiling = skl_disable_tiling;
- 
- 	if (DISPLAY_VER(display) >= 13)
- 		plane->max_stride = adl_plane_max_stride;
+ /**
+  * ttm_bo_kmap
+  *
+diff --git a/include/drm/ttm/ttm_bo.h b/include/drm/ttm/ttm_bo.h
+index cf027558b6db..8c0ce3fa077f 100644
+--- a/include/drm/ttm/ttm_bo.h
++++ b/include/drm/ttm/ttm_bo.h
+@@ -429,6 +429,7 @@ int ttm_bo_init_validate(struct ttm_device *bdev, struct ttm_buffer_object *bo,
+ int ttm_bo_kmap(struct ttm_buffer_object *bo, unsigned long start_page,
+ 		unsigned long num_pages, struct ttm_bo_kmap_obj *map);
+ void ttm_bo_kunmap(struct ttm_bo_kmap_obj *map);
++void *ttm_bo_kmap_try_from_panic(struct ttm_buffer_object *bo, unsigned long page);
+ int ttm_bo_vmap(struct ttm_buffer_object *bo, struct iosys_map *map);
+ void ttm_bo_vunmap(struct ttm_buffer_object *bo, struct iosys_map *map);
+ int ttm_bo_mmap_obj(struct vm_area_struct *vma, struct ttm_buffer_object *bo);
 -- 
 2.49.0
 
