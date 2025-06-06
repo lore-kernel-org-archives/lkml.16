@@ -1,133 +1,264 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F25E01DDC23
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 18:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2DAC1E8335
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 18:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749235820; cv=none; b=HvHtQTfK9sGh3fyStGssWG8BnLlQ7IN9m57Mp1sEc08i0ZjWM2kXuOw0M2qplm9JWvuIhDh7i1Uu6HdjWeCayK2K1bCwwxUvH4bNsF0mD9Gx2K0PIfikE9p1gDYwbAu0LA+IN6ojTcYCzGprE7puXHL2ljJjyOWLlPwJ4zY41a4=
+	t=1749235827; cv=none; b=F/3oGO9HHUDnd8gkT34mWYTOYVvz9NHo99P1qw7pEKYSPgMJ1REaFpub66kovvdiXmIJmOTJJmoz/klkU4dhuQh7v+DfK5nK330X9qW/Gdeogb+Y2T91UHY+HTzw/PogRM585QP/3QGiy8ZRg6JAlsqcOT7QlxbeCA0+w4Ou5xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749235820; c=relaxed/simple;
-	bh=10JnmucGd6OenkVGt4OG+hqE6x7A45XIqjpDbEqK8Do=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gVzklEcZFIhpWSRLMus0qj9dT1Z5Tzg08xllc1Hy/+q5RR7FZArbb26C42PVlruwqMp9Ug/Tmgx/J+HhK9B1LOG7Gxh7qPietnfEZ+dtgVgcBhUW7qXyLQH3u4e+yD+e2L8XEizaEB8M9wMrVI9r7nwx0OiHbtbloPUYQ+kxeqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ILY0reCQ; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749235827; c=relaxed/simple;
+	bh=/dqd4gsiXRTcfp+0X9yq9B99EvZcupPMVZfAGuQtBNs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=THuSh7X52NyJL9gLUPl3WOqv53p1kXQbBZdE5G5koP6F2/PNQnXLqz2zMvSKxCUoiYPIRWrN8skWWa4BSbmb23bDk+ZjuWB5TO/S+JhSgLPZqrIvbheJaX5PuZnD7x5d73OO1ivtZjX2xhzf5T3LR+feyuToDU67oEYmaMpAqO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=hgva45pU; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ILY0reCQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749235819; x=1780771819;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=10JnmucGd6OenkVGt4OG+hqE6x7A45XIqjpDbEqK8Do=;
-  b=ILY0reCQjhk3fj2OMIYcRsYH9N0+yHFRUmiXHAhV4f5IYftqNBenKXvZ
-   Ywg9D4eES6xYxl1Qg7j0dLDjnESV2mruM8PHJdyg9JYVPxz2TM/Yrd4bI
-   NNvDsCnaulByeDVsySsTxdiIFl1QYKUhwpEoRPdy16J7o148f5D8onDuX
-   bOlHoYrAz73B5dw/vjj/adLEegDdIG9enALT2t0q6Lcr1TS3cHNk4KleB
-   ftEdabuw8CSRV8C7tRFGfTZY036rEpjeUH+K7q9FCvO2m9pnwSue+F1Yo
-   mkDMgylt4/UPaG2CxOo1iM5XnfjORYkBaI3D+2xFZKiNwoyqqfVKFZZ80
-   A==;
-X-CSE-ConnectionGUID: oiIojU7ARgyo25iF3bLxjg==
-X-CSE-MsgGUID: BLFM4d90QbWhYhsqgNytYw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="62016098"
-X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
-   d="scan'208";a="62016098"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 11:50:18 -0700
-X-CSE-ConnectionGUID: rY7FftbMQZKbY4eM/+r7BA==
-X-CSE-MsgGUID: Z/e32k2BQNm5CniNrBZlYw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
-   d="scan'208";a="150916214"
-Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.111.31]) ([10.125.111.31])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 11:50:18 -0700
-Message-ID: <1d52eb65-0f16-4086-803a-5add6cd56550@intel.com>
-Date: Fri, 6 Jun 2025 11:50:16 -0700
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="hgva45pU"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-23526264386so21034475ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 11:50:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1749235825; x=1749840625; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zDvQKKxsfWnILy2mH3BQ9U7IfG3DuTu++rNRUJOw37w=;
+        b=hgva45pUHIESQwyjTxWPRV7D6eWOGjPkUhuBheLqEpJbQCHtwSCf6KyyOpqrFasIbK
+         LReRTNAK5m6bJ6v/RNCtY8OlOx1Jpf50lxbqsh3fpA6oLtuw6PTLbqk2rBJJuBzqPh2w
+         oeuIkXU/YUtY2k3jMrxSD8DTu9qmt67q5h4Pr60H86GNf6w4cZ3dh58GGiaNwIHW9wGz
+         aDnredw+MAgKRo8Cl5vD2vB2MHvs1cDuj3iHrV3TtUwr+a98FfFFGnBvLvVCHE/gCiPt
+         41x1RFopobJqDapvQzntpb/BegrEUFKHu8CCGlzQ6izX4b89eoIHs9Yhw+Dd2i9xWN6e
+         N7rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749235825; x=1749840625;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zDvQKKxsfWnILy2mH3BQ9U7IfG3DuTu++rNRUJOw37w=;
+        b=vMg6/DI9kdykwFw/p+amO3cdt1wj5rnEg0HTm6tH1Q+4dLIap/i1Vq2ReRkNyq4HfQ
+         wuwbNcQ3GMlrEijx2oshXeUylW8VqlLFKt9+hzJwahhaM5EkplkALMzfFhr3DzstRz5v
+         Nn1G94oekoKLHYdf5Ck+cx1RRTgU0Haz9Ofer0SuChRSj/C4EmGPSJFBBghGpT/YqsY5
+         AlIReAxytGzaxWS+9Poj54eg1XuPmj7Vf9yBXJKRe7uwm806tM/MvLiLLCXWMybVxXr0
+         vLCM3J4lme6k6tYfdyuyTzLpuDZUxnGx+grVK/4Pb4nI9E+RrNFwlMwuRV1qfV/qRotK
+         95xg==
+X-Forwarded-Encrypted: i=1; AJvYcCWQqsYg8jaeuFO28OifKDoUcwb6W+WVFhNrJ7eH97TC61IrSCmp4kFXKUOfoO24JLSYuI3GdPz8jlUTTNU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza3uSM3unPamCCBjjY3tlcYM08F2uuHHbF6OqxylsV3i1TU8g/
+	JJE2uQuXIQXsKUBLWC2fztqlGWoL508QV+N15+ryjfb738d0U9q+Q75Z6fhS3MSGvTc=
+X-Gm-Gg: ASbGncv6IUcz2aT0kzUXMFhPSNsh+KCYItpMQihIQAdgFZQ27dY7PGsBbAVzYaRoiQf
+	63iP3tJ0CRVtLWdOFmo3Pf+2jr2hqmt5mPZkfIaPsaGc5gMVmkHv4jZMc50bwX9uvtKjJIkwHod
+	XpbP9pPTbzCzxUHr9KiHOvIGkFSPyT8pXpFZw8F15sWLE5tNmD79fMBsGdgpbq9quqzeTsnU8C3
+	F0lup+G9i7P8ULiB0zWYeVBipSoYsfLp0Flwr75/t8uJCGXHtichPvkggdtyzRj8CU2JJqhUOP1
+	mjvIpruzg9lVJXILiBV7LejxOnpttNAM6jNfFYMIpiH+YgQzz2zUvOVInmA=
+X-Google-Smtp-Source: AGHT+IHZJuISdaOQA9ORyw2q+y1x20F/e9MNZXHDSrwlivNtd8EgXD7EmYmmTpZQgthCiMV++qIcEQ==
+X-Received: by 2002:a17:902:ce85:b0:235:f078:4733 with SMTP id d9443c01a7336-23601cf6f4bmr58352295ad.8.1749235825082;
+        Fri, 06 Jun 2025 11:50:25 -0700 (PDT)
+Received: from thelio.tailc1103.ts.net ([97.120.245.255])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5f782246sm1473617a12.51.2025.06.06.11.50.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 11:50:24 -0700 (PDT)
+From: Drew Fustini <drew@pdp7.com>
+To: Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	nvdimm@lists.linux.dev
+Cc: Oliver O'Halloran <oohall@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Drew Fustini <drew@pdp7.com>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v3] dt-bindings: pmem: Convert binding to YAML
+Date: Fri,  6 Jun 2025 11:11:17 -0700
+Message-ID: <20250606184405.359812-4-drew@pdp7.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] x86/mm: Fix potential overflow in
- user_pcid_flush_mask
-To: Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org
-Cc: kernel-team@meta.com, dave.hansen@linux.intel.com, luto@kernel.org,
- peterz@infradead.org, bp@alien8.de, x86@kernel.org, nadav.amit@gmail.com,
- seanjc@google.com, tglx@linutronix.de, mingo@kernel.org,
- Rik van Riel <riel@meta.com>, stable@kernel.org
-References: <20250606171112.4013261-1-riel@surriel.com>
- <20250606171112.4013261-2-riel@surriel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250606171112.4013261-2-riel@surriel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/6/25 10:10, Rik van Riel wrote:
-> +/*
-> + * With page table isolation, the user_pcid_flush_mask is used to indicate
-> + * that the TLB for a process needs to be flushed when switching to user
-> + * space. Broadcast TLB flushing uses more PCIDs, and a larger bitmap.
-> + */
-> +#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
-> +# ifdef CONFIG_BROADCAST_TLB_FLUSH
-> +#  define CR3_AVAIL_PCID_LONGS ((1 << CR3_AVAIL_PCID_BITS) / BITS_PER_LONG)
-> +# else
-> +#  define CR3_AVAIL_PCID_LONGS 1
-> +# endif
-> +#else
-> +# define CR3_AVAIL_PCID_LONGS 0
-> +#endif
+Convert the PMEM device tree binding from text to YAML. This will allow
+device trees with pmem-region nodes to pass dtbs_check.
 
-Just so nobody goes and applies this...
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Acked-by: Oliver O'Halloran <oohall@gmail.com>
+Signed-off-by: Drew Fustini <drew@pdp7.com>
+---
+Dan/Dave/Vishal: does it make sense for this pmem binding patch to go
+through the nvdimm tree?
 
-I don't like how this looks. I'd much rather have the code be
-concentrating on *bits* of ASID space rather than longs. I'm going to
-rework this a bit.
+Note: checkpatch complains about "DT binding docs and includes should
+be a separate patch". Rob told me that this a false positive. I'm hoping
+that I can fix the false positive at some point if I can remember enough
+perl :)
+
+v3:
+ - no functional changes
+ - add Oliver's Acked-by
+ - bump version to avoid duplicate message-id mess in v2 and v2 resend:
+   https://lore.kernel.org/all/20250520021440.24324-1-drew@pdp7.com/
+
+v2 resend:
+ - actually put v2 in the Subject
+ - add Conor's Acked-by
+   - https://lore.kernel.org/all/20250520-refract-fling-d064e11ddbdf@spud/
+
+v2:
+ - remove the txt file to make the conversion complete
+ - https://lore.kernel.org/all/20250520021440.24324-1-drew@pdp7.com/
+
+v1:
+ - https://lore.kernel.org/all/20250518035539.7961-1-drew@pdp7.com/
+
+ .../devicetree/bindings/pmem/pmem-region.txt  | 65 -------------------
+ .../devicetree/bindings/pmem/pmem-region.yaml | 49 ++++++++++++++
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 50 insertions(+), 66 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pmem/pmem-region.txt
+ create mode 100644 Documentation/devicetree/bindings/pmem/pmem-region.yaml
+
+diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.txt b/Documentation/devicetree/bindings/pmem/pmem-region.txt
+deleted file mode 100644
+index cd79975e85ec..000000000000
+--- a/Documentation/devicetree/bindings/pmem/pmem-region.txt
++++ /dev/null
+@@ -1,65 +0,0 @@
+-Device-tree bindings for persistent memory regions
+------------------------------------------------------
+-
+-Persistent memory refers to a class of memory devices that are:
+-
+-	a) Usable as main system memory (i.e. cacheable), and
+-	b) Retain their contents across power failure.
+-
+-Given b) it is best to think of persistent memory as a kind of memory mapped
+-storage device. To ensure data integrity the operating system needs to manage
+-persistent regions separately to the normal memory pool. To aid with that this
+-binding provides a standardised interface for discovering where persistent
+-memory regions exist inside the physical address space.
+-
+-Bindings for the region nodes:
+------------------------------
+-
+-Required properties:
+-	- compatible = "pmem-region"
+-
+-	- reg = <base, size>;
+-		The reg property should specify an address range that is
+-		translatable to a system physical address range. This address
+-		range should be mappable as normal system memory would be
+-		(i.e cacheable).
+-
+-		If the reg property contains multiple address ranges
+-		each address range will be treated as though it was specified
+-		in a separate device node. Having multiple address ranges in a
+-		node implies no special relationship between the two ranges.
+-
+-Optional properties:
+-	- Any relevant NUMA associativity properties for the target platform.
+-
+-	- volatile; This property indicates that this region is actually
+-	  backed by non-persistent memory. This lets the OS know that it
+-	  may skip the cache flushes required to ensure data is made
+-	  persistent after a write.
+-
+-	  If this property is absent then the OS must assume that the region
+-	  is backed by non-volatile memory.
+-
+-Examples:
+---------------------
+-
+-	/*
+-	 * This node specifies one 4KB region spanning from
+-	 * 0x5000 to 0x5fff that is backed by non-volatile memory.
+-	 */
+-	pmem@5000 {
+-		compatible = "pmem-region";
+-		reg = <0x00005000 0x00001000>;
+-	};
+-
+-	/*
+-	 * This node specifies two 4KB regions that are backed by
+-	 * volatile (normal) memory.
+-	 */
+-	pmem@6000 {
+-		compatible = "pmem-region";
+-		reg = < 0x00006000 0x00001000
+-			0x00008000 0x00001000 >;
+-		volatile;
+-	};
+-
+diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.yaml b/Documentation/devicetree/bindings/pmem/pmem-region.yaml
+new file mode 100644
+index 000000000000..a4aa4ce3318b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pmem/pmem-region.yaml
+@@ -0,0 +1,49 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pmem-region.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++maintainers:
++  - Bjorn Helgaas <bhelgaas@google.com>
++  - Oliver O'Halloran <oohall@gmail.com>
++
++title: Persistent Memory Regions
++
++description: |
++  Persistent memory refers to a class of memory devices that are:
++
++    a) Usable as main system memory (i.e. cacheable), and
++    b) Retain their contents across power failure.
++
++  Given b) it is best to think of persistent memory as a kind of memory mapped
++  storage device. To ensure data integrity the operating system needs to manage
++  persistent regions separately to the normal memory pool. To aid with that this
++  binding provides a standardised interface for discovering where persistent
++  memory regions exist inside the physical address space.
++
++properties:
++  compatible:
++    const: pmem-region
++
++  reg:
++    maxItems: 1
++
++  volatile:
++    description: |
++      Indicates the region is volatile (non-persistent) and the OS can skip
++      cache flushes for writes
++    type: boolean
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    pmem@5000 {
++        compatible = "pmem-region";
++        reg = <0x00005000 0x00001000>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ee93363ec2cb..eba2b81ec568 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13798,7 +13798,7 @@ M:	Oliver O'Halloran <oohall@gmail.com>
+ L:	nvdimm@lists.linux.dev
+ S:	Supported
+ Q:	https://patchwork.kernel.org/project/linux-nvdimm/list/
+-F:	Documentation/devicetree/bindings/pmem/pmem-region.txt
++F:	Documentation/devicetree/bindings/pmem/pmem-region.yaml
+ F:	drivers/nvdimm/of_pmem.c
+ 
+ LIBNVDIMM: NON-VOLATILE MEMORY DEVICE SUBSYSTEM
+-- 
+2.43.0
+
