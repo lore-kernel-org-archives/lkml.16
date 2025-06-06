@@ -1,112 +1,195 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16081DE887;
-	Fri,  6 Jun 2025 20:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF1B51DE887
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 20:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749243200; cv=none; b=pUVU8bcGs5Ks93sT3zzRGtAY9MQwO0RHSmlr5hOgLAvUXpatkr33TCTeCnPs1LVtZo1yvSg7533KwhS/xkd4Qjh2qr9vTSxApEcP2ofT0Ss9FPvLbadRmbUBKHYw1pMtgVPJgheKbsikoKx1Nsfbmn9MhkxvHknCpqXTaMx+GJQ=
+	t=1749243236; cv=none; b=d7yI+4sVQwVyXbXvjadKduRnofTN2CMZ6INnCWq7hjnQxOFPpF4JLK8P4RRrvPNY+NkyqIb1HA0crW9ypwizH7fGCWtqWaexfCN7epTyEaPhpssRu4Y349Kh4Ko4TdITnWXXEUT2utHCyNLgubxhuYK8PsdCilQoBpo4a76hsVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749243200; c=relaxed/simple;
-	bh=te0rz6iuH+tuOfeWxtRzrEQXLcAUOuPCArfYha2FS8Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dDpJ//KNrdOwU0zp1E2mDJs/rq+D9PNrbbck2yWB1kVnFBIFIvYeyALmf+0lp5Rcjmpqa0iIas0fFvnztdHytSvIXcealdgJoqKAwyQniPOhwGPK9u24x6cX5BtDXYDqwv8Ktz29ZdBsoR405B2hw+eAAYkybWa03CG6IkB5A3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=maNdaJrr; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749243236; c=relaxed/simple;
+	bh=Up+x6akCvEFqBXwDMLKnnBujp/GZxUmeGELAcWIXC+Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JYs4eQ0nvblfL5DzYkW5CGp2bfZ/H8spCWsXiwZlFvqdJ1LuPYFoatezm6VEgA1viv1WlJuI3LZOQpCTBr6VM4CiV2Vg2O2tAjZW0N2+DD2uYyNuwuuBpNCSo+nop6EWRkaSG9BOXyjI4cHsi5deHUp7y8xlAOZVPwwbEe0KlYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UTRYq178; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="maNdaJrr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749243198; x=1780779198;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=te0rz6iuH+tuOfeWxtRzrEQXLcAUOuPCArfYha2FS8Q=;
-  b=maNdaJrrFJmbF7qBzXgb7krjpgnt1c/6Jx6IvNg7lGUZXfd+v/On1p2M
-   Yk5QafNi1aQOxJAxUw/ZNXUr4dn5sDIFmGUcqxEUJmilpVCZ+cr3d+Wzw
-   4wZlTHZ00lSCd7xd69xDiWbQVinX6kI2DV8Kp/tmhx5Wa0MlIp4A/PeNn
-   lavAoIdOqpRJC3BGO+qjb18SkwVVyu+V3iEa44C+1DCejBNVihDfnKq+P
-   nMOOPZm55gVh/rw9yWfPT1QAkvnUqJWr7jqrnAJ+PRU4UYrD3XyY57bm4
-   j0K8lJ+oYzalIz9AIejRbgq6QS1cIaD6IxIaC5Wh4V2hgPBc2ZlayVWX8
-   g==;
-X-CSE-ConnectionGUID: G9mqQ4hOTBicBocx8FxEBg==
-X-CSE-MsgGUID: PnlqbgcFSpmTUfeiEfk+MQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="73931460"
-X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
-   d="scan'208";a="73931460"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 13:53:17 -0700
-X-CSE-ConnectionGUID: ZUzEG+hISHSsKQ+aQroEfA==
-X-CSE-MsgGUID: sQ9MDDtzTx2DxZmGMHll6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
-   d="scan'208";a="176806018"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.16])
-  by fmviesa001.fm.intel.com with ESMTP; 06 Jun 2025 13:53:16 -0700
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	stable@vger.kernel.org
-Subject: [PATCH] platform/x86/intel-uncore-freq: Fail module load when plat_info is NULL
-Date: Fri,  6 Jun 2025 13:53:00 -0700
-Message-ID: <20250606205300.2384494-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UTRYq178"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749243233;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DM/wpsf5bNvV+zxr0+R2E64Ci7rD4gOu6WoUfimCvys=;
+	b=UTRYq178zx7MYyLY8KVfO+vChTNFBc8s3WMbHudpZwsrQp+wHMyevB4W3dxTHEmOl/j7h6
+	Fc21kdXB3VqCZ4jrvEEWv72Oj5Ku278YuSXLHnaGawBvzDwUtinxRpIMGBKvDH6eY4b98T
+	rqPwVHcITRmTmDgpMLUMPrdUx1H+/Rs=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-308-YixMp70qO8CHb4RYDYOZdw-1; Fri, 06 Jun 2025 16:53:52 -0400
+X-MC-Unique: YixMp70qO8CHb4RYDYOZdw-1
+X-Mimecast-MFC-AGG-ID: YixMp70qO8CHb4RYDYOZdw_1749243232
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4a57fea76beso56829121cf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 13:53:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749243232; x=1749848032;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DM/wpsf5bNvV+zxr0+R2E64Ci7rD4gOu6WoUfimCvys=;
+        b=s34NHN9j5B2HwLM7fS8pF1Cf5UuN6V6XwjQpZGD6QS/xs0oep+KqENvcMS49ffUhSY
+         TQUDkqp7VGj1YBmv2IMBTiaW1EQFdMKRplWDTro/n0TARBw6klI7HFYwLE5T9xosvvc8
+         XZn09aI9AeC8M3rKt1wMIzuOACeevnmUVTTftBU/q6xONtGg421S6kzKfxkRYOC+h113
+         SAFj001gNxx1TZDh32OrlEoT0h+VwSUN8oIE1JJBukHaK9JfJPK69aGrM1eU4E71zR+M
+         fP4xp4W5wx6XIarlY+LPWqNAC5CM3Ltb5VbLYxzjJEPUVEAEvI8HNgZSpgTISGuFtrPi
+         YNQA==
+X-Forwarded-Encrypted: i=1; AJvYcCWEoznjt1L6iA1/jiSiWLt6WXBB6lzEQn/K/OWpZU8PGt43J4yd9CBARbxHsGdETK77X1No7002g0C+8Dc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw62oCdIiH6UXgBCvj0cHKvMZSAHE5MdHiQmh+BZcwNxVly+fNU
+	j7m3KJWlrSZ8yxJFLWluWRhJcxG1dCXZ4/bSOODVzsDZEuIU3IUkQ2048U9XV8/xK265hg2t4Uo
+	RYBp+xZyTTNt6RMD1ic8fjQVC1VkXtH8Yw7J2Ne9JCDIHxwiSojhv+bct7wTu3qpRbA==
+X-Gm-Gg: ASbGncvALsksa3vBGMO1APPrCoIopTNJIXl34MWE6lB3uSKHPhrB4deZoOx0QehJ9hB
+	HyYAXLdBr8+7eK2ylGmpHYVZVzoWKMeXI5yxiSVeNHJS9XlwuVcGrDAQQoPP0eZeK87gOdAugXQ
+	ZUYKwi3cpG95O716FskVdtvMuHwqiz68edjpLpyqfbX4aWJx16t2sxDCi8/+eRq5hRQ/zVSBNAv
+	c0tY8nNuwJ9Rdsga2hag2NtZo/mq3P1RQPUD75sizpc0lpZidqhk78WTCjIVMcFBjuVxrUIts9B
+	Fj2TjZYx3N/UQF//0H/+ajqYuOzZ76XrJkRf5LLgLTs5CRaj2ElVFneTQZsDYplGwFX38pVkg/o
+	sSA==
+X-Received: by 2002:a05:622a:5c16:b0:494:a2b8:88f0 with SMTP id d75a77b69052e-4a5b9d7a923mr91424621cf.33.1749243232175;
+        Fri, 06 Jun 2025 13:53:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEjXguAZBo6H2ys4WrzMebLkgCjFXMlP6rUGT+92Ehao/6lv02yGuSQ85yrFcvgoHrqYMiDSg==
+X-Received: by 2002:a05:622a:5c16:b0:494:a2b8:88f0 with SMTP id d75a77b69052e-4a5b9d7a923mr91424221cf.33.1749243231829;
+        Fri, 06 Jun 2025 13:53:51 -0700 (PDT)
+Received: from [192.168.1.17] (pool-68-160-160-85.bstnma.fios.verizon.net. [68.160.160.85])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a61986509bsm18419281cf.58.2025.06.06.13.53.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jun 2025 13:53:50 -0700 (PDT)
+Message-ID: <fc7afc33-0167-4e4d-b5f6-433f18457084@redhat.com>
+Date: Fri, 6 Jun 2025 16:53:48 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 59/62] livepatch/klp-build: Introduce klp-build script
+ for generating livepatch modules
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+ Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
+ live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
+ laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
+ Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>,
+ Fazla Mehrab <a.mehrab@bytedance.com>,
+ Chen Zhongjin <chenzhongjin@huawei.com>, Puranjay Mohan <puranjay@kernel.org>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <10ccbeb0f4bcd7d0a10cc9b9bd12fdc4894f83ee.1746821544.git.jpoimboe@kernel.org>
+ <f97a2e18-d672-41b1-ac26-4d1201528ed7@redhat.com>
+ <27bkpjpv4lklcxafb4yifrbdjmfxn2sh67lckom2w7hpmgdyxr@zgty22rlp62q>
+ <fo7d53hseij2pes7fml5hf2gnmfbuzlr7glpbc7wij2sgctuxx@mpr223nazmgg>
+Content-Language: en-US
+From: Joe Lawrence <joe.lawrence@redhat.com>
+Autocrypt: addr=joe.lawrence@redhat.com; keydata=
+ xsFNBFgTlmsBEADfrZirrMsj9Z9umoJ5p1rgOitLBABITvPO2x5eGBRfXbT306zr226bhfPj
+ +SDlaeIRwKoQvY9ydB3Exq8bKObYZ+6/OAVIDPHBVlnZbysutSHsgdaGqTH9fgYhoJlUIApz
+ suQL0MIRkPi0y+gABbH472f2dUceGpEuudIcGvpnNVTYxqwbWqsSsfT1DaAz9iBCeN+T/f/J
+ 5qOXyZT7lC6vLy07eGg0uBh9jQznhbfXPIev0losNe7HxvgaPaVQ+BS9Q8NF8qpvbgpO+vWQ
+ ZD5+tRJ5t85InNiWR3bv01GcGXEjEVTnExYypajVuHxumqJeqGNeWvx26cfNRQJQxVQNV7Gz
+ iyAmJO7UulyWQiJqHZPcXAfoWyeKKAJ37YIYfE3k+rm6ekIwSgc9Lacf+KBfESNooU1LnwoQ
+ ok9Q6R5r7wqnhCziqXHfyN2YGhm0Wx4s7s6xIVrx3C5K0LjXBisjAthG/hbPhJvsCz5rTOmP
+ jkr+GSwBy2XUdOmtgq1IheBFwvWf08vrzNRCqz3iI1CvRpz0ZYBazmkz924u4ul6W7JuCdgy
+ qW3UDLA77XlzFrA7nJ6rb77aZF7LJlkahX7lMaKZUzH+K4aVKTdvZ3szm9K+v0iixsM0TEnz
+ oWsZgrkAA0OX2lpLfXvskoujQ84lY989IF+nUwy0wRMJPeqNxwARAQABzSZKb2UgTGF3cmVu
+ Y2UgPGpvZS5sYXdyZW5jZUByZWRoYXQuY29tPsLBlgQTAQgAQAIbAwcLCQgHAwIBBhUIAgkK
+ CwQWAgMBAh4BAheAFiEEXzkJ3py1AClxRoHJx96nQticmuUFAmF2uf8FCRLJJRQACgkQx96n
+ QticmuU69A/9FB5eF5kc392ifa/G6/m8q5BKVUXBMWy/RcRaEVUwl9lulJd99tkZT5KwwdIU
+ eYSpmT4SXrMzHj3mWe8RcFT9S39RvmZA6UKQkt9mJ+dvUVyDW1pqAB+S6+AEJyzw9AoVPSIG
+ WcHTCHdJZfZOMmFjDyduww7n94qXLO0oRMhjvR9vUqfBgEBSLzRSK96HI38brAcj33Q3lCkf
+ 8uNLEAHVxN57bsNXxMYKo/i7ojFNCOyFEdPCWUMSF+M0D9ScXZRZCwbx0369yPSoNDgSIS8k
+ iC/hbP2YMqaqYjxuoBzTTFuIS60glJu61RNealNjzvdlVz3RnNvD4yKz2JUsEsNGEGi4dRy7
+ tvULj0njbwdvxV/gRnKboWhXVmlvB1qSfimSNkkoCJHXCApOdW0Og5Wyi+Ia6Qym3h0hwG0r
+ r+w8USCn4Mj5tBcRqJKITm92IbJ73RiJ76TVJksC0yEfbLd6x1u6ifNQh5Q7xMYk0t4VF6bR
+ 56GG+3v1ci1bwwY5g1qfr7COU7in2ZOxhEpHtdt08MDSDFB3But4ko8zYqywP4sxxrJFzIdq
+ 7Kv8a2FsLElJ3xG7jM260sWJfgZNI5fD0anbrzn9Pe1hShZY+4LXVJR/k3H01FkU9jWan0G/
+ 8vF04bVKng8ZUBBT/6OYoNQHzQ9z++h5ywgMTITy5EK+HhnOwU0EWBOWawEQALxzFFomZI1s
+ 4i0a6ZUn4eQ6Eh2vBTZnMR2vmgGGPZNZdd1Ww62VnpZamDKFddMAQySNuBG1ApgjlFcpX0kV
+ zm8PCi8XvUo0O7LHPKUkOpPM1NJKE1E3n5KqVbcTIftdTu3E/87lwBfEWBHIC+2K6K4GwSLX
+ AMZvFnwqkdyxm9v0UiMSg87Xtf2kXYnqkR5duFudMrY1Wb56UU22mpZmPZ3IUzjV7YTC9Oul
+ DYjkWI+2IN+NS8DXvLW8Dv4ursCiP7TywkxaslVT8z1kqtTUFPjH10aThjsXB5y/uISlj7av
+ EJEmj2Cbt14ps6YOdCT8QOzXcrrBbH2YtKp2PwA3G3hyEsCFdyal8/9h0IBgvRFNilcCxxzq
+ 3gVtrYljN1IcXmx87fbkV8uqNuk+FxR/dK1zgjsGPtuWg1Dj/TrcLst7S+5VdEq87MXahQAE
+ O5qqPjsh3oqW2LtqfXGSQwp7+HRQxRyNdZBTOvhG0sys4GLlyKkqAR+5c6K3Qxh3YGuA77Qb
+ 1vGLwQPfGaUo3soUWVWRfBw8Ugn1ffFbZQnhAs2jwQy3CILhSkBgLSWtNEn80BL/PMAzsh27
+ msvNMMwVj/M1R9qdk+PcuEJXvjqQA4x/F9ly/eLeiIvspILXQ5LodsITI1lBN2hQSbFFYECy
+ a4KuPkYHPZ3uhcfB0+KroLRxABEBAAHCwXwEGAEIACYCGwwWIQRfOQnenLUAKXFGgcnH3qdC
+ 2Jya5QUCYXa52AUJEskk7QAKCRDH3qdC2Jya5awND/9d9YntR015FVdn910u++9v64fchT+m
+ LqD+WL24hTUMOKUzAVxq+3MLN4XRIcig4vnLmZ2sZ7VXstsukBCNGdm8y7Y8V1tXqeor82IY
+ aPzfFhcTtMWOvrb3/CbwxHWM0VRHWEjR7UXG0tKt2Sen0e9CviScU/mbPHAYsQDkkbkNFmaV
+ KJjtiVlTaIwq/agLZUOTzvcdTYD5QujvfnrcqSaBdSn1+LH3af5T7lANU6L6kYMBKO+40vvk
+ r5w5pyr1AmFU0LCckT2sNeXQwZ7jR8k/7n0OkK3/bNQMlLx3lukVZ1fjKrB79b6CJUpvTUfg
+ 9uxxRFUmO+cWAjd9vOHT1Y9pgTIAELucjmlmoiMSGpbhdE8HNesdtuTEgZotpT1Q2qY7KV5y
+ 46tK1tjphUw8Ln5dEJpNv6wFYFKpnKsiiHgWAaOuWkpHWScKfNHwdbXOw7kvIOrHV0euKhFa
+ 0j0S2Arb+WjjMSJQ7WpC9rzkq1kcpUtdWnKUC24WyZdZ1ZUX2dW2AAmTI1hFtHw42skGRCXO
+ zOpdA5nOdOrGzIu0D9IQD4+npnpSIL5IW9pwZMkkgoD47pdeekzG/xmnvU7CF6iDBzwuG3CC
+ FPtyZxmwRVoS/YeBgzoyEDTwUJDzNGrkkNKnaUbDpg4TLRSCUUhmDUguj0QCa4n8kYoaAw9S
+ pNzsRQ==
+In-Reply-To: <fo7d53hseij2pes7fml5hf2gnmfbuzlr7glpbc7wij2sgctuxx@mpr223nazmgg>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Address a Smatch static checker warning regarding an unchecked
-dereference in the function call:
-set_cdie_id(i, cluster_info, plat_info)
-when plat_info is NULL.
+On 6/6/25 4:28 PM, Josh Poimboeuf wrote:
+> On Fri, Jun 06, 2025 at 12:03:45PM -0700, Josh Poimboeuf wrote:
+>> On Fri, Jun 06, 2025 at 09:05:59AM -0400, Joe Lawrence wrote:
+>>> Should the .cmd file copy come from the reference SRC and not original
+>>> ORIG directory?
+>>>
+>>>   cmd_file="$SRC/$(dirname "$rel_file")/.$(basename "$rel_file").cmd"
+>>>
+>>> because I don't see any .cmd files in klp-tmp/orig/
+>>>
+>>> FWIW, I only noticed this after backporting the series to
+>>> centos-stream-10.  There, I got this build error:
+>>>
+>>>   Building original kernel
+>>>   Copying original object files
+>>>   Fixing patches
+>>>   Building patched kernel
+>>>   Copying patched object files
+>>>   Diffing objects
+>>>   vmlinux.o: changed function: cmdline_proc_show
+>>>   Building patch module: livepatch-test.ko
+>>>   <...>/klp-tmp/kmod/.vmlinux.o.cmd: No such file or directory
+>>>   make[2]: *** [scripts/Makefile.modpost:145:
+>>> <...>/klp-tmp/kmod/Module.symvers] Error 1
+>>>  make[1]: *** [<...>/Makefile:1936: modpost] Error 2
+>>>  make: *** [Makefile:236: __sub-make] Error 2
+>>>
+>>> The above edit worked for both your upstream branch and my downstream
+>>> backport.
+>>
+>> Hm, I broke this in one of my refactorings before posting.
+>>
+>> Is this with CONFIG_MODVERSIONS?
+>>
+>> If you get a chance to test, here's a fix (currently untested):
+> 
+> It was indeed CONFIG_MODVERSIONS.  I verified the fix works.
+> 
+> All the latest fixes are in my klp-build branch:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git klp-build
+> 
+> I hope to post v3 next week and then start looking at merging patches --
+> if not all of them, then at least the first ~40 dependency patches which
+> are mostly standalone improvements.
+> 
 
-Instead of addressing this one case, in general if plat_info is NULL
-then it can cause other issues. For example in a two package system it
-will give warning for duplicate sysfs entry as package ID will be always
-zero for both packages when creating string for attribute group name.
+Ack, I tested this update with CONFIG_MODVERSIONS for both vmlinux and
+module cases with success :)
 
-plat_info is derived from TPMI ID TPMI_BUS_INFO, which is integral to
-the core TPMI design. Therefore, it should not be NULL on a production
-platform. Consequently, the module should fail to load if plat_info is
-NULL.
-
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/platform-driver-x86/aEKvGCLd1qmX04Tc@stanley.mountain/T/#u
-Fixes: 8a54e2253e4c ("platform/x86/intel-uncore-freq: Uncore frequency control via TPMI")
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: stable@vger.kernel.org
----
- .../x86/intel/uncore-frequency/uncore-frequency-tpmi.c   | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-index 1c7b2f2716ca..44d9948ed224 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-@@ -511,10 +511,13 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
- 
- 	/* Get the package ID from the TPMI core */
- 	plat_info = tpmi_get_platform_data(auxdev);
--	if (plat_info)
--		pkg = plat_info->package_id;
--	else
-+	if (unlikely(!plat_info)) {
- 		dev_info(&auxdev->dev, "Platform information is NULL\n");
-+		ret = -ENODEV;
-+		goto err_rem_common;
-+	}
-+
-+	pkg = plat_info->package_id;
- 
- 	for (i = 0; i < num_resources; ++i) {
- 		struct tpmi_uncore_power_domain_info *pd_info;
 -- 
-2.49.0
+Joe
 
