@@ -1,149 +1,319 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA3F139579;
-	Fri,  6 Jun 2025 17:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00CA1DCB09;
+	Fri,  6 Jun 2025 17:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749229426; cv=none; b=lsY7fmIR0JhqIFy3g19dwU3lx1u2F+gDD24nuNlVJDZnIjspApUMuSIiNGMVKoYe3HlU83PNvjX8GCoq+Ugl+RNHuabWzVLomUew0lyCe3wrEWhoKa2jff6igubwtETG2UGRM5uGbq93RqcfH5XrJmaJQCdNHrj6mrSTbtR6KgA=
+	t=1749229482; cv=none; b=fB/i2aVgy5s/GLQhnHJGY50VFwjdTMmeZfkAwLXODZjFO3OCIwtq0gO6NGsreqQBGo+6f5ar1CaJHpPUgATQETY3UxyMIKjYJAh1Kzldyb0NgcoObyLfRjyud3I3GNIoRgJYrixt5hA5xIFJCwbJxmEsQNin82U0/Ddp5JkpUX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749229426; c=relaxed/simple;
-	bh=bXVAae7DKMJ0tzjoon4h0PiScmsC2Apz1l3Ep2ZFjNs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NWp/KSnOIQGCXaVVvH1uP3x0qXvAJoREr3vb3QUi0I8fHKgLPDos5KSRLlWDpgnVL4iuqNQB8YfhmGL6u/Wk7VzlKF6M6PL3k3ekhiK/6WB28kxrFtBbMTBCEB2b/bv/RCeYdjMqruTVgKD0qVQNbq4Xh+y6qdcVtMP6HQ98Q2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QEhSxkZ6; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749229482; c=relaxed/simple;
+	bh=FEti/6W5+cDXHM7QPLkOIy38jOqcHarb3UBqmuZzjew=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=oiQhUaVlZyUm82C1igGyXLy0cWJRyiD9WBYb3zAzL0eXcGGpdI/VTq0K7ZIqTAQ6BhsKCpO845IFTL2guB5NIvp6IeKwmkKoUOgzeMgxtlhJC1pCVd6JskfM4bcfpgBXholWNHXx0SqpWkfWH3I6iQVzoQ6MTVZUEFeNG7rH840=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UnlS228e; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QEhSxkZ6"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so26580495e9.2;
-        Fri, 06 Jun 2025 10:03:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749229423; x=1749834223; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1hJOEiywNictZFF5V1cHbMzRCVMfZP5W7l0+Ena+ZBg=;
-        b=QEhSxkZ6osU+QgCO7BSSSqUvpY8adJa93BXlnx6ZsC14/mvIib+5nGrUoilyphWhGT
-         8I8Ib5du/64nZrxwbO2D3UNGhS4TxNMVrSA7JKxcdsP12+wC5nZXPZWWcXui5ROBB1Y2
-         90GHxZ+Vmcx8UaorDLkC9sNKM8TmGJW3PMf8rV4y94BaK7FFnOTb+oaVTrka32z4AyJI
-         QzjA9pGBHPFva797iPvhjgkkzWizLA75wFAZKN32iDmKvfzbFR6XauCDjgN6VO3vRORY
-         oRgmeHRE1wOvFPCDHU5WePv0PtUKe13SveMChD4Scl/anockne6QOy7z7qVXJnVkwXDB
-         VWpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749229423; x=1749834223;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1hJOEiywNictZFF5V1cHbMzRCVMfZP5W7l0+Ena+ZBg=;
-        b=eOXJ5Ol4tbkew+SuxL2vVHde4sYcYFCiwfq+T4Pevhk2AR0v2Df7LoSNP/Xfv3R3yh
-         z/dqB3DIeZ8khm8fmzVupxEOQjKkfmppTeZyk+lspq979SKWLmxh/qXAOQJFvBmTU/jS
-         xgmFfgyFFHdJhyDxz7xu85Qq9FGVqOptwhiC7Pc2QbR/W59pM5P5Q01IVFUc+cqOJNGW
-         I+j71I1ZO0AmGoAWR6vY5Wo2iy9d4IIPnQ8Zzx60iNgxzXIn00Bc1AKaWH9of5PkD2iW
-         x1e5EOxN43zoAE2KO62OemkZ9grLWAhOAFCQgHRx9rMT2ZFwUW0VRMXH2S6JdXvVUZmb
-         1Eog==
-X-Forwarded-Encrypted: i=1; AJvYcCUjIWxvhvN9UVzqPRciBSz3XQS9Vmt9Ac7oRkUKh6B9AkNVAQvEQLAg2aMIBaDeYJnolntq7kgq95fD@vger.kernel.org, AJvYcCVTCzqQk6bTwlIQIdCJWsN2y/N8pETLD+jNxO0WRr5gyYNLx/MhziN0cOF4UbxXbnmwMBXJeqd+D7ezPN6yTeI=@vger.kernel.org, AJvYcCVlbbXcdG7dm1RUwxDRSq0cdn6aiRkNlQdcv1bCkm5bnQh6nOQMHXO5xtv4l9U7HKrxkwrEqNsCdYHPqvnC@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyj2vX6lj2NaXud8msi5j/1Shux7oENNKmYXjXrmIAr4V6CXcFL
-	OUqIL/ENi7Vv/ZTg2wtUGh2AZgdjuJN8Cvbin7DmOHYgB5hYyoOvT902
-X-Gm-Gg: ASbGnctyr62Tu0iAkoISxSfWPSzH3wBLlNtNmuO7vt/teskdX2SdNWmbx5ueE5HuS1R
-	5BFq3T0OcsnoN2SDmmllhbU2/2iba87Mw5cL/LsXO8dq+NGWeI3PSUkFITdXntjUz3u9OKx1+Mb
-	AbwF9So0TuRBAp2fW/aQyOl+NTGsl2rb1i343wiCyAsV58dKBtlChEVUdnGQ+FilQRwke2dcaTs
-	5pbPWjkZpxDag1DB70SF07Xd2ARf/pwune2UW3qJOHMIt4K2kKCzSf+AFN9jc9AiShiWP13/ox5
-	aQvyyXh1kwGkzfi4e8ZkmIGz4eV5VYfUr4Q/AQ28Z+E7iHKKUF3HOhNJw5M0zyxJ2Tkol9lJllv
-	L+WaF7pfS15AIOZljmFtDlqI=
-X-Google-Smtp-Source: AGHT+IFhV3GFPFoA+00yt9MHy083gJVi+t2TgGm4p+nHQDI4B9+g9acm958QPZwpD82FgYPkjfw2Hw==
-X-Received: by 2002:a05:600c:5305:b0:450:cfe1:a827 with SMTP id 5b1f17b1804b1-4520141b200mr46555375e9.31.1749229422688;
-        Fri, 06 Jun 2025 10:03:42 -0700 (PDT)
-Received: from igor-korotin-Precision-Tower-3620.. ([188.39.32.4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53229de17sm2478995f8f.18.2025.06.06.10.03.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 10:03:42 -0700 (PDT)
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-To: ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	rafael@kernel.org,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Cc: boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	lenb@kernel.org,
-	wedsonaf@gmail.com,
-	viresh.kumar@linaro.org,
-	alex.hung@amd.com,
-	dingxiangfei2009@gmail.com
-Subject: [PATCH v3 0/4] rust: Add ACPI match table support for Rust drivers
-Date: Fri,  6 Jun 2025 18:03:41 +0100
-Message-ID: <20250606170341.3880941-1-igor.korotin.linux@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UnlS228e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749229481; x=1780765481;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=FEti/6W5+cDXHM7QPLkOIy38jOqcHarb3UBqmuZzjew=;
+  b=UnlS228eVJL5S0/ZD9AbJIzZjtqNbNPez5gqARx4LzaaPtp2jov1jUg1
+   Lw4oDj1c0d2HNFgeIFx+jweP7TYjNbGwjcZcsDnbso72BpiBhhD6LH+E8
+   +E0KIDpN4/4TieeJbNt+wnWo46BU3jfWglAG4bNUUP8tBbCTaH87qWhO6
+   p2FOMQDN4k0Xj1CAJEJ180BNNFsN30bbQoM+97GONY4gzP1ZreCFqBP6e
+   3zStMSTIhOSWy+2GgY+cw92z5MIMbdk8Odb/zDpocYE8wswHun6wBU9E/
+   0gdDby0Sc9TnrPyrq6Q6s/W1nh+/bM+Ou9rIsEi5rmnWTOp++3zrCe0VX
+   Q==;
+X-CSE-ConnectionGUID: IkXZx9TUQfWmYgM2TqaIgg==
+X-CSE-MsgGUID: wym7mCKLRbKo2XjDUCBjyw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="54016754"
+X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
+   d="scan'208";a="54016754"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 10:04:40 -0700
+X-CSE-ConnectionGUID: PKAX6cfjSFql/99WlRiN3g==
+X-CSE-MsgGUID: rqdu907nSV2MNjXZf+Nc7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
+   d="scan'208";a="146851621"
+Received: from spandruv-desk1.amr.corp.intel.com (HELO [10.125.111.33]) ([10.125.111.33])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 10:04:38 -0700
+Message-ID: <6856e071-79ff-4b95-95ef-ebacadfabfbc@intel.com>
+Date: Fri, 6 Jun 2025 10:04:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-
-This patch series introduces support for ACPI match tables in Rust 
-drivers.
-
-Currently, Rust abstractions support only Open Firmware (OF) device 
-matching. This series extends the driver model to support ACPI-based 
-matching, enabling Rust drivers to bind to ACPI-described devices.
-
-Changes include:
-  - A new `acpi::DeviceId` abstraction for working with 
-   `struct acpi_device_id`.
-  - Updates to the core `Adapter` trait and `platform::Driver` to support
-    optional ACPI ID tables.
-  - A sample implementation in the Rust platform driver, demonstrating 
-    multi-bus matching.
-
-This is especially useful for writing drivers that work across platforms 
-using both OF and ACPI.
-
-Tested using QEMU with a custom SSDT that creates an ACPI device matching
-the sample Rust platform driver.
-
-Igor Korotin (4):
-  rust: acpi: add `acpi::DeviceId` abstraction
-  rust: driver: Add ACPI id table support to Adapter trait
-  rust: platform: Add ACPI match table support to `Driver` trait
-  samples: rust: add ACPI match table example to platform driver
-
-Changelog
----------
-v3:
- - Removed fwnode type check in `Adapter::id_info` per Greg's and Danilo's
-   comments
- - Removed `is_of_node` rust helper, due to unnecessity. 
- - Fixed example code in `rust_driver_platform.rs` per Danilo's comment
- - Added an instruction of testing ACPI using QEMU with a custom SSDT
- - Fixed minor code formatting issues.
- - Link to v2: https://lore.kernel.org/rust-for-linux/20250605161956.3658374-1-igor.korotin.linux@gmail.com/
-v2:
- - Removed misleading comment in `acpi::DeviceID` implementation. 
- - Removed unnecessary casting in `acpi::DeviceID::new`.
- - Moved `pub mod acpi` to correct alphabetical position in `rust/kernel/lib.rs`.
- - Link to v1: https://lore.kernel.org/rust-for-linux/20250530123815.1766726-1-igor.korotin.linux@gmail.com/
-
- MAINTAINERS                          |  1 +
- rust/bindings/bindings_helper.h      |  1 +
- rust/kernel/acpi.rs                  | 61 +++++++++++++++++
- rust/kernel/driver.rs                | 39 ++++++++++-
- rust/kernel/lib.rs                   |  1 +
- rust/kernel/platform.rs              | 18 +++++-
- samples/rust/rust_driver_platform.rs | 97 +++++++++++++++++++++++++++-
- 7 files changed, 214 insertions(+), 4 deletions(-)
- create mode 100644 rust/kernel/acpi.rs
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 06/16] cxl/pci: Move RAS initialization to cxl_port
+ driver
+To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ bhelgaas@google.com, bp@alien8.de, ming.li@zohomail.com,
+ shiju.jose@huawei.com, dan.carpenter@linaro.org,
+ Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+ yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
+ uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
+ ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-7-terry.bowman@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250603172239.159260-7-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-base-commit: 9857af0fcff385c75433f2162c30c62eb912ef6d
--- 
-2.43.0
+
+On 6/3/25 10:22 AM, Terry Bowman wrote:
+> The cxl_port driver is intended to manage CXL Endpoint Ports and CXL Switch
+> Ports. Move existing RAS initialization to the cxl_port driver.
+> 
+> Restricted CXL Host (RCH) Downstream Port RAS initialization currently
+> resides in cxl/core/pci.c. The PCI source file is not otherwise associated
+> with CXL Port management.
+> 
+> Additional CXL Port RAS initialization will be added in future patches to
+> support a CXL Port device's CXL errors.
+
+Is this the part that Jonathan recommended moving to cxl/core/ras.c?
+
+DJ
+
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> ---
+>  drivers/cxl/core/pci.c  | 73 --------------------------------------
+>  drivers/cxl/core/regs.c |  2 ++
+>  drivers/cxl/cxl.h       |  6 ++++
+>  drivers/cxl/port.c      | 78 +++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 86 insertions(+), 73 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index b50551601c2e..317cd0a91ffe 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -748,79 +748,6 @@ static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
+>  
+>  #ifdef CONFIG_PCIEAER_CXL
+>  
+> -static void cxl_dport_map_rch_aer(struct cxl_dport *dport)
+> -{
+> -	resource_size_t aer_phys;
+> -	struct device *host;
+> -	u16 aer_cap;
+> -
+> -	aer_cap = cxl_rcrb_to_aer(dport->dport_dev, dport->rcrb.base);
+> -	if (aer_cap) {
+> -		host = dport->reg_map.host;
+> -		aer_phys = aer_cap + dport->rcrb.base;
+> -		dport->regs.dport_aer = devm_cxl_iomap_block(host, aer_phys,
+> -						sizeof(struct aer_capability_regs));
+> -	}
+> -}
+> -
+> -static void cxl_dport_map_ras(struct cxl_dport *dport)
+> -{
+> -	struct cxl_register_map *map = &dport->reg_map;
+> -	struct device *dev = dport->dport_dev;
+> -
+> -	if (!map->component_map.ras.valid)
+> -		dev_dbg(dev, "RAS registers not found\n");
+> -	else if (cxl_map_component_regs(map, &dport->regs.component,
+> -					BIT(CXL_CM_CAP_CAP_ID_RAS)))
+> -		dev_dbg(dev, "Failed to map RAS capability.\n");
+> -}
+> -
+> -static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
+> -{
+> -	void __iomem *aer_base = dport->regs.dport_aer;
+> -	u32 aer_cmd_mask, aer_cmd;
+> -
+> -	if (!aer_base)
+> -		return;
+> -
+> -	/*
+> -	 * Disable RCH root port command interrupts.
+> -	 * CXL 3.0 12.2.1.1 - RCH Downstream Port-detected Errors
+> -	 *
+> -	 * This sequence may not be necessary. CXL spec states disabling
+> -	 * the root cmd register's interrupts is required. But, PCI spec
+> -	 * shows these are disabled by default on reset.
+> -	 */
+> -	aer_cmd_mask = (PCI_ERR_ROOT_CMD_COR_EN |
+> -			PCI_ERR_ROOT_CMD_NONFATAL_EN |
+> -			PCI_ERR_ROOT_CMD_FATAL_EN);
+> -	aer_cmd = readl(aer_base + PCI_ERR_ROOT_COMMAND);
+> -	aer_cmd &= ~aer_cmd_mask;
+> -	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
+> -}
+> -
+> -/**
+> - * cxl_dport_init_ras_reporting - Setup CXL RAS report on this dport
+> - * @dport: the cxl_dport that needs to be initialized
+> - * @host: host device for devm operations
+> - */
+> -void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host)
+> -{
+> -	dport->reg_map.host = host;
+> -	cxl_dport_map_ras(dport);
+> -
+> -	if (dport->rch) {
+> -		struct pci_host_bridge *host_bridge = to_pci_host_bridge(dport->dport_dev);
+> -
+> -		if (!host_bridge->native_aer)
+> -			return;
+> -
+> -		cxl_dport_map_rch_aer(dport);
+> -		cxl_disable_rch_root_ints(dport);
+> -	}
+> -}
+> -EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
+> -
+>  static void cxl_handle_rdport_cor_ras(struct cxl_dev_state *cxlds,
+>  					  struct cxl_dport *dport)
+>  {
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index 5ca7b0eed568..b8e767a9571c 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -199,6 +199,7 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
+>  
+>  	return ret_val;
+>  }
+> +EXPORT_SYMBOL_NS_GPL(devm_cxl_iomap_block, "CXL");
+>  
+>  int cxl_map_component_regs(const struct cxl_register_map *map,
+>  			   struct cxl_component_regs *regs,
+> @@ -517,6 +518,7 @@ u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb)
+>  
+>  	return offset;
+>  }
+> +EXPORT_SYMBOL_NS_GPL(cxl_rcrb_to_aer, "CXL");
+>  
+>  static resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct cxl_dport *dport)
+>  {
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index ba08b77b65da..0dc43bfba76a 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -313,6 +313,12 @@ int cxl_setup_regs(struct cxl_register_map *map);
+>  struct cxl_dport;
+>  resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
+>  					   struct cxl_dport *dport);
+> +
+> +u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb);
+> +
+> +void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
+> +				   resource_size_t length);
+> +
+>  int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev, struct cxl_dport *dport);
+>  
+>  #define CXL_RESOURCE_NONE ((resource_size_t) -1)
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index fe4b593331da..7b61f09347a5 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -6,6 +6,7 @@
+>  
+>  #include "cxlmem.h"
+>  #include "cxlpci.h"
+> +#include "cxl.h"
+>  
+>  /**
+>   * DOC: cxl port
+> @@ -57,6 +58,83 @@ static int discover_region(struct device *dev, void *unused)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_PCIEAER_CXL
+> +
+> +static void cxl_dport_map_rch_aer(struct cxl_dport *dport)
+> +{
+> +	resource_size_t aer_phys;
+> +	struct device *host;
+> +	u16 aer_cap;
+> +
+> +	aer_cap = cxl_rcrb_to_aer(dport->dport_dev, dport->rcrb.base);
+> +	if (aer_cap) {
+> +		host = dport->reg_map.host;
+> +		aer_phys = aer_cap + dport->rcrb.base;
+> +		dport->regs.dport_aer = devm_cxl_iomap_block(host, aer_phys,
+> +						sizeof(struct aer_capability_regs));
+> +	}
+> +}
+> +
+> +static void cxl_dport_map_ras(struct cxl_dport *dport)
+> +{
+> +	struct cxl_register_map *map = &dport->reg_map;
+> +	struct device *dev = dport->dport_dev;
+> +
+> +	if (!map->component_map.ras.valid)
+> +		dev_dbg(dev, "RAS registers not found\n");
+> +	else if (cxl_map_component_regs(map, &dport->regs.component,
+> +					BIT(CXL_CM_CAP_CAP_ID_RAS)))
+> +		dev_dbg(dev, "Failed to map RAS capability.\n");
+> +}
+> +
+> +static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
+> +{
+> +	void __iomem *aer_base = dport->regs.dport_aer;
+> +	u32 aer_cmd_mask, aer_cmd;
+> +
+> +	if (!aer_base)
+> +		return;
+> +
+> +	/*
+> +	 * Disable RCH root port command interrupts.
+> +	 * CXL 3.0 12.2.1.1 - RCH Downstream Port-detected Errors
+> +	 *
+> +	 * This sequence may not be necessary. CXL spec states disabling
+> +	 * the root cmd register's interrupts is required. But, PCI spec
+> +	 * shows these are disabled by default on reset.
+> +	 */
+> +	aer_cmd_mask = (PCI_ERR_ROOT_CMD_COR_EN |
+> +			PCI_ERR_ROOT_CMD_NONFATAL_EN |
+> +			PCI_ERR_ROOT_CMD_FATAL_EN);
+> +	aer_cmd = readl(aer_base + PCI_ERR_ROOT_COMMAND);
+> +	aer_cmd &= ~aer_cmd_mask;
+> +	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
+> +}
+> +
+> +/**
+> + * cxl_dport_init_ras_reporting - Setup CXL RAS report on this dport
+> + * @dport: the cxl_dport that needs to be initialized
+> + * @host: host device for devm operations
+> + */
+> +void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host)
+> +{
+> +	dport->reg_map.host = host;
+> +	cxl_dport_map_ras(dport);
+> +
+> +	if (dport->rch) {
+> +		struct pci_host_bridge *host_bridge = to_pci_host_bridge(dport->dport_dev);
+> +
+> +		if (!host_bridge->native_aer)
+> +			return;
+> +
+> +		cxl_dport_map_rch_aer(dport);
+> +		cxl_disable_rch_root_ints(dport);
+> +	}
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
+> +
+> +#endif /* CONFIG_PCIEAER_CXL */
+> +
+>  static int cxl_switch_port_probe(struct cxl_port *port)
+>  {
+>  	struct cxl_hdm *cxlhdm;
 
