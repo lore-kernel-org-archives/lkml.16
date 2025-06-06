@@ -1,163 +1,86 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B0F284B57;
-	Fri,  6 Jun 2025 09:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282D42857DE;
+	Fri,  6 Jun 2025 09:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749201528; cv=none; b=Ndp0+FrXIONqHtumi9qCQqFdPpy3npuZ8LahoZHoX1uDCLLK225ggxpfrSyBTHbhEXDy/aJfpweEahAmkF38RxpivE365pEZ4hE0d/NINOJquw6tDqZ97uy1kyqfpgC9MhaPbJt5LFxZhM6agmbgt6sqDijGxmyGzuhsyd3Xs/U=
+	t=1749201562; cv=none; b=pYs1btsnHbbWg5DRiTI0oe1HlzA6SzZ/USVuBAPisQRwG6wgYvMT4HvOcwvDaTrXs/rX3U/mAWjEo+h0g51NUihS+y2zW69oAjOw1hKQzSQjNgPujG9mxWvchULb1xN+Onr35DNq2X8WDOys8vpKiZ53YAdsBhyJ3v15Atd0Us8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749201528; c=relaxed/simple;
-	bh=wDHQfU8+QP37WRswTIYC/zKbarYTIkc8xrZVy166uOo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PRXDQZBPt1fwkC7o8QK4rghUxc33G9mHW4HopH5Zd8Qaslv8PVnJ4Q39meVW2Su+zKA/VFAfVBA0BpFLvmmyWwHaIyEkKYoxpCYT37KKVcT49+TyIgamuSlpMrvFR4A2HNFHZyjgx6WocvP/Hox5J4XSvXjYVvMqHw0xz/E0+Yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 384fae7e42b711f0b29709d653e92f7d-20250606
-X-CTIC-Tags:
-	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN
-	HR_FROM_NAME, HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER
-	HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT
-	HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED
-	SA_TRUSTED, SA_EXISTED, SN_TRUSTED, SN_EXISTED, SPF_NOPASS
-	DKIM_NOPASS, DMARC_NOPASS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:07587476-8ac4-4c73-8c0b-f3e67721b9b3,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-5
-X-CID-INFO: VERSION:1.1.45,REQID:07587476-8ac4-4c73-8c0b-f3e67721b9b3,IP:0,URL
-	:0,TC:0,Content:-25,EDM:25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-5
-X-CID-META: VersionHash:6493067,CLOUDID:9a30bf3b74591aedaf2c97aae7f9d25f,BulkI
-	D:250606171835ZJIVP55Y,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|81|82|10
-	2,TC:nil,Content:0|50,EDM:5,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,B
-	EC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_SNR
-X-UUID: 384fae7e42b711f0b29709d653e92f7d-20250606
-X-User: xiaopei01@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <xiaopei01@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 774779148; Fri, 06 Jun 2025 17:18:33 +0800
-From: Pei Xiao <xiaopei01@kylinos.cn>
-To: nicolas.frattaroli@collabora.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	heiko@sntech.de,
-	linux-rockchip@lists.infradead.org,
-	linux-sound@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Pei Xiao <xiaopei01@kylinos.cn>
-Subject: [PATCH v2 2/2] ASOC: rockchip: Use helper function devm_clk_get_enabled()
-Date: Fri,  6 Jun 2025 17:18:22 +0800
-Message-Id: <84bc40641d05596f1edf4f01d1e6aea16bdbeeb5.1749201126.git.xiaopei01@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1749201126.git.xiaopei01@kylinos.cn>
-References: <cover.1749201126.git.xiaopei01@kylinos.cn>
+	s=arc-20240116; t=1749201562; c=relaxed/simple;
+	bh=frCW/vBzCrEGCM+6G/qXfkE8FGMEPfIpWzwPqLwytyI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KG4DfuNWCHZp7r9qxZcc8Ji0zlHbBlXR2k5tZ+ZsLIcOgKe9NZgfc7Ltd2IlpKCPgQ49A/QXwD2MCDtp/v/K1mWcXhUMvvxE0PvYTFKKABxyY0/OBkUT6M93d+Mi3vJFuO+quVLxbnCSjPiVsk76Sr2qqUdsh4ofNKGcn3AV4YY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rNMRrAiK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rNMRrAiK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72F5FC4CEEB;
+	Fri,  6 Jun 2025 09:19:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749201561;
+	bh=frCW/vBzCrEGCM+6G/qXfkE8FGMEPfIpWzwPqLwytyI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rNMRrAiK7jsc5fKcq1zGRPDz0tUULP8frmSPSUyrliQr9nTOq9lm/pvPb76qqYiaf
+	 5Q2Z88dU8DOOcCdIOeH+4u/AiM895Vcj9u9rlLRTYZtRYIWiFT6+vU4sawpMVSGcyP
+	 K+p6ztCNAyQQ+HDKGOq1hSSSc8kXTfW36Zn0QcQxEiinFKsjXMIYf9ebYVt8+2uA2W
+	 Ujwh1kzvKNTiHyhsELFWsUFDeqYesP02NwLadObbhMyY/mlQFtDwsZUOJjoam/2mDp
+	 1rABr00hoTzQMGi276EpHhGktvXp3tLFFEKBH41LQJ37ditQY1CfG6eV2FT55L+UT+
+	 DLtUVRiTiQHPA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uNTEK-000000007mi-1Oin;
+	Fri, 06 Jun 2025 11:19:17 +0200
+Date: Fri, 6 Jun 2025 11:19:16 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Miaoqing Pan <quic_miaoqing@quicinc.com>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Jeff Johnson <jjohnson@kernel.org>,
+	Remi Pommarel <repk@triplefau.lt>,
+	Baochen Qiang <quic_bqiang@quicinc.com>,
+	linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] wifi: ath12k: fix dest ring-buffer corruption
+ when ring is full
+Message-ID: <aEKylLhbfLusD3Kq@hovoldconsulting.com>
+References: <20250604144509.28374-1-johan+linaro@kernel.org>
+ <20250604144509.28374-5-johan+linaro@kernel.org>
+ <a8236639-2448-4552-ac21-db7e7370e23e@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a8236639-2448-4552-ac21-db7e7370e23e@quicinc.com>
 
-Since commit 7ef9651e9792 ("clk: Provide new devm_clk helpers for prepared
-and enabled clocks"), devm_clk_get() and clk_prepare_enable() can now be
-replaced by devm_clk_get_enabled() when driver enables the clocks for the
-whole lifetime of the device. Moreover, it is no longer necessary to
-unprepare and disable the clocks explicitly.
+On Fri, Jun 06, 2025 at 03:27:04PM +0800, Miaoqing Pan wrote:
+> On 6/4/2025 10:45 PM, Johan Hovold wrote:
+> > Add the missing memory barriers to make sure that destination ring
+> > descriptors are read before updating the tail pointer (and passing
+> > ownership to the device) to avoid memory corruption on weakly ordered
+> > architectures like aarch64 when the ring is full.
 
-Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
----
- sound/soc/rockchip/rockchip_sai.c | 35 +++++++++----------------------
- 1 file changed, 10 insertions(+), 25 deletions(-)
+> > @@ -2184,6 +2187,10 @@ void ath12k_hal_srng_access_end(struct ath12k_base *ab, struct hal_srng *srng)
+> >   					   srng->u.src_ring.hp);
+> >   		} else {
+> >   			srng->u.dst_ring.last_hp = *srng->u.dst_ring.hp_addr;
+> > +			/* Make sure descriptor is read before updating the
+> > +			 * tail pointer.
+> > +			 */
+> > +			mb();
+> 
+> Is rmb() sufficient, since MMIO write already includes wmb()?
 
-diff --git a/sound/soc/rockchip/rockchip_sai.c b/sound/soc/rockchip/rockchip_sai.c
-index 916af63f1c2c..0b9f54102d69 100644
---- a/sound/soc/rockchip/rockchip_sai.c
-+++ b/sound/soc/rockchip/rockchip_sai.c
-@@ -1427,43 +1427,32 @@ static int rockchip_sai_probe(struct platform_device *pdev)
- 	if (irq > 0) {
- 		ret = devm_request_irq(&pdev->dev, irq, rockchip_sai_isr,
- 				       IRQF_SHARED, node->name, sai);
--		if (ret) {
-+		if (ret)
- 			return dev_err_probe(&pdev->dev, ret,
- 					     "Failed to request irq %d\n", irq);
--		}
- 	} else {
- 		dev_dbg(&pdev->dev, "Asked for an IRQ but got %d\n", irq);
- 	}
- 
- 	sai->mclk = devm_clk_get(&pdev->dev, "mclk");
--	if (IS_ERR(sai->mclk)) {
-+	if (IS_ERR(sai->mclk))
- 		return dev_err_probe(&pdev->dev, PTR_ERR(sai->mclk),
- 				     "Failed to get mclk\n");
--	}
- 
--	sai->hclk = devm_clk_get(&pdev->dev, "hclk");
--	if (IS_ERR(sai->hclk)) {
-+	sai->hclk = devm_clk_get_enabled(&pdev->dev, "hclk");
-+	if (IS_ERR(sai->hclk))
- 		return dev_err_probe(&pdev->dev, PTR_ERR(sai->hclk),
- 				     "Failed to get hclk\n");
--	}
--
--	ret = clk_prepare_enable(sai->hclk);
--	if (ret)
--		return dev_err_probe(&pdev->dev, ret, "Failed to enable hclk\n");
- 
- 	regmap_read(sai->regmap, SAI_VERSION, &sai->version);
- 
- 	ret = rockchip_sai_init_dai(sai, res, &dai);
--	if (ret) {
--		dev_err(&pdev->dev, "Failed to initialize DAI: %d\n", ret);
--		goto err_disable_hclk;
--	}
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret, "Failed to initialize DAI\n");
- 
- 	ret = rockchip_sai_parse_paths(sai, node);
--	if (ret) {
--		dev_err(&pdev->dev, "Failed to parse paths: %d\n", ret);
--		goto err_disable_hclk;
--	}
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret, "Failed to parse paths\n");
- 
- 	/*
- 	 * From here on, all register accesses need to be wrapped in
-@@ -1474,10 +1463,8 @@ static int rockchip_sai_probe(struct platform_device *pdev)
- 	devm_pm_runtime_enable(&pdev->dev);
- 	pm_runtime_get_noresume(&pdev->dev);
- 	ret = rockchip_sai_runtime_resume(&pdev->dev);
--	if (ret) {
--		dev_err(&pdev->dev, "Failed to resume device: %pe\n", ERR_PTR(ret));
--		goto err_disable_hclk;
--	}
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret, "Failed to resume device\n");
- 
- 	ret = devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
- 	if (ret) {
-@@ -1504,8 +1491,6 @@ static int rockchip_sai_probe(struct platform_device *pdev)
- 	/* If we're !CONFIG_PM, we get -ENOSYS and disable manually */
- 	if (pm_runtime_put(&pdev->dev))
- 		rockchip_sai_runtime_suspend(&pdev->dev);
--err_disable_hclk:
--	clk_disable_unprepare(sai->hclk);
- 
- 	return ret;
- }
--- 
-2.25.1
+No, rmb() only orders reads against later reads.
 
+[ The wmb() itself orders reads against later writes on aarch64, but
+that's not generally guaranteed and hence should not be relied on in
+driver code. ]
+
+> >   			ath12k_hif_write32(ab,
+> >   					   (unsigned long)srng->u.dst_ring.tp_addr -
+> >   					   (unsigned long)ab->mem,
+
+Johan
