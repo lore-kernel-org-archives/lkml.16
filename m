@@ -1,48 +1,48 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C47F268FEB;
-	Fri,  6 Jun 2025 06:33:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF10526C3B3;
+	Fri,  6 Jun 2025 06:33:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749191588; cv=none; b=u40YDJeqDXsGl0M/kpssakyFnL7L9bGPIB7nE6gb22p3D4Q1c2K/RDB9jMz4txFI/WWnRTaE6aVUMEpc4d6LVsEqi7MkYSOuem6whvpDy37aRfJVHmGGgKHeYhgZWEpbMAsTVn4YkVeEwlI9DbuogOXMF7J94yJawh/oedJV+3A=
+	t=1749191590; cv=none; b=hgm1X4p/t6g1xH1zX6dOU/z8Q5U8I3aGORzDJ4qb10ipoxf6GzvFBTVugbee/MJlEJ4czRLqSpD2orKCypjvK2mQpadPb7yfQDb7SFwP8YiOnNPP4kZqtIy8hCo0f9oNARCGU0WMscAoMOtrikZG2xpIs+LERtVcQQ6zlKSETR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749191588; c=relaxed/simple;
-	bh=ZJZ/DGAiZ8EFB89FUOY0RrQq5fJ8wgWrZftdSh9uqkc=;
+	s=arc-20240116; t=1749191590; c=relaxed/simple;
+	bh=Z51SxzdRMddVEx3I1w41kaD1gSreXpgx/GzJBjqhaBY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dpPhA5VJgMRYY8O9K+cFVW2XFLtZ75KCLHOEoXXrzQZebqBNwSSQ2eRsr4vXw8rMXIqgFS4ELjp/+ibwkrQBna2fgF0J5KyWNZGreJhJgeAN4Fj8wolQK4cYWDXL1I0cwGP6IqW+vB2tTMn6hU0aP/xdc/T1Ekraj4TYp+iADlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=pKV7Bu8L; arc=none smtp.client-ip=68.232.153.233
+	 MIME-Version:Content-Type; b=o2WU4oXWfzTFW6lnkDoxDp68lIFo7VBVWa3i1JGLkFXZo040vqRdDcxYF+KtUQSdP0E3kvuNtGIgB9hbTB7f4kjt6m55Tk19HEAiY19nlOU+RPUsKFo9IYBlAlwFc2rPIwcjFKPYlhRfASdStF1mOgMZcl2gr9NZ08CeJYC/sRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=GtYGQXY+; arc=none smtp.client-ip=68.232.153.233
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pKV7Bu8L"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="GtYGQXY+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1749191587; x=1780727587;
+  t=1749191589; x=1780727589;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ZJZ/DGAiZ8EFB89FUOY0RrQq5fJ8wgWrZftdSh9uqkc=;
-  b=pKV7Bu8LBuzPTQ+iSRmXBGoO1I6f3ziz5R2g0P/66Pw/JzTwHjeP2rTy
-   tyYQpNbpiENgnM8OalnoF9eFxzFuXS80WG1sL5tVbkvIbnpndc5mwlB1a
-   yYrNL43LQEdGoi1U6gb9oku0rtq1+z+8BmPuLYRAUT2K9vXMUGr84ezh0
-   xAlWWyYeNTt5Ww9GCiHPKVAugnUnlS8Gropv+8yjD/g9NQ0qiRK13JFKm
-   oRGb2tqjiQmQZOpVuPbklxSi6V/skh4yiwGI8j675o927YarF+V6XfL1g
-   0lJCQZ+9ckUHMsJEuetRPR93X7ntKNxTuoYoCO0vkVaCKMJg3ku9FRPZm
+  bh=Z51SxzdRMddVEx3I1w41kaD1gSreXpgx/GzJBjqhaBY=;
+  b=GtYGQXY+/WBLR/aRm9SJDAhS/VQhW/G8XyIkID490EpIMXIVfOmUukvJ
+   UUJiwSaUsRa3nF6ddvdtJO39cTcVYM63Hxp8bE4Za39LcdfKcORtSTNtN
+   m+ix5OtIzAqTeBw3X8/OSTMfL48l8a6ruc4GVoe99ra5nUica7BSL5+3/
+   V22yjZpevYDhtwZP6OFNAkM40b/rqlyOTaHXcSWLCo6m+p+KKZoAfSLiZ
+   /kiMFczqirV+7718ZF81VAyVsgmeSNYUVCyx26tCme+IMGNn/cdaNa74C
+   O0y/jL0cDyUkh3TUkH7CfGdQoPO/f8gh/RAKnnVJVcLZkKyGqjtqphAC1
    Q==;
 X-CSE-ConnectionGUID: oUgoCjtdR6urrjAWwMc5YQ==
-X-CSE-MsgGUID: cNXOQ01BQIiJoM1iRMq+9g==
+X-CSE-MsgGUID: SD1+5EidR1yxH1Lg9lB3sw==
 X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
-   d="scan'208";a="273876226"
+   d="scan'208";a="273876228"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Jun 2025 23:31:58 -0700
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Jun 2025 23:31:59 -0700
 Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 5 Jun 2025 23:31:30 -0700
+ 15.1.2507.44; Thu, 5 Jun 2025 23:31:53 -0700
 Received: from che-lt-i67131.microchip.com (10.10.85.11) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Thu, 5 Jun 2025 23:31:19 -0700
+ 15.1.2507.44 via Frontend Transport; Thu, 5 Jun 2025 23:31:43 -0700
 From: Manikandan Muralidharan <manikandan.m@microchip.com>
 To: <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
 	<rfoss@kernel.org>, <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
@@ -57,10 +57,10 @@ To: <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
 	<dharma.b@microchip.com>, <dri-devel@lists.freedesktop.org>,
 	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>
-CC: <manikandan.m@microchip.com>, Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v6 RESEND 1/4] dt-bindings: display: bridge: add sam9x75-mipi-dsi binding
-Date: Fri, 6 Jun 2025 12:00:52 +0530
-Message-ID: <20250606063055.224159-2-manikandan.m@microchip.com>
+CC: <manikandan.m@microchip.com>
+Subject: [PATCH v6 RESEND 3/4] MAINTAINERS: add SAM9X7 SoC's Microchip's MIPI DSI host wrapper driver
+Date: Fri, 6 Jun 2025 12:00:54 +0530
+Message-ID: <20250606063055.224159-4-manikandan.m@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250606063055.224159-1-manikandan.m@microchip.com>
 References: <20250606063055.224159-1-manikandan.m@microchip.com>
@@ -73,149 +73,36 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-Add the 'sam9x75-mipi-dsi' compatible binding, which describes the
-Microchip's specific wrapper for the Synopsys DesignWare MIPI DSI HOST
-Controller for the sam9x75 series System-on-Chip (SoC) devices.
+Add the Microchip's DSI controller wrapper driver that uses the
+Synopsys DesignWare MIPI DSI host controller bridge for the SAM9X7
+SoC series to the MAINTAINERS entry.
 
 Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 ---
-changes in v5:
-- Add reviewed-by tag
-
-changes in v4:
-- Removed 'microchip,sfr' phandle property since
-regmap to SFR node can be obtained using its compatible
-string
-
 changes in v3:
-- Describe the clocks used
-
-changes in v2:
-- List the clocks with description
-- remove describing 'remove-endpoint' properties
-- remove unused label, node and fix example DT indentation
-- cosmetic fixes
+- Drop T: section
 ---
- .../bridge/microchip,sam9x75-mipi-dsi.yaml    | 109 ++++++++++++++++++
- 1 file changed, 109 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/microchip,sam9x75-mipi-dsi.yaml
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/microchip,sam9x75-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/microchip,sam9x75-mipi-dsi.yaml
-new file mode 100644
-index 000000000000..d2ae6250e1f1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/microchip,sam9x75-mipi-dsi.yaml
-@@ -0,0 +1,109 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/microchip,sam9x75-mipi-dsi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e94d21953227..2cfca810e692 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16067,6 +16067,13 @@ S:	Supported
+ F:	Documentation/devicetree/bindings/display/bridge/microchip,sam9x75-lvds.yaml
+ F:	drivers/gpu/drm/bridge/microchip-lvds.c
+ 
++DRM DRIVER FOR MICROCHIP SAM9X7-COMPATIBLE MIPI DSI HOST CONTROLLER
++M:	Manikandan Muralidharan <manikandan.m@microchip.com>
++L:	dri-devel@lists.freedesktop.org
++S:	Supported
++F:	Documentation/devicetree/bindings/display/bridge/microchip,sam9x75-mipi-dsi.yaml
++F:	drivers/gpu/drm/bridge/dw-mipi-dsi-mchp.c
 +
-+title: Microchip SAM9X75 MIPI DSI Controller
-+
-+maintainers:
-+  - Manikandan Muralidharan <manikandan.m@microchip.com>
-+
-+description:
-+  Microchip specific extensions or wrapper to the Synopsys Designware MIPI DSI.
-+  The MIPI Display Serial Interface (DSI) Host Controller implements all
-+  protocol functions defined in the MIPI DSI Specification.The DSI Host
-+  provides an interface between the LCD Controller (LCDC) and the MIPI D-PHY,
-+  allowing communication with a DSI-compliant display.
-+
-+allOf:
-+  - $ref: /schemas/display/dsi-controller.yaml#
-+
-+properties:
-+  compatible:
-+    const: microchip,sam9x75-mipi-dsi
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description:
-+          Peripheral Bus Clock between LCDC and MIPI DPHY
-+      - description:
-+          MIPI DPHY Interface reference clock for PLL block
-+
-+  clock-names:
-+    items:
-+      - const: pclk
-+      - const: refclk
-+
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/$defs/port-base
-+        unevaluatedProperties: false
-+        description:
-+          DSI Input port node, connected to the LCDC RGB output port.
-+
-+        properties:
-+          endpoint:
-+            $ref: /schemas/media/video-interfaces.yaml#
-+            unevaluatedProperties: false
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/$defs/port-base
-+        unevaluatedProperties: false
-+        description:
-+          DSI Output port node, connected to a panel or a bridge input port.
-+
-+        properties:
-+          endpoint:
-+            $ref: /schemas/media/video-interfaces.yaml#
-+            unevaluatedProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - ports
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+     #include <dt-bindings/clock/at91.h>
-+     #include <dt-bindings/gpio/gpio.h>
-+
-+     dsi@f8054000 {
-+       compatible = "microchip,sam9x75-mipi-dsi";
-+       reg = <0xf8054000 0x200>;
-+       clocks = <&pmc PMC_TYPE_PERIPHERAL 54>, <&pmc PMC_TYPE_GCK 55>;
-+       clock-names = "pclk", "refclk";
-+
-+       #address-cells = <1>;
-+       #size-cells = <0>;
-+
-+       ports {
-+         #address-cells = <1>;
-+         #size-cells = <0>;
-+
-+         port@0 {
-+           reg = <0>;
-+           dsi_in: endpoint {
-+             remote-endpoint = <&hlcdc_panel_output>;
-+           };
-+         };
-+
-+         port@1 {
-+           reg = <1>;
-+           dsi_out: endpoint {
-+             remote-endpoint = <&mipi_in_panel>;
-+           };
-+         };
-+       };
-+     };
-+...
+ MICROCHIP SAMA5D2-COMPATIBLE ADC DRIVER
+ M:	Eugen Hristev <eugen.hristev@microchip.com>
+ L:	linux-iio@vger.kernel.org
 -- 
 2.25.1
 
