@@ -1,80 +1,174 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBC31C27
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 08:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9378A1FECDD;
+	Fri,  6 Jun 2025 08:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749197951; cv=none; b=GOTMBb/QnXF61y+SpRWeVEGV0aTsmAFI4N5b6MVJAMVQIG8fLx56E/h/U0xp5T6s6jd3DNRQt5LEtFo0s1vKGD11qrkQlIXR4SfQsPqOSKexyyaLCKiyHJYixxCHPizx9sDwMiTjdyx20X67+9DCyb6sVQe+PhQ9JM/af+m4Wnw=
+	t=1749197979; cv=none; b=EwgyhqVCYruFcPRcK7GRIXZuv5frNYnuy1R1Y2YCq4B4GHtJUdo4StqegQMDyZlcQMuI8+9D+8LHFeDy34bPNQiEXqryfNwFEmVe4GpBwi4NS5iiQNSXs2kj6UzOIlYm2TwBcd+GMeTUybLLMZERVw84ANPWqIgWfrDEk7UwoSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749197951; c=relaxed/simple;
-	bh=7zs9RrF4Is4C2gar4hVdfBkJcKOVqMYc4c/E37+I8fc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VdW2RMarFerUt7MyVgtP/ZME0lCgV6HPPySYc/+EPbukRUCg9A7ahFaFxYd+C6EAAJXR+DsBUfKWr8e6sLty9r5NXVs6nTlPjVb6/Hl5saA3nCEKcAofmbWWkcQoMcsxfa67sVHv/I1lPjm/2qwqdSYSqjeb6252AE+fc3Q+SBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lk1cC2/0; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1749197979; c=relaxed/simple;
+	bh=xZlhkRAkf9NtLVuWaJZVBEvuhnY31s4L7SnFMDiGwoY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b1IvGZZBI5q3ImX7YZeDFi108xhI4+CEnqeJlgIKLeWt2MyOri/xzqEodap8u/Ix57s2BpDkEyHBbN7mpQDtPrG092C3m88alVmw4faXxnWqxS6kyujvTGnlhHgVVRebWPJ05Z+yl9i4dozcO7h4fQSyKZxD96bw2Rzr7ozErgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=B5Ey5XQo; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lk1cC2/0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=yjoLRs9EAMLzIj5nbMGgLiuljEHvVksleD7tSDqaBxs=; b=lk1cC2/0p+1Kr6WpyNPQBEMOVd
-	pUIwb/Yu5yPQ2nobs3Qq9HL0hnTMD5JLWkQKn9DdMADf3RSLARJ+MFEbUgz7bfEreYxOxKbQH2HIE
-	5dH7MalZ9E0pXJoGQf88CUblOTlUsn6QXgt1NyfoeorOGHYatBV8mo++A/wCZdozj2Vvxg5Wfy0nG
-	WD5Q6vJ+50wSDThh383uu+2pfze+25/zNCKqsFufHoo99P4Zh+R7siXLPTcPsJbKJPl6YPLx6jiTk
-	FQewEtCz+u3mq3O6J2Dhir58jNum+PDty9jigws98zWJ0AlRBkku5ZrH5WyeG7yH2nMHRbP6SApWW
-	Y5FHTKmw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uNSI5-00000001Fbq-3Uui;
-	Fri, 06 Jun 2025 08:19:06 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B0D1430078B; Fri,  6 Jun 2025 10:19:04 +0200 (CEST)
-Date: Fri, 6 Jun 2025 10:19:04 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: Mateusz Guzik <mjguzik@gmail.com>, torvalds@linux-foundation.org,
-	mingo@redhat.com, x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] x86: prevent gcc from emitting rep movsq/stosq for
- inlined ops
-Message-ID: <20250606081904.GK30486@noisy.programming.kicks-ass.net>
-References: <20250605164733.737543-1-mjguzik@gmail.com>
- <20250605190054.GH30486@noisy.programming.kicks-ass.net>
- <CAFULd4Z4SJZErfV1AG_a-+SDd=gnXa88=suRAFN3RHB5M+=bFw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="B5Ey5XQo"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id AC86241D02;
+	Fri,  6 Jun 2025 08:19:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749197969;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L9OL/AoGykLh8iv60m7BkynFYdgLzm2qSbm2BGgS4HQ=;
+	b=B5Ey5XQoeq+ZDoSg7Va76oi/nJ1WxdKyLsALXCcWuruWFaEr67IuHf2UXOO1OjnxCYe4qZ
+	d6M+EyQFkLbu6svj00TePXK+ejdXSwQhZtfc3ftuv2K0zbBIi5krTPh9W/jIBto10YVpjr
+	faJlFIUwuQSRnce4pgMuwLl19MANeKyuGRmTW9ELDbxC6Ydut0rkssSHOPAnABdrWO76JF
+	MhSE7R1o9LgLTBrHj17K5jmpoSnZdjMAUZ8KIeoUsYiU/RruDafw+6z9TjLSurAaYh7oLB
+	AN3s/sNoIsv/ZJtXnzGNP6B4hv/mGbTXm/5OODafrxi9irPbxRf9imyt2Sovjw==
+Date: Fri, 6 Jun 2025 10:19:23 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, Simon Horman <horms@kernel.org>, Heiner
+ Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Herve Codina
+ <herve.codina@bootlin.com>, Romain Gantois <romain.gantois@bootlin.com>,
+ Jijie Shao <shaojijie@huawei.com>
+Subject: Re: [PATCH net] net: phy: phy_caps: Don't skip better duplex macth
+ on non-exact match
+Message-ID: <20250606101923.04393789@fedora>
+In-Reply-To: <ef3efb3c-3b5a-4176-a512-011e80c52a06@redhat.com>
+References: <20250603083541.248315-1-maxime.chevallier@bootlin.com>
+	<ef3efb3c-3b5a-4176-a512-011e80c52a06@redhat.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFULd4Z4SJZErfV1AG_a-+SDd=gnXa88=suRAFN3RHB5M+=bFw@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdegkeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeeftdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepleehgeevfeejgfduledtlefhlefgveelkeefffeuiedtteejheduueegiedvveehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdduvddruddthedrudehtddrvdehvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvuddvrddutdehrdduhedtrddvhedvpdhhvghlohepfhgvughorhgrpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhgl
+ hgvrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Fri, Jun 06, 2025 at 09:27:07AM +0200, Uros Bizjak wrote:
+On Thu, 5 Jun 2025 12:24:54 +0200
+Paolo Abeni <pabeni@redhat.com> wrote:
 
-> Now, to use function call instead of "rep movsb", you can
-> use -mstringop-strategy=libcall instead of some objtool substitution
-> (-O2 -mno-sse -mstringop-strategy=libcall):
+> On 6/3/25 10:35 AM, Maxime Chevallier wrote:
+> > When performing a non-exact phy_caps lookup, we are looking for a
+> > supported mode that matches as closely as possible the passed speed/duplex.
+> > 
+> > Blamed patch broke that logic by returning a match too early in case
+> > the caller asks for half-duplex, as a full-duplex linkmode may match
+> > first, and returned as a non-exact match without even trying to mach on
+> > half-duplex modes.
+> > 
+> > Reported-by: Jijie Shao <shaojijie@huawei.com>
+> > Closes: https://lore.kernel.org/netdev/20250603102500.4ec743cf@fedora/T/#m22ed60ca635c67dc7d9cbb47e8995b2beb5c1576
+> > Fixes: fc81e257d19f ("net: phy: phy_caps: Allow looking-up link caps based on speed and duplex")
+> > Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> > ---
+> >  drivers/net/phy/phy_caps.c | 15 +++++++++------
+> >  1 file changed, 9 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/net/phy/phy_caps.c b/drivers/net/phy/phy_caps.c
+> > index 703321689726..d80f6a37edf1 100644
+> > --- a/drivers/net/phy/phy_caps.c
+> > +++ b/drivers/net/phy/phy_caps.c
+> > @@ -195,7 +195,7 @@ const struct link_capabilities *
+> >  phy_caps_lookup(int speed, unsigned int duplex, const unsigned long *supported,
+> >  		bool exact)
+> >  {
+> 	> -	const struct link_capabilities *lcap, *last = NULL;
+> > +	const struct link_capabilities *lcap, *match = NULL, *last = NULL;
+> >  
+> >  	for_each_link_caps_desc_speed(lcap) {
+> >  		if (linkmode_intersects(lcap->linkmodes, supported)) {
+> > @@ -204,16 +204,19 @@ phy_caps_lookup(int speed, unsigned int duplex, const unsigned long *supported,
+> >  			if (lcap->speed == speed && lcap->duplex == duplex) {
+> >  				return lcap;
+> >  			} else if (!exact) {
+> > -				if (lcap->speed <= speed)
+> > -					return lcap;
+> > +				if (!match && lcap->speed <= speed)
+> > +					match = lcap;
+> > +
+> > +				if (lcap->speed < speed)
+> > +					break;
+> >  			}
+> >  		}
+> >  	}
+> >  
+> > -	if (!exact)
+> > -		return last;
+> > +	if (!match && !exact)
+> > +		match = last;  
 > 
-> foo:
->        subq    $8, %rsp
->        movl    $160, %edx
->        leaq    16(%rsp), %rsi
->        call    memcpy
->        addq    $8, %rsp
->        ret
+> If I read correctly, when user asks for half-duplex, this can still
+> return a non exact matching full duplex cap, even when there is non
+> exact matching half-duplex cap available.
+
+That would be only if there's no half-duplex match at the requested
+speed, but yes indeed.
+
 > 
-> Which IMO is what you are looking for.
+> I'm wondering if the latter would be preferable, or at least if the
+> current behaviour should be explicitly called out in the function
+> documentation.
 
-Well, no, because I can't replace the 'call memcpy' with "cs;cs;cs;rep
-movsb" on good machines.
+Looking at the previous way of doing this, we looked at the following
+array in descending order : 
 
-We want the "rep movsb" / "rep stosb" interface so we can actually use
-those instructions when they're good, but then fall back to an
-out-of-line function (with the same calling convention as the
-instruction) when they're not so very good.
+[...]
+	/* 1G */
+	PHY_SETTING(   1000, FULL,   1000baseT_Full		),
+	PHY_SETTING(   1000, HALF,   1000baseT_Half		),
+	PHY_SETTING(   1000, FULL,   1000baseT1_Full		),
+	PHY_SETTING(   1000, FULL,   1000baseX_Full		),
+	PHY_SETTING(   1000, FULL,   1000baseKX_Full		),
+	/* 100M */
+	PHY_SETTING(    100, FULL,    100baseT_Full		),
+	PHY_SETTING(    100, FULL,    100baseT1_Full		),
+	PHY_SETTING(    100, HALF,    100baseT_Half		),
+	PHY_SETTING(    100, HALF,    100baseFX_Half		),
+	PHY_SETTING(    100, FULL,    100baseFX_Full		),
+[...]
 
+The matching logic was pretty much the same, walk that (and and'ing
+with the passed supported modes), note the partial matches, return
+either an exact or non-exact match.
+
+None of the logic actually cared about the duplex for non-exact
+matches, only the speed. I think we would have faced the same behaviour.
+
+In reality, the case you're mentioning would be a device that supports
+1000/Full, 100/Full and 100/Half, user asks for 1000/Half, and 100/Full
+would be reported.
+
+That's unlikely to exist, but I'll document it as I've been surprised
+in the past with setups that shouldn't exist that actually do :)
+
+All of this really makes me want to add some test scripts to cover all
+these corner-case behaviours and test for future regressions.
+Hopefully when I get a bit more bandwidth I'll be finally able to
+finish the netdevsim PHY support...
+
+Thanks,
+
+Maxime
+
+> /P
+> 
 
