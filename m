@@ -1,108 +1,165 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A209F1A9B3D;
-	Fri,  6 Jun 2025 18:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E861E9B3F
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 18:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749235257; cv=none; b=D+3ycytpaSwoWKYR5g9RwSXJr+fl/ijwAMUEdJbdYP5n10+rNx5KRNJ1UDpWhCVk6Zv/OVn2Jx/+yuvCoGKVSqUYy3ODYarOQJL7DuMOvFKKo3fAYPFEJgY6Lz5UIn2fEfT4wksUZg1CgpXtW3qNnnp/AMADM7/edi3glxdYRFU=
+	t=1749235282; cv=none; b=USg0kL6gjH9uEjvseOebq8/2LLkrz0kh0pAUwIJspEwLVIh9sbVESjhLklQDwL5I7+fTTzModiGq+6PuDdWvt4hPsC7Sp0pMBE6D8ZVuaLVEs6+hP1g7rqZ1gEbPdjNsiPl/vHIQ23yMzwTbPXPSWIR5jnxzhu3epLWxHfOTknw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749235257; c=relaxed/simple;
-	bh=nd7Qy1kKKrpW7iUlYYWs5D47amWIruf/C+4oEJHy2tg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=il86nYMhaaM9hUK/JAPCPqPYgfKHtefUi58liXsIyEdP9AzFKOkMwiI9Pjjj5UvrEEbz8CS+phSFXVnNGCkpFPWvybhplw8dlY8E4dtYoK7O07Z6lC6JlYNNWBO/pUs5B6zHxOBZIdc6Tkk9Mi94XP6efZCAPv7f5E3E9NlM9Zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EFk9e5WV; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749235282; c=relaxed/simple;
+	bh=VwcS2Z8io2o0cY3xmV6ZCIZl/itPdgGtnMt2d7h2C7I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E8lbjDYyoXL7fuNz5jFi+yRJxT3ep5PbwKE1O32CVojtuqmksHF8Ot50h5PbUU+8n8JfcX9bpvNDc6JMhVn6NyAaguwIGgT1v6YetI4UTvHlE4s4BcOamqU5IeSQYw2wv6ewDizrx3oggHsQG8qMZ5OcCYMI2dlm7g2FdXXCOQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DsT6zKeS; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EFk9e5WV"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a510432236so1889310f8f.0;
-        Fri, 06 Jun 2025 11:40:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749235254; x=1749840054; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nd7Qy1kKKrpW7iUlYYWs5D47amWIruf/C+4oEJHy2tg=;
-        b=EFk9e5WVVO84xElPcApefsTpOxjQm/LXGJl6nJsA4L+uW8c87eXqAhKG2/0m2AV+ZU
-         M3NR1ZgJcD1zfBoqnXuKWgOHrOXr6VeTWvSeKAnzC7+RwjxkuEMoDs0PdaYIfy7afkgs
-         EyoJMlOmFtqNxDIzy8ReCLSkYLsMw5vxCS3Bjoc5WCp8G7vWzyQHwJyyy9Me27VU72ew
-         /Z0tcYXIUUpTMQcoOvCxjup8fA9Le6AeHzjZStWACK8qSqc3ZqoEP3mpF79BylSQmEM5
-         /6xZN91e0wOgUZE9dSjDnyyFSK8xIiTbnQg/mACRxw1GQsr4KPH54WM+XDvqW9OFlG7V
-         ge7g==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DsT6zKeS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749235279;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=tkX4uYhgyu0xrtO7ADEiny3gzIp95LCIRO3lMgtzOQs=;
+	b=DsT6zKeS+TkedhyEazvA1tAkrdxrw8A2Lggyc6JYPfXJlfLm/9Ptfl3gjLoAVqY6rhzdHl
+	BSQqaNbBWCVU8dwnlH23BadDZyaDp7YtiyelrgROUd0ZZMOLU9B1m8sEm5XUX20mQrUTO1
+	3lfGIsq1ULYvNHGsSO6oifRrR5Pe9mM=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-104-awWZw8LtMRaZt_VExoV7ng-1; Fri, 06 Jun 2025 14:41:18 -0400
+X-MC-Unique: awWZw8LtMRaZt_VExoV7ng-1
+X-Mimecast-MFC-AGG-ID: awWZw8LtMRaZt_VExoV7ng_1749235278
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a50816ccc6so1640976f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 11:41:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749235254; x=1749840054;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nd7Qy1kKKrpW7iUlYYWs5D47amWIruf/C+4oEJHy2tg=;
-        b=sw+AOS2fcwPPZStERa/uYa9+BDJzM0yosDflWNv0HRH+T5H2Vc2CwCOTtoI7YT1m70
-         LTX5mNav7E3rYQ4Xd9Zqc8aKIOh3X2UOEZF+57zAvWdem5ye55QLsoCuX2Eq2nT82qz6
-         0wevxTQZLU9PDIK726dLVMPg5nqlLV9tMXu2xjjvPmoRQ6z1uUbsP5zcvRYMRNV3nOsJ
-         rX0/2zC9RuZ/+wBvJhhmRd+YHF6i2tu1ERDGzqLOUprXUXhTxSTlWaOu8HPvmg0NgQyA
-         +OEa8wDhgThRoWwwzghLQf/WH3XGuSsnzJkFU9CHu9zxSb/U8TaBZ1g/nVnVfaT8KU/X
-         Uvdw==
-X-Forwarded-Encrypted: i=1; AJvYcCV9RGZOGv4K5dNtKQL97F9F79LhQu3gCIwWylHZWiHCKT/ls6L86JiT97CzpJw9zKe3SATBY4l+A+ALnSbfWahbTA==@vger.kernel.org, AJvYcCXiSyA8G/j4IrHugAd0xlAtduoA3JAKKd7PR4cUcwVdn+XaUO2ZJ6LrIaCtBVSa37gSEeRrWlW+9ZUcmd0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLfsxGQf3mwIbdaeIKoXsSgHZyiwX7mlSfgygnbtabtQJKHpUi
-	mwc8heeMOzYLpuipIPNWh7sLUAU1ggKhjfTWqrr7pfN2y1egK2W8AxW2y79ca+Uc++TcRYZSd5e
-	v6KmFxygR3yW6aKohW++8TywnLbzsLas=
-X-Gm-Gg: ASbGncsM1wi77EPtQuysVxlgVUCS/ykV5VPq0eHExOCGTcXlhuwnmxyCV6A8MGNF8i1
-	6DRdiN0WuoxPTohWEEcl721jVicm604A8XqAwleM5OC9ag5UJ8rKnIWVuwnS1J/bIRG5LUeoo1J
-	EcYBjlXNYs4mkzH4AiahnLzFSHiqO+OA2eTQTeaQsTlbqUHWVtcjzYoO892ULcPhLi4lezNpYp
-X-Google-Smtp-Source: AGHT+IEQC9fQv4kactTxAWCEV5FEKsh8+pWuznPByHUXwGxhx2zG6vfYXUSSolmJqWbq7PYgzAf1pMhycgsUql7zMoY=
-X-Received: by 2002:a05:6000:2c0f:b0:3a1:fcd6:1e6b with SMTP id
- ffacd0b85a97d-3a531cea596mr3919566f8f.57.1749235253903; Fri, 06 Jun 2025
- 11:40:53 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749235278; x=1749840078;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tkX4uYhgyu0xrtO7ADEiny3gzIp95LCIRO3lMgtzOQs=;
+        b=rdzQpdcDoIFSGPLqSRzFhvUPA/eQ5OKeHOMyv1die/SsDvVhWf1tlYcRwHnAo5YOYK
+         uxZ6mvkfI79rSAv9RxWGEpVnX2bPd0yT19dIWIUL3qCEuCV/X70xsMqrDuhBCVeSBRYx
+         a1MWzjqr1Q2q11JKf1mK4VTcJwKNgGb01ZT1rGqyHTXqDIpPCE/CKZonExmcUjaeWrhk
+         1Kr4k9l2/PfXXw8vzruYj3Z6Dv5n6X0Rr3KwF8Sk9GQxvAGbFUq8qE0xIKsOazoU+nxV
+         OG5rWuY3ibZdZLw5ASJsnyEsG5rf+61CTtHfMQcbz4gAEOLGk/QqPNLjIb5dQWUtyVuG
+         zknQ==
+X-Gm-Message-State: AOJu0YwbzQr1Lan9raqaTJgB0SFioUx8HOaqhoSlaiawInbS0PJ985bP
+	uwqTPA93b5tPXhc5iVtkQNZmm08QGHEBy0R6cB11hLGcIs4opV+OM7bMtRI2fIW9jQSSJ7Pl3bn
+	8vs9tjN0Sm7p20wYmqVYz/1cep0xVhVg7053RF/kcXHVfrE5zfeasXblV2FcvhXLpMQ==
+X-Gm-Gg: ASbGnctIS+4Tf9kIg8E7L5oCfUMBFczlPukuj5MuzwmLmT8M54Y0R3ucbJQcg6THZd+
+	IbBhSniwLrGCSWLmW1LcJHMiSCsvXrzfzc2Yo0xUA2mgkJlr5Zx+kn1JR0xQmF3yBW4js04hX3W
+	WzCbRjyCRurhy+AzCIAKvm/fGBrZ+dCKBdGEFZnChho4pO4kYdMkChBFkzPGpqs9i+cY1bpWGih
+	rIIK+U8K78iTQb3V5RDRry8S6Sta/qC+zy0zgAV+JTWadifNTc53ryAYPjJIEpHUWZfmJLM5ccc
+	fhGWheYceJhxhaYSZg/eYfXlgJSgi7iets4cQ++HU0RuOotrRY7CwIeFm3DpVeWrVBwGDI6GsQI
+	8TWDfkMNqY6Yv99Ur6RpqglU4w2GzTA0=
+X-Received: by 2002:a05:6000:2382:b0:3a5:300d:ead0 with SMTP id ffacd0b85a97d-3a531cdd5a0mr3790793f8f.43.1749235277488;
+        Fri, 06 Jun 2025 11:41:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IECTH6YhYvW6ZH1CMtqGX1UnVUl20ogDcBS5RnIYh0ZPNAA1XAMq5p/2Szxsq9CZSwnHVZ/TQ==
+X-Received: by 2002:a05:6000:2382:b0:3a5:300d:ead0 with SMTP id ffacd0b85a97d-3a531cdd5a0mr3790768f8f.43.1749235277116;
+        Fri, 06 Jun 2025 11:41:17 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f19:9c00:568:7df7:e1:293d? (p200300d82f199c0005687df700e1293d.dip0.t-ipconnect.de. [2003:d8:2f19:9c00:568:7df7:e1:293d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532468360sm2571480f8f.100.2025.06.06.11.41.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jun 2025 11:41:16 -0700 (PDT)
+Message-ID: <965a6d13-e97b-450f-9d4c-d53cf08f9315@redhat.com>
+Date: Fri, 6 Jun 2025 20:41:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604171554.3909897-1-kan.liang@linux.intel.com>
- <CAADnVQKjyzdNVR_+WCMzORPJAX00tD3HK0vaCz13ZprWaG72Tg@mail.gmail.com>
- <d5fcf34f-63fe-451b-89ad-621c38981709@linux.intel.com> <CAADnVQ+N5UaBwLjtLGHAe1PCjpRzxxcFL45gbb0eHMDZD5+X6A@mail.gmail.com>
- <3f8b0b58-3b48-470e-b8ff-a71a26370bc3@linux.intel.com> <CAADnVQKRJKsG08KkEriuBQop0LgDr+c9rkNE6MUh_n3rzZoXVQ@mail.gmail.com>
- <7638853b-bbc6-464d-8890-29ed92aa5cef@linux.intel.com> <CAADnVQLBv08fjWWVL+7w7TqoYN-EbGT-E=YsAcms+NEQ9zGUeQ@mail.gmail.com>
- <e671d9e9-7da5-4f04-8584-fd743fce1202@linux.intel.com> <CAADnVQ+BF5FjZgqgh08+uoZgkVqE-QG33kYKoMjErZDX5Lh-nw@mail.gmail.com>
- <62855572-5961-4548-a961-d05d14a3659f@linux.intel.com>
-In-Reply-To: <62855572-5961-4548-a961-d05d14a3659f@linux.intel.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 6 Jun 2025 11:40:42 -0700
-X-Gm-Features: AX0GCFtYIWSj9Zm31iledCXOdsdilNNRG7OvYgbHaQCOc03GFL-2U6jFc8NK87g
-Message-ID: <CAADnVQ+Lx0HWEM8xdLC80wco3BTUPAD_2dQ-3oZFiECZMcw2aQ@mail.gmail.com>
-Subject: Re: [PATCH V3] perf: Fix the throttle error of some clock events
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Mark Rutland <mark.rutland@arm.com>, LKML <linux-kernel@vger.kernel.org>, 
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Thomas Richter <tmricht@linux.ibm.com>, Leo Yan <leo.yan@arm.com>, 
-	Aishwarya TCV <aishwarya.tcv@arm.com>, Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] mm/huge_memory: don't mark refcounted pages
+ special in vmf_insert_folio_pmd()
+To: Oscar Salvador <osalvador@suse.de>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Alistair Popple <apopple@nvidia.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Dan Williams <dan.j.williams@intel.com>
+References: <20250603211634.2925015-1-david@redhat.com>
+ <20250603211634.2925015-2-david@redhat.com>
+ <aEKkvdSAplmukcXz@localhost.localdomain>
+ <b6a1b97b-39d9-4c9e-ba95-190684fc4074@redhat.com>
+ <aEKmOfWDIy14Ub6n@localhost.localdomain>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aEKmOfWDIy14Ub6n@localhost.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 6, 2025 at 11:38=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
->
->
-> Right, but the soft lockup is a different issue. Even without the recent
-> generic throttle logic change, it still can be triggered, right?
->
-> How does the below sound?
-> I will send a V4 with the small change I made yesterday. Please help to
-> verify it and see if it fixes your original report (test_progs cases).
-> If yes, let's merge it first, so it can unblock other people (ARM CI,
-> IBM CI, Vince...).
+On 06.06.25 10:26, Oscar Salvador wrote:
+> On Fri, Jun 06, 2025 at 10:23:11AM +0200, David Hildenbrand wrote:
+>> See my reply to Dan.
+>>
+>> Yet another boolean, yuck. Passing the folio and the pfn, yuck.
+>>
+>> (I have a strong opinion here ;) )
+> 
+> ok, I see it was already considered. No more questions then ;-)
 
-sounds good. definitely address the regression asap,
-since BPF CI is also blocked.
+Okay, change of plans, let me try to unify both functions in a clean way :)
 
-> Then I will go back and see what I can do for this long-standing issue
-> in VM.
->
-> Thanks,
-> Kan
->
->
->
+I'll only have to find a clean way to make the other stuff I have 
+planned with these functions work ...
+
+-- 
+Cheers,
+
+David / dhildenb
+
