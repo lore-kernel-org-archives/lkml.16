@@ -1,117 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C853E14F98;
-	Fri,  6 Jun 2025 03:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C78F14F98;
+	Fri,  6 Jun 2025 03:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749179069; cv=none; b=FTQwxyKPsMyGkVkqOIEX3G+ejHPs6ekpFvu/zHNSgBCo/1v9WLvpbg9nKGy5+MQfOAI4Sa9S0EF1i/7lJaiuQlMrCLKYUipz6U8MgON0Xf3qSRLsayQbcV3MTDJd2TDlOzZwWiuYiQAOlFodZlnis3mcpEmG1c4DjVHa9+V4BFQ=
+	t=1749179120; cv=none; b=o5xVcPuy5+CCFeGCrYLFbiIWQ4dIeCR//acoBHZZqdoTAbnkSdnAU4fRpkcGJ7Zqzh9EzHfs/DHzu23yMmwgBF3yjppUxhXtPYRWOS9S5RHF/MHSo3HbIHsOCS4mcVaQA5Hpkkf6hVI3d5HigoWfM2qL3+puoyCyuCpj+OiLxqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749179069; c=relaxed/simple;
-	bh=Bb5B2N/50aofcLkxGWqoRvUWdtbs6I+b50RSOa2ECLQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DftPsOwF2pZGuMg4LfpaCNVrtNmdxY7gSeFTgU+2uEdPROpt1SELPZCb+gH7ECVTanuYZGTsvLar5LhuS7jITEFYvWC6DTdWA4zD1d364Wnxrq9RuIuHKKYVH7E/OxOAkJdaUzOIr5uqnRdU+lpUmGKWPRZwOQhxAwCCMqQa7sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kOxggLK+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749179120; c=relaxed/simple;
+	bh=qvxfTohsQcakb1JOVyty8LHhkWl895U5JULIp9uIpAM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DHWzNwqHudowEcCkbLxzbu7Gj+ApHOPgFBbbuCMnjzDV4NaLJdEWEX9Umsh8yRjAC3Y2qVDyUHa9WwwmZ+kL8QOZYl7WJ26x1JhWkPtc5DOD4WybHoV7CLBvwuGZH7QVPMTuikuPSPZJlILJ8Gl6eC3VxrKnlndXM7Ph8L0nb2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=knWAdjF7; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kOxggLK+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1E7AC4CEE7;
-	Fri,  6 Jun 2025 03:04:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749179069;
-	bh=Bb5B2N/50aofcLkxGWqoRvUWdtbs6I+b50RSOa2ECLQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kOxggLK+F7SYrbNgCRncBHLwWta1wcVufY7Ic89Kv+nPDnbNNF/4gEkwNT5jLi64w
-	 l6aNY8ofXYgntkJGm7+raVwB/9aZM/x8MjYMGfZ38sY1HoxOPefMlXnpTGFc/PHmtq
-	 DhUKbES4+w3KnEGf4T34A4McD1TxtWq5YpheanLCsbC84xt4MSU4ZVR8y//k0wzAjH
-	 SiJwIBilk4U4lZCP3E5znf+b/5xZ5cJA1MMx5z5IdIrLomxicexmgJLzzzNkh+I3ww
-	 RIdHNB5ExFFtx0YFKzjcl95RW+Qxl8Amk1C9VMevFBJir2LNceNr8a/q9nXyf+Kv7h
-	 WkA3r1jqMTs6Q==
-Date: Thu, 5 Jun 2025 20:04:27 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: Re: [PATCH 6/6] perf annotate: Add 'y' hot key to toggle data type
- display
-Message-ID: <aEJau5NU75auBkOt@google.com>
-References: <20250601065302.12531-1-namhyung@kernel.org>
- <20250601065302.12531-7-namhyung@kernel.org>
- <aEICHsZPYbN5KWTa@x1>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="knWAdjF7"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-742c27df0daso1656784b3a.1;
+        Thu, 05 Jun 2025 20:05:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749179118; x=1749783918; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=c/2WAUKpAG8ell30qVj88kLBNlacicp6gf1yYc6ekd0=;
+        b=knWAdjF7ib8GK9FEx691VBBn2pUMRwC/oZB+QIFTKhGzpNE7asvFnyugGl6uLqtORJ
+         ffmlqNKhyhQSpI1u17JanvnELaRgwIyH4/LD9VHFCXluqcOOfsgGmZRTaTNw368Rxu6I
+         16Y54YsXiMvHNdBz52wvE0JcSr5KBNY8AsmWfPwTy3IKR31uhyZSKWvmY4GaRfIs+7gd
+         2tasK9uMKLEwn7Slg24qzLyVD5k5Bc2H36Lh+J3Vjq0riIJYCKoPJVwMgtTN5foOppSs
+         KoACmMYk8cy3NtcMy6GmiQvh+SjC4ZqKCxHOfAXtGrk9NaQhcpqVwsF35vbvUOHHMSdl
+         9mPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749179118; x=1749783918;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c/2WAUKpAG8ell30qVj88kLBNlacicp6gf1yYc6ekd0=;
+        b=awu2c7m/UR8jaZd+8E2ajwO/i2l/3u1H3Q8daq+2lk6YV/lTmffDWNlL3slLrwYjPI
+         q9tpr5/Dig4CbphmBsjnW7ycYr78TCtIiDiIQglJF8U6l74EJzx4C+DZuzSBsrgki1ey
+         0qCPr0i56bBmgg+vvNeW7lBDBiGOkUzGAhSHOzGBvK2NdhiJt8ps8MfF/wFtYFsX0X5i
+         wjLDC5wiwlYUYa9c7LNBTyIwdsl/IGOwA6LiKflVUCzm6S86a/dKjrjzffJmUoy6hzPK
+         ZMPjhmDWyhzzT4UKvdu9971LeBWdZ3JY5Cp4hE2rD5eTXsf/u0ZBmGgbWds7qqzNVder
+         zLdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU086O/uuiZ9NHVH6T1tKmVXAy0DkQpleynBnGMP9XYPNapuCXYwzAdLBPOsXGuEZs4kkT8WIZC@vger.kernel.org, AJvYcCUWETFAD51BTAFpaMO52dTc64yEw1wZ9O+6uDkRNQtFYCZhVNQSoKOev+zQHDO5upWhPW+3k5BLGwJbiNE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwargGceC2BQzxjzH94LmFhc+OwB3bUAcxsGM4vSs4xqZqKCfGq
+	1yxdb2wvehZpHD14zPYy8TcOIECW1NN6a6P69bZTaAEkuTFxg7r9HIpB
+X-Gm-Gg: ASbGncuwjM6J61E9KZyjKYN8XK8KXR79HtLBZnf7Y4O7tPXYqUePdoPxlJS3I6hyYrN
+	CsGfaJoZaVjIj6lNNqvj09kWiLxogBuwkPc/1ZtaPs7HChSNk6vXpA2/C5MXSU8l9oAhH56lBGH
+	rLJaYUjwZrEWq0HMUNfzg+BrpTT0NBkycSQMHSzSD3zPTsJAjfxlyWsCan3AiYc+nTa5VeectJm
+	ls8TGP1E/MfLuU/tffvqkXJDONeIgNsK5/QJ+hJH5CClnQdAuliKI1l0mc9XtTyx15o99SCJXcZ
+	hdkCXmMXcU9ufJUyJ03n/FCBJZhKSX2ZHRznK30nBfmc7HAviNz+GFsMQDoOVHqIjCwpvAFMomE
+	wBw==
+X-Google-Smtp-Source: AGHT+IEevhfR4kZLewqgPQkOOJ3rbgAG83iZSMjkBdMA2R41iU+N7gZPtZFk4A9IQWIJQrVxQTVJqg==
+X-Received: by 2002:a05:6a21:600b:b0:1f5:64a4:aeac with SMTP id adf61e73a8af0-21ee25e02fcmr2177323637.33.1749179117554;
+        Thu, 05 Jun 2025 20:05:17 -0700 (PDT)
+Received: from localhost.localdomain ([124.127.236.5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0e9d36sm350696b3a.157.2025.06.05.20.05.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 20:05:17 -0700 (PDT)
+From: Gui-Dong Han <hanguidong02@gmail.com>
+To: hverkuil@xs4all.nl,
+	mchehab@kernel.org
+Cc: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	baijiaju1990@gmail.com,
+	Gui-Dong Han <hanguidong02@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] media: rainshadow-cec: fix TOCTOU race condition in rain_interrupt()
+Date: Fri,  6 Jun 2025 03:04:59 +0000
+Message-Id: <20250606030459.487276-1-hanguidong02@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aEICHsZPYbN5KWTa@x1>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 05, 2025 at 05:46:22PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Sat, May 31, 2025 at 11:53:02PM -0700, Namhyung Kim wrote:
-> > Support data type display with a key press so that users can toggle the
-> > output dynamically on TUI.
-> 
-> 'd', 'T', control+d, control+t are all available, why 'y'? :-)
-> 
-> Apart from these minor nits,
+In the interrupt handler rain_interrupt(), the buffer full check on
+rain->buf_len is performed before acquiring rain->buf_lock. This
+creates a Time-of-Check to Time-of-Use (TOCTOU) race condition, as
+rain->buf_len is concurrently accessed and modified in the work
+handler rain_irq_work_handler() under the same lock.
 
-Maybe 'T'.  I thought 'y' won't be used by others later but it may be
-used by 'y/n' questions.
+Multiple interrupt invocations can race, with each reading buf_len
+before it becomes full and then proceeding. This can lead to both
+interrupts attempting to write to the buffer, incrementing buf_len
+beyond its capacity (DATA_SIZE) and causing a buffer overflow.
 
-> 
-> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fix this bug by moving the spin_lock() to before the buffer full
+check. This ensures that the check and the subsequent buffer modification
+are performed atomically, preventing the race condition. An corresponding
+spin_unlock() is added to the overflow path to correctly release the
+lock.
 
-Thanks!
-Namhyung
+This possible bug was found by an experimental static analysis tool
+developed by our team.
 
->  
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/ui/browsers/annotate.c | 11 ++++++++---
-> >  1 file changed, 8 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-> > index 686fa54e545e275c..cd1d452035a265d3 100644
-> > --- a/tools/perf/ui/browsers/annotate.c
-> > +++ b/tools/perf/ui/browsers/annotate.c
-> > @@ -827,7 +827,8 @@ static int annotate_browser__run(struct annotate_browser *browser,
-> >  		"b             Toggle percent base [period/hits]\n"
-> >  		"B             Branch counter abbr list (Optional)\n"
-> >  		"?             Search string backwards\n"
-> > -		"f             Toggle showing offsets to full address\n");
-> > +		"f             Toggle showing offsets to full address\n"
-> > +		"y             Toggle data type display\n");
-> >  			continue;
-> >  		case 'r':
-> >  			script_browse(NULL, NULL);
-> > @@ -947,6 +948,11 @@ static int annotate_browser__run(struct annotate_browser *browser,
-> >  		case 'f':
-> >  			annotation__toggle_full_addr(notes, ms);
-> >  			continue;
-> > +		case 'y':
-> > +			annotate_opts.code_with_type ^= 1;
-> > +			if (browser->dbg == NULL)
-> > +				browser->dbg = debuginfo__new(dso__long_name(map__dso(ms->map)));
-> > +			continue;
-> >  		case K_LEFT:
-> >  		case '<':
-> >  		case '>':
-> > @@ -1035,8 +1041,7 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
-> >  
-> >  	ret = annotate_browser__run(&browser, evsel, hbt);
-> >  
-> > -	if (annotate_opts.code_with_type)
-> > -		debuginfo__delete(browser.dbg);
-> > +	debuginfo__delete(browser.dbg);
-> >  	if(not_annotated)
-> >  		annotated_source__purge(notes->src);
-> >  
-> > -- 
-> > 2.49.0
-> > 
+Fixes: 0f314f6c2e77 ("[media] rainshadow-cec: new RainShadow Tech HDMI CEC driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gui-Dong Han <hanguidong02@gmail.com>
+---
+ drivers/media/cec/usb/rainshadow/rainshadow-cec.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/cec/usb/rainshadow/rainshadow-cec.c b/drivers/media/cec/usb/rainshadow/rainshadow-cec.c
+index ee870ea1a886..6f8d6797c614 100644
+--- a/drivers/media/cec/usb/rainshadow/rainshadow-cec.c
++++ b/drivers/media/cec/usb/rainshadow/rainshadow-cec.c
+@@ -171,11 +171,12 @@ static irqreturn_t rain_interrupt(struct serio *serio, unsigned char data,
+ {
+ 	struct rain *rain = serio_get_drvdata(serio);
+ 
++	spin_lock(&rain->buf_lock);
+ 	if (rain->buf_len == DATA_SIZE) {
++		spin_unlock(&rain->buf_lock);
+ 		dev_warn_once(rain->dev, "buffer overflow\n");
+ 		return IRQ_HANDLED;
+ 	}
+-	spin_lock(&rain->buf_lock);
+ 	rain->buf_len++;
+ 	rain->buf[rain->buf_wr_idx] = data;
+ 	rain->buf_wr_idx = (rain->buf_wr_idx + 1) & 0xff;
+-- 
+2.25.1
+
