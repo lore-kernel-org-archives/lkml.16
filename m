@@ -1,124 +1,146 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F030A31;
-	Fri,  6 Jun 2025 21:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51954214A97
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 21:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749243764; cv=none; b=RSTvH/jfuWUWtjq6K73JDIwGl7RNCtZIckVNhNaB9cHg5UfjOlhunaxpJ8fITANFoYOxMGI4Y5dUwRB8gvpSs2hL0/RhDEp7NhuXjJARV4YGpTdz4ZdVdodPRCsANAGnmbgLtIDISZsRLCHXfhg7Qsm0cB4zBEj4osHdemqxGQY=
+	t=1749243852; cv=none; b=YNPNkgklzvNYuO8OU1SAE8BjtqCBXXoH5ivPKgaewzUwESmlzh3pAV6eGenni0hX98Z+tndFKYuT83zi3Ib5lsvUDx6UbtW7SrjIZKS6hwf07aSviGu9W510bMzio4QoVTX4stnmjiiLDUSC9xSdBdrC3EkI2cw2NtnKK0M3juc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749243764; c=relaxed/simple;
-	bh=xj0/huTnf1Ge1GUzSFj0vryQBvGBYZ/TnFMm1kkMCIQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OLKE88GSYtowOqEzD40nFliO4yUBKeZybNN8BBerWLl/+C1c9USkqREdpMGMLRcTkoSSr8j9Hjn/t5QRm/1iplTnkDNAfWAIs6Af9yws/RyJ9g0JHS2ymyZHiWCsPvxSBmyhlCB5qCZWy+n9hbaLzLGY5DZO93QHnLASzeT6vS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e1RH7DKa; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749243852; c=relaxed/simple;
+	bh=1Xc1REoGz59kJ4M9DicrjznJxMvjS5pOb4T5OcmR7Qw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KPvSDwSaX/difuruKxau3pu8TCrXVxKeRm9hBBSKvjSLWrrByNfVIAe4v2SwRvhpUWwqLTwSjLAUJe9UVR7gSh6NzvUaXK6AO80DCnJ0WPeptkCdWnSRZVsuY04adWCaCu+p+dhDOdlEZoO4EH01K8VaTFElpA9dyrcO993Yvjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com; spf=pass smtp.mailfrom=gateworks.com; dkim=pass (2048-bit key) header.d=gateworks.com header.i=@gateworks.com header.b=qBviRiQs; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gateworks.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e1RH7DKa"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-708d90aa8f9so24977547b3.3;
-        Fri, 06 Jun 2025 14:02:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gateworks.com header.i=@gateworks.com header.b="qBviRiQs"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e7db5c13088so2159118276.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 14:04:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749243761; x=1749848561; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ckTWEplUDj8tVOgXyWQTsu3+spCGSYfUAFmKmFITmxY=;
-        b=e1RH7DKaxGNUwj+LpWPs75owh592mifdntJtYA/9RYTrqETVdpGKrc5BfObxKiEsA/
-         QPxrhi/+49n0Lvs/pCkDKfne7Bw3ZKpC/RBSsm1hKnbLyeKc9ie3tPmIlsdU8EqYvXLn
-         FJTxbA3bmiU1eoG3H/j6H3HvulV4TBgdjHP3W3Nl/S5YDsII0uBf2LUEEJ2I7gzsvgAb
-         B6rN4HNIhfsI3kk/IiDfuY7ZwKW2HeyvtQdMhQcbHCn3m2Di4GNFos8+mNK8KyVHpXzl
-         yp+DZoUplW+mfMKr2X0V/+DCchp4fGcIVAJOuAU7sQYR38afXMkTTNfhOWRYc68nDBRC
-         n5Zw==
+        d=gateworks.com; s=google; t=1749243849; x=1749848649; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u5BUjHtvSQa2fwgei7fhihebHAmQMvtk7aJVJVyEqtY=;
+        b=qBviRiQs1e8bmNRMIMgsHrgDBNWw5USv2MfZ9oEUvYTjgnlLegIjC0qKuHfk6YQ8Ky
+         9YjTaoVUD6sUoyQhObR1W5SYc44XVThg9A7LvsQ9RFpRn8JNotkSgzjNsax6pF7JeLm4
+         MwQH4u+PpFlKfF/OveeS9MnZ5HCxmcQTXDdpicuHLJ4CmX4RjMWsdcO8mwsKyeqCAo9y
+         0B11Y0s7ypP9KelPlFoG0e4BnGweEg8BAY3eFc3f/Zii8hT9jq6qTduSJhXGT09HUhbb
+         gCiNyDdCzbsTZBXh6wcR3ru+fxQ7PrW+Fwjc676AWxBCEe/fZU+13zMnwANjoWis4JPU
+         zxow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749243761; x=1749848561;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ckTWEplUDj8tVOgXyWQTsu3+spCGSYfUAFmKmFITmxY=;
-        b=kTW1avq+clSjdnSDrTwMBLbU9CdOD1na4+OXfYrLyiQye3n6085Gx39jcpEMjYxB21
-         IJ+cxccPL1D6buzzRvip3nNpddWnphtKvOfrdDeksPsg3hdNq/SMVdUCPNyLtMha+Fgh
-         suBZPH2Hq4SMRRnG8gAkiSa9W/zShilfaeN8OGmekElRpRGrAaVqnpyUyBRAoE/eY0Rj
-         sibfoTDAytpVolK9oy+Xb44geWsHI3j+4cGTxj03EKkKw+yBuv8mNy0Y0HMeBPXgiSgG
-         jjeKpRxFlYdlS9QMn747WwJSE0qNYAVvHkxgq94pHl1wG5jVqK+tjAdnybHDKMGF/0aB
-         RCPw==
-X-Forwarded-Encrypted: i=1; AJvYcCVeiwEFWzZL8ejjk2fV16TuoTHAcDIMmgtQ51RShjaSvsIs6acYOlk4LtK9Cjn/coIwxwHXnF+UczlVf34=@vger.kernel.org, AJvYcCWX12csjA3SOUKpeFN/VQsvWa1jmWd15NEMNRUpbDZ23DSeZh2w7GQXZ2M8tEzp4oRRl6IgFQIKGpVNDcU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5g50egNQLk38mPH0c7HIa60eqMj38xh2JRyXgkPZIt7bXncU8
-	arPiL0hiamxNVScgx1EwcjMNXsYQBkgdYJuH6cmTJHWyXWBuJr5rJYJp
-X-Gm-Gg: ASbGnct4kak8cEVIm2F6DHxwOup+blYEg6vHUt4K9cl2yqUnB5sloOhOijBCrjtMpDH
-	XKaSyF1CrW74K6bIh6xXdA7l3ecJjlk76LMvhX1LdOQSc0b7dsP9/EpWH038t9d8fVh834RZW2q
-	u2VzmfBJ4ZgKQdAGgEZnXHOwyZgcOQzGRzt3A/uB5N91DELHZK0QROEv78KZ2ww3X7Gte2Ccalw
-	Bd+z9kw87h3QxaZnLI6V8GLsHUzMgx65XlmOavIiRJl4wZLMu1RnlUhUH2Xez0nyEswu8Po+Ll2
-	Xz1lVw/1vBC4fk03buWC5b64BbZHBgWr+DrCeNKpE52oiQt77CmjQ/NM0Hz4Tjiczg==
-X-Google-Smtp-Source: AGHT+IG1fy9dy91VK/x1ZkI8SoZWkrn8wR+qdFht38h2sCE5mAew7pjFDZWWomOaCGuG07h43LX68A==
-X-Received: by 2002:a05:690c:fc2:b0:70a:36b2:8f94 with SMTP id 00721157ae682-710f76c2cfdmr72144037b3.18.1749243761230;
-        Fri, 06 Jun 2025 14:02:41 -0700 (PDT)
-Received: from trojai4.cs.purdue.edu ([128.210.0.165])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-710f98afad6sm4000027b3.20.2025.06.06.14.02.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 14:02:40 -0700 (PDT)
-From: jinyaoguo <alexguo1023@gmail.com>
-To: mchehab@kernel.org
-Cc: hverkuil@xs4all.nl,
-	algonell@gmail.com,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jinyaoguo <guo846@purdue.edu>,
-	Alex Guo <alexguo1023@gmail.com>
-Subject: [PATCH] media: dvb-frontends: dib7090: fix null-ptr-deref in dib7090_tuner_xfer()
-Date: Fri,  6 Jun 2025 17:02:38 -0400
-Message-Id: <20250606210238.1517508-1-alexguo1023@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1749243849; x=1749848649;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u5BUjHtvSQa2fwgei7fhihebHAmQMvtk7aJVJVyEqtY=;
+        b=TP/U7lEclIDBwd0K7fDoQXQ5+BhQ8llL5rRezwltrDStmdcda0et0oQyDlethsXcW4
+         ZCT4dIaCSxMrcfkz2SZAL7pE9dcYuaA+250n0buWano/+nzNqM25vKgFFjqDclhhhdVH
+         LykjYKsRXXLlP+ciymRRvVeYqb8QVTiXUVh2H3kv8e9rqToDaW9iXt7bE4afx6l0x8Z4
+         9ZauR7ohyPpFoboZLvfsdsxJ7o5Sx9oi/iJjXTzXezVjjm4bffgaAVg3hZXkQ0R2ozgd
+         cWQLqTRLUKK128+rQybvmhtxBljwIr/jgA4neBofXgl5ZW7cS6KGC9U02N3Ng4iiBr0a
+         ip9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWnQdA6OeOenb0kZJvbmJkpiRHVzRIRG/+3/ilJ4gYdJxcnSCiiOOyLwhrP0RcG6x5JfqRFgEgaddFp2ZA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxp97dQ+QC2hJoUB/WFyJEmBVK+elZOxOIpj32d6BJuNGmTF1od
+	wzJeWM1Etk8NDqgk31HlzrNJ10RF88Ynp4oDRzELJCFWI5wxsk/TFAUIVvD3pdy5XEaDdJrWytb
+	hrCD0ri0uW194tRxjvadp6chDfhqDGQlePUJ8lz0SyQ==
+X-Gm-Gg: ASbGnctDaUczFkQoVNVtKWLW1pJbNMZ6wMCYkHfmOpHaXNGqmAlgyo0w2bKPmG8bO29
+	g4DpHgYGYJWJ/nsNNl7MKawpdRxoJKfj60+SbXHlA1AIcZN82slJCGdVhqY0CovsIMeab4o0piQ
+	CU8MooJVuVUsILeAwdPbC2n2pXvLO68gIN
+X-Google-Smtp-Source: AGHT+IHz5Vh1WV9nsY/ZJiTiB1W8ok9w5HzbkMh2HaPQU1ew8kA+sOX9MHLa7aQ/uKATj0C5Wdv6l/pIEuTUkbDn4co=
+X-Received: by 2002:a05:6902:138e:b0:e81:566c:3085 with SMTP id
+ 3f1490d57ef6-e81c0fc6b57mr402062276.1.1749243849237; Fri, 06 Jun 2025
+ 14:04:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241126075702.4099164-1-hongxing.zhu@nxp.com> <20241126075702.4099164-6-hongxing.zhu@nxp.com>
+In-Reply-To: <20241126075702.4099164-6-hongxing.zhu@nxp.com>
+From: Tim Harvey <tharvey@gateworks.com>
+Date: Fri, 6 Jun 2025 14:03:57 -0700
+X-Gm-Features: AX0GCFsPTDn7iA-rHigWV1JSUeeni9XBl8RHjYyReEuG_dN3ujPTRzbBW4231V8
+Message-ID: <CAJ+vNU3ohR2YKTwC4xoYrc1z-neDoH2TTZcMHDy+poj9=jSy+w@mail.gmail.com>
+Subject: Re: [PATCH v7 05/10] PCI: imx6: Deassert apps_reset in imx_pcie_deassert_core_reset()
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: l.stach@pengutronix.de, bhelgaas@google.com, lpieralisi@kernel.org, 
+	kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, shawnguo@kernel.org, 
+	frank.li@nxp.com, s.hauer@pengutronix.de, festevam@gmail.com, 
+	imx@lists.linux.dev, kernel@pengutronix.de, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: jinyaoguo <guo846@purdue.edu>
+On Tue, Nov 26, 2024 at 12:03=E2=80=AFAM Richard Zhu <hongxing.zhu@nxp.com>=
+ wrote:
+>
+> Since the apps_reset is asserted in imx_pcie_assert_core_reset(), it shou=
+ld
+> be deasserted in imx_pcie_deassert_core_reset().
+>
+> Fixes: 9b3fe6796d7c ("PCI: imx6: Add code to support i.MX7D")
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controll=
+er/dwc/pci-imx6.c
+> index 3538440601a7..413db182ce9f 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -776,6 +776,7 @@ static void imx_pcie_assert_core_reset(struct imx_pci=
+e *imx_pcie)
+>  static int imx_pcie_deassert_core_reset(struct imx_pcie *imx_pcie)
+>  {
+>         reset_control_deassert(imx_pcie->pciephy_reset);
+> +       reset_control_deassert(imx_pcie->apps_reset);
+>
+>         if (imx_pcie->drvdata->core_reset)
+>                 imx_pcie->drvdata->core_reset(imx_pcie, false);
+> --
+> 2.37.1
+>
+>
 
-In dib7090_tuner_xfer, msg is controlled by user. When msg[0].buf is null and
-msg[0].len is zero, former checks on msg[0].buf would be passed. If accessing
-msg[0].buf[0] without sanity check, null pointer deref would happen. We add
-check on msg[0].len to prevent crash. Similar issue occurs when access
-msg[1].buf[0] and msg[1].buf[1].
+Hi Richard,
 
-Similar commit: commit 0ed554fd769a ("media: dvb-usb: az6027: fix null-ptr-deref in az6027_i2c_xfer()")
+I've found that this patch causes a regression on i.MX8MM and i.MX8MP
+boards with hotplug capable bridges:
+i.MX8MM+PI7C9X2G404EV (this switch does not support hotplug) - no issues
+i.MX8MM+PI7C9X2G608GP (hotplug) - fails to reliably enumerate
+downstream devices about 80% of the time
+^^^ when this occurs PCI_PRIMARY_BUS (0x18) for the root complex
+0000:00:00.0 reads 0x00000000 instead of 0x00ff0100 (PCI_SECONDARY_BUS
+is 0 instead of 1 and PCI_SUBBORDINATE_BUS is 0 instead of 0xff)
+i.MX8MP+PI7C9X2G608GP (hotplug) - hangs at imx_pcie_ltssm_enable
+deassert apps_reset
 
-Signed-off-by: Alex Guo <alexguo1023@gmail.com>
----
- drivers/media/dvb-frontends/dib7000p.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+In both cases here reverting ef61c7d8d032 ("PCI: imx6: Deassert
+apps_reset in imx_pcie_deassert_core_reset()") resolves this.
 
-diff --git a/drivers/media/dvb-frontends/dib7000p.c b/drivers/media/dvb-frontends/dib7000p.c
-index b40daf242046..46753d2ae212 100644
---- a/drivers/media/dvb-frontends/dib7000p.c
-+++ b/drivers/media/dvb-frontends/dib7000p.c
-@@ -2270,6 +2270,8 @@ static int dib7090_tuner_xfer(struct i2c_adapter *i2c_adap, struct i2c_msg msg[]
- {
- 	struct dib7000p_state *state = i2c_get_adapdata(i2c_adap);
- 
-+	if (msg[0].len < 1)
-+		return -EOPNOTSUPP;
- 	u16 apb_address = 0, word;
- 	int i = 0;
- 	switch (msg[0].buf[0]) {
-@@ -2360,11 +2362,15 @@ static int dib7090_tuner_xfer(struct i2c_adapter *i2c_adap, struct i2c_msg msg[]
- 	case 0x1d:
- 		i = ((dib7000p_read_word(state, 72) >> 12) & 0x3);
- 		word = dib7000p_read_word(state, 384 + i);
-+		if (msg[1].len < 2)
-+			return -EOPNOTSUPP;
- 		msg[1].buf[0] = (word >> 8) & 0xff;
- 		msg[1].buf[1] = (word) & 0xff;
- 		return num;
- 	case 0x1f:
- 		if (num == 1) {	/* write */
-+			if (msg[0].len < 3)
-+				return -EOPNOTSUPP;
- 			word = (u16) ((msg[0].buf[1] << 8) | msg[0].buf[2]);
- 			word &= 0x3;
- 			word = (dib7000p_read_word(state, 72) & ~(3 << 12)) | (word << 12);
--- 
-2.34.1
+I notice the sequence of events here is:
+imx_pcie_assert_core_reset asserts apps_reset (disables LTSSM)
+imx_pcie_deassert_core_reset deasserts apps_reset (enables LTSSM)
+imx_pcie_ltssm_enable deasserts apps_reset (enables LTSSM; this is
+where it hangs on imx8mp)
 
+Is there perhaps some issue with de-asserting this (enabling LTSSM)
+when it's already in this state?
+
+In the case where downstream devices do not enumerate some
+investigation points to them not being happy that the link drops so
+perhaps deasserting apps_reset when its already asserted drops the
+link and restarts it?
+
+Best Regards,
+
+Tim
