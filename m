@@ -1,198 +1,227 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4241027D77D
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 10:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 914BA3234;
+	Fri,  6 Jun 2025 10:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749205077; cv=none; b=aGw69wKsNmlq5AxlfRhxx/FajLDH/53KgDT/gPsnuX8KZbh/aOgoA6Z76vCGvaRhYNoqOEQt1Ht9qvfTe3tDxLIDcU/elYAoagy+Ix9+XUqFjCIn1YfUCdFhs+czd6L/kCe7cXNVGlo3iX+/BgynlI/3qppT/4eM2GooTYgitiU=
+	t=1749205180; cv=none; b=GuYsTFokhTmsq8HuDsDZ52+Nep0Patpd87uQDoJhHEPEAMblGj2KfvArvAb5w/YqL9euJNk0sgmHHJyYYaG78T1Oj7zeVS61wKeQbiWwgF3nsDYTj7Xceu1KkjPYBzP+ZK7DYWfil1dLjk1+mN3HfXB0BQu3BaBq47tLOifAQls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749205077; c=relaxed/simple;
-	bh=SVMCfylbwM5vuiB3Wx+PhHek76Iz+RwCcFIRJVgYp/s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HdXeSQs80JGqZ4/4QXM/U8eoqg+2SE9Glhyj0IxoGr68ji0ARI5WP2UwWvdUTugaYS/oFKIzZ7HxaS0A3ivzTSFJcwqHH6yNPcQr8xA0wc4qzKpNXbb+kBZ/FjIOAh7+TywzXvjMAylxaNmLKdCe3pdA2T9Ik653V1Oe/jts+S8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=W/8NzpW0; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749205180; c=relaxed/simple;
+	bh=U9oRcqk8pQONKNF0tSAsSNHiaoMlLKsDK3FIcKhEGQk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=pXiuQqEkfHvJWzN9bwtv/C9pRb1O+7ih7Jk9AEkGlHZONn1b7hgcwhA6a2Grd4FxjsqizfA8u1Up0c5scBB5/EzVGd/Vaas5k6ZNIBM4K0M5ExGuyRDfFdXDG0kD6P21SE9GhI5fVn8t8Vi9p56Beuq0at6EXlGN84yjZuDELyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NAcC5HuI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oU5sfJAx; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="W/8NzpW0"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5561CCwp013895
-	for <linux-kernel@vger.kernel.org>; Fri, 6 Jun 2025 10:17:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=MUm770nsjTk7RKaqGJXS/UXM
-	bcC3CLIfXaIBHht8qoo=; b=W/8NzpW0F9AfIenOSQKcaHAtJd6pwGHnLQ78YdyZ
-	VRa0/MQkCsHkOd05mCswdst64V2qpJjZbOf0Hqh3w1gjcq4siRG8fCEIn3blroMS
-	AkU6oTlRt+c8EZI67XOllofobWQ7GAizeV2l0rhhTYLVFLBgoR9AeS+wYaGtjIZs
-	GKv7HFBC3/J0UBIqyRIUkIwcTf9VnkN80hEc31kIUThXYYeJaXqWN7oUSgKMSGQG
-	V0VvQfcTJUMkssvLnMV5MO337dGkbpNd8wFQom6S+aZeqHf/JYdAaNeTDY8zq3mM
-	rofkJBm+IznBjcgn34id9RcF4n79GuZ8Thl6QmmicpyZaA==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471sfv3659-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 10:17:54 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-235f6b829cfso12431985ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 03:17:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749205073; x=1749809873;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MUm770nsjTk7RKaqGJXS/UXMbcC3CLIfXaIBHht8qoo=;
-        b=pJybFLIHgEUPOZGROdSLsvviCO7YmyA33ionnOfT7PFs423qJZcrMUzjJ2OztEZ6Wv
-         nOgP/F0J4tA1uFmdMkiTwbN0fxGqKV+dGdHHZMepBJhUGqdQdYP8H/W/SMh8sROC87J7
-         mbw3fn72s0q/LC8kT0lGhQjB9uIwPTn1UVxz2zaUPJKTrkQDU+6uobSPdM53kuxcNV+E
-         vZjUrtqFOnHM0TpjxZtCFimHOK4EBc0MapPTo2xYJfOkXTtLWT56euAOwwG+xw4uCxbp
-         bYlbtOVCstnRzpyewW4WbAMafRsxCCTqgjvo5E5lC47Od4n9t9s+IWTl3Z6RKD919e19
-         gw5g==
-X-Forwarded-Encrypted: i=1; AJvYcCXSHk707NLkdOcmiAkgphDIrVAiixKZ3tuR6RS1l6CEwltx8HkIjLcCfsehUTQ/0uzmG+yqb4WFczZqtr0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5CWrF+4q1XQWjP18V3kjk7jFDa4Ilb0HQwxbC70esOohHtjaV
-	m3qVoMeeGkRC3MbAKKgIMOm2ev6HPujgAKvED2j6NzaqY1VVRmWZ1qCNFOwfmeaU9ByvIwLahLq
-	zLwA44NxqLU/4XQ5dMItOs9YMO0qmcb9hiIChSS7HJ+GKjJp63YW6Os847Wvb/R/tevY=
-X-Gm-Gg: ASbGncsfBBfDDUUKXXM/b0bGSJ0YVshQ9y6+B+n4MV0eMwkZDB7Hru8zBl0wnjzImDO
-	+XneVWDvi0iSdm6cGNLstbybpCtuN/im4jT/lh2B7ngGZAsNO1dnpVkM4v3yU61M5pYwZ5fMkU/
-	N77/pg5szT8doyF+5xqXUL9tBNHmLap7AzOqZlI54BQqmrIbPRUnVTx4J6cliNotwknFKiXtWI4
-	e7tv36rUfr+myZ+bRARNPYUdTQ77cC2o6atkzqzmS90pAumF2QvgnSXLn74UDzJv3xyzAvlmra/
-	PnnMNm6AmosJ8zDSEiHB0AFMsIl7rtttensaFQFwIV2DAf+DImgpqVspXAc=
-X-Received: by 2002:a17:902:e5cf:b0:234:d7b2:2ab4 with SMTP id d9443c01a7336-23601d038c2mr38586405ad.17.1749205073605;
-        Fri, 06 Jun 2025 03:17:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHWEq5utuN+xciTxdEM9oY6Q/JAcry9JQaMjmy2DyusLiUkQ5pFcrFEA1HGQcbYN9+4KF154A==
-X-Received: by 2002:a17:902:e5cf:b0:234:d7b2:2ab4 with SMTP id d9443c01a7336-23601d038c2mr38586135ad.17.1749205073233;
-        Fri, 06 Jun 2025 03:17:53 -0700 (PDT)
-Received: from hu-qianyu-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603077e9dsm9466565ad.1.2025.06.06.03.17.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 03:17:52 -0700 (PDT)
-Date: Fri, 6 Jun 2025 03:17:50 -0700
-From: Qiang Yu <qiang.yu@oss.qualcomm.com>
-To: Johan Hovold <johan@kernel.org>
-Cc: Wenbin Yao <quic_wenbyao@quicinc.com>, catalin.marinas@arm.com,
-        will@kernel.org, linux-arm-kernel@lists.infradead.org,
-        andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkoul@kernel.org, kishon@kernel.org, sfr@canb.auug.org.au,
-        linux-phy@lists.infradead.org, krishna.chundru@oss.qualcomm.com,
-        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com,
-        quic_cang@quicinc.com, Johan Hovold <johan+linaro@kernel.org>,
-        Abel Vesa <abel.vesa@linaro.org>
-Subject: Re: [PATCH v4 5/5] phy: qcom: qmp-pcie: add x1e80100 qref supplies
-Message-ID: <aELATuLue/Vs8lHz@hu-qianyu-lv.qualcomm.com>
-References: <20250604080237.494014-1-quic_wenbyao@quicinc.com>
- <20250604080237.494014-6-quic_wenbyao@quicinc.com>
- <aEBh2xHu3QDtUrxe@hovoldconsulting.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NAcC5HuI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oU5sfJAx"
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749205176;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2Wj8ecJw8sQMELv22VyqXO77n+w+BEzjGz6ZQfwvvzw=;
+	b=NAcC5HuIuZMqVi0R070oigm72+7GL9UEurnIlPXXJZ3LfgUaFtk0M2Za0cGz/tUqCN+vr/
+	b5YdrvdC2jhJwxrsQD45HLC6oAWzXVejuT3MuPcYfyZ3zmDUJNvN++edpV0XbMn7cPVMrg
+	mF0NqAMkjNudN/f0dMo8nOS2CDMbILTm2jD0jTeO/m2N/9RYDMqta++hz3YEYHEC+JcZF4
+	P8g+YCmJqQ+hUdUH30LbU9toOmsYkpjwDooAi6MPzvXt9u0ncTB/f5bv2lf8kFYr9EJ3yo
+	Qi2ZlQzJ9K6Yc/K1RIemL0Bh5eTXnXB8OMMgviFVyMA7Vzg8NBQQHLx5HYVmXA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749205176;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2Wj8ecJw8sQMELv22VyqXO77n+w+BEzjGz6ZQfwvvzw=;
+	b=oU5sfJAxPYPEf4Mjq9ihtQjWLaP3Dg/H2+yCANCmxnuvywVX0+sZLQKU+aAWpT5RSmH39E
+	6+95i4B+bR+O5eAA==
+To: Petr Mladek <pmladek@suse.com>, "Toshiyuki Sato (Fujitsu)"
+ <fj6611ie@fujitsu.com>
+Cc: 'Michael Kelley' <mhklinux@outlook.com>, 'Ryo Takakura'
+ <ryotkkr98@gmail.com>, Russell King <linux@armlinux.org.uk>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
+ <jirislaby@kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org"
+ <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>
+Subject: Re: Problem with nbcon console and amba-pl011 serial port
+In-Reply-To: <aEGeARVcCwqcoHb8@pathway.suse.cz>
+References: <SN6PR02MB4157A4C5E8CB219A75263A17D46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <OS7PR01MB13775FE1A20762D1EA4A38D0ED76DA@OS7PR01MB13775.jpnprd01.prod.outlook.com>
+ <84y0u95e0j.fsf@jogness.linutronix.de>
+ <84plfl5bf1.fsf@jogness.linutronix.de>
+ <TY4PR01MB13777674C22721FCD8ACF4FCCD76CA@TY4PR01MB13777.jpnprd01.prod.outlook.com>
+ <aEApOPTqbVOR35F_@pathway.suse.cz> <84o6v3ohdh.fsf@jogness.linutronix.de>
+ <aEBNLMYVUOGzusuR@pathway.suse.cz>
+ <TY4PR01MB13777CC92C858572B9C19394FD76FA@TY4PR01MB13777.jpnprd01.prod.outlook.com>
+ <aEGeARVcCwqcoHb8@pathway.suse.cz>
+Date: Fri, 06 Jun 2025 12:25:35 +0206
+Message-ID: <84frgdcgug.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEBh2xHu3QDtUrxe@hovoldconsulting.com>
-X-Authority-Analysis: v=2.4 cv=CY8I5Krl c=1 sm=1 tr=0 ts=6842c052 cx=c_pps
- a=IZJwPbhc+fLeJZngyXXI0A==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=zitRP-D0AAAA:8
- a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=Kn45tV52aVggcf7Ks3EA:9
- a=CjuIK1q_8ugA:10 a=uG9DUKGECoFWVXl0Dc02:22 a=xwnAI6pc5liRhupp6brZ:22
- a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: g9QqLKCZ4K2c2zJZ23oIVFqpMT-qs_TT
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDA5MyBTYWx0ZWRfX5ccbmkXolF7j
- j/DrpaliSTJJbNxuaO5Y7ZgcnkwJLcfg1VJ9I0PJmXaGHwmCsx3zJqtF0hlK38vu12ws3jzevzQ
- pM+tcSeDQRuZTAHjbdI7qSoSyYfeubOy3OakQtxXmNnyk0EWBnpEd2ZqkyZvChRTCa96aKDDH4M
- 8rjDtI8/FDSPeiCEkpq0m3Pdo0MKxXjxsStecJE/ZUTILHnBTUuBmcWBU7sCbqbBhUf+IeL8UOT
- 57x/MOlDcd9zlM1YEA1RKSgEdbaMZoYE0DJt3VpIhKrrJHZ9VBOVBPIafAG+pjlA3fYSIQb+xV5
- JdtZvYWMYcbyGvFOuTeN3Mcv+UmN8kPYEfmRtotx/Sfms5rWJzzfEg/H4c+ErMTMv8dQSeh9gv3
- 1A5fVcQfDQit2u9s4sQfy+lF6ur6QXrwA2aDP6brknK7U5b6sUJrmpVJYZHHMkKczmZXsCWI
-X-Proofpoint-GUID: g9QqLKCZ4K2c2zJZ23oIVFqpMT-qs_TT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-06_03,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 mlxscore=0 adultscore=0 bulkscore=0 suspectscore=0
- malwarescore=0 clxscore=1015 lowpriorityscore=0 spamscore=0 impostorscore=0
- phishscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506060093
+Content-Type: text/plain
 
-On Wed, Jun 04, 2025 at 05:10:19PM +0200, Johan Hovold wrote:
-> On Wed, Jun 04, 2025 at 04:02:37PM +0800, Wenbin Yao wrote:
-> > From: Qiang Yu <qiang.yu@oss.qualcomm.com>
-> > 
-> > All PCIe PHYs on the X1E80100 SOC require the vdda-qref, which feeds QREF
-> > clocks provided by the TCSR device.
-> 
-> As I just mentioned in the thread where this is still being discussed:
-> 
-> 	https://lore.kernel.org/all/aEBfV2M-ZqDF7aRz@hovoldconsulting.com
-> 
-> you need to provide a lot more detail on why you think modelling these
-> supplies as PHY supplies (which they are not) is the right thing to do.
-> 
+On 2025-06-05, Petr Mladek <pmladek@suse.com> wrote:
+> The question is if it is worth it. Is the clean up really important?
 
-TCSR_PCIE_xx_CLKREF_EN is not always in TCSR, they're custom
-bits to enable pieces of the distribution network. We always classify them
-as "TCSR" even though they're not always in that module.
+I must admit that I am not happy about encouraging the proposed solution
+so far (i.e. expecting driver authors to create special unsafe code in
+the panic situation). It leads down the "hope and pray" path that nbcon
+was designed to fix.
 
-So even if we put the QREF supplies in tscr device tree node, it still
-doesn't describe the hardware correctly as the hardware itself does't have
-a unified structure.
+What if during non-panic-CPU shutdown, we allow reacquires to succeed
+only for _direct_ acquires? The below diff shows how this could be
+implemented. Since it only supports direct acquires, it does not violate
+any state rules. And also, since it only involves the reacquire, there
+is no ugly battling for console printing between the panic and non-panic
+CPUs.
 
-Since the TCSR_PCIE_xx_CLKREF_EN is only required by PCIe, why can't we
-model these supplies consumed by TCSR_PCIE_xx_CLKREF_EN as PHY supplies,
-treating PCIe PHY and TCSR_PCIE_xx_CLKREF_EN as a whole.
+Thoughts?
 
-> Also please answer the question I've asked three times now on how the
-> QREF supplies map to PHY supplies on X1E as no one will be able to use
-> this binding unless this is documented somewhere (and similar for other
-> SoCs).
->
+John Ogness
 
-PCIe3,
-VDD_A_QREFS_0P875_0,
-VDD_A_QREFS_0P875_B,
-VDD_A_QREFS_1P2_B,
-
-PCIe4,
-VDD_A_QREFS_0P875_B,
-VDD_A_QREFS_1P2_B
-
-PCIe5,
-VDD_A_QREFS_0P875_2,
-VDD_A_QREFS_0P875_B,
-VDD_A_QREFS_1P2_B,
-
-PCIe6
-VDD_A_QREFS_0P875_A,
-VDD_A_QREFS_1P2_A
-
-> The fact that you so far have not been able to provide an answer
-> seems to suggest that these supplies need to be managed by the TCSR
-> clock driver which can handle the mapping.
-> 
-> > Hence, restore the vdda-qref request for the 6th and the 3th PCIe instance
-> > by reverting commit 031b46b4729b ("phy: qcom: qmp-pcie: drop bogus x1e80100
-> > qref supplies") and commit eb7a22f830f6("phy: qcom: qmp-pcie: drop bogus
-> > x1e80100 qref supply"). For the 4th PCIe instance (Gen3 x2), add a new
-> > driver data entry, namely x1e80100_qmp_gen3x2_pciephy_cfg, which is a copy
-> > of sm8550_qmp_gen3x2_pciephy_cfg but uses sm8550_qmp_phy_vreg_l instead.
-> > 
-> > Fixes: eb7a22f830f6 ("phy: qcom: qmp-pcie: drop bogus x1e80100 qref supplies")
-> > Fixes: 031b46b4729b ("phy: qcom: qmp-pcie: drop bogus x1e80100 qref supplies")
-> > Fixes: 606060ce8fd0 ("phy: qcom-qmp-pcie: Add support for X1E80100 g3x2 and g4x2 PCIE")
-> > Cc: Johan Hovold <johan+linaro@kernel.org>
-> > Cc: Abel Vesa <abel.vesa@linaro.org>
-> > Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
-> > Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
-> 
-> NAK, for now, and please don't post any new revisions of this patch
-> until this has been resolved.
-
-OK, I will remove this patch from the series if other patches require
-updates and submit it separately when it is required.
-
-- Qiang Yu
-
-> 
-> Johan
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index 5b462029d03c1..d58ebdc8170b3 100644
+--- a/include/linux/printk.h
++++ b/include/linux/printk.h
+@@ -208,6 +208,7 @@ extern bool nbcon_device_try_acquire(struct console *con);
+ extern void nbcon_device_release(struct console *con);
+ void nbcon_atomic_flush_unsafe(void);
+ bool pr_flush(int timeout_ms, bool reset_on_progress);
++void nbcon_panic_allow_reacquire_set(bool value);
+ #else
+ static inline __printf(1, 0)
+ int vprintk(const char *s, va_list args)
+@@ -321,6 +322,10 @@ static inline bool pr_flush(int timeout_ms, bool reset_on_progress)
+ 	return true;
+ }
+ 
++static inline void nbcon_panic_allow_reacquire_set(bool value)
++{
++}
++
+ #endif
+ 
+ bool this_cpu_in_panic(void);
+diff --git a/kernel/panic.c b/kernel/panic.c
+index b0b9a8bf4560d..8f572630c9f7e 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -292,6 +292,12 @@ static void panic_other_cpus_shutdown(bool crash_kexec)
+ 		panic_triggering_all_cpu_backtrace = false;
+ 	}
+ 
++	/*
++	 * Temporarily allow non-panic CPUs to finish any nbcon cleanup
++	 * in case they were interrupted due to the panic.
++	 */
++	nbcon_panic_allow_reacquire_set(true);
++
+ 	/*
+ 	 * Note that smp_send_stop() is the usual SMP shutdown function,
+ 	 * which unfortunately may not be hardened to work in a panic
+@@ -304,6 +310,8 @@ static void panic_other_cpus_shutdown(bool crash_kexec)
+ 		smp_send_stop();
+ 	else
+ 		crash_smp_send_stop();
++
++	nbcon_panic_allow_reacquire_set(false);
+ }
+ 
+ /**
+diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+index d60596777d278..d960cb8a05558 100644
+--- a/kernel/printk/nbcon.c
++++ b/kernel/printk/nbcon.c
+@@ -235,7 +235,8 @@ static void nbcon_seq_try_update(struct nbcon_context *ctxt, u64 new_seq)
+  *			the handover acquire method.
+  */
+ static int nbcon_context_try_acquire_direct(struct nbcon_context *ctxt,
+-					    struct nbcon_state *cur)
++					    struct nbcon_state *cur,
++					    bool ignore_other_cpu_in_panic)
+ {
+ 	unsigned int cpu = smp_processor_id();
+ 	struct console *con = ctxt->console;
+@@ -249,7 +250,7 @@ static int nbcon_context_try_acquire_direct(struct nbcon_context *ctxt,
+ 		 * nbcon_waiter_matches(). In particular, the assumption that
+ 		 * lower priorities are ignored during panic.
+ 		 */
+-		if (other_cpu_in_panic())
++		if (other_cpu_in_panic() && !ignore_other_cpu_in_panic)
+ 			return -EPERM;
+ 
+ 		if (ctxt->prio <= cur->prio || ctxt->prio <= cur->req_prio)
+@@ -568,7 +569,7 @@ static struct printk_buffers panic_nbcon_pbufs;
+  * in an unsafe state. Otherwise, on success the caller may assume
+  * the console is not in an unsafe state.
+  */
+-static bool nbcon_context_try_acquire(struct nbcon_context *ctxt)
++static bool nbcon_context_try_acquire(struct nbcon_context *ctxt, bool ignore_other_cpu_in_panic)
+ {
+ 	unsigned int cpu = smp_processor_id();
+ 	struct console *con = ctxt->console;
+@@ -577,7 +578,7 @@ static bool nbcon_context_try_acquire(struct nbcon_context *ctxt)
+ 
+ 	nbcon_state_read(con, &cur);
+ try_again:
+-	err = nbcon_context_try_acquire_direct(ctxt, &cur);
++	err = nbcon_context_try_acquire_direct(ctxt, &cur, ignore_other_cpu_in_panic);
+ 	if (err != -EBUSY)
+ 		goto out;
+ 
+@@ -892,6 +893,12 @@ bool nbcon_exit_unsafe(struct nbcon_write_context *wctxt)
+ }
+ EXPORT_SYMBOL_GPL(nbcon_exit_unsafe);
+ 
++static bool nbcon_panic_allow_reacquire;
++void nbcon_panic_allow_reacquire_set(bool value)
++{
++	nbcon_panic_allow_reacquire = value;
++}
++
+ /**
+  * nbcon_reacquire_nobuf - Reacquire a console after losing ownership
+  *				while printing
+@@ -913,7 +920,7 @@ void nbcon_reacquire_nobuf(struct nbcon_write_context *wctxt)
+ {
+ 	struct nbcon_context *ctxt = &ACCESS_PRIVATE(wctxt, ctxt);
+ 
+-	while (!nbcon_context_try_acquire(ctxt))
++	while (!nbcon_context_try_acquire(ctxt, READ_ONCE(nbcon_panic_allow_reacquire)))
+ 		cpu_relax();
+ 
+ 	nbcon_write_context_set_buf(wctxt, NULL, 0);
+@@ -1101,7 +1108,7 @@ static bool nbcon_emit_one(struct nbcon_write_context *wctxt, bool use_atomic)
+ 		cant_migrate();
+ 	}
+ 
+-	if (!nbcon_context_try_acquire(ctxt))
++	if (!nbcon_context_try_acquire(ctxt, false))
+ 		goto out;
+ 
+ 	/*
+@@ -1486,7 +1493,7 @@ static int __nbcon_atomic_flush_pending_con(struct console *con, u64 stop_seq,
+ 	ctxt->prio			= nbcon_get_default_prio();
+ 	ctxt->allow_unsafe_takeover	= allow_unsafe_takeover;
+ 
+-	if (!nbcon_context_try_acquire(ctxt))
++	if (!nbcon_context_try_acquire(ctxt, false))
+ 		return -EPERM;
+ 
+ 	while (nbcon_seq_read(con) < stop_seq) {
+@@ -1784,7 +1791,7 @@ bool nbcon_device_try_acquire(struct console *con)
+ 	ctxt->console	= con;
+ 	ctxt->prio	= NBCON_PRIO_NORMAL;
+ 
+-	if (!nbcon_context_try_acquire(ctxt))
++	if (!nbcon_context_try_acquire(ctxt, false))
+ 		return false;
+ 
+ 	if (!nbcon_context_enter_unsafe(ctxt))
