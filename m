@@ -1,45 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90969257D;
-	Fri,  6 Jun 2025 00:07:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C83D29A1;
+	Fri,  6 Jun 2025 00:08:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749168431; cv=none; b=F22sYePfyj8OZn06bOkpluhOunV4z9jVn7VsElEtLl9bFK7Wwvz3SgamikflagZu1PuLLW6eOEqloe1NS/0INUiGQ93ztlRQe3JyATyyp8bZX1ZAXAuk8N0XxTsrDGIYSNV2WE7DYWa+Wn86c4wB8gSi+t7z9oHiUwuDAwKPeGA=
+	t=1749168518; cv=none; b=jkI2DzI/6o9e/wcxsu8GQofa7lMilSMK14jLRHXZNaaWOvsWRhH03tp+f3vOvlZYNt92F9bl7AUKh8k2c5L03Q4OpgLpJY2g+r28oQIx7wLoUHOlWK+GqOXojBPYYkBpM14xy4OffYJH5gim6/mRLZkX+g11daLD7vC+odn6XKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749168431; c=relaxed/simple;
-	bh=WCAnL1RuMU0W+2QGcVKKuVXGaRhQpR/IhkCMFv/QF7g=;
+	s=arc-20240116; t=1749168518; c=relaxed/simple;
+	bh=096tcwFPpeJG650wQF6YIxLq94RUk9uyR/oF7cR6+RE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M46Ot4Ui5KsWRTuBzovoB3YKrvlGHRiFzvXjO3IW+CQAGaclAL23qc+Im/Ugr/qZw9GYDk3JVclx1DiK1JABopDwT6MKyVCsnco7DQSTTh7CitgFmQAt0xnaB6L7g+z6nujd/sXFUrwZ1olQmUP0M0btyhaNwBPH9oPhxOM7FxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nLO4lH2S; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y9dzSQzzXt56acdmPIMaWkuAu1MxCrJtG4zUX4sZEKWREp+1RqCOvquxiLSc62IZaWt3c7LBZyCuBdVxiMccdmqnEH6dff4eIgZk1sckukO2NSaIwRzeV2KXksBK14tXMeB5ibQuRr5PRI9mpCWNqUEUt7JMUuc2tgiyluPSED4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tlY3UW/K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nLO4lH2S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9E45C4CEE7;
-	Fri,  6 Jun 2025 00:07:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tlY3UW/K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72D48C4CEE7;
+	Fri,  6 Jun 2025 00:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749168431;
-	bh=WCAnL1RuMU0W+2QGcVKKuVXGaRhQpR/IhkCMFv/QF7g=;
+	s=k20201202; t=1749168517;
+	bh=096tcwFPpeJG650wQF6YIxLq94RUk9uyR/oF7cR6+RE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nLO4lH2SoVVbUbKRIreNMqW0at1MlwNLNSZPPRiPGgGlDSSwFcDZVO9GiK7fjvvLQ
-	 txSCX1W7R7wa/vUTA6BQFYmpYlbdLHPtVrXs9KQpz8rs7V5xbhd04lOC7iJpz+TK1D
-	 MEtD4mU+MHZPpgXizLtifZ8eLbEu3JRn8gVw4FZF3RdYTH8vr40EKTDq2157vTFe/O
-	 GQJlyx2z4dIDg+uB7N049bsA6LTMlcv2SbCcW71XtymH80Up+ka2B/SryhyKIrQBMr
-	 KTOPsw8TlY+mAMelna1rVRUYH1U00zh8UWUBOp26t8OhiQWA2yozWzwMWawo2jXSJJ
-	 s3vZ7hT872iQw==
-Date: Thu, 5 Jun 2025 19:07:08 -0500
+	b=tlY3UW/K9u2JgwKDcNQfnVeBUy7hC2xfe1v6W6OWg7aZbXOdcl8TXEzA9d1Ny/T16
+	 Wt80q6QSXA35UMSeatSZr8jHqdfyo8/sK7SX9r4uHImRD6+I+0te6ZV5RJ4rXDPVx/
+	 OqRnyGKF89OtAvy9gV5ms9Tk0rwh2ZfjdkKY5ztFUBeS8a5RWiQpSAuPFqWVsKg5Pk
+	 KSQ9XbATQIDUaUscrAfuw+UzTPA8u+WNrLmBe9lhVBS/Yj69CDu9wpktMbeHYunLSb
+	 s8GxzNo6oVfJmTkCKLTRXeqpbDOOzbzSYERp6vX9CMT3BB1f399DwXOAbRSAy8bWjq
+	 Jve6yHyxMRt2Q==
+Date: Thu, 5 Jun 2025 19:08:35 -0500
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Frank Li <Frank.Li@nxp.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-	Eric Dumazet <edumazet@google.com>, imx@lists.linux.dev,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH 1/1] dt-bindings: net: convert nxp,lpc1850-dwmac.txt to
- yaml format
-Message-ID: <174916842673.3519885.13165846799874556339.robh@kernel.org>
-References: <20250602141638.941747-1-Frank.Li@nxp.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, imx@lists.linux.dev,
+	linux-clk@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>
+Subject: Re: [PATCH 1/1] dt-bindings: clock: convert lpc1850-ccu.txt to yaml
+ format
+Message-ID: <174916851320.3533561.1893618858405515968.robh@kernel.org>
+References: <20250602141937.942091-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,27 +46,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250602141638.941747-1-Frank.Li@nxp.com>
+In-Reply-To: <20250602141937.942091-1-Frank.Li@nxp.com>
 
 
-On Mon, 02 Jun 2025 10:16:36 -0400, Frank Li wrote:
-> Convert nxp,lpc1850-dwmac.txt to yaml format.
+On Mon, 02 Jun 2025 10:19:36 -0400, Frank Li wrote:
+> Convert lpc1850-ccu.txt to yaml format.
 > 
 > Additional changes:
-> - compatible string add fallback as "nxp,lpc1850-dwmac", "snps,dwmac-3.611"
-> "snps,dwmac".
-> - add common interrupts, interrupt-names, clocks, clock-names, resets and
->   reset-names properties.
-> - add ref snps,dwmac.yaml.
-> - add phy-mode in example to avoid dt_binding_check warning.
+> - remove label in examples.
+> - remove clock consumer in examples.
 > 
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
->  .../bindings/net/nxp,lpc1850-dwmac.txt        | 20 -----
->  .../bindings/net/nxp,lpc1850-dwmac.yaml       | 81 +++++++++++++++++++
->  2 files changed, 81 insertions(+), 20 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/net/nxp,lpc1850-dwmac.txt
->  create mode 100644 Documentation/devicetree/bindings/net/nxp,lpc1850-dwmac.yaml
+>  .../devicetree/bindings/clock/lpc1850-ccu.txt |  77 -------------
+>  .../bindings/clock/nxp,lpc1850-ccu.yaml       | 104 ++++++++++++++++++
+>  2 files changed, 104 insertions(+), 77 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/lpc1850-ccu.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/nxp,lpc1850-ccu.yaml
 > 
 
 Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
