@@ -1,144 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE3A24EF6B;
-	Fri,  6 Jun 2025 08:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FAE62356B8;
+	Fri,  6 Jun 2025 08:11:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749197480; cv=none; b=N9DDOqmrsJ+cxYjgjZSI5TgVTfMKheS85B3jyFh/bxPcHvreorOlaJOQsvio3Uai6JacR/IJNLEPmPWBmRd0RzS4C6rxZThDsC68cDxZyOwPdZRI9wHYNGtXfY2k2+tsgBuAH3xPg0XkN4l+PRurI4XYuFMIfQi3hYpT6OiXQT8=
+	t=1749197519; cv=none; b=aM6emf6h6MFqDU1ungCVPbPX4/zPl7PF/wq7/QTSdXDdNy1DseFQ2K5Qc9lNQpIQmds8v46XIpKnEDHKx4z9tVX72oU2uaRYJPlDUtPm4hcVVPs4nu1JoGIkC5mQpHIUCYd35SPrZNqI3Opr/T1McRSG2NIc7FrAciXIsj9YudU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749197480; c=relaxed/simple;
-	bh=ND77xMVcFqeXe20NboWW0w2himlLjNgVxCRvLH5ylDA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=HuqwO5hlTipuLpH0C9c4Bty26xBcpW40i8wIyNmvvV4LPAGYhUdPf/qZBc5MuZDLYk8MKJTN4g4MPWD9ZKMr8tTYJDwHlttW3wAyvGj1wxD/NHMiCWBG7VX2K7sjlXygLHLAkTws2hbJ80XktdGkZViJAu/oBoEcl5P1CHGG9QA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cj4pu86+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749197519; c=relaxed/simple;
+	bh=ZuDJMQx0bckQqQYAX8ktUsiM7fLLnYTzUNDL9d0esbs=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lv8sokWta3jBAaeXtsSPELUaO9EBllVNOM40Z5U4kvbDP39aBdJfXt/3b+xW1XeFpspHhwcuXuBe4dx1ZDnD7O+6XXyFJBvhazi0zJh9BC6BNxpGHG51BTYmT8kvBPt+7Hl+QniH4X1I3g8kPkjPyikk9b94Mf+7Vw+SsnOp5VA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KtpAb7rw; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cj4pu86+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 854E5C4CEEB;
-	Fri,  6 Jun 2025 08:11:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749197480;
-	bh=ND77xMVcFqeXe20NboWW0w2himlLjNgVxCRvLH5ylDA=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=cj4pu86+AMWCo54oNH4Pvp+0tWHoIclkHKDmjxZirsjSHKcfhsNxMbU80aU/1wo8t
-	 53NjEOedMoJS7nhcrS0yT4SPtmGD57MILhpCIzRqNv0gxW5XZFcJHPtKjh55e2Qioy
-	 7oG3IZB5PLYrKWCTuxz/CxkyqwspR11EmFNSDzm3DHDr+rQ0NAPCJTklDhWpU1WdZ4
-	 PK2oTdjgJk2OAlz/twb1gPG5z4W6x7jWpdN4DgY3Y3WMnOhlNLsampM4q5PgfpFMax
-	 CJcaItV7pzGFeh1dGXToOOCUVqv/cghi7W+v4s0Gy1q4T3WT68Vx2tiuHfuuoUI8d9
-	 aBjnADTPSgOTA==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KtpAb7rw"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6071ac9dc3eso2910569a12.1;
+        Fri, 06 Jun 2025 01:11:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749197516; x=1749802316; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TgApWI0+BVOjkWxGB075M4gC4i26wr9y4+tNmb0C/Mg=;
+        b=KtpAb7rwJFao9JAOAvvkHOcO+DKApjMcr9ZFF0EOX1p87BGDIhmkKGNeJl/AcPHJtv
+         AZ7xmIiNGewHniRCvqJY5kMBwm32Xxo1Um+SNuZCnn7oJu/53RZ93RtSlLqunRWbW1q0
+         m/v1HxoeuFgzaRilL3bE5Kb7o7v74epLPRy8TOOA2DwEtjaGYudKkcwR8fs6KSlZMuYN
+         rmen9R71rTGppi3F/jc8r72xtzmKmNG7K+wYvdET+u4hFv8GGyxjpUwpqcw8qBnLjPee
+         vFb/WDQU/4iQ66g2ucGGtmMnr4h2CLcBrnuLMI6rCVJDZoqJdlKmzzTUN/rs8DsKqZrS
+         aD6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749197516; x=1749802316;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TgApWI0+BVOjkWxGB075M4gC4i26wr9y4+tNmb0C/Mg=;
+        b=QXpOEYS5GjgiL58dKtFEyyX+ZrErV+K8zXyrX/3sCcw6K4CUWzJvmdT7ZHs8b8Oiq8
+         0zZ8specE/sLfg10RlNJtZZ3GssBV6JEgkox7LpP3ieELPM8fKefW4Akrdl1+JrT+IS+
+         9dmrb8PeWrE5fz50VkEyy8iZ/QjbPDKBmLwRGRDnrk80wZu62YJzp9+LhcfCFk7NQ3xH
+         V6pl74sIlHR1S+1nt4CBPwMhrwcYsBYjsX25gBO8v9vvC4C/Rp2hnPjmLXlZ/L9h38IE
+         jIFNi38g1itXVK/vtXzeHko1hpHvANiBN6u4mxQ0wE+Fn350x42leyIBK2ADvsuhnypV
+         jhqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVNA8kdYHokTaZbgCxycGTpxHMrFK0cF3162sUDvHVWsoO9IjmWPIoRb+kMK2lYdlrAst/yrwGT@vger.kernel.org, AJvYcCVsC+BUgIFvhBtnz0xKPAPATJL5y4U0vOBWAOgo3pIgqxe8piyYiFOg0u/u5kQiGAZj5Gc=@vger.kernel.org, AJvYcCX4Rl1132zoNpdT9jkGaHa7sXWoXwGb0EqkMgX7AavuMuCiIRZXL7LXaJtXsheUBcUk/+O/M9TYQQ6fxwW8@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqDn48VRkbrrx1rszO8Gc4IS7/jdqKJCd6kaCzhgEcEk3XCYH3
+	TktJHBxtTAseqq27VfcaAnTTOaWcKiL6VJSGetHEX9G3VVoBoyviLRM1
+X-Gm-Gg: ASbGncsM/wUa82JIVLOEbw9se+QZTruKd/jdb28KkitBAkDJZCDMzaYMWj0Z9G/x3r3
+	4MxcQIcoLFh3xneykZ8tTpwJZI7WYQv6UvrbLD9eLSlVB09ilg8l1wdG/GFZvNAnMmDjwawYUv9
+	4oG6yDh3JDAXky1J32u9MvBeHnsP9fM8xEv80hH/ina5x2QwTk8MlU2FcjNO5RXpsWE6TLFsfbz
+	KFVpqo+zSXTyKVQTiw7tVVMHBntFTa3yyNjKRD7aUHRU7eVXUSbwMhLho9BGY+kBv/xX/C4jTvE
+	OLUSJ76BET0dhPAxviKHsjruJ0q42UO+lCiNQg==
+X-Google-Smtp-Source: AGHT+IHf3kWkZJUnkGKGDtasZxLAsJqT2XOamn0NT4qFa01M0qYWTtrfBtVc1Eqbs4sG8b8aQ7MZtQ==
+X-Received: by 2002:a17:907:c25:b0:ad8:8c52:d61f with SMTP id a640c23a62f3a-ade1aab9f4dmr176003166b.35.1749197515955;
+        Fri, 06 Jun 2025 01:11:55 -0700 (PDT)
+Received: from krava ([173.38.220.52])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1d7542b1sm79027666b.35.2025.06.06.01.11.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 01:11:55 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Fri, 6 Jun 2025 10:11:53 +0200
+To: Suleiman Souhlal <suleiman@google.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Masahiro Yamada <masahiroy@kernel.org>,
+	Ian Rogers <irogers@google.com>, ssouhlal@freebsd.org,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: [PATCH v2] tools/resolve_btfids: Fix build when cross compiling
+ kernel with clang.
+Message-ID: <aEKiyUwKGDUAs3sf@krava>
+References: <20250606074538.1608546-1-suleiman@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 06 Jun 2025 10:11:13 +0200
-Message-Id: <DAFAR5SUQSU9.OSLB2UAXE9DY@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Yury Norov"
- <yury.norov@gmail.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
- "Vincent Guittot" <vincent.guittot@linaro.org>, <linux-pm@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH] rust: cpumask: Validate CPU number in set() and clear()
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Boqun Feng" <boqun.feng@gmail.com>, "Viresh Kumar"
- <viresh.kumar@linaro.org>
-X-Mailer: aerc 0.20.1
-References: <8b5fc7889a7aacbd9f1f7412c99f02c736bde190.1749183428.git.viresh.kumar@linaro.org> <aEJwm16HSwCyt7aB@Mac.home>
-In-Reply-To: <aEJwm16HSwCyt7aB@Mac.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250606074538.1608546-1-suleiman@google.com>
 
-On Fri Jun 6, 2025 at 6:37 AM CEST, Boqun Feng wrote:
-> On Fri, Jun 06, 2025 at 09:47:28AM +0530, Viresh Kumar wrote:
->> The C `cpumask_{set|clear}_cpu()` APIs emit a warning when given an
->> invalid CPU number - but only if `CONFIG_DEBUG_PER_CPU_MAPS=3Dy` is set.
->>=20
->> Meanwhile, `cpumask_weight()` only considers CPUs up to `nr_cpu_ids`,
->> which can cause inconsistencies: a CPU number greater than `nr_cpu_ids`
->> may be set in the mask, yet the weight calculation won't reflect it.
->>=20
->> This leads to doctest failures when `nr_cpu_ids < 4`, as the test tries
->> to set CPUs 2 and 3:
->>=20
->>   rust_doctest_kernel_cpumask_rs_0.location: rust/kernel/cpumask.rs:180
->>   rust_doctest_kernel_cpumask_rs_0: ASSERTION FAILED at rust/kernel/cpum=
-ask.rs:190
->>=20
->> Fix this by validating the CPU number in the Rust `set()` and `clear()`
->> methods to prevent out-of-bounds modifications.
->>=20
->
-> Thanks for the quick fix!
->
-> While this can fix the current problem, but it's not a good solution for
-> the long run. Because outside a test, we should never use an arbitrary
-> i32 as a cpu number (we usually get it from smp_processor_id(), or
-> something else). So the `< nr_cpu_ids` testing is not necessary in
-> normal use cases.
->
-> We should instead provide a wrapper for cpu id:
->
->     /// # Invariants
->     ///
->     /// The number is always in [0..nr_cpu_ids) range.
->     pub struct CpuId(i32);
->
-> and
->
->     impl CpuId {
->         /// # Safety
-> 	/// Callers must ensure `i` is a valid cpu id (i.e. 0 <=3D i <
-> 	/// nr_cpu_ids).
->         pub unsafe fn from_i32_unchecked(i: i32) -> Self {
-> 	    // INVARIANT: The function safety guarantees `i` is a valid
-> 	    // cpu id.
-> 	    CpuId(id);
-> 	}
->
-> 	pub fn from_i32(i: i32) -> Option<Self> {
-> 	    if i < 0 || i >=3D nr_cpu_ids {
-> 	        None
-> 	    } else {
-> 	        // SAFETY: `i` has just been checked as a valid cpu id.
-> 	        Some(unsafe { Self::from_i32_unchecked(i) })
-> 	    }
-> 	}
->
-> 	pub fn current() -> Self {
-> 	    // SAFETY: smp_processor_id() always return valid cpu id.
-> 	    unsafe { Self::from_i32_unchecked(smp_processor_id()) }
-> 	}
->     }
->
-> All `Cpumask` functions then take `CpuId` instead of `i32` as the
-> parameter. Needless to say if we were to have a cpumask_next() wrapper,
-> the return value will be `CpuId` (or `Option<CpuId>`), i.e. if a bit was
-> set in a cpumask, then it must represent a correct cpu id.
->
-> Make sense?
+On Fri, Jun 06, 2025 at 04:45:38PM +0900, Suleiman Souhlal wrote:
+> When cross compiling the kernel with clang, we need to override
+> CLANG_CROSS_FLAGS when preparing the step libraries.
+> 
+> Prior to commit d1d096312176 ("tools: fix annoying "mkdir -p ..." logs
+> when building tools in parallel"), MAKEFLAGS would have been set to a
+> value that wouldn't set a value for CLANG_CROSS_FLAGS, hiding the
+> fact that we weren't properly overriding it.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 56a2df7615fa ("tools/resolve_btfids: Compile resolve_btfids as host program")
+> Signed-off-by: Suleiman Souhlal <suleiman@google.com>
 
-Just to make sure, the `nr_cpu_ids` stays constant, right?
+lgtm
 
->> @@ -101,10 +108,16 @@ pub fn set(&mut self, cpu: u32) {
->>      /// This mismatches kernel naming convention and corresponds to the=
- C
->>      /// function `__cpumask_clear_cpu()`.
->>      #[inline]
->> -    pub fn clear(&mut self, cpu: i32) {
->> +    pub fn clear(&mut self, cpu: i32) -> Result {
->> +        // SAFETY: It is safe to read `nr_cpu_ids`.
->> +        if unsafe { cpu as u32 >=3D bindings::nr_cpu_ids } {
->
-> You probably want to check whether `bindings::nr_cpu_ids` can be
-> accessible if NR_CPUS =3D=3D 1 or CONFIG_FORCE_NR_CPUS=3Dy, because then
-> nr_cpu_ids is a macro definition.
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-Just define a helper function?
+thanks,
+jirka
 
----
-Cheers,
-Benno
+> ---
+> v2:
+> - "Signed-off-by:" instead of "Signed-of-by".
+> 
+> v1: https://lore.kernel.org/lkml/20250606052301.810338-1-suleiman@google.com/
+> ---
+>  tools/bpf/resolve_btfids/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/bpf/resolve_btfids/Makefile b/tools/bpf/resolve_btfids/Makefile
+> index afbddea3a39c..ce1b556dfa90 100644
+> --- a/tools/bpf/resolve_btfids/Makefile
+> +++ b/tools/bpf/resolve_btfids/Makefile
+> @@ -17,7 +17,7 @@ endif
+>  
+>  # Overrides for the prepare step libraries.
+>  HOST_OVERRIDES := AR="$(HOSTAR)" CC="$(HOSTCC)" LD="$(HOSTLD)" ARCH="$(HOSTARCH)" \
+> -		  CROSS_COMPILE="" EXTRA_CFLAGS="$(HOSTCFLAGS)"
+> +		  CROSS_COMPILE="" CLANG_CROSS_FLAGS="" EXTRA_CFLAGS="$(HOSTCFLAGS)"
+>  
+>  RM      ?= rm
+>  HOSTCC  ?= gcc
+> -- 
+> 2.50.0.rc0.642.g800a2b2222-goog
+> 
