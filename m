@@ -1,240 +1,202 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4DA20330;
-	Fri,  6 Jun 2025 13:13:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0061C288C3D
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 13:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749215616; cv=none; b=NNmWkXt7v/9Mvd6T8iWHSSUVXDqKJMyh8Ic04ep+3QF2y4WZq7PtWPmTZ1Ku1J2X34cq2QG06Nkud0UAQsNcie9CoopibSiMfK5aTFwBXdcjGMF2ejKVcn3e/ddOc0R6XjXW95zMlDqKVwAqIMLUEos+6fqKO6xoaSRbJzFiC3o=
+	t=1749215653; cv=none; b=sRiSLAKfM/M3MEfoIPjIhhAVhHRvTYnxg6AgPUPHv4lvShHCE1Bp5FD8Ijn8ip0j1BQScucrSZaD6WEHX18zIJu9UAfkUcuO0i8UV94qqmnYuU6TMT5/Aee5O9zzq+9DwnRc3KdE73cYKbG35efWzxzf8T8MUAAN6DXuVSWYiXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749215616; c=relaxed/simple;
-	bh=j9EZE4q62ThuV+2Zjfct90iVgC2ZOI9xeRJnbY5SyJw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=az/RTgSBZU33hzbq6A4M/CeBh6Kw/eNDrx+yS2oyYFxxlcTPPP4Myl4fGfWXKVl2RStVsNRX/VkTVefTSFd9EduFragaiar63fSMZLZlr63b+aB2gAZt3q3sHe6aoyiYxbA0RD9ufz7mmrAAjV/Ptwd24o3I7VTvk7BLdQuQryk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=egF/NlpP; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1749215653; c=relaxed/simple;
+	bh=gf/eMo1Drdee7qnpxNSlWUGvG/MqRAG8ULUx2xh3QFE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=bUKJq7bl0Gd6GeCIEpNS/X4uyrWFo1dNbYH+kPVG1XG/Msx/W+VIOxfFHc7ceVzIt3a08SnYuYSOvc0h+A+b/H/Tzb3SeEwmLW/TJ5HTAfI6CuyQNl/mhVVcj4mb45deyuxGlgv96iEpTrhZ5JBFpO79OqUpmSLEHXI6jBmKkyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c0+1pPJi; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="egF/NlpP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1749215588; x=1749820388; i=spasswolf@web.de;
-	bh=Ci2Fs3IVjrOw8jayotgpd7SLmlfduGsH2A1mfElURos=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=egF/NlpP+TElqXVs2mcG+eaItU2by5xIeuqRUmkCZKLo7f35Ukts3s2rynZaTAJk
-	 0RUD14ZtXWFsGi/q5VB5Y+ozjbbJIN5e0tcPPJbKjXg9evKH0DhJ3vQ35Vq/fsh95
-	 2jyIPXI5dZ7/Xr0R4VoAYrOjM+7rI2QG00YjJNODPc9pko5yG8EvHe6dl5F+jueLa
-	 5FDmgHjoOgnDBbOgaTWU45HBNJmQnsa166cfSfy43hw6VDotSlQKY7ilx53l+YWsw
-	 pQ2ewRtR9p/lpLCaougCTy5jMAoAOhC45L6ZSINA41KCBDFBfU8Rd1H64648rirGx
-	 eWmNi19oS0Q1L1TzOg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MCXZf-1uW1K42g6N-00HKnx; Fri, 06
- Jun 2025 15:13:07 +0200
-Message-ID: <b86bd98b23d1299981c4e95b593eb5a144fbf822.camel@web.de>
-Subject: Re: BUG: scheduling while atomic with PREEMPT_RT=y and bpf selftests
-From: Bert Karwatzki <spasswolf@web.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
- bpf@vger.kernel.org, 	linux-rt-users@vger.kernel.org,
- linux-rt-devel@lists.linux.dev, Thomas Gleixner	 <tglx@linutronix.de>,
- Alexei Starovoitov <alexei.starovoitov@gmail.com>, 	spasswolf@web.de
-Date: Fri, 06 Jun 2025 15:13:05 +0200
-In-Reply-To: <20250605084816.3e5d1af1@gandalf.local.home>
-References: <20250605091904.5853-1-spasswolf@web.de>
-	 <20250605084816.3e5d1af1@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.1-1 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c0+1pPJi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749215650;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OPcQkvm2yO9gaDxIY/WqB5o2C00Jo+psdQDe9Iafs6c=;
+	b=c0+1pPJiJSGBv2f4xBQIjhKQGflzL0A69F/b6XgJv70TVdgHqzHLL3081TL2C1dfo5yhqo
+	m41Z6FYKZ9lT2HhMjGcQTwRmWm1qYv/CLwb+vLYSfv6EJUGOHdRokt5QGjbsjmAM3NzaPR
+	WMfu+Wupher85rrJK5+b9Ylo88tSOuo=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-398-f3wmOiNnNP6FXnWHUkNg0Q-1; Fri, 06 Jun 2025 09:14:09 -0400
+X-MC-Unique: f3wmOiNnNP6FXnWHUkNg0Q-1
+X-Mimecast-MFC-AGG-ID: f3wmOiNnNP6FXnWHUkNg0Q_1749215648
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-450d9f96f61so14843665e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 06:14:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749215648; x=1749820448;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OPcQkvm2yO9gaDxIY/WqB5o2C00Jo+psdQDe9Iafs6c=;
+        b=sx6+FISBIDNYBr/lTLNvur3+25CPNJ4eVfOfrlL/3uMGnhYxdPiEdZ1xHfE/6KoH2/
+         0LSENc0tTXg30aaRUXdb5XGoAYK/SLCjZ2nHKXwe25X+7djXKSZ9dRaKc9XF8T20cjkS
+         /zz5r1MAYwG6bCikaQR07WtB+n7bQ3NDz5vpsbfbSVo8cYHXtSeOjKUgPf1srpI9C5O/
+         LIYvlTiWW4mYKuTgHkVFmxexXcvKFml4mMhD75hoNVoA4GE4o3sx3db5cs+6FFFE2iiF
+         mLjsBefV+0RrHsT8+qdi4gppLSkdKk8aUFVDw+AXByC+ddOJS5nP8aRpn6/sa55oQSbZ
+         J5mg==
+X-Forwarded-Encrypted: i=1; AJvYcCXUeL9CrYGSJa/oysAlupWLPv5WjNBwpGO9aF4cL00vP0UKEokbNDywpfjepUptglil6JQ0JdyVM68HjYI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxF+pzrKctJK19nsr4qOw9wb3XbhxrxUenG0f11zdiAPQtCbtmM
+	/ODI5SHGCHmn4Li/dEeYqTsEeJnDCpi3V2ybGmxDlW9cr8IOrwBMFDLjhJTZH2hRhsulIvyvU2V
+	xkbWWVPhkLRG1XJQ8l5iiAYZDT6/drluKtiighogENiXRdfas6Acp4KrMiLN2VY0YqA==
+X-Gm-Gg: ASbGncuOiOLYkSKKQz1nH+yzudgVa1YZJkGoWV8hEHaVKmF4MppaEMbTY+ebqH2aNwV
+	5H7wKamyCnDtXfy3CWEkR5g9BEZVfR7cmS8GXTOs4ihDB339HnpzuehS2+YtjXFslgP9BOEophd
+	i/xeql6Fl7TJcz/UA/jXazdbQBDhk7BfFqcwwcalH80ckAGv/J3O805zr7rUaYVUeHbyC3t75md
+	9yjCz3D+vWipHTiUbAMgsY2iidVR1WmYdcUu0PpIjtN4z9mBaZ/igSdrB5yNUdBS7VFrCCDp2GF
+	PZkLM+XarXbzH0EXcPSWOEcYXBRMZ4aazPRq+4zy5L+Ro0Z1Yx7oSYy/1t363A==
+X-Received: by 2002:a05:600c:a08e:b0:43c:fa24:873e with SMTP id 5b1f17b1804b1-45201391375mr37179115e9.13.1749215648359;
+        Fri, 06 Jun 2025 06:14:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEgw0C5j9K+kUpLKu17QtwP444HtAeVPH30PrMVtLgOGG/Lf58xq+FjEIaE8XuzPGYKNjMZEQ==
+X-Received: by 2002:a05:600c:a08e:b0:43c:fa24:873e with SMTP id 5b1f17b1804b1-45201391375mr37178795e9.13.1749215647873;
+        Fri, 06 Jun 2025 06:14:07 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:c:37e0:ced3:55bd:f454:e722? ([2a01:e0a:c:37e0:ced3:55bd:f454:e722])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452137277basm24098065e9.32.2025.06.06.06.14.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jun 2025 06:14:07 -0700 (PDT)
+Message-ID: <8ed62378-269f-4385-bf05-eda28098fc1f@redhat.com>
+Date: Fri, 6 Jun 2025 15:14:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:EUfzu2r5Y+S6E6zcWCk+pUUGDD4dSlli2Qs7FhrVxk7lXtsBA1/
- 91m2kpTjo2XQTfbdHTSuVobgtf0CsoG9Y7+hDzXN8XdiCWggM9JTL38j6cA+vPng7rlHSmf
- k6oNjdeh5IuWeJHLz0dM6gVJue7QHdatTgNQ6ebnqdFGM6xFaMqCIdAPQX2lv2MyxD+wlTt
- uJbPtvdTMMryI44Hl7rkw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ibbMtDxjIug=;XuACQFZ/BJa1YM82rdBjToQk8cB
- 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
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 4/9] drm/ttm: Add ttm_bo_kmap_try_from_panic()
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>,
+ =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>,
+ Matthew Brost <matthew.brost@intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250606120519.753928-1-jfalempe@redhat.com>
+ <20250606120519.753928-5-jfalempe@redhat.com>
+ <dd0532a2-4011-41ec-896d-ec066dc23cbc@amd.com>
+Content-Language: en-US, fr
+From: Jocelyn Falempe <jfalempe@redhat.com>
+In-Reply-To: <dd0532a2-4011-41ec-896d-ec066dc23cbc@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Am Donnerstag, dem 05.06.2025 um 08:48 -0400 schrieb Steven Rostedt:
-> On Thu,  5 Jun 2025 11:19:03 +0200
-> Bert Karwatzki <spasswolf@web.de> wrote:
->=20
-> > This patch seems to create so much output that the orginal error messa=
-ge and
-> > backtrace often get lost, so I needed several runs to get a meaningful=
- message
-> > when running
->=20
-> Are you familiar with preempt count tracing?
+On 06/06/2025 14:28, Christian König wrote:
+> On 6/6/25 13:48, Jocelyn Falempe wrote:
+>> If the ttm bo is backed by pages, then it's possible to safely kmap
+>> one page at a time, using kmap_try_from_panic().
+> 
+> I strongly assume that we don't care about locking anything in this case, don't we?
 
-Thanks for pointing me to this, I only very briefly tried out the function=
- tracer
-judging by an old file I found on 22.01.2022:
+Yes, normally it's called for the current framebuffer, so I assume it's 
+properly allocated, and isn't growing/shrinking while being displayed.
 
--rw-r--r-- 1 root root  75529450 22. Jan 2022  trace.log
+> 
+>> Unfortunately there is no way to do the same with ioremap, so it
+>> only supports the kmap case.
+> 
+> Oh, there actually is on most modern systems.
+> 
+> At least on 64bit systems amdgpu maps the whole VRAM BAR into kernel address space on driver load.
+> 
+> So as long as you have a large BAR system you can trivially have access to the MMIO memory.
 
->=20
-> ~# trace-cmd start -e preempt_enable -e preempt_disable
-> ~# trace-cmd show
-> # tracer: nop
-> #
-> # entries-in-buffer/entries-written: 177552/177552   #P:8
-> #
-> #                                _-----=3D> irqs-off/BH-disabled
-> #                               / _----=3D> need-resched
-> #                              | / _---=3D> hardirq/softirq
-> #                              || / _--=3D> preempt-depth
-> #                              ||| / _-=3D> migrate-disable
-> #                              |||| /     delay
-> #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-> #              | |         |   |||||     |         |
->        trace-cmd-1131    [001] ...1.   965.046684: preempt_disable: call=
-er=3Dvfs_write+0x89c/0xe90 parent=3Dvfs_write+0x89c/0xe90
->        trace-cmd-1131    [001] ...1.   965.046695: preempt_enable: calle=
-r=3Dvfs_write+0x923/0xe90 parent=3Dvfs_write+0x923/0xe90
->        trace-cmd-1131    [001] ...1.   965.046729: preempt_disable: call=
-er=3D_raw_spin_lock+0x17/0x40 parent=3D0x0
->        trace-cmd-1131    [001] ...1.   965.046746: preempt_enable: calle=
-r=3D_raw_spin_unlock+0x2d/0x50 parent=3D0x0
->        trace-cmd-1131    [001] ...1.   965.046749: preempt_disable: call=
-er=3Dcount_memcg_events+0x74/0x480 parent=3Dcount_memcg_events+0x74/0x480
->        trace-cmd-1131    [001] ...1.   965.046751: preempt_enable: calle=
-r=3Dcount_memcg_events+0x2b4/0x480 parent=3Dcount_memcg_events+0x2b4/0x480
->        trace-cmd-1131    [001] ...1.   965.046765: preempt_disable: call=
-er=3D_raw_spin_lock+0x17/0x40 parent=3D0x0
->        trace-cmd-1131    [001] ...1.   965.046769: preempt_enable: calle=
-r=3D_raw_spin_unlock+0x2d/0x50 parent=3D0x0
->        trace-cmd-1131    [001] ...1.   965.046771: preempt_disable: call=
-er=3Dcount_memcg_events+0x74/0x480 parent=3Dcount_memcg_events+0x74/0x480
->        trace-cmd-1131    [001] ...1.   965.046773: preempt_enable: calle=
-r=3Dcount_memcg_events+0x2b4/0x480 parent=3Dcount_memcg_events+0x2b4/0x480
->        trace-cmd-1131    [001] ...1.   965.046787: preempt_disable: call=
-er=3D_raw_spin_lock+0x17/0x40 parent=3D0x0
->        trace-cmd-1131    [001] ...1.   965.046801: preempt_enable: calle=
-r=3D_raw_spin_unlock+0x2d/0x50 parent=3D0x0
->        trace-cmd-1131    [001] ...1.   965.046803: preempt_disable: call=
-er=3Dcount_memcg_events+0x74/0x480 parent=3Dcount_memcg_events+0x74/0x480
->        trace-cmd-1131    [001] ...1.   965.046805: preempt_enable: calle=
-r=3Dcount_memcg_events+0x2b4/0x480 parent=3Dcount_memcg_events+0x2b4/0x480
->        trace-cmd-1131    [001] d..1.   965.046812: preempt_disable: call=
-er=3D_raw_spin_lock_irq+0x2b/0x60 parent=3D0x0
->        trace-cmd-1131    [001] ...1.   965.046815: preempt_enable: calle=
-r=3D_raw_spin_unlock_irq+0x38/0x60 parent=3D0x0
-> [..]
->=20
-> It's very light weight. There's also trace_printk() that is also very li=
-ght
-> weight to use.
+For amdgpu, I used the indirect MMIO access, so I didn't need to ioremap
+https://elixir.bootlin.com/linux/v6.15/source/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c#L1800
 
-> It's enabled when you enable CONFIG_PREEMPT_TRACER.
->=20
-> -- Steve
-
-I tried this and first thought my kernel did not have the right configurat=
-ion as
-
-# trace-cmd record -e preempt_disable -e preempt_enable
-
-seemed to do nothing in particular, but it turns out it takes a long time =
-to start
-(~1min) when the kernel is compiled with CONFIG_LOCKDEP=3Dy. (on the stand=
-ard debian
-kernel starting to record takes less time, but it does not have CONFIG_PRE=
-EMPT_TRACER.)
-
-So after the trace-cmd was running I ran the bpf example and got a trace.d=
-at:
-
-# ls -lh trace.dat=20
--rw-r--r-- 1 root root 152M  6. Jun 14:41 trace.dat
-
-turning this into a report with
-
-# trace-cmd report > preemp_trace.rep
-
-gives a rather unwieldly large file
-
-# ls -lh preempt_trace.rep=20
--rw-rw-r-- 1 root root 7,4G  6. Jun 14:46 preempt_trace.rep
-
-This file has about 61 million lines
-
-# wc -l preempt_trace.rep
-61627360 preempt_trace.rep
-
-but only 742104 corresponding to the bpf example program "test_progs"
-
-# grep test_progs preempt_trace.rep | wc -l
-742104
-
-Is it possible to filter the preempt_{en,dis}able events by task name (i.e=
-.
-get_current()->comm)?
-
-I tried this (from=C2=A0https://code.tools/man/1/trace-cmd-report/) but it
-fails with an error message:
-# trace-cmd record -e preempt_enable -F '.*:COMM =3D=3D "test_progs"' -e p=
-reempt_disable -F '.*:COMM =3D=3D "test_progs"'
-
-********************
- Unable to exec .*:COMM =3D=3D "test_progs"
-********************
-trace-cmd: No such file or directory
-  Failed to exec .*:COMM =3D=3D "test_progs"
-libtracecmd: No such file or directory
-  can not stat 'trace.dat.cpu0'
+For the xe driver, I only tested on integrated GPU, using system RAM, so 
+this first approach is good enough.
+But I'm still interested to find a solution, is there a way to get the 
+current io-mapping if it exists?
 
 
-Bert Karwatzki
+> 
+>> This is needed for proper drm_panic support with xe driver.
+>>
+>> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+>> ---
+>>
+>> v8:
+>>   * Added in v8
+>>
+>>   drivers/gpu/drm/ttm/ttm_bo_util.c | 27 +++++++++++++++++++++++++++
+>>   include/drm/ttm/ttm_bo.h          |  1 +
+>>   2 files changed, 28 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/ttm/ttm_bo_util.c b/drivers/gpu/drm/ttm/ttm_bo_util.c
+>> index 15cab9bda17f..9c3f3b379c2a 100644
+>> --- a/drivers/gpu/drm/ttm/ttm_bo_util.c
+>> +++ b/drivers/gpu/drm/ttm/ttm_bo_util.c
+>> @@ -377,6 +377,33 @@ static int ttm_bo_kmap_ttm(struct ttm_buffer_object *bo,
+>>   	return (!map->virtual) ? -ENOMEM : 0;
+>>   }
+>>   
+>> +/**
+>> + *
+>> + * ttm_bo_kmap_try_from_panic
+>> + *
+>> + * @bo: The buffer object
+>> + * @page: The page to map
+>> + *
+>> + * Sets up a kernel virtual mapping using kmap_local_page_try_from_panic().
+>> + * This can safely be called from the panic handler, if you make sure the bo
+> 
+> "This can *only* be called from the panic handler..."
+
+Yes, I will fix that, it shouldn't be called for normal operations.
+
+> 
+> Apart from those open questions, looks sane to me.
+> 
+> Regards,
+> Christian.
+> 
+>> + * is the one being displayed, so is properly allocated, and won't be modified.
+>> + *
+>> + * Returns the vaddr, that you can use to write to the bo, and that you should
+>> + * pass to kunmap_local() when you're done with this page, or NULL if the bo
+>> + * is in iomem.
+>> + */
+>> +void *ttm_bo_kmap_try_from_panic(struct ttm_buffer_object *bo, unsigned long page)
+>> +{
+>> +	if (page + 1 > PFN_UP(bo->resource->size))
+>> +		return NULL;
+>> +
+>> +	if (!bo->resource->bus.is_iomem && bo->ttm->pages && bo->ttm->pages[page])
+>> +		return kmap_local_page_try_from_panic(bo->ttm->pages[page]);
+>> +
+>> +	return NULL;
+>> +}
+>> +EXPORT_SYMBOL(ttm_bo_kmap_try_from_panic);
+>> +
+>>   /**
+>>    * ttm_bo_kmap
+>>    *
+>> diff --git a/include/drm/ttm/ttm_bo.h b/include/drm/ttm/ttm_bo.h
+>> index cf027558b6db..8c0ce3fa077f 100644
+>> --- a/include/drm/ttm/ttm_bo.h
+>> +++ b/include/drm/ttm/ttm_bo.h
+>> @@ -429,6 +429,7 @@ int ttm_bo_init_validate(struct ttm_device *bdev, struct ttm_buffer_object *bo,
+>>   int ttm_bo_kmap(struct ttm_buffer_object *bo, unsigned long start_page,
+>>   		unsigned long num_pages, struct ttm_bo_kmap_obj *map);
+>>   void ttm_bo_kunmap(struct ttm_bo_kmap_obj *map);
+>> +void *ttm_bo_kmap_try_from_panic(struct ttm_buffer_object *bo, unsigned long page);
+>>   int ttm_bo_vmap(struct ttm_buffer_object *bo, struct iosys_map *map);
+>>   void ttm_bo_vunmap(struct ttm_buffer_object *bo, struct iosys_map *map);
+>>   int ttm_bo_mmap_obj(struct vm_area_struct *vma, struct ttm_buffer_object *bo);
+> 
+
