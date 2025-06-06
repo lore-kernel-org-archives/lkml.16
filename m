@@ -1,108 +1,104 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0362882A7;
-	Fri,  6 Jun 2025 11:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC762874FA;
+	Fri,  6 Jun 2025 11:59:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749211145; cv=none; b=VOpYlkwC88Nldbd57X0f4FtLP/S+bmmOyVZvCxXmMCtvr0N9bA95Kzqae0HGiEnkh8owEuVUsDbosDFw1Z/ZWtFdV2HliVHl67rA0tiqawqKEp20PJJ2ObIwTCyi6koIX6RE6qk0X6p95nGq81pf8P9nmRzBPVcge4K5dI7kHlk=
+	t=1749211179; cv=none; b=HDhQ7sNB4BYrqsrNiuhIaZCZRABsmcogTylB2P26hY0WTgn1nF5KvjS0moklGnzCj4RqIpA9OEothlJoi2j6jnNhY8jatt1Az4SMpfe0JaPYj3bDJo27rsZqGiNutYefj70hUDH3cmE8+r2K4iLW9F3dPuwmom3h+p4NSGj623w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749211145; c=relaxed/simple;
-	bh=VNzFnnjmlBp/RMn3jvFeMwHEGzosLKTGr8Q2T984OKw=;
+	s=arc-20240116; t=1749211179; c=relaxed/simple;
+	bh=fLyP1nJgU2iKVNH8e+jPqTnC6CYKC0rB5Q0uu/GtYng=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jz8sqLm+IFc7XnOiaIQiTCYgktqtq3/gwY6JxV0nCKSM0cDLyJZ7oJprHtfXRYQqW8SHgfChtuIep8qsMzVzpVEAb1dW0Sj6nD7ZNLx1qHgLpjTbdes/uUhTVCk2DhwRdUyiRvaKbnYudYGWn9kqoTN2Ns/HMlQ5p9S1BJw4TYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	 To:Cc:Content-Type; b=RIkAC5nMW1/bCGyM8IqKasPCipEjUQ9D+7nDYAdY0+UMweWZU2Vmp+oCLhgUBSTh6qDNTc/oz0RiuLdzbFGCXA7Uyb4bKWMFelj5P7vSm5XVzZIhqms+JwdqzxlImcIKF9tmwB6ZGqxPPGAGQmaYcLwSvs3hUUNI1uIfBtYV+Gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DUbkvwqP; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-530cd3d0f8bso711464e0c.1;
-        Fri, 06 Jun 2025 04:59:04 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DUbkvwqP"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-32a61af11ffso21451481fa.1;
+        Fri, 06 Jun 2025 04:59:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749211176; x=1749815976; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7RBKB3/9EuqkeSqFD8CRon1Zsx+X5s6ybMaqEFvORUg=;
+        b=DUbkvwqPoAd2yKYqVb/Wnsr7MPFB04HpOePGZ3CRkL7OLVXULU7CCbx9nIT0t1MG2R
+         mOABZBAqSHoZOt/Q9308/123W04+2Msgzpe8j6n2eq/RE4AzrKgW+0CjPOWa9V7fRr2g
+         7uPuLnPiYwBy9D+XKzIWsyBvAQhtbqlSyOOkIU+JTsPKjX2Nj9cBg6HjWaepgIyt8h9F
+         n7qeluF2TKhJUPFhDvAjz50CZGjZp6sKz/a0hLxRBhbgrMuzbGQxdaCXRzKoB7e0KoGp
+         BclMrp/BZSmfmgkKegw2+9wWv2ohF9yHMfnnAO/fDV6avPMWSt6J9dLa3eW3BtpXjf8z
+         Pm/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749211142; x=1749815942;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GkkIyvqOfr9ngi6miRPVbPTmpqHilBK6eOIDZuISEqs=;
-        b=Y5zJfvsGnJ/t51ugHoiqwJstdFq7FXclwXxF3CT76aR/kLIREOlZNLpCbHCTqSkTOe
-         rYH0KCsKcd28voDnG5Q9JARcsehM91VVFSXvQCyf1dMEl5+zhWGjzZA3bZE0hVdu/sdl
-         dSIkGs5fqpF4/I0LuAedIeMrEV6icWB2vkYrer6dHQ9kSIjD7TXpE+Ta9AjizNfOnk1V
-         0mV1pQ1wyQKoyzMZDCMPa7GfAc83UW1QGM2fhU81hbpTBOI6D1lRlvucHt2bDu4oF58V
-         UZZXQBn9GLxlO4GP+JiJL2xqmA0luZpQ/Y8AxV9on1TrBvwrGitM2KEhopdsJF1ZjFLz
-         Zg7A==
-X-Forwarded-Encrypted: i=1; AJvYcCV+y4DGFK6XyWVXupckYa5px+uj3DfsaDRZAVeocKD3/nepWnQY0VZqkmg8cpCGqA4M+ynskD4sTZAsZFMw@vger.kernel.org, AJvYcCWi15lDB6QKRkwUtzvmBobqed0HEKPFU99fmlZpMqfSj6wulvLG7NLNd+IxwBYIpuV1FGlDF2QcWjAj@vger.kernel.org, AJvYcCWvLhvO5cakVrs1212OrGipU1nFK6rZs0mQtHK7Zy9tka2PBp+Bfs3fW/aRfoH1c5/AK8V3vPZ/wzC41T6Qdwk5s/8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywi2oe7yFsRCQCkUzqmp6MmX9mRiyJbvVo2lqLO28GGPIHHTwia
-	rC134+Q8CrkeLMnFOUsQrAFe5Lg8IOb87ZxUt2e+bxMTHo6v6sJ6oxPUZTbWW3uj
-X-Gm-Gg: ASbGncvMt3TDE12eFZ4dbjNq67BPaDNb5b+BTKIANnXzDkrGdDdOSOASVJm2Xc4j7xn
-	37TN97rdlmGBS7qxW+fsyk6M0HUSh+WlLmp0UOcyarPJng/83casaAtFd00ddQ1r57kn6S5kEnY
-	klaJijjqxLDaPT+jPozQ3nOYZSDYuZxSl4ENk+cvOxHQerQnKKcx0cVrnliyHmiiLav2kuxSLpt
-	aXqE8og17AS1AKlITE0zRdf9Q06FtyZaCGCZyM2/BlMqbe8N9rugOs10QQiv/QaRT50VVS7AEIo
-	4vGiWr89vOcZ5GxS7T8F3vEpXgLoQQXM6bGKG8Dy3/Gr5hH/BWwXMBH2wd8Ox3UQfTqydSAYyVv
-	7gQSQH00uMlo7KQ==
-X-Google-Smtp-Source: AGHT+IE1sIhNlyo4aUhjctzlL5t/v6W/0ioCcOUUcZ+0FNgWuKuK1NBY3FRpGW7t3iwEuekCDhyEGg==
-X-Received: by 2002:a05:6122:640c:10b0:526:1ddc:6354 with SMTP id 71dfb90a1353d-530e45c78eamr1858178e0c.0.1749211142224;
-        Fri, 06 Jun 2025 04:59:02 -0700 (PDT)
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-530e62f42b8sm970467e0c.19.2025.06.06.04.59.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 04:59:01 -0700 (PDT)
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4e770bb7b45so274150137.0;
-        Fri, 06 Jun 2025 04:59:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUfh+1ROspvczqPnGryP1qyVAgYvUYFyF4pIZIa2SSGUoiLamiuoalRD30MZ8U+yPze7hrYMqQ8uoyx@vger.kernel.org, AJvYcCV4FTIKcC2IBqdyTUq3mRssQu4h7ejlmqVsMWHDbGM5FHQUQDfftGvCrV3IIE3nSHbszh/MGI7f2OqOhEhNz0rTwC4=@vger.kernel.org, AJvYcCW30TvWqdbkM7dRWx5a8Yidnscts6UY/eV1BR/3EMHA9DR7TkXpGnVDThYqlswTf2IviMYsYmaWhLe4tRro@vger.kernel.org
-X-Received: by 2002:a05:6102:440e:b0:4df:84d5:543e with SMTP id
- ada2fe7eead31-4e772928b20mr2281122137.7.1749211140760; Fri, 06 Jun 2025
- 04:59:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749211176; x=1749815976;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7RBKB3/9EuqkeSqFD8CRon1Zsx+X5s6ybMaqEFvORUg=;
+        b=WROxm7KjDsWTNdAZjXdXj0gVyx5zeyg3lQirA2Qqbh7WWq+Kq+ymy3JeDwsQfFqGRQ
+         jjkdr2Mo0+2BQTxsXhBHWoUGXffv3LJ0oSOnXtdd0SRK98cSiRyOaAnupCBolhRH0EQY
+         7HVeFl/M9BBj+tjdQ+vN7bxfkYxHDYGO5B2pHOYNWOfudLHC77tR1l+uXnhop0mZGQ+7
+         D7c7wGhg8FJjiaWOqnC8XlBUHlv7eaDUkp28/kZW77vqGa8SbDObv8FmwmIrZb6xG1So
+         foSTWBXnM728RXV2yNA4asYllfT+ihwBoCYVVF4WHBJsRfrSaijDC3wnfUgl6+SdJeHK
+         xJtA==
+X-Forwarded-Encrypted: i=1; AJvYcCUvGIPkmGecfJyYiblaepOyZmFpZh24PlNJektOjuzcmqJ7Mn0TqECbyy3N7eUTruoP3gM19K0Kkg/QXA4=@vger.kernel.org, AJvYcCVlK/C3Sd+L8ApGZ7ctOizD9KcQI5g0WLosCz7yezBerfg2IFK2ML1Vuhaisb5eet5gRe/sbPjT5inlWLV1@vger.kernel.org, AJvYcCWsNhWXgiSYKhX23OfpcOypk86UsyqxB/Rc0AXQyKczb+WXaNq72d2KRkXNbkIOJ2bg+2pbN6OyPdF++0TT@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQgVAwbjrxGweLDpY7Luc8jGOd+npKA2JIsp76T7I6/RIHGERW
+	SRmp9rAhrPHmlwf4klShL5udpW13CgKR86cadxF29LASSdVRdjlQ6Y9UA8/dc0oIAnb7jRlPKhX
+	oV7uA4RjKA3pjJY2MyWzOwJgMzwYDHF4=
+X-Gm-Gg: ASbGncsuTEguhf1xbLLRNsgyQK3U3P6Vag2oSe1wZ3NA4Og98Tb8brk5uaLND7Jf1Y5
+	Ct1OQpwVlhD0lm+vojVtG1fk3Ek3Y0GGBKlL3T1WAFJVznIZisq7hMDm4nVHjXgsHBQLoxrndJA
+	iO9HbmI7F4rP+KO+C8HhB5hYmnQzN9NQ==
+X-Google-Smtp-Source: AGHT+IEyOHac18JRsxQCDC33nCW0intiyA9mvI/PE8BZZlcm+WphqtwKX7kfZnMd/x1fvrki/mIzxhujOWzkyQ0xq1o=
+X-Received: by 2002:a2e:be0e:0:b0:326:cf84:63c4 with SMTP id
+ 38308e7fff4ca-32ae0021b08mr9121671fa.1.1749211175876; Fri, 06 Jun 2025
+ 04:59:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528133858.168582-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250528133858.168582-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 6 Jun 2025 13:58:48 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXMEzPYfDvefSzSx9hZGY=4eyRY2MHHnr5JBHV3ujFdrg@mail.gmail.com>
-X-Gm-Features: AX0GCFsl-TsxaSk2EijYe-2lJ04s7VyuySx5VPceo-nG7KhS3hWpW4y_WadxEEM
-Message-ID: <CAMuHMdXMEzPYfDvefSzSx9hZGY=4eyRY2MHHnr5JBHV3ujFdrg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: phy: renesas,usb2-phy: Document RZ/V2N SoC support
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-phy@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250531-topic-venus_98_tbl-v1-1-68e5523a39dc@oss.qualcomm.com> <btmzhyullmggev43b3syp3anxlm6o5mpz2mthaskuyl7kfx5gw@w5gesyaaytkh>
+In-Reply-To: <btmzhyullmggev43b3syp3anxlm6o5mpz2mthaskuyl7kfx5gw@w5gesyaaytkh>
+From: Arnaud Vrac <rawoul@gmail.com>
+Date: Fri, 6 Jun 2025 13:59:23 +0200
+X-Gm-Features: AX0GCFsrvG8NbZd4C_wPfiA0MO9Yh-Z4gplq5hfZ8xBg7i6J3bFVaxj1uRtBKGs
+Message-ID: <CAN5H-g7WLsowjW6CMee5T=W4Lmia9mLWGgX17-mOMjtBo2SwvQ@mail.gmail.com>
+Subject: Re: [PATCH] media: venus: Fix MSM8998 frequency table
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, Vikash Garodia <quic_vgarodia@quicinc.com>, 
+	Dikshita Agarwal <quic_dikshita@quicinc.com>, "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, 
+	Marc Gonzalez <mgonzalez@freebox.fr>, Pierre-Hugues Husson <phhusson@freebox.fr>, 
+	Hans Verkuil <hverkuil@xs4all.nl>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Prabhakar,
-
-On Wed, 28 May 2025 at 15:39, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Le dim. 1 juin 2025 =C3=A0 09:46, Dmitry Baryshkov
+<dmitry.baryshkov@oss.qualcomm.com> a =C3=A9crit :
 >
-> Document support for the USB2.0 phy found on the Renesas RZ/V2N
-> (R9A09G056) SoC. The USB2.0 phy is functionally identical to that on the
-> RZ/V2H(P) SoC, so no driver changes are needed. The existing
-> `renesas,usb2-phy-r9a09g057` compatible will be used as a fallback
-> for the RZ/V2N SoC.
+> On Sat, May 31, 2025 at 02:22:00PM +0200, Konrad Dybcio wrote:
+> > From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> >
+> > Fill in the correct data for the production SKU.
+> >
+> > Fixes: 193b3dac29a4 ("media: venus: add msm8998 support")
+> > Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> > ---
+> >  drivers/media/platform/qcom/venus/core.c | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> >
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Verified against msm-4.4
 
-Thanks for your patch!
+Hello,
 
-There seems to be some minor differences related to VBSTA interrupt
-handling, but the documentation is far from clear in making clear what
-that actually means, or is used for...
+The current values are based on
+https://git.codelinaro.org/clo/la/kernel/msm-4.4/-/blob/caf_migration/kerne=
+l.lnx.4.4.r38-rel/arch/arm/boot/dts/qcom/msm8998-vidc.dtsi
+which we've been using in production for many years.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-Arnaud
