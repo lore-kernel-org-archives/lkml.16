@@ -1,122 +1,67 @@
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393C784D08
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 14:39:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC9E12C544;
+	Fri,  6 Jun 2025 14:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749220747; cv=none; b=LZVCmKN1Nu8lWG4wNBaIUy7aUwVaQFNNpzsDkfbDebnm0U22RT9jZtzUapcq8Csqg346Gc3tmDHiPJY34cvZhVfyvwgkht6MH/UN7bPPmeUU7QOvQ5oUscTN0RWwfR5t/jIy+hO0GzxxT6lgrEfXzVBTHUFfdgzcwWfjQriXT+w=
+	t=1749220864; cv=none; b=FtVm5q8xnxIISyUMdVISYJo6+pH5Dh3Daq94aOxrHzVtOWfUN2b5tx6naKjv4353McB6qfI8AeCqrQvRaTqkjgCearloPzhxG6adYufldmxtduscBNrUM++W5MdBa/EPGjHrny6hTivo1Yya9UDmQT1hvC6DF0GLBpBwuBNA3VQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749220747; c=relaxed/simple;
-	bh=3RlpGtfRa9bewFOs6MV3+PiSEYjbIEuBcgpZrywD4S4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aArurpCC/fJKQvH5LhhNAfLRz8k++OzaFDVKjzooBUk3YYj8v39qRLGvNDL8gwiVRodbTq+zQwRM3bUQNV9ceWHwMVI1YUYVM2b0xepOvj5HiDup3cmMyZcdGMrpaw2GEew7Fw0OyaMXnTZiLUvcl4xsPl4tpH/GD8cvFnJwXkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=mKTa0PeW; arc=none smtp.client-ip=209.85.166.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1749220864; c=relaxed/simple;
+	bh=i6yRDhrgT2/zq3iSXDElxzAsOnMwawV20rQ7HStxa3M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MlhEage/+ho0C29RRaCbgYNSDfNXDI2H8k5qq+RlRt+KxcTEkTdEeRSu7pM2nXUVYiW1yerD7KHHuuqDmSqQJ7+a8HfwBNNw8+ux9whjvcIV0kK7nYA/Hl0UMZOhgZd0PZrq8NRMM6KxtWiRnRdnx8gI3Detvjpvr1dilYgRKJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=vEgwYKXW; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="mKTa0PeW"
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-86cdb330b48so182850839f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 07:39:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1749220744; x=1749825544; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ePD8mbSyxWI7tOm3mJrlzLEJipoLjaxPhCQo9r49Cf8=;
-        b=mKTa0PeWjWcSVDM40+YtAJTOsOyqfMH3pmtRTzzSXlYGNVzR5A+RRsh/5jHgdp1GyD
-         BK8zRWQdR40sbK/CLNWaZJaPf6X8yaGIlPHcZ5pOtiap1nCJFaEwmAksugXxqoiXIMu9
-         Q/4W8fAXCwfYifhochJ97Z6to/ZVSJ3fuPezfwI+KTh8aZIvKEJyTFeDQL+Heycmtug/
-         loT9Elme0eFcTstWi/gDI7BqIXlgQkp7d4esNhpd6JYUKYMhPd9LniOJD99kri7OgMxo
-         WLUG2Hw+wyHLI77rNiPQmYpufxdQGEHDAjWEFhjFUbd/lEQ8OdlEe7W1WD+vh+qIw6Tu
-         8gVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749220744; x=1749825544;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ePD8mbSyxWI7tOm3mJrlzLEJipoLjaxPhCQo9r49Cf8=;
-        b=G1ND77cfiGTdfdcbQqhm0VrSudIijgiuUk5lrFn9ZQl4ZbBPJ30ipaDNRhSy/E8a/J
-         G+4LCvQVvoRx4xzN+w/a9/C5mR6WSvN88AEYlpSj+SA830xwVtfEKW+Ds7oIJZhsOOTx
-         WSEXu/I8yrjDeLC9LSsJpBn1Qj1GbkEswTdLw6DQaGGLH5mg4jSblZHD5SaavpgfxX1k
-         THlNrgnwSElZVki4/Z9+4Cf5Wu98Iabe0JqTIBFsE/lrHqiLi+MQOndQ/88oZKF6EWzq
-         QlYJh9Kl1X6JcNCExRGH9CZDwBsT9eHwmHu41TukfE7vJgxyWNPqKJR18SUia0dgCqIh
-         P3vw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7nRrfEziuf8FdH/K9TrVWvnvx/GJza2Xb12O3fj00deo3SOMdeghDopcA1KpUl7zHMHNE/mVptM1oeDU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycNejabEPZK2xPKrwQf/EgflmJvpvr0MP4UkNFkYu9BDYVXBgB
-	q2l0P62Y5YvErIGsSWleRwVXVqOvig1uzeD63IOdLSrVA5kU5iGhJnWbBYs98PnSRjIu0X8pNnL
-	rugNW
-X-Gm-Gg: ASbGncusZPjsCp2sugMXWQQzhwPq9f2WEesbMmNn3PO9tp+YPOAXwmFuwx9Z/7D61oM
-	tWelVGMWRVb2d+WbACfIJrBimEZhYEuENmqNILI9bblBbGye0q4qm1NwowTcd+9Y5e7/9lXRh/L
-	7VE4DC0O337HjFcYjwvRPznbUEjmDnq/6/x8CiCDIPa2xxVXohiWWiogfgUH9pZr7/YQMY3D0HV
-	ONOEMPcF4+eoHSzk66LvmSXMvl7L7O4S4JzAqNkGH0QhX36raFBYITRmOX92glsvfjSTdTCywth
-	tjw1EDBgBzLKwceUNxvbM4mAhgJ4Uf+Cisf9YBb654ACZ+h8GSV+mpvM9A==
-X-Google-Smtp-Source: AGHT+IEYIIwpMH1limnRPkyPHzVPpLRFlfL43w/MdnkURpLFcO0uzBblUbS83KbIhEnSklhOW03Jog==
-X-Received: by 2002:a05:6602:4807:b0:86c:fea7:6b83 with SMTP id ca18e2360f4ac-8733665b1d9mr492040539f.6.1749220732743;
-        Fri, 06 Jun 2025 07:38:52 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-873387843b3sm34217239f.8.2025.06.06.07.38.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 07:38:52 -0700 (PDT)
-Message-ID: <36c0c06e-26fa-4395-a4cf-2a7520520187@kernel.dk>
-Date: Fri, 6 Jun 2025 08:38:51 -0600
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="vEgwYKXW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=BUMSe0tFWJRLz9VwcNCfytngVWsj4oVCG4RF0FGla5Y=; b=vEgwYKXWIxvqi2qfBNwslK5vx9
+	VsPxPYEQeWsRX5tCPp3P5OFJxKugVlpqYPEFHnzLNTOKVEBcYfIYdwZ0BrM6RYJECMp9T8jN3lO4+
+	Jsl6UzNw/pudNpkER7f6ou//01Wf16scHrGG1fChyR4eUJnVC0U3gIMew+NcR9Ab6zh2f2STtFwFt
+	F87GCBGHHwS8dTqGei+wOgXnT6Q8DCvLPuVgW6wgUncgyHXcf6ASCgolmOMJoCmXEeBQmmmGsuojL
+	wX/aYEHk8mYjsJQE7NIDj3oWM3g5GZLWQh7SXZgrygHk/5mFP7McpL1BN6do31ucnXBs7Sb5XBz8L
+	hjZcZM/A==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uNYFe-0000000HDKS-17Ib;
+	Fri, 06 Jun 2025 14:40:58 +0000
+Date: Fri, 6 Jun 2025 15:40:58 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Song Liu <song@kernel.org>
+Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com,
+	ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev,
+	brauner@kernel.org, jack@suse.cz, kpsingh@kernel.org,
+	mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com,
+	jlayton@kernel.org, josef@toxicpanda.com, mic@digikod.net,
+	gnoack@google.com, m@maowtm.org
+Subject: Re: [PATCH v2 bpf-next 1/4] namei: Introduce new helper function
+ path_walk_parent()
+Message-ID: <20250606144058.GW299672@ZenIV>
+References: <20250603065920.3404510-1-song@kernel.org>
+ <20250603065920.3404510-2-song@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 0/5] BPF controlled io_uring
-To: Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org
-Cc: Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <cover.1749214572.git.asml.silence@gmail.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <cover.1749214572.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250603065920.3404510-2-song@kernel.org>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On 6/6/25 7:57 AM, Pavel Begunkov wrote:
-> This series adds io_uring BPF struct_ops, which allows processing
-> events and submitting requests from BPF without returning to user.
-> There is only one callback for now, it's called from the io_uring
-> CQ waiting loop when there is an event to be processed. It also
-> has access to waiting parameters like batching and timeouts.
+On Mon, Jun 02, 2025 at 11:59:17PM -0700, Song Liu wrote:
+> This helper walks an input path to its parent. Logic are added to handle
+> walking across mount tree.
 > 
-> It's tested with a program that queues a nop request, waits for
-> its completion and then queues another request, repeating it N
-> times. The baseline to compare with is traditional io_uring
-> application doing same without BPF and using 2 requests links,
-> with the same total number of requests.
-> 
-> # ./link 0 100000000
-> type 2-LINK, requests to run 100000000
-> sec 20, total (ms) 20374
-> # ./link 1 100000000
-> type BPF, requests to run 100000000
-> sec 13, total (ms) 13700
-> 
-> The BPF version works ~50% faster on a mitigated kernel, while it's
-> not even a completely fair comparison as links are restrictive and
-> can't always be used. Without links the speedup reaches ~80%.
+> This will be used by landlock, and BPF LSM.
 
-Nifty! Great to see the BPF side taking shape, I can think of many cool
-things we could do with that. Out of curiosity, tested this on my usual
-arm64 vm on the laptop:
-
-axboe@m2max-kvm ~/g/l/examples-bpf (bpf) [1]> ./link 0 100000000
-type 2-LINK, requests to run 100000000
-sec 13, total (ms) 13868
-
-axboe@m2max-kvm ~/g/l/examples-bpf (bpf)> sudo ./link 1 100000000
-type BPF, requests to run 100000000
-sec 4, total (ms) 4929
-
-No mitigations or anything configured in this kernel.
-
-I'll take a closer look at the patches.
-
--- 
-Jens Axboe
+Unless I'm misreading that, it does *NOT* walk to parent - it treats
+step into mountpoint as a separate step.  NAK in that form - it's
+simply a wrong primitive.
