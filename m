@@ -1,123 +1,266 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B363610E0
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 00:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630FC1805B
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 00:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749168827; cv=none; b=bc4JXYJ5Jko3QbtGWUm+W/pLbiAz6+r0xACfEZbZMbUVdDaqtC/awlfJ8ZerBD/treVBwDURirBMJXabFmxz5HReBtvdnieemXWqFWU3d/ZS3lgd3fIDaz439z40pFugiR9zTyeiPwJWMsvCKuaw8x6EXP5oRACTjeEZLkBbT2o=
+	t=1749168912; cv=none; b=NM5pMlEeuuymsO0GqYvFHJ/Z2I3QAzez8T/ifBmdUSS4bmD6GsNrtuD6dhjqp+dYiDMgvrEqCYXz6sDDgC5n5uIsUE6p74gpPqBtxvL4heRgcbmSO8PEmExD2GM+O3LJU0HAm6iJU3uHE0QfPxH4Y+NRqU+k4yvWTd7n7ka0ZRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749168827; c=relaxed/simple;
-	bh=1ci5R2NzDGs9Zy3z5xqfBnWX5eSyKx4GjoIMRSFtd0s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=esaD2Q+ypPoG2dP5XL9FM8xRy71p+FRgi6D6m8fGFjRgqTQnPQfcMsAWhPzexYRT4Fg9cwSIEdXQkWTVcsGY6Sfzu+GPzsxl/GJVKz8L80wtyP3haq8Ze7TaHkOCAUBviKTl2NqmYavOpAgmzlchP3ef5zmT3lMz7dRFg3x9TSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fGFFdSHE; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749168912; c=relaxed/simple;
+	bh=V+Qlec6SXG5Mz7B+D4sbtYjym82uWnzpo1+wOeci9OY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U1sKxYpMjLiIOWH3hZmkjtcXy0FrnjPJdmCpO/+bDhhZKy9NLQTG8Jla3dgmdhSjlBPyK+i/vwoGHBywATQw3oUXzOVqWAonvO/7of5EmhR/T7FhNmm7t1RqdlP8D6y/VeJOJ3T9fxyRqLRT/E5O3KufWes19kqlkkOPnzzmEIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uqrfNvKp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fGFFdSHE"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 555H1BKH027543
-	for <linux-kernel@vger.kernel.org>; Fri, 6 Jun 2025 00:13:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	qKPeT7PKb1fxMnqUnO72Yv6GpwFkb9IAXywrH3wuK+I=; b=fGFFdSHEGNUdEOoH
-	IvVwuSZolYy+p0nCQqjaGvQ29U3C77J8ZYRiBr73E7OWIlsmtOdaOM03xc1CDz4X
-	Dj5xwJlmhAvoXrSoFjR47aKQOYJNOcjcqBCG75XhFQCC8FzP5NSvBjyObMtFDvfg
-	1AvIJ7Dr2najsGkQF0HBB5qzkubdibAwpfGnOvyy07PSTGAicr/P2LasovSernuR
-	gAsC8HKH03jtMamcbfVm2AaiAW3c5UHBEEmveMZ+rqhl0Hcs3UDwKTXG/MSKVw+x
-	VDei3E1AW/2wFOkTOcITQE+CqE+R7+SyqveIfinEQwiGAxTjpxtTN/TGDChilDAx
-	fNGhIA==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8taxjm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 00:13:44 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6fabe7822e3so2778986d6.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 17:13:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749168823; x=1749773623;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qKPeT7PKb1fxMnqUnO72Yv6GpwFkb9IAXywrH3wuK+I=;
-        b=Uj48mHKfs2tGQ/uDev0uIuepq41F1yak0bbMsCQAse9lyiNCJ/C2zDol194qIKFq2Y
-         al878BzWAWr9schAGLrVN91vwTQXg+ui2xsWnKlF5MRWsFhrbE9PQPpoc+Z4sllcqus9
-         3HKlZgWB6bddfsKr45EL7HE5ghUtx26UTP2Lo4wRstRrEu3P2NSaQULe8NNFJO/sV3/x
-         J6zLmBnX3C+Sr5ie5x6SmyMt5NcaUmfKx4gElBLbmIxahNiPX+b9Uv3Jct9WKMZXT82D
-         tl/kFHS44jGblUku8gE1EAMA658KpZElU9/+CQxBtmR6sWytCASsjIXCaSXao4VtGTEU
-         B9bA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7FZ5qdpnkQrW0i9mHHOar7JGrMYLr1Uhit/XYHz3uQDjiU1BOGKEeUEn7mVhqaH0fembPGiRdrVWL3Bo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEyuueKOiC2k7dFnZyb3XAg174QS7aIgbRIOdd2l0/PGoABrTH
-	xUeRLipoBi32lTileQSkNZM+Ok/Bt+nDBzgHdLttfUmPvY2mzpDTbGAxyH0qiU3AFg6Q978+uBf
-	WRPz+invP6vXFhFEdwbANFPPDryjalYQtNJXmgCIwP0R6tgbpbkiaVTSNt1hgpk/gpOI=
-X-Gm-Gg: ASbGnctCxVeij0TzQtQTIOKSoRolg7ko2Ed+bi/D7EQXusbkjlD4DyHooApqfc/Zrtt
-	akv/M+/1+R5YB7cBP9qv3n5AVlBxrhrLqEuL6633LLhWf/oOulKRvuuQ1Hv2IDtkbq9ny/qgSB3
-	oOVF0hIxefeCbI2MpCJNxSTMIiDvlGkWD8y+g5IiDv6T9IbwV5tCYAKkpQCrIjvp8anApH+nIod
-	PG1JrmulfhKbesFKVKT2Qbrsppo6q/HAz462ogfI3ErT2gVcASpxwPV41KlZiYOYCs32d05+kTZ
-	mww+/gKrTsMoh8swHKqo7IeotXDgThod0rAu/r5R3hoUrLux0UkWEkmMlekWNHrOdg==
-X-Received: by 2002:a05:620a:3949:b0:7ca:e519:6585 with SMTP id af79cd13be357-7d331c4db9amr14443885a.4.1749168823028;
-        Thu, 05 Jun 2025 17:13:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE1I88zELlFQymDFktqh3nqMKdf4ODb086uhCaONDMfm1wNpqDjMf6iaqOMJPu/FfdCdrxBuA==
-X-Received: by 2002:a05:620a:3949:b0:7ca:e519:6585 with SMTP id af79cd13be357-7d331c4db9amr14442985a.4.1749168822649;
-        Thu, 05 Jun 2025 17:13:42 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc383aasm30038966b.122.2025.06.05.17.13.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Jun 2025 17:13:42 -0700 (PDT)
-Message-ID: <c6256bd9-1316-4de8-a31c-cec782220b0a@oss.qualcomm.com>
-Date: Fri, 6 Jun 2025 02:13:39 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uqrfNvKp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3106C4CEF3
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 00:15:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749168911;
+	bh=V+Qlec6SXG5Mz7B+D4sbtYjym82uWnzpo1+wOeci9OY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uqrfNvKpzh/WL+mkq2StHQ2JU6Q9KSchU6/7PMU8i7VmNSGwvvZ1m3Iy2zVPIQCIv
+	 xrcGJbb+ubvSsMeLC/R6l1+h8YrTbKRyEehi4fyLFnb92nP3nc2HYzrEHCxqZBpaBw
+	 Aflx6PLY5cMRXWDj1TKQQX2CpH9sy/8YyAKLAhVs4FI1p+t4OxJ11wxCQyysstSDWr
+	 mbwGSlOcr436I0JK7eShTBEr03JeseA05UHe52qhzkTid38eWpopkbmLChN1C7VmPn
+	 LDgJc/gQDz+TvSkVAYlKACeiYIv1EgAzqyg64GXzpIcxTrRm9bNzE8Dpp4/MNQaQkQ
+	 Hmvjuo5Fz4yYg==
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-443d4bff5dfso16405e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 17:15:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV3cvqOUvZRFOhcwGEcYvAK+YsDH6n33wBDV/ZkcRcLHMxDaeRxK1nbDkT24dAFT8GWnj1oso8LbPDvw38=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGdFV97BOudTUkZy5gL3yIb5h0hZ6MOqdY8yhrSWi3eE8QvpNN
+	G9nGFhOL4TFYou5Dmvr3XkPG33D0VcSr289JMyDhUfLcadikfVa5wpsEFUmoZ6oA0fnqBzogfE8
+	QXm6LBoutgMcrMxdOtujCTia7k9ZYluDiOvfPuyNe
+X-Google-Smtp-Source: AGHT+IGLbUuIjAfVPsirnUgTYnXMIcDKIEE/hWRHptE8PR6snMnIlRCkrJyI4OLFwaKdxDWggO5BwLYZFbBJ8mcmIO8=
+X-Received: by 2002:a05:600c:3543:b0:442:feea:622d with SMTP id
+ 5b1f17b1804b1-4527a28f0ddmr303065e9.1.1749168910422; Thu, 05 Jun 2025
+ 17:15:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: defconfig: Enable Qualcomm CPUCP mailbox driver
-To: bjorn.andersson@oss.qualcomm.com, Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20250605-enable-cpucp-v1-1-111ecef7e4c9@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250605-enable-cpucp-v1-1-111ecef7e4c9@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=eJQTjGp1 c=1 sm=1 tr=0 ts=684232b8 cx=c_pps
- a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=laPIkmKxayIJum0PPccA:9
- a=QEXdDO2ut3YA:10 a=pJ04lnu7RYOZP9TFuWaZ:22
-X-Proofpoint-ORIG-GUID: k4sB6aEH9q4p6UlCTlMSiYD45PlYZHEh
-X-Proofpoint-GUID: k4sB6aEH9q4p6UlCTlMSiYD45PlYZHEh
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDAwMCBTYWx0ZWRfX6dcf8ZeKNr+2
- 8HSteqef1Fs2L/RWeL9OPHHE+mbKyES+Ih1tuhdoeml0kYORFIP4xinAieXXfAOEv20D332uINV
- O/1ZXlud+SbuLJTo9mR4wc6Z20uP3B75m+L2mH1rN0oTy2Kcw/kKvnpZscdyuPpSmtLLL28PYPi
- xcc4LaHvlsATqYcaG3DjMcI3wGQUEOm2+CmFYm6t531rGsN9IpDCC2mYrMxQtJc3bAhRzc120dQ
- vJ0PtLuZKCREKU0PkmrcKVrQ1Zk9VzrU7r0Pu22VSoHlANlpMArF48pVmuaQzT59KYE6WLTUusC
- WMMbBogpsLlira4xdwhWzrFcFStFvjzEb4rqfNIC2ndHsZ4bViccX12L6F6CfOaP+P9kLD4/DXS
- EYwCWazzcaPRKzoJQd7CVQfEIcN+xZONgWKb0afZEa1VVy9u/U29L6/QL5EzmL7Koi8Okbq5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-05_08,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 adultscore=0 lowpriorityscore=0 clxscore=1015
- priorityscore=1501 bulkscore=0 mlxlogscore=954 impostorscore=0 spamscore=0
- phishscore=0 mlxscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506060000
+References: <20250604151038.21968-1-ryncsn@gmail.com>
+In-Reply-To: <20250604151038.21968-1-ryncsn@gmail.com>
+From: Chris Li <chrisl@kernel.org>
+Date: Thu, 5 Jun 2025 17:14:59 -0700
+X-Gmail-Original-Message-ID: <CAF8kJuPoJrYu30YPqze7oSPBm0qJ1Qutpw3=cQMQeSmboGnQKg@mail.gmail.com>
+X-Gm-Features: AX0GCFvVDeJjp0rqUIAm0FMQrOXJdPhT8-6JSI_7eeM2z9k4rHA4l2shVraeDC0
+Message-ID: <CAF8kJuPoJrYu30YPqze7oSPBm0qJ1Qutpw3=cQMQeSmboGnQKg@mail.gmail.com>
+Subject: Re: [PATCH v4] mm: userfaultfd: fix race of userfaultfd_move and swap cache
+To: Kairui Song <kasong@tencent.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Barry Song <21cnbao@gmail.com>, Peter Xu <peterx@redhat.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Andrea Arcangeli <aarcange@redhat.com>, 
+	David Hildenbrand <david@redhat.com>, Lokesh Gidra <lokeshgidra@google.com>, stable@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/6/25 2:06 AM, Bjorn Andersson via B4 Relay wrote:
-> From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-> 
-> The Qualcomm CPUCP mailbox driver needs to be enabled for CPU frequency
-> scaling to work on the X Elite platform, so enable this driver.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+On Wed, Jun 4, 2025 at 8:10=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wrote=
+:
+>
+> From: Kairui Song <kasong@tencent.com>
+>
+> On seeing a swap entry PTE, userfaultfd_move does a lockless swap
+> cache lookup, and tries to move the found folio to the faulting vma.
+> Currently, it relies on checking the PTE value to ensure that the moved
+> folio still belongs to the src swap entry and that no new folio has
+> been added to the swap cache, which turns out to be unreliable.
+>
+> While working and reviewing the swap table series with Barry, following
+> existing races are observed and reproduced [1]:
+>
+> In the example below, move_pages_pte is moving src_pte to dst_pte,
+> where src_pte is a swap entry PTE holding swap entry S1, and S1
+> is not in the swap cache:
+>
+> CPU1                               CPU2
+> userfaultfd_move
+>   move_pages_pte()
+>     entry =3D pte_to_swp_entry(orig_src_pte);
+>     // Here it got entry =3D S1
+>     ... < interrupted> ...
+>                                    <swapin src_pte, alloc and use folio A=
+>
+>                                    // folio A is a new allocated folio
+>                                    // and get installed into src_pte
+>                                    <frees swap entry S1>
+>                                    // src_pte now points to folio A, S1
+>                                    // has swap count =3D=3D 0, it can be =
+freed
+>                                    // by folio_swap_swap or swap
+>                                    // allocator's reclaim.
+>                                    <try to swap out another folio B>
+>                                    // folio B is a folio in another VMA.
+>                                    <put folio B to swap cache using S1 >
+>                                    // S1 is freed, folio B can use it
+>                                    // for swap out with no problem.
+>                                    ...
+>     folio =3D filemap_get_folio(S1)
+>     // Got folio B here !!!
+>     ... < interrupted again> ...
+>                                    <swapin folio B and free S1>
+>                                    // Now S1 is free to be used again.
+>                                    <swapout src_pte & folio A using S1>
+>                                    // Now src_pte is a swap entry PTE
+>                                    // holding S1 again.
+>     folio_trylock(folio)
+>     move_swap_pte
+>       double_pt_lock
+>       is_pte_pages_stable
+>       // Check passed because src_pte =3D=3D S1
+>       folio_move_anon_rmap(...)
+>       // Moved invalid folio B here !!!
+>
+> The race window is very short and requires multiple collisions of
+> multiple rare events, so it's very unlikely to happen, but with a
+> deliberately constructed reproducer and increased time window, it
+> can be reproduced easily.
+
+Thanks for the fix.
+
+Please spell out clearly what is the consequence of the race if
+triggered. I assume possible data lost? That should be mentioned in
+the first few sentences of the commit message as the user's visible
+impact.
+
+>
+> This can be fixed by checking if the folio returned by filemap is the
+> valid swap cache folio after acquiring the folio lock.
+>
+> Another similar race is possible: filemap_get_folio may return NULL, but
+> folio (A) could be swapped in and then swapped out again using the same
+> swap entry after the lookup. In such a case, folio (A) may remain in the
+> swap cache, so it must be moved too:
+>
+> CPU1                               CPU2
+> userfaultfd_move
+>   move_pages_pte()
+>     entry =3D pte_to_swp_entry(orig_src_pte);
+>     // Here it got entry =3D S1, and S1 is not in swap cache
+>     folio =3D filemap_get_folio(S1)
+>     // Got NULL
+>     ... < interrupted again> ...
+>                                    <swapin folio A and free S1>
+>                                    <swapout folio A re-using S1>
+>     move_swap_pte
+>       double_pt_lock
+>       is_pte_pages_stable
+>       // Check passed because src_pte =3D=3D S1
+>       folio_move_anon_rmap(...)
+>       // folio A is ignored !!!
+>
+> Fix this by checking the swap cache again after acquiring the src_pte
+> lock. And to avoid the filemap overhead, we check swap_map directly [2].
+>
+> The SWP_SYNCHRONOUS_IO path does make the problem more complex, but so
+> far we don't need to worry about that, since folios can only be exposed
+> to the swap cache in the swap out path, and this is covered in this
+> patch by checking the swap cache again after acquiring the src_pte lock.
+>
+> Testing with a simple C program that allocates and moves several GB of
+> memory did not show any observable performance change.
+>
+> Cc: <stable@vger.kernel.org>
+> Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
+> Closes: https://lore.kernel.org/linux-mm/CAMgjq7B1K=3D6OOrK2OUZ0-tqCzi+EJ=
+t+2_K97TPGoSt=3D9+JwP7Q@mail.gmail.com/ [1]
+> Link: https://lore.kernel.org/all/CAGsJ_4yJhJBo16XhiC-nUzSheyX-V3-nFE+tAi=
+=3D8Y560K8eT=3DA@mail.gmail.com/ [2]
+> Signed-off-by: Kairui Song <kasong@tencent.com>
+> Reviewed-by: Lokesh Gidra <lokeshgidra@google.com>
+>
 > ---
+>
+> V1: https://lore.kernel.org/linux-mm/20250530201710.81365-1-ryncsn@gmail.=
+com/
+> Changes:
+> - Check swap_map instead of doing a filemap lookup after acquiring the
+>   PTE lock to minimize critical section overhead [ Barry Song, Lokesh Gid=
+ra ]
+>
+> V2: https://lore.kernel.org/linux-mm/20250601200108.23186-1-ryncsn@gmail.=
+com/
+> Changes:
+> - Move the folio and swap check inside move_swap_pte to avoid skipping
+>   the check and potential overhead [ Lokesh Gidra ]
+> - Add a READ_ONCE for the swap_map read to ensure it reads a up to dated
+>   value.
+>
+> V3: https://lore.kernel.org/all/20250602181419.20478-1-ryncsn@gmail.com/
+> Changes:
+> - Add more comments and more context in commit message.
+>
+>  mm/userfaultfd.c | 33 +++++++++++++++++++++++++++++++--
+>  1 file changed, 31 insertions(+), 2 deletions(-)
+>
+> diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> index bc473ad21202..8253978ee0fb 100644
+> --- a/mm/userfaultfd.c
+> +++ b/mm/userfaultfd.c
+> @@ -1084,8 +1084,18 @@ static int move_swap_pte(struct mm_struct *mm, str=
+uct vm_area_struct *dst_vma,
+>                          pte_t orig_dst_pte, pte_t orig_src_pte,
+>                          pmd_t *dst_pmd, pmd_t dst_pmdval,
+>                          spinlock_t *dst_ptl, spinlock_t *src_ptl,
+> -                        struct folio *src_folio)
+> +                        struct folio *src_folio,
+> +                        struct swap_info_struct *si, swp_entry_t entry)
+>  {
+> +       /*
+> +        * Check if the folio still belongs to the target swap entry afte=
+r
+> +        * acquiring the lock. Folio can be freed in the swap cache while
+> +        * not locked.
+> +        */
+> +       if (src_folio && unlikely(!folio_test_swapcache(src_folio) ||
+> +                                 entry.val !=3D src_folio->swap.val))
+> +               return -EAGAIN;
+> +
+>         double_pt_lock(dst_ptl, src_ptl);
+>
+>         if (!is_pte_pages_stable(dst_pte, src_pte, orig_dst_pte, orig_src=
+_pte,
+> @@ -1102,6 +1112,25 @@ static int move_swap_pte(struct mm_struct *mm, str=
+uct vm_area_struct *dst_vma,
+>         if (src_folio) {
+>                 folio_move_anon_rmap(src_folio, dst_vma);
+>                 src_folio->index =3D linear_page_index(dst_vma, dst_addr)=
+;
+> +       } else {
+> +               /*
+> +                * Check if the swap entry is cached after acquiring the =
+src_pte
+> +                * lock. Otherwise, we might miss a newly loaded swap cac=
+he folio.
+> +                *
+> +                * Check swap_map directly to minimize overhead, READ_ONC=
+E is sufficient.
+> +                * We are trying to catch newly added swap cache, the onl=
+y possible case is
+> +                * when a folio is swapped in and out again staying in sw=
+ap cache, using the
+> +                * same entry before the PTE check above. The PTL is acqu=
+ired and released
+> +                * twice, each time after updating the swap_map's flag. S=
+o holding
+> +                * the PTL here ensures we see the updated value. False p=
+ositive is possible,
+> +                * e.g. SWP_SYNCHRONOUS_IO swapin may set the flag withou=
+t touching the
+> +                * cache, or during the tiny synchronization window betwe=
+en swap cache and
+> +                * swap_map, but it will be gone very quickly, worst resu=
+lt is retry jitters.
+> +                */
+> +               if (READ_ONCE(si->swap_map[swp_offset(entry)]) & SWAP_HAS=
+_CACHE) {
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Nit: You can use "} else if {" to save one level of indentation.
 
-Konrad
+Reviewed-by: Chris Li <chrisl@kernel.org>
+
+Chris
