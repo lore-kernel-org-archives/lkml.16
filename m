@@ -1,35 +1,34 @@
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A88287516;
-	Fri,  6 Jun 2025 10:29:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57B42882DF;
+	Fri,  6 Jun 2025 10:29:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749205777; cv=none; b=m6Nks+ed82bCPIlcJ7KEPeOlHoBTf4LIGEAKT2Y8NRV8SGS7PFBf7PLdVY1EnhbLhYsb9Ft4z5wXnazxo873F73xTwSJqZodUi9/4W65Sr0PefoAlIUYtCxYmfTAWGYJ2QGke9mSVfgxJmVSp15trZlwSS498Bs6OQLRSUi04bY=
+	t=1749205781; cv=none; b=HARJtwyhYyEwvqr+VJDGf2WEpObqoNryIBD/k+vrpp3YIo0uSrQy0RslWSq/oRCVXAaADnttIBb78QC0irvKXK4DmY8LKJxrpOVHJIYboxGHr1OagwMlBRRMotS7f4R4U1Q1Kf0BU2pIqg0n2cJhT4pvGw9oB/KfK2QptGsYyps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749205777; c=relaxed/simple;
-	bh=9MM74xoBnZjeb+7dlcAgIXr4ZI2P++CHv1REUpu+GeY=;
+	s=arc-20240116; t=1749205781; c=relaxed/simple;
+	bh=V+Ek8KvYXVxMnGDCEA+ZZupIN9VfOzRn2A+zOM1rIFI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nd8mRtDDOgn3OFa3cvBUx3uLLn1SNvp0Mt27STdTPoZQ1KkximxUv4QuJBt70TtFajgZvL7FcMeDgdTm/iaMqr2g1LNbq/MlGZtFfmyF2FejDk3FDzzx/2pWhtnmvEr5UupQFAnU+aIdYqo6SVqPVn2RFOHf64exwyqaCof6hdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=er7gwa/t; arc=none smtp.client-ip=213.167.242.64
+	 In-Reply-To:To:Cc; b=oEszg5AlObZLJjADxDWAg0DiKw0+I1UdEYlM9pMZHxwu1HmJEuRXqqts3IcBzhsy2syQVgany+TnJJmLkcU9TSX5JHCRhqWHfbsysxu3tH4dVL+G47CEJZO3GDzemFxHcaUIxzi51MuTW9zDXg4hqRST4TXBwHxBFXsLvGKhcFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=LyobtJeS; arc=none smtp.client-ip=213.167.242.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="er7gwa/t"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="LyobtJeS"
 Received: from [192.168.1.102] (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 93FEB1449;
-	Fri,  6 Jun 2025 12:29:27 +0200 (CEST)
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 910C31648;
+	Fri,  6 Jun 2025 12:29:29 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1749205768;
-	bh=9MM74xoBnZjeb+7dlcAgIXr4ZI2P++CHv1REUpu+GeY=;
+	s=mail; t=1749205770;
+	bh=V+Ek8KvYXVxMnGDCEA+ZZupIN9VfOzRn2A+zOM1rIFI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=er7gwa/tSh7C4H/PxSZsAhdzkpBC6d9YzX0Xc1X+dcVMz4NsSoRAqbo7uSCi9gPRO
-	 ujHcJvb+EYg2cT8HfW3Tqwa6qjZtK5nvIfBofSR1Iy5V51YdSdnV/X1tc63Q9WW9Hd
-	 nDT5vSrL4edUEMVsQIrpRxNrX6Hr2Hv5APrL442o=
+	b=LyobtJeSR70kPu/NJewF6WvjT8KSCw1gBtLv2N60eJvVep1KxdIMKo+yJFYWyLxLI
+	 a/C3EctwsYf1Tl0hOPeG0s4X7T4UckFvl716UipY5Rjm9MQKVK3ssUBgVnK6l6RNVj
+	 jMGOzQZDvQXnGUwkQ50NLofmFC+Q7ausn4aZS0Y8=
 From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Date: Fri, 06 Jun 2025 12:29:22 +0200
-Subject: [PATCH v7 2/4] media: pisp_be: Remove config validation from
- schedule()
+Date: Fri, 06 Jun 2025 12:29:24 +0200
+Subject: [PATCH v7 4/4] media: pisp_be: Fix pm_runtime underrun in probe
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,7 +37,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250606-pispbe-mainline-split-jobs-handling-v6-v7-2-46169f0622b7@ideasonboard.com>
+Message-Id: <20250606-pispbe-mainline-split-jobs-handling-v6-v7-4-46169f0622b7@ideasonboard.com>
 References: <20250606-pispbe-mainline-split-jobs-handling-v6-v7-0-46169f0622b7@ideasonboard.com>
 In-Reply-To: <20250606-pispbe-mainline-split-jobs-handling-v6-v7-0-46169f0622b7@ideasonboard.com>
 To: Naushir Patuck <naush@raspberrypi.com>, 
@@ -54,101 +53,102 @@ To: Naushir Patuck <naush@raspberrypi.com>,
  Hans Verkuil <hverkuil@xs4all.nl>
 Cc: linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+ Jacopo Mondi <jacopo.mondi@ideasonboard.com>, stable@vger.kernel.org
 X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2974;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3094;
  i=jacopo.mondi@ideasonboard.com; h=from:subject:message-id;
- bh=9MM74xoBnZjeb+7dlcAgIXr4ZI2P++CHv1REUpu+GeY=;
- b=owEBbQKS/ZANAwAKAXI0Bo8WoVY8AcsmYgBoQsMJrEbciS8x2BHdIWih/2w10/v2vY3ocpNYy
- +Fd9/iyT8KJAjMEAAEKAB0WIQS1xD1IgJogio9YOMByNAaPFqFWPAUCaELDCQAKCRByNAaPFqFW
- PGTXD/0UhSC7RVmTpo7+6azLUS7zBmkMT5p/G08Lu2Wz9NEezo5GvXp2P4dx3ruWpU6OowFF/1W
- tPjwlj4rC1K1ZG0ZSt1xQFsmr76YjKRUrAHJIsaaKoYYnskRlOKZ2DereCPP2XePKeA7EGp9/iZ
- bx9uNfBMbyPvProqMdb65iuiwawNCXQMOUxjGabt5Wi0m0cT9WiEYeULiJE7xDwgRg461bIh1rE
- n5CVOC+crpNPBCsUa9ZEQjvKJSCu9sL1hBYupMDV/U6DE39oeNyKbgwZjGxtY6lX+D2HI691YHP
- snqwIL+fk52+jAr2PJq6ra0waUAEtQmNFVWD5i+3C98KJ+fbZNIfxA77trkJwCjnoaiQiCHM579
- 2Msc4h0secTqAh+4K0AE/HJR4BkKK3ifXaXnfu9boznO0KCYlYFIpOoHA5ZoVfpRHm/mYBiI/M/
- Wow6KHFqzkaFB14cd/STuDAV2CVB9mePsvcyl9x4Tz0FP0tY8YTe3FyaBmkI32S1rtnjjqKrTh8
- wPnH6hR9iEsmvqhNShfZ57smIAPazXg/+eSZTTiS3bBhN9Tf85ruh8WBD1wHd2u6dqoOSqN0Tul
- Nj8Dqbm0WyPR3xNtvBSCpokm4Ek1Hk0Dnesf4upKXwH8WCxTbEksz9HUFDpXTEa3S0G6/a1BhVw
- 2hXbLEgfTTTgQGA==
+ bh=V+Ek8KvYXVxMnGDCEA+ZZupIN9VfOzRn2A+zOM1rIFI=;
+ b=owEBbQKS/ZANAwAKAXI0Bo8WoVY8AcsmYgBoQsMJy30vmgezVQQsGohmNhEl7scj92nRO6VT+
+ 83ukN8V4LqJAjMEAAEKAB0WIQS1xD1IgJogio9YOMByNAaPFqFWPAUCaELDCQAKCRByNAaPFqFW
+ PLwBD/4jPLV38ukgCPlmkOKp/S5DffYm09zKURW5qlvF2508WzIcSyvSUqDlH0oc1+OzTnU6uaA
+ tvkt8OjmyqHCJQGsWQ/K2OSTvs/Q++BngwUkyduUk180Xc3qlpZlI9Qt9QHpsI5imCxa0vFZWzB
+ 7pcP9r2+k/2Npa37fxuS23zrwG9UGcwcHlZAummjU2z4eLQMHfSNgnvUJdwNcOSJMxtjCKxMAtS
+ p1XUvMATHwzi2DZss2yj/PBjwQv07zIXi+oJAuaaC1vVd9lKlAT55DbxewopHQnTXsJLj52iHqd
+ tVYHeuuzAuk0ACtEqEkXhJnvI77s8KbWQa0FHEvNfR2UK4TSDrIJqbE74COoyJKSJLQkS/1+x2B
+ 3Oo3AV6uIYMg22nFy5opWcjeDROQJkrSVJNWO4TOAFZ83lsmySSUtxFyY8JH21aLgkYQxMVaZUd
+ 26p6NYdGlMI0Kl9IbwefIuD9UVY62zmVmw5KoOvI8DnGcxGpLQyedyxSyLyAindzmt89jq6ilZ6
+ 8SOpvj/908p9v3uJem0eNt0Ow/ZrhW4PvVAtyw4QBZiAKNjPmPmjc9epAUCLR51ZGdrlIgYrcw9
+ UEC7p5Q7ks5Pxm7sRpScEDFzqYqN+Nv5tk3mUzog08SKZQpGU/RFDCYAwPFMEd4ourQvHMDCMsW
+ EIlxkCnCrIBAM4Q==
 X-Developer-Key: i=jacopo.mondi@ideasonboard.com; a=openpgp;
  fpr=72392EDC88144A65C701EA9BA5826A2587AD026B
 
-The config parameters buffer is already validated in
-pisp_be_validate_config() at .buf_prepare() time.
+During the probe() routine, the PiSP BE driver needs to power up the
+interface in order to identify and initialize the hardware.
 
-However some of the same validations are also performed at
-pispbe_schedule() time. In particular the function checks that:
+The driver resumes the interface by calling the
+pispbe_runtime_resume() function directly, without going
+through the pm_runtime helpers, but later suspends it by calling
+pm_runtime_put_autosuspend().
 
-1) config.num_tiles is valid
-2) At least one of the BAYER or RGB input is enabled
+This causes a PM usage count imbalance at probe time, notified by the
+runtime_pm framework with the below message in the system log:
 
-The input config validation is already performed in
-pisp_be_validate_config() and while job.hw_enables is modified by
-pispbe_xlate_addrs(), the function only resets the input masks if
+ pispbe 1000880000.pisp_be: Runtime PM usage count underflow!
 
-- there is no input buffer available, but pispbe_prepare_job() fails
-  before calling pispbe_xlate_addrs() in this case
-- bayer_enable is 0, but in this case rgb_enable is valid as guaranteed
-  by pisp_be_validate_config()
-- only outputs are reset in rgb_enable
+Fix this by resuming the interface using the pm runtime helpers instead
+of calling the resume function directly and use the pm_runtime framework
+in the probe() error path. While at it, remove manual suspend of the
+interface in the remove() function. The driver cannot be unloaded if in
+use, so simply disable runtime pm.
 
-For this reasons there is no need to repeat the check at
-pispbe_schedule() time.
+To simplify the implementation, make the driver depend on PM as the
+RPI5 platform where the ISP is integrated in uses the PM framework by
+default.
 
-The num_tiles validation can be moved to pisp_be_validate_config() as
-well. As num_tiles is a u32 it can'be be < 0, so change the sanity
-check accordingly.
-
+Fixes: 12187bd5d4f8 ("media: raspberrypi: Add support for PiSP BE")
 Signed-off-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- .../media/platform/raspberrypi/pisp_be/pisp_be.c   | 25 ++++++----------------
- 1 file changed, 7 insertions(+), 18 deletions(-)
 
+--
+
+Cc: stable@vger.kernel.org
+---
+ drivers/media/platform/raspberrypi/pisp_be/Kconfig   | 1 +
+ drivers/media/platform/raspberrypi/pisp_be/pisp_be.c | 5 ++---
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/media/platform/raspberrypi/pisp_be/Kconfig b/drivers/media/platform/raspberrypi/pisp_be/Kconfig
+index 46765a2e4c4d..a9e51fd94aad 100644
+--- a/drivers/media/platform/raspberrypi/pisp_be/Kconfig
++++ b/drivers/media/platform/raspberrypi/pisp_be/Kconfig
+@@ -3,6 +3,7 @@ config VIDEO_RASPBERRYPI_PISP_BE
+ 	depends on V4L_PLATFORM_DRIVERS
+ 	depends on VIDEO_DEV
+ 	depends on ARCH_BCM2835 || COMPILE_TEST
++	depends on PM
+ 	select VIDEO_V4L2_SUBDEV_API
+ 	select MEDIA_CONTROLLER
+ 	select VIDEOBUF2_DMA_CONTIG
 diff --git a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
-index b1449245f394..92c452891d6c 100644
+index c25f7d9b404c..e49e4cc322db 100644
 --- a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
 +++ b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
-@@ -588,24 +588,6 @@ static void pispbe_schedule(struct pispbe_dev *pispbe, bool clear_hw_busy)
- 	pispbe->hw_busy = true;
- 	spin_unlock_irqrestore(&pispbe->hw_lock, flags);
+@@ -1718,7 +1718,7 @@ static int pispbe_probe(struct platform_device *pdev)
+ 	pm_runtime_use_autosuspend(pispbe->dev);
+ 	pm_runtime_enable(pispbe->dev);
  
--	if (job.config->num_tiles <= 0 ||
--	    job.config->num_tiles > PISP_BACK_END_NUM_TILES ||
--	    !((job.hw_enables.bayer_enables | job.hw_enables.rgb_enables) &
--	      PISP_BE_BAYER_ENABLE_INPUT)) {
--		/*
--		 * Bad job. We can't let it proceed as it could lock up
--		 * the hardware, or worse!
--		 *
--		 * For now, just force num_tiles to 0, which causes the
--		 * H/W to do something bizarre but survivable. It
--		 * increments (started,done) counters by more than 1,
--		 * but we seem to survive...
--		 */
--		dev_dbg(pispbe->dev, "Bad job: invalid number of tiles: %u\n",
--			job.config->num_tiles);
--		job.config->num_tiles = 0;
--	}
--
- 	pispbe_queue_job(pispbe, &job);
+-	ret = pispbe_runtime_resume(pispbe->dev);
++	ret = pm_runtime_resume_and_get(pispbe->dev);
+ 	if (ret)
+ 		goto pm_runtime_disable_err;
  
- 	return;
-@@ -703,6 +685,13 @@ static int pisp_be_validate_config(struct pispbe_dev *pispbe,
- 		return -EIO;
- 	}
+@@ -1740,7 +1740,7 @@ static int pispbe_probe(struct platform_device *pdev)
+ disable_devs_err:
+ 	pispbe_destroy_devices(pispbe);
+ pm_runtime_suspend_err:
+-	pispbe_runtime_suspend(pispbe->dev);
++	pm_runtime_put(pispbe->dev);
+ pm_runtime_disable_err:
+ 	pm_runtime_dont_use_autosuspend(pispbe->dev);
+ 	pm_runtime_disable(pispbe->dev);
+@@ -1754,7 +1754,6 @@ static void pispbe_remove(struct platform_device *pdev)
  
-+	if (config->num_tiles == 0 ||
-+	    config->num_tiles > PISP_BACK_END_NUM_TILES) {
-+		dev_dbg(dev, "%s: Invalid number of tiles: %d\n", __func__,
-+			config->num_tiles);
-+		return -EINVAL;
-+	}
-+
- 	/* Ensure output config strides and buffer sizes match the V4L2 formats. */
- 	fmt = &pispbe->node[TDN_OUTPUT_NODE].format;
- 	if (bayer_enables & PISP_BE_BAYER_ENABLE_TDN_OUTPUT) {
+ 	pispbe_destroy_devices(pispbe);
+ 
+-	pispbe_runtime_suspend(pispbe->dev);
+ 	pm_runtime_dont_use_autosuspend(pispbe->dev);
+ 	pm_runtime_disable(pispbe->dev);
+ }
 
 -- 
 2.49.0
