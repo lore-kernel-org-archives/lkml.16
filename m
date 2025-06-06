@@ -1,143 +1,113 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B481C189F43;
-	Fri,  6 Jun 2025 08:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEF5189F43;
+	Fri,  6 Jun 2025 08:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749198134; cv=none; b=jQ0Dak4MxIj27H0HtvsWupf8GaON0jkJRnEB+IXBrIxD+5RUM4ACqnCUqVpb7YaPwLiPVdVBvEfPtr4yHP5xQiuj0ECvZ9eMVkASRVVkxJgIPihLPCNwELVENY0Xw4/Fa1EinJQJXdzp8ycy8NcSe7tA4Rb0fE/rkhibry/g6ts=
+	t=1749198140; cv=none; b=X8UKH8Dg8U1WemXkmNTz+xIy/iQpJvVnW9b2bxxCe0WZdeLNLjQLY87nVe1ZHnaulubuAus3U0DLFRCo3Pf8zvYg04DbIQTJmi/vlpyJFfqy27PA21Cc4ytq8J/glNGyk8Hltgbwcyp26enWoQ28yUuXtKyKUxsifBmPKjBedrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749198134; c=relaxed/simple;
-	bh=KUGIQAd3jM9iInlALZiBHMUnVKHULmaAsWOPmbW4Rhw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bqrX9tckJyGng4zlw9LRgS3pZ/MfV1SVZkUfXQkXfx5mte73nUXKuBI58+74Bm501Hf2ajsXCgzmpgIQXCepf5tdgyUYD6KC3E6lmJthaUwm9mM1zKIebJ1qCKsnUz43YDguRrSTq4AIPxNrA2kFE54XqhLMR7eHtcBSia99Ei8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UM0Fuc8h; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749198140; c=relaxed/simple;
+	bh=5Wcwpm0Z8kSMrpruTks0M12X5foA0MV5jmGMbNb+6dM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TxylhGxcl2Fy6ozcNJTUj/CaoL376lEydp/9cpomx8zsNk/sPhrwkEl/JDdvZQmi9szLzGjekv+m846PY9Nxj7bsRUI5fyEOgxr+xB1EAqLVd87DGhBBZGBmCl0Q0kb4ZSfj61gGWlaGGqbibKFdfD7iK5PGeckxmV2zBVYyhHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PgiPE4xi; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UM0Fuc8h"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 555KSrN5027115;
-	Fri, 6 Jun 2025 08:22:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=BFdjaTQyCsB4OaXb/L0yUQPh
-	Xln/bFbHQQtQTApKxNU=; b=UM0Fuc8haNtSxC88LcxxgGXjr2JICWGWROmuoyYM
-	2qNttOVEKFWeRONa4BhzENglsPrGTf0fFce67NUre4P2xePjQhNfPvF7UI1Ej7ye
-	GmX0YxmnvPBebnRSIGYib2hLaG6H4n3WBiztN7X2q10xGjVj6U12XcXhnryovkVV
-	9VEbK+TYPo/L6HmuzRgBJSi3K3OfKrZPdZtS3CaCp48JVhf5EY/cayLjZhD1BqfF
-	6hf0YP7L7Cw/KpNlQ2uaEOx7hc2LenBLoups1YmKwCnQVawNdN+6a2JCmGBRfKKe
-	gO+GUa/yax1D6mfGqQyDQpc9hlvjNZ7jNukYsR5A6doZdw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8nuw5h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Jun 2025 08:22:09 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5568M9vS006183
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 6 Jun 2025 08:22:09 GMT
-Received: from hu-wasimn-hyd.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 6 Jun 2025 01:22:02 -0700
-Date: Fri, 6 Jun 2025 13:51:58 +0530
-From: Wasim Nazir <quic_wasimn@quicinc.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@quicinc.com>, <kernel@oss.qualcomm.com>
-Subject: Re: [PATCH v9 3/4] arm64: dts: qcom: qcs9075: Introduce QCS9075 SOM
-Message-ID: <aEKlJuoQTNs7swVl@hu-wasimn-hyd.qualcomm.com>
-References: <20250530092850.631831-1-quic_wasimn@quicinc.com>
- <20250530092850.631831-4-quic_wasimn@quicinc.com>
- <kz7rdu643iw7y2x7t2kmaewfdhzlk53hylivybw7om53dseakf@g5a64rjnup5f>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PgiPE4xi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749198139; x=1780734139;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5Wcwpm0Z8kSMrpruTks0M12X5foA0MV5jmGMbNb+6dM=;
+  b=PgiPE4xiq3agC8yfPvRGGyqz3Bj1BMWMdd6oCY8ZAouBCRbkMMsGe+OY
+   i/B5uao6dM6AynfMRjNOXBKYiLSD5IX72c+mhHPlSUYJHqQvZLF4IRB0o
+   piknMLz/7MqpxmeyNHsHm/ppDG6ppSXlcXsBW1HTZFrC3sMVnT6Ai4P+U
+   9+/8fIpsvWT6cMER6DawjHhacNUIVYsGD+DVyxINSgFpAV2RKqjzKumz/
+   bsp0ok70rtfvKSXDIwLmb2Lm9zQf7RLX3BMeK+RNqBxmdX8F6BU1P8sfp
+   kbNbMbDqG8magKrqFTehdT5BuAXAds5db0RRiExaMOcsW7S9yca9MC3OP
+   w==;
+X-CSE-ConnectionGUID: eMynQqGZRumCpVJn7QcTCg==
+X-CSE-MsgGUID: U7i0eh3wT7u74oiA/d3JCA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51486171"
+X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
+   d="scan'208";a="51486171"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 01:22:18 -0700
+X-CSE-ConnectionGUID: eboYxtTKRUmWuzIQmUOnyA==
+X-CSE-MsgGUID: 1kUmMYwXQ2eM37IKT+dL5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
+   d="scan'208";a="145776851"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 01:22:14 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uNSL5-00000004837-1i9R;
+	Fri, 06 Jun 2025 11:22:11 +0300
+Date: Fri, 6 Jun 2025 11:22:11 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, ikepanhc@gmail.com,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Armin Wolf <W_Armin@gmx.de>, linux-doc@vger.kernel.org,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: Move Lenovo files into lenovo subdir
+Message-ID: <aEKlM5lzhuVdYS-U@smile.fi.intel.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
+ <aEEyEfYgpPQm8Tlx@smile.fi.intel.com>
+ <71f410f4-6ac6-41d2-8c99-2a02e0f05fed@app.fastmail.com>
+ <aEHzYT4XqhzIpO5k@smile.fi.intel.com>
+ <dd3b79e3-a0d1-4413-8c69-58ca6b4fb8c9@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <kz7rdu643iw7y2x7t2kmaewfdhzlk53hylivybw7om53dseakf@g5a64rjnup5f>
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: VHRglWU1GODgWIB1V15t3UWPSD3x5VwH
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDA3NiBTYWx0ZWRfXyrZD2QOW2WZf
- 7w1Ti6CiDFeimZml0vJ/aOiloT8OPlVsEUkHiColshQzuPLbvbwEl8vCH4blxrd4OQWWIlSLpKC
- W5T2dOPqxFYoaAjpT7cnnLCPq9I2MIMVsuyCY8ExbWE1DPFveaMngUNhppp04tFS24TpZ2CvFoP
- iLiSovujf6RL6xok6lVT6C/iW+H5rNdBCs6RxOUIDTGDUVOXF9+OgUxb54HUEYtwZN8sb0SeED1
- u33liQI12RVmEMvtE2QUk8C+ELVCA1grvpXHvF2YpQPuRen0f7TCem0x/igzlHZ92gQtvNpG7ev
- 32YMUHnd65wWSiu54s638xlg8xMXGA0gy3ySISnQ3nIcxwHTeJ3uGvHB/ycWqygO8it8fdVISpE
- QF0dn+xZk+Jo31fyE0MSikX2FPrzQgdMwlKrIQfEK86d/GWvFk0IOaAoMvWwjNrhhqIUvC/7
-X-Proofpoint-ORIG-GUID: VHRglWU1GODgWIB1V15t3UWPSD3x5VwH
-X-Authority-Analysis: v=2.4 cv=UphjN/wB c=1 sm=1 tr=0 ts=6842a531 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=e_47BRpi10H5czWX2-MA:9 a=CjuIK1q_8ugA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-06_02,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 spamscore=0 impostorscore=0 lowpriorityscore=0
- phishscore=0 mlxlogscore=525 clxscore=1015 malwarescore=0 adultscore=0
- bulkscore=0 mlxscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506060076
+In-Reply-To: <dd3b79e3-a0d1-4413-8c69-58ca6b4fb8c9@app.fastmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Jun 02, 2025 at 10:03:19AM +0300, Dmitry Baryshkov wrote:
-> On Fri, May 30, 2025 at 02:58:46PM +0530, Wasim Nazir wrote:
-> > QCS9075 is an IoT variant of SA8775P SOC, most notably without
-> > safety monitoring feature of Safety Island(SAIL) subsystem.
-> > Add qcs9075-som.dtsi to specifies QCS9075 based SOM having SOC,
-> > PMICs, Memory-map updates.
-> > Use this SOM for qcs9075-iq-9075-evk board.
-> 
-> No, you are not using the newly added SoM, you are just adding it. If
-> you really want to use it for the EVK board, squash this commit into the
-> next one.
+On Thu, Jun 05, 2025 at 05:03:15PM -0400, Mark Pearson wrote:
+> On Thu, Jun 5, 2025, at 3:43 PM, Andy Shevchenko wrote:
+> > On Thu, Jun 05, 2025 at 11:53:47AM -0400, Mark Pearson wrote:
+> >> On Thu, Jun 5, 2025, at 1:58 AM, Andy Shevchenko wrote:
+> >> > On Wed, Jun 04, 2025 at 01:36:53PM -0400, Mark Pearson wrote:
+> >> >> Create lenovo subdirectory for holding Lenovo specific drivers.
 
-Sure, will squash it.
+...
 
-> 
-> > 
-> > Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
-> > ---
-> >  arch/arm64/boot/dts/qcom/qcs9075-som.dtsi | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/qcom/qcs9075-som.dtsi
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/qcs9075-som.dtsi b/arch/arm64/boot/dts/qcom/qcs9075-som.dtsi
-> > new file mode 100644
-> > index 000000000000..552e40c95e06
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/qcom/qcs9075-som.dtsi
-> > @@ -0,0 +1,10 @@
-> > +// SPDX-License-Identifier: BSD-3-Clause
-> > +/*
-> > + * Copyright (c) 2025, Qualcomm Innovation Center, Inc. All rights reserved.
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "sa8775p.dtsi"
-> > +#include "iq9-reserved-memory.dtsi"
-> > +#include "sa8775p-pmics.dtsi"
-> > --
-> > 2.49.0
-> > 
-> 
-> -- 
-> With best wishes
-> Dmitry
+> >> >> -F:	drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
+> >> >> +F:	drivers/platform/x86/lenovo/lenovo-wmi-hotkey-utilities.c
+> >> >
+> >> > You may follow the trick in the Makefile (see intel folder) to avoid repetition
+> >> > of the folder name in the file names. Note, the modules will be called the
+> >> > same (assuming no ABI breakages due to renames).
+> >> >
+> >> Interesting - I'll have to look at that a bit more.
+> >> Any objections if I leave that for a future change?
+> >
+> > IF it's nearest future :-)
+> >
+> I got this implemented - I'll include it with v3. It's less complicated than
+> I thought when I initially looked. 
+
+Thank you!
+
+> Thanks for the suggestion.
+
+You're welcome!
 
 -- 
-Regards,
-Wasim
+With Best Regards,
+Andy Shevchenko
+
+
