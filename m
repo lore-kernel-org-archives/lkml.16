@@ -1,147 +1,160 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509462356B9;
-	Fri,  6 Jun 2025 12:37:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7E328852F
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 12:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749213476; cv=none; b=g5V39bnOhFlZwwanGoERZxJ5VMxfTQR9eQ9+Qy6FNwQcNzhaztyexgPmkfgTvjNbM82WHZ/ff5Lfs7fqC3JP5FC/5ieYd7t40sJuFNcwu0QTxxzsQohCDaPe0AeDbuN1G09fBOi9WxSzrYH28ZnYm3jSDrBu3zXngkyeiAIDvCA=
+	t=1749213492; cv=none; b=aLjgUHkvEHefVRURaNZ+XzN5uNaEwbFxgCX0m7hyIA0Rja5wdGLqknTCTVxWzJcpjXFNLP6kAE9quSfyhinJPxEMauG0y2tLWCyX9vL+0gaZ3VWM60wYELnCV3GitX4mwpFELPs8zb36/kPxiUAsCxRgy5jphGBaNu4OsbcJGT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749213476; c=relaxed/simple;
-	bh=8BFKlrQ68QjCmbx5xh4/w0cPsnqeWqA5EfLScv6WkrE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JSQ5UJBmEIiVoSsuTP8dzHUEiScy5daZ9NmpPNawLf6NS/X6rXMm8p6/oOj3Zi2e1gGc7GL4dne4xv1xJw1D1nEGaZH1gOvbIk16ScPAr6Ju/mTfIj4ToHiIC9RCGSEcddFIzmj6MNtogZgz6FaSUDVvfg17+6h7aFlGNj4U3X0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=S0EKknag; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749213492; c=relaxed/simple;
+	bh=76ceGAtoe6msQi7Co3W0+hpA8OF7n2ceHM3GHX4Q6is=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=snwA0ga1t/uJgAWjgbfQrlKUgGdHhRWc1ubRDsT3VyAob1gu7ky/IdRcn9l39Te+lAntV8eVg6QQ7v6Ppfe5jQzlXG2C7Y19cUNkBqBGTTfFR+jR/b4PZzF6awNYsxZZLv+uEUI8NqjzEOzNC/6BgWMUvPg6MYTVBX8njtdJrCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wUhpu31R; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="S0EKknag"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55663pHt000708;
-	Fri, 6 Jun 2025 12:37:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	1oODGAliAr0P1Y/Ntrn/PvuZ7jpTdNekDsWec4XKAP8=; b=S0EKknagQ6PJY13L
-	1Dblb5hcsqx0Y0zinF0lLNDlVzglwIOrAFdqoOkZE/dJAu3+xEjEmJf0vHbigkhP
-	dOG0Xo5F4MwngHeBnEV+J4rzo9DbNl3Fdh27aNblB0/y/aJRftc/T8FiAuw3trKQ
-	1qZfAd6GxNoV8b36QtZyk+xzlbYc6f3s53qROSKRIx8NMyIVuSOmZS3kt/uW5HfX
-	WDlZ5XHdUVHQJxmf4VPaqV2zJEQGIR+qqUpQLOEucrBfjPzFuRNVsK4b0Q/sU2aJ
-	VosKVxVvRQc0Zsd1b4YnDy9frmBPIvmH8NBGJjCjJvog1tiRkJ9ocd6GKXATaaAr
-	IJxsfg==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8qcmek-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Jun 2025 12:37:50 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 556Cbnue000632
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 6 Jun 2025 12:37:49 GMT
-Received: from [10.253.79.143] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 6 Jun 2025
- 05:37:45 -0700
-Message-ID: <996c9a39-5520-4b43-adfa-06ce29223ba0@quicinc.com>
-Date: Fri, 6 Jun 2025 20:37:43 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wUhpu31R"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6024087086dso9852a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 05:38:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749213489; x=1749818289; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FeOQnwFRu1+Kj/2MlWTCn9hMSyDZ7M1MsWilhgviDz8=;
+        b=wUhpu31RUtz1dPzebSVTy51HPG9j7LqL71+XHHkMy+yHxg/W8zYQgKB6yofETPDUim
+         HuQvAWWv6SqdXC/YFAetMG//HLMC5YuusLQ8iDEEKZ/Ysj2n7PQ6JvhNeLA9NHAz4QR1
+         UOt5Wm8sIuqP11m846Gbrga9ocy1cPZQhQqFAryMNqE9wcgA7XaUs53yuUU5mYXZM7Ze
+         WQy1qRiQ7VuCss563lp8CIuKjFLNIUjjkSBh2mDD4xnejoaffMU3rhRuMwvBeN2lPd4t
+         M7JP25cBO+eK5suTBSs+s0lkNVjNvxKUw8e8ooSk//ATpCaEni2RQIZ1TE4xMr3HrZWL
+         LJ1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749213489; x=1749818289;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FeOQnwFRu1+Kj/2MlWTCn9hMSyDZ7M1MsWilhgviDz8=;
+        b=v07qyMLXvSClUcMePEkQnw90rKSgcb2qB4/IWQx5vrf3dVkfL47hMUgohFoqpj0RED
+         dmEpJl00jLYN5eb8sa1db5WiF/CAfNqy3kGN5eJqt7Q0hkm3nsZcIlmLWlKCsShkADe4
+         E6pW26PKaMr1r/YOpzvkI19kgMsFb5lVggSPx5zCWp9W5BQTMQGUekd8VI4MKDNScvwN
+         GAfl5tAPYpylgeUobNH2IABxYNCs8MBI2iVW+SqXplifbpoXBZxoN6LY04m0fXJ5tWCy
+         L4fCuHymx66iDBpWcbj9Hc8UC50+y81ykjOtM7V2dosStivGMoTJtKnLC3Zu8RJDS98I
+         hxTA==
+X-Forwarded-Encrypted: i=1; AJvYcCWfSIspsobVE00amSxY4ZV+PZclcUUbW2OJKmmHL+JCcig28xbSPtp/hz9GDMqiS5yaiYK3QrYlMubroZ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLM7N1sDRnRIXt9Z40McJUob8uRZdKU+a0wG+4Ka0F5f3fcLcZ
+	zoueHF6FA1kDh2/3cqz7rIvkRABb8HcQGi4l0/iBn14x8K4qLycDasOQYuKWpMJFD62YOc0M3yw
+	sB/toDb4nMENsl8HOwjo0RQfuGCgwwH2BRvJxrbVD
+X-Gm-Gg: ASbGncs/XA5IA1PYsbj7UnB6sB17VHi5OQwqPd42pEya0LIhiq1RM5awQ6n0nY3QbtS
+	AIV2J5QRSZtZHBiOza44uwTYEEqO0Uvwzbc1k5CuA3tQekZlfn2T5PC+Vw+/i5eI7FKIKSWlaz7
+	K/A2+s5gdZVxo/lBR/52uruounMoaL/t4cGdUcFx/mOJU95+p2MNcE6OA/nuzOvIK4RNLN6A==
+X-Google-Smtp-Source: AGHT+IE+fznf396DEdYbm7FDbiMqK8DD7+M7vFeKn4D5k96LIDFgmHNB35OHueWQZma6dil8qwRaIjQmLGcvzLI2aTE=
+X-Received: by 2002:a05:6402:3887:b0:600:9008:4a40 with SMTP id
+ 4fb4d7f45d1cf-6077498ed18mr90476a12.4.1749213488536; Fri, 06 Jun 2025
+ 05:38:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 0/3] media: venus: enable venus on qcs615
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@oss.qualcomm.com>
-CC: Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Dikshita Agarwal
-	<quic_dikshita@quicinc.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        "Nicolas
- Dufresne" <nicolas.dufresne@collabora.com>
-References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
- <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
- <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
- <5854a587-aba7-4e71-87f8-249ba00cbc59@linaro.org>
-Content-Language: en-US
-From: Renjiang Han <quic_renjiang@quicinc.com>
-In-Reply-To: <5854a587-aba7-4e71-87f8-249ba00cbc59@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: MJCRs-B1rtwWlJNjGneRRIOua0tJXyig
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDExMyBTYWx0ZWRfXx/9a70jTHg0Q
- iKpMhz+m7Or5xEi5C4FX7Q81Qh484u9YwJ2YiM/z3qBTKAlRqlespbvR/LfvPZOipkjlADsJ7mk
- q/Rq/K1lxxs1lQTdc779GnV8zdmBtD471Gwg9qnaw+IBIt+sWTZlgQzNFvVVlIO9dT7KRqTGxkh
- 00rlvFNvdriHYd8mbHd5v10pG2Pbld5LcH0dg7jjKX/+3G/B+8ZwDNGuCJ7X/YldlIyx3/jxQ2L
- xzd26xcxV7OzOW6jS6wVOGy/wBv2J1RP2XeMnl0pJqEOrN2cSkV7PHrFine5agUlZFw52sZD0/m
- 3sKYR7vEMHNx1yppPEKt9sRuqdiN8GcJDlumuiUzgsPyQXAa2UKcx/V6hwArb12ubGM6tVRxO1u
- cqEOZmAgRCF7gqBZxHXwTTg+OhQw7V0ZgNdRPE4/ATgXfIV1CDCGkt/n2WpCJeU4sBDde3Hf
-X-Proofpoint-ORIG-GUID: MJCRs-B1rtwWlJNjGneRRIOua0tJXyig
-X-Authority-Analysis: v=2.4 cv=PrmTbxM3 c=1 sm=1 tr=0 ts=6842e11e cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
- a=OeXMNpvLbdQpr1KLWfoA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-06_04,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 mlxlogscore=530 mlxscore=0 lowpriorityscore=0
- impostorscore=0 malwarescore=0 spamscore=0 clxscore=1015 adultscore=0
- suspectscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506060113
+References: <20250606092809.4194056-1-ryan.roberts@arm.com>
+In-Reply-To: <20250606092809.4194056-1-ryan.roberts@arm.com>
+From: Jann Horn <jannh@google.com>
+Date: Fri, 6 Jun 2025 14:37:32 +0200
+X-Gm-Features: AX0GCFvlWBvUofLsMql7uPnqlPQ_I7AwEatSw2rWNXAV8LpXKA2kOKqETQmhfQc
+Message-ID: <CAG48ez1VHfcTJNDLZcoupQBJQ5xpKzEMss8oBhmGYgHFidRU_A@mail.gmail.com>
+Subject: Re: [PATCH v1] mm: Close theoretical race where stale TLB entries
+ could linger
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, David Hildenbrand <david@redhat.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mel Gorman <mgorman@suse.de>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jun 6, 2025 at 11:28=E2=80=AFAM Ryan Roberts <ryan.roberts@arm.com>=
+ wrote:
+> Commit 3ea277194daa ("mm, mprotect: flush TLB if potentially racing with
+> a parallel reclaim leaving stale TLB entries") described a theoretical
+> race as such:
+>
+> """
+> Nadav Amit identified a theoritical race between page reclaim and
+> mprotect due to TLB flushes being batched outside of the PTL being held.
+>
+> He described the race as follows:
+>
+>         CPU0                            CPU1
+>         ----                            ----
+>                                         user accesses memory using RW PTE
+>                                         [PTE now cached in TLB]
+>         try_to_unmap_one()
+>         =3D=3D> ptep_get_and_clear()
+>         =3D=3D> set_tlb_ubc_flush_pending()
+>                                         mprotect(addr, PROT_READ)
+>                                         =3D=3D> change_pte_range()
+>                                         =3D=3D> [ PTE non-present - no fl=
+ush ]
+>
+>                                         user writes using cached RW PTE
+>         ...
+>
+>         try_to_unmap_flush()
+>
+> The same type of race exists for reads when protecting for PROT_NONE and
+> also exists for operations that can leave an old TLB entry behind such
+> as munmap, mremap and madvise.
+> """
+>
+> The solution was to introduce flush_tlb_batched_pending() and call it
+> under the PTL from mprotect/madvise/munmap/mremap to complete any
+> pending tlb flushes.
+>
+> However, while madvise_free_pte_range() and
+> madvise_cold_or_pageout_pte_range() were both retro-fitted to call
+> flush_tlb_batched_pending() immediately after initially acquiring the
+> PTL, they both temporarily release the PTL to split a large folio if
+> they stumble upon one. In this case, where re-acquiring the PTL
+> flush_tlb_batched_pending() must be called again, but it previously was
+> not. Let's fix that.
+>
+> There are 2 Fixes: tags here: the first is the commit that fixed
+> madvise_free_pte_range(). The second is the commit that added
+> madvise_cold_or_pageout_pte_range(), which looks like it copy/pasted the
+> faulty pattern from madvise_free_pte_range().
+>
+> This is a theoretical bug discovered during code review.
 
-On 6/5/2025 8:34 PM, Bryan O'Donoghue wrote:
-> On 31/05/2025 01:05, Renjiang Han wrote:
->>>>
->>>> Note:
->>>> This series consist of DT patches and a venus driver patch. The patch
->>>> 1/3, which is venus driver patch, can be picked independently without
->>>> having any functional dependency. But patch 2/3 & patch 3/3, which are
->>>> DT patches, still depend on [1].
->>> I'd say 2/3 and 3/3 still depend on 1/3, otherwise we can get video 
->>> core
->>> on QCS615 over(?)clocked.
->> Agree, so we need to make sure that the driver patch is not picked 
->> after the DT patch.
->
-> This statement is confusing.
->
-> 1/3 states that there will be a fallback if there is no OPP table 
-> present.
->
-> Giving the code a glance, I believe that is so, freq_table should be 
-> used if there is no OPP specified in the DT.
->
-> I think we are having a hard time here understanding what you are saying.
->
-> My understanding:
->
-> - venus modification is standalone 1/3
->   Qcs615 will fallback if no OPP is present
->
-> - dt modification 2/3 3/3 is therefore also independent of driver
->
-> ---
-> bod
-yes, let me re-spin this with driver patch alone. Once that gets in, 
-will bring in the DT patches.
+Yeah, good point. So we could race like this:
 
--- 
-Best Regards,
-Renjiang
+CPU 0                         CPU 1
+madvise_free_pte_range
+  pte_offset_map_lock
+  flush_tlb_batched_pending
+  pte_unmap_unlock
+                              try_to_unmap_one
+                                get_and_clear_full_ptes
+                                set_tlb_ubc_flush_pending
+  pte_offset_map_lock
+[old PTE still cached in TLB]
 
+which is not a security problem for the kernel (a TLB flush will
+happen before the page is actually freed) but affects userspace
+correctness.
+
+(Maybe we could at some point refactor this into tlb_finish_mmu(), and
+give tlb_finish_mmu() a boolean parameter for "did we maybe try to
+unmap/protect some range of memory"; just like how tlb_finish_mmu()
+already does the safety flush against concurrent mmu_gather
+operations. Maybe that would make it harder to mess this up?)
+
+> Cc: stable@vger.kernel.org
+> Fixes: 3ea277194daa ("mm, mprotect: flush TLB if potentially racing with =
+a parallel reclaim leaving stale TLB entries")
+> Fixes: 9c276cc65a58 ("mm: introduce MADV_COLD")
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+
+Reviewed-by: Jann Horn <jannh@google.com>
