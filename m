@@ -1,88 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A84265CC5;
-	Fri,  6 Jun 2025 08:56:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0B51624DD
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 08:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749200219; cv=none; b=ZKc8K5KBFYERclK6xMPXDEHxvrr24BlAZSRtopQRo1ZCF8yjIROMGO5xQQ8BrP1NrTGv+UxaIImCu9RO64YykFD5iZSJsZb0AIb7W4YSB1PMZszLRVq1AxSSDYQmPZq2WD1KCZrij0SmoyA/1T52XG7ZTTEgPKnIfbJP7pA2ErY=
+	t=1749200310; cv=none; b=Ez0/V8DVuMmiieBerC12k2JihdvbvjLV/Pu541+dJIkXFgeSZyXeMNTK+8zIGyRUy6O9308qILT+ZikdsRHY6VQFVu2YwOJdGzkXD946CDApr0Qh4Zfui/yLiKVaUn7mXCEazujWj0C7MuwjWBOLsaswbjthh2VegG1LGAkVqYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749200219; c=relaxed/simple;
-	bh=ihq1PWlB2U3WzY86lVnSq59NBEGnqtz4IiNft5x+ZSU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O83u2KxGKbbaEBHYuqhzdgY5T0IdNp6RYDmFUBPL5sWGKSKe8QIlIesH0/qiWCyMmWDl7CpN/FaBTMlt5OK4TP48meStuHMicAzBYP074JHWdXSB2/rYemirWjD9gol9UMHgBvd6B4NmrU1omJ83zBjiCIJaJQANi7SWhjEHkik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qYzMRvCZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749200310; c=relaxed/simple;
+	bh=qb8DMH4gF6S93MskjiiEecUdSv/LDFJZcaoLws8MM/w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rwWSiC/pFbgYn29WqZvgg9HtQW8K/4Ge2xWMtw7RvaCHcew4tF9ZwhU2XhaU9oj++qOalDMQWFzkkI4imJpRpGOEVkZKra/61tTiqPsenWns/eK3UTZwHot7xct/GLikv7S38NCw6T19y/cosMD+nJ0Kk4mwzwJB0m2/bjKRikw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=KUlKyzwx; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qYzMRvCZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0422EC4CEEB;
-	Fri,  6 Jun 2025 08:56:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749200219;
-	bh=ihq1PWlB2U3WzY86lVnSq59NBEGnqtz4IiNft5x+ZSU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qYzMRvCZvFXJL5/UK4Ayh1axQtFKH3Z/1LrvAm87knFoFPh7aJ+uq0mUcwhrK3oOu
-	 6CpJd1Z4aHGjRhxq3Zm69/2RXAoWTZ1FlxRR8xXKm0y7Efvqzzy4vi6OPxBXEK35Sb
-	 hHfp9w/NY8vrtAsNE/qlp8jTqG3QO/3YyzfaphH537iqUYqh4PNSB0TBqbsWoirjLV
-	 ios/bNyHqo+84mtxrIIhgohAq/bq41bGEz/p5SnFjF3stlCufhpOoZV9+1IyHKy2hc
-	 TMJD5DslnH9DnWar5pwx7DrThmtZ+Eot7642ySIiseWBQG+EvT/tLlMI3in6UreILa
-	 xTTCcvA6lmEmw==
-Date: Fri, 6 Jun 2025 10:56:57 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Brian Masney <bmasney@redhat.com>
-Cc: Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, 
-	Alberto Ruiz <aruiz@redhat.com>
-Subject: Re: [PATCH v2 03/10] clk: test: introduce a few specific rate
- constants for mock testing
-Message-ID: <20250606-fabulous-fortunate-chamois-ab4c98@houat>
-References: <20250528-clk-wip-v2-v2-0-0d2c2f220442@redhat.com>
- <20250528-clk-wip-v2-v2-3-0d2c2f220442@redhat.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="KUlKyzwx"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-231e8553248so19304575ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 01:58:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1749200307; x=1749805107; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ymOcQmc1za1KFmVBfx7ccy1EEL2Tdf1lKKtdHUAzlqI=;
+        b=KUlKyzwx6ptV/yUOBej77ZFnR+jio2oOFcE8nkKpWul7damnoAE/ZoZ9yDtjQEPVUD
+         +k0tKrfJAHH5ZuEvHKWHGmD/7t/TSZcDS1oFbDJ2ZGT0bHqRj6cMT1V6rZVEL82lpPS4
+         fycYB5M7xkLWEvID1HS+xjgWN6QXcihua4E+rgwKJXhaZV3SH1qcmHwJMn8xHY3lisVD
+         nLInNXeJLgMs5cxXJUK5xdqP+UJPzah3cGnpFEShC1fhaZmL0y4C7ppxL1DV4Msh/Fey
+         BhGcq2U2Mi78rmp3pp4stXK1rNJodel+b+DajCCJ/S3qiNSqkvAojzK56yX4cDBkwzey
+         Pn3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749200307; x=1749805107;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ymOcQmc1za1KFmVBfx7ccy1EEL2Tdf1lKKtdHUAzlqI=;
+        b=WrxYg+i7CeubJbehlU+unnFIutqViI4laa6Ym9PNFWoJlVAwr3oyNjpOC2pim5UGOY
+         ux3qtc68Dl0kpJQczkoIhzBS2fLAmuy9fceRhVQSwAGGMsoylhm3TfgIoN0t9IxxqZZ5
+         xXD4DqPSM7uphSo8+y803Y/f/OkLdZK6yKiSBKruprW2gHaN9VYLgTBgLt9n9iEeZXdj
+         6eRiPp5HNc+Ibi4rq87HPcTBSWzgtYWn1jkRsaLlCheSOxp4NgwiMEztKO4H+zrvRw22
+         Ve4qjJ5hllR0tzhn5hxjiCob+Q3b+7xCz2jj79IeEFBNSyixpHHsvlVQfJaozsfGjqUa
+         w1mw==
+X-Forwarded-Encrypted: i=1; AJvYcCX7iHC48sOlaxHKOrbGt/ZYF2aSC58nv++knoyG6iWSOqTxsgMGXRBvSkI0mIvXHYcxT4iRfd53L1kJvKM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxN5jnloHzpXoc6TxkW/Dv7Q6D/PhqvixG1wSFkLo3nnzCzYK/B
+	WgaySYIsENu7i6T8rQyqio1+n7Qn/afa/SpxGP8B7SOtYMvOudXkzgMrgv3k27bZuO8=
+X-Gm-Gg: ASbGncsGk+1Uii1/7n6JER5HuvfM/9blSfDEX1TWvB9jgy7hWYtBHEhFOm1zWw5MBNP
+	CrLT2muNmYxu0cpp4hCgjSQwKSIIceFVKlMSi8bePuTN7Yd+LCVhX8oTaDgtLUvQbgo23vjizo2
+	bG7M8k4F4Uz4k6SNeb17o5SzYiNvEw8EgVYlLQSOvvcCciMI+cAu1L/SQ7aGcW6vLMJdoK9i3GN
+	/nTa6nbrbXVtDMMD/GbskzE2rET/LJ1itZiJA2uyVlP3Jy9Znkhq+V9stDifhsGi3J1L10GsEsO
+	xiHwJP1l86fYUigQ+bVsOQXk9mt7YajAHbtkcY5fm0g8kIsTRa9pEPydwKyL7PMtF8DwOASUlGG
+	vJws=
+X-Google-Smtp-Source: AGHT+IGSu1cXHwIHRp8Sg3wueJ136zK9blpmz4N1Qjg/nEzAL2VqPuiwWwZjy4fAHlq7m7EMtekxZA==
+X-Received: by 2002:a17:903:40cb:b0:235:7c6:ebbf with SMTP id d9443c01a7336-23601d82e5cmr39668735ad.35.1749200306814;
+        Fri, 06 Jun 2025 01:58:26 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.12])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236034037a4sm8121785ad.141.2025.06.06.01.58.22
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 06 Jun 2025 01:58:26 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: david@redhat.com
+Cc: akpm@linux-foundation.org,
+	dev.jain@arm.com,
+	jgg@ziepe.ca,
+	jhubbard@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lizhe.67@bytedance.com,
+	muchun.song@linux.dev,
+	peterx@redhat.com
+Subject: Re: [PATCH v4] gup: optimize longterm pin_user_pages() for large folio
+Date: Fri,  6 Jun 2025 16:58:19 +0800
+Message-ID: <20250606085819.89839-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <a6559d96-5018-43ea-8d51-4467f5f0d759@redhat.com>
+References: <a6559d96-5018-43ea-8d51-4467f5f0d759@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="wea4pqj4lkytyzs5"
-Content-Disposition: inline
-In-Reply-To: <20250528-clk-wip-v2-v2-3-0d2c2f220442@redhat.com>
+Content-Transfer-Encoding: 8bit
 
+On Fri, 6 Jun 2025 10:50:34 +0200, david@redhat.com wrote:
 
---wea4pqj4lkytyzs5
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 03/10] clk: test: introduce a few specific rate
- constants for mock testing
-MIME-Version: 1.0
+> On 06.06.25 10:27, lizhe.67@bytedance.com wrote:
+> > On Fri, 6 Jun 2025 09:58:45 +0200, david@redhat.com wrote:
+> > 
+> >> On 06.06.25 09:37, lizhe.67@bytedance.com wrote:
+> >>> On Fri, 6 Jun 2025 10:37:42 +0800, david@redhat.com wrote:
+> >>>
+> >>>>>      * Returns the number of collected folios. Return value is always >= 0.
+> >>>>>      */
+> >>>>> @@ -2324,16 +2349,12 @@ static void collect_longterm_unpinnable_folios(
+> >>>>>     		struct list_head *movable_folio_list,
+> >>>>>     		struct pages_or_folios *pofs)
+> >>>>>     {
+> >>>>> -	struct folio *prev_folio = NULL;
+> >>>>>     	bool drain_allow = true;
+> >>>>> -	unsigned long i;
+> >>>>> -
+> >>>>> -	for (i = 0; i < pofs->nr_entries; i++) {
+> >>>>> -		struct folio *folio = pofs_get_folio(pofs, i);
+> >>>>> +	struct folio *folio;
+> >>>>> +	long i = 0;
+> >>>>>     
+> >>>>> -		if (folio == prev_folio)
+> >>>>> -			continue;
+> >>>>> -		prev_folio = folio;
+> >>>>> +	for (folio = pofs_get_folio(pofs, i); folio;
+> >>>>> +		 folio = pofs_next_folio(folio, pofs, &i)) {
+> >>>>
+> >>>> Nit: indentation is still off?
+> >>>
+> >>> In my editor (vim with ts=4), after applying this patch, the folio on
+> >>> this line would be positioned directly below the folio on the previous
+> >>> line.
+> >>
+> >> Documentation/process/coding-style.rst
+> >>
+> >> "Tabs are 8 characters"
+> >>
+> >> :)
+> >>
+> >> Good choice on using vim. This is what I have in my .vimrc regarding tabs
+> >>
+> >> set tabstop=8
+> >> set shiftwidth=8
+> >> set noexpandtab
+> >>
+> >> set smartindent
+> >> set cindent
+> > 
+> > I truly appreciate your correction and guidance. I sincerely apologize
+> > for the formatting issue that I've caused.
+> > 
+> > I noticed that Andrew has already integrated this patch into the mm-new
+> > branch.
+> 
+> mm-new is for new stuff, unless it's in mm-unstable -> mm-stable, it's 
+> still considered rather "experimental".
+> 
+> > I'm just wondering if there's still a need for me to send out a
+> > v5 patch. I'm happy to do whatever is necessary to ensure everything is
+> > in order.
+> 
+> Feel free to just send a simple fixup as reply to this patch.
 
-On Wed, May 28, 2025 at 07:16:49PM -0400, Brian Masney wrote:
-> Some of the mock tests care about the relationship between two
-> different rates, and the specific numbers are important, such as for
-> mocking a divider.
->=20
-> Signed-off-by: Brian Masney <bmasney@redhat.com>
+Thank you. I'll send a fixup reply right away.
 
-It's not obvious to me why they are important, actually. The relation
-between the two is, but a divider (and our tests) should work with any
-parent rate, so I guess we can expect it to be opaque.
-
-Can you expand on why it's important?
-
-Maxime
-
---wea4pqj4lkytyzs5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaEKtWAAKCRAnX84Zoj2+
-drfnAYDtvCw013kwk9Ob5wtsOFRbehBvu5UEoU6eZtcmqiNg9XzY6ULKSJUTsRTw
-eOcbsWQBegOcYCyySnL2jfXK3176j3vFkZox9qW0yWQKbpgYdv9fJi9gmDtCftS4
-y9jfowNwoQ==
-=Ggfj
------END PGP SIGNATURE-----
-
---wea4pqj4lkytyzs5--
+Thanks,
+Zhe
