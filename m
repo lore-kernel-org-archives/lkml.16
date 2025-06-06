@@ -1,237 +1,269 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2069.outbound.protection.outlook.com [40.107.95.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDB41DFCB
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 18:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749234104; cv=fail; b=sWnTn3i//XHrBKOtrP+W+G3mPB1t+FkiJswWARg1kn0op59zN+r9f4ySCx35V0VYLB4Bq+39C0bfmNxHsPsPKC5TxkDhz2jJJCi0GflLwbSxu1DjEJbHT16IOpkJ8KZsLBgVBR/1wLPLrY6MD13zvyAxVfDI6N5nvA7DriRXdgw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749234104; c=relaxed/simple;
-	bh=lcMHYKhYXWu/vzSj57B6sqLPFaeSHskhktPOPQRAcVE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ulJ8BsoTUrGaIEcfJVK4BiqadXcV7TobPU5VRzxA8hNUajr+hH6cSb8tkQqFcH1FMIjCiyXDTlsO2DHjflFpNQFzA4kydE5tE7Tez+2tETbpna9ONvz/D3bOoTbjc2eS3iG4HEr0UxFOy4CPrpwKz10AbebKY+lgXiKQFq+cyzI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ZPSTvNsl; arc=fail smtp.client-ip=40.107.95.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED14D433A6
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 18:22:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749234146; cv=none; b=jma+AHBwVm6ipd+Mh7Yp5pcv3XV9KL6eIq2wy3Nb1XtjfQKHAIO/1znGFstE/FjcVzTysOc7eewg8yP4DUeO3ZXJQVNrpa5SaOMZvhZ7qHmp6X7oPWm5SRjO7tZZ5zHuubbB7STnBblt2qG/7IS71iputqUejScfI5jrcRmf0SA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749234146; c=relaxed/simple;
+	bh=wD3ohA+2DtNVVMZ9motY8mWNX8A9Usl66ckYinm/99E=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=tl2c40Ba/HRB8Wh+yHMk6wf5EC/zDcewKOeZC3uUby8Bq2i2Pu0ig9N8u3WXY2AdMDAK3ebo7Zj8jvaR0No6uEsUFRjC/QDEGNe4kJ45xfI+ZeTQiIuz4k5jR62GrgX+Ahx73Q80LUi1zp2VijI+RC5irYHJMI7rzVqva7U4fCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=byk1l4yV; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ZPSTvNsl"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oGJyy/piO2FkXo4r5KQK3gERx7ipW44c+1Fm+62ruSH4pJcA42QjjTYeEdCQjo3ZHoM3Rkp8EblJZnJRD9XQuzdW0ce5U2e5nKFnGbwL4JHFR9vRxD5+KHYoZbwl67c7TVaBrj+W0EFxC2IvQmeWJ/kfKtdlV6+ch16YuxnbzDoHE9KkMCTzuIbtgJaGagNb+GxirEzuuik3u/x5prYy9TM7u6O6cOb2JLjIOvqpfO2ixe2soQUs9dPHVupSEu1LPVSHIw5meTI4P/2AfhTSmSKnsX8q+aw8nWWF4zh55Y3Wfp2qCBhUL30M6RHXjsPFqZbKgJi/uJcTFtr20bPFwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AEL16ELCWXBjkHkzn48i/Chb/D4lQa2N+DK5B4qXDvU=;
- b=THtbYKlFbsukCNPCJdcW50nf5zOqE+emrkxM322CGq1HjdrPKWaEwCgXYRBUGiVC+6bracyy6z/6CSTYKC5c4EHmqLmvlacoosuuUpuV5k9Bu8rVNiXqnjuV1NqD/HUm4lYk5mJyK51kYP3HBT/zBjRpE5v8wU+vxBQm6D4zev81rKrdk3x8JynRMcC7SLQk+dhQWiaJ+zNg+cS+PeYocP+LWR0irONb2tZcx9H8gaekYQwhMPvXdZKe8vZdF3LDCrql74gEtfiKficb8hUxSsJp+R+Qp19YAUdBYMGss0HB8o7c04j8szrSQLVC3c1kIGL4wxFT6l2FK6gAR22qJQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AEL16ELCWXBjkHkzn48i/Chb/D4lQa2N+DK5B4qXDvU=;
- b=ZPSTvNslp1qJDBpFn6/5JJOWIk89NS+XuTjNZuMEn3sMQF0KSB0TjL8hIs14A8X2wnN4VXlD/E4saeRcCwSGYTHHnr3BcdLKhuUyZQ9KWCUWIjBx+oA/faxr5/aZssjRahEc662t838rY/K7bOKDzat6E1Vcg4Eq3ru6JntaTqKRQ9W2K3WNBZG3JEWiPWUpfBaYVUXBRuhltOJeEC+nsBoF6aTDTRAxyzX8IlxCMNJxsaT0Z2BEp4Wgunj1PyDDMbg/MrevwsjVnJ7SVjYjxyCPe1GAtB2sdGju6eaj86sWNDsy4pjFASS7QWdooxQ8yfPAfxCFfcPwoRFuxBpvmQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5968.namprd12.prod.outlook.com (2603:10b6:408:14f::7)
- by DM4PR12MB7645.namprd12.prod.outlook.com (2603:10b6:8:107::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.38; Fri, 6 Jun
- 2025 18:21:37 +0000
-Received: from LV2PR12MB5968.namprd12.prod.outlook.com
- ([fe80::e6dd:1206:6677:f9c4]) by LV2PR12MB5968.namprd12.prod.outlook.com
- ([fe80::e6dd:1206:6677:f9c4%4]) with mapi id 15.20.8769.037; Fri, 6 Jun 2025
- 18:21:37 +0000
-Message-ID: <3dfbbd63-697d-42aa-8906-539d74df9123@nvidia.com>
-Date: Fri, 6 Jun 2025 11:21:34 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] mm/gup: remove (VM_)BUG_ONs
-To: David Hildenbrand <david@redhat.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Peter Xu <peterx@redhat.com>
-References: <20250604140544.688711-1-david@redhat.com>
- <aEFC_12om2UHFGbu@tiehlicka>
- <1a65d0e6-6088-4a15-9c19-537203fe655c@redhat.com>
- <aEKnSxHG8_BGj7zQ@tiehlicka>
- <e680a8f3-7b45-4836-8da7-7e7a0d2fcd56@redhat.com>
- <aEK_R93gihEn-xW6@tiehlicka>
- <50ff9149-2824-4e57-8d74-d8d0c063c87e@lucifer.local>
- <e5fa4a36-2af8-48e9-811e-680881c06b86@redhat.com>
- <1a7513cf-4a0a-4e58-b20d-31c1370b760f@lucifer.local>
- <e898e52e-a223-4567-9514-b4a021b5d460@nvidia.com>
- <72bb36f2-65b6-4785-af9d-5b1f8126fc78@lucifer.local>
- <2f866f12-2aa0-4456-b215-08ddc9b13b1e@redhat.com>
-Content-Language: en-US
-From: John Hubbard <jhubbard@nvidia.com>
-In-Reply-To: <2f866f12-2aa0-4456-b215-08ddc9b13b1e@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR05CA0025.namprd05.prod.outlook.com
- (2603:10b6:a03:33b::30) To LV2PR12MB5968.namprd12.prod.outlook.com
- (2603:10b6:408:14f::7)
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="byk1l4yV"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-234fcadde3eso29258065ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 11:22:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1749234143; x=1749838943; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OZrMvaEHkl3yooXaY3MSFj8fFjzuxvYEiXVTkirVIzk=;
+        b=byk1l4yVcTrr698paW31ATjzOL9czFtVCGcFx+Qk5XYU7Obwp1d1K2389uUrG0dfYb
+         APn5xrsXAXdbSiPbW6CkLgftg9b3KDhdq3/mucxtTdMLYR+FCdKy6WFH9nXgOXyYbc+i
+         g86QjKNdOxRjlWct0xguv4frrerFD5ySvqY8z+XIMdCDLcxf6lvujKzj1ESpBJ9wpzec
+         r/jceQvIzOziS9Fm6bOptHeM3gE6JV14nghIzQrEaQqp9p0mR6OJmiBe4eiM3iqS66Tv
+         Lg4hyveuk4wWMMNwWlT6waPdRd4S8LM/yaGM1Z455bsOFG05WYJRvPHJ/NIjHj8s5y1o
+         c9RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749234143; x=1749838943;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OZrMvaEHkl3yooXaY3MSFj8fFjzuxvYEiXVTkirVIzk=;
+        b=e8hhl1ooeImeQ2ZLcM3raJ40pWXA69JA/jjTyQYz8EBRHkxhvrHM0l5b+Y45zV6tOc
+         WDf9xGik+rRjhPU/do8fKgx0b1irrKWC6hcQw70g/c/UbWLJkQWuVgicjUw42w0vJ9it
+         vuTId0CZPaXO41r7KJAsZG0P+HhOClpWdY3xxYvGHikUZJmCOITNF+rkQgn1e92rtNoM
+         B/uLTpWj4ddfNJpQThQiGoCvAMq9GfsyJMcCWGdPbTHH6I8RS38ehYxHnxh8ibGs6Qr8
+         fY9fopnhPbuNCHlVd9jBpNh7CdsXrNIL5Ksyf2UYzPqG0ZSQZS0vo3iu0DRdcSRK1VgO
+         JMsw==
+X-Forwarded-Encrypted: i=1; AJvYcCVdicfIwhNHmBSbRwQsGrG/pZ9i087YgOQt1Mbu+eqhblyyPSsGLgh2UENnVrYW/2tIPLnmDrOgEQdQDqc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHBGGxu27llx4qXi9z+h+/hEBhn05yOoMJMIGxx05QG6eXrLG7
+	lF15LrQ8ZP4EfCJzfMx/i5WX/aWXJaptUA7XTnDhdjGg3VQ+KdwGQj3Y4cTWS4GntECvYq/uqtC
+	9zpxl
+X-Gm-Gg: ASbGncuIpIohPo9vb7Jgj83+85wig4+el1gPRUXwCrLXGjh50YOdtDAD6mreGpGtAND
+	/Xr6Nyketnds+ALiL1l8A16N1gp4zegwWyH6ksMO0XddVDj54e3EGRBk8ZJ50o75a0jmGgMw7aw
+	OetZpBOMnDTpqllGzRc6tM6yXkD6+AbCSc7bBB5NIM8Lz2+ArSYjaWW3bt3cwXjbMaNB/dST/X9
+	+y+oldkraK43HGeh/SXsI19HTPYyEyapSKRA3MBJTacjqPLqYuhMhsxhQ8SKr1VWUAOytAJfCpc
+	p+98xT+lsQ7QedZHMDST2J52dFgcg6QsMayQSsmALBl3LoPXFYyKPk4=
+X-Google-Smtp-Source: AGHT+IGMlluHec06cdDvnE+fsfsOP8CEZrDoNNmjzyHDnUqsJgq7fMhrAUqDcdxh0pOY9mNBmLtDoA==
+X-Received: by 2002:a17:902:d483:b0:235:e1d6:4e29 with SMTP id d9443c01a7336-23601dc0136mr70329185ad.36.1749234143099;
+        Fri, 06 Jun 2025 11:22:23 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:500::7:2724])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-236030788a1sm15357385ad.16.2025.06.06.11.22.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 11:22:22 -0700 (PDT)
+Date: Fri, 06 Jun 2025 11:22:22 -0700 (PDT)
+X-Google-Original-Date: Fri, 06 Jun 2025 11:22:16 PDT (-0700)
+Subject:     Re: [PATCH v8] riscv: mm: Add support for Svinval extension
+In-Reply-To: <CAN37VV4ohoi48BAM1-OTdSGe9yD=2Eh84pKsHLsWQSaRadJ7tw@mail.gmail.com>
+CC: Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org,
+  linux-kernel@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+  alexghiti@rivosinc.com, samuel.holland@sifive.com, ajones@ventanamicro.com
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: mchitale@ventanamicro.com
+Message-ID: <mhng-BE91CAF1-2E4D-45A2-A21A-FD613551610D@palmerdabbelt-mac>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5968:EE_|DM4PR12MB7645:EE_
-X-MS-Office365-Filtering-Correlation-Id: b6c2eb77-f47d-4ff7-cb41-08dda526f988
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?M1c2aE82T2Fma0hoWUprcXNJd1NST0g2SWNDV1BXc1FGNHQ4bXZUVlpCdFBy?=
- =?utf-8?B?WjA4UTExK1JjaTAra2hhcmo4b1NyazlMNEZuc2d0bEZldTVYa0N6R2ZVRHNE?=
- =?utf-8?B?U2JEZ0ZwWmdtM2dLZmJWSE92Ukk1TXJ1dHh1RmxBRHpLUWQzamluOU9ST3Nw?=
- =?utf-8?B?TFl3WFA4bkZKTWUrRW5Fc2puRERpTnM3S3VFQnRJbFZ3OFZxT3k5NnhadHpN?=
- =?utf-8?B?d29LUXhYRWljWjVEWmhaM01CcmNraXJGdHBUSWJYR3VlMk9TZkRkY3EwR3hS?=
- =?utf-8?B?aWlMNkpiZVNMdUZVR3NOQmVIOTZENlovbXFwa3J1KzByTjJUZXljMGY4dG1w?=
- =?utf-8?B?emF5SXRZWlIxOHNFRE5kNG8rZjRLMFdvakduM0RUNEZkNzEra3ZmbWk0NFRw?=
- =?utf-8?B?QzZXRlZKU3oyMkJrNk5WVDBDWlBIWGh3eGRwaW1SdWNCN2xxWmFSMXJXNk14?=
- =?utf-8?B?dUFDSUlJSEdJUFdZZ3VoejVpNUlOaHJKZk45VVI1cmQ3RWJDdXRhbDcyOXZP?=
- =?utf-8?B?M2NRSXpWOWJXalgwaFBsbUQvVDlXYmxoYXRIMU5pK0ZBTnhUVTZZWTRVamt6?=
- =?utf-8?B?TlhwSE5RYUFZYU1mNTA1OFpLeU5INmpLNjFoOVdraDI1TStST1FOYWJRWG5L?=
- =?utf-8?B?cHhmbHZGdllIYW5hVUl5d2VxNUFBOU10MEdqbjg5bWNzRkVralA0a0p1b2Fp?=
- =?utf-8?B?U05hWVAvVFVUNVZDUjQrUFV1dkxrWjEwbnczNkdKcUhSb0NmWjJBamUrNi9N?=
- =?utf-8?B?VFZkWUJxVUJ0NFFQV1p2bm1RMExJN2lkOW1SZUlkR3lnTVlnQ01zcFdWbE4v?=
- =?utf-8?B?YXJXOGMxVEhETWhISkgxS3E2UC9xK2ZkRnVDKyswcTladCsrendzd1Y5b3k0?=
- =?utf-8?B?dE1DaEd0ajZWc3VtYXJVdk9oS2dwRVhpZGVNc2JoNVpSK2RkZ0c3TmU5eWlK?=
- =?utf-8?B?bkQrMTRCWkpDT3U2MnNDZTVHZkRJczZQa3pCdGtZTFM2MWc0RzVzSUxZU1NB?=
- =?utf-8?B?L0dhTUIxV08ybnpiOWtIVlZkQjVVUFN6VStqVjJEWHRXTFpXTC9DV29xSkxY?=
- =?utf-8?B?UUVxTWVnK2ZIMm9zbFR6VUtSVHdnUjVYeU5zcy92YTdkQXNJQ0JKeW1Takhq?=
- =?utf-8?B?Y0Ftd2RTbk9PbzBrSCtTRVR3NzZtYjNZT3EvS0hyUHJsZDRMZTc3MW95Q3d6?=
- =?utf-8?B?RWozdTc1cG12ZXo0RVVJNzd0eGFqMENSZlU5RkEzQVhVRTBRaUNNV051VDRD?=
- =?utf-8?B?MTdCR29vQjRtczErclBPRFJQSDhLd1dJWHc4YURJVlR6ajlCSFNGN253Mmpw?=
- =?utf-8?B?T3ZKWm5na25wNG45TmV4TG9BdDJCak5zb2lPVDZaQmIrUm5zVU1RMGZiam55?=
- =?utf-8?B?ekVNQjloWUV6UEVndUlOTndMRHkxZXpSMUJVL0E2ZHIvNW5Vb0x2bEFPV25k?=
- =?utf-8?B?VHpIWjNWVElWZUpmeHZ3S0duZmQvVVNoZys1KzlwbjBWZ1QwMkp0MURkZWZ6?=
- =?utf-8?B?c1FOaU0wcjZwemx6SzBKbkh0ekRqRGdFcEZSd1QzQzZtZlR5eXI5clZKbjc2?=
- =?utf-8?B?SDErUS9FOWkxSHVEVWdDRjZwWERmQXNpUm83R0RDeUVvaCs3ZjdZeXdFSVht?=
- =?utf-8?B?RGlwWXZtVmtQS3FDaklPNUFKVTFFV1BRaVdCd29Sa0dDUWIwZVRBNURFMWda?=
- =?utf-8?B?amEvaWlOcUxCU0pHZURHc2dEOTJNWldnZ1ZQYlZHSE9UblR6UTFjWFFIbXAy?=
- =?utf-8?B?dEt6YWJxOWZqTkhYQ1hHajZIZ2l4bDlQaVhJbjVHeWFsWklEcG54S1Fybjds?=
- =?utf-8?B?bS9TV21meWV0U2hBaVFiNFpSd2kzTHpMM1dWYWtEVVo1NyszZmQ2cXpKcmdY?=
- =?utf-8?B?WXFRSExHYlFCWmJqaWNFYlVZM0U2NDRCTWxkSzNFc0NpUlVFbDZzSFpuMng2?=
- =?utf-8?Q?s0lpsbqPfaU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5968.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UEQ2VnpLOFpGWTUxQk5ZeTU3ZE9qeXl2TkZER01LMy85SHRzUVNEZEo2aUFh?=
- =?utf-8?B?N0lCcnRVaUN0RkVsRnpoNEZlOEF1a2hYaisvUzZUNjJVQ0pZYzB3TkNxSGt5?=
- =?utf-8?B?UWNvS2ZmUmlKR0pxRGVkWE9GNkloT085WnNOaU1kWWpscmJld0orUUdvVE5H?=
- =?utf-8?B?R0RUa0kvRG9nOEdhN0lRZVVsai9xYWN6cC9pYktFMlJ6amtEVGpqNUlleXNq?=
- =?utf-8?B?Z1U0bHFGUUtLeUpRU1p0MmlGOFZPWlJXOGEzdFFRWHZZSk9kR2NuajZPRWNs?=
- =?utf-8?B?RCtqZ0VMaTB4cFNta3JLNTN3eHdMRVIvQmJkSXljakFGeHc5ZHBvWmFhTG1W?=
- =?utf-8?B?SXNCMC9payt1VXZicWJUNmZqWEdOZ0hCbk1ybGFrenlwUHYybEhiVDJzdXBk?=
- =?utf-8?B?bUZ0Um80b2pDZmhOOTZZc3FiRUdVWXJ0aXdLWFdRK0lQR2o4YUUyd0x4T0F1?=
- =?utf-8?B?T3NweHNPQmxkNUh3SFNPTG1lZmxFbXpxbVJ0R0VUdXQ1SXE2MlpRUzZpelFu?=
- =?utf-8?B?NkwxODVDK1ZPVWlidk9zMEZtODlvNUt2dHVNNTQ1SVM4VkxjUDVuL0dEakM3?=
- =?utf-8?B?Y2dkTGU2MEpMM1luYkZDNXYvcktrTU1NSmZSYUhLYXErUGczT3BiK1NRbkF0?=
- =?utf-8?B?N3hsSWRCYVorZmFDVjgxdll1QzdValBiSlZ6ZUZEUFFwK1FBZEJqQUh4ZzI3?=
- =?utf-8?B?Q2lnTURtRTdGaW4xbEQ1cm9TTWVQYkhOOHZUeVEyV282MVhNcFdQckRRaEsw?=
- =?utf-8?B?R0JNVm00QnRNUFhxZFZmc2E4SkhTOE93ZjdoNUEwTG0vb3R3SVE1NzlpNllz?=
- =?utf-8?B?QlRUT0hCU3MrQnV4WVQzQ1pwcjlZK3JQV0FKbUdWUHEyeUkzK3hXZzRmbzMw?=
- =?utf-8?B?RjBVc3lDWWtBNU9aOGhWS21vMXZaMEFWcWxLdmoyQjFCWTJCOVRXMXRvdzF2?=
- =?utf-8?B?U3ZjdmRiRWh5cHltVklKOWtxUjhlcmdBMU9ZbHhqVzBCTzdmbUNHWXBrNlRv?=
- =?utf-8?B?T1h3aUM2NU1xUlErcmJSZHk4YTNZSmttSFEwblFZcUpvZHlOWDRsc1VzRHZX?=
- =?utf-8?B?VDViUkJaNHlSbG1CV3poajEzSnE2d1I3WExVVnBtektxVUdVTjlRNXEweVRx?=
- =?utf-8?B?WFNOK1pxczhBRUIyUDlZTHZoRks4ZHR4Mnk5Tzg0d08wb3JKZFlDRjR1aFgr?=
- =?utf-8?B?dW5xY3pyS2krN1FZaW82STIwUmYxdWo5cnRJVndXT25YK1R6ZkNMOXhVVzE0?=
- =?utf-8?B?R2d3b3Uvd2l6VGUwSGZLVGhwdFM5TzFaVHQ0RWJYc0NQc2s1NWplMDhydjdt?=
- =?utf-8?B?eWRHSmIvMlR1UWVmY2RkWXRNV0xTY3czdkwzTVFYYzB1OVdQVXo0bEVvaGNj?=
- =?utf-8?B?azNpQndwK2VyL1lON0lKZitBTUIyeDh2dFcyMjdIY1V6dExJMlVTOXkxbFFK?=
- =?utf-8?B?R3FaTE1QWXJ4VlhEU1lrMVZRdWM2a24vc05YQzBNeDFYMS9tZXhSb0doTUtm?=
- =?utf-8?B?YUsyOUFCUzRSSG5VeWNpYmZVaktDSUNRbzF3YTFyeFMzTGZEbitsZlF0RnpQ?=
- =?utf-8?B?NUJjd1hOWHBBMm41dCtGYlk1YkxCYkhiU1YzS1dicW5LVzlVQ214K3YxZXF6?=
- =?utf-8?B?R1MxSkhJZkhBRGxqSk4wUWs1cUVZN2xlVkM5eUZmelRyeXV4THJIbmVIY3Nw?=
- =?utf-8?B?TVNJS3F5UXBPaHpFWndJdGVkdkpWNVpyMUZia0JCL3BWRnB0QU1TSjZ5bm9o?=
- =?utf-8?B?UWNXdVFmZ2JDY3FubWtTWmJ1YWxwQ3FvamlocE1WSzVVa0RpRHVQZFBpQ2Qr?=
- =?utf-8?B?Qkh2WnhtRUxnZzVTSU9XWUpsSnpwWkFMU3VybnBiMGpRejJMUTFiNGJ4L3Ba?=
- =?utf-8?B?VkVWWUxZRVI5WVhwdURRWjFEaHBsTlRDMXJGNXhwdU9GMUtIMDkyc0VTSFRM?=
- =?utf-8?B?SnNhQ0RQdjVqbkZjd2d4YnR1Qkd1b2d3bTB4dUxodDRnVVVoMnc2ZW9EMzJQ?=
- =?utf-8?B?QVd0RnVqcEgyU0sxejY5eUhXZklRNTBPS2ZucnM5VTU1U2pwckVYZkYzNC82?=
- =?utf-8?B?eUlmamhuQVEzQy9LaE1QS1BTcm9uZ0QrOFpnMmhBZkw5SnVUU2pCcXRHc1NF?=
- =?utf-8?Q?CBI6h+eWIUhg3cSKfOS0lS1N+?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b6c2eb77-f47d-4ff7-cb41-08dda526f988
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5968.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2025 18:21:37.1917
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /iVL41+XGxIkbLdNw7T3arXP/tZNZVQNamCzcYfST56wVYAjg3h7TNuobrEK01jbMVUwJ+8LBC+1QmaaeWqEIg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7645
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-
-
-On 6/6/25 11:15 AM, David Hildenbrand wrote:
-> On 06.06.25 20:06, Lorenzo Stoakes wrote:
->> On Fri, Jun 06, 2025 at 10:57:44AM -0700, John Hubbard wrote:
->>> On 6/6/25 4:04 AM, Lorenzo Stoakes wrote:
->>>> On Fri, Jun 06, 2025 at 12:28:28PM +0200, David Hildenbrand wrote:
->>>>> On 06.06.25 12:19, Lorenzo Stoakes wrote:
->>>>>> On Fri, Jun 06, 2025 at 12:13:27PM +0200, Michal Hocko wrote:
->>>>>>> On Fri 06-06-25 11:01:18, David Hildenbrand wrote:
->>>>>>>> On 06.06.25 10:31, Michal Hocko wrote:
->>>>>>> [...]
->>>> So to me the only assessment needed is 'do we want to warn on this or not?'.
->>>>
->>>> And as you say, really WARN_ON_ONCE() seems appropriate, because nearly always
->>>> we will get flooded with useless information.
->>>>
->>>
->>> As yet another victim of such WARN_ON() floods at times, I've followed
->>> this thread with great interest. And after reflecting on it a bit, I believe
->>> that, surprisingly enough, WARN_ON() is a better replacement for VM_BUG_ON()
->>> than WARN_ON_ONCE(), because:
+On Thu, 22 May 2025 08:11:09 PDT (-0700), mchitale@ventanamicro.com wrote:
+> Hi Alex,
+>
+> On Tue, May 20, 2025 at 10:25 PM Alexandre Ghiti <alex@ghiti.fr> wrote:
 >>
->> Right, these shouldn't be happening _at all_.
->  > > I'm easy on this point, I'd say in that case VM_WARN_ON() is the most
->> _conservative_ approach, since these are things that must not happen, and
->> so it's not unreasonable to fail to repress repetitions of the 'impossible'
->> :)
+>> Hi Mayuresh!
 >>
->> But I get the general point about ...WARN_ON_ONCE() avoiding floods.
+>> On 7/30/24 10:43, Mayuresh Chitale wrote:
+>> > On Wed, Jul 24, 2024 at 8:20 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+>> >> On Tue, 02 Jul 2024 03:26:37 PDT (-0700), mchitale@ventanamicro.com wrote:
+>> >>> The Svinval extension splits SFENCE.VMA instruction into finer-grained
+>> >>> invalidation and ordering operations and is mandatory for RVA23S64 profile.
+>> >>> When Svinval is enabled the local_flush_tlb_range_threshold_asid function
+>> >>> should use the following sequence to optimize the tlb flushes instead of
+>> >> Do you have any performance numbers for the optimization?  As per here
+>> >> <https://lore.kernel.org/all/mhng-f799bd2b-7f22-4c03-bdb2-903fa3b5d508@palmer-ri-x1c9a/>.
+>> > No, currently there are no numbers available for comparison but the
+>> > rationale for the optimization is described in the spec. The extension
+>> > is mandatory for the RVA23S64 profile but any platform that doesn't
+>> > support this extension will not be impacted as the code executes only
+>> > if the svinval extension is enabled at the boot up.
+
+I seem to remember writing something like this up at some point, but I 
+didn't see it so I figured I'd just write it up again in case anyone's 
+looking in the future...
+
+My core worry here  is that there's two ways to tuse the Svinval 
+extension:
+
+* This, which just replaces the sfence.vma with a loop of Svinval 
+  instructions.  This keeps the Svinval instructions close to each 
+  other.
+* Some more extensive modifications to move the Svinval instructions 
+  farther apart from each other.
+
+Which approach is better is going to depend on what them microarchicture 
+implements: does it want the Svinval instructions close to each other so 
+it can pattern match them, or does it want them far apart so the 
+ordering instructions stall less.  It's entirely possible that the wrong 
+flavor of Svinval will actually decrease performance on systems that 
+were built around the other flavor, and we don't know which flavor is 
+getting implemented.
+
+So it's not one of these extensions where we can just say "these are 
+only used on systems that implement the extensions, so it's obviously 
+faster".  We really need some numbers to demonstrate this flavor is 
+actually faster...
+
+>> So I finally have some numbers! I tested this patchset on the BananaPi:
+>> I measured the number of cycles when flushing 64 entries (which is our
+>> current threshold) and I made sure to touch the entries beforehand.
 >>
->> David, what do you think?
-> 
-> Well, in this patch here I deliberately want _ONCE for the unpin sanity 
-> checks. Because if they start happening (IOW, now after 5 years observed 
-> for the first time?) I *absolutely don't* want to get flooded and 
-> *really* figure out what is going on by seeing what else failed.
-> 
-> And crashing on VM_BUG_ON() and not observing anything else was also not 
-> particularly helpful :)
-> 
-> Because ... they shouldn't be happening ...
-> 
-> (well, it goes back to my initial point about requiring individual 
-> decisions etc ...)
-> 
-> Not sure what's best now in the general case, in the end I don't care 
-> that much.
-> 
-> Roll a dice? ;)
+>> Here they are:
+>>
+>> * svinval:
+>>
+>> #cycles: 364920
+>> #cycles: 365856
+>> #cycles: 367993
+>>
+>> * !svinval:
+>>
+>> #cycles: 663585
+>> #cycles: 663105
+>> #cycles: 664073
+>>
+>
+> That's awesome !! Thank you so much for getting the data.
 
-One last data point: I've often logged onto systems that were running
-long enough that the dmesg had long since rolled over. And this makes
-the WARN_ON_ONCE() items disappear.
+So I think that's good enough to start, so it's going up to Linus and 
+hopefully it lands (there's been a bit of chaos, but hopefully that's 
+all sorted out).
 
+>> So that's roughly /2 using svinval. To me that's good enough to merge
+>> that for 6.16 :)
 
+Ya, but probably low enough that we're going to want a lower threshold 
+too -- if the svinval loop is only a factor of 2 faster for 64 entries, 
+it's probably going to end up slower at some point...
 
-> 
+On the flip side, it's a big enough change that we probably want to 
+re-evaluate tlb_flush_all_threshold, too.
 
-thanks,
--- 
-John Hubbard
-
+>> Sorry for the very very long delay and thanks again for the multiple
+>> revisions!
+>>
+>> Alex
+>>
+>>
+>> >>> a simple sfence.vma:
+>> >>>
+>> >>> sfence.w.inval
+>> >>> svinval.vma
+>> >>>    .
+>> >>>    .
+>> >>> svinval.vma
+>> >>> sfence.inval.ir
+>> >>>
+>> >>> The maximum number of consecutive svinval.vma instructions that
+>> >>> can be executed in local_flush_tlb_range_threshold_asid function
+>> >>> is limited to 64. This is required to avoid soft lockups and the
+>> >>> approach is similar to that used in arm64.
+>> >>>
+>> >>> Signed-off-by: Mayuresh Chitale <mchitale@ventanamicro.com>
+>> >>> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+>> >>> ---
+>> >>> Changes in v8:
+>> >>> - Fix line wrap
+>> >>> - Add RB tag
+>> >>>
+>> >>> Changes in v7:
+>> >>> - Use existing svinval macros in the insn-def.h
+>> >>> - Rename local_sinval_vma_asid to local_sinval_vma
+>> >>>
+>> >>> Changes in v6:
+>> >>> - Rebase on latest torvalds/master
+>> >>>
+>> >>> Changes in v5:
+>> >>> - Reduce tlb flush threshold to 64
+>> >>> - Improve implementation of local_flush_tlb* functions
+>> >>>
+>> >>> Changes in v4:
+>> >>> - Rebase and refactor as per latest changes on torvalds/master
+>> >>> - Drop patch 1 in the series
+>> >>>
+>> >>> Changes in v3:
+>> >>> - Fix incorrect vma used for sinval instructions
+>> >>> - Use unified static key mechanism for svinval
+>> >>> - Rebased on torvalds/master
+>> >>>
+>> >>> Changes in v2:
+>> >>> - Rebased on 5.18-rc3
+>> >>> - update riscv_fill_hwcap to probe Svinval extension
+>> >>>
+>> >>>   arch/riscv/mm/tlbflush.c | 32 ++++++++++++++++++++++++++++++++
+>> >>>   1 file changed, 32 insertions(+)
+>> >>>
+>> >>> diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
+>> >>> index 9b6e86ce3867..782147a63f3b 100644
+>> >>> --- a/arch/riscv/mm/tlbflush.c
+>> >>> +++ b/arch/riscv/mm/tlbflush.c
+>> >>> @@ -6,6 +6,27 @@
+>> >>>   #include <linux/hugetlb.h>
+>> >>>   #include <asm/sbi.h>
+>> >>>   #include <asm/mmu_context.h>
+>> >>> +#include <asm/cpufeature.h>
+>> >>> +
+>> >>> +#define has_svinval()        riscv_has_extension_unlikely(RISCV_ISA_EXT_SVINVAL)
+>> >>> +
+>> >>> +static inline void local_sfence_inval_ir(void)
+>> >>> +{
+>> >>> +     asm volatile(SFENCE_INVAL_IR() ::: "memory");
+>> >>> +}
+>> >>> +
+>> >>> +static inline void local_sfence_w_inval(void)
+>> >>> +{
+>> >>> +     asm volatile(SFENCE_W_INVAL() ::: "memory");
+>> >>> +}
+>> >>> +
+>> >>> +static inline void local_sinval_vma(unsigned long vma, unsigned long asid)
+>> >>> +{
+>> >>> +     if (asid != FLUSH_TLB_NO_ASID)
+>> >>> +             asm volatile(SINVAL_VMA(%0, %1) : : "r" (vma), "r" (asid) : "memory");
+>> >>> +     else
+>> >>> +             asm volatile(SINVAL_VMA(%0, zero) : : "r" (vma) : "memory");
+>> >>> +}
+>> >>>
+>> >>>   /*
+>> >>>    * Flush entire TLB if number of entries to be flushed is greater
+>> >>> @@ -26,6 +47,16 @@ static void local_flush_tlb_range_threshold_asid(unsigned long start,
+>> >>>                return;
+>> >>>        }
+>> >>>
+>> >>> +     if (has_svinval()) {
+>> >>> +             local_sfence_w_inval();
+>> >>> +             for (i = 0; i < nr_ptes_in_range; ++i) {
+>> >>> +                     local_sinval_vma(start, asid);
+>> >>> +                     start += stride;
+>> >>> +             }
+>> >>> +             local_sfence_inval_ir();
+>> >>> +             return;
+>> >>> +     }
+>> >>> +
+>> >>>        for (i = 0; i < nr_ptes_in_range; ++i) {
+>> >>>                local_flush_tlb_page_asid(start, asid);
+>> >>>                start += stride;
+>> > _______________________________________________
+>> > linux-riscv mailing list
+>> > linux-riscv@lists.infradead.org
+>> > http://lists.infradead.org/mailman/listinfo/linux-riscv
