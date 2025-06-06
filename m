@@ -1,184 +1,233 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960AF2F2E;
-	Fri,  6 Jun 2025 13:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C0228466C;
+	Fri,  6 Jun 2025 13:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749216780; cv=none; b=XB83UyI+TMyFmpfZfAgYz1FDdfzsc5cLZ87yiAL9Rhd5SPs48O5XWxh6JLZXEXiGi/Jowpi0RgssKI2Uk+w0HfOIZabEBP7r1ZDeE5EkBcKb20eyKu9m7tfZNzGSueItm22OMaguSF1EW+2378zIyy+efdpX49Dd1FcbXkK5DCs=
+	t=1749216904; cv=none; b=hqnjCTkbDEgpv5tu3teM+hzpiEJUQV0VT6puNl1iAnvHdwzPsoBuR5dPeqF1tADuhbBz8pbVBQvn11fWVEzSI6B2FkcNALooB1hS4lFX5jbVkiHdI6+p9mHibC9mmlOI7fljgCjb/uM0AWYvIMitPlLd5bDw4WLw3VZNIAwwR/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749216780; c=relaxed/simple;
-	bh=6RuF3Znt+tzQ+CHuQwvoPvsyYVJVvXA7G1mYnBcSznQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bsX64u8Y+bEZR6x/gALOv5YCrOY1yzRRTd2J0AbfPw9ZWFvH7ft9AuKoNIylfTHI+46/kuNFQieiQHSS9eCIYUAe3j4jZDrgPaurAMQF2kE+xnltU4FEFoNMvv83PvsR8xAcH98DMW0YjTzCk71dwcCSIR+qPuxGJ7/M6jMAO6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HeKgCYiq; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749216904; c=relaxed/simple;
+	bh=/z4KNTY6K1QX9BqG+GXj3WT7AYkNxHHXlkhmMGQe8dA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kosladHcgVsnmfxWI7kiskE6zf2MNKm7qA6Wn8dnB0epqaLc2IiJfVq23NOz8N5CD1Ogf8Gk8CAL36Z61ntLtVBZZ1Wyu7gyUilCKgMdDZGIodJuiCsehmpoFRAaKOp8mL3K/G7Rf2Q3fl/bI9SAMDdLkJuVtC4+xiK/eE4QAbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PZHfQXDW; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HeKgCYiq"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 556AZi9a012803;
-	Fri, 6 Jun 2025 13:32:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Es2qJC6PPNbgqcXhrSCL+dvAJQdmrGgRvfxTwABm56k=; b=HeKgCYiqFouGAnKU
-	dQFUmPzWEWl7MX4kY7/Sq99hHU+VUllGwwM7zpGsAW4578gNyc1Op9Ih+8sFUnxj
-	LxrMRqZy2bf5iTQPZhYiWu6rOtCQUoBSlNs9u2r3j19063VjToV1U4iKdsoBURSx
-	bgzEF/RT9E1on64TMEGL7c2gRoFe8DloR+X2q3gpD85X5BMvbIkm6n9sPStNFocK
-	DyIDZHRDtqCMtkOabQSmXOpxgqrNvMAwMreoJgalT9iyiywfIVj3h0azmmcPROO1
-	OmctL6hfC3o+uxtmFoiimGFhnXah09+7Dubj0bOgA2xLqeKjC5WmAVxAEgGKCHa7
-	DKNJig==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 473nphsqxq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Jun 2025 13:32:51 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 556DWoRD025923
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 6 Jun 2025 13:32:50 GMT
-Received: from [10.253.79.143] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 6 Jun 2025
- 06:32:46 -0700
-Message-ID: <d5aee491-3ba2-4beb-8b8f-4ba8372e6d16@quicinc.com>
-Date: Fri, 6 Jun 2025 21:32:44 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PZHfQXDW"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7cee9f0af46so215050585a.3;
+        Fri, 06 Jun 2025 06:35:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749216901; x=1749821701; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=li311bFWIwjWn8TvNMnkERHq2b02zAYt2SjH2f5Hw9U=;
+        b=PZHfQXDWA3IATUVeTXdxGiRJYm8FHkKP8vpmEfkDDql63vukvYyPMGdDIQLxd2h60S
+         Ms6RY04z8yw1FpqQ7jrhCV3kO7G9NKlabxwXgc7yuEAyp2V8GUPRQ57uHSzeKddwpqPm
+         EdezgBXvqJYyxZ481tbEVAnLiYDaGOkZnO7fv3HhvjMUoVuu7cBgfGct3jy4GfGcgQbR
+         GMPIqyLhGnqCrLR5GguzX7x1hPX9DEhd3z8aLaku2lGp2dRhSCOpZEGbOZvUULN9k28+
+         TxIUqgX1eYd0gmYcWzdFlxNbjuH1AP8mks5FUVpCzuwS/CHS90joXYfMsqUObnkX+KN0
+         P9Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749216901; x=1749821701;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=li311bFWIwjWn8TvNMnkERHq2b02zAYt2SjH2f5Hw9U=;
+        b=eYXf6fiX1CXdaYg+dAs03hTi7sMkorUj4oSDRMokTGTljeTgRkBbgOg8obbnKVOdkq
+         +at/v8PnhgxouapTxeJ4h4/5hXbU5VoRo7sqcp5+TD9ZuqIbNmZFzB0g0I81gxrtj8Rp
+         3HZHZLIbJ5ghdGXfPxxQucDPS7AedNISquDxJuxvndmhnAUNPn3Za9//v1HI0SQjjXKY
+         5sYxSbwqJ3n/mKpRRBvGrMjMg+O0gAa3o1WtQMycxN4iQLU0vHlm1g6sWBsO7i6AEo62
+         KHRQZmd6DFsbDV/jctN8G+LkXSTQuIo8nGdKthg+P/7wUrzUyB/Whh/TyPEJEBTin1Vv
+         dd3w==
+X-Forwarded-Encrypted: i=1; AJvYcCUYBeMY02Rij12hxEnEiG6I0RH9ncROLXeZ1+CPMZVGIg9jTrwmMufeDwdYMmCiR+UiYTIC5OVnx7g=@vger.kernel.org, AJvYcCWU9R/uM6diQCzZvYG696VFxLjqEIH2UXS9TlEHcUiidZNnmctqhbGDoqNbkT7EdFElmaZDUxTzjCyP3qc=@vger.kernel.org, AJvYcCX0bygzJ0v0SMIAZc0F2C3BkLJufELj5i28xAwXN8yR84y0XBn/BxtuyNObHx6HwXLfUqWguAXMxArVkXP4vvQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGYhwnq3shAlx3j4LPnko4kZnlqHJMTCo/7pH1iTyxfQD8L6pm
+	4+lV4WfG43JuZ10u13F/eUrRjUwuQH/ZRZ06pPYInV53qIrIrwouXePv
+X-Gm-Gg: ASbGncsoqAjrQX+lh9qz379OpxZlwZe2AdAX/lnxL1fdCQRhlJz15wx5xRYoE32atD3
+	jc8f8KNlFSFt+9IxSKoe9zRQVNztreW1HGGCjA5uUYg19pNM59EPEIWZrnboLPSCq5tKhOYWv6F
+	h+4dYjFZ4yfCsMADcOIhbcBJgasjfD8FbHBLcB/CudcLsg/n5F/nGCGgZ64sqyWEUuqaIifbQZg
+	XwIouzXpgdl7VQJDrcgnqkr7ZbV3Tkf/eK5g2HeOcWLcSAU3q0EU+N8Er8Z3H58m8OMS8quT5pF
+	/4c7p3d8XxGr0Rj/wRkkQt5KDBJPIU1lurSMVtiqP04ZyPOuHLOIiFLjRGiSLl2ST36rMVnjixI
+	LuBIHqT12Q8jzrOghltf3M/yr6zEw5DFrAbG/QGTruRi2/TSCOc+b
+X-Google-Smtp-Source: AGHT+IGdv0PS1gCrF8HQzy1OVLhLukJz18uMLvvURPoeqzXqH+XjqhJus4TcmLLdKA2xzN/X0VJTRA==
+X-Received: by 2002:a05:620a:2910:b0:7c5:60c7:339 with SMTP id af79cd13be357-7d229896807mr549791285a.9.1749216901107;
+        Fri, 06 Jun 2025 06:35:01 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d2513357basm131888285a.4.2025.06.06.06.35.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 06:35:00 -0700 (PDT)
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfauth.phl.internal (Postfix) with ESMTP id CF8D81200043;
+	Fri,  6 Jun 2025 09:34:59 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Fri, 06 Jun 2025 09:34:59 -0400
+X-ME-Sender: <xms:g-5CaNRpeF7_7vsGG9v5ez9zypqGV4oaphkT89ARD1sU3yQ3dyY-rA>
+    <xme:g-5CaGyjvxdiFuo_L9i03pJPxRSI6FDLsNwWw22oSFcU48rDLFv9H6wBDPDA2-gyn
+    D-Vf4bxMaJ-iQaf9A>
+X-ME-Received: <xmr:g-5CaC31W5AqpHQdU7zDlZ2SUuW7OvW4k2mYMC_CcMXwkQFm7_1wba-eYQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdehudehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvden
+    ucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrd
+    gtohhmqeenucggtffrrghtthgvrhhnpefftdeihfeigedtvdeuueffieetvedtgeejuefh
+    hffgudfgfeeggfeftdeigeehvdenucffohhmrghinhepghhithhhuhgsrdgtohhmnecuve
+    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdo
+    mhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejke
+    ehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgr
+    mhgvpdhnsggprhgtphhtthhopedujedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoh
+    eplhhoshhsihhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehvihhrvghshhdrkhhu
+    mhgrrheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlh
+    drohhrghdprhgtphhtthhopeihuhhrhidrnhhorhhovhesghhmrghilhdrtghomhdprhgt
+    phhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrgh
+    grhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhihguhho
+    rdhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtoh
+    hmpdhrtghpthhtoheprgdrhhhinhgusghorhhgsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:g-5CaFA-zWWrv8JLb3Wnksy-nxHZWpITNKKXVPnjDyFJG27FOuW6eA>
+    <xmx:g-5CaGgsY8xTMgxvIj-dagcYAAUAo-KGwQOsICDASq8jd_Bj1F8lRw>
+    <xmx:g-5CaJr05cAIrBlfLm-gzzhBJSYarjBFEEYsBswpRojhZqamNwzDpA>
+    <xmx:g-5CaBgTQTj2RvSqaBsJTY-3n7ssks1XCJTtRrJPybS0GqjXbt-KbQ>
+    <xmx:g-5CaBR-rd1jMbvxffL4vy9pD7P1uujEqMepQUhJRW0fYO1IjQPm0Dv7>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 6 Jun 2025 09:34:58 -0400 (EDT)
+Date: Fri, 6 Jun 2025 06:34:56 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Benno Lossin <lossin@kernel.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH] rust: cpumask: Validate CPU number in set() and clear()
+Message-ID: <aELugDefiviXZjx6@Mac.home>
+References: <8b5fc7889a7aacbd9f1f7412c99f02c736bde190.1749183428.git.viresh.kumar@linaro.org>
+ <aEJwm16HSwCyt7aB@Mac.home>
+ <DAFAR5SUQSU9.OSLB2UAXE9DY@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 0/3] media: venus: enable venus on qcs615
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Bryan O'Donoghue
-	<bryan.odonoghue@linaro.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@oss.qualcomm.com>
-CC: Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Dikshita Agarwal
-	<quic_dikshita@quicinc.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        "Nicolas
- Dufresne" <nicolas.dufresne@collabora.com>
-References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
- <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
- <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
- <5854a587-aba7-4e71-87f8-249ba00cbc59@linaro.org>
- <996c9a39-5520-4b43-adfa-06ce29223ba0@quicinc.com>
- <713b87cb-0003-4ee3-a599-9cd41629bb42@kernel.org>
- <7aa36a0f-6741-40c2-93f4-036823d245fd@quicinc.com>
- <247002c0-ee68-4d0d-857a-768bf68bce75@kernel.org>
-Content-Language: en-US
-From: Renjiang Han <quic_renjiang@quicinc.com>
-In-Reply-To: <247002c0-ee68-4d0d-857a-768bf68bce75@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: ELZWQvtfk4vMVcc4do65dkOWUgD4OYgl
-X-Authority-Analysis: v=2.4 cv=N8QpF39B c=1 sm=1 tr=0 ts=6842ee03 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
- a=scSONbXNw8eJHw9vBkAA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDEyMiBTYWx0ZWRfX2O+JbySA59j7
- E0P/k6LOqIR/dbtYJ0JEMQP8zzqj6m6s4Lrr6rmI+VRtnFLdBKQ4NNt8i+wOknpDc0zwUqf4skv
- tXUoXMQFHiJ98F2FRKPWobE4PT8JIqnzgk4ZEwZJ/3yxxc3g4+HZanwlmjGCBtIZ+LRIV5hwZij
- sMdb9+VfSvUv78qt8QEW5enhVUWiWQ8ApgEepdms32vG8vWfiRH9A8CiJGwWTInMUZ6f3bQm1kL
- x76Qe6z8wyxM73+YbxIsxlZ7U8I+95xJYR0b7K8WM8IJzBVkp2s8BXncNlH7i0fHwnkTxWPnTem
- e5DaAcy9I8/ILFGv+vVD3cQa8KNWMFon2VHTcwzk3N+8kWUFDaQp2yyTmsE7IokRqfHO4KNQZIH
- E4ELfFKSkFLsM0gm+ryeJdSBDM98vqHtLk5Zdk6J4CE7CIm+nrs7BMBopAIVSNmOYfdc0V+u
-X-Proofpoint-GUID: ELZWQvtfk4vMVcc4do65dkOWUgD4OYgl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-06_04,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 adultscore=0 malwarescore=0 suspectscore=0 bulkscore=0
- mlxscore=0 spamscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1015
- impostorscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506060122
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DAFAR5SUQSU9.OSLB2UAXE9DY@kernel.org>
 
+On Fri, Jun 06, 2025 at 10:11:13AM +0200, Benno Lossin wrote:
+> On Fri Jun 6, 2025 at 6:37 AM CEST, Boqun Feng wrote:
+> > On Fri, Jun 06, 2025 at 09:47:28AM +0530, Viresh Kumar wrote:
+> >> The C `cpumask_{set|clear}_cpu()` APIs emit a warning when given an
+> >> invalid CPU number - but only if `CONFIG_DEBUG_PER_CPU_MAPS=y` is set.
+> >> 
+> >> Meanwhile, `cpumask_weight()` only considers CPUs up to `nr_cpu_ids`,
+> >> which can cause inconsistencies: a CPU number greater than `nr_cpu_ids`
+> >> may be set in the mask, yet the weight calculation won't reflect it.
+> >> 
+> >> This leads to doctest failures when `nr_cpu_ids < 4`, as the test tries
+> >> to set CPUs 2 and 3:
+> >> 
+> >>   rust_doctest_kernel_cpumask_rs_0.location: rust/kernel/cpumask.rs:180
+> >>   rust_doctest_kernel_cpumask_rs_0: ASSERTION FAILED at rust/kernel/cpumask.rs:190
+> >> 
+> >> Fix this by validating the CPU number in the Rust `set()` and `clear()`
+> >> methods to prevent out-of-bounds modifications.
+> >> 
+> >
+> > Thanks for the quick fix!
+> >
+> > While this can fix the current problem, but it's not a good solution for
+> > the long run. Because outside a test, we should never use an arbitrary
+> > i32 as a cpu number (we usually get it from smp_processor_id(), or
+> > something else). So the `< nr_cpu_ids` testing is not necessary in
+> > normal use cases.
+> >
+> > We should instead provide a wrapper for cpu id:
+> >
+> >     /// # Invariants
+> >     ///
+> >     /// The number is always in [0..nr_cpu_ids) range.
+> >     pub struct CpuId(i32);
+> >
+> > and
+> >
+> >     impl CpuId {
+> >         /// # Safety
+> > 	/// Callers must ensure `i` is a valid cpu id (i.e. 0 <= i <
+> > 	/// nr_cpu_ids).
+> >         pub unsafe fn from_i32_unchecked(i: i32) -> Self {
+> > 	    // INVARIANT: The function safety guarantees `i` is a valid
+> > 	    // cpu id.
+> > 	    CpuId(id);
+> > 	}
+> >
+> > 	pub fn from_i32(i: i32) -> Option<Self> {
+> > 	    if i < 0 || i >= nr_cpu_ids {
+> > 	        None
+> > 	    } else {
+> > 	        // SAFETY: `i` has just been checked as a valid cpu id.
+> > 	        Some(unsafe { Self::from_i32_unchecked(i) })
+> > 	    }
+> > 	}
+> >
+> > 	pub fn current() -> Self {
+> > 	    // SAFETY: smp_processor_id() always return valid cpu id.
+> > 	    unsafe { Self::from_i32_unchecked(smp_processor_id()) }
+> > 	}
+> >     }
+> >
+> > All `Cpumask` functions then take `CpuId` instead of `i32` as the
+> > parameter. Needless to say if we were to have a cpumask_next() wrapper,
+> > the return value will be `CpuId` (or `Option<CpuId>`), i.e. if a bit was
+> > set in a cpumask, then it must represent a correct cpu id.
+> >
+> > Make sense?
+> 
+> Just to make sure, the `nr_cpu_ids` stays constant, right?
+> 
 
-On 6/6/2025 8:56 PM, Krzysztof Kozlowski wrote:
-> On 06/06/2025 14:51, Renjiang Han wrote:
->> On 6/6/2025 8:44 PM, Krzysztof Kozlowski wrote:
->>> On 06/06/2025 14:37, Renjiang Han wrote:
->>>> On 6/5/2025 8:34 PM, Bryan O'Donoghue wrote:
->>>>> On 31/05/2025 01:05, Renjiang Han wrote:
->>>>>>>> Note:
->>>>>>>> This series consist of DT patches and a venus driver patch. The patch
->>>>>>>> 1/3, which is venus driver patch, can be picked independently without
->>>>>>>> having any functional dependency. But patch 2/3 & patch 3/3, which are
->>>>>>>> DT patches, still depend on [1].
->>>>>>> I'd say 2/3 and 3/3 still depend on 1/3, otherwise we can get video
->>>>>>> core
->>>>>>> on QCS615 over(?)clocked.
->>>>>> Agree, so we need to make sure that the driver patch is not picked
->>>>>> after the DT patch.
->>>>> This statement is confusing.
->>>>>
->>>>> 1/3 states that there will be a fallback if there is no OPP table
->>>>> present.
->>>>>
->>>>> Giving the code a glance, I believe that is so, freq_table should be
->>>>> used if there is no OPP specified in the DT.
->>>>>
->>>>> I think we are having a hard time here understanding what you are saying.
->>>>>
->>>>> My understanding:
->>>>>
->>>>> - venus modification is standalone 1/3
->>>>>     Qcs615 will fallback if no OPP is present
->>>>>
->>>>> - dt modification 2/3 3/3 is therefore also independent of driver
->>>>>
->>>>> ---
->>>>> bod
->>>> yes, let me re-spin this with driver patch alone. Once that gets in,
->>>> will bring in the DT patches.
->>> Did you read my feedback? There is no "once that gets in". DTS is an
->>> independent hardware description and your patchset claiming there is
->>> dependency is just broken.
->>>
->>> I am repeating this since few emails, so shall I NAK it that you will
->>> address the main issue you have?
->>>
->>> Best regards,
->>> Krzysztof
->> Hi Krzysztof
->>
->> SC7180 and QCS615 use the same video core. Only difference lies in the
->> freq_table for the video. Freq_table is generally determined at SOC level.
->> The Venus driver does not currently handle freq_table compatibility well
->> across platforms. This patch enables the driver to use the OPP-table from
->> the DT, addressing the frequency compatibility issue.
-> This does not resolve the main problem at all. If SW cannot use the
-> fallback alone, your fallback has no meaning and is not only confusing
-> but actually incorrect. And based on previous statements like
-> "overclocking" it is not only incorrect, but even harmful.
->
-> Best regards,
-> Krzysztof
-The fallback is only triggered when there is no OPP table in the DT.
-Since the QCS615 DT will include an OPP table, the fallback logic will
-not be used.
+Sort of. I believe the value won't be changed once the kernel boots, in
+most cases (modulo NR_CPUS=1 or CONFIG_FORCE_NR_CPUS=y), it's a
+read-mostly variable not a constant, and the value gets set by either a
+kernel command line or how many CPUs the kernel actually detect at boot
+time. See:
 
-Also, if the freq from the freq_table and the OPP table are the same,
-would it be acceptable to drop the freq_table from the driver?
+https://github.com/Rust-for-Linux/linux/blob/rust-next/kernel/smp.c#L995:w
 
--- 
-Best Regards,
-Renjiang
+> >> @@ -101,10 +108,16 @@ pub fn set(&mut self, cpu: u32) {
+> >>      /// This mismatches kernel naming convention and corresponds to the C
+> >>      /// function `__cpumask_clear_cpu()`.
+> >>      #[inline]
+> >> -    pub fn clear(&mut self, cpu: i32) {
+> >> +    pub fn clear(&mut self, cpu: i32) -> Result {
+> >> +        // SAFETY: It is safe to read `nr_cpu_ids`.
+> >> +        if unsafe { cpu as u32 >= bindings::nr_cpu_ids } {
+> >
+> > You probably want to check whether `bindings::nr_cpu_ids` can be
+> > accessible if NR_CPUS == 1 or CONFIG_FORCE_NR_CPUS=y, because then
+> > nr_cpu_ids is a macro definition.
+> 
+> Just define a helper function?
+> 
 
+Maybe, but it is then "a variable read" vs "a FFI function call" if we
+want to check every time in clear()/set(), of course if we only check it
+in CpuId::from_i32() mentioned above, the performance impact shouldn't
+be observable, because we won't call that method often.
+
+Either, I was just pointing out the current fix may cause build errors.
+
+Regards,
+Boqun
+
+> ---
+> Cheers,
+> Benno
