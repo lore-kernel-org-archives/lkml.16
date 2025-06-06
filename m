@@ -1,63 +1,63 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85B5289340;
-	Fri,  6 Jun 2025 12:07:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307BB289367;
+	Fri,  6 Jun 2025 12:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749211638; cv=none; b=thLhbqTsVyn8z/rtiRoiLQAskLYHCqPdQSpX22PxuOBjwuu0C7iyaiDAEk5rVLOJbC8YsYyO1gm2X9lebnBTpZdc7x5UkMhzpLFTwAU0i97lwJ0wfc0FHLB7Lu71Z6QQaK3MO2FaqLTYjnDyDCucm4aaReEK9c91E9LXBYVaa+0=
+	t=1749211643; cv=none; b=jpWZp0QH8Qeel6ofcnNOUpmKHAjKIGbvl5E/QUZfGcYGLsLwrFTejAyNrQbierpsC0JqmiRH+nCTN45fORMGTpL3ckGkI1yoTuXY/9k2A9xPDmbo3XvNGTIHwBs3HKiYRaTf17cvsOWfiz4Scn+f3wa1rpRk1bCz1dCTKLEuwa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749211638; c=relaxed/simple;
-	bh=dQLEdNUdN2l/hNT7UgALgimh2FWKT7OVd1iN24fNj+4=;
+	s=arc-20240116; t=1749211643; c=relaxed/simple;
+	bh=1aU6DiPih2JcaZs55Kgy5nWudTSKniFEBn9Fbc0X48o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R5kGMNrLcpTgb2DCK+61Lw5NyF53MkI8czl/BTbsxA+uE48PRsDYa/T8TSoSrwhLkz1yNQMu9a8QI9ToJXONkQjNVjPI/8X7lYDSAjTnk5VvmCCjBukRKpQJwl/IJ/W4yrO76uZGtSy+3as8NhIBop5/Oc0WTbeSkAXRonYh5Y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jk0UpC+P; arc=none smtp.client-ip=209.85.128.53
+	 MIME-Version; b=V0I2P5KuDbWK5tiI0CGrNzbn8Tpa3XSXz405L8Bc/+v0eanYQl+iqjZQmQqRX0zVeJPPkO4E16aPcuzKJpxcCVY5/D9PwuoFYMKqBZLRlo70vDaTPtP4FFffhAGUYysBnG7krXvP93KRtOG7ZJI9exy7Vkesn8BQAFvmsi4qrOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HiPXQgFP; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jk0UpC+P"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-451dbe494d6so24964605e9.1;
-        Fri, 06 Jun 2025 05:07:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HiPXQgFP"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-450cfb790f7so15862245e9.0;
+        Fri, 06 Jun 2025 05:07:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749211635; x=1749816435; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749211639; x=1749816439; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mFHAbclmiC1TBKhrN+ddCpgt7t400uvyyz03PUe/ABs=;
-        b=jk0UpC+P0kU0O8/D/d82/hCMOY87tzonILCagCQ7LHWuBXwvnDDNmVywFTvaXC5HPQ
-         5CD5JQBFXZweTmpSDzoE8rrJQbcY0R3S6uAyBBQKMmDcRVkSE77Up4Dr2jUZbl/pkuls
-         qGiHf6jEChMqchhqTJKlZMhKoKK8NIcROChBvrLr6tbsiEdYa0T12IymiVhlHQYCnUU2
-         rmOWh43R/u4HSpR41ysqdsIwYxhcKkuS+8cL2t4QmjiwoTl8htf2Y0Tp0FdG3zu7JK9J
-         MimWkCdy1z6HTfqxY1swDIAOpC/g4F21bgnOo3TRp7AvDYd7nzBNFZjPOYLw5GFnp2Z3
-         7slw==
+        bh=oQLhyfa6s1Y1N2934/HNvah+Kn4N5hPI40oGFlKP6mM=;
+        b=HiPXQgFPfZL7k+cBu/eUp5L83DjDppkH9bQ5cHulrJhJ9Eavd9cyIqiKKEpxAY82rl
+         BPjtBX+XJ7Ty+5A0aw+zkfsxNBvU2gpHQyPdji+MwJgcn6B7rWxFwOf3nkOMI5C4Ucec
+         go9yRQUMctFKpupr4Zg/pinlOnl3pdurOJYZTTc+MjZn1MJ8mPOUCfd3ZdS7cWdLgTLq
+         qOaTmSGfcSumtTAe7mCG3IiSE+DeV7MKaOjLYDjU/nfQlsLrsqPIX0fpocfD1RXBKahp
+         Klw7GmiZS+MWh5rOcdMgPvHBxx9eoasaIGv0VD3GYXL9Btgp5pb5w/f7uw6FqeOCBoM9
+         VP/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749211635; x=1749816435;
+        d=1e100.net; s=20230601; t=1749211639; x=1749816439;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mFHAbclmiC1TBKhrN+ddCpgt7t400uvyyz03PUe/ABs=;
-        b=WVinU43uNxF5rFVUf+pMr7eGQOst/3oZhapOlkHfv73aQQzKJQ48h/7XF8utBOLHyw
-         1RUPhgDZE6tlP3LMX3CRBGGZWP2TPG1V6H/o0/1nw4JDK1/cJi4ASKyrGZdsPUknErq7
-         GRntbqEcvXjmLlfCqyK5uGyBpL8u1BcOveACX19LhpqHwPIoCoF2DsmuYuGK9FyZfuvO
-         CQEhKmBMpJK78tea6AI4PUveDagHhTkOpFkL7zFGwTiXpYgBLkwmG9UgzlrggCE2knJ7
-         DoGulr96miWcgpBU80L5dqsBvnOTqvkaLrKpf/2N23X50B+wPCVHZ0uwzfQJQ9ck1QNi
-         cMcw==
-X-Forwarded-Encrypted: i=1; AJvYcCX4MSAkTs3kfvvqJ1p1rD9CoPJeeQ9rAwDLOHLj5maKVhDewH3/fe/mCl2JE2Cbq3T2FFp85cLPkqFQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnJcJEFszKan164Rfr10/kMkxsGZnmaTFp4P1ey8VZJtOk8UoK
-	yFiqykH/DySpa+y+L4dRw5kaXv0q4C8+FACNvhSc12PAPt0EFhLd0lXAoGLd3w==
-X-Gm-Gg: ASbGncvd6X5Mp/TwB4LPz7HSS0NxmaLruagbUjz+y5FEJNrCBzoZj1DJ7pXoUcch7kR
-	WeCZ8EBV8H8tFX0bCTzZ+e8thc8g2BMTCqnApf3I+AwQV+9pNPpgM2es5cuOEdA4ntaWowqfO8j
-	usz/uRqQAmoPNzZX5ArN2mksorvEJJRyJ/q6o1YfROe0wtfStaaExsVQ1jq7dQB5DnYl7onRQu3
-	PzONx9ZAqF+wfNN6eo7lmRp4jAh9sitEAfTsi3a0bVl/ofQr4o7svpU9EumaEnTnssUPhAf48lD
-	X0BQBTiyAyoCF+UMByDhAWHbJMZApViXi0cnaTq0m4vXeUe0BCpfpDd4RoAz67Gt4DgoNt/vgiI
-	TNQTeN/tkLY0OWQ==
-X-Google-Smtp-Source: AGHT+IG3TVH6jOiZ+yEcPvEe/kgM/u71qBIw1h+zOPS0mfXdwJ6w4oDybJPAHp5zgUw7VXUgKU2gcA==
-X-Received: by 2002:a05:600c:4e12:b0:43c:ea1a:720c with SMTP id 5b1f17b1804b1-452013abb30mr37000255e9.18.1749211634514;
-        Fri, 06 Jun 2025 05:07:14 -0700 (PDT)
+        bh=oQLhyfa6s1Y1N2934/HNvah+Kn4N5hPI40oGFlKP6mM=;
+        b=haSkl7cqbbiFH5TzYxXmzEGH/DAIg4B6yV3kkRZRdoR3xYI5Ezam9Zb/H32ZAeHcpg
+         Q/edPsfKChH1KW0GhIfLL6z5yroCdGnoG/LqyCI5K/L0Aasj51MCn4kpWbSRG3UMBSBu
+         gzrwZxjVfEcm7w2q+N+KNkYGe5IxJnOmo/xD6jRO36ci4Q/2SN+a+y2p0+4q3VihMD5f
+         oqP/Q1PeEH1j5GWLXKZdicNHWZ2IgNRw2W72vh4m02Ig7A81UKF9GmSgVwVBQqHEwM0n
+         djYN11kHq657Z2ghR/gDoAL5rq3MZ8pPnOIP8pFY2UFPn+6Bb/XDhMjWSsnMR+vypDqq
+         vPVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXBay+ZnmBynmvocleDETo3tPkOZMILGEdNGx5F0zbqNA/oDcgfY6kvZl2KrGobwinSPHe7FF5+YqjL@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPRUrowBmeaEsKqF2cgfetWKsPfKSViSRzKZLWKeprFrh9ZOoN
+	k2nrR9STYeMwXNF03zgfoiAaVwi1h0BtdkO40TZvc92wCysGG9ayk3HDz1arKQ==
+X-Gm-Gg: ASbGncsrwMBSTA4yPcB6R2G+ff3/QneFR3UpCjsvGXpreh/TVoCAq0F7IiQf9K0LyBE
+	eqnL4EqGV6JvBIfmr3xMOWPjEpIsfvjSs2l8vux5Hmyt8GNqg4LA0HDfxxbgVOfKHH89v2cZ0Il
+	CEHqAUxl+LvcqwjBYbA3Z8w69HnqNS/ukPHoKnffrLc/sgG2dhH1JGIySsn3hNb28i854JncVxF
+	lrTq1XSw94Sy7A/t0iqn8/MYt8lNgBpvLYbk5cRf45a7HFUCnQV4umGpC2/khjGkX3itX/IM9Jr
+	KKQfQHVp7M77KGrhHhTvEbI1GLTKMYmmdJa+ksbICeO8ckXUrqfPFBetRffx6vCBR9KY2UD4l3W
+	FW/2WRgH/4ec/4Q==
+X-Google-Smtp-Source: AGHT+IGB7hSxzFM+Zz49/eCCU7lmuwQX9rezj6h1KVhyi70e6TzoiW+6dTVTsknwjab4QcSthNsc/Q==
+X-Received: by 2002:a05:6000:24c8:b0:3a4:e56a:48c1 with SMTP id ffacd0b85a97d-3a531cbe5a3mr2728398f8f.55.1749211639298;
+        Fri, 06 Jun 2025 05:07:19 -0700 (PDT)
 Received: from masalkhi.. (ip-109-43-113-198.web.vodafone.de. [109.43.113.198])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53244f516sm1671874f8f.74.2025.06.06.05.07.13
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53244f516sm1671874f8f.74.2025.06.06.05.07.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 05:07:14 -0700 (PDT)
+        Fri, 06 Jun 2025 05:07:19 -0700 (PDT)
 From: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org
@@ -67,9 +67,9 @@ Cc: arnd@arndb.de,
 	krzk+dt@kernel.org,
 	conor+dt@kernel.org,
 	abd.masalkhi@gmail.com
-Subject: [PATCH v3 1/3] dt-bindings: eeprom: Add ST M24LR support
-Date: Fri,  6 Jun 2025 12:06:29 +0000
-Message-ID: <20250606120631.3140054-2-abd.masalkhi@gmail.com>
+Subject: [PATCH v3 3/3] ABI: sysfs: add documentation for ST M24LR EEPROM and control interface
+Date: Fri,  6 Jun 2025 12:06:31 +0000
+Message-ID: <20250606120631.3140054-4-abd.masalkhi@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250606120631.3140054-1-abd.masalkhi@gmail.com>
 References: <20250606120631.3140054-1-abd.masalkhi@gmail.com>
@@ -81,84 +81,125 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for STMicroelectronics M24LR RFID/NFC EEPROM chips.
-These devices use two I2C addresses: the primary address provides
-access to control and system parameter registers, while the
-secondary address is used for EEPROM access.
+Add sysfs ABI documentation for the STMicroelectronics M24LR device,
+covering both the control interface (e.g., unlock, password update, UID,
+memory size, and SSS entries) and EEPROM access via the nvmem subsystem.
 
 Signed-off-by: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
 ---
 Changes in v3:
- - Dropped reference to the i2c-mux binding.
- - Added reference to the nvmem binding to reflect EEPROM usage.
- - Updated 'reg' property to represent the device using two I2C addresses.
- - Fixed DT schema errors and yamllint warnings.
- - Removed the unused 'pagesize' property.
----
- .../devicetree/bindings/misc/st,m24lr.yaml    | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/st,m24lr.yaml
+ - Updated sysfs entry paths to use <busnum>-<primary-addr> to reflect the
+   control address.
 
-diff --git a/Documentation/devicetree/bindings/misc/st,m24lr.yaml b/Documentation/devicetree/bindings/misc/st,m24lr.yaml
+Changes in v2:
+ - Added initial sysfs ABI documentation.
+---
+ .../ABI/testing/sysfs-bus-i2c-devices-m24lr   | 96 +++++++++++++++++++
+ 1 file changed, 96 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-m24lr
+
+diff --git a/Documentation/ABI/testing/sysfs-bus-i2c-devices-m24lr b/Documentation/ABI/testing/sysfs-bus-i2c-devices-m24lr
 new file mode 100644
-index 000000000000..775d218381b7
+index 000000000000..53b6fe39162c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/st,m24lr.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/misc/st,m24lr.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/Documentation/ABI/testing/sysfs-bus-i2c-devices-m24lr
+@@ -0,0 +1,96 @@
++What:           /sys/bus/i2c/devices/<busnum>-<primary-addr>/unlock
++Date:           2025-05-31
++KernelVersion:  6.16
++Contact:        Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
++Description:
++                Write-only attribute used to present a password and unlock
++                access to protected areas of the M24LR chip, including
++                configuration registers such as the Sector Security Status
++                (SSS) bytes. A valid password must be written to enable write
++                access to these regions via the I2C interface.
 +
-+title: STMicroelectronics M24LR NFC/RFID EEPROM
++                Format:
++                  - Hexadecimal string representing a 32-bit (4-byte) password
++                  - Accepts 1 to 8 hex digits (e.g., "c", "1F", "a1b2c3d4")
++                  - No "0x" prefix, whitespace, or trailing newline
++                  - Case-insensitive
 +
-+maintainers:
-+  - Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
++                Behavior:
++                  - If the password matches the internal stored value,
++                    access to protected memory/configuration is granted
++                  - If the password does not match the internally stored value,
++                    it will fail silently
 +
-+description:
-+  STMicroelectronics M24LR series are dual-interface (RF + I2C)
-+  EEPROM chips. These devices support I2C-based access to both
-+  memory and a system area that controls authentication and configuration.
-+  They expose two I2C addresses, one for the system parameter sector and
-+  one for the EEPROM.
++What:           /sys/bus/i2c/devices/<busnum>-<primary-addr>/new_pass
++Date:           2025-05-31
++KernelVersion:  6.16
++Contact:        Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
++Description:
++                Write-only attribute used to update the password required to
++                unlock the M24LR chip.
 +
-+allOf:
-+  - $ref: /schemas/nvmem/nvmem.yaml#
++                Format:
++                  - Hexadecimal string representing a new 32-bit password
++                  - Accepts 1 to 8 hex digits (e.g., "1A", "ffff", "c0ffee00")
++                  - No "0x" prefix, whitespace, or trailing newline
++                  - Case-insensitive
 +
-+properties:
-+  compatible:
-+    enum:
-+      - st,m24lr04e-r
-+      - st,m24lr16e-r
-+      - st,m24lr64e-r
++                Behavior:
++                  - Overwrites the current password stored in the I2C password
++                    register
++                  - Requires the device to be unlocked before changing the
++                    password
++                  - If the device is locked, the write silently fails
 +
-+  reg:
-+    description:
-+      Two I2C address, the primary for control registers, the secondary
-+      for EEPROM access.
-+    minItems: 2
-+    maxItems: 2
++What:           /sys/bus/i2c/devices/<busnum>-<primary-addr>/uid
++Date:           2025-05-31
++KernelVersion:  6.16
++Contact:        Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
++Description:
++                Read-only attribute that exposes the 8-byte unique identifier
++                programmed into the M24LR chip at the factory.
 +
-+required:
-+  - compatible
-+  - reg
++                Format:
++                  - Lowercase hexadecimal string representing a 64-bit value
++                  - 1 to 16 hex digits (e.g., "e00204f12345678")
++                  - No "0x" prefix
++                  - Includes a trailing newline
 +
-+unevaluatedProperties: false
++What:           /sys/bus/i2c/devices/<busnum>-<primary-addr>/mem_size
++Date:           2025-05-31
++KernelVersion:  6.16
++Contact:        Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
++Description:
++                Read-only attribute that exposes the internal memory size code
++                of the M24LR device, as stored in the system register area.
 +
-+examples:
-+  - |
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
++                Format:
++                  - Unsigned 8-bit integer
++                  - Includes a trailing newline
 +
-+      eeprom@57 {
-+        compatible = "st,m24lr04e-r";
-+        reg = <0x57>, /* primary-device */
-+              <0x53>; /* secondary-device */
-+      };
-+    };
-+...
++                Notes:
++                  - Value is encoded by the chip and corresponds to the EEPROM
++                    size (e.g., 3 = 4 kbit for M24LR04E-R)
++
++What:           /sys/bus/i2c/devices/<busnum>-<primary-addr>/sss<N>
++Date:           2025-05-31
++KernelVersion:  6.16
++Contact:        Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
++Description:
++                Read/write attribute representing the Sector Security Status
++                (SSS) byte for EEPROM sector <N> in the M24LR chips. Each sector
++                has one SSS byte, which defines I2c and RF access control via a
++                combination of protection and password settings.
++
++                Format:
++                  - Read: returns a 8-bit hexadecimal value followed by a
++                          newline
++                  - Write: requires exactly one or two hexadecimal digits
++                      - No "0x" prefix, whitespace, or trailing newline
++                      - Case-insensitive
++
++                Notes:
++                  - Refer to the M24LR chip datasheet for full bit definitions
++                    and usage
++                  - Write access requires prior password authentication in I2C
++                    mode
 -- 
 2.43.0
 
