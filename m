@@ -1,97 +1,68 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8ED1DFCE
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 00:00:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52844A41;
+	Fri,  6 Jun 2025 00:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749168054; cv=none; b=H9nvsxydCooGyhhPP28g0cpEA3Tdrmxj1L9IeHY6zV7IVEaJcgJudZgIqsX9D0M0IwjoHMBccq2zNrw3LA8CNvEeR3bz7v5cEQc+DLO/GnzfHWmiMmuXrFwNVQ59WN9eMEvmy+8h5/cxj4ns5CGWbbgu+fPVYagaZO8NNMPps9I=
+	t=1749168095; cv=none; b=pv+yq6kyWoPFu6VH9iYPh35cQHgGOE7Juoywzin+rxCqZ/5sAnkWvj3JNGs1U0kGE/ei5NrRZIRhiuJC6BevqEslo92wLrzD8JLvKKu9tyR+AAJuFLTQ4/Gv6uoxxXIxzEohfDkhgRGPv65rA4hLDlg+ZaZdDlnAmiIHRSPCcWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749168054; c=relaxed/simple;
-	bh=yF81W6xg7pXep5ORBgjRaqlgriNmy3LE1ibfI78BKQw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mLYpB9qTeYf6G59hO7snO0K9L3kYbjBogvN5Ol+2Pk82mwgeYOVC3qzK/ymHKsOAQpghBU0zOFhikGjfzi/Yg0gvEKvEW2yO0XDgP7A0GPa0DqFswDMhdcMrvwMCcm+y7+vZduclPOOul4X0i2bZq+13JQ1rBBGsut+nJHuycUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ro5Ve4iw; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749168095; c=relaxed/simple;
+	bh=YuKnegkMnbM4szu+amR2YfzjVvrNlOoFtRS0ECLGqWo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LiGe9raEuUB9BrpgkhEPBGX4UWB5A9JeWRE8kwvoxQv5IP4u4zDYmfwx2YTbwOOsBJBYjZXWbij0JOzaG1/+v24Ysd2Hy2eDiNpfUsZq52jpJx/5lkllKdRkdPfrMMHTPwE/WWuORi+4QOULWsW607DbuysVYR75LBXUBVmUZ24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u9leJEGq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ro5Ve4iw"
-Message-ID: <cc2caf0b-7c2f-4793-9510-0dd6c391088a@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749168040;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ci1aLZP2uGDNNh5buVx4u3tAr7sY/YsrNm+RPVvB3I8=;
-	b=Ro5Ve4iwh0itvA3O67QDkEdjRqdvpxYprJZQz0r8mJiDlH8Fowyn7uZRRcqoFN2cWVA2G9
-	05P/KjWr7hz6phBLy4d9vgYX4DzrMZVmSI+d+A7kmLFHdrGpxMSdXLJzxiVXMRhOG/jvNK
-	t2GzY3qBGgpqqiVubwPgdfji62Ge5TQ=
-Date: Thu, 5 Jun 2025 17:00:35 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u9leJEGq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB26FC4CEE7;
+	Fri,  6 Jun 2025 00:01:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749168094;
+	bh=YuKnegkMnbM4szu+amR2YfzjVvrNlOoFtRS0ECLGqWo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=u9leJEGqJe0wOxFCdTsvfoKtyzBLIvpbwYCcZI3j7WkZyTG3/gXtPY/Im/bDpfyXS
+	 U6gEL/3DjnqIxXB1Bl0Uu+/lCo8eijDnPUiQtpmVQaoDBJ3DHx2+9g2G/OoB4aelkn
+	 i0KzVS/zqqPXh9Kjdf+hmF/SEHTVeDPvcQxAdx0wUmy0uNeFpem0eRLXIMQg5H/tUF
+	 OCf0ORYBOvHuQRk2fdhprwfqukNvTT/769XhEKtf2gxePeD3aFf4L2R2ivhBKZBvTN
+	 /FrhJxF2/ffcK6rjD1H92wJqBxXsTgYy+BrX2tkbL8R6bP8XFXFFAYWQAMKWdwwZqA
+	 J5lZiY4wiehPQ==
+Date: Thu, 5 Jun 2025 19:01:32 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-pwm@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	devicetree@vger.kernel.org, imx@lists.linux.dev
+Subject: Re: [PATCH 1/1] dt-bindings: pwm: convert lpc1850-sct-pwm.txt to
+ yaml format
+Message-ID: <174916809073.3505313.7999310908701889550.robh@kernel.org>
+References: <20250602140722.941002-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 01/13] RISC-V: KVM: Fix the size parameter check in SBI
- SFENCE calls
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Alexandre Ghiti <alex@ghiti.fr>,
- Andrew Jones <ajones@ventanamicro.com>, Anup Patel <anup@brainfault.org>,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250605061458.196003-1-apatel@ventanamicro.com>
- <20250605061458.196003-2-apatel@ventanamicro.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Atish Patra <atish.patra@linux.dev>
-In-Reply-To: <20250605061458.196003-2-apatel@ventanamicro.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250602140722.941002-1-Frank.Li@nxp.com>
 
 
-On 6/4/25 11:14 PM, Anup Patel wrote:
-> As-per the SBI specification, an SBI remote fence operation applies
-> to the entire address space if either:
-> 1) start_addr and size are both 0
-> 2) size is equal to 2^XLEN-1
->
->  From the above, only #1 is checked by SBI SFENCE calls so fix the
-> size parameter check in SBI SFENCE calls to cover #2 as well.
->
-> Fixes: 13acfec2dbcc ("RISC-V: KVM: Add remote HFENCE functions based on VCPU requests")
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+On Mon, 02 Jun 2025 10:07:21 -0400, Frank Li wrote:
+> Convert lpc1850-sct-pwm.txt to yaml format.
+> 
+> Additional changes:
+> - add ref pwm.yaml.
+> - add resets property to match existed dts.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
->   arch/riscv/kvm/vcpu_sbi_replace.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/riscv/kvm/vcpu_sbi_replace.c b/arch/riscv/kvm/vcpu_sbi_replace.c
-> index 5fbf3f94f1e8..9752d2ffff68 100644
-> --- a/arch/riscv/kvm/vcpu_sbi_replace.c
-> +++ b/arch/riscv/kvm/vcpu_sbi_replace.c
-> @@ -103,7 +103,7 @@ static int kvm_sbi_ext_rfence_handler(struct kvm_vcpu *vcpu, struct kvm_run *run
->   		kvm_riscv_vcpu_pmu_incr_fw(vcpu, SBI_PMU_FW_FENCE_I_SENT);
->   		break;
->   	case SBI_EXT_RFENCE_REMOTE_SFENCE_VMA:
-> -		if (cp->a2 == 0 && cp->a3 == 0)
-> +		if ((cp->a2 == 0 && cp->a3 == 0) || cp->a3 == -1UL)
->   			kvm_riscv_hfence_vvma_all(vcpu->kvm, hbase, hmask);
->   		else
->   			kvm_riscv_hfence_vvma_gva(vcpu->kvm, hbase, hmask,
-> @@ -111,7 +111,7 @@ static int kvm_sbi_ext_rfence_handler(struct kvm_vcpu *vcpu, struct kvm_run *run
->   		kvm_riscv_vcpu_pmu_incr_fw(vcpu, SBI_PMU_FW_HFENCE_VVMA_SENT);
->   		break;
->   	case SBI_EXT_RFENCE_REMOTE_SFENCE_VMA_ASID:
-> -		if (cp->a2 == 0 && cp->a3 == 0)
-> +		if ((cp->a2 == 0 && cp->a3 == 0) || cp->a3 == -1UL)
->   			kvm_riscv_hfence_vvma_asid_all(vcpu->kvm,
->   						       hbase, hmask, cp->a4);
->   		else
+>  .../bindings/pwm/lpc1850-sct-pwm.txt          | 20 --------
+>  .../bindings/pwm/nxp,lpc1850-sct-pwm.yaml     | 51 +++++++++++++++++++
+>  2 files changed, 51 insertions(+), 20 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/lpc1850-sct-pwm.txt
+>  create mode 100644 Documentation/devicetree/bindings/pwm/nxp,lpc1850-sct-pwm.yaml
+> 
 
-
-Thanks for the fix.
-Reviewed-by: Atish Patra <atishp@rivosinc.com>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
