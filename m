@@ -1,143 +1,116 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387FB45945;
-	Fri,  6 Jun 2025 14:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E62F45945;
+	Fri,  6 Jun 2025 14:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749221222; cv=none; b=DxMOhanXqlor67beLQ1XPqkSfaGNCksZvFFUVkXUu2V5T90udqF9LYxM3aOQrAdc5i7pnWL0k07MjXWyzXToiFiJJfC9JQ/8VhMz29jwqYw5VSxbI152yDOdgsAyKls5uf2FaOd0Gh5R/nc8fvyNoQBsFuyniMPXlcreSTd0O8s=
+	t=1749221589; cv=none; b=cRTSzoMEBWXkAK/IbMXjrHY2sI8ZIImf6KDT61qxG5ggrnk42gvddYuI+js2N0aY5Uvt+8K6JyhJs+mHGfw1AiPVWpwiBfIqlSLT5HdJuy9Ut90jeh4G8g5Y1Ptvx+YZ0Xv1WE3uIU1yLdDKKJo2lKtV0z07611NLlzOQc5S5+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749221222; c=relaxed/simple;
-	bh=SpqQZtxYSGSrQiPzmi2CGEM5uyDqqyc0FKFBMT4zdfw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ldX5Vi1w4+LDCd/LsaRfiTxSimftltO+GOFxBkTSyYO/Fo6CWU0BHQvyVO6RkeiuyJBpEmWiJjWQE2DJVAjaqYxdOfTXVcy2ydm9RwJyQTKylIpbiGw+zmrYu8SItBJagubC7ogwHvRTkrZym0Mmqb2KbhrhzFjy154haibFLHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=drIWyQ+q; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749221589; c=relaxed/simple;
+	bh=TcHbFteQOmLGBTjvX6qik4ZH9aSmoF2gCaV1qnEzHEs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=eqNtqRYh+56WpqTG1RrKJdU9RTqC6qWPKqYkZmYSpJOu/UQbjRfhxUpmOpQQ+5/IIiDJtoT4jmFfkV9e/igIepn743YU/G67FynLDVptQ1nX5UCjIijXvyH+crl8RbTVTz0gl3nZRlRxTdBKRn/jH386gEfa6gj5P6KBK0KqjKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dI+0Ye+A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="drIWyQ+q"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a507e88b0aso2019907f8f.1;
-        Fri, 06 Jun 2025 07:47:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749221219; x=1749826019; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VWfDD2dEf8PJavEnPu/pXfDOZiD1JAykowbebqUXmnI=;
-        b=drIWyQ+qfMrcbT2jpbjZO8bGumzFqhglxawBfTIDHgRuJ7+ak2cgCNFTDBtGwrQghm
-         deTGAYjWJNjsDI09jXiUudh6PIGPgRFu3+CQCn0K80ByIWSnZOA8D/39hzA/F3Hk3Ryz
-         3PL8Zz6BknarIXxkWR8mvqTEfA7m5nO35lSKH+qESTzXDCNzqfpkL0LoeYB60Qr6ZNtn
-         9GKtzdRlgepRhi5IJp20QPuS5JFhgye5GDyADc2h3jsMvfwVQw+wRTB8EjXr8tQsMVVk
-         I1qy2mXGmkDU5lTlgXij/8OfEIMKYmTaxBj/2P0lSZNPgJdBfZus8q0U/IbUTQ8T4XaQ
-         oyQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749221219; x=1749826019;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VWfDD2dEf8PJavEnPu/pXfDOZiD1JAykowbebqUXmnI=;
-        b=oBNMTKSX0njyCMigQNSynZyfqiIEIwKTyW3BcuzUMamu6ZhU72zNBOUzRKDJX7yjtb
-         i2ny2hYwEgm5UgGn4G7Xvra9fHhOgQgcrYfXK0tFShNzk33s9PVeUyGNrSqWZLg8qepO
-         A6ksuS4p5MqBNKxDYODIJXvcojc9moXsIsQZE4gNsoBP+WRhRsIG0twseSIYhAmS9N/Q
-         Wcx6QRti7F0OhNoMEGW6jGjLUA4XQj0TrKGa0MFP4JbYsO3Te/qwLhsWAXBuvQqabqvE
-         HMSXGfSBASsOEBjvC/Qx64942D7KszZNBVOounK5sYtR1iR0Rl9D0QfA7l6dK8pVfSlr
-         iRWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWepWLoMLqx0D0siRzww467PIQ6zTn1EDpnVx+aqBHuCTpAj+yIJWok7kEI8UY1DE03t+qfcHzbaD+7@vger.kernel.org, AJvYcCWkgmGkaIsCqFvVpYpbqJMFsz9oCAO3RcJCy2D8Tu3CZaLbyuXJDJVohNexwSvpsSYCGT/rtUWJgJd3lM45@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMcCvskdTmLZde0LifriPXnsfLXn00e7siunJlQp5hil6f97s1
-	ebK4TNhnbDw3zG8B/tXpjl5tBSRU4YUh0jCqJ/j6XBUOwqfoDB3rq5ZM
-X-Gm-Gg: ASbGncuX0OHv5KKhS+PdqUhopy3OQaAn6ANN4kbJiaABmrCKJJEo6Zc6YjCmKPxB8QH
-	Fv/GauRM+cZdLLs+LzhasgMOAyIijrpMwJFcyvzWWfy42s25n7oN05tjLm0Jq6HAaZ0nGIcI4zp
-	cv56NIItSkK94oSGbR5T/n7hzniIrt6MbEKrM3DHPPUrdlEIEOTWBEPNZrT/FBp0PnLJ14BaDIG
-	uoaYaBYchqeaYMI+iqMjI2TWAI8tkWERPsUnoab+2iCqZ5kvGoQ0oHN0XPYrGfGvAjlAgkZWH+K
-	FzhdsBg6NUQJyESUEEkGnMZMH4OprU4unQ3EF8Du0L/dUsllZbn7ZAl5ZppVk8jyKjt0FPpiXhm
-	1ygr/ESrkoklw37WF4wJsOYGerBf+h8872ac=
-X-Google-Smtp-Source: AGHT+IHFZfm7/jlQzgkdQ83hBRHRmGcLyOvphH61w+zpaQfg9JXlMcucPHHvwrU97yp0xV68gJM/VA==
-X-Received: by 2002:a5d:588f:0:b0:3a4:eeb5:21cb with SMTP id ffacd0b85a97d-3a53189ec50mr3200568f8f.26.1749221219172;
-        Fri, 06 Jun 2025 07:46:59 -0700 (PDT)
-Received: from masalkhi.. (ip-109-43-113-198.web.vodafone.de. [109.43.113.198])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323b653dsm2098932f8f.39.2025.06.06.07.46.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 07:46:58 -0700 (PDT)
-From: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: abd.masalkhi@gmail.com,
-	arnd@arndb.de,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	krzk+dt@kernel.org,
-	linux-kernel@vger.kernel.org,
-	robh@kernel.org
-Subject: Re: [PATCH v3 3/3] ABI: sysfs: add documentation for ST M24LR EEPROM and control interface
-Date: Fri,  6 Jun 2025 14:46:57 +0000
-Message-ID: <20250606144657.3140262-1-abd.masalkhi@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <2025060632-luridness-carpool-bf90@gregkh>
-References: <2025060632-luridness-carpool-bf90@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dI+0Ye+A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ED27C4CEEB;
+	Fri,  6 Jun 2025 14:53:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749221588;
+	bh=TcHbFteQOmLGBTjvX6qik4ZH9aSmoF2gCaV1qnEzHEs=;
+	h=From:Date:Subject:To:Cc:From;
+	b=dI+0Ye+AGlZIaH/LY1u7ma22xgJn7KvgemittR6jP5yziMo9nnkajES+zuH79aYo+
+	 gpVnmRjPOgcWmWHPYwNZLY49I9zzd40rSPJ/m5qyMCHAabaxWfsE0qsO9rhgFh7zJ7
+	 8gv+WuKNH7svThgQ/GeAWVvt2IqakwIkIV/Ucz6lX9XxEwQL1W0BUWkm+jTLmvYmd/
+	 hyopqgm+mrSl28br7RKDPRBjt/D4F80WrPG75l938RoJuGq2sy0t/ljYiXof/G60hH
+	 MLlNBTky/+Ro44yqw3expGOKqchH1DXLImcKd1EdadqUOj6IGplLMe3A6hz6on8onz
+	 N0lrSXJAVki/w==
+From: Maxime Ripard <mripard@kernel.org>
+Date: Fri, 06 Jun 2025 16:53:03 +0200
+Subject: [PATCH] media: bcm2835-unicam: Remove RGB24 support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250606-rpi-unicam-rgb-bgr-fix-v1-1-9930b963f3eb@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAM4AQ2gC/x2MSQqAMAwAvyI5G2hFK/gV8dAl1hyskqIIxb9bP
+ M7ATIFMwpRhagoI3Zz5SBV024DfbIqEHCpDp7pBGWVQTsYrsbc7SnToouDKDwbtzNobOw42QI1
+ Poar/8by87wcQphAQaAAAAA==
+X-Change-ID: 20250606-rpi-unicam-rgb-bgr-fix-d1b6f46a75ad
+To: Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+ Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Hans Verkuil <hverkuil@xs4all.nl>, 
+ Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Naushir Patuck <naush@raspberrypi.com>, linux-media@vger.kernel.org, 
+ linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1907; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=TcHbFteQOmLGBTjvX6qik4ZH9aSmoF2gCaV1qnEzHEs=;
+ b=owGbwMvMwCmsHn9OcpHtvjLG02pJDBnODBcdQnQ+MO74st7wm4N2jPGUE8frxWuEpXdsn7D88
+ bbGp2xXOqawMAhzMsiKKbI8kQk7vbx9cZWD/cofMHNYmUCGMHBxCsBECl4yNhxzmWem2pHb0W8z
+ 8X/Ay9isuX6arzVjHykLq+0vjZTk423b9+R2ndlZueavVzgfCi6fyVim9C7/7AT/d99+ySU92mx
+ mEPD+kpbb9gZPJY5VXTsVLismFtk9q1ooNbnhLH+6hY6cAgA=
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-Hi greg,
+The RGB24 V4L2 format is defined as a pixel format with 8 bits per
+components, with the components being in the red, green, and blue order
+from left to right.
 
-Thanks for the feedback.
+The RGB MIPI-CSI2 is defined in the specification (Section 11.3.1,
+RGB888) with blue coming first, then green, then red. So the opposite of
+what V4L2 means by RGB.
 
->> +                Behavior:
->> +                  - If the password matches the internal stored value,
->> +                    access to protected memory/configuration is granted
->> +                  - If the password does not match the internally stored value,
->> +                    it will fail silently
->
-> Why is the kernel in the business of adding passwords to devices?  That
-> feels wrong, and a way to just flood the device with a "try all the
-> values" attempt if needed.
+Since the hardware cannot reorder the components, this means that when
+selecting the RGB24 format, you get inverted red and blue components
+compared to what you'd expect.
 
-You're absolutely right, implementing password-based access in kernel
-space isn't ideal. However, this behavior is defined by the hardware
-itself. The M24LR chips require the user to "unlock" the device by writing
-a password before certain registers become writable (such as the Sector
-Security Status registors) and unfortunately, the chip does not provide
-any status or feedback to indicate whether the unlock was successful,
-which limits what the driver can safely report or validate.
+The driver already supports BGR24, so we can simply remove the RGB24
+format from the driver.
 
->> +What:           /sys/bus/i2c/devices/<busnum>-<primary-addr>/sss<N>
->> +Date:           2025-05-31
->> +KernelVersion:  6.16
->> +Contact:        Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
->> +Description:
->> +                Read/write attribute representing the Sector Security Status
->> +                (SSS) byte for EEPROM sector <N> in the M24LR chips. Each sector
->> +                has one SSS byte, which defines I2c and RF access control via a
->> +                combination of protection and password settings.
->> +                Format:
->> +                  - Read: returns a 8-bit hexadecimal value followed by a
->> +                          newline
->> +                  - Write: requires exactly one or two hexadecimal digits
->> +                      - No "0x" prefix, whitespace, or trailing newline
->> +                      - Case-insensitive
->> +
->> +                Notes:
->> +                  - Refer to the M24LR chip datasheet for full bit definitions
->> +                    and usage
->> +                  - Write access requires prior password authentication in I2C
->> +                    mode
->
-> How "deep" does this sysfs tree get here?  This feels like the wrong api
-> for read/write to the device, just do it with a single binary file if
-> you really want a "passthrough" way to get to the hardware.
+Fixes: 392cd78d495f ("media: bcm2835-unicam: Add support for CCP2/CSI2 camera interface")
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
+---
+ drivers/media/platform/broadcom/bcm2835-unicam.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-The depth of the sysfs tree depends on the M24LR variant. For example,
-the M24LR04E-R has 4 sectors, resulting in 4 entries: sss0 through sss3.
+diff --git a/drivers/media/platform/broadcom/bcm2835-unicam.c b/drivers/media/platform/broadcom/bcm2835-unicam.c
+index f10064107d543caf867249d0566a0f42d6d8c4c6..1f549019efd53c9aae83193e74f1a3601ebf274d 100644
+--- a/drivers/media/platform/broadcom/bcm2835-unicam.c
++++ b/drivers/media/platform/broadcom/bcm2835-unicam.c
+@@ -338,15 +338,10 @@ static const struct unicam_format_info unicam_image_formats[] = {
+ 	/* RGB Formats */
+ 		.fourcc		= V4L2_PIX_FMT_RGB565, /* gggbbbbb rrrrrggg */
+ 		.code		= MEDIA_BUS_FMT_RGB565_1X16,
+ 		.depth		= 16,
+ 		.csi_dt		= MIPI_CSI2_DT_RGB565,
+-	}, {
+-		.fourcc		= V4L2_PIX_FMT_RGB24, /* rgb */
+-		.code		= MEDIA_BUS_FMT_RGB888_1X24,
+-		.depth		= 24,
+-		.csi_dt		= MIPI_CSI2_DT_RGB888,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_BGR24, /* bgr */
+ 		.code		= MEDIA_BUS_FMT_BGR888_1X24,
+ 		.depth		= 24,
+ 		.csi_dt		= MIPI_CSI2_DT_RGB888,
 
-I understand the concern about exposing multiple sysfs entries. The
-reason for this design is that each sector has its own SSS byte, and
-separating them helps reflect the per-sector nature of the access
-control. That said, I'm open to refactoring this to expose the SSS
-area via a single binary file if that's more in line with expected
-kernel interfaces.
+---
+base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+change-id: 20250606-rpi-unicam-rgb-bgr-fix-d1b6f46a75ad
 
 Best regards,
-Abd-Alrhman Masalkhi
+-- 
+Maxime Ripard <mripard@kernel.org>
+
