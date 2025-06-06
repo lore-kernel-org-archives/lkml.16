@@ -1,70 +1,72 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C0213B7AE
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 18:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658FE323D;
+	Fri,  6 Jun 2025 18:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749235754; cv=none; b=gBFlc653l8UHBhVRZ2QMHkKD5tgyBn4puebKdufBbuGqbl23iERFmcNgy2n897/tfMPXPRQwb0upGKNWOm/SVeW/jM0ihxscWUwtY5Y//1o7RKE3WQBG+rHCLE7R4cUAfSLQ5KeAPT0iiWWejUVGboNhBWDgXfd8Sqd3W/Vagnk=
+	t=1749235819; cv=none; b=pj2zRw6l4JwELWxfIk4Fr/jve9nfN8ofBi8EOQTBT6tPe96RbkJ20dU/TVzGEcKP4FloCfmP6yFxaneOQDAg6yQs6zd5xqb7GLxbEeAcolCvV7JoPaY9IKEep10WpEpoEj1LdZ/3XZ8ykSmgPF5oR7TbJvoI1OJbwTpgrwTAxSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749235754; c=relaxed/simple;
-	bh=NJL/HvFCP8LBdaOE52nI1PwCHmXJzBz3A4hZd6HeOQw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K8Ef25XBaG5BLEhgz1jT/m+vuP05+W3Lr0S2TEsT1ymlk+Icc3whsnTnD4ObNn4wFK6VuvO621UmKjecz24+8GD6UOvrTmb5KEf2NCNr7FGMCTNR+YufFgBhRoyfHBauOAMnlocOVfwspJcMVuEpZnf9fJ1eJ93OFrcg/Q/d0TQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H+lp/Ql7; arc=none smtp.client-ip=209.85.214.181
+	s=arc-20240116; t=1749235819; c=relaxed/simple;
+	bh=U4P2tnNseozPuuy/skT7kmujiUB/sLQ43YhfGdq+IVA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OnvK7by6PyrLu7OvUtcRqovEVlv/Rr2w8dO8XgXF4KJMqvLSObZrMsRkRBJHkiF41vjIHZZDlRAMz0pkCCVotRDyfy1JvuUpcbkYQ5uzenapoQ7KPjS/u3CkryjtHwKH5yveb+4PeW5ATvtvgE1KiSBPnM+8wmPpeB2ayJZMPhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZwdXnTQ0; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H+lp/Ql7"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-235a3dd4f0dso17732995ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 11:49:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZwdXnTQ0"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-442f9043f56so13451555e9.0;
+        Fri, 06 Jun 2025 11:50:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749235752; x=1749840552; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749235816; x=1749840616; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VVl18CkOJ15003GjsMWz0RG+tHCTImFD4CbpZhIBGrg=;
-        b=H+lp/Ql7+eksoCmuZFqA3YzNfu6skZ34typkEEE8pberD1r83/7uuISxCBvJgIsQFB
-         smY0k/xuQeRutL0VmpIkaeb07RWwK9IyW8MmcFtqfOHDN8xyS/YDx5jShJwpyPV0UyT7
-         Pn7v/B0f7ZzSOyW/yfjE7/q3HMhE3DxXmBgvgFF2kP/q9wSChhP4GG/DNIC6QN3WdK0d
-         yy0nALJvT5IJLAJdyPEph2XVY/za2jBGoVYqxrVe+RvdoOP+lQgqDbCYOQr0y1myMLWT
-         luMszPzq1iql7u7T5HdgAzeZGFXGAXT3kfAIeaExPmD2hx2J7TpkGCYnuOMHqtS7AR5R
-         +PQA==
+        bh=Md9dvw0OrzD5ybuFEtQ1C4p9sLs5X9fR5lPCIeJYTOA=;
+        b=ZwdXnTQ04duvx3ATIOMGvQ8MWO4UyjuY1hSqk+FWIdoQqLeoLYnKo2ieO6OnvtRIcf
+         +ZT1xD0hIakMcnnF6E+Qxy3plrhxoauzfD7ByQeingbCjrSYLcpUVJgEzNSkouNxgRk7
+         5wi+eTp/yzksCvqmjEjNPsILjg8E9L07KV90GMPSOuyfYUmj9YtiwVmLbJUIhbrMkZEC
+         TYYyzo7NO+FW/ZSiabRP42fvWCIAckJrlpFjhSvicIh4YB4z4k/eKusSrv6XpWP4BQQP
+         ouzfKc34s1vbmmY83+lPsBefAiIBQxucTHbIuWO9Fk8aZe8uPojS1HDZNUmBlp9+UsQh
+         u/UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749235752; x=1749840552;
+        d=1e100.net; s=20230601; t=1749235816; x=1749840616;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=VVl18CkOJ15003GjsMWz0RG+tHCTImFD4CbpZhIBGrg=;
-        b=cE0IVqPVIn6pyQ6/BATcOmFQ/xPpESkSsvmBL8xZ4mQs0+ALa9DqvcttP+XhHigTnq
-         lDPF2EhyIDbnpmsHA5XRHu+FzmUCAWOpX5h+m66vFfKkkJEoMrstW4cRKHsWNASsGjw2
-         EiMD+umZWJT/aH+DD6LnN8ixR4xd8Ueq1Rp2ABWT5AkGl3yiCevKl8sybMTHU7dzLi8R
-         xlznaJiU/vau15x6lKqZ6zeO4kJrUdS5dIeWGbJpbGKS6wUdYF7rTt3iv/DKw+liKY3r
-         uTAKxnbT5HlMO9/8lc3+mXRU4nM5vxWhjl+IRe2t6IKQEaDIL9kYw7At7ykRCQDxHA4V
-         GxMQ==
-X-Gm-Message-State: AOJu0YwoY7QNov/jsPcKDdf0qEw91CFrIRuOH18P8zZx0GgQx850UQNQ
-	J8XMGelwtu/PGLsY7wDK1AQmFXWvo8huT3Dww2cgN6i3HXpT+kq3ycqzyJnj0A==
-X-Gm-Gg: ASbGncsTSTKbYTvy4uIlLBvk3vDWEYz+DwE+lyYtxw10mojFtemjt6uYV476YLuhkRo
-	nPT88iSr4v049qcYZDcIVrf/38u/yFGhNZzwZFX+EJv+TBVqeOBJ4Y0CrYt72FYF2UZqNUFlY9R
-	ayqPwwsaMiubC2z3sleZA0Q4rLKkgTQb7gZl9pGg53B7e5WeJaUHTLZUiQdoli/eC/DhriTY0Dg
-	I2DKooYqbTpgk9EDb1PDvUIBAoGr0+N4URXWsfi7bqMdrye+3DXkZNG860nnA4oE7YZSnUkS4/V
-	PJu5rDwgca+91M2bU7VS7RH0mcmpNK2FsIqTPteCrUgYnbZ0LobxASL4jI+niBfvvydxPmQLyx1
-	+cNkdSlX3a9tAY69vglqIO2mzI3t/+vUH6Le1vAR+Yg==
-X-Google-Smtp-Source: AGHT+IG118EXQa+ckUV2izSwGgtCI5B5Q2LLS0l1xjh5vEqVA/gR2EMnnsTOfduFFZxs+B8gErHwzQ==
-X-Received: by 2002:a17:903:3c63:b0:234:d2fb:2d28 with SMTP id d9443c01a7336-23601e21c05mr63997405ad.2.1749235751894;
-        Fri, 06 Jun 2025 11:49:11 -0700 (PDT)
-Received: from daehojeong-desktop.mtv.corp.google.com ([2a00:79e0:2e14:7:d02c:e22:e5a4:2f84])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603078d7bsm15542505ad.2.2025.06.06.11.49.11
+        bh=Md9dvw0OrzD5ybuFEtQ1C4p9sLs5X9fR5lPCIeJYTOA=;
+        b=QtxweBBnMb5KUOEEFJPsynM8RiWrhPbDvWa9TA6kgEvsSXvn5Wg8O5aV5Tx00kkcQn
+         1DeK/DXkd7LZBaLX2y48Bcef/dVctBPh+mhuBlpb4rufwGAUY/8xCTbmL2qBEan2Iktw
+         AZbFgFPjABqXOwiLnLoPDSna/kVP8Ov8gDFxu6rePUWb55Ru2C6W4FSSjDun+p4quxaE
+         wL0QYIOiNDzkMKqq+mopQH54zLIMtu7mmszM+RuYgNR+uHHpkb7ccciWE24P6i9cIAjV
+         aPZ1maC74SHzLdQxn9zk6Q4bQnquLrYh5mqhzyJwgFz22zjoxF0Nyedul3nOLkrqgB/H
+         MFSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWl+jbaLUUwt6sN84Z5AtTxT62PyEDItKvPdVv8D58hGv4pDz9elcO6gQx+H0TL21kiC4PgL6Ni4vMNww==@vger.kernel.org, AJvYcCXpDOfLrLs4frIY1xLMa5Xsk/VrJ/brPiCLdPc4RVBPmQcYODLXXqhPJGGgs13BitZAb3XAxKuN+iGSLXZg@vger.kernel.org
+X-Gm-Message-State: AOJu0YymnDxuTLUhR63WbxEIEBIgtct+E/gi7rt13SgTMopgZw3QtvO1
+	b+bGO2z9DSVV6uBb9q2AvN2Bnzk/iJVwCZ/MedS963FtJZ90zVRqEr0a
+X-Gm-Gg: ASbGncvroTLWu8EnfPWxhWKHfaMR8JhL8Rag6j6N8vMuspI2ITzlK1b4XC0MRF2WMLy
+	xJ8YxSRiM8eP5HJJAlz2Y9Gv8XVot/poSNWJOIhqshUKR2XObj2VE2BAz5oKfXqaABxp0/UxucD
+	II5s68BEtLM0qokUxrJUNUssh7eq4u9VSDlK1aK+Vjp5mu26eTwpBcLQBLt1H2fjdoFRDQjdPvn
+	3zFzdN8bh5+UJs01wAAPMx3fc/Rs/eA4Pyz7chkVVT55cE1Sw8dfiwj1k/gqrWzkCtPfnC3i0Ix
+	qqvyBv8mP2j4NybG3N6KjYd9rx7WUoqHjOa/Mg03hjsgD5ej+pMr
+X-Google-Smtp-Source: AGHT+IGuIlWNHzSSG+6amTKVvjhqDcEXZJVvPSig4Vit3wsbpXI0vNRPDn8jiXTCepXBAWmLwrUrow==
+X-Received: by 2002:a05:6000:310d:b0:3a4:edf5:b952 with SMTP id ffacd0b85a97d-3a5319a7945mr4071838f8f.36.1749235815459;
+        Fri, 06 Jun 2025 11:50:15 -0700 (PDT)
+Received: from qasdev.Home ([2a02:c7c:6696:8300:44e7:a1ae:b1f1:d5a4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532435771sm2713057f8f.63.2025.06.06.11.50.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 11:49:11 -0700 (PDT)
-From: Daeho Jeong <daeho43@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	kernel-team@android.com
-Cc: Daeho Jeong <daehojeong@google.com>,
-	Chao Yu <chao@kernel.org>
-Subject: [PATCH v2] f2fs: turn off one_time when forcibly set to foreground GC
-Date: Fri,  6 Jun 2025 11:49:04 -0700
-Message-ID: <20250606184904.224811-1-daeho43@gmail.com>
-X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
+        Fri, 06 Jun 2025 11:50:14 -0700 (PDT)
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: Ping Cheng <ping.cheng@wacom.com>,
+	Jason Gerecke <jason.gerecke@wacom.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Qasim Ijaz <qasdev00@gmail.com>
+Subject: [PATCH RESEND 0/3] HID: wacom: fix resource cleanup issues
+Date: Fri,  6 Jun 2025 19:49:56 +0100
+Message-Id: <20250606184959.35915-1-qasdev00@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,32 +75,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Daeho Jeong <daehojeong@google.com>
+Fix a few resource cleanup issues.
 
-one_time mode is only for background GC. So, we need to set it back to
-false when foreground GC is enforced.
+Qasim Ijaz (3):
+  fix memory leak on kobject creation failure
+  fix memory leak on sysfs attribute creation failure
+  fix kobject reference count leak
 
-Fixes: 9748c2ddea4a ("f2fs: do FG_GC when GC boosting is required for zoned devices")
-Signed-off-by: Daeho Jeong <daehojeong@google.com>
-Reviewed-by: Chao Yu <chao@kernel.org>
----
-v2: move the position of Fixes.
----
- fs/f2fs/gc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/hid/wacom_sys.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index 2b8f9239bede..f752dec71e45 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -1893,6 +1893,7 @@ int f2fs_gc(struct f2fs_sb_info *sbi, struct f2fs_gc_control *gc_control)
- 	/* Let's run FG_GC, if we don't have enough space. */
- 	if (has_not_enough_free_secs(sbi, 0, 0)) {
- 		gc_type = FG_GC;
-+		gc_control->one_time = false;
- 
- 		/*
- 		 * For example, if there are many prefree_segments below given
 -- 
-2.50.0.rc0.604.gd4ff7b7c86-goog
+2.39.5
 
