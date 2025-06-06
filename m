@@ -1,61 +1,64 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B57286429;
-	Fri,  6 Jun 2025 10:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F3028750D;
+	Fri,  6 Jun 2025 10:28:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749205689; cv=none; b=XMMfzeQYlSY6Dqz6nJ2j03jRa/QM5ewKEuBCoXHJlfGnJqPauyCjiCxiNpSNF11UfqE30iirOfBOqnu54Pm8FodsPghF8jizvgrXmX0J3qlDXAKWbw8rDqKGECYo35KejbmsJp+C+4gOPtxCi6qAGE+vbtLUdxmdNQXuSpU0WGc=
+	t=1749205693; cv=none; b=RkewudAsXl5tVTXvFlhm2sMq03pERGOBnXx/xPDBXG1QHTqARUYdD28xt8Bx1dDxTY9I9e9MMe+omE9s09aVbsPykrfn/2kbvBtOxayvmjhvsNeYcYUXbNQKdLfsfh1zh7fGabH+nDU9Wnu8Ey/2uyhLqOxw1wAI4pGR4gpLqLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749205689; c=relaxed/simple;
-	bh=FMzX1ASQKqkQ1tt/369NITjzbVxz4J5tb33XHDzXWjA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=EAotq3tLL/CTUw0ZJDzCzDwDPBCcmK0s98+m+Hmm/oYm2SAKEusiB/r1Ql1lBqfekukKAD+Bm7dubTsrDn1JdA6N5OpBeTPXooducso/i7uPLZP9Xlf/BcH1Yg7Kjl7Si3hNaCLUrIENwJbk6qp1sYprq9wWBpmwRUIRGapHBBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BfYixcle; arc=none smtp.client-ip=209.85.214.179
+	s=arc-20240116; t=1749205693; c=relaxed/simple;
+	bh=VW1z7quOUVaSxQgJ+9/BOsabZt0GNXzoFywJfXHGils=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Xrm4fBEdQwbLmBZxNJNGzwok6bxV8Oe2MG5JPCiWa2CI3B/6Aa76BdcID1OTZKh1gh+i5pBnpTyh+jH85LkgG6gACqEyh29c8wiiDT7CTDAp2F/NEB04S1RtAikEWn1aNrHZ2woMZn/t+rTgzhMLLz/WW0GdicshtA4BSPqEp30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YFnNna53; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BfYixcle"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-235ea292956so19742175ad.1;
-        Fri, 06 Jun 2025 03:28:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YFnNna53"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-231e8553248so20023055ad.1;
+        Fri, 06 Jun 2025 03:28:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749205687; x=1749810487; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kq75SIqPsOJ1DQd3x8jl/mu37HxVt1wTwstMgXOJ46M=;
-        b=BfYixcleDyBWI4HRlNMcYxDzBq2wxphfwZko5RtzshLqs30R/fnUw9dcLrkynZFSWo
-         wDAyZKyvPYd4bUfA+kNg+L7p9CWYuK/hKGBw0yikF3u57wqQ0uaNhLOFw581hQQPosj4
-         s8ucO/bLrgpIgjquFG5hGuAOUSWt7L9uKwG7EXhj9s5CbMyu+2zhyZsNibbxufgTcvht
-         +Kf+ak/dPF7/cSxn1+/lZpxtqHfBP+75fFwi1jlybOHOsjLxgpMbeOwZ//8ElOaSKE0O
-         58YDzfYHYHm2hjpQ3MfKHhmmEIABaWUhstL24EFJUAvfi8/cHaCSybpDbGT6jv0MA23W
-         RAgQ==
+        d=gmail.com; s=20230601; t=1749205691; x=1749810491; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=f2k6QLhMs+Ybe7hFRFwIVvK0vEsmpmU+VkYws59KtZA=;
+        b=YFnNna53aGiWA9VE/xIMEnXU6h2RAsRP/8fQ2iW9V2LWyZGeGWxKOKyi1N/IjjtAT4
+         DaR0zEEWnBPqXwy/w0JMgmkwaE/5kC2PQN1COP12m36cx0CM/uXFcix0pcgguWeeahtr
+         py5Dnl7ZrRZRafL9wMtqf/4dVAxrMIlqokm7pCLFXWL3bm20FW6DUsTF/igyFTUNQezQ
+         +4AwRLabUkCDt2IMJxRV6zNpQFWaupkqJBClz9SuxxRTuYw2562TtuiAgtjIAYzlRszj
+         B6CBBOOmrxQ0KTl/AtoDZb7OvOE4vxc8XMUu0p8ECT815L7+Kh1KJmFFDoGJdxkAE8ZT
+         IjFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749205687; x=1749810487;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kq75SIqPsOJ1DQd3x8jl/mu37HxVt1wTwstMgXOJ46M=;
-        b=dUd4m93fghCkantWuqG3GIFNfyF7Z4IkSvnjpM46Wjps1w6xNC97pqEtbVJeUHo/UZ
-         tpgdf6WILrCfGHB7XoFx7O67kbZ7jV5/ibIMchb1b/Mm+ewH6ROmtzBtYSd0yd79Rhyb
-         PTDc4MNFhRl5QQI+EuqiZJPnM7EbhVoZ/D5We6HDa9gmSho3XzWiDPZBWRMshwLwoTyq
-         HeHA+ZpD1PA7etFttBBdTOLeYj6YkLFPdC7iwF7twtCmWRlhedth8xo/UtYLuJ8qhXcO
-         isZIIf72rIYdgKZkaDV+HMqN4s5bsK1sWXF1XlRC1QHsMp4yOleXZpG6O5d6j12ttHTE
-         zCyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCURlYXW4kygtC2xycb86BW0ssBiAY/sULOwcNg9gUN2pqdlvSRJo4p3IOk4qE93oCbfUxXTZNtBqw3lo+7h@vger.kernel.org, AJvYcCWe6AHIRtX5LyDPSq3EcqKwrsbAUquFP79tkOnaXE14RT5kABjTn5xl2QF4ZyLwpnLhI4W75GSs9OVI@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgYIn1ttMqOICpVpqoMnOlakdhqCPk+Tc/q2LTrSQYgzLfpfKj
-	E1IT7gFKoyWZD5nve/wOBp2WKakDC9CImM9KmLbSN6tQ2qX6mUcG8l6+
-X-Gm-Gg: ASbGncul03+0HM8sHpJpgTx/Nu1S/bES/4Vm57hSrZvCIdT4c9Gc1NCekpeIiCziCbX
-	bjFh2V1wvr7QQGK1/ALLH6JFdArbsgtZy/5s5DMCH+uEG09+K8144p+PklB3qX188HJj40hMcOr
-	vJm6VqOe4WjEu5v5ew0tdPbw/mpEwDBMsfocpAIjS9cTFZvWKJfBcUVN75ISuif8QiOHnJ+F/vG
-	euA+z+dAHt6crTAj0Z88DETjQaJ2iFhmmNdyfV3wG6/JpgTmseiQdrCvks80QVBbbCd+8UlkbJn
-	vuO7/Tm647ifTjRyBuVjB+G3USv2nnQUSN2j5VnPWcyfx6w9sjzuCFIZfqyCU4O9C5JHs741yNk
-	TqWdIYwHNW92aUpfroCDdWr8KeR/A57Wn5cmHJfHNZzMyFnByZB7oug0xUMzDN+bAWfq+LsD1QD
-	o=
-X-Google-Smtp-Source: AGHT+IHWIRzmPF9hBfCr89nWxfu/OXV/L7N6WZrJscNojX76/huWUu2nhvxP0kFj4o42XVFggGnTGQ==
-X-Received: by 2002:a17:902:f652:b0:235:779:edfd with SMTP id d9443c01a7336-23601d97820mr40085765ad.39.1749205687155;
-        Fri, 06 Jun 2025 03:28:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749205691; x=1749810491;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f2k6QLhMs+Ybe7hFRFwIVvK0vEsmpmU+VkYws59KtZA=;
+        b=t4dGKVyi4krXXxIatWgjcVJeOsNUN/4KrpHJW0Zxmh0zXCS1q766mSP8SUvS8TuU2w
+         K2Kq6B79QBVvPgmpwlqGagsKaE5xb2t50VYY60emWPReOhAxY6EeHEIVAklu1V5S8+wF
+         M8msPGBr3HllgoitvxAU7zQmy/HhPjd3ndEMCeGn3tGJpXT3211QGlFlOr0cO+zZ1Orz
+         XCclFYx+veQyoE8jm6d/aJlpIu13wNzcrmaYBZERuDdRQmtkr3X2sAqhxnE6OI5bK+UH
+         wtqgAz0L10egGZUDgXknYB1bxil/kIUgIssN+pvuJzwrMpa9qq1mUyC+VRElYHuIrHnM
+         aNoA==
+X-Forwarded-Encrypted: i=1; AJvYcCUb/I9947bIVhK2UvQ0kJxf3Fs+AXDkIAZq62s7xYLthlAfkNjUj47UsLuQAaJLY7EmKDIukKFcYvtq7LeF@vger.kernel.org, AJvYcCUlczBeVvPelSKnE4/Ww6UuWifnEJew+u7iULqp99R7et0w9JjWdau/C82kWe4/FNbuUD/+DQ7+qW2W@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaK78X5OMAE9pWgHKte/Gxq/yYtIih6oInJEKVe6dy7B/5qXqj
+	Kdqr5lzhDVzQv8ZopfV3QFSV3B3ZAeg3D7vvhoFv/3I8LTmB/19d7KXc
+X-Gm-Gg: ASbGnct+X4yyNSgU56ISy967QYVBi0onAqsFK1l9jhAPQ4tzenioTZ4VeKZDLhfIDyP
+	UupWILFWlckCC1ByKF6qh+2P3/wUBU7s//ZBalvZn0VXnFcWS4B9D+/iKbe9qJeFMjpnZeISIVP
+	k40rLDppCf7N42cPEYyzdOrvI1Smtj0AYS0DQnXbrE4Kj5UlXclM5g44yg51iYfv04vdbaCPAgs
+	eGKjQ9V5R2VWS+yMzH89JH97CD0EvGhh7sEfAgE6Vi7KDACR4v1NooC+cZlz7NN02xzPG0xjnhE
+	ZtTrBOa0cobW7aHl0Ft5aOiXzQe4PYTsllGLsYVylpKGwg3El5J3gtomtneX+bwgvqrkZuVOb4Y
+	TPZtfGYldFnIMr3NLYen3c9QgYIbiExx9s77fYyFxBOsqZf+Jef0Fc5ogu1gtoIxjx0NoCs/l9I
+	OLrTPiCucxLA==
+X-Google-Smtp-Source: AGHT+IHdkRnMxTdMkIPYO52HyIjgNRpDvU7O4+2NT2FszwjIZ6VSApJKtT1r2YkGVF9r+aJyzdfHBw==
+X-Received: by 2002:a17:902:db10:b0:235:91a:2c with SMTP id d9443c01a7336-23601d82d3fmr34529105ad.42.1749205691572;
+        Fri, 06 Jun 2025 03:28:11 -0700 (PDT)
 Received: from fred-System-Product-Name.. (2001-b400-e35c-06eb-80f3-97a6-ae1b-00f8.emome-ip6.hinet.net. [2001:b400:e35c:6eb:80f3:97a6:ae1b:f8])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2360307813bsm9632885ad.22.2025.06.06.03.28.04
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2360307813bsm9632885ad.22.2025.06.06.03.28.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 03:28:06 -0700 (PDT)
+        Fri, 06 Jun 2025 03:28:11 -0700 (PDT)
 From: Fred Chen <fredchen.openbmc@gmail.com>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -66,10 +69,12 @@ To: Rob Herring <robh@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-aspeed@lists.ozlabs.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 0/2] Add Meta(Facebook) Santabarbara BMC(AST2600)
-Date: Fri,  6 Jun 2025 18:27:52 +0800
-Message-ID: <20250606102802.1821638-1-fredchen.openbmc@gmail.com>
+Subject: [PATCH v1 1/2] dt-bindings: arm: aspeed: add Meta Santabarbara board
+Date: Fri,  6 Jun 2025 18:27:53 +0800
+Message-ID: <20250606102802.1821638-2-fredchen.openbmc@gmail.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250606102802.1821638-1-fredchen.openbmc@gmail.com>
+References: <20250606102802.1821638-1-fredchen.openbmc@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,20 +83,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Summary:
-Add linux device tree entry related to Meta(Facebook) Santabarbara
-specific devices connected to BMC(AST2600) SoC.
+Document the new compatibles used on Facebook Santabarbara.
 
-Fred Chen (2):
-  dt-bindings: arm: aspeed: add Meta Santabarbara board
-  ARM: dts: aspeed: santabarbara: Add Meta Santabarbara BMC
+Signed-off-by: Fred Chen <fredchen.openbmc@gmail.com>
+---
+ Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
- .../bindings/arm/aspeed/aspeed.yaml           |   1 +
- arch/arm/boot/dts/aspeed/Makefile             |   1 +
- .../aspeed-bmc-facebook-santabarbara.dts      | 978 ++++++++++++++++++
- 3 files changed, 980 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dts
-
+diff --git a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
+index 01333ac111fb..a965f1a03051 100644
+--- a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
++++ b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
+@@ -87,6 +87,7 @@ properties:
+               - facebook,greatlakes-bmc
+               - facebook,harma-bmc
+               - facebook,minerva-cmc
++              - facebook,santabarbara-bmc
+               - facebook,yosemite4-bmc
+               - ibm,blueridge-bmc
+               - ibm,everest-bmc
 -- 
 2.49.0
 
