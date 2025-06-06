@@ -1,167 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1D484039;
-	Fri,  6 Jun 2025 21:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF2836D;
+	Fri,  6 Jun 2025 21:26:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749244743; cv=none; b=PHvvX54bo5IQ5LUm0NW2cB+AMgxVYjHnjRsKR8US4ZwEKEepGxQQhpoLHzGaYCZHP2St1+5aoLoDaFpp9bhxXoBoalXYtzgKfHZ+8BmFeoSqIf/RZ7+ChUePea8zkMYcYFxGlxj8jkjaUn8Q1W0ADyvBMMSbpXmE5KDnO6V8acs=
+	t=1749245164; cv=none; b=Thxkqsebe1vVu7p00G3EzXRdWYGXfS8y3F9hoLYfwfU+pz0kKt5Xf+1BRHrTCSkFxnfm4/6VvgXo01s3Ve78336F1rl3S5nfqKZAMZW/VqXzKZVUgsYDMm02yuV7OXXnTipS/EeViJkzDSVptND4ZsbKvyAVNt1t/t8rQGjP0f4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749244743; c=relaxed/simple;
-	bh=hVazHZdWHt4jxCMZncRecOf9Qm+Sc+rUksZ9g0Z+26U=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hw4obKYyB6Dl1NfSeofyQrc9KWxnjtmR3JEG2p/FcKKX935nb56TH33hBsyOl/SGcthd3b0pi4b38/PUDxI3PDR2FFUj23sTHjPxa+/ymUBQKGLm3CQaE6dYwDWwKEIt/kzLkFKnWkpCQQcDhJcQWilPR+5ROtAve8IPkvupvds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nTYc1iFO; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749245164; c=relaxed/simple;
+	bh=P/Kfse8MZ7/nPZ2PUNCeEZ76+M3/DNjQ4KzcgKuG5O0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=iXy6nPNy4wUhc9R0leuXRDe2tYYVLWZQ1l/Y46Dd40BPf7VRYvkR29AsV8wLdm/On2W54RurBaa6P/j3N1wWi6J6XCgYNZVyDhd9gxM743bzOJk6QljtcQAn0wxLwOoXK27jCRTaMQqCN3Mxr0FuGpZs6yvsbAF6UoN5blMWSV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=f6nMpYMQ; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nTYc1iFO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749244742; x=1780780742;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=hVazHZdWHt4jxCMZncRecOf9Qm+Sc+rUksZ9g0Z+26U=;
-  b=nTYc1iFODbYmYGTllltuxulD6zIcVtufT4fI1Y7T2jFqzt/zumertlct
-   y+5qiCNT/sLdh312Ty8fZokNplst9fjxhXeWNZ6IUtc+egpYtA+XLhUmj
-   OU6qpNhuHExuyFA/OZOdKWpMfWxkslCeh2vaqWFff/obyZkhlu5g+9+v4
-   LN6qRKFIC7Wdes/XlWBJjsGlc+u9xA5IeOsklIFlaazS0on7bEGTYK/J1
-   teEEGppFxyNfzmdVGy+R9FAYxK7DvC/HkisFs3WH/GA/wLhAsfpGM+PPm
-   x34/h/UUTERdIFoTx5Vix6Y5FcfdH8JNuAEAxy2CDEnmFFqhKrdIpPhY3
-   g==;
-X-CSE-ConnectionGUID: RK6ULsqTTuua6TVqKpm/kQ==
-X-CSE-MsgGUID: 0DTBgi35Sv2qaBR/CVDC+w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="68846442"
-X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
-   d="scan'208";a="68846442"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 14:19:01 -0700
-X-CSE-ConnectionGUID: rrNVKOJiQYOt6a9MxwqOOA==
-X-CSE-MsgGUID: 6bWTXIu0SiOlxIT0tYFB8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
-   d="scan'208";a="151075622"
-Received: from spandruv-desk1.amr.corp.intel.com ([10.124.222.223])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 14:19:00 -0700
-Message-ID: <1c48e672c98c079b36ebe7ef8f2e313866c66972.camel@linux.intel.com>
-Subject: Re: [PATCH 2/2] thermal: intel: int340x: Allow temperature override
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: "Zhang, Rui" <rui.zhang@intel.com>, "lukasz.luba@arm.com"
-	 <lukasz.luba@arm.com>, "rafael@kernel.org" <rafael@kernel.org>, 
- "daniel.lezcano@linaro.org"
-	 <daniel.lezcano@linaro.org>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, 
- "linux-kernel@vger.kernel.org"
-	 <linux-kernel@vger.kernel.org>
-Date: Fri, 06 Jun 2025 14:19:00 -0700
-In-Reply-To: <0fcd95bc6e9b300caa7d3029c9c43e9b5de6627e.camel@intel.com>
-References: <20250604203518.2330533-1-srinivas.pandruvada@linux.intel.com>
-		 <20250604203518.2330533-2-srinivas.pandruvada@linux.intel.com>
-		 <545fae8be782943a92d9df1c4a3ff90b7a865c76.camel@intel.com>
-		 <63d616ac8bb1dbac9eebf10953886a5ce3274940.camel@linux.intel.com>
-	 <0fcd95bc6e9b300caa7d3029c9c43e9b5de6627e.camel@intel.com>
-Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
- keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
- YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
- y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
- NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
- GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
- TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
- oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
- AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
- b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
- AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
- oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
- UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
- ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
- wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
- NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
- J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
- oOfCQxricddC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="f6nMpYMQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1749245160; x=1749849960; i=w_armin@gmx.de;
+	bh=/tj1iGDlRT6q9MjHJ8l6Dkokkjh/J6fjXRl7bo2zibg=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=f6nMpYMQ4yiFyOEBo2m8kGHotgZibF/ckxiTzkkz3tdeaGH6UUsZBc/i8ztsXyRa
+	 wAuKdfBCUneI3+SD+62uRTKoirggKQ8/zyzcw9T9T+hX2L6UHQEES+0ddoS0wF8GV
+	 iNdyOXPTKsokLr2ahQ7OJ64MrahU7KWq3oj0sG4rgj4ZzOSdqNV5i/zHfUaoF5qDE
+	 CJDVO5UsXsiGMxZzzPFIm5/Ex7nVMwSJr7un0YwtxIohSMsFjUJATyoBq6C6uEmUL
+	 C8v0KGMNayIvcfBFaL8Ef4FMPMLcCpS3K0fLyZSieOA2sQjYrxWQhTeEOHB3llUsy
+	 ZfSZGsC9pl/FYVcG2w==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MNKlu-1uC0mT335m-00VXC3; Fri, 06
+ Jun 2025 23:25:59 +0200
+Message-ID: <dc67341d-2376-44b3-81fd-f3c5c2b241e1@gmx.de>
+Date: Fri, 6 Jun 2025 23:25:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: samsung-galaxybook: Add SAM0426
+To: Joshua Grisham <josh@joshuagrisham.com>, ilpo.jarvinen@linux.intel.com,
+ hdegoede@redhat.com, platform-driver-x86@vger.kernel.org, thomas@t-8ch.de,
+ kuurtb@gmail.com, linux-kernel@vger.kernel.org
+References: <20250606130909.207047-1-josh@joshuagrisham.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20250606130909.207047-1-josh@joshuagrisham.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:xISwjz5rUYNPXvBxbZFp9L78XPcqQSVpKdV2wBbFNyoTJ0csZgv
+ Ub1TdKSGDfcqVgkvq8iL5KU9M3VLPf7qG4tKn+Z1lIdEmT44r1oTOKCTmZzqbqqQItQlCY3
+ TT130N9KVPCFcFrXzotQOcr8xg11N8B61zEJQag5o2qYjLMw7aJjI8LnT1yqhPN6xFASoBg
+ cjCjxK6wQgnwIFHjIncfA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:dcmGv8WrdPc=;qdhmVlBZkU1H0RbRHJM0LmA7eJw
+ GsG4YRe3oQCDWJURNn5obhxYZWprF2uM392uhXbOfaDA+9Dss1yKGwSFXJpA3Xa0D4RBln4ZG
+ rxvRR+LhUpaBtJuDwg5/er0OhQl+00Cmg8wO4tpg65K8qASahfJMObJvF4rAhA37SX2nzyzKO
+ j7ecSgdRlqt2UvB6OcRE8H9yvYCLgnb+tSlAZy4aYeaK/vx01WJ6+GutqUUd5knOavrNUih1s
+ uQRfreaZHj14w9ELuReAH6ZSq/knI0Bnvx7UCNqig+n+9Li2/krYvCfkU+imilmRhH9PNc+2/
+ +Xolst8iahQ8AkJVTw440K76a1CQKMwBVJ3jXjYBBPgaJhWGvbg5utHZTyeRkMkeP4ZASQvxa
+ kbtcDgzZVyvRMkdHrdVIz8jNitpd6yPxceyJEANs8N8dvmjpoAVRPbB8xhkJg7WxIJ07gfQM4
+ 3iiOyEhIWC6Pdjs1BDgua1rcVZO5q//BTIUwHhK7KqbO8hswck7+TRiY/jLNdC6eUHyTngqrP
+ vaf1LI6JXV8vs22P0IbN5km6y+a7paKJQuOsqCI8od8DBV7CdprG6W+LiFLH5jS1QyCKqbBXC
+ slvRbXHzMydT2fbRWstCMaOez7eUiWtZdzdE6UUE/7kWVFLWJzUp+nONBJ/7/GZwRdhb2MF5Y
+ dre3mzi5Adx3VUZTDpvbL98myFLxJlfPpXlAZg0HFXB/nPF8ajRmIrfOhvrJA1MegrZq1upJ+
+ CDG8L7KZIs9HhetUta1oatb+1aHXYzb2Ri44Afl4HRLoMGKmahDguPAp3ViZnqIG75An3EIro
+ 95733RzM/ehY0YjmjPwm96sKR8YN+wRwUIyJ2Lhvn529WzCEFOhAVCRQ+s+/IRUDcMHeGfRia
+ qvbchw6lw4KE6ye+aCKyu5LWCEsMLtPO/hffSygKvtgwm4x4qm5BZwK7CU3onLjhSPwVHFNQy
+ HxG5TnTdExfs0oUcmCBxwKdhCEPoMG76KSIntr0UXII6o9deGcWxcG/RIW0Ti+99pqgux6V1x
+ qF1omsPePZc25/m9G1YR3uft0cn7H4Ze0JvKpDWEKhT0IsG+BK8srop2fEZFHRUr2XLuHfvRI
+ 3Ye4P0NMXhLg13xti/FpxItpEkP7IJ/GsHgOofEgmN2ZjqoktAebwbJFQwQigSFH7d4JFZHWW
+ ubCWGZZtlJtGUNBunLOxxDL+KsvDKCW+YXBo5GR93oNZOFJxsCPc1T9VEnxjNFWAPnglKEGuV
+ ISNqal2wc49RuFOVP7I4y3oF7pI85P4NamHPf5DWBlukAGHArPEBFc85L3SG88t5vBw8l6W5/
+ iFrYEJQTfrw+XqkG+pf1RPMDryGjqGENgrqdOncpBF37iPScn71RIzD52UfsCudKDiL/INzfV
+ lYfIVaIlW/fdowntJu9b2AmZ057yf80+LNSnIFRaB1GyoU639p2uLPyqqQ62nYqegwzshXYQN
+ 5xehWdjB8fK3MkcEul6JJHuLunJtAsEZ4olYdb+lXaPJb6vOHZpe1K5ghGFt1vcsal27mQ7P4
+ uhvxa4foSsqsDblzlIVcZznHDjVnFk433rg0WHv2WAojtJyUSYUYGxvDLOJplxbqtmP1F92A9
+ B2CgjADxvb8VoNSH/2RqcdpUIQMtshoYGhFLkwXqlYqcskPSSMpzXO0FiseH5jVmT8PvUoMmN
+ oMESkz/B4OLBj5VdhgZo9KOQENLQkSax9AwVRWEKMWOubOENRdL0ErbwKjTUWyWQwiH4bG3lR
+ iTlTOMTPPd0rnW71NZ7Yc8o+xk7OibJXA/1E4eNMRJErWUuTs/UaAB8mRCOb8KphvxNonQUcS
+ kwflxblZAzbrMX21ZjW0eV3rZKlt5BDcpWtrMQyyRldShpqp9/KtTP1olmvVryRU2DUNT5xmf
+ CtyUNfBUHFusrptjbNKydMxKDmOZIdmMYkzvSfBgqD1GtDKrzILI5R2Di00syOQ2ldnuJgfsb
+ fE1qJofChlHH6VNkRb+8KT0hg7ImmlfHRu92cl3hUL6ztL56nW5yBjCpiRN00pAt12bncvHTj
+ /5a6v6PUQdvKueoRxP1i38GOpQuPpLlMEFUuYYkORY2WYz/vwMKISjtk3X0kD2ScEgsKoGAib
+ ehvZ1rlv+gjXotIdjL3wnpu5ImaxgNxcSq6pMsYvnUqm2dM8+RSBrqh7HlG5DD//14aYQYgi0
+ MBTo9tU1H0xxkrSuEadWoPCokYFA5c2yHOPrWRK3K7shWdc2kVHGS1g1JtUWDmYo3lp1czWz+
+ LnR3aylecK/KCVL0uy2EoCo/aTrMqzgKpg1JNlgLTT162nEefZ8qBw2oxPE/ynzK0iaByLxb9
+ e2cSf6NACvWN/+Vu9vg1axdzp6tjCyhMTMx/WIIkbDLAeKDgANzwEh28q1eA6hq4UCzNv00e/
+ JdNYKSarQ1s48BgUuALxcnFFXDf3WSlO+0KZOMQLz/7bn3pqsTFX6EtZfRVb5aQg3EY7G2muq
+ HkqGbXC1b6BEA5+w2jLHX8qh/rmldSX2v3m467bFeQxI/co6vx9JSqb54kapZ3ZBsIsKqTKwg
+ p2xdo80XCKfL9hUxJsXiKJ8/hq5WJxiw3q8wU+WLbiR03jTE6mhGo7w5BmaVPCuexEFxFeD9k
+ eIdIBYNem3H2KjsC8mo/JFyTXZ3pt6N+nh6eWwaF04zuDncP5k94uBaLbNd0llA7KFQEx1npY
+ FiUXws9nLGKafTvQ+aHguQKjO6iIeivUlGAu4wJZiW73TtBusIvS7a4uP+JiJ44nzgdeH927z
+ z1B7dRe+w3w0RAHky73AbZDyGJCL6FFGNmhVMpryyjcyc1iDu2vPJtgc+O6btST3ojQjdjy8W
+ 6cEs+WP4Sqx0JfbtFPJ4Fzu5oKEWkfkQqeWfq1RKNfqpGz8pgzwo7ZcXpXUPIVBwyijBnqu6r
+ wFVgIDN9Z4y6dttQr0YJEjabmvGNsYNMVVv79ZTBgHXABcl2DDCBBzMfDYWqicXBbcneq6MZ8
+ M1A2S7zoRzLhoda2mJJlnt+GvkgU3q7VogCi+eCPonn1a4Q+iBerxHCc1u6uP1qPdsnFK79n1
+ lxpuIExyNixyexkYVxSGyYF+OG6v+nLXQ0kUOT8LHkxwnexjPiAWSuIGQflzPyg2u6Q5sHbQB
+ g2i60TsnBx7obNUZ3qKkD2OsB3ohtURxo+YgV3tx6PcKzANPTAVww28Po5KCVwB/tsyTpGKEr
+ dXD48yBXAPwa4KSL+Toll25mEARE5pC4ceNyGtaSIPtydapZN9abZFv5J7X0y5B6+EW6iqCyk
+ Q1SuvZ7kGP3cI+Hg
 
-On Fri, 2025-06-06 at 07:22 +0000, Zhang, Rui wrote:
-> On Thu, 2025-06-05 at 10:20 -0700, srinivas pandruvada wrote:
-> > > > =C2=A0
-> > > > =C2=A0int proc_thermal_ptc_add(struct pci_dev *pdev, struct
-> > > > proc_thermal_device *proc_priv)
-> > > > =C2=A0{
-> > > > @@ -230,10 +289,13 @@ int proc_thermal_ptc_add(struct pci_dev
-> > > > *pdev,
-> > > > struct proc_thermal_device *proc_
-> > > > =C2=A0
-> > > > =C2=A0		for (i =3D 0; i < PTC_MAX_INSTANCES; i++) {
-> > > > =C2=A0			ptc_instance[i].offset =3D
-> > > > ptc_offsets[i];
-> > > > +			ptc_instance[i].pdev =3D pdev;
-> > > > =C2=A0			ptc_create_groups(pdev, i,
-> > > > &ptc_instance[i]);
-> > > > =C2=A0		}
-> > > > =C2=A0	}
-> > > > =C2=A0
-> > > > +	ptc_create_debugfs();
-> > > > +
-> > >=20
-> > > should we create the debugfs only when PROC_THERMAL_FEATURE_PTC
-> > > is
-> > > set?
-> >=20
-> > This function is only called when
-> > =C2=A0if (feature_mask & PROC_THERMAL_FEATURE_PTC) {
-> > }
-> >=20
-> >=20
-> right, then the
-> =C2=A0=C2=A0 if (proc_priv->mmio_feature_mask & PROC_THERMAL_FEATURE_PTC)
-> check in proc_thermal_ptc_add() is redundant.
-Yes.
+Am 06.06.25 um 15:09 schrieb Joshua Grisham:
 
->=20
->=20
-> BTW, in proc_thermal_mmio_add() and proc_thermal_mmio_remove(), we
->=20
-> 1. call the rapl/ptc/rfim/wt_req/wt_hint .add() functions with the
-> feature mask check in proc_thermal_mmio_add()
->=20
-> 2. call the .remove() functions without the feature mask check in
-> failure
-> cases in proc_thermal_mmio_add().
-The current functions in the upstream code are for:
-	proc_thermal_rfim_remove(pdev);
-This is already protected inside as it has to check each feature.
+> Add device ID SAM0426 (Notebook 9 Pro and similar devices) as reported
+> and tested by GitHub user "diego-karsa" [1].
+>
+> [1]: https://github.com/joshuagrisham/samsung-galaxybook-extras/issues/6=
+9
 
-	proc_thermal_rapl_remove();
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
-This is by virtue of rapl_mmio_priv.control_type is NULL on error, so
-the above function will return.
-
-proc_thermal_ptc_remove() is also protected by the flag. But you are
-right for the debugfs part added with this patch, which should be
-inside the flag check.
-
-
->=20
-> 3. call the .remove() functions with feature mask check in
-> proc_thermal_mmio_remove()
->=20
-> This is inconsistent. If you agree, I'd like to propose a cleanup
-> patch
-> to make them work in a unified way.
-You can make a cleanup patch to be consistent.
-
-Thanks,
-Srinivas
-
-
-
->=20
-> thanks,
-> rui
+> Signed-off-by: Joshua Grisham <josh@joshuagrisham.com>
+> ---
+>   drivers/platform/x86/samsung-galaxybook.c | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platfor=
+m/x86/samsung-galaxybook.c
+> index 5878a3519..3c13e13d4 100644
+> --- a/drivers/platform/x86/samsung-galaxybook.c
+> +++ b/drivers/platform/x86/samsung-galaxybook.c
+> @@ -1403,6 +1403,7 @@ static int galaxybook_probe(struct platform_device=
+ *pdev)
+>   }
+>  =20
+>   static const struct acpi_device_id galaxybook_device_ids[] =3D {
+> +	{ "SAM0426" },
+>   	{ "SAM0427" },
+>   	{ "SAM0428" },
+>   	{ "SAM0429" },
