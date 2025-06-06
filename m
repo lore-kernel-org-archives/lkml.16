@@ -1,43 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C83D29A1;
-	Fri,  6 Jun 2025 00:08:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3AE23208
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 00:09:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749168518; cv=none; b=jkI2DzI/6o9e/wcxsu8GQofa7lMilSMK14jLRHXZNaaWOvsWRhH03tp+f3vOvlZYNt92F9bl7AUKh8k2c5L03Q4OpgLpJY2g+r28oQIx7wLoUHOlWK+GqOXojBPYYkBpM14xy4OffYJH5gim6/mRLZkX+g11daLD7vC+odn6XKA=
+	t=1749168593; cv=none; b=mqe59bekm9f4o91Qxz/lPiQCkm4ySK9EAALP2dSL4Yr14HNul5ohwbX4u9Up7NYWyLGEBzcI5GzdL+BzSwdPp/Zq1dmxf2zpkOTrfiBLR9sFHi3MCZPsWKKGYiHvECozrgqnhFDi6zhB0/+l3JxG4Cm6vKXeffQlW5oimCEjWBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749168518; c=relaxed/simple;
-	bh=096tcwFPpeJG650wQF6YIxLq94RUk9uyR/oF7cR6+RE=;
+	s=arc-20240116; t=1749168593; c=relaxed/simple;
+	bh=HelkW/bWw8McxxXZHEIrR28siZM+fgO3DHrIn0ODxGo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y9dzSQzzXt56acdmPIMaWkuAu1MxCrJtG4zUX4sZEKWREp+1RqCOvquxiLSc62IZaWt3c7LBZyCuBdVxiMccdmqnEH6dff4eIgZk1sckukO2NSaIwRzeV2KXksBK14tXMeB5ibQuRr5PRI9mpCWNqUEUt7JMUuc2tgiyluPSED4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tlY3UW/K; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bc/Kbqn/T2bbeU9wqTKX+ankVAISuBaYFteP1DcSmeGWmugE0Ky69glTicgrHLEttJG1DiN3n83LeBWpHV6Qa10HAH13U3yUBXHoCoxN4iUOeahThhuIh6tgesOMbVIi/72SjDmUHGLtAi1gVvNzi5M6wKotz68g9jykyiV1yjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hU3ahuw4; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tlY3UW/K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72D48C4CEE7;
-	Fri,  6 Jun 2025 00:08:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749168517;
-	bh=096tcwFPpeJG650wQF6YIxLq94RUk9uyR/oF7cR6+RE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tlY3UW/K9u2JgwKDcNQfnVeBUy7hC2xfe1v6W6OWg7aZbXOdcl8TXEzA9d1Ny/T16
-	 Wt80q6QSXA35UMSeatSZr8jHqdfyo8/sK7SX9r4uHImRD6+I+0te6ZV5RJ4rXDPVx/
-	 OqRnyGKF89OtAvy9gV5ms9Tk0rwh2ZfjdkKY5ztFUBeS8a5RWiQpSAuPFqWVsKg5Pk
-	 KSQ9XbATQIDUaUscrAfuw+UzTPA8u+WNrLmBe9lhVBS/Yj69CDu9wpktMbeHYunLSb
-	 s8GxzNo6oVfJmTkCKLTRXeqpbDOOzbzSYERp6vX9CMT3BB1f399DwXOAbRSAy8bWjq
-	 Jve6yHyxMRt2Q==
-Date: Thu, 5 Jun 2025 19:08:35 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Stephen Boyd <sboyd@kernel.org>, imx@lists.linux.dev,
-	linux-clk@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>
-Subject: Re: [PATCH 1/1] dt-bindings: clock: convert lpc1850-ccu.txt to yaml
- format
-Message-ID: <174916851320.3533561.1893618858405515968.robh@kernel.org>
-References: <20250602141937.942091-1-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hU3ahuw4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749168592; x=1780704592;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HelkW/bWw8McxxXZHEIrR28siZM+fgO3DHrIn0ODxGo=;
+  b=hU3ahuw4nxEL0uH0hSp+rlEZ3UMay/zp2tA0ZaYT3qRLHmhL3xAkEWYe
+   ZxfqtwWYVZIq18B+PxBgSxhHQV9LAOPzqY3DFCOplqXEM5YpSX001EYuK
+   LRGKO3GuWb5BYN1++Ij0+xX5sR9+eZ+aUelVLxbYBVjUy/Psy1xgL1sqL
+   ao8AfyUXYs4JPnRyTdcf4/FVRLAxY7XBg3vsDAFZfiKLtcek6kFQUjKyU
+   6JIepeE03nsgcIXRz3e+7ASxkaO6JvLYH98MzGBixqVdRXkmvkJDSze3E
+   pHeFPd2WReEkMUjbLAuOseeN7NftyQ/Bka8Dbpjr4cGzLPFE75dcBZef9
+   A==;
+X-CSE-ConnectionGUID: GmkpomXTSPysyLE9llgJjw==
+X-CSE-MsgGUID: WU12CQCRTKyiy24dxdDPTA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="55101505"
+X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
+   d="scan'208";a="55101505"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 17:09:51 -0700
+X-CSE-ConnectionGUID: 7BiVIETJSymTZrniWRzO7w==
+X-CSE-MsgGUID: O1hvVvTySe6NS5MwRlktaQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
+   d="scan'208";a="176629122"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 17:09:51 -0700
+Date: Thu, 5 Jun 2025 17:09:49 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Fenghua Yu <fenghuay@nvidia.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	Chen Yu <yu.c.chen@intel.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH v5 27/29] fs/resctrl: Add file system mechanism for
+ architecture info file
+Message-ID: <aEIxzbuFybLBE3xt@agluck-desk3>
+References: <20250521225049.132551-1-tony.luck@intel.com>
+ <20250521225049.132551-28-tony.luck@intel.com>
+ <f25d136c-b1d3-483a-ac77-92464d7fe25c@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,24 +69,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250602141937.942091-1-Frank.Li@nxp.com>
+In-Reply-To: <f25d136c-b1d3-483a-ac77-92464d7fe25c@intel.com>
 
-
-On Mon, 02 Jun 2025 10:19:36 -0400, Frank Li wrote:
-> Convert lpc1850-ccu.txt to yaml format.
+On Tue, Jun 03, 2025 at 09:15:02PM -0700, Reinette Chatre wrote:
+> Hi Tony,
 > 
-> Additional changes:
-> - remove label in examples.
-> - remove clock consumer in examples.
+> On 5/21/25 3:50 PM, Tony Luck wrote:
+> > Creation of all files in the resctrl file system is under control of
+> > the file system layer.
+> > 
+> > But some resources may need to add a file to the info/{resource}
+> > directory for debug purposes.
+> > 
+> > Add a new rdt_resource::info_file field for the resource to specify
+> > show() and/or write() operations. These will be called with the
+> > rdtgroup_mutex held.
+> > 
+> > Architecture can note the file is only for debug using by setting
+> > the rftype::flags RFTYPE_DEBUG bit.
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  .../devicetree/bindings/clock/lpc1850-ccu.txt |  77 -------------
->  .../bindings/clock/nxp,lpc1850-ccu.yaml       | 104 ++++++++++++++++++
->  2 files changed, 104 insertions(+), 77 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/lpc1850-ccu.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/nxp,lpc1850-ccu.yaml
-> 
+> This needs to change. This punches a crater through the separation
+> between fs and arch that we worked hard to achieve. Please make an attempt
+> to do so as I am sure you can.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+The file I want to create here amy only be of interest in debugging
+the telemetry h/w interface. So my next choice is debugfs.
 
+But creation of the debugfs "resctrl" directory is done by file
+system code and the debugfs_resctrl variable is only marked "extern" by
+fs/resctrl/internal.h, so currently not accessible to architecture code.
+
+Is that a deliberate choice? Would it be OK to make that visible to
+architecture code to create files in /sys/kernel/debug/resctrl?
+
+Or should I add my file in a new /sys/kernel/debug/x86/resctrl
+directory?
+
+-Tony
