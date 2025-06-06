@@ -1,99 +1,68 @@
-Received: from MTA-13-4.privateemail.com (mta-13-4.privateemail.com [198.54.127.109])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B215DBA38;
-	Fri,  6 Jun 2025 19:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.109
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694EC36D;
+	Fri,  6 Jun 2025 19:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749238968; cv=none; b=MW795NyJdH/18m8t/pMgrGrFFClkEa1Cb3OXAZ+v918W00drUBz4ISJIK6nq/7fYRlJge8rrL4jGhkrNlqlnDC9m1b9EhIpcGVFKOyHKK2PTe3ScqlnF3uzF8wsJQgIS0/6FTeOjZJ51HNIjDqbodFJ31hhl3g1XLAvhEtZuK+g=
+	t=1749239181; cv=none; b=aMCK+i7wukPEiA5U1c3DjvRfnjdRzRRZt0TG87tbXetWwYun6hqoSjKJa3jwvspoVADEFbUu3N+h9lfEW38gYLkGVDNvpyTShizJwZaind33J2GM+6iXg3NC0s4FM8zcbuSzEsv/DplnJhVuvyRwSSfsMavWSN9WyObNbImbWFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749238968; c=relaxed/simple;
-	bh=f/ZG7FzFsllKeCY4kWY41SHT1xEBrgdADFi7P3Tq+Y8=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=FHr7mt4huwj5gWiZ4VZ63EWFDoC3TGCN++L2DlLSEJ44BIZEuRuuPZG03cr3Og3Rb3EHKzTxpfIJDydaCSU1a2HdKwsCwMv+/AY042868sE63mEQZbumBIjd8HKw9nWy0kv2Sau5dGz/K/KnkDOkwBsBrBtwtV9C4KcX1YkjkGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mebeim.net; spf=pass smtp.mailfrom=mebeim.net; dkim=pass (2048-bit key) header.d=mebeim.net header.i=@mebeim.net header.b=B9TYwjG8; arc=none smtp.client-ip=198.54.127.109
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mebeim.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mebeim.net
+	s=arc-20240116; t=1749239181; c=relaxed/simple;
+	bh=01zrtN3LHWp3T9SlDc6J4OdMI4FP63NecS3WUI0ue1w=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=fknN+YwrXPrelds+TMRtFmCCrqZRGB4Mcnn3a8X6xplRM+RwxSBHTYWFyZhs+GubDUlYujdb3wa2FUxe3pUjTLVtEOIs+cDqnxTibJUA1wyXeTYhMrmkPW5fwmQtKYN3v11YTCpheLZJwwaF8OwU9WR5R32GTb3uTk8pKk5WaFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1kh6CKn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mebeim.net header.i=@mebeim.net header.b="B9TYwjG8"
-Received: from mta-13.privateemail.com (localhost [127.0.0.1])
-	by mta-13.privateemail.com (Postfix) with ESMTP id 4bDWtk1fWVz3hhhd;
-	Fri,  6 Jun 2025 15:42:38 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mebeim.net; s=default;
-	t=1749238958; bh=f/ZG7FzFsllKeCY4kWY41SHT1xEBrgdADFi7P3Tq+Y8=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=B9TYwjG8CE3vwgX0/Lz90Hrtrhq9bCeXEavuCbkZ9jmcnkF9k9Y1am6Dir+rDCnUD
-	 qxVkI9Fac5CpADN6kGrSxYdoU97UE2Ptx/8ubWWKj3ZdvBiDsQDQCNQw6xsAQDjUBD
-	 tzuLmKwxVrZmvqyygCyvGAYRTzzVqJoiW5Af/VjmgewD8+PPpiHmpOyCZFFNL2SSrS
-	 kl/LYS8qiOpixS+ScjVPIiL1H9cFl6VXa+w+X+ajJ71fthhOWcJh8KYRAGtD3XxNV/
-	 7tStNop7MJQnxMg6qmRGpZl2GMqpqluKZOkJngalKlwcu35YmRt5LXa5Hdt41B98on
-	 cLbzOrqlrwTSg==
-Received: from APP-18 (unknown [10.50.14.242])
-	by mta-13.privateemail.com (Postfix) with ESMTPA;
-	Fri,  6 Jun 2025 15:42:27 -0400 (EDT)
-Date: Fri, 6 Jun 2025 21:42:27 +0200 (CEST)
-From: Marco Bonelli <marco@mebeim.net>
-To: Alexandre Ghiti <alex@ghiti.fr>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "terrelln@fb.com" <terrelln@fb.com>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>,
-	"mhiramat@kernel.org" <mhiramat@kernel.org>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-	"palmer@dabbelt.com" <palmer@dabbelt.com>,
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Message-ID: <191074362.1248877.1749238947947@privateemail.com>
-In-Reply-To: <1338988468.1011577.1749045125350@privateemail.com>
-References: <960240908.630790.1748641210849@privateemail.com>
- <1552795452.650306.1748692371190@privateemail.com>
- <c239ee1b-f201-4e7b-80f8-03a7fb02b666@ghiti.fr>
- <1338988468.1011577.1749045125350@privateemail.com>
-Subject: Re: Broken 32-bit riscv debug build with ZSTD and FTRACE
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1kh6CKn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 668B1C4CEEB;
+	Fri,  6 Jun 2025 19:46:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749239180;
+	bh=01zrtN3LHWp3T9SlDc6J4OdMI4FP63NecS3WUI0ue1w=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=S1kh6CKnovjc32GVIf+1sxu269Qc4igI05LZNceRGVi7fI7Rii96g51x7D1iy3StZ
+	 /FbmDP9LAdRBUEbmuUxFPibEpJBF4F/SeWfBIvWMavG8UNU5u7qWi235r7THakknNv
+	 aYu5lZQdXwe5UfSnG0cUHyCVvrvDB9Ea6KOdtZlaW3ezdXF/i/HilWxp55k8CDR7Jc
+	 9e2l0XzmfdhP+EERWfjSGLdLFYEPLx+GIcBVCXGeDHGFc0sY3Ad7vNSoDHbn6d13KM
+	 B3AnAo14177XSxbPVXqH0vcfqSeqDb4JMg+RR79aa8dqs1dfhLdGSaCmAFbi5hrICb
+	 AodQPi+RO59jQ==
+Date: Fri, 06 Jun 2025 12:46:10 -0700
+From: Kees Cook <kees@kernel.org>
+To: Eric Dumazet <edumazet@google.com>, Pranav Tyagi <pranav.tyagi03@gmail.com>
+CC: Andrew Lunn <andrew@lunn.ch>, andrew+netdev@lunn.ch, davem@davemloft.net,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+ linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH] net: randomize layout of struct net_device
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CANn89iJR1i3hhXrkDNtXyPCNUj1KmrTAff2=pcuYNsXBxogNpw@mail.gmail.com>
+References: <20250602135932.464194-1-pranav.tyagi03@gmail.com> <053507e4-14dc-48db-9464-f73f98c16b46@lunn.ch> <202506021057.3AB03F705@keescook> <25d96fc0-c54b-4f24-a62b-cf68bf6da1a9@lunn.ch> <CAH4c4jJRkeiCaRji9s1dXxWL538X=vXRyKgwcuAOLPNd-jv4VQ@mail.gmail.com> <CANn89iJR1i3hhXrkDNtXyPCNUj1KmrTAff2=pcuYNsXBxogNpw@mail.gmail.com>
+Message-ID: <123565BC-9619-40F1-9F38-0F2BAAE09716@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Normal
-X-Mailer: Open-Xchange Mailer v7.10.6-Rev75
-X-Originating-Client: open-xchange-appsuite
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-I was able to also reproduce without ZSTD (i.e. both ZSTD_COMPRESS=n
-and ZSTD_DECOMPRESS=n) like this:
 
-	export ARCH=riscv CROSS_COMPILE=riscv32-linux-
-	make distclean
-	make defconfig
-	make 32-bit.config
-	./scripts/config \
-		-e FTRACE \
-		-e CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT \
-		-d RD_ZSTD \
-		-d SECURITY_APPARMOR_INTROSPECT_POLICY \
-		-d BTRFS_FS
-	make olddefconfig
-	make -j vmlinux
 
-Did another bisect run between v6.14 and v6.15 with the above commands
-in a bash script and got:
+On June 6, 2025 8:42:45 AM PDT, Eric Dumazet <edumazet@google=2Ecom> wrote=
+:
+>Most distros use CONFIG_RANDSTRUCT_NONE=3Dy
 
-	494e7fe591bf834d57c6607cdc26ab8873708aa7 Merge tag 'bpf_res_spin_lock' of git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next
+That is true=2E But distros don't strictly define our code base=2E :)
 
-This leaves me more puzzled than before honestly. Not sure whether it is
-a real bug or a problem on my end at this point? The fact that I can repro
-in a Docker makes me think of the former, but the fact that I was able to
-bisect it down to two different commits depending on ZSTD vs no ZSTD is
-weird.
+> I do not think __randomize_layout has a future=2E
 
-Alex (or anyone else really): are you able to reproduce with my Dockerfile
-or config I provided in my last mail by any chance?
+It will remain an actively supported feature -- many high security systems=
+ (that build their own kernels) use it, along with other features where the=
+y have no problem trading performance for security=2E
 
---
-Marco Bonelli
+-Kees
+
+--=20
+Kees Cook
