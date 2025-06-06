@@ -1,264 +1,122 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D502745009
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 15:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C6B288CBA;
+	Fri,  6 Jun 2025 15:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749222231; cv=none; b=E8xKf56QhLkOKVNvINtWZSZHM9igfvLt+v/9xrIt9k3Kb0C9IiO0KWsA24RphgPFP2Qa6ZXij2Z6KHgkqA30NAtBiALDKFkH851FXx4bBXB/DrvXltgoG5sLid5irsYRSpTehteIqJl29zA60pXXIM03mpfc3b8XN+i0qMUHvLQ=
+	t=1749222309; cv=none; b=VX08g7VwcDycF7XHI/1uC/i/9ox8ZdDEEyxqG2Ca8+eYo2X/Rpp8toMVxcs2ddZjgWzg4go9ssxIpl/5blvUpLoxC4rB/XfTbRJ3HCpZ9J6n5KzR/okIvL0a9H9tZEMIfamzX4Nb/qTICfIiVOCmX/7e6jlM0O2tJnYacFbsY8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749222231; c=relaxed/simple;
-	bh=MP1DlX3KQk0isYvYsMaQEocILjiYOZ/JELPcnsAuWZU=;
+	s=arc-20240116; t=1749222309; c=relaxed/simple;
+	bh=gJtT0Tn2PpQSNzJ2Th229/jPzi9ZJ2Ls6N/5fNjLzI8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nAHZBIR05f5u9B/7/GkiXs5yVxhuYN/d1DtU4A9puy0LAZMUdGiLstdp5xVxxqkpwsQrMyw685VPZOq1T+XtSoOOAiCN5Hn33/zubGY/2rAb9Xew4RLsP5AO9pLQ363MvWToeQR/zqwsvd6ih9HcNi8tb11BH3O2BUd5YQojYPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nfvyh27C; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=Y2jyv3Dy4iyS3Sns25AfIGZ3eNQhAt7noExVSe3SolIdJ+znoSw8bRmwHqUIErxCkoHN62wyp92zyyvszmbDRGwIRMsrOrJ4JXON+eY9k5+xxdRgxyy5goXK5pmttGbklnc51c+3LsksPTKZZWWO6t1fbBx+btok4aHwuXLIg/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YpCV2m3l; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nfvyh27C"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-601f278369bso4373581a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 08:03:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YpCV2m3l"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-3105ef2a071so25108781fa.1;
+        Fri, 06 Jun 2025 08:05:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749222228; x=1749827028; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=LKFTgmexJ2tRnAKnlvK8zPAnKcYjOx7uvqLUInYgAWM=;
-        b=nfvyh27C9fMKooOlxtKM/i2mO2e4IvC6XaZy3tyRtFeiOxXiozM1zf1u5BhgT1JM44
-         DRpcygqh3EVIE2tWmWfVNsTWDLzSAYLYHa0T3fCLMeACHskITPz/UrIpD9UHFssVCF/B
-         RU6wQZc3u1JrRJnkP6eVRHgoC0YVQDQ1IEdAr0M5KX/7R5pwT/zOgAI+XywTcoPTTSfK
-         PgH33L4b2F8iqI2z/JYJ37D3QdghXneH8HRlneNPSFRZQd1uIDU0SXHBMYcMhKSFqsIZ
-         yz3VtsAKESdYn4wBE86WWJUbrleHLYLpzn5J5mfgFD6bAtZ4/839F0cqFPYmPMzI4ZX9
-         Iywg==
+        d=gmail.com; s=20230601; t=1749222305; x=1749827105; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5NhdrlgztzgpE1Xk+Zp4kkuAyeJA1EIIswOLXPfRZyk=;
+        b=YpCV2m3lvJOOefyFXL82qLH4EogGzFVPWK9M8oCN07Fic9U7v1tEDkXt95WXzFVp2q
+         AZDqK0FCG7MzzPHmPUjQPmXUAbZgNouTnIp5tagkakj56oeYlHsiGL+3yo8c79yJE7PO
+         IJFdUCYvA5b4PzBIzpxkhCjNNb3mzTJQceauLyOCTZ1kWVLEzbJ7v5HsxuKcaMGb5ur5
+         ViGhjhBniksIIE0WnkZ0tc7Hs8QS2TL01fzz5Q2a4MYQlb+9CSlU/HkQ7pGFL/s9mzgI
+         lIj8nefnfKImlYYhGGTlYFZDY10CHofyH/hQo1HZe2iMzTHFByKPREy2qo0vhHXmfXNA
+         ZKIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749222228; x=1749827028;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LKFTgmexJ2tRnAKnlvK8zPAnKcYjOx7uvqLUInYgAWM=;
-        b=bF24ZD1FLTve8vObxj/WsXNCA+FIKxZtxPoKC/lYxsyhI4IOmAPRWVa4rWOTqH0PtI
-         ImMOVzqSS0zUDFsh+gDZMW8jZnyfr9w9+CUoGxbPPcMkjMDMyF+v2m63rEC9RPCqiYwJ
-         cveNY7Boue8qy54rqSqMwkHyEiK4h4lgbQPD9n4d0G42yct7mECIZRzg7lQQC8cszmze
-         hbwQB6gjPeiQr5cQSH12WXciqubdTES1XFSbsFPqlkXhCJ1OwA0AdwRbXDFfvaKzOZHs
-         lygfXW30g0diwmpBybp7fEW54MeMC7IJDp3Fx8fZvR5ScVVB3jJiT3YqpPRFngAsLuZ5
-         gRIg==
-X-Forwarded-Encrypted: i=1; AJvYcCWxBqRn29vCYPlwN2RVB2SDJrUfWgD2vP2sADXVTOOQiHhdM9YPloB+TFqdrEoctrHi/dmfQkIcEn6cFsM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9scU/cePg3GijU0QoZ2maD3pt14rL/t5ED2+OSePoVXEY8n75
-	yhPyEpYhrCWY2WaaHqFINgmbLjg2IE34pJ/gjOZkYZ7lQcdj7KKYBERoYK7FdUkH0tfnPnUQkx7
-	Jy9fnpEdA5+J0PLsAnqxj+8GBRfogdaGtuxn+FtcxqA==
-X-Gm-Gg: ASbGncuQ0vg+GxKX7TjmlI/QIs7o9hD/BA1tQQkD+f6Ccv2chu7wiV3fGZWm6SaLAp9
-	qvIeG1xQ+EsGjvDeSOe6pg7RWvRrxohXvb8MhP7Tg3OOSeO7tTeckpmQ6RDS4BJgq46cutgW+wd
-	teEuKJDmbmWGzjeJPC6o+L1+D95W4Um/4/mkTSUyYIKr77kDNGHVZ4WNKBsSNtyT059P07wVg8
-X-Google-Smtp-Source: AGHT+IHb+JIgUTS+Jy05lwbJZA4PqXBhKzT+HUFPD4/O0+x0rM7l/7JgkPmvPnA8jVqm7RQCEOc4OaSz79JZUmZz5Ik=
-X-Received: by 2002:a17:907:6d0d:b0:ad5:7732:675b with SMTP id
- a640c23a62f3a-ade1ab2088cmr371102566b.40.1749222228076; Fri, 06 Jun 2025
- 08:03:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749222305; x=1749827105;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5NhdrlgztzgpE1Xk+Zp4kkuAyeJA1EIIswOLXPfRZyk=;
+        b=D/r0sXxjiDPejZlzps9G3ilCEbEvTYSvDAx64WWhcFDnDrS0S4+TR0d4qY1wB+WiOt
+         4G9NRTP7vg4iAAZqG3Nh6bTi/tmO4iKCgHTU2ygoo2tnqj+ZxrAUY/ut0au5H1OSypXd
+         wWSKyOmGXBBg7dUoMIeXNNckYrgEUw6lSGRinV32nvO1jr4WijaY0+18ThfRb/D5hVsH
+         6lxTvMdDoal+yBKtHmF+cEZXHLKLmhkv4J/ylH7CgWPrmzErv+Rmsn16y2Eq0eBWOnIt
+         Ay9ykoQ09X5qvq/aA76X3phalOS3wqzqwrYChIouR23P0IguNyHJL2XDuzZQlq5BIt2n
+         zPzg==
+X-Forwarded-Encrypted: i=1; AJvYcCVpnz/sqc4ziP30JMqf1mF5/86NlBjG9sC5CTwS3dZsxiDCXn/RK/L9LEtFucp2GiNjTPcbCczEbTYo6L8=@vger.kernel.org, AJvYcCXFTPRoCf6NacWolkDBNPEi2swHImLx+ElfCn/cuMSNyCIHDOUiwLNKxBoO97ZoWa+jqzwuQoVK@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRkgFQ3toitz6kVAbx6arHiWeQr+PeG0vxFVm3f96g1Ii1M9nA
+	Y7cSSrOaK95eBU4qeEj4qlsNTrdt7iDE8t+yM3MFx4bfXMD2m4Pnv2TXYa4Luxx2ASAvLFdKc1a
+	fG6GYWeXeT85xG2tgKkSA4rpT3y2dVCs=
+X-Gm-Gg: ASbGncs+0PRWoxPzBMHuIrAk596EMmTM5A5+VrS7XNAWkxnCKPtleL/vifMG7a43c46
+	SotbBoho6faYhN140m0Y0JswMrJG7tgVWvcWMTRTMxvza9eYfJ2OS90iz6e9lO83Mv6JIu7el3I
+	id+tEpfZpcNbhbLhE3bQh4+2z6LJ7nRVbLkYNOIXKfFOEn8LKDYnjzpvi2rlnirV86j1AybzAje
+	8INuw==
+X-Google-Smtp-Source: AGHT+IH78G8M0elhu6vNm3wt3JuGbGuw0AvHq4vu10oYAIAXshUAr7D1SoCJMauU898LZIj0vl45j514wQ0JYhgZ68o=
+X-Received: by 2002:a2e:a7ca:0:b0:32a:88b5:7b3e with SMTP id
+ 38308e7fff4ca-32adfeec0bemr8720921fa.41.1749222305096; Fri, 06 Jun 2025
+ 08:05:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520094538.086709102@infradead.org> <20250520101727.984171377@infradead.org>
-In-Reply-To: <20250520101727.984171377@infradead.org>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Fri, 6 Jun 2025 17:03:36 +0200
-X-Gm-Features: AX0GCFv_fVC0VUzxSff7a-L_s-fxu5T2EqxzSb-EwHgZJZPdeebuweUcX02bGVI
-Message-ID: <CAKfTPtDOQVEMRWaK9xEVqSDKcvUfai4CUck6G=oOdaeRBhZQUw@mail.gmail.com>
-Subject: Re: [RFC][PATCH 5/5] sched: Add ttwu_queue support for delayed tasks
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com, 
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
-	clm@meta.com, linux-kernel@vger.kernel.org
+References: <20250602135932.464194-1-pranav.tyagi03@gmail.com> <2025060239-delirium-nephew-e37c@gregkh>
+In-Reply-To: <2025060239-delirium-nephew-e37c@gregkh>
+From: Pranav Tyagi <pranav.tyagi03@gmail.com>
+Date: Fri, 6 Jun 2025 20:34:53 +0530
+X-Gm-Features: AX0GCFvdMphOgp8NP2z6BCJwn33AWaLDf2vr9-l3CqvYDu4QUg76FhA0esJXBe4
+Message-ID: <CAH4c4jKrYsyVi_g=bem2bGmH1Y95mRkKPApqbQbWZXkQuVWtDQ@mail.gmail.com>
+Subject: Re: [PATCH] net: randomize layout of struct net_device
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, keescook@chromium.org, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 20 May 2025 at 12:18, Peter Zijlstra <peterz@infradead.org> wrote:
+On Mon, Jun 2, 2025 at 8:50=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org>=
+ wrote:
 >
-> One of the things lost with introduction of DELAY_DEQUEUE is the
-> ability of TTWU to move those tasks around on wakeup, since they're
-> on_rq, and as such, need to be woken in-place.
+> On Mon, Jun 02, 2025 at 07:29:32PM +0530, Pranav Tyagi wrote:
+> > Add __randomize_layout to struct net_device to support structure layout
+> > randomization if CONFIG_RANDSTRUCT is enabled else the macro expands to
+> > do nothing. This enhances kernel protection by making it harder to
+> > predict the memory layout of this structure.
+> >
+> > Link: https://github.com/KSPP/linux/issues/188
+> > Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+> > ---
+> >  include/linux/netdevice.h | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> > index 7ea022750e4e..0caff664ef3a 100644
+> > --- a/include/linux/netdevice.h
+> > +++ b/include/linux/netdevice.h
+> > @@ -2077,7 +2077,11 @@ enum netdev_reg_state {
+> >   *   moves out.
+> >   */
+> >
+> > +#ifdef CONFIG_RANDSTRUCT
+> > +struct __randomize_layout net_device {
+> > +#else
+> >  struct net_device {
+> > +#endif
+>
+> Are you sure the #ifdef is needed?
+>
+> thanks,
+>
+> greg k-h
 
-I was thinking that you would call select_task_rq() somewhere in the
-wake up path of delayed entity to get a chance to migrate it which was
-one reason for the perf regression (and which would have also been
-useful for EAS case) but IIUC, the task is still enqueued on the same
-CPU but the target cpu will do the enqueue itself instead on the local
-CPU. Or am I missing something ?
+Hi Greg,
 
->
-> Doing the in-place thing adds quite a bit of cross-cpu latency, add a
-> little something that gets remote CPUs to do their own in-place
-> wakeups, significantly reducing the rq->lock contention.
->
-> Reported-by: Chris Mason <clm@meta.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  kernel/sched/core.c     |   74 ++++++++++++++++++++++++++++++++++++++++++------
->  kernel/sched/fair.c     |    5 ++-
->  kernel/sched/features.h |    1
->  kernel/sched/sched.h    |    1
->  4 files changed, 72 insertions(+), 9 deletions(-)
->
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -3784,6 +3784,8 @@ static int __ttwu_runnable(struct rq *rq
->         return 1;
->  }
->
-> +static bool ttwu_queue_wakelist(struct task_struct *p, int cpu, int wake_flags);
-> +
->  /*
->   * Consider @p being inside a wait loop:
->   *
-> @@ -3811,6 +3813,33 @@ static int __ttwu_runnable(struct rq *rq
->   */
->  static int ttwu_runnable(struct task_struct *p, int wake_flags)
->  {
-> +#ifdef CONFIG_SMP
-> +       if (sched_feat(TTWU_QUEUE_DELAYED) && READ_ONCE(p->se.sched_delayed)) {
-> +               /*
-> +                * Similar to try_to_block_task():
-> +                *
-> +                * __schedule()                         ttwu()
-> +                *   prev_state = prev->state             if (p->sched_delayed)
-> +                *   if (prev_state)                         smp_acquire__after_ctrl_dep()
-> +                *     try_to_block_task()                   p->state = TASK_WAKING
-> +                *       ... set_delayed()
-> +                *         RELEASE p->sched_delayed = 1
-> +                *
-> +                * __schedule() and ttwu() have matching control dependencies.
-> +                *
-> +                * Notably, once we observe sched_delayed we know the task has
-> +                * passed try_to_block_task() and p->state is ours to modify.
-> +                *
-> +                * TASK_WAKING controls ttwu() concurrency.
-> +                */
-> +               smp_acquire__after_ctrl_dep();
-> +               WRITE_ONCE(p->__state, TASK_WAKING);
-> +
-> +               if (ttwu_queue_wakelist(p, task_cpu(p), wake_flags | WF_DELAYED))
-> +                       return 1;
-> +       }
-> +#endif
-> +
->         CLASS(__task_rq_lock, guard)(p);
->         return __ttwu_runnable(guard.rq, p, wake_flags);
->  }
-> @@ -3830,12 +3859,41 @@ void sched_ttwu_pending(void *arg)
->         update_rq_clock(rq);
->
->         llist_for_each_entry_safe(p, t, llist, wake_entry.llist) {
-> +               struct rq *p_rq = task_rq(p);
-> +               int ret;
-> +
-> +               /*
-> +                * This is the ttwu_runnable() case. Notably it is possible for
-> +                * on-rq entities to get migrated -- even sched_delayed ones.
+No, the #ifdef is not required since __randomize_layout is defined
+as a no-op when CONFIG_RANDSTRUCT is disabled.
+I rechecked the documentation to confirm this.
+Thanks for pointing it out!
+I will remove the #ifdef and update the patch before resending.
 
-I haven't found where the sched_delayed task could migrate on another cpu.
-
-> +                */
-> +               if (unlikely(p_rq != rq)) {
-> +                       rq_unlock(rq, &rf);
-> +                       p_rq = __task_rq_lock(p, &rf);
-> +               }
-> +
-> +               ret = __ttwu_runnable(p_rq, p, WF_TTWU);
-> +
-> +               if (unlikely(p_rq != rq)) {
-> +                       if (!ret)
-> +                               set_task_cpu(p, cpu_of(rq));
-> +
-> +                       __task_rq_unlock(p_rq, &rf);
-> +                       rq_lock(rq, &rf);
-> +                       update_rq_clock(rq);
-> +               }
-> +
-> +               if (ret) {
-> +                       // XXX ttwu_stat()
-> +                       continue;
-> +               }
-> +
-> +               /*
-> +                * This is the 'normal' case where the task is blocked.
-> +                */
-> +
->                 if (WARN_ON_ONCE(p->on_cpu))
->                         smp_cond_load_acquire(&p->on_cpu, !VAL);
->
-> -               if (WARN_ON_ONCE(task_cpu(p) != cpu_of(rq)))
-> -                       set_task_cpu(p, cpu_of(rq));
-> -
->                 ttwu_do_activate(rq, p, p->sched_remote_wakeup ? WF_MIGRATED : 0, &rf);
->         }
->
-> @@ -3974,7 +4032,7 @@ static inline bool ttwu_queue_cond(struc
->
->  static bool ttwu_queue_wakelist(struct task_struct *p, int cpu, int wake_flags)
->  {
-> -       bool def = sched_feat(TTWU_QUEUE_DEFAULT);
-> +       bool def = sched_feat(TTWU_QUEUE_DEFAULT) || (wake_flags & WF_DELAYED);
->
->         if (!ttwu_queue_cond(p, cpu, def))
->                 return false;
-> @@ -4269,8 +4327,8 @@ int try_to_wake_up(struct task_struct *p
->                  * __schedule().  See the comment for smp_mb__after_spinlock().
->                  *
->                  * Form a control-dep-acquire with p->on_rq == 0 above, to ensure
-> -                * schedule()'s deactivate_task() has 'happened' and p will no longer
-> -                * care about it's own p->state. See the comment in __schedule().
-> +                * schedule()'s try_to_block_task() has 'happened' and p will no longer
-> +                * care about it's own p->state. See the comment in try_to_block_task().
->                  */
->                 smp_acquire__after_ctrl_dep();
->
-> @@ -6712,8 +6770,8 @@ static void __sched notrace __schedule(i
->         preempt = sched_mode == SM_PREEMPT;
->
->         /*
-> -        * We must load prev->state once (task_struct::state is volatile), such
-> -        * that we form a control dependency vs deactivate_task() below.
-> +        * We must load prev->state once, such that we form a control
-> +        * dependency vs try_to_block_task() below.
->          */
->         prev_state = READ_ONCE(prev->__state);
->         if (sched_mode == SM_IDLE) {
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -5395,7 +5395,10 @@ static __always_inline void return_cfs_r
->
->  static void set_delayed(struct sched_entity *se)
->  {
-> -       se->sched_delayed = 1;
-> +       /*
-> +        * See TTWU_QUEUE_DELAYED in ttwu_runnable().
-> +        */
-> +       smp_store_release(&se->sched_delayed, 1);
->
->         /*
->          * Delayed se of cfs_rq have no tasks queued on them.
-> --- a/kernel/sched/features.h
-> +++ b/kernel/sched/features.h
-> @@ -82,6 +82,7 @@ SCHED_FEAT(TTWU_QUEUE, false)
->  SCHED_FEAT(TTWU_QUEUE, true)
->  #endif
->  SCHED_FEAT(TTWU_QUEUE_ON_CPU, true)
-> +SCHED_FEAT(TTWU_QUEUE_DELAYED, false)
-
-I'm not sure that the feature will be tested as people mainly test
-default config
-
->  SCHED_FEAT(TTWU_QUEUE_DEFAULT, false)
->
->  /*
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -2313,6 +2313,7 @@ static inline int task_on_rq_migrating(s
->  #define WF_RQ_SELECTED         0x80 /* ->select_task_rq() was called */
->
->  #define WF_ON_CPU              0x0100
-> +#define WF_DELAYED             0x0200
->
->  #ifdef CONFIG_SMP
->  static_assert(WF_EXEC == SD_BALANCE_EXEC);
->
->
+Regards
+Pranav Tyagi
