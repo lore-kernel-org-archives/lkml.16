@@ -1,117 +1,181 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94D328A1F9
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 17:28:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9872428A71A
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 17:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749230892; cv=none; b=tvXDTuMiLTJ+yMbDUl4LWP3XTSg1vyCWRXUQaf8+JGanMPnQXqg6ahcKEnTOOOkNT4aUCQJugtfKCjR/iHY1JVBCt/OVzK+zjFvVSjQ2pldpTvsLUEoUeq6Zrc+7eAmsWzP8X+6/s9qqfbmD2XoovytM4ilukfDAsdeRBF5Yxb8=
+	t=1749230896; cv=none; b=NAZDowPmkxAMcIm1nDzjcPTNvOUE9YJvKSddm+WF5fj6tUbmWntKLzEb57vzGUszXj0x31EYe1hmtZLRJTmJi9KhGdmGYVmn82UVtJgIVDMgBLKdrM+p1AJt4wXd+sfdxde2nN+p96OpDdGaNo5TBcwbcRdnORbScIHjsRr7vHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749230892; c=relaxed/simple;
-	bh=xrcru449cei1Et0aCLQa6/Kqc5VQETIjkfkAR+RpjMY=;
+	s=arc-20240116; t=1749230896; c=relaxed/simple;
+	bh=2OmHS4d4LLkJyCDJRd0Sh2nA9xIIDRgfYtuAClUrl1k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AQvmxxPXhCUILlR1TBpGZW68EOnINIQRWh7arN7f5t+0HM4zM3VVm2hHtjXzdRtSzEJQb5b67ou3C1PjHNaPeP/Y9g4UHpbnFsoKBBFjUReSWOvOoQ2ucZz2Iwo7bEvUCJhag/hTUCtVYJiK8FFfso96tfql6OJR0HyzfHHBVsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=cqRrcxKR; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=mcx5D4D82PFRZzVgzhvwszW7n7GRmvjIMRSt6QKjrp7ujr5WV8C9iwT858OTP5R09JokdHmzGNVZ9SxwsNBJRQ6pD/ZxPsE4/K2BXAmqrxZL8JsywHLl+wPyfeIUObSuZhQEQV7r3/UXBX1/j3YUeyVu4I8n+kt/295bTgyuw7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=V9Jl3/Ml; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=dihhV7pM; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=V9Jl3/Ml; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=dihhV7pM; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="cqRrcxKR"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-742c46611b6so3048138b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 10:28:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1749230890; x=1749835690; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=8bxQcB6I31Y/6ivyEzgwxs7LfhD5ih9mAPGJOZEq11Q=;
-        b=cqRrcxKR8uLqD1uNqh2UCF2EfD1hKwtE4UDaKVZZGda0BaT2pspDjD5WhgdFGf4oaP
-         vBTc4RoC+16C7tORgdtxalqpHmNVdInUrz5iBMYS9HNyT6uUSe299lQfKMmsizM6TZTP
-         /ZtRXzVoPElYETnSRmsQriqk3q4Cli2OC9qysjyoRUVuTsWKYbkbqIoH3QsYK+TbKA4S
-         CsLF7dPo0GWzKdHkD61YHandP/5kt6J604eV7OGMfWYxHRRz6zhxxsi9P6nYUTJ/YR5m
-         wNN03n7BJHNiKn9eRe5xtIknpaORwfudf5zCJ5ps7nycwbWnhKfw266XegfGlablhR7a
-         JpDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749230890; x=1749835690;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8bxQcB6I31Y/6ivyEzgwxs7LfhD5ih9mAPGJOZEq11Q=;
-        b=pU+4Gva6JiANj+dFtFugP5AdNbig18sJ4QDq/cpha3FEXNJFL68q6C3KlKbXYRBS8N
-         S7pc7R+Fg1oMcvixQppI1KLukaj6lFmGQqxA/lY2jW4YI9geJ3YS9RQCTOWXg/xlGK8f
-         6LzvFKG87RHylRyRlhmX20qLLaMY5vWue59k83wpJp7aja0FprWUDAzq6asQJ7HqaQDn
-         ClWeltUYvVrOeKW4MvOkqNyzJyAjiNV8kIcIlNOVI1HFf93xTc+FOwIDgg06kUgGkvti
-         4fxG6rmGmdUddNQk9KoJKAP/yZ90xZSI5qUUlK+TaUGtdLC4hZJBiJO257JiYn5NrdLh
-         Ktww==
-X-Forwarded-Encrypted: i=1; AJvYcCV7PJJotIz9MUCqv4gbpFJNBHHwFbWbt5Bt0sHQy0sAhZdvrQ+wZQiR3fuYzCpwDonr6F7uPWZDQgE1slw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZRJ7cuXTGAWe1GdWp8xlDTChupDp8rlrYpK2h9UxczWx4z1V0
-	R13FK3dznaA+e0wtN2xJ9i6xD24GdFntrcsV/oJjGu3CXnZa3ST9LAH2GTYhbZyE3Yk/69U/HZy
-	sx46mV0c=
-X-Gm-Gg: ASbGncteM3IUy/F3wl4owQketR+ZQQuwMwRFtqB1bKpL6khcedEYvTfqdx3oZs1ypsK
-	X6L4fCEt9jONr9w8MLMIMJCa+KZSSLIb72aeNtiJU2EVnPZxVAX/wwG2ZNiCqjCHevzVQ/09Mq4
-	gZ7W55EI0JXfkUCWRS45j4BsUcOl+tF1axQxRlq2U68mf74OcQbtkbBgEKfRGr/0uUAsxlty0mu
-	eo5q33OvNB4MLAmV2y5tGHrlLB4CVwPKIur9HLcKHzCFW5ukddYE4m6sz3x1xsHbPql5M/uzm/i
-	AC/eH67ymmeMqhmu8B4GaOXb/ABIhjs+
-X-Google-Smtp-Source: AGHT+IEbUQQvWXU//4u2yreY3b/suldCjm0c7NQZ8DRuolXQmMbStt3cnUiQB2khj9JcdjCEds7eUw==
-X-Received: by 2002:a05:6a20:729f:b0:215:d611:5d9b with SMTP id adf61e73a8af0-21ee68a05d8mr5562457637.12.1749230890038;
-        Fri, 06 Jun 2025 10:28:10 -0700 (PDT)
-Received: from x1 ([97.120.245.255])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0842d3sm1576428b3a.98.2025.06.06.10.28.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 10:28:09 -0700 (PDT)
-Date: Fri, 6 Jun 2025 10:28:08 -0700
-From: Drew Fustini <drew@pdp7.com>
-To: Oliver O'Halloran <oohall@gmail.com>
-Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, nvdimm@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pmem: Convert binding to YAML
-Message-ID: <aEMlKN9/PKTLciLF@x1>
-References: <20250520021440.24324-1-drew@pdp7.com>
- <aCvnXW12cC97amX3@x1>
- <20250520-refract-fling-d064e11ddbdf@spud>
- <aCzvaPQ0Z3uunjHz@x1>
- <CAOSf1CGLoN7u18OOPZ_FGiYvxUninoCAvR8CJiOLGJrORCghdw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="V9Jl3/Ml";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="dihhV7pM";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="V9Jl3/Ml";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="dihhV7pM"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C47B7336B1;
+	Fri,  6 Jun 2025 17:28:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749230892;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qep49SCoIb7Px0X63pnsLPhhPKdUjmluUs+NJCFgizs=;
+	b=V9Jl3/MlQVoXXhhjRP86nJlbiLlj2JDmEeNQOGHMXZP/5bl5haWhz3MKADVJK+hN/WOFMB
+	cpCbJDblrrVK8gK8HZqM8BkYiDUmx+0xK7gpK94E6OK259z8crUdFhmFv4qZra9BuYTy9N
+	8eVGYTa87rxN26/93dXorPRRCKf26kM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749230892;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qep49SCoIb7Px0X63pnsLPhhPKdUjmluUs+NJCFgizs=;
+	b=dihhV7pMKSJMjLo2E7Iq2gLt9tt0LMWsM/vG+m0D0aoXmhmbrx6l/nkxeTUpKDlU/j/Lt9
+	uwr9ZViXFA44m9Cw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749230892;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qep49SCoIb7Px0X63pnsLPhhPKdUjmluUs+NJCFgizs=;
+	b=V9Jl3/MlQVoXXhhjRP86nJlbiLlj2JDmEeNQOGHMXZP/5bl5haWhz3MKADVJK+hN/WOFMB
+	cpCbJDblrrVK8gK8HZqM8BkYiDUmx+0xK7gpK94E6OK259z8crUdFhmFv4qZra9BuYTy9N
+	8eVGYTa87rxN26/93dXorPRRCKf26kM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749230892;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qep49SCoIb7Px0X63pnsLPhhPKdUjmluUs+NJCFgizs=;
+	b=dihhV7pMKSJMjLo2E7Iq2gLt9tt0LMWsM/vG+m0D0aoXmhmbrx6l/nkxeTUpKDlU/j/Lt9
+	uwr9ZViXFA44m9Cw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A86AE1336F;
+	Fri,  6 Jun 2025 17:28:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id HbecKCwlQ2g7UAAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Fri, 06 Jun 2025 17:28:12 +0000
+Date: Fri, 6 Jun 2025 19:28:11 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Daniel Vacek <neelx@suse.com>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: index buffer_tree using node size
+Message-ID: <20250606172811.GY4037@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20250512172321.3004779-1-neelx@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOSf1CGLoN7u18OOPZ_FGiYvxUninoCAvR8CJiOLGJrORCghdw@mail.gmail.com>
+In-Reply-To: <20250512172321.3004779-1-neelx@suse.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Flag: NO
+X-Spam-Score: -4.00
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo];
+	RCVD_COUNT_TWO(0.00)[2];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
+X-Spam-Level: 
 
-On Fri, Jun 06, 2025 at 12:20:48PM +1000, Oliver O'Halloran wrote:
-> On Wed, May 21, 2025 at 7:08 AM Drew Fustini <drew@pdp7.com> wrote:
-> >
-> > On Tue, May 20, 2025 at 04:51:42PM +0100, Conor Dooley wrote:
-> > > On Mon, May 19, 2025 at 07:22:21PM -0700, Drew Fustini wrote:
-> > > > On Mon, May 19, 2025 at 07:14:40PM -0700, Drew Fustini wrote:
-> > > > > Convert the PMEM device tree binding from text to YAML. This will allow
-> > > > > device trees with pmem-region nodes to pass dtbs_check.
-> > > > >
-> > > > > Signed-off-by: Drew Fustini <drew@pdp7.com>
-> > > > > ---
-> > > > > v2: remove the txt file to make the conversion complete
-> > > >
-> > > > Krzysztof/Rob: my apologies, I forgot to add v2 to the Subject. Please
-> > > > let me know if I should resend.
-> > >
-> > > I see how it is Drew...
-> > > Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> >
-> > Thanks for the Ack and sorry about that :)
-> >
-> > Is it now just a matter of Rb from Oliver O'Halloran and this patch
-> > going through the nvdimm tree?
+On Mon, May 12, 2025 at 07:23:20PM +0200, Daniel Vacek wrote:
+> So far we are deriving the buffer tree index using the sector size. But each
+> extent buffer covers multiple sectors. This makes the buffer tree rather sparse.
 > 
-> It looks fine to me, but I've never worked with YAML DTs so I won't
-> pretend to review it.
+> For example the typical and quite common configuration uses sector size of 4KiB
+> and node size of 16KiB. In this case it means the buffer tree is using up to
+> the maximum of 25% of it's slots. Or in other words at least 75% of the tree
+> slots are wasted as never used.
 > 
-> Acked-By: Oliver O'Halloran <oohall@gmail.com>
+> We can score significant memory savings on the required tree nodes by indexing
+> the tree using the node size instead. As a result far less slots are wasted
+> and the tree can now use up to all 100% of it's slots this way.
+> 
+> Signed-off-by: Daniel Vacek <neelx@suse.com>
 
-Thanks for the Ack.
+This is a useful improvement, so we should continue and merge it. The
+performance improvements should be done so we get some idea. Runtime and
+slab savings.
 
-Drew
+One coding comment, please rename node_bits to nodesize_bits so it's
+consistent with sectorsize and sectorsize_bits.
+
+>  fs/btrfs/disk-io.c   |  1 +
+>  fs/btrfs/extent_io.c | 30 +++++++++++++++---------------
+>  fs/btrfs/fs.h        |  3 ++-
+>  3 files changed, 18 insertions(+), 16 deletions(-)
+> 
+> diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+> index 5bcf11246ba66..dcea5b0a2db50 100644
+> --- a/fs/btrfs/extent_io.c
+> +++ b/fs/btrfs/extent_io.c
+> @@ -4294,9 +4294,9 @@ static int try_release_subpage_extent_buffer(struct folio *folio)
+>  {
+>  	struct btrfs_fs_info *fs_info = folio_to_fs_info(folio);
+>  	struct extent_buffer *eb;
+> -	unsigned long start = folio_pos(folio) >> fs_info->sectorsize_bits;
+> +	unsigned long start = folio_pos(folio) >> fs_info->node_bits;
+>  	unsigned long index = start;
+> -	unsigned long end = index + (PAGE_SIZE >> fs_info->sectorsize_bits) - 1;
+> +	unsigned long end = index + (PAGE_SIZE >> fs_info->node_bits) - 1;
+
+This looks a bit suspicious, page size is 4k node size can be 4k .. 64k.
+It's in subpage code so sector < page, the shift it's always >= 0. Node
+can be larger so the shift result would be 0 but as a result of 4k
+shifted by "16k".
+
+>  	int ret;
+>  
+>  	xa_lock_irq(&fs_info->buffer_tree);
+> diff --git a/fs/btrfs/fs.h b/fs/btrfs/fs.h
+> index cf805b4032af3..8c9113304fabe 100644
+> --- a/fs/btrfs/fs.h
+> +++ b/fs/btrfs/fs.h
+> @@ -778,8 +778,9 @@ struct btrfs_fs_info {
+>  
+>  	struct btrfs_delayed_root *delayed_root;
+>  
+> -	/* Entries are eb->start / sectorsize */
+> +	/* Entries are eb->start >> node_bits */
+>  	struct xarray buffer_tree;
+> +	int node_bits;
+
+u32 and pleas move it to nodesize.
