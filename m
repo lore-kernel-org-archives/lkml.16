@@ -1,255 +1,211 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012141CD15;
-	Fri,  6 Jun 2025 00:51:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D038D5223;
+	Fri,  6 Jun 2025 00:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749171116; cv=none; b=r5fiQKMKIrXZOr4ze1ndQeJOfqO8PyDyy+BAvXmXx4yzatJtdZSK6O9EXaHQ7xyl1WTDDxsiqJefHgvsXMH+skzxYsms46aJrAEQqy/sbchgFUOa6pJJ5gUTNe/M325ZvOHPQVjonv3UnkcQ9onp/e3TKd7zHEhK3xWThQPlMHo=
+	t=1749171118; cv=none; b=qsQf+9j/eJS7B9mwIebod8IysVJbEnkLJ1ti9iuZd+BN7+sXRGDo4uwrsTYW77j0c3ishE04ivrfC0ZlaZEuQitoxsYvdGn8F20Ave4d+4wBljRNfrZAKf0P3IbZ6a3dUkior7ksJdDeA0BzHP6WpDEeXC0tIRd5TZ1QoBvFeC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749171116; c=relaxed/simple;
-	bh=6Nm5wKH2gLRJXtw6pTRP6GaKKzBhe+GS4TRaNH00bVA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EUXhCqy4OTuApBPp9CzXHRDLoB3p7kh1aqA3/zNcQjYVfMNTzAFBAWHTNJqFr7u73FCugt7/BcT0WvdzuABhc4dRYtgRAI6IloHclW3uMHj5uFt9I4YKIUcUelXIL9bYlqH4VRV6CB9uE4NDRbeAUxdHyUKo9JdqLkOM+20kvlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gwgPxoVy; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749171118; c=relaxed/simple;
+	bh=GjZsXE6imN4TLudPRr86MYiFtxqZ2oSp/FwjQcorbUY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=rE+5OVFFZGnF93mF8y8oSrnPDl5osj3sZdAcynaTUXh8c1tR2jo274GAB5qCOWo0i2+dQZimf6g99y0S6H2NM5ccxMm/hCpDpBgmBbr5zTvDwg0EiZJdU7CzTEUB4wEYT7R3XX+DMtU1GJUj+NUUdvQPvGD0jEEZJiKg4sQfXyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=irHw+2s2; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gwgPxoVy"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-451dbe494d6so18929265e9.1;
-        Thu, 05 Jun 2025 17:51:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749171111; x=1749775911; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=pDd/em4BnTremoHZ4ljFwRuxK1c22ANbjaIWqYoupN4=;
-        b=gwgPxoVyu6Qy3xIykguZHkK0I9igwWAzXOcc8XsyrV7MICeRYRbiNNFVLetcuZoJXp
-         7bs+oLa8HAqCxZem/DDRHvP6Uql4Vk1Wey7c6ThG8nk87ox5Z/Ws7mHyluyzO/ekA/LE
-         7vZ6xJZ4RMpZ3vrMAgCjCUQKxVJGMccrOYPrWIOeFzYybsNBc6GKz+44XZJXXVVEtRgB
-         ALBnGpJNFJCf5CAeIo39bnbAOxHjUNaaKodrBmUT47q+GEBXiKucPEYUjwBPuk6izz3M
-         ZGfkp/aFRNMuD7Fw8zKeP44GNtvXJdyG6MQDpNoPQyNXU5gaYwMPKtDVFvA4UAx3hj0t
-         JZzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749171111; x=1749775911;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pDd/em4BnTremoHZ4ljFwRuxK1c22ANbjaIWqYoupN4=;
-        b=llh2H+Q3gXtuiernjl3fvkP8LwervQimluSrjQZXIFxvgGF4Ug57zeXbQi55+RBk7f
-         TnPeNTTSazSGYQ5ezstMzvbu2UAxD0qEK63YJliE+dzy3pnptVcBNRJ0enozA1R+Q9vU
-         GYA5dKu72ADkX1Pbmk3A+9uCJnPmAwu2E5nQqNF94FBUI+ofrJ/zy3bxoLK/+jhSQ0L2
-         BLghr1RirQN8HwTHSwhv1bHQGSj8BVx8k6uuxPgT3L3uTO1aP+DOmT1yA+mycJnDmgs5
-         VpgfRWuANErr5DgWP4/IYD1LFqtMiqpCeD77WvGPUJlY5TF3mh7I3ldoYgwmukFflJ8n
-         jz/A==
-X-Forwarded-Encrypted: i=1; AJvYcCX2LqiyMFTHeCUzZbXCZYdjSGm/S0RK0v0JiQW1sCT+VxMOIWjhcxIiJsRxQ/xVKD7WHvUwGuAH8fh/@vger.kernel.org, AJvYcCX4jqO0lr7zu/7SRTevomUqOLagb9OOpCHNmIhRmk26HIooGqXEaBfME/dIwwMc1drZODTyx4+r2+iFDDRT@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywi52nmbVwp9yezJjQOUGLDUx9mkNeswTScrtmVBYiuMc8fcp1o
-	W1ou7+DwF2Mx7mR5ZSi0kzOg/l/XmMYsuC9nUanYvRwbs5YuGJm9/R+STP8IEJRf2ZuKYsVoQta
-	5Y+MkNv6p87h8bmHo44FX3pBkKoKqrqQ=
-X-Gm-Gg: ASbGncsatP2Uw/63EL1GsxKOQNQKbrvDDrcGi68mlAMfl91pFDPgDXfKALdnpPUVgm/
-	EYkPl0cqddYOZpopCNGefBFvjCB87xWmeqqmcqq2EwW+8eVc6+zcMHqYHSyy7G1E/bGFBqyeGew
-	3J3ce8K+Zq+q9l9yz/YiE9cUoYnrqIBp2hpjaX9vJJMp9z21qDQLDNnuyIKkb85HP4BKthu3KVy
-	w==
-X-Google-Smtp-Source: AGHT+IFmJe8yFH3mtq1Z6Tv7efTynx3Rh7g1ZDY0N3/XsC7tUoceZKE++OJZinpMI9oi2tnQpCU05SbiAGXhzc5oB+w=
-X-Received: by 2002:a05:6000:310e:b0:3a4:e480:b5df with SMTP id
- ffacd0b85a97d-3a531cdcf1bmr1029174f8f.44.1749171110901; Thu, 05 Jun 2025
- 17:51:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="irHw+2s2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749171116; x=1780707116;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=GjZsXE6imN4TLudPRr86MYiFtxqZ2oSp/FwjQcorbUY=;
+  b=irHw+2s2RsVflbndo+cfxCxXtu7eLq+NcFROe9nr5JL5zNjnIX5p3qQn
+   Fr7m2wag5WiHL8xrzJ+En9GgQ4cFviusM5UWnXzaimSIriwkBPuyPnCse
+   1YRoP+33r69XQ2eXvAOa/Lwx+Iz1ErkCUBV28sGUX/32j/b69lzMfURhM
+   Ib1vUg0N2VL+aIeQ0WrzxyXDtl9Ui0gQv2w4DPUFKDhNphELXL5g8mrP2
+   F8+KGA2G0xSEyvENMEpMKxL7BQQRQKmhW9Vne7AaBiMJ7SNce0uxQDBus
+   RpzxznZLrYdBR0VyzZk6cBVCUovPa3TKVYuwt3UNIckZTMHpQ3ipgkX46
+   g==;
+X-CSE-ConnectionGUID: gFsAUVqRQM+rOpvs9MTtcw==
+X-CSE-MsgGUID: 3wEzwF0CQjuNKlmBwEaAJw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51174725"
+X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
+   d="scan'208";a="51174725"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 17:51:55 -0700
+X-CSE-ConnectionGUID: FXLIaEmsTpm7ASEmGZdsgw==
+X-CSE-MsgGUID: nO4SilR4T4e6oSCA57hv3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
+   d="scan'208";a="146636526"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 17:51:55 -0700
+Received: from [10.124.222.132] (unknown [10.124.222.132])
+	by linux.intel.com (Postfix) with ESMTP id D189D20B5736;
+	Thu,  5 Jun 2025 17:51:53 -0700 (PDT)
+Message-ID: <6b47a383-3e57-44f7-a3c6-45af88c04897@linux.intel.com>
+Date: Thu, 5 Jun 2025 17:51:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250605-rk3588s-cm5-io-dts-upstream-v4-0-8445db5ca6b0@gmail.com> <20250605-rk3588s-cm5-io-dts-upstream-v4-2-8445db5ca6b0@gmail.com>
-In-Reply-To: <20250605-rk3588s-cm5-io-dts-upstream-v4-2-8445db5ca6b0@gmail.com>
-From: Jimmy Hon <honyuenkwun@gmail.com>
-Date: Thu, 5 Jun 2025 19:51:39 -0500
-X-Gm-Features: AX0GCFsRkfO5vf9GbjFEfVPfc0GUX68k1KXUdvbKCGuPNLJHp2VacWfI4Po_q7M
-Message-ID: <CALWfF7J-Lygg+N3oH+p7XkPvH_6ZbvTRY6CaZzFqDixzSgDHBA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] arm64: dts: rockchip: Add rk3588 based Radxa CM5
-To: Joseph Kogut <joseph.kogut@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Steve deRosier <derosier@cal-sierra.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 15/16] CXL/PCI: Enable CXL protocol errors during CXL
+ Port probe
+To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, bp@alien8.de,
+ ming.li@zohomail.com, shiju.jose@huawei.com, dan.carpenter@linaro.org,
+ Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+ yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
+ uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
+ ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-16-terry.bowman@amd.com>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250603172239.159260-16-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-radxa-cm5.dtsi b/arch/arm64/boot/dts/rockchip/rk3588s-radxa-cm5.dtsi
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..d7946fe2bb4e721689e3eb4d60d8e9783402f05e
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588s-radxa-cm5.dtsi
-> @@ -0,0 +1,156 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2025 Joseph Kogut <joseph.kogut@gmail.com>
-> + */
-> +
-> +/*
-> + * CM5 data sheet
-> + * https://dl.radxa.com/cm5/v2210/radxa_cm5_v2210_schematic.pdf
-> + */
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/leds/common.h>
-> +#include <dt-bindings/soc/rockchip,vop2.h>
-> +#include <dt-bindings/usb/pd.h>
-> +
-> +/ {
-> +       compatible = "radxa,cm5", "rockchip,rk3588s";
-> +
-> +       aliases {
-> +               mmc0 = &sdmmc;
-Since the microSD card is on the carrier board, this alias should be
-moved to the board DTS.
 
-> +               mmc1 = &sdhci;
-Most of the other Radxa rk3588 boards have the eMMC alias to mmc0. Why
-does this use another convention?
+On 6/3/25 10:22 AM, Terry Bowman wrote:
+> CXL protocol errors are not enabled for all CXL devices after boot. These
+> must be enabled inorder to process CXL protocol errors.
+>
+> Export the AER service driver's pci_aer_unmask_internal_errors().
+>
+> Introduce cxl_unmask_prot_interrupts() to call pci_aer_unmask_internal_errors().
+> pci_aer_unmask_internal_errors() expects the pdev->aer_cap is initialized.
+> But, dev->aer_cap is not initialized for CXL Upstream Switch Ports and CXL
+> Downstream Switch Ports. Initialize the dev->aer_cap if necessary. Enable AER
+> correctable internal errors and uncorrectable internal errors for all CXL
+> devices.
+>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
 
-> +               mmc2 = &sdio;
-The sdio is not enabled. This alias won't be used.
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-> +       };
+>   drivers/cxl/port.c     | 29 +++++++++++++++++++++++++++--
+>   drivers/pci/pcie/aer.c |  3 ++-
+>   include/linux/aer.h    |  1 +
+>   3 files changed, 30 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index 0f7c4010ba58..3687848ae772 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -3,6 +3,7 @@
+>   #include <linux/device.h>
+>   #include <linux/module.h>
+>   #include <linux/slab.h>
+> +#include <linux/pci.h>
+>   
+>   #include "cxlmem.h"
+>   #include "cxlpci.h"
+> @@ -60,6 +61,21 @@ static int discover_region(struct device *dev, void *unused)
+>   
+>   #ifdef CONFIG_PCIEAER_CXL
+>   
+> +static void cxl_unmask_prot_interrupts(struct device *dev)
+> +{
+> +	struct pci_dev *pdev __free(pci_dev_put) =
+> +		pci_dev_get(to_pci_dev(dev));
 > +
-> +       leds {
-> +               compatible = "gpio-leds";
+> +	if (!pdev->aer_cap) {
+> +		pdev->aer_cap = pci_find_ext_capability(pdev,
+> +							PCI_EXT_CAP_ID_ERR);
+> +		if (!pdev->aer_cap)
+> +			return;
+> +	}
 > +
-> +               led_sys: led-0 {
-> +                       color = <LED_COLOR_ID_BLUE>;
-> +                       default-state = "on";
-> +                       function = LED_FUNCTION_HEARTBEAT;
-> +                       gpios = <&gpio4 RK_PB4 GPIO_ACTIVE_HIGH>;
-> +                       linux,default-trigger = "heartbeat";
-> +               };
-> +       };
-> +};
+> +	pci_aer_unmask_internal_errors(pdev);
+> +}
 > +
-> +&cpu_b0 {
-> +       cpu-supply = <&vdd_cpu_big0_s0>;
-> +};
+>   static void cxl_dport_map_rch_aer(struct cxl_dport *dport)
+>   {
+>   	resource_size_t aer_phys;
+> @@ -118,8 +134,12 @@ static void cxl_uport_init_ras_reporting(struct cxl_port *port,
+>   
+>   	map->host = host;
+>   	if (cxl_map_component_regs(map, &port->uport_regs,
+> -				   BIT(CXL_CM_CAP_CAP_ID_RAS)))
+> +				   BIT(CXL_CM_CAP_CAP_ID_RAS))) {
+>   		dev_dbg(&port->dev, "Failed to map RAS capability\n");
+> +		return;
+> +	}
 > +
-> +&cpu_b1 {
-> +       cpu-supply = <&vdd_cpu_big0_s0>;
-> +};
+> +	cxl_unmask_prot_interrupts(port->uport_dev);
+>   }
+>   
+>   /**
+> @@ -144,9 +164,12 @@ void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host)
+>   	}
+>   
+>   	if (cxl_map_component_regs(&dport->reg_map, &dport->regs.component,
+> -				   BIT(CXL_CM_CAP_CAP_ID_RAS)))
+> +				   BIT(CXL_CM_CAP_CAP_ID_RAS))) {
+>   		dev_dbg(dport->dport_dev, "Failed to map RAS capability\n");
+> +		return;
+> +	}
+>   
+> +	cxl_unmask_prot_interrupts(dport->dport_dev);
+>   }
+>   EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
+>   
+> @@ -177,6 +200,8 @@ static void cxl_endpoint_port_init_ras(struct cxl_port *port)
+>   	}
+>   
+>   	cxl_dport_init_ras_reporting(dport, &cxlmd->dev);
 > +
-> +&cpu_b2 {
-> +       cpu-supply = <&vdd_cpu_big1_s0>;
-> +};
-> +
-> +&cpu_b3 {
-> +       cpu-supply = <&vdd_cpu_big1_s0>;
-> +};
-> +
-> +&cpu_l0 {
-> +       cpu-supply = <&vdd_cpu_lit_s0>;
-> +};
-> +
-> +&cpu_l1 {
-> +       cpu-supply = <&vdd_cpu_lit_s0>;
-> +};
-> +
-> +&cpu_l2 {
-> +       cpu-supply = <&vdd_cpu_lit_s0>;
-> +};
-> +
-> +&cpu_l3 {
-> +       cpu-supply = <&vdd_cpu_lit_s0>;
-> +};
-> +
-> +&gmac1 {
-> +       clock_in_out = "output";
-> +       phy-handle = <&rgmii_phy1>;
-> +       phy-mode = "rgmii-id";
-> +       phy-supply = <&vcc_3v3_s0>;
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&gmac1_miim
-> +                    &gmac1_tx_bus2
-> +                    &gmac1_rx_bus2
-> +                    &gmac1_rgmii_clk
-> +                    &gmac1_rgmii_bus
-> +                    &gmac1_clkinout>;
-> +       status = "okay";
-> +};
-Should this be left disabled on the SoM dtsi? And only enabled on the
-carrier board, if the carrier board has the RJ45 jack?
-i.e. a handheld using the CM5 may not have ethernet
-https://github.com/StonedEdge/Retro-Lite-CM5
+> +	cxl_unmask_prot_interrupts(cxlmd->cxlds->dev);
+>   }
+>   
+>   #else
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 5efe5a718960..2d202ad1453a 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -964,7 +964,7 @@ static bool find_source_device(struct pci_dev *parent,
+>    * Note: AER must be enabled and supported by the device which must be
+>    * checked in advance, e.g. with pcie_aer_is_native().
+>    */
+> -static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
+> +void pci_aer_unmask_internal_errors(struct pci_dev *dev)
+>   {
+>   	int aer = dev->aer_cap;
+>   	u32 mask;
+> @@ -977,6 +977,7 @@ static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
+>   	mask &= ~PCI_ERR_COR_INTERNAL;
+>   	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
+>   }
+> +EXPORT_SYMBOL_NS_GPL(pci_aer_unmask_internal_errors, "CXL");
+>   
+>   static bool is_cxl_mem_dev(struct pci_dev *dev)
+>   {
+> diff --git a/include/linux/aer.h b/include/linux/aer.h
+> index c9a18eca16f8..74600e75705f 100644
+> --- a/include/linux/aer.h
+> +++ b/include/linux/aer.h
+> @@ -107,5 +107,6 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>   int cper_severity_to_aer(int cper_severity);
+>   void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
+>   		       int severity, struct aer_capability_regs *aer_regs);
+> +void pci_aer_unmask_internal_errors(struct pci_dev *dev);
+>   #endif //_AER_H_
+>   
 
-> +
-> +&gpu {
-> +       mali-supply = <&vdd_gpu_s0>;
-> +       status = "okay";
-> +};
-> +
-> +&hdmi0 {
-> +       status = "okay";
-> +};
-This should be moved to the carrier board DTS where all the other
-HDMI0 nodes are.
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
-> +
-> +&i2c0 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&i2c0m2_xfer>;
-> +       status = "okay";
-> +
-> +       vdd_cpu_big0_s0: regulator@42 {
-> +               compatible = "rockchip,rk8602";
-> +               reg = <0x42>;
-> +               fcs,suspend-voltage-selector = <1>;
-> +               regulator-name = "vdd_cpu_big0_s0";
-> +               regulator-always-on;
-> +               regulator-boot-on;
-> +               regulator-min-microvolt = <550000>;
-> +               regulator-max-microvolt = <1050000>;
-> +               regulator-ramp-delay = <2300>;
-> +               vin-supply = <&vcc5v0_sys>;
-> +
-> +               regulator-state-mem {
-> +                       regulator-off-in-suspend;
-> +               };
-> +       };
-> +
-> +       vdd_cpu_big1_s0: regulator@43 {
-> +               compatible = "rockchip,rk8602";
-> +               reg = <0x43>;
-> +               fcs,suspend-voltage-selector = <1>;
-> +               regulator-name = "vdd_cpu_big1_s0";
-> +               regulator-always-on;
-> +               regulator-boot-on;
-> +               regulator-min-microvolt = <550000>;
-> +               regulator-max-microvolt = <1050000>;
-> +               regulator-ramp-delay = <2300>;
-> +               vin-supply = <&vcc5v0_sys>;
-> +
-> +               regulator-state-mem {
-> +                       regulator-off-in-suspend;
-> +               };
-> +       };
-> +};
-> +
-> +&mdio1 {
-> +       rgmii_phy1: phy@1 {
-> +               compatible = "ethernet-phy-ieee802.3-c22";
-> +               reg = <0x1>;
-> +       };
-> +};
-> +
-> +&pd_gpu {
-> +       domain-supply = <&vdd_gpu_s0>;
-> +};
-> +
-> +&sdhci {
-> +       bus-width = <8>;
-> +       no-sdio;
-> +       no-sd;
-> +       non-removable;
-> +       max-frequency = <200000000>;
-> +       mmc-hs400-1_8v;
-> +       mmc-hs400-enhanced-strobe;
-> +       mmc-hs200-1_8v;
-> +       status = "okay";
-> +};
-> +
-
-Jimmy
