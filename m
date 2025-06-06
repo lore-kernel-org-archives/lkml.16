@@ -1,123 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F5D288C93;
-	Fri,  6 Jun 2025 15:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA05A28937F;
+	Fri,  6 Jun 2025 16:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749225547; cv=none; b=oTIIv2ssW6vVIdWWkBxRU8fvYyyTh5aOiWRC1DxAWIHLlkaCpMwoWnDrcQeR5UxNGvU7UpRn7NSfhgRPkRrBBX5VLN927u5ZHsuFOSFfAzFoLgaKuyjpCGhFGrXrV4tsSnz9cyDdLCgYZ/RVeH8yfwStSqOx34Ga+byELgPFHsU=
+	t=1749225604; cv=none; b=pC72WFmPudjiyv8RTvNtypd2bxj8FPlU4FwLqMd4qgFEGRdY9syQTDsiOzBOUu9Za5blsQ/k4TQ3UDWMEK7Atgf3oZuXb6mtgc7FPuOWD//bX7l6e7ka0P7TLMTdbDQ/786QoCNFMYvbNVY3vNx0PU9ej1+6V7ms1WlOS7Swp0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749225547; c=relaxed/simple;
-	bh=DqILrp7MAmIHBHpVhQPDe90I9D1u0u26u1bnK5dDg38=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ca3e5TGHTMaKcz3Zb7lmS2bkeZWGBuTJgGtyjHXu2EAv6+9uK7HEPjtNzTSQDssApjR2G9qm9mYnYaXZmcHUQ5BgWXLn1itdC9ldQTdPVqYQNcR8gxmlYYc71rFL/JYoMoHU5YFZd0glW+n+yVZOc0+6nw72BIAzr4NiwtIeT0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TsbMtZCo; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749225604; c=relaxed/simple;
+	bh=0dJFOIZZI3h9+CUlJttgkI830u/vDy1QTXEgLX9l6xU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sQ8YSrjtWrQhtuNgt0II0BODNcf4AvzgGWaf/T/VDBBPtgQYeWJncS3yJ014q0RMfnxN/rrHYXJkCLtXQlnxyZr0eWHKozYFlpV1Sv9wQOzM7XoZFXQkag9LyqTdwaqDeJJM47qjdQuU8+TKWk+3RT1OP5gzIf3iB9yfNz0LTHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k9UA2sTy; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TsbMtZCo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749225545; x=1780761545;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DqILrp7MAmIHBHpVhQPDe90I9D1u0u26u1bnK5dDg38=;
-  b=TsbMtZCoduM1sxMFrHH7pI8RIMh/6aFAQUogt/xFqKsStFglorQhHQH7
-   MjmM9ez1vNzBxMRktIAmzZ0Eq3wzQfw7/rkhA9WLy1DI3ETnw+crSO3+J
-   f3/BRYF18Btquo8hFk6ruadTZ4o4c/ul78T10kc3X2QIJOGsOLHeB2dqq
-   XyCFJpwX33kFOBtlHKfKFqbXicP08wzejlAcQUis/7nFI/L1A+2pDjOXm
-   XyWLYalWduLhC6XecGAvUj6TgvoNHKK5VPb1A0mFeEtjRSiVYEXSVDjtM
-   J/TCwRf0gOwPAqnVXKcY+hKovQ0jC7IcUfdCyehB7OKGrZpQQpLezZXHc
-   w==;
-X-CSE-ConnectionGUID: Aq6Y4urORS2+jJtmwBmbiQ==
-X-CSE-MsgGUID: PPY+fI+3TEWLs8oZrTv3Jg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="51525633"
-X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
-   d="scan'208";a="51525633"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 08:59:04 -0700
-X-CSE-ConnectionGUID: oZVF5Z4hQXmdJLGOaHW+Wg==
-X-CSE-MsgGUID: AjXvMA79Q3u8y2LSr675og==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
-   d="scan'208";a="151020215"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 06 Jun 2025 08:59:01 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uNZT9-00055V-0u;
-	Fri, 06 Jun 2025 15:58:59 +0000
-Date: Fri, 6 Jun 2025 23:58:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: oe-kbuild-all@lists.linux.dev, ilpo.jarvinen@linux.intel.com,
-	hdegoede@redhat.com, corbet@lwn.net, ikepanhc@gmail.com,
-	hmh@hmh.eng.br, W_Armin@gmx.de, andriy.shevchenko@linux.intel.com,
-	linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86: Move Lenovo files into lenovo subdir
-Message-ID: <202506062319.F0IpDxF6-lkp@intel.com>
-References: <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k9UA2sTy"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-87dfe906a87so733435241.0;
+        Fri, 06 Jun 2025 09:00:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749225601; x=1749830401; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0dJFOIZZI3h9+CUlJttgkI830u/vDy1QTXEgLX9l6xU=;
+        b=k9UA2sTygpXiiMr5DZFITuw3wrV2wyh1PV5Yt0arRjCOfauVccM6aD5By2zsT/fN0N
+         SV/1ygvXF4P+GfcNShRLDauYsoN0v4aa2H+pVFo7TiCEAKJk8A2fbv5Nbk/J1iAxacl8
+         3TwaulPXZgj/rs0sy7mKTbDbYQxzctBYXxZq7DmaRJ+df1XWi1M4VTZM9dyzCueA+UEF
+         Sb2CYBiejgdqd4sdhBqfKbKXAeQKSUqn+Wh3L7lt/Is7vw3S5/CF2bzWEHiD9H+7G/Xx
+         unqEZROhsikJC3bASkMfTTUOzBRLIhXIYypufeq50fMdcS80V+QEszoQ9t44mRbaPZqO
+         Hmnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749225601; x=1749830401;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0dJFOIZZI3h9+CUlJttgkI830u/vDy1QTXEgLX9l6xU=;
+        b=rawh2I2m9UuUM00VicD74gh0cU0n9mvlFf6BTLHaGGCrnBOqrTcnI+Nh/nkcXUkNvG
+         9bAq5+ufsXjG7xfG5M4+rnMSYkxXEOGL21ZevV4MHJJHnomFOQgh2iAAXks59jhVRvpV
+         ePGvyg+4kbiNbygNnm6JIrVVfe71GONiHCn1yPVej12oeaA1a3ro5DF5leWoNjUv/T1w
+         rg4qfUrWqyXg3O9M5G96SrmWyhWEUS4wksBN/tJok4GzyzfE3e4klbWQbLwzDcICuxzN
+         Hww7FmXIbAiOwPIvmpHK0w2Ag4aoGmwk37Y3q4BYys9l/bz39FqfOGHy7P6W3jYFSnqL
+         Q7oA==
+X-Forwarded-Encrypted: i=1; AJvYcCU44jj+nuY1rIPBX7dFr1euhg7eMUd9vMRJOe4iCkYAspkfDUAUNKArrUSEfdgNlgbM3AhiDedQVy9INAHe@vger.kernel.org, AJvYcCU8B0V93UQGqgTBYItprKoeSPgB4EAjCsSlbfXEOMxerWSPvN6XvEveLZxpd9/+DWjzKCEY5xER5de9EA==@vger.kernel.org, AJvYcCUsCM6NEp/TXluanTlqcrRHfeZMm4GTi3uCx5b87e6oAQDy9C3iEZX93vUPztzsWGXA8td6tc7qjgm7@vger.kernel.org, AJvYcCWPLbf+5zzuVTa2KizUCJkeBXI7PeBjiek1lYDBIgHesd6Qv56nNaW0VYiCq9jom0vuIKNQ9Hp/VD0nrvjRrA4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycjXjK4VXyqlVbrNT+/mYE7IAh2n947280rtG5xHpNHTzkNsac
+	1WZTs6BI5Vsl5kHXCYQuWQNzlyC6qrEHtmgEp868dbVZdjj12G52Rfp5tlMOqUv0qZsRCU2/bMA
+	xw2QhrqHZHxEAaPhG55XrY75czpxL/o0=
+X-Gm-Gg: ASbGnctifktE0K3uvnVbVLUiIj772e7/+yzF4fZ10L5xC4z5u4amOfmhFkMu5Yvk/VL
+	/n1HkCDcuWxNoTMJbmLLSiaPYv0HU/FbtzTQ4idnwnQMFUTsmaMTbVUGBwJZBTBlQtet+RcX3b9
+	oo1JSMNT5chgNOzzdHAFqH4r/ojwm61Q==
+X-Google-Smtp-Source: AGHT+IGIT8pKAwvT3E053ka5rCKmDZMWVRQ8M3uHmHMzX5aPj1CCrXxaJlYwiNxduBr8mvHv8BvYl+bYAcSqHDeOWjo=
+X-Received: by 2002:a05:6102:fa7:b0:4e2:ecd8:a1a with SMTP id
+ ada2fe7eead31-4e7728cd536mr3574282137.4.1749225601602; Fri, 06 Jun 2025
+ 09:00:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
+References: <20250605161956.3658374-1-igor.korotin.linux@gmail.com>
+ <20250605162726.3659792-1-igor.korotin@yahoo.com> <aELyEqg0GrkC8oZY@pollux>
+ <CAG7QV91AWpOk7VUcE-B1MLkEQPDB0Y=zsBOBf6MhHVYh1aEGQA@mail.gmail.com>
+ <2025060635-unleveled-drowsily-a192@gregkh> <ce134894-f33e-4810-97ab-76270438fff7@kernel.org>
+In-Reply-To: <ce134894-f33e-4810-97ab-76270438fff7@kernel.org>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+Date: Fri, 6 Jun 2025 16:59:49 +0100
+X-Gm-Features: AX0GCFvSY0Jr_aDmFg6bKOfCHKOl-4OvqCPqVnrQ__eHQ2WfgIUMY8esXLD5Y0I
+Message-ID: <CAG7QV91opwxQ=VH4A_4f8NdopW9zFuw8EnknRX1YrTpMSw5AiA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] rust: driver: Add ACPI id table support to Adapter trait
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Igor Korotin <igor.korotin@yahoo.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, "Rafael J . Wysocki" <rafael@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	devicetree@vger.kernel.org, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Len Brown <lenb@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
+	Alex Hung <alex.hung@amd.com>, Tamir Duberstein <tamird@gmail.com>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Xiangfei Ding <dingxiangfei2009@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Mark,
+On Fri, Jun 6, 2025 at 4:39=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> w=
+rote:
+>
+> On 6/6/25 5:29 PM, Greg Kroah-Hartman wrote:
+> > On Fri, Jun 06, 2025 at 03:26:13PM +0100, Igor Korotin wrote:
+> >> On Fri, Jun 6, 2025 at 2:50=E2=80=AFPM Danilo Krummrich <dakr@kernel.o=
+rg> wrote:
+> >>> However, I don't understand why we need this and the subsequent
+> >>> is_acpi_device_node() and is_of_node() checks.
+> >>
+> >> The idea is to avoid unnecessary table lookups when both OF and ACPI
+> >> match tables are present. If we already know the fwnode type, these
+> >> simple pointer comparisons (is_acpi_device_node() / is_of_node()) let
+> >> us skip the irrelevant match function.
+> >>
+> >> Those checks are cheap (just pointer comparisons), while
+> >> acpi_match_device() and of_match_device() iterate over tables.
+> >>
+> >> So yeah, it=E2=80=99s a bit ugly, but it can save some CPU cycles duri=
+ng enumeration.
+> >
+> > You have loads of CPU cycles during enumeration, keep things simple
+> > first, only attempt to optimize things later on if it is actually
+> > measureable.
+>
+> I'm fine either way, I don't expect much value in optimizing this and at =
+the
+> same time I don't see doing it adds significant complexity either.
+>
+> If Greg prefers not to have this optimization to begin with, let's go wit=
+hout
+> it please.
 
-kernel test robot noticed the following build warnings:
+I'm ok with this as well. Will remove those checks. I assume that I
+don't need to align with `FwNode` abstractions in that case. Also I'll
+drop `is_of_node` rust helper in v3.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on next-20250606]
-[cannot apply to v6.15]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thanks for the review and your comments, guys
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mark-Pearson/platform-x86-Move-Lenovo-files-into-lenovo-subdir/20250605-013934
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250604173702.3025074-1-mpearson-lenovo%40squebb.ca
-patch subject: [PATCH v2] platform/x86: Move Lenovo files into lenovo subdir
-config: x86_64-randconfig-078-20250606 (https://download.01.org/0day-ci/archive/20250606/202506062319.F0IpDxF6-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250606/202506062319.F0IpDxF6-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506062319.F0IpDxF6-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/platform/x86/lenovo/think-lmi.c: In function 'certificate_store':
->> drivers/platform/x86/lenovo/think-lmi.c:661:47: warning: '%s' directive argument is null [-Wformat-overflow=]
-     661 |                 return kasprintf(GFP_KERNEL, "%s,%s", arg1, arg2);
-         |                                               ^~
-   drivers/platform/x86/lenovo/think-lmi.c:657:50: warning: '%s' directive argument is null [-Wformat-overflow=]
-     657 |                 return kasprintf(GFP_KERNEL, "%s,%s,%s",
-         |                                                  ^~
-
-
-vim +661 drivers/platform/x86/lenovo/think-lmi.c
-
-640a5fa50a42b9 drivers/platform/x86/think-lmi.c Mark Pearson 2021-11-17  652  
-5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24  653  static char *cert_command(struct tlmi_pwd_setting *setting, const char *arg1, const char *arg2)
-5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24  654  {
-5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24  655  	/* Prepend with SVC or SMC if multicert supported */
-5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24  656  	if (tlmi_priv.pwdcfg.core.password_mode >= TLMI_PWDCFG_MODE_MULTICERT)
-5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24  657  		return kasprintf(GFP_KERNEL, "%s,%s,%s",
-5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24  658  				 setting == tlmi_priv.pwd_admin ? "SVC" : "SMC",
-5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24  659  				 arg1, arg2);
-5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24  660  	else
-5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24 @661  		return kasprintf(GFP_KERNEL, "%s,%s", arg1, arg2);
-5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24  662  }
-5dcb5ef125907d drivers/platform/x86/think-lmi.c Mark Pearson 2024-10-24  663  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Cheers
+Igor
