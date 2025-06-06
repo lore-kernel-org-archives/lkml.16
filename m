@@ -1,188 +1,124 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f68.google.com (mail-ej1-f68.google.com [209.85.218.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B184928A1CA;
-	Fri,  6 Jun 2025 17:46:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0271E3DD7;
+	Fri,  6 Jun 2025 17:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749231971; cv=none; b=WZSd1hwkAt8az8xiCzWOdtQg63XPMgj+82IsHFuhYghy9dGfG131CbbxmGg2UmXHgjEVSHd7L8KpNh9djsQuDopHMYaN8GbOgSA5kxHuidDhcB5Wx3ZXYghIQ1dZl/ySYH0p08DmvWuPBMIiJEXX3KRe1ItRvdTcMcu/4YejPsg=
+	t=1749232147; cv=none; b=BKzDuQCVQu/eLg7PVOVQZ1ELE4bGUUn643/efDtOhcFHDmWj/YqbssR3v49Tj4lX2+++sQrGf7KNV9Lg+Q+2VYQCyVId0HUn9xiiq3z430RAwSjGEFFjIqCUpG5gsNoLrXhRueT9COMXLUyfKzfUXg0wpWOvJql0dHvhXtEWq9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749231971; c=relaxed/simple;
-	bh=CczLoW2dlYcx5sPWpp7uNqve7lenu2UjeLRtcexDZbI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qZlMTsH4urQkKRO/H7bLUBlMAoPImNCTvzGR7ptK1+8RN26vuO9zz/ehaFZKFXkzYKC45jX/1GxYnJhpIxrOUWAZm7/kvUnhrbd7nlZ8sQfzD/nJv4A7c/Egxj1ct4z8GRWy0RJxbtUkWB8RvpoMdStUWiPr2cFxucgdc/Z0Rx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=w3p1A4Ju; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1749232147; c=relaxed/simple;
+	bh=QkCC156cFLZ32G7VZvrODLuLWj+/VBaRP7kkagtS93k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BJixyK1ForBTLvJ/xQVKiT8Q7QCLb1B+C1BXuLDEsawueV8eAsX32RL687zTiQpOL1Qp/+rloRs4cDyuf8CvmzHD4yF13R++mtwE6fBHhROXCSKY2vhwwM4HVsbb0+zxmlRqUS3z1/G1Vwkn9Nmk0mYMk08hMgBhRtHy7rJOlwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ixOSjXDm; arc=none smtp.client-ip=209.85.218.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="w3p1A4Ju"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 556HjTFq1004770
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Fri, 6 Jun 2025 10:45:34 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 556HjTFq1004770
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025052101; t=1749231934;
-	bh=VEJNnQ7PpoyqgGIxpsAno3Mvap5meMu5RIbn9OvGm2w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=w3p1A4Jux/rDT62s2GKh6qUlI6qBFzatbw2Sacf3A/hC358YoG11kaybczMTlFn18
-	 DL5NJDLNG7rchEmKQhmzCTnDuQrgY8EG3kGk+1wGniJ0EFKFgZvWLPKioCxOUoLVSG
-	 vO0qXKTvjMSwTuI1+872JoIqE/YypXy41WoXSTMBYSekitqucbNZIybfJ/NQQ+bw4Y
-	 4ukFEVycTnY7SR8Ev2o7JuJRMyuGZyMUOnG9EQODvLBHWhLm5tLgm4Ftj+EpcnrT42
-	 TkTK2dY0dh14aimAFTfHjJ6m2Qbwo2K8g//orUqDFWzSyDy90Iw/CmBls4Du8+jnMe
-	 a7vLfwHROpQrw==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        shuah@kernel.org, andrew.cooper3@citrix.com, sohil.mehta@intel.com,
-        stable@vger.kernel.org
-Subject: [PATCH v5 1/2] x86/fred/signal: Prevent immediate repeat of single step trap on return from SIGTRAP handler
-Date: Fri,  6 Jun 2025 10:45:27 -0700
-Message-ID: <20250606174528.1004756-2-xin@zytor.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250606174528.1004756-1-xin@zytor.com>
-References: <20250606174528.1004756-1-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ixOSjXDm"
+Received: by mail-ej1-f68.google.com with SMTP id a640c23a62f3a-ade30256175so110323166b.1;
+        Fri, 06 Jun 2025 10:49:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749232144; x=1749836944; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QkCC156cFLZ32G7VZvrODLuLWj+/VBaRP7kkagtS93k=;
+        b=ixOSjXDmeewQIvkxaE7NhwSw8ikmrRASV5R3bAwcLFzpZkBFY9f23y/pAD+GPWq3Qz
+         TMukVR6E782ip4FDJfoIkORKyV+JHOo8MxabK7xsnViwQTtDYcXKgCR5i3mlV2K1Ht9Q
+         TViVr/Cju57GUrzI5WXDLMFQn/IlMk3AJ3ZsnMIt2CjeyG8Zn6Nfx9WpkBfzNjgibQZy
+         eqz22m7pfLqWtXN46HW3HXe9q1igjdvB3uF3Na2s3Bmn0XQkHu2KNPKf7RIeB6NiBrdT
+         jy2wPkepNVk4jOA2CSUCeA7czK8Dtjk5DBDu3tY7gGuRwx5LOPZYsszgERSoF06OqoJG
+         XhmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749232144; x=1749836944;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QkCC156cFLZ32G7VZvrODLuLWj+/VBaRP7kkagtS93k=;
+        b=WJdom4LuTKwwRWny6CxjZ0DsZyjfhaiQJibtc75b59PqLjKvabCrHQLx2TvH1NR3Ea
+         nNOkGUZxsoMzpxfU10NobfmeR8A2tTKtuKW3OWWBwrQbOPH8ev5p5I9/aKRu6hWO5IuT
+         e6GGv4jCt664IyuAzCXIn6tlRRjSwIMIylBwg1H+62dpl/1i9hRUFFvykm5H9bRZylqc
+         GJmtbW8tsv7Nu0V715CnA80W/OALXOosr2iiuDUcLwIQkGigplBgg1UhTF+ZYrEkjbju
+         HW/czcB+zkIbnpVAJ1NfJXupdH3U1WEkHRwd7WgWlDb5e26YSMiFj5WmgARSSdbjDRWh
+         NYww==
+X-Forwarded-Encrypted: i=1; AJvYcCUB6AAXCgJdMk3mBDL4BQEzAMK4UevcijjLHNmiJFMqPzZQpaggk9ABcw8X46tkT95MBxuag0vqSZtEnlYb@vger.kernel.org, AJvYcCVS1eMhBaqgAzQMZd+pH33+igVCjoJ60B1qA5YpfM1HKh6o84m6oUEVKZjh8LmcQ+STHFsFrnEVeTQ=@vger.kernel.org, AJvYcCVj1FRR6ud8G3sEKPRZpfYe0TmanO8YZK4SE/nHohKHvAKh29Jv4l+LjhmGTK5g9DE6NPLQonDk@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+ZaEt2lyqldeVQo29VlW4rcrGmcg44/DTQpp1GICCsEKsz7cW
+	HyXPp3Id7tbvP7Agu9uyM0IYhXu2HdKWWTPPkP38MUF3Q9FIwQ1AldpPzUt46YGY7F0aB6oPdbO
+	n7y/FQzulDKw16MzWf1AEWnWRHmjDVWJLhqtIcT0rGQfb
+X-Gm-Gg: ASbGnctH01CRyQTtou2sqb0UFIK9acqEsVGRpNf93ELq+t32Zjwvwsq2j4ugTLShbit
+	BmhNy9U7iFzWS/ziYiAQTuolfHPQylmvHq7ZBuRUDM7htWnC4NZyIqX6cUeN2u2vQHLmStAVSUJ
+	YkQ94/FKwzNafua9c8YLmXOvKRX26Hh0YFpyfHD0/RegY=
+X-Google-Smtp-Source: AGHT+IHXAoU/5KkMHOwPj/9FFVapAMcrkwidaA20pDZe+6fW4OeNUdufuvg0OsHg+lbWtoD1W9V+6MaUGDrLNkTMyhA=
+X-Received: by 2002:a17:907:60d1:b0:adb:2462:d921 with SMTP id
+ a640c23a62f3a-ade1a9160c3mr401179666b.5.1749232143541; Fri, 06 Jun 2025
+ 10:49:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250606071709.4738-1-chenqiuji666@gmail.com> <ff77f70e-344d-4b8a-a27f-c8287d49339c@linaro.org>
+ <CANgpojXWk1zvu32bMuGgkVGVNvPw+0NWmSUC62Sbc3WcUXAd3A@mail.gmail.com> <ca3ce8df-aa4f-4422-8455-29db2440d8d5@linaro.org>
+In-Reply-To: <ca3ce8df-aa4f-4422-8455-29db2440d8d5@linaro.org>
+From: Qiu-ji Chen <chenqiuji666@gmail.com>
+Date: Sat, 7 Jun 2025 01:48:51 +0800
+X-Gm-Features: AX0GCFs2ajWvvueyvPNV-snyunQFsI1e-MJEy6pQ_bQ_hu8xTMdazrmACi39OKk
+Message-ID: <CANgpojV51R5sKvowPiMk5MRAzJ3KZoti6mRXjD3Knfz6kk6+MA@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: mediatek: Fix a flag reuse error in mtk_cqdma_tx_status()
+To: Eugen Hristev <eugen.hristev@linaro.org>
+Cc: sean.wang@mediatek.com, vkoul@kernel.org, matthias.bgg@gmail.com, 
+	angelogioacchino.delregno@collabora.com, dmaengine@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, baijiaju1990@gmail.com, stable@vger.kernel.org, 
+	kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Clear the software event flag in the augmented SS to prevent immediate
-repeat of single step trap on return from SIGTRAP handler if the trap
-flag (TF) is set without an external debugger attached.
+Hello Eugen,
 
-Following is a typical single-stepping flow for a user process:
+Thank you for discussing this with me!
 
-1) The user process is prepared for single-stepping by setting
-   RFLAGS.TF = 1.
-2) When any instruction in user space completes, a #DB is triggered.
-3) The kernel handles the #DB and returns to user space, invoking the
-   SIGTRAP handler with RFLAGS.TF = 0.
-4) After the SIGTRAP handler finishes, the user process performs a
-   sigreturn syscall, restoring the original state, including
-   RFLAGS.TF = 1.
-5) Goto step 2.
+In this specific code scenario, the lock acquisition order is strictly
+fixed (e.g., pc->lock is always acquired before vc->lock). This
+sequence is linear and won't interleave with other code paths in a
+conflicting nested pattern (e.g., the pc =E2=86=92 vc sequence never coexis=
+ts
+with a potential vc =E2=86=92 pc sequence). Therefore, a standard spin_lock=
+()
+is sufficient to safely prevent deadlocks, and explicitly declaring a
+nesting level via spin_lock_nested() is unnecessary.
 
-According to the FRED specification:
+Additionally, using spin_lock_nested() would require specifying an
+extra nesting subclass parameter. This adds unnecessary complexity to
+the code and could adversely affect maintainability for other
+developers working on it in the future.
 
-A) Bit 17 in the augmented SS is designated as the software event
-   flag, which is set to 1 for FRED event delivery of SYSCALL,
-   SYSENTER, or INT n.
-B) If bit 17 of the augmented SS is 1 and ERETU would result in
-   RFLAGS.TF = 1, a single-step trap will be pending upon completion
-   of ERETU.
+Best regards,
+Qiu-ji Chen
 
-In step 4) above, the software event flag is set upon the sigreturn
-syscall, and its corresponding ERETU would restore RFLAGS.TF = 1.
-This combination causes a pending single-step trap upon completion of
-ERETU.  Therefore, another #DB is triggered before any user space
-instruction is executed, which leads to an infinite loop in which the
-SIGTRAP handler keeps being invoked on the same user space IP.
-
-Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-Cc: stable@vger.kernel.org
----
-
-Change in v5:
-*) Accurately rephrase the shortlog (hpa).
-
-Change in v4:
-*) Add a selftest to the patch set (Dave Hansen).
-
-Change in v3:
-*) Use "#ifdef CONFIG_X86_FRED" instead of IS_ENABLED(CONFIG_X86_FRED)
-   (Intel LKP).
-
-Change in v2:
-*) Remove the check cpu_feature_enabled(X86_FEATURE_FRED), because
-   regs->fred_ss.swevent will always be 0 otherwise (hpa).
----
- arch/x86/include/asm/sighandling.h | 22 ++++++++++++++++++++++
- arch/x86/kernel/signal_32.c        |  4 ++++
- arch/x86/kernel/signal_64.c        |  4 ++++
- 3 files changed, 30 insertions(+)
-
-diff --git a/arch/x86/include/asm/sighandling.h b/arch/x86/include/asm/sighandling.h
-index e770c4fc47f4..8727c7e21dd1 100644
---- a/arch/x86/include/asm/sighandling.h
-+++ b/arch/x86/include/asm/sighandling.h
-@@ -24,4 +24,26 @@ int ia32_setup_rt_frame(struct ksignal *ksig, struct pt_regs *regs);
- int x64_setup_rt_frame(struct ksignal *ksig, struct pt_regs *regs);
- int x32_setup_rt_frame(struct ksignal *ksig, struct pt_regs *regs);
- 
-+/*
-+ * To prevent immediate repeat of single step trap on return from SIGTRAP
-+ * handler if the trap flag (TF) is set without an external debugger attached,
-+ * clear the software event flag in the augmented SS, ensuring no single-step
-+ * trap is pending upon ERETU completion.
-+ *
-+ * Note, this function should be called in sigreturn() before the original
-+ * state is restored to make sure the TF is read from the entry frame.
-+ */
-+static __always_inline void prevent_single_step_upon_eretu(struct pt_regs *regs)
-+{
-+	/*
-+	 * If the trap flag (TF) is set, i.e., the sigreturn() SYSCALL instruction
-+	 * is being single-stepped, do not clear the software event flag in the
-+	 * augmented SS, thus a debugger won't skip over the following instruction.
-+	 */
-+#ifdef CONFIG_X86_FRED
-+	if (!(regs->flags & X86_EFLAGS_TF))
-+		regs->fred_ss.swevent = 0;
-+#endif
-+}
-+
- #endif /* _ASM_X86_SIGHANDLING_H */
-diff --git a/arch/x86/kernel/signal_32.c b/arch/x86/kernel/signal_32.c
-index 98123ff10506..42bbc42bd350 100644
---- a/arch/x86/kernel/signal_32.c
-+++ b/arch/x86/kernel/signal_32.c
-@@ -152,6 +152,8 @@ SYSCALL32_DEFINE0(sigreturn)
- 	struct sigframe_ia32 __user *frame = (struct sigframe_ia32 __user *)(regs->sp-8);
- 	sigset_t set;
- 
-+	prevent_single_step_upon_eretu(regs);
-+
- 	if (!access_ok(frame, sizeof(*frame)))
- 		goto badframe;
- 	if (__get_user(set.sig[0], &frame->sc.oldmask)
-@@ -175,6 +177,8 @@ SYSCALL32_DEFINE0(rt_sigreturn)
- 	struct rt_sigframe_ia32 __user *frame;
- 	sigset_t set;
- 
-+	prevent_single_step_upon_eretu(regs);
-+
- 	frame = (struct rt_sigframe_ia32 __user *)(regs->sp - 4);
- 
- 	if (!access_ok(frame, sizeof(*frame)))
-diff --git a/arch/x86/kernel/signal_64.c b/arch/x86/kernel/signal_64.c
-index ee9453891901..d483b585c6c6 100644
---- a/arch/x86/kernel/signal_64.c
-+++ b/arch/x86/kernel/signal_64.c
-@@ -250,6 +250,8 @@ SYSCALL_DEFINE0(rt_sigreturn)
- 	sigset_t set;
- 	unsigned long uc_flags;
- 
-+	prevent_single_step_upon_eretu(regs);
-+
- 	frame = (struct rt_sigframe __user *)(regs->sp - sizeof(long));
- 	if (!access_ok(frame, sizeof(*frame)))
- 		goto badframe;
-@@ -366,6 +368,8 @@ COMPAT_SYSCALL_DEFINE0(x32_rt_sigreturn)
- 	sigset_t set;
- 	unsigned long uc_flags;
- 
-+	prevent_single_step_upon_eretu(regs);
-+
- 	frame = (struct rt_sigframe_x32 __user *)(regs->sp - 8);
- 
- 	if (!access_ok(frame, sizeof(*frame)))
--- 
-2.49.0
-
+> On 6/6/25 12:14, Qiu-ji Chen wrote:
+> >> On 6/6/25 10:17, Qiu-ji Chen wrote:
+> >>> Fixed a flag reuse bug in the mtk_cqdma_tx_status() function.
+> >> If the first spin_lock_irqsave already saved the irq flags and disable=
+d
+> >> them, would it be meaningful to actually use a simple spin_lock for th=
+e
+> >> second lock ? Or rather spin_lock_nested since there is a second neste=
+d
+> >> lock taken ?
+> >>
+> >> Eugen
+> >>
+> >
+> > Hello Eugen,
+> >
+> > Thanks for helpful suggestion. The modification has been submitted in
+> > patch v2 as discussed.
+> >
+> > Best regards,
+> > Qiu-ji Chen
+>
+> You are welcome, but in fact I suggested two alternatives. Any reason
+> you picked this one instead of the other ?
