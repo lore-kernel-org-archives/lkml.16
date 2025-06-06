@@ -1,134 +1,124 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC661E1A3B
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 05:57:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9ECF9EC;
+	Fri,  6 Jun 2025 05:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749189428; cv=none; b=nry0RnF76+Pg+VbusxvlDaVDxyd8InRVukHULJNSGt+Y/CasU4lBa6ipJYybbk1IxGXraRBZ/oZTu1nhJjpSgmr2C3UdbdL8tox3coIB0J688AnYAfIhmL5pOZri5KsASey42oYn7InJSUOEWT0fsLRKimdz67y9x8TA/9PrZb4=
+	t=1749189553; cv=none; b=FrZAUtaUj7orZkOZvtmOhEOwaI4/KJqdIh/vHbk06eZlVBeckeeGIhVZp+KcIC1CVuCe/z+S/OyQJkpU8anxCWKGVhRIp2aK1esjObvth/c47A8nYrTLVj1MxmEquusPwRE62boDF6qFV2ESDua0rb+slRcO5/5yBJNcMC5DbZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749189428; c=relaxed/simple;
-	bh=HVE1G+Z5i7ndExI2k4+eSvEduCb0IPEkjOzuhcF+PlQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=A69wX/1D4+PkTr00kIU9pWwDL7RFaHZZPCLsfMBLVNdlMMRd8BUIX67pBMTP93hVhyDqAzIIPVGRpP5wsZs/YlR747VOHsn8rUF0kMpZZlF0dI9AskjUV1xneib1/fJP+ucVj9EeE3zBQ68VxCVG2APrBUHAQyJVmJOOnNUIOG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DcFMmYle; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1749189553; c=relaxed/simple;
+	bh=YmJcU9va6zlIKBqEb/6FSueJJ7ATQVbP2IX5DudqPPk=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=g0gsEX6xE9GLdKcl8ZJf6KovXEThWNNfOrdrf8HSZg7hpGT6uNCMy0ycJWFJDBsObKwRN2J98VxKJGH3FihXQF9ape0E4zz3qFnd7rxks7XZpBbtaiFoIEugJYcRBg2h9fivpHwhg7DHXZPeXRsEDWDv0onndgEgJwOkNSZFIb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NnrP1Gfq; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DcFMmYle"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-234b9dfb842so17148075ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 22:57:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NnrP1Gfq"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7d21cecc11fso281471385a.3;
+        Thu, 05 Jun 2025 22:59:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749189426; x=1749794226; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=flbL4ZAGKopRBR3RHJC7fuG7mIkT0wjs478w1oV7gYw=;
-        b=DcFMmYleRSDleGws8OdoUqIh/IR8R6eTUP3ZmjU61/I5xnEijXUzjxT8JJpy7uZ1+R
-         JXFOOkbgZazFnro6EhB4tuROK1bJ6jP8uQ3WG9QQR6zqyZUlh1xZfEwE/dpQKPB+0rdc
-         YTzzJ55b7xYu/p2NypStLAo5vIYrpSPAAjNhQ=
+        d=gmail.com; s=20230601; t=1749189551; x=1749794351; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZqcpyQR1uW9jks47tVuDGazbOtrYAt2+YqMREe9YBoI=;
+        b=NnrP1GfqMhp7Oe3Omp0ul5hhDtnt5FFuWg58BQ4ZHtcHNDgRspQvI4DHMUI6oPrxec
+         ufh0/BlpfFVNR8T/zuIk69pavAmOTQbuFl5+mM9oGtfEdkjJksFD9cUi/E7fn4xcZpwK
+         aK3w83teGQhmBJnYu/j+npFe3+SSAUSb7Y5eBIrrjoVe5HXKhM3sXT6WmqmXrjepUgnD
+         4wKJRjluhIx09OR/TSbWpwY9vLYtoYoaxxivY9K4sxYuPz9bdnvR0jaR4hnEvavYBL7p
+         Qealz2HU67zhgxLHlsTK2V+ADpecVBJ3LAYDEhXlHkS5bNQYc8liOEDYDXbJ3Eca1pGc
+         xELw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749189426; x=1749794226;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=flbL4ZAGKopRBR3RHJC7fuG7mIkT0wjs478w1oV7gYw=;
-        b=lpDUpEB29hUXjxlw47dcABqPFcWUUdi80j0JeblQgRgiihskngc1uV+p5AJmKeANZg
-         vwVpnpg69VJA2rlKhavFh1dJCVBDlJaZRPPLeVGZ41q3KE6ZLAl3qZtuSLfLPwA+PBjK
-         rrVoSTTdcrUOe5IJ6ScmP1K+RrpgHV1ywQEsy7ZSjEOkTpPR8R4CV0Y1UxtEGXOnY3w6
-         bPZ/x4VAAeArbVxb4E5RweGYhiG5XM5HlCgr/e0Shpfv1D65ZwMgFK1YZbHfg004hc1h
-         NYE4YDlSqd0tgdM0GwZpEyDmie0vz6hEXqoj22uOg4sEzTmPpCXyAx/A8sKeNUsl3aW7
-         PnAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX52Vb4etj58XJGkSoYKTyXrCRgUoqqFM87fOjUtlsojmOHTIZ4h+6lrGLUqviVl4y20Ow5EqIkZmqddzA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJJJrM/tsseIC3GF3ZavsJ8gU//bY9q3gK/iDKrvImePjplPog
-	f+6jmb4YDa6v9VPcpJAR0dY+faJBpDchz3U77a4xgq0AUtTycznaSnuGp90kakZrDLchx6WtqgP
-	cY50=
-X-Gm-Gg: ASbGnctMtePmVvwsAVA8XDcx28yW2xO4/Q3BDHjriNijbHxWxtp2+7/gxCtUJXu5Bbz
-	BopA2e+NBUhFkuu2ZyIMaEdfw1LA+Z5rZUnm2jLT35U8p0L3oJX6D1L+/pdzsUXKa0/9QFTx2Dv
-	63nGMbEmxPMuDDn0LxJM7yJrUdvU5RKJn4kL1m68nwOh11KuZeGzTMVwpOgL+zJLh+gALkHtHN9
-	3obqGe/T/wW3jiT/AcgpR/fkIAf5jkt5JWpfukJ9Yfsyjf4Ew23WtYof/Yq1F9jFXCAiRpy6AAl
-	so0RYpvGP4clGPZ5J+sCLW9G9D8t0N1NXU/xwXGP0jZLHog9YXk9k0qm+ehPajx/4g==
-X-Google-Smtp-Source: AGHT+IEgAbjDW+mS+YznEbzmeIXBrYaqMOw6H2788sgyRAnufkSPuz90MitCidMrgGnO9vwICzwPgw==
-X-Received: by 2002:a17:903:41cf:b0:234:dd3f:80fd with SMTP id d9443c01a7336-23601cf0ceemr31019615ad.2.1749189425909;
-        Thu, 05 Jun 2025 22:57:05 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:9926:e211:3810:bb30])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236032fcf39sm5189745ad.93.2025.06.05.22.57.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 22:57:05 -0700 (PDT)
-Date: Fri, 6 Jun 2025 14:57:01 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: fuse: suspend blockers
-Message-ID: <jofz5aw5pd2ver3mkwjeljyqsy4htsg6peaezmax4vw4lhvyjp@jphornopqgmr>
+        d=1e100.net; s=20230601; t=1749189551; x=1749794351;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZqcpyQR1uW9jks47tVuDGazbOtrYAt2+YqMREe9YBoI=;
+        b=GqFSpOLZo1CKwmSQSxbOoOSZZa1NSZn9wwUToSSCP+YGVmEIK7JogDsOLJV2xNENsI
+         mRX4VARwci/7rapCM2TmwtpRMexf3sxD/z5NgO/nd8tBQdfvGCgkmrLH48jGMtsZiQCa
+         2AaVjfgLg/asxMftx+hoiM/D0VoiwbiJWv2zw+M4sUqzNiugeMs7av+rlAdz3hZI++EY
+         t8WHaoAsbPw7BYVEGmRs3JS9G5alKk2RyGXTYJ5zFOGyzBmgw4H3WKQBaFnbU3p0aKOF
+         l1vUWQyerd3UJEhBiHQd0H38Vlew+HrIc9a680Vg1RnW+3ZeKI+8gPWvX2NdF3dnv90X
+         9apA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0cS4YSlHrmgs/28Z6zldUYRev4M6Az/+BcbC6NBaWRePVyUhQ3BST3i8Mh0Ru3zqT/KXDBU5n@vger.kernel.org, AJvYcCWNCaAnPUvKjoJ8Jq98lwLIeWuGMJxbiwkqGe9IXyztE5hqcF4wov9eOc/JCUnFjfv97tc+GQ0WUEht7vnC@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgFX8xnSBr/6FOGY6dSIScQ+TjdNUaOoTeNwW02rMlN5yT9j1N
+	U+VtI2IC09dEuMVs78wCGf7IU9/jP0GY/yCaSpqymPgEKKVeIoo0bRxK
+X-Gm-Gg: ASbGncu68uXU7R+Eo/QZ7d75jGWS977mQV8PBhgY/EqRFAY/W6+fZPu+Hka+1i6mXdu
+	j60EaveLbEJvDbCkUslEz42cMh4bwe2Y8C62TbFq6hrUxTtxhS58U7oA5L8UODmaLXFLCENbla6
+	dkUPzKakQQ/Eu7DrpSrtLacszttMDBAUgoOkNvbXnm60EzDciJLvy7T/ocPObFLpGmYGxZoXdPz
+	Tus1FvE8Obbb0tnGKqzWc+4/jtAf6HatCOGMKjicwWe5L6aTagUPcCiB2aGUCBY8t52tK6YdApj
+	P7FcppiC65bJzSrscSwu0GKD+kSzI13VZ9hQn8PU/kYZdStRJmkJ+iOP0yFNlQ==
+X-Google-Smtp-Source: AGHT+IESyHlAlFO7+uuIypvrTAQS8nZexY0QRLY3mCrq4aPdb4VOAGaiKiKs0qnPlCpcb/iD4VN37g==
+X-Received: by 2002:a05:620a:6412:b0:7ca:eb5b:6de9 with SMTP id af79cd13be357-7d2298db5d6mr318174785a.42.1749189551044;
+        Thu, 05 Jun 2025 22:59:11 -0700 (PDT)
+Received: from smtpclient.apple ([202.8.105.115])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d25a608d0dsm85326185a.67.2025.06.05.22.59.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Jun 2025 22:59:10 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v0] cgroup: Add lock guard support
+From: Jemmy Wong <jemmywong512@gmail.com>
+In-Reply-To: <CAADnVQJyATTb9GFyBhOy5V_keAO5NZ6+zucLRyN27Cmg2FGPVA@mail.gmail.com>
+Date: Fri, 6 Jun 2025 13:58:50 +0800
+Cc: Jemmy <jemmywong512@gmail.com>,
+ Tejun Heo <tj@kernel.org>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ =?utf-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>,
+ Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>,
+ KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>,
+ Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>,
+ "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E6D65212-6332-4180-8A78-81700357AAE5@gmail.com>
+References: <20250605211053.19200-1-jemmywong512@gmail.com>
+ <CAADnVQJyATTb9GFyBhOy5V_keAO5NZ6+zucLRyN27Cmg2FGPVA@mail.gmail.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
 
-Hi,
+Hi Alexei,
 
-We are seeing a number of cases when blocked fuse requests prevent
-the system from suspending, which is a little important on laptops.
-Usually something like this:
+Thank you for your review. I=E2=80=99ll revert the changes to BPF.
 
-[ 36.281038] Freezing user space processes
-[ 56.284961] Freezing user space processes failed after 20.003 seconds (1 tasks refusing to freeze, wq_busy=0):
-[ 56.285069] task:secagentd state:D stack:0 pid:1792 ppid:1711 flags:0x00004006
-[ 56.285084] Call Trace:
-[ 56.285091] <TASK>
-[ 56.285111] schedule+0x612/0x2230
-[ 56.285136] fuse_get_req+0x108/0x2d0
-[ 56.285179] fuse_simple_request+0x40/0x630
-[ 56.285203] fuse_getxattr+0x15d/0x1c0
-[...]
+Best Regards,
+Jemmy
 
-Which looks like wait_event_killable_exclusive() in fuse_get_req().
-And we were wondering if we could do something about it.  For example,
-perhaps, something like:
+> On Jun 6, 2025, at 8:54=E2=80=AFAM, Alexei Starovoitov =
+<alexei.starovoitov@gmail.com> wrote:
+>=20
+> On Thu, Jun 5, 2025 at 2:11=E2=80=AFPM Jemmy Wong =
+<jemmywong512@gmail.com> wrote:
+>>=20
+>> This change replaces manual lock acquisition and release with lock =
+guards
+>> to improve code robustness and reduce the risk of lock mismanagement.
+>> No functional changes to the cgroup logic are introduced.
+>>=20
+>> Signed-off-by: Jemmy Wong <jemmywong512@gmail.com>
+>>=20
+>> ---
+>> include/linux/cgroup.h     |   7 +
+>> kernel/bpf/cgroup.c        |  96 +++---
+>> kernel/bpf/local_storage.c |  12 +-
+>=20
+> Nack for bpf bits.
+> It only uglifies the code.
 
----
-
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index f182a4ca1bb32..587cea3a0407d 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -241,7 +241,7 @@ static struct fuse_req *fuse_get_req(struct fuse_conn *fc, bool for_background)
- 
-        if (fuse_block_alloc(fc, for_background)) {
-                err = -EINTR;
--               if (wait_event_killable_exclusive(fc->blocked_waitq,
-+               if (wait_event_freezable_killable_exclusive(fc->blocked_waitq,
-                                !fuse_block_alloc(fc, for_background)))
-                        goto out;
-        }
-diff --git a/include/linux/wait.h b/include/linux/wait.h
-index 5b65f720261a9..1c8fdf1e02785 100644
---- a/include/linux/wait.h
-+++ b/include/linux/wait.h
-@@ -628,6 +628,19 @@ do {                                                                               \
-        __ret;                                                                  \
- })
- 
-+#define __wait_event_freezable_killable_exclusive(wq, condition)               \
-+       ___wait_event(wq, condition, TASK_KILLABLE, 1, 0,                       \
-+                     freezable_schedule())
-+
-+#define wait_event_freezable_killable_exclusive(wq, condition)                 \
-+({                                                                             \
-+       int __ret = 0;                                                          \
-+       might_sleep();                                                          \
-+       if (!(condition))                                                       \
-+               __ret = __wait_event_freezable_killable_exclusive(wq,           \
-+                                                                 condition);   \
-+       __ret;                                                                  \
-+})
- 
- #define __wait_event_freezable_exclusive(wq, condition)                                \
-        ___wait_event(wq, condition, TASK_INTERRUPTIBLE, 1, 0,                  \
-
----
-
-Would this be a terrible idea?
