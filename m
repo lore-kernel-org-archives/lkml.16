@@ -1,474 +1,1343 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69FCD27F75A
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 10:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749204222; cv=fail; b=JG71FkvGEi/Cb2fF8d3I9lgnKzjLi2XgYVS/hP4pEs2xTraegzq0YLMMFIYnZmC3VSLMs17759fMhY0fvcOBIkzycSaJZVvsEsdom0oB6BUGXMFw38WbjWYHuemJwQ77PWUtQberkL8tX+076UI9idbAO2FgGD7qepfv648yI/w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749204222; c=relaxed/simple;
-	bh=n+xupnBD7cQ5TZCGvnZ7Lxa3A2siHm2xxAp7oMSUOHc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Owc5wVkqeVBHEduqMv02X8MwvFmllQBRgmAR1xw37aDS/lOhQ37QBqMeyJzBQpyQpRr1BeZZduAyqn6+gaacw8nQWgnB6Ruotfgojewn4O5MNXhasRFWstTLxhilSfyMCsajL7kzr7Mh8XUfGC2RT7zNv0l7T91zPqAP9uLyoS0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=IpIAdLhI; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=f4mIjhXg; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4947181724;
+	Fri,  6 Jun 2025 10:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749204308; cv=none; b=SXycvI0XPNXhTzuXcPX2D6FysWitS/OQKsjmKWg+iHJU3kS5RjE85b2OIuiUvFRwAl9Kdx8s0p3VZHuVDX1ibHRGaj7fs4oA+uLgAaEpm+ZZlJKWWEckw3zppy47enrdRDcKRhotM/nDc4Ee5+o21fDG5jUFN2TbMVEh/keAJ84=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749204308; c=relaxed/simple;
+	bh=zg31OCNDujZUAqHixJFKbfF9+ZIcCZFGjjRq/8K4wso=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FT//uUgb9LErB8HA3N3d4CRlDtP0dkZKoTMThsGSJFeQAO552gP2aBeTwHZqCYVHh6Ff7RW1DDuAe/UlKTVdEBw+b1YGRMk3dSB2UBxBk+3EX6Xn12Ye+D2yg931IahNeCM0/d5SDvWcUesqkR63rrg5iLgRkJLCrlZQKzlwm8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sdd1t3xB; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IpIAdLhI";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="f4mIjhXg"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5565NG2O011382;
-	Fri, 6 Jun 2025 10:03:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=Jj+2RbZthBBqCc/VyY
-	6kJCF9irffaBJjy0DOCj9k1+g=; b=IpIAdLhIb8+ohlJlKZiZlkWUcURndbQeZ4
-	Rf8UtsffrHDpWATdrcHdY/JoAoTnQ8JD4eLluaFmDk/9KmaBwlKnXfd59pgv9qDh
-	zqfKEMopHyqHMPLkRz6nNRzVua1uFHll1CXMUqCggZ44Ik6dv4PeF+j97aYmjqd0
-	dUnX7QMe2EQ1Wb/jnX93YpIG5ai7eCvOjgy9iYUMvc2iMNBuI/ssNMyP/U2oo6al
-	kBX5xSrQroz80rm72S0EvsudsDoe9X6y0wfRKU9biff57J+NK/dmedQdSO91Jwne
-	zUd84YLfeks09MEFP30TSDP+P9q367het1rzW/V7zjDGuKtk5R7w==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 471gwhfk27-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 06 Jun 2025 10:03:19 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5568ZAVi030643;
-	Fri, 6 Jun 2025 10:03:17 GMT
-Received: from ch4pr04cu002.outbound.protection.outlook.com (mail-northcentralusazon11013015.outbound.protection.outlook.com [40.107.201.15])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46yr7d44t7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 06 Jun 2025 10:03:17 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jgUHM5kTrok3j1fvFy+pXIgzrZC6gi+HUrwTpxiS0kpSYP2pq9RadkyGEo3RWytSjI0WS7wDSztdWhpYsf6JChJGZ16POCMlx9cfHXpj21LpGYnfD0u99y62QyB1xaEzn6aRZDfllF98evWiwdbAaPZuv2rq50NrPdX56fe8WmBy1CuIByk41FEZ03EDL0R6i2aFoct+F3dw0x+L8wQ91wUKHNC2QJ67BCQqrlPM3OZMZWzRmkOjPRh39qvud89vnmwzk3n2IJogs+x0HBOgh6Z01Ebyey9lTRB/Tn0Sw4327n18HuVb/euGcx/2yCTauYNkdqiKwPZQsIZgUm1uYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Jj+2RbZthBBqCc/VyY6kJCF9irffaBJjy0DOCj9k1+g=;
- b=TAOHVk+9LuZVdhN7KDdmeo1x7FzH1oR/ew9qA5Wpfd/CdXU7Y+PQY8Ggs41kwNM8ktBlRXolL4vWyXB36sBqPF5cRouA+WHQsj+p/4GigUMaYaDsz/6XtlkLfRTO7DCQn87X336f/3UkfQ6EJ11AZ3VvjG9uKSpfGJqVI0RnpvBNI8KV3wQEA8DbQGzim9B38M79YWfyNRaxKl8esW/0K5qlOsGkHIux4swXrhfFdrPV5wnM/L/HIOAwd5u0XnZ9RBSgNRDkaV8JxiDMk/CEe4S4jgDTgBIsCl5MKVVs5H6D6CIAgXpn3Y1q46szbgJ0RmdK3pbVM9i6MPO4vcTTMQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sdd1t3xB"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad89f9bb725so358217366b.2;
+        Fri, 06 Jun 2025 03:05:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Jj+2RbZthBBqCc/VyY6kJCF9irffaBJjy0DOCj9k1+g=;
- b=f4mIjhXgxerCO58+W6870WlMVN95oRYSpkQeG4YUAvqmapXc9ARAvB31bx+gNz65zqzO3kDtCvl3xXKVnKoSkKX9uu21DuIVwNEccU12pQ/jMlO/Nlsr50Ouf2rBk0T9BfXCaZ3KjCdDe4B2kbmHDfO7oNTySLmRhANl1vzbo5E=
-Received: from BL4PR10MB8229.namprd10.prod.outlook.com (2603:10b6:208:4e6::14)
- by SN4PR10MB5624.namprd10.prod.outlook.com (2603:10b6:806:20b::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.20; Fri, 6 Jun
- 2025 10:03:01 +0000
-Received: from BL4PR10MB8229.namprd10.prod.outlook.com
- ([fe80::552b:16d2:af:c582]) by BL4PR10MB8229.namprd10.prod.outlook.com
- ([fe80::552b:16d2:af:c582%4]) with mapi id 15.20.8813.018; Fri, 6 Jun 2025
- 10:03:01 +0000
-Date: Fri, 6 Jun 2025 11:02:58 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Dev Jain <dev.jain@arm.com>
-Cc: akpm@linux-foundation.org, david@redhat.com, catalin.marinas@arm.com,
-        will@kernel.org, Liam.Howlett@oracle.com, vbabka@suse.cz,
-        rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        suzuki.poulose@arm.com, steven.price@arm.com, gshan@redhat.com,
-        linux-arm-kernel@lists.infradead.org, Jann Horn <jannh@google.com>,
-        Yang Shi <yang@os.amperecomputing.com>,
-        Ryan Roberts <ryan.roberts@arm.com>
-Subject: Re: [PATCH 1/3] mm: Allow pagewalk without locks
-Message-ID: <0b2cf458-4e5f-4ab3-bdd5-82cec8f0aec7@lucifer.local>
-References: <20250530090407.19237-1-dev.jain@arm.com>
- <20250530090407.19237-2-dev.jain@arm.com>
- <6a60c052-9935-489e-a38e-1b03a1a79155@lucifer.local>
- <ecfed817-105d-487f-80ba-52965f926c1e@arm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ecfed817-105d-487f-80ba-52965f926c1e@arm.com>
-X-ClientProxiedBy: LO4P123CA0365.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:18e::10) To BL4PR10MB8229.namprd10.prod.outlook.com
- (2603:10b6:208:4e6::14)
+        d=gmail.com; s=20230601; t=1749204303; x=1749809103; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=QhpYN2L+e8ZOlXdHKAWYCgXLcomAnicmHPGk6SGwhY0=;
+        b=Sdd1t3xBoKvjwdP6LZ5yJOEGEKXRjScbv/VVDdvrIsVxRiQMdIDowcfiz4t3z3RXzG
+         8Ntn/XT/hQ8onu4E2Vp9pbG0u0L+Ftc/rCdlHU0SRbvzIU555meUiqgweSJzkN1R4eyj
+         8dTV2Mzv3bBa/1b9E5PHU/+HZTXb7ib1+HayVaa0ekSVrOq75B83y2MMijBFckclyK/b
+         QajLDZsjnbswFEc2fyGdsXCgxtPlVUlWO8oCq/gZny60Qia0Tocw2DmDVaNYj5xeIm6w
+         biadyxPXaUdru6ChHsXmjM6dva0oyA4B9iGI6QT3g0dijXd8kOIQKl2K3X0ppBB6VKgG
+         lPzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749204303; x=1749809103;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QhpYN2L+e8ZOlXdHKAWYCgXLcomAnicmHPGk6SGwhY0=;
+        b=AWgN4XChxXiNHfcFGZdx//T+W1gDrkIDdXsn4JXFd4HD+LeydKBZ88XWpdGRCyhUs7
+         9HUo/0xGJQLJYhdP4vws0vys7dEOHRHAnD9nrjulPeHFJmluUatjmljj9z1jLdelbLg0
+         0tgtFvCukUcJyP9AFRfNmIZY+Q/ffKf3gsR15U/lB/fIhw7NOW40L81rnC/mdxnnYX5N
+         wCaRac9woKCIrpuoYVRb54EXDN4D+h25hjbgRcjRx+BjM2uJMOjfHnJDmBMXfJwXVXIH
+         mG+yfMeJ6fVtftGCE9JFd9lWuAKHA6ZmmvlL9bC4R4AankQMHySIfNC+zXVz3ikDET3x
+         5r9w==
+X-Forwarded-Encrypted: i=1; AJvYcCUe7w0rmerzceGs4fPkzUsI+1PRFMHZYCP3c2nb1HBDBFr/O7foMSIqz52SlxLgfznRrw30KG6kfZjUjSXV@vger.kernel.org, AJvYcCWNOR+xTC3I7W6MezJzaykee/l3df8K9lUmfGfXqCP7Ix49aTgjawGRQQG+HtqU+I0TGYUg9FABRd8l@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKzAA68VEFuKb+UcJULt3ao087U/psIJ+7qLELhpEmmpG8gq+E
+	DXYQ0C7oyu7PIZVbgyf72dXEP3TpDKBN/V0UT3Fj2NTgliW/YInsKzI2D077azljMs9NDw==
+X-Gm-Gg: ASbGncskcXGnIF7DgOWOKNBsOIOb9xMFhuYPlyzebgDvF3tLHRikFXDTOfLcgTdEreX
+	z6gDX1yQo14vmp42DRaiyPYbwoV8HQlKLHNjkaqoJn4nACvepu0cxH2RKhLUMB9aEDo3JYx6PLA
+	25vnVU485aEdbxQGoga5Dbc2ikY/4GU/NRnaIP5Yr496ygiwWmSjUNqK0p1VDY1vPppcD6eA88O
+	btjR9vj4nMEoNQK2uJSRuMO1/2u1A1EH7mf3D7EK6FbctvxDOWdBlR9M8cmc4UErTO+SNZjJPv2
+	5Q7sM7Wvpb9BuAHGNHmzv2oY1jAw/8FoF5zj90yYTcv+nwL+oUUXMNUPbHWp7s41L/3zjf6+IlR
+	C
+X-Google-Smtp-Source: AGHT+IHJ3g9KDsHyFfInaEEVSx+H7Y6yZwCxQ9nsa5Q8ta2kMV05CkLuufoL+/0uzndXu1HOJQdIGg==
+X-Received: by 2002:a17:906:c154:b0:ad2:2146:3b89 with SMTP id a640c23a62f3a-ade1a9c8247mr209498466b.47.1749204303107;
+        Fri, 06 Jun 2025 03:05:03 -0700 (PDT)
+Received: from HYB-DlYm71t3hSl.ad.analog.com ([2001:a61:1225:ec01:d1d7:779d:8019:7bb0])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1d754180sm93099166b.9.2025.06.06.03.05.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 03:05:02 -0700 (PDT)
+Date: Fri, 6 Jun 2025 12:05:00 +0200
+From: Jorge Marques <gastmaier@gmail.com>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Jorge Marques <jorge.marques@analog.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-i3c@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] i3c: master: Add driver for Analog Devices I3C
+ Controller IP
+Message-ID: <lmh3y23qcffyyy4oxbyinsfagcawovxgpqiskyhjmwurqx4pri@tg4ipxn4abgo>
+References: <20250604-adi-i3c-master-v1-0-0488e80dafcb@analog.com>
+ <20250604-adi-i3c-master-v1-2-0488e80dafcb@analog.com>
+ <aECaFQzkPYdfjagK@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL4PR10MB8229:EE_|SN4PR10MB5624:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1cf9fac8-a2a2-4734-024f-08dda4e15223
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?GtELHw4GxEOVKCK7dGZzAB7yh+LlZnldItvnZN1qoyjj1gphIFubc9uEs7Gz?=
- =?us-ascii?Q?iIZzImftAWh9na0P9paBNkOBZfTuheSMjAIm7aepDfH2JofVDOP1yqATRCjx?=
- =?us-ascii?Q?Z/B0iRfRSSQJIL+e3fflBFY/kAOeT/T8sB6+P6JrI3+tE69Q8NpjCRARlFnb?=
- =?us-ascii?Q?XHOMoHdLQAamvsPALbxMhsOla++ARfQ45yxJOqus5CulKwAGsi7ICjuxmySg?=
- =?us-ascii?Q?/8LZDzXU1dQnk75koWYeSFHZXiLDyJY5keYiAN+kgRYZ3WhDsb0njX7tpZlH?=
- =?us-ascii?Q?oFGS4ytzxs1iliIueKvIirtiBzY1vOGBsL75FUv2/aufIjlamQ3lEDwXD11L?=
- =?us-ascii?Q?P/8FqF8JXrn8+ycg4Mn0NaqnUgHqCF+HpH6X/uuS7Iajb9tY1ZLpZK2A8F7n?=
- =?us-ascii?Q?BecOtVoHwJIpdBhwoowLU9O8jeb634muuww/zp5oSZd9ImLTS/vuzoEL7mm3?=
- =?us-ascii?Q?y+jIk513mksbK7oKmNF6/T9NhaS1PxKKtDYIuM9DAQxw1J11XcEUfyoCjvfj?=
- =?us-ascii?Q?S7QFMa0kpH2cVRsgeIdmTfdkN0l0jJ4k6zVrmyRYKMc5DrLshhUw+CSTgRdr?=
- =?us-ascii?Q?BmOwafCY883dyAx/YvYTwJvccXCu1ne7bvfP+Zbwibvixl5R180Iot/wr7OF?=
- =?us-ascii?Q?LSCNiKatxlqGaCZ2rpnKITeHn2URU7WJFjy7t4+C8aeBvnhL6oUx8G2LG+kj?=
- =?us-ascii?Q?4np766VDzHKP8Psqn298KD5rviOyjk6ZtauUYUqPhQVMofZUNSOKEl9JYBlX?=
- =?us-ascii?Q?raaL5x8x3PP0hJSxJFKBHmvNsTECNRw+6nyeD6pomHKHySUCZxONXbsY2eig?=
- =?us-ascii?Q?HLgIHXAzRUmnjpJYOKPAd9GmQX5hX2QmPasFMIZHHDUGCjlJZPa2Ee6gb+uo?=
- =?us-ascii?Q?2TPKPiTN1usq8iAZfxUgdzn6Y5TVVFqi9UiEWzswDzElJiCQ9a6rpV0Lk6v1?=
- =?us-ascii?Q?LYbhCVK6zovao9WSu7xMqmQ7l5YHXFnRwHLJ+lhtcUXZzBiBOYIAEiHRKI9I?=
- =?us-ascii?Q?OZbFV64YEDTN5J7TxcOD8hBxAfr3SQQsFZ4F5xIlaiNmaASxW8AYOUo8f95H?=
- =?us-ascii?Q?gj6uJ79+HITmlLDrB5WF4brXS3OKuRwo4/uJulIfJsC4SihAUaq2ZRh/qMFP?=
- =?us-ascii?Q?0o4R5U51wTXGVBWqNQWMWlkE4rViNhhk+pZR45FPsenKHwjSXv3V6KTGHH1r?=
- =?us-ascii?Q?si6n7EHkYT6e9nFbGmNDqpU8Td+eGHO57c7HdNGqoXn3xiS+IaJkQc4DDgXJ?=
- =?us-ascii?Q?vAHssF/fIMf73hEZ9r5PDeB/YLPeki94Jk4ye7LodGsVxUiG7M3XRciKSbEO?=
- =?us-ascii?Q?6VBZRV+3O/vUKOJ0d8gd/jM+GOrIj7ypBHNgWVeuKZ/11PBi9rT9PT7143Ks?=
- =?us-ascii?Q?GRHeNIyLbF6CGpCfeKlJ5kpEZ/8nHacy+3aIKR0VP6wk04PD68eTCGBCKv+6?=
- =?us-ascii?Q?UMAqGBHHHRRbXyPNJw41x6ife3kN0IhA?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL4PR10MB8229.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?dLnNM6/mOe9H/E7qbN9UVFqoTRh/adWiME/c7kvnC1T+5D1U+o+1c6RMMafB?=
- =?us-ascii?Q?Rzme5xEs8TGDo5Eoi3t0cUqz2L1UPxp0Iwdy/oEmjz07wTRz8RtktKm/7McN?=
- =?us-ascii?Q?B9tGoM1XiNLfpWnxqXKaN18CGrZjetrv6xkW9ZxZCywDpwic43U7bKIqTBUn?=
- =?us-ascii?Q?pIy37xe1l5Hqxq+sdwGbnZh9PnpNlWErt6dMJlL6ECp8Sb7bqPBRUCN8M5v7?=
- =?us-ascii?Q?BQCzBM92MH0+xyPDmGr6RezBjSSeKfhiKAFzdJH1wVaSpRfNM3o2Ta54HpP2?=
- =?us-ascii?Q?G1omi70F5wVjK7g2tC0fNS3DVF79n9GGOZ+R41YfrJKZmu9N3rOvB8AFQDzX?=
- =?us-ascii?Q?2LB4ge9fHKUlTeb/Y0dHWAUz0YQUqntn2c2IRRxSQ9szF3WoTY0fqqnjXppT?=
- =?us-ascii?Q?lSbd21W0/kE8PrF8YDDXlkp3bnu6BGca7T08RgFSBbhOXaUM0f6xwCJ7KgKL?=
- =?us-ascii?Q?t9FeIR6teLnpYcSqIGRvsui2mIAnaBqFn3/zjOkhKe7AO2gUY2HaoGfGcaIK?=
- =?us-ascii?Q?am2VFbjvK+8gx43cTSA9m1AgVeEAwuOsmFLDlLBsAaXL4uJnYOsgDWyuo+fn?=
- =?us-ascii?Q?kD5QLjws2t6Ef3viUJcue9J6jhSRzVNpfKSgH3plbwtGlToE7isRcHPDwAvh?=
- =?us-ascii?Q?V8VF1dH68BayZakU7UdQL3ltd8+M6u1iKgaAvBxxh/i1RrMSe8tUInUZhBZq?=
- =?us-ascii?Q?qKY8Di1pI1LL1ZEDWEf8nVyvoXp6b911e62lYYbl+83WKeDGt4a6uSnr1ep0?=
- =?us-ascii?Q?coMb8LXvQBKgR55m/VETmMUaGsSyjO3mRLljVAgTRgitLcQ/vErPsYIZv8Td?=
- =?us-ascii?Q?hgkBxppE0htLVAOxGheUDH0JH8pa6arZIX/4bJ/8EkA1w/MfVUTBQD8u2lao?=
- =?us-ascii?Q?/eAYANFfHJs16ZgeesOcOoQyB3gyjDVd7nO7/ZhXYDaPYjjv/p+5DTj8rtUY?=
- =?us-ascii?Q?uH4umR99/heGWvXZnQ/D7nI/3/grL//ZcGZtv80xPwKHGhu33GHjIob3RxhE?=
- =?us-ascii?Q?P6/n7BR7MOHOUf56KYkeUxv7nKUQuUkucoF6BHf4zj16xBA/zx3LzMdPkRXq?=
- =?us-ascii?Q?PD8lOtmf1SeQ/xtv6rzbYuiIg7Zo0uAmZiyYARLO0VrO4JKgC6mPTWmZjKcH?=
- =?us-ascii?Q?e9wWHNPMLgAHv/p0I1ernL5VOBH7JrT0jYOcQnSCBSDM3klqtm9OyCWdXcHe?=
- =?us-ascii?Q?XK+T0mEtFbcErsLco2y+Icvi5EwBbpGHsV527b9gzkj2RRQImNNQTmrTwU3u?=
- =?us-ascii?Q?DjrN7ma31Hw9cdnLThW86Xh3pADu7EtRszxPd2Vl0uszkoXZRAwtJumFpKOe?=
- =?us-ascii?Q?njVne87o9vhiZM7Lm2NsDSR/1xl4ZNX/KX9dEB3k9qezgFenJdZysH6ASD91?=
- =?us-ascii?Q?8QXz0gGwOycVhd4eogxtuyWNUZ+LyuGdQzfG/CScfTuXEiqA4r99iVYi44cJ?=
- =?us-ascii?Q?ZBZCBzJsMVIHqSsWtIklRrRWnYVRcAI4lXWa3+haxxw1Id81buzMpndjpS02?=
- =?us-ascii?Q?tmbbJzp7GFT9ng9W6y32LVcfaOgc7/zmHQ95eZJ/aEfbwiFSOCNvpt8zrKqL?=
- =?us-ascii?Q?FF5xMUziuZDoUerc3h0SwjNlqsX4RfotJqqeKAxdYAtpMfwKSyLneAAzfKMc?=
- =?us-ascii?Q?eQ=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	7SUrae/+fdqEGXipPrIC2rPRV2BxZXalsxWK3l0BEGojr++QVPLUS7Mr/LVFDXpLV+Epuj/G1jeRYlwcPuz4eY4ryLxqaG+xdMJ2sm42r9sCDHYABwd70JJvcsVus4w+L6Q12vm4C0q7/PNVCDAtBMEUdeefyec7jJKB6V1rfvarTDw4wIsMe353kCRwqwk/uy4eWwVW80/WTgWK3kxyx0iAZ0AZjfsXobE59PIlFAvR/npypkpdenRXMM5yQw09192EH344sv9d5cGOj1ETRjwmji8L/67iNS6kolANr0n46xl2nUhs+Lrf7CTs/pXnIbRJdm85Z2DQmDnPhhfAoIzaIBejaLvR6ddEt+v9VVsQ7Et7/y4VVDqjqfwyC1V5cCk6WEgnTpbrLoH6EqjjBwhioukX+qafMOFDYIlkMLiZKSwPl9Xy+QLcBu6jNEXYtZHznzPz9MD7dWTju6DuRRvTA8IzykxpUQ8Eb1zjQxI8jcyP6Soc8y1gW4mQj0nkW5+lMJBiKPS/tl2pmRdSjYIiGlCg1Qi+UGflMdhpyr1yTQ5tpKgMlz4RJwbslOha3qkY79QT5mOBRo+Wm0C4YivD0pZMkG0wlUMUGxsRF+g=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1cf9fac8-a2a2-4734-024f-08dda4e15223
-X-MS-Exchange-CrossTenant-AuthSource: BL4PR10MB8229.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2025 10:03:01.2923
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2furwG2GVLBDqoHaFzeRyoPLT0+z+1TkHF63Rc0TTPF35D832SlpRLlzcGA4TczGx1t/WdA0FrKOnpFjVd4WMjqbhzLfSuz7kllqkflqiVw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR10MB5624
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-06_03,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- suspectscore=0 phishscore=0 adultscore=0 spamscore=0 mlxlogscore=999
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2506060092
-X-Authority-Analysis: v=2.4 cv=Wu0rMcfv c=1 sm=1 tr=0 ts=6842bce7 b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=7CQSdrXTAAAA:8 a=7qp52ovlw9--blVHXKAA:9 a=CjuIK1q_8ugA:10 a=PG6Q-FFm6skA:10 a=a-qgeE7W1pNrGK8U0ZQC:22 cc=ntf awl=host:14714
-X-Proofpoint-GUID: dawVMZ30N4P_P_YcfFhkNlPLb3u7wkE1
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDA5MiBTYWx0ZWRfX1ZHUjNHwOScl B5ZFrbmIvzQ3k8Xma2md0/jzijIFdhif0QrOlC0TaSBqe3Bmz4xhPLSnLpA7MBmt0ouK4IC/9A9 l0JB/Hcb4wCxFcwwTj9U+JxCO/9h3JABPtr/7b0Li94J1gOH3piE+Ck+WgN1yrhE/o8uw52pK3g
- doGf//0qs5m1fWVWEYsNDUvv2VIQh3VhDYptg9wy8q6QXIH5h54QwfI5XXmTOXTMDv7ghml8AKg x2IHDGSgrVt7BXWyduQ6QvFJegrw5cSNt6f7Zi6o7x9Eh6Ps+7BOak9/o3OKOKQcRCs3q7OMDez 5JWQz/IqJ6I+ro3TUzjjiToxY3zBVPhbMpWyFGKrwJqgLH2nhcssi0ARbN/N7co+rF8KSgzmK8+
- dE1p72iv/rW82omJIn0L/3EOJkyU0gC5HDRUTu+BVZvu4i20EtSQVB7IeqiHmiwAmkgXCfXr
-X-Proofpoint-ORIG-GUID: dawVMZ30N4P_P_YcfFhkNlPLb3u7wkE1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aECaFQzkPYdfjagK@lizhi-Precision-Tower-5810>
 
-(One thing to note here is that I have refactored this walk_page_range_novma()
-function so the kernel equivalent is now walk_kernel_page_table_range().)
+Hi Frank,
 
-Overall, I'm questioning doing this in the walker code at all.
+Thank you for the review.
 
-The use of mmap locks for kernel mappings is essentially a convention among
-callers, it's not something that is actually required for kernel page table
-mappings.
+I think the only thing up for discussion on this thread is the tx_fifo
+packing (see below).
 
-And now we're introducing a new mode where we say 'ok that convention is
-out the window, we won't assert anything'.
+On Wed, Jun 04, 2025 at 03:10:13PM -0400, Frank Li wrote:
+> On Wed, Jun 04, 2025 at 05:48:58PM +0200, Jorge Marques wrote:
+> > Add support for Analog Devices I3C Controller IP, an AXI-interfaced IP
+> > core that supports I3C and I2C devices, multiple speed-grades and
+> > I3C IBIs.
+> >
+> > Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+> > ---
+> >  MAINTAINERS                         |    1 +
+> >  drivers/i3c/master/Kconfig          |   11 +
+> >  drivers/i3c/master/Makefile         |    1 +
+> >  drivers/i3c/master/adi-i3c-master.c | 1063 +++++++++++++++++++++++++++++++++++
+> >  4 files changed, 1076 insertions(+)
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 6f56e17dcecf902c6812827c1ec3e067c65e9894..9eb5b6c327590725d1641fd4b73e48fc1d1a3954 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -11247,6 +11247,7 @@ I3C DRIVER FOR ANALOG DEVICES I3C CONTROLLER IP
+> >  M:	Jorge Marques <jorge.marques@analog.com>
+> >  S:	Maintained
+> >  F:	Documentation/devicetree/bindings/i3c/adi,i3c-master.yaml
+> > +F:	drivers/i3c/master/adi-i3c-master.c
+> >
+> >  I3C DRIVER FOR CADENCE I3C MASTER IP
+> >  M:	Przemysław Gaj <pgaj@cadence.com>
+> > diff --git a/drivers/i3c/master/Kconfig b/drivers/i3c/master/Kconfig
+> > index 7b30db3253af9d5c6aee6544c060e491bfbeb643..328b7145cdefa20e708ebfa3383e849ce51c5a71 100644
+> > --- a/drivers/i3c/master/Kconfig
+> > +++ b/drivers/i3c/master/Kconfig
+> > @@ -1,4 +1,15 @@
+> >  # SPDX-License-Identifier: GPL-2.0-only
+> > +config ADI_I3C_MASTER
+> > +	tristate "Analog Devices I3C master driver"
+> > +	depends on HAS_IOMEM
+> > +	help
+> > +	  Support for Analog Devices I3C Controller IP, an AXI-interfaced IP
+> > +	  core that supports I3C and I2C devices, multiple speed-grades and
+> > +	  I3C IBIs.
+> > +
+> > +	  This driver can also be built as a module.  If so, the module
+> > +	  will be called adi-i3c-master.
+> > +
+> >  config CDNS_I3C_MASTER
+> >  	tristate "Cadence I3C master driver"
+> >  	depends on HAS_IOMEM
+> > diff --git a/drivers/i3c/master/Makefile b/drivers/i3c/master/Makefile
+> > index 3e97960160bc85e5eaf2966ec0c3fae458c2711e..6cc4f4b73e7bdc206b68c750390f9c3cc2ccb199 100644
+> > --- a/drivers/i3c/master/Makefile
+> > +++ b/drivers/i3c/master/Makefile
+> > @@ -1,4 +1,5 @@
+> >  # SPDX-License-Identifier: GPL-2.0-only
+> > +obj-$(CONFIG_ADI_I3C_MASTER)		+= adi-i3c-master.o
+> >  obj-$(CONFIG_CDNS_I3C_MASTER)		+= i3c-master-cdns.o
+> >  obj-$(CONFIG_DW_I3C_MASTER)		+= dw-i3c-master.o
+> >  obj-$(CONFIG_AST2600_I3C_MASTER)	+= ast2600-i3c-master.o
+> > diff --git a/drivers/i3c/master/adi-i3c-master.c b/drivers/i3c/master/adi-i3c-master.c
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..6f44b0b6fc2020bb0131e8e2943806c0a9d9ce7b
+> > --- /dev/null
+> > +++ b/drivers/i3c/master/adi-i3c-master.c
+> > @@ -0,0 +1,1063 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * I3C Controller driver
+> > + * Copyright 2024 Analog Devices Inc.
+> 
+> 2025?
+> 
+Ups.
+> > + * Author: Jorge Marques <jorge.marques@analog.com>
+> > + */
+> > +
+> > +#include <linux/bitops.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/err.h>
+> > +#include <linux/errno.h>
+> > +#include <linux/i3c/master.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/io.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +
+> > +#define VERSION_MAJOR(x)		(((x) >> 16) & 0xff)
+> > +#define VERSION_MINOR(x)		(((x) >> 8) & 0xff)
+> > +#define VERSION_PATCH(x)		((x) & 0xff)
+> 
+> Can you use GEN_MASK and FIELD_GET macro for it?
+> 
+Of course, for V2 I will do for all.
+And also reformat the regmap to format:
 
-Not sure I want to add yet another way you can use the kernel walker code here,
-not at least until I can unravel the mess of why we're even using these locks at
-all.
+  #define REG_SOME_REG
+  #define   REG_SOME_REG_FIELD_NAME
 
-Strikes me that init_mm.mmap_lock is just being used as a convenient mutual
-exclusion for all other callers.
+Which makes way easier to read/debug.
+> > +
+> > +#define MAX_DEVS			16
+> > +
+> > +#define REG_VERSION			0x000
+> > +#define REG_ENABLE			0x040
+> > +#define REG_IRQ_MASK			0x080
+> > +#define REG_IRQ_PENDING			0x084
+> > +#define REG_CMD_FIFO			0x0d4
+> > +#define REG_CMDR_FIFO			0x0d8
+> > +#define REG_SDO_FIFO			0x0dc
+> > +#define REG_SDI_FIFO			0x0e0
+> > +#define REG_IBI_FIFO			0x0e4
+> > +#define REG_FIFO_STATUS			0x0e8
+> > +#define REG_OPS				0x100
+> > +#define REG_IBI_CONFIG			0x140
+> > +#define REG_DEV_CHAR			0x180
+> > +
+> > +#define CMD0_FIFO_IS_CCC		BIT(22)
+> > +#define CMD0_FIFO_BCAST			BIT(21)
+> > +#define CMD0_FIFO_SR			BIT(20)
+> > +#define CMD0_FIFO_LEN(l)		((l) << 8)
+> > +#define CMD0_FIFO_LEN_MAX		4095
+> > +#define CMD0_FIFO_DEV_ADDR(a)		((a) << 1)
+> > +#define CMD0_FIFO_RNW			BIT(0)
+> > +
+> > +#define CMD1_FIFO_CCC(id)		((id) & GENMASK(7, 0))
+> > +
+> > +#define CMDR_NO_ERROR			0
+> > +#define CMDR_CE0_ERROR			1
+> > +#define CMDR_CE2_ERROR			4
+> > +#define CMDR_NACK_RESP			6
+> > +#define CMDR_UDA_ERROR			8
+> > +#define CMDR_ERROR(x)			(((x) & GENMASK(23, 20)) >> 20)
+> > +#define CMDR_XFER_BYTES(x)		(((x) & GENMASK(19, 8)) >> 8)
+> 
+> use GET_FIELD
+> 
+Ack.
+> > +
+> > +#define FIFO_STATUS_CMDR_EMPTY		BIT(0)
+> > +#define FIFO_STATUS_IBI_EMPTY		BIT(1)
+> > +#define IRQ_PENDING_CMDR_PENDING	BIT(5)
+> > +#define IRQ_PENDING_IBI_PENDING		BIT(6)
+> > +#define IRQ_PENDING_DAA_PENDING		BIT(7)
+> > +
+> > +#define DEV_CHAR_IS_I2C			BIT(0)
+> > +#define DEV_CHAR_IS_ATTACHED		BIT(1)
+> > +#define DEV_CHAR_BCR_IBI(x)		(((x) & GENMASK(2, 1)) << 1)
+> > +#define DEV_CHAR_WEN			BIT(8)
+> > +#define DEV_CHAR_ADDR(x)		(((x) & GENMASK(6, 0)) << 9)
+> 
+> The same here.
+> 
+Ack.
+> > +
+> > +#define REG_OPS_SET_SG(x)		((x) << 5)
+> > +#define REG_OPS_PP_SG_MASK		GENMASK(6, 5)
+> > +
+> > +#define REG_IBI_CONFIG_LISTEN		BIT(1)
+> > +#define REG_IBI_CONFIG_ENABLE		BIT(0)
+> > +
+> > +enum speed_grade {PP_SG_UNSET, PP_SG_1MHZ, PP_SG_3MHZ, PP_SG_6MHZ, PP_SG_12MHZ};
+> > +struct adi_i3c_cmd {
+> > +	u32 cmd0;
+> > +	u32 cmd1;
+> > +	u32 tx_len;
+> > +	const void *tx_buf;
+> > +	u32 rx_len;
+> > +	void *rx_buf;
+> > +	u32 error;
+> > +};
+> > +
+> > +struct adi_i3c_xfer {
+> > +	struct list_head node;
+> > +	struct completion comp;
+> > +	int ret;
+> > +	unsigned int ncmds;
+> > +	unsigned int ncmds_comp;
+> > +	struct adi_i3c_cmd cmds[];
+> > +};
+> > +
+> > +struct adi_i3c_master {
+> > +	struct i3c_master_controller base;
+> > +	u32 free_rr_slots;
+> > +	unsigned int maxdevs;
+> > +	struct {
+> > +		unsigned int num_slots;
+> > +		struct i3c_dev_desc **slots;
+> > +		spinlock_t lock; /* Protect IBI slot access */
+> > +	} ibi;
+> > +	struct {
+> > +		struct list_head list;
+> > +		struct adi_i3c_xfer *cur;
+> > +		spinlock_t lock; /* Protect transfer */
+> > +	} xferqueue;
+> > +	void __iomem *regs;
+> > +	struct clk *clk;
+> > +	unsigned long i3c_scl_lim;
+> > +	struct {
+> > +		u8 addrs[MAX_DEVS];
+> > +		u8 index;
+> > +	} daa;
+> > +};
+> > +
+> > +static inline struct adi_i3c_master *to_adi_i3c_master(struct i3c_master_controller *master)
+> > +{
+> > +	return container_of(master, struct adi_i3c_master, base);
+> > +}
+> > +
+> > +static void adi_i3c_master_wr_to_tx_fifo(struct adi_i3c_master *master,
+> > +					 const u8 *bytes, int nbytes)
+> > +{
+> > +	writesl(master->regs + REG_SDO_FIFO, bytes, nbytes / 4);
+> > +	if (nbytes & 3) {
+> > +		u32 tmp = 0;
+> > +
+> > +		memcpy(&tmp, bytes + (nbytes & ~3), nbytes & 3);
+> 
+> ALIGN_DOWN(bytes, 4)?
+> 
+> Do you need conside big/little endian to trim down data?
+> 
 
-So as per my (new :P) comment to 2/3, maybe we should just fix apply_to_range()
-no?
+This is due the byte array passed may not be a multiple of 32bits.
+If it were, it could be simply
 
-David - any thoughts here?
+  writesl(master->regs + REG_SDO_FIFO, bytes, DIV_ROUND_UP(m, 4));
 
-On Fri, Jun 06, 2025 at 02:51:48PM +0530, Dev Jain wrote:
->
-> On 30/05/25 4:27 pm, Lorenzo Stoakes wrote:
-> > +cc Jan for page table stuff.
-> >
-> > On Fri, May 30, 2025 at 02:34:05PM +0530, Dev Jain wrote:
-> > > It is noted at [1] that KFENCE can manipulate kernel pgtable entries during
-> > > softirqs. It does this by calling set_memory_valid() -> __change_memory_common().
-> > > This being a non-sleepable context, we cannot take the init_mm mmap lock.
-> > > Therefore, add PGWALK_NOLOCK to enable walk_page_range_novma() usage without
-> > > locks.
-> > Hm This is worrying.
-> >
-> > You're unconditionally making it possible for dangerous usage here - to
-> > walk page tables without a lock.
-> >
-> > We need to assert this is only being used in a context where this makes
-> > sense, e.g. a no VMA range under the right circumstances.
-> >
-> > At the very least we need asserts that we are in a circumstance where this
-> > is permitted.
-> >
-> > For VMAs, you must keep the VMA stable, which requires a VMA read lock at
-> > minimum.
-> >
-> > See
-> > https://origin.kernel.org/doc/html/latest/mm/process_addrs.html#page-tables
-> > for details where these requirements are documented.
-> >
-> > I also think we should update this documentation to cover off this non-VMA
-> > task context stuff. I can perhaps do this so as not to egregiously add
-> > workload to this series :)
-> >
-> > Also, again this commit message is not enough for such a major change to
-> > core mm stuff. I think you need to underline that - in non-task context -
-> > you are safe to manipulate _kernel_ mappings, having precluded KFENCE as a
-> > concern.
->
-> Sorry for late reply, after your comments I had to really go and understand
-> kernel pagetable walking properly by reading your process_addrs documentation
-> and reading the code, so that I could prepare an answer and improve my
-> understanding, thanks for your review!
+Also,
+  
+  writesb(master->regs + REG_SDO_FIFO, bytes, m);
 
-Of course, that's fine, it's all super confusing, and continues to be so... :)
+Is not suitable.
+cnds and dw i3c tx fifo write do the same.
+The data is packed as follows ("D" is discarded):
 
->
-> How does the below comment above PGWALK_NOLOCK look?
->
-> "Walk without any lock. Use of this is only meant for the
->  case where there is no underlying VMA, and the user has
->  exclusive control over the range, guaranteeing no concurrent
->  access. For example, changing permissions of vmalloc objects."
->
++----------------------------------------------------+
+| Payload transfer, length = 5                       |
++--------------------+-------+-------+-------+-------+
+| SDO FIFO Stack     | Byte3 | Byte2 | Byte1 | Byte0 |
++====================+=======+=======+=======+=======+
+| #0                 | 0x78  | 0x56  | 0x34  | 0x12  |
++--------------------+-------+-------+-------+-------+
+| #1                 | D     | D     | D     | 0xFE  |
++--------------------+-------+-------+-------+-------+
 
-OK so now I think I understand better... this seems to wholly be about unwinding
-the convention in this walker code that an mmap lock be taken on init_mm because
-you have a context where that doesn't work.
+> > +		writesl(master->regs + REG_SDO_FIFO, &tmp, 1);
+> 
+> writel() is enough
+> 
+Ok
+> > +	}
+> > +}
+> > +
+> > +static void adi_i3c_master_rd_from_rx_fifo(struct adi_i3c_master *master,
+> > +					   u8 *bytes, int nbytes)
+> > +{
+> > +	readsl(master->regs + REG_SDI_FIFO, bytes, nbytes / 4);
+> > +	if (nbytes & 3) {
+> > +		u32 tmp;
+> > +
+> > +		readsl(master->regs + REG_SDI_FIFO, &tmp, 1);
+> 
+> readl()
+> 
+Ok
+> > +		memcpy(bytes + (nbytes & ~3), &tmp, nbytes & 3);
+> > +	}
+> > +}
+> > +
+> > +static bool adi_i3c_master_supports_ccc_cmd(struct i3c_master_controller *m,
+> > +					    const struct i3c_ccc_cmd *cmd)
+> > +{
+> > +	if (cmd->ndests > 1)
+> > +		return false;
+> > +
+> > +	switch (cmd->id) {
+> > +	case I3C_CCC_ENEC(true):
+> > +	case I3C_CCC_ENEC(false):
+> > +	case I3C_CCC_DISEC(true):
+> > +	case I3C_CCC_DISEC(false):
+> > +	case I3C_CCC_RSTDAA(true):
+> > +	case I3C_CCC_RSTDAA(false):
+> > +	case I3C_CCC_ENTDAA:
+> > +	case I3C_CCC_SETDASA:
+> > +	case I3C_CCC_SETNEWDA:
+> > +	case I3C_CCC_GETMWL:
+> > +	case I3C_CCC_GETMRL:
+> > +	case I3C_CCC_GETPID:
+> > +	case I3C_CCC_GETBCR:
+> > +	case I3C_CCC_GETDCR:
+> > +	case I3C_CCC_GETSTATUS:
+> > +	case I3C_CCC_GETHDRCAP:
+> > +		return true;
+> > +	default:
+> > +		break;
+> > +	}
+> > +
+> > +	return false;
+> > +}
+> > +
+> > +static int adi_i3c_master_disable(struct adi_i3c_master *master)
+> > +{
+> > +	writel(~REG_IBI_CONFIG_LISTEN | ~REG_IBI_CONFIG_ENABLE,
+> > +	       master->regs + REG_IBI_CONFIG);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct adi_i3c_xfer *adi_i3c_master_alloc_xfer(struct adi_i3c_master *master,
+> > +						      unsigned int ncmds)
+> > +{
+> > +	struct adi_i3c_xfer *xfer;
+> > +
+> > +	xfer = kzalloc(struct_size(xfer, cmds, ncmds), GFP_KERNEL);
+> > +	if (!xfer)
+> > +		return NULL;
+> > +
+> > +	INIT_LIST_HEAD(&xfer->node);
+> > +	xfer->ncmds = ncmds;
+> > +	xfer->ret = -ETIMEDOUT;
+> > +
+> > +	return xfer;
+> > +}
+> > +
+> > +static void adi_i3c_master_start_xfer_locked(struct adi_i3c_master *master)
+> > +{
+> > +	struct adi_i3c_xfer *xfer = master->xferqueue.cur;
+> > +	unsigned int i;
+> > +
+> > +	if (!xfer)
+> > +		return;
+> > +
+> > +	for (i = 0; i < xfer->ncmds; i++) {
+> > +		struct adi_i3c_cmd *cmd = &xfer->cmds[i];
+> > +
+> > +		adi_i3c_master_wr_to_tx_fifo(master, cmd->tx_buf, cmd->tx_len);
+> 
+> what's happen if data length bigger than fifo size?
+> 
+Right, I will add the safeguards.
+The behaviour is to set the minimum between tx_len and tx_fifo_room.
+And if there is not enough room, data is lost.
+Same for cmd_fifo.
 
-Yeah, even more inclined to say no to this now.
+> > +	}
+> > +
+> > +	for (i = 0; i < xfer->ncmds; i++) {
+> > +		struct adi_i3c_cmd *cmd = &xfer->cmds[i];
+> > +
+> > +		writel(cmd->cmd0, master->regs + REG_CMD_FIFO);
+> > +		if (cmd->cmd0 & CMD0_FIFO_IS_CCC)
+> > +			writel(cmd->cmd1, master->regs + REG_CMD_FIFO);
+> > +	}
+> > +}
+> > +
+> > +static void adi_i3c_master_end_xfer_locked(struct adi_i3c_master *master,
+> > +					   u32 pending)
+> > +{
+> > +	struct adi_i3c_xfer *xfer = master->xferqueue.cur;
+> > +	int i, ret = 0;
+> > +	u32 status0;
+> > +
+> > +	if (!xfer)
+> > +		return;
+> > +
+> > +	for (status0 = readl(master->regs + REG_FIFO_STATUS);
+> > +	     !(status0 & FIFO_STATUS_CMDR_EMPTY);
+> > +	     status0 = readl(master->regs + REG_FIFO_STATUS)) {
+> > +		struct adi_i3c_cmd *cmd;
+> > +		u32 cmdr, rx_len;
+> > +
+> > +		cmdr = readl(master->regs + REG_CMDR_FIFO);
+> > +
+> > +		cmd = &xfer->cmds[xfer->ncmds_comp++];
+> > +		rx_len = min_t(u32, CMDR_XFER_BYTES(cmdr), cmd->rx_len);
+> > +		adi_i3c_master_rd_from_rx_fifo(master, cmd->rx_buf, rx_len);
+> > +		cmd->error = CMDR_ERROR(cmdr);
+> 
+> what happen if cmds[0] is write, cmds[1] is read.
+> 
+What is important here is to check the direction, I will add checks as
+follows were applicable:
 
-Or if we absolutely cannot do this in apply_to_range(), then we should
-explicitly have a function for this, like:
+  if (cmd->cmd0 & REG_CMD_FIFO_0_RNW)
 
-/*
- * Does not assert any locks have been taken. You must absolutely be certain
- * that appropriate locks are held.
- */
-int walk_kernel_page_table_range_unlocked(unsigned long start, unsigned long end,
-		const struct mm_walk_ops *ops, pgd_t *pgd, void *private);
+Instead of relying that tx/rx_len are set to 0.
+> > +	}
+> > +
+> > +	for (i = 0; i < xfer->ncmds; i++) {
+> > +		switch (xfer->cmds[i].error) {
+> > +		case CMDR_NO_ERROR:
+> > +			break;
+> > +
+> > +		case CMDR_CE0_ERROR:
+> > +		case CMDR_CE2_ERROR:
+> > +		case CMDR_NACK_RESP:
+> > +		case CMDR_UDA_ERROR:
+> > +			ret = -EIO;
+> > +			break;
+> > +
+> > +		default:
+> > +			ret = -EINVAL;
+> > +			break;
+> > +		}
+> > +	}
+> > +
+> > +	xfer->ret = ret;
+> > +
+> > +	if (xfer->ncmds_comp != xfer->ncmds)
+> > +		return;
+> > +
+> > +	complete(&xfer->comp);
+> > +
+> > +	xfer = list_first_entry_or_null(&master->xferqueue.list,
+> > +					struct adi_i3c_xfer, node);
+> > +	if (xfer)
+> > +		list_del_init(&xfer->node);
+> > +
+> > +	master->xferqueue.cur = xfer;
+> > +	adi_i3c_master_start_xfer_locked(master);
+> > +}
+> > +
+> > +static void adi_i3c_master_queue_xfer(struct adi_i3c_master *master,
+> > +				      struct adi_i3c_xfer *xfer)
+> > +{
+> > +	unsigned long flags;
+> > +
+> > +	init_completion(&xfer->comp);
+> > +	spin_lock_irqsave(&master->xferqueue.lock, flags);
+> 
+> suggest use guard(spinlock_irqsave)
+> 
+Sure!
+> > +	if (master->xferqueue.cur) {
+> > +		list_add_tail(&xfer->node, &master->xferqueue.list);
+> > +	} else {
+> > +		master->xferqueue.cur = xfer;
+> > +		adi_i3c_master_start_xfer_locked(master);
+> > +	}
+> > +	spin_unlock_irqrestore(&master->xferqueue.lock, flags);
+> > +}
+> > +
+> > +static void adi_i3c_master_unqueue_xfer(struct adi_i3c_master *master,
+> > +					struct adi_i3c_xfer *xfer)
+> > +{
+> > +	unsigned long flags;
+> > +
+> > +	spin_lock_irqsave(&master->xferqueue.lock, flags);
+> > +	if (master->xferqueue.cur == xfer)
+> > +		master->xferqueue.cur = NULL;
+> > +	else
+> > +		list_del_init(&xfer->node);
+> > +
+> > +	writel(0x01, master->regs + REG_ENABLE);
+> > +	writel(0x00, master->regs + REG_ENABLE);
+> > +	writel(IRQ_PENDING_CMDR_PENDING, master->regs + REG_IRQ_MASK);
+> > +
+> > +	spin_unlock_irqrestore(&master->xferqueue.lock, flags);
+> > +}
+> > +
+> > +static enum i3c_error_code adi_i3c_cmd_get_err(struct adi_i3c_cmd *cmd)
+> > +{
+> > +	switch (cmd->error) {
+> > +	case CMDR_CE0_ERROR:
+> > +		return I3C_ERROR_M0;
+> > +
+> > +	case CMDR_CE2_ERROR:
+> > +	case CMDR_NACK_RESP:
+> > +		return I3C_ERROR_M2;
+> > +
+> > +	default:
+> > +		break;
+> > +	}
+> > +
+> > +	return I3C_ERROR_UNKNOWN;
+> > +}
+> > +
+> > +static int adi_i3c_master_send_ccc_cmd(struct i3c_master_controller *m,
+> > +				       struct i3c_ccc_cmd *cmd)
+> > +{
+> > +	struct adi_i3c_master *master = to_adi_i3c_master(m);
+> > +	struct adi_i3c_xfer *xfer;
+> > +	struct adi_i3c_cmd *ccmd;
+> > +
+> > +	xfer = adi_i3c_master_alloc_xfer(master, 1);
+> > +	if (!xfer)
+> > +		return -ENOMEM;
+> > +
+> > +	ccmd = xfer->cmds;
+> > +	ccmd->cmd1 = CMD1_FIFO_CCC(cmd->id);
+> > +	ccmd->cmd0 = CMD0_FIFO_IS_CCC |
+> > +		     CMD0_FIFO_LEN(cmd->dests[0].payload.len);
+> > +
+> > +	if (cmd->id & I3C_CCC_DIRECT)
+> > +		ccmd->cmd0 |= CMD0_FIFO_DEV_ADDR(cmd->dests[0].addr);
+> > +
+> > +	if (cmd->rnw) {
+> > +		ccmd->cmd0 |= CMD0_FIFO_RNW;
+> > +		ccmd->rx_buf = cmd->dests[0].payload.data;
+> > +		ccmd->rx_len = cmd->dests[0].payload.len;
+> > +	} else {
+> > +		ccmd->tx_buf = cmd->dests[0].payload.data;
+> > +		ccmd->tx_len = cmd->dests[0].payload.len;
+> > +	}
+> > +
+> > +	adi_i3c_master_queue_xfer(master, xfer);
+> > +	if (!wait_for_completion_timeout(&xfer->comp, msecs_to_jiffies(1000)))
+> > +		adi_i3c_master_unqueue_xfer(master, xfer);
+> > +
+> > +	cmd->err = adi_i3c_cmd_get_err(&xfer->cmds[0]);
+> > +	kfree(xfer);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int adi_i3c_master_priv_xfers(struct i3c_dev_desc *dev,
+> > +				     struct i3c_priv_xfer *xfers,
+> > +				     int nxfers)
+> > +{
+> > +	struct i3c_master_controller *m = i3c_dev_get_master(dev);
+> > +	struct adi_i3c_master *master = to_adi_i3c_master(m);
+> > +	struct adi_i3c_xfer *xfer;
+> > +	int i, ret;
+> > +
+> > +	for (i = 0; i < nxfers; i++) {
+> > +		if (xfers[i].len > CMD0_FIFO_LEN_MAX)
+> > +			return -EOPNOTSUPP;
+> > +	}
+> > +
+> > +	if (!nxfers)
+> > +		return 0;
+> > +
+> > +	xfer = adi_i3c_master_alloc_xfer(master, nxfers);
+> > +	if (!xfer)
+> > +		return -ENOMEM;
+> > +
+> > +	for (i = 0; i < nxfers; i++) {
+> > +		struct adi_i3c_cmd *ccmd = &xfer->cmds[i];
+> > +
+> > +		ccmd->cmd0 = CMD0_FIFO_DEV_ADDR(dev->info.dyn_addr);
+> > +
+> > +		if (xfers[i].rnw) {
+> > +			ccmd->cmd0 |= CMD0_FIFO_RNW;
+> > +			ccmd->rx_buf = xfers[i].data.in;
+> > +			ccmd->rx_len = xfers[i].len;
+> > +		} else {
+> > +			ccmd->tx_buf = xfers[i].data.out;
+> > +			ccmd->tx_len = xfers[i].len;
+> > +		}
+> > +
+> > +		ccmd->cmd0 |= CMD0_FIFO_LEN(xfers[i].len);
+> > +
+> > +		if (i < nxfers - 1)
+> > +			ccmd->cmd0 |= CMD0_FIFO_SR;
+> > +
+> > +		if (!i)
+> > +			ccmd->cmd0 |= CMD0_FIFO_BCAST;
+> > +	}
+> > +
+> > +	adi_i3c_master_queue_xfer(master, xfer);
+> > +	if (!wait_for_completion_timeout(&xfer->comp,
+> > +					 msecs_to_jiffies(1000)))
+> > +		adi_i3c_master_unqueue_xfer(master, xfer);
+> > +
+> > +	ret = xfer->ret;
+> > +
+> > +	for (i = 0; i < nxfers; i++)
+> > +		xfers[i].err = adi_i3c_cmd_get_err(&xfer->cmds[i]);
+> > +
+> > +	kfree(xfer);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +struct adi_i3c_i2c_dev_data {
+> > +	u16 id;
+> > +	s16 ibi;
+> > +	struct i3c_generic_ibi_pool *ibi_pool;
+> > +};
+> > +
+> > +static int adi_i3c_master_get_rr_slot(struct adi_i3c_master *master,
+> > +				      u8 dyn_addr)
+> > +{
+> > +	if (!master->free_rr_slots)
+> > +		return -ENOSPC;
+> > +
+> > +	return ffs(master->free_rr_slots) - 1;
+> > +}
+> > +
+> > +static int adi_i3c_master_reattach_i3c_dev(struct i3c_dev_desc *dev, u8 dyn_addr)
+> > +{
+> > +	struct i3c_master_controller *m = i3c_dev_get_master(dev);
+> > +	struct adi_i3c_master *master = to_adi_i3c_master(m);
+> > +	u8 addr;
+> > +
+> > +	addr = dev->info.dyn_addr ? dev->info.dyn_addr : dev->info.static_addr;
+> > +
+> > +	writel(DEV_CHAR_ADDR(dyn_addr), master->regs + REG_DEV_CHAR);
+> > +	writel((readl(master->regs + REG_DEV_CHAR) &
+> > +		~DEV_CHAR_IS_ATTACHED) | DEV_CHAR_WEN,
+> > +	       master->regs + REG_DEV_CHAR);
+> > +
+> > +	writel(DEV_CHAR_ADDR(addr), master->regs + REG_DEV_CHAR);
+> > +	writel(readl(master->regs + REG_DEV_CHAR) |
+> > +	       DEV_CHAR_IS_ATTACHED | DEV_CHAR_WEN,
+> > +	       master->regs + REG_DEV_CHAR);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int adi_i3c_master_attach_i3c_dev(struct i3c_dev_desc *dev)
+> > +{
+> > +	struct i3c_master_controller *m = i3c_dev_get_master(dev);
+> > +	struct adi_i3c_master *master = to_adi_i3c_master(m);
+> > +	struct adi_i3c_i2c_dev_data *data;
+> > +	int slot;
+> > +	u8 addr;
+> > +
+> > +	data = kzalloc(sizeof(*data), GFP_KERNEL);
+> > +	if (!data)
+> > +		return -ENOMEM;
+> > +
+> > +	slot = adi_i3c_master_get_rr_slot(master, dev->info.dyn_addr);
+> > +	if (slot < 0) {
+> > +		kfree(data);
+> > +		return slot;
+> > +	}
+> > +
+> > +	data->ibi = -1;
+> > +	data->id = slot;
+> > +	i3c_dev_set_master_data(dev, data);
+> > +	master->free_rr_slots &= ~BIT(slot);
+> > +
+> > +	addr = dev->info.dyn_addr ? dev->info.dyn_addr : dev->info.static_addr;
+> > +
+> > +	writel(DEV_CHAR_ADDR(addr), master->regs + REG_DEV_CHAR);
+> > +	writel(readl(master->regs + REG_DEV_CHAR) |
+> > +	       DEV_CHAR_IS_ATTACHED | DEV_CHAR_WEN,
+> > +	       master->regs + REG_DEV_CHAR);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void adi_i3c_master_sync_dev_char(struct i3c_master_controller *m)
+> > +{
+> > +	struct adi_i3c_master *master = to_adi_i3c_master(m);
+> > +	struct i3c_dev_desc *i3cdev;
+> > +	u8 addr;
+> > +
+> > +	i3c_bus_for_each_i3cdev(&m->bus, i3cdev) {
+> > +		addr = i3cdev->info.dyn_addr ?
+> > +		       i3cdev->info.dyn_addr : i3cdev->info.static_addr;
+> > +		writel(DEV_CHAR_ADDR(addr), master->regs + REG_DEV_CHAR);
+> > +		writel(readl(master->regs + REG_DEV_CHAR) |
+> > +		       DEV_CHAR_BCR_IBI(i3cdev->info.bcr) | DEV_CHAR_WEN,
+> > +		       master->regs + REG_DEV_CHAR);
+> > +	}
+> > +}
+> > +
+> > +static void adi_i3c_master_detach_i3c_dev(struct i3c_dev_desc *dev)
+> > +{
+> > +	struct i3c_master_controller *m = i3c_dev_get_master(dev);
+> > +	struct adi_i3c_master *master = to_adi_i3c_master(m);
+> > +	struct adi_i3c_i2c_dev_data *data = i3c_dev_get_master_data(dev);
+> > +	u8 addr;
+> > +
+> > +	addr = dev->info.dyn_addr ? dev->info.dyn_addr : dev->info.static_addr;
+> > +
+> > +	writel(DEV_CHAR_ADDR(addr), master->regs + REG_DEV_CHAR);
+> > +	writel((readl(master->regs + REG_DEV_CHAR) &
+> > +		~DEV_CHAR_IS_ATTACHED) | DEV_CHAR_WEN,
+> > +	       master->regs + REG_DEV_CHAR);
+> > +
+> > +	i3c_dev_set_master_data(dev, NULL);
+> > +	master->free_rr_slots |= BIT(data->id);
+> > +	kfree(data);
+> > +}
+> > +
+> > +static int adi_i3c_master_attach_i2c_dev(struct i2c_dev_desc *dev)
+> > +{
+> > +	struct i3c_master_controller *m = i2c_dev_get_master(dev);
+> > +	struct adi_i3c_master *master = to_adi_i3c_master(m);
+> > +	struct adi_i3c_i2c_dev_data *data;
+> > +	int slot;
+> > +
+> > +	slot = adi_i3c_master_get_rr_slot(master, 0);
+> > +	if (slot < 0)
+> > +		return slot;
+> > +
+> > +	data = kzalloc(sizeof(*data), GFP_KERNEL);
+> > +	if (!data)
+> > +		return -ENOMEM;
+> > +
+> > +	data->id = slot;
+> > +	master->free_rr_slots &= ~BIT(slot);
+> > +	i2c_dev_set_master_data(dev, data);
+> > +
+> > +	writel(DEV_CHAR_ADDR(dev->addr) |
+> > +	       DEV_CHAR_IS_I2C | DEV_CHAR_IS_ATTACHED | DEV_CHAR_WEN,
+> > +	       master->regs + REG_DEV_CHAR);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void adi_i3c_master_detach_i2c_dev(struct i2c_dev_desc *dev)
+> > +{
+> > +	struct i3c_master_controller *m = i2c_dev_get_master(dev);
+> > +	struct adi_i3c_master *master = to_adi_i3c_master(m);
+> > +	struct adi_i3c_i2c_dev_data *data = i2c_dev_get_master_data(dev);
+> > +
+> > +	writel(DEV_CHAR_ADDR(dev->addr) |
+> > +	       DEV_CHAR_IS_I2C | DEV_CHAR_WEN,
+> > +	       master->regs + REG_DEV_CHAR);
+> > +
+> > +	i2c_dev_set_master_data(dev, NULL);
+> > +	master->free_rr_slots |= BIT(data->id);
+> > +	kfree(data);
+> > +}
+> > +
+> > +static void adi_i3c_master_bus_cleanup(struct i3c_master_controller *m)
+> > +{
+> > +	struct adi_i3c_master *master = to_adi_i3c_master(m);
+> > +
+> > +	adi_i3c_master_disable(master);
+> > +}
+> > +
+> > +static void adi_i3c_master_upd_i3c_scl_lim(struct adi_i3c_master *master)
+> > +{
+> > +	struct i3c_master_controller *m = &master->base;
+> > +	struct i3c_bus *bus = i3c_master_get_bus(m);
+> > +	u8 i3c_scl_lim = 0;
+> > +	struct i3c_dev_desc *dev;
+> > +	u8 pp_sg;
+> > +
+> > +	i3c_bus_for_each_i3cdev(bus, dev) {
+> > +		u8 max_fscl;
+> > +
+> > +		max_fscl = max(I3C_CCC_MAX_SDR_FSCL(dev->info.max_read_ds),
+> > +			       I3C_CCC_MAX_SDR_FSCL(dev->info.max_write_ds));
+> > +
+> > +		switch (max_fscl) {
+> > +		case I3C_SDR1_FSCL_8MHZ:
+> > +			max_fscl = PP_SG_6MHZ;
+> > +			break;
+> > +		case I3C_SDR2_FSCL_6MHZ:
+> > +			max_fscl = PP_SG_3MHZ;
+> > +			break;
+> > +		case I3C_SDR3_FSCL_4MHZ:
+> > +			max_fscl = PP_SG_3MHZ;
+> > +			break;
+> > +		case I3C_SDR4_FSCL_2MHZ:
+> > +			max_fscl = PP_SG_1MHZ;
+> > +			break;
+> > +		case I3C_SDR0_FSCL_MAX:
+> > +		default:
+> > +			max_fscl = PP_SG_12MHZ;
+> > +			break;
+> > +		}
+> > +
+> > +		if (max_fscl &&
+> > +		    (i3c_scl_lim > max_fscl || !i3c_scl_lim))
+> > +			i3c_scl_lim = max_fscl;
+> > +	}
+> > +
+> > +	if (!i3c_scl_lim)
+> > +		return;
+> > +
+> > +	master->i3c_scl_lim = i3c_scl_lim - 1;
+> > +
+> > +	pp_sg = readl(master->regs + REG_OPS) &
+> > +		  ~REG_OPS_PP_SG_MASK;
+> > +
+> > +	pp_sg |= REG_OPS_SET_SG(master->i3c_scl_lim);
+> > +
+> > +	writel(pp_sg, master->regs + REG_OPS);
+> > +}
+> > +
+> > +static void adi_i3c_master_get_features(struct adi_i3c_master *master,
+> > +					unsigned int slot,
+> > +					struct i3c_device_info *info)
+> > +{
+> > +	memset(info, 0, sizeof(*info));
+> > +
+> > +	info->dyn_addr = 0x31;
+> > +	info->dcr = 0x00;
+> > +	info->bcr = 0x40;
+> > +	info->pid = 0;
+> > +}
+> > +
+> > +static int adi_i3c_master_do_daa(struct i3c_master_controller *m)
+> > +{
+> > +	struct adi_i3c_master *master = to_adi_i3c_master(m);
+> > +	int ret;
+> > +	u32 irq_mask;
+> > +
+> > +	master->daa.index = 0x8;
+> > +	for (u8 i = 0; i < MAX_DEVS; i++) {
+> 
+> Not sure why need pre-alloc MAX_DEVS address here?
+> 
+Here we just collect 15 free addresses to send during the DAA, the
+allocation only occurs at the "Add I3C devices discovered". This driver
+does not match an dynamic address with a provisioned id, so the payload
+obtained during the DAA is discarded.
+> > +		ret = i3c_master_get_free_addr(m, master->daa.index);
+> > +		if (ret < 0)
+> > +			return -ENOSPC;
+> > +
+> > +		master->daa.index = ret;
+> > +		master->daa.addrs[i] = master->daa.index;
+> > +	}
+> > +	/* Will be reused as index for daa.addrs */
+> > +	master->daa.index = 0;
+> > +
+> > +	irq_mask = readl(master->regs + REG_IRQ_MASK);
+> > +	writel(irq_mask | IRQ_PENDING_DAA_PENDING,
+> > +	       master->regs + REG_IRQ_MASK);
+> > +
+> > +	ret = i3c_master_entdaa_locked(&master->base);
+> > +
+> > +	writel(irq_mask, master->regs + REG_IRQ_MASK);
+> > +
+> > +	/* DAA always finishes with CE2_ERROR or NACK_RESP */
+> > +	if (ret && ret != I3C_ERROR_M2)
+> > +		return ret;
+> > +
+> > +	/* Add I3C devices discovered */
+> > +	for (u8 i = 0; i < master->daa.index; i++)
+> > +		i3c_master_add_i3c_dev_locked(m, master->daa.addrs[i]);
+> > +	/* Sync retrieved devs info with the IP */
+> > +	adi_i3c_master_sync_dev_char(m);
+> > +
+> > +	i3c_master_defslvs_locked(&master->base);
+> > +
+> > +	adi_i3c_master_upd_i3c_scl_lim(master);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int adi_i3c_master_bus_init(struct i3c_master_controller *m)
+> > +{
+> > +	struct adi_i3c_master *master = to_adi_i3c_master(m);
+> > +	struct i3c_device_info info = { };
+> > +	int ret;
+> > +
+> > +	ret = i3c_master_get_free_addr(m, 0);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	adi_i3c_master_get_features(master, 0, &info);
+> > +	ret = i3c_master_set_info(&master->base, &info);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	writel(REG_IBI_CONFIG_LISTEN | ~REG_IBI_CONFIG_ENABLE,
+> > +	       master->regs + REG_IBI_CONFIG);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void adi_i3c_master_handle_ibi(struct adi_i3c_master *master,
+> > +				      u32 ibi)
+> > +{
+> > +	struct adi_i3c_i2c_dev_data *data;
+> > +	struct i3c_ibi_slot *slot;
+> > +	struct i3c_dev_desc *dev;
+> > +	u8 da, id;
+> > +	u8 *mdb;
+> > +
+> > +	da = (ibi >> 17) & GENMASK(6, 0);
+> > +	for (id = 0; id < master->ibi.num_slots; id++) {
+> > +		if (master->ibi.slots[id] &&
+> > +		    master->ibi.slots[id]->info.dyn_addr == da)
+> > +			break;
+> > +	}
+> > +
+> > +	if (id == master->ibi.num_slots)
+> > +		return;
+> > +
+> > +	dev = master->ibi.slots[id];
+> > +	spin_lock(&master->ibi.lock);
+> 
+> use guard(spin_lock);
+> 
+Ack.
+> > +
+> > +	data = i3c_dev_get_master_data(dev);
+> > +	slot = i3c_generic_ibi_get_free_slot(data->ibi_pool);
+> > +	if (!slot)
+> > +		goto out_unlock;
+> > +
+> > +	mdb = slot->data;
+> > +	mdb[0] = (ibi >> 8) & GENMASK(7, 0);
+> > +
+> > +	slot->len = 1;
+> > +	i3c_master_queue_ibi(dev, slot);
+> > +
+> > +out_unlock:
+> > +	spin_unlock(&master->ibi.lock);
+> > +}
+> > +
+> > +static void adi_i3c_master_demux_ibis(struct adi_i3c_master *master)
+> > +{
+> > +	u32 status0;
+> > +
+> > +	for (status0 = readl(master->regs + REG_FIFO_STATUS);
+> > +	     !(status0 & FIFO_STATUS_IBI_EMPTY);
+> > +	     status0 = readl(master->regs + REG_FIFO_STATUS)) {
+> > +		u32 ibi = readl(master->regs + REG_IBI_FIFO);
+> > +
+> > +		adi_i3c_master_handle_ibi(master, ibi);
+> > +	}
+> > +}
+> > +
+> > +static void adi_i3c_master_handle_da_req(struct adi_i3c_master *master)
+> > +{
+> > +	u8 payload0[8];
+> > +	u32 addr;
+> > +
+> > +	/* Clear device characteristics */
+> > +	adi_i3c_master_rd_from_rx_fifo(master, payload0, 6);
+> > +	addr = master->daa.addrs[master->daa.index++];
+> > +	addr = (addr << 1) | !parity8(addr);
+> > +
+> > +	writel(addr, master->regs + REG_SDO_FIFO);
+> > +}
+> > +
+> > +static irqreturn_t adi_i3c_master_irq(int irq, void *data)
+> > +{
+> > +	struct adi_i3c_master *master = data;
+> > +	u32 pending;
+> > +
+> > +	pending = readl_relaxed(master->regs + REG_IRQ_PENDING);
+> > +	if (pending & IRQ_PENDING_CMDR_PENDING) {
+> > +		spin_lock(&master->xferqueue.lock);
+> > +		adi_i3c_master_end_xfer_locked(master, pending);
+> > +		spin_unlock(&master->xferqueue.lock);
+> > +	}
+> > +	if (pending & IRQ_PENDING_IBI_PENDING)
+> > +		adi_i3c_master_demux_ibis(master);
+> > +	if (pending & IRQ_PENDING_DAA_PENDING)
+> > +		adi_i3c_master_handle_da_req(master);
+> > +	writel_relaxed(pending, master->regs + REG_IRQ_PENDING);
+> 
+> this need move just after readl_relaxed().
+> 
+Yes. I had to make a small RTL change to to allow this, since previously
+the irq was sticky until resolved, which is uncommon. Now it is latched
+on the rising edge and only re-sets on the next event rising edge,
+allowing it to be cleared then resolved.
+> > +
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> > +static int adi_i3c_master_i2c_xfers(struct i2c_dev_desc *dev,
+> > +				    struct i2c_msg *xfers,
+> > +				    int nxfers)
+> > +{
+> > +	struct i3c_master_controller *m = i2c_dev_get_master(dev);
+> > +	struct adi_i3c_master *master = to_adi_i3c_master(m);
+> > +	struct adi_i3c_xfer *xfer;
+> > +	int i, ret;
+> > +
+> > +	for (i = 0; i < nxfers; i++) {
+> > +		if (xfers[i].len > CMD0_FIFO_LEN_MAX)
+> > +			return -EOPNOTSUPP;
+> > +		if (xfers[i].flags & I2C_M_TEN)
+> > +			return -EOPNOTSUPP;
+> > +	}
+> > +
+> > +	if (!nxfers)
+> > +		return 0;
+> > +
+> > +	xfer = adi_i3c_master_alloc_xfer(master, nxfers);
+> > +	if (!xfer)
+> > +		return -ENOMEM;
+> > +
+> > +	for (i = 0; i < nxfers; i++) {
+> > +		struct adi_i3c_cmd *ccmd = &xfer->cmds[i];
+> > +
+> > +		ccmd->cmd0 = CMD0_FIFO_DEV_ADDR(xfers[i].addr);
+> > +
+> > +		if (xfers[i].flags & I2C_M_RD) {
+> > +			ccmd->cmd0 |= CMD0_FIFO_RNW;
+> > +			ccmd->rx_buf = xfers[i].buf;
+> > +			ccmd->rx_len = xfers[i].len;
+> > +		} else {
+> > +			ccmd->tx_buf = xfers[i].buf;
+> > +			ccmd->tx_len = xfers[i].len;
+> > +		}
+> > +
+> > +		ccmd->cmd0 |= CMD0_FIFO_LEN(xfers[i].len);
+> > +	}
+> > +
+> > +	adi_i3c_master_queue_xfer(master, xfer);
+> > +	if (!wait_for_completion_timeout(&xfer->comp,
+> > +					 msecs_to_jiffies(1000)))
+> > +		adi_i3c_master_unqueue_xfer(master, xfer);
+> > +
+> > +	ret = xfer->ret;
+> > +	kfree(xfer);
+> > +	return ret;
+> > +}
+> > +
+> > +static int adi_i3c_master_disable_ibi(struct i3c_dev_desc *dev)
+> > +{
+> > +	struct i3c_master_controller *m = i3c_dev_get_master(dev);
+> > +	struct adi_i3c_master *master = to_adi_i3c_master(m);
+> > +	struct i3c_dev_desc *i3cdev;
+> > +	bool enabled = 0;
+> 
+> enabled = false if you use bool type.
+> 
+I will set as u32 as suggested below.
+> > +	int ret;
+> > +
+> > +	ret = i3c_master_disec_locked(m, dev->info.dyn_addr,
+> > +				      I3C_CCC_EVENT_SIR);
+> > +
+> > +	i3c_bus_for_each_i3cdev(&m->bus, i3cdev) {
+> > +		if (dev != i3cdev && i3cdev->ibi)
+> > +			enabled |= i3cdev->ibi->enabled;
+> 
+> if you use | here, suggest use u32 enabled
+> 
+Ack.
+> > +	}
+> > +	if (!enabled) {
+> > +		writel(REG_IBI_CONFIG_LISTEN | ~REG_IBI_CONFIG_ENABLE,
+> > +		       master->regs + REG_IBI_CONFIG);
+> > +		writel(readl(master->regs + REG_IRQ_MASK) | ~IRQ_PENDING_IBI_PENDING,
+> > +		       master->regs + REG_IRQ_MASK);
+> > +	}
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int adi_i3c_master_enable_ibi(struct i3c_dev_desc *dev)
+> > +{
+> > +	struct i3c_master_controller *m = i3c_dev_get_master(dev);
+> > +	struct adi_i3c_master *master = to_adi_i3c_master(m);
+> > +
+> > +	writel(REG_IBI_CONFIG_LISTEN | REG_IBI_CONFIG_ENABLE,
+> > +	       master->regs + REG_IBI_CONFIG);
+> > +
+> > +	writel(readl(master->regs + REG_IRQ_MASK) | IRQ_PENDING_IBI_PENDING,
+> > +	       master->regs + REG_IRQ_MASK);
+> > +
+> > +	return i3c_master_enec_locked(m, dev->info.dyn_addr,
+> > +				      I3C_CCC_EVENT_SIR);
+> > +}
+> > +
+> > +static int adi_i3c_master_request_ibi(struct i3c_dev_desc *dev,
+> > +				      const struct i3c_ibi_setup *req)
+> > +{
+> > +	struct i3c_master_controller *m = i3c_dev_get_master(dev);
+> > +	struct adi_i3c_master *master = to_adi_i3c_master(m);
+> > +	struct adi_i3c_i2c_dev_data *data;
+> > +	unsigned long flags;
+> > +	unsigned int i;
+> > +
+> > +	data = i3c_dev_get_master_data(dev);
+> > +	data->ibi_pool = i3c_generic_ibi_alloc_pool(dev, req);
+> > +	if (IS_ERR(data->ibi_pool))
+> > +		return PTR_ERR(data->ibi_pool);
+> > +
+> > +	spin_lock_irqsave(&master->ibi.lock, flags);
+> > +	for (i = 0; i < master->ibi.num_slots; i++) {
+> > +		if (!master->ibi.slots[i]) {
+> > +			data->ibi = i;
+> > +			master->ibi.slots[i] = dev;
+> > +			break;
+> > +		}
+> > +	}
+> > +	spin_unlock_irqrestore(&master->ibi.lock, flags);
+> > +
+> > +	if (i < master->ibi.num_slots)
+> > +		return 0;
+> > +
+> > +	i3c_generic_ibi_free_pool(data->ibi_pool);
+> > +	data->ibi_pool = NULL;
+> > +
+> > +	return -ENOSPC;
+> > +}
+> > +
+> > +static void adi_i3c_master_free_ibi(struct i3c_dev_desc *dev)
+> > +{
+> > +	struct i3c_master_controller *m = i3c_dev_get_master(dev);
+> > +	struct adi_i3c_master *master = to_adi_i3c_master(m);
+> > +	struct adi_i3c_i2c_dev_data *data = i3c_dev_get_master_data(dev);
+> > +	unsigned long flags;
+> > +
+> > +	spin_lock_irqsave(&master->ibi.lock, flags);
+> > +	master->ibi.slots[data->ibi] = NULL;
+> > +	data->ibi = -1;
+> > +	spin_unlock_irqrestore(&master->ibi.lock, flags);
+> > +
+> > +	i3c_generic_ibi_free_pool(data->ibi_pool);
+> > +}
+> > +
+> > +static void adi_i3c_master_recycle_ibi_slot(struct i3c_dev_desc *dev,
+> > +					    struct i3c_ibi_slot *slot)
+> > +{
+> > +	struct adi_i3c_i2c_dev_data *data = i3c_dev_get_master_data(dev);
+> > +
+> > +	i3c_generic_ibi_recycle_slot(data->ibi_pool, slot);
+> > +}
+> > +
+> > +static const struct i3c_master_controller_ops adi_i3c_master_ops = {
+> > +	.bus_init = adi_i3c_master_bus_init,
+> > +	.bus_cleanup = adi_i3c_master_bus_cleanup,
+> > +	.attach_i3c_dev = adi_i3c_master_attach_i3c_dev,
+> > +	.reattach_i3c_dev = adi_i3c_master_reattach_i3c_dev,
+> > +	.detach_i3c_dev = adi_i3c_master_detach_i3c_dev,
+> > +	.attach_i2c_dev = adi_i3c_master_attach_i2c_dev,
+> > +	.detach_i2c_dev = adi_i3c_master_detach_i2c_dev,
+> > +	.do_daa = adi_i3c_master_do_daa,
+> > +	.supports_ccc_cmd = adi_i3c_master_supports_ccc_cmd,
+> > +	.send_ccc_cmd = adi_i3c_master_send_ccc_cmd,
+> > +	.priv_xfers = adi_i3c_master_priv_xfers,
+> > +	.i2c_xfers = adi_i3c_master_i2c_xfers,
+> > +	.request_ibi = adi_i3c_master_request_ibi,
+> > +	.enable_ibi = adi_i3c_master_enable_ibi,
+> > +	.disable_ibi = adi_i3c_master_disable_ibi,
+> > +	.free_ibi = adi_i3c_master_free_ibi,
+> > +	.recycle_ibi_slot = adi_i3c_master_recycle_ibi_slot,
+> > +};
+> > +
+> > +static const struct of_device_id adi_i3c_master_of_match[] = {
+> > +	{ .compatible = "adi,i3c-master" },
+> > +	{}
+> > +};
+> > +
+> > +static int adi_i3c_master_probe(struct platform_device *pdev)
+> > +{
+> > +	struct adi_i3c_master *master;
+> > +	unsigned int version;
+> > +	int ret, irq;
+> > +
+> > +	master = devm_kzalloc(&pdev->dev, sizeof(*master), GFP_KERNEL);
+> > +	if (!master)
+> > +		return -ENOMEM;
+> > +
+> > +	master->regs = devm_platform_ioremap_resource(pdev, 0);
+> > +	if (IS_ERR(master->regs))
+> > +		return PTR_ERR(master->regs);
+> > +
+> > +	master->clk = devm_clk_get(&pdev->dev, "s_axi_aclk");
+> > +	if (IS_ERR(master->clk))
+> > +		return PTR_ERR(master->clk);
+> > +
+> > +	irq = platform_get_irq(pdev, 0);
+> > +	if (irq < 0)
+> > +		return irq;
+> > +
+> > +	ret = clk_prepare_enable(master->clk);
+> 
+> use devm_clk_get_enabled() instead of devm_clk_get() to simple err handle.
+> 
+Ack.
+> > +	if (ret)
+> > +		goto err_clk_disable;
+> > +
+> > +	version = readl(master->regs + REG_VERSION);
+> > +	if (VERSION_MAJOR(version) != 0) {
+> > +		dev_err(&pdev->dev, "Unsupported IP version %u.%u.%c\n",
+> > +			VERSION_MAJOR(version),
+> > +			VERSION_MINOR(version),
+> > +			VERSION_PATCH(version));
+> > +		ret = -EINVAL;
+> > +		goto err_clk_disable;
+> > +	}
+> > +
+> > +	writel(0x00, master->regs + REG_ENABLE);
+> > +	writel(0x00, master->regs + REG_IRQ_MASK);
+> > +
+> > +	ret = devm_request_irq(&pdev->dev, irq, adi_i3c_master_irq, 0,
+> > +			       dev_name(&pdev->dev), master);
+> > +	if (ret)
+> > +		goto err_clk_disable;
+> 
+> needn't goto if you use devm_clk_get_enabled()
+> 
+> Frank
+Ack.
 
-An alternative would be to have a new parameter that specifies locking to
-walk_kerenl_page_table_range(), but I'd rather not have to churn up all the
-callers yet again :)
-
-> and the patch description can be modified as
-> "
-> It is noted at [1] that KFENCE can manipulate kernel pgtable entries during
-> softirqs. It does this by calling set_memory_valid() -> __change_memory_common().
-> This being a non-sleepable context, we cannot take the init_mm mmap lock.
-> Therefore, add PGWALK_NOLOCK to enable walk_page_range_novma() usage without
-> locks.
-> Currently, apply_to_page_range is being used by __change_memory_common()
-> to change permissions over a range of vmalloc space, without any locking.
-> Patch 2 in this series shifts to the usage of walk_page_range_novma(), hence
-> this patch is needed. We do not need any locks because the vmalloc object
-> has exclusive access to the range, i.e two vmalloc objects do not share
-> the same physical address.
-> "
-
-Thanks for expanding, but this sort of dives into the KFENCE thing without
-explaining why or the context or what it relates to. It's like diving into the
-ocean to look for an oyster but never mentioning the oyster and only talking
-about your wet suit :P
-
->
->
+Best regards,
+Jorge
+> > +
+> > +	platform_set_drvdata(pdev, master);
+> > +
+> > +	master->maxdevs = MAX_DEVS;
+> > +	master->free_rr_slots = GENMASK(master->maxdevs, 1);
+> > +
+> > +	writel(IRQ_PENDING_CMDR_PENDING, master->regs + REG_IRQ_MASK);
+> > +
+> > +	spin_lock_init(&master->ibi.lock);
+> > +	master->ibi.num_slots = 15;
+> > +	master->ibi.slots = devm_kcalloc(&pdev->dev, master->ibi.num_slots,
+> > +					 sizeof(*master->ibi.slots),
+> > +					 GFP_KERNEL);
+> > +	if (!master->ibi.slots) {
+> > +		ret = -ENOMEM;
+> > +		goto err_clk_disable;
+> > +	}
+> > +
+> > +	ret = i3c_master_register(&master->base, &pdev->dev,
+> > +				  &adi_i3c_master_ops, false);
+> > +	if (ret)
+> > +		goto err_clk_disable;
+> > +
+> > +	return 0;
+> > +
+> > +err_clk_disable:
+> > +	clk_disable_unprepare(master->clk);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static void adi_i3c_master_remove(struct platform_device *pdev)
+> > +{
+> > +	struct adi_i3c_master *master = platform_get_drvdata(pdev);
+> > +
+> > +	i3c_master_unregister(&master->base);
+> > +
+> > +	writel(0xff, master->regs + REG_IRQ_PENDING);
+> > +	writel(0x00, master->regs + REG_IRQ_MASK);
+> > +	writel(0x01, master->regs + REG_ENABLE);
+> > +
+> > +	clk_disable_unprepare(master->clk);
+> > +}
+> > +
+> > +static struct platform_driver adi_i3c_master = {
+> > +	.probe = adi_i3c_master_probe,
+> > +	.remove = adi_i3c_master_remove,
+> > +	.driver = {
+> > +		.name = "adi-i3c-master",
+> > +		.of_match_table = adi_i3c_master_of_match,
+> > +	},
+> > +};
+> > +module_platform_driver(adi_i3c_master);
+> > +
+> > +MODULE_AUTHOR("Jorge Marques <jorge.marques@analog.com>");
+> > +MODULE_DESCRIPTION("Analog Devices I3C master driver");
+> > +MODULE_LICENSE("GPL");
 > >
-> > > [1] https://lore.kernel.org/linux-arm-kernel/89d0ad18-4772-4d8f-ae8a-7c48d26a927e@arm.com/
-> > Basically expand upon this information.
+> > --
+> > 2.49.0
 > >
-> > Basically the commit message refers to your usage, but describes a patch
-> > that makes it possible to do unlocked page table walks.
-> >
-> > As I get into below, no pun intended, but this needs to be _locked down_
-> > heavily.
-> >
-> > - Only walk_page_range_novma() should allow it. All other functions should
-> >    return -EINVAL if this is set.
->
-> Sure.
->
-> >
-> > - walk_page_range_novma() should assert we're in the appropriate context
-> >    where this is feasible.
->
-> There should be two conditions: that the mm is init_mm, and the start address
-> belongs to the vmalloc (or module) space. I am a little nervous about the second. On searching
-> throughout the codebase, I could find only vmalloc and module addresses getting
-> modified through set_memory_* API, but I couldn't prove that all such usages
-> are being done on vmalloc/module addresses.
-
-Hmm, yeah that's concerning.
-
->
-> >
-> > - Comments should be updated accordingly.
-> >
-> > - We should assert (at least CONFIG_DEBUG_VM asserts) in every place that
-> >    checks for a VMA that we are not in this lock mode, since this is
-> >    disallowed.
-> >
-> > > Signed-off-by: Dev Jain <dev.jain@arm.com>
-> > > ---
-> > >   include/linux/pagewalk.h |  2 ++
-> > >   mm/pagewalk.c            | 12 ++++++++----
-> > >   2 files changed, 10 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
-> > > index 9700a29f8afb..9bc8853ed3de 100644
-> > > --- a/include/linux/pagewalk.h
-> > > +++ b/include/linux/pagewalk.h
-> > > @@ -14,6 +14,8 @@ enum page_walk_lock {
-> > >   	PGWALK_WRLOCK = 1,
-> > >   	/* vma is expected to be already write-locked during the walk */
-> > >   	PGWALK_WRLOCK_VERIFY = 2,
-> > > +	/* no lock is needed */
-> > > +	PGWALK_NOLOCK = 3,
-> > I'd prefer something very explicitly documenting that, at the very least, this
-> > can only be used for non-VMA cases.
-> >
-> > It's hard to think of a name here, but the comment should be explicit as to
-> > under what circumstances this is allowed.
-> >
-> > >   };
-> > >
-> > >   /**
-> > > diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-> > > index e478777c86e1..9657cf4664b2 100644
-> > > --- a/mm/pagewalk.c
-> > > +++ b/mm/pagewalk.c
-> > > @@ -440,6 +440,8 @@ static inline void process_vma_walk_lock(struct vm_area_struct *vma,
-> > >   	case PGWALK_RDLOCK:
-> > >   		/* PGWALK_RDLOCK is handled by process_mm_walk_lock */
-> > >   		break;
-> > > +	default:
-> > > +		break;
-> > Please no 'default' here, we want to be explicit and cover all cases.
->
-> Sure.
->
-> >
-> > And surely, since you're explicitly only allowing this for non-VMA ranges, this
-> > should be a WARN_ON_ONCE() or something?
->
-> Sounds good, maybe a WARN_ON_ONCE(vma)?
->
-> >
-> > >   	}
-> > >   #endif
-> > >   }
-> > > @@ -640,10 +642,12 @@ int walk_page_range_novma(struct mm_struct *mm, unsigned long start,
-> > >   	 * specified address range from being freed. The caller should take
-> > >   	 * other actions to prevent this race.
-> > >   	 */
-> > All functions other than this should explicitly disallow this locking mode
-> > with -EINVAL checks. I do not want to see this locking mode made available
-> > in a broken context.
-> >
-> > The full comment:
-> >
-> > 	/*
-> > 	 * 1) For walking the user virtual address space:
-> > 	 *
-> > 	 * The mmap lock protects the page walker from changes to the page
-> > 	 * tables during the walk.  However a read lock is insufficient to
-> > 	 * protect those areas which don't have a VMA as munmap() detaches
-> > 	 * the VMAs before downgrading to a read lock and actually tearing
-> > 	 * down PTEs/page tables. In which case, the mmap write lock should
-> > 	 * be hold.
-> > 	 *
-> > 	 * 2) For walking the kernel virtual address space:
-> > 	 *
-> > 	 * The kernel intermediate page tables usually do not be freed, so
-> > 	 * the mmap map read lock is sufficient. But there are some exceptions.
-> > 	 * E.g. memory hot-remove. In which case, the mmap lock is insufficient
-> > 	 * to prevent the intermediate kernel pages tables belonging to the
-> > 	 * specified address range from being freed. The caller should take
-> > 	 * other actions to prevent this race.
-> > 	 */
-> >
-> > Are you walking kernel memory only? Point 1 above explicitly points out why
-> > userland novma memory requires a lock.
-> >
-> > For point 2 you need to indicate why you don't need to consider hotplugging,
->
-> Well, hotunplugging will first offline the physical memory, and since the
-> vmalloc object has the reference to the pages, there is no race.
-
-Right, but fundamentally you are holding vmalloc locks no? So this is what
-protects things? Or more broadly, vmalloc wholly controls its ranges.
-
->
-> > etc.
-> >
-> > But as Ryan points out elsewhere, you should be expanding this comment to
-> > explain your case...
-> >
-> > You should also assert you're in a context where this applies and error
-> > out/WARN if not.
-> >
-> > > -	if (mm == &init_mm)
-> > > -		mmap_assert_locked(walk.mm);
-> > > -	else
-> > > -		mmap_assert_write_locked(walk.mm);
-> > > +	if (ops->walk_lock != PGWALK_NOLOCK) {
-> > I really don't like the idea that you're allowing no lock for userland mappings.
-> >
-> > This should at the very least be:
-> >
-> > if (mm == &init_mm)  {
-> > 	if (ops->walk_lock != PGWALK_NOLOCK)
-> > 		mmap_assert_locked(walk.mm);
-> > } else {
-> > 	mmap_assert_write_locked(walk.mm);
-> > }
->
-> Sure.
->
-> >
-> > > +		if (mm == &init_mm)
-> > > +			mmap_assert_locked(walk.mm);
-> > > +		else
-> > > +			mmap_assert_write_locked(walk.mm);
-> > > +	}
-> > >
-> > >   	return walk_pgd_range(start, end, &walk);
-> > >   }
-> > > --
-> > > 2.30.2
-> > >
-> > We have to be _really_ careful with this stuff. It's very fiddly and
-> > brokenness can be a security issue.
+> 
+> -- 
+> linux-i3c mailing list
+> linux-i3c@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-i3c
