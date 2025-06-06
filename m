@@ -1,83 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1348286883;
-	Fri,  6 Jun 2025 10:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582832356B9;
+	Fri,  6 Jun 2025 10:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749204662; cv=none; b=TdN1wmiMIe2hztKBhZ/O2WTTK5BNShUNL4IOufTgR3PF/7oY33EemnuUZoM70OfS8ObH6tL4I/LG+aVrOChGRHpmyyiuxDhCExbiu4CgR8uJFXV1rgLyCSciWSb6SqWYomKNLRJJ2bzNmCaoB1h0N1vq81PpjSqOVWJoE/oARaQ=
+	t=1749204730; cv=none; b=WlKgn63kPtXbp8CgiMmU9Rk6CeAC6iWwUMmwZY7FZWVycmlfqWJDhctcMmmsgY9kyW5uokvziqJyTgVobku4EQZbL0vZiyioQeZQM0GbOEbYHMi9Se4y0BuNWL/LmDGnD9u3KpfnyJ0u/JZmhVsgfL6spSGDuERUAAiBy/Ys9dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749204662; c=relaxed/simple;
-	bh=QpA/JuCnAP/vFa+RSbOkJBcKz4J+tC4XXGlQAhLxjiY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q4UfznYGbivLKvkQheM+E4iC4I+Xp+tqYbBjlC0cJTFOyuTmk13PfFAOY/eHwtE3XsCjiZyZRI05m9FQfpYHGXQ6uUfhmfa+OsMdVRgyG2S+zmk9ZGPJ8UURPJTrq+SVVpUcBIL9GN/qzuG687sdzk9xOgUW6xA6hR5omb0/rDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kOYV3ygE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749204730; c=relaxed/simple;
+	bh=na3Pb0D7zXPPHmt6QnpL0+q1JshApJET/mF8iH1Bbkg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RCgw4aJYKhOdnOAz1e+KruuhJh3hNjQyDab4M9iWVF4MNKMelQIsS5142F3nECl3DShF3yHJZkNbGLdQQAE60JkwWeQiRf9as2XDbb7ZzHjxsTFCL7hJthu9NYhE2+w8JRjUIgctcCUwbwjNoG9sMbt8jvMw9t/AM0V9yEYJE0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y6b9EnwN; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kOYV3ygE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79D32C4CEEB;
-	Fri,  6 Jun 2025 10:10:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749204662;
-	bh=QpA/JuCnAP/vFa+RSbOkJBcKz4J+tC4XXGlQAhLxjiY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kOYV3ygE1WUo2ThdlO7485Uw/rj45w0Z+n/6w5WbgFyUCXIjsyKtxqHf2YHZO0Hv8
-	 WbPKtRgW3k55PDtqmLWOUmorRkt/FVHsXcRPlM5ZyYNCebTbP+Q4uCa7zdoWaOn2O1
-	 WbPE3oVUkM6WgXPuJMOlqd5WvzgdONu1RXVFeFzL0nqWRUOi3mG4dHgnrBzE/83Mqn
-	 FyKKPmY4pvB6Z7tMVxcKOpNcAeK0soEHiZtQYZhuh00iKPvG3IhxtaXWR/Hhmik34O
-	 gCbYNzdXNCtYHoXL9fEAWqLDFlVb1+xzr5QSZaqBb4CM/pdq0K28lxwY0NR1kAf91W
-	 W7kAAiZVNcUhQ==
-Date: Fri, 6 Jun 2025 12:10:54 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Chuck Lever <chuck.lever@oracle.com>, Alexander Aring <alex.aring@gmail.com>, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Tom Talpey <tom@talpey.com>, Bharath SM <bharathsm@microsoft.com>, 
-	NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
-	Dai Ngo <Dai.Ngo@oracle.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Amir Goldstein <amir73il@gmail.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH RFC v2 04/28] vfs: allow mkdir to wait for delegation
- break on parent
-Message-ID: <20250606-zuzahlen-vervielfachen-8831c5ca8f69@brauner>
-References: <20250602-dir-deleg-v2-0-a7919700de86@kernel.org>
- <20250602-dir-deleg-v2-4-a7919700de86@kernel.org>
- <wqp4ruxfzv47xwz2fca5trvpwg7rxufvd3nlfiu5kfsasqzsih@lutnvxe4ri62>
- <eeefb45bc67182971ae7d3c455a4ecfdec53d640.camel@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y6b9EnwN"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-234ae2bf851so2677325ad.1;
+        Fri, 06 Jun 2025 03:12:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749204728; x=1749809528; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=28Bl/PeHLavR9/zeEbDpLv4eVLtWJGzEYSYvLscWvio=;
+        b=Y6b9EnwNHwwcqpRUz1DDiP6NBlDeIBgNR1VueVoq52JR8ahzAjtlLBHddCs03RLcna
+         ywl8Y+jysr0u6fK1AAnmOD3e1woWnWid6SRNZ4CSfnNLyucZGHlUtd6GScyzWJwWcTIP
+         ZBjSd4MK+EF/K+pVhJwcFNQxEJKT8SlZVgVWJEkJbuO0+O+MSLT9bhLC+dVZI8Z7S/fj
+         roR7/ZMKgYf9p73eAR/bBfwyUfiDvH3Vyiib+UbDdhGsiPza8Jii6KsW/dxxLDtUisbW
+         7dAnuNF1d8XqRklQU3n+H7HHq+6wC/fmnRnSNIlewtKQT4NBMquLL1RTMVdokes82iNm
+         TnZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749204728; x=1749809528;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=28Bl/PeHLavR9/zeEbDpLv4eVLtWJGzEYSYvLscWvio=;
+        b=rWPvGzcBtBehIXefR4hHUftr6a/8caLSJY3XNeh2eyQLbMh1L5FoTr5CyGHoPeaQTP
+         ZyXei24rRqn6+nvyUepmBZyWPiXlVG5DH84onfvkgCLKr/72nP8f9Wg6H8h2Wmv01IdJ
+         rMoI5qNkpR3e/3Qkkz3ewv73ZSLaCMf1Tqvg8J7bGirLQhwBpcxtNwFj60KMO1IMO58P
+         SCnz0Md0PX9g3WtwtACO/8wdGBoSPLlUfzMdhXJU5kJmmNti2s1F10P/xbnrO4hnsZUr
+         ijU6qMq2TCiK3oHZ4WvkC5BfoWI/+QhOwU2f3GnSuEDVpUDIszxjcZyFPChVnm2SAoVk
+         i2xQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV794qW1K8j4SEa/K+GFmhQHRxd8fi7OWQRRJtlQ/LDs3CcIhbYgJUX0pkwUCvNwgSENy/dUIVp7qXgd8YKyTE=@vger.kernel.org, AJvYcCVB77cpz9P8wcmxlucNrAPu6WeSipHcncrF7uT+Z8LMtiJWYqiiq41lhW2OGaozxUOYn/BMBb3KgJY=@vger.kernel.org, AJvYcCVBB6sZ68bgFEOVLPtp/DqhmES8Xlz+7RKL3+T2tNiv49tHaLYrv/BY1FUHqlBJ/ZHxZ+o8Gu08WNMsUpY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYYeFmUxT2BTN7ETzlaN5wWREaH5ujuCVfaBgeDUKKjG3MXJmm
+	uPem2THLLCb5ppjcafox+WQ4WvNMv6UpaR0JIzsS+lEWMTiiS61ngd+H1Dv++icAhDV63XuZgHs
+	GEgE3Khr91nT9F1Z7wKe2cU6BdYS59LY=
+X-Gm-Gg: ASbGnctFVk3XGSZmKY+ilO9SC65FwnJVLOHpZWOpDYJjL/ScY6ziKLd9gDv3DwNDKjQ
+	pEDfW//XX6YuEP0IJqMd0VM45QOqkxObVHtYERJ/sZLIvepDZ+dAzx2rxPu4Ns/PuDVa2mjgv5F
+	Ex+eEIqGsyQIJnjECtBuITYXOuyBQiCAO1hTTf5vJO/OY=
+X-Google-Smtp-Source: AGHT+IGDyYS4phFiiRoWWoNoUg7v6sFeimAODFhUFphROTs9ZwAMTwMLYmFrMagrQi7dUStuyt9v5HYVGNf4skLUAYk=
+X-Received: by 2002:a17:902:f683:b0:234:d7b2:2abe with SMTP id
+ d9443c01a7336-236040bb86bmr8720125ad.7.1749204728458; Fri, 06 Jun 2025
+ 03:12:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <eeefb45bc67182971ae7d3c455a4ecfdec53d640.camel@kernel.org>
+References: <8b5fc7889a7aacbd9f1f7412c99f02c736bde190.1749183428.git.viresh.kumar@linaro.org>
+In-Reply-To: <8b5fc7889a7aacbd9f1f7412c99f02c736bde190.1749183428.git.viresh.kumar@linaro.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 6 Jun 2025 12:11:56 +0200
+X-Gm-Features: AX0GCFvHZQ2r_W4WbjaPUXUdMkm3Lfj-HkvnbZrQYwwtbAB-RIXtkAjEDDUZN3M
+Message-ID: <CANiq72nxs4BTFQQcJLgrbgHDzQLbhAA3=qsycdKu=oxc2V=yqw@mail.gmail.com>
+Subject: Re: [PATCH] rust: cpumask: Validate CPU number in set() and clear()
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Yury Norov <yury.norov@gmail.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 05, 2025 at 07:25:38AM -0400, Jeff Layton wrote:
-> On Thu, 2025-06-05 at 13:19 +0200, Jan Kara wrote:
-> > On Mon 02-06-25 10:01:47, Jeff Layton wrote:
-> > > In order to add directory delegation support, we need to break
-> > > delegations on the parent whenever there is going to be a change in the
-> > > directory.
-> > > 
-> > > Rename the existing vfs_mkdir to __vfs_mkdir, make it static and add a
-> > > new delegated_inode parameter. Add a new exported vfs_mkdir wrapper
-> > > around it that passes a NULL pointer for delegated_inode.
-> > > 
-> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > 
-> > FWIW I went through the changes adding breaking of delegations to VFS
-> > directory functions and they look ok to me. Just I dislike the addition of
-> > __vfs_mkdir() (and similar) helpers because over longer term the helpers
-> > tend to pile up and the maze of functions (already hard to follow in VFS)
-> > gets unwieldy. Either I'd try to give it a proper name or (if exposing the
-> > functionality to the external world is fine - which seems it is) you could
-> > just add the argument to vfs_mkdir() and change all the callers? I've
-> > checked and for each of the modified functions there's less than 10 callers
-> > so the churn shouldn't be that big. What do others think?
+On Fri, Jun 6, 2025 at 6:17=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.or=
+g> wrote:
+>
+> Reported-by: Miguel Ojeda <ojeda@kernel.org>
+> Closes: https://lore.kernel.org/all/87qzzy3ric.fsf@kernel.org/
 
-If it's just a few callers we should just add the argument.
+The URL is wrong, please point to the original report:
+
+    https://lore.kernel.org/rust-for-linux/CANiq72k3ozKkLMinTLQwvkyg9K=3DBe=
+Rxs1oYZSKhJHY-veEyZdg@mail.gmail.com/
+
+I would also suggest adding Inspired-by or Debugged-by or Suggested-by
+or similar for Boqun, since he figured out the root issue.
+
+Thanks!
+
+Cheers,
+Miguel
