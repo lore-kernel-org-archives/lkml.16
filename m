@@ -1,137 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C1B126C17;
-	Fri,  6 Jun 2025 15:33:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF4A17A2F0
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 15:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749223990; cv=none; b=akSLRL8ThNN9qerhMBqTEcDvRrxrEQs42uhRU2NEfWx0I3XRd2af5ZjbzJuweGjw0nswqpRPSQuflAIo0XoeWGUD2HhAlMSSjF12UQi7mNiZf5bESqrNx1Mwf2vgbQqZm4Y6R4nTp/CUUQzrPlX4KTej8J+VPKHafsnN23gTW9A=
+	t=1749224044; cv=none; b=K8IvGqdacxWomRmFV3rSMZinKV+GYDXuoeK+TIQwD+4iWr11GKEmipNWDIG9KWmtAU/2OXxGSvqlWLcEkc6VR654vpg/7GKX8lZ90MCQE50LvfuqHsPWwRQ0NH3ESzZ73NYtrWWObNsL1Iazj+NSnu0UFbvF9tr68Jt8vkLaeNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749223990; c=relaxed/simple;
-	bh=eFI9xeUFmF4rI2dCK4V9G58Eni9zAREHZy6uDgy3Crs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Z0XXBDBcbo3XByNK7dl/PIoWM7pCJg8ZS0wh0LG2qGOi8ThiMxi/1DxZcmNJmiHIJcA/6Ew3d1cuUYFV5Fif7UxOT1bqPhZwYeOqc0zBH8v90Ql7nzgQOHtHcVwrUpu76Artd1bGJOFcw7u0a1hHgPNDE+0dDYd3jyZjaTSbrFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y9sY+4Vw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749224044; c=relaxed/simple;
+	bh=6zGH2THaO++Hoe2Pq3QI6AhoAcscA0m3XSJOahn94Qw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HRsmgyo7Q/ORFNNkAxRvqwVfuf/8iqQOHxCUbGVCVYA+LimTJqyLmlDnN2uP+rxDxtFBwnD446LEOvr7ypZTg/FfuHSpPmGYGVwcdT2hnMcVF/Dsp5DgLLmyVe2ZCrqtxOj50WRUmhn6vBD9VbVyTDxdmVmOi/m9jG690cQ4FUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=BlffJf/D; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=hGHpgx7E; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=BlffJf/D; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=hGHpgx7E; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y9sY+4Vw"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1A19BC4CEED;
-	Fri,  6 Jun 2025 15:33:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749223990;
-	bh=eFI9xeUFmF4rI2dCK4V9G58Eni9zAREHZy6uDgy3Crs=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=Y9sY+4Vwylp42SVCseYf+Xs9IllAuZ7nyJjRbl/gVeQ/Lacg9NXvsA5rIMajjzOb3
-	 tAlhbSHPpYoil4TaQXo/NwCzJgQduIzrTl06AL6itN5GOfk+nFdMeZc2Zop+DZD+g7
-	 gcSG+GcG83cbNq9MTnd4T9FkCa5ZOFPw/5fL7Pmvui6kzsRwALF9Px/bQpdi8WRB3X
-	 R3cvH2IPzoZNtPyJGqSvF3/BLlVjnuA3ARUiEpWfL8wPxEKtiYPjMznE42xUMzWrlh
-	 rBkR9tO5GzNlwyXHjJEXwjRvD4/JK0pIvwYiWVa9YLa1JcN4mZpplJGIuMCB2uHQjl
-	 JOD0AEZJgZdSg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0664AC61CE7;
-	Fri,  6 Jun 2025 15:33:10 +0000 (UTC)
-From: Haochen Tong via B4 Relay <devnull+i.hexchain.org@kernel.org>
-Date: Fri, 06 Jun 2025 23:33:03 +0800
-Subject: [PATCH] Bluetooth: btusb: Add a new VID/PID 2c7c/7009 for MT7925
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="BlffJf/D";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="hGHpgx7E";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="BlffJf/D";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="hGHpgx7E"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 30C701F7AF;
+	Fri,  6 Jun 2025 15:34:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749224041; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=SlwW0J0385Y0bArYP2SUZCYXr9QqXS7xayaGmcRxHrI=;
+	b=BlffJf/DBrN5guDiHTn0NQPpKU7mMuHbwBoSgvGqSJD+AhxjnE85osPIFTdzS2ph5vH8ny
+	wrILZp4VyPV0yO+osD9vJaNwOXVDnW5E+vSyuiZ9STCTuEYfrod06qX9sA3cz52fOh15tG
+	AxaWABKIcXvwfUMPEikLBL3weUsOXZk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749224041;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=SlwW0J0385Y0bArYP2SUZCYXr9QqXS7xayaGmcRxHrI=;
+	b=hGHpgx7EGs+9pq7TLA28HHzDvffqXl+pWlyrywYRA25G2gCoCgYcAwBsyHtlrM0tYQA88w
+	wh3wuaYX5H13mKAw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749224041; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=SlwW0J0385Y0bArYP2SUZCYXr9QqXS7xayaGmcRxHrI=;
+	b=BlffJf/DBrN5guDiHTn0NQPpKU7mMuHbwBoSgvGqSJD+AhxjnE85osPIFTdzS2ph5vH8ny
+	wrILZp4VyPV0yO+osD9vJaNwOXVDnW5E+vSyuiZ9STCTuEYfrod06qX9sA3cz52fOh15tG
+	AxaWABKIcXvwfUMPEikLBL3weUsOXZk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749224041;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=SlwW0J0385Y0bArYP2SUZCYXr9QqXS7xayaGmcRxHrI=;
+	b=hGHpgx7EGs+9pq7TLA28HHzDvffqXl+pWlyrywYRA25G2gCoCgYcAwBsyHtlrM0tYQA88w
+	wh3wuaYX5H13mKAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F389C1336F;
+	Fri,  6 Jun 2025 15:34:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id f5UjO2gKQ2gaLQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 06 Jun 2025 15:34:00 +0000
+Message-ID: <2b6cce1b-5ca4-49d2-8a33-aeae1543ddc6@suse.cz>
+Date: Fri, 6 Jun 2025 17:34:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250606-btusb-mt7925-add-v1-1-9b64bfa86ea4@hexchain.org>
-X-B4-Tracking: v=1; b=H4sIAC4KQ2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDMwMz3aSS0uIk3dwSc0sjU93ElBRd4yRL00RLM3NjCzNLJaC2gqLUtMw
- KsJHRsbW1ANE/BQhiAAAA
-X-Change-ID: 20250606-btusb-mt7925-add-3b95a9673869
-To: Marcel Holtmann <marcel@holtmann.org>, 
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749223989; l=3127;
- i=i@hexchain.org; s=hitori; h=from:subject:message-id;
- bh=l1pzEMSqiCKHnCKcovE0KP8Jz664l6WVWK2Fa8hLWhY=;
- b=CXITlyYQ4OL76dWZM3RLlobupw/4ikv4zkqcYbPCxMnlwLo6C0qf5KFCMg924Z6zYq5zmg51+
- +GB8fdHiO1XBU4Yks3v2bf6/a60SPfjdM01L8feI2uV6+vVDDF2r2mB
-X-Developer-Key: i=i@hexchain.org; a=ed25519;
- pk=PyxHSC4BlFPXyw6JBia4ophgQYawC9AZWZKF9uDPsz0=
-X-Endpoint-Received: by B4 Relay for i@hexchain.org/hitori with auth_id=428
-X-Original-From: Haochen Tong <i@hexchain.org>
-Reply-To: i@hexchain.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] mm/memory: ensure fork child sees coherent memory
+ snapshot
+Content-Language: en-US
+To: Jann Horn <jannh@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
+ Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250603-fork-tearing-v1-0-a7f64b7cfc96@google.com>
+ <20250603-fork-tearing-v1-1-a7f64b7cfc96@google.com>
+ <ba208d76-7992-4c70-be8f-49082001f194@suse.cz>
+ <CAG48ez1R7v-L-L33nJUXtj_Y=SKyyFcU8amLs0dQ6ecuC3xMWA@mail.gmail.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ m6M14QORSWTLRg==
+In-Reply-To: <CAG48ez1R7v-L-L33nJUXtj_Y=SKyyFcU8amLs0dQ6ecuC3xMWA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-From: Haochen Tong <i@hexchain.org>
+On 6/6/25 14:55, Jann Horn wrote:
+> On Thu, Jun 5, 2025 at 9:33 AM Vlastimil Babka <vbabka@suse.cz> wrote:
+> + *  - Before mmap_write_unlock(), a TLB flush ensures that parent threads can't
+> + *    write to copy-on-write pages anymore.
+> + *  - Before dup_mmap() copies page contents (which happens rarely), the
+> + *    parent's PTE for the page is made read-only and a TLB flush is issued, so
+> + *    subsequent writes are delayed until mmap_write_unlock().
+> 
+> But I guess this way makes it hard to review patch 1/2 individually.
+> Should I just squash the two patches together, and then write in the
+> commit message "see the comment blocks I'm adding for the fix
 
-Adds a new entry with VID 2c7c and PID 7009 for MediaTek MT7925
-Bluetooth chip.
+That would be good unless it makes it increases the conflicts in stable
+backports.
 
-The device information from /sys/kernel/debug/usb/devices is provided
-below.
+> approach"? Or is there value in repeating the explanation in the
+> commit message?
 
-T:  Bus=03 Lev=01 Prnt=01 Port=04 Cnt=02 Dev#=  3 Spd=480  MxCh= 0
-D:  Ver= 2.10 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs=  1
-P:  Vendor=2c7c ProdID=7009 Rev= 1.00
-S:  Manufacturer=MediaTek Inc.
-S:  Product=Wireless_Device
-S:  SerialNumber=000000000
-C:* #Ifs= 3 Cfg#= 1 Atr=e0 MxPwr=100mA
-A:  FirstIf#= 0 IfCount= 3 Cls=e0(wlcon) Sub=01 Prot=01
-I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=81(I) Atr=03(Int.) MxPS=  16 Ivl=125us
-E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=83(I) Atr=01(Isoc) MxPS=   0 Ivl=1ms
-E:  Ad=03(O) Atr=01(Isoc) MxPS=   0 Ivl=1ms
-I:  If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=83(I) Atr=01(Isoc) MxPS=   9 Ivl=1ms
-E:  Ad=03(O) Atr=01(Isoc) MxPS=   9 Ivl=1ms
-I:  If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  17 Ivl=1ms
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  17 Ivl=1ms
-I:  If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  25 Ivl=1ms
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  25 Ivl=1ms
-I:  If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  33 Ivl=1ms
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  33 Ivl=1ms
-I:  If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  49 Ivl=1ms
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  49 Ivl=1ms
-I:  If#= 1 Alt= 6 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-E:  Ad=83(I) Atr=01(Isoc) MxPS=  63 Ivl=1ms
-E:  Ad=03(O) Atr=01(Isoc) MxPS=  63 Ivl=1ms
-I:* If#= 2 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=(none)
-E:  Ad=8a(I) Atr=03(Int.) MxPS=  64 Ivl=125us
-E:  Ad=0a(O) Atr=03(Int.) MxPS=  64 Ivl=125us
-I:  If#= 2 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=(none)
-E:  Ad=8a(I) Atr=03(Int.) MxPS= 512 Ivl=125us
-E:  Ad=0a(O) Atr=03(Int.) MxPS= 512 Ivl=125us
+Depending on the above, if the stable fix needs to stay minimal, it would be
+valuable to make it more self-contained by repeating that in the commit
+message. So that the LLM has an easier job marking it as a CVE. </sarcasm>
 
-Signed-off-by: Haochen Tong <i@hexchain.org>
----
- drivers/bluetooth/btusb.c | 2 ++
- 1 file changed, 2 insertions(+)
+Vlastimil
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 9ab661d2d1e69028061fa3accd5106f481094100..e4a45596762f8c7d8ba10b4107d6e6f2203188e2 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -725,6 +725,8 @@ static const struct usb_device_id quirks_table[] = {
- 						     BTUSB_WIDEBAND_SPEECH },
- 	{ USB_DEVICE(0x13d3, 0x3630), .driver_info = BTUSB_MEDIATEK |
- 						     BTUSB_WIDEBAND_SPEECH },
-+	{ USB_DEVICE(0x2c7c, 0x7009), .driver_info = BTUSB_MEDIATEK |
-+						     BTUSB_WIDEBAND_SPEECH },
- 
- 	/* Additional Realtek 8723AE Bluetooth devices */
- 	{ USB_DEVICE(0x0930, 0x021d), .driver_info = BTUSB_REALTEK },
-
----
-base-commit: e271ed52b344ac02d4581286961d0c40acc54c03
-change-id: 20250606-btusb-mt7925-add-3b95a9673869
-
-Best regards,
--- 
-Haochen Tong <i@hexchain.org>
-
+>> > Fixes: 70e806e4e645 ("mm: Do early cow for pinned pages during fork() for ptes")
+>> > Cc: stable@vger.kernel.org
+>> > Signed-off-by: Jann Horn <jannh@google.com>
+>>
+>> Given how the fix seems to be localized to the already rare slowpath and
+>> doesn't require us to pessimize every trivial fork(), it seems reasonable to
+>> me even if don't have a concrete example of a sane code in the wild that's
+>> broken by the current behavior, so:
+>>
+>> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> 
+> Thanks!
 
