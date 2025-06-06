@@ -1,100 +1,200 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940B613A258;
-	Fri,  6 Jun 2025 14:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4C72B9A5;
+	Fri,  6 Jun 2025 14:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749219662; cv=none; b=szEwgja8x8i44iBqOB9icFSGxc1iYcqHSfl52KbETzTmIMzOKqCA+ZhwD7CtMXUZfYaakpx0Au+/3bqTAPk72A4PVDDF792ZbraJLVY9hGohRA+u0Qo6t8v4nIEbaMm486RPe1LZn3CRLb2159l15WBFuCBrXr1fI6MgO5SbWWU=
+	t=1749219902; cv=none; b=c7LfZzBreeVQvE8HsAJLaIl+W5XpukuC5f/wz3BuZKWByY7sgJfwn/0wCayGgZuJ0sfYIoxgokILr1rw9qtcxVIGyP8PzOM6Wlcu8Ia3VgAeCCoDU4+vTUquw1cOJqQlEZMj9DQ5zRLedQpghpYIgd64CAxGQ+C6wdIGKY7MBWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749219662; c=relaxed/simple;
-	bh=rSP2F/Vp8pAf45QmfKMDtzuSXKBxupSWAhnZGVm31eo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q17u/+7kvhY7Vg6/O0PjJ3EIE9HCrDpuhM8Bi7BGvS2W9J1A+/DOdSLnSf0o+Qoo34ewUKm1HWWMKndajTnFxc0XoQWcZ75lmnzIaWTRc82wA4lhFrXW1AYIjWT52HsxSk1bMj8tKI1Mc6BjMtC0zVRkdUOKdIHerNbAf4t4Au0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qr1QraNu; arc=none smtp.client-ip=209.85.214.175
+	s=arc-20240116; t=1749219902; c=relaxed/simple;
+	bh=iqG/efhZVTgsxHipSyjybtPfHYZOrkqBqAApKV+b51A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hmWLOtkDIl8J5tXkpc0cknmnZ5gvO5pnmAzrGpWPgs4DUvG+wDDJHx5t0SsEr2k5yrHHRfq7a8pqqEqqwdj1W0itFy02xG7UwXOCX+3xKHr8RRwVhBsxFa//PoXueJ1H7aKuwBv20l0iIj08G3eOoo5PSfQq85bJP3HOaN+AU5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M1hOf06h; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qr1QraNu"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22c336fcdaaso18812955ad.3;
-        Fri, 06 Jun 2025 07:21:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M1hOf06h"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-450cf0025c0so15124105e9.3;
+        Fri, 06 Jun 2025 07:25:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749219660; x=1749824460; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7oHF+BaYEidVFkRjLgW1RNqKQ9NAKcb2cnOs0pZlOZI=;
-        b=Qr1QraNuxpm5zmQDlO6oHizRqfeUPmlK+VVtXg8liFA5qQOSKtcKMDRiyVrMPXs4kW
-         F11znNhLYVM/kNh6daLVfgCaqyUFOzi8wfoN4SMubeAS0QGVzc01265hDpWVFW5+evNx
-         CEqkNV5UPxHtc7QJrvxZeeSLajze3EwICA2o7e74+q3nEu1KAvce4B1Ypm4y4U8Nb4yg
-         0fPU43faciW8s/MbMklXf7kZuRAf/DUYk5PqpY+uZaM/eJst87cqGLUy+ZMnVpZhplZl
-         zLJi/J0gF2RiFJcQC2TYbBmiHheoPK6BFrDiMPXUPO5g3ilK8pdH1eaCEZ8/RB1OWa3t
-         GLeA==
+        d=gmail.com; s=20230601; t=1749219899; x=1749824699; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RU2KfMaJ2+9yanxW+f1dhdc9HAZcZembcLZ9Md0lK/k=;
+        b=M1hOf06hHLAgfJl/QcFGhhBrAYllBkimQJ4K6PxswiCFmDfqEDtTMM4L9xvI0AGm1K
+         l2ptklkz9PvQQncx7+nCaGiqzpSgjHgUwrObrnsqANj73VM9DWNewhfc910PbArk/aC4
+         H2JNOYvvhCo5LasFmF0SzPppbic9KOGSDsOnO99+0p64g/9SbPWZTSkdeK/mauxEfW6D
+         A74fqr59v5xnnR+WeAmbTsV+UUf5AaqmUA4b19T6scQkaqHkncTOqSTr803qMyY/3szh
+         TEcAvuyhMfC59LmrIo0WIqFd+6vZ0pr2SxpvOyFecaTkBVG8fD7I3J7l3ehTqXK9clXA
+         kKGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749219660; x=1749824460;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7oHF+BaYEidVFkRjLgW1RNqKQ9NAKcb2cnOs0pZlOZI=;
-        b=jfCibSwIRO+/bS79ASDI8Xvd2DIMnTCVEGJ7CFTulxppqNmu0v2PNXPAeQTYDhxBDA
-         uuziAWsNUHXiztWj5EYMdUDnBHysybXpAk83KMUim9pt1IFp70ic37gZpVeJNhLIjfv1
-         kI7/Jhzc6EamkFAGkNdCAkZu53EEqgYCMSQlzxBOt9COvBwxrw6guGCcqzeSrHwythw0
-         jJqYXXtlGLlsgX27/HIagjpNPJtJr2TY4/+VzBbsfCHKb5KjWyUj9EhOwgESdiuyj1tz
-         4/YJ7nuvYWdPnSuaLX0kYPpmaEuVFnrhuof/G2sbTESBL3C+3ixfJBMcCwYBIgPLWOM6
-         KpPg==
-X-Forwarded-Encrypted: i=1; AJvYcCVxwdMOJUg6lKYqPa4qRDpgHmg6RBcBmXpRIyX+VdLfeSH5nEiLpCPCZJy0RpphdCmeXacC/LPBuyE13Uk=@vger.kernel.org, AJvYcCWo+ABnrM3dsLtTTCWGubU3Y2S96xBReSwvAOlL5zN6Co/YthV0DlCDpDIzDxCLhsoUWTWLUBbM@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgiVXrNStN+68lr9hAdWLcy9y0QCxtycdjXphnC2ORRRujGO+i
-	z1bcX4KU5yQsflZEU3uptUm6/5Shu+s0FLCHnyroIHnWOFv3rtngaL1nLVFyDQ==
-X-Gm-Gg: ASbGncsyCG336FjHkPzcXQ5pb2TEHI0lGpDGWMr5KA5K/mjfPE0ekGs7Hhqj1KeQcuf
-	O+g9F32H0pHAisqpQ6FgHJi+JW6cf159aLxCvyzfWqUArpjOcGD4cVEwGnEPpO1J2yOxFFM0cdk
-	CnQ2mNYiNHSJJToMjW6xVEAWNKm1R3owNnSZrLUbbtAF2oPW4Oizbk0N1L+5bRB+ip/RaFSz81K
-	AnTBCUAj5anLCEiy5nHPpIcHhx4kIwSuRndvOnDT/92nTL6VK7Edqjy/sWC0MdLE9yGY/PGespw
-	VdnW5T35mGvUd3bNVul4jZ5nMLyzoVn9urjSDlXkEG29SPtK0eQ=
-X-Google-Smtp-Source: AGHT+IEV6Xg84XbMRZPliX18VduESPGpoHh056OZEWDuyhWAMYEW6h7oFD9MTeB4Fa5jUSxYd8HJdg==
-X-Received: by 2002:a17:902:d48f:b0:234:b41e:37a4 with SMTP id d9443c01a7336-23601cf5aadmr37529615ad.6.1749219659719;
-        Fri, 06 Jun 2025 07:20:59 -0700 (PDT)
-Received: from localhost ([216.228.127.129])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236032fccc4sm12934765ad.127.2025.06.06.07.20.58
+        d=1e100.net; s=20230601; t=1749219899; x=1749824699;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RU2KfMaJ2+9yanxW+f1dhdc9HAZcZembcLZ9Md0lK/k=;
+        b=OjaDcNC/R+spUJXlwyOVwZCmAhTLcZ4albWh4yQYH3gHPqu7oUNu7pFTBiNTV0DA1p
+         jx4WC1pgqhLEeHMaCNkxEIQ9OftpLZx2fx7dDFG76LPxuW8OP57Mc7Uk8cXPPvPutuya
+         LHzToaB1EZm6Y93HCua+mEXUgC71kDEsEWDI1cxrhZxDQHXltoiJz7FB1LCzfAav58xy
+         SQu6LMWO5oyTS6zqCryV7Q48OXmArCYutXw7QGfCTustAklPxEiPUfw+enm5Uni0yJ6q
+         PMgg5f+0UoGZqHAn9Q3MqvYCE+RC/+Ul6yrOicM474jnFTDj2/1zWXhK4S3GfMX0t/Hd
+         WcAA==
+X-Forwarded-Encrypted: i=1; AJvYcCVvG5XECk4Qj2Bjputcu2LvrsqaKpmpI5FE8e4o+wge//KsA1EahK9WjzYJwGBUnaLNDghOwWTPksP5WE8m@vger.kernel.org, AJvYcCXq/X08mLaOadQL62ox13fX7eMwZe+CfmeDfPBHc/YmGrT/UEIT1T4w/5+FLKBST0QFB7SBIiKDm4M+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyvr37TUGQh/HdMDWSPrZxpYlKtpVHDUa9NSqGPV9yKIA3dYlds
+	pGleM0PkllqrDu/jDy19f9EqeIJCD/8XkH7qG5qOQiqd3ZQ1otwhtZUs
+X-Gm-Gg: ASbGncvupCoQCO+iDi4Xn30AKHN6Lt6EmVxlDOJKsp7wjcrT746eOrXfW5D90zqmRBP
+	xetkzTfyNFXHSmg+Kat6GlDp7dOyWkemm2onm1bBEGeuPdYoXzNWndRXG8Q0LUFEPwjul3AJoGq
+	ELchZjv/th3CQiUikmsVF4nXO4pvVUAlajRCw3ugo15UmJrWUWUQHEcexi1kAXcxh8nNcSvQL7t
+	jeFcXHZ27wVQeHusEm8/0XOu9d9khH+waakPl2H6anMhgL2/VK0ZptvIEV2FMLDQ07NO+D0z6iy
+	RO/yxiFanFWrLo58Fuml7JvdBLjOtVVgsAGoP2197mAEHBBIrVHzguvpZ8egl0YViWFAK0GfSxk
+	ol9eaDt00HzbOEwRSdQNe14gW
+X-Google-Smtp-Source: AGHT+IEBJ4DoVvw/stlDOgi18RzfrOUTiRlKASLE2QkGIDx36kpF9qdd0AZsPbr8D1+OxjcNDNlTIQ==
+X-Received: by 2002:a05:600c:83cf:b0:442:f4a3:9338 with SMTP id 5b1f17b1804b1-45201404993mr34463405e9.21.1749219898437;
+        Fri, 06 Jun 2025 07:24:58 -0700 (PDT)
+Received: from masalkhi.. (ip-109-43-113-198.web.vodafone.de. [109.43.113.198])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451f82878acsm33018475e9.0.2025.06.06.07.24.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 07:20:59 -0700 (PDT)
-Date: Fri, 6 Jun 2025 10:20:56 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: I Hsin Cheng <richard120310@gmail.com>, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] uapi: bitops: use UAPI-safe variant of BITS_PER_LONG
- again
-Message-ID: <aEL5SIIMxmnrzbDA@yury>
-References: <20250606-uapi-genmask-v1-1-e05cdc2e14c5@linutronix.de>
+        Fri, 06 Jun 2025 07:24:58 -0700 (PDT)
+From: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
+To: gregkh@linuxfoundation.org
+Cc: abd.masalkhi@gmail.com,
+	arnd@arndb.de,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	krzk+dt@kernel.org,
+	linux-kernel@vger.kernel.org,
+	robh@kernel.org
+Subject: Re: [PATCH v3 2/3] misc: add driver for ST M24LR series RFID/NFC EEPROM chips
+Date: Fri,  6 Jun 2025 14:24:56 +0000
+Message-ID: <20250606142456.3140225-1-abd.masalkhi@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <2025060650-tried-widen-4443@gregkh>
+References: <2025060650-tried-widen-4443@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250606-uapi-genmask-v1-1-e05cdc2e14c5@linutronix.de>
 
-On Fri, Jun 06, 2025 at 10:23:57AM +0200, Thomas Weiﬂschuh wrote:
-> Commit 1e7933a575ed ("uapi: Revert "bitops: avoid integer overflow in GENMASK(_ULL)"")
-> did not take in account that the usage of BITS_PER_LONG in __GENMASK() was
-> changed to __BITS_PER_LONG for UAPI-safety in
-> commit 3c7a8e190bc5 ("uapi: introduce uapi-friendly macros for GENMASK").
-> BITS_PER_LONG can not be used in UAPI headers as it derives from the kernel
-> configuration and not from the current compiler invocation.
-> When building compat userspace code or a compat vDSO its value will be
-> incorrect.
-> 
-> Switch back to __BITS_PER_LONG.
-> 
-> Fixes: 1e7933a575ed ("uapi: Revert "bitops: avoid integer overflow in GENMASK(_ULL)"")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+Hi greg,
 
-Thanks Thomas. I applied it in bitmap-for-next. Is that issue critical
-enough for you to send a pull request in -rc2?
+Thank you for the detailed feedback.
 
-Thanks,
-Yury
+>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>
+> Are you sure "or-later" is what you want?  Sorry, I have to ask.
+I will remove the or-later part, lol
+
+>> +
+>> +#define M24LR_PAGESIZE_DEFAULT	  1u
+>> +
+>> +#define M24LR_WRITE_TIMEOUT	  25u
+>> +#define M24LR_READ_TIMEOUT	  (M24LR_WRITE_TIMEOUT)
+>> +
+>> +#define to_sys_entry(attrp)   container_of(attrp, struct m24lr_sys_entry, attr)
+>
+> This shouldn't be needed, something seems odd...
+
+I will remove the M24LR_PAGESIZE_DEFAULT, i do not needed any more
+and about the to_sys_entry, i am using it in show and store callbacks
+
+>> +static ssize_t m24lr_ctl_store(struct device *dev, struct device_attribute *attr,
+>> +			       const char *buf, size_t count)
+>> +{
+>> +	struct m24lr *m24lr = i2c_get_clientdata(to_i2c_client(dev));
+>> +	struct m24lr_sys_entry *entry = to_sys_entry(attr);
+>
+> Why isn't this just going off of the device?  Are you using single
+> show/store callbacks for multiple attribute types?
+>
+>> +	unsigned int reg_size = entry->reg_size;
+>> +	unsigned int reg_addr = entry->reg_addr;
+
+> Ah, you are.  Are you sure you need/want to do that?
+
+For registers that do not require any special processing, it's sufficient
+to directly pass the value to the device. In such cases, a generic store
+callback is appropriate. Other registers that require specific handling
+have dedicated store callbacks. For example, the unlock attribute uses
+its own specialized implementation.
+
+>> +	u8 output[8];
+>> +	int err = 0;
+>> +
+>> +	if (unlikely(!count))
+>
+> likely/unlikely can ONLY be used when you can benchmark the difference
+> in the speed of not having it.  For a sysfs file, that's not needed at
+> all, please remove all of these.
+
+Alright, i will do that
+
+>> +		return -EINVAL;
+>> +
+>> +	if (count > (reg_size << 1))
+>> +		return -EINVAL;
+>> +
+>> +	if (unlikely(!is_power_of_2(reg_size) || reg_size > 8)) {
+>> +		dev_dbg(dev,
+>> +			"Invalid register size: must be a power of 2 and <= 8 bytes (%u)\n",
+>> +			reg_size);
+>> +		return -EIO;
+>
+> Not -EINVAL?  This isn't an I/O error.
+
+The last if statement is primarily for debugging purposes. The reg_size
+value is specified internally by the driver (not user-controlled), so
+this check helps catch potential mistakes in the driver's sysfs entry
+definitions. That's why I used -EIO instead of -EINVAL, as it's not due
+to invalid user input but rather an internal misconfiguration.
+
+>> +	n_sss = chip->n_sss_entries;
+>> +	if (n_sss) {
+>> +		sss = devm_kzalloc(dev, n_sss * sizeof(struct m24lr_sys_entry),
+>> +				   GFP_KERNEL);
+>> +		if (!sss)
+>> +			return -ENOMEM;
+>> +
+>> +		for (i = 0; i < n_sss; i++) {
+>> +			char *name = devm_kasprintf(dev, GFP_KERNEL, "sss%d", i);
+>> +
+>> +			sss[i].reg_size = 1;
+>> +			sss[i].reg_addr = i;
+>> +			sss[i].attr.attr.name = name;
+>> +			sss[i].attr.attr.mode = 0600;
+>> +			sss[i].attr.show = m24lr_ctl_show;
+>> +			sss[i].attr.store = m24lr_ctl_store;
+>> +
+>> +			err = device_create_file(dev, &sss[i].attr);
+>
+> You just raced with userspace and lost. This is not how to do this,
+> please do not dynamically create attributes (hint, this should have
+> errored out as you didn't correctly initialize them), but also:
+
+I didn't fully understand where the race condition comes from. Is
+the issue caused by calling device_create_file() from within the
+probe() function, or is it due to the fact that the attributes
+are being allocated dynamically rather than defined statically?
+
+>
+>> +			if (err)
+>> +				dev_warn(dev,
+>> +					 "Failed to create sysfs entry '%s'\n",
+>> +					 name);
+>
+> You do not unwind properly if an error happens.
+>
+> Just use a default attribute group attached to the driver and the driver
+> core will handle all of that logic for you automatically. Making the
+> code smaller and even better yet, correct :)
+
+Thanks for clarifying this point. I'll rework the implementation
+to use a default attribute_group
+
+Best regards,
+Abd-Alrhman Masalkhi
