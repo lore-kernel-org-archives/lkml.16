@@ -1,153 +1,95 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D1328981B;
-	Fri,  6 Jun 2025 13:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F938288C23;
+	Fri,  6 Jun 2025 13:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749217912; cv=none; b=P1sfK6KgCE6Wj3w1FsgzhJqznbGc6qspEh3+VSaNX9/AprrL1ESv6onSlBXP+ffmH2Yh0HCokV9QxlbbdppA7M7vxPvH5yge14Y7/VGPEHgrfMXQuo+wpJfJaHU3I2bcr0MkJoMW0gsmzr6M4Hbfh2EQeO31DCtrms+8GRCEISI=
+	t=1749218147; cv=none; b=OvygGauS/slV3QDhV37pSTzk55W3sktwT7wagLr0UcxaB1MLaqcBNyddko+NmjaFUW+PpQa7PKAf5aAZ5IPAHdrj3p3mLfEQG4KHJ5oZL1mcnNQ1TQ7oKkHfxfiq9ovnnIQLD+EQ158SPHK0qz+LF3/vI/4CATKBDfW5AU8aC5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749217912; c=relaxed/simple;
-	bh=IIrcHjOJF0WUmf3dP0J4tD5Xi1dZ+WzmtH3IV/CQrbY=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=E07AL849BQejg9mejPPsxMT6OsgXaEiZvcGybRhuxo6H5xCVChWReNt/F9VrkfYrQ8OBSCYrgqgDsXYY4ZdsTsBPo//U1gxG8Td3ACopK5cUSl7RfJkmJNkhYcXjLyroI0uBtC9n/iE2ftJ5YMrLsZHFIzTfO87XynpU9S/j9CA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y4by5+4S; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749218147; c=relaxed/simple;
+	bh=qKrYyKmHvECRvbUNso07tTqZkuOyB6ZTHzexI+wUNgU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L2z/ePelIQWk/4Ts/kzxwPFZoR9xUKsDyI6/OZqtImasU4vBo+1IVuUviJxmZvbUKmXoRakbPQpQOAn+sxC8WE0tZrrbD2RqcYHs12GroV6PA7x/BHs+8qFhSCc7TTzyLBR+RrrLcor3ugJSGJYnzhFIMi+WgzIB3js7E8RUFOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=T5NhYSjd; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4by5+4S"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7482377b086so847443b3a.1;
-        Fri, 06 Jun 2025 06:51:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749217910; x=1749822710; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IIrcHjOJF0WUmf3dP0J4tD5Xi1dZ+WzmtH3IV/CQrbY=;
-        b=Y4by5+4SqzjvREvK80VwpUn9C04PLcGI7p1SlVfvNn0DziG9WGqGhCSIbKFCSw4aNw
-         aQ1FzropuAZFXREBRQ57XfqeI2HL0Jco14cFs8mTLQ67klHXQ/M9C0mhjpfVyu5y16PA
-         ROrjMZa2MHNsvJ01uczrmyDZR0hnVnJWgqr2sEw7M0xhQFZfmPMKRsrmmx+r/4LF5sgf
-         ykO8Iqn8X/Gt9mTwYJPKjlmA0A6RihqC9YIT3Rct3wMYb4axv7jLe1z6y0vNP2McQSaz
-         hLp2qyIqPChJiaVy1EY+f5fuAeRYg7+JUshJoB+kz2GBYyLqR3z6XAW6Rq2V1cX6+9RZ
-         18yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749217910; x=1749822710;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IIrcHjOJF0WUmf3dP0J4tD5Xi1dZ+WzmtH3IV/CQrbY=;
-        b=Uw457F15KbEUEf81Afufv0KfaphMCYAbplpHD2lsIWd3nbH+FL5oNa/+DFjy1wjNLC
-         6RJltSUvy1X3wbHoo6cPXQO+Zak2NzwVsQ1tqUWHOQDep3HJXNVv1NPl2rumQVtD6Sow
-         C1S/aMZoAUDPnwRYbGtnWOQBaVOs2p1W4i1sH6nJIMjuQTL73Z4QIL1ZEFcFyk3mnF4X
-         fYrYvTzPzE24M6ZfN32w3gWAPT51q8ME4+AdxmX28mPwXVnHahV+nbYiAKZQWWpQ97WY
-         R3QZPIX2S/P13zFG9r14s3syHU5hjHOzvA9Sc0yqERsxqnE3D+CI9GADVrzaSPp8mDyS
-         sCCA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEKIaoX/wOFiqkNBLboHAdZNbtE8Iu+tMA5vNCqrmU+bXdfAV0M4yANTl7zPyNlapFc7M6yyQsOaRc68QB@vger.kernel.org, AJvYcCVtdLx+AzUPpxfYiWd4DZZ3ZrUPHwlWYzIE4ccCaFnNJg0XktfxtJIVFrLBlVY7Xm9n7kwDwJcs@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5WXHDsXqepIFT6smOueg49hn94oU6ni97Uha6E0/w/8W3JmTQ
-	yWqbzuS/EblXtVT+EUp9MGthT1cSKnHMUfkZ5QYTfc/ySmOU3V0ZKLtK
-X-Gm-Gg: ASbGnctIqylbLYIsIdb1lKC1Jdv72+TITtCiPR3KZMN/KZrk1bc43Vj+ZYAjcBm+Qxm
-	VesF9T7KxuF3zLBKM980EPNFVgALkUJV7gDCtFhqHAkUxO2dIvqNVtn3wEtq7AKfkh6/YntKuHi
-	U/n/oGg3sv1g6wZSPaLXvOkw8K8AdDvrCWn0S4OMQ0pFPx8yhPq5bQL2tq8mSLLFR0l14iGpwg4
-	I0Ly75p2uIvuzl0shx1lNaZHtTjXX51DqNMHQozNS+a+vj5I+39jZnWsq+4/44vmNOOIaZt/o9T
-	FO10MqQ9ShzwmpOe1DtuLDGDEtSS29gnQwJwp/ZB7UxNVYZgXMDdth13TpyUHUyraLERAuhx
-X-Google-Smtp-Source: AGHT+IGhKffUcoovZoLmF4robbIk7xZYJEyrjgrjfdxA9yu1fAwpBy+RuF1KnZIN80fq3t/tsXzygw==
-X-Received: by 2002:a05:6a21:e8c:b0:218:5954:128c with SMTP id adf61e73a8af0-21ee2532c61mr4608410637.21.1749217910233;
-        Fri, 06 Jun 2025 06:51:50 -0700 (PDT)
-Received: from smtpclient.apple ([202.8.105.124])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b084f60sm1315192b3a.101.2025.06.06.06.51.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Jun 2025 06:51:49 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="T5NhYSjd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=6dFmZYMvFnPKz7ElX5mkKo2Zv+TMRgVK23txlUfoVfY=; b=T5NhYSjd2nnhmPpsffbFUfP6uC
+	eAPdvN5/SN0+W8vn/INqTew/+ATLDf1rR3/RBPDbaRm6mjXIyOyP8HLGEvFR+3FQV+Vo9iFNGWN/h
+	QJmBgqQOEOoBeJ+/6okvzyJNd9Gu+bHs4IM1KDGCQ0ncCsGduFLMHl54xvqJ7OEgqzrM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uNXXZ-00EuDg-89; Fri, 06 Jun 2025 15:55:25 +0200
+Date: Fri, 6 Jun 2025 15:55:25 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Bartlomiej Dziag <bartlomiejdziag@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	Wojciech Drewek <wojciech.drewek@intel.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Alexis =?iso-8859-1?Q?Lothor=E9?= <alexis.lothore@bootlin.com>,
+	netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: stmmac: Change the busy-wait loops timing
+Message-ID: <9f5f87d6-c7c2-4288-8c02-e57b0d943881@lunn.ch>
+References: <20250606102100.12576-1-bartlomiejdziag@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v0] cgroup: Add lock guard support
-From: Jemmy Wong <jemmywong512@gmail.com>
-In-Reply-To: <fo5le4uonsrv24z5gikojq7hxwaqaidgco25pypnppk5h2czap@egdwx6yte4lf>
-Date: Fri, 6 Jun 2025 21:51:34 +0800
-Cc: Jemmy <jemmywong512@gmail.com>,
- Tejun Heo <tj@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>,
- Martin KaFai Lau <martin.lau@linux.dev>,
- Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>,
- Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>,
- KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>,
- Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>,
- cgroups@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <64D97068-D44C-4B29-9847-82F87A006D14@gmail.com>
-References: <20250605211053.19200-1-jemmywong512@gmail.com>
- <fo5le4uonsrv24z5gikojq7hxwaqaidgco25pypnppk5h2czap@egdwx6yte4lf>
-To: =?utf-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250606102100.12576-1-bartlomiejdziag@gmail.com>
 
-Hi Michal,
+On Fri, Jun 06, 2025 at 12:19:49PM +0200, Bartlomiej Dziag wrote:
+> After writing a new value to the PTP_TAR or PTP_STSUR registers,
+> the driver waits for the addend/adjust operations to complete.
+> Sometimes, the first check operation fails, resulting in
+> a 10 milliseconds busy-loop before performing the next check.
+> Since updating the registers takes much less than 10 milliseconds,
+> the kernel gets stuck unnecessarily. This may increase the CPU usage.
+> Fix that with changing the busy-loop interval to 5 microseconds.
+> The registers will be checked more often.
+> 
+> Signed-off-by: Bartlomiej Dziag <bartlomiejdziag@gmail.com>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+> index e2840fa241f2..f8e1278a1837 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+> @@ -144,11 +144,11 @@ static int config_addend(void __iomem *ioaddr, u32 addend)
+>  	writel(value, ioaddr + PTP_TCR);
+>  
+>  	/* wait for present addend update to complete */
+> -	limit = 10;
+> +	limit = 10000;
+>  	while (limit--) {
+>  		if (!(readl(ioaddr + PTP_TCR) & PTP_TCR_TSADDREG))
+>  			break;
+> -		mdelay(10);
+> +		udelay(5);
 
-> On Jun 6, 2025, at 5:34=E2=80=AFPM, Michal Koutn=C3=BD =
-<mkoutny@suse.com> wrote:
->=20
-> Hello.
->=20
-> On Fri, Jun 06, 2025 at 05:10:53AM +0800, Jemmy Wong =
-<jemmywong512@gmail.com> wrote:
->> This change replaces manual lock acquisition and release with lock =
-guards
->> to improve code robustness and reduce the risk of lock mismanagement.
->> No functional changes to the cgroup logic are introduced.
->=20
-> I like this.
-> Could you possible split it to individual commits to ease the review
-> for: cgroup_mutex, css_set_lock, RCU and the rest?
->=20
+I would actually suggest rewriting this using the macros from iopoll.h.
 
-Thanks for your support. I=E2=80=99ll split the patch into several =
-parts.
+    Andrew
 
-> ...
->> --- a/include/linux/cgroup.h
->> +++ b/include/linux/cgroup.h
->> @@ -382,6 +382,10 @@ static inline void cgroup_put(struct cgroup =
-*cgrp)
->>=20
->> extern struct mutex cgroup_mutex;
->>=20
->> +DEFINE_LOCK_GUARD_0(cgroup_mutex,
->> + mutex_lock(&cgroup_mutex),
->> + mutex_unlock(&cgroup_mutex))
->> +
->> static inline void cgroup_lock(void)
->> {
->> mutex_lock(&cgroup_mutex);
->> @@ -656,6 +660,9 @@ struct cgroup *cgroup_get_from_id(u64 id);
->> struct cgroup_subsys_state;
->> struct cgroup;
->>=20
->> +extern struct mutex cgroup_mutex;
->=20
-> I assume this was because of the BPF code, which wouldn't be needed in
-> the end.
->=20
-
-Yeah, other modules also need cgroup_mutex, cgroup_lock/unlock must be =
-retained.
-
-> ...
->=20
-> Thanks,
-> Michal
-
-Best,=20
-Jemmy
-
+---
+pw-bot: cr
