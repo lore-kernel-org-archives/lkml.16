@@ -1,139 +1,232 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F99524EF6B
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 08:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749198399; cv=none; b=Euyihl7DFSsJjng/6nLKa1j5l9VV3Xmdpbpk29QRrJKrvYMJa6MOrO/54q4oZpbrgo19Kan3btCc/Oar7pS3ZGyDTOj37m1x7rDxvknOkJuFv0G+07T0+LGFePAHGKDN2mMl+3g1WUPuLDKcFXmT2Ua4b9lLNGjDtvfGSEqsD+I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749198399; c=relaxed/simple;
-	bh=D7gHEpfkxQ6Uvt1H4cUoE1Sk1l5EYXiGF0yQ+Dr6ehA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T2NcGeVuxmksM3LrNAFETlkeQbYMiuP6zqMh1+4dZ4rEXFswrzZTXXLDIGJdhj8RC/1VYJundyDfruU8AFUJn/WnEWHrkZ/Cc8pR7mtKAntFaMJQUhW0ddM/+C2+EK4KUisai0gluVn78gkI7s07NJKoapaGvxHEhCJd4f3vPII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RAMqapaE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=joF/cB38; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RAMqapaE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=joF/cB38; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF508283FF6;
+	Fri,  6 Jun 2025 08:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749198417; cv=pass; b=mkpdnf9EvMbc5uHj/ohs0EKHf7FcVFYyXtLFdPqT6moLh8RK4E+Lopil+gMAFc3hPyKr7cJceXJVBRgnxsq74XwgjqohAKa7cns2eiThxA9fQdr0cWrjJ3rEOWDWDWyB0KZK7K8OxCkXBDW6LuuWeEjgYjNLmvrgQeNlNSeRb4c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749198417; c=relaxed/simple;
+	bh=JzybpB9O50HKqd2tQryFsC67T6tQEyKjF0z8lV3FvkI=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oz9IvDi8W4rKnHVL3hIpGC2zzIrJx9G1FtIBjGHcgVsk6VL1Oe3HDC+DSStdEgpRMs+9i5+uPDk8ep40g+bAjCVdwBrKiaTmuouh7XqQter54ZHyPJs3XjvaqPbPkWnNuCuP0FKQH0b7jN+zA/l5maJW3iq0x7hQydzz8xsk24s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=c9OJCCPX; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RAMqapaE";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="joF/cB38";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RAMqapaE";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="joF/cB38"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4B55C1F79E;
-	Fri,  6 Jun 2025 08:26:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749198396; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Mid1kH4OKE9bgaX15SmE1nQ08hTR8IepPOFIfoJ4/zg=;
-	b=RAMqapaEEIGmcfJrQqhT75jIusWqUIiYaxjYJAJVhIHZXAWSzblPaun51QMI5ANaum/nbX
-	X2ROmt9+8ENpsOBYDATsI/3+TkE3z3Wt1DGmd35UhTwkdE4rJZKyZuonK6NztRVZREMRz9
-	zmHAmSOpJ0Jd/VUo94HrIPGGqByT1HY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749198396;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Mid1kH4OKE9bgaX15SmE1nQ08hTR8IepPOFIfoJ4/zg=;
-	b=joF/cB38BB6PyisyaUYzFhPzeZnUHqMCkSM7QplTq1F/RfncfA1ggXfxNNnFK5Ga9c5rDe
-	S31+slPHemjmJQDA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749198396; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Mid1kH4OKE9bgaX15SmE1nQ08hTR8IepPOFIfoJ4/zg=;
-	b=RAMqapaEEIGmcfJrQqhT75jIusWqUIiYaxjYJAJVhIHZXAWSzblPaun51QMI5ANaum/nbX
-	X2ROmt9+8ENpsOBYDATsI/3+TkE3z3Wt1DGmd35UhTwkdE4rJZKyZuonK6NztRVZREMRz9
-	zmHAmSOpJ0Jd/VUo94HrIPGGqByT1HY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749198396;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Mid1kH4OKE9bgaX15SmE1nQ08hTR8IepPOFIfoJ4/zg=;
-	b=joF/cB38BB6PyisyaUYzFhPzeZnUHqMCkSM7QplTq1F/RfncfA1ggXfxNNnFK5Ga9c5rDe
-	S31+slPHemjmJQDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 43E791369F;
-	Fri,  6 Jun 2025 08:26:35 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id RDjUDTumQmgUBgAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Fri, 06 Jun 2025 08:26:35 +0000
-Date: Fri, 6 Jun 2025 10:26:33 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alistair Popple <apopple@nvidia.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v1 1/2] mm/huge_memory: don't mark refcounted pages
- special in vmf_insert_folio_pmd()
-Message-ID: <aEKmOfWDIy14Ub6n@localhost.localdomain>
-References: <20250603211634.2925015-1-david@redhat.com>
- <20250603211634.2925015-2-david@redhat.com>
- <aEKkvdSAplmukcXz@localhost.localdomain>
- <b6a1b97b-39d9-4c9e-ba95-190684fc4074@redhat.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="c9OJCCPX"
+ARC-Seal: i=1; a=rsa-sha256; t=1749198402; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=b350DFtfUedur7zBIMRauTVll3wzUq/8EEXa4/OZnxG4gtK048GBPd7gBlTKV7+QxtNWFmOMdLgbCTq7ca61CNBIMDPzuyNcF7fVuLkv2T+W8DmLB4Y6cRbnJn/sDfiLkP++JzF6JyG8bFg9kKYhFt021kaGwlLLn2G9U2CmnLM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749198402; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
+	bh=RaYpsPgJJHeNg4Z6G85HvxDq+rrSNHiEHejBmAZBSBs=; 
+	b=EJ6G2a+EznvdWSFMcrOZ92fnTeugzxllS4zd13h7jTOg2oR+CIgG5Nfk/zHh/PIvl+t5S8uNS8wCnmVIp1hANxeGRQFkE080kjhogModZ7hmVV+IC/myrDSnQUPQFl06iRUcdTWLQ/XAvf2OFmZQzzVXxV0h9MSUOFgW5k0AB/I=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749198402;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To:Cc;
+	bh=RaYpsPgJJHeNg4Z6G85HvxDq+rrSNHiEHejBmAZBSBs=;
+	b=c9OJCCPXAHT6EhmKgJ6A2wg23RjKUXmZWwGn/+UUqIypKLtpwDBG5YNShBPFkU/S
+	428Z0fjqPBHjLMtw6dzxYtIAokLSiDRN2qVkC+NEi8MLXN9KBhxkimFMYOannJ9BBV2
+	bulOUHREm+9SPPpKO58YV50moLjw28r84Tmzcj/k=
+Received: by mx.zohomail.com with SMTPS id 1749198399941963.5389095677118;
+	Fri, 6 Jun 2025 01:26:39 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: linux-rockchip@lists.infradead.org, linux-sound@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Pei Xiao <xiaopei01@kylinos.cn>
+Subject:
+ Re: [PATCH 2/2] ASOC: rockchip: Use helper function devm_clk_get_enabled()
+Date: Fri, 06 Jun 2025 10:26:36 +0200
+Message-ID: <2895073.PYKUYFuaPT@workhorse>
+In-Reply-To: <3f589ddf-e421-494f-85e5-1adebd19d03a@kylinos.cn>
+References:
+ <cover.1749006565.git.xiaopei01@kylinos.cn> <24654754.ouqheUzb2q@workhorse>
+ <3f589ddf-e421-494f-85e5-1adebd19d03a@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b6a1b97b-39d9-4c9e-ba95-190684fc4074@redhat.com>
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost.localdomain:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, Jun 06, 2025 at 10:23:11AM +0200, David Hildenbrand wrote:
-> See my reply to Dan.
-> 
-> Yet another boolean, yuck. Passing the folio and the pfn, yuck.
-> 
-> (I have a strong opinion here ;) )
+On Friday, 6 June 2025 05:27:13 Central European Summer Time Pei Xiao wrote:
+>=20
+> =E5=9C=A8 2025/6/5 01:42, Nicolas Frattaroli =E5=86=99=E9=81=93:
+> > On Wednesday, 4 June 2025 05:13:30 Central European Summer Time Pei Xia=
+o wrote:
+> >> Since commit 7ef9651e9792 ("clk: Provide new devm_clk helpers for prep=
+ared
+> >> and enabled clocks"), devm_clk_get() and clk_prepare_enable() can now =
+be
+> >> replaced by devm_clk_get_enabled() when driver enables the clocks for =
+the
+> >> whole lifetime of the device. Moreover, it is no longer necessary to
+> >> unprepare and disable the clocks explicitly.
+> >>
+> >> Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
+> >> ---
+> >>  sound/soc/rockchip/rockchip_sai.c | 8 +-------
+> >>  1 file changed, 1 insertion(+), 7 deletions(-)
+> >>
+> >> diff --git a/sound/soc/rockchip/rockchip_sai.c b/sound/soc/rockchip/ro=
+ckchip_sai.c
+> >> index 79b04770da1c..2ec675708681 100644
+> >> --- a/sound/soc/rockchip/rockchip_sai.c
+> >> +++ b/sound/soc/rockchip/rockchip_sai.c
+> >> @@ -1448,16 +1448,12 @@ static int rockchip_sai_probe(struct platform_=
+device *pdev)
+> >>  				     "Failed to get mclk\n");
+> >>  	}
+> >> =20
+> >> -	sai->hclk =3D devm_clk_get(&pdev->dev, "hclk");
+> >> +	sai->hclk =3D devm_clk_get_enabled(&pdev->dev, "hclk");
+> >>  	if (IS_ERR(sai->hclk)) {
+> >>  		return dev_err_probe(&pdev->dev, PTR_ERR(sai->hclk),
+> >>  				     "Failed to get hclk\n");
+> >>  	}
+> >> =20
+> >> -	ret =3D clk_prepare_enable(sai->hclk);
+> >> -	if (ret)
+> >> -		return dev_err_probe(&pdev->dev, ret, "Failed to enable hclk\n");
+> >> -
+> >>  	regmap_read(sai->regmap, SAI_VERSION, &sai->version);
+> >> =20
+> >>  	ret =3D rockchip_sai_init_dai(sai, res, &dai);
+> >> @@ -1512,8 +1508,6 @@ static int rockchip_sai_probe(struct platform_de=
+vice *pdev)
+> >>  	if (pm_runtime_put(&pdev->dev))
+> >>  		rockchip_sai_runtime_suspend(&pdev->dev);
+> >>  err_disable_hclk:
+> >> -	clk_disable_unprepare(sai->hclk);
+> >> -
+> >>  	return ret;
+> >>  }
+> >> =20
+> >>
+> > Please get rid of the err_disable_hclk label, and change the
+> >
+> >     goto err_disable_hclk;
+> >
+> > in the resume failure condition to a=20
+> >
+> >     return ret;
+> May I ask, could we use the dev_err_probe function instead?
+>=20
+> return dev_err_probe(&pdev->dev, ret, "Failed to initialize DAI\n");
 
-ok, I see it was already considered. No more questions then ;-)
+Absolutely, dev_err_probe states the following in its documentation:
+
+    Using this helper in your probe function is totally fine even if @err
+    is known to never be -EPROBE_DEFER.
+
+This means you can use it for every error case in the probe function.
+
+>=20
+>=20
+> @@ -1441,28 +1441,22 @@ static int rockchip_sai_probe(struct platform_dev=
+ice *pdev)
+>                                      "Failed to get mclk\n");
+>         }
+> =20
+> -       sai->hclk =3D devm_clk_get(&pdev->dev, "hclk");
+> +       sai->hclk =3D devm_clk_get_enabled(&pdev->dev, "hclk");
+>         if (IS_ERR(sai->hclk)) {
+>                 return dev_err_probe(&pdev->dev, PTR_ERR(sai->hclk),
+>                                      "Failed to get hclk\n");
+>         }
+> =20
+> -       ret =3D clk_prepare_enable(sai->hclk);
+> -       if (ret)
+> -               return dev_err_probe(&pdev->dev, ret, "Failed to enable h=
+clk\n");
+> -
+>         regmap_read(sai->regmap, SAI_VERSION, &sai->version);
+> =20
+>         ret =3D rockchip_sai_init_dai(sai, res, &dai);
+>         if (ret) {
+> -               dev_err(&pdev->dev, "Failed to initialize DAI: %d\n", ret=
+);
+> -               goto err_disable_hclk;
+> +               return dev_err_probe(&pdev->dev, ret, "Failed to initiali=
+ze DAI\n");
+>         }
+
+This would now be a one-line statement in the if branch, so checkpatch will
+advise you to remove the redundant { } from the if, so that it becomes
+
+    if (ret)
+            return dev_err_probe(&pdev->dev, ret, "Failed to initialize DAI=
+\n");
+
+You can run `./scripts/checkpatch.pl` on either a git commit range or a
+patch file, and it'll let you know. If you use b4, it'll run that
+script with some recommended flags on all commits in your series with
+`b4 prep --check`.
+
+> =20
+>         ret =3D rockchip_sai_parse_paths(sai, node);
+>         if (ret) {
+> -               dev_err(&pdev->dev, "Failed to parse paths: %d\n", ret);
+> -               goto err_disable_hclk;
+> +               return dev_err_probe(&pdev->dev, ret, "Failed to parse pa=
+ths\n");
+>         }
+
+Same here
+
+> =20
+>         /*
+> @@ -1475,8 +1469,7 @@ static int rockchip_sai_probe(struct platform_devic=
+e *pdev)
+>         pm_runtime_get_noresume(&pdev->dev);
+>         ret =3D rockchip_sai_runtime_resume(&pdev->dev);
+>         if (ret) {
+> -               dev_err(&pdev->dev, "Failed to resume device: %pe\n", ERR=
+_PTR(ret));
+> -               goto err_disable_hclk;
+> +               return dev_err_probe(&pdev->dev, ret, "Failed to resume d=
+evice\n");
+>         }
+
+Same here
+
+> =20
+>         ret =3D devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
+> @@ -1504,8 +1497,6 @@ static int rockchip_sai_probe(struct platform_devic=
+e *pdev)
+>         /* If we're !CONFIG_PM, we get -ENOSYS and disable manually */
+>         if (pm_runtime_put(&pdev->dev))
+>                 rockchip_sai_runtime_suspend(&pdev->dev);
+> -err_disable_hclk:
+> -       clk_disable_unprepare(sai->hclk);
+> =20
+>         return ret;
+>  }
+>=20
+> thanks!
+>=20
+> Pei.
+
+Kind regards,
+Nicolas Frattaroli
+
+>=20
+> > Other than that, patch tested to be working fine.
+> >
+> > Kind regards,
+> > Nicolas Frattaroli
+> >
+> >
+>=20
 
 
--- 
-Oscar Salvador
-SUSE Labs
+
+
