@@ -1,125 +1,97 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712B66F06B;
-	Fri,  6 Jun 2025 00:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE3E1BF58;
+	Fri,  6 Jun 2025 00:54:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749171191; cv=none; b=aUoPsut/cbNrB1IPbo0QpezsbhVgOpAyQzW2xWi5XzOsF1l6vJghzWF2weXxZyH+kBSKZWAvtI4PODnelbrvLRZtAFO0TCp2TPcAoPsmiw/g4p0Z4qCnBO73+LojZYyjq+O0Eg5LwdGZdP0jR8lCj+Jw+ernXgzaf1P90Ojje4w=
+	t=1749171270; cv=none; b=CrgBsirsiu3VIT4YZ793prNXh4F9qrjsXnSUJot/uRwZCEJ0MOaY8Zq61KKMa75r+twVk8FPSh8bMBrhysFzqIv3ANND41KtZeQR3sZ3SSGZPJueoILRHuyLr0vSNM1rO/SM+I/RRx6SAqBGhuvHQbTEjhaVuNcQSDzmmgH10sI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749171191; c=relaxed/simple;
-	bh=T3sY2nxuWKNXKPsm8uMDnUfpWpT+EKrbW35bH4yrACQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bN4aPKKpmn3HC3+7sCvmgLXjSSaHrFnT1tyhf5fzVZ2v9kaOPmbdxhNhAou6dKb7cbaAQppGDphHSP5/8m6u0T8/sLWpBiBhsrYJo6J1305C5NMcmAfq6fvgsa140CcA+BSTqyCZZNdZlcnpLGfELJVLLmGY9O2vwO5D+O4Zo/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EMie37qY; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749171270; c=relaxed/simple;
+	bh=XcD3CQpM2fvCnfNAEiJRLLE3yyVHesdRZ7FGaMCES3I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Cjz5HMQx/ZYzXJefENEceByglSD/9jNZ7c4wX5l2jgxAy9NbRnW56CwzkN12Lu41kCR5YOMYbEGQrkv5JBOlDDIU68rQsxOH95jifwvMOhn5mhYRmrxOExpljn/JbI8eoA2Yv3RlqVtiIBori6KS/cehcMOtsVTvytlXwyiUjSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dMpgh6nl; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EMie37qY"
-Message-ID: <8ca50309-fad7-438a-86d6-947cd39355fa@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749171185;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kY1Yhf2Ta16lGAfQpv9nl7Dl6/dZF2m3DEDTNJAsF5Y=;
-	b=EMie37qYZzEs8Rjw9lzqRaIyG0BkrIKeZAJmJltSqgZlWHSoD3LrX5cznfshPhNPFrabI7
-	OSLfNETKU251DBYbeFMpyzHpsDkkJPr/iZ7F2qHFaI2nvnKeM2nzLr2xHOncUVAXLwZSI4
-	tO0xRD2vfiqsbX6LUjiLm0p4c3MDyAA=
-Date: Thu, 5 Jun 2025 17:52:55 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dMpgh6nl"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-451d6ade159so13684245e9.1;
+        Thu, 05 Jun 2025 17:54:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749171266; x=1749776066; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r2rwrhWlVtJKNsIdoVp8QiZ90VZN2RBKrVsrx5vFTF4=;
+        b=dMpgh6nlOHoDWpl9ADn9kas15UVlFE1CdgytkFgP2d3fgup0o5X+3tUvlGdMIxdhBv
+         mkjD/txWnhe2kLn/b2Uk8/wSDAGbY1wIBRNL6/Fd4oo+WbFpTjdNTR8vAEUGEHbcd3gW
+         FBJ7lTXoZN4NtqstdJdYO3X6eBagJfhI3HJQwBmrwlauuWKIVVLYggTCEneT+luFY3Zp
+         0coodHHO1PoHXu7y1KA52MsEc8F3m6Oak8tBC5xAql3DlN8/CStOHCEfdcyCgrmWCy87
+         j7lq6gSqAaurdtVjwYsVLhhy1DxMuUS2nDZAA4v6oGzGxGLMDG+5XJ7fLwXYyLiSRk+/
+         /2rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749171266; x=1749776066;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r2rwrhWlVtJKNsIdoVp8QiZ90VZN2RBKrVsrx5vFTF4=;
+        b=jcO0suLPzqUqe8btI3dg403MRM79E+/wD7d2gDqZ4+cmxiJidJXXRwK0p7n0Pz+hzk
+         1pLBAD63Wj6p7aav6Q7ZdkXM0lBaqx4MOmXg0cnvvL056+b1b955O3zRBtDesiqbGwwR
+         VYeq13xbRo5bSEGdvbFS/XgM47WlfSrw6RLLlmWvyvWjTo76tKCV1sB3PticFXcoq8GY
+         mwfOokHR9ZCYygr0OjhYhbKOehep8/zZCfjBQeBi1U3fE7adHSwsianKygao8WgmdpaY
+         4WaweFN8IAXVZxg0nvkoxFsiUVrPxcfEQ+zwCGDeFxmBdgyMace2ORlWM+D1KKYD4yuO
+         kC4g==
+X-Forwarded-Encrypted: i=1; AJvYcCUY7meU86yVv+rq3YQRS6hvKPh0xs5KSAvqBYDRVcDfdK763lCMPBRywLkvBjy3oxk5MxDWBQDH@vger.kernel.org, AJvYcCVhSW8L15MfQXK7WBY9rfnM1fvNmafOoZZ1B2nXud/uEgEKvB2MVPvse+qnr/mlbPNyiit6+2+8eFmsUqff@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7/oTMus2Xvbthr16jTbPMJSz5bSQuwBLeDI+pJy4w9BY3kR+z
+	kp0/uxL+5MTmYUfvISt69vPdPMqAtkeGW/ZB6B3yZ4Dv8qlQB4eOlJ3jHWgOsVMO9KnCQOYREJP
+	BJtufBZw9RqWOAmcoS/Ul/EPvf1d5zvU=
+X-Gm-Gg: ASbGncuMelR7cGlxCNz/KcEZyir0luRm49bkcNlDlWQ9OvgbIxH7zKm5bDTI6RJsmqE
+	982mNp9/3vEqvCfvHB1ADSxcH7Dbu5H6l81iAXiY8zDohIbtpJEDnKPYXyfPyQWUMTD7kO4arPx
+	doj6D5IxcQgkC7DLEMY7kZPUyavkaEf8qFs9Yx2Q+6KoqCGrlUx3AIYrQzCEr+YA==
+X-Google-Smtp-Source: AGHT+IH1dtOra6TUqOMybdYXVeTmKbd4hEyDG2gvQ9kVL4NVBlNw30HPRXxgTCtQtLrNw0Ph7XRAIClCNgt72e/X7dA=
+X-Received: by 2002:a05:600c:34c1:b0:450:cf46:5510 with SMTP id
+ 5b1f17b1804b1-45201436a61mr13431415e9.29.1749171266466; Thu, 05 Jun 2025
+ 17:54:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 04/13] RISC-V: KVM: Drop the return value of
- kvm_riscv_vcpu_aia_init()
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Alexandre Ghiti <alex@ghiti.fr>,
- Andrew Jones <ajones@ventanamicro.com>, Anup Patel <anup@brainfault.org>,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250605061458.196003-1-apatel@ventanamicro.com>
- <20250605061458.196003-5-apatel@ventanamicro.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Atish Patra <atish.patra@linux.dev>
-In-Reply-To: <20250605061458.196003-5-apatel@ventanamicro.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250605211053.19200-1-jemmywong512@gmail.com>
+In-Reply-To: <20250605211053.19200-1-jemmywong512@gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Thu, 5 Jun 2025 17:54:15 -0700
+X-Gm-Features: AX0GCFvsDf8E-bJ5xoX-vPGgtym_KVcgJT5fKhu-2duLhqId13vjSDkBfC5K6lI
+Message-ID: <CAADnVQJyATTb9GFyBhOy5V_keAO5NZ6+zucLRyN27Cmg2FGPVA@mail.gmail.com>
+Subject: Re: [PATCH v0] cgroup: Add lock guard support
+To: Jemmy Wong <jemmywong512@gmail.com>
+Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	=?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, 
+	"open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 6/4/25 11:14 PM, Anup Patel wrote:
-> The kvm_riscv_vcpu_aia_init() does not return any failure so drop
-> the return value which is always zero.
+On Thu, Jun 5, 2025 at 2:11=E2=80=AFPM Jemmy Wong <jemmywong512@gmail.com> =
+wrote:
 >
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> This change replaces manual lock acquisition and release with lock guards
+> to improve code robustness and reduce the risk of lock mismanagement.
+> No functional changes to the cgroup logic are introduced.
+>
+> Signed-off-by: Jemmy Wong <jemmywong512@gmail.com>
+>
 > ---
->   arch/riscv/include/asm/kvm_aia.h | 2 +-
->   arch/riscv/kvm/aia_device.c      | 6 ++----
->   arch/riscv/kvm/vcpu.c            | 4 +---
->   3 files changed, 4 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/kvm_aia.h b/arch/riscv/include/asm/kvm_aia.h
-> index 3b643b9efc07..0a0f12496f00 100644
-> --- a/arch/riscv/include/asm/kvm_aia.h
-> +++ b/arch/riscv/include/asm/kvm_aia.h
-> @@ -147,7 +147,7 @@ int kvm_riscv_vcpu_aia_rmw_ireg(struct kvm_vcpu *vcpu, unsigned int csr_num,
->   
->   int kvm_riscv_vcpu_aia_update(struct kvm_vcpu *vcpu);
->   void kvm_riscv_vcpu_aia_reset(struct kvm_vcpu *vcpu);
-> -int kvm_riscv_vcpu_aia_init(struct kvm_vcpu *vcpu);
-> +void kvm_riscv_vcpu_aia_init(struct kvm_vcpu *vcpu);
->   void kvm_riscv_vcpu_aia_deinit(struct kvm_vcpu *vcpu);
->   
->   int kvm_riscv_aia_inject_msi_by_id(struct kvm *kvm, u32 hart_index,
-> diff --git a/arch/riscv/kvm/aia_device.c b/arch/riscv/kvm/aia_device.c
-> index 43e472ff3e1a..5b7ed2d987db 100644
-> --- a/arch/riscv/kvm/aia_device.c
-> +++ b/arch/riscv/kvm/aia_device.c
-> @@ -539,12 +539,12 @@ void kvm_riscv_vcpu_aia_reset(struct kvm_vcpu *vcpu)
->   	kvm_riscv_vcpu_aia_imsic_reset(vcpu);
->   }
->   
-> -int kvm_riscv_vcpu_aia_init(struct kvm_vcpu *vcpu)
-> +void kvm_riscv_vcpu_aia_init(struct kvm_vcpu *vcpu)
->   {
->   	struct kvm_vcpu_aia *vaia = &vcpu->arch.aia_context;
->   
->   	if (!kvm_riscv_aia_available())
-> -		return 0;
-> +		return;
->   
->   	/*
->   	 * We don't do any memory allocations over here because these
-> @@ -556,8 +556,6 @@ int kvm_riscv_vcpu_aia_init(struct kvm_vcpu *vcpu)
->   	/* Initialize default values in AIA vcpu context */
->   	vaia->imsic_addr = KVM_RISCV_AIA_UNDEF_ADDR;
->   	vaia->hart_index = vcpu->vcpu_idx;
-> -
-> -	return 0;
->   }
->   
->   void kvm_riscv_vcpu_aia_deinit(struct kvm_vcpu *vcpu)
-> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-> index 6a1914b21ec3..f98a1894d55b 100644
-> --- a/arch/riscv/kvm/vcpu.c
-> +++ b/arch/riscv/kvm/vcpu.c
-> @@ -160,9 +160,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
->   	kvm_riscv_vcpu_pmu_init(vcpu);
->   
->   	/* Setup VCPU AIA */
-> -	rc = kvm_riscv_vcpu_aia_init(vcpu);
-> -	if (rc)
-> -		return rc;
-> +	kvm_riscv_vcpu_aia_init(vcpu);
->   
->   	/*
->   	 * Setup SBI extensions
+>  include/linux/cgroup.h     |   7 +
+>  kernel/bpf/cgroup.c        |  96 +++---
+>  kernel/bpf/local_storage.c |  12 +-
 
-
-
+Nack for bpf bits.
+It only uglifies the code.
