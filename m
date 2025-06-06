@@ -1,141 +1,149 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6583120F09A
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 10:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464162B9BC;
+	Fri,  6 Jun 2025 11:01:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749207600; cv=none; b=FDOQySYu/P/KzncVpuDRR2Oe5+4ISYg2zjy7a/SsaS+tL+Y6ZMRMFmvKipruH6tTRI6+z/8gLp4FNm5Vb8jcJwVhyTFLR+TzImzSGmVHT12TlsOZoXHxw7ujZZDQJn94CDaV2C56/+ytRZly7eoqQ3V0pSVYXqVEMlZ/UHR34xk=
+	t=1749207693; cv=none; b=H5qYuU2JVCAdXGAzTEI/r6w9T9+qHtQQO+T1K1qphdtatuIkn1fDrwKdkFkgbiUoB/KEjLaAI+6uTESCCTDKZ23ac2rN049S1I/IVr7qHth+pMceiIie6v4Vo3pWCMzxFewrvj46Ov8TyiGFLxhz35M1rkdXEzYvAMAB4DhwAUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749207600; c=relaxed/simple;
-	bh=Ij6p51RBSpIfTcDNnVZuFN0QIs5BBfAMlgmDV1oy1ao=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JHkUD1nRAspr0xZnUNc7eN9DeutMBDTDSYQqcQQP+7N7S09OX/R+O2wlX8orC79StdABkB/PBeGoAMTKg6ZQZ4t59Pz439vpWSvxW+UVHuYebmWI7q0YnYPOtHgla6t++E9IBXoFaAKHvj0ovmK03VSpOs3k4gVXHkcQwqnhQnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vaSPDhVh; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749207693; c=relaxed/simple;
+	bh=xT5xCkZ1JFFONaYP0IT32OFGyChvPSzHHY99QK6deuA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OeeUP28aK92SeakHYgqeRMdcvshC4d0DuR3ArS1CiaZNodMfgAraCMwaWPo/kkBT1Il0+YBWijZARjb82No4w3hysOE+0FcyFtkjQGh6SVMDzkHMcS2klhuTI4zKUHI8+IqQwt6v5E+FrqPeb8VGWFfAdi9cgcW98ukhnQwbdGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mguw66Xl; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vaSPDhVh"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-601a67c6e61so9715a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 03:59:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mguw66Xl"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-235f9ea8d08so13239515ad.1;
+        Fri, 06 Jun 2025 04:01:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749207597; x=1749812397; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ij6p51RBSpIfTcDNnVZuFN0QIs5BBfAMlgmDV1oy1ao=;
-        b=vaSPDhVhvjxvG1nQm1xYmlK/3OnsTO+bhCVqzT6XjcDS+Tpz2RI4D1q5Zzy84uzzZw
-         twls2e8OE6QVoq5BNWZ6e/C3isira+CyyF39szH+gH0IO5bd58B4BfRpgROJR2Rjs9CY
-         KcUIrEDuiq1V1m5xgC8j4axAUED6Bgq1Q5XrBmRaVErKKL2ZC8CFGD4tMi+vuPU44LtA
-         h0cVjlsYmqkzeIc1eYa/KFy7OFQgsdjgm4zWaJ42WSrk021epJn89Id0dqz1+VK7kvjm
-         7ucJ/bk1wpFQRrGpYB7h4c58U0qmHUhHRWIJyjJFbRjyE6iMUko2aXUkS3bfK7qbfofR
-         rwZw==
+        d=gmail.com; s=20230601; t=1749207690; x=1749812490; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UDajbAe57kbFd3lsA+awvfcHj7NkUKCVzc3fJfrdtwM=;
+        b=Mguw66Xl1nByGQFsakpywgxn9pOYoxEp2R+WuBTCKhrR1dW5ZBVeJeEFCthtWjc9WN
+         d7DxT2fn3coYj3IXMChH8JKX33dPiKkPzoC4cJs54MtyBG2ELFkNDdicIthWGyK/FK6Y
+         bTRfNyZjbC+IjPtVNpL/aHY/+5GHv03FYni6H4idlVATX1ltkkTIhZJuc5TVa+r543RK
+         aC+GBQEH3fTMCtO1Xphq5IOfba8v2/p20i3fxRotty4izsdZTSLLZAm/2dkHuwI7hzeN
+         xcqdl8yWEagtXDks+20dq3vUMY8eoRf0WPX7az7d3dyTDvlgHdl3XTlmMF9vWyXxHa3R
+         TbtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749207597; x=1749812397;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ij6p51RBSpIfTcDNnVZuFN0QIs5BBfAMlgmDV1oy1ao=;
-        b=GtuegggFG69pdodwxOb238ubZEoJwvqU8XRWPKIO4FE9BguboP2mcpW/0bC472LXRC
-         jdPcEhEITjd0Gt7npBpl0zYe+73mr4S3qcp1dFqirfRFEujDOXkgwjwaIoV17TyDcdSX
-         z/IVga148nUCgKqAZG992XMEJ1zQCCEl/3hiUguP3YrdFJvfp8x5Rxs41VAxbaPtwC62
-         9BbF5OnrUya2+fgi6QDO7UVTdRm/527cOfTTZ+4Dh7+pPZ9S0HKNzyJmkIGrVV2jvS1h
-         a8SCEVf5vPfBv5wD/5FGXhfsYc/KEOYNVYvt0DR4BNMLyWpMQqmn9ygg6IsovqHEUJD8
-         5rsA==
-X-Forwarded-Encrypted: i=1; AJvYcCXi2/xPZFD+6h0inku4ZfyAtNk8PkI27Mc2uvQj345gZP0qstCx16gTvxw0Ix5FMcjtpmUuAdWDnyIACD8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6DJFqJWIVTQASWe5uJO2LEC0it573UqRsOWdCwX9uBJrEfoMq
-	2fuq3VFx1+CMuPqKae57Wv2Dx50ZWsYxjDUeW9oeBp/0rqZobao1NtM8FdtCGzX/U6CXaxSFNS+
-	V76UHz5ic+TUxj+FwGWKoA0trM6kWHC69tMOqIzBs
-X-Gm-Gg: ASbGncuFkZx4E5MNndOTREOMPzNeZMsf00GTr/YROqr8UKOVon+9NctH/2XKXC7E0WQ
-	fLBji+aM0tFtaGl3h6IcB08DNjGQN1dowPD0lsxzqfRpB8OyGLlc8tUVVK6rF8KwwNoyq+3mtft
-	6lHRDgN7X4kXTLjqXTjMRc9v4FyEt4b2vvFnwm1Q8JNlYUcxtsx5TArDfYvd4l0ze8Tdle3xyId
-	Xb1e9yC
-X-Google-Smtp-Source: AGHT+IHxO2eadHOlfPVxuGh+iyeVA+X2FQXWYvnzf8QlbhCwgU3Fgf6hl8bb87wyCATPpiU1tP4xwP8RO2klSRm0ODw=
-X-Received: by 2002:aa7:d98f:0:b0:601:7b94:b80e with SMTP id
- 4fb4d7f45d1cf-607793d441bmr49798a12.3.1749207596298; Fri, 06 Jun 2025
- 03:59:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749207690; x=1749812490;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UDajbAe57kbFd3lsA+awvfcHj7NkUKCVzc3fJfrdtwM=;
+        b=Q3pCZd6RJn+QNsazPTkiCzZ0vENod2zlf0oXQJeY0xTpVjtlQRjx33apDUIbtOh857
+         P/Vj4Fuq3KIjlnGwoNwCmvC1SG86uGIYIOC8n4TvpPLdpEwTCgCvckzjGtQHX0cCH6DO
+         GFK82LbXf7DJhkq1wDkd5rrVnki0LA0Mg1HgBoQ0wob1/yXEFB3tkxGAtXD+9k1Spm4K
+         J8ZcNq/ZiwHUzfrn8sdNTkOdvB1oIC8RrtxQBq9dHZYQpuMvYoaQhppwDTMIpiDJhj2i
+         ffZPV2oQa8cRXiXbQdoHEjLKW2wfWPUz2sRXxS1fC62eJCZLLS4Ftyd1Uh1ksD/xbQTM
+         qqyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1aEE/b/s50WWNisY63jpy4MlQgPSDzpX6SmNnt0Afvjo2Wj/SLLUudwl3TY4b5R76uNZg5LJwhDUGKaM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8gycjU5OdXRvYY/XK0cPXZo036fj+hQDuGttxCG5mTpCQjoBO
+	WjHLZCayPoli63UZX+ozDsDhyKquOq85/TFoONwwCyy11ODUlDpGlg8E
+X-Gm-Gg: ASbGncsC6xGVbG3cDhIbj7lPTwyXnmgqlrntLHJKYnpL4rr1oPBtNwnwJUyFmn/tXw3
+	gbSU1LFk8qoLtn8gSiJgsgOuyrA4lNH86ySpDRxf8oM4oLBwMiWcKbHQzSB36qmye0Qgy4/TC6J
+	42M4SmO7/+TKTbhSBHpxITTApUbs/VxaF7viby2n4qPVOFB2fwo0q27sZwgTiN/BsjWhJP0y1df
+	KsKmmwnpz3yFaWV5FgUwOgqYXZmleuKymQmVypqk2DNdh+gh3qOQVa68MlH3kXTdwth6Ur/6GN6
+	vwFDIxHCNFqD5j77lc4Q9zSgM1zA+CxGmUUX1afR3zzRM/uFdBcYZEvv1Uq930i2tGoQCA==
+X-Google-Smtp-Source: AGHT+IEuQ5XKtuQPYr1CK/mvEDG3WWgyFUsrOC+Ax+xUPhXLsT1tDc1xNFSLcRAlbvPTptb4pA5B5g==
+X-Received: by 2002:a17:902:da4b:b0:234:a66d:cce5 with SMTP id d9443c01a7336-23601ed6398mr45797085ad.46.1749207690331;
+        Fri, 06 Jun 2025 04:01:30 -0700 (PDT)
+Received: from victorshih.. ([2402:7500:477:464b:b7fc:d546:e798:4fbc])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603406aa9sm10095565ad.188.2025.06.06.04.01.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 04:01:29 -0700 (PDT)
+From: Victor Shih <victorshihgli@gmail.com>
+To: ulf.hansson@linaro.org,
+	adrian.hunter@intel.com
+Cc: linux-mmc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	benchuanggli@gmail.com,
+	ben.chuang@genesyslogic.com.tw,
+	HL.Liu@genesyslogic.com.tw,
+	Greg.tu@genesyslogic.com.tw,
+	Victor Shih <victor.shih@genesyslogic.com.tw>
+Subject: [PATCH V3 0/3] Adjust some error messages for SD UHS-II initialization process
+Date: Fri,  6 Jun 2025 19:01:18 +0800
+Message-ID: <20250606110121.96314-1-victorshihgli@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604141958.111300-1-lorenzo.stoakes@oracle.com>
- <CAG48ez3hvPbfc2dapQQu9TKrjdi5mhZ4tAWi+m0tNZeEtSZBrQ@mail.gmail.com> <af6d28d0-d646-45d5-832c-66add20ea388@redhat.com>
-In-Reply-To: <af6d28d0-d646-45d5-832c-66add20ea388@redhat.com>
-From: Jann Horn <jannh@google.com>
-Date: Fri, 6 Jun 2025 12:59:20 +0200
-X-Gm-Features: AX0GCFuSeBKSZUd4LEoLg2wIZ296FSomM3Hd1AfilUwfRktV5EvXRfsEyT3g3G0
-Message-ID: <CAG48ez3-QiaT1hSFz64xiucR4azQsrcj+6rQrLoz+d0zd-BUuQ@mail.gmail.com>
-Subject: Re: [PATCH v2] mm/pagewalk: split walk_page_range_novma() into
- kernel/user parts
-To: David Hildenbrand <david@redhat.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Barry Song <baohua@kernel.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>, 
-	Oscar Salvador <osalvador@suse.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Jonas Bonn <jonas@southpole.se>, 
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-openrisc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 5, 2025 at 10:23=E2=80=AFPM David Hildenbrand <david@redhat.com=
-> wrote:
-> On 05.06.25 21:19, Jann Horn wrote:
-> > On Wed, Jun 4, 2025 at 4:21=E2=80=AFPM Lorenzo Stoakes
-> > <lorenzo.stoakes@oracle.com> wrote:
-> >> The walk_page_range_novma() function is rather confusing - it supports=
- two
-> >> modes, one used often, the other used only for debugging.
-> >>
-> >> The first mode is the common case of traversal of kernel page tables, =
-which
-> >> is what nearly all callers use this for.
-> >>
-> >> Secondly it provides an unusual debugging interface that allows for th=
-e
-> >> traversal of page tables in a userland range of memory even for that m=
-emory
-> >> which is not described by a VMA.
-> >>
-> >> It is far from certain that such page tables should even exist, but pe=
-rhaps
-> >> this is precisely why it is useful as a debugging mechanism.
-> >>
-> >> As a result, this is utilised by ptdump only. Historically, things wer=
-e
-> >> reversed - ptdump was the only user, and other parts of the kernel evo=
-lved
-> >> to use the kernel page table walking here.
-> >
-> > Just for the record, copy-pasting my comment on v1 that was
-> > accidentally sent off-list:
-> > ```
-> > Sort of a tangential comment: I wonder if it would make sense to give
-> > ptdump a different page table walker that uses roughly the same safety
-> > contract as gup_fast() - turn off IRQs and then walk the page tables
-> > locklessly. We'd need basically no locking and no special cases
-> > (regarding userspace mappings at least), at the cost of having to
-> > write the walker code such that we periodically restart the walk from
-> > scratch and not being able to inspect referenced pages. (That might
-> > also be nicer for debugging, since it wouldn't block on locks...)
-> > ```
->
-> I assume we don't have to dump more than pte values etc? So
-> pte_special() and friends are not relevant to get it right.
->
-> GUP-fast depend on CONFIG_HAVE_GUP_FAST, not sure if that would be a
-> concern for now.
+From: Victor Shih <victor.shih@genesyslogic.com.tw>
 
-Ah, good point, that's annoying... maaaybe we should just gate this
-entire feature on CONFIG_HAVE_GUP_FAST to make sure the userspace
-mappings are designed to be walkable in this way? It's in debugfs,
-which _theoretically_
-(https://docs.kernel.org/filesystems/debugfs.html) means there are no
-stability guarantees, and I think it is normally used on architectures
-that define CONFIG_HAVE_GUP_FAST...
+Summary
+=======
+It is normal that errors will occur when using non-UHS-II card to enter
+the UHS-II card initialization process. We should not be producing error
+messages and register dumps. Therefore, switch the error messages to debug
+mode and register dumps to dynamic debug mode.
+
+Patch structure
+===============
+patch#1:    for core
+patch#2-#3: for sdhci
+
+Changes in v3 (June. 06, 2025)
+* Rebase on latest mmc/next.
+* Patch#2: Separate the helper function in V2 patch#2 into V3 patch#2.
+
+----------------- original cover letter from v2 -----------------
+Summary
+=======
+It is normal that errors will occur when using non-UHS-II card to enter
+the UHS-II card initialization process. We should not be producing error
+messages and register dumps. Therefore, switch the error messages to debug
+mode and register dumps to dynamic debug mode.
+
+Patch structure
+===============
+patch#1: for core
+patch#2: for sdhci
+
+Changes in v2 (May. 23, 2025)
+* Rebase on latest mmc/next.
+* Patch#1: Drop the use of DBG macro and use pr_debug() instead.
+* Patch#2: Drop the use of DBG macro in some function
+           and use pr_debug() instead.
+
+----------------- original cover letter from v1 -----------------
+Summary
+=======
+It is normal that errors will occur when using non-UHS-II card to enter
+the UHS-II card initialization process. We should not be producing error
+messages and register dumps. Therefore, switch the error messages to debug
+mode and register dumps to dynamic debug mode.
+
+Patch structure
+===============
+patch#1: for core
+patch#2: for sdhci
+
+Changes in v1 (May. 16, 2025)
+* Rebase on latest mmc/next.
+* Patch#1: Adjust some error messages for SD UHS-II cards.
+* Patch#2: Adjust some error messages and register dump for SD UHS-II card
+
+Victor Shih (3):
+  mmc: core: Adjust some error messages for SD UHS-II cards
+  mmc: sdhci: Add a helper function for dump register in dynamic debug
+    mode
+  mmc: sdhci-uhs2: Adjust some error messages and register dump for SD
+    UHS-II card
+
+ drivers/mmc/core/sd_uhs2.c    |  4 ++--
+ drivers/mmc/host/sdhci-uhs2.c | 20 ++++++++++----------
+ drivers/mmc/host/sdhci.h      | 16 ++++++++++++++++
+ 3 files changed, 28 insertions(+), 12 deletions(-)
+
+-- 
+2.43.0
+
