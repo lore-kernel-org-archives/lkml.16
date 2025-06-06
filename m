@@ -1,174 +1,229 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9378A1FECDD;
-	Fri,  6 Jun 2025 08:19:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D10189F43
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 08:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749197979; cv=none; b=EwgyhqVCYruFcPRcK7GRIXZuv5frNYnuy1R1Y2YCq4B4GHtJUdo4StqegQMDyZlcQMuI8+9D+8LHFeDy34bPNQiEXqryfNwFEmVe4GpBwi4NS5iiQNSXs2kj6UzOIlYm2TwBcd+GMeTUybLLMZERVw84ANPWqIgWfrDEk7UwoSE=
+	t=1749198019; cv=none; b=YjpOGwYZcaXKVFrn5sTIyRuTC4qTvCbJl+kHjQ/ySXzBZapqNYFw/1nHce+oLBa98Orpm1JvbHdwWclsq/N3yVzBs2X9zfomsBrzA/3pgtArn3W8iGOOaRkzywixvThFlZQh3sKG2K370o1pfZOfRLP8w+EhMMe7rS9JyRHc9qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749197979; c=relaxed/simple;
-	bh=xZlhkRAkf9NtLVuWaJZVBEvuhnY31s4L7SnFMDiGwoY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b1IvGZZBI5q3ImX7YZeDFi108xhI4+CEnqeJlgIKLeWt2MyOri/xzqEodap8u/Ix57s2BpDkEyHBbN7mpQDtPrG092C3m88alVmw4faXxnWqxS6kyujvTGnlhHgVVRebWPJ05Z+yl9i4dozcO7h4fQSyKZxD96bw2Rzr7ozErgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=B5Ey5XQo; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1749198019; c=relaxed/simple;
+	bh=DFK0enjsDPlNXgMmzgeZ/eEpmn1q/94j/EFDqLqDEGk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CxRXJRFJ1sOdhNSL44wWtAWvuQJG6Ouc7dJ/Fs5xL+/2555ubgQw0agdDF7xb5d1xunTRIckcDqB7jX+lOxJXMxAiYQ347L9HjyofSkwaDc/C5skJedq7mB7e+QisNf2J6vQ5H6Jxdia39qBcfGoyGFit0H0wYVmSOE3GM4U0wY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MitPkhnC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pr7ciNVw; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MitPkhnC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pr7ciNVw; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="B5Ey5XQo"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id AC86241D02;
-	Fri,  6 Jun 2025 08:19:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749197969;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MitPkhnC";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pr7ciNVw";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MitPkhnC";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pr7ciNVw"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 12EE91F46E;
+	Fri,  6 Jun 2025 08:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749198016; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=L9OL/AoGykLh8iv60m7BkynFYdgLzm2qSbm2BGgS4HQ=;
-	b=B5Ey5XQoeq+ZDoSg7Va76oi/nJ1WxdKyLsALXCcWuruWFaEr67IuHf2UXOO1OjnxCYe4qZ
-	d6M+EyQFkLbu6svj00TePXK+ejdXSwQhZtfc3ftuv2K0zbBIi5krTPh9W/jIBto10YVpjr
-	faJlFIUwuQSRnce4pgMuwLl19MANeKyuGRmTW9ELDbxC6Ydut0rkssSHOPAnABdrWO76JF
-	MhSE7R1o9LgLTBrHj17K5jmpoSnZdjMAUZ8KIeoUsYiU/RruDafw+6z9TjLSurAaYh7oLB
-	AN3s/sNoIsv/ZJtXnzGNP6B4hv/mGbTXm/5OODafrxi9irPbxRf9imyt2Sovjw==
-Date: Fri, 6 Jun 2025 10:19:23 +0200
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
- <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- thomas.petazzoni@bootlin.com, Simon Horman <horms@kernel.org>, Heiner
- Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>,
- Christophe Leroy <christophe.leroy@csgroup.eu>, Herve Codina
- <herve.codina@bootlin.com>, Romain Gantois <romain.gantois@bootlin.com>,
- Jijie Shao <shaojijie@huawei.com>
-Subject: Re: [PATCH net] net: phy: phy_caps: Don't skip better duplex macth
- on non-exact match
-Message-ID: <20250606101923.04393789@fedora>
-In-Reply-To: <ef3efb3c-3b5a-4176-a512-011e80c52a06@redhat.com>
-References: <20250603083541.248315-1-maxime.chevallier@bootlin.com>
-	<ef3efb3c-3b5a-4176-a512-011e80c52a06@redhat.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	bh=xPPCQgVTU9igB5wVJT7oj3CtdzrH4k5GbPxzRDDz2ws=;
+	b=MitPkhnCE/m1UL+eiwSqT48a8zIh4RmGtHolImnFPG0Y8bwen2/MXzyvn82oZBa+ByhvBF
+	Yc9lgYMCuADcGRTJGmBzFPzQi3Bpn+GWCJqwT928WI9fyN0eybt68nPD6uDm3t16ANUJ1O
+	LYhvc67RpnmSlNbW89XNPzerd22tENA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749198016;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xPPCQgVTU9igB5wVJT7oj3CtdzrH4k5GbPxzRDDz2ws=;
+	b=pr7ciNVwces3HHVQ0sy0AjX6ZZBoczoDFUyAmHwDKNxZevZNa0w7ZxkkWv92FCF+9rbTUW
+	WHtHTvD3VAlmbxAQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=MitPkhnC;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=pr7ciNVw
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749198016; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xPPCQgVTU9igB5wVJT7oj3CtdzrH4k5GbPxzRDDz2ws=;
+	b=MitPkhnCE/m1UL+eiwSqT48a8zIh4RmGtHolImnFPG0Y8bwen2/MXzyvn82oZBa+ByhvBF
+	Yc9lgYMCuADcGRTJGmBzFPzQi3Bpn+GWCJqwT928WI9fyN0eybt68nPD6uDm3t16ANUJ1O
+	LYhvc67RpnmSlNbW89XNPzerd22tENA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749198016;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xPPCQgVTU9igB5wVJT7oj3CtdzrH4k5GbPxzRDDz2ws=;
+	b=pr7ciNVwces3HHVQ0sy0AjX6ZZBoczoDFUyAmHwDKNxZevZNa0w7ZxkkWv92FCF+9rbTUW
+	WHtHTvD3VAlmbxAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 105D21369F;
+	Fri,  6 Jun 2025 08:20:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id OmoQO76kQmgbBAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Fri, 06 Jun 2025 08:20:14 +0000
+Date: Fri, 6 Jun 2025 10:20:13 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alistair Popple <apopple@nvidia.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v1 1/2] mm/huge_memory: don't mark refcounted pages
+ special in vmf_insert_folio_pmd()
+Message-ID: <aEKkvdSAplmukcXz@localhost.localdomain>
+References: <20250603211634.2925015-1-david@redhat.com>
+ <20250603211634.2925015-2-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdegkeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeeftdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepleehgeevfeejgfduledtlefhlefgveelkeefffeuiedtteejheduueegiedvveehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdduvddruddthedrudehtddrvdehvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvuddvrddutdehrdduhedtrddvhedvpdhhvghlohepfhgvughorhgrpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhgl
- hgvrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250603211634.2925015-2-david@redhat.com>
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,localhost.localdomain:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 12EE91F46E
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.51
 
-On Thu, 5 Jun 2025 12:24:54 +0200
-Paolo Abeni <pabeni@redhat.com> wrote:
-
-> On 6/3/25 10:35 AM, Maxime Chevallier wrote:
-> > When performing a non-exact phy_caps lookup, we are looking for a
-> > supported mode that matches as closely as possible the passed speed/duplex.
-> > 
-> > Blamed patch broke that logic by returning a match too early in case
-> > the caller asks for half-duplex, as a full-duplex linkmode may match
-> > first, and returned as a non-exact match without even trying to mach on
-> > half-duplex modes.
-> > 
-> > Reported-by: Jijie Shao <shaojijie@huawei.com>
-> > Closes: https://lore.kernel.org/netdev/20250603102500.4ec743cf@fedora/T/#m22ed60ca635c67dc7d9cbb47e8995b2beb5c1576
-> > Fixes: fc81e257d19f ("net: phy: phy_caps: Allow looking-up link caps based on speed and duplex")
-> > Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-> > ---
-> >  drivers/net/phy/phy_caps.c | 15 +++++++++------
-> >  1 file changed, 9 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/net/phy/phy_caps.c b/drivers/net/phy/phy_caps.c
-> > index 703321689726..d80f6a37edf1 100644
-> > --- a/drivers/net/phy/phy_caps.c
-> > +++ b/drivers/net/phy/phy_caps.c
-> > @@ -195,7 +195,7 @@ const struct link_capabilities *
-> >  phy_caps_lookup(int speed, unsigned int duplex, const unsigned long *supported,
-> >  		bool exact)
-> >  {
-> 	> -	const struct link_capabilities *lcap, *last = NULL;
-> > +	const struct link_capabilities *lcap, *match = NULL, *last = NULL;
-> >  
-> >  	for_each_link_caps_desc_speed(lcap) {
-> >  		if (linkmode_intersects(lcap->linkmodes, supported)) {
-> > @@ -204,16 +204,19 @@ phy_caps_lookup(int speed, unsigned int duplex, const unsigned long *supported,
-> >  			if (lcap->speed == speed && lcap->duplex == duplex) {
-> >  				return lcap;
-> >  			} else if (!exact) {
-> > -				if (lcap->speed <= speed)
-> > -					return lcap;
-> > +				if (!match && lcap->speed <= speed)
-> > +					match = lcap;
-> > +
-> > +				if (lcap->speed < speed)
-> > +					break;
-> >  			}
-> >  		}
-> >  	}
-> >  
-> > -	if (!exact)
-> > -		return last;
-> > +	if (!match && !exact)
-> > +		match = last;  
+On Tue, Jun 03, 2025 at 11:16:33PM +0200, David Hildenbrand wrote:
+> Marking PMDs that map a "normal" refcounted folios as special is
+> against our rules documented for vm_normal_page().
 > 
-> If I read correctly, when user asks for half-duplex, this can still
-> return a non exact matching full duplex cap, even when there is non
-> exact matching half-duplex cap available.
-
-That would be only if there's no half-duplex match at the requested
-speed, but yes indeed.
-
+> Fortunately, there are not that many pmd_special() check that can be
+> mislead, and most vm_normal_page_pmd()/vm_normal_folio_pmd() users that
+> would get this wrong right now are rather harmless: e.g., none so far
+> bases decisions whether to grab a folio reference on that decision.
 > 
-> I'm wondering if the latter would be preferable, or at least if the
-> current behaviour should be explicitly called out in the function
-> documentation.
-
-Looking at the previous way of doing this, we looked at the following
-array in descending order : 
-
-[...]
-	/* 1G */
-	PHY_SETTING(   1000, FULL,   1000baseT_Full		),
-	PHY_SETTING(   1000, HALF,   1000baseT_Half		),
-	PHY_SETTING(   1000, FULL,   1000baseT1_Full		),
-	PHY_SETTING(   1000, FULL,   1000baseX_Full		),
-	PHY_SETTING(   1000, FULL,   1000baseKX_Full		),
-	/* 100M */
-	PHY_SETTING(    100, FULL,    100baseT_Full		),
-	PHY_SETTING(    100, FULL,    100baseT1_Full		),
-	PHY_SETTING(    100, HALF,    100baseT_Half		),
-	PHY_SETTING(    100, HALF,    100baseFX_Half		),
-	PHY_SETTING(    100, FULL,    100baseFX_Full		),
-[...]
-
-The matching logic was pretty much the same, walk that (and and'ing
-with the passed supported modes), note the partial matches, return
-either an exact or non-exact match.
-
-None of the logic actually cared about the duplex for non-exact
-matches, only the speed. I think we would have faced the same behaviour.
-
-In reality, the case you're mentioning would be a device that supports
-1000/Full, 100/Full and 100/Half, user asks for 1000/Half, and 100/Full
-would be reported.
-
-That's unlikely to exist, but I'll document it as I've been surprised
-in the past with setups that shouldn't exist that actually do :)
-
-All of this really makes me want to add some test scripts to cover all
-these corner-case behaviours and test for future regressions.
-Hopefully when I get a bit more bandwidth I'll be finally able to
-finish the netdevsim PHY support...
-
-Thanks,
-
-Maxime
-
-> /P
+> Well, and GUP-fast will fallback to GUP-slow. All in all, so far no big
+> implications as it seems.
 > 
+> Getting this right will get more important as we use
+> folio_normal_page_pmd() in more places.
+> 
+> Fix it by just inlining the relevant code, making the whole
+> pmd_none() handling cleaner. We can now use folio_mk_pmd().
+> 
+> While at it, make sure that a pmd that is not-none is actually present
+> before comparing PFNs.
+> 
+> Fixes: 6c88f72691f8 ("mm/huge_memory: add vmf_insert_folio_pmd()")
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
+Hi David,
+
+> ---
+>  mm/huge_memory.c | 39 ++++++++++++++++++++++++++++++++-------
+>  1 file changed, 32 insertions(+), 7 deletions(-)
+> 
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index d3e66136e41a3..f9e23dfea76f8 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -1474,9 +1474,10 @@ vm_fault_t vmf_insert_folio_pmd(struct vm_fault *vmf, struct folio *folio,
+>  	struct vm_area_struct *vma = vmf->vma;
+>  	unsigned long addr = vmf->address & PMD_MASK;
+>  	struct mm_struct *mm = vma->vm_mm;
+> +	pmd_t *pmd = vmf->pmd;
+>  	spinlock_t *ptl;
+>  	pgtable_t pgtable = NULL;
+> -	int error;
+> +	pmd_t entry;
+>  
+>  	if (addr < vma->vm_start || addr >= vma->vm_end)
+>  		return VM_FAULT_SIGBUS;
+> @@ -1490,17 +1491,41 @@ vm_fault_t vmf_insert_folio_pmd(struct vm_fault *vmf, struct folio *folio,
+>  			return VM_FAULT_OOM;
+>  	}
+>  
+> -	ptl = pmd_lock(mm, vmf->pmd);
+> -	if (pmd_none(*vmf->pmd)) {
+> +	ptl = pmd_lock(mm, pmd);
+> +	if (pmd_none(*pmd)) {
+>  		folio_get(folio);
+>  		folio_add_file_rmap_pmd(folio, &folio->page, vma);
+>  		add_mm_counter(mm, mm_counter_file(folio), HPAGE_PMD_NR);
+> +
+> +		entry = folio_mk_pmd(folio, vma->vm_page_prot);
+> +		if (write) {
+> +			entry = pmd_mkyoung(pmd_mkdirty(entry));
+> +			entry = maybe_pmd_mkwrite(entry, vma);
+> +		}
+> +		set_pmd_at(mm, addr, pmd, entry);
+> +		update_mmu_cache_pmd(vma, addr, pmd);
+> +
+> +		if (pgtable) {
+> +			pgtable_trans_huge_deposit(mm, pmd, pgtable);
+> +			mm_inc_nr_ptes(mm);
+> +			pgtable = NULL;
+> +		}
+> +	} else if (pmd_present(*pmd) && write) {
+> +		/*
+> +		 * We only allow for upgrading write permissions if the
+> +		 * same folio is already mapped.
+> +		 */
+> +		if (pmd_pfn(*pmd) == folio_pfn(folio)) {
+> +			entry = pmd_mkyoung(*pmd);
+> +			entry = maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
+> +			if (pmdp_set_access_flags(vma, addr, pmd, entry, 1))
+> +				update_mmu_cache_pmd(vma, addr, pmd);
+> +		} else {
+> +			WARN_ON_ONCE(!is_huge_zero_pmd(*pmd));
+> +		}
+
+So, this is pretty much insert_pfn_pmd without pmd_mkdevmap/pmd_mkspecial().
+I guess vmf_inser_folio_pmd() doesn't have to be concerned with devmaps
+either, right?
+
+Looks good to me, just a nit: would it not be better to pass a boolean
+to insert_pfn_pmd() that lets it know whether it "can" create a
+devmap/special entries?
+
+
+-- 
+Oscar Salvador
+SUSE Labs
