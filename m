@@ -1,200 +1,145 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2791BF58
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 07:06:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3806C19CD1B
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 07:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749193605; cv=none; b=j+ger24p63cozTuGmmM3SF5Vv8LClrL/rKqexALPgfA0lkBfaHUifEHmlx30a16ILv2aiqu7XzZxZLCn9XLVbTj34JMtOcsqgmv6AzvAJrVPKTYNEfj/KFXn7QzjciGm//WuD6NzAF/yuMXSk6ivzjOcc/Cq1MymmwAhqq2A+LY=
+	t=1749193810; cv=none; b=JjXdnl1WM2aT+DX1vFKDJUWaLlMV+3F5m/4thoFoZfvmhFNArBvEiLTYWWyWFec0Qi6nZTY14M0JG1uEiz81okH+E14AO4PJz1+Tp+lUbbYn0sreLfJNkg2xrXFGBpXWxvlgoAhj3CvPGzLQg8OEcUAsX1167402tz35ajs5VnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749193605; c=relaxed/simple;
-	bh=8NCNDOFKVX4l5yQGOXyPhRGYHAm0YXygur2y+QsQT+k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=brjOv0iE9BvWQtYOvnDtSVwa3oiuFbJhbDtBYaVeMkFfaYyTyipWJZV9wQyJPem/ySZI1tHUCjsszcSH7l11Pr0aaSAuc/x1shz/aw9mew47vzCO/ajvTwq71ZkUcNs77aCRatmuw8yWlfHcs+a2OjdMhkgK18Iv9IDMKB+RHC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zFqwksVc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vgjPFlC5; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749193810; c=relaxed/simple;
+	bh=GE10Jp7w3vgYYB2dCGeJgGB3gcYPdTbhyjRFYkwy+Kw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VdAkpQRfjk5a6YNDvBQv0sAgn97c5JrZOVUig4UcWVxle9NM2WvFvPCo33jS/k9b4x40uFTp7Aqa4Nw/vFn6rwypwA5yS9o1jOOrmWSulyYjvJg/PEf3+qQ8C5/hveT4yDb1gXEK3PjT3aPzTgt30XUwecT4O1ei4GPd1158OeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AoQ9bFBT; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zFqwksVc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vgjPFlC5"
-Date: Fri, 6 Jun 2025 09:06:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749193599;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AoQ9bFBT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749193807;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CvmhLghGljnZK4lbrm7YCzxGbGhVL5rk2OVbZ5M8Mz8=;
-	b=zFqwksVc5XiAenpC280DSds5VU1hH8itGRnTApN09TT59dYO+MIlcYP/eeFP3bvx6+XFTH
-	qubv/6zWq3sAOEHtcFac9HK4XqU6OoUMO6QRsC6R1jBHiM7YVXY5WEl58nrWE142E4LBzY
-	JbTcRt+nyDgn2nBxOCUhe9zgwOL9wNGkR0jOV5o2YVmAr4O3D4GqtfKGTY0nwmyioq1P/y
-	wbyilk/z7JIrgcMYtnzV4F1CX9x6CsmsH9CDES8lKnFvp8x77S0xT2ze4m6aa6JsTNYPlS
-	XD4w40duMDgMp9SwTsKfwT9swfd04OpreQukP2mXcKJAaYECkmpuADwtjUaBXA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749193599;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CvmhLghGljnZK4lbrm7YCzxGbGhVL5rk2OVbZ5M8Mz8=;
-	b=vgjPFlC50CRMDthTsmUR5/tlTDddl9N+ai19d6fKpZyhx/X5dPkFjQsrCBFOUMN7nuzfZG
-	DcjfPP9J/sOhE6Cg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Chris Mason <clm@meta.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
-Subject: Re: futex performance regression from "futex: Allow automatic
- allocation of process wide futex hash"
-Message-ID: <20250606070638.2Wk45AMk@linutronix.de>
-References: <3ad05298-351e-4d61-9972-ca45a0a50e33@meta.com>
- <20250604092815.UtG-oi0v@linutronix.de>
- <372d8277-7edb-4f78-99bd-6d23b8f94984@meta.com>
- <20250604200808.hqaWJdCo@linutronix.de>
- <aa6154d1-726c-4da1-a27b-69d2e8b449c6@meta.com>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MxJNFACo9rn3IWUaAFK5nXlw1xwbNXA8vdGLsqbsFak=;
+	b=AoQ9bFBTa1gVdk6az/7GLhUK3e8TBqQvuphpTy6wnZkXqlEs4Z3DOEdWtGFYSwqdOyNzH5
+	nl+yXbAPvydD0KXme4bmVSszl6oApXGcssxHfCb9JMvwQz51UegcM3lF9Qe1J30X0dZhB0
+	/hILyC1CVW68lgDLV8A912UZcbjKuUI=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-213-u-It7wpsOqa1-HgzrqvDTA-1; Fri,
+ 06 Jun 2025 03:10:01 -0400
+X-MC-Unique: u-It7wpsOqa1-HgzrqvDTA-1
+X-Mimecast-MFC-AGG-ID: u-It7wpsOqa1-HgzrqvDTA_1749193799
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 72B9319560B1;
+	Fri,  6 Jun 2025 07:09:58 +0000 (UTC)
+Received: from thuth-p1g4.redhat.com (unknown [10.45.225.83])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 863EF18003FC;
+	Fri,  6 Jun 2025 07:09:54 +0000 (UTC)
+From: Thomas Huth <thuth@redhat.com>
+To: linux-riscv@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: Alexandre Ghiti <alex@ghiti.fr>,
+	Atish Patra <atish.patra@linux.dev>,
+	Anup Patel <anup@brainfault.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] riscv: Replace __ASSEMBLY__ with __ASSEMBLER__ in header files
+Date: Fri,  6 Jun 2025 09:09:50 +0200
+Message-ID: <20250606070952.498274-1-thuth@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <aa6154d1-726c-4da1-a27b-69d2e8b449c6@meta.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On 2025-06-05 20:55:27 [-0400], Chris Mason wrote:
-> >> We've got large systems that are basically dedicated to single
-> >> workloads, and those will probably miss the larger global hash table,
-> >> regressing like schbench did.  Then we have large systems spread over
-> >> multiple big workloads that will love the private tables.
-> >>
-> >> In either case, I think growing the hash table as a multiple of thread
-> >> count instead of cpu count will probably better reflect the crazy thin=
-gs
-> >> multi-threaded applications do?  At any rate, I don't think we want
-> >> applications to need prctl to get back to the performance they had on
-> >> older kernels.
-> >=20
-> > This is only an issue if all you CPUs spend their time in the kernel
-> > using the hash buckets at the same time.
-> > This was the case in every benchmark I've seen so far. Your thing might
-> > be closer to an actual workload.
-> >=20
->=20
-> I didn't spend a ton of time looking at the perf profiles of the slower
-> kernel, was the bottleneck in the hash chain length or in contention for
-> the buckets?
+The kernel Makefiles define the __ASSEMBLY__ macro to provide
+a way to use headers in both, assembly and C source code.
+However, all the supported versions of the GCC and Clang compilers
+also define the macro __ASSEMBLER__ automatically already when compiling
+assembly code, so some kernel headers are using __ASSEMBLER__ instead.
+With regards to userspace code, this seems also to be constant source
+of confusion, see for example these links here:
 
-Every futex operation does a rcuref_get() (which is an atomic inc) on
-the private hash. This is before anything else happens. If you have two
-threads, on two CPUs, which simultaneously do a futex() operation then
-both do this rcuref_get(). That atomic inc ensures that the cacheline
-bounces from one CPU to the other. On the exit of the syscall there is a
-matching rcuref_put().
+ https://lore.kernel.org/kvm/20250222014526.2302653-1-seanjc@google.com/
+ https://stackoverflow.com/questions/28924355/gcc-assembler-preprocessor-not-compatible-with-standard-headers
+ https://forums.raspberrypi.com/viewtopic.php?p=1652944#p1653834
+ https://github.com/riscv-software-src/opensbi/issues/199
 
-> >> For people that want to avoid that memory overhead, I'm assuming they
-> >> want the CONFIG_FUTEX_PRIVATE_HASH off, so the Kconfig help text should
-> >> make that more clear.
-> >>
-> >>> Then there the possibility of=20
-> > =E2=80=A6
-> >>> 256 cores, 2xNUMA:
-> >>> | average rps: 1 701 947.02 Futex HBs: 0 immutable: 1
-> >>> | average rps:   785 446.07 Futex HBs: 1024 immutable: 0
-> >>> | average rps: 1 586 755.62 Futex HBs: 1024 immutable: 1> | average
-> >> rps:   736 769.77 Futex HBs: 2048 immutable: 0
-> >>> | average rps: 1 555 182.52 Futex HBs: 2048 immutable: 1
-> >>
-> >>
-> >> How long are these runs?  That's a huge benefit from being immutable
-> >> (1.5M vs 736K?) but the hash table churn should be confined to early in
-> >> the schbench run right?
-> >=20
-> > I think 30 secs or so. I used your command line.=20
->=20
-> Ah ok, my command line is 60 seconds.  It feels like something is
-> strange for the immutable flag to make it that much faster?  schbench
-> starts all the threads up front, so it should hit steady state pretty
-> quickly.  More on NUMA below, but I'll benchmark with the immutable flag
-> on the turin box in the morning to see if it is the extra atomics.
+To avoid confusion in the future, it would make sense to standardize
+on the macro that gets defined by the compiler, so this patch series
+changes all occurances of __ASSEMBLY__ into __ASSEMBLER__.
 
-That immutable flag makes this rcuref_get()/ put() go away. The price is
-that you can't change the size of the private hash anymore. So if your
-workload works best with a hash size of X and you don't intend to change
-it during the runtime of the program, set the immutable flag.
+I split the patches per architecture to ease the review, and I also
+split the uapi headers from the normal ones in case we decide that
+uapi needs to be treated differently from the normal headers here.
 
-> > The 256 core box showed
-> > a higher improvement than the 144 one. I attached a patch against
-> > schbench in the previous mail, I did then
-> > 	./schbench -L -m 4 -M auto -t 256 -n 0 -r 60 -s 0 -H 1024 -I
-> >=20
-> > =E2=80=A6
-> >> This schbench hunk is just testing the performance impact of different
-> >> bucket sizes, but hopefully we don't need it long term unless we want =
-to
-> >> play with even bigger hash tables?
-> >=20
-> > If you do "-H 0" then you should get the "old" behaviour. However the h=
-ash
-> > bucket are spread now over the NUMA nodes:
-> >=20
-> > | dmesg |grep -i futex
-> > | [    0.501736] futex hash table entries: 32768 (2097152 bytes on 2 NU=
-MA nodes, total 4096 KiB, linear).
-> >=20
-> > Now there are 32768 hash buckets on both NUMA nodes. Depending on the
-> > hash it computes, it uses the data structures on NUMA node 1 or 2. The
-> > old code allocated 65536 hash buckets via vmalloc().
->=20
-> So I wanted to mention this earlier and forgot, but schbench obviously
-> isn't numa aware at all.  This combination of command line options
-> basically just has the 4 message threads waking up the 256 worker
-> threads (per message thread) after scribbling a timestamp into shared
-> memory.  From a schbench pov at least, we'll get much more stable
-> numbers by sticking to a single socket.  <makes numa placement hand
-> gestures>
+The x86 and parisc patches already got merged via their specific
+architecture tree:
 
-Earlier the global hash was somehow spread via vmalloc(). Now it is
-spread slightly different. If you request the private hash, then it is
-allocated on the current node. Unless you move from one node the other,
-this should be good.
+ https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=24a295e4ef1ca8
+ https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8a141be3233af7
+ https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=cccaea1d66e94b
+ https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e2b6a188625a2b
 
-> > The bigger hash table isn't always the answer. Yes, you could play
-> > around figure out what works best for you. The problem is that the hash
-> > is based on the mm and the (user) memory address. So on each run you
-> > will get a different hash and therefore different collisions.
-> > If you end up having many hash collisions and then block on the same
-> > lock then yes, larger hash table will be the cure. If you have many
-> > threads doing the futex syscall simultaneously then making the hash
-> > immutable avoids two atomic ops on the same memory address.
-> > This would be my favorite.
-> >=20
-> > Now that I think about it, it might be possible to move the atomic ops
-> > the hash bucket itself. Then it wouldn't bounce the cache line so much.
-> > Making the hash immutable is simpler.
->=20
-> Going back to your diff, if we have a process growing the total number
-> of threads, can we set FH_IMMUTABLE too early?  As the number of threads
-> increases, eventually we'll pick the 2x num_cpus, but that'll take a whil=
-e?
+So I assume the riscv patches should also go via the riscv tree.
 
-If you refer to the schbench diff, then set it early. Once the prctl()
-to set the size of the private hash, there will be no resize by the
-kernel.
+v2:
+- Split the riscv patches from the global series
+  (see https://lore.kernel.org/all/20250314071013.1575167-1-thuth@redhat.com/)
+- Rebased the patches on linux-next and fixed the conflicts
+  and new occurances of __ASSEMBLY__
 
-If you refer to the kernel diff where set the FH_IMMUTABLE flag, then it
-is set once the upper limit is reached (that was the plan in case I did
-the logic wrong). Which means at that point it won't increase any
-further because of the CPU limit. The only way how you can reach it too
-early is if you offline CPUs.
+Thomas Huth (2):
+  riscv: Replace __ASSEMBLY__ with __ASSEMBLER__ in uapi headers
+  riscv: Replace __ASSEMBLY__ with __ASSEMBLER__ in non-uapi headers
 
-> I do see what you mean about immutable being simpler though, I'll get
-> some numbers on those atomics.
+ arch/riscv/include/asm/alternative-macros.h   | 12 ++++++------
+ arch/riscv/include/asm/alternative.h          |  2 +-
+ arch/riscv/include/asm/asm-extable.h          |  6 +++---
+ arch/riscv/include/asm/asm.h                  | 10 +++++-----
+ arch/riscv/include/asm/assembler.h            |  2 +-
+ arch/riscv/include/asm/barrier.h              |  4 ++--
+ arch/riscv/include/asm/cache.h                |  4 ++--
+ arch/riscv/include/asm/cpu_ops_sbi.h          |  2 +-
+ arch/riscv/include/asm/csr.h                  |  4 ++--
+ arch/riscv/include/asm/current.h              |  4 ++--
+ arch/riscv/include/asm/errata_list.h          |  6 +++---
+ arch/riscv/include/asm/ftrace.h               |  6 +++---
+ arch/riscv/include/asm/gpr-num.h              |  6 +++---
+ arch/riscv/include/asm/image.h                |  4 ++--
+ arch/riscv/include/asm/insn-def.h             |  8 ++++----
+ arch/riscv/include/asm/jump_label.h           |  4 ++--
+ arch/riscv/include/asm/kasan.h                |  2 +-
+ arch/riscv/include/asm/kgdb.h                 |  4 ++--
+ arch/riscv/include/asm/mmu.h                  |  4 ++--
+ arch/riscv/include/asm/page.h                 |  4 ++--
+ arch/riscv/include/asm/pgtable.h              |  4 ++--
+ arch/riscv/include/asm/processor.h            |  4 ++--
+ arch/riscv/include/asm/ptrace.h               |  4 ++--
+ arch/riscv/include/asm/scs.h                  |  4 ++--
+ arch/riscv/include/asm/set_memory.h           |  4 ++--
+ arch/riscv/include/asm/thread_info.h          |  4 ++--
+ arch/riscv/include/asm/vdso.h                 |  4 ++--
+ arch/riscv/include/asm/vdso/getrandom.h       |  4 ++--
+ arch/riscv/include/asm/vdso/gettimeofday.h    |  4 ++--
+ arch/riscv/include/asm/vdso/processor.h       |  4 ++--
+ arch/riscv/include/asm/vdso/vsyscall.h        |  4 ++--
+ arch/riscv/include/uapi/asm/kvm.h             |  2 +-
+ arch/riscv/include/uapi/asm/ptrace.h          |  4 ++--
+ arch/riscv/include/uapi/asm/sigcontext.h      |  4 ++--
+ tools/arch/riscv/include/asm/csr.h            |  6 +++---
+ tools/arch/riscv/include/asm/vdso/processor.h |  4 ++--
+ 36 files changed, 81 insertions(+), 81 deletions(-)
 
-I have another idea to add a refcount to the hb slot itself. I hope that
-it won't be that expensive if a atomic inc/dec occurs on different
-memory locations. But then maybe freeze it if the upper limit is
-reached. But that might help if we don't reach the upper limit.
+-- 
+2.49.0
 
-> -chris
-
-Sebastian
