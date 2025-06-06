@@ -1,123 +1,155 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4262874E7
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 12:05:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A9E2874E9
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 12:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749211544; cv=none; b=tObzMBlECd7G7fW01IgRkUtOkDDUtZ4ae7tV1GY4lpLiDCKr1f6cupem2Jr85hHKSGjsw4fjaiRZ+vu6ZEAMEedTbYzLeYjlBv+P1DP42cxjfLriYMSJRI6U5wDTY51PVaO3H9+F2H6sNCqA/a1fCnyA4KmhDeJpJRB+PiyWgAg=
+	t=1749211552; cv=none; b=mXEZLV2+o0yU1q84XENNscRd71T3NgXDpfTtroJGnETOrCWVCrQ6JtruYyWUfubT0u9jJnYiKsljy11QfFBUURcAd4QfIZc3ivY/hUGaqzetB2MIVf/pgXmmUhWmUnNhUSyt54QsbHwQTkqzun11ZDUzaKxJb3gH9eQi+pqkrgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749211544; c=relaxed/simple;
-	bh=pw5DxZusOl5EtI/08fej6vFmQVNmSEMstPXZfIOtxuk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hhT0yKTotVY4VlBBlvJRYYOtBZ23QTJSkofJBpW6f7Fx5fYrpthJgsMurIaJ8U6gtnyljxSBdsRCM+gWLYSv3cws73d00c+8T7D0twMwF9ldC8dM7iz+YakVeFhu45Zmxr61sjdcKvSLIqruj2kfrGRDsY1G8Rzm9LmrFoqKmSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZejPF38a; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1749211552; c=relaxed/simple;
+	bh=CV4a4KGuH728yQyPWaLKgsNTM75BrIPl2zVZKUa7l2A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gyBFkL70Z/tLFUCdqH2Bno5hEMBiiXEvAahygj3I2IbVPjfi/nCwjI78GbhiiL+Jmk22D54DYWiIUTzJEMpcJfonzxzMnMsnP+LmSNxLAcj9GVGVp3vS5u7888kZVaz8Ch4yNXLBJVKJxi2JZxaH8vF5VlFnm8AGazu4ZHBeZIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=guLQZWdw; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZejPF38a"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-606b39b19b6so333739a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 05:05:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749211540; x=1749816340; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=blUSLQmy9t7rc+yhzKuamiyJu/iQaaFL9KW6gmT2m2A=;
-        b=ZejPF38a0LqdVW5/zknx/22KqHXfdBq7g//umrB2TA9L5St/eYMe78bXc/x78Xy5N0
-         J16ZJCaK+xqUnmasqNlkiUNswBlzvtpD/qUpWk6bMXNWZLygWOKozueAdGOrqb2CeJdo
-         7h1HNScLvL/yqZACikq/cA/F44dH9Krerw6R23ZrBCugzsOZgzP/uqAglYsa494ohvuL
-         JEjU+ys5rCcDadQUzfdgTQ0vMYCMTgrwY7ggSTLakfMy/lR3NwmXQT/X34EOLvIG7SaQ
-         X5q4ME2BQqBUwd4wXiyrUtqmj1pIcIqdR1+3M9TQQcf7Iu/+rsK/qUZBwKER45/r92Wj
-         cqKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749211540; x=1749816340;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=blUSLQmy9t7rc+yhzKuamiyJu/iQaaFL9KW6gmT2m2A=;
-        b=T8qSZmZ302OT3e7BA07XMw5x85ZgNNDqncUHNSYh92sde+QukMsgfNSi3RJbiX9noc
-         sGdpaZfbKM6xG9DwbXMDyZmeEKBrXtv9/wZPoqmKqCMe9neIncUZXcVYoyCCKdm5a1dN
-         WqZpC/ppZjPbA0XeauA9AoK9LwaSsG5+BGeGQH6uEkTbFXtZzcA8YM4TNEVh8ox6+S9y
-         i45C9dOe3VypTeNn1bfp82zSC43r+Qlw/ulAl3jXfOfZmQMIacVQBW1wna6jOFJtUooF
-         F8mMJlF4u22gO0hb676dMcog1RqZ6zvqDhGi8ANeRZa8G7l0W4jAVhwkIX47/lPW7Uj0
-         cUQQ==
-X-Gm-Message-State: AOJu0YwPtClahZSLMgMFdAwMcTeJ14ZErshf1CRCvlGG52uCT/Scj22H
-	wq91YMsuwnL3Uoq+aQ4CyMITTuyd2Hla/3ENtzrWx7Qww4pH9yOujHdAJVAhnh+K4Ms=
-X-Gm-Gg: ASbGncvaCdwt+3nynCNQl+FlnJby59iBqZpxK7c9wkBmGA4PzkAaxWGUDPQ8irtkGVx
-	emqP4H0PnS0ukYuFAhaN05BgKzTpuGpUyblukV1fvntl4rN7RM/IVR5pi2ameHW/UfqZFb9ROWV
-	Jbp0iNZ1r5N4jbSWKOGu073lmC3cmaDKOckePQnxFAmXcgg9Tl31iZWPSCOy6ibq/PiBNdOmDH2
-	Vi7leGkP8icwYR1nPPQCCvUwvWIvzTLTs8M+XKA7fjlDBpsX/nI/BKJFeE/IHnvT3HLagM2Oxzy
-	anK9UvQT7MJlFNdGiGR77KSb85DPR1snu3w6WznWVBaA4lJT4q8XpTN+3gsjKkvABmoAbarhjjL
-	4wOBwHygRHF3Bne8C4FLf6crNsK+Ckzi1/wZWywHzHknGcp7H+l4KqPAB
-X-Google-Smtp-Source: AGHT+IFEWMIzPeLiuWhp169aIeLqFwqJdP4I0BLMQjvCWLHGJqq5NI3ba8l22k9bFyc8ukNwi499Gg==
-X-Received: by 2002:a17:907:3c8c:b0:adb:2dc9:ad4 with SMTP id a640c23a62f3a-ade1ab952f9mr87524366b.14.1749211539636;
-        Fri, 06 Jun 2025 05:05:39 -0700 (PDT)
-Received: from mordecai.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1db54c3esm106606666b.39.2025.06.06.05.05.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 05:05:39 -0700 (PDT)
-Date: Fri, 6 Jun 2025 14:05:28 +0200
-From: Petr Tesarik <ptesarik@suse.com>
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
- <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] timers/migration: remove an unneeded call to
- find_first_bit()
-Message-ID: <20250606140528.2b17567f@mordecai.tesarici.cz>
-In-Reply-To: <20250530132539.234792-1-ptesarik@suse.com>
-References: <20250530132539.234792-1-ptesarik@suse.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.50; x86_64-suse-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="guLQZWdw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749211549;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=/tweG0MISrWmVqbzzxaipvMQBJhW3IG/hseCw+v/QAo=;
+	b=guLQZWdwgPTDp1CE68wVCdF3Vaa/sPbBu3e1Wcr9hlY7JADJBBylPMhNYnMKB6/Qam9gRj
+	wj5wL6Gfi2VdQTlS/1lxLYAJiyPXrLiF2ZPPOIUQPUauP+JYH1meardf95UI4ZaWKMj/dd
+	PkwWNdUhnJSUSE4FaK7N0NKBIImQOHg=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-226-MDInHr2wNf-wmBmIOyt2Kw-1; Fri,
+ 06 Jun 2025 08:05:43 -0400
+X-MC-Unique: MDInHr2wNf-wmBmIOyt2Kw-1
+X-Mimecast-MFC-AGG-ID: MDInHr2wNf-wmBmIOyt2Kw_1749211540
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3AFC318003FC;
+	Fri,  6 Jun 2025 12:05:40 +0000 (UTC)
+Received: from hydra.redhat.com (unknown [10.44.33.65])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4CA5618002A5;
+	Fri,  6 Jun 2025 12:05:32 +0000 (UTC)
+From: Jocelyn Falempe <jfalempe@redhat.com>
+To: Jani Nikula <jani.nikula@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Christian Koenig <christian.koenig@amd.com>,
+	Huang Rui <ray.huang@amd.com>,
+	Matthew Auld <matthew.auld@intel.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Cc: Jocelyn Falempe <jfalempe@redhat.com>
+Subject: [PATCH v8 0/9] drm/i915: Add drm_panic support
+Date: Fri,  6 Jun 2025 13:48:04 +0200
+Message-ID: <20250606120519.753928-1-jfalempe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Fri, 30 May 2025 15:25:39 +0200
-Petr Tesarik <ptesarik@suse.com> wrote:
+This is a draft of drm_panic support for i915.
 
-> Use simple bit arithmetic to extract the least significant bit from the
-> active bitmask, because the bit position is not needed, only the bit
-> itself.
+I've tested it on the 4 intel laptops I have at my disposal.
+ * Haswell with 128MB of eDRAM.
+ * Comet Lake  i7-10850H
+ * Raptor Lake i7-1370P (with DPT, and Y-tiling).
+ * Lunar Lake Ultra 5 228V (with DPT, and 4-tiling, and using the Xe driver.
 
-There has been no reply here, but I received an out-of-band
-recommendation to wrap this bit-twiddling trick in a macro.
+I tested panic in both fbdev console and gnome desktop.
 
-So, you can ignore this patch for now and wait for a respin after I
-add the macro and convert pre-existing uses in the kernel.
+Best regards,
 
-Petr T
+v2:
+ * Add the proper abstractions to build also for Xe.
+ * Fix dim checkpatch issues.
 
-> No functional change.
-> 
-> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-> ---
->  kernel/time/timer_migration.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
-> index 2f6330831f08..0f40727b6cac 100644
-> --- a/kernel/time/timer_migration.c
-> +++ b/kernel/time/timer_migration.c
-> @@ -1277,12 +1277,12 @@ static bool tmigr_inactive_up(struct tmigr_group *group,
->  			 * group is idle!
->  			 */
->  			if (!childstate.active) {
-> -				unsigned long new_migr_bit, active = newstate.active;
-> +				u8 active = newstate.active;
->  
-> -				new_migr_bit = find_first_bit(&active, BIT_CNT);
-> +				if (active) {
-> +					u8 lsbit = active & -active;
->  
-> -				if (new_migr_bit != BIT_CNT) {
-> -					newstate.migrator = BIT(new_migr_bit);
-> +					newstate.migrator = lsbit;
->  				} else {
->  					newstate.migrator = TMIGR_NONE;
->  
+v3:
+ * Add support for Y-tiled framebuffer when DPT is enabled.
+
+v4:
+ * Add support for Xe driver, which shares most of the code.
+ * Add support for 4-tiled framebuffer found in newest GPU.
+
+v5:
+ * Rebase on top of git@gitlab.freedesktop.org:drm/i915/kernel.git drm-intel-next
+ * Use struct intel_display instead of drm_i915_private.
+ * Use iosys_map for intel_bo_panic_map().
+
+v6:
+ * Rebase on top of git@gitlab.freedesktop.org:drm/i915/kernel.git drm-intel-next
+ * Use struct intel_display instead of drm_i915_private for intel_atomic_plane.c
+
+v7:
+ * Fix mismatch {} in intel_panic_flush() (Jani Nikula)
+ * Return int for i915_gem_object_panic_map() (Ville Syrjälä)
+ * Reword commit message about alignment/size when disabling tiling (Ville Syrjälä)*
+
+v8:
+ * Use kmap_try_from_panic() instead of vmap, to access the framebuffer.
+ * Add ttm_bo_kmap_try_from_panic() for the xe driver, that uses ttm.
+ * Replace intel_bo_panic_map() with a setup() and finish() function,
+   to allow mapping only one page of teh framebuffer at a time.
+ * Configure psr to send the full framebuffer update.
+
+Jocelyn Falempe (9):
+  drm/i915/fbdev: Add intel_fbdev_get_map()
+  drm/i915/display/i9xx: Add a disable_tiling() for i9xx planes
+  drm/i915/display: Add a disable_tiling() for skl planes
+  drm/ttm: Add ttm_bo_kmap_try_from_panic()
+  drm/i915: Add intel_bo_panic_setup and intel_bo_panic_finish
+  drm/i915/display: Add drm_panic support
+  drm/i915/display: Add drm_panic support for Y-tiling with DPT
+  drm/i915/display: Add drm_panic support for 4-tiling with DPT
+  drm/i915/psr: Add intel_psr2_panic_force_full_update
+
+ drivers/gpu/drm/i915/display/i9xx_plane.c     |  23 +++
+ .../gpu/drm/i915/display/intel_atomic_plane.c | 169 +++++++++++++++++-
+ drivers/gpu/drm/i915/display/intel_bo.c       |  12 ++
+ drivers/gpu/drm/i915/display/intel_bo.h       |   4 +
+ .../drm/i915/display/intel_display_types.h    |   2 +
+ drivers/gpu/drm/i915/display/intel_fb_pin.c   |   5 +
+ drivers/gpu/drm/i915/display/intel_fb_pin.h   |   2 +
+ drivers/gpu/drm/i915/display/intel_fbdev.c    |   5 +
+ drivers/gpu/drm/i915/display/intel_fbdev.h    |   6 +-
+ drivers/gpu/drm/i915/display/intel_psr.c      |  20 +++
+ drivers/gpu/drm/i915/display/intel_psr.h      |   2 +
+ .../drm/i915/display/skl_universal_plane.c    |  27 +++
+ drivers/gpu/drm/i915/gem/i915_gem_object.h    |   5 +
+ drivers/gpu/drm/i915/gem/i915_gem_pages.c     | 109 +++++++++++
+ drivers/gpu/drm/i915/i915_vma.h               |   5 +
+ drivers/gpu/drm/ttm/ttm_bo_util.c             |  27 +++
+ drivers/gpu/drm/xe/display/intel_bo.c         |  61 +++++++
+ drivers/gpu/drm/xe/display/xe_fb_pin.c        |   5 +
+ include/drm/ttm/ttm_bo.h                      |   1 +
+ 19 files changed, 488 insertions(+), 2 deletions(-)
+
+
+base-commit: 7247efca0dcbc8ac6147db9200ed1549c0662465
+-- 
+2.49.0
 
