@@ -1,269 +1,214 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED14D433A6
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 18:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A361A433A6
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 18:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749234146; cv=none; b=jma+AHBwVm6ipd+Mh7Yp5pcv3XV9KL6eIq2wy3Nb1XtjfQKHAIO/1znGFstE/FjcVzTysOc7eewg8yP4DUeO3ZXJQVNrpa5SaOMZvhZ7qHmp6X7oPWm5SRjO7tZZ5zHuubbB7STnBblt2qG/7IS71iputqUejScfI5jrcRmf0SA=
+	t=1749234213; cv=none; b=QkLGJ+1xyxRlUWD6bu3OkA+YT0kb/va3nlL5zJNkVfLVdzWVhzrtraXiHcDXSyg9uXdnU0IY8N2y2CQkItcb292uY39vV/gH9qub1D83jgOSdx2+77vwBb3k3+dzs3mWT8t99TEfbaXvS5VALX8qaq/JhEeDpTclTbCqZD1N6NI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749234146; c=relaxed/simple;
-	bh=wD3ohA+2DtNVVMZ9motY8mWNX8A9Usl66ckYinm/99E=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=tl2c40Ba/HRB8Wh+yHMk6wf5EC/zDcewKOeZC3uUby8Bq2i2Pu0ig9N8u3WXY2AdMDAK3ebo7Zj8jvaR0No6uEsUFRjC/QDEGNe4kJ45xfI+ZeTQiIuz4k5jR62GrgX+Ahx73Q80LUi1zp2VijI+RC5irYHJMI7rzVqva7U4fCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=byk1l4yV; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1749234213; c=relaxed/simple;
+	bh=RYOWzqJO2EfEC/awvItMe9Z5A0XaQhmh/O4j46xBP+g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JdvkNHWVyRsPYbTywfkNf0COjqsZt7espgQTjlzd1/NOzPPmfmn4oeUGEoaDO1jOV284NndB/ck2Npu70ToHrJzU5XF7DYBdZ9dSIlU5EBGPdWKCfzJQtlUGOzn2fpWsWWtIq2dS9EEz1jFWS+vFbjU4InTVVTmMU7YmVVXcyVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LfQFDgqy; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="byk1l4yV"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-234fcadde3eso29258065ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 11:22:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1749234143; x=1749838943; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OZrMvaEHkl3yooXaY3MSFj8fFjzuxvYEiXVTkirVIzk=;
-        b=byk1l4yVcTrr698paW31ATjzOL9czFtVCGcFx+Qk5XYU7Obwp1d1K2389uUrG0dfYb
-         APn5xrsXAXdbSiPbW6CkLgftg9b3KDhdq3/mucxtTdMLYR+FCdKy6WFH9nXgOXyYbc+i
-         g86QjKNdOxRjlWct0xguv4frrerFD5ySvqY8z+XIMdCDLcxf6lvujKzj1ESpBJ9wpzec
-         r/jceQvIzOziS9Fm6bOptHeM3gE6JV14nghIzQrEaQqp9p0mR6OJmiBe4eiM3iqS66Tv
-         Lg4hyveuk4wWMMNwWlT6waPdRd4S8LM/yaGM1Z455bsOFG05WYJRvPHJ/NIjHj8s5y1o
-         c9RQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LfQFDgqy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749234210;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Ug2rgnBs6oJAavrVeN9J6WIfZuijp5pXf6YiUZQknzU=;
+	b=LfQFDgqy02vdEKhS9IFAEZuWdB2BoE/xhCWsvCVjnyTrn4oYs1k3mE1hTAL1DZmwtc7NqR
+	BHty8i9IwDopaR35lmuGihD3GhWw1X8+occLONgh90X+vnarnU2ta+ZA0TfMKi6H/L0f73
+	9bYylYVwTtdMhPMTOy85PUgnYUvScp8=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-590-pWyLs_E9PtWMjvJ1LNB3LQ-1; Fri, 06 Jun 2025 14:23:29 -0400
+X-MC-Unique: pWyLs_E9PtWMjvJ1LNB3LQ-1
+X-Mimecast-MFC-AGG-ID: pWyLs_E9PtWMjvJ1LNB3LQ_1749234208
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a1f6c5f4f2so1081662f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 11:23:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749234143; x=1749838943;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OZrMvaEHkl3yooXaY3MSFj8fFjzuxvYEiXVTkirVIzk=;
-        b=e8hhl1ooeImeQ2ZLcM3raJ40pWXA69JA/jjTyQYz8EBRHkxhvrHM0l5b+Y45zV6tOc
-         WDf9xGik+rRjhPU/do8fKgx0b1irrKWC6hcQw70g/c/UbWLJkQWuVgicjUw42w0vJ9it
-         vuTId0CZPaXO41r7KJAsZG0P+HhOClpWdY3xxYvGHikUZJmCOITNF+rkQgn1e92rtNoM
-         B/uLTpWj4ddfNJpQThQiGoCvAMq9GfsyJMcCWGdPbTHH6I8RS38ehYxHnxh8ibGs6Qr8
-         fY9fopnhPbuNCHlVd9jBpNh7CdsXrNIL5Ksyf2UYzPqG0ZSQZS0vo3iu0DRdcSRK1VgO
-         JMsw==
-X-Forwarded-Encrypted: i=1; AJvYcCVdicfIwhNHmBSbRwQsGrG/pZ9i087YgOQt1Mbu+eqhblyyPSsGLgh2UENnVrYW/2tIPLnmDrOgEQdQDqc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHBGGxu27llx4qXi9z+h+/hEBhn05yOoMJMIGxx05QG6eXrLG7
-	lF15LrQ8ZP4EfCJzfMx/i5WX/aWXJaptUA7XTnDhdjGg3VQ+KdwGQj3Y4cTWS4GntECvYq/uqtC
-	9zpxl
-X-Gm-Gg: ASbGncuIpIohPo9vb7Jgj83+85wig4+el1gPRUXwCrLXGjh50YOdtDAD6mreGpGtAND
-	/Xr6Nyketnds+ALiL1l8A16N1gp4zegwWyH6ksMO0XddVDj54e3EGRBk8ZJ50o75a0jmGgMw7aw
-	OetZpBOMnDTpqllGzRc6tM6yXkD6+AbCSc7bBB5NIM8Lz2+ArSYjaWW3bt3cwXjbMaNB/dST/X9
-	+y+oldkraK43HGeh/SXsI19HTPYyEyapSKRA3MBJTacjqPLqYuhMhsxhQ8SKr1VWUAOytAJfCpc
-	p+98xT+lsQ7QedZHMDST2J52dFgcg6QsMayQSsmALBl3LoPXFYyKPk4=
-X-Google-Smtp-Source: AGHT+IGMlluHec06cdDvnE+fsfsOP8CEZrDoNNmjzyHDnUqsJgq7fMhrAUqDcdxh0pOY9mNBmLtDoA==
-X-Received: by 2002:a17:902:d483:b0:235:e1d6:4e29 with SMTP id d9443c01a7336-23601dc0136mr70329185ad.36.1749234143099;
-        Fri, 06 Jun 2025 11:22:23 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:500::7:2724])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-236030788a1sm15357385ad.16.2025.06.06.11.22.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 11:22:22 -0700 (PDT)
-Date: Fri, 06 Jun 2025 11:22:22 -0700 (PDT)
-X-Google-Original-Date: Fri, 06 Jun 2025 11:22:16 PDT (-0700)
-Subject:     Re: [PATCH v8] riscv: mm: Add support for Svinval extension
-In-Reply-To: <CAN37VV4ohoi48BAM1-OTdSGe9yD=2Eh84pKsHLsWQSaRadJ7tw@mail.gmail.com>
-CC: Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org,
-  linux-kernel@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-  alexghiti@rivosinc.com, samuel.holland@sifive.com, ajones@ventanamicro.com
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: mchitale@ventanamicro.com
-Message-ID: <mhng-BE91CAF1-2E4D-45A2-A21A-FD613551610D@palmerdabbelt-mac>
+        d=1e100.net; s=20230601; t=1749234208; x=1749839008;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Ug2rgnBs6oJAavrVeN9J6WIfZuijp5pXf6YiUZQknzU=;
+        b=JYr1kSpnB2GvWXFleR2UMDfe8c5xcvbHdAZVYuMdnTHY5jOuckwJ0x2XVnGcig6sAs
+         0Fi4VqCGRPgieh4hpMOPoc4kYJYDOgtNrzhwI8+GTlYD+BkK921BF4vz2xLn9lv0hbuk
+         8O4Fo5rEdwNV4OdE2X6iBSbyPgECSuIvg8PLO7huMT88TvZZeYD4/f8bvuseN1bS6YVm
+         +hWaySB/zzbSJ3wVOvAsr+wDJo9WTw9rOaV6hsrR+dE4qqGPCrpZkrU4xie8pzlGSSKW
+         4IYaj3ClDHk+CNXqxVQoMoRQPCAuRGB+wNExLTLkvrEFWfCWHtz0pZ5q4Qz1XEh81vrM
+         h/bg==
+X-Forwarded-Encrypted: i=1; AJvYcCXVKn4zqLpiKfdwmOYOSXUvvsNdjtfE7WDRDw/EMS1++cdvOtCHJiTnURgIRs2ODYiaxExNxGPUVtnEBTA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWO5DVR+1YVb+Hq9v+b926Wk1K321JX9QCNbk0ZXD2LeVJc5/A
+	7P8RcG7fZsIMiYZM1ofBWl7m8+9uY/T5pM0Ib10wfbYS2RYG50ZhF24SqGgAWQoEmHvGaCCg5pm
+	uNzjCs4DSGbPtpD0nF7MbTd5DkNaP9fQ+sfwriq/KHryLCqWRjFkpm1zW2janm7gkPA==
+X-Gm-Gg: ASbGncuh85nWpAJuCLhUPNJMOcru5uNu5MeuditniPLEWxrJU6QxzV5xaaglCZgaB8O
+	phqp+i0L7uNc0R/e3Q8p+RRdzJkwIR+Xo3tsvhInyS5biDaC5D63D2bKNV7EzTMQVrewxdKPTlv
+	p1rkdfKhecDZGtzk+tep1km7Ecz/IjHSIUaNR7AdAESJU/alIZTKMir7eJCJpkWTAobfiLaaJ2r
+	ngZC2ZzWa3HSyYDuq48fitbKjNnWRZitAccbOD1jWc24oaB7aV/sHxsjQi8RGe4cfQ9u9wOAy4N
+	WqCglCAq9RbHGeYuvtfZL7NGApVLYvQ2lSm/SO5MDjQpbqqM+PPaZTlzcWnOPKHcH9nGn+1XoYz
+	o/EQOoysntqEREOvE2hBskk4aLnVCsN0=
+X-Received: by 2002:a05:6000:200d:b0:3a4:dc2a:924e with SMTP id ffacd0b85a97d-3a531784971mr3973412f8f.6.1749234208252;
+        Fri, 06 Jun 2025 11:23:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF8/EXOFVWPefbdu/a4nHn2MByHfexAc310Ody1Xrl1rxFHi1hd9fL2kjWdNFfNi7AORNazHQ==
+X-Received: by 2002:a05:6000:200d:b0:3a4:dc2a:924e with SMTP id ffacd0b85a97d-3a531784971mr3973385f8f.6.1749234207849;
+        Fri, 06 Jun 2025 11:23:27 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f19:9c00:568:7df7:e1:293d? (p200300d82f199c0005687df700e1293d.dip0.t-ipconnect.de. [2003:d8:2f19:9c00:568:7df7:e1:293d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451f8fb57b1sm34324945e9.1.2025.06.06.11.23.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jun 2025 11:23:26 -0700 (PDT)
+Message-ID: <44af8f5a-2d94-498b-a3e0-31f5dde74538@redhat.com>
+Date: Fri, 6 Jun 2025 20:23:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] mm/gup: remove (VM_)BUG_ONs
+To: John Hubbard <jhubbard@nvidia.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Peter Xu <peterx@redhat.com>
+References: <20250604140544.688711-1-david@redhat.com>
+ <aEFC_12om2UHFGbu@tiehlicka>
+ <1a65d0e6-6088-4a15-9c19-537203fe655c@redhat.com>
+ <aEKnSxHG8_BGj7zQ@tiehlicka>
+ <e680a8f3-7b45-4836-8da7-7e7a0d2fcd56@redhat.com>
+ <aEK_R93gihEn-xW6@tiehlicka>
+ <50ff9149-2824-4e57-8d74-d8d0c063c87e@lucifer.local>
+ <e5fa4a36-2af8-48e9-811e-680881c06b86@redhat.com>
+ <1a7513cf-4a0a-4e58-b20d-31c1370b760f@lucifer.local>
+ <e898e52e-a223-4567-9514-b4a021b5d460@nvidia.com>
+ <72bb36f2-65b6-4785-af9d-5b1f8126fc78@lucifer.local>
+ <2f866f12-2aa0-4456-b215-08ddc9b13b1e@redhat.com>
+ <3dfbbd63-697d-42aa-8906-539d74df9123@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <3dfbbd63-697d-42aa-8906-539d74df9123@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 22 May 2025 08:11:09 PDT (-0700), mchitale@ventanamicro.com wrote:
-> Hi Alex,
->
-> On Tue, May 20, 2025 at 10:25 PM Alexandre Ghiti <alex@ghiti.fr> wrote:
+On 06.06.25 20:21, John Hubbard wrote:
+> 
+> 
+> On 6/6/25 11:15 AM, David Hildenbrand wrote:
+>> On 06.06.25 20:06, Lorenzo Stoakes wrote:
+>>> On Fri, Jun 06, 2025 at 10:57:44AM -0700, John Hubbard wrote:
+>>>> On 6/6/25 4:04 AM, Lorenzo Stoakes wrote:
+>>>>> On Fri, Jun 06, 2025 at 12:28:28PM +0200, David Hildenbrand wrote:
+>>>>>> On 06.06.25 12:19, Lorenzo Stoakes wrote:
+>>>>>>> On Fri, Jun 06, 2025 at 12:13:27PM +0200, Michal Hocko wrote:
+>>>>>>>> On Fri 06-06-25 11:01:18, David Hildenbrand wrote:
+>>>>>>>>> On 06.06.25 10:31, Michal Hocko wrote:
+>>>>>>>> [...]
+>>>>> So to me the only assessment needed is 'do we want to warn on this or not?'.
+>>>>>
+>>>>> And as you say, really WARN_ON_ONCE() seems appropriate, because nearly always
+>>>>> we will get flooded with useless information.
+>>>>>
+>>>>
+>>>> As yet another victim of such WARN_ON() floods at times, I've followed
+>>>> this thread with great interest. And after reflecting on it a bit, I believe
+>>>> that, surprisingly enough, WARN_ON() is a better replacement for VM_BUG_ON()
+>>>> than WARN_ON_ONCE(), because:
+>>>
+>>> Right, these shouldn't be happening _at all_.
+>>   > > I'm easy on this point, I'd say in that case VM_WARN_ON() is the most
+>>> _conservative_ approach, since these are things that must not happen, and
+>>> so it's not unreasonable to fail to repress repetitions of the 'impossible'
+>>> :)
+>>>
+>>> But I get the general point about ...WARN_ON_ONCE() avoiding floods.
+>>>
+>>> David, what do you think?
 >>
->> Hi Mayuresh!
+>> Well, in this patch here I deliberately want _ONCE for the unpin sanity
+>> checks. Because if they start happening (IOW, now after 5 years observed
+>> for the first time?) I *absolutely don't* want to get flooded and
+>> *really* figure out what is going on by seeing what else failed.
 >>
->> On 7/30/24 10:43, Mayuresh Chitale wrote:
->> > On Wed, Jul 24, 2024 at 8:20 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
->> >> On Tue, 02 Jul 2024 03:26:37 PDT (-0700), mchitale@ventanamicro.com wrote:
->> >>> The Svinval extension splits SFENCE.VMA instruction into finer-grained
->> >>> invalidation and ordering operations and is mandatory for RVA23S64 profile.
->> >>> When Svinval is enabled the local_flush_tlb_range_threshold_asid function
->> >>> should use the following sequence to optimize the tlb flushes instead of
->> >> Do you have any performance numbers for the optimization?  As per here
->> >> <https://lore.kernel.org/all/mhng-f799bd2b-7f22-4c03-bdb2-903fa3b5d508@palmer-ri-x1c9a/>.
->> > No, currently there are no numbers available for comparison but the
->> > rationale for the optimization is described in the spec. The extension
->> > is mandatory for the RVA23S64 profile but any platform that doesn't
->> > support this extension will not be impacted as the code executes only
->> > if the svinval extension is enabled at the boot up.
-
-I seem to remember writing something like this up at some point, but I 
-didn't see it so I figured I'd just write it up again in case anyone's 
-looking in the future...
-
-My core worry here  is that there's two ways to tuse the Svinval 
-extension:
-
-* This, which just replaces the sfence.vma with a loop of Svinval 
-  instructions.  This keeps the Svinval instructions close to each 
-  other.
-* Some more extensive modifications to move the Svinval instructions 
-  farther apart from each other.
-
-Which approach is better is going to depend on what them microarchicture 
-implements: does it want the Svinval instructions close to each other so 
-it can pattern match them, or does it want them far apart so the 
-ordering instructions stall less.  It's entirely possible that the wrong 
-flavor of Svinval will actually decrease performance on systems that 
-were built around the other flavor, and we don't know which flavor is 
-getting implemented.
-
-So it's not one of these extensions where we can just say "these are 
-only used on systems that implement the extensions, so it's obviously 
-faster".  We really need some numbers to demonstrate this flavor is 
-actually faster...
-
->> So I finally have some numbers! I tested this patchset on the BananaPi:
->> I measured the number of cycles when flushing 64 entries (which is our
->> current threshold) and I made sure to touch the entries beforehand.
+>> And crashing on VM_BUG_ON() and not observing anything else was also not
+>> particularly helpful :)
 >>
->> Here they are:
+>> Because ... they shouldn't be happening ...
 >>
->> * svinval:
+>> (well, it goes back to my initial point about requiring individual
+>> decisions etc ...)
 >>
->> #cycles: 364920
->> #cycles: 365856
->> #cycles: 367993
+>> Not sure what's best now in the general case, in the end I don't care
+>> that much.
 >>
->> * !svinval:
->>
->> #cycles: 663585
->> #cycles: 663105
->> #cycles: 664073
->>
->
-> That's awesome !! Thank you so much for getting the data.
+>> Roll a dice? ;)
+> 
+> One last data point: I've often logged onto systems that were running
+> long enough that the dmesg had long since rolled over. And this makes
+> the WARN_ON_ONCE() items disappear.
 
-So I think that's good enough to start, so it's going up to Linus and 
-hopefully it lands (there's been a bit of chaos, but hopefully that's 
-all sorted out).
+I think what would be *really* helpful would be quick access to the very 
+first warning that triggered. At least that's what I usually dig for ... :)
 
->> So that's roughly /2 using svinval. To me that's good enough to merge
->> that for 6.16 :)
+-- 
+Cheers,
 
-Ya, but probably low enough that we're going to want a lower threshold 
-too -- if the svinval loop is only a factor of 2 faster for 64 entries, 
-it's probably going to end up slower at some point...
+David / dhildenb
 
-On the flip side, it's a big enough change that we probably want to 
-re-evaluate tlb_flush_all_threshold, too.
-
->> Sorry for the very very long delay and thanks again for the multiple
->> revisions!
->>
->> Alex
->>
->>
->> >>> a simple sfence.vma:
->> >>>
->> >>> sfence.w.inval
->> >>> svinval.vma
->> >>>    .
->> >>>    .
->> >>> svinval.vma
->> >>> sfence.inval.ir
->> >>>
->> >>> The maximum number of consecutive svinval.vma instructions that
->> >>> can be executed in local_flush_tlb_range_threshold_asid function
->> >>> is limited to 64. This is required to avoid soft lockups and the
->> >>> approach is similar to that used in arm64.
->> >>>
->> >>> Signed-off-by: Mayuresh Chitale <mchitale@ventanamicro.com>
->> >>> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
->> >>> ---
->> >>> Changes in v8:
->> >>> - Fix line wrap
->> >>> - Add RB tag
->> >>>
->> >>> Changes in v7:
->> >>> - Use existing svinval macros in the insn-def.h
->> >>> - Rename local_sinval_vma_asid to local_sinval_vma
->> >>>
->> >>> Changes in v6:
->> >>> - Rebase on latest torvalds/master
->> >>>
->> >>> Changes in v5:
->> >>> - Reduce tlb flush threshold to 64
->> >>> - Improve implementation of local_flush_tlb* functions
->> >>>
->> >>> Changes in v4:
->> >>> - Rebase and refactor as per latest changes on torvalds/master
->> >>> - Drop patch 1 in the series
->> >>>
->> >>> Changes in v3:
->> >>> - Fix incorrect vma used for sinval instructions
->> >>> - Use unified static key mechanism for svinval
->> >>> - Rebased on torvalds/master
->> >>>
->> >>> Changes in v2:
->> >>> - Rebased on 5.18-rc3
->> >>> - update riscv_fill_hwcap to probe Svinval extension
->> >>>
->> >>>   arch/riscv/mm/tlbflush.c | 32 ++++++++++++++++++++++++++++++++
->> >>>   1 file changed, 32 insertions(+)
->> >>>
->> >>> diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
->> >>> index 9b6e86ce3867..782147a63f3b 100644
->> >>> --- a/arch/riscv/mm/tlbflush.c
->> >>> +++ b/arch/riscv/mm/tlbflush.c
->> >>> @@ -6,6 +6,27 @@
->> >>>   #include <linux/hugetlb.h>
->> >>>   #include <asm/sbi.h>
->> >>>   #include <asm/mmu_context.h>
->> >>> +#include <asm/cpufeature.h>
->> >>> +
->> >>> +#define has_svinval()        riscv_has_extension_unlikely(RISCV_ISA_EXT_SVINVAL)
->> >>> +
->> >>> +static inline void local_sfence_inval_ir(void)
->> >>> +{
->> >>> +     asm volatile(SFENCE_INVAL_IR() ::: "memory");
->> >>> +}
->> >>> +
->> >>> +static inline void local_sfence_w_inval(void)
->> >>> +{
->> >>> +     asm volatile(SFENCE_W_INVAL() ::: "memory");
->> >>> +}
->> >>> +
->> >>> +static inline void local_sinval_vma(unsigned long vma, unsigned long asid)
->> >>> +{
->> >>> +     if (asid != FLUSH_TLB_NO_ASID)
->> >>> +             asm volatile(SINVAL_VMA(%0, %1) : : "r" (vma), "r" (asid) : "memory");
->> >>> +     else
->> >>> +             asm volatile(SINVAL_VMA(%0, zero) : : "r" (vma) : "memory");
->> >>> +}
->> >>>
->> >>>   /*
->> >>>    * Flush entire TLB if number of entries to be flushed is greater
->> >>> @@ -26,6 +47,16 @@ static void local_flush_tlb_range_threshold_asid(unsigned long start,
->> >>>                return;
->> >>>        }
->> >>>
->> >>> +     if (has_svinval()) {
->> >>> +             local_sfence_w_inval();
->> >>> +             for (i = 0; i < nr_ptes_in_range; ++i) {
->> >>> +                     local_sinval_vma(start, asid);
->> >>> +                     start += stride;
->> >>> +             }
->> >>> +             local_sfence_inval_ir();
->> >>> +             return;
->> >>> +     }
->> >>> +
->> >>>        for (i = 0; i < nr_ptes_in_range; ++i) {
->> >>>                local_flush_tlb_page_asid(start, asid);
->> >>>                start += stride;
->> > _______________________________________________
->> > linux-riscv mailing list
->> > linux-riscv@lists.infradead.org
->> > http://lists.infradead.org/mailman/listinfo/linux-riscv
