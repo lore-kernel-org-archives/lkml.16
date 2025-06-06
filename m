@@ -1,328 +1,234 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010064.outbound.protection.outlook.com [52.101.84.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53836125DF;
-	Fri,  6 Jun 2025 01:56:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749174968; cv=none; b=WWQehQkeIqeBMpG68CXqL0DcKSZQuXnFgSttwq34hHgXpvM31Hv/nGtNDkcQTPsWrVchN/e4Pyjh6o/8yI4Kgt2NVG3M+ksPa9LoAshX9EjSlanvckUh2JX8WFA/g7u1YcQXx5yr1FIbWp6pg6pfMv/ssPrxgVEFtNn/56w3+3Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749174968; c=relaxed/simple;
-	bh=C5//pQcnTZbOFzfaGvl6vHYS6lL+oPJHSLrCeE3Yuz0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H2PszaSkV3eWiLf/QpUGyhiLRxUl+TLFUGW+r3aLiZaRjjSu5WE19s15/AoRvwkZnVCsIFTuZSpnB8qMI/paDC/62mZ94UQo13cPfUWlA4hkdqzYj68yCYNbebk97xBKWTYEc1cj5awYPxKUIj4+gTWRCt8xqsnfqove9UOi4lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQ9U5hIl; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA45125DF;
+	Fri,  6 Jun 2025 01:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749175019; cv=fail; b=t+auyzZlz0wCliFOudKAQsv5a4PYCoLpyNyKCrMEjUaDtyKMEd/1bc/Wau49g80r9C6eTkdQg9cQ6016iZbnKt1C0zUXmhTY0OySvmILuOPMkTxj8JZm2wQTpoVlIsheZDdHY2QTLjIsYHZvMbdaOxOgeZX8+zYw/ku8JfW4SdU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749175019; c=relaxed/simple;
+	bh=zJEMvfI/VQnnKHomfkAy6ygr8nfgooa6ZRc+S7ohHaY=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=TXfU+egih4loLRO4plifuni4ebMe+MAtSQxS8GB1OrDmUKemNjuyKOpPPbSk4UYDBwX0CekbUjVnGgXbisjiF5Ca6MTn2bG4F8tvYE0ghHt5J/vdAkKpQgfXuI92xFrvRqsURWoqNWRPAdgZMin3ewB3EM6VgFRZV7Ak6n2ybhk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=cY8MIAKJ; arc=fail smtp.client-ip=52.101.84.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQ9U5hIl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 539E3C4CEE7;
-	Fri,  6 Jun 2025 01:56:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749174967;
-	bh=C5//pQcnTZbOFzfaGvl6vHYS6lL+oPJHSLrCeE3Yuz0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PQ9U5hIlCsmv2KoKgCVcs6YgL78tNZOrTmTxoqZlyvGf1kvvYiFd6uvhE1O4B/Vfv
-	 75QD08qB15FzoOlJ9Ju2B5+KxNw6CId7EMMQCN3O1WP8UU7C3j8SimQkOBI7+D4aMh
-	 LQ8bn9nWaUwiPj9tLxL6h2OFny2UNbQS1QmGcNHDLmdhuvl4AEx8NB1wL3i+2VvRCL
-	 ouXJHq1uBcT/B2v1UoHfp8ahoobj9UGpYB4CSOT3JZlTkQ6ASIV+goKYIJGb+l0DR6
-	 Ng4hf1at6tgOb0DczcfYSrP8sz64ShKyRA8UF/bhFa6MTQFnH0OBNjiOeTVNmaGBdX
-	 /7ZiQPTEz6TuQ==
-Date: Thu, 5 Jun 2025 20:56:05 -0500
-From: Rob Herring <robh@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH 1/1] dt-bindings: clock: convert lpc1850-cgu.txt to yaml
- format
-Message-ID: <20250606015605.GA3750566-robh@kernel.org>
-References: <20250602143143.943086-1-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="cY8MIAKJ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CD3D0j91l1pecmYu6/PVd982gd2/U/UPXlYve73HWJ/n8mBab8AqDj5R6jmOaOU9jAyDwXqtVHTYYpKRdIjJhVsAAdQcU3fHUUQ9rd69jgBL0jFZnv1E6FNRjy8BkKnzIzyxGM27267s5Z2vmeqqjgpjyZ2FqaCZQwge9BtSZqv0zC7JLIbuIt24lgp7a4j7fPh8+q2cncQtH3tFtMTJdtxNM6XaMbmUm3JVFBTx2zbAF/aVqyCGc8XW33RCbxtOhjcqsY2PyTSfQRM/oIEXoQRm4DriygH8maejZmT/084lpMuDL4+hWk9YXzlsjVCaUgsYae8ha2Kl7acZVcX0LQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+T4NHgZQ6FVHSZw4LvLfB89oc3f8nPd3U1TJKL+cpz0=;
+ b=E+g709XpfHd0/Bie9qFEb7kFHihSgUKEtrb5C/qvcITAPYpIRbG4CzvSBUNUGK/WDBO9AwqmYxezQUUtFnFbdPfm3pAi6FWKUqOh6KXuM1S1F3qimBhdNdlXbm6IZL3/T6OZLei0fBSV+E+YFx6BBdZ24hEwDl+VPAdwB1BDIY75Gam4maQju4HDquBHXYhdlnqeLdTJabkVwflPu7IM4WboPp+WZxqk1OluQFJv7uMspKAnTkGssgAknXrUP/kurGdRsIFNPoypgWd55Qink4UJq6qgfXs7hdaTSvqE2xpSmMsTbXFq1gmFDM80nH/QgtmkVfghcZl20+Vhp7GsgA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+T4NHgZQ6FVHSZw4LvLfB89oc3f8nPd3U1TJKL+cpz0=;
+ b=cY8MIAKJMfhF5cqDSXfkD7iFZxlgXX+VEuHIQREBd4LRbQqHbrtuUjBqPPHENp54VnJmxXgUE/G6VO6z1ZI3nuJ1Cx4drV5YkD9ooWtzrSd3hhHIwwI8izoY3I1Auyr5VZvdQ3X1JfB87CcoBo80ZwM9snb+9bndgsDqfyLrofqR9I5XWfEN0UrPXW93rv0ugnRGmoe7mDMs0TOxV2Bv0dgh9cEzORvz2dFagto7bp3lxycpXtb+v382YKXx7dTBet2geEgj+iFdwq4DQFpAiearZAu8wWalsHG5IkUa7b0Vu7RMagEgefg4VmxvqELeSmusPlsONgEGrm/JBvAguQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by DU0PR04MB9657.eurprd04.prod.outlook.com (2603:10a6:10:31c::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.39; Fri, 6 Jun
+ 2025 01:56:51 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%3]) with mapi id 15.20.8813.018; Fri, 6 Jun 2025
+ 01:56:51 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Subject: [PATCH v2 0/3] remoteproc: imx_rproc: Support i.MX95
+Date: Fri, 06 Jun 2025 09:55:11 +0800
+Message-Id: <20250606-imx95-rproc-1-v2-0-a2bd64438be9@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAH9KQmgC/13MSw6CMBSF4a2QO/aatlJQRu7DMCh9yB3QktY0N
+ YS9W3Hm8D/J+TZINpJNMDQbRJspUfA1xKkBPSv/tEimNggmJJNCIi3lJjGuMWjkKNg09a0x+qo
+ c1M8araNyeI+x9kzpFeL74DP/rj+pY+2flDkyVJ2VTnLRX7i++7KedVhg3Pf9A+QIxH6oAAAA
+X-Change-ID: 20250525-imx95-rproc-1-20bb74ddc8af
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Iuliana Prodan <iuliana.prodan@nxp.com>, 
+ Daniel Baluta <daniel.baluta@nxp.com>
+Cc: linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749174921; l=2404;
+ i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
+ bh=zJEMvfI/VQnnKHomfkAy6ygr8nfgooa6ZRc+S7ohHaY=;
+ b=egB0glMUENWgsftgFAT5XHIOimlX/myfMyAhz68gcZX2+yG5vF8LSx4knzUHgTe0L8bNfPtHI
+ msLfX+wPk/eDpnTpJoiA2Bx6vqwQxRrWla0JVQHeag/nZDb1L+7Iukm
+X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
+ pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
+X-ClientProxiedBy: SG2P153CA0053.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c6::22)
+ To PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250602143143.943086-1-Frank.Li@nxp.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|DU0PR04MB9657:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2d73f6c3-fce9-43a2-b484-08dda49d6779
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|52116014|38350700014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Nk80RzZHYWNuSXNFN2p6cVl0NkJ4cWQ2YURQeFFuc2hQbiswbkN3V0Vuc3J0?=
+ =?utf-8?B?dGk0eExXb3lLN01KMjhlOXQva0xCd2l5cHFuL0o0NWlEMHdHamhXcFNDT1k3?=
+ =?utf-8?B?blJXcW5zQldlOHdqUnZlMTlvUmFLb0dJcUd4U2FEZEw4QzNCY2JhcWVyS1Bo?=
+ =?utf-8?B?TXdqWlYzd1hZYlZadzQzWFpUdkhpVHM2WDhoN3VHRXc5cWxucktpbW9rR1k3?=
+ =?utf-8?B?bFBVZ2hIWDVlWExnUUxJNGNEQk5mR0VvOEFIMzMvV1RwT24vWHBIUmpWSHZu?=
+ =?utf-8?B?VmtaUDUvSUJwTnZxa01NTnZMRnZzVUtxQTc3MFNaaytnTEo3LzRTSktJSmJE?=
+ =?utf-8?B?czY5d3h2UGFPSDEvZkEwbDA2RWxVeXpaUDN0Rk5LdGNvUTJzMitDcHp2UVIy?=
+ =?utf-8?B?dFl1KzlLSXRDRHRLN2g3R0NEVlc0amtBSGNDVkhGbFlCa2J5SnhmVXI2LzIy?=
+ =?utf-8?B?ZjA3b2dpOWkveWxuZUhnQytVQ0xSZTQrMFN1eVZqSmEwa0M5aHlpRHR2WHJC?=
+ =?utf-8?B?aFhENnd6Z09HSDd4bGtSY25zRDFJYi92TmFMaGVsMmNXZmFZaG9WZVVWYitM?=
+ =?utf-8?B?RGVzZ2xJUnI5OElYN3Z0aHZCcWthVlVCeVoxZEZzMWwwanpiUzVTNFAvK3dn?=
+ =?utf-8?B?dzU1aGJ4TUUrbGVKK0svRFhwT1NwV2NMTi9oaDliS0JUUHVRbWI0blE4K1BQ?=
+ =?utf-8?B?Q0JXSlJsa0gvRW9KSlJkZm1DSzFWMityajdSaVJSUVN0MlFySGgwcC81K0Ux?=
+ =?utf-8?B?Q2tteDUrbUp6Sk12Q251Um5tZVNmUjM5bjAvM1F1cEhwUTFkWEpnR0NtNGlR?=
+ =?utf-8?B?cTJBRFlZcmNJMjQ0S0diYjd6WWczd085SVc3OW5XeStJTytaRWFPcm5EdjND?=
+ =?utf-8?B?dHhrSnVpUWRtTklkNlJib2FvR2MyVjNGYUZ5QmVnb0dLOUwrck9wWEZMWkxW?=
+ =?utf-8?B?MEhiR0hadldsY2wvYW9GaFR3YkRGa3QxN0RkOUZjVDV5a3dObHpmeXBUY0xF?=
+ =?utf-8?B?bzJYS3paektYN0JuQnFkaEJGMnV4dHM1WkdxV1RteC9wNW9sN3YzUms3bXRP?=
+ =?utf-8?B?V2NwSzF2UG55cVhZT0lnbjY1dHFKa3NpUEtyUlZLNTZJYXEyeHZVM0RDNGow?=
+ =?utf-8?B?bnl6Nkxid1llbWU3dXhXeWNJZkR4SlA4NWNGeVY5WkpvNTgzaWdKc2R1SGx6?=
+ =?utf-8?B?V0Z6VHk5WEFUSHdwdDhzRlcvSjY0a0RnbVdQcXVZb1dnYXJ6aGdCL1EvaVFI?=
+ =?utf-8?B?WW14ZlM0Y1dFdTBqVnM2TVJ1bFovb2R2Nk0ya0pPMFJlK2JUUmNCSEE1TU5Q?=
+ =?utf-8?B?OWRudzQ0ZC9IZk94Z2Z5emZDUXEwVDZCRE9zN1FVOU1pZFA2QU42cjBTUDVs?=
+ =?utf-8?B?V2pIeUkvZXo0eVRtNmJtRXltMlZsVDZBQ01RaTExZDV6MlFhUGI2ZzNhc2ZQ?=
+ =?utf-8?B?Y1Zld0JMaTB3bXFGcjhEOExrR3M3YXo4ODV1dnFSNWp6OWNraklYY0dOMnhS?=
+ =?utf-8?B?Q2FmcFNTUzA3K09FM3dzWEdldE9ETlNjeCtLZFBxV1hvOUdCMWY4NXlNa0w1?=
+ =?utf-8?B?eTFUMVJFV01idGVob3BaSHZaTDIwdGNNc0prSzEwSENoa3Z1ZkkvTVM4QkMv?=
+ =?utf-8?B?dC9NYlBPR1VCbkRYTzZhTnF5TTB4WmRZQllOcG9kd2pHUnZkTGl4ODNvNUJW?=
+ =?utf-8?B?bkpVUFk5TnUvOUZ3SXpsUVliZ3RLd2krVkdOS01lYkI0ZEZoVVFsaFliNDFo?=
+ =?utf-8?B?NmNJR0ZhZXd5U0hQQU1lc0Z4MDd4M2MwZUZNYXN5eG5LWlVTM0dZVFJDUU4z?=
+ =?utf-8?B?KytzMmdyZTRLV1pVTCtJWG9TMXJtZ2dBYjdJOVMrM3VVWUFjVjMySmZvTGEy?=
+ =?utf-8?B?WXZCOXJidE9aeEdidGdiZldPSWViOEhBZXJYNmdYaXFabFdaazBwcmhwRjRO?=
+ =?utf-8?B?NzRYR0NGSzZXMDk2WnNCT3BXNDRDSDdHSEpjdGNCQk9ZTDVGT3dVQ1UyMzNT?=
+ =?utf-8?B?eUgwSWJaSkN6WEVGRE9vRFp1YnM5c0M4MThIdUJJWFljT0IycEdLUHhWS3J0?=
+ =?utf-8?Q?/QuwCv?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(52116014)(38350700014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WUkwNGZmc0ZIakZTV1NXa3F5aEtKcjRrbG1ITGhSTStqNDUxVUFwb2NVem91?=
+ =?utf-8?B?aStkcXBieVExWU55c2RzYUROQkdQRk5LTm1TZEROSVNFRlBhbVo4VkNkRm8z?=
+ =?utf-8?B?YnVvZ0ZHTTg4U1dpOFlFREczWVoxS3cwSWhrUkNEWkgwdng5M3NqQmlSZ0xj?=
+ =?utf-8?B?d0VWbEJzc1daZ3c2MVlYanhsWERSRkRLaS9HTXU4d2JEYW9LcnNuRW1sV2pU?=
+ =?utf-8?B?YlRNdytmYTE3MGJZbTVicHJtcEs1bkgveGRja1NJWGdCQU5hNkR1MFgyeEhn?=
+ =?utf-8?B?RTIzNGdNQmZYd0JaSEdMYmNyS2FIRmdha2U2R3FXcmhGczdabXpPNWw4NkVR?=
+ =?utf-8?B?STNWdUl5R09IWkNkNTRCY1plSHdBTUMvZ3JBWnBQanFzL3BaUnpSK1AwcEtE?=
+ =?utf-8?B?eXBPNjRQdW8yMkVaUUVMa0VEVVRaaUh2cnk2ZThtTjN3L2VjTXZkaFlkYy80?=
+ =?utf-8?B?d3g1cGpPUjU4N2RuaHAzQU8yckJSQUhBR2U5UHhITGtjWm5XZHFiaXB0dkIr?=
+ =?utf-8?B?SWs1NXBaRFo3b1N3VXZwTW5hTkFiejFxQngzMFNKY3A1OExWdFNHT2FVZzB6?=
+ =?utf-8?B?eXREa2lrSjUzU1U1aGZwK1VnYmVmVWgzK0dUbEptK3MxdnpvUFdicU1JUDNa?=
+ =?utf-8?B?b0VWbFFFeEIyZURsU1h5cGRvUUFQMTFqWnF2NUQva2xwUGk3U2RjRzBCUmNl?=
+ =?utf-8?B?bGZzWmUrQnYwQ0FaSlpzMzBsZzNYQ0dUa0I4bkorcGR2NG5BSDl4OGx4SlY3?=
+ =?utf-8?B?alduSG9rTVdDR1RHdmk1Vk9mRkp3RFA0MjdrWDd3em1ESE4vKzVDK0JQc3lq?=
+ =?utf-8?B?Y2xnSkRqWGc1UVpYT0pwdXdubnRsVE1odjF2dXVBQk0vc2UydEk0TjVQdkt1?=
+ =?utf-8?B?K3ZUK2hjYnlQQ3dEdlZMU3VQaWhCVVB6MS8vNkxJcHNBZHo5N20vNFNvZHMv?=
+ =?utf-8?B?bTduTm1Ucmgya3FBZXUwbjJNem13aCt5ZTBDcE9rbDVGdU5Rd21BNTV2QUZY?=
+ =?utf-8?B?UEJ0YTkyazhSOUJvaEd3Z0k0K3dPYWVnSWV2Y0VGR2ZlaE03blZOUmNiZk1T?=
+ =?utf-8?B?VmtFVTdGSHhaOUlGbHZkdndXdkVKanowbmlHQnc2U05Sa0NmdlQxRm45b0dS?=
+ =?utf-8?B?N2lSNzhCVTcvbHFZbXNIWE5oMjZ5aWpsVTl1NDZGNmZydkgxMjlYQVZOL3dG?=
+ =?utf-8?B?TVo5ek1rdW52K1NIVFBXV3o5MlkvekhPeVlUb3lHaFJpZlRIa3ZEcGZZL3Vo?=
+ =?utf-8?B?SGlVUDEzNGRpWVM2NnFRbEJqSkxvQ2RtTWo2c0xoM3ZnOUg4b0ZOZjlZY2J4?=
+ =?utf-8?B?a1BkbXVvYjlsbE10Y0hGMWVZSkFOMGdZbTZUQkJYY2MrQW9DL1puMzhPRVJK?=
+ =?utf-8?B?ZlZOek9FUnkvREE5WElwRzFtbFdpYkw4NkZQdUdPc1lIYVBxSTlnU0ZuU0VL?=
+ =?utf-8?B?TkVUVWphUm1xejFxcVRhMC81NTg1Y2pTaXVaVGVTZ2FEY0NzazRzZkhVOElV?=
+ =?utf-8?B?NjBsdWxObWpxRE1ramRuVzZkcmJSWlBxU1ZMT3dDeUpobEtnQ0RDRHNKN0o0?=
+ =?utf-8?B?RUFkYUQ3K2VRckh3dzl4ZCsrZlZacS8rVzJtNW5vWEtxbHE3U1c4Yi84NnNu?=
+ =?utf-8?B?TUZ4WGdnWG44T0ZnWGlYNEFzZlNyMjA5dHVRQ2phVnVnNTNKaTkzS1NGR1pR?=
+ =?utf-8?B?dTN5N2Y4UEhYbFpNTG9rM3lndjEvZDZ2bXZJWFcvckdmdFVsTWJlUmVDTytk?=
+ =?utf-8?B?Y09jVFhSdmhqamJnYXZTd1JYZTBaZWFQZUZtYWJOMUdrSDZ5NldjVEhCVnNi?=
+ =?utf-8?B?Zm9HQWpPU21kbFZaRVFmUnFOWVdJS1dYZlErY0tUYUQ2WlpLU3BRdng0bVpi?=
+ =?utf-8?B?NzUvVVlKNVJJMXNtNmpMZm1YSS9iM3FxMDhFRE1raThVekVwdjhRVkI5cEdq?=
+ =?utf-8?B?alB4T1YxeTY2eVlOZXlEUHhrbEF4SE9KVE00dzhjZTFxV1hvMEtEdzhDUVlL?=
+ =?utf-8?B?REswb1BOWWlDaTRxS1hUR01VWVg2VUFqSS9Zdm1GV00zUjJMckMvVDdGdUp1?=
+ =?utf-8?B?Rm9QcVVNZjlLdFd5WkhIWStpZlg3UmN1aGZQMG11Q1VPOFE0R0M2SFRDNitl?=
+ =?utf-8?Q?eHYvWOw5jD3HLOHWtDaweX53A?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d73f6c3-fce9-43a2-b484-08dda49d6779
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2025 01:56:51.6688
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GhyLl4qXb1FE2q8hsDZr6BHeHqkOHI6RS14hm0oMWtlMBI8Isfw7YvD9eOWJFXP9n6d369rSDZeSmY0Wy/p/Eg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR04MB9657
 
-On Mon, Jun 02, 2025 at 10:31:42AM -0400, Frank Li wrote:
-> Convert lpc1850-cgu.txt to yaml format.
-> 
-> Additional changes:
-> - remove extra clock source nodes in example.
-> - remove clock consumer in example.
-> - remove clock-output-names and clock-clock-indices from required list to
->   match existed dts.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  .../devicetree/bindings/clock/lpc1850-cgu.txt | 131 ------------------
->  .../bindings/clock/nxp,lpc1850-cgu.yaml       | 102 ++++++++++++++
->  2 files changed, 102 insertions(+), 131 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/lpc1850-cgu.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/nxp,lpc1850-cgu.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/lpc1850-cgu.txt b/Documentation/devicetree/bindings/clock/lpc1850-cgu.txt
-> deleted file mode 100644
-> index 2cc32a9a945a7..0000000000000
-> --- a/Documentation/devicetree/bindings/clock/lpc1850-cgu.txt
-> +++ /dev/null
-> @@ -1,131 +0,0 @@
-> -* NXP LPC1850 Clock Generation Unit (CGU)
-> -
-> -The CGU generates multiple independent clocks for the core and the
-> -peripheral blocks of the LPC18xx. Each independent clock is called
-> -a base clock and itself is one of the inputs to the two Clock
-> -Control Units (CCUs) which control the branch clocks to the
-> -individual peripherals.
-> -
-> -The CGU selects the inputs to the clock generators from multiple
-> -clock sources, controls the clock generation, and routes the outputs
-> -of the clock generators through the clock source bus to the output
-> -stages. Each output stage provides an independent clock source and
-> -corresponds to one of the base clocks for the LPC18xx.
-> -
-> - - Above text taken from NXP LPC1850 User Manual.
-> -
-> -
-> -This binding uses the common clock binding:
-> -    Documentation/devicetree/bindings/clock/clock-bindings.txt
-> -
-> -Required properties:
-> -- compatible:
-> -	Should be "nxp,lpc1850-cgu"
-> -- reg:
-> -	Shall define the base and range of the address space
-> -	containing clock control registers
-> -- #clock-cells:
-> -	Shall have value <1>.  The permitted clock-specifier values
-> -	are the base clock numbers defined below.
-> -- clocks:
-> -	Shall contain a list of phandles for the external input
-> -	sources to the CGU. The list shall be in the following
-> -	order: xtal, 32khz, enet_rx_clk, enet_tx_clk, gp_clkin.
-> -- clock-indices:
-> -	Shall be an ordered list of numbers defining the base clock
-> -	number provided by the CGU.
-> -- clock-output-names:
-> -	Shall be an ordered list of strings defining the names of
-> -	the clocks provided by the CGU.
-> -
-> -Which base clocks that are available on the CGU depends on the
-> -specific LPC part. Base clocks are numbered from 0 to 27.
-> -
-> -Number:		Name:			Description:
-> - 0		BASE_SAFE_CLK		Base safe clock (always on) for WWDT
-> - 1		BASE_USB0_CLK		Base clock for USB0
-> - 2		BASE_PERIPH_CLK		Base clock for Cortex-M0SUB subsystem,
-> -					SPI, and SGPIO
-> - 3		BASE_USB1_CLK		Base clock for USB1
-> - 4		BASE_CPU_CLK		System base clock for ARM Cortex-M core
-> -					and APB peripheral blocks #0 and #2
-> - 5		BASE_SPIFI_CLK		Base clock for SPIFI
-> - 6		BASE_SPI_CLK		Base clock for SPI
-> - 7		BASE_PHY_RX_CLK		Base clock for Ethernet PHY Receive clock
-> - 8		BASE_PHY_TX_CLK		Base clock for Ethernet PHY Transmit clock
-> - 9		BASE_APB1_CLK		Base clock for APB peripheral block # 1
-> -10		BASE_APB3_CLK		Base clock for APB peripheral block # 3
-> -11		BASE_LCD_CLK		Base clock for LCD
-> -12		BASE_ADCHS_CLK		Base clock for ADCHS
-> -13		BASE_SDIO_CLK		Base clock for SD/MMC
-> -14		BASE_SSP0_CLK		Base clock for SSP0
-> -15		BASE_SSP1_CLK		Base clock for SSP1
-> -16		BASE_UART0_CLK		Base clock for UART0
-> -17		BASE_UART1_CLK		Base clock for UART1
-> -18		BASE_UART2_CLK		Base clock for UART2
-> -19		BASE_UART3_CLK		Base clock for UART3
-> -20		BASE_OUT_CLK		Base clock for CLKOUT pin
-> -24-21		-			Reserved
-> -25		BASE_AUDIO_CLK		Base clock for audio system (I2S)
-> -26 		BASE_CGU_OUT0_CLK	Base clock for CGU_OUT0 clock output
-> -27 		BASE_CGU_OUT1_CLK	Base clock for CGU_OUT1 clock output
-> -
-> -BASE_PERIPH_CLK and BASE_SPI_CLK is only available on LPC43xx.
-> -BASE_ADCHS_CLK is only available on LPC4370.
-> -
-> -
-> -Example board file:
-> -
-> -/ {
-> -	clocks {
-> -		xtal: xtal {
-> -			compatible = "fixed-clock";
-> -			#clock-cells = <0>;
-> -			clock-frequency = <12000000>;
-> -		};
-> -
-> -		xtal32: xtal32 {
-> -			compatible = "fixed-clock";
-> -			#clock-cells = <0>;
-> -			clock-frequency = <32768>;
-> -		};
-> -
-> -		enet_rx_clk: enet_rx_clk {
-> -			compatible = "fixed-clock";
-> -			#clock-cells = <0>;
-> -			clock-frequency = <0>;
-> -			clock-output-names = "enet_rx_clk";
-> -		};
-> -
-> -		enet_tx_clk: enet_tx_clk {
-> -			compatible = "fixed-clock";
-> -			#clock-cells = <0>;
-> -			clock-frequency = <0>;
-> -			clock-output-names = "enet_tx_clk";
-> -		};
-> -
-> -		gp_clkin: gp_clkin {
-> -			compatible = "fixed-clock";
-> -			#clock-cells = <0>;
-> -			clock-frequency = <0>;
-> -			clock-output-names = "gp_clkin";
-> -		};
-> -	};
-> -
-> -	soc {
-> -		cgu: clock-controller@40050000 {
-> -			compatible = "nxp,lpc1850-cgu";
-> -			reg = <0x40050000 0x1000>;
-> -			#clock-cells = <1>;
-> -			clocks = <&xtal>, <&creg_clk 1>, <&enet_rx_clk>, <&enet_tx_clk>, <&gp_clkin>;
-> -		};
-> -
-> -		/* A CGU and CCU clock consumer */
-> -		lcdc: lcdc@40008000 {
-> -			...
-> -			clocks = <&cgu BASE_LCD_CLK>, <&ccu1 CLK_CPU_LCD>;
-> -			clock-names = "clcdclk", "apb_pclk";
-> -			...
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/clock/nxp,lpc1850-cgu.yaml b/Documentation/devicetree/bindings/clock/nxp,lpc1850-cgu.yaml
-> new file mode 100644
-> index 0000000000000..319bd2705c422
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/nxp,lpc1850-cgu.yaml
-> @@ -0,0 +1,102 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/nxp,lpc1850-cgu.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP LPC1850 Clock Generation Unit (CGU)
-> +
-> +description:
+i.MX95 features a Cortex-M33 core, six Cortex-A55 cores, and
+one Cortex-M7 core. The System Control Management Interface(SCMI)
+firmware runs on the M33 core. The i.MX95 SCMI firmware named System
+Manager(SM) includes vendor extension protocols, Logical Machine
+Management(LMM) protocol and CPU protocol and etc.
 
-Needs '>'.
+There are three cases for M7:
+(1) M7 in a separate Logical Machine(LM) that Linux couldn't control it.
+(2) M7 in a separate Logical Machine that Linux could control it using
+    LMM protocol
+(3) M7 runs in same Logical Machine as A55, so Linux could control it
+    using CPU protocol
 
-> +  The CGU generates multiple independent clocks for the core and the
-> +  peripheral blocks of the LPC18xx. Each independent clock is called
-> +  a base clock and itself is one of the inputs to the two Clock
-> +  Control Units (CCUs) which control the branch clocks to the
-> +  individual peripherals.
-> +
-> +  The CGU selects the inputs to the clock generators from multiple
-> +  clock sources, controls the clock generation, and routes the outputs
-> +  of the clock generators through the clock source bus to the output
-> +  stages. Each output stage provides an independent clock source and
-> +  corresponds to one of the base clocks for the LPC18xx.
-> +
-> +  Above text taken from NXP LPC1850 User Manual.
-> +
-> +maintainers:
-> +  - Frank Li <Frank.Li@nxp.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: nxp,lpc1850-cgu
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +    description: |
-> +      Which base clocks that are available on the CGU depends on the
-> +      specific LPC part. Base clocks are numbered from 0 to 27.
-> +
-> +      Number:         Name:                   Description:
-> +       0              BASE_SAFE_CLK           Base safe clock (always on) for WWDT
-> +       1              BASE_USB0_CLK           Base clock for USB0
-> +       2              BASE_PERIPH_CLK         Base clock for Cortex-M0SUB subsystem,
-> +                                        SPI, and SGPIO
-> +       3              BASE_USB1_CLK           Base clock for USB1
-> +       4              BASE_CPU_CLK            System base clock for ARM Cortex-M core
-> +                                        and APB peripheral blocks #0 and #2
-> +       5              BASE_SPIFI_CLK          Base clock for SPIFI
-> +       6              BASE_SPI_CLK            Base clock for SPI
-> +       7              BASE_PHY_RX_CLK         Base clock for Ethernet PHY Receive clock
-> +       8              BASE_PHY_TX_CLK         Base clock for Ethernet PHY Transmit clock
-> +       9              BASE_APB1_CLK           Base clock for APB peripheral block # 1
-> +      10              BASE_APB3_CLK           Base clock for APB peripheral block # 3
-> +      11              BASE_LCD_CLK            Base clock for LCD
-> +      12              BASE_ADCHS_CLK          Base clock for ADCHS
-> +      13              BASE_SDIO_CLK           Base clock for SD/MMC
-> +      14              BASE_SSP0_CLK           Base clock for SSP0
-> +      15              BASE_SSP1_CLK           Base clock for SSP1
-> +      16              BASE_UART0_CLK          Base clock for UART0
-> +      17              BASE_UART1_CLK          Base clock for UART1
-> +      18              BASE_UART2_CLK          Base clock for UART2
-> +      19              BASE_UART3_CLK          Base clock for UART3
-> +      20              BASE_OUT_CLK            Base clock for CLKOUT pin
-> +      24-21           -                       Reserved
-> +      25              BASE_AUDIO_CLK          Base clock for audio system (I2S)
-> +      26              BASE_CGU_OUT0_CLK       Base clock for CGU_OUT0 clock output
-> +      27              BASE_CGU_OUT1_CLK       Base clock for CGU_OUT1 clock output
-> +
-> +      BASE_PERIPH_CLK and BASE_SPI_CLK is only available on LPC43xx.
-> +      BASE_ADCHS_CLK is only available on LPC4370.
-> +
-> +  clocks:
-> +    maxItems: 5
-> +
-> +  clock-indices:
-> +    maxItems: 5
+In patch 1, add fsl,lmm-id and fsl,cpu-id to indicate LM ID and CPU ID
+In patch 2, Use LMM and CPU protocol to manage M7. More info could be
+found in the patch commit log
 
-1-28 entries should be valid.
+Current setup relies on pre-Linux software(U-Boot) to do
+M7 TCM ECC initialization. In future, we could add the support in Linux
+to decouple U-Boot and Linux.
 
-> +
-> +  clock-output-names:
-> +    items:
-> +      - const: xtal
-> +      - const: creg_clk
-> +      - const: enet_rx_clk
-> +      - const: enet_tx_clk
-> +      - const: gp_clkin
+Patchset was tested with below boot images when the patchset based on next-20250526:
+imx-boot-variant-rpmsg-imx95-19x19-lpddr5-evk-sd.bin-flash_lpboot_sm_a55 (Use LMM protocol)
+imx-boot-variant-alt-imx95-19x19-lpddr5-evk-sd.bin-flash_alt (Use CPU protocol)
+imx-boot-imx95-19x19-lpddr5-evk-sd.bin-flash_a55 (M7 not under A55 control)
+imx-boot-imx95-19x19-lpddr5-evk-sd.bin-flash_all (M7 not under A55 control)
 
-This looks like names of the inputs, not the outputs. There wasn't any 
-clock-names on the original though. You don't have to document the names 
-in clock-output-names, just how many entries.
+Patchset is re-based on next-20250603.
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - '#clock-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    clock-controller@40050000 {
-> +        compatible = "nxp,lpc1850-cgu";
-> +        reg = <0x40050000 0x1000>;
-> +        #clock-cells = <1>;
-> +        clocks = <&xtal>, <&creg_clk 1>, <&enet_rx_clk>, <&enet_tx_clk>, <&gp_clkin>;
-> +    };
-> +
-> -- 
-> 2.34.1
-> 
+Thanks for Daniel helping review the patchset before posting out to list.
+
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+Changes in v2:
+- Typo fix in patch 2 commit message
+- Move the m7 address mapping array from patch 2 to patch 3
+- Add R-b from Daniel to patch 3
+- Link to v1: https://lore.kernel.org/r/20250604-imx95-rproc-1-v1-0-a6e5f512731c@nxp.com
+
+---
+Peng Fan (3):
+      dt-bindings: remoteproc: fsl,imx-rproc: Add support for i.MX95
+      remoteproc: imx_rproc: Add support for System Manager API
+      remoteproc: imx_rproc: Add support for i.MX95
+
+ .../bindings/remoteproc/fsl,imx-rproc.yaml         |  27 ++++
+ drivers/remoteproc/imx_rproc.c                     | 146 ++++++++++++++++++++-
+ drivers/remoteproc/imx_rproc.h                     |   2 +
+ 3 files changed, 173 insertions(+), 2 deletions(-)
+---
+base-commit: b79c044712e34fe49e7b85ffafd0bd460b5c4afa
+change-id: 20250525-imx95-rproc-1-20bb74ddc8af
+
+Best regards,
+-- 
+Peng Fan <peng.fan@nxp.com>
+
