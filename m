@@ -1,118 +1,151 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3140D1C9EB1;
-	Fri,  6 Jun 2025 05:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FAC4683
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 05:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749187903; cv=none; b=ZECOGaMeo9fWPwkHqAk6FvTftn+VHsXix+zpmzYINWhsmY3komn2eSe9HaSwqZCQleV+qEcYfyUheOuGiS61Qew7D8xVR7uhmkceTO4p0SfhG1/SMGO2YEAy0reHZRXXnxWHDDcbaumB72DXQg6+mhtw9iDBEBJN1283Dhm9TUM=
+	t=1749188041; cv=none; b=fat6JFy81rRNs2zMAh13J3cn4Sd5Yf0RrzS8mXKgYN8rPUub4FXLV+bTMqYIf8rrMGCc63umGAOivbw3q/qyx4Fxmkdyg9pn3IFTlQy457S5O3dvsxal3wBmwb8Ny2sDXaVZZP5uIBgDbkJY81g8+nh2fxD80G1XVpgsIcpmqwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749187903; c=relaxed/simple;
-	bh=Rs6u/8uV0wNpRku8tHaJX2RzEPsFk0Z6vIX0IKDE7zc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X9gtwDv8vLKlASeaPE6PuRNzF3/HbxuJXh2EL92nQeGmuUcaatbC7M6cMGKgMQBkK/rt5QV441zWaqRGyPIMcDy4Jd/qkbENHf1G/NuHA9g0rs2AvGykTWGrr3Tam8POoj9yoqddQn/+r4QCI1WUZwBw6p8rcttrxqb3EI0B8X0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lzqb1Dwi; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749188041; c=relaxed/simple;
+	bh=naqltafWL62FHIa0QUHTzp57wiSFDq8rVif1IzApAsc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=JldS91jd31OKTQmbvtEgjCoi4s68w+3C6zZZVEAb5tKAO814E/Z4ouRWMKERHuooA5QYMY0Mo69/+eIDbxpFI7v0TLYkABI95iEVF8Qp763l3m59rohIymqJ45hUjCBAu+rtjnZspTa4Bw85+zNNVH3Pjys2MFadCVZ0ZuPmjUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GfAPyq0k; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lzqb1Dwi"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-235e1d4cba0so14721495ad.2;
-        Thu, 05 Jun 2025 22:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749187901; x=1749792701; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dzlXgy5IGuV11bydpJNOntnZHJEgtC/+n57kSppntuY=;
-        b=lzqb1DwiXX2TDtpOBglmP4b1h73BvzA0VR4pA1B8daKEFAdJgZaLdh5UrvZahxNZMR
-         dPI0ZIhJmAmsmmyECp5dkBtHZtBNNE5BOFtiSsgmPVhHvP1bBr+AZqRh7nxsm6QUqP+/
-         nl5iMgQeyWpl1ZYhbBJgl69hPVURy3FzLxpcWX90kbETLOIAr2LOr+Atpt+qHgZsiu0a
-         6a8STCnTuUljPXBPbV1DVJD6+YLpkYKm685iNLObMZe+2BQTRMAkoutCyRbq4sq9mEhc
-         R4Ck8p4nWi5Ty1NV0R5CLNFA6g51kDr0T6vSh0JIanwPJGwJVRLRk/sAB4BPKFze7mKj
-         YQeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749187901; x=1749792701;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dzlXgy5IGuV11bydpJNOntnZHJEgtC/+n57kSppntuY=;
-        b=e4+vigx5lUx1l7B0+xm7bbywVEwwh6F3FcQTv9B6b2SYpKN+Us/1O9BRBmwqe27Zne
-         HjPNNT/8X5/fUCxAAf3gCiC/hhY5K7ZFw1UApPZqelycJyEtadk6Tnztc/0pa1vG0uWq
-         SfrjhOkNEdLEVG+Ay6anWfmsE8UZzt2AOxkgHfUChLX62hI8Dzx1Kp6oHrwMvACO23Pu
-         2bUi9jtJ/R8JP+LyCZDCbIQTGUkOk1zhYmGvdXWGTr3vHfeRsk/7VEKRqkL0chG93hdc
-         VFGTQaPjjh5QlqJAjzff3cH63ojmzSZTRAAGmaf+h6CdFuT5B+nXH2LJKP4RIcI2HJ3/
-         9ZGg==
-X-Forwarded-Encrypted: i=1; AJvYcCUDSkZgoS0wj1WJrIRwMDuxVLopThJDH6pU03SqFaZCLEpBnFobMUzHqjny6DMnMW9ISw/J4RvZfFjS@vger.kernel.org, AJvYcCV3OeGONHmJqNlVI2nmGFgEvVQlgqGTzBegr7Lx67shhfkB+EBHd9VhJZ7VDGb0wEw5NVOEfvm4zLJa8yFo@vger.kernel.org, AJvYcCVJ4MU+4/aH0CV8P4hnLs0IdmRdOwKEW0zxYeFdmzWxwE79q/e3iVnZFVyKbS9N/kdTOlpPEMaMmK+5846o4Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTBLo4JAiQdTYqWlHqg1IpNFdvqBc6zUWNy6WRS/C70gqpUlm+
-	8LIN2Fvs0WGpcYyzk0pQLBhjdYxxFSthzz+24yECUbla5ELJ3FfVsD3F
-X-Gm-Gg: ASbGncv688yijoxgygOeK82dBTuknwYPuePWPxZhJJcRRmYj3CZ+BabWU/VrHWZmyEe
-	wYyoBFBCADg1g270fIwtW4QXZD2ZfGvdclrgEILGQiidjRF7KR9WdyZHbl3jdzwu0rBgRMlxI1N
-	Se2PEwkJSXeIkMcI5y3MfIuF8fXajvo4KLFBFL7leh24ky0K+mRGQo9ZtseYni5R/wlyMEF8Zih
-	jG3vwFQeWEbicZBVX86uBoRsQZUP3JF9WIM7kdvqPA6/DNbEywcttcpJLLufWxnS1GAEtAki9VM
-	2xWPa4R3Sr6SG0AKKNTvW+oGJVNk4CJcF1bzuQYYa1N9HkIB+vJJpm1D0xDS
-X-Google-Smtp-Source: AGHT+IHm9V8MInY7eid9ZjIu/qmANGOMoaeiN5kAiiPpPU+C0cJpEdUtkuzqSwl6yjJEnE728bmZPg==
-X-Received: by 2002:a17:903:41c9:b0:235:6e7:8df2 with SMTP id d9443c01a7336-23601d975acmr29530675ad.41.1749187901230;
-        Thu, 05 Jun 2025 22:31:41 -0700 (PDT)
-Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236034109cfsm4765675ad.200.2025.06.05.22.31.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jun 2025 22:31:40 -0700 (PDT)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: quic_amakhija@quicinc.com
-Cc: Laurent.pinchart@ideasonboard.com,
-	andersson@kernel.org,
-	andrzej.hajda@intel.com,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	dmitry.baryshkov@oss.qualcomm.com,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org,
-	jernej.skrabec@gmail.com,
-	jonas@kwiboo.se,
-	konradybcio@kernel.org,
-	krzk+dt@kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	marijn.suijten@somainline.org,
-	neil.armstrong@linaro.org,
-	quic_abhinavk@quicinc.com,
-	quic_jesszhan@quicinc.com,
-	quic_rajeevny@quicinc.com,
-	quic_vproddut@quicinc.com,
-	rfoss@kernel.org,
-	robdclark@gmail.com,
-	robh+dt@kernel.org,
-	robh@kernel.org,
-	sean@poorly.run
-Subject: Re: [PATCH v8 RESEND 0/2] Add DSI display support for SA8775P target
-Date: Fri,  6 Jun 2025 13:31:22 +0800
-Message-ID: <20250606053122.523651-1-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250604071851.1438612-1-quic_amakhija@quicinc.com>
-References: <20250604071851.1438612-1-quic_amakhija@quicinc.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GfAPyq0k"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 555H44dg000905;
+	Fri, 6 Jun 2025 05:33:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	3fXWGiDGcxviW1fGNoR2ruND6LCNBMbPtWe2+G2nYOo=; b=GfAPyq0kYu2RL4oW
+	xjCLyhCE4D7Wh3PbVBc0I4prWGdAwD6Kc1eNfA40rfwQNkWGinfeAWHik5fcGtu/
+	oFKIOZjRx0bIW2M0+gmG7bCJ3r9Um715VBQsPe3zNyw+Njxpvs7K0k2guiwdpjSZ
+	OnFLym7wiL9Up+3PFN3zGF6/DscK4QdBtfRAjH44Uwhiorfm7zN/qJqx378sY4Fg
+	cuAjHUn1jorHkSAhL5wjauaY84Wo0PZIE0TyKUMnkVVuu1D/9aswdFET5mGVBptn
+	v1ctJwgB8CLwxTVEzZXnHIYZkYIdleTJm4EjEJ8qnLkdUeIBhZJGmHsoQT2J8HAZ
+	gKdeMw==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8qbjyv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 06 Jun 2025 05:33:49 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5565XhtK027289
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 6 Jun 2025 05:33:43 GMT
+Received: from [10.239.133.242] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 5 Jun 2025
+ 22:33:41 -0700
+Message-ID: <10e5207e-353e-4648-8e8d-6ee38d14907f@quicinc.com>
+Date: Fri, 6 Jun 2025 13:33:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] scripts: coccicheck: filter *.cocci files by MODE
+To: Nicolas Palix <nicolas.palix@imag.fr>,
+        Julia Lawall
+	<Julia.Lawall@inria.fr>, <cocci@inria.fr>
+CC: <linux-kernel@vger.kernel.org>, <quic_tingweiz@quicinc.com>,
+        <quic_jinlmao@quicinc.com>
+References: <20250605044405.2057511-1-quic_songchai@quicinc.com>
+ <e8221cc5-cf5b-49f8-871d-e49d6621fc6e@imag.fr>
+Content-Language: en-US
+From: Songwei Chai <quic_songchai@quicinc.com>
+In-Reply-To: <e8221cc5-cf5b-49f8-871d-e49d6621fc6e@imag.fr>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Kv9s_mcjB24Xqulvs4uzK8jhNFLf81Nx
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDA1MCBTYWx0ZWRfX2FtfBsIFWyYO
+ WHvTaOcQGmaSc5W53cvx5lzDd8WoSiMQH/8P/EhZPD+dAQaM7h4IexaPmyKv7h81LfK4m/cP3jV
+ W7XuKcIw5Go2Vwp1YE3KPraDSN5WaMz63XNZPoc8PlM5W7UQ0wVZnOiVf2GCVK4nwnDciiOfEXA
+ Dxtnbum+4jk2x376z1NOnQRf/XlAwOLMSSme8PICuy1X1fXR9mtFP6OETAYJprikclxyskY1FpC
+ cF9/rzOQG5zr0Uh8+FlgRTF7bZG+g69O+eqV/Y/yL5Gy2xczvKubRg893Szle3FH4+WNuVMaBL5
+ KKE9z2I1w6gN2zB0iY5N46dAKKLFP092QOISMiwVoFiBjqzFEzRX9G6wH3rIL7Gr05VVo0CeUkx
+ nEH8c0H21sfL3s/4lu8zeYq2FJChEcQe+PhTbP28Aifk05eSmjS1BasRDwykrDf3kCWaF5zs
+X-Proofpoint-ORIG-GUID: Kv9s_mcjB24Xqulvs4uzK8jhNFLf81Nx
+X-Authority-Analysis: v=2.4 cv=PrmTbxM3 c=1 sm=1 tr=0 ts=68427dbd cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
+ a=sPnlxz4oxlKK5PFXHyoA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-06_01,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 priorityscore=1501 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 malwarescore=0 spamscore=0 clxscore=1015 adultscore=0
+ suspectscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506060050
 
-On Wed,  4 Jun 2025 12:48:49 +0530 Ayushi Makhija <quic_amakhija@quicinc.com> wrote:
-> This series enables the support for DSI to DP bridge ports
-> (labled as DSI0 and DSI1) of the Qualcomm's SA8775P Ride platform.
+
+On 6/6/2025 1:43 AM, Nicolas Palix wrote:
+> Hi Songwei,
 >
-> SA8775P SoC has DSI controller v2.5.1 and DSI PHY v4.2.
-> The Ride platform is having ANX7625 DSI to DP bridge chip from Analogix.
-> Since I am just an amateur, so I followed some applied examples, like [1]
-> If you mind this, I will describe in next version.
-
-Hi, Ayushi. I think this series had been verified to work. Do you have
-any idea in my case? According to the public information, SA8775P is
-equipped with Adreno DPU1199, SA8295P(almost identical to SC8280XP) too.
-And SC8280XP has the same dsi version and dsi phy. And my device tree
-nodes for the DSI0 and DSI1 are almost same as yours. I got
-`dsi_err_worker: status=4` only with a blanking screen.
-
-Best wishes,
-Pengyu
+> Le 05/06/2025 à 06:44, Songwei Chai a écrit :
+>> Enhance the coccicheck script to filter *.cocci files based on the
+>> specified MODE (e.g., report, patch). This ensures that only compatible
+>> semantic patch files are executed, preventing errors such as:
+>>
+>>      "virtual rule report not supported"
+>>
+>> This error occurs when a .cocci file does not define a 'virtual <MODE>'
+>> rule, yet is executed in that mode.
+>
+> I am fine with the idea even if the orignal idea was to be exhaustive 
+> in the implementation of the mode in each SP.
+>
+> However, silently discarding the patch is maybe not what one would 
+> expect as the considered SP will vary according to the mode.
+>
+> Hence, could I suggest to add an else branch reporting a warning at 
+> least ?
+>
+> Regards,
+Sure, will update patch with else branch reporting a warning.
+>
+>>
+>> For example:
+>>
+>>      make coccicheck M=drivers/hwtracing/coresight/ MODE=report
+>>
+>> In this case, running "secs_to_jiffies.cocci" would trigger the error
+>> because it lacks support for 'report' mode. With this change, such files
+>> are skipped automatically, improving robustness and developer 
+>> experience.
+>>
+>> Signed-off-by: Songwei Chai <quic_songchai@quicinc.com>
+>> ---
+>>   scripts/coccicheck | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/scripts/coccicheck b/scripts/coccicheck
+>> index 0e6bc5a10320..18a69edcea66 100755
+>> --- a/scripts/coccicheck
+>> +++ b/scripts/coccicheck
+>> @@ -270,7 +270,9 @@ fi
+>>     if [ "$COCCI" = "" ] ; then
+>>       for f in `find $srctree/scripts/coccinelle/ -name '*.cocci' 
+>> -type f | sort`; do
+>> -    coccinelle $f
+>> +        if grep -q "virtual[[:space:]]\+$MODE" "$f"; then
+>> +            coccinelle $f
+>> +        fi
+>>       done
+>>   else
+>>       coccinelle $COCCI
+>>
+>
