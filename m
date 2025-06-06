@@ -1,73 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A740A28850C
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 11:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE9C287507
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 11:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749210691; cv=none; b=XJiA5yjbbmkwsLgGH1MhgK/6D3ycEzyKf31z9tgxVYKLvLnqqb3lfYNxZZjtXUjv/kx9lGbOoq4P3P2M+KW9rXOIOb/XZtDNQZTPfk46nbkfjbz26E9KopAWpZFeGD19igFmcGeBKq+dR83u5Xw3SfhsTTfYoocpc6CBrSNPyM8=
+	t=1749210702; cv=none; b=ZSUo1EKKXT5bBO+J9Q7bfas3TBErvXU35k+B/hfHDUlW2v+82kn+9CwaiMKDq+LQZoqhktZNpUo+BEopxngXzNbsvxRsp4gN9lkLB+QDTubov/MzRUWbuhjUfAGmUSdq55abtAWI0XUGcw1pVXGW3DPQ4y6mRZdOP7hgfsBMSUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749210691; c=relaxed/simple;
-	bh=zbnH3pInG6RT5w6ACeygENQ7RmnTomfZEB2GDkjzMQM=;
+	s=arc-20240116; t=1749210702; c=relaxed/simple;
+	bh=d+1peOpzhF896/8kkhDB2QAnaqXIePKAVigDiqRx/AE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ALu25bdTbB7M5sR4xaN5Mn6lRjNnusftp8YnX110Rs1X1AntdZpKK5ElClOLRp0zGUfMXj6R7OrpOhsB2pUGYAK9gCa1NZgQnD4UxYwyT5DO5BrVoiZ52snMMhW1Kg0+ZqwBLlLNaRKouoB/xPNIENQk6nSeU3EUYR7Dp7fC04U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dffrT20r; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=Txund6JXwmDc3AYU8Nc1z4/MZK5uzZwBfNkdLpUJDGJE6k0V0eQauCeh32IhHOy+5ok1fS8/10PIpRrUKd1sWYycT0UUkn1DMsNaOj3PamScb7+vydkHaOsaBb44sC5uNLha5keOAor7rtbRukZ43y9Bo3MI8UohLW5YLPrF9P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NJfmA3EW; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dffrT20r"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NJfmA3EW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749210688;
+	s=mimecast20190719; t=1749210700;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=HBNIv4v4CDaVQ8ZIjf4kNfpcVgMGwx5JzlOzvqm3Fu4=;
-	b=dffrT20rXXhOo6nYwTtFAFgxWjrDN9YFHlEdu+TY63rozhJQ963jjHycitsoIj6b3iLC5c
-	l6N5u3Z6fSmP1ozCvHALquUtUOkOzOjgAbqEUyRPVofXWLdSHAGzAUQlatgLLLIIcSwdq8
-	M/fIACdQKrPtc4Ikl/tX24N4JQUDtwY=
+	bh=YuDqZfBW806rEHMVFjcdFO+ADelk/lfDf5CqIzU3/HY=;
+	b=NJfmA3EW0YNU9UoURU/FXYGPxA4GQVDfpWaAa6u72RyAuHuJW1kVAMVa5j8SAAmvJ1PiEo
+	/RW7o7BpuCJxIJQueOghSpQWkKLe1YbUUw2IEpA3/m94uOG43P1+9HleRZWGehxyLj7nbs
+	LY6dgdz+8Ma1ga87vxsr7nJKHgB2LDw=
 Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
  [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-302-nqDrCHUZM-m0W3A234Zb3w-1; Fri, 06 Jun 2025 07:51:27 -0400
-X-MC-Unique: nqDrCHUZM-m0W3A234Zb3w-1
-X-Mimecast-MFC-AGG-ID: nqDrCHUZM-m0W3A234Zb3w_1749210687
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4517abcba41so11529195e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 04:51:27 -0700 (PDT)
+ us-mta-557-RtdFvd2BNkqaPlpE0QRteg-1; Fri, 06 Jun 2025 07:51:39 -0400
+X-MC-Unique: RtdFvd2BNkqaPlpE0QRteg-1
+X-Mimecast-MFC-AGG-ID: RtdFvd2BNkqaPlpE0QRteg_1749210698
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-441c122fa56so10173585e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 04:51:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749210686; x=1749815486;
+        d=1e100.net; s=20230601; t=1749210698; x=1749815498;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=HBNIv4v4CDaVQ8ZIjf4kNfpcVgMGwx5JzlOzvqm3Fu4=;
-        b=wVY1Nx6tkIT/BhfIWN65rFvsB6txLNL9LLjfAip6KfKpT0kajz8qCZd7tZmmokITOZ
-         IWETkpvkHoqkUDm+mxoCmZVlEYOmCxEvohO4jAGsPzpMwsUTjUNbPZtoaVSzQsFVjD85
-         aKr6HOthAadQxhnRGZLQB2FhxMWgzDS1aextsKWBcQ7aNniOd/b467bhOyajGIeJtbmZ
-         52vNj58rvmKHnFT9+9kZ8vwQ2k10kpltvglzIoowem1nAa8MKMRZZMfilmIFOsaJ/HqX
-         OWNcdG/FzkjKEFrZyYRNYdT5ydoHjjNC1mL0fC9/0Ee7AE3YVOrS0O5BFgmKiWNHYzzx
-         oj0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW5CmHPoeQMhk7+ojqcEtw8jI1MYbqvzk2kxJLC2hHlRq1PS7J2oM/DVMAG5hcpKJsYhIsF6kpsMGpct3U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLM9kJee+aSbRuOwexLBZrGCBq+HtpTuy9149EgXZ34wyQXhEx
-	0jUGUeLdLDSd3FLuKlQ1J4V39/kfPR5JbnInvSzf10/Ei7qWK5DAyvtJTe1Q1XIeYuzX8qLEDua
-	onwqenESS2bPrVhj/dJHBWyyIDqs6D8JNAj0TVtroVi40GNhPgMDXGB8XtyZAoBdtiA==
-X-Gm-Gg: ASbGncsbZLK8D1n9ujSKE1Wvn6IHzvT/P+8GghZ0kgaA7zNtC72HdvPx3rrdFv6YnF2
-	SIvdU/cH+nhx2YZYbfllw0pYiSbdNDcBsEdfzavGK4AcyEoFsvIinIhCW1nzuZLULKgat92Xhys
-	luOmru5iwrhR7i02mWFjeQv7cq9HbBm7Qhx9U3837IFrqM1qZwtxAEugUx1MPtP+TuhKEDCbwkm
-	q0aVOlTli9y+q/xA2zDUzNbJPrr344HNuWLFTOC0TynZ6GBZitlP83C+e3Zl9ytg98uyuZ6cGo/
-	Qcembk2JsvHgAW6kd6R5mGrYh/SejFsSRSxJxZhhOCxAlnj+6mJ/HxWv7R2zPHZz5MpJJQgwDr4
-	EQPUZW4LVDLrYldq8+xChVZIoLFxIQlE=
-X-Received: by 2002:a05:600c:5396:b0:441:b3eb:570a with SMTP id 5b1f17b1804b1-452013681efmr36330185e9.2.1749210686523;
-        Fri, 06 Jun 2025 04:51:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IElH7bwO57ALfHi1SkLqsprEBH0fmkDmJSbPoYUAVfRjcV047e6NdMnUnc45QEilr6SuOtg9w==
-X-Received: by 2002:a05:600c:5396:b0:441:b3eb:570a with SMTP id 5b1f17b1804b1-452013681efmr36329955e9.2.1749210686142;
-        Fri, 06 Jun 2025 04:51:26 -0700 (PDT)
+        bh=YuDqZfBW806rEHMVFjcdFO+ADelk/lfDf5CqIzU3/HY=;
+        b=gxC9D9WE/XbMRIwY0nOL3fPMTnNwhyHu78hpMT7O6S5jE4kP15ZkJNJBDDIapx2LSF
+         vsaYrEiPiLqKyP8Rx0z1YELOUPszV9rQzStFC/m0QLMC/qWbznfDElKWGKRGcKJEuHES
+         N0uW5fHqSPNWANw2uWWplabbMR3m1L73o2usH3opSDrRAOpW4Ug5VmKQaQsX0Lrpl8wa
+         Dp/RUUQXBQvJjSo6uGDU3obn03hlxni7eSab0J5EJCXE/mYCkCs5qoiSr8wL/CEuKo/E
+         O9el2oDRgfJNRZP2Bo5NtUgMy+bnYAF2Md2RdecX6H3m3XhKjWQuU9W3XVmqgxPJ9i4y
+         YvlA==
+X-Forwarded-Encrypted: i=1; AJvYcCU2Xk0gNlRtBU3mWceHVUOAUqREuVvwebHW+Cq0iav5M0BCuveYxi+i0phWlykzEuQq00PMuVc5tEzZdEA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHK+hm7LYFPvGV3Af5KfQq7yHpUEGNmsgMod/IsndWw5fz5eUH
+	w5ZWuBRJHNbnjheHHCQPyu2NQOuGLZrP3h9c9sHu/KGvDroS3mRh6sHSSyCWAdcAaYt9aa6+2kW
+	sbEJPxozvQim4jUw8YUdJEsmiMOt9Qvh56arJG1BecKsT/KB37thPTwDNNk9qjuTPyA==
+X-Gm-Gg: ASbGncssnb95luWUcVstpheWTQ66K6VH9OkBP8krsmtjHo/X72npf5Q3W9oLgorEYTs
+	VcgPcrZQ0HFvHtBnWLmkubs2uoM6HWcyjj8xDe6fYZvMwunIspDQymJIDWVcODKqUnujm7hpdfv
+	9VWdSSpc7G9l/ZrSOC2qNjwQnsNAqBTUp8VVfJVYGnUihK21ZSt9LWDie12WtxHoJ2/pq8tiPUt
+	PP0592D/1VquY8IBU3IxfFGpfVzOVGX2i7cShS903ATR0F9yMeDMtb5NBgXVEz7EZLksmnJwA9o
+	aY9niaIVXdF2UcxkGrgem9gqZ4e75FcyyZDeXP5QesIJIVYf1UwINHORT+9eurLYpb5pdAo430n
+	IB4Y3c7KmaEw9Rs83nkULON1Wrr+cwds=
+X-Received: by 2002:a05:600c:1e09:b0:442:e9eb:cb9e with SMTP id 5b1f17b1804b1-452013d1ac1mr31336575e9.26.1749210697803;
+        Fri, 06 Jun 2025 04:51:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFTutIf5S/5ExePoSx/Td85W93qsFuXMvMZErKLOVTEWcRei1bg1QE+/+NPv+XEexChA/X33g==
+X-Received: by 2002:a05:600c:1e09:b0:442:e9eb:cb9e with SMTP id 5b1f17b1804b1-452013d1ac1mr31336315e9.26.1749210697345;
+        Fri, 06 Jun 2025 04:51:37 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f19:9c00:568:7df7:e1:293d? (p200300d82f199c0005687df700e1293d.dip0.t-ipconnect.de. [2003:d8:2f19:9c00:568:7df7:e1:293d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53243664fsm1672259f8f.65.2025.06.06.04.51.25
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451f8311ae6sm30797975e9.2.2025.06.06.04.51.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 04:51:25 -0700 (PDT)
-Message-ID: <3a6f0f37-f4a9-46c0-bc3f-5c6dbf4a765d@redhat.com>
-Date: Fri, 6 Jun 2025 13:51:24 +0200
+        Fri, 06 Jun 2025 04:51:36 -0700 (PDT)
+Message-ID: <3051c206-9a1c-47b9-a5c4-18010abf070a@redhat.com>
+Date: Fri, 6 Jun 2025 13:51:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,7 +75,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 06/10] drivers,cxl: Use node-notifier instead of
+Subject: Re: [PATCH v5 07/10] drivers,hmat: Use node-notifier instead of
  memory-notifier
 To: Oscar Salvador <osalvador@suse.de>,
  Andrew Morton <akpm@linux-foundation.org>
@@ -85,7 +85,7 @@ Cc: Vlastimil Babka <vbabka@suse.cz>,
  Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
  linux-kernel@vger.kernel.org
 References: <20250605142305.244465-1-osalvador@suse.de>
- <20250605142305.244465-7-osalvador@suse.de>
+ <20250605142305.244465-8-osalvador@suse.de>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -133,15 +133,15 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20250605142305.244465-7-osalvador@suse.de>
+In-Reply-To: <20250605142305.244465-8-osalvador@suse.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 05.06.25 16:22, Oscar Salvador wrote:
-> memory-tier is only concerned when a numa node changes its memory state,
+> hmat driver is only concerned when a numa node changes its memory state,
 > specifically when a numa node with memory comes into play for the first
-> time, because it needs to get its performance attributes to build a proper
-> demotion chain.
+> time, because it will register the memory_targets belonging to that numa
+> node.
 > So stop using the memory notifier and use the new numa node notifer
 > instead.
 > 
@@ -150,31 +150,26 @@ On 05.06.25 16:22, Oscar Salvador wrote:
 > Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
 > Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 > ---
->   drivers/cxl/core/region.c | 16 ++++++++--------
->   drivers/cxl/cxl.h         |  4 ++--
->   2 files changed, 10 insertions(+), 10 deletions(-)
+>   drivers/acpi/numa/hmat.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index c3f4dc244df7..a8477a3e175c 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2432,12 +2432,12 @@ static int cxl_region_perf_attrs_callback(struct notifier_block *nb,
->   					  unsigned long action, void *arg)
+> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+> index 9d9052258e92..fe626e969fdc 100644
+> --- a/drivers/acpi/numa/hmat.c
+> +++ b/drivers/acpi/numa/hmat.c
+> @@ -962,10 +962,10 @@ static int hmat_callback(struct notifier_block *self,
+>   			 unsigned long action, void *arg)
 >   {
->   	struct cxl_region *cxlr = container_of(nb, struct cxl_region,
-> -					       memory_notifier);
+>   	struct memory_target *target;
 > -	struct memory_notify *mnb = arg;
-> -	int nid = mnb->status_change_nid;
-> +					       node_notifier);
-> +	struct node_notify *mnb = arg;
-> +	int nid = mnb->nid;
->   	int region_nid;
+> -	int pxm, nid = mnb->status_change_nid;
+> +	struct node_notify *nb = arg;
+> +	int pxm, nid = nb->nid;
 >   
 > -	if (nid == NUMA_NO_NODE || action != MEM_ONLINE)
 > +	if (nid == NUMA_NO_NODE || action != NODE_ADDED_FIRST_MEMORY)
 
-
-Dito, one would expect "nid == NUMA_NO_NODE" to never even happen here.
+Same comment :)
 
 -- 
 Cheers,
