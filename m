@@ -1,73 +1,48 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CEC287513
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 12:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509462356B9;
+	Fri,  6 Jun 2025 12:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749213335; cv=none; b=ICm7YPycLKcs3X8ims7CDSk0YNLh4EmDGpgFSPQpUcdprWMivPl414hKUD5C47kOtLz/Sd8UDWSvmA5r1VHOHYHQmq+fngcIn25dWkfIORoAC6o+xiBoQ04NjAPB2K2FTIrxUfp1aKlWcaXz4uWRTA0IEhstRRX9F5RMjERCW/o=
+	t=1749213476; cv=none; b=g5V39bnOhFlZwwanGoERZxJ5VMxfTQR9eQ9+Qy6FNwQcNzhaztyexgPmkfgTvjNbM82WHZ/ff5Lfs7fqC3JP5FC/5ieYd7t40sJuFNcwu0QTxxzsQohCDaPe0AeDbuN1G09fBOi9WxSzrYH28ZnYm3jSDrBu3zXngkyeiAIDvCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749213335; c=relaxed/simple;
-	bh=kpRINIUUT3cNR5P8bR7a4qNj9t6jrjVfH1S2gblGSHM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VmKIWDQSpwkh8iiETuU+Q3kCd4CE7oa0NCV0wd0v99EFrcAHbj0ZKjkmlrIvQHraSPPVIYYOP1qMoqbsqROGmmjsHb8UBk2wECvYnC/OADJs5MoqhR2/KTvCVT/VhXIAyAl2go8KhVPhlvHuiwONZdR8gOBpiF8hUUaIx5eCHys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VdV/OTlJ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749213476; c=relaxed/simple;
+	bh=8BFKlrQ68QjCmbx5xh4/w0cPsnqeWqA5EfLScv6WkrE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=JSQ5UJBmEIiVoSsuTP8dzHUEiScy5daZ9NmpPNawLf6NS/X6rXMm8p6/oOj3Zi2e1gGc7GL4dne4xv1xJw1D1nEGaZH1gOvbIk16ScPAr6Ju/mTfIj4ToHiIC9RCGSEcddFIzmj6MNtogZgz6FaSUDVvfg17+6h7aFlGNj4U3X0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=S0EKknag; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VdV/OTlJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749213332;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=sSb0ikd6dE0bNHJf4fDasJAbxnz21Z9UlDYPOcjiVX4=;
-	b=VdV/OTlJmud2hXMtcpQGU1m6bz/J39Z9DEutp6WbqjNt74cvsTm9ozaKSMUZ+GUeMFskDb
-	v/DoP2rRu7a1RIYBzBDCZOhzQy+YVTMaL7ZJEgU91ggrMtxT0nPrJK4w6PfdhS8uJEPprO
-	xFPG+TqSspMXm1zPoFUzLvvCDw6ee60=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-636-bi0XcQL4Ot2fNu3OXGir2A-1; Fri, 06 Jun 2025 08:35:31 -0400
-X-MC-Unique: bi0XcQL4Ot2fNu3OXGir2A-1
-X-Mimecast-MFC-AGG-ID: bi0XcQL4Ot2fNu3OXGir2A_1749213330
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-441c122fa56so10407855e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 05:35:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749213330; x=1749818130;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=sSb0ikd6dE0bNHJf4fDasJAbxnz21Z9UlDYPOcjiVX4=;
-        b=IrN4Kr4JYhOAOXu9S2T7t8JPDkv7js4ze/Sb/0fx0sjBZx4dqeov/EJ7jJQ8oQer87
-         bRUXbXPk3ynv6P7rUDryUTdLFcOwob+43F/pmukS2L9gDRnj2elcUYj3EPv5iyw8h2V7
-         c0MP+uUpJsB+xvH5kPFbHdrk2bBDOT+MxTmTkAjiq2fn0QUq526XSgQG4pRXssVbae8i
-         LS4E60w4NyrWVv6P/pjOd/vnkvRqZQKj/dY+o6wHH8BorfULC60mhN8CayuN1VG0Taex
-         TPkZZb5MoZ9CKt5pqchpzRMM/nPUdVT5n1FWueVDI7Ia6ZNfsiNMZBfQd8lxND2pwdRG
-         0oWg==
-X-Forwarded-Encrypted: i=1; AJvYcCXbkb2cK1rN2lykOO7F94fJoj4PHXJpNIU4v5XiiGRAMea+VJK7RybdlIJRHyC3U7g8wQf5vwKFU8cZQD0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLvzmcrkF1lvR4i7HA8NkxIAHQkakk/+utdw2T8ouACD6dkgox
-	0W2AeUuipnQ3ONEy1vywNlQeAIi6f2y6Camvmng6aoaLBuD8NfmX+Q3DnvFw+6A/Dvi90KMyLce
-	+/kdDoUeIEQNsltbQTlqQ70OUg30IB/Ud3RUPXLYd6eGKWI4+8pRIC+/1DySE8t7D5A==
-X-Gm-Gg: ASbGncsF2PT0meCOJ6DNXYHJgb/0ykl7s1ZGp0EDnHOFbcrLOkdUjj46hVgoKCL4CFx
-	z6KzPgmMlRCpE25G5i/MhjyMcTiHDAzpgN9ukJFM4nY8/GPnZ7lOi92CeV8GwrlFptkVOSQqkE9
-	RRJRkJNxbdgIFXEPCKoeGwvc/2GnFYTRAAAiEGSAsI/+kJTK2sDDXvOuwTdU3RNnAlY3Rt0uvI4
-	S1QZuYQB91k0CwB5kPFspGg7JbPPwbYKLVvkmis56dtzjUQ0LMNkJuzCMLbCwqdOiNMyPJb8E2n
-	gZaLsxtFMxIdBGy0XUkpvfe9b20EdWY0d4scjXwUn9afkVI/FksH8eqT0hdeYThBaF8mF9ngroD
-	oNXUKi/lnlIVp8FOnN840gylKHeLhOMjMprbp73Jpdw==
-X-Received: by 2002:a05:6000:310d:b0:3a5:2beb:747b with SMTP id ffacd0b85a97d-3a5319b592bmr2739322f8f.3.1749213330325;
-        Fri, 06 Jun 2025 05:35:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE6Ebolrz1IOoMpW3aYGJSUpFY88OxyWoAs8HB+AGnlcGOsl5vVciX1PlKuEnfQRSWeZP/PAQ==
-X-Received: by 2002:a05:6000:310d:b0:3a5:2beb:747b with SMTP id ffacd0b85a97d-3a5319b592bmr2739302f8f.3.1749213329969;
-        Fri, 06 Jun 2025 05:35:29 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f19:9c00:568:7df7:e1:293d? (p200300d82f199c0005687df700e1293d.dip0.t-ipconnect.de. [2003:d8:2f19:9c00:568:7df7:e1:293d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532436668sm1788926f8f.54.2025.06.06.05.35.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 05:35:29 -0700 (PDT)
-Message-ID: <e105ba14-f9f5-4510-bf9d-b65440361f51@redhat.com>
-Date: Fri, 6 Jun 2025 14:35:28 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="S0EKknag"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55663pHt000708;
+	Fri, 6 Jun 2025 12:37:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	1oODGAliAr0P1Y/Ntrn/PvuZ7jpTdNekDsWec4XKAP8=; b=S0EKknagQ6PJY13L
+	1Dblb5hcsqx0Y0zinF0lLNDlVzglwIOrAFdqoOkZE/dJAu3+xEjEmJf0vHbigkhP
+	dOG0Xo5F4MwngHeBnEV+J4rzo9DbNl3Fdh27aNblB0/y/aJRftc/T8FiAuw3trKQ
+	1qZfAd6GxNoV8b36QtZyk+xzlbYc6f3s53qROSKRIx8NMyIVuSOmZS3kt/uW5HfX
+	WDlZ5XHdUVHQJxmf4VPaqV2zJEQGIR+qqUpQLOEucrBfjPzFuRNVsK4b0Q/sU2aJ
+	VosKVxVvRQc0Zsd1b4YnDy9frmBPIvmH8NBGJjCjJvog1tiRkJ9ocd6GKXATaaAr
+	IJxsfg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8qcmek-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 06 Jun 2025 12:37:50 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 556Cbnue000632
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 6 Jun 2025 12:37:49 GMT
+Received: from [10.253.79.143] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 6 Jun 2025
+ 05:37:45 -0700
+Message-ID: <996c9a39-5520-4b43-adfa-06ce29223ba0@quicinc.com>
+Date: Fri, 6 Jun 2025 20:37:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,111 +50,98 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 04/10] mm,slub: Use node-notifier instead of
- memory-notifier
-To: Oscar Salvador <osalvador@suse.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Vlastimil Babka <vbabka@suse.cz>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Harry Yoo <harry.yoo@oracle.com>, Rakie Kim <rakie.kim@sk.com>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250605142305.244465-1-osalvador@suse.de>
- <20250605142305.244465-5-osalvador@suse.de>
- <0ca963af-8dc9-4cb4-9142-04497c359b81@redhat.com>
- <aELfAo3RgIU0CV-5@localhost.localdomain>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v8 0/3] media: venus: enable venus on qcs615
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>
+CC: Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Dikshita Agarwal
+	<quic_dikshita@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        "Nicolas
+ Dufresne" <nicolas.dufresne@collabora.com>
+References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
+ <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
+ <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
+ <5854a587-aba7-4e71-87f8-249ba00cbc59@linaro.org>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aELfAo3RgIU0CV-5@localhost.localdomain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-
-On 06.06.25 14:28, Oscar Salvador wrote:
-> On Fri, Jun 06, 2025 at 01:56:15PM +0200, David Hildenbrand wrote:
->>> @@ -6217,15 +6217,12 @@ static int slab_memory_callback(struct notifier_block *self,
->>>    	int ret = 0;
->>>    	switch (action) {
->>> -	case MEM_GOING_ONLINE:
->>> +	case NODE_ADDING_FIRST_MEMORY:
->>>    		ret = slab_mem_going_online_callback(arg);
->>
->> In slab_mem_going_online_callback we will cast arg to "struct
->> memory_notify", no?
-> 
-> Uhm... not sure if I understood this correctly but slab_mem_going_online_callback looks
-> like this:
-> 
->   static int slab_mem_going_online_callback(void *arg)
->   {
->           struct kmem_cache_node *n;
->           struct kmem_cache *s;
->           struct node_notify *narg = arg;
->           int nid = narg->nid;
->           int ret = 0;
-> 
-
-I'm stupid and missed that hunk, sorry.
-
-> 
-> 
->> Probably needs to get fixed.
->>
->> ... and probably best to pass marg directly.
-> 
-> You mean to cast it directly in slab_memory_callback and pass 'narg'
-> to slab_mem_going_online_callback?
-
-Yes :)
+From: Renjiang Han <quic_renjiang@quicinc.com>
+In-Reply-To: <5854a587-aba7-4e71-87f8-249ba00cbc59@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: MJCRs-B1rtwWlJNjGneRRIOua0tJXyig
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDExMyBTYWx0ZWRfXx/9a70jTHg0Q
+ iKpMhz+m7Or5xEi5C4FX7Q81Qh484u9YwJ2YiM/z3qBTKAlRqlespbvR/LfvPZOipkjlADsJ7mk
+ q/Rq/K1lxxs1lQTdc779GnV8zdmBtD471Gwg9qnaw+IBIt+sWTZlgQzNFvVVlIO9dT7KRqTGxkh
+ 00rlvFNvdriHYd8mbHd5v10pG2Pbld5LcH0dg7jjKX/+3G/B+8ZwDNGuCJ7X/YldlIyx3/jxQ2L
+ xzd26xcxV7OzOW6jS6wVOGy/wBv2J1RP2XeMnl0pJqEOrN2cSkV7PHrFine5agUlZFw52sZD0/m
+ 3sKYR7vEMHNx1yppPEKt9sRuqdiN8GcJDlumuiUzgsPyQXAa2UKcx/V6hwArb12ubGM6tVRxO1u
+ cqEOZmAgRCF7gqBZxHXwTTg+OhQw7V0ZgNdRPE4/ATgXfIV1CDCGkt/n2WpCJeU4sBDde3Hf
+X-Proofpoint-ORIG-GUID: MJCRs-B1rtwWlJNjGneRRIOua0tJXyig
+X-Authority-Analysis: v=2.4 cv=PrmTbxM3 c=1 sm=1 tr=0 ts=6842e11e cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=OeXMNpvLbdQpr1KLWfoA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-06_04,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 priorityscore=1501 mlxlogscore=530 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 malwarescore=0 spamscore=0 clxscore=1015 adultscore=0
+ suspectscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506060113
 
 
+On 6/5/2025 8:34 PM, Bryan O'Donoghue wrote:
+> On 31/05/2025 01:05, Renjiang Han wrote:
+>>>>
+>>>> Note:
+>>>> This series consist of DT patches and a venus driver patch. The patch
+>>>> 1/3, which is venus driver patch, can be picked independently without
+>>>> having any functional dependency. But patch 2/3 & patch 3/3, which are
+>>>> DT patches, still depend on [1].
+>>> I'd say 2/3 and 3/3 still depend on 1/3, otherwise we can get video 
+>>> core
+>>> on QCS615 over(?)clocked.
+>> Agree, so we need to make sure that the driver patch is not picked 
+>> after the DT patch.
+>
+> This statement is confusing.
+>
+> 1/3 states that there will be a fallback if there is no OPP table 
+> present.
+>
+> Giving the code a glance, I believe that is so, freq_table should be 
+> used if there is no OPP specified in the DT.
+>
+> I think we are having a hard time here understanding what you are saying.
+>
+> My understanding:
+>
+> - venus modification is standalone 1/3
+>   Qcs615 will fallback if no OPP is present
+>
+> - dt modification 2/3 3/3 is therefore also independent of driver
+>
+> ---
+> bod
+yes, let me re-spin this with driver patch alone. Once that gets in, 
+will bring in the DT patches.
 
 -- 
-Cheers,
-
-David / dhildenb
+Best Regards,
+Renjiang
 
