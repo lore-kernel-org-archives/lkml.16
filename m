@@ -1,94 +1,175 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2121DF739
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 09:11:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CBF28642F
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 09:12:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749201096; cv=none; b=C3LcOMJXy79DjLipyCMOP+rf4slyi/RQI5/5InsBIXKW+HA6corOE9FetpR4WXKGnVMv0mYZ3QOQAdbzSgHq1Cdhkf3jWSaQu/SXcYRVuurSL4dvzrp1VXSY4J1HkaSlzrALQEaHUTB2FnlNFYDLcibXDdXpCOv7YUw2iGcx0Uk=
+	t=1749201147; cv=none; b=EAjAjwWV8n1V1QlAtM/08T+RH8T3L58gubNbOg6X1WHJImVQnzUijiWq4JmpIdjjjpM/2bGdGPrb7R6zcH4wl7NnewIt0voPTiiGUyS7XO0tiVtmsHOs4e9f6Ru0QtwM0kFeofvwTXmRXiHO90nFpk29W6U7SVp8nRqRk6wsIyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749201096; c=relaxed/simple;
-	bh=5MdIQVI8FLkz4uPQ2nEO3DWQJIyA/2G/IKcgBv4oc/o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=o5CPU72ViTwGDTsXziphheP0l0+Rg8IMMbp3fzhxhlmGv16bDkL3lBswTvp/TKjsnRFLv/Ud8CuIaPN2G/bggvHkaG4ym11A2a5QKHpa+D6Wdw4fCXMyy3sZZQP/SkuccL4//MMvkHlfA8Twm5eolAR2l0Ag2Yt3cw0zZd1kn38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OcBwctdI; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749201147; c=relaxed/simple;
+	bh=HmRNUwvFUl/hdKoO4B1dgc6/Hw5mGyFSqMWv/NJQVWE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uH+gizAI5bNev/gHcJxu1gUHAM5ifFeebMcifX3Me0NHxZbAIVu9oFxcK1vEZppAtx0jkaYVvUhEQDMjnhdjS8wKE1CXxfYt2k+5f8XS5zebxD/Idz22t2fNO3AYsJxwCDjnRsHMpvHPFnSRyHuP2ELtX9WK1m4OLKkeZ0gtKrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=TxvA3+vc; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OcBwctdI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749201094; x=1780737094;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=5MdIQVI8FLkz4uPQ2nEO3DWQJIyA/2G/IKcgBv4oc/o=;
-  b=OcBwctdI4vVCPR3vK7dXzUTN/jcvnhOARl8nwgMaZV8W1318OpxzUvTD
-   NUQmJ4n5qHtlFxSYgDdeCjB23/ChzYgowTtv4M/J+EQCaLJfT1yey97jJ
-   Ntb+R8aQ351cqffxvPKiDBgSMawX6a/bwop/jH5AG7RQK0HF70HSkBo1c
-   QF1We44xUtF4MMMBk8zMqg29iwRiE8mw3NJ3HfQrscBcCivDHoFjlvqDU
-   WDzf8g3XmTQYo3bW5tkfch/STaU6C2bYUp8VyIenXNGxavRUO5frMIlV+
-   Xb3Ta99vvHJ2pj8WuPE7D7eUOapYAlwbuivVZFA7rH4/bONHR1bVTMMdu
-   Q==;
-X-CSE-ConnectionGUID: UGnPoUBfQ266dXPio1RI1g==
-X-CSE-MsgGUID: iMlSff36ROCSbu0x3tkmQw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51048587"
-X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
-   d="scan'208";a="51048587"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 02:11:34 -0700
-X-CSE-ConnectionGUID: IgnUupqwRLudpdbQoYyDlw==
-X-CSE-MsgGUID: UYpnkVZCTAWtZd/KTG2NlA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
-   d="scan'208";a="146731361"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.33])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 02:11:30 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Anusha Srivatsa <asrivats@redhat.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>
-Subject: Re: [PATCH v4 2/4] drm/panel: Add refcount support
-In-Reply-To: <20250606-pompous-mellow-guan-1d9ea4@houat>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <CAN9Xe3RLazpAXdxxJmyF2QAShDtMSgdoxMdo6ecdYd7aZiP9kA@mail.gmail.com>
- <874ixvtbxy.fsf@intel.com>
- <20250509-rapid-flounder-of-devotion-6b26bb@houat>
- <87r00yj6kv.fsf@intel.com>
- <molexnyjkiryvhetfdc66gmzecrf6f7kxl656qn46djdkixrkb@fdgnp5hispbf>
- <875xi3im1r.fsf@intel.com> <20250519-singing-silent-stingray-fe5c9b@houat>
- <87sekztwyc.fsf@intel.com>
- <20250527-winged-prawn-of-virtuosity-d11a47@houat>
- <4a1c28b2ad4f701b9b2fe363ebf6acbab504e6ad@intel.com>
- <20250606-pompous-mellow-guan-1d9ea4@houat>
-Date: Fri, 06 Jun 2025 12:11:28 +0300
-Message-ID: <3016c9e72f1abda5368399eb1c0e42921da2e017@intel.com>
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="TxvA3+vc"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad883afdf0cso359278366b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 02:12:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1749201144; x=1749805944; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Wc+ifX+7O38yry593NEDWvp79xQMU3g4ALAygrP5+5k=;
+        b=TxvA3+vcesJZKqLdzgVo3evL9gOZzhwlcXroGLLBq+G8ahix5MAMLbKqLE35JLUHF2
+         VAvfkrrzKMTNT1Er2AEEtR0GK5Jklbeh4SDj//wLvZ+MXHqpuLHP1y8+Ew37iDNJ/ELB
+         zGhVek5Cu05m1W0oBuGylGglcngGZP80EfUkifMT7AU6RLF4+uduuyt1BPRz3coEAQtq
+         SW9pJJVof/RhUpHQVgMQkGdxLiu/xtLDer20WNPoe3nsqhMdclVAfEwnrx7puRF3IKrA
+         3xZthlRqDnC+BfNnrav3UnkwCkSEWUZ9QA8rf88C/gzcD6VYUSmeu6f9qbBQ1uH4nfQi
+         3eoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749201144; x=1749805944;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wc+ifX+7O38yry593NEDWvp79xQMU3g4ALAygrP5+5k=;
+        b=rn8WwJNlZyaQrNUCEopIdIi5g/rqxdYWjbbZHwUonxxX9p55W1Eqijf2mzc90hVAp1
+         Eo4l/f07KCM2c08rUT02qQ+r/+pq1zUBQD0jj+wh6+WBzEkYheo47npWMR5p/uaXPUzn
+         r2lgr6HKTlCLmyKjeJANgPLn/YLzyz++ynP/Nzll2vGC942zBusS8gKM5kTDyO3Og2Qx
+         81k53f5IKiDFDyDV11aR7CFOSTGloYeFSxcBYvugwEWsF6C1w6pqoK+muafoiT0iNG+e
+         kjGz4PRp4q51qL2VQJdWzuF/GBlUxusRhvVtPfcLx/iwAw1AbTIx2FeLGNQtIN6W8JOn
+         dGUg==
+X-Forwarded-Encrypted: i=1; AJvYcCWo0CJCyK2L4vKjWIcnFWvscLXMqxHOevWmeOkw2F16Km37EmPWwXR+9f+OBNES2JxomX+OgJ4T4oxjF2E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvUIi74HnZB9nrufgxr5bmksUWeYtQaT86nsFYAv45Va0hvxr4
+	9mSX1mlsoOmK5PfnpkFrrJNuxtwzyBlduaDPYVkQcEOLbAdmO/thPdYz+ro4nNaYxZA=
+X-Gm-Gg: ASbGncudpV4i4wUPxx/DD0z/HICHFibj0RIUgCmHJGtuPFUt9QVIFMxqfZMNOpyMXxP
+	/GtCE51IgjvPd7R5u6zDOGzEF0ANHSb2IxfDAVWDB9fgQ8oHIx6cjNLHpvIlocS8oj/Gz2pALWE
+	H9eVcMSoIHcshzhx9XjrXg7doIUh/T7iMWVEcxa74i7roJgsZbeIwHWTatRm9y73C+MTQgSvkW6
+	77vQnIfdjrmraIJAuMxxs8WWCeXKxxqZkEE1djGUxIBzA1LfDx9e5XA086c8HWY4tISKtfgWf9g
+	6Ae1j0Zu63AK/iruQFalSdORAXntG1vKBqXgLcgxOIJHrF07hEj4Su70/+EA
+X-Google-Smtp-Source: AGHT+IEjDHiLE7sMo+a12s7VFlD8SjfCEiBfxxMF3QVGmJjKfSvQI7x7ZEGc6pDRlowYGNhvaszk6A==
+X-Received: by 2002:a17:907:bb49:b0:adb:428f:f748 with SMTP id a640c23a62f3a-ade1aa06c95mr206620466b.21.1749201143788;
+        Fri, 06 Jun 2025 02:12:23 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.126])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc7d300sm85900566b.179.2025.06.06.02.12.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jun 2025 02:12:23 -0700 (PDT)
+Message-ID: <53921bd9-6ac9-49fb-8c9d-2c439ec8cd5b@tuxon.dev>
+Date: Fri, 6 Jun 2025 12:12:21 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/8] PCI: rzg3s-host: Add Initial PCIe Host Driver for
+ Renesas RZ/G3S SoC
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
+ mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de,
+ linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+ john.madieu.xa@bp.renesas.com,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20250605225730.GA625963@bhelgaas>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <20250605225730.GA625963@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 06 Jun 2025, Maxime Ripard <mripard@kernel.org> wrote:
-> Thanks for working on that. Your two patches (the one you sent here, and
-> the one in the other subthread) look good to me. So if that works, it
-> looks like we have a way forward.
+Hi, Bjorn,
 
-Coincidentally, I just posted the first non-draft patches [1]. Thanks
-for your feedback, and for bearing with me.
+On 06.06.2025 01:57, Bjorn Helgaas wrote:
+> On Fri, May 30, 2025 at 02:19:13PM +0300, Claudiu wrote:
+>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>
+>> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
+>> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
+>> only as a root complex, with a single-lane (x1) configuration. The
+>> controller includes Type 1 configuration registers, as well as IP
+>> specific registers (called AXI registers) required for various adjustments.
+> 
+>> +/* Timeouts */
+>> +#define RZG3S_REQ_ISSUE_TIMEOUT_US		2500
+>> +#define RZG3S_LTSSM_STATE_TIMEOUT_US		1000
+>> +#define RZG3S_LS_CHANGE_TIMEOUT_US		1000
+>> +#define RZG3S_LINK_UP_TIMEOUT_US		500000
+> 
+> Are any of these timeouts related to values in the PCIe spec?  If so,
+> use #defines from drivers/pci/pci.h, or add a new one if needed.
+> 
+> If they come from the RZ/G3S spec, can you include citations?
 
+The values here were retrieved by experimenting. They are not present in
+RZ/G3S specification. I'll look though the header you pointed and use any
+defines if they match.
 
-BR,
-Jani.
+> 
+>> +static int rzg3s_pcie_host_init(struct rzg3s_pcie_host *host, bool probe)
+>> +{
+>> +	u32 val;
+>> +	int ret;
+>> +
+>> +	/* Initialize the PCIe related registers */
+>> +	ret = rzg3s_pcie_config_init(host);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	/* Initialize the interrupts */
+>> +	rzg3s_pcie_irq_init(host);
+>> +
+>> +	ret = reset_control_bulk_deassert(host->data->num_cfg_resets,
+>> +					  host->cfg_resets);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	/* Wait for link up */
+>> +	ret = readl_poll_timeout(host->axi + RZG3S_PCI_PCSTAT1, val,
+>> +				 !(val & RZG3S_PCI_PCSTAT1_DL_DOWN_STS), 5000,
+>> +				 RZG3S_LINK_UP_TIMEOUT_US);
+> 
+> Where do we wait for PCIE_T_RRS_READY_MS before pci_host_probe()
+> starts issuing config requests to enumerate devices?
 
+I missed adding it as RZ/G3S manual don't mention this delay.
 
-[1] https://lore.kernel.org/r/cover.1749199013.git.jani.nikula@intel.com
+> 
+>> +	if (ret) {
+>> +		reset_control_bulk_assert(host->data->num_cfg_resets,
+>> +					  host->cfg_resets);
+>> +		return ret;
+>> +	}
+>> +
+>> +	val = readl(host->axi + RZG3S_PCI_PCSTAT2);
+>> +	dev_info(host->dev, "PCIe link status [0x%x]\n", val);
+>> +
+>> +	val = FIELD_GET(RZG3S_PCI_PCSTAT2_STATE_RX_DETECT, val);
+>> +	dev_info(host->dev, "PCIe x%d: link up\n", hweight32(val));
+>> +
+>> +	if (probe) {
+>> +		ret = devm_add_action_or_reset(host->dev,
+>> +					       rzg3s_pcie_cfg_resets_action,
+>> +					       host);
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+> 
+>> +		 * According to the RZ/G3S HW manual (Rev.1.10, section
+>> +		 * 34.3.1.71 AXI Window Mask (Lower) Registers) HW expects first
+>> +		 * 12 LSB bits to be 0xfff. Extract 1 from size for this.
+> 
+> s/Extract/Subtract/
 
+OK.
 
--- 
-Jani Nikula, Intel
+Thank you for your review,
+Claudiu
