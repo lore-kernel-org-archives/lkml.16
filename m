@@ -1,38 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E846128E0F;
-	Fri,  6 Jun 2025 12:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60BE0288508
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 12:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749212914; cv=none; b=KimRJKEIYh/msldVPK+S2DVUUMAp02ZE3P6ieQhglvIt8tKI+7J9O7NRLbZqBkdMuuZdBt6xEJVuk2/LMBNMVvJXaHrQsppFEQKnJrIL0bzdTQMK99iWF8ZnZZt/LYSxo4r9tzE2q20yO9eLP0cetdZvtzj08d7ptvx6a8lMaDw=
+	t=1749212936; cv=none; b=qFYQryX3kmiyMO70Lh6nKsmveDhR1uQVwHAQiyZAGIy3jAHDe8lhyZyfsDpeDzFRoLYFioZdUpVp5zGcBhRcsx/aUFVqn8AKzE5l6cq8i7Mbcbzdn8B3BtFJDgjXE46mqPPgDgGhMkROEakOU1iS1Gab5qBo0PU8W0esfB96Sbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749212914; c=relaxed/simple;
-	bh=jAkYL4VXVnMBgY+eRaXVCeLOmNfQxDZf8QjlfRZ3Fnc=;
+	s=arc-20240116; t=1749212936; c=relaxed/simple;
+	bh=VdugDXsJC+MySYLUkZ+jaVZRS+xfYRsyvBkvIOugRw0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EiJSJ0/WHHL8SZHHbUqPzitmJ2sBico3AFCFcDHtrH7dQ4JrALm2ng09xp2QPbIwdeRqcwYo9ENypn4xl9MMVEJhdsyUcRqydzpzpazHJPEX7euXNmwrRuZmyQHdkg8kXmEmr7OiVQi96W+4M4SZilK29AhGdZtgq9IGaW4vDug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ynoObLXa; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=KUf0KIKxn23h5Wkr2z66x5WqIzPtJj+7Ca6xFIZbvLVzARwZ4t/Khr558s8nqMwZYHsMOugk4sin1d15U8iNMVEKaexepX28A6wsi7ps2QzbQ6cDkx62rOWQp2dcZ9K8UZR2Lqi4S7fqzQ40q1nAjSekyKyPkNmzkOlbJxmtRG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=m0Tqyx7l; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TupEVE61; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=m0Tqyx7l; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TupEVE61; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ynoObLXa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06B72C4CEEB;
-	Fri,  6 Jun 2025 12:28:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1749212913;
-	bh=jAkYL4VXVnMBgY+eRaXVCeLOmNfQxDZf8QjlfRZ3Fnc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ynoObLXaB/tB8TrJbEjSXuDCG94H2eGnP9qg7EnWf0qd/vD7UlXkIdV22PtIuZX+o
-	 IlVPlPpIa5mof3pTFKdeuBZy1qcwF8Cwr9jAsmt3HbGtehFBkdmzplU6LiX75lE8Ed
-	 6eNVn8fHcuG8FbfiGekTd4OrcRwONJ11oQP9aCdE=
-Date: Fri, 6 Jun 2025 14:28:30 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Subject: Re: [PATCH v3 3/3] ABI: sysfs: add documentation for ST M24LR EEPROM
- and control interface
-Message-ID: <2025060632-luridness-carpool-bf90@gregkh>
-References: <20250606120631.3140054-1-abd.masalkhi@gmail.com>
- <20250606120631.3140054-4-abd.masalkhi@gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="m0Tqyx7l";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TupEVE61";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="m0Tqyx7l";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TupEVE61"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7123321114;
+	Fri,  6 Jun 2025 12:28:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749212932; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DqICevuKoP0IJLpCka+29EYHI1p+jaoZS/6X28IIxdU=;
+	b=m0Tqyx7lrrlQgV4nYGpP1zIy5aYr8pdM7BZbJIMBFDW/0ldzBITpicmeCTtoT+wULeWu94
+	LsjTCIfhAF6/IzKqHC5OFGDdeDnSO7qdUCPH04DBgzukifaXTrB4Lyun7eOb3Cf3twLSlU
+	FM+l/7mya7GOStvYJkxM4HwHwov9eqc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749212932;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DqICevuKoP0IJLpCka+29EYHI1p+jaoZS/6X28IIxdU=;
+	b=TupEVE61L1YpQIEe5C8YHYMwU4SKGD6E0FgkwkiMdTnKNF9+1eDiAjv9oZMVAl6R71fumJ
+	noODCVmyuCdo7jAg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749212932; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DqICevuKoP0IJLpCka+29EYHI1p+jaoZS/6X28IIxdU=;
+	b=m0Tqyx7lrrlQgV4nYGpP1zIy5aYr8pdM7BZbJIMBFDW/0ldzBITpicmeCTtoT+wULeWu94
+	LsjTCIfhAF6/IzKqHC5OFGDdeDnSO7qdUCPH04DBgzukifaXTrB4Lyun7eOb3Cf3twLSlU
+	FM+l/7mya7GOStvYJkxM4HwHwov9eqc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749212932;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DqICevuKoP0IJLpCka+29EYHI1p+jaoZS/6X28IIxdU=;
+	b=TupEVE61L1YpQIEe5C8YHYMwU4SKGD6E0FgkwkiMdTnKNF9+1eDiAjv9oZMVAl6R71fumJ
+	noODCVmyuCdo7jAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E11E31369F;
+	Fri,  6 Jun 2025 12:28:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ei86NAPfQmicYwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Fri, 06 Jun 2025 12:28:51 +0000
+Date: Fri, 6 Jun 2025 14:28:50 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Harry Yoo <harry.yoo@oracle.com>, Rakie Kim <rakie.kim@sk.com>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 04/10] mm,slub: Use node-notifier instead of
+ memory-notifier
+Message-ID: <aELfAo3RgIU0CV-5@localhost.localdomain>
+References: <20250605142305.244465-1-osalvador@suse.de>
+ <20250605142305.244465-5-osalvador@suse.de>
+ <0ca963af-8dc9-4cb4-9142-04497c359b81@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,92 +92,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250606120631.3140054-4-abd.masalkhi@gmail.com>
+In-Reply-To: <0ca963af-8dc9-4cb4-9142-04497c359b81@redhat.com>
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_CC(0.00)[linux-foundation.org,suse.cz,huawei.com,oracle.com,sk.com,gmail.com,kvack.org,vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	MISSING_XM_UA(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-On Fri, Jun 06, 2025 at 12:06:31PM +0000, Abd-Alrhman Masalkhi wrote:
-> Add sysfs ABI documentation for the STMicroelectronics M24LR device,
-> covering both the control interface (e.g., unlock, password update, UID,
-> memory size, and SSS entries) and EEPROM access via the nvmem subsystem.
+On Fri, Jun 06, 2025 at 01:56:15PM +0200, David Hildenbrand wrote:
+> > @@ -6217,15 +6217,12 @@ static int slab_memory_callback(struct notifier_block *self,
+> >   	int ret = 0;
+> >   	switch (action) {
+> > -	case MEM_GOING_ONLINE:
+> > +	case NODE_ADDING_FIRST_MEMORY:
+> >   		ret = slab_mem_going_online_callback(arg);
 > 
-> Signed-off-by: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-> ---
-> Changes in v3:
->  - Updated sysfs entry paths to use <busnum>-<primary-addr> to reflect the
->    control address.
+> In slab_mem_going_online_callback we will cast arg to "struct
+> memory_notify", no?
+
+Uhm... not sure if I understood this correctly but slab_mem_going_online_callback looks
+like this:
+
+ static int slab_mem_going_online_callback(void *arg)
+ {
+         struct kmem_cache_node *n;
+         struct kmem_cache *s;
+         struct node_notify *narg = arg;
+         int nid = narg->nid;
+         int ret = 0;
+
+
+
+> Probably needs to get fixed.
 > 
-> Changes in v2:
->  - Added initial sysfs ABI documentation.
-> ---
->  .../ABI/testing/sysfs-bus-i2c-devices-m24lr   | 96 +++++++++++++++++++
->  1 file changed, 96 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-m24lr
+> ... and probably best to pass marg directly.
+
+You mean to cast it directly in slab_memory_callback and pass 'narg'
+to slab_mem_going_online_callback?
+
+
+> >   		break;
+> > -	case MEM_GOING_OFFLINE:
+> > +	case NODE_REMOVING_LAST_MEMORY:
+> >   		ret = slab_mem_going_offline_callback(arg);
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-i2c-devices-m24lr b/Documentation/ABI/testing/sysfs-bus-i2c-devices-m24lr
-> new file mode 100644
-> index 000000000000..53b6fe39162c
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-i2c-devices-m24lr
-> @@ -0,0 +1,96 @@
-> +What:           /sys/bus/i2c/devices/<busnum>-<primary-addr>/unlock
-> +Date:           2025-05-31
+> slab_mem_going_offline_callback() doesn't even look at arg, so likely we can
+> drop that parameter?
 
-It's later than this.
+Sure.
 
-> +KernelVersion:  6.16
+Thanks for the feedback!
 
-This will not be showing up in 6.16, sorry, it's too late for that.
+ 
 
-> +Contact:        Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-> +Description:
-> +                Write-only attribute used to present a password and unlock
-> +                access to protected areas of the M24LR chip, including
-> +                configuration registers such as the Sector Security Status
-> +                (SSS) bytes. A valid password must be written to enable write
-> +                access to these regions via the I2C interface.
-> +
-> +                Format:
-> +                  - Hexadecimal string representing a 32-bit (4-byte) password
-> +                  - Accepts 1 to 8 hex digits (e.g., "c", "1F", "a1b2c3d4")
-> +                  - No "0x" prefix, whitespace, or trailing newline
-> +                  - Case-insensitive
-> +
-> +                Behavior:
-> +                  - If the password matches the internal stored value,
-> +                    access to protected memory/configuration is granted
-> +                  - If the password does not match the internally stored value,
-> +                    it will fail silently
-
-Why is the kernel in the business of adding passwords to devices?  That
-feels wrong, and a way to just flood the device with a "try all the
-values" attempt if needed.
-
-> +What:           /sys/bus/i2c/devices/<busnum>-<primary-addr>/sss<N>
-> +Date:           2025-05-31
-> +KernelVersion:  6.16
-> +Contact:        Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-> +Description:
-> +                Read/write attribute representing the Sector Security Status
-> +                (SSS) byte for EEPROM sector <N> in the M24LR chips. Each sector
-> +                has one SSS byte, which defines I2c and RF access control via a
-> +                combination of protection and password settings.
-> +
-> +                Format:
-> +                  - Read: returns a 8-bit hexadecimal value followed by a
-> +                          newline
-> +                  - Write: requires exactly one or two hexadecimal digits
-> +                      - No "0x" prefix, whitespace, or trailing newline
-> +                      - Case-insensitive
-> +
-> +                Notes:
-> +                  - Refer to the M24LR chip datasheet for full bit definitions
-> +                    and usage
-> +                  - Write access requires prior password authentication in I2C
-> +                    mode
-
-How "deep" does this sysfs tree get here?  This feels like the wrong api
-for read/write to the device, just do it with a single binary file if
-you really want a "passthrough" way to get to the hardware.
-
-thanks,
-
-greg k-h
+-- 
+Oscar Salvador
+SUSE Labs
