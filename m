@@ -1,59 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE16D1E4B2
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 13:11:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2EC20330;
+	Fri,  6 Jun 2025 13:12:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749215511; cv=none; b=HiOM8L16ab4FCezz7lVF1QpVqQCXvWsRmB2fOtE/AlqnWy0hx7XwCBpgKoD35BhXDy5JxpX+tPZFxFxOCEVXkSapgN5iAuljaCoAs9EhddM12PKG4WCvnOfFpuX5f+wxf/4Pkruv8zGaxO1Nfvhytto7D+2WWQ/CVUFjgENlB+M=
+	t=1749215528; cv=none; b=IrEtsJCvJsUCE+37AGmdYeByXHGLs3aF+PVi5JEwd1gs5YErcOcthuoe+rsGhFsS42JE8V+HDhy0TACkev47yU0PCVthngDUIbSuCrTmLvoyTzrzeBTyGOuKDN9vr5V0tcC+P1MHBbW7+LHkwtmt+072Ser60HdHXOwWDjWHan4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749215511; c=relaxed/simple;
-	bh=0GVuQojpk9Mb3dzd1WX8x8g8rwjrX/NeL70/4vMlg64=;
+	s=arc-20240116; t=1749215528; c=relaxed/simple;
+	bh=rGZRqJph/AYEM9AzQLAgB41QMOJBZx9aYxw1lu4xNAE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qyStjt1Em+4reCo01m925Tqpv0h1Vl3Ffmb+M4tfc+dTLbjnmCQs3JUryj9721FGl0u5V21yTaoBxhSwa2NWaFK2G8h94A8m7RHaTYrwW1TRdYDlpwTZYqOB/JiH+c3b+V2Kpdj8tP30qzdkGK7ngxs9qi4zwVhr+js3BrrYw0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=icz4gBox; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=elIe0JzzHeuz4cJLz0Xeh3IzcUtvt3NTr1HrWjcQ/WYrNqM1ttnz81Swhi1OOUm1epN5fwSoTX9A1w0Qb3UczXJKY8fnyuvBN2ngzq/QZj9uWGXRhAZaMvVp2G4PYxDLUT/S8b9GH8diBwTeUfcmpz66jWYQe4J9TNSLmlhSE+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cfhTfHcc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="icz4gBox"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37144C4CEF1
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 13:11:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cfhTfHcc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95875C4AF0C;
+	Fri,  6 Jun 2025 13:12:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749215511;
-	bh=0GVuQojpk9Mb3dzd1WX8x8g8rwjrX/NeL70/4vMlg64=;
+	s=k20201202; t=1749215527;
+	bh=rGZRqJph/AYEM9AzQLAgB41QMOJBZx9aYxw1lu4xNAE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=icz4gBoxMsfNuz9Xc4Rut4lRvznU2kQuuPD5pvQYBOskeuPuG6LVLIvfql1bKvUUl
-	 YKXSUB9vTyBbRNmARiri8sDFUEk4EmvLaJAqnHeA2VxSrkemD0PZfeN0LMVD7L3dJn
-	 JG7g25RYaFPXDkcI4LAVMJYvZIfl3lHngZVXqKMK7AWE8UNA2RV0Ea2Upq2R9d6s6S
-	 L3icPIHSV2mims1BQU6kGxlcpFKpnTCfgL0rdjCyQ+LTk0/C5QYCvoKdtR/4vFbgV/
-	 ZcuEHrJJK5OjgfxJBZR+zPEZMf7N0M3aCXdrpXdnga8RDoV6U/ORR4/W0Oq9gWja2J
-	 Sobfj5vzHsxFA==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-60768f080d8so1779214a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 06:11:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVnAFBTHqXzi8N+5e/lF4Y1mRlvSZXKdVVDDjBK+kfZg0+b0Y8/soP5kBTH9LFUptREx2a4UMEqwQu0kOs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXELMcxMyirHlDZ/lFtw9fq3H/fFkQtt7durVV7ElypM+5ixZb
-	Pl1BGqUQwAMkWyPddS6PNDq1iFF9yUuKocXbJqsK08OEnx1LE1rZwHq68l4LOFUvo8TM06DaHCz
-	lEHEFf+eFSHM7WbeNGue5rSIqJ63cY9c=
-X-Google-Smtp-Source: AGHT+IGkonwhwsMSN2QFCrW9x7bFLMapaDsabxXJgcN7/UazSOBNAAEU4ymwq4ziVNQTZCJ09V22Zkxx/KY4GB20gRc=
-X-Received: by 2002:a05:6402:2807:b0:602:2e21:631f with SMTP id
- 4fb4d7f45d1cf-6077479a7b0mr2927047a12.24.1749215509801; Fri, 06 Jun 2025
- 06:11:49 -0700 (PDT)
+	b=cfhTfHcctqgAwVeOqIbGC/R/W/7BnjHIglya57cJl2vhkPKiPzj/EFm8DZt678gm8
+	 7TQhclnrpXmWkM9DR7ahAcoxB1TteyGiT3dObYylKMZsLpOd54fMFeiTEvPvcoFfCJ
+	 LleorvyPfpPt/wonuhD7+A2hz4+7qZzkc/p7Qe0Sp9FWLRDxtBk+ZlISxE2TrOHBQj
+	 HfYcdCXSJEjLHWOrvlJjZPm+pHN7RFb6o8onIcjckbpX4aTes012TmjKAJuUDYBvje
+	 51FQZz6Uax8RqzgGVLjQnUKHpwApXXrZEbvoKVwhzJgR1UgJaddxjvKMDNyXQfvBH6
+	 puwgeeBmQ4tvQ==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ade326e366dso38909466b.3;
+        Fri, 06 Jun 2025 06:12:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVFEcs3OekLEsXKqSTgS0NDtAsoWkQj232ZO6KQb5RMxtwihrz4bemB/MEaEJN8SX9kaFgX7hYWsZPXLZk=@vger.kernel.org, AJvYcCXUvow9hxW/QSdAWZvj55hLnQ1z4xrWdHVNf7PCL/hWyqISKS9qTZPXMvJJXdzMoCi3iaKfx6r1@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyi17A0m6MHCN53rsMRs18e7fRU9/cokcAEEhkmrMzVrSYu7A3C
+	/pwii9R97OPNQcy26gaKPnaDg8zVaMrEA9SYffaen8njnqgkH5dDMJUR5qWxquOCfgpvZnjA3yg
+	r+LeFByE1mi0Hpde/Hh/0wLWbDyFXmUU=
+X-Google-Smtp-Source: AGHT+IE3pzzutoVEt+xG7WoH2SCggVL9nueRxZ/i2LyieJigkTr1b5rrWQyRf4BgAOIe/icLjS3SlRApkbSvZUQGZz0=
+X-Received: by 2002:a17:907:7f9f:b0:ad8:99cc:774c with SMTP id
+ a640c23a62f3a-ade1aa4743fmr302174766b.58.1749215526167; Fri, 06 Jun 2025
+ 06:12:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250605054828.15093-1-ziyao@disroot.org>
-In-Reply-To: <20250605054828.15093-1-ziyao@disroot.org>
+References: <20250605055546.15264-1-ziyao@disroot.org>
+In-Reply-To: <20250605055546.15264-1-ziyao@disroot.org>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 6 Jun 2025 21:11:39 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H58JGB0QoVBC_LE4Mo5gGdZ=-NcH8FtZupK9hxGFdfvMQ@mail.gmail.com>
-X-Gm-Features: AX0GCFs_Wi3GPn_-VTaU2yt159R1v2DT0MEdn5mw4mPvCP_UNtgOrgvMGLkiBBo
-Message-ID: <CAAhV-H58JGB0QoVBC_LE4Mo5gGdZ=-NcH8FtZupK9hxGFdfvMQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] Backlight control improvements for loongson_laptop
+Date: Fri, 6 Jun 2025 21:11:55 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5B22f3bJ38F16vs208pZA80oQBrqrhaGTQqeU7xkrXNA@mail.gmail.com>
+X-Gm-Features: AX0GCFuSfHSPLUWXT3X6Z-gVUN1k3vC627BbcSHCLmYtH_uyRJoe269rQgrWQqQ
+Message-ID: <CAAhV-H5B22f3bJ38F16vs208pZA80oQBrqrhaGTQqeU7xkrXNA@mail.gmail.com>
+Subject: Re: [PATCH] platform/loongarch: laptop: Unregister
+ generic_sub_drivers on exit
 To: Yao Zi <ziyao@disroot.org>
 Cc: Jianmin Lv <lvjianmin@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, 
 	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -61,35 +62,46 @@ Applied, thanks.
 
 Huacai
 
-On Thu, Jun 5, 2025 at 1:48=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrote:
+On Thu, Jun 5, 2025 at 1:56=E2=80=AFPM Yao Zi <ziyao@disroot.org> wrote:
 >
-> I've observed strange screen brightness changes on TongFang L860-T2
-> 3A5000 laptop after resumption. It's found that a brightness value that
-> doesn't match the hardware state before suspension is "restored" for the
-> EC, causing the strange behavior.
+> Without correct unregisteration, ACPI notify handlers and the platform
+> driver installed by generic_subdriver_init will become dangling
+> references after removing loongson_laptop module, triggering various
+> kernel faults when a hotkey is sent or at kernel shutdown.
 >
-> This series fixes the behavior by obtaining EC's brightness setting
-> instead of using a constant as current brightness on probe.
+> Cc: stable@vger.kernel.org
+> Fixes: 6246ed09111f ("LoongArch: Add ACPI-based generic laptop driver")
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> ---
+>  drivers/platform/loongarch/loongson-laptop.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 >
-> While digging through the code, I've found some unused,
-> power-control-related functions in the driver. They're cleaned up and
-> used to support power control of backlight in the second patch as well.
+> diff --git a/drivers/platform/loongarch/loongson-laptop.c b/drivers/platf=
+orm/loongarch/loongson-laptop.c
+> index 99203584949d..cfe2cf79dbbe 100644
+> --- a/drivers/platform/loongarch/loongson-laptop.c
+> +++ b/drivers/platform/loongarch/loongson-laptop.c
+> @@ -611,11 +611,17 @@ static int __init generic_acpi_laptop_init(void)
 >
-> Changed from v1:
-> - Reword commit message of PATCH 1
-> - PATCH 2
->   - Always issue a power-on command on probe to ensure the backlight has
->     been powered, matching our expectation
->   - Cache backlight state in the driver to reduce interaction with EC
-> - Link to v1: https://lore.kernel.org/loongarch/20250531113851.21426-1-zi=
-yao@disroot.org/
->
-> Yao Zi (2):
->   platform/loongarch: laptop: Get brightness setting from EC on probe
->   platform/loongarch: laptop: Support backlight power control
->
->  drivers/platform/loongarch/loongson-laptop.c | 78 ++++++++++----------
->  1 file changed, 39 insertions(+), 39 deletions(-)
+>  static void __exit generic_acpi_laptop_exit(void)
+>  {
+> +       int i;
+> +
+>         if (generic_inputdev) {
+> -               if (input_device_registered)
+> +               if (input_device_registered) {
+>                         input_unregister_device(generic_inputdev);
+> -               else
+> +
+> +                       for (i =3D 0; i < ARRAY_SIZE(generic_sub_drivers)=
+; i++)
+> +                               generic_subdriver_exit(&generic_sub_drive=
+rs[i]);
+> +               } else {
+>                         input_free_device(generic_inputdev);
+> +               }
+>         }
+>  }
 >
 > --
 > 2.49.0
