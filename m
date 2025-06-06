@@ -1,118 +1,229 @@
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B31441C2335;
-	Fri,  6 Jun 2025 07:03:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786231E766F
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 07:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749193429; cv=none; b=N+6NeEGxavKO/U23+94ggicYfeZeUWhk5lNzItddwiKZ1Hp60P8L7SZuit+fpF+IRAEmr6FzHwwjiIb7XuwhGUP60ieIryGt2s5UBmFoFSV5h9993eGhLdu9GrO0JYHCxa1Ldx6rcICCGNf1pta+sreJR7ctn2g2nW9w/469pUM=
+	t=1749193510; cv=none; b=ufDnts10Iuue/b1RL9Xwiq/Dl5GMQ0vGMWJ0xR7agXNl2ROA72wAq1Fs/m4flWCkyHfqO4sRLF7VIHMfOI+iXc+tjr4zsT78yZCB9l5RYKfzwRde6ZLUORQPiitPJoeuWeqrWVKAwCIGe8Jz9tqR3zhmFbOuYfR2UEYz4769ogI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749193429; c=relaxed/simple;
-	bh=+t8nyFXhbkZnOjq8PogUNmGpTnMslub0IohHtzrxenk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PAOtx2zIo5lAggSdXKOwQ9KO5OQs5ETbFeZheMfon/0S5Ph4OFqZSu+eCJ4JoooUOxeB256JwhhxpLqap7etne4Q8eidEsJX4wCSoZGCYyGwtr+6Pfkv6GLz97Enq9xcMKojxcMDtxBamFkp/dRPXUMpR2Zz9dSVjusQ32mgJSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IJlXrhv9; arc=none smtp.client-ip=209.85.161.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749193510; c=relaxed/simple;
+	bh=tC//mIrfAJjU7WfUsuOw9mvVsuwgq7xskNKiRRyR8bA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PcFYcMzMZLlUCmehi1CVVZiQmhpKsvVMcz5QhZ+2KFdNNjmBE6U3DTJDZpqjCnXRPeidDAwdIcf8bFrrxbGOKvQsuWdI1ZRrdrF7pF/zvXaAwLJC5qDUJAg4iAnBUmJLmwmqfGVQ+IMc8LWKzNbQnFDyV09xbQgEgN0WxihpNC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mso8S6Go; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LxrEBdxm; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mso8S6Go; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LxrEBdxm; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IJlXrhv9"
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-60eefb805a4so349291eaf.2;
-        Fri, 06 Jun 2025 00:03:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749193427; x=1749798227; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+t8nyFXhbkZnOjq8PogUNmGpTnMslub0IohHtzrxenk=;
-        b=IJlXrhv9Fpr3igE57295siSmwtLzorv6/SmuOxtWpCRsOcVtRok89/nq9QvFfWTF7l
-         PVgZxuKULnkM07I/2J+K5s8ZJK+LKlWicB8kQcoEHpf7M7nomI9qUjFLOR1MOmyfnf3p
-         e/nUs83st/DAS8WxqNp4JG0rDbNWyZhddazFR7l5KG/rATrGUVIub5p0ZNZQ6rhqT4x/
-         aXbPTfTmcf9OfWi/zC6QQ6XqcB+v8lSjUbX/FVap/KfZcX3uhjEipIyNq7YcukofGqx1
-         7wnAW0hjDNegfWFXZmwcmza/gf7fKHONMzgLnCHWBJEOk6gUfHGd3tM46MA5jeRQnhcQ
-         WbVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749193427; x=1749798227;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+t8nyFXhbkZnOjq8PogUNmGpTnMslub0IohHtzrxenk=;
-        b=u2OUcrX2+Cge592xkauEMBPZikxbGN9FcQjFWnZXcfwVsu6X6bu6mXcDjJSODyB6/N
-         8V4rF4w2iZEziUHKlFESIgy2zx07yb+AvaXrvvRVVXJ2KWIr7s8hCqyxcfoHT3YwdfVs
-         kv2jFe4oLtJUh52oUm5p1F+MoemlIAfzdyyEVGfe8ts2Lr6cLvIO8L/9zr2MXF7ExHJf
-         BkzjQ+4mjl88jLwlOmbfNgICeSy2sk0igBctgQohszV5dzbYGNoWEPQRXSHsfWuJrhuX
-         dGaYdLtiqs4oE3hgVT+jtPk5xJvgNKYIIdZEX/HMbROQo/hVCbow7D91hUoL53r8F8z6
-         mqyg==
-X-Forwarded-Encrypted: i=1; AJvYcCWqBhBlmfijdcT3Q1v/itVpR+i54G2MrVyJwKIUwR8z74mdsF++5IIbVARBJNa499qi+dz1X+uZPRd9sA==@vger.kernel.org, AJvYcCXzoDzgG9d3S593AWbdRi13yw8aCpu9Sk8oZQ7TcY8OVCEotF0pnhqnlAgBAiyeUbBHX0QRcDdN/D5e6yiu@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgQt7IZvoTC+YUdYScQmfAB47YadAmIBBSAtsfExDRpRAGibyX
-	pQY+GbscxWxq3PltJkQetZAuZiAjbeXfG6R9baoB4P/guu7Q0TB41wroAVe6NuhwG5z/bsFuHNY
-	ZDwovrT47HyXvkFAiILymc6Za5bgwEKc=
-X-Gm-Gg: ASbGnctN9G0xByrcvuSj6o8VDVkWwry2gx1FwvcOrHHD0n2q8nuKfKz8JI9tadLtS3E
-	2GRlhouYSP2BHnIawhMkwBKSo9G9GI7rzzV2YpAeD0ab7bxZmQO18Kz1T32+A8TwNmGDTP1oLOZ
-	kxR7KKtXW4JnPRmRqa2gKLH3cL0CbG8gl+7EJ6nx2aPg==
-X-Google-Smtp-Source: AGHT+IGlLabyThzSeqYMlNHv20wA1II+mVIoLCdAPVSiaLGXvMH7P7mfv8u9CX+Vb8T93FWYRw3sqml41XcsV4pgZoQ=
-X-Received: by 2002:a05:6820:8c1:b0:60e:d9a3:dc32 with SMTP id
- 006d021491bc7-60f3cef153cmr1136958eaf.4.1749193426701; Fri, 06 Jun 2025
- 00:03:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mso8S6Go";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LxrEBdxm";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mso8S6Go";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LxrEBdxm"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 783AD33698;
+	Fri,  6 Jun 2025 07:05:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749193505; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=k2KtpshqGTjOkV+lUEfg3uZCqBTXw5lieXqPBdNVp1g=;
+	b=mso8S6Gok2dLZQNjeDNICwcHsC3OUwLXGktjoEbiTOTMMsspYjQkqrJKoA0N5Tpmv/P3Op
+	JySGQIyDsI3kq32H2jfxO1WekPZPExkTY+4eEV78qXN7+9smu1dDBSnn+C67v2Sa5EG+pm
+	QEF4Xh5D9EvYcs5liWaPQGi5HAeSGRg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749193505;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=k2KtpshqGTjOkV+lUEfg3uZCqBTXw5lieXqPBdNVp1g=;
+	b=LxrEBdxm55dQcTQCMKtS/h7h44wFx3HhWJoLzUqd6GtWwYuelIfi/qgsitS5hjye5jchSk
+	l/fgatD5LeIVyHBw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=mso8S6Go;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=LxrEBdxm
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749193505; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=k2KtpshqGTjOkV+lUEfg3uZCqBTXw5lieXqPBdNVp1g=;
+	b=mso8S6Gok2dLZQNjeDNICwcHsC3OUwLXGktjoEbiTOTMMsspYjQkqrJKoA0N5Tpmv/P3Op
+	JySGQIyDsI3kq32H2jfxO1WekPZPExkTY+4eEV78qXN7+9smu1dDBSnn+C67v2Sa5EG+pm
+	QEF4Xh5D9EvYcs5liWaPQGi5HAeSGRg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749193505;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=k2KtpshqGTjOkV+lUEfg3uZCqBTXw5lieXqPBdNVp1g=;
+	b=LxrEBdxm55dQcTQCMKtS/h7h44wFx3HhWJoLzUqd6GtWwYuelIfi/qgsitS5hjye5jchSk
+	l/fgatD5LeIVyHBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0DF481336F;
+	Fri,  6 Jun 2025 07:05:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id zKnSASGTQmhoaAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Fri, 06 Jun 2025 07:05:05 +0000
+Message-ID: <575e098d-ef9f-4431-bef9-bfc8070a0dfd@suse.de>
+Date: Fri, 6 Jun 2025 09:05:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CALbr=LYJ_ehtp53HXEVkSpYoub+XYSTU8Rg=o1xxMJ8=5z8B-g@mail.gmail.com>
- <3f5feb87-330c-4342-88a1-d5076538a86d@roeck-us.net> <3401727c-ad93-42df-8130-413eda41ab3a@roeck-us.net>
-In-Reply-To: <3401727c-ad93-42df-8130-413eda41ab3a@roeck-us.net>
-From: Gui-Dong Han <hanguidong02@gmail.com>
-Date: Fri, 6 Jun 2025 15:03:34 +0800
-X-Gm-Features: AX0GCFvMmpIHumCzGzvB3zmLEKid9CPhshqnMkw_DscjH3mld0W5o7UCfRZe7mA
-Message-ID: <CALbr=LYe3p9GW2Z_RUxKG+w2Q1wfWGRW=dRLoTraS7qJ7imdgw@mail.gmail.com>
-Subject: Re: [BUG] hwmon: Widespread TOCTOU vulnerabilities in the hwmon subsystem
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: vt8231@hiddenengine.co.uk, steve.glendinning@shawell.net, 
-	jdelvare@suse.com, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	baijiaju1990@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/4] fbdev/deferred-io: Support contiguous kernel
+ memory framebuffers
+To: Michael Kelley <mhklinux@outlook.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>
+Cc: David Hildenbrand <david@redhat.com>, "simona@ffwll.ch"
+ <simona@ffwll.ch>, "deller@gmx.de" <deller@gmx.de>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "kys@microsoft.com" <kys@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+ "weh@microsoft.com" <weh@microsoft.com>, "hch@lst.de" <hch@lst.de>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>
+References: <20250523161522.409504-1-mhklinux@outlook.com>
+ <20250523161522.409504-4-mhklinux@outlook.com>
+ <de0f2cb8-aed6-436f-b55e-d3f7b3fe6d81@redhat.com>
+ <SN6PR02MB41573C075152ECD8428CAF5ED46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <c0b91a50-d3e7-44f9-b9c5-9c3b29639428@suse.de>
+ <SN6PR02MB4157871127ED95AD24EDF96DD46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <9a93813c-4d7c-45ef-b5a2-0ad37e7a078a@suse.de>
+ <aEBcCjMWZJgbsRas@phenom.ffwll.local>
+ <SN6PR02MB415702B00D6D52B0EE962C98D46CA@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <154aa365-0e27-458c-b801-62fd1cbfa169@suse.de>
+ <SN6PR02MB4157F630284939E084486AFED46FA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <SN6PR02MB4157F630284939E084486AFED46FA@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 783AD33698
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-6.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	FREEMAIL_TO(0.00)[outlook.com,ffwll.ch];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmx.de,outlook.com];
+	FREEMAIL_CC(0.00)[redhat.com,ffwll.ch,gmx.de,microsoft.com,kernel.org,linux-foundation.org,lst.de,lists.freedesktop.org,vger.kernel.org,kvack.org];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -6.51
+X-Spam-Level: 
 
-> On Thu, Jun 05, 2025 at 07:33:24AM -0700, Guenter Roeck wrote:
-> > >
-> > > I would like to discuss these issues further and collaborate on the
-> > > best way to address them comprehensively.
-> > >
-> >
-> > I'd suggest to start submitting patches, with the goal of minimizing
-> > the scope of changes. Sometimes that may mean expanding the scope of
-> > locks, sometimes it may mean converting macros to functions. When
-> > converting to functions, it doesn't have to be inline functions: I'd
-> > leave that up to the compiler to decide. None of that code is performance
-> > critical.
-> >
-> Actualy, that makes me wonder if it would make sense to introduce
-> subsystem-level locking. We could introduce a lock in struct
-> hwmon_device_attribute and lock it whenever a show or store function
-> executes in drivers/hwmon/hwmon.c. That would only help for drivers
-> using the _with_info API, but it would simplify driver code a lot.
-> Any thoughts on that ?
+Hi
 
-Hi Guenter,
+Am 05.06.25 um 19:38 schrieb Michael Kelley:
+[...]
+>> I try to address the problem with the patches at
+>>
+>> https://lore.kernel.org/dri-devel/20250605152637.98493-1-tzimmermann@suse.de/
+>>
+>> Testing and feedback is much appreciated.
+>>
+> Nice!
+>
+> I ran the same test case with your patches, and everything works well. The
+> hyperv_drm numbers are now pretty much the same as the hyperv_fb
+> numbers for both elapsed time and system CPU time -- within a few percent.
+> For hyperv_drm, there's no longer a gap in the elapsed time and system
+> CPU time. No errors due to the guest-to-host ring buffer being full. Total
+> messages to Hyper-V for hyperv_drm are now a few hundred instead of 3M.
 
-Thanks for your quick and insightful feedback!
+Sounds great. Credit also goes to the vkms devs, which already have the 
+software vblank in their driver.
 
-I agree with your suggestion. Adding a note to
-Documentation/hwmon/submitting-patches.rst about avoiding calculations
-in macros is also a great idea to prevent this class of bugs in the
-future.
+This might need better support for cases where display updates take 
+exceptionally long, but I can see this being merged as a DRM feature.
 
-Regarding your thoughts on subsystem-level locking, it sounds like a
-promising approach to simplify the drivers using the _with_info API.
-As you mentioned, some drivers don't use this API, so they would still
-require manual fixes.
+> The hyperv_drm message count is still a little higher than for hyperv_fb,
+> presumably because the simulated vblank rate in hyperv_drm is higher than
+> the 20 Hz rate used by hyperv_fb deferred I/O. But the overall numbers are
+> small enough that the difference is in the noise. Question: what is the default
+> value for the simulated vblank rate? Just curious ...
 
-For the subsystem-level lock itself, I was wondering if a read-write
-semaphore might be more appropriate than a standard mutex. This would
-prevent a single show operation from blocking other concurrent reads.
-I'm not entirely sure about all the implications, but it might be
-worth considering to maintain read performance.
+As with a hardware interrupt, the vblank rate comes from the programmed 
+display mode, so most likely 60 Hz. The difference in the update 
+frequency could explain the remaining differences to hyperv_fb.
 
-Thanks again for your guidance.
+Best regards
+Thomas
 
-Best regards,
-Gui-Dong Han
+>
+> Michael
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
