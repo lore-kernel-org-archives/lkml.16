@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEF914286;
-	Fri,  6 Jun 2025 01:32:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D310D4C8F;
+	Fri,  6 Jun 2025 01:34:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749173542; cv=none; b=PC0iKm9gij0ow3t/c/q6aNz9mew3goW1mV09MuOP6YwcRatq2R9wZpVTnM+mBKHJeIiA0ueiF216fmx3Dkns1AQP1QXasRPaKG3SyTNgZBs30kKMLJQkkWL2SGrpU2vWqHXeL5UebRUzby1S1YIItYm8EP6DS3Xd1O1DlLy2PwQ=
+	t=1749173671; cv=none; b=qbuAk1FVempo334frwwSiD0lQI3Qeu16G8etmWtmEZXbdQlPbVu67O/Yjn2vHRNjO2bBWUOeAP+H2TXX1TKdCi99prKuRliz4ln/8meL2uZFAhKRsBtccukEx0G0QdiiXFNrmomKw4PzZDqPwxn3GvUAmtYOKsxSNhtg5uI4WFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749173542; c=relaxed/simple;
-	bh=usjHo3a3Onjh88f0YaGS0D3CtdBMIoHOMahg0MhHQOA=;
+	s=arc-20240116; t=1749173671; c=relaxed/simple;
+	bh=ngJ9SSrUin6QJix+m8AJArBuNLj/I4InKuWeZdUwPeI=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tmyLb7XOOmid0dDdQUNZT7mblU8BoBA+M3gHH1uA+B8RuHdk3Ifff8NWF7PbvDXAo20NaBjtygA9JWrggvo/9giTUhAeiOQ7Gk2R65BAE8Cmm0xXLvQ8GL0Z86jMtBcuD7lI2g/QokW4vYiK4EIOAoTHmL89w6z3wfrBJXUsZaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Za9LNfoa; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=TelHo3nNj8ArV4/gJOEzD0l+VP9UorN/DCYRZJiSXU5keBRB5+kxKaJ0B7bTQ3y5KwsqLd9zAYRFVHDD35vwg9ues6/1BaqfDorMgCw9xyGaUj2jxypv9LnUpD6OMdsP9RV6iDSbn/tPuwvgbbnlFNp92QS6MaYBzCvc2wo85Ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JbnJ6vZI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Za9LNfoa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 311D3C4CEE7;
-	Fri,  6 Jun 2025 01:32:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JbnJ6vZI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32465C4CEE7;
+	Fri,  6 Jun 2025 01:34:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749173542;
-	bh=usjHo3a3Onjh88f0YaGS0D3CtdBMIoHOMahg0MhHQOA=;
+	s=k20201202; t=1749173670;
+	bh=ngJ9SSrUin6QJix+m8AJArBuNLj/I4InKuWeZdUwPeI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Za9LNfoavOoK+/3s1iRK9eiLPy1oM0eFzU/nH6RLIHumNAlC88jRQJC3DgtfDI1La
-	 nG5b6Vk+VuT738s7cKpOuEvsYnTDbTYDaEg4HYoT5QdgrbK99cPgj54hy9BB+1zYGr
-	 fwp3/ts/xpDwfHsxOplwud8IqnVnBXaMStBEomN8xIrEZ9gQRdbBAkrlfKGFayrdl9
-	 qxnfLzTPH7tCiifj+FKSy0tuPMo+BmElrgrBl02ush5L3tb5YbhgypW62ELi6G6Y1O
-	 atLCOE8Zjh00UdaK0BeSSwr+a5x+ITjbIQg/LhkOSfG3bDzL3hQYuHKsma4oBR4uoH
-	 LRaiv+qr1YR4g==
-Date: Thu, 5 Jun 2025 18:32:20 -0700
+	b=JbnJ6vZICLLgzGsTPkPEalYDAndRokwH+RAKSBtB9Pw9X2Vy16IPCH8p5ltAztgvJ
+	 kY/b7IcNiT9d/QAf7kLtlVHNWOclLr8BNRHt3bqN8QMWtL0OPH8mPeL6lP9Wo0UQD9
+	 BTGV0G/1bYH5jg9MHLWEeZTDPosk77VE73ENHECkM0ZlQ3MXuiO1+vG5jCEuCCR+9J
+	 gEjLFYW9SVRus2Nr/uVu/o5w8uC+KqJ9nSKT8LZvlEAFTa1bbwoX4qyndMCYJ3Jdtp
+	 ga6X33co9jJiYRTOGyH6lAlSklKXCFLESFdus6sNZ7F9/kghSC507mGXObj0vWGS2X
+	 F5sJXDOMauFeA==
+Date: Thu, 5 Jun 2025 18:34:28 -0700
 From: Jakub Kicinski <kuba@kernel.org>
 To: Kory Maincent <kory.maincent@bootlin.com>
 Cc: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>,
@@ -43,12 +43,12 @@ Cc: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>,
  Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, Maxime
  Chevallier <maxime.chevallier@bootlin.com>, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v12 05/13] net: ethtool: Add support for new
- power domains index description
-Message-ID: <20250605183220.1cf1b00b@kernel.org>
-In-Reply-To: <20250524-feature_poe_port_prio-v12-5-d65fd61df7a7@bootlin.com>
+Subject: Re: [PATCH net-next v12 08/13] net: ethtool: Add PSE port priority
+ support feature
+Message-ID: <20250605183428.3bedd020@kernel.org>
+In-Reply-To: <20250524-feature_poe_port_prio-v12-8-d65fd61df7a7@bootlin.com>
 References: <20250524-feature_poe_port_prio-v12-0-d65fd61df7a7@bootlin.com>
-	<20250524-feature_poe_port_prio-v12-5-d65fd61df7a7@bootlin.com>
+	<20250524-feature_poe_port_prio-v12-8-d65fd61df7a7@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,20 +58,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sat, 24 May 2025 12:56:07 +0200 Kory Maincent wrote:
-> +	if (st->pw_d_id > 0)
+On Sat, 24 May 2025 12:56:10 +0200 Kory Maincent wrote:
+> +	if (st->prio_max > 0 &&
 
-nit: here..
-
-> +		len += nla_total_size(sizeof(u32)); /* _PSE_PW_D_ID */
->  	if (st->podl_admin_state > 0)
->  		len += nla_total_size(sizeof(u32)); /* _PODL_PSE_ADMIN_STATE */
->  	if (st->podl_pw_status > 0)
-> @@ -148,6 +150,11 @@ static int pse_fill_reply(struct sk_buff *skb,
->  	const struct pse_reply_data *data = PSE_REPDATA(reply_base);
->  	const struct ethtool_pse_control_status *st = &data->status;
->  
-> +	if (st->pw_d_id > 0 &&
-
-and here -- it's unsigned so just if (st->pw_d_id &&
-no need to add > 0
+and here
