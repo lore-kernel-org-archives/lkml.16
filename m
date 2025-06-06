@@ -1,126 +1,177 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F7E19D880
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 11:20:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDF32882A6;
+	Fri,  6 Jun 2025 11:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749208805; cv=none; b=OfsVp8wT5h8oYOhrjvhXlXJaCwxfc7FpWv0pixiOJc5dFz6tYF1Qf+hF6dCuHiBjIRY3wprLjLIXk0mraMBwD/h+hfrf3xITCGo8YskP7h9eeXpNfw68VtZnaiXNHjsPg93JqNN98JZLg0pxCCkuk2eRHS18onoLXUcxcHy2f00=
+	t=1749208845; cv=none; b=L2O1kI4nzBn8hHLaQM8Ir6iHnNHg9pn7Fg0548DNtLOqsfuO+tIX2drVAr9YR0gQhF7LlXXHODA5550YudM9xx6B454qRMW2vLz1XY4qwO8Dx2UlMazJO6n4zsDskRbToAP5BRWiH0k662y6oQutk5/6PejgvUvdhR7BWBlm0vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749208805; c=relaxed/simple;
-	bh=USdClpSVqld8qSLsJmF5UBqX++/lI09ziLNHsV+mc0s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=naUxyhanSdvWih4Oc8k5P0xIfi3bWzYXMDClqdh0WVzag20b/KXySw6LFcmCLZT0ZXLTATybLF51TIrpiXjcmwbN5GWEP07DllWHxWNeuoWleInSDbVka4BiYENu5IRREQe7Rk+kxfCf8kvDqvbfqjxF73FfoT8Zk3rIncOmFFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=u0CDmtcy; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1749208845; c=relaxed/simple;
+	bh=ti9oOmqvMGZUuTjapj1Ojl85o/P6e6+srSzCZvIrPug=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Qy7JRyCLWPSiiXJfc+ee/wbyZX+d09yGnaGtqroma8n9rAUP4ne/Ds2QTxcM5007rMiPiQzu/Tl2vVtPjhuSi5sS/bRG5IxXCosikYW1mLcaBZssPQAgZyC2G77dMwCqGETkgfy8GwmYIrivP3zeQAczL8xAwa3ghf6tSsi6yoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fMroN5Hd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="u0CDmtcy"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-442f9043f56so10948855e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 04:20:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1749208799; x=1749813599; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MuQ7ElMFujECmYhgfOt92ztzf79cPNjqJC1YxZVfkjk=;
-        b=u0CDmtcyJQO2+isOBmvt98vI8uIspiM4cTPZwGOvfWsegbf32lu/gjt16nz6BGq2ko
-         mLk0oG3tn79OfjdaA0ts9QSuhYPsR/T7APcj4Mk7mxNDUv5zSuKuPagRDb9Ku9oo2waF
-         afEJ1qOGZnjwo9cw86cz8hA+MB7X+vUr+jNXPa7aij4WIRswv2FTnY0CiMIRyw8JSpic
-         6TMvKIdmN5PFqwNqdvX8K6A3n7RO2QVxzkYpw1ys2LlOJzA9bDcY3Z9gUtZO1RfZn/mD
-         0iy4vzXKCi58AHhghJO9UsxhmfRWoFzd7jn7SBU3KFp6n/eaNw9ApwvVh2AfQOWnl68L
-         198Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749208799; x=1749813599;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MuQ7ElMFujECmYhgfOt92ztzf79cPNjqJC1YxZVfkjk=;
-        b=OwvLhau4KOi54LQAui5Huv1LPC3RcSxo5sB3e0iQ/gkbgNcwVH431wS7kZf/EzZnD3
-         xxwZfaBJKoqN9F8BLGupUd0YPXAGbdszvSLJ8uMVKpoVU4j+i/AAAGdplTHzqydAbvMX
-         eV/nwEKERzvM2M0gjMte+F2Uc8JuIqygVd0LHUo8Vffs0xFuJizh9wqLQQBUCFl+ar4z
-         zV6oaG3UCLMQB4hhKOjey3+JfyDV3dH5CamSzFpAGugqjIMokyg8IzeD8XSkoVNkHUwg
-         tKRRn1T+xkMbJf1DEBZ89WiBTM/Eq8p09T2vwLwNuw++DrmpDiSCo3vw4FAjHdGubabF
-         SxIw==
-X-Forwarded-Encrypted: i=1; AJvYcCUgVqDP+bhGcL1CmC2GDKnSyMslODtx6aXsOPqBpu2kCS/PUulvaWF+jGyZ0YwUXVt6rXuigPkU1f6VKtA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxODMpRjK2KdqDZTxMwq0DAdyNbFRPAfEcW+I9UnuwewXk85RKS
-	GKuEF5W77hVhwey4GI6vcjTdZhDEZykivybJQuGobQ8QZRQpZ9/GYZu/i5b4ka9pcVQ=
-X-Gm-Gg: ASbGncs3WxK/rqzsHwFuJ1Expkq1PNocyq2KmGR6Ls8UUEgDdtAs0s1snlm3ZqZ1LTw
-	eRTNMf18riznDMl5Xq++KsTmWIp3+Dj9MzVEXdYUbDNpBfrdrK5YG773fHjc7RzBi9SBAwQEW5R
-	LnEnrgLQmXgabLxl+RRfpzsUkcR6J8CLHyboxVyj+taEYb90TxaWX19uFyzqV31FqEoKARmlqg8
-	SQMX4LIlR4YI9lF5wrJicWFoakEvGO8QdaT3TN6Wjsdiw25t0NL26vQ40A4W/9ga83tnRVudbMM
-	ofeV8fMQJXKf93YQ0E9r57TOJ4LYmMHK0tj+6k71WBdKCEbFIaDoDTmezyIwkES60IIA5w==
-X-Google-Smtp-Source: AGHT+IH2MrdFxFyb1RgZrJq3QgVItnUJDGd7Nbi2wT4HljZC4pDIqfq4GTUxdydboY7ZnYyQOl6GGg==
-X-Received: by 2002:a05:600c:3e10:b0:450:d204:34ca with SMTP id 5b1f17b1804b1-452013bb9a4mr33700405e9.18.1749208799424;
-        Fri, 06 Jun 2025 04:19:59 -0700 (PDT)
-Received: from localhost ([2a02:8071:6401:180:da11:6260:39d6:12c])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4526e056138sm18262385e9.5.2025.06.06.04.19.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 04:19:58 -0700 (PDT)
-Date: Fri, 6 Jun 2025 13:19:53 +0200
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Wupeng Ma <mawupeng1@huawei.com>
-Cc: akpm@linux-foundation.org, vbabka@suse.cz, surenb@google.com,
-	jackmanb@google.com, ziy@nvidia.com, wangkefeng.wang@huawei.com,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] mm: Drain PCP during direct reclaim
-Message-ID: <20250606111953.GB1118@cmpxchg.org>
-References: <20250606065930.3535912-1-mawupeng1@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fMroN5Hd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6215C4CEEE;
+	Fri,  6 Jun 2025 11:20:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749208843;
+	bh=ti9oOmqvMGZUuTjapj1Ojl85o/P6e6+srSzCZvIrPug=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fMroN5Hdeoj2fXFeiuFwDDjk29HJ9r8Y7fJlr2wZfQAoznnCRxu5oOIm1CHqdGdOp
+	 FKVj028MKePTDNPvPOdDct0TvUwm568Qn1Y7mLUhHgtdMPECFSLdHbjgz02Lyht6mT
+	 QB0db8ECRW70WsDiQFxoUhEeZwaEvo2uGHWJlL7/OWN6on2aLwaopBOnyBk5aQ9tMy
+	 f81dczgn4CJ3onCGWovbuVpjdO996Fa2ANMyAaxaxvKJpZz5gSwPfxpzPp0tfNBy/T
+	 chQz4FEfkjt/rHtJRfpsMaxi4e9+FpWcVw8dNLfwr2mtI2m8Q/Bd14jKDs356yVBeQ
+	 VqXVlo0jTX6kw==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5533c562608so1936637e87.3;
+        Fri, 06 Jun 2025 04:20:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU2qzND37PXL78bSalAej4hSnJKFApTZn98EWaT8R87EDJt3zWeM5gpEkLSC0qCTSKcXjFExwksQAie6E+v@vger.kernel.org, AJvYcCVHeCQ3DZru0fUGHlwkLaDzVma7Jv4HxpGNSie1WN2qQlELvE5wJvMBksFue8XoQVX9r+skFOBDXUhmjEU=@vger.kernel.org, AJvYcCWxqUhrLSfq20KP8LCu4Rvrud9ZSDt3YaxHl8QBmZyGwovQMGB6QJbUzHa/AxlxrF2eGf40BEJpOElslMizJw==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb2bOSzh4TsNKPHBIbf445LI72zf85jxYDLrpVHmy7Zyu66qaQ
+	5lO0KQUnr7S/T2lSXUI2mIv/Aq23wSvXVEJVpzMCERWkuabfVT6AZqszA9ibxSLQ4lDcJh1AHsG
+	NpKzTAaBdDkOw28JFY4ZTqVd/KUc7CwM=
+X-Google-Smtp-Source: AGHT+IGotelMifHvfI0kxQU1GKWrH79dTAXyh8hKDUGCX9NIBElz/uLWQ5uFvZmiHGQprCmA6Xpe6plpyrH+73inxxE=
+X-Received: by 2002:a05:6512:234e:b0:553:3621:efee with SMTP id
+ 2adb3069b0e04-55366c433e2mr755126e87.50.1749208842441; Fri, 06 Jun 2025
+ 04:20:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250606065930.3535912-1-mawupeng1@huawei.com>
+References: <cover.1748335606.git.legion@kernel.org> <ecf0ebdda5bcf82464ed1cebbf50afdcd8b5b23a.1748335606.git.legion@kernel.org>
+ <CAK7LNARkhc40UfrmmqsqmqkCn60=7zHc=pDFGR4o=k2p7CsABA@mail.gmail.com>
+ <aD1bozP0l67f_wbs@example.org> <CAK7LNAQmQtvB4PfmH4MkRM123wySON6cF6TG79fi0WER1sz4Gw@mail.gmail.com>
+ <aD2vSnZhofEPilcL@example.org> <CAK7LNATfUzCXmCb5kKOJOKOw=CJvk7viGgYtrGLwbSAkq7VtyA@mail.gmail.com>
+ <aEAtUc6OTyvu-ThM@example.org> <CAK7LNAQhnA50EyccG2hVqnNHjfFk-JC6zYTkqzUR4Pibg2mzWA@mail.gmail.com>
+In-Reply-To: <CAK7LNAQhnA50EyccG2hVqnNHjfFk-JC6zYTkqzUR4Pibg2mzWA@mail.gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Fri, 6 Jun 2025 20:20:06 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATY+11zvrpfGnnxFENKyXjKC2qfmt3-i5tjVjHs9wiZKg@mail.gmail.com>
+X-Gm-Features: AX0GCFu68IzIGUZHtnHJayFYfspqR6O5akw101n6HxgF3TEX6o0MmWVsTfedvHs
+Message-ID: <CAK7LNATY+11zvrpfGnnxFENKyXjKC2qfmt3-i5tjVjHs9wiZKg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/6] modpost: Make mod_device_table aliases more unique
+To: Alexey Gladkov <legion@kernel.org>
+Cc: Petr Pavlu <petr.pavlu@suse.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 06, 2025 at 02:59:30PM +0800, Wupeng Ma wrote:
-> Memory retained in Per-CPU Pages (PCP) caches can prevent hugepage
-> allocations from succeeding despite sufficient free system memory. This
-> occurs because:
-> 1. Hugepage allocations don't actively trigger PCP draining
-> 2. Direct reclaim path fails to trigger drain_all_pages() when:
->    a) All zone pages are free/hugetlb (!did_some_progress)
->    b) Compaction skips due to costly order watermarks (COMPACT_SKIPPED)
+On Fri, Jun 6, 2025 at 2:10=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.or=
+g> wrote:
+>
+> On Wed, Jun 4, 2025 at 8:26=E2=80=AFPM Alexey Gladkov <legion@kernel.org>=
+ wrote:
+> >
+> > On Tue, Jun 03, 2025 at 01:18:25AM +0900, Masahiro Yamada wrote:
+> > > > > > Before these patches this was not a problem as non-unique chara=
+cters are
+> > > > > > in separate object files when the module is compiled separately=
+.
+> > > > > >
+> > > > > > But when the modules are compiled into the kernel, there is a s=
+ymbol
+> > > > > > conflict when linking vmlinuz. We have modules that export mult=
+iple device
+> > > > > > tables from different object files.
+> > > > >
+> > > > > This is because the __mod_device_table__* symbols are global, but
+> > > > > I suspect they do not need to be.
+> > > > >
+> > > > > Let's test this
+> > > > > https://lore.kernel.org/lkml/20250602105539.392362-1-masahiroy@ke=
+rnel.org/T/#u
+> > > >
+> > > > I tested this patch with the config:
+> > > >
+> > > > make allmodconfig
+> > > > make mod2yesconfig
+> > > >
+> > > > and it works.
+> > >
+> > > Good.
+> > > Then, __COUNTER__ is unnecessary.
+> >
+> > I didn't immediately notice. The patch you suggested works, but these
+> > symbols remain in System.map and it seems in vmlinuz.
+> >
+>
+> Ah, yes, if your patch set is applied.
+>
+> Currently, MODULE_DEVICE_TABLE() is no-op in vmlinux.
+>
+> This makes me realize that your v3 4/6
+> increased the vmlinux image, as MODULE_DEVICE_TABLE()
+> is kept for modpost.
 
-This doesn't sound quite right. Direct reclaim skips when compaction
-is suitable. Compaction says COMPACT_SKIPPED when it *isn't* suitable.
 
-So if direct reclaim didn't drain, presumably compaction ran but
-returned COMPLETE or PARTIAL_SKIPPED because the freelist checks in
-__compact_finished() never succeed due to the pcp?
+With your patch set, __mod_device_table_* will be
+included in vmlinux.
 
-> @@ -4137,28 +4137,22 @@ __alloc_pages_direct_reclaim(gfp_t gfp_mask, unsigned int order,
->  {
->  	struct page *page = NULL;
->  	unsigned long pflags;
-> -	bool drained = false;
->  
->  	psi_memstall_enter(&pflags);
->  	*did_some_progress = __perform_reclaim(gfp_mask, order, ac);
-> -	if (unlikely(!(*did_some_progress)))
-> -		goto out;
-> -
-> -retry:
-> -	page = get_page_from_freelist(gfp_mask, order, alloc_flags, ac);
-> +	if (likely(*did_some_progress))
-> +		page = get_page_from_freelist(gfp_mask, order, alloc_flags, ac);
->  
->  	/*
->  	 * If an allocation failed after direct reclaim, it could be because
->  	 * pages are pinned on the per-cpu lists or in high alloc reserves.
->  	 * Shrink them and try again
->  	 */
-> -	if (!page && !drained) {
-> +	if (!page) {
->  		unreserve_highatomic_pageblock(ac, false);
->  		drain_all_pages(NULL);
-> -		drained = true;
-> -		goto retry;
-> +		page = get_page_from_freelist(gfp_mask, order, alloc_flags, ac);
+My patch changes them from global to local  ('D' is changed to 'd'),
+but there is no difference in the fact that v3 4/6 will grow
+the symbol table in vmlinux.
 
-This seems like the wrong place to fix the issue.
 
-Kcompactd has a drain_all_pages() call. Move that to compact_zone(),
-so that it also applies to the try_to_compact_pages() path?
+
+
+(1) Your patch set
+
+$ arm-linux-gnueabihf-nm  vmlinux | grep __mod_device | head -n 10
+c0527678 D __mod_device_table__164__kmod_clk_scmi__scmi__scmi_id_table
+c053f458 D __mod_device_table__164__kmod_reset_scmi__scmi__scmi_id_table
+c05421bc D __mod_device_table__164__kmod_reset_uniphier_glue__of__uniphier_=
+glue_reset_match
+c05334ac D __mod_device_table__164__kmod_scmi_pm_domain__scmi__scmi_id_tabl=
+e
+c054cbd0 D __mod_device_table__164__kmod_twl4030_power__of__twl4030_power_o=
+f_match
+c0548e8c D __mod_device_table__165__kmod_omap3_rom_rng__of__omap_rom_rng_ma=
+tch
+c05124a0 D __mod_device_table__165__kmod_simple_pm_bus__of__simple_pm_bus_o=
+f_match
+c05559ac D __mod_device_table__165__kmod_timer_ti_dm__of__omap_timer_match
+c0528a68 D __mod_device_table__166__kmod_adpll__of__ti_adpll_match
+c0520a68 D __mod_device_table__166__kmod_gpio_en7523__of__airoha_gpio_of_ma=
+tch
+
+(2) Your patch set + my one (extern -> static)
+
+$ arm-linux-gnueabihf-nm  vmlinux | grep __mod_device | head -n 10
+c0527678 d __mod_device_table__164__kmod_clk_scmi__scmi__scmi_id_table
+c053f458 d __mod_device_table__164__kmod_reset_scmi__scmi__scmi_id_table
+c05421bc d __mod_device_table__164__kmod_reset_uniphier_glue__of__uniphier_=
+glue_reset_match
+c05334ac d __mod_device_table__164__kmod_scmi_pm_domain__scmi__scmi_id_tabl=
+e
+c054cbd0 d __mod_device_table__164__kmod_twl4030_power__of__twl4030_power_o=
+f_match
+c0548e8c d __mod_device_table__165__kmod_omap3_rom_rng__of__omap_rom_rng_ma=
+tch
+c05124a0 d __mod_device_table__165__kmod_simple_pm_bus__of__simple_pm_bus_o=
+f_match
+c05559ac d __mod_device_table__165__kmod_timer_ti_dm__of__omap_timer_match
+c0528a68 d __mod_device_table__166__kmod_adpll__of__ti_adpll_match
+c0520a68 d __mod_device_table__166__kmod_gpio_en7523__of__airoha_gpio_of_ma=
+tch
+
+
+
+
+
+
+
+
+
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
