@@ -1,300 +1,211 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2135.outbound.protection.outlook.com [40.107.101.135])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518461E98F3
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 18:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749234463; cv=none; b=TxU6KseAGrBE7P3Xqg+Br0xyHjdAkWBuhLMbaphfbpqGLwLA56wb6Pr2yCVkoVdTuFLC6fnEmXjbt+cwAwFwSngbzm0IlmeKw0cW4Q+t8cGIVp1SgPh7rBA2Kt1jpRJyTUb2a3Mbkhfmystu8gI02WwDpZXVh84Af+4rHJASWK4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749234463; c=relaxed/simple;
-	bh=7Mrtp/ujC7IUUY/xhLK4hRCZlis7yEUVD6oZar6upKw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rIkUV6MgDVHfIZfS1b1rmEiQYew+TaZjH9XAiMzho/VQChhUXsOQJfH7bPawjsNELkT3m/YbLRVoykaW1ugWCjPuKPtOiQWmn9em8R6Y9chRlSsTDbQomT7W6SRk3kG1JE9P+t60q/SSCIxBTpsbr+IrD9G8YjPK3btNCSIAv+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VzZQZc97; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F2A13A41F;
+	Fri,  6 Jun 2025 18:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.135
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749234641; cv=fail; b=JXIeaKOiMNg2vhmU3S1gAXO7PArJjsgIfb/68BM7m8SqLf9F7pj70o8aqIzQSckvsY00I5RxjxM6+F1oO7Hhe8NR2AJbx4//UfL261WcNSamWqeLKHtS56GN29bwhLgxIjFgJRkKW4j1mZDZY1NwnYH+M9nTp2bVaPDUP2U83pU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749234641; c=relaxed/simple;
+	bh=79fnhhj6YnyIT63/OxtrBN1LgWsQMfo3uB0I+Fu6Ros=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=uyUMsO5au//7cjpgW71sMnoWK8lyUB84Rs1Hjdp4iEWar3qS1i3/jXiaAquJPe2KmEvONI+NIy7718muuO662YFHYNMmF1SluukWJSLqzkr5HQ5Mec/PsPGMUtV/YlbBZB9IuqM1qmsfGttEBPUIpzSiETkGtn+2YE1EZyDuMz0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=YPGMF+D+; arc=fail smtp.client-ip=40.107.101.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VzZQZc97"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3ddd1a3e659so19615ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 11:27:41 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="YPGMF+D+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=R23lrfj2n2EhdZuA8ae0ekWo/nee4oEqDJOdKrY3ToB0tx5gQfC3pMXC6vWmYvsI/Yzu4cRlYfF5CsEjwvlXXYy/LcNpIbJk4Rts77nEqbe7KnkeR+K/UPEcuhXmmdS3BWYm2Jqvw6zUhJFQ+ubjfBV/LTFGw45m6WyBv6CnNLQjmRoYaR8Mg9Dm/xHYjLG/vwjbwCUUZaRwVpgcpDKWYDLisqJ/6h9dZLyZXcTTjVwbC6c0ewKnZ2zKiXAjeVoAAUUsQqJxAq0YA30cTXICYtkHWsfkohgk6f3FLTQc1Q9e/ATzaAIcUwjLITejGqOozf8+wCIBwlhQYOqHQ1bnEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=g0xtbHlaADTMbNKM6N2Icm8Ajv3pfd9GQiY5NkrNoFA=;
+ b=qvoR5SY4FSpwye4St0J55rR+LLJRfBTw7q5yTHe6EBx/E0kbqIFX770z3KIfvUCqAVQJjMTnhlvgA3XXm+G6TsLRPliKghnwL5QruJQugjOY/g947zsDm+9a1bZV9dJr8KfDHRmk/710SJ/ZZnYITHC6rQoP8Dh3n9V5OXPse13ezOXS7tjdLOCsV3AaowVGgXBpTI52UOUoHdXDhS7yfFYST7wHnXznBUKz0q04/ouGJBV6Ib8G7F8tbXbRqRFIyf+SJ1oVznyV1CUu1BZBSDbmH78UymnV+JuWiR0AJJrF1dXEXz+zRK5hGMG4A3tikVh/B/rry9xtMIKTlpzrvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749234460; x=1749839260; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UH9iNsg9TJrDDcNjF332Ex2YPRc93vYZGAZZ8zWp6+s=;
-        b=VzZQZc97ww68pRZPgS3ffiVLRmzPQ1dSmpIwly+jEjkOYqbaOCgo3nDWMbRn2YY4iL
-         AW8gP3N9sgD6Pe18zejBoxiRGheAfeM2o6R0Ss+unL9aCd594+ylgyfgviLE3azJ349p
-         N0tLhFDvpARnUyxxoBZlhAA3u7RMXIxq8kiqEcAlhXtaQ/UOK0MjAJ94Ni+szO5NJ+UH
-         9yYt17NuCyUM3ksiV/RHv7QN2VsRCMbBVLPmGtOzS18ttq4LbPuLHCZjjbt4C1ih40KO
-         egmepWKQ/MoQM+QCkyzDXBXYyGt6K74wdFGZ1bmuC7s5WMrJ2oXO46nvdbK7li1cyCMs
-         sm5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749234460; x=1749839260;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UH9iNsg9TJrDDcNjF332Ex2YPRc93vYZGAZZ8zWp6+s=;
-        b=s5Q67nQsLzJqR8JfmfQSX4rPcpGZUXKp493CcEoTlYxQAhwEdtQSKsba6m5X2Dt24E
-         lARUrs6fc5GRgY/49OERpOB/YVAGRI1O9A1aBjXqm+EgteMjNq/LqbRIhm4b/qyeRY3a
-         WFB8Te3Moj7g1YOiPgOalv+gxd+6JADOnqgATpvbbJiCl1OeL4jMLGWXd/ghQgUsgBeD
-         boiUVjulDvzGReqqPCyMRNpSy12mv7XgBoAilszszzhJ78lq9BmHdvH3NCzlWQ57zjyK
-         jF+U4tKv4MCPuAeh8cU0RNkdMKQ9WP3A00rY+Bxu+J7YDjrcTGRIa83Xx2eXkvl7GIcz
-         tWvg==
-X-Forwarded-Encrypted: i=1; AJvYcCW7I2LRYSGTyK0v6seJ4tGVNyh3UYs7K6cMPBZl5jzWO1Nqi/zxYwfa1EP0NPvw/aK8Iqb2P21kim2V/Hs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqHv1kzL3OXcemFjUg2q4vl4gaQwWXHxPQ417cyK2UamOsahbo
-	jHprB4yzcL7qhvy/tkCNGkHaKHbub/fV75/lHWOL4OlVJPEi769uQgiTiRdo7Rk7Qx6p+v6okmw
-	Fit2JC6wBSpNpW0z3Qo+39yw9VoLHaXCAqkIlSgMR
-X-Gm-Gg: ASbGncusq/oHhr06v81UHhwmZgrfJIl3iTXxHn2T6Nb5kom3BKJwu2dfckMEWyFFJRq
-	d/UuGN6u8rM3f+NpYSyIvEZbE18pIPc0uICvVmbpShgW1g5q22ecCxR8K4uSMODcRdBv6QQEmw5
-	z6UTg0+fkHqJ884Ey6NO3XD0CarcAUlBff5lBfn1sAf7O3
-X-Google-Smtp-Source: AGHT+IEJXe0nz5dAwhgVL5WD4u2+k2DG6pcgtJF8RoF6Fyj1dX4bmbkKisdB8JLUuxOTTt9TvaiXB+XWXumzd7r17lQ=
-X-Received: by 2002:a05:6e02:398c:b0:3dc:670e:ad5f with SMTP id
- e9e14a558f8ab-3ddd74d763dmr339265ab.14.1749234460177; Fri, 06 Jun 2025
- 11:27:40 -0700 (PDT)
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g0xtbHlaADTMbNKM6N2Icm8Ajv3pfd9GQiY5NkrNoFA=;
+ b=YPGMF+D+XoDc6CpN1ShTUNGxsBE9+CHkWxXN3hSoWR5m/DKzMKQ4Qy0fjaCsvvwUUFZJjytr8gHTlyEw1N40rogRywmRzEbZeLRFFscrPSAAF+ocEnPq7QsmbzUlHbRK6s3cpsf1iOoUcvb1ZhKx4+PeGlWmP96goEM9LR7x0f8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from CH3PR01MB8470.prod.exchangelabs.com (2603:10b6:610:1a4::21) by
+ PH0PR01MB6167.prod.exchangelabs.com (2603:10b6:510:14::5) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8769.20; Fri, 6 Jun 2025 18:30:34 +0000
+Received: from CH3PR01MB8470.prod.exchangelabs.com
+ ([fe80::80c4:7216:f070:e5fd]) by CH3PR01MB8470.prod.exchangelabs.com
+ ([fe80::80c4:7216:f070:e5fd%3]) with mapi id 15.20.8813.020; Fri, 6 Jun 2025
+ 18:30:34 +0000
+Message-ID: <efbc8109-1854-43b2-bff4-095ecd5970cd@os.amperecomputing.com>
+Date: Fri, 6 Jun 2025 11:30:29 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/5] Fix issues with ARM Processor CPER records
+To: Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ James Morse <james.morse@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ Tony Luck <tony.luck@intel.com>, linux-acpi@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-edac@vger.kernel.org,
+ linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1725429659.git.mchehab+huawei@kernel.org>
+ <20241011115707.GCZwkSk5ybx-s9AqMM@fat_crate.local>
+ <CAMj1kXGQSgeshrns7-EwTkG_c1dHgaxaVxO_FxWumdFx6m4vRQ@mail.gmail.com>
+Content-Language: en-US
+From: Daniel Ferguson <danielf@os.amperecomputing.com>
+In-Reply-To: <CAMj1kXGQSgeshrns7-EwTkG_c1dHgaxaVxO_FxWumdFx6m4vRQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4P222CA0011.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:303:114::16) To CH3PR01MB8470.prod.exchangelabs.com
+ (2603:10b6:610:1a4::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521225307.743726-1-yuzhuo@google.com> <20250521225307.743726-3-yuzhuo@google.com>
- <aC9lXhPFcs5fkHWH@x1> <CADQikVDs3msXqZ6tyoXR0WeN4D_9snxWyk2kXeDw5iAs+BHFuw@mail.gmail.com>
-In-Reply-To: <CADQikVDs3msXqZ6tyoXR0WeN4D_9snxWyk2kXeDw5iAs+BHFuw@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 6 Jun 2025 11:27:28 -0700
-X-Gm-Features: AX0GCFsJf9BoOQBJo9u8SiBY-wGn-QaijMbtUCmBq-anRCNCzEGR20_B5-Gw7iw
-Message-ID: <CAP-5=fV11L=5cBaYcd0ftVyk8=Tm4+NWCoTG+MBnAwjEogS5iA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] perf tools: Add sha1 utils
-To: Yuzhuo Jing <yuzhuo@google.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Eric Biggers <ebiggers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Liang Kan <kan.liang@linux.intel.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>, James Clark <james.clark@linaro.org>, 
-	Tomas Glozar <tglozar@redhat.com>, Leo Yan <leo.yan@arm.com>, 
-	Guilherme Amadio <amadio@gentoo.org>, Yang Jihong <yangjihong@bytedance.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Adhemerval Zanella <adhemerval.zanella@linaro.org>, 
-	Wei Yang <richard.weiyang@gmail.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Aditya Gupta <adityag@linux.ibm.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Jeff Johnson <jeff.johnson@oss.qualcomm.com>, 
-	Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR01MB8470:EE_|PH0PR01MB6167:EE_
+X-MS-Office365-Filtering-Correlation-Id: c84133c3-da2f-4795-3dbf-08dda52839b1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|366016|52116014|7416014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Yk5nWmRBMXcxNFI1L043azRjZXYrYndZenVmSG92Qnc5bEdJT2pQSDVNVlMw?=
+ =?utf-8?B?MXVud2pLOGZZVnFOSnVzS1paZ09ZSVNSRGdBdGc0NWFGcDFTNTB1MjRmNUsr?=
+ =?utf-8?B?RWdkVWl0aTZ5UWc5aGFuN2ZMZHJhY1BZTkxEaXhXaEJqYk5GZCszcVluR3Ix?=
+ =?utf-8?B?N0JxV203OVRMOWVsbXFBNWZ1elQrUGJDbWZYdFdKUCtlU014TGtSTXZCY2Vh?=
+ =?utf-8?B?dmdoVG9WczZ3OWcxcTNZMzdsQ3lRMm5xa1pqUUZXZkQwdUpsc1NwZnllVzlq?=
+ =?utf-8?B?YWY0RlVwNVp6eHVMWThMS3VQY0RDak9CU0oydjlxeXRuVk5BZ2tvT291VUR1?=
+ =?utf-8?B?NUpsaS9laVkrdXFuSkl3RWdMc2RIckVSR285OS9YVHRRSnlTQzEvV0JKRlA3?=
+ =?utf-8?B?WE5leVZ1L1IzNGV4VFRxZElyNUtrVGFucStXUW9VbUpoM2IrZjBkVURicjRL?=
+ =?utf-8?B?RkdhLzd4VnZOQk5DclVnMEMwWmtMMDhzaHVsSDc0cHZxVURoUGxpd0k1ZjVZ?=
+ =?utf-8?B?L0xMTXE1d1c0NjV1SC9RYTVkZFBOVmNNSVN1RkJJNzNzdzVrMVUzSUdmQUN6?=
+ =?utf-8?B?RlV0QVJHS2hsYWhwVForaG9pVXEyRTlJNVVBLzlBVHMvOEJ4R2F2Z2hwb3ZT?=
+ =?utf-8?B?dkNjYkdXV096RVYzVENFQ0J6ZVVQRFcyVFB6WlIvT0ppdU1DM0YzVGFmcFRU?=
+ =?utf-8?B?ZEdrRzVHZWRDRVBkendJYjBqazVhY2F0M2RUdFFvRWc3SENMMHFjQ1lGc3dC?=
+ =?utf-8?B?RnF0cnJUdlRmWjRkVUI2bko3OGZYcWFVZWFFREp2RXRUOWhJSHJrd0R2WE9i?=
+ =?utf-8?B?T3lEY0UxWWh3ZDA1aVZ5MGIvaWRuR0dIRlZwNFAyeHJLcWxyczlNYnpnVzBN?=
+ =?utf-8?B?STRJeDY0MnZlcnJFRGM3YnBkR0wveUY3VDZJQ1FIdkRBRkJMV1ZHSG5EWGxR?=
+ =?utf-8?B?bDEzMFVDT0UrR25LUmNnc1BGS3k0Y2VUQ0N1SkZxeE80RVFqY211ZG5nU0E1?=
+ =?utf-8?B?dnlmcW1JSjFCNUF5NzRxOWtaRE5kZmRNcksyOG96VytkWTlIMStraktGZ2VO?=
+ =?utf-8?B?aXhZbGhNYmtPMlB0ZExycjlDNWVBdlVsK0FtaERUS055KzFqc3YzTEZneFFn?=
+ =?utf-8?B?Q1FZVmdiNGJsdXVHckpQRitRcnVWL1lKZmtId0pPUGk4Y0tZdlduUnA0QnZp?=
+ =?utf-8?B?WVhqd3VsVEwrUHpSaEFaV3k4ckZGMWxpK1RFcnIzSWczUXVrZWo4Tm1yT2Nl?=
+ =?utf-8?B?T1ZVRlFkcCtrbmF2dmRUcDVTQUlCOS90Nk1qT2VMcDIzSWZRNVducWdmWnF6?=
+ =?utf-8?B?U1ZrL1BIOU4wVzY0aW1CVzNPQ1FjWUErVytvTDR6YzdOWmkzekxxSW1ZR0p0?=
+ =?utf-8?B?QlJqeHRkMTFVWEM3RiszZzNYVGhWS1UrbmxSWExEeFR0eHlQTkQ4cUdza3Fm?=
+ =?utf-8?B?RWhZY3lhL0NwdUdqNXRmVEJOR2xUaDAwQ0pOeXVLNExEL3IrZjMzcDE4a09F?=
+ =?utf-8?B?Y0xUVHFMMnppWjh3aDJpUDRnZngwM2N2UGdob1plVnJjNlJxU2kvemhPcE5u?=
+ =?utf-8?B?aFNDNDk2LzdSK29WNnpkWHRMdzJCNXVGYng0bVBUUmJCYjIvazN3Y3VPdUhy?=
+ =?utf-8?B?aTZtRmNseERhRllIZi93Umtsek41SXErSlQwV3ppRFJad3lPMzBqSi9udjYv?=
+ =?utf-8?B?WFZ0eGtON3FWRnlmWWZ3dE1DV0o3aC9jQ1VxbWpwYW50eUxPUStmTUFwWTd1?=
+ =?utf-8?B?enQ0ZzRIRWdFMldYQXZ6Y3BGNCtYYnhjUnRTNDZwbWRzZitKZUw3MlBOZjN5?=
+ =?utf-8?B?cW95YUM5a3hTczkxblBXRWdpU2ZReTdmeS9QY2tiV0xVUEJZNW1EVXV0TU5j?=
+ =?utf-8?B?NVRhS1VpdG4xdWR1VVUyTGZORDRIalNydFVqSCtpcG9wTU9LOFlHdmVhbkdi?=
+ =?utf-8?B?Kzh5U09MTTJYU290SFBFR2F3aXJhcHZscEoyTkZydWF4SVhJNXB3MXZ0SVQv?=
+ =?utf-8?B?T2FzT282aFJ3PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR01MB8470.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(52116014)(7416014)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NTNpd2ErU0hUL1A0cktRLzFRWnJ0WmsvZ3R1L3RVMG9rczVyRENqZUJQQlZm?=
+ =?utf-8?B?WDRpa0JPT2pYUU5ZMEdESTgyd21ranNiVWZnemhLZml4RGJlMGtJRDAxakh0?=
+ =?utf-8?B?TkZ3azJacnZNckhyR2dRWW56ckhPclNIQWduemN4V0gvNVNvUFh5YUpGOVZ3?=
+ =?utf-8?B?RS9aa2RjMWhHY21EL0hNSm1MOG1SQUpzZmlubDFaUE03UW9Fd0w1dXhrL3hB?=
+ =?utf-8?B?UHh4V25EWjA5RHh2cXc4ZnBTbXVJT25PTTBsaitEQ3NUZlh2cFNEZGxlZXdv?=
+ =?utf-8?B?UGIxbjN0a2pucCs2c0d4YlRTNnhXZGVXRXlNMGhINHpFdm5qeVJrOENLSVZm?=
+ =?utf-8?B?RFZ3VUZQOVhpVElTa01yK1JNaHlXWHVnMjhUb0pJY1JSL3lkZlBOZXFIdy8r?=
+ =?utf-8?B?b25vbU5uZVpiYzVYZ1hOSURZYVlmaXRIVGg2ZVZTVFlpVXNYUm5rb2EwRWpL?=
+ =?utf-8?B?cFNrYnNvNVcvTFpFa1NaQ2hJSzhXMTdnM0dzRlNNblZWOHNOc1pjYS9NWDYz?=
+ =?utf-8?B?KzJ3ak1PYmsyR3pRVFBBQ0VkaDluVy9CSHhjRmhkN0FUVWVwVmhrWGViUTRW?=
+ =?utf-8?B?cFBtNmFydi9KendEZEwvZDNRT0MvWnpudXQvN3pxcTVMYWhaY0RtR0hUcEVw?=
+ =?utf-8?B?ZVU1V0RONS9FejZIcUVGUzdlODc5M1U1emkrajJkUGtkNDA4MjA0dEF4U3RP?=
+ =?utf-8?B?SWZFcXpwU3FDdGhHNnJONDZXZHBzclR2dkozVDIwbjUrSjBTeHBCbDhyK3Vv?=
+ =?utf-8?B?bW0yVXlxVy8yWlJkcU0xNkhaVktTZ3FaRFFGdlV1QmVweEVKTzdOSnBmLzgr?=
+ =?utf-8?B?a1NCdGJtVks1aGxOUzFVT0I3eUdVOTFjcWpUQlJoSFVVWGFuRkRrWnQrM2pk?=
+ =?utf-8?B?WW9UbDlvVExrbk1GazcvS0t0cUgvd0RUWlZjcG4zdGZPWkRicXFJOHR1MDlF?=
+ =?utf-8?B?Rko3dmFVZ2lDQjBldnhNd0JBNjVsL2VmYmZ3d3c0Rkt6ek5FLzR5Y0l4a0JN?=
+ =?utf-8?B?eXFoU09wSXhGbmRHcUkyWU9YeS9nUWxwMElWUTJmN2QwTmp0RWFxSXpTbG11?=
+ =?utf-8?B?RTIzSnRNVC81TEpVM3QwNUR6Y0t1NzBaUUhWOEsvMXY5bVBpYmNmN1A5Vkly?=
+ =?utf-8?B?cVNZQXhON2ZqNFFOTnR2cytpcWtqOEZaWFZZZ3JTd2dQdDcyeHFWUzJidUd4?=
+ =?utf-8?B?YU5sZ2pBWnMvMWk0alVpMGN4MUgyZFdKTVg5bE55aTFTNVN0N3FkTTM4S3ZF?=
+ =?utf-8?B?S2tYTERHeDdwVnozc0pwaEQxQzVCMVFwWDZZTHBDU1lPY1JpSnJ2V2NCcW1z?=
+ =?utf-8?B?VC9UTDJXNnlDTTlVdXVBTnQ0QkpoK29SSUlwVGlyaE9vWXhwWlVLenRpa3Zu?=
+ =?utf-8?B?ZXl3N1E3RUs5K00vTGQ2WE9ZbFk4MVZpdWtSV0xkb0pNdUJqMXZZZ3dWUE9B?=
+ =?utf-8?B?Qk5aYWRkR3hzekloUmlwTS9lbWoreVAxd0NFUzJ4d0JsaWUwRWhvTUVSK25K?=
+ =?utf-8?B?bGRNejVzNFR6Yzd5N2MyVDJ4c3VXSkw5RmE4MHdqSVVEc3htdVNkU0hiVXdx?=
+ =?utf-8?B?TERKV1VaNWpDKzhLQU8wazZYc3dtOGwycnU4QXpkVWlybWpWd3I2VTNxZStS?=
+ =?utf-8?B?QkRJVFZKVzNlNEprc1lNRUcxaG0zUUtEREwyeGthcW15dllxZ1draU5rTFZQ?=
+ =?utf-8?B?eTNqMUhCRE52Uyt3ZzI2RFlxRVdBbERyRnVlV0dQSk1ObnluNWkvTGZQRHoy?=
+ =?utf-8?B?TjFHdVh2TUFIalY4QmtURy9tUzd5Y09XaXZIajVpUDFsMmtWMU16UGcwMCtO?=
+ =?utf-8?B?K1FqMXdtVmtvUTd1U0w0NnExbWswb29Hb1I1Tmx1Qk9YaWM5eDBtS2VVbUxN?=
+ =?utf-8?B?bjNKYlN2bDliSE5ZcDg3c2xuakt4cWRDLzd5N08xQXliM3NoODZERm11Mzhp?=
+ =?utf-8?B?ZUpweGVUN3FCWFdCbVZjcDNqZGdWTGhXUG84dDN1aDd3RnNlRGJpUHdKV0Ry?=
+ =?utf-8?B?ODdNZ2hpSHJJS2ZMaFNpdHhlOTR1L1IrLzFiRk91WUREdTBBRmE2TXgybnQ0?=
+ =?utf-8?B?TG1GYnNrZWZyR3lyczdsaGZTaDgwZEhpa0JYN0U1bnBHRmhUR1RNRFF0VHRx?=
+ =?utf-8?B?dlhPTDBSUEhKL09lR0VUSngwVXpMZDRmNGh2bmpwSHNveGpheGIyMGRvMm1G?=
+ =?utf-8?Q?ZPGgGzBBqE6GRUKg91jIKtk=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c84133c3-da2f-4795-3dbf-08dda52839b1
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR01MB8470.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2025 18:30:34.4676
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MklcXgzK/QvIAhpgoGAGlzROzTt0jTtmC3zgXwWeFnlC8EUs6azJqThVw1uIrfmUVU5SYWceso1qXSmVb8fI4AAVJPupoMwc5vUNcbt+jQO4WXM43cT6x8RQYfcm7Ooq
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR01MB6167
 
-On Wed, Jun 4, 2025 at 11:17=E2=80=AFAM Yuzhuo Jing <yuzhuo@google.com> wro=
-te:
->
-> Hi Arnaldo,
->
-> Thanks for testing the patches!
->
-> > In file included from util/sha1_generic.c:18:
-> > util/sha1_base.h: In function =E2=80=98sha1_base_do_finalize=E2=80=99:
-> > util/sha1_base.h:77:21: error: comparison of integer expressions of dif=
-ferent signedness: =E2=80=98unsigned int=E2=80=99 and =E2=80=98int=E2=80=99=
- [-Werror=3Dsign-compare]
-> >    77 |         if (partial > bit_offset) {
-> >       |                     ^
-> > cc1: all warnings being treated as errors
->
-> Oh, I didn't see that on my GCC 14.2.  A quick fix would work:
->
-> --- /dev/fd/63  2025-06-04 09:54:42.344516115 -0700
-> +++ tools/perf/util/sha1_base.h 2025-06-03 15:43:39.194036707 -0700
-> @@ -71,7 +69,7 @@
->  static inline int sha1_base_do_finalize(struct sha1_state *sctx,
->                                         sha1_block_fn *block_fn)
->  {
-> -       const int bit_offset =3D SHA1_BLOCK_SIZE - sizeof(__be64);
-> +       const unsigned int bit_offset =3D SHA1_BLOCK_SIZE - sizeof(__be64=
-);
->         __be64 *bits =3D (__be64 *)(sctx->buffer + bit_offset);
->         unsigned int partial =3D sctx->count % SHA1_BLOCK_SIZE;
->
->
-> To test it, I added -Werror=3Dsign-compare to my local Makefile.config to
-> force the error.
->
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index d19d1f132726..9909611be301 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -225,9 +225,9 @@ endif
->
->  # Treat warnings as errors unless directed not to
->  ifneq ($(WERROR),0)
-> -  CORE_CFLAGS +=3D -Werror
-> -  CXXFLAGS +=3D -Werror
-> -  HOSTCFLAGS +=3D -Werror
-> +  CORE_CFLAGS +=3D -Werror=3Dsign-compare -Werror
-> +  CXXFLAGS +=3D -Werror=3Dsign-compare -Werror
-> +  HOSTCFLAGS +=3D -Werror=3Dsign-compare -Werror
->  endif
->
->  ifndef DEBUG
->
->
-> While testing with "make -C tools/perf -f tests/make make_debug", I saw
-> similar compile errors in libjvmti.c:
->
-> jvmti/libjvmti.c: In function =E2=80=98copy_class_filename=E2=80=99:
-> jvmti/libjvmti.c:148:39: error: comparison of integer expressions of
-> different signedness: =E2=80=98int=E2=80=99 and =E2=80=98long unsigned in=
-t=E2=80=99
-> [-Werror=3Dsign-compare]
->   148 |                         for (i =3D 0; i < (size_t)(p - class_sign=
-); i++)
->       |                                       ^
-> jvmti/libjvmti.c:155:31: error: comparison of integer expressions of
-> different signedness: =E2=80=98int=E2=80=99 and =E2=80=98size_t=E2=80=99 =
-{aka =E2=80=98long unsigned int=E2=80=99}
-> [-Werror=3Dsign-compare]
->   155 |                 for (j =3D 0; i < (max_length - 1) && file_name
-> && j < strlen(file_name); j++, i++)
->       |                               ^
-> jvmti/libjvmti.c:155:68: error: comparison of integer expressions of
-> different signedness: =E2=80=98int=E2=80=99 and =E2=80=98size_t=E2=80=99 =
-{aka =E2=80=98long unsigned int=E2=80=99}
-> [-Werror=3Dsign-compare]
->   155 |                 for (j =3D 0; i < (max_length - 1) && file_name
-> && j < strlen(file_name); j++, i++)
->       |                                                                  =
-  ^
->
-> I've just sent a separate patch to the mailing list:
-> https://lore.kernel.org/lkml/20250604173632.2362759-1-yuzhuo@google.com/T=
-/
 
-Thanks Yuzhuo! I guess this happened because jvmti.h is missing in the
-test container. It seems to make sense to add -Wsign-compare to the
-standard CFLAGS to lower the chance of breaking this container again.
 
-> > Humm that part is the same as in the kernel...
-> >
-> > =E2=AC=A2 [acme@toolbx perf-tools-next]$ line=3D$(ctags -x --c-kinds=3D=
-f include/crypto/sha1_base.h | awk '$1 =3D=3D "sha1_base_do_finalize" {prin=
-t $3}')
-> > =E2=AC=A2 [acme@toolbx perf-tools-next]$ sed -n $line,\$p include/crypt=
-o/sha1_base.h | awk '{print} /\{/ {c++} /\}/ {c--; if (c=3D=3D0) exit}' > /=
-tmp/original
-> > =E2=AC=A2 [acme@toolbx perf-tools-next]$ line=3D$(ctags -x --c-kinds=3D=
-f tools/perf/util/sha1_base.h | awk '$1 =3D=3D "sha1_base_do_finalize" {pri=
-nt $3}')
-> > =E2=AC=A2 [acme@toolbx perf-tools-next]$ sed -n $line,\$p include/crypt=
-o/sha1_base.h | awk '{print} /\{/ {c++} /\}/ {c--; if (c=3D=3D0) exit}' > /=
-tmp/copy
-> > =E2=AC=A2 [acme@toolbx perf-tools-next]$ diff -u /tmp/original /tmp/cop=
-y
-> > --- /tmp/original       2025-05-22 14:48:31.338406860 -0300
-> > +++ /tmp/copy   2025-05-22 14:48:58.401603439 -0300
-> > @@ -1,3 +1,7 @@
-> > +
-> > +       return 0;
-> > +}
-> > +
-> >  static inline int sha1_base_do_finalize(struct shash_desc *desc,
-> >                                         sha1_block_fn *block_fn)
-> >  {
-> > @@ -13,10 +17,3 @@
-> >
-> >                 block_fn(sctx, sctx->buffer, 1);
-> >         }
-> > -
-> > -       memset(sctx->buffer + partial, 0x0, bit_offset - partial);
-> > -       *bits =3D cpu_to_be64(sctx->count << 3);
-> > -       block_fn(sctx, sctx->buffer, 1);
-> > -
-> > -       return 0;
-> > -}
-> > =E2=AC=A2 [acme@toolbx perf-tools-next]$
->
-> There were some other fixes that I made only to the perf tree version,
-> while maintaining verbatim for other parts.  Here's a script that
-> retains and compares only the copied parts.
->
->   # Ignore everything after sha1_transform
->   diff -u -B -I "^#include " <(sed -n
-> '/EXPORT_SYMBOL(sha1_transform)/q;p' lib/crypto/sha1.c)
-> tools/perf/util/sha1.c
->   diff -u -B -I "^#include " -I "sha1_zero_message_hash" -I "^struct
-> sha1_state;$" -I "^void sha1_init(__u32 \*buf);$" \
->       <(sed 's/shash_desc/sha1_state/g;' include/crypto/sha1.h)
-> tools/perf/util/sha1.h
->   diff -u -B -I "^EXPORT_SYMBOL" -I "^#include " \
->       <(sed 's/shash_desc \*desc/sha1_state *sctx/g;
-> /shash_desc_ctx(desc)/d' include/crypto/sha1_base.h)
-> tools/perf/util/sha1_base.h
->   # Ignore everything after crypto_sha1_finup
->   diff -u -B -I "^EXPORT_SYMBOL" -I "^#include " \
->       <(sed -n -e '/const u8
-> sha1_zero_message_hash/,/EXPORT_SYMBOL_GPL(sha1_zero_message_hash)/d'
-> \
->                -e 's/shash_desc/sha1_state/g;
-> /EXPORT_SYMBOL(crypto_sha1_finup)/q;p' crypto/sha1_generic.c) \
->       tools/perf/util/sha1_generic.c
->
-> And the changes are as below (including the quick fix above), with one
-> changing the sign and integer type and another fixing type mismatch from
-> const u8 * to const char *.
->
-> Should we send another patch to the kernel tree version to fix the sign
-> error, or we add rules to allow perf tree only changes?
+On 10/14/2024 3:00 AM, Ard Biesheuvel wrote:
+> On Fri, 11 Oct 2024 at 13:57, Borislav Petkov <bp@alien8.de> wrote:
+>>
+>> On Wed, Sep 04, 2024 at 08:07:13AM +0200, Mauro Carvalho Chehab wrote:
+>>> Jason Tian (1):
+>>>   RAS: Report all ARM processor CPER information to userspace
+>>>
+>>> Mauro Carvalho Chehab (4):
+>>>   efi/cper: Adjust infopfx size to accept an extra space
+>>>   efi/cper: Add a new helper function to print bitmasks
+>>>   efi/cper: align ARM CPER type with UEFI 2.9A/2.10 specs
+>>>   docs: efi: add CPER functions to driver-api
+>>>
+>>>  .../driver-api/firmware/efi/index.rst         | 11 +++-
+>>>  drivers/acpi/apei/ghes.c                      | 27 ++++----
+>>>  drivers/firmware/efi/cper-arm.c               | 52 ++++++++--------
+>>>  drivers/firmware/efi/cper.c                   | 62 ++++++++++++++++++-
+>>>  drivers/ras/ras.c                             | 41 +++++++++++-
+>>>  include/linux/cper.h                          | 12 ++--
+>>>  include/linux/ras.h                           | 16 ++++-
+>>>  include/ras/ras_event.h                       | 48 ++++++++++++--
+>>>  8 files changed, 210 insertions(+), 59 deletions(-)
+>>
+>> With the issues to patch 1 fixed:
+>>
+>> Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
+>>
+>> I'm presuming this'll go through Ard's tree. Alternatively, I can pick it up
+>> too with Ard's ack.
+>>
+> 
+> Either works for me.
+> 
+> Mauro: please put all maintainers on cc of the code you are touching - thanks.
 
-I believe there will need to be a set of patches for the kernel sha1
-code (fixing -Wsign-compare, any other typing issues) and a set of
-patches for perf with the check-headers.sh updated as your scripts
-check above. The perf patches shouldn't assume kernel patches have
-landed. The perf check-headers.sh produces a warning but doesn't stop
-the perf build. When the kernel changes land we can update the perf
-check-headers.sh expectations.
+What can I do to help this patch move forward?
+I noticed it needs to be rebased as of kernel v6.15.
 
-Thanks,
-Ian
+Would it be helpful if I were to rebase, add all the maintainers to the cc, and
+resubmit ?
 
-> --- /dev/fd/63  2025-06-04 09:54:42.344516115 -0700
-> +++ tools/perf/util/sha1_base.h 2025-06-03 15:43:39.194036707 -0700
-> @@ -71,7 +69,7 @@
->  static inline int sha1_base_do_finalize(struct sha1_state *sctx,
->                                         sha1_block_fn *block_fn)
->  {
-> -       const int bit_offset =3D SHA1_BLOCK_SIZE - sizeof(__be64);
-> +       const unsigned int bit_offset =3D SHA1_BLOCK_SIZE - sizeof(__be64=
-);
->         __be64 *bits =3D (__be64 *)(sctx->buffer + bit_offset);
->         unsigned int partial =3D sctx->count % SHA1_BLOCK_SIZE;
->
-> @@ -95,7 +93,7 @@
->         __be32 *digest =3D (__be32 *)out;
->         int i;
->
-> -       for (i =3D 0; i < SHA1_DIGEST_SIZE / sizeof(__be32); i++)
-> +       for (i =3D 0; i < SHA1_DIGEST_SIZE / (int)sizeof(__be32); i++)
->                 put_unaligned_be32(sctx->state[i], digest++);
->
->         memzero_explicit(sctx, sizeof(*sctx));
-> --- /dev/fd/63  2025-06-04 09:54:42.344516115 -0700
-> +++ tools/perf/util/sha1_generic.c      2025-05-16 10:52:59.219531034 -07=
-00
-> @@ -27,7 +23,7 @@
->         u32 temp[SHA1_WORKSPACE_WORDS];
->
->         while (blocks--) {
-> -               sha1_transform(sst->state, src, temp);
-> +               sha1_transform(sst->state, (const char *)src, temp);
->                 src +=3D SHA1_BLOCK_SIZE;
->         }
->         memzero_explicit(temp, sizeof(temp));
->
-> Thanks!
->
-> Best regards,
-> Yuzhuo
+I did rebase to v6.15 and tested. Everything still seems good to go.
+
