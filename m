@@ -1,256 +1,101 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF84A20330
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 11:44:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DE31E47B3;
+	Fri,  6 Jun 2025 11:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749210261; cv=none; b=SfQx0JLHTt4HVCLER0ltcQTWsoGCiXwpihoUXH1QaonXg/pqP+rzqt2MAsMqB4f7py+/imREKfOrX2tjr5bfT/y4SEO8zQ0n+Rcz6rwPqDAShS42shGJmRdVQV32gIx1/PPufIspZ31ORGXLy5VIaZnWFP4xhESZh4it3VBOZgs=
+	t=1749210332; cv=none; b=pfPN7YihBRI+n6QwUBRTwej/IGo4GEUDpCzrWFfgaKO2yHF4KqlnsgVe+Uvl2EzmTq0dx6zAFJGvBJykmjpe3ygjqqqaTZiZQu0LodrF/k7jKKDuImo4LLdp2Wn0jK6WmfZq6YmPk5n/mKo6VS6f9IRndQcYqyOupIetule/ZQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749210261; c=relaxed/simple;
-	bh=nVGg1kZqsFDkItjZ0WGg/TiLrVmiTG9ltMYHttHXNEw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bbqxdIf9qrgSpPY1BGZjRV6rHni/tuY0PnahLynEZQ/Kv3gIKLk8+rPA9JWqcuiIaVMhSxNDTBHdhRbhb8pO473QZp2q3ihMOng4xWHX2XNeUcLH3b+1c8R36oNmUQns797kt+H6aFeo4D/zMaB7H5OKNn/+GPJYr6REimRQyAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gOsGJCPn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gOsGJCPn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749210257;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=zelhpDixa89Wl/4nvIXRYdUrWpyIXYaO3oQleH1j9lE=;
-	b=gOsGJCPnkfyvcUGIDyvCoZ6N6GBQ67R9UQD4qtrk3Zgt/I0vcu1MKSvcwy+/iP3NoQFOuB
-	BNJHmkTSRzgkZkodBz2bCfWK14aWPhn8fsfmVbQ4SbcE8tb9Q3kdGJFHdGFZDLGibLM7cs
-	XU0M0zqQJa36Pl/ztE71JazgxMKh+L8=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-235-RGFf4eSaPCyWr9dSPyxPqw-1; Fri, 06 Jun 2025 07:44:16 -0400
-X-MC-Unique: RGFf4eSaPCyWr9dSPyxPqw-1
-X-Mimecast-MFC-AGG-ID: RGFf4eSaPCyWr9dSPyxPqw_1749210255
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-450db029f2aso10012855e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 04:44:15 -0700 (PDT)
+	s=arc-20240116; t=1749210332; c=relaxed/simple;
+	bh=pBBtJFnYmIG50xs6IyBYD32IyjLEgxGwTo8+5EbdyKQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FrE41LRdAA+9b0Buz+BevMAWj0vwag8U7NnwFIK1euakPxrBFDrTzuBa+NT7ZWSwtINXxqhkGbqxCCYjlomjh1WXHcvrEm1fUxGrhhwaadSF/OmAE4IIxaLqj4EtTrKEfUdVx2yGBPA0Ce6Xp/06I+6xBP9r16dzOlj8Lmtee2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-52413efd0d3so682787e0c.2;
+        Fri, 06 Jun 2025 04:45:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749210255; x=1749815055;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=zelhpDixa89Wl/4nvIXRYdUrWpyIXYaO3oQleH1j9lE=;
-        b=SePlaQxCX8yRaBCioAtZhATkQWQcazUK+NguaHR52WvFiaVHpnjqoSBiK0HoUrd6Nu
-         lcx7Q5ikhvyoOXqAXwJR1VnGXVEDdOp9sRMJUT4+oftMHtKm1TMbm6/uTOxxJxCfpQsz
-         B714ezFLXejdB0UAZhoQqbAO/coihosU0fIO4FQXKmhAdQMAef8BTPegOX9Y52PKsIXP
-         UNKMZUtNM9U5i/i3t1Z0LFvkw2vXC9aPaxElFDvJI7tipHrnGL76dhwRRdMKjaiMyVzC
-         sfPOx64P68cgfd21EqwAHt5pn38pIEemgfHoTQmjeErajh1RyqNrkV/XjeyjxPuttI+K
-         7dIA==
-X-Forwarded-Encrypted: i=1; AJvYcCWjSnm4lmuSS7FMERZI184kFBwpglqQgqu1vi1EtMxylP+b/THMNs5Q7nOL2kIBubtryNhMmGmbrQDEsKA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFGRw3sXXUUOtKilT0PKIZbHFmeeuIAbeE52jDeeZtXH1s4PbL
-	cSP9Exet3/Ze+nkXW3OD2fJDKEUN3k09IzBXCtHtgwCYeItYz/p7RONXOGj8YezSvWx4RjrjAct
-	3v621QlNasFXrWAS+jfBAoN2KqA91n0+IpQOMS95DQWrEDYB0qtc0uqJegz0FIVRGsA==
-X-Gm-Gg: ASbGncsBBHsghrb5cSOOzuqmydDl6YkQ6WT4Ppi9b5sHeYr9e0QR4NR2w/EkYsq6TEI
-	y0eoFjhkCc2hv6lFqqEMyRBmBye2UyIXEzMjDl2f/vbYUUwmOZKgSvOYrrDNjUgBzk9k2gk5YHL
-	JgqDqIGLsYaUY6x/t8fKgxLcJfD2TgadXDOoxp6EXtPq9zY+yz4Q4FJ1BU8no2LWl/FGsyGLNzx
-	k7FukKUnApNvi3n+/HifADvsuOYb6yO5j5KTw/iLnP8IA/GP5U7Tl1h2DgC7D6r55W3mIAksLhL
-	Uu3EecJ3XGsOzwIMwPDIa3BS8XuGzUUriEF6DEUVCskgQOrHyNwLP+R//ViqUyP+9jhuaEhaZ6h
-	wdXXANeyQcV9wF6rGONvvA58Gj+7IlMA9gOfHPvM0kA==
-X-Received: by 2002:a05:600c:8b8b:b0:450:d00d:588b with SMTP id 5b1f17b1804b1-45201414a42mr34849325e9.9.1749210254887;
-        Fri, 06 Jun 2025 04:44:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH3dRH0G6UjohJo+eKi5EKaynQQeqsxHWVR0GdsCweg3VD3myB7xWyGGMX4gcfDaIN3Ly9wEA==
-X-Received: by 2002:a05:600c:8b8b:b0:450:d00d:588b with SMTP id 5b1f17b1804b1-45201414a42mr34849125e9.9.1749210254417;
-        Fri, 06 Jun 2025 04:44:14 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f19:9c00:568:7df7:e1:293d? (p200300d82f199c0005687df700e1293d.dip0.t-ipconnect.de. [2003:d8:2f19:9c00:568:7df7:e1:293d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452730c747dsm18638905e9.31.2025.06.06.04.44.12
+        d=1e100.net; s=20230601; t=1749210328; x=1749815128;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k/AA2thBkYBRTSrmKbacqRtsRcQ9H4ZTCKUlsZiT20c=;
+        b=wI2aHHRLk98Xa+l065EX1/VFYQN5bLXu7wuftG34p4DiknreiDk18rm+dqDCZh0lKO
+         kr2XoQmZtGEAwVktdurJlt8gpcWp/czQBfstuI5qHvyy2vdtYZwM4xXB5Hgfnul80iBv
+         sZHUmacceIEEaFEWufQv5szakCY+zei6PjR8SxNG8iOHVAD4HHD3Wl62NRy5d50V/0qR
+         Y5s4RWjn/v9GC7K4Qd7NINWkLjcDv9iReBK9MUBTe8FwuXWzuHgxqHoiJf77Q84+XaB+
+         MT15+tVIlyRmrNO5NtQ9D54AFk2fftzdajZId/ZcarztAJhvDtWIsdcQPI8WFKyk8oxz
+         amiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSTa5rKMTDZaCkg8RlRiBlwLe/9ysFhXvTRJu8RWgEljGbm4kC4CTKICy1u+XPbx8EVfTf5lAv1TN88qtjF+3zOy8=@vger.kernel.org, AJvYcCWw4TW7fya5LDXvFl6zswg0UGw3iwYcKVcZzG/8NAhU24xGiH1wQs1Q7o/NnFR6VPT5J3G2Us5oHht3ZHtc@vger.kernel.org, AJvYcCX3IAPFNxLn1FcPohm7nHFouxN/E3gg0P3eQTR2m2FdOlEjS/X+2sZR/O/GATW0/UPTbMVqxcEONo0U@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRo41MVVsYeSDZDFAKziATQ/oZcx2CcB9NiEXg8GxJ/75mX9Kl
+	iJLODlDHK9pe9DunsmuMHxg0SxwzVp+2zYfSPjAL8W6QOKd8VSSQgrWpNNtV6Lud
+X-Gm-Gg: ASbGnctRbv9axXurtSS6eNSzTpYzJvcd7Jybf8ZSSfEHKooBxE/0dVe37nKjPOYYtb2
+	/4t57t71UybjDqyP+Ffv9uA88rjlc6QAIuPu8AA6GbFI/43s+URp+iScJ3oU7bOGO2bo303vZzx
+	WWs8t2s29upMZfHCxqVGL8EhSyT0EIS4joiJjWFmRy9c8mVMVbZq+C0bxyiXfF5f0YxShQ1qUYe
+	REtEKqoUCIhK/E1f6+qxq6Tnx5O6pPK43VY7sm/oM9nEVjexq7NR43wACZgTuodgB33TEUyL8V0
+	cddkeCOB75h9osvaI2+h96wpkmeokpWDACBMs1tL15UyMSalR1ZmVz7hrwFvudfN7KKN94S5TyW
+	JYxDhDmtItTKydA==
+X-Google-Smtp-Source: AGHT+IH71oNIxZ+UBxKRrJzzaHrRgTJrTF9CvkgGAT71mGaGsN/hNJFpUYlqcho7DryKfzfnuQf0Xw==
+X-Received: by 2002:a05:6122:3c8c:b0:530:5f5a:1362 with SMTP id 71dfb90a1353d-530e48ca52bmr2299372e0c.10.1749210327664;
+        Fri, 06 Jun 2025 04:45:27 -0700 (PDT)
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-530e6427aefsm932909e0c.42.2025.06.06.04.45.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 04:44:13 -0700 (PDT)
-Message-ID: <fe31e754-159d-49fd-aac7-64af5e313884@redhat.com>
-Date: Fri, 6 Jun 2025 13:44:12 +0200
+        Fri, 06 Jun 2025 04:45:27 -0700 (PDT)
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4e6312895d0so542901137.3;
+        Fri, 06 Jun 2025 04:45:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVBoL6/YVOMtAi+agx8St4gQ41xX9TOhyJipKGhgrw7E9Od7U2LNIuCD3EjvIHCApjLchMrgdXcKBAOGFFu5ZuEXUs=@vger.kernel.org, AJvYcCWqJ7O0qPB1Dm87APSmB12+r6BTNTLLVAviaWW6QElwp0yrSnBuxDf77SkosP2OC1g8Ucsn4k9fvGlR@vger.kernel.org, AJvYcCXL2osFaUMfXt0opJujsWWnVBoUKZRmELG+K3G7Z2M7y+HOO9rr55Wlh63NHLo5lk9fLDLvmUbhB5VQTO2g@vger.kernel.org
+X-Received: by 2002:a05:6102:8082:b0:4e4:5e11:6848 with SMTP id
+ ada2fe7eead31-4e772a02124mr2374263137.23.1749210326790; Fri, 06 Jun 2025
+ 04:45:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] mm/gup: remove (VM_)BUG_ONs
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>
-References: <20250604140544.688711-1-david@redhat.com>
- <aEFC_12om2UHFGbu@tiehlicka>
- <1a65d0e6-6088-4a15-9c19-537203fe655c@redhat.com>
- <aEKnSxHG8_BGj7zQ@tiehlicka>
- <e680a8f3-7b45-4836-8da7-7e7a0d2fcd56@redhat.com>
- <aEK_R93gihEn-xW6@tiehlicka>
- <50ff9149-2824-4e57-8d74-d8d0c063c87e@lucifer.local>
- <e5fa4a36-2af8-48e9-811e-680881c06b86@redhat.com>
- <1a7513cf-4a0a-4e58-b20d-31c1370b760f@lucifer.local>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <1a7513cf-4a0a-4e58-b20d-31c1370b760f@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250528133031.167647-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250528133031.167647-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 6 Jun 2025 13:45:15 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdW6SSTV-O5ejf5zWH+ZP--g2R8OYLoBSrYU3b0dKqVGWw@mail.gmail.com>
+X-Gm-Features: AX0GCFvscKZ744xaTrPRPezQ-0dPxGY5ctzKoeJh9okkP8uwXsx7PAhDIZbjQrE
+Message-ID: <CAMuHMdW6SSTV-O5ejf5zWH+ZP--g2R8OYLoBSrYU3b0dKqVGWw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: reset: renesas,rzv2h-usb2phy: Document
+ RZ/V2N SoC support
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, linux-renesas-soc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 06.06.25 13:04, Lorenzo Stoakes wrote:
-> On Fri, Jun 06, 2025 at 12:28:28PM +0200, David Hildenbrand wrote:
->> On 06.06.25 12:19, Lorenzo Stoakes wrote:
->>> On Fri, Jun 06, 2025 at 12:13:27PM +0200, Michal Hocko wrote:
->>>> On Fri 06-06-25 11:01:18, David Hildenbrand wrote:
->>>>> On 06.06.25 10:31, Michal Hocko wrote:
->>>> [...]
->>>>>> Turning them into VM_WARN_ON
->>>>>> should be reasonably safe as they are not enabled in production
->>>>>> environment anyway so we cannot really rely on those. Having them in
->>>>>> WARN form would be still useful for debugging and those that really need
->>>>>> a crash dump while debugging can achieve the same result.
->>>>>
->>>>> One question is if we should be VM_WARN_ON vs. VM_WARN_ON_ONCE ...
->>>>
->>>> *WARN_ONCE ha a very limited use from code paths which are generally
->>>> shared by many callers. You just see one and then nothing. Some time ago
->>>> we have discussed an option to have _ONCE per call trace but I haven't
->>>> see any follow up.
->>>>
->>>> Anyway starting without _ONCE seems like safer option because we are not
->>>> losing potentially useful debugging information. Afterall this is
->>>> debugging only thing. But no strong position on my side.
->>>>
->>>>> VM_BUG_ON is essentially a "once" thing so far, but then, we don't continue
->>>>> ... so probably most should be _ONCE.
->>>>>
->>>>>>
->>>>>> So while I agree that many of them could be dropped or made more clear
->>>>>> those could be dealt with after a mass move. An advantage of this would
->>>>>> be that we can drop VM_BUG_ON* and stop new instances from being added.
->>>>>
->>>>> As a first step we could probably just #define them to go to the
->>>>> VM_WARN_ON_* variants and see what happens.
->>>>
->>>> You meand VM_BUG_ON expand to VM_WARN_ON by default?
->>>
->>> Sorry to interject in the conversation, but to boldly throw my two English pence
->>> into the mix:
->>>
->>> As the "king of churn" (TM) you'll not be surprised to hear that I'm in favour
->>> of us just doing a big patch and convert all VM_BUG_ON() -> VM_WARN_ON_ONCE()
->>> and remove VM_BUG_ON*().
->>>
->>> Pull the band-aid off... I think better than a #define if this indeed what you
->>> meant David.
->>>
->>> But of course, you'd expect me to have this opinion ;)
->>
->> See my reply to Michal regarding keeping VM_BUG_ON() until we actually
->> decided what the right cleanup is.
-> 
-> Sure, but to me the concept of VM_BUG_ON() is surely fundamentally broken - if
-> BUG_ON() means 'stop everything we're going to corrupt' then it makes no sense
-> to add a '...but only if CONFIG_DEBUG_VM is set' in there.
-> 
-> So to me the only assessment needed is 'do we want to warn on this or not?'.
+On Wed, 28 May 2025 at 15:30, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Document support for the USB2PHY reset controller found on the Renesas
+> RZ/V2N (R9A09G056) SoC. The reset controller IP is functionally identical
+> to that on the RZ/V2H(P) SoC, so no driver changes are needed. The existing
+> `renesas,r9a09g057-usb2phy-reset` compatible will be used as a fallback
+> for the RZ/V2N SoC.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Well, when done carefully, it would be when reworking a VM_BUG_ON:
+LGTM (I don't have the User's Manual Additional Document for RZ/V2N)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-(a) Should this really only be checked with DEBUG_VM or should this
-     actually be a WARN_ON_ONCE() + recovery
-(b) Does this check even still make sense in current code, or were we
-     just extra careful initially.
-(c) Do we even understand why it is checked or should we add a comment.
-(d) Should we use one of the _PAGE / _FOLIO / _VMA etc. variants instead
-     or even add new ones.
+Gr{oetje,eeting}s,
 
-One could argue that the same is true for any other VM_WARN_ON ... but 
-my point from the beginning was that if we're already touching them, why 
-not spend some extra time and do it properly ..
-
-... but yeah, 600 instances are a bit much.
-
-:)
-
-But yeah, VM_BUG_ON is easier to replace than BUG_ON, because ... not 
-even Fedora is running with CONFIG_DEBUG_VM anymore, so these checks are 
-mostly only there in actual debug kernels.
-
-So agreed, let's move forward with a simple conversion.
-
-> 
-> And as you say, really WARN_ON_ONCE() seems appropriate, because nearly always
-> we will get flooded with useless information.
-> 
-> I think this being debug code gives us a lot of leeway here.
-> 
-> After the big change, we can always revisit individual cases and see if the
-> warning is valid at all.
-> 
->>
->> I don't have a very strong opinion on any of this ... as long as VM_BUG_ON()
->> goes away one way or the other.
-> 
-> Am happy to come up with the churn-meister version of this patch and take the
-> heat :P
-
-I assume with "this patch" you mean "a patch that gets rid of VM_BUG_ON 
-completely", because I want this patch here (that started the 
-discussion) to go in first.
-
-Fascinating how you are always looking for work :P
-
-Thanks!
+                        Geert
 
 -- 
-Cheers,
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-David / dhildenb
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
