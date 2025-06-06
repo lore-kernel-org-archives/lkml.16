@@ -1,168 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4A824EF6B
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 08:04:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745D524EF6B;
+	Fri,  6 Jun 2025 08:05:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749197086; cv=none; b=saSgPV+iAcozIH8s7wvKl6tOAT4BYTkWL487Yl66zF721A0XfD/llR2gkJp6rLTKD4G7pdqjFgoea2f7wsQo/dl1dXMlQLvgHyq6NwRL1yOgIhoAyIepyKTBzzb8F2lL4Bswgt3xgnKgPZzZ4WF+4GtTZNNpc0bUb7PFVayV7cg=
+	t=1749197137; cv=none; b=qVSYjdwZeqQ4sZ/0pVUrXxd4zhh0tMR8IzHLaoqFHQHZ6mS+I8XUA/Q1R+nN8Pj9v0sFX4ySXAPnVcm5WwYE8jr+oYdbQnEjeY4rZ4d3LHJLqP60PeZOuHmblYJvgMFYO5bDiGMfQ3u+HgLRn2vRfvIjOrZw6Pl91eZQnlo7/nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749197086; c=relaxed/simple;
-	bh=/eAbsE62fKUCaEC3zAvD15WyaOeeMA6jncyNVQwRldg=;
+	s=arc-20240116; t=1749197137; c=relaxed/simple;
+	bh=2+ukVt7ZT/sBmEW2z10tGXejfw+yjMbmy9hjYlP/qvk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IqICIVloqDydMg0Sw9vDbvIxDfVG9vEoneZ+BdzR/l9LcLVl+LhyFnVxYw17OlmqIdqdtWdgewQDAaN/u2WpzPzzUq6g3/Nysn9WgQujDgDuoP1BHV+J+PqTRV0XHLMKvW3z0GHtEyRu3o4/RfOXWIrLy6Bir8u7fFZXWZNfnx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qV4jtDv+; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CAvEmJR/1Sb8nBi4ws27JwdniQ3xntJOMLWdPeQvBDmEWD3uDx4HdyofeEmvG0/w3BVORCnL0EsepLLhauk0yMSLy8+6uxFOVVfS05bpsOT/j9xZqSorNn9uwo5PNPVKmhD/+pF6pfUy5Ihc/4h+6DPqWbNCC9lpfzI0mHS44g8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VyHv5TV0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qV4jtDv+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7EB2C4CEEB;
-	Fri,  6 Jun 2025 08:04:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VyHv5TV0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 811DDC4CEEF;
+	Fri,  6 Jun 2025 08:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749197086;
-	bh=/eAbsE62fKUCaEC3zAvD15WyaOeeMA6jncyNVQwRldg=;
+	s=k20201202; t=1749197136;
+	bh=2+ukVt7ZT/sBmEW2z10tGXejfw+yjMbmy9hjYlP/qvk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qV4jtDv+PQOS1Z54jDelm+RkHP6SZV4PHiNcZ7pa3FEoaNtqdWNmfGY+gApAqOlfr
-	 wGx1+FACRrsQAzZ7HF9ROT3Oc5yRqgeEgYkSwrTVslT3taQMq7DRWpcBnKbjam0jkh
-	 FzS4NAgwzQCOJUMLwIGww+BNzcXdv9D8Bu/UY5PY8mAeCL0jBg78dfowP/RdmO1GY/
-	 8j3RSNfj4DPOJccGvQK70atOh8UnIKDqhJUl+2qw041PRIdtXhzL7igODq4SbPy5HR
-	 5rPxt5E3JOIiJPjdgUc338VwGktz2mCgS5JNdfiK6ss7hQbT9oVG4g04Klb/wQr2zS
-	 TmnoqI11hBOfQ==
-Date: Fri, 6 Jun 2025 11:04:39 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Alexander Graf <graf@amazon.com>, Changyuan Lyu <changyuanl@google.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Pratyush Yadav <ptyadav@amazon.de>,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH] kho: initialize tail pages for higher order folios
- properly
-Message-ID: <aEKhF3HcrvG77Ogb@kernel.org>
-References: <20250605171143.76963-1-pratyush@kernel.org>
+	b=VyHv5TV0fw7A2TwPXdNR3B6gHFyovUH291qD/ftkl1u3S0HRqsDN7A5evqljYQfDR
+	 ddDzLAbEn1SjcHr66kgmq5nHIiY0P1E2Y50dyHR5BHSfIP8OJB3NU++tPtyQHKO9hH
+	 Fwn1gtMPIukScrIn3BPTuzRgaNac1/e4ajeTMLUXfbokpF1uGe7N2s/9TviafBMqkd
+	 7sb6+0IQFIxtx2eZ3yiXaaoB0+ZrPFrZUW+WeKbkeDshbEjRIhPx6Nik0l5G67c0qH
+	 TgOCXcgh3oxiPoTFE+mG4Uyv6bHyMFczt2w9vhr4UqXKZaGokv9+eFs1sVYrfbkG1Y
+	 GH03g4Hd4vxFQ==
+Date: Fri, 6 Jun 2025 10:05:34 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Kees Cook <kees@kernel.org>, 
+	Alessandro Carminati <acarmina@redhat.com>, linux-kselftest@vger.kernel.org, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Daniel Diaz <daniel.diaz@linaro.org>, 
+	David Gow <davidgow@google.com>, Arthur Grillo <arthurgrillo@riseup.net>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, Naresh Kamboju <naresh.kamboju@linaro.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Ville Syrjala <ville.syrjala@linux.intel.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Guenter Roeck <linux@roeck-us.net>, 
+	Alessandro Carminati <alessandro.carminati@gmail.com>, Jani Nikula <jani.nikula@intel.com>, 
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Linux Kernel Functional Testing <lkft@linaro.org>, 
+	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v5 1/5] bug/kunit: Core support for suppressing warning
+ backtraces
+Message-ID: <20250606-fat-optimal-jackrabbit-cdbb9f@houat>
+References: <20250526132755.166150-1-acarmina@redhat.com>
+ <20250526132755.166150-2-acarmina@redhat.com>
+ <20250529090129.GZ24938@noisy.programming.kicks-ass.net>
+ <CAGegRW76X8Fk_5qqOBw_aqBwAkQTsc8kXKHEuu9ECeXzdJwMSw@mail.gmail.com>
+ <20250530140140.GE21197@noisy.programming.kicks-ass.net>
+ <202505301037.D816A49@keescook>
+ <20250531102304.GF21197@noisy.programming.kicks-ass.net>
+ <20250602-phenomenal-turkey-of-hurricane-aadcde@houat>
+ <20250603122603.GK21197@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="qoe724hz7swoodx2"
 Content-Disposition: inline
-In-Reply-To: <20250605171143.76963-1-pratyush@kernel.org>
+In-Reply-To: <20250603122603.GK21197@noisy.programming.kicks-ass.net>
 
-On Thu, Jun 05, 2025 at 07:11:41PM +0200, Pratyush Yadav wrote:
-> From: Pratyush Yadav <ptyadav@amazon.de>
-> 
-> Currently, when restoring higher order folios, kho_restore_folio() only
-> calls prep_compound_page() on all the pages. That is not enough to
-> properly initialize the folios. The managed page count does not
-> get updated, the reserved flag does not get dropped, and page count does
-> not get initialized properly.
-> 
-> Restoring a higher order folio with it results in the following BUG with
-> CONFIG_DEBUG_VM when attempting to free the folio:
-> 
->     BUG: Bad page state in process test  pfn:104e2b
->     page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffffffffffffffff pfn:0x104e2b
->     flags: 0x2fffff80000000(node=0|zone=2|lastcpupid=0x1fffff)
->     raw: 002fffff80000000 0000000000000000 00000000ffffffff 0000000000000000
->     raw: ffffffffffffffff 0000000000000000 00000001ffffffff 0000000000000000
->     page dumped because: nonzero _refcount
->     [...]
->     Call Trace:
->     <TASK>
->     dump_stack_lvl+0x4b/0x70
->     bad_page.cold+0x97/0xb2
->     __free_frozen_pages+0x616/0x850
->     [...]
-> 
-> Combine the path for 0-order and higher order folios, initialize the
-> tail pages with a count of zero, and call adjust_managed_page_count() to
-> account for all the pages instead of just missing them.
-> 
-> In addition, since all the KHO-preserved pages get marked with
-> MEMBLOCK_RSRV_NOINIT by deserialize_bitmap(), the reserved flag is not
-> actually set (as can also be seen from the flags of the dumped page in
-> the logs above). So drop the ClearPageReserved() calls.
-> 
-> Fixes: fc33e4b44b271 ("kexec: enable KHO support for memory preservation")
-> Signed-off-by: Pratyush Yadav <ptyadav@amazon.de>
-> ---
-> 
-> Side note: get_maintainers.pl for KHO only lists kexec@ as the mailing list.
-> Since KHO has a bunch of MM bits as well, should we also add linux-mm@ to its
-> MAINTAINERS entry?
-> 
-> Adding linux-mm@ to this patch at least, in case MM people have an opinion on
-> this.
-> 
->  kernel/kexec_handover.c | 29 +++++++++++++++++------------
->  1 file changed, 17 insertions(+), 12 deletions(-)
-> 
-> diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
-> index eb305e7e61296..5214ab27d1f8d 100644
-> --- a/kernel/kexec_handover.c
-> +++ b/kernel/kexec_handover.c
-> @@ -157,11 +157,21 @@ static int __kho_preserve_order(struct kho_mem_track *track, unsigned long pfn,
->  }
-> 
->  /* almost as free_reserved_page(), just don't free the page */
-> -static void kho_restore_page(struct page *page)
-> +static void kho_restore_page(struct page *page, unsigned int order)
->  {
-> -	ClearPageReserved(page);
 
-So now we don't clear PG_Reserved even on order-0 pages? ;-)
+--qoe724hz7swoodx2
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v5 1/5] bug/kunit: Core support for suppressing warning
+ backtraces
+MIME-Version: 1.0
 
-> -	init_page_count(page);
-> -	adjust_managed_page_count(page, 1);
-> +	unsigned int i, nr_pages = (1 << order);
+On Tue, Jun 03, 2025 at 02:26:03PM +0200, Peter Zijlstra wrote:
+> On Mon, Jun 02, 2025 at 01:13:29PM +0200, Maxime Ripard wrote:
+>=20
+> > > I can't operate kunit
+> >=20
+> > Why not?
+>=20
+> Too complicated. People have even wrecked tools/testing/selftests/ to
+> the point that it is now nearly impossible to run the simple selftests
+> :-(
+>=20
+> And while I don't mind tests -- they're quite useful. Kunit just looks
+> to make it all more complicated that it needs to be. Not to mention
+> there seems to be snakes involved -- and I never can remember how that
+> works.
+>=20
+> Basically, if the stuff takes more effort to make run, than the time it
+> runs for, its a loss. And in that respect much of the kernel testing
+> stuff is a fail. Just too damn hard to make work.
+>=20
+> I want to: make; ./run.sh or something similarly trivial. But clearly
+> that is too much to task these days :-(
 
-Can you please declare 'i' inside the loop, looks nicer IMHO.
+Are you sure you're not confusing kunit with kselftests?
 
-> +
-> +	/* Head page gets refcount of 1. */
-> +	set_page_count(page, 1);
+You can run all tests in the kernel using:
+=2E/tools/testing/kunit/kunit.py run
 
-ClearPageReserved(page) here?
+Restrict it to a single subsystem with (for DRM for example):
+=2E/tools/testing/kunit/kunit.py run --kunitconfig=3Ddrivers/gpu/drm/tests
 
-> +
-> +	/* For higher order folios, tail pages get a page count of zero. */
-> +	for (i = 1; i < nr_pages; i++)
-> +		set_page_count(page + i, 0);
+Both would compile a UML kernel and run the tests on your workstation,
+but you can also run them in qemu with:
+=2E/tools/testing/kunit/kunit.py run --arch x86_64
 
-and here?
+So it looks close to what you expect?
 
-> +
-> +	if (order > 0)
-> +		prep_compound_page(page, order);
-> +
-> +	adjust_managed_page_count(page, nr_pages);
->  }
-> 
->  /**
-> @@ -179,15 +189,10 @@ struct folio *kho_restore_folio(phys_addr_t phys)
->  		return NULL;
-> 
->  	order = page->private;
-> -	if (order) {
-> -		if (order > MAX_PAGE_ORDER)
-> -			return NULL;
-> -
-> -		prep_compound_page(page, order);
-> -	} else {
-> -		kho_restore_page(page);
-> -	}
-> +	if (order > MAX_PAGE_ORDER)
-> +		return NULL;
-> 
-> +	kho_restore_page(page, order);
->  	return page_folio(page);
->  }
->  EXPORT_SYMBOL_GPL(kho_restore_folio);
-> --
-> 2.47.1
-> 
+Maxime
 
--- 
-Sincerely yours,
-Mike.
+--qoe724hz7swoodx2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaEKhTQAKCRAnX84Zoj2+
+dkuhAX9LyJvmNiSNTxiTi6JgV/sxlSk5sRo97QTw1YnBFIjUT/sl00MRuvKDZFaq
+sKRGjvEBf17xAmxt5cStdYQumenD9U2D4emcx7/aZKS7vfTR34g6tAmFa1ggk8Wc
+ZpbpxDrD5g==
+=TJNi
+-----END PGP SIGNATURE-----
+
+--qoe724hz7swoodx2--
