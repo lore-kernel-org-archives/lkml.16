@@ -1,43 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41D01C700D;
-	Fri,  6 Jun 2025 02:07:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A9129A2;
+	Fri,  6 Jun 2025 02:08:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749175626; cv=none; b=AkeyjrNdhurY5XqpneTWczM1v3W26iAHL4HQaNqWFtCV0jAaCArA+SjHOM9ER3moSoanrdb1WmHtEoTm9fyDnDP2OREvfTrNoX8ZQe2SCk69rRs0ISKwtCRVrGV042QwU04KULic4PhSEZQHQgDW0QsKLxEusOfh3RGWjz08Baw=
+	t=1749175701; cv=none; b=mOK7KSTv4jeQu7Za+9oYKWC8yeE5k2PI4/VyuN71/cBhueib29+av7OlvaxdtOJ/+VR07zV26Q2JuUCDxRG5Pso38WRgdoO4ohjTRIM8QYaQB/gt7QhtjAkPZHnqvydamK2DzbTivEg6LvY2u7OxSvvC17hK2ZNo64XkeMtunyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749175626; c=relaxed/simple;
-	bh=7W2i6lbL3UMR3CK9ANla0nqOKQPRknlJntToecOV9QY=;
+	s=arc-20240116; t=1749175701; c=relaxed/simple;
+	bh=YTdf3xm7wZ7lUC4dCzd5973Ix6qiOcyX9BbD6pAEsLs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NOxHhOYfVNRmdexkvwVcM/q7qm4i4ouaViEXQuZiu1w57PbAcnQvxZV+TdDMGztkPVL8S3+uhpD9/9lvgfEdO+853L2ry9a8I+zOiTLxzB1HtiVdO7nBS6ew9FEqW7nJRNCWl5owHffo3Nm70/Y2CO/qNrjdH0EjBMFQdNg5Mkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P3/KiO/x; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CrLYJgezjd+WBz+uYejn9meadFeiGyb/aLRJYD/3LyzST4LyNbdVHPOEXj2pZn1jq0iaNEQMVFyyCvEb8gIXgNLKYfbb2hrnjPrqMMzpiEgDhq1bfJGYOppQz7dnTtibLya+8cde14SxAxsowzHlhTM2pJgu90QJiuIXM93TyAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n0qgeNSA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P3/KiO/x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD6ACC4CEE7;
-	Fri,  6 Jun 2025 02:07:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n0qgeNSA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30390C4CEE7;
+	Fri,  6 Jun 2025 02:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749175626;
-	bh=7W2i6lbL3UMR3CK9ANla0nqOKQPRknlJntToecOV9QY=;
+	s=k20201202; t=1749175699;
+	bh=YTdf3xm7wZ7lUC4dCzd5973Ix6qiOcyX9BbD6pAEsLs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P3/KiO/x3Q9agM6MS94XdZZ8TPa88fMV6mvxtbXmHpkxbbJsRb9WsnhYUHfHK6yA2
-	 SeXgD57lfoHDoIioW1UTzhh+1sJx/2esb2Mo13Yx4FypjwyEvsbT/e5OluBF5LwfKr
-	 XGOa4L3tcJg9g9mIbRk5LvqrYBw+luXGBCcnq8al0VA9h5uxvV4FEoAklEd1OWjM5H
-	 i84KvBPfYkLNbX2NongIxwOtHlecbgaQuiRLnF6f6MeXO/U1ptuWgULcMts7G1l59M
-	 CTXvLfQc7650GSFy56M3/ghtZlzCKJzoVQy8ertyofEsbwO+9ESi0w+wjc/PqA185h
-	 bmHWGvqi5abZw==
-Date: Thu, 5 Jun 2025 21:07:04 -0500
+	b=n0qgeNSAQ2lpHZ3DG2HYw6oyiOZfMZlU33z+/XIvr5hvN8XLfZnw1JeeF3RWPVPYS
+	 Oin/+k2n/tJjx2XNCJPPCeiIZP7nXGGKHxqFRxmcTqdFL2fy219MQzBcXYKTson/A1
+	 ri2mjCJI/nnfe8ht4RkXYys8S+3r054PzTQs6ecrJDkXIaiCjHbPwX8eXkSlp0pAqu
+	 rF1AT3Rlg0VO3faQvRaKi60C7Wr+gHuMyvvtSf0FVbzV+bkrD28+H6BKSAaZ5Xb+3S
+	 aaTFpX+9mPMCkXOiBhsEx73LhSrAYwv2k9c5VPqzj/HxsLBoxx48CSTwktgBVhjj4Z
+	 478AOOBP5Z8Vw==
+Date: Thu, 5 Jun 2025 21:08:17 -0500
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Frank Li <Frank.Li@nxp.com>
-Cc: Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-	imx@lists.linux.dev, Linus Walleij <linus.walleij@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 1/1] dt-bindings: gpio: convert nxp,lpc1850-gpio.txt to
- yaml format
-Message-ID: <174917562214.3777775.10544409008316605683.robh@kernel.org>
-References: <20250602144259.944257-1-Frank.Li@nxp.com>
+Cc: linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev,
+	Maxime Ripard <mripard@kernel.org>,
+	Liviu Dudau <Liviu.Dudau@arm.com>, Simona Vetter <simona@ffwll.ch>,
+	David Airlie <airlied@gmail.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Andre Przywara <andre.przywara@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 1/1] dt-bindings: display: allow resets  property
+Message-ID: <174917569478.3779604.1149263045871881557.robh@kernel.org>
+References: <20250602144906.944866-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,25 +49,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250602144259.944257-1-Frank.Li@nxp.com>
+In-Reply-To: <20250602144906.944866-1-Frank.Li@nxp.com>
 
 
-On Mon, 02 Jun 2025 10:42:58 -0400, Frank Li wrote:
-> Convert nxp,lpc1850-gpio.txt to yaml format.
-> 
-> Additional changes:
-> - remove interrupt-controller and #interupt-cells from required list to
->   match existed dts files.
-> - remove gpio consumer in examples.
+On Mon, 02 Jun 2025 10:49:06 -0400, Frank Li wrote:
+> Allow resets property to fix below CHECK_DTB warning:
+>   arch/arm/boot/dts/nxp/lpc/lpc4337-ciaa.dtb: lcd-controller@40008000 (arm,pl111): 'resets' does not match any of the regexes: 'pinctrl-[0-9]+'
 > 
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
->  .../bindings/gpio/nxp,lpc1850-gpio.txt        | 59 --------------
->  .../bindings/gpio/nxp,lpc1850-gpio.yaml       | 78 +++++++++++++++++++
->  2 files changed, 78 insertions(+), 59 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpio/nxp,lpc1850-gpio.txt
->  create mode 100644 Documentation/devicetree/bindings/gpio/nxp,lpc1850-gpio.yaml
+>  Documentation/devicetree/bindings/display/arm,pl11x.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Applied, thanks!
 
