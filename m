@@ -1,216 +1,140 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09AC62C3242;
-	Fri,  6 Jun 2025 10:50:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA08C2853E5;
+	Fri,  6 Jun 2025 10:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749207005; cv=none; b=DD4bDpOW8zw5AGm683hlNZTdrPVgbhXOBzuBH1QwtmGfpL03FZh90PH/0vADWIgpiH9sVGQqo9JhAwszk6ZmLP9zCscs2tP9X6Fcc3QpFGuzcGf4ctA7lSy718naAKxjo8r7jFTQ8Oj6rYCw3PNNuMqQfHXV8nXXj3ucpEnkpiw=
+	t=1749207073; cv=none; b=B6sSJgi3tMDO8TT13xVHjyJPNIqzNGcyjC7epVRX32R2PYTNPIPBOsbfzDGD43k5p//B4+4CI4tEontthkkLAqy5YuKyGd9rmx++LvTDh1rLYJ/bSkLNjel3VCLBEoJs3mqAphikO+7X1RpNSYlr0Q8yYu8ssSevHgYSZQVA3dM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749207005; c=relaxed/simple;
-	bh=oVChse1wLr1LatGOtuMGq5IMy2U8hxvfsamh2B8qz9E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=egNAsMWaGt+tkRvNT6XBKbJEFYDd7xZNFiqgtPD6wqaySV4/2waL5zi8d2pXUdlyZ+vF80Cpn2KlNDBJMZstraismxvxZnrV83y3QHjdtQv357iDZScVxgIm9oIeDcXwL+iVEBBDGO8O5ze/8zFPtkL4qgSNnqkwZ4l4UnHJ/Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Torlej3I; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1749207073; c=relaxed/simple;
+	bh=CNPz/yyP5cutCEBAybS+Lck8HSInfMDQx2oYa9/K/kQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=CqXF6QKFS7GTIyOE3eAAKWLzkJ+KuLvZomcYQVbxzxQOv1yzsYbRtyYQ93qljSpt77IFit5uiy6TETwXQk2K87EKrOviq1YgL/oh4a0iUWyyuKi9d4HuM0YG2JnKXFZ1GZEHmo2hjVFJ5UlFm3ZI62Jtl13rleM/r9u5hQTF2dU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fovZhgN+; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Torlej3I"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=RgB6+Le5gZuvkTyuy9hjeapQkiI3tD5aj0y4LFHCOn0=; b=Torlej3I0MsK1FluWphWjPqhsU
-	dYVV1Iq3HXQwbpZ4GJPpspOkLrHMdyGDEmocb19R4VBLitr0DShyV9gUU1KA0nO2o8qHQ4oj2+Mea
-	ZkYT8kN2mdJyfPOZoEcG1LqGibuuMfFVE8slw+g9N1tF9P4ndbI00fCWneAVBZjhgnSKacWOXwuVZ
-	dvHSKONQ7BrU9xHYFYpVaKe8XVMmWNFrs7Co/CWhtFD3jWbnSEaN8tJD6YfV8XfTLZbPZz8HGoADB
-	pz4Lo1m4tNt4yClsbpq3GMlZp8yEd2XAfRqjsD60qUBJfGi4UHjU6iCxBzPcPmt7PloO4J0n2f17N
-	9SpAdLhQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uNUdu-00000001GGo-2krp;
-	Fri, 06 Jun 2025 10:49:47 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8F36B3005AF; Fri,  6 Jun 2025 12:49:45 +0200 (CEST)
-Date: Fri, 6 Jun 2025 12:49:45 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Sean Christopherson <seanjc@google.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, pbonzini@redhat.com, ardb@kernel.org,
-	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	linux-efi@vger.kernel.org, samitolvanen@google.com,
-	ojeda@kernel.org, xin@zytor.com
-Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls
- in __nocfi functions
-Message-ID: <20250606104945.GY39944@noisy.programming.kicks-ass.net>
-References: <20250506073100.GG4198@noisy.programming.kicks-ass.net>
- <20250506133234.GH4356@noisy.programming.kicks-ass.net>
- <vukrlmb4kbpcol6rtest3tsw4y6obopbrwi5hcb5iwzogsopgt@sokysuzxvehi>
- <20250528074452.GU39944@noisy.programming.kicks-ass.net>
- <20250528163035.GH31726@noisy.programming.kicks-ass.net>
- <20250528163557.GI31726@noisy.programming.kicks-ass.net>
- <20250529093017.GJ31726@noisy.programming.kicks-ass.net>
- <fp5amaygv37wxr6bglagljr325rsagllbabb62ow44kl3mznb6@gzk6nuukjgwv>
- <eegs5wq4eoqpu5yqlzug7icptiwzusracrp3nlmjkxwfywzvez@jngbkb3xqj6o>
- <4z4fhaqesjlevwiugiqpnxdths5qkkj7vd4q3wgdosu4p24ppl@nb6c2gybuwe5>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fovZhgN+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749207072; x=1780743072;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=CNPz/yyP5cutCEBAybS+Lck8HSInfMDQx2oYa9/K/kQ=;
+  b=fovZhgN+SYdxPpiNelxNhvuvZRVlQR2CAENUtQOPcNwScxcoIPShdt0D
+   QWnqxoJIC1lrZQAgIxAgz3FA2tAESRiE2Spghg3Rz/vyJ8uzzcUNr/74I
+   VzKu0kPZ5KaB0vwoiTiIGsxY1n6TJbbDEUnJboO7piJ46HW2Z1YfpcsZ5
+   Qq+a+BsN5NPLDpNBrhDVBE2neFXDoqq92PcAPL0MI0hWViQWhGTABqQeQ
+   jtn0M4c54GZAkSvtMpJwCYhHozRi2HPoYFCdM0aP6NmLc3Z+Q84ynipI+
+   pgTAHyRKm2c4bd+hs/+21FAZAwDcDidumKq1ro1QkwCUy0rxOZ412LiSb
+   w==;
+X-CSE-ConnectionGUID: X5ZtwcWSTe+9kXUx3Tfk5Q==
+X-CSE-MsgGUID: GrRRXGuPR0ONh6W2OW3ArA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="55161791"
+X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
+   d="scan'208";a="55161791"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 03:51:11 -0700
+X-CSE-ConnectionGUID: s0+9KUBOScK0UWBrMAYDuw==
+X-CSE-MsgGUID: rk/F+LbGRu+OjUNpF+gkaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
+   d="scan'208";a="146768243"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 03:51:11 -0700
+Received: from [10.245.245.46] (abityuts-desk.ger.corp.intel.com [10.245.245.46])
+	by linux.intel.com (Postfix) with ESMTP id DBA2220B5736;
+	Fri,  6 Jun 2025 03:51:06 -0700 (PDT)
+Message-ID: <96158539a213de089c792ff8f88ed5abb71a60e0.camel@linux.intel.com>
+Subject: Re: [PATCH v1 0/5] x86/smp: Restore the elimination of
+ mwait_play_dead_cpuid_hint()
+From: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, x86 Maintainers
+ <x86@kernel.org>,  Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Dave
+ Hansen	 <dave.hansen@linux.intel.com>, "Gautham R. Shenoy"
+ <gautham.shenoy@amd.com>,  Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Linux ACPI <linux-acpi@vger.kernel.org>
+Date: Fri, 06 Jun 2025 13:51:05 +0300
+In-Reply-To: <2226957.irdbgypaU6@rjwysocki.net>
+References: <2226957.irdbgypaU6@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4z4fhaqesjlevwiugiqpnxdths5qkkj7vd4q3wgdosu4p24ppl@nb6c2gybuwe5>
 
-On Thu, Jun 05, 2025 at 10:19:41AM -0700, Josh Poimboeuf wrote:
+On Thu, 2025-06-05 at 17:03 +0200, Rafael J. Wysocki wrote:
+> Hi Everyone,
+>=20
+> The purpose of this series is to reapply the code changes from commit
+> 96040f7273e2 ("x86/smp: Eliminate mwait_play_dead_cpuid_hint()") that
+> has been reverted because of an issue introduced by it.  This takes
+> place in the last patch ([5/5]) and the previous patches make
+> preparatory changes needed to avoid breaking systems in the field
+> once again.
 
-> diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
-> index d83236b96f22..e680afbf65b6 100644
-> --- a/arch/x86/entry/calling.h
-> +++ b/arch/x86/entry/calling.h
-> @@ -99,7 +99,7 @@ For 32-bit we have the following conventions - kernel is built with
->  	.endif
->  .endm
->  
-> -.macro CLEAR_REGS clear_bp=1
-> +.macro CLEAR_REGS clear_callee=1
->  	/*
->  	 * Sanitize registers of values that a speculation attack might
->  	 * otherwise want to exploit. The lower registers are likely clobbered
-> @@ -113,20 +113,19 @@ For 32-bit we have the following conventions - kernel is built with
->  	xorl	%r9d,  %r9d	/* nospec r9  */
->  	xorl	%r10d, %r10d	/* nospec r10 */
->  	xorl	%r11d, %r11d	/* nospec r11 */
-> +	.if \clear_callee
->  	xorl	%ebx,  %ebx	/* nospec rbx */
-> -	.if \clear_bp
->  	xorl	%ebp,  %ebp	/* nospec rbp */
-> -	.endif
->  	xorl	%r12d, %r12d	/* nospec r12 */
->  	xorl	%r13d, %r13d	/* nospec r13 */
->  	xorl	%r14d, %r14d	/* nospec r14 */
->  	xorl	%r15d, %r15d	/* nospec r15 */
-> -
-> +	.endif
->  .endm
->  
-> -.macro PUSH_AND_CLEAR_REGS rdx=%rdx rcx=%rcx rax=%rax save_ret=0 clear_bp=1 unwind_hint=1
-> +.macro PUSH_AND_CLEAR_REGS rdx=%rdx rcx=%rcx rax=%rax save_ret=0 clear_callee=1 unwind_hint=1
->  	PUSH_REGS rdx=\rdx, rcx=\rcx, rax=\rax, save_ret=\save_ret unwind_hint=\unwind_hint
-> -	CLEAR_REGS clear_bp=\clear_bp
-> +	CLEAR_REGS clear_callee=\clear_callee
->  .endm
->  
->  .macro POP_REGS pop_rdi=1
+Hello,
 
-Nice. So that leaves the callee-clobbered, extra caller-saved and return
-registers cleared, and preserves the callee-saved regs.
+thanks Rafael for the patches, and Peter/Dave for helping handling the
+issue.
 
-> diff --git a/arch/x86/entry/entry_64_fred.S b/arch/x86/entry/entry_64_fred.S
-> index 29c5c32c16c3..5d1eef193b79 100644
-> --- a/arch/x86/entry/entry_64_fred.S
-> +++ b/arch/x86/entry/entry_64_fred.S
-> @@ -112,11 +112,12 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
->  	push %rax				/* Return RIP */
->  	push $0					/* Error code, 0 for IRQ/NMI */
->  
-> -	PUSH_AND_CLEAR_REGS clear_bp=0 unwind_hint=0
-> +	PUSH_AND_CLEAR_REGS clear_callee=0 unwind_hint=0
->  	movq %rsp, %rdi				/* %rdi -> pt_regs */
->  	call __fred_entry_from_kvm		/* Call the C entry point */
-> -	POP_REGS
-> -	ERETS
-> +	addq $C_PTREGS_SIZE, %rsp
-> +
-> +	ALTERNATIVE "mov %rbp, %rsp", __stringify(ERETS), X86_FEATURE_FRED
+Tested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
 
-So... I was wondering.. do we actually ever need the ERETS? AFAICT this
-will only ever 'inject' external interrupts, and those are not supposed
-to change the exception frame, like ever. Only exceptions get to change
-the exception frame, but those are explicitly excluded in fred_extint().
+I measured a Granite Rapids Xeon with v6.15 vanilla [setup 1], then
+with v6.15 + revert of 96040f7273e2 + these 5 patches [setup 2].
 
-As such, it should always be correct to just do:
+I can see that in setup 2 the average idle package power is 54% lower
+than in setup 1. This is simply because in setup 1 there is no CC6 /
+PC6. And this is because every core's sibling is in CC1, which blocks
+CC6 on every core.
 
-	leave;
-	RET;
+=3D=3D Reference =3D=3D
 
-at this point, and call it a day, no? Just completely forget about all
-this sillyness with alternatives and funky stack state.
+1. Small article explaining then naming I use (CC1, CC6, PC6):
+https://github.com/intel/pepc/blob/main/docs/misc-cstate-namespaces.md
 
-Only problem seems to be that if we do this, then
-has_modified_stack_frame() has a fit, because of the register state.
+=3D=3D Non-essential details, just for reference =3D=3D
 
-The first to complain is bx, the push %rbx modifies the CFI state to
-track where on the stack its saved, and that's not what initial_func_cfi
-has.
+The measurement could have been done in a simpler way, but since I have
+developed tools and have a good setup to measure workloads with my open
+source tools, I did the following.
 
-We can stomp on that with UNWIND_HINT_FUNC right before RET. It's all a
-bit magical, but should work, right?
+Used stats-collect: https://github.com/intel/stats-collect/
 
-So keeping your CLEAR_REGS changes, I've ended up with the below:
+# Boot the vanilla kernel on system under test (SUT) named 'gnr2' (this
+# is the host name). Then run the following command on my system, that
+# has root SSH access to 'gnr2' configured.
 
----
-diff --git a/arch/x86/entry/entry_64_fred.S b/arch/x86/entry/entry_64_fred.S
-index 29c5c32c16c3..8c03d04ea69d 100644
---- a/arch/x86/entry/entry_64_fred.S
-+++ b/arch/x86/entry/entry_64_fred.S
-@@ -62,8 +62,6 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
- 	push %rbp
- 	mov %rsp, %rbp
- 
--	UNWIND_HINT_SAVE
--
- 	/*
- 	 * Both IRQ and NMI from VMX can be handled on current task stack
- 	 * because there is no need to protect from reentrancy and the call
-@@ -112,19 +110,35 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
- 	push %rax				/* Return RIP */
- 	push $0					/* Error code, 0 for IRQ/NMI */
- 
--	PUSH_AND_CLEAR_REGS clear_bp=0 unwind_hint=0
-+	PUSH_AND_CLEAR_REGS clear_callee=0 unwind_hint=0
- 	movq %rsp, %rdi				/* %rdi -> pt_regs */
-+
-+	/*
-+	 * At this point: {rdi, rsi, rdx, rcx, r8, r9}, {r10, r11}, {rax, rdx}
-+	 * are clobbered, which corresponds to: arguments, extra caller-saved
-+	 * and return. All registers a C function is allowed to clobber.
-+	 *
-+	 * Notably, the callee-saved registers: {rbx, r12, r13, r14, r15}
-+	 * are untouched, with the exception of rbp, which carries the stack
-+	 * frame and will be restored before exit.
-+	 *
-+	 * Further calling another C function will not alter this state.
-+	 */
- 	call __fred_entry_from_kvm		/* Call the C entry point */
--	POP_REGS
--	ERETS
--1:
-+
-+1:	/*
-+	 * Therefore, all that remains to be done at this point is restore the
-+	 * stack and frame pointer register.
-+	 */
-+	leave
- 	/*
--	 * Objtool doesn't understand what ERETS does, this hint tells it that
--	 * yes, we'll reach here and with what stack state. A save/restore pair
--	 * isn't strictly needed, but it's the simplest form.
-+	 * Objtool gets confused by the cfi register state; this doesn't match
-+	 * initial_func_cfi because of PUSH_REGS, where it tracks where those
-+	 * registers are on the stack.
-+	 *
-+	 * Forcefully make it forget this before returning.
- 	 */
--	UNWIND_HINT_RESTORE
--	pop %rbp
-+	UNWIND_HINT_FUNC
- 	RET
- 
- SYM_FUNC_END(asm_fred_entry_from_kvm)
+stats-collect start --stats all -H gnr2 --reportid gnr2-idle-nosmt-
+v6.15-vanilla -o raw/gnr2-idle-nosmt-v6.15-vanilla -- sleep 600
+
+# The above SSHed to gnr2, ran workload "sleep 600", and collected a
+# bunch of statistics, which were saved to
+# raw/gnr2-idle-nosmt-v6.15-vanilla on my host.
+
+# Boot the "setup 2" kernel, which I referred to as "6.15-fixed". Run
+# the following command.
+
+stats-collect start --stats all -H gnr2 --reportid gnr2-idle-nosmt-
+v6.15-fixed -o raw/gnr2-idle-nosmt-v6.15-fixed -- sleep 600
+
+# Then generate an HTML diff between those.
+stats-collect report raw/gnr2-idle-nosmt-v6.15-vanilla/ raw/gnr2-idle-
+nosmt-v6.15-fixed/ -o diff
+
+# Open "diff" with a browser (I have my HTTP server, so just copied it
+# to ~/public_html). Find lots of stats, in my case
+# turbostat,=C2=A0interrupts, IPMI.
+
+In the diff, I checked turbostat's PkgPwr (CPU chip power in Watts) and
+turbostat's CPU%c6 (CC6 residency, %).
+
+HTH,
+Artem.
