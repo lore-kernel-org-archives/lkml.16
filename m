@@ -1,61 +1,63 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF703284674
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 13:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C48B28936C
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 13:48:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749217685; cv=none; b=BG3Hsv9ygDpdTzkT2j/D23jyxiyAAq9VfLXdZJGv/VFjkxBJsIMSE2trVxGi31Vi+gyM0UAGoF86i95LgAk7a1gfCTr0QVaudT+JSdpyLr7vgRykqGfvYYnAEELYb/pWWgC1UsDTLLCC0mtLYbm8ihfe1Vej0ZzCwQKSG9xPqZg=
+	t=1749217689; cv=none; b=hoxDya0Gp1cHYwW5qBOFsx8WnW6LR+MNsn7pSOIKUg9/9yPUarFJuHsbN/Ez6+oHwbXKSF6KmMvyzaMhaQUK3SLtD3FyftqtSmXeOQW/0saDpODUDErv5YEmYyoSwUdPQbSpQR3CjNaopuHpkFwqneulQJBtfbLhitM1Ensq2fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749217685; c=relaxed/simple;
-	bh=z1CqVsJ1ckuC/WRsoWE2v886V0CEr2UctLIbqfChQGI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sBQ++lnxiHE0kjs6xuzLxVP1s+1q/rON0Vmp6rkBUXJ9PwnC9ttwFdZMgMETbuno+pbwNYT2g/HLe2iM+2Y8IrfJss6kcB5s3J3KlcZaXna1hDStck884JHHaNS+zS1e8sVuU0ol2TkIsM94d+7TDp9AEOI8yHFSD99IWtqsNg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UpRwy4zS; arc=none smtp.client-ip=209.85.210.177
+	s=arc-20240116; t=1749217689; c=relaxed/simple;
+	bh=QAzuCIf6SmB3yJkUb6LPFPckwrq7uhWrHQG0HRpWI6c=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=KXoKSeYcMEMzYHPOVoVJAZqBSoq8rV4mBSJ3yKTzB8YXvw8yRHpniCqZj4qoU0iG0RGXpIGjDSv/LHiZBzuYiQUMWPmLhMGem7d03hv6oJxPDRfcH4FqTo19pS+N22iKHEXRCf1BDt0rD8iITqdwsieiPHD3xhMOnLdRyTLPCvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f9b0Og8N; arc=none smtp.client-ip=209.85.210.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UpRwy4zS"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-742c5eb7d1cso2569050b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 06:48:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f9b0Og8N"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-742c46611b6so2732997b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 06:48:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749217683; x=1749822483; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xg6qWBW9452a89D15vuiBGGJUNV9bhzosnI+08qf8bo=;
-        b=UpRwy4zSgSPwyvxsLLN8dudHy4rGpFLKywaqVQbxh8LqF0BdpfblvB90XKJr0OH8wi
-         Yq2t4HEOnL+Qlo/wJQ+pJRDegSdqhmxDm5Dj4HwudhE5CQgugpg0b2+quhBoBEvYQW3i
-         pb5gptSDJ3ETIBZkW50okzFjpuykWtpEw7CqKOhNDZVWc1MBzU38rKo+WkWmylPNc23J
-         15wVGBWAYJPAZGabBVribmorXTWi+HeSYDhVht4/OZfQHKBD/WJbiNkDsx0V3gIjluwk
-         UO4oP5WdZ5G1mRMmcpqf33tefY+5eFs+fp5HlkewGG0xAjLqSc5LuVVPyByh21mCgUJ4
-         iS2Q==
+        d=gmail.com; s=20230601; t=1749217687; x=1749822487; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lbLXfMia3LGx0x5vatzlSPOE+phQVH8WezZPhdpMpIw=;
+        b=f9b0Og8NfjbE7BHYXqYz5gm5MEaM1m1fR7BCfZF7P2WDq4W8dOP9iae2eu+VMI68zv
+         JaEG597oZpi5o5IjGl3c0BCVMAoCfHztWCvkIOBmuLtRSfrbB8kk+n78VdUe3HZNesYK
+         TMk8k+Z6Aot1uZ9fgBiqRcXyWkmu05OtiK/tcf3T8irWL/BVW41/S2nYyi5qeTg9cuRt
+         u+YCguXZ8YBVXl3VVNlftbiMX98OXT8aeKAfM3ZjL0Cy3xDIENSoo4MvtBRlourr7zoC
+         RT/4vuON03WC1+PgMGJXAikdeBftDtDE9DcUMac9O/Qc2EPfkBNP88ofRBAcPkYgMoHy
+         Tekg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749217683; x=1749822483;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xg6qWBW9452a89D15vuiBGGJUNV9bhzosnI+08qf8bo=;
-        b=DDp5g9bepeTPV18W2c3OnfeRxSXln2iKBSC7l4CkXhRIuLaY3vTyEV3hF/pNqMAR6y
-         7wRgJ3t6D/PMku7Gi2EcXVjjUWhnYecuNXtk62IuGz6o6Q9MLWzZMf+ntUHeZR2mXaUh
-         tCFacCSnPSeEcZiGbRtAVXP0OgrH2yqri8EazLJhJuYHtWxAxwhk2DpV3guOldmaEYKZ
-         imTPpadlg8wTI/0kzjEMXJlQKz0OsdATeKOB8h+oTn0BSLZhzIRhG5l8cAa+bVuYRL0t
-         Hd5R3YHQrFQ83R7uYj3ZiXFv4CI9s2pCgzccTkvFfOq5ynqMWB7AedglV6rj3X7wea+5
-         2t+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWKDiWTd/v8900RhDlPgPUw2P8pEOVJSdZPBVYks4n0om2O7rUpl3etVGnBuVEMGjLV6v7vjcwgc/UPt3E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUjyhUUH6po5QWVmgHX6QYiwJ0RzROmgxkC3Q8QJgtIta/dxID
-	WAubRB81EucoONgVhiaMtHqDZynm1WxUldHQ9tn7TAz8k0jT3lDqh8pT
-X-Gm-Gg: ASbGncvw2V5ceqTB+D+3Z4iucnIJCDzTb+OGkMLhO8rDKr8skGvOh/LYJbaBDFvXkfV
-	SHzvw0qqJCHzEMrR69bMs1BhmAGERH42T+FO6UqF8PB6H71Rrzph+Uw1yPr7JjE1Y22fnWPR/eK
-	s1YFpASPPuTh1zifbRM/R4TdEv2D7hUCuHeU2yBfglp0l2HzPu8mMGqHD92gWRpNC8vEnuyw71L
-	t/DbJpQ0kXs6NqG1Zr3MHBRW7YfihprURoxo6wiqT09vWgqjooRjRxhSv3KcZSRHZ8tQ2xFr8gp
-	Ddkx+YxmBq688E+SmCLomj/Ky9xmHKkAA7eCm8L0HsxAo+taZV3uNAGfIE5ybiEfIilWL0+M5In
-	MHTZMWw==
-X-Google-Smtp-Source: AGHT+IGkvFTXTyoyFP5THpiFg7vz28z93vYZnhgXj37vty+QoUT/oX3Gk9XgnFYyH9xdaWnr72Cmkw==
-X-Received: by 2002:a05:6a00:3cc8:b0:746:25d1:b711 with SMTP id d2e1a72fcca58-74827f159a3mr4536689b3a.17.1749217683105;
-        Fri, 06 Jun 2025 06:48:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749217687; x=1749822487;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lbLXfMia3LGx0x5vatzlSPOE+phQVH8WezZPhdpMpIw=;
+        b=MYKWiO6wPltM+dSxmuiK/qWAY1iadTpg7ftNjS03in+rtkmIqETWizqaYz1G/+CZkT
+         Y2jcQCo8Rg7pBkHfyDVPsCtRBicaDvYRyVcqsePXe/wNBdOW9vzf50GDlALRr5fInZek
+         DcpzaCzaPwi5pPz73ixKDJJ3OtKqY+o1lmsU1MddF8eUf5Xg1wuyLcQ38h12XWIUMDfj
+         a3y6nf/RyDj3XHO4Lah8z+rJ0CC4SKX+2ZNIU43tu8wZRR0w8lwYITQBncPJ8DCyRnws
+         LDQHVR5yiuwWndViaYBIqDCYCnbz7SfDXVtHvVs18HfnGd6HyXn7Ak5JZrQ0f97KmHbi
+         xYww==
+X-Forwarded-Encrypted: i=1; AJvYcCUR9HtTsnNJ4cotUSA0Fie0Dl52O2zE4aS9aVc07FCvu9dpVlftpyUp/dEOx2Hh0B6WcRL8+hyFKDJrwi4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwU5Q3ariCjaR3X5/s2fRwGGv1xOLcagF8r+Z9Zan/dCFVfGAy3
+	HHF1EQzNWJDEVCMTVg4Gd7XTJlWwD3x9oU95P9OEi0C0B1G+1Nbymo1Bupuq6w==
+X-Gm-Gg: ASbGncujCZIBd6H11Ac6bLYnIlp9ex7CbLBVOYPp9l4Po1iifnj7bNSWCrIYmzUaYsd
+	atXP+PNu8ehWXf91mQABEdI3kZipJdDBiAGRGlBVk7uUwgx345Q+gnyUS3DQUsQBI479q61r7Q2
+	gTMaeY7E5lJtDW5qdgYLV+ZsgFhr3V260B3dHi4DnrCPSROZANGoKmCY9vPk5zPsr5laiUrY6Bo
+	De5cU3sseXMsJOtozQvDexufr5LOa3X4bSCN2EPvUHytYIECqsqeI4X5De24R2xjMtVYLu7bX3I
+	m3un6ycLYioXPLcT3ukY3GHRuAE1+bsOxJHjftGynZOaqT6vqS/pDihN4cgmzfy5tzjHC2SV6f9
+	Yh4O1eeOA1TPqFTB+
+X-Google-Smtp-Source: AGHT+IEWQEWWMghu/cP6dwFr5jCrVGt0sZKMZoG/iTAmXCUcpXkPFPhjT4lzx4jV92YNz8SClJVpsg==
+X-Received: by 2002:a05:6a00:4884:b0:748:3385:a4a with SMTP id d2e1a72fcca58-74833850decmr553711b3a.23.1749217686884;
+        Fri, 06 Jun 2025 06:48:06 -0700 (PDT)
 Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0c1168sm1296798b3a.136.2025.06.06.06.48.00
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0c1168sm1296798b3a.136.2025.06.06.06.48.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 06:48:02 -0700 (PDT)
+        Fri, 06 Jun 2025 06:48:06 -0700 (PDT)
 From: Kuan-Wei Chiu <visitorckw@gmail.com>
 To: paul.walmsley@sifive.com,
 	palmer@dabbelt.com,
@@ -67,10 +69,12 @@ Cc: linux-riscv@lists.infradead.org,
 	jserv@ccns.ncku.edu.tw,
 	Kuan-Wei Chiu <visitorckw@gmail.com>,
 	Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: [PATCH v3 0/3] Optimize GCD performance on RISC-V by selecting implementation at runtime
-Date: Fri,  6 Jun 2025 21:47:55 +0800
-Message-Id: <20250606134758.1308400-1-visitorckw@gmail.com>
+Subject: [PATCH v3 1/3] lib/math/gcd: Use static key to select implementation at runtime
+Date: Fri,  6 Jun 2025 21:47:56 +0800
+Message-Id: <20250606134758.1308400-2-visitorckw@gmail.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250606134758.1308400-1-visitorckw@gmail.com>
+References: <20250606134758.1308400-1-visitorckw@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,58 +83,105 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The current implementation of gcd() selects between the binary GCD and
-the odd-even GCD algorithm at compile time, depending on whether
-CONFIG_CPU_NO_EFFICIENT_FFS is set. On platforms like RISC-V, however,
-this compile-time decision can be misleading: even when the compiler
-emits ctz instructions based on the assumption that they are efficient
-(as is the case when CONFIG_RISCV_ISA_ZBB is enabled), the actual
-hardware may lack support for the Zbb extension. In such cases, ffs()
-falls back to a software implementation at runtime, making the binary
-GCD algorithm significantly slower than the odd-even variant.
+On platforms like RISC-V, the compiler may generate hardware FFS
+instructions even if the underlying CPU does not actually support them.
+Currently, the GCD implementation is chosen at compile time based on
+CONFIG_CPU_NO_EFFICIENT_FFS, which can result in suboptimal behavior on
+such systems.
 
-To address this, we introduce a static key to allow runtime selection
-between the binary and odd-even GCD implementations. On RISC-V, the
-kernel now checks for Zbb support during boot. If Zbb is unavailable,
-the static key is disabled so that gcd() consistently uses the more
-efficient odd-even algorithm in that scenario. Additionally, to further
-reduce code size, we select CONFIG_CPU_NO_EFFICIENT_FFS automatically
-when CONFIG_RISCV_ISA_ZBB is not enabled, avoiding compilation of the
-unused binary GCD implementation entirely on systems where it would
-never be executed.
-
-This series ensures that the most efficient GCD algorithm is used in
-practice and avoids compiling unnecessary code based on hardware
-capabilities and kernel configuration.
+Introduce a static key, efficient_ffs_key, to enable runtime selection
+between the binary GCD (using ffs) and the odd-even GCD implementation.
+This allows the kernel to default to the faster binary GCD when FFS is
+efficient, while retaining the ability to fall back when needed.
 
 Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
 Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
 Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
-
 ---
-This series has been tested on QEMU to verify that the correct GCD
-implementation is used both with and without Zbb support.
+ include/linux/gcd.h |  3 +++
+ lib/math/gcd.c      | 27 +++++++++++++++------------
+ 2 files changed, 18 insertions(+), 12 deletions(-)
 
-v2 -> v3:
-- Drop if (!a || !b) check in binary_gcd()
-- Move DECLARE_STATIC_KEY_TRUE(efficient_ffs_key) to gcd.h
-v1 -> v2:
-- Use a static key to select the GCD implementation at runtime.
-
-v2: https://lore.kernel.org/lkml/20250524155519.1142570-1-visitorckw@gmail.com/
-v1: https://lore.kernel.org/lkml/20250217013708.1932496-1-visitorckw@gmail.com/
-
-Kuan-Wei Chiu (3):
-  lib/math/gcd: Use static key to select implementation at runtime
-  riscv: Optimize gcd() code size when CONFIG_RISCV_ISA_ZBB is disabled
-  riscv: Optimize gcd() performance on RISC-V without Zbb extension
-
- arch/riscv/Kconfig        |  1 +
- arch/riscv/kernel/setup.c |  5 +++++
- include/linux/gcd.h       |  3 +++
- lib/math/gcd.c            | 27 +++++++++++++++------------
- 4 files changed, 24 insertions(+), 12 deletions(-)
-
+diff --git a/include/linux/gcd.h b/include/linux/gcd.h
+index cb572677fd7f..616e81a7f7e3 100644
+--- a/include/linux/gcd.h
++++ b/include/linux/gcd.h
+@@ -3,6 +3,9 @@
+ #define _GCD_H
+ 
+ #include <linux/compiler.h>
++#include <linux/jump_label.h>
++
++DECLARE_STATIC_KEY_TRUE(efficient_ffs_key);
+ 
+ unsigned long gcd(unsigned long a, unsigned long b) __attribute_const__;
+ 
+diff --git a/lib/math/gcd.c b/lib/math/gcd.c
+index e3b042214d1b..62efca6787ae 100644
+--- a/lib/math/gcd.c
++++ b/lib/math/gcd.c
+@@ -11,22 +11,16 @@
+  * has decent hardware division.
+  */
+ 
++DEFINE_STATIC_KEY_TRUE(efficient_ffs_key);
++
+ #if !defined(CONFIG_CPU_NO_EFFICIENT_FFS)
+ 
+ /* If __ffs is available, the even/odd algorithm benchmarks slower. */
+ 
+-/**
+- * gcd - calculate and return the greatest common divisor of 2 unsigned longs
+- * @a: first value
+- * @b: second value
+- */
+-unsigned long gcd(unsigned long a, unsigned long b)
++static unsigned long binary_gcd(unsigned long a, unsigned long b)
+ {
+ 	unsigned long r = a | b;
+ 
+-	if (!a || !b)
+-		return r;
+-
+ 	b >>= __ffs(b);
+ 	if (b == 1)
+ 		return r & -r;
+@@ -44,9 +38,15 @@ unsigned long gcd(unsigned long a, unsigned long b)
+ 	}
+ }
+ 
+-#else
++#endif
+ 
+ /* If normalization is done by loops, the even/odd algorithm is a win. */
++
++/**
++ * gcd - calculate and return the greatest common divisor of 2 unsigned longs
++ * @a: first value
++ * @b: second value
++ */
+ unsigned long gcd(unsigned long a, unsigned long b)
+ {
+ 	unsigned long r = a | b;
+@@ -54,6 +54,11 @@ unsigned long gcd(unsigned long a, unsigned long b)
+ 	if (!a || !b)
+ 		return r;
+ 
++#if !defined(CONFIG_CPU_NO_EFFICIENT_FFS)
++	if (static_branch_likely(&efficient_ffs_key))
++		return binary_gcd(a, b);
++#endif
++
+ 	/* Isolate lsbit of r */
+ 	r &= -r;
+ 
+@@ -80,6 +85,4 @@ unsigned long gcd(unsigned long a, unsigned long b)
+ 	}
+ }
+ 
+-#endif
+-
+ EXPORT_SYMBOL_GPL(gcd);
 -- 
 2.34.1
 
