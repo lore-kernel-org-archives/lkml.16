@@ -1,117 +1,139 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B3524EF6B
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 08:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F99524EF6B
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 08:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749198394; cv=none; b=h8OG0n1EVd5jSwCOWCiRUnBDfwsPHprlPIY7VjNRYjcaqcRVMB/s2O3sMwYHirza8oejJWLvxxMzpTBgYjfBRdydy9a9+fUpAHRX3RnL8yn12WDlkPQAlHX3LBoULDVmAiDL8x0FT16x+HBRG0oV1gs0rkC7V5fB2piBArtvoVU=
+	t=1749198399; cv=none; b=Euyihl7DFSsJjng/6nLKa1j5l9VV3Xmdpbpk29QRrJKrvYMJa6MOrO/54q4oZpbrgo19Kan3btCc/Oar7pS3ZGyDTOj37m1x7rDxvknOkJuFv0G+07T0+LGFePAHGKDN2mMl+3g1WUPuLDKcFXmT2Ua4b9lLNGjDtvfGSEqsD+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749198394; c=relaxed/simple;
-	bh=Lk/4bNgje+km5ELpEXzFEGafBzt8r05auPYlzNrBk8M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YSYUVRkrCBaBbuYOMfn6QL9gM7lI/T2InGdd9F/KHLGawhbgz6ZV9QC2m7lCjtsbApKlBzlnFyPUtM/u846vw1+Ylbv46BctXEzsk75PblUlKiy94s6SXZzD3pueRJ9JcME7l0jkOSkIFapKz1zNLd3AKvft+fBs1J8VRWieN3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=RwgGFdy4; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	s=arc-20240116; t=1749198399; c=relaxed/simple;
+	bh=D7gHEpfkxQ6Uvt1H4cUoE1Sk1l5EYXiGF0yQ+Dr6ehA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T2NcGeVuxmksM3LrNAFETlkeQbYMiuP6zqMh1+4dZ4rEXFswrzZTXXLDIGJdhj8RC/1VYJundyDfruU8AFUJn/WnEWHrkZ/Cc8pR7mtKAntFaMJQUhW0ddM/+C2+EK4KUisai0gluVn78gkI7s07NJKoapaGvxHEhCJd4f3vPII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RAMqapaE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=joF/cB38; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RAMqapaE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=joF/cB38; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="RwgGFdy4"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4a5a196f057so36049511cf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 01:26:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1749198392; x=1749803192; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/82TyWvrgWW43lzxaEpfXgvxvM8+gL7hQaGtQ71+kKU=;
-        b=RwgGFdy48ql4SziPDIvVyRssev0HoWX4EdXDOd1L3JZc0LtACCC9aXPEYNDg2Is/so
-         KuJN0odSR/eW+FvkPrCb5yEA5EUJQ6niuiO2y3lmQfoHLJ8S7HZrvoiyGHKm6W/rFfzY
-         t8ttcleLr/9tTiZuAh8SD7slLX/tFFmJp8QEU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749198392; x=1749803192;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/82TyWvrgWW43lzxaEpfXgvxvM8+gL7hQaGtQ71+kKU=;
-        b=q0lYIwYRK98K1f0H2dWOX61EbiGcGwziBX2AFZAkeHW2PI7z97aZYM3MINHV0G93zM
-         CtLcn9HYSW4MIERqfHTIO98U+MjM3+utdzI3DSf2THOWrN4DiUHApk4oQzptF8eitnMT
-         Vfzs2/53teoMQE1dgDp4iIt4Co/IPTOnLGTvB3u3y+kXnIv0wqOx5sTobnQ+Xk4KqwNf
-         5MOnAQYgDaYA5Qm2la6Vqdd2bmAFujga5JQDjHTt+Oqk5FJLhyiCgxTtma+6lwTocjHi
-         LOQAxVi3ENA5oEc7eBEcr8knQlG9xh/AOPV9pocvOS4jJAzWvdOWXo9afr/BTgJ/ZG9r
-         IPhA==
-X-Forwarded-Encrypted: i=1; AJvYcCWG0BAbhDRPu08+hw6uwaxSajmHy3SW60kn7IIFGYKjp6812ICnx/WzNVZjOHTQeV0hTQZlefi1tT+xqDg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyf320r++2BFRSqSeRAUmhESjOA0pdg2Nk2w3+sVExG1c+FHybw
-	1hTkoMMqSXHhnRJlIYNdvUwJUMXlidWOegrm+3iGJIQCkBewq5Gz5TCDSx9av04ytxr6i/x0sQ6
-	wUxG9k/WuIWOYmZj0qby1e3JmTTEhh7KDrESX9L+ldQ==
-X-Gm-Gg: ASbGncs+y0EihurwaZFpgR+cn67Qkm99EhgffXPfAN26VMVw59IuvIGfnbZp2BHdTy8
-	HxyPSg0djL4WsKVodITpIvOvGjyW9ywx+zu5XIk8ybfDokpP7f9Uv2srz79L6t2StEoGftImU07
-	nReAnvoIpKqEOeyiaXRgD4r8iXnIr+NLNgGMXKiKtJXA==
-X-Google-Smtp-Source: AGHT+IGBbi1c+tA0gmzvVBVmYU7L9J/QhtafZyTFlLLqiw79nw0P2vMwUHhQmJer78X7KJBrKFe2wFSw2pFlN2i6t+Y=
-X-Received: by 2002:a05:622a:4a15:b0:4a4:3b41:916c with SMTP id
- d75a77b69052e-4a5b9a38b4bmr49387721cf.17.1749198391790; Fri, 06 Jun 2025
- 01:26:31 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RAMqapaE";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="joF/cB38";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RAMqapaE";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="joF/cB38"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4B55C1F79E;
+	Fri,  6 Jun 2025 08:26:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749198396; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mid1kH4OKE9bgaX15SmE1nQ08hTR8IepPOFIfoJ4/zg=;
+	b=RAMqapaEEIGmcfJrQqhT75jIusWqUIiYaxjYJAJVhIHZXAWSzblPaun51QMI5ANaum/nbX
+	X2ROmt9+8ENpsOBYDATsI/3+TkE3z3Wt1DGmd35UhTwkdE4rJZKyZuonK6NztRVZREMRz9
+	zmHAmSOpJ0Jd/VUo94HrIPGGqByT1HY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749198396;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mid1kH4OKE9bgaX15SmE1nQ08hTR8IepPOFIfoJ4/zg=;
+	b=joF/cB38BB6PyisyaUYzFhPzeZnUHqMCkSM7QplTq1F/RfncfA1ggXfxNNnFK5Ga9c5rDe
+	S31+slPHemjmJQDA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749198396; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mid1kH4OKE9bgaX15SmE1nQ08hTR8IepPOFIfoJ4/zg=;
+	b=RAMqapaEEIGmcfJrQqhT75jIusWqUIiYaxjYJAJVhIHZXAWSzblPaun51QMI5ANaum/nbX
+	X2ROmt9+8ENpsOBYDATsI/3+TkE3z3Wt1DGmd35UhTwkdE4rJZKyZuonK6NztRVZREMRz9
+	zmHAmSOpJ0Jd/VUo94HrIPGGqByT1HY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749198396;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mid1kH4OKE9bgaX15SmE1nQ08hTR8IepPOFIfoJ4/zg=;
+	b=joF/cB38BB6PyisyaUYzFhPzeZnUHqMCkSM7QplTq1F/RfncfA1ggXfxNNnFK5Ga9c5rDe
+	S31+slPHemjmJQDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 43E791369F;
+	Fri,  6 Jun 2025 08:26:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id RDjUDTumQmgUBgAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Fri, 06 Jun 2025 08:26:35 +0000
+Date: Fri, 6 Jun 2025 10:26:33 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alistair Popple <apopple@nvidia.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v1 1/2] mm/huge_memory: don't mark refcounted pages
+ special in vmf_insert_folio_pmd()
+Message-ID: <aEKmOfWDIy14Ub6n@localhost.localdomain>
+References: <20250603211634.2925015-1-david@redhat.com>
+ <20250603211634.2925015-2-david@redhat.com>
+ <aEKkvdSAplmukcXz@localhost.localdomain>
+ <b6a1b97b-39d9-4c9e-ba95-190684fc4074@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <jofz5aw5pd2ver3mkwjeljyqsy4htsg6peaezmax4vw4lhvyjp@jphornopqgmr>
-In-Reply-To: <jofz5aw5pd2ver3mkwjeljyqsy4htsg6peaezmax4vw4lhvyjp@jphornopqgmr>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Fri, 6 Jun 2025 10:26:20 +0200
-X-Gm-Features: AX0GCFsh9T8XrzmD5kl2B3MmZjfNpAHi77kyIUl6LTG8TtxdLikYxjk_YHqZDoY
-Message-ID: <CAJfpegtNB22Dpi=wX8nBDx=A9SeYZKpZGniJHBBxJBHB3o0nHQ@mail.gmail.com>
-Subject: Re: fuse: suspend blockers
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b6a1b97b-39d9-4c9e-ba95-190684fc4074@redhat.com>
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost.localdomain:mid,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-On Fri, 6 Jun 2025 at 07:57, Sergey Senozhatsky
-<senozhatsky@chromium.org> wrote:
->
-> Hi,
->
-> We are seeing a number of cases when blocked fuse requests prevent
-> the system from suspending, which is a little important on laptops.
-> Usually something like this:
->
-> [ 36.281038] Freezing user space processes
-> [ 56.284961] Freezing user space processes failed after 20.003 seconds (1 tasks refusing to freeze, wq_busy=0):
-> [ 56.285069] task:secagentd state:D stack:0 pid:1792 ppid:1711 flags:0x00004006
-> [ 56.285084] Call Trace:
-> [ 56.285091] <TASK>
-> [ 56.285111] schedule+0x612/0x2230
-> [ 56.285136] fuse_get_req+0x108/0x2d0
-> [ 56.285179] fuse_simple_request+0x40/0x630
-> [ 56.285203] fuse_getxattr+0x15d/0x1c0
-> [...]
->
-> Which looks like wait_event_killable_exclusive() in fuse_get_req().
-> And we were wondering if we could do something about it.  For example,
-> perhaps, something like:
->
-> ---
->
-> diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-> index f182a4ca1bb32..587cea3a0407d 100644
-> --- a/fs/fuse/dev.c
-> +++ b/fs/fuse/dev.c
-> @@ -241,7 +241,7 @@ static struct fuse_req *fuse_get_req(struct fuse_conn *fc, bool for_background)
->
->         if (fuse_block_alloc(fc, for_background)) {
->                 err = -EINTR;
-> -               if (wait_event_killable_exclusive(fc->blocked_waitq,
-> +               if (wait_event_freezable_killable_exclusive(fc->blocked_waitq,
->                                 !fuse_block_alloc(fc, for_background)))
->                         goto out;
->         }
+On Fri, Jun 06, 2025 at 10:23:11AM +0200, David Hildenbrand wrote:
+> See my reply to Dan.
+> 
+> Yet another boolean, yuck. Passing the folio and the pfn, yuck.
+> 
+> (I have a strong opinion here ;) )
 
-This looks fine.  We can turn each wait into a freezable one inside
-fuse.  But that still would leave core locks (inode lock, rename lock,
-page lock, etc) unfreezable.  Turning those into freezable isn't
-realistic...
+ok, I see it was already considered. No more questions then ;-)
 
-But a partial solution might still be better than no solution.
 
-Thanks,
-Miklos
+-- 
+Oscar Salvador
+SUSE Labs
