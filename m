@@ -1,56 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA3C288510;
-	Fri,  6 Jun 2025 13:05:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB6A288510
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 13:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749215147; cv=none; b=Oq7MYvlIc5l9Rbu+IKW8PTeFksH2LQ1uNmXABQvTMxRO9I4wuolldXekE2RZixKJWMeTlXee7C7BVRItun6+qBrCS5up/RcgcBSfacF3igxWzIuwWXEeuvfkI5W4O+fMB6yMEtYIpJmj42c1pGMkz1LddZL/Z8p71vqu33cKXEo=
+	t=1749215168; cv=none; b=d0vBIxv/AD9F2uxmJQLubk2pt9mv2w7UWd/9Q9z0YAJ83EVKImDUJSGUW1eZacAy8+yj/dyy8nyKQ2vdoyz0i/OiCWnyVetME0wKDY6PrqqZEn/I8p8iPw2iFgnktQcStTA6uoAKg2djnmD3ose7lPRSyKaeZEbz2XDMj0gpBWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749215147; c=relaxed/simple;
-	bh=A2Sd/WTJjnDq4VgsQHc+hkVedj4k04ocVAy2dQ6whM0=;
+	s=arc-20240116; t=1749215168; c=relaxed/simple;
+	bh=C1GT0Omhkh4mzSLsciQfyAKel4MDNktx3SepqIEgJtk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fMavZwurGhokjy0S9iO9e/vSiO1rlWs9TwUEBVn43EKGkr7rmPG3AVWXkyCIaSLatF1b/JJ9bc1TgAwHKqSGLMRRuTP0MldUB21bTQjJiqxXAbMmo1LhYqWIm6r7uEit8X6zy+bT3kQNZR2MDoXvERni3fkRhHPsH40z3NM+EFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NaKnKfVQ; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=hMfyctQMUq+40O1VLQ1ZCKkhL334oT89w4WsHbtifP+tYz6dWK1KnwJyHeBqZcA1zV4CtYRW6Lt30CuF0V2rkFk57MthRLxIixJptMOPTw/ntYg1WoSFvkoVODC1dpwHwKkvLvm1KqvE/+pRxoDEp5Gs9d+xQIF5yX7jg0q12qE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M4qAFMN5; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NaKnKfVQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749215145; x=1780751145;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=A2Sd/WTJjnDq4VgsQHc+hkVedj4k04ocVAy2dQ6whM0=;
-  b=NaKnKfVQk+R6LZs8w0ej+NnIPRMDU/D1gl32nP0g3IxpYJIBYkH84MXB
-   pECFA/PdSFUazxTZvYnfwhy2+VVglzV90SLBuCxhZp4KqqRxmqhHWtTSh
-   +l/Un8c5V/bkESonr6ckGTSKpyNdFh2o9H93/ziO9ieGmf6Q3FoZZXRzk
-   Cd9bndpTAKgrCbbarBhIqo+I498HaLNosj1c8lPuWo/4bl1cOpJj4o8Jh
-   djNEHMn7CIBog6D0bXge0UEf8ftbxWdWW7muRMOriDOBJ240Tpgk7VRgO
-   B8Y0RpwwMqt7tqJQXEWZOpnmpH57OVfCO0rrMwUAiq/AF7CXdIFGRUd6O
-   w==;
-X-CSE-ConnectionGUID: IRtku3/NSOWEP+3y4nrixw==
-X-CSE-MsgGUID: 9VujRSbQT+G1zCSpittTXw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="51438099"
-X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
-   d="scan'208";a="51438099"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 06:05:41 -0700
-X-CSE-ConnectionGUID: bHcp5Q6qShaYt4J2d1NZPw==
-X-CSE-MsgGUID: BJBXeGDQQaCxqL+SPIKPbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
-   d="scan'208";a="145832218"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 06:05:41 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 16ECB20B5736;
-	Fri,  6 Jun 2025 06:05:38 -0700 (PDT)
-Message-ID: <e671d9e9-7da5-4f04-8584-fd743fce1202@linux.intel.com>
-Date: Fri, 6 Jun 2025 09:05:37 -0400
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M4qAFMN5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749215165;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5BSoPKdS5u7WoJFLwbKI61wUvIj0zk/QD32Y3X5nyxg=;
+	b=M4qAFMN5dXsugBji0ialuGWprlOz4DEpJOWNHd9zuXu1UwjPNNNEYwRQz/BYsMzVB332M1
+	JQG2Uxzt/pxBcUvww8cT9fhw5VmPiwpHF6X7mmBYRNrmQurTKSkbB6CMCv+ez3qNmRJM5R
+	HJKp86/SnluzoKAicwYp4ArJzLlQpII=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-315-RD9YvcEVO2elz2Nxid6TVA-1; Fri, 06 Jun 2025 09:06:02 -0400
+X-MC-Unique: RD9YvcEVO2elz2Nxid6TVA-1
+X-Mimecast-MFC-AGG-ID: RD9YvcEVO2elz2Nxid6TVA_1749215161
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5d608e6f5so497108885a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 06:06:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749215161; x=1749819961;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5BSoPKdS5u7WoJFLwbKI61wUvIj0zk/QD32Y3X5nyxg=;
+        b=WNNsM85L4l8mX2YiGOYT3HlW5Ps/PkzY5Y18Pk4Dy/u6nZgGgLH5imTLTM89Lgvd4i
+         gG1aOCo1gGebViyS2Xh3zpcsHyy2i8muR93bdDiMZcw5KIFZBO2671W0uRUd10AftvAU
+         UhiFkVSjTUonYW+DJApZloL1iaXas+SK9sUp0rAEXU6GpyP7KWojW6TwLZIBucYFChJT
+         M00dNEqiJ0/uXuUSNmpLU2y+l+30Va1JjGhp+Hv2iOOdx87XgewEG4xmGyDITB3jM6Us
+         0iNLDpnGqmu+d1+2yKSQ6eEcmrgGz1Tx1XXucGigy2S51M9E1BuvOefkXTkxThODSVFm
+         fgig==
+X-Gm-Message-State: AOJu0YyLqs7mMF6WusMiqGevBler6kmnjC6m/3N4IGqYgztKbLpV/sAL
+	szAGa2eXTAu8wR925tQFkFlzboRRxjjb14HLv5v+bwSo2lTx32UQ829A1+imwil93+4i5NbNQfo
+	OkuAU6Nx3+ZKqm0S1eGr0KBCf55i9xOrUpj1A4r6fyg8RXEZIb0OeU5iHEl+BkxCyHw==
+X-Gm-Gg: ASbGncuMdIjKXk+YSwGhuefDAuZ7Dd4cXth6ah2HYgfUnfmCk62NO7v5i8AxLFaneK2
+	OV+0sc0NTT3J21xhYXQuQczKqE0C1KlgQ3UmXFP0K79QQvGNjXGAW7C6akWeMIyI1dpqXXVG+6k
+	rz+YARyZJk5iyxj0f9ooAr4f5fJhN8A1qz5JoOv9oaxHwxvzYoa3l7bXcGWrSHvkfMdeSJ7nt6T
+	peVbYED8YhTtsaCgIfY0O3PbTi7s1Xyg47SMVwzu1iAZBhAfV7OizGknlu0u4PzPZhYxBmzQpMw
+	oZ/feBElomm9I2SzTCphT0PlJlsCt0v+Y7kQogb1DdUQgrmVGjhLkt8JO4H6qx6I9P8kw5zqjqr
+	IPg==
+X-Received: by 2002:a05:620a:3955:b0:7c5:a2de:71d3 with SMTP id af79cd13be357-7d22987fd96mr489759085a.20.1749215161512;
+        Fri, 06 Jun 2025 06:06:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFUdVvO738H51zx3RkpFD2tOGdJQjBekLK/xn3jpyoVqPrtFayMU3gCbklQpppj/190tyxMbg==
+X-Received: by 2002:a05:620a:3955:b0:7c5:a2de:71d3 with SMTP id af79cd13be357-7d22987fd96mr489754185a.20.1749215161067;
+        Fri, 06 Jun 2025 06:06:01 -0700 (PDT)
+Received: from [192.168.1.17] (pool-68-160-160-85.bstnma.fios.verizon.net. [68.160.160.85])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d250e70898sm126377285a.20.2025.06.06.06.05.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jun 2025 06:06:00 -0700 (PDT)
+Message-ID: <f97a2e18-d672-41b1-ac26-4d1201528ed7@redhat.com>
+Date: Fri, 6 Jun 2025 09:05:59 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,280 +74,131 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3] perf: Fix the throttle error of some clock events
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Mark Rutland <mark.rutland@arm.com>, LKML <linux-kernel@vger.kernel.org>,
- "linux-perf-use." <linux-perf-users@vger.kernel.org>,
- Stephane Eranian <eranian@google.com>, Chun-Tse Shao <ctshao@google.com>,
- Thomas Richter <tmricht@linux.ibm.com>, Leo Yan <leo.yan@arm.com>,
- Aishwarya TCV <aishwarya.tcv@arm.com>,
- Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-References: <20250604171554.3909897-1-kan.liang@linux.intel.com>
- <CAADnVQKjyzdNVR_+WCMzORPJAX00tD3HK0vaCz13ZprWaG72Tg@mail.gmail.com>
- <d5fcf34f-63fe-451b-89ad-621c38981709@linux.intel.com>
- <CAADnVQ+N5UaBwLjtLGHAe1PCjpRzxxcFL45gbb0eHMDZD5+X6A@mail.gmail.com>
- <3f8b0b58-3b48-470e-b8ff-a71a26370bc3@linux.intel.com>
- <CAADnVQKRJKsG08KkEriuBQop0LgDr+c9rkNE6MUh_n3rzZoXVQ@mail.gmail.com>
- <7638853b-bbc6-464d-8890-29ed92aa5cef@linux.intel.com>
- <CAADnVQLBv08fjWWVL+7w7TqoYN-EbGT-E=YsAcms+NEQ9zGUeQ@mail.gmail.com>
+Subject: Re: [PATCH v2 59/62] livepatch/klp-build: Introduce klp-build script
+ for generating livepatch modules
+To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+ Miroslav Benes <mbenes@suse.cz>, live-patching@vger.kernel.org,
+ Song Liu <song@kernel.org>, laokz <laokz@foxmail.com>,
+ Jiri Kosina <jikos@kernel.org>, Marcos Paulo de Souza <mpdesouza@suse.com>,
+ Weinan Liu <wnliu@google.com>, Fazla Mehrab <a.mehrab@bytedance.com>,
+ Chen Zhongjin <chenzhongjin@huawei.com>, Puranjay Mohan <puranjay@kernel.org>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <10ccbeb0f4bcd7d0a10cc9b9bd12fdc4894f83ee.1746821544.git.jpoimboe@kernel.org>
 Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAADnVQLBv08fjWWVL+7w7TqoYN-EbGT-E=YsAcms+NEQ9zGUeQ@mail.gmail.com>
+From: Joe Lawrence <joe.lawrence@redhat.com>
+Autocrypt: addr=joe.lawrence@redhat.com; keydata=
+ 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
+ pNzsRQ==
+In-Reply-To: <10ccbeb0f4bcd7d0a10cc9b9bd12fdc4894f83ee.1746821544.git.jpoimboe@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
+> +# Build and post-process livepatch module in $KMOD_DIR
+> +build_patch_module() {
+> +	local makefile="$KMOD_DIR/Kbuild"
+> +	local log="$KMOD_DIR/build.log"
+> +	local cflags=()
+> +	local files=()
+> +	local cmd=()
+> +
+> +	rm -rf "$KMOD_DIR"
+> +	mkdir -p "$KMOD_DIR"
+> +
+> +	cp -f "$SRC/scripts/livepatch/init.c" "$KMOD_DIR"
+> +
+> +	echo "obj-m := $NAME.o" > "$makefile"
+> +	echo -n "$NAME-y := init.o" >> "$makefile"
+> +
+> +	find "$DIFF_DIR" -type f -name "*.o" | mapfile -t files
+> +	[[ ${#files[@]} -eq 0 ]] && die "no changes detected"
+> +
+> +	for file in "${files[@]}"; do
+> +		local rel_file="${file#"$DIFF_DIR"/}"
+> +		local kmod_file="$KMOD_DIR/$rel_file"
+> +		local cmd_file
+> +
+> +		mkdir -p "$(dirname "$kmod_file")"
+> +		cp -f "$file" "$kmod_file"
+> +
+> +		# Tell kbuild this is a prebuilt object
+> +		cp -f "$file" "${kmod_file}_shipped"
+> +
+> +		echo -n " $rel_file" >> "$makefile"
+> +
+> +		cmd_file="$ORIG_DIR/$(dirname "$rel_file")/.$(basename "$rel_file").cmd"
+> +		[[ -e "$cmd_file" ]] && cp -f "$cmd_file" "$(dirname "$kmod_file")"
 
+Hi Josh,
 
-On 2025-06-05 8:39 p.m., Alexei Starovoitov wrote:
-> On Thu, Jun 5, 2025 at 4:50 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->>
->>
->> On 2025-06-05 4:46 p.m., Alexei Starovoitov wrote:
->>> On Thu, Jun 5, 2025 at 1:24 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>>>
->>>>
->>>>
->>>> On 2025-06-05 2:45 p.m., Alexei Starovoitov wrote:
->>>>> On Thu, Jun 5, 2025 at 6:46 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>>>>>
->>>>>>
->>>>>>
->>>>>> On 2025-06-04 7:21 p.m., Alexei Starovoitov wrote:
->>>>>>> On Wed, Jun 4, 2025 at 10:16 AM <kan.liang@linux.intel.com> wrote:
->>>>>>>>
->>>>>>>> From: Kan Liang <kan.liang@linux.intel.com>
->>>>>>>>
->>>>>>>> Both ARM and IBM CI reports RCU stall, which can be reproduced by the
->>>>>>>> below perf command.
->>>>>>>>   perf record -a -e cpu-clock -- sleep 2
->>>>>>>>
->>>>>>>> The issue is introduced by the generic throttle patch set, which
->>>>>>>> unconditionally invoke the event_stop() when throttle is triggered.
->>>>>>>>
->>>>>>>> The cpu-clock and task-clock are two special SW events, which rely on
->>>>>>>> the hrtimer. The throttle is invoked in the hrtimer handler. The
->>>>>>>> event_stop()->hrtimer_cancel() waits for the handler to finish, which is
->>>>>>>> a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART should
->>>>>>>> be used to stop the timer.
->>>>>>>>
->>>>>>>> There may be two ways to fix it.
->>>>>>>> - Introduce a PMU flag to track the case. Avoid the event_stop in
->>>>>>>>   perf_event_throttle() if the flag is detected.
->>>>>>>>   It has been implemented in the
->>>>>>>>   https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
->>>>>>>>   The new flag was thought to be an overkill for the issue.
->>>>>>>> - Add a check in the event_stop. Return immediately if the throttle is
->>>>>>>>   invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
->>>>>>>>   method to stop the timer.
->>>>>>>>
->>>>>>>> The latter is implemented here.
->>>>>>>>
->>>>>>>> Move event->hw.interrupts = MAX_INTERRUPTS before the stop(). It makes
->>>>>>>> the order the same as perf_event_unthrottle(). Except the patch, no one
->>>>>>>> checks the hw.interrupts in the stop(). There is no impact from the
->>>>>>>> order change.
->>>>>>>>
->>>>>>>> Reported-by: Leo Yan <leo.yan@arm.com>
->>>>>>>> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
->>>>>>>> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
->>>>>>>> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
->>>>>>>> Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw/
->>>>>>>> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
->>>>>>>> Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com/
->>>>>>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->>>>>>>
->>>>>>> It seems the patch fixes one issue and introduces another ?
->>>>>>>
->>>>>>> Looks like the throttle event is sticky.
->>>>>>> Once it's reached the perf_event no longer works ?
->>>>>>
->>>>>> No. It should still work even the throttle is triggered.
->>>>>>
->>>>>> sdp@d404e6bce080:~$ sudo bash -c 'echo 10 >
->>>>>> /proc/sys/kernel/perf_event_max_sample_rate'
->>>>>> sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
->>>>>> [ perf record: Woken up 1 times to write data ]
->>>>>> [ perf record: Captured and wrote 0.559 MB perf.data (584 samples) ]
->>>>>
->>>>> With the patch applied above command hangs in my VM:
->>>>>
->>>>> # perf record -a -e cpu-clock -c10000 -- sleep 1
->>>>> [   43.656855] hrtimer: interrupt took 21640 ns
->>>>> [   68.561052] watchdog: BUG: soft lockup - CPU#0 stuck for 41s! [perf:2253]
->>>>> [   68.561056] Modules linked in: bpf_preload
->>>>> [   68.561060] CPU: 0 UID: 0 PID: 2253 Comm: perf Not tainted
->>>>> 6.15.0-12294-gc89e5202e569 #1172 PREEMPT
->>>>> [   68.561062] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
->>>>> BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
->>>>> [   68.561063] RIP: 0010:handle_softirqs+0x77/0x2a0
->>>>> [   68.561070] Code: 6b 96 02 00 01 00 00 bd 0a 00 00 00 44 89 64 24
->>>>> 14 89 6c 24 10 40 88 7c 24 04 31 c0 65 66 89 05 5f 6b 96 02 fb bb ff
->>>>> ff ff ff <48> c7 c0 c0 f
->>>>> [   68.561071] RSP: 0018:ffa0000000003fa0 EFLAGS: 00000246
->>>>> [   68.561072] RAX: 0000000000000000 RBX: 00000000ffffffff RCX: 00000000000006e0
->>>>> [   68.561073] RDX: 0000000000000007 RSI: ff1100010212e100 RDI: 0000000000000000
->>>>> [   68.561074] RBP: 000000000000000a R08: 0000000000000000 R09: 7fffffffffffffff
->>>>> [   68.561074] R10: 00000005a3af2140 R11: 0000000000004601 R12: 0000000000400100
->>>>> [   68.561075] R13: 0000000000000000 R14: 0000000000000002 R15: 0000000000000000
->>>>> [   68.561111] FS:  00007fa1b536f780(0000) GS:ff110004abe26000(0000)
->>>>> knlGS:0000000000000000
->>>>> [   68.561112] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>>>> [   68.561113] CR2: 0000000001c67a30 CR3: 000000010f2f3003 CR4: 00000000003716f0
->>>>> [   68.561113] Call Trace:
->>>>> [   68.561170]  <IRQ>
->>>>> [   68.561174]  irq_exit_rcu+0x91/0xb0
->>>>> [   68.561176]  sysvec_apic_timer_interrupt+0x71/0x90
->>>>> [   68.561181]  </IRQ>
->>>>> [   68.561181]  <TASK>
->>>>> [   68.561182]  asm_sysvec_apic_timer_interrupt+0x1a/0x20
->>>>> [   68.561184] RIP: 0010:generic_exec_single+0x33/0x120
->>>>> [   68.561188] Code: 65 39 3d 5c 4d 89 02 74 28 3b 3d b8 f5 17 02 0f
->>>>> 83 de 00 00 00 89 f8 48 0f a3 05 d8 f1 17 02 0f 83 ce 00 00 00 e8 bd
->>>>> fe ff ff <31> c0 5b 5d 9
->>>>> [   68.561189] RSP: 0018:ffa00000025a3cc0 EFLAGS: 00000206
->>>>> [   68.561190] RAX: 0000000000000000 RBX: ffffffff8145b310 RCX: ff110004abe26000
->>>>> [   68.561190] RDX: 0000000000000007 RSI: 0000000000000000 RDI: ff1100042fa26540
->>>>> [   68.561191] RBP: 0000000000000202 R08: 0000000000000000 R09: 0000000000000000
->>>>> [   68.561191] R10: ffa00000025a3ee0 R11: 0000000000000000 R12: ffa00000025a3d40
->>>>> [   68.561192] R13: ff11000100881220 R14: ff11000100880fc0 R15: 0000000000000000
->>>>> [   68.561192]  ? sw_perf_event_destroy+0x70/0x70
->>>>> [   68.561197]  smp_call_function_single+0xc4/0x110
->>>>> [   68.561199]  ? sw_perf_event_destroy+0x70/0x70
->>>>> [   68.561200]  event_function_call+0x160/0x170
->>>>> [   68.561202]  ? ctx_resched+0x2d0/0x2d0
->>>>> [   68.561205]  ? perf_event_set_state+0x60/0x60
->>>>> [   68.561206]  ? _perf_event_disable+0x50/0x50
->>>>> [   68.561208]  perf_event_for_each_child+0x37/0x80
->>>>> [   68.561209]  ? _perf_event_disable+0x50/0x50
->>>>> [   68.561211]  _perf_ioctl+0x1df/0xad0
->>>>> [   68.561213]  ? __set_cpus_allowed_ptr+0x71/0x80
->>>>> [   68.561216]  ? avc_has_perm+0x72/0x160
->>>>> [   68.561219]  ? ldsem_down_write+0x1bb/0x1fc
->>>>> [   68.561222]  perf_ioctl+0x42/0x70
->>>>> [   68.561224]  __x64_sys_ioctl+0x8f/0xd0
->>>>> [   68.561226]  do_syscall_64+0x46/0x160
->>>>> [   68.561228]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
->>>>>
->>>>> but only after a fresh boot.
->>>>>
->>>>> If I run bpf selftests before that it works.
->>>>> Like test_progs -t stacktrace_build_id_nmi
->>>>> followed by the same
->>>>> perf record -a -e cpu-clock ..
->>>>> it works fine.
->>>>>
->>>>
->>>> There should be a bug in V3. When stops in the throttle, the event
->>>> should not be updated, stop(event, 0). But the cpu_clock_event_stop()
->>>> doesn't handle the flag. That changes the behavior a little bit.
->>>>
->>>> Could you please try the below patch and see if it helps?
->>>>
->>>> diff --git a/kernel/events/core.c b/kernel/events/core.c
->>>> index cd85b1820e7d..b6c57ba24e78 100644
->>>> --- a/kernel/events/core.c
->>>> +++ b/kernel/events/core.c
->>>> @@ -2656,8 +2656,8 @@ static void perf_event_unthrottle(struct
->>>> perf_event *event, bool start)
->>>>
->>>>  static void perf_event_throttle(struct perf_event *event)
->>>>  {
->>>> -       event->pmu->stop(event, 0);
->>>>         event->hw.interrupts = MAX_INTERRUPTS;
->>>> +       event->pmu->stop(event, 0);
->>>>         if (event == event->group_leader)
->>>>                 perf_log_throttle(event, 0);
->>>>  }
->>>> @@ -11777,7 +11777,12 @@ static void perf_swevent_cancel_hrtimer(struct
->>>> perf_event *event)
->>>>  {
->>>>         struct hw_perf_event *hwc = &event->hw;
->>>>
->>>> -       if (is_sampling_event(event)) {
->>>> +       /*
->>>> +        * The throttle can be triggered in the hrtimer handler.
->>>> +        * The HRTIMER_NORESTART should be used to stop the timer,
->>>> +        * rather than hrtimer_cancel(). See perf_swevent_hrtimer()
->>>> +        */
->>>> +       if (is_sampling_event(event) && (hwc->interrupts != MAX_INTERRUPTS)) {
->>>>                 ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
->>>>                 local64_set(&hwc->period_left, ktime_to_ns(remaining));
->>>>
->>>> @@ -11832,7 +11837,8 @@ static void cpu_clock_event_start(struct
->>>> perf_event *event, int flags)
->>>>  static void cpu_clock_event_stop(struct perf_event *event, int flags)
->>>>  {
->>>>         perf_swevent_cancel_hrtimer(event);
->>>> -       cpu_clock_event_update(event);
->>>> +       if (flags & PERF_EF_UPDATE)
->>>> +               cpu_clock_event_update(event);
->>>>  }
->>>
->>> Nope. The last hunk didn't make any difference.
->>> Same soft lockup.
->>
->> Thanks for the verification.
->>
->> I have some questions, could you please help to clarify?
->>
->> - What's the value of proc/sys/kernel/perf_event_max_sample_rate in the
->> test?
-> 
-> 100000
-> 
->> - Can the soft lockup issue be produced by both bpf selftests and the
->> perf record command? Or just the perf record command?
-> 
-> just perf record.
-> 
->> - Can the soft lockup issue be reproduced with the v2 patchset?
->> https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
-> 
-> yes. With v2
-> perf record -a -e cpu-clock -c10000 -- sleep 1
-> 
-> soft locks up as well with the same stack trace.
-> 
->> - Furthermore, can the soft lockup issue be reproduced after reverting
->> the recent generic throttle logic fix?
->> commit e800ac51202f ("perf: Only dump the throttle log for the leader")
->> commit 9734e25fbf5a ("perf: Fix the throttle logic for a group")
-> 
-> yes.
-> 
-> perf record -a -e cpu-clock -- sleep 1
-> works
-> 
-> but
-> perf record -a -e cpu-clock -c100 -- sleep 1
-> locks up.
-> -c1, -c100, -c10000 all lockup.
+Should the .cmd file copy come from the reference SRC and not original
+ORIG directory?
 
-Thanks for the confirmation.
+  cmd_file="$SRC/$(dirname "$rel_file")/.$(basename "$rel_file").cmd"
 
-The soft lockup issue is likely an existing issue in virtualization,
-unrelated to the recent throttle patches.
+because I don't see any .cmd files in klp-tmp/orig/
 
-The issue should be caused by the overwhelming overflows.
-The -c means fixed period. It's too small for the SW event in VM.
-For 1 GHZ CPU, the -c10000 will trigger 100000 samples per second.
--c1 will trigger 1000000000 samples per second.
-The perf_event_max_sample_rate is set to 100000. The throttle mechanism
-should be triggered for the above case, but even with 100000 samples per
-second. It seems still be big number in virtualization.
+FWIW, I only noticed this after backporting the series to
+centos-stream-10.  There, I got this build error:
 
-There is no such issue without -c. I think it's because of the
-auto-adjust mechanism for the freq mode. The period is automatically
-adjusted, so a reasonable number of samples can be generated per second.
+  Building original kernel
+  Copying original object files
+  Fixing patches
+  Building patched kernel
+  Copying patched object files
+  Diffing objects
+  vmlinux.o: changed function: cmdline_proc_show
+  Building patch module: livepatch-test.ko
+  <...>/klp-tmp/kmod/.vmlinux.o.cmd: No such file or directory
+  make[2]: *** [scripts/Makefile.modpost:145:
+<...>/klp-tmp/kmod/Module.symvers] Error 1
+ make[1]: *** [<...>/Makefile:1936: modpost] Error 2
+ make: *** [Makefile:236: __sub-make] Error 2
 
-If you change the proc/sys/kernel/perf_event_max_sample_rate to a small
-value, e.g., 1000, I think the issue should be gone.
+The above edit worked for both your upstream branch and my downstream
+backport.
 
-Could you please give a try?
-
-Thanks,
-Kan
+-- 
+Joe
 
