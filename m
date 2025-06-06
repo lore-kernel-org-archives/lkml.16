@@ -1,146 +1,209 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28722857EE;
-	Fri,  6 Jun 2025 09:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96DA28688D;
+	Fri,  6 Jun 2025 09:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749202812; cv=none; b=CbJL18asvX4AhlkCVlWp7hXBQClPAQ53+nILZlU/fjhoUYF34LQ8oDKvqiOPXoXa9fUz6emDstD97QNKgM297TVWEBfAOvLDKxhven4qcGt1S92NGFuYwrWi+75b06Jc3mrTYIylK3jPx0P3dzwflcvJ4hGYpFGY9bAXinOxpVg=
+	t=1749202841; cv=none; b=fs+xtCP7jlDyUVZN/irGnC/l3yaEbP61sjYyv/q5wZTqHphbR5tUlAfH+M0ooTvaZfxrLYoAz5jE1AvRjM3wBe32byL53F991xT/cp530VRdcsuhQzZh7EztWGGwuxmhJ73rKtt5RPFdeoi51mpjFKlHy4PVxyBSaDqqDh6RsNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749202812; c=relaxed/simple;
-	bh=hx2tqVby4hICbY7arRGml2MUf2WN62USFOlRL4dU2TE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pRCDbY51dpVS5+SdQlR84wJbCQAZj3LIPlvWNGvHgfNa/1J1qTwm4PtsK5Q5zP0lCjMlzKpv+j0r1ipMkHY4m5y+1zGgi6FbY2cbXxzIOQra6U/eXri0Yi2dL/KNNvLrsjNDf9UvZ25x2XsTeZu081r66UR2aqFs0pE8SsKwStU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=nsQtImAe; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1749202841; c=relaxed/simple;
+	bh=MsSVWdGVlzcxZp/J2ROe/PeWjaXznhz0HwdWWtqU+e8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bejnDSNigBiaPPXzPyoznlpRdA3e33WgEGQKeDLqcPOuvCbfcki+nvP0rgYza1aOOKRfMyWpVvxMT1+DJREnBh20BFt/KRdVTS23SBzgIpq7jv8aiwPrq1Oq8bbAjaSZwd6vBWfHsrvwTxzu08B1ICXVqjyCttBlH8QmEACae8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CRQTQBEC; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="nsQtImAe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1749202811; x=1780738811;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=hx2tqVby4hICbY7arRGml2MUf2WN62USFOlRL4dU2TE=;
-  b=nsQtImAeqTwIpx3lWaHlXwbYAbK8tGj28kOOxj5o/Ieepzc85ZMWCuJi
-   vT/zro3a8wiaQNNJw5gs6kuG4wJPLUPX3EP1XAeIQM2a/YYdJ6pACs2n4
-   82Srj14hGqRSaUsudkDdY4ZSGCuckn9niZVbrF74+rOE9DBDTE9Vwz5Tu
-   wj+RC8ZaaTzQXxYcviKsUiqkd4+5WeCY5P4oKxFnHwGeHTlHLILOhu1bJ
-   oDyKpwXATtmLlc1kyn4ltwVep0l0L7YUtchQG1FdJCPAuL4mK11TjYUrX
-   OwCpWdYT6FnWuEb+2VluMjSCg6gsTKnA6kNnX/HdHrldV3XpmKThOJDO+
-   Q==;
-X-CSE-ConnectionGUID: 01hBMkXoQcS7BeTmXZ+HsA==
-X-CSE-MsgGUID: IY4AG+0kQ9OfYiy2P1hX0Q==
-X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
-   d="scan'208";a="42499415"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 06 Jun 2025 02:40:10 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Fri, 6 Jun 2025 02:39:37 -0700
-Received: from marius-VM.mshome.net (10.10.85.11) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
- Transport; Fri, 6 Jun 2025 02:39:35 -0700
-From: <marius.cristea@microchip.com>
-To: <jic23@kernel.org>, <dlechner@baylibre.com>, <nuno.sa@analog.com>,
-	<andy@kernel.org>
-CC: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<broonie@kernel.org>, <linux-iio@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<marius.cristea@microchip.com>
-Subject: [PATCH v3 0/2] adding support for Microchip PAC194X Power Monitor
-Date: Fri, 6 Jun 2025 12:39:27 +0300
-Message-ID: <20250606093929.100118-1-marius.cristea@microchip.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CRQTQBEC"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-451d3f72391so24788115e9.3;
+        Fri, 06 Jun 2025 02:40:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749202838; x=1749807638; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=q+n76qVXU3h+uhDCEUxB7URrPrTN6QFQxKPKPiN//Go=;
+        b=CRQTQBEC8ZFZQ/DgEqyr1N4/Vuk19KgIRlKMrVx5QtQ8sMLtmbXigRHKqc2TvA9H6N
+         XbHrepfy1lyL76pnamtgU6YJNXfOFZxBFY6Q7H1mjX+ttlUkNNeHmwFJEmDqQtM6KEg1
+         EJdPupjcDcKK6XyWp/rIHAfVZbMa0byydMIy9pwUvtEY5p7V9ybcLFhmy1r9h3P6DAlq
+         zRfaU9zOJNBfCMIFLW4BohyKOtRrf4kwRwtRdMAFN2BZRIMcKCedB7ETLJoQk71kFK1X
+         tkzOqX1YTMAZBJCtyxTgEX6Xi/vDc6azzfqtpeca4gcqgyPZ4+KNPUUVNboAiCym56CI
+         n7gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749202838; x=1749807638;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=q+n76qVXU3h+uhDCEUxB7URrPrTN6QFQxKPKPiN//Go=;
+        b=a0gglGlXN/GLFvyCxqaSCmfrVq9kmThKCktBIVtehhmpowUBDuH0OjtddaRxlQRNou
+         Ro66pGG53YGpL3kWPjJd+GH+Bu17dE4YyJkUcRmMuTX6f+x1+9jC68oUcaV49pl8bKQ+
+         VRRxvFP+m2StBfyqaTVqi1txCXVqd47sRXfFyjLekkgBN93nHRie8CbserJ1e3yOcMj0
+         unUkkWk+FNA0SWfMlPAupC+900d5x2vf3BCmm73nB29cD/tNoTjMqcaKlIufOlCyMggM
+         qRSNK73bPRZgph3MlQf7VN0RJRvd6vS+gJ0rNv6Zqx/IGXgtp81btfa5okVAsetkeLsU
+         TLEw==
+X-Forwarded-Encrypted: i=1; AJvYcCXC0fmcbtI5V0Fyhdi5hNy3efGysI7FRKZ2rM/ojus+dQ9NPZryHJbJotKTnjjYx1goiLfHE8SZ1rDEdJQR@vger.kernel.org, AJvYcCXIgf26YUT2EoM1la2sZAkXBgHz7L56GwcUTVPbhMUR2EMtgr0YFgkToaawCHRqr/ysvYTAu/vrOvfP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxipl1j1RqT1qDjeH0aND2WV04AyP9ENZttEEGjZuwBuRs8+Pbn
+	whmsRhPGrBDGAGXxiuPCMVSZgm22g3HR27ddJKySOSdxcp1g9gDqKvRg
+X-Gm-Gg: ASbGncvNMcHRNHHOI5D0VTFfPWf6zchXpcn7UdJWF41qkQzCnC/PyoP+uPwfCOa3pZy
+	bTsd2VEz7EXBd6JV+BhURttC6HW5VpQ1QlnwnwwvexG9UvzQSTgs4lThj2MV/Bp6nXJycVU6hRd
+	uOTBnqXt9ZIHjNej1Gv8Dmbu1hVdmhv9b6gBZQuCnrFg6FuZuXLqaKvI0f7ZAd0IMmqTUX15GRl
+	3rQtsZb4RrS8LtYk8xGQ0Z10xFPSX9i96IKQX5P2vsT8aRt3fhdsgTjC+9PKxSF3UOdPiPbp2Bs
+	kv2GqcIoqM4P3X+IXnDvC1Q5kqXAjLTbo/OHpscLwoBq8/Tk/Bu9S/wQT8Xv5rAw1MBFFF8/0rO
+	x
+X-Google-Smtp-Source: AGHT+IGwBj0jxP6yyRAAm+wJVRyOfQEStxQUYPCyRL5B3SL086Ed1xUu2fktxVuU5/8a5FZfBehQTQ==
+X-Received: by 2002:a05:600c:548d:b0:43d:3df:42d8 with SMTP id 5b1f17b1804b1-45201437aa8mr27346985e9.6.1749202837831;
+        Fri, 06 Jun 2025 02:40:37 -0700 (PDT)
+Received: from HYB-DlYm71t3hSl.ad.analog.com ([2001:a61:1225:ec01:d1d7:779d:8019:7bb0])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452730c73b8sm15003775e9.29.2025.06.06.02.40.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 02:40:37 -0700 (PDT)
+Date: Fri, 6 Jun 2025 11:40:35 +0200
+From: Jorge Marques <gastmaier@gmail.com>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Jorge Marques <jorge.marques@analog.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-i3c@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: i3c: Add adi-i3c-master
+Message-ID: <binjodgavnupkl2plmnwjito4pu27uwwmhgwexlqq3diad3zj3@c2jotuzsq43o>
+References: <20250604-adi-i3c-master-v1-0-0488e80dafcb@analog.com>
+ <20250604-adi-i3c-master-v1-1-0488e80dafcb@analog.com>
+ <aECSL3cn3m9pKJv6@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+In-Reply-To: <aECSL3cn3m9pKJv6@lizhi-Precision-Tower-5810>
 
-From: Marius Cristea <marius.cristea@microchip.com>
+Hi Frank,
 
-Adding support for Microchip PAC194X and PAC195X series of Power Monitor
-with Accumulator chip family. This driver covers the following part
-numbers:
- - PAC1941, PAC1941_2, PAC1942, PAC1942_2, PAC1943, PAC1944
- - PAC1951, PAC1951_2, PAC1952, PAC1952_2, PAC1953, PAC1954
+On Wed, Jun 04, 2025 at 02:36:31PM -0400, Frank Li wrote:
+> On Wed, Jun 04, 2025 at 05:48:57PM +0200, Jorge Marques wrote:
+> > Add nodes for ADI I3C Controller IP core.
+> 
+> Add binding doc for ...
+> 
+> >
+> > Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+> > ---
+> >  .../devicetree/bindings/i3c/adi,i3c-master.yaml    | 63 ++++++++++++++++++++++
+> >  MAINTAINERS                                        |  5 ++
+> >  2 files changed, 68 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/i3c/adi,i3c-master.yaml b/Documentation/devicetree/bindings/i3c/adi,i3c-master.yaml
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..859dbfde15f123db59d7aa46c120c4a3ac05198e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/i3c/adi,i3c-master.yaml
+> > @@ -0,0 +1,63 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/i3c/adi,i3c-master.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Analog Devices I3C Controller
+> > +
+> > +description: |
+> > +  The ADI I3C controller implements a subset of the I3C-basic specification to
+> > +  interface I3C and I2C peripherals [1].
+> > +
+> > +  [1] https://analogdevicesinc.github.io/hdl/library/i3c_controller
+> > +
+> > +maintainers:
+> > +  - Jorge Marques <jorge.marques@analog.com>
+> > +
+> > +allOf:
+> > +  - $ref: i3c.yaml#
+> > +
+> 
+> New binding, generally, allOf between required and unevaluatedProperties
+> 
 
-The PAC194X family supports 9V Full-Scale Range and the PAC195X supports
-32V Full-Scale Range.
+Ack.
+> > +properties:
+> > +  compatible:
+> > +    const: adi,i3c-master
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    minItems: 1
+> > +    items:
+> > +      - description: The AXI interconnect clock.
+> > +      - description: The I3C controller clock.
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: s_axi_aclk
+> > +      - const: i3c_clk
+> 
+> Needn't _clk surfix,
+> 
+> - const: axi
+> - const: i3c
+> 
+> Frank
 
-There are two versions of the PAC194X/5X: the PAC194X-1/5X-1 devices are
-for high-side current sensing and the PAC194X/5X-2 devices are for low-side
-current sensing or floating VBUS applications. The PAC194X/5X-1 is named
-shortly PAC194X/5X.
+Ack.
 
-Differences related to previous patch:
-v3:
-- fix review comments device tree binding:
-  rewrite commit message
-  change the way full scale for voltage and current is set. Add a
-    properties to describe if the input is bipolar or not.
-  fix the "dtschema/dtc warnings/errors"
-- fix review comments driver:
-  simplify the driver to include just the basic functionality. More
-    features will be added later.
-  fix coding style issues
-  change to lower case the "to_pac1944_chip_info()" to be more like
-    other container_of
-  remove the PAC1944_DEV_ATTR() macro
-  drop the __func__ bit from error messages
-  remove unneeded casts
-  change the logic to reset the accumulator when is enabled
-  change from {} to { }
-  remove unreachable() from the code
-  rewrite the code to keep the error paths out of line
-  replace scoped_guard() with guard(), where was possible
-  use to_delayed_work() to get from work to delayed work
-  remove active_channels[] array
-  print info message in case FW disagrees with what is found on the bus
-  
-v2:
-- fix review comments device tree binding:
-    remove underscore from names
-    add names to the interrupts and list them
-    add a better description for new properties
-- fix review comments driver:
-    fix coding style issues
-    use bitmap for checking the active channels
-    keep the "pac1944_get_unaligned_be56" here because the change wasn't acceted
-      into the asm-generic.
-    document new added attributes
-    remove the "scan" part till we support buffered capture
-    remove "unlikely" marking
-    add masks up in some array of const structures to avoid some case statements
-    remove pac1944_mutex_destroy function
-    replace some functions with a macro (just for testing)
-    replace dev_err with dev_err_probe in functions used in pac1944_probe
-    
-v1:
-- first version committed to review
-
-Marius Cristea (2):
-  dt-bindings: iio: adc: adding support for PAC194X
-  iio: adc: adding support for PAC194X
-
- .../ABI/testing/sysfs-bus-iio-adc-pac1944     |   17 +
- .../bindings/iio/adc/microchip,pac1944.yaml   |  204 ++
- MAINTAINERS                                   |    7 +
- drivers/iio/adc/Kconfig                       |   12 +
- drivers/iio/adc/Makefile                      |    1 +
- drivers/iio/adc/pac1944.c                     | 2841 +++++++++++++++++
- 6 files changed, 3082 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-pac1944
- create mode 100644 Documentation/devicetree/bindings/iio/adc/microchip,pac1944.yaml
- create mode 100644 drivers/iio/adc/pac1944.c
-
-
-base-commit: 0c86e33819785fe50616b6ee3fb35c1e4be406d5
--- 
-2.48.1
-
+Best Regards,
+Jorge
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - clocks
+> > +  - clock-names
+> > +  - interrupts
+> > +
+> > +unevaluatedProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    i3c@44a00000 {
+> > +        compatible = "adi,i3c-master";
+> > +        reg = <0x44a00000 0x1000>;
+> > +        interrupts = <0 56 4>;
+> > +        clocks = <&clkc 15>, <&clkc 15>;
+> > +        clock-names = "s_axi_aclk", "i3c_clk";
+> > +        #address-cells = <3>;
+> > +        #size-cells = <0>;
+> > +
+> > +        /* I3C and I2C devices */
+> > +    };
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 96b82704950184bd71623ff41fc4df31e4c7fe87..6f56e17dcecf902c6812827c1ec3e067c65e9894 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -11243,6 +11243,11 @@ S:	Maintained
+> >  F:	Documentation/devicetree/bindings/i3c/aspeed,ast2600-i3c.yaml
+> >  F:	drivers/i3c/master/ast2600-i3c-master.c
+> >
+> > +I3C DRIVER FOR ANALOG DEVICES I3C CONTROLLER IP
+> > +M:	Jorge Marques <jorge.marques@analog.com>
+> > +S:	Maintained
+> > +F:	Documentation/devicetree/bindings/i3c/adi,i3c-master.yaml
+> > +
+> >  I3C DRIVER FOR CADENCE I3C MASTER IP
+> >  M:	Przemysław Gaj <pgaj@cadence.com>
+> >  S:	Maintained
+> >
+> > --
+> > 2.49.0
+> >
+> 
+> -- 
+> linux-i3c mailing list
+> linux-i3c@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-i3c
