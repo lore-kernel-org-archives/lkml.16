@@ -1,121 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89D912CDBE;
-	Fri,  6 Jun 2025 17:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94D328A1F9
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 17:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749230881; cv=none; b=H19jW+WMEET46yVGaA4SV3eKPE3VyGhCccFY3eaa07u6psiguvrZMhaCsN7lIvsbSeNCmXk66ReeBPbekCJrKL10XE35nc0gh45du3Wj301CHpIc2yGufO8WwBYUcE3yccJquNhVH73xvgHJ/su3gV/m9Koti0zcq9qtcur1D9U=
+	t=1749230892; cv=none; b=tvXDTuMiLTJ+yMbDUl4LWP3XTSg1vyCWRXUQaf8+JGanMPnQXqg6ahcKEnTOOOkNT4aUCQJugtfKCjR/iHY1JVBCt/OVzK+zjFvVSjQ2pldpTvsLUEoUeq6Zrc+7eAmsWzP8X+6/s9qqfbmD2XoovytM4ilukfDAsdeRBF5Yxb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749230881; c=relaxed/simple;
-	bh=J8G7cVDmZqNS5VPQ5fdctx1wA6Zh/OwxmAsrLM2vCr4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=eDKvWMTatOFPXpnQvDCjLiwUs7/KuOC5pLp8SAsZlPcAsOPH4UokoKl4EAmBwwpTEloJ3ktqJOkKx65oM2iKF08jtwHmVVtqc609a84x+CrVS/6FVEgnejYm0L6UoyyuPYmOn6qtR480UwsluuX2MRIBJb6lEFiIQZ15ja312jM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lzeHH5ii; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749230892; c=relaxed/simple;
+	bh=xrcru449cei1Et0aCLQa6/Kqc5VQETIjkfkAR+RpjMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AQvmxxPXhCUILlR1TBpGZW68EOnINIQRWh7arN7f5t+0HM4zM3VVm2hHtjXzdRtSzEJQb5b67ou3C1PjHNaPeP/Y9g4UHpbnFsoKBBFjUReSWOvOoQ2ucZz2Iwo7bEvUCJhag/hTUCtVYJiK8FFfso96tfql6OJR0HyzfHHBVsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=cqRrcxKR; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lzeHH5ii"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749230880; x=1780766880;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=J8G7cVDmZqNS5VPQ5fdctx1wA6Zh/OwxmAsrLM2vCr4=;
-  b=lzeHH5iiUgYl3K54upK5MGPu7q7sckgiHjA7zSUHCbpKWOSApBdtUr8e
-   M8cinklkDbdiBesuYVZ+cvy+bKBAtIx3Ty4P73/VVum4VWdQjuWehKXxv
-   3mc1/qjkHZH5Tg773JClAlDF/kGbAFX0XPCiVyMCodcvHNoZa1T3KXw/y
-   wBJnYRFZC7bItcql1I6TzRzhlQKh3mYew4yQtlLoGghFMvZAbYh8rhn5E
-   ucGENhBWAvC/6kglmMcakorhQFBa5sE4IylxsD0TrVGauCjM+sF9ijnBB
-   xeQJZxhSK/UERU5L5GHqKKzKVWe/GN9Mpr6hNQRTasDqPGyyke6THaVvP
-   w==;
-X-CSE-ConnectionGUID: ziwZrM1vS1+syWBwtRlgAA==
-X-CSE-MsgGUID: bY2MzqtrQVqxN0qHII8/Hw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="68943910"
-X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
-   d="scan'208";a="68943910"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 10:27:59 -0700
-X-CSE-ConnectionGUID: 2OGIbcAjTmePLFk5nu4cBA==
-X-CSE-MsgGUID: XAVzpngtSnCy4oqWEKqJkw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
-   d="scan'208";a="149718475"
-Received: from spandruv-desk1.amr.corp.intel.com (HELO [10.125.111.33]) ([10.125.111.33])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 10:27:55 -0700
-Message-ID: <48b438d2-c709-4355-bd9b-ebf24a96faac@intel.com>
-Date: Fri, 6 Jun 2025 10:27:54 -0700
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="cqRrcxKR"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-742c46611b6so3048138b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 10:28:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1749230890; x=1749835690; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=8bxQcB6I31Y/6ivyEzgwxs7LfhD5ih9mAPGJOZEq11Q=;
+        b=cqRrcxKR8uLqD1uNqh2UCF2EfD1hKwtE4UDaKVZZGda0BaT2pspDjD5WhgdFGf4oaP
+         vBTc4RoC+16C7tORgdtxalqpHmNVdInUrz5iBMYS9HNyT6uUSe299lQfKMmsizM6TZTP
+         /ZtRXzVoPElYETnSRmsQriqk3q4Cli2OC9qysjyoRUVuTsWKYbkbqIoH3QsYK+TbKA4S
+         CsLF7dPo0GWzKdHkD61YHandP/5kt6J604eV7OGMfWYxHRRz6zhxxsi9P6nYUTJ/YR5m
+         wNN03n7BJHNiKn9eRe5xtIknpaORwfudf5zCJ5ps7nycwbWnhKfw266XegfGlablhR7a
+         JpDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749230890; x=1749835690;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8bxQcB6I31Y/6ivyEzgwxs7LfhD5ih9mAPGJOZEq11Q=;
+        b=pU+4Gva6JiANj+dFtFugP5AdNbig18sJ4QDq/cpha3FEXNJFL68q6C3KlKbXYRBS8N
+         S7pc7R+Fg1oMcvixQppI1KLukaj6lFmGQqxA/lY2jW4YI9geJ3YS9RQCTOWXg/xlGK8f
+         6LzvFKG87RHylRyRlhmX20qLLaMY5vWue59k83wpJp7aja0FprWUDAzq6asQJ7HqaQDn
+         ClWeltUYvVrOeKW4MvOkqNyzJyAjiNV8kIcIlNOVI1HFf93xTc+FOwIDgg06kUgGkvti
+         4fxG6rmGmdUddNQk9KoJKAP/yZ90xZSI5qUUlK+TaUGtdLC4hZJBiJO257JiYn5NrdLh
+         Ktww==
+X-Forwarded-Encrypted: i=1; AJvYcCV7PJJotIz9MUCqv4gbpFJNBHHwFbWbt5Bt0sHQy0sAhZdvrQ+wZQiR3fuYzCpwDonr6F7uPWZDQgE1slw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZRJ7cuXTGAWe1GdWp8xlDTChupDp8rlrYpK2h9UxczWx4z1V0
+	R13FK3dznaA+e0wtN2xJ9i6xD24GdFntrcsV/oJjGu3CXnZa3ST9LAH2GTYhbZyE3Yk/69U/HZy
+	sx46mV0c=
+X-Gm-Gg: ASbGncteM3IUy/F3wl4owQketR+ZQQuwMwRFtqB1bKpL6khcedEYvTfqdx3oZs1ypsK
+	X6L4fCEt9jONr9w8MLMIMJCa+KZSSLIb72aeNtiJU2EVnPZxVAX/wwG2ZNiCqjCHevzVQ/09Mq4
+	gZ7W55EI0JXfkUCWRS45j4BsUcOl+tF1axQxRlq2U68mf74OcQbtkbBgEKfRGr/0uUAsxlty0mu
+	eo5q33OvNB4MLAmV2y5tGHrlLB4CVwPKIur9HLcKHzCFW5ukddYE4m6sz3x1xsHbPql5M/uzm/i
+	AC/eH67ymmeMqhmu8B4GaOXb/ABIhjs+
+X-Google-Smtp-Source: AGHT+IEbUQQvWXU//4u2yreY3b/suldCjm0c7NQZ8DRuolXQmMbStt3cnUiQB2khj9JcdjCEds7eUw==
+X-Received: by 2002:a05:6a20:729f:b0:215:d611:5d9b with SMTP id adf61e73a8af0-21ee68a05d8mr5562457637.12.1749230890038;
+        Fri, 06 Jun 2025 10:28:10 -0700 (PDT)
+Received: from x1 ([97.120.245.255])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0842d3sm1576428b3a.98.2025.06.06.10.28.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 10:28:09 -0700 (PDT)
+Date: Fri, 6 Jun 2025 10:28:08 -0700
+From: Drew Fustini <drew@pdp7.com>
+To: Oliver O'Halloran <oohall@gmail.com>
+Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, nvdimm@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pmem: Convert binding to YAML
+Message-ID: <aEMlKN9/PKTLciLF@x1>
+References: <20250520021440.24324-1-drew@pdp7.com>
+ <aCvnXW12cC97amX3@x1>
+ <20250520-refract-fling-d064e11ddbdf@spud>
+ <aCzvaPQ0Z3uunjHz@x1>
+ <CAOSf1CGLoN7u18OOPZ_FGiYvxUninoCAvR8CJiOLGJrORCghdw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 09/16] cxl/pci: Log message if RAS registers are
- unmapped
-To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
- dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
- bhelgaas@google.com, bp@alien8.de, ming.li@zohomail.com,
- shiju.jose@huawei.com, dan.carpenter@linaro.org,
- Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
- yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
- uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
- ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20250603172239.159260-1-terry.bowman@amd.com>
- <20250603172239.159260-10-terry.bowman@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250603172239.159260-10-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOSf1CGLoN7u18OOPZ_FGiYvxUninoCAvR8CJiOLGJrORCghdw@mail.gmail.com>
 
-
-
-On 6/3/25 10:22 AM, Terry Bowman wrote:
-> The CXL RAS handlers do not currently log if the RAS registers are
-> unmapped. This is needed in order to help debug CXL error handling. Update
-> the CXL driver to log a warning message if the RAS register block is
-> unmapped during RAS error handling.
+On Fri, Jun 06, 2025 at 12:20:48PM +1000, Oliver O'Halloran wrote:
+> On Wed, May 21, 2025 at 7:08 AM Drew Fustini <drew@pdp7.com> wrote:
+> >
+> > On Tue, May 20, 2025 at 04:51:42PM +0100, Conor Dooley wrote:
+> > > On Mon, May 19, 2025 at 07:22:21PM -0700, Drew Fustini wrote:
+> > > > On Mon, May 19, 2025 at 07:14:40PM -0700, Drew Fustini wrote:
+> > > > > Convert the PMEM device tree binding from text to YAML. This will allow
+> > > > > device trees with pmem-region nodes to pass dtbs_check.
+> > > > >
+> > > > > Signed-off-by: Drew Fustini <drew@pdp7.com>
+> > > > > ---
+> > > > > v2: remove the txt file to make the conversion complete
+> > > >
+> > > > Krzysztof/Rob: my apologies, I forgot to add v2 to the Subject. Please
+> > > > let me know if I should resend.
+> > >
+> > > I see how it is Drew...
+> > > Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> >
+> > Thanks for the Ack and sorry about that :)
+> >
+> > Is it now just a matter of Rb from Oliver O'Halloran and this patch
+> > going through the nvdimm tree?
 > 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
->  drivers/cxl/core/pci.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+> It looks fine to me, but I've never worked with YAML DTs so I won't
+> pretend to review it.
 > 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 78735da7e63d..186a5a20b951 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -670,8 +670,10 @@ static void __cxl_handle_cor_ras(struct device *dev,
->  	void __iomem *addr;
->  	u32 status;
->  
-> -	if (!ras_base)
-> +	if (!ras_base) {
-> +		dev_warn_once(dev, "CXL RAS register block is not mapped");
->  		return;
-> +	}
->  
->  	addr = ras_base + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
->  	status = readl(addr);
-> @@ -714,8 +716,10 @@ static bool __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
->  	u32 status;
->  	u32 fe;
->  
-> -	if (!ras_base)
-> +	if (!ras_base) {
-> +		dev_warn_once(dev, "CXL RAS register block is not mapped");
->  		return false;
-> +	}
->  
->  	addr = ras_base + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
->  	status = readl(addr);
+> Acked-By: Oliver O'Halloran <oohall@gmail.com>
 
+Thanks for the Ack.
+
+Drew
