@@ -1,98 +1,87 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B57264629;
-	Fri,  6 Jun 2025 06:31:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.8])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DBA42550B4
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 06:31:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749191515; cv=none; b=eC6vg9eBST61ve/KTOWcboaf4HuserEzV0Ylk+lTmeAkMZivswOqZeijxS7wwAk0h6IimbpqxOSlKnyh6u1Ba4IH/Rxm84kgk5AT/CaAnoAhaOY6XsS7b6OoIU969WMIEajinenYCdykB7xvNuA1IkYdwa1zIfLsBGVSgd+bavE=
+	t=1749191521; cv=none; b=cZXR0GegZgTGW29JrtJFLLpUlj+r3P4t84hWlx27XHe2MZKZNLZPLJEoPFXjOvDmrsnSHgYx8BVAa4Nx8QYM+j5rSs6E/zUY69mrvMnifqGzXpR5FwuIQTTEFYpYgsMCHxwdzUNMH1a1nm5VIFO6N0Ob7x7OK4EDOMtOfu5Zy64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749191515; c=relaxed/simple;
-	bh=zRwVKxY/ljPw+PWBx03TIerZJoDRcw2Ws1V9+SjbY18=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RZZmygKMzQ0B9JY8830fbJzKRpiG8MVF3pVFVlZLamndlmbI73Fphns2GQ/DH3rXrZydQHD+MVX63RQvkQUIzPW6AHKNlILo6eYJnXavLgkDDOpdwtJEH3UUPNEJiB5+2gUtHRrbeCIBuTG11vLT+d9D9R5JR3WAH7rAc0+F484=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=tv4TG3un; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1749191521; c=relaxed/simple;
+	bh=twRi+HAcOCoN8kNjPgqZNRZo3pWlLxYUYgi6AF6k4gM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XaRm6bfYTAUHHIDnDYjlgGuLPbqC+38JHKvdOAaxfx6G0yLJzmzFUzQma2VOHyM/jCtn0kXCwgiXycCQGal5tS9pib+sCY33UvkucVbwm65vDO4KusOrWCGQyMEAY+4V03Mc16bxmhgaeCDtSUCho+GVmoiB8uxsgDPEOMTifbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=psEsKbkL; arc=none smtp.client-ip=117.135.210.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="tv4TG3un"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1749191514; x=1780727514;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=zRwVKxY/ljPw+PWBx03TIerZJoDRcw2Ws1V9+SjbY18=;
-  b=tv4TG3unT8fA0jSX2iIol1BCr3TIXTLd+z+kNWUZapAkMdCbsQ5cXh5F
-   6ELPruEvxnQW2aK2CE/qFriWLqQpQUYRM1t0cwEjbj5oQUj/Rzcqn9app
-   XpPPIScpG+0GN1uZZBnLUkdlhSMFT1Rx8NMk8TzXczoo6v3LZuJJ2cwxA
-   uDRVV2Ol6NzWRFFhTIf9/dybCNTojtzh+YvmMwboi2nMw211aeryY4dvM
-   1ZFKEHVTFhHCD26MTknjI4Gco39q2fD1QM3CXnK8nugXzU0lFAT67WiBs
-   ra+c/ui6DEuTJO+X+m1cEGY6YDucPwMFJNIl0z1a9vuEAx/oMt1Wqw6xG
-   A==;
-X-CSE-ConnectionGUID: HiyTZkGJTpSB36KKTlmuzA==
-X-CSE-MsgGUID: 3HVan55pQ52EQ1v26Ftyiw==
-X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
-   d="scan'208";a="43057989"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Jun 2025 23:31:46 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 5 Jun 2025 23:31:18 -0700
-Received: from che-lt-i67131.microchip.com (10.10.85.11) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Thu, 5 Jun 2025 23:31:09 -0700
-From: Manikandan Muralidharan <manikandan.m@microchip.com>
-To: <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
-	<rfoss@kernel.org>, <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
-	<jernej.skrabec@gmail.com>, <maarten.lankhorst@linux.intel.com>,
-	<mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
-	<simona@ffwll.ch>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <linux@armlinux.org.uk>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <ebiggers@google.com>,
-	<varshini.rajendran@microchip.com>, <ardb@kernel.org>,
-	<martin.petersen@oracle.com>, <mihai.sain@microchip.com>,
-	<dharma.b@microchip.com>, <dri-devel@lists.freedesktop.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>
-CC: <manikandan.m@microchip.com>
-Subject: [PATCH v6 RESEND 0/4] MIPI DSI Controller support for SAM9X75 series
-Date: Fri, 6 Jun 2025 12:00:51 +0530
-Message-ID: <20250606063055.224159-1-manikandan.m@microchip.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="psEsKbkL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=VlkXIqbrHLNm6KB283mzI4Nr/emCcxR2Gwn0N2hg5lw=;
+	b=psEsKbkLFnDrIJ2bRJQpP0KZD8fbbK97QG2hPjjn+DTmY68UBdlBYHe5CYr7RQ
+	4GSwwR2osODvKK0WXu+aUYEGodv48mxz+gq5S4C1y2FMpGZhFHyaMFuzjwiWG+JE
+	nWxOBn/0c2FZV1W3AOAk9R8rCoNPN4ChWqAltmScKbojg=
+Received: from [172.19.20.199] (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id PikvCgD3h7iKgEJolGIhBA--.42221S2;
+	Fri, 06 Jun 2025 13:45:47 +0800 (CST)
+Message-ID: <a57a2de7-1b0c-4cc9-a300-02cb46c1f02a@126.com>
+Date: Fri, 6 Jun 2025 13:45:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] mm/hugetlb: remove unnecessary holding of hugetlb_lock
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 21cnbao@gmail.com,
+ david@redhat.com, baolin.wang@linux.alibaba.com, muchun.song@linux.dev,
+ osalvador@suse.de, liuzixing@hygon.cn
+References: <1748317010-16272-1-git-send-email-yangge1116@126.com>
+ <20250604154754.a30e327c3f1640173c8b9cb8@linux-foundation.org>
+ <c15bfa20-2113-4299-98bf-1865b6b535ef@126.com>
+ <20250605181242.54767f38223f9ebd4c379ccb@linux-foundation.org>
+From: Ge Yang <yangge1116@126.com>
+In-Reply-To: <20250605181242.54767f38223f9ebd4c379ccb@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-CM-TRANSID:PikvCgD3h7iKgEJolGIhBA--.42221S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKrW5Jw13uF45ury7Gw4rXwb_yoWkKrc_ur
+	1kZ3s7Cw4UW3yqga1ktrZFvrsxK3yxZrZ5Jay0krZ7Aas7XF13WFs3tana9Fs3Wa1kJFnr
+	Wr90gwsIyr4jgjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8OdbUUUUUU==
+X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiOgxkG2hCeNjCwgAAsD
 
-This patch series adds support for the Microchip's MIPI DSI Controller
-wrapper driver that uses the Synopsys DesignWare MIPI DSI host controller
-bridge for SAM9X75 SoC series.
 
-Changelogs are available in respective patches.
 
-Manikandan Muralidharan (4):
-  dt-bindings: display: bridge: add sam9x75-mipi-dsi binding
-  drm/bridge: add Microchip DSI controller support for sam9x7 SoC series
-  MAINTAINERS: add SAM9X7 SoC's Microchip's MIPI DSI host wrapper driver
-  ARM: configs: at91: Enable Microchip's MIPI DSI Host Controller
-    support
+在 2025/6/6 9:12, Andrew Morton 写道:
+> On Thu, 5 Jun 2025 08:44:09 +0800 Ge Yang <yangge1116@126.com> wrote:
+> 
+>>> This change addresses a possible performance issue which was introduced
+>>> by 113ed54ad276 ("mm/hugetlb: fix kernel NULL pointer dereference when
+>>> replacing free hugetlb folios").  113ed54ad276 was added recently and
+>>> was cc:stable.
+>>>
+>>> David said:
+>>> https://lkml.kernel.org/r/87521d93-cc03-480d-a2ef-3ef8c84481c9@redhat.com
+>>>
+>>>
+>>> Question is, will that bugfix's performance impact be sufficiently
+>>> serious for us to also backport this new patch?
+>>
+>> In some low-probability scenarios, there could be severe impacts. For
+>> example, when multiple CPUs execute the replace_free_hugepage_folios()
+>> function simultaneously. It seems that we need to backport this new
+>> patch. Thank you.
+> 
+> OK, thanks.  I added
+> 
+> Fixes: 113ed54ad276 ("mm/hugetlb: fix kernel NULL pointer dereference when replacing free hugetlb folios")
+> Cc: <stable@vger.kernel.org>
+> 
+> and moved this to the mm-hotfixes pile.  I'll keep it there for a week
+> or two for review/test.  Once it goes upstream, this should propagate
+> into 6.15.x.
 
- .../bridge/microchip,sam9x75-mipi-dsi.yaml    | 109 ++++
- MAINTAINERS                                   |   7 +
- arch/arm/configs/at91_dt_defconfig            |   1 +
- drivers/gpu/drm/bridge/Kconfig                |   8 +
- drivers/gpu/drm/bridge/Makefile               |   1 +
- drivers/gpu/drm/bridge/dw-mipi-dsi-mchp.c     | 545 ++++++++++++++++++
- 6 files changed, 671 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/microchip,sam9x75-mipi-dsi.yaml
- create mode 100644 drivers/gpu/drm/bridge/dw-mipi-dsi-mchp.c
-
--- 
-2.25.1
+Ok，thanks.
 
