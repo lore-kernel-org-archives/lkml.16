@@ -1,101 +1,281 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C07F215793
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 20:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1D27FD;
+	Fri,  6 Jun 2025 20:17:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749240892; cv=none; b=VJAUyzQVtj0sDXddlCjz0os6J/WVe2m5jjPTQoMRXj7aHPab5QQJXBm4OTGb8VMvSiAS7yJljSam29MMYnmFZnxVkVlpVg2EmsHq6APGUJb2oDUj08IccUvSJVX3zVJs5wGWrekJm9iQ3lX3E6EOtk/2977ixSyLHxQj0cPgfv8=
+	t=1749241058; cv=none; b=XQdBklY0Q8Iqpu30uWbC2uYlHeYO/w94IHz44WyE+B4k/L98DCsglFEQP3Z4iQSUY3ryKz+CsVJNBP2tuzRduQi+1GqSYWeLcvMXqnH6b7TqoH9UYhKDYuh+fF/3eJk+9w/wT+IK/1ejP5WnF6vnprX8oN2g+0H1Ie5H3Sf0G/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749240892; c=relaxed/simple;
-	bh=EANyIHOVfbr28GA5k/vh10ReQjJLmWpCRBkFKqXMbJA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SSpn4L+E226Z7r2lNOYoCvMUSOCayoM+jn7WGWDqoJ+WDJjAY9y8GrFzucQOqRS9bU0jux/VIRn0gp7zdtRqb9u5Wfh+t2y7Zqc40wx1w322SJXdc282lMwvJ7Tc4JBDubu3IdYdHR+QKIhSHkpdI7fYxigleb3IV0J4D6dLYpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ifoZNNLl; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749241058; c=relaxed/simple;
+	bh=xo8VKm0/2nL/L70Nvv0cwJxphDlhCnT+pw1XJfzarG8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iyets9b9Zyhz7uLV3nkh/5PRms/KV/StdKzvRNCbi0xtWrYBrOt6CqUNVdgIGHmvJzjE1WFVEQfxQ+HDaXqlhk4vx5VI30zWmco+qtBNUL7J4gppShJvTuBfRqUHFBuHRwq+0LgkpDUDiuhsFdHCbYV3S8UYJm2MWCJuTmdI1i0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VtD3Hipr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ifoZNNLl"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-adb4e36904bso467953466b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 13:14:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749240889; x=1749845689; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EANyIHOVfbr28GA5k/vh10ReQjJLmWpCRBkFKqXMbJA=;
-        b=ifoZNNLlZsU2Fv0QkgjIagSEqXX5VIQJ3UDAmtkjGQxzPiP2sepA0EPW5rsYJyZtGM
-         L8TCqeooS5i2CWgkebgYzfwZWZxzL3XTEIJmbITi8WPu4BMGYMQ8i6R5KUoCtAoHEklm
-         MPrXmduI1AiRghd3CwcsBgJfKqIkHqVORz0Oq2pF9JNsggIW06llH/nPmOoB7Le9Akwj
-         FrSw9TXQic4hzfEiUi5RpVPEBOO+Rj2Kwknz2gbRYHntjb3wMc7BE6zOHLd1lit/HxmR
-         +tJxFQDTjhNa9DLf4hM3V9eK3M/ERfpIGC5059F/kDqdmCh17tyZG6xR9QyNgy8evdLI
-         KcJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749240889; x=1749845689;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EANyIHOVfbr28GA5k/vh10ReQjJLmWpCRBkFKqXMbJA=;
-        b=EtG30FixaKf2hiT4VDb52i4G6Z649OXm9SEOvx5lII1L5i2Rmw+7O7I1LIuT+sfLxd
-         RojAmYzzLK66FpShujsaZ6vtSMucJ/v2jFmXOyOR15vgmtdu9Vkx8SF3yiRZxBkIMlCu
-         vmUW4Ovyur/maQ09lGECoTPvsMd4OJSVBFhFHQUz/J9oWE4P5X6D5jFSj0wMQIE1qx08
-         P5Deow+SYN5tmOOAXLp2XoMZ5EdtfPEek3W9otzP5ivvPWELAbVMvsE9vQR/5n6zI+lh
-         7SihK67Gn9iZN9ueqm9GKQQYJvw7c3L1oQYn8mSa7/wUEY3mjtzCnv6LIKoVICphytU2
-         S0Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCUu1eEpvxHnfUVbRtxi6L6EuLwkn/sRygE518iDLMHEiEQAynAhOazhx2fnBX/FDru8Jx/OZNO3shlBLGI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+QIt4yFR/lbkI/j2BZdLP49VafZIJ3rUezjyYR2R3ftsJMXDA
-	BO+6fAJ+a35YiPXXwH3Ch2sMuPg2kovDfAbmalfq4zwsgdf4NQI7LKC1PLNeaXqGSDHvNFuNb2c
-	Ljrjg+Vt6I48FEhwhMGOlBslVrbE9f78pMQbsTBKu
-X-Gm-Gg: ASbGncvE8QPbLJOFB9fymb5U4RfK9t5Z+A/CSWG/wkdhZ/Tbp/tE2sZanN9AjEnvc9d
-	1zuTY6QdX8rMMDCyoRixp4IkKh+RrEq5oK9NoXijcHMbv4DeghDcOXWlGt/tVIQqHgyX5QAN9YB
-	1u9xKIb1FV3Ko3z/oR0QogW74o6f6upHiKskTn7zPX2WOB8WFLtDQetl0QO1tDT6yRJhHWl5K6D
-	w==
-X-Google-Smtp-Source: AGHT+IEBbEM3xolDQ8YXyygvntnqUe0HKnoDL8XvCNP/LU2/8dHYPObttdf1gE3Beh+Jo1+bX7QVa4CuQx1noe6Z8gY=
-X-Received: by 2002:a17:907:7ba0:b0:ad8:a2cf:76f2 with SMTP id
- a640c23a62f3a-ade1a9c804fmr402467266b.48.1749240888513; Fri, 06 Jun 2025
- 13:14:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VtD3Hipr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AAEDC4CEEB;
+	Fri,  6 Jun 2025 20:17:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749241058;
+	bh=xo8VKm0/2nL/L70Nvv0cwJxphDlhCnT+pw1XJfzarG8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VtD3Hiprq5zyy8Swg6g7TrobqWadI0b4cz8odsJy85UXU2VI1zgBM8nAWGPgvfnyn
+	 skJmqELd9u7fwcinw0xLEzdY6VrMbaDhbFfCvx70x5aYJOReFQtuMrle084jFBjXOX
+	 qQfzZBByGsfkjCchGRwp6ypUQjLwxvvsGV+PpmvDeaD6uMWAjudkxOM79PPv6jvhEj
+	 z+R5qDJc/bFEUPNYcYr2TO2sT8KJdTaJ455KjQEyCPBPH4a0wA3j86GKuOrnuF2PCX
+	 KmBUFmFG140RMan874RKdYg7IWMCShutjm6v1GsVZ8/v3OwftRm7AenBAUNkRsRZ9i
+	 CG58aku5AqCMQ==
+Date: Fri, 6 Jun 2025 17:17:35 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Yuzhuo Jing <yuzhuo@google.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Eric Biggers <ebiggers@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Liang Kan <kan.liang@linux.intel.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	James Clark <james.clark@linaro.org>,
+	Tomas Glozar <tglozar@redhat.com>, Leo Yan <leo.yan@arm.com>,
+	Guilherme Amadio <amadio@gentoo.org>,
+	Yang Jihong <yangjihong@bytedance.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Adhemerval Zanella <adhemerval.zanella@linaro.org>,
+	Wei Yang <richard.weiyang@gmail.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Aditya Gupta <adityag@linux.ibm.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	"Steinar H. Gunderson" <sesse@google.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v1 2/4] perf tools: Add sha1 utils
+Message-ID: <aENM39y1XBf6ajKi@x1>
+References: <20250521225307.743726-1-yuzhuo@google.com>
+ <20250521225307.743726-3-yuzhuo@google.com>
+ <aC9lXhPFcs5fkHWH@x1>
+ <CADQikVDs3msXqZ6tyoXR0WeN4D_9snxWyk2kXeDw5iAs+BHFuw@mail.gmail.com>
+ <CAP-5=fV11L=5cBaYcd0ftVyk8=Tm4+NWCoTG+MBnAwjEogS5iA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604195846.193159-1-zecheng@google.com> <20250604195846.193159-2-zecheng@google.com>
- <20250605142851.GU39944@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250605142851.GU39944@noisy.programming.kicks-ass.net>
-From: Zecheng Li <zecheng@google.com>
-Date: Fri, 6 Jun 2025 16:14:36 -0400
-X-Gm-Features: AX0GCFuaSZ3A8OQVzbxck7ZldxGngaP13EE6uqDudDqgirhosvMTf0RnYpMqXIo
-Message-ID: <CAJUgMy+-27NsqN=G53i0JRShnbb6=V7YtJEqJxsN27C4S+xiYQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] sched/fair: Embed sched_entity into cfs_rq
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Xu Liu <xliuprof@google.com>, 
-	Blake Jones <blakejones@google.com>, Josh Don <joshdon@google.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fV11L=5cBaYcd0ftVyk8=Tm4+NWCoTG+MBnAwjEogS5iA@mail.gmail.com>
 
-Hi Peter,
+On Fri, Jun 06, 2025 at 11:27:28AM -0700, Ian Rogers wrote:
+> On Wed, Jun 4, 2025 at 11:17 AM Yuzhuo Jing <yuzhuo@google.com> wrote:
+> > Thanks for testing the patches!
 
-On Thu, Jun 5, 2025 at 10:28=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> This also blows up struct rq for no reason.
+You're welcome!
 
-I'm working on a v2 change that could avoid this overhead by allocating
-struct cfs_rq and struct sched_entity together as a combined struct
-(e.g., struct {struct cfs_rq cfs_rq; struct sched_entity se;}) on
-non-root task groups. This would allow us to save the extra sched_entity
-inside struct rq.
+> > > In file included from util/sha1_generic.c:18:
+> > > util/sha1_base.h: In function ‘sha1_base_do_finalize’:
+> > > util/sha1_base.h:77:21: error: comparison of integer expressions of different signedness: ‘unsigned int’ and ‘int’ [-Werror=sign-compare]
+> > >    77 |         if (partial > bit_offset) {
+> > >       |                     ^
+> > > cc1: all warnings being treated as errors
+> >
+> > Oh, I didn't see that on my GCC 14.2.  A quick fix would work:
+> >
+> > --- /dev/fd/63  2025-06-04 09:54:42.344516115 -0700
+> > +++ tools/perf/util/sha1_base.h 2025-06-03 15:43:39.194036707 -0700
+> > @@ -71,7 +69,7 @@
+> >  static inline int sha1_base_do_finalize(struct sha1_state *sctx,
+> >                                         sha1_block_fn *block_fn)
+> >  {
+> > -       const int bit_offset = SHA1_BLOCK_SIZE - sizeof(__be64);
+> > +       const unsigned int bit_offset = SHA1_BLOCK_SIZE - sizeof(__be64);
+> >         __be64 *bits = (__be64 *)(sctx->buffer + bit_offset);
+> >         unsigned int partial = sctx->count % SHA1_BLOCK_SIZE;
+> >
+> >
+> > To test it, I added -Werror=sign-compare to my local Makefile.config to
+> > force the error.
+> >
+> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > index d19d1f132726..9909611be301 100644
+> > --- a/tools/perf/Makefile.config
+> > +++ b/tools/perf/Makefile.config
+> > @@ -225,9 +225,9 @@ endif
+> >
+> >  # Treat warnings as errors unless directed not to
+> >  ifneq ($(WERROR),0)
+> > -  CORE_CFLAGS += -Werror
+> > -  CXXFLAGS += -Werror
+> > -  HOSTCFLAGS += -Werror
+> > +  CORE_CFLAGS += -Werror=sign-compare -Werror
+> > +  CXXFLAGS += -Werror=sign-compare -Werror
+> > +  HOSTCFLAGS += -Werror=sign-compare -Werror
+> >  endif
 
-> I would much rather you all investigate if you can make the flattened
-> cgroup stuff from Rik work.
+> >  ifndef DEBUG
 
-The flattened cgroup work seems to be a separate, larger architectural
-change. This patch series focuses on micro-architecture optimizations
-to existing memory layouts without changing functionality.
+> > While testing with "make -C tools/perf -f tests/make make_debug", I saw
+> > similar compile errors in libjvmti.c:
 
-Regards,
-Zecheng
+> > jvmti/libjvmti.c: In function ‘copy_class_filename’:
+> > jvmti/libjvmti.c:148:39: error: comparison of integer expressions of
+> > different signedness: ‘int’ and ‘long unsigned int’
+> > [-Werror=sign-compare]
+> >   148 |                         for (i = 0; i < (size_t)(p - class_sign); i++)
+> >       |                                       ^
+> > jvmti/libjvmti.c:155:31: error: comparison of integer expressions of
+> > different signedness: ‘int’ and ‘size_t’ {aka ‘long unsigned int’}
+> > [-Werror=sign-compare]
+> >   155 |                 for (j = 0; i < (max_length - 1) && file_name
+> > && j < strlen(file_name); j++, i++)
+> >       |                               ^
+> > jvmti/libjvmti.c:155:68: error: comparison of integer expressions of
+> > different signedness: ‘int’ and ‘size_t’ {aka ‘long unsigned int’}
+> > [-Werror=sign-compare]
+> >   155 |                 for (j = 0; i < (max_length - 1) && file_name
+> > && j < strlen(file_name); j++, i++)
+> >       |                                                                    ^
+> >
+> > I've just sent a separate patch to the mailing list:
+> > https://lore.kernel.org/lkml/20250604173632.2362759-1-yuzhuo@google.com/T/
+
+> Thanks Yuzhuo! I guess this happened because jvmti.h is missing in the
+> test container. It seems to make sense to add -Wsign-compare to the
+> standard CFLAGS to lower the chance of breaking this container again.
+
+> > > Humm that part is the same as in the kernel...
+> > >
+> > > ⬢ [acme@toolbx perf-tools-next]$ line=$(ctags -x --c-kinds=f include/crypto/sha1_base.h | awk '$1 == "sha1_base_do_finalize" {print $3}')
+> > > ⬢ [acme@toolbx perf-tools-next]$ sed -n $line,\$p include/crypto/sha1_base.h | awk '{print} /\{/ {c++} /\}/ {c--; if (c==0) exit}' > /tmp/original
+> > > ⬢ [acme@toolbx perf-tools-next]$ line=$(ctags -x --c-kinds=f tools/perf/util/sha1_base.h | awk '$1 == "sha1_base_do_finalize" {print $3}')
+> > > ⬢ [acme@toolbx perf-tools-next]$ sed -n $line,\$p include/crypto/sha1_base.h | awk '{print} /\{/ {c++} /\}/ {c--; if (c==0) exit}' > /tmp/copy
+> > > ⬢ [acme@toolbx perf-tools-next]$ diff -u /tmp/original /tmp/copy
+> > > --- /tmp/original       2025-05-22 14:48:31.338406860 -0300
+> > > +++ /tmp/copy   2025-05-22 14:48:58.401603439 -0300
+> > > @@ -1,3 +1,7 @@
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > >  static inline int sha1_base_do_finalize(struct shash_desc *desc,
+> > >                                         sha1_block_fn *block_fn)
+> > >  {
+> > > @@ -13,10 +17,3 @@
+> > >
+> > >                 block_fn(sctx, sctx->buffer, 1);
+> > >         }
+> > > -
+> > > -       memset(sctx->buffer + partial, 0x0, bit_offset - partial);
+> > > -       *bits = cpu_to_be64(sctx->count << 3);
+> > > -       block_fn(sctx, sctx->buffer, 1);
+> > > -
+> > > -       return 0;
+> > > -}
+> > > ⬢ [acme@toolbx perf-tools-next]$
+> >
+> > There were some other fixes that I made only to the perf tree version,
+> > while maintaining verbatim for other parts.  Here's a script that
+> > retains and compares only the copied parts.
+> >
+> >   # Ignore everything after sha1_transform
+> >   diff -u -B -I "^#include " <(sed -n
+> > '/EXPORT_SYMBOL(sha1_transform)/q;p' lib/crypto/sha1.c)
+> > tools/perf/util/sha1.c
+> >   diff -u -B -I "^#include " -I "sha1_zero_message_hash" -I "^struct
+> > sha1_state;$" -I "^void sha1_init(__u32 \*buf);$" \
+> >       <(sed 's/shash_desc/sha1_state/g;' include/crypto/sha1.h)
+> > tools/perf/util/sha1.h
+> >   diff -u -B -I "^EXPORT_SYMBOL" -I "^#include " \
+> >       <(sed 's/shash_desc \*desc/sha1_state *sctx/g;
+> > /shash_desc_ctx(desc)/d' include/crypto/sha1_base.h)
+> > tools/perf/util/sha1_base.h
+> >   # Ignore everything after crypto_sha1_finup
+> >   diff -u -B -I "^EXPORT_SYMBOL" -I "^#include " \
+> >       <(sed -n -e '/const u8
+> > sha1_zero_message_hash/,/EXPORT_SYMBOL_GPL(sha1_zero_message_hash)/d'
+> > \
+> >                -e 's/shash_desc/sha1_state/g;
+> > /EXPORT_SYMBOL(crypto_sha1_finup)/q;p' crypto/sha1_generic.c) \
+> >       tools/perf/util/sha1_generic.c
+> >
+> > And the changes are as below (including the quick fix above), with one
+> > changing the sign and integer type and another fixing type mismatch from
+> > const u8 * to const char *.
+> >
+> > Should we send another patch to the kernel tree version to fix the sign
+> > error, or we add rules to allow perf tree only changes?
+> 
+> I believe there will need to be a set of patches for the kernel sha1
+> code (fixing -Wsign-compare, any other typing issues) and a set of
+> patches for perf with the check-headers.sh updated as your scripts
+> check above.
+
+Right, we try to reuse bits from the kernel as there are more people
+working there and its a more critical piece of software than tooling
+like perf, so when we notice something in the copies we carry, we better
+fix it first in the origin.
+
+> The perf patches shouldn't assume kernel patches have
+> landed. The perf check-headers.sh produces a warning but doesn't stop
+> the perf build. When the kernel changes land we can update the perf
+> check-headers.sh expectations.
+
+Right,
+
+Thanks,
+
+- Arnaldo
+ 
+> Thanks,
+> Ian
+> 
+> > --- /dev/fd/63  2025-06-04 09:54:42.344516115 -0700
+> > +++ tools/perf/util/sha1_base.h 2025-06-03 15:43:39.194036707 -0700
+> > @@ -71,7 +69,7 @@
+> >  static inline int sha1_base_do_finalize(struct sha1_state *sctx,
+> >                                         sha1_block_fn *block_fn)
+> >  {
+> > -       const int bit_offset = SHA1_BLOCK_SIZE - sizeof(__be64);
+> > +       const unsigned int bit_offset = SHA1_BLOCK_SIZE - sizeof(__be64);
+> >         __be64 *bits = (__be64 *)(sctx->buffer + bit_offset);
+> >         unsigned int partial = sctx->count % SHA1_BLOCK_SIZE;
+> >
+> > @@ -95,7 +93,7 @@
+> >         __be32 *digest = (__be32 *)out;
+> >         int i;
+> >
+> > -       for (i = 0; i < SHA1_DIGEST_SIZE / sizeof(__be32); i++)
+> > +       for (i = 0; i < SHA1_DIGEST_SIZE / (int)sizeof(__be32); i++)
+> >                 put_unaligned_be32(sctx->state[i], digest++);
+> >
+> >         memzero_explicit(sctx, sizeof(*sctx));
+> > --- /dev/fd/63  2025-06-04 09:54:42.344516115 -0700
+> > +++ tools/perf/util/sha1_generic.c      2025-05-16 10:52:59.219531034 -0700
+> > @@ -27,7 +23,7 @@
+> >         u32 temp[SHA1_WORKSPACE_WORDS];
+> >
+> >         while (blocks--) {
+> > -               sha1_transform(sst->state, src, temp);
+> > +               sha1_transform(sst->state, (const char *)src, temp);
+> >                 src += SHA1_BLOCK_SIZE;
+> >         }
+> >         memzero_explicit(temp, sizeof(temp));
+> >
+> > Thanks!
+> >
+> > Best regards,
+> > Yuzhuo
