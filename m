@@ -1,58 +1,58 @@
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346E728A1DD
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 15:35:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2C928A40C
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 15:35:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749224104; cv=none; b=j6bLt1y/LYMgx1ggy8C9bxd6DB5dayOOR/vmGgLzJAC2YoGdVPwdyoHTovEl/+MvCcGVV2fxzA8O335fgXoj9OiRjQe8nvi/oiIa0W2gDYeEbgF9q0cbjVM5M+v3c7nWWe2RYtw9Ip9g21q+3GZTUpn1uK/9Zb0xSThPrdRHcBE=
+	t=1749224108; cv=none; b=Ur34ta/MgVArfJcVl3qZk08ZlxfQzGjfeMj+39YdfBXEnrs+PjzNPKLhifZTgbR/BBVv7WMeI8xgOAibE8EAli+IwWXY2mKsOuaWWanxxQQOY21DBL4ExeH+qVNb2SCNXRi18GLi+VwQQMYB2UBHVcIHi2CZiC3XNRen/7sZX2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749224104; c=relaxed/simple;
-	bh=rh2rppaKF/ghsqA+OyEMxeQOq2p9iJlfrX8v9ArZL3g=;
+	s=arc-20240116; t=1749224108; c=relaxed/simple;
+	bh=wf45yRpEwq5KiZcDz36ZHOLG9XlM2tWNLMFFlF385kY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TXy292uTXggc9nNV+ZSUJTCKhdzdORa/qLUKsbtilKfvxGOQCMa/HkENO9c3xiwbBRp/oXpw37f0aWDq6v679kituxirt8Lwlh1vi9c9VLSQxLbMTLGXiF/77EsLEhj9YUd0w4GF2xsAneBHUZ1bZHjWg9NpQVkKvy3TBXKxgmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=m98Cz9AF; arc=none smtp.client-ip=205.220.177.32
+	 MIME-Version; b=UtmER+rwgaOmXDwjN317Kyq7pTci6fb1miOdiwV59R8zfzcT6JuWk36Z9UmXjbNvtluaBuvSO55DY6f1avdWhkx3TQ+R9BboObttpcsLJ1gL92YqrQV3H/FflUbLPpchF3ixFlwEjZuth5Dm6/lwnZXtPf0Pf4DFKw6HcB7XfDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=kszUSr7b; arc=none smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="m98Cz9AF"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kszUSr7b"
 Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5565MXVq002110;
-	Fri, 6 Jun 2025 15:34:58 GMT
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5565MWAb002101;
+	Fri, 6 Jun 2025 15:35:02 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2025-04-25; bh=ShrFy
-	nUlxGk8nWVeIgPchPdYzOw/hadrawBr7I8U5Rs=; b=m98Cz9AFnrjZpLdCSlPDb
-	Mo0nLDlA9E/XgsSyG2XQ1KNZHFVR5Duqp5zm3JZKS3uR0rmhckig7a3+Ocz5qm++
-	ooIaUl4xidiCj+WnoUn/aHu704mooo1fVvRZAMimgmPn8PoPm8jmzbxy8+oETB4D
-	Zw2x8xRzNxsH18of613KuoL7ieltyu8TGXiQ90Gs1o1x2TNr683B+znaoIWm0wbF
-	Eneaw7ypOjMU3vesspaX+n5Tv0vhEC53Z4dGi+1ktSutx63/MkkgyqvBLMpSmG+M
-	lNoBhV3OVWWsPjoNKZ52EeQjifa+iES13mpupX0Cb/UVtpkTfZ/G4VzlSuwKlLMq
+	:mime-version:references:subject:to; s=corp-2025-04-25; bh=G4+f+
+	x8WW0xnNhwauAPhEewB+fqNtqeekRCjKKOKkv8=; b=kszUSr7bMRY1tjD/kw/6L
+	FEyttZn5jB/KBErkPqj3XxhWZmyZPDx5wlQIQaj4jLUgY7pJz2hV0vlss1OE379a
+	TgHQeaNJ+THaH97blIEuwoCHX/SDgKFzcdYEH0R1sUln7P5CQ3Wnct8+bRpSaOfw
+	NspDdC/cyQ2ATfNdOrGtqhi3+pfdcGTM+PXifkdPX7jwwcFYC2QH1/J1OGBvvGBS
+	VTqoARwIOCmOn8bVNszQ7Us/6AzKEzBRutmKpVwTG9vDq46dshbO/2Ynoc+017s8
+	e6CoN7+U1CkScCPcERobjWZn53c5ac87YhIvFhUZTbEPBKWDoyKqS/4jvY+E6zx5
 	g==
 Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 471gahgafv-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 471gahgag7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 06 Jun 2025 15:34:57 +0000 (GMT)
+	Fri, 06 Jun 2025 15:35:02 +0000 (GMT)
 Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 556EZ1PY038505;
-	Fri, 6 Jun 2025 15:34:57 GMT
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 556EGXHo039442;
+	Fri, 6 Jun 2025 15:35:01 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46yr7desav-1
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46yr7desdx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 06 Jun 2025 15:34:56 +0000
+	Fri, 06 Jun 2025 15:35:01 +0000
 Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 556FYh3p015517;
-	Fri, 6 Jun 2025 15:34:56 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 556FYh3t015517;
+	Fri, 6 Jun 2025 15:35:00 GMT
 Received: from laptop-dell-latitude7430.nl.oracle.com (dhcp-10-154-187-118.vpn.oracle.com [10.154.187.118])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 46yr7des15-7;
-	Fri, 06 Jun 2025 15:34:56 +0000
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 46yr7des15-9;
+	Fri, 06 Jun 2025 15:35:00 +0000
 From: Alexandre Chartre <alexandre.chartre@oracle.com>
 To: linux-kernel@vger.kernel.org, mingo@kernel.org, jpoimboe@kernel.org,
         peterz@infradead.org
 Cc: alexandre.chartre@oracle.com
-Subject: [RFC 06/13] objtool: Disassemble instruction on warning or backtrace
-Date: Fri,  6 Jun 2025 17:34:33 +0200
-Message-ID: <20250606153440.865808-7-alexandre.chartre@oracle.com>
+Subject: [RFC 08/13] objtool: Record symbol name max length
+Date: Fri,  6 Jun 2025 17:34:35 +0200
+Message-ID: <20250606153440.865808-9-alexandre.chartre@oracle.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20250606153440.865808-1-alexandre.chartre@oracle.com>
 References: <20250606153440.865808-1-alexandre.chartre@oracle.com>
@@ -70,175 +70,53 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulks
  phishscore=0 mlxlogscore=999 adultscore=0 malwarescore=0 mlxscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
  definitions=main-2506060136
-X-Authority-Analysis: v=2.4 cv=aqqyCTZV c=1 sm=1 tr=0 ts=68430aa2 cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=49cdYLv4DVxkACFpF8YA:9
-X-Proofpoint-GUID: 8eFwyzk2SNiDdwO87Tl6ExPQVgbfTpQP
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDEzNyBTYWx0ZWRfX+PcvDh66Ll5F q/s0sQbFKi/PKr6MZZf6FxM8OG0OOsjxyyTqKxczBb5AnoDX5dA2l6ZobKEqFExVLPYe5LKF9s+ 2WNKDEcW7/77tfjTgZgyfLI5TtxPowgl41kuURhc9yq0aO2SplOY5HfeoXjaeaRAcuR2UvsP1a4
- m7ZE/IADqaI7ZY9gtd7KvsqL45V3HWtTak/XFPAVGNbZGmJUjG4oitsIvg3c1H7O2KYxVPZyHec xAulE36toVZm5hTi4LSsJObWd2nzHknroKC6Dk4aPqjgYKcykKIzLTCz3VeMJnDYACfA3MjzJ8g msd9PCcbPrnvE15Amx9QYVOk+k+ahbHWOZiTzM0HqpBH8Ldrk+gCxF4+fLD01yEliY3Mh27k5/U
- 8MHflJ0qb1vXSEo86RFGznaGsvkPBvHFPgpHl3gc/NXCzJWxV211M2d8jufONegwa6GfPW1a
-X-Proofpoint-ORIG-GUID: 8eFwyzk2SNiDdwO87Tl6ExPQVgbfTpQP
+X-Authority-Analysis: v=2.4 cv=aqqyCTZV c=1 sm=1 tr=0 ts=68430aa6 cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=xKpiAcmDGk3KfUQPlkUA:9
+X-Proofpoint-GUID: e1aT2PFvLXcXI2pJ_4RM6K48iuejL4A3
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDEzNyBTYWx0ZWRfX6A6eS7NrWZgb 60CsbyU2+rrEjaUBDPy5cN1GzVJOsciSu9P3vBHYZznFcgcCTcGtJqecppGn+UmB5ym5maIVYhA Tf9RdcAbqecxJvnmwlLofoSFUW58lExHA8uGDMLn6Ess4ssMQHqJidu/Bz/JWJ1KhS8DoqA54eG
+ wn0LyjtJdlblg9mBR5jTmgClhhVoZuvY0wBIiBHRIs12odcaBEbksuWaz1uSYE3ft4MCxN5gbI0 P/CeEoFKeOXtElOrhwowCLHuH73ovwEnbFbT5XacvyLDwxCxRzh9wrBKA3ZeV29knryZFoi2iL2 6Z7OHT/XGhVBNcqGFAbnBndF+1HcpuKIaN0Z7Rxbz1gfR/aDZfRg5SEmHaw6kW9/6fJN3wIEqrN
+ rCnnyECd+t/ritPyFRnCngyUVZBaHok8WrlrIqu1SIeb7C0vdIPz4Z2/sjmoPGU7nmwtnajw
+X-Proofpoint-ORIG-GUID: e1aT2PFvLXcXI2pJ_4RM6K48iuejL4A3
 
-When an instruction warning (WARN_INSN) or backtrace (BT_INSN) is issued,
-disassemble the instruction to provide more context.
+Keep track of the maximum length of symbol names. This will help
+formatting the code flow between different functions.
 
 Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- tools/objtool/check.c                   | 30 +++++++++++++++++++++++--
- tools/objtool/disas.c                   |  5 ++---
- tools/objtool/include/objtool/check.h   | 12 ++++++++++
- tools/objtool/include/objtool/objtool.h |  9 --------
- tools/objtool/include/objtool/warn.h    | 14 ++++++++----
- 5 files changed, 52 insertions(+), 18 deletions(-)
+ tools/objtool/check.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index ee613f03e57d..2c73c8d3515d 100644
+index 36ec08b8d654..300428cb5c2c 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -4580,11 +4580,34 @@ static void free_insns(struct objtool_file *file)
- 		free(chunk->addr);
- }
+@@ -34,6 +34,8 @@ static struct cfi_state init_cfi;
+ static struct cfi_state func_cfi;
+ static struct cfi_state force_undefined_cfi;
  
-+static struct disas_context *objtool_disas_ctx;
++static size_t sym_name_max_len;
 +
-+const char *objtool_disas_insn(struct instruction *insn)
-+{
-+	struct disas_context *dctx = objtool_disas_ctx;
-+
-+	if (!dctx)
-+		return "";
-+
-+	disas_insn(dctx, insn);
-+	return disas_result(dctx);
-+}
-+
- int check(struct objtool_file *file)
+ struct instruction *find_insn(struct objtool_file *file,
+ 			      struct section *sec, unsigned long offset)
  {
--	struct disas_context *disas_ctx;
-+	struct disas_context *disas_ctx = NULL;
- 	int ret = 0, warnings = 0;
+@@ -2458,6 +2460,7 @@ static bool is_profiling_func(const char *name)
+ static int classify_symbols(struct objtool_file *file)
+ {
+ 	struct symbol *func;
++	size_t len;
  
-+	/*
-+	 * If the verbose or backtrace option is used then we need a
-+	 * disassembly context to disassemble instruction or function
-+	 * on warning or backtrace.
-+	 */
-+	if (opts.verbose || opts.backtrace) {
-+		disas_ctx = disas_context_create(file);
-+		objtool_disas_ctx = disas_ctx;
-+	}
+ 	for_each_sym(file, func) {
+ 		if (func->type == STT_NOTYPE && strstarts(func->name, ".L"))
+@@ -2484,6 +2487,10 @@ static int classify_symbols(struct objtool_file *file)
+ 
+ 		if (is_profiling_func(func->name))
+ 			func->profiling_func = true;
 +
- 	arch_initial_func_cfi_state(&initial_func_cfi);
- 	init_cfi_state(&init_cfi);
- 	init_cfi_state(&func_cfi);
-@@ -4710,9 +4733,12 @@ int check(struct objtool_file *file)
- 		if (opts.werror && warnings)
- 			WARN("%d warning(s) upgraded to errors", warnings);
- 		print_args();
--		disas_ctx = disas_context_create(file);
- 		disas_warned_funcs(disas_ctx);
-+	}
-+
-+	if (disas_ctx) {
- 		disas_context_destroy(disas_ctx);
-+		objtool_disas_ctx = NULL;
++		len = strlen(func->name);
++		if (len > sym_name_max_len)
++			sym_name_max_len = len;
  	}
  
- 	free_insns(file);
-diff --git a/tools/objtool/disas.c b/tools/objtool/disas.c
-index f86b9b04ef97..1e198d5f9205 100644
---- a/tools/objtool/disas.c
-+++ b/tools/objtool/disas.c
-@@ -348,7 +348,7 @@ void disas_context_destroy(struct disas_context *dctx)
- 	free(dctx);
- }
- 
--static char *disas_result(struct disas_context *dctx)
-+char *disas_result(struct disas_context *dctx)
- {
- 	return dbuffer_data(&dctx->result);
- }
-@@ -356,8 +356,7 @@ static char *disas_result(struct disas_context *dctx)
- /*
-  * Disassemble a single instruction. Return the size of the instruction.
-  */
--static size_t disas_insn(struct disas_context *dctx,
--			 struct instruction *insn)
-+size_t disas_insn(struct disas_context *dctx, struct instruction *insn)
- {
- 	disassembler_ftype disasm = dctx->disassembler;
- 	struct disassemble_info *dinfo = &dctx->info;
-diff --git a/tools/objtool/include/objtool/check.h b/tools/objtool/include/objtool/check.h
-index 4adbcd760c6f..92bfe6b209ad 100644
---- a/tools/objtool/include/objtool/check.h
-+++ b/tools/objtool/include/objtool/check.h
-@@ -139,4 +139,16 @@ struct instruction *next_insn_same_sec(struct objtool_file *file, struct instruc
- 	     insn && insn->offset < sym->offset + sym->len;		\
- 	     insn = next_insn_same_sec(file, insn))
- 
-+struct disas_context;
-+struct disassemble_info;
-+struct disas_context *disas_context_create(struct objtool_file *file);
-+void disas_context_destroy(struct disas_context *dctx);
-+void disas_warned_funcs(struct disas_context *dctx);
-+int disas_info_init(struct disassemble_info *dinfo,
-+		    int arch, int mach32, int mach64,
-+		    const char *options);
-+size_t disas_insn(struct disas_context *dctx, struct instruction *insn);
-+char *disas_result(struct disas_context *dctx);
-+const char *objtool_disas_insn(struct instruction *insn);
-+
- #endif /* _CHECK_H */
-diff --git a/tools/objtool/include/objtool/objtool.h b/tools/objtool/include/objtool/objtool.h
-index 0b404cfd81c0..c0dc86a78ff6 100644
---- a/tools/objtool/include/objtool/objtool.h
-+++ b/tools/objtool/include/objtool/objtool.h
-@@ -47,13 +47,4 @@ int check(struct objtool_file *file);
- int orc_dump(const char *objname);
- int orc_create(struct objtool_file *file);
- 
--struct disas_context;
--struct disassemble_info;
--struct disas_context *disas_context_create(struct objtool_file *file);
--void disas_context_destroy(struct disas_context *dctx);
--void disas_warned_funcs(struct disas_context *dctx);
--int disas_info_init(struct disassemble_info *dinfo,
--		    int arch, int mach32, int mach64,
--		    const char *options);
--
- #endif /* _OBJTOOL_H */
-diff --git a/tools/objtool/include/objtool/warn.h b/tools/objtool/include/objtool/warn.h
-index cb8fe846d9dd..32a8dd299c87 100644
---- a/tools/objtool/include/objtool/warn.h
-+++ b/tools/objtool/include/objtool/warn.h
-@@ -77,9 +77,11 @@ static inline char *offstr(struct section *sec, unsigned long offset)
- #define WARN_INSN(insn, format, ...)					\
- ({									\
- 	struct instruction *_insn = (insn);				\
--	if (!_insn->sym || !_insn->sym->warned)				\
-+	if (!_insn->sym || !_insn->sym->warned)	{			\
- 		WARN_FUNC(_insn->sec, _insn->offset, format,		\
- 			  ##__VA_ARGS__);				\
-+		BT_INSN(_insn, "");					\
-+	}								\
- 	if (_insn->sym)							\
- 		_insn->sym->warned = 1;					\
- })
-@@ -87,9 +89,13 @@ static inline char *offstr(struct section *sec, unsigned long offset)
- #define BT_INSN(insn, format, ...)				\
- ({								\
- 	if (opts.verbose || opts.backtrace) {			\
--		struct instruction *_insn = (insn);		\
--		char *_str = offstr(_insn->sec, _insn->offset); \
--		WARN("  %s: " format, _str, ##__VA_ARGS__);	\
-+		struct instruction *__insn = (insn);		\
-+		char *_str = offstr(__insn->sec, __insn->offset); \
-+		const char *_istr = objtool_disas_insn(__insn);	\
-+		int len;					\
-+		len = snprintf(NULL, 0, "  %s: " format,  _str, ##__VA_ARGS__);	\
-+		len = (len < 50) ? 50 - len : 0;		\
-+		WARN("  %s: " format "  %*s%s", _str, ##__VA_ARGS__, len, "", _istr); \
- 		free(_str);					\
- 	}							\
- })
+ 	return 0;
 -- 
 2.43.5
 
