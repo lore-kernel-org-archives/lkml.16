@@ -1,95 +1,183 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7479B20330;
-	Fri,  6 Jun 2025 13:20:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE8320330;
+	Fri,  6 Jun 2025 13:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749216062; cv=none; b=V09gYCegjAecAepjZhIgLl9IA/C2TYXNsNsIK1W5Aeq1QV2+gLrGHSncGS77YILZOE74gilfXmljcjTF9ZTyrG19LTDgnhGFrjv0Xmkf6KTdYONzOjmYS5p0L30UwvMn6Jk1fXbSHxclSW/KLvSlQAfmkCAJJVtV6/BSxN2cHYs=
+	t=1749216108; cv=none; b=W/TAjhpOtPwxPDsweYPMU8HvblMH0MNaQG/dfSXYL3nhxJ/5RdJ+e4IsKdQGtWNXXRskAVL4oLKIS5Kq/yNDkjtNs27W8ijPox58zKOparEJmtKw49c5OqYTqUKiROtzLF04qlR1OyCqaLOcpvqzuP6Np186TNQGFTmgVLtlfCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749216062; c=relaxed/simple;
-	bh=d5xSSZzjIO6YCeawzr4MdDA5aSt61eXqUJbb64Fk4Pk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M8ATWoagFE9dvp+Y6g7S+LmFowIV/JUS+qnokcWdI2D65TTJwq8vlly6rL+CFBo6kOXWKxcPlr4tMFbBTRC8zq/Zbdb5H7/KFsbvvMdKGM7sQwHlLDZyhENe8xSY+NW+MZ3pmiGFMc2XAlQx/Kc6zF3uVeiy3qmhE0XxXyiFFYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qq10DXT2; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qq10DXT2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=O9FE0uB61EEETNdTWzbNvrnPXytymt6dcwtvq6U/pJk=; b=qq10DXT2GTNSGudV/qtRDEQlfe
-	DhgZVYdDQH26c5BDbUntvNfTk0AMNNN5xGgDlZ9dH/Sx41XiJ1ieT7AYvnTTve4AU4oCBuQF9jyQd
-	q6XWBPwWxAk6Jp0Sp6PI4mM9ZPC+CieoW5igq/3W0LNZBKy6BUG+A95PNvHMSWHffELK0a978C+J/
-	nqtO1ZljIE6SBA8cZM81e+RZb8uENAekGG0Zys36cQxaH9UsaeADuo8flKbNPT55UcykrS1gQsE6q
-	gW+DpATLTNQ1/O3TuETXsIcemTUsKG2hwD0iDrQb0M1yBKIYVRgEX2rAJrMafi4dLeQ5fxbzmu+aG
-	UMnuo7UA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uNX04-00000001HLz-0rSj;
-	Fri, 06 Jun 2025 13:20:48 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 20C8E3005AF; Fri,  6 Jun 2025 15:20:47 +0200 (CEST)
-Date: Fri, 6 Jun 2025 15:20:47 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-	x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	pbonzini@redhat.com, ardb@kernel.org, kees@kernel.org,
-	Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, linux-efi@vger.kernel.org,
-	samitolvanen@google.com, ojeda@kernel.org, xin@zytor.com
-Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls
- in __nocfi functions
-Message-ID: <20250606132047.GA39944@noisy.programming.kicks-ass.net>
-References: <vukrlmb4kbpcol6rtest3tsw4y6obopbrwi5hcb5iwzogsopgt@sokysuzxvehi>
- <20250528074452.GU39944@noisy.programming.kicks-ass.net>
- <20250528163035.GH31726@noisy.programming.kicks-ass.net>
- <20250528163557.GI31726@noisy.programming.kicks-ass.net>
- <20250529093017.GJ31726@noisy.programming.kicks-ass.net>
- <fp5amaygv37wxr6bglagljr325rsagllbabb62ow44kl3mznb6@gzk6nuukjgwv>
- <eegs5wq4eoqpu5yqlzug7icptiwzusracrp3nlmjkxwfywzvez@jngbkb3xqj6o>
- <4z4fhaqesjlevwiugiqpnxdths5qkkj7vd4q3wgdosu4p24ppl@nb6c2gybuwe5>
- <20250606104945.GY39944@noisy.programming.kicks-ass.net>
- <aELptV62mbTC3YA9@google.com>
+	s=arc-20240116; t=1749216108; c=relaxed/simple;
+	bh=Zc3hOlE1rh4BeCCJuVCK2t0CTBXnExBS3agU5ssS/Bo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gBSE7SbQZadGCzT2dRUi0R3gRPmW7mt6YieGRqHk2ee4NwQ4e+VUsRPr/N2nsOdjohZhrak8qcpLW/bU4qgN/zwHstkLgGldsBbWBfl38C2OBzhfogyJWguAuoVQlKf3mqze/sR3oMJmVjJ+53lhRl9NHvLVNDq1Bh/ESSYHGBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-87ec4d69b12so68092241.1;
+        Fri, 06 Jun 2025 06:21:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749216105; x=1749820905;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5SHPgJGpGwWRpAKXV7TD2IvmmZsZIIUaR3p49SfxukY=;
+        b=cRyjiXPoWB8TvAm/gyw+t1UR/xQdaBg0zdqjEHwOIB1uiX2UNl/sobCFyWIVJSFThR
+         n65swkSlPUH7+6n5/rwq8zfyi7OtesvSPf4QaGknaZo3y7ug5zlMOcET3saqAKMzx1Q2
+         iO46eC4x58s6exZ91LgCJ32yMGRDW9PQJgf5yPr+hvHwWqVQG73YjwwE2gfD6qVvOZSE
+         R0IrQhVAR2sEGKf5cSO7YfyCf71pUk/BaT2j3zP67dzHc4D+ZH0uA60p8c2iN243CSf+
+         q608IFRSz8NIxZJgPhGNXZZEonEN0h6yL0c9f9AGW6Z8YSLCw2bz69HUR/SEir3OG1nQ
+         9k3A==
+X-Forwarded-Encrypted: i=1; AJvYcCUa2RgczKWthvuwRzVojYyHXr9jhxT6Abow99AIpmaxUhBDgZGtxkJx95hZuhFXuI7TiRE5D8PhwwpO+9b7@vger.kernel.org, AJvYcCV3XIrnM/XpfEhhZP75ArzVGkS3A9Z6FFcFgoIy0VEgi1WSc8tUOrEvKspFr+P1Pdaw9tVVh2fEMUfn@vger.kernel.org, AJvYcCV5PID3I/IlZJ1ReMeU2cqNpYheWYQx9YMYu/gM/PiuYFGziwjO8CBkDj+nCfhlT9VulrZ25ae10ERh@vger.kernel.org, AJvYcCXygsh6zWNPHT0qpVo36TcU9Eq25cHWqXAl0aqwpSKraofDN7N33CfqDobw9BqQyCoks9dbRObzKFt6C/UbXq6mCXc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHBWdqsjthYPsdQWmvhW3Frks3BocaSmtCDcyC5nKVe0G3QzEY
+	2gbIPAA36J4GuKhe1GwZcRc1KSi01pEfgDKzgWQCYqIQFDeD0ttSD5SA5ZHR/Ato
+X-Gm-Gg: ASbGnctU1ido/mJpYHdo1TB7lvHI9LzwrQXHpGIRrM4G7cn9lcrpvkT730eN4tg++rA
+	760FYM9xRP+yPV8oTu9h4kGI/cDD5lBbswH24aVEk5B3n7DgdtpSKV66L6ObQmSECE6QH5C9MkB
+	xBMVz/Zl/SEqQB1MucNSAvDWdmkirxJORel2Egn+d2X7MgHL3lSQCKhkLj0Ja/BnghRs2r/9tnb
+	DtZnHPhlMi0pw7R0r0Et/lWzrgtQzU7gFpFt1hI/wNj5sDB9hW/a85JU4uyHq0Ea9g748ZapSGB
+	hq9fw6RJbtbxoavet4wtCKOgLMHnkdGAYUsHONKJ6CaAoIYJQ81aUTdnRBUJSSTTXlfqxpGfT0b
+	3YdwhN8fTpNnGvkI3x91Ex8rn
+X-Google-Smtp-Source: AGHT+IGh9IE7imcdH3O8AsrnNV5dQ13WBR36cIaiMVuHG/0MuHPKcPAAI66x/OVcX8PpJHWDuO34HQ==
+X-Received: by 2002:a05:6122:926:b0:530:533c:1f6d with SMTP id 71dfb90a1353d-530e48d2947mr3035897e0c.11.1749216104774;
+        Fri, 06 Jun 2025 06:21:44 -0700 (PDT)
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-530e63e4170sm1082274e0c.27.2025.06.06.06.21.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jun 2025 06:21:44 -0700 (PDT)
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4e58a9bb8fcso636298137.2;
+        Fri, 06 Jun 2025 06:21:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU/j72tkcMoZHrbHRNajahiCydA02yBab4ZlljtZh9AcR3mv8w/KpUQLcJ0a8hhJJ9qYvznjK953UqN@vger.kernel.org, AJvYcCV3BB8neHyXyl/eK51uyR+m4dF3+l78rlA9HjfWHUrkC+LkrjEpnBblgIt8LTlI1Dv5frj8mLdy3mXh/nao92KvkGc=@vger.kernel.org, AJvYcCW4aPvN4UKjqHzsnP3Nt8WhfNJzS36nMYowawg/n1U2xc4HO4KfsrlCDrcgLuePCgOs+9o3D46FQBbvJkMd@vger.kernel.org, AJvYcCWK37T4By7gLgr27cTBDLr3trp9CATgoNHaRrCrtraITmd33afVPI55P64o2CSghh54QQoi/uWmDDkC@vger.kernel.org
+X-Received: by 2002:a05:6102:1486:b0:4e4:8362:dce9 with SMTP id
+ ada2fe7eead31-4e7729ad87cmr2873795137.9.1749216104213; Fri, 06 Jun 2025
+ 06:21:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aELptV62mbTC3YA9@google.com>
+References: <20250530143135.366417-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250530143135.366417-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250530143135.366417-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 6 Jun 2025 15:21:31 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXO1fOODiDA4vQBT=+LKRjT5ZoeewdyPSDoTeeoqUVTSA@mail.gmail.com>
+X-Gm-Features: AX0GCFtvhT3pJFghdGRenMhq10cIBWx14-LLPjr4W6t770WjmYutVYh9IEnSwY0
+Message-ID: <CAMuHMdXO1fOODiDA4vQBT=+LKRjT5ZoeewdyPSDoTeeoqUVTSA@mail.gmail.com>
+Subject: Re: [PATCH 2/6] dt-bindings: i2c: renesas,riic: Document RZ/T2H support
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Chris Brandt <chris.brandt@renesas.com>, Andi Shyti <andi.shyti@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jun 06, 2025 at 06:15:19AM -0700, Sean Christopherson wrote:
-> On Fri, Jun 06, 2025, Peter Zijlstra wrote:
-> > On Thu, Jun 05, 2025 at 10:19:41AM -0700, Josh Poimboeuf wrote:
-> > > diff --git a/arch/x86/entry/entry_64_fred.S b/arch/x86/entry/entry_64_fred.S
-> > > index 29c5c32c16c3..5d1eef193b79 100644
-> > > --- a/arch/x86/entry/entry_64_fred.S
-> > > +++ b/arch/x86/entry/entry_64_fred.S
-> > > @@ -112,11 +112,12 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
-> > >  	push %rax				/* Return RIP */
-> > >  	push $0					/* Error code, 0 for IRQ/NMI */
-> > >  
-> > > -	PUSH_AND_CLEAR_REGS clear_bp=0 unwind_hint=0
-> > > +	PUSH_AND_CLEAR_REGS clear_callee=0 unwind_hint=0
-> > >  	movq %rsp, %rdi				/* %rdi -> pt_regs */
-> > >  	call __fred_entry_from_kvm		/* Call the C entry point */
-> > > -	POP_REGS
-> > > -	ERETS
-> > > +	addq $C_PTREGS_SIZE, %rsp
-> > > +
-> > > +	ALTERNATIVE "mov %rbp, %rsp", __stringify(ERETS), X86_FEATURE_FRED
-> > 
-> > So... I was wondering.. do we actually ever need the ERETS?
-> 
-> Yes, to unblock NMIs, because NMIs are blocked on VM-Exit due to NMI.
+Hi Prabhakar,
 
-Ah, bah, indeed! Shame.
+On Fri, 30 May 2025 at 16:31, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Document support for the I2C Bus Interface (RIIC) found on the Renesas
+> RZ/T2H (R9A09G077) SoC. The RIIC IP on this SoC is similar to that on
+> the RZ/V2H(P) SoC but supports fewer interrupts, lacks FM+ support and
+> does not require resets. Due to these differences, add a new compatible
+> string `renesas,riic-r9a09g077` for the RZ/T2H SoC.
+>
+> Unlike earlier SoCs that use eight distinct interrupts, the RZ/T2H uses
+> only four, including a combined error/event interrupt. Update the binding
+> schema to reflect this interrupt layout and skip the `resets` property
+> check, as it is not required on these SoCs.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+Thanks for your patch!
+
+> --- a/Documentation/devicetree/bindings/i2c/renesas,riic.yaml
+> +++ b/Documentation/devicetree/bindings/i2c/renesas,riic.yaml
+> @@ -29,32 +29,46 @@ properties:
+>                - renesas,riic-r9a09g056   # RZ/V2N
+>            - const: renesas,riic-r9a09g057   # RZ/V2H(P)
+>
+> -      - const: renesas,riic-r9a09g057   # RZ/V2H(P)
+> +      - enum:
+> +          - renesas,riic-r9a09g057   # RZ/V2H(P)
+> +          - renesas,riic-r9a09g077   # RZ/T2H
+>
+>    reg:
+>      maxItems: 1
+>
+>    interrupts:
+> -    items:
+> -      - description: Transmit End Interrupt
+> -      - description: Receive Data Full Interrupt
+> -      - description: Transmit Data Empty Interrupt
+> -      - description: Stop Condition Detection Interrupt
+> -      - description: Start Condition Detection Interrupt
+> -      - description: NACK Reception Interrupt
+> -      - description: Arbitration-Lost Interrupt
+> -      - description: Timeout Interrupt
+> +    oneOf:
+> +      - items:
+> +          - description: Transmit End Interrupt
+> +          - description: Receive Data Full Interrupt
+> +          - description: Transmit Data Empty Interrupt
+> +          - description: Stop Condition Detection Interrupt
+> +          - description: Start Condition Detection Interrupt
+> +          - description: NACK Reception Interrupt
+> +          - description: Arbitration-Lost Interrupt
+> +          - description: Timeout Interrupt
+> +      - items:
+> +          - description: Transmit End Interrupt
+> +          - description: Receive Data Full Interrupt
+> +          - description: Transmit Data Empty Interrupt
+> +          - description: Transmit error or event Interrupt
+
+Nit: the documentation calls it "Transfer error or event generation".
+
+>
+>    interrupt-names:
+> -    items:
+> -      - const: tei
+> -      - const: ri
+> -      - const: ti
+> -      - const: spi
+> -      - const: sti
+> -      - const: naki
+> -      - const: ali
+> -      - const: tmoi
+> +    oneOf:
+> +      - items:
+> +          - const: tei
+> +          - const: ri
+> +          - const: ti
+> +          - const: spi
+> +          - const: sti
+> +          - const: naki
+> +          - const: ali
+> +          - const: tmoi
+> +      - items:
+> +          - const: tei
+> +          - const: ri
+> +          - const: ti
+
+Given you have a new set of names, perhaps "rxi" and "txi",
+to match the documentation?
+
+> +          - const: eei
+
+Perhaps use the order from the documentation: eei, rxi, txi, tei?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
