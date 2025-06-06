@@ -1,65 +1,65 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99F823A9AB
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 23:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7D823C8D3
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 23:04:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749251092; cv=none; b=afJaTFLFKnOYHYXmRjUljYwKMqpgpWEJrrARiWtz1s2E/Ycw3sl3DSWXuj95tHl5jYWvgKv4embh3fbF/McysMp4uiKkVy07E2mQijs+N7GMBb/x4ohtNxpdUQuvjKRmsdzWBA/9loFQU8Z0xsF7ohLHipqccdXV/nHVHt1Wa3I=
+	t=1749251101; cv=none; b=nIpYVIdGWWZ/YP8dPknCVyAHFJfw2IfIERputG4QAQHnu8bCEIkiR7Gx2QlNtOHmP6s54mShA1wEceVdHRiMB6VxSlyv0lWFt4TRSkwt67Vs9I3bdfjugMnVcqUwIMuDkVu2yqRdNozSif0A7qBlC97SBHC3pnuavkd1P+SePc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749251092; c=relaxed/simple;
-	bh=8v1w/rx8QmKrM2H8CLoFMfy02CLFbjc7d7XobF+yimM=;
+	s=arc-20240116; t=1749251101; c=relaxed/simple;
+	bh=QOivU9cCWOuD6+qnCQXHqwXBoofn756k+BYeNjlbNGU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=C5PbpXzGNASD2yVqh6dRseC72+IOMODf6wSshzeqSQhjfX3tBdRbbwsVBX3KITeK0xoI0Izi4yVjtTHavIEYB3u/4FfG5ve3SZexeTGymyXAwufrV2jPAOJutOMgQNwp4ePDYq6W3K6v5T3GiyWmJhw5EhQkf/B9ATa7G8rj2Dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com; spf=pass smtp.mailfrom=dubeyko.com; dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b=pfMKRyN1; arc=none smtp.client-ip=209.85.214.177
+	 Content-Type:MIME-Version; b=m/bQ1UTwbgQnGgJNKnIMYTACfszW40+BwgFhRKIW2Ye4hvXjcZMWeCMvACLbn9emKujk4nIT0XjJMR/EK3hYuUaTQ/TePNymX4Nh8woNE9p1h+d++yKMzXOm7g+xz9Dk2OtB4GAX31I6dILyVZqNOYd1dj0rbt9nsJuSiWzWtvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com; spf=pass smtp.mailfrom=dubeyko.com; dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b=Dne/0Q5q; arc=none smtp.client-ip=209.85.216.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dubeyko.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b="pfMKRyN1"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2360ff7ac1bso3886395ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 16:04:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b="Dne/0Q5q"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-3121aed2435so2702568a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 16:04:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dubeyko-com.20230601.gappssmtp.com; s=20230601; t=1749251088; x=1749855888; darn=vger.kernel.org;
+        d=dubeyko-com.20230601.gappssmtp.com; s=20230601; t=1749251099; x=1749855899; darn=vger.kernel.org;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=uhme8POsgTIWZEfbXCMl9ex2ivqucnoJucp3kGTV+kI=;
-        b=pfMKRyN1f+7gh1H/HAJrCnaYTyBc0qjI4+AD1e8JAwO+2eMEcypx8Ctu0hXR6M+jZf
-         HED/MQrkQSAvVs3Omz3ktNbz0SO8WKcnMcOhIfO9tLEG3GzpqxJaG0TgMfkldl5+eFAa
-         wvwP2aJkw9pOSNcvkP+/2P3iLFBkta59XbwSLuW2GJM4zeUFKgTMaOZ87LGiIZylqMsl
-         AOF0g+FnFhhUempN2SYFtPudNC0ONNVWqzFplN7BHtCtARLh339h7WNTmXxVqEEmZgbZ
-         D40hbNoX6hkQlSeEaGxoZajQTp3/Sp/VFvNJ7rLaZHjTgdZ7nsVvD3yroQDFCkMK25VA
-         jKRQ==
+        bh=8FCwWKZSt8jlO+Nh8PWh4qO6V0jK1RFpZe2Cr7kkzR4=;
+        b=Dne/0Q5qqaKrbXz7KduXx2zlzMNmN96B2q+Vin2OC0P4VIo0cmaoDMzAl+gtw0yBAH
+         rNOedtEqBGRos+Ofv2R8YdHTWT/2YO2gwjfXRdoOoN4ZrUwUvEbJG4vgRR7lJtX7O9o4
+         WJ4/OI/Gm+odswFbLQRdW7D3eIbOyjuGzLXbXjRtPdIVEvFQZKs21nMGJrLlbcO24DTB
+         lfeMf2ecidmiv4VBPYfKPe2li6Ju/BI0/8Rf97rmqmblgYsoEd5ZS7j2Y3r7T/XUE5N/
+         mB/gvBJnJu+GaG1bOVNHnOrH5nhNpDjznwi8P3+sYbJ2GKF9Yf8iILcLiJ3EZ1w5qi4X
+         bckA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749251088; x=1749855888;
+        d=1e100.net; s=20230601; t=1749251099; x=1749855899;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=uhme8POsgTIWZEfbXCMl9ex2ivqucnoJucp3kGTV+kI=;
-        b=QggUND0RDeSTEYc1ue7wr3BNkmR+A1Jv2ClbFZ5h1/3OEWdZExOiiiTk7yVZeLLGoq
-         RFbBebzZMkBDWpPh0LPlSODu20x0peD6Y+VnIJqTxbn1x9gC3tZHguvMmGahtFLpSjqE
-         K1Ebwhv5s4adW+Xsp1nbIKQHYO4/VjYwwZOoW4SsAS0DC9hwbsZB/D/XLGdsZFIxb3kG
-         KTFyn2xfuznUQqYO+DflTkCR4LP1MEzr93rXUPFvgiEcL9bIr5d6tUbIJHFkRhlLAnIV
-         q2ju2nZnd6c/h3c2o/dLFzZqEaLgmNKaw5mXkjUBIavTzYOhUqKzESiRKwqnmAkqC5Ha
-         zsZw==
-X-Forwarded-Encrypted: i=1; AJvYcCWrX7QEVm5zaoXII4d5cp5FKPz5BbSUrypXk1WOLZnhHs6qAXvpF3oNquq3OCSW9+U6uSq1RmM3tNgAzac=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yze6fI7kHPsQwwdcpuo9WqkjneD6aHwrkkONqTH5rmhNK0cBOfS
-	QzIZUYz38qvNGiHe7TuCpaLma7NVhXi9D9pN2bgqIYP3WyXHoeB6zt8OIinLdolqA2g=
-X-Gm-Gg: ASbGncv5R6COX7kzQ7rVcFF07dYEBXIyrDj4j7HGY6hDjuT6V+FobXpqyUs+d7TLcSa
-	IWT6BvVsO/xd+LBjjdkySQ9Zno2M6ud6awdJjdRm1djrrIXBqlKtGRYCeqbLIGjReCJdeD0Y2XW
-	A2v4upp3wbDiN79U5kpfTS6XpYQuMz8S/y2SB61m6oRJHOE2v8I8RIoprwBTqlnrPOyLfkOgcX9
-	s7f8t/C6QQ3Pc5EnlY8k3JkAujjVcuVmwMaJpDG7JWb7PPYell17kLOhukqLJVOhQqAOPMKdaKN
-	ljifAo1zH3l/12IKVIXSAW2MiGrBAzDca0dt7AHoXZmcqfzTAfShLdHG2P/zLpxgTghOKt0BCAo
-	byQUrl5OnKvaRaPN8qwUG
-X-Google-Smtp-Source: AGHT+IFgrQDB6Nn2l+X/T0PcUGKKD0lTBhZasahpqZTWKrGawO0uowh230qpq/ePsvzA78EQxD38ig==
-X-Received: by 2002:a17:902:d483:b0:234:9052:2be6 with SMTP id d9443c01a7336-23601d73edamr73967025ad.41.1749251088003;
-        Fri, 06 Jun 2025 16:04:48 -0700 (PDT)
+        bh=8FCwWKZSt8jlO+Nh8PWh4qO6V0jK1RFpZe2Cr7kkzR4=;
+        b=Uybl6/2hZAdJCWxrCz78/S6ORyOm8xxBzO1gwyadrc1zSekJSSScB6K31j3DwV48Sk
+         pkpWIBxEeVyRloOjF2S03eicGJpeahmiUI5KPX41ODSY5j3VG4ApG3lorZxCIFv4NeH6
+         WQr7axfws0ZZ+vBVp5lbsQ0trEtBxEPN76+SYNGGWBOczDH9/No3Gt4fVFarlf1sPCyn
+         SwqYbehUxCeeLaJdgxaXJxl6pHAPu3+ClJdXK25NRnXj+YxtQxlJFY3VQm/aDKD7n9P6
+         E05xDLqEgKzG6NrpvXaJ71JnfS34c4lJqNDvCXOOuGr920epfwgcZzGSfrC39loPadTs
+         pdeA==
+X-Forwarded-Encrypted: i=1; AJvYcCWYYUvUqeCk1bfg8BerzUlsWqqB3PrMH5nVHiLeoNeuuLp1kaIyGu4Mx/9FGZ8MfEYRkmz7p3RaT7JImjk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqMELiP+SfHsloZzaZ4zmQRCYHi4ouxpD8SXcxhHNkNGXmEkn7
+	BbFj6fKx8z4P+yJiaQEkCttmDI93wYlteYBBwSnH3JmfdUMe/N8rb8lQAgAgRrOR0Iw=
+X-Gm-Gg: ASbGnctD1jXhS4yxUpQBNLqPAQIpn7Uem+VFIQ5xRdma9HoIyS0NOOK9tQyE7EfIhtd
+	z57ap6/+m5RdE9xwUzWfWmxlhPY2FvEuhE6bNc+jX1msVxAsCZfxKAlqEl5mc1E/xwobIpja669
+	KlqLnLm7QJ4LJD1lei5sGyzOu6SYqi1qJr4rfvZ37dCp+OJyJ4Buf0E7F/5/mb+GtgAXwX1uq7F
+	Rn1lFqWpPs6XO+09OjCeozspIFFaAJab9KB/8ub3oquSdf5s9U7ZdBkQDZ0cxY9jRir5RHhS88a
+	mF+1p5XGqAQPAJQRqUDjqfblGpQAZtl6h+G4aE/LS6kS3U8fo2MJFTuJFXrzeWBl12ZCrf/4Put
+	CQvUYY0rOdhDw9alq/WM1
+X-Google-Smtp-Source: AGHT+IG64ChHlIEnH7AGZWP1roW4oYFooio9dxXqOSvuAYjcY7yPJNcaadXJ+ghoASQqymoWgh+a0A==
+X-Received: by 2002:a17:90b:4e83:b0:312:f54e:ba28 with SMTP id 98e67ed59e1d1-31347057c9amr8210172a91.24.1749251098933;
+        Fri, 06 Jun 2025 16:04:58 -0700 (PDT)
 Received: from ?IPv6:2600:1700:6476:1430:77a3:4e60:32de:3fd? ([2600:1700:6476:1430:77a3:4e60:32de:3fd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603406916sm17406875ad.169.2025.06.06.16.04.46
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31349f32cc6sm1829579a91.11.2025.06.06.16.04.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 16:04:47 -0700 (PDT)
-Message-ID: <415dae31e51263864612eadfc5ce5699575ad2d8.camel@dubeyko.com>
-Subject: Re:  [PATCH 1/2] hfsplus: make splice write available again
+        Fri, 06 Jun 2025 16:04:58 -0700 (PDT)
+Message-ID: <e9aa0276f0aad149ee7225da5f6b2493d7593df9.camel@dubeyko.com>
+Subject: Re:  [PATCH 2/2] hfs: make splice write available again
 From: Viacheslav Dubeyko <slava@dubeyko.com>
 To: Christian Brauner <brauner@kernel.org>
 Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
@@ -68,10 +68,11 @@ Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
  "glaubitz@physik.fu-berlin.de"	 <glaubitz@physik.fu-berlin.de>,
  "viro@zeniv.linux.org.uk"	 <viro@zeniv.linux.org.uk>, "kees@kernel.org"
  <kees@kernel.org>
-Date: Fri, 06 Jun 2025 16:04:46 -0700
-In-Reply-To: <fa46baccde906c7e52b1d84264d284be1072ffcf.camel@ibm.com>
+Date: Fri, 06 Jun 2025 16:04:57 -0700
+In-Reply-To: <604cca238cdecbbe3dee499b8363f31ddd9e63bc.camel@ibm.com>
 References: <20250529140033.2296791-1-frank.li@vivo.com>
-	 <fa46baccde906c7e52b1d84264d284be1072ffcf.camel@ibm.com>
+		 <20250529140033.2296791-2-frank.li@vivo.com>
+	 <604cca238cdecbbe3dee499b8363f31ddd9e63bc.camel@ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.56.1 (by Flathub.org) 
@@ -89,7 +90,7 @@ Could you please pick up the patch?
 Thanks,
 Slava.
 
-On Thu, 2025-05-29 at 18:27 +0000, Viacheslav Dubeyko wrote:
+On Thu, 2025-05-29 at 18:28 +0000, Viacheslav Dubeyko wrote:
 > On Thu, 2025-05-29 at 08:00 -0600, Yangtao Li wrote:
 > > Since 5.10, splice() or sendfile() return EINVAL. This was
 > > caused by commit 36e2c7421f02 ("fs: don't allow splice read/write
@@ -103,22 +104,22 @@ On Thu, 2025-05-29 at 18:27 +0000, Viacheslav Dubeyko wrote:
 > > explicit ops")
 > > Signed-off-by: Yangtao Li <frank.li@vivo.com>
 > > ---
-> > =C2=A0fs/hfsplus/inode.c | 1 +
+> > =C2=A0fs/hfs/inode.c | 1 +
 > > =C2=A01 file changed, 1 insertion(+)
 > >=20
-> > diff --git a/fs/hfsplus/inode.c b/fs/hfsplus/inode.c
-> > index f331e9574217..c85b5802ec0f 100644
-> > --- a/fs/hfsplus/inode.c
-> > +++ b/fs/hfsplus/inode.c
-> > @@ -368,6 +368,7 @@ static const struct file_operations
-> > hfsplus_file_operations =3D {
+> > diff --git a/fs/hfs/inode.c b/fs/hfs/inode.c
+> > index a81ce7a740b9..451115360f73 100644
+> > --- a/fs/hfs/inode.c
+> > +++ b/fs/hfs/inode.c
+> > @@ -692,6 +692,7 @@ static const struct file_operations
+> > hfs_file_operations =3D {
 > > =C2=A0	.write_iter	=3D generic_file_write_iter,
 > > =C2=A0	.mmap		=3D generic_file_mmap,
 > > =C2=A0	.splice_read	=3D filemap_splice_read,
 > > +	.splice_write	=3D iter_file_splice_write,
-> > =C2=A0	.fsync		=3D hfsplus_file_fsync,
-> > =C2=A0	.open		=3D hfsplus_file_open,
-> > =C2=A0	.release	=3D hfsplus_file_release,
+> > =C2=A0	.fsync		=3D hfs_file_fsync,
+> > =C2=A0	.open		=3D hfs_file_open,
+> > =C2=A0	.release	=3D hfs_file_release,
 >=20
 > Makes sense.
 >=20
