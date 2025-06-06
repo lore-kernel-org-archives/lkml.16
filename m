@@ -1,118 +1,62 @@
-Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42FB283FFB;
-	Fri,  6 Jun 2025 09:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE2F286897
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 09:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749200442; cv=none; b=U8JKcdIJ2E6Mxni2rzlicMwzwt0Ug6luqp4sVsD0ybhVSfulf7VICZMFQFRfbLWIY46XtACZY2XkAvKjshdvmHedxP+VgtyWd44LkITMBGGB+ii4ylq3PIinu9SFF2+bRS92+IbQOlK/iLZo3CMm8DvLbRgXpmn5KrncqJeajls=
+	t=1749200446; cv=none; b=PDEqAlfxlxxQ/Drp+giECaz9IMKbRLOeLswWpQcqY4bjMtqL1SE48OqWtF5EJmpldee6T6SL2318+XAXgumGi30wvNsbWNq4I8P5HiGJkLD/GIZIpi2tzxvcvaRtReJxT2ylD5CD7hyT6tEYQ8S2N8OrLxu8uwREpamPfFW+iYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749200442; c=relaxed/simple;
-	bh=hua8O9rgb0Y0B53K2JGIm1JlLWfji5bzqwET3Z3XDks=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=SU03LJGaxtdtsJGOR4JKERRxCDrbV+b9sqbDatYK3OfkXGfmxTqe9+WR8Q1cD840wHV1sE2YLdDnU1fPhrp7ibxep7f/VCSfN9yfkiV19qdfMQAMgOjtAMawG4dhZq8SrDK3Yp+XL7Sw84ZpLe07d+zcmDOAvx9M8P2gqQPyUEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IIdt0Sqq; arc=none smtp.client-ip=209.85.214.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IIdt0Sqq"
-Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-22d95f0dda4so24849815ad.2;
-        Fri, 06 Jun 2025 02:00:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749200440; x=1749805240; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+Toi2tQAZrviqm160TJzNi/82azbGkUfQEBaQsphdcI=;
-        b=IIdt0SqqIt/s7/umM9OCJ3+oB1/laLIvuCAovgnPt0+pE4SubFDuGYqP31Gxf6wSCN
-         /Wgky6FPtIdpae8TmbLILtZRF1SZvprpYB/xSg8hvyEEuCX/g2YDwSbqRju5GaZowR/w
-         gkymVG1YhFIy+Nw3XqoHSvqyHa4pGLL5JKz9FmpbOas12zCcOzmUZbFf/KmzkOgSDREo
-         EzmYek2cJk5jhJjMIKROeTECzDxIUVKeFr/1q8rfZm9OXdnS4LAk8GHAo9UAEz4IX9/T
-         ePJ2cliWe+0ON+lQWCWSpp1iw5Aq4TYYpyyxoerWkCuYY+1HZ0i+MtmKHunuHn4GHd/y
-         75aQ==
+	s=arc-20240116; t=1749200446; c=relaxed/simple;
+	bh=yjZz5cqjPxCELpVBkF9BIDvsjB8/4NGvmo0rmXZMq4s=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=FWPiPE08WSnmR2foTjpepGMZkzfj72+kAmdG0iDdDEwPDpbtHQcOt+tr7MNm7JdGVBsQ9J6N7iInwp5C51Wo/qh/f4Xmwj6Sqm8dXae/6VUNDBFD6hrNEcvJnMcfH2e6fUkrzqcbGnBW2lq307kDvz0BY6zi4EQuufHiIcqFXTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.222.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5bb68b386so540629585a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 02:00:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749200440; x=1749805240;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+Toi2tQAZrviqm160TJzNi/82azbGkUfQEBaQsphdcI=;
-        b=ELuBqS3AC8BudUkJ1iYONs1v63lDEnz1JZDKHJskPuSVWgr4BTBBqyBSTn6R9eOCyc
-         5XvEA+zcwk8vdRGtk5reRyIbGYFw7iVKRqdgjmCkp5z2T+vjK6iU2hRnkBNAgL79iYSZ
-         8vE8Gao6iBZH+mO4B5X0AN3sai7Z6ruZQYgDciDPgbZIthpYMXKfx79EbzY7lQsUB7e/
-         RszlBmbW05qdVaWkA6/hcuXbiQx0nbnghRjmldMDgbtldRUioNve7yf69kDanlBNOZAE
-         bzKZ31G/7lBCE6l764eXP0mrIZYaK2gk9oJRC5p2GJytnqQ3R8mbbU50EDKFEE7RRacy
-         nYNA==
-X-Forwarded-Encrypted: i=1; AJvYcCVUzggR0OY36+8VuwAkmrUziiP7wKG/muDVChA+bsWmZkxbNhoFtn1CHC4ieZhiqmlSRCCcPAwqStqxwTU=@vger.kernel.org, AJvYcCWoWfhjVcCl64qdchnHq1Dm/vZAnSEmzGQbZV3xRWasOPdmBIC/r/XqaQR/tyzNIfdFjiEoM27G@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNfaFZAVld8wc4AFO/NJl60p69NE+rv+LxKEz11Tv3pyd8ttpH
-	EAHJK0+hkdNxFMsv1CSzEA56hGQ+bD2ng386t0hZzdXc0C3ihNHRgTs/
-X-Gm-Gg: ASbGnctUSF5SJd36QIKWpfXpgI9SmCDyeHu0lFSwWWkz4KvejO/XGwWOX0iOP4ctrFW
-	0aoZjIJIg3Qwkox3TzfBeOPzaKdareltbR+blPcgDsHcJt0Z7ytnG8k/7DJBQk3ihtIYp8lXs9S
-	NTOtGlvBJImyVlm92oGUB/hBEc5lVkBTgRa182mdjT/5jluBz9D5cQtausFRZpktqs6cMVyiJq+
-	MVA4JM6BQVU8oxFjxINGsEOKxWbuTU5kRlMD9fZbgadoNKnnVDsRF0CIr6FgEiQEATp7tHJ74Qq
-	NFJF3O44SGQ2KHvADWV5pGNSm3KAtZMWfKnr3/PVExceSVu27F2V4sgJR5nU8XmqybIyTg==
-X-Google-Smtp-Source: AGHT+IH15PyfKv8D2hZo4jz4TX/8Ll4a83KhJNiOMLH4+nrqpTtsFeVLOHL/LLeT5zU+0mYoyt7KqQ==
-X-Received: by 2002:a17:902:b18a:b0:234:f1ac:c036 with SMTP id d9443c01a7336-23601dab2ebmr23801085ad.50.1749200439705;
-        Fri, 06 Jun 2025 02:00:39 -0700 (PDT)
-Received: from tom-QiTianM540-A739.. ([124.127.236.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2360340d87csm8140735ad.189.2025.06.06.02.00.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 02:00:39 -0700 (PDT)
-From: Qiu-ji Chen <chenqiuji666@gmail.com>
-To: sean.wang@mediatek.com,
-	vkoul@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	eugen.hristev@linaro.org
-Cc: dmaengine@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	baijiaju1990@gmail.com,
-	Qiu-ji Chen <chenqiuji666@gmail.com>,
-	stable@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH v2] dmaengine: mediatek: Fix a flag reuse error in mtk_cqdma_tx_status()
-Date: Fri,  6 Jun 2025 17:00:17 +0800
-Message-Id: <20250606090017.5436-1-chenqiuji666@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1749200443; x=1749805243;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yjZz5cqjPxCELpVBkF9BIDvsjB8/4NGvmo0rmXZMq4s=;
+        b=MlsduYLqvatMndLy+QP2Hk7pxJ9DUGZN6djxDCgpkuTScgFiHUnCcShZyhui/ed5Cv
+         8w5CeyIGrgI8q6oIAEWXC3RiXTvHTJYhA0dOc2uLhxRob9X0dODLY5sqaRn3ZFWp5ABA
+         urL1gslgu8qUEjSaPJmleHp60Cakp3CTzgwkv0sGSC/TNE1snf4fE1BLB+yOP8QoHwz2
+         Fhn9GwnBQ1/X7G2oW/9OS0PmNAv/z9/32BK0x0m7TMmDjQNtHg8YM8Bem5AjLf/n+bql
+         ZI++WaBD5zohrrcwUdiehtnwAOF3gaqUIcM+HQTs+eLr9Lt5axTgTgMaQRrEkKFk+VsM
+         wyYw==
+X-Gm-Message-State: AOJu0YzI6fVRwOJDb1QHZmPpWQ5N5Uuw5Qyub1BSi8dT3udQy88vaLxQ
+	2ObegHnnS1f5sTGTGaLHMZTwtSoqTaSEfbtDCKe00lstzP4cz4ja1NAYhXKAhJDkhl5gKNIFyQV
+	GDGi8NkGEjMiezee6+q8403OTlULTYk613p7x2WjuV+UlpHILL1gFJDM51ZI=
+X-Google-Smtp-Source: AGHT+IHdtfTf/YQQweWThFDrXf3h20ZP5yrlFxrKlU3g9JMeYriMcK9U8SbaARVfCSyaoOqS9i5Gr6FPByN5VjODN1gd3zuqPbye
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:cd8a:0:b0:3dc:7fa4:834 with SMTP id
+ e9e14a558f8ab-3ddce448577mr24595035ab.15.1749200431470; Fri, 06 Jun 2025
+ 02:00:31 -0700 (PDT)
+Date: Fri, 06 Jun 2025 02:00:31 -0700
+In-Reply-To: <684298d8.050a0220.2461cf.0039.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6842ae2f.050a0220.389efd.0000.GAE@google.com>
+Subject: Re: [syzbot] #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+ e271ed52b344ac02d4581286961d0c40acc54c03
+From: syzbot <syzbot+05d673e83ec640f0ced9@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Fixed a flag reuse bug in the mtk_cqdma_tx_status() function.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Fixes: 157ae5ffd76a ("dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_status()")
-Cc: stable@vger.kernel.org
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202505270641.MStzJUfU-lkp@intel.com/
-Signed-off-by: Qiu-ji Chen <chenqiuji666@gmail.com>
----
-V2:
-Change the inner vc lock from spin_lock_irqsave() to spin_lock()
-Thanks Eugen Hristev for helpful suggestion.
----
- drivers/dma/mediatek/mtk-cqdma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+***
 
-diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
-index 47c8adfdc155..9f0c41ca7770 100644
---- a/drivers/dma/mediatek/mtk-cqdma.c
-+++ b/drivers/dma/mediatek/mtk-cqdma.c
-@@ -449,9 +449,9 @@ static enum dma_status mtk_cqdma_tx_status(struct dma_chan *c,
- 		return ret;
- 
- 	spin_lock_irqsave(&cvc->pc->lock, flags);
--	spin_lock_irqsave(&cvc->vc.lock, flags);
-+	spin_lock(&cvc->vc.lock);
- 	vd = mtk_cqdma_find_active_desc(c, cookie);
--	spin_unlock_irqrestore(&cvc->vc.lock, flags);
-+	spin_unlock(&cvc->vc.lock);
- 	spin_unlock_irqrestore(&cvc->pc->lock, flags);
- 
- 	if (vd) {
--- 
-2.34.1
+Subject: #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git e271ed52b344ac02d4581286961d0c40acc54c03
+Author: dmantipov@yandex.ru
 
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git e271ed52b344ac02d4581286961d0c40acc54c03
