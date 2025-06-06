@@ -1,62 +1,62 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D1B289E05;
-	Fri,  6 Jun 2025 16:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8287628A1CE;
+	Fri,  6 Jun 2025 16:19:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749226735; cv=none; b=Blh0JsjdMCrxblE4soSAkQ3/Mz/VyFHM6bpTa8tfUmAVE5MJpbqZhWhtPQr7KFrGHFRaCjKE5oe1fDIxDb3l6++gneuZrF6v/d36hxZyWieTydREFv7N3ZZQSR3KIhFogfm3OC4tzy1oo7XIqXrKRHQoGLovB6WH4ukTCVABbFU=
+	t=1749226742; cv=none; b=Q02eMB5WQN/efE4OvnIR6SUSknxpogN25O/LTGyJRF2VpzShogqHe4jgg+dWTGTPBoTVZWJMaWlzh/VMlfTtSHl0Uqq585T3ct75dNKNss/ZizMd/qghHzhRI8g1FFMDyezgnU+AAzA8KKdfQpW374yMYQX9vQgvYWcl1w+3OOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749226735; c=relaxed/simple;
-	bh=Ys6phxAi1yCzadfLuMIMyyXTOESVHhFvpOJF7AGYjSk=;
+	s=arc-20240116; t=1749226742; c=relaxed/simple;
+	bh=lLb+jNOrtfcqwgNscb056qIBxvga8xPQUWy2hvwYULk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Vr7ifI0g1gYu1FGQfmIuwo5aewNPg0kjVZSVMz+b2+zSvWOZ1u2YknH6hwrDMn7a2ziYR1sCB8bL0LqsxbrKxB1aG7XrLBQUEBn8TizTsz4baAC4CD2l0GWSQ/ody8UzIOlEcS6zaehrJpXvaHeP3Ubd1S9qsl1Ogl++v5fn788=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NC11wwJK; arc=none smtp.client-ip=209.85.210.179
+	 MIME-Version; b=kv3YVW3lgYZJoyRLRMTuhllY5n85asDFThUerTbmrK3XJi4l+pSx4jnhC3LEgUnLBOrVwjXpf4Ed/frHCD9IxXlGvHNXLbp3chCswOsrE27Vx9KmgX832ohhJfKxV0xDEZ7T+8xZdg7gvg9CsTgwOgdgAu1RTjU1S6ZazkmGXmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JvfOMurp; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NC11wwJK"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-747fc7506d4so2370869b3a.0;
-        Fri, 06 Jun 2025 09:18:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvfOMurp"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso1912247b3a.2;
+        Fri, 06 Jun 2025 09:19:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749226733; x=1749831533; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749226740; x=1749831540; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=B1D/UwBfO9rb1qi8d6FbfGYivA4b5vNq0TisU6WUgjI=;
-        b=NC11wwJK+oN7ZRJ6VurdDcWObuKIGMy8+yg86LRol7Tto12d+bFTeiLT83iU5vQLcH
-         TEC28Bw6WIBUNpz+IMuH/a9rptnDxsMcI2ZBnS33fNkbMIEt5l48Xage3Tjk8T15iQb7
-         ngKe2FK8S32Ln3utrPnCGrrgJhcNqwveFvxVz2J+B7/rWxQa6ruGLwlMhumqNeisvPUA
-         SYmErGR5SwjFt7F176jMaLLZg/ZWnmEeXc5McMR0CcG485T6LbMet2cSgz+PfEp+w/2Y
-         ApBcF50OkKyDaW8fJJMwyRM+XYcRj9EKPl9XgiH9Uf4m3g78mLZ5P9ri3cR9f5K4nmF6
-         QgRw==
+        bh=WmddC+fvugcNh6NPL5Z6V5D8fMLub+35xnJ4f4NuuCY=;
+        b=JvfOMurpwNZkdo5/SkBpxrhg7n1NReDOujg2lnxmifhJ3zThO6fnSOiZv2L1KmTO13
+         4OLlmAWhz9GmC7T/RRMRQetl5UsWT8G0AGzYDEUAbN5NIqOprard2nTtVVAwvGzU4lFI
+         8q43M5m1jpioPfu0AxgmFmi6ieFiz5aIcBdkiDcbnww7/CO7bA6SPR5gMhO9oaX2DYDf
+         /UXxFwiVSELirSkpMD2oKWdvJDJTZrpOYS3zxbua0mj/SgHKLdkOZhpzU8XmjKd4+7He
+         aVDdo2nHURy7kVVJJpOO4q5hyO/y/oo3Kcfx51jhm5a/CXoi/r6uVfKyFMDxGUtfkyHZ
+         sNgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749226733; x=1749831533;
+        d=1e100.net; s=20230601; t=1749226740; x=1749831540;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=B1D/UwBfO9rb1qi8d6FbfGYivA4b5vNq0TisU6WUgjI=;
-        b=ZBHBkm+/zcpfRhJXXnU5P+d+ZUU1KuDjWrqMoGe8GX0ADqVHQdmVLEIDEx32M11mAb
-         EW4r8dQbP/Yi45k0S5P5UXNflhB45dOkttGGi+dEe0BI4RxWOhUgApTEJhzpPJARF0U4
-         9+rJdZF8QyxJS4ePJIqF+NEeUKvwMO1bd5+Tdi3+qdf3dZTa7D0dA6GKyA7c/KnhAV+t
-         FHuBnSpbk/InyqqlUZHZILZnQNO7W4wBuel6NkTIUKoTogXaSSUVze97Re/F+2ZH+MOb
-         k1lnIObrl2ons5iGMd5lL4nnEZiIUXs65kdcRI94rgP+SSfoxgMpwFmas1auqlPPk4BK
-         ad3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVl+3JrhTz3SOB4XJrdoI0rYvPpTex0HTE1WVLmXu3zBia7eiWOBWPWWeWdBPakRNDy0AbTUHEa@vger.kernel.org, AJvYcCX/s9Ae70YhE+OxO6qcybbLPwMvW179772Hy/CY29AMO5+yavJfUMvKeJBl/DleXg2WdPCk90dXdi8/Sp9C@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5ZxWKFfbsuLfCv0+mHyh68P4npQWdJCa2+trm5UryOXdOy8EL
-	S8INQJKmVYuq9NZ2ntneDHXyJnfEay8fGytj3KeUa4WPQACWxoJPBJBkuk4hJpnwGuE=
-X-Gm-Gg: ASbGnctHUhDbTdy+H4sP7oLDyXmRG1g42dLAiOywH0wxbMul5FWtYGioXjis1XCsbrd
-	HgClQ7bLAeY9JjP8P6/PvWqFRW6u52E/2k0GGfsgRyBW41c1zWE4e2dfvw3vBgu3RtUDC8lognL
-	TYFg4bXi1hpkEEJu69dPRpizLwq4HYvdjl1DcKc89Gu6i1CrMW8QNo83vIZpYvGXmh8R1EFuJWD
-	qQeyS+D4JYA1UQ0ahZQgPAWr7JOuJS6xkZKcK3Aue9ICSaG7zooQr44Vj6Ln5dasLa1P5tWMvXL
-	sG0oInFl3AUMR8tLND+xRzxISipMq0Dd4VNG05UpNQajTQUUSrw=
-X-Google-Smtp-Source: AGHT+IFAIDJwYl1tg2vjnywkbJPdZQ9Xx5bwB7Cih6rVhVZKDzc36c6HegpZFRbjInSIIK5CEsY+FA==
-X-Received: by 2002:a05:6a20:db0c:b0:215:e818:9fe5 with SMTP id adf61e73a8af0-21ee2500408mr5198758637.18.1749226733054;
-        Fri, 06 Jun 2025 09:18:53 -0700 (PDT)
+        bh=WmddC+fvugcNh6NPL5Z6V5D8fMLub+35xnJ4f4NuuCY=;
+        b=Rz4/X62ozB8MM0JudsOZETocJ9I3QgwpMvqS2RBHtUQcozIXaKnark066tZeAoAS/E
+         YLBcQMcw3qfz6Hq4rvki1U5dOQqkanR5Lpc+mSXgkLzbAImLiXR3ydtY00VAORcXhf/L
+         yyxnSVYxSXTbqOfvTni5kvLPe2K5uZrDX0wiJBg1yyh/+o6HwAiNExaYkf7e6G4/Hs0H
+         yWpvgzj38R1IzasSLHe+yTJQfkRd9gfP/C/A167aGwcWS5d3OGqYNJYahyWCeQ5cnIT6
+         gejxIACPKUwpVEXPsQvpbn8/jwoXNWvtSD0xER3d45e3h7bYk1v3+JtaFeu2wcUS2h//
+         oDsg==
+X-Forwarded-Encrypted: i=1; AJvYcCV1Gr4k06cbg1Etx70if3399gHw4xwo/W5xdvvGy8dv+6qBIKMfX6RC/qJjfUW2Fma27Di0dtlfXAbBRzUu@vger.kernel.org, AJvYcCWQklR7TqNtjESjFp3v13ZpXkv+EbFOMdLm0izv2L8ihr2fn6CjgqkbkaFZB4DKdtWVgGyZM+s3@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywg1LqKXP38TQtVk7RJXjurUEc++RVE+tpVi9ZSmYJ/Iby3Ny0x
+	9lKtwMaYAkpNd5UhvunBwrHVM+Ir97bct4c24tqYHcVMEX+bJTe9wRKd
+X-Gm-Gg: ASbGncvpRSHkXfqav0egCunitZ8nsfOmeCw7T18/CN5/pwe0zkc5a29b9TojNGDTurF
+	3AXj/8TBnV1/aimswrA8NfvhiY4EP6fYB/FtEcgl5YDje6l8Ez3UYh50ekYuwhxN8Ni2CK4Dbi8
+	DTYBKCfuMqwZ6Ud2Hq2eOKXYtrHhP886hhIupbcaQST3yGMxR/zMKW9lrpKq9jPn2m3P4hvXjVM
+	wIaRzvk1zvfBa3BaArhGp7dXAdsACLEPnMDmrqNJ1tAt4aEz+r4/1RoCCoR2/UHibWJbb1c3kug
+	/LDADIhjsmCfkUYfWFXUbeY76gxmDeYTqzWeP6Ae/Fz+bwGYvXK023lTph22cA==
+X-Google-Smtp-Source: AGHT+IFcXtPfFGYXvkgSpvJ7vtSOpxnnhRLikBp1U3gJWE6ad36suuVrBjAV85Ov9GEOGtdfNwEpHg==
+X-Received: by 2002:a05:6a00:4646:b0:73e:1566:5960 with SMTP id d2e1a72fcca58-748280ab71bmr6362559b3a.19.1749226739523;
+        Fri, 06 Jun 2025 09:18:59 -0700 (PDT)
 Received: from jemmy.. ([180.172.46.169])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482af38353sm1518675b3a.10.2025.06.06.09.18.50
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482af38353sm1518675b3a.10.2025.06.06.09.18.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 09:18:52 -0700 (PDT)
+        Fri, 06 Jun 2025 09:18:59 -0700 (PDT)
 From: Jemmy Wong <jemmywong512@gmail.com>
 To: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
 Cc: Tejun Heo <tj@kernel.org>,
@@ -64,9 +64,9 @@ Cc: Tejun Heo <tj@kernel.org>,
 	Waiman Long <longman@redhat.com>,
 	cgroups@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/3] cgroup: add lock guard support for cgroup_muetx
-Date: Sat,  7 Jun 2025 00:18:39 +0800
-Message-ID: <20250606161841.44354-2-jemmywong512@gmail.com>
+Subject: [PATCH v1 3/3] cgroup: add lock guard support for others
+Date: Sat,  7 Jun 2025 00:18:41 +0800
+Message-ID: <20250606161841.44354-4-jemmywong512@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250606161841.44354-1-jemmywong512@gmail.com>
 References: <20250606161841.44354-1-jemmywong512@gmail.com>
@@ -81,263 +81,266 @@ Content-Transfer-Encoding: 8bit
 Signed-off-by: Jemmy Wong <jemmywong512@gmail.com>
 
 ---
- include/linux/cgroup.h    |  7 ++++
- kernel/cgroup/cgroup-v1.c | 16 ++++----
- kernel/cgroup/cgroup.c    | 81 +++++++++++++++++++--------------------
- 3 files changed, 54 insertions(+), 50 deletions(-)
+ kernel/cgroup/cgroup-internal.h |  8 ++--
+ kernel/cgroup/cgroup-v1.c       | 11 +++--
+ kernel/cgroup/cgroup.c          | 73 ++++++++++++---------------------
+ 3 files changed, 35 insertions(+), 57 deletions(-)
 
-diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
-index b18fb5fcb38e..979f827452ad 100644
---- a/include/linux/cgroup.h
-+++ b/include/linux/cgroup.h
-@@ -382,6 +382,10 @@ static inline void cgroup_put(struct cgroup *cgrp)
+diff --git a/kernel/cgroup/cgroup-internal.h b/kernel/cgroup/cgroup-internal.h
+index b14e61c64a34..5430454d38ca 100644
+--- a/kernel/cgroup/cgroup-internal.h
++++ b/kernel/cgroup/cgroup-internal.h
+@@ -198,8 +198,6 @@ void put_css_set_locked(struct css_set *cset);
  
- extern struct mutex cgroup_mutex;
- 
-+DEFINE_LOCK_GUARD_0(cgroup_mutex,
-+	mutex_lock(&cgroup_mutex),
-+	mutex_unlock(&cgroup_mutex))
-+
- static inline void cgroup_lock(void)
+ static inline void put_css_set(struct css_set *cset)
  {
- 	mutex_lock(&cgroup_mutex);
-@@ -656,6 +660,9 @@ struct cgroup *cgroup_get_from_id(u64 id);
- struct cgroup_subsys_state;
- struct cgroup;
+-	unsigned long flags;
+-
+ 	/*
+ 	 * Ensure that the refcount doesn't hit zero while any readers
+ 	 * can see it. Similar to atomic_dec_and_lock(), but for an
+@@ -208,9 +206,9 @@ static inline void put_css_set(struct css_set *cset)
+ 	if (refcount_dec_not_one(&cset->refcount))
+ 		return;
  
-+extern struct mutex cgroup_mutex;
-+DEFINE_LOCK_GUARD_0(cgroup_mutex, , ,)
-+
- static inline u64 cgroup_id(const struct cgroup *cgrp) { return 1; }
- static inline void css_get(struct cgroup_subsys_state *css) {}
- static inline void css_put(struct cgroup_subsys_state *css) {}
+-	spin_lock_irqsave(&css_set_lock, flags);
+-	put_css_set_locked(cset);
+-	spin_unlock_irqrestore(&css_set_lock, flags);
++	scoped_guard(spinlock_irqsave, &css_set_lock) {
++		put_css_set_locked(cset);
++	}
+ }
+ 
+ /*
 diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
-index fa24c032ed6f..f4658eda4445 100644
+index fcc2d474b470..91c6ba4e441d 100644
 --- a/kernel/cgroup/cgroup-v1.c
 +++ b/kernel/cgroup/cgroup-v1.c
-@@ -64,7 +64,8 @@ int cgroup_attach_task_all(struct task_struct *from, struct task_struct *tsk)
+@@ -1291,7 +1291,6 @@ struct cgroup *task_get_cgroup1(struct task_struct *tsk, int hierarchy_id)
+ {
+ 	struct cgroup *cgrp = ERR_PTR(-ENOENT);
  	struct cgroup_root *root;
- 	int retval = 0;
+-	unsigned long flags;
  
--	cgroup_lock();
-+	guard(cgroup_mutex)();
-+
- 	cgroup_attach_lock(true);
+ 	guard(rcu)();
  	for_each_root(root) {
- 		struct cgroup *from_cgrp;
-@@ -78,7 +79,6 @@ int cgroup_attach_task_all(struct task_struct *from, struct task_struct *tsk)
- 			break;
+@@ -1300,11 +1299,11 @@ struct cgroup *task_get_cgroup1(struct task_struct *tsk, int hierarchy_id)
+ 			continue;
+ 		if (root->hierarchy_id != hierarchy_id)
+ 			continue;
+-		spin_lock_irqsave(&css_set_lock, flags);
+-		cgrp = task_cgroup_from_root(tsk, root);
+-		if (!cgrp || !cgroup_tryget(cgrp))
+-			cgrp = ERR_PTR(-ENOENT);
+-		spin_unlock_irqrestore(&css_set_lock, flags);
++		scoped_guard(spinlock_irqsave, &css_set_lock) {
++			cgrp = task_cgroup_from_root(tsk, root);
++			if (!cgrp || !cgroup_tryget(cgrp))
++				cgrp = ERR_PTR(-ENOENT);
++		}
+ 		break;
  	}
- 	cgroup_attach_unlock(true);
--	cgroup_unlock();
  
- 	return retval;
- }
-@@ -862,13 +862,11 @@ static int cgroup1_rename(struct kernfs_node *kn, struct kernfs_node *new_parent
- 	kernfs_break_active_protection(new_parent);
- 	kernfs_break_active_protection(kn);
- 
--	cgroup_lock();
--
--	ret = kernfs_rename(kn, new_parent, new_name_str);
--	if (!ret)
--		TRACE_CGROUP_PATH(rename, cgrp);
--
--	cgroup_unlock();
-+	scoped_guard(cgroup_mutex) {
-+		ret = kernfs_rename(kn, new_parent, new_name_str);
-+		if (!ret)
-+			TRACE_CGROUP_PATH(rename, cgrp);
-+	}
- 
- 	kernfs_unbreak_active_protection(kn);
- 	kernfs_unbreak_active_protection(new_parent);
 diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index a723b7dc6e4e..54f80afe4f65 100644
+index 46b677a066d1..ea98679b01e1 100644
 --- a/kernel/cgroup/cgroup.c
 +++ b/kernel/cgroup/cgroup.c
-@@ -2224,13 +2224,13 @@ int cgroup_do_get_tree(struct fs_context *fc)
- 		struct super_block *sb = fc->root->d_sb;
- 		struct cgroup *cgrp;
- 
--		cgroup_lock();
--		spin_lock_irq(&css_set_lock);
-+		scoped_guard(cgroup_mutex) {
-+			spin_lock_irq(&css_set_lock);
- 
--		cgrp = cset_cgroup_from_root(ctx->ns->root_cset, ctx->root);
-+			cgrp = cset_cgroup_from_root(ctx->ns->root_cset, ctx->root);
- 
--		spin_unlock_irq(&css_set_lock);
--		cgroup_unlock();
-+			spin_unlock_irq(&css_set_lock);
-+		}
- 
- 		nsdentry = kernfs_node_dentry(cgrp->kn, sb);
- 		dput(fc->root);
-@@ -2440,13 +2440,12 @@ int cgroup_path_ns(struct cgroup *cgrp, char *buf, size_t buflen,
- {
+@@ -335,28 +335,23 @@ static int cgroup_idr_alloc(struct idr *idr, void *ptr, int start, int end,
  	int ret;
  
--	cgroup_lock();
-+	guard(cgroup_mutex)();
- 	spin_lock_irq(&css_set_lock);
- 
- 	ret = cgroup_path_ns_locked(cgrp, buf, buflen, ns);
- 
- 	spin_unlock_irq(&css_set_lock);
--	cgroup_unlock();
- 
- 	return ret;
- }
-@@ -4472,9 +4471,10 @@ int cgroup_rm_cftypes(struct cftype *cfts)
- 	if (!(cfts[0].flags & __CFTYPE_ADDED))
- 		return -ENOENT;
- 
--	cgroup_lock();
--	cgroup_rm_cftypes_locked(cfts);
--	cgroup_unlock();
-+	scoped_guard(cgroup_mutex) {
-+		cgroup_rm_cftypes_locked(cfts);
+ 	idr_preload(gfp_mask);
+-	spin_lock_bh(&cgroup_idr_lock);
+-	ret = idr_alloc(idr, ptr, start, end, gfp_mask & ~__GFP_DIRECT_RECLAIM);
+-	spin_unlock_bh(&cgroup_idr_lock);
++	scoped_guard(spinlock_bh, &cgroup_idr_lock) {
++		ret = idr_alloc(idr, ptr, start, end, gfp_mask & ~__GFP_DIRECT_RECLAIM);
 +	}
-+
- 	return 0;
- }
- 
-@@ -4506,14 +4506,13 @@ int cgroup_add_cftypes(struct cgroup_subsys *ss, struct cftype *cfts)
- 	if (ret)
- 		return ret;
- 
--	cgroup_lock();
--
--	list_add_tail(&cfts->node, &ss->cfts);
--	ret = cgroup_apply_cftypes(cfts, true);
--	if (ret)
--		cgroup_rm_cftypes_locked(cfts);
-+	scoped_guard(cgroup_mutex) {
-+		list_add_tail(&cfts->node, &ss->cfts);
-+		ret = cgroup_apply_cftypes(cfts, true);
-+		if (ret)
-+			cgroup_rm_cftypes_locked(cfts);
-+	}
- 
--	cgroup_unlock();
+ 	idr_preload_end();
  	return ret;
  }
  
-@@ -5489,14 +5488,14 @@ static void css_free_rwork_fn(struct work_struct *work)
- 	}
- }
- 
--static void css_release_work_fn(struct work_struct *work)
-+static inline void css_release_work_fn_locked(struct work_struct *work)
+ static void *cgroup_idr_replace(struct idr *idr, void *ptr, int id)
  {
- 	struct cgroup_subsys_state *css =
- 		container_of(work, struct cgroup_subsys_state, destroy_work);
- 	struct cgroup_subsys *ss = css->ss;
- 	struct cgroup *cgrp = css->cgroup;
- 
--	cgroup_lock();
-+	guard(cgroup_mutex)();
- 
- 	css->flags |= CSS_RELEASED;
- 	list_del_rcu(&css->sibling);
-@@ -5550,8 +5549,14 @@ static void css_release_work_fn(struct work_struct *work)
- 					 NULL);
- 	}
- 
--	cgroup_unlock();
-+}
-+
-+static void css_release_work_fn(struct work_struct *work)
-+{
-+	struct cgroup_subsys_state *css =
-+		container_of(work, struct cgroup_subsys_state, destroy_work);
- 
-+	css_release_work_fn_locked(work);
- 	INIT_RCU_WORK(&css->destroy_rwork, css_free_rwork_fn);
- 	queue_rcu_work(cgroup_destroy_wq, &css->destroy_rwork);
+-	void *ret;
+-
+-	spin_lock_bh(&cgroup_idr_lock);
+-	ret = idr_replace(idr, ptr, id);
+-	spin_unlock_bh(&cgroup_idr_lock);
+-	return ret;
++	guard(spinlock_bh)(&cgroup_idr_lock);
++	return idr_replace(idr, ptr, id);
  }
-@@ -5914,7 +5919,7 @@ static void css_killed_work_fn(struct work_struct *work)
- 	struct cgroup_subsys_state *css =
- 		container_of(work, struct cgroup_subsys_state, destroy_work);
  
--	cgroup_lock();
-+	guard(cgroup_mutex)();
+ static void cgroup_idr_remove(struct idr *idr, int id)
+ {
+-	spin_lock_bh(&cgroup_idr_lock);
++	guard(spinlock_bh)(&cgroup_idr_lock);
+ 	idr_remove(idr, id);
+-	spin_unlock_bh(&cgroup_idr_lock);
+ }
+ 
+ static bool cgroup_has_tasks(struct cgroup *cgrp)
+@@ -583,20 +578,19 @@ struct cgroup_subsys_state *cgroup_get_e_css(struct cgroup *cgrp,
+ 	if (!CGROUP_HAS_SUBSYS_CONFIG)
+ 		return NULL;
+ 
+-	rcu_read_lock();
++	guard(rcu)();
  
  	do {
- 		offline_css(css);
-@@ -5922,8 +5927,6 @@ static void css_killed_work_fn(struct work_struct *work)
- 		/* @css can't go away while we're holding cgroup_mutex */
- 		css = css->parent;
- 	} while (css && atomic_dec_and_test(&css->online_cnt));
--
--	cgroup_unlock();
+ 		css = cgroup_css(cgrp, ss);
+ 
+ 		if (css && css_tryget_online(css))
+-			goto out_unlock;
++			return css;
+ 		cgrp = cgroup_parent(cgrp);
+ 	} while (cgrp);
+ 
+ 	css = init_css_set.subsys[ss->id];
+ 	css_get(css);
+-out_unlock:
+-	rcu_read_unlock();
++
+ 	return css;
  }
+ EXPORT_SYMBOL_GPL(cgroup_get_e_css);
+@@ -1691,9 +1685,9 @@ static void cgroup_rm_file(struct cgroup *cgrp, const struct cftype *cft)
+ 		struct cgroup_subsys_state *css = cgroup_css(cgrp, cft->ss);
+ 		struct cgroup_file *cfile = (void *)css + cft->file_offset;
  
- /* css kill confirmation processing requires process context, bounce */
-@@ -6115,7 +6118,7 @@ static void __init cgroup_init_subsys(struct cgroup_subsys *ss, bool early)
+-		spin_lock_irq(&cgroup_file_kn_lock);
+-		cfile->kn = NULL;
+-		spin_unlock_irq(&cgroup_file_kn_lock);
++		scoped_guard(spinlock_irq, &cgroup_file_kn_lock) {
++			cfile->kn = NULL;
++		}
  
- 	pr_debug("Initializing cgroup subsys %s\n", ss->name);
+ 		timer_delete_sync(&cfile->notify_timer);
+ 	}
+@@ -4277,9 +4271,9 @@ static int cgroup_add_file(struct cgroup_subsys_state *css, struct cgroup *cgrp,
  
--	cgroup_lock();
-+	guard(cgroup_mutex)();
+ 		timer_setup(&cfile->notify_timer, cgroup_file_notify_timer, 0);
  
- 	idr_init(&ss->css_idr);
- 	INIT_LIST_HEAD(&ss->cfts);
-@@ -6161,8 +6164,6 @@ static void __init cgroup_init_subsys(struct cgroup_subsys *ss, bool early)
- 	BUG_ON(!list_empty(&init_task.tasks));
+-		spin_lock_irq(&cgroup_file_kn_lock);
+-		cfile->kn = kn;
+-		spin_unlock_irq(&cgroup_file_kn_lock);
++		scoped_guard(spinlock_irq, &cgroup_file_kn_lock) {
++			cfile->kn = kn;
++		}
+ 	}
  
- 	BUG_ON(online_css(css));
+ 	return 0;
+@@ -4534,9 +4528,7 @@ int cgroup_add_legacy_cftypes(struct cgroup_subsys *ss, struct cftype *cfts)
+  */
+ void cgroup_file_notify(struct cgroup_file *cfile)
+ {
+-	unsigned long flags;
 -
--	cgroup_unlock();
+-	spin_lock_irqsave(&cgroup_file_kn_lock, flags);
++	guard(spinlock_irqsave)(&cgroup_file_kn_lock);
+ 	if (cfile->kn) {
+ 		unsigned long last = cfile->notified_at;
+ 		unsigned long next = last + CGROUP_FILE_NOTIFY_MIN_INTV;
+@@ -4548,7 +4540,6 @@ void cgroup_file_notify(struct cgroup_file *cfile)
+ 			cfile->notified_at = jiffies;
+ 		}
+ 	}
+-	spin_unlock_irqrestore(&cgroup_file_kn_lock, flags);
  }
  
  /**
-@@ -6224,20 +6225,18 @@ int __init cgroup_init(void)
+@@ -4560,10 +4551,10 @@ void cgroup_file_show(struct cgroup_file *cfile, bool show)
+ {
+ 	struct kernfs_node *kn;
  
- 	get_user_ns(init_cgroup_ns.user_ns);
- 
--	cgroup_lock();
--
--	/*
--	 * Add init_css_set to the hash table so that dfl_root can link to
--	 * it during init.
--	 */
--	hash_add(css_set_table, &init_css_set.hlist,
--		 css_set_hash(init_css_set.subsys));
--
--	cgroup_bpf_lifetime_notifier_init();
-+	scoped_guard(cgroup_mutex) {
-+		/*
-+		 * Add init_css_set to the hash table so that dfl_root can link to
-+		 * it during init.
-+		 */
-+		hash_add(css_set_table, &init_css_set.hlist,
-+			css_set_hash(init_css_set.subsys));
- 
--	BUG_ON(cgroup_setup_root(&cgrp_dfl_root, 0));
-+		cgroup_bpf_lifetime_notifier_init();
- 
--	cgroup_unlock();
-+		BUG_ON(cgroup_setup_root(&cgrp_dfl_root, 0));
+-	spin_lock_irq(&cgroup_file_kn_lock);
+-	kn = cfile->kn;
+-	kernfs_get(kn);
+-	spin_unlock_irq(&cgroup_file_kn_lock);
++	scoped_guard(spinlock_irq, &cgroup_file_kn_lock) {
++		kn = cfile->kn;
++		kernfs_get(kn);
 +	}
  
- 	for_each_subsys(ss, ssid) {
- 		if (ss->early_init) {
-@@ -6289,9 +6288,9 @@ int __init cgroup_init(void)
- 		if (ss->bind)
- 			ss->bind(init_css_set.subsys[ssid]);
+ 	if (kn)
+ 		kernfs_show(kn, show);
+@@ -4987,11 +4978,10 @@ static void css_task_iter_advance(struct css_task_iter *it)
+ void css_task_iter_start(struct cgroup_subsys_state *css, unsigned int flags,
+ 			 struct css_task_iter *it)
+ {
+-	unsigned long irqflags;
  
--		cgroup_lock();
--		css_populate_dir(init_css_set.subsys[ssid]);
--		cgroup_unlock();
-+		scoped_guard(cgroup_mutex) {
-+			css_populate_dir(init_css_set.subsys[ssid]);
-+		}
+ 	memset(it, 0, sizeof(*it));
+ 
+-	spin_lock_irqsave(&css_set_lock, irqflags);
++	guard(spinlock_irqsave)(&css_set_lock);
+ 
+ 	it->ss = css->ss;
+ 	it->flags = flags;
+@@ -5004,8 +4994,6 @@ void css_task_iter_start(struct cgroup_subsys_state *css, unsigned int flags,
+ 	it->cset_head = it->cset_pos;
+ 
+ 	css_task_iter_advance(it);
+-
+-	spin_unlock_irqrestore(&css_set_lock, irqflags);
+ }
+ 
+ /**
+@@ -5018,14 +5006,12 @@ void css_task_iter_start(struct cgroup_subsys_state *css, unsigned int flags,
+  */
+ struct task_struct *css_task_iter_next(struct css_task_iter *it)
+ {
+-	unsigned long irqflags;
+-
+ 	if (it->cur_task) {
+ 		put_task_struct(it->cur_task);
+ 		it->cur_task = NULL;
  	}
  
- 	/* init_css_set.subsys[] has been updated, re-hash */
+-	spin_lock_irqsave(&css_set_lock, irqflags);
++	guard(spinlock_irqsave)(&css_set_lock);
+ 
+ 	/* @it may be half-advanced by skips, finish advancing */
+ 	if (it->flags & CSS_TASK_ITER_SKIPPED)
+@@ -5038,8 +5024,6 @@ struct task_struct *css_task_iter_next(struct css_task_iter *it)
+ 		css_task_iter_advance(it);
+ 	}
+ 
+-	spin_unlock_irqrestore(&css_set_lock, irqflags);
+-
+ 	return it->cur_task;
+ }
+ 
+@@ -5051,13 +5035,10 @@ struct task_struct *css_task_iter_next(struct css_task_iter *it)
+  */
+ void css_task_iter_end(struct css_task_iter *it)
+ {
+-	unsigned long irqflags;
+-
+ 	if (it->cur_cset) {
+-		spin_lock_irqsave(&css_set_lock, irqflags);
++		guard(spinlock_irqsave)(&css_set_lock);
+ 		list_del(&it->iters_node);
+ 		put_css_set_locked(it->cur_cset);
+-		spin_unlock_irqrestore(&css_set_lock, irqflags);
+ 	}
+ 
+ 	if (it->cur_dcset)
+@@ -6737,10 +6718,10 @@ void cgroup_post_fork(struct task_struct *child,
+ 				 * too. Let's set the JOBCTL_TRAP_FREEZE jobctl bit to
+ 				 * get the task into the frozen state.
+ 				 */
+-				spin_lock(&child->sighand->siglock);
+-				WARN_ON_ONCE(child->frozen);
+-				child->jobctl |= JOBCTL_TRAP_FREEZE;
+-				spin_unlock(&child->sighand->siglock);
++				scoped_guard(spinlock, &child->sighand->siglock) {
++					WARN_ON_ONCE(child->frozen);
++					child->jobctl |= JOBCTL_TRAP_FREEZE;
++				}
+ 
+ 				/*
+ 				 * Calling cgroup_update_frozen() isn't required here,
 -- 
 2.43.0
 
