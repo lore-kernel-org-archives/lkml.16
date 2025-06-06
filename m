@@ -1,95 +1,104 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4152125DF
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 05:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CE41C860C
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 05:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749186991; cv=none; b=C8maBfPba8hUc4CEkSiQjh7Z8vInxsrlVprZo4WR+WhcWXnnj3eLw7ZKNsSpjyg/Z+NFnf5kfXsEqffc0TecTSOyDpy4Om9M/HjnRI79gnw79rcaz7V9mTzVXfbOffOFZbQXW7L4YIr/mdMKHy0DVpt/+X9RyQ4oh2wju2GqRWU=
+	t=1749187436; cv=none; b=KOKJPJ08225B58mCe8YuVsAvKtZXiid2FT2zZsSaSMxpS09bVpge+DyCTBdgmrJrq8Tz+0SyM75HADC2utxBD5b8KnB9sEyGry3Zv+Vxo2atz3xHRZeCxpcgdGa9f9QaBboiSMyxclM2dr1YngGZfO+WHeNYOdQdtfZeB5VYYrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749186991; c=relaxed/simple;
-	bh=L0hJFyfyZX3FzKinw4N3p4Tp1T8WVYqepfCHeNfvQ9c=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p4L0cDQUHAj2oLckHyTfErM+psiEdAKlb6n3dUmY0KxfgLollkK1GfCcNcEYzeeMG8w0PG9Kafk7IlAwGP9jkjIHLoo5Wk0nwQKxA6wH9U12oV6t5cpcBRLSe2ZbYuoxnfaRMMMl64cbF2KWXJX9DnbQ9wOvdysr6GEPe+66EFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5564Nsgi009744;
-	Thu, 5 Jun 2025 22:16:20 -0700
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 471g9rvx6y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 05 Jun 2025 22:16:20 -0700 (PDT)
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Thu, 5 Jun 2025 22:16:19 -0700
-Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Thu, 5 Jun 2025 22:16:17 -0700
-From: Lizhi Xu <lizhi.xu@windriver.com>
-To: <viro@zeniv.linux.org.uk>
-CC: <almaz.alexandrovich@paragon-software.com>, <linux-kernel@vger.kernel.org>,
-        <lizhi.xu@windriver.com>, <ntfs3@lists.linux.dev>,
-        <syzbot+598057afa0f49e62bd23@syzkaller.appspotmail.com>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: [PATCH V2] fs/ntfs3: Add sanity check for file name
-Date: Fri, 6 Jun 2025 13:16:16 +0800
-Message-ID: <20250606051616.2578208-1-lizhi.xu@windriver.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250606042501.GR299672@ZenIV>
-References: <20250606042501.GR299672@ZenIV>
+	s=arc-20240116; t=1749187436; c=relaxed/simple;
+	bh=0LcugX7pIJqi20ylrFfW2GJHIIOk7YhX5V657AkjHuo=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Cc:Content-Type; b=BdwnB4S2aeLZhjuU9exOgoOcRIzeN6Zo66ELyZFJyqSbD6OE5vxx35PsVrl+SVVvdiRqUa957Tmys7pIUdlEqzDGfXV1Q9T9ZSHXtMl5XCROZt92Cqso0j5/TahBe0+dgKgUtRkQpvzhgR87IULQ0waOE0HzdYI0yUFkZzWGLI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--suleiman.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yfP10EHU; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--suleiman.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yfP10EHU"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-7071dd5dbc1so23540087b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Jun 2025 22:23:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749187433; x=1749792233; darn=vger.kernel.org;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xPdemEaGJWvzsN6Iuk80gCcUSIvsiiSoKmwg/dFuW0k=;
+        b=yfP10EHUYSptf3vTvQpLzrWk6SoM8dVGsCjwcyPEPo1u9ALbLCd5EXvrwaXwKRwYYo
+         QlI3UZwO3ik/aXEoFohb0r+fmmx00W5sv8f4KwPHaiSfLFHjxB/92F12jGCeRfjbKqWZ
+         IB4U8j/hh9hYDPt0eumUIed+UIcuK+ZtXcZTEttc1jJQmY/nTlcPqNPtLxT8ovD59lyU
+         aHuj/jIuX/1EvpONMGuWMpuIShkjM2gtvXHZScLLDgFmyZtCQxI+1QxbheG4dRt4OlpD
+         uAEwS5eMPbNv43LUyZ1QcgbqHK8JsQUSMN626nNs8B+GoE0wV6R5xOGa41diDiFYybm4
+         z5LQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749187433; x=1749792233;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xPdemEaGJWvzsN6Iuk80gCcUSIvsiiSoKmwg/dFuW0k=;
+        b=C+x/8Dgk63+AWuwaKUprxcc2/jHaqEy+vGmXvEk2nElH4hSMHKDh4X1GgLeveCJxQK
+         P/XBVYVQct9PiuRReltAyCsIZGNQYAf8/aary/+GqHnAqFF1ULiE0DX68NAUCfs6Qok1
+         X+YAT2RPu7UAVrgCR2yedpwFzjxysVYWqvQjCw2lkUvDkR2ojjTFeXzYbSJmZsRDynMC
+         9LK4TtiTIyNpHvIxAAExolbQ1I7a9TrGK0ArcUeaCXZKySO7dVdLkjU6OiR15CkYzO8V
+         q0uHdSsR4rh18f6XgVoor6Bgmm3DrRFnHQay8Vm3jz4M0kQHvOZ/3cBvUtlWbnVHvWpv
+         fBZA==
+X-Forwarded-Encrypted: i=1; AJvYcCXyJdpnHAm6oTbawbyKthgJhcFcdDyxPCQhVs3h8B/mitzn6+kfgvfr3BNU0N6mIgbrcCtP95nvAckzcgk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwagVx7QjrJf0ViQgjGhAazBo3o7Xt4ExnaaQHKe7Um6TOrps/W
+	DiGYD6c+fQLiRUNsRtNC6cqx1t3vlFVdSt0bL8P7hiCrs2FKi2bx72RXiOzyPxrCS4HgXobaW1q
+	TgDo9yIH88A4HdA==
+X-Google-Smtp-Source: AGHT+IGM/2zgkKAi8l8Bv5Y3g3HKlCcWzySlnqdZP8vCaBlczO4XnsaCrkzqSdd8WqbJpXkzwLkHLILC/I6frg==
+X-Received: from suleiman1.tok.corp.google.com ([2401:fa00:8f:203:b09c:3d84:6735:a65])
+ (user=suleiman job=sendgmr) by 2002:a05:690c:8e0d:b0:70e:458:874a with SMTP
+ id 00721157ae682-710f7533fb3mr8927b3.0.1749187433661; Thu, 05 Jun 2025
+ 22:23:53 -0700 (PDT)
+Date: Fri,  6 Jun 2025 14:23:01 +0900
+Message-Id: <20250606052301.810338-1-suleiman@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: 4MYwveU8D1-_YS0SPrfol5ZFTO9v0zvx
-X-Authority-Analysis: v=2.4 cv=VIHdn8PX c=1 sm=1 tr=0 ts=684279a4 cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=6IFa9wvqVegA:10 a=edf1wS77AAAA:8 a=hSkVLCK3AAAA:8 a=t7CeM3EgAAAA:8 a=mp8hP4E6WeWH5piVKYsA:9 a=DcSpbTIhAlouE1Uv7lRv:22
- a=cQPPKAXgyycSBL8etih5:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDA0NyBTYWx0ZWRfX7+agaZ4Uubs3 oO6Sbz1N7jaHK2lxXPURYWjHsU4iNFkrUjPp2Qa1/ZE0R2HpMSKX3akczmRs2Y2/GmL3gh8dlTC XNiH0FfW5OIghsDik7QJUGZm7v7dhDrx660VrBmA9ojPE8/kFEJowycHBxY23khq+BijLxQe0DZ
- IG8sSUwfLLbjWVxGRX/tF5/hF8Sq+f3OjS7Zq3TMERhZzqpmqvTca+g87iLvfffGgJqnE0dgZYx lHBNSfPydlE91fkbQZfSf43nQLJu1K/UOS78Ll+MPk95xfbyI69YGnRRR5Fm6hFnFDbiFfECJQF FhTgL1EBSTR+TJVTxR5CX9DN+cgxGRn/d5CsMAku4uYQW0+owxF8CdFRK6Xdm/zdNLUCfKsqLGg
- OuhXvfDp0rTTuRjhl8ig906rrMv1YznTEU7GVvsT05YCrYEMWWdP7B5iUR+WK+KW/PeocMNp
-X-Proofpoint-ORIG-GUID: 4MYwveU8D1-_YS0SPrfol5ZFTO9v0zvx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-06_01,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=785
- adultscore=0 malwarescore=0 spamscore=0 impostorscore=0 mlxscore=0
- priorityscore=1501 clxscore=1015 lowpriorityscore=0 bulkscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2505280000
- definitions=main-2506060047
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
+Subject: [PATCH] tools/resolve_btfids: Fix build when cross compiling kernel
+ with clang.
+From: Suleiman Souhlal <suleiman@google.com>
+To: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, Ian Rogers <irogers@google.com>, 
+	ssouhlal@freebsd.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, Suleiman Souhlal <suleiman@google.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The length of the file name should be smaller than the directory entry size.
+When cross compiling the kernel with clang, we need to override
+CLANG_CROSS_FLAGS when preparing the step libraries for
+resolve_btfids.
 
-Reported-by: syzbot+598057afa0f49e62bd23@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=598057afa0f49e62bd23
-Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>
+Prior to commit d1d096312176 ("tools: fix annoying "mkdir -p ..." logs
+when building tools in parallel"), MAKEFLAGS would have been set to a
+value that wouldn't set a value for CLANG_CROSS_FLAGS, hiding the
+fact that we weren't properly overriding it.
+
+Cc: stable@vger.kernel.org
+Fixes: 56a2df7615fa ("tools/resolve_btfids: Compile resolve_btfids as host program")
+Signed-of-by: Suleiman Souhlal <suleiman@google.com>
 ---
-V1 -> V2: move sizeof to left
+ tools/bpf/resolve_btfids/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- fs/ntfs3/dir.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/fs/ntfs3/dir.c b/fs/ntfs3/dir.c
-index b6da80c69ca6..b31bc9cbfa35 100644
---- a/fs/ntfs3/dir.c
-+++ b/fs/ntfs3/dir.c
-@@ -304,6 +304,9 @@ static inline bool ntfs_dir_emit(struct ntfs_sb_info *sbi,
- 	if (sbi->options->nohidden && (fname->dup.fa & FILE_ATTRIBUTE_HIDDEN))
- 		return true;
+diff --git a/tools/bpf/resolve_btfids/Makefile b/tools/bpf/resolve_btfids/Makefile
+index afbddea3a39c..ce1b556dfa90 100644
+--- a/tools/bpf/resolve_btfids/Makefile
++++ b/tools/bpf/resolve_btfids/Makefile
+@@ -17,7 +17,7 @@ endif
  
-+	if (fname->name_len + sizeof(struct NTFS_DE) > le16_to_cpu(e->size))
-+		return true;
-+
- 	name_len = ntfs_utf16_to_nls(sbi, fname->name, fname->name_len, name,
- 				     PATH_MAX);
- 	if (name_len <= 0) {
+ # Overrides for the prepare step libraries.
+ HOST_OVERRIDES := AR="$(HOSTAR)" CC="$(HOSTCC)" LD="$(HOSTLD)" ARCH="$(HOSTARCH)" \
+-		  CROSS_COMPILE="" EXTRA_CFLAGS="$(HOSTCFLAGS)"
++		  CROSS_COMPILE="" CLANG_CROSS_FLAGS="" EXTRA_CFLAGS="$(HOSTCFLAGS)"
+ 
+ RM      ?= rm
+ HOSTCC  ?= gcc
 -- 
-2.43.0
+2.50.0.rc0.642.g800a2b2222-goog
 
