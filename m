@@ -1,68 +1,79 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755B082C60
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 01:50:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE9F195FE8;
+	Fri,  6 Jun 2025 01:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749174656; cv=none; b=t6qFcegzNMSTysPRD3+bzCnnBIbURjkcndBl6qXKcQVmL5iYlFn+v68DLbSdZ2ao5OueqOoVEX+oqO7FHdd7+71ZYzsBfIkK56aUja/moknBSpakgDF1O5NoRvLNs6vUsLwDkBO/xUhm6ZYVG6eZdi6rbvoBCHbFtcHHKZGGUBs=
+	t=1749174659; cv=none; b=QpnrdkGzejRjY0IhILN+rRhd/fk/wgnXCUXwH7xQyBw40URVe1SXhdk90gUsOYIfA6Bxrv7wlcoaeQwJUljYiTZWQDzvQBPkc50tquHccto3mJEZ/sgTzNZxNbz+HVJaL8nJXUJwyoV9rjrzpri7SF1TDmO5LiFpFfXZDD9pS20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749174656; c=relaxed/simple;
-	bh=/DJv+NPpUjWWWztYNwh9gNVvsQab8+O1fHBH0SOuxb8=;
+	s=arc-20240116; t=1749174659; c=relaxed/simple;
+	bh=N05hR/hxwfDBOUnGdQrZDfk14X/CwEcpp+IGoFxatVU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YIQihUpxPjgve1xdPse99qvTbsJ13goX1OmvnPQGqK1CA6var//YsKfECiuy+4NR94Wo9hTVAEBthHrfwYDMHvnKcickxciGRkgN5nB/d9zzMt1snpAV0BhoL1hJxey1KKPGd2vDtC0lGUtLvgpnfdG3nk5YMuMSUAj2dJ75O0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NNUS08jp; arc=none smtp.client-ip=198.175.65.20
+	 Content-Type:Content-Disposition:In-Reply-To; b=sWV5/pCfUh1vWdEfmmtQSHATm24GI8+3b17WLl9IdRoggRPU+7kpii6ieCB/mbw9gpWz9GeGbVBsVo8xsR+PyffSNS+JyCMHFQcSTblqPPCnX7BZyXj6Z+6Om528LxgHqy3GcE9SjW5/GrLDmPk0zvoueU9F9wj0S892TCTF4Wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FzAMIT6z; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NNUS08jp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FzAMIT6z"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749174654; x=1780710654;
+  t=1749174657; x=1780710657;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=/DJv+NPpUjWWWztYNwh9gNVvsQab8+O1fHBH0SOuxb8=;
-  b=NNUS08jpaTUWtehpxuo52MGNiWGpWXWiNkznpfg97RykvrXjCGk9hlKI
-   y5/Fe/dWrCy9AZZPRhoTGujUVDMZydh6tGX8YfHDfUfCa90CgPb/GV6pn
-   fFOL5ZM0wXkwATEQZ+rC1HpKHIJjH+MNP5Qdja1ZGNcoqT2KZoY83TOxI
-   m1ngr6WDGuBM7EvFR0jmS1LcYMn2sSvCBdB1VyFmSqzPlmJBRlRSEEfI0
-   bFzu92N54XdSJbh3AvTdy9stg7R2lqO6a1NtJI8hy6DXg5LoEtTXzVwrD
-   48H1DYw9bfqFAGhI0HFDo0CcXAlLkIuq4T7NbnU5zacLB+wG7Pq/TZ/6o
-   g==;
-X-CSE-ConnectionGUID: KCUw7ObxTOG4YShX+lrB9g==
-X-CSE-MsgGUID: 8ptGD+pzToKS55aDaSjbsQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51020245"
+  bh=N05hR/hxwfDBOUnGdQrZDfk14X/CwEcpp+IGoFxatVU=;
+  b=FzAMIT6z/ZGGrYPlWDRiOyovF7htXFx9E+JGwKULkhWwNmaZ0oeZm0ql
+   QRm3vmw4PQ/VMbBuM5dG9a9G1+T1WN+p+DmDp/8C4riWJqZmSf3uc0SBF
+   7serjF7xQL2SlKMnMfbq3+XBOWUoGIYy3Ppheml46oULexlBKmf20JEnr
+   ORYrdAln82cKVIWX5lEE/K5Ssb6ehDTGOwK1QgOvuUMiMK0HleeDKHTCX
+   RVsGyGuC1R0rsrBj07qfU0W7WdbNqlN/MQcoQRELeIMwvyHdB4z26S3Xe
+   qb7k8zrmD2aq+aGgYawcYfoEn53IZZdj+g/2y8hZorirTfiAglcj/KXM7
+   Q==;
+X-CSE-ConnectionGUID: lYNSpG20T8un92epqQphlg==
+X-CSE-MsgGUID: vYZWQZyCQCCLLmFerFnY5A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51020260"
 X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="51020245"
+   d="scan'208";a="51020260"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 18:50:53 -0700
-X-CSE-ConnectionGUID: QnSp8KYWQReB4kmtCIqw5Q==
-X-CSE-MsgGUID: FTnBe6xFRp+SkcA369UidQ==
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 18:50:57 -0700
+X-CSE-ConnectionGUID: HG5uRUl6TOafNSK4RUho7w==
+X-CSE-MsgGUID: rFJR7U6qTuizDoxEFvDV1Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="150514855"
+   d="scan'208";a="150514856"
 Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
   by orviesa003.jf.intel.com with ESMTP; 05 Jun 2025 18:50:52 -0700
 Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uNMEL-0004dX-0P;
+	id 1uNMEL-0004dV-0J;
 	Fri, 06 Jun 2025 01:50:49 +0000
-Date: Fri, 6 Jun 2025 09:50:39 +0800
+Date: Fri, 6 Jun 2025 09:50:46 +0800
 From: kernel test robot <lkp@intel.com>
-To: Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	David Hildenbrand <david@redhat.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Harry Yoo <harry.yoo@oracle.com>, Rakie Kim <rakie.kim@sk.com>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-kernel@vger.kernel.org,
-	Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH v5 04/10] mm,slub: Use node-notifier instead of
- memory-notifier
-Message-ID: <202506060918.HDCPogq9-lkp@intel.com>
-References: <20250605142305.244465-5-osalvador@suse.de>
+To: Igor Korotin <igor.korotin.linux@gmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, Len Brown <lenb@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Alex Hung <alex.hung@amd.com>, Tamir Duberstein <tamird@gmail.com>,
+	FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	Xiangfei Ding <dingxiangfei2009@gmail.com>,
+	Igor Korotin <igor.korotin.linux@gmail.com>
+Subject: Re: [PATCH v2 3/5] rust: driver: Add ACPI id table support to
+ Adapter trait
+Message-ID: <202506060941.Q8GECvnj-lkp@intel.com>
+References: <20250605165109.3663553-1-igor.korotin.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,108 +82,116 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250605142305.244465-5-osalvador@suse.de>
+In-Reply-To: <20250605165109.3663553-1-igor.korotin.linux@gmail.com>
 
-Hi Oscar,
+Hi Igor,
 
 kernel test robot noticed the following build errors:
 
-[auto build test ERROR on driver-core/driver-core-testing]
-[also build test ERROR on driver-core/driver-core-next driver-core/driver-core-linus rafael-pm/linux-next rafael-pm/bleeding-edge tj-cgroup/for-next linus/master v6.15 next-20250605]
-[cannot apply to akpm-mm/mm-everything vbabka-slab/for-next]
+[auto build test ERROR on char-misc/char-misc-testing]
+[also build test ERROR on char-misc/char-misc-next char-misc/char-misc-linus v6.15]
+[cannot apply to rust/rust-next driver-core/driver-core-testing driver-core/driver-core-next driver-core/driver-core-linus linus/master next-20250605]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
 https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Oscar-Salvador/mm-memory_hotplug-Remove-status_change_nid_normal-and-update-documentation/20250605-232305
-base:   driver-core/driver-core-testing
-patch link:    https://lore.kernel.org/r/20250605142305.244465-5-osalvador%40suse.de
-patch subject: [PATCH v5 04/10] mm,slub: Use node-notifier instead of memory-notifier
-config: riscv-randconfig-001-20250606 (https://download.01.org/0day-ci/archive/20250606/202506060918.HDCPogq9-lkp@intel.com/config)
-compiler: riscv64-linux-gcc (GCC) 11.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250606/202506060918.HDCPogq9-lkp@intel.com/reproduce)
+url:    https://github.com/intel-lab-lkp/linux/commits/Igor-Korotin/rust-acpi-add-acpi-DeviceId-abstraction/20250606-042551
+base:   char-misc/char-misc-testing
+patch link:    https://lore.kernel.org/r/20250605165109.3663553-1-igor.korotin.linux%40gmail.com
+patch subject: [PATCH v2 3/5] rust: driver: Add ACPI id table support to Adapter trait
+config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/20250606/202506060941.Q8GECvnj-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250606/202506060941.Q8GECvnj-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506060918.HDCPogq9-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506060941.Q8GECvnj-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   mm/slub.c: In function 'slab_mem_going_online_callback':
->> mm/slub.c:6168:23: error: invalid use of undefined type 'struct node_notify'
-    6168 |         int nid = narg->nid;
-         |                       ^~
-   mm/slub.c: In function 'slab_memory_callback':
-   mm/slub.c:6220:14: error: 'NODE_ADDING_FIRST_MEMORY' undeclared (first use in this function)
-    6220 |         case NODE_ADDING_FIRST_MEMORY:
-         |              ^~~~~~~~~~~~~~~~~~~~~~~~
-   mm/slub.c:6220:14: note: each undeclared identifier is reported only once for each function it appears in
-   mm/slub.c:6223:14: error: 'NODE_REMOVING_LAST_MEMORY' undeclared (first use in this function)
-    6223 |         case NODE_REMOVING_LAST_MEMORY:
-         |              ^~~~~~~~~~~~~~~~~~~~~~~~~
-   mm/slub.c: In function 'kmem_cache_init':
-   mm/slub.c:6300:9: error: implicit declaration of function 'hotplug_node_notifier'; did you mean 'hotplug_memory_notifier'? [-Werror=implicit-function-declaration]
-    6300 |         hotplug_node_notifier(slab_memory_callback, SLAB_CALLBACK_PRI);
-         |         ^~~~~~~~~~~~~~~~~~~~~
-         |         hotplug_memory_notifier
-   cc1: some warnings being treated as errors
-
-
-vim +6168 mm/slub.c
-
-  6162	
-  6163	static int slab_mem_going_online_callback(void *arg)
-  6164	{
-  6165		struct kmem_cache_node *n;
-  6166		struct kmem_cache *s;
-  6167		struct node_notify *narg = arg;
-> 6168		int nid = narg->nid;
-  6169		int ret = 0;
-  6170	
-  6171		/*
-  6172		 * If the node's memory is already available, then kmem_cache_node is
-  6173		 * already created. Nothing to do.
-  6174		 */
-  6175		if (nid < 0)
-  6176			return 0;
-  6177	
-  6178		/*
-  6179		 * We are bringing a node online. No memory is available yet. We must
-  6180		 * allocate a kmem_cache_node structure in order to bring the node
-  6181		 * online.
-  6182		 */
-  6183		mutex_lock(&slab_mutex);
-  6184		list_for_each_entry(s, &slab_caches, list) {
-  6185			/*
-  6186			 * The structure may already exist if the node was previously
-  6187			 * onlined and offlined.
-  6188			 */
-  6189			if (get_node(s, nid))
-  6190				continue;
-  6191			/*
-  6192			 * XXX: kmem_cache_alloc_node will fallback to other nodes
-  6193			 *      since memory is not yet available from the node that
-  6194			 *      is brought up.
-  6195			 */
-  6196			n = kmem_cache_alloc(kmem_cache_node, GFP_KERNEL);
-  6197			if (!n) {
-  6198				ret = -ENOMEM;
-  6199				goto out;
-  6200			}
-  6201			init_kmem_cache_node(n);
-  6202			s->node[nid] = n;
-  6203		}
-  6204		/*
-  6205		 * Any cache created after this point will also have kmem_cache_node
-  6206		 * initialized for the new node.
-  6207		 */
-  6208		node_set(nid, slab_nodes);
-  6209	out:
-  6210		mutex_unlock(&slab_mutex);
-  6211		return ret;
-  6212	}
-  6213	
+   PATH=/opt/cross/clang-18/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+   INFO PATH=/opt/cross/rustc-1.78.0-bindgen-0.65.1/cargo/bin:/opt/cross/clang-18/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+   /usr/bin/timeout -k 100 12h /usr/bin/make KCFLAGS= -Wno-error=return-type -Wreturn-type -funsigned-char -Wundef W=1 --keep-going LLVM=1 -j32 -C source O=/kbuild/obj/consumer/x86_64-rhel-9.4-rust ARCH=x86_64 SHELL=/bin/bash rustfmtcheck
+   make: Entering directory '/kbuild/src/consumer'
+   make[1]: Entering directory '/kbuild/obj/consumer/x86_64-rhel-9.4-rust'
+   Diff in rust/kernel/acpi.rs at line 59:
+            $crate::module_device_table!("acpi", $module_table_name, $table_name);
+        };
+    }
+   -
+    
+>> Diff in rust/kernel/driver.rs at line 6:
+    //! register using the [`Registration`] class.
+    
+>>  use crate::error::{Error, Result};
+   -use crate::{device, of, acpi, str::CStr, try_pin_init, types::Opaque, ThisModule};
+   +use crate::{acpi, device, of, str::CStr, try_pin_init, types::Opaque, ThisModule};
+    use core::pin::Pin;
+    use pin_init::{pin_data, pinned_drop, PinInit};
+    
+   Diff in rust/kernel/driver.rs at line 211:
+        /// associated with a [`device::Device`].
+        fn id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
+            // SAFETY: `id_info` is called from `Adapter::probe_callback` with a valid `dev` argument.
+   -        let fwnode = unsafe{ (*dev.as_raw()).fwnode};
+   +        let fwnode = unsafe { (*dev.as_raw()).fwnode };
+    
+            // SAFETY: `bindings::is_acpi_device_node` checks `fwnode` before accessing `fwnode->ops`,
+            // and only compares it with the address of `acpi_device_fwnode_ops`.
+>> Diff in rust/kernel/platform.rs at line 5:
+    //! C header: [`include/linux/platform_device.h`](srctree/include/linux/platform_device.h)
+    
+    use crate::{
+   -    acpi,
+   -    bindings, device, driver,
+   +    acpi, bindings, device, driver,
+        error::{to_result, Result},
+        of,
+        prelude::*,
+   Diff in rust/kernel/acpi.rs at line 59:
+            $crate::module_device_table!("acpi", $module_table_name, $table_name);
+        };
+    }
+   -
+    
+>> Diff in rust/kernel/platform.rs at line 5:
+    //! C header: [`include/linux/platform_device.h`](srctree/include/linux/platform_device.h)
+    
+    use crate::{
+   -    acpi,
+   -    bindings, device, driver,
+   +    acpi, bindings, device, driver,
+        error::{to_result, Result},
+        of,
+        prelude::*,
+>> Diff in rust/kernel/driver.rs at line 6:
+    //! register using the [`Registration`] class.
+    
+>>  use crate::error::{Error, Result};
+   -use crate::{device, of, acpi, str::CStr, try_pin_init, types::Opaque, ThisModule};
+   +use crate::{acpi, device, of, str::CStr, try_pin_init, types::Opaque, ThisModule};
+    use core::pin::Pin;
+    use pin_init::{pin_data, pinned_drop, PinInit};
+    
+   Diff in rust/kernel/driver.rs at line 211:
+        /// associated with a [`device::Device`].
+        fn id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
+            // SAFETY: `id_info` is called from `Adapter::probe_callback` with a valid `dev` argument.
+   -        let fwnode = unsafe{ (*dev.as_raw()).fwnode};
+   +        let fwnode = unsafe { (*dev.as_raw()).fwnode };
+    
+            // SAFETY: `bindings::is_acpi_device_node` checks `fwnode` before accessing `fwnode->ops`,
+            // and only compares it with the address of `acpi_device_fwnode_ops`.
+   make[1]: Leaving directory '/kbuild/obj/consumer/x86_64-rhel-9.4-rust'
+   make[2]: *** [Makefile:1826: rustfmt] Error 123
+   make[1]: *** [Makefile:248: __sub-make] Error 2
+   make[2]: Target 'rustfmtcheck' not remade because of errors.
+   make[1]: Target 'rustfmtcheck' not remade because of errors.
+   make: *** [Makefile:248: __sub-make] Error 2
+   make: Target 'rustfmtcheck' not remade because of errors.
+   make: Leaving directory '/kbuild/src/consumer'
 
 -- 
 0-DAY CI Kernel Test Service
