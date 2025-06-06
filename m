@@ -1,62 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899461E32CF;
-	Fri,  6 Jun 2025 19:02:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FBB2746A;
+	Fri,  6 Jun 2025 19:03:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749236556; cv=none; b=kYpQGWt3wTaNJGwK6zYRVGqLyykLa/IMDofjVBwv2Ia1ouqMwrST5rQtMbuX+PgcP4lgcZAq5hPMyjSNWvuOmpC5CkZNdkTMrBM47pp1O/WKBhyVKHi536Q20vMB8qnf2jBSI0GaNp10yUDsJMLBxcDwJeZRS4ivJu2ujlxobQ8=
+	t=1749236625; cv=none; b=Y6gkQNsapXPivurT+ppAjUfScaK/LfnE36bzPlU9oHI2bbHyjHv7tcsc0Xx/L4AQx0VvkX83egt4dZR+adNowFcFOkOAmGINPtNo1BiXaeoFuiU3v9/m9GT/xAY90NWEmW8Qa/SSFOPTXuWBneOeFz4+7eenjtktI5HmsornFCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749236556; c=relaxed/simple;
-	bh=a4zS+f4/L3VUhoY85jKW59MyAD/HA3R1PKujB+DYmJI=;
+	s=arc-20240116; t=1749236625; c=relaxed/simple;
+	bh=9tgAyBkUtSwD9VozH5RNCCXHKjCQ8YY2mL/VrG7xqko=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Eoh8A+iDEnC7DEAFpcsZpx/c1g24fTmFoRi0UBBIH5gXYhiEO9sc74c+9Och/ruJXKC3cgmySER/0lPL1DS4laQHUFNFfS2pzTyBGC3QpJ7gMGymuzgIoC4244Cq+6zsqN+dgnxGvSrPb/bW43Cz1b6gyMTp+6qdjpyVOUhnNgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XBTFSRIm; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=X5WQ421M95dp8joa9BcEP9iHJZalNOSX+4tSCRFkc2bAaSlRTyiVCPiQmBZU7d/6dF0aeO1oC0KbV79fJwUlEdvDrb4P96Z6WASb26nvs61/0OriuJTXYt5+j0oZEpkFrW12PrKlvqPcrPRqdYTL46/XQ3iThrvlqs6gjmNnOg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ipm8VRWa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XBTFSRIm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56F37C4CEEE;
-	Fri,  6 Jun 2025 19:02:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ipm8VRWa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1EF6C4CEEB;
+	Fri,  6 Jun 2025 19:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749236556;
-	bh=a4zS+f4/L3VUhoY85jKW59MyAD/HA3R1PKujB+DYmJI=;
+	s=k20201202; t=1749236625;
+	bh=9tgAyBkUtSwD9VozH5RNCCXHKjCQ8YY2mL/VrG7xqko=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XBTFSRImwUhWTqHbK3GfkpIJqT2MWRLvOL4xH3c7LmW34WhWjxRKRo0mZxD+Hd3b1
-	 no+GIK+ZbTIdtrj6/Jm+3yEgNxfLjMNQhTn+GhHIq6jrHc9buqX4II2lMNv1FvFWkj
-	 +bv4HHrfouLV/lZXaH7d7grOHFeBUgtFLM6xgv9Ht4nmse9RQoPI7eY2iBGLdmg5/B
-	 DBZ6u1r0bpqFQsUEAE2eQi3qh2pphPyPXvOHzbdtJHijqosHN7CNEHzBOQYeVSKqbj
-	 3fUHTjoyUSbqchAUk0qunoCsnuqFuU0DeNIva7aHBxfQlkplwThO13LMeHvzxjTUEj
-	 nWH1z18hVLYnA==
-Date: Fri, 6 Jun 2025 12:02:33 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Blake Jones <blakejones@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>,
-	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
-	Guilherme Amadio <amadio@gentoo.org>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>,
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
-	Yujie Liu <yujie.liu@intel.com>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Ben Gainey <ben.gainey@arm.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] perf: collect BPF metadata from new programs, and
- display the new event
-Message-ID: <aEM7SeSC7yup7TJ7@google.com>
-References: <20250605233934.1881839-1-blakejones@google.com>
- <20250605233934.1881839-4-blakejones@google.com>
+	b=ipm8VRWanv8Dxdj800NzO4oHpDbwo8z1MfcU7ESgGA3/yMTJBl6hk17WXR7zSxC0G
+	 Aq2VYWwwnlO8NcJJSK48JQnsqakMuqRCindHES170F1AgfXnR6qs2Jxd2AXYsiAoxZ
+	 PExWPTBqHTj3VjlOjLCdUCetB0/47MkuESDHyYLZmNzYjqqmsKLasiLJbxNcAWSXEM
+	 6scNqSeD5YnrFPPpX1LgMyQtZ1f3gFLV1i+XcYAk4nA/hfeuAwrMvLS+tCCbdX1aBt
+	 V6LfICXhSieRscJMr46/diDBsYlh4pXv8OAEktxcyxr+bh4P4S/v0cwpcvImM8Fuws
+	 eevQnA3cns2hQ==
+Date: Fri, 6 Jun 2025 12:03:42 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, live-patching@vger.kernel.org, 
+	Song Liu <song@kernel.org>, laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
+	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
+	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 59/62] livepatch/klp-build: Introduce klp-build script
+ for generating livepatch modules
+Message-ID: <27bkpjpv4lklcxafb4yifrbdjmfxn2sh67lckom2w7hpmgdyxr@zgty22rlp62q>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <10ccbeb0f4bcd7d0a10cc9b9bd12fdc4894f83ee.1746821544.git.jpoimboe@kernel.org>
+ <f97a2e18-d672-41b1-ac26-4d1201528ed7@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,44 +49,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250605233934.1881839-4-blakejones@google.com>
+In-Reply-To: <f97a2e18-d672-41b1-ac26-4d1201528ed7@redhat.com>
 
-Hi Blake,
-
-On Thu, Jun 05, 2025 at 04:39:33PM -0700, Blake Jones wrote:
-> This collects metadata for any BPF programs that were loaded during a
-> "perf record" run, and emits it at the end of the run. It also adds support
-> for displaying the new PERF_RECORD_BPF_METADATA type.
-
-Can you please split the final synthesis and the processing/display
-parts?  I prefer commits doing one at a time.
-
->
-> Here's some example "perf script -D" output for the new event type. The
-> ": unhandled!" message is from tool.c, analogous to other behavior there.
-> I've elided some rows with all NUL characters for brevity, and I wrapped
-> one of the >75-column lines to fit in the commit guidelines.
+On Fri, Jun 06, 2025 at 09:05:59AM -0400, Joe Lawrence wrote:
+> Should the .cmd file copy come from the reference SRC and not original
+> ORIG directory?
 > 
-> 0x50fc8@perf.data [0x260]: event: 84
-> .
-> . ... raw event: size 608 bytes
-> .  0000:  54 00 00 00 00 00 60 02 62 70 66 5f 70 72 6f 67  T.....`.bpf_prog
-> .  0010:  5f 31 65 30 61 32 65 33 36 36 65 35 36 66 31 61  _1e0a2e366e56f1a
-> .  0020:  32 5f 70 65 72 66 5f 73 61 6d 70 6c 65 5f 66 69  2_perf_sample_fi
-> .  0030:  6c 74 65 72 00 00 00 00 00 00 00 00 00 00 00 00  lter............
-> .  0040:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> [...]
-> .  0110:  74 65 73 74 5f 76 61 6c 75 65 00 00 00 00 00 00  test_value......
-> .  0120:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> [...]
-> .  0150:  34 32 00 00 00 00 00 00 00 00 00 00 00 00 00 00  42..............
-> .  0160:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> [...]
+>   cmd_file="$SRC/$(dirname "$rel_file")/.$(basename "$rel_file").cmd"
 > 
-> 0 0x50fc8 [0x260]: PERF_RECORD_BPF_METADATA \
->       prog bpf_prog_1e0a2e366e56f1a2_perf_sample_filter
->   entry 0:           test_value = 42
-> : unhandled!
+> because I don't see any .cmd files in klp-tmp/orig/
+> 
+> FWIW, I only noticed this after backporting the series to
+> centos-stream-10.  There, I got this build error:
+> 
+>   Building original kernel
+>   Copying original object files
+>   Fixing patches
+>   Building patched kernel
+>   Copying patched object files
+>   Diffing objects
+>   vmlinux.o: changed function: cmdline_proc_show
+>   Building patch module: livepatch-test.ko
+>   <...>/klp-tmp/kmod/.vmlinux.o.cmd: No such file or directory
+>   make[2]: *** [scripts/Makefile.modpost:145:
+> <...>/klp-tmp/kmod/Module.symvers] Error 1
+>  make[1]: *** [<...>/Makefile:1936: modpost] Error 2
+>  make: *** [Makefile:236: __sub-make] Error 2
+> 
+> The above edit worked for both your upstream branch and my downstream
+> backport.
 
-Looks good, thanks!
-Namhyung
+Hm, I broke this in one of my refactorings before posting.
+
+Is this with CONFIG_MODVERSIONS?
+
+If you get a chance to test, here's a fix (currently untested):
+
+diff --git a/scripts/livepatch/klp-build b/scripts/livepatch/klp-build
+index 277fbe948730..cd6e118da275 100755
+--- a/scripts/livepatch/klp-build
++++ b/scripts/livepatch/klp-build
+@@ -517,16 +517,29 @@ find_objects() {
+ 
+ # Copy all objects (.o archives) to $ORIG_DIR
+ copy_orig_objects() {
++	local files=()
+ 
+ 	rm -rf "$ORIG_DIR"
+ 	mkdir -p "$ORIG_DIR"
+ 
+-	(
+-		cd "$OBJ"
+-		find_objects						\
+-			| sed 's/\.ko$/.o/'				\
+-			| xargs cp --parents --target-directory="$ORIG_DIR"
+-	)
++	find_objects | mapfile -t files
++
++	xtrace_save "copying orig objects"
++	for _file in "${files[@]}"; do
++		local rel_file="${_file/.ko/.o}"
++		local file="$OBJ/$rel_file"
++		local file_dir="$(dirname "$file")"
++		local orig_file="$ORIG_DIR/$rel_file"
++		local orig_dir="$(dirname "$orig_file")"
++		local cmd_file="$file_dir/.$(basename "$file").cmd"
++
++		[[ ! -f "$file" ]] && die "missing $(basename "$file") for $_file"
++
++		mkdir -p "$orig_dir"
++		cp -f "$file" "$orig_dir"
++		[[ -e "$cmd_file" ]] && cp -f "$cmd_file" "$orig_dir"
++	done
++	xtrace_restore
+ 
+ 	mv -f "$TMP_DIR/build.log" "$ORIG_DIR"
+ 	touch "$TIMESTAMP"
