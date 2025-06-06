@@ -1,144 +1,153 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A020289371
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 13:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D1328981B;
+	Fri,  6 Jun 2025 13:51:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749217909; cv=none; b=soN965z828nEH/8HSfktzVH4nmKeUDvxo4us8mHdNb+Bn45sMpIUpwfCOQY14LPuprAHaV8Z0BZKMnnINJ9P3tfDhttqrlN8oGqHwVtXy2sL4FM3iTLfNUb7u0gbLZvoLlDw9/8tKoPZUtGwVDIeRljeZ00GmajYtRcp7RzRhCM=
+	t=1749217912; cv=none; b=P1sfK6KgCE6Wj3w1FsgzhJqznbGc6qspEh3+VSaNX9/AprrL1ESv6onSlBXP+ffmH2Yh0HCokV9QxlbbdppA7M7vxPvH5yge14Y7/VGPEHgrfMXQuo+wpJfJaHU3I2bcr0MkJoMW0gsmzr6M4Hbfh2EQeO31DCtrms+8GRCEISI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749217909; c=relaxed/simple;
-	bh=1cXy0ycIoVFg/MhpMcFWn9S3JLlWV6ejpENRa6Q2LjM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UuK+AsedUgwYDxj2UiRvhZrK4AtnUPhSGBdYYes1b+k7cdGMxA4/qFBugvM4Dfzng4+sJB8wuGMiwvBQB5oSZNVDclEfZEcCp56OT1mX81y2wof47OYsuWKtO6GynA5zR3tB93ze6tIF3Th2dXVy0veYalLPRESR51gRbqfUK5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZeKOrfe9; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749217912; c=relaxed/simple;
+	bh=IIrcHjOJF0WUmf3dP0J4tD5Xi1dZ+WzmtH3IV/CQrbY=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=E07AL849BQejg9mejPPsxMT6OsgXaEiZvcGybRhuxo6H5xCVChWReNt/F9VrkfYrQ8OBSCYrgqgDsXYY4ZdsTsBPo//U1gxG8Td3ACopK5cUSl7RfJkmJNkhYcXjLyroI0uBtC9n/iE2ftJ5YMrLsZHFIzTfO87XynpU9S/j9CA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y4by5+4S; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZeKOrfe9"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-60700a745e5so1106016a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 06:51:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4by5+4S"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7482377b086so847443b3a.1;
+        Fri, 06 Jun 2025 06:51:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749217906; x=1749822706; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WWPSFukZBDHDG6pN288MbNxWFpqaNB01Y5FNmAhQ1fI=;
-        b=ZeKOrfe9WQHxD69vTnaqUfjtC2VAnbXwCwHRDA+cZkWgAbBs3DKwluDQRHoXfIy+U4
-         4JVP4THm/j6RbgXT/E6lZoi/IFVZFUQDoUtdZtO8dLYD8wAi8BDvdG7kTmWJXW1+PcO7
-         R9SkH8eYCnkgNHEyqzPDwzIFxErHA07ppUUvMkaHsMEwPPx5zuJEEQi4KaXhQa1E4ASS
-         2ek6EJSbM/uNjXUFwndp2nQPyVW5QWTO6uFHnfc27eXxf5yGv5h52yocwBVEVcQIxWL/
-         i3lCs2xtlVKYKr1QBmXS25TDcbnDCxe3Rne6SbbR3dkPsS72RPFI25u+LERmnbHN4f/5
-         6ing==
+        d=gmail.com; s=20230601; t=1749217910; x=1749822710; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IIrcHjOJF0WUmf3dP0J4tD5Xi1dZ+WzmtH3IV/CQrbY=;
+        b=Y4by5+4SqzjvREvK80VwpUn9C04PLcGI7p1SlVfvNn0DziG9WGqGhCSIbKFCSw4aNw
+         aQ1FzropuAZFXREBRQ57XfqeI2HL0Jco14cFs8mTLQ67klHXQ/M9C0mhjpfVyu5y16PA
+         ROrjMZa2MHNsvJ01uczrmyDZR0hnVnJWgqr2sEw7M0xhQFZfmPMKRsrmmx+r/4LF5sgf
+         ykO8Iqn8X/Gt9mTwYJPKjlmA0A6RihqC9YIT3Rct3wMYb4axv7jLe1z6y0vNP2McQSaz
+         hLp2qyIqPChJiaVy1EY+f5fuAeRYg7+JUshJoB+kz2GBYyLqR3z6XAW6Rq2V1cX6+9RZ
+         18yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749217906; x=1749822706;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WWPSFukZBDHDG6pN288MbNxWFpqaNB01Y5FNmAhQ1fI=;
-        b=dPtiatO6fDJfGyyGVziC/a2aZRlyBYv7isf78FjAcJXRuU/R++andqH0o4zSZZgg8o
-         U/8Rw3w1FQCAxLpJIQbRPwrhF7IEBeLZXNrs962c8INpxiAc8UjkZewhQ1YLAnl6LMOU
-         0PXU7flmDFeL+BwtdbfkTaHeBUagLwFgPWCqOxw7NYvfjyA+NvuHFfMu8dlICZdWDrIL
-         DUvOv7alBpXA+eYnlinDBTzfk1R0Gyf1HfMCmoytcuNmjXx1fo7L2rcymHm5dKW8lXqK
-         nHqnGKn0uBYoUhImKwknewBmFk+NqUtF454Vv4TbmT/PSNTS8jVZmLeCwdQk6J6AAhaQ
-         Lr/w==
-X-Forwarded-Encrypted: i=1; AJvYcCV38KuiFe6MeNjKgtU74ldLna+tYS2jT3AXLV5lYGveZka0Xxn1gxPB9pR++v6L6yzVtW8TIUj+xGNN+d0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQWoJKj7X/ZMpecyFZfDSfFlcqNd5BkKaPjCjuUC0oxPuICL9f
-	3iKbeg9/48s0tc4CtVHhqtm/XLP3w0sOHmYKgo63Dmyd8vzuNWrTv43ER5hfPyYXIOPHtSVdm29
-	kqgUUYHX0ZY5EIPCHC4XOX5OPkUi4ziqDUPVY0vUM3Q==
-X-Gm-Gg: ASbGnctyuydyTWIOOVg4rxL9LFl36VXhFQeLxnSOWtaoLlygj7+gDWdVuviarb2jrJ1
-	7NBeXZbm3e6AGiMJId8CYPX3YxSJEsoZ7AMofa8REkYRZwBMTioB6gJ4BaXTcavQBMM9IPZKpD5
-	C+X3ZzDOqufiVfEwe9ww3ByF+GfRAQ5YaBKdfgZHcu3lCOLnMM6AKgQROUM1wsTIHwr6Qu8kmZ
-X-Google-Smtp-Source: AGHT+IHX94roqFXROBXnIx9NhnT4WHs1dfm5kRkaVUWpbVA7IjPnQJNCvIuu9/hYbQzqnvhB5tF5GaD+bQPQk0biGIk=
-X-Received: by 2002:a17:907:3f14:b0:ad8:8719:f6f3 with SMTP id
- a640c23a62f3a-ade1a932e69mr291889366b.22.1749217905616; Fri, 06 Jun 2025
- 06:51:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749217910; x=1749822710;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IIrcHjOJF0WUmf3dP0J4tD5Xi1dZ+WzmtH3IV/CQrbY=;
+        b=Uw457F15KbEUEf81Afufv0KfaphMCYAbplpHD2lsIWd3nbH+FL5oNa/+DFjy1wjNLC
+         6RJltSUvy1X3wbHoo6cPXQO+Zak2NzwVsQ1tqUWHOQDep3HJXNVv1NPl2rumQVtD6Sow
+         C1S/aMZoAUDPnwRYbGtnWOQBaVOs2p1W4i1sH6nJIMjuQTL73Z4QIL1ZEFcFyk3mnF4X
+         fYrYvTzPzE24M6ZfN32w3gWAPT51q8ME4+AdxmX28mPwXVnHahV+nbYiAKZQWWpQ97WY
+         R3QZPIX2S/P13zFG9r14s3syHU5hjHOzvA9Sc0yqERsxqnE3D+CI9GADVrzaSPp8mDyS
+         sCCA==
+X-Forwarded-Encrypted: i=1; AJvYcCUEKIaoX/wOFiqkNBLboHAdZNbtE8Iu+tMA5vNCqrmU+bXdfAV0M4yANTl7zPyNlapFc7M6yyQsOaRc68QB@vger.kernel.org, AJvYcCVtdLx+AzUPpxfYiWd4DZZ3ZrUPHwlWYzIE4ccCaFnNJg0XktfxtJIVFrLBlVY7Xm9n7kwDwJcs@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5WXHDsXqepIFT6smOueg49hn94oU6ni97Uha6E0/w/8W3JmTQ
+	yWqbzuS/EblXtVT+EUp9MGthT1cSKnHMUfkZ5QYTfc/ySmOU3V0ZKLtK
+X-Gm-Gg: ASbGnctIqylbLYIsIdb1lKC1Jdv72+TITtCiPR3KZMN/KZrk1bc43Vj+ZYAjcBm+Qxm
+	VesF9T7KxuF3zLBKM980EPNFVgALkUJV7gDCtFhqHAkUxO2dIvqNVtn3wEtq7AKfkh6/YntKuHi
+	U/n/oGg3sv1g6wZSPaLXvOkw8K8AdDvrCWn0S4OMQ0pFPx8yhPq5bQL2tq8mSLLFR0l14iGpwg4
+	I0Ly75p2uIvuzl0shx1lNaZHtTjXX51DqNMHQozNS+a+vj5I+39jZnWsq+4/44vmNOOIaZt/o9T
+	FO10MqQ9ShzwmpOe1DtuLDGDEtSS29gnQwJwp/ZB7UxNVYZgXMDdth13TpyUHUyraLERAuhx
+X-Google-Smtp-Source: AGHT+IGhKffUcoovZoLmF4robbIk7xZYJEyrjgrjfdxA9yu1fAwpBy+RuF1KnZIN80fq3t/tsXzygw==
+X-Received: by 2002:a05:6a21:e8c:b0:218:5954:128c with SMTP id adf61e73a8af0-21ee2532c61mr4608410637.21.1749217910233;
+        Fri, 06 Jun 2025 06:51:50 -0700 (PDT)
+Received: from smtpclient.apple ([202.8.105.124])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b084f60sm1315192b3a.101.2025.06.06.06.51.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 06 Jun 2025 06:51:49 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250416035823.1846307-1-tim.c.chen@linux.intel.com>
-In-Reply-To: <20250416035823.1846307-1-tim.c.chen@linux.intel.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Fri, 6 Jun 2025 15:51:34 +0200
-X-Gm-Features: AX0GCFtQuZ3rgVRNeRNw_KLI4y7VY70dnK5LaR0i6JgbSOrS9GgzORh4iniXqSs
-Message-ID: <CAKfTPtA7sLeddYsRU=uftcYt4RpEbWNHWx36tBDzGuPxu8oEmg@mail.gmail.com>
-Subject: Re: [PATCH] sched: Skip useless sched_balance_running acquisition if
- load balance is not due
-To: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	Chen Yu <yu.c.chen@intel.com>, Doug Nelson <doug.nelson@intel.com>, 
-	Mohini Narkhede <mohini.narkhede@intel.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v0] cgroup: Add lock guard support
+From: Jemmy Wong <jemmywong512@gmail.com>
+In-Reply-To: <fo5le4uonsrv24z5gikojq7hxwaqaidgco25pypnppk5h2czap@egdwx6yte4lf>
+Date: Fri, 6 Jun 2025 21:51:34 +0800
+Cc: Jemmy <jemmywong512@gmail.com>,
+ Tejun Heo <tj@kernel.org>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>,
+ Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>,
+ KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>,
+ Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>,
+ cgroups@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <64D97068-D44C-4B29-9847-82F87A006D14@gmail.com>
+References: <20250605211053.19200-1-jemmywong512@gmail.com>
+ <fo5le4uonsrv24z5gikojq7hxwaqaidgco25pypnppk5h2czap@egdwx6yte4lf>
+To: =?utf-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
 
-On Wed, 16 Apr 2025 at 05:51, Tim Chen <tim.c.chen@linux.intel.com> wrote:
->
-> At load balance time, balance of last level cache domains and
-> above needs to be serialized. The scheduler checks the atomic var
-> sched_balance_running first and then see if time is due for a load
-> balance. This is an expensive operation as multiple CPUs can attempt
-> sched_balance_running acquisition at the same time.
->
-> On a 2 socket Granite Rapid systems enabling sub-numa cluster and
-> running OLTP workloads, 7.6% of cpu cycles are spent on cmpxchg of
-> sched_balance_running.  Most of the time, a balance attempt is aborted
-> immediately after acquiring sched_balance_running as load balance time
-> is not due.
->
-> Instead, check balance due time first before acquiring
-> sched_balance_running. This skips many useless acquisitions
-> of sched_balance_running and knocks the 7.6% CPU overhead on
-> sched_balance_domain() down to 0.05%.  Throughput of the OLTP workload
-> improved by 11%.
->
-> Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
-> Reported-by: Mohini Narkhede <mohini.narkhede@intel.com>
-> Tested-by: Mohini Narkhede <mohini.narkhede@intel.com>
+Hi Michal,
 
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+> On Jun 6, 2025, at 5:34=E2=80=AFPM, Michal Koutn=C3=BD =
+<mkoutny@suse.com> wrote:
+>=20
+> Hello.
+>=20
+> On Fri, Jun 06, 2025 at 05:10:53AM +0800, Jemmy Wong =
+<jemmywong512@gmail.com> wrote:
+>> This change replaces manual lock acquisition and release with lock =
+guards
+>> to improve code robustness and reduce the risk of lock mismanagement.
+>> No functional changes to the cgroup logic are introduced.
+>=20
+> I like this.
+> Could you possible split it to individual commits to ease the review
+> for: cgroup_mutex, css_set_lock, RCU and the rest?
+>=20
 
+Thanks for your support. I=E2=80=99ll split the patch into several =
+parts.
 
-> ---
->  kernel/sched/fair.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index e43993a4e580..5e5f7a770b2f 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -12220,13 +12220,13 @@ static void sched_balance_domains(struct rq *rq, enum cpu_idle_type idle)
->
->                 interval = get_sd_balance_interval(sd, busy);
->
-> -               need_serialize = sd->flags & SD_SERIALIZE;
-> -               if (need_serialize) {
-> -                       if (atomic_cmpxchg_acquire(&sched_balance_running, 0, 1))
-> -                               goto out;
-> -               }
-> -
->                 if (time_after_eq(jiffies, sd->last_balance + interval)) {
-> +                       need_serialize = sd->flags & SD_SERIALIZE;
-> +                       if (need_serialize) {
-> +                               if (atomic_cmpxchg_acquire(&sched_balance_running, 0, 1))
-> +                                       goto out;
-> +                       }
-> +
->                         if (sched_balance_rq(cpu, rq, sd, idle, &continue_balancing)) {
->                                 /*
->                                  * The LBF_DST_PINNED logic could have changed
-> @@ -12238,9 +12238,9 @@ static void sched_balance_domains(struct rq *rq, enum cpu_idle_type idle)
->                         }
->                         sd->last_balance = jiffies;
->                         interval = get_sd_balance_interval(sd, busy);
-> +                       if (need_serialize)
-> +                               atomic_set_release(&sched_balance_running, 0);
->                 }
-> -               if (need_serialize)
-> -                       atomic_set_release(&sched_balance_running, 0);
->  out:
->                 if (time_after(next_balance, sd->last_balance + interval)) {
->                         next_balance = sd->last_balance + interval;
-> --
-> 2.32.0
->
+> ...
+>> --- a/include/linux/cgroup.h
+>> +++ b/include/linux/cgroup.h
+>> @@ -382,6 +382,10 @@ static inline void cgroup_put(struct cgroup =
+*cgrp)
+>>=20
+>> extern struct mutex cgroup_mutex;
+>>=20
+>> +DEFINE_LOCK_GUARD_0(cgroup_mutex,
+>> + mutex_lock(&cgroup_mutex),
+>> + mutex_unlock(&cgroup_mutex))
+>> +
+>> static inline void cgroup_lock(void)
+>> {
+>> mutex_lock(&cgroup_mutex);
+>> @@ -656,6 +660,9 @@ struct cgroup *cgroup_get_from_id(u64 id);
+>> struct cgroup_subsys_state;
+>> struct cgroup;
+>>=20
+>> +extern struct mutex cgroup_mutex;
+>=20
+> I assume this was because of the BPF code, which wouldn't be needed in
+> the end.
+>=20
+
+Yeah, other modules also need cgroup_mutex, cgroup_lock/unlock must be =
+retained.
+
+> ...
+>=20
+> Thanks,
+> Michal
+
+Best,=20
+Jemmy
+
