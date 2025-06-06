@@ -1,146 +1,154 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB851339A4
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 14:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108741339A4
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 14:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749220108; cv=none; b=HLPr8SwL9r4SQaXtgT4k1D6MvSJI5GUG/62C/f0tjFsPXzShPHwm3ywkIoKjAj18Vw+KyJ5LkJG2IoVlsCd/OSdmp6pp7/DsTyEnKWTspLqXsK+3WZOAOqo/iVjA6BudTOPY4x4pI5Jzdiwu7XCGMM4P665AZtpy7G8PYPFS2Ko=
+	t=1749220114; cv=none; b=ZAyZpWTBGxwtl9tpDzc8qoo0aob/LzFR97sgHUwWozV6LCGPf15lDA5Dg5q8OiHHTj3vwn/yEU2+03xIg0rrI1TzXSiwR9j4Cyuxpb4JRYTj4xOXf+ZhUUe0i+ScFXSDMVKT9kfsFn8qJh2FrxglttXDDDGWlCg/IqqOqxEXLTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749220108; c=relaxed/simple;
-	bh=Li7ibbFp6IAWaPGC1mntaG/QZQpQuadYqbXM0mDxQQw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oh0DHUG6Z/+QkRTGVFwiVrhLK/kE3uAE3LHSGaiwwVW5twS35d04+kwcDYRtNxsTINlB98mQ90VRIUSzVcvxv0gUO6KGEKMITJIv1MM1DSs7aEURVv/PVmo2xoDCKOs1+p4otLQLWnWx5KQgz1WftvpNiFHAabbtjmJfKizEjn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gfDu4XLW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gfDu4XLW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749220105;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ALf2A6SSvV1hHGniFOaJAJDOmsxkAraK1tIfpQpNucs=;
-	b=gfDu4XLWLl0z4fMm/klMntI9JPTn/7LBJC6sswgmbonYWTCZytR6apJoYXnIUgpo7s+60r
-	VQTWJVapvsc5ZxoKROOi3mX25UJIt8WB3rkfa+LwmcaFy7QMgvuSsXBUYQ5/f4P4g7imT6
-	0HInieiFxiv4jZTOQNU3VSkeJFGNgKk=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-86-d35b6AMVObyaxqtBs5WkEQ-1; Fri, 06 Jun 2025 10:28:24 -0400
-X-MC-Unique: d35b6AMVObyaxqtBs5WkEQ-1
-X-Mimecast-MFC-AGG-ID: d35b6AMVObyaxqtBs5WkEQ_1749220103
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-47ae87b5182so36990871cf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 07:28:24 -0700 (PDT)
+	s=arc-20240116; t=1749220114; c=relaxed/simple;
+	bh=biYcYaU5eBW9WP/dymTI+cSw8ql6koScbNr6aIjyULM=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=qKah19d2n/8kmD/LdOx7E1R5zsmhnQOUxVhQXN+0B+S3A6++XeMlr9NowEVm3n+X0fUvA5llqC84V4HZJ/SL4HCJIBuqaB9fVqI4Un2nWR6RXUhwYxpr2jHdCbbXM6xuH/Aftrc0iIDyPbzZavl+VUniJpgdnLj9wM1bboswS+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3ddc3f14171so29037295ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 07:28:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749220103; x=1749824903;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ALf2A6SSvV1hHGniFOaJAJDOmsxkAraK1tIfpQpNucs=;
-        b=vF3HnuB4pN+BgY8jIFj2ciuxQji1s4Gr45t8gocdgF5jmZPBwgD9p00h5Z1BkA4v23
-         mU44P7CHYtUv1j6Nz6mvT5rmfIKIVvpK72Cek4A52i7iboC5/Ni8r4KhIQKdHwzovUjP
-         JV9ZOL2RZRAoVHZoFLSkhr71sQ4U6gOP53OkOVHAN/FdN3nZCqvL7LMgvM8TdXSZjdO5
-         /mEGmT/TGRogG6VmKNwmxX9KwAgH953pV/oLbyG0Wl0K1DkHV2XtIREEVqS9YWiDMVmq
-         kt+vvN+/O974YFYrdMBkNriCZqlAtkxmsuOK1g8q+NIxDs+22PPrxBGFzxk1ERe34EIv
-         NjBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUC9BOnyqqT2X6EdgoL7B3rT9xdwRlAEXWgZkVOaKBEddprMWc5qQcVUbhp71pjA7q/RoxIEuOAxvzgBCw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywz4uGKsNU3jSctcz7IUy9EETS2LjaTCdMfu4TsxyM3nBwtFRjS
-	VI88kA006Oe1UA6A9wjxsssmrzK47O1C99waTLGdzDHKZQ3tx14I/gPPbdeiDyo627Vh114YyTk
-	MlzWypAKKDRPYgZplKhlOoAnDp2SnoLYmBJyPMdjteGrZITuqsvRf2MA5ieza5Vo4Bu8QclRCCg
-	jx
-X-Gm-Gg: ASbGncsegzR0gQPPltRlmeR6cTllYSUE/ag5nv7n+iIEP+on97bTI/0lOD616obd0Qw
-	Mr+XFLfbbKueXr2aedIwHoKPcOF17LDwRpcFhkFxwaoC01P6jf2yh0sbC3X3ltuBb+p0fhcKg/t
-	+7d9L2SW2m4ynKEtIE4tZrqgH1SIymTS5sXi2MFbtanfDTQ0YfQ8wmXv7TNhoqLf764yKgOd2Y5
-	Ajo84jpyNeZ5bC+hgVRLgYk61pjjDPevwtmak38sMAJRgP8o67hGNN9wvPzQy8Aqjgx/bzuorpd
-	Pa1+x/HDJNCL6KPYdEiTl+t0GdEk+CmHnkLWSLqB4GV2Ew==
-X-Received: by 2002:a05:622a:5c95:b0:476:8f75:b885 with SMTP id d75a77b69052e-4a5b9ece0f5mr63062251cf.44.1749220103132;
-        Fri, 06 Jun 2025 07:28:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGpf4O45y7/LqbcN4g1foJ8Kzb9sFSBSPTzamnMml1OhKOozVnoN1sS1mY/qb2zqIL8mkLT4Q==
-X-Received: by 2002:a05:622a:5c95:b0:476:8f75:b885 with SMTP id d75a77b69052e-4a5b9ece0f5mr63061841cf.44.1749220102756;
-        Fri, 06 Jun 2025 07:28:22 -0700 (PDT)
-Received: from x1 (c-73-183-52-120.hsd1.pa.comcast.net. [73.183.52.120])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a619852fddsm13548021cf.40.2025.06.06.07.28.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 07:28:21 -0700 (PDT)
-Date: Fri, 6 Jun 2025 10:28:19 -0400
-From: Brian Masney <bmasney@redhat.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Alberto Ruiz <aruiz@redhat.com>
-Subject: Re: [PATCH v2 03/10] clk: test: introduce a few specific rate
- constants for mock testing
-Message-ID: <aEL7A_YeC8b4Wj48@x1>
-References: <20250528-clk-wip-v2-v2-0-0d2c2f220442@redhat.com>
- <20250528-clk-wip-v2-v2-3-0d2c2f220442@redhat.com>
- <20250606-fabulous-fortunate-chamois-ab4c98@houat>
+        d=1e100.net; s=20230601; t=1749220111; x=1749824911;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=p9O7Vw9hq24JSKUy5LWCCSKNu/YQohpnts9uAfWp4Yk=;
+        b=ETCjuqA0B1P/IvdDLv0RoNvkGeDucw6EIs0NAyH+YAuky/kNI23B6PV42z+sjbAl+a
+         8FnPurdVqywz5UM4nClIX3HrMRaPqfX2ACENNVVcKW30PplMFII9sHn8K10W0Dy2lVZ5
+         G+DTGuZL8LU+sfB1HXvwuEgPWSLQoxVoOiHLG5rRFmBlS/RHGmAb9KL47UG9w6nAm3mK
+         3krJa7kay/Ozy2WO+KnAys/scupr9VpUIeKsA0QK/crUe1Nrno05XR7fFw+DQfLFYYwk
+         QHnGSe2cEqciWxBE1hk4PCPjlxs7zSAaDRGfuzgOzHKWXZo7cOC7+XZWwonX8PzVoMuC
+         2RqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWQvZOC0bh0UjRF7ir3oUf5ZFx+oIgtgxOpv4nKSjltFgU41pvDQEN2SSlkiu/WdTi0aqc77AS5R1tisv0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzva1ComGtnYyHKv2O5a53WRTpCl7ncIDJ+zGSxWC59mc+wSUbn
+	mmB4BAViuGx1RyfXB9nDs/1hQZo3g5DrxR8cQmPU82o7U0rj1acqDx3mui41zr+7xh5C55Z+bBv
+	Iw6xIr6K/IqA0TXLbzuAtiPgRZ+pvdIc/yDBUONwwtG+6ea5Wev/S2bbW1M4=
+X-Google-Smtp-Source: AGHT+IGl3VUXOeQZGwKedAVyHMmazJe0L0rP4hWudnpGDWFuFI6Fr2VW+cKwX5SSjX8EKM/SVw6ysE7DqQ76EX7zBnKXNp3k6WO9
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250606-fabulous-fortunate-chamois-ab4c98@houat>
-User-Agent: Mutt/2.2.14 (2025-02-20)
+X-Received: by 2002:a05:6e02:380d:b0:3dc:868e:dae7 with SMTP id
+ e9e14a558f8ab-3ddce441589mr42066485ab.15.1749220111133; Fri, 06 Jun 2025
+ 07:28:31 -0700 (PDT)
+Date: Fri, 06 Jun 2025 07:28:31 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6842fb0f.a00a0220.29ac89.0042.GAE@google.com>
+Subject: [syzbot] [mm?] INFO: rcu detected stall in sys_unlinkat (3)
+From: syzbot <syzbot+61ec37db8c428baeb677@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, pasha.tatashin@soleen.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jun 06, 2025 at 10:56:57AM +0200, Maxime Ripard wrote:
-> On Wed, May 28, 2025 at 07:16:49PM -0400, Brian Masney wrote:
-> > Some of the mock tests care about the relationship between two
-> > different rates, and the specific numbers are important, such as for
-> > mocking a divider.
-> > 
-> > Signed-off-by: Brian Masney <bmasney@redhat.com>
-> 
-> It's not obvious to me why they are important, actually. The relation
-> between the two is, but a divider (and our tests) should work with any
-> parent rate, so I guess we can expect it to be opaque.
+Hello,
 
-I agree as well.
+syzbot found the following issue on:
 
-> Can you expand on why it's important?
+HEAD commit:    92a09c47464d Linux 6.15-rc5
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=143530f4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=91c351a0f6229e67
+dashboard link: https://syzkaller.appspot.com/bug?extid=61ec37db8c428baeb677
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
 
-I personally find that having specific numbers in some (but not) of the
-tests make the tests clearer that specific functionality within the clk
-core is exercised. For example, assume we have a parent that can do any
-rate, and two children that are dividers. We could have a test like the
-following:
+Unfortunately, I don't have any reproducer for this issue yet.
 
-    clk_set_rate(ctx->child1_clk, DUMMY_CLOCK_RATE_1);
-    clk_set_rate(ctx->child2_clk, DUMMY_CLOCK_RATE_2);
-    KUNIT_EXPECT_EQ(test, clk_get_rate(ctx->child1_clk), DUMMY_CLOCK_RATE_1);
-    KUNIT_EXPECT_EQ(test, clk_get_rate(ctx->child2_clk), DUMMY_CLOCK_RATE_2);
-    /*
-     * Make something to figure out what the ideal parent rate should be
-     * and test that as well?
-     */
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/1891731f8dec/disk-92a09c47.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/d0de4fa2c8c2/vmlinux-92a09c47.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/53a4edfaecf1/bzImage-92a09c47.xz
 
-So if we set child1 and child2 to 16 MHz and 32 MHz, then that exercises
-one path through the clk core. However, it will currently fail if we set
-the children to 32 MHz and 48 MHz. I have this working on a WIP branch
-and one of my new tests looks similar to:
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+61ec37db8c428baeb677@syzkaller.appspotmail.com
 
-    clk_set_rate(ctx->child1_clk, DUMMY_CLOCK_RATE_32_MHZ);
-    clk_set_rate(ctx->child2_clk, DUMMY_CLOCK_RATE_48_MHZ);
-    // This should test that it's a multiple of 96 MHz
-    KUNIT_EXPECT_EQ(test, clk_get_rate(ctx->parent_clk), DUMMY_CLOCK_RATE_96_MHZ);
-    KUNIT_EXPECT_EQ(test, clk_get_rate(ctx->child1_clk), DUMMY_CLOCK_RATE_32_MHZ);
-    KUNIT_EXPECT_EQ(test, clk_get_rate(ctx->child2_clk), DUMMY_CLOCK_RATE_48_MHZ);
+sched: DL replenish lagged too much
+rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+rcu: 	Tasks blocked on level-0 rcu_node (CPUs 0-1): P6265/1:b..l
+rcu: 	(detected by 0, t=10503 jiffies, g=19425, q=859 ncpus=2)
+task:syz-executor    state:R  running task     stack:22008 pid:6265  tgid:6265  ppid:6251   task_flags:0x400140 flags:0x00004002
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
+ preempt_schedule_irq+0xb5/0x150 kernel/sched/core.c:7090
+ irqentry_exit+0x6f/0x90 kernel/entry/common.c:354
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+RIP: 0010:arch_atomic_read arch/x86/include/asm/atomic.h:23 [inline]
+RIP: 0010:raw_atomic_read include/linux/atomic/atomic-arch-fallback.h:457 [inline]
+RIP: 0010:atomic_read include/linux/atomic/atomic-instrumented.h:33 [inline]
+RIP: 0010:__page_table_check_zero+0x1f9/0x510 mm/page_table_check.c:142
+Code: 89 ee e8 fa 26 93 ff 4c 39 ed 0f 84 6c 01 00 00 4c 8b 3d 5a 2c db 0b 4d 01 e7 4c 89 ff be 04 00 00 00 e8 7a 1b f5 ff 4c 89 f8 <48> c1 e8 03 48 b9 00 00 00 00 00 fc ff df 0f b6 04 08 84 c0 0f 85
+RSP: 0018:ffffc9000b5ef790 EFLAGS: 00000256
+RAX: ffff88801d1b29b8 RBX: 0000000000000000 RCX: ffffffff822cabd6
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffff88801d1b29b8
+RBP: 0000000000000008 R08: ffff88801d1b29bb R09: 1ffff11003a36537
+R10: dffffc0000000000 R11: ffffed1003a36538 R12: ffff88801d1b2970
+R13: 0000000000000003 R14: 000000000005d6e9 R15: ffff88801d1b29b8
+ page_table_check_free include/linux/page_table_check.h:41 [inline]
+ free_pages_prepare mm/page_alloc.c:1263 [inline]
+ __free_frozen_pages+0xb22/0xcd0 mm/page_alloc.c:2725
+ __slab_free+0x326/0x400 mm/slub.c:4553
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x9a/0x140 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x148/0x160 mm/kasan/quarantine.c:286
+ __kasan_kmalloc+0x22/0xb0 mm/kasan/common.c:385
+ kasan_kmalloc include/linux/kasan.h:260 [inline]
+ __do_kmalloc_node mm/slub.c:4327 [inline]
+ __kmalloc_noprof+0x27a/0x4f0 mm/slub.c:4339
+ kmalloc_noprof include/linux/slab.h:909 [inline]
+ kzalloc_noprof include/linux/slab.h:1039 [inline]
+ tomoyo_encode2 security/tomoyo/realpath.c:45 [inline]
+ tomoyo_encode+0x28b/0x550 security/tomoyo/realpath.c:80
+ tomoyo_realpath_from_path+0x58d/0x5d0 security/tomoyo/realpath.c:283
+ tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+ tomoyo_path_perm+0x213/0x4b0 security/tomoyo/file.c:822
+ tomoyo_path_rmdir+0xa2/0xe0 security/tomoyo/tomoyo.c:195
+ security_path_rmdir+0x167/0x360 security/security.c:1949
+ do_rmdir+0x219/0x630 fs/namei.c:4506
+ __do_sys_unlinkat fs/namei.c:4683 [inline]
+ __se_sys_unlinkat fs/namei.c:4677 [inline]
+ __x64_sys_unlinkat+0xc2/0xf0 fs/namei.c:4677
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f36e318df47
+RSP: 002b:00007ffdf6aecb78 EFLAGS: 00000207 ORIG_RAX: 0000000000000107
+RAX: ffffffffffffffda RBX: 0000000000000065 RCX: 00007f36e318df47
+RDX: 0000000000000200 RSI: 00007ffdf6aedd20 RDI: 00000000ffffff9c
+RBP: 00007f36e321089d R08: 000055555c96962b R09: 0000000000000000
+R10: 0000000000001000 R11: 0000000000000207 R12: 00007ffdf6aedd20
+R13: 00007f36e321089d R14: 0000000000033668 R15: 00007ffdf6aeedf0
+ </TASK>
 
-Based on the work in my WIP branch, I think we need to make some of the
-divider only clk tests parameterized, and have a table with various
-specific frequencies so that various edge cases within the clk core are
-tested by the frequency combinations.
 
-I think that instead of having a list of DUMMY_CLOCK_RATE_XXX_MHZ
-defines, a single define like this will suffice:
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-#define clk_dummy_rate_mhz(rate)      ((rate) * 1000 * 1000)
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-Brian
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
