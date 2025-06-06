@@ -1,97 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B799A5234;
-	Fri,  6 Jun 2025 00:06:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90969257D;
+	Fri,  6 Jun 2025 00:07:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749168370; cv=none; b=ghX5v/81nCFqiIkZzIAc3PNCkLF9i6/6EalaHZgjmSxwyqwxUu8Y+wSV5wjSYl7/MShpAX6KNGmFyDiKr3s2LDIffpgK+9PtjmdHkTDGir0kEmkkD4hzIZHx7RaFJHcI833/0pQG/cvtDVVMx70U+OJArG2/GYTI1oh7ugp/f0M=
+	t=1749168431; cv=none; b=F22sYePfyj8OZn06bOkpluhOunV4z9jVn7VsElEtLl9bFK7Wwvz3SgamikflagZu1PuLLW6eOEqloe1NS/0INUiGQ93ztlRQe3JyATyyp8bZX1ZAXAuk8N0XxTsrDGIYSNV2WE7DYWa+Wn86c4wB8gSi+t7z9oHiUwuDAwKPeGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749168370; c=relaxed/simple;
-	bh=kOeEXWQNRy2OTULbzXmLA/yVFQzsao71agZKirZ35u8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Wpi+FNz9m8CD8PirSce89DdTDSRV/ZueVuV7A6c616+gYFQgCDGXQEyzgWyW5FObTmpV5bMt+imzRzwhXl5L+8g1PDxF7BiAUz1M7VtO6ck1NvWhbCSP/n7A7m/YyrGNp/guSh4sjGvcZSQbzuX/AftmXVvLgYt3gXYkWlaEtPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nJFctsbU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749168431; c=relaxed/simple;
+	bh=WCAnL1RuMU0W+2QGcVKKuVXGaRhQpR/IhkCMFv/QF7g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M46Ot4Ui5KsWRTuBzovoB3YKrvlGHRiFzvXjO3IW+CQAGaclAL23qc+Im/Ugr/qZw9GYDk3JVclx1DiK1JABopDwT6MKyVCsnco7DQSTTh7CitgFmQAt0xnaB6L7g+z6nujd/sXFUrwZ1olQmUP0M0btyhaNwBPH9oPhxOM7FxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nLO4lH2S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nJFctsbU"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2CBE6C4CEE7;
-	Fri,  6 Jun 2025 00:06:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nLO4lH2S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9E45C4CEE7;
+	Fri,  6 Jun 2025 00:07:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749168370;
-	bh=kOeEXWQNRy2OTULbzXmLA/yVFQzsao71agZKirZ35u8=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=nJFctsbUoQa5qk+VChv8Sz/jIrNNMapriCXS+1rgwt/pRbUA6jdgJaltLQ9Q0GGXu
-	 SpUE7buCTNRKRolFrV0iL5lJ97nzR6fBamyzlpOYnFSoJKomEUOQex/CNrkV3jhs63
-	 yir9JRDb1KMO6X8MYOChZwH27mM6Ks/+n7ARyuF6YFTiYVgF2yx4eiQmFQ392jsMRr
-	 f8GyzKlZBCwirffmaIBdNdbSTBxKw7/kgypTnU7+cxcAW4Qg5n15NcRggWawJdDAK4
-	 b2BYsCPoRC0uuCAjFui6r7HeZWEYHUYV4894/ihDY/aTu+901w4SkYZwGjERPDLO0H
-	 nsuNMrMP2lsrQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B829C5B555;
-	Fri,  6 Jun 2025 00:06:10 +0000 (UTC)
-From: Bjorn Andersson via B4 Relay <devnull+bjorn.andersson.oss.qualcomm.com@kernel.org>
-Date: Thu, 05 Jun 2025 19:06:06 -0500
-Subject: [PATCH] arm64: defconfig: Enable Qualcomm CPUCP mailbox driver
+	s=k20201202; t=1749168431;
+	bh=WCAnL1RuMU0W+2QGcVKKuVXGaRhQpR/IhkCMFv/QF7g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nLO4lH2SoVVbUbKRIreNMqW0at1MlwNLNSZPPRiPGgGlDSSwFcDZVO9GiK7fjvvLQ
+	 txSCX1W7R7wa/vUTA6BQFYmpYlbdLHPtVrXs9KQpz8rs7V5xbhd04lOC7iJpz+TK1D
+	 MEtD4mU+MHZPpgXizLtifZ8eLbEu3JRn8gVw4FZF3RdYTH8vr40EKTDq2157vTFe/O
+	 GQJlyx2z4dIDg+uB7N049bsA6LTMlcv2SbCcW71XtymH80Up+ka2B/SryhyKIrQBMr
+	 KTOPsw8TlY+mAMelna1rVRUYH1U00zh8UWUBOp26t8OhiQWA2yozWzwMWawo2jXSJJ
+	 s3vZ7hT872iQw==
+Date: Thu, 5 Jun 2025 19:07:08 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+	Eric Dumazet <edumazet@google.com>, imx@lists.linux.dev,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH 1/1] dt-bindings: net: convert nxp,lpc1850-dwmac.txt to
+ yaml format
+Message-ID: <174916842673.3519885.13165846799874556339.robh@kernel.org>
+References: <20250602141638.941747-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250605-enable-cpucp-v1-1-111ecef7e4c9@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAO0wQmgC/x3MQQqAIBBA0avIrBNGw6CuEi3UxhoIE6UIpLsnL
- d/i/wqFMlOBSVTIdHPhMzaoToDfbdxI8toMGrXBAY2kaN1B0qfLJzkqa9D0AV1Q0JKUKfDz7+b
- lfT8Vhg+VXgAAAA==
-X-Change-ID: 20250605-enable-cpucp-91a5053f0bf1
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, linux-arm-msm@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749168367; l=931;
- i=bjorn.andersson@oss.qualcomm.com; s=20250318; h=from:subject:message-id;
- bh=mwZCvU5SjPvj2kO7B5ZfonxzycfZ+NOz+VGaDsi0ueE=;
- b=L05l4pr3UPZUZ5Tco/EHocmMvBvnHuoV/CG26hOOlmpoGvi0y/J50xiVyWHqBhKDtLGRRVJKx
- 4BWrg4OWuZ6ByYUBCzvI5YNd+uPCN6J6cirhNYCrvDjo7wT9Z4C8hnI
-X-Developer-Key: i=bjorn.andersson@oss.qualcomm.com; a=ed25519;
- pk=rD3O9C9Erg+mUPBRBNw91AGaIaDVqquHZbnn6N6xh6s=
-X-Endpoint-Received: by B4 Relay for
- bjorn.andersson@oss.qualcomm.com/20250318 with auth_id=362
-X-Original-From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-Reply-To: bjorn.andersson@oss.qualcomm.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250602141638.941747-1-Frank.Li@nxp.com>
 
-From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
 
-The Qualcomm CPUCP mailbox driver needs to be enabled for CPU frequency
-scaling to work on the X Elite platform, so enable this driver.
+On Mon, 02 Jun 2025 10:16:36 -0400, Frank Li wrote:
+> Convert nxp,lpc1850-dwmac.txt to yaml format.
+> 
+> Additional changes:
+> - compatible string add fallback as "nxp,lpc1850-dwmac", "snps,dwmac-3.611"
+> "snps,dwmac".
+> - add common interrupts, interrupt-names, clocks, clock-names, resets and
+>   reset-names properties.
+> - add ref snps,dwmac.yaml.
+> - add phy-mode in example to avoid dt_binding_check warning.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  .../bindings/net/nxp,lpc1850-dwmac.txt        | 20 -----
+>  .../bindings/net/nxp,lpc1850-dwmac.yaml       | 81 +++++++++++++++++++
+>  2 files changed, 81 insertions(+), 20 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/net/nxp,lpc1850-dwmac.txt
+>  create mode 100644 Documentation/devicetree/bindings/net/nxp,lpc1850-dwmac.yaml
+> 
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 62d3c87858e1817bac291780dff3823dacd72510..d3ef95df7b2770ac1c7a6022a9ec22d1fb4c25da 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -1447,6 +1447,7 @@ CONFIG_PLATFORM_MHU=y
- CONFIG_BCM2835_MBOX=y
- CONFIG_QCOM_APCS_IPC=y
- CONFIG_MTK_ADSP_MBOX=m
-+CONFIG_QCOM_CPUCP_MBOX=m
- CONFIG_QCOM_IPCC=y
- CONFIG_ROCKCHIP_IOMMU=y
- CONFIG_TEGRA_IOMMU_SMMU=y
-
----
-base-commit: 4f27f06ec12190c7c62c722e99ab6243dea81a94
-change-id: 20250605-enable-cpucp-91a5053f0bf1
-
-Best regards,
--- 
-Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
