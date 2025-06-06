@@ -1,184 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47211863E;
-	Fri,  6 Jun 2025 14:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216C3288A8
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 14:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749219539; cv=none; b=I+4hp1Zp9o+MQXQL45KNPum1YsytffTkWqhS73HaZDm7NlAZUXgjMyn9n6PBMnzhm8JZkhenFjfzrflEk0Ej5oKNOxGGOy5Kg+qlqOtNEwYqNdrInCIdA4uNhi2ZYDZBKIQfYq+S2t/AxP5EOaMMTrliz00PwgvoM41NMMhzDI0=
+	t=1749219641; cv=none; b=A3TM+5impM8dt891gzaMnXfHwW+dPid+ERYYjwvbiUXnOG3Ok1MPRZqS+l09+D72LzWxU7ahqOcMBl1hvN/dQAg5aVDPG4gjS//ZvnE40CsEp8YD3MyK/KbqQZ49wys3XKBx6LmQMXqZXdp7PvY8eNvtmz7DFbayAEu9YcXJzb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749219539; c=relaxed/simple;
-	bh=pkkL6mHI4nb2yOPPIzaWJ0j+YolfgGRBjMLR/Ejsq4c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M+VugrtaKAFgzc3sTh0xO2cWFWoIVac7TkBIxGboopEGAMwWmptYC1ydO3XU9iZKvW2FEFo0fd7ENVWAzwmyfo8vmzWiIA3ol3S7AskF75/idkktgcA5nATvP4httrxNbWk2aVpnAQeGod7frj/q82Fm/VkqAcm647y4npdoTqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j1iVkK0L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749219641; c=relaxed/simple;
+	bh=3MDKCzcRqE17jpMODKflA/mPPIlcttinXXOo2OBAwAs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=lPtIlxrwp7VhEgw9XhQm9zKRzqDOmHgLS9otEwGkUylHrgzZcekqfEAVPLWYNT0yspPfvgeLEFZs/irtTZ3IOzbf1sSgutbAANKrvnei2vTl4cfttBHrBsaXKMrgWb6jx9itbDB7nfFAON+Qenv+ULJ8XUh8cXQaXKO0gNhRXTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=255GtuGk; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j1iVkK0L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 189F6C4CEEB;
-	Fri,  6 Jun 2025 14:18:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749219539;
-	bh=pkkL6mHI4nb2yOPPIzaWJ0j+YolfgGRBjMLR/Ejsq4c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j1iVkK0L7Ccl0msF0tGTZuRrE0YFQXXe2rKPaZuw5DZ2YNA+a+kUq7Eq8qTdm+mnK
-	 TUDRDRhqGdVRkT/3RGndJ+nau61as9MGRgXpagFiyu0+2LicgiTrZs3nM6GYd5d9rS
-	 JBCIv4OXDINGrbCYKC44oGkzGCewPxGLzi1AfGAdSGS3WPvpeRImIgeJnWkEXoirVW
-	 5djXzYxSQTlNAUt3/60Kg18rYdbzah5FShiuC+RQhD/npg/Uibembo3fxvM7OEVKh+
-	 ucDO4f3PMzVzoPE88njq5syfEKtRFjeePyv1JshnTawAkYDSGkji3qKooQxlwWlGgK
-	 et2VhhKkPV1Zg==
-Date: Fri, 6 Jun 2025 09:18:57 -0500
-From: Rob Herring <robh@kernel.org>
-To: Alireza Sanaee <alireza.sanaee@huawei.com>
-Cc: devicetree@vger.kernel.org, jonathan.cameron@huawei.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linuxarm@huawei.com, mark.rutland@arm.com,
-	shameerali.kolothum.thodi@huawei.com, krzk@kernel.org,
-	dianders@chromium.org, catalin.marinas@arm.com,
-	suzuki.poulose@arm.com, mike.leach@linaro.org,
-	james.clark@linaro.org, linux-perf-users@vger.kernel.org,
-	coresight@lists.linaro.org, gshan@redhat.com, ruanjinjie@huawei.com,
-	saravanak@google.com
-Subject: Re: [PATCH v3 7/7] of: of_cpu_phandle_to_id to support SMT threads
-Message-ID: <20250606141857.GA1476878-robh@kernel.org>
-References: <20250512080715.82-1-alireza.sanaee@huawei.com>
- <20250512080715.82-8-alireza.sanaee@huawei.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="255GtuGk"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-450dd065828so16526875e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 07:20:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749219637; x=1749824437; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BCECvT2ZqaLSupqrgHoRYTITFIBrUFbkXozj6gpUIgI=;
+        b=255GtuGkBXlI2UOWybrmrBwbIHQffrjov0sFZNJKZ4dJiWV2B15jbwXmMuNSVgNMHk
+         MEFB4VLhH3JwSO/n1AEyHblJF9NXlmASdp1uj51a0FxJFojjwDg/K+f3Dg3tQGDyE5Uj
+         hyZx3lXNQ1Lfv5HaYGFDR4Aiab5ktwePsonZ5W7XSP5W8iJbkWmlbwkYe+IxKiFGimhN
+         xUS3nXrnNuLp+NNfk4F2cfOqPupCwMdulVRMHik1PKSL5C8I5H6M8EDNfR7z+17hm119
+         WVn2jqM7KHQtfYmvY/aHMs2LM2ioPTY+HD5z231YHjigiYzf8Xg3RYJkwSAjXDLC4Ctp
+         AghA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749219637; x=1749824437;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BCECvT2ZqaLSupqrgHoRYTITFIBrUFbkXozj6gpUIgI=;
+        b=A0Fo85if3hoTbEDYb79+Q0vnmTW0goN4Ct/KAbZeNsC9P60IFqKWo9m1XPXyA1Xymg
+         AN3vhZutvvxXTFv0B5Mkw/BayM/gszTo8v3A6R5tCGFK3g9DWjKjAr1WRiZi0xK3x1Mf
+         rhfAxS2KYLzeiourYbc8nDbcIo1CY9gAPlef37GMGkpZx4zbQSDjT4JxjFmzV1U+sHpN
+         goyYARpuSTKcGZGxgtHFyg2wCpNHslUfA2CYX1SdElUvjjCgA9yr5qhj6UE18opA1HT5
+         zwbZbhc4BE0uRByB28U7AdQgUFRHbce6aMK7cmbYbHnHkYfDyWg/WDDXn+OF/T9tIzEQ
+         KZJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWImGam2iBBPzGfZ2nth0WdfviuWo+5q1MOcWZzWlhVJ3L670NWDQp5wDq6mVJmSDWZxrY2kObRCub400E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSCiYSdViYWbumDnVCTA8wX8u2XkdO9o9LlgbG4hPcbMF2Mj5W
+	CqvHNMeRUQr12gFYonH6IivnNdHKSNEjRMWMPCOvBZpdQrHRkX0tO/UF8oX6d5vX9jA=
+X-Gm-Gg: ASbGncsGToVepfLRgkjsO5wDah5V3HgidVroSJlpKbAD7T/rC0ZzelxPK+mgu4whyqn
+	Lccna0lh5bFZzSrwLlfSD2pZEKuTOZckJHh82Ul0vrvW5Ft7tVg2Esgj6NP+1SoLUaGlhh4drum
+	R5pufUdh4lh7S9nPYNn5pf8OM1R3X/E0kBKCNTCwNR/QI4a0XYxlZ4Pcr9Tw/0n2O1swy6tVVQx
+	lO4tELs0ts3uy3XtCqKHxK/xra1IbDEtRI/R7LXU/YE8s36IeVAxcYZU5E/KaUgduAIYLbAkf6T
+	l3BtA6jsjgFiwkSBbOdCux6gjLMW9e0AUdrTM7HolSSMUw1BgvSdqYsVnmprNPG8ZFTpm6u++8Q
+	DnpBo6nt7wPdRT1+UBRdbdl9Uia/+pX4=
+X-Google-Smtp-Source: AGHT+IH59aMsKf3hdHtSKVIfRUVq4kAbJbYNUCQzRJeoDhtgAosvkcg81rm88rY6ZYDHdAP4zhIZwQ==
+X-Received: by 2002:a05:600c:83cf:b0:450:b9c0:c7d2 with SMTP id 5b1f17b1804b1-452014146bamr37850795e9.11.1749219637319;
+        Fri, 06 Jun 2025 07:20:37 -0700 (PDT)
+Received: from [192.168.0.2] (host-80-116-51-117.retail.telecomitalia.it. [80.116.51.117])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45213754973sm25686345e9.35.2025.06.06.07.20.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 07:20:36 -0700 (PDT)
+From: Angelo Dureghello <adureghello@baylibre.com>
+X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
+Date: Fri, 06 Jun 2025 16:19:16 +0200
+Subject: [PATCH v9 1/7] Documentation: ABI: IIO: add new convdelay
+ documentation
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250512080715.82-8-alireza.sanaee@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250606-wip-bl-ad7606-calibration-v9-1-6e014a1f92a2@baylibre.com>
+References: <20250606-wip-bl-ad7606-calibration-v9-0-6e014a1f92a2@baylibre.com>
+In-Reply-To: <20250606-wip-bl-ad7606-calibration-v9-0-6e014a1f92a2@baylibre.com>
+To: Jonathan Cameron <jic23@kernel.org>, 
+ David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Michael Hennerich <michael.hennerich@analog.com>, 
+ devicetree@vger.kernel.org, Angelo Dureghello <adureghello@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1850;
+ i=adureghello@baylibre.com; h=from:subject:message-id;
+ bh=HL+KRQj9p0fzRWOWKu4itMjiQokyOUQbf/17jsDSPRk=;
+ b=owGbwMvMwCXGf3bn1e/btlsznlZLYshw+vEsMrwlT6QtiT/9adzuwK9LpP7aftApjC3T3F78t
+ 4r7zcHdHaUsDGJcDLJiiix1iREmobdDpZQXMM6GmcPKBDKEgYtTACbiHsfwV9iXRbItQ+bak6zk
+ qAqt8zvrmLdqZXKabucRPPnj/Y9D3xn+Sr/y+8PxyzuBNSWTM1CF80HtAc3bwXqTMkVr7+Xr29/
+ gBQA=
+X-Developer-Key: i=adureghello@baylibre.com; a=openpgp;
+ fpr=703CDFAD8B573EB00850E38366D1CB9419AF3953
 
-On Mon, May 12, 2025 at 09:07:15AM +0100, Alireza Sanaee wrote:
-> Enhance the API to support SMT threads, this will allow sharing
-> resources among multiple SMT threads.
-> 
-> Enabled the sharing of resources, such as L1 Cache and clocks, between
-> SMT threads. It introduces a fix that uses thread IDs to match each CPU
-> thread in the register array within the cpu-node. This ensures that the
-> cpu-map or any driver relying on this API is fine even when SMT threads
-> share resources.
-> 
-> Additionally, I have tested this for CPU based on the discussions in
-> [1], I adopted the new cpu-map layout, where the first parameter is a
-> phandle and the second is the local thread index, as shown below:
-> 
->     core0 {
->       thread0 {
->         cpu = <&cpu0 0>;
->       };
->       thread1 {
->         cpu = <&cpu0 1>;
->       };
+From: Angelo Dureghello <adureghello@baylibre.com>
 
-I think the thread nodes should be omitted in this case.
+Add new IIO "convdelay" documentation.
 
->     };
-> 
-> Also, there are devices such as below that are a bit different.
-> 
->     arm_dsu@0 {
->       compatible = "arm,dsu";
->       cpus = <&cpu0 &cpu1 &cpu2 &cpu3>;
->     }
-> 
-> In these cases, we can also point to a CPU thread as well like the
-> following:
-> 
->     arm_dsu@0 {
->       compatible = "arm,dsu";
->         cpus = <&cpu0 5 &cpu1 9 &cpu2 1 &cpu3 0>;
+The ad7606 implements a phase calibation feature, in nanoseconds.
+Being this a time delay, using the convdelay suffix.
 
-The purpose of 'cpus' properties is to define CPU affinity. I don't 
-think the affinity could ever be different for threads in a core.
+Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+---
+ Documentation/ABI/testing/sysfs-bus-iio | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-And cpu1 having 10 threads is nonsense.
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+index ef52c427a015cf47bb9847782e13afbee01e9f31..3bc386995fb6ddf5fd0718587a84d703cb973d70 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio
++++ b/Documentation/ABI/testing/sysfs-bus-iio
+@@ -559,6 +559,30 @@ Description:
+ 		- a small discrete set of values like "0 2 4 6 8"
+ 		- a range specified as "[min step max]"
+ 
++What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_convdelay
++KernelVersion:	6.17
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Delay of start of conversion from common reference point shared
++		by all channels. Can be writable when used to compensate for
++		delay variation introduced by external filters feeding a
++		simultaneous sampling ADC.
++
++		E.g., for the ad7606 ADC series, this value is intended as a
++		configurable time delay in seconds, to correct delay introduced
++		by an optional external filtering circuit.
++
++What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_convdelay_available
++KernelVersion:	6.16
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Available values of convdelay. Maybe expressed as:
++
++		- a range specified as "[min step max]"
++
++		If shared across all channels, <type>_convdelay_available
++		is used.
++
+ What:		/sys/bus/iio/devices/iio:deviceX/in_accel_x_calibscale
+ What:		/sys/bus/iio/devices/iio:deviceX/in_accel_y_calibscale
+ What:		/sys/bus/iio/devices/iio:deviceX/in_accel_z_calibscale
 
-Most cases of 'cpus' (and 'affinity') lookups and then callers of 
-of_cpu_node_to_id() ultimately just want to set a cpumask. So we should 
-provide that rather than opencoding the same loop everywhere.
+-- 
+2.49.0
 
->     }
-> 
-> It should be possible to know how many arguments a phandle might
-> require, and this information is encoded in another variable in the dt
-> called #cpu-cells in cpu node.
-> 
-> Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>
-> 
-> [1] https://lore.kernel.org/devicetree-spec/CAL_JsqK1yqRLD9B+G7UUp=D8K++mXHq0Rmv=1i6DL_jXyZwXAw@mail.gmail.com/
-> ---
->  drivers/of/cpu.c | 41 +++++++++++++++++++++++++++++++++--------
->  1 file changed, 33 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/of/cpu.c b/drivers/of/cpu.c
-> index fba17994fc20..cf54ef47f029 100644
-> --- a/drivers/of/cpu.c
-> +++ b/drivers/of/cpu.c
-> @@ -189,16 +189,41 @@ int of_cpu_phandle_to_id(const struct device_node *node,
->  			 struct device_node **cpu_np,
->  			 uint8_t cpu_idx)
->  {
-> +	bool found = false;
-> +	int cpu, ret = -1, i, j;
-> +	uint32_t local_thread, thread_index;
-> +	struct device_node *np;
-> +	struct of_phandle_args args;
-> +	static const char * const phandle_names[] = { "cpus", "cpu" };
-> +	static const char * const cpu_cells[] = { "#cpu-cells", NULL };
-> +
->  	if (!node)
-> -		return -1;
-> +		return ret;
->  
-> -	*cpu_np = of_parse_phandle(node, "cpu", 0);
-> -	if (!*cpu_np)
-> -		*cpu_np = of_parse_phandle(node, "cpus", cpu_idx);
-> -			if (!*cpu_np)
-> -				return -ENODEV;
-> +	for (i = 0; i < ARRAY_SIZE(phandle_names); i++) {
-> +		for (j = 0; j < ARRAY_SIZE(cpu_cells); j++) {
-> +			ret = of_parse_phandle_with_args(node, phandle_names[i],
-> +							 cpu_cells[j], cpu_idx,
-> +							 &args);
-> +				if (ret >= 0)
-> +					goto success;
-> +		}
-> +	}
->  
-> -	return of_cpu_node_to_id(*cpu_np);
-> +	if (ret < 0)
-> +		return ret;
-> +success:
-> +	*cpu_np = args.np;
-> +	thread_index = args.args_count == 1 ? args.args[0] : 0;
-> +	for_each_possible_cpu(cpu) {
-> +		np = of_get_cpu_node(cpu, &local_thread);
-> +		found = (*cpu_np == np) && (local_thread == thread_index);
-> +		of_node_put(np);
-> +		if (found)
-> +			return cpu;
-> +	}
-> +
-> +	return -ENODEV;
->  }
->  EXPORT_SYMBOL(of_cpu_phandle_to_id);
->  
-> @@ -206,7 +231,7 @@ EXPORT_SYMBOL(of_cpu_phandle_to_id);
->   * of_get_cpu_state_node - Get CPU's idle state node at the given index
->   *
->   * @cpu_node: The device node for the CPU
-> - * @index: The index in the list of the idle states
-> +g* @index: The index in the list of the idle states
-
-Oops!
-
->   *
->   * Two generic methods can be used to describe a CPU's idle states, either via
->   * a flattened description through the "cpu-idle-states" binding or via the
-> -- 
-> 2.34.1
-> 
