@@ -1,81 +1,99 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8859B1FECDD
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 09:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A573283FFB
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 09:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749200618; cv=none; b=KejVlaSzJCKFhPI2vznmF/VyC4QJI9gZ8mqTJdQmNPN6S6oL96Dpph/cGr/7fFkVQBIR8BbKQmiRO06jry3LHkqfDmbo2j7F5iuuCmnVcXM5/wkQ7khzjaXSma9U6E1Y9tcihlDjVfkGX5mbvbiXQlIIbL5O/m6bUqlfGwGPfFo=
+	t=1749200663; cv=none; b=d1MbHFrSFNXy5n18she0vlHbZM3ODkgJN4E9ucOzWJ7rZ4fxTbkiAv8jOo5LQCugY1cyU+G345GYepS/07vOu3ej3ST0G2Z9ivfxPKpLK3jhqfGcbNKOedqoS7ijkQuHyMhJ7Qu7AVyuxzQHQCFOdTL/HSSlERVIiHzGptniZ6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749200618; c=relaxed/simple;
-	bh=NixwJmhararRG0PXik0CMU+BuPMxAwgYpPtxJpeTDK8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LmFigY0FKp7OnlyuZwb9hZtKjHA9MflVsD5PXZNdWEdxXj/pyemnFfoQa31rkQ2yGAVUoMo2VNU4BZES00BGJ9+/87zXo1LGEeY6Fg2jINKFuuH8z2qWCLXF5dxX3LA+qbdioSZ6PO/vfjubSV19j9UfJd7PgDE6aLhaWRhpBr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4kSnPIbi; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1749200663; c=relaxed/simple;
+	bh=atA00FElL1PdAn8QEx0N6GgZX//dcCoPP67oO9WxXfo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=G7Hu3jN1wU19Gh1i0luXUSneeGhUMShpO3LNoyOtFlzx1jxQHSu7QdbNVnbQbD1bOJjrWzJoM0ybn5rXNtohWPwvZM+VTpAdo0lF1PJdnxaubaWaGZoK8Getbvtyu5s4Tdjxs4rAKWYc+WVueegtPg+q6V7UwfiL9EBE3nMwnyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FLBdE6Ky; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4kSnPIbi"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-450d290d542so12172605e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 02:03:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FLBdE6Ky"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-450cea01b9cso5922535e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 02:04:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749200615; x=1749805415; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PXmA45OktDW/fOAesa/7QySr6oLvpP9eVh/oC+dlXDM=;
-        b=4kSnPIbiJPffn1KOB2Ti5KjFYGBE0XCnO4kGkHFnsez1/N/woSKsaNFpJZInr7PPE/
-         vFn9kVihU+wyGiL73DQ7vyOwNdhG+WSbX7b71EDtsQlapa6MNzWSE6HgcFhjlUloQ7iA
-         nsXHSmMEifBdNb8cmUQNdLcWfVDf1pfgpRwIHmiDRrpCfNRA/aZAlnv+nprWd5f88bD7
-         jIWt7lMp1GJKan/b0VIc3BQyT+hPK7nGKeIp7h9HAQ9G8cSQDTFxK5Y9vmmrTa+0cllK
-         iki4aPu2YBiWUqmxsEoZBeNb5JfY74+30k9rEImh/YwxKsa0fPALbxjn99uMciI78v5I
-         upqA==
+        d=linaro.org; s=google; t=1749200660; x=1749805460; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=f+0n8NKWl3riyF7/7I5pRPKqW7VrVfcXJo61+Gw+kIg=;
+        b=FLBdE6KyuWCOEJ6DiXopQgcFNtVLB0ly443e90Gh7P+zYuFY6tBGjir/iwBQc8CkOY
+         62oNPoizn4tGbJn/app7aq2Ai2NEuqSQJMFK6rSJ7mFBSfeMXgKylT3g+Zu9JtpQmW1w
+         /kUSJn3rAHmgmOqKshbeGuBdib1jBT09PqLx69EMYj448NQqfdI00M12OlVw7d9HWOjV
+         z1/tdYqUi8/EkpvwvDiL7uQukUTL/1LFlLLr2EAM51MPm0VZZjJN0aZedogcXjXm+d2L
+         k7rSfokygEUPo7ff5ziU+EsHh25FeAnw2lGQr3t3Sa8CCVFb/bOJ11/MbXRcVmMNnhvN
+         Kq5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749200615; x=1749805415;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PXmA45OktDW/fOAesa/7QySr6oLvpP9eVh/oC+dlXDM=;
-        b=LG1dDyGuCL7aYV7ZlT0qFb6TWwfNveHEZUM/jgbeu8XTJKaBB+HYsBOjih+wt145M1
-         xycr3W7vTQhamOev99uS5qrotG4Ojb72I3rltWaxYxesuJq+dll8IzD/CuKGzmKRmn96
-         MWE440PLyxe/m50qKIcnStlMqydm+JQpfvE/r5NmXGyruNxpP7LLa8nTQJcEoUEk/4/F
-         nAk56gqIrzfSEKuNfPV8KO/Dj9Fw9Lf2HX5kGXulEffQ2S9g2h32sW8Qh3PLVLx3g+aR
-         YobVPZYPQNaMC4Eopb2kn2Ui60SDpSB8/1VgJZpahcR6tDJwFPd7qIYJXTKZzaF6AEDX
-         b2mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW4sigPLRIQ+mOcd/nyPHjsGuDTm5KnA/qbrEjjuwtFwBUKkWUNlz7Z92C36icjEX2pNlTs6TsDnfpaqb8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzV6DKyGXcxUQ5V/+TOQxejznwkIBinsoRxk2eLmIJTGXaVdIT/
-	WfU+GwsMbnSVurYhWTV6aEJGIos5q62rjmqbq5cQb4onZkRw2/L6512rKBA5OugVhRKv1i6jgka
-	nfjESsfnFjHKL3G+npQ==
-X-Google-Smtp-Source: AGHT+IHFQ6pRF7d6Uf2Oxmr4H+s0YtMi7Jc3S14x7LDh/JCicwAfoN95lt3GaMtzT3oX1lM0zaOLBSxt36s38pU=
-X-Received: from wmsd9.prod.google.com ([2002:a05:600c:3ac9:b0:451:f443:5948])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:8b72:b0:441:d43d:4f68 with SMTP id 5b1f17b1804b1-45201450b88mr28775525e9.15.1749200614959;
- Fri, 06 Jun 2025 02:03:34 -0700 (PDT)
-Date: Fri, 6 Jun 2025 09:03:33 +0000
-In-Reply-To: <20250605141930.1069438-1-cmllamas@google.com>
+        d=1e100.net; s=20230601; t=1749200660; x=1749805460;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f+0n8NKWl3riyF7/7I5pRPKqW7VrVfcXJo61+Gw+kIg=;
+        b=aaTD2mtqF4qGn6B1TuZKDwTaq2lAYhAauZQycCvVPPmvxkiBr0vTnmqJ8Q1vAkf29f
+         C0mGsDEfsrHwCyB10su7rUw0LCPa9g7sf8SNmNZnCwI83zg85TXhvDEDkSDrGLe2j1pT
+         yFFry2ISE3hFakRZHPgCKshxYnGRTznKpZDuMfWKLHm9PVcQ0isQsHgv2Uthiv2lMxJB
+         vTRQmsYSsIhkroCxHNjA2QM4pJCpFER0PukABEXkWZBgVTqa0vos4CVzCiEtg7DRpgGH
+         48mu2068CSYW8X0Jqrjb7cMQvGlzO0PXB/dYvOjYo/MbyEWPARrZfI8E4ZBEcKzrSgBj
+         1ViA==
+X-Forwarded-Encrypted: i=1; AJvYcCW0XanDo6nIJmha2DBf9xw0IqqqnE7IjWatggbfiWVI5tKW2UwtT9wp2OkZn2JxQdxiCf36ojnOb21Bdfs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIiLmoVheM3TeE4xVB/luNv9+bbDQ7c87leNaBiJbY99r2epb/
+	Yp3RmBoxopUbWI6q0ru4B4YiI1tHrM7TYovbJnvtoaItC+gBm5DNPEQMZWc4jQ3Ie64=
+X-Gm-Gg: ASbGncvanB3a2wxdBn9WydyEftndLjJYWXAsFzN2ueLsKcHi5DPSU3OaQQMu4ImaTWd
+	O09Emy5LVkRcfV3+pKp6WxwLl5izSbimC9TQQgEgQ6xssteD/0EiffqTyQP2kAzJpsqzM+tsk2x
+	5UkIih17VRMl87Y8SOQkBUPEqDhsedhdlYIpUyxK8Y4fYh2fQtD5UuKy7g3Vh7nsabve0V9JsYm
+	p1Rj1fP9eVDQDRCB9mr9OmU3LBOZOjBkCdP4DIBejfv8X8lZTFcezMMIHWGhFCLa43CuGaZL8eg
+	uWNAyJDb4Q7zUuv0P9aVxoMlz634ndA++OYAtMAzaXDZ/AHO729T55OPIFwS+rJfs88=
+X-Google-Smtp-Source: AGHT+IEMgnQm6IyXJETnU1joAUlaC9jQwH6ZYJk+ZFID2NbYjHHTWiY2iKL9SlP/kooNnTgG9NsR4A==
+X-Received: by 2002:a05:600c:3b0e:b0:43c:f8fe:dd82 with SMTP id 5b1f17b1804b1-4520147f41emr28594825e9.18.1749200659602;
+        Fri, 06 Jun 2025 02:04:19 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4526e158428sm14173225e9.14.2025.06.06.02.04.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 02:04:18 -0700 (PDT)
+Date: Fri, 6 Jun 2025 12:04:14 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Thangaraj Samynathan <thangaraj.s@microchip.com>
+Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH next] spi: spi-pci1xxxx: Fix error code in probe
+Message-ID: <aEKvDrUxD19GWi0u@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250605141930.1069438-1-cmllamas@google.com>
-Message-ID: <aEKu5Xusjkxa9vZV@google.com>
-Subject: Re: [PATCH] binder: fix reversed pid/tid in log
-From: Alice Ryhl <aliceryhl@google.com>
-To: Carlos Llamas <cmllamas@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Arve =?utf-8?B?SGrDuG5uZXbDpWc=?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Christian Brauner <brauner@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, kernel-team@android.com, 
-	Steven Moreland <smoreland@google.com>, 
-	"open list:ANDROID DRIVERS" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-On Thu, Jun 05, 2025 at 02:19:29PM +0000, Carlos Llamas wrote:
-> The "pid:tid" format is used consistently throughout the driver's logs
-> with the exception of this one place where the arguments are reversed.
-> Let's fix that. Also, collapse a multi-line comment into a single line.
-> 
-> Cc: Steven Moreland <smoreland@google.com>
-> Signed-off-by: Carlos Llamas <cmllamas@google.com>
+Return the error code if pci_alloc_irq_vectors() fails.  Don't return
+success.
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Fixes: b4608e944177 ("spi: spi-pci1xxxx: Fix Probe failure with Dual SPI instance with INTx interrupts")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ drivers/spi/spi-pci1xxxx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/spi/spi-pci1xxxx.c b/drivers/spi/spi-pci1xxxx.c
+index c6489e90b8b9..9112d8a1a0c8 100644
+--- a/drivers/spi/spi-pci1xxxx.c
++++ b/drivers/spi/spi-pci1xxxx.c
+@@ -765,7 +765,7 @@ static int pci1xxxx_spi_probe(struct pci_dev *pdev, const struct pci_device_id *
+ 							   PCI_IRQ_ALL_TYPES);
+ 			if (num_vector < 0) {
+ 				dev_err(&pdev->dev, "Error allocating MSI vectors\n");
+-				return ret;
++				return num_vector;
+ 			}
+ 
+ 			init_completion(&spi_sub_ptr->spi_xfer_done);
+-- 
+2.47.2
+
