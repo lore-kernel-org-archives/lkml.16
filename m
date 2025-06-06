@@ -1,213 +1,121 @@
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A155A288C15;
-	Fri,  6 Jun 2025 12:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F780288C29;
+	Fri,  6 Jun 2025 12:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749211627; cv=none; b=gGMNrzmCrNodnXHGKPwiGwNZSLodJWJH+JR1nPVVn+8ao2heJLH+LMKwwh11BtjeNmszgy2svFsjIsqiELbWdDApiKWha6K60jNOp4ESnAHB9D/T/KyybTxrJZGTsAYf+u1EuyxlgMH5/WaBi17ACGY/avxn2DjtkdQIVhGgAtk=
+	t=1749211635; cv=none; b=mfxa+sDcnDHJGuRNwE4HFih0smDLMIiZPtPHEpmBs9ka4iayjkMCh0o+RbVdPGOj1QNCBSIHeadI2Q9lMAZulZNTqIU8mlCorJKiuZdaawA+g4jHRy+/k48T4QLo8uBhEAWftb68xmpZica2m3zdMiH2f83VTlDricmJ1cL5zTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749211627; c=relaxed/simple;
-	bh=lg3kmFZQXaT6RdO/u7P41CZ1HWdm8SPqQvfiJsphDpw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rvg+RvW/mmEw2zzuOFXHVhw8JnDXOwBNnWaqhZ68+PBlCuiuoonb8AXxHpL7ywvNQrTEmuEhjREO/XngnwHfGY0U+/kKrhWWX7AiELIoHISWim4CltZbhD/UQebZclM/cUt9nlHFKuvv8muYBlZaSbgn/u6M2OLkG6gLFksXR8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=SuWL0iqd; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=kK1vmeEd; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	s=arc-20240116; t=1749211635; c=relaxed/simple;
+	bh=yLJY0BRHWTXa3UHtKPNGBZr3m05ayE2UCFaKiHPe/T0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tD4BXirxTIADgDfmQSqg+5Y1kvOhej5VPHTEGOSL2NpRemUfM/m7DwS+GfyPbW9JvcbHCncBpipLBeyOYbQkg+hXKoDDS78aZiEg6H/X15kQO+xtXhkimktOC/edMWLekBWLR7X9R8XcfJ5ua05yKhHP4nmXqlLL/BTNOXqi8gI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BQBauKso; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="SuWL0iqd";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kK1vmeEd"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 981871140144;
-	Fri,  6 Jun 2025 08:07:04 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Fri, 06 Jun 2025 08:07:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1749211624;
-	 x=1749298024; bh=nh5POVPYAuUyoy5LaIyDc334XOD2OOPorQvukFMjFAQ=; b=
-	SuWL0iqdM2/T8O4OdKzfzfA5S+UNVDQsq7Aev1PitHbEcj4klwnTP2OFZHvChQzO
-	fRjMx1EHxooCVH+xG870jWZcR7KjbSbWrpU86IUQOBq/hDgXk/IuRV4pD+NtEr9l
-	vfuh7fLnXKhdylEbMtmkX3+qKeXNc32TRKuCdGZ8heNpff+ejIfIP8B7tBiVd+Br
-	erLQrr8HsY69ed1FbROU1TCfGySejYys/AsHBPu2g4PTh2kHBSQdVoPwQO98ritK
-	dahQ7jwNJeF9T+lIGlbA98lN4fMcoytC7erAloJ5MEhdcYvuYX1GnHxKp8hUkbSw
-	D0XbjY/thJNokBiSajZDaA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749211624; x=
-	1749298024; bh=nh5POVPYAuUyoy5LaIyDc334XOD2OOPorQvukFMjFAQ=; b=k
-	K1vmeEdeAkBavAInnZCPJFGQMc/rJjyaksapEtG/kOxv1WdYBQ502N0aQMZV+c3J
-	yl+Sr71EPZFqnXl52uCS4GwCJwJYYf805aQKtcgNXAcEN6qdIOiLy7xa3fOevsQp
-	L1A21nRaefdoAQi73SPDr64/NLFneRUQwrowaU1fh0kNcKBpW64bfuzP3jHXQLfn
-	vN1TswySlrA9JHMqnhin6YfKQRydV6rHYpdoZi/fVd1hnhjhTBCrben+l9VvP7tJ
-	vRm8k5xCIKkQovdnf1RBtlJ9VTg8abBdsez4+jM8/SXKs+pOw4TRBA4m3vQ0mCMd
-	qDNxnyesr20g3ajWEo/Tg==
-X-ME-Sender: <xms:6NlCaGX0EvBx7EIhyI8FXvc349lBq1sksLkmGRqkh-cyD9wFjaFXng>
-    <xme:6NlCaCnptmrJMjcAdypzUKypl37c2aTT4FuMQu6eT1zUvpazrlhX1DwlHdMU0DLb8
-    q0B4wysvcSTMDPh3C4>
-X-ME-Received: <xmr:6NlCaKZ0iDxJjB8vJ2mBwd6T3DHVPQHj_-d45iplg4ZKzqdLfw1ocJHlL7OC0XRl14TaCOhTnrESkN6W5z9Ia9JvSBDIqA3JvA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdehtdeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdej
-    necuhfhrohhmpefpihhklhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrshhoug
-    gvrhhluhhnugesrhgrghhnrghtvggthhdrshgvqeenucggtffrrghtthgvrhhnpeevteeg
-    tddvvdfhtdekgefhfeefheetheekkeegfeejudeiudeuleegtdehkeekteenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihhklhgrshdrshho
-    uggvrhhluhhnugesrhgrghhnrghtvggthhdrshgvpdhnsggprhgtphhtthhopeelpdhmoh
-    guvgepshhmthhpohhuthdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhdorhgv
-    nhgvshgrshesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepmhgthhgvhh
-    grsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgrkhgrrhhirdgrihhluhhssehl
-    ihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhgvughirgesvh
-    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrvghnvghsrghs
-    qdhsohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkh
-    gvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgthhgvhhgr
-    sgdohhhurgifvghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlrghurhgvnhhtrd
-    hpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepjhgr
-    tghophhordhmohhnughisehiuggvrghsohhnsghorghrugdrtghomh
-X-ME-Proxy: <xmx:6NlCaNU60iCqoZUxCO4TOZGqQNVectzPJOd-XvXGVBAXEuSh-WvLrA>
-    <xmx:6NlCaAkv_giklsOeq-tmxLMa4Uroskr-R6hFvNTB9EdS37CWUlJ31w>
-    <xmx:6NlCaCe5rt2585NfMWkRqkNvJYvdH_YloVK63NQVBy7quDf11jGXdg>
-    <xmx:6NlCaCFxT1Kb_7G0HFEjNSHaTdxKkipAkCzxo70Jy1s0nFuN0HKxvw>
-    <xmx:6NlCaE_nwb1jaMssEFXpDARl9as58qtxQdEzp-AVlUyFE0uebzSqQe1c>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 6 Jun 2025 08:07:03 -0400 (EDT)
-Date: Fri, 6 Jun 2025 14:07:02 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Subject: Re: [PATCH v3 07/15] media: rcar-csi2: Optimize rcsi2_calc_mbps()
-Message-ID: <20250606120702.GD2770609@ragnatech.se>
-References: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
- <20250530-rcar-streams-v3-7-026655df7138@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQBauKso"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a5123c1533so1133522f8f.2;
+        Fri, 06 Jun 2025 05:07:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749211631; x=1749816431; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gJ95E9EY23axZFcMUppGnCR3XLsVeg2NtUQTaqPaYkE=;
+        b=BQBauKsojKwLtDwte6HuFguys1dKXLg0lwxtqkLYzNtQXn3KM+ih7MUGLA6lo4Su9q
+         UTgW58UrQHhgqx/MT1thaCfNTgxnkFtfCoAUuSvVw04E6Q3g6UdX+fssUyrx6ye1LcB6
+         NsMdwnqQz2LC/mGKb+qsuo1Q6q+NzenE5ISWXLPm7VEwh3SyJa3qOXTNuEBwU/7aztaF
+         PNL0vW1GFvRnOs3lH3C/sFE5JlD9mcVdH20A4xqc/RDp7y3xmEB2/PljMtjOW4FVQh/h
+         t9Z57Otm+6SVDrbdvl/MYBu7sMRyj4XcQANfuHFyNilsb2LfeDx3s8nKHYsr51bq6jA+
+         DK6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749211631; x=1749816431;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gJ95E9EY23axZFcMUppGnCR3XLsVeg2NtUQTaqPaYkE=;
+        b=AQwG0LD+kdJa32Uc954uEsRmC4Gd76E0NhZ7slGeZiK2OG7swI8US7fCovMeWOfwBD
+         +8o0lqzBcVTQ3fqulzXcTxEhgRuU8IhHIKhTPTCopt2m+EQF7y7RvHNadTTh/d7cwhIz
+         uO5yisyufNF/nz/Qck0RtudI1fTjV9IlMrZnhbi3ZL3ebSSm0NQQ5BdXWz/lqQu8l8zR
+         6XFUgYYcqDN4c8wCxqmlymHnVCwaW96JsBxnKKX1ojA3OAmLTTT+9269ZgBVMA8BwNFc
+         XkIsCLM7Z2nKWV7FTKwZZdbjMdP0Bu0waUJFfxpsPHk3X0mZ1fdoUZRPSWazmo6uKtlV
+         rkiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWPrc7w5e84/qiEkxZZ13XMBfKFQriAOoxmaXqX7ZTHPZyEJHtQnxQyKZPLJOfm+UwzAlFJgv/8IJOA@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbAtUxDEMBQg6wSvrdLyH4mA3j+oe2XIecHOtJiOdDbPAfv3Jx
+	pvq9OjZWcveBo2SC2SFv3zjb2A4z0bB5yubxaVvTZ0ysIy3wUvOu7+YZnoQn51xI
+X-Gm-Gg: ASbGnctyNnLgBP4Gd2fx+bioZB0nQA08pjB5jAxlG5lOlqcJpcgOikW5bDGy2P0ccwQ
+	yMHzOCk1TviEDPU4OCrDURz5E+ohcyZcNN4gQnrFbk4Ok2Eiq1oicxdnkIbB1ZTnl09ZHQ/lIU0
+	W/O9wGjJbSe7c/5hNXanPraMW5ghPyd4kawzOZnHIl5/kL+Di964484qUjKW3rF43GOMVx0eigp
+	lxEIQm5kaL6Tee8ks9nNKklxbil97/6nXRixPOANiJfzg5qG6SH3mJH6hDcsGAUAj23WPEeHxpR
+	aDR9S8MYkcOv01Gj+N6YkS2qvRp7hU3boTR+vFYSJgKFBG/5stUGecLCOKIXkBXrHLyqhdYdfdn
+	UQAe5zDChQ81uDjeROFeodPSb
+X-Google-Smtp-Source: AGHT+IEOtEM9TP1fLEZNVP7do6r2cKStJcuv9OdTia/zzf1zi2+54zrnJ9cEAcb2CZHeUg90uRNjBQ==
+X-Received: by 2002:a05:6000:22c4:b0:3a5:276b:1ec0 with SMTP id ffacd0b85a97d-3a531ce1597mr2396156f8f.45.1749211631108;
+        Fri, 06 Jun 2025 05:07:11 -0700 (PDT)
+Received: from masalkhi.. (ip-109-43-113-198.web.vodafone.de. [109.43.113.198])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53244f516sm1671874f8f.74.2025.06.06.05.07.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 05:07:10 -0700 (PDT)
+From: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Cc: arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	abd.masalkhi@gmail.com
+Subject: [PATCH v3 0/3] Add support for STMicroelectronics M24LR EEPROM/NFC chips
+Date: Fri,  6 Jun 2025 12:06:28 +0000
+Message-ID: <20250606120631.3140054-1-abd.masalkhi@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250530-rcar-streams-v3-7-026655df7138@ideasonboard.com>
 
-Hi Tomi,
+This patch series adds support for the STMicroelectronics M24LR series
+RFID/NFC EEPROM devices. These chips expose two I2C addresses: the primary
+one provides access to system control and configuration registers, while
+the secondary address is used for EEPROM access.
 
-Thanks for your work.
+The driver implements both functionalities:
+ - A sysfs-based interface for the control and system parameter registers.
+ - EEPROM access via the nvmem subsystem using a secondary I2C dummy client.
 
-On 2025-05-30 16:50:36 +0300, Tomi Valkeinen wrote:
-> With modern drivers supporting link-freq, we don't need to do any
-> calculations based on the bpp and number of lanes when figuring out the
-> link frequency. However, the code currently always runs code to get the
-> bpp and number of lanes.
-> 
-> Optimize the rcsi2_calc_mbps() so that we only do that when needed, i.e.
-> when querying the link-freq is not supported by the upstream subdevice.
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+Brief summary of changes in v3:
+ - Full support for ST M24LR chips, including integrated EEPROM access
+   within the same driver-no need for the at24 driver.
+ - Dropped usage of the I2C mux API.
+ - Switched to using the NVMEM subsystem for EEPROM access.
+ - Removed reference to the i2c-mux binding.
+ - Added reference to the nvmem binding to reflect EEPROM integration.
+ - Updated the reg property to support devices exposing two I2C
+   addresses, one for control and one for EEPROM.
 
-I wonder if it make sens to add a dev_warn_once() for the old call path 
-so we won't forget to update all known users of this old way, and once 
-fixed we can remove the huristic method all together?
+Tested on: M24LR04E-R using Yocto on Raspberry Pi 4
 
-> ---
->  drivers/media/platform/renesas/rcar-csi2.c | 50 +++++++++++++++++-------------
->  1 file changed, 29 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
-> index 90973f3cba38..e0a0fd96459b 100644
-> --- a/drivers/media/platform/renesas/rcar-csi2.c
-> +++ b/drivers/media/platform/renesas/rcar-csi2.c
-> @@ -1001,15 +1001,10 @@ static int rcsi2_get_active_lanes(struct rcar_csi2 *priv,
->  static int rcsi2_calc_mbps(struct rcar_csi2 *priv,
->  			   struct v4l2_subdev_state *state)
->  {
-> -	const struct rcar_csi2_format *format;
-> -	struct v4l2_mbus_framefmt *fmt;
->  	struct media_pad *remote_pad;
->  	struct v4l2_subdev *source;
-> -	unsigned int lanes;
-> -	unsigned int bpp;
->  	s64 freq;
->  	u64 mbps;
-> -	int ret;
->  
->  	if (!priv->remote)
->  		return -ENODEV;
-> @@ -1017,28 +1012,41 @@ static int rcsi2_calc_mbps(struct rcar_csi2 *priv,
->  	source = priv->remote;
->  	remote_pad = &source->entity.pads[priv->remote_pad];
->  
-> -	ret = rcsi2_get_active_lanes(priv, &lanes);
-> -	if (ret)
-> -		return ret;
-> +	/*
-> +	 * First try to get the real link freq. If that fails, try the heuristic
-> +	 * method with bpp and lanes (but that only works for one route).
-> +	 */
-> +	freq = v4l2_get_link_freq(remote_pad, 0, 0);
-> +	if (freq < 0) {
-> +		const struct rcar_csi2_format *format;
-> +		struct v4l2_mbus_framefmt *fmt;
-> +		unsigned int lanes;
-> +		unsigned int bpp;
-> +		int ret;
->  
-> -	fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK);
-> -	if (!fmt)
-> -		return -EINVAL;
-> +		ret = rcsi2_get_active_lanes(priv, &lanes);
-> +		if (ret)
-> +			return ret;
->  
-> -	format = rcsi2_code_to_fmt(fmt->code);
-> -	if (!format)
-> -		return -EINVAL;
-> +		fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK);
-> +		if (!fmt)
-> +			return -EINVAL;
->  
-> -	bpp = format->bpp;
-> +		format = rcsi2_code_to_fmt(fmt->code);
-> +		if (!format)
-> +			return -EINVAL;
->  
-> -	freq = v4l2_get_link_freq(remote_pad, bpp, 2 * lanes);
-> -	if (freq < 0) {
-> -		int ret = (int)freq;
-> +		bpp = format->bpp;
->  
-> -		dev_err(priv->dev, "failed to get link freq for %s: %d\n",
-> -			source->name, ret);
-> +		freq = v4l2_get_link_freq(remote_pad, bpp, 2 * lanes);
-> +		if (freq < 0) {
-> +			int ret = (int)freq;
->  
-> -		return ret;
-> +			dev_err(priv->dev, "failed to get link freq for %s: %d\n",
-> +				source->name, ret);
-> +
-> +			return ret;
-> +		}
->  	}
->  
->  	mbps = div_u64(freq * 2, MEGA);
-> 
-> -- 
-> 2.43.0
-> 
+Signed-off-by: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
+
+Abd-Alrhman Masalkhi (3):
+  dt-bindings: eeprom: Add ST M24LR support
+  misc: add driver for ST M24LR series RFID/NFC EEPROM chips
+  ABI: sysfs: add documentation for ST M24LR EEPROM and control
+    interface
+
+ .../ABI/testing/sysfs-bus-i2c-devices-m24lr   |  96 +++
+ .../devicetree/bindings/misc/st,m24lr.yaml    |  54 ++
+ drivers/misc/Kconfig                          |  17 +
+ drivers/misc/Makefile                         |   1 +
+ drivers/misc/m24lr.c                          | 705 ++++++++++++++++++
+ 5 files changed, 873 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-m24lr
+ create mode 100644 Documentation/devicetree/bindings/misc/st,m24lr.yaml
+ create mode 100644 drivers/misc/m24lr.c
 
 -- 
-Kind Regards,
-Niklas Söderlund
+2.43.0
+
