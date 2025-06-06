@@ -1,183 +1,114 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4264A28A1DC;
-	Fri,  6 Jun 2025 16:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA74C289375;
+	Fri,  6 Jun 2025 16:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749229107; cv=none; b=RaJ5ha+MCs66SwdNJ99bd6JxoJ6UbPkbex7yLE0jao6yQwEQvbiEXnS0VpZILTirIoeQ5Fcy54usXisUN0IIGnM/peio2Le53/VwE60eH3RV5rjWE+pr3VTYUfagKmMRw8w9CS4xpmpZqYTFfmyAT2beTZKblpkvmZEsPFHj5H8=
+	t=1749229130; cv=none; b=fLiRlPD5XPHCyvCpXWjynteMAwLEwjMtGSTjWmDGdhAmaHwkCG2UWl+BEr/84fLggkDFcuNeoiESC8vSe58Hp4LblxdETJbVtRzl2KnK5Z34ToQ/tPciPTzK+g0VtvjfZNa/SyeIEQEq6a2NlF630HY1HvGKcb7jDUrnh2xZD3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749229107; c=relaxed/simple;
-	bh=fcglZOKYAlZZOQ2/Dkb0cJsSrYB7P0UhmfoDzTbxPtY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HVvgQhcDp3958A3itbKGh+v9cAFH+rgxQkoB1zEbmWMoq8LArLW3PBVy2Ai9coTqH61iwn5zDcfcF9ZPeCm17xRG1N3niOaBMZ0/BEjb5fDY/ejIQ+nLPWT+AomF2aIZyBrfvijkF89liSjxAzitpP2MD+jplK4Sl4/LRei/Htk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=35ARZ3cW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=D/ZzWL1W; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749229130; c=relaxed/simple;
+	bh=2oB22RlAdelwXL/0ev/Z3gQPRBpTfwO+IvDL8z2ibaE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=SJqCQ8gOagYmKkxFMhxe4NlnChJ/zwoDq4Ptl7g3lLqkpiwisLqak5eqWAsu2fjGj+PDKZOckwEpv8tW5Q1Q/mNTXHHJilDEumLcBO+s1CqVgyX71n9Kd/Uj85NQv8AMi3YxXecrUcgfmpCGuMpFHWx6LsVxcd0oroXTLTIDoGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EOQVHkuM; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="35ARZ3cW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D/ZzWL1W"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749229102;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EOQVHkuM"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749229126;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=k95L5dONGc9CGpjQXqAX4pgyDviRC1HRrOs4s2XHP00=;
-	b=35ARZ3cWSCFsiwLfUkdujv+aKxhUsCTUh2IX4MmwT3dO0YvNhz8mxqLjOLSmRedTSFebTq
-	psSABq/JZEzPlaUlHXBoeRc1oUYheu3iQI9vWbhT1AgIwul1wKZhwKSByI/aTYyprU81AP
-	WDs52bDysUvt+72dq1xUeXUJxknI1Zij1y76fKpF69gei+VLeesoQgLgGfI3JlPIW20Cq1
-	yWVwMlT2Kl1M/LZEdGyYhkTBiYx8FuORb+ERVlRo27PChn4RZE5gkqCGWNiTkgqqzzDW7K
-	kgzePptvKAELg7I58UBeLnnPQ9pGPu4PhTNHLy/mdwBh7lGsczKGkYLat+gSUQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749229102;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k95L5dONGc9CGpjQXqAX4pgyDviRC1HRrOs4s2XHP00=;
-	b=D/ZzWL1WLUKSjbYuu1m6EkVXeRSKEWqtK71hgfzILpbVD+lKbq+WraD7rm7MeCUilnhyBo
-	Z/6FCBLz9/2tTICg==
-To: Petr Mladek <pmladek@suse.com>
-Cc: "Toshiyuki Sato (Fujitsu)" <fj6611ie@fujitsu.com>, 'Michael Kelley'
- <mhklinux@outlook.com>, 'Ryo Takakura' <ryotkkr98@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org"
- <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>
-Subject: Re: Problem with nbcon console and amba-pl011 serial port
-In-Reply-To: <aEL0tZgSEhsR9qbf@pathway.suse.cz>
-References: <OS7PR01MB13775FE1A20762D1EA4A38D0ED76DA@OS7PR01MB13775.jpnprd01.prod.outlook.com>
- <84y0u95e0j.fsf@jogness.linutronix.de>
- <84plfl5bf1.fsf@jogness.linutronix.de>
- <TY4PR01MB13777674C22721FCD8ACF4FCCD76CA@TY4PR01MB13777.jpnprd01.prod.outlook.com>
- <aEApOPTqbVOR35F_@pathway.suse.cz> <84o6v3ohdh.fsf@jogness.linutronix.de>
- <aEBNLMYVUOGzusuR@pathway.suse.cz>
- <TY4PR01MB13777CC92C858572B9C19394FD76FA@TY4PR01MB13777.jpnprd01.prod.outlook.com>
- <aEGeARVcCwqcoHb8@pathway.suse.cz> <84frgdcgug.fsf@jogness.linutronix.de>
- <aEL0tZgSEhsR9qbf@pathway.suse.cz>
-Date: Fri, 06 Jun 2025 19:04:22 +0206
-Message-ID: <84msakdcy9.fsf@jogness.linutronix.de>
+	bh=Y7O2ud3V4WEaTf3FLO9W1kkRGHRVawHEgYNCRiL+E2g=;
+	b=EOQVHkuMeF1GsC0WpDxbyC0c3fVz6nIanJWXBH+HT+YOWjhgpoZd+Qid2XVGF67UHctLam
+	G1q2gs/AE/lWz5YWZ4JZF/cH1vP5cid4PUmEVv6J4ECpzDXbNCGyr8LUASLeUuzoeFHYw2
+	UJEEaRZvTD67GaUDPq+q77N6m3D871I=
+From: Tao Chen <chen.dylane@linux.dev>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	qmo@kernel.org,
+	jolsa@kernel.org
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tao Chen <chen.dylane@linux.dev>
+Subject: [PATCH bpf-next  2/5] selftests/bpf: Add cookies check for tracing fill_link_info test
+Date: Sat,  7 Jun 2025 00:58:15 +0800
+Message-Id: <20250606165818.3394397-2-chen.dylane@linux.dev>
+In-Reply-To: <20250606165818.3394397-1-chen.dylane@linux.dev>
+References: <20250606165818.3394397-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 2025-06-06, Petr Mladek <pmladek@suse.com> wrote:
->> What if during non-panic-CPU shutdown, we allow reacquires to succeed
->> only for _direct_ acquires? The below diff shows how this could be
->> implemented. Since it only supports direct acquires, it does not violate
->> any state rules. And also, since it only involves the reacquire, there
->> is no ugly battling for console printing between the panic and non-panic
->> CPUs.
->
-> Interesting idea. I thought a lot about it, see below.
->
->
->> diff --git a/include/linux/printk.h b/include/linux/printk.h
->> index 5b462029d03c1..d58ebdc8170b3 100644
->> --- a/include/linux/printk.h
->> +++ b/include/linux/printk.h
->> diff --git a/kernel/panic.c b/kernel/panic.c
->> index b0b9a8bf4560d..8f572630c9f7e 100644
->> --- a/kernel/panic.c
->> +++ b/kernel/panic.c
->> @@ -304,6 +310,8 @@ static void panic_other_cpus_shutdown(bool crash_kexec)
->>  		smp_send_stop();
->>  	else
->>  		crash_smp_send_stop();
->> +
->> +	nbcon_panic_allow_reacquire_set(false);
->>  }
->
-> I have two concerns here:
->
-> 1. I wonder whether this is reliable enough. It seems that
->    smp_send_stop() waits at least 1 sec until the CPUs
->    get stopped. But is this enough on virtualized systems?
->
-> 2. It might increase a risk when CPUs are stopped using NMI.
->    The change would allow a non-panic CPU to reacquire the ownership
->    and enter _unsafe_ section right before being stopped by NMI.
->
->
-> The 1st problem might be avoided by allowing the reacquire all
-> the time unless an "unsafe" takeover happened.
->
-> The 2nd problem is worse. But allowing the reacquire all the time
-> might actually help as well.
->
-> Note that the information about the "unsafe_takeover" is stored
-> in struct console so that we even won't need a new global
-> variable.
+Adding tests for getting cookie with fill_link_info for tracing.
 
-That is a good idea. We should add unsafe_takeover as a condition as
-well. That can only happen way after the smp_send_stop() anyway. But it
-means that only the atomic printing code would ever need to worry about
-unsafe_takeover (assuming a driver were to implement some sort of
-handling of it).
+Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+---
+ .../selftests/bpf/prog_tests/bpf_cookie.c     | 24 ++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
->>  /**
->> diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
->> index d60596777d278..d960cb8a05558 100644
->> --- a/kernel/printk/nbcon.c
->> +++ b/kernel/printk/nbcon.c
->> @@ -235,7 +235,8 @@ static void nbcon_seq_try_update(struct nbcon_context *ctxt, u64 new_seq)
->>   *			the handover acquire method.
->>   */
->>  static int nbcon_context_try_acquire_direct(struct nbcon_context *ctxt,
->> -					    struct nbcon_state *cur)
->> +					    struct nbcon_state *cur,
->> +					    bool ignore_other_cpu_in_panic)
->>  {
->>  	unsigned int cpu = smp_processor_id();
->>  	struct console *con = ctxt->console;
->> @@ -249,7 +250,7 @@ static int nbcon_context_try_acquire_direct(struct nbcon_context *ctxt,
->>  		 * nbcon_waiter_matches(). In particular, the assumption that
->>  		 * lower priorities are ignored during panic.
->>  		 */
->> -		if (other_cpu_in_panic())
->> +		if (other_cpu_in_panic() && !ignore_other_cpu_in_panic)
->
-> If you agree with allowing the reacquire all the time then I would
-> rename the parameter to @is_reacquire and do something like:
->
-> 	if (other_cpu_in_panic() &&
-> 	   (!is_reacquire || cur->unsafe_takeover))
+diff --git a/tools/testing/selftests/bpf/prog_tests/bpf_cookie.c b/tools/testing/selftests/bpf/prog_tests/bpf_cookie.c
+index 0774ae6c1be..4a0670c056b 100644
+--- a/tools/testing/selftests/bpf/prog_tests/bpf_cookie.c
++++ b/tools/testing/selftests/bpf/prog_tests/bpf_cookie.c
+@@ -489,10 +489,28 @@ static void pe_subtest(struct test_bpf_cookie *skel)
+ 	bpf_link__destroy(link);
+ }
+ 
++static int verify_tracing_link_info(int fd, u64 cookie)
++{
++	struct bpf_link_info info;
++	int err;
++	u32 len = sizeof(info);
++
++	err = bpf_link_get_info_by_fd(fd, &info, &len);
++	if (!ASSERT_OK(err, "get_link_info"))
++		return -1;
++
++	if (!ASSERT_EQ(info.type, BPF_LINK_TYPE_TRACING, "link_type"))
++		return -1;
++
++	ASSERT_EQ(info.tracing.cookie, cookie, "tracing_cookie");
++
++	return 0;
++}
++
+ static void tracing_subtest(struct test_bpf_cookie *skel)
+ {
+ 	__u64 cookie;
+-	int prog_fd;
++	int prog_fd, err;
+ 	int fentry_fd = -1, fexit_fd = -1, fmod_ret_fd = -1;
+ 	LIBBPF_OPTS(bpf_test_run_opts, opts);
+ 	LIBBPF_OPTS(bpf_link_create_opts, link_opts);
+@@ -507,6 +525,10 @@ static void tracing_subtest(struct test_bpf_cookie *skel)
+ 	if (!ASSERT_GE(fentry_fd, 0, "fentry.link_create"))
+ 		goto cleanup;
+ 
++	err = verify_tracing_link_info(fentry_fd, cookie);
++	if (!ASSERT_OK(err, "verify_tracing_link_info"))
++		goto cleanup;
++
+ 	cookie = 0x20000000000000L;
+ 	prog_fd = bpf_program__fd(skel->progs.fexit_test1);
+ 	link_opts.tracing.cookie = cookie;
+-- 
+2.43.0
 
-Looks fine to me.
-
->>  			return -EPERM;
->>  
->>  		if (ctxt->prio <= cur->prio || ctxt->prio <= cur->req_prio)
->> @@ -913,7 +920,7 @@ void nbcon_reacquire_nobuf(struct nbcon_write_context *wctxt)
->>  {
->>  	struct nbcon_context *ctxt = &ACCESS_PRIVATE(wctxt, ctxt);
->>  
->> -	while (!nbcon_context_try_acquire(ctxt))
->> +	while (!nbcon_context_try_acquire(ctxt, READ_ONCE(nbcon_panic_allow_reacquire)))
->
-> And here it would be:
->
-> 	while (!nbcon_context_try_acquire(ctxt, true))
-
-Right.
-
->>  		cpu_relax();
->>  
->>  	nbcon_write_context_set_buf(wctxt, NULL, 0);
->
->
-> Summary:
->
-> I open to give this alternative approach a chance when we allow the
-> reacquire all the time. It might work well. And it won't require
-> any special "panic" handling in all console drivers.
-
-Agreed. Thanks for being open about this approach. I will put together
-an official patch.
-
-John
