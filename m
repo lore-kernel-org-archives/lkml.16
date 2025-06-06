@@ -1,75 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3553F1A5BB7;
-	Fri,  6 Jun 2025 06:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5284736D;
+	Fri,  6 Jun 2025 06:06:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749189911; cv=none; b=PgGBOENFRW+gCC07Snj4ah16lt04dbtoGMCkkaclG/E+ESnxpIF6pmBrkijIk6zMk4n9YWAAL6JNAj6j/o6+kajP+dTx+/ZA14FDDGATvUDQaf5fw7bZKniDGPO/sDh5mG/wFsZ16yYwCMkS2IJSyTT88Zdb+fsO7GseGR8RLOE=
+	t=1749189992; cv=none; b=UZwOxf6J7HKDc6S2sA/MPQEfJfQ/SMxnqvahzB/fSSA1T/lCQrK5onHQ6rJ4yVFVejq8+Hvel5FkdsJ2XVatzjmVr2P9ezf/Rdv0rea1JVWSe2bhGuH170J7QDphMziryjAmC7OXKukXZrSOpv88+XC6UOKS1b+ZPiRLKXww5rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749189911; c=relaxed/simple;
-	bh=DTzL7DH5w6RieyjzqD07L9LNs315gRs2qw8zCLb94/Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HoS73HsJScGaK9OSdO12NYWe0K9hVlkWUz4R3V56vqVhleN6D8LdJUjSQg4YTsEMLTCNidcaKc727MGLbH/N4g0+MMYLIPs4nyrkqAWmxcmJTsQgJPfIHPKdSqLIyaydpJJXGKWkoBqzYKDFXqzDVfGJKPgvOmtdNQA6/emyESU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=zisg+DrU; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zisg+DrU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2643CC4CEEF;
-	Fri,  6 Jun 2025 06:05:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1749189908;
-	bh=DTzL7DH5w6RieyjzqD07L9LNs315gRs2qw8zCLb94/Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=zisg+DrUcu+dtFL2LRXv292Qiq5YWXVFY18by/5ETlckTfiAEsP35H4yv5eZxogg/
-	 Tb8L7G6msi6VLJMysGTo5+0TEN2637NOGT3hCKwF6I0yHfm+4VcIjoc4jutZ40LD68
-	 I8LaNQ9Pnq2YSIoH8VUA2i2Gj06n/haivsU1se+E=
-Date: Fri, 6 Jun 2025 08:05:04 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Suleiman Souhlal <suleiman@google.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Ian Rogers <irogers@google.com>, ssouhlal@freebsd.org,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [RESEND][PATCH] tools/resolve_btfids: Fix build when cross
- compiling kernel with clang.
-Message-ID: <2025060650-detached-boozy-8716@gregkh>
-References: <20250606052301.810338-1-suleiman@google.com>
- <20250606053650.863215-1-suleiman@google.com>
+	s=arc-20240116; t=1749189992; c=relaxed/simple;
+	bh=g6gR5ca2BcNvCtBCVJl2Nd0K2sCgWnyiegUtKp1Ui4w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D1+Co3Oz2d8iPtea/3Z0C9JCLQ1YZ75k2y9LUemQdqqBimYUfscewtCujnnecnBDGsnLR3kZo5R53WgQGabkuh7zla1Gqy75WNMw04DI6jNSYQS91E1IA/gGLNR+sxQTq6XDXuOFPAQR0oMPc3zq6nCVCBpD1XxLj2PColWZuFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 5e3284e2429c11f0b29709d653e92f7d-20250606
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:9ca42e9d-a54d-48ca-a2f0-f36b09dcd64e,IP:0,U
+	RL:0,TC:0,Content:0,EDM:-25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-25
+X-CID-META: VersionHash:6493067,CLOUDID:24696fe07121afc78295f14f43985d45,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:1,IP:nil,URL
+	:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SP
+	R:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 5e3284e2429c11f0b29709d653e92f7d-20250606
+Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
+	(envelope-from <zhangzihuan@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 417240045; Fri, 06 Jun 2025 14:06:21 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id E7826E00891C;
+	Fri,  6 Jun 2025 14:06:20 +0800 (CST)
+X-ns-mid: postfix-6842855C-7647601
+Received: from localhost.localdomain (unknown [172.25.120.24])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 0D171E008900;
+	Fri,  6 Jun 2025 14:06:19 +0800 (CST)
+From: Zihuan Zhang <zhangzihuan@kylinos.cn>
+To: rafael@kernel.org,
+	pavel@kernel.org,
+	len.brown@intel.com
+Cc: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Zihuan Zhang <zhangzihuan@kylinos.cn>
+Subject: [RESEND PATCH v2] PM / Freezer: Skip dead/zombie processes
+Date: Fri,  6 Jun 2025 14:06:04 +0800
+Message-Id: <20250606060604.16237-1-zhangzihuan@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250606053650.863215-1-suleiman@google.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 06, 2025 at 02:36:50PM +0900, Suleiman Souhlal wrote:
-> When cross compiling the kernel with clang, we need to override
-> CLANG_CROSS_FLAGS when preparing the step libraries for
-> resolve_btfids.
-> 
-> Prior to commit d1d096312176 ("tools: fix annoying "mkdir -p ..." logs
-> when building tools in parallel"), MAKEFLAGS would have been set to a
-> value that wouldn't set a value for CLANG_CROSS_FLAGS, hiding the
-> fact that we weren't properly overriding it.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 56a2df7615fa ("tools/resolve_btfids: Compile resolve_btfids as host program")
-> Signed-off-by: Suleiman Souhlal <suleiman@google.com>
-> ---
->  tools/bpf/resolve_btfids/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+ZOMBIE (exit_state =3D=3D EXIT_ZOMBIE) and DEAD (exit_state =3D=3D EXIT_D=
+EAD)
+processes have already finished execution and will not be scheduled again=
+.
 
-You forgot to say why this is a resend :(
+In the context of system suspend (e.g., S3), attempting to freeze such
+processes is unnecessary. Moreover, freezing them can obscure suspend
+diagnostics and delay resume if they appear "stuck" in logs.
+
+This patch introduces an early check for `p->exit_state !=3D 0` in
+`try_to_freeze_tasks()` and skips freezing for such tasks. This is a safe
+optimization because:
+
+ - They hold no running resources
+ - Their `task_struct` is only waiting to be collected or freed
+
+Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
+
+Changes in v2:
+- Simplified code, added judgment of dead processes
+- Rewrite changelogs
+---
+ kernel/power/process.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/power/process.c b/kernel/power/process.c
+index a6f7ba2d283d..2bbe22610522 100644
+--- a/kernel/power/process.c
++++ b/kernel/power/process.c
+@@ -51,7 +51,7 @@ static int try_to_freeze_tasks(bool user_only)
+ 		todo =3D 0;
+ 		read_lock(&tasklist_lock);
+ 		for_each_process_thread(g, p) {
+-			if (p =3D=3D current || !freeze_task(p))
++			if (p =3D=3D current || p->exit_state || !freeze_task(p))
+ 				continue;
+=20
+ 			todo++;
+--=20
+2.25.1
 
