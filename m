@@ -1,73 +1,56 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0079B323D
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 18:36:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91E21DF755;
+	Fri,  6 Jun 2025 18:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749235003; cv=none; b=b1vf+BwS0thhrjbARJtSYEqYg/vhTmLvSh32h7xl3Rtt2GfrnW2Hrn+ypjeCEkHmBsT5R/ZJ5VC8mfPgMsnPZZr6xGsu5926YFz+YHFLwEubMN357qSwVIoxGx2kvUzG/3KxV4OnriaXK/tPDU+Ml0wGhGjzymB3bJf5JeEMoME=
+	t=1749235094; cv=none; b=Y34AqO1X8OLyrfkcbCCIW7M8Nw+/9VhJ24R5CFAo6/ErvnRKb1hl279YxmIDvm/mBckU963/2EZQyjcNm2J5619d6MrSt8zvIc4Zwt4PRYgbjo+9T2Z8N7LtxY+YlQ8PDp6qASBefbeIPGMFIRmiwt+1Nfo3ngzYYpYtURpAa30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749235003; c=relaxed/simple;
-	bh=KKvNnc6+ahTFeNIbwyjYowPgxH07+lHND4LVA1Z+Bww=;
+	s=arc-20240116; t=1749235094; c=relaxed/simple;
+	bh=mnkIYm5as7Z1Cu5ulhxwtqKGq1GmdAMjAkwSthSVZ8M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dmAbEroRkxFg1+c6ItB5/ZgsCizn8ypJe87TtrEZlMt3oxLDofo0HnXih4jSYGe0mLScev9ymasYRPuH8G1561OzFKF0lbNjgj/jdASR1zGTzep+H0cPowQXnX0hMRWeyUOfDhH1DQTCYPywS/e3BLVfzqbsXxyoE2x4+wvN0GY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CiUZ/TJo; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=Ee9pmE6U6zamY+2lnwxSsCxAHeJUxZvKBbk9QD4480R5kSlXpsfa7HRWx6+6IZDfC4d367L6ZtMwjqBgsYEYgGDzF5b2zkzYfW/5M42eZhupoGroqiScNuNub+5apEUGzDsoN5Z1szirt8dpm+DvjmEVnQE0/cNJIsKYx29ntso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Crh/JRiQ; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CiUZ/TJo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749235001;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ETXo+kNhv5Vh+fUDoc90IncohVidEafEgeEXooy5dQo=;
-	b=CiUZ/TJo/gMewpBFo/VXohxBFjrOPLUdVrbvr+LnUl142znJ4Lng0jKs+qQ8w8M2Rd7IJ+
-	amwqGTnjBrsFcewCzsOuFiaHdTYJBL23xTawHmQfu7CqnqlU0oe+uvjrm892PVVcyz/MDB
-	jki3GyxFidgJgR4ehEnU79OO+G3JWlA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-113-PSOc8R_2O46ZmrL_1m5l3A-1; Fri, 06 Jun 2025 14:36:39 -0400
-X-MC-Unique: PSOc8R_2O46ZmrL_1m5l3A-1
-X-Mimecast-MFC-AGG-ID: PSOc8R_2O46ZmrL_1m5l3A_1749234998
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-451ecc3be97so9602015e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 11:36:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749234998; x=1749839798;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ETXo+kNhv5Vh+fUDoc90IncohVidEafEgeEXooy5dQo=;
-        b=KPd3JqRhWaCydUXa0CZCrVYCL1YvE1wCzGcVIwWbBnp4+l+v77y8aN9Uax2HlqbOT3
-         TJ65I7JI9Y0NIgR0DEzpFzndj+MnTwof8f1ug2j82B2vIgQ/MaAnZ8tLhzoMSOV89LJJ
-         JUIryPn5h3F9D8wImgb5w/KMO4OtDAUlojGs7FRhLb6W9HMKT9pEjaGAtK57Iq7tWOQG
-         WFJRcC6N4UOD7VlbimZIvwnpQOglVUUIi3Ua0TpKi1pnPNqyj82LH7J9HKTyuXrogKca
-         a4kRPUwjBU/TJNwdKV7YEb+m8Wz7SyyQgE4Pj9OoBAm1RCwZSeANyYa9yMubI5hFqO5H
-         1zKw==
-X-Forwarded-Encrypted: i=1; AJvYcCU7ARP4adJ89t16da5bsDmfF8ALTpesZwFQUDix7Af5SEQmmve1u7c/JLkvqdlIk7RQ9S44OOgsdcbWlyI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZoc95qGPg4rx1nfcpeXgjL5rCWTycc/6e2MTYZl5dJtvSjmMM
-	fN9ijaIuiKuOMwMKA8YusptpgpJZsjwgsLjL/XlSZ2F68J10KHw5MmpsM+KHkPvbjFganr/WtZ7
-	pumQM601x/JXJLiQtowPCP+Sc2DW7zpE2Rh21qEbDYPja5zg/edXevJI9IE6tBJZ5vw==
-X-Gm-Gg: ASbGncsMtO30xKXXiBcwDTKCDDlXH5FcuOOYoV7latCq2oYvaXambnmocoGHFw4KsIa
-	hGEQc9GjZpn4nifAWOT7vT3DtsxfAYL2zPVfCrL7YURqA2fkLDRG8watVlfkPDHGfETBp6Oesx1
-	YjmE5LNWiUBaeagD2qFMB7p9zbkSW4dYmyWf1ydboYgW+PDZ2g0hgXfJhPTOH6nJrVxSDZlqRw8
-	R2Pqz3B6Z469DOLgiHyJkvGWwqxLRWQwmQQj7pE+pZu9cOv2FYphygqPkq5oG+0jr8MTs0gxf75
-	akCDHtfqQF2ZyHsFXqUAANBSrXZm0PxuAZn7iQOV0+M1MGBLCZi/lnwOuWWZEYqjseZ2gitBVYy
-	vMf7+zMrPSXYunGfie+gr4Sm0S+801gc=
-X-Received: by 2002:a05:600c:3e84:b0:450:d00d:cc with SMTP id 5b1f17b1804b1-45201417068mr48055745e9.2.1749234998484;
-        Fri, 06 Jun 2025 11:36:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF4Ona8cC63T7ugk0ilSFASiLSAqyndxjm/MnJNHcFCOx0BTqY9MXZDy3OKqQOcNsnCIUG9QQ==
-X-Received: by 2002:a05:600c:3e84:b0:450:d00d:cc with SMTP id 5b1f17b1804b1-45201417068mr48055465e9.2.1749234998104;
-        Fri, 06 Jun 2025 11:36:38 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f19:9c00:568:7df7:e1:293d? (p200300d82f199c0005687df700e1293d.dip0.t-ipconnect.de. [2003:d8:2f19:9c00:568:7df7:e1:293d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451f8ef98b1sm48644065e9.1.2025.06.06.11.36.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 11:36:36 -0700 (PDT)
-Message-ID: <e0f17454-241c-4a88-be32-ea34d3769930@redhat.com>
-Date: Fri, 6 Jun 2025 20:36:34 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Crh/JRiQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749235093; x=1780771093;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=mnkIYm5as7Z1Cu5ulhxwtqKGq1GmdAMjAkwSthSVZ8M=;
+  b=Crh/JRiQ4rhg50auhoshte/hjxKALtcrpGyEmmaipFrcmcUyCZzvCxH3
+   xE7Fe8RhXHODO9hsbQGYRBzDY4m0rAHkaTgnuIj7MASrOIWg5erEWlXlf
+   OSniGT4PcacVulJflKHzo+K4e7DRT1izFnb6uht187Ni/5y++GCMpnYBi
+   Cm42SdOyc6TRY6UXLMqjAobT4+XUUO3VfwwyjekhwbU4gnQuLkNPYoDpE
+   6hRWhkQM6EjiE6LazvQPU6u0ouPCYB2UWI397dGdLfPvrXf82QBKz2vx5
+   1vfrFNy5kTMcDALs2WQ295p2mXQAST4gocOstOAfBI8GFlxfptVD9hhb1
+   A==;
+X-CSE-ConnectionGUID: eGiP8S2qQOWQ3Gjt2l5qDw==
+X-CSE-MsgGUID: LBtL4i1ERuaKaMVK7HRDdw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="51251358"
+X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
+   d="scan'208";a="51251358"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 11:38:12 -0700
+X-CSE-ConnectionGUID: x2V57cr+QvyOHQtrqybn2A==
+X-CSE-MsgGUID: 6AL+BN2rTI2FnUs5qUJ7OQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
+   d="scan'208";a="183093110"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 11:38:12 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id EB4BE20B5736;
+	Fri,  6 Jun 2025 11:38:09 -0700 (PDT)
+Message-ID: <62855572-5961-4548-a961-d05d14a3659f@linux.intel.com>
+Date: Fri, 6 Jun 2025 14:38:08 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,123 +58,304 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] mm/gup: remove (VM_)BUG_ONs
-To: John Hubbard <jhubbard@nvidia.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Peter Xu <peterx@redhat.com>
-References: <20250604140544.688711-1-david@redhat.com>
- <aEFC_12om2UHFGbu@tiehlicka>
- <1a65d0e6-6088-4a15-9c19-537203fe655c@redhat.com>
- <aEKnSxHG8_BGj7zQ@tiehlicka>
- <e680a8f3-7b45-4836-8da7-7e7a0d2fcd56@redhat.com>
- <aEK_R93gihEn-xW6@tiehlicka>
- <50ff9149-2824-4e57-8d74-d8d0c063c87e@lucifer.local>
- <e5fa4a36-2af8-48e9-811e-680881c06b86@redhat.com>
- <1a7513cf-4a0a-4e58-b20d-31c1370b760f@lucifer.local>
- <e898e52e-a223-4567-9514-b4a021b5d460@nvidia.com>
- <72bb36f2-65b6-4785-af9d-5b1f8126fc78@lucifer.local>
- <2f866f12-2aa0-4456-b215-08ddc9b13b1e@redhat.com>
- <3dfbbd63-697d-42aa-8906-539d74df9123@nvidia.com>
- <44af8f5a-2d94-498b-a3e0-31f5dde74538@redhat.com>
- <5d0d0542-5994-49e1-820a-02fd7e7551c5@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH V3] perf: Fix the throttle error of some clock events
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Mark Rutland <mark.rutland@arm.com>, LKML <linux-kernel@vger.kernel.org>,
+ "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+ Stephane Eranian <eranian@google.com>, Chun-Tse Shao <ctshao@google.com>,
+ Thomas Richter <tmricht@linux.ibm.com>, Leo Yan <leo.yan@arm.com>,
+ Aishwarya TCV <aishwarya.tcv@arm.com>,
+ Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+References: <20250604171554.3909897-1-kan.liang@linux.intel.com>
+ <CAADnVQKjyzdNVR_+WCMzORPJAX00tD3HK0vaCz13ZprWaG72Tg@mail.gmail.com>
+ <d5fcf34f-63fe-451b-89ad-621c38981709@linux.intel.com>
+ <CAADnVQ+N5UaBwLjtLGHAe1PCjpRzxxcFL45gbb0eHMDZD5+X6A@mail.gmail.com>
+ <3f8b0b58-3b48-470e-b8ff-a71a26370bc3@linux.intel.com>
+ <CAADnVQKRJKsG08KkEriuBQop0LgDr+c9rkNE6MUh_n3rzZoXVQ@mail.gmail.com>
+ <7638853b-bbc6-464d-8890-29ed92aa5cef@linux.intel.com>
+ <CAADnVQLBv08fjWWVL+7w7TqoYN-EbGT-E=YsAcms+NEQ9zGUeQ@mail.gmail.com>
+ <e671d9e9-7da5-4f04-8584-fd743fce1202@linux.intel.com>
+ <CAADnVQ+BF5FjZgqgh08+uoZgkVqE-QG33kYKoMjErZDX5Lh-nw@mail.gmail.com>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <5d0d0542-5994-49e1-820a-02fd7e7551c5@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAADnVQ+BF5FjZgqgh08+uoZgkVqE-QG33kYKoMjErZDX5Lh-nw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 06.06.25 20:31, John Hubbard wrote:
-> ...
->>>>> David, what do you think?
+
+
+On 2025-06-06 1:42 p.m., Alexei Starovoitov wrote:
+> On Fri, Jun 6, 2025 at 6:05 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>>
+>>
+>> On 2025-06-05 8:39 p.m., Alexei Starovoitov wrote:
+>>> On Thu, Jun 5, 2025 at 4:50 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
 >>>>
->>>> Well, in this patch here I deliberately want _ONCE for the unpin sanity
->>>> checks. Because if they start happening (IOW, now after 5 years observed
->>>> for the first time?) I *absolutely don't* want to get flooded and
->>>> *really* figure out what is going on by seeing what else failed.
 >>>>
->>>> And crashing on VM_BUG_ON() and not observing anything else was also not
->>>> particularly helpful :)
 >>>>
->>>> Because ... they shouldn't be happening ...
+>>>> On 2025-06-05 4:46 p.m., Alexei Starovoitov wrote:
+>>>>> On Thu, Jun 5, 2025 at 1:24 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> On 2025-06-05 2:45 p.m., Alexei Starovoitov wrote:
+>>>>>>> On Thu, Jun 5, 2025 at 6:46 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> On 2025-06-04 7:21 p.m., Alexei Starovoitov wrote:
+>>>>>>>>> On Wed, Jun 4, 2025 at 10:16 AM <kan.liang@linux.intel.com> wrote:
+>>>>>>>>>>
+>>>>>>>>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>>>>>>>>
+>>>>>>>>>> Both ARM and IBM CI reports RCU stall, which can be reproduced by the
+>>>>>>>>>> below perf command.
+>>>>>>>>>>   perf record -a -e cpu-clock -- sleep 2
+>>>>>>>>>>
+>>>>>>>>>> The issue is introduced by the generic throttle patch set, which
+>>>>>>>>>> unconditionally invoke the event_stop() when throttle is triggered.
+>>>>>>>>>>
+>>>>>>>>>> The cpu-clock and task-clock are two special SW events, which rely on
+>>>>>>>>>> the hrtimer. The throttle is invoked in the hrtimer handler. The
+>>>>>>>>>> event_stop()->hrtimer_cancel() waits for the handler to finish, which is
+>>>>>>>>>> a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART should
+>>>>>>>>>> be used to stop the timer.
+>>>>>>>>>>
+>>>>>>>>>> There may be two ways to fix it.
+>>>>>>>>>> - Introduce a PMU flag to track the case. Avoid the event_stop in
+>>>>>>>>>>   perf_event_throttle() if the flag is detected.
+>>>>>>>>>>   It has been implemented in the
+>>>>>>>>>>   https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
+>>>>>>>>>>   The new flag was thought to be an overkill for the issue.
+>>>>>>>>>> - Add a check in the event_stop. Return immediately if the throttle is
+>>>>>>>>>>   invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
+>>>>>>>>>>   method to stop the timer.
+>>>>>>>>>>
+>>>>>>>>>> The latter is implemented here.
+>>>>>>>>>>
+>>>>>>>>>> Move event->hw.interrupts = MAX_INTERRUPTS before the stop(). It makes
+>>>>>>>>>> the order the same as perf_event_unthrottle(). Except the patch, no one
+>>>>>>>>>> checks the hw.interrupts in the stop(). There is no impact from the
+>>>>>>>>>> order change.
+>>>>>>>>>>
+>>>>>>>>>> Reported-by: Leo Yan <leo.yan@arm.com>
+>>>>>>>>>> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+>>>>>>>>>> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
+>>>>>>>>>> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+>>>>>>>>>> Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw/
+>>>>>>>>>> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+>>>>>>>>>> Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com/
+>>>>>>>>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>>>>>>>>>
+>>>>>>>>> It seems the patch fixes one issue and introduces another ?
+>>>>>>>>>
+>>>>>>>>> Looks like the throttle event is sticky.
+>>>>>>>>> Once it's reached the perf_event no longer works ?
+>>>>>>>>
+>>>>>>>> No. It should still work even the throttle is triggered.
+>>>>>>>>
+>>>>>>>> sdp@d404e6bce080:~$ sudo bash -c 'echo 10 >
+>>>>>>>> /proc/sys/kernel/perf_event_max_sample_rate'
+>>>>>>>> sdp@d404e6bce080:~$ sudo perf record -a -e cpu-clock -c10000 -- sleep 1
+>>>>>>>> [ perf record: Woken up 1 times to write data ]
+>>>>>>>> [ perf record: Captured and wrote 0.559 MB perf.data (584 samples) ]
+>>>>>>>
+>>>>>>> With the patch applied above command hangs in my VM:
+>>>>>>>
+>>>>>>> # perf record -a -e cpu-clock -c10000 -- sleep 1
+>>>>>>> [   43.656855] hrtimer: interrupt took 21640 ns
+>>>>>>> [   68.561052] watchdog: BUG: soft lockup - CPU#0 stuck for 41s! [perf:2253]
+>>>>>>> [   68.561056] Modules linked in: bpf_preload
+>>>>>>> [   68.561060] CPU: 0 UID: 0 PID: 2253 Comm: perf Not tainted
+>>>>>>> 6.15.0-12294-gc89e5202e569 #1172 PREEMPT
+>>>>>>> [   68.561062] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+>>>>>>> BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+>>>>>>> [   68.561063] RIP: 0010:handle_softirqs+0x77/0x2a0
+>>>>>>> [   68.561070] Code: 6b 96 02 00 01 00 00 bd 0a 00 00 00 44 89 64 24
+>>>>>>> 14 89 6c 24 10 40 88 7c 24 04 31 c0 65 66 89 05 5f 6b 96 02 fb bb ff
+>>>>>>> ff ff ff <48> c7 c0 c0 f
+>>>>>>> [   68.561071] RSP: 0018:ffa0000000003fa0 EFLAGS: 00000246
+>>>>>>> [   68.561072] RAX: 0000000000000000 RBX: 00000000ffffffff RCX: 00000000000006e0
+>>>>>>> [   68.561073] RDX: 0000000000000007 RSI: ff1100010212e100 RDI: 0000000000000000
+>>>>>>> [   68.561074] RBP: 000000000000000a R08: 0000000000000000 R09: 7fffffffffffffff
+>>>>>>> [   68.561074] R10: 00000005a3af2140 R11: 0000000000004601 R12: 0000000000400100
+>>>>>>> [   68.561075] R13: 0000000000000000 R14: 0000000000000002 R15: 0000000000000000
+>>>>>>> [   68.561111] FS:  00007fa1b536f780(0000) GS:ff110004abe26000(0000)
+>>>>>>> knlGS:0000000000000000
+>>>>>>> [   68.561112] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>>>>>> [   68.561113] CR2: 0000000001c67a30 CR3: 000000010f2f3003 CR4: 00000000003716f0
+>>>>>>> [   68.561113] Call Trace:
+>>>>>>> [   68.561170]  <IRQ>
+>>>>>>> [   68.561174]  irq_exit_rcu+0x91/0xb0
+>>>>>>> [   68.561176]  sysvec_apic_timer_interrupt+0x71/0x90
+>>>>>>> [   68.561181]  </IRQ>
+>>>>>>> [   68.561181]  <TASK>
+>>>>>>> [   68.561182]  asm_sysvec_apic_timer_interrupt+0x1a/0x20
+>>>>>>> [   68.561184] RIP: 0010:generic_exec_single+0x33/0x120
+>>>>>>> [   68.561188] Code: 65 39 3d 5c 4d 89 02 74 28 3b 3d b8 f5 17 02 0f
+>>>>>>> 83 de 00 00 00 89 f8 48 0f a3 05 d8 f1 17 02 0f 83 ce 00 00 00 e8 bd
+>>>>>>> fe ff ff <31> c0 5b 5d 9
+>>>>>>> [   68.561189] RSP: 0018:ffa00000025a3cc0 EFLAGS: 00000206
+>>>>>>> [   68.561190] RAX: 0000000000000000 RBX: ffffffff8145b310 RCX: ff110004abe26000
+>>>>>>> [   68.561190] RDX: 0000000000000007 RSI: 0000000000000000 RDI: ff1100042fa26540
+>>>>>>> [   68.561191] RBP: 0000000000000202 R08: 0000000000000000 R09: 0000000000000000
+>>>>>>> [   68.561191] R10: ffa00000025a3ee0 R11: 0000000000000000 R12: ffa00000025a3d40
+>>>>>>> [   68.561192] R13: ff11000100881220 R14: ff11000100880fc0 R15: 0000000000000000
+>>>>>>> [   68.561192]  ? sw_perf_event_destroy+0x70/0x70
+>>>>>>> [   68.561197]  smp_call_function_single+0xc4/0x110
+>>>>>>> [   68.561199]  ? sw_perf_event_destroy+0x70/0x70
+>>>>>>> [   68.561200]  event_function_call+0x160/0x170
+>>>>>>> [   68.561202]  ? ctx_resched+0x2d0/0x2d0
+>>>>>>> [   68.561205]  ? perf_event_set_state+0x60/0x60
+>>>>>>> [   68.561206]  ? _perf_event_disable+0x50/0x50
+>>>>>>> [   68.561208]  perf_event_for_each_child+0x37/0x80
+>>>>>>> [   68.561209]  ? _perf_event_disable+0x50/0x50
+>>>>>>> [   68.561211]  _perf_ioctl+0x1df/0xad0
+>>>>>>> [   68.561213]  ? __set_cpus_allowed_ptr+0x71/0x80
+>>>>>>> [   68.561216]  ? avc_has_perm+0x72/0x160
+>>>>>>> [   68.561219]  ? ldsem_down_write+0x1bb/0x1fc
+>>>>>>> [   68.561222]  perf_ioctl+0x42/0x70
+>>>>>>> [   68.561224]  __x64_sys_ioctl+0x8f/0xd0
+>>>>>>> [   68.561226]  do_syscall_64+0x46/0x160
+>>>>>>> [   68.561228]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
+>>>>>>>
+>>>>>>> but only after a fresh boot.
+>>>>>>>
+>>>>>>> If I run bpf selftests before that it works.
+>>>>>>> Like test_progs -t stacktrace_build_id_nmi
+>>>>>>> followed by the same
+>>>>>>> perf record -a -e cpu-clock ..
+>>>>>>> it works fine.
+>>>>>>>
+>>>>>>
+>>>>>> There should be a bug in V3. When stops in the throttle, the event
+>>>>>> should not be updated, stop(event, 0). But the cpu_clock_event_stop()
+>>>>>> doesn't handle the flag. That changes the behavior a little bit.
+>>>>>>
+>>>>>> Could you please try the below patch and see if it helps?
+>>>>>>
+>>>>>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>>>>>> index cd85b1820e7d..b6c57ba24e78 100644
+>>>>>> --- a/kernel/events/core.c
+>>>>>> +++ b/kernel/events/core.c
+>>>>>> @@ -2656,8 +2656,8 @@ static void perf_event_unthrottle(struct
+>>>>>> perf_event *event, bool start)
+>>>>>>
+>>>>>>  static void perf_event_throttle(struct perf_event *event)
+>>>>>>  {
+>>>>>> -       event->pmu->stop(event, 0);
+>>>>>>         event->hw.interrupts = MAX_INTERRUPTS;
+>>>>>> +       event->pmu->stop(event, 0);
+>>>>>>         if (event == event->group_leader)
+>>>>>>                 perf_log_throttle(event, 0);
+>>>>>>  }
+>>>>>> @@ -11777,7 +11777,12 @@ static void perf_swevent_cancel_hrtimer(struct
+>>>>>> perf_event *event)
+>>>>>>  {
+>>>>>>         struct hw_perf_event *hwc = &event->hw;
+>>>>>>
+>>>>>> -       if (is_sampling_event(event)) {
+>>>>>> +       /*
+>>>>>> +        * The throttle can be triggered in the hrtimer handler.
+>>>>>> +        * The HRTIMER_NORESTART should be used to stop the timer,
+>>>>>> +        * rather than hrtimer_cancel(). See perf_swevent_hrtimer()
+>>>>>> +        */
+>>>>>> +       if (is_sampling_event(event) && (hwc->interrupts != MAX_INTERRUPTS)) {
+>>>>>>                 ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
+>>>>>>                 local64_set(&hwc->period_left, ktime_to_ns(remaining));
+>>>>>>
+>>>>>> @@ -11832,7 +11837,8 @@ static void cpu_clock_event_start(struct
+>>>>>> perf_event *event, int flags)
+>>>>>>  static void cpu_clock_event_stop(struct perf_event *event, int flags)
+>>>>>>  {
+>>>>>>         perf_swevent_cancel_hrtimer(event);
+>>>>>> -       cpu_clock_event_update(event);
+>>>>>> +       if (flags & PERF_EF_UPDATE)
+>>>>>> +               cpu_clock_event_update(event);
+>>>>>>  }
+>>>>>
+>>>>> Nope. The last hunk didn't make any difference.
+>>>>> Same soft lockup.
 >>>>
->>>> (well, it goes back to my initial point about requiring individual
->>>> decisions etc ...)
+>>>> Thanks for the verification.
 >>>>
->>>> Not sure what's best now in the general case, in the end I don't care
->>>> that much.
+>>>> I have some questions, could you please help to clarify?
 >>>>
->>>> Roll a dice? ;)
+>>>> - What's the value of proc/sys/kernel/perf_event_max_sample_rate in the
+>>>> test?
 >>>
->>> One last data point: I've often logged onto systems that were running
->>> long enough that the dmesg had long since rolled over. And this makes
->>> the WARN_ON_ONCE() items disappear.
+>>> 100000
+>>>
+>>>> - Can the soft lockup issue be produced by both bpf selftests and the
+>>>> perf record command? Or just the perf record command?
+>>>
+>>> just perf record.
+>>>
+>>>> - Can the soft lockup issue be reproduced with the v2 patchset?
+>>>> https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
+>>>
+>>> yes. With v2
+>>> perf record -a -e cpu-clock -c10000 -- sleep 1
+>>>
+>>> soft locks up as well with the same stack trace.
+>>>
+>>>> - Furthermore, can the soft lockup issue be reproduced after reverting
+>>>> the recent generic throttle logic fix?
+>>>> commit e800ac51202f ("perf: Only dump the throttle log for the leader")
+>>>> commit 9734e25fbf5a ("perf: Fix the throttle logic for a group")
+>>>
+>>> yes.
+>>>
+>>> perf record -a -e cpu-clock -- sleep 1
+>>> works
+>>>
+>>> but
+>>> perf record -a -e cpu-clock -c100 -- sleep 1
+>>> locks up.
+>>> -c1, -c100, -c10000 all lockup.
 >>
->> I think what would be *really* helpful would be quick access to the very
->> first warning that triggered. At least that's what I usually dig for ... :)
+>> Thanks for the confirmation.
 >>
+>> The soft lockup issue is likely an existing issue in virtualization,
+>> unrelated to the recent throttle patches.
+>>
+>> The issue should be caused by the overwhelming overflows.
+>> The -c means fixed period. It's too small for the SW event in VM.
+>> For 1 GHZ CPU, the -c10000 will trigger 100000 samples per second.
+>> -c1 will trigger 1000000000 samples per second.
+>> The perf_event_max_sample_rate is set to 100000. The throttle mechanism
+>> should be triggered for the above case, but even with 100000 samples per
+>> second. It seems still be big number in virtualization.
+>>
+>> There is no such issue without -c. I think it's because of the
+>> auto-adjust mechanism for the freq mode. The period is automatically
+>> adjusted, so a reasonable number of samples can be generated per second.
+>>
+>> If you change the proc/sys/kernel/perf_event_max_sample_rate to a small
+>> value, e.g., 1000, I think the issue should be gone.
+>>
+>> Could you please give a try?
 > 
-> These two use cases cannot be simultaneously solved, at least not
-> perfectly.
+> Smaller value helps, but this is not an acceptable workaround.
+> The kernel shouldn't lock up like that with a simple perf command.
 
-I guess we'd have to store the first WARN data separately away, just 
-like when tainting the kernel or so. Not sure.
+Right, but the soft lockup is a different issue. Even without the recent
+generic throttle logic change, it still can be triggered, right?
 
-Fortunately, since a VM_BUG_ON() case cannot ever happen,
+How does the below sound?
+I will send a V4 with the small change I made yesterday. Please help to
+verify it and see if it fixes your original report (test_progs cases).
+If yes, let's merge it first, so it can unblock other people (ARM CI,
+IBM CI, Vince...).
 
-I mean, also WARN and friends are for things that should never happen ... :)
+Then I will go back and see what I can do for this long-standing issue
+in VM.
 
--- 
-Cheers,
+Thanks,
+Kan
 
-David / dhildenb
+
 
