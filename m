@@ -1,141 +1,133 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4628082866;
-	Fri,  6 Jun 2025 16:01:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA88E82866;
+	Fri,  6 Jun 2025 16:01:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749225703; cv=none; b=sw5QkmZfrww3JdmN9rj5wus6FxZIOfHtu/3g06awg8r+6xT5W+8vCVxt5SFH/n45ho2IKRESuzVOAR5Xu4C0XMTyIGSgsgPH8H5JftRbMui8UlKqLNuoi7mZ7WAYLS4fQ68knu/euIyczYnIHhW8iFq9K42802lPjkqvGD0Nmwg=
+	t=1749225708; cv=none; b=AuWxapbFg0uMcl0ObBoryKkE6twDCcohI7ZpQJrCJemOhNlhBh6+OHKY34qBdHGyV7qtitEG0ne07hcCtrMTfN6IpCzB4KNX89VTp7YTMamWDOYbEnAfhR9LA79SLeqDsJRnB2EiWv/mzYQ4BN/STpe0yiQKpl9J4aMhMAo0cyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749225703; c=relaxed/simple;
-	bh=nm25pcAcVJI0cheKsvQKjVyk6CHa+YZoF+h1z7RNn5I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ttn2amiJECnhcBABZAhUwbiGRW2H0McvU+4x6uXDCaxnlZ4R5lw26/Ozl+6ipnD4K5LzqhqT5c+K+PoninmWBIvozRuw3jiB1zt6Z8W5UPw5U4SbJp0/ju6kzwx5kSuX6lPHCKRif+DcnNjt5rSnP4eW59wGQXw0awBAgyKhkf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PfkkAK4D; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749225708; c=relaxed/simple;
+	bh=vhVShy+skVnHFGzfDTJtn4TVEa894a3+Y2xjxqrM850=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PWa7nzmfXSojpTC/sd7g3LitX5UCDNrBB+dB0pgG/O1AODdEOrYEl8WjXA+YZcqyHjLTnS6baX6ejPB0KvNWX3y5PivL8tWgVOTuSMBPA1qG2Qw3Q+pl6cvPEfH0c06Q/bEAFXdlj121tVec3KerQX0g7p6gGLsNA/McYFDCZU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j2BcI4Ml; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PfkkAK4D"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a51481a598so1382263f8f.3;
-        Fri, 06 Jun 2025 09:01:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749225700; x=1749830500; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BUbXR0bwQGiCRtW9GFJ1y1yZl1gXhHCz0DArJw0qNw0=;
-        b=PfkkAK4DI3HQluxkSzfniXwNaIw6cbP93T56+KRPGNca5sryICWEUY8w59lDMXcHGv
-         2nnxLxXGSAWAd4nlYWDthYM3afubzbziPzi1AvCgYYJCY3scYZUgOj8Nv+v1hJJytyu8
-         IZ2WBge1Hx2eTFq/myY/QDyk3uUEyWyWZpA6wMM+uf+WSCaVtxK8vsTEqs8x0IgQq4mA
-         JnSNR6UULOBUsTcf6lwSa1q85oLorgTZZsioAu9mxUY27moawr6fP+txXvN7cPvMSkJT
-         tLdjnYJDMJA2d8jlZrhw3IA9zPJcIeV11ujJV0/knzoitKwOC4z9FiWtoRHsJ6GRGVOj
-         FfsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749225700; x=1749830500;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BUbXR0bwQGiCRtW9GFJ1y1yZl1gXhHCz0DArJw0qNw0=;
-        b=mWvN0stnwmnWF9oLoMeXfTjun1InNJj1eOA4j/+Y3k6dSkrjttuwpgw+OzX3/1++Ge
-         N3TvQzBXfPyiy7w0X/qowwD7MGWe+kmxVxrHJvl0lts0PRpU99TZ8PV4W9KujMOy8+bL
-         X3GW97xvw8azTMRJko+gX4fiLiBmkN3Cr07JOOWQgEG/sI7dBZVWw0VDflZr9UtYqjf+
-         FXWz1cmk7giXVgO9jKD5AuA+HugpEePKxokepCBK/pIgdRae0HSpHzwP9DBNGbiZWH2Q
-         5Tn1aMdijO+lsb7C9GwGQvxKH5IhNpwzpYS0l3SvBYFF5yZw/WAmVsNqyK4t65d/arVY
-         BMjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVjAkTXCuXh3vvqvP2V3GFQfSPwGbo3QzMJp2vJUYM5GU3pKF3P+a47dG5OTmsvPh5sb0qOJz6TOmiO@vger.kernel.org, AJvYcCXqwTFzvsKVd3WRCugIX5in/kzvthnv+kaGp/2aStisJzmdHEfKd1xRBq2wAXOgy+8XKWlsmzBeukQ4hiIE@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHJr1etv0SVdCseETSc5RIEa88KZIW5vRifENzfcYlH77SqT80
-	coj8P2gh6qwr5lEcshqHrdKU6envWCFk7JPXpKXENAVFLPMwwAzWKXUd
-X-Gm-Gg: ASbGnct+ROyqT+KZOFRd6na8v+kFRA5xUPi1/POIpeYEO5YVntut8447+9+YdmdnmMQ
-	T1bt604DHnJ310izjBoacrj4knC6gW8gNLghW1A6tSK84fWrNmmqsMfLuxanaD0Amf7206nrdpH
-	BN4Mx1UrtxtdbSJShLMyCYv8yIIwCSx/N4IcYxePSWP4wjE7f4nPvAHeN2H67gfBO0YubFidnEk
-	ZRjjpv4+Jb1ZhA89aa/7PU+IUbpIVZGM1J5gjkXYbs9XGH6XfWQXgvBocTT2Ix5pAELESARPXXx
-	Xr5eHTi5GZgayKbt9hST1FHYIOWFeHbEwihqsnYlTXFRNNv10dJrtSXo3A+FbqW5TXiKcylqViB
-	Tf6yxfmungiD8ckzxCLl628cb
-X-Google-Smtp-Source: AGHT+IEmqmuKj6FXn9i/uI9zQy+znVxChGqy5qwFVVuIhtY5rcMLHOtTf0zBBGAfuZkiaQUGnO+8Zg==
-X-Received: by 2002:a5d:4fd1:0:b0:3a5:3930:f57 with SMTP id ffacd0b85a97d-3a539300f8fmr652283f8f.51.1749225700083;
-        Fri, 06 Jun 2025 09:01:40 -0700 (PDT)
-Received: from masalkhi.. (ip-109-43-113-198.web.vodafone.de. [109.43.113.198])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45209bc6c6csm29070975e9.2.2025.06.06.09.01.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 09:01:39 -0700 (PDT)
-From: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-To: krzk@kernel.org
-Cc: abd.masalkhi@gmail.com,
-	arnd@arndb.de,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	krzk+dt@kernel.org,
-	linux-kernel@vger.kernel.org,
-	robh@kernel.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: eeprom: Add ST M24LR support
-Date: Fri,  6 Jun 2025 15:06:41 +0000
-Message-ID: <20250606150641.3140295-1-abd.masalkhi@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <8ac3c2da-2824-44fe-942c-fceb8b6f5332@kernel.org>
-References: <8ac3c2da-2824-44fe-942c-fceb8b6f5332@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j2BcI4Ml"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCB77C4CEEB;
+	Fri,  6 Jun 2025 16:01:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749225707;
+	bh=vhVShy+skVnHFGzfDTJtn4TVEa894a3+Y2xjxqrM850=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=j2BcI4Mlhm7S2wN2qr+fzTsG6NZqxkE/MjmXsyG2VIRIXTUJvnYAj6v7DCMkWYQpM
+	 9zSNy4itoSohUNXsmhyMXu+UmGtp5TGOEaPmRoVKvAk/d/fdgx8BwTx1MRCuZXVCwb
+	 fAUHe5HmjbwdrO4Js2VMuYfTuYQYtGrIufqKnJ+RGdrFtdUOU6RGDlk3fCLGYLaWUA
+	 LRQMDy9tjmVGux8bWFDXHfYaT7BNBEYpI3hzDpRDNR0qyvzZlEgj1OEwsNlFGmbCeq
+	 oOa0CM32BjqEiTb/qaTKY/xPBUkxm4pZutRd3v5sL+7i8WDRpNhnNZRNBYL7Ayn17s
+	 jZlsYvn+8Gjnw==
+Date: Fri, 6 Jun 2025 17:01:42 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Chen Wang <unicorn_wang@outlook.com>
+Cc: Inochi Amaoto <inochiama@gmail.com>, Han Gao <rabenda.cn@gmail.com>,
+	devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	linux-riscv@lists.infradead.org, sophgo@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] riscv: dts: sophgo: add zfh for sg2042
+Message-ID: <20250606-viable-guts-13687b1fbcdc@spud>
+References: <cover.1747235487.git.rabenda.cn@gmail.com>
+ <104dde6002c268a39fab6fcf469adc26d49ba364.1747235487.git.rabenda.cn@gmail.com>
+ <MA0P287MB226290B908D3209E5C890BFAFE90A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+ <CAAT7Ki-33DcA7xeBzzv1hm0wR_ebcVdux5fQxGVrLs45RbGM9A@mail.gmail.com>
+ <MA0P287MB226265FFA15A808221629848FE64A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+ <4vuneynwhmsyokkuw3wlabxij6kobl6j7bbbcymlcmsdc2hhb7@u5mhb7je74km>
+ <MA0P287MB226230791E82A7A4D566C224FE60A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-
-Hi Krzysztof,
-
-thank you for the feedback.
-
-> How did you implement this feedback:
->
-> "That's not a misc device, but eeprom. Place it in appropriate directory."
-> ?
->
-> There is no such device as a misc device.
-
-I will move it to the eeprom dirctory 
-
->> +  reg:
->> +    description:
->> +      Two I2C address, the primary for control registers, the secondary
->> +      for EEPROM access.
->> +    minItems: 2
->> +    maxItems: 2
->
-> Replace this all with items and description:
-> items:
->   - description: foo
->   - description: bar
-
-I will do that.
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="9oQ+77yUoZqjb+2M"
+Content-Disposition: inline
+In-Reply-To: <MA0P287MB226230791E82A7A4D566C224FE60A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
 
 
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +unevaluatedProperties: false
->> +
->> +examples:
->> +  - |
->> +    i2c {
->> +      #address-cells = <1>;
->> +      #size-cells = <0>;
->> +
->> +      eeprom@57 {
->> +        compatible = "st,m24lr04e-r";
->> +        reg = <0x57>, /* primary-device */
->> +              <0x53>; /* secondary-device */
->
-> Where is the rest of at24 properties? Not relevant? Not correct? I had
-> impression this is fully at24 compatible.
+--9oQ+77yUoZqjb+2M
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The driver does not currently accept at24-style configuration properties
-(e.g., pagesize, address-width) because the EEPROM access is handled
-internally using fixed parameters per device variant. Let me know if
-adding support for these via DT is preferred, I'm happy to extend it
-for flexibility.
+On Sat, May 31, 2025 at 10:49:58AM +0800, Chen Wang wrote:
+>=20
+> On 2025/5/31 9:34, Inochi Amaoto wrote:
+> > On Tue, May 27, 2025 at 06:22:05PM +0800, Chen Wang wrote:
+> > > On 2025/5/27 17:34, Han Gao wrote:
+> > > > On Thu, May 15, 2025 at 9:33=E2=80=AFAM Chen Wang <unicorn_wang@out=
+look.com> wrote:
+> > > > > On 2025/5/14 23:15, Han Gao wrote:
+> > > > > > sg2042 support Zfh ISA extension [1].
+> > > > > >=20
+> > > > > > Link: https://occ-oss-prod.oss-cn-hangzhou.aliyuncs.com/resourc=
+e//1737721869472/%E7%8E%84%E9%93%81C910%E4%B8%8EC920R1S6%E7%94%A8%E6%88%B7%=
+E6%89%8B%E5%86%8C%28xrvm%29_20250124.pdf [1]
+> > > > > >=20
+> > > > > > Signed-off-by: Han Gao <rabenda.cn@gmail.com>
+> > > > > > ---
+> > > > > >     arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi | 256 +++++++++=
++----------
+> > > > > >     1 file changed, 128 insertions(+), 128 deletions(-)
+> > > > > >=20
+> > > > > > diff --git a/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi b/arch=
+/riscv/boot/dts/sophgo/sg2042-cpus.dtsi
+> > > > > > index f483f62ab0c4..8dd1a3c60bc4 100644
+> > > > > > --- a/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi
+> > > > > > +++ b/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi
+> > > > > > @@ -256,11 +256,11 @@ core3 {
+> > > > > >                 cpu0: cpu@0 {
+> > > > > >                         compatible =3D "thead,c920", "riscv";
+> > > > > >                         device_type =3D "cpu";
+> > > > > > -                     riscv,isa =3D "rv64imafdc";
+> > > > > > +                     riscv,isa =3D "rv64imafdc_zfh";
+> > > > > Need not touch this. "riscv,isa" is deprecated and replaced by
+> > > > > "riscv,isa-base" & "riscv,isa-extensions".
+> > > > >=20
+> > > > > And only adding zfh for this looks a bit werid.
+> > > > >=20
+> > > > > Actually, I plan to remove "riscv,isa" later, so please don't tou=
+ch this
+> > > > > from now on.
+> > > > I think that since the linux kernel is the upstream for devicetree,=
+ it
+> > > > cannot yet remove riscv, isa needs to maintain compatibility.
+> > > OK, maybe it's not good to remove "riscv,isa".
+> > >=20
+> > > Can this patch not modify "riscv,isa", but only add something for
+> > > "riscv,isa-extensions"?
+> > >=20
+> > I can remove this while merging the patch, is it OK for you?
 
-Best regards,
-Abd-Alrhman Masalkhi
+> Han does not want to remove this "riscv,isa"=EF=BC=8Che said some other c=
+omponents,
+> such as u-boot may have dependency on this.
+
+U-Boot shouldn't, what actually needs it, opensbi?
+
+--9oQ+77yUoZqjb+2M
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEMQ5gAKCRB4tDGHoIJi
+0svJAP9Sj+tPyw/qgj7Nuqwdlm3h9SJL2W8YJeG/9/7t7SMLmAD/QshrFinvdV9O
+0fyCldiYSrBiW7dQFbTy4jBpo492ag4=
+=3AHM
+-----END PGP SIGNATURE-----
+
+--9oQ+77yUoZqjb+2M--
