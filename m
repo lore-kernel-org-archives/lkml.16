@@ -1,42 +1,42 @@
 Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B853E289E21;
-	Fri,  6 Jun 2025 16:35:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B60E2853F6;
+	Fri,  6 Jun 2025 16:35:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749227705; cv=none; b=UuJ04Z8nYNy7ESd9vlIs7a4OaK2c7PXacSyQgadHMjPFoGbQJ/Bb+oYtZsiupMk4+4XbybhyCXuT8PplezvywmOGHiqNferZ3Equ/PSht8F8P7tkZGTyZPyvEhjqicP8KgWg58bk82aOqimSg+66R+OW6n3dlDo2gcxK31juQw0=
+	t=1749227705; cv=none; b=sboC7ubwH2OIZrZXejwoyhS3xOsKmroRRmuGJ9PXqJq01TgsvQYDko5UbLoSX6ePTfxzQb7SVWm85QSN9it4fPxEP/vYLIXB/yUFSNhq681dlwxVLRtv3QZGzAVhSjrnakHE4StdxEJs9zk25Gu69GmT5YZbAr2U8dTsSEFI+tY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749227705; c=relaxed/simple;
-	bh=4wOhT+ccdmsvlqlGTH/6VXz0OIu+as1y2XRYVinSHrc=;
+	bh=Xk9ajLZGYrjC8GxOtF2H673cXwx3Vc4L5ZswNgZDV3w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WzKw186XYDJC6gNAjB7oicMDLQwep/2uIq+6/kBunGRMpqCvMPuOJLJCFYwV7ZMfB35ibiaojYH5rzqXxIIwI6EBZWzGtezAO1OBeqcEDDqh+39Cvf9hAfHvkGpdS/cUo5NofBy4J9FHckoCUEZ8BwivwIteUWT/CBFK5h2arpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=sCv2Rd85; arc=none smtp.client-ip=45.79.88.28
+	 MIME-Version; b=CdAVBbzxqu1EcdiuAhmFuVMIGNlYbfzTzRNcUHzvfT6cOA98mugXNqeguRXhuwjLYN0ge00xhbMxDmVGAV2WyVvNWXXkn0hWwnJLyyeIkw4mlFKWDHfkheYB9/G3pTk47IbQEHrNKeI1eWf25XFHFQ5rQ/QkhshtPj5rjngMoKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=H1xF6vEh; arc=none smtp.client-ip=45.79.88.28
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="sCv2Rd85"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 9D8DD41F2F
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="H1xF6vEh"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 1433541F26
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1749227697; bh=UYcmn4qdwBXvAETOWfKZx/qAHGOt2DuUFA6POj8NZjI=;
+	t=1749227696; bh=k4wWLzw3KH5+stcNScMYwU5UgcBq+X0OjHCe0oISl2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sCv2Rd85XijSp2BAvJdjVnHYttyKZpyHIV0BUUQixj+LJVfUjLc8bN5ZKeGsYQp/b
-	 ST+9+qEdOBRKZzIF0YjTfaKv8VSWEjORxuTTEjy744TMaTV23S3WToMuH0L4LTnEOe
-	 8GB1Ax7OroSCOfv282dyJsJH85OXjDbYIOozk6RBoIuTsvsPo7x8wCIFRDEZoIBibr
-	 MGGOwFUL7xHyh/u7bKeF1i54QwvkGb5/J9tIVuyfqQO3xJn7RFek51/Vmx2pnpZmdb
-	 qnjYDTgmXXm3qbOIUf6Q+bZpLHH4RiBTBrynr+9lIe/+GYAbiOeYvYfL+f/3e+qFk1
-	 lfHgfMAOJnwEQ==
+	b=H1xF6vEhKkve9MVXtJu94HsbQIumFIoSU2FEcFb5iXjDA00SutPir3hSzpQ6ZeRrz
+	 535yNLQZSTBMCqiJ2/cWmea/zXQWVIV2hSu7A4Q3UJvYKq/UW3zur2Z/Mh5V3OzFXs
+	 04pihMcrB1Ha15T41MbLf76NNeQMPxrPc0QxKf8VBdbwdL09SYw12xbXMK0GVfhhDI
+	 dKJv6s22LQPyqnfbQy1LTW5WEtpbhESv+9EfUh5ZujGrFKC0QwoEMDlc9mgasj8+gJ
+	 kMd70nrQ1mvtz1RQspFSLiNknjSoOzkrY0QiTZCN4+KaRX+X0NtUzJyeGtbmelvjSC
+	 2jobPetci4UIw==
 Received: from trenco.lwn.net (unknown [IPv6:2601:280:4600:2da9::1fe])
-	by ms.lwn.net (Postfix) with ESMTPA id 9D8DD41F2F;
-	Fri,  6 Jun 2025 16:34:57 +0000 (UTC)
+	by ms.lwn.net (Postfix) with ESMTPA id 1433541F26;
+	Fri,  6 Jun 2025 16:34:56 +0000 (UTC)
 From: Jonathan Corbet <corbet@lwn.net>
 To: linux-doc@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 5/9] docs: kdoc: remove the KernelEntry::is_kernel_comment member
-Date: Fri,  6 Jun 2025 10:34:34 -0600
-Message-ID: <20250606163438.229916-6-corbet@lwn.net>
+Subject: [PATCH 2/9] docs: kdoc: move the core dispatch into a state table
+Date: Fri,  6 Jun 2025 10:34:31 -0600
+Message-ID: <20250606163438.229916-3-corbet@lwn.net>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250606163438.229916-1-corbet@lwn.net>
 References: <20250606163438.229916-1-corbet@lwn.net>
@@ -48,65 +48,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-entry::is_kernel_comment never had anything to do with the entry itself; it
-is a bit of local state in one branch of process_name().  It can, in fact,
-be removed entirely; rework the code slightly so that it is no longer
-needed.
-
-No change in the rendered output.
+Since all of the handlers already nicely have the same prototype, put them
+into a table and call them from there and take out the extended
+if-then-else series.
 
 Signed-off-by: Jonathan Corbet <corbet@lwn.net>
 ---
- scripts/lib/kdoc/kdoc_parser.py | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ scripts/lib/kdoc/kdoc_parser.py | 30 +++++++++++++++++-------------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
 
 diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
-index 3ea260b423e2..56299695abd1 100644
+index b193cf9dc0d1..37b7e501af7c 100644
 --- a/scripts/lib/kdoc/kdoc_parser.py
 +++ b/scripts/lib/kdoc/kdoc_parser.py
-@@ -1216,7 +1216,6 @@ class KernelDoc:
+@@ -1670,6 +1670,21 @@ class KernelDoc:
  
-         if doc_decl.search(line):
-             self.entry.identifier = doc_decl.group(1)
--            self.entry.is_kernel_comment = False
+         return export_table
  
-             decl_start = str(doc_com)       # comment block asterisk
-             fn_type = r"(?:\w+\s*\*\s*)?"  # type (for non-functions)
-@@ -1234,14 +1233,20 @@ class KernelDoc:
-             if r.search(line):
-                 self.entry.decl_type = r.group(1)
-                 self.entry.identifier = r.group(2)
--                self.entry.is_kernel_comment = True
-             #
-             # Look for a function description
-             #
-             elif r2.search(line):
-                 self.entry.identifier = r2.group(1)
-                 self.entry.decl_type = "function"
--                self.entry.is_kernel_comment = True
-+            #
-+            # We struck out.
-+            #
-+            else:
-+                self.emit_msg(ln,
-+                              f"This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst\n{line}")
-+                self.state = state.NORMAL
-+                return
++    #
++    # The state/action table telling us which function to invoke in
++    # each state.
++    #
++    state_actions = {
++        state.NORMAL:			process_normal,
++        state.NAME:			process_name,
++        state.BODY:			process_body,
++        state.BODY_MAYBE:		process_body,
++        state.BODY_WITH_BLANK_LINE:	process_body,
++        state.INLINE:			process_inline,
++        state.PROTO:			process_proto,
++        state.DOCBLOCK:			process_docblock,
++        }
++
+     def parse_kdoc(self):
+         """
+         Open and process each line of a C source file.
+@@ -1721,19 +1736,8 @@ class KernelDoc:
+                     self.process_export(export_table, line)
  
-             self.entry.identifier = self.entry.identifier.strip(" ")
+                     # Hand this line to the appropriate state handler
+-                    if self.state == state.NORMAL:
+-                        self.process_normal(ln, line)
+-                    elif self.state == state.NAME:
+-                        self.process_name(ln, line)
+-                    elif self.state in [state.BODY, state.BODY_MAYBE,
+-                                        state.BODY_WITH_BLANK_LINE]:
+-                        self.process_body(ln, line)
+-                    elif self.state == state.INLINE:  # scanning for inline parameters
+-                        self.process_inline(ln, line)
+-                    elif self.state == state.PROTO:
+-                        self.process_proto(ln, line)
+-                    elif self.state == state.DOCBLOCK:
+-                        self.process_docblock(ln, line)
++                    self.state_actions[self.state](self, ln, line)
++
+         except OSError:
+             self.config.log.error(f"Error: Cannot open file {self.fname}")
  
-@@ -1263,11 +1268,6 @@ class KernelDoc:
-             else:
-                 self.entry.declaration_purpose = ""
- 
--            if not self.entry.is_kernel_comment:
--                self.emit_msg(ln,
--                              f"This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst\n{line}")
--                self.state = state.NORMAL
--
-             if not self.entry.declaration_purpose and self.config.wshort_desc:
-                 self.emit_msg(ln,
-                               f"missing initial short description on line:\n{line}")
 -- 
 2.49.0
 
