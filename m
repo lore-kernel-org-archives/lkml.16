@@ -1,88 +1,102 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9CE627468;
-	Fri,  6 Jun 2025 09:24:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F3E204F8C
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 09:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749201868; cv=none; b=mQWTtAznusWGH+iaDSW9It/lajTPE2Hc3pj4J5FLg5LzU8DIa27Ttkgg2cS23K1Ww0azhjuGTUiwq7kCnsFtRtIeGntvks1Yx/RI8iUscPw83JwWLgq1nse+fqio0PeJlTIEZwOHRUwAqiQNTwKVtb3L0WZ52w6T1NvhGcl8u7Y=
+	t=1749201919; cv=none; b=nbli7ZpfHqg7u6jYPMifDNHeT1I+XRJ8wJbsVI5Co3ujkOs2/3VmG0lb80PSdzn1JCsDJ32J6hxIwxw93rhquRH3QvA3dU0rZ38j93pARR5NuZ/YG3sQJHmMgQSHbTdyHDElkRh9ChB8pgX3sZ8G+BsdGF2UUjGVtsi7OQ4/58Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749201868; c=relaxed/simple;
-	bh=f+Wxw4EM39rKBgY0c49H2GDg+nabb6mWi/XNe/6zCY0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l3O6w0Ekqtccr5rCLSWUvitnRxkeTrLmNERxX1Esp9nqLpqvWnvZaXzqWshMWgPMUWfDBdH4S3swFaiT7QIeHKZ46RiwvZKZwPvqU2woGllr6QvpcXp9vfDx0tkkd5eWo0IgjrbcvpyqkI4O4I17rWakMvQd5caFfn+7ewaRR3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Dpuu8/J7; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1749201919; c=relaxed/simple;
+	bh=I6PsUegXvW4sKwtm2hBSON/3SVKA+xQsbUV7xdVlBvs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HSw06wJidOQQQddD5QDKBTSDRyXmfhK1+eO10RAIqfZ6yp60qqe1lugnPhrcNkgepPkrc8SuuhnDQrEYrW3zICSQxHpYoN99vZJgk2Ji4J2+TysIj9S0wNC6JtYVMebxIlglpJQRralSHgczhVNYOH/+svFZTiKQiJEkEhDQhPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=j78M4blQ; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Dpuu8/J7"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 73C1843423;
-	Fri,  6 Jun 2025 09:24:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749201858;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f+Wxw4EM39rKBgY0c49H2GDg+nabb6mWi/XNe/6zCY0=;
-	b=Dpuu8/J7iTIRvepQ76q8ahXSHCKRbL8PLInN/k6elyJCxgmevhisDvZIEEx6PPg27bIO9Y
-	2Ij0dzH2w02Razsa42UjkCQ6rOr9amM6qkH0o9G06pM8r8vjT6rRiC7OdN8GZDhj9Vigp7
-	8v8oFY3TK41DuEEjC9F0FHGlHjaHJKdgjGtizlxUBKgqqtZMRHaLYNBnXVSWj+JXcWGcVB
-	L3S0Wky0nRqFoyFobwwfgAUIGslOu6KV9co2hLB0MGDUTQBshtj5FMb+q3SJvMbFCunZCk
-	gfuUJdH7Yh9EQGldDmJo98aZWpw0DLBeOR7JcGvE2buGZph8+AeKPsMS1iRN3Q==
-Date: Fri, 6 Jun 2025 11:24:11 +0200
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Paolo Abeni <pabeni@redhat.com>, davem@davemloft.net, Andrew Lunn
- <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>, Eric Dumazet
- <edumazet@google.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Simon Horman
- <horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Christophe
- Leroy <christophe.leroy@csgroup.eu>, Herve Codina
- <herve.codina@bootlin.com>, Romain Gantois <romain.gantois@bootlin.com>,
- Jijie Shao <shaojijie@huawei.com>
-Subject: Re: [PATCH net] net: phy: phy_caps: Don't skip better duplex macth
- on non-exact match
-Message-ID: <20250606112411.69b1a3f9@fedora>
-In-Reply-To: <aEKnQ4haQtcJWzXX@shell.armlinux.org.uk>
-References: <20250603083541.248315-1-maxime.chevallier@bootlin.com>
-	<ef3efb3c-3b5a-4176-a512-011e80c52a06@redhat.com>
-	<20250606101923.04393789@fedora>
-	<aEKnQ4haQtcJWzXX@shell.armlinux.org.uk>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="j78M4blQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1749201916;
+	bh=7KRt2HEAfw/QBgPweBInY7JAo1KxrGLTcf3nOhyjppw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=j78M4blQyuDMZi/77ULjiVFRXBNYmihmFbvvGrUR/B76MB7mrcwxkWfW9kqmQO1BH
+	 2MfZ5X/TiSQsmiG33p1FFcYDNKXaQKOv4TLD5dsG1s6tGrWl6pTwzOjZAjtUCseJ9w
+	 QzGV0D0poPJXgwN3JDEI7zAo78IJLROfuUkRtv7w=
+Received: from stargazer.. (unknown [113.200.174.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id BF41E65992;
+	Fri,  6 Jun 2025 05:25:14 -0400 (EDT)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Alexandre Ghiti <alex@ghiti.fr>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+	Nathan Chancellor <nathan@kernel.org>
+Cc: "Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Guo Ren <guoren@kernel.org>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH v2] RISC-V: vDSO: Correct inline assembly constraints in the getrandom syscall wrapper
+Date: Fri,  6 Jun 2025 17:24:44 +0800
+Message-ID: <20250606092443.73650-2-xry111@xry111.site>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250605091112-7cd6b3bd-a466-486a-aebc-7bf0b2a8ac31@linutronix.de>
+References: <20250605091112-7cd6b3bd-a466-486a-aebc-7bf0b2a8ac31@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdegkeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppedvuddvrddutdehrdduhedtrddvhedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdduvddruddthedrudehtddrvdehvddphhgvlhhopehfvgguohhrrgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduhedprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughum
- hgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi,
+As recently pointed out by Thomas, if a register is forced for two
+different register variables, among them one is used as "+" (both input
+and output) and another is only used as input, Clang would treat the
+conflicting input parameters as undefined behaviour and optimize away
+the argument assignment.
 
-On Fri, 6 Jun 2025 09:30:59 +0100
-"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+Per an example in the GCC documentation, for this purpose we can use "="
+(only output) for the output, and "0" for the input for that we must
+reuse the same register as the output.  And GCC developers have
+confirmed using a simple "r" (that we use for most vDSO implementations)
+instead of "0" is also fine.
 
-> On Fri, Jun 06, 2025 at 10:19:23AM +0200, Maxime Chevallier wrote:
-> > In reality, the case you're mentioning would be a device that supports
-> > 1000/Full, 100/Full and 100/Half, user asks for 1000/Half, and 100/Full
-> > would be reported.
+Link: https://lore.kernel.org/all/20250603-loongarch-vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de/
+Link: https://gcc.gnu.org/onlinedocs/gcc-15.1.0/gcc/Local-Register-Variables.html
+Link: https://gcc.gnu.org/pipermail/gcc-help/2025-June/144266.html
+Cc: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
 
-> If you're version doesn't come out with a matching speed, then I'm
-> afraid it's still broken.
+v1 -> v2: Keep using "r" for buffer to follow the existing convention
+(that the GCC developers have confirmed fine).
 
-My analysis is wrong, but the new result is right. The patch we're
-discussing is correct I think, we do report a matching speed (tested on
-an espressobin with manual masking of the linkmodes)
+ arch/riscv/include/asm/vdso/getrandom.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'll update the doc though.
+diff --git a/arch/riscv/include/asm/vdso/getrandom.h b/arch/riscv/include/asm/vdso/getrandom.h
+index 8dc92441702a..c6d66895c1f5 100644
+--- a/arch/riscv/include/asm/vdso/getrandom.h
++++ b/arch/riscv/include/asm/vdso/getrandom.h
+@@ -18,7 +18,7 @@ static __always_inline ssize_t getrandom_syscall(void *_buffer, size_t _len, uns
+ 	register unsigned int flags asm("a2") = _flags;
+ 
+ 	asm volatile ("ecall\n"
+-		      : "+r" (ret)
++		      : "=r" (ret)
+ 		      : "r" (nr), "r" (buffer), "r" (len), "r" (flags)
+ 		      : "memory");
+ 
 
-Maxime
+base-commit: dc5240f09bca7b5fc72ad8894d6b9321bce51139
+-- 
+2.49.0
 
