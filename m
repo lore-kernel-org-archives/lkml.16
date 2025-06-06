@@ -1,116 +1,212 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F932AD0D;
-	Fri,  6 Jun 2025 12:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1934D2882DE;
+	Fri,  6 Jun 2025 12:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749211401; cv=none; b=uC1nhaE0ino8Bo+yNVX6HWuOaAgl0snungOlMgn6yL5f70/nz/uuDeMCbi7TFg+ana6HvCWGm5CUUVWeveq75I/bokzHaSOZ4UdCdlqYE4DVUo+QdU3vGVcL/zBlX2ZTGpIqekgSK3OoomdlFH38IA41G9EMjzjrsdukxCkupYY=
+	t=1749211404; cv=none; b=fu0Mim8lfY8/jbl7fkAMa4xIeY7htS5BburiBhA/APQn4NWgl1M4bjy4vn8pUSVWxrMDbceHvxU3OWp9e8B1b1f+vd74OXjPsH52dPa5rJ9BAs0ezKl+/hbnO1mGgxPsYoX53Mv3sESW45IZ/AbdRntPqaC1Lkm5Bkn1W+4RoGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749211401; c=relaxed/simple;
-	bh=6oz9cLgBpq1+bwaTR5/JwtLIYahXmjDOpJo1Ih+IxD4=;
+	s=arc-20240116; t=1749211404; c=relaxed/simple;
+	bh=ItXu5mV3/0ntWGHFjikM6fudcBK1Ei0an4X8RtRpgPM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j48qAd5dumekbKi3PNIiZadCZj9ycyUryleQTRBiKRDPNjuK69cJUvtWJWEvF4d4lo/0gfj1uPb0Ixdyhp1IpX5AQ7Ue3OVVofSZVdJMqiMhwC1RazwKvZO+SqdPiwyP4SbtbWk77IVhRXwLLo7/4qtBCDdw5avbtrUd5q5lfvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SeNM+vw6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HEoCR4//d+r/lGALbI9LPjVubYKeA/J69DImO6iRaz0za57KrQgmqKyN/ivOpnT2eypQOZMt6xZzrY0bkO2Z8AEtRffGTPJisedSzEBGc7WiaWecZCVkXzbYa8xFYAnymUkz1ghjysK5gsIFrburT0BQLFx0S6VPmz5UNcZG46A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=OwyHz0dS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=EirVsUt+; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SeNM+vw6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C16BFC4CEEB;
-	Fri,  6 Jun 2025 12:03:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749211401;
-	bh=6oz9cLgBpq1+bwaTR5/JwtLIYahXmjDOpJo1Ih+IxD4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SeNM+vw6o2R/VlOg+xOelhhzCXW9usTQ42ANhiV95Y2x9Zn03fWe3qeJLHG/Irx/V
-	 Ql+SwV5H4mHoIKAcoaq2UwshrQHD6bGBm4u6t2zp9iHtjOBL0ZO9RabpIdByFPnF0h
-	 nqzutpLb25wSNP2wH9Foo26YdAFUOUXmRhUVtbiPA3qPycHZ1fc6C8cXHnKZfVN+WK
-	 xT3fOBQgnFjYwte/ANAF2HV/22aK4vTebfl33KbuQ5bPgOrZYwCk0Z72Q37FigH+8c
-	 eqeO+OdQDej06AfYvflVWtrLcZWKoxbZUqoCCKaYZuYGy8Kmsvx7XGjdirdcgiNxpO
-	 sdTSFPhyYXnPQ==
-Date: Fri, 6 Jun 2025 14:03:18 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Anusha Srivatsa <asrivats@redhat.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, 
-	Jagan Teki <jagan@amarulasolutions.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Chen-Yu Tsai <wens@csie.org>, 
-	Samuel Holland <samuel@sholland.org>, Seung-Woo Kim <sw0312.kim@samsung.com>, 
-	Kyungmin Park <kyungmin.park@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH 2/4] drm/panel/samsung-dsicm: Keep up with refcounting
-Message-ID: <20250606-radical-rigorous-buzzard-ca09cd@houat>
-References: <20250604-of_drm_find_panel_part1-v1-0-c632e12e131d@redhat.com>
- <20250604-of_drm_find_panel_part1-v1-2-c632e12e131d@redhat.com>
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="OwyHz0dS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EirVsUt+"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 04F261140152;
+	Fri,  6 Jun 2025 08:03:22 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Fri, 06 Jun 2025 08:03:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1749211402;
+	 x=1749297802; bh=Fj022TFRzcr09PkipTT8Q855tluX6YSmqn8UnY8RXu0=; b=
+	OwyHz0dSLwPVcoLeXuaP0b5MRtkMztGA4LtJVm37ydNGv4DJnfwjYPRMsA8GQLW0
+	/+SrsEkjPbKK9PJOomZY9Uf+DVtGO8koKs9cIOdvm68oen6v7NihXNMQNhi4LAoL
+	8Ke1ZG5NRRYLFvmsrBQbbYrLIOReD4ovWA3fV8i36Xd2/ZuKi++f2GGT59csgP8o
+	kAEnL8cLrNlKDio2qa06kCsiayYvRVMJDg1CH7qUhx8qJx6Hapd+x7Dm1Hje+QJY
+	eGDl3TxGK2D2zj2yurTBgSNIRrpPW2OT108tH9gSAzthlDiLeb6FQ4W3bm2S7lFf
+	YZDSAAanVPS0EQFVV0g7ow==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749211402; x=
+	1749297802; bh=Fj022TFRzcr09PkipTT8Q855tluX6YSmqn8UnY8RXu0=; b=E
+	irVsUt+PxjIyCePH5JIZJFHjUpeoGsvbuOMd9BSkgnZoi28+1qaKPljAhKo2vPNy
+	JW1Dr7Rlrkt8QsJ0YBga8RBkJFbwZHz1b8lUABciaSLPvP3+Zl0NyF5isWk+7Hq+
+	BfeQUXHruLm4n4kyRk/xxUTFetci0Zv9PfhfZIHdZuLeSuENzu4KIW0LTzrBzN2Z
+	4ek0ggaW6vpU+89665So3sGFiODiUUrRiC6wpskj0koE9Sas+iPO7hk+VhpTtPuQ
+	YSq+JLOgKH6YFktkJ62fwwBfKMfn2UYU9O2KJJUGEtdaEWm/UEYWUfMGMLYSaV3w
+	zNkn5zTwNJdv3CZdqt4cA==
+X-ME-Sender: <xms:CdlCaDwPTm1hi8gYSLFy2ZATppFxodORt-E2FrYDRMq_Zxo7pjQ0Sw>
+    <xme:CdlCaLSAMgcySFfUTch5Nc8Sofo5D1ppoWFpnJQtWYQxy4loq9GNltlm3HH2Sz7tC
+    GFhyKDQjlah6YzG8H0>
+X-ME-Received: <xmr:CdlCaNXcciVIy7sPbAG2gu5AhE5SWzPoiaoZYZtOnCmzYZujLG9YYIRPRrnb8cjA63hVAOsEBpsqTPLScgaOuNMT2i0-T3uRAA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdehtdeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdej
+    necuhfhrohhmpefpihhklhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrshhoug
+    gvrhhluhhnugesrhgrghhnrghtvggthhdrshgvqeenucggtffrrghtthgvrhhnpeevteeg
+    tddvvdfhtdekgefhfeefheetheekkeegfeejudeiudeuleegtdehkeekteenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihhklhgrshdrshho
+    uggvrhhluhhnugesrhgrghhnrghtvggthhdrshgvpdhnsggprhgtphhtthhopeelpdhmoh
+    guvgepshhmthhpohhuthdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhdorhgv
+    nhgvshgrshesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepmhgthhgvhh
+    grsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgrkhgrrhhirdgrihhluhhssehl
+    ihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhgvughirgesvh
+    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrvghnvghsrghs
+    qdhsohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkh
+    gvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgthhgvhhgr
+    sgdohhhurgifvghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlrghurhgvnhhtrd
+    hpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepjhgr
+    tghophhordhmohhnughisehiuggvrghsohhnsghorghrugdrtghomh
+X-ME-Proxy: <xmx:CdlCaNjQjrPfEpgyQMz76ef_hakII1BIPfZEDOgw6o_WQtbiShfUdA>
+    <xmx:CdlCaFDA1NZea8SDZmBmzKOFGhaj-gVSr6vLMK_kaFSXo4A0RYqOXA>
+    <xmx:CdlCaGJeBMgnxpZrpzYRxZZDzODHDPYHDn-hA1NW0U3RJ6y9sgBMdw>
+    <xmx:CdlCaEDNnYfCIBUXbWR7UnBDJNxwhMohqO3NGC5j9rkzY8yPJJWKbA>
+    <xmx:CdlCaHrHYaqkCswSHLZvN9Tds5TJ6CAP8dkCG2Cl0BQQsi8yqpbUM2NV>
+Feedback-ID: i80c9496c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 6 Jun 2025 08:03:21 -0400 (EDT)
+Date: Fri, 6 Jun 2025 14:03:20 +0200
+From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Subject: Re: [PATCH v3 05/15] media: rcar-csi2: Move rcar2_calc_mbps()
+Message-ID: <20250606120320.GC2770609@ragnatech.se>
+References: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
+ <20250530-rcar-streams-v3-5-026655df7138@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="naqzmlhexuyovrm5"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250604-of_drm_find_panel_part1-v1-2-c632e12e131d@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250530-rcar-streams-v3-5-026655df7138@ideasonboard.com>
 
+Hi Tomi,
 
---naqzmlhexuyovrm5
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 2/4] drm/panel/samsung-dsicm: Keep up with refcounting
-MIME-Version: 1.0
+Thanks for your work.
 
-On Wed, Jun 04, 2025 at 10:45:11PM -0500, Anusha Srivatsa wrote:
-> Put the panel reference back when driver is no
-> longer using it.
->=20
-> Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+On 2025-05-30 16:50:34 +0300, Tomi Valkeinen wrote:
+> Move the function so that it can call rcsi2_get_active_lanes() in the
+> following patch.
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
 > ---
->  drivers/gpu/drm/bridge/samsung-dsim.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c b/drivers/gpu/drm/brid=
-ge/samsung-dsim.c
-> index 0014c497e3fe7d8349a119dbdda30d65d816cccf..3667855ff0d6d1b608c579573=
-de657af7fd14388 100644
-> --- a/drivers/gpu/drm/bridge/samsung-dsim.c
-> +++ b/drivers/gpu/drm/bridge/samsung-dsim.c
-> @@ -1748,6 +1748,7 @@ static int samsung_dsim_host_attach(struct mipi_dsi=
-_host *host,
->  			dsi->out_bridge =3D ERR_PTR(-EINVAL);
->  	}
-> =20
-> +	drm_panel_put(panel);
->  	of_node_put(remote);
-> =20
->  	if (IS_ERR(dsi->out_bridge)) {
+>  drivers/media/platform/renesas/rcar-csi2.c | 66 +++++++++++++++---------------
+>  1 file changed, 33 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
+> index 698eb0e60f32..8aca35096408 100644
+> --- a/drivers/media/platform/renesas/rcar-csi2.c
+> +++ b/drivers/media/platform/renesas/rcar-csi2.c
+> @@ -951,39 +951,6 @@ static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
+>  	return 0;
+>  }
+>  
+> -static int rcsi2_calc_mbps(struct rcar_csi2 *priv, unsigned int bpp,
+> -			   unsigned int lanes)
+> -{
+> -	struct media_pad *remote_pad;
+> -	struct v4l2_subdev *source;
+> -	s64 freq;
+> -	u64 mbps;
+> -
+> -	if (!priv->remote)
+> -		return -ENODEV;
+> -
+> -	source = priv->remote;
+> -	remote_pad = &source->entity.pads[priv->remote_pad];
+> -
+> -	freq = v4l2_get_link_freq(remote_pad, bpp, 2 * lanes);
+> -	if (freq < 0) {
+> -		int ret = (int)freq;
+> -
+> -		dev_err(priv->dev, "failed to get link freq for %s: %d\n",
+> -			source->name, ret);
+> -
+> -		return ret;
+> -	}
+> -
+> -	mbps = div_u64(freq * 2, MEGA);
+> -
+> -	/* Adjust for C-PHY, divide by 2.8. */
+> -	if (priv->cphy)
+> -		mbps = div_u64(mbps * 5, 14);
+> -
+> -	return mbps;
+> -}
+> -
+>  static int rcsi2_get_active_lanes(struct rcar_csi2 *priv,
+>  				  unsigned int *lanes)
+>  {
+> @@ -1031,6 +998,39 @@ static int rcsi2_get_active_lanes(struct rcar_csi2 *priv,
+>  	return 0;
+>  }
+>  
+> +static int rcsi2_calc_mbps(struct rcar_csi2 *priv, unsigned int bpp,
+> +			   unsigned int lanes)
+> +{
+> +	struct media_pad *remote_pad;
+> +	struct v4l2_subdev *source;
+> +	s64 freq;
+> +	u64 mbps;
+> +
+> +	if (!priv->remote)
+> +		return -ENODEV;
+> +
+> +	source = priv->remote;
+> +	remote_pad = &source->entity.pads[priv->remote_pad];
+> +
+> +	freq = v4l2_get_link_freq(remote_pad, bpp, 2 * lanes);
+> +	if (freq < 0) {
+> +		int ret = (int)freq;
+> +
+> +		dev_err(priv->dev, "failed to get link freq for %s: %d\n",
+> +			source->name, ret);
+> +
+> +		return ret;
+> +	}
+> +
+> +	mbps = div_u64(freq * 2, MEGA);
+> +
+> +	/* Adjust for C-PHY, divide by 2.8. */
+> +	if (priv->cphy)
+> +		mbps = div_u64(mbps * 5, 14);
+> +
+> +	return mbps;
+> +}
+> +
+>  static int rcsi2_start_receiver_gen3(struct rcar_csi2 *priv,
+>  				     struct v4l2_subdev_state *state)
+>  {
+> 
+> -- 
+> 2.43.0
+> 
 
-Explaining in your commit log why you think it's a good idea to put it
-there would be really nice. In particular, it looks super odd to me that
-you would put the panel reference in attach.
-
-Also, your patch doesn't work, and you have a reference inbalance. You
-have one taken by the panel driver, put in remove. You have one in
-drm_panel_add, put in drm_panel_remove. Which reference do you put here?
-
-This applies to your other patches too.
-
-Maxime
-
---naqzmlhexuyovrm5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaELY/wAKCRAnX84Zoj2+
-diBYAXwKsnGG/hDaACTi2QF85rFrKiFaFWibUe+aygZ2K7/QBjFUhuAmCr4gs9ij
-KBDYTjQBgNXlwuo0a1Tzh+JZDgdPXgj1NZYl1UppVoWcYCBkxzww5vfwCw0+YexU
-o1W0BPKmpA==
-=VbEd
------END PGP SIGNATURE-----
-
---naqzmlhexuyovrm5--
+-- 
+Kind Regards,
+Niklas Söderlund
