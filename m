@@ -1,178 +1,229 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EA0289343
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 16:55:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749228953; cv=none; b=JBIZGdHX5/dHZF5VVRy7rvCfiS6BCHVblS44Kz2OuOt6Z7Ug/W3xL8dOkqqIYAfh7fxzB0KEPxFqQt41vhE65WZ69lz+i+5xuQjWmVIwWVoB6ndOufF1DyIfktPDZAW14So8APlO62RUMiaO37+6y/03OMDDKE1XSnL/du31IeQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749228953; c=relaxed/simple;
-	bh=utVji0gh0cITT6qLu7hQz3Zn+LIjyS0bbK0p5HBtEX8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C9cxbZqv4V+rPOe5ZkJiOVWUONaUTOvw8S7RDKZbxI6ExBtfo4rHYynDciwQUyy/FB6oysbkNl07wNVQIHBXeY4WSk+VlOJ3AXDAJngIMfHk4rFVNeuJBzCR+xTbgeP0TiHomNrDsc+aMLiLrvCidAwv7IZ5hcv7zbQI6p2593U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kbIdut3U; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30D02882B6
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 16:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749229035; cv=fail; b=BAOsaIj3hdJHA4HRpSP+zpiYEBQ6Js1SWMpTDkUp6rE3Xy0B86kKtnuxWDHt5vbyBNB14l27ErgFltOPGWMjxBfR+Lli4Rz50iI2UCSas932BDy3QRPmrqccVGn24EdSMaKxljg7YeM5oUoA23qAANNt+cPoSn/Y+/Jeb18fKNI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749229035; c=relaxed/simple;
+	bh=o4ATKNEEQsXjc66L5VCOE5XOBCuJzsa0oY9ZYKJPqIM=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=fUNq7Mmn2QLQO0mV9PApD9NPhecgxU4DXESIjKAUlSD156lWIpIXWAmaN6B3jfaCyF54ExvhKoO+7X352yFz1IBfo082R6wnIuwZnF7SY7IUwHxowfkt4lPZHUde1k0MHp1BtwhbRDFoS1ktXQQ9niCN5nhUG1RU+UJxFFux0e8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hUuSo1YV; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kbIdut3U"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad69e4f2100so392414866b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 09:55:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749228949; x=1749833749; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1HB33mTZ6Uyhbs2rVVA5QvTekUj8jcM1rft0PUvWrpc=;
-        b=kbIdut3UCirGNc88MrUyYeg+0vRQT5uIxM+jpx1C2B2Mco04VPhpweNVUqCVq3h58L
-         XE0rNVWhh97F5JtOzB37xx2tMLswxS1KnLfY/zXVZflutZtRPJFHs7VtMVCUlTaofez9
-         qrwJ1U6QhO5ECZrXrBvI8lL2HwGzsidqYAQldysi65CQkWyqWlUPXhjw9SVawkVxHJ7+
-         OC4Uu28TPK15fN0s1UsIh/FyfuMBvkmMZiY2obvOVOkczxsmuINiQSqy72YmUbBjp31G
-         Co4Jqof0XVU3ZN7uSUZKJIYICQYJ1z2TgM2A1DkXgEL3Bt1hlVqXrgmKqQ6uXJu1sDuv
-         owLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749228949; x=1749833749;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1HB33mTZ6Uyhbs2rVVA5QvTekUj8jcM1rft0PUvWrpc=;
-        b=OzAvHAGpdF10TA5uSjLJ+PXLeBqgIrP3z5UsX6prQr9+gEw5mmyq6/NW5cX+GjyWYm
-         9hscbYM3XW+bORrl0qopF/R1TPRLg8nxQi40QzeOSftILLDOl9KGLBdYqFeliRyLrN/A
-         NWCT1xgWkStuW3caYbQ/fddfPl2YT8xcfHaGEdUNq3R+NiVQzyHFLAutdlzKHYtV4lR7
-         UevGev+E6nW3hqELM/q5nD5Zz5rTo+OeLrdTO+NkpTiolFmu2PKl8iEsGCPE/3qzQ79L
-         csAVx6KCVPZWWeHUd5hMoygosmHw2iQngrtaEo8QyACGJKT2BZGQyT3svF6NM94N4HSq
-         jHvA==
-X-Forwarded-Encrypted: i=1; AJvYcCXGAOk/OfTC7WTo/qYWpOPb9/Db6jju/4Hr2v40guUQJS0OHm4dJaNaHrQIERyl6d6pgg5WHuuA8jLPFSA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxa+NkH2ITgJ71lYajy00LwcU5zVLhwvOcFe9xWkFEea0fkKxYk
-	EjqkU1cFk48jYqpyi9AJdgMSJqYHwnXvwyGXas1UBmggHQkECIYYBhSceFeQZKTHSjxqNoNUdF9
-	RejwzMrtjrnPU5TL3fjtQF3TSiRD0mJ8h4sy7oXEULg==
-X-Gm-Gg: ASbGnctg5APFAPpNTe0mhObPdGZvd88OHB2XM72TvmA4Q4pGR0UlI/+dGxUQSfe5mou
-	OTxIhXqCdH00BTOXZiA125I1qAq15fjP5k0f2+zebgPTdlj33SUXkADIZEdye02RjKwdVHmat5h
-	agsSpoFCRDw1Rvp4U6+oZr4nuy34OKOwCjoWcMiY4ExxohGHZYHvG79SSQ6Y3NbdmhjPIlUpi7s
-	wpJxFEHSoU=
-X-Google-Smtp-Source: AGHT+IFHwPRqiSryPxM3bjTeEXWOPBxqHiddylVRC+mRJ/Sxer4f/km91+qaXRp/rF06w9ianzEchM0fhBXQAkGyry4=
-X-Received: by 2002:a17:906:3c58:b0:ade:32fa:7394 with SMTP id
- a640c23a62f3a-ade32fa7ad5mr113294466b.35.1749228949422; Fri, 06 Jun 2025
- 09:55:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hUuSo1YV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749229034; x=1780765034;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=o4ATKNEEQsXjc66L5VCOE5XOBCuJzsa0oY9ZYKJPqIM=;
+  b=hUuSo1YVgERP209q6i2/60vw7UhY+1N2Pw3gfsnz7l1UY71HsXFiitZW
+   t4xELLkTsrkubAYHdkIeR7sdwVi35J41w1oRvCERqHU6mkF22yjrlNTq/
+   gYFz3d7WJWzDU9P+vG/ybWpDybKhLsV6FOMXS9tkRize8WUCH3F78OSrl
+   uXEl+WmmpZaNCc97EXSedn8BrrCjSBnVTeZoW38zH9wfCONxatzu272zW
+   FOFH3jtesxNLdsXDt9IhF/P87WAZUqfAj3Nz2eI9WdV1KyMHLHcwmQPKW
+   XahXyH4HT5j/8rjcqC0rs7eS2xlI2G6plEFtLs4PIp4N6LKmo1M/7qVfY
+   w==;
+X-CSE-ConnectionGUID: kQ6F49/gRqGR1si7D4cZYQ==
+X-CSE-MsgGUID: 0r8/0ej8RMmIIC/VccX6UA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="54015379"
+X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
+   d="scan'208";a="54015379"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 09:56:30 -0700
+X-CSE-ConnectionGUID: C+ojGLRATBSZYcUhnY8CgA==
+X-CSE-MsgGUID: 32SOo4hgRV+T7ze6Yvqi8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,215,1744095600"; 
+   d="scan'208";a="146847149"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 09:56:30 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 6 Jun 2025 09:56:29 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Fri, 6 Jun 2025 09:56:29 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.65) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Fri, 6 Jun 2025 09:56:29 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MlFLOk675cJ/XsBzBAN3CluR0mb5kEhWbcc0Wjr8x4Y1L1OZFmDezcpG2I4jQo24Ouur8P9AecRYSW12qBpMHCyzF7jPcx783UFJSDrK7iNS/2MDIrGDzPj4H2ZIC5qm1f0KAOxluFbXOoueEJD4gSYEI8jQGjQzpLfmW8scriHDpGZH5Jd+sUpXk77I4Fl7Uv00pWL/cr62mgwExlYku+N9gStsIAtI6iOLhdzwaaw7aOdXo1Hzzs0GytyXVvyl7ahHk3iGr4tjZ3MhWMwszC+RqNlsG1vwktwoPLXTx9aroS06uqLtM3IKETtawdHeKIC3HVozfAxtFNTKOaHUVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9Q8PoeNGh4miPe6R3VYescVYxux58LKeJ+qyT7H5/LU=;
+ b=V9a2O0xmb9YmUHr6ODD48UFvZALPeMhjBn3dVxqr2um/ZZI23bt9nsJtPAIf0ezkK/ecK6+4k95D3MxRWxr/5ZEZXb0XnUpY+VdAzA3S74+27uRiDVfQrJbogfnClR5nFWH6amr2rd6lnDBzTRjfUY2KbL2mgOXIax5lIaOl7CL4uUwK3kqVOVlNjS5Td1rOhVAmgH4okTEH8tvwssgw4ijy2/Hi51IRXjNcxn9x2cf36Xlgleo/Q8jaAoujn8XPkCLEc5c5/zX/4MkaTr3a1p+nwiGCoHfSeb9uvxGErpoFW4jvSF82uakAC+9bRoEp2XsdJKp2ucJ8pXDZhXh4Sg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by SJ5PPF1611BC49E.namprd11.prod.outlook.com (2603:10b6:a0f:fc02::812) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.21; Fri, 6 Jun
+ 2025 16:56:27 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf%6]) with mapi id 15.20.8792.034; Fri, 6 Jun 2025
+ 16:56:27 +0000
+Message-ID: <7d4c739b-3fe2-43e2-9771-6137f15b42f1@intel.com>
+Date: Fri, 6 Jun 2025 09:56:25 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 14/29] x86,fs/resctrl: Support binary fixed point event
+ counters
+To: "Luck, Tony" <tony.luck@intel.com>
+CC: Fenghua Yu <fenghuay@nvidia.com>, Maciej Wieczor-Retman
+	<maciej.wieczor-retman@intel.com>, Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>, "Drew
+ Fustini" <dfustini@baylibre.com>, Dave Martin <Dave.Martin@arm.com>, "Anil
+ Keshavamurthy" <anil.s.keshavamurthy@intel.com>, Chen Yu
+	<yu.c.chen@intel.com>, <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<patches@lists.linux.dev>
+References: <20250521225049.132551-1-tony.luck@intel.com>
+ <20250521225049.132551-15-tony.luck@intel.com>
+ <f368c506-c479-4e8b-a5c6-b9bc5bcd5674@intel.com>
+ <aEMWhMbLpImmMBrL@agluck-desk3>
+Content-Language: en-US
+From: Reinette Chatre <reinette.chatre@intel.com>
+In-Reply-To: <aEMWhMbLpImmMBrL@agluck-desk3>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR04CA0001.namprd04.prod.outlook.com
+ (2603:10b6:a03:40::14) To SJ2PR11MB7573.namprd11.prod.outlook.com
+ (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520094538.086709102@infradead.org> <20250520101727.984171377@infradead.org>
- <CAKfTPtDOQVEMRWaK9xEVqSDKcvUfai4CUck6G=oOdaeRBhZQUw@mail.gmail.com> <20250606153800.GB39944@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250606153800.GB39944@noisy.programming.kicks-ass.net>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Fri, 6 Jun 2025 18:55:37 +0200
-X-Gm-Features: AX0GCFu44L1pYU_1hc1fZsMIo6UCMJ-D6eVSUJtfs0Sa7xjJLRaSzjULbeTyYUA
-Message-ID: <CAKfTPtDhC3nCcWcWSz08nadZDJ0OtbgZ0r3Usjcu6AagGqYcRA@mail.gmail.com>
-Subject: Re: [RFC][PATCH 5/5] sched: Add ttwu_queue support for delayed tasks
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com, 
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
-	clm@meta.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|SJ5PPF1611BC49E:EE_
+X-MS-Office365-Filtering-Correlation-Id: bf9292a4-c76c-4c1c-abcf-08dda51b13d4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?RFJGV1dmUEJaUEdaZ2hoVHNZVWE2b3Y3UkRBYk1HL0hxM1U0cVBVZVl1VGZl?=
+ =?utf-8?B?LzZTVnk2UHZsd2EreU1BTzQ5WGxmTkc2ZVhLODJ1Rm52TmNVclBEbVRlSFdi?=
+ =?utf-8?B?MHBuY0lKY1RZdFUyb0s0YTV3S0R3ZTI2VkxYaXh5Nld2bW1ET0VtdlE1eDJw?=
+ =?utf-8?B?bTcxWVF4ZE1SZWhaWDdnWWRrSXRKTzVYVVRpTkxJL2xaZ0hRdndyUDJGTE0x?=
+ =?utf-8?B?TU5rMllsSmhGN0c1b1BlNTNNeEZacXpNWEVWc2IzdSs1WnMyd1huRmxrQUNU?=
+ =?utf-8?B?bk1mOG54QjlmdCtwaGN3K0tNd2hPQ1YwT2dINEpHQ0d2NkltSHJxbHlwRXox?=
+ =?utf-8?B?akVGa1ZQcXhyWW9LUjZZZ1dkdjlpb21wamRnWTJ5RmY1WjFpTDhnMUF6TUJC?=
+ =?utf-8?B?bGcrOE1SUlA5SnZYQU1uY3dEYkhoQ2hiYlVxZWdvUWEzempaYjJ1K3NyRlha?=
+ =?utf-8?B?RjVZUzAzT0R0TDFjZlR0dE9neXEydFYwZzgxSXFSMDlwTVFSOUZZK1dCSG1h?=
+ =?utf-8?B?TTlqY212SVdSMVJHTHJPNmJ4M1lCaThFaTIzUzR1ZXE4NDFHZS91Q2hwbWpi?=
+ =?utf-8?B?ZXkxbkN1WkhjL3RySHpaSDVyaTdRYWpERnI0N28zQlVDTjFCd2w1bXV5Qmx3?=
+ =?utf-8?B?L216MkREWVRxTU9MUFJyQXpBdC95MU94cVdmajVTZDRVUzB3ZmhxTU1FY3k5?=
+ =?utf-8?B?R0ZCcUNqRGppUW9xbG1WWlBqeEt5VmdhN0VPTStRNmdUcThNNHhUbnR3YWl1?=
+ =?utf-8?B?cU4xcVMzckJPN2hEUE12K1hHREd6Q1FGYlZoeU5KZ2o4U0tYWjhlMm83M094?=
+ =?utf-8?B?dGVUSytlcjRxYWV4azh6ZE8weGRheWRHZy94WGErN1gwandzQkoxc0E2NUZL?=
+ =?utf-8?B?WTUyUWRmZ3NTUmRjUGMyUGxYS2gxNlFZallIMTN5TnJXZmorLytrSTdaSzZv?=
+ =?utf-8?B?TVhBb0Y3K08zK2VrNGIrUS9teTV5VEFobGltbzFuME1aOTY1MXdaS2JjbXlq?=
+ =?utf-8?B?ZzhUL2hhTFk2RWwzZ25rbVRxTzNNc2t1eXV4U0VOYkQzUkFwdmE0NWdzOS9X?=
+ =?utf-8?B?cmkzM0Z1dVhCV2l5N3gvbEljYWZjLzRvNTQyTk5jR0JCWVIxb1RJTnVucHVG?=
+ =?utf-8?B?VEwxWUYzd1BSM00zQUFTQTFEWVNmWDdCQ3R3N21lRnRpZWRYNWxCN0JRc3N2?=
+ =?utf-8?B?Sy9TOVFGV0xmcVZNNTFBdVdWN3RkS2tiS1BVR1E5LzNmOG9yUGNINVVrZjFp?=
+ =?utf-8?B?NEY1U3Bvd1ZuVWFUbW45VFFSSXhlY3RZMzFzL3BKZ1BBTE9TVWthazlhTVNz?=
+ =?utf-8?B?WnBka24ycHlqUXlOK2QvZ2txQUtrNlY1OHdRZ21yNk1pZktsZUxCd1l1RjVV?=
+ =?utf-8?B?Tm5aTXhKZ1FUalVCd3dUMzFrSm44cERIUFNzQm9yQVhzRDBkRGtCZ3JsY3Ns?=
+ =?utf-8?B?bEhsSlorRGpzcGhDZlE2MzE1MTIxKy9QbmIwdUpSTjFubjgwUWhGYW5wdVpF?=
+ =?utf-8?B?V2ZqT1hTVjlTa2dmVlRMaEJya1RjWlpyVVFCeW4vQStBbzdJNjVENkY2WXhm?=
+ =?utf-8?B?NjhOWnY1aUs0NHd5Vi8ydERjdG5tOXE3WjFqZWUyUHFJZjM5S3g2ZUZEYjhq?=
+ =?utf-8?B?clRDd3ZONUpuV29tREFiVDVPRnI2UUZjOXU3aFdLT2Q3WXBQQWUyTlg2aDNE?=
+ =?utf-8?B?Qm1MQTFjTmlSb291V2gxUHRkN0pkUzJFS01pMUlBRWtNNko0LzZnVkFHc0o3?=
+ =?utf-8?B?dmRCenF2TG5lRjY2SnhHUkVVSFZiRkNtNWIyQ2ZjS0ZVbTUxU3MzYkY0endr?=
+ =?utf-8?B?WlZHNjliaFRIV09LVk1udFNnWlFDb2xKMnZMamJMdkhSeHNvb3RDeGZQeGYr?=
+ =?utf-8?B?MkpxTHd2Vk9LOEZhZjVWMnltK3RXYThzcjdueGcyTmlyUVF2ZEV5eUFBRFpF?=
+ =?utf-8?Q?1m5+uEAFy8Y=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Uklhb0NLL042SFJ2b0tEc0JUR1lTNUtXL1RZcURna2dsVks0ZkgwTFZQWXhM?=
+ =?utf-8?B?K0lWd1JtUmRoYmowcHAwQlliUkF6QlN6MXN1RnJielNnL3JKejFKMEtqY0dp?=
+ =?utf-8?B?bFcyeEtES0lMMVY4MzVBNXlsZVZUMk1ZRTFkeFM0czdDR1VBeElNRXVmbHdo?=
+ =?utf-8?B?WmNPak0zdFN2VzBHUU1ja2o5MkxKTlJ3NURVS0lIZ1dudnlZNHdUK2lRcDVn?=
+ =?utf-8?B?VVNLb3kwOCsxMHJKM0ZhV1RETjlNeTlMMVlxYjREL2lNeHNDSldreCtVUmhq?=
+ =?utf-8?B?OHYycGU3UVI5T1JUN05ZTU8vNHBObWZOdlFTbHIyWEtGdG85dUgyN0g1NW9T?=
+ =?utf-8?B?WmYzVFZZZlJmSWtpbVRDYm9mSWsxKzd5WDhBK1h0M0w3MEZDZ1UzSUR6T2ZS?=
+ =?utf-8?B?RGFYMjF0enJrem9GUHlEVm90VDNGTm1UZHJ3Y2RHRmpnbm9GVTNaSmg5Nmd6?=
+ =?utf-8?B?T1doU29HZkxBT05mNzdIQ0pBN3BOUFA1bFhRdndVeUJCWTFBTkdaSFh0UUtw?=
+ =?utf-8?B?SmxOQk82WGdDbXVONU5JeWxXa0hOeWxrMFFHSzlkbmUxS2pJSzdBQkpkWHRT?=
+ =?utf-8?B?ZzRrQXIrOEZwNDhSY3JUdGRnbXFLZmlqc2UxWkVjcEV6UzVtMWhyQlR2WWF3?=
+ =?utf-8?B?YXFYZlh5RWNBZEt3eGwwdFNaNW5wYlVoZ3ljUE5xOXhJQWNFMFlvZVVzNElz?=
+ =?utf-8?B?SnUyYW9KYVMraC9DVWUvOEMwKzZGV3FuQzJLa1I0dzl0bE1kdkRoSkxQcXNH?=
+ =?utf-8?B?L3NEUjVwSlRWcjBxMjU2SlFWVFBGNHhIQnlrMXZlS0lBclFXQWRDbDJER1lF?=
+ =?utf-8?B?N2xPT3RLMnppVEY1Z1VLUHVoNlozUS91Y1JZVnp5ekFpZTl1R0puVHRNKzA5?=
+ =?utf-8?B?K1B2NzBpMGd3YXk0T0dVYnV6b0tvamFvTlpmYjRidVAva2QxZGd2MzdVSnRZ?=
+ =?utf-8?B?b3o4UGs0NS83MkxLNUJvMkpJNXBzQkhvZlNKcEhFSmJkQmRUOWJCS3kyZ2Ix?=
+ =?utf-8?B?L2tGUWZFaFRuWXV0OVNSTmQ1T2VzenJVZEM5eXRkcEdBeGlocFdFMHZwdzcx?=
+ =?utf-8?B?eWlaK2taNGNYS0VCREpsT1o2ZVhXRUVVVEVRZ21ySDdFeTZrQjlIU3NSTXF3?=
+ =?utf-8?B?bnF3NE5NeEpxdnBsYlVHYmVTb3FUSHV2YXo4VkMvSjIzS3pkbXRENnlUWllR?=
+ =?utf-8?B?RHFtV0lSWHByQjlVenFWc0lXeGNZcHZOMUJhZjNBZmg2RXNZeFlPRDZnbWdr?=
+ =?utf-8?B?YUxGRlR1RG5sUUFRWDVGc1JvSW0zbkRsSXQvNk0xUmk2cC91Vk1ERlRVQU1W?=
+ =?utf-8?B?S1RINWRCak1CZ095cWtTNGdnSEdkWUNZbkthaTE1eS84SFd5QS9KVXVHbDNl?=
+ =?utf-8?B?endlMlQ4VGwzdU00cFBEVk5XNGxnaDd2aXBKdFplcVVvQUFXbGxHQTIxYkNP?=
+ =?utf-8?B?clQ2Q1dWSEVXNDYzc2NzS0I2NUFYKy9XVE1MYUhYVmpsdkdKNHFyVnA5RWRp?=
+ =?utf-8?B?KzRlQ3BVREphTDQyYzBaeXJCaU56SVJnaHd2eW9lNE5ROTNTdXFRUnIxZWVJ?=
+ =?utf-8?B?RkhYZ3ZyOWdkOEJTVHdoa3IxSDJXU2RUTUpuRE5qLzI3UjNYL0pMaVJvc1Jn?=
+ =?utf-8?B?cmJmeUtubG0rVnVHN01vSmdPK0ljYzhoNGtoWXBSTDdrWFVoQXg3amoxenor?=
+ =?utf-8?B?ZEVCMWg3dUoyU25LRDVzYmhRK1hzS0hWai8xbzlsc3lBZmxpSml0cGlrdkZJ?=
+ =?utf-8?B?dFBsSjFjOWVaMkNoUGtzRFZ1VU13cENsV0YvQk9qNHd4MlpybjV0QmcyUWN3?=
+ =?utf-8?B?aWE4N29kMFVhRGFIc2U0T3U5SlM5KzBOcGlPVlJRSVY0UFVoWnVnaEdDSk9m?=
+ =?utf-8?B?YUJoMXRxNnJrNlVjMGtIdnljMlYwZHZFSWNkdVJiUTJuOHFJaFJWVDg3SVBN?=
+ =?utf-8?B?MDduQ09odWFtSFNrTXlqNkZGTzB2SjdjUU1CQUhZN3VicVU4VWJJampkaGdG?=
+ =?utf-8?B?bU54RW94VWN1VEsxNHo1YStaelh0YzNyRXFDV0lRSU1sdUdWbXZrL0h4NGhE?=
+ =?utf-8?B?VEhKY1BNU0kycFg0bHhRaVB2dVJtU0ZZZ3V3RW96ckNoRmNrM0krYllLdzdW?=
+ =?utf-8?B?azY2UElPR2h4YXR4TTFOVU55bVgydVRlcUp1b2lWK0VJdk9tUldWZUZsWmh3?=
+ =?utf-8?B?d2c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf9292a4-c76c-4c1c-abcf-08dda51b13d4
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2025 16:56:27.3055
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: h9EPcsMbf//vZqhbPKgHqknNofDfx4WX5imYSUQZPUYzTgFOu7Iw2iTs7h/kOXOijLy1a8vm9yetNfoLmgq7ecq83X++hIebxldDTL/g25M=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF1611BC49E
+X-OriginatorOrg: intel.com
 
-On Fri, 6 Jun 2025 at 17:38, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, Jun 06, 2025 at 05:03:36PM +0200, Vincent Guittot wrote:
-> > On Tue, 20 May 2025 at 12:18, Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > One of the things lost with introduction of DELAY_DEQUEUE is the
-> > > ability of TTWU to move those tasks around on wakeup, since they're
-> > > on_rq, and as such, need to be woken in-place.
-> >
-> > I was thinking that you would call select_task_rq() somewhere in the
-> > wake up path of delayed entity to get a chance to migrate it which was
-> > one reason for the perf regression (and which would have also been
-> > useful for EAS case) but IIUC, the task is still enqueued on the same
-> > CPU but the target cpu will do the enqueue itself instead on the local
-> > CPU. Or am I missing something ?
->
-> Correct. I tried to add that migration into the mix, but then things get
-> tricky real fast.
+Hi Tony,
 
-Yeah, I can imagine
+On 6/6/25 9:25 AM, Luck, Tony wrote:
+> On Tue, Jun 03, 2025 at 08:49:08PM -0700, Reinette Chatre wrote:
+>>> +	sprintf(buf, "%0*llu", fp->decplaces, frac);
+>>
+>> I'm a bit confused here. I see fp->decplaces as the field width and the "0" indicates
+>> that the value is zero padded on the _left_. I interpret this to mean that, for example,
+>> if the value of frac is 42 then it will be printed as "0042". The fraction's value is modified
+>> (it is printed as "0.0042") and there are no trailing zeroes to remove. What am I missing?
+> 
+> An example may help. Suppose architecture is providing 18 binary place
+> numbers, and delivers the value 0x60000 to be displayed. With 18 binary
+> places filesystem chooses 6 decimal places (I'll document the rationale
+> for this choice in comments in next version). In binary the value looks
+> like this:
+> 
+> 	integer	binary_places
+> 	1	100000000000000000
+> 
+> Running through my algorithm will end with "frac" = 500000 (decimal).
+> 
+> Thus there are *trailing* zeroes. The value should be displayed as
+> "1.5" not as "1.500000".
 
->
-> Just getting rid of the remote rq lock also helped; these dispatch
-> threads just need to get on with waking up tasks, any delay hurts.
->
-> > >
-> > > Doing the in-place thing adds quite a bit of cross-cpu latency, add a
-> > > little something that gets remote CPUs to do their own in-place
-> > > wakeups, significantly reducing the rq->lock contention.
-> > >
-> > > Reported-by: Chris Mason <clm@meta.com>
-> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > > ---
-> > >  kernel/sched/core.c     |   74 ++++++++++++++++++++++++++++++++++++++++++------
-> > >  kernel/sched/fair.c     |    5 ++-
-> > >  kernel/sched/features.h |    1
-> > >  kernel/sched/sched.h    |    1
-> > >  4 files changed, 72 insertions(+), 9 deletions(-)
-> > >
-> > > --- a/kernel/sched/core.c
-> > > +++ b/kernel/sched/core.c
-> > > @@ -3784,6 +3784,8 @@ static int __ttwu_runnable(struct rq *rq
-> > >         return 1;
-> > >  }
-> > >
-> > > +static bool ttwu_queue_wakelist(struct task_struct *p, int cpu, int wake_flags);
-> > > +
-> > >  /*
-> > >   * Consider @p being inside a wait loop:
-> > >   *
-> > > @@ -3811,6 +3813,33 @@ static int __ttwu_runnable(struct rq *rq
-> > >   */
-> > >  static int ttwu_runnable(struct task_struct *p, int wake_flags)
-> > >  {
-> > > +#ifdef CONFIG_SMP
-> > > +       if (sched_feat(TTWU_QUEUE_DELAYED) && READ_ONCE(p->se.sched_delayed)) {
-> > > +               /*
-> > > +                * Similar to try_to_block_task():
-> > > +                *
-> > > +                * __schedule()                         ttwu()
-> > > +                *   prev_state = prev->state             if (p->sched_delayed)
-> > > +                *   if (prev_state)                         smp_acquire__after_ctrl_dep()
-> > > +                *     try_to_block_task()                   p->state = TASK_WAKING
-> > > +                *       ... set_delayed()
-> > > +                *         RELEASE p->sched_delayed = 1
-> > > +                *
-> > > +                * __schedule() and ttwu() have matching control dependencies.
-> > > +                *
-> > > +                * Notably, once we observe sched_delayed we know the task has
-> > > +                * passed try_to_block_task() and p->state is ours to modify.
-> > > +                *
-> > > +                * TASK_WAKING controls ttwu() concurrency.
-> > > +                */
-> > > +               smp_acquire__after_ctrl_dep();
-> > > +               WRITE_ONCE(p->__state, TASK_WAKING);
-> > > +
-> > > +               if (ttwu_queue_wakelist(p, task_cpu(p), wake_flags | WF_DELAYED))
-> > > +                       return 1;
-> > > +       }
-> > > +#endif
-> > > +
-> > >         CLASS(__task_rq_lock, guard)(p);
-> > >         return __ttwu_runnable(guard.rq, p, wake_flags);
-> > >  }
-> > > @@ -3830,12 +3859,41 @@ void sched_ttwu_pending(void *arg)
-> > >         update_rq_clock(rq);
-> > >
-> > >         llist_for_each_entry_safe(p, t, llist, wake_entry.llist) {
-> > > +               struct rq *p_rq = task_rq(p);
-> > > +               int ret;
-> > > +
-> > > +               /*
-> > > +                * This is the ttwu_runnable() case. Notably it is possible for
-> > > +                * on-rq entities to get migrated -- even sched_delayed ones.
-> >
-> > I haven't found where the sched_delayed task could migrate on another cpu.
->
-> Doesn't happen often, but it can happen. Nothing really stops it from
-> happening. Eg weight based balancing can do it. As can numa balancing
-> and affinity changes.
+Instead of a counter example, could you please make it obvious through
+the algorithm description and/or explanation of decimal place choice how
+"frac" is guaranteed to never be smaller than "decplaces"?
 
-Yes, I agree that delayed tasks can migrate because of load balancing
-but not at wake up.
+Reinette
