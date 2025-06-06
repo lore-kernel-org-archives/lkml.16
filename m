@@ -1,222 +1,134 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF14C1C1F0D
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 07:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8D3149C7B;
+	Fri,  6 Jun 2025 07:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749194208; cv=none; b=Wz2KuHCLmdZo86LyKRywOBe09Qyce2TXz4ehVk4iia4y1T0C2874qm4GOXo/BSywZ2uFuiwam2JYywiQCSQxiF6FeHqPkcOAiLLTuxB7y0UNJVBnPevWDSwJ8DrV/DZhE+bB/lttNtCtJpsnKQYq+nUr+EpParRX9LEUqZtDhdE=
+	t=1749194218; cv=none; b=Gcv5Z0yy6bxS/lljXpfmr/OHdp6KEEeOfJMz5DJskXOjrI8Vstki/7T/vfk+lqZ9VXw8jdqL0YIWPnu2X3roQCVN8yzrI/kcxXMPRXukos91qUd+k/8XOV8LZQoSq4nMh7NNjChd/7u0nOZdlQntaYFvh4bsUHe6y23r/NXgttg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749194208; c=relaxed/simple;
-	bh=cAJrkKXG09xOhd2Hzr+C5E4wIGGeJl26deIYWukEoLc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f/RWt6nha/b+RCxtNLxLHqowwn3Gqns3r0Bu6kq/s65Sec0kuErUbU28O6BYFOgmCYc4eSOjUO5hcTO3YXcGjekIaB8l2PIigTgPGpR2oc8mHD4c97/wsS/vBc/JcBnNraI3yu7K6iQ8MYFZsx5qQuGjGCUUihpdiDquBJnVqG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmo-cybersecurity.com; spf=pass smtp.mailfrom=gmo-cybersecurity.com; dkim=pass (2048-bit key) header.d=gmo-cybersecurity.com header.i=@gmo-cybersecurity.com header.b=UXBatLuy; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmo-cybersecurity.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmo-cybersecurity.com
+	s=arc-20240116; t=1749194218; c=relaxed/simple;
+	bh=UlP3CPYKKYt3AdibsoMkCj0+1S83KV8eyOy9q/HeNvU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oBQz6NxH20qO0XFpMO9ylEy680TToJ0Z0PcgvusxpjqUXFu8xst/oPxn34FaEW9lKh9b8vcpXEPCgudjvZHZByqL892KlcONZCNLwK0K7+FQu1GgVjsvxIiDXYgZ+x1OADj1asKBhTaeggBwngnNG1lpcSZUE9aDyHenmaFQzlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eRwEvzJE; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmo-cybersecurity.com header.i=@gmo-cybersecurity.com header.b="UXBatLuy"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so14415865e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 00:16:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eRwEvzJE"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso2141984b3a.2;
+        Fri, 06 Jun 2025 00:16:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmo-cybersecurity.com; s=google; t=1749194203; x=1749799003; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/XMi5+8eZH1IMFT7aIIxuzqoktYcarPLjPOsXqsdoW0=;
-        b=UXBatLuy9FR+dbtuBtJlT2cpTWlw9nh0lfnPueOdY586OZlNETOlN3JLHU/qXWm9ub
-         BVXcS0MC4rfWfWcn1TwcCmRjg7s/kKeuveT2vtTmkSI/cF/Wl7coxXv8yWHCzfz38sgm
-         MI+h+qU9XsktNbRu+iehVVvoy9/zk/ZclP2fweNa1GLVw9Do+vcwMJjj1vP+2MTrBgE5
-         SyXnwS/aiwOowu6zoxwzyFOYnNqjc9168UYW6l4pudCTZHEtq2bDgPWaYSoEPhb4jAvd
-         npNyQQEUw6JWfVIHijWVpldBwT47I/bghBMY++9WnJvCbNwfDhexzTEkvqhk3arOCbeE
-         EJfA==
+        d=gmail.com; s=20230601; t=1749194216; x=1749799016; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Op+Qtpfm2MCMUy1ujuvIkaXazDWxwmwSZEgD+0eih2w=;
+        b=eRwEvzJElk8F94fYZAKbIhmve1YRoe5+NL4fDlntj+Xu10huSWZpoFGxbh8bXSYMBl
+         mMN6qk6e5pTUc4DWrp/rKhaFpDVx1vsh152z1o07Z73a+ICDSXMtaTU2652paG+pV3U8
+         ML0K7zSyN3PIzhWga8MyCGPH+QuJWV1U2jJkGSrCr6l9CJqU8jXNbDIZx8j+sKfJZOI0
+         87Tkv58T8z8I0/LrFkpFgYcAJmts/5af6TZfgiE0r2wjlXr9nOPXakh0FysAus7/JsuU
+         4tBmDbLj8FFHzPQVn0Pd/5r0FQUsiIrxCUPz7v8AnoxI7fqC2qU/a3++Znj/MUddW7T8
+         BM1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749194203; x=1749799003;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/XMi5+8eZH1IMFT7aIIxuzqoktYcarPLjPOsXqsdoW0=;
-        b=lIdvFcJuW46KpdI9AK/aI5z8VDXp4/Dt7wWUSCaQkty4PZCPss3l9I6N6xd87fKXn0
-         ixXoO/9H5wrKW+ipsChcr5aw/+/VFyFydN8JucfCLBb72NOiRrzsbXDXPTccGyzRm6d5
-         9tDVC+D7wySVbLqDlsEh4xtG8SGp+NEnCF+s2NIXuaNi8ciyHv08l4J1kKC+1REK5kvh
-         Gr/kUMegWplVG338uPFxYokHHSBfuw93djC1cxpTzYH7zAd190Cp8SJwpGuLAaCLnPq1
-         FqRhi+3ed64XRtbz2jJOE49LnYnmkZShtVeP3XE6wA2Lt2GmCeBiR2a7gJdmFw/R6bwu
-         6Zcg==
-X-Forwarded-Encrypted: i=1; AJvYcCWwRM8Ea/w2VtMWfGevASz/AN/jTbnILkRE0+GUOQcI5yvenZih4GOLGw3V9g4Q9WUBKqGHWQKyi1jCKmA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzlyCSQ7HyUjZYIx7gWvE4rYy8Mxg2ZfMTU0QN8JbYMjWPSup0
-	KziE6d2L4YwuEYynL60y59i4DZc1SE/RNLvyejIjc6TMLAanF+rLYKQ35Hxn53GoGSbfaKZvy2R
-	o0odpLYtDOkS4gKIgY0C4Sq9ACrDr0DryFJJbhZ8Vtw==
-X-Gm-Gg: ASbGncu6qz0csd9qABVHCAE05fRvPE4fQO55+JInpHEFpU8RCAUuU2tEscmKbN6WqST
-	XkhnzRuDsih4fVqooL0yXQYMxaTVkzFxaFeYdovXONh/IjT7scRtwuTSmF3yLaCQCe2aLghB3MV
-	DmcX+JXyl3PBIS9raoCiduokhPzhwTmma5iA0=
-X-Google-Smtp-Source: AGHT+IFbp+79x8nHQ+OULHJyBDfxZG/qTcxnaYx6r++2repCfOCP6My7PuJtJ4f7O4onCD/EyLM6Nt3of8iU/1n4iUE=
-X-Received: by 2002:a05:600c:8b8b:b0:451:df07:d8e0 with SMTP id
- 5b1f17b1804b1-452015832f0mr22700445e9.11.1749194202956; Fri, 06 Jun 2025
- 00:16:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749194216; x=1749799016;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Op+Qtpfm2MCMUy1ujuvIkaXazDWxwmwSZEgD+0eih2w=;
+        b=OCEGDDbLBg15I5Xb9qpy3kbgsOLimI0le4/KHs1mMggAQfHPKXjJAeSL7pizg45ZU/
+         d88NduCDhzok85fW6WFbTCCNwDuE3ag40lADRHWN10nc7RgVxmHPVpKocEGkcOwtJ2rg
+         GNiWu2jEmMU9sbExyCfatJY/BYnLPRHHgEPGTyactD+bOKyVO6Lqd8/MFYla1KE1sana
+         R/As/a7mHAwe7Jul7tIyvC/gIEXnxSlXOEGF380tpxaRdao2wc8FwtKXWimYojeWXrRU
+         67r2yOAASDNy7FOv3x0z+4cLXGWkKKAGvanb11zuvAL1k0nQCTJw3jQlishH6A1mzEj9
+         BQ6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXV02xSs5hbLAjWB2RKZLTplPVLb66AE2ZXo7RlMkzRIrD4KUhtZP9pPk5dx0Eg+5heoTGrFn5V@vger.kernel.org, AJvYcCXaSC8Z3qAwV69zy0OuOmErfW7ymlQTbN0sHMLNC9HLY80mP82XcudxCn2xLFmp0DceHQQED69dOOgPufU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1/s6QPKTSHIWvSI8SqeY8ZYcsr2k7rjZXJghn/B2iylq+eXER
+	WZf3tQBNARpkF4+8M10Pl7xc0rWbT4pFBEhDKJx1sk8ZtqX0hagoYZi6UH+Vw09tMrQ=
+X-Gm-Gg: ASbGncsoyHqmuCyQygpRg50vu1mYZj684JojmiGE23UppnakmdgMZ6dox4+O5YRyTxD
+	DHGy0yKVq6zCLcdM6EcugWHpTF1cw7Zulfg3Nlv+m6BxRzCCQR11Br0IOdp97AAwVlzw0cQTNNb
+	XzIJDuiE28dc+mb2BSPF90ljKOSUTmpls+K69i51zHliOZvTFRRivqTl3p3aYh+FvOu6y7PrbDT
+	TnxZ7FmajRxb51ShmehULbTILTgkWF0A8JrE47D6CbcQ67L1IBL9fkbSkFhEmZhwv+L/r0/Yt6R
+	Eubm+bq71WijVtctGwXQjhdX4xdgeummW7fvz5di8Q1hZxCd25KozUcS6f0K7LEwruM=
+X-Google-Smtp-Source: AGHT+IGhUpAbWq+54xvZKi30Ot5Ktc9ysFyqQgxtqXZzYUo9SybvjX4C13xxRSAukBjjZ+ozZxcpdg==
+X-Received: by 2002:a05:6a20:d80d:b0:1f5:8a1d:3904 with SMTP id adf61e73a8af0-21ee684e093mr3491091637.7.1749194215803;
+        Fri, 06 Jun 2025 00:16:55 -0700 (PDT)
+Received: from localhost.localdomain ([124.127.236.5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482af7ab09sm718469b3a.58.2025.06.06.00.16.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 00:16:55 -0700 (PDT)
+From: Gui-Dong Han <hanguidong02@gmail.com>
+To: jdelvare@suse.com,
+	linux@roeck-us.net
+Cc: linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	baijiaju1990@gmail.com,
+	Gui-Dong Han <hanguidong02@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] hwmon: (ftsteutates) Fix TOCTOU race in fts_read()
+Date: Fri,  6 Jun 2025 07:16:40 +0000
+Message-Id: <20250606071640.501262-1-hanguidong02@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAA3_Gnogt7GR0gZVZwQ4vXXav6TpXMK6t=QTLsqKOaX3Bo_tNA@mail.gmail.com>
- <CANn89iLVq=3d7Ra7gKmTpLcMzuWv+KamYs=KjUHH2z3cPpDBDA@mail.gmail.com>
- <CAA3_GnrVyeXtLjhZ_d9=0x58YmK+a9yADfp+LRCBHQo_TEDyvw@mail.gmail.com> <CANn89iJN-fcx-szsR3Azp8wQ0zhXp0XiYJofQU1zqqtdj7SWTA@mail.gmail.com>
-In-Reply-To: <CANn89iJN-fcx-szsR3Azp8wQ0zhXp0XiYJofQU1zqqtdj7SWTA@mail.gmail.com>
-From: =?UTF-8?B?5oi455Sw5pmD5aSq?= <kota.toda@gmo-cybersecurity.com>
-Date: Fri, 6 Jun 2025 16:16:31 +0900
-X-Gm-Features: AX0GCFt4wB4HZLPyKUDTkRdMREAP3Zt6ZcM3tUJZen_xiATXlJ5q5OVPx5uS9_Y
-Message-ID: <CAA3_GnqOnsOXHk-x4gKKe7MFmS0WQsXmMp6XoQc+fR3gmZVQEQ@mail.gmail.com>
-Subject: Re: [PATCH net] bonding: Fix header_ops type confusion
-To: Eric Dumazet <edumazet@google.com>
-Cc: netdev@vger.kernel.org, pabeni@redhat.com, 
-	=?UTF-8?B?5bCP5rGg5oKg55Sf?= <yuki.koike@gmo-cybersecurity.com>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-2025=E5=B9=B45=E6=9C=8829=E6=97=A5(=E6=9C=A8) 0:10 Eric Dumazet <edumazet@g=
-oogle.com>:
+In the fts_read() function, when handling hwmon_pwm_auto_channels_temp,
+the code accesses the shared variable data->fan_source[channel] twice
+without holding any locks. It is first checked against
+FTS_FAN_SOURCE_INVALID, and if the check passes, it is read again
+when used as an argument to the BIT() macro.
 
->
-> On Wed, May 28, 2025 at 7:36=E2=80=AFAM =E6=88=B8=E7=94=B0=E6=99=83=E5=A4=
-=AA <kota.toda@gmo-cybersecurity.com> wrote:
-> >
-> > Thank you for your review.
-> >
-> > 2025=E5=B9=B45=E6=9C=8826=E6=97=A5(=E6=9C=88) 17:23 Eric Dumazet <eduma=
-zet@google.com>:
-> > >
-> > > On Sun, May 25, 2025 at 10:08=E2=80=AFPM =E6=88=B8=E7=94=B0=E6=99=83=
-=E5=A4=AA <kota.toda@gmo-cybersecurity.com> wrote:
-> > > >
-> > > > In bond_setup_by_slave(), the slave=E2=80=99s header_ops are uncond=
-itionally
-> > > > copied into the bonding device. As a result, the bonding device may=
- invoke
-> > > > the slave-specific header operations on itself, causing
-> > > > netdev_priv(bond_dev) (a struct bonding) to be incorrectly interpre=
-ted
-> > > > as the slave's private-data type.
-> > > >
-> > > > This type-confusion bug can lead to out-of-bounds writes into the s=
-kb,
-> > > > resulting in memory corruption.
-> > > >
-> > > > This patch adds two members to struct bonding, bond_header_ops and
-> > > > header_slave_dev, to avoid type-confusion while keeping track of th=
-e
-> > > > slave's header_ops.
-> > > >
-> > > > Fixes: 1284cd3a2b740 (bonding: two small fixes for IPoIB support)
-> > > > Signed-off-by: Kota Toda <kota.toda@gmo-cybersecurity.com>
-> > > > Signed-off-by: Yuki Koike <yuki.koike@gmo-cybersecurity.com>
-> > > > Co-Developed-by: Yuki Koike <yuki.koike@gmo-cybersecurity.com>
-> > > > Reviewed-by: Paolo Abeni <pabeni@redhat.com>
-> > > > Reported-by: Kota Toda <kota.toda@gmo-cybersecurity.com>
-> > > > ---
-> > > >  drivers/net/bonding/bond_main.c | 61
-> > > > ++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
-> > > >  include/net/bonding.h           |  5 +++++
-> > > >  2 files changed, 65 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/=
-bond_main.c
-> > > > index 8ea183da8d53..690f3e0971d0 100644
-> > > > --- a/drivers/net/bonding/bond_main.c
-> > > > +++ b/drivers/net/bonding/bond_main.c
-> > > > @@ -1619,14 +1619,65 @@ static void bond_compute_features(struct bo=
-nding *bond)
-> > > >      netdev_change_features(bond_dev);
-> > > >  }
-> > > >
-> > > > +static int bond_hard_header(struct sk_buff *skb, struct net_device=
- *dev,
-> > > > +        unsigned short type, const void *daddr,
-> > > > +        const void *saddr, unsigned int len)
-> > > > +{
-> > > > +    struct bonding *bond =3D netdev_priv(dev);
-> > > > +    struct net_device *slave_dev;
-> > > > +
-> > > > +    slave_dev =3D bond->header_slave_dev;
-> > > > +
-> > > > +    return dev_hard_header(skb, slave_dev, type, daddr, saddr, len=
-);
-> > > > +}
-> > > > +
-> > > > +static void bond_header_cache_update(struct hh_cache *hh, const
-> > > > struct net_device *dev,
-> > > > +        const unsigned char *haddr)
-> > > > +{
-> > > > +    const struct bonding *bond =3D netdev_priv(dev);
-> > > > +    struct net_device *slave_dev;
-> > > > +
-> > > > +    slave_dev =3D bond->header_slave_dev;
-> > >
-> > > I do not see any barrier ?
-> > >
-> > > > +
-> > > > +    if (!slave_dev->header_ops || !slave_dev->header_ops->cache_up=
-date)
-> > > > +        return;
-> > > > +
-> > > > +    slave_dev->header_ops->cache_update(hh, slave_dev, haddr);
-> > > > +}
-> > > > +
-> > > >  static void bond_setup_by_slave(struct net_device *bond_dev,
-> > > >                  struct net_device *slave_dev)
-> > > >  {
-> > > > +    struct bonding *bond =3D netdev_priv(bond_dev);
-> > > >      bool was_up =3D !!(bond_dev->flags & IFF_UP);
-> > > >
-> > > >      dev_close(bond_dev);
-> > > >
-> > > > -    bond_dev->header_ops        =3D slave_dev->header_ops;
-> > > > +    /* Some functions are given dev as an argument
-> > > > +     * while others not. When dev is not given, we cannot
-> > > > +     * find out what is the slave device through struct bonding
-> > > > +     * (the private data of bond_dev). Therefore, we need a raw
-> > > > +     * header_ops variable instead of its pointer to const header_=
-ops
-> > > > +     * and assign slave's functions directly.
-> > > > +     * For the other case, we set the wrapper functions that pass
-> > > > +     * slave_dev to the wrapped functions.
-> > > > +     */
-> > > > +    bond->bond_header_ops.create =3D bond_hard_header;
-> > > > +    bond->bond_header_ops.cache_update =3D bond_header_cache_updat=
-e;
-> > > > +    if (slave_dev->header_ops) {
-> > > > +        bond->bond_header_ops.parse =3D slave_dev->header_ops->par=
-se;
-> > > > +        bond->bond_header_ops.cache =3D slave_dev->header_ops->cac=
-he;
-> > > > +        bond->bond_header_ops.validate =3D slave_dev->header_ops->=
-validate;
-> > > > +        bond->bond_header_ops.parse_protocol =3D
-> > > > slave_dev->header_ops->parse_protocol;
-> > >
-> > > All these updates probably need WRITE_ONCE(), and corresponding
-> > > READ_ONCE() on reader sides, at a very minimum ...
-> > >
-> > > RCU would even be better later.
-> > >
-> > I believe that locking is not necessary in this patch. The update of
-> > `header_ops` only happens when a slave is newly enslaved to a bond.
-> > Under such circumstances, members of `header_ops` are not called in
-> > parallel with updating. Therefore, there is no possibility of race
-> > conditions occurring.
->
-> bond_dev can certainly be live, and packets can flow.
->
-> I have seen enough syzbot reports hinting at this precise issue.
+This creates a Time-of-Check to Time-of-Use (TOCTOU) race condition.
+Another thread executing fts_update_device() can modify the value of
+data->fan_source[channel] between the check and its use. If the value
+is changed to FTS_FAN_SOURCE_INVALID (0xff) during this window, the
+BIT() macro will be called with a large shift value (BIT(255)).
+A bit shift by a value greater than or equal to the type width is
+undefined behavior and can lead to a crash or incorrect values being
+returned to userspace.
 
-Hi Eric, Thank you for reviewing the patch.
+Fix this by reading data->fan_source[channel] into a local variable
+once, eliminating the race condition. Additionally, add a bounds check
+to ensure the value is less than BITS_PER_LONG before passing it to
+the BIT() macro, making the code more robust against undefined behavior.
 
-At the beginning of `bond_setup_by_slave`, `dev_close(bond_dev)` is called,
-meaning bond_dev is down and no packets can flow during the update of
-`bond_header_ops`.
+This possible bug was found by an experimental static analysis tool
+developed by our team.
 
-The syzbot report (you mentioned in the conversation in security@) indicati=
-ng
-`dev->header_ops` becoming NULL should be resolved by this patch.
-I couldn't find any other related syzbot reports.
+Fixes: 1c5759d8ce05 ("hwmon: (ftsteutates) Replace fanX_source with pwmX_auto_channels_temp")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gui-Dong Han <hanguidong02@gmail.com>
+---
+ drivers/hwmon/ftsteutates.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/hwmon/ftsteutates.c b/drivers/hwmon/ftsteutates.c
+index a3a07662e491..8aeec16a7a90 100644
+--- a/drivers/hwmon/ftsteutates.c
++++ b/drivers/hwmon/ftsteutates.c
+@@ -423,13 +423,16 @@ static int fts_read(struct device *dev, enum hwmon_sensor_types type, u32 attr,
+ 		break;
+ 	case hwmon_pwm:
+ 		switch (attr) {
+-		case hwmon_pwm_auto_channels_temp:
+-			if (data->fan_source[channel] == FTS_FAN_SOURCE_INVALID)
++		case hwmon_pwm_auto_channels_temp: {
++			u8 fan_source = data->fan_source[channel];
++
++			if (fan_source == FTS_FAN_SOURCE_INVALID || fan_source >= BITS_PER_LONG)
+ 				*val = 0;
+ 			else
+-				*val = BIT(data->fan_source[channel]);
++				*val = BIT(fan_source);
+ 
+ 			return 0;
++		}
+ 		default:
+ 			break;
+ 		}
+-- 
+2.25.1
+
