@@ -1,235 +1,116 @@
-Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806BE1E25ED;
-	Fri,  6 Jun 2025 12:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F932AD0D;
+	Fri,  6 Jun 2025 12:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749211329; cv=none; b=N0dl3ceEzzpDBuwfsMBHLME/8GNT0ZhmDUZKUNRaJ8ZgqCQCbOHlCh3l4UPz6zCmW3WwaUUz5cA2Dbg91qaWdBDw0eQv9wr6b9RLcBJSXrvwYJK9zGWh4qY2XHzSDLeAyDl2hJWDwnQbpFCVocgk1WiT5geoSyDajGbyqoXK+mQ=
+	t=1749211401; cv=none; b=uC1nhaE0ino8Bo+yNVX6HWuOaAgl0snungOlMgn6yL5f70/nz/uuDeMCbi7TFg+ana6HvCWGm5CUUVWeveq75I/bokzHaSOZ4UdCdlqYE4DVUo+QdU3vGVcL/zBlX2ZTGpIqekgSK3OoomdlFH38IA41G9EMjzjrsdukxCkupYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749211329; c=relaxed/simple;
-	bh=lehcra6IGALpqmalurFJkLUkRed2UEtrzqdw0mPZm84=;
+	s=arc-20240116; t=1749211401; c=relaxed/simple;
+	bh=6oz9cLgBpq1+bwaTR5/JwtLIYahXmjDOpJo1Ih+IxD4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DQ9GcF5XGr82SyZxSU3BGw+uAYXrJfE2kAYIbb3n/ZEmTswbcKX2ZtRqGFwc1oqNy20RkL0oXFJbY6khI2UGPpgLggOBDdUAkaMaauYRqtA1siHGtC7SOShciynAuYcREqFAsbI3PrAolNYM5pzQJvCFv4OEeYd+6X+HJYl9sok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=eqFQyPfQ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=e+XB/RZV; arc=none smtp.client-ip=103.168.172.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	 Content-Type:Content-Disposition:In-Reply-To; b=j48qAd5dumekbKi3PNIiZadCZj9ycyUryleQTRBiKRDPNjuK69cJUvtWJWEvF4d4lo/0gfj1uPb0Ixdyhp1IpX5AQ7Ue3OVVofSZVdJMqiMhwC1RazwKvZO+SqdPiwyP4SbtbWk77IVhRXwLLo7/4qtBCDdw5avbtrUd5q5lfvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SeNM+vw6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="eqFQyPfQ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="e+XB/RZV"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.phl.internal (Postfix) with ESMTP id 8D983138034B;
-	Fri,  6 Jun 2025 08:02:06 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-10.internal (MEProxy); Fri, 06 Jun 2025 08:02:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1749211326;
-	 x=1749297726; bh=Obfl9LVjZme1N6jc3cwqyAP+xIrat0n5RtphV2HZsYo=; b=
-	eqFQyPfQ/2uz2Hf90IC7OpGPKwzj2va86tcIwI74xuggpcGj0V1DTWPziBGqrOOl
-	jmIVqUh0tHevUARLzv6NGTuQ043gBlNO39iJ9+BGflLkeMqrdinEJF1cAH1JrVFE
-	gG+l8c+yU7lTxvjkh3aWMJMdTN+tesP58yZC+i6nP7zz17IysYaUBdoxiIJs/nMX
-	i6jRolK/n1ZFvXau8ayW+yYFiD7eNeAxirSglx+9LTlCUWxdXNTQkil38kVKWmpG
-	fl90Ciy/+2aEhg9BJNTPTb5xU6EXHlnqJt5uVKpEj9AfkmSOR43ThRZ9HyGbckM5
-	XeSK2t7uLdRe3Jvl7b5X8g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749211326; x=
-	1749297726; bh=Obfl9LVjZme1N6jc3cwqyAP+xIrat0n5RtphV2HZsYo=; b=e
-	+XB/RZVVF5um3WjDqG+JtiNfzuEiG5U7WYHRXrg7LCaAPG8jMy7dt4KdHTjJIuIT
-	W0JO5Zo2dhXHtpBql0BUsIgQWa6WDYsLbjU+M8bkMelzKQB8IVADMdFuYIWFMQxe
-	hjFmXmZWdE5SSI0p7Tbcgu9Hwaet0NWVkZnkdveqW0shywnKqUKxkGADi6XIa69x
-	tCXwdTgWA773qwNhynSBpnA1FRHWy+oUrZ/ooK6KKkOpn/R+sUCSmMXYf3B3Nrk1
-	ijrXxwrNZ8BGc4oKG8ErGYW69/mQeUzhHbsK9WqTxJBV1vBVsyAerq2txzk6hFOS
-	82r4nfCiyFB9R0GhOo0gQ==
-X-ME-Sender: <xms:vthCaG79hNryUfREJyuP0Dwf47hMh9OxsqNNHK0QSXYQHRqirXU6_A>
-    <xme:vthCaP7XrtNJbzZBjAch0FStDLfrd_EMhIXIwraY4zwVa8HrvCl9ElPkfBJ1bU8ys
-    i65wZ2i05H6kRY8pUw>
-X-ME-Received: <xmr:vthCaFeDCJE3rVQTtWvFp9PWls1Eg3VNz_KL7Nx71oWu5a648oq9OXxNJsO66IdG8ZYZz4pwARr6T34ftYex7Do6TfSaLDM-yQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdehtdeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdej
-    necuhfhrohhmpefpihhklhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrshhoug
-    gvrhhluhhnugesrhgrghhnrghtvggthhdrshgvqeenucggtffrrghtthgvrhhnpeevteeg
-    tddvvdfhtdekgefhfeefheetheekkeegfeejudeiudeuleegtdehkeekteenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihhklhgrshdrshho
-    uggvrhhluhhnugesrhgrghhnrghtvggthhdrshgvpdhnsggprhgtphhtthhopeelpdhmoh
-    guvgepshhmthhpohhuthdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhdorhgv
-    nhgvshgrshesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepmhgthhgvhh
-    grsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgrkhgrrhhirdgrihhluhhssehl
-    ihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhgvughirgesvh
-    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrvghnvghsrghs
-    qdhsohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkh
-    gvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgthhgvhhgr
-    sgdohhhurgifvghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlrghurhgvnhhtrd
-    hpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepjhgr
-    tghophhordhmohhnughisehiuggvrghsohhnsghorghrugdrtghomh
-X-ME-Proxy: <xmx:vthCaDKCtzFjbKXjC3thKaN-8KY038v7xA66A-3tWHnd-ieicRkuWA>
-    <xmx:vthCaKIfd6jP1gRXqGjWMqnFzEby_UHoAcU_yK5jNTtGi9eYfwQ-bg>
-    <xmx:vthCaEygYudWqvWGx_N_kRHEYco4K_pv_Ul4lghc4vBWlWkl7tqD1A>
-    <xmx:vthCaOIZsEHL9CI8J-k_H6K6jLuubDIn2O3lnDmc950b-UwOXwC9ww>
-    <xmx:vthCaIQBknF3LjVfWfs5ad4Z32s5y7Xwblc3kH41SNxCeuyncEJoG6hP>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 6 Jun 2025 08:02:05 -0400 (EDT)
-Date: Fri, 6 Jun 2025 14:02:04 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Subject: Re: [PATCH v3 06/15] media: rcar-csi2: Simplify rcsi2_calc_mbps()
-Message-ID: <20250606120204.GB2770609@ragnatech.se>
-References: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
- <20250530-rcar-streams-v3-6-026655df7138@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SeNM+vw6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C16BFC4CEEB;
+	Fri,  6 Jun 2025 12:03:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749211401;
+	bh=6oz9cLgBpq1+bwaTR5/JwtLIYahXmjDOpJo1Ih+IxD4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SeNM+vw6o2R/VlOg+xOelhhzCXW9usTQ42ANhiV95Y2x9Zn03fWe3qeJLHG/Irx/V
+	 Ql+SwV5H4mHoIKAcoaq2UwshrQHD6bGBm4u6t2zp9iHtjOBL0ZO9RabpIdByFPnF0h
+	 nqzutpLb25wSNP2wH9Foo26YdAFUOUXmRhUVtbiPA3qPycHZ1fc6C8cXHnKZfVN+WK
+	 xT3fOBQgnFjYwte/ANAF2HV/22aK4vTebfl33KbuQ5bPgOrZYwCk0Z72Q37FigH+8c
+	 eqeO+OdQDej06AfYvflVWtrLcZWKoxbZUqoCCKaYZuYGy8Kmsvx7XGjdirdcgiNxpO
+	 sdTSFPhyYXnPQ==
+Date: Fri, 6 Jun 2025 14:03:18 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Anusha Srivatsa <asrivats@redhat.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, 
+	Jagan Teki <jagan@amarulasolutions.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Chen-Yu Tsai <wens@csie.org>, 
+	Samuel Holland <samuel@sholland.org>, Seung-Woo Kim <sw0312.kim@samsung.com>, 
+	Kyungmin Park <kyungmin.park@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH 2/4] drm/panel/samsung-dsicm: Keep up with refcounting
+Message-ID: <20250606-radical-rigorous-buzzard-ca09cd@houat>
+References: <20250604-of_drm_find_panel_part1-v1-0-c632e12e131d@redhat.com>
+ <20250604-of_drm_find_panel_part1-v1-2-c632e12e131d@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="naqzmlhexuyovrm5"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250530-rcar-streams-v3-6-026655df7138@ideasonboard.com>
+In-Reply-To: <20250604-of_drm_find_panel_part1-v1-2-c632e12e131d@redhat.com>
 
-Hi Tomi,
 
-Thanks for your patch.
+--naqzmlhexuyovrm5
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 2/4] drm/panel/samsung-dsicm: Keep up with refcounting
+MIME-Version: 1.0
 
-On 2025-05-30 16:50:35 +0300, Tomi Valkeinen wrote:
-> Instead of taking the bpp and the number of lanes as parameters to
-> rcsi2_calc_mbps(), change the function to get those parameters inside
-> the function. This centralizes the code a bit and makes it easier to add
-> streams support.
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-
+On Wed, Jun 04, 2025 at 10:45:11PM -0500, Anusha Srivatsa wrote:
+> Put the panel reference back when driver is no
+> longer using it.
+>=20
+> Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
 > ---
->  drivers/media/platform/renesas/rcar-csi2.c | 45 ++++++++++++++++--------------
->  1 file changed, 24 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
-> index 8aca35096408..90973f3cba38 100644
-> --- a/drivers/media/platform/renesas/rcar-csi2.c
-> +++ b/drivers/media/platform/renesas/rcar-csi2.c
-> @@ -998,13 +998,18 @@ static int rcsi2_get_active_lanes(struct rcar_csi2 *priv,
->  	return 0;
->  }
->  
-> -static int rcsi2_calc_mbps(struct rcar_csi2 *priv, unsigned int bpp,
-> -			   unsigned int lanes)
-> +static int rcsi2_calc_mbps(struct rcar_csi2 *priv,
-> +			   struct v4l2_subdev_state *state)
->  {
-> +	const struct rcar_csi2_format *format;
-> +	struct v4l2_mbus_framefmt *fmt;
->  	struct media_pad *remote_pad;
->  	struct v4l2_subdev *source;
-> +	unsigned int lanes;
-> +	unsigned int bpp;
->  	s64 freq;
->  	u64 mbps;
-> +	int ret;
->  
->  	if (!priv->remote)
->  		return -ENODEV;
-> @@ -1012,6 +1017,20 @@ static int rcsi2_calc_mbps(struct rcar_csi2 *priv, unsigned int bpp,
->  	source = priv->remote;
->  	remote_pad = &source->entity.pads[priv->remote_pad];
->  
-> +	ret = rcsi2_get_active_lanes(priv, &lanes);
-> +	if (ret)
-> +		return ret;
-> +
-> +	fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK);
-> +	if (!fmt)
-> +		return -EINVAL;
-> +
-> +	format = rcsi2_code_to_fmt(fmt->code);
-> +	if (!format)
-> +		return -EINVAL;
-> +
-> +	bpp = format->bpp;
-> +
->  	freq = v4l2_get_link_freq(remote_pad, bpp, 2 * lanes);
->  	if (freq < 0) {
->  		int ret = (int)freq;
-> @@ -1092,7 +1111,7 @@ static int rcsi2_start_receiver_gen3(struct rcar_csi2 *priv,
->  	phycnt = PHYCNT_ENABLECLK;
->  	phycnt |= (1 << lanes) - 1;
->  
-> -	mbps = rcsi2_calc_mbps(priv, format->bpp, lanes);
-> +	mbps = rcsi2_calc_mbps(priv, state);
->  	if (mbps < 0)
->  		return mbps;
->  
-> @@ -1300,23 +1319,15 @@ static int rcsi2_c_phy_setting_v4h(struct rcar_csi2 *priv, int msps)
->  static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
->  				    struct v4l2_subdev_state *state)
->  {
-> -	const struct rcar_csi2_format *format;
-> -	const struct v4l2_mbus_framefmt *fmt;
->  	unsigned int lanes;
->  	int msps;
->  	int ret;
->  
-> -	/* Use the format on the sink pad to compute the receiver config. */
-> -	fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK);
-> -	format = rcsi2_code_to_fmt(fmt->code);
-> -	if (!format)
-> -		return -EINVAL;
-> -
->  	ret = rcsi2_get_active_lanes(priv, &lanes);
->  	if (ret)
->  		return ret;
->  
-> -	msps = rcsi2_calc_mbps(priv, format->bpp, lanes);
-> +	msps = rcsi2_calc_mbps(priv, state);
->  	if (msps < 0)
->  		return msps;
->  
-> @@ -1494,23 +1505,15 @@ static int rcsi2_init_common_v4m(struct rcar_csi2 *priv, unsigned int mbps)
->  static int rcsi2_start_receiver_v4m(struct rcar_csi2 *priv,
->  				    struct v4l2_subdev_state *state)
->  {
-> -	const struct rcar_csi2_format *format;
-> -	const struct v4l2_mbus_framefmt *fmt;
->  	unsigned int lanes;
->  	int mbps;
->  	int ret;
->  
-> -	/* Calculate parameters */
-> -	fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK);
-> -	format = rcsi2_code_to_fmt(fmt->code);
-> -	if (!format)
-> -		return -EINVAL;
-> -
->  	ret = rcsi2_get_active_lanes(priv, &lanes);
->  	if (ret)
->  		return ret;
->  
-> -	mbps = rcsi2_calc_mbps(priv, format->bpp, lanes);
-> +	mbps = rcsi2_calc_mbps(priv, state);
->  	if (mbps < 0)
->  		return mbps;
->  
-> 
-> -- 
-> 2.43.0
-> 
+>  drivers/gpu/drm/bridge/samsung-dsim.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c b/drivers/gpu/drm/brid=
+ge/samsung-dsim.c
+> index 0014c497e3fe7d8349a119dbdda30d65d816cccf..3667855ff0d6d1b608c579573=
+de657af7fd14388 100644
+> --- a/drivers/gpu/drm/bridge/samsung-dsim.c
+> +++ b/drivers/gpu/drm/bridge/samsung-dsim.c
+> @@ -1748,6 +1748,7 @@ static int samsung_dsim_host_attach(struct mipi_dsi=
+_host *host,
+>  			dsi->out_bridge =3D ERR_PTR(-EINVAL);
+>  	}
+> =20
+> +	drm_panel_put(panel);
+>  	of_node_put(remote);
+> =20
+>  	if (IS_ERR(dsi->out_bridge)) {
 
--- 
-Kind Regards,
-Niklas Söderlund
+Explaining in your commit log why you think it's a good idea to put it
+there would be really nice. In particular, it looks super odd to me that
+you would put the panel reference in attach.
+
+Also, your patch doesn't work, and you have a reference inbalance. You
+have one taken by the panel driver, put in remove. You have one in
+drm_panel_add, put in drm_panel_remove. Which reference do you put here?
+
+This applies to your other patches too.
+
+Maxime
+
+--naqzmlhexuyovrm5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaELY/wAKCRAnX84Zoj2+
+diBYAXwKsnGG/hDaACTi2QF85rFrKiFaFWibUe+aygZ2K7/QBjFUhuAmCr4gs9ij
+KBDYTjQBgNXlwuo0a1Tzh+JZDgdPXgj1NZYl1UppVoWcYCBkxzww5vfwCw0+YexU
+o1W0BPKmpA==
+=VbEd
+-----END PGP SIGNATURE-----
+
+--naqzmlhexuyovrm5--
