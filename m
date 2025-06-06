@@ -1,72 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0477FD
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 07:40:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A321E2614
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 07:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749195632; cv=none; b=Ju5GvioM8AVLqEaZJF3QJsMX287h8tf+iQlGO6Oq5kXufNYxPhDY+mD/LoC4DKDten9ZPNtf5bzToZcIGLM5GPiyXbOdNspIRV3Bqx+dxVj0m4OQl9S3KqRM12wndL4RQC5ZwLER259Bm8boP9+Qyh+0VekSAyE1MFZPS7fsC50=
+	t=1749195740; cv=none; b=Spr2FZsBTa3uWkSVdN2T9nzo7FeLFLoJeWj2Vlmp/WH7MX+SjVwXX2CgsTO6R42gPADV9MMINNQ8z+eXkvJdaMiaJeq4Nd+pFMCkI1F2FTi/T8Ny1e76IjsVUblDkzkZ8fam+FAEmHdaaHspqZFF/M/yZDMJOwJjDaBRGO61SQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749195632; c=relaxed/simple;
-	bh=htfHA8imEknZwM/lOYfRRwySwn8+TiThJS+ASnJ+2XI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Au6zoP1OtsTW7VeWyWIVKtdDYqX2gVHGFcXduSnPqsHa1wS6OTPa/vTgyvpxA1a2KN3NcQlSldeA8Hg87BditRokThRXc1UGQVbA3u42CbkXWKqhfX37bFQzGDZYY9hXuEFY26O/fl9tVm+UDq+T2kHs2SKnnov22kobpudOh1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F4Zm32OY; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749195740; c=relaxed/simple;
+	bh=JrXEu9V00IDwc0gs2Fk3u6thmp4myUk90+/KCMWMqHY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Fy34UhK7elqhbibmMHrGNoQhOEVF9x33PPWSnJpe7FS1/6PLie/pzAuQ6Q/fyXieEwfVyM+DjvDepaDJpGchzKUY9fH3/tiCesO94G27RTJuKpjktJhuqRiitByv2V7Y4inHTzKPcQFExndncoviCOAqQTGJCpxEvcqYCY+qBKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NyqdMCWH; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F4Zm32OY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749195629;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=I9c2gsmYq2Jmi7oxccIpF5lrsaMiGoQHkxwe49tMmhQ=;
-	b=F4Zm32OYYcdY2GhhLBQJu2LOjGWX9zCNLaST+lv5x0athUMjIS6e5hu+FZJoSDEup0ZuoC
-	wkmPVBBuaUCGa2/x2ssiBiFVCZgtyjZqucNyPrCQb+TDQSx30Qy//EtGAfAzSqL3ZGAhXo
-	zlQ6iQ9K9T4m96AYzRFdAnMtX3Wn9hI=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-630-__Z_TC9iP-aA5qr5a05QLw-1; Fri, 06 Jun 2025 03:40:28 -0400
-X-MC-Unique: __Z_TC9iP-aA5qr5a05QLw-1
-X-Mimecast-MFC-AGG-ID: __Z_TC9iP-aA5qr5a05QLw_1749195627
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4f858bc5eso1400653f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 00:40:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NyqdMCWH"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4508287895dso18710025e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 00:42:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749195736; x=1749800536; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Px7TUkiGLJQvkjO/71jKrxllILzPLzGA5siX95GH57I=;
+        b=NyqdMCWHOoSp2C6ntTQEqAHoDzvLQxSzWsiWJAkHHcYmtu17UbnJEBc7fHWIC0FiIY
+         yIOmjDrh873M0nLI5oenX6cHZd3aZF9LqNHPiHITxZH1D9u4LZHew0+ym7sqrWHf29jJ
+         LLQ5AymDNct9M3rtrUb/FLTLlxRbp8JArLr00m1buxCJZldgV9fj89XjNmzsEtoPBlng
+         gkfGjW6E+t1xLNUFMa8eWfjtZu4t1b2ikwjyenzfrjB5wNJwC9W//VGgrsAE+BioVOHJ
+         wKRmCgpB5026ihZfvenShxWmLicm+cGPLAHYUndNNgHbVfx/aXI61EfMYJxrpxNP2uyO
+         LvFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749195627; x=1749800427;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I9c2gsmYq2Jmi7oxccIpF5lrsaMiGoQHkxwe49tMmhQ=;
-        b=BVx2uq6EbmI7Og1VpS0BA4cf8XUTFljf2jOO0vaCLnmbc+K665HSd9enfArLTGYqry
-         FhIRU7K5tYFxiGLZuSYMmYSbkVMkSy71t9ieskpE/82Z/C/GVz4VfcOuHKfK4gi+jxxE
-         e3tAbBCxcEt8Ew1GnO32OAUz/DCNSaXFIKlF17nJ2noEnPqVuXqLUyfwWDPvHOsdL2A8
-         E+Qo6RbG48mwTxRUW0PcwGEoh4gMejpFAS2Nf/xUtxlqTPozAd5pWfNT8o35zmxHvKGR
-         PlEx+dAA56mLN6Kj2hy8fDGKoTYn3/vtZTw39146F5RZOeXV+JoysbxovouwYqDd4Tyy
-         sVFA==
-X-Forwarded-Encrypted: i=1; AJvYcCWnfQeE32hNSYWWlhQIHn+8yFhTBfLSE8vfdSRARQkUf/GVafS37f3OyRstb7q2oXpg7a0xaQdXT7NxDyo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfSa97/ySVf+6+wg9lobYBtoa3B4URwMs0Jbq2O99YNOtkykoI
-	vkWaScXD6yxw25N8IhuFxNvaapG9l0s1dxwAmw5APO+z/SduiRNtwh2E1/tOm0afvfI0/VLJOzK
-	1HyemflaH7/Dg0AQJcYEC9dq7mCphSdp7IBAnNSt3fjXTOvEy87TsGRUYLrjwBluANg==
-X-Gm-Gg: ASbGnctMM9ZdXh6QSBbrapBv1h8twF/R/rOGk4Fb+M4uhQo23QBUStXE9a6EJe6Kyh2
-	1R/oPwkzfp6oVZG6YmjjXbkWI+UbhXW8IEKUmzOkmaSHLH05Em6In+a++IlWob9xS1iOXJldEqu
-	eHVs29/Tl+xycftxTePawlWVmtSmrX2eDXJfIxocn3Z4wro1Lk2eU3cakeWEz7Vb7bkNJfUOcNU
-	k0QFdWeyrcKFf7M2Vzhj2cdx33C+KVBNz8oA8NxRpUDQuMNqhJjykO5aaKlbLb0jdbI7iRl9FxC
-	AaLs96CNmBngeu5C1BA/+7FIF4+rlIutVsVie30NbwNeF6DKFQVquQ==
-X-Received: by 2002:a05:6000:2913:b0:3a4:e667:922e with SMTP id ffacd0b85a97d-3a5319b18f7mr1892350f8f.4.1749195627270;
-        Fri, 06 Jun 2025 00:40:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHwBe2kBJP+NKllERR0xfX73Egd9sD4ST0tOY6eSfKaEu0pcjexHPFmcKUKkAi7vL+CW7MMEA==
-X-Received: by 2002:a05:6000:2913:b0:3a4:e667:922e with SMTP id ffacd0b85a97d-3a5319b18f7mr1892324f8f.4.1749195626847;
-        Fri, 06 Jun 2025 00:40:26 -0700 (PDT)
-Received: from [192.168.3.141] (p57a1a6a5.dip0.t-ipconnect.de. [87.161.166.165])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53229d9ddsm1084220f8f.4.2025.06.06.00.40.25
+        d=1e100.net; s=20230601; t=1749195736; x=1749800536;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Px7TUkiGLJQvkjO/71jKrxllILzPLzGA5siX95GH57I=;
+        b=YDFMEKbtzkRRJke7Tyv5giPWAOu7G1Ms/c4OtQDSAkOCOIxFR72DuMHA/mdfA6W6+X
+         y0nCkyyFrdi2cFQzqyYmMQE+xumnyueFTTe2l1/URd576j0k0aLGGik44hHVYK9wbqkM
+         wpwEDGpJTXrHayLdxYTQItNym8+lrvtUjwtvD0GB7M9h9yHo6BAvSY6IO+hTSSZkvc/z
+         gnimSGPKMCr1dh0zrISySfR2D7D6pSpru6jULMr9CtpIxU0plB0QBEeWs9ejwUib0b5x
+         yeQY1ESz6eo5QIra4MR2AJNjpSXm4Q7jGuZfFegKyvC9bMywJUFNtIKl9XNpqgTdfBi6
+         BGhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV/EJPoZHF2ZgMyYl2N0XnoP/fruDDZRwGjytc709QnTbVarIEONFKPPHtPhX/Qww/rxm0wKy826IMxG5g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysfxC2/XeB3UWwYX5eWRaAwfDJbypxS1krVevo38ucdAn2qjDa
+	3u8+qf+jpRtTJv0HTCWqv0wt07XDxBoH2FVNk/hfbJSBJTj7OwL37R16BQcVDJD06Gs=
+X-Gm-Gg: ASbGncuxfWsIP1uX6ILH4mTLFS4/Y+HHvAeNCN2YhM1nGpViP/ITAPIJUjuNuQ5LdsL
+	yLTtqSEO4up43ACRH3kxXpcSjHrij7Q+SvENcjZQDYlupkzwQ/Cp7uJryJuCaTDdnTSXw8dLYX0
+	8Z/ejfTDWVLKYxV7pOpCuBg1R/oK/xHnr06Tq0zTaa0FZoX68lxYmzZSDSHLj5xSavxrIkJ8FCR
+	ptUjamG40fE0fGu5r6UqKfRNpHV2Nz3dxOmiQ/YrflcgpG6eK8BsaGPHt9ocM83zRHRWAqoxPbg
+	EZEVpmPl57SWs6JHr0JbJ42ZZmsrgfZ4W0+9houZGJHxMbVKyd9Pf010EIVNDH8TseJu7SKDJid
+	HZNCr
+X-Google-Smtp-Source: AGHT+IEDJ6Qm0Ur3ac3Ih5jAsMWLAgYjL99/0S8sUsnqlAT4/rYCzrAkgc1FBvTgHlungYhO6iFY8w==
+X-Received: by 2002:a05:600c:4f90:b0:44a:b468:87b1 with SMTP id 5b1f17b1804b1-45201506dd3mr20374865e9.4.1749195736011;
+        Fri, 06 Jun 2025 00:42:16 -0700 (PDT)
+Received: from [192.168.1.221] ([5.30.189.74])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4526e056138sm12622585e9.5.2025.06.06.00.42.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 00:40:26 -0700 (PDT)
-Message-ID: <bf1d8531-983d-46d5-87b8-fba46e66c2e6@redhat.com>
-Date: Fri, 6 Jun 2025 09:40:25 +0200
+        Fri, 06 Jun 2025 00:42:15 -0700 (PDT)
+Message-ID: <ff77f70e-344d-4b8a-a27f-c8287d49339c@linaro.org>
+Date: Fri, 6 Jun 2025 10:42:11 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,146 +67,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [mm?] kernel BUG in try_to_unmap_one (2)
-To: Jinjiang Tu <tujinjiang@huawei.com>,
- syzbot <syzbot+3b220254df55d8ca8a61@syzkaller.appspotmail.com>,
- Liam.Howlett@oracle.com, akpm@linux-foundation.org, harry.yoo@oracle.com,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- lorenzo.stoakes@oracle.com, riel@surriel.com,
- syzkaller-bugs@googlegroups.com, vbabka@suse.cz, Jens Axboe
- <axboe@kernel.dk>, Catalin Marinas <catalin.marinas@arm.com>
-References: <68412d57.050a0220.2461cf.000e.GAE@google.com>
- <4fc2c008-2384-4d94-b1bf-f0a076585a4a@redhat.com>
- <fda7a3e3-1711-4f1b-a0bb-6a4369aa80ab@redhat.com>
- <b9a43f6d-1865-4074-b91c-a5bd7e10f2a9@redhat.com>
- <37e77dc4-bc73-2710-088f-f7ec0c787caf@huawei.com>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH] dmaengine: mediatek: Fix a flag reuse error in
+ mtk_cqdma_tx_status()
+To: Qiu-ji Chen <chenqiuji666@gmail.com>, sean.wang@mediatek.com,
+ vkoul@kernel.org, matthias.bgg@gmail.com,
+ angelogioacchino.delregno@collabora.com
+Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+ baijiaju1990@gmail.com, stable@vger.kernel.org,
+ kernel test robot <lkp@intel.com>
+References: <20250606071709.4738-1-chenqiuji666@gmail.com>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <37e77dc4-bc73-2710-088f-f7ec0c787caf@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Eugen Hristev <eugen.hristev@linaro.org>
+In-Reply-To: <20250606071709.4738-1-chenqiuji666@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 05.06.25 09:37, Jinjiang Tu wrote:
+
+
+On 6/6/25 10:17, Qiu-ji Chen wrote:
+> Fixed a flag reuse bug in the mtk_cqdma_tx_status() function.
 > 
-> 在 2025/6/5 14:37, David Hildenbrand 写道:
->> On 05.06.25 08:27, David Hildenbrand wrote:
->>> On 05.06.25 08:11, David Hildenbrand wrote:
->>>> On 05.06.25 07:38, syzbot wrote:
->>>>> Hello,
->>>>>
->>>>> syzbot found the following issue on:
->>>>>
->>>>> HEAD commit:    d7fa1af5b33e Merge branch 'for-next/core' into
->>>>> for-kernelci
->>>>
->>>> Hmmm, another very odd page-table mapping related problem on that tree
->>>> found on arm64 only:
->>>
->>> In this particular reproducer we seem to be having MADV_HUGEPAGE and
->>> io_uring_setup() be racing with MADV_HWPOISON, MADV_PAGEOUT and
->>> io_uring_register(IORING_REGISTER_BUFFERS).
->>>
->>> I assume the issue is related to MADV_HWPOISON, MADV_PAGEOUT and
->>> io_uring_register racing, only. I suspect MADV_HWPOISON is trying to
->>> split a THP, while MADV_PAGEOUT tries paging it out.
->>>
->>> IORING_REGISTER_BUFFERS ends up in
->>> io_sqe_buffers_register->io_sqe_buffer_register where we GUP-fast and
->>> try coalescing buffers.
->>>
->>> And something about THPs is not particularly happy :)
->>>
->>
->> Not sure if realted to io_uring.
->>
->> unmap_poisoned_folio() calls try_to_unmap() without TTU_SPLIT_HUGE_PMD.
->>
->> When called from memory_failure(), we make sure to never call it on a
->> large folio: WARN_ON(folio_test_large(folio));
->>
->> However, from shrink_folio_list() we might call unmap_poisoned_folio()
->> on a large folio, which doesn't work if it is still PMD-mapped. Maybe
->> passing TTU_SPLIT_HUGE_PMD would fix it.
->>
->>
->> Likely the relevant commit is:
->>
->> commit 1b0449544c6482179ac84530b61fc192a6527bfd
->> Author: Jinjiang Tu <tujinjiang@huawei.com>
->> Date:   Tue Mar 18 16:39:39 2025 +0800
->>
->>      mm/vmscan: don't try to reclaim hwpoison folio
->>          Syzkaller reports a bug as follows:
->>          Injecting memory failure for pfn 0x18b00e at process virtual
->> address 0x20ffd000
->>      Memory failure: 0x18b00e: dirty swapcache page still referenced by
->> 2 users
->>      Memory failure: 0x18b00e: recovery action for dirty swapcache
->> page: Failed
->>      page: refcount:2 mapcount:0 mapping:0000000000000000 index:0x20ffd
->> pfn:0x18b00e
->>      memcg:ffff0000dd6d9000
->>      anon flags:
->> 0x5ffffe00482011(locked|dirty|arch_1|swapbacked|hwpoison|node=0|zone=2|lastcpupid=0xfffff)
->>      raw: 005ffffe00482011 dead000000000100 dead000000000122
->> ffff0000e232a7c9
->>      raw: 0000000000020ffd 0000000000000000 00000002ffffffff
->> ffff0000dd6d9000
->>      page dumped because: VM_BUG_ON_FOLIO(!folio_test_uptodate(folio))
->>
->> CCing Jinjiang Tu
+> Fixes: 157ae5ffd76a ("dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_status()")
+> Cc: stable@vger.kernel.org
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202505270641.MStzJUfU-lkp@intel.com/
+> Signed-off-by: Qiu-ji Chen <chenqiuji666@gmail.com>
+> ---
+>  drivers/dma/mediatek/mtk-cqdma.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
 > 
-> By the way, unmap_poisoned_folio() is called in do_migrate_range() too. the folio may be in lru and is a large folio.
+> diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
+> index 47c8adfdc155..f7b870d2ca90 100644
+> --- a/drivers/dma/mediatek/mtk-cqdma.c
+> +++ b/drivers/dma/mediatek/mtk-cqdma.c
+> @@ -441,18 +441,19 @@ static enum dma_status mtk_cqdma_tx_status(struct dma_chan *c,
+>  	struct mtk_cqdma_vdesc *cvd;
+>  	struct virt_dma_desc *vd;
+>  	enum dma_status ret;
+> -	unsigned long flags;
+> +	unsigned long pc_flags;
+> +	unsigned long vc_flags;
+>  	size_t bytes = 0;
+>  
+>  	ret = dma_cookie_status(c, cookie, txstate);
+>  	if (ret == DMA_COMPLETE || !txstate)
+>  		return ret;
+>  
+> -	spin_lock_irqsave(&cvc->pc->lock, flags);
+> -	spin_lock_irqsave(&cvc->vc.lock, flags);
+> +	spin_lock_irqsave(&cvc->pc->lock, pc_flags);
+> +	spin_lock_irqsave(&cvc->vc.lock, vc_flags);
+>  	vd = mtk_cqdma_find_active_desc(c, cookie);
+> -	spin_unlock_irqrestore(&cvc->vc.lock, flags);
+> -	spin_unlock_irqrestore(&cvc->pc->lock, flags);
+> +	spin_unlock_irqrestore(&cvc->vc.lock, vc_flags);
+> +	spin_unlock_irqrestore(&cvc->pc->lock, pc_flags);
+>  
+>  	if (vd) {
+>  		cvd = to_cqdma_vdesc(vd);
 
-Indeed.
+If the first spin_lock_irqsave already saved the irq flags and disabled
+them, would it be meaningful to actually use a simple spin_lock for the
+second lock ? Or rather spin_lock_nested since there is a second nested
+lock taken ?
 
--- 
-Cheers,
-
-David / dhildenb
+Eugen
 
