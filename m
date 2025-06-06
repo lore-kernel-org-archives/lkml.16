@@ -1,68 +1,66 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216C3288A8
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 14:20:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF0527468
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 14:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749219641; cv=none; b=A3TM+5impM8dt891gzaMnXfHwW+dPid+ERYYjwvbiUXnOG3Ok1MPRZqS+l09+D72LzWxU7ahqOcMBl1hvN/dQAg5aVDPG4gjS//ZvnE40CsEp8YD3MyK/KbqQZ49wys3XKBx6LmQMXqZXdp7PvY8eNvtmz7DFbayAEu9YcXJzb8=
+	t=1749219641; cv=none; b=bdy0P7oQ6W1jXSf0Xbvm+y+iMvWQf5YzrK7i7bepdEwV82fsLy1Lx2MDdAb0dI9J7e7x+9qMupPkkqy+zCk8BoUlBWVOb+AGBRTRjDwb3ZHT+WJJJ66cCo2KIf8jkEfp+y+b2yBOTFvCye2MpBNto0wGVQOOP83dpRwozJHGmyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749219641; c=relaxed/simple;
-	bh=3MDKCzcRqE17jpMODKflA/mPPIlcttinXXOo2OBAwAs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lPtIlxrwp7VhEgw9XhQm9zKRzqDOmHgLS9otEwGkUylHrgzZcekqfEAVPLWYNT0yspPfvgeLEFZs/irtTZ3IOzbf1sSgutbAANKrvnei2vTl4cfttBHrBsaXKMrgWb6jx9itbDB7nfFAON+Qenv+ULJ8XUh8cXQaXKO0gNhRXTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=255GtuGk; arc=none smtp.client-ip=209.85.128.53
+	bh=OZrzbP1SbRGVb+WCBZuIR/Xx/XISjeOLbhSk+S2W58Y=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HhMGEgyowVXKFrM2tnqvnGUeCcnrgLG88LrxFUZT1x/yMmLD1nGmlDKVcVd0zGPt+BRP10ZnrSpNufBawFtHbLE66ZJetT6AaQ4BdTT++QS7EJkf5zsktXQaebdNA0ZqneSQOvKpbewrH4LDd/sdifdBYTwp3E7fCuPzRnAWn3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=UmOUUv44; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="255GtuGk"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-450dd065828so16526875e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 07:20:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="UmOUUv44"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so28022495e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 07:20:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749219637; x=1749824437; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BCECvT2ZqaLSupqrgHoRYTITFIBrUFbkXozj6gpUIgI=;
-        b=255GtuGkBXlI2UOWybrmrBwbIHQffrjov0sFZNJKZ4dJiWV2B15jbwXmMuNSVgNMHk
-         MEFB4VLhH3JwSO/n1AEyHblJF9NXlmASdp1uj51a0FxJFojjwDg/K+f3Dg3tQGDyE5Uj
-         hyZx3lXNQ1Lfv5HaYGFDR4Aiab5ktwePsonZ5W7XSP5W8iJbkWmlbwkYe+IxKiFGimhN
-         xUS3nXrnNuLp+NNfk4F2cfOqPupCwMdulVRMHik1PKSL5C8I5H6M8EDNfR7z+17hm119
-         WVn2jqM7KHQtfYmvY/aHMs2LM2ioPTY+HD5z231YHjigiYzf8Xg3RYJkwSAjXDLC4Ctp
-         AghA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749219636; x=1749824436; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JjGat8Y0B+/GQXbzYuSVj2PQ8u5SUEo0nANMq38jBNs=;
+        b=UmOUUv449ZyMaqDfiJp/kfQVa3KlZ4Mfm+GHWHmAg5mvwjEj6CPFOMgQ7nwKflJV30
+         nvzy6WzssR+1wytBI9Ox4PH+TT46Ai9Ro7yftLqORivvWTlRW1ne7g+Em6oF2y54weHD
+         124uvlTxfodVPb7kgI2hiISVNd8N6A98OIxnitemKBIztrFQZE3tPrGR2/wqoahSImrL
+         ZgbJ6F/aJvcM5pYGCxooGDfHbRDGm0Bh3IVjhZxGLvFZ9PiIqx9RRl/m4C3/+MwIkooQ
+         cnkPxmLeO37IzQrgUoUrAp4uOpGeuGJHdWNmAeDIrYz6Tus5Mz2fLI1a1lq27YmQsfDG
+         BWpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749219637; x=1749824437;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BCECvT2ZqaLSupqrgHoRYTITFIBrUFbkXozj6gpUIgI=;
-        b=A0Fo85if3hoTbEDYb79+Q0vnmTW0goN4Ct/KAbZeNsC9P60IFqKWo9m1XPXyA1Xymg
-         AN3vhZutvvxXTFv0B5Mkw/BayM/gszTo8v3A6R5tCGFK3g9DWjKjAr1WRiZi0xK3x1Mf
-         rhfAxS2KYLzeiourYbc8nDbcIo1CY9gAPlef37GMGkpZx4zbQSDjT4JxjFmzV1U+sHpN
-         goyYARpuSTKcGZGxgtHFyg2wCpNHslUfA2CYX1SdElUvjjCgA9yr5qhj6UE18opA1HT5
-         zwbZbhc4BE0uRByB28U7AdQgUFRHbce6aMK7cmbYbHnHkYfDyWg/WDDXn+OF/T9tIzEQ
-         KZJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWImGam2iBBPzGfZ2nth0WdfviuWo+5q1MOcWZzWlhVJ3L670NWDQp5wDq6mVJmSDWZxrY2kObRCub400E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSCiYSdViYWbumDnVCTA8wX8u2XkdO9o9LlgbG4hPcbMF2Mj5W
-	CqvHNMeRUQr12gFYonH6IivnNdHKSNEjRMWMPCOvBZpdQrHRkX0tO/UF8oX6d5vX9jA=
-X-Gm-Gg: ASbGncsGToVepfLRgkjsO5wDah5V3HgidVroSJlpKbAD7T/rC0ZzelxPK+mgu4whyqn
-	Lccna0lh5bFZzSrwLlfSD2pZEKuTOZckJHh82Ul0vrvW5Ft7tVg2Esgj6NP+1SoLUaGlhh4drum
-	R5pufUdh4lh7S9nPYNn5pf8OM1R3X/E0kBKCNTCwNR/QI4a0XYxlZ4Pcr9Tw/0n2O1swy6tVVQx
-	lO4tELs0ts3uy3XtCqKHxK/xra1IbDEtRI/R7LXU/YE8s36IeVAxcYZU5E/KaUgduAIYLbAkf6T
-	l3BtA6jsjgFiwkSBbOdCux6gjLMW9e0AUdrTM7HolSSMUw1BgvSdqYsVnmprNPG8ZFTpm6u++8Q
-	DnpBo6nt7wPdRT1+UBRdbdl9Uia/+pX4=
-X-Google-Smtp-Source: AGHT+IH59aMsKf3hdHtSKVIfRUVq4kAbJbYNUCQzRJeoDhtgAosvkcg81rm88rY6ZYDHdAP4zhIZwQ==
-X-Received: by 2002:a05:600c:83cf:b0:450:b9c0:c7d2 with SMTP id 5b1f17b1804b1-452014146bamr37850795e9.11.1749219637319;
-        Fri, 06 Jun 2025 07:20:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749219636; x=1749824436;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JjGat8Y0B+/GQXbzYuSVj2PQ8u5SUEo0nANMq38jBNs=;
+        b=b5CupFB7uG/j25p9qIhbgobgSsv+jsf/5LkVsiDrn7LDLAoH6biCFmlujIjcwXfWmV
+         12LlFh0SlPgz0pZziyN59Bu1Uta57NNQh5+54zRi3cvsriPpGkFZL4uvu/efzpZoq0e7
+         hzdBJEuzmU9mSR9QcN6oM+qnn7K5CyM8kZaHc2r/8ZibdAv5QO+baCgeHM653jsaGnMG
+         97oTsqGUwGtta7m5kAYQ859Kw80hZNQCz557rYcSNHXfhKnureTRevb+WA4YL5+CjmYl
+         EhQ8EUfYQywVw4zTn8dwISE3C/+izoUmQYzBOn+Z8fAdP6r4IQkF/OcotbTULwyUsyu+
+         BDJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXTJAMp+HIx3QXOhi7sRjr9IIdYrJU+xOio/WT7heLnVB1uz2mB0ZO5ebzBY3TydhfQfJQrefPK7G9GH7I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywt3zNhiNuB/IDi1AHyvnyIBwJc5U29845OXA1KfABMvcFoddTf
+	c2HCZlHg+LGahDFFgXNmHye7duxaWCGZlgZTf8gviIQK8ZUtpgDV22v6BNtoiUr29ck=
+X-Gm-Gg: ASbGncsU9fO7B49KT/uabI0jC4HU5fCCRwtAMB7BlMXAqZHbr0PnTDquz2mmBETKAuq
+	qH8mGkV4rZf8U35C3Jk7gEDPLogs1XQMPS3q1pK237Rk1wrFEM+y2spAorivAnoMP5xfOvSrBgo
+	UCyIRZ9uttyqF1HRDb5/96xnfhhdY/aW+uwg0R+/jF1rYm49VFXnqGmZhZpLQyyC2xDxg/Co8Ty
+	0gZTYpfztJjzWalWa/rBCaaS27IxTFVcSqXpNPov1t+VhAofhMCJQ/1CJ6Ok77hQ9yiRNXGPATH
+	GsLB724vsLzZWwqo01LCeZuiM8k/aINCGjONoKVtDUDYgyLCm8oVd7Koq27Y1E++XQJnMtRPjj+
+	FIG+QmI8XmYq6c1x6AZo8r4KMI6uIJmMQIJ9Z/ffmjQ==
+X-Google-Smtp-Source: AGHT+IGAmJ6OQn+Rk5+zosv7byWwapXctFy1BWUaDJa55qiK+0N+TiLKkkIXrOnKe/WuXhNlWgKrQQ==
+X-Received: by 2002:a05:600c:3492:b0:440:6852:5b31 with SMTP id 5b1f17b1804b1-45201391186mr44123055e9.10.1749219635948;
+        Fri, 06 Jun 2025 07:20:35 -0700 (PDT)
 Received: from [192.168.0.2] (host-80-116-51-117.retail.telecomitalia.it. [80.116.51.117])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45213754973sm25686345e9.35.2025.06.06.07.20.36
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45213754973sm25686345e9.35.2025.06.06.07.20.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 07:20:36 -0700 (PDT)
+        Fri, 06 Jun 2025 07:20:35 -0700 (PDT)
 From: Angelo Dureghello <adureghello@baylibre.com>
 X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
-Date: Fri, 06 Jun 2025 16:19:16 +0200
-Subject: [PATCH v9 1/7] Documentation: ABI: IIO: add new convdelay
- documentation
+Subject: [PATCH v9 0/7] iio: adc: add ad7606 calibration support
+Date: Fri, 06 Jun 2025 16:19:15 +0200
+Message-Id: <20250606-wip-bl-ad7606-calibration-v9-0-6e014a1f92a2@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,9 +69,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250606-wip-bl-ad7606-calibration-v9-1-6e014a1f92a2@baylibre.com>
-References: <20250606-wip-bl-ad7606-calibration-v9-0-6e014a1f92a2@baylibre.com>
-In-Reply-To: <20250606-wip-bl-ad7606-calibration-v9-0-6e014a1f92a2@baylibre.com>
+X-B4-Tracking: v=1; b=H4sIAOP4QmgC/43SwWoDIRAG4FcJnmsZR9fRnPoepQd1tRHSbNgN2
+ 4aQd+9sLlnKIj3+ynzKz9zElMeaJ7Hf3cSY5zrV4cTBv+xEOoTTZ5a15ywQsAODXn7Xs4xHGXq
+ yYGUKxxrHcOEpiRC0t8GC7lDw/HnMpf487PcPzoc6XYbx+nhqVsvpf9RZSZA5mt44VFERvsVwX
+ a7zaxq+xALP+MQ6wBaGjCkysYdQwKm4gek1ZluYZszmSNFmQg20gZk15lqYYcyroAs6Tdlu/ax
+ bYarZWceYgc6URMkX3W9gdoVhszO7YI6iB6N1H2ADozXW7IwYi6wBYsrK+w3MPTHepRbmGENNK
+ pMCV/Tf1bjf779NyXBC4AIAAA==
+X-Change-ID: 20250429-wip-bl-ad7606-calibration-20a396a60352
 To: Jonathan Cameron <jic23@kernel.org>, 
  David Lechner <dlechner@baylibre.com>, 
  =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
@@ -83,66 +85,109 @@ To: Jonathan Cameron <jic23@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>
 Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Michael Hennerich <michael.hennerich@analog.com>, 
- devicetree@vger.kernel.org, Angelo Dureghello <adureghello@baylibre.com>
+ devicetree@vger.kernel.org, Angelo Dureghello <adureghello@baylibre.com>, 
+ Conor Dooley <conor.dooley@microchip.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1850;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4039;
  i=adureghello@baylibre.com; h=from:subject:message-id;
- bh=HL+KRQj9p0fzRWOWKu4itMjiQokyOUQbf/17jsDSPRk=;
- b=owGbwMvMwCXGf3bn1e/btlsznlZLYshw+vEsMrwlT6QtiT/9adzuwK9LpP7aftApjC3T3F78t
- 4r7zcHdHaUsDGJcDLJiiix1iREmobdDpZQXMM6GmcPKBDKEgYtTACbiHsfwV9iXRbItQ+bak6zk
- qAqt8zvrmLdqZXKabucRPPnj/Y9D3xn+Sr/y+8PxyzuBNSWTM1CF80HtAc3bwXqTMkVr7+Xr29/
- gBQA=
+ bh=OZrzbP1SbRGVb+WCBZuIR/Xx/XISjeOLbhSk+S2W58Y=;
+ b=owGbwMvMwCXGf3bn1e/btlsznlZLYshw+vHMaM/+/17cT3Xklqiwa3EGrC55kt28KidmzyQ3I
+ eOcUImsjlIWBjEuBlkxRZa6xAiT0NuhUsoLGGfDzGFlAhnCwMUpABN5uJqRoedd0cojHl2xb8oD
+ zpy4VH7L92pY0lr15JJI98ZoT+nPWYwMpwKDQx4KyniXHuR6eWb9os9lquLnxZ7Mzl3mb3w8Wle
+ XAQA=
 X-Developer-Key: i=adureghello@baylibre.com; a=openpgp;
  fpr=703CDFAD8B573EB00850E38366D1CB9419AF3953
 
-From: Angelo Dureghello <adureghello@baylibre.com>
+Add gain, offset and phase (as a delay) calibration support, for
+ad7606b, ad7606c16 and ad7606c18.
 
-Add new IIO "convdelay" documentation.
+Calibration is available for devices with software mode capability. 
 
-The ad7606 implements a phase calibation feature, in nanoseconds.
-Being this a time delay, using the convdelay suffix.
+Offset and phase calibration is configurable by sysfs attributes, while
+gain calibration value in ohms must match the external RFilter value,
+when an external RFilter is available, so implemented through a specific
+devicetree "adi,rfilter-ohms" property.
+
+This patchset depends on:
+https://lore.kernel.org/linux-iio/20250505131544.0a7477a2@jic23-huawei/
 
 Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
 ---
- Documentation/ABI/testing/sysfs-bus-iio | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Changes in v9:
+- add patch 6/7 changing chan_scale to a more generic chan_info, 
+- parse gain fdt property in existing function, to reduce code.
+- Link to v8: https://lore.kernel.org/r/20250603-wip-bl-ad7606-calibration-v8-0-2371e7108f32@baylibre.com
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index ef52c427a015cf47bb9847782e13afbee01e9f31..3bc386995fb6ddf5fd0718587a84d703cb973d70 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -559,6 +559,30 @@ Description:
- 		- a small discrete set of values like "0 2 4 6 8"
- 		- a range specified as "[min step max]"
- 
-+What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_convdelay
-+KernelVersion:	6.17
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Delay of start of conversion from common reference point shared
-+		by all channels. Can be writable when used to compensate for
-+		delay variation introduced by external filters feeding a
-+		simultaneous sampling ADC.
-+
-+		E.g., for the ad7606 ADC series, this value is intended as a
-+		configurable time delay in seconds, to correct delay introduced
-+		by an optional external filtering circuit.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_convdelay_available
-+KernelVersion:	6.16
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Available values of convdelay. Maybe expressed as:
-+
-+		- a range specified as "[min step max]"
-+
-+		If shared across all channels, <type>_convdelay_available
-+		is used.
-+
- What:		/sys/bus/iio/devices/iio:deviceX/in_accel_x_calibscale
- What:		/sys/bus/iio/devices/iio:deviceX/in_accel_y_calibscale
- What:		/sys/bus/iio/devices/iio:deviceX/in_accel_z_calibscale
+Changes in v8:
+- fix bug related to wrong calib gain setup,
+- fix return value on wrong "reg" read from fdt on calib setup,
+- fix commit messages/titles,
+- add new function to write calib gain on ADC registers after reset.
+- Link to v7: https://lore.kernel.org/r/20250526-wip-bl-ad7606-calibration-v7-0-b487022ce199@baylibre.com
 
+Changes in v7:
+- Fix each wrong commit desc. occurence related to convdelay.
+- Fix ABI documentation with better words.
+- Fix wrong comments in driver source code.
+- Add r_gain default before reading the fdt value.
+- Link to v6: https://lore.kernel.org/r/20250522-wip-bl-ad7606-calibration-v6-0-487b90433da0@baylibre.com
+
+Changes in v6:
+- exit for error in case of fdt that breaks the dt_schema,
+- add (5/6) patch to fix the above on older code too, 
+- Link to v5: https://lore.kernel.org/r/20250519-wip-bl-ad7606-calibration-v5-0-4054fc7c9f3d@baylibre.com
+
+Changes in v5:
+- fix tab/spaces wrong formatting on ABI doc (1/5),
+- fix description in ABI doc (1/5),
+- fix code multiline alignments (3/5),
+- fix calibration offset calculation as oneliner expression (3/5), 
+- Link to v4: https://lore.kernel.org/r/20250508-wip-bl-ad7606-calibration-v4-0-91a3f2837e6b@baylibre.com
+
+Changes in v4:
+- fix ad7606_chan_calib_gain_setup appropriately to be called once.
+- Link to v3: https://lore.kernel.org/r/20250506-wip-bl-ad7606-calibration-v3-0-6eb7b6e72307@baylibre.com
+
+Changes in v3:
+- fix dt_bindings,
+- change sysfs calib_delay to convdelay,
+- fix sysfs documentation accordingly,
+- used u32 for reg and r_gain,
+- used DIV_ROUND_CLOSEST for setting r_gain,
+- minor syntax fixes,
+- Link to v2: https://lore.kernel.org/r/20250502-wip-bl-ad7606-calibration-v2-0-174bd0af081b@baylibre.com
+
+Changes in v2:
+- change phase_delay to calib_delay,
+- fix dt_bindings,
+- fix gain calibarion fdt parsing,
+- fix ad7606c-18 calib offset range,
+- fix calib offset calculation,
+- fix calib gain range,
+- Link to v1: https://lore.kernel.org/r/20250429-wip-bl-ad7606-calibration-v1-0-eb4d4821b172@baylibre.com
+
+---
+Angelo Dureghello (7):
+      Documentation: ABI: IIO: add new convdelay documentation
+      iio: core: add ADC delay calibration definition
+      iio: adc: ad7606: add offset and phase calibration support
+      dt-bindings: iio: adc: adi,ad7606: add gain calibration support
+      iio: adc: ad7606: exit for invalid fdt dt_schema properties
+      iio: adc: ad7606: rename chan_scale to a more generic chan_info
+      iio: adc: ad7606: add gain calibration support
+
+ Documentation/ABI/testing/sysfs-bus-iio            |  24 ++
+ .../devicetree/bindings/iio/adc/adi,ad7606.yaml    |  29 ++
+ drivers/iio/adc/ad7606.c                           | 351 ++++++++++++++++-----
+ drivers/iio/adc/ad7606.h                           |  22 +-
+ drivers/iio/industrialio-core.c                    |   1 +
+ include/linux/iio/types.h                          |   1 +
+ 6 files changed, 347 insertions(+), 81 deletions(-)
+---
+base-commit: 351e9e8549a49300e674fc562b4b2a7e4bd74a66
+change-id: 20250429-wip-bl-ad7606-calibration-20a396a60352
+
+Best regards,
 -- 
-2.49.0
+Angelo Dureghello <adureghello@baylibre.com>
 
