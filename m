@@ -1,182 +1,124 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DCA1DE887
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 20:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F030A31;
+	Fri,  6 Jun 2025 21:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749243521; cv=none; b=WR9SJO7Be5URsWCXpG5hR5x2bToOiF3pVmhLTthRtMTpB4olFkmu8tfdLgd3ckPoLQZam8HVzEXKS67mTECbMjpReyuFKAwy5cFIui5nrfl3bHws5qTQEr/ET5xfZJnBQyYGl/d/QJsi/6VJR+STob9ajZeTxaAht8q/zwtnQyY=
+	t=1749243764; cv=none; b=RSTvH/jfuWUWtjq6K73JDIwGl7RNCtZIckVNhNaB9cHg5UfjOlhunaxpJ8fITANFoYOxMGI4Y5dUwRB8gvpSs2hL0/RhDEp7NhuXjJARV4YGpTdz4ZdVdodPRCsANAGnmbgLtIDISZsRLCHXfhg7Qsm0cB4zBEj4osHdemqxGQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749243521; c=relaxed/simple;
-	bh=5OYc0uKWh7qIH+AR3SuReSyysjjqrsA/cCLLRH7dsAk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vw0ayXhTt6YCvAb0jpjl7BqC44cu8XRW1p9p2MTcQtSviDrSbYAKejgcnrjxDkpzDTWu2HY5eGCouB8+Qvgh94StbDTIl7x+Q/52xcCLwGOYUj1ddKQH6NDTlS4MTTy6pxr+5Xo2Ri6+ZYVIhKCsryMWpprj1B30mfa8qb5wJRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WxLMu6f9; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749243764; c=relaxed/simple;
+	bh=xj0/huTnf1Ge1GUzSFj0vryQBvGBYZ/TnFMm1kkMCIQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OLKE88GSYtowOqEzD40nFliO4yUBKeZybNN8BBerWLl/+C1c9USkqREdpMGMLRcTkoSSr8j9Hjn/t5QRm/1iplTnkDNAfWAIs6Af9yws/RyJ9g0JHS2ymyZHiWCsPvxSBmyhlCB5qCZWy+n9hbaLzLGY5DZO93QHnLASzeT6vS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e1RH7DKa; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WxLMu6f9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749243518;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=guFPgH4oWq6xee/Rhvz3IuDEY33ZRCSZGOY5KIimvlE=;
-	b=WxLMu6f9njRO0EFjti8p73aL62zW6xElpNUjpoVFiDCCpCY5ZyPiDd2d+rZNU1ok4AXwlH
-	oj7FQ96q/4tfcBjKbE2WWT6Gak4eocuQG4y3n5wijuCNpBdZ5/+towlaX8M6XBKD0LqaHd
-	CNzgA1wwmG9uUKPqOz7dP/+svmFaBC4=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-590-rU0pF8H7NIGrOxw22QLz4Q-1; Fri, 06 Jun 2025 16:58:37 -0400
-X-MC-Unique: rU0pF8H7NIGrOxw22QLz4Q-1
-X-Mimecast-MFC-AGG-ID: rU0pF8H7NIGrOxw22QLz4Q_1749243517
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6fad1f7f175so41374846d6.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 13:58:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e1RH7DKa"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-708d90aa8f9so24977547b3.3;
+        Fri, 06 Jun 2025 14:02:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749243761; x=1749848561; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ckTWEplUDj8tVOgXyWQTsu3+spCGSYfUAFmKmFITmxY=;
+        b=e1RH7DKaxGNUwj+LpWPs75owh592mifdntJtYA/9RYTrqETVdpGKrc5BfObxKiEsA/
+         QPxrhi/+49n0Lvs/pCkDKfne7Bw3ZKpC/RBSsm1hKnbLyeKc9ie3tPmIlsdU8EqYvXLn
+         FJTxbA3bmiU1eoG3H/j6H3HvulV4TBgdjHP3W3Nl/S5YDsII0uBf2LUEEJ2I7gzsvgAb
+         B6rN4HNIhfsI3kk/IiDfuY7ZwKW2HeyvtQdMhQcbHCn3m2Di4GNFos8+mNK8KyVHpXzl
+         yp+DZoUplW+mfMKr2X0V/+DCchp4fGcIVAJOuAU7sQYR38afXMkTTNfhOWRYc68nDBRC
+         n5Zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749243517; x=1749848317;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=guFPgH4oWq6xee/Rhvz3IuDEY33ZRCSZGOY5KIimvlE=;
-        b=Y36CFo+kyiTfAjGNBr+klclRW7LLo8YO3CRA2AD7Pt02WkGirrF0mG6q0mrRHd0MFn
-         OuEQnhHwqiokNOYD1hjvdLizDcWL2h5m/Hy51JO43bI90dQEM9Gjlk0MqyRZbT2slQ4R
-         m2y89W6U3AIwhemgMh3EzF907hR5M5GfwESUSBumxAZ9GUoEaln4RIFTYTuDzb+GGYR7
-         Hl9LIrx43ZpreEoKlR00u8ULnoduDK9rH4Zv607hv9uO2QUTl4tqYWksDBIYU3cqv6O2
-         zkMee0PyA3ukbtBXWW7CUuN5EeNzF/4jyg0bWV7MGk8DJ847++r1DLacfsRuezKg8wob
-         tfbQ==
-X-Gm-Message-State: AOJu0YyM9OIcG0RJ4nZ15q0QwyOru3P/skfqYa4JavyGKSykyi23kFN1
-	YrZ6QW5Lqpowhrwe43GSp150Dr15mMqe1iIzgECpCTEcRuKPFCh9NRPZW5S/7ksmIZZ5yx32aeI
-	4SUl565sMY0c+fXBT5RwMNLsRXq6DwjjaMAzAItRLLzD48IGhKfU/WMGdHO3EBGRMAg==
-X-Gm-Gg: ASbGncvULnf/uhTjdc5Rnd/1ksscavuNtzayqPP9/OWxQgxeu3XcUErgn+A1fyaWSfU
-	H88OAJaXu9ysKAZbRSGsj0X7ezopS6JJqZpip2etcFFGEwyCnaCM6mZ++q1VLfZjk+H9DhrhedJ
-	AzI7FlQGCPVHZ07LPMeIsDgFBtj35ss7Z8f/nepIQOC0he6Tyf625+S9fZOedQqxhIfPf0yFdKH
-	DG8MlOsHhCnW7fS6cqDiy80l4BETEPkf+uMDiZ7Iqv9FadvqjwQtsIXNBNpa0yTzq7RSL0JKzam
-	H2KZoHFZmMuDXT62ceWfW982akAlfr4kXxS6lw8r9rMHVWMxo19YHTgbYMd1aq1vE00fjaEVpej
-	cjg==
-X-Received: by 2002:a05:6214:2022:b0:6f5:4dfa:6944 with SMTP id 6a1803df08f44-6fb0921374emr76184946d6.3.1749243517213;
-        Fri, 06 Jun 2025 13:58:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHhGy1oMHsZOqoKexnPlR5OGbVbT9nbo3hIS4Q241Y/MmfB4nAGvYTMd0FKz6d+fiBye1h5YA==
-X-Received: by 2002:a05:6214:2022:b0:6f5:4dfa:6944 with SMTP id 6a1803df08f44-6fb0921374emr76184716d6.3.1749243516943;
-        Fri, 06 Jun 2025 13:58:36 -0700 (PDT)
-Received: from [192.168.1.17] (pool-68-160-160-85.bstnma.fios.verizon.net. [68.160.160.85])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb09add2easm16922886d6.51.2025.06.06.13.58.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 13:58:36 -0700 (PDT)
-Message-ID: <07252044-070f-405e-b1fe-ea27da7746e6@redhat.com>
-Date: Fri, 6 Jun 2025 16:58:35 -0400
+        d=1e100.net; s=20230601; t=1749243761; x=1749848561;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ckTWEplUDj8tVOgXyWQTsu3+spCGSYfUAFmKmFITmxY=;
+        b=kTW1avq+clSjdnSDrTwMBLbU9CdOD1na4+OXfYrLyiQye3n6085Gx39jcpEMjYxB21
+         IJ+cxccPL1D6buzzRvip3nNpddWnphtKvOfrdDeksPsg3hdNq/SMVdUCPNyLtMha+Fgh
+         suBZPH2Hq4SMRRnG8gAkiSa9W/zShilfaeN8OGmekElRpRGrAaVqnpyUyBRAoE/eY0Rj
+         sibfoTDAytpVolK9oy+Xb44geWsHI3j+4cGTxj03EKkKw+yBuv8mNy0Y0HMeBPXgiSgG
+         jjeKpRxFlYdlS9QMn747WwJSE0qNYAVvHkxgq94pHl1wG5jVqK+tjAdnybHDKMGF/0aB
+         RCPw==
+X-Forwarded-Encrypted: i=1; AJvYcCVeiwEFWzZL8ejjk2fV16TuoTHAcDIMmgtQ51RShjaSvsIs6acYOlk4LtK9Cjn/coIwxwHXnF+UczlVf34=@vger.kernel.org, AJvYcCWX12csjA3SOUKpeFN/VQsvWa1jmWd15NEMNRUpbDZ23DSeZh2w7GQXZ2M8tEzp4oRRl6IgFQIKGpVNDcU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5g50egNQLk38mPH0c7HIa60eqMj38xh2JRyXgkPZIt7bXncU8
+	arPiL0hiamxNVScgx1EwcjMNXsYQBkgdYJuH6cmTJHWyXWBuJr5rJYJp
+X-Gm-Gg: ASbGnct4kak8cEVIm2F6DHxwOup+blYEg6vHUt4K9cl2yqUnB5sloOhOijBCrjtMpDH
+	XKaSyF1CrW74K6bIh6xXdA7l3ecJjlk76LMvhX1LdOQSc0b7dsP9/EpWH038t9d8fVh834RZW2q
+	u2VzmfBJ4ZgKQdAGgEZnXHOwyZgcOQzGRzt3A/uB5N91DELHZK0QROEv78KZ2ww3X7Gte2Ccalw
+	Bd+z9kw87h3QxaZnLI6V8GLsHUzMgx65XlmOavIiRJl4wZLMu1RnlUhUH2Xez0nyEswu8Po+Ll2
+	Xz1lVw/1vBC4fk03buWC5b64BbZHBgWr+DrCeNKpE52oiQt77CmjQ/NM0Hz4Tjiczg==
+X-Google-Smtp-Source: AGHT+IG1fy9dy91VK/x1ZkI8SoZWkrn8wR+qdFht38h2sCE5mAew7pjFDZWWomOaCGuG07h43LX68A==
+X-Received: by 2002:a05:690c:fc2:b0:70a:36b2:8f94 with SMTP id 00721157ae682-710f76c2cfdmr72144037b3.18.1749243761230;
+        Fri, 06 Jun 2025 14:02:41 -0700 (PDT)
+Received: from trojai4.cs.purdue.edu ([128.210.0.165])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-710f98afad6sm4000027b3.20.2025.06.06.14.02.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 14:02:40 -0700 (PDT)
+From: jinyaoguo <alexguo1023@gmail.com>
+To: mchehab@kernel.org
+Cc: hverkuil@xs4all.nl,
+	algonell@gmail.com,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jinyaoguo <guo846@purdue.edu>,
+	Alex Guo <alexguo1023@gmail.com>
+Subject: [PATCH] media: dvb-frontends: dib7090: fix null-ptr-deref in dib7090_tuner_xfer()
+Date: Fri,  6 Jun 2025 17:02:38 -0400
+Message-Id: <20250606210238.1517508-1-alexguo1023@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 59/62] livepatch/klp-build: Introduce klp-build script
- for generating livepatch modules
-To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
- Miroslav Benes <mbenes@suse.cz>, live-patching@vger.kernel.org,
- Song Liu <song@kernel.org>, laokz <laokz@foxmail.com>,
- Jiri Kosina <jikos@kernel.org>, Marcos Paulo de Souza <mpdesouza@suse.com>,
- Weinan Liu <wnliu@google.com>, Fazla Mehrab <a.mehrab@bytedance.com>,
- Chen Zhongjin <chenzhongjin@huawei.com>, Puranjay Mohan <puranjay@kernel.org>
-References: <cover.1746821544.git.jpoimboe@kernel.org>
- <10ccbeb0f4bcd7d0a10cc9b9bd12fdc4894f83ee.1746821544.git.jpoimboe@kernel.org>
-Content-Language: en-US
-From: Joe Lawrence <joe.lawrence@redhat.com>
-Autocrypt: addr=joe.lawrence@redhat.com; keydata=
- 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
- pNzsRQ==
-In-Reply-To: <10ccbeb0f4bcd7d0a10cc9b9bd12fdc4894f83ee.1746821544.git.jpoimboe@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/9/25 4:17 PM, Josh Poimboeuf wrote:
-> +copy_patched_objects() {
-> +	local found
-> +	local files=()
-> +	local opts=()
-> +
-> +	rm -rf "$PATCHED_DIR"
-> +	mkdir -p "$PATCHED_DIR"
-> +
-> +	# Note this doesn't work with some configs, thus the 'cmp' below.
-> +	opts=("-newer")
-> +	opts+=("$TIMESTAMP")
-> +
-> +	find_objects "${opts[@]}" | mapfile -t files
-> +
-> +	xtrace_save "processing all objects"
-> +	for _file in "${files[@]}"; do
-> +		local rel_file="${_file/.ko/.o}"
-> +		local file="$OBJ/$rel_file"
-> +		local orig_file="$ORIG_DIR/$rel_file"
-> +		local patched_file="$PATCHED_DIR/$rel_file"
-> +
-> +		[[ ! -f "$file" ]] && die "missing $(basename "$file") for $_file"
-> +
-> +		cmp -s "$orig_file" "$file" && continue
-> +
-> +		mkdir -p "$(dirname "$patched_file")"
-> +		cp -f "$file" "$patched_file"
-> +		found=1
-> +	done
-> +	xtrace_restore
-> +
-> +	[[ -n "$found" ]] || die "no changes detected"
-> +
+From: jinyaoguo <guo846@purdue.edu>
 
-Minor nit here, I gave it a patch for files that didn't compile and
-because because files() was presumably empty:
+In dib7090_tuner_xfer, msg is controlled by user. When msg[0].buf is null and
+msg[0].len is zero, former checks on msg[0].buf would be passed. If accessing
+msg[0].buf[0] without sanity check, null pointer deref would happen. We add
+check on msg[0].len to prevent crash. Similar issue occurs when access
+msg[1].buf[0] and msg[1].buf[1].
 
-  ./scripts/livepatch/klp-build: line 564: found: unbound variable
+Similar commit: commit 0ed554fd769a ("media: dvb-usb: az6027: fix null-ptr-deref in az6027_i2c_xfer()")
 
-since found was only declared local, but never set inside the loop.
+Signed-off-by: Alex Guo <alexguo1023@gmail.com>
+---
+ drivers/media/dvb-frontends/dib7000p.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
+diff --git a/drivers/media/dvb-frontends/dib7000p.c b/drivers/media/dvb-frontends/dib7000p.c
+index b40daf242046..46753d2ae212 100644
+--- a/drivers/media/dvb-frontends/dib7000p.c
++++ b/drivers/media/dvb-frontends/dib7000p.c
+@@ -2270,6 +2270,8 @@ static int dib7090_tuner_xfer(struct i2c_adapter *i2c_adap, struct i2c_msg msg[]
+ {
+ 	struct dib7000p_state *state = i2c_get_adapdata(i2c_adap);
+ 
++	if (msg[0].len < 1)
++		return -EOPNOTSUPP;
+ 	u16 apb_address = 0, word;
+ 	int i = 0;
+ 	switch (msg[0].buf[0]) {
+@@ -2360,11 +2362,15 @@ static int dib7090_tuner_xfer(struct i2c_adapter *i2c_adap, struct i2c_msg msg[]
+ 	case 0x1d:
+ 		i = ((dib7000p_read_word(state, 72) >> 12) & 0x3);
+ 		word = dib7000p_read_word(state, 384 + i);
++		if (msg[1].len < 2)
++			return -EOPNOTSUPP;
+ 		msg[1].buf[0] = (word >> 8) & 0xff;
+ 		msg[1].buf[1] = (word) & 0xff;
+ 		return num;
+ 	case 0x1f:
+ 		if (num == 1) {	/* write */
++			if (msg[0].len < 3)
++				return -EOPNOTSUPP;
+ 			word = (u16) ((msg[0].buf[1] << 8) | msg[0].buf[2]);
+ 			word &= 0x3;
+ 			word = (dib7000p_read_word(state, 72) & ~(3 << 12)) | (word << 12);
 -- 
-Joe
+2.34.1
 
