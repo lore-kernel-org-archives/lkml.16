@@ -1,163 +1,209 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB4E1FC0EA;
-	Fri,  6 Jun 2025 22:59:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0C91FC0EA;
+	Fri,  6 Jun 2025 22:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749250783; cv=none; b=PaFb8uuzfxgg69EzYKF8RmKlJjSly1wY+wpE/Zou3FjADh385SZGeUl9zWs/t9XMi3mpEo0JwOv3VnSuebLs/mQcF0wN85XXJjD4QXkmm6ozpS8VCl3O/DbG7/n2GWYFrsosvMuqCbbiGI1oELcRYReZOseHsLsMYpjKWAEMKhs=
+	t=1749250789; cv=none; b=Mu2lasNltFWb5NBD/PD11/x7Nb6AH/HV3Oei6NhPtVaHf6E1/vxccppeL4vbcPzET3NuuOfhxHE2mu1V98JSF+MPy55WRpqNLo3s654bgkLcEjmpCL9PvPukSPPN/3RdO13eYmu+g0I5/Lq04wAvS+VYYw8ddinIF/bcNHedjlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749250783; c=relaxed/simple;
-	bh=Cw+crYerPWYJW2N2ikNlghBYSqfPUoxfZKZ2b2TgZ9g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SpCJW61JeebMCZfiDeqbULKKOMplpO6Pi+hDJ50bu91rJTRhFVEohxDZEbdd5SaTviE0j77L/PEEPHvPxWeRjmkwvdGXSc5l6G9EPGxUmIk48xTLRrAx4bHalQ7n2+PeQWUdMlNK07r6HZ6p3bfNC9Rr7hUzGwwnRDw4g9PhSsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=crxR5hkS; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749250789; c=relaxed/simple;
+	bh=FTFPRAZ267L3VdOADE7/ub60Qc7Ju5XwkBj3SD87vxM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=WbSUeLNFmVEJGjQKI7XazT9oeVkvvtuumc3K50M5BKocTq6ua0y1rVpC85Ank+0sBb4LRD0toxq5yS4AI7lgCAmjAIPIiV13eej/fzUg8+X5fh8/OdRIACl/8wLGSxCp7dlrb9utnk+e8rz38vDd0+LXzUO7PNCuAANkl6UMs7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ceew3i7Z; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="crxR5hkS"
-Message-ID: <b355406d-c79f-4d81-bc36-a8889b54aa03@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749250768;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9RomQS92hBA9eqkdzWe6rSqjDgfbgT2iRuNEC7vRw7I=;
-	b=crxR5hkSHPAgjkpSnkO2hc8eEWkclBTknO2F7yBROybPqI5nKCjHgKwa0V02tyc5LGBXzL
-	atH+6hcgCQr7eVoQgYmiOj60nzwcJVjzGOYkkdTdz0l3tJ3Nv1pJ+BkxoQQAAdDK2rriO0
-	3s00piolPkq0+wq/zV8s6TI/FqnwTLM=
-Date: Fri, 6 Jun 2025 15:59:19 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ceew3i7Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749250787; x=1780786787;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=FTFPRAZ267L3VdOADE7/ub60Qc7Ju5XwkBj3SD87vxM=;
+  b=ceew3i7ZGJWNyyyB0o3tiehLwIyYqJh/B+6LxBIlOe9O0JVRl40DEdTv
+   2ZJBI+iTAV9Z6x7S8A278CEZVtFnWalEwYlXL63T5QhhnHgf2/QkvrXq9
+   cV4s8xkTG6pqOgyGViTGd5QFg2Hiz4lBnZgKL2l2GPqP2ucAhhca9Q4PY
+   SJ4Ke/NWFkCsRktMDJ8VJYSTphMyjAfY4+z82kcqD7FT8EDYyVunVg42A
+   GzY2af0Tz9XB6VYyRjASSp2qLz5gOmq/o9McQfLGNThkoCa9h4mgyDM5A
+   H93gZylCctjZfkFNgrQduf/VU5Q7vfNcq0hQpHh1Mdt5hq1wlIVfw8oUi
+   Q==;
+X-CSE-ConnectionGUID: NYtEfoO2T46oGQMpcwnbZw==
+X-CSE-MsgGUID: l49QNMmNRsmToSk0cYSM3Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="54039810"
+X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
+   d="scan'208";a="54039810"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 15:59:46 -0700
+X-CSE-ConnectionGUID: juQn6lj6TiGeCPiG7j3dig==
+X-CSE-MsgGUID: YGeAIvhdRni60Wi4gzmBBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
+   d="scan'208";a="150959926"
+Received: from spandruv-desk1.amr.corp.intel.com (HELO [10.125.111.33]) ([10.125.111.33])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 15:59:44 -0700
+Message-ID: <4ed71897-2b04-438c-8b08-006c12a0037f@intel.com>
+Date: Fri, 6 Jun 2025 15:59:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 11/23] dt-bindings: Add RPMI system MSI message proxy
- bindings
-To: Anup Patel <apatel@ventanamicro.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>,
- Thomas Gleixner <tglx@linutronix.de>, "Rafael J . Wysocki"
- <rafael@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Len Brown <lenb@kernel.org>,
- Sunil V L <sunilvl@ventanamicro.com>, Rahul Pathak
- <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>,
- Andrew Jones <ajones@ventanamicro.com>,
- Samuel Holland <samuel.holland@sifive.com>, Anup Patel
- <anup@brainfault.org>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250525084710.1665648-1-apatel@ventanamicro.com>
- <20250525084710.1665648-12-apatel@ventanamicro.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 16/16] CXL/PCI: Disable CXL protocol error interrupts
+ during CXL Port cleanup
+To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ bhelgaas@google.com, bp@alien8.de, ming.li@zohomail.com,
+ shiju.jose@huawei.com, dan.carpenter@linaro.org,
+ Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+ yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
+ uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
+ ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-17-terry.bowman@amd.com>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Atish Patra <atish.patra@linux.dev>
-In-Reply-To: <20250525084710.1665648-12-apatel@ventanamicro.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250603172239.159260-17-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
 
-On 5/25/25 1:46 AM, Anup Patel wrote:
-> Add device tree bindings for the RPMI system MSI service group
-> based message proxy implemented by the SBI implementation (machine
-> mode firmware or hypervisor).
->
-> The RPMI system MSI service group is defined by the RISC-V
-> platform management interface (RPMI) specification.
->
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+
+On 6/3/25 10:22 AM, Terry Bowman wrote:
+> During CXL device cleanup the CXL PCIe Port device interrupts remain
+> enabled. This potentially allows unnecessary interrupt processing on
+> behalf of the CXL errors while the device is destroyed.
+> 
+> Disable CXL protocol errors by setting the CXL devices' AER mask register.
+> 
+> Introduce pci_aer_mask_internal_errors() similar to pci_aer_unmask_internal_errors().
+> 
+> Introduce cxl_mask_prot_interrupts() to call pci_aer_mask_internal_errors().
+> Add calls to cxl_mask_prot_interrupts() within CXL Port teardown for CXL
+> Root Ports, CXL Downstream Switch Ports, CXL Upstream Switch Ports, and CXL
+> Endpoints. Follow the same "bottom-up" approach used during CXL Port
+> teardown.
+> 
+> Implement cxl_mask_prot_interrupts() in a header file to avoid introducing
+> Kconfig ifdefs in cxl/core/port.c.
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->   .../riscv,rpmi-mpxy-system-msi.yaml           | 67 +++++++++++++++++++
->   1 file changed, 67 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,rpmi-mpxy-system-msi.yaml
->
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,rpmi-mpxy-system-msi.yaml b/Documentation/devicetree/bindings/interrupt-controller/riscv,rpmi-mpxy-system-msi.yaml
-> new file mode 100644
-> index 000000000000..26dd13731350
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,rpmi-mpxy-system-msi.yaml
-> @@ -0,0 +1,67 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/interrupt-controller/riscv,rpmi-mpxy-system-msi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>  drivers/cxl/core/port.c |  6 ++++++
+>  drivers/cxl/cxl.h       |  8 ++++++++
+>  drivers/pci/pcie/aer.c  | 21 +++++++++++++++++++++
+>  include/linux/aer.h     |  1 +
+>  4 files changed, 36 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 07b9bb0f601f..6aaaad002a7f 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -1433,6 +1433,9 @@ EXPORT_SYMBOL_NS_GPL(cxl_endpoint_autoremove, "CXL");
+>   */
+>  static void delete_switch_port(struct cxl_port *port)
+>  {
+> +	cxl_mask_prot_interrupts(port->uport_dev);
+> +	cxl_mask_prot_interrupts(port->parent_dport->dport_dev);
 > +
-> +title: RISC-V RPMI system MSI service group based message proxy
+>  	devm_release_action(port->dev.parent, cxl_unlink_parent_dport, port);
+>  	devm_release_action(port->dev.parent, cxl_unlink_uport, port);
+>  	devm_release_action(port->dev.parent, unregister_port, port);
+> @@ -1446,6 +1449,7 @@ static void reap_dports(struct cxl_port *port)
+>  	device_lock_assert(&port->dev);
+>  
+>  	xa_for_each(&port->dports, index, dport) {
+> +		cxl_mask_prot_interrupts(dport->dport_dev);
+>  		devm_release_action(&port->dev, cxl_dport_unlink, dport);
+>  		devm_release_action(&port->dev, cxl_dport_remove, dport);
+>  		devm_kfree(&port->dev, dport);
+> @@ -1476,6 +1480,8 @@ static void cxl_detach_ep(void *data)
+>  {
+>  	struct cxl_memdev *cxlmd = data;
+>  
+> +	cxl_mask_prot_interrupts(cxlmd->cxlds->dev);
 > +
-> +maintainers:
-> +  - Anup Patel <anup@brainfault.org>
+>  	for (int i = cxlmd->depth - 1; i >= 1; i--) {
+>  		struct cxl_port *port, *parent_port;
+>  		struct detach_ctx ctx = {
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 2c1c00466a25..2753db3d473e 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -12,6 +12,7 @@
+>  #include <linux/node.h>
+>  #include <linux/io.h>
+>  #include <linux/pci.h>
+> +#include <linux/aer.h>
+>  
+>  extern const struct nvdimm_security_ops *cxl_security_ops;
+>  
+> @@ -771,9 +772,16 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
+>  #ifdef CONFIG_PCIEAER_CXL
+>  void cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport);
+>  void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host);
+> +static inline void cxl_mask_prot_interrupts(struct device *dev)
+> +{
+> +	struct pci_dev *pdev __free(pci_dev_put) = pci_dev_get(to_pci_dev(dev));
 > +
-> +description: |
-> +  The RISC-V Platform Management Interface (RPMI) [1] defines a
-> +  messaging protocol which is modular and extensible. The supervisor
-> +  software can send/receive RPMI messages via SBI MPXY extension [2]
-> +  or some dedicated supervisor-mode RPMI transport.
+> +	pci_aer_mask_internal_errors(pdev);
+> +}
+>  #else
+>  static inline void cxl_dport_init_ras_reporting(struct cxl_dport *dport,
+>  						struct device *host) { }
+> +static inline void cxl_mask_prot_interrupts(struct device *dev) { }
+>  #endif
+>  
+>  struct cxl_decoder *to_cxl_decoder(struct device *dev);
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 2d202ad1453a..69230cf87d79 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -979,6 +979,27 @@ void pci_aer_unmask_internal_errors(struct pci_dev *dev)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(pci_aer_unmask_internal_errors, "CXL");
+>  
+> +/**
+> + * pci_aer_mask_internal_errors - mask internal errors
+> + * @dev: pointer to the pcie_dev data structure
+> + *
+> + * Masks internal errors in the Uncorrectable and Correctable Error
+> + * Mask registers.
+> + *
+> + * Note: AER must be enabled and supported by the device which must be
+> + * checked in advance, e.g. with pcie_aer_is_native().
+> + */
+> +void pci_aer_mask_internal_errors(struct pci_dev *dev)
+> +{
+> +	int aer = dev->aer_cap;
 > +
-> +  The RPMI specification [1] defines system MSI service group which
-> +  allow application processors to receive MSIs upon system events
-> +  such as P2A doorbell, graceful shutdown/reboot request, CPU hotplug
-> +  event, memory hotplug event, etc from the platform microcontroller.
-> +  The SBI implementation machine mode firmware or hypervisor) can
-nit:
-The SBI implementation in machine mode
-> +  implement an SBI MPXY channel to allow RPMI system MSI service
-> +  group access to the supervisor software.
+> +	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_UNCOR_MASK,
+> +				       0, PCI_ERR_UNC_INTN);
+> +	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_COR_MASK,
+> +				       0, PCI_ERR_COR_INTERNAL);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(pci_aer_mask_internal_errors, "CXL");
 > +
-> +  ===========================================
-> +  References
-> +  ===========================================
-> +
-> +  [1] RISC-V Platform Management Interface (RPMI)
-> +      https://github.com/riscv-non-isa/riscv-rpmi/releases
-> +
-> +  [2] RISC-V Supervisor Binary Interface (SBI)
-> +      https://github.com/riscv-non-isa/riscv-sbi-doc/releases
-> +
-nit: Refer the latest frozen version of the spec ?
-> +properties:
-> +  compatible:
-> +    description:
-> +      Intended for use by the SBI implementation.
-> +    const: riscv,rpmi-mpxy-system-msi
-> +
-> +  mboxes:
-> +    maxItems: 1
-> +    description:
-> +      Mailbox channel of the underlying RPMI transport.
-> +
-> +  riscv,sbi-mpxy-channel-id:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      The SBI MPXY channel id to be used for providing RPMI access to
-> +      the supervisor software.
-> +
-> +required:
-> +  - compatible
-> +  - mboxes
-> +  - riscv,sbi-mpxy-channel-id
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    interrupt-controller {
-> +        compatible = "riscv,rpmi-mpxy-system-msi";
-> +        mboxes = <&rpmi_shmem_mbox 0x2>;
-> +        riscv,sbi-mpxy-channel-id = <0x2000>;
-> +    };
-> +...
-
-Otherwise, lgtm.
-
-Reviewed-by: Atish Patra <atishp@rivosinc.com>
+>  static bool is_cxl_mem_dev(struct pci_dev *dev)
+>  {
+>  	/*
+> diff --git a/include/linux/aer.h b/include/linux/aer.h
+> index 74600e75705f..41167ad3797a 100644
+> --- a/include/linux/aer.h
+> +++ b/include/linux/aer.h
+> @@ -108,5 +108,6 @@ int cper_severity_to_aer(int cper_severity);
+>  void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
+>  		       int severity, struct aer_capability_regs *aer_regs);
+>  void pci_aer_unmask_internal_errors(struct pci_dev *dev);
+> +void pci_aer_mask_internal_errors(struct pci_dev *dev);
+>  #endif //_AER_H_
+>  
 
