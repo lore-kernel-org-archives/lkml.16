@@ -1,261 +1,127 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C35C13DBA0;
-	Fri,  6 Jun 2025 15:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51865289801;
+	Fri,  6 Jun 2025 15:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749224833; cv=none; b=RxSFoXpaIkPU7uzIQ1Pwq/6LjuBB7SWowFWbnXVDcJk6DtprRJNGhAm6uzy59QSyygJmIxYl8bg94SMZCxY1/03Yhliz7NKdbzaTC+U7RimVfFTuMkDTEHjDqbJQJqfDdpKjX9es4EMr9uiC1z5hLGQi6RMCIWSUaVca03mfUMo=
+	t=1749224943; cv=none; b=SlwTT0kdBa83VR/RJjThsoyOIzXuJNe5L6VGpZoZKIj2r9FLsZPxoDmp+EPCXBOGZX30xdoFV5PKneGkrd/VyCiYfBkQFqJQsTMDGSVKgvlp47otz3lbFC2xwZ+P7Hyo0gr8BkIXDr1g/TpOxTjHWm1AVy4bLzYh75htl1nNZss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749224833; c=relaxed/simple;
-	bh=RdiDBtVhuf4nlhpFoArx/0tGuceAeEnMRGYWVVGgEW8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tvK58hcs+pOLzdyT25tWG7pgANJEdFFgW09g9b1yr3obalDe+Xl/RgjbZtUzuBMReBXtYBAlAxixLoKhqrm7QHVWF1VGEFp7fOD9pU0mvsym0AVS03KxwRADjIHr2ezMn6zc8jvkh6uEflPm8aFFKMGqsk7eNzoMlKYXofKNk54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=GphpJ9oc; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1749224943; c=relaxed/simple;
+	bh=qteTWSdXmGXbvSh/VWtVvDyFhQzDEAd2cyVRYJIO0yg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Su3JyLeECc9POlaqsV9NX0mmffc6oUpvIirGytxKxBJdXwaDIi95Q0A2Hs79ilI6ebuxGfUXr1n1Xwe3wbtxYTucZHwzZYjE5eDMO2934KS23fp+hzgtKA597hKMjHNEllwl0P6hlKZO1kgBVQ/sjd8Do/0gQ403xKfGfMRXBI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NW9nvpxe; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="GphpJ9oc"
-Received: from isaac-ThinkPad-T16-Gen-2.localdomain (cpc90716-aztw32-2-0-cust408.18-1.cable.virginm.net [86.26.101.153])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0A74A8DB;
-	Fri,  6 Jun 2025 17:47:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1749224824;
-	bh=RdiDBtVhuf4nlhpFoArx/0tGuceAeEnMRGYWVVGgEW8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=GphpJ9ocRRaSKmBGaMe0GY9T6CO1Vr1c30fqd1NVudiCktufhnnq7f2rRPh2/hAxF
-	 8DvNnG5L25nYfAg8FnDOBMJXOQGZy9iAs6aoMq0rfQZIYt+XYxoJk9T+MMkiXM004e
-	 +R3mMgu+29H29kJnrlqV3LEhgSd8rdxh2HOlEZqQ=
-Message-ID: <8e950dd3c54a363d8e2d7252e3f3d93301076b50.camel@ideasonboard.com>
-Subject: Re: [PATCH 1/2] media: platform: Refactor interrupt status registers
-From: Isaac Scott <isaac.scott@ideasonboard.com>
-To: Rui Miguel Silva <rmfrfs@gmail.com>, laurent.pinchart@ideasonboard.com
-Cc: kieran.bingham@ideasonboard.com, martink@posteo.de, kernel@puri.sm, 
-	mchehab@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de, 
-	kernel@pengutronix.de, festevam@gmail.com, linux-media@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Date: Fri, 06 Jun 2025 16:47:04 +0100
-In-Reply-To: <DAFI37JD827I.KWPZ7XCTWPBD@linaro.com>
-References: <20250606121403.498153-1-isaac.scott@ideasonboard.com>
-	 <20250606121403.498153-2-isaac.scott@ideasonboard.com>
-	 <DAFI37JD827I.KWPZ7XCTWPBD@linaro.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (by Flathub.org) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NW9nvpxe"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3122368d7cfso1909446a91.1;
+        Fri, 06 Jun 2025 08:49:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749224941; x=1749829741; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SFAXCqQFrPjFZs7s5flyQDRDOg704B5o+gINoyafWfw=;
+        b=NW9nvpxeAQP5ozos0dNMFjHsOTDiHhdYnfFRH5y1LXmTH6P+GQBmavLMlYGU+UunS1
+         dx/9ZTX9qlvIen5rJDoEr2CXjZ4KGcZB/OJJL+XaTEf6PLxFZREjbCyi91q3CafQeXse
+         SLELgwWo9HWSH7hqRcNH11fuMGOUiRldPyHpgqHybibseAqzqk4e+VPLipDl/SbxVnyN
+         GQffJNiJnGmOgMGg1FYlWYN9auyOkf1V4wDZeNVTl2OvexSZxRuNv7OtrdcfPIqY0dPA
+         6AXACvLe5NZbMGw/d/CAWPQRRtHcoSuanMQmHpAFxULAFAIpOM+Cj2HedtotFwExwKse
+         KQbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749224941; x=1749829741;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SFAXCqQFrPjFZs7s5flyQDRDOg704B5o+gINoyafWfw=;
+        b=IK1f7+fkfSZf8+x0Od3jjyQhV2w/xAAUtfTZQu7NKxdRpT50iA+Wh5cgypyZV4oeiU
+         3HdZaT2Fj7infffm+6EOeuFaWmFJazcCKnjF/nra0M8NnIwMD1r/tjQPa+3xZyh4Bsrn
+         m/h3dv1bhN8RxLehpjiiL3NtdSGzwW6KqKd5NRryJ0cs3Q0Au9taYvyv0/zclHkUZx60
+         E/aqqSaifp8D87U2ltyFQRN5vgNik2cusRACSDKuRUEtlGOKIziQYF2na5gO29HtlJbq
+         FpLIC1s6axLnFWJEXwXq+krUncbfFRguF0/NppxmDUvtcQhrpval14725zVqzP0cGEKE
+         kR+w==
+X-Forwarded-Encrypted: i=1; AJvYcCV8inONVebNTMWFS1+jxo9bIYBi4c4AcKuCFhreyDSg2mWspDzJtI4U2YqwOsI7dTxTOoM=@vger.kernel.org, AJvYcCW/LL05J10mLnP/BYgqStfgz/INlTnZdDd53W8ShtzcbskgsLHbATBVYrcqSuhoMbYM9JF3NBxRgt+OqJnc@vger.kernel.org, AJvYcCWjCAG8g4RmS/wzUdPNQmpLTpS1wB3pCbLt5GibjD0wBroDlEJLHMSCFvxTAFs51Hz2NaLt0hRB@vger.kernel.org, AJvYcCWrdoseY7tsDAWVhKDXYAFMV7X6VffmJoufiusExI3nfMdqAorpfehwBX84aGTdYOVNV+nTrtYa@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZ5jYDd+1BxHKRc3i5P1n1FMRbPKlLP4wF2vpw9ot5CAfIZXkc
+	2Ug/lJx9jMeWVxAzs2NOpnxt+eYk63VNg1QlLxWeZBzfcCczySLhWLA+
+X-Gm-Gg: ASbGncsU4LcebNuK3HsVUbOkQePPdccZiN4wjr0V7A/XEEJ5We9eOvckS9ip91mnZKl
+	AG2JAJb28czfo4d9Z7/4PtmaLarvZs03KgKcXoTdE9X/B7rd09j+JneAJatIvB4vrPHW4YH3Nbq
+	wmZFjIow6iBMxBqDtfqj1W+U+pjW8J5wZAm0nq6otio7I2bT+EOJCdY7GcCMtUEUyYk/Uvnq/0R
+	hwHegOb8DhgfZ+pAsAhCO5yrOQOjNw+G3MtZ3GpCA6kNGJeIUrYyfOmyuN/KOdsmbb2c6WmOmmf
+	kzx0KUUJaaEde+AN3qhFfmm2JkkFHLuNyxD7cslC0xrg23i0MGLOF/bE29NkGObfP232M0dNd7X
+	Wita23ATLZrhE3lFkRr7X33s7pqpndPFlEPcbDH8y
+X-Google-Smtp-Source: AGHT+IHG/4StZ2v8LodTRZ+tFEEY1GEgtwGds0NXN4+D7wj3obn0sPwJ9Edgk7OM0j71WGZIu3Rb6w==
+X-Received: by 2002:a17:90b:4b09:b0:313:2adc:b4c4 with SMTP id 98e67ed59e1d1-31347678bbcmr5917844a91.24.1749224941467;
+        Fri, 06 Jun 2025 08:49:01 -0700 (PDT)
+Received: from ?IPV6:2001:ee0:4f0e:fb30:e7b6:944a:261d:ef5a? ([2001:ee0:4f0e:fb30:e7b6:944a:261d:ef5a])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236032fcf53sm13827705ad.129.2025.06.06.08.48.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jun 2025 08:49:00 -0700 (PDT)
+Message-ID: <f073b150-b2e9-43db-aa61-87eee4755a2f@gmail.com>
+Date: Fri, 6 Jun 2025 22:48:53 +0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] virtio-net: drop the multi-buffer XDP packet in
+ zerocopy
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org, stable@vger.kernel.org
+References: <20250603150613.83802-1-minhquangbui99@gmail.com>
+ <dd087fdf-5d6c-4015-bed3-29760002f859@redhat.com>
+ <f6d7610b-abfe-415d-adf8-08ce791e4e72@gmail.com>
+ <20250605074810.2b3b2637@kernel.org>
+Content-Language: en-US
+From: Bui Quang Minh <minhquangbui99@gmail.com>
+In-Reply-To: <20250605074810.2b3b2637@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Rui,
+On 6/5/25 21:48, Jakub Kicinski wrote:
+> On Thu, 5 Jun 2025 21:33:26 +0700 Bui Quang Minh wrote:
+>> On 6/5/25 18:03, Paolo Abeni wrote:
+>>> On 6/3/25 5:06 PM, Bui Quang Minh wrote:
+>>>> In virtio-net, we have not yet supported multi-buffer XDP packet in
+>>>> zerocopy mode when there is a binding XDP program. However, in that
+>>>> case, when receiving multi-buffer XDP packet, we skip the XDP program
+>>>> and return XDP_PASS. As a result, the packet is passed to normal network
+>>>> stack which is an incorrect behavior.
+>>> Why? AFAICS the multi-buffer mode depends on features negotiation, which
+>>> is not controlled by the VM user.
+>>>
+>>> Let's suppose the user wants to attach an XDP program to do some per
+>>> packet stats accounting. That suddenly would cause drop packets
+>>> depending on conditions not controlled by the (guest) user. It looks
+>>> wrong to me.
+>> But currently, if a multi-buffer packet arrives, it will not go through
+>> XDP program so it doesn't increase the stats but still goes to network
+>> stack. So I think it's not a correct behavior.
+> Sounds fair, but at a glance the normal XDP path seems to be trying to
+> linearize the frame. Can we not try to flatten the frame here?
+> If it's simply to long for the chunk size that's a frame length error,
+> right?
 
-On Fri, 2025-06-06 at 14:56 +0100, Rui Miguel Silva wrote:
-> Hey Isaac,
-> Thanks for the patch.
->=20
-> On Fri Jun 6, 2025 at 1:14 PM WEST, Isaac Scott wrote:
->=20
-> > The NXP i.MX 8 MP CSI-2 receiver features multiple interrupt and
-> > debug
-> > status sources which span multiple registers. The driver currently
-> > supports two interrupt source registers, and attributes the
-> > mipi_csis_event event entries to those registers through a boolean
-> > debug
-> > field that indicate if the event relates to the main interrupt
-> > status
-> > (false) or debug interrupt status (true) register. To make it
-> > easier to
-> > add new event fields, replace the debug bool with a 'status index'
-> > integer than indicates the index of the corresponding status
-> > register.
-> >=20
-> > Signed-off-by: Isaac Scott <isaac.scott@ideasonboard.com>
-> > ---
-> > =C2=A0drivers/media/platform/nxp/imx-mipi-csis.c | 64 +++++++++++------=
--
-> > ----
-> > =C2=A01 file changed, 31 insertions(+), 33 deletions(-)
-> >=20
-> > diff --git a/drivers/media/platform/nxp/imx-mipi-csis.c
-> > b/drivers/media/platform/nxp/imx-mipi-csis.c
-> > index d060eadebc7a..bbc549c22aff 100644
-> > --- a/drivers/media/platform/nxp/imx-mipi-csis.c
-> > +++ b/drivers/media/platform/nxp/imx-mipi-csis.c
-> > @@ -249,7 +249,7 @@
-> > =C2=A0#define MIPI_CSI2_DATA_TYPE_USER(x)		(0x30 + (x))
-> > =C2=A0
-> > =C2=A0struct mipi_csis_event {
-> > -	bool debug;
-> > +	unsigned int status_index;
-> > =C2=A0	u32 mask;
-> > =C2=A0	const char * const name;
-> > =C2=A0	unsigned int counter;
-> > @@ -257,30 +257,30 @@ struct mipi_csis_event {
-> > =C2=A0
-> > =C2=A0static const struct mipi_csis_event mipi_csis_events[] =3D {
-> > =C2=A0	/* Errors */
-> > -	{ false, MIPI_CSIS_INT_SRC_ERR_SOT_HS,		"SOT
-> > Error" },
-> > -	{ false,
-> > MIPI_CSIS_INT_SRC_ERR_LOST_FS,		"Lost Frame Start Error" },
-> > -	{ false,
-> > MIPI_CSIS_INT_SRC_ERR_LOST_FE,		"Lost Frame End Error" },
-> > -	{ false, MIPI_CSIS_INT_SRC_ERR_OVER,		"FIFO
-> > Overflow Error" },
-> > -	{ false, MIPI_CSIS_INT_SRC_ERR_WRONG_CFG,	"Wrong
-> > Configuration Error" },
-> > -	{ false, MIPI_CSIS_INT_SRC_ERR_ECC,		"ECC
-> > Error" },
-> > -	{ false, MIPI_CSIS_INT_SRC_ERR_CRC,		"CRC
-> > Error" },
-> > -	{ false,
-> > MIPI_CSIS_INT_SRC_ERR_UNKNOWN,		"Unknown Error" },
-> > -	{ true, MIPI_CSIS_DBG_INTR_SRC_DT_NOT_SUPPORT,	"Data Type
-> > Not Supported" },
-> > -	{ true, MIPI_CSIS_DBG_INTR_SRC_DT_IGNORE,	"Data Type
-> > Ignored" },
-> > -	{ true, MIPI_CSIS_DBG_INTR_SRC_ERR_FRAME_SIZE,	"Frame
-> > Size Error" },
-> > -	{ true,
-> > MIPI_CSIS_DBG_INTR_SRC_TRUNCATED_FRAME,	"Truncated Frame" },
-> > -	{ true, MIPI_CSIS_DBG_INTR_SRC_EARLY_FE,	"Early
-> > Frame End" },
-> > -	{ true, MIPI_CSIS_DBG_INTR_SRC_EARLY_FS,	"Early
-> > Frame Start" },
-> > +	{ 0, MIPI_CSIS_INT_SRC_ERR_SOT_HS,		"SOT
-> > Error"},
->=20
-> Maybe instead of 0,1,2 (magic indexes)... we could give a meaningful
-> index
-> enums names, don't know, like: main, debug, user??? or something that
-> you think is better.
+Here we are in the zerocopy path, so the buffers for the frame to fill 
+in are allocated from XDP socket's umem. And if the frame spans across 
+multiple buffers then the total frame size is larger than the chunk 
+size. Furthermore, we are in the zerocopy so we cannot linearize by 
+allocating a large enough buffer to cover the whole frame then copy the 
+frame data to it. That's not zerocopy anymore. Also, XDP socket zerocopy 
+receive has assumption that the packet it receives must from the umem 
+pool. AFAIK, the generic XDP path is for copy mode only.
 
-Thanks for the review! I have updated v2 to include an enum instead of
-magic numbers.
+Thanks,
+Quang Minh.
 
-Best wishes,
-
-Isaac
-
->=20
-> Cheers,
-> =C2=A0=C2=A0=C2=A0 Rui
->=20
-> > +	{ 0, MIPI_CSIS_INT_SRC_ERR_LOST_FS,		"Lost
-> > Frame Start Error"},
-> > +	{ 0, MIPI_CSIS_INT_SRC_ERR_LOST_FE,		"Lost
-> > Frame End Error"},
-> > +	{ 0, MIPI_CSIS_INT_SRC_ERR_OVER,		"FIFO
-> > Overflow Error"},
-> > +	{ 0, MIPI_CSIS_INT_SRC_ERR_WRONG_CFG,		"Wrong
-> > Configuration Error"},
-> > +	{ 0,
-> > MIPI_CSIS_INT_SRC_ERR_ECC,			"ECC Error"},
-> > +	{ 0,
-> > MIPI_CSIS_INT_SRC_ERR_CRC,			"CRC Error"},
-> > +	{ 0, MIPI_CSIS_INT_SRC_ERR_UNKNOWN,		"Unknown
-> > Error"},
-> > +	{ 1, MIPI_CSIS_DBG_INTR_SRC_DT_NOT_SUPPORT,	"Data Type
-> > Not Supported"},
-> > +	{ 1, MIPI_CSIS_DBG_INTR_SRC_DT_IGNORE,		"Data Type
-> > Ignored"},
-> > +	{ 1, MIPI_CSIS_DBG_INTR_SRC_ERR_FRAME_SIZE,	"Frame
-> > Size Error"},
-> > +	{ 1, MIPI_CSIS_DBG_INTR_SRC_TRUNCATED_FRAME,	"Truncated
-> > Frame"},
-> > +	{ 1, MIPI_CSIS_DBG_INTR_SRC_EARLY_FE,		"Early
-> > Frame End"},
-> > +	{ 1, MIPI_CSIS_DBG_INTR_SRC_EARLY_FS,		"Early
-> > Frame Start"},
-> > =C2=A0	/* Non-image data receive events */
-> > -	{ false,
-> > MIPI_CSIS_INT_SRC_EVEN_BEFORE,		"Non-image data before even frame" },
-> > -	{ false, MIPI_CSIS_INT_SRC_EVEN_AFTER,		"Non-image
-> > data after even frame" },
-> > -	{ false, MIPI_CSIS_INT_SRC_ODD_BEFORE,		"Non-image
-> > data before odd frame" },
-> > -	{ false, MIPI_CSIS_INT_SRC_ODD_AFTER,		"Non-image
-> > data after odd frame" },
-> > +	{ 0, MIPI_CSIS_INT_SRC_EVEN_BEFORE,		"Non-image
-> > data before even frame"},
-> > +	{ 0, MIPI_CSIS_INT_SRC_EVEN_AFTER,		"Non-image
-> > data after even frame"},
-> > +	{ 0, MIPI_CSIS_INT_SRC_ODD_BEFORE,		"Non-image
-> > data before odd frame"},
-> > +	{ 0, MIPI_CSIS_INT_SRC_ODD_AFTER,		"Non-image
-> > data after odd frame"},
-> > =C2=A0	/* Frame start/end */
-> > -	{ false,
-> > MIPI_CSIS_INT_SRC_FRAME_START,		"Frame Start" },
-> > -	{ false, MIPI_CSIS_INT_SRC_FRAME_END,		"Frame
-> > End" },
-> > -	{ true, MIPI_CSIS_DBG_INTR_SRC_CAM_VSYNC_FALL,	"VSYNC
-> > Falling Edge" },
-> > -	{ true, MIPI_CSIS_DBG_INTR_SRC_CAM_VSYNC_RISE,	"VSYNC
-> > Rising Edge" },
-> > +	{ 0, MIPI_CSIS_INT_SRC_FRAME_START,		"Frame
-> > Start"},
-> > +	{ 0, MIPI_CSIS_INT_SRC_FRAME_END,		"Frame
-> > End"},
-> > +	{ 1, MIPI_CSIS_DBG_INTR_SRC_CAM_VSYNC_FALL,	"VSYNC
-> > Falling Edge"},
-> > +	{ 1, MIPI_CSIS_DBG_INTR_SRC_CAM_VSYNC_RISE,	"VSYNC
-> > Rising Edge"},
-> > =C2=A0};
-> > =C2=A0
-> > =C2=A0#define MIPI_CSIS_NUM_EVENTS ARRAY_SIZE(mipi_csis_events)
-> > @@ -765,32 +765,30 @@ static irqreturn_t mipi_csis_irq_handler(int
-> > irq, void *dev_id)
-> > =C2=A0	struct mipi_csis_device *csis =3D dev_id;
-> > =C2=A0	unsigned long flags;
-> > =C2=A0	unsigned int i;
-> > -	u32 status;
-> > -	u32 dbg_status;
-> > +	u32 status[2];
-> > =C2=A0
-> > -	status =3D mipi_csis_read(csis, MIPI_CSIS_INT_SRC);
-> > -	dbg_status =3D mipi_csis_read(csis, MIPI_CSIS_DBG_INTR_SRC);
-> > +	status[0] =3D mipi_csis_read(csis, MIPI_CSIS_INT_SRC);
-> > +	status[1] =3D mipi_csis_read(csis, MIPI_CSIS_DBG_INTR_SRC);
-> > =C2=A0
-> > =C2=A0	spin_lock_irqsave(&csis->slock, flags);
-> > =C2=A0
-> > =C2=A0	/* Update the event/error counters */
-> > -	if ((status & MIPI_CSIS_INT_SRC_ERRORS) || csis-
-> > >debug.enable) {
-> > +	if ((status[0] & MIPI_CSIS_INT_SRC_ERRORS) || csis-
-> > >debug.enable) {
-> > =C2=A0		for (i =3D 0; i < MIPI_CSIS_NUM_EVENTS; i++) {
-> > =C2=A0			struct mipi_csis_event *event =3D &csis-
-> > >events[i];
-> > =C2=A0
-> > -			if ((!event->debug && (status & event-
-> > >mask)) ||
-> > -			=C2=A0=C2=A0=C2=A0 (event->debug && (dbg_status & event-
-> > >mask)))
-> > +			if (status[event->status_index] & event-
-> > >mask)
-> > =C2=A0				event->counter++;
-> > =C2=A0		}
-> > =C2=A0	}
-> > =C2=A0
-> > -	if (status & MIPI_CSIS_INT_SRC_FRAME_START)
-> > +	if (status[0] & MIPI_CSIS_INT_SRC_FRAME_START)
-> > =C2=A0		mipi_csis_queue_event_sof(csis);
-> > =C2=A0
-> > =C2=A0	spin_unlock_irqrestore(&csis->slock, flags);
-> > =C2=A0
-> > -	mipi_csis_write(csis, MIPI_CSIS_INT_SRC, status);
-> > -	mipi_csis_write(csis, MIPI_CSIS_DBG_INTR_SRC, dbg_status);
-> > +	mipi_csis_write(csis, MIPI_CSIS_INT_SRC, status[0]);
-> > +	mipi_csis_write(csis, MIPI_CSIS_DBG_INTR_SRC, status[1]);
-> > =C2=A0
-> > =C2=A0	return IRQ_HANDLED;
-> > =C2=A0}
-> > --=20
-> > 2.43.0
->=20
->=20
