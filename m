@@ -1,156 +1,167 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AFB6F9EC
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 12:56:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26FC3F9EC;
+	Fri,  6 Jun 2025 12:56:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749214566; cv=none; b=lsoj/t4BREAARJv7s431+r7UCLw0mQ3EuSWsXZDA44o7jlNQ/ny2QXntx7ZOwqX1B4sCPaqP+SUUZjAlqGm7wtVdUBiyyzAWRT1bmgUUNeUPaBI88FTCNRk2cfMk37+yaS+w6vdtjhUKW7sitX3twe2t1vvQt3ajgQcfeVjKhM0=
+	t=1749214597; cv=none; b=ndNPFp3rso6vpkArj4hSL/i2Z4gzRxo8UDmbDIAvP0OFkaoJZVBI9rw3Ql2pjNQwBV565wNWRoM84TYhxXnIBWuZCAIIyjhiX01Ovc4jFGRYeZCaMj2qxurQ/gO/lR5yUFT/vJniAXuFOjJWJr5XNXV4f4tDj21aPORvhC52oyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749214566; c=relaxed/simple;
-	bh=pyP4voBTnGow5cseeEAeEmJxNYO/WBjrdKku1W4VhIE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F6H+Z7w25b23IgTq+Xtr2tKj9zUtfSg7SdlWX6DwyMw9Ts41BVv7/plnk+KEIeAmmxKqivk82xi7SbxtN0FybtBrkyVOGUfDuYLi4aKWSbJtSaJLGtGzt25NaflcEi63X209PxJy0plrgvzUvzvaQZ2POT/mNWfwL2b7Vfa6jg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uBFbsyo4; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749214597; c=relaxed/simple;
+	bh=wL+fp9VarHsGsJlpL4iAZOPtoMI7My2h8+Cxc+j3Ilk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WaloMMDkf75Hg7lpHh+yozoCPDDSnICG2K/pEyF/t551KD9yF5T+uy0uUfer1CKz/S9wgH4JRbLoyRDygB8WslwS+HLdDz85d/hgZPR3256N5V5IvK8Tp1fvY9yNHGiXXsqdnhqYOzXHUJTOYlskm3z1JcDggMzUWogPZTjwNB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uWVw3eZf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uBFbsyo4"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso8595a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 05:56:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749214561; x=1749819361; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lej/JzmO0Dw1V/XOb+M60AVoOmPPuLiZ67cVi04ciIo=;
-        b=uBFbsyo4SkLBrAKLUmvzR34JtdqTWUnPPAzOILSYG9PupdcRaLlRR1c20f/GeS3vtu
-         C9tQgaeTLgKSWtL/v/yTjo2P4Ll4p9cc2A8YCSkW4ZL67RntHfZlMp3P72vy0vo9DZad
-         JlNETEPiBUdgZ61Ip/DDT9cGMlNBraDcgHbb4mBhK/MGdCifR2Ow4PebsehI9l87XapG
-         JzWza0J/yxV33ob9S2cun7Ux407OSytqlFY1Tn80JhXTcEWPzdmXo63LA/yMgBwZu3+X
-         8v8t7gYstMSJpWb3VvHhmRMbjUJ33dMF1lICdlDADiADxMOGMcNqfWXTaPo+GVk73J7w
-         Z+Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749214561; x=1749819361;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lej/JzmO0Dw1V/XOb+M60AVoOmPPuLiZ67cVi04ciIo=;
-        b=DYUR+/65YnMRfNpN9gN2Ro5dl+A0EizruhkfgMnp04czY459biYS+r9fHTx38mpqrv
-         ZN6bdS8QApJGSqa7VjODnQ+fGV/BQLlOBCiPX8thWt/KRQGedGCPFar1exji+oNz3rL2
-         w0QzWIEn53CughZSw3bGbIkavXyciJioTdtHFTbog5szmYmAoK2LeiGYhqN4mvX/PBOm
-         SIQeLcCTOhYpgSCF2b86spzAIB0AAUPfTAJ37KpaYEqKDixn0Ac1HKjhGI5ooCC7/qDj
-         H2MSUkAfqwHlPsAEY0qQTmHpF7bZe+xTTbExd+MF63S5Fnvux7WJssKsvH7UQkr29DAa
-         bBNg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9Lx7AbfJs4gnkwXnhZXPBp3E33Vaja3JQGB0kADJ02FVGRFh926q/HGa/iLXlOtnd3XxqYYhhfpOicSY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBaCSkMhqWUcnekAs01zskfncH/l5UkhCIncreBlOkHxcMutvD
-	TLTaFRlxIBlP0oB6wLWLCVZ3r5RGhJpxtw/LVwrM+2XyMaxK+YDCSD/eEZRvmVGsqG0HckhGnoU
-	ugujZiWu2J10FoqLIpN0HzyEusGs6d5KoesEIYkYG
-X-Gm-Gg: ASbGncvkStP77FYL9nNLjRARkoX7EdRTeJPa/rWV06btLUOLCfWqqQHBsry5YSbccNJ
-	zUurm2d8q/m5QqFyNbK9VVOrKAgxLr57LUEd4+6T1YPrWjPdPCxcHhcDC8WEoBmZaq8NoPCmNrO
-	AGT8ho8dnTrTwoI+PdtF0cjR2rGbzQDB4bcQQJNoNjeslI9V6zhgRdSHqzpt2eUarJMV/Zlw==
-X-Google-Smtp-Source: AGHT+IHXwcAquv0lb5IUM1aVYSbEaPQ46aM0vazICMyj+IzmQp//DMyCXsrGOLh2XTNX6ibsNYUExUiUldgyqMaL0gE=
-X-Received: by 2002:aa7:c346:0:b0:607:1323:9c2c with SMTP id
- 4fb4d7f45d1cf-607793de3b1mr62222a12.7.1749214561141; Fri, 06 Jun 2025
- 05:56:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uWVw3eZf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F27CC4CEEB;
+	Fri,  6 Jun 2025 12:56:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749214596;
+	bh=wL+fp9VarHsGsJlpL4iAZOPtoMI7My2h8+Cxc+j3Ilk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uWVw3eZfQG4ABC2YEDR5x8sQOOzjay1g+6GCYgiUX79IFg2pmG+OzucJ7ipVsIZ1P
+	 KPMOLZTsMJp9xDBu7ZsU8RyfMdUwMczvQ72xZKIUW/0B2G41U6RJ9SmriKAX9XBaar
+	 UgcUM20QD4F9s4QrQlNJ4fXvQLPwaR/v1JYN+9PoGQpBEUdNFFTt/kF2+E1qtl9plP
+	 YNrs90yOkij9xgzqRfJwrdacOgDC3PqfcbjjFRjZ+OJv6rW0VNxjDeQRpOQDsf+eoD
+	 8WvOa+E+/GON3apsn916x7JRccMZOxmVWn0fkEk6L2wAG3JKgYs4lK+qra9aJ0Dm3C
+	 5UvWrt9R7YMtA==
+Message-ID: <247002c0-ee68-4d0d-857a-768bf68bce75@kernel.org>
+Date: Fri, 6 Jun 2025 14:56:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250603-fork-tearing-v1-0-a7f64b7cfc96@google.com>
- <20250603-fork-tearing-v1-1-a7f64b7cfc96@google.com> <ba208d76-7992-4c70-be8f-49082001f194@suse.cz>
-In-Reply-To: <ba208d76-7992-4c70-be8f-49082001f194@suse.cz>
-From: Jann Horn <jannh@google.com>
-Date: Fri, 6 Jun 2025 14:55:25 +0200
-X-Gm-Features: AX0GCFtRkqF2Lt6u6n6mq4FlDl2aj4mZ-IS4O5MGhg5wVl65bWzoxagLke2Bp80
-Message-ID: <CAG48ez1R7v-L-L33nJUXtj_Y=SKyyFcU8amLs0dQ6ecuC3xMWA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mm/memory: ensure fork child sees coherent memory snapshot
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	linux-mm@kvack.org, Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 0/3] media: venus: enable venus on qcs615
+To: Renjiang Han <quic_renjiang@quicinc.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, Nicolas Dufresne <nicolas.dufresne@collabora.com>
+References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
+ <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
+ <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
+ <5854a587-aba7-4e71-87f8-249ba00cbc59@linaro.org>
+ <996c9a39-5520-4b43-adfa-06ce29223ba0@quicinc.com>
+ <713b87cb-0003-4ee3-a599-9cd41629bb42@kernel.org>
+ <7aa36a0f-6741-40c2-93f4-036823d245fd@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <7aa36a0f-6741-40c2-93f4-036823d245fd@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 5, 2025 at 9:33=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wro=
-te:
-> On 6/3/25 20:21, Jann Horn wrote:
-> > When fork() encounters possibly-pinned pages, those pages are immediate=
-ly
-> > copied instead of just marking PTEs to make CoW happen later. If the pa=
-rent
-> > is multithreaded, this can cause the child to see memory contents that =
-are
-> > inconsistent in multiple ways:
-> >
-> > 1. We are copying the contents of a page with a memcpy() while userspac=
-e
-> >    may be writing to it. This can cause the resulting data in the child=
- to
-> >    be inconsistent.
-> > 2. After we've copied this page, future writes to other pages may
-> >    continue to be visible to the child while future writes to this page=
- are
-> >    no longer visible to the child.
-> >
-> > This means the child could theoretically see incoherent states where
-> > allocator freelists point to objects that are actually in use or stuff =
-like
-> > that. A mitigating factor is that, unless userspace already has a deadl=
-ock
-> > bug, userspace can pretty much only observe such issues when fancy lock=
-less
-> > data structures are used (because if another thread was in the middle o=
-f
-> > mutating data during fork() and the post-fork child tried to take the m=
-utex
-> > protecting that data, it might wait forever).
-> >
-> > On top of that, this issue is only observable when pages are either
-> > DMA-pinned or appear false-positive-DMA-pinned due to a page having >=
-=3D1024
-> > references and the parent process having used DMA-pinning at least once
-> > before.
->
-> Seems the changelog seems to be missing the part describing what it's doi=
-ng
-> to fix the issue? Some details are not immediately obvious (the writing
-> threads become blocked in page fault) as the conversation has shown.
+On 06/06/2025 14:51, Renjiang Han wrote:
+> 
+> On 6/6/2025 8:44 PM, Krzysztof Kozlowski wrote:
+>> On 06/06/2025 14:37, Renjiang Han wrote:
+>>> On 6/5/2025 8:34 PM, Bryan O'Donoghue wrote:
+>>>> On 31/05/2025 01:05, Renjiang Han wrote:
+>>>>>>> Note:
+>>>>>>> This series consist of DT patches and a venus driver patch. The patch
+>>>>>>> 1/3, which is venus driver patch, can be picked independently without
+>>>>>>> having any functional dependency. But patch 2/3 & patch 3/3, which are
+>>>>>>> DT patches, still depend on [1].
+>>>>>> I'd say 2/3 and 3/3 still depend on 1/3, otherwise we can get video
+>>>>>> core
+>>>>>> on QCS615 over(?)clocked.
+>>>>> Agree, so we need to make sure that the driver patch is not picked
+>>>>> after the DT patch.
+>>>> This statement is confusing.
+>>>>
+>>>> 1/3 states that there will be a fallback if there is no OPP table
+>>>> present.
+>>>>
+>>>> Giving the code a glance, I believe that is so, freq_table should be
+>>>> used if there is no OPP specified in the DT.
+>>>>
+>>>> I think we are having a hard time here understanding what you are saying.
+>>>>
+>>>> My understanding:
+>>>>
+>>>> - venus modification is standalone 1/3
+>>>>    Qcs615 will fallback if no OPP is present
+>>>>
+>>>> - dt modification 2/3 3/3 is therefore also independent of driver
+>>>>
+>>>> ---
+>>>> bod
+>>> yes, let me re-spin this with driver patch alone. Once that gets in,
+>>> will bring in the DT patches.
+>> Did you read my feedback? There is no "once that gets in". DTS is an
+>> independent hardware description and your patchset claiming there is
+>> dependency is just broken.
+>>
+>> I am repeating this since few emails, so shall I NAK it that you will
+>> address the main issue you have?
+>>
+>> Best regards,
+>> Krzysztof
+> 
+> Hi Krzysztof
+> 
+> SC7180 and QCS615 use the same video core. Only difference lies in the
+> freq_table for the video. Freq_table is generally determined at SOC level.
+> The Venus driver does not currently handle freq_table compatibility well
+> across platforms. This patch enables the driver to use the OPP-table from
+> the DT, addressing the frequency compatibility issue.
+This does not resolve the main problem at all. If SW cannot use the
+fallback alone, your fallback has no meaning and is not only confusing
+but actually incorrect. And based on previous statements like
+"overclocking" it is not only incorrect, but even harmful.
 
-I tried to document this in patch 2/2, where I wrote this (though I
-guess I should maybe make it more verbose and not just say "subsequent
-writes are delayed until mmap_write_unlock()"):
-
-+ *  - Before mmap_write_unlock(), a TLB flush ensures that parent threads =
-can't
-+ *    write to copy-on-write pages anymore.
-+ *  - Before dup_mmap() copies page contents (which happens rarely), the
-+ *    parent's PTE for the page is made read-only and a TLB flush is issue=
-d, so
-+ *    subsequent writes are delayed until mmap_write_unlock().
-
-But I guess this way makes it hard to review patch 1/2 individually.
-Should I just squash the two patches together, and then write in the
-commit message "see the comment blocks I'm adding for the fix
-approach"? Or is there value in repeating the explanation in the
-commit message?
-
-> > Fixes: 70e806e4e645 ("mm: Do early cow for pinned pages during fork() f=
-or ptes")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Jann Horn <jannh@google.com>
->
-> Given how the fix seems to be localized to the already rare slowpath and
-> doesn't require us to pessimize every trivial fork(), it seems reasonable=
- to
-> me even if don't have a concrete example of a sane code in the wild that'=
-s
-> broken by the current behavior, so:
->
-> Acked-by: Vlastimil Babka <vbabka@suse.cz>
-
-Thanks!
+Best regards,
+Krzysztof
