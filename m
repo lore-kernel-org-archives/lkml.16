@@ -1,117 +1,387 @@
-Received: from smtp-42ae.mail.infomaniak.ch (smtp-42ae.mail.infomaniak.ch [84.16.66.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649D6214209
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 10:46:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC2C286885
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 10:47:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749206801; cv=none; b=lPn22UweGgzO2HMVapnW4m0YuCdXeh4zxz4zkjW5c87iW4O7XgOvXGrnTwYieuDqfOKxfm9Pr9qp1httyuD5gBGj20ceCvWcXmqObQJJnlFjNapYuK9U00yune2Z8Q6LBc75z0BYs1m0nROKZvJDRocYQP4JREfeG+Qn3O5pS0g=
+	t=1749206831; cv=none; b=V2lSe7m6Rlj4cHDbFZqtfhG3wrPLBjpDC/TM1eSualohxIojAiFEFwgi62mouprzS6woRrs1LoC527aA1wylDIvCoI1UyVXLfGquuRIRrhmw+ElaK2syCp5WPHlDILDP4k/F49BXgRF6ofWfEqS44y5q59zOuVfG1NlyNdD08A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749206801; c=relaxed/simple;
-	bh=EdISCY8+Nwj/6Ck2qwx1KqleTaHrkAdcHuOQ931eBqc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BfNV517XKHV+LuVC122NmavhxJGAQ3SmvgAqdLix8kC173ziSGWTsUJIbeq6qO5HSLWSf/T7Ng5//bHSdPvZAaOAqjqIOBSVkA+SGT5JLE+/RoOgknEVWXQ/HNGCkZuX9z+jQ7ltdbR1L3fCN1g+DYZVd3Fkpd+zmSlCWAcEQp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=zqPERQUg; arc=none smtp.client-ip=84.16.66.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1749206831; c=relaxed/simple;
+	bh=f+/j1GlnG7yRbwOXO1wHIG7cgcq9EW09L+j7P/rKe1k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GAn4MtvvN9QqaWQCm40dxu1EbdJHuCH7MWpncwjsQ9p6c/ZdpJx1JXW3l2xI/4iEUJ7Qo6GraWvxkT06ZS8JAAzbkNPMOSCAr3VJiJKTrHoIR5GMmaMrd1ewTCgASn1QeTxqY50E0m+bJJaxfJjPQTivP4Q/8FFmoZEzSjIDtKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tPyoyjUi; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="zqPERQUg"
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bDJ0747jqz5rT;
-	Fri,  6 Jun 2025 12:46:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1749206791;
-	bh=hiQyTj6n+Gg20Nh1xHG8uksvLeu5UW/Ze/TPfn76o9k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=zqPERQUgAHkRj+EGCmB9c3YgKTMwsZbMGsK/qDMZwD9Lbj13miqcFlVMURYAAubK2
-	 i3B1WOlx1T6ZOUgtjJ7iZXjsqnEa4LKxII8BScUkuboPqOuMTLNxP2K6Xw7639aa52
-	 Jt8of9CfhDl4RPMREdx+2Zl5Z0PPL9Czm1Wrphfo=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4bDJ062Hb4zhsp;
-	Fri,  6 Jun 2025 12:46:30 +0200 (CEST)
-Date: Fri, 6 Jun 2025 12:46:29 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Song Liu <song@kernel.org>
-Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, kernel-team@meta.com, 
-	andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, daniel@iogearbox.net, 
-	martin.lau@linux.dev, viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
-	kpsingh@kernel.org, mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com, 
-	jlayton@kernel.org, josef@toxicpanda.com, gnoack@google.com, m@maowtm.org
-Subject: Re: [PATCH v2 bpf-next 2/4] landlock: Use path_walk_parent()
-Message-ID: <20250606.zo5aekae6Da6@digikod.net>
-References: <20250603065920.3404510-1-song@kernel.org>
- <20250603065920.3404510-3-song@kernel.org>
- <20250603.Av6paek5saes@digikod.net>
- <CAPhsuW6J_hDtXZm4MH_OAz=GCpRW0NMM1EXMrJ=nqsTdpf8vcg@mail.gmail.com>
- <CAPhsuW7MtxryseFsHF2xqBFS2UWammJatjf8UxBhytgn_nA4=g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tPyoyjUi"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-32a6c0d613eso2000541fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 03:47:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749206827; x=1749811627; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Sdh3DYrunzvdU87ptIswN2gqeFyihiWuxRVoLIp7jeA=;
+        b=tPyoyjUiWWXQlWbmAywAoEgb95uFXimp9DGWTF9bnPOfoetyO9LhY5eRf1B3l4NS42
+         p8QMipdHZ4eJ0sT9yloT19TE9BX6ywU2RNJLDrbVuryl5yDWtueOBrRxzT0qFhEwfE9H
+         q+Fmg7fhwjfLzJNL9DxAG1NzmB/KjlT4zQTEAR3SWQfbE0xA9flHNZ1B5U/XRJGCnetP
+         DFjo/ifQNB98y1ziAz/I2QvDGXZ5nxHRoN9RIC5ZEeLjZdktjIsorjgr9DihoDFGwt8p
+         MX14o1o8bD8LnpwLu6RulESjXrste7fGpUKPLX/EMEHn1/gcPm4vdXRUgxmISnpfWPak
+         h/eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749206827; x=1749811627;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Sdh3DYrunzvdU87ptIswN2gqeFyihiWuxRVoLIp7jeA=;
+        b=XiCVKB8HybY3Xe6kR2/nOdcQHfDrnP4p8e4GLl4iIH7ZSiyu6P5Aj5E47TaXH4mK4/
+         nT2Y1IcmdJJZcoqUwlDVi1p9H35s5ZlmwndMniaNQLIshiOOdUGbLaaNrhN3whT4rmNr
+         X21F2Q38VWEcorZRJsIeP2SAwTWIWeqWI2hq/wUGIlIoYF3RljkbH9kjUTDrr6MMOKmi
+         4nL1p6id/yj62Ss0Jkvc25r7ldcygO7LN07ai+M5ErlQpWYnDcsqhpBP9YguEnMNPRWx
+         yDQdguzQ4SvliO++2K92FX0f0oL/4FsQMd1Bl681GAWDjXK8c+RzvmTPWHFghclN0Xak
+         P6xg==
+X-Gm-Message-State: AOJu0Yx4ge1LBWzK86ru1INomOBfbvBmFOVXrynlXtAdODyVinbCGJsL
+	m1/6Ukpyo94Z7nJ3TtysI4Ltl9BriY9WTVhjrBuXPwbnqWXKKzH9G3OQP1uG8wmX8DZ5tAeMAsF
+	Mc/5l
+X-Gm-Gg: ASbGncuDWCnVJNP2h2Cr9IjeMb67zbr/dpv4p5TBL9ybiJWYn+GlqSvQxhqfXMRjt5d
+	gIU2MyII5UpctHoZMVbIZpHeouaDlYx21j+fJ8dCI05GPUyEz1V7cSepS8x2SB0Qrm/4wieXnGr
+	6wDKrZpmAOPRp1Y1dfJSkvlMIkpo1PXtnRswq8VlOOOVwrU1p1xxMs8HHSEi+mfrEnI68nS4UM6
+	rR3KFjRpC9I7dvAmXRPFkWBBI0bt5Q7QyOBLdhaPOe3j366lJgTxUgQSdMAtvWgCOhcPIEeZgO9
+	Ho/A92L5Mv/T7LT8tPXNS8UA3aJ88HVppEPrV76+vxcdo9Z/iYU8CeZPeN3vNg89q564JN9KdS9
+	Dg3Z8GLwjetBot5Hpxy2GURa/xGNBaSdybOLsuCuq
+X-Google-Smtp-Source: AGHT+IGxjhoxsgVGEZoQ3YemtpUiJRV1bf+P3EhChyczWjkpXHPpDvcvXiPRpgWGAH6vjpJO+8TgQw==
+X-Received: by 2002:ac2:4e0d:0:b0:553:2e82:162e with SMTP id 2adb3069b0e04-553685e5a0dmr156612e87.2.1749206827030;
+        Fri, 06 Jun 2025 03:47:07 -0700 (PDT)
+Received: from [192.168.1.4] (88-112-131-206.elisa-laajakaista.fi. [88.112.131.206])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32ae1b33b48sm1379641fa.30.2025.06.06.03.47.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jun 2025 03:47:06 -0700 (PDT)
+Message-ID: <2884f55c-6b80-406a-ba21-aaa26297b1bf@linaro.org>
+Date: Fri, 6 Jun 2025 13:46:59 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW7MtxryseFsHF2xqBFS2UWammJatjf8UxBhytgn_nA4=g@mail.gmail.com>
-X-Infomaniak-Routing: alpha
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/4] media: dt-bindings: Add qcom,msm8939-camss
+Content-Language: ru-RU
+To: vincent.knecht@mailoo.org, Robert Foss <rfoss@kernel.org>,
+ Todor Tomov <todor.too@gmail.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250602-camss-8x39-vbif-v4-0-32c277d8f9bf@mailoo.org>
+ <20250602-camss-8x39-vbif-v4-3-32c277d8f9bf@mailoo.org>
+From: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+In-Reply-To: <20250602-camss-8x39-vbif-v4-3-32c277d8f9bf@mailoo.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 05, 2025 at 09:47:36AM -0700, Song Liu wrote:
-> On Wed, Jun 4, 2025 at 12:37 PM Song Liu <song@kernel.org> wrote:
-> >
-> > On Tue, Jun 3, 2025 at 6:46 AM Mickaël Salaün <mic@digikod.net> wrote:
-> > >
-> > > Landlock tests with hostfs fail:
-> > >
-> > > ok 126 layout3_fs.hostfs.tag_inode_file
-> > > #  RUN           layout3_fs.hostfs.release_inodes ...
-> > > # fs_test.c:5555:release_inodes:Expected EACCES (13) == test_open(TMP_DIR, O_RDONLY) (0)
-> > >
-> > > This specific test checks that an access to a (denied) mount point over
-> > > an allowed directory is indeed denied.
+Hello Vincent.
+
+On 6/2/25 20:27, Vincent Knecht via B4 Relay wrote:
+> From: Vincent Knecht <vincent.knecht@mailoo.org>
 > 
-> I just realized this only fails on hostfs. AFAICT, hostfs is only used
-> by um. Do we really need this to behave the same on um+hostfs?
-
-Yes, this would be a regression, and in fact it is not related to hostfs
-and it would be a new security bug.
-
-The issue is that the path_walk_parent() doesn't return the parent
-dentry but the underlying mount point if any.  When choose_mountpoint()
-returns true, path_walk_parent() should continue to the following root
-check and potentiall the dget_parent() call.  We need to be careful with
-the path_put() though.
-
-This issue was only spotted by this hostfs test because this one adds a
-rule which is tied to the inode of the mount which is in fact the same
-inode of the mount point because the mount is a bind mount.  I'll send a
-new test that check the same thing but with tmpfs (for convenience, but
-it would be the same for any filesystem).
-
+> Add bindings for qcom,msm8939-camss in order to support the camera
+> subsystem for MSM8939.
 > 
-> Thanks,
-> Song
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
+> ---
+>   .../bindings/media/qcom,msm8939-camss.yaml         | 254 +++++++++++++++++++++
+>   1 file changed, 254 insertions(+)
 > 
-> >
-> > I am having trouble understanding the test. It appears to me
-> > the newly mounted tmpfs on /tmp is allowed, but accesses to
-> > / and thus mount point /tmp is denied? What would the walk in
-> > is_access_to_paths_allowed look like?
+> diff --git a/Documentation/devicetree/bindings/media/qcom,msm8939-camss.yaml b/Documentation/devicetree/bindings/media/qcom,msm8939-camss.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..59bf16888a8235495a2080e512ce179583bcd25d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/qcom,msm8939-camss.yaml
+> @@ -0,0 +1,254 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/qcom,msm8939-camss.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm MSM8939 Camera Subsystem (CAMSS)
+> +
+> +maintainers:
+> +  - Vincent Knecht <vincent.knecht@mailoo.org>
+> +
+> +description:
+> +  The CAMSS IP is a CSI decoder and ISP present on Qualcomm platforms
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,msm8939-camss
+> +
+> +  reg:
+> +    maxItems: 11
+> +
+> +  reg-names:
+> +    items:
+> +      - const: csid0
+> +      - const: csid1
+> +      - const: csid2
+> +      - const: csiphy0
+> +      - const: csiphy0_clk_mux
+> +      - const: csiphy1
+> +      - const: csiphy1_clk_mux
+> +      - const: csi_clk_mux
+> +      - const: ispif
+> +      - const: vfe0
+> +      - const: vfe0_vbif
 
-The test checks that a mount is not wrongly identified as the underlying
-mount point.
+Please sort the list alphanumerically, accorting to the ASCII character set
+the underscore symbol precedes lower case letters.
 
-> >
-> > > It's not clear to me the origin of the issue, but it seems to be related
-> > > to choose_mountpoint().
-> > >
-> > > You can run these tests with `check-linux.sh build kselftest` from
-> > > https://github.com/landlock-lsm/landlock-test-tools
-> >
-> > How should I debug this test? printk doesn't seem to work.
+> +
+> +  clocks:
+> +    maxItems: 24
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ahb
+> +      - const: csi0
+> +      - const: csi0_ahb
+> +      - const: csi0_phy
+> +      - const: csi0_pix
+> +      - const: csi0_rdi
+> +      - const: csi1
+> +      - const: csi1_ahb
+> +      - const: csi1_phy
+> +      - const: csi1_pix
+> +      - const: csi1_rdi
+> +      - const: csi2
+> +      - const: csi2_ahb
+> +      - const: csi2_phy
+> +      - const: csi2_pix
+> +      - const: csi2_rdi
+> +      - const: csiphy0_timer
+> +      - const: csiphy1_timer
+> +      - const: csi_vfe0
+> +      - const: ispif_ahb
+> +      - const: top_ahb
+> +      - const: vfe0
+> +      - const: vfe_ahb
+> +      - const: vfe_axi
 
-The console log level is set to warn, so you can use pr_warn().
+Same comment as above.
 
-> >
-> > Thanks,
-> > Song
+> +
+> +  interrupts:
+> +    maxItems: 7
+> +
+> +  interrupt-names:
+> +    items:
+> +      - const: csid0
+> +      - const: csid1
+> +      - const: csid2
+> +      - const: csiphy0
+> +      - const: csiphy1
+> +      - const: ispif
+> +      - const: vfe0
+> +
+> +  iommus:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    items:
+> +      - description: VFE GDSC - Video Front End, Global Distributed Switch
+> +          Controller.
+> +
+> +  vdda-supply:
+> +    description:
+> +      Definition of the regulator used as analog power supply.
+
+Please specify the wanted voltage level in the description, due to
+the example below I would expect it's 2.8V.
+
+> +
+> +  ports:
+> +    $ref: /schemas/graph.yaml#/properties/ports
+> +
+> +    description:
+> +      CSI input ports.
+> +
+> +    patternProperties:
+> +      "^port@[0-1]$":
+> +        $ref: /schemas/graph.yaml#/$defs/port-base
+> +        unevaluatedProperties: false
+> +
+> +        description:
+> +          Input port for receiving CSI data.
+> +
+> +        properties:
+> +          endpoint:
+> +            $ref: video-interfaces.yaml#
+> +            unevaluatedProperties: false
+> +
+> +            properties:
+> +              data-lanes:
+> +                minItems: 1
+> +                maxItems: 4
+> +
+> +              bus-type:
+> +                enum:
+> +                  - 4 # MEDIA_BUS_TYPE_CSI2_DPHY
+> +
+> +            required:
+> +              - data-lanes
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +  - interrupt-names
+> +  - iommus
+> +  - power-domains
+> +  - vdda-supply
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/qcom,gcc-msm8939.h>
+> +
+> +    isp@1b08000 {
+> +        compatible = "qcom,msm8939-camss";
+> +
+> +        reg = <0x01b08000 0x100>,
+> +              <0x01b08400 0x100>,
+> +              <0x01b08800 0x100>,
+> +              <0x01b0ac00 0x200>,
+> +              <0x01b00030 0x4>,
+> +              <0x01b0b000 0x200>,
+> +              <0x01b00038 0x4>,
+> +              <0x01b00020 0x10>,
+> +              <0x01b0a000 0x500>,
+> +              <0x01b10000 0x1000>,
+> +              <0x01b40000 0x200>;
+> +
+> +        reg-names = "csid0",
+> +                    "csid1",
+> +                    "csid2",
+> +                    "csiphy0",
+> +                    "csiphy0_clk_mux",
+> +                    "csiphy1",
+> +                    "csiphy1_clk_mux",
+> +                    "csi_clk_mux",
+> +                    "ispif",
+> +                    "vfe0",
+> +                    "vfe0_vbif";
+> +
+> +        clocks = <&gcc GCC_CAMSS_AHB_CLK>,
+> +                 <&gcc GCC_CAMSS_CSI0_CLK>,
+> +                 <&gcc GCC_CAMSS_CSI0_AHB_CLK>,
+> +                 <&gcc GCC_CAMSS_CSI0PHY_CLK>,
+> +                 <&gcc GCC_CAMSS_CSI0PIX_CLK>,
+> +                 <&gcc GCC_CAMSS_CSI0RDI_CLK>,
+> +                 <&gcc GCC_CAMSS_CSI1_CLK>,
+> +                 <&gcc GCC_CAMSS_CSI1_AHB_CLK>,
+> +                 <&gcc GCC_CAMSS_CSI1PHY_CLK>,
+> +                 <&gcc GCC_CAMSS_CSI1PIX_CLK>,
+> +                 <&gcc GCC_CAMSS_CSI1RDI_CLK>,
+> +                 <&gcc GCC_CAMSS_CSI2_CLK>,
+> +                 <&gcc GCC_CAMSS_CSI2_AHB_CLK>,
+> +                 <&gcc GCC_CAMSS_CSI2PHY_CLK>,
+> +                 <&gcc GCC_CAMSS_CSI2PIX_CLK>,
+> +                 <&gcc GCC_CAMSS_CSI2RDI_CLK>,
+> +                 <&gcc GCC_CAMSS_CSI0PHYTIMER_CLK>,
+> +                 <&gcc GCC_CAMSS_CSI1PHYTIMER_CLK>,
+> +                 <&gcc GCC_CAMSS_CSI_VFE0_CLK>,
+> +                 <&gcc GCC_CAMSS_ISPIF_AHB_CLK>,
+> +                 <&gcc GCC_CAMSS_TOP_AHB_CLK>,
+> +                 <&gcc GCC_CAMSS_VFE0_CLK>,
+> +                 <&gcc GCC_CAMSS_VFE_AHB_CLK>,
+> +                 <&gcc GCC_CAMSS_VFE_AXI_CLK>;
+> +
+> +        clock-names = "ahb",
+> +                      "csi0",
+> +                      "csi0_ahb",
+> +                      "csi0_phy",
+> +                      "csi0_pix",
+> +                      "csi0_rdi",
+> +                      "csi1",
+> +                      "csi1_ahb",
+> +                      "csi1_phy",
+> +                      "csi1_pix",
+> +                      "csi1_rdi",
+> +                      "csi2",
+> +                      "csi2_ahb",
+> +                      "csi2_phy",
+> +                      "csi2_pix",
+> +                      "csi2_rdi",
+> +                      "csiphy0_timer",
+> +                      "csiphy1_timer",
+> +                      "csi_vfe0",
+> +                      "ispif_ahb",
+> +                      "top_ahb",
+> +                      "vfe0",
+> +                      "vfe_ahb",
+> +                      "vfe_axi";
+> +
+> +        interrupts = <GIC_SPI 51 IRQ_TYPE_EDGE_RISING>,
+> +                     <GIC_SPI 52 IRQ_TYPE_EDGE_RISING>,
+> +                     <GIC_SPI 153 IRQ_TYPE_EDGE_RISING>,
+> +                     <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>,
+> +                     <GIC_SPI 79 IRQ_TYPE_EDGE_RISING>,
+> +                     <GIC_SPI 55 IRQ_TYPE_EDGE_RISING>,
+> +                     <GIC_SPI 57 IRQ_TYPE_EDGE_RISING>;
+> +
+> +        interrupt-names = "csid0",
+> +                          "csid1",
+> +                          "csid2",
+> +                          "csiphy0",
+> +                          "csiphy1",
+> +                          "ispif",
+> +                          "vfe0";
+> +
+> +        iommus = <&apps_iommu 3>;
+> +
+> +        power-domains = <&gcc VFE_GDSC>;
+> +
+> +        vdda-supply = <&reg_2v8>;
+> +
+> +        ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            port@1 {
+> +                reg = <1>;
+> +                csiphy1_ep: endpoint {
+
+There should be an empty line between the end of the list of properties
+and the beginning of the list of children device tree nodes.
+
+> +                    clock-lanes = <1>;
+
+Please remove 'clock-lanes' propoerty from here.
+
+> +                    data-lanes = <0 2>;
+> +                    remote-endpoint = <&sensor_ep>;
+> +                };
+> +            };
+> +        };
+> +    };
+> 
+
+--
+Best wishes,
+Vladimir
