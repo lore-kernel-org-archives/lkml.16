@@ -1,109 +1,80 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF771C27;
-	Fri,  6 Jun 2025 08:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBC31C27
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 08:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749197893; cv=none; b=pW/cUBb7qPCOcWvm93tLxB9T57hhr6kQXgJFecnYCrePDS8eHeAQ7IjaQZRXiUdWlsYVBZMPavXmuOUpTs5n/b0gx/RawOEQZfVTzbxTWZmPggt9Bw1sEl+xrtWnIGZmfVmPtiuA8XqPbmG2QtRLo1iK2fCpEouCkwkphtnOycM=
+	t=1749197951; cv=none; b=GOTMBb/QnXF61y+SpRWeVEGV0aTsmAFI4N5b6MVJAMVQIG8fLx56E/h/U0xp5T6s6jd3DNRQt5LEtFo0s1vKGD11qrkQlIXR4SfQsPqOSKexyyaLCKiyHJYixxCHPizx9sDwMiTjdyx20X67+9DCyb6sVQe+PhQ9JM/af+m4Wnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749197893; c=relaxed/simple;
-	bh=E24qRkhsleKXUtJgi0UGgXe7Q9BafN+sy4FPMlQLtqo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=heS4N5kzQHFsUdeILMfoMxtUWDkeN3kVxVxXPnDYrFJ0hjOxJWODIba9vWfcljlXSMk5lEJC9NfEG7mHeIM6QEIr66QIUrHPwIQHvDi6fnt20iy40PsYlFt6vwZdHL8chUkzezw6hpm7rKKkdobqulrhQXA+GvPgIWfYHrj2wL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QMUcANEP; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749197951; c=relaxed/simple;
+	bh=7zs9RrF4Is4C2gar4hVdfBkJcKOVqMYc4c/E37+I8fc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VdW2RMarFerUt7MyVgtP/ZME0lCgV6HPPySYc/+EPbukRUCg9A7ahFaFxYd+C6EAAJXR+DsBUfKWr8e6sLty9r5NXVs6nTlPjVb6/Hl5saA3nCEKcAofmbWWkcQoMcsxfa67sVHv/I1lPjm/2qwqdSYSqjeb6252AE+fc3Q+SBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lk1cC2/0; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QMUcANEP"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55669mYe000728;
-	Fri, 6 Jun 2025 08:18:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=zdbDa/fryTusveJ7J3y3Ekjc
-	84qti9Y57GWqgNEp7M4=; b=QMUcANEPOD/2ZJy4Gsli/XvPeHLmWu3hj1ruKdGB
-	nIbM6R6b0oyW/qFnN3EsV2UzR8GqMMb12OkV57H98ALZG8uiIThlkob/GBviC84m
-	9ap4C1R8VK8aVQOZPsEnCdZK+6wF+dTWDDJEhdTLsAcTLvj7mmVty7lEG6M4r7ZT
-	e3HGwBuWlu6dU0Aj2vpqFfmsBx1B52s2DI3TRAJtuKs/OWjIx9SRdjyYcY5rzFHB
-	46x84Ncbjj8I30JmspKiR2kB5GIyqTNnE6DcMylCiyK+HOMFFOuafM+8tYw9/pLK
-	azR22ItpMkQuS+ZO8aC3hbmB5MVDPIn/t382pOXneMyTRA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 471g8qbynf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Jun 2025 08:18:01 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5568I0UI020832
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 6 Jun 2025 08:18:00 GMT
-Received: from hu-wasimn-hyd.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 6 Jun 2025 01:17:58 -0700
-Date: Fri, 6 Jun 2025 13:47:44 +0530
-From: Wasim Nazir <quic_wasimn@quicinc.com>
-To: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier
-	<mathieu.poirier@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] remoteproc: qcom: pas: Conclude the rename from adsp
-Message-ID: <aEKkKG43H1BDmr0r@hu-wasimn-hyd.qualcomm.com>
-References: <20250605-pas-rename-v2-1-f1c89e49e691@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lk1cC2/0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=yjoLRs9EAMLzIj5nbMGgLiuljEHvVksleD7tSDqaBxs=; b=lk1cC2/0p+1Kr6WpyNPQBEMOVd
+	pUIwb/Yu5yPQ2nobs3Qq9HL0hnTMD5JLWkQKn9DdMADf3RSLARJ+MFEbUgz7bfEreYxOxKbQH2HIE
+	5dH7MalZ9E0pXJoGQf88CUblOTlUsn6QXgt1NyfoeorOGHYatBV8mo++A/wCZdozj2Vvxg5Wfy0nG
+	WD5Q6vJ+50wSDThh383uu+2pfze+25/zNCKqsFufHoo99P4Zh+R7siXLPTcPsJbKJPl6YPLx6jiTk
+	FQewEtCz+u3mq3O6J2Dhir58jNum+PDty9jigws98zWJ0AlRBkku5ZrH5WyeG7yH2nMHRbP6SApWW
+	Y5FHTKmw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uNSI5-00000001Fbq-3Uui;
+	Fri, 06 Jun 2025 08:19:06 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id B0D1430078B; Fri,  6 Jun 2025 10:19:04 +0200 (CEST)
+Date: Fri, 6 Jun 2025 10:19:04 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: Mateusz Guzik <mjguzik@gmail.com>, torvalds@linux-foundation.org,
+	mingo@redhat.com, x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] x86: prevent gcc from emitting rep movsq/stosq for
+ inlined ops
+Message-ID: <20250606081904.GK30486@noisy.programming.kicks-ass.net>
+References: <20250605164733.737543-1-mjguzik@gmail.com>
+ <20250605190054.GH30486@noisy.programming.kicks-ass.net>
+ <CAFULd4Z4SJZErfV1AG_a-+SDd=gnXa88=suRAFN3RHB5M+=bFw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250605-pas-rename-v2-1-f1c89e49e691@oss.qualcomm.com>
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: THd6-SZ0BA4CqIo5bFIdmgmHko0xNORh
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDA3NiBTYWx0ZWRfX+dc/An1ITf8Z
- 7wfsbTdWLj+4jf6lliq0Jlp8/RNYo+EYnRFdmyFV0cHgy0VfC13ZZgFLnZYEzBawn9oAxxunj9E
- 9H9NqNVHbxwI24c2zDXYvAPMTiTICbh0/6YWJzORGOmniAt3iBMIETwoszyU+XFpSKqWaak/nBf
- Tp17HiISqg42xsyHLdLLsCxEO7OWYPpH9GDQ1L72ksx2aqc3DxXEs7UqOAyIzOW9T0pFk5ui5m7
- WjHxbEkWqWEhekvFzpydvAccF7ZBS1JIKDR/U1qBvGuds704noaArUUI9ICLBkbZbXYc0nAd34R
- 7xN4/YGw4OBrlJmj2ejfms64BuQ1jl2zb+CUDY9rbueDIcMFbQafLkvwmAt2YjtQWSzsBey1yB4
- 3iwHPmf8V6I+JyT/1gqMhmJHfYY9opS9goelAeu5R8zfzQvA3t2w56Q6n4gBqs/nN1J8I82T
-X-Proofpoint-ORIG-GUID: THd6-SZ0BA4CqIo5bFIdmgmHko0xNORh
-X-Authority-Analysis: v=2.4 cv=PrmTbxM3 c=1 sm=1 tr=0 ts=6842a439 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8
- a=COk6AnOGAAAA:8 a=1jkivVvmW3QYzkBJvmcA:9 a=CjuIK1q_8ugA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-06_02,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 mlxlogscore=483 mlxscore=0 lowpriorityscore=0
- impostorscore=0 malwarescore=0 spamscore=0 clxscore=1015 adultscore=0
- suspectscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506060076
+In-Reply-To: <CAFULd4Z4SJZErfV1AG_a-+SDd=gnXa88=suRAFN3RHB5M+=bFw@mail.gmail.com>
 
-On Thu, Jun 05, 2025 at 05:17:47PM -0500, Bjorn Andersson wrote:
-> The change that renamed the driver from "adsp" to "pas" didn't change
-> any of the implementation. The result is an aesthetic eyesore, and
-> confusing to many.
-> 
-> Conclude the rename of the driver, by updating function, structures and
-> variable names to match what the driver actually is. The "Hexagon v5" is
-> also dropped from the name and Kconfig, as this isn't correct either.
-> 
-> No functional change.
-> 
-> Fixes: 9e004f97161d ("remoteproc: qcom: Rename Hexagon v5 PAS driver")
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+On Fri, Jun 06, 2025 at 09:27:07AM +0200, Uros Bizjak wrote:
 
-Reviewed-by: Wasim Nazir <quic_wasimn@quicinc.com>
+> Now, to use function call instead of "rep movsb", you can
+> use -mstringop-strategy=libcall instead of some objtool substitution
+> (-O2 -mno-sse -mstringop-strategy=libcall):
+> 
+> foo:
+>        subq    $8, %rsp
+>        movl    $160, %edx
+>        leaq    16(%rsp), %rsi
+>        call    memcpy
+>        addq    $8, %rsp
+>        ret
+> 
+> Which IMO is what you are looking for.
 
---
-Regards,
-Wasim
+Well, no, because I can't replace the 'call memcpy' with "cs;cs;cs;rep
+movsb" on good machines.
+
+We want the "rep movsb" / "rep stosb" interface so we can actually use
+those instructions when they're good, but then fall back to an
+out-of-line function (with the same calling convention as the
+instruction) when they're not so very good.
+
+
