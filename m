@@ -1,101 +1,107 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF07817548;
-	Fri,  6 Jun 2025 02:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CACB29A9
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 02:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749176983; cv=none; b=HheCeq1ewQAchxPYOkBVsNsRuF+VBZiu5LAot3/LV1CNNLI3NIKxzYU8q9S7Ia5g3rNaBBalVufDZ4pm2n1M0OXxsPxbxmCvkZZ5pz1drmXAOhrgi4Wl+6dCw15cGeotJjaEKAqnM6CbEhMXw11tn+qCXUQEw90+aOtatYMHyAc=
+	t=1749177103; cv=none; b=Kk96F8qd4HUyoBPVdFC9tA399L5KA8iasCSNA00+gcwxwo8OZL44+wvMWnJs23fQ8pcIjHfEjwdy0h1VKbePfQfzbbIMi/JHiB2dzcz56FHRlHmvKMHEyf4jxa8G5xLUqEgaKglpv9FPGYUdLjQyp1JWN+ltJACr9tAxYrQbQjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749176983; c=relaxed/simple;
-	bh=Vf3HhJvqoimMQTMohZTvE2A3QG8yH+pWFF0c7UUl3Qw=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=XrBAKYtB0WMLdXZv2wnQ+zv1/zkWMkZaeO9Tx/84iQgxaWhsuBQR5H1hY+pHo7LnOJJLT/+X4rQ7uphtPFwP9PPAQbmpjBlpuWWSnOaCqWFCT4mCbt/T4VJgQsWBWCajKpJAHsimpsnnD1XGg/Cin+bTJZtNMCSCVfXC/bwpcAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bD4yq2SfVzYQvbb;
-	Fri,  6 Jun 2025 10:29:39 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 611DF1A018D;
-	Fri,  6 Jun 2025 10:29:38 +0800 (CST)
-Received: from [10.174.99.169] (unknown [10.174.99.169])
-	by APP2 (Coremail) with SMTP id Syh0CgAnMGOQUkJo1_4aOg--.17761S2;
-	Fri, 06 Jun 2025 10:29:38 +0800 (CST)
-Subject: Re: [PATCH 1/7] mm: shmem: correctly pass alloced parameter to
- shmem_recalc_inode() to avoid WARN_ON()
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: hughd@google.com, baolin.wang@linux.alibaba.com, willy@infradead.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org
-References: <20250605221037.7872-1-shikemeng@huaweicloud.com>
- <20250605221037.7872-2-shikemeng@huaweicloud.com>
- <20250605125724.d2e3db9c23af7627a53d8914@linux-foundation.org>
- <721923ac-4bb1-1b2b-fce5-9d957c535c97@huaweicloud.com>
- <20250605182802.ec8d869bc02583cbc9de9648@linux-foundation.org>
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-Message-ID: <ceba6bf2-e4cb-492f-ee28-f9808f617ec0@huaweicloud.com>
-Date: Fri, 6 Jun 2025 10:29:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1749177103; c=relaxed/simple;
+	bh=NHbJRMovU5g1h1phG6fHk9x/84oGG3tK+HK1g+xz/uU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Yzw+mvYl3ED1d+U0Tc4QwYreeEnUdonedJx1n7RDB16vngJ8onxGgeUtvhxwS4Le0tQuIaHHrlKRxEEqFZJWjjWIeuA6KEh3+FZjS5GyPuBDMypepd9+1aLzZLURKjU7APXc87dfFBAEeaPOe8eEXFKiV87hN5EWFCe1puVBYOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=w+6KgyMH; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="w+6KgyMH"
+Message-ID: <29d26dea-a0c1-4b1d-adf5-6161c4b16c0d@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749177088;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aaVf2/WsdO7AkFVReBhXK3K/lsQylWvH/nAD0ji5RbE=;
+	b=w+6KgyMHLmbfykr6belYApv97m3vg6x8PktJwYUoVSdbsyV7dxs71UUiGd69gjYyFL4bCp
+	LgV09goKUHkelW7RmTjxjysj/rZMTMGMxRzqk7DKfCufLfSPLE74mZBZauIq2BCekkUnRA
+	XFneJ4rzQAQ/ehA7V+FmXNGb27dWspk=
+Date: Fri, 6 Jun 2025 10:31:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250605182802.ec8d869bc02583cbc9de9648@linux-foundation.org>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgAnMGOQUkJo1_4aOg--.17761S2
-X-Coremail-Antispam: 1UD129KBjvJXoWruw45Jr17GrWUKr45ur18AFb_yoW8JF1rpr
-	WUua45Arn3Wryxtr1Ivwn7Wr1S9FZ7GFWUt3W5Ww13Kas8X3sFyF4kArW5u3W5CrykXw4a
-	vFsruF9rXFW7ArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
-	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUwx
-	hLUUUUU
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+Subject: Re: [PATCH bpf-next] bpf: Add show_fdinfo for perf_event
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+ andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
+ haoluo@google.com, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250604163723.3175258-1-chen.dylane@linux.dev>
+ <aEIR8SBXrV9PgQ0L@krava>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Tao Chen <chen.dylane@linux.dev>
+In-Reply-To: <aEIR8SBXrV9PgQ0L@krava>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+
+在 2025/6/6 05:53, Jiri Olsa 写道:
+> On Thu, Jun 05, 2025 at 12:37:22AM +0800, Tao Chen wrote:
+> 
+> SNIP
+> 
+>> +static void bpf_perf_link_fdinfo_uprobe(const struct perf_event *event,
+>> +					struct seq_file *seq)
+>> +{
+>> +	const char *name;
+>> +	int err;
+>> +	u32 prog_id, type;
+>> +	u64 offset, addr;
+>> +	unsigned long missed;
+>> +
+>> +	err = bpf_get_perf_event_info(event, &prog_id, &type, &name,
+>> +				      &offset, &addr, &missed);
+> 
+> hi,
+> addr now gets ref_ctr_offset:
+>    823153334042 bpf: Add support to retrieve ref_ctr_offset for uprobe perf link
+> 
+> so let's display that
+> 
+
+will add it in v2, thanks.
+
+> thanks,
+> jirka
+> 
+> 
+> 
+>> +	if (err)
+>> +		return;
+>> +
+>> +	if (type == BPF_FD_TYPE_URETPROBE)
+>> +		type = BPF_PERF_EVENT_URETPROBE;
+>> +	else
+>> +		type = BPF_PERF_EVENT_UPROBE;
+>> +
+>> +	seq_printf(seq,
+>> +		   "name:\t%s\n"
+>> +		   "offset:\t%llu\n"
+>> +		   "event_type:\t%u\n"
+>> +		   "cookie:\t%llu\n",
+>> +		   name, offset, type, event->bpf_cookie);
+>> +
+>> +}
+>>   #endif
+>>   
+> 
+> SNIP
 
 
-
-on 6/6/2025 9:28 AM, Andrew Morton wrote:
-> On Fri, 6 Jun 2025 09:11:37 +0800 Kemeng Shi <shikemeng@huaweicloud.com> wrote:
-> 
->>>> --- a/mm/shmem.c
->>>> +++ b/mm/shmem.c
->>>> @@ -2145,7 +2145,7 @@ static void shmem_set_folio_swapin_error(struct inode *inode, pgoff_t index,
->>>>  	 * won't be 0 when inode is released and thus trigger WARN_ON(i_blocks)
->>>>  	 * in shmem_evict_inode().
->>>>  	 */
->>>> -	shmem_recalc_inode(inode, -nr_pages, -nr_pages);
->>>> +	shmem_recalc_inode(inode, 0, -nr_pages);
->>>>  	swap_free_nr(swap, nr_pages);
->>>>  }
->>>
->>> Huh, three years ago.  What do we think might be the userspace-visible
->>> runtime effects of this?
->> This could trigger WARN_ON(i_blocks) in shmem_evict_inode() as i_blocks
->> is supposed to be dropped in the quota free routine.
-> 
-> I don't believe we've seen such a report in those three years so perhaps
-> no need to backport.  But it's a one-liner so let's backport ;) And
-> possibly [2/7] and [3/7] should receive the same treatment.
-> 
-> I don't think any of these need to be fast-tracked into mm-hotfixes so
-> please resend after a suitable review period and include the cc:stable
-> on those which -stable needs.
-> 
-Sure, all issues are hard to trigger. I will resend this series later.
-Thanks!
-
+-- 
+Best Regards
+Tao Chen
