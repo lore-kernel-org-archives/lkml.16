@@ -1,138 +1,222 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71A01B4F09
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 14:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B02D1CEAC2
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 14:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749221831; cv=none; b=ixYNdskl2OWIOswlkxcVgA2yNsr8f3mJG/nK+zN95BTWiYHam8jYnX8eQu8X0wtgt2qgF1wjiJ7IolcKdne70hof825e9DY1I8CagfjCbD+yLKB7dSl4sH/oR2sXxDKq8pvKLMNHEB+qx6C2gNMsReKdjr1MMf3Wdy4lP/UL/ZU=
+	t=1749221836; cv=none; b=Z199GBTwy73jCAACB28Mo7ndwO//UtkkSZBiqacxtPp6PvJ1EnCKMKWYRIXF2vRe4zLVBtKOkV3PY7b1oZlDp+Eb4wSh2b8cmf75J+awiUJ9tJOQTiPlDnGl4h1QiFK9xWXuy7/e9tEnfEKUZwHpD6VvoZZYRZnD4jkW/8Sba7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749221831; c=relaxed/simple;
-	bh=5rLk0Y1o9Yqu936oDGAf+guTBOuXSZ/KP5hY7VpGzCQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X8x7Z87GkYHCV+5JEhopNr1r4wsUX/IbY0TXBx8Y8B6QlsX+FaIaxI6ItcIFqG9GuMg7XWi2UXnoIm2zLhMSwJ6pPhtcEpHeMUq3I66A0CemrD81GSpTOgnIX+gox87XRRNFCynVDxzzvJnNXlHyeCtsiA8RUay4+M+2zLOG4FI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=hMtKoXXh; arc=none smtp.client-ip=209.85.166.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1749221836; c=relaxed/simple;
+	bh=ia7pnAGyVV1EpMWakQwBtxjI3bEZOeCvt8bf0l4HQIg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N3BfIZ7KBqJq0dBZy7XSfLvLWz1Ib1wdEPgMarwjzQKqnk56YMt507lgXug6esxAHhk2n5ZFt+xuRB0y5B8t4bebF1waTPQIwdZz+bkFovT6Q2GYLelJvhd4xzdM/nK5qJo33eQy5x921l3OUI5ZBIuBzauaoCBC1G7tYGp/eoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Ji+tBwGY; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="hMtKoXXh"
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-86cfc1b6dcaso61531739f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 07:57:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Ji+tBwGY"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-450ccda1a6eso20619075e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 07:57:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1749221828; x=1749826628; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=y4SilW7Kz/GqOrsdyu9o99hQfeO+kZMJ6kTTI3SZL88=;
-        b=hMtKoXXh8+5SC4d//xyI/YsWQof1pTyJgp8PvZMRjJEr+ZXGQDP6PiKucpYcvXxhgt
-         R/v1olg0Jg27bs2vAvbXLvE45rYoG68EZ58vWZtBT+YKvSE/Y61EG6Jgsuv5c7j7Q4CT
-         N/ZaM/yXxUEhAabGOWU23a3e2mAqusOZvhacUnQPB8HTsuTR9UlfgAN8gIV3ssAnmWfq
-         YqQLiPlal2Hv22VEolt+uyoxborkDCIxNRXuov18yx2KNRy3TAqCcSFxGpvuQVV8gXia
-         HlbkOMQthwezDppKAreITxg5uCk6PNvrqFLM4Aw9kHo6ObeJR3xcgVGqd6O2DVHzEjiY
-         Txdg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749221832; x=1749826632; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ybeh6r8IJ9MMaBfEPZurC85ycYwc4zI6taH+XBEB7iM=;
+        b=Ji+tBwGYkavoDMO2lvr8lzuKAde/GcNvyhsdvCc7YKkXSjig9iG67tFKvktaWtZBn2
+         T7mCDqAZ6U/+1BKCqd9rDB9bOIxlFWSfOVifoMs4oZpfxLjy7FG+BYVr66OIG0Szrg7W
+         a4vB934BQzNaw5DZeH86zO8SPDoPSJK7lUrdpDMtzn0stPutv2tFFN5GuMaePUTRX3vG
+         qYFbWgUbtJSyvOqF99X5tvsOpwCO2Y3dKtSh27EgxILr7LROSDFiVhCIany08F0uKbfL
+         No1jRCDMM/YVZrQz78c/Kso8fbr3t9WjvZe79kTIdyAbQqppe06i70kCYc7r4lIIXNN6
+         z2Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749221828; x=1749826628;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y4SilW7Kz/GqOrsdyu9o99hQfeO+kZMJ6kTTI3SZL88=;
-        b=oA0yVaaof9dK0oQo3Xi91XoDeskidWb4+XIEiN0wVBFPNPJuaufo/cjFFwfnOOrmKK
-         I0Ij2Nky2Tqsv4BEPstORu/ak+m2waDEf5isPYlH13b6+pURb8kxz0tedchT4WUEJmpl
-         WM/AyCcYbUJ9D1GhrDqxw+6k2ZAguXK/VXjaF4YGijBhBFraE6mDabuC9e9rR655T165
-         xxOYdoaeYtuRER4CmFV925+Vv0Gy1P0q/JpoQ6+tTJXMEUy8qqA7jJz7Vpxb8LiY3uiW
-         Ejti0M2hx5ndv7xBOxI9Wm1oLGjrCbTB4DxdA2H6NZZMoL/OffClWYuTBIkb1C8j/xoy
-         yHdA==
-X-Forwarded-Encrypted: i=1; AJvYcCW/YvLPwq4qY0BRbBl71LkN50j9gEMzSwUqA5yMsVURMF99TMmiOFO3oHWiDrJOt9l5xUfydHbE+yJ3vJo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAh0HiwwjU+X6RIAQ/URHUrIaGKNaOZOX+kkWhLsR9icei8AkG
-	nqNdydU8gOY24vsCOvq0LF8vUszatNZ910NvWgymFIvryRRACN0x1sh2jtNOtJa/eOg=
-X-Gm-Gg: ASbGncvboXQlNoAzzUreDqqpgCxNQ92Ect7Nk0/NaI5vEo4bY9u7ZiGpRfIOSseuY3F
-	rQ9qC1ePMLDai0J3+9W8C3CjJ5mIUxQyOyPx78epPu0aBuOtZdvFapD1tPUft8RhR/J/dwq2+pu
-	003Q5KytD6r6MOTEio81GMyfpckWiVAIUL7xLaOgGZj+T8Qi0NTtk997cxYsMl42CFPIgVKcsBf
-	Cu/mPcEUMhaIom2ipBgdObrSOLBLmvJxGP/vsqa275HfVG3UbsNWuyZh8BoHFGk6/vrIJPurwAb
-	wpOorwMJflojoMwA1c77rEbHdaSO+7yH2EOQnaa455NaP+NHLdmADYoIrg==
-X-Google-Smtp-Source: AGHT+IHCqdvcPc2EHD8OF2SGiY28FRz5VxV/iMut9sL/Iq4G5xTeNxhhacKuQVTKYCyvf5H+SS82Sg==
-X-Received: by 2002:a05:6602:4c03:b0:86c:fa3a:fe97 with SMTP id ca18e2360f4ac-873366c4eb2mr364557439f.10.1749221827729;
-        Fri, 06 Jun 2025 07:57:07 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-87338782c7dsm37099439f.2.2025.06.06.07.57.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 07:57:07 -0700 (PDT)
-Message-ID: <9b9199f0-347b-42fb-984a-761f0e738837@kernel.dk>
-Date: Fri, 6 Jun 2025 08:57:06 -0600
+        d=1e100.net; s=20230601; t=1749221832; x=1749826632;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ybeh6r8IJ9MMaBfEPZurC85ycYwc4zI6taH+XBEB7iM=;
+        b=tV2Bgj/BBFbOjr+DJROsB59cXImQ3YmCaTpO+7yJ3IRvOCXtEhvSlZ8ZY0DdakBozc
+         ILFbxxwL9JhoTadKs4sLbwpHlAhIy60uxq+SJrd66T3l7HdJ0alOmJvJumlszDFspAiD
+         QzIyy613/yKoXCIJjJJQ4Xx2GN9eYg5HQUVlbbQWTLSDmQp+ADtCMmbd0CoaS8XrIrEp
+         Kx0KmTGTMQDqYE8zPCRqTEIaVXI7FGmDpYZcjn5AjioZ08b+cI541/DzxG5qyzTWFiww
+         eqAZlkpaiu7MxaOedxwI3GeOpwl+EyWZcVrb6fd9b1VcXBxOJBvxMZlQg0sc7D9/C76Z
+         EBdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX0/PBpCg98zDJ+5UhdTbUJ5RpC8kO9gWTRx/3jM9Q3I55JVkVM8rf6ezx5X5rdTkJa2ayqnghadgTgUFQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1pKFcpLrLImZIdhKbwD/6v83hJBPVQ0zlSxXkan9cALHpZviZ
+	hb0B6SV+W0hJwAbyEHjgK/eurt0F7sHO2Pgfmxjo+UgwI/STbPWD4KL+ihyJVQgVq1I=
+X-Gm-Gg: ASbGnctjr53WTTN5PgcbSv4XWCxSGOpkGtGRNV2VtgURqZCtpegdCgx/mJzhiM+Vh9s
+	sGzRHBw2WImRjKL+ggZ+gGgpryWJvkCehul0/yvyofcUm+Z6269QuoNZQhaiV8utYqda1cVXZhP
+	S8cYJYrLShAfuwqztzyOntXufmrCz9AKsuM2nNXeC6qPazj/8bN+lR4tl6GNIazSG3gIoL7dWBy
+	O23pNQmuK7dc2C1mMnZCfnQVjR2EY+RZhLRbAteo5XLuWcjD+0Itn2OdzSfsNLo3Eb+IiPj5kKY
+	vQeDHptG0m9aGP+66t6yNhwOjYDU7Jy4OUwWj1YJ6jSLtmFvLQYaSizCQxM8eLZRSgFypWM9SNe
+	c97vqaE0CHZJg6+3mhdCtTjQWWOpk
+X-Google-Smtp-Source: AGHT+IEtcBbSWQ+OKjv58Suw5c1swP9aEvffhR8eHp0ff4ePqLrLdMPX0D2MvWAAWZPqN7jMkQVkmg==
+X-Received: by 2002:a05:600c:458a:b0:450:cabd:b4a9 with SMTP id 5b1f17b1804b1-452014ea1ebmr35514085e9.29.1749221832308;
+        Fri, 06 Jun 2025 07:57:12 -0700 (PDT)
+Received: from localhost (p200300f65f13c80400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f13:c804::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-45213754973sm26847055e9.35.2025.06.06.07.57.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 07:57:11 -0700 (PDT)
+Date: Fri, 6 Jun 2025 16:57:10 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Sean Anderson <sean.anderson@seco.com>, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Subject: Re: New default binding for PWM devices? [Was: Re: [PATCH]
+ dt-bindings: timer: xlnx,xps-timer: Make PWM in example usable]
+Message-ID: <erst43cabswj3cwnszssolgyoh4dsgrlnjjxhb7luk3qkqhyay@6zyoixljvwwg>
+References: <20250527171504.346696-2-u.kleine-koenig@baylibre.com>
+ <a14be34c-de2a-4bea-9282-1fac7780b9a4@kernel.org>
+ <crk42dsypmbyqk7avldghjq32vslmalfmmouwxzgtdci4agfhz@rkbmxj5z22fx>
+ <20250606141324.GA1383279-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 3/5] io_uring/bpf: implement struct_ops registration
-To: Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org
-Cc: Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <cover.1749214572.git.asml.silence@gmail.com>
- <f43e5d4e5e1797312ef3ee7986f4447bddac1d3c.1749214572.git.asml.silence@gmail.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <f43e5d4e5e1797312ef3ee7986f4447bddac1d3c.1749214572.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="53f32hgy6vknjdpf"
+Content-Disposition: inline
+In-Reply-To: <20250606141324.GA1383279-robh@kernel.org>
 
-On 6/6/25 7:58 AM, Pavel Begunkov wrote:
-> Add ring_fd to the struct_ops and implement [un]registration.
-> 
-> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-> ---
->  io_uring/bpf.c | 67 +++++++++++++++++++++++++++++++++++++++++++++++++-
->  io_uring/bpf.h |  3 +++
->  2 files changed, 69 insertions(+), 1 deletion(-)
-> 
-> diff --git a/io_uring/bpf.c b/io_uring/bpf.c
-> index 3096c54e4fb3..0f82acf09959 100644
-> --- a/io_uring/bpf.c
-> +++ b/io_uring/bpf.c
-> @@ -3,6 +3,8 @@
->  #include "bpf.h"
->  #include "register.h"
->  
-> +DEFINE_MUTEX(io_bpf_ctrl_mutex);
-> +
->  static struct io_uring_ops io_bpf_ops_stubs = {
->  };
->  
-> @@ -50,20 +52,83 @@ static int bpf_io_init_member(const struct btf_type *t,
->  			       const struct btf_member *member,
->  			       void *kdata, const void *udata)
->  {
-> +	u32 moff = __btf_member_bit_offset(t, member) / 8;
-> +	const struct io_uring_ops *uops = udata;
-> +	struct io_uring_ops *ops = kdata;
-> +
-> +	switch (moff) {
-> +	case offsetof(struct io_uring_ops, ring_fd):
-> +		ops->ring_fd = uops->ring_fd;
-> +		return 1;
-> +	}
-> +	return 0;
 
-Possible to pass in here whether the ring fd is registered or not? Such
-that it can be used in bpf_io_reg() as well.
+--53f32hgy6vknjdpf
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: New default binding for PWM devices? [Was: Re: [PATCH]
+ dt-bindings: timer: xlnx,xps-timer: Make PWM in example usable]
+MIME-Version: 1.0
 
-> +static int io_register_bpf_ops(struct io_ring_ctx *ctx, struct io_uring_ops *ops)
-> +{
-> +	if (ctx->bpf_ops)
-> +		return -EBUSY;
-> +	if (!(ctx->flags & IORING_SETUP_DEFER_TASKRUN))
-> +		return -EOPNOTSUPP;
-> +
-> +	percpu_ref_get(&ctx->refs);
-> +	ops->ctx = ctx;
-> +	ctx->bpf_ops = ops;
->  	return 0;
->  }
+Hello Rob,
 
-Haven't looked too deeply yet, but what's the dependency with
-DEFER_TASKRUN?
+On Fri, Jun 06, 2025 at 09:13:24AM -0500, Rob Herring wrote:
+>    reg:
+> >      maxItems: 1
+> > =20
+> > -  '#pwm-cells': true
+> > +  '#pwm-cells':
+> > +    const: 3
+> > =20
+> >    xlnx,count-width:
+> >      $ref: /schemas/types.yaml#/definitions/uint32
+> > @@ -82,7 +83,7 @@ examples:
+> >      };
+> > =20
+> >      timer@800f0000 {
+> > -        #pwm-cells =3D <0>;
+> > +        #pwm-cells =3D <3>;
+> >          clock-names =3D "s_axi_aclk";
+> >          clocks =3D <&zynqmp_clk 71>;
+> >          compatible =3D "xlnx,xps-timer-1.00.a";
+> >=20
+> > There is however one concern that I want to get resolved first to
+> > prevent churn:
+> >=20
+> > In principle I think it's bad that a phandle to a PWM must contain a
+> > period and flags specifying the polarity. For some use cases the period
+> > might not matter or is implicitly given or more than one period length
+> > is relevant.
+>=20
+> Why can't the period be 0 and no flags set if they aren't needed?
 
--- 
-Jens Axboe
+I don't say they cannot, and probably that's the most sane option if
+there is no fixed default period and flags and we're sticking to 3
+cells.
+
+> > So I wonder if instead of unifying all PWM bindings to #pwm-cells =3D <=
+3>
+> > I should instead go to something like
+> >=20
+> > 	mypwm: pwm {
+> > 		compatible =3D "...."
+> > 		#pwm-cells =3D <1>;
+> > 	};
+> >=20
+> > 	fan {
+> > 		compatible =3D "pwm-fan";
+> > 		pwms =3D <&mypwm 1>;
+> > 		assigned-pwms =3D <&mypwm>;
+> > 		assigned-pwm-default-period-lengths-ns =3D <40000>;
+> > 		assigned-pwm-default-flags =3D <PWM_POLARITY_INVERTED>;
+> > 	};
+> >=20
+> > (where the single cell specifies the index of the PWM's output).
+>=20
+> Sigh. You just changed everyone to 3 cells and now you want to change=20
+> again?
+
+I did? I admit that I intended to, but before starting to modify the
+bindings I thought about if #pwm-cells =3D <3> is really the best way
+forward.
+
+> Changing existing users to 3 was borderline churn. Changing again=20
+> I won't be receptive to.=20
+
+I'm puzzled about what you mean.
+
+There is 2bb369ab50e107a7de6df060a1ece2f33a6a0b9e but this is hardly
+churn? And I prepared switching to 3 cells in
+895fe4537cc8586f51abb5c66524efaa42c29883 but didn't touch the bindings
+yet.
+=20
+> > I already suggested that in
+> > https://lore.kernel.org/linux-pwm/jmxmxzzfyobuheqe75lj7qcq5rlt625wddb3r=
+lhiernunjdodu@tgxghvfef4tl/.
+> > When I asked about that in #armlinux Rob said "no. We don't need a 2nd
+> > way to set period and flags." Is this still a bad idea if the
+> > traditional binding with 3 cells will be deprecated for all PWM
+> > devices? If this would be ok then, I'm also open for improvements to
+> > the new concept. Maybe something like:
+> >=20
+> > 	fan {
+> > 		compatible =3D "pwm-fan";
+> > 		pwms =3D <&mypwm 1>;
+> > 		pwm-default-period-lengths-ns =3D <40000>;
+> > 		pwm-default-flags =3D <PWM_POLARITY_INVERTED>;
+> > 	};
+> >=20
+> > ?
+>=20
+> How is this any different than a slight name change?
+
+Compared to the suggestion with assigned-pwms it's mostly just a name
+change, but dropping assigned-pwms is a relevant change. Compared to
+what we have now (i.e. #pwm-cells =3D <3> for most bindings) the
+specification of flags and period is optional which is IMHO a nicer
+design pattern.
+
+> What I also said there is that case looked like a property of the fan.=20
+> If you want a default fan speed, then you should express that in fan=20
+> terms (i.e. RPM or %) and then have a table to go from fan speeds to fan=
+=20
+> control settings (i.e. PWM duty cycle in this case). Even if you need=20
+> something like minimum startup duty cycle, that's still a property of=20
+> the fan.
+
+I fully agree and want to fix the #pwm-cells =3D <4> case. In that context
+it's also relevant if the change should go to <3> or <1>.
+
+Best regards
+Uwe
+
+--53f32hgy6vknjdpf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhDAcMACgkQj4D7WH0S
+/k7Zrwf/e3pkjRqHFV7Lk3vsWkmBLVvNzXJD7lFWLaL48eo49cz+xEVS1hg2NH2x
+OdS0bPOu1kOSTdJcpWCThTsJUL0IignJx5D+SXMlcSj+VfeEpfTj2ooi7MhnZEK7
+hSlIT/VfKcrlOh5SQw+uslH6VDNW7jEWfrimh90vEcqYCJqm56kyalzdI6Gj0XS9
+YRmmjvxWu4hU73H2LB04Ha5VAtWSI2E1o/2Bm81jL6dQfqyVQDIjO+fAK90QNGnT
+Fv7OM+bluN1LiMZRzy3TLv1wyNTFAZ1Vv93Xb+ZuSPC6SrJB+C082J+vQtXT20f6
+8KapgO98QZsotPXAGWN7LPxr3fkCmg==
+=fwHN
+-----END PGP SIGNATURE-----
+
+--53f32hgy6vknjdpf--
