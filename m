@@ -1,185 +1,150 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA854683;
-	Fri,  6 Jun 2025 20:02:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5224D4683;
+	Fri,  6 Jun 2025 20:05:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749240125; cv=none; b=KcbNFG+omNuWegt9xaMZNeJIBqjqA+MYyMCOCK+9gN/GU83wEnr5GXDT4e75Oj6Hk1+2YvozOxpDi6Ez40H4V3jYfYmWwN7Sm2Fb0qjse6lU0jK0BkmYN2DWcyDvf/BhJu+7fcHsE4l216YLyImlCDgFu58RRa8nUP1/25xCuqc=
+	t=1749240341; cv=none; b=gf/NRJZmQ5yt1T8IvOrGygJ9VaDRF2Kx5iuEQlSyk/ZSn381W9R8QQLRQX+Nh2nufMxC6cqXBFE+Yerd3IEKKaF9A5/I6ea/uW5BmiNxY4+YYC2khG0cu6RyAobtHuKl+OVkR5ypU36Zp30Dz0HqReAytcy2ZDaryh6D6wXQJCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749240125; c=relaxed/simple;
-	bh=Ob/ZeCmO+wM4R1HbnSgpPdyraptai3IhmhW/MHO+XAI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mc1kzTmRZr05CLkFkoIzfaUNC2N5/YYUklyY+zS4LgDHsp+SZQkrMYGZcbkMLq4D14z1OqaEm+J7XVn3Vbq2FgzSNnXtY87Y/7MILwgEVaGzN9l/XVq9BHmXTt+VQ9chvaYc8CyPKzM6OCwJX9WBid8WY/prA7tICWXbO0wYEJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t9FUBEc2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749240341; c=relaxed/simple;
+	bh=FQ3fjcNpzvQ9V7CwjG1kiv01ToImRNUpU3/LKa/6tzE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rbBRiJDu39W7zEgDjZg9Oj/lTdr17ELnGow9yriLzlYN2Zu7eAk8WB2vC4Qosd6wHyfj5ykofBJYJZE1a8Ui7BSa20c38mte0bQ6GSQhcuPKS4X2Cul/Hn4te8pGMW7Hm1HBzbmMSEyzay92UwjHnqslFafSjyWTEqfzWklCGAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kI4Xj6H6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t9FUBEc2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6FC3C4AF09;
-	Fri,  6 Jun 2025 20:02:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kI4Xj6H6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40EA7C4CEEB;
+	Fri,  6 Jun 2025 20:05:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749240124;
-	bh=Ob/ZeCmO+wM4R1HbnSgpPdyraptai3IhmhW/MHO+XAI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=t9FUBEc2/VmeaHZwCeWK+Kwv3h+8395994AKfndTgMLKHavK6pfFE6ToGeYiag/ts
-	 DGPqHO4yE7GrLfX2iiuTyH/ZQse+oYItRwftwZsxNd9klerkAwUwCyLvJeaQJHaoXH
-	 iOEG/tV8lPQnY882k3NbmYk7xkDRqO7Ilu9xdUYvOCTX4Dgl4UD6ErSWjkFZZUDlFO
-	 BG09SVH3xvGM+PXaVhnOkfEB+udaheA3v6NVZnEtWlKsiy+rc8+QdmIk11IvpWBo6s
-	 XfUCnRR1PWy2Snbifn+eUhl+CmZC6/beWXPkm9n6iyXe9/BgCEBsJSpaWYqJTNUK1h
-	 WasWL/+30+s1g==
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-4067bab37a1so2030662b6e.1;
-        Fri, 06 Jun 2025 13:02:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUmFOUEZA3pg7eR7pgqtfjZDnEkkNS+/WnYzVkPeXsJFzUWd8FwL98FlW36+WbXPtvU7PdxCJqN7kE=@vger.kernel.org, AJvYcCV5a2C4tKhj+txSBwFMpQBaybomSM9LoiLOkz/Wi8r7qNvtG7KuybmfrjxwyV680/zlsbSFbQ7ILK0Cr8LL@vger.kernel.org, AJvYcCWszul0oFtxKTYabU7MBX6Iq1XYOP6WNXQ8XeZ02qnMnLW6eeIHOE/hbCo1Yg2SAkZZTVp4TabwLAqQ5d37CqIEeHI=@vger.kernel.org, AJvYcCXCGZYKwlPw2DYEi6yErUkJdG275+X9QIGsv6ZrdeHfnO1TBYASOAreb+4UXAf3W+hgWVKJQAgTeR0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNrFrJX8hipSpw0dv4w2KTrCWFkCpr2YJTZA1TwTvxxmXJP+Z1
-	tQm2LrZYHN5f+zJYycEO5E7bwv/k03Cfik+KFxAngUcsHBAWjzEmC9YdoTCVCTQXU0doZ+rcK0F
-	XAxcrNvrTtkGN+uvaHP6rjwXGkkSGk7E=
-X-Google-Smtp-Source: AGHT+IHNZnCL1ykgwQryTtQYD1pAw3TeNBUdACA9R8FHLJwKJd2b5YrpQ99JhEVsJ1qktocsfwS3ziRQWkbt5v5XQiE=
-X-Received: by 2002:a05:6808:22a5:b0:3fc:7e1:a455 with SMTP id
- 5614622812f47-4090519a67dmr3524076b6e.2.1749240123996; Fri, 06 Jun 2025
- 13:02:03 -0700 (PDT)
+	s=k20201202; t=1749240338;
+	bh=FQ3fjcNpzvQ9V7CwjG1kiv01ToImRNUpU3/LKa/6tzE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kI4Xj6H6vyFs3nwqcsRnkHaRVaA3RP22CWj6F7Bz8yEbdYW+EJp2I6TJQEnzHcjXZ
+	 /nh0dMm0RHZyB/IPuxuf4sO/YxCH/kctVW1SidV1cwEE1rL4gu4d2mQtzFe2B2qGLF
+	 KIrevHInSuy7dRslQoTSIJHSaxeBBCzjioptnv+SkG9tmLT6yylKr0/kbZIN+n+m+Z
+	 Xq8wf0qJ2OLER+g9Ztw5CScZMsufY0rBsKDPcLb5319mjtLVdxmNcZhqN9gC8VEcGH
+	 msNWBlpXo8buD5ca+vuol8H1MDqHc9YsW48/D8Qup7aI9HL5LgTxOK75Mzkz8yYN95
+	 0gSXk3LhdH8bQ==
+Date: Fri, 6 Jun 2025 17:05:35 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Leo Yan <leo.yan@arm.com>, Lorenz Bauer <lmb@isovalent.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: BTF loading failing on perf
+Message-ID: <aENKD6yUCN9UXves@x1>
+References: <aEMLU2li1x2bAO4w@x1>
+ <20250606161406.GH8020@e132581.arm.com>
+ <CAEf4BzY2UEe9e53Ums=d-mMVgBdc5JnVAboKz1LLmvKRk5O=jA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606111749.3142348-1-claudiu.beznea.uj@bp.renesas.com>
- <20250606111749.3142348-2-claudiu.beznea.uj@bp.renesas.com>
- <CAJZ5v0i_Ey+OVpSZHXru=tubMaZi=y-uOh_0M6zmWZ2DqqA7Vg@mail.gmail.com> <zhjytvj35lknj7v3jhva3n3nbv6qctvqgykwyi5huj6omet7lz@wchd7f4p4dpv>
-In-Reply-To: <zhjytvj35lknj7v3jhva3n3nbv6qctvqgykwyi5huj6omet7lz@wchd7f4p4dpv>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 6 Jun 2025 22:01:52 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hsT-Q2hz=qoBo409oungaCmexJwwGheN7KRLFqz=6_Dw@mail.gmail.com>
-X-Gm-Features: AX0GCFuutVnb1KxLXZv_oVq_-Zm6x2wDg2kJRxLwu7XWQkafSciRR866LCNgLQ4
-Message-ID: <CAJZ5v0hsT-Q2hz=qoBo409oungaCmexJwwGheN7KRLFqz=6_Dw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] PM: domains: Add devres variant for dev_pm_domain_attach()
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Claudiu <claudiu.beznea@tuxon.dev>, 
-	gregkh@linuxfoundation.org, dakr@kernel.org, len.brown@intel.com, 
-	pavel@kernel.org, ulf.hansson@linaro.org, jic23@kernel.org, 
-	daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, bhelgaas@google.com, geert@linux-m68k.org, 
-	linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	fabrizio.castro.jz@renesas.com, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzY2UEe9e53Ums=d-mMVgBdc5JnVAboKz1LLmvKRk5O=jA@mail.gmail.com>
 
-On Fri, Jun 6, 2025 at 8:55=E2=80=AFPM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> On Fri, Jun 06, 2025 at 06:00:34PM +0200, Rafael J. Wysocki wrote:
-> > On Fri, Jun 6, 2025 at 1:18=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.de=
-v> wrote:
+On Fri, Jun 06, 2025 at 09:20:57AM -0700, Andrii Nakryiko wrote:
+> On Fri, Jun 6, 2025 at 9:14 AM Leo Yan <leo.yan@arm.com> wrote:
+> > On Fri, Jun 06, 2025 at 12:37:55PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > root@number:~# perf trace -e openat --max-events=1
+> > > libbpf: failed to read kernel BTF from '/sys/kernel/btf/vmlinux': -ENODEV
+> > > libbpf: failed to read kernel BTF from '/sys/kernel/btf/vmlinux': -ENODEV
+> > >      0.000 ( 0.016 ms): ptyxis-agent/4375 openat(dfd: CWD, filename: "/proc/6593/cmdline", flags: RDONLY|CLOEXEC) = 13
+> > > root@number:~#
 > > >
-> > > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> > >
-> > > The dev_pm_domain_attach() function is typically used in bus code alo=
-ngside
-> > > dev_pm_domain_detach(), often following patterns like:
-> > >
-> > > static int bus_probe(struct device *_dev)
-> > > {
-> > >     struct bus_driver *drv =3D to_bus_driver(dev->driver);
-> > >     struct bus_device *dev =3D to_bus_device(_dev);
-> > >     int ret;
-> > >
-> > >     // ...
-> > >
-> > >     ret =3D dev_pm_domain_attach(_dev, true);
-> > >     if (ret)
-> > >         return ret;
-> > >
-> > >     if (drv->probe)
-> > >         ret =3D drv->probe(dev);
-> > >
-> > >     // ...
-> > > }
-> > >
-> > > static void bus_remove(struct device *_dev)
-> > > {
-> > >     struct bus_driver *drv =3D to_bus_driver(dev->driver);
-> > >     struct bus_device *dev =3D to_bus_device(_dev);
-> > >
-> > >     if (drv->remove)
-> > >         drv->remove(dev);
-> > >     dev_pm_domain_detach(_dev);
-> > > }
-> > >
-> > > When the driver's probe function uses devres-managed resources that d=
-epend
-> > > on the power domain state, those resources are released later during
-> > > device_unbind_cleanup().
-> > >
-> > > Releasing devres-managed resources that depend on the power domain st=
-ate
-> > > after detaching the device from its PM domain can cause failures.
-> > >
-> > > For example, if the driver uses devm_pm_runtime_enable() in its probe
-> > > function, and the device's clocks are managed by the PM domain, then
-> > > during removal the runtime PM is disabled in device_unbind_cleanup() =
-after
-> > > the clocks have been removed from the PM domain. It may happen that t=
-he
-> > > devm_pm_runtime_enable() action causes the device to be runtime-resum=
-ed.
+> > > openat(AT_FDCWD, "/sys/kernel/btf/vmlinux", O_RDONLY) = 258
+> > > mmap(NULL, 6519699, PROT_READ, MAP_PRIVATE, 258, 0) = -1 ENODEV (No such device)
+> > > libbpf: failed to read kernel BTF from '/sys/kernel/btf/vmlinux': -ENODEV
 > >
-> > Don't use devm_pm_runtime_enable() then.
->
-> What about other devm_ APIs? Are you suggesting that platform drivers
-> should not be using devm_clk*(), devm_regulator_*(),
-> devm_request_*_irq() and devm_add_action_or_reset()? Because again,
-> dev_pm_domain_detach() that is called by platform bus_remove() may shut
-> off the device too early, before cleanup code has a chance to execute
-> proper cleanup.
->
-> The issue is not limited to runtime PM.
->
+> > Have you included the commit below in the kernel side?
+> 
+> It doesn't matter, libbpf should silently fallback to non-mmap() way,
+
+Right, it has to work with older kernels, etc.
+
+> and it clearly doesn't.
+
+> We need something like this:
+> +++ b/tools/lib/bpf/btf.c
+> @@ -1384,12 +1384,12 @@ static struct btf *btf_parse_raw_mmap(const
+> char *path, struct btf *base_btf)
+> 
+>         fd = open(path, O_RDONLY);
+>         if (fd < 0)
+> -               return libbpf_err_ptr(-errno);
+> +               return ERR_PTR(-errno);
+> 
+>         if (fstat(fd, &st) < 0) {
+>                 err = -errno;
+>                 close(fd);
+> -               return libbpf_err_ptr(err);
+> +               return ERR_PTR(err);
+>         }
+> 
+>         data = mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+> @@ -1397,7 +1397,7 @@ static struct btf *btf_parse_raw_mmap(const char
+> *path, struct btf *base_btf)
+>         close(fd);
+> 
+>         if (data == MAP_FAILED)
+> -               return libbpf_err_ptr(err);
+> +               return ERR_PTR(err);
+> 
+>         btf = btf_new(data, st.st_size, base_btf, true);
+>         if (IS_ERR(btf))
+> 
+> libbpf_err_ptr() should be used for user-facing API functions, they
+> return NULL on error and set errno, so checking for IS_ERR() is wrong
+> here.
+
+And the only user of the above function is:
+
+                btf = btf_parse_raw_mmap(sysfs_btf_path, NULL);
+                if (IS_ERR(btf))
+                        btf = btf__parse(sysfs_btf_path, NULL);
+
+That expects ERR_PTR() to then use IS_ERR().
+
+I think this could be automated with something like coccinnele(sp)?
+
+Anyway, I tested the patch above and it seems to fix the issue, so:
+
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+- Arnaldo
+
+ 
+> Lorenz, can you please test and send a proper fix ASAP?
+> 
 > >
-> > > If the driver specific runtime PM APIs access registers directly, thi=
-s
-> > > will lead to accessing device registers without clocks being enabled.
-> > > Similar issues may occur with other devres actions that access device
-> > > registers.
-> > >
-> > > Add devm_pm_domain_attach(). When replacing the dev_pm_domain_attach(=
-) and
-> > > dev_pm_domain_detach() in bus probe and bus remove, it ensures that t=
-he
-> > > device is detached from its PM domain in device_unbind_cleanup(), onl=
-y
-> > > after all driver's devres-managed resources have been release.
-> > >
-> > > For flexibility, the implemented devm_pm_domain_attach() has 2 state
-> > > arguments, one for the domain state on attach, one for the domain sta=
-te on
-> > > detach.
+> > commit a539e2a6d51d1c12d89eec149ccc72ec561639bc
+> > Author: Lorenz Bauer <lmb@isovalent.com>
+> > Date:   Tue May 20 14:01:17 2025 +0100
 > >
-> > dev_pm_domain_attach() is not part driver API and I'm not convinced at
->
-> Is the concern that devm_pm_domain_attach() will be [ab]used by drivers?
-
-Yes, among other things.
-
-> In that case we can go back to using devres group to enforce ordering,
-> but proper ordering is needed.
-
-Sure.
-
-> > all by the arguments above.
->
-> Please reconsider given the fact that issue is not limited to the
-> runtime PM.
-
-PM domains are not resources, they are interfaces that are added to
-devices by the bus types that need them and they also need to be
-removed by those bus types.
-
-A PM domain needs to go away at remove time because it may not make
-sense to use PM domain callbacks without driver callbacks and if
-enabled runtime PM is leaked beyond the point at which there are no
-driver and bus type callbacks, this is exactly what may happen.
-
-If you have ordering issues in drivers, that's where they are and
-that's where they need to be addressed.
-
-Thanks!
+> >     btf: Allow mmap of vmlinux btf
+> >
+> >     User space needs access to kernel BTF for many modern features of BPF.
+> >     Right now each process needs to read the BTF blob either in pieces or
+> >     as a whole. Allow mmaping the sysfs file so that processes can directly
+> >     access the memory allocated for it in the kernel.
+> >
+> >     remap_pfn_range is used instead of vm_insert_page due to aarch64
+> >     compatibility issues.
+> >
+> >     Signed-off-by: Lorenz Bauer <lmb@isovalent.com>
+> >     Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> >     Tested-by: Alan Maguire <alan.maguire@oracle.com>
+> >     Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
+> >     Link: https://lore.kernel.org/bpf/20250520-vmlinux-mmap-v5-1-e8c941acc414@isovalent.com
+> >
+> > Thanks,
+> > Leo
