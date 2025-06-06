@@ -1,160 +1,210 @@
-Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E1727FD5A;
-	Fri,  6 Jun 2025 12:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391C827FD5A;
+	Fri,  6 Jun 2025 12:25:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749212705; cv=none; b=eiGgWQ19/GV5sOc2dqr4K7l2Bz28hRFAD+B21RCUiWbxmRiLhDxK9qCdKO9cYTifZomXnQzmNGPt7f3OTGLT6ElmXtex5WgGC6EK7YOGUhD7vJ/wANrQ5q1pxeh5gn1YaHppFB3Knpe2LbcduuRjsHLJ0AfZohprmZb0rNhfi/o=
+	t=1749212753; cv=none; b=YJJmIJtZlABGB2b+HcQDzrPk3RmaaGv6IwruTUNYeohFov37OYStXgecV0VryojZMvaC4d8BALiD/7b0BcEoziwmhLYsQg3Hin8qhhx2iawXR5mMeRIhPjsHwu9LCNpHaMVQ91YpR22r0BijUw5kw16xK52MHa6BNp2INs7i7fM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749212705; c=relaxed/simple;
-	bh=/LwMGNERnTE/Re/wZKCZmRuWogdYPaqVaY5+sEEkS74=;
+	s=arc-20240116; t=1749212753; c=relaxed/simple;
+	bh=+97TlAFovavLSEOye2F0bZZb1ctQiJ0szw3vipntuxY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SvRg0Oj1LJCM2QUQ1ny+SksyKMsYow282KzemnLrQtog0t7dJvYYa01o0Jr5SPlldA3LtPTq+leEg5dod4PXDv1C1InjnI3X/hV0AkHI3sa3Mp7ya9D5t6w/FmPmEenDzslaXWqKdG8PEcvAgu8dV3UAT3rsOtreiZ8B4ZsnCLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=UdM7Ona6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Xm7vQ7c+; arc=none smtp.client-ip=103.168.172.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	 Content-Type:Content-Disposition:In-Reply-To; b=alI7RpqwGaLM74tj2Dupt3QTTq40guh7kZJZxaj6gjzxtasHXzsSP0cLZ5G57hklrXRXiDIKffOLxMOLCTDqc43RChsx8xsf5GAsbfY8c1Tw9MUHBltxcHoBMj1kHFWPxwuEwk4MZ/+yKxX9PNga640tsjnmLIL3KwQQliqv7xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=M7dPO64o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="UdM7Ona6";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Xm7vQ7c+"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfout.phl.internal (Postfix) with ESMTP id F298C138036D;
-	Fri,  6 Jun 2025 08:25:02 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Fri, 06 Jun 2025 08:25:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1749212702;
-	 x=1749299102; bh=+Yz74keYzlcBJNNckM7243Jd6xVKNRMOXRAFhHTjxas=; b=
-	UdM7Ona6Ut6PD/qIdX82XAxCiZuA/Adbumg/LCKzkMK0NLe4qu3PSXrMBziA5CYz
-	yRefFtROBCuzKl3ZSbN32jbfWaqlxA7jYAWykS3FexMo5Npsdx0TykmLQLRXMZ2E
-	BNL0SXAAxXoeHbR4P4GNJGs4nmoETzapCUh5nngJ8ssfiKCi3XAqFwjz4HlxP4tj
-	CtyiRujKGqyRuVT6G8xA/BSdN4jlb3+ZMlkLAWxpGxlnfNzjVXxbsAaWzs/cFiUq
-	H0CH93D7gIH+uW02qIqNOx9L2rdzBwkNjPCoa9aRt5rk9mfli619Pz9a32CFBRbj
-	1/hId4bVBh99J+lP5ALhqg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749212702; x=
-	1749299102; bh=+Yz74keYzlcBJNNckM7243Jd6xVKNRMOXRAFhHTjxas=; b=X
-	m7vQ7c+IJ/MTG99KovrXlXaMcJjLxF0WGTj5CzvktubnhaEff7q5G3wijb1PJJgY
-	jov1HjVoXboW4t8WwxBQ3H/BZGbTorgr0A528ZC3h6PYQq1XSO5/vhmksuZL0pO4
-	oe/D7XNJwnqxyxS6kHtZv8+HKLkM0lJGTuJ+VkqzNv1Uofz1xSVaO9jDj1UzGLqJ
-	zarGv7ME/cQYjKY/9cH2rVgFZlownRB/lOD+4ncSWCqA8IVhvAqL10hiPveOoYnq
-	pwW0WEZ4T2/Y9qS+bMslr9MhcOCkgDkZLWU9OvVWVKfHAu0bR/Hq2OmHWbA2Hc8j
-	6TYXD9VdePZqPMLyCi0dA==
-X-ME-Sender: <xms:Ht5CaGkusookHOrOUDU6-qelVeXWxQlDx3Yplu0BSrN5i2olUjDXnw>
-    <xme:Ht5CaN00UkJvH4GaDmUCx-Yr6FoJd504FUQQBERoqhIrpA6EZA7M78JW7JzeMo8YE
-    c1iplg5RI4IuUYrZ_Q>
-X-ME-Received: <xmr:Ht5CaEpom3F2vzEHktGzPLyWjqsj7i2ba7D47hTWoys_gMh39kjALn2TA9iqH3XPuK66r8ZwBjRSQDfeXYP1QvIQc__4Sh56Uw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdehtdekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdej
-    necuhfhrohhmpefpihhklhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrshhoug
-    gvrhhluhhnugesrhgrghhnrghtvggthhdrshgvqeenucggtffrrghtthgvrhhnpeevteeg
-    tddvvdfhtdekgefhfeefheetheekkeegfeejudeiudeuleegtdehkeekteenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihhklhgrshdrshho
-    uggvrhhluhhnugesrhgrghhnrghtvggthhdrshgvpdhnsggprhgtphhtthhopeelpdhmoh
-    guvgepshhmthhpohhuthdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhdorhgv
-    nhgvshgrshesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepmhgthhgvhh
-    grsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgrkhgrrhhirdgrihhluhhssehl
-    ihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhgvughirgesvh
-    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrvghnvghsrghs
-    qdhsohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkh
-    gvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgthhgvhhgr
-    sgdohhhurgifvghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlrghurhgvnhhtrd
-    hpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepjhgr
-    tghophhordhmohhnughisehiuggvrghsohhnsghorghrugdrtghomh
-X-ME-Proxy: <xmx:Ht5CaKlP-ZMblpyyypBd6H9uCIWZdisxthkJsSdIknbwWfUo5y5Uzw>
-    <xmx:Ht5CaE2FyDglCNfV38epkX9UGNUgEU1Gq1R13FHkiC182b18mU1HRA>
-    <xmx:Ht5CaBuMBn9ScmrenkmJorZzbDhgPCqTB6CDC6bMOckiUXEn9JQEdQ>
-    <xmx:Ht5CaAV7K_1Dr4LVAcN0xsFnopFTHKqikrTlA8W39NKl2omvWgNR5w>
-    <xmx:Ht5CaIMUBaTPPx0JbdivynujZCNEotjvaPSsWmzHLCGuDPmsiX_0EUEq>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 6 Jun 2025 08:25:01 -0400 (EDT)
-Date: Fri, 6 Jun 2025 14:25:00 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Subject: Re: [PATCH v3 12/15] media: rcar-csi2: Add more stream support to
- rcsi2_calc_mbps()
-Message-ID: <20250606122500.GI2770609@ragnatech.se>
-References: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
- <20250530-rcar-streams-v3-12-026655df7138@ideasonboard.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="M7dPO64o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2675CC4CEEB;
+	Fri,  6 Jun 2025 12:25:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1749212752;
+	bh=+97TlAFovavLSEOye2F0bZZb1ctQiJ0szw3vipntuxY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M7dPO64ovbpmqj/VsmsITZfJKoGgSN/4sqiUJnOTJHQ7qWCD/9GCRPS0X90KyYggk
+	 IeQo3rlaDgy9WhetWz+CtQ/b/yFyBn737NoxRVThbfeZhldT1noHYK4g2qBHG25iKr
+	 efrTb3veEsOYReUP3MMBbgRZvYWuwq5VHLt1u7X4=
+Date: Fri, 6 Jun 2025 14:25:49 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Subject: Re: [PATCH v3 2/3] misc: add driver for ST M24LR series RFID/NFC
+ EEPROM chips
+Message-ID: <2025060650-tried-widen-4443@gregkh>
+References: <20250606120631.3140054-1-abd.masalkhi@gmail.com>
+ <20250606120631.3140054-3-abd.masalkhi@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250530-rcar-streams-v3-12-026655df7138@ideasonboard.com>
+In-Reply-To: <20250606120631.3140054-3-abd.masalkhi@gmail.com>
 
-Hi Tomi,
+On Fri, Jun 06, 2025 at 12:06:30PM +0000, Abd-Alrhman Masalkhi wrote:
+> +// SPDX-License-Identifier: GPL-2.0-or-later
 
-Thanks for your patch.
+Are you sure "or-later" is what you want?  Sorry, I have to ask.
 
-On 2025-05-30 16:50:41 +0300, Tomi Valkeinen wrote:
-> In the case where link-freq is not available, make sure we fail if there
-> are more than one stream configured, and also use the correct stream
-> number for that single stream.
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-
-With Laurent's comments addressed,
-
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-
-> ---
->  drivers/media/platform/renesas/rcar-csi2.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
-> index 65c7f3040696..b9f83aae725a 100644
-> --- a/drivers/media/platform/renesas/rcar-csi2.c
-> +++ b/drivers/media/platform/renesas/rcar-csi2.c
-> @@ -1018,17 +1018,22 @@ static int rcsi2_calc_mbps(struct rcar_csi2 *priv,
->  	 */
->  	freq = v4l2_get_link_freq(remote_pad, 0, 0);
->  	if (freq < 0) {
-> +		struct v4l2_subdev_route *route = &state->routing.routes[0];
->  		const struct rcar_csi2_format *format;
->  		struct v4l2_mbus_framefmt *fmt;
->  		unsigned int lanes;
->  		unsigned int bpp;
->  		int ret;
->  
-> +		if (state->routing.num_routes > 1)
-> +			return -EINVAL;
+> +/*
+> + * m24lr.c - Sysfs control interface for ST M24LR series RFID/NFC chips
+> + *
+> + * Copyright (c) 2025 Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
+> + *
+> + * This driver implements both the sysfs-based control interface and EEPROM
+> + * access for STMicroelectronics M24LR series chips (e.g., M24LR04E-R).
+> + * It provides access to control registers for features such as password
+> + * authentication, memory protection, and device configuration. In addition,
+> + * it manages read and write operations to the EEPROM region of the chip.
+> + */
 > +
->  		ret = rcsi2_get_active_lanes(priv, &lanes);
->  		if (ret)
->  			return ret;
->  
-> -		fmt = v4l2_subdev_state_get_format(state, RCAR_CSI2_SINK, 0);
-> +		fmt = v4l2_subdev_state_get_format(state, route->sink_pad,
-> +						   route->sink_stream);
->  		if (!fmt)
->  			return -EINVAL;
->  
-> 
-> -- 
-> 2.43.0
-> 
+> +#include <linux/i2c.h>
+> +#include <linux/regmap.h>
+> +#include <linux/module.h>
+> +#include <linux/device.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/nvmem-provider.h>
+> +
+> +#define M24LR_PAGESIZE_DEFAULT	  1u
+> +
+> +#define M24LR_WRITE_TIMEOUT	  25u
+> +#define M24LR_READ_TIMEOUT	  (M24LR_WRITE_TIMEOUT)
+> +
+> +#define to_sys_entry(attrp)   container_of(attrp, struct m24lr_sys_entry, attr)
 
--- 
-Kind Regards,
-Niklas Söderlund
+This shouldn't be needed, something seems odd...
+
+> +static ssize_t m24lr_ctl_store(struct device *dev, struct device_attribute *attr,
+> +			       const char *buf, size_t count)
+> +{
+> +	struct m24lr *m24lr = i2c_get_clientdata(to_i2c_client(dev));
+> +	struct m24lr_sys_entry *entry = to_sys_entry(attr);
+
+Why isn't this just going off of the device?  Are you using single
+show/store callbacks for multiple attribute types?
+
+> +	unsigned int reg_size = entry->reg_size;
+> +	unsigned int reg_addr = entry->reg_addr;
+
+Ah, you are.  Are you sure you need/want to do that?
+
+> +	u8 output[8];
+> +	int err = 0;
+> +
+> +	if (unlikely(!count))
+
+likely/unlikely can ONLY be used when you can benchmark the difference
+in the speed of not having it.  For a sysfs file, that's not needed at
+all, please remove all of these.
+
+> +		return -EINVAL;
+> +
+> +	if (count > (reg_size << 1))
+> +		return -EINVAL;
+> +
+> +	if (unlikely(!is_power_of_2(reg_size) || reg_size > 8)) {
+> +		dev_dbg(dev,
+> +			"Invalid register size: must be a power of 2 and <= 8 bytes (%u)\n",
+> +			reg_size);
+> +		return -EIO;
+
+Not -EINVAL?  This isn't an I/O error.
+
+> +	}
+> +
+> +	err = m24lr_parse_le_value(buf, reg_size, output);
+> +	if (err)
+> +		return err;
+> +
+> +	return m24lr_write(m24lr, (u8 *)&output, reg_size, reg_addr, false);
+> +}
+> +
+> +static ssize_t m24lr_ctl_show(struct device *dev, struct device_attribute *attr,
+> +			      char *buf)
+> +{
+> +	long ret;
+> +	u64 val;
+> +	__le64 input = 0;
+> +	struct m24lr *m24lr = i2c_get_clientdata(to_i2c_client(dev));
+> +	struct m24lr_sys_entry *entry = to_sys_entry(attr);
+> +	unsigned int reg_addr = entry->reg_addr;
+> +	unsigned int reg_size = entry->reg_size;
+> +
+> +	if (unlikely(!is_power_of_2(reg_size) || reg_size > 8)) {
+> +		dev_dbg(dev,
+> +			"Invalid register size: must be a power of 2 and <= 8 bytes (%u)\n",
+> +			reg_size);
+> +		return -EIO;
+> +	}
+> +
+> +	ret = m24lr_read(m24lr, (u8 *)&input, reg_size, reg_addr, false);
+> +	if (IS_ERR_VALUE(ret))
+> +		return ret;
+> +
+> +	if (ret != reg_size)
+> +		return -EIO;
+> +
+> +	switch (reg_size) {
+> +	case 1:
+> +		val = *(u8 *)&input;
+> +		break;
+> +	case 2:
+> +		val = le16_to_cpu((__le16)input);
+> +		break;
+> +	case 4:
+> +		val = le32_to_cpu((__le32)input);
+> +		break;
+> +	case 8:
+> +		val = le64_to_cpu((__le64)input);
+> +		break;
+> +	};
+> +
+> +	return sysfs_emit(buf, "%llx\n", val);
+
+Why are "raw" read/writes happening from sysfs to the chip?  That feels
+wrong, and an abuse of the sysfs api.
+
+If you really want "raw" access, make it a binary file that userspace
+can mmap or read/write from directly, with the kernel getting out of the
+way entirely.
+
+> +	n_sss = chip->n_sss_entries;
+> +	if (n_sss) {
+> +		sss = devm_kzalloc(dev, n_sss * sizeof(struct m24lr_sys_entry),
+> +				   GFP_KERNEL);
+> +		if (!sss)
+> +			return -ENOMEM;
+> +
+> +		for (i = 0; i < n_sss; i++) {
+> +			char *name = devm_kasprintf(dev, GFP_KERNEL, "sss%d", i);
+> +
+> +			sss[i].reg_size = 1;
+> +			sss[i].reg_addr = i;
+> +			sss[i].attr.attr.name = name;
+> +			sss[i].attr.attr.mode = 0600;
+> +			sss[i].attr.show = m24lr_ctl_show;
+> +			sss[i].attr.store = m24lr_ctl_store;
+> +
+> +			err = device_create_file(dev, &sss[i].attr);
+
+You just raced with userspace and lost.  This is not how to do this,
+please do not dynamically create attributes (hint, this should have
+errored out as you didn't correctly initialize them), but also:
+
+> +			if (err)
+> +				dev_warn(dev,
+> +					 "Failed to create sysfs entry '%s'\n",
+> +					 name);
+
+You do not unwind properly if an error happens.
+
+Just use a default attribute group attached to the driver and the driver
+core will handle all of that logic for you automatically.  Making the
+code smaller and even better yet, correct :)
+
+thanks,
+
+greg k-h
