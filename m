@@ -1,251 +1,140 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36892868AB
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 09:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631A81DF739
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 09:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749200814; cv=none; b=qVFNEKuZgo1G8efEiDDavxuNdoB/E+iINrsiEJlBuCgP+ogBIhEgLIR2x7zrOp5SZ0qhUcF9cj42MsmAol53UYHMNb5cN/o136pqGj5E8eChBA0mG0jz4qKzNVrOeJet9Q2ur87CDbPNzm28WBbxTab8Qybik3RIbnXVBgJydFM=
+	t=1749200893; cv=none; b=F6A8IPHtjiwWrCvMQ2T6HLKJtlD853vKn+9QWg+3atEI03tK9tAd6JTfuL4HRox/ABCs7n9ZTQty/Yl4N7t7TCcKLfEG0rZXEkIPde9Ie2sDKwR0LE/IEkvSVl8z7bd19UCCkuyJfmA/pDHgKFifdnxVC9hebmWI7kUYsvO62dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749200814; c=relaxed/simple;
-	bh=5/GIpoiLEODukIITVP+GzuZ7UBw9dQMUpLlMC4ZVZgw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jnk9Tg/dkYl025Ll8nM3h9jRcR+B0QIhicjSf8iy9abFZfPz39GwweT6hg1IqhvhZ8dlsvvCmnyvuamHRdjUKZEVu7eZIkVLHayNi7KLfKd/2koViqJsSDvPtO+fcV9CWOfO5g4fwJyWyzjGxWncrrnk3PWV+2Ed6NSo3ldMGJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KR8o8gwP; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749200893; c=relaxed/simple;
+	bh=ZFnM3PDhFbSJjWsyk0zkU5H5rASBj60HHgmc53ZHy8Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fmF/7yCn9iJbEC4sScBFSLH3qINhX8qeTMrg9jxzyWK/JGUV9iMGDCJD9lQ3bMbD1CWez9KN2UjcnZoa/bkV3waG5zuN5ShocK+Y53MJTRgbCK9GNjCXWtLG4FRC7qFFVFJggFI1f5EW1imwpN4fOnBSF4t7dQ7gJCUWw8vrhvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hEESVUea; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KR8o8gwP"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6face1d58dcso28360456d6.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 02:06:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749200812; x=1749805612; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7Juf4jrcJwc7M/PUKZ2NRoIutSSX565sEIodIwjaKUU=;
-        b=KR8o8gwPU/AKH4wTlHWbYqWLn0K0H3kLCForFgwD9iy+n/I1Lal+DC5SHj2RrLAvEL
-         c6mlOwWS/Aq2NZLWA2ALG9dkk3qXZkCm4kE1UfE031IP+eBpl2PiQJv9Lo3Yk3xSDehw
-         OkkOe6AL52t9NluxQCi6TEgsejukLlR7f+5nvzmRWaaDf1Jb/W2T+/bRsy5NeLmNZ5/T
-         nRYzUp7zLsK9h5Do+Zfa04PF0QXWMJj9X9JlnGGAkC7bQKv0BMA8p2B1YnZaBY5WD4H0
-         EJY8zE4XUFJgy2OhCBcd1Ka79ERkP3AEjPJGEqcAknnsL+yKA/qvPzmyfHV65nKITpU2
-         Z4dg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hEESVUea"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749200890;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=zY1UJXwwdXuV/sjsPfipNC1p4dsxIugLMJFfrvt+Ih0=;
+	b=hEESVUeaznH0JxUOK+TKxspAkTxbnqyAS0j5WVhE+1A2OpMhECei2lwVSGSDfJwuYsYjIg
+	d9lFNwiYGzYu2dD8itVrqTu0GgSFgcIqu+MdP3BQez8dl9uAT4XS1URimP3IjUw1pW8bCY
+	r5H/e60QwPUpJtBRKuSdMlJUso3JoZI=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-527-ZXPD1VVzM96-c-URO3yaJw-1; Fri, 06 Jun 2025 05:08:09 -0400
+X-MC-Unique: ZXPD1VVzM96-c-URO3yaJw-1
+X-Mimecast-MFC-AGG-ID: ZXPD1VVzM96-c-URO3yaJw_1749200888
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-450eaae2934so15764445e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 02:08:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749200812; x=1749805612;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7Juf4jrcJwc7M/PUKZ2NRoIutSSX565sEIodIwjaKUU=;
-        b=H17sQ5XkN101M8NRatbJfzl+JzJ3iK+fPYQQRjLWLTw+ESdxZBn8b4fZNAA+i+Er0n
-         5qptk2bLH4cYy3H3o5jSZCFpyJ0njmyrGqBYfwxlF3SGqkYWdtQkZUf8A6hoXZwkseF1
-         km1KgYcNdcU5m7rQUEMqsrPtb2dUNDOuJiKJk0+2H5SDjLy+l31rSuFVcmPbWuN62a+k
-         QjV9QW6lgT15lbafwqDX70ZSPxOqsxwO7mDi+4YOe3CMQzknVbf+bNn6g7hHqIp9apjQ
-         MTTlBRLgVs7w91JqW3S0WAx4Q99DfouKKRdtGp4s4u5MNUPudxQBmMesGPlpSpfZVwmF
-         el/g==
-X-Forwarded-Encrypted: i=1; AJvYcCU+bIcLand6GV/Lt0m0vKJtVphegWCwpSucBShjYE25dOw/5ESDrl/inKorw6U2drxfDMWquuod3V3HFKs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoyUGToza9AOcTN1GHN/e5eDioSinSyV8HXq/k6JGNvisN7tGt
-	J8BK4IqI7Ldx8ZFJT0xKn/GPUWujkEv/MdgsWtSzKHrT4g7DqhtVsnnDEX4dx8vKV/I3xAud1+d
-	cn9jS/fOZIruCUgpgZ3DWsfE/2j6BXujbsKHsBsMM
-X-Gm-Gg: ASbGncuQrgV9v6QhsBuID7Ugxs4qxHaRc+cEhLMB6gnJDJsGe3qZTIFVN0OaJ6Kg86g
-	qjjWtq5lWysvvLImh2l06KLIfisY0cuulrA4dY3cu5O4wXkl0mgDgJjdLqKfKexo9kdD/b5dYqt
-	XmjEHSEtCALrd77bAiyKtWcI/AkuRa9Qkt/rgHwa/vtEB141wRv/eFaALrx9WOk1qe6NBtQClg4
-	ghD2A==
-X-Google-Smtp-Source: AGHT+IHrlc9mecNqwz2N+nw+P4UYGvVjpnyOb92OYDI8uLthwW+8fWcUH8+t4NPziYSbwMH5pv1fl34SjJ41A6Aw6oE=
-X-Received: by 2002:a05:622a:4a15:b0:4a4:3b41:916c with SMTP id
- d75a77b69052e-4a5b9a38b4bmr50944651cf.17.1749200811395; Fri, 06 Jun 2025
- 02:06:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749200888; x=1749805688;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zY1UJXwwdXuV/sjsPfipNC1p4dsxIugLMJFfrvt+Ih0=;
+        b=f3126r/twVX/M++Ts8wUuybTHTNCrGyqVdrdBsw5salP9K4/U1Sjg1dfatcUxTyyPU
+         BsRt1abNU2jnl1AAMkosVUUFlGKcRW0nk4Lc8VlP336+PTiip7yIVVzoIuyhagCfcqtm
+         Ox7O9wa/LE4P+XktkAaOtV5+G2ZTYKPAYEmr8ANhGeRmSR5inyHEXoQoR0A1l06wocnF
+         a3M+1MqqwwuwBF+jw3sD/o45CRReIgZh1NN9lDm5Pt458LpSxrmY4Cts62ZNLvqDUmrJ
+         TMGBs/tmEpnxisL3ZoRXXdO2HidKb85JE6UbJib7ltVrZwXT31tcITtKkRUKCYO1Mh7O
+         /M8A==
+X-Forwarded-Encrypted: i=1; AJvYcCXkO58p5k3LS3Ad+hOMzkdzXf03xYsNywxdpKvHB2lm92r5Xcp6MAvL9ORiQZf4lHSM8LJ0rOLxl8vjR2k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJ8OOPH/Kwmp8pM7yW7iPtps5RJ4QjFjH+aR6WN3oYw7cB/9Z4
+	PvfjIotT+dyTNUw9Ay8welAlwwWx+WzLLxog300GtuAM7PWEWNSljp8rEL2e5gKULT8EFEkPTth
+	3SR5bi2BFmv3rYc5fFZBfgfqp6qrfEAKNDujl/VN24PyTukm37RqBhzX54v4/Q4O/UV2in/RhJA
+	==
+X-Gm-Gg: ASbGnctcyoCyH9znmdd73UPlBvpOODIuDS8Cwkno2RGsLo74DNpD7rji67KiiARLvCF
+	sMF7763QGRtdadBsaNyuxCOBNJtWEZ9k3Nbyrf1VSfv7ejb6x+iuQH8n+22/F2+LrkukttSwtxc
+	a8eeCjsCVqgOMgmp5WhAheLEWxW0TKyXpQiM71XB/rAOw0HPCwHOC1PK9mGqXZVhXlgQeuaclB2
+	0if/+bRVw3/vdZrfx0G3D5+SGczWk7CaQcL8sWo+AaLQihl/Gfx40JzLXfRbPdfINZZXIaU6e10
+	rvU+fiBJ0uC2WnCAUNanNIwPtyOtFZXDJFEIX4Vz5n0G1DvveYq5EzvQyg==
+X-Received: by 2002:a05:600c:b86:b0:450:cd25:e68f with SMTP id 5b1f17b1804b1-452014e9325mr24877475e9.27.1749200887747;
+        Fri, 06 Jun 2025 02:08:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGFgCfJhv5D4WKiJLVPtf7WFxx5mFScPGVIDDWdSB4TB7uCI+iacBtSoT4d2UV7tlwIeLe0gg==
+X-Received: by 2002:a05:600c:b86:b0:450:cd25:e68f with SMTP id 5b1f17b1804b1-452014e9325mr24877175e9.27.1749200887316;
+        Fri, 06 Jun 2025 02:08:07 -0700 (PDT)
+Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e01:ef00:b52:2ad9:f357:f709])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452137290b9sm17000835e9.34.2025.06.06.02.08.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 02:08:06 -0700 (PDT)
+From: Lukas Bulwahn <lbulwahn@redhat.com>
+X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+To: Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pm@vger.kernel.org
+Cc: Javier Martinez Canillas <javierm@redhat.com>,
+	kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: [PATCH] pmdomain: arm: scmi_pm_domain: remove code clutter
+Date: Fri,  6 Jun 2025 11:08:02 +0200
+Message-ID: <20250606090802.597504-1-lukas.bulwahn@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <9da42688-bfaa-4364-8797-e9271f3bdaef@hetzner-cloud.de>
- <87zfemtbah.fsf@toke.dk> <CANn89i+7crgdpf-UXDpTNdWfei95+JHyMD_dBD8efTbLBnvZUQ@mail.gmail.com>
- <CANn89iKpZ5aLNpv66B9M4R1d_Pn5ZX=8-XaiyCLgKRy3marUtQ@mail.gmail.com> <5f19b555-b0fa-472a-a5f3-6673c0b69c5c@hetzner-cloud.de>
-In-Reply-To: <5f19b555-b0fa-472a-a5f3-6673c0b69c5c@hetzner-cloud.de>
-From: Eric Dumazet <edumazet@google.com>
-Date: Fri, 6 Jun 2025 02:06:40 -0700
-X-Gm-Features: AX0GCFuvatprhbrKC4R-61A0CpjrF1M_FzEpByoJmTe1A2qJ9Yyf7FigygmAcu0
-Message-ID: <CANn89iJAR3HvWXNqNSR=y9qYm4W5sD40La+UpRraF4NE8yhfrA@mail.gmail.com>
-Subject: Re: [BUG] veth: TX drops with NAPI enabled and crash in combination
- with qdisc
-To: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
-Cc: =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, bpf@vger.kernel.org, netdev@vger.kernel.org, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
-	Jiri Pirko <jiri@resnulli.us>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 5, 2025 at 3:17=E2=80=AFPM Marcus Wichelmann
-<marcus.wichelmann@hetzner-cloud.de> wrote:
->
-> Am 06.06.25 um 00:11 schrieb Eric Dumazet:
-> > On Thu, Jun 5, 2025 at 9:46=E2=80=AFAM Eric Dumazet <edumazet@google.co=
-m> wrote:
-> >>
-> >> On Thu, Jun 5, 2025 at 9:15=E2=80=AFAM Toke H=C3=B8iland-J=C3=B8rgense=
-n <toke@redhat.com> wrote:
-> >>>
-> >>> Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de> writes:
-> >>>
-> >>>> Hi,
-> >>>>
-> >>>> while experimenting with XDP_REDIRECT from a veth-pair to another in=
-terface, I
-> >>>> noticed that the veth-pair looses lots of packets when multiple TCP =
-streams go
-> >>>> through it, resulting in stalling TCP connections and noticeable ins=
-tabilities.
-> >>>>
-> >>>> This doesn't seem to be an issue with just XDP but rather occurs whe=
-never the
-> >>>> NAPI mode of the veth driver is active.
-> >>>> I managed to reproduce the same behavior just by bringing the veth-p=
-air into
-> >>>> NAPI mode (see commit d3256efd8e8b ("veth: allow enabling NAPI even =
-without
-> >>>> XDP")) and running multiple TCP streams through it using a network n=
-amespace.
-> >>>>
-> >>>> Here is how I reproduced it:
-> >>>>
-> >>>>   ip netns add lb
-> >>>>   ip link add dev to-lb type veth peer name in-lb netns lb
-> >>>>
-> >>>>   # Enable NAPI
-> >>>>   ethtool -K to-lb gro on
-> >>>>   ethtool -K to-lb tso off
-> >>>>   ip netns exec lb ethtool -K in-lb gro on
-> >>>>   ip netns exec lb ethtool -K in-lb tso off
-> >>>>
-> >>>>   ip link set dev to-lb up
-> >>>>   ip -netns lb link set dev in-lb up
-> >>>>
-> >>>> Then run a HTTP server inside the "lb" namespace that serves a large=
- file:
-> >>>>
-> >>>>   fallocate -l 10G testfiles/10GB.bin
-> >>>>   caddy file-server --root testfiles/
-> >>>>
-> >>>> Download this file from within the root namespace multiple times in =
-parallel:
-> >>>>
-> >>>>   curl http://[fe80::...%to-lb]/10GB.bin -o /dev/null
-> >>>>
-> >>>> In my tests, I ran four parallel curls at the same time and after ju=
-st a few
-> >>>> seconds, three of them stalled while the other one "won" over the fu=
-ll bandwidth
-> >>>> and completed the download.
-> >>>>
-> >>>> This is probably a result of the veth's ptr_ring running full, causi=
-ng many
-> >>>> packet drops on TX, and the TCP congestion control reacting to that.
-> >>>>
-> >>>> In this context, I also took notice of Jesper's patch which describe=
-s a very
-> >>>> similar issue and should help to resolve this:
-> >>>>   commit dc82a33297fc ("veth: apply qdisc backpressure on full ptr_r=
-ing to
-> >>>>   reduce TX drops")
-> >>>>
-> >>>> But when repeating the above test with latest mainline, which includ=
-es this
-> >>>> patch, and enabling qdisc via
-> >>>>   tc qdisc add dev in-lb root sfq perturb 10
-> >>>> the Kernel crashed just after starting the second TCP stream (see ou=
-tput below).
-> >>>>
-> >>>> So I have two questions:
-> >>>> - Is my understanding of the described issue correct and is Jesper's=
- patch
-> >>>>   sufficient to solve this?
-> >>>
-> >>> Hmm, yeah, this does sound likely.
-> >>>
-> >>>> - Is my qdisc configuration to make use of this patch correct and th=
-e kernel
-> >>>>   crash is likely a bug?
-> >>>>
-> >>>> ------------[ cut here ]------------
-> >>>> UBSAN: array-index-out-of-bounds in net/sched/sch_sfq.c:203:12
-> >>>> index 65535 is out of range for type 'sfq_head [128]'
-> >>>
-> >>> This (the 'index 65535') kinda screams "integer underflow". So certai=
-nly
-> >>> looks like a kernel bug, yeah. Don't see any obvious reason why Jespe=
-r's
-> >>> patch would trigger this; maybe Eric has an idea?
-> >>>
-> >>> Does this happen with other qdiscs as well, or is it specific to sfq?
-> >>
-> >> This seems like a bug in sfq, we already had recent fixes in it, and
-> >> other fixes in net/sched vs qdisc_tree_reduce_backlog()
-> >>
-> >> It is possible qdisc_pkt_len() could be wrong in this use case (TSO of=
-f ?)
-> >
-> > This seems to be a very old bug, indeed caused by sch->gso_skb
-> > contribution to sch->q.qlen
-> >
-> > diff --git a/net/sched/sch_sfq.c b/net/sched/sch_sfq.c
-> > index b912ad99aa15d95b297fb28d0fd0baa9c21ab5cd..77fa02f2bfcd56a36815199=
-aa2e7987943ea226f
-> > 100644
-> > --- a/net/sched/sch_sfq.c
-> > +++ b/net/sched/sch_sfq.c
-> > @@ -310,7 +310,10 @@ static unsigned int sfq_drop(struct Qdisc *sch,
-> > struct sk_buff **to_free)
-> >                 /* It is difficult to believe, but ALL THE SLOTS HAVE
-> > LENGTH 1. */
-> >                 x =3D q->tail->next;
-> >                 slot =3D &q->slots[x];
-> > -               q->tail->next =3D slot->next;
-> > +               if (slot->next =3D=3D x)
-> > +                       q->tail =3D NULL; /* no more active slots */
-> > +               else
-> > +                       q->tail->next =3D slot->next;
-> >                 q->ht[slot->hash] =3D SFQ_EMPTY_SLOT;
-> >                 goto drop;
-> >         }
-> >
->
-> Hi,
->
-> thank you for looking into it.
-> I'll give your patch a try and will also do tests with other qdiscs as we=
-ll when I'm back
-> in office.
->
+From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 
-I have been using this repro :
+There is no need to introduce the boolean power_on to select the constant
+value for state. Simply pass the value for state as argument. Just remove
+this code clutter.
 
-ip netns add lb
+No functional change.
 
-ip link add dev to-lb type veth peer name in-lb netns lb
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+---
+ drivers/pmdomain/arm/scmi_pm_domain.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-# force qdisc to requeue gso_skb
-ethtool -K to-lb tso off
+diff --git a/drivers/pmdomain/arm/scmi_pm_domain.c b/drivers/pmdomain/arm/scmi_pm_domain.c
+index 2a213c218126..8fe1c0a501c9 100644
+--- a/drivers/pmdomain/arm/scmi_pm_domain.c
++++ b/drivers/pmdomain/arm/scmi_pm_domain.c
+@@ -22,27 +22,21 @@ struct scmi_pm_domain {
+ 
+ #define to_scmi_pd(gpd) container_of(gpd, struct scmi_pm_domain, genpd)
+ 
+-static int scmi_pd_power(struct generic_pm_domain *domain, bool power_on)
++static int scmi_pd_power(struct generic_pm_domain *domain, u32 state)
+ {
+-	u32 state;
+ 	struct scmi_pm_domain *pd = to_scmi_pd(domain);
+ 
+-	if (power_on)
+-		state = SCMI_POWER_STATE_GENERIC_ON;
+-	else
+-		state = SCMI_POWER_STATE_GENERIC_OFF;
+-
+ 	return power_ops->state_set(pd->ph, pd->domain, state);
+ }
+ 
+ static int scmi_pd_power_on(struct generic_pm_domain *domain)
+ {
+-	return scmi_pd_power(domain, true);
++	return scmi_pd_power(domain, SCMI_POWER_STATE_GENERIC_ON);
+ }
+ 
+ static int scmi_pd_power_off(struct generic_pm_domain *domain)
+ {
+-	return scmi_pd_power(domain, false);
++	return scmi_pd_power(domain, SCMI_POWER_STATE_GENERIC_OFF);
+ }
+ 
+ static int scmi_pm_domain_probe(struct scmi_device *sdev)
+-- 
+2.49.0
 
-# Enable NAPI
-ip netns exec lb ethtool -K in-lb gro on
-
-ip link set dev to-lb up
-ip -netns lb link set dev in-lb up
-
-ip addr add dev to-lb 192.168.20.1/24
-ip -netns lb addr add dev in-lb 192.168.20.2/24
-
-tc qdisc replace dev to-lb root sfq limit 100
-
-ip netns exec lb netserver
-
-netperf -H 192.168.20.2 -l 100 &
-netperf -H 192.168.20.2 -l 100 &
-netperf -H 192.168.20.2 -l 100 &
-netperf -H 192.168.20.2 -l 100 &
