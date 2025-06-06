@@ -1,98 +1,75 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C923DF5C;
-	Fri,  6 Jun 2025 01:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6ACADF5C
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 01:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749172306; cv=none; b=cLfEquInmPBpCDmkyYOhCpfAItOlk0JZMMLuV6huxJ0NDXCJabQbmtpeRflHaj0uyonsWRzk+EnkdUkbNGWwZkMc2IZVDuGSnNaqVlic8fzeBfpQYXKdDo8J91RZe/x8c482rxYJl6w2znR/IcNRfluO1Pnk5wdqfW8Vx/1VGj8=
+	t=1749172364; cv=none; b=SZjyMbYrHSy+xAQNFKpdOBN9X064ZSlA6xUknWZxrARCjvFjjsZs9FcgYXY4da7mSBS3cty3Khjb0UJzcqciUlNGpmlcRUTXJIq5+sByJnFlkB0/H18C5O3EBQb2oYcDuojSsTTr/c8Rhbnsmfl3QtRYzQkb0+nB41CkuEIjy/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749172306; c=relaxed/simple;
-	bh=Ng97a+IaTRbBbYWYbDD6AuQ8DmFmzD18hIzZD+c8ipM=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=up0k7fq4qek5/mzMrFTnBf2iMFjJkOE47SmeGtBa0emZIWwnx4J1T+PlAeNXTSzs5L8XTLWXgTc4G7nZ0tcxCHsYRggmGai/uyb/6MNAveBWteSlO2epZd7MAyAhShV7GM8P9aFS+zs3q10tW5U0V7gAT6H/9epVgWiu+1iU5dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bD3Ds1VgkzKHMyD;
-	Fri,  6 Jun 2025 09:11:41 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 91A711A0D27;
-	Fri,  6 Jun 2025 09:11:39 +0800 (CST)
-Received: from [10.174.99.169] (unknown [10.174.99.169])
-	by APP3 (Coremail) with SMTP id _Ch0CgBnB8JJQEJotWmmOQ--.56805S2;
-	Fri, 06 Jun 2025 09:11:39 +0800 (CST)
-Subject: Re: [PATCH 1/7] mm: shmem: correctly pass alloced parameter to
- shmem_recalc_inode() to avoid WARN_ON()
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: hughd@google.com, baolin.wang@linux.alibaba.com, willy@infradead.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org
-References: <20250605221037.7872-1-shikemeng@huaweicloud.com>
- <20250605221037.7872-2-shikemeng@huaweicloud.com>
- <20250605125724.d2e3db9c23af7627a53d8914@linux-foundation.org>
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-Message-ID: <721923ac-4bb1-1b2b-fce5-9d957c535c97@huaweicloud.com>
-Date: Fri, 6 Jun 2025 09:11:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1749172364; c=relaxed/simple;
+	bh=iMf7UDSsX3Mm/LHtC2bTXzYk4dQFJ9eq211Scrc0O8o=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=pcQu37os40ceFRdbL0Q+6F0D5REpO2cq09Wr57CeoZ1KYXqyAA8iqOuw9ITZPSXpDJAeszH4817jz3iPTI8qV1GrTBxv2HMHMo2J3ZSnPDCTkjN4/AahI4Fkn3PrIq9NJeSz3ByC8RrCUJZBJ1FyNX2VJLwp4PBTc/+bFm2LSHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=omfbEecq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="omfbEecq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4042BC4CEE7;
+	Fri,  6 Jun 2025 01:12:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1749172364;
+	bh=iMf7UDSsX3Mm/LHtC2bTXzYk4dQFJ9eq211Scrc0O8o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=omfbEecqCNV0u4fSV0wkn2rFqgPiiBk4KaDv4YrQCn79QKoxIhov9oFY3gDdb+fWl
+	 wJyWcOOO2ZGtH8MurIhycraTkt6JqcRGiO7RiPdYH2j0Co7cyUD0mtRaaN8+KEQbzE
+	 D0TL+xc7riC060HBhXRj/FulcXdfJqkFBWlA98IQ=
+Date: Thu, 5 Jun 2025 18:12:42 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Ge Yang <yangge1116@126.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 21cnbao@gmail.com,
+ david@redhat.com, baolin.wang@linux.alibaba.com, muchun.song@linux.dev,
+ osalvador@suse.de, liuzixing@hygon.cn
+Subject: Re: [PATCH V2] mm/hugetlb: remove unnecessary holding of
+ hugetlb_lock
+Message-Id: <20250605181242.54767f38223f9ebd4c379ccb@linux-foundation.org>
+In-Reply-To: <c15bfa20-2113-4299-98bf-1865b6b535ef@126.com>
+References: <1748317010-16272-1-git-send-email-yangge1116@126.com>
+	<20250604154754.a30e327c3f1640173c8b9cb8@linux-foundation.org>
+	<c15bfa20-2113-4299-98bf-1865b6b535ef@126.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20250605125724.d2e3db9c23af7627a53d8914@linux-foundation.org>
-Content-Type: text/plain; charset=gbk
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_Ch0CgBnB8JJQEJotWmmOQ--.56805S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xw1rtw48Jw48uFWDXw1rCrg_yoWkXrc_XF
-	4Iv39rCFW8XFsrAa1DXw4SqFZYka1kur4qvrW3JF92vryYq3WDCrnrXrySyryxXa1UKFZx
-	Cwn3X3W5KFyj9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb4AYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x02
-	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AK
-	xVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1l
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
-	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1veHD
-	UUUUU==
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
+On Thu, 5 Jun 2025 08:44:09 +0800 Ge Yang <yangge1116@126.com> wrote:
 
+> > This change addresses a possible performance issue which was introduced
+> > by 113ed54ad276 ("mm/hugetlb: fix kernel NULL pointer dereference when
+> > replacing free hugetlb folios").  113ed54ad276 was added recently and
+> > was cc:stable.
+> > 
+> > David said:
+> > https://lkml.kernel.org/r/87521d93-cc03-480d-a2ef-3ef8c84481c9@redhat.com
+> > 
+> > 
+> > Question is, will that bugfix's performance impact be sufficiently
+> > serious for us to also backport this new patch?
+> 
+> In some low-probability scenarios, there could be severe impacts. For 
+> example, when multiple CPUs execute the replace_free_hugepage_folios() 
+> function simultaneously. It seems that we need to backport this new 
+> patch. Thank you.
 
-on 6/6/2025 3:57 AM, Andrew Morton wrote:
-> On Fri,  6 Jun 2025 06:10:31 +0800 Kemeng Shi <shikemeng@huaweicloud.com> wrote:
-> 
->> As noted in the comments, we need to release block usage for swap entry
->> which was replaced with poisoned swap entry. However, no block usage is
->> actually freed by calling shmem_recalc_inode(inode, -nr_pages, -nr_pages).
->> Instead, call shmem_recalc_inode(inode, 0, -nr_pages) can correctly release
->> the block usage.
->>
->> ...
->>
->> --- a/mm/shmem.c
->> +++ b/mm/shmem.c
->> @@ -2145,7 +2145,7 @@ static void shmem_set_folio_swapin_error(struct inode *inode, pgoff_t index,
->>  	 * won't be 0 when inode is released and thus trigger WARN_ON(i_blocks)
->>  	 * in shmem_evict_inode().
->>  	 */
->> -	shmem_recalc_inode(inode, -nr_pages, -nr_pages);
->> +	shmem_recalc_inode(inode, 0, -nr_pages);
->>  	swap_free_nr(swap, nr_pages);
->>  }
-> 
-> Huh, three years ago.  What do we think might be the userspace-visible
-> runtime effects of this?
-This could trigger WARN_ON(i_blocks) in shmem_evict_inode() as i_blocks
-is supposed to be dropped in the quota free routine.
-> 
-> 
+OK, thanks.  I added
 
+Fixes: 113ed54ad276 ("mm/hugetlb: fix kernel NULL pointer dereference when replacing free hugetlb folios")
+Cc: <stable@vger.kernel.org>
+
+and moved this to the mm-hotfixes pile.  I'll keep it there for a week
+or two for review/test.  Once it goes upstream, this should propagate
+into 6.15.x.
