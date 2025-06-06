@@ -1,173 +1,252 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A2B1DEFD2;
-	Fri,  6 Jun 2025 16:00:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FBBE19D06A;
+	Fri,  6 Jun 2025 16:00:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749225612; cv=none; b=RU5Bc6wrKldcs9pH2g7mjrHuCz4JHrjvf3CKUOXfWf4SvrZDiLSv+7jBaOzrzWfcQgfIt4pcxK86R8kS35nc+4MYCTe1DXJ7DQGcTJWZg173HpqrfY6Fu88V477ayAB1MwGytE3M2+ESCnWk0j85X9TB2JX7bY3NMl+CWDbS0u4=
+	t=1749225647; cv=none; b=JQSbAhwkHxIdOmtXyUs0q/NJP2NolcshPPTYkRAVExTd9mafPbIXTdyJde+vivKb9sIZQ68KGWjyOr2avQtv0D12lunt4093QmQcLS3s8sxNWp9cco0F0m6wuMDichj5Wxx6zG6zbgy6uAm3lR1lalBwueiik34aielky8d9GQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749225612; c=relaxed/simple;
-	bh=Y1KQtPS81IExz4pchO3Uiy9RWFy+znuf0PIIHykxx+U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HtXjK15/LZoLkc3YOoXeakWyZJg/LjGP6b6GXCI0n60HQ5aQaC/F19f5UJlNVPzpFCPFXRs8DdQWv4Z++VOd9gAbcJWwayFdCOMonabMUXdM+bpbnnndHbMd9wwHWneIaAnak7J7QWrpQd1l8f0Jx9q1DLydgoJyv1IoUST9VGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PGySD9tq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749225647; c=relaxed/simple;
+	bh=0+E08hRwywKhkjx7JnQt4se8cvECsmAoG8+aEI0QaTw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V+gHVu9XlfDjPuOPCDEXE52RoG6V3UoQ7uPaA5q3TyDJbbGz7jkkNd47EEV1GMXn1+sZcVo3c2rGwtvVR2ksyXxoECv8TqNvLJe7no83ZzlByEC8bA5SmyZIgrpOZqnI69iHX2CjUWoZm2nrJoPQCoIr++Ld070Ql9WT6AlpPvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aN/v7igt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PGySD9tq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E375C4CEEB;
-	Fri,  6 Jun 2025 16:00:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aN/v7igt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D41F6C4CEF6;
+	Fri,  6 Jun 2025 16:00:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749225612;
-	bh=Y1KQtPS81IExz4pchO3Uiy9RWFy+znuf0PIIHykxx+U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PGySD9tq4ZQpSu/Wtj4XFkBDmmsKZGnIVxxl1oj7eYsTqQuRu23KRSHoeD85Vspgy
-	 qxr+RhnwQFbveIX9CanFdBmFn8T/0wkywf65ZQIyrbHCzJnLpH6UpTcJbS3go7IGSe
-	 7s6DuAYrZ200X3NBJxDFBQ5CdA5SSzLA5vhHCPYcuP5/H4aPZavwJcedFv7BS53s6z
-	 o5izOMHe7gmyuWPWE1uGR4QhhMprbnqP1t3OncMPMCS0+8Hz/10g/w9QUUSi1mRSYX
-	 1U8CS6d3aoF3I1AUnB8P546Ro7jroNxfuLYz6CVoVtk+Jhya/c1o93fFEqxvwUvGon
-	 bqkT0VtUHxX0Q==
-Date: Fri, 6 Jun 2025 17:00:06 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Ben Zong-You Xie <ben717@andestech.com>
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	alex@ghiti.fr, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, tglx@linutronix.de, daniel.lezcano@linaro.org,
-	prabhakar.mahadev-lad.rj@bp.renesas.com, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	tim609@andestech.com
-Subject: Re: [PATCH v5 0/8] add Voyager board support
-Message-ID: <20250606-booth-icky-b416c1827a43@spud>
-References: <20250602060747.689824-1-ben717@andestech.com>
+	s=k20201202; t=1749225646;
+	bh=0+E08hRwywKhkjx7JnQt4se8cvECsmAoG8+aEI0QaTw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=aN/v7igtpEDVhwIJFRhxmY7E4gZfzp/s4XbROI0iBLJbLV+MylVl6it9hyqNkQiWg
+	 Fjol823KWKYUP+c4P4B0Ldc3JaOCL2RUHcG6umTiCiwD2ve0ZNuRuuk8d95c4pOL8j
+	 SB9jsu67mvFHyYraWhBQWv33/WRdXBEj5jbsoTy/k2UkluRNhoy55ThC2M8Ahk1SYj
+	 5Keo1BaKYkYgjA9TxHzyWPHygXFTR6cOrSnIDaPI1Sb/r0CqrG7JsGjdNCylI1A39/
+	 MfWVpv2CReJ8CXeN1A+Q8eZoL17vdRV6eiGMnvaVetJ935abpTNtMIrIpVH6SWp0SB
+	 NiUR6Y/fmo7PQ==
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-4074997ce2bso650153b6e.3;
+        Fri, 06 Jun 2025 09:00:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUFBI4OuEr0M23yJvo2SH+0HIjiYpOyZvWZl5J0Rnz1NeDSi43/9pYKxC6T25SuFRxzFgwChzseD8iLfCtd@vger.kernel.org, AJvYcCUQQe9pXdosMGvRooK2J3vDWNP86dNnxZLouBEOjHvAP99kFGKxeEEOn0QTh331nDQZPVL/X+hvPuY=@vger.kernel.org, AJvYcCWP1DHMU6+aIdTXD5BcZqBD+x2FhpM0ajgHYM2MckLma8c3ZrbPouipTvv1YpXDGYLnP/+KYakdRAAFESR5Kgzwk+8=@vger.kernel.org, AJvYcCX8GJ1ptLXKF1O4sV1vZeOw10yIBBjB2CbTQrRrxySiwGSKnQ7G4mMhCHwOP4l3sHB10nq7nDAAUS4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNxsEKcLbCh4dCGqisl3st1LPfBAeZLahvFGp4DTpvW6r9uCgH
+	PUeLjT/cFUaKDzHQBu8jKj2gk+lJx0fCiuQ6V3AwUaqUDrrldCLjZzrcXNqtX0KKcowBbsm6S65
+	UxSaYHIaBgD2FVVf03Hmk7fVbiddOwm0=
+X-Google-Smtp-Source: AGHT+IG+/p8dPlsG+i+bKyi4+OPGxOvAlCFygsy2kq8Yd4lHK8Rtxzkc4gi25tmt3K47CNUiAhq8jyV80f/PLw6impg=
+X-Received: by 2002:a05:6808:288f:b0:402:b0f:4ccc with SMTP id
+ 5614622812f47-409051d725bmr1988228b6e.16.1749225645925; Fri, 06 Jun 2025
+ 09:00:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="XnSn4wlHT+08Cik0"
-Content-Disposition: inline
-In-Reply-To: <20250602060747.689824-1-ben717@andestech.com>
-
-
---XnSn4wlHT+08Cik0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20250606111749.3142348-1-claudiu.beznea.uj@bp.renesas.com> <20250606111749.3142348-2-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20250606111749.3142348-2-claudiu.beznea.uj@bp.renesas.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 6 Jun 2025 18:00:34 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0i_Ey+OVpSZHXru=tubMaZi=y-uOh_0M6zmWZ2DqqA7Vg@mail.gmail.com>
+X-Gm-Features: AX0GCFuO1uRWb5NWOssOUUfHKn6m_s_TDNlqKwT50_Lx4DRONBgPCZFQvedB7Bs
+Message-ID: <CAJZ5v0i_Ey+OVpSZHXru=tubMaZi=y-uOh_0M6zmWZ2DqqA7Vg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] PM: domains: Add devres variant for dev_pm_domain_attach()
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, 
+	len.brown@intel.com, pavel@kernel.org, ulf.hansson@linaro.org, 
+	jic23@kernel.org, daniel.lezcano@linaro.org, dmitry.torokhov@gmail.com, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, bhelgaas@google.com, 
+	geert@linux-m68k.org, linux-iio@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, fabrizio.castro.jz@renesas.com, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 02, 2025 at 02:07:39PM +0800, Ben Zong-You Xie wrote:
-> The Voyager is a 9.6=E2=80=9D x 9.6=E2=80=9D Micro ATX form factor develo=
-pment board
-> including Andes QiLai SoC. This patch series adds minimal device tree
-> files for the QiLai SoC and the Voyager board [1].
->=20
-> Now only support basic uart drivers to boot up into a basic console. Other
-> features will be added later.
->=20
-> [1] https://www.andestech.com/en/products-solutions/andeshape-platforms/q=
-ilai-chip/
+On Fri, Jun 6, 2025 at 1:18=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev> w=
+rote:
+>
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> The dev_pm_domain_attach() function is typically used in bus code alongsi=
+de
+> dev_pm_domain_detach(), often following patterns like:
+>
+> static int bus_probe(struct device *_dev)
+> {
+>     struct bus_driver *drv =3D to_bus_driver(dev->driver);
+>     struct bus_device *dev =3D to_bus_device(_dev);
+>     int ret;
+>
+>     // ...
+>
+>     ret =3D dev_pm_domain_attach(_dev, true);
+>     if (ret)
+>         return ret;
+>
+>     if (drv->probe)
+>         ret =3D drv->probe(dev);
+>
+>     // ...
+> }
+>
+> static void bus_remove(struct device *_dev)
+> {
+>     struct bus_driver *drv =3D to_bus_driver(dev->driver);
+>     struct bus_device *dev =3D to_bus_device(_dev);
+>
+>     if (drv->remove)
+>         drv->remove(dev);
+>     dev_pm_domain_detach(_dev);
+> }
+>
+> When the driver's probe function uses devres-managed resources that depen=
+d
+> on the power domain state, those resources are released later during
+> device_unbind_cleanup().
+>
+> Releasing devres-managed resources that depend on the power domain state
+> after detaching the device from its PM domain can cause failures.
+>
+> For example, if the driver uses devm_pm_runtime_enable() in its probe
+> function, and the device's clocks are managed by the PM domain, then
+> during removal the runtime PM is disabled in device_unbind_cleanup() afte=
+r
+> the clocks have been removed from the PM domain. It may happen that the
+> devm_pm_runtime_enable() action causes the device to be runtime-resumed.
 
-Ball is in your court now, after rc1 make a tree and get it in
-linux-next, and then send a pr to soc@kernel.org with this new content.
-Perhaps the defconfig should go separately, I can take that one if you
-want.
+Don't use devm_pm_runtime_enable() then.
 
-Cheers,
-Conor.
+> If the driver specific runtime PM APIs access registers directly, this
+> will lead to accessing device registers without clocks being enabled.
+> Similar issues may occur with other devres actions that access device
+> registers.
+>
+> Add devm_pm_domain_attach(). When replacing the dev_pm_domain_attach() an=
+d
+> dev_pm_domain_detach() in bus probe and bus remove, it ensures that the
+> device is detached from its PM domain in device_unbind_cleanup(), only
+> after all driver's devres-managed resources have been release.
+>
+> For flexibility, the implemented devm_pm_domain_attach() has 2 state
+> arguments, one for the domain state on attach, one for the domain state o=
+n
+> detach.
 
+dev_pm_domain_attach() is not part driver API and I'm not convinced at
+all by the arguments above.
+
+Thanks!
+
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > ---
-> Changelog from v4 to v5:
->   - Rebase the series on torvalds/master
->   - Clarify the patch dependencies (2 <- 4 <- 5 <- 6) in the patch descri=
-ption
->=20
-> v4: https://lore.kernel.org/all/20250514095350.3765716-1-ben717@andestech=
-=2Ecom/
->=20
-> Changelog from v3 to v4:
->   - Restore the modification to cache-sets and cache-size in patch 6
->   - Do not constrain renesas,r9a07g043f-ax45mp-cache since it's independe=
-nt to
->     this series.
->   - Delete the redundant example added by patch 6
->=20
-> v3: https://lore.kernel.org/all/20250513094933.1631493-1-ben717@andestech=
-=2Ecom/
->=20
-> Changelog from v2 to v3:
->   - Rebase the series on Conor/riscv-soc-for-next
->   - Reform patch 6 as suggested by Conor
->   - Modify l2_cache's compatible in qilai.dtsi due to patch 6
->   - Add Conor's Acked-by tag to patch 4
->   - Add Conor's Acked-by tag to patch 5
->   - Add Conor's Acked-by tag to patch 9
->=20
-> v2: https://lore.kernel.org/all/20250503151829.605006-5-ben717@andestech.=
-com/
->=20
-> Changelog from v1 to v2:
->   - Add detailed descriptions to PLIC_SW and PLMT0
->   - Move the aliases node and memory node from qilai.dtsi to qilai-voyage=
-r.dts
->   - Drop "status =3D okay" in each CPU node since the status property is =
-by
->     default "okay"
->   - Reorder the nodes in qilai.dtsi by unit address in ascending order
->   - Add myself as the maintainer of Andes's SoC tree
->   - Add Rob's Reviewed-by tag to patch 2
->   - Add Rob's Acked-by tag to patch 3
->   - Add Rob's Acked-by tag to patch 6.
->=20
-> v1: https://lore.kernel.org/all/20250407104937.315783-1-ben717@andestech.=
-com/
->=20
-> ---
-> Ben Zong-You Xie (8):
->   riscv: add Andes SoC family Kconfig support
->   dt-bindings: riscv: add Andes QiLai SoC and the Voyager board bindings
->   dt-bindings: interrupt-controller: add Andes QiLai PLIC
->   dt-bindings: interrupt-controller: add Andes machine-level software
->     interrupt controller
->   dt-bindings: timer: add Andes machine timer
->   riscv: dts: andes: add QiLai SoC device tree
->   riscv: dts: andes: add Voyager board device tree
->   riscv: defconfig: enable Andes SoC
->=20
->  .../andestech,plicsw.yaml                     |  54 +++++
->  .../sifive,plic-1.0.0.yaml                    |   1 +
->  .../devicetree/bindings/riscv/andes.yaml      |  25 +++
->  .../bindings/timer/andestech,plmt0.yaml       |  53 +++++
->  MAINTAINERS                                   |   9 +
->  arch/riscv/Kconfig.errata                     |   2 +-
->  arch/riscv/Kconfig.socs                       |   9 +
->  arch/riscv/boot/dts/Makefile                  |   1 +
->  arch/riscv/boot/dts/andes/Makefile            |   2 +
->  arch/riscv/boot/dts/andes/qilai-voyager.dts   |  28 +++
->  arch/riscv/boot/dts/andes/qilai.dtsi          | 186 ++++++++++++++++++
->  arch/riscv/configs/defconfig                  |   1 +
->  12 files changed, 370 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controlle=
-r/andestech,plicsw.yaml
->  create mode 100644 Documentation/devicetree/bindings/riscv/andes.yaml
->  create mode 100644 Documentation/devicetree/bindings/timer/andestech,plm=
-t0.yaml
->  create mode 100644 arch/riscv/boot/dts/andes/Makefile
->  create mode 100644 arch/riscv/boot/dts/andes/qilai-voyager.dts
->  create mode 100644 arch/riscv/boot/dts/andes/qilai.dtsi
->=20
+>
+> Changes in v3:
+> - dropped devm_pm_domain_detach_off(), devm_pm_domain_detach_on()
+>   and use a single function devm_pm_domain_detach()
+>
+> Changes in v2:
+> - none; this patch is new
+>
+>  drivers/base/power/common.c | 50 +++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_domain.h   |  6 +++++
+>  2 files changed, 56 insertions(+)
+>
+> diff --git a/drivers/base/power/common.c b/drivers/base/power/common.c
+> index 781968a128ff..82ea20b343f5 100644
+> --- a/drivers/base/power/common.c
+> +++ b/drivers/base/power/common.c
+> @@ -115,6 +115,56 @@ int dev_pm_domain_attach(struct device *dev, bool po=
+wer_on)
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_domain_attach);
+>
+> +/**
+> + * devm_pm_domain_detach - devres action for devm_pm_domain_attach() to
+> + * detach a device from its domain.
+> + * @dev: device to detach.
+> + * @res: indicate if the device should be powered off
+> + *
+> + * This function reverse the actions from devm_pm_domain_attach().
+> + * It will be invoked during the remove phase from drivers implicitly.
+> + */
+> +static void devm_pm_domain_detach(struct device *dev, void *res)
+> +{
+> +       bool *power_off =3D res;
+> +
+> +       dev_pm_domain_detach(dev, *power_off);
+> +}
+> +
+> +/**
+> + * devm_pm_domain_attach - devres-enabled version of dev_pm_domain_attac=
+h()
+> + * @dev: Device to attach.
+> + * @power_on: Use to indicate whether we should power on the device
+> + *            when attaching.
+> + *
+> + * NOTE: this will also handle calling dev_pm_domain_detach() for
+> + * you during remove phase.
+> + *
+> + * Returns 0 on successfully attached PM domain, or a negative error cod=
+e in
+> + * case of a failure.
+> + */
+> +int devm_pm_domain_attach(struct device *dev, bool power_on)
+> +{
+> +       bool *power_off;
+> +       int ret;
+> +
+> +       power_off =3D devres_alloc(devm_pm_domain_detach, sizeof(*power_o=
+ff), GFP_KERNEL);
+> +       if (!power_off)
+> +               return -ENOMEM;
+> +
+> +       ret =3D dev_pm_domain_attach(dev, power_on);
+> +       if (ret) {
+> +               devres_free(power_off);
+> +               return ret;
+> +       }
+> +
+> +       *power_off =3D power_on;
+> +       devres_add(dev, power_off);
+> +
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_pm_domain_attach);
+> +
+>  /**
+>   * dev_pm_domain_attach_by_id - Associate a device with one of its PM do=
+mains.
+>   * @dev: The device used to lookup the PM domain.
+> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+> index 0b18160901a2..f78b6b4dd734 100644
+> --- a/include/linux/pm_domain.h
+> +++ b/include/linux/pm_domain.h
+> @@ -509,6 +509,7 @@ struct device *dev_pm_domain_attach_by_name(struct de=
+vice *dev,
+>  int dev_pm_domain_attach_list(struct device *dev,
+>                               const struct dev_pm_domain_attach_data *dat=
+a,
+>                               struct dev_pm_domain_list **list);
+> +int devm_pm_domain_attach(struct device *dev, bool power_on);
+>  int devm_pm_domain_attach_list(struct device *dev,
+>                                const struct dev_pm_domain_attach_data *da=
+ta,
+>                                struct dev_pm_domain_list **list);
+> @@ -539,6 +540,11 @@ static inline int dev_pm_domain_attach_list(struct d=
+evice *dev,
+>         return 0;
+>  }
+>
+> +static inline int devm_pm_domain_attach(struct device *dev, bool power_o=
+n)
+> +{
+> +       return 0;
+> +}
+> +
+>  static inline int devm_pm_domain_attach_list(struct device *dev,
+>                                              const struct dev_pm_domain_a=
+ttach_data *data,
+>                                              struct dev_pm_domain_list **=
+list)
 > --
-> 2.34.1
->=20
-
---XnSn4wlHT+08Cik0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEMQhgAKCRB4tDGHoIJi
-0iR/AP9kPQhWU7yiu4elPR9CbPEUL9giMIDGnTOMdYaas3PcgwEAsiTkRJcBi9T7
-Y/QETMvnZHsQfGe/qM/xmH2VNJ/ZQAE=
-=6So4
------END PGP SIGNATURE-----
-
---XnSn4wlHT+08Cik0--
+> 2.43.0
+>
