@@ -1,158 +1,157 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20B6E1A5BA9;
-	Fri,  6 Jun 2025 09:17:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18C3286427;
+	Fri,  6 Jun 2025 09:17:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749201445; cv=none; b=VOJHqOOFBsiFEJIwnML0fl1hTXT7U6EtNR4s5Q04/fPLIDsx9M5C7Xrqu3YV7d7BDGQTYjy3o93xns0HUaeu1odLWNjpbNsdetMB3LC1DGYyL2PYs9U9ML6N+GXGjtA92uTwrzi8+x6rPWufzAHfHeYWPd58MoBZvdvRKm0+9+s=
+	t=1749201448; cv=none; b=ukTDEdCjHuLDgc8ERQzot6U8uCDN6YRKX+83qNYWmUDm4PxGu8zybDS5xDRLOJRNVyrhRropTd5ooqWKLKv1JjLf3zXaxNjOxmq9BeI3mrGfc/nsUTMC/DDcXab6KU9TIE0RGSyOwefgSiUlw/ixsnlhWLDq3Wab/Zapj6Fu1hA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749201445; c=relaxed/simple;
-	bh=7cXe2RVI5l+VbEwv6pMU5n7vOdXDTkLOGpmb/XnSvNk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=npy7FhpRl2v9VovDrshx2f2JZZbeCPFKKs1OGM7rldhc87i8GgTGWm8R6D3/YEvBDw+0NOpcLwN9jWcC3+Is93BDqJL9/qTCSQl8r3VkKqLxqUU1g/59W5vhlnPCoSRlxPRCRrlShCRtlVa9hjkvcFkqgvQT3wXkNq3K2eDRv/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kxKiavON; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749201448; c=relaxed/simple;
+	bh=CjeE3+LoclCRyl6TuFvX0hWyFjMLD2xC9d7fgme2REo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sRXQcpgICid1nUjE7NaALg9ZmBrW0VblPUMNQriGeTrh6sSGbOLXXvu5u5kl4iCm9WtqiGuOOsCdDuTUhYn+A7KvmHNyzDksqV7He0rH/1zq96nm1T7cwlwkffu3FdIH9eNVdKcwEZZFP6/GlyePO3emVSSEyUJCME5QZOcaZgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gxv1K9RB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kxKiavON"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30624C4CEEF;
-	Fri,  6 Jun 2025 09:17:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gxv1K9RB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6961C4CEEB;
+	Fri,  6 Jun 2025 09:17:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749201444;
-	bh=7cXe2RVI5l+VbEwv6pMU5n7vOdXDTkLOGpmb/XnSvNk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kxKiavONcB/WIysSRDIfdLKgglvY/RwSo+s6CJdrbUK/bbk/oaklsT/mEShmR63Ae
-	 jypwSf89L/DocrigEErSG9RCm4iyKzMIkOTcOjn9VmxBNHkxzslE7KcC19neaLEDdA
-	 vHrsTPq99j/8SeVfbJvCsLUvZ3+qkX0VDPR8uX0SgG74efyJ8yd9m9cPGUO8lxc/sP
-	 Bk8EX8+GDKhD8oenxrw8o2niISgQWdbijq71omz9zcuzIj96c8wlZRjhEVFpK/exjb
-	 vvmkO9X0wZNSZVMr77t3xA5CwDXPdyabkPu5f78subnYeOjV7kl4Ob6NiRkbgb1/jf
-	 fp6j7jonntr1A==
-Date: Fri, 6 Jun 2025 11:17:21 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Brian Masney <bmasney@redhat.com>
-Cc: Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, 
-	Alberto Ruiz <aruiz@redhat.com>
-Subject: Re: [PATCH v2 01/10] clk: add kernel docs for struct clk_core
-Message-ID: <20250606-fuzzy-hasty-deer-fdcee0@houat>
-References: <20250528-clk-wip-v2-v2-0-0d2c2f220442@redhat.com>
- <20250528-clk-wip-v2-v2-1-0d2c2f220442@redhat.com>
+	s=k20201202; t=1749201447;
+	bh=CjeE3+LoclCRyl6TuFvX0hWyFjMLD2xC9d7fgme2REo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Gxv1K9RBg+ikSYDrWsGTVi4QyTWp1KgiEWdg1OgYbwv6vwRKGkzBojDEqzdBfx5Q0
+	 XMsPq0WumaKOH6MZUioHuKgQuGP9dAY6ZUiZWwNN4dz3LKi2UN9mjPxJ+LA5urJKYl
+	 09O86hEbboia8Ss869hYlxk1Tli64WgOAC5RvLGe70io5fjJEoOtBcMrST5yT/MYQ+
+	 D+CtM7oOBXD7tCWMT7+Sx3KI223pcCOVZQMOJZFJ+WWS0oeniyhttSy1uSgfm9wQyg
+	 04NXFSEHInFjGwYjXMUdHC+RIOfvEImBvgGxt0ex8TJSytBCUu9NQM3uc0R9/4HhNF
+	 ZQeTRpbfi72Dw==
+Message-ID: <9767d411-81dc-491b-b6da-419240065ffe@kernel.org>
+Date: Fri, 6 Jun 2025 11:17:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="nqgulkyw2ns3u2wn"
-Content-Disposition: inline
-In-Reply-To: <20250528-clk-wip-v2-v2-1-0d2c2f220442@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Large modules with 6.15 [was: [PATCH v4 6/6] percpu/x86: Enable
+ strict percpu checks via named AS qualifiers]
+To: Uros Bizjak <ubizjak@gmail.com>, Dave Hansen <dave.hansen@intel.com>
+Cc: x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-bcachefs@vger.kernel.org, linux-arch@vger.kernel.org,
+ netdev@vger.kernel.org, Nadav Amit <nadav.amit@gmail.com>,
+ Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+ Christoph Lameter <cl@linux.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+ Peter Zijlstra <peterz@infradead.org>, Shung-Hsi Yu <shung-hsi.yu@suse.com>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>
+References: <20250127160709.80604-1-ubizjak@gmail.com>
+ <20250127160709.80604-7-ubizjak@gmail.com>
+ <02c00acd-9518-4371-be2c-eb63e5d11d9c@kernel.org>
+ <b27d96fc-b234-4406-8d6e-885cd97a87f3@intel.com>
+ <CAFULd4Ygz8p8rD1=c-S2MjJniP6vjVNMsWG_B=OjCVpthk0fBg@mail.gmail.com>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <CAFULd4Ygz8p8rD1=c-S2MjJniP6vjVNMsWG_B=OjCVpthk0fBg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On 05. 06. 25, 19:31, Uros Bizjak wrote:
+> On Thu, Jun 5, 2025 at 7:15 PM Dave Hansen <dave.hansen@intel.com> wrote:
+>>
+>> On 6/5/25 07:27, Jiri Slaby wrote:
+>>> Reverting this gives me back to normal sizes.
+>>>
+>>> Any ideas?
+>>
+>> I don't see any reason not to revert it. The benefits weren't exactly
+>> clear from the changelogs or cover letter. Enabling "various compiler
+>> checks" doesn't exactly scream that this is critical to end users in
+>> some way.
+>>
+>> The only question is if we revert just this last patch or the whole series.
+>>
+>> Uros, is there an alternative to reverting?
+> 
+> This functionality can easily be disabled in include/linux/compiler.h
+> by not defining USE_TYPEOF_UNQUAL:
+> 
+> #if CC_HAS_TYPEOF_UNQUAL && !defined(__CHECKER__)
+> # define USE_TYPEOF_UNQUAL 1
+> #endif
+> 
+> (support for typeof_unqual keyword is required to handle __seg_gs
+> qualifiers), but ...
+> 
+> ... the issue is reportedly fixed, please see [1], and ...
 
---nqgulkyw2ns3u2wn
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 01/10] clk: add kernel docs for struct clk_core
-MIME-Version: 1.0
+Confirmed, I need a patched userspace (libbpf).
 
-On Wed, May 28, 2025 at 07:16:47PM -0400, Brian Masney wrote:
-> Document all of the members of struct clk_core.
->=20
-> Signed-off-by: Brian Masney <bmasney@redhat.com>
-> ---
->  drivers/clk/clk.c | 42 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->=20
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index 0565c87656cf5c557d8259c71b5d2971a7ac87e8..a130eac9072dc7e71f840a0ed=
-f51c368650f8386 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -57,6 +57,48 @@ struct clk_parent_map {
->  	int			index;
->  };
-> =20
-> +/**
-> + * struct clk_core - This structure represents the internal state of a c=
-lk
-> + * within the kernel's clock tree. Drivers do not interact with this str=
-ucture
-> + * directly. The clk_core is manipulated by the framework to manage clock
-> + * operations, parent/child relationships, rate, and other properties.
-> + *
-> + * @name:              Unique name of the clk for identification.
-> + * @ops:               Pointer to hardware-specific operations for this =
-clk.
-> + * @hw:                Pointer for traversing from a struct clk to its
-> + *                     corresponding hardware-specific structure.
-> + * @owner:             Kernel module owning this clk (for reference coun=
-ting).
-> + * @dev:               Device associated with this clk (optional)
-> + * @rpm_node:          Node for runtime power management list management.
-> + * @of_node:           Device tree node associated with this clk (if app=
-licable)
-> + * @parent:            Pointer to the current parent in the clock tree.
-> + * @parents:           Array of possible parents (for muxes/selectable p=
-arents).
-> + * @num_parents:       Number of possible parents
-> + * @new_parent_index:  Index of the new parent during parent change.
-> + * @rate:              Current clock rate (Hz).
+> ... you will disable much sought of feature, just ask tglx (and please
+> read his rant at [2]):
 
-I think we should define what current means here. clk_core->rate is
-effectively a cached value of what the hardware has been programmed with.
+Given this is the second time I hit a bug with this, perhaps introduce 
+an EXPERIMENTAL CONFIG option, so that random users can simply disable 
+it if an issue occurs? Without the need of patching random userspace and 
+changing random kernel headers?
 
-It's initialized by reading the value at boot time, and will be updated
-every time an operation affecting the rate will be performed.
+> --q--
+> If the compiler people would have provided a way to utilize the anyway
+> non-standard name space support in a useful way, I could have spared the
+> time to bang my head agaist the wall simply because this would have failed
+> to build in the first place long ago. That just makes me sad.
+> --/q--
+> 
+> [1] https://lore.kernel.org/bpf/20250429161042.2069678-1-alan.maguire@oracle.com/
+> [2] https://lore.kernel.org/lkml/20240303235029.555787150@linutronix.de/
 
-Clocks the CLK_GET_RATE_NOCACHE flag however should not use this value,
-as its rate is expected to change behind the kernel's back (because the
-firmware might change it, for example).
-
-Also, if the clock is orphan, it's set to 0 and updated when (and if)
-its parent is later loaded, so its content is only ever valid if
-clk_core->orphan is false.
-
-> + * @req_rate:          Requested clock rate (Hz).
-
-and clk_core->req_rate is the last rate requested by a call to
-clk_set_rate. It's initialized to clk_core->rate. It's also updated to
-clk_core->rate every time the clock is reparented, and when we're doing
-the orphan -> !orphan transition.
-
-> + * @new_rate:          New rate to be set during a rate change operation.
-> + * @new_parent:        Pointer to new parent during parent change.
-> + * @new_child:         Pointer to new child during reparenting.
-> + * @flags:             Clock property and capability flags.
-> + * @orphan:            True if this clk is currently orphaned.
-> + * @rpm_enabled:       True if runtime power management is enabled for t=
-his clk.
-> + * @enable_count:      Reference count of enables.
-> + * @prepare_count:     Reference count of prepares.
-> + * @protect_count:     Protection reference count against disable.
-> + * @min_rate:          Minimum supported clock rate (Hz).
-> + * @max_rate:          Maximum supported clock rate (Hz).
-> + * @accuracy:          Accuracy of the clock rate (Hz).
-
-The unit is parts per billion
-
-> + * @phase:             Current phase (degrees or hardware-specific units=
-).
-
-It's degrees, not hardware specific units.
-
-Maxime
-
---nqgulkyw2ns3u2wn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaEKyIQAKCRAnX84Zoj2+
-dkyfAYDSVOdlnZmKx2FqnpDkMSE9pm85fEZTb7iWlHewL2hOdF7wOkEGZw5k3Akg
-Xa3G7qMBeQFn5bn+m06N2XT535qmFpoVRzdZIwm8h+7Rvat2YrBvD3CE7wMoq2Zr
-MYcipCUb6w==
-=AOV5
------END PGP SIGNATURE-----
-
---nqgulkyw2ns3u2wn--
+thanks,
+-- 
+js
+suse labs
