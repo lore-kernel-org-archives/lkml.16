@@ -1,267 +1,109 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B4A1A275;
-	Fri,  6 Jun 2025 06:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B54C1E1A3B;
+	Fri,  6 Jun 2025 06:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749191127; cv=none; b=naUitZDtN36Ds+xe+YGd8eYEH9Ns2kHFHQmmVsD91wvnzl+Z3SIR8t+zaXraNQ/Qklk2ppWGdH/JVwgUoe02wOk5jK0rKXrZwVcwAot5fP79YIpK4eyDY6pNvqF7zlRjMCSfPYSJP5S+8swAMPjTO+zdZag9ut1sl70jvOQM8MA=
+	t=1749191195; cv=none; b=Jd3qCeYLVdG9SS91aPyY1QZdFfctNQdFRhQvE+KnGI5t534wUXDi1wx/tMBUCXx7jSsIW/YcPxjQltVbHDQuDDx0xp9vRGZpIzIWWUlya3bT+CvD4CnmE3f+FYng/YS+1n8j9v4OytEPlPjtmKKA2W2CmhkDqKZWSBilXMWltWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749191127; c=relaxed/simple;
-	bh=0LH66iRzEVsVMWZQ16gFXqlqRT/3q47LJ3MHGQz1594=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DstT/CG7RJQMIXyW+rP84PTZLSm/ZLnKW6E7o56EObZw7S78TQGCSVj55vzrXQtqpKilsiP3VVYWn5el0gvq3ihx9KiFWnDc5zLC+dNMoGaKsXmIRtb5R3x05bHWptYP30lI8AvKxV6MhzTBTmQWrr3DLqUVkXb88eWk1ZKhTr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 02d87ffe429f11f0b29709d653e92f7d-20250606
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:6b42408c-7026-429f-9e4d-3d0f5f2d21bc,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:6493067,CLOUDID:a6a3df80516d00628685e0315a2f7149,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:nil,UR
-	L:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,S
-	PR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 02d87ffe429f11f0b29709d653e92f7d-20250606
-Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
-	(envelope-from <zhangzihuan@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 855462109; Fri, 06 Jun 2025 14:25:16 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id A9EBAE00891C;
-	Fri,  6 Jun 2025 14:25:15 +0800 (CST)
-X-ns-mid: postfix-684289CB-4926953
-Received: from localhost.localdomain (unknown [172.25.120.24])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 5F529E008900;
-	Fri,  6 Jun 2025 14:25:11 +0800 (CST)
-From: Zihuan Zhang <zhangzihuan@kylinos.cn>
-To: rafael@kernel.org,
-	len.brown@intel.com,
-	pavel@kernel.org,
-	kees@kernel.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	akpm@linux-foundation.org,
-	david@redhat.com,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Zihuan Zhang <zhangzihuan@kylinos.cn>
-Subject: [RFC PATCH] PM: Optionally block user fork during freeze to improve performance
-Date: Fri,  6 Jun 2025 14:25:02 +0800
-Message-Id: <20250606062502.19607-1-zhangzihuan@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1749191195; c=relaxed/simple;
+	bh=JU0mgop2few5Pt6Dq9+ZtVDzm94WKdjmkUHwV6dtdYI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wyt4KHjv2z/x3+fO5F/aojsvC6qVgADsYDmqmxVHYGoPfN3yyh/GmZo75wLZAZj+K6KAyF1QUZoWrTLXG5EG/1s+Gj0AX64Q/QaFYS1S5YVt9z2qEvg5fpW7ubn6ILEjcPuyRLpXEeLB/UyVeXxZJf0tdi4oefDpxaMDV+1OOQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e8sxWCEU; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e8sxWCEU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749191193; x=1780727193;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=JU0mgop2few5Pt6Dq9+ZtVDzm94WKdjmkUHwV6dtdYI=;
+  b=e8sxWCEUFW5lT5rslrmUtGH7KrVkCmV6KEWiJTBiD1vPA4dJtUoQGdnv
+   bQkMx2QMJMhoMaEiq/dO9CRvTrC1V6SjM+U5XeicGRYHUaVd0Q0TuOL7E
+   2DXpltiUZtoHU+KsAw5iif+bjP7fPOlw92BbTZxJ+DH0zQtd0CyDZl1yh
+   UKWjvLQFNFBBtXmf+Vd/4gH4YcP+3O/jkhPxrTRqViLCh1MJCJXaU30Iu
+   hESO9CzXGF/8VWnkWOflGaRTH//kyAh2V/GS154gNTzo4mqo9z6UHNmes
+   J4qZ6t75t88FpefCzLaUSuSEGGJrpovb02/exwTXW8i7EBF3fROty3ehx
+   A==;
+X-CSE-ConnectionGUID: l6WLGGuXQuKqUstgml7oFQ==
+X-CSE-MsgGUID: AVvvcZ+fR2ujsKDsHilqyQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="73864453"
+X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
+   d="scan'208";a="73864453"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 23:26:33 -0700
+X-CSE-ConnectionGUID: E8/CkPXtQm+K4/yvZjVXYQ==
+X-CSE-MsgGUID: s/578i+CRfmWvgroYersIg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
+   d="scan'208";a="150761251"
+Received: from emr.sh.intel.com ([10.112.229.56])
+  by orviesa004.jf.intel.com with ESMTP; 05 Jun 2025 23:26:28 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Andrew Zaborowski <andrew.zaborowski@intel.com>,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [PATCH] perf/x86/intel: Use early_initcall() to hook bts_init()
+Date: Fri,  6 Jun 2025 11:16:06 +0000
+Message-ID: <20250606111606.84350-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Currently, the freezer traverses all tasks to freeze them during
-system suspend or hibernation. If a user process forks during this
-window, the new child may escape freezing and require a second
-traversal or retry, adding non-trivial overhead.
+After the commit 'd971342d38bf ("perf/x86/intel: Decouple BTS
+ initialization from PEBS initialization")' is introduced, x86_pmu.bts
+would initialized in bts_init() which is hooked by arch_initcall().
 
-This patch introduces a CONFIG_PM_DISABLE_USER_FORK_DURING_FREEZE
-option. When enabled, it prevents user processes from creating new
-processes (via fork/clone) during the freezing period. This guarantees
-a stable task list and avoids re-traversing the process list due to
-late-created user tasks, thereby improving performance.
+Whereas init_hw_perf_events() is hooked by early_initcall(). Once the
+core PMU is initialized, nmi watchdog initialization is called
+immediately before bts_init() is called. It leads to the BTS buffer is
+not really initialized since bts_init() is not called and x86_pmu.bts is
+still false at that time. Worse, BTS buffer would never be initialized
+then unless all core PMU events are freed and reserve_ds_buffers()
+is called again.
 
-The restriction is only active during the window when the system is
-freezing user tasks. Once all tasks are frozen, or if the system aborts
-the suspend/hibernate process, the restriction is lifted.
-No kernel threads are affected, and kernel_create_* functions remain
-unrestricted.
+Thus aligning with init_hw_perf_events(), use early_initcall() to hook
+bts_init() to ensure x86_pmu.bts is initialized before nmi watchdog
+initialization.
 
-Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
+Fixes: d971342d38bf ("perf/x86/intel: Decouple BTS initialization from PEBS initialization")
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- include/linux/suspend.h |  8 ++++++++
- kernel/fork.c           |  6 ++++++
- kernel/power/Kconfig    | 10 ++++++++++
- kernel/power/main.c     | 44 +++++++++++++++++++++++++++++++++++++++++
- kernel/power/power.h    |  4 ++++
- kernel/power/process.c  |  7 +++++++
- 6 files changed, 79 insertions(+)
+ arch/x86/events/intel/bts.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/suspend.h b/include/linux/suspend.h
-index b1c76c8f2c82..2dd8b3eb50f0 100644
---- a/include/linux/suspend.h
-+++ b/include/linux/suspend.h
-@@ -591,4 +591,12 @@ enum suspend_stat_step {
- void dpm_save_failed_dev(const char *name);
- void dpm_save_failed_step(enum suspend_stat_step step);
-=20
-+#ifdef CONFIG_PM_DISABLE_USER_FORK_DURING_FREEZE
-+extern bool pm_block_user_fork;
-+bool pm_should_block_fork(void);
-+bool pm_freeze_process_in_progress(void);
-+#else
-+static inline bool pm_should_block_fork(void) { return false; };
-+static inline bool pm_freeze_process_in_progress(void) { return false; }=
-;
-+#endif /* CONFIG_PM_DISABLE_USER_FORK_DURING_FREEZE */
- #endif /* _LINUX_SUSPEND_H */
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 1ee8eb11f38b..b0bd0206b644 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -105,6 +105,7 @@
- #include <uapi/linux/pidfd.h>
- #include <linux/pidfs.h>
- #include <linux/tick.h>
-+#include <linux/suspend.h>
-=20
- #include <asm/pgalloc.h>
- #include <linux/uaccess.h>
-@@ -2596,6 +2597,11 @@ pid_t kernel_clone(struct kernel_clone_args *args)
- 			trace =3D 0;
- 	}
-=20
-+#ifdef CONFIG_PM_DISABLE_USER_FORK_DURING_FREEZE
-+	if (pm_should_block_fork() && !(current->flags & PF_KTHREAD))
-+		return -EBUSY;
-+#endif
-+
- 	p =3D copy_process(NULL, trace, NUMA_NO_NODE, args);
- 	add_latent_entropy();
-=20
-diff --git a/kernel/power/Kconfig b/kernel/power/Kconfig
-index 54a623680019..d3d4d23b8f04 100644
---- a/kernel/power/Kconfig
-+++ b/kernel/power/Kconfig
-@@ -375,6 +375,16 @@ config PM_GENERIC_DOMAINS_OF
- 	def_bool y
- 	depends on PM_GENERIC_DOMAINS && OF
-=20
-+config PM_DISABLE_USER_FORK_DURING_FREEZE
-+	bool "Disable user fork during process freeze"
-+	depends on PM
-+	default n
-+	help
-+	If enabled, user space processes will be forbidden from creating
-+	new tasks (via fork/clone) during the process freezing stage of
-+	system suspend/hibernate.
-+	This can avoid process list races and reduce retries during suspend.
-+
- config CPU_PM
- 	bool
-=20
-diff --git a/kernel/power/main.c b/kernel/power/main.c
-index 3d484630505a..99f5689dc8ac 100644
---- a/kernel/power/main.c
-+++ b/kernel/power/main.c
-@@ -994,6 +994,47 @@ static ssize_t freeze_filesystems_store(struct kobje=
-ct *kobj,
- power_attr(freeze_filesystems);
- #endif /* CONFIG_SUSPEND || CONFIG_HIBERNATION */
-=20
-+#ifdef CONFIG_PM_DISABLE_USER_FORK_DURING_FREEZE
-+bool strict_fork_enabled;
-+bool pm_block_user_fork;
-+
-+bool pm_freeze_process_in_progress(void)
-+{
-+	return pm_block_user_fork;
-+}
-+
-+bool pm_should_block_fork(void)
-+{
-+	return strict_fork_enabled && pm_freeze_process_in_progress();
-+}
-+EXPORT_SYMBOL_GPL(pm_should_block_fork);
-+
-+static ssize_t strict_fork_show(struct kobject *kobj,
-+				struct kobj_attribute *attr, char *buf)
-+{
-+	return sysfs_emit(buf, "%d\n", strict_fork_enabled);
-+}
-+
-+static ssize_t strict_fork_store(struct kobject *kobj,
-+				 struct kobj_attribute *attr,
-+				 const char *buf, size_t n)
-+{
-+	unsigned long val;
-+
-+	if (kstrtoul(buf, 10, &val))
-+		return -EINVAL;
-+
-+	if (val > 1)
-+		return -EINVAL;
-+
-+	strict_fork_enabled =3D !!val;
-+	return n;
-+}
-+
-+power_attr(strict_fork);
-+
-+#endif /* CONFIG_PM_DISABLE_USER_FORK_DURING_FREEZE */
-+
- static struct attribute * g[] =3D {
- 	&state_attr.attr,
- #ifdef CONFIG_PM_TRACE
-@@ -1026,6 +1067,9 @@ static struct attribute * g[] =3D {
- #endif
- #if defined(CONFIG_SUSPEND) || defined(CONFIG_HIBERNATION)
- 	&freeze_filesystems_attr.attr,
-+#endif
-+#ifdef CONFIG_PM_DISABLE_USER_FORK_DURING_FREEZE
-+	&strict_fork_attr.attr,
- #endif
- 	NULL,
- };
-diff --git a/kernel/power/power.h b/kernel/power/power.h
-index cb1d71562002..45a52d7b899d 100644
---- a/kernel/power/power.h
-+++ b/kernel/power/power.h
-@@ -22,6 +22,10 @@ struct swsusp_info {
- extern bool filesystem_freeze_enabled;
- #endif
-=20
-+#ifdef CONFIG_PM_DISABLE_USER_FORK_DURING_FREEZE
-+extern bool strict_fork_enabled;
-+#endif
-+
- #ifdef CONFIG_HIBERNATION
- /* kernel/power/snapshot.c */
- extern void __init hibernate_reserved_size_init(void);
-diff --git a/kernel/power/process.c b/kernel/power/process.c
-index dc0dfc349f22..a6f7ba2d283d 100644
---- a/kernel/power/process.c
-+++ b/kernel/power/process.c
-@@ -134,7 +134,14 @@ int freeze_processes(void)
-=20
- 	pm_wakeup_clear(0);
- 	pm_freezing =3D true;
-+
-+#ifdef CONFIG_PM_DISABLE_USER_FORK_DURING_FREEZE
-+	pm_block_user_fork =3D true;
-+#endif
- 	error =3D try_to_freeze_tasks(true);
-+#ifdef CONFIG_PM_DISABLE_USER_FORK_DURING_FREEZE
-+	pm_block_user_fork =3D false;
-+#endif
- 	if (!error)
- 		__usermodehelper_set_disable_depth(UMH_DISABLED);
-=20
---=20
-2.25.1
+diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
+index 9560f693fac0..f0d9729ed255 100644
+--- a/arch/x86/events/intel/bts.c
++++ b/arch/x86/events/intel/bts.c
+@@ -642,4 +642,4 @@ static __init int bts_init(void)
+ 
+ 	return perf_pmu_register(&bts_pmu, "intel_bts", -1);
+ }
+-arch_initcall(bts_init);
++early_initcall(bts_init);
+
+base-commit: e7d952cc39fca34386ec9f15f68cb2eaac01b5ae
+-- 
+2.43.0
 
