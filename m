@@ -1,55 +1,55 @@
 Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A0123C8BE
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 21:52:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F9023E34F
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 21:52:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749246775; cv=none; b=JhfgS7XFt7P3hm5/2JSxwR93N1TpQaLwk92TMhK7JW68hjerOTtMZ+foeNTaszqekiv7Xnx3Ah/Zcc9xzTd5mz8sDlUbY9IL2cc/TD6TmFeOasVO899epc/PdlS0QuymgkeaIxEz+wM0g306riMC4Oa1v2djTCsexinc8QhZkrY=
+	t=1749246778; cv=none; b=fJav6VAEi66cAANs1Tj82ccDkEFLj+4legnFteqIEXgmOZ2/okOMf8QAIqaoJ44N5ir4K27Ot58zv6jJammZQP9sqmhu+HUfg99gBOd7/Z0eF18AYd0iA3/rt99pmd9/WUL7PL5QiQKLCuwfsUcnUo/mjdRqQ2WSDcmUlEyW/ZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749246775; c=relaxed/simple;
-	bh=fdk50WYueaBLzSwBgidVg7pckEa/1AfhDiTbjBNVjvo=;
+	s=arc-20240116; t=1749246778; c=relaxed/simple;
+	bh=OhUv3r9YK7S2vWeklKY7wXIyczrwBkYk68z5KVxE38M=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=QXVckRjwWkRQi+Wbwgxaq7BKDwpq30SGiN8IV2PoUbwHKbEMCk6cl2EVSHCn3JPlyeEIIXegje0qQD5dq/OeEyTLZP93W5Rg0GHpm40tl37eD+hAotm2aFipZ/nJDR64u/ZDzw7+0IVabccsW2bUES6rJu0bm+qeZ0GQ/dXu6ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--blakejones.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uK/aKTd/; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=ZCfnAMpvmuW3bTGV85uTwcpsrmqYuAhc8+BM/xwuLVOVY7CYIAUWm49rSv6u7Xe+8mh5BwS4S0cWdVFWovWHsPl3nGLT1TUMqogUiOXuWVSRJn9MsU0qConIsHnueVZeoTk16BZKcKTakOQ38WGbNzL5izYz4ltClSjStzsOjTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--blakejones.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4qPF8LeJ; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--blakejones.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uK/aKTd/"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2350804a43eso37104515ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 14:52:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4qPF8LeJ"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-234f1acc707so22378385ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 14:52:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749246773; x=1749851573; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749246776; x=1749851576; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=D+kZBatEUrJrZZ6PE0Z1l/q9xeZJJ3Utgr+97hvf5fQ=;
-        b=uK/aKTd/Adr+/dFRFxIfcWYYJ00FUhuc0ocrZJKSq5kXY/09xgScHNf4OK6ylS48hf
-         ihlOqcmixyysf7LSwErV7gm/xMaMClXYpnhbnF6MGBL5GKYtSfzuWEG+l9TGICe/QGOz
-         Z5TjyIYXzIMo+3GpAUz8ynJGjA/keqSMtYyMCj7Bp+zkgqrOP5xVeXGkBSgXhYtxRJpA
-         OnSgbG2p76EIpJfog9lOqw4Z1OgdMAra9aSWJEbFOjKpPeCb4DCZNhfMz2c1tzfh5k5o
-         7bN+E2LfUapjXbUPlwLTYNiyTu/8rfD8Ek7gLm0Bzkm2eIAS1eCi2ftqTLAruZY5bPzb
-         As8Q==
+        bh=JS/Db2SUjK5/g3LbclVsWOHT1Smx8t5HOzo/CvKXbp4=;
+        b=4qPF8LeJGIuGPOEENYNF/0NRGd0KoYHWcEFG7U3ywnkDjaD1Hd4OyKdRSlBgwzCEh7
+         OiSvEHG2lAjh/Ak2x4mPQ0Ylqe3m7EkiZQ5Dq8TAXJB39jjb3hgplQy+6iGtB18MB5zy
+         m8KXh8MZxEc5g+466Qx5aUngHFKsPLM5QleIQ+PRh+ktmI0MrUZ0lZFfOpmI/uuO2Ha6
+         iNq25gFrPFg+IY6hUl9Y8IzTawYzE0fZuHbJ1kdacV0pyza8hBbSgnWcwrZ22F9ikcci
+         bA1BIdo3ktOzLTtrO3ACI+cBaVoazqUx1I6BdFNI2XqCHYh8oHNGLoc1jYAjC1TpT/OZ
+         FUaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749246773; x=1749851573;
+        d=1e100.net; s=20230601; t=1749246776; x=1749851576;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=D+kZBatEUrJrZZ6PE0Z1l/q9xeZJJ3Utgr+97hvf5fQ=;
-        b=ZnxEqVbua0xg0JIOb4kFq/3Dpzx+gJ5Rn2yeZae1wmmAGjz+QEb/ZGNFSVE8iJTDzi
-         hqSdQhRf/4ihOOY/ErspjXb+o7odujmDsNJMTlWnUyxzqBqoIZTCnm9btQ7vSFihT6qt
-         1Bl2qI+rfZDe0JYNxc/j3r4jqoKfu4OZIFZ6OqknG82UtPfQ/2iUZJbAT4praFejyJ+Y
-         ZdsFiPKxrjsVB72LtfGJA+uaIkFPfcFzZ/Ku6n4LyoE9UTtXHQ9AdIZd+2ksHlR+ilF4
-         Kiigf32vOU1tDuUt2DLovBobyuhy9XMo+bbit4AsjebdTnRNpsd3TtEsMpjPC5tXwaxA
-         404A==
-X-Forwarded-Encrypted: i=1; AJvYcCU7KMfbIdU5vCc1b+6yZ0dDPmvfR8cnCsyq+noU4AydJeFerasqAFGrNQWssXsg1v/rWl+XERX7SOmFoys=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yynz71RnaGjzMMIkufj2t6dkVlw9UK7OjKtjq4uP6K5+b/WmXTN
-	quHvnyB5nUR3xftMW7jyOrpT5q4K9/QVzWcLauxnQGMHEO2nTkYs2wCeB9FMUDuAF1lNRrCFoqv
-	ETOFCoqSWtjTgbWkqrfqIhw==
-X-Google-Smtp-Source: AGHT+IGUB45yrNx9LuqRMIDTKKRwgWQUuD4w9NE1Ld77LnJv215C9tYBR+DSbX0KgD3MHda8qh5AmDJxb4IqBytr
-X-Received: from pjm5.prod.google.com ([2002:a17:90b:2fc5:b0:313:245:8921])
+        bh=JS/Db2SUjK5/g3LbclVsWOHT1Smx8t5HOzo/CvKXbp4=;
+        b=sNt7gqf2Q7Tf9IZVtEOYTTbDyQ/vpL9Ecx/1lBomfonkqcKTjge4rGfi3iChXbuJq+
+         gC6AiDeIHYYrFKJPppYKfnxZUct8a5+LCOonyplHz0b0wTLdJsntAQyTXQrWSjFPwg6w
+         WhlMT4ToNPS2P4ot3QJz1KxcDZfJ6TAJp9pSmWkJahQxp2ukqk0uoAr0r9t+SOa825h5
+         MKJXn0gbMSfbTa7yfG8Jv+Nrnj5L9VJMHaAIqFWYAO0WP8lWOyordO9E20Sh+4J3KWTa
+         TfE5SD6Vr9x9jIZel6z1CSj7V0FF0BrH2h9zD4YScs6rQi+gy09nMArMGxb9xOLnRwSQ
+         mP1A==
+X-Forwarded-Encrypted: i=1; AJvYcCWo1np2/QbLg3NumSXg7hIRILmexBKMZpPqPJoPeOIRsko4l3UkhucImWZdx3dq6NUUE87SayjWROphfM0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb/eBFYA9ptI7VeHOtw1tmceBYwkMbAqFi9XRF+TBSuj8st6d0
+	0jLSGwKXZul+/uFhxPJtstWy8hAw5zLnBRJ7fiOWL2NKt6qWuBYWw+4bD8xFYqLI3qBn7Hp0vmb
+	JapTI5CsBFwGUkcVvP/sCsw==
+X-Google-Smtp-Source: AGHT+IGlHDIsXQ6iCILcEd7JatNtcpZ/R5Fn6/EzRFCZispX4sWEu4cmFjgXt5Xg05e2D5V/72S4Vg3WxP0+mCk4
+X-Received: from plnz4.prod.google.com ([2002:a17:902:8344:b0:234:d2de:e601])
  (user=blakejones job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:1dcb:b0:312:639:a064 with SMTP id 98e67ed59e1d1-3134768d9cbmr7402437a91.28.1749246773007;
- Fri, 06 Jun 2025 14:52:53 -0700 (PDT)
-Date: Fri,  6 Jun 2025 14:52:42 -0700
+ 2002:a17:903:244c:b0:235:f3df:bc1f with SMTP id d9443c01a7336-23601dc4688mr76887345ad.36.1749246776340;
+ Fri, 06 Jun 2025 14:52:56 -0700 (PDT)
+Date: Fri,  6 Jun 2025 14:52:44 -0700
 In-Reply-To: <20250606215246.2419387-1-blakejones@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250606215246.2419387-1-blakejones@google.com>
 X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
-Message-ID: <20250606215246.2419387-2-blakejones@google.com>
-Subject: [PATCH v3 1/5] perf: detect support for libbpf's emit_strings option
+Message-ID: <20250606215246.2419387-4-blakejones@google.com>
+Subject: [PATCH v3 3/5] perf: collect BPF metadata from new programs
 From: Blake Jones <blakejones@google.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
@@ -81,134 +81,221 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Blake Jones <blakejones@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-This creates a config option that detects libbpf's ability to display
-character arrays as strings, which was just added to the BPF tree
-(https://git.kernel.org/bpf/bpf-next/c/87c9c79a02b4).
-
-To test this change, I built perf (from later in this patch set) with:
-
-- static libbpf (default, using source from kernel tree)
-- dynamic libbpf (LIBBPF_DYNAMIC=1 LIBBPF_INCLUDE=/usr/local/include)
-
-For both the static and dynamic versions, I used headers with and without
-the ".emit_strings" option.
-
-I verified that of the four resulting binaries, the two with
-".emit_strings" would successfully record BPF_METADATA events, and the two
-without wouldn't.  All four binaries would successfully display
-BPF_METADATA events, because the relevant bit of libbpf code is only used
-during "perf record".
+This collects metadata for any BPF programs that were loaded during a
+"perf record" run, and emits it at the end of the run.
 
 Signed-off-by: Blake Jones <blakejones@google.com>
 ---
- tools/build/Makefile.feature              |  1 +
- tools/build/feature/Makefile              |  4 ++++
- tools/build/feature/test-libbpf-strings.c | 10 ++++++++++
- tools/perf/Documentation/perf-check.txt   |  1 +
- tools/perf/Makefile.config                | 12 ++++++++++++
- tools/perf/builtin-check.c                |  1 +
- 6 files changed, 29 insertions(+)
- create mode 100644 tools/build/feature/test-libbpf-strings.c
+ tools/perf/builtin-record.c        |  8 ++++++
+ tools/perf/util/bpf-event.c        | 46 ++++++++++++++++++++++++++++++
+ tools/perf/util/bpf-event.h        |  1 +
+ tools/perf/util/env.c              | 19 +++++++++++-
+ tools/perf/util/env.h              |  4 +++
+ tools/perf/util/header.c           |  1 +
+ tools/perf/util/synthetic-events.h |  2 ++
+ 7 files changed, 80 insertions(+), 1 deletion(-)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 3a1fddd38db0..2e5f4c8b6547 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -126,6 +126,7 @@ FEATURE_TESTS_EXTRA :=                  \
-          llvm                           \
-          clang                          \
-          libbpf                         \
-+         libbpf-strings                 \
-          libpfm4                        \
-          libdebuginfod			\
-          clang-bpf-co-re		\
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 4aa166d3eab6..0c4e541ed56e 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -59,6 +59,7 @@ FILES=                                          \
-          test-lzma.bin                          \
-          test-bpf.bin                           \
-          test-libbpf.bin                        \
-+         test-libbpf-strings.bin                \
-          test-get_cpuid.bin                     \
-          test-sdt.bin                           \
-          test-cxx.bin                           \
-@@ -339,6 +340,9 @@ $(OUTPUT)test-bpf.bin:
- $(OUTPUT)test-libbpf.bin:
- 	$(BUILD) -lbpf
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 0b566f300569..47adee0c2a1c 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -2162,6 +2162,12 @@ static int record__synthesize(struct record *rec, bool tail)
+ 	return err;
+ }
  
-+$(OUTPUT)test-libbpf-strings.bin:
-+	$(BUILD)
-+
- $(OUTPUT)test-sdt.bin:
- 	$(BUILD)
- 
-diff --git a/tools/build/feature/test-libbpf-strings.c b/tools/build/feature/test-libbpf-strings.c
-new file mode 100644
-index 000000000000..83e6c45f5c85
---- /dev/null
-+++ b/tools/build/feature/test-libbpf-strings.c
-@@ -0,0 +1,10 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <bpf/btf.h>
-+
-+int main(void)
++static void record__synthesize_final_bpf_metadata(struct record *rec)
 +{
-+	struct btf_dump_type_data_opts opts;
-+
-+	opts.emit_strings = 0;
-+	return opts.emit_strings;
++	perf_event__synthesize_final_bpf_metadata(rec->session,
++						  process_synthesized_event);
 +}
-diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documentation/perf-check.txt
-index a764a4629220..799982d8d868 100644
---- a/tools/perf/Documentation/perf-check.txt
-+++ b/tools/perf/Documentation/perf-check.txt
-@@ -52,6 +52,7 @@ feature::
-                 dwarf-unwind            /  HAVE_DWARF_UNWIND_SUPPORT
-                 auxtrace                /  HAVE_AUXTRACE_SUPPORT
-                 libbfd                  /  HAVE_LIBBFD_SUPPORT
-+                libbpf-strings          /  HAVE_LIBBPF_STRINGS_SUPPORT
-                 libcapstone             /  HAVE_LIBCAPSTONE_SUPPORT
-                 libcrypto               /  HAVE_LIBCRYPTO_SUPPORT
-                 libdw-dwarf-unwind      /  HAVE_LIBDW_SUPPORT
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index d1ea7bf44964..647ade45e4e5 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -595,8 +595,20 @@ ifndef NO_LIBELF
-           LIBBPF_STATIC := 1
-           $(call detected,CONFIG_LIBBPF)
-           CFLAGS += -DHAVE_LIBBPF_SUPPORT
-+          ifneq ($(OUTPUT),)
-+            LIBBPF_INCLUDE = $(abspath $(OUTPUT))/libbpf/include
-+          else
-+            LIBBPF_INCLUDE = $(CURDIR)/libbpf/include
-+          endif
-         endif
-       endif
 +
-+      FEATURE_CHECK_CFLAGS-libbpf-strings="-I$(LIBBPF_INCLUDE)"
-+      $(call feature_check,libbpf-strings)
-+      ifeq ($(feature-libbpf-strings), 1)
-+        $(call detected,CONFIG_LIBBPF_STRINGS)
-+        CFLAGS += -DHAVE_LIBBPF_STRINGS_SUPPORT
-+      endif
-     endif
-   endif # NO_LIBBPF
- endif # NO_LIBELF
-diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
-index 9a509cb3bb9a..f4827f0ddb47 100644
---- a/tools/perf/builtin-check.c
-+++ b/tools/perf/builtin-check.c
-@@ -43,6 +43,7 @@ struct feature_status supported_features[] = {
- 	FEATURE_STATUS("dwarf-unwind", HAVE_DWARF_UNWIND_SUPPORT),
- 	FEATURE_STATUS("auxtrace", HAVE_AUXTRACE_SUPPORT),
- 	FEATURE_STATUS_TIP("libbfd", HAVE_LIBBFD_SUPPORT, "Deprecated, license incompatibility, use BUILD_NONDISTRO=1 and install binutils-dev[el]"),
-+	FEATURE_STATUS("libbpf-strings", HAVE_LIBBPF_STRINGS_SUPPORT),
- 	FEATURE_STATUS("libcapstone", HAVE_LIBCAPSTONE_SUPPORT),
- 	FEATURE_STATUS("libcrypto", HAVE_LIBCRYPTO_SUPPORT),
- 	FEATURE_STATUS("libdw-dwarf-unwind", HAVE_LIBDW_SUPPORT),
+ static int record__process_signal_event(union perf_event *event __maybe_unused, void *data)
+ {
+ 	struct record *rec = data;
+@@ -2807,6 +2813,8 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	trigger_off(&auxtrace_snapshot_trigger);
+ 	trigger_off(&switch_output_trigger);
+ 
++	record__synthesize_final_bpf_metadata(rec);
++
+ 	if (opts->auxtrace_snapshot_on_exit)
+ 		record__auxtrace_snapshot_exit(rec);
+ 
+diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+index 1f6e76ee6024..dc09a4730c50 100644
+--- a/tools/perf/util/bpf-event.c
++++ b/tools/perf/util/bpf-event.c
+@@ -472,6 +472,49 @@ void bpf_metadata_free(struct bpf_metadata *metadata __maybe_unused)
+ 
+ #endif /* HAVE_LIBBPF_STRINGS_SUPPORT */
+ 
++struct bpf_metadata_final_ctx {
++	const struct perf_tool *tool;
++	perf_event__handler_t process;
++	struct machine *machine;
++};
++
++static void synthesize_final_bpf_metadata_cb(struct bpf_prog_info_node *node,
++					     void *data)
++{
++	struct bpf_metadata_final_ctx *ctx = (struct bpf_metadata_final_ctx *)data;
++	struct bpf_metadata *metadata = node->metadata;
++	int err;
++
++	if (metadata == NULL)
++		return;
++	err = synthesize_perf_record_bpf_metadata(metadata, ctx->tool,
++						  ctx->process, ctx->machine);
++	if (err != 0) {
++		const char *prog_name = metadata->prog_names[0];
++
++		if (prog_name != NULL)
++			pr_warning("Couldn't synthesize final BPF metadata for %s.\n", prog_name);
++		else
++			pr_warning("Couldn't synthesize final BPF metadata.\n");
++	}
++	bpf_metadata_free(metadata);
++	node->metadata = NULL;
++}
++
++void perf_event__synthesize_final_bpf_metadata(struct perf_session *session,
++					       perf_event__handler_t process)
++{
++	struct perf_env *env = &session->header.env;
++	struct bpf_metadata_final_ctx ctx = {
++		.tool = session->tool,
++		.process = process,
++		.machine = &session->machines.host,
++	};
++
++	perf_env__iterate_bpf_prog_info(env, synthesize_final_bpf_metadata_cb,
++					&ctx);
++}
++
+ /*
+  * Synthesize PERF_RECORD_KSYMBOL and PERF_RECORD_BPF_EVENT for one bpf
+  * program. One PERF_RECORD_BPF_EVENT is generated for the program. And
+@@ -612,6 +655,7 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
+ 		}
+ 
+ 		info_node->info_linear = info_linear;
++		info_node->metadata = NULL;
+ 		if (!perf_env__insert_bpf_prog_info(env, info_node)) {
+ 			free(info_linear);
+ 			free(info_node);
+@@ -803,6 +847,7 @@ static void perf_env__add_bpf_info(struct perf_env *env, u32 id)
+ 	arrays |= 1UL << PERF_BPIL_JITED_INSNS;
+ 	arrays |= 1UL << PERF_BPIL_LINE_INFO;
+ 	arrays |= 1UL << PERF_BPIL_JITED_LINE_INFO;
++	arrays |= 1UL << PERF_BPIL_MAP_IDS;
+ 
+ 	info_linear = get_bpf_prog_info_linear(fd, arrays);
+ 	if (IS_ERR_OR_NULL(info_linear)) {
+@@ -815,6 +860,7 @@ static void perf_env__add_bpf_info(struct perf_env *env, u32 id)
+ 	info_node = malloc(sizeof(struct bpf_prog_info_node));
+ 	if (info_node) {
+ 		info_node->info_linear = info_linear;
++		info_node->metadata = bpf_metadata_create(&info_linear->info);
+ 		if (!perf_env__insert_bpf_prog_info(env, info_node)) {
+ 			free(info_linear);
+ 			free(info_node);
+diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
+index 16644b3aaba1..1ed0b36dc3b8 100644
+--- a/tools/perf/util/bpf-event.h
++++ b/tools/perf/util/bpf-event.h
+@@ -25,6 +25,7 @@ struct bpf_metadata {
+ 
+ struct bpf_prog_info_node {
+ 	struct perf_bpil		*info_linear;
++	struct bpf_metadata		*metadata;
+ 	struct rb_node			rb_node;
+ };
+ 
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index 36411749e007..05a4f2657d72 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -3,8 +3,10 @@
+ #include "debug.h"
+ #include "env.h"
+ #include "util/header.h"
+-#include "linux/compiler.h"
++#include "util/rwsem.h"
++#include <linux/compiler.h>
+ #include <linux/ctype.h>
++#include <linux/rbtree.h>
+ #include <linux/string.h>
+ #include <linux/zalloc.h>
+ #include "cgroup.h"
+@@ -89,6 +91,20 @@ struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
+ 	return node;
+ }
+ 
++void perf_env__iterate_bpf_prog_info(struct perf_env *env,
++				     void (*cb)(struct bpf_prog_info_node *node,
++						void *data),
++				     void *data)
++{
++	struct rb_node *first;
++
++	down_read(&env->bpf_progs.lock);
++	first = rb_first(&env->bpf_progs.infos);
++	for (struct rb_node *node = first; node != NULL; node = rb_next(node))
++		(*cb)(rb_entry(node, struct bpf_prog_info_node, rb_node), data);
++	up_read(&env->bpf_progs.lock);
++}
++
+ bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
+ {
+ 	bool ret;
+@@ -174,6 +190,7 @@ static void perf_env__purge_bpf(struct perf_env *env)
+ 		next = rb_next(&node->rb_node);
+ 		rb_erase(&node->rb_node, root);
+ 		zfree(&node->info_linear);
++		bpf_metadata_free(node->metadata);
+ 		free(node);
+ 	}
+ 
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index d90e343cf1fa..6819cb9b99ff 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -180,6 +180,10 @@ bool perf_env__insert_bpf_prog_info(struct perf_env *env,
+ 				    struct bpf_prog_info_node *info_node);
+ struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
+ 							__u32 prog_id);
++void perf_env__iterate_bpf_prog_info(struct perf_env *env,
++				     void (*cb)(struct bpf_prog_info_node *node,
++						void *data),
++				     void *data);
+ bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
+ bool __perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
+ struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index e3cdc3b7b4ab..7c477e2a93b3 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3161,6 +3161,7 @@ static int process_bpf_prog_info(struct feat_fd *ff, void *data __maybe_unused)
+ 		/* after reading from file, translate offset to address */
+ 		bpil_offs_to_addr(info_linear);
+ 		info_node->info_linear = info_linear;
++		info_node->metadata = NULL;
+ 		if (!__perf_env__insert_bpf_prog_info(env, info_node)) {
+ 			free(info_linear);
+ 			free(info_node);
+diff --git a/tools/perf/util/synthetic-events.h b/tools/perf/util/synthetic-events.h
+index b9c936b5cfeb..ee29615d68e5 100644
+--- a/tools/perf/util/synthetic-events.h
++++ b/tools/perf/util/synthetic-events.h
+@@ -92,6 +92,8 @@ int perf_event__synthesize_threads(const struct perf_tool *tool, perf_event__han
+ int perf_event__synthesize_tracing_data(const struct perf_tool *tool, int fd, struct evlist *evlist, perf_event__handler_t process);
+ int perf_event__synth_time_conv(const struct perf_event_mmap_page *pc, const struct perf_tool *tool, perf_event__handler_t process, struct machine *machine);
+ pid_t perf_event__synthesize_comm(const struct perf_tool *tool, union perf_event *event, pid_t pid, perf_event__handler_t process, struct machine *machine);
++void perf_event__synthesize_final_bpf_metadata(struct perf_session *session,
++					       perf_event__handler_t process);
+ 
+ int perf_tool__process_synth_event(const struct perf_tool *tool, union perf_event *event, struct machine *machine, perf_event__handler_t process);
+ 
 -- 
 2.50.0.rc0.604.gd4ff7b7c86-goog
 
