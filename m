@@ -1,38 +1,38 @@
 Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412721AC44D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412D7289819
 	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 17:11:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749229891; cv=none; b=VCfdPQBFyirTewy98+opF8MTVbZdXNt7AgXpP+tGxVSfBDjBpmkrhEs8T8PRLzAjQ56ulKBCbdkBNu2766fCngCnOzsObnPFqj82ju2w2FXQYzgTmoCZgR9pq5e4VFA3KHhyiXanxcF3n6TJgYSxGdo2prnp1LqfRC8FuIJbxbo=
+	t=1749229891; cv=none; b=X7477IFbi8fnUcU1S7js/BEtFXPYaOv5eFWabtaz6aEyaAFV6OPRixo+OqiwkPVXY6awu9/kNh+phk324h3MhjsAnA5PO5qUlG2CHdRgxoJ0grWSClNnZJsjdMaLXpFmtSKLdNwr8v2QJrQxJT4u7xiZAJZO04wikvSOxXQzFgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749229891; c=relaxed/simple;
-	bh=I8tmsVTo0MQcJjiMlM942Vive3o2UFjS72ccCIhVkks=;
+	bh=qcOfhLcNm7S1SyTd8tK+TKEUQLWhmfWH4aNgAteT74g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SwOyx91zOydAyryAwJ/2UqoP0K0h2savd6cLRjdcEtKoR4PUMv5PEB9sT7ZDjaOWzE2FGWyK4Id5ZUWZ4tLGZRhPnivzX5J50/iX4KTVjl3w1pXfSvdOfJQNkodeErKwnQ/dPzzSiVsO86lb0DsopqbdSvutXc2tzlxVJDiUxQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=FUi9HQ5z; arc=none smtp.client-ip=96.67.55.147
+	 MIME-Version; b=FiCgScJTl4Lh+bRm6+QJWPIxON1CzLAoECdmSgFB6/EKkWmQQ3f5KulrU3fISgWi4IhCS7QClpml/m9mEecd6nicrB3OiLGWnOPAU0xruJI38VJTDdlxX7UdvYOErOTho007OgPTspwU8b4/fGDxM+XG+tMCEld5hdRxRN85q8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=Uk4bm9p9; arc=none smtp.client-ip=96.67.55.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="FUi9HQ5z"
+	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="Uk4bm9p9"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
 	; s=mail; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=ZwYBv8sNTbOxmlxA4VDVgq6hefWE68MVO+zvxO/w0ms=; b=FUi9HQ5z/zez9imie9XR5M/FG8
-	avA39tFHpDmMhHdWmDpPhm73KMxhyL8EfYwh96AZJcgZYtQrk6SC7RmNXKdiFdn5OAXttzbYfBq5N
-	mqt5iIIVMeN2eT9AmVGbCv8botRwKlwm5Exn6mNfDepk98p8o8Xmzjnv7x05dGzVDcKJLXa3pqjhN
-	SKbSNE47yQs/CpAnTpc2JelIZpgeHeXt8lQZReyK4XoQqbuhbAdbmW3ff7+O/zsRzngv/guL7B36p
-	MaGcnBRO2ufLSYIj5Itiiu5NfvuQj3LKKzqw8u3JlrA7XDuSwgwUjkWhA9Co3YD1e9cWnjdUVSZMa
-	l4nvKy9A==;
+	bh=FXhb5AK4hmzs7wEbphuMQS57/NnaTRqpKXsIVk4kIRA=; b=Uk4bm9p93KKs9rG1MvQKzM7uE2
+	mkryQIrbAjoJmYcuJIIm14NBn/aTgKYAC/CQTkld2rrTXPagIaDqqf+FC9JWvFPzAmc0IklhrUa3E
+	SV0JWeLZRx1hJeLHG1fzkBMO0daDZhMNUKH3yOjoeADjPu/Q8ox273v8RSlB+YNtqpJnkioA7C53m
+	/Bzjn+DbTxVRlabXjejhovkYEKKyvHI41Y/sYENSkjDFPHUAFFDTzkxQbk2WhD9j8WvewrKBvR2GK
+	TRPy1aiJUh1eUZiQ9gJipEmjOzA5ANMaq2X4zo6BJUvZQ+wMOtWJMZ1NagRlQT1kvdJS3AAGg1lV8
+	B817w3tQ==;
 Received: from fangorn.home.surriel.com ([10.0.13.7])
 	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.97.1)
 	(envelope-from <riel@surriel.com>)
-	id 1uNab3-000000006Se-1izx;
+	id 1uNab3-000000006Se-1ocO;
 	Fri, 06 Jun 2025 13:11:13 -0400
 From: Rik van Riel <riel@surriel.com>
 To: linux-kernel@vger.kernel.org
@@ -46,11 +46,11 @@ Cc: kernel-team@meta.com,
 	seanjc@google.com,
 	tglx@linutronix.de,
 	mingo@kernel.org,
-	Rik van Riel <riel@surriel.com>,
-	stable@kernel.org
-Subject: [PATCH v2 2/3] x86/mm: Fix early boot use of INVPLGB
-Date: Fri,  6 Jun 2025 13:10:34 -0400
-Message-ID: <20250606171112.4013261-3-riel@surriel.com>
+	Yu-cheng Yu <yu-cheng.yu@intel.com>,
+	Rik van Riel <riel@surriel.com>
+Subject: [PATCH v2 3/3] x86/mm: Change cpa_flush() to call flush_kernel_range() directly
+Date: Fri,  6 Jun 2025 13:10:35 -0400
+Message-ID: <20250606171112.4013261-4-riel@surriel.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250606171112.4013261-1-riel@surriel.com>
 References: <20250606171112.4013261-1-riel@surriel.com>
@@ -62,49 +62,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The INVLPGB instruction has limits on how many pages it can invalidate
-at once. That limit is enumerated in CPUID, read by the kernel, and
-stored in 'invpgb_count_max'. Ranged invalidation, like
-invlpgb_kernel_range_flush() break up their invalidations so
-that they do not exceed the limit.
+From: Yu-cheng Yu <yu-cheng.yu@intel.com>
 
-However, early boot code currently attempts to do ranged
-invalidation before populating 'invlpgb_count_max'. There is a
-for loop which is basically:
+The function cpa_flush() calls __flush_tlb_one_kernel() and
+flush_tlb_all().
 
-	for (...; addr < end; addr += invlpgb_count_max*PAGE_SIZE)
+Replacing that with a call to flush_tlb_kernel_range() allows
+cpa_flush() to make use of INVLPGB or RAR without any additional
+changes.
 
-If invlpgb_kernel_range_flush is called before the kernel has read
-the value of invlpgb_count_max from the hardware, the normally
-bounded loop can become an infinite loop if invlpgb_count_max is
-initialized to zero.
+Initialize invlpgb_count_max to 1, since flush_tlb_kernel_range()
+can now be called before invlpgb_count_max has been initialized
+to the value read from CPUID.
 
-Fix that issue by initializing invlpgb_count_max to 1.
+[riel: remove now unused __cpa_flush_tlb]
 
-This way INVPLGB at early boot time will be a little bit slower
-than normal (with initialized invplgb_count_max), and not an
-instant hang at bootup time.
-
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 Signed-off-by: Rik van Riel <riel@surriel.com>
-Fixes: b7aa05cbdc52 ("x86/mm: Add INVLPGB support code")
-Cc: stable@kernel.org
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
 ---
- arch/x86/kernel/cpu/amd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/mm/pat/set_memory.c | 20 +++++++-------------
+ 1 file changed, 7 insertions(+), 13 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 93da466dfe2c..b2ad8d13211a 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -31,7 +31,7 @@
+diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+index 30ab4aced761..1da32261bc11 100644
+--- a/arch/x86/mm/pat/set_memory.c
++++ b/arch/x86/mm/pat/set_memory.c
+@@ -399,15 +399,6 @@ static void cpa_flush_all(unsigned long cache)
+ 	on_each_cpu(__cpa_flush_all, (void *) cache, 1);
+ }
  
- #include "cpu.h"
+-static void __cpa_flush_tlb(void *data)
+-{
+-	struct cpa_data *cpa = data;
+-	unsigned int i;
+-
+-	for (i = 0; i < cpa->numpages; i++)
+-		flush_tlb_one_kernel(fix_addr(__cpa_addr(cpa, i)));
+-}
+-
+ static int collapse_large_pages(unsigned long addr, struct list_head *pgtables);
  
--u16 invlpgb_count_max __ro_after_init;
-+u16 invlpgb_count_max __ro_after_init = 1;
+ static void cpa_collapse_large_pages(struct cpa_data *cpa)
+@@ -444,6 +435,7 @@ static void cpa_collapse_large_pages(struct cpa_data *cpa)
  
- static inline int rdmsrq_amd_safe(unsigned msr, u64 *p)
+ static void cpa_flush(struct cpa_data *cpa, int cache)
  {
++	unsigned long start, end;
+ 	unsigned int i;
+ 
+ 	BUG_ON(irqs_disabled() && !early_boot_irqs_disabled);
+@@ -453,10 +445,12 @@ static void cpa_flush(struct cpa_data *cpa, int cache)
+ 		goto collapse_large_pages;
+ 	}
+ 
+-	if (cpa->force_flush_all || cpa->numpages > tlb_single_page_flush_ceiling)
+-		flush_tlb_all();
+-	else
+-		on_each_cpu(__cpa_flush_tlb, cpa, 1);
++	start = fix_addr(__cpa_addr(cpa, 0));
++	end =   fix_addr(__cpa_addr(cpa, cpa->numpages));
++	if (cpa->force_flush_all)
++		end = TLB_FLUSH_ALL;
++
++	flush_tlb_kernel_range(start, end);
+ 
+ 	if (!cache)
+ 		goto collapse_large_pages;
 -- 
 2.49.0
 
