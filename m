@@ -1,86 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282D42857DE;
-	Fri,  6 Jun 2025 09:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7BCA26B95A;
+	Fri,  6 Jun 2025 09:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.130.44.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749201562; cv=none; b=pYs1btsnHbbWg5DRiTI0oe1HlzA6SzZ/USVuBAPisQRwG6wgYvMT4HvOcwvDaTrXs/rX3U/mAWjEo+h0g51NUihS+y2zW69oAjOw1hKQzSQjNgPujG9mxWvchULb1xN+Onr35DNq2X8WDOys8vpKiZ53YAdsBhyJ3v15Atd0Us8=
+	t=1749201563; cv=none; b=QWlYIpPDpwAcCV1b9nJXbhTerBAhFQ2QTddv9T58vkquzubplo3zeW1PKMcIe2J0oSkL/9hPbJFfA87bCjdX/fgBSPVtQgI7Gfo3BspxZUzY7H3nnnN0mV7af4l2M9ByRO6TIqg5NBzcfvOAxjv8SUoCvFvQf73483lwhT7N5b8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749201562; c=relaxed/simple;
-	bh=frCW/vBzCrEGCM+6G/qXfkE8FGMEPfIpWzwPqLwytyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KG4DfuNWCHZp7r9qxZcc8Ji0zlHbBlXR2k5tZ+ZsLIcOgKe9NZgfc7Ltd2IlpKCPgQ49A/QXwD2MCDtp/v/K1mWcXhUMvvxE0PvYTFKKABxyY0/OBkUT6M93d+Mi3vJFuO+quVLxbnCSjPiVsk76Sr2qqUdsh4ofNKGcn3AV4YY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rNMRrAiK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749201563; c=relaxed/simple;
+	bh=tKDi5g+WJYXkiDu84THtecwGQt34edB7qK5WTJ+hv1I=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CE2VVARr5o/cAR6ck0oNSkkVEoyojKtnpq9TBtMKiEsCyVSxojJFQlUaRVlsPM+D9iIWh6z06Fdd+h3+eiCYMc5ElOxnKi9Ksrfy1mXG1JfkZ/TgIOjUhTJY3L7jdLR36qLxHFT1QrDnN+AjTVEkwMiH963A8FbReIj160u6p0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com; spf=pass smtp.mailfrom=richtek.com; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=I4Okap8r; arc=none smtp.client-ip=220.130.44.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rNMRrAiK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72F5FC4CEEB;
-	Fri,  6 Jun 2025 09:19:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749201561;
-	bh=frCW/vBzCrEGCM+6G/qXfkE8FGMEPfIpWzwPqLwytyI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rNMRrAiK7jsc5fKcq1zGRPDz0tUULP8frmSPSUyrliQr9nTOq9lm/pvPb76qqYiaf
-	 5Q2Z88dU8DOOcCdIOeH+4u/AiM895Vcj9u9rlLRTYZtRYIWiFT6+vU4sawpMVSGcyP
-	 K+p6ztCNAyQQ+HDKGOq1hSSSc8kXTfW36Zn0QcQxEiinFKsjXMIYf9ebYVt8+2uA2W
-	 Ujwh1kzvKNTiHyhsELFWsUFDeqYesP02NwLadObbhMyY/mlQFtDwsZUOJjoam/2mDp
-	 1rABr00hoTzQMGi276EpHhGktvXp3tLFFEKBH41LQJ37ditQY1CfG6eV2FT55L+UT+
-	 DLtUVRiTiQHPA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uNTEK-000000007mi-1Oin;
-	Fri, 06 Jun 2025 11:19:17 +0200
-Date: Fri, 6 Jun 2025 11:19:16 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Miaoqing Pan <quic_miaoqing@quicinc.com>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
-	Jeff Johnson <jjohnson@kernel.org>,
-	Remi Pommarel <repk@triplefau.lt>,
-	Baochen Qiang <quic_bqiang@quicinc.com>,
-	linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] wifi: ath12k: fix dest ring-buffer corruption
- when ring is full
-Message-ID: <aEKylLhbfLusD3Kq@hovoldconsulting.com>
-References: <20250604144509.28374-1-johan+linaro@kernel.org>
- <20250604144509.28374-5-johan+linaro@kernel.org>
- <a8236639-2448-4552-ac21-db7e7370e23e@quicinc.com>
+	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="I4Okap8r"
+X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
+	s=richtek; t=1749201556;
+	bh=15QNaksYI2zs+1jCXDG0pPlORekfTpURDzMdJDiHTJg=; l=801;
+	h=Date:From:To:Subject:Message-ID:MIME-Version;
+	b=I4Okap8rXVG3dJqrjFL8jak2qvriNzOzi/OA7XxTIWulnumdOPOSoFEk8J0eEeVg1
+	 uFqJxTCR9LrZNWBaChXSbZ887Qqbf0au/iouOtRxKfTyNgA314nHUPPjn3xmlBUbqw
+	 OHfQuioYRyBBVz0tNAZSe1m+a92IuonPhhSkyjjIvR62Detrn8yXdKq15P2zfKWd3K
+	 jc4XifX870bWtWKkcGC54XQLrc6ibBMRZnBg73OMjTRKxsaP70sxeSOb0lvk2QJs2N
+	 GKMX5s7xgixoCUKEg1R+suyyjF1Nd9o+1kn9mlsgd6BmBA4CJoWRVvxmodrNv0jKBz
+	 Pw5UZu960mSZQ==
+Received: from 192.168.10.47
+	by mg.richtek.com with MailGates ESMTPS Server V6.0(2288495:0:AUTH_RELAY)
+	(envelope-from <cy_huang@richtek.com>)
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Fri, 06 Jun 2025 17:18:57 +0800 (CST)
+Received: from ex3.rt.l (192.168.10.46) by ex4.rt.l (192.168.10.47) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 6 Jun
+ 2025 17:18:57 +0800
+Received: from git-send.richtek.com (192.168.10.154) by ex3.rt.l
+ (192.168.10.45) with Microsoft SMTP Server id 15.2.1544.11 via Frontend
+ Transport; Fri, 6 Jun 2025 17:18:57 +0800
+Date: Fri, 6 Jun 2025 17:19:12 +0800
+From: ChiYuan Huang <cy_huang@richtek.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Conor
+ Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
+	<tiwai@suse.com>, Roy Chiu <roy_chiu@richtek.com>,
+	<linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] ASoC: dt-bindings: Add Richtek RTQ9124
+Message-ID: <aEKykANxE/v0UN1b@git-send.richtek.com>
+References: <cover.1749197773.git.cy_huang@richtek.com>
+ <b95d701e5eb93d011a9e428adede845a309d1f12.1749197773.git.cy_huang@richtek.com>
+ <3853e99b-30bf-4263-8abb-2b9f812415bc@kernel.org>
+ <aEKqGS8xGKNL4WxD@git-send.richtek.com>
+ <d923e0a2-acee-4e25-80e7-cdbc125408a4@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <a8236639-2448-4552-ac21-db7e7370e23e@quicinc.com>
+In-Reply-To: <d923e0a2-acee-4e25-80e7-cdbc125408a4@kernel.org>
 
-On Fri, Jun 06, 2025 at 03:27:04PM +0800, Miaoqing Pan wrote:
-> On 6/4/2025 10:45 PM, Johan Hovold wrote:
-> > Add the missing memory barriers to make sure that destination ring
-> > descriptors are read before updating the tail pointer (and passing
-> > ownership to the device) to avoid memory corruption on weakly ordered
-> > architectures like aarch64 when the ring is full.
-
-> > @@ -2184,6 +2187,10 @@ void ath12k_hal_srng_access_end(struct ath12k_base *ab, struct hal_srng *srng)
-> >   					   srng->u.src_ring.hp);
-> >   		} else {
-> >   			srng->u.dst_ring.last_hp = *srng->u.dst_ring.hp_addr;
-> > +			/* Make sure descriptor is read before updating the
-> > +			 * tail pointer.
-> > +			 */
-> > +			mb();
+On Fri, Jun 06, 2025 at 10:50:14AM +0200, Krzysztof Kozlowski wrote:
+> On 06/06/2025 10:43, ChiYuan Huang wrote:
+> > On Fri, Jun 06, 2025 at 10:33:46AM +0200, Krzysztof Kozlowski wrote:
+> >> On 06/06/2025 10:24, cy_huang@richtek.com wrote:
+> >>> +
+> >>> +allOf:
+> >>> +  - $ref: dai-common.yaml#
+> >>> +
+> >>> +properties:
+> >>> +  compatible:
+> >>> +    enum:
+> >>> +      - richtek,rtq9124
+> >>
+> >> Exactly the same as richtek,rt9123. Don't create same binding files for
+> >> similar devices.
+> >>
+> > Do you mean to expand rtq9124 description in rt9123 binding file? 
 > 
-> Is rmb() sufficient, since MMIO write already includes wmb()?
+> Yes
+> 
+Compared to write a similar file, this should be better.
+Will use that way in next revision.
 
-No, rmb() only orders reads against later reads.
-
-[ The wmb() itself orders reads against later writes on aarch64, but
-that's not generally guaranteed and hence should not be relied on in
-driver code. ]
-
-> >   			ath12k_hif_write32(ab,
-> >   					   (unsigned long)srng->u.dst_ring.tp_addr -
-> >   					   (unsigned long)ab->mem,
-
-Johan
+Thanks.
+> > Any example that I
+> > can refer to?
+> 
+> Majority of bindings.
+> 
+> Best regards,
+> Krzysztof
