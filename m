@@ -1,139 +1,129 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FF3D42AA9;
-	Fri,  6 Jun 2025 06:55:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEEAC1BF58
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 07:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749192907; cv=none; b=gWAU2RiGxjohm0ezZS7nqVnAgpQ515ef3Ms3uUEOIMSaFmT+y1pUTwAjFzkAcyM23/tE9LnGxnO8wVxIUuNP+DrFq4WlTXJ66334PYWDyQU0ElnXPgooGwJSNy4t8UmGYIg5m/XPpm49LrwMWFRLhZtTtnwI+uWdV2Dti5ocUE4=
+	t=1749193357; cv=none; b=DLlr1uH4Pyp7mrhpJcaQlS93uTD1aL1HfSqYcmbub93rtTmLHIizVuapY8DujaFQjOPv2/2HsLHgtqakVwwTjeSXdiSkcH1sH/wYk0gEggOWAH60tNm79Z0Z/jhgMiFoh02z61xHekW1aypuPtd+l96KhsPUxwPrHjITAwN3FCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749192907; c=relaxed/simple;
-	bh=+KR7896HFgiNCh/FwADWs5fCnvi70stb4k6usaGIL+Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=GMq79kHe1Pneyt+zBY8tkZzvzOK0xcCPs9R6HFgY0KUB88Vqq0T69/5gcHqAxKuumInO8vF1alKuUgn4MIi7tVXPdUqBHyX5wdlHUAYKRvEHIprbWEFCCv+y6KMGWmsEe0zFw/EvISoo3BIvzZ8tRzszWCcYQFgSSBVODXhMSV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1uNQyb-00037B-00; Fri, 06 Jun 2025 08:54:53 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id E95AEC0176; Fri,  6 Jun 2025 08:54:44 +0200 (CEST)
-Date: Fri, 6 Jun 2025 08:54:44 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: torvalds@linux-foundation.org
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] MIPS changes for v6.16
-Message-ID: <aEKQtJcSIeKklwz4@alpha.franken.de>
+	s=arc-20240116; t=1749193357; c=relaxed/simple;
+	bh=WZpvh8twhZKeYn8n5M47CATl7KMxz/7YeF7UTgrpTdU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RzECEBNU6qzw+hmYbBl/YxZIHqWdzfjfZqtCYy21RrYcLzh6XjZ/e0vB4LeF/6tCqENP5ju1QO4H66FLJpszd3PesFrOnJTzqJhY4y2srj9/cuVvWh+qtLZAIiHf/vT+uXxJg+qyY+KABEOT4g77E+do1GYmu6Tw2xY0lwUDoco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bDBx80NVxz2Cf50;
+	Fri,  6 Jun 2025 14:58:36 +0800 (CST)
+Received: from kwepemg100017.china.huawei.com (unknown [7.202.181.58])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0011A140295;
+	Fri,  6 Jun 2025 15:02:24 +0800 (CST)
+Received: from huawei.com (10.175.124.71) by kwepemg100017.china.huawei.com
+ (7.202.181.58) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 6 Jun
+ 2025 15:02:24 +0800
+From: Wupeng Ma <mawupeng1@huawei.com>
+To: <akpm@linux-foundation.org>, <vbabka@suse.cz>
+CC: <surenb@google.com>, <jackmanb@google.com>, <hannes@cmpxchg.org>,
+	<ziy@nvidia.com>, <wangkefeng.wang@huawei.com>, <mawupeng1@huawei.com>,
+	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+Subject: [RFC PATCH] mm: Drain PCP during direct reclaim
+Date: Fri, 6 Jun 2025 14:59:30 +0800
+Message-ID: <20250606065930.3535912-1-mawupeng1@huawei.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemg100017.china.huawei.com (7.202.181.58)
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+Memory retained in Per-CPU Pages (PCP) caches can prevent hugepage
+allocations from succeeding despite sufficient free system memory. This
+occurs because:
+1. Hugepage allocations don't actively trigger PCP draining
+2. Direct reclaim path fails to trigger drain_all_pages() when:
+   a) All zone pages are free/hugetlb (!did_some_progress)
+   b) Compaction skips due to costly order watermarks (COMPACT_SKIPPED)
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+Reproduction:
+  - Alloc page and free the page via put_page to release to pcp
+  - Observe hugepage reservation failure
 
-are available in the Git repository at:
+Solution:
+  Actively drain PCP during direct reclaim for memory allocations.
+  This increases page allocation success rate by making stranded pages
+  available to any order allocations.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/ tags/mips_6.16
+Verification:
+  This issue can be reproduce easily in zone movable with the following
+  step:
 
-for you to fetch changes up to 5a0c749125c001cba673e9951b0002fba7ea2886:
+w/o this patch
+  # numactl -m 2 dd if=/dev/urandom of=/dev/shm/testfile bs=4k count=64
+  # rm -f /dev/shm/testfile
+  # sync
+  # echo 3 > /proc/sys/vm/drop_caches
+  # echo 2048 > /sys/devices/system/node/node2/hugepages/hugepages-2048kB/nr_hugepages
+  # cat /sys/devices/system/node/node2/hugepages/hugepages-2048kB/nr_hugepages
+    2029
 
-  MIPS: loongson2ef: lemote-2f: add missing function prototypes (2025-05-30 14:19:02 +0200)
+w/ this patch
+  # numactl -m 2 dd if=/dev/urandom of=/dev/shm/testfile bs=4k count=64
+  # rm -f /dev/shm/testfile
+  # sync
+  # echo 3 > /proc/sys/vm/drop_caches
+  # echo 2048 > /sys/devices/system/node/node2/hugepages/hugepages-2048kB/nr_hugepages
+  # cat /sys/devices/system/node/node2/hugepages/hugepages-2048kB/nr_hugepages
+    2047
 
-----------------------------------------------------------------
-Added support for EcoNet platform
-Added support for parallel CPU bring up on EyeQ
-Other cleanups and fixes
+Signed-off-by: Wupeng Ma <mawupeng1@huawei.com>
+---
+ mm/page_alloc.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
-----------------------------------------------------------------
-Bartosz Golaszewski (4):
-      MIPS: rb532: gpio: use new line value setter callbacks
-      MIPS: bcm63xx: gpio: use new line value setter callbacks
-      MIPS: alchemy: gpio: use new line value setter callbacks
-      MIPS: txx9: gpio: use new line value setter callbacks
-
-Caleb James DeLisle (6):
-      dt-bindings: mips: Add EcoNet platform binding
-      mips: Add EcoNet MIPS platform support
-      dt-bindings: vendor-prefixes: Add SmartFiber
-      mips: dts: Add EcoNet DTS with EN751221 and SmartFiber XP8421-B board
-      MAINTAINERS: Add entry for newly added EcoNet platform.
-      mips: econet: Fix incorrect Kconfig dependencies
-
-Charan Pedumuru (1):
-      mips: dts: pic32: pic32mzda: Rename the sdhci nodename to match with common mmc-controller binding
-
-Chris Packham (1):
-      mips: dts: realtek: Add MDIO controller
-
-Eric Biggers (1):
-      MIPS: bcm63xx: nvram: avoid inefficient use of crc32_le_combine()
-
-Gregory CLEMENT (3):
-      MIPS: SMP: Implement parallel CPU bring up for EyeQ
-      MIPS: SMP: Move the AP sync point before the non-parallel aware functions
-      MIPS: SMP: Move the AP sync point before the calibration delay
-
-Khem Raj (1):
-      mips: Add -std= flag specified in KBUILD_CFLAGS to vdso CFLAGS
-
-Randy Dunlap (2):
-      MIPS: loongson2ef: cs5536: add missing function prototypes
-      MIPS: loongson2ef: lemote-2f: add missing function prototypes
-
-Thorsten Blum (3):
-      mips: ptrace: Improve code formatting and indentation
-      MIPS: BCM63XX: Replace strcpy() with strscpy() in board_prom_init()
-      MIPS: Replace strcpy() with strscpy() in vpe_elfload()
-
-WangYuli (1):
-      MIPS: Loongson64: Add missing '#interrupt-cells' for loongson64c_ls7a
-
- Documentation/devicetree/bindings/mips/econet.yaml | 26 ++++++++
- .../devicetree/bindings/vendor-prefixes.yaml       |  2 +
- MAINTAINERS                                        | 12 ++++
- arch/mips/Kbuild.platforms                         |  1 +
- arch/mips/Kconfig                                  | 28 ++++++++
- arch/mips/alchemy/common/gpiolib.c                 |  6 +-
- arch/mips/bcm63xx/boards/board_bcm963xx.c          |  2 +-
- arch/mips/bcm63xx/gpio.c                           |  7 +-
- arch/mips/boot/compressed/uart-16550.c             |  5 ++
- arch/mips/boot/dts/Makefile                        |  1 +
- arch/mips/boot/dts/econet/Makefile                 |  2 +
- arch/mips/boot/dts/econet/en751221.dtsi            | 67 +++++++++++++++++++
- .../dts/econet/en751221_smartfiber_xp8421-b.dts    | 19 ++++++
- .../boot/dts/loongson/loongson64c_4core_ls7a.dts   |  1 +
- arch/mips/boot/dts/pic32/pic32mzda.dtsi            |  2 +-
- arch/mips/boot/dts/realtek/rtl930x.dtsi            | 33 +++++++++
- arch/mips/econet/Kconfig                           | 48 +++++++++++++
- arch/mips/econet/Makefile                          |  2 +
- arch/mips/econet/Platform                          |  5 ++
- arch/mips/econet/init.c                            | 78 ++++++++++++++++++++++
- .../asm/mach-loongson2ef/cs5536/cs5536_pci.h       | 20 ++++++
- arch/mips/include/asm/mach-loongson2ef/loongson.h  |  9 +++
- arch/mips/include/asm/topology.h                   |  3 +
- arch/mips/kernel/gpio_txx9.c                       |  8 ++-
- arch/mips/kernel/ptrace.c                          | 34 +++++-----
- arch/mips/kernel/smp-cps.c                         |  2 +
- arch/mips/kernel/smp.c                             | 18 +++++
- arch/mips/kernel/vpe.c                             |  3 +-
- arch/mips/rb532/gpio.c                             |  8 ++-
- arch/mips/txx9/generic/setup.c                     |  8 ++-
- arch/mips/vdso/Makefile                            |  1 +
- include/linux/bcm963xx_nvram.h                     | 16 ++---
- 32 files changed, 434 insertions(+), 43 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mips/econet.yaml
- create mode 100644 arch/mips/boot/dts/econet/Makefile
- create mode 100644 arch/mips/boot/dts/econet/en751221.dtsi
- create mode 100644 arch/mips/boot/dts/econet/en751221_smartfiber_xp8421-b.dts
- create mode 100644 arch/mips/econet/Kconfig
- create mode 100644 arch/mips/econet/Makefile
- create mode 100644 arch/mips/econet/Platform
- create mode 100644 arch/mips/econet/init.c
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 2ef3c07266b3..464f2e48651e 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -4137,28 +4137,22 @@ __alloc_pages_direct_reclaim(gfp_t gfp_mask, unsigned int order,
+ {
+ 	struct page *page = NULL;
+ 	unsigned long pflags;
+-	bool drained = false;
+ 
+ 	psi_memstall_enter(&pflags);
+ 	*did_some_progress = __perform_reclaim(gfp_mask, order, ac);
+-	if (unlikely(!(*did_some_progress)))
+-		goto out;
+-
+-retry:
+-	page = get_page_from_freelist(gfp_mask, order, alloc_flags, ac);
++	if (likely(*did_some_progress))
++		page = get_page_from_freelist(gfp_mask, order, alloc_flags, ac);
+ 
+ 	/*
+ 	 * If an allocation failed after direct reclaim, it could be because
+ 	 * pages are pinned on the per-cpu lists or in high alloc reserves.
+ 	 * Shrink them and try again
+ 	 */
+-	if (!page && !drained) {
++	if (!page) {
+ 		unreserve_highatomic_pageblock(ac, false);
+ 		drain_all_pages(NULL);
+-		drained = true;
+-		goto retry;
++		page = get_page_from_freelist(gfp_mask, order, alloc_flags, ac);
+ 	}
+-out:
+ 	psi_memstall_leave(&pflags);
+ 
+ 	return page;
 -- 
+2.43.0
 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
