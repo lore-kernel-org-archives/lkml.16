@@ -1,121 +1,130 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4EB323D
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 19:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA63E1534EC;
+	Fri,  6 Jun 2025 19:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749239949; cv=none; b=tcuk1KWHn85WAjQo9PizbdU79U5bSBkRsx6eo7oqzBywxYqkK9w0Hyyp9SFT2zRU5PFfNraevz6Q6dUx1uhbNR/1oZHeiwHDrx8fVwXHypmkFQiEQjiO11m0x3t9veuxEpDxNLdcjeDxUuiD7wy95RDvc0fqsbRdos+INN/O/oU=
+	t=1749239963; cv=none; b=Q6XTxewO9rVUd0N5IId2UkVlkbWzTo2F7bR+asOwDMRKJPoX1lB6M2jnt7JlA9XiyGl0MHT94EeePlWWPhY/NNqmeGyN+6BkPLcyBvvcAglTfVIEyRyQJsWBCCuqnLRwpZ/OA3vg4RnaAndnaLwLYppLtuyeU9i57MHPuAedfiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749239949; c=relaxed/simple;
-	bh=SdvZDvnjYLWzJUWJ438rov/PLt522izsObi6Xc7FM9c=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=nhhW7keyIPrZT6qBrAKOvAFrVyO5fAq28hogjtFC6zFW8DSe5uSDRKW0u5F8aAJEXwg/CH5fkDzIa46ITnqOTQSt3Ot+P8pUYS4UogX3japqlPbyMFHE5US8P6oB1eYjcPLhOEHvykDhIhJtAns0Vf5xZhZjq3Iol3vc1IHRSwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nLFOGh4x; arc=none smtp.client-ip=209.85.128.49
+	s=arc-20240116; t=1749239963; c=relaxed/simple;
+	bh=cF3i1INmzxHotStY6F4mgjH7GBYziuXpGsn4ZWbItic=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JUuvpaBoO8Tc8hWnWzSLtHNYuLQ57ieTK9noqFylp7p4wII3h6Tf7H0J/yorDtjNimM1p3RKNoY714uFAQkg2Edephl76NGZvaf35rDm6hw/DEyGHsvset1fM+S8inWTe17i96Y/4qLgpRbmd3YNIkK5cDtxP16nBKhRjkA/m2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IsBEblEU; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nLFOGh4x"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-450cfb790f7so19305695e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 12:59:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IsBEblEU"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-45300c82c1cso120095e9.3;
+        Fri, 06 Jun 2025 12:59:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749239945; x=1749844745; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SdvZDvnjYLWzJUWJ438rov/PLt522izsObi6Xc7FM9c=;
-        b=nLFOGh4xpz1e1DVoAsUrQLbvxRq5vv/Ziec8oBOByxfpTbXfhAax1A2AZSA7dtt024
-         4YQJm9PwNcvrF8oa7s+nDDVnYYj7c9qjH4+fl+JI5CgFz2Gy4aLL9/9yQt5mHTnNYklR
-         oFwTOb07LLOngX9HFwLyFW4DzPzvm6Gw1e0FTAaIEt4PPHKwBsDjFRy+5y+BQPZEMcx9
-         sYtnTNugmDk8SI6N9FQWY8ftO/l6sBA3Vx1sb3slkmVZm/7dNg1UIE5Be1aek0ZXSSMc
-         YOgQy7SvTrZp8KzJDcgnPiEVGUE0FLhjVlwxKpT3IVIvBXJVGyRUoweqhmcISOANf7fJ
-         wBqA==
+        d=gmail.com; s=20230601; t=1749239960; x=1749844760; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WgMKogE+w0FLvT0S9tcfLKtpLGtygafazcLhHppciws=;
+        b=IsBEblEUCWAoCiY3IpC0cwLWG+XEcBpisCBusAQqKHh+4kapLmNTjBIIDiy/P1v+dX
+         dHmH6kG88nBZpKbVmma2jnHsPbcGDk86srkXwyOLHhyeVFN2Vp6cJkUXYlcO7FHdPHXt
+         us5z0NQ4XjbnWum52P7oc5V+UBWhUENB7DTh9y+4OjqTOAsZJ/PnPEPvoX63x4a0jcPA
+         jz50UPjYsYtSshSrOoXz6ZbEfhy2XJM2a9QCq1cIHeXew5yRmPgRz7IcaI3aONZVZ3rV
+         G5x1FWXmr77uoHo5wnPnQR6c1nDs7xPomYIGKfP+DHZec1M40cqesYZtw+nyCwgwEoEX
+         FtKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749239945; x=1749844745;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SdvZDvnjYLWzJUWJ438rov/PLt522izsObi6Xc7FM9c=;
-        b=mJrViLRdbDQrl1sJNtHLVcDQ6N4gHJQ2+OQfOFbc2As9/csTbe0JuCRgDzoE91C1TB
-         rrC/jcwTTtzaSgNVjUM6YqGZpRk5Iz3nT4V8Ivdq8DKgALSTxIJKGIva7tSRU/NBcYiP
-         kKlQewE6xwlPYaiH5/j25RYpqCDDpVu6p8z36gIEUd1NSauPKV76eSbm92IVH7skYR7P
-         Qtlrh7TttZ8e00DTpmr32XiI4MFfjEEwy11RKMTT28SmU1zUW6iuYFCfAb120xMVDbz6
-         RnO+3LKyLhofb0+q7xwGtruC95+tUfu3FwJjNRf/2rfxINSg1TtH8mv+JkSpzm4K8p26
-         TE6w==
-X-Gm-Message-State: AOJu0Ywh4J3jaUE/9XCDINSS94zMa9TuPzy6+xsq69qBTTywBfuj0QHO
-	m07X5krh0x5af85LGc2+Jp9cDsIz9FyiBGleMdYVV0SX4gyPiSxdQeVf
-X-Gm-Gg: ASbGncuV+PY5aXmd02sVkMLPKmFfgePuNMN6zLdjW8USLTZyyh/6FPvYfIV7Ou37dH3
-	mzuIbl39kA//p2pyMomVfksMwTu53uJ17PaDwwqS+wQ7nB4KPM9u7+qhFYH7fpzZ2WM1ihWOOa3
-	htPr6/hCzQeBbcKzWQSXlQfIWTljnkxAOx4kxcMDM0z4todzAyjA5eVSN35tyUBMzG4CzpPcxls
-	zIAZnVfV7Rp7RO1UjG4eaIRBG+kJ2QDhpb8lN53mycHr9f9hx7GXpCAumPX0xFMxirST3PytzMj
-	XHE0vcTdbSrpgHUCWxN3ChwYrqtFAYvF/4JyAha7V6DvQx/FrhhWkokn9XeZakCusw==
-X-Google-Smtp-Source: AGHT+IFctWpLLDZPu7WnOKQ7pi+H0ICZkrWxRtTuLiHch4LOJT5YR7T8y68hpRDawg25UX5nAYZf3A==
-X-Received: by 2002:a05:600c:8b43:b0:43d:fa59:af97 with SMTP id 5b1f17b1804b1-45201427c5amr44870465e9.32.1749239944871;
-        Fri, 06 Jun 2025 12:59:04 -0700 (PDT)
-Received: from smtpclient.apple ([5.29.20.116])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53244d10asm2780741f8f.67.2025.06.06.12.59.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Jun 2025 12:59:04 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+        d=1e100.net; s=20230601; t=1749239960; x=1749844760;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WgMKogE+w0FLvT0S9tcfLKtpLGtygafazcLhHppciws=;
+        b=tY9bCSN22ktsfuaoqBCgZTBDuNp34CY+3zgMfKd25UaDo/cAyee133o+Vt7PCFczkE
+         qjpsH+KBNj1EZAFlQapdimPasWlgKQOUC67zCUz1uC7NbHVeku2/Z/+9xquxla/AVpxp
+         ri2gv37yzP2owFr0vpqClcgg9NLExovEhM6EAnnTBBGgrTUwoq9CXGUe3e15NRbfh3SO
+         5VUZb50r2162Sl+b/uBtg1jasE55N9NilNK/5s5LVKCS6mGw1M2vm+o5SAeH7kVPMScK
+         rhkEso0r2ATHqENEgiQEyxQoJSgDmuAoKFhtGWFJWoNCC2naqVdzo8lVtZmFLnxRh1vm
+         h8qQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVViv2RDDWijlsXpN0I18PBirmDLQgQhE3RVW38Zza9saFs8Hhz9aCDaLE918ELtyUmJw1wA46m2Og3A68@vger.kernel.org, AJvYcCVkln25PssYPKoD5Tgvy5rAwnEjoSFgLPDQFSf3qI/igJiRswhhsTOqzzpVUJkCmBTMLrU=@vger.kernel.org, AJvYcCWM8SJiix0bF7BC0CyStjAhvA5/ums8vPYBC82oGmX8avfzVSajdR+R1bC4ltq2ERR56aXtJcV+fzI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxX2bIXeiQOSWu62mBHJ87fIsopzGAaXeKk56nM+85hRUBHDqH1
+	ra7i/0J6/wx8epUzBF4VPhJ/RvAEU5ZBsyfJo5qkDaf0BYvzmCrNg1doMVknoQ==
+X-Gm-Gg: ASbGncs9ktemnqqqe0QwKoQYHYi3cIugxk7Huuhlas00t/+urZcNfHx+RRwmrz6KJ8L
+	wim3GpgzUv19Tj+28BAIr+ei9h4XTU201w56BS/Wwsi0fbGXa6T3yjU3L1yO1UooSEo1BMf9HYT
+	KD650e7Yr0jGYgR3kgdabGIlS4RuizgDKGZJAdjshyCN3JbVqGwxiC4lM389yDAhb5gV9FRjHub
+	uHh1Jm75zLdzPYpT4VYuyDqzZA7Z3+0k3Br8lP7l36Gf1UiphtDKnkMt5Gye5p0MV5yGQoT/F6M
+	V1B6anms24BSJguU/633OU8WodkMndRTE7nQ+Pdfp22S7T2n312crFr+mBgnRA==
+X-Google-Smtp-Source: AGHT+IF8Be/8hvJLKt9Wkfm7L0GTwkTnlcZ/O88biSQ1kMjH+e6QfycT5Y63BkTYLEnP3ilLcjjNFg==
+X-Received: by 2002:a05:600c:8b55:b0:43c:f629:66f4 with SMTP id 5b1f17b1804b1-452012b32cdmr51229305e9.0.1749239959673;
+        Fri, 06 Jun 2025 12:59:19 -0700 (PDT)
+Received: from [192.168.8.100] ([148.252.145.124])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452730d175dsm31565675e9.35.2025.06.06.12.59.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jun 2025 12:59:18 -0700 (PDT)
+Message-ID: <4efddaee-3d1c-4953-a64d-bbe69f837955@gmail.com>
+Date: Fri, 6 Jun 2025 21:00:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [RFC PATCH v3 5/7] x86/mm: Introduce Remote Action Request
-From: Nadav Amit <nadav.amit@gmail.com>
-In-Reply-To: <842d430e0df97933914c8f743e7ee226eccb3d3a.camel@surriel.com>
-Date: Fri, 6 Jun 2025 22:58:52 +0300
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- kernel-team@meta.com,
- Dave Hansen <dave.hansen@linux.intel.com>,
- luto@kernel.org,
- peterz@infradead.org,
- Borislav Petkov <bp@alien8.de>,
- the arch/x86 maintainers <x86@kernel.org>,
- Sean Christopherson <seanjc@google.com>,
- Thomas Gleixner <tglx@linutronix.de>,
- Yu-cheng Yu <yu-cheng.yu@intel.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B951662D-F565-4A48-B909-76BAB5D04A9A@gmail.com>
-References: <20250605163544.3852565-1-riel@surriel.com>
- <20250605163544.3852565-6-riel@surriel.com>
- <9290E368-A0E1-4429-B14C-9AEF8DC71672@gmail.com>
- <2666b165d262a3bad73a3a4d886fa6d16bced03c.camel@surriel.com>
- <51570690-D1B2-48EE-96EE-5C90B93C7067@gmail.com>
- <842d430e0df97933914c8f743e7ee226eccb3d3a.camel@surriel.com>
-To: Rik van Riel <riel@surriel.com>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 3/5] io_uring/bpf: implement struct_ops registration
+To: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org
+Cc: Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1749214572.git.asml.silence@gmail.com>
+ <f43e5d4e5e1797312ef3ee7986f4447bddac1d3c.1749214572.git.asml.silence@gmail.com>
+ <9b9199f0-347b-42fb-984a-761f0e738837@kernel.dk>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <9b9199f0-347b-42fb-984a-761f0e738837@kernel.dk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 6/6/25 15:57, Jens Axboe wrote:
+...>> @@ -50,20 +52,83 @@ static int bpf_io_init_member(const struct btf_type *t,
+>>   			       const struct btf_member *member,
+>>   			       void *kdata, const void *udata)
+>>   {
+>> +	u32 moff = __btf_member_bit_offset(t, member) / 8;
+>> +	const struct io_uring_ops *uops = udata;
+>> +	struct io_uring_ops *ops = kdata;
+>> +
+>> +	switch (moff) {
+>> +	case offsetof(struct io_uring_ops, ring_fd):
+>> +		ops->ring_fd = uops->ring_fd;
+>> +		return 1;
+>> +	}
+>> +	return 0;
+> 
+> Possible to pass in here whether the ring fd is registered or not? Such
+> that it can be used in bpf_io_reg() as well.
 
-> On 6 Jun 2025, at 3:03, Rik van Riel <riel@surriel.com> wrote:
->=20
-> On Fri, 2025-06-06 at 01:45 +0300, Nadav Amit wrote:
->=20
->>=20
->> So you may want to do some initial checks on the BSP as for
->> whether RAR is supported and what rar_max_payloads is (e.g., in
->> bsp_init_intel() ). And then on each AP, in something like=20
->> init_intel() you=E2=80=99d call setup_clear_cpu_cap() to disable RAR =
-if any
->> CPU's max_payloads is different than the BSP.
->=20
-> Grabbing the value of rar_max_payloads from early_init_intel()
-> might make sense, since it is supposed to be a system-wide
-> value, and not a per CPU thing.
->=20
-> That seems like it would solve data race issues?
->=20
+That requires registration to be done off the syscall path (e.g. no
+workers), which is low risk and I'm pretty sure that's how it's done,
+but in either case that's not up to io_uring and should be vetted by
+bpf. It's not important to performance, and leaking that to other
+syscalls is a bad idea as well, so in the meantime it's just left
+unsupported.
 
-early_init_intel() is called from init_intel() so it
-would be called both for the BSP and the APs; IOW, it won=E2=80=99t =
-solve
-the race.
+>> +static int io_register_bpf_ops(struct io_ring_ctx *ctx, struct io_uring_ops *ops)
+>> +{
+>> +	if (ctx->bpf_ops)
+>> +		return -EBUSY;
+>> +	if (!(ctx->flags & IORING_SETUP_DEFER_TASKRUN))
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	percpu_ref_get(&ctx->refs);
+>> +	ops->ctx = ctx;
+>> +	ctx->bpf_ops = ops;
+>>   	return 0;
+>>   }
+> 
+> Haven't looked too deeply yet, but what's the dependency with
+> DEFER_TASKRUN?
+Unregistration needs to be sync'ed with waiters, and that can easily
+become a problem. Taking the lock like in this set in not necessarily
+the right solution. I plan to wait and see where it goes rather
+than shooting myself in the leg right away.
 
-Looking again at the code, I think that you should be able to assume
-this data is the same on all cores and move the X86_FEATURE_RAR enabling
-and rar_max_payloads setting into intel_detect_tlb() which appears
-both to be the most logical place to put it and only runs on the BSP.
+-- 
+Pavel Begunkov
 
