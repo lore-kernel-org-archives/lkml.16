@@ -1,202 +1,105 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAAAE289E1B;
-	Fri,  6 Jun 2025 13:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7019289377;
+	Fri,  6 Jun 2025 13:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749218212; cv=none; b=X9ij/VJ43QFH85MJa42KqbBZyRcFIKnEen4Q7FxSHr+0wZ/42TzIC4fP+H/iGZUoGh5MYmgEntfSiPDERwTOZ2aeQnvAxP3kTZnZO5AEwhjmBC121zuPesggDuXTdVidEtqIBA1IiDXqjlvhqATfKT2xR7f/VAKf6o13a7/4V1g=
+	t=1749218221; cv=none; b=JsNau9Rc1JqBj4RbJi5Sdo0jSyGH5zrX9PqYONpb6MUpNnYKDIat53S/FfGPsynbHxIVKnoQ0itwq9gMC624dreelnSzgxgR1X6rRaufSKynhU2/McQXKtIv6FBwDiMr+qg8Ip3x+LiP5+3IrziI/JKhvJwXcd+asQVXcs/uqGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749218212; c=relaxed/simple;
-	bh=6XuUXclfgoEKljVaIZCM2rGLK7pYyEG8d9ML+mCyG1I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c8sWQeZybx4SgeC5ivSoCFmT0aMIP5mPJ8lJP4NtOuVk5mDkHm3A2D0KOrYhDUzCFV+kPIKWtBrlY/LIB+xzFRJwVZ6Jp9KcuHaEDyR7YHe0RpECUbuyiUSTQgywD3oOY3CvtNYiytiOskKzt51rWB9K0ZgCyftyGl2ibuOVmAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DnkOUMVy; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749218221; c=relaxed/simple;
+	bh=/1A025lXNtz4EqacED2aEnZgxsk0Idtg7kLaIV43aFA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=vDT6iMgzI1lVbdKZpgv1HZq7EnYjC/xBeuUyPMtsVS+zTHJlJDpES5/2sqm8e4RQGYQ4vAayqo2dlw6VAgLRImT8O3TgZtysHMaBO7RXKEkikDLLpwfJkOR1/2tX5w4D8W6gzsQAmWOS5tuoxD0b98VbWgDYRgg5pmTH48Jc+AE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=sT56Obop; arc=none smtp.client-ip=198.37.111.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DnkOUMVy"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-adb2bd27c7bso342193466b.2;
-        Fri, 06 Jun 2025 06:56:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749218209; x=1749823009; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fvUd63Qr4Uj7TI50ZVFoqkRT4E5BfeemVFyk/+/NcyI=;
-        b=DnkOUMVyYh1qZ84LvYOqpK1J2zChMvMwTvckKYCvF1xYzdk+2FM8KhwbRpmlJ0qWvl
-         Vkj62lwzFc0TLLxgBgc/XTNmwqPPDgLobrQUbX9MqwgLSQeSNN7Sif9VhakHUbxg/lAw
-         iGU43ok02uwgcrehgtbzAUdq6A5u4CdBfYWZGDozPCYG8KfKHUmd+YXQYv3qusnBp8Fj
-         OMlBV6KViefJ4ksoW1xjC41Zq31MRLrNMbRgh35SZVjw1dHac8ixa/ChpyAPVA2XyQpy
-         m7XJtbbxHIk3Hzx2Yz2Flw4WHnjWjJjPDPKAq+InfTR+/FZuiiCX6fNFl0xgyJStSup4
-         Yf+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749218209; x=1749823009;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fvUd63Qr4Uj7TI50ZVFoqkRT4E5BfeemVFyk/+/NcyI=;
-        b=s3KQwRzx5/HLvFYNva5IZQN4dy27quNZojJWY/6XsnpmlhAOJ7UzHlmbI7VVnA1/CV
-         u5euLbPM3qdkMOVPzuRUn2sChmLvJESbPmJEA01eGOmV1yV9qBPqR+THcBMHbDWtc/rS
-         az4c5u3Nk7vqNO38xOOwEM3tl9adC0Luo1iBhU15nC6iCSpKSdppWFNU+Sad9LL8MY1x
-         VupuCgF89K7vdyoTgsRShlmStBqfsUXz83wNNG0guNGYHRqyle7ihXNKK8Y131L5y4N/
-         vleD0czanNdVRHXFG4WtXDAe8sLzDr6SrzPF+IKWT3r0hIvJpGL6m4LqNCN+tL0qmLEW
-         LBfA==
-X-Forwarded-Encrypted: i=1; AJvYcCWr4eHgZFaUGz0CBfI3AQrc7qpbbw2Z64KOJCMI7TbeOZ6X0KSRMyAtcAJv9veUiHxTYe0=@vger.kernel.org, AJvYcCXDX++ZsAA7+Pss/HOnDRSFBjtcHbcwu9fBk/BBfo4T49cH0dLfk2YjcwvIJUhyUd27aKReOVEb7LMzmGwp@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4ZMCFQ58tiiu9inXW0GsNrzB//gggiClnhDHvtxjfMNhq295a
-	1Sj5wn8ixGQL4Su6cDvbFvJQnxD731ZN4InGr37yF6/ttFjOkZkwghEXpdl65w==
-X-Gm-Gg: ASbGnctKo1l2EziC4vshnllekvOs1TCAgyrUWxWyLTAUhyVlBXa/xx2pRxLlZY1NspR
-	M3tVB3iWKYCQjWW64Ay1/VBuS2ASxo+hI6dX7nNB1N65a7Y5y/a/F8kCXVnG2xMCjNL98vbbsTj
-	laWpZ9EMn+W0ff7dscEWuVM+rcxAWTqGo8DjxjfA5XG0csvds/zQFOLvcSl4QBnVS9X9omz+Yie
-	2ZDqpR+fHiHQhP/7RBSpkjTB1x6vHtwu+Dn9Le+iDwSNS3E5pI7Qvn/0Y4769+n9dUWqdt+2fMv
-	kT0oxZlb+zIcLaPjDlNftwPW62ZhqJ5UY8XxuvwOCSVjyw==
-X-Google-Smtp-Source: AGHT+IEsx3hUnaelYT0aEIVsQCZHO0xm/AdKQqvAEwfCIS6P16J6XswUGs8Rz+chBLEDz7p9hGnd/g==
-X-Received: by 2002:a17:907:5ce:b0:adb:469d:223b with SMTP id a640c23a62f3a-ade1aa469bbmr277091866b.49.1749218208386;
-        Fri, 06 Jun 2025 06:56:48 -0700 (PDT)
-Received: from 127.com ([2620:10d:c092:600::1:a199])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc379f6sm118026766b.110.2025.06.06.06.56.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 06:56:47 -0700 (PDT)
-From: Pavel Begunkov <asml.silence@gmail.com>
-To: io-uring@vger.kernel.org
-Cc: asml.silence@gmail.com,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC v2 5/5] io_uring/bpf: add basic kfunc helpers
-Date: Fri,  6 Jun 2025 14:58:02 +0100
-Message-ID: <c4de7ed6e165f54e2166e84bc88632887d87cfdf.1749214572.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1749214572.git.asml.silence@gmail.com>
-References: <cover.1749214572.git.asml.silence@gmail.com>
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="sT56Obop"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1749218217;
+	bh=/1A025lXNtz4EqacED2aEnZgxsk0Idtg7kLaIV43aFA=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=sT56ObopHbUV7yMYiPWo0KeJuG224Sgijnu8qpHxQ4P63Li9O0GTDitb95xkitJYP
+	 /WYgTGywdlSdEMH5CRgEfbU92R07DfBKrlybwRMN95+vU90+8Ljuk6YxP9Uf3r1dUb
+	 t3Bst9iTcCUoRX5RVq1UbJqRf/a5OAbKGUqtyGUY=
+Received: from [IPv6:2601:5c4:4302:c21::a774] (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id AD67E1C034C;
+	Fri, 06 Jun 2025 09:56:56 -0400 (EDT)
+Message-ID: <f8c39fe043d3548cffc376c7c014d45db70cd7af.camel@HansenPartnership.com>
+Subject: Re: Large modules with 6.15 [was: [PATCH v4 6/6] percpu/x86: Enable
+ strict percpu checks via named AS qualifiers]
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Uros Bizjak <ubizjak@gmail.com>, Jiri Slaby <jirislaby@kernel.org>
+Cc: Dave Hansen <dave.hansen@intel.com>, x86@kernel.org, linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
+ linux-arch@vger.kernel.org, netdev@vger.kernel.org, Nadav Amit
+ <nadav.amit@gmail.com>, Dennis Zhou <dennis@kernel.org>, Tejun Heo
+ <tj@kernel.org>,  Christoph Lameter <cl@linux.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin"
+ <hpa@zytor.com>, Linus Torvalds <torvalds@linux-foundation.org>, Andy
+ Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>, Peter
+ Zijlstra <peterz@infradead.org>, Shung-Hsi Yu <shung-hsi.yu@suse.com>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 06 Jun 2025 09:56:56 -0400
+In-Reply-To: <CAFULd4Zf4FOP-h0GVYo=frJ90tF07yvbuLbngnqUwyx9x+qz6w@mail.gmail.com>
+References: <20250127160709.80604-1-ubizjak@gmail.com>
+	 <20250127160709.80604-7-ubizjak@gmail.com>
+	 <02c00acd-9518-4371-be2c-eb63e5d11d9c@kernel.org>
+	 <b27d96fc-b234-4406-8d6e-885cd97a87f3@intel.com>
+	 <CAFULd4Ygz8p8rD1=c-S2MjJniP6vjVNMsWG_B=OjCVpthk0fBg@mail.gmail.com>
+	 <9767d411-81dc-491b-b6da-419240065ffe@kernel.org>
+	 <CAFULd4Zf4FOP-h0GVYo=frJ90tF07yvbuLbngnqUwyx9x+qz6w@mail.gmail.com>
+Autocrypt: addr=James.Bottomley@HansenPartnership.com;
+ prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-A handle_events program should be able to parse the CQ and submit new
-requests, add kfuncs to cover that. The only essential kfunc here is
-bpf_io_uring_submit_sqes, and the rest are likely be removed in a
-non-RFC version in favour of a more general approach.
+On Fri, 2025-06-06 at 11:27 +0200, Uros Bizjak wrote:
+> On Fri, Jun 6, 2025 at 11:17=E2=80=AFAM Jiri Slaby <jirislaby@kernel.org>
+> wrote:
+[...]
+> > Given this is the second time I hit a bug with this, perhaps
+> > introduce an EXPERIMENTAL CONFIG option, so that random users can
+> > simply disable it if an issue occurs? Without the need of patching
+> > random userspace and changing random kernel headers?
+>=20
+> In both cases, the patch *exposed* a bug in a related utility
+> software, it is not that the patch itself is buggy. IMO, waving off
+> the issue by disabling the feature you just risk the bug in the
+> related software to hit even harder in some not too distant future.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- io_uring/bpf.c | 86 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
+Given the severity of the problem absent tools updates the usual way of
+handling this is a (sometimes partial) revert for the estimated time to
+fix the tool chain followed by a resend.  This is exactly what we did
+when an efivarfs bug fixe exposed a bug in the firmware update service:
 
-diff --git a/io_uring/bpf.c b/io_uring/bpf.c
-index f86b12f280e8..9494e4289605 100644
---- a/io_uring/bpf.c
-+++ b/io_uring/bpf.c
-@@ -1,12 +1,92 @@
- #include <linux/mutex.h>
- #include <linux/bpf_verifier.h>
- 
-+#include "io_uring.h"
- #include "bpf.h"
- #include "register.h"
- 
- static const struct btf_type *loop_state_type;
- DEFINE_MUTEX(io_bpf_ctrl_mutex);
- 
-+__bpf_kfunc_start_defs();
-+
-+__bpf_kfunc int bpf_io_uring_submit_sqes(struct io_ring_ctx *ctx,
-+					 unsigned nr)
-+{
-+	return io_submit_sqes(ctx, nr);
-+}
-+
-+__bpf_kfunc int bpf_io_uring_post_cqe(struct io_ring_ctx *ctx,
-+				      u64 data, u32 res, u32 cflags)
-+{
-+	bool posted;
-+
-+	posted = io_post_aux_cqe(ctx, data, res, cflags);
-+	return posted ? 0 : -ENOMEM;
-+}
-+
-+__bpf_kfunc int bpf_io_uring_queue_sqe(struct io_ring_ctx *ctx,
-+					void *bpf_sqe, int mem__sz)
-+{
-+	unsigned tail = ctx->rings->sq.tail;
-+	struct io_uring_sqe *sqe;
-+
-+	if (mem__sz != sizeof(*sqe))
-+		return -EINVAL;
-+
-+	ctx->rings->sq.tail++;
-+	tail &= (ctx->sq_entries - 1);
-+	/* double index for 128-byte SQEs, twice as long */
-+	if (ctx->flags & IORING_SETUP_SQE128)
-+		tail <<= 1;
-+	sqe = &ctx->sq_sqes[tail];
-+	memcpy(sqe, bpf_sqe, sizeof(*sqe));
-+	return 0;
-+}
-+
-+__bpf_kfunc
-+struct io_uring_cqe *bpf_io_uring_get_cqe(struct io_ring_ctx *ctx, u32 idx)
-+{
-+	unsigned max_entries = ctx->cq_entries;
-+	struct io_uring_cqe *cqe_array = ctx->rings->cqes;
-+
-+	if (ctx->flags & IORING_SETUP_CQE32)
-+		max_entries *= 2;
-+	return &cqe_array[idx & (max_entries - 1)];
-+}
-+
-+__bpf_kfunc
-+struct io_uring_cqe *bpf_io_uring_extract_next_cqe(struct io_ring_ctx *ctx)
-+{
-+	struct io_rings *rings = ctx->rings;
-+	unsigned int mask = ctx->cq_entries - 1;
-+	unsigned head = rings->cq.head;
-+	struct io_uring_cqe *cqe;
-+
-+	/* TODO CQE32 */
-+	if (head == rings->cq.tail)
-+		return NULL;
-+
-+	cqe = &rings->cqes[head & mask];
-+	rings->cq.head++;
-+	return cqe;
-+}
-+
-+__bpf_kfunc_end_defs();
-+
-+BTF_KFUNCS_START(io_uring_kfunc_set)
-+BTF_ID_FLAGS(func, bpf_io_uring_submit_sqes, KF_SLEEPABLE);
-+BTF_ID_FLAGS(func, bpf_io_uring_post_cqe, KF_SLEEPABLE);
-+BTF_ID_FLAGS(func, bpf_io_uring_queue_sqe, KF_SLEEPABLE);
-+BTF_ID_FLAGS(func, bpf_io_uring_get_cqe, 0);
-+BTF_ID_FLAGS(func, bpf_io_uring_extract_next_cqe, KF_RET_NULL);
-+BTF_KFUNCS_END(io_uring_kfunc_set)
-+
-+static const struct btf_kfunc_id_set bpf_io_uring_kfunc_set = {
-+	.owner = THIS_MODULE,
-+	.set = &io_uring_kfunc_set,
-+};
-+
- static int io_bpf_ops__handle_events(struct io_ring_ctx *ctx,
- 				     struct iou_loop_state *state)
- {
-@@ -186,6 +266,12 @@ static int __init io_uring_bpf_init(void)
- 		return ret;
- 	}
- 
-+	ret = register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
-+					&bpf_io_uring_kfunc_set);
-+	if (ret) {
-+		pr_err("io_uring: Failed to register kfuncs (%d)\n", ret);
-+		return ret;
-+	}
- 	return 0;
- }
- __initcall(io_uring_bpf_init);
--- 
-2.49.0
+https://lore.kernel.org/all/ffd953c76d3a0bc0f88aeb319589632e8da032dc.camel@=
+HansenPartnership.com/
+
+It only took about 3 months to get the update through the distros, what
+would the estimate for this be?
+
+Regards,
+
+James
 
