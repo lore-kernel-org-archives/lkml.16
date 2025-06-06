@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C91142AA9;
-	Fri,  6 Jun 2025 06:50:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE88C42AA9;
+	Fri,  6 Jun 2025 06:52:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749192652; cv=none; b=e8kpvNgz3WTOSv2ozLNi/A+D/4LRx2A7tYoJk2O0diHjSYsP7JmrSxq+sYUhBplHVAXdbIRggaLWKgtZDvTKWWw/+mJiJo7eHJ6Xf3ysqWoRhPY2WMPBWW1ngHg2oy7/uH3Au/M6NXlIAtdX2Bo6HOdU+6Xh2mBnwlZEbjGfzW4=
+	t=1749192777; cv=none; b=DtpUU0OYgsCyb8yj2eZZLxPpHzWEB2SnU4ExQEe8XDH44/cmqn2l9oqvzLahiAZPZ+wm4iBt3raZwWGJ0+FeZ8uEegObOJYTOBEIUhW6/yWNyhykBy7yrG+lztu3HulmOouswpUCQ8y1cNSYmtO0jeck88G5pWm85aN9u+dFik8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749192652; c=relaxed/simple;
-	bh=3i0K2Cb7TgIgcoO/1LEeenusT49+10en1WHeFgaoCbQ=;
+	s=arc-20240116; t=1749192777; c=relaxed/simple;
+	bh=wk4SOBjDCrEEF63gdLu+EPqFr55LfBxz8pJHs9sIA84=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ka8Ai59bdFxzkmDXf2XvDXLuG444GIMEjv7UJveE2Kwt5/08VlhEzZxaAIK+e6QMziA135qcY1V0fo0uf6hcehMYAZDQZWkiJdkkWTFNnCVgtP1AfkgS79aoHqd1zo2RnSrt5VKwNSh8bdF2Vj2kDKmgNHzmBS2rdHEZZFqsaOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NOCtZz3r; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=B4WOa2jZScCDKShndA657EhZ1XSB2t2s1uiBP6n3i8VULCi4vSan8zxpe3PavT/GBiABxS2FfLPGChcB4PH5EcHSGqetLyKqFRKhNc+vHVXBVdAofm9LVemA0lLEIb0SxNDN/L7RcRVm2shJkZsz0Yahe690e9IviMmvDRjl2iU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gSC4rUVg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NOCtZz3r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3F75C4CEEB;
-	Fri,  6 Jun 2025 06:50:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gSC4rUVg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52E0BC4CEEB;
+	Fri,  6 Jun 2025 06:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749192652;
-	bh=3i0K2Cb7TgIgcoO/1LEeenusT49+10en1WHeFgaoCbQ=;
+	s=k20201202; t=1749192776;
+	bh=wk4SOBjDCrEEF63gdLu+EPqFr55LfBxz8pJHs9sIA84=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NOCtZz3rHIh67wd8v5OIYJI1PZkZ6sLWHD9B1msOuJPIiyJvuomQBfs6kKRPTlLhB
-	 rN854GLDnWO4SRLXPq3SHTb8AmFdGbPSYvHyTh5mVVb+PMOBZWup1LZ5CSUl0gAj9N
-	 ZxPwnSW++eTgnKOd6bKU9Zgbo/r3eqyL9NEolvPbSNj3Oov4C2NxM0k0FNj/NTbqaV
-	 +VmUH9IYcm+CYXhzxjW8qrGMQFjTd95W91vF9arYYgz6/FiqaGhQXe2tOh/L+fw4Xt
-	 7tL8LdmM/1cvNwWMFn9kEqgquS2R7ty1FRD13EJGOmJvQ80SNw0zsfMQ9yRCuMhkeN
-	 YX/snbkyOIGPA==
-Message-ID: <44b72ea6-353f-40bd-9bbc-66186bdb1161@kernel.org>
-Date: Fri, 6 Jun 2025 08:50:47 +0200
+	b=gSC4rUVgMxIAG+S4k5bglLdPFFozAfqagGwE7m7PfFf2hYRuv2v/9iNVvbSNwM2Ny
+	 RTtXTkB86cPRByrY1+y0t840lyreHtpCXsQ20vpoB4LzPgusiCmAeQmycko84x6x9Y
+	 aT/8n6TQcScxnxrXbnbayftP4osbv36K8zn3JWk6EB1XGto1XrvvNJAOf8Rp2KJtz6
+	 tkT+LdS3OD67KLltlmmmFLzMdldz5Nq7Ri3hShuiasBW8yGrHM3Epk5ig+4xRycuRD
+	 iDChxcW3DSljtApVpl1ViRWb60L9hjXsquc2ipPdyfr2w9DiIZ5s+7TMcWS10ZTVAc
+	 z0gHLGHu0rCow==
+Message-ID: <27c1a3fe-4536-4e6f-a636-ffc0fbd52568@kernel.org>
+Date: Fri, 6 Jun 2025 08:52:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,7 +35,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/2] ARM: dts: aspeed: ventura: add Meta Ventura BMC
+Subject: Re: [PATCH v7 2/2] dt-bindings: arm: aspeed: add Meta Ventura board
 To: Jason Hsu <jasonhell19@gmail.com>, robh@kernel.org, krzk+dt@kernel.org,
  conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
  patrick@stwcx.xyz, devicetree@vger.kernel.org,
@@ -43,7 +43,7 @@ To: Jason Hsu <jasonhell19@gmail.com>, robh@kernel.org, krzk+dt@kernel.org,
  linux-kernel@vger.kernel.org
 Cc: yang.chen@quantatw.com, jerry.lin@quantatw.com
 References: <20250606025251.887953-1-jasonhell19@gmail.com>
- <20250606025251.887953-2-jasonhell19@gmail.com>
+ <20250606025251.887953-3-jasonhell19@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -89,35 +89,28 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250606025251.887953-2-jasonhell19@gmail.com>
+In-Reply-To: <20250606025251.887953-3-jasonhell19@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 06/06/2025 04:52, Jason Hsu wrote:
-> Add Linux device tree related to Meta(Facebook) Ventura specific
-> devices connected to BMC(AST2600) SoC.Add subject prefix for the patch.
+> Document the new compatibles used on Meta Ventura.
+
+This is not what is happening here.
+
+> Add subject prefix for the patch.
+
+No clue what is "subject prefix" for a patch.
+
 > 
 > Signed-off-by: Jason Hsu <jasonhell19@gmail.com>
 
-<form letter>
-This is a friendly reminder during the review process.
+Please use subject prefixes matching the subsystem. You can get them for
+example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+your patch is touching. For bindings, the preferred subjects are
+explained here:
+https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
 
-It looks like you received a tag and forgot to add it.
-
-If you do not know the process, here is a short explanation:
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
-of patchset, under or above your Signed-off-by tag, unless patch changed
-significantly (e.g. new properties added to the DT bindings). Tag is
-"received", when provided in a message replied to you on the mailing
-list. Tools like b4 can help here. However, there's no need to repost
-patches *only* to add the tags. The upstream maintainer will do that for
-tags received on the version they apply.
-
-Please read:
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-
-If a tag was not added on purpose, please state why and what changed.
-</form letter>
 
 Best regards,
 Krzysztof
