@@ -1,222 +1,280 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2048.outbound.protection.outlook.com [40.107.223.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B02D1CEAC2
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 14:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749221836; cv=none; b=Z199GBTwy73jCAACB28Mo7ndwO//UtkkSZBiqacxtPp6PvJ1EnCKMKWYRIXF2vRe4zLVBtKOkV3PY7b1oZlDp+Eb4wSh2b8cmf75J+awiUJ9tJOQTiPlDnGl4h1QiFK9xWXuy7/e9tEnfEKUZwHpD6VvoZZYRZnD4jkW/8Sba7Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749221836; c=relaxed/simple;
-	bh=ia7pnAGyVV1EpMWakQwBtxjI3bEZOeCvt8bf0l4HQIg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N3BfIZ7KBqJq0dBZy7XSfLvLWz1Ib1wdEPgMarwjzQKqnk56YMt507lgXug6esxAHhk2n5ZFt+xuRB0y5B8t4bebF1waTPQIwdZz+bkFovT6Q2GYLelJvhd4xzdM/nK5qJo33eQy5x921l3OUI5ZBIuBzauaoCBC1G7tYGp/eoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Ji+tBwGY; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD68171C9
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 14:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749221869; cv=fail; b=HObFmvupSaxBOdvBxQ31iXeY3zB7cBwD7cbHYiEVl3tytgEabDPdtqDXN2a6bwC7kTTwqhOveMnLj7Fw0NHka89TD+VezosCaAJ2rjCubn/hNNJp9Z83Yv3dQhjKAgFaTizMKgLDefnG+OBzNVwRCRVAQmZP7pCqgGOJNblThfE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749221869; c=relaxed/simple;
+	bh=kj8mr1xtL/5m3vA/lw1nPHzAfYSCtZTMvjhcAKV9b+Y=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=NDMMEsKL77Lq2i9sVnZiRxJm4wLMHPq2/CGP4OWEVosGChU/+7POQ2g7KlSqUJrejQazl4E6FR7ZBZep0KuQMJBuCZ6qQGxhsHDPQbFN7AziId32ruaZo22rWyE5CpaQR+MY2gLt+vLotVSa2m1RAee+dhkDF6V23dGPSH9m/Ws=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Nwd4M0rx; arc=fail smtp.client-ip=40.107.223.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Ji+tBwGY"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-450ccda1a6eso20619075e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 07:57:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749221832; x=1749826632; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ybeh6r8IJ9MMaBfEPZurC85ycYwc4zI6taH+XBEB7iM=;
-        b=Ji+tBwGYkavoDMO2lvr8lzuKAde/GcNvyhsdvCc7YKkXSjig9iG67tFKvktaWtZBn2
-         T7mCDqAZ6U/+1BKCqd9rDB9bOIxlFWSfOVifoMs4oZpfxLjy7FG+BYVr66OIG0Szrg7W
-         a4vB934BQzNaw5DZeH86zO8SPDoPSJK7lUrdpDMtzn0stPutv2tFFN5GuMaePUTRX3vG
-         qYFbWgUbtJSyvOqF99X5tvsOpwCO2Y3dKtSh27EgxILr7LROSDFiVhCIany08F0uKbfL
-         No1jRCDMM/YVZrQz78c/Kso8fbr3t9WjvZe79kTIdyAbQqppe06i70kCYc7r4lIIXNN6
-         z2Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749221832; x=1749826632;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ybeh6r8IJ9MMaBfEPZurC85ycYwc4zI6taH+XBEB7iM=;
-        b=tV2Bgj/BBFbOjr+DJROsB59cXImQ3YmCaTpO+7yJ3IRvOCXtEhvSlZ8ZY0DdakBozc
-         ILFbxxwL9JhoTadKs4sLbwpHlAhIy60uxq+SJrd66T3l7HdJ0alOmJvJumlszDFspAiD
-         QzIyy613/yKoXCIJjJJQ4Xx2GN9eYg5HQUVlbbQWTLSDmQp+ADtCMmbd0CoaS8XrIrEp
-         Kx0KmTGTMQDqYE8zPCRqTEIaVXI7FGmDpYZcjn5AjioZ08b+cI541/DzxG5qyzTWFiww
-         eqAZlkpaiu7MxaOedxwI3GeOpwl+EyWZcVrb6fd9b1VcXBxOJBvxMZlQg0sc7D9/C76Z
-         EBdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX0/PBpCg98zDJ+5UhdTbUJ5RpC8kO9gWTRx/3jM9Q3I55JVkVM8rf6ezx5X5rdTkJa2ayqnghadgTgUFQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1pKFcpLrLImZIdhKbwD/6v83hJBPVQ0zlSxXkan9cALHpZviZ
-	hb0B6SV+W0hJwAbyEHjgK/eurt0F7sHO2Pgfmxjo+UgwI/STbPWD4KL+ihyJVQgVq1I=
-X-Gm-Gg: ASbGnctjr53WTTN5PgcbSv4XWCxSGOpkGtGRNV2VtgURqZCtpegdCgx/mJzhiM+Vh9s
-	sGzRHBw2WImRjKL+ggZ+gGgpryWJvkCehul0/yvyofcUm+Z6269QuoNZQhaiV8utYqda1cVXZhP
-	S8cYJYrLShAfuwqztzyOntXufmrCz9AKsuM2nNXeC6qPazj/8bN+lR4tl6GNIazSG3gIoL7dWBy
-	O23pNQmuK7dc2C1mMnZCfnQVjR2EY+RZhLRbAteo5XLuWcjD+0Itn2OdzSfsNLo3Eb+IiPj5kKY
-	vQeDHptG0m9aGP+66t6yNhwOjYDU7Jy4OUwWj1YJ6jSLtmFvLQYaSizCQxM8eLZRSgFypWM9SNe
-	c97vqaE0CHZJg6+3mhdCtTjQWWOpk
-X-Google-Smtp-Source: AGHT+IEtcBbSWQ+OKjv58Suw5c1swP9aEvffhR8eHp0ff4ePqLrLdMPX0D2MvWAAWZPqN7jMkQVkmg==
-X-Received: by 2002:a05:600c:458a:b0:450:cabd:b4a9 with SMTP id 5b1f17b1804b1-452014ea1ebmr35514085e9.29.1749221832308;
-        Fri, 06 Jun 2025 07:57:12 -0700 (PDT)
-Received: from localhost (p200300f65f13c80400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f13:c804::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-45213754973sm26847055e9.35.2025.06.06.07.57.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 07:57:11 -0700 (PDT)
-Date: Fri, 6 Jun 2025 16:57:10 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Sean Anderson <sean.anderson@seco.com>, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: New default binding for PWM devices? [Was: Re: [PATCH]
- dt-bindings: timer: xlnx,xps-timer: Make PWM in example usable]
-Message-ID: <erst43cabswj3cwnszssolgyoh4dsgrlnjjxhb7luk3qkqhyay@6zyoixljvwwg>
-References: <20250527171504.346696-2-u.kleine-koenig@baylibre.com>
- <a14be34c-de2a-4bea-9282-1fac7780b9a4@kernel.org>
- <crk42dsypmbyqk7avldghjq32vslmalfmmouwxzgtdci4agfhz@rkbmxj5z22fx>
- <20250606141324.GA1383279-robh@kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Nwd4M0rx"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MEBRQHdyEylNtdD/ogQSkp0KIuOzThoMlIoxNctL6/hO0yJk6/62/kKTuUwHN5CDMcmc4wvonxjGF7sZm8nru2rHvuqCEc7jYbCOyGLm9LcsD1Odi83EAcc0X8V4J+84u+2upgZgliP3RwZHXbT9Bz9s/gU70upuEP+4tYmPw85hJQhTVsMqmx5Y6e0fdByMAT2wVoL2sX9Ng1yL7BDjMixrmc1FN5BsBgAjmMR1vBVtQcFyUEXLF0zsGlEX1sIZaIY8Go57uURfJjfZboc+S14sB6NQvGPXVzvqbtucVMM9WKMQmMW+vQ/U4IKmjLv3kiPZWOfW4ilBL+/OXOk/jQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BQcIp+09qq/oG+Lqkcv4qvTHvgnr1G3PgBCBMHhest8=;
+ b=Yuc/mJTc970Uh13vYGrIFiapoorIFGTCZCE82FXrVIpSV+X0JVXEUPoOIv6FgocAw2Xr4x3H6r3I/6fSz1ynHxpBdYv/59pu1X2R8lHCGnr1AGkPbETg594rJJ/TsVO3erMEysaAAxPTB7qahKnIhBmuySlWGKZf4im5dhEffGXI3nQeAFbO3kHpm2pdcHMy592kcEHFf5mDYRSGVFjASBHAHakTaBHtf67r2GfENuF+O1uOmzMYOSnt3msOUMdG6FzamRqgbrxmtZeSymi61SzEEZJxaVtLr4PocBzs1MB32yai/db7lqG22snhL4wlVqsY31sByVlDRyH1PPabLw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BQcIp+09qq/oG+Lqkcv4qvTHvgnr1G3PgBCBMHhest8=;
+ b=Nwd4M0rx4ZSD/ik3AU3dP7OVHciXCI7KAjQ01OabKdWS9YmCVtMs4LccakBnHATBWP52ZZ6OFbNJ2EtZgldtv7B7khvcg07i5d4pC4GZIxJG7r+zKvbMOQ9pAEkFUBvhUjpBpjAO7MkZmDUXg0Dcj/ouce7HzZu8o8RXHQJ8BrU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by DS7PR12MB5741.namprd12.prod.outlook.com (2603:10b6:8:70::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8769.34; Fri, 6 Jun 2025 14:57:45 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%7]) with mapi id 15.20.8722.031; Fri, 6 Jun 2025
+ 14:57:44 +0000
+Message-ID: <d443719b-cf74-437b-8049-5f7a130350b9@amd.com>
+Date: Fri, 6 Jun 2025 16:57:37 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 4/9] drm/ttm: Add ttm_bo_kmap_try_from_panic()
+To: Jocelyn Falempe <jfalempe@redhat.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>,
+ =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>,
+ Matthew Brost <matthew.brost@intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250606120519.753928-1-jfalempe@redhat.com>
+ <20250606120519.753928-5-jfalempe@redhat.com>
+ <dd0532a2-4011-41ec-896d-ec066dc23cbc@amd.com>
+ <8ed62378-269f-4385-bf05-eda28098fc1f@redhat.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <8ed62378-269f-4385-bf05-eda28098fc1f@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BL0PR02CA0005.namprd02.prod.outlook.com
+ (2603:10b6:207:3c::18) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="53f32hgy6vknjdpf"
-Content-Disposition: inline
-In-Reply-To: <20250606141324.GA1383279-robh@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|DS7PR12MB5741:EE_
+X-MS-Office365-Filtering-Correlation-Id: c39a04d6-7bb9-4f0d-06c7-08dda50a7e62
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|921020|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MWtvUUEyQ1VpK3ZaVjJsc0UycHZYN1RpSzFvL0EwLyszcGtua3ZpeXBXYUc4?=
+ =?utf-8?B?WUtBU3FHKzVuR0JiRjlQTVhBQlNSQTdKbXpjUWVoVWxPcnZlT3Y2SHA1VTJ6?=
+ =?utf-8?B?QWlqNkRick4xL1FNQTA2RmUrQUpDN2g5VFJ2THBkdmpRSE9zR045R0xuUGJS?=
+ =?utf-8?B?MHd0L0hyejhtbi9GQjhJMVhCRmtZZnhETlRXUzBsK3Y0L21VcHlRS1NzUHIz?=
+ =?utf-8?B?ME5tcDJpZUdUYk9wRENwV3pyTk4yWUlvRFY5RlYyaUhqLzRxdTRJK3Y0dXdr?=
+ =?utf-8?B?M1plMmh1ZGxnNkRwWDVQMjc1VXY4VThXYm5ySHBWd1R3Y2c1T29jdEc2c3k0?=
+ =?utf-8?B?bVRPekthaVVrWld1bk1UVHZUdm9tVERCSjU0UWN0UlY2bENiM3FBTG5nWHk2?=
+ =?utf-8?B?cUpERW9VTVZBZmxxbkdwMm4xeWIrTjlYbU04bU14U3p6S216K3VOc0Y3TzF4?=
+ =?utf-8?B?ODZyZzZNekZlenpYQjFuc09aMHN2SlVqcG9tcDNwaDhWZ1ZtYkpTSHdrbWQx?=
+ =?utf-8?B?cFJwNUlRSS9NSTNtYVY2ZDFuR0R5WTU4RlhOQVEyY1RmdENxZ2NjREpxa1pu?=
+ =?utf-8?B?UmYxd2kyTkxnWTlKb2xzSlVaeFovU3ZwTmI4czIvYXZteGJNdE4zUUQzRmxW?=
+ =?utf-8?B?TkE2Rjc5K3A5YndTeDUySnJ3b25KUkJ5QlN3aXptNE5GUUVLTitvRlJWbXI2?=
+ =?utf-8?B?M0dOYkk3Qk9qM2wrWHlEU01GbmJ3YVJhUGdIdjFQOUJKMzdLRFFzU29YZW00?=
+ =?utf-8?B?ZjI2UWhiNkpVV0w5VUh4ekJwVjdxVHV5Sno4dzZGcnQ1RFJmb0ZPQUFsRUl6?=
+ =?utf-8?B?UDIzVXF6d05Md01nbW1zQ0JmN01DZjdTYTdUbVk4S3dlVVN5Rm8xUko1YmRY?=
+ =?utf-8?B?UEdveDJLQkE3WTNBMDlhczlBc2tnV1JIOU9XNVhpTWo4QUFnQmx2dTA1VUNa?=
+ =?utf-8?B?K2k1QVF5WHNxV3NlVXNKNkRkS0NaNkNCTmVpM2M5R1RtWER3dHNYb0poVk9u?=
+ =?utf-8?B?K1NwMmZhRnR5Z3JrcEc1TUtyMXhFTElGQ1R0UlNrYmxjdUVYelNDTnBNUjlZ?=
+ =?utf-8?B?WlZKRGJQdS9kOXY1LzBzR0xodlBWby9yVDBKUFFuNEpKZzAxZ1JuRkFDTkh5?=
+ =?utf-8?B?eEVObkw3eVBxM3oySjl4S1FOcHBqQXpNbHM5V0xBNUhZRkZlck53eEovbFJN?=
+ =?utf-8?B?OVlaOVh6aDR2VFRreGJMYitXNnpNZk9rOVc5QktYeDJ1b3c3UTlMTFpjZC8z?=
+ =?utf-8?B?aUxtRUFuVVgvTXJDQjRWdWFwTExMR1pQWEN4TzNtbzZVcFc3L01hdWtWcmEz?=
+ =?utf-8?B?M0ZJaFowL3M2dmZnSHlqTUJPNXo2d1UzS3R2cmV0Rks0MERmMjEwWHV1Q3Zh?=
+ =?utf-8?B?aFhXby9iZ1Z6MU1OS0xjaEl1Q2NRQStjWEY0UlpOZjNlcHA0S3lGRG15WnA1?=
+ =?utf-8?B?T0hMSkRLOWlsdUs3NXN0UFlvd1d5aVpRZDJFTDlFUVdhY2lVNStGcnNSZThI?=
+ =?utf-8?B?U0FnQU1OamZXUmpJNVhYc1RCUDYwRER5VWtmekI5T1ZmNDI3ZnhMakk1WWwv?=
+ =?utf-8?B?VlM3WVBQVmJONkZlN2xqOEROOXRPN3UvTmIrQWh2N3czaGZJeTR2NHVQL0xX?=
+ =?utf-8?B?RGFCTXY2N1lsS1RJejkwZ0VCekdzMUZSSHNVR0pyQjhqZnRhc2pWVkNJTjF5?=
+ =?utf-8?B?YldnWWhaczdZUXZhZEpScmNhNmkzbW1ucDFsbldYS3ZHeXdhYy9jdnIvSUw3?=
+ =?utf-8?B?RU02OWJ6K2RVSk5BdEt1eUVDNXZ6ZllZdWx2NFZIZSs3N0tUQWNlcmlrdWZH?=
+ =?utf-8?B?bk9VczJWdHp3YWFxQ3YzemNVeTBuZjJQZmlPQUtRTS8vam9mRTJzMkIwZGhw?=
+ =?utf-8?B?YWZiQ3MwVW1VMEErQjNqWWpxVG8zMVAwOWxmRTZOcDJ0SmNSL1l4S0hteTEx?=
+ =?utf-8?Q?bxNAt1LVCSc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(921020)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SDVmUVZMaDhSSjR0Q3JSRzNpamFxSXNUZkhUTWVDN1MrZnZ3ZE5HcFZUMm9O?=
+ =?utf-8?B?eTRjQnFPRnZVQTcwbGZGSVlsOWZmRmxDWWhoMjNGL1FtUjJ1SWkranVURG5X?=
+ =?utf-8?B?RHBMWkxseGl4NC9wdlZOL3ZQbFZ1MytlejB4TjdZNzBTZENaWkYxTmU1NzRS?=
+ =?utf-8?B?cmFNL0s2YWo3RDNLTmxWTFdvMHZ0N1Q0Wi9GelJlUGw2SnBicEpTdVpjSldr?=
+ =?utf-8?B?cUljTGs1ZlpNekJsUkVsL0FjY3FHUEZ1bmptbTFaMWJQbmdqK3ZhZmlmQklK?=
+ =?utf-8?B?eDJxL2VDRW1laXliV0FRNVBuVWN3SnEwQzNjdFJKdlMzNEdmcmpBSXdMSVEr?=
+ =?utf-8?B?dW9qcWxOM29PZ09rZXNjc0lnb0VwMXozNzlJaXp3eUdqMU5iWTExK09wYXZV?=
+ =?utf-8?B?Zldmc3hId3gxOEJQUEF0b0JPN3Uyb1N2VU44cHdqQ1BBSXZZUklZMUFGVHpG?=
+ =?utf-8?B?cEs2cjEvdXRZbTJSQjV5YTBOdUw4QVhiV0ZEblhXMEl2czVkcGFUb1hEZFlD?=
+ =?utf-8?B?aGpmMXh2YkxUZjBTTzV1ZjI2LzEwc25TZGVtYXhqZk9JNVgxRXRySUtsYXFm?=
+ =?utf-8?B?a1EyLy94VkQ3Ukw1d0U5Zk5iR3F0Rk05ZDIvMUJkcmh5a3FrN1h1VXl1OW96?=
+ =?utf-8?B?cTdCTGt5dlZWSzRtaXNJNTFOZzlRNlp1UklXQjZpZlF3cnRuSUxEd3NoVDFF?=
+ =?utf-8?B?SXJ6ZnBKZmpxb04vZklmb2J1YVJxangzRTMyRDFIQUVXZHJPeC83dEY3Mzd2?=
+ =?utf-8?B?UDNWdlNWeUZrWDltdTNkNCtNbVhaTHdsbFc2eHpVa0ZOS1FFTU9WQ2NBK0Jj?=
+ =?utf-8?B?bmdBVFhscHpiRUd3NFFPa2dLTkIvQ2s5SEY4MzhxdktkQkp5NkZPSmpLcS8v?=
+ =?utf-8?B?ajRzemdYaVZubU1xZm5hR05RcG1MamwzUGNGTi80R0huNUNQY3gycnZCeFVQ?=
+ =?utf-8?B?UDNXZHhjTkR4Vy9QaFdrUHhac3QrTzNPbkc1ZlZ6UkVjK0wzZWV6Mjc5Rlpu?=
+ =?utf-8?B?V3F4bUJkY0RGcmxHZzlCL0c5cytXbkJia1lHb2ptcXkzOC9QaFRrQXFZbi91?=
+ =?utf-8?B?RncrWFJOK1huWTJ0cG12SkxJSWRGYjJQc011bHlNcEJhNDVHSGJQVHdESjFi?=
+ =?utf-8?B?NXprYSt5L3U3YnRpcWI3ZUtkUWRDYlFDR2NPM1VDNVJaU1o3b1hLQ0dMQlZi?=
+ =?utf-8?B?QU9HMVJ2VC9oVnlPWkRqa3NWYkthNllvQy92QUNKckxMaHhNRVFFREFkYVRt?=
+ =?utf-8?B?L0lSV2o5N2swbnQ5YTA3alZxSUp2UlVTUm95S25kS3ZwWkl0SzNkbVNvZ1Vl?=
+ =?utf-8?B?V2FHZHlWV3lZTStuM3VsS1Z3RUJaUVRCRVVJNHpnVE91d01wODI1OE5QRnVK?=
+ =?utf-8?B?L3MvRVBORkhRYW9sYUZKT2UxVkZ1bDcwUU9rbTMzZk1XVm9WRlJ4cHZiclZQ?=
+ =?utf-8?B?SVJaajFuTk1HWTlhazk1N1BXTk9mTXlyM3pwNXN4TnlCWDNnc1NiS0I2TEZw?=
+ =?utf-8?B?Q2VTcThyeXhEQUFTelY3ZXhUM2dlbDFHejdmb0lrSk1Qb1RHQ3gvYVJGUXNI?=
+ =?utf-8?B?UFZSNTlTdlluR2xsRU5zejNOOHc2TXQ5d3N4cWpadTkvdXUyWW1nWEZncTVO?=
+ =?utf-8?B?QmpwYy9JTkcvZkhJbUUyRUZzb1FPeWpSVjRUVjY0Yk5KNERsTFNxdkhuT0lL?=
+ =?utf-8?B?MWprSjNYb1NVQVdTU2hqaGc1WXF2K3AzbzZ0Si9QNU1YMzdpSVh5NmdKcUJF?=
+ =?utf-8?B?aUx0RWVpVU1EdjU5WG12RVpGYW16LzBvSk5RWll2SEQvbUZ3QmNWQVpRQUw1?=
+ =?utf-8?B?SXJIelF6QzMvcFN2aWxjY3VhS1NzWkxKb0VDTzVncGZEVUx1ekVNRTZ6ZGFr?=
+ =?utf-8?B?b1FLYkFWelRIU2ZIaDFJTDFPUWZiTnJyK0RMdzVqWHBSdnF5dHNRVlA5TzNE?=
+ =?utf-8?B?M1VneHV6UVpkT1FubE5DYU55RGYxSEd2ZjdvUlIydXlEZW95WE5oUFhWUWFw?=
+ =?utf-8?B?cXI2YW5MbnlYenFLaDF6Rlo1eVY2WFp5cjdGdWgvTmEyVUU0L3lRTnpBamR1?=
+ =?utf-8?B?cm9IQzNFL2ZuWGtYSldxb1BpZm5SZDZMblZtUTFzMm45ZFlXMUhIZHJ4ZFNy?=
+ =?utf-8?Q?jVyUGqHQ7514LvMzgCACBlVky?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c39a04d6-7bb9-4f0d-06c7-08dda50a7e62
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2025 14:57:44.7414
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 06NZgiaVjAZti9rNgZNg8HiO4/uqSeUpFaXxOyRo4BxU2NrAxpT12O4q0oK56bvu
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5741
 
+On 6/6/25 15:14, Jocelyn Falempe wrote:
+> On 06/06/2025 14:28, Christian König wrote:
+>> On 6/6/25 13:48, Jocelyn Falempe wrote:
+>>> If the ttm bo is backed by pages, then it's possible to safely kmap
+>>> one page at a time, using kmap_try_from_panic().
+>>
+>> I strongly assume that we don't care about locking anything in this case, don't we?
+> 
+> Yes, normally it's called for the current framebuffer, so I assume it's properly allocated, and isn't growing/shrinking while being displayed.
+> 
+>>
+>>> Unfortunately there is no way to do the same with ioremap, so it
+>>> only supports the kmap case.
+>>
+>> Oh, there actually is on most modern systems.
+>>
+>> At least on 64bit systems amdgpu maps the whole VRAM BAR into kernel address space on driver load.
+>>
+>> So as long as you have a large BAR system you can trivially have access to the MMIO memory.
+> 
+> For amdgpu, I used the indirect MMIO access, so I didn't need to ioremap
+> https://elixir.bootlin.com/linux/v6.15/source/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c#L1800
 
---53f32hgy6vknjdpf
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: New default binding for PWM devices? [Was: Re: [PATCH]
- dt-bindings: timer: xlnx,xps-timer: Make PWM in example usable]
-MIME-Version: 1.0
+Good point. That is probably quite slow, but works under really all circumstances as long as the device hasn't fallen of the bus.
 
-Hello Rob,
+> For the xe driver, I only tested on integrated GPU, using system RAM, so this first approach is good enough.
+> But I'm still interested to find a solution, is there a way to get the current io-mapping if it exists?
 
-On Fri, Jun 06, 2025 at 09:13:24AM -0500, Rob Herring wrote:
->    reg:
-> >      maxItems: 1
-> > =20
-> > -  '#pwm-cells': true
-> > +  '#pwm-cells':
-> > +    const: 3
-> > =20
-> >    xlnx,count-width:
-> >      $ref: /schemas/types.yaml#/definitions/uint32
-> > @@ -82,7 +83,7 @@ examples:
-> >      };
-> > =20
-> >      timer@800f0000 {
-> > -        #pwm-cells =3D <0>;
-> > +        #pwm-cells =3D <3>;
-> >          clock-names =3D "s_axi_aclk";
-> >          clocks =3D <&zynqmp_clk 71>;
-> >          compatible =3D "xlnx,xps-timer-1.00.a";
-> >=20
-> > There is however one concern that I want to get resolved first to
-> > prevent churn:
-> >=20
-> > In principle I think it's bad that a phandle to a PWM must contain a
-> > period and flags specifying the polarity. For some use cases the period
-> > might not matter or is implicitly given or more than one period length
-> > is relevant.
->=20
-> Why can't the period be 0 and no flags set if they aren't needed?
+You need to ask that the XE guys. There is TTMs bdev->funcs->access_memory() callback which should allow doing that, but I have no idea how that is implemented for XE. 
 
-I don't say they cannot, and probably that's the most sane option if
-there is no fixed default period and flags and we're sticking to 3
-cells.
+Regards,
+Christian.
 
-> > So I wonder if instead of unifying all PWM bindings to #pwm-cells =3D <=
-3>
-> > I should instead go to something like
-> >=20
-> > 	mypwm: pwm {
-> > 		compatible =3D "...."
-> > 		#pwm-cells =3D <1>;
-> > 	};
-> >=20
-> > 	fan {
-> > 		compatible =3D "pwm-fan";
-> > 		pwms =3D <&mypwm 1>;
-> > 		assigned-pwms =3D <&mypwm>;
-> > 		assigned-pwm-default-period-lengths-ns =3D <40000>;
-> > 		assigned-pwm-default-flags =3D <PWM_POLARITY_INVERTED>;
-> > 	};
-> >=20
-> > (where the single cell specifies the index of the PWM's output).
->=20
-> Sigh. You just changed everyone to 3 cells and now you want to change=20
-> again?
+> 
+> 
+>>
+>>> This is needed for proper drm_panic support with xe driver.
+>>>
+>>> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+>>> ---
+>>>
+>>> v8:
+>>>   * Added in v8
+>>>
+>>>   drivers/gpu/drm/ttm/ttm_bo_util.c | 27 +++++++++++++++++++++++++++
+>>>   include/drm/ttm/ttm_bo.h          |  1 +
+>>>   2 files changed, 28 insertions(+)
+>>>
+>>> diff --git a/drivers/gpu/drm/ttm/ttm_bo_util.c b/drivers/gpu/drm/ttm/ttm_bo_util.c
+>>> index 15cab9bda17f..9c3f3b379c2a 100644
+>>> --- a/drivers/gpu/drm/ttm/ttm_bo_util.c
+>>> +++ b/drivers/gpu/drm/ttm/ttm_bo_util.c
+>>> @@ -377,6 +377,33 @@ static int ttm_bo_kmap_ttm(struct ttm_buffer_object *bo,
+>>>       return (!map->virtual) ? -ENOMEM : 0;
+>>>   }
+>>>   +/**
+>>> + *
+>>> + * ttm_bo_kmap_try_from_panic
+>>> + *
+>>> + * @bo: The buffer object
+>>> + * @page: The page to map
+>>> + *
+>>> + * Sets up a kernel virtual mapping using kmap_local_page_try_from_panic().
+>>> + * This can safely be called from the panic handler, if you make sure the bo
+>>
+>> "This can *only* be called from the panic handler..."
+> 
+> Yes, I will fix that, it shouldn't be called for normal operations.
+> 
+>>
+>> Apart from those open questions, looks sane to me.
+>>
+>> Regards,
+>> Christian.
+>>
+>>> + * is the one being displayed, so is properly allocated, and won't be modified.
+>>> + *
+>>> + * Returns the vaddr, that you can use to write to the bo, and that you should
+>>> + * pass to kunmap_local() when you're done with this page, or NULL if the bo
+>>> + * is in iomem.
+>>> + */
+>>> +void *ttm_bo_kmap_try_from_panic(struct ttm_buffer_object *bo, unsigned long page)
+>>> +{
+>>> +    if (page + 1 > PFN_UP(bo->resource->size))
+>>> +        return NULL;
+>>> +
+>>> +    if (!bo->resource->bus.is_iomem && bo->ttm->pages && bo->ttm->pages[page])
+>>> +        return kmap_local_page_try_from_panic(bo->ttm->pages[page]);
+>>> +
+>>> +    return NULL;
+>>> +}
+>>> +EXPORT_SYMBOL(ttm_bo_kmap_try_from_panic);
+>>> +
+>>>   /**
+>>>    * ttm_bo_kmap
+>>>    *
+>>> diff --git a/include/drm/ttm/ttm_bo.h b/include/drm/ttm/ttm_bo.h
+>>> index cf027558b6db..8c0ce3fa077f 100644
+>>> --- a/include/drm/ttm/ttm_bo.h
+>>> +++ b/include/drm/ttm/ttm_bo.h
+>>> @@ -429,6 +429,7 @@ int ttm_bo_init_validate(struct ttm_device *bdev, struct ttm_buffer_object *bo,
+>>>   int ttm_bo_kmap(struct ttm_buffer_object *bo, unsigned long start_page,
+>>>           unsigned long num_pages, struct ttm_bo_kmap_obj *map);
+>>>   void ttm_bo_kunmap(struct ttm_bo_kmap_obj *map);
+>>> +void *ttm_bo_kmap_try_from_panic(struct ttm_buffer_object *bo, unsigned long page);
+>>>   int ttm_bo_vmap(struct ttm_buffer_object *bo, struct iosys_map *map);
+>>>   void ttm_bo_vunmap(struct ttm_buffer_object *bo, struct iosys_map *map);
+>>>   int ttm_bo_mmap_obj(struct vm_area_struct *vma, struct ttm_buffer_object *bo);
+>>
+> 
 
-I did? I admit that I intended to, but before starting to modify the
-bindings I thought about if #pwm-cells =3D <3> is really the best way
-forward.
-
-> Changing existing users to 3 was borderline churn. Changing again=20
-> I won't be receptive to.=20
-
-I'm puzzled about what you mean.
-
-There is 2bb369ab50e107a7de6df060a1ece2f33a6a0b9e but this is hardly
-churn? And I prepared switching to 3 cells in
-895fe4537cc8586f51abb5c66524efaa42c29883 but didn't touch the bindings
-yet.
-=20
-> > I already suggested that in
-> > https://lore.kernel.org/linux-pwm/jmxmxzzfyobuheqe75lj7qcq5rlt625wddb3r=
-lhiernunjdodu@tgxghvfef4tl/.
-> > When I asked about that in #armlinux Rob said "no. We don't need a 2nd
-> > way to set period and flags." Is this still a bad idea if the
-> > traditional binding with 3 cells will be deprecated for all PWM
-> > devices? If this would be ok then, I'm also open for improvements to
-> > the new concept. Maybe something like:
-> >=20
-> > 	fan {
-> > 		compatible =3D "pwm-fan";
-> > 		pwms =3D <&mypwm 1>;
-> > 		pwm-default-period-lengths-ns =3D <40000>;
-> > 		pwm-default-flags =3D <PWM_POLARITY_INVERTED>;
-> > 	};
-> >=20
-> > ?
->=20
-> How is this any different than a slight name change?
-
-Compared to the suggestion with assigned-pwms it's mostly just a name
-change, but dropping assigned-pwms is a relevant change. Compared to
-what we have now (i.e. #pwm-cells =3D <3> for most bindings) the
-specification of flags and period is optional which is IMHO a nicer
-design pattern.
-
-> What I also said there is that case looked like a property of the fan.=20
-> If you want a default fan speed, then you should express that in fan=20
-> terms (i.e. RPM or %) and then have a table to go from fan speeds to fan=
-=20
-> control settings (i.e. PWM duty cycle in this case). Even if you need=20
-> something like minimum startup duty cycle, that's still a property of=20
-> the fan.
-
-I fully agree and want to fix the #pwm-cells =3D <4> case. In that context
-it's also relevant if the change should go to <3> or <1>.
-
-Best regards
-Uwe
-
---53f32hgy6vknjdpf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhDAcMACgkQj4D7WH0S
-/k7Zrwf/e3pkjRqHFV7Lk3vsWkmBLVvNzXJD7lFWLaL48eo49cz+xEVS1hg2NH2x
-OdS0bPOu1kOSTdJcpWCThTsJUL0IignJx5D+SXMlcSj+VfeEpfTj2ooi7MhnZEK7
-hSlIT/VfKcrlOh5SQw+uslH6VDNW7jEWfrimh90vEcqYCJqm56kyalzdI6Gj0XS9
-YRmmjvxWu4hU73H2LB04Ha5VAtWSI2E1o/2Bm81jL6dQfqyVQDIjO+fAK90QNGnT
-Fv7OM+bluN1LiMZRzy3TLv1wyNTFAZ1Vv93Xb+ZuSPC6SrJB+C082J+vQtXT20f6
-8KapgO98QZsotPXAGWN7LPxr3fkCmg==
-=fwHN
------END PGP SIGNATURE-----
-
---53f32hgy6vknjdpf--
