@@ -1,70 +1,53 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEF5189F43;
-	Fri,  6 Jun 2025 08:22:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494A9189F43;
+	Fri,  6 Jun 2025 08:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749198140; cv=none; b=X8UKH8Dg8U1WemXkmNTz+xIy/iQpJvVnW9b2bxxCe0WZdeLNLjQLY87nVe1ZHnaulubuAus3U0DLFRCo3Pf8zvYg04DbIQTJmi/vlpyJFfqy27PA21Cc4ytq8J/glNGyk8Hltgbwcyp26enWoQ28yUuXtKyKUxsifBmPKjBedrs=
+	t=1749198188; cv=none; b=X9kngHLrrvbWiyfbeyW9HtcRTdC2FAmsMBXoVGwdQw1KT/4L0xehNfF0/H6zmPK1+baKDgIQsvFGV3w5APMZ4Iq5f36eiCoadgmLOliV+6UOdrVJahOgeuDHKE6AIAjU6Wkm4ug6LVbZaORSap5K1i0soKxJYc/Z43b+kYum2QE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749198140; c=relaxed/simple;
-	bh=5Wcwpm0Z8kSMrpruTks0M12X5foA0MV5jmGMbNb+6dM=;
+	s=arc-20240116; t=1749198188; c=relaxed/simple;
+	bh=ivoX4r7KYxAqKYD1s1wmwegF8q36RQsFe5fTjupGLJA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TxylhGxcl2Fy6ozcNJTUj/CaoL376lEydp/9cpomx8zsNk/sPhrwkEl/JDdvZQmi9szLzGjekv+m846PY9Nxj7bsRUI5fyEOgxr+xB1EAqLVd87DGhBBZGBmCl0Q0kb4ZSfj61gGWlaGGqbibKFdfD7iK5PGeckxmV2zBVYyhHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PgiPE4xi; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=JuFIzQC1pu+2qcl1ePUl8+gGr/XQQCemB7yaIzzZsXIUFUpb12gwD3PVLULly3QNL0VB1f5VbuhDgdxnIvK0L1uQImtdPeKYo3rRHsGSstaQsq27usO/tdk5xwl1g5GNBjM94AEhVj+UYeMjzeR4HLkirqX10rAnt9IDWYH9XJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KwzOt/gD; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PgiPE4xi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749198139; x=1780734139;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5Wcwpm0Z8kSMrpruTks0M12X5foA0MV5jmGMbNb+6dM=;
-  b=PgiPE4xiq3agC8yfPvRGGyqz3Bj1BMWMdd6oCY8ZAouBCRbkMMsGe+OY
-   i/B5uao6dM6AynfMRjNOXBKYiLSD5IX72c+mhHPlSUYJHqQvZLF4IRB0o
-   piknMLz/7MqpxmeyNHsHm/ppDG6ppSXlcXsBW1HTZFrC3sMVnT6Ai4P+U
-   9+/8fIpsvWT6cMER6DawjHhacNUIVYsGD+DVyxINSgFpAV2RKqjzKumz/
-   bsp0ok70rtfvKSXDIwLmb2Lm9zQf7RLX3BMeK+RNqBxmdX8F6BU1P8sfp
-   kbNbMbDqG8magKrqFTehdT5BuAXAds5db0RRiExaMOcsW7S9yca9MC3OP
-   w==;
-X-CSE-ConnectionGUID: eMynQqGZRumCpVJn7QcTCg==
-X-CSE-MsgGUID: U7i0eh3wT7u74oiA/d3JCA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51486171"
-X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
-   d="scan'208";a="51486171"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 01:22:18 -0700
-X-CSE-ConnectionGUID: eboYxtTKRUmWuzIQmUOnyA==
-X-CSE-MsgGUID: 1kUmMYwXQ2eM37IKT+dL5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,214,1744095600"; 
-   d="scan'208";a="145776851"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 01:22:14 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uNSL5-00000004837-1i9R;
-	Fri, 06 Jun 2025 11:22:11 +0300
-Date: Fri, 6 Jun 2025 11:22:11 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>, ikepanhc@gmail.com,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Armin Wolf <W_Armin@gmx.de>, linux-doc@vger.kernel.org,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86: Move Lenovo files into lenovo subdir
-Message-ID: <aEKlM5lzhuVdYS-U@smile.fi.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250604173702.3025074-1-mpearson-lenovo@squebb.ca>
- <aEEyEfYgpPQm8Tlx@smile.fi.intel.com>
- <71f410f4-6ac6-41d2-8c99-2a02e0f05fed@app.fastmail.com>
- <aEHzYT4XqhzIpO5k@smile.fi.intel.com>
- <dd3b79e3-a0d1-4413-8c69-58ca6b4fb8c9@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KwzOt/gD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=H0JpHwrg6m9oWWv4QZ7+WuHnHXvL+MLbWUK7Sbl+PVA=; b=KwzOt/gDHutXCfdoTahbJ0Q4H1
+	1Q4GNDzPMnJuQJoWFShR8pF4q/tbrTdRS4YGxFKJC4r2KDtlJoFt4mvMRktLdcvx7lUq3FB60ecOI
+	JT74645Q2ozznQyJwvT20cz3LzLz4vGy3SodLKzkvf3LSSYkiRWy/R37aDrPxZhUcktO5DRh2iP3u
+	Ip6LX9s1QTxQnet+eaYJJ8UHd33cd6XgPtrOC7HDaq/Nusc5K0+ZUEYfPJOfdu1lHpeDsIpKsOzB7
+	d473Xeo75i/7/VCY0bLDgixhhV6bfgcYWT6PLnI7PyJ9wUPZM0vJ2fhlmGsTWU40tR5Pwq6ESOlI3
+	oQA2CwTA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uNSLd-000000057xs-18V4;
+	Fri, 06 Jun 2025 08:22:45 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id B1DA8300348; Fri,  6 Jun 2025 10:22:44 +0200 (CEST)
+Date: Fri, 6 Jun 2025 10:22:44 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Zihuan Zhang <zhangzihuan@kylinos.cn>
+Cc: rafael@kernel.org, len.brown@intel.com, pavel@kernel.org,
+	kees@kernel.org, mingo@redhat.com, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	vschneid@redhat.com, akpm@linux-foundation.org, david@redhat.com,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [RFC PATCH] PM: Optionally block user fork during freeze to
+ improve performance
+Message-ID: <20250606082244.GL30486@noisy.programming.kicks-ass.net>
+References: <20250606062502.19607-1-zhangzihuan@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,41 +56,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dd3b79e3-a0d1-4413-8c69-58ca6b4fb8c9@app.fastmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250606062502.19607-1-zhangzihuan@kylinos.cn>
 
-On Thu, Jun 05, 2025 at 05:03:15PM -0400, Mark Pearson wrote:
-> On Thu, Jun 5, 2025, at 3:43 PM, Andy Shevchenko wrote:
-> > On Thu, Jun 05, 2025 at 11:53:47AM -0400, Mark Pearson wrote:
-> >> On Thu, Jun 5, 2025, at 1:58 AM, Andy Shevchenko wrote:
-> >> > On Wed, Jun 04, 2025 at 01:36:53PM -0400, Mark Pearson wrote:
-> >> >> Create lenovo subdirectory for holding Lenovo specific drivers.
+On Fri, Jun 06, 2025 at 02:25:02PM +0800, Zihuan Zhang wrote:
 
-...
+> @@ -2596,6 +2597,11 @@ pid_t kernel_clone(struct kernel_clone_args *args)
+>  			trace = 0;
+>  	}
+>  
+> +#ifdef CONFIG_PM_DISABLE_USER_FORK_DURING_FREEZE
+> +	if (pm_should_block_fork() && !(current->flags & PF_KTHREAD))
+> +		return -EBUSY;
+> +#endif
+> +
+>  	p = copy_process(NULL, trace, NUMA_NO_NODE, args);
+>  	add_latent_entropy();
 
-> >> >> -F:	drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
-> >> >> +F:	drivers/platform/x86/lenovo/lenovo-wmi-hotkey-utilities.c
-> >> >
-> >> > You may follow the trick in the Makefile (see intel folder) to avoid repetition
-> >> > of the folder name in the file names. Note, the modules will be called the
-> >> > same (assuming no ABI breakages due to renames).
-> >> >
-> >> Interesting - I'll have to look at that a bit more.
-> >> Any objections if I leave that for a future change?
-> >
-> > IF it's nearest future :-)
-> >
-> I got this implemented - I'll include it with v3. It's less complicated than
-> I thought when I initially looked. 
-
-Thank you!
-
-> Thanks for the suggestion.
-
-You're welcome!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+This isn't blocking fork(), this is failing fork(). Huge difference.
+Also problematic, because -EBUSY is not a recognised return value of
+fork(). As such, no existing software will adequately handle it.
