@@ -1,169 +1,105 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC2A2C3242;
-	Fri,  6 Jun 2025 10:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A988C2C3242;
+	Fri,  6 Jun 2025 10:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749206110; cv=none; b=M/XokEQwUKVmVlC2Ytr1Zw9xYMvlvfKnB2c0zTwBUpQ1qB0aFbf1WMX0mNRIEC9icnZH5SKP0aCBAWbwvBAoIE1pWBSl//ZyfMvl/izoA4XHqzJ2qjPSDf448hm17zfRS55UqZ9mX8ypL6Vi5cL6p5CO1QHURj4XIb8FiJyjMvA=
+	t=1749206232; cv=none; b=EcVY3vXtEH8c7xPScQpz98ob8e4kxXthoFI4fJO3f3lprhlAKG2q9QJvURFF6lvCvDRDjjZbugL1W8OQu8l6EdyoaFW99E9LLuA4mRHgBA/Htl56grG8LM9gjToIOYmhX5J3Ew+yj2K1P4oe2KkfcMaLakQIx4U50af3CFfU25Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749206110; c=relaxed/simple;
-	bh=FVNLm1VrL8jaqyqM/ByJ16XfYaxZyZvq2f7/obGxSPY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=lonP6t8nrTWxsWWoLHS+von23d81yl7IasjrcKEFS1mVGV7LPaRL8/IakLuEAGDFxjE7PMM4bv6l119n7Jx6WBxpjRNV3N9TCDREZMibUsYtz92y4mZHEra2MU57AdtbzlQvAmXgb4VLh+oKF1AabWCPggWNirCHFr9FKNB/Nhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tY4fxOkz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nRJZ20Ac; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749206232; c=relaxed/simple;
+	bh=Mq4k4ekcbiqjRIxZJ0xXM1aKpS5twuBvYi6/9eFoJo8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bito4myopx6FUom7ZrV5ZDAPnbPQZl/QDodtZu8kayN3vj8xaWXUAsNAoU0c871UGLRIs5GjW4k/+NZqx1m4Ko/ZRAialG6V8bfuZr/+AA4Y24TlGL9gEi+UwbPvLzseYm06ZJkF3IaZ3/Sr+D14N7hOI8IoIRAx4jo9RcNQWvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h23P9u9P; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tY4fxOkz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nRJZ20Ac"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749206106;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FNlEqQbY+fa98gHMzcIrLM+qc3h/stf4tBXFHk8HQmQ=;
-	b=tY4fxOkzUOGEzSfuyTD1Xd7XXCr0wIg9z+OmDJ1uHXs/0D6FrBM/ARQL+JKenmmx/SpN1Z
-	JAaEnnksFD2pAgpGepixdsCDbPwxD74kL6ismmFvB9cLDuRgf8ibnKAFi5/2b5701+mDCg
-	5VpEE4EglAvv54Fl8fO/P2s7xX4L3DtAiHURV80AJrT7N47nWHbrRREZFuqYmx38diQKZs
-	BKUf+HgD+rtvBpRhYWfMzpNZuqVoW4oPOpDSwEJeV5WekTNskz0yvoEUH1kCnq2ICR1vVE
-	YbvnoKZtWzTI3AC6z4Ds2rIK1sD6dpBSviLaFZzF+GvfnCIm4DZojFmf8kxmVA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749206106;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FNlEqQbY+fa98gHMzcIrLM+qc3h/stf4tBXFHk8HQmQ=;
-	b=nRJZ20AcwHFYUmZVwaWsjyLVYVVIrcXFd2uY86bpZxAlNp2w/pQPxHQZvAEKp0MqcL8Y+l
-	KcVTJEOFTSVwaWBg==
-To: Petr Mladek <pmladek@suse.com>, "Toshiyuki Sato (Fujitsu)"
- <fj6611ie@fujitsu.com>
-Cc: 'Michael Kelley' <mhklinux@outlook.com>, 'Ryo Takakura'
- <ryotkkr98@gmail.com>, Russell King <linux@armlinux.org.uk>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
- <jirislaby@kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org"
- <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>
-Subject: Re: Problem with nbcon console and amba-pl011 serial port
-In-Reply-To: <84frgdcgug.fsf@jogness.linutronix.de>
-References: <SN6PR02MB4157A4C5E8CB219A75263A17D46DA@SN6PR02MB4157.namprd02.prod.outlook.com>
- <OS7PR01MB13775FE1A20762D1EA4A38D0ED76DA@OS7PR01MB13775.jpnprd01.prod.outlook.com>
- <84y0u95e0j.fsf@jogness.linutronix.de>
- <84plfl5bf1.fsf@jogness.linutronix.de>
- <TY4PR01MB13777674C22721FCD8ACF4FCCD76CA@TY4PR01MB13777.jpnprd01.prod.outlook.com>
- <aEApOPTqbVOR35F_@pathway.suse.cz> <84o6v3ohdh.fsf@jogness.linutronix.de>
- <aEBNLMYVUOGzusuR@pathway.suse.cz>
- <TY4PR01MB13777CC92C858572B9C19394FD76FA@TY4PR01MB13777.jpnprd01.prod.outlook.com>
- <aEGeARVcCwqcoHb8@pathway.suse.cz> <84frgdcgug.fsf@jogness.linutronix.de>
-Date: Fri, 06 Jun 2025 12:41:06 +0206
-Message-ID: <84cybhcg4l.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h23P9u9P"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso2306682b3a.2;
+        Fri, 06 Jun 2025 03:37:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749206230; x=1749811030; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NdtxJEbjhatRvCDWF7ffdW5RJ6Yji8odY3/KOt6aPsc=;
+        b=h23P9u9P2iy1P2igEqGnvqgONTTZVKs1Q6TsQBOJLmqfiZc96aMUK5gZMLlvPX6XgB
+         NxLUfDQhrooStQA/KCf8fkEv7qM3F+WMbL1AvP/h46DGnIiavzDmhzRiZkKXfSQX/6tC
+         Xp2i6ww3pg3IWGwHBaSTMHKqgfp5aTgXMK7EIZtMBoWBZwjE5aIrCPHvMPRoKagjry0g
+         17XyZJOB+mq7pFgESTxiM/4c37D4w0jgu39gD6wIpMTCxrgm1wHGlHbgJehAwptDdirM
+         4T8u8BmS5G9Ljk7s6V89tthYuGij8SmsrPK9B/6KNdpp99ehXi9If3pYMe5GGQ4+Y+mI
+         j9MQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749206230; x=1749811030;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NdtxJEbjhatRvCDWF7ffdW5RJ6Yji8odY3/KOt6aPsc=;
+        b=fC5UhgUa0tcMvDfKJakc0+KG3rUvH+p4NuV0FyN54J5U0cUI7Uq/qtdYTivDDzio7B
+         4XN/OyNGnAbn4mobnaJ20+WirD4uzkHEpVcXtbbkHl2XOzu6KSg8B69ibkR1gtSWXiRG
+         2PLwvGmNEOE6zy8GWJgkTe4krEfidqJ9QF3hOOLl5LgYQGtYb8k/Mc0/lzcmvIL/4j7e
+         JzFc8s659u172rUoF4D7d5B03JFnggOx7oMbHHpQXEwjo1LOD65Fd+cvFJ0YvYskLkYW
+         Ov0NOzbNvknZ4NBsN8BnkpZkfVXIapL5Q09xUDFZu2o+dpOyi7ZxG1Y+iD2+zuVQOE3L
+         f0IQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUOsqiPL2Xrm8e5TgCh6WhQpFug+rr6wl5M6+a2dsZge2Mbk89won+XE3FkloA/Kn+dsIiijlrtb3JIHIU=@vger.kernel.org, AJvYcCVMrbhVHhXpFydSWFAIhhwVS1BDwKDgP9PaTO/Dbtbl2p2CIhgqpC8HDV/V49gvU320RgpBHIeu@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhbkTs/rxMXaiECD8/4U1mWvDPeEgU0NTMUG08Z2B2dBlYVrWN
+	wpqPA5zeKsB/4SN4CsX2XkxiFQiq3TakmFd+rmZ5ZyW69mzwhS3TmUzs
+X-Gm-Gg: ASbGncvkKNcCkq0GL3oRZFXNhNhEg7J/kPF7mxQ+SGAGUvJ4cUxTozxxvvI/q0kA4Ad
+	E3HvyaVQnBMazt9Lwr3M+6g6FMtR+zdBKpuzVkz6GaHjaNWGUVwwN8mcPB+StyLSZEDOZJWLSBX
+	VlUWdHxYNCz9tlPxtisx3euuhdeFsBVM+ebrTHVqaHPIjpAUbvS90olehiAFaPwjYNWSd60Ql86
+	4N0rQVf9TA2BPH/OZ8PWRzWqhUjca4f5keaTXg5hLBHm1iQ9IxyAfLV6RVeVhLIV0cEDjQVneIL
+	shPmtEnD7gKkVXX423a/qbllh7NHSavGSYYmQNJJpoQPVx9DrwM8CTAolUB6s44WdaLPhACEKIR
+	gDyuYFQjAGJZ8uoA=
+X-Google-Smtp-Source: AGHT+IESWEQByLV3zPRY07M398R8ZoM9qPk001wtKdUGokyw0THc1FuuH31hxl2c0VkrBS+61mTUzA==
+X-Received: by 2002:a05:6a00:2e0d:b0:746:24c9:c92e with SMTP id d2e1a72fcca58-74827e810demr4833871b3a.8.1749206229803;
+        Fri, 06 Jun 2025 03:37:09 -0700 (PDT)
+Received: from localhost.localdomain ([121.185.186.233])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b084695sm1033041b3a.96.2025.06.06.03.37.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 03:37:09 -0700 (PDT)
+From: Jeongjun Park <aha310510@gmail.com>
+To: richardcochran@gmail.com
+Cc: andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jeongjun Park <aha310510@gmail.com>
+Subject: [PATCH] ptp: remove unnecessary brace in ptp_clock_unregister()
+Date: Fri,  6 Jun 2025 19:36:59 +0900
+Message-ID: <20250606103659.8336-1-aha310510@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On 2025-06-06, John Ogness <john.ogness@linutronix.de> wrote:
-> On 2025-06-05, Petr Mladek <pmladek@suse.com> wrote:
->> The question is if it is worth it. Is the clean up really important?
->
-> I must admit that I am not happy about encouraging the proposed solution
-> so far (i.e. expecting driver authors to create special unsafe code in
-> the panic situation). It leads down the "hope and pray" path that nbcon
-> was designed to fix.
->
-> What if during non-panic-CPU shutdown, we allow reacquires to succeed
-> only for _direct_ acquires? The below diff shows how this could be
-> implemented. Since it only supports direct acquires, it does not violate
-> any state rules. And also, since it only involves the reacquire, there
-> is no ugly battling for console printing between the panic and non-panic
-> CPUs.
+There are unnecessary brace used in the conditional statement where
+ptp_vclock_in_use() is used in ptp_clock_unregister(). This should be
+removed.
 
-Thinking about it some more, since it does not involve printing, why not
-just always allow reacquiring directly in panic?
+Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+---
+ drivers/ptp/ptp_clock.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-This simplifies the diff significantly.
-
-John
-
-diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
-index d60596777d278..26c229b7f56ea 100644
---- a/kernel/printk/nbcon.c
-+++ b/kernel/printk/nbcon.c
-@@ -235,7 +235,8 @@ static void nbcon_seq_try_update(struct nbcon_context *ctxt, u64 new_seq)
-  *			the handover acquire method.
-  */
- static int nbcon_context_try_acquire_direct(struct nbcon_context *ctxt,
--					    struct nbcon_state *cur)
-+					    struct nbcon_state *cur,
-+					    bool ignore_other_cpu_in_panic)
+diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
+index 35a5994bf64f..0ae9f074fc52 100644
+--- a/drivers/ptp/ptp_clock.c
++++ b/drivers/ptp/ptp_clock.c
+@@ -412,9 +412,8 @@ static int unregister_vclock(struct device *dev, void *data)
+ 
+ int ptp_clock_unregister(struct ptp_clock *ptp)
  {
- 	unsigned int cpu = smp_processor_id();
- 	struct console *con = ctxt->console;
-@@ -249,7 +250,7 @@ static int nbcon_context_try_acquire_direct(struct nbcon_context *ctxt,
- 		 * nbcon_waiter_matches(). In particular, the assumption that
- 		 * lower priorities are ignored during panic.
- 		 */
--		if (other_cpu_in_panic())
-+		if (other_cpu_in_panic() && !ignore_other_cpu_in_panic)
- 			return -EPERM;
+-	if (ptp_vclock_in_use(ptp)) {
++	if (ptp_vclock_in_use(ptp))
+ 		device_for_each_child(&ptp->dev, NULL, unregister_vclock);
+-	}
  
- 		if (ctxt->prio <= cur->prio || ctxt->prio <= cur->req_prio)
-@@ -568,7 +569,7 @@ static struct printk_buffers panic_nbcon_pbufs;
-  * in an unsafe state. Otherwise, on success the caller may assume
-  * the console is not in an unsafe state.
-  */
--static bool nbcon_context_try_acquire(struct nbcon_context *ctxt)
-+static bool nbcon_context_try_acquire(struct nbcon_context *ctxt, bool ignore_other_cpu_in_panic)
- {
- 	unsigned int cpu = smp_processor_id();
- 	struct console *con = ctxt->console;
-@@ -577,7 +578,7 @@ static bool nbcon_context_try_acquire(struct nbcon_context *ctxt)
- 
- 	nbcon_state_read(con, &cur);
- try_again:
--	err = nbcon_context_try_acquire_direct(ctxt, &cur);
-+	err = nbcon_context_try_acquire_direct(ctxt, &cur, ignore_other_cpu_in_panic);
- 	if (err != -EBUSY)
- 		goto out;
- 
-@@ -913,7 +914,7 @@ void nbcon_reacquire_nobuf(struct nbcon_write_context *wctxt)
- {
- 	struct nbcon_context *ctxt = &ACCESS_PRIVATE(wctxt, ctxt);
- 
--	while (!nbcon_context_try_acquire(ctxt))
-+	while (!nbcon_context_try_acquire(ctxt, true))
- 		cpu_relax();
- 
- 	nbcon_write_context_set_buf(wctxt, NULL, 0);
-@@ -1101,7 +1102,7 @@ static bool nbcon_emit_one(struct nbcon_write_context *wctxt, bool use_atomic)
- 		cant_migrate();
- 	}
- 
--	if (!nbcon_context_try_acquire(ctxt))
-+	if (!nbcon_context_try_acquire(ctxt, false))
- 		goto out;
- 
- 	/*
-@@ -1486,7 +1487,7 @@ static int __nbcon_atomic_flush_pending_con(struct console *con, u64 stop_seq,
- 	ctxt->prio			= nbcon_get_default_prio();
- 	ctxt->allow_unsafe_takeover	= allow_unsafe_takeover;
- 
--	if (!nbcon_context_try_acquire(ctxt))
-+	if (!nbcon_context_try_acquire(ctxt, false))
- 		return -EPERM;
- 
- 	while (nbcon_seq_read(con) < stop_seq) {
-@@ -1784,7 +1785,7 @@ bool nbcon_device_try_acquire(struct console *con)
- 	ctxt->console	= con;
- 	ctxt->prio	= NBCON_PRIO_NORMAL;
- 
--	if (!nbcon_context_try_acquire(ctxt))
-+	if (!nbcon_context_try_acquire(ctxt, false))
- 		return false;
- 
- 	if (!nbcon_context_enter_unsafe(ctxt))
+ 	ptp->defunct = 1;
+ 	wake_up_interruptible(&ptp->tsev_wq);
+--
