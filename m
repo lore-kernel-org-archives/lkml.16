@@ -1,303 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78CD288CB4;
-	Fri,  6 Jun 2025 13:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87C72F2E;
+	Fri,  6 Jun 2025 13:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749216501; cv=none; b=cPzqqEIDs5qAeaIFPGQ9zW8JwyC/BF3xDjgorlowp43nnondjO8hHsxT2l7z8Xcie6lq4krZN2hKsHPQUYmLDKB32y+akXgBmMxPGURNsgGgIqoEOXwGwvQTiSFrrFoT5aiCz8wAjX7jHHAa0fuiGB63o3Kww1gRFY65FWX6B+o=
+	t=1749216671; cv=none; b=dc2osxqkNmAIbaMSxDSys1oxXfSTLyTvCkr3QKRDIWRFmUPZPNAYS0TFykO70SIEHHIrwVhsg9gAti71wjDIYhEhg6wqZEvN8Cm6Ey5r+0eo9zDKDpZIDkL+Js5KV0f6pJX2SpyvDTc1McdpWa7gMnK8H9xcJE9+w+oY1D/1384=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749216501; c=relaxed/simple;
-	bh=YgSQOMAF2b5WWx7Y03Wg5UQpUV9r7pptM31Y3UsFm78=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B0q/Gbj9z3CzWVZLi94D32wir9/jDCLgjOH8XAN48Cw23qEyjts2ORFHEoEuOUdQlYHzdQKszXZvB4egorQ7WW4z/qUs4Upj76BoeHvqGSFs+hnmIFiWaoBsEex0kRs+TfmYvb1kceyYBhvAzT9wYKuF82sYydDwhbaAmlDvBtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rN8ugWxS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749216671; c=relaxed/simple;
+	bh=N9Wy1DLXhhISqceJ4s1aGdwZLuvYZPRCEL0gR1l+Rv4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=bktsA1Fx/BMpcuynE41kkJY17RJfNWQe8HRp+46CpBZIC1Me3Ss+7I4OPTy1hNnFXwUBXC6QquimB9nF3K268/sLPtKADSJHTsi9yQXxhHV+gP2ERkVWstW+I+jFDqhSxcRx8zz2J5nF+aLjMPnKp4gwDcbq3Pi2ouAgmTomyuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=y89NGOqs; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=omhTFxJB; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rN8ugWxS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FA8BC4CEEB;
-	Fri,  6 Jun 2025 13:28:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749216500;
-	bh=YgSQOMAF2b5WWx7Y03Wg5UQpUV9r7pptM31Y3UsFm78=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rN8ugWxSko1Du8wyQZwMk9xXJz45NS6VyiTEPvYWNMtRn3xY8qTPvAwSlEk5juxLy
-	 6aZGXIC3ShnkOldnw6uBPRDHwDCr7AaScNEqVzTAhis1wrPGmHIyJKBo1O0QNHvoVD
-	 3wXQe0LzAWWdUImGcdGNHaY22PMKAZN4kxLdElVYJ1cDS//9gSxO4wNqmHb4eYvV+d
-	 UOTGxpaE1NK4RJVae9px0rPmHbJJCiknMjP3LZrAmwbOcVhPPHnRmPv7K/3sXd7XYy
-	 pzBxDVWZWcpXStnkX+1psNpVfpBViZnAdvpo2s9+BBw2GqVVX2J7NRNCK8qklRc1o0
-	 KEPTwteWRB9Tg==
-Date: Fri, 6 Jun 2025 08:28:18 -0500
-From: Rob Herring <robh@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	"open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH v2 1/1] dt-bindings: net: convert qca,qca7000.txt yaml
- format
-Message-ID: <20250606132818.GA1246648-robh@kernel.org>
-References: <20250602224402.1047281-1-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="y89NGOqs";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="omhTFxJB"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 5C6B2114017E;
+	Fri,  6 Jun 2025 09:31:05 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-06.internal (MEProxy); Fri, 06 Jun 2025 09:31:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1749216665;
+	 x=1749303065; bh=N9Wy1DLXhhISqceJ4s1aGdwZLuvYZPRCEL0gR1l+Rv4=; b=
+	y89NGOqs+DarZJgbfqAm+EDavPOclNYRXH8bvhG3eul3FsnnSePAXHG81xplfpSs
+	U9AAB69kZwQDf77ItFKMVd2XYVEgogZ2zh87Fkah9hzgPdMzm7SZssZVgN6e/vGL
+	THBVMDrIAPS0C6lPucTk4F6emLIKL1sVgdkyfwVYVj9qR2DqSkB1Gf/BB75ab36c
+	KuTt/ieEn76riHaOlFCNh4JZLZbmV05x6cJN10MRy4KK7E8OWEymrjC0ZExPZhUX
+	FICtFKeJonwLAFJhAIe/n7N9NmSrgQNnfh55wLRrHoP97q/dvt8fzeWGYr8Meoyd
+	hb4I4iJ+aX+oWlxBlFB1yA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749216665; x=
+	1749303065; bh=N9Wy1DLXhhISqceJ4s1aGdwZLuvYZPRCEL0gR1l+Rv4=; b=o
+	mhTFxJBV2G4IaP30Kawj8S7hVwmCO9bc9XxOlsbAYfNSqJuy/nVyXBzxzz0wq2g9
+	uDVQ6cRPUkwMrMO18E8ezlE7lVG/8lJMi9hkLfbYll2HFJrDdgjrkTovHxHCh9MC
+	uHt46xiqrZgtJFfiANqnqshWq1lGeMSnfFISy6WZbwwpyizAIM1gbdZF3fjSV5PB
+	npPk2lTyyHmqo6iXV6G7fyRpQsIutgCmXhPK5W40qkvs1tD/iBsm3Eh/EDV8OXlt
+	x+izrM+0o46+G9hYFUcC15TrNzhdsGYN/ad/4leWJNLlhf9iNzexxJc6/VwaBBYJ
+	pfSOiR9OFlNTSBR74sOpg==
+X-ME-Sender: <xms:mO1CaF3y-PoQRmBUsux-o_My9SDfmboERuV5KrkgNAQ9XsBHmpQALQ>
+    <xme:mO1CaMHbcOH2LMejk0ZdOW1Rj2_3FeitSGcR4CN8_1mRaa5fVO1jjmKNKxpqs2VOU
+    hpHUf9uhWah5CJgDHc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdehudehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
+    necuhfhrohhmpedflfhirgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfh
+    hlhihgohgrthdrtghomheqnecuggftrfgrthhtvghrnhepjeehfeduvddtgffgvdffkeet
+    hefhlefgvdevvdekuefffeekheehgeevhfevteejnecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgr
+    thdrtghomhdpnhgspghrtghpthhtohepgedpmhhouggvpehsmhhtphhouhhtpdhrtghpth
+    htohepthhssghoghgvnhgusegrlhhphhgrrdhfrhgrnhhkvghnrdguvgdprhgtphhtthho
+    pehsthgrsghlvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrh
+    hnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhhi
+    phhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:mO1CaF5PyU2ISWJI6C87-K0tOmypjUbpRv-kD5vcTLhqBWJ-ib3x0w>
+    <xmx:mO1CaC2rkO9iKjqDn4T9CbJRmnIJ8TuNhMAXg9hjDP-UdyNRkPyp_A>
+    <xmx:mO1CaIEUIwrhbZYsnyxsRK3jqxE0AT89HPVWLdQkge2NQDUxz6lexA>
+    <xmx:mO1CaD89LhunXFsKt-IPdD9Xz71LVYRdcWziAd4IqnvQDe7TIfxr3A>
+    <xmx:me1CaOfWZhG6k0IdECmyaog9GBQ2ro84lnkJK8oetKefBmkpdkK3J9yv>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id AE41E2CE0065; Fri,  6 Jun 2025 09:31:04 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250602224402.1047281-1-Frank.Li@nxp.com>
+X-ThreadId: Tfa3886415041e94f
+Date: Fri, 06 Jun 2025 14:30:43 +0100
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
+Cc: "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, stable@kernel.org
+Message-Id: <a70690be-64ba-4337-bca2-23f93b645b62@app.fastmail.com>
+In-Reply-To: <20250605-tlb-fix-v1-1-4af496f17b2f@flygoat.com>
+References: <20250605-tlb-fix-v1-1-4af496f17b2f@flygoat.com>
+Subject: Re: [PATCH] MIPS: mm: tlb-r4k: Uniquify TLB entries on init
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 02, 2025 at 06:44:01PM -0400, Frank Li wrote:
-> Convert qca,qca7000.txt yaml format.
-> 
-> Additional changes:
-> - add refs: spi-peripheral-props.yaml, serial-peripheral-props.yaml and
->   ethernet-controller.yaml.
-> - simple spi and uart node name.
-> - use low case for mac address in examples.
-> - add check reg choose spi-peripheral-props.yaml or
->   spi-peripheral-props.yaml.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> change in v2
-> - add Ethernet over UART" description here back
-> - add add check reg choose spi-peripheral-props.yaml
-> - move spi related properties in if-then branch
-> - move uart related properies in if-else branch
-> ---
->  .../devicetree/bindings/net/qca,qca7000.txt   |  87 ---------------
->  .../devicetree/bindings/net/qca,qca7000.yaml  | 104 ++++++++++++++++++
->  MAINTAINERS                                   |   2 +-
->  3 files changed, 105 insertions(+), 88 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/net/qca,qca7000.txt
->  create mode 100644 Documentation/devicetree/bindings/net/qca,qca7000.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/net/qca,qca7000.txt b/Documentation/devicetree/bindings/net/qca,qca7000.txt
-> deleted file mode 100644
-> index 8f5ae0b84eec2..0000000000000
-> --- a/Documentation/devicetree/bindings/net/qca,qca7000.txt
-> +++ /dev/null
-> @@ -1,87 +0,0 @@
-> -* Qualcomm QCA7000
-> -
-> -The QCA7000 is a serial-to-powerline bridge with a host interface which could
-> -be configured either as SPI or UART slave. This configuration is done by
-> -the QCA7000 firmware.
-> -
-> -(a) Ethernet over SPI
-> -
-> -In order to use the QCA7000 as SPI device it must be defined as a child of a
-> -SPI master in the device tree.
-> -
-> -Required properties:
-> -- compatible	    : Should be "qca,qca7000"
-> -- reg		    : Should specify the SPI chip select
-> -- interrupts	    : The first cell should specify the index of the source
-> -		      interrupt and the second cell should specify the trigger
-> -		      type as rising edge
-> -- spi-cpha	    : Must be set
-> -- spi-cpol	    : Must be set
-> -
-> -Optional properties:
-> -- spi-max-frequency : Maximum frequency of the SPI bus the chip can operate at.
-> -		      Numbers smaller than 1000000 or greater than 16000000
-> -		      are invalid. Missing the property will set the SPI
-> -		      frequency to 8000000 Hertz.
-> -- qca,legacy-mode   : Set the SPI data transfer of the QCA7000 to legacy mode.
-> -		      In this mode the SPI master must toggle the chip select
-> -		      between each data word. In burst mode these gaps aren't
-> -		      necessary, which is faster. This setting depends on how
-> -		      the QCA7000 is setup via GPIO pin strapping. If the
-> -		      property is missing the driver defaults to burst mode.
-> -
-> -The MAC address will be determined using the optional properties
-> -defined in ethernet.txt.
-> -
-> -SPI Example:
-> -
-> -/* Freescale i.MX28 SPI master*/
-> -ssp2: spi@80014000 {
-> -	#address-cells = <1>;
-> -	#size-cells = <0>;
-> -	compatible = "fsl,imx28-spi";
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&spi2_pins_a>;
-> -
-> -	qca7000: ethernet@0 {
-> -		compatible = "qca,qca7000";
-> -		reg = <0x0>;
-> -		interrupt-parent = <&gpio3>;      /* GPIO Bank 3 */
-> -		interrupts = <25 0x1>;            /* Index: 25, rising edge */
-> -		spi-cpha;                         /* SPI mode: CPHA=1 */
-> -		spi-cpol;                         /* SPI mode: CPOL=1 */
-> -		spi-max-frequency = <8000000>;    /* freq: 8 MHz */
-> -		local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
-> -	};
-> -};
-> -
-> -(b) Ethernet over UART
-> -
-> -In order to use the QCA7000 as UART slave it must be defined as a child of a
-> -UART master in the device tree. It is possible to preconfigure the UART
-> -settings of the QCA7000 firmware, but it's not possible to change them during
-> -runtime.
-> -
-> -Required properties:
-> -- compatible        : Should be "qca,qca7000"
-> -
-> -Optional properties:
-> -- local-mac-address : see ./ethernet.txt
-> -- current-speed     : current baud rate of QCA7000 which defaults to 115200
-> -		      if absent, see also ../serial/serial.yaml
-> -
-> -UART Example:
-> -
-> -/* Freescale i.MX28 UART */
-> -auart0: serial@8006a000 {
-> -	compatible = "fsl,imx28-auart", "fsl,imx23-auart";
-> -	reg = <0x8006a000 0x2000>;
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&auart0_2pins_a>;
-> -
-> -	qca7000: ethernet {
-> -		compatible = "qca,qca7000";
-> -		local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
-> -		current-speed = <38400>;
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/net/qca,qca7000.yaml b/Documentation/devicetree/bindings/net/qca,qca7000.yaml
-> new file mode 100644
-> index 0000000000000..5258288132968
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/qca,qca7000.yaml
-> @@ -0,0 +1,104 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/qca,qca7000.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm QCA7000
-> +
-> +maintainers:
-> +  - Frank Li <Frank.Li@nxp.com>
-> +
-> +description: |
-> +  The QCA7000 is a serial-to-powerline bridge with a host interface which could
-> +  be configured either as SPI or UART slave. This configuration is done by
-> +  the QCA7000 firmware.
-> +
-> +  (a) Ethernet over SPI
-> +
-> +  In order to use the QCA7000 as SPI device it must be defined as a child of a
-> +  SPI master in the device tree.
-> +
-> +  (b) Ethernet over UART
-> +
-> +  In order to use the QCA7000 as UART slave it must be defined as a child of a
-> +  UART master in the device tree. It is possible to preconfigure the UART
-> +  settings of the QCA7000 firmware, but it's not possible to change them during
-> +  runtime
-> +
-> +properties:
-> +  compatible:
-> +    const: qca,qca7000
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +if:
-> +  required:
-> +    - reg
-> +
-> +then:
-> +  properties:
-> +    spi-cpha: true
-> +
-> +    spi-cpol: true
-> +
-> +    spi-max-frequency:
-> +      default: 8000000
-> +      maximum: 16000000
-> +      minimum: 1000000
-> +
-> +    qca,legacy-mode:
-> +      $ref: /schemas/types.yaml#/definitions/flag
-> +      description:
-> +        Set the SPI data transfer of the QCA7000 to legacy mode.
-> +        In this mode the SPI master must toggle the chip select
-> +        between each data word. In burst mode these gaps aren't
-> +        necessary, which is faster. This setting depends on how
-> +        the QCA7000 is setup via GPIO pin strapping. If the
-> +        property is missing the driver defaults to burst mode.
-> +
-> +  allOf:
-> +    - $ref: /schemas/spi/spi-peripheral-props.yaml#
-> +    - $ref: ethernet-controller.yaml#
 
-ethernet-controller.yaml should be moved out of the 'if' schemas.
 
-> +
-> +else:
-> +  properties:
-> +    current-speed:
-> +      default: 115200
-> +
-> +  allOf:
-> +    - $ref: /schemas/serial/serial-peripheral-props.yaml#
-> +    - $ref: ethernet-controller.yaml#
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    spi {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        ethernet@0 {
-> +            compatible = "qca,qca7000";
-> +            reg = <0x0>;
-> +            interrupt-parent = <&gpio3>;      /* GPIO Bank 3 */
-> +            interrupts = <25 0x1>;            /* Index: 25, rising edge */
-> +            spi-cpha;                         /* SPI mode: CPHA=1 */
-> +            spi-cpol;                         /* SPI mode: CPOL=1 */
-> +            spi-max-frequency = <8000000>;    /* freq: 8 MHz */
-> +            local-mac-address = [ a0 b0 c0 d0 e0 f0 ];
-> +        };
-> +    };
-> +
-> +  - |
-> +    serial {
-> +        ethernet {
-> +            compatible = "qca,qca7000";
-> +            local-mac-address = [ a0 b0 c0 d0 e0 f0 ];
-> +            current-speed = <38400>;
-> +        };
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c14da518a214c..6416ada9900af 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -20295,7 +20295,7 @@ QUALCOMM ATHEROS QCA7K ETHERNET DRIVER
->  M:	Stefan Wahren <wahrenst@gmx.net>
->  L:	netdev@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/devicetree/bindings/net/qca,qca7000.txt
-> +F:	Documentation/devicetree/bindings/net/qca,qca7000.yaml
->  F:	drivers/net/ethernet/qualcomm/qca*
->  
->  QUALCOMM BAM-DMUX WWAN NETWORK DRIVER
-> -- 
-> 2.34.1
-> 
+=E5=9C=A82025=E5=B9=B46=E6=9C=885=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8A=E5=
+=8D=8811:02=EF=BC=8CJiaxun Yang=E5=86=99=E9=81=93=EF=BC=9A
+> Hardware or bootloader will initialize TLB entries to any value, which
+> may collide with kernel's UNIQUE_ENTRYHI value. On MIPS microAptiv/M51=
+50
+> family of cores this will trigger machine check exception and cause bo=
+ot
+> failure. On M5150 simulation this could happen 7 times out of 1000 boo=
+ts.
+>
+> Replace local_flush_tlb_all() with r4k_tlb_uniquify() which probes each
+> TLB ENTRIHI unique value for collisions before it's written and overwr=
+ites
+> any conflicting entries with safe values before initializing the kerne=
+l's
+> UNIQUE_ENTRYHI pattern.
+
+I just realised it might be easier to cycling ASID instead of address in
+Entry Hi.
+
+Will come try a v2.
+
+Thanks
+Jiaxun
+
+[...]
+
+--=20
+- Jiaxun
