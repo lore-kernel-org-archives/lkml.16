@@ -1,114 +1,177 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4161A9B3D
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 18:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C72C13B7AE
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 18:47:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749235337; cv=none; b=ZLjF6ihUhNRBrw649rFB2DtJYS+HE2AnlE9jr7O8Ft4yfkm/tB/JUE1q1HtFgzTnsdKBY84jb3tbN1cEMicdfQrXAbC8S+Zh4ZfWKLqu2ft5rr/q5WqHSAfJIvamLLnG8somdol61eOuAwG53UCP+XXyR40Q/A9F6u7ICRkk6l4=
+	t=1749235632; cv=none; b=fFXWG/deZ6zWhr0Lx6oFUGkfB2i/nxG1ED3AghZims/mQ/aD6ifBotWCFLi7dImc1zgKMMsaXdWPG1K6uYPBlLJ9Xk5GWQ3msIXxnSNR6AzW6V/1+c/2Yb2NxppEuN+M5RFhnZaUVWWdW/fKGiVcs0B+LzsPzliOV3Lur13wV5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749235337; c=relaxed/simple;
-	bh=JQrsvG3tyIE7uUwdQMrPu0jtyB3RFUhMEsosIMER4Ew=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tJpARAZCY2mttSRG1FTVMZmxR6+BhYxhvBg5vWYztBC03nobxHsqFOxpJULk8N5btFMrCaoJi4rFyJ3+xbtTvSj5vE3iAXRQgnvkwtMD5V/Ta+4NQrIu3p70IL3XqTpLYTp8VBs+v9s6DifbaEmX3EBXedecms5tBjKmyuQHJLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Kp4ZqwJF; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1749235632; c=relaxed/simple;
+	bh=VNprBbGInVwNB1dTCHUv4OWQx/EAaGLFCt+mwQEfaOE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=SqasTQJwrQ7AgxVBFQp/5W8p0DUo7xlxhj0c8rJk+mCYGpw8vIuR96WeYmVlXeFQd8+W/o9u99myzTvhgCbwSTbOqUQl8plCqqg3KcTP59VMKrqHphQInyRKL8UQNNdSDnHhJDhQH8+TGcriZ6CcsRjc4ACImr7xPfovCymanWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Fk1cnpfN; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Kp4ZqwJF"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6fafdd322d3so28225236d6.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 11:42:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fk1cnpfN"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-747cebffd4eso2016913b3a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 11:47:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1749235334; x=1749840134; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UIWRWZxV/p0xSjEz7FnPnZMyLQBnVez8LgmKnErYtcc=;
-        b=Kp4ZqwJFwyzCxD4dSvj7H4uImMo8faTQUsh7JJrOYp80rRe6Nu32SGRuUpHX9yMDWj
-         seDVuipQSXb9ZIa55wmmYETLlxIizE13T1Nc/o774uspV/HJQt23Wzzm6p90fBUWcXJA
-         0CE21JzVV4o1pnskFyglUNuGXRC0izhON2rMOd3WXGGgdF98CzdcOSiZFw7heMB/+y8Z
-         dZ9WI7syn8DkZHIdFrI02zXZCLf0ZutDn8iLyoVmBnYKJvFO8DywhZEUoeHucclIwl4J
-         vwj+TpkSmvbPdoJ344v2f67T6pgmRWdrNgif5wjbUXnBOS/Pt9vPuXcZK/1TXJrbbhy8
-         EE/w==
+        d=google.com; s=20230601; t=1749235630; x=1749840430; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=v/ki/VhM37j6zMZpXzHfYjvUHV1vLuZ1aZ5fIvczRkI=;
+        b=Fk1cnpfNpT8MFk1+bMzMCR1J8Pe9WSNoQe4p0Z1+IeQvHC8TQtAVhTYGDvkWDZ5nd2
+         RrIVef2qzYtWT2loh5yQJG71SpntusRkcNl7KQ4cJjqiVdc5E8FomnbK4iverBjponi5
+         EBODWbL6eVJq7HSypWaMsnXRbcZ7C2143V7/kQkKB9A2uiIdFNt2bE8qG/NlBdVrUksN
+         MaDCGy4p2SDZy1vnZrVeqaAii+HrOmd+FCtkZNoJ8xbjxUsS6zOnPTQkLnziTSRE6riD
+         I5/V2DEWfqh0Xu7S8v/kzQ5DZMf4EHZ7osW4rOxW5n4DutkUriCN917HEwsfl/jnkedQ
+         NqRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749235334; x=1749840134;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UIWRWZxV/p0xSjEz7FnPnZMyLQBnVez8LgmKnErYtcc=;
-        b=NKnTC9tLd2yWFutNgmsAKLyj9laO2mNKyXJyTroEU2BIevBr9UK6dC9zSdtYwGaitp
-         aVR2MG+34iAsaH/W+di4admujVXxBHgd3NP90j7N5Pvft2u3XUew4ZrntL+uRR7d5w3g
-         Fmku32VdbaVid+WZbuiInb/Culq4vDSoWoU+qt1DasZllSdSxeJww3YGzvLWiOD/hAqP
-         Gul+MUrUqpuydnu1JgS1R4m4+YQnwiDPy0LdTDKU7A6VdxC2WuOJiVI0rQkqNteFmxZz
-         TZWcDHMXtH9/treC3uhEU/668ngXwfjUD88XXld3s706Jzz5DzJf07hu0mGN6I0vXRvJ
-         Q9QQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVAnQ7ESnTfimqwOlRj8zU7+R16NYR5OlrP0StFB+4nkwBx3G+LZo035ARq8raJ5iudYpHQ8Ly78LI7Fcc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHdtvik5QxybN4sR29g6+gRQRWEbke3SGi/T4bQojXZHWgTZAX
-	bwVWJMtm2K3KfvfzMCENLp7E6RRq6UgGmxjDiwfn0HsBjpXNgVDrj0mJ7ZSt4tWWYUM=
-X-Gm-Gg: ASbGncuP8tR7GlGZ38X/GumvQHP5qs598Ud19dNuSNYSCTpnXGADehN1IFDHE4x/suF
-	j8HShT5QIof/9YZym9xpI+QLvSRTVC95ix/Z2PcAxJJHFC09smsKm5MUfGtV3HIm9DXm0wOm+6b
-	u+L+oJ1U8Z78CayY0llfgJ9QPt9RvaKTR6xMxnIsyj7/z6M+ssrfjg3A8NFsDfaXpDiRZ5A4xfz
-	mUtF3NngBT6Y+OlTssGCy9O9PDAdX2U/t8z3BzdkGwgnI7KkEI7MLdP761VBueB1TOvcYGV5oOU
-	LWZhT7qWaCjhaNSDY8Z5RM+OwrdIIJ4b1UpPUGPPfB5yoM0EAeBrRo5c9/jl8kQMgOOVc8kM2Dm
-	TCJIqnCHiAa9gKbKCV5A0TZpmllbZZ3gPQ+5fxA==
-X-Google-Smtp-Source: AGHT+IFSiaH4qNveUr41mUFrPUHA3YO5ABeezzAAMvW87dhqrIPrTwsERama2dq7gCiRZA1rfnwHFw==
-X-Received: by 2002:a05:6214:2426:b0:6fa:bf2f:41a4 with SMTP id 6a1803df08f44-6fb08f4d14bmr66807746d6.1.1749235333864;
-        Fri, 06 Jun 2025 11:42:13 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb09ac85a8sm14820006d6.35.2025.06.06.11.42.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 11:42:13 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uNc16-00000000fH6-2wHx;
-	Fri, 06 Jun 2025 15:42:12 -0300
-Date: Fri, 6 Jun 2025 15:42:12 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: David Hildenbrand <david@redhat.com>
-Cc: John Hubbard <jhubbard@nvidia.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Peter Xu <peterx@redhat.com>
-Subject: Re: [PATCH v1] mm/gup: remove (VM_)BUG_ONs
-Message-ID: <20250606184212.GB63308@ziepe.ca>
-References: <e680a8f3-7b45-4836-8da7-7e7a0d2fcd56@redhat.com>
- <aEK_R93gihEn-xW6@tiehlicka>
- <50ff9149-2824-4e57-8d74-d8d0c063c87e@lucifer.local>
- <e5fa4a36-2af8-48e9-811e-680881c06b86@redhat.com>
- <1a7513cf-4a0a-4e58-b20d-31c1370b760f@lucifer.local>
- <e898e52e-a223-4567-9514-b4a021b5d460@nvidia.com>
- <72bb36f2-65b6-4785-af9d-5b1f8126fc78@lucifer.local>
- <2f866f12-2aa0-4456-b215-08ddc9b13b1e@redhat.com>
- <3dfbbd63-697d-42aa-8906-539d74df9123@nvidia.com>
- <44af8f5a-2d94-498b-a3e0-31f5dde74538@redhat.com>
+        d=1e100.net; s=20230601; t=1749235630; x=1749840430;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=v/ki/VhM37j6zMZpXzHfYjvUHV1vLuZ1aZ5fIvczRkI=;
+        b=wpjK3kfvFkfM4rs12xnsVn/FTxJu/xe7U62mFojqMNHY0Nh8N5yCksaTfWRGIRCVL6
+         nE/P7/Wmsi9az+0D+AAxvorDfIc2E9OGwBAH/xA0TKTzpStS0BiyaJNml2RsY7WK7E7P
+         Y60SdnfhcIME+FYkpdr+8qVvcHTPI05RTWSs0iL3VTqzkC5w0acFNAlxZxkx9YGaUUy8
+         A96AlsCcb5kvbcFFOiUnbneAuHFNWGcFywAolg7fjnmDF9e5WvBqwEJdkOJz9MkobCPv
+         SFeZxpT0pwW8YIdxoyG87k01fPmSOoj6JP4UiqmjuPboqmy0MfPQPBo7szxeAroUXKAP
+         6RVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWA9xvYzN7auiWame185BmMnqp/zVchQjYmDrnzDAtpPBJjWkS1HLnyFOO9Ra/D10CO7mw/fybT84PRKOk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMgiTlesV2UrdVk4lUFnexAsSTgj410onZ1W5bCyT1SbfYASjW
+	5n8lu57plJsZmTFHIHs1qGQbMIPxqGzcg/uvQBG7zWGcrBdCxENzoDBbnfYThDl5nd0D7ZIQiT2
+	q7a8eKQ==
+X-Google-Smtp-Source: AGHT+IEZyYuLn2uNfZKIlYtfvQKzZHENqms43RXrZuwTzWFllEW6HqLwXyFTQrSxPPBQBCLq39nRCAnbAsU=
+X-Received: from pffk13.prod.google.com ([2002:aa7:88cd:0:b0:746:2acb:bba2])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1882:b0:740:b5f8:ac15
+ with SMTP id d2e1a72fcca58-74827e7b394mr5618400b3a.10.1749235629913; Fri, 06
+ Jun 2025 11:47:09 -0700 (PDT)
+Date: Fri, 6 Jun 2025 11:47:08 -0700
+In-Reply-To: <4dd45ddb-5faf-4766-b829-d7e10d3d805f@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <44af8f5a-2d94-498b-a3e0-31f5dde74538@redhat.com>
+Mime-Version: 1.0
+References: <20250514071803.209166-1-Neeraj.Upadhyay@amd.com>
+ <20250514071803.209166-8-Neeraj.Upadhyay@amd.com> <20250524121241.GKaDG3uWICZGPubp-k@fat_crate.local>
+ <4dd45ddb-5faf-4766-b829-d7e10d3d805f@amd.com>
+Message-ID: <aEM3rBrlxHMk6Mct@google.com>
+Subject: Re: [RFC PATCH v6 07/32] KVM: x86: apic_test_vector() to common code
+From: Sean Christopherson <seanjc@google.com>
+To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org, tglx@linutronix.de, 
+	mingo@redhat.com, dave.hansen@linux.intel.com, Thomas.Lendacky@amd.com, 
+	nikunj@amd.com, Santosh.Shukla@amd.com, Vasant.Hegde@amd.com, 
+	Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com, x86@kernel.org, 
+	hpa@zytor.com, peterz@infradead.org, pbonzini@redhat.com, kvm@vger.kernel.org, 
+	kirill.shutemov@linux.intel.com, huibo.wang@amd.com, naveen.rao@amd.com, 
+	francescolavra.fl@gmail.com, tiala@microsoft.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, Jun 06, 2025 at 08:23:25PM +0200, David Hildenbrand wrote:
-> > One last data point: I've often logged onto systems that were running
-> > long enough that the dmesg had long since rolled over. And this makes
-> > the WARN_ON_ONCE() items disappear.
+On Mon, May 26, 2025, Neeraj Upadhyay wrote:
 > 
-> I think what would be *really* helpful would be quick access to the very
-> first warning that triggered. At least that's what I usually dig for ... :)
+> 
+> On 5/24/2025 5:42 PM, Borislav Petkov wrote: 
+> > 
+> > The previous patch is moving those *_POS() macros to arch/x86/kvm/lapic.c, now
+> > this patch is doing rename-during-move to the new macros.
+> > 
+> > Why can't you simply do the purely mechanical moves first and then do the
+> > renames? Didn't I explain it the last time? Or is it still unclear?
+> > 
+> 
+> I thought it was clear to me when you explained last time. However, I did this
+> rename-during-move because of below reason. Please correct me if I am wrong here.
+> 
+> VEC_POS, REG_POS are kvm-internal wrappers for APIC_VECTOR_TO_BIT_NUMBER/
+> APIC_VECTOR_TO_REG_OFFSET macros which got defined in patch 01/32. Prior to patch
+> 06/32, these macros were defined in kvm-internal header arch/x86/kvm/lapic.h. Using
+> VEC_POS, REG_POS kvm-internal macros in x86 common header file (arch/x86/include/asm/apic.h)
+> in this patch did not look correct to me and as APIC_VECTOR_TO_BIT_NUMBER/APIC_VECTOR_TO_REG_OFFSET
+> are already defined in arch/x86/include/asm/apic.h, I used them.
+> 
+> Is adding this information in commit log of this patch sufficient or do you have some
+> other suggestion for doing this?
 
-That's basically my point, it doesn't make sense to expose two APIs to
-developers with a choice like this. The WARN_ON infrastructure should
-deal with it consistently, maybe even configurable by the admin.
+I agree that moving VEC_POS/REG_POS to common code would be weird/undesirable,
+but I also agree with Boris' underlying point that doing renames as part of code
+movement is also undesirable.  And you're doing that all over this series.
 
-Keeping the first warn in a buffer is definately a good option.
+So, just one patch at the beginning of the series to replace VEC_POS/REG_POS with
+APIC_VECTOR_TO_BIT_NUMBER/APIC_VECTOR_TO_REG_OFFSET, but *only* in the functions
+you intended to move out of KVM.  That way you separate code movement and rename
+patches.
 
-Otherwise how is the patch author supposed to decide which API to
-call in each case?
+Actually, looking at the end usage, just drop VEC_POS/REG_POS entirely.  IIRC, I
+suggested keeping the shorthand versions for KVM, but I didn't realize there would
+literally be two helpers left.  At that point, keeping VEC_POS and REG_POS is
+pure stubborness :-)
 
-Jason
+ 1. Rename VEC_POS/REG_POS => APIC_VECTOR_TO_BIT_NUMBER/APIC_VECTOR_TO_REG_OFFSET
+ 2. Rename all of the KVM helpers you intend to move out of KVM.
+ 3. Move all of the helpers out of KVM.
+
+That way #1 and #2 are pure KVM changes, and the code review movement is easy to
+review because it'll be _just_ code movement.
+
+Actually (redux), we should probably kill off __apic_test_and_set_vector() and
+__apic_test_and_clear_vector(), because the _only_ register that's safe to modify
+with a non-atomic operation is ISR, because KVM isn't running the vCPU, i.e.
+hardware can't service an IRQ or process an EOI for the relevant (virtual) APIC.
+
+So this on top somewhere? (completely untested)
+
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 8ecc3e960121..95921e5c3eb2 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -104,16 +104,6 @@ bool kvm_apic_pending_eoi(struct kvm_vcpu *vcpu, int vector)
+                apic_test_vector(vector, apic->regs + APIC_IRR);
+ }
+ 
+-static inline int __apic_test_and_set_vector(int vec, void *bitmap)
+-{
+-       return __test_and_set_bit(VEC_POS(vec), (bitmap) + REG_POS(vec));
+-}
+-
+-static inline int __apic_test_and_clear_vector(int vec, void *bitmap)
+-{
+-       return __test_and_clear_bit(VEC_POS(vec), (bitmap) + REG_POS(vec));
+-}
+-
+ __read_mostly DEFINE_STATIC_KEY_FALSE(kvm_has_noapic_vcpu);
+ EXPORT_SYMBOL_GPL(kvm_has_noapic_vcpu);
+ 
+@@ -706,9 +696,15 @@ void kvm_apic_clear_irr(struct kvm_vcpu *vcpu, int vec)
+ }
+ EXPORT_SYMBOL_GPL(kvm_apic_clear_irr);
+ 
++static void *apic_vector_to_isr(int vec, struct kvm_lapic *apic)
++{
++       return apic->regs + APIC_ISR + APIC_VECTOR_TO_REG_OFFSET(vec);
++}
++
+ static inline void apic_set_isr(int vec, struct kvm_lapic *apic)
+ {
+-       if (__apic_test_and_set_vector(vec, apic->regs + APIC_ISR))
++       if (__test_and_set_bit(APIC_VECTOR_TO_BIT_NUMBER(vec),
++                              apic_vector_to_isr(vec, apic)))
+                return;
+ 
+        /*
+@@ -751,7 +747,8 @@ static inline int apic_find_highest_isr(struct kvm_lapic *apic)
+ 
+ static inline void apic_clear_isr(int vec, struct kvm_lapic *apic)
+ {
+-       if (!__apic_test_and_clear_vector(vec, apic->regs + APIC_ISR))
++       if (!__test_and_clear_bit(APIC_VECTOR_TO_BIT_NUMBER(vec),
++                                 apic_vector_to_isr(vec, apic)))
+                return;
+ 
+        /*
+
