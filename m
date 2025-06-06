@@ -1,150 +1,91 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEC6276048
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 15:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8601213DBA0;
+	Fri,  6 Jun 2025 15:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749224292; cv=none; b=hOsgV0W0qmifleVFtgPOYFyL0Q4jhE7pkv2VH2aEEjPqziiFbNJ96eR8dVlf8izYqqmb50iFSisJgYSLbru3+WhnCylXD3fdFQ3b/z2PINELJcOtGikaKKGvNLceyMWJlfGY8pKf98Hmz7Dq+jcDr7DuFFVuzYRDQfi3N06o2w0=
+	t=1749224342; cv=none; b=UywuJ/CQDf6mocX5UWYnPr6tXviHmaoBJtwZ6lSF8MRyvnw2h4JKmujC0TQOz+7Uull4QztmFybrZpD8z83ux563sLJELmQL3uyJDXs3hTcTsOJFDfF2bYZChgqAvbPAZTPJK62jOJjZFvsLA1eG4suFQy+OwoMyI9b8tl0+BmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749224292; c=relaxed/simple;
-	bh=4X95mHJDWKTAMJlKQG04hYb66R2l9Muxa2mv604C5rg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WSitwiGF08D/nWhIwd2ZYRw40jo+WYM4QxkeZULgszkQ//MFMg+YZGqiSViZOsb9YndfVY4daS6i7iBqYW3NKKZCgXut2oHi5F5BcXQSFS1nha6/DWHwAsRa1Cfve6l48bKGnLvvBVIoL9/OmvvPdC3RReSl0/5EiCJG8Zx6Mas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uLFwioCG; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1749224342; c=relaxed/simple;
+	bh=UGLikP/qZtf4sFlH8DwnQ90HiF5s8Tor/O7KHagFCII=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Bp+CpdCPWDx3Hwqfe3GUkwdM2qYAQBbAeWEGylbUmFGq568jALjUdfMxRwlCsideIh7xgb1Z/Y1oN5Kwq94OZvrnX6Tvf42o2UxFVY+omUdejCy+wKg7/e4/j9774w2pP3uUiZ6i8cnrYgtPqL5qqllJ0XHLXbpKB/IUldSa5+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fYcdotZl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uLFwioCG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=HePKWS3kmkS0czonpDaymeqsS5lCZ/0cwc3/yYKH/bc=; b=uLFwioCG2Nseyx2tnrhGq8Nxi1
-	Sfz/sC+K3CvFwxAEiypJIlw9KdR/UVYpNPtdQ6hyPlfj7SFuPK3nHWJHmRzBGE43yqR52BmRuWFPj
-	KmGGv6oiYGTZyNweWUKyJPy0Ch/EPWDuhR39M62USa0zBg/SSBz6Hk6aAVC5OiEh98kVnlZwpbNqB
-	F++TlKA1LIqZVdXzCBgFjNOOSga1c911dJlrf9cHvE4dGpFR+Vf10DCBR4V4E492AHUHJ99WvL1HZ
-	Hhs5Dw6B47QqgzeR5A/g9kCTfit5i0VZmUoYfsIgzMQTEGCPVYXFK9GmPzaGfX+B+qkMCEEjBDebJ
-	MOrLOgkA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uNZ8r-00000005SHl-2YjK;
-	Fri, 06 Jun 2025 15:38:01 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id CC52C3005AF; Fri,  6 Jun 2025 17:38:00 +0200 (CEST)
-Date: Fri, 6 Jun 2025 17:38:00 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, clm@meta.com, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH 5/5] sched: Add ttwu_queue support for delayed tasks
-Message-ID: <20250606153800.GB39944@noisy.programming.kicks-ass.net>
-References: <20250520094538.086709102@infradead.org>
- <20250520101727.984171377@infradead.org>
- <CAKfTPtDOQVEMRWaK9xEVqSDKcvUfai4CUck6G=oOdaeRBhZQUw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fYcdotZl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D22DC4CEEB;
+	Fri,  6 Jun 2025 15:38:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749224342;
+	bh=UGLikP/qZtf4sFlH8DwnQ90HiF5s8Tor/O7KHagFCII=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fYcdotZlDgIcxkH/gmjVHX8EnV5ANOEwY8ytcA8q4eQxIvAo/UWBbhUX+DFNwt2v2
+	 AYptnw+3ludL/ltvelG9/35rShFPbF5FB/6Oef96qRed5lT/MB+fX/HvxdkSKkG64v
+	 C+9y+KD/Otg/x4z4ceq3Pu3hsAiIeVfYm16k5yvV4WViyo1xMSu+5s/Wkfy4XPpxBo
+	 kzCwDZNxPWh3tU5mozOdKQbp8QTt3OY49i4uiRxv1PnwNFXW0hfZOPRhAUjNtpWK5K
+	 BYSeCCAwGzwolY6OT0MhiFlnBub8WL/eQ1ZHjxe0viTzeqMso18idgejLRHlwW4UCE
+	 x162QIkqZN7OA==
+Message-ID: <ce134894-f33e-4810-97ab-76270438fff7@kernel.org>
+Date: Fri, 6 Jun 2025 17:38:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtDOQVEMRWaK9xEVqSDKcvUfai4CUck6G=oOdaeRBhZQUw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/5] rust: driver: Add ACPI id table support to Adapter
+ trait
+To: Igor Korotin <igor.korotin.linux@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Igor Korotin <igor.korotin@yahoo.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ devicetree@vger.kernel.org, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Len Brown <lenb@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Wedson Almeida Filho <wedsonaf@gmail.com>, Alex Hung <alex.hung@amd.com>,
+ Tamir Duberstein <tamird@gmail.com>,
+ FUJITA Tomonori <fujita.tomonori@gmail.com>,
+ Xiangfei Ding <dingxiangfei2009@gmail.com>
+References: <20250605161956.3658374-1-igor.korotin.linux@gmail.com>
+ <20250605162726.3659792-1-igor.korotin@yahoo.com> <aELyEqg0GrkC8oZY@pollux>
+ <CAG7QV91AWpOk7VUcE-B1MLkEQPDB0Y=zsBOBf6MhHVYh1aEGQA@mail.gmail.com>
+ <2025060635-unleveled-drowsily-a192@gregkh>
+From: Danilo Krummrich <dakr@kernel.org>
+Content-Language: en-US
+In-Reply-To: <2025060635-unleveled-drowsily-a192@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 06, 2025 at 05:03:36PM +0200, Vincent Guittot wrote:
-> On Tue, 20 May 2025 at 12:18, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > One of the things lost with introduction of DELAY_DEQUEUE is the
-> > ability of TTWU to move those tasks around on wakeup, since they're
-> > on_rq, and as such, need to be woken in-place.
+On 6/6/25 5:29 PM, Greg Kroah-Hartman wrote:
+> On Fri, Jun 06, 2025 at 03:26:13PM +0100, Igor Korotin wrote:
+>> On Fri, Jun 6, 2025 at 2:50 PM Danilo Krummrich <dakr@kernel.org> wrote:
+>>> However, I don't understand why we need this and the subsequent
+>>> is_acpi_device_node() and is_of_node() checks.
+>>
+>> The idea is to avoid unnecessary table lookups when both OF and ACPI
+>> match tables are present. If we already know the fwnode type, these
+>> simple pointer comparisons (is_acpi_device_node() / is_of_node()) let
+>> us skip the irrelevant match function.
+>>
+>> Those checks are cheap (just pointer comparisons), while
+>> acpi_match_device() and of_match_device() iterate over tables.
+>>
+>> So yeah, it’s a bit ugly, but it can save some CPU cycles during enumeration.
 > 
-> I was thinking that you would call select_task_rq() somewhere in the
-> wake up path of delayed entity to get a chance to migrate it which was
-> one reason for the perf regression (and which would have also been
-> useful for EAS case) but IIUC, the task is still enqueued on the same
-> CPU but the target cpu will do the enqueue itself instead on the local
-> CPU. Or am I missing something ?
+> You have loads of CPU cycles during enumeration, keep things simple
+> first, only attempt to optimize things later on if it is actually
+> measureable.
 
-Correct. I tried to add that migration into the mix, but then things get
-tricky real fast.
+I'm fine either way, I don't expect much value in optimizing this and at the
+same time I don't see doing it adds significant complexity either.
 
-Just getting rid of the remote rq lock also helped; these dispatch
-threads just need to get on with waking up tasks, any delay hurts.
-
-> >
-> > Doing the in-place thing adds quite a bit of cross-cpu latency, add a
-> > little something that gets remote CPUs to do their own in-place
-> > wakeups, significantly reducing the rq->lock contention.
-> >
-> > Reported-by: Chris Mason <clm@meta.com>
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > ---
-> >  kernel/sched/core.c     |   74 ++++++++++++++++++++++++++++++++++++++++++------
-> >  kernel/sched/fair.c     |    5 ++-
-> >  kernel/sched/features.h |    1
-> >  kernel/sched/sched.h    |    1
-> >  4 files changed, 72 insertions(+), 9 deletions(-)
-> >
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -3784,6 +3784,8 @@ static int __ttwu_runnable(struct rq *rq
-> >         return 1;
-> >  }
-> >
-> > +static bool ttwu_queue_wakelist(struct task_struct *p, int cpu, int wake_flags);
-> > +
-> >  /*
-> >   * Consider @p being inside a wait loop:
-> >   *
-> > @@ -3811,6 +3813,33 @@ static int __ttwu_runnable(struct rq *rq
-> >   */
-> >  static int ttwu_runnable(struct task_struct *p, int wake_flags)
-> >  {
-> > +#ifdef CONFIG_SMP
-> > +       if (sched_feat(TTWU_QUEUE_DELAYED) && READ_ONCE(p->se.sched_delayed)) {
-> > +               /*
-> > +                * Similar to try_to_block_task():
-> > +                *
-> > +                * __schedule()                         ttwu()
-> > +                *   prev_state = prev->state             if (p->sched_delayed)
-> > +                *   if (prev_state)                         smp_acquire__after_ctrl_dep()
-> > +                *     try_to_block_task()                   p->state = TASK_WAKING
-> > +                *       ... set_delayed()
-> > +                *         RELEASE p->sched_delayed = 1
-> > +                *
-> > +                * __schedule() and ttwu() have matching control dependencies.
-> > +                *
-> > +                * Notably, once we observe sched_delayed we know the task has
-> > +                * passed try_to_block_task() and p->state is ours to modify.
-> > +                *
-> > +                * TASK_WAKING controls ttwu() concurrency.
-> > +                */
-> > +               smp_acquire__after_ctrl_dep();
-> > +               WRITE_ONCE(p->__state, TASK_WAKING);
-> > +
-> > +               if (ttwu_queue_wakelist(p, task_cpu(p), wake_flags | WF_DELAYED))
-> > +                       return 1;
-> > +       }
-> > +#endif
-> > +
-> >         CLASS(__task_rq_lock, guard)(p);
-> >         return __ttwu_runnable(guard.rq, p, wake_flags);
-> >  }
-> > @@ -3830,12 +3859,41 @@ void sched_ttwu_pending(void *arg)
-> >         update_rq_clock(rq);
-> >
-> >         llist_for_each_entry_safe(p, t, llist, wake_entry.llist) {
-> > +               struct rq *p_rq = task_rq(p);
-> > +               int ret;
-> > +
-> > +               /*
-> > +                * This is the ttwu_runnable() case. Notably it is possible for
-> > +                * on-rq entities to get migrated -- even sched_delayed ones.
-> 
-> I haven't found where the sched_delayed task could migrate on another cpu.
-
-Doesn't happen often, but it can happen. Nothing really stops it from
-happening. Eg weight based balancing can do it. As can numa balancing
-and affinity changes.
+If Greg prefers not to have this optimization to begin with, let's go without
+it please.
