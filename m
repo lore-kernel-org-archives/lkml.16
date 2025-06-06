@@ -1,124 +1,130 @@
-Received: from mail-ej1-f68.google.com (mail-ej1-f68.google.com [209.85.218.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0271E3DD7;
-	Fri,  6 Jun 2025 17:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91376BA38;
+	Fri,  6 Jun 2025 17:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749232147; cv=none; b=BKzDuQCVQu/eLg7PVOVQZ1ELE4bGUUn643/efDtOhcFHDmWj/YqbssR3v49Tj4lX2+++sQrGf7KNV9Lg+Q+2VYQCyVId0HUn9xiiq3z430RAwSjGEFFjIqCUpG5gsNoLrXhRueT9COMXLUyfKzfUXg0wpWOvJql0dHvhXtEWq9M=
+	t=1749232325; cv=none; b=L8CRtthlggktV1lj6UzD2PoOaSrlsmhZepoTrqBFwtZ8ftxSP9fl70B4MVG21MTZaRghVAzcbGJVSIwaQO4OsXTY0xeQ7IGQj8XqhPC8ig7VPhf+bz41xvrz8JCI0BJyvfBdxRCGOsxsTIQ9wSgFnP1IPHEj8Rmg4MuS73luE70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749232147; c=relaxed/simple;
-	bh=QkCC156cFLZ32G7VZvrODLuLWj+/VBaRP7kkagtS93k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BJixyK1ForBTLvJ/xQVKiT8Q7QCLb1B+C1BXuLDEsawueV8eAsX32RL687zTiQpOL1Qp/+rloRs4cDyuf8CvmzHD4yF13R++mtwE6fBHhROXCSKY2vhwwM4HVsbb0+zxmlRqUS3z1/G1Vwkn9Nmk0mYMk08hMgBhRtHy7rJOlwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ixOSjXDm; arc=none smtp.client-ip=209.85.218.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749232325; c=relaxed/simple;
+	bh=ZBxaPeLZ+NMirTXxZsy0pLoROXjQTt2mCUR/DYPua+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eZtu9h09k43kbISbhh+5FAh0CAw0UIMaryDu01DLhv7ICiQy2mDeYIw+rQUiPHYrfBcdbGVIuScjmKbs9WijnX0EMG2ztHtSK/q4jlvrYxjJcUo4GCOqWoS+pVm1Mzv3MYLa+rib+xF7iY141airsdGMYiXMCbhzXxl4dyq38io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=umGnpJES; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ixOSjXDm"
-Received: by mail-ej1-f68.google.com with SMTP id a640c23a62f3a-ade30256175so110323166b.1;
-        Fri, 06 Jun 2025 10:49:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749232144; x=1749836944; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QkCC156cFLZ32G7VZvrODLuLWj+/VBaRP7kkagtS93k=;
-        b=ixOSjXDmeewQIvkxaE7NhwSw8ikmrRASV5R3bAwcLFzpZkBFY9f23y/pAD+GPWq3Qz
-         TMukVR6E782ip4FDJfoIkORKyV+JHOo8MxabK7xsnViwQTtDYcXKgCR5i3mlV2K1Ht9Q
-         TViVr/Cju57GUrzI5WXDLMFQn/IlMk3AJ3ZsnMIt2CjeyG8Zn6Nfx9WpkBfzNjgibQZy
-         eqz22m7pfLqWtXN46HW3HXe9q1igjdvB3uF3Na2s3Bmn0XQkHu2KNPKf7RIeB6NiBrdT
-         jy2wPkepNVk4jOA2CSUCeA7czK8Dtjk5DBDu3tY7gGuRwx5LOPZYsszgERSoF06OqoJG
-         XhmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749232144; x=1749836944;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QkCC156cFLZ32G7VZvrODLuLWj+/VBaRP7kkagtS93k=;
-        b=WJdom4LuTKwwRWny6CxjZ0DsZyjfhaiQJibtc75b59PqLjKvabCrHQLx2TvH1NR3Ea
-         nNOkGUZxsoMzpxfU10NobfmeR8A2tTKtuKW3OWWBwrQbOPH8ev5p5I9/aKRu6hWO5IuT
-         e6GGv4jCt664IyuAzCXIn6tlRRjSwIMIylBwg1H+62dpl/1i9hRUFFvykm5H9bRZylqc
-         GJmtbW8tsv7Nu0V715CnA80W/OALXOosr2iiuDUcLwIQkGigplBgg1UhTF+ZYrEkjbju
-         HW/czcB+zkIbnpVAJ1NfJXupdH3U1WEkHRwd7WgWlDb5e26YSMiFj5WmgARSSdbjDRWh
-         NYww==
-X-Forwarded-Encrypted: i=1; AJvYcCUB6AAXCgJdMk3mBDL4BQEzAMK4UevcijjLHNmiJFMqPzZQpaggk9ABcw8X46tkT95MBxuag0vqSZtEnlYb@vger.kernel.org, AJvYcCVS1eMhBaqgAzQMZd+pH33+igVCjoJ60B1qA5YpfM1HKh6o84m6oUEVKZjh8LmcQ+STHFsFrnEVeTQ=@vger.kernel.org, AJvYcCVj1FRR6ud8G3sEKPRZpfYe0TmanO8YZK4SE/nHohKHvAKh29Jv4l+LjhmGTK5g9DE6NPLQonDk@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+ZaEt2lyqldeVQo29VlW4rcrGmcg44/DTQpp1GICCsEKsz7cW
-	HyXPp3Id7tbvP7Agu9uyM0IYhXu2HdKWWTPPkP38MUF3Q9FIwQ1AldpPzUt46YGY7F0aB6oPdbO
-	n7y/FQzulDKw16MzWf1AEWnWRHmjDVWJLhqtIcT0rGQfb
-X-Gm-Gg: ASbGnctH01CRyQTtou2sqb0UFIK9acqEsVGRpNf93ELq+t32Zjwvwsq2j4ugTLShbit
-	BmhNy9U7iFzWS/ziYiAQTuolfHPQylmvHq7ZBuRUDM7htWnC4NZyIqX6cUeN2u2vQHLmStAVSUJ
-	YkQ94/FKwzNafua9c8YLmXOvKRX26Hh0YFpyfHD0/RegY=
-X-Google-Smtp-Source: AGHT+IHXAoU/5KkMHOwPj/9FFVapAMcrkwidaA20pDZe+6fW4OeNUdufuvg0OsHg+lbWtoD1W9V+6MaUGDrLNkTMyhA=
-X-Received: by 2002:a17:907:60d1:b0:adb:2462:d921 with SMTP id
- a640c23a62f3a-ade1a9160c3mr401179666b.5.1749232143541; Fri, 06 Jun 2025
- 10:49:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="umGnpJES"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F020C4CEEF;
+	Fri,  6 Jun 2025 17:52:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749232325;
+	bh=ZBxaPeLZ+NMirTXxZsy0pLoROXjQTt2mCUR/DYPua+4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=umGnpJEShuZxT5wROi8zrRiQpPoqHBJQ5MK4M3UI+GTnNVdPJTFWzyiSuCNW7NTlG
+	 4DltS2yqxbbXIf1dZ3dAOq4lUxHuShPbH58Hp4SQ440I7W1OXKPV+pKXbemGeQNWY0
+	 h8YIrk0fcweGRcXJy49CfIvFCSRV1Y6LEnvUZ2v68bp/VYJT6h+jWNecWhmTnXiAAP
+	 HmFY69ZtMoCsWcP8GQvbqrxr0Vk2Fb/27Vlejrg9XG3PKdFS5p4VcDEURet9KhQc75
+	 oxmKzEuGNEcsmibLW4Jw/yyZ4WbtMpJGGSSBD7tOjEvTKz/feG1C32q+3/voBXdPXj
+	 TQVy5wzOBZ/lw==
+Date: Fri, 6 Jun 2025 10:52:02 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Chun-Tse Shao <ctshao@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Howard Chu <howardchu95@gmail.com>, Ian Rogers <irogers@google.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Levi Yun <yeoreum.yun@arm.com>, Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/1 v6.16] perf test event_uniquifying: Skip test on
+ platforms without 'clockticks' events
+Message-ID: <aEMqwmCmbyAlb1Y1@google.com>
+References: <aEHugAPinlWLuTAS@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606071709.4738-1-chenqiuji666@gmail.com> <ff77f70e-344d-4b8a-a27f-c8287d49339c@linaro.org>
- <CANgpojXWk1zvu32bMuGgkVGVNvPw+0NWmSUC62Sbc3WcUXAd3A@mail.gmail.com> <ca3ce8df-aa4f-4422-8455-29db2440d8d5@linaro.org>
-In-Reply-To: <ca3ce8df-aa4f-4422-8455-29db2440d8d5@linaro.org>
-From: Qiu-ji Chen <chenqiuji666@gmail.com>
-Date: Sat, 7 Jun 2025 01:48:51 +0800
-X-Gm-Features: AX0GCFs2ajWvvueyvPNV-snyunQFsI1e-MJEy6pQ_bQ_hu8xTMdazrmACi39OKk
-Message-ID: <CANgpojV51R5sKvowPiMk5MRAzJ3KZoti6mRXjD3Knfz6kk6+MA@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: mediatek: Fix a flag reuse error in mtk_cqdma_tx_status()
-To: Eugen Hristev <eugen.hristev@linaro.org>
-Cc: sean.wang@mediatek.com, vkoul@kernel.org, matthias.bgg@gmail.com, 
-	angelogioacchino.delregno@collabora.com, dmaengine@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, baijiaju1990@gmail.com, stable@vger.kernel.org, 
-	kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aEHugAPinlWLuTAS@x1>
 
-Hello Eugen,
+On Thu, Jun 05, 2025 at 04:22:40PM -0300, Arnaldo Carvalho de Melo wrote:
+> I'll add this to perf-tools for v6.16, please check.
+ 
+Plesae see
 
-Thank you for discussing this with me!
+https://lore.kernel.org/linux-perf-users/20250521224513.1104129-1-ctshao@google.com/
 
-In this specific code scenario, the lock acquisition order is strictly
-fixed (e.g., pc->lock is always acquired before vc->lock). This
-sequence is linear and won't interleave with other code paths in a
-conflicting nested pattern (e.g., the pc =E2=86=92 vc sequence never coexis=
-ts
-with a potential vc =E2=86=92 pc sequence). Therefore, a standard spin_lock=
-()
-is sufficient to safely prevent deadlocks, and explicitly declaring a
-nesting level via spin_lock_nested() is unnecessary.
+Thanks,
+Namhyung
 
-Additionally, using spin_lock_nested() would require specifying an
-extra nesting subclass parameter. This adds unnecessary complexity to
-the code and could adversely affect maintainability for other
-developers working on it in the future.
-
-Best regards,
-Qiu-ji Chen
-
-> On 6/6/25 12:14, Qiu-ji Chen wrote:
-> >> On 6/6/25 10:17, Qiu-ji Chen wrote:
-> >>> Fixed a flag reuse bug in the mtk_cqdma_tx_status() function.
-> >> If the first spin_lock_irqsave already saved the irq flags and disable=
-d
-> >> them, would it be meaningful to actually use a simple spin_lock for th=
-e
-> >> second lock ? Or rather spin_lock_nested since there is a second neste=
-d
-> >> lock taken ?
-> >>
-> >> Eugen
-> >>
-> >
-> > Hello Eugen,
-> >
-> > Thanks for helpful suggestion. The modification has been submitted in
-> > patch v2 as discussed.
-> >
-> > Best regards,
-> > Qiu-ji Chen
->
-> You are welcome, but in fact I suggested two alternatives. Any reason
-> you picked this one instead of the other ?
+> ---
+> 
+> This test assumes the 'clockticks' event is generally available, which
+> isn't the case, for instance, on AMD systems such as:
+> 
+>   root@number:~# grep -m1 "model name" /proc/cpuinfo
+>   model name	: AMD Ryzen 9 9950X3D 16-Core Processor
+>   root@number:~# perf list clockticks
+> 
+>   List of pre-defined events (to be used in -e or -M):
+> 
+>   root@number:~#
+> 
+> So skip this test when 'clockticks' isn't available.
+> 
+> This should be improved to find other events that are available in
+> multiple PMUs so that the intent of the test is achieved in more
+> platforms.
+> 
+> Fixes: cb422594d62066a5 ("perf test: Add stat uniquifying test")
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Andi Kleen <ak@linux.intel.com>
+> Cc: Chun-Tse Shao <ctshao@google.com>
+> Cc: Dr. David Alan Gilbert <linux@treblig.org>
+> Cc: Howard Chu <howardchu95@gmail.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: James Clark <james.clark@linaro.org>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Levi Yun <yeoreum.yun@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Weilin Wang <weilin.wang@intel.com>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/tests/shell/stat+event_uniquifying.sh | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/tools/perf/tests/shell/stat+event_uniquifying.sh b/tools/perf/tests/shell/stat+event_uniquifying.sh
+> index 5ec35c52b7d9651e..20498b6eadb57702 100755
+> --- a/tools/perf/tests/shell/stat+event_uniquifying.sh
+> +++ b/tools/perf/tests/shell/stat+event_uniquifying.sh
+> @@ -49,6 +49,12 @@ test_event_uniquifying() {
+>      uniquified_event_array+=("${uniquified_event}")
+>    done < <(${perf_tool} list -v ${event} | grep "\[Kernel PMU event\]")
+>  
+> +  if [ ${#uniquified_event_array[@]} -eq 0 ]; then
+> +    echo "'clocktick' event not available on this machine"
+> +    err=2
+> +    return
+> +  fi
+> +
+>    perf_command="${perf_tool} stat -e $event -A -o ${stat_output} -- true"
+>    $perf_command
+>  
+> -- 
+> 2.49.0
+> 
