@@ -1,227 +1,164 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F79E193077
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 15:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD37828B3FF;
+	Fri,  6 Jun 2025 15:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749224590; cv=none; b=ACbkFjOaztevdW/qDg9/wrTZKZaqshI8knjJeu/ik2Hk9DMYelwGaMcvBz1vn1LdQLUMYAsqORIp5q9+aSo8rYkmo2xtetPTdQS3u1iqoRRRd+7l1MuGDRkGap6NTOXo+oK1aXT1Uw19d2Ji84JPgALyRQ/dCWvZCdM4DapNFno=
+	t=1749224591; cv=none; b=l+mDcVtg5H1NUeofPtIiWo4ULHWphnY7kZXpRi1pLN1Q0dTwGCsiiRFEHYsD4FUz1N0m8vLhxb64d0KIwpNGxmx8oIRbJBTSvmMZneCaNzOpVk7MR2IS8rKJzcb2VpbG+HHELfzyIB3ur1Zr9IeRgWWUDYemFW2EeBXd+c5iea0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749224590; c=relaxed/simple;
-	bh=BssSf538SCQ3bExCodfPwCOVcFqz70KXS8ab1xagiEs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hK8hB4+SGdrv4z3IE7Nt2HNV75hBbswahewz+3xUDkm7wzzy9BfWXqcuNxsTA56/EHKxfzswJx1hIY3VPcYA/zqFg5pKYbEuQXE/sfXj/wRTZlo0Uyh2+hWaqPGZX4Xk2quxJraBPbzWINFWiF5/B2Uw7VUrzNgCR/3O3jqVOg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=phRsmion; arc=none smtp.client-ip=209.85.167.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749224591; c=relaxed/simple;
+	bh=cSV2s7RixPkjrBSQuDprrXa/GlT3m+vYjOcot1cKvq8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JfXVKtUi02kYHnlowaLxmdT+wBfn9pe04uP/QhbSaaS8FEliMvb7K/7HXH/aOO+dkzR9y2RWbPteW2O3drOXg+71JYVmphcIW4dvaO1rlLvqr7nBJFQ6ICE1urfua5wRyvCh45j90C5lajCw8NY4awHoZLk5ZjjAxwzeYX9Pk9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AeuQf6AY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="phRsmion"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-406e31162c6so729036b6e.2
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 08:43:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749224587; x=1749829387; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=atBrsiBQdovA6XQSD3owooH8KFvjiwxKuYkfC+ytQP0=;
-        b=phRsmion5rMvrNd8AGQFINgqWDWwFC3G8oP2O928hBR4x0cH9XuaqB874eiHIhiCeZ
-         H8mGmPNqpv/uiOAOL3KEjelRdA2w0fMsY5g7h5MI8xRRr3RmYl2cxWfYOuIquw9Lx4lT
-         ZpNkdHX0DQCm5hz9xsw/9Etgq2WC7Xl0Cdw5mK25QJeotNxg5fES+HOLUjsUEFby4B8r
-         iBZ7Rc28YFO1XyTXYt7TS+IUkvWyyImDQZ9b6xliyAFW+TeeTclNP7xMTka/P3WhMG7+
-         i00YsWsn5KIf+/91oxnu4zbiG/uYVesqMwQkglG08Dadxn4hJxdAz7e7g6ObK0MElOpE
-         FWnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749224587; x=1749829387;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=atBrsiBQdovA6XQSD3owooH8KFvjiwxKuYkfC+ytQP0=;
-        b=uUafbEkVLDqULVxCiszjNtdgFieaEmUNqo7F1DpNTrqO418SCGZ011l5fnKcriZWOw
-         O9Mr/VRFChkTJu/fGzblCCCA/kp3ktYrp/7R1W8jgRqmFNcCyxuFcZe/nH59u/aFRuK8
-         z268nX++zfwseU063ZFTMKs1gewBxxTtaTu2MOOaDgVJNncx9Tw4fq/ZvVakTQqKqrDL
-         bScnd4TpzmYylQ3/IeDxZB+nswDqL21EDBodqm7A1xwtK8st3HqV39fxQtyLdKDghGMz
-         /TcSam7RCxQCW3C4OVDCTSgy5kLhai6g1YXweQ8/sTlykUYOhXMrUpd0Jl2VSx/PWoGu
-         7XUw==
-X-Forwarded-Encrypted: i=1; AJvYcCVln5NY5lZmfNWp4zd0/2DcemGn9T57dmTMdeIe93DcpWUfHVnxkTi3irep6F4goX5pZ5bKbuICEgZOd/Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/fE/qjbtiTymMsGkGleouMpEup7JglOzZpy2ptATXIeUiCfLI
-	g8/rRo3W7im7d5+6LDg6s9HFoEetKUcDPx1BiuxCLB2/xgxt3y9w1ZqOEORuRdzF+e1mHfEaWVe
-	8PzY95oAHZA1171wIQVennu7C8xXRSKDHZ7+b+RpAb57D2P20PsNIQPO6QtM=
-X-Gm-Gg: ASbGncv4gCIdoM5H+5XnhyPCb3fJ//aMmF/GgMils/xOYwy5aqLCB1oEoOBr580w426
-	d8U2MblCiKVrybDm3rxzte1YkANG77HLqHwV8V83OaNpIZrM5fqPUnnF5LgtsaU7FjYO8cJw72U
-	k6KTZSnhuBVMPsN6q20jS8fm/5f01Nnv3R782ZVwlN0to=
-X-Google-Smtp-Source: AGHT+IFwZt96R27Gw8zd/WO1DCWRNwmmGO5Su5CRhGAMCitk7Zp+EPKl0GeXrmi6Y9mF2xBgCReQybypIDNLM8S7cR4=
-X-Received: by 2002:a05:622a:5c16:b0:494:a2b8:88f0 with SMTP id
- d75a77b69052e-4a5b9d7a923mr72974071cf.33.1749224577010; Fri, 06 Jun 2025
- 08:42:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AeuQf6AY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49B74C4CEF1;
+	Fri,  6 Jun 2025 15:43:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749224591;
+	bh=cSV2s7RixPkjrBSQuDprrXa/GlT3m+vYjOcot1cKvq8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=AeuQf6AYZI9NX3+tAafm8u7m2iw/FtWELWtzJlh8mOHoJpl8JU08A9sn3f+1rAURi
+	 SQWK2SwUCmx2cxbUSrQovKjWKL82J4tOKbjlm/FsPE4IBAijiVFHFhWm82+opkIYP+
+	 8oEbg65LZvGWnsOHYnIknAUeuwHXfSACV87Qv5zlCENVju6e2dWacuKoVPRR5zWp26
+	 QQBkJU/kAC2GP+vvBWd3dQc/CQlfRJ1DrR5T0dQFKa4munYMZVzUYzcpgzbNCiLBp7
+	 cA4M++C+qA/MCJ71i4G6qZaOMfyVk7sJaLL6qkHrjb8L6gHM6BHreuXeOrokzFUgk+
+	 6rmtG66bQoiag==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Lee Jones <lee@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	cw00.choi@samsung.com,
+	krzk@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 08/15] mfd: max14577: Fix wakeup source leaks on device unbind
+Date: Fri,  6 Jun 2025 11:42:51 -0400
+Message-Id: <20250606154259.547394-8-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250606154259.547394-1-sashal@kernel.org>
+References: <20250606154259.547394-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602135932.464194-1-pranav.tyagi03@gmail.com>
- <053507e4-14dc-48db-9464-f73f98c16b46@lunn.ch> <202506021057.3AB03F705@keescook>
- <25d96fc0-c54b-4f24-a62b-cf68bf6da1a9@lunn.ch> <CAH4c4jJRkeiCaRji9s1dXxWL538X=vXRyKgwcuAOLPNd-jv4VQ@mail.gmail.com>
-In-Reply-To: <CAH4c4jJRkeiCaRji9s1dXxWL538X=vXRyKgwcuAOLPNd-jv4VQ@mail.gmail.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Fri, 6 Jun 2025 08:42:45 -0700
-X-Gm-Features: AX0GCFu5bBYumsgogodK6DnGqjj3NSYGozTewcVjea7gPo9oQSX8_BL5MzVZrmc
-Message-ID: <CANn89iJR1i3hhXrkDNtXyPCNUj1KmrTAff2=pcuYNsXBxogNpw@mail.gmail.com>
-Subject: Re: [PATCH] net: randomize layout of struct net_device
-To: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Kees Cook <kees@kernel.org>, andrew+netdev@lunn.ch, 
-	davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.32
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 6, 2025 at 7:55=E2=80=AFAM Pranav Tyagi <pranav.tyagi03@gmail.c=
-om> wrote:
->
-> On Tue, Jun 3, 2025 at 12:36=E2=80=AFAM Andrew Lunn <andrew@lunn.ch> wrot=
-e:
-> >
-> > On Mon, Jun 02, 2025 at 11:03:18AM -0700, Kees Cook wrote:
-> > > On Mon, Jun 02, 2025 at 04:46:14PM +0200, Andrew Lunn wrote:
-> > > > On Mon, Jun 02, 2025 at 07:29:32PM +0530, Pranav Tyagi wrote:
-> > > > > Add __randomize_layout to struct net_device to support structure =
-layout
-> > > > > randomization if CONFIG_RANDSTRUCT is enabled else the macro expa=
-nds to
-> > > > > do nothing. This enhances kernel protection by making it harder t=
-o
-> > > > > predict the memory layout of this structure.
-> > > > >
-> > > > > Link: https://github.com/KSPP/linux/issues/188
-> > >
-> > > I would note that the TODO item in this Issue is "evaluate struct
-> > > net_device".
-> > >
-> > > > A dumb question i hope.
-> > > >
-> > > > As you can see from this comment, some time and effort has been put
-> > > > into the order of members in this structure so that those which are
-> > > > accessed on the TX fast path are in the same cache line, and those =
-on
-> > > > the RX fast path are in the same cache line, and RX and TX fast pat=
-hs
-> > > > are in different cache lines, etc.
-> > >
-> > > This is pretty well exactly one of the right questions to ask, and
-> > > should be detailed in the commit message. Mainly: a) how do we know i=
-t
-> > > will not break anything? b) why is net_device a struct that is likely
-> > > to be targeted by an attacker?
-> >
-> > For a), i doubt anything will break. The fact the structure has been
-> > optimised for performance implies that members have been moved around,
-> > and there are no comments in the structure saying don't move this,
-> > otherwise bad things will happen.
-> >
-> > There is a:
-> >
-> >         u8                      priv[] ____cacheline_aligned
-> >                                        __counted_by(priv_len);
-> >
-> > at the end, but i assume RANDSTRUCT knows about them and won't move it.
-> >
-> > As for b), i've no idea, not my area. There are a number of pointers
-> > to structures contains ops. Maybe if you can take over those pointers,
-> > point to something you can control, you can take control of the
-> > Program Counter?
-> >
-> > > > Does CONFIG_RANDSTRUCT understand this? It is safe to move members
-> > > > around within a cache line. And it is safe to move whole cache line=
-s
-> > > > around. But it would be bad if the randomisation moved members betw=
-een
-> > > > cache lines, mixing up RX and TX fast path members, or spreading fa=
-st
-> > > > path members over more cache lines, etc.
-> > >
-> > > No, it'll move stuff all around. It's very much a security vs
-> > > performance trade-off, but the systems being built with it are happy =
-to
-> > > take the hit.
-> >
-> > It would be interesting to look back at the work optimising this
-> > stricture to get a ball park figure how big a hit this is?
-> >
-> > I also think some benchmark numbers would be interesting. I would
-> > consider two different systems:
-> >
-> > 1) A small ARM/MIPS/RISC-V with 1G interfaces. The low amount of L1
-> > cache on these systems mean that cache misses are important. So
-> > spreading out the fast path members will be bad.
-> >
-> > 2) Desktop/Server class hardware, lots of cores, lots of cache, 10G,
-> > 40G or 100G interfaces. For these systems, i expect cache line
-> > bouncing is more of an issue, so Rx and Tx fast path members want to
-> > be kept in separate cache lines.
-> >
-> > > The basic details are in security/Kconfig.hardening in the "choice" f=
-ollowing
-> > > the CC_HAS_RANDSTRUCT entry.
-> >
-> > So i see two settings here. It looks like RANDSTRUCT_PERFORMANCE
-> > should have minimal performance impact, so maybe this should be
-> > mentioned in the commit message, and the benchmarks performed both on
-> > full randomisation and with the performance setting.
-> >
-> > I would also suggest a comment is added to the top of
-> > Documentation/networking/net_cachelines/net_device.rst pointing out
-> > this assumed RANDSTRUCT is disabled, and the existing comment in
-> > struct net_device is also updated.
-> >
-> >         Andrew
->
-> Resending to the list=E2=80=94my previous reply was accidentally sent off=
--list.
->
-> Apologies for the delayed response, and thank you
-> all for the detailed feedback.
->
-> Regarding the concern about breaking functionality,
-> I did compile and boot the kernel successfully with
-> this change, and everything appeared to work as
-> expected during basic testing. However, I agree
-> that this is not a substitute for thorough
-> benchmarking.
->
-> You're absolutely right that applying
-> __randomize_layout to net_device will shuffle
-> structure fields and likely incur a performance
-> penalty. As mentioned, this is a trade-off that
-> targets hardening over performance. It's worth
-> noting that CONFIG_RANDSTRUCT has two options:
-> RANDSTRUCT_FULL and RANDSTRUCT_PERFORMANCE, with
-> the latter aiming to minimize the impact by only
-> shuffling less performance-critical members.
->
-> I=E2=80=99d appreciate guidance on which specific
-> benchmarking tests would be most appropriate to
-> quantify the performance impact. Based on your
-> suggestions, I plan to run benchmarks on a small
-> SoC (ARM/MIPS/RISC-V) with 1G NICs. However, I
-> currently don=E2=80=99t have access to high-end server
-> hardware with 10G/40G+ NICs, so I=E2=80=99ll start with the
-> systems I have and clearly note the limitations in
-> the revised commit message.
->
-> I=E2=80=99ll also update the commit message to reflect the
-> security vs performance trade-offs, mention
-> RANDSTRUCT_PERFORMANCE, and add a reference to
-> net_cachelines/net_device.rst to document the
-> assumption of structure layout.
->
-> Thanks again for the thoughtful review=E2=80=94I=E2=80=99ll revise
-> the patch accordingly.
->
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Do you have evidence of added security on this particular structure ?
+[ Upstream commit d905d06e64b0eb3da43af6186c132f5282197998 ]
 
-What particular bug could have been avoided with __randomize_layout ?
+Device can be unbound, so driver must also release memory for the wakeup
+source.
 
-Most distros use CONFIG_RANDSTRUCT_NONE=3Dy, I do not think
-__randomize_layout has a future.
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Link: https://lore.kernel.org/r/20250406-mfd-device-wakekup-leak-v1-3-318e14bdba0a@linaro.org
+Signed-off-by: Lee Jones <lee@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+
+Now let me understand the difference between the fixes - the historical
+commits show two patterns:
+1. Using `devm_device_init_wakeup()` - automatically handles cleanup
+2. Manual cleanup by calling `device_init_wakeup(dev, false)` in remove
+   functions
+
+Let me check if this specific commit has `Cc: stable@vger.kernel.org` in
+the message:
+
+Based on my analysis of this commit and comparison with the similar
+historical commits, here is my assessment:
+
+**YES**
+
+This commit should be backported to stable kernel trees for the
+following reasons:
+
+## Analysis
+
+### **Code Change Analysis**
+The commit adds a single line in the `max14577_i2c_remove()` function:
+```c
++       device_init_wakeup(max14577->dev, false);
+```
+
+This addition occurs at drivers/mfd/max14577.c:459, right before
+`mfd_remove_devices()` is called.
+
+### **Bug Fix Characteristics**
+1. **Memory Leak Fix**: The commit fixes a wakeup source memory leak
+   that occurs when the device is unbound. When `device_init_wakeup(dev,
+   true)` is called during probe (line 442), it allocates memory for
+   wakeup source structures. Without the corresponding cleanup call,
+   this memory is leaked on device removal.
+
+2. **Small and Contained**: The fix is minimal - a single line addition
+   that mirrors the cleanup pattern used throughout the kernel.
+
+3. **Low Risk**: The change has extremely low regression risk since it
+   only adds proper cleanup that should have been there originally.
+
+### **Comparison with Historical Similar Commits**
+Looking at the provided historical commits, there are two categories:
+
+**YES commits (backported)**:
+- `gpio: mpc8xxx: Fix wakeup source leaks on device unbind` - Same exact
+  pattern and includes `Cc: stable@vger.kernel.org`
+- `gpio: zynq: Fix wakeup source leaks on device unbind` - Same exact
+  pattern and includes `Cc: stable@vger.kernel.org`
+
+**NO commits (not backported)**:
+- IIO driver commits that use `devm_device_init_wakeup()` instead of
+  manual cleanup
+
+The key difference is that the YES commits use the same fix pattern as
+this MFD commit - manual cleanup in the remove function, while the NO
+commits use the `devm_` managed approach that automatically handles
+cleanup.
+
+### **Impact Assessment**
+- **User Impact**: Memory leaks on device unbind affect systems where
+  MFD devices are frequently bound/unbound
+- **Subsystem**: MFD (Multi-Function Device) is a core kernel subsystem
+  used by many embedded systems
+- **Regression Risk**: Minimal - adding proper cleanup cannot cause
+  functional regression
+
+### **Stable Tree Criteria Met**
+1. ✅ Fixes an important bug (memory leak)
+2. ✅ Small and contained change
+3. ✅ No architectural changes
+4. ✅ Minimal risk of regression
+5. ✅ Follows established patterns seen in other backported commits
+
+The commit follows the exact same pattern as the GPIO driver commits
+that were successfully backported to stable trees (commits #1 and #2 in
+the historical examples), making it a clear candidate for backporting.
+
+ drivers/mfd/max14577.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/mfd/max14577.c b/drivers/mfd/max14577.c
+index 6fce79ec2dc64..7e7e8af9af224 100644
+--- a/drivers/mfd/max14577.c
++++ b/drivers/mfd/max14577.c
+@@ -456,6 +456,7 @@ static void max14577_i2c_remove(struct i2c_client *i2c)
+ {
+ 	struct max14577 *max14577 = i2c_get_clientdata(i2c);
+ 
++	device_init_wakeup(max14577->dev, false);
+ 	mfd_remove_devices(max14577->dev);
+ 	regmap_del_irq_chip(max14577->irq, max14577->irq_data);
+ 	if (max14577->dev_type == MAXIM_DEVICE_TYPE_MAX77836)
+-- 
+2.39.5
+
