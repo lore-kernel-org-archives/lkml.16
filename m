@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F97A2882C2
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 11:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D83288C0C
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 11:50:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749210637; cv=none; b=aE0938p+SLLtiV1Hdr1Wb5FzKx4lf4LUlDApgd+Syz7OtnOil0htppDG1iNkgEazPipgaxCl+5QsX2PRXbGRZqnIKFX4hmeWMY+GM5l6aVS/mNo7Il9BBOzQLDO7lOQ5MalDiHF30n/12mHvWik6GjcjKhg1Byz3URecnMjCIvM=
+	t=1749210643; cv=none; b=KLWokj9py66DAyVr1nO2D/fSGOr2b2KutxJ7bWPykWXkfCltMqVch/ei+vpaiAC8DKittqbCDNQWKdh912fdXKexMOoHKTenpR8Nsr3ufhX71smBJM1uPKmXNh6DoFz3ckmDQlWWzhzfjgN+hP+tH366Y5aDvQFeDHq+ud+w1DA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749210637; c=relaxed/simple;
-	bh=UgsieFu3Kz0njZbZT/Zg810et6OCXfsW1n4LV9dgZgY=;
+	s=arc-20240116; t=1749210643; c=relaxed/simple;
+	bh=89wxZ3oO4ZH6cCK6mN0JW+yXN+Rr112wSDrBDCPMLAo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WcRO5Kr9mWjesOucKNSCKwbbOCmCJecfygOO2lS7ZyhvbK1p1m5D+xi+Nq5U0hH74P0WF4uAVT/7/ma9CshwZp5K7L1AugvpH3b9hv80GAV/mEL6YuH0vlvfncQv/3C3QAS9CcGlVya7jS0sUDL3W/n1ZyoqPV108gLNydJ4kJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i6uoQw/Z; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=pqnghTORDRIhLBeSEWuv0NzLQq3nE8xcrKTtFAeI0U4hvGFlBEualC4B22rCIUIAis/8qcBzukv/uwD6EYoDxCaihQGUFWgGups4/euKMj1Jr15xJqxpszH5gyVNxQ5FFJdAclXTDnI+Ee8kAgbOGnG53WNgU+uOsAD2eTedD5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gq0GpwSs; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i6uoQw/Z"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gq0GpwSs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749210634;
+	s=mimecast20190719; t=1749210641;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NZUnE9Fp7JTLv3YsV0naKvxGFvbyveDrK723yBnXOgQ=;
-	b=i6uoQw/ZzVbOplaEtATgXAbXfXgobX9wbwe864CbPsSo9wyhVS711CvphK/b6BT/28hHPY
-	RdToYRnlAcxIP/rUT7mIywIUIVq3rIykIxbVq5KMlJd36WNv+z4AzafTPLuxIe+N+Ax65e
-	tft6v6bgiICibQw62ryt3GF0O7Cfigs=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+	bh=iretUVp3t9mkYjP8n+n5q4o6QbDi952+SZy4PuCS9O8=;
+	b=gq0GpwSs0q3CnYywnp1WrT2bbxjMscAbJ4S6EJJyX8LhIjNUuxlFJ4P7DZFL/RA4sNvcmW
+	xxBanp3lI1yxYmRVrONCNdLEQHRbwQpz/xrzg9O04X1YwvZe4g67w0Moez0SCYPZCfK2Kh
+	vq4M1/TVrDyxpeQbptE/WSq0ORUQwRg=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-5-g9yncyHAMdO1cDyUatHMvg-1; Fri,
- 06 Jun 2025 07:50:29 -0400
-X-MC-Unique: g9yncyHAMdO1cDyUatHMvg-1
-X-Mimecast-MFC-AGG-ID: g9yncyHAMdO1cDyUatHMvg_1749210628
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-544-UV_7ViRdPh6HGemABi3etQ-1; Fri,
+ 06 Jun 2025 07:50:38 -0400
+X-MC-Unique: UV_7ViRdPh6HGemABi3etQ-1
+X-Mimecast-MFC-AGG-ID: UV_7ViRdPh6HGemABi3etQ_1749210637
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ED08A195608B;
-	Fri,  6 Jun 2025 11:50:27 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DD9E5195608E;
+	Fri,  6 Jun 2025 11:50:36 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.44.33.72])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0B5AC19560B2;
-	Fri,  6 Jun 2025 11:50:23 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DA36C195E74A;
+	Fri,  6 Jun 2025 11:50:32 +0000 (UTC)
 From: =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>
 To: jasowang@redhat.com
 Cc: Yongji Xie <xieyongji@bytedance.com>,
@@ -55,9 +55,9 @@ Cc: Yongji Xie <xieyongji@bytedance.com>,
 	virtualization@lists.linux.dev,
 	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
 	Laurent Vivier <lvivier@redhat.com>
-Subject: [RFC 2/6] vduse: add vq group support
-Date: Fri,  6 Jun 2025 13:50:08 +0200
-Message-ID: <20250606115012.1331551-3-eperezma@redhat.com>
+Subject: [RFC 4/6] vduse: send update_iotlb_v2 message
+Date: Fri,  6 Jun 2025 13:50:10 +0200
+Message-ID: <20250606115012.1331551-5-eperezma@redhat.com>
 In-Reply-To: <20250606115012.1331551-1-eperezma@redhat.com>
 References: <20250606115012.1331551-1-eperezma@redhat.com>
 Precedence: bulk
@@ -70,196 +70,79 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-The virtqueue group is the minimal set of virtqueues that must share an
-address space.  And the address space identifier could only be attached
-to a specific virtqueue group.  The virtqueue is attached to a
-virtqueue group for all the life of the device.
-
-During vDPA device allocation, the VDUSE device needs to report the
-number of virtqueue groups supported. At this moment only vhost_vdpa is
-able to do it.
-
-This helps to isolate the environments for the virtqueue that will not
-be assigned directly. E.g in the case of virtio-net, the control
-virtqueue will not be assigned directly to guest.
-
-As we need to back the vq groups with a struct device for the file
-operations, let's keep this number as low as possible at the moment: 2.
-We can back one VQ group with the vduse device and the other one with
-the vdpa device.
+This new version reports the translation ASID.  Needed so the device can
+support it.
 
 Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
 ---
- drivers/vdpa/vdpa_user/vduse_dev.c | 44 +++++++++++++++++++++++++++++-
- include/uapi/linux/vduse.h         | 17 +++++++++++-
- 2 files changed, 59 insertions(+), 2 deletions(-)
+ drivers/vdpa/vdpa_user/vduse_dev.c | 14 ++++++++++----
+ include/uapi/linux/vduse.h         |  7 +++++++
+ 2 files changed, 17 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/vdpa/vdpa_user/vduse_dev.c b/drivers/vdpa/vdpa_user/vduse_dev.c
-index 6a9a37351310..6fa687bc4912 100644
+index d51e4f26fe72..151c6d133e76 100644
 --- a/drivers/vdpa/vdpa_user/vduse_dev.c
 +++ b/drivers/vdpa/vdpa_user/vduse_dev.c
-@@ -46,6 +46,11 @@
- #define VDUSE_IOVA_SIZE (VDUSE_MAX_BOUNCE_SIZE + 128 * 1024 * 1024)
- #define VDUSE_MSG_DEFAULT_TIMEOUT 30
- 
-+/*
-+ * Let's make it 2 for simplicity.
-+ */
-+#define VDUSE_MAX_VQ_GROUPS 2
-+
- #define IRQ_UNBOUND -1
- 
- struct vduse_virtqueue {
-@@ -114,6 +119,7 @@ struct vduse_dev {
- 	u8 status;
- 	u32 vq_num;
- 	u32 vq_align;
-+	u32 ngroups;
- 	struct vduse_umem *umem;
- 	struct mutex mem_lock;
- 	unsigned int bounce_size;
-@@ -592,6 +598,25 @@ static int vduse_vdpa_set_vq_state(struct vdpa_device *vdpa, u16 idx,
- 	return 0;
+@@ -317,7 +317,7 @@ static int vduse_dev_set_status(struct vduse_dev *dev, u8 status)
+ 	return vduse_dev_msg_sync(dev, &msg);
  }
  
-+static u32 vduse_get_vq_group(struct vdpa_device *vdpa, u16 idx)
-+{
-+	struct vduse_dev *dev = vdpa_to_vduse(vdpa);
-+	struct vduse_dev_msg msg = { 0 };
-+	int ret;
-+
-+	if (dev->api_version < VDUSE_API_VERSION_1)
-+		return 0;
-+
-+	msg.req.type = VDUSE_GET_VQ_GROUP;
-+	msg.req.vq_group.index = idx;
-+
-+	ret = vduse_dev_msg_sync(dev, &msg);
-+	if (ret)
-+		return ret;
-+
-+	return msg.resp.vq_group.num;
-+}
-+
- static int vduse_vdpa_get_vq_state(struct vdpa_device *vdpa, u16 idx,
- 				struct vdpa_vq_state *state)
+-static int vduse_dev_update_iotlb(struct vduse_dev *dev,
++static int vduse_dev_update_iotlb(struct vduse_dev *dev, u32 asid,
+ 				  u64 start, u64 last)
  {
-@@ -789,6 +814,7 @@ static const struct vdpa_config_ops vduse_vdpa_config_ops = {
- 	.set_vq_cb		= vduse_vdpa_set_vq_cb,
- 	.set_vq_num             = vduse_vdpa_set_vq_num,
- 	.get_vq_size		= vduse_vdpa_get_vq_size,
-+	.get_vq_group		= vduse_get_vq_group,
- 	.set_vq_ready		= vduse_vdpa_set_vq_ready,
- 	.get_vq_ready		= vduse_vdpa_get_vq_ready,
- 	.set_vq_state		= vduse_vdpa_set_vq_state,
-@@ -1850,6 +1876,16 @@ static int vduse_create_dev(struct vduse_dev_config *config,
- 	dev->device_features = config->features;
- 	dev->device_id = config->device_id;
- 	dev->vendor_id = config->vendor_id;
-+	if (dev->api_version >= 1) {
-+		if (config->ngroups > VDUSE_MAX_VQ_GROUPS) {
-+			pr_err("Not creating a VDUSE device with %u vq groups. Max: %u",
-+				config->ngroups, VDUSE_MAX_VQ_GROUPS);
-+			goto err_ngroups;
-+		}
-+		dev->ngroups = config->ngroups ?: 1;
+ 	struct vduse_dev_msg msg = { 0 };
+@@ -326,8 +326,14 @@ static int vduse_dev_update_iotlb(struct vduse_dev *dev,
+ 		return -EINVAL;
+ 
+ 	msg.req.type = VDUSE_UPDATE_IOTLB;
+-	msg.req.iova.start = start;
+-	msg.req.iova.last = last;
++	if (dev->api_version < VDUSE_API_VERSION_1) {
++		msg.req.iova.start = start;
++		msg.req.iova.last = last;
 +	} else {
-+		dev->ngroups = 1;
++		msg.req.iova_v2.start = start;
++		msg.req.iova_v2.last = last;
++		msg.req.iova_v2.asid = asid;
 +	}
- 	dev->name = kstrdup(config->name, GFP_KERNEL);
- 	if (!dev->name)
- 		goto err_str;
-@@ -1885,6 +1921,7 @@ static int vduse_create_dev(struct vduse_dev_config *config,
- 	idr_remove(&vduse_idr, dev->minor);
- err_idr:
- 	kfree(dev->name);
-+err_ngroups:
- err_str:
- 	vduse_dev_destroy(dev);
- err:
-@@ -2003,13 +2040,18 @@ static struct vduse_mgmt_dev *vduse_mgmt;
- static int vduse_dev_init_vdpa(struct vduse_dev *dev, const char *name)
- {
- 	struct vduse_vdpa *vdev;
-+	__u32 ngroups = 1;
- 	int ret;
  
- 	if (dev->vdev)
- 		return -EEXIST;
+ 	return vduse_dev_msg_sync(dev, &msg);
+ }
+@@ -818,7 +824,7 @@ static int vduse_vdpa_set_map(struct vdpa_device *vdpa,
+ 	if (ret)
+ 		return ret;
  
-+	if (vdev->dev->api_version >= VDUSE_API_VERSION_1)
-+		ngroups = vdev->dev->ngroups;
-+
- 	vdev = vdpa_alloc_device(struct vduse_vdpa, vdpa, dev->dev,
--				 &vduse_vdpa_config_ops, 1, 1, name, true);
-+				 &vduse_vdpa_config_ops, ngroups, 1, name,
-+				 true);
- 	if (IS_ERR(vdev))
- 		return PTR_ERR(vdev);
- 
+-	ret = vduse_dev_update_iotlb(dev, 0ULL, ULLONG_MAX);
++	ret = vduse_dev_update_iotlb(dev, asid, 0ULL, ULLONG_MAX);
+ 	if (ret) {
+ 		vduse_domain_clear_map(dev->domain[asid], iotlb);
+ 		return ret;
 diff --git a/include/uapi/linux/vduse.h b/include/uapi/linux/vduse.h
-index 9a56d0416bfe..a779bcddac58 100644
+index 3a17a0b4e938..a7c979591b2e 100644
 --- a/include/uapi/linux/vduse.h
 +++ b/include/uapi/linux/vduse.h
-@@ -45,7 +45,8 @@ struct vduse_dev_config {
- 	__u64 features;
- 	__u32 vq_num;
- 	__u32 vq_align;
--	__u32 reserved[13];
-+	__u32 ngroups; /* if VDUSE_API_VERSION >= 1 */
-+	__u32 reserved[12];
- 	__u32 config_size;
- 	__u8 config[];
- };
-@@ -160,6 +161,16 @@ struct vduse_vq_state_packed {
- 	__u16 last_used_idx;
+@@ -349,6 +349,12 @@ struct vduse_iova_range {
+ 	__u64 last;
  };
  
-+/**
-+ * struct vduse_vq_group - virtqueue group
-+ * @num: Index of the virtqueue group
-+ * @num: Group
-+ */
-+struct vduse_vq_group {
-+	__u32 index;
-+	__u32 num;
++struct vduse_iova_range_v2 {
++	__u64 start;
++	__u64 last;
++	__u32 asid;
 +};
 +
  /**
-  * struct vduse_vq_info - information of a virtqueue
-  * @index: virtqueue index
-@@ -182,6 +193,7 @@ struct vduse_vq_info {
- 	union {
- 		struct vduse_vq_state_split split;
- 		struct vduse_vq_state_packed packed;
-+		struct vduse_vq_group group;
- 	};
- 	__u8 ready;
- };
-@@ -274,6 +286,7 @@ enum vduse_req_type {
- 	VDUSE_GET_VQ_STATE,
- 	VDUSE_SET_STATUS,
- 	VDUSE_UPDATE_IOTLB,
-+	VDUSE_GET_VQ_GROUP,
- };
- 
- /**
-@@ -328,6 +341,7 @@ struct vduse_dev_request {
+  * struct vduse_dev_request - control request
+  * @type: request type
+@@ -369,6 +375,7 @@ struct vduse_dev_request {
  		struct vduse_vq_state vq_state;
  		struct vduse_dev_status s;
  		struct vduse_iova_range iova;
-+		struct vduse_vq_group vq_group; /* Only if vduse api version >= 1 */
- 		__u32 padding[32];
- 	};
- };
-@@ -350,6 +364,7 @@ struct vduse_dev_response {
- 	__u32 reserved[4];
- 	union {
- 		struct vduse_vq_state vq_state;
-+		struct vduse_vq_group vq_group; /* Only if vduse api version >= 1 */
- 		__u32 padding[32];
- 	};
- };
++		struct vduse_iova_range_v2 iova_v2;
+ 		struct vduse_vq_group vq_group; /* Only if vduse api version >= 1 */
+ 		/* Only if vduse api version >= 1 */
+ 		struct vduse_vq_group_asid vq_group_asid;
 -- 
 2.49.0
 
