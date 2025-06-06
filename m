@@ -1,124 +1,165 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DF91EF0B9;
-	Fri,  6 Jun 2025 07:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9AED1EF0B9
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 07:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749194487; cv=none; b=jgwK7na+hGLurq/VCFJq96P85xHYVhSjyBuewQL9Ix8zL6gBW5rttjvC2PvrKqbJAdF5xbAX6vPjWfcxLj9+k03cxaRmcLJGZBLojTyaPVmZj0lbbOsmw7G8ONLoftFsT+NX/soWtiW122WJo+K+PdXBXmKHia56i1bpI7U/2Gk=
+	t=1749194492; cv=none; b=ei3UMbGzWppeOAsyrlrqhFB+ELj00h+NTv23kwbyJMSbj1+vbeGw+mwucqHV7g2Vn2xl2bkF60rz68geIZv7+2muLS0UFbyi0wr9+PceK6hAQgyoraW9DI8d3okWkN4avWhDKe/2Lx7Tnfpxo6SebaKud172R68VcOzpDjVUA6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749194487; c=relaxed/simple;
-	bh=ChjZONmvwHIQgHEoxS2hbayUZ7YTKLK86GqYEJ9vb8w=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CdTWpvqTdfKXZ8OuUXuJuVSKFa6r0d5huON0HPTubrqhnOnli9kKS+PpCq6h9to2Ntsp66gqum+f8JnC1QValjKwclkaJAGVCGpiQ/bzgF9aC5G8ZJw70gzN25amj5aYyIawtqDh9m/kpcBJTjBUBsKbrMzKXFoHnVRX0QLbKvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=PRp10qEB; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1749194492; c=relaxed/simple;
+	bh=W6aqRYw57nLIh05HMsthjwLVSomTwVgGhQrbgMrbbRg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AzOpwBQwre27aoFOm5Ry2Ih8vzA0GWMfvnU39IMWinLtsHe7PJfmxW77wYVr45xpOMPB2HFyKqBdu1Lslrsm2p9iwc7jSRvqZxTYIEwjD+tZ2AWI3ti3zyBoRFzfCnAJSoRS4DuKe8tzdXjO+Nm+2NBAbRGW72iYM+xgRyjL2vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R4Llq0le; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="PRp10qEB"
-Received: from pps.filterd (m0431383.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 555H0UpP024603;
-	Fri, 6 Jun 2025 00:20:57 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=78vuFN+FTuBzAdllm1AMLckzj
-	iwjwEP6iKxOkB7ETO8=; b=PRp10qEBEI9/KmMIIszcRTvtEgWZDg11o43L9G5Vs
-	3RK8/YkI7bwMDFjWy7w/IMjeaW9QIGGgeOZyOsdpPksvkq0hTRYzmzkeKwOkwhsk
-	4dBGQyf73+k1zamqCP5CaUMbW4YRuWiod+DVgvawFp3NCLeGEHdDPnVdFgp1eQh9
-	f5B9671WGYd2+8hs9DV2fAwMinyjJos5PmugXUHZsMznjpvdi+F3F0qUEwKMuxnI
-	5fCrQ0vCg8K+51Kp9t5ksfvI2iG1D3g3JbdoLknEp1FC+lhlWVkY5hIkPepq/0j7
-	nXkAd6svC3l0sBO16u30zhUBFz4LwNzhdMacWw+J0BUdA==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 473f8s9fn4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Jun 2025 00:20:56 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Fri, 6 Jun 2025 00:20:55 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Fri, 6 Jun 2025 00:20:55 -0700
-Received: from 7f70c4b51185 (HY-LT91368.marvell.com [10.29.24.116])
-	by maili.marvell.com (Postfix) with SMTP id 1DE233F7085;
-	Fri,  6 Jun 2025 00:20:51 -0700 (PDT)
-Date: Fri, 6 Jun 2025 07:20:50 +0000
-From: Subbaraya Sundeep <sbhatta@marvell.com>
-To: Carlos Fernandez <carlos.fernandez@technica-engineering.de>
-CC: Sabrina Dubroca <sd@queasysnail.net>, Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Hannes
- Frederic Sowa <hannes@stressinduktion.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net v3] macsec: MACsec SCI assignment for ES = 0
-Message-ID: <aEKW0nDwvkfMy-_c@7f70c4b51185>
-References: <20250604123407.2795263-1-carlos.fernandez@technica-engineering.de>
- <20250605132110.3922404-1-carlos.fernandez@technica-engineering.de>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R4Llq0le"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749194490;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=nWO+Jnfr7sb3bO+bv1vixTUde8+oHiFJjcUZ4U1xv+k=;
+	b=R4Llq0leWmfVB0OMdehEOH0VrekW14qqpZc8Ro9CzSDkzALMk4cJWQOZUNTA+57VyMgFkL
+	thU+Vl22wrx7rgMsls9jOtOFKOb/oDCm68RmiQxpTCSs2+9UpVpkqQUpr5GHF6vNLNVALq
+	O2QmkBaO+VyqfuX45eLrwjJCa8dQGBI=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-240-RNfBnJ-WPpe--FEFVKHBBQ-1; Fri, 06 Jun 2025 03:21:28 -0400
+X-MC-Unique: RNfBnJ-WPpe--FEFVKHBBQ-1
+X-Mimecast-MFC-AGG-ID: RNfBnJ-WPpe--FEFVKHBBQ_1749194487
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-451ac1b43c4so10359815e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 00:21:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749194487; x=1749799287;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=nWO+Jnfr7sb3bO+bv1vixTUde8+oHiFJjcUZ4U1xv+k=;
+        b=QrkV+YwzOc30QyciVqQovgzogCyuGEt9Ln8VbzCQ8/lQYvVsWFVst7qvS4SMwj1sU2
+         wTu09Tg6zMC3ZtGy77Ea2eIFRyQjFCTlH7GvemHaJQ3hIxdEXnGZFxi5GU9LEl1cj9Ma
+         MDmoUelQwm2yeDX02AXf5J+rN6bE5duhay+lk03YIbZ2al1KRJeY9Ih2BT7G7YL+u0nH
+         F8WG1aupFIIdjeCYhMx1s2IGwK7oXOtgZkHvf9Sq9Rk1krVa1l++cxfzFCIcv7a5ID03
+         im7OE6tsyLBkaCyPeEmzQQkjHbgXyOKFuG4t7iCvDXvPuu78KZSwMZ6F7F6rhsSvichn
+         nNQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVkFslFdBwYiaKTQD7i3iNuuEBJSLeDP2PIOpiV3MjKy16p8R6c5wVL9tTDGCRkBsPlRvACIYhdmZudYwo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhPI8OxP+hDYT694sre1Ko6zx2XLSZX/3ZSXEZLPbWwXjuJPO5
+	NkjM7jkv6T4UyqIgKbUmjK+rIgQDlB8Luk9qmd+xHoFKP+CGXN+y5W6XXW/ovBd0/7YJSn5HNGI
+	flMWSNQSVW0x89QUARNjRJpAExd69QV1sVsKWvssJh3bGDErJKnIJg31vyNNZeGXQbw==
+X-Gm-Gg: ASbGncs3fe4A6soFGe/zl8JBS9g09yfopDcY7ROpbFskJDOLlv9LHtOatEDa7YIleDu
+	BG5shUvCzMjPCZVNKbwx+LDxtG60Wz0cHjCWIG/1OBB9JinCJl1hvNnI1yaIYKto6pVuvL5HD92
+	pcPSjugrCiiui9AsOcuXM9Ujl0g9TolspAmuj8xG4CqZ0BZN+3h5uOYu8j6e9sH8bGuq2Fdz5GG
+	hKa6ys2e5OdI0qqBqwLV0VuNuKPg0qqcAm1w6lNMpgIHlvOxBpIIMUJoLiRn3QHy0GUis//ugbL
+	/mQUnyR8clCq1X35Q+ZVj8FokcbbKezoL0SPomD2EiVQaKIs9iI/AA==
+X-Received: by 2002:a05:600c:8b08:b0:440:9b1a:cd78 with SMTP id 5b1f17b1804b1-4520141635bmr28557345e9.10.1749194487390;
+        Fri, 06 Jun 2025 00:21:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEYGBLqLhHoU0eSEvvhOEsyyfoB3fkvfxp6wTH1B94salkTHS+ANrxUABh7PLpFIFo0O5+fUA==
+X-Received: by 2002:a05:600c:8b08:b0:440:9b1a:cd78 with SMTP id 5b1f17b1804b1-4520141635bmr28556955e9.10.1749194486956;
+        Fri, 06 Jun 2025 00:21:26 -0700 (PDT)
+Received: from [192.168.3.141] (p57a1a6a5.dip0.t-ipconnect.de. [87.161.166.165])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452730c7459sm11770115e9.34.2025.06.06.00.21.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jun 2025 00:21:26 -0700 (PDT)
+Message-ID: <8b68e7f0-46b8-4814-99a2-02f0044cda9c@redhat.com>
+Date: Fri, 6 Jun 2025 09:21:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250605132110.3922404-1-carlos.fernandez@technica-engineering.de>
-X-Proofpoint-ORIG-GUID: lY8RMgbu4n9SVZRdOylOt15s4GEHAAwl
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA2MDA2NyBTYWx0ZWRfX4NVX3mV6ewBh jz3dzTPIN2pXMVgt/dQ13c2eSqvIc4lwfg7dmiZgcYdgivNzGZM3M7+nOGpL/ykCMSjS1ripwNR vbvWXRG7K+CIifNIu591iBSrY3gZFj+2PPHyL/9v7J881/Z0bj8j27iQvK9fuUrlWgn6aEryZaM
- NPsdGD1YWamDFDG2+FGHNZx/3qSnrUB3uY9GWIgZIgO18cZp9MkdzNi0/AYgc9YdC4XmTZRygsZ KbRPSeAQPVlPWlKsoWD2B2UI9/C8wDYC4Rssi50r9DJK/u3g37nBslSMWpy2MF/9SB5I5ckPNjq krQQDoZq16FlK4Hu7ZE6sTQcybAcrzk501qPjY7wtWTlqJPG3oAM36Zk6k25hCBOSYAAH58yJPF
- RnXIbUat5Ui3HfU2THnrRcKyewYKWjjDemfHTieeqgitkhy86Yauc035NGFO8iWFLLoAZR9w
-X-Authority-Analysis: v=2.4 cv=RKizH5i+ c=1 sm=1 tr=0 ts=684296d8 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=yWhXGdImo7ep3bz_Ny0A:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: lY8RMgbu4n9SVZRdOylOt15s4GEHAAwl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-06_02,2025-06-05_01,2025-03-28_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] gup: optimize longterm pin_user_pages() for large
+ folio
+To: lizhe.67@bytedance.com, akpm@linux-foundation.org, jgg@ziepe.ca,
+ jhubbard@nvidia.com, peterx@redhat.com
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev,
+ dev.jain@arm.com
+References: <20250606023742.58344-1-lizhe.67@bytedance.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250606023742.58344-1-lizhe.67@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 2025-06-05 at 13:21:04, Carlos Fernandez (carlos.fernandez@technica-engineering.de) wrote:
-> Hi Sundeep, 
-> 
-> In order to test this scenario, ES and SC flags must be 0 and 
-> port identifier should be different than 1.
-> 
-> In order to test it, I runned the following commands that configure
-> two network interfaces on qemu over different namespaces.
-> 
-> After applying this configuration, MACsec ping works in the patched version 
-> but fails with the original code.
-> 
-> I'll paste the script commands here. Hope it helps your testing.
-> 
-> PORT=11
-> SEND_SCI="off"
-> ETH1_MAC="52:54:00:12:34:57"
-> ETH0_MAC="52:54:00:12:34:56"
-> ENCRYPT="on"
-> 
-> ip netns add macsec1
-> ip netns add macsec0
-> ip link set eth0 netns macsec0
-> ip link set eth1 netns macsec1
+
+>    * Returns the number of collected folios. Return value is always >= 0.
+>    */
+> @@ -2324,16 +2349,12 @@ static void collect_longterm_unpinnable_folios(
+>   		struct list_head *movable_folio_list,
+>   		struct pages_or_folios *pofs)
+>   {
+> -	struct folio *prev_folio = NULL;
+>   	bool drain_allow = true;
+> -	unsigned long i;
+> -
+> -	for (i = 0; i < pofs->nr_entries; i++) {
+> -		struct folio *folio = pofs_get_folio(pofs, i);
+> +	struct folio *folio;
+> +	long i = 0;
 >   
-> ip netns exec macsec0 ip link add link eth0 macsec0 type macsec port $PORT send_sci $SEND_SCI end_station off encrypt $ENCRYPT
-> ip netns exec macsec0 ip macsec add macsec0 tx sa 0 pn 2 on key 01 12345678901234567890123456789012
-> ip netns exec macsec0 ip macsec add macsec0 rx port $PORT address $ETH1_MAC 
-> ip netns exec macsec0 ip macsec add macsec0 rx port $PORT address $ETH1_MAC sa 0 pn 2 on key 02 09876543210987654321098765432109
-> ip netns exec macsec0 ip link set dev macsec0 up
-> ip netns exec macsec0 ip addr add 10.10.12.1/24 dev macsec0
-> 
-> ip netns exec macsec1 ip link add link eth1 macsec1 type macsec port $PORT send_sci $SEND_SCI end_station off encrypt $ENCRYPT
-> ip netns exec macsec1 ip macsec add macsec1 tx sa 0 pn 2 on key 02 09876543210987654321098765432109
-> ip netns exec macsec1 ip macsec add macsec1 rx port $PORT address $ETH0_MAC 
-> ip netns exec macsec1 ip macsec add macsec1 rx port $PORT address $ETH0_MAC sa 0 pn 2 on key 01 12345678901234567890123456789012
-> ip netns exec macsec1 ip link set dev macsec1 up
-> ip netns exec macsec1 ip addr add 10.10.12.2/24 dev macsec1
-> 
-> ip netns exec macsec1 ping 10.10.12.1 #Ping works on patched version.
-> 
-> Thanks, 
-> Carlos
+> -		if (folio == prev_folio)
+> -			continue;
+> -		prev_folio = folio;
+> +	for (folio = pofs_get_folio(pofs, i); folio;
+> +		 folio = pofs_next_folio(folio, pofs, &i)) {
 
-Clear for me now. Thanks for the steps.
+Nit: indentation is still off?
 
-Sundeep
+Acked-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Cheers,
+
+David / dhildenb
+
