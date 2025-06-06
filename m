@@ -1,275 +1,230 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E6519DF7A
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 18:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918561E32B7
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 18:13:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749233520; cv=none; b=LIyAHwXG39/yP/IPRR7dwr1843qLFl26JKOO+UVfJktqUlgpkRCAydYKEc2IapIUWveaxnxcn4rJqSW6v/wzec9kEw4Hxu7UCFq1dqRh/9n59tzJulQNfeeimDFpLtJDIgOyltpJgvzOXWhi00v+mpL6ROtkKWVQNzyi5Oc5HFE=
+	t=1749233604; cv=none; b=Or1gEWzeFnIUzL2aMtyy9pOLAyAgqTrae/9HGsu47K/oj87lDErD5JfK9zqnaGOnvDgIlpCV53aqJvjezgCi4pbUbvkYzd/kTV6nCZWDdNWcGA8Zox1MRl5iEXAzMXiHc8hLdG/RNOOgNJSLpLHszowJaHXyk63CTw26YQewRcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749233520; c=relaxed/simple;
-	bh=AGMz9ZKOylSWIfehSBLwfJo5U8gevcDw4zx/mHAF+AQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=G0lXaQzrwPpOOyEZ5vw4xQNkLDhqQzTYJOykhpwM2E8H+0pVd4/2FKd1juQPYOcXiCb1AI++TseQ87T7xuwg4XdaOtfsIXZZMSvXVhKKJjtA4A5idJvuz2JhCLeHiAvaKzLUfbgLEx7vaJ9oBTF7b4jvnFmrPiM/u/+vCdYznwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eA28uik/; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1749233604; c=relaxed/simple;
+	bh=uOgM+clqQQCqi8eGfdAcZYzgfyhN44h7yJUkAF6YUdA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LERcnCLhhk7hULCNWMKrHzmzC5Xsn1AVzA6p1JutQwAmEoUXJL6rt76Bxdv+DqpLjhY2IygerjYl6wWnq6zAxqY1Jpc44Q4A6O8QoBSXfMNQBViMv7eqQEOn17RLK0+KjpYkDLw+Br72ptaQcsxxDbWF9y8IpdFn3igfwzqZFZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lST+aomr; arc=none smtp.client-ip=209.85.166.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eA28uik/"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-310efe825ccso2525603a91.3
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 11:11:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lST+aomr"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3da76aea6d5so18035ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 11:13:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749233518; x=1749838318; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=goGsGlGK4aCvgRlt6QQZwnV9SY/etRc0Yb1ngROaDOc=;
-        b=eA28uik/Br9V1/XB+KszSrD+0dhR5algzMcBbryOaz3edrsCUr5avDn5fwuaB2hJ57
-         avlvw15gA1gGun0kXNa83pAeFcgQv38t8KxeP5AKF3i1bAGYIMxp51VTwHPyi3GCYIMQ
-         WNQlknOFAAzxsdSnqbxfttbPCUzIWB78sHCtzQ4Nhp2/sVoVvxkhJ0Kid/Ej0yq7KI9T
-         DACO2fS0Px5gceAybY/T8BHeJKcQS5aZqxq/xlXnkA6mq4LIuAxMzTWB/1XxNDoQZhn9
-         Xup14L84agz5F39sm1dogRgChmqBCnW56xTgGTMvWw4otL6Wf5vQ39XfjGKNgaH+rBas
-         RYoA==
+        d=google.com; s=20230601; t=1749233602; x=1749838402; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zt8+YlsWUWtVNI1tXIPQN5PMXhCaHc68mpFbT3w923o=;
+        b=lST+aomrFtI0yu2pTptD6br2jY6FgNKG9Wv5Wls9Njm4E7/kSeJugLMd8lDYxGOIfr
+         EJTP6llHqgFzYvO6vc45Y9dJg1dv1eH2CPdPdqhbUeWUeE6CUzcPXlJOQPYxQajN+P1O
+         Ew5l8qNKSX2AaTBTCW00VOoVi9m2/gizCKHwGCbRBwpfnuWzsGvo8vlFan8AVVCC2gdk
+         Z3WYXpGuC7uIeCcL+oCyDBBUEy1s6n6EOacDi0irJMZtkrpXeOUV8PJ0EWFF3iaszCt8
+         T3BzgG87gzCX7BXEWQeDDIq7zvl31gGqBtQ3Q9pJdnozckjS7Ke7G1p8tVFj+LD2biyr
+         GFpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749233518; x=1749838318;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=goGsGlGK4aCvgRlt6QQZwnV9SY/etRc0Yb1ngROaDOc=;
-        b=uzTbCy/08FTAFYkFfKfT2PNEifo8DZ6iEEhRwj7kbyG8HQALl0EX+tvNyNmcCAQb3J
-         rahVgoTRFePUSCZWsUoswtrLzMJFODy131hArZJWGL+TEV739wtnBlkSfSHPbAQgLS1w
-         2XQNLzsr8XW3lxMl1FAjkXRU44V39aRbmq/Xz+Qxmp3T5fHt7kh77eoDQ4Ip4NvB445d
-         1+G2WU9bVdl+cL7V5Xdm22lCqKrGPqHTA31II+p0rkP1B+iEqDyUdWQKVVwviEPkwHqY
-         Y/u8Rz5XY3aOd4ysMRdJn0YtxzQiJx2pPeF7Ov7WTTo5g3ToxLmS3CYGNwDctguiqSpd
-         RUyg==
-X-Forwarded-Encrypted: i=1; AJvYcCXx/1iOXelG67Vs6rtNmuJYrkDBjhKX8CMWFuauECI2ZouOnRdcq6vxBN6NtwFjtjlgZjWtczw00cjb49c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzlxFdfbvE/osQ6PpQWDkEdCy874L+XeL38SZqlx5pAR5WHMWK
-	OFRuSfqs2D0RjtyDDDzljEPzrnyZf5y4+QFZg+B8SkTXaEtkGwCpmdhbfaFZcZhXGXSujff3fst
-	tSiMjbg==
-X-Google-Smtp-Source: AGHT+IEL48Zr+RVpxcph90N0P9k6HL0QyILrRx6484oP33DwOnxzZeVG7VJ6lc1LW/g9pPx5ZMAaWFJF2Pc=
-X-Received: from pjbqd13.prod.google.com ([2002:a17:90b:3ccd:b0:312:4274:c4ce])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:17c5:b0:313:33ca:3b8b
- with SMTP id 98e67ed59e1d1-31346b21437mr6696240a91.9.1749233518162; Fri, 06
- Jun 2025 11:11:58 -0700 (PDT)
-Date: Fri, 6 Jun 2025 11:11:56 -0700
-In-Reply-To: <20250524013943.2832-2-ankita@nvidia.com>
+        d=1e100.net; s=20230601; t=1749233602; x=1749838402;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zt8+YlsWUWtVNI1tXIPQN5PMXhCaHc68mpFbT3w923o=;
+        b=W7U3oKQC0Dz/hunhIW7lQKBJ1yMixCxX09flNzBYS2FjHZHjCeB7asoZDNAKgfjrFG
+         R76ri+bCcasdi9iXTiNj0NhdeqiwxMJA0OFMSRuhXvW8DdZhyc2uNYiHOdgrXA9y9RqN
+         9BGIH1buq9DzzpcO344YRCqo9qas0gGrnZphGgr0aS59dZS+KX4E/zlMzZc5GSWZgsnN
+         oho3F7kJFkB6nNcwpHKLYpXnjRPtHw1tFJtwUnkYmIxCgEB2ryReDDS9obKvus2hDE2a
+         fhQqx+HJ8rusdQ4pYPuJmSczcJ+awDahx4VLYO+ghxtn8NhtQ+b59al58KwJH8pwima+
+         /C9A==
+X-Forwarded-Encrypted: i=1; AJvYcCXgvRDXdy0VvPX8Dhvl18EzqR/2pXoTACcbOZcWD7FEXTeTelPIBQokDq38P9PQb5x+AWWwehzZGgrgMYs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLuBcTBu5j92eani4N+0DlsxY3Z/ZuDDnLQehQmspubpnkFhP3
+	dQdE49o77r3ITxuBgUamAuqSmmnF7lcWYNcag2fsbVm4Gqz3qFzVREZ9lweJr71DVuhjMt0OpCB
+	Wi6E48CbXJfWLyV6Gp1VB+QEAyGsw4cy9kWJn1wiv
+X-Gm-Gg: ASbGncvGQVyCBuz+yy6ewV/aMh4mn0obpHjC/dZM3WiPBuwOZximJpHVYz2T4/huUOj
+	eG0hisUVDM4rgm2sCyR1oTf3P/RXEpmyFoHwU4SiFOfiHtlWX0NlUvAFml0RubrfltWzB7YWLFB
+	cIURMuOrKt9nBuRS0sP0NStoDIJG6KGbmOTikLDiqmcRIa
+X-Google-Smtp-Source: AGHT+IEP1tIKhbdH4lqSSc295DJ6xTef6f7Idag/2cBRhGqPw5sYxBJgOV57opfblDqW6p+d7sX840GMamXgEQHqKMA=
+X-Received: by 2002:a05:6e02:4416:10b0:3dd:bdcc:5b29 with SMTP id
+ e9e14a558f8ab-3ddd766ba6amr92655ab.21.1749233601372; Fri, 06 Jun 2025
+ 11:13:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250524013943.2832-1-ankita@nvidia.com> <20250524013943.2832-2-ankita@nvidia.com>
-Message-ID: <aEMvbIu530nCqwhG@google.com>
-Subject: Re: [PATCH v6 1/5] KVM: arm64: Block cacheable PFNMAP mapping
-From: Sean Christopherson <seanjc@google.com>
-To: ankita@nvidia.com
-Cc: jgg@nvidia.com, maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, 
-	suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, 
-	will@kernel.org, ryan.roberts@arm.com, shahuang@redhat.com, 
-	lpieralisi@kernel.org, david@redhat.com, aniketa@nvidia.com, cjia@nvidia.com, 
-	kwankhede@nvidia.com, kjaju@nvidia.com, targupta@nvidia.com, 
-	vsethi@nvidia.com, acurrid@nvidia.com, apopple@nvidia.com, 
-	jhubbard@nvidia.com, danw@nvidia.com, zhiw@nvidia.com, mochs@nvidia.com, 
-	udhoke@nvidia.com, dnigam@nvidia.com, alex.williamson@redhat.com, 
-	sebastianene@google.com, coltonlewis@google.com, kevin.tian@intel.com, 
-	yi.l.liu@intel.com, ardb@kernel.org, akpm@linux-foundation.org, 
-	gshan@redhat.com, linux-mm@kvack.org, ddutile@redhat.com, tabba@google.com, 
-	qperret@google.com, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, maobibo@loongson.cn
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+References: <20250604174545.2853620-1-irogers@google.com> <20250604174545.2853620-4-irogers@google.com>
+ <aEMoSj0kmWo9LEaF@google.com>
+In-Reply-To: <aEMoSj0kmWo9LEaF@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 6 Jun 2025 11:13:10 -0700
+X-Gm-Features: AX0GCFufpphanskcS_VgTeM5MLC0aivwUbtBDsVA8RxKaTOFneXfioIpUTtMSWM
+Message-ID: <CAP-5=fWDaJwC6uzkbmcT1tD1jOuPT8rNEaAuO+MSq6X8BH7shw@mail.gmail.com>
+Subject: Re: [PATCH v4 03/10] perf parse-events: Add parse_uid_filter helper
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Veronika Molnarova <vmolnaro@redhat.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Leo Yan <leo.yan@arm.com>, Hao Ge <gehao@kylinos.cn>, 
+	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Levi Yun <yeoreum.yun@arm.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	Gautam Menghani <gautam@linux.ibm.com>, Tengda Wu <wutengda@huaweicloud.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 24, 2025, ankita@nvidia.com wrote:
-> From: Ankit Agrawal <ankita@nvidia.com>
-> 
-> Fixes a security bug due to mismatched attributes between S1 and
-> S2 mapping.
-> 
-> Currently, it is possible for a region to be cacheable in S1, but mapped
-> non cached in S2. This creates a potential issue where the VMM may
-> sanitize cacheable memory across VMs using cacheable stores, ensuring
-> it is zeroed. However, if KVM subsequently assigns this memory to a VM
-> as uncached, the VM could end up accessing stale, non-zeroed data from
-> a previous VM, leading to unintended data exposure. This is a security
-> risk.
-> 
-> Block such mismatch attributes case by returning EINVAL when userspace
-> try to map PFNMAP cacheable. Only allow NORMAL_NC and DEVICE_*.
-> 
-> CC: Oliver Upton <oliver.upton@linux.dev>
-> CC: Sean Christopherson <seanjc@google.com>
-> CC: Catalin Marinas <catalin.marinas@arm.com>
-> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
-> ---
->  arch/arm64/kvm/mmu.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-> index 2feb6c6b63af..305a0e054f81 100644
-> --- a/arch/arm64/kvm/mmu.c
-> +++ b/arch/arm64/kvm/mmu.c
-> @@ -1466,6 +1466,18 @@ static bool kvm_vma_mte_allowed(struct vm_area_struct *vma)
->  	return vma->vm_flags & VM_MTE_ALLOWED;
->  }
->  
-> +/*
-> + * Determine the memory region cacheability from VMA's pgprot. This
-> + * is used to set the stage 2 PTEs.
-> + */
-> +static unsigned long mapping_type_noncacheable(pgprot_t page_prot)
+On Fri, Jun 6, 2025 at 10:41=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> Hi Ian,
+>
+> On Wed, Jun 04, 2025 at 10:45:37AM -0700, Ian Rogers wrote:
+> > Add parse_uid_filter filter as a helper to parse_filter, that
+> > constructs a uid filter string. As uid filters don't work with
+> > tracepoint filters, add a is_possible_tp_filter function so the
+> > tracepoint filter isn't attempted for tracepoint evsels.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/parse-events.c | 33 ++++++++++++++++++++++++++++++++-
+> >  tools/perf/util/parse-events.h |  1 +
+> >  2 files changed, 33 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-eve=
+nts.c
+> > index d96adf23dc94..7f34e602fc08 100644
+> > --- a/tools/perf/util/parse-events.c
+> > +++ b/tools/perf/util/parse-events.c
+> > @@ -25,6 +25,7 @@
+> >  #include "pmu.h"
+> >  #include "pmus.h"
+> >  #include "asm/bug.h"
+> > +#include "ui/ui.h"
+> >  #include "util/parse-branch-options.h"
+> >  #include "util/evsel_config.h"
+> >  #include "util/event.h"
+> > @@ -2561,6 +2562,12 @@ foreach_evsel_in_last_glob(struct evlist *evlist=
+,
+> >       return 0;
+> >  }
+> >
+> > +/* Will a tracepoint filter work for str or should a BPF filter be use=
+d? */
+> > +static bool is_possible_tp_filter(const char *str)
+> > +{
+> > +     return strstr(str, "uid") =3D=3D NULL;
+> > +}
+> > +
+> >  static int set_filter(struct evsel *evsel, const void *arg)
+> >  {
+> >       const char *str =3D arg;
+> > @@ -2573,7 +2580,7 @@ static int set_filter(struct evsel *evsel, const =
+void *arg)
+> >               return -1;
+> >       }
+> >
+> > -     if (evsel->core.attr.type =3D=3D PERF_TYPE_TRACEPOINT) {
+> > +     if (evsel->core.attr.type =3D=3D PERF_TYPE_TRACEPOINT && is_possi=
+ble_tp_filter(str)) {
+> >               if (evsel__append_tp_filter(evsel, str) < 0) {
+> >                       fprintf(stderr,
+> >                               "not enough memory to hold filter string\=
+n");
+> > @@ -2609,6 +2616,30 @@ int parse_filter(const struct option *opt, const=
+ char *str,
+> >                                         (const void *)str);
+> >  }
+> >
+> > +int parse_uid_filter(struct evlist *evlist, uid_t uid)
+>
+> It failed to build on alpine 3.18.
+>
+> util/parse-events.h:48:45: error: unknown type name 'uid_t'
+>    48 | int parse_uid_filter(struct evlist *evlist, uid_t uid);
+>       |                                             ^~~~~
+>
+> I'll add this.
 
-Return a bool.  And given that all the usage queries cachaeable, maybe invert
-this predicate?
+Thanks Namhyung! I see this in tmp.perf-tools-next so I'll assume
+there's no need for a v5.
 
-> +{
-> +	unsigned long mt = FIELD_GET(PTE_ATTRINDX_MASK, pgprot_val(page_prot));
-> +
-> +	return (mt == MT_NORMAL_NC || mt == MT_DEVICE_nGnRnE ||
-> +		mt == MT_DEVICE_nGnRE);
-> +}
+Ian
 
-No need for the parantheses.  And since the values are clumped together, maybe
-use a switch statement to let the compiler optimize the checks (though I'm
-guessing modern compilers will optimize either way).
-
-E.g.
-
-static bool kvm_vma_is_cacheable(struct vm_area_struct *vma)
-{
-	switch (FIELD_GET(PTE_ATTRINDX_MASK, pgprot_val(vma->vm_page_prot))) {
-	case MT_NORMAL_NC:
-	case MT_DEVICE_nGnRnE:
-	case MT_DEVICE_nGnRE:
-		return false;
-	default:
-		return true;
-	}
-}
-
-
->  static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
->  			  struct kvm_s2_trans *nested,
->  			  struct kvm_memory_slot *memslot, unsigned long hva,
-> @@ -1612,6 +1624,10 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
->  
->  	vfio_allow_any_uc = vma->vm_flags & VM_ALLOW_ANY_UNCACHED;
->  
-> +	if ((vma->vm_flags & VM_PFNMAP) &&
-> +	    !mapping_type_noncacheable(vma->vm_page_prot))
-
-I don't think this is correct, and there's a very real chance this will break
-existing setups.  PFNMAP memory isn't strictly device memory, and IIUC, KVM
-force DEVICE/NORMAL_NC based on kvm_is_device_pfn(), not based on VM_PFNMAP.
-
-	if (kvm_is_device_pfn(pfn)) {
-		/*
-		 * If the page was identified as device early by looking at
-		 * the VMA flags, vma_pagesize is already representing the
-		 * largest quantity we can map.  If instead it was mapped
-		 * via __kvm_faultin_pfn(), vma_pagesize is set to PAGE_SIZE
-		 * and must not be upgraded.
-		 *
-		 * In both cases, we don't let transparent_hugepage_adjust()
-		 * change things at the last minute.
-		 */
-		device = true;
-	}
-
-	if (device) {
-		if (vfio_allow_any_uc)
-			prot |= KVM_PGTABLE_PROT_NORMAL_NC;
-		else
-			prot |= KVM_PGTABLE_PROT_DEVICE;
-	} else if (cpus_have_final_cap(ARM64_HAS_CACHE_DIC) &&
-		   (!nested || kvm_s2_trans_executable(nested))) {
-		prot |= KVM_PGTABLE_PROT_X;
-	}
-
-which gets morphed into the hardware memtype attributes as:
-
-	switch (prot & (KVM_PGTABLE_PROT_DEVICE |
-			KVM_PGTABLE_PROT_NORMAL_NC)) {
-	case KVM_PGTABLE_PROT_DEVICE | KVM_PGTABLE_PROT_NORMAL_NC:
-		return -EINVAL;
-	case KVM_PGTABLE_PROT_DEVICE:
-		if (prot & KVM_PGTABLE_PROT_X)
-			return -EINVAL;
-		attr = KVM_S2_MEMATTR(pgt, DEVICE_nGnRE);
-		break;
-	case KVM_PGTABLE_PROT_NORMAL_NC:
-		if (prot & KVM_PGTABLE_PROT_X)
-			return -EINVAL;
-		attr = KVM_S2_MEMATTR(pgt, NORMAL_NC);
-		break;
-	default:
-		attr = KVM_S2_MEMATTR(pgt, NORMAL);
-	}
-
-E.g. if the admin hides RAM from the kernel and manages it in userspace via
-/dev/mem, this will break (I think).
-
-So I believe what you want is something like this:
-
-diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-index eeda92330ade..4129ab5ac871 100644
---- a/arch/arm64/kvm/mmu.c
-+++ b/arch/arm64/kvm/mmu.c
-@@ -1466,6 +1466,18 @@ static bool kvm_vma_mte_allowed(struct vm_area_struct *vma)
-        return vma->vm_flags & VM_MTE_ALLOWED;
- }
- 
-+static bool kvm_vma_is_cacheable(struct vm_area_struct *vma)
-+{
-+       switch (FIELD_GET(PTE_ATTRINDX_MASK, pgprot_val(vma->vm_page_prot))) {
-+       case MT_NORMAL_NC:
-+       case MT_DEVICE_nGnRnE:
-+       case MT_DEVICE_nGnRE:
-+               return false;
-+       default:
-+               return true;
-+       }
-+}
-+
- static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
-                          struct kvm_s2_trans *nested,
-                          struct kvm_memory_slot *memslot, unsigned long hva,
-@@ -1473,7 +1485,7 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
- {
-        int ret = 0;
-        bool write_fault, writable, force_pte = false;
--       bool exec_fault, mte_allowed;
-+       bool exec_fault, mte_allowed, is_vma_cacheable;
-        bool device = false, vfio_allow_any_uc = false;
-        unsigned long mmu_seq;
-        phys_addr_t ipa = fault_ipa;
-@@ -1615,6 +1627,8 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
- 
-        vfio_allow_any_uc = vma->vm_flags & VM_ALLOW_ANY_UNCACHED;
- 
-+       is_vma_cacheable = kvm_vma_is_cacheable(vma);
-+
-        /* Don't use the VMA after the unlock -- it may have vanished */
-        vma = NULL;
- 
-@@ -1639,6 +1653,9 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
-                return -EFAULT;
- 
-        if (kvm_is_device_pfn(pfn)) {
-+               if (is_vma_cacheable)
-+                       return -EINVAL;
-+
-                /*
-                 * If the page was identified as device early by looking at
-                 * the VMA flags, vma_pagesize is already representing the
-@@ -1722,6 +1739,11 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
-                prot |= KVM_PGTABLE_PROT_X;
- 
-        if (device) {
-+               if (is_vma_cacheable) {
-+                       ret = -EINVAL;
-+                       goto out;
-+               }
-+
-                if (vfio_allow_any_uc)
-                        prot |= KVM_PGTABLE_PROT_NORMAL_NC;
-                else
-
+> Thanks,
+> Namhyung
+>
+>
+> ---8<---
+> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-event=
+s.h
+> index ab242f6710313993..931780911e071ec6 100644
+> --- a/tools/perf/util/parse-events.h
+> +++ b/tools/perf/util/parse-events.h
+> @@ -11,6 +11,7 @@
+>  #include <linux/perf_event.h>
+>  #include <stdio.h>
+>  #include <string.h>
+> +#include <sys/types.h>
+>
+>  struct evsel;
+>  struct evlist;
+>
+>
+>
+> > +{
+> > +     struct option opt =3D {
+> > +             .value =3D &evlist,
+> > +     };
+> > +     char buf[128];
+> > +     int ret;
+> > +
+> > +     snprintf(buf, sizeof(buf), "uid =3D=3D %d", uid);
+> > +     ret =3D parse_filter(&opt, buf, /*unset=3D*/0);
+> > +     if (ret) {
+> > +             if (use_browser >=3D 1) {
+> > +                     /*
+> > +                      * Use ui__warning so a pop up appears above the
+> > +                      * underlying BPF error message.
+> > +                      */
+> > +                     ui__warning("Failed to add UID filtering that use=
+s BPF filtering.\n");
+> > +             } else {
+> > +                     fprintf(stderr, "Failed to add UID filtering that=
+ uses BPF filtering.\n");
+> > +             }
+> > +     }
+> > +     return ret;
+> > +}
+> > +
+> >  static int add_exclude_perf_filter(struct evsel *evsel,
+> >                                  const void *arg __maybe_unused)
+> >  {
+> > diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-eve=
+nts.h
+> > index ab242f671031..46e5a01be61c 100644
+> > --- a/tools/perf/util/parse-events.h
+> > +++ b/tools/perf/util/parse-events.h
+> > @@ -45,6 +45,7 @@ static inline int parse_events(struct evlist *evlist,=
+ const char *str,
+> >  int parse_event(struct evlist *evlist, const char *str);
+> >
+> >  int parse_filter(const struct option *opt, const char *str, int unset)=
+;
+> > +int parse_uid_filter(struct evlist *evlist, uid_t uid);
+> >  int exclude_perf(const struct option *opt, const char *arg, int unset)=
+;
+> >
+> >  enum parse_events__term_val_type {
+> > --
+> > 2.50.0.rc0.604.gd4ff7b7c86-goog
+> >
