@@ -1,331 +1,168 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11EF23F40F
-	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 21:52:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9099D1A9B3D
+	for <linux-kernel@vger.kernel.org>; Fri,  6 Jun 2025 21:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749246781; cv=none; b=uy8qWMVlAErRJX9AsORQJH8G/E78LguaWibt2NMMTIn0XyZb7UFDE1XIhxkIIyCJUAlHPv3oC72+ov3V5xxcdEbYuCsah9FDH3t0dZmDNFp+H+tKtva5ZGFoZt2N8hLJBf895BxeV0dKUU+MF6y7vDt+ndd3AC4MxYqeFIZE2b8=
+	t=1749247181; cv=none; b=uQd9RnG0SiIk3+WJoxQzRaGUsisz00jTrSuBgtRTrZBxgtkFpEoPJwJYrgZ+Md0gqoAvb0vp077pUx88bamiYzWmRnKZjPW/tkxZm5gSpft6aagMIYj0CbgFcEodNCDzvMsAOJWeljqF/OxLkt5lQbns7Z9ossZHckh16iI498E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749246781; c=relaxed/simple;
-	bh=56RIbi1wHtAnGWt9TO+tS+DbBV7lYKLepiYAO8j9APg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=AqXsDT03zIaADQ6fLQS9NQ72OOGO0WZan670ChGU7dgs0fytxq2EcOTPzoqkhdnO2Kh0kTDTqCpMFLoqec/i6sIWllBM5G5SE0ylJTDuuA78OdCoSw6w9+++dD8NBRlkNfvH6c8Y0S+E/xMeyfZb/0os2f2WQ1K+Zgph4IDg6P8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--blakejones.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S23e44vL; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--blakejones.bounces.google.com
+	s=arc-20240116; t=1749247181; c=relaxed/simple;
+	bh=YiTEgPLwch4Bs+k/s9/DVupdd2uxEJ58BERhALJ2HC8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MJLt6eWiXTUbB4iug0XFI1btNa+9EjW7qi1q/lVpFYzLFh7van2hJjoBoicHocV6sefLLCexGy5sSSJI6EmUk+mIYFuZ8TKDLXJEIEJuGFommThA2Hcp54dHcJ8DczCqzFpPmRgRlLLYZmHeqyb6knHtd4t3hFjVKrnT8WjIjEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C0xdaHdP; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S23e44vL"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2eb60594e8so1465914a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 14:52:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C0xdaHdP"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-234b440afa7so26629305ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 14:59:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749246778; x=1749851578; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=62r4G4HXTwI4+axBAzatF9lbY5pnGvZEQZG3dQIurTE=;
-        b=S23e44vLNzU5+XjMiIBWvLjJJhIYKgnNL4fQ91CiUbpSc767OJH8tQ7ILoKv3pe82y
-         dSasTPIi2ziEtL6+R9V3bqMQbA8/0Po5Fh0UGBf60StpITKBupAQpBtvMeH2BULHAmiX
-         GzsLPzXnqopZIyV0L2Na6dYFDbA3AdvXw2SiNZod/YdQwTy+LqxeCeStQVHo0K+xI6+9
-         Ft9ewsotdfEcu2x/wfkeGsndj3FWAjRjYszLhI9NrXaMcFsk61xFKS7ntGGecwuRjxCG
-         8yVXpUePpQd6clu7WdpdFOC/fnKuXWzvuYmy+avuvis4trKwQ89euZPMDRaPoHXojxTk
-         b8KQ==
+        d=gmail.com; s=20230601; t=1749247179; x=1749851979; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3zZWlbsZsWBDzSGqtGht4OhBTNgnXf0xW+1Vj0/hhfI=;
+        b=C0xdaHdPcddW+fLPxMFpdAVqDtK4Y1Rq/43t7+xAl5YSKMrEktt5GZ3F7ieccADSN0
+         zqPTbmiAsx5oNABK+94anlWqWWgQRBULpWSvx/PV6hqP10NfX4+uxCy7NuAy42OD4OKe
+         tMcyI16JU2Yw5cIgFeJv575SEJADsX1sc7n5yDPMgaTjFfhpZQJEggbw6hgePrTK8XZB
+         u2XMEyH8iQj2FqSuzfNNEYc3qnfu1TDeL70lqeZuFTxmNi8EG5gOfUyNA68NRfZNDhwZ
+         sYNR26RdfoU4yovCoQZ/dlrEKMrlWi+1l2L/nvYEIFGqTbw2mps+heAiOpL10KKv8Oa7
+         Pz9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749246778; x=1749851578;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=62r4G4HXTwI4+axBAzatF9lbY5pnGvZEQZG3dQIurTE=;
-        b=l7pJMyGw6cL8d468jTDczpXD+RO8Z+IKnrhcb4TKgjYUUNK3gpxgRee1I9m4yLMhWw
-         Q74xJAVXC0xTOxgdZUOVsrxXBtoqwEgHLOj0YNi3cTOEZtSEW2BLublKhVav9smjkwYl
-         H4wTUurg34A1YZndwhwo7gidnxHfRuot98FRVhAWvizhahbswFbAWKhd5x4SrIcQ8W5J
-         BTydj/Db+rCYG56WtGAsQFfJDSsD+vzZE65g36LunklsUPRkfrDXH4LmGG535LLwMhQS
-         1XN4/O8pUpGiZAJtmSNLBcrX3Dm0Eq9L57ZUwOi4tGYsm8Y6pSwBetMVQz2tiKbT9iLr
-         qzbw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKD5tRLh03b6uMjnla1Sf9obC9cuRN9OTgbb439oH/iCh6SVva72MXG+mYjgbArfuVrW1BfEtDhi9FMW4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yww1LTSguG3u7PFOVE2UfT1PpNfTci5uRVH7CIH9fHWOAj8pa5u
-	IQM1xCBI7Wf5CJx7pFxW65CtjNEIsdkVYmZPgBucJhmFNOMKls30u9KSxMHHYBfIRfKS7blhsWE
-	ycbyZ+d+kwTfRQZYoA0ozxQ==
-X-Google-Smtp-Source: AGHT+IFb+oRo7Gdo3AEE2CFdv4bRIuCYeWjr1d5KKTlL5l68rd4hpdZ+CwC4ht/p1O/Mdo46ekdtvOqFHgzmN9FX
-X-Received: from pjbsq3.prod.google.com ([2002:a17:90b:5303:b0:312:1af5:98c9])
- (user=blakejones job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:4c48:b0:313:287c:74bd with SMTP id 98e67ed59e1d1-3134769724dmr7743384a91.33.1749246778095;
- Fri, 06 Jun 2025 14:52:58 -0700 (PDT)
-Date: Fri,  6 Jun 2025 14:52:45 -0700
-In-Reply-To: <20250606215246.2419387-1-blakejones@google.com>
+        d=1e100.net; s=20230601; t=1749247179; x=1749851979;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3zZWlbsZsWBDzSGqtGht4OhBTNgnXf0xW+1Vj0/hhfI=;
+        b=v6qwvMpP0FVPOQkK/7DE0hPCwoe9NsuPOVCLqt6pqyRXYEX4Yxv5X7XW5wE+2jdoeD
+         3itPLxZylvDWRCyIAt2cKsxCdDlBqJLX7O9xMXr0PsltXssRxlPfUVMUMf/tzqFjmxSb
+         24y0JREOI68q1ZTsZ2OilnM/0CoLAZ0yDf/h15y3CPGXc88HjIR+t++krjsjcalxIzlp
+         PBpvf4DvvIUgVI8wJ3WRVydbGjoH6OB72Hc7QGXtNTUXmEWxV/3SWdg/84k6xdK4+ENY
+         fmlnenr8U0FYai8mhhrFxJSvQ877ZxE0yLDOq131WsO5XR2HnKkB8suTbFNt/Awyosr/
+         iDxw==
+X-Gm-Message-State: AOJu0YzH4pz1j84SvrD3My/9+zIkVW2AhhDh3nZ0B500KLNT1XN3w/+9
+	QT1ObvFRAZKa+9BcAOZbF7oSClP449ASW0uEdFu5EOhPvz1o4PfuCi+dMjwnXg==
+X-Gm-Gg: ASbGncvRnDqhhTM+3h6vgMGC7yTMBs1l7oIPN6imdhv4bOlEo6xs/85iYvTO82+QzAF
+	ZWUwpNSfSH+q969TGUPZ/4kGnsXfY7en55Do9wcldbmtdydLG7ZNtv9SdtGqRC7z9A3g/xjph5M
+	upafrjUZSSXcdlR3I4xu6jOnjHfZkwEgsOeA1uT2tOnibb79RY3tLEyUr2KIP8YkAcs5iDUYKkB
+	/5jr/Y9ksJ5EPwzT+jgpkGcUaTyuR8EWjVInk+3ZAUs3pcFhB0yaVpFefcFK5lzUiyViUB4ztMA
+	7VcChmL/l8mIYiXOniYBBCySXEb6KJbpenlhlslqeETwkD0N7H4PkKQnTugW5FSr3TAERfS9pXo
+	sWwd8iVVcA6vY99xduBaezrus/DeGKGZhQtrCzLGn2lHd869L+agU
+X-Google-Smtp-Source: AGHT+IGRsYTvhTtG9mBhuM8Z3ZXSmPKu2CNyDifUVuE0zlVIJSCgJ202lfmjd43VebliOXdmMiIbnA==
+X-Received: by 2002:a17:902:e80e:b0:235:c9ef:c9e1 with SMTP id d9443c01a7336-23601cf0b28mr76283335ad.5.1749247178611;
+        Fri, 06 Jun 2025 14:59:38 -0700 (PDT)
+Received: from daehojeong-desktop.mtv.corp.google.com ([2a00:79e0:2e14:7:d02c:e22:e5a4:2f84])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236035068f3sm16963425ad.236.2025.06.06.14.59.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 14:59:38 -0700 (PDT)
+From: Daeho Jeong <daeho43@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	kernel-team@android.com
+Cc: Daeho Jeong <daehojeong@google.com>
+Subject: [PATCH] f2fs: add gc_boost_gc_greedy sysfs node
+Date: Fri,  6 Jun 2025 14:59:32 -0700
+Message-ID: <20250606215932.1226604-1-daeho43@gmail.com>
+X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250606215246.2419387-1-blakejones@google.com>
-X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
-Message-ID: <20250606215246.2419387-5-blakejones@google.com>
-Subject: [PATCH v3 4/5] perf: display the new PERF_RECORD_BPF_METADATA event
-From: Blake Jones <blakejones@google.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, 
-	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, 
-	Guilherme Amadio <amadio@gentoo.org>, Yang Jihong <yangjihong@bytedance.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Chun-Tse Shao <ctshao@google.com>, 
-	Aditya Gupta <adityag@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Zhongqiu Han <quic_zhonhan@quicinc.com>, Andi Kleen <ak@linux.intel.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Yujie Liu <yujie.liu@intel.com>, 
-	Graham Woodward <graham.woodward@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Ben Gainey <ben.gainey@arm.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
-	Blake Jones <blakejones@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Here's some example "perf script -D" output for the new event type. The
-": unhandled!" message is from tool.c, analogous to other behavior there.
-I've elided some rows with all NUL characters for brevity, and I wrapped
-one of the >75-column lines to fit in the commit guidelines.
+From: Daeho Jeong <daehojeong@google.com>
 
-0x50fc8@perf.data [0x260]: event: 84
-.
-. ... raw event: size 608 bytes
-.  0000:  54 00 00 00 00 00 60 02 62 70 66 5f 70 72 6f 67  T.....`.bpf_prog
-.  0010:  5f 31 65 30 61 32 65 33 36 36 65 35 36 66 31 61  _1e0a2e366e56f1a
-.  0020:  32 5f 70 65 72 66 5f 73 61 6d 70 6c 65 5f 66 69  2_perf_sample_fi
-.  0030:  6c 74 65 72 00 00 00 00 00 00 00 00 00 00 00 00  lter............
-.  0040:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[...]
-.  0110:  74 65 73 74 5f 76 61 6c 75 65 00 00 00 00 00 00  test_value......
-.  0120:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[...]
-.  0150:  34 32 00 00 00 00 00 00 00 00 00 00 00 00 00 00  42..............
-.  0160:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[...]
+Add this to control GC algorithm for boost GC.
 
-0 0x50fc8 [0x260]: PERF_RECORD_BPF_METADATA \
-      prog bpf_prog_1e0a2e366e56f1a2_perf_sample_filter
-  entry 0:           test_value = 42
-: unhandled!
-
-Signed-off-by: Blake Jones <blakejones@google.com>
+Signed-off-by: Daeho Jeong <daehojeong@google.com>
 ---
- tools/perf/builtin-inject.c |  1 +
- tools/perf/builtin-script.c | 15 +++++++++++++--
- tools/perf/util/event.c     | 21 +++++++++++++++++++++
- tools/perf/util/event.h     |  1 +
- tools/perf/util/session.c   |  4 ++++
- tools/perf/util/tool.c      | 14 ++++++++++++++
- tools/perf/util/tool.h      |  3 ++-
- 7 files changed, 56 insertions(+), 3 deletions(-)
+ Documentation/ABI/testing/sysfs-fs-f2fs | 6 ++++++
+ fs/f2fs/gc.c                            | 3 ++-
+ fs/f2fs/gc.h                            | 1 +
+ fs/f2fs/sysfs.c                         | 7 +++++++
+ 4 files changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 11e49cafa3af..b15eac0716f7 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -2530,6 +2530,7 @@ int cmd_inject(int argc, const char **argv)
- 	inject.tool.finished_init	= perf_event__repipe_op2_synth;
- 	inject.tool.compressed		= perf_event__repipe_op4_synth;
- 	inject.tool.auxtrace		= perf_event__repipe_auxtrace;
-+	inject.tool.bpf_metadata	= perf_event__repipe_op2_synth;
- 	inject.tool.dont_split_sample_group = true;
- 	inject.session = __perf_session__new(&data, &inject.tool,
- 					     /*trace_event_repipe=*/inject.output.is_pipe);
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 6c3bf74dd78c..4001e621b6cb 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -38,6 +38,7 @@
- #include "print_insn.h"
- #include "archinsn.h"
- #include <linux/bitmap.h>
-+#include <linux/compiler.h>
- #include <linux/kernel.h>
- #include <linux/stringify.h>
- #include <linux/time64.h>
-@@ -50,6 +51,7 @@
- #include <errno.h>
- #include <inttypes.h>
- #include <signal.h>
-+#include <stdio.h>
- #include <sys/param.h>
- #include <sys/types.h>
- #include <sys/stat.h>
-@@ -2755,6 +2757,14 @@ process_bpf_events(const struct perf_tool *tool __maybe_unused,
- 			   sample->tid);
- }
+diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
+index 931c1f63aa2e..b978d183f5b1 100644
+--- a/Documentation/ABI/testing/sysfs-fs-f2fs
++++ b/Documentation/ABI/testing/sysfs-fs-f2fs
+@@ -869,3 +869,9 @@ Description:	Set a multiplier for the background GC migration window when F2FS G
+ 		boosted.
+ 		Default: 5
  
-+static int
-+process_bpf_metadata_event(struct perf_session *session __maybe_unused,
-+			   union perf_event *event)
-+{
-+	perf_event__fprintf(event, NULL, stdout);
-+	return 0;
-+}
++What:		/sys/fs/f2fs/<disk>/gc_boost_gc_greedy
++Date:		June 2025
++Contact:	"Daeho Jeong" <daehojeong@google.com>
++Description:	Control GC algorithm for boost GC. 0: cost benefit, 1: greedy
++		Default: 1
 +
- static int process_text_poke_events(const struct perf_tool *tool,
- 				    union perf_event *event,
- 				    struct perf_sample *sample,
-@@ -2877,8 +2887,9 @@ static int __cmd_script(struct perf_script *script)
- 		script->tool.finished_round = process_finished_round_event;
- 	}
- 	if (script->show_bpf_events) {
--		script->tool.ksymbol = process_bpf_events;
--		script->tool.bpf     = process_bpf_events;
-+		script->tool.ksymbol	  = process_bpf_events;
-+		script->tool.bpf	  = process_bpf_events;
-+		script->tool.bpf_metadata = process_bpf_metadata_event;
- 	}
- 	if (script->show_text_poke_events) {
- 		script->tool.ksymbol   = process_bpf_events;
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index 7544a3104e21..14b0d3689137 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -1,9 +1,12 @@
- #include <errno.h>
- #include <fcntl.h>
- #include <inttypes.h>
-+#include <linux/compiler.h>
- #include <linux/kernel.h>
- #include <linux/types.h>
- #include <perf/cpumap.h>
-+#include <perf/event.h>
-+#include <stdio.h>
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <unistd.h>
-@@ -78,6 +81,7 @@ static const char *perf_event__names[] = {
- 	[PERF_RECORD_COMPRESSED]		= "COMPRESSED",
- 	[PERF_RECORD_FINISHED_INIT]		= "FINISHED_INIT",
- 	[PERF_RECORD_COMPRESSED2]		= "COMPRESSED2",
-+	[PERF_RECORD_BPF_METADATA]		= "BPF_METADATA",
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index de7e59bc0906..31afee3af1a0 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -141,7 +141,7 @@ static int gc_thread_func(void *data)
+ 					FOREGROUND : BACKGROUND);
+ 
+ 		sync_mode = (F2FS_OPTION(sbi).bggc_mode == BGGC_MODE_SYNC) ||
+-				gc_control.one_time;
++			(gc_control.one_time && gc_th->boost_gc_greedy);
+ 
+ 		/* foreground GC was been triggered via f2fs_balance_fs() */
+ 		if (foreground)
+@@ -198,6 +198,7 @@ int f2fs_start_gc_thread(struct f2fs_sb_info *sbi)
+ 	gc_th->urgent_sleep_time = DEF_GC_THREAD_URGENT_SLEEP_TIME;
+ 	gc_th->valid_thresh_ratio = DEF_GC_THREAD_VALID_THRESH_RATIO;
+ 	gc_th->boost_gc_multiple = BOOST_GC_MULTIPLE;
++	gc_th->boost_gc_greedy = 1;
+ 
+ 	if (f2fs_sb_has_blkzoned(sbi)) {
+ 		gc_th->min_sleep_time = DEF_GC_THREAD_MIN_SLEEP_TIME_ZONED;
+diff --git a/fs/f2fs/gc.h b/fs/f2fs/gc.h
+index efa1968810a0..1a2e7a84b59f 100644
+--- a/fs/f2fs/gc.h
++++ b/fs/f2fs/gc.h
+@@ -69,6 +69,7 @@ struct f2fs_gc_kthread {
+ 	unsigned int boost_zoned_gc_percent;
+ 	unsigned int valid_thresh_ratio;
+ 	unsigned int boost_gc_multiple;
++	unsigned int boost_gc_greedy;
  };
  
- const char *perf_event__name(unsigned int id)
-@@ -505,6 +509,20 @@ size_t perf_event__fprintf_bpf(union perf_event *event, FILE *fp)
- 		       event->bpf.type, event->bpf.flags, event->bpf.id);
- }
- 
-+size_t perf_event__fprintf_bpf_metadata(union perf_event *event, FILE *fp)
-+{
-+	struct perf_record_bpf_metadata *metadata = &event->bpf_metadata;
-+	size_t ret;
-+
-+	ret = fprintf(fp, " prog %s\n", metadata->prog_name);
-+	for (__u32 i = 0; i < metadata->nr_entries; i++) {
-+		ret += fprintf(fp, "  entry %d: %20s = %s\n", i,
-+			       metadata->entries[i].key,
-+			       metadata->entries[i].value);
-+	}
-+	return ret;
-+}
-+
- static int text_poke_printer(enum binary_printer_ops op, unsigned int val,
- 			     void *extra, FILE *fp)
- {
-@@ -602,6 +620,9 @@ size_t perf_event__fprintf(union perf_event *event, struct machine *machine, FIL
- 	case PERF_RECORD_AUX_OUTPUT_HW_ID:
- 		ret += perf_event__fprintf_aux_output_hw_id(event, fp);
- 		break;
-+	case PERF_RECORD_BPF_METADATA:
-+		ret += perf_event__fprintf_bpf_metadata(event, fp);
-+		break;
- 	default:
- 		ret += fprintf(fp, "\n");
+ struct gc_inode_list {
+diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+index b0270b1c939c..5de7cd5c4fd8 100644
+--- a/fs/f2fs/sysfs.c
++++ b/fs/f2fs/sysfs.c
+@@ -824,6 +824,11 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
+ 		return count;
  	}
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 664bf39567ce..67ad4a2014bc 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -370,6 +370,7 @@ size_t perf_event__fprintf_namespaces(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf_cgroup(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf_ksymbol(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf_bpf(union perf_event *event, FILE *fp);
-+size_t perf_event__fprintf_bpf_metadata(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf_text_poke(union perf_event *event, struct machine *machine,FILE *fp);
- size_t perf_event__fprintf(union perf_event *event, struct machine *machine, FILE *fp);
  
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index a320672c264e..38075059086c 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -12,6 +12,7 @@
- #include <sys/types.h>
- #include <sys/mman.h>
- #include <perf/cpumap.h>
-+#include <perf/event.h>
- 
- #include "map_symbol.h"
- #include "branch.h"
-@@ -1491,6 +1492,9 @@ static s64 perf_session__process_user_event(struct perf_session *session,
- 	case PERF_RECORD_FINISHED_INIT:
- 		err = tool->finished_init(session, event);
- 		break;
-+	case PERF_RECORD_BPF_METADATA:
-+		err = tool->bpf_metadata(session, event);
-+		break;
- 	default:
- 		err = -EINVAL;
- 		break;
-diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
-index 37bd8ac63b01..204ec03071bc 100644
---- a/tools/perf/util/tool.c
-+++ b/tools/perf/util/tool.c
-@@ -1,12 +1,15 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "data.h"
- #include "debug.h"
-+#include "event.h"
- #include "header.h"
- #include "session.h"
- #include "stat.h"
- #include "tool.h"
- #include "tsc.h"
-+#include <linux/compiler.h>
- #include <sys/mman.h>
-+#include <stddef.h>
- #include <unistd.h>
- 
- #ifdef HAVE_ZSTD_SUPPORT
-@@ -237,6 +240,16 @@ static int perf_session__process_compressed_event_stub(struct perf_session *sess
- 	return 0;
- }
- 
-+static int perf_event__process_bpf_metadata_stub(struct perf_session *perf_session __maybe_unused,
-+						 union perf_event *event)
-+{
-+	if (dump_trace)
-+		perf_event__fprintf_bpf_metadata(event, stdout);
++	if (!strcmp(a->attr.name, "gc_boost_gc_greedy")) {
++		if (t > 1)
++			return -EINVAL;
++	}
 +
-+	dump_printf(": unhandled!\n");
-+	return 0;
-+}
-+
- void perf_tool__init(struct perf_tool *tool, bool ordered_events)
- {
- 	tool->ordered_events = ordered_events;
-@@ -293,6 +306,7 @@ void perf_tool__init(struct perf_tool *tool, bool ordered_events)
- 	tool->compressed = perf_session__process_compressed_event_stub;
- #endif
- 	tool->finished_init = process_event_op2_stub;
-+	tool->bpf_metadata = perf_event__process_bpf_metadata_stub;
- }
+ 	*ui = (unsigned int)t;
  
- bool perf_tool__compressed_is_stub(const struct perf_tool *tool)
-diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
-index db1c7642b0d1..18b76ff0f26a 100644
---- a/tools/perf/util/tool.h
-+++ b/tools/perf/util/tool.h
-@@ -77,7 +77,8 @@ struct perf_tool {
- 			stat,
- 			stat_round,
- 			feature,
--			finished_init;
-+			finished_init,
-+			bpf_metadata;
- 	event_op4	compressed;
- 	event_op3	auxtrace;
- 	bool		ordered_events;
+ 	return count;
+@@ -1051,6 +1056,7 @@ GC_THREAD_RW_ATTR(gc_no_zoned_gc_percent, no_zoned_gc_percent);
+ GC_THREAD_RW_ATTR(gc_boost_zoned_gc_percent, boost_zoned_gc_percent);
+ GC_THREAD_RW_ATTR(gc_valid_thresh_ratio, valid_thresh_ratio);
+ GC_THREAD_RW_ATTR(gc_boost_gc_multiple, boost_gc_multiple);
++GC_THREAD_RW_ATTR(gc_boost_gc_greedy, boost_gc_greedy);
+ 
+ /* SM_INFO ATTR */
+ SM_INFO_RW_ATTR(reclaim_segments, rec_prefree_segments);
+@@ -1222,6 +1228,7 @@ static struct attribute *f2fs_attrs[] = {
+ 	ATTR_LIST(gc_boost_zoned_gc_percent),
+ 	ATTR_LIST(gc_valid_thresh_ratio),
+ 	ATTR_LIST(gc_boost_gc_multiple),
++	ATTR_LIST(gc_boost_gc_greedy),
+ 	ATTR_LIST(gc_idle),
+ 	ATTR_LIST(gc_urgent),
+ 	ATTR_LIST(reclaim_segments),
 -- 
 2.50.0.rc0.604.gd4ff7b7c86-goog
 
