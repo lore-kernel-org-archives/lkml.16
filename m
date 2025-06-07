@@ -1,100 +1,97 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E1613AD38;
-	Sat,  7 Jun 2025 10:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A172D13AD38;
+	Sat,  7 Jun 2025 10:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749292793; cv=none; b=QFKtwe/4ELy/pveYnlt7w4udpHzK23LsWyOR9UG0iztLRPwZFe9zRSyxfOKR3FLqAL3kJfmD3AtuYm4paESztOyGtspa8oVSdo5M1Bg1NdQ6eG8bcaLIxAFmo4pOYMpdadlGggDqpANnHE0ATASrDqwZlMapCncyoMvPQAT8RY4=
+	t=1749292879; cv=none; b=P4+bsQNDzaQTF8N+SZ0sfeIqC0mqmK40JNX/ZPVTT/THD1StmV7VJRNceqLyTlBys1g9m8BmKGVrqDdnq2UqAXy331pJ2x7H5GX6fqAHlcAhw/3+gwXMNnU0EpWsfQI3OIXgFKVwQBnxyv1HZsFcUqt7Vcb7zP0kvp7rzHbr9YM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749292793; c=relaxed/simple;
-	bh=RE3tXUrM4bm7+iA5yAKQLpWH6JZaXZuYLqtW3Y+ttLA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=t9Q7bsCyLLo6AomutX+grnpAk8e6XRLV60SvwPNzN9fTrs7sTN44ctjcUJZLRQrUChO12QlHmEMRRQo3XZ61xxSpOG64Q0Vfquu7IvtjtEOer7EjmGuO3TSsPQKdo0OqiJNcw7r8YWZW+OxdTLUWZ4kbG1TfaEz/EC5yIbwdJcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ImfyPyac; arc=none smtp.client-ip=209.85.221.52
+	s=arc-20240116; t=1749292879; c=relaxed/simple;
+	bh=Jn2nwtxhrD0LiVtEA05ZWEGUVk8dP/GC/5zmOhse/KM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HOE2E/AbpW1haE8wgtm8V4iD+We1VTjgUoWHj1TgQ+0RT6KlcIug0aHoMDVsRgMdMEIfI/ex9Ghr2kDGZcNxh4gBtD1q/gcmE+iymAnAnuYISOhKU7j+QZ3mIkCPHwtATDgvoUqcxqaCTOnGf70i8uxYnv0TfUlBJ8NXU+k4vSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DiQ2Ns8u; arc=none smtp.client-ip=209.85.218.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ImfyPyac"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so2049546f8f.0;
-        Sat, 07 Jun 2025 03:39:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DiQ2Ns8u"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad88d77314bso554988466b.1;
+        Sat, 07 Jun 2025 03:41:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749292790; x=1749897590; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WPyo+f5u+pZwh1nTlph78auP3X9q253JZ2K1lN/sHWs=;
-        b=ImfyPyaceX/d/wSbXfKskXKuQXLJHyohT/vqp4ZlghInDqcGESeMU8L7h8JFIEgbZL
-         c6qWCH9tJLAC8kiq8EtTNOS3CMkGg45mdeWl4dlPW6vWHJu6dHzaIc6cNTCZ0wjidXhw
-         Zr7n4t505RbLuq+T+EBERgSlKGDZP3WZXwAF5WZB1nanpZdtzRrkoVLDPb2d6Ic/hDGi
-         yv9udSS3EnD600toQBEhTpXbczbsVV5gPY+G7+1PfhIoL09QuGwBLTL8qX/5Cykd+QCV
-         D1IxpQXa5VMZx8fecTsybrpcLM1Ux4WKNarMB8jz8M93zlkg3feq4ok0NTlEMek58jpJ
-         J6Ng==
+        d=gmail.com; s=20230601; t=1749292875; x=1749897675; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LCc2AL+8GYTHWfaJdKFHyFfLcbynW+S8GO3AirZCWOg=;
+        b=DiQ2Ns8uchRY1v4BGuyu8aMjJjW0m3g2oeLWR/Fvze6nVUyR2tIMIc2T/KXzPltn7h
+         TsNFVOw4WjNXhv8AuWng7HxbRt/NP1fElC5kRV4GO4cyEGT9W8iwGz6wRP2nATLTnzIx
+         0WLWLiV0OoqQPo+DLN0XL78uNtQHGDw6GK5Xsu9jbuSDekFUM8z47fP1ytHzjQjdaedy
+         ApPLw6G3w2oVfUp+MOjkJlRTo81naC6z9RUHBLif2tGdtYJBjtAHIQIT71exNafUkF6n
+         gawdd3fyqAE8FmBwGrMXdmuWGZ/xL2aJr9QdF4D2xc2L8CaH+/rgWxM5/UyWhmBTXpqU
+         Qinw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749292790; x=1749897590;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WPyo+f5u+pZwh1nTlph78auP3X9q253JZ2K1lN/sHWs=;
-        b=dvFvmx1R0Py6KrGdI2MT7SfjddxCTe2zkouphxr911an4cksEIFIN7M32IQ0epPPmi
-         qal0eEC2ARhw4g7qOKp2CKVN9Xkd5zOj9ORSmclnS4G6Bq33sv9JeSjh4WR4Wg6j+Neg
-         nImuVBKazO5aOQhTQIJES98BEENFFM6ENH8OtKmHrRXlQ6peOEWzgqAfy3dMhI5SSfdy
-         ZFKNJntZh9kiT1ssWo+rc5F9Uz6NANK+ZWzQpjN7MfF174zpGEvGo5OoQOBMgkwguKYd
-         7fWGwv6+1FK7eABjoSsUgGeVtYsgidAkWVHFBs0EzoTIG2S3Rfsr8/koFB63jhWYXeUJ
-         1ufA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCiChWayNzBnm5Fb56uGbmpFG7AUtrqHbsZzvcdhQPcle9nikCD3b6k4mOE5b0iJUvgYNYTmNPGL/MMOtf@vger.kernel.org, AJvYcCUiBL0qUtTIpjeMuv9ucqylHIczudqbb/CJDi67Yvd0LsZgbb3A9Rub22X061FCTYq22ys=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiUuwGdo94RGubEipvGtcYOTyLgbAz7ZyJCzvR8OVHBnf/pFkI
-	7vF0WWUNzlS5JzgI8U4TBheIAIvznvamE+4yHiLTFlNqt4rjPb0e7wLr
-X-Gm-Gg: ASbGncsD3usjggmFy5Ng69yM+T1loghYuRLIQw1B7egt2R7xcpIjbj8QnXMnwZl98oB
-	kIRPa2VqFmllwvMXV8O5jXVvdOcX8OxT11FDdovq6RGdWYQWRlAU9QBuYQBaQNJjxSBQo4ReYGr
-	rDgI0AdD7h2nMm5g+1iQtkors3lT2Cyj6MHLbFlMD/qONDP8uZoUCgABzIgBkY/VNSwbSsFdisl
-	xpg0bLveFp/gtTdCFNtHaG10mF0fzxC8UPVzS7Q7Z0pIGPQGZEM2nSkFZM4BSl8EXzkfGZDXLbI
-	uVNeleO7D/pDaymhqbIvHX9pOjo+JLFyzg3c4HXYqpjp78bUpo3E
-X-Google-Smtp-Source: AGHT+IEgr9eZctityaMoUBJwBvcE46VmtYvzipkVJHROPn3XPlopibChXb5SVwSHCBWrSPdIP/nhfA==
-X-Received: by 2002:a05:6000:2088:b0:3a4:dfbe:2b14 with SMTP id ffacd0b85a97d-3a531327dfcmr4560249f8f.16.1749292790064;
-        Sat, 07 Jun 2025 03:39:50 -0700 (PDT)
-Received: from pc ([196.235.97.142])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532452d7esm4242508f8f.85.2025.06.07.03.39.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Jun 2025 03:39:49 -0700 (PDT)
-Date: Sat, 7 Jun 2025 11:39:47 +0100
-From: Salah Triki <salah.triki@gmail.com>
-To: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: salah.triki@gmail.com
-Subject: [PATCH] kvm: preemption must be disabled when calling
- smp_call_function_many
-Message-ID: <aEQW81I9kO5-eyrg@pc>
+        d=1e100.net; s=20230601; t=1749292875; x=1749897675;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LCc2AL+8GYTHWfaJdKFHyFfLcbynW+S8GO3AirZCWOg=;
+        b=mjd5PJ9sQ3pOdDK+hPjrro4xUDNcrLrqzngH6OevKrnUEpG5yfceaUei9UNPOKjj9L
+         1UCaHKmkMneYySagf0QUguuW0We6KXv8veroUruAzHHAwWV6Q1tz1o6BFJGltvKXwnqw
+         +43d0zbFT6lE9ATlxdqZ21BCgjUHNJPQGLl9GyrSKRY6OLJ03vp3k3AsJYM+XHBzBtZB
+         8tL/hrX4XsRTaBaQNZRVZaxQoC76/dwNU++FsnqccHwbVIayhsMD8mmdEdNZBMJTgyWT
+         KylRQHjjAt74+ehydwFjW1OiGg5kxxQb1E0vQweI8ou+lPkZeOfOFjWklk4g5t7xusJm
+         k11w==
+X-Forwarded-Encrypted: i=1; AJvYcCVD9KZYV0PHJ5POXDwBFlTdzuFeDR80TR0Fley98CT7bGhrbTpiytZyyC14bgemPH18ASEbY7nScSra3pgOwg==@vger.kernel.org, AJvYcCW+DP1c64G/gi4RV4u67CuHBAC26fVI/xq44DQwES9u2WUOiKcFQkat0YTDDH9jkCC3rM7w3BfRtVam9yUD@vger.kernel.org, AJvYcCW+WFgCkX190h7VZqhhtek3TsK5G5tZOzOZnYg/ad5t6BLd1hufrTFwk0JNPKl+VL76lSbTEI3oprhqlrBX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/x0xL6W7PQ93KdGxuzCieSaOfurm9osqOuTaGlBpb4kw4lv5g
+	lge5pEXgD/N7XCpw6t2+n/AQC+sfNKLWLKod1DkMAJCPlZ3pyBAWd5S9hCtFC2ofLe4bCXo0eEX
+	MfC4a1fVvNg1aQt9XmKTWNG0jjGes+yM=
+X-Gm-Gg: ASbGncsN24Ca9/hr80e0NVw+z4KsQuj4B0OyinjcffnqOPALnlmEz7LebpEatiy76yi
+	tVZpkJ+0um9Nu7TGZBD2ZKyDUfE9nKNjW8FY2PxKfwjDgpR5iPAiZEayOQdVj9Bt8V5XRDFpLuJ
+	MiOVc7oWEO76ATITJEb0D6iymZaubgI0s1
+X-Google-Smtp-Source: AGHT+IGmGeCn46P5NspVOPkS27vYcSGjcKxmfhGr6FFoxv5+mZNtdASAwSMv/beOFpW7j2ByyNuxapTB32Jp/PXLSW0=
+X-Received: by 2002:a17:906:915:b0:ade:422d:3167 with SMTP id
+ a640c23a62f3a-ade422d3425mr99608166b.49.1749292874588; Sat, 07 Jun 2025
+ 03:41:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <CAJfpegvB3At5Mm54eDuNVspuNtkhoJwPH+HcOCWm7j-CSQ1jbw@mail.gmail.com>
+ <CAHk-=wgH174aR4HnpmV7yVYVjS7VmSRC31md5di7_Cr_v0Afqg@mail.gmail.com>
+ <CAOQ4uxjXvcj8Vf3y81KJCbn6W5CSm9fFofV8P5ihtcZ=zYSREA@mail.gmail.com>
+ <CAJfpegutprdJ8LPsKGG-yNi9neC65Phhf67nLuL+5a4xGhpkZA@mail.gmail.com> <CAJfpegu1BAVsW5duT-HoMGiSXNvj2VsLNfTuzvF1-RLyVLDdTA@mail.gmail.com>
+In-Reply-To: <CAJfpegu1BAVsW5duT-HoMGiSXNvj2VsLNfTuzvF1-RLyVLDdTA@mail.gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Sat, 7 Jun 2025 12:41:03 +0200
+X-Gm-Features: AX0GCFuOS-cNCbhYtnI1GPftVgZkMlWkuSQkk5a56vkarkoJju9FdW0Wtthagqc
+Message-ID: <CAOQ4uxgFJCikAi4o4e9vzXTH=cUQGyvoo+cpdtfmBwJzutSCzw@mail.gmail.com>
+Subject: Re: [GIT PULL] overlayfs update for 6.16
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+	overlayfs <linux-unionfs@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-{Disable, Enable} preemption {before, after} calling
-smp_call_function_many().
+On Fri, Jun 6, 2025 at 11:33=E2=80=AFAM Miklos Szeredi <miklos@szeredi.hu> =
+wrote:
+>
+> On Fri, 6 Jun 2025 at 08:36, Miklos Szeredi <miklos@szeredi.hu> wrote:
+>
+> > I'll redo the PR with your patch.
+>
+> Pushed to #overlayfs-next.
+>
+> I'll drop this from the PR, since it's just a cleanup.  It still won't
+> break anything (and that's what I meant by "trivial"), but it can wait
+> a cycle or at least a few rc's.
+>
 
-Signed-off-by: Salah Triki <salah.triki@gmail.com>
----
- virt/kvm/kvm_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+I'll send the cleanup patch to Christian.
+It's best if it goes in via the vfs tree anyway.
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index eec82775c5bf..ab9593943846 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -209,7 +209,10 @@ static inline bool kvm_kick_many_cpus(struct cpumask *cpus, bool wait)
- 	if (cpumask_empty(cpus))
- 		return false;
- 
-+	preempt_disable();
- 	smp_call_function_many(cpus, ack_kick, NULL, wait);
-+	preempt_enable();
-+
- 	return true;
- }
- 
--- 
-2.43.0
-
+Thanks,
+Amir.
