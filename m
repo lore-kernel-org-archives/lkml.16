@@ -1,103 +1,141 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C926D1C5F2C;
-	Sat,  7 Jun 2025 09:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A318FD2FF
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 09:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749288440; cv=none; b=TY3Ym4qXNtNV2dd1Xcu/tB427URagWpL8hMFABNGroiNrz3LcCiVxpC+Cue/4soCsfE+6EwlF0voy7MJ/MwnUzGDsrrGzEBc3/QdDgwEnFI7ObFF9yhZLTsXbVZHOnkSHu3CYjyd0j3nKkyIlHHKhC+OyhVjjRHRAWhYfu03i58=
+	t=1749288830; cv=none; b=T0aAa5LQRM5wXCzaD41ZC4bR7k5yOt8VLck5MSSDlGt52eWkFFzNdVdAKKrRJmcfcAR7oFQukTGCm6rQp4JY0Spr3mMshtMbYmEqYO9Wu4PQJ9+qFRSzTCZ2B+YM9s7Y0HZLhCGTB7MMPkFSRyRv2Hek47UgNULBJAPVHMCovnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749288440; c=relaxed/simple;
-	bh=EimdEfbxy9f3n4pqz8glXweRRH2yRxI2qczGEFcb/9k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ECeJbxFudNRHplvfPZkSS9GszWE/k09uFltQmgAPmAlwGQMW7usHN2kqFEGWl5yGAvm8ELETcn7l9lQXD3LUDZHE5H8Y8RLasGRBHH0TO9saEjTco5fEm4XIR414tBggZokLali3N31FbvlmDsbdm4GzSsTmo8JTFWnNyjjWwhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NPVF1F0m; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749288830; c=relaxed/simple;
+	bh=r/p8vjTholAGUnw7ennp4sAfJrYAwEt+Ralg6aU1yrI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HWcekelXoK0YASYYjklpz/dO5X1Jh9y16a5cv/oYicDamPx0PULdeOcL9lgiPB8DAr2NRffe6br3/H3zzZQmFq8wFURF/HbsCr5MJDIjcQuSPbZThMeiU1JpK6XUt+5/T93Pp0bXB7Y0q9ljsvAvPwmET52xO64D5ZWV4po1eHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=KxLO8I/i; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NPVF1F0m"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-234ae2bf851so4409945ad.1;
-        Sat, 07 Jun 2025 02:27:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="KxLO8I/i"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-adb2e9fd208so532408666b.3
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 02:33:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749288437; x=1749893237; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YQ618K/9B+ws58WKtKVcQe8gIJGwOodDGL8PPYqV65Q=;
-        b=NPVF1F0mQJqunwR8VMd+RjWj/q5lCFhFItWAUFMwNF5QST5fdbkTNiy1ZE/HiNvlqL
-         f0SoAF7UX0H0Uh/srvKgHwID59HtjRxgpvSFbVnkX6azJ40yUoqr07uYBe2gkj7Gq/Ly
-         Zc0FDO0ohz6N4PUzG15bGlEH/tQXtLC3vHXJUBXs+nAxfLepEmq0jNNXLZupV/SiWuQ0
-         pHYgDUGCKhmiXvs13RS4fVHJf6RGyPl9gjSDHCLEgLNel61tyte3TyMrJlBsbk03GJYZ
-         zJ96T5ay7s2smVR+9OIgYhT6lJE3LkVxp9vB04h1R2vLeF7E6S+9AIiUs1LhLdQvcoJ3
-         e0XA==
+        d=amarulasolutions.com; s=google; t=1749288827; x=1749893627; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xn1CB+ZLcGxV8ZFV2HSZz3RsXenQLkjSfas4c7S2PdU=;
+        b=KxLO8I/iZyqOH6fozqXQ+0OUu8Q/U4ZMlrz3/I6cN1oeRNg83QifLHIwKabxh8GOBB
+         tfOPF+o4kYlmIq+XPr1+veHH2g7Yseh6CITaSBwC6trBNZ6KIITP8NCemCpW5DreA4sZ
+         oPKNoHNFHmBLJ5j1lLT80pZDvosRwqA/4+VgM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749288437; x=1749893237;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YQ618K/9B+ws58WKtKVcQe8gIJGwOodDGL8PPYqV65Q=;
-        b=aBG4UQNUy9DzOyTjpttm1sOkb0YUjlfpB1jSmj0C36iIKOLHxlS6m2M+nIXZ5FGEAL
-         HT3CyGpwGB12NL9C643jBjEP4ilOx4yP1AO1vS3iM++WgdRMqRS81oiGY1LRYasXrZ9y
-         eiZhKhQ5doruBWBlYNxrqX9I9ljN+QORjZrhEZ2dkjZtW2nItiIiAJXT2cxQpVv8EzSx
-         MOEMUEdexClGkNtZTmUyzyYKEpKeiF9hfYGq6Xep6LQY3FkembginHaLymdARuYIn8pO
-         uVi3I4zEtxNiTdQdIbOgUuA8Kkzek3PQNFny77vFgPvVoISwginTn2FCe9+3w9GdkYcG
-         dOmw==
-X-Forwarded-Encrypted: i=1; AJvYcCUYagH7yVgeRdP0ClEM3HIRsJcNvyr0hEysBjuewX3ZIJYcBD4N5Abso6KI52yUX8nse83wEe/Tljg=@vger.kernel.org, AJvYcCXMSMagOVBiEOwSWXzzR47x2Wkd1vZkVPDfbNghjPcLC7AprMaxtshEe8S78raN14Z/WE0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLncso1TxcKtspmWLIeqA0CcWn4ec1gWAFSfYPVIz72l7ffafw
-	AFa1TtAkdYnD7K0yYKgdZN5QQAXAsNOyrFxDsc82i9re/xdoADkgSxNvifxo7uUPIntj7sMO7vK
-	TnCZtFaMCHFE4JkvFP8Z66jmpEf/c6Bk=
-X-Gm-Gg: ASbGnctk5n7K9En/xI4ZI7sd4DxFfXhyoTSNX7+H5QOSpg+lSTtBi4LMWuPHg3Wnb9A
-	N1YY3EGY7tlGIuK6A+FySxZr/vkPLy/Zy+axiE9jOXNK7vVz4q++Aw14MqrljoYzZmID0kMJ399
-	D/xjtH/JBmK4EIhvA8Ajcc/utkJ6/pEf3RjOsNJvb9uWrfRJB7jNJ52w==
-X-Google-Smtp-Source: AGHT+IGeYeKXl3hgG+Fp/G3HE7APEoKAwmE4M3Tyz0AMmqc1zE6hRZt1BFPjsCs2HVZDcx8eLr2OyyXzRJWzUum43vg=
-X-Received: by 2002:a17:90b:3d04:b0:311:9c9a:58e2 with SMTP id
- 98e67ed59e1d1-3134e418de8mr2864012a91.7.1749288436994; Sat, 07 Jun 2025
- 02:27:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749288827; x=1749893627;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xn1CB+ZLcGxV8ZFV2HSZz3RsXenQLkjSfas4c7S2PdU=;
+        b=T1aBD2zFo5iDnHdC0R1nvrdHsRYoUOwrBX9KMvieCKQbLpWNjrMIpGIOkrMWc1tmhS
+         zIDwLVe7YyIIE7cmvd8xoKhlIJ852AuMiS+Hd+5tOUE3KmVB0n6Y06ScOISkvtUg4uOw
+         U2g/BHbLkdtXlKa41KznDwOydyN2cnv0Bv80oTaQOqqB+4Dx8L9X1rBmGDf9zgFfDcrd
+         VbLDunj/w/EoTluouTZNejvFT8STJKD4IdnM0csKU59luWPPr3+/gwEkqtxG3Ma6p04s
+         M7xlj3Wtru3FJQP/kj0QwxunlMOZcjtWGOk3tEll24WWRUj6BAkk8w49fM3baJ/1cUWs
+         qZmA==
+X-Gm-Message-State: AOJu0YwkA8/r7uAMi5x4DYBqGPwNG2Ew6fA2VwaIRau+ItGf6BBf2iWK
+	8nbp62E0DCTZ8Zwj7QnZnO85r4cdP/qPv+SHbMtcX24jGCiD1waDdx5WIYXYWoRKkxuej/qF3hS
+	Zxs4b
+X-Gm-Gg: ASbGncsh82+NONfdArz0j4Xcu36aZ7uO862CriWHc0g8A+S6vPCvU6iy+JCZEYKEIBk
+	mCG3mlYANCiIJUnxnEIpGipYAe+vvlNx83DW2F6wdsya6XcocwWFf+jhH4HBjjB3naRXxQLvhtS
+	DaH8rlkpnZ/pncT48nRTWRsSSpPulpC8iRp/kcsLGyKfWmsjwblZIGaO3vMkQqwLb5UdzbC65ew
+	PJ1cpPaZpRyVd+lld2hXhLBH3C40y4uFDFc3LHb2P1002Cw38Bhy0OhIS1qxUmbFhvVpJyLQndt
+	m2XyAHMnkbB87et4tZ62IeJ3UiCDkqMhjWdYSXXDF7Q0gABuX5H5qFpG0aX9+qHyUzRXPZ8wiZt
+	E0zFfgE9LwSB+hQ9C/4oekBwjk9d+qZahMZXbTZBBi6s1IWZJ1P9zmlaaEjGPqy/w3y8mYzfGqj
+	pxRGFwrB8bEgZW
+X-Google-Smtp-Source: AGHT+IFSjDnmW2EWNA+L7rjZYf/CeSyJkQ7tNtchDLVj5RAdGtBJa7XPtmYoEbrLf4khxRuwgaXdPQ==
+X-Received: by 2002:a17:907:9491:b0:ad5:42bd:dfab with SMTP id a640c23a62f3a-ade1aa8db96mr547985866b.30.1749288826712;
+        Sat, 07 Jun 2025 02:33:46 -0700 (PDT)
+Received: from dario-ThinkPad-T14s-Gen-2i.homenet.telecomitalia.it (host-87-5-95-99.retail.telecomitalia.it. [87.5.95.99])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc1c316sm251541066b.98.2025.06.07.02.33.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Jun 2025 02:33:45 -0700 (PDT)
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+To: linux-kernel@vger.kernel.org
+Cc: Matteo Lisi <matteo.lisi@engicam.com>,
+	linux-amarula@amarulasolutions.com,
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>,
+	Eric Biggers <ebiggers@google.com>,
+	Fabio Estevam <festevam@denx.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Marek Vasut <marex@denx.de>,
+	Markus Niebel <Markus.Niebel@tq-group.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Max Merchel <Max.Merchel@ew.tq-group.com>,
+	Michael Walle <mwalle@kernel.org>,
+	Peng Fan <peng.fan@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Primoz Fiser <primoz.fiser@norik.com>,
+	Rob Herring <robh@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Stefan Eichenberger <stefan.eichenberger@toradex.com>,
+	Tim Harvey <tharvey@gateworks.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 00/10] Support Engicam MicroGEA boards
+Date: Sat,  7 Jun 2025 11:33:12 +0200
+Message-ID: <20250607093342.2248695-1-dario.binacchi@amarulasolutions.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606214840.3165754-1-andrii@kernel.org>
-In-Reply-To: <20250606214840.3165754-1-andrii@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 7 Jun 2025 11:27:04 +0200
-X-Gm-Features: AX0GCFvji-yOOYaLkUD3HloEKDD6XOA1rmp4GBK4VajWZsqIV0W1a5ingTaeHno
-Message-ID: <CANiq72kDA3MPpjMzX+LutOoLgKqm9uz8xAT_-iBzhR3pFC+L_Q@mail.gmail.com>
-Subject: Re: [PATCH v2] .gitignore: ignore compile_commands.json globally
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-kernel@vger.kernel.org, masahiroy@kernel.org, ojeda@kernel.org, 
-	nathan@kernel.org, bpf@vger.kernel.org, kernel-team@meta.com, 
-	linux-pm@vger.kernel.org, Eduard Zingerman <eddyz87@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 6, 2025 at 11:48=E2=80=AFPM Andrii Nakryiko <andrii@kernel.org>=
- wrote:
->
-> compile_commands.json can be used with clangd to enable language server
-> protocol-based assistance. For kernel itself this can be built with
-> scripts/gen_compile_commands.py, but other projects (e.g., libbpf, or
-> BPF selftests) can benefit from their own compilation database file,
-> which can be generated successfully using external tools, like bear [0].
->
-> So, instead of adding compile_commands.json to .gitignore in respective
-> individual projects, let's just ignore it globally anywhere in Linux repo=
-.
->
-> While at it, remove exactly such a local .gitignore rule under
-> tools/power/cpupower.
->
->   [0] https://github.com/rizsotto/Bear
->
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-> Suggested-by: Eduard Zingerman <eddyz87@gmail.com>
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+The series adds support for Engicam MicroGEA boards:
 
-Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
+- BMM
+- RMM
+- GTW
 
-Thanks!
+based on MicroGEA-MX6UL SoM.
 
-Cheers,
-Miguel
+
+Dario Binacchi (10):
+  dt-bindings: arm: fsl: support Engicam MicroGEA BMM board
+  ARM: dts: imx6ul: support Engicam MicroGEA-MX6UL SoM
+  ARM: dts: imx6ul: support Engicam MicroGEA BMM board
+  ARM: imx_v6_v7_defconfig: cleanup mxs_defconfig
+  ARM: imx_v6_v7_defconfig: select CONFIG_INPUT_PWM_BEEPER
+  dt-bindings: arm: fsl: support Engicam MicroGEA RMM board
+  ARM: dts: imx6ul: support Engicam MicroGEA RMM board
+  dt-bindings: arm: fsl: support Engicam MicroGEA GTW board
+  ARM: dts: imx6ul: support Engicam MicroGEA GTW board
+  ARM: imx_v6_v7_defconfig: select CONFIG_USB_HSIC_USB3503
+
+ .../devicetree/bindings/arm/fsl.yaml          |   9 +
+ arch/arm/boot/dts/nxp/imx/Makefile            |   3 +
+ .../nxp/imx/imx6ull-engicam-microgea-bmm.dts  | 306 +++++++++++++++
+ .../nxp/imx/imx6ull-engicam-microgea-gtw.dts  | 164 ++++++++
+ .../nxp/imx/imx6ull-engicam-microgea-rmm.dts  | 362 ++++++++++++++++++
+ .../dts/nxp/imx/imx6ull-engicam-microgea.dtsi |  96 +++++
+ arch/arm/configs/imx_v6_v7_defconfig          |  27 +-
+ 7 files changed, 946 insertions(+), 21 deletions(-)
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-bmm.dts
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-gtw.dts
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-rmm.dts
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea.dtsi
+
+-- 
+2.43.0
+
+base-commit: bdc7f8c5adad50dad2ec762e317f8b212f5782ac
+branch: imx6ull-engicam-microgea
