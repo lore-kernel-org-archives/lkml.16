@@ -1,101 +1,116 @@
-Received: from e3i282.smtp2go.com (e3i282.smtp2go.com [158.120.85.26])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66A7215F6C
-	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 11:06:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.120.85.26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454FFEC4
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 11:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749294389; cv=none; b=Aa+bXIB1kmLdUY5Hg8tSzwnBmZnbir3Q+VOKgV1Ihz6uFW243fLJMTYoc7OENC+C0oaK+Hq04X7z7lF5KhYoIsCipW7CVEvMe8J/tX5J+ouD8OB0AC2ITzQbCWMwsrqxkNMuMeUbRlmEkDTr2wN1bp4/umDUgrKHXe+2f2FnPes=
+	t=1749294392; cv=none; b=ths/mNG87Jw5g6e2KrtSj6CADg5bOilSpPh71/LSj2H7jFvkt5I9+k4w79/bv3lQZQzMic1afHw38vBAAXhejf+sV1hKXzTWUHE2NzZk7zHtCU3ZIJdoPRvMt7In+osqJ4n+i5S6af5btsWfRAXDo+BPqj9ehtg6do+gXEnByWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749294389; c=relaxed/simple;
-	bh=nX74YXxYtHkzOexVkzDImxaKm+7hvrwPVrhY5bNpSrA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qvwkiVj0fKMJFMp19VqCDI8n+gxLmKAHRvOqrc/JLk4x7XBlCAMkFvCN6sbmJMnhCaoxv6ayGR5XHU/HLfifws8PVrrWWgJJV9Z+/XRCHhqFDnteTNyJss9Vf71dvvl2bPNvx0b3CABfuuRdPIJ7CknnwcdmtzoM+Tf1wBuCTkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=medip.dev; spf=pass smtp.mailfrom=em1255854.medip.dev; dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=pDMjzRHd; dkim=pass (2048-bit key) header.d=medip.dev header.i=@medip.dev header.b=bgkbXsl4; arc=none smtp.client-ip=158.120.85.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=medip.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1255854.medip.dev
+	s=arc-20240116; t=1749294392; c=relaxed/simple;
+	bh=kmTQB+yMiFcHzCHY1trlsiEJR2icsWBguc+W8zpcLcQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=JjmM2rA1fwHdX3+nV+Yk4dytNgZ8rcy96mVWJkgutN66yyYp8pXytRbXYY8uo0T8C7G6vTtCkCsFS5saMaWEChvj35ojo9LS1oGi/FKmQMalnxnTZc6yh/KhbxwvZ4rEOWc8l3HxYmi3yKUz2+d8bQNt9FhV72EiyWrCvPiZWsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=jZ3fB/R0; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="pDMjzRHd";
-	dkim=pass (2048-bit key) header.d=medip.dev header.i=@medip.dev header.b="bgkbXsl4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smtpservice.net;
- i=@smtpservice.net; q=dns/txt; s=a1-4; t=1749293474; h=feedback-id :
- x-smtpcorp-track : date : message-id : to : subject : from : reply-to
- : sender : list-unsubscribe : list-unsubscribe-post;
- bh=hOyF5qcsGk+wcyGuqz+JA3xcq8KlJ65GJ3VjxNyRqCA=;
- b=pDMjzRHdU3FogIf3jYNa+vPVqMoU/KlqmpANEdkkKjc1j3wVDsQNa1vyXunajXA7DiJHM
- fl+VH5iln436mnq+lBWIdj58Eog2NESxyrb/bXXDTemNkhT9CF5DI8R/yiyEtckdwyKIb5d
- WETTTKEX4tLuNscw66N4gH4rvrl9oy6pUZpAByEglzUBmRPJvxJSC5F75KHeFo+PeIFl+wY
- 4Z2kKHLRFs1+Qt0w49fUx8AXDgCHA8IF6bq6mBd8N8GybS19AzO2kVmASFMDih8oxOKpjEf
- r4NgMp2CftwaWtlOihQnZ6rSlWAlZAYSiJDoTHaQ4wVrGNkITHa2OXnzbTPQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=medip.dev;
- i=@medip.dev; q=dns/txt; s=s1255854; t=1749293474; h=from : subject :
- to : message-id : date;
- bh=hOyF5qcsGk+wcyGuqz+JA3xcq8KlJ65GJ3VjxNyRqCA=;
- b=bgkbXsl4VGZYWRPYSRxuyWvjWJFhF4DFFCzqx3f7/dSEAX9YKNnqFgRx75XgpQF0rP1BC
- TIcU/DN0IIbMpKbkIknooo+Haf6YcvycLeXKNqn/QYjB+4B3S+bk+vmB2b8RpF+9nci15ua
- YUU2V7/2fffUQejK2kU6NLadCflssSB79lFEqiEnCk8HLr/eCEnaea8ftL+oMCLp4d58xQr
- eZImB1Vza1+R6Llo10k7aIuBEKhQYg+6kPPxJOHUB0e4nxBBtbBpteAEXiBy6eeZIAInJeI
- JgpXwDcdjPvaRboRSdvDDzT5h4kRouMbyKAu0EUIKHTWnOH+uB+CHVUfK+Xg==
-Received: from [10.152.250.198] (helo=localhost.localdomain)
-	by smtpcorp.com with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97.1-S2G)
-	(envelope-from <edip@medip.dev>)
-	id 1uNr8l-4o5NDgrtezB-jxvq;
-	Sat, 07 Jun 2025 10:51:08 +0000
-From: edip@medip.dev
-To: perex@perex.cz,
-	tiwai@suse.com
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Edip Hazuri <edip@medip.dev>,
-	stable@vger.kernel.org
-Subject: [PATCH] ALSA: hda/realtek - Add mute LED support for HP Victus 16-s1xxx and HP Victus 15-fa1xxx
-Date: Sat,  7 Jun 2025 13:50:51 +0300
-Message-ID: <20250607105051.41162-1-edip@medip.dev>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="jZ3fB/R0"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-604f26055c6so7889906a12.1
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 04:06:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1749294388; x=1749899188; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=wX5KfR9MOdyE8SuFH1WwTnQT5xWHkVGETwnX9lS5vz8=;
+        b=jZ3fB/R075s+xWvhzcLNCOqRWPyYWSjvQae1SdkVuENt/lZrOcmGXWO7tPdRWUjW1e
+         y/Xhii0B3bTvy19A+3CvTL8cusSflEurX/Hk5zci4Aj6RNe5oyfQMYNXGuxCyYcWk9eV
+         p7OSkjYke/QkLzw6iNkGaIJWj0eEgqRn1Qi3eu4p1sRaVOOAAgGzABW93a8xCyN0jTY/
+         ESKQP+91KIlEbGjGkcZlD7KZO4j3Xy8VSPhv5dVwULe1RrBL7NxfGu6zu33X76Isecw/
+         f9XXGV93qOsRHKz7D35yFN9XyrsWNR8ywJ23oEgls71v1xBBMhPP4FhR3bFdQgc1c8Ya
+         7IkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749294388; x=1749899188;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wX5KfR9MOdyE8SuFH1WwTnQT5xWHkVGETwnX9lS5vz8=;
+        b=KhyLuKssEpkZSpl5xEpt5vt08k0fKD0uzn+/HxKxvJj5DW4cfYF7UyI/WwtxZAvd5P
+         +1kZaFHecIS30ZEdX4wUiMeUUDIOk7ev8cm5dHYR/th5c39MgywPQTZounqWoaEvd20S
+         pmYq6egNPX67Ax6eqXtNY1k0pyRqTe25EvpWUXjte+57HxoPForzzB8l42CxDBNQrKKR
+         zprmsCFCZYu6kuPaXrvXoLXxg+Hfodx5i2VNWy+sB+daSYN5KfUEoNQKz3H0s8gdR0pi
+         OA0RliqLf/89ddh1R8JTMymV+V3B9G1aP2EcZH4sBv/NZzLl+iQLcBeOwKBYIcyu3mWL
+         hwcg==
+X-Forwarded-Encrypted: i=1; AJvYcCVSu3+KvcQefgPXf/oLbya/vZR8JpNHv3QRgIvhg1075dElFTekRaWd+BkGYCC+UBeWlBnEM7VbTs+D33w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5PjZeXYQbSDDQGNxfQp1HVgowQTtc+jrGXZWLnTpASZjiTcFp
+	HtvYPf/fQoFD6d1vd2oLLkPat5HjOl85KNFo8bgL6J4evgCRbJeNMm192c6e2wROa7o=
+X-Gm-Gg: ASbGnctc/tZiYdZ/tiGXLSk7B6mzd2jGY0Eg3Joz1DjZKYYQ5Jt7jviGoJCPpY6gTDL
+	Lca4awUCmzrnTJj+1qG2QevD+WTlpCznLZI9UpzyXEzXxMTsnklfbyHKHZvHs6iRHiMGl4Ijx7L
+	xWv5Jmm7SOW1mBwddpJywz3UFTWHETb63smYBaH+tpDnmwTaDrpicZEEPbM4+R5BE2WkQshnPsi
+	V1FwN3Ui7cIkbrULVsLNLyIkGGgIO0lmHm6tBgwHRyIXivtWoh5JJ4V07fHhBMkm6AP0xvCZJOl
+	Ci6M82+Ej28Ggg+1Wx0RWrH34uVth1scnjGoH7wskQoM+fPqUd8fUXFHyW/OHft7SCQwy44=
+X-Google-Smtp-Source: AGHT+IE+q4EZEeGcYbHs9Cr6SWwfg3TvuJIon+Nk+US7johX0he69tUZyS1HyJZxxpkozjkb+cd2AQ==
+X-Received: by 2002:a17:906:6a27:b0:ad5:2d5d:2069 with SMTP id a640c23a62f3a-ade1a9da675mr665733666b.13.1749294387390;
+        Sat, 07 Jun 2025 04:06:27 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.126])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1d75467fsm263858366b.14.2025.06.07.04.06.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 07 Jun 2025 04:06:26 -0700 (PDT)
+Message-ID: <62e644dd-e193-4375-8d05-82b51a8cf0a4@tuxon.dev>
+Date: Sat, 7 Jun 2025 14:06:25 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Report-Abuse: Please forward a copy of this message, including all headers, to <abuse-report@smtp2go.com>
-Feedback-ID: 1255854m:1255854ay30w_v:1255854sdbwEFunTN
-X-smtpcorp-track: RY3mYqRYs-In.a0PqPoo1hbB1.B_9Z6gs55nd
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] ARM: dts: microchip: sama5d27_wlsom1: rename
+ spi-cs-setup-ns property to spi-cs-setup-delay-ns
+To: Manikandan Muralidharan <manikandan.m@microchip.com>, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, nicolas.ferre@microchip.com,
+ alexandre.belloni@bootlin.com, tudor.ambarus@linaro.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250521054309.361894-1-manikandan.m@microchip.com>
+ <20250521054309.361894-3-manikandan.m@microchip.com>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <20250521054309.361894-3-manikandan.m@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Edip Hazuri <edip@medip.dev>
 
-The mute led on those laptops is using ALC245 but requires a quirk to work
-This patch enables the existing quirk for the devices.
 
-Tested on my Victus 16-s1011nt Laptop and my friend's Victus 15-fa1xxx. The LED behaviour works as intended.
+On 21.05.2025 08:43, Manikandan Muralidharan wrote:
+> The naming scheme for delay properties includes "delay" in the name,
+> so renaming spi-cs-setup-ns property to spi-cs-setup-delay-ns.
+> 
+> Fixes: 417e58ea41ab ("ARM: dts: at91-sama5d27_wlsom1: Set sst26vf064b SPI NOR flash at its maximum frequency")
+> Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Edip Hazuri <edip@medip.dev>
----
- sound/pci/hda/patch_realtek.c | 2 ++
- 1 file changed, 2 insertions(+)
+Reviewed-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index cd0d7ba73..1e07da9c6 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -10733,6 +10733,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x8a0f, "HP Pavilion 14-ec1xxx", ALC287_FIXUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8a20, "HP Laptop 15s-fq5xxx", ALC236_FIXUP_HP_MUTE_LED_COEFBIT2),
- 	SND_PCI_QUIRK(0x103c, 0x8a25, "HP Victus 16-d1xxx (MB 8A25)", ALC245_FIXUP_HP_MUTE_LED_COEFBIT),
-+	SND_PCI_QUIRK(0x103c, 0x8c9c, "HP Victus 16-s1xxx (MB 8C9C)", ALC245_FIXUP_HP_MUTE_LED_COEFBIT),
- 	SND_PCI_QUIRK(0x103c, 0x8a28, "HP Envy 13", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x103c, 0x8a29, "HP Envy 15", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x103c, 0x8a2a, "HP Envy 15", ALC287_FIXUP_CS35L41_I2C_2),
-@@ -10805,6 +10806,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x8c16, "HP Spectre x360 2-in-1 Laptop 16-aa0xxx", ALC245_FIXUP_HP_SPECTRE_X360_16_AA0XXX),
- 	SND_PCI_QUIRK(0x103c, 0x8c17, "HP Spectre 16", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x103c, 0x8c21, "HP Pavilion Plus Laptop 14-ey0XXX", ALC245_FIXUP_HP_X360_MUTE_LEDS),
-+	SND_PCI_QUIRK(0x103c, 0x8bc8, "HP Victus 15-fa1xxx", ALC245_FIXUP_HP_MUTE_LED_COEFBIT),
- 	SND_PCI_QUIRK(0x103c, 0x8c30, "HP Victus 15-fb1xxx", ALC245_FIXUP_HP_MUTE_LED_COEFBIT),
- 	SND_PCI_QUIRK(0x103c, 0x8c46, "HP EliteBook 830 G11", ALC245_FIXUP_CS35L41_SPI_2_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8c47, "HP EliteBook 840 G11", ALC245_FIXUP_CS35L41_SPI_2_HP_GPIO_LED),
--- 
-2.49.0
+
+> ---
+> changes in v2:
+> - add fixes tag
+> ---
+>  arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
+> index ef11606a82b3..9543214adc9f 100644
+> --- a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
+> +++ b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
+> @@ -234,7 +234,7 @@ qspi1_flash: flash@0 {
+>  		compatible = "jedec,spi-nor";
+>  		reg = <0>;
+>  		spi-max-frequency = <104000000>;
+> -		spi-cs-setup-ns = <7>;
+> +		spi-cs-setup-delay-ns = <7>;
+>  		spi-rx-bus-width = <4>;
+>  		spi-tx-bus-width = <4>;
+>  		m25p,fast-read;
 
