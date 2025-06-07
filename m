@@ -1,164 +1,188 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DEE6F9C0;
-	Sat,  7 Jun 2025 13:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B32F9C0
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 13:03:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749301353; cv=none; b=At7Ds9CwcDoN1Qb3Kp0xJmYRx4pRqDO6G/DJSZmMGcWQuxqUj6UlrQPfYg2Cn06r2BIf5m/SGviZu//VtkUZJpU36r5WgPWRBFn2nGMDWaRfmcNliezL1XGwvCYz/9l2bZTGFddnGx7km4G3v56GvHZ7rkmMSdnnX0UrlkZ/4E0=
+	t=1749301427; cv=none; b=YwrpDW2c6yo8V6akrbCpsoTNKjo7gGFfi/HZBdfEys+gg0y1sLzQyUFsPotBUulPLSJDkGj2djiEloISWre6YV5OOumh7HGqygy+s8FZflmaue56hyQmNd0alFmZAE2ZVKRWIIA9LdI11fxx6PV8x3w7tArue26TYFyVDnQxevU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749301353; c=relaxed/simple;
-	bh=7KlOu1vZhR+nl/hj2RRC9lpKz151DKQmGM/ILIo0hSE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=aygtDR/Dj6uSUSC/i4Ug8Cop26Ma91cI0Oqjukg+aKSn0upPIWSLpv0thkfQMqjs39MvEgPiXEz6JXSXLK8B7/tTO9kR67Worjrb8WBBt4YMBhWM14kMtI0rCCyXGj26SX0Bql16LwoEOISaIko3IJfMQ8o46RfQmwROXicraj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Chz7oiJg; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749301427; c=relaxed/simple;
+	bh=Eqj6FJEHfq7+3qKDuYXg+g35tU6lnmHz5On8n9Rjhgc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=St4KAg/CWtHvNTcbBRCvGj0YGlm8v0JQCGQp+v3lm+vdZd+nP6ztDcC1PuekkOpc+EXPCBQe3WhBrwH8hU4Zz4+OWUMaFaMuqdFUyfb7VxV51n2dQajAgiMME+qQ6LsoMyKur5VJ4HUScd+AyEHvGb+vCkkz5mnYv19hGkULlFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YULZcZPN; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Chz7oiJg"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4530921461aso372625e9.0;
-        Sat, 07 Jun 2025 06:02:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749301350; x=1749906150; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PQuHizt0r759ehkPwWbyMhSbtHXbf70UVrsqp16PUuE=;
-        b=Chz7oiJg0lzKB+GU4IAmYTAQhtrnljrnl3d0OolhYjn8gdnxrpYYItrOiHHkNeW/Dx
-         oykRHhPbWR3eix76qsFcaCKK+LHI8xlRwN1MiRc59+k7Qk+82RfGzFH5pxZdMYsfukym
-         +JWD8F7zyvniep1D+jZUHGuaglR0P3jfg44YdCCARhms0+kz8R8LpvXRKeTaS+9XGUTM
-         MONXfiXLPiKF+LtYvyeN3SRi4Ip9SiHo9ElJiIMCBLe87e8u5daQqBnZg9TfWunwrzHX
-         bgkQPxYgySzljS02ii4vs2zSM8ZNhyFNWAWojL9hGy7ypxR9fz/ibmo75gPXi0JEeftk
-         z/2A==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YULZcZPN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749301425;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SfnJpnOmsGPup1H/ERs2tNGx2bCdZsNE5EPGkXR7fYk=;
+	b=YULZcZPNZKpqFGOvyydS/RNzBUtXb/k6/xqSDfYvJhALnHzsh1XDExbXPM1chY4w94RyT6
+	5QuelT3EE17T2KhoZbCtJpNo1Nv1mMiQ4ql28zNlGiAvQyFc7TM+GzAXf+L7M2bUw5LtPP
+	vXfMIZOo+5a9jiA9/I78nPuj+czfndk=
+Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
+ [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-150-Q4Vryx8FPeaL2u3oVj1Efw-1; Sat, 07 Jun 2025 09:03:43 -0400
+X-MC-Unique: Q4Vryx8FPeaL2u3oVj1Efw-1
+X-Mimecast-MFC-AGG-ID: Q4Vryx8FPeaL2u3oVj1Efw_1749301423
+Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-70e4e62caa7so53770737b3.1
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 06:03:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749301350; x=1749906150;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PQuHizt0r759ehkPwWbyMhSbtHXbf70UVrsqp16PUuE=;
-        b=XGg+qS7YxNGuUvL9MkeY/MTb6HKU5dtBVUfopyOF9xtneZ60lUOCqCgkr4EnIgZwgd
-         huTqedWJ80vw6jaNglsbXz+gobJgQKpeXal0h3UcW/cjnE+opwXXACd7gu0NSUMKyt/O
-         2kmwsICuDZXxVHmpW9YycHcizcowZiPKUm9qtFDNHRsGRgKT+Ol7YTcdSlhT7fZ85A2B
-         2F3c9Msr2kBcS1dWwz2eLwXWY7G0xAPyIKppj9Ujya9Qp98wPKwqzQipBctd89Zw+pPa
-         dsmyYXp+EdTpEAwSGtJeDXBLkVx5Z6sRLbgYmvNZQqvgl1O6kOuuIeihRI8bypKn0NqI
-         HvkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDe2Bk0Ck33gm0wt4SBWm26O+8S8LNYQGAiRr4qs5cnc0Pf2wbtstfA8L0rOY+uSTKlrFkycUWOFJdvSDE6Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLX9ba49/JCeDegEmgUfDfjTP5/baiJTeMRfcq/im/8H6dl1d6
-	kcLfI4EJZoVZm3Z7MJY3pfZSDz3R5rM4zcdpIK+gdz1W2oDTqroHANna
-X-Gm-Gg: ASbGncvaYLLOa67YOwkQQp0JQ9KZMNQK4XaNfq7l2TVGQnK+8uTEDHa16ZrtxvUWpYC
-	nBJ6T2mqG33Z0scCNs3/CVrnF7VbFNIJUyeJLjNSD5nzNEfagdp0/xfKB1nOxiyfJ5woTYITedn
-	8lUvH2wu5zqdw7sZnQUCX3uq18pBqiiBGt7TDqmnnV1j3Xh+/aZMOp2B0FwaVVjv2AhhPwDZr97
-	LTyYav3fAU5TZ1k0tJkySqTFeDP4XII1SKFQLkACcxkc2GnFHICVFJj8Kz433WKVOhxgKJ2PgUf
-	NRz+WWN7AB8PXymV0AJpzmn/aZf8Nhhfk18XPAc=
-X-Google-Smtp-Source: AGHT+IHDRKzjxB04nIpSXygVB6fmNQla6ulscaXnS6kK/z0JoonFUKtFHPK867QTrCbc4HXkzQuR3w==
-X-Received: by 2002:a05:600c:1c25:b0:43c:f81d:34 with SMTP id 5b1f17b1804b1-45201437847mr68835795e9.9.1749301349590;
-        Sat, 07 Jun 2025 06:02:29 -0700 (PDT)
-Received: from [10.0.1.50] ([2001:871:22a:3372::171c])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a53244d15asm4686593f8f.66.2025.06.07.06.02.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Jun 2025 06:02:29 -0700 (PDT)
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-Date: Sat, 07 Jun 2025 15:02:14 +0200
-Subject: [PATCH] rust: add `assert_sync` function
+        d=1e100.net; s=20230601; t=1749301423; x=1749906223;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SfnJpnOmsGPup1H/ERs2tNGx2bCdZsNE5EPGkXR7fYk=;
+        b=nfsZ+gE3/RMClfFDzeWBYTvBJsFHlZw8NfFd41TNUgW6z0RmZnPmAcIuCc50kpztRX
+         LVqmAgWaxLIPwA/r3Rrb5ChV+dM4ICpU9LR4OH+kMIsybNxIkcFrZgezveuvWn7I1DDp
+         N2WLEkjP7H4EaM6g8KL9PjBrEtj6AZRILbl0LsIIV0ddqSIeqPaLLfpcnBGrwtYNrM/d
+         F0lI4DKvvcfHEkPG7z/+Q0r8fsgPnS+mAHRWk80bSo1U4dvGPXqdvAIDreMwjZXsAqdD
+         BONqtyqb+oDvKz5c9TgPetJ5Xxmibj0y7oCnxKNRt5f2I21rg48ErnXJJ3yAvEySHywr
+         VAaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUqHVoDHngHUKjVr9hrb36+KrtZyJ8vh1WLxulIAsQ/99OAeMvuhiRbfFjKR5YkwSbWUgfx8vglHkmhsDM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWldHCaG09A/bzycbVhcFh3UXFv7l++RljixbqKvOMtMSVm0PS
+	mGLmzKNLh/vWYmxkFwQu8WjHwD3aHYUDsukCg0s9ZDHNyc4IwywJkjHGOexTBJKMB2Kli0gF7qT
+	BeDxYKm4vp8Pgc9ki0gPIe1CaOYWtz730/tTWb2hSqGs0WhakKbwnjYMg8AXsiueWybpxMO3Jzc
+	nhYqKrckuVOzB7M5qlD03GXlXEyDdFwgIIp6A7NQymT0J+UyJ4dUk=
+X-Gm-Gg: ASbGncspwitJdOQ8KvQggsX7NvK6hk3ajeM05OyaL3I852ZZpOUnmZxkgEwHKYS3zUi
+	xe7DktKQTwINwIMh55RUi+f4I95+ma5DoFk97Gm7AvqEMCqDX8u1HQ6ZYXOE54WYH/X+CXkNFSJ
+	xgOEUjrA==
+X-Received: by 2002:a05:690c:dcb:b0:710:e81e:1364 with SMTP id 00721157ae682-710f7afa722mr95726567b3.6.1749301423047;
+        Sat, 07 Jun 2025 06:03:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE0D1oScsQFJkbV3leaGwsdhfTHQOUGGFXMT7UPU6qs5ZvaWLTmpU2PaV4/bjxQzeziLLSjyNubyd/h1pZsPnU=
+X-Received: by 2002:a05:690c:dcb:b0:710:e81e:1364 with SMTP id
+ 00721157ae682-710f7afa722mr95725927b3.6.1749301422601; Sat, 07 Jun 2025
+ 06:03:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250607-assert_sync-v1-1-b18261da83e2@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAFU4RGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDMwNz3cRioI6S+OLKvGRdM6O0lJRk00SDxJRkJaCOgqLUtMwKsGnRsbW
- 1AKKjSCpdAAAA
-X-Change-ID: 20250607-assert_sync-62fddc5a0adc
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
- Danilo Krummrich <dakr@kernel.org>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- Christian Schrefl <chrisi.schrefl@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749301348; l=2538;
- i=chrisi.schrefl@gmail.com; s=20250119; h=from:subject:message-id;
- bh=7KlOu1vZhR+nl/hj2RRC9lpKz151DKQmGM/ILIo0hSE=;
- b=MjGhfiWMEflXnqwsYpzJX0UNJgIPIXO4f7w80fYZRYJ06pCvKUMxGKhPGqz1TtWwVMwu9LqZF
- d5hdvQnvzDMANA7VOXdjkJCPF86OcI++tyiRViPnW6VMwEyu6nEwz8d
-X-Developer-Key: i=chrisi.schrefl@gmail.com; a=ed25519;
- pk=EIyitYCrzxWlybrqoGqiL2jyvO7Vp9X40n0dQ6HE4oU=
+References: <20250515032226.128900-1-npache@redhat.com> <20250515032226.128900-8-npache@redhat.com>
+ <6f061c65-f3aa-42bb-ab70-b45afdcf2baf@arm.com>
+In-Reply-To: <6f061c65-f3aa-42bb-ab70-b45afdcf2baf@arm.com>
+From: Nico Pache <npache@redhat.com>
+Date: Sat, 7 Jun 2025 07:03:16 -0600
+X-Gm-Features: AX0GCFsXeVlQnNKWAGBb29ema6RNmgUDaEXB5xk1LDR3gUMKNf8Z3uuBnY7lWI8
+Message-ID: <CAA1CXcDVMdzNWS3maQPd3L2ZTOjnNyswH21H-BNfZpUPXk6UcQ@mail.gmail.com>
+Subject: Re: [PATCH v7 07/12] khugepaged: add mTHP support
+To: Dev Jain <dev.jain@arm.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com, 
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, ryan.roberts@arm.com, 
+	corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org, baohua@kernel.org, 
+	willy@infradead.org, peterx@redhat.com, wangkefeng.wang@huawei.com, 
+	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
+	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
+	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
+	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de, 
+	will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, 
+	jglisse@google.com, surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, 
+	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Adds a new file `compile_assert.rs` for asserts during compile time and
-add the `assert_sync` function to this file.
+On Sat, Jun 7, 2025 at 12:24=E2=80=AFAM Dev Jain <dev.jain@arm.com> wrote:
+>
+>
+> On 15/05/25 8:52 am, Nico Pache wrote:
+> > Introduce the ability for khugepaged to collapse to different mTHP size=
+s.
+> > While scanning PMD ranges for potential collapse candidates, keep track
+> > of pages in KHUGEPAGED_MIN_MTHP_ORDER chunks via a bitmap. Each bit
+> > represents a utilized region of order KHUGEPAGED_MIN_MTHP_ORDER ptes. I=
+f
+> > mTHPs are enabled we remove the restriction of max_ptes_none during the
+> > scan phase so we dont bailout early and miss potential mTHP candidates.
+> >
+> > After the scan is complete we will perform binary recursion on the
+> > bitmap to determine which mTHP size would be most efficient to collapse
+> > to. max_ptes_none will be scaled by the attempted collapse order to
+> > determine how full a THP must be to be eligible.
+> >
+> > If a mTHP collapse is attempted, but contains swapped out, or shared
+> > pages, we dont perform the collapse.
+> >
+> > For non PMD collapse we much leave the anon VMA write locked until afte=
+r
+> > we collapse the mTHP
+>
+> Why? I know that Hugh pointed out locking errors; I am yet to catch up
+> on that thread, but you need to explain in the description why you do
+> what you do.
+>
+> [--snip---]
+>
+> >
+> > -
+> > -     spin_lock(pmd_ptl);
+> > -     BUG_ON(!pmd_none(*pmd));
+> > -     folio_add_new_anon_rmap(folio, vma, address, RMAP_EXCLUSIVE);
+> > -     folio_add_lru_vma(folio, vma);
+> > -     pgtable_trans_huge_deposit(mm, pmd, pgtable);
+> > -     set_pmd_at(mm, address, pmd, _pmd);
+> > -     update_mmu_cache_pmd(vma, address, pmd);
+> > -     deferred_split_folio(folio, false);
+> > -     spin_unlock(pmd_ptl);
+> > +     if (order =3D=3D HPAGE_PMD_ORDER) {
+> > +             pgtable =3D pmd_pgtable(_pmd);
+> > +             _pmd =3D folio_mk_pmd(folio, vma->vm_page_prot);
+> > +             _pmd =3D maybe_pmd_mkwrite(pmd_mkdirty(_pmd), vma);
+> > +
+> > +             spin_lock(pmd_ptl);
+> > +             BUG_ON(!pmd_none(*pmd));
+> > +             folio_add_new_anon_rmap(folio, vma, _address, RMAP_EXCLUS=
+IVE);
+> > +             folio_add_lru_vma(folio, vma);
+> > +             pgtable_trans_huge_deposit(mm, pmd, pgtable);
+> > +             set_pmd_at(mm, address, pmd, _pmd);
+> > +             update_mmu_cache_pmd(vma, address, pmd);
+> > +             deferred_split_folio(folio, false);
+> > +             spin_unlock(pmd_ptl);
+> > +     } else { /* mTHP collapse */
+> > +             mthp_pte =3D mk_pte(&folio->page, vma->vm_page_prot);
+> > +             mthp_pte =3D maybe_mkwrite(pte_mkdirty(mthp_pte), vma);
+> > +
+> > +             spin_lock(pmd_ptl);
+>
+> Nico,
+>
+> I've noticed a few occasions where my review comments have not been ackno=
+wledged -
+> for example, [1]. It makes it difficult to follow up and contributes to s=
+ome
+> frustration on my end. I'd appreciate if you could make sure to respond t=
+o
+> feedback, even if you are disagreeing with my comments. Thanks!
 
-This will be used in `miscdevice` to avoid regression in case a `: Send`
-bound falsely gets dropped in the future.
+I'm sorry you feel that way, are there any others? I feel like I've
+been pretty good at responding to all comments. I've also been out of
+the office for the last month, so keeping up with upstream has been
+more difficult, but i'm back now.
 
-Suggested-by: Benno Lossin <lossin@kernel.org>
-Link: https://lore.kernel.org/rust-for-linux/20250530-b4-rust_miscdevice_registrationdata-v4-0-d313aafd7e59@gmail.com/T/#mdf3328834ce1d136daf836c9e089b5a8627a6d53
-Signed-off-by: Christian Schrefl <chrisi.schrefl@gmail.com>
----
-For now I've only added the function.
+Sorry I never got back to you on that one! I will add the BUG_ON, but
+I believe it's unnecessary. Your changeset was focused on different
+functionality and it seems that you had a bug in it if you were
+hitting that often.
 
-Some things that might make sense to do as well:
-- Move `static_assert` into `compile_assert.rs`.
-- Add `assert_sync` to prelude.
-- Add `assert_send` as well.
-- Use these asserts in various places around the kernel. (I'm not sure
-where it would make sense)
----
- rust/kernel/compile_assert.rs | 24 ++++++++++++++++++++++++
- rust/kernel/lib.rs            |  1 +
- 2 files changed, 25 insertions(+)
-
-diff --git a/rust/kernel/compile_assert.rs b/rust/kernel/compile_assert.rs
-new file mode 100644
-index 0000000000000000000000000000000000000000..2a99de1ba919dc3952d7a1585869567a44106b44
---- /dev/null
-+++ b/rust/kernel/compile_assert.rs
-@@ -0,0 +1,24 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Compile-time asserts.
-+
-+/// Asserts that the given type is [`Sync`]. This check is done at compile time and does nothing
-+/// at runtime.
-+///
-+/// Note that this is only intended to avoid regressions and for sanity checks.
-+///
-+/// # Examples
-+/// ```
-+/// # use kernel::compile_assert::assert_sync;
-+/// # use kernel::types::NotThreadSafe;
-+///
-+///
-+/// // Do the assertion in a const block to make sure it won't be executed at runtime.
-+/// const _:() = {
-+///     assert_sync::<i32>(); // Succeeds because `i32` is Sync
-+///     // assert_sync::<NotThreadSafe>(); // Fails because `NotThreadSafe` is not `Sync`.
-+/// };
-+///
-+/// ```
-+#[inline(always)]
-+pub const fn assert_sync<T: ?Sized + Sync>() {}
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 7e227b52b4d8ff23d39d5cc9ad3ab57132c448d0..e1630e5079b2436eda6f8b71225bd5371af337b4 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -56,6 +56,7 @@
- pub mod block;
- #[doc(hidden)]
- pub mod build_assert;
-+pub mod compile_assert;
- pub mod cred;
- pub mod device;
- pub mod device_id;
-
----
-base-commit: 7a17bbc1d952057898cb0739e60665908fbb8c72
-change-id: 20250607-assert_sync-62fddc5a0adc
-
-Best regards,
--- 
-Christian Schrefl <chrisi.schrefl@gmail.com>
+Cheers,
+-- Nico
+>
+>
+> [1] https://lore.kernel.org/all/08d13445-5ed1-42ea-8aee-c1dbde24407e@arm.=
+com/
+>
+>
+> [---snip---]
+>
 
