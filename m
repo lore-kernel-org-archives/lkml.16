@@ -1,136 +1,100 @@
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6F13B2A0;
-	Sat,  7 Jun 2025 10:37:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E1613AD38;
+	Sat,  7 Jun 2025 10:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749292637; cv=none; b=ByGf/TbKvfCuooR2uF6kKtB3u5jw5rLLcV0RequondlQp+0zWzu8b0r+HtXc1TLNylvDLVKGKl09AtGxqF1OQzKy5cCmEliqoSjIKHk2OwzUE9jnD/ra8b2JMHFe4cofn4SP7zzzri5XWhYDG6yHiVL7hOGPfYtV3ww0XZlNT6Q=
+	t=1749292793; cv=none; b=QFKtwe/4ELy/pveYnlt7w4udpHzK23LsWyOR9UG0iztLRPwZFe9zRSyxfOKR3FLqAL3kJfmD3AtuYm4paESztOyGtspa8oVSdo5M1Bg1NdQ6eG8bcaLIxAFmo4pOYMpdadlGggDqpANnHE0ATASrDqwZlMapCncyoMvPQAT8RY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749292637; c=relaxed/simple;
-	bh=gY5IB5+OXmtOZhxYSyPMZEpmkUHeAnHZwVikIIs8rpA=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=lPX2JZpYEb0xDEDqoYunijk2nLz5QDomUg68Px8i+iU/t1L1OGbY7OBTCI5NScSicZAln7rz/uNds1noMEmWQv8wOx+AQkOL4SBcVDp19P7KDPqFy9KiUM30vLKU6sNCjRnbUHovyvFQOJK7lFyHMBynERWuJnGhsn6eg1+Ieqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=ssuhWOIZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ea63CQyY; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1749292793; c=relaxed/simple;
+	bh=RE3tXUrM4bm7+iA5yAKQLpWH6JZaXZuYLqtW3Y+ttLA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=t9Q7bsCyLLo6AomutX+grnpAk8e6XRLV60SvwPNzN9fTrs7sTN44ctjcUJZLRQrUChO12QlHmEMRRQo3XZ61xxSpOG64Q0Vfquu7IvtjtEOer7EjmGuO3TSsPQKdo0OqiJNcw7r8YWZW+OxdTLUWZ4kbG1TfaEz/EC5yIbwdJcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ImfyPyac; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ssuhWOIZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ea63CQyY"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id D3A8511400DE;
-	Sat,  7 Jun 2025 06:37:13 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-06.internal (MEProxy); Sat, 07 Jun 2025 06:37:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1749292633;
-	 x=1749379033; bh=cvgmmEJtABl4x5NTALpRDuyvTzE9kDx+5yiLNZhZiaQ=; b=
-	ssuhWOIZOo5qakjbKHT1vaBwKkd7qkWhuUY6YXO1o+oyA+Q5lsCcz4J8ASrBIG2g
-	IyJ1B5V89Sj9nEOQiHHG/EWabMv4CEfp1tzMQVttNRe22//299phYBdP+5881v8P
-	mzvyLbR5vd5RUAXxZ7POo6Wn638PFMJZ/1L/etXnhAQ8JzEdXqrfubXcctJXcNEJ
-	RJxs2f4aPxdkMnuKNsSA2xCMCRXaLMJZdb7gJRLLMGwsk3No3MkEHnbK6+KO9fUv
-	CIqZgcd81PQuXzFxLRw66OdruH0vSbqKz5wIq7WSxSx3tb2Z1LsxXG275j2YifuI
-	hpt/iE+fwChBq3gfTj5a1A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749292633; x=
-	1749379033; bh=cvgmmEJtABl4x5NTALpRDuyvTzE9kDx+5yiLNZhZiaQ=; b=e
-	a63CQyYxcxcFXHM5HGmEDe0SQ24+DQSnkNGkv7lPi3K3zdOpsZ2B7u7H7y+EPVQo
-	j5oHXXZeIA1vQs7MDQ9jeqtCKIkxRayQijsIZNJHKZJSoQs0XbuYin2JkRklZdA2
-	DdG4fcWv8nIPKpkn1Bkc9rIhJWIVJnz5v2ccF0IKhePK6cyMWeMgBTXJsQjD28Gi
-	vEY43knl07VKPok3K9S0/OnPCuyBh2w5JMQcN9PNOMqu+BgldrPxFgHTa8UD5AeE
-	R/k1/O8EnmNlKoohDIahMrmlzXURW2XJ7N+flBU822fK1/03SZOqSLSf4E82+S6P
-	6tI/g3J1cBxETgmq8qwow==
-X-ME-Sender: <xms:WRZEaNz-cPlBbFfeLuVDW_Hcz5lWWSEy_rt8Bu-5gvMISB0VWKHrDA>
-    <xme:WRZEaNRH3Ly8b1wqmsxdBo2gpLbReF3Acmee95C5lnAqFRXbYXz6k-HltDWh4mGNG
-    k6LDCZGlINxzSg9YIM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdeigeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
-    necuhfhrohhmpedflfhirgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfh
-    hlhihgohgrthdrtghomheqnecuggftrfgrthhtvghrnhepjeehfeduvddtgffgvdffkeet
-    hefhlefgvdevvdekuefffeekheehgeevhfevteejnecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgr
-    thdrtghomhdpnhgspghrtghpthhtohepgedpmhhouggvpehsmhhtphhouhhtpdhrtghpth
-    htohepthhssghoghgvnhgusegrlhhphhgrrdhfrhgrnhhkvghnrdguvgdprhgtphhtthho
-    pehmrggtrhhosehorhgtrghmrdhmvgdruhhkpdhrtghpthhtoheplhhinhhugidqkhgvrh
-    hnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhhi
-    phhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:WRZEaHVlI1lhmvhphAh2EJKoI8_hRP7g-S7qDSL93NlPnUQZm2914w>
-    <xmx:WRZEaPi8-AM8OqWb3trPoji071n7wQjMGaSXHyAzMTzJHyWzyrarQA>
-    <xmx:WRZEaPAJk6u-VctWH8CPpz3PgdG3fOs--O4mh0UmuNX5mt1cQyxpLA>
-    <xmx:WRZEaIJ3r_JA9g9xOdb49zGcMj_m2gTNLEFZt3caJjRs6Qoz-wuzAA>
-    <xmx:WRZEaMM8xw9lINe3PUXZTeYvfmLoyT4l9Kz0rmiWfY7DlehyEScR5k8y>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 27A182CE0065; Sat,  7 Jun 2025 06:37:13 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ImfyPyac"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so2049546f8f.0;
+        Sat, 07 Jun 2025 03:39:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749292790; x=1749897590; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WPyo+f5u+pZwh1nTlph78auP3X9q253JZ2K1lN/sHWs=;
+        b=ImfyPyaceX/d/wSbXfKskXKuQXLJHyohT/vqp4ZlghInDqcGESeMU8L7h8JFIEgbZL
+         c6qWCH9tJLAC8kiq8EtTNOS3CMkGg45mdeWl4dlPW6vWHJu6dHzaIc6cNTCZ0wjidXhw
+         Zr7n4t505RbLuq+T+EBERgSlKGDZP3WZXwAF5WZB1nanpZdtzRrkoVLDPb2d6Ic/hDGi
+         yv9udSS3EnD600toQBEhTpXbczbsVV5gPY+G7+1PfhIoL09QuGwBLTL8qX/5Cykd+QCV
+         D1IxpQXa5VMZx8fecTsybrpcLM1Ux4WKNarMB8jz8M93zlkg3feq4ok0NTlEMek58jpJ
+         J6Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749292790; x=1749897590;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WPyo+f5u+pZwh1nTlph78auP3X9q253JZ2K1lN/sHWs=;
+        b=dvFvmx1R0Py6KrGdI2MT7SfjddxCTe2zkouphxr911an4cksEIFIN7M32IQ0epPPmi
+         qal0eEC2ARhw4g7qOKp2CKVN9Xkd5zOj9ORSmclnS4G6Bq33sv9JeSjh4WR4Wg6j+Neg
+         nImuVBKazO5aOQhTQIJES98BEENFFM6ENH8OtKmHrRXlQ6peOEWzgqAfy3dMhI5SSfdy
+         ZFKNJntZh9kiT1ssWo+rc5F9Uz6NANK+ZWzQpjN7MfF174zpGEvGo5OoQOBMgkwguKYd
+         7fWGwv6+1FK7eABjoSsUgGeVtYsgidAkWVHFBs0EzoTIG2S3Rfsr8/koFB63jhWYXeUJ
+         1ufA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCiChWayNzBnm5Fb56uGbmpFG7AUtrqHbsZzvcdhQPcle9nikCD3b6k4mOE5b0iJUvgYNYTmNPGL/MMOtf@vger.kernel.org, AJvYcCUiBL0qUtTIpjeMuv9ucqylHIczudqbb/CJDi67Yvd0LsZgbb3A9Rub22X061FCTYq22ys=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiUuwGdo94RGubEipvGtcYOTyLgbAz7ZyJCzvR8OVHBnf/pFkI
+	7vF0WWUNzlS5JzgI8U4TBheIAIvznvamE+4yHiLTFlNqt4rjPb0e7wLr
+X-Gm-Gg: ASbGncsD3usjggmFy5Ng69yM+T1loghYuRLIQw1B7egt2R7xcpIjbj8QnXMnwZl98oB
+	kIRPa2VqFmllwvMXV8O5jXVvdOcX8OxT11FDdovq6RGdWYQWRlAU9QBuYQBaQNJjxSBQo4ReYGr
+	rDgI0AdD7h2nMm5g+1iQtkors3lT2Cyj6MHLbFlMD/qONDP8uZoUCgABzIgBkY/VNSwbSsFdisl
+	xpg0bLveFp/gtTdCFNtHaG10mF0fzxC8UPVzS7Q7Z0pIGPQGZEM2nSkFZM4BSl8EXzkfGZDXLbI
+	uVNeleO7D/pDaymhqbIvHX9pOjo+JLFyzg3c4HXYqpjp78bUpo3E
+X-Google-Smtp-Source: AGHT+IEgr9eZctityaMoUBJwBvcE46VmtYvzipkVJHROPn3XPlopibChXb5SVwSHCBWrSPdIP/nhfA==
+X-Received: by 2002:a05:6000:2088:b0:3a4:dfbe:2b14 with SMTP id ffacd0b85a97d-3a531327dfcmr4560249f8f.16.1749292790064;
+        Sat, 07 Jun 2025 03:39:50 -0700 (PDT)
+Received: from pc ([196.235.97.142])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532452d7esm4242508f8f.85.2025.06.07.03.39.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Jun 2025 03:39:49 -0700 (PDT)
+Date: Sat, 7 Jun 2025 11:39:47 +0100
+From: Salah Triki <salah.triki@gmail.com>
+To: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: salah.triki@gmail.com
+Subject: [PATCH] kvm: preemption must be disabled when calling
+ smp_call_function_many
+Message-ID: <aEQW81I9kO5-eyrg@pc>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tfa3886415041e94f
-Date: Sat, 07 Jun 2025 11:36:52 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <40ff6065-2f2b-4a07-b247-02e11fd46eb8@app.fastmail.com>
-In-Reply-To: <alpine.DEB.2.21.2506070300430.1790@angie.orcam.me.uk>
-References: <20250605-tlb-fix-v1-1-4af496f17b2f@flygoat.com>
- <alpine.DEB.2.21.2506070300430.1790@angie.orcam.me.uk>
-Subject: Re: [PATCH] MIPS: mm: tlb-r4k: Uniquify TLB entries on init
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+{Disable, Enable} preemption {before, after} calling
+smp_call_function_many().
 
+Signed-off-by: Salah Triki <salah.triki@gmail.com>
+---
+ virt/kvm/kvm_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-=E5=9C=A82025=E5=B9=B46=E6=9C=887=E6=97=A5=E5=91=A8=E5=85=AD =E4=B8=8A=E5=
-=8D=883:48=EF=BC=8CMaciej W. Rozycki=E5=86=99=E9=81=93=EF=BC=9A
-> On Thu, 5 Jun 2025, Jiaxun Yang wrote:
->
->> +static unsigned long r4k_safe_entryhi(void)
->> +{
->> +	int entry =3D current_cpu_data.tlbsize;
->> +	int old_index;
->> +
->> +	old_index =3D read_c0_index();
->> +	while (entry >=3D 0) {
-> [...]
->> +		entry++;
->> +	}
->
->  Hmm, how is it supposed to work: you start from say 48 and then itera=
-te=20
-> until 0x80000000 before giving up?  Also a signed overflow condition i=
-s UB=20
-> pre-C23, so the compiler may well optimise the loop control away.
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index eec82775c5bf..ab9593943846 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -209,7 +209,10 @@ static inline bool kvm_kick_many_cpus(struct cpumask *cpus, bool wait)
+ 	if (cpumask_empty(cpus))
+ 		return false;
+ 
++	preempt_disable();
+ 	smp_call_function_many(cpus, ack_kick, NULL, wait);
++	preempt_enable();
++
+ 	return true;
+ }
+ 
+-- 
+2.43.0
 
-Ah sorry I didn't realise it's a UB. However, this loop is likely to be
-terminated very early as it should be fairly easily to find a free Entry=
-Hi
-value with TLBP.
-
->
->  How did you verify this code?
-
-Boot tested on Boston as well as M5150 simulation. I tried to manually s=
-etup a
-TLB entry collision situation with Boot-MIPS.
-
->
->   Maciej
-
-Thanks
-
---=20
-- Jiaxun
