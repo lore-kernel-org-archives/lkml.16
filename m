@@ -1,64 +1,79 @@
-Received: from baidu.com (mx22.baidu.com [220.181.50.185])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B806611187;
-	Sat,  7 Jun 2025 13:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.181.50.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F30BA45;
+	Sat,  7 Jun 2025 13:22:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749302243; cv=none; b=O4zk5101geuSkdjfv5bR+VAeHWlZgqA/G/lglPT7emvcgkbKThIAdBlm32Y1pj3CCb/gntabFRxudQ8GegDVG4nW+r1bDpMDqZhn6TqPof6bNt+gqlw/4tkcCV1m2yaevUXt9TZMD53uvTjBryk4CvlH9EffjFBgwn8StpfMQlw=
+	t=1749302576; cv=none; b=D1exCFgCzSIof/1MnCm3Gdbj09pMJERLEVwDdClHJ2T43szxEuLxFpPdfA2/MB8ZJKMHfz9wsX0uLluhnhvA1e6OPG4Ecp+RDwfrMwg1E0s6Eb0FZmZ6vJi/Isz6k58FqRxEKTXF1U9hWo6CMy8akD/kgQp4gEK6Fx1xsKMk/mU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749302243; c=relaxed/simple;
-	bh=D6/ffpYWsm1WAnxu88V/6bgCFhb8CHWYC8FUk5z0G4w=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GXJubulb3jvwr/2Ef1UpEwmhQapiCZdNrcBCENTUYK21fSe0KNiCPfsC6WjKVsXPs+kd2qFKPr1kt13dVCbPyC0BoaMGrTZjDuELU+c+tp4rz46iYCp4owbeuva3jmjpcgyI8XG6x78slP+tSKWQqkNs/lxnMnJauEYbbwVFsiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=220.181.50.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
-From: wangfushuai <wangfushuai@baidu.com>
-To: <akpm@linux-foundation.org>, <david@redhat.com>, <andrii@kernel.org>,
-	<osalvador@suse.de>, <Liam.Howlett@Oracle.com>, <christophe.leroy@csgroup.eu>
-CC: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	wangfushuai <wangfushuai@baidu.com>
-Subject: [PATCH v2] fs/proc/task_mmu: add VM_SHADOW_STACK for arm64 when support GCS
-Date: Sat, 7 Jun 2025 21:15:25 +0800
-Message-ID: <20250607131525.76746-1-wangfushuai@baidu.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
+	s=arc-20240116; t=1749302576; c=relaxed/simple;
+	bh=PEGI5ThpE4d6VX+ncYk7KMiKnnSSRFSA3Q2QOnWFVYM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HOLlg18/iVLT8FlPEzsw/3DkoT4QiBCqApuZqEWllmQ61u+9XAX5ZMpz+yLiR38PBhGvZUFpvYMEpDCIwknmno7QAH/7aFlQ2rSgFWJmVjONM8IH95ElnfCYgIM85OcwdSwdQ3Y/JDGkLs8lZ9FDXHLzQTWGyiAjIHAMgMFEuhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=osezAeg5; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="osezAeg5"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 2B71341EC3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1749302572; bh=FsHLDlLwg/GJofvnvqgi5DZPj17QgOSV+Rs7gyfeJjg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=osezAeg5t0Ebg1eFkYA0qiUQ6KzuDHjFR2roUynIhymC59CU61mt9Lh7Vl7A3MFSn
+	 /nLtyYj1z0tTPWb5O9sOAPpL/HL8vyiU3THvMs2ntfWN4Uo3J97v/1nbWA72dOu8X+
+	 rQXiHD1L2f0CQCWmu5BI5ai/NgZY3W8LoO3Tvn/Xax66dWphCu0hul+kazYzIlcWf1
+	 jh8roIaGj32M9aYW+B58XVeHKCVFj4syLPIxjAa+schdVQ0sXn0QYLUJnUC81JNIP0
+	 iDLvr7ikICP3784ZUxgxeHlgGkU3JeTB1T3ez5ur9GkPe5+NDWLSsg1vvo7sgbjhHa
+	 fOG3zVG/GxNlg==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 2B71341EC3;
+	Sat,  7 Jun 2025 13:22:52 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/9] docs: kdoc: remove the
+ KernelEntry::is_kernel_comment member
+In-Reply-To: <20250607120745.7e0fee67@foz.lan>
+References: <20250606163438.229916-1-corbet@lwn.net>
+ <20250606163438.229916-6-corbet@lwn.net> <20250607120745.7e0fee67@foz.lan>
+Date: Sat, 07 Jun 2025 07:22:51 -0600
+Message-ID: <87y0u3d6tw.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: bjkjy-exc5.internal.baidu.com (172.31.50.49) To
- bjkjy-mail-ex22.internal.baidu.com (172.31.50.16)
-X-FEAS-Client-IP: 172.31.50.16
-X-FE-Policy-ID: 52:10:53:SYSTEM
 
-The recent commit adding VM_SHADOW_STACK for arm64 GCS did not update
-the /proc/[pid]/smaps display logic to show the "ss" flag for GCS pages.
-This patch adds the necessary condition to display "ss" flag.
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-Fixes: ae80e1629aea ("mm: Define VM_SHADOW_STACK for arm64 when we support GCS")
-Signed-off-by: wangfushuai <wangfushuai@baidu.com>
----
- fs/proc/task_mmu.c | 3 +++
- 1 file changed, 3 insertions(+)
+> Em Fri,  6 Jun 2025 10:34:34 -0600
+> Jonathan Corbet <corbet@lwn.net> escreveu:
+>
+>> entry::is_kernel_comment never had anything to do with the entry itself; it
+>> is a bit of local state in one branch of process_name().  It can, in fact,
+>> be removed entirely; rework the code slightly so that it is no longer
+>> needed.
+>> 
+>> No change in the rendered output.
+>> 
+>> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+>
+> Not sure about this one. The idea of those warnings are to detect 
+> non-kerneldoc markups that typically comes when someone "imports"
+> OOT drivers or Windows one into Linux.
+>
+> I remember I catched several such cases in the past with the help
+> of those warnings.
 
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 27972c0749e7..2c2ee893a797 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -994,6 +994,9 @@ static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
- #ifdef CONFIG_ARCH_HAS_USER_SHADOW_STACK
- 		[ilog2(VM_SHADOW_STACK)] = "ss",
- #endif
-+#if defined(CONFIG_ARM64_GCS)
-+		[ilog2(VM_SHADOW_STACK)] = "ss",
-+#endif
- #if defined(CONFIG_64BIT) || defined(CONFIG_PPC32)
- 		[ilog2(VM_DROPPABLE)] = "dp",
- #endif
--- 
-2.36.1
+I haven't removed the warning, just the use of that specific variable to
+trigger it.
 
+Thanks,
+
+jon
