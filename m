@@ -1,93 +1,102 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45EE6EEDE
-	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 14:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B61EEDE;
+	Sat,  7 Jun 2025 14:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749306168; cv=none; b=Nn1bbMHWjdP4ZBfPIsOsRBJF05HqCjkz/GcPuazQDgBNQkyzyx/jAyd6clqzi3oVoTNVhZHnwCgt7QXYLbrzzv9EStv+i7QdEkWfJlVOsnEtXh+0VEZ7X5kKG4j0az4ci/veHe/3UOKny2M9/+D4dmsv51evuoWMGgfuHBve3Hw=
+	t=1749306429; cv=none; b=gpJIpe1OYkNYkuwUoDApb0KZMXBGzr+o9B0tbilVIqxG9B5PppeohwcokcbcSHn3zwlw+8+nzEKaQv4a9a1rOCtLsXB7LGMzOizbNdkGUeEkwYzJWRrV9I7ar0cXJZYTQzvfVgqi/Yy1sCUUpXNcnVUX9BLd9gpjfyZKe0Ig9Ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749306168; c=relaxed/simple;
-	bh=WhjK9a59bc6p2SEI8qtTVAnhoS+vb0UzkU/ThcA6PmU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pgKEU4F/zU4zLOXoyzA/7E4brB5m1gRCwmgWElOoKwI/2E2KIzG4nABLifv5NgVx08iE0HQscbUOIohY5PL1drzh2isoJUWMysrssYtX9OLXC6ebQFF9fJtolzt4sxT9o8cq/iLhPDmJ/8QdJdvRoPH1uYiPKSW5/VHInsJa9NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Afi0sFLQ; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Afi0sFLQ"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so4883776a12.2
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 07:22:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1749306164; x=1749910964; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=X256oqzY0uXwBHeq+Zf7FeZKobDc6se1DrH1ve9LTYg=;
-        b=Afi0sFLQP6a4TkAnmj1BFMIx8v60/fuKdtLXDZd7VJ7TXvOe9Qaj+G8ecpp7pqwqj4
-         sGCIBQ6Ba7ouo11SWN0i+IEcLJwHolWP6a2gR9252MvBUr4BB2jEk96YUZeM5saxBto2
-         SrCeJZmI2FDVTBxN/KvAMtqmfjVTXpt1gaRJI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749306164; x=1749910964;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X256oqzY0uXwBHeq+Zf7FeZKobDc6se1DrH1ve9LTYg=;
-        b=ssKTsonZFkcUZJPcyngaX87HanS4Xs3a1HpgMuLzFR8IkKFnswefgTZNn/zV15wZnW
-         3hUb0rh59Dx+FEKid+8cv8JoiMyTW5EPSYfgbcaKeqdO/45c/5kNeWR55ybNRtLEZqzr
-         eFRACWkhKyaEhcCK3poymDcTUNYmTSI0VTo1C2y6+yFS9f83b2yerZHM/ZHM4sqYns2f
-         YC2iu6kkGbTvbIPVabMGrD8YsHzkCoqYpUN8JPZefhy2gj2FVHrfj6FB+Mlvg2jSFQVY
-         00cNEh02Ffm3wDvHNWVwjKg3LaK9rENCexaIDtIdMvrsA4n/6cZGYNHCeB3NL1Kg+QTI
-         MzPw==
-X-Forwarded-Encrypted: i=1; AJvYcCU/hi6e1smR/rWidYxwBrEb0BXL3jPMCUWAeAaUdY5ZjOpfTRsIikdTTkR4MGbw3xZp9UKpmyMzbgEDtSQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTKGMDbHyb1Osm1FknBBbIurqM850nH18qWxlVqZBsmKi4Yw8U
-	aMw+HRj6PA0c5UHZ2USFAm44QUrTej8xkwitZL/dd9Jwyr0vnfzM75OVAodsq8ez8Pz2i0KDc8l
-	I6QR/w9o=
-X-Gm-Gg: ASbGnctyj4hifx4Sj54nlmZXxjU2SYwwI96XlPYIHZXQPkKV6Z/DLS74RlUn4yaayMP
-	eondIbwL90aVH8hNZ4tDgoa6nkmvYf5zzvGkRiMkn0JCHmJui8q/sYQOQyiqvu7t3W4o5Tu+Hr3
-	mV85kNgJ5DRNEpe6KFP6FKIzkDMk4HT2C85n8nh1s7uUqjcJ1v8t9S3ZZdBVKyEHTi93naVuFtH
-	luCwgCy+cughtb+9RUxZ1LdzAVEnodd4pbr2eSakTjWWtXz2xMa2J+GkjE92HklNMrI947Ddiaq
-	ocKKpqptXQqStty7B9T+t2nrKmydsgzEHguLuLxNAMWquz89xNngNHdfHcCelInD73aHf/eUHCN
-	mNRX8iyzJK7QM9d43RcT40F92PmaT0NXc7/0=
-X-Google-Smtp-Source: AGHT+IHGmddGFs9/jgo3QzYbSSXvxQ21KANuCQgkQgoXq4WgIXd+1jtzaDVN6/7cVdVlGhDp9fQuNw==
-X-Received: by 2002:a05:6402:50d2:b0:605:2da5:8483 with SMTP id 4fb4d7f45d1cf-60773ec9198mr6185435a12.13.1749306164453;
-        Sat, 07 Jun 2025 07:22:44 -0700 (PDT)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6077836ff6csm2446022a12.1.2025.06.07.07.22.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Jun 2025 07:22:43 -0700 (PDT)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so4883722a12.2
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 07:22:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW8kMiSHr7KbxSB4m8Ez0jKzzCyw9wcucCxmEPJn2ejlyAcPUyVBBQ8LhYGk6M1hzZF0NZMiN5JJNlAa+U=@vger.kernel.org
-X-Received: by 2002:a05:6402:1ed5:b0:604:e82b:e255 with SMTP id
- 4fb4d7f45d1cf-6077285cb5fmr6133955a12.0.1749306161715; Sat, 07 Jun 2025
- 07:22:41 -0700 (PDT)
+	s=arc-20240116; t=1749306429; c=relaxed/simple;
+	bh=QMjxoZ8qXLwUD4CsAbquyp2sisBQwy7tspEYYmHf4hQ=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type; b=teiQrU7fj2bVvE2ghUMEuQqBZcX2GUCBeoybDZr8ItHNx9yy01htUpLlJk3gdPTsJibHyOgjXfSkPZkoosXMVJ/hp1KF+6M4pbHPtiAokJl8ukwqCWPMOWQtjx+0QbXdAs7JK8rb8gUnF8sWrjDW24HgInfATGqqvzVvpt6v/1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 9C5FEBE14A;
+	Sat,  7 Jun 2025 14:26:59 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 1FEA02000E;
+	Sat,  7 Jun 2025 14:26:58 +0000 (UTC)
+Date: Sat, 7 Jun 2025 10:28:21 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] tracing: Add rcu annotation around file->filter accesses
+Message-ID: <20250607102821.6c7effbf@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250607094224.104791182@infradead.org>
-In-Reply-To: <20250607094224.104791182@infradead.org>
-From: Linus Torvalds <torvalds@linuxfoundation.org>
-Date: Sat, 7 Jun 2025 07:22:25 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjP2jDPcop24tz_9xs=cPUoCgMRHG8gkkEW8DJvD3HJcA@mail.gmail.com>
-X-Gm-Features: AX0GCFsdn9Bs0MIWa5xRQX3H4S9IPSmleSHvn6kAT7DpvgEdxkb3jbzvg6rG7C4
-Message-ID: <CAHk-=wjP2jDPcop24tz_9xs=cPUoCgMRHG8gkkEW8DJvD3HJcA@mail.gmail.com>
-Subject: Re: [PATCH 00/11] x86: WARN() hackery
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, kees@kernel.org, 
-	acarmina@redhat.com, jpoimboe@kernel.org, mark.rutland@arm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 1FEA02000E
+X-Stat-Signature: tmkgfwqbzumb1kwskugydpwn5g49mps5
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19XMeTW4TfddNXNDaC82KqTngsn6M0KlDg=
+X-HE-Tag: 1749306418-897492
+X-HE-Meta: U2FsdGVkX18iK57pU5RN/cMe+lJmV2uIWUa2B7uronNOg8wC+JYJ7kbXxcEJsEWKDShiRRdCjW8UqlSzQDd25GJu5gELRaTcmnlVLr4UbLWMzuPEiI6mN+/eGZ55Ps7UKy4NBgXm5BCmECvn/J8QRnNWyG0z1Edgc+dOjpLqAQCO1+asnmkeLWiPVSC2H7ot4OZ3esfz7E0lKmOqeRdU8pOAeEHXgLoN5PAUen0K1SQzDf9LokSORLQ3qbGBnwK0CAp0eMITXikx83nng5KLf0NsFjBna7cgHYjPDg2eoYYDdqf4UNfylZTh4OjPyaza2RTwzH5JvDcr52yicqY3HXTFC678g1hWsuN2YSdhKrZYh5O5EhRMAxukS0LFFy9+
 
-On Sat, 7 Jun 2025 at 03:05, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> Slightly less mad this time :-)
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Looks a lot better to me - at least by looking at the patches.
+Running sparse on trace_events_filter.c triggered several warnings about
+file->filter being accessed directly even though it's annotated with __rcu.
 
-So I didn't actually apply the series to test out what the end result
-looks like, but from just the patches this looks much nicer. Thanks,
+Add rcu_dereference() around it and shuffle the logic slightly so that
+it's always referenced via accessor functions.
 
-         Linus
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events_filter.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 711520081741..ea8b364b6818 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -1250,7 +1250,9 @@ static void append_filter_err(struct trace_array *tr,
+ 
+ static inline struct event_filter *event_filter(struct trace_event_file *file)
+ {
+-	return file->filter;
++	return rcu_dereference_protected(file->filter,
++					 lockdep_is_held(&event_mutex));
++
+ }
+ 
+ /* caller must hold event_mutex */
+@@ -1320,7 +1322,7 @@ void free_event_filter(struct event_filter *filter)
+ static inline void __remove_filter(struct trace_event_file *file)
+ {
+ 	filter_disable(file);
+-	remove_filter_string(file->filter);
++	remove_filter_string(event_filter(file));
+ }
+ 
+ static void filter_free_subsystem_preds(struct trace_subsystem_dir *dir,
+@@ -1405,7 +1407,7 @@ static void try_delay_free_filter(struct event_filter *filter)
+ 
+ static inline void __free_subsystem_filter(struct trace_event_file *file)
+ {
+-	__free_filter(file->filter);
++	__free_filter(event_filter(file));
+ 	file->filter = NULL;
+ }
+ 
+@@ -1465,7 +1467,7 @@ static void filter_free_subsystem_filters(struct trace_subsystem_dir *dir,
+ 	list_for_each_entry(file, &tr->events, list) {
+ 		if (file->system != dir || !file->filter)
+ 			continue;
+-		__free_filter(file->filter);
++		__free_subsystem_filter(file);
+ 	}
+ 	__free_filter(filter);
+ }
+-- 
+2.47.2
+
