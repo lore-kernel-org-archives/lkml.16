@@ -1,127 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B15FB67A;
-	Sat,  7 Jun 2025 02:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F4627468
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 02:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749264744; cv=none; b=NOAINh0+zm3EqnNygeWFXpVoQ6Au0hhfo4OCBQxwMat9IX/z5fdW9HBTF/D8UoPodNmew9ESFjcPdcn2Iq8g0E2PSoezsobu7vquWQFLZEFdWm6AdrESrQqWZdZgW9xua4FOwphRX9x1kuUU9HMImj1PEOHU3VkwbEVwsMuPiY8=
+	t=1749264842; cv=none; b=mj/5toE/s3W1PzC/DFNhpe4lEFIs6G+R/ub3r1/4BzQ4KvvZwS6/Pv4/qcSv+oTZs3HT3bVmQpedK0zzO2Y+9WoNT4EXk+SCFfvI9Gv47LSiUN8JdaeN/yu2Woqq23jjTQfugVRmZM2tyJldb+ehq76LpoP8d/bCBr7xuHgFeac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749264744; c=relaxed/simple;
-	bh=lQczlWJS0+1NAZxns2cnXt/wYRNUS+DRnMlnKt4NP/4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CV4RDTEowBYEW3v11YZxsAFm2ltwj/YeCz7aVVdOygLz4ABwsZqWyUz+uM49bLpEI+SNFB+fSgZZ4gsaRxircMNtXiJDhBQ0tetNLINjrTQOU8SIYl4ROSwogOoOUCOnjgfhyE0YDdHr1ZGyOYTCycfgdk/cuRson5JMmCRpcTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TV8RzDJQ; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749264842; c=relaxed/simple;
+	bh=DlBaewAA+ovTE7nzNZ0gfmioiWclhmgO3IlQrbrct5o=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=cZU+BPagwgbnU/zFu/lm7JYmaTPgp1qyw30SX0cNIBjpjkmNOjF00/7XpxOlGu0+QhBmmr54fRvBlS3eQ3GqmtpeW36+GxIRfYtadelMBxmRc5/PNPo6wI5SZGe7SSSUj03Ai4LKFylsi/+1/algl0SMySYIcuv8za9d9+kHXdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=VPWAJctp; arc=none smtp.client-ip=209.85.221.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TV8RzDJQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749264742; x=1780800742;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lQczlWJS0+1NAZxns2cnXt/wYRNUS+DRnMlnKt4NP/4=;
-  b=TV8RzDJQ340iPIoHV+hyNsEZHAjMxJWn3dGXX3vzWidRwG0mfoL1gBFj
-   DPp/LLLLB813U8af2WwTo8XOClFtyZz7n4yfuxXr3sbA16bzV0zDajRBy
-   43DGCAltBPDb41YAOMjZbdPnG/VwMCMO5srllky2N/zzoov5vQsBYBFk3
-   elCX6NdsUCmGV/eSSurUitfWKUCFUlVeqntfxXh8WIXKXuvy/6wpItqrb
-   e4D9LAGShqMbKo1eEC094WtILQCbZmI4k9UVxy22DkOUyR329499toDkZ
-   geTWeBJ3zRpmQvK9/+R+iLwPxVg75AJAcvGyzVEmxE0qlP5S9LPqVLRW3
-   A==;
-X-CSE-ConnectionGUID: /lrELgg6Sp6a+pdYU+UAwg==
-X-CSE-MsgGUID: fpuMhVQyRry/SuDzriOlxw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="54048502"
-X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
-   d="scan'208";a="54048502"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 19:52:21 -0700
-X-CSE-ConnectionGUID: VSFEqLOzTAmgepYM6LBEAw==
-X-CSE-MsgGUID: 8ePsBAY2QteDMGxVdeglug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
-   d="scan'208";a="176933155"
-Received: from mmercado-mobl6.amr.corp.intel.com (HELO desk) ([10.125.146.40])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 19:52:21 -0700
-Date: Fri, 6 Jun 2025 19:52:13 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-	Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH 0/5] KVM: VMX: Fix MMIO Stale Data Mitigation
-Message-ID: <20250607025213.o226wig3qtt5spv2@desk>
-References: <20250523011756.3243624-1-seanjc@google.com>
- <20250529033546.dhf3ittxsc3qcysc@desk>
- <aD42rwMoJ0gh5VBy@google.com>
- <20250603012208.cadagk7rgwy24gkh@desk>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="VPWAJctp"
+Received: by mail-wr1-f68.google.com with SMTP id ffacd0b85a97d-3a53359dea5so677989f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 19:53:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1749264838; x=1749869638; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=d8AB0D5JOvGYjX2dpcO3lbaRK+7xpSkRk0OO2w6sGwk=;
+        b=VPWAJctpjOSiVMgnWcmaeUg/rilGXNARVB1/p51qvxNfSf/eWlIs3K2ZrsT2cBJiO4
+         gxJFMZgWbEyM7obAkuCi4gyFwjZb9BNUGM8Zj4nPXbZhl9bRORi4TxDXoxGPhEOLNdl7
+         ew6+F1+Ghe+lpfXezTv+setwWpBiyk5n+gDQiPT8oUS7wIyadt0DnaUk+c3GhstKEUoU
+         wcKdch+fVSqo/ETh/kFAhDk50l/vVv2kCoApPDJzZt+TdW+4twlYpgIuaKYdg0aULndQ
+         fFN7aT58Je/Xmxs3p9fGyqXwDSiKwvKotew1425vXqfnFsL7R3iUnoo2k3p9RBKkbAvF
+         0OHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749264838; x=1749869638;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d8AB0D5JOvGYjX2dpcO3lbaRK+7xpSkRk0OO2w6sGwk=;
+        b=TeOEHJzhnFhJ/YhnXMczAmnDQ0s30enlnAxdZ7sVOCREJdCPABCiA+xrwlicflB5Ez
+         z96zd4SBSxd+N7/Elge6Azb1A6eBofoqs6do5oxRBtjY7Cq5/QU+KOoIwwdtgD43Dp7r
+         Ahq9YKFss1y1+VV7cJyrrap471r1MDpdC75CZQruDAkDXyKw345sCxTsaVBiPAgqTyVk
+         oxiMjXQ3c4e4zWJ6I04/AS4NK6YviHPhv20z9h5TvGIkXMY5ybQqjrRwQsYCWftwv5N9
+         vXjR26CuLoCqNeSef8cqnR+aEl5mFnB+0OOkWoXKjkRV/zR3QyzIFUh9TT+wlmlDwUsA
+         aUbA==
+X-Gm-Message-State: AOJu0YwvT2nCbvRGMSiov1bQFLqntlkr6Ds3IEro1zQmo+5x84KebVCW
+	7LLUg0PTpDCZawegX37kS4pqQi5phbNn2xRJt+jZ98NhHuJoM0KZG/0HKWOSSb+70i0=
+X-Gm-Gg: ASbGncstjnKZKIzDxtghzgdfccB9CfmMKwo85/KZGT+Rq3LUvFKHERTjgPj6u3iExcD
+	c+Gq4tBDbYEqZuywdW4nfNJimaDIVp3YSKpv8MrqdtjZqcjdfJbT/ilgapRW8PlYeZr5gcJGtFv
+	y0tfdOnzWaTzlf4O0M2uwKxCdTQY/VeWx2GdC22at24lWKvrdmeLU3KyeZQqeUdXcZjIu3tMULf
+	tlQxWEzWwwycQ3Y9YCmh8KUkb4ayh5nF4R93IpJnuHovWgdnlF3bVG+s4CEqds7IcIFbE4C2DXz
+	itT3PoOhbIshhzQaRSZiD/dIMKg5wbiAbCZCk26Q5uVfH91N0mgeeV2eSQ0=
+X-Google-Smtp-Source: AGHT+IHShYQtnCxYffZd53hg8+hhCGTXjO/OocFI6hhZSrjjpXUQTLeXH1KRlfClVKp1b+8IXy1o1A==
+X-Received: by 2002:a05:6000:144e:b0:3a4:f975:30f7 with SMTP id ffacd0b85a97d-3a5319b4e68mr4801932f8f.56.1749264837970;
+        Fri, 06 Jun 2025 19:53:57 -0700 (PDT)
+Received: from [127.0.0.1] ([2804:5078:80f:b600:58f2:fc97:371f:2])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-530e6429475sm2005465e0c.45.2025.06.06.19.53.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 19:53:57 -0700 (PDT)
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
+Subject: [PATCH 0/7] printk cleanup - part 2
+Date: Fri, 06 Jun 2025 23:53:42 -0300
+Message-Id: <20250606-printk-cleanup-part2-v1-0-f427c743dda0@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250603012208.cadagk7rgwy24gkh@desk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALapQ2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDMwND3YKizLySbN3knNTEvNIC3YLEohIjXWOLNIsUU0MDCwNLSyWg1oK
+ i1LTMCrCx0bG1tQDCWrwyZgAAAA==
+X-Change-ID: 20250601-printk-cleanup-part2-38f8d5108099
+To: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
+ John Ogness <john.ogness@linutronix.de>, 
+ Sergey Senozhatsky <senozhatsky@chromium.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jiri Slaby <jirislaby@kernel.org>, 
+ Jason Wessel <jason.wessel@windriver.com>, 
+ Daniel Thompson <danielt@kernel.org>, 
+ Douglas Anderson <dianders@chromium.org>, 
+ Richard Weinberger <richard@nod.at>, 
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+ Johannes Berg <johannes@sipsolutions.net>
+Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+ kgdb-bugreport@lists.sourceforge.net, linux-um@lists.infradead.org, 
+ Marcos Paulo de Souza <mpdesouza@suse.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749264832; l=1540;
+ i=mpdesouza@suse.com; s=20231031; h=from:subject:message-id;
+ bh=DlBaewAA+ovTE7nzNZ0gfmioiWclhmgO3IlQrbrct5o=;
+ b=uaTXBJLcvhgf5YKL4OJgFRYKVnwKvnF9HHj0A6a1DeNA/cKGB2zz4gtZcmbgnKD0ZnQ5jzr1u
+ IL5jbxZWwPtDKhU0kF+79D2EX/S5HQyeZSKJDCeivyLlYkj/oRqQ8Gh
+X-Developer-Key: i=mpdesouza@suse.com; a=ed25519;
+ pk=/Ni/TsKkr69EOmdZXkp1Q/BlzDonbOBRsfPa18ySIwU=
 
-On Mon, Jun 02, 2025 at 06:22:08PM -0700, Pawan Gupta wrote:
-> On Mon, Jun 02, 2025 at 04:41:35PM -0700, Sean Christopherson wrote:
-> > > Regarding validating this, if VERW is executed at VMenter, mitigation was
-> > > found to be effective. This is similar to other bugs like MDS. I am not a
-> > > virtualization expert, but I will try to validate whatever I can.
-> > 
-> > If you can re-verify the mitigation works for VFIO devices, that's more than
-> > good enough for me.  The bar at this point is to not regress the existing mitigation,
-> > anything beyond that is gravy.
-> 
-> Ok sure. I'll verify that VERW is getting executed for VFIO devices.
+The first part can be found here[1]. The proposed changes do not
+change the functionality of printk, but were suggestions made by
+Petr Mladek. I already have more patches for a part 3 ,but I would like
+to see these ones merged first.
 
-I have verified that with below patches CPU buffer clearing for MMIO Stale
-Data is working as expected for VFIO device.
+I did the testing with VMs, checking suspend and resume cycles, and it worked
+as expected.
 
-  KVM: VMX: Apply MMIO Stale Data mitigation if KVM maps MMIO into the guest
-  KVM: x86/mmu: Locally cache whether a PFN is host MMIO when making a SPTE
-  KVM: x86: Avoid calling kvm_is_mmio_pfn() when kvm_x86_ops.get_mt_mask is NULL
+Thanks for reviewing!
 
-For the above patches:
+[1]: https://lore.kernel.org/lkml/20250226-printk-renaming-v1-0-0b878577f2e6@suse.com/
 
-Tested-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+---
+Marcos Paulo de Souza (7):
+      printk: Make console_{suspend,resume} handle CON_SUSPENDED
+      printk: Use consoles_suspended flag when suspending/resuming all consoles
+      drivers: tty: Check CON_SUSPENDED instead of CON_ENABLED
+      drivers: serial: kgdboc: Check CON_SUSPENDED instead of CON_ENABLED
+      arch: um: kmsg_dump: Don't check for CON_ENABLED
+      debug: kgd_io: Don't check for CON_ENABLED
+      printk: Don't check for CON_ENABLED on console_unblank
 
-Below are excerpts from the logs with debug prints added:
+ arch/um/kernel/kmsg_dump.c  |  2 +-
+ drivers/tty/serial/kgdboc.c |  3 ++-
+ drivers/tty/tty_io.c        |  2 +-
+ kernel/debug/kdb/kdb_io.c   |  2 +-
+ kernel/printk/internal.h    |  7 ++++++-
+ kernel/printk/nbcon.c       |  8 ++++----
+ kernel/printk/printk.c      | 32 +++++++++++++++-----------------
+ 7 files changed, 30 insertions(+), 26 deletions(-)
+---
+base-commit: e728cdbeed0667b6261fceeddc91ef1420463ac7
+change-id: 20250601-printk-cleanup-part2-38f8d5108099
 
-# virsh start ubuntu24.04                                                      <------ Guest launched
-[ 5737.281649] virbr0: port 1(vnet1) entered blocking state
-[ 5737.281659] virbr0: port 1(vnet1) entered disabled state
-[ 5737.281686] vnet1: entered allmulticast mode
-[ 5737.281775] vnet1: entered promiscuous mode
-[ 5737.282026] virbr0: port 1(vnet1) entered blocking state
-[ 5737.282032] virbr0: port 1(vnet1) entered listening state
-[ 5737.775162] vmx_vcpu_enter_exit: 13085 callbacks suppressed
-[ 5737.775169] kvm_intel: vmx_vcpu_enter_exit: CPU buffer NOT cleared for MMIO  <----- Buffers not cleared
-[ 5737.775192] kvm_intel: vmx_vcpu_enter_exit: CPU buffer NOT cleared for MMIO
-[ 5737.775203] kvm_intel: vmx_vcpu_enter_exit: CPU buffer NOT cleared for MMIO
-...
-Domain 'ubuntu24.04' started
+Best regards,
+-- 
+Marcos Paulo de Souza <mpdesouza@suse.com>
 
-[ 5739.323529] virbr0: port 1(vnet1) entered learning state
-[ 5741.372527] virbr0: port 1(vnet1) entered forwarding state
-[ 5741.372540] virbr0: topology change detected, propagating
-[ 5742.906218] kvm_intel: vmx_vcpu_enter_exit: CPU buffer NOT cleared for MMIO
-[ 5742.906232] kvm_intel: vmx_vcpu_enter_exit: CPU buffer NOT cleared for MMIO
-[ 5742.906234] kvm_intel: vmx_vcpu_enter_exit: CPU buffer NOT cleared for MMIO
-[ 5747.906515] vmx_vcpu_enter_exit: 267825 callbacks suppressed
-...
-
-# virsh attach-device ubuntu24.04 vfio.xml  --live                            <----- Device attached
-
-[ 5749.913996] ioatdma 0000:00:01.1: Removing dma and dca services
-[ 5750.786112] vfio-pci 0000:00:01.1: resetting
-[ 5750.891646] vfio-pci 0000:00:01.1: reset done
-[ 5750.900521] vfio-pci 0000:00:01.1: resetting
-[ 5751.003645] vfio-pci 0000:00:01.1: reset done
-Device attached successfully
-[ 5751.074292] kvm_intel: vmx_vcpu_enter_exit: CPU buffer cleared for MMIO    <----- Buffers getting cleared
-[ 5751.074293] kvm_intel: vmx_vcpu_enter_exit: CPU buffer cleared for MMIO
-[ 5751.074294] kvm_intel: vmx_vcpu_enter_exit: CPU buffer cleared for MMIO
-[ 5756.076427] vmx_vcpu_enter_exit: 68991 callbacks suppressed
