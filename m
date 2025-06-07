@@ -1,107 +1,83 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2978136D;
-	Sat,  7 Jun 2025 15:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F246A33B;
+	Sat,  7 Jun 2025 15:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749310125; cv=none; b=bVquXRCIIaHjfzeK4nNxDtOUbZMRaGLWzvhMaPFR5/tuYQSs/c/hsuBCcvZrrdO/JDxK917R98UKjsoBs94N5mPeyQhOUcutm5e5t/kjizBUMcoH36C3j1XP5G5tqF5WjF+oMe9sReyALdDnTlg15ionQn+uG7x0rfEYy9sbI9U=
+	t=1749310215; cv=none; b=KUmavWb0EqivRsXAGmFK0IN1NPdrGM8uMfJgmFuBJY33IjioHPcLo16+YatUcbEXmCsaz8/vsG7DXsJfBStYeHbLMEPIS0nZyJDYQkeIMpqiYFgTF6L6HizjZJPzSpwQe4keMX/ZZeGHK1kTbjXtwJgk14h18xyqPdCHrJltYlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749310125; c=relaxed/simple;
-	bh=z+jyBC0rDsvIMFnB2CX5hTuZkM0uQU8PSDEQ97J9Fms=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=msxe/qAPqpK74NiI4tmYekdVwTZfzV+dhCbGlABqBtZ8KehCQo7ZS+yPKtP97a3KFTnkiNOpg4UV2qR94gKXpWKzOUz288L9eLgacT0S2osMMZ9q3n3kMCbMwpIk37AYxQPYir1h65XoTO6C0eS/WUWhaN1zjGUbMNuVNRFZiT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W+DZPIv5; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749310215; c=relaxed/simple;
+	bh=sKLJ4kqThC0sq9tHJe28wjzBnsYeSUl8eVTtMw6w7Qo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QCptqcHW+hkxQUovCWUPkkgP9EG6p64j79H/VcMow0k19WiVIhsey3pyiYW8bJ7EOnM5baEab2BYMOzHtOLuCV8G2fYpTHixKxEWNSJy3GMqgM1O2fDR3wHh3xihBp0L5i+WCehqiDFVQunQNRjMh1bKEfFFRrrJbMw+PF7IYG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JtKcuTqx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+DZPIv5"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-742c27df0daso2757933b3a.1;
-        Sat, 07 Jun 2025 08:28:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749310123; x=1749914923; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+c2fxGTrOu+gHD3RHbFZi/o0nuFFUaAiSBwnrt9ygdg=;
-        b=W+DZPIv5k3zkxUrraIUqUJnWBKbw91RGvfgeDFjbPLSRpzgdY24O1EOIMYrEjC3lba
-         wavtlk+gqVxFoLLa+ixWSxT9RgBJ0jzXiNZqBPEwAcTxymbWTZYJtXogXowoElgRgxgo
-         eANYLY+q6vPV2ztOZpfQOiONQp6rksg35sqMyu5ILOPvqmedsvyikR+AgjCcZwz7j93j
-         KAHbaSGMh6IymiJswoBxrlc/9ANFUpmFU3ZYGN2nfXn9kNzmZt+pj/WtaX/61sjd1/aR
-         XxkR3H/Btu0qbMD2WxmE5ztRrwx97qYu40yQybY/BfMOjr9ce7fp7ZRjWezBYFRup5Bp
-         r52g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749310123; x=1749914923;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+c2fxGTrOu+gHD3RHbFZi/o0nuFFUaAiSBwnrt9ygdg=;
-        b=nuJvpCTlCicvfef4+s0G/B7b4vf6ZCRYImITm2OqMc9A3hmlOi/u5iQZsfEVJEh43q
-         nmywkzhKnGU3VAn9DLcahqipbT6UjwtMWwFUl192pb2Q1s1BBeCzm4MjSZFrv6Y6AsHu
-         LO3pq6uCcvD/ON46v6Q2cjfuzO+b8slhrf+7a/xEj0AYE6KAno6DJazhU6Wdgc9D1Dok
-         1/Kjw7OcZVIBUhbObnmLfboedtZE/ZJdBmsgurNTpL1trIihsV0VBfoi7Jl4PrpsFtGk
-         SBDlXnatrG0u3PZndJUYxn1zuOleiFAwy+QabRyL5A23Cm7k1kZJ3/O8gg/69xSFZQU9
-         S/4g==
-X-Forwarded-Encrypted: i=1; AJvYcCVGj2pNIa+D27LyAxI/4tohYbrrQJkEpqNJA61QALldk356YxxGc0PZUJrqMoYo5S0wpY0n0GgtC0bao3I=@vger.kernel.org, AJvYcCXA0YRFw4ugy6kIJWBdnvQ5Hx2HJO4ufiC3LJ4UiZk5r69KnpxKGMq5I8U2e5fM6YErNm9QUj05@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSftKquSbUDi21ZOtSDZb/8OnFeDdg9aL4dNLQCA1pZcvVFmC6
-	M/VjMv9Sv5blCJB8VV4lVmqyck6KBNfRpLEEA3sKQr0CZtZN1nr/MeV4
-X-Gm-Gg: ASbGnct7Q35DP7hmfNSS4KJbtjkJQjpQyZ/YwniJGg+EXWsfbJf7zCZOWN9EPbXTBsw
-	opTTo6LNfh/O1wXQsJNJDzGmnLeVgRJLkujPmijB7Z5OEmlIyHDBK5Ai6u6+fR6YSrVzLlzC2Ie
-	00P5PYs+DezPrnZM1ZT/3yrAfhkEbJwasy4x0hzElqYxd/t/Dnq9b3z4ICSG6wmiNXCgHYX1ist
-	MP2p10c4ICizpipFgg/zk2dvo/LuJzypWCWrd1CoTx5ar7MM4k79h1wXJCLpH0HMZWtkcHVVK6W
-	69+jpsYBTp8QeYieAu7RaFRukayAV3bc3kukQc3fUxiZtxsO2T+WgkWDVbG8B4hSyMhQMBs=
-X-Google-Smtp-Source: AGHT+IGe5PvLLkyfOcvRfGoQZO2yM5rs9oLpWj19Gd+8+aRM/ZSBmC4cTKl3EgRRwqh8R4Ru25G9lw==
-X-Received: by 2002:a05:6a00:4612:b0:736:a8db:93bb with SMTP id d2e1a72fcca58-74827fa2840mr8940461b3a.5.1749310123426;
-        Sat, 07 Jun 2025 08:28:43 -0700 (PDT)
-Received: from manjaro.domain.name ([2401:4900:1c66:bf5b:2e56:6e66:c9ef:ed1b])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482af3831esm2965754b3a.13.2025.06.07.08.28.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Jun 2025 08:28:42 -0700 (PDT)
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-To: davem@davemloft.net,
-	dsahern@kernel.org,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org
-Cc: skhan@linuxfoundation.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Pranav Tyagi <pranav.tyagi03@gmail.com>
-Subject: [PATCH] net: ipconfig: replace strncpy with strscpy
-Date: Sat,  7 Jun 2025 20:58:30 +0530
-Message-ID: <20250607152830.26597-1-pranav.tyagi03@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JtKcuTqx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00FAEC4CEE4;
+	Sat,  7 Jun 2025 15:30:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749310214;
+	bh=sKLJ4kqThC0sq9tHJe28wjzBnsYeSUl8eVTtMw6w7Qo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JtKcuTqxNFkIqCZvcIgYM76jlOv/FOoHHN6heQKOFsV54aCDxtu4fbt6BuXM5fyZm
+	 NEiEBaEG1EapV3JJhhRcVPbHYPO409vaatyvjwvoLK6Ai/j8KopoqdAVkfa0bM8cFY
+	 zspq8OhpgBliZDx50vBOMJGqdGVldfL+AEbXl5wu7QSiU+Ype9AI5WyIkDGMkzUSfR
+	 ytxWWxxvYTIkSkuu9Zgvo+GhqOtAQksKPwiJMo3bHnEUkFUzVclD/788bkocOmzyPK
+	 qSXDi0x6oRwtATeqsR8qFNxRzCFO8/CbojlTjCHIf8kKVGzJdKCn/mfgl9UOHb/37x
+	 ESz1tGgX1fc7A==
+Date: Sat, 7 Jun 2025 16:30:07 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Chen-Yu Tsai <wens@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Chen-Yu Tsai
+ <wens@csie.org>, linux-iio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [PATCH] iio: adc: axp20x_adc: Add missing sentinel to AXP717
+ ADC channel maps
+Message-ID: <20250607163007.21da58c0@jic23-huawei>
+In-Reply-To: <20250607135627.2086850-1-wens@kernel.org>
+References: <20250607135627.2086850-1-wens@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Replace the deprecated strncpy() with strscpy() as the destination
-buffer is NUL-terminated and does not require any
-trailing NUL-padding. Also increase the length to 252
-as NUL-termination is guaranteed.
+On Sat,  7 Jun 2025 21:56:27 +0800
+Chen-Yu Tsai <wens@kernel.org> wrote:
 
-Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
----
- net/ipv4/ipconfig.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> From: Chen-Yu Tsai <wens@csie.org>
+> 
+> The AXP717 ADC channel maps is missing a sentinel entry at the end. This
+> causes a KASAN warning.
+> 
+> Add the missing sentinel entry.
+> 
+> Fixes: 5ba0cb92584b ("iio: adc: axp20x_adc: add support for AXP717 ADC")
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Applied to my temporary fixes tree.  I'll rebase that on rc1 in next few days.
 
-diff --git a/net/ipv4/ipconfig.c b/net/ipv4/ipconfig.c
-index c56b6fe6f0d7..eb9b32214e60 100644
---- a/net/ipv4/ipconfig.c
-+++ b/net/ipv4/ipconfig.c
-@@ -1690,7 +1690,7 @@ static int __init ic_proto_name(char *name)
- 			*v = 0;
- 			if (kstrtou8(client_id, 0, dhcp_client_identifier))
- 				pr_debug("DHCP: Invalid client identifier type\n");
--			strncpy(dhcp_client_identifier + 1, v + 1, 251);
-+			strscpy(dhcp_client_identifier + 1, v + 1, 252);
- 			*v = ',';
- 		}
- 		return 1;
--- 
-2.49.0
+J
+> ---
+>  drivers/iio/adc/axp20x_adc.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/iio/adc/axp20x_adc.c b/drivers/iio/adc/axp20x_adc.c
+> index 71584ffd3632..1b49325ec1ce 100644
+> --- a/drivers/iio/adc/axp20x_adc.c
+> +++ b/drivers/iio/adc/axp20x_adc.c
+> @@ -187,6 +187,7 @@ static struct iio_map axp717_maps[] = {
+>  		.consumer_channel = "batt_chrg_i",
+>  		.adc_channel_label = "batt_chrg_i",
+>  	},
+> +	{ }
+>  };
+>  
+>  /*
 
