@@ -1,91 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8F116A956;
-	Sat,  7 Jun 2025 15:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07AAA13AD05;
+	Sat,  7 Jun 2025 15:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749311411; cv=none; b=lHUif8CBVPnV0rN+QJY7vWfBZVhFVsi6DXzz9iLEd4DheJkevo2vzp5SLyWgAbIewkHcMIX1qbZ3kaWTCJi+09EiNWclleI6bbAhFQ+m+CRHHbkKqFJmr0CTbDTTa72Rc+kfEyRf7HZfee1MTRbnXgoB8iq98uScwBEXGAIM7E0=
+	t=1749311562; cv=none; b=Wa57WqhXgB/aDlXM3zGWhZCEcxiODfQ8Hl0ojSEBJHUuMiwYW9NyWeja5zTaqdtRzdkkuPi19/Rqlwyd46Zgbj4zIIGP3aLniNWvBDEAiydBh1ohhsk08wSHDphINDrjfrBzCF2f6bors6ioEQJPHl8Ggya6UizaRzwM+30qx6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749311411; c=relaxed/simple;
-	bh=Cf3YSEsgdXLpS9NxtTieDY5//GqWFe3FpK6Ry6r7ABk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cmu89vFVnB0ArpdWJvwTfN5sBQBx41MY30TawcRPdAZj1EtMEb5IubFhMk6nSdPi0k/5VMNMZvlM9rEH2rADm33+LfkNoJXlQueZASifQLN7pY0WNOFXE69B6VhZ5tdokMP0Key5yzOOyQDM86Jco9QwCDrTbNheFtl3cfJbEvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dFgmWfNe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749311562; c=relaxed/simple;
+	bh=TXILFu9/mk5P8ay7BUtsp1FAJk1pZTISkb8vZbLV3Ts=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sXuAwgyBV13+Yse4B4lXEEmhO5c0izG+fB1kaU9tGA6/qYfR/VdUMId0jbDexQSflU3uXmpxP0nfpOiGj52vh8rBX6xrIGJxMv21EpTj+380bAqt2XFh8qXxwoM81TOdGYjWe3DQAah/tILY7y4bXfzn7L4AWIDAKT3g9QcUXHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=GhXVN+L7; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dFgmWfNe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20394C4CEE4;
-	Sat,  7 Jun 2025 15:50:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749311410;
-	bh=Cf3YSEsgdXLpS9NxtTieDY5//GqWFe3FpK6Ry6r7ABk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=dFgmWfNeq/4Yqz4e7DyszammCh1GybSgHQEONW0EuyhEX0D/eeXIspiuUWmOVx3zC
-	 jso+E5CNmfH8yLoos4PDv3qEbNXy4yZz1779h9iALOgBJ/AyICSHqc7nJQe4Dl6au7
-	 99Gsya1K08j/pKoewrGBmF0+l8BqljWq17co+g33pHCE05zAu+Fnzrs/WJvobbyF0R
-	 JC/9UDjR03gGsfpGmoMJ6d03ycF5nA+hcRlNkJgp/igfNm1jkCVSGZqOM4CuJ624jP
-	 BLDY9U8Si+FIm0OkKicE/cZzVLXNlrazHsisOIrGWbELSnnulqpwIaxPvLxEYOOsIc
-	 7vjgxHKTHNU9Q==
-Date: Sat, 7 Jun 2025 16:50:04 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Gustavo Silva <gustavograzs@gmail.com>, Alex Lanzano
- <lanzano.alex@gmail.com>, David Lechner <dlechner@baylibre.com>, Nuno
- =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] iio: imu: bmi270: add channel for step counter
-Message-ID: <20250607165004.4673e9f5@jic23-huawei>
-In-Reply-To: <aEKxhPFDQEIN1xnm@smile.fi.intel.com>
-References: <20250605-bmi270-events-v2-0-8b2c07d0c213@gmail.com>
-	<20250605-bmi270-events-v2-1-8b2c07d0c213@gmail.com>
-	<aEKxhPFDQEIN1xnm@smile.fi.intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="GhXVN+L7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=UK
+	Da40I0u1fLgDBEqwi9HdVUgYBePD5D6X2Frp4VUjc=; b=GhXVN+L7/RTx1R9Z60
+	yyriw21vGGe4kF9td2SU3KTuR3r97iwbUVXHCmeBzpam9B5ChUnHk3rKdMMBjrF0
+	eyKxfDATDtbC30bVWLWKDwZTt96TQ0756D+Er37SOIPllQqfB9xJ5kzgcAFuYF4H
+	XNswf7L/m8R3RB5N5HVUz0brQ=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wBXM_kjYERoFeepHA--.4808S2;
+	Sat, 07 Jun 2025 23:52:03 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: mahesh@linux.ibm.com,
+	bhelgaas@google.com
+Cc: oohall@gmail.com,
+	manivannan.sadhasivam@linaro.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH v2] PCI/AER: Use pci_clear_and_set_config_dword() to simplify mask updates
+Date: Sat,  7 Jun 2025 23:51:59 +0800
+Message-Id: <20250607155159.805679-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBXM_kjYERoFeepHA--.4808S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxWr4fXF1Uuw13Cr1rZr4DCFg_yoW5CFyrpr
+	W3AFWfArWUJF15urWDWaykJr1rAas7t3ySgryfKwn5XF4UuFZrJr9avw1UJ345KFZ3Xw4f
+	Jws5Ka1ruF4UJ3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pKYLkZUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhVlo2hEXNpMQQAAsO
 
-On Fri, 6 Jun 2025 12:14:44 +0300
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+Replace manual read-modify-write sequences in multiple functions with
+pci_clear_and_set_config_dword() to ensure atomic operations and reduce
+code duplication. 
 
-> On Thu, Jun 05, 2025 at 07:05:01PM -0300, Gustavo Silva wrote:
-> > Add a channel for enabling/disabling the step counter, reading the
-> > number of steps and resetting the counter.  
-> 
-> ...
-> 
-> > +static int bmi270_update_feature_reg(struct bmi270_data *data,
-> > +				     enum bmi270_feature_reg_id id,
-> > +				     u16 mask, u16 val)
-> > +{
-> > +	u16 regval = 0;  
-> 
-> Redundant assignment.
-> 
-> > +	int ret;
-> > +
-> > +	ret = bmi270_read_feature_reg(data, id, &regval);
-> > +	if (ret)
-> > +		return ret;  
-> 
-> > +	set_mask_bits(&regval, mask, val);  
-> 
-> You can't do this on the 16-bit values on some architectures.
-> Maybe it's easy to implement cmpxchg() for 16-bit values there,
-> though.
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+Changes for v2:
+- The patch commit message were modified.
+- New optimizations for the functions disable_ecrc_checking, aer_enable_irq, and aer_disable_irq have been added.
+---
+ drivers/pci/pcie/aer.c | 30 +++++++++++-------------------
+ 1 file changed, 11 insertions(+), 19 deletions(-)
 
-It doesn't need to be atomic, so stick to traditional
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 70ac66188367..86cbd204a73f 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -176,14 +176,13 @@ static int enable_ecrc_checking(struct pci_dev *dev)
+ static int disable_ecrc_checking(struct pci_dev *dev)
+ {
+ 	int aer = dev->aer_cap;
+-	u32 reg32;
+ 
+ 	if (!aer)
+ 		return -ENODEV;
+ 
+-	pci_read_config_dword(dev, aer + PCI_ERR_CAP, &reg32);
+-	reg32 &= ~(PCI_ERR_CAP_ECRC_GENE | PCI_ERR_CAP_ECRC_CHKE);
+-	pci_write_config_dword(dev, aer + PCI_ERR_CAP, reg32);
++	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_CAP,
++				       PCI_ERR_CAP_ECRC_GENE |
++				       PCI_ERR_CAP_ECRC_CHKE, 0);
+ 
+ 	return 0;
+ }
+@@ -1101,15 +1100,12 @@ static bool find_source_device(struct pci_dev *parent,
+ static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
+ {
+ 	int aer = dev->aer_cap;
+-	u32 mask;
+ 
+-	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, &mask);
+-	mask &= ~PCI_ERR_UNC_INTN;
+-	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, mask);
++	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_UNCOR_MASK,
++				       PCI_ERR_UNC_INTN, 0);
+ 
+-	pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK, &mask);
+-	mask &= ~PCI_ERR_COR_INTERNAL;
+-	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
++	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_COR_MASK,
++				       PCI_ERR_COR_INTERNAL, 0);
+ }
+ 
+ static bool is_cxl_mem_dev(struct pci_dev *dev)
+@@ -1555,23 +1551,19 @@ static irqreturn_t aer_irq(int irq, void *context)
+ static void aer_enable_irq(struct pci_dev *pdev)
+ {
+ 	int aer = pdev->aer_cap;
+-	u32 reg32;
+ 
+ 	/* Enable Root Port's interrupt in response to error messages */
+-	pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+-	reg32 |= ROOT_PORT_INTR_ON_MESG_MASK;
+-	pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, reg32);
++	pci_clear_and_set_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND,
++				       0, ROOT_PORT_INTR_ON_MESG_MASK);
+ }
+ 
+ static void aer_disable_irq(struct pci_dev *pdev)
+ {
+ 	int aer = pdev->aer_cap;
+-	u32 reg32;
+ 
+ 	/* Disable Root Port's interrupt in response to error messages */
+-	pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+-	reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
+-	pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, reg32);
++	pci_clear_and_set_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND,
++				       ROOT_PORT_INTR_ON_MESG_MASK, 0);
+ }
+ 
+ /**
 
-	regval &= ~mask;
-	regval |= bits;
-
-And avoid the fun of architectural corner cases entirely.
-> 
-> > +	return bmi270_write_feature_reg(data, id, regval);
-> > +}  
-> 
+base-commit: ec7714e4947909190ffb3041a03311a975350fe0
+-- 
+2.25.1
 
