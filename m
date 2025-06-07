@@ -1,172 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01BB428F5
-	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 04:34:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C5515D1
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 04:53:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749270850; cv=none; b=SsQ5MrEX6FJpeNf7CyPkqvMqpPfqKUR1M3SwJD0nxvd8dMrOrIPSwwTgqCPQJ/CRyq1gV91K4VjugZB+30kbhr9xZBkhb9NwzGWmDherzd6G0y6vPIfsm8JoHFpRv859uGe4hsorbfeO74y2v3NoX0pVshRL2RVMnoGeSATFIlM=
+	t=1749271996; cv=none; b=sw7wDohg/FgVx8BqX9bRCcpaTShs9vM03SSMCAmv71Og2RBg0cM2G1nNlU99a5HYvVrLQYlrATu1+1up8/tgMSYMvxEORT4tJIWh+mJG/j8i2C0h/5Vhl7H0fEoDErT2x5nS8sL/OZkfBAMdVS+5qruL84rcVfDhJdTStokq55c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749270850; c=relaxed/simple;
-	bh=G3PiSTY6owBc+FncVysPjXa7w7CqO6AYIb6st/EXhN8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=gqgdxQlQXhmul8uaKvq72FgZdtp92lh+7aPOsS8MOJrtYnphxgF3nrgmrATja3zdKK9TAUnCyulxd9m83TMrpo3dRxj8IbKjodwG2nh1KiBAp8IHtDjm7PKvRseegskeIth9HLHHJ01zyIbWFNUc0zAgYeyvXFQZYw1KhhS2ejs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YKNBCGT4; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749271996; c=relaxed/simple;
+	bh=ixXS0cDr0yH7e+RR5z3g86AXJJ6l/DAV6Z0FxjD6xmI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OUU8Q1YB/6mmM8wCrbysBZcl66YJU9AKZ75rVv2Avyd0+mK2SF9S4bqOq+70lYskzAucoEXTY1PFfaNg2a2UoXziX3wypeojw5OAlj7gTNUKn67xYmT5HkV2GAO1AP/WUVlKHSfIoYF0UY5EJY5phHoKvS7+QMkcyjjcsuKwBrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MgZuf4dv; arc=none smtp.client-ip=209.85.217.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YKNBCGT4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749270848; x=1780806848;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=G3PiSTY6owBc+FncVysPjXa7w7CqO6AYIb6st/EXhN8=;
-  b=YKNBCGT4akMrFNZs2I2m943evVSqzMEc/w8DBFwsEngDjL9kzBBRXk2V
-   2TaHq1ietYBow3iHFcixLUgCibZvzli4BaxVxfZ50aBDi2c4pP0TCHS17
-   T8z2rbK+TZbFSTt3rrNKHl89tLcTdNjrYHWs4bd/rLhEhnR2dBICs5TMB
-   EG3wx9/MeqIfGzFNixaSnz7/a5XkuMq3wL7+QSnhMUwE0fFZfgx6IfrEi
-   /oyuYrDxXywjl37qNgH3UedOiMVc2nO0nCJ445+Viw2h9IWaLeMNscpdB
-   TAX16TtiMwgJJWkiPuBQQhiMX4Lq5IKj5KGYHAWZl1AufzG7nRrrI7V1o
-   w==;
-X-CSE-ConnectionGUID: 6Nj58VBGTdKsJ37XRnU3RQ==
-X-CSE-MsgGUID: XyGwpN05RzOWjV5mY2ueeA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="51286415"
-X-IronPort-AV: E=Sophos;i="6.16,217,1744095600"; 
-   d="scan'208";a="51286415"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 21:34:08 -0700
-X-CSE-ConnectionGUID: FbRwBcgwRyKLYoCesayx/w==
-X-CSE-MsgGUID: BUQm4thIQWm8YrivC0t9aw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,217,1744095600"; 
-   d="scan'208";a="150879789"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 06 Jun 2025 21:34:06 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uNlFs-0005Sv-08;
-	Sat, 07 Jun 2025 04:34:04 +0000
-Date: Sat, 7 Jun 2025 12:33:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Benjamin Berg <benjamin@sipsolutions.net>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Johannes Berg <johannes.berg@intel.com>
-Subject: arch/um/os-Linux/start_up.c:309:39: sparse: sparse: Using plain
- integer as NULL pointer
-Message-ID: <202506071247.JCFuvo4j-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MgZuf4dv"
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4e75abe99b7so822104137.3
+        for <linux-kernel@vger.kernel.org>; Fri, 06 Jun 2025 21:53:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749271994; x=1749876794; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MIooNSg1UO6vKmEWpNnCRekkajqCQgFQZhhnW9YK6hk=;
+        b=MgZuf4dvMKGriJDiOZupdhvIVfsYsAOf3/VbakkXQmSPObAnE0x2jbmXXooU/08ZYD
+         dzCGpbQBLzAGVOtOW7xo1vZ4BS9yQSoLSxBDMsXH8xr9ESo/JSUXnCzA6i60NXzeYj8b
+         xhZ2epYVSUMbylwxjklDNn5tlz097FN28vaEwiLg3lfVUojA4SmJZgyOu0CQgF5jZ+NY
+         vFmmrYy3cKFXhoXQNRsLqYjCxvvySStmIqbOzqnCUrJdLxlhE6zecV6E4lFGm6pYDE/5
+         5KI8OHY0wApnBHBk7zRm1rC11ieUci75S5rta7mra4Uj6oeqzaNlyZhL0nhttM/l3T9S
+         dUUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749271994; x=1749876794;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MIooNSg1UO6vKmEWpNnCRekkajqCQgFQZhhnW9YK6hk=;
+        b=oI6fn+fldRBvD5Go0VwIEu8+24caUhsOzX9TxW89OEHfcAGo2h+uoZbS4CogrWohsF
+         PyF8Cjv7OBxS6AKngF1vz4sjkzFZySF0pL2DqxaHSe5uPu5who+ifdqHCmBkkYfRt65R
+         DYxYMkIJ3hzZrmmZVfRJHJ4l2ggfbj3HWDT/ELBvT8ngxFFoQfjS09HwHud7QIcGntBm
+         iXnURvsyxyJC+0l7CjmnSkghIKOnQmHvVRF5D2f/Qyrdw5iXPjda480wvrrV3si25zEp
+         rQUKvyQ2Z+ZdCEx0RuSfQv1i4Ql+F7qtIBB4zTHBGt6cIqhE6/pWjGyik5wL69BOTz0P
+         ECew==
+X-Forwarded-Encrypted: i=1; AJvYcCULWyhC9VM17UnTcBi/NbmgOB17T6Jz/wfggbULznPLEjKcloyO2T24OG6uBDzRqrrdWRZhj3x71nivM44=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykAh/VWzDHYQLHb4xynZL6mZDulJCNAmVpe+h0qmliBdig9h6d
+	KEXH7ZZlqHxBh2oWclw31WqBCrF5hOcLayGCDQ5meTJo2e99bnU7iUiGtvHV03FyJMZkdfq+gbz
+	7adLMe0VOvcCvP590azWnfmBrdta3nzs=
+X-Gm-Gg: ASbGncvi/8Xqk6LoPqsaZZPcwq/lNh+BNcepxaeXYNjr0YyMs65gpRvnXtGoNdkv5/x
+	x7UnORJg44IGLZnQ5cMR7xCGD5CyOc809jpy9s3HpTvFT+K34PifF+wJmOpn5QpAT6UwKVwjkoS
+	SpsDe6kPCjy7yPypn9lhSyx79jPOTncV4t5Q==
+X-Google-Smtp-Source: AGHT+IGDUf1jWjcaktsy61a18I3PkSz6S+VdyYHIHk8/YlRKQVO1BjIipCaUo/Eq6T+4tnSTeBOJvDsEfT1oFYy2cMc=
+X-Received: by 2002:a05:6102:3fa9:b0:4de:c7fe:34b3 with SMTP id
+ ada2fe7eead31-4e77264eb77mr6327504137.0.1749271993663; Fri, 06 Jun 2025
+ 21:53:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250607004623.8896-1-21cnbao@gmail.com> <aEO6asiCu9oG1z8o@casper.infradead.org>
+In-Reply-To: <aEO6asiCu9oG1z8o@casper.infradead.org>
+From: Barry Song <21cnbao@gmail.com>
+Date: Sat, 7 Jun 2025 16:53:02 +1200
+X-Gm-Features: AX0GCFs3CZonaFcFqVyazYoNoWE6X0NXyHkVo-n7Fw6MSugWNyJiwNgljphKH_A
+Message-ID: <CAGsJ_4x1RbQ+GKKc1rrTaNA8Xd+W8K-Zu6-kwVYNKzB0OWiowQ@mail.gmail.com>
+Subject: Re: [PATCH v3] mm: use per_vma lock for MADV_DONTNEED
+To: Matthew Wilcox <willy@infradead.org>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	David Hildenbrand <david@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Lokesh Gidra <lokeshgidra@google.com>, 
+	Tangquan Zheng <zhengtangquan@oppo.com>, Qi Zheng <zhengqi.arch@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   119b1e61a769aa98e68599f44721661a4d8c55f3
-commit: beddc9fb1cb161e1bf779b180750b648ff9690c7 um: Add SECCOMP support detection and initialization
-date:   5 days ago
-config: um-randconfig-r112-20250607 (https://download.01.org/0day-ci/archive/20250607/202506071247.JCFuvo4j-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250607/202506071247.JCFuvo4j-lkp@intel.com/reproduce)
+On Sat, Jun 7, 2025 at 4:05=E2=80=AFPM Matthew Wilcox <willy@infradead.org>=
+ wrote:
+>
+> On Sat, Jun 07, 2025 at 12:46:23PM +1200, Barry Song wrote:
+> > To simplify handling, the implementation falls back to the standard
+> > mmap_lock if userfaultfd is enabled on the VMA, avoiding the complexity=
+ of
+> > userfaultfd_remove().
+>
+> This feels too complex to me.  Why do we defer grabbing the vma lock
+> so late, instead of grabbing it at the start like the fault handler does?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506071247.JCFuvo4j-lkp@intel.com/
+Hi Matthew,
 
-sparse warnings: (new ones prefixed by >>)
-   arch/um/os-Linux/start_up.c: note: in included file (through include/linux/compiler_types.h, arch/um/include/shared/init.h):
-   include/linux/compiler_attributes.h:55:9: sparse: sparse: preprocessor token __always_inline redefined
-   arch/um/os-Linux/start_up.c: note: in included file (through /usr/include/features.h, /usr/include/sys/types.h, arch/um/include/shared/user.h, builtin):
-   /usr/include/sys/cdefs.h:426:10: sparse: this was the original definition
->> arch/um/os-Linux/start_up.c:309:39: sparse: sparse: Using plain integer as NULL pointer
+It looks like you missed the spot where your comment should have gone:
+https://lore.kernel.org/all/0b96ce61-a52c-4036-b5b6-5c50783db51f@lucifer.lo=
+cal/
+So I believe Lorenzo is the best person to respond to your concern.
 
-vim +309 arch/um/os-Linux/start_up.c
+In both v1 and v2 [1][2], we did try to fall back as early as possible:
 
-   287	
-   288	static bool __init init_seccomp(void)
-   289	{
-   290		int pid;
-   291		int status;
-   292		int n;
-   293		unsigned long sp;
-   294	
-   295		/* doesn't work on 32-bit right now */
-   296		if (!IS_ENABLED(CONFIG_64BIT))
-   297			return false;
-   298	
-   299		/*
-   300		 * We check that we can install a seccomp filter and then exit(0)
-   301		 * from a trapped syscall.
-   302		 *
-   303		 * Note that we cannot verify that no seccomp filter already exists
-   304		 * for a syscall that results in the process/thread to be killed.
-   305		 */
-   306	
-   307		os_info("Checking that seccomp filters can be installed...");
-   308	
- > 309		seccomp_test_stub_data = mmap(0, sizeof(*seccomp_test_stub_data),
-   310					      PROT_READ | PROT_WRITE,
-   311					      MAP_SHARED | MAP_ANON, 0, 0);
-   312	
-   313		/* Use the syscall data area as stack, we just need something */
-   314		sp = (unsigned long)&seccomp_test_stub_data->syscall_data +
-   315		     sizeof(seccomp_test_stub_data->syscall_data) -
-   316		     sizeof(void *);
-   317		pid = clone(seccomp_helper, (void *)sp, CLONE_VFORK | CLONE_VM, NULL);
-   318	
-   319		if (pid < 0)
-   320			fatal_perror("check_seccomp : clone failed");
-   321	
-   322		CATCH_EINTR(n = waitpid(pid, &status, __WCLONE));
-   323		if (n < 0)
-   324			fatal_perror("check_seccomp : waitpid failed");
-   325	
-   326		if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
-   327			struct uml_pt_regs *regs;
-   328			unsigned long fp_size;
-   329			int r;
-   330	
-   331			/* Fill in the host_fp_size from the mcontext. */
-   332			regs = calloc(1, sizeof(struct uml_pt_regs));
-   333			get_stub_state(regs, seccomp_test_stub_data, &fp_size);
-   334			host_fp_size = fp_size;
-   335			free(regs);
-   336	
-   337			/* Repeat with the correct size */
-   338			regs = calloc(1, sizeof(struct uml_pt_regs) + host_fp_size);
-   339			r = get_stub_state(regs, seccomp_test_stub_data, NULL);
-   340	
-   341			/* Store as the default startup registers */
-   342			exec_fp_regs = malloc(host_fp_size);
-   343			memcpy(exec_regs, regs->gp, sizeof(exec_regs));
-   344			memcpy(exec_fp_regs, regs->fp, host_fp_size);
-   345	
-   346			munmap(seccomp_test_stub_data, sizeof(*seccomp_test_stub_data));
-   347	
-   348			free(regs);
-   349	
-   350			if (r) {
-   351				os_info("failed to fetch registers: %d\n", r);
-   352				return false;
-   353			}
-   354	
-   355			os_info("OK\n");
-   356			return true;
-   357		}
-   358	
-   359		if (WIFEXITED(status) && WEXITSTATUS(status) == 2)
-   360			os_info("missing\n");
-   361		else
-   362			os_info("error\n");
-   363	
-   364		munmap(seccomp_test_stub_data, sizeof(*seccomp_test_stub_data));
-   365		return false;
-   366	}
-   367	
+[1] https://lore.kernel.org/linux-mm/20250527044145.13153-1-21cnbao@gmail.c=
+om/
+[2] https://lore.kernel.org/all/20250530104439.64841-1-21cnbao@gmail.com/
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+But that approach had its own problems:
+* It's not extensible to other madvise operations.
+* It's not easy to adapt to vector_madvise.
+
+I also initially found the new approach too complex and tried a few
+alternatives, but each had its own problems. In the end, Lorenzo's
+solution still seems to be the cleanest among them.
+
+I even forgot to move the code below back to visit() from
+madvise_vma_behavior(). I had changed it while exploring an
+alternative and should have reverted it.
+
++       if (madv_behavior && madv_behavior->lock_mode =3D=3D
+MADVISE_VMA_READ_LOCK) {
++               vma =3D try_vma_read_lock(mm, madv_behavior, start, end);
++               if (vma) {
++                       error =3D madvise_vma_behavior(vma, &prev, start, e=
+nd,
++                               madv_behavior);  /* better to be visit() */
++                       vma_end_read(vma);
++                       return error;
++               }
++       }
+
+Thanks
+Barry
