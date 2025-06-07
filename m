@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8130E219A95;
-	Sat,  7 Jun 2025 21:25:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06335215798;
+	Sat,  7 Jun 2025 21:25:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749331539; cv=none; b=kYWZ8adUfGPQZsCH+Mn+Y6+K3e55Rwu6qoZbBSJvX9ek5WoffcPH2Ar9hvukFmRgFzHhJEm46hmWH9zFvV5YYB7O1+8gr6BPuNMgq4fK0HQ63F/A8Hfrzeo/2uP+21JUh7bTgCG/wU7M8Tnw9F0huiNAzaO0c7ZDbMtsT8o/arM=
+	t=1749331540; cv=none; b=nqOtUlhh/YBDMgWOK+k2frmsBleNm/Kz8xRqr3N08ENMddKhTrBvlbqUcBTM0zBeeuWKUKR+UOvM84220NAut4Y5uyNz8b67jEUpZMUCuadSEUUCquiPBwSbbeXBFuP71BKxjnWssslzQTJE02gZzqgjUXI4pbn9C+yOrM6cnbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749331539; c=relaxed/simple;
-	bh=K6AgqbCW9JSjO83IIZgLlFEbhS3N7/Ckiy1gB7abu3E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kapUbfFRyyp5s+JLi2IS1iV1X6OOdZ/9JJsgb7/AjTjzv6hzcMtBqmOZ/xZeI/4xr5qjlpMcCvaAPNj9ffh6Urj9qJqtS+UoIMDoOmGOMHx1W84vFYsHIe3XjOBppeqziYth0pbAAC1NNdN+dYw9CmemBtwJZNxnjKAMktk2SRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AoZqJDT0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749331540; c=relaxed/simple;
+	bh=lDutR/OkZJ8kejemD+ev3cJGgma3EktDwsICk0qZi/c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LOaiejjdEN5rSyDfYKeNHY0kiGU24/sbwRpAvPpLBNpz+rkjeS6Nv953lbtYAnV3QS9TUQvkVH7rJYCbu6r8M08fc5C47IFPCiac+rIGlvnRTPSECYUjYp5VTED8EqT/ofOvGebOhFQVZhY64yYdU3fANeZE6jgXaEN3zNunoMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QiVYTStC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AoZqJDT0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9488C4CEE4;
-	Sat,  7 Jun 2025 21:25:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QiVYTStC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6770EC4CEF2;
+	Sat,  7 Jun 2025 21:25:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749331535;
-	bh=K6AgqbCW9JSjO83IIZgLlFEbhS3N7/Ckiy1gB7abu3E=;
+	s=k20201202; t=1749331539;
+	bh=lDutR/OkZJ8kejemD+ev3cJGgma3EktDwsICk0qZi/c=;
 	h=From:To:Cc:Subject:Date:From;
-	b=AoZqJDT0febyKLlUO3MJ4D8cpngI3LYXICgQK5r1J9BfeHhXiP7PK0j/+XcDa4HSF
-	 cCJXXRbSAPYd8rJepUHpb0dbRoKtvphOROemAMC8H73VeVjvrGLxPnCoM1HymbyotC
-	 aRajyi8gXQjymv0HxOv/0RojHp7V1UEnv/hr6NTZgOhHNyvWE1PGO5N7+7GKF0VdPL
-	 rr6M5stWF9tl5M79gEZ5bVbHTJoXqckqimxrk5uvEUD15hHMfcrxm+X/5fpTPS7vCs
-	 0dy2lmLp0SZuwNN7m9gZzfjT81qootIKeqdGKMe/gDShAfhdhdiD+8be/wkuTcWaNU
-	 CgKoGLlpyUX8g==
+	b=QiVYTStC0tCKCpWkxIXZjo51dquboWRkaSsp9XUW3T6nGrRTiI1b3gcFjshihMhkn
+	 gc3j/YqolsyW8TRo24Y7YaZmkfOckgbgms1HEAmMDUyUQ6LUepPZBe4TM/6uoXE4cc
+	 jQ4AWh/i9e25i624WS3WVuMctwJOSNgdUos0/l2+kTqDJRoybJHjDvD68eDjCH38cd
+	 cQfdMHgQobnfJ6H0DqsWmYsl1CfGpMIeBJVHmeEuar5y7oh3b2hXQ1icvwdQdPkiMG
+	 C1CThrSJ9UFWvJVKCrwD6CmQZ/yLKV2HjrQodtoxCEtgaCoR7fK6SG6eDAjVoKkWYC
+	 9ao94dAP1hC5A==
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Vinod Koul <vkoul@kernel.org>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Andrew Bresticker <abrestic@chromium.org>
+	Hauke Mehrtens <hauke@hauke-m.de>
 Cc: linux-phy@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: phy: Convert img,pistachio-usb-phy to DT schema
-Date: Sat,  7 Jun 2025 16:25:30 -0500
-Message-ID: <20250607212531.742082-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: phy: Convert lantiq,ase-usb2-phy to DT schema
+Date: Sat,  7 Jun 2025 16:25:36 -0500
+Message-ID: <20250607212537.742287-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,120 +46,140 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the Imagination Pistachio USB PHY binding to DT schema format.
-It's a straight forward conversion.
+Convert the Lantiq XWAY USB PHY binding to DT schema format. It's a
+straight forward conversion.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../bindings/phy/img,pistachio-usb-phy.yaml   | 62 +++++++++++++++++++
- .../bindings/phy/pistachio-usb-phy.txt        | 29 ---------
- 2 files changed, 62 insertions(+), 29 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/img,pistachio-usb-phy.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
+ .../bindings/phy/lantiq,ase-usb2-phy.yaml     | 71 +++++++++++++++++++
+ .../bindings/phy/phy-lantiq-rcu-usb2.txt      | 40 -----------
+ 2 files changed, 71 insertions(+), 40 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/lantiq,ase-usb2-phy.yaml
+ delete mode 100644 Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt
 
-diff --git a/Documentation/devicetree/bindings/phy/img,pistachio-usb-phy.yaml b/Documentation/devicetree/bindings/phy/img,pistachio-usb-phy.yaml
+diff --git a/Documentation/devicetree/bindings/phy/lantiq,ase-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/lantiq,ase-usb2-phy.yaml
 new file mode 100644
-index 000000000000..bcc19bc68297
+index 000000000000..99b5da705ca4
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/img,pistachio-usb-phy.yaml
-@@ -0,0 +1,62 @@
++++ b/Documentation/devicetree/bindings/phy/lantiq,ase-usb2-phy.yaml
+@@ -0,0 +1,71 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/phy/img,pistachio-usb-phy.yaml#
++$id: http://devicetree.org/schemas/phy/lantiq,ase-usb2-phy.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Imagination Pistachio USB PHY
++title: Lantiq XWAY SoC RCU USB 1.1/2.0 PHY
 +
 +maintainers:
-+  - Andrew Bresticker <abrestic@chromium.org>
++  - Hauke Mehrtens <hauke@hauke-m.de>
++
++description:
++  This node has to be a sub node of the Lantiq RCU block.
 +
 +properties:
 +  compatible:
-+    const: img,pistachio-usb-phy
++    items:
++      - enum:
++          - lantiq,ase-usb2-phy
++          - lantiq,danube-usb2-phy
++          - lantiq,xrx100-usb2-phy
++          - lantiq,xrx200-usb2-phy
++          - lantiq,xrx300-usb2-phy
++
++  reg:
++    items:
++      - description: Offset of the USB PHY configuration register
++      - description: Offset of the USB Analog configuration register
 +
 +  clocks:
 +    maxItems: 1
 +
 +  clock-names:
 +    items:
-+      - const: usb_phy
++      - const: phy
++
++  resets:
++    minItems: 1
++    maxItems: 2
++
++  reset-names:
++    minItems: 1
++    items:
++      - enum: [ phy, ctrl ]
++      - const: ctrl
 +
 +  '#phy-cells':
 +    const: 0
 +
-+  phy-supply:
-+    description: USB VBUS supply. Must supply 5.0V.
-+
-+  img,refclk:
-+    description:
-+      Reference clock source for the USB PHY. See
-+      <dt-bindings/phy/phy-pistachio-usb.h> for valid values.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  img,cr-top:
-+    description: CR_TOP syscon phandle.
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
 +required:
 +  - compatible
++  - reg
 +  - clocks
 +  - clock-names
++  - resets
++  - reset-names
 +  - '#phy-cells'
-+  - img,refclk
-+  - img,cr-top
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    #include <dt-bindings/phy/phy-pistachio-usb.h>
-+    #include <dt-bindings/clock/pistachio-clk.h>
-+
-+    usb-phy {
-+        compatible = "img,pistachio-usb-phy";
-+        clocks = <&clk_core CLK_USB_PHY>;
-+        clock-names = "usb_phy";
++    usb2-phy@18 {
++        compatible = "lantiq,xrx200-usb2-phy";
++        reg = <0x18 4>, <0x38 4>;
++        clocks = <&pmu 1>;
++        clock-names = "phy";
++        resets = <&reset1 4 4>, <&reset0 4 4>;
++        reset-names = "phy", "ctrl";
 +        #phy-cells = <0>;
-+        phy-supply = <&usb_vbus>;
-+        img,refclk = <REFCLK_CLK_CORE>;
-+        img,cr-top = <&cr_top>;
 +    };
-diff --git a/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt b/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
+diff --git a/Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt b/Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt
 deleted file mode 100644
-index c7970c07ee32..000000000000
---- a/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
+index 643948b6b576..000000000000
+--- a/Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt
 +++ /dev/null
-@@ -1,29 +0,0 @@
--IMG Pistachio USB PHY
--=====================
+@@ -1,40 +0,0 @@
+-Lantiq XWAY SoC RCU USB 1.1/2.0 PHY binding
+-===========================================
 -
--Required properties:
----------------------
-- - compatible: Must be "img,pistachio-usb-phy".
-- - #phy-cells: Must be 0.  See ./phy-bindings.txt for details.
-- - clocks: Must contain an entry for each entry in clock-names.
--   See ../clock/clock-bindings.txt for details.
-- - clock-names: Must include "usb_phy".
-- - img,cr-top: Must contain a phandle to the CR_TOP syscon node.
-- - img,refclk: Indicates the reference clock source for the USB PHY.
--   See <dt-bindings/phy/phy-pistachio-usb.h> for a list of valid values.
+-This binding describes the USB PHY hardware provided by the RCU module on the
+-Lantiq XWAY SoCs.
 -
--Optional properties:
----------------------
-- - phy-supply: USB VBUS supply.  Must supply 5.0V.
+-This node has to be a sub node of the Lantiq RCU block.
 -
--Example:
----------
--usb_phy: usb-phy {
--	compatible = "img,pistachio-usb-phy";
--	clocks = <&clk_core CLK_USB_PHY>;
--	clock-names = "usb_phy";
--	phy-supply = <&usb_vbus>;
--	img,refclk = <REFCLK_CLK_CORE>;
--	img,cr-top = <&cr_top>;
--	#phy-cells = <0>;
--};
+--------------------------------------------------------------------------------
+-Required properties (controller (parent) node):
+-- compatible	: Should be one of
+-			"lantiq,ase-usb2-phy"
+-			"lantiq,danube-usb2-phy"
+-			"lantiq,xrx100-usb2-phy"
+-			"lantiq,xrx200-usb2-phy"
+-			"lantiq,xrx300-usb2-phy"
+-- reg		: Defines the following sets of registers in the parent
+-		  syscon device
+-			- Offset of the USB PHY configuration register
+-			- Offset of the USB Analog configuration
+-			  register (only for xrx200 and xrx200)
+-- clocks	: References to the (PMU) "phy" clk gate.
+-- clock-names	: Must be "phy"
+-- resets	: References to the RCU USB configuration reset bits.
+-- reset-names	: Must be one of the following:
+-			"phy" (optional)
+-			"ctrl" (shared)
+-
+--------------------------------------------------------------------------------
+-Example for the USB PHYs on an xRX200 SoC:
+-	usb_phy0: usb2-phy@18 {
+-		compatible = "lantiq,xrx200-usb2-phy";
+-		reg = <0x18 4>, <0x38 4>;
+-
+-		clocks = <&pmu PMU_GATE_USB0_PHY>;
+-		clock-names = "phy";
+-		resets = <&reset1 4 4>, <&reset0 4 4>;
+-		reset-names = "phy", "ctrl";
+-		#phy-cells = <0>;
+-	};
 -- 
 2.47.2
 
