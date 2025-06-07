@@ -1,97 +1,216 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A172D13AD38;
-	Sat,  7 Jun 2025 10:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7201FCF41;
+	Sat,  7 Jun 2025 10:50:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749292879; cv=none; b=P4+bsQNDzaQTF8N+SZ0sfeIqC0mqmK40JNX/ZPVTT/THD1StmV7VJRNceqLyTlBys1g9m8BmKGVrqDdnq2UqAXy331pJ2x7H5GX6fqAHlcAhw/3+gwXMNnU0EpWsfQI3OIXgFKVwQBnxyv1HZsFcUqt7Vcb7zP0kvp7rzHbr9YM=
+	t=1749293444; cv=none; b=usWXPyLE7EV4fJ7f9EfyHHhHXjD7PWWSEFDhkXv7Vrue2L0SHByaElLrfYb68q0E8QpEH7hDFyyUCf9nyvgOS8r1rQoZFBzsTIm4XiAtFWQMY1JxdGx6evqmvPpThOypN8I6X+rldVrzxKr4RJyr3UXMtm/N1oapVWK3OL3gVIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749292879; c=relaxed/simple;
-	bh=Jn2nwtxhrD0LiVtEA05ZWEGUVk8dP/GC/5zmOhse/KM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HOE2E/AbpW1haE8wgtm8V4iD+We1VTjgUoWHj1TgQ+0RT6KlcIug0aHoMDVsRgMdMEIfI/ex9Ghr2kDGZcNxh4gBtD1q/gcmE+iymAnAnuYISOhKU7j+QZ3mIkCPHwtATDgvoUqcxqaCTOnGf70i8uxYnv0TfUlBJ8NXU+k4vSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DiQ2Ns8u; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749293444; c=relaxed/simple;
+	bh=o27XSHqJkIzSFdZHAZnYV8LCRI52XNOu42Y1+FEpZS4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cJBTlaANhbsTxmxo9L7eqolC8rwr8LTIdaSH8q93JogYxvtngtwnmURcLugm40O2oWbDH+Jn2eIwHxZYzq/W1gYF6nIKo84mcmMxGbr4Ygtazgf3SisJxv30JI+mH66XiSnCWnoR5b0/PaYqNtMsfKHLxMjsBHnntF32xT4YT84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xk3uaKUK; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DiQ2Ns8u"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad88d77314bso554988466b.1;
-        Sat, 07 Jun 2025 03:41:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749292875; x=1749897675; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LCc2AL+8GYTHWfaJdKFHyFfLcbynW+S8GO3AirZCWOg=;
-        b=DiQ2Ns8uchRY1v4BGuyu8aMjJjW0m3g2oeLWR/Fvze6nVUyR2tIMIc2T/KXzPltn7h
-         TsNFVOw4WjNXhv8AuWng7HxbRt/NP1fElC5kRV4GO4cyEGT9W8iwGz6wRP2nATLTnzIx
-         0WLWLiV0OoqQPo+DLN0XL78uNtQHGDw6GK5Xsu9jbuSDekFUM8z47fP1ytHzjQjdaedy
-         ApPLw6G3w2oVfUp+MOjkJlRTo81naC6z9RUHBLif2tGdtYJBjtAHIQIT71exNafUkF6n
-         gawdd3fyqAE8FmBwGrMXdmuWGZ/xL2aJr9QdF4D2xc2L8CaH+/rgWxM5/UyWhmBTXpqU
-         Qinw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749292875; x=1749897675;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LCc2AL+8GYTHWfaJdKFHyFfLcbynW+S8GO3AirZCWOg=;
-        b=mjd5PJ9sQ3pOdDK+hPjrro4xUDNcrLrqzngH6OevKrnUEpG5yfceaUei9UNPOKjj9L
-         1UCaHKmkMneYySagf0QUguuW0We6KXv8veroUruAzHHAwWV6Q1tz1o6BFJGltvKXwnqw
-         +43d0zbFT6lE9ATlxdqZ21BCgjUHNJPQGLl9GyrSKRY6OLJ03vp3k3AsJYM+XHBzBtZB
-         8tL/hrX4XsRTaBaQNZRVZaxQoC76/dwNU++FsnqccHwbVIayhsMD8mmdEdNZBMJTgyWT
-         KylRQHjjAt74+ehydwFjW1OiGg5kxxQb1E0vQweI8ou+lPkZeOfOFjWklk4g5t7xusJm
-         k11w==
-X-Forwarded-Encrypted: i=1; AJvYcCVD9KZYV0PHJ5POXDwBFlTdzuFeDR80TR0Fley98CT7bGhrbTpiytZyyC14bgemPH18ASEbY7nScSra3pgOwg==@vger.kernel.org, AJvYcCW+DP1c64G/gi4RV4u67CuHBAC26fVI/xq44DQwES9u2WUOiKcFQkat0YTDDH9jkCC3rM7w3BfRtVam9yUD@vger.kernel.org, AJvYcCW+WFgCkX190h7VZqhhtek3TsK5G5tZOzOZnYg/ad5t6BLd1hufrTFwk0JNPKl+VL76lSbTEI3oprhqlrBX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/x0xL6W7PQ93KdGxuzCieSaOfurm9osqOuTaGlBpb4kw4lv5g
-	lge5pEXgD/N7XCpw6t2+n/AQC+sfNKLWLKod1DkMAJCPlZ3pyBAWd5S9hCtFC2ofLe4bCXo0eEX
-	MfC4a1fVvNg1aQt9XmKTWNG0jjGes+yM=
-X-Gm-Gg: ASbGncsN24Ca9/hr80e0NVw+z4KsQuj4B0OyinjcffnqOPALnlmEz7LebpEatiy76yi
-	tVZpkJ+0um9Nu7TGZBD2ZKyDUfE9nKNjW8FY2PxKfwjDgpR5iPAiZEayOQdVj9Bt8V5XRDFpLuJ
-	MiOVc7oWEO76ATITJEb0D6iymZaubgI0s1
-X-Google-Smtp-Source: AGHT+IGmGeCn46P5NspVOPkS27vYcSGjcKxmfhGr6FFoxv5+mZNtdASAwSMv/beOFpW7j2ByyNuxapTB32Jp/PXLSW0=
-X-Received: by 2002:a17:906:915:b0:ade:422d:3167 with SMTP id
- a640c23a62f3a-ade422d3425mr99608166b.49.1749292874588; Sat, 07 Jun 2025
- 03:41:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xk3uaKUK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749293442; x=1780829442;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=o27XSHqJkIzSFdZHAZnYV8LCRI52XNOu42Y1+FEpZS4=;
+  b=Xk3uaKUK1W/P8sNyt2SB0yFwF3LPDkAkbBP5fK3btRtsLL681pTHczlb
+   ryXDQ8EhLdAITcjc/EhxpSmGKcxU1lLoWKuMadi2BQqn1FaZMG40Rs5mH
+   Ft71OQbPRFJTela9LCstVVtQonSs92rMN/akJq3hpdLj7Phm11ZLTu4Sl
+   vBbFzdOBFguGBS1+mMvVVLKat7+aSN2e3VTRE+Dxs+LlEQ6Op+rhlgVcO
+   TjNQ500vFvkROZ2px73bt7nyeDOsyChAKPcoZpq8A6N7G87xxzsg0Ttv5
+   KC5M/zekknmoyueLgLNIue3zyDIM6VTYpYhFzO+5PUPWWhEnaQfZUXfmw
+   g==;
+X-CSE-ConnectionGUID: HzsETOrtTwu0OPMTxuRCLA==
+X-CSE-MsgGUID: oZiQy1FtRmq5xT3Oy7l8+A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="51431701"
+X-IronPort-AV: E=Sophos;i="6.16,217,1744095600"; 
+   d="scan'208";a="51431701"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2025 03:50:42 -0700
+X-CSE-ConnectionGUID: Y+tVodW+Rx6jX9aNnNeT7w==
+X-CSE-MsgGUID: xibnwF5vSVGeQ+6KMw1QHQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,217,1744095600"; 
+   d="scan'208";a="145980515"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 07 Jun 2025 03:50:40 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uNr8H-0005jN-28;
+	Sat, 07 Jun 2025 10:50:37 +0000
+Date: Sat, 7 Jun 2025 18:50:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jemmy Wong <jemmywong512@gmail.com>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc: oe-kbuild-all@lists.linux.dev, Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Waiman Long <longman@redhat.com>, cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 3/3] cgroup: add lock guard support for others
+Message-ID: <202506071822.ERv4i34r-lkp@intel.com>
+References: <20250606161841.44354-4-jemmywong512@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJfpegvB3At5Mm54eDuNVspuNtkhoJwPH+HcOCWm7j-CSQ1jbw@mail.gmail.com>
- <CAHk-=wgH174aR4HnpmV7yVYVjS7VmSRC31md5di7_Cr_v0Afqg@mail.gmail.com>
- <CAOQ4uxjXvcj8Vf3y81KJCbn6W5CSm9fFofV8P5ihtcZ=zYSREA@mail.gmail.com>
- <CAJfpegutprdJ8LPsKGG-yNi9neC65Phhf67nLuL+5a4xGhpkZA@mail.gmail.com> <CAJfpegu1BAVsW5duT-HoMGiSXNvj2VsLNfTuzvF1-RLyVLDdTA@mail.gmail.com>
-In-Reply-To: <CAJfpegu1BAVsW5duT-HoMGiSXNvj2VsLNfTuzvF1-RLyVLDdTA@mail.gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Sat, 7 Jun 2025 12:41:03 +0200
-X-Gm-Features: AX0GCFuOS-cNCbhYtnI1GPftVgZkMlWkuSQkk5a56vkarkoJju9FdW0Wtthagqc
-Message-ID: <CAOQ4uxgFJCikAi4o4e9vzXTH=cUQGyvoo+cpdtfmBwJzutSCzw@mail.gmail.com>
-Subject: Re: [GIT PULL] overlayfs update for 6.16
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	overlayfs <linux-unionfs@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250606161841.44354-4-jemmywong512@gmail.com>
 
-On Fri, Jun 6, 2025 at 11:33=E2=80=AFAM Miklos Szeredi <miklos@szeredi.hu> =
-wrote:
->
-> On Fri, 6 Jun 2025 at 08:36, Miklos Szeredi <miklos@szeredi.hu> wrote:
->
-> > I'll redo the PR with your patch.
->
-> Pushed to #overlayfs-next.
->
-> I'll drop this from the PR, since it's just a cleanup.  It still won't
-> break anything (and that's what I meant by "trivial"), but it can wait
-> a cycle or at least a few rc's.
->
+Hi Jemmy,
 
-I'll send the cleanup patch to Christian.
-It's best if it goes in via the vfs tree anyway.
+kernel test robot noticed the following build warnings:
 
-Thanks,
-Amir.
+[auto build test WARNING on tj-cgroup/for-next]
+[also build test WARNING on linus/master next-20250606]
+[cannot apply to v6.15]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Jemmy-Wong/cgroup-add-lock-guard-support-for-cgroup_muetx/20250607-002109
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-next
+patch link:    https://lore.kernel.org/r/20250606161841.44354-4-jemmywong512%40gmail.com
+patch subject: [PATCH v1 3/3] cgroup: add lock guard support for others
+config: sparc-randconfig-r121-20250607 (https://download.01.org/0day-ci/archive/20250607/202506071822.ERv4i34r-lkp@intel.com/config)
+compiler: sparc-linux-gcc (GCC) 8.5.0
+reproduce: (https://download.01.org/0day-ci/archive/20250607/202506071822.ERv4i34r-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506071822.ERv4i34r-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> kernel/cgroup/cgroup.c:6721:33: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct spinlock [usertype] *l @@     got struct spinlock [noderef] __rcu * @@
+   kernel/cgroup/cgroup.c:6721:33: sparse:     expected struct spinlock [usertype] *l
+   kernel/cgroup/cgroup.c:6721:33: sparse:     got struct spinlock [noderef] __rcu *
+   kernel/cgroup/cgroup.c:345:13: sparse: sparse: context imbalance in 'cgroup_idr_replace' - wrong count at exit
+   kernel/cgroup/cgroup.c:351:13: sparse: sparse: context imbalance in 'cgroup_idr_remove' - wrong count at exit
+   kernel/cgroup/cgroup.c:626:5: sparse: sparse: context imbalance in 'cgroup_task_count' - wrong count at exit
+   kernel/cgroup/cgroup.c:2225:9: sparse: sparse: context imbalance in 'cgroup_do_get_tree' - different lock contexts for basic block
+   kernel/cgroup/cgroup.c:2418:5: sparse: sparse: context imbalance in 'cgroup_path_ns' - wrong count at exit
+   kernel/cgroup/cgroup.c:2734:9: sparse: sparse: context imbalance in 'cgroup_migrate_finish' - wrong count at exit
+   kernel/cgroup/cgroup.c:3131:9: sparse: sparse: context imbalance in 'cgroup_lock_and_drain_offline' - wrong count at exit
+   kernel/cgroup/cgroup.c:4532:9: sparse: sparse: context imbalance in 'cgroup_file_notify' - wrong count at exit
+   kernel/cgroup/cgroup.c:4994:9: sparse: sparse: context imbalance in 'css_task_iter_start' - wrong count at exit
+   kernel/cgroup/cgroup.c:5027:9: sparse: sparse: context imbalance in 'css_task_iter_next' - wrong count at exit
+   kernel/cgroup/cgroup.c:5047:9: sparse: sparse: context imbalance in 'css_task_iter_end' - wrong count at exit
+   kernel/cgroup/cgroup.c:6485:12: sparse: sparse: context imbalance in 'cgroup_css_set_fork' - wrong count at exit
+   kernel/cgroup/cgroup.c:6601:9: sparse: sparse: context imbalance in 'cgroup_css_set_put_fork' - wrong count at exit
+   kernel/cgroup/cgroup.c:6621:5: sparse: sparse: context imbalance in 'cgroup_can_fork' - wrong count at exit
+   kernel/cgroup/cgroup.c:6670:9: sparse: sparse: context imbalance in 'cgroup_cancel_fork' - unexpected unlock
+   kernel/cgroup/cgroup.c:6813:9: sparse: sparse: context imbalance in 'cgroup_release' - different lock contexts for basic block
+
+vim +6721 kernel/cgroup/cgroup.c
+
+  6672	
+  6673	/**
+  6674	 * cgroup_post_fork - finalize cgroup setup for the child process
+  6675	 * @child: the child process
+  6676	 * @kargs: the arguments passed to create the child process
+  6677	 *
+  6678	 * Attach the child process to its css_set calling the subsystem fork()
+  6679	 * callbacks.
+  6680	 */
+  6681	void cgroup_post_fork(struct task_struct *child,
+  6682			      struct kernel_clone_args *kargs)
+  6683		__releases(&cgroup_threadgroup_rwsem) __releases(&cgroup_mutex)
+  6684	{
+  6685		unsigned int cgrp_kill_seq = 0;
+  6686		unsigned long cgrp_flags = 0;
+  6687		bool kill = false;
+  6688		struct cgroup_subsys *ss;
+  6689		struct css_set *cset;
+  6690		int i;
+  6691	
+  6692		cset = kargs->cset;
+  6693		kargs->cset = NULL;
+  6694	
+  6695		scoped_guard(spinlock_irq, &css_set_lock) {
+  6696			/* init tasks are special, only link regular threads */
+  6697			if (likely(child->pid)) {
+  6698				if (kargs->cgrp) {
+  6699					cgrp_flags = kargs->cgrp->flags;
+  6700					cgrp_kill_seq = kargs->cgrp->kill_seq;
+  6701				} else {
+  6702					cgrp_flags = cset->dfl_cgrp->flags;
+  6703					cgrp_kill_seq = cset->dfl_cgrp->kill_seq;
+  6704				}
+  6705	
+  6706				WARN_ON_ONCE(!list_empty(&child->cg_list));
+  6707				cset->nr_tasks++;
+  6708				css_set_move_task(child, NULL, cset, false);
+  6709			} else {
+  6710				put_css_set(cset);
+  6711				cset = NULL;
+  6712			}
+  6713	
+  6714			if (!(child->flags & PF_KTHREAD)) {
+  6715				if (unlikely(test_bit(CGRP_FREEZE, &cgrp_flags))) {
+  6716					/*
+  6717					 * If the cgroup has to be frozen, the new task has
+  6718					 * too. Let's set the JOBCTL_TRAP_FREEZE jobctl bit to
+  6719					 * get the task into the frozen state.
+  6720					 */
+> 6721					scoped_guard(spinlock, &child->sighand->siglock) {
+  6722						WARN_ON_ONCE(child->frozen);
+  6723						child->jobctl |= JOBCTL_TRAP_FREEZE;
+  6724					}
+  6725	
+  6726					/*
+  6727					 * Calling cgroup_update_frozen() isn't required here,
+  6728					 * because it will be called anyway a bit later from
+  6729					 * do_freezer_trap(). So we avoid cgroup's transient
+  6730					 * switch from the frozen state and back.
+  6731					 */
+  6732				}
+  6733	
+  6734				/*
+  6735				 * If the cgroup is to be killed notice it now and take the
+  6736				 * child down right after we finished preparing it for
+  6737				 * userspace.
+  6738				 */
+  6739				kill = kargs->kill_seq != cgrp_kill_seq;
+  6740			}
+  6741		}
+  6742		/*
+  6743		 * Call ss->fork().  This must happen after @child is linked on
+  6744		 * css_set; otherwise, @child might change state between ->fork()
+  6745		 * and addition to css_set.
+  6746		 */
+  6747		do_each_subsys_mask(ss, i, have_fork_callback) {
+  6748			ss->fork(child);
+  6749		} while_each_subsys_mask();
+  6750	
+  6751		/* Make the new cset the root_cset of the new cgroup namespace. */
+  6752		if (kargs->flags & CLONE_NEWCGROUP) {
+  6753			struct css_set *rcset = child->nsproxy->cgroup_ns->root_cset;
+  6754	
+  6755			get_css_set(cset);
+  6756			child->nsproxy->cgroup_ns->root_cset = cset;
+  6757			put_css_set(rcset);
+  6758		}
+  6759	
+  6760		/* Cgroup has to be killed so take down child immediately. */
+  6761		if (unlikely(kill))
+  6762			do_send_sig_info(SIGKILL, SEND_SIG_NOINFO, child, PIDTYPE_TGID);
+  6763	
+  6764		cgroup_css_set_put_fork(kargs);
+  6765	}
+  6766	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
