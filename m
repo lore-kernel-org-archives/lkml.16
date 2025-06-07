@@ -1,59 +1,67 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE801EE033;
-	Sat,  7 Jun 2025 19:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1EA01990A7;
+	Sat,  7 Jun 2025 19:44:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749325276; cv=none; b=Nle2q0qcCcKI0N+hG00trPZ7KaGPdymXnZU1UYDO6ltQ/AgsiXclW0zlnjvXs61XeYUjeOtw2qqLrkOz4Tm6Ds0Lebr+StMXl5z4zNcI2qFD9g5xJ+uH/E+PBw9FY3PdsgaH7OFvniy9+5GcuehiuVtZS+FQIYoDp3TXJPMKCfM=
+	t=1749325457; cv=none; b=rPW+QB4x3zwxvPDfD389CrkH9SSGLTsl3JPMxRBGJVVpD3FO8N/X7QoziWmjQ2hASR8t3T8Mfhr/peCr+qZ72LjXhstcuLIcBUl8NE8tt2rLIHTfpEbWPERBkwEE+d6f/sHWCESV7IXzwLzUOQUfbGkZ57OhKKkLjmudG05GyrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749325276; c=relaxed/simple;
-	bh=Y30K3E0yyjFSeZhj+xUBTiPZOGiQLu3gv23G/kKzCMA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CmxcQp+muyMDH96M2Dk0obng0nkAVfeExKg6zqkrRfRY1grYdINM0miIjvuMAa27JK90P+uuSHIelMcBPD2LrGGrUTZNTt7Na76zkDV9XW5/KpuP8SuVeDnsF3muWZM8QFMIJ62yDyzvWDtVmfzReK074C0B7ksENoOMG25TaBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=LO2nnOUn; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1749325457; c=relaxed/simple;
+	bh=HeQuThy1N1IZeImMdHxkz5s60e2a1U6OFxeJ6qxbARE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G8lJR/mv2sHrTu2c0+sN/61gBA+3tVEB6fPeBOB9gEPIDBZX+0SDxRuSkp1REU72hAnbyPetcazDuYAewPgPb7ZKlKrafXZBX1kitqasLucfKFEA6J+ufEnV/LhGGyJFhBkUx96GbwC78IlF8dxZlv2jqm60kAU5A4QELaEY3vU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=B8wmFcSh; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=rZjZLHUy; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LO2nnOUn"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 557Hfvxl025274;
-	Sat, 7 Jun 2025 19:41:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=yEkNIciN2ZXl51snU525fgC5g4mjn
-	LWPSAyW/FCbrXE=; b=LO2nnOUnxu4dUKzT+uNxdct5XL7/VHqiogYLJTej2X5sn
-	WfRd/dwK1RyuCCBTz1vfaxEYm8dYwlmQvH+WISlGDTLF8M76SXrp1l4sEqtI7gJQ
-	vpUFRWDi33JNr+knQrGFlcJyxy9bdaWIhh/HmVeLklLTjGW3u6DLtJZ/1NT47Zht
-	oYf2NxADuuIQ+6Q0g8NZACZ9PI70LsLDmffhBR6D0VYh6LRwSZNxCZk2Z8bkY48G
-	HGSh0huyzCJ9wItvQwC/BRNMrOUSo9bcBW9V0LzvbCZ75ci1TPCLH4WNIned7aj0
-	dcLEVwEgfUvG6WdShbdKMuFt+Wyqi1fDMX9VDuRQQ==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 474dywrdq2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 07 Jun 2025 19:41:07 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 557IF4ex007379;
-	Sat, 7 Jun 2025 19:41:07 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 474bv5x8ar-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 07 Jun 2025 19:41:07 +0000
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 557Jf6gP038168;
-	Sat, 7 Jun 2025 19:41:06 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 474bv5x8ah-1;
-	Sat, 07 Jun 2025 19:41:06 +0000
-From: Alok Tiwari <alok.a.tiwari@oracle.com>
-To: mst@redhat.com, jasowang@redhat.com, michael.christie@oracle.com,
-        pbonzini@redhat.com, stefanha@redhat.com, eperezma@redhat.com,
-        virtualization@lists.linux.dev, kvm@vger.kernel.org
-Cc: alok.a.tiwari@oracle.com, darren.kenny@oracle.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] vhost-scsi: Fix check for inline_sg_cnt exceeding preallocated limit
-Date: Sat,  7 Jun 2025 12:40:29 -0700
-Message-ID: <20250607194103.1770451-1-alok.a.tiwari@oracle.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="B8wmFcSh";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="rZjZLHUy"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bF7t564njz9sR8;
+	Sat,  7 Jun 2025 21:44:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1749325453;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hLbKLNDjtxbVMF5ETdYa9428/m9uNBsQgiB8dN56zpo=;
+	b=B8wmFcShtOKUvAYME98xFT62ZRqGHHCQhe9a7/++NtHLbFoEOo7JTVdHKLhahTkc6BpjIp
+	2mKo2TGY7um2NBcMYS7jxeEJUaDTd+T0lTXxbJSn6fRbM3pWv4PZ9vQBXNPupsDxs9Hv2U
+	h/ePBfngwnKKrdaaikl6glfwSEWHfxP1EeSOFflnP0pqLjEbR0sx3wWMUCZK9FD6GpTfJa
+	HlByS53U4IaG13CS2Gdv5d1QggAaJHGeQuRjZTx+Z/H5glrEVpBuz/Ue5qLUo7JZsK6QuM
+	xsHc9rd6bBt++h4f9/ySj0rZRbjJJqpIVPRq/yZdP/oO5wWFmDDdxq/+edSBAg==
+From: Marek Vasut <marek.vasut+renesas@mailbox.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1749325451;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hLbKLNDjtxbVMF5ETdYa9428/m9uNBsQgiB8dN56zpo=;
+	b=rZjZLHUyn/+RaDF4E7gXke0p3zZhHbLcqwf/fgkMFm5VRfhqe4V2OP01L7XzCn3NDTE1qQ
+	AoLhXc3LuLJX+3H0Lr/D/dDYUOf2WVFS2DHKuZQeOsSUVZED/oMO+eQ3yDGWfjyjUlhpQ0
+	JpyqWhv18dfAspag1cPNdBy0JL6NiljpY2tgA+hs7t8mjX3Jfw9Y6R7p4c6fuu9Qbgjfm6
+	ZJojBBy4eBXYgE/HF/G/Drn5qiivXtdTlC6BHWDcUYgck3pbif6eXRPVJvNQDV4SMr6iUc
+	hIZ/gDJvmegjDjN9wxBaBtqJ4dp34nHeNxjc1/hSZAJzXsMaXT6lfJoFXpFYQg==
+To: devicetree@vger.kernel.org
+Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org
+Subject: [PATCH] schemas: pci: bridge: Document clocks
+Date: Sat,  7 Jun 2025 21:43:24 +0200
+Message-ID: <20250607194353.79124-1-marek.vasut+renesas@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,46 +69,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-07_08,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
- malwarescore=0 suspectscore=0 spamscore=0 mlxscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2506070143
-X-Authority-Analysis: v=2.4 cv=fdaty1QF c=1 sm=1 tr=0 ts=684495d3 cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=0E5YaXQ-T7Us6pBqENsA:9
-X-Proofpoint-ORIG-GUID: zrKFm2P7NJWydziM36CAf1I0LxougJUz
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA3MDE0MyBTYWx0ZWRfX7ceZ/gS4wvAA L0+WgZ8Tgjjl7VP6fLXWVruHM8e+vh3ybaRXvs2pYfKP9fOW7HlW0iRJ+MHptBiUkp9BclVMwtk VOL60rSTRJ4LACI92sOShx7sz2Cwfl28bXJvoky259xv7DIpGGj4CEsGgRhdnU421kWM366YrbR
- XzvQl1I1v+dQMGVpW5uSH7p49yOFt6Z7mqvBejEWD9HIlC94+OgVE1EYhZ5jxAg2znxICwssIbA 2uZTmHuGoj4VIPKDcTdCfv3n39a7OyrV+ivZQvj3cQRq8LtmTHje/Zl7W45LZBTDIp90DrRP6lx 02F0/cMcCVal5BnZH01u2O0jLEPw8Qgto+IH33wXK3/vaGETanLdvS0oBBPmB9lq9Q6qRJ9N0bt
- bDHbB5oP6G9UzRM0tbYrXdsSO71TOgJ2ZCy2dd+nUIjXHRxzKKG3NRNFTi2kR2J76Dxp2Z7p
-X-Proofpoint-GUID: zrKFm2P7NJWydziM36CAf1I0LxougJUz
+X-MBO-RS-ID: 5a62b158240baca3793
+X-MBO-RS-META: tm7tb873p8z3pq1mfj7hhqdxiq4rxajn
 
-The condition comparing ret to VHOST_SCSI_PREALLOC_SGLS was incorrect,
-as ret holds the result of kstrtouint() (typically 0 on success),
-not the parsed value. Update the check to use cnt, which contains the
-actual user-provided value.
+The PCIe slot may have clocks which are explicitly controlled
+by the OS, describe the clocks property.
 
-prevents silently accepting values exceeding the maximum inline_sg_cnt.
-
-Fixes: bca939d5bcd0 ("vhost-scsi: Dynamically allocate scatterlists")
-Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 ---
- drivers/vhost/scsi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Related to https://lore.kernel.org/all/CAMuHMdUFHKHKfymqa6jwfNnxZTAuH3kbj5WL+-zN=TR6XGd0eA@mail.gmail.com/
+---
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Conor Dooley <conor+dt@kernel.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org
+---
+ dtschema/schemas/pci/pci-bus-common.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/vhost/scsi.c b/drivers/vhost/scsi.c
-index c12a0d4e6386..8d655b2d15d9 100644
---- a/drivers/vhost/scsi.c
-+++ b/drivers/vhost/scsi.c
-@@ -71,7 +71,7 @@ static int vhost_scsi_set_inline_sg_cnt(const char *buf,
- 	if (ret)
- 		return ret;
+diff --git a/dtschema/schemas/pci/pci-bus-common.yaml b/dtschema/schemas/pci/pci-bus-common.yaml
+index ca97a00..3c512cf 100644
+--- a/dtschema/schemas/pci/pci-bus-common.yaml
++++ b/dtschema/schemas/pci/pci-bus-common.yaml
+@@ -82,6 +82,8 @@ properties:
+     items:
+       maximum: 255
  
--	if (ret > VHOST_SCSI_PREALLOC_SGLS) {
-+	if (cnt > VHOST_SCSI_PREALLOC_SGLS) {
- 		pr_err("Max inline_sg_cnt is %u\n", VHOST_SCSI_PREALLOC_SGLS);
- 		return -EINVAL;
- 	}
++  clocks: true
++
+   external-facing:
+     description:
+       When present, the port is externally facing. All bridges and endpoints
 -- 
-2.47.1
+2.47.2
 
