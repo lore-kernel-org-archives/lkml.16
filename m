@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA272192FB;
-	Sat,  7 Jun 2025 21:26:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF1521D584;
+	Sat,  7 Jun 2025 21:26:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749331568; cv=none; b=rgHq3pLZjROoFK7ccplDzAFLVPZLHRdicb+JEZIAhuUcJ8Vws8gualHJr07L79Ry6TLeJ+yFwwCQRQpHZ2H6osc0/iT5da328m3/riStc7pHVnTPF7StBU6ZHy/+aJzMFjJtWSDJwqKj0iC7IhNImZOpPEvOZVErQMOG5r+ydl8=
+	t=1749331571; cv=none; b=Pfhnw564L2FZHU4Lf/M+F5+382se7xORNukkgYRm0wqyhAHGDbzm5CCRqRlyq/5Mz4Br7U2QB8E2r9Jl5Izsne/LwiqLghXpJinc/VTznpje+HXnkoSsN7xLg4Q84OFfmpG704EgQD/qu1DpAV8Y66HQW6A1ANqCMqXs+3m1DWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749331568; c=relaxed/simple;
-	bh=u29uebHU4LzMIDnLy+ZN3RITbyjTQBcHBeYH6wky+rw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lbK0ue+yNNmxu3l+q2SLh2Uu8l0ewY1p4r/6WzB0RQnnnM18t+OJSmeBpCjU6d9VEUHdTWC0wP4AkttoTyKazSmeE5WYSLRPZ55uUzKLcsbNYPh/LQe05q26VhmRZhN9nasKcm0JmD+BIH8DTNbEArjK8RhR5eTpxkn9B0WTtFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JJEJf9BB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749331571; c=relaxed/simple;
+	bh=9qIg7nbVlH9lBf4gZhbYJUi7zeVRI83SNOM20GBH+CM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bb/SrdfoVQfSvdXGe+TFpryoV+Wcl0dmnu10qb94X7LD1JqouCOAud2cV2LXSe0C24d9sDcFnmDyWBtQ327kKephpEJO4DTMqgh39OFgeiwHfqisUcEShrMZh+W5PsXvdcmq+gOy9PCxwo0d3li3JBHq7KutLGexaEjrEiA7zP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ouDPQgbi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JJEJf9BB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 586D9C4CEE4;
-	Sat,  7 Jun 2025 21:26:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ouDPQgbi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D3E2C4CEF2;
+	Sat,  7 Jun 2025 21:26:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749331567;
-	bh=u29uebHU4LzMIDnLy+ZN3RITbyjTQBcHBeYH6wky+rw=;
+	s=k20201202; t=1749331571;
+	bh=9qIg7nbVlH9lBf4gZhbYJUi7zeVRI83SNOM20GBH+CM=;
 	h=From:To:Cc:Subject:Date:From;
-	b=JJEJf9BBK5oh8ErN7gZok+kvWfMbAorazW/b1HZsY72qeOq4ibHud/5JQhPESRC8+
-	 3+D+jjIyb9/RxjUm4zKWxkajBP8+0/u7IxhL+uj4JTyOsbh3xSxDDFX34DdxTHBCjb
-	 JVaJJkYM4aVWD0uErPUHM3qtdJjc/wJKBeyDwUgVXehDhFEgA3Rj1YsYlZnGnka+hH
-	 FK/OENXe3qc2+0xf5bRyo0h/0bte5da6Ewj2bcNX/Y+m+dxe9p6Yjh4b4X9czwA2GJ
-	 jwlrDHT3lszZsKcXP5EklpaDVGJVVc6bsVl/8iCKmdCnZv0msWnEhfAOJiuGaXigAF
-	 vrYHGjGWb1DxQ==
+	b=ouDPQgbiVnLPKhnyAvyov/3263kJMXAShxvV/Usojroe+jzVKurcqPn30gGnV4tQH
+	 hwzu98oQEH5TjSPfThN84P7fz9jtH4X+EtbGR3UlYovTeLeH7YRj2akPnrQNLBeFX6
+	 mDNQO8jLQnpZMx7UW9DM7NKMRb1MNcam8IWrQjika5zqU/ApkZaPXq4rNaKoTT+FAM
+	 9atCRkVQdFmjndCrT2G5pPq9JZ3ku+EWDv1sJWd0/z5kve77yM8FFRruCJ5SDU6XFq
+	 Pa1mPAwHG8IEbx3obaxZqDz0ZsdGHO0wqpMHHT984PbMmck+IzZNm8VCyysQU/2R2P
+	 Y6ilD77tJlluA==
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Vinod Koul <vkoul@kernel.org>,
+To: Vinod Koul <vkoul@kernel.org>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
+	Conor Dooley <conor+dt@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Gregory Clement <gregory.clement@bootlin.com>
 Cc: linux-phy@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: phy: Convert marvell,comphy-cp110 to DT schema
-Date: Sat,  7 Jun 2025 16:26:03 -0500
-Message-ID: <20250607212605.743176-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: phy: Convert Marvell MVEBU PHYs to DT schema
+Date: Sat,  7 Jun 2025 16:26:07 -0500
+Message-ID: <20250607212609.743346-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,291 +47,166 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the Marvell CP110 combo PHY binding to DT schema format. It's a
-straight forward conversion.
+Convert the Marvell Armada-375 USB and MVEBU SATA PHY binding to DT
+schema format. It's a straight forward conversion.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../bindings/phy/marvell,comphy-cp110.yaml    | 154 ++++++++++++++++++
- .../bindings/phy/phy-mvebu-comphy.txt         |  94 -----------
- MAINTAINERS                                   |   2 +-
- 3 files changed, 155 insertions(+), 95 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/marvell,comphy-cp110.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/phy-mvebu-comphy.txt
+ .../phy/marvell,armada-375-usb-cluster.yaml   | 40 ++++++++++++++++
+ .../bindings/phy/marvell,mvebu-sata-phy.yaml  | 47 +++++++++++++++++++
+ .../devicetree/bindings/phy/phy-mvebu.txt     | 42 -----------------
+ 3 files changed, 87 insertions(+), 42 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/marvell,armada-375-usb-cluster.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/marvell,mvebu-sata-phy.yaml
+ delete mode 100644 Documentation/devicetree/bindings/phy/phy-mvebu.txt
 
-diff --git a/Documentation/devicetree/bindings/phy/marvell,comphy-cp110.yaml b/Documentation/devicetree/bindings/phy/marvell,comphy-cp110.yaml
+diff --git a/Documentation/devicetree/bindings/phy/marvell,armada-375-usb-cluster.yaml b/Documentation/devicetree/bindings/phy/marvell,armada-375-usb-cluster.yaml
 new file mode 100644
-index 000000000000..d9501df42886
+index 000000000000..1706c31644e1
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/marvell,comphy-cp110.yaml
-@@ -0,0 +1,154 @@
++++ b/Documentation/devicetree/bindings/phy/marvell,armada-375-usb-cluster.yaml
+@@ -0,0 +1,40 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/phy/marvell,comphy-cp110.yaml#
++$id: http://devicetree.org/schemas/phy/marvell,armada-375-usb-cluster.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Marvell MVEBU COMPHY Controller
++title: Armada 375 USB Cluster
 +
 +maintainers:
-+  - Miquel Raynal <miquel.raynal@bootlin.com>
++  - Andrew Lunn <andrew@lunn.ch>
++  - Gregory Clement <gregory.clement@bootlin.com>
 +
-+description: >
-+  COMPHY controllers can be found on the following Marvell MVEBU SoCs:
-+
-+    * Armada 7k/8k (on the CP110)
-+    * Armada 3700
-+
-+  It provides a number of shared PHYs used by various interfaces (network, SATA,
-+  USB, PCIe...).
++description:
++  Control register for the Armada 375 USB cluster, managing USB2 and USB3 features.
 +
 +properties:
 +  compatible:
-+    enum:
-+      - marvell,comphy-cp110
-+      - marvell,comphy-a3700
++    const: marvell,armada-375-usb-cluster
 +
 +  reg:
-+    minItems: 1
-+    items:
-+      - description: Generic COMPHY registers
-+      - description: Lane 1 (PCIe/GbE) registers (Armada 3700)
-+      - description: Lane 0 (USB3/GbE) registers (Armada 3700)
-+      - description: Lane 2 (SATA/USB3) registers (Armada 3700)
++    maxItems: 1
 +
-+  reg-names:
-+    minItems: 1
-+    items:
-+      - const: comphy
-+      - const: lane1_pcie_gbe
-+      - const: lane0_usb3_gbe
-+      - const: lane2_sata_usb3
-+
-+  '#address-cells':
++  '#phy-cells':
++    description: Number of PHY cells in specifier. 1 for USB2, 2 for USB3.
 +    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+  clocks:
-+    maxItems: 3
-+    description: Reference clocks for CP110; MG clock, MG Core clock, AXI clock
-+
-+  clock-names:
-+    items:
-+      - const: mg_clk
-+      - const: mg_core_clk
-+      - const: axi_clk
-+
-+  marvell,system-controller:
-+    description: Phandle to the Marvell system controller (CP110 only)
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+patternProperties:
-+  '^phy@[0-2]$':
-+    description: A COMPHY lane child node
-+    type: object
-+    additionalProperties: false
-+
-+    properties:
-+      reg:
-+        description: COMPHY lane number
-+
-+      '#phy-cells':
-+        const: 1
-+
-+    required:
-+      - reg
-+      - '#phy-cells'
 +
 +required:
 +  - compatible
 +  - reg
++  - '#phy-cells'
 +
 +additionalProperties: false
 +
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          const: marvell,comphy-a3700
++examples:
++  - |
++    usbcluster: usb-cluster@18400 {
++        compatible = "marvell,armada-375-usb-cluster";
++        reg = <0x18400 0x4>;
++        #phy-cells = <1>;
++    };
+diff --git a/Documentation/devicetree/bindings/phy/marvell,mvebu-sata-phy.yaml b/Documentation/devicetree/bindings/phy/marvell,mvebu-sata-phy.yaml
+new file mode 100644
+index 000000000000..81e942428911
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/marvell,mvebu-sata-phy.yaml
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/marvell,mvebu-sata-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+    then:
-+      properties:
-+        clocks: false
-+        clock-names: false
++title: Marvell MVEBU SATA PHY
 +
-+      required:
-+        - reg-names
++maintainers:
++  - Andrew Lunn <andrew@lunn.ch>
++  - Gregory Clement <gregory.clement@bootlin.com>
 +
-+    else:
-+      required:
-+        - marvell,system-controller
++properties:
++  compatible:
++    const: marvell,mvebu-sata-phy
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: sata
++
++  '#phy-cells':
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - '#phy-cells'
++
++additionalProperties: false
 +
 +examples:
 +  - |
-+    phy@120000 {
-+        compatible = "marvell,comphy-cp110";
-+        reg = <0x120000 0x6000>;
-+        clocks = <&clk 1 5>, <&clk 1 6>, <&clk 1 18>;
-+        clock-names = "mg_clk", "mg_core_clk", "axi_clk";
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        marvell,system-controller = <&syscon0>;
-+
-+        phy@0 {
-+            reg = <0>;
-+            #phy-cells = <1>;
-+        };
-+
-+        phy@1 {
-+            reg = <1>;
-+            #phy-cells = <1>;
-+        };
++    sata-phy@84000 {
++        compatible = "marvell,mvebu-sata-phy";
++        reg = <0x84000 0x0334>;
++        clocks = <&gate_clk 15>;
++        clock-names = "sata";
++        #phy-cells = <0>;
 +    };
-+
-+  - |
-+    phy@18300 {
-+        compatible = "marvell,comphy-a3700";
-+        reg = <0x18300 0x300>,
-+              <0x1F000 0x400>,
-+              <0x5C000 0x400>,
-+              <0xe0178 0x8>;
-+        reg-names = "comphy",
-+                    "lane1_pcie_gbe",
-+                    "lane0_usb3_gbe",
-+                    "lane2_sata_usb3";
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        comphy0: phy@0 {
-+            reg = <0>;
-+            #phy-cells = <1>;
-+        };
-+
-+        comphy1: phy@1 {
-+            reg = <1>;
-+            #phy-cells = <1>;
-+        };
-+
-+        comphy2: phy@2 {
-+            reg = <2>;
-+            #phy-cells = <1>;
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/phy/phy-mvebu-comphy.txt b/Documentation/devicetree/bindings/phy/phy-mvebu-comphy.txt
+diff --git a/Documentation/devicetree/bindings/phy/phy-mvebu.txt b/Documentation/devicetree/bindings/phy/phy-mvebu.txt
 deleted file mode 100644
-index 5ffd0f55d010..000000000000
---- a/Documentation/devicetree/bindings/phy/phy-mvebu-comphy.txt
+index 64afdd13d91d..000000000000
+--- a/Documentation/devicetree/bindings/phy/phy-mvebu.txt
 +++ /dev/null
-@@ -1,94 +0,0 @@
--MVEBU comphy drivers
----------------------
+@@ -1,42 +0,0 @@
+-* Marvell MVEBU SATA PHY
 -
--COMPHY controllers can be found on the following Marvell MVEBU SoCs:
--* Armada 7k/8k (on the CP110)
--* Armada 3700
--It provides a number of shared PHYs used by various interfaces (network, SATA,
--USB, PCIe...).
+-Power control for the SATA phy found on Marvell MVEBU SoCs.
+-
+-This document extends the binding described in phy-bindings.txt
+-
+-Required properties :
+-
+- - reg		   : Offset and length of the register set for the SATA device
+- - compatible	   : Should be "marvell,mvebu-sata-phy"
+- - clocks	   : phandle of clock and specifier that supplies the device
+- - clock-names	   : Should be "sata"
+-
+-Example:
+-		sata-phy@84000 {
+-			compatible = "marvell,mvebu-sata-phy";
+-			reg = <0x84000 0x0334>;
+-			clocks = <&gate_clk 15>;
+-			clock-names = "sata";
+-			#phy-cells = <0>;
+-		};
+-
+-Armada 375 USB cluster
+-----------------------
+-
+-Armada 375 comes with an USB2 host and device controller and an USB3
+-controller. The USB cluster control register allows to manage common
+-features of both USB controllers.
 -
 -Required properties:
 -
--- compatible: should be one of:
--  * "marvell,comphy-cp110" for Armada 7k/8k
--  * "marvell,comphy-a3700" for Armada 3700
--- reg: should contain the COMPHY register(s) location(s) and length(s).
--  * 1 entry for Armada 7k/8k
--  * 4 entries for Armada 3700 along with the corresponding reg-names
--    properties, memory areas are:
--    * Generic COMPHY registers
--    * Lane 1 (PCIe/GbE)
--    * Lane 0 (USB3/GbE)
--    * Lane 2 (SATA/USB3)
--- marvell,system-controller: should contain a phandle to the system
--			     controller node (only for Armada 7k/8k)
--- #address-cells: should be 1.
--- #size-cells: should be 0.
+-- compatible: "marvell,armada-375-usb-cluster"
+-- reg: Should contain usb cluster register location and length.
+-- #phy-cells : from the generic phy bindings, must be 1. Possible
+-values are 1 (USB2), 2 (USB3).
 -
--Optional properlties:
--
--- clocks: pointers to the reference clocks for this device (CP110 only),
--          consequently: MG clock, MG Core clock, AXI clock.
--- clock-names: names of used clocks for CP110 only, must be :
--               "mg_clk", "mg_core_clk" and "axi_clk".
--
--A sub-node is required for each comphy lane provided by the comphy.
--
--Required properties (child nodes):
--
--- reg: COMPHY lane number.
--- #phy-cells : from the generic PHY bindings, must be 1. Defines the
--               input port to use for a given comphy lane.
--
--Examples:
--
--	CP11X_LABEL(comphy): phy@120000 {
--		compatible = "marvell,comphy-cp110";
--		reg = <0x120000 0x6000>;
--		marvell,system-controller = <&CP11X_LABEL(syscon0)>;
--		clocks = <&CP11X_LABEL(clk) 1 5>, <&CP11X_LABEL(clk) 1 6>,
--			 <&CP11X_LABEL(clk) 1 18>;
--		clock-names = "mg_clk", "mg_core_clk", "axi_clk";
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		CP11X_LABEL(comphy0): phy@0 {
--			reg = <0>;
--			#phy-cells = <1>;
+-Example:
+-		usbcluster: usb-cluster@18400 {
+-			compatible = "marvell,armada-375-usb-cluster";
+-			reg = <0x18400 0x4>;
+-			#phy-cells = <1>
 -		};
--
--		CP11X_LABEL(comphy1): phy@1 {
--			reg = <1>;
--			#phy-cells = <1>;
--		};
--	};
--
--	comphy: phy@18300 {
--		compatible = "marvell,comphy-a3700";
--		reg = <0x18300 0x300>,
--		<0x1F000 0x400>,
--		<0x5C000 0x400>,
--		<0xe0178 0x8>;
--		reg-names = "comphy",
--		"lane1_pcie_gbe",
--		"lane0_usb3_gbe",
--		"lane2_sata_usb3";
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--
--		comphy0: phy@0 {
--			reg = <0>;
--			#phy-cells = <1>;
--		};
--
--		comphy1: phy@1 {
--			reg = <1>;
--			#phy-cells = <1>;
--		};
--
--		comphy2: phy@2 {
--			reg = <2>;
--			#phy-cells = <1>;
--		};
--	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5defb941c141..8fc2f21de224 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14495,7 +14495,7 @@ MARVELL ARMADA 3700 PHY DRIVERS
- M:	Miquel Raynal <miquel.raynal@bootlin.com>
- S:	Maintained
- F:	Documentation/devicetree/bindings/phy/marvell,armada-3700-utmi-phy.yaml
--F:	Documentation/devicetree/bindings/phy/phy-mvebu-comphy.txt
-+F:	Documentation/devicetree/bindings/phy/marvell,comphy-cp110.yaml
- F:	drivers/phy/marvell/phy-mvebu-a3700-comphy.c
- F:	drivers/phy/marvell/phy-mvebu-a3700-utmi.c
- 
 -- 
 2.47.2
 
