@@ -1,155 +1,158 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2F3DCA5A;
-	Sat,  7 Jun 2025 14:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1F7EEDE
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 14:16:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749305808; cv=none; b=bsgsOtseXT8YUDZ+WbcWmevGK/s3SL469C/IvtVAIdfCKkkBiyyf8UHlzGeeSMDQA/ypsiLNHuaN4eBdhv8i03c96QdFgdRu/J6aHwicXZtgPcKCi7vKYwsVNPrHK/B/+kkGyLT951mmhc4EMv2TzdS7d/6/YpHj22uJiBcKApo=
+	t=1749305808; cv=none; b=Hpm8K+bbKQeYPtiHGBqOy+ySJs1lwXLlf/cX10csGVVWmN2myUXGOzAGF5aLGloex5izQGDLzS/oRKN9GTcHSEe+GuHxiApRAWuZD+Zr59Rd2jNUnjIh6RKgsDd8HFpGnW0sUPVeluuUF+l+lVgjfL+3rWSjQC5CQeXqcOR4eI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749305808; c=relaxed/simple;
-	bh=BRmj87RP767+F/IPH8y7XcECquUBMp7SSKsaQmg/+Ak=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RSiFz8Onzs3w8WnompEDzNgKsHk0FwmLhVBSXXqs9PKjJMvRDb4kzK6/ppdRke0mkecw5wUvax22uA+o+KPVuykPYyxRIIFIZHdwZxq2G2NXopur7oduxIHXIZKiQEaNJFyVwcU/0BBkXrNl/X4stXq4GTWaUHtmp1CNu+yqMuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.69.3])
-	by gateway (Coremail) with SMTP id _____8DxC3LISURoXnIPAQ--.40961S3;
-	Sat, 07 Jun 2025 22:16:40 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.69.3])
-	by front1 (Coremail) with SMTP id qMiowMDxDce+SURoShMPAQ--.4187S2;
-	Sat, 07 Jun 2025 22:16:37 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch changes for v6.16
-Date: Sat,  7 Jun 2025 22:16:18 +0800
-Message-ID: <20250607141619.3616592-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	bh=74oBZmO8xDsWk8MCIOfUtTekYbilRrVe3hnnEo6zFWo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=AoXnyoFCrKiQLAjWfFg02ZgJO2FJemRYWvr1ze3p40yqff7hVOk8Hu3uXwwvX5iNUmouuAuLgo38e/eojRFY+jiJnWZs7KNka8RvdliZRE6rOcyeEjRpRjUAUSJPSM/i+ZYSPoofBzjpTM7m1mSxlv8ORAgZI4KqRTfgruTRcgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=PeG+dtO+; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="PeG+dtO+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1749305799;
+	bh=JWEOaaLt4BDnVdW8Y37Y6nzHvOr5CYTYqnL4sURAwu8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=PeG+dtO+FStFd8BBtOFfJzSwzCx2XDnw5DNnQaeg2A/I3tfjzfW41TSAxLB0IG6Mv
+	 fJy/nRJ53oIWpjPaIa2aeT1yKyXhiJmP9sA5fMx2239cDgeFtaEOVl2Mf5s3pllC/S
+	 b/7+oAQ33E9CG+EaEap0pOSaxfSBeGE2I/kZlHqw=
+Received: from [192.168.124.38] (unknown [113.200.174.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 7913065F62;
+	Sat,  7 Jun 2025 10:16:37 -0400 (EDT)
+Message-ID: <6163d55a1e7910f89dda114a2ee52c9df5235dad.camel@xry111.site>
+Subject: Re: [PATCH v2] RISC-V: vDSO: Correct inline assembly constraints in
+ the getrandom syscall wrapper
+From: Xi Ruoyao <xry111@xry111.site>
+To: Vineet Gupta <vineetg@rivosinc.com>, Alexandre Ghiti <alex@ghiti.fr>, 
+ Thomas =?ISO-8859-1?Q?Wei=DFschuh?=
+	 <thomas.weissschuh@linutronix.de>, Nathan Chancellor <nathan@kernel.org>
+Cc: "Jason A . Donenfeld" <Jason@zx2c4.com>, Paul Walmsley
+	 <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Guo Ren
+	 <guoren@kernel.org>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Date: Sat, 07 Jun 2025 22:16:34 +0800
+In-Reply-To: <94f9af73-0b2d-484c-ba1d-d4435908336b@rivosinc.com>
+References: 
+	<20250605091112-7cd6b3bd-a466-486a-aebc-7bf0b2a8ac31@linutronix.de>
+	 <20250606092443.73650-2-xry111@xry111.site>
+	 <94f9af73-0b2d-484c-ba1d-d4435908336b@rivosinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxDce+SURoShMPAQ--.4187S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxAF4kuF4kZrW7uF1fXFWxXwc_yoWrXrWkpF
-	ZxurnrGF48Grn3Arnxt34Uur1DJr4xGry2qa1ak348Ar13Zw1UZr18XF95XFyUJ3yrJry0
-	qr1rGw1aqF4UJ3XCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
-	Jw1lYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2l1vDUUUU
 
-The following changes since commit 0ff41df1cb268fc69e703a08a57ee14ae967d0ca:
+On Fri, 2025-06-06 at 15:01 -0700, Vineet Gupta wrote:
+> On 6/6/25 02:24, Xi Ruoyao wrote:
+> > As recently pointed out by Thomas, if a register is forced for two
+> > different register variables, among them one is used as "+" (both input
+> > and output) and another is only used as input, Clang would treat the
+> > conflicting input parameters as undefined behaviour and optimize away
+> > the argument assignment.
+> >=20
+> > Per an example in the GCC documentation, for this purpose we can use "=
+=3D"
+> > (only output) for the output, and "0" for the input for that we must
+> > reuse the same register as the output.=C2=A0 And GCC developers have
+> > confirmed using a simple "r" (that we use for most vDSO implementations=
+)
+> > instead of "0" is also fine.
+> >=20
+> > Link: https://lore.kernel.org/all/20250603-loongarch-vdso-syscall-v1-1-=
+6d12d6dfbdd0@linutronix.de/
+> > Link: https://gcc.gnu.org/onlinedocs/gcc-15.1.0/gcc/Local-Register-Vari=
+ables.html
+> > Link: https://gcc.gnu.org/pipermail/gcc-help/2025-June/144266.html
+> > Cc: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+> > Cc: Nathan Chancellor <nathan@kernel.org>
+> > Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> > ---
+> >=20
+> > v1 -> v2: Keep using "r" for buffer to follow the existing convention
+> > (that the GCC developers have confirmed fine).
+> >=20
+> > =C2=A0arch/riscv/include/asm/vdso/getrandom.h | 2 +-
+> > =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/arch/riscv/include/asm/vdso/getrandom.h b/arch/riscv/inclu=
+de/asm/vdso/getrandom.h
+> > index 8dc92441702a..c6d66895c1f5 100644
+> > --- a/arch/riscv/include/asm/vdso/getrandom.h
+> > +++ b/arch/riscv/include/asm/vdso/getrandom.h
+> > @@ -18,7 +18,7 @@ static __always_inline ssize_t getrandom_syscall(void=
+ *_buffer, size_t _len, uns
+> > =C2=A0	register unsigned int flags asm("a2") =3D _flags;
+> > =C2=A0
+> > =C2=A0	asm volatile ("ecall\n"
+> > -		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 : "+r" (ret)
+> > +		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 : "=3Dr" (ret)
+> > =C2=A0		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 : "r" (nr), "r" (buffer), "r" (l=
+en), "r" (flags)
+> > =C2=A0		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 : "memory");
+>=20
+> My 2 cents as I've dabbled into this for ARC glibc syscall macros [1] whe=
+re r0
+> is both the first syscall/function arg and also the function/syscall retu=
+rn.
+>=20
+> The v2 approach still keeps 2 different variables in same local reg which=
+ has
+> potential for any future compiler shenanigans.
+> Segher's example avoided specifying the same reg.
+> What about something like the following: seems to generate the right code=
+ (with
+> gcc 15)
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 register long ret asm("a0");
 
-  Linux 6.15 (2025-05-25 16:09:23 -0700)
+Then it would be better to rename this variable to just "a0".  And I
+guess Thomas doesn't want a new convention different from all other
+syscall wrappers in vDSO...
 
-are available in the Git repository at:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 register long nr asm("a7") =3D __NR_=
+getrandom;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 register size_t len asm("a1") =3D _l=
+en;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 register unsigned int flags asm("a2"=
+) =3D _flags;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D (unsigned long) _buffer;
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 asm volatile ("ecall\n"
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 : "+r" (ret)=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 // keep "+r"
+> for input _buffer / output ret
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 : "r" (nr), "r" (len), "r"=
+ (flags)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 : "memory");
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>=20
+> Thx,
+> -Vineet
+>=20
+> [1] https://github.com/bminor/glibc/blob/master/sysdeps/unix/sysv/linux/a=
+rc/sysdep.h
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.16
-
-for you to fetch changes up to f78fb2576f22b0ba5297412a9aa7691920666c41:
-
-  platform/loongarch: laptop: Unregister generic_sub_drivers on exit (2025-06-07 11:37:15 +0800)
-
-----------------------------------------------------------------
-LoongArch changes for v6.16
-
-1, Adjust the 'make install' operation;
-2, Support SCHED_MC (Multi-core scheduler);
-3, Enable ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS;
-4, Enable HAVE_ARCH_STACKLEAK;
-5, Increase max supported CPUs up to 2048;
-6, Introduce the numa_memblks conversion;
-7, Add PWM controller nodes in dts;
-8, Some bug fixes and other small changes.
-
-----------------------------------------------------------------
-Binbin Zhou (3):
-      LoongArch: dts: Add PWM support to Loongson-2K0500
-      LoongArch: dts: Add PWM support to Loongson-2K1000
-      LoongArch: dts: Add PWM support to Loongson-2K2000
-
-Huacai Chen (5):
-      Merge commit 'core-entry-2025-05-25' into loongarch-next
-      LoongArch: Increase max supported CPUs up to 2048
-      LoongArch: Introduce the numa_memblks conversion
-      LoongArch: Avoid using $r0/$r1 as "mask" for csrxchg
-      LoongArch: Preserve firmware configuration when desired
-
-Thomas Weißschuh (1):
-      LoongArch: vDSO: Correctly use asm parameters in syscall wrappers
-
-Tianyang Zhang (2):
-      LoongArch: Add SCHED_MC (Multi-core scheduler) support
-      LoongArch: Fix panic caused by NULL-PMD in huge_pte_offset()
-
-Yao Zi (3):
-      platform/loongarch: laptop: Get brightness setting from EC on probe
-      platform/loongarch: laptop: Add backlight power control support
-      platform/loongarch: laptop: Unregister generic_sub_drivers on exit
-
-Youling Tang (4):
-      LoongArch: Add a default install.sh
-      LoongArch: Using generic scripts/install.sh in `make install`
-      LoongArch: Add some annotations in archhelp
-      LoongArch: Enable HAVE_ARCH_STACKLEAK
-
-Yuli Wang (1):
-      LoongArch: Enable ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
-
- .../core/mseal_sys_mappings/arch-support.txt       |   2 +-
- Documentation/userspace-api/mseal.rst              |   2 +-
- arch/loongarch/Kconfig                             |  18 ++-
- arch/loongarch/Makefile                            |  11 +-
- arch/loongarch/boot/dts/loongson-2k0500.dtsi       | 160 +++++++++++++++++++++
- arch/loongarch/boot/dts/loongson-2k1000-ref.dts    |  24 ++++
- arch/loongarch/boot/dts/loongson-2k1000.dtsi       |  42 +++++-
- arch/loongarch/boot/dts/loongson-2k2000.dtsi       |  60 ++++++++
- arch/loongarch/boot/install.sh                     |  56 ++++++++
- arch/loongarch/include/asm/acpi.h                  |   2 +-
- arch/loongarch/include/asm/entry-common.h          |   8 +-
- arch/loongarch/include/asm/irqflags.h              |  16 ++-
- arch/loongarch/include/asm/loongarch.h             |   4 +-
- arch/loongarch/include/asm/numa.h                  |  14 --
- arch/loongarch/include/asm/smp.h                   |   1 +
- arch/loongarch/include/asm/sparsemem.h             |   5 -
- arch/loongarch/include/asm/stackframe.h            |   6 +
- arch/loongarch/include/asm/stacktrace.h            |   5 +
- arch/loongarch/include/asm/topology.h              |  15 +-
- arch/loongarch/include/asm/vdso/getrandom.h        |   2 +-
- arch/loongarch/include/asm/vdso/gettimeofday.h     |   6 +-
- arch/loongarch/kernel/acpi.c                       |  52 ++++---
- arch/loongarch/kernel/entry.S                      |   3 +
- arch/loongarch/kernel/numa.c                       | 108 ++------------
- arch/loongarch/kernel/smp.c                        |  38 +++++
- arch/loongarch/kernel/vdso.c                       |   4 +-
- arch/loongarch/mm/hugetlbpage.c                    |   3 +-
- arch/loongarch/mm/init.c                           |   8 --
- arch/loongarch/pci/acpi.c                          |  14 +-
- drivers/firmware/efi/libstub/Makefile              |   2 +-
- drivers/platform/loongarch/loongson-laptop.c       |  87 +++++------
- mm/Kconfig                                         |   1 +
- 32 files changed, 561 insertions(+), 218 deletions(-)
- create mode 100755 arch/loongarch/boot/install.sh
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
