@@ -1,82 +1,83 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A1B220E6E4
-	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 09:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98278204598
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 09:33:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749288833; cv=none; b=nLe59AmwPqKtRy78wjLcIboABUuYw5riQfWyx8exEMtTAKIRX7URG5UxEqNPcznJI1wDitaOcYoG6AEQrchAwc9CKeFcYp5FrlaqokEt8gQynbQ6v8++eMD4dlOWweDkyuMeUMceddfITdyMAIu5MYAWdE36L59hQA+1OFlHpzE=
+	t=1749288837; cv=none; b=l9R+ralFHgLwNoomQ/L4D3GXF5f+Ym6hsmBIJc58XDmASJKWvD8OlV2s2KE4Gbr5WVjOdqaWQFVD1uXYYTuyMtIvMPzbE3atPAkKetO8GHL9InRzreA3W/1TFTk687VsPF9o9duYaNcY7PWNz/hGoyWVZEIy+RaAoX5sJK0sSo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749288833; c=relaxed/simple;
-	bh=nlwe7h7r3/BITiv4q+dzdvB5lKnHkIgxhj7FM6I1jnA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NWzKHSzm4Mpd9VZdR/wXdC5YO5iU0hHx7N4q9WkyHJg4J+OTWOKz3YJn6XrEbyGN7cjGftGZCQHYv5tR0HqnLLm77tTOmAkp68feKxLEUBq3ilreVddd6nXY3SK9EJ8O+CSXIjPDGL9pQjvc63L5zAnftZ8nIJDt4wlvF/Y/6Ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=Mnu60MMC; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+	s=arc-20240116; t=1749288837; c=relaxed/simple;
+	bh=Lz0eLCiYZnrrXd5YWphnkBc3OjusMpbgwmHPH62sSWY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fxJRURBZBgJlAQnCa+dTgQNQwtkh8BlbnW7vOdl2Nq0jWZOGaxzC3zzXk/s020lcN31XGb0vHd+zHv+A+ecGmtFKWAjru8ZnQmweWJT6MLu7bW6BkBy1c26nrn/Jj8bPet71hOmvC8gLRT8wrQkdZd06+OF9/X4pHmeRkHfaDQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gfD/TNNJ; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Mnu60MMC"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-604f26055c6so7803950a12.1
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 02:33:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gfD/TNNJ"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-742c7a52e97so2474237b3a.3
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 02:33:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1749288830; x=1749893630; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749288834; x=1749893634; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cYXpxglNlRn6ZF9PKdL5/2uCcX5/hamtbwOWk6+JISM=;
-        b=Mnu60MMC9Ew9JCQaXtCWIYBHvwD0Mq2bgrsRlstvDNk2aqNENCUjPwAch0TC0o7HAd
-         lUdVbL5c1x6RS4w8Adg6TmCHOv2nAe/pa2MCmsSySUPfJOpiUPqnODpprsZHscYoe5sf
-         0RCqiDxbmT2+d7DJQeI8Zo8JfLG3MuM5g8OY0=
+        bh=zgdEJ/cU6wnqCBIWwveSAYSn7+5OkM6oE2wu1ZdN47M=;
+        b=gfD/TNNJzSW4zxSqlWTa0/WTZqQIv6x81a7uCE8pCV5nWDNW577MwbKfj02Tm0ymjn
+         XEd71zW6PWD5ASg5TrVNbfmo7bNQuAzWVxTJwdBYiuWltXpXZkcszNqa6TkPI5Ylk+GI
+         9BnuFYH2uZV/d3xD+7J01QeivPYOjc8dclbp3Zee10GnY9DTFnxSgHGH5sGAvqw6VLFT
+         5zlaU7BlIrrNKTjuUdwFyghdYEQmufhWZ5KxdwnNZcBIGRZpCIse15epjmhV5WrWHPov
+         ioOHzUYejDLM9N2SL3eWPacsGk/HhLAwqws+wNCzR9cBIvi0eOCyN0R49RRWottrPIsG
+         Nafg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749288830; x=1749893630;
+        d=1e100.net; s=20230601; t=1749288834; x=1749893634;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cYXpxglNlRn6ZF9PKdL5/2uCcX5/hamtbwOWk6+JISM=;
-        b=XRo07knSMLZXkjLsiuIlEhijSO03agpCeLP40ESCUmFAkHPs7QFVGIWBsI4yao+zsv
-         f8JTt4LvDbklekCSHh6g/HlqqwIWCb/44fc7JjLysIW0+C3d7PkuABj0FKLSgYiR0srF
-         07bqK/8+DHHplEeAfueX1h4ZA9aW3QwHqyah+SS1221BikwM+UPuyisWBPOoG0rkbz4E
-         sT88hX4Q1teoTpqqjqGrX4JngDacdXTrh7FymVIHf7v0YY7/MaiAOeYjr1SnXkbtJa9U
-         ZnkJhJQ7jCblKEyLRnI3+m6I+Vq7foe5Pe49ynDSdfRVyaZ2ULcEKJkiAaMTQAVMK3uJ
-         aG2g==
-X-Gm-Message-State: AOJu0YzxwDZzzDxTcuEIJ1RcxzLge4HtGWZgMY+nvCUkbaN3KXROBKYD
-	SoHFEGouIX7lVu6da7tbSU4olyg1TZYvut7u+do1x4JWY+kv7nKIKs57ST9W0Yhl5UJnYjg/AHF
-	x6Mcb
-X-Gm-Gg: ASbGncuSOJafIqESM4uiUvL7JIHEvJ+rIxNMdK7R2cUIC62BNmcMqf2Uw8peIM8z+J5
-	7d7q4WIYETZUwJfRFdaKNoybrB1i0ph8ch+s+26ExlktqwzLuNLpqPnL1tQmAviaJnz3o7XyJUm
-	sr6YKuqMlmFm6GVE20zAAhNztyHV6nCkWPOqrEsF41EMCoPONwdxeSxBoz4s6GmUN5V0ykv+Krv
-	xchlN5Pb9l61BdotuR0Revcxq2mVUqRUWSyPvdit1LkkCWGHr3tCmp5eT4bvJwlcTeVpQMZ70kz
-	YoK/AfJFIhkkv7pgyjvR+eIpGv1m5mTy4bwmF+DS7+JkjG90KFAwSaUfaYSxz0Xe1nX22D2H2Sz
-	vMrXAz1G2VI59G0cUoAXnBREnB9wO3bnZOWjz1rVzZr1LAldHd5hf91Ts0grYwiQz6O7nqZV/HZ
-	kXNPL004h8uPVjJ9o+YURjnfU=
-X-Google-Smtp-Source: AGHT+IFwrSoT/bg84mvJeB5tJBoerkyokpFv/ZBrKGOCSANMJJ0LsqpRieQ9b6Ay4j+aF5bsl8WiDw==
-X-Received: by 2002:a17:907:6ea6:b0:ad8:9ca4:af7c with SMTP id a640c23a62f3a-ade076350e8mr993166366b.17.1749288830301;
-        Sat, 07 Jun 2025 02:33:50 -0700 (PDT)
-Received: from dario-ThinkPad-T14s-Gen-2i.homenet.telecomitalia.it (host-87-5-95-99.retail.telecomitalia.it. [87.5.95.99])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc1c316sm251541066b.98.2025.06.07.02.33.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Jun 2025 02:33:49 -0700 (PDT)
-From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-To: linux-kernel@vger.kernel.org
-Cc: Matteo Lisi <matteo.lisi@engicam.com>,
-	linux-amarula@amarulasolutions.com,
-	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 02/10] ARM: dts: imx6ul: support Engicam MicroGEA-MX6UL SoM
-Date: Sat,  7 Jun 2025 11:33:14 +0200
-Message-ID: <20250607093342.2248695-3-dario.binacchi@amarulasolutions.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250607093342.2248695-1-dario.binacchi@amarulasolutions.com>
-References: <20250607093342.2248695-1-dario.binacchi@amarulasolutions.com>
+        bh=zgdEJ/cU6wnqCBIWwveSAYSn7+5OkM6oE2wu1ZdN47M=;
+        b=S/S4VXQN+Z/HD+PAA1xZb5WXSOZeQJ08bLg46khVbiAz4vZ9CT5wnxk/KH3lKi5zIg
+         LSvrRTUjDpZkLBd/D23e4wXEzxwG3zWPi+JCiGHV2b4mPBJP6zkohCxu+FT4Z4U7Splb
+         NX2jmBNfEyW/0D/fDvf58V5ge9+cWpuT8xP9Cy3nUDJv+RArj94q7rXkn5N2f06qfilK
+         YQjgrEoyTSCV26j75Fcn6GodPpmMg/CUXgSvgy9gEUvI/7ooM5JJhbkylBP8v1sVsWCE
+         GBoU3UG95g1GA2dj1kLjzUOVm+GO5Cm9k5QBCiqI25hFBG5bypgeXKGnS1+D/GmyBWRh
+         ZCDA==
+X-Forwarded-Encrypted: i=1; AJvYcCX3ehRqIvcixKbdQbpQPO0O7DMK+z0hDZjtmpvIxaZbWytx8L9SQewuZKYFebtaYdiKx72R2vpY1ZdfpEw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9RPJeCmhIvBJItyKlnx1mzOkPPDl8thX8S7El886MEayhykkm
+	WNCZVEnwdKmBe0z5xDoknjdHr72IpDQeDAj1E5YAefd2X396vDYtF1Qs
+X-Gm-Gg: ASbGncutUBG/9W26zP+iWlLpwbEStuhZ8La/guN36mEiRhn1ZeSfHE3i7S/eVww9lMF
+	SSe8fscF7MH1MtVtQ89zNDKCHazRtZGvOLsg2dw+ENQxlwJurN3OjuSqD9qMVGWb7WpCPIRhpYN
+	3SqDofYfZ+NgFPg5ecMUzbr9dTdIEXAk+VhF7eLi/hhNGCyAdJBBM32Lwyv9jOfS1xpSKxJXl3L
+	R3rBgOZkKAi6y3HO0/TKL8Qxyd5TwIqFf+eiGHb//cAJrykPSwLg0G74AiZRnZyqnFfaYwNhHIf
+	B25oW/an8YFJg68cWU0mppO8vM8a03eNJRl+fWLAw476BPL8rj5Unsf5yMPBjOKoCMS+
+X-Google-Smtp-Source: AGHT+IGUIlX0BLBrtpZ0sdzWykKmUsclqHT4YHF/03/LX41TjmfuFUCagyty3GHMnITyJWpy288DzA==
+X-Received: by 2002:a05:6a00:9145:b0:748:323f:ba21 with SMTP id d2e1a72fcca58-748323fbb7bmr4918326b3a.1.1749288833628;
+        Sat, 07 Jun 2025 02:33:53 -0700 (PDT)
+Received: from Barrys-MBP.hub ([118.92.145.159])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482af7b09dsm2427850b3a.43.2025.06.07.02.33.48
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Sat, 07 Jun 2025 02:33:53 -0700 (PDT)
+From: Barry Song <21cnbao@gmail.com>
+To: lorenzo.stoakes@oracle.com,
+	akpm@linux-foundation.org
+Cc: 21cnbao@gmail.com,
+	Liam.Howlett@oracle.com,
+	david@redhat.com,
+	jannh@google.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lokeshgidra@google.com,
+	surenb@google.com,
+	v-songbaohua@oppo.com,
+	vbabka@suse.cz,
+	zhengqi.arch@bytedance.com,
+	zhengtangquan@oppo.com
+Subject: Re: [PATCH v3] mm: use per_vma lock for MADV_DONTNEED
+Date: Sat,  7 Jun 2025 21:33:44 +1200
+Message-Id: <20250607093344.15699-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <69846ab3-de03-48bc-acd7-60e8a458c263@lucifer.local>
+References: <69846ab3-de03-48bc-acd7-60e8a458c263@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,121 +86,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Support Engicam MicroGEA-MX6UL SoM with:
+>
+> Whoops, I should add R-b only applies with the fix-patch proposed in [0].
+>
+> [0]: https://lore.kernel.org/all/CAGsJ_4x1RbQ+GKKc1rrTaNA8Xd+W8K-Zu6-kwVYNKzB0OWiowQ@mail.gmail.com/
+>
+> Barry - Probably worth respinning a v4 to pick that up to make things
+> clear, you can propagate my tag with that.
 
- - 256 Mbytes NAND Flash
- - 512 Mbytes DRAM DDR2
- - Ethernet MAC
+Sure. It's a small, non-functional change:
 
-Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
----
+diff --git a/mm/madvise.c b/mm/madvise.c
+index a94e6a7ee387..8382614b71d1 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -1534,8 +1534,7 @@ int madvise_walk_vmas(struct mm_struct *mm, unsigned long start,
+ 	if (madv_behavior && madv_behavior->lock_mode == MADVISE_VMA_READ_LOCK) {
+ 		vma = try_vma_read_lock(mm, madv_behavior, start, end);
+ 		if (vma) {
+-			error = madvise_vma_behavior(vma, &prev, start, end,
+-				madv_behavior);
++			error = visit(vma, &prev, start, end, arg);
+ 			vma_end_read(vma);
+ 			return error;
+ 		}
 
- .../dts/nxp/imx/imx6ull-engicam-microgea.dtsi | 96 +++++++++++++++++++
- 1 file changed, 96 insertions(+)
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea.dtsi
+>
+> Cheers, Lorenzo
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea.dtsi
-new file mode 100644
-index 000000000000..8588e9ad7b8f
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea.dtsi
-@@ -0,0 +1,96 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2025 Amarula Solutions, Dario Binacchi <dario.binacchi@amarulasolutions.com>
-+ * Copyright (C) 2025 Engicam srl
-+ */
-+
-+/dts-v1/;
-+
-+ #include "imx6ull.dtsi"
-+
-+ / {
-+	compatible = "engicam,microgea-imx6ull", "fsl,imx6ull";
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>;
-+	};
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet1>, <&pinctrl_phy_reset>;
-+	phy-mode = "rmii";
-+	phy-handle = <&ethphy0>;
-+	local-mac-address = [00 04 9F 01 1B B9];
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy0: ethernet-phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <0>;
-+			reset-gpios = <&gpio5 9 GPIO_ACTIVE_LOW>;
-+			reset-assert-us = <4000>;
-+			reset-deassert-us = <4000>;
-+		};
-+	};
-+};
-+
-+/* NAND */
-+&gpmi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_gpmi_nand>;
-+	nand-ecc-mode = "hw";
-+	nand-ecc-strength = <0>;
-+	nand-ecc-step-size = <0>;
-+	nand-on-flash-bbt;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+
-+	pinctrl_enet1: enet1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x4001b009
-+			MX6UL_PAD_GPIO1_IO07__ENET1_MDC		0x1b0b0
-+			MX6UL_PAD_GPIO1_IO06__ENET1_MDIO	0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_gpmi_nand: gpminandgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_NAND_CLE__RAWNAND_CLE		0xb0b1
-+			MX6UL_PAD_NAND_ALE__RAWNAND_ALE		0xb0b1
-+			MX6UL_PAD_NAND_WP_B__RAWNAND_WP_B	0xb0b1
-+			MX6UL_PAD_NAND_READY_B__RAWNAND_READY_B	0xb000
-+			MX6UL_PAD_NAND_CE0_B__RAWNAND_CE0_B	0xb0b1
-+			MX6UL_PAD_NAND_RE_B__RAWNAND_RE_B	0xb0b1
-+			MX6UL_PAD_NAND_WE_B__RAWNAND_WE_B	0xb0b1
-+			MX6UL_PAD_NAND_DATA00__RAWNAND_DATA00	0xb0b1
-+			MX6UL_PAD_NAND_DATA01__RAWNAND_DATA01	0xb0b1
-+			MX6UL_PAD_NAND_DATA02__RAWNAND_DATA02	0xb0b1
-+			MX6UL_PAD_NAND_DATA03__RAWNAND_DATA03	0xb0b1
-+			MX6UL_PAD_NAND_DATA04__RAWNAND_DATA04	0xb0b1
-+			MX6UL_PAD_NAND_DATA05__RAWNAND_DATA05	0xb0b1
-+			MX6UL_PAD_NAND_DATA06__RAWNAND_DATA06	0xb0b1
-+			MX6UL_PAD_NAND_DATA07__RAWNAND_DATA07	0xb0b1
-+		>;
-+	};
-+};
-+
-+&iomuxc_snvs {
-+	pinctrl_phy_reset: phy-resetgrp {
-+		fsl,pins = <
-+			MX6ULL_PAD_SNVS_TAMPER9__GPIO5_IO09	0x1b0b0
-+		>;
-+	};
-+};
--- 
-2.43.0
-
+Thanks
+Barry
