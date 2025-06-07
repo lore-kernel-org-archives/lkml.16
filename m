@@ -1,116 +1,61 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B898821883C
-	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 11:07:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDC01F3BA9
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 11:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749294429; cv=none; b=KcwreA4hRc4F8cHQrdbW61mcRwheeeooRkGrmkN372Yhdi6XvKiJe8DkMk3wKghhqdOOJHmGvmZWMuSH3IIxUi/WatRlnABVFc8N+mUMC5EDVVnlcc4Mb2kkNZAQETQVw6gAZgZVb4YP81z2Kxwrm6AnA8Y+eEOkOlBxz8wl4sI=
+	t=1749295207; cv=none; b=fsS+il8e2fWM9ycNzDtva15vGC4uZztqxVgjPGvrnBAsQLvFD4e5D9KxO71gWbj1+hc3KpiT3sBsezDwxYeoGxSE0Q79YmK0hrlhP6lNTsb7gMaxRUqiop53tPmm3JH/i4/yM9KdTd6dNrOLqhEqhwYI3Dxuxu4UiOIJEFr7tkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749294429; c=relaxed/simple;
-	bh=vicUU9PHI2hVlzAUIoglCN2hj3dmlD4qUda4Sx3foGw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PoboXh/bjY+P/7b2DN1Oqsb8BO7R5fBqT0CePLFkWcuK9M7mRwfMXFBoSsbXA3sRT0yJ1TxHg/zueFtGiAAW0tW1GYUR0VXIGuG+mtkX2iCY99V0g6F4s2oij9ingc7uVztJrud0V2h02EIq2Y2LvIdp/2AcjY52mOnj2vP4qTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=aTrMvR0e; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="aTrMvR0e"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-607cf70b00aso88941a12.2
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 04:07:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1749294426; x=1749899226; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ZpeOeAdGqxMbXCn6EnheQKl037hSzc1P5CMiTi/s4OA=;
-        b=aTrMvR0ekfVYHIA/tiDfCpqsHL+XGnGfduwB0gkxxmTqWzYI3ndoZGG/PmMQlqmIc9
-         tbTMfc8xJZgdFupxtZDAiOrfWoMjAo4e19OyPLLPYuKxCs2Az/MguwXuLav58Dx+A8Gc
-         HnbuwxlDMphhmHJjfBVQbjDUHjo3a/zCYB6y1oFgah9EkTY117kboIwpazmyA3aDpIBi
-         R151OCIofVpaRqO0BrQ0kT0yc69ff/HG390QOk4YuvJ5BieIi7k6fpwlcYxxaWbga7z3
-         cLU8HTyrUa54OPTOPwMTxrGkqWSgTBUK4YTJp7qaF738zkBqoQgtkQgMyowHE7GCZqls
-         NVBQ==
+	s=arc-20240116; t=1749295207; c=relaxed/simple;
+	bh=ezOwLJxBd+E84cmXUSsMjmFEAV4KywkBAe2NsMojkx0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=gUU9eIdNUN0zRvGR82WtcE32L8ZjoJM7LUJCD57p7E9O6phYYPBuWUOYJ7rrCEXq0NkkN+ABeHxXG1zo/FqIA9jwct52C40xosQUDwn8/I9DQjuVBmHBizvnUGze76FW2a2+FK/4pn22MFhdcxztJTaYSgjt9DPTwvP2FqEJ67M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddce213201so19195185ab.0
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 04:20:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749294426; x=1749899226;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1749295205; x=1749900005;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZpeOeAdGqxMbXCn6EnheQKl037hSzc1P5CMiTi/s4OA=;
-        b=Rg558OGDUhtO5qLwW5xx2W38ccTLOeDFNEsqPhp6hJWMtRjsJF4XbolD+/ZUYmfjAh
-         awKBeGPdjl/IpYjV9Va+OpV9jZTHa3lLby9mJeO3YfrSx8s1eFT7yW/QIg/pmhWMlXR0
-         tKgYncfywM/lEmf1SPYAaTJC490XofQpiVuQVGQynbRjFYopYtnqLjkND3icWhOOHEE6
-         BiAF60Fm5IfuMcGycIDEvpFvgwx8py068sRh23pVTYaiJS2BbxQe7OmuCA6Z+VstSO3E
-         kQotJHPnePmz19Sm6FUkpyXdUY6nm5SoxI1dH7SkLK4xf2l2+TyN1Lx/6xTPs3hgOJKI
-         AXBA==
-X-Forwarded-Encrypted: i=1; AJvYcCXL16g0uf+BY2VDNq2WQnXLJnEiq2PrbxoD5FZ8VNOzy1pBcXbQlYs7aJyr32N1+NiNO+bWM0MlsztvSE8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxHgcAgjEaqsMakqHcqXXeBKsc+ma0IzRRbJ+85xQ1v5Q2tscC
-	C4QcHTLEE+ch0mAhnhJNVRUx9jiTdUmsN0bAYIpLwQ+YFIMQ1RzqbpKk3VhZt7Sx7ENY6EiEqNX
-	TgSg/
-X-Gm-Gg: ASbGncug7aO+8TkcFACDLJi/qh9lPD4eBwmEoezeNEIrLBTIem1serC11Y/JZ3GinCV
-	2Sqp6kURjv8Q/Zv7VdeedPJjL9KZNX16aS2JlPO+bQu4QgG5TPFrj64TL5Cb2/NrYi2y+60Tje9
-	mz2YkSKFzU4LitKwS4eSo1DRbs9v3uJZUREXAPfH3ZqxIFS8GDgEil3IkFO7BPHr6LN0+MAsLtz
-	y62a0C1ko/ZNvIo2rlV14q6YfdksVAKwEWuTtZMLG+S/+6FONjtgix30CpeC1zbDgBqNx5Xs0Ig
-	731np/Wg5mbzJWWtiV0Od4A/OY+1UUaatuKXgh+q+yCnvmSyx1WcaCATLIobakhKEKkO5cs=
-X-Google-Smtp-Source: AGHT+IG3M8z181em7vBtuZBZYwhYQocgtGu/WkgrN5sHYgBLnsseshvmDwY/I6GFT297t5L4kOKqyw==
-X-Received: by 2002:a05:6402:4407:b0:601:a431:86cc with SMTP id 4fb4d7f45d1cf-60773be8fafmr5653795a12.5.1749294413789;
-        Sat, 07 Jun 2025 04:06:53 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.126])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc1c8ecsm262161066b.94.2025.06.07.04.06.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Jun 2025 04:06:52 -0700 (PDT)
-Message-ID: <55a5a22f-aaf3-448e-a628-6309db283182@tuxon.dev>
-Date: Sat, 7 Jun 2025 14:06:51 +0300
+        bh=ezOwLJxBd+E84cmXUSsMjmFEAV4KywkBAe2NsMojkx0=;
+        b=jfr5UnZmm3udgKCNq/4I7Wbta++tT1WInvd00/zadj983yeqCXjHC/odSpIhR4amZR
+         V82dceVwRRkA51Ko228JFbZVu/QE8btn+EG0Zeo8zK5f7Zp5hmotDLbFdeOAubPw09sE
+         +ywgX9Kh9IIy4ehfk0kwQoQmle7iJ7QpJb1SatUxvyM0Z4CvkTnz16UpeF8PaUlSuusW
+         lFNUnwD+6NiXH6rc91jI5aNg1Pgxqmj16gGT1wvRG/wddlafKJpgG6uUpYf1aVzGTwCD
+         31FKr/HfdzKdIZs+1cUpNTE4BHF5/+WplDEVLj/uZLkI498fSlXT1MgweuoFcvGHoImR
+         vQhQ==
+X-Gm-Message-State: AOJu0YzhC8B7T6Ot/Q8iqjWBxSO2nv7Y32vatcH9swu9HaqUsUs5Tu3F
+	J9aHq0pMP+lJL4+QTcxcuhvnI+CDdUaVPkQMBTJbUp1O0bLTHgSGLRVeOuCsu++6NX0MIWMW6qO
+	y0vjQAzXerFw0r/oo5kfAqjhDHIBMVB3R+CYCc49Rvqfr9vgQ1q11IZn8HGM=
+X-Google-Smtp-Source: AGHT+IGKNAvPMq3I1C5vFuouOKWJQC8FTanoXXkRkbXNtW108j97sxLOHSvz+f0G0lDOEKIg7WKLnPVFewb9LKMNxJ75jPvXUzyi
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] ARM: dts: microchip: sama5d2_icp: rename
- spi-cs-setup-ns property to spi-cs-setup-delay-ns
-To: Manikandan Muralidharan <manikandan.m@microchip.com>, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, nicolas.ferre@microchip.com,
- alexandre.belloni@bootlin.com, tudor.ambarus@linaro.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250521054309.361894-1-manikandan.m@microchip.com>
- <20250521054309.361894-4-manikandan.m@microchip.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <20250521054309.361894-4-manikandan.m@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:3e05:b0:3dc:875e:ed8d with SMTP id
+ e9e14a558f8ab-3ddce5d8c17mr63591625ab.4.1749295204793; Sat, 07 Jun 2025
+ 04:20:04 -0700 (PDT)
+Date: Sat, 07 Jun 2025 04:20:04 -0700
+In-Reply-To: <6841dca8.a00a0220.d4325.0020.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68442064.a00a0220.29ac89.0054.GAE@google.com>
+Subject: Re: [syzbot] kernel BUG in populate_free_space_tre
+From: syzbot <syzbot+36fae25c35159a763a2a@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
+***
 
-On 21.05.2025 08:43, Manikandan Muralidharan wrote:
-> The naming scheme for delay properties includes "delay" in the name,
-> so renaming spi-cs-setup-ns property to spi-cs-setup-delay-ns.
-> 
-> Fixes: 46a8a137d8f6 ("ARM: dts: at91: sama5d2_icp: Set sst26vf064b SPI NOR flash at its maximum frequency")
-> Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
+Subject: kernel BUG in populate_free_space_tre
+Author: abinashlalotra@gmail.com
 
-Reviewed-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-
-> ---
-> changes in v2:
-> - add fixes tag
-> ---
->  arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts b/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts
-> index 9fa6f1395aa6..fbae6a9af6c3 100644
-> --- a/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts
-> +++ b/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts
-> @@ -714,7 +714,7 @@ flash@0 {
->  		compatible = "jedec,spi-nor";
->  		reg = <0>;
->  		spi-max-frequency = <104000000>;
-> -		spi-cs-setup-ns = <7>;
-> +		spi-cs-setup-delay-ns = <7>;
->  		spi-tx-bus-width = <4>;
->  		spi-rx-bus-width = <4>;
->  		m25p,fast-read;
-
+#syz test
