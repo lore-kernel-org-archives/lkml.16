@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1074219A95;
-	Sat,  7 Jun 2025 21:25:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8130E219A95;
+	Sat,  7 Jun 2025 21:25:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749331530; cv=none; b=uXUCLD9+rvwXdCt9Z4MQYUpieI4zro5cDOr+iiGViAH4k7I4nBBmp3mtEsSxVX3CDuhhiYf2NL5HKt6XSB21CcPq3+pNruvQSOLe2/x1gYoHOPzE2RUuoR6UD23U7V3Va6AX8xae3AJxTkhQYqgEeats58WneYVo0o+xAXf/pQA=
+	t=1749331539; cv=none; b=kYWZ8adUfGPQZsCH+Mn+Y6+K3e55Rwu6qoZbBSJvX9ek5WoffcPH2Ar9hvukFmRgFzHhJEm46hmWH9zFvV5YYB7O1+8gr6BPuNMgq4fK0HQ63F/A8Hfrzeo/2uP+21JUh7bTgCG/wU7M8Tnw9F0huiNAzaO0c7ZDbMtsT8o/arM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749331530; c=relaxed/simple;
-	bh=hQVYCNQ5OrWUucTQkw09cPQ8jCF3PdFQNCpwjyOGrNs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ArGJPCeSleOpEksSHdV24O95VNMLAd1DbC+qXo0E52/Ze7CXitOo1LVh6bXKwmLsLy7cgiUWgwLpl8mKbgAQ1za1p9ziUUhowIS3Ri+R+nR0H6ICKI6BPgUgb+IyZujDeHOI4dQURdWNxzd5MNGZrJ1UeXT05NZQymGONrCFJ1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iE+1idd8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749331539; c=relaxed/simple;
+	bh=K6AgqbCW9JSjO83IIZgLlFEbhS3N7/Ckiy1gB7abu3E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kapUbfFRyyp5s+JLi2IS1iV1X6OOdZ/9JJsgb7/AjTjzv6hzcMtBqmOZ/xZeI/4xr5qjlpMcCvaAPNj9ffh6Urj9qJqtS+UoIMDoOmGOMHx1W84vFYsHIe3XjOBppeqziYth0pbAAC1NNdN+dYw9CmemBtwJZNxnjKAMktk2SRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AoZqJDT0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iE+1idd8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 282CCC4CEE4;
-	Sat,  7 Jun 2025 21:25:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AoZqJDT0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9488C4CEE4;
+	Sat,  7 Jun 2025 21:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749331530;
-	bh=hQVYCNQ5OrWUucTQkw09cPQ8jCF3PdFQNCpwjyOGrNs=;
+	s=k20201202; t=1749331535;
+	bh=K6AgqbCW9JSjO83IIZgLlFEbhS3N7/Ckiy1gB7abu3E=;
 	h=From:To:Cc:Subject:Date:From;
-	b=iE+1idd8X5+sCs+qGdLsfhZYXYNxXzWOOz/H2p+VUSBbQfPfOTXFTrjgOEgDqA5xe
-	 qy8cI+wbsrvM9lkl8WCjuriEi5cE3FQEb+weUyYO3hhG+uXIshwVeQiLqaY2rqlfK9
-	 +M6w78KE/PgVWq3R4B6/94MyuK6kqDTAeTPrJrIQvxrcerVvbhKh99X4EIOAk8Ithq
-	 FD5Z1xUq8zWOfMFSJwLUTJCloU6+tO1RFxIZDzeTFyj5w7DP0UXgpnzE736MhQFUx3
-	 omoDFQ5cNgwOynL7tmggGW1YwS0m9o//Gm9KpjFhIyzSMkSKI07q532gdJ+O6SAQ19
-	 UhxPWtOIfyx2Q==
+	b=AoZqJDT0febyKLlUO3MJ4D8cpngI3LYXICgQK5r1J9BfeHhXiP7PK0j/+XcDa4HSF
+	 cCJXXRbSAPYd8rJepUHpb0dbRoKtvphOROemAMC8H73VeVjvrGLxPnCoM1HymbyotC
+	 aRajyi8gXQjymv0HxOv/0RojHp7V1UEnv/hr6NTZgOhHNyvWE1PGO5N7+7GKF0VdPL
+	 rr6M5stWF9tl5M79gEZ5bVbHTJoXqckqimxrk5uvEUD15hHMfcrxm+X/5fpTPS7vCs
+	 0dy2lmLp0SZuwNN7m9gZzfjT81qootIKeqdGKMe/gDShAfhdhdiD+8be/wkuTcWaNU
+	 CgKoGLlpyUX8g==
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Vinod Koul <vkoul@kernel.org>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Pengcheng Li <lpc.li@hisilicon.com>
+	Andrew Bresticker <abrestic@chromium.org>
 Cc: linux-phy@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: phy: Convert hisilicon,inno-usb2-phy to DT schema
-Date: Sat,  7 Jun 2025 16:25:26 -0500
-Message-ID: <20250607212527.741915-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: phy: Convert img,pistachio-usb-phy to DT schema
+Date: Sat,  7 Jun 2025 16:25:30 -0500
+Message-ID: <20250607212531.742082-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,194 +46,119 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the HiSilicon INNO USB2 PHY binding to DT schema format. It's a
-straight forward conversion.
-
-Add the undocumented "hisilicon,hi3798mv100-usb2-phy" compatible.
+Convert the Imagination Pistachio USB PHY binding to DT schema format.
+It's a straight forward conversion.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../bindings/phy/hisilicon,inno-usb2-phy.yaml | 93 +++++++++++++++++++
- .../bindings/phy/phy-hisi-inno-usb2.txt       | 71 --------------
- 2 files changed, 93 insertions(+), 71 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
+ .../bindings/phy/img,pistachio-usb-phy.yaml   | 62 +++++++++++++++++++
+ .../bindings/phy/pistachio-usb-phy.txt        | 29 ---------
+ 2 files changed, 62 insertions(+), 29 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/img,pistachio-usb-phy.yaml
+ delete mode 100644 Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
 
-diff --git a/Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml
+diff --git a/Documentation/devicetree/bindings/phy/img,pistachio-usb-phy.yaml b/Documentation/devicetree/bindings/phy/img,pistachio-usb-phy.yaml
 new file mode 100644
-index 000000000000..51ea0e54ce35
+index 000000000000..bcc19bc68297
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml
-@@ -0,0 +1,93 @@
++++ b/Documentation/devicetree/bindings/phy/img,pistachio-usb-phy.yaml
+@@ -0,0 +1,62 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/phy/hisilicon,inno-usb2-phy.yaml#
++$id: http://devicetree.org/schemas/phy/img,pistachio-usb-phy.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: HiSilicon INNO USB2 PHY
++title: Imagination Pistachio USB PHY
 +
 +maintainers:
-+  - Pengcheng Li <lpc.li@hisilicon.com>
-+
-+description:
-+  The INNO USB2 PHY device should be a child node of peripheral controller that
-+  contains the PHY configuration register, and each device supports up to 2 PHY
-+  ports which are represented as child nodes of INNO USB2 PHY device.
++  - Andrew Bresticker <abrestic@chromium.org>
 +
 +properties:
 +  compatible:
-+    enum:
-+      - hisilicon,hi3798cv200-usb2-phy
-+      - hisilicon,hi3798mv100-usb2-phy
-+      - hisilicon,inno-usb2-phy
-+
-+  reg:
-+    maxItems: 1
++    const: img,pistachio-usb-phy
 +
 +  clocks:
 +    maxItems: 1
 +
-+  resets:
-+    maxItems: 1
++  clock-names:
++    items:
++      - const: usb_phy
 +
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
++  '#phy-cells':
 +    const: 0
 +
-+patternProperties:
-+  "^phy@[0-1]$":
-+    description: PHY port subnode
-+    type: object
-+    additionalProperties: false
++  phy-supply:
++    description: USB VBUS supply. Must supply 5.0V.
 +
-+    properties:
-+      reg:
-+        maximum: 1
++  img,refclk:
++    description:
++      Reference clock source for the USB PHY. See
++      <dt-bindings/phy/phy-pistachio-usb.h> for valid values.
++    $ref: /schemas/types.yaml#/definitions/uint32
 +
-+      "#phy-cells":
-+        const: 0
-+
-+      resets:
-+        maxItems: 1
-+
-+    required:
-+      - reg
-+      - "#phy-cells"
-+      - resets
++  img,cr-top:
++    description: CR_TOP syscon phandle.
++    $ref: /schemas/types.yaml#/definitions/phandle
 +
 +required:
 +  - compatible
-+  - reg
 +  - clocks
-+  - resets
-+  - "#address-cells"
-+  - "#size-cells"
++  - clock-names
++  - '#phy-cells'
++  - img,refclk
++  - img,cr-top
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    #include <dt-bindings/clock/histb-clock.h>
++    #include <dt-bindings/phy/phy-pistachio-usb.h>
++    #include <dt-bindings/clock/pistachio-clk.h>
 +
-+    usb2-phy@120 {
-+        compatible = "hisilicon,hi3798cv200-usb2-phy";
-+        reg = <0x120 0x4>;
-+        clocks = <&crg HISTB_USB2_PHY1_REF_CLK>;
-+        resets = <&crg 0xbc 4>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        phy@0 {
-+            reg = <0>;
-+            #phy-cells = <0>;
-+            resets = <&crg 0xbc 8>;
-+        };
-+
-+        phy@1 {
-+            reg = <1>;
-+            #phy-cells = <0>;
-+            resets = <&crg 0xbc 9>;
-+        };
++    usb-phy {
++        compatible = "img,pistachio-usb-phy";
++        clocks = <&clk_core CLK_USB_PHY>;
++        clock-names = "usb_phy";
++        #phy-cells = <0>;
++        phy-supply = <&usb_vbus>;
++        img,refclk = <REFCLK_CLK_CORE>;
++        img,cr-top = <&cr_top>;
 +    };
-diff --git a/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
+diff --git a/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt b/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
 deleted file mode 100644
-index 104953e849e7..000000000000
---- a/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
+index c7970c07ee32..000000000000
+--- a/Documentation/devicetree/bindings/phy/pistachio-usb-phy.txt
 +++ /dev/null
-@@ -1,71 +0,0 @@
--Device tree bindings for HiSilicon INNO USB2 PHY
+@@ -1,29 +0,0 @@
+-IMG Pistachio USB PHY
+-=====================
 -
 -Required properties:
--- compatible: Should be one of the following strings:
--	"hisilicon,inno-usb2-phy",
--	"hisilicon,hi3798cv200-usb2-phy".
--- reg: Should be the address space for PHY configuration register in peripheral
--  controller, e.g. PERI_USB0 for USB 2.0 PHY01 on Hi3798CV200 SoC.
--- clocks: The phandle and clock specifier pair for INNO USB2 PHY device
--  reference clock.
--- resets: The phandle and reset specifier pair for INNO USB2 PHY device reset
--  signal.
--- #address-cells: Must be 1.
--- #size-cells: Must be 0.
+---------------------
+- - compatible: Must be "img,pistachio-usb-phy".
+- - #phy-cells: Must be 0.  See ./phy-bindings.txt for details.
+- - clocks: Must contain an entry for each entry in clock-names.
+-   See ../clock/clock-bindings.txt for details.
+- - clock-names: Must include "usb_phy".
+- - img,cr-top: Must contain a phandle to the CR_TOP syscon node.
+- - img,refclk: Indicates the reference clock source for the USB PHY.
+-   See <dt-bindings/phy/phy-pistachio-usb.h> for a list of valid values.
 -
--The INNO USB2 PHY device should be a child node of peripheral controller that
--contains the PHY configuration register, and each device supports up to 2 PHY
--ports which are represented as child nodes of INNO USB2 PHY device.
--
--Required properties for PHY port node:
--- reg: The PHY port instance number.
--- #phy-cells: Defined by generic PHY bindings.  Must be 0.
--- resets: The phandle and reset specifier pair for PHY port reset signal.
--
--Refer to phy/phy-bindings.txt for the generic PHY binding properties
+-Optional properties:
+---------------------
+- - phy-supply: USB VBUS supply.  Must supply 5.0V.
 -
 -Example:
--
--perictrl: peripheral-controller@8a20000 {
--	compatible = "hisilicon,hi3798cv200-perictrl", "simple-mfd";
--	reg = <0x8a20000 0x1000>;
--	#address-cells = <1>;
--	#size-cells = <1>;
--	ranges = <0x0 0x8a20000 0x1000>;
--
--	usb2_phy1: usb2-phy@120 {
--		compatible = "hisilicon,hi3798cv200-usb2-phy";
--		reg = <0x120 0x4>;
--		clocks = <&crg HISTB_USB2_PHY1_REF_CLK>;
--		resets = <&crg 0xbc 4>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		usb2_phy1_port0: phy@0 {
--			reg = <0>;
--			#phy-cells = <0>;
--			resets = <&crg 0xbc 8>;
--		};
--
--		usb2_phy1_port1: phy@1 {
--			reg = <1>;
--			#phy-cells = <0>;
--			resets = <&crg 0xbc 9>;
--		};
--	};
--
--	usb2_phy2: usb2-phy@124 {
--		compatible = "hisilicon,hi3798cv200-usb2-phy";
--		reg = <0x124 0x4>;
--		clocks = <&crg HISTB_USB2_PHY2_REF_CLK>;
--		resets = <&crg 0xbc 6>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		usb2_phy2_port0: phy@0 {
--			reg = <0>;
--			#phy-cells = <0>;
--			resets = <&crg 0xbc 10>;
--		};
--	};
+---------
+-usb_phy: usb-phy {
+-	compatible = "img,pistachio-usb-phy";
+-	clocks = <&clk_core CLK_USB_PHY>;
+-	clock-names = "usb_phy";
+-	phy-supply = <&usb_vbus>;
+-	img,refclk = <REFCLK_CLK_CORE>;
+-	img,cr-top = <&cr_top>;
+-	#phy-cells = <0>;
 -};
 -- 
 2.47.2
