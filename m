@@ -1,123 +1,328 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513BD221F09
-	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 12:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749298505; cv=none; b=iP92omebCqA6diDbdD8v8XoKqRjzqzv1puBAfUug9Vj9YiqrMsZ54Q4Z2dKP1FifoG8WT6jUkuSGPtShVUFgDIiNSYRZE5FJ6VFqq64HlsmAjZX5mGUnV7i8hM/7g1u6HuieocWAAxwBdWePs7iN6nIAd7CmaO0F4LVPTmm/mto=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749298505; c=relaxed/simple;
-	bh=oLtwGz2om7Uq3VZsgJHxRqVOBLG1WKvnFPqv+epsekE=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Y7qMvj+sa4uXrm7Ef/IBdO/9LOm1u0MD2k4sgmcMpfaO9nrsdfFqZE/tJfcI3GigYptX7vYSsYPlcVz5Vx4YXfRYZSnZ9V46JVFxf5K6a3Uj+OxCncaAsx6cr0d+FPcFtHNqF1D2/y4kATBXfPDOlzOw5q50V7x8MAtjyh58fao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddc6d66787so37085825ab.3
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 05:15:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749298502; x=1749903302;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f6khKyuzNrG0UiD6tiQwVZA1S1mtehdI0hb+YyqvtkU=;
-        b=kl8f7T8zHuJRu3qfnQ+DtONb+iWJ561Iu2zROZl/Jg7ufXRxhQmJOR7FNOH9BU6Pd3
-         eGQMC02dVcDsSKdmBNPkoUmEIGLaBa0xDEIMWGS/NYEIU8LSSoaZjNLDdtQYCA+wq4ih
-         zzn308H5bbQeaoT5nMYQlTf1FQIVMgVt9z7YSi7aR25UwE6iOFmdmi5gJAKcULn77eAR
-         mvo5ZulS+bmQe9jtUg3PAVslutmzQj49vE1SMKaanIiw1Z4beWfQbjQDwUa1WtJM2RK4
-         VYmc1z0SAsgf6iDPcNecShEvHLDGeaBjkYK6XEIDUhT+RbX5UPGoXGjg4+3HYtbROVkj
-         ruGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXMoFQj5Piww995vBQMolf/xZKoTpXkWnLJ5qYIPXvmGRO8z0xgaiIY+Qxdu6gTaDgU7BmMPsUDauJiJH4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlKewFzCdDf6L8ck/2RUHT8jPD1zc8ssTF3qkgVZ+8ATlyAdz4
-	WQzD9gMut7aDfMP0oswL4xJxH3BVBJ+NdiUTbnWrpOeikMTNaeEaFOdQ1eZcAKGcQWRpEcC+0QE
-	391sR+hnfiBibyDOH6IXj+/4KZ9mmTRlqnkSY54JzT9hTzegZ5M2RzFgjGW0=
-X-Google-Smtp-Source: AGHT+IHmL9BLSnu80DN+JqbFo/KZW5om0NI59h0+mNh5EYW7C17VUc7j20kQei8sTorluQ6q/UGSySzVRqbRuxM686EwmuOHiLb1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ECCD21B9DE
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 12:15:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749298511; cv=fail; b=cpekOQISnIV0MbOhZ44IaaRlCauEjPx0NptEXJHk263fzYUkgNOv+XpQjx5eKM46tZVnMKFpbrkzVFhs0ZQyWDwa4BR4pTPTmsB+OE+EOeM1M0QRQpBu9i91xAfhCkBxgW4/VKCOEsY7Yqis22e8cUwzNoLlZsPNk3i8VV27AQ8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749298511; c=relaxed/simple;
+	bh=ht0O5Iu3n5XM5sMmOIeDdLhwf+lQ9rIkkOEmof0gJ4k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Qcmqi90HV04uX93w/5mQooZQBRXcUuyy03akHrOlaIy+3rGG83OwLYcF7mZhNh57/9ZUueNLiOy+CFb98Lj5t0F8GS/99QSLbMdWMu05x9sIMVs08zLnfeL0rPWquU3q71o/m4J0Dt+fq4h3hHS0ovRnqOpggbHdP7WFLURQcY8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fSz5w2ul; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=d8J0WSVO; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fSz5w2ul";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="d8J0WSVO"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55772xb9017219;
+	Sat, 7 Jun 2025 12:14:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=2ZfCgFzuPsoSMKXri78JTpC5z4fhshPNPJXBBScIbGo=; b=
+	fSz5w2ul82RNgWmZhQfgk1TdqIybSNMGrRIbQ1MVUnYJE7IisllUWwjqUDrZT4uk
+	jW4THfhWlDPueAyLBbO6LgotwphU7dSvjNmVydADBYvBVXLgw2pEMAMwefxmfMmH
+	s2GVONzd9TkeJSd9UcSYFBuA8tZ7HzZO7q/m8C4ulq7hM41yn+xKLXQd7guserHR
+	hzJ1Gy5u59LUbaNnQeUkO442GjTijJTM532PyUJ4ztL4bUzg5Dq2GIvjpAv3OHCJ
+	XDEdvrmQMKQxoJnzuJDLqFJoGBKBxrqqTKaQi7PTaYLQzRGaoM6ockslWhhfmebY
+	p8Z2Wh0UVBWf87Zx1p+HXw==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 474buf08we-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 07 Jun 2025 12:14:46 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5576jq44007375;
+	Sat, 7 Jun 2025 12:14:46 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12on2074.outbound.protection.outlook.com [40.107.244.74])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 474bv5rmfw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 07 Jun 2025 12:14:45 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Z0XxSZQkwQhUt2be+JjFentEbHJfuqBTxFz1B8PB2VPyOegJYSBa69S9YDXbMmjdbsuY1xYz5o7TV0JjICZaNBCM7OR1Oblhhf1mFmTEBkMSqshnKb3hk/ITvXC3C9O2kbUo+U6QCP4A5jjOUBnjrAhPc/rVzH3mts2OBIoUV1TqY+v//fwpv1ZF9sUv8OBiMTxui7ECLKGf+JRWLlN8h4Hj7FkrjO9oGFr6FXaELF/MDIuAuC6xWTZZSNXhBY2RIMhqL3rbiZSoHXAyyyzwdU8ZVVdpM14+4ysHaonhIlvHiyKTTtEZsfKsSYkYx1ssUv/qo9L89KaToby0hbQJyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2ZfCgFzuPsoSMKXri78JTpC5z4fhshPNPJXBBScIbGo=;
+ b=a4DBhCN8GtZtdp/RDw3LutftpN8RBhCDb7N8l22X6Grpu2Ep7V2ztuBjiy6NYHlQE0HIXmpe3pCeoJgIjnCARz5lYuSLv5CZGR48UkzbYdTlrSuobiCLyc06eFBNO7+ENua2txnv99Zr8MdBvr0k303nA9wALp8FMT9ZPZUZQLVrAYyyu1XECh6fSujSGTevXNq6GjAnHXSpcW88IlPfmRxGG4MBMN0rMLQKpC8wja2gLqNwAfULDn+xHnkRB1pr7fJIIZ+rqUXgYiT1Jn0fYeBB84piP2mNQt7+pB7Ci6UQ+H8zc+G2x6Eq5/9yoeP0O28rV8AtOmOmzeUEDQWaAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2ZfCgFzuPsoSMKXri78JTpC5z4fhshPNPJXBBScIbGo=;
+ b=d8J0WSVOcx8tq4S21VJ3/Jw4QdXyD55JvEvs3JJlYJ1eFxWv0K0OP5AAceLDjxDUK4xCZi8IUPaEsGJSeIXv6ARyT4A7KLuToViuq6T4VNQyNdCTvPEIE7RoSfBYIgZOmU1jTeqOC7tgSNfwIZ4OTA2egc7ytIXnKbIHLTUzmhw=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by BLAPR10MB4881.namprd10.prod.outlook.com (2603:10b6:208:327::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.20; Sat, 7 Jun
+ 2025 12:14:43 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8813.022; Sat, 7 Jun 2025
+ 12:14:43 +0000
+Date: Sat, 7 Jun 2025 13:14:41 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: akpm@linux-foundation.org, hughd@google.com, david@redhat.com,
+        Liam.Howlett@oracle.com, npache@redhat.com, ryan.roberts@arm.com,
+        dev.jain@arm.com, ziy@nvidia.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] mm: shmem: disallow hugepages if the system-wide
+ shmem THP sysfs settings are disabled
+Message-ID: <b6ae32e5-60e0-44dd-a1e8-37c162d04ed3@lucifer.local>
+References: <cover.1749109709.git.baolin.wang@linux.alibaba.com>
+ <39d7617a6142c6091f233357171c5793e0992d36.1749109709.git.baolin.wang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <39d7617a6142c6091f233357171c5793e0992d36.1749109709.git.baolin.wang@linux.alibaba.com>
+X-ClientProxiedBy: LO2P265CA0501.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:13b::8) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1569:b0:3dc:7b3d:6a37 with SMTP id
- e9e14a558f8ab-3ddce423461mr75897805ab.8.1749298502572; Sat, 07 Jun 2025
- 05:15:02 -0700 (PDT)
-Date: Sat, 07 Jun 2025 05:15:02 -0700
-In-Reply-To: <CAJZ91LC2PXK-F8D7br-JKWiREf0hb2BFbEXvugN+=xzuTPdK5Q@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68442d46.a70a0220.27c366.0045.GAE@google.com>
-Subject: Re: [syzbot] [btrfs?] kernel BUG in populate_free_space_tree
-From: syzbot <syzbot+36fae25c35159a763a2a@syzkaller.appspotmail.com>
-To: abinashlalotra@gmail.com, clm@fb.com, dsterba@suse.com, 
-	josef@toxicpanda.com, linux-btrfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|BLAPR10MB4881:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1ac62809-1460-403b-47d1-08dda5bce2a1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZjZPYjQzNzJhRzJQWUh1L2NQL0RzK3FhSzI5aXIrQmQ5N2FlSzBNUnZWa3hD?=
+ =?utf-8?B?UlBTbkRLSnlXWjA5aUs4UzFkU00zV2w4REppUkFGSzE2TDRkdmxxWlJ2RVpX?=
+ =?utf-8?B?b0hpOTVSOGNVVVBsOFlJeWVOdEFsaGlRblRFcXl3aE9PWjhMMGZOV0dMMEtY?=
+ =?utf-8?B?TXBnNnZpa0xUcUdjaElUdU9xclAyK1d3ZHM0T1psSzRHaUltTG9jRVB2cWZJ?=
+ =?utf-8?B?T1NiMnh1ZkQvazJDSFhSVHMzeXJqNHROTkhRL3g5bWdIeW5KODhCdDBicW5I?=
+ =?utf-8?B?M0cxcHlWbVJTUmkrRTFwa1JSWWhYOUp5dHBNQnVlN3o4a2g4Q3RVTTZ1dTFl?=
+ =?utf-8?B?ZGd6LzBoZkF4b2d1cklpYmVpQ0dNZGhpMzlKRU5UZnlmclgrU2ppN3hWUjFn?=
+ =?utf-8?B?RHdXVXE3VXplOTcxS1BRcHA0WGpEbWhobTM0U3ByZXMyL21xaklqNllUVUo5?=
+ =?utf-8?B?cGlVRUFENC9UcEFBNnI4K0FMVW9RblZLYmFiMk94YW81R3VVc0pmRTNiWndC?=
+ =?utf-8?B?L0JHQ0pDYVZJMFNVSGZMUFRaZWdBMzNPbzhzdGtWbmt1K004M2c2M3NPWE84?=
+ =?utf-8?B?MkxjNkJ0VDRFMjZrM2pVK1hadXhBRUhRc0dIQlVxK2c4bUw2MCtUL3g2Y3Fh?=
+ =?utf-8?B?YnBVUHJJd2lNRytVZXRNcjZMaXRnOFhJVmFINi9DOTYvVXVldExGZGtOZk5w?=
+ =?utf-8?B?b0pobzJVd2x4VEp1ZXI3N3p4RTloV2xjOGFCTUdDQjRiZ1ZNbHlrTStKSHZX?=
+ =?utf-8?B?N1EvQzVoRTd5cUp6bFdnOVZhMmhBWjFRZkVMSCttYmFPOXptVDN0RDlVQUFL?=
+ =?utf-8?B?aW9aSW5uQjF1QW9qUzNwTnB3UjlNd2g2S04reGlES1JDbldQelZ1R0tldUFw?=
+ =?utf-8?B?YUZMVjBLdUI3emp3WDJlTyt0ZExqc0tZL0Rvbi9wSmI0d2ROZTlDdmgzQkFP?=
+ =?utf-8?B?YXdOT1pOMUtCV1Z3KzEvZGZrZmphZWxBREszQktzYy9VNE5VbngraW00YnZC?=
+ =?utf-8?B?UkJpQlNtOTczU1VFWjFiMVBYYVN1QVMzRCtxZCtIZU9scnVHMU5RY1ZubDA1?=
+ =?utf-8?B?cFFKeXlwMFI0RnhmVTFTNXVYbjQxb0F5VkZjemZ5NnRjWC9lRzRWZXNUczFZ?=
+ =?utf-8?B?SG1MOEExUjl4ZlZYWnRrY2pRYUNIalVtVFM0cVJ2ZXhVUURFTFZLbU43b05R?=
+ =?utf-8?B?cGRueUJ3Mk5NWWp1ejhTcWx1U0xEUUlsQUt3dUxlQWRxWUdld0FmS0lWbXNj?=
+ =?utf-8?B?c2RYUTVSUW5PeGE2RmdxS2VhRmFITHUzbnJYTisxbjVkUk1sakZNQ3d6MUJP?=
+ =?utf-8?B?blExdkJLaWZ1L2FReTJUWXlaanZmYmVpQWNZS3JXdkxVMTQxYlZnSGFnMjBH?=
+ =?utf-8?B?cXBUQTdKMTFFOFdrSWNZMHNEaDR3VTh4WG1OSm1XVk9hS01SWTRxR0ltOEgy?=
+ =?utf-8?B?clhCRXpiUlpTQjExM1NMUDJqTFlTVWJPVnl4aWxMV0NCTmsrbDFOZFZhSEVM?=
+ =?utf-8?B?ME9NaWR5ZE8zcDhwT0pKcXl4WkROVzRKZTd1TGhWVm1sUFAyRVdFZTlOdTdF?=
+ =?utf-8?B?aUlSR09weEhRdFN3THh0Y1NZbitDRTNXNFpkSFcvUjFoNXB6MGMyZ3RyVUxO?=
+ =?utf-8?B?VUw5eHJZRkZZQkR4UEVlc0dxbkRzNVlpbWZxL3RCSEFTajh1YnlnSzBPbzcx?=
+ =?utf-8?B?aGljSGdtSFFTYU9QTElIRUR0U2VXenlTbjlXcjBJd0ZtenVqd3RzbVprYS9R?=
+ =?utf-8?B?aVRUY1BRYmxLRFBPNUhLS3dRZmcybDBoZWFseXZpKzNQdm52OFdzUFJQR092?=
+ =?utf-8?B?MHhEdjBpRy9BczYvN1ZjT2RBYXo4NUtoWllKMXlrQXIvUjZ3M1U5bmVTMXBQ?=
+ =?utf-8?B?bjJ1b1pDbHZpcURGbk5oZ0x6SnJKVDFSdDM4RHBKdjAwMkY3QnJPUTFzTWZu?=
+ =?utf-8?Q?KldKTpRH4N0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MHVSZW5zTVFpcGFIYzFQYnh5dFlOREtOeUd5bGp5SW0rUjZ5dG5ZeEZLemdT?=
+ =?utf-8?B?N1A5OXZyMFprZ3pRT3NUaHZjUUR2Y29sQkNnVU9vSHVBTHMxWWJ5Z1pQR2Vr?=
+ =?utf-8?B?eVZuR3JyTFRKUmZtOXhrTXI0NnhvRDdHdWp0bjBWUGszcERPK28vTWZvMk5K?=
+ =?utf-8?B?Tk5MZGhkRWhtL1RNYmlRTDNtaVVteG5tOGZTSkhYVGNtdGxhTGJvZk9FRGVJ?=
+ =?utf-8?B?QkpVQlV5aXFMdWM4TnJEUnZPL1hyTHgrK3ZySmx4cTBjTG1nWXNISjF5T1hv?=
+ =?utf-8?B?bitGbm5TNC9aV1dRdUtaZzR3dXVyLy9qNWIwd1ZiUFZaaG1QSVhpc1B0YjA2?=
+ =?utf-8?B?MDdka1d1Q3hsYXk1U3ltdTFYdkxaakZDaTdQSWZSWVQ5QmFKQ2laVkNLWVZI?=
+ =?utf-8?B?a2Y4SXNRakk5SjFpazkzMzJENFN5UEFCdTFEVHhObkNDQWpodWVnL3AvenRs?=
+ =?utf-8?B?QTRKY2ZudmtlSjJwWGhIUnlZQWo3bCtiSVJ3eXBRdUpxWDUxdlFVOVJQY3JN?=
+ =?utf-8?B?T3FPbEUyUjd1K2czUFZBWDJVdFZzTEZMbVJ5WnVFWE84SUYrNmhOQWtLN2hV?=
+ =?utf-8?B?M1JVdVNadWlNZ250NXBDN2pBOE5IZWgzeTJudjBDeElsV2dBcHJNT3AvQlNu?=
+ =?utf-8?B?OVVtd1NUVWVYRm9BYk5jVlZ6Ty8vV3E0a1RHVVZTbVd6OGY4UlNTaTZRSXVv?=
+ =?utf-8?B?ZDVDQkxxeFk3SkN5Z2dIMnlmWlRmQVRVak1tSXQwZXVLclFSZ1FLVi8zcmFT?=
+ =?utf-8?B?Zyt4QkhSMUtLYlF4UkNTcTBHR1pWL2JoVTFEb29pZFUxQmQ5NmlnVVdzT3By?=
+ =?utf-8?B?eGJSbHNVV1IxcGtxUmtjR1M0NzV4RUplTmhaY1crM1JsMWd4ZjRRNGcrYlNv?=
+ =?utf-8?B?VUJWWHptWVl5eE02NlhYcmNieTltSVFBN2EwWmx1UDJWZGZFZHg0Y0pmNHNh?=
+ =?utf-8?B?TEJDMFYvN0cxaUVHNDVEbWRheGxjdmp2VjRTd1pzd2owS2p6MVdqQnlXOVVR?=
+ =?utf-8?B?RjlraEc1czFxbll4Tjh1b2JuYkJvTnFOWGNtMzdlRFNZbyt1cSszVE5temlE?=
+ =?utf-8?B?aTBPanQ3bkJqZHQycVd1eWJVQWo5VzdTVmlhK1VqU0dsN2IwMGR6SGpHMHl3?=
+ =?utf-8?B?a3h3d0hsa2dJRU8rcU5wYzhJTXFVZk5sUGlqSWlZRE84RHd1eHI1VzliVlMw?=
+ =?utf-8?B?TXVjaVBVazUwUGtxNTFHdVlXLzczL3RUQytBRlY1RGQzcmx3QnE1YWVSUFZS?=
+ =?utf-8?B?VXBmdjJHL1NKZU5pYy9hMHdIZCtOUXJ5NHdtcUxpbExPeFg0R0JOb3RlbjUv?=
+ =?utf-8?B?cjVDNUZYSUlheE13b3AzY2diUlQvcXhaM0F0K3BzR01vZDZKYjJpNjFoUGR1?=
+ =?utf-8?B?bEg0RjVRRG9lNFlFMDE1RXJuVFFFQVlxMlJ2dHdleHZXMlFHL1F3MHBrcTQy?=
+ =?utf-8?B?K3gvamFnb0c2VTR6Qml4dDZXRlFJTWlQelFlS0VlQlk3Y2hUSk42WXp2UHJQ?=
+ =?utf-8?B?TFY4eXVnZ3ZGZGFEbjd3RkZkMHU1anczdUx6NGdDMDFURThha3A5ZC90NVEw?=
+ =?utf-8?B?ZDcyQTJFdkVzZzMwcjBZZ1VzVXg4WWppUnFJOSszcWsxc3hSN3V5RDB0aWJZ?=
+ =?utf-8?B?RmdycE9VUHdXOXc5ZnRlR1MyOHJ1NGdnSzFkdWtBQ3ZIb0RzdzVBb0dmaTJw?=
+ =?utf-8?B?ZU1HZFlmN0E0NGh2US85a0VEczFHbCtEcVVGZVBrOHBYeTlnenJweXhJUG1W?=
+ =?utf-8?B?dnFCN0hZc0w2OVcvZ2J2MzdQY3JNKzVPM3FQTVR6Yi95bTlKeURvNkhKcDBI?=
+ =?utf-8?B?ZWlYbW5qU1VON2krd2hnOE9COVBOUWc1NjRselJabTd2TlYvVWh6VkhDeWxP?=
+ =?utf-8?B?WFZqeE9paXY5Yll5bjdOSzhRYzBlZnQwNWRCTys4aDlGRExXRnJ6SVo0cDFH?=
+ =?utf-8?B?aGhweUx5MFFDNVhuZ28xc21mMDV1UDNXd3hJZmhqeTMrNjhSYUhFMXdxTzNF?=
+ =?utf-8?B?T0hjVWVpakJUL1lWWVBCRGZEdzBHa29vZW05WktDbGN3ZS82czB1ZlVIbmhS?=
+ =?utf-8?B?aGxiNFRsSVpvZnR6Uk5CeEJWRS9vZDh6S0hRbFhzaHlBZ1hFTDlqL0JSY2FR?=
+ =?utf-8?B?a0pyQVFkS2VUV2pUMWczMGpLbVNvQ2tWcUpvU0F5dlFtZFl1RmE5eFFPQnh2?=
+ =?utf-8?B?U2c9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	LnXIi6Ekgfp8kRzkh73bz2JzYetU2Bq46o7ryTaww7xN0nNwK7pVVL0ij/Kd3GVweRlqL+owvY+IzFOFlqcFTEXznSBd0O2jciTuSX+DAbOS+jsF+xgZ/a8BkKAV/Sa3quKiE6EIEHPGk83VTmmuWTufAfWU2+OqRtjdJbyBZue8Mkkrrz8m+zIwy+urthEXZHky3hUpQzaCiKcQIPb6feG6adzqaqf2oZLFU6aK4niSDoZdNLZMpDcWXulwjN2u6xoHQo5+ZPwVg/iyROaTOAy8j2V6IQRe8YIGIGch8SwCGNO962crj89q8tGR7rar0rpxwdDPpPKWQxNxJ93zVtF3j1WbdkwF3v11VfDH2H3bVBqRJanKHJPFgxLRohDuVozaDoGlkQD7fovk6FAEpIgk7QPacWUDOQYa7fsdLg2wQsmBlzEXqVuyMRHXK0+uqv5Z3mz/cbiVWpWQR5UpAqgtGGUZgl9Km9+fVEQa8TVcTjnFQ9FhIO/VuCxWQSnf3XJDcJGT54RwuwQbqaUzA/PKARf81fWgCgA+N61NInj8hs2r1Xdd5nkWXzhXmk5hO7yg1sbVaJIcyTdttwz3dWPz/z+pNOqibZ3FLWVOBoc=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ac62809-1460-403b-47d1-08dda5bce2a1
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2025 12:14:43.1964
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TM5nffM5pbJJxIhcGZLPDRU4OOS/ZutNd3yhmHs8C5Mmu3PxVv3luyroEQvUfq7gpaE4JUfxd5qgvW2ggmV5s/One20AEs5zSiKdbR3yf1Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB4881
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-07_04,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
+ malwarescore=0 suspectscore=0 spamscore=0 mlxscore=0 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2506070087
+X-Authority-Analysis: v=2.4 cv=RZGQC0tv c=1 sm=1 tr=0 ts=68442d37 cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=Ikd4Dj_1AAAA:8 a=SRrdq9N9AAAA:8 a=h08ATKPx_57Ha0vpD2kA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: GjcNfmF4z68DDHDWmXmZJl9sWlRKwcSS
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA3MDA4NyBTYWx0ZWRfX8SSWU2wukONp Ll5HfrhX8J4FQ0UW6AA+pgOLdDgpksbSgAU6zGnxxi6iMTdTmxQwuyzJjnFmbOfDZ0eTRplNqPV NPnGJBg3ZzMo/ofiTF6EdK4y66+4LtoUXFJ6blv0V0XhMCyqmFMXoKj+Sbd0Z0Oj8eDUTvfUkX1
+ IQtQH+A4WDEjeczC/aPHmp12gmxQS3ZQuGoxkR7CCIF77kuR7KyLl7bxKFnaoxSH4SB+uRMouNB +TTGuKLWc0N4KI/PTyuk16AqIN3I1grAcRhhFQ45M/d7RxcxggDsQqsO8X2+tivlKCgqIobZQAY /7aI8BvDFODWByKlBizMxiQyzTvXKrscmbpLAxT94Zt/b64TFJRXrLcEcB9Vu4n/Ed6lkRaJJxG
+ dx4TwYnaQX1p/NkUcvpd/GUAL+iz3xTmDU6Nmv3AWF6b/E2z5CN0w5PDhi8Tp/MudaQFsYT3
+X-Proofpoint-ORIG-GUID: GjcNfmF4z68DDHDWmXmZJl9sWlRKwcSS
 
-Hello,
+On Thu, Jun 05, 2025 at 04:00:59PM +0800, Baolin Wang wrote:
+> The MADV_COLLAPSE will ignore the system-wide shmem THP sysfs settings, which
+> means that even though we have disabled the shmem THP configuration, MADV_COLLAPSE
+> will still attempt to collapse into a shmem THP. This violates the rule we have
+> agreed upon: never means never.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-WARNING in btrfs_rebuild_free_space_tree
+Ugh that we have separate shmem logic. And split between huge_memory.c and
+shmem.c too :)) Again, not your fault, just a general moan about existing
+stuff :P
 
-BTRFS warning: 'usebackuproot' is deprecated, use 'rescue=usebackuproot' instead
-BTRFS info (device loop2 state M): rebuilding free space tree
-------------[ cut here ]------------
-BTRFS: Transaction aborted (error -17)
-WARNING: CPU: 1 PID: 7626 at fs/btrfs/free-space-tree.c:1341 btrfs_rebuild_free_space_tree+0x470/0x54c fs/btrfs/free-space-tree.c:1341
-Modules linked in:
-CPU: 1 UID: 0 PID: 7626 Comm: syz.2.25 Not tainted 6.15.0-rc7-syzkaller-00085-gd7fa1af5b33e-dirty #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : btrfs_rebuild_free_space_tree+0x470/0x54c fs/btrfs/free-space-tree.c:1341
-lr : btrfs_rebuild_free_space_tree+0x470/0x54c fs/btrfs/free-space-tree.c:1341
-sp : ffff80009c4f7740
-x29: ffff80009c4f77b0 x28: ffff0000d4c3f400 x27: 0000000000000000
-x26: dfff800000000000 x25: ffff70001389eee8 x24: 0000000000000003
-x23: 1fffe000182b6e7b x22: 0000000000000000 x21: ffff0000c15b73d8
-x20: 00000000ffffffef x19: ffff0000c15b7378 x18: 1fffe0003386f276
-x17: ffff80008f31e000 x16: ffff80008adbe98c x15: 0000000000000001
-x14: 1fffe0001b281550 x13: 0000000000000000 x12: 0000000000000000
-x11: ffff60001b281551 x10: 0000000000000003 x9 : 1c8922000a902c00
-x8 : 1c8922000a902c00 x7 : ffff800080485878 x6 : 0000000000000000
-x5 : 0000000000000001 x4 : 0000000000000001 x3 : ffff80008047843c
-x2 : 0000000000000001 x1 : ffff80008b3ebc40 x0 : 0000000000000001
-Call trace:
- btrfs_rebuild_free_space_tree+0x470/0x54c fs/btrfs/free-space-tree.c:1341 (P)
- btrfs_start_pre_rw_mount+0xa78/0xe10 fs/btrfs/disk-io.c:3074
- btrfs_remount_rw fs/btrfs/super.c:1319 [inline]
- btrfs_reconfigure+0x828/0x2418 fs/btrfs/super.c:1543
- reconfigure_super+0x1d4/0x6f0 fs/super.c:1083
- do_remount fs/namespace.c:3365 [inline]
- path_mount+0xb34/0xde0 fs/namespace.c:4200
- do_mount fs/namespace.c:4221 [inline]
- __do_sys_mount fs/namespace.c:4432 [inline]
- __se_sys_mount fs/namespace.c:4409 [inline]
- __arm64_sys_mount+0x3e8/0x468 fs/namespace.c:4409
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
- el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
- el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-irq event stamp: 330
-hardirqs last  enabled at (329): [<ffff80008048590c>] raw_spin_rq_unlock_irq kernel/sched/sched.h:1525 [inline]
-hardirqs last  enabled at (329): [<ffff80008048590c>] finish_lock_switch+0xb0/0x1c0 kernel/sched/core.c:5130
-hardirqs last disabled at (330): [<ffff80008adb9e60>] el1_dbg+0x24/0x80 arch/arm64/kernel/entry-common.c:511
-softirqs last  enabled at (10): [<ffff8000801fbf10>] local_bh_enable+0x10/0x34 include/linux/bottom_half.h:32
-softirqs last disabled at (8): [<ffff8000801fbedc>] local_bh_disable+0x10/0x34 include/linux/bottom_half.h:19
----[ end trace 0000000000000000 ]---
-BTRFS: error (device loop2 state MA) in btrfs_rebuild_free_space_tree:1341: errno=-17 Object already exists
-BTRFS warning (device loop2 state EMA): failed to rebuild free space tree: -17
+>
+> Another rule for madvise, referring to David's suggestion: “allowing for collapsing
+> in a VM without VM_HUGEPAGE in the "madvise" mode would be fine".
+
+Hm I'm not sure if this is enforced is it? I may have missed something here
+however.
+
+>
+> Then the current strategy is:
+>
+> For shmem, if none of always, madvise, within_size, and inherit have enabled
+> PMD-sized THP, then MADV_COLLAPSE will be prohibited from collapsing PMD-sized THP.
+
+Again, is this just MADV_COLLAPSE? Surely this is a general change?
+
+We should be clear that we are not explicitly limiting ourselves to
+MADV_COLLAPSE here.
+
+You shoudl clearly indicate that the MADV_COLLAPSE case DOESN'T set
+TVA_ENFORCE_SYSFS and that's the key difference here.
+
+>
+> For tmpfs, if the mount option is set with the 'huge=never' parameter, then
+> MADV_COLLAPSE will be prohibited from collapsing PMD-sized THP.
+>
+> Acked-by: Zi Yan <ziy@nvidia.com>
+> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> ---
+>  mm/huge_memory.c | 2 +-
+>  mm/shmem.c       | 6 +++---
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index d3e66136e41a..a8cfa37cae72 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -166,7 +166,7 @@ unsigned long __thp_vma_allowable_orders(struct vm_area_struct *vma,
+>  	 * own flags.
+>  	 */
+>  	if (!in_pf && shmem_file(vma->vm_file))
+> -		return shmem_allowable_huge_orders(file_inode(vma->vm_file),
+> +		return orders & shmem_allowable_huge_orders(file_inode(vma->vm_file),
+>  						   vma, vma->vm_pgoff, 0,
+>  						   !enforce_sysfs);
+
+Did you mean to do &&?
+
+Also, is this achieving what you want to achieve? Is it necessary? The
+changes in patch 1/2 enforce the global settings and before this code in
+__thp_vma_allowable_orders():
+
+unsigned long __thp_vma_allowable_orders(struct vm_area_struct *vma,
+					 unsigned long vm_flags,
+					 unsigned long tva_flags,
+					 unsigned long orders)
+{
+	... (no early exits) ...
+
+	orders &= supported_orders;
+	if (!orders)
+		return 0;
+
+	...
+}
+
+So if orders == 0 due to the changes in thp_vma_allowable_orders(), which
+is the only caller of __thp_vma_allowable_orders() then we _always_ exit
+early here before we get to this shmem_allowable_huge_orders() code.
+
+>
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index 4b42419ce6b2..9af45d4e27e6 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -625,7 +625,7 @@ static unsigned int shmem_huge_global_enabled(struct inode *inode, pgoff_t index
+>  		return 0;
+>  	if (shmem_huge == SHMEM_HUGE_DENY)
+>  		return 0;
+> -	if (shmem_huge_force || shmem_huge == SHMEM_HUGE_FORCE)
+> +	if (shmem_huge == SHMEM_HUGE_FORCE)
+>  		return maybe_pmd_order;
+>
+>  	/*
+> @@ -660,7 +660,7 @@ static unsigned int shmem_huge_global_enabled(struct inode *inode, pgoff_t index
+>
+>  		fallthrough;
+>  	case SHMEM_HUGE_ADVISE:
+> -		if (vm_flags & VM_HUGEPAGE)
+> +		if (shmem_huge_force || (vm_flags & VM_HUGEPAGE))
+>  			return maybe_pmd_order;
+>  		fallthrough;
+>  	default:
+> @@ -1790,7 +1790,7 @@ unsigned long shmem_allowable_huge_orders(struct inode *inode,
+>  	/* Allow mTHP that will be fully within i_size. */
+>  	mask |= shmem_get_orders_within_size(inode, within_size_orders, index, 0);
+>
+> -	if (vm_flags & VM_HUGEPAGE)
+> +	if (shmem_huge_force || (vm_flags & VM_HUGEPAGE))
+>  		mask |= READ_ONCE(huge_shmem_orders_madvise);
+
+I'm also not sure these are necessary:
+
+The only path that can set shmem_huge_force is __thp_vma_allowable_orders()
+-> shmem_allowable_huge_orders() -> shmem_huge_global_enabled() and then
+only if !(tva_flags & TVA_ENFORCE_SYSFS) and as stated above we already
+cover off this case by early exiting __thp_vma_allowable_orders() if orders
+== 0 as established in patch 1/2.
 
 
-Tested on:
 
-commit:         d7fa1af5 Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=152cfc0c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=89c13de706fbf07a
-dashboard link: https://syzkaller.appspot.com/bug?extid=36fae25c35159a763a2a
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-userspace arch: arm64
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=168d7282580000
-
+>
+>  	if (global_orders > 0)
+> --
+> 2.43.5
+>
