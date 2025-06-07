@@ -1,61 +1,61 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5100921B908
-	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 09:33:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752B820C038
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 09:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749288839; cv=none; b=UMELwxxK0ytZcqxYMwhKsB4N6U8geqW4MI/88I7Lyg7fT2ww/jmJNt0y+XZzVzo54jmuUBQm3i2ryta6HaG5SGarPsfRUZc4N7Tq1eFhbVfbG6zqIptFfD8X3SFdRpbwZTqcKTz8ieoBjM03WT4FtDhxZ6Za5mkBV1UEPZyq3Lg=
+	t=1749288843; cv=none; b=jxUOgAHRaakP15I6HnWS7+i4w0nrtH0sXPD/Crt55DkSVnv9dvJBD01fBsMf4K/tZduN4tacXFI37I+Trfn0/0rUdI4qU30hmxsoYSfz9+PXAvCHGv6477mACo/YqB3X02eBCuzbI65QH4FNZkUDpQidt9BH3hSDdVp9lpNi0rM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749288839; c=relaxed/simple;
-	bh=hzT3vNgL1vWDpYVWZ4Vv9VCYguwOggONSy8Bpm6xvOg=;
+	s=arc-20240116; t=1749288843; c=relaxed/simple;
+	bh=Yqcf5TW8YfhX69k3zXNVG5GmujWRH6hO2eu9bkjbyko=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HQjVBVRt2VQTCFRkjKg9v1lSg4PpDUBZfy98w9eD17ep3YrqmHLxoUm1bZlASQCQiOPIHYU5rIIMua+xcO09a3gjdOjb5DT3peKcAD1fn9Nprp6bHXvjNkrMCnBkyLjqVEgYHJotI+JgyDqLHPxFz4V6KnRdzKOoFzwuO9iIMAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=I1ejNc55; arc=none smtp.client-ip=209.85.208.50
+	 MIME-Version; b=VXeXzEDnDgfX0qbMpX3Yf7KB8HPE6BgSkkg3A/BlN35ZJUhEhravgRBe2NDxAOxiqRM5s3LYSpl6u1nU4zBZRGT/zhT7B1q5DupBF7m1qyeBP2cUQ4gNFvpHugq4LAqERruLAjQNJCN14f7TkrEc5gws5LL7A2OucZiPt6rMfjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=Y+l3m40m; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="I1ejNc55"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-60179d8e65fso516959a12.0
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 02:33:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Y+l3m40m"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-606ddbda275so5264770a12.1
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 02:34:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1749288836; x=1749893636; darn=vger.kernel.org;
+        d=amarulasolutions.com; s=google; t=1749288839; x=1749893639; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5MR+dZbWYo4do6lj7ERY9jZ9tLxOFZiirseEEryjRVE=;
-        b=I1ejNc55IVc7Cxdz5arB+XZ+Yp1SIwPmCSSjNtUbwEkHIQkPJuDemkUtG9Mc3VN1mc
-         QikAM4LI8POOd4dUjueeX+NQX9MqECnR+Pzw0IaiMVbILvxEKN8snNH/ZPd0SG7qG+wG
-         mXZmcptviJjR/lA979j4QieqTqkYo/ek0E2M8=
+        bh=RxEd2AdkeiCCeDSCFcPyL7zgCyiOfRVYJlDF1i2IoUo=;
+        b=Y+l3m40m1koX5tcv82yw3gJu9lVFoOxqmPU2bNqBfiD8ukaTJolDDv6AXhuWSPesP0
+         87tc1WSDwqYAZvhAzpPj5aeDPNf4yeyc9zgyJ9ejpBZNPKlrzk9eEwsuoI1iUEB7tKRg
+         uEoQ5N5eTzmToy2Tv20jV0w6pKUlDkifamhXs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749288836; x=1749893636;
+        d=1e100.net; s=20230601; t=1749288839; x=1749893639;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5MR+dZbWYo4do6lj7ERY9jZ9tLxOFZiirseEEryjRVE=;
-        b=FkXlYvVxE/CAA+Q3mWd/4JUjvB3BIjpQ+rzj4KQ12YGUXP1nnoc4Eo1paINozafG7E
-         Hm2jdfThTwtxiVwjD9Wi9nSc9nzZixiF7hv/9m8hUgAUgydjqx4vzNFqcmseMdikwput
-         E5Pp/msRRAESxh59UVUpBMCldkICaFpU+qGpzFw/ZpEKGGrlDafKUMHhQo0Q5OE+jsCe
-         laPBPMgv0PQUqj7vkicr8m7RmYRWrWsba2SPBEN+Dy0n8Lrqy7Qz99AWqJ6tBtGbldrL
-         BynRpQTSxGCUTiZMKiT0rOnCUkK0KohdSKBl++I/EnoALtYmWU1SeVdK13Q5+dqzW2k2
-         FQ7A==
-X-Gm-Message-State: AOJu0YzgAny2mWicx8Omc1xFeUE8RTPUivLSA2bhcy2Ady1Hes3tyIL8
-	ZfmPFDV8sgIl0RuIpmRcEPrWMH7zLXA0QvUn8UadlzMOepx2j9u76lHwOKuxblUKL/seDHi+pfi
-	uwbiI
-X-Gm-Gg: ASbGncu5IeWU3/a2531LVkpVAO5e3U7EKOphdYCBN00x9lYKicx9+vsCc/TokY74qhV
-	GfanzPrQluNf/1UqdYh2cRhAjwRgUs3Mj3WR/AboZlZHucCFcuuG/gGVWma8241U7r4jL/cBMV7
-	+FObgQV70i0FbdPY65DWO5y9s8Ud7Wym9eis3XHW7/PDulNr9UEFznlmuz7SaluGH8tB3oLUFW5
-	nFan3sK8V5yFHrZOXpodoAh0TGKhMSiKZRyp6R4XLZu0wl6Z/QYX3Oh7/MNYw0NX2A/PJWW/d30
-	1RSfhH6qBkpkXzH8YNCwR3SMZxiYE96Tw4wyjRYF+EWzxvZlRgNh43GJ+Jc/XO4Gu+XC/xxlIks
-	VKNZnuLIVJcEkHfXxJLctnA0ZNCGDP94+DSxSi3vME7gU5LctBrdLEhkeZNeDZaC8FR18tf79CW
-	7T/ELjhgfd9KZdrMGIVPvvmrg=
-X-Google-Smtp-Source: AGHT+IFlHwQClNktEW9rU11ODeYPn4LafvV12ThMJYdILr+sWuVhLFbv21t3KR4w5K99ahlUqfYzBw==
-X-Received: by 2002:a17:906:4fc7:b0:ad8:89c7:2735 with SMTP id a640c23a62f3a-ade1aa0fbaemr593115766b.58.1749288836475;
-        Sat, 07 Jun 2025 02:33:56 -0700 (PDT)
+        bh=RxEd2AdkeiCCeDSCFcPyL7zgCyiOfRVYJlDF1i2IoUo=;
+        b=nFPzLcrm0hITa2S3VtcM5wi3eY2z33lC5DBRx44g2jNJat0Y1RKH4Tyebjsy7x804N
+         i5IHusFyBqxcxw524zKDXm/Ru7ek9VwGj6fsZS45O2M3WMrvSDt3wby6nAlV3nTl5c9I
+         i8pK87P/k9ZzSEapButh8cvhRVn//HKZQT3vVZfOcj+1Qb1mXia/2BDKbadywDWm//hL
+         pCr081IXWVhnd/zT7BD/UBlXeTv1Q1QOu/ivNZLpfM8A3/Y/u1XZk4S60eMiOIDML1WX
+         Z6DikfGq5gX65R0Etlms9HKQwJPYm6obHOGV4eDT9tpMFUp04Vrq4aVoAzjslg1I0ISS
+         gpsw==
+X-Gm-Message-State: AOJu0Yz3OcoalEL218/eVuwhSYPOnIGG/wlex3h4r5Tn2FhNqz54HijG
+	mxiaT/O0Ps5y4UpIq70H2xoSExn9z1A6JqwcyTJKyQHVqOuVGQLUYp8E5rnWo8mXkvXGegSiSOW
+	wll0Y
+X-Gm-Gg: ASbGncvDqsg9LfBRCru7rzjUe9IEj9yi3QcTl6kkmoDYzmH3GsawQlxcRyN6zosh2gN
+	Qb+ntm0Xkg0yteQdaop7EYGQHTN0+JGJH2hhXqn59znQ6MX9Q8HIPu1dbdL12UyYtCf4Lz/t7Su
+	Achu0/IWlQauJ+5Akjekegsum1FJimQyI6wB1qLgTOWDBpcTT5msb0FF7mYhHpLFLskGqKtmZS+
+	1sI4bjCNwl4M7UT1/rqcUu14S7R/1qPKG+YcXCMuPgHaIeSlcLVTBzbWCt+Z+m2yavZ13rBqSZ2
+	qy0y20+DP9ZNmVyAHT1UvzqGrtYoQ96JKta3W82vSLKc1JnLYklfXgU3g8GlZh5kQ9BSR1KQNVx
+	pALfLkwM9J5PpiLNBQsFavmi1fhGEWGNBMu56TMmGRudajkSgnM+J6ydRl63gykhiiYtBSs9cXJ
+	Z8SUcGCi18MD69
+X-Google-Smtp-Source: AGHT+IGYbydEgnGk8F6YGGogCA17omQe2S98dizXcs3JVp65SK75LQ489PZTWGPSh2pDxfdX41g3zQ==
+X-Received: by 2002:a17:907:97d6:b0:ad5:c463:8d42 with SMTP id a640c23a62f3a-ade1a9164acmr631030366b.12.1749288839580;
+        Sat, 07 Jun 2025 02:33:59 -0700 (PDT)
 Received: from dario-ThinkPad-T14s-Gen-2i.homenet.telecomitalia.it (host-87-5-95-99.retail.telecomitalia.it. [87.5.95.99])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc1c316sm251541066b.98.2025.06.07.02.33.55
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc1c316sm251541066b.98.2025.06.07.02.33.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Jun 2025 02:33:56 -0700 (PDT)
+        Sat, 07 Jun 2025 02:33:59 -0700 (PDT)
 From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
 To: linux-kernel@vger.kernel.org
 Cc: Matteo Lisi <matteo.lisi@engicam.com>,
@@ -76,9 +76,9 @@ Cc: Matteo Lisi <matteo.lisi@engicam.com>,
 	Rob Herring <robh@kernel.org>,
 	Shawn Guo <shawnguo@kernel.org>,
 	devicetree@vger.kernel.org
-Subject: [PATCH 06/10] dt-bindings: arm: fsl: support Engicam MicroGEA RMM board
-Date: Sat,  7 Jun 2025 11:33:18 +0200
-Message-ID: <20250607093342.2248695-7-dario.binacchi@amarulasolutions.com>
+Subject: [PATCH 08/10] dt-bindings: arm: fsl: support Engicam MicroGEA GTW board
+Date: Sat,  7 Jun 2025 11:33:20 +0200
+Message-ID: <20250607093342.2248695-9-dario.binacchi@amarulasolutions.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250607093342.2248695-1-dario.binacchi@amarulasolutions.com>
 References: <20250607093342.2248695-1-dario.binacchi@amarulasolutions.com>
@@ -90,7 +90,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add devicetree bindings for Engicam MicroGEA RMM board based on the
+Add devicetree bindings for Engicam MicroGEA GTW board based on the
 Engicam MicroGEA SoM (System-on-Module).
 
 Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
@@ -100,17 +100,17 @@ Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 5feb62611e53..58492b1cd468 100644
+index 58492b1cd468..99ff7c78544b 100644
 --- a/Documentation/devicetree/bindings/arm/fsl.yaml
 +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
 @@ -773,6 +773,7 @@ properties:
          items:
            - enum:
                - engicam,microgea-imx6ull-bmm       # i.MX6ULL Engicam MicroGEA BMM Board
-+              - engicam,microgea-imx6ull-rmm       # i.MX6ULL Engicam MicroGEA RMM Board
++              - engicam,microgea-imx6ull-gtw       # i.MX6ULL Engicam MicroGEA GTW Board
+               - engicam,microgea-imx6ull-rmm       # i.MX6ULL Engicam MicroGEA RMM Board
            - const: engicam,microgea-imx6ull        # i.MX6ULL Engicam MicroGEA SoM
            - const: fsl,imx6ull
- 
 -- 
 2.43.0
 
