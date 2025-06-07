@@ -1,188 +1,228 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B32F9C0
-	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 13:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2764CA5A;
+	Sat,  7 Jun 2025 13:06:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749301427; cv=none; b=YwrpDW2c6yo8V6akrbCpsoTNKjo7gGFfi/HZBdfEys+gg0y1sLzQyUFsPotBUulPLSJDkGj2djiEloISWre6YV5OOumh7HGqygy+s8FZflmaue56hyQmNd0alFmZAE2ZVKRWIIA9LdI11fxx6PV8x3w7tArue26TYFyVDnQxevU=
+	t=1749301571; cv=none; b=Lxl+SdKTdE2WmrAJt9XPwew1BgB5+f2V5eA16Ycl4tnytB1BMdLv+5uz0CyD8oX2qw7BGufR78ItHpcFyJ8m9+0P4LGTJb234xfoOiEqjlQCzQU6ljqkkNb5x/jYVjVnM2GVJ/nk95NasBam2I4HIY8sSu5/Hdyjk+XcK87ZGtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749301427; c=relaxed/simple;
-	bh=Eqj6FJEHfq7+3qKDuYXg+g35tU6lnmHz5On8n9Rjhgc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=St4KAg/CWtHvNTcbBRCvGj0YGlm8v0JQCGQp+v3lm+vdZd+nP6ztDcC1PuekkOpc+EXPCBQe3WhBrwH8hU4Zz4+OWUMaFaMuqdFUyfb7VxV51n2dQajAgiMME+qQ6LsoMyKur5VJ4HUScd+AyEHvGb+vCkkz5mnYv19hGkULlFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YULZcZPN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749301571; c=relaxed/simple;
+	bh=6c+HOf6ZjIH9W8D0daft7amDlJzRluE+zsoKm7aXUC0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kRR/L9oulsgH4rkFH3fhMkq1VVqlzwJV5ROya8ILrdzgUEWoNCzDiD16kCPvKzOzrbmpVlgGg2QMYS1L/+lWGs58/8fY+IeQASexPvOe8Uhbv4jUmnQ1IDmAKRficFCCUVG1Wy5MAelERJdiWQ8vc4RaiMUGRn6yx8cy/BynQIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NPHVhphh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YULZcZPN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749301425;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SfnJpnOmsGPup1H/ERs2tNGx2bCdZsNE5EPGkXR7fYk=;
-	b=YULZcZPNZKpqFGOvyydS/RNzBUtXb/k6/xqSDfYvJhALnHzsh1XDExbXPM1chY4w94RyT6
-	5QuelT3EE17T2KhoZbCtJpNo1Nv1mMiQ4ql28zNlGiAvQyFc7TM+GzAXf+L7M2bUw5LtPP
-	vXfMIZOo+5a9jiA9/I78nPuj+czfndk=
-Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
- [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-150-Q4Vryx8FPeaL2u3oVj1Efw-1; Sat, 07 Jun 2025 09:03:43 -0400
-X-MC-Unique: Q4Vryx8FPeaL2u3oVj1Efw-1
-X-Mimecast-MFC-AGG-ID: Q4Vryx8FPeaL2u3oVj1Efw_1749301423
-Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-70e4e62caa7so53770737b3.1
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 06:03:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749301423; x=1749906223;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SfnJpnOmsGPup1H/ERs2tNGx2bCdZsNE5EPGkXR7fYk=;
-        b=nfsZ+gE3/RMClfFDzeWBYTvBJsFHlZw8NfFd41TNUgW6z0RmZnPmAcIuCc50kpztRX
-         LVqmAgWaxLIPwA/r3Rrb5ChV+dM4ICpU9LR4OH+kMIsybNxIkcFrZgezveuvWn7I1DDp
-         N2WLEkjP7H4EaM6g8KL9PjBrEtj6AZRILbl0LsIIV0ddqSIeqPaLLfpcnBGrwtYNrM/d
-         F0lI4DKvvcfHEkPG7z/+Q0r8fsgPnS+mAHRWk80bSo1U4dvGPXqdvAIDreMwjZXsAqdD
-         BONqtyqb+oDvKz5c9TgPetJ5Xxmibj0y7oCnxKNRt5f2I21rg48ErnXJJ3yAvEySHywr
-         VAaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUqHVoDHngHUKjVr9hrb36+KrtZyJ8vh1WLxulIAsQ/99OAeMvuhiRbfFjKR5YkwSbWUgfx8vglHkmhsDM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWldHCaG09A/bzycbVhcFh3UXFv7l++RljixbqKvOMtMSVm0PS
-	mGLmzKNLh/vWYmxkFwQu8WjHwD3aHYUDsukCg0s9ZDHNyc4IwywJkjHGOexTBJKMB2Kli0gF7qT
-	BeDxYKm4vp8Pgc9ki0gPIe1CaOYWtz730/tTWb2hSqGs0WhakKbwnjYMg8AXsiueWybpxMO3Jzc
-	nhYqKrckuVOzB7M5qlD03GXlXEyDdFwgIIp6A7NQymT0J+UyJ4dUk=
-X-Gm-Gg: ASbGncspwitJdOQ8KvQggsX7NvK6hk3ajeM05OyaL3I852ZZpOUnmZxkgEwHKYS3zUi
-	xe7DktKQTwINwIMh55RUi+f4I95+ma5DoFk97Gm7AvqEMCqDX8u1HQ6ZYXOE54WYH/X+CXkNFSJ
-	xgOEUjrA==
-X-Received: by 2002:a05:690c:dcb:b0:710:e81e:1364 with SMTP id 00721157ae682-710f7afa722mr95726567b3.6.1749301423047;
-        Sat, 07 Jun 2025 06:03:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE0D1oScsQFJkbV3leaGwsdhfTHQOUGGFXMT7UPU6qs5ZvaWLTmpU2PaV4/bjxQzeziLLSjyNubyd/h1pZsPnU=
-X-Received: by 2002:a05:690c:dcb:b0:710:e81e:1364 with SMTP id
- 00721157ae682-710f7afa722mr95725927b3.6.1749301422601; Sat, 07 Jun 2025
- 06:03:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NPHVhphh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88FC1C4CEE4;
+	Sat,  7 Jun 2025 13:06:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749301571;
+	bh=6c+HOf6ZjIH9W8D0daft7amDlJzRluE+zsoKm7aXUC0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NPHVhphhbYulIq1XoIsucXc0qTYaBVWJO8K8l98szbmu1CKQh3rQhp9L0Ktv1snf3
+	 L7hgh0jS3B3nD9KULbAdN3zDdxQDMwrosZxWSWi5AQt+ntkdKNzZVFSY7lZUNdgK0b
+	 Ipuhjogl7k4RbDHs7J2WkhQPmzZNmkC+GjpN0xnQSKkVln+F6x5H5Kco+Ie6r9trTz
+	 960gpJG2j36iiuvNMHRZSj/QJN1RzvVShoB08sHazmkutLJ4j+l6nR9WrVyz3mU7nC
+	 tlGynQ/HI1g4uvCdjf+vSCz4VHRtC+oN/0flRVW0DeBZ1GJsvibwQJDcYkoWEnchVe
+	 QqkAaFV4/wtlA==
+Date: Sat, 7 Jun 2025 14:06:00 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Claudiu
+ <claudiu.beznea@tuxon.dev>, gregkh@linuxfoundation.org, dakr@kernel.org,
+ len.brown@intel.com, pavel@kernel.org, ulf.hansson@linaro.org,
+ daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, bhelgaas@google.com, geert@linux-m68k.org,
+ linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ fabrizio.castro.jz@renesas.com, Claudiu Beznea
+ <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH v3 1/2] PM: domains: Add devres variant for
+ dev_pm_domain_attach()
+Message-ID: <20250607140600.76e87ea5@jic23-huawei>
+In-Reply-To: <CAJZ5v0hsT-Q2hz=qoBo409oungaCmexJwwGheN7KRLFqz=6_Dw@mail.gmail.com>
+References: <20250606111749.3142348-1-claudiu.beznea.uj@bp.renesas.com>
+	<20250606111749.3142348-2-claudiu.beznea.uj@bp.renesas.com>
+	<CAJZ5v0i_Ey+OVpSZHXru=tubMaZi=y-uOh_0M6zmWZ2DqqA7Vg@mail.gmail.com>
+	<zhjytvj35lknj7v3jhva3n3nbv6qctvqgykwyi5huj6omet7lz@wchd7f4p4dpv>
+	<CAJZ5v0hsT-Q2hz=qoBo409oungaCmexJwwGheN7KRLFqz=6_Dw@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515032226.128900-1-npache@redhat.com> <20250515032226.128900-8-npache@redhat.com>
- <6f061c65-f3aa-42bb-ab70-b45afdcf2baf@arm.com>
-In-Reply-To: <6f061c65-f3aa-42bb-ab70-b45afdcf2baf@arm.com>
-From: Nico Pache <npache@redhat.com>
-Date: Sat, 7 Jun 2025 07:03:16 -0600
-X-Gm-Features: AX0GCFsXeVlQnNKWAGBb29ema6RNmgUDaEXB5xk1LDR3gUMKNf8Z3uuBnY7lWI8
-Message-ID: <CAA1CXcDVMdzNWS3maQPd3L2ZTOjnNyswH21H-BNfZpUPXk6UcQ@mail.gmail.com>
-Subject: Re: [PATCH v7 07/12] khugepaged: add mTHP support
-To: Dev Jain <dev.jain@arm.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com, 
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, ryan.roberts@arm.com, 
-	corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org, baohua@kernel.org, 
-	willy@infradead.org, peterx@redhat.com, wangkefeng.wang@huawei.com, 
-	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
-	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
-	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
-	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de, 
-	will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, 
-	jglisse@google.com, surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, 
-	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 7, 2025 at 12:24=E2=80=AFAM Dev Jain <dev.jain@arm.com> wrote:
->
->
-> On 15/05/25 8:52 am, Nico Pache wrote:
-> > Introduce the ability for khugepaged to collapse to different mTHP size=
-s.
-> > While scanning PMD ranges for potential collapse candidates, keep track
-> > of pages in KHUGEPAGED_MIN_MTHP_ORDER chunks via a bitmap. Each bit
-> > represents a utilized region of order KHUGEPAGED_MIN_MTHP_ORDER ptes. I=
-f
-> > mTHPs are enabled we remove the restriction of max_ptes_none during the
-> > scan phase so we dont bailout early and miss potential mTHP candidates.
-> >
-> > After the scan is complete we will perform binary recursion on the
-> > bitmap to determine which mTHP size would be most efficient to collapse
-> > to. max_ptes_none will be scaled by the attempted collapse order to
-> > determine how full a THP must be to be eligible.
-> >
-> > If a mTHP collapse is attempted, but contains swapped out, or shared
-> > pages, we dont perform the collapse.
-> >
-> > For non PMD collapse we much leave the anon VMA write locked until afte=
-r
-> > we collapse the mTHP
->
-> Why? I know that Hugh pointed out locking errors; I am yet to catch up
-> on that thread, but you need to explain in the description why you do
-> what you do.
->
-> [--snip---]
->
-> >
-> > -
-> > -     spin_lock(pmd_ptl);
-> > -     BUG_ON(!pmd_none(*pmd));
-> > -     folio_add_new_anon_rmap(folio, vma, address, RMAP_EXCLUSIVE);
-> > -     folio_add_lru_vma(folio, vma);
-> > -     pgtable_trans_huge_deposit(mm, pmd, pgtable);
-> > -     set_pmd_at(mm, address, pmd, _pmd);
-> > -     update_mmu_cache_pmd(vma, address, pmd);
-> > -     deferred_split_folio(folio, false);
-> > -     spin_unlock(pmd_ptl);
-> > +     if (order =3D=3D HPAGE_PMD_ORDER) {
-> > +             pgtable =3D pmd_pgtable(_pmd);
-> > +             _pmd =3D folio_mk_pmd(folio, vma->vm_page_prot);
-> > +             _pmd =3D maybe_pmd_mkwrite(pmd_mkdirty(_pmd), vma);
-> > +
-> > +             spin_lock(pmd_ptl);
-> > +             BUG_ON(!pmd_none(*pmd));
-> > +             folio_add_new_anon_rmap(folio, vma, _address, RMAP_EXCLUS=
-IVE);
-> > +             folio_add_lru_vma(folio, vma);
-> > +             pgtable_trans_huge_deposit(mm, pmd, pgtable);
-> > +             set_pmd_at(mm, address, pmd, _pmd);
-> > +             update_mmu_cache_pmd(vma, address, pmd);
-> > +             deferred_split_folio(folio, false);
-> > +             spin_unlock(pmd_ptl);
-> > +     } else { /* mTHP collapse */
-> > +             mthp_pte =3D mk_pte(&folio->page, vma->vm_page_prot);
-> > +             mthp_pte =3D maybe_mkwrite(pte_mkdirty(mthp_pte), vma);
-> > +
-> > +             spin_lock(pmd_ptl);
->
-> Nico,
->
-> I've noticed a few occasions where my review comments have not been ackno=
-wledged -
-> for example, [1]. It makes it difficult to follow up and contributes to s=
-ome
-> frustration on my end. I'd appreciate if you could make sure to respond t=
-o
-> feedback, even if you are disagreeing with my comments. Thanks!
+On Fri, 6 Jun 2025 22:01:52 +0200
+"Rafael J. Wysocki" <rafael@kernel.org> wrote:
 
-I'm sorry you feel that way, are there any others? I feel like I've
-been pretty good at responding to all comments. I've also been out of
-the office for the last month, so keeping up with upstream has been
-more difficult, but i'm back now.
+Hi Rafael,
 
-Sorry I never got back to you on that one! I will add the BUG_ON, but
-I believe it's unnecessary. Your changeset was focused on different
-functionality and it seems that you had a bug in it if you were
-hitting that often.
+> On Fri, Jun 6, 2025 at 8:55=E2=80=AFPM Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+> >
+> > On Fri, Jun 06, 2025 at 06:00:34PM +0200, Rafael J. Wysocki wrote: =20
+> > > On Fri, Jun 6, 2025 at 1:18=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.=
+dev> wrote: =20
+> > > >
+> > > > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> > > >
+> > > > The dev_pm_domain_attach() function is typically used in bus code a=
+longside
+> > > > dev_pm_domain_detach(), often following patterns like:
+> > > >
+> > > > static int bus_probe(struct device *_dev)
+> > > > {
+> > > >     struct bus_driver *drv =3D to_bus_driver(dev->driver);
+> > > >     struct bus_device *dev =3D to_bus_device(_dev);
+> > > >     int ret;
+> > > >
+> > > >     // ...
+> > > >
+> > > >     ret =3D dev_pm_domain_attach(_dev, true);
+> > > >     if (ret)
+> > > >         return ret;
+> > > >
+> > > >     if (drv->probe)
+> > > >         ret =3D drv->probe(dev);
+> > > >
+> > > >     // ...
+> > > > }
+> > > >
+> > > > static void bus_remove(struct device *_dev)
+> > > > {
+> > > >     struct bus_driver *drv =3D to_bus_driver(dev->driver);
+> > > >     struct bus_device *dev =3D to_bus_device(_dev);
+> > > >
+> > > >     if (drv->remove)
+> > > >         drv->remove(dev);
+> > > >     dev_pm_domain_detach(_dev);
+> > > > }
+> > > >
+> > > > When the driver's probe function uses devres-managed resources that=
+ depend
+> > > > on the power domain state, those resources are released later during
+> > > > device_unbind_cleanup().
+> > > >
+> > > > Releasing devres-managed resources that depend on the power domain =
+state
+> > > > after detaching the device from its PM domain can cause failures.
+> > > >
+> > > > For example, if the driver uses devm_pm_runtime_enable() in its pro=
+be
+> > > > function, and the device's clocks are managed by the PM domain, then
+> > > > during removal the runtime PM is disabled in device_unbind_cleanup(=
+) after
+> > > > the clocks have been removed from the PM domain. It may happen that=
+ the
+> > > > devm_pm_runtime_enable() action causes the device to be runtime-res=
+umed. =20
+> > >
+> > > Don't use devm_pm_runtime_enable() then. =20
+> >
+> > What about other devm_ APIs? Are you suggesting that platform drivers
+> > should not be using devm_clk*(), devm_regulator_*(),
+> > devm_request_*_irq() and devm_add_action_or_reset()? Because again,
+> > dev_pm_domain_detach() that is called by platform bus_remove() may shut
+> > off the device too early, before cleanup code has a chance to execute
+> > proper cleanup.
+> >
+> > The issue is not limited to runtime PM.
+> > =20
+> > > =20
+> > > > If the driver specific runtime PM APIs access registers directly, t=
+his
+> > > > will lead to accessing device registers without clocks being enable=
+d.
+> > > > Similar issues may occur with other devres actions that access devi=
+ce
+> > > > registers.
+> > > >
+> > > > Add devm_pm_domain_attach(). When replacing the dev_pm_domain_attac=
+h() and
+> > > > dev_pm_domain_detach() in bus probe and bus remove, it ensures that=
+ the
+> > > > device is detached from its PM domain in device_unbind_cleanup(), o=
+nly
+> > > > after all driver's devres-managed resources have been release.
+> > > >
+> > > > For flexibility, the implemented devm_pm_domain_attach() has 2 state
+> > > > arguments, one for the domain state on attach, one for the domain s=
+tate on
+> > > > detach. =20
+> > >
+> > > dev_pm_domain_attach() is not part driver API and I'm not convinced a=
+t =20
+> >
+> > Is the concern that devm_pm_domain_attach() will be [ab]used by drivers=
+? =20
+>=20
+> Yes, among other things.
 
-Cheers,
--- Nico
->
->
-> [1] https://lore.kernel.org/all/08d13445-5ed1-42ea-8aee-c1dbde24407e@arm.=
-com/
->
->
-> [---snip---]
->
+Maybe naming could make abuse at least obvious to spot? e.g.
+pm_domain_attach_with_devm_release()
+
+>=20
+> > In that case we can go back to using devres group to enforce ordering,
+> > but proper ordering is needed. =20
+>=20
+> Sure.
+
+Ok. Please take a look at:
+https://lore.kernel.org/all/20250215130849.227812-1-claudiu.beznea.uj@bp.re=
+nesas.com/
+
+>=20
+> > > all by the arguments above. =20
+> >
+> > Please reconsider given the fact that issue is not limited to the
+> > runtime PM. =20
+>=20
+> PM domains are not resources, they are interfaces that are added to
+> devices by the bus types that need them and they also need to be
+> removed by those bus types.
+>=20
+> A PM domain needs to go away at remove time because it may not make
+> sense to use PM domain callbacks without driver callbacks and if
+> enabled runtime PM is leaked beyond the point at which there are no
+> driver and bus type callbacks, this is exactly what may happen.
+
+I'm fully in agreement with all that.  However, I'm not sure on relevance t=
+o this
+discussion as (if the new function is used as intended) the pm domain will =
+get
+removed before any problems occur. The only call in
+__device_release_driver() between the bus remove and device_unbind_cleanup()
+which unrolls the devm stuff as the first thing it does is
+dev->bus->dma_cleanup().
+
+Maybe I'm missing another path?
+
+>=20
+> If you have ordering issues in drivers, that's where they are and
+> that's where they need to be addressed.
+>=20
+
+To my viewpoint, the ordering issue is in the bus driver because devm
+setup calls are in device driver probe() which comes after the
+bus_type->probe() but unwound after the bus_type->remove() - they should
+be before that if they are only for device driver usage.  There are
+devm uses in bus probe functions though which is assume why the ordering
+is as we have it.
+
+Personally I preferred the devres group in the bus driver. It's a
+model a couple of busses are already using.  The solution in this
+patch also worked for me though as a good compromise between different view
+points.
+
+Claudiu has been working on different solutions to this problem for a long
+time so lets work together to find a solution that finally resolves it.
+
+Jonathan
+
+
+> Thanks!
 
