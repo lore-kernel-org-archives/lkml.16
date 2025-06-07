@@ -1,149 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B431FA859;
-	Sat,  7 Jun 2025 12:19:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20DB74C8F
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 12:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749298759; cv=none; b=uGC4HpbA4UzHs+oXdLQZ4NL64Ko8yKaRnyjRKZ35GWkS7Idvjh1L/AWy5OvEYt+QbczcUXM1L3UucEb+YMvZDLZAJt7A8swzQZFTc/KFdLorjup4KS/x/CsspwWrANC+sk7WW6wpm8loZOXCdIJpMlvgKi+cMLxqgde8DcDacnU=
+	t=1749298840; cv=none; b=TSrJQTL8TIFOHXHHyf9vmRbCDf4XkzG6kkQhCadwMIkfAwDHGBMhJ/XFJGLasVGsvV7f++oU7lFLGpwRALovoCbBVbpORii9h7FXTThjeZH2xjzzQvfwgqY74DjZ34SmOvd5ElI8Tr640seIvZ/a+tMa0IGaJXXRmmxmE5Be+OE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749298759; c=relaxed/simple;
-	bh=w2DyumJs7cOJbwAL33h6oxUYA9Api2hkt43KHYq+pT8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CdvfwUgSxDZE3DYiFuYMEQDheZQDmXNn3Umwmj5fPCEbzIYr8cSYyFIaKD3cw3w19mhnu5FFV8/tXyS9TjdZETwmOWUX1cV7XEAda6ZMiK2u+FvdF44cdDLah+0XoU3HWN2xm5D952OMmy4BdcY+/Qjlcbm9Iky6fgo2X45qDfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ON2RV2ra; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ON2RV2ra"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8787C4CEE4;
-	Sat,  7 Jun 2025 12:19:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749298758;
-	bh=w2DyumJs7cOJbwAL33h6oxUYA9Api2hkt43KHYq+pT8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ON2RV2ramxoF5zguFHhUHn7LVYh9wpZyiCbg+syejc3q3DgrsHBGJqrlhN5cSnJLf
-	 W4uUIAR5Q/LpJyZWHqfL9AAx0+a3AARedtzhkNTU8enoPdbAyRN/Ae3MIXiQOzgQze
-	 uCRKPQwLbF01cRXmg3qrURo+8pXIQW2A8OTKAxcTdetBtdiTqJwMfJAzEQE4auwoBI
-	 JKXs4CENbBVYh9NlWIauO7ya85xGFkcBTCINWAT7nelwsb20MfAJFdyeuJAClG1vhn
-	 DlWaH/NyK2p80l/gJHxHx1K5FYOqI+hEHcuL+InKAl44W1jhkraiJI+6rs/xB5Scih
-	 HyjS9OxfCw8rQ==
-Date: Sat, 7 Jun 2025 13:19:05 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: andriy.shevchenko@linux.intel.com, Andy Shevchenko <andy@kernel.org>,
- Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org, nuno.sa@analog.com,
- Michael.Hennerich@analog.com, marcelo.schmitt@analog.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
- linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
- broonie@kernel.org, dlechner@baylibre.com, rafael@kernel.org,
- djrscally@gmail.com
-Subject: Re: [PATCH v9 09/12] iio: adc: ad7768-1: add support for
- Synchronization over SPI
-Message-ID: <20250607131905.4e42cbcd@jic23-huawei>
-In-Reply-To: <aD4WndkKGIWVVWx6@surfacebook.localdomain>
-References: <cover.1748447035.git.Jonathan.Santos@analog.com>
-	<27cccb51cc56f1bb57cb06d279854a503d779e25.1748447035.git.Jonathan.Santos@analog.com>
-	<aDnuvAdkcTAP2tMt@smile.fi.intel.com>
-	<aD3cK5PioN7Rw3pP@JSANTO12-L01.ad.analog.com>
-	<aD4WndkKGIWVVWx6@surfacebook.localdomain>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749298840; c=relaxed/simple;
+	bh=6yIyHvRp/1FaQ4jrUwGgmv8Co/tA7GZq3G5uLUMi2xo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QnMTB2Fc2kkUnyL6MrkB5FeTDSJyI/utxy+aG4ye1scX5asQs0zmZMOr2/fVo40bsU/kUwr5SsSNcrjCYCyEajjx6TCYr1zgCXwPtgFfGJfBz8wnyXdXf+cegoghoOiUSZ0F2l7mT+z7oq5pijU/TyN+G2Dv5f0DSliD0LXLpUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4bDxHn11l0z9sYQ;
+	Sat,  7 Jun 2025 13:47:17 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id Jq2Gnj8iY67x; Sat,  7 Jun 2025 13:47:17 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4bDxHm7448z9sXD;
+	Sat,  7 Jun 2025 13:47:16 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id E0D6A8B764;
+	Sat,  7 Jun 2025 13:47:16 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id xHP-SzKNoyYf; Sat,  7 Jun 2025 13:47:16 +0200 (CEST)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 7810E8B763;
+	Sat,  7 Jun 2025 13:47:16 +0200 (CEST)
+Message-ID: <6205828d-34ef-445d-8117-71a5269dc22f@csgroup.eu>
+Date: Sat, 7 Jun 2025 13:47:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-
-On Tue, 3 Jun 2025 00:25:40 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-
-> Mon, Jun 02, 2025 at 02:15:23PM -0300, Jonathan Santos kirjoitti:
-> > On 05/30, Andy Shevchenko wrote:  
-> > > On Thu, May 29, 2025 at 07:50:29PM -0300, Jonathan Santos wrote:  
-> 
-> ...
-> 
-> > > > +static int ad7768_trigger_sources_sync_setup(struct device *dev,
-> > > > +					     struct fwnode_handle *dev_fwnode,
-> > > > +					     struct ad7768_state *st)
-> > > > +{
-> > > > +	struct fwnode_reference_args args;
-> > > > +
-> > > > +	struct fwnode_handle *fwnode __free(fwnode_handle) =
-> > > > +		fwnode_find_reference_args(dev_fwnode, "trigger-sources",
-> > > > +					   "#trigger-source-cells", 0,
-> > > > +					   AD7768_TRIGGER_SOURCE_SYNC_IDX, &args);  
-> > > 
-> > > I don't see how args are being used. This puts in doubt the need of the first
-> > > patch.  
-> > 
-> > If the wrapper is the issue, maybe it is better doing this instead?
-> > 
-> > static int ad7768_trigger_sources_sync_setup(struct device *dev,
-> > 					     struct fwnode_handle *dev_fwnode,  
-> 
-> Name it fwnode...
-> 
-> > 					     struct ad7768_state *st)
-> > {
-> > 	struct fwnode_reference_args args;
-> > 	struct fwnode_handle *fwnode __free(fwnode_handle) = NULL;  
-> 
-> ...and this one something like 'ref'. Also I'm not sure the __free() will do
-> what you expect from it.
-> 
-> > 	int ret;
-> > 
-> > 	ret = fwnode_property_get_reference_args(dev_fwnode, "trigger-sources",
-> > 						 "#trigger-source-cells", 0,
-> > 						 AD7768_TRIGGER_SOURCE_SYNC_IDX, &args);
-> > 	if (ret)
-> > 		return ret;
-> > 
-> > 	fwnode = args.fwnode;  
-> 
-> Yes, please. This looks better.
-
-Take a look at the guidance in cleanup.h first.  Linus made it very clear
-that the = NULL then set it later pattern was not the way to go. That was
-one of the things buried deep in a discussion thread soon after the cleanup.h
-stuff was proposed and the lack of general knowledge of that preference lead
-to Dan adding that documentation to cleanup.h.
-
-If __free is used Linus always wants to see the constructor and destructor in the same line. 
-
-That is why I suggested the approach in patch 1.
-
-If that isn't acceptable (yet), wrap this up in a local function doing the equivalent
-of patch 1 and we can wait and see how common this ends up being.
-
-Jonathan
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] powerpc: unify two CONFIG_POWERPC64_CPU entries in the
+ same choice block
+To: Masahiro Yamada <masahiroy@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Naveen N Rao <naveen@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org
+References: <20250607102005.1965409-1-masahiroy@kernel.org>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250607102005.1965409-1-masahiroy@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
+
+Le 07/06/2025 à 12:13, Masahiro Yamada a écrit :
+> There are two CONFIG_POWERPC64_CPU entries in the "CPU selection"
+> choice block.
 > 
-> > > > +	/* First, try getting the GPIO trigger source */
-> > > > +	if (fwnode_device_is_compatible(fwnode, "gpio-trigger")) {
-> > > > +		st->gpio_sync_in = devm_fwnode_gpiod_get_index(dev, fwnode,
-> > > > +							       NULL,
-> > > > +							       0,
-> > > > +							       GPIOD_OUT_LOW,
-> > > > +							       "sync-in");
-> > > > +		return PTR_ERR_OR_ZERO(st->gpio_sync_in);
-> > > > +	}
-> > > > +
-> > > > +	/*
-> > > > +	 * TODO: Support the other cases when we have a trigger subsystem
-> > > > +	 * to reliably handle other types of devices as trigger sources.
-> > > > +	 *
-> > > > +	 * For now, return an error message. For self triggering, omit the
-> > > > +	 * trigger-sources property.
-> > > > +	 */
-> > > > +	return dev_err_probe(dev, -EOPNOTSUPP, "Invalid synchronization trigger source\n");
-> > > > +}  
-> > 
-> > Then we can get rid of the first patch.  
+> I guess the intent is to display a different prompt depending on
+> CPU_LITTLE_ENDIAN: "Generic (POWER5 and PowerPC 970 and above)" for big
+> endian, and "Generic (POWER8 and above)" for little endian.
 > 
+> I stumbled on this tricky use case, and worked around it on Kconfig with
+> commit 4d46b5b623e0 ("kconfig: fix infinite loop in sym_calc_choice()").
+> However, I doubt that supporting multiple entries with the same symbol
+> in a choice block is worth the complexity - this is the only such case
+> in the kernel tree.
+> 
+> This commit merges the two entries. Once this cleanup is accepted in
+> the powerpc subsystem, I will proceed to refactor the Kconfig parser.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+
+Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+
+> ---
+> 
+>   arch/powerpc/platforms/Kconfig.cputype | 13 ++++---------
+>   1 file changed, 4 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
+> index 613b383ed8b3..7b527d18aa5e 100644
+> --- a/arch/powerpc/platforms/Kconfig.cputype
+> +++ b/arch/powerpc/platforms/Kconfig.cputype
+> @@ -122,16 +122,11 @@ choice
+>   	  If unsure, select Generic.
+>   
+>   config POWERPC64_CPU
+> -	bool "Generic (POWER5 and PowerPC 970 and above)"
+> -	depends on PPC_BOOK3S_64 && !CPU_LITTLE_ENDIAN
+> +	bool "Generic 64 bits powerpc"
+> +	depends on PPC_BOOK3S_64
+> +	select ARCH_HAS_FAST_MULTIPLIER if CPU_LITTLE_ENDIAN
+>   	select PPC_64S_HASH_MMU
+> -
+> -config POWERPC64_CPU
+> -	bool "Generic (POWER8 and above)"
+> -	depends on PPC_BOOK3S_64 && CPU_LITTLE_ENDIAN
+> -	select ARCH_HAS_FAST_MULTIPLIER
+> -	select PPC_64S_HASH_MMU
+> -	select PPC_HAS_LBARX_LHARX
+> +	select PPC_HAS_LBARX_LHARX if CPU_LITTLE_ENDIAN
+>   
+>   config POWERPC_CPU
+>   	bool "Generic 32 bits powerpc"
 
