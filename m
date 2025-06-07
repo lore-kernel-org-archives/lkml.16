@@ -1,120 +1,127 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B7521773D
-	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 11:42:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C999D22127C;
+	Sat,  7 Jun 2025 11:42:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749296567; cv=none; b=lBced//wz9pqVCFcU9j/9kqrbbGKKVO9//wk1X5Zr5G3Lk8rR5JkgJL6LUyaE6L+uZBshAdWzw3tVhx6Pgil8oVWaJSk/TLxayauo4JogjscUMw4gBexZ1fdUn6pX/OCrj/oMLDiddq3eUuhd5uTNzO/Aiu1gHVMB81iu1v9vJE=
+	t=1749296569; cv=none; b=JgGye++lZ+s+Hss7aUGmM0c2BxpfLOOz+r//T84V6rhOH8hAaLwFWh6hScF+170TcYH4UsYbbEMPMO7/SIf0Aa7R5FinVRizemrQCHgDeKiEcwTobso1DznDSZ/JlENHz7+tZpwceyDitNziWSIvD7e8Z1rXR9E9gKQZEV5Hjjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749296567; c=relaxed/simple;
-	bh=d8I8eKRlDb5f4zH5sidDXcjiayJ19dluoQhODaDQiKc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ucmwDDaUbkE9niDo+IS1oLgSe0i0PDS5MiMag7HjaSPolPZPuQFf1tK0ic5epuKzOcUSBvRo/hSpQ+J9PbSTsqYCzfFNqi0AQWnX57UlPoN2rL2AifzjC/CQDukbHraQ0wi54vV1Hw2S7kni/8p//go8J+wkusaJ4FVd7qyg9Vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=KYBgFCkg; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1749296569; c=relaxed/simple;
+	bh=A5VFj1e+xpbR6SHxeq2NDLvtJFEJtEFEkt742n8/blA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qqc6+Jao4gyEynBCl0jGsaxn/PfcwDQLD0hNeCRfnanNXPgXhMgV8BzVQmuUSTsm0IgmtfW8kgZ58O9lkpo9zU55LwWy/43RxKjCwVDwm0KG+V2Ei3fq6Cdxt8Ri+/1eXkOrbk1BSf7MKio9ot2aZ1x8+X+KZWUDlxHxTvd0Jzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=AmN7JHt+; arc=none smtp.client-ip=217.72.192.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="KYBgFCkg"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-606fdbd20afso5660667a12.1
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 04:42:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1749296564; x=1749901364; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vbBYREB7EZz7uh97XCG/R2ZuqTlW8SyAHh+pi6ZvUpg=;
-        b=KYBgFCkga+XzwYosEm+EoT0Cc3Iv0dA9vPnaaOtM8t8qndpQ8mR4+EFOhABTfvM3IN
-         p9T7IWtEK6TFZN7C7OhzReF6RueEgUv+j2iMpJBLVAzn+CW9tH3Gr/kkwYPovB24S4TQ
-         lXq2705Z57ePtjzUmUJnnRMgpX3EC5GCHNutTjQorwUOnEQ90T4kZ3xsFxnDklctEs4h
-         SiUuu+dSmz725+Q5HRwOrImBjE+pwfKJsjww2Zu6wMvENxelyeiewD6tMt3vtAXBKi0K
-         /vV/JomfZrhi9n4M+LxiJevZijFIT+R+bn8Re9+H4goPiFi91CavUjzfW39+UFvczZeV
-         naaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749296564; x=1749901364;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vbBYREB7EZz7uh97XCG/R2ZuqTlW8SyAHh+pi6ZvUpg=;
-        b=GBKPEIFKeFnfC3Gol/UbuECSul/Tee3kQl0u9BB81gFJjzk/ahJb9nPiIdTYCfg/d3
-         KFOhxTwZOm7go2sI2avo8Vdh7EFUcAm+MNymdYnvmXkjs+N/p1Ej/sVTa4/YPmaGcExf
-         kf5WS3j9Ans/XwSeaVWOQFaxIvI8QttCBmhKxRA5VcLPXPHk3c+0K+b9NfwNmrKX3M3E
-         G+oNkoU8RZsnAzuzDyQUTPYRDVTv5tCkrSB1PwIUo/9n7dgstwSfoIdTkZdnHoWqBtqR
-         wJK6SwuuM652b8cwm786ZPSxpep2wfoYU0B0VmeKMIpTtLNUZlwZQhtRDk6ihRgdsz5A
-         vMRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVfc6dN9jCFjOP1PEN5E7vFWgmUGUplJYzI9lIMIHB3ABkp6s1Gd5/nSnheAhOPYc6JPXaH9+uqG85wqIA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+DJqLNIUF4BqLok4O6oS/G2qdUwmDyodQahtXgOGrHWzO6aK1
-	z5Q0hkwdqyUPqp+OCjrU7I1SV9zDLPPFaWWHRM9M1Kem/5RWZilJvGtdlCP/B0DM2BlrNf+76lD
-	sBJ/M
-X-Gm-Gg: ASbGncuR4y1oUoHhgiW+yYYyBNkAxKTxenjbsWdPo8Z7d9gLP8rFImJ2jlGfQc18Kc5
-	x/MF4IFEz6Zc0SgwwIUlk94LB51fXTjXDvgWei2LiJgOQO22VHipHZCZx+RnBXZI52Ua1WLzZSv
-	Pr2maBT6kWIg83fglpCBgC2j5yZ3oi8p7sqYLieCgJX9wYPJMxNGDfIVrqRpOAy+e6BOQBhdB9C
-	CLM87GSAanUK0+WF++SxVEngouwJlBnJYEYKg9ZAJX0r2/rTkoK5Je9i4Sc2bTwxEHQ9pcHy7vI
-	j1Dbn+K6hFq7xeu+Jy0jpfLgXDVaFtT3UwcwQt95LKUhm9sWg5jQHn3AxxPc
-X-Google-Smtp-Source: AGHT+IE/ghuMo8WxjRQEBBSzj3ZNMEtTZhSuX3aE1kpWDYjCFmKx98n9jZapdCOk71/aJ5kHwhIRQA==
-X-Received: by 2002:a17:907:7282:b0:ad8:9c97:c2dc with SMTP id a640c23a62f3a-ade1a9fcf5fmr648393066b.15.1749296551642;
-        Sat, 07 Jun 2025 04:42:31 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.126])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade35ce30casm151447866b.162.2025.06.07.04.42.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Jun 2025 04:42:31 -0700 (PDT)
-Message-ID: <b355e01c-d9a7-47f0-bfe8-282d9152a814@tuxon.dev>
-Date: Sat, 7 Jun 2025 14:42:30 +0300
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="AmN7JHt+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1749296556; x=1749901356; i=christian@heusel.eu;
+	bh=gIYlZ50mxQXGvz6F133XjL9sWrBBVbI6DqKQT9SVqnQ=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=AmN7JHt+lD9gR+HbnxcvzEEPnmvqzYThb64z7YFQ7dvCdQfv/yHK1qpyFBLFf3ee
+	 O5moNS22r1z6viKbzYvu1X9heiB6fCbQ/ILHoeigq7SYBd51ZQWJHrMLr5c1YRB77
+	 klj/cB0nOndqQXlQcqNsVqsCw70iK5pRlk+rIQXMxO2phMAzy7oK1AoO1OLveOF/t
+	 9jjrHnBDtfpAC0P5fENE2Xkmqxp8OCodYL5ojD5hbn5ltJ/s5kv52VWoaXm2DAoQF
+	 bxuSpCU0xRk9e55o4OaU1KFa/Vve0i8199HVZokUfQed6zcFShY0kCuBNYMFMPGQ3
+	 AWk7E5xWVh/SaAUnFA==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([89.244.90.37]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1McGxG-1uyJ9j41yW-00hj8d; Sat, 07 Jun 2025 13:42:36 +0200
+Date: Sat, 7 Jun 2025 13:42:32 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, 
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, 
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, 
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, 
+	hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.15 00/34] 6.15.2-rc1 review
+Message-ID: <d8e69fb7-fd1f-46b4-8031-13ab23ed8226@heusel.eu>
+References: <20250607100719.711372213@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/9] ARM: dts: microchip: sama7d65: Add PWM support
-To: Ryan.Wanner@microchip.com, herbert@gondor.apana.org.au,
- davem@davemloft.net, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, nicolas.ferre@microchip.com,
- alexandre.belloni@bootlin.com, olivia@selenic.com
-Cc: linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <cover.1747077616.git.Ryan.Wanner@microchip.com>
- <fae166010f94a672e4f1906f5fd4394f4236da53.1747077616.git.Ryan.Wanner@microchip.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <fae166010f94a672e4f1906f5fd4394f4236da53.1747077616.git.Ryan.Wanner@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jj753swazz7l7vzc"
+Content-Disposition: inline
+In-Reply-To: <20250607100719.711372213@linuxfoundation.org>
+X-Provags-ID: V03:K1:yI7xnS0BEN970P6M2FWovJNt5Pig2NzeKXfDXnoS3GKC7ItLPaX
+ QJfvdk8lbsrZAJ0mb4ZKFT7G0F2fDkBuwSKl8aTO8pO3UIkC+X9PkKbTanHZT6QrEi0P+TM
+ u5e/ccnbxAjHRHP4IKXlc4ORbNQaq69yTDHvfZYZikwuvUH71r5eat5virwC2fzgFBOZY/X
+ ixH276Q4UfU6ROFWPW5Lg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:/R9EqnYZTZE=;iNdiJhF9PNlT/qwNpY2FcgxQbze
+ SHk9SaopC14c4gsChEJ4BrgUkx1eHaY9jho4k46GtUr7yF+zAauDwSIShYG9pyDZ9zxbgf9Mg
+ 2XWjeuiJfelpGIAAVIbEXRL/d1YGVJTFNISWi/sw7Ctl5dWd5RW45aLcxIEyU6kxqQ6GjRwsc
+ LNuqmkKYOf4qgp9gcW3FxIhbAErbMJE55FVgxefY9HwzKKuVOSdnEHSmEp5cgK5dllC5lrF+4
+ j5SlF3p5NFLwmPOvp2XeB8KmrVv3RoTaFdNKi2wCAzCcEPnRxE4lE/VAk4dodMknlCsJf0pzy
+ SSDYn7J/cqnhwOCgx4SS00o9DkFP1lROLBm0TVtj0ejzAhyvqj/UVvx8sF7FsEzl6hScP7cW/
+ fXX7ZDSPTRPapyPI1ZUl7KGJZezjSzSGGLgoFgqWzqqlh1FVKcvhiTxrgzr1zpyUe8ouRKrpM
+ lEyWctR6TzD0K1n2SoMpZaB25K6mT0paJ5GiicDnmDr7hT81Rtx3YTY1AlVRGlqdFMD+1f5H1
+ lmuYlPXKO0Tx1RxxPFHa8o9cfEY/hCLkb4qzBWiemlzASK7vkOdnv8BbYXTJ14LQDxayjyuHb
+ XNtfZuPbxJQaPhuFAZtiLhG2svqjNxq/ofURcUCyVkD2tJYC5l6UHvSQgXNas0/9sZnJrsX7C
+ oIdLOJNDubH4kMp7dnxcrd+v3yk8bShkZAM5XDuceYvd0nlqrx79I0rgnJhT+O/ScpoLHZQqx
+ gNh0sFHbg7QhTFsbnWQ5xl/+jS0TWy71UsqMa0PJrAn/MlrBrdgXjThpf73mh5vBn7skSt2pC
+ f1qnIMX5AB+SRmJA+b5aDj0LuWWlqHzT4Fa3Tn60dJpe/HtgdgYKuPy1VAd8uoiSjIE1lr7sC
+ nsfFBdcA5wSFe/Yo34GgESf4tVRANIBe6dFh/rLfmrbkMXMNggvSLvMWeGmXP3u6+GL+2rpDP
+ 55o262zb23kjPNBEZudHuFN/bSKvkQ2/t3olmAsm3TIBrvRZ7veqvCxeczHXhzDooQ0H5jZdz
+ QgiOR3nMF4Qz/FW+CI+Bk2b88X6yOwbwDgqVCZoX3haa4QScMKnYBe7dlphKNB49p4LWdnAlv
+ /1vWNGmDSe8qGefenkqg5GThN+7dsXtqt92S2PQBsQdGyn9rpfWoT9Y+6ZVmesJYpQbmcsY6j
+ O8T6af8FLgKRo7NyPNdWo2jZo5LdajBlXLC8dmK5kATCvVko+KZGf+drPqqvpbq00vYcABxKS
+ tR4adA1UVAws6XxgJu5rdbv1EN3SUjWJyifiIEOTMsxTkt/2As5MCdpF3uj5+xgouooiEboDt
+ UATcw8A3u150+iiTl3ReJzV6GTzrEJd9NvT3zqb9WHUOUQdB0GC5VdXDOLSeaj3MpVHyMHkmi
+ eOAp7PJhUyZg30/OxByzlgPYaAUdbRLmCW9+SR/JNF614v+GoZsO/zpLmv
 
 
+--jj753swazz7l7vzc
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 6.15 00/34] 6.15.2-rc1 review
+MIME-Version: 1.0
 
-On 12.05.2025 22:27, Ryan.Wanner@microchip.com wrote:
-> From: Ryan Wanner <Ryan.Wanner@microchip.com>
-> 
-> Add support for PWMs to the SAMA7D65 SoC.
-> 
-> Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
+On 25/06/07 12:07PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.15.2 release.
+> There are 34 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>=20
+> Responses should be made by Mon, 09 Jun 2025 10:07:05 +0000.
+> Anything received after that time might be too late.
 
-Reviewed-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Tested-by: Christian Heusel <christian@heusel.eu>
 
-> ---
->  arch/arm/boot/dts/microchip/sama7d65.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/microchip/sama7d65.dtsi b/arch/arm/boot/dts/microchip/sama7d65.dtsi
-> index 90cbea576d91..796909fa2368 100644
-> --- a/arch/arm/boot/dts/microchip/sama7d65.dtsi
-> +++ b/arch/arm/boot/dts/microchip/sama7d65.dtsi
-> @@ -293,6 +293,15 @@ pit64b1: timer@e1804000 {
->  			clock-names = "pclk", "gclk";
->  		};
->  
-> +		pwm: pwm@e1818000 {
-> +			compatible = "microchip,sama7d65-pwm", "atmel,sama5d2-pwm";
-> +			reg = <0xe1818000 0x500>;
-> +			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&pmc PMC_TYPE_PERIPHERAL 72>;
-> +			#pwm-cells = <3>;
-> +			status = "disabled";
-> +		};
-> +
->  		flx0: flexcom@e1820000 {
->  			compatible = "microchip,sama7d65-flexcom", "atmel,sama5d2-flexcom";
->  			reg = <0xe1820000 0x200>;
+Tested on a ThinkPad E14 Gen 3 with a AMD Ryzen 5 5500U CPU and on the
+Steam Deck (LCD variant) aswell as a Framework Desktop.
 
+--jj753swazz7l7vzc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmhEJagACgkQwEfU8yi1
+JYVRIhAA0CHQq5ZUUCu6jIrBj6sVfnhYzkuiFjknop83PudJOunnfoxJOE2sw/Yj
+LbbFLGSaaKp1v2ZHLVL2pQ+rZgUeE4oUPmk4PUGuopir+PTpQkucmCuj/kvt4oiv
+JS0/wU5I20MAQ0/5BWto7MJPcaaLv+b8DJTyiQviGK6HGm9E+mEHaal/z9ID1ush
+ksFcjHzx52dbF/CZdM+tPy/9BAtNfxUWHb72KHbpnibJN+711thoLXWi6LMEQRyt
+QJB57RglQj4mTLouffN3TVS1DW9dNE8LHswpwv0RodBuAKv9vmA4TrK8zusw2fvg
+YDKvOPm9Lfwm6RaX8IzzxlLcbzmw87D1PepPFzPOI7Gta206KwU9Geak7Y3bm4RR
+UgTVPhkAX+ufeHPRyDrw+XwzG3SgxUnhg12G7BR+Q90ZWdM081/7jZvc8KJxXrAS
++vKto2PlUCUoDxtM8KhkD6fkEVwNaLWY2Y69G1MK6weDn/m1VXoJTIX2kgHxtE/K
+Prec1aIOqh1Cm7AGv4vdcyCvAJn3viHRmHCCskS5vSLDqdWZFnhTmFeqFMGKZcdQ
+rp154zC6sTu7hhnLzrIVUxmZrWw9tOtx1X+r9IIcxtkO4jbzjVIBiXBHKL0kMlgp
+IWWtC5lo4Jb3nqjSfzpSeH0Ulel3AUoYXnHz2jdtz1LYKH4D/OM=
+=ubGG
+-----END PGP SIGNATURE-----
+
+--jj753swazz7l7vzc--
