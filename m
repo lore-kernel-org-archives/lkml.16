@@ -1,72 +1,76 @@
-Received: from baidu.com (mx22.baidu.com [220.181.50.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B3019B3EC;
-	Sat,  7 Jun 2025 15:36:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.181.50.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6283619B3EC;
+	Sat,  7 Jun 2025 15:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749310621; cv=none; b=RjTSC7VL0IChUws0cqGB02FKJTxRpTfoxvwyqyRDMZVItRu9lkjPuAs2URbpVRCwFAFzW4UD2qje5OCg341FCqIrJNoEA2wCYxz0f8U5NmmwGVgsXMW54xWpjn+cAWMR0RywDEJkHrgL2Mx2fTbwyyyRH2KjsNFS+6LkOSmFHAs=
+	t=1749310637; cv=none; b=BM04HDcVrxchaJfRE7HACB1oIjfblGDjcd4CwfAfb1sK2lv2yOLIf0CWNUyOMNWKSSfQm11fJC6GKKlzSnOrT+vGKcTb4q6HGHU40dnjefcgEFgpG7/eY0uM3mWJMdOOfxks5JXJUtSLcPIFLeMYbMH4/cbGTHX8eymn7obPX3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749310621; c=relaxed/simple;
-	bh=IeOpdQJ2eq6EFL/hfmaSdYTtKTt2LixyF6JS3FWC1dQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hkhFLn7a5/CnYlRyXM79uicf4fIXBduf3tbRD1pdfZfqkAC5rgAi6Ml7aSRsQ9NNt3BcZInh9FD+pTOjleWxcSTt9QVFChDCuuIe4/ZNpacpyUGNP4aOpxG8fqaFBCWqqjcIP3ibReXFIyx4bqqEURdU2ox8L2a0uUj5osqW40g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=220.181.50.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
-From: wangfushuai <wangfushuai@baidu.com>
-To: <corbet@lwn.net>, <akpm@linux-foundation.org>, <david@redhat.com>,
-	<andrii@kernel.org>, <npache@redhat.com>, <catalin.marinas@arm.com>,
-	<xu.xin16@zte.com.cn>
-CC: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, wangfushuai <wangfushuai@baidu.com>
-Subject: [PATCH] docs: proc: update VmFlags documentation in smaps
-Date: Sat, 7 Jun 2025 23:36:14 +0800
-Message-ID: <20250607153614.81914-1-wangfushuai@baidu.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
+	s=arc-20240116; t=1749310637; c=relaxed/simple;
+	bh=hobH2cB3D9QwmS6w1z716NpBDziaPQlLuXLn2ppt2ds=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=Su+IWPzEF3u0xMD4Itn3oK9WP6F4cO7BonZJMjm9FkJ7AqvcRDh3Cev+5uUCjyVxBEDcWRUqs2qEtd7bruZzsdp0YMuOvYiC3VtIEPBkW2FcMw/uP5CjExJcdyfbtnXXtYIJ3W8GS+R6c1efRdNkNphIemWy8vTQgXsecWxnDPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E5GxZDed; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E5GxZDed"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFBF2C4CEE4;
+	Sat,  7 Jun 2025 15:37:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749310637;
+	bh=hobH2cB3D9QwmS6w1z716NpBDziaPQlLuXLn2ppt2ds=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=E5GxZDedPl+41pY/vVBqkFmxpDdW5WeJMQEKhAH6VITuytZdPE0rLK8C4m4T7OBVf
+	 y4NDj9vj/QUO+q0Ed7HUHAMLOcCxEAbK3rPEwmW8oSwOkrPHEj0PKpG0mO/oRBp+Vj
+	 ERrCngCKNm2Sqlco1GnfjEtgypM1pkXL3p6OvnZ23GDcB7Nfe/NibxjneP0Q2Ov2U7
+	 JnRt27o+cwBuzKz6A47Q/ZnYvsscpxcXnIur5AFtbqvIp1v6lcajeWf8Pkyn8uRe8o
+	 8U0e6olPLh8R1fpO8oxpOH/hiS2opATt7nV1ehzBcaB8g8eeqIeX/8oqg7kfiBND0m
+	 MPjKtg2h9Pvhw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: bjhj-exc5.internal.baidu.com (172.31.3.15) To
- bjkjy-mail-ex22.internal.baidu.com (172.31.50.16)
-X-FEAS-Client-IP: 172.31.50.16
-X-FE-Policy-ID: 52:10:53:SYSTEM
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 07 Jun 2025 17:37:11 +0200
+Message-Id: <DAGEV65EU1DO.152XYF0ZYTM6P@kernel.org>
+Cc: =?utf-8?q?Gerald_Wisb=C3=B6ck?= <gerald.wisboeck@feather.ink>,
+ <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/3] rust: miscdevice: add additional data to
+ MiscDeviceRegistration
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Christian Schrefl" <chrisi.schrefl@gmail.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Arnd Bergmann" <arnd@arndb.de>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Lee Jones" <lee@kernel.org>, "Daniel
+ Almeida" <daniel.almeida@collabora.com>
+X-Mailer: aerc 0.20.1
+References: <20250530-b4-rust_miscdevice_registrationdata-v4-0-d313aafd7e59@gmail.com> <20250530-b4-rust_miscdevice_registrationdata-v4-2-d313aafd7e59@gmail.com> <DAACCYW3QRQE.1O75L2SHJYVPM@kernel.org> <3eef5777-9190-4782-8433-7b6ad4b9acd3@gmail.com> <DADAEIT9E1R8.1J69W5DKYAQGY@kernel.org> <3c1c0563-7f48-4222-a28d-316f885bcad4@gmail.com> <DAEQ7VRHEP4W.4O0KV31IPJFG@kernel.org> <89066f83-db7f-405c-b3b5-ce553f8e6b48@gmail.com> <DAERY78ROO76.2WSPPIC01XQ5H@kernel.org> <8f491c61-e7b2-4a1f-b4f8-8ff691015655@gmail.com>
+In-Reply-To: <8f491c61-e7b2-4a1f-b4f8-8ff691015655@gmail.com>
 
-Remove outdated VM_DENYWRITE("dw") reference and add missing
-VM_LOCKONFAULT("lf") and VM_UFFD_MINOR("ui") flags.
+On Sat Jun 7, 2025 at 1:34 PM CEST, Christian Schrefl wrote:
+> Yeah I understand that its not UB, but to me it seems a bit fragile and o=
+paque why it is allowed.
+> That's what I meant by "a bit iffy".
 
-Signed-off-by: wangfushuai <wangfushuai@baidu.com>
+What's fragile about it? That someone could add a non-opaque field to
+the struct? Or that one is not allowed to take an `&`?
+
+> Alright but I doubt that realistic, since the `Data` would always at
+> least be shared between the owner of `MiscDeviceRegistration` and the
+> `fops` implementation. Meaning its always shared with syscall context
+> and I don't think it makes sense to have a registration owed in=20
+> that context.
+
+That might be the case, but I think we should have this as a general
+design guideline: avoid unnecessary trait bounds.
+
 ---
- Documentation/filesystems/proc.rst | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
-index 2a17865dfe39..e48dabab2a4a 100644
---- a/Documentation/filesystems/proc.rst
-+++ b/Documentation/filesystems/proc.rst
-@@ -584,7 +584,6 @@ encoded manner. The codes are the following:
-     ms    may share
-     gd    stack segment growns down
-     pf    pure PFN range
--    dw    disabled write to the mapped file
-     lo    pages are locked in memory
-     io    memory mapped I/O area
-     sr    sequential read advise provided
-@@ -607,8 +606,10 @@ encoded manner. The codes are the following:
-     mt    arm64 MTE allocation tags are enabled
-     um    userfaultfd missing tracking
-     uw    userfaultfd wr-protect tracking
-+    ui    userfaultfd minor fault
-     ss    shadow/guarded control stack page
-     sl    sealed
-+    lf    lock on fault pages
-     ==    =======================================
- 
- Note that there is no guarantee that every flag and associated mnemonic will
--- 
-2.36.1
-
+Cheers,
+Benno
