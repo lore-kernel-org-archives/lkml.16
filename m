@@ -1,147 +1,245 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800B61F0E25;
-	Sat,  7 Jun 2025 20:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2862E18DB01
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 20:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749327607; cv=none; b=Qz90YkriOu7THCImv7McXUiLVPEjtkIs1PYygd4NssaQzpwdY2lGpFg4CNKkyDYyRGdwZC4+lNsXMSRnEHtIOCezIMBnHS6eI6UH1TI/mbStAgUEL5V/ia2Ex9qpnpVlnzPpCkuKkLF81xYLifhkgz8RLCuekl9sAzIV1YrCU00=
+	t=1749327766; cv=none; b=WLshRlAMBmaqqCrWtQnO0e+n/fQIV+xi2/r0/WCSX67jzk35fcu0DfQX/7HZCNMpFt2hopCBQAZ2AchkQVRfL3fzE9mbL0jirOStRhCAItYCLRaQy2S49ncNgHhhhaR21xNtjSxx+kCPt/DCppY7fsmfIwoA5roGXfXu+U4+Mzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749327607; c=relaxed/simple;
-	bh=j67PlnEfqbvwkbFIcNp7D2Hb21IvSpJVcC0OXzmk+lQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XoeQplqwQ4fCIcAIICZ2CtL91RZq7RjKn97H4n2hlYl0cHk0hOUbuSFI+lOabO/S7KEXXI3QFw6wxeLvxxabwzKw7VEJ6MNMpTEU4j1yr5TIV5fuHiRuAv4G26tMBMziPgajztfrIJNOtabqUbw8HLXogmvE8XmWSTaGIao7zYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GhMW1trr; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749327766; c=relaxed/simple;
+	bh=AiZtyPMh8GiT5mWCJrUirjBFy0Orj4P67aITlzgsZwI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F6rtfOQ6da75CS1IvdfmHqF4y2LSbLoqc4x7ju54yCvpP52peutP4Ax+scrh9y/pjhAQTLDxh7aG4l3HuGVvZ5GkETUlXYbkaK6uyw46KOC23dybq2xxZkypBEorAscVtbHRrZGmFKujbAMjkhOV6Tb/LBw+RPFJNhXgY6zebkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GbFN71i8; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GhMW1trr"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b2f603b0f0dso1328000a12.1;
-        Sat, 07 Jun 2025 13:20:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749327606; x=1749932406; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=1JCuA/KJ1/RmFLQaJiC7CE/5YPs/dtb6ADPS+mr7YTo=;
-        b=GhMW1trrP/ExMFruZgyEh8NaNuRNt4SXGIT0/5VoYIFbeNY8gXCr4lBP06ZiXVshHc
-         XwoZdUR/vIXxKr2c6/YpcZU9BS7vGnGVOQ8F5aC36HJEyQ0qQhkHr7JYWxlnTaCiK6UU
-         J8FhOxyuDkDir+v11a7/313qSlECGPHjP9XYqu3vqr3U0kE1m2KIhVc9+3yHMFQeoVol
-         Lx2TPm2nUTDPYkHOE2Qg5U9projwbXyr35v+iYUefSvJtwQYECortW+u+NNKHIZg+hDG
-         EAB9h/9TDoeWP5wiL2VtoNiEasGZsUMhxXUH1Kcr44iDd0hsANjshiQ8aO7pb4Zy72az
-         SdMw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GbFN71i8"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 557JqSP3000358
+	for <linux-kernel@vger.kernel.org>; Sat, 7 Jun 2025 20:22:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=9fQ3VYWbG/BAlQYpAZbVI/9a
+	TrC0Es4DqbImtN5V4o8=; b=GbFN71i8pj5WsNn36/7wqa6F/WJHtKw+lb9gseEj
+	X1/7nVmS/faKqnMZMM5Ruz5ZJB42Xb0xKmu2BJ/9NM0FJa4fQKscZXDQKfRD98AN
+	WjRAOKuynpFQQN+QQgwZ7T3rmLQhk09e/uNKc04Y7TKHyJ8lr00DJWj4AbtlKJBk
+	1UTCTiIMWdPkR4+njEmUhOBNe2NPu2K5Q82UwSiMYxQ5AZcfyq//pJC3y8rXVhEK
+	MGkHVA6VUTfD84wZ0brbX3J8WulBfMuDAAdK232OEm8WpCdHvabPDDnL1260pjZ/
+	NUBbQu3/Y1xAVa1ZxQYLVAHOkXaU506ynu43FED9JOSHsg==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ce9h3cs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 20:22:43 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c955be751aso507198385a.2
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 13:22:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749327606; x=1749932406;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1749327763; x=1749932563;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1JCuA/KJ1/RmFLQaJiC7CE/5YPs/dtb6ADPS+mr7YTo=;
-        b=cjb/iBs7i53RsZZxbD1/csaQ/92/je5bAffKB1jSFPsW3mONpvmA8NhFBizr045DlN
-         K9s3/uWK8efoRgwltGLVNiKgv1DkESmtyBAT8XGuqZxUg6x6c8c2esDL7K2ql8Uju20L
-         RuHn+Qi3PjfcUjhegntMBOUlhPIKwJU6obAtmzlnIDnKjVTJN133K3tMMFAuxEqt0iwR
-         05aJpdBFbA5zlDeO1ZpLzyWZJ+WdheDaSRV0K/ZPVazmIEvYM5DSP2GgxkEHtKg9No9J
-         eb/TODgdI5M6DpJ+cgXVu5UYzBMXEOEfGhxK2sctmL2+K/32l709avbXnzi9W4jkQS7M
-         XlnA==
-X-Forwarded-Encrypted: i=1; AJvYcCWGNI6w+/OvTxXCU8yBsu2YYamftCDPF5tYeOqMg9jnK1Cj/Bwjm3CaCXmQ5tTdgJWkGSNvwN4H@vger.kernel.org, AJvYcCXKfKS8zJbvMuKQ2lafh2ZOqhJSpGJnxCBKUt4fLjpmOaK4Cfza3RvnOtuLh7DkbP3aq96nF5DrDZoWvo0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPhgMPgIJn0xGqDJDmNrWN8C1f2igAeNa+UfZ0RwJcXTEdq5nA
-	MKkg78UPx54Xuorm6u1k1lsMRpauMkH1N7Tl83qUQd4xMvH+XdAI4rWY
-X-Gm-Gg: ASbGnctk8+QGWLWFHWRXWE7UKWyVfApxAelWun8vFTsXnnUluUBF6ZRXOv1N+In7B8Y
-	Pc1QpAWh1QpDLIMenEjslkcUbc4lL8zZypJ3rI006F4iWqF5e54O3a9OzfIqj5xD5HB37KdpQZx
-	FZfYuR5R+/jZMPyLjHSuEzHk3gPwMFOElyxL0yrIHlw4ygjvSdtn4+BnhceiIvIF4MBvsRQpeAy
-	M9oOjjUc+WHwmZHVoQZ4/1CN5vMqU5nTn/5jYx6mBkwDTnRrZHR8ZBuC2hpgltOKGdEC2Kwu63C
-	DsQBre2cY4hCPX1GIgcNtICoNJWoO8r2JYgXTPPBwjXlHv5I+5QTJiGw6Cthhq3R77qqZhly+Wn
-	KL5J4EeprqqY/qRTajmUlmNnrdl9SxBEOIxcoo/Q=
-X-Google-Smtp-Source: AGHT+IGD4clp9fPtWjceXrKZpN/02Voy2xyMYrequhlApMSZn1dDDHAu/V8zk7Y5YGUSPCpSdUjScw==
-X-Received: by 2002:a17:902:f545:b0:235:129a:175f with SMTP id d9443c01a7336-23601dbfe92mr113590005ad.34.1749327605732;
-        Sat, 07 Jun 2025 13:20:05 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-4-215-93.oc.oc.cox.net. [68.4.215.93])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603078007sm30644365ad.44.2025.06.07.13.19.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Jun 2025 13:20:05 -0700 (PDT)
-Message-ID: <f0ef7d23-29e6-4478-a7e1-0421ef7456d2@gmail.com>
-Date: Sat, 7 Jun 2025 13:19:55 -0700
+        bh=9fQ3VYWbG/BAlQYpAZbVI/9aTrC0Es4DqbImtN5V4o8=;
+        b=PbHBTmx2L16A8983Kfpfh0yTLcEk9NPa97MXgcHdnxJNiEX3gb/de26Lb6C5fLB8uc
+         t7o82tUbFZonMFV9bMd99IkFCa/D72NlggVdpWLhbenqM7wNWr+CQza8XC41i9P81UkV
+         F88xxi2qJoViq1mjculdg8L5kMeYKQCmCelit57LFFaY4+gwIETGzBAPLDmGMb4HVtfl
+         C4w3Qv70xybQHWMqM6LeyBfYkaApL0GZ50AlIJaSJtSsc2/YAztmbL+T0LtHspMavJjw
+         nznOSL3j3pbpURoj8J6vmWNjvxfqz6Vi8oGfSPo2b6Qu6rDLYbXmqvKBWnvkA1oBaGo3
+         rsig==
+X-Forwarded-Encrypted: i=1; AJvYcCWZe/7r6zGwDP63eJrh4ksqKrsTmTjQKBuowqAGhfElESCkuelfUQKwOL4u1UH7j6yan9YiOauiTRSj9Tk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1w8wA159/q4yFwKey27iehgePblKaZGzVzHgAH76FrHbk4LIx
+	AMv5ocKEAYZTodELD0C6VjYOQb/97IJS3XWvrQ49PiB9bNfAT6KfA4TTMKHIHniZ8pNq65jRmon
+	whbkAJQw5xyFmixWKDYldjvc8yLo/SnYUZCuMq3YfJw/0iXKSyv6yKuBQUuesYPVzlr8=
+X-Gm-Gg: ASbGncvb3XWOz5I1bVFaDNlcICPN94ryK8HhKpapnoOT9yu4TXmUUuXX8fehV+hdeQ7
+	bP1qReK1M6vO0qJw9GucKPtszb7HV9Vm/uLf5xweiOvQzGaWBlkhvMBWNGbvXOWYtCLBwbo37jG
+	gkoLNlkAhz2EjJdMAhsEu05vKFLam2IGNr/Ge4uOnowX6REmBvQUH1lG5k+Qa+RHIuy2dagS/YP
+	q6tJKjSXBlb8soFEkc89co7F9hwuu3dffxmmSmlmMK5bpZ2OYCleGB8A3A4fdXqd6vGU7zORBOp
+	LTGTbuw1uNE+7En5IefUe9tOmR0X4WUGir5BNrTcsbuajLwbpfUmD3HZPI0lupqqi+Fo/0L06Iz
+	/Rid952xD3w==
+X-Received: by 2002:a05:620a:29c9:b0:7c7:694e:1ba0 with SMTP id af79cd13be357-7d2298d6f08mr1252521385a.44.1749327763038;
+        Sat, 07 Jun 2025 13:22:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEOXMP12xf26oWOoo8b6leKG3z/1PZIJuLYN/LTC+bX+rKHsCW3vr6YCquXQWmxLXKmHYFGRA==
+X-Received: by 2002:a05:620a:29c9:b0:7c7:694e:1ba0 with SMTP id af79cd13be357-7d2298d6f08mr1252518385a.44.1749327762649;
+        Sat, 07 Jun 2025 13:22:42 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55367731a17sm603347e87.231.2025.06.07.13.22.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Jun 2025 13:22:40 -0700 (PDT)
+Date: Sat, 7 Jun 2025 23:22:39 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Wasim Nazir <quic_wasimn@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@quicinc.com, kernel@oss.qualcomm.com,
+        Pratyush Brahma <quic_pbrahma@quicinc.com>,
+        Prakash Gupta <quic_guptap@quicinc.com>
+Subject: Re: [PATCH v9 2/4] arm64: dts: qcom: iq9: Introduce new memory map
+ for qcs9100/qcs9075
+Message-ID: <n3et5jemuiin5c5pwi3r5gycnicxdhrwbmxapnsg2arlwabxcv@7b734qnxwaof>
+References: <20250530092850.631831-1-quic_wasimn@quicinc.com>
+ <20250530092850.631831-3-quic_wasimn@quicinc.com>
+ <ss3xhat6v3s4ivcypw6fqcmblqait56pqhzwuhzyfhevp4kzlr@5e3f5nwb6lhb>
+ <aEATe3pi1SsfZVI3@hu-wasimn-hyd.qualcomm.com>
+ <q3hzryk4s7jd4kyavcg7s6d3oyzfpnjy4jhpeluvnikiglbeng@r4ydugwidgv7>
+ <aEBzNnnyqt/aZ35r@hu-wasimn-hyd.qualcomm.com>
+ <aEKnstzguH7f0A92@hu-wasimn-hyd.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.15 00/34] 6.15.2-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250607100719.711372213@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250607100719.711372213@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEKnstzguH7f0A92@hu-wasimn-hyd.qualcomm.com>
+X-Proofpoint-GUID: RWZ2qHRfqyfxMElE1Lm4CQLOdI_SZFzz
+X-Authority-Analysis: v=2.4 cv=drjbC0g4 c=1 sm=1 tr=0 ts=68449f93 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=75EJ9CGrmiedGd2GwnIA:9
+ a=CjuIK1q_8ugA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: RWZ2qHRfqyfxMElE1Lm4CQLOdI_SZFzz
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA3MDE0OCBTYWx0ZWRfX9no7mUQOpCYb
+ ODkweUG0KChJ4W52IJhmgWPHur9JMagNkkrrqmI2tJNEdVX6ZZ45mmBkC2l9m3I9QGX54njevCN
+ tWvttIp1EcSbz5r+oD2Vh/911Mx7vckXHfwViC1MZNjxhg9ivB/vf/JDjtQCx0zNhw+FMd9fYiC
+ /OltTHPlbUIgWqY76U71wtgvuLKHeSrPd3t2iWpXqRE5SLmU/K2zFoaHn0PLxTvrh5xZRh4n1oI
+ OEXoWGMYFv6mrFZ54Mm5XqRnX3EMVfgaNSWA6a+whpfBtylDxE3KjZNRR6UIJf8EOablxZyuoIY
+ 7R/JV2l14joosu9IGiozAkD0r9JmU2JfvA9ydOqK/YElJmzLKyfuFH9c8CXAeJKRSCoutqTbb+w
+ c9kEyg9HkNNzqKKGU6f3P4oZxOBBLu3Yu3o8CCjLyFIhxelAaA9HR5aUp0gARG/hFR0Y2+Xv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-07_09,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1015
+ priorityscore=1501 suspectscore=0 bulkscore=0 mlxlogscore=999 adultscore=0
+ phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506070148
 
-
-
-On 6/7/2025 3:07 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.15.2 release.
-> There are 34 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Fri, Jun 06, 2025 at 02:02:50PM +0530, Wasim Nazir wrote:
+> On Wed, Jun 04, 2025 at 09:54:38PM +0530, Wasim Nazir wrote:
+> > On Wed, Jun 04, 2025 at 04:21:46PM +0300, Dmitry Baryshkov wrote:
+> > > On Wed, Jun 04, 2025 at 03:05:55PM +0530, Wasim Nazir wrote:
+> > > > On Mon, Jun 02, 2025 at 10:41:39AM -0500, Bjorn Andersson wrote:
+> > > > > On Fri, May 30, 2025 at 02:58:45PM +0530, Wasim Nazir wrote:
+> > > > > > From: Pratyush Brahma <quic_pbrahma@quicinc.com>
+> > > > > > 
+> > > > > > SA8775P has a memory map which caters to the auto specific requirements.
+> > > > > 
+> > > > > I thought SA8775P was the IoT platform and SA8255P was the automotive
+> > > > > one. Has this changed?
+> > > > 
+> > > > Both SA8775P & SA8255P is for auto but former one is non-SCMI based while
+> > > > the later one is SCMI based chip.
+> > > > 
+> > > > Only IQ9 series of chips (QCS9100 & QCS9075) are for IOT.
+> > > > 
+> > > > > 
+> > > > > > QCS9100 & QCS9075 are its IOT variants (with marketing name as IQ9) which
+> > > > > > inherit the memory map of SA8775P require a slightly different memory
+> > > > > > map as compared to SA8775P auto parts.
+> > > > > > This new memory map is applicable for all the IoT boards which inherit
+> > > > > > the initial SA8775P memory map. This is not applicable for non-IoT
+> > > > > 
+> > > > > Is there are platform out there that actually uses the "initial SA8775P
+> > > > > memory map"?
+> > > > 
+> > > > Yes currently sa8775p-ride and sa8775p-ride-r3 are using initial memory
+> > > > map.
+> > > > 
+> > > > > 
+> > > > > > boards.
+> > > > > > 
+> > > > > > Some new carveouts (viz. gunyah_md and a few pil dtb carveouts) have been
+> > > > > > introduced as part of firmware updates for IoT. The size and base address
+> > > > > > have been updated for video PIL carveout compared to SA8775P since it is
+> > > > > > being brought up for the first time on IoT boards. The base addresses
+> > > > > > of the rest of the PIL carveouts have been updated to accommodate the
+> > > > > > change in size of video since PIL regions are relocatable and their
+> > > > > > functionality is not impacted due to this change. The size of camera
+> > > > > > pil has also been increased without breaking any feature.
+> > > > > > 
+> > > > > > The size of trusted apps carveout has also been reduced since it is
+> > > > > > sufficient to meet IoT requirements. Also, audio_mdf_mem & tz_ffi_mem
+> > > > > > carveout and its corresponding scm reference has been removed as these
+> > > > > > are not required for IoT parts.
+> > > > > > 
+> > > > > > Incorporate these changes in the updated memory map.
+> > > > > > 
+> > > > > > Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
+> > > > > > Signed-off-by: Prakash Gupta <quic_guptap@quicinc.com>
+> > > > > > Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
+> > > > > > ---
+> > > > > >  .../boot/dts/qcom/iq9-reserved-memory.dtsi    | 113 ++++++++++++++++++
+> > > > > >  1 file changed, 113 insertions(+)
+> > > > > >  create mode 100644 arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
+> > > > > > 
+> > > > > > diff --git a/arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi b/arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..ff2600eb5e3d
+> > > > > > --- /dev/null
+> > > > > > +++ b/arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
+> > > > > 
+> > > > > The naming convention is <soc>-<something>.dtsi and I don't see any
+> > > > > other uses of the "iq9" naming.
+> > > > 
+> > > > As this new memory map is common for IQ9 series of SoC (QCS9100 &
+> > > > QCS9075), so we have used its common name.
+> > > 
+> > > IQ9 name is not known or visible outside of this commit.
+> > 
+> > Are you referring to add the same in cover-letter?
+> > 
+> > > 
+> > > > Once the DT structure for QCS9100 is refactored, we would update this
+> > > > common file there.
+> > > 
+> > > Can you refactor it first?
+> > 
+> > This refactoring involves changes in all the ride/ride-r3 boards which
+> > are based on sa8775p & qcs9100. Even though we had sent v0[1] but we still
+> > need to conclude on the final structure. Since, ethernet is broken in upstream,
+> > we are working on its fix before sending another series.
+> > 
+> > Hence, we want to proceed for iq9075-evk for now and once qcs9100 is
+> > finalized, we can use the memory-map there.
+> > 
+> > But to avoid this dependency and to proceed with iq9075-evk alone,
+> > I can rename it to qcs9075-reserved-memory.dtsi.
+> > 
+> > Let me know if that works here.
+> > 
+> > [1] https://lore.kernel.org/all/20250507065116.353114-1-quic_wasimn@quicinc.com/
 > 
-> Responses should be made by Mon, 09 Jun 2025 10:07:05 +0000.
-> Anything received after that time might be too late.
+> Hi Dmitry,
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.15.2-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.15.y
-> and the diffstat can be found below.
+> Shall I proceed with qcs9075-reserved-memory.dtsi or do you have any
+> other suggestion that we should discuss?
 > 
-> thanks,
+> Aparently, this series is for qcs9075 only so using exact (not common)
+> name also aligns the naming format.
+
+Squash it into qcs9075.dtsi.
+
 > 
-> greg k-h
+> > 
+> > > 
+> > > > 
+> > > > > 
+> > > 
+> > > -- 
+> > > With best wishes
+> > > Dmitry
+> > 
+> > Regards,
+> > Wasim
+> 
+> -- 
+> Regards,
+> Wasim
 
-
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
-
-Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-Florian
-
+With best wishes
+Dmitry
