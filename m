@@ -1,145 +1,72 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+Received: from baidu.com (mx22.baidu.com [220.181.50.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62ADD1362;
-	Sat,  7 Jun 2025 15:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B3019B3EC;
+	Sat,  7 Jun 2025 15:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.181.50.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749310402; cv=none; b=l8Y+A+6H9LoEpG1Tf7cptcJbeKB5C9Qwx/BbmPYOFtcqBpZ+ZPQlmKPF5GXUptgSYQ1hCxHHvu0jVLsnmHuF7vJGdE4rnio3ePjwmacW54O+9SHDngvRMUv3IU2vxJiULMxzVDzp/PBu+L2D3WHQsvcNe806OoXg11S15ND9pIM=
+	t=1749310621; cv=none; b=RjTSC7VL0IChUws0cqGB02FKJTxRpTfoxvwyqyRDMZVItRu9lkjPuAs2URbpVRCwFAFzW4UD2qje5OCg341FCqIrJNoEA2wCYxz0f8U5NmmwGVgsXMW54xWpjn+cAWMR0RywDEJkHrgL2Mx2fTbwyyyRH2KjsNFS+6LkOSmFHAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749310402; c=relaxed/simple;
-	bh=mL3bMPxtlWeP4omW9jhy3oREP5l10pyt+mXfirZFTiw=;
-	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=RriiADCMEVc9q731AiWzNrGJqMvDHyInSFBWbEjprW9KETuFfjVxceyk8MLvDn6Ia6ehvBqDf6NXAJWVY+IO0Gy/v3+8Wgvb8OUTN7J+aD0dGQ8wVK6karVUR79TxkeKwsx10KA6MTQe9MdDhbJavBrgiRjpAXJN4gZDdCCVH64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=dG62WXl/; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="dG62WXl/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=8iUcTrsbpF5lvVp8YW0lY7JI5M8cSHdudxeylxSoV/4=; t=1749310400; x=1749915200; 
-	b=dG62WXl/I7MjwwfDskgcYNfSOaZV6155wvGPLx2bqIU9YoPF0xkoD7CzCmXP7SLPSvw0CupTlnN
-	RAAS2av5WcWcnU5Z+5QO7TAEeCAdM5untjpnxb/JDSE7rW5CIOl29aqfZ3cuWT0+KCpeGMKQMsF7v
-	eKXECXoiL5AzLpb4q0yFsjXITQUvl9bIrM05/1Zg90lRY4w8TRym2T3FnNmb49AaFO0XIle/qegcE
-	Nerz4HxlT5TBHx1DhGPIqEKg/b64kOFPbTtHD1cB+ZKNDy8WJibnV3WBo6z3KYH0gBCY7Jy7H5JW3
-	SqskYzMHGqag3a1GbV7i3y6xkes/k+m/V/ow==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1uNvXo-00000002GG3-111a; Sat, 07 Jun 2025 17:33:16 +0200
-Received: from p5b13afe4.dip0.t-ipconnect.de ([91.19.175.228] helo=[192.168.178.61])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1uNvXn-00000003fZb-49FC; Sat, 07 Jun 2025 17:33:16 +0200
-Message-ID: <878859a81e32c216669a9f80a6c30eaf83be5a9d.camel@physik.fu-berlin.de>
-Subject: [GIT PULL] sh updates for v6.16
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Thomas Huth <thuth@redhat.com>, Geert Uytterhoeven
- <geert+renesas@glider.be>,  Mike Rapoport <rppt@kernel.org>, Rich Felker
- <dalias@libc.org>, Yoshinori Sato <ysato@users.sourceforge.jp>,  linux-sh
- <linux-sh@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
-Date: Sat, 07 Jun 2025 17:33:15 +0200
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	s=arc-20240116; t=1749310621; c=relaxed/simple;
+	bh=IeOpdQJ2eq6EFL/hfmaSdYTtKTt2LixyF6JS3FWC1dQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hkhFLn7a5/CnYlRyXM79uicf4fIXBduf3tbRD1pdfZfqkAC5rgAi6Ml7aSRsQ9NNt3BcZInh9FD+pTOjleWxcSTt9QVFChDCuuIe4/ZNpacpyUGNP4aOpxG8fqaFBCWqqjcIP3ibReXFIyx4bqqEURdU2ox8L2a0uUj5osqW40g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=220.181.50.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
+From: wangfushuai <wangfushuai@baidu.com>
+To: <corbet@lwn.net>, <akpm@linux-foundation.org>, <david@redhat.com>,
+	<andrii@kernel.org>, <npache@redhat.com>, <catalin.marinas@arm.com>,
+	<xu.xin16@zte.com.cn>
+CC: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, wangfushuai <wangfushuai@baidu.com>
+Subject: [PATCH] docs: proc: update VmFlags documentation in smaps
+Date: Sat, 7 Jun 2025 23:36:14 +0800
+Message-ID: <20250607153614.81914-1-wangfushuai@baidu.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: bjhj-exc5.internal.baidu.com (172.31.3.15) To
+ bjkjy-mail-ex22.internal.baidu.com (172.31.50.16)
+X-FEAS-Client-IP: 172.31.50.16
+X-FE-Policy-ID: 52:10:53:SYSTEM
 
-Hi Linus,
+Remove outdated VM_DENYWRITE("dw") reference and add missing
+VM_LOCKONFAULT("lf") and VM_UFFD_MINOR("ui") flags.
 
-this is my pull request for v6.16 which contains one fix and two code clean=
-ups.
+Signed-off-by: wangfushuai <wangfushuai@baidu.com>
+---
+ Documentation/filesystems/proc.rst | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-The first patch by Thomas Huth replaces the __ASSEMBLY__ with __ASSEMBLER__=
- macro
-in all headers since the latter is now defined automatically by both GCC an=
-d Clang
-when compiling assembly code.
+diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
+index 2a17865dfe39..e48dabab2a4a 100644
+--- a/Documentation/filesystems/proc.rst
++++ b/Documentation/filesystems/proc.rst
+@@ -584,7 +584,6 @@ encoded manner. The codes are the following:
+     ms    may share
+     gd    stack segment growns down
+     pf    pure PFN range
+-    dw    disabled write to the mapped file
+     lo    pages are locked in memory
+     io    memory mapped I/O area
+     sr    sequential read advise provided
+@@ -607,8 +606,10 @@ encoded manner. The codes are the following:
+     mt    arm64 MTE allocation tags are enabled
+     um    userfaultfd missing tracking
+     uw    userfaultfd wr-protect tracking
++    ui    userfaultfd minor fault
+     ss    shadow/guarded control stack page
+     sl    sealed
++    lf    lock on fault pages
+     ==    =======================================
+ 
+ Note that there is no guarantee that every flag and associated mnemonic will
+-- 
+2.36.1
 
-The second patch by Geert Uytterhoeven sets the default SPI mode for the ec=
-ovec24
-board which became necessary after a new mode member as added to the sh_msi=
-of_spi_info
-struct in cf9e4784f3bde3e4 ("spi: sh-msiof: Add slave mode support").
-
-Finally, the third patch by Mike Rapoport removes unused variables in the k=
-probes
-code in kprobe_exceptions_notify().
-
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8=
-:
-
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/glaubitz/sh-linux.git tags/=
-sh-for-v6.16-tag1
-
-for you to fetch changes up to 8a3682601ddaa4ef0c400f627a7f4b9388bbccef:
-
-  sh: kprobes: Remove unused variables in kprobe_exceptions_notify() (2025-=
-06-07 15:16:41 +0200)
-
-Thanks for pulling!
-
-Adrian
-
-----------------------------------------------------------------
-sh updates for v6.16
-
-- sh: kprobes: Remove unused variables in kprobe_exceptions_notify()
-- sh: ecovec24: Make SPI mode explicit
-- sh: Replace __ASSEMBLY__ with __ASSEMBLER__ in all headers
-
-----------------------------------------------------------------
-Geert Uytterhoeven (1):
-      sh: ecovec24: Make SPI mode explicit
-
-Mike Rapoport (1):
-      sh: kprobes: Remove unused variables in kprobe_exceptions_notify()
-
-Thomas Huth (1):
-      sh: Replace __ASSEMBLY__ with __ASSEMBLER__ in all headers
-
- arch/sh/boards/mach-ecovec24/setup.c          |  1 +
- arch/sh/include/asm/cache.h                   |  4 ++--
- arch/sh/include/asm/dwarf.h                   |  6 +++---
- arch/sh/include/asm/fpu.h                     |  4 ++--
- arch/sh/include/asm/ftrace.h                  |  8 ++++----
- arch/sh/include/asm/mmu.h                     |  4 ++--
- arch/sh/include/asm/page.h                    |  8 ++++----
- arch/sh/include/asm/pgtable.h                 |  4 ++--
- arch/sh/include/asm/pgtable_32.h              |  8 ++++----
- arch/sh/include/asm/processor.h               |  4 ++--
- arch/sh/include/asm/smc37c93x.h               |  4 ++--
- arch/sh/include/asm/suspend.h                 |  2 +-
- arch/sh/include/asm/thread_info.h             | 10 +++++-----
- arch/sh/include/asm/tlb.h                     |  4 ++--
- arch/sh/include/asm/types.h                   |  4 ++--
- arch/sh/include/mach-common/mach/romimage.h   |  6 +++---
- arch/sh/include/mach-ecovec24/mach/romimage.h |  6 +++---
- arch/sh/include/mach-kfr2r09/mach/romimage.h  |  6 +++---
- arch/sh/kernel/kprobes.c                      |  4 ----
- 19 files changed, 47 insertions(+), 50 deletions(-)
-
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
