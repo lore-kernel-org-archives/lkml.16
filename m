@@ -1,145 +1,108 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BF582866;
-	Sat,  7 Jun 2025 17:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1687F9C1;
+	Sat,  7 Jun 2025 17:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749315685; cv=none; b=kpbq6lU1aap/As8FCrxG/APyGd4co83swqxcG5MtnHk9v17+gdVWrUCnSXDz1SA9hdigtyP8VtOE3tJaPx8ODVJf+OTQFn0Dv5PkQr9MClVLf02bq/lpTkU8x0nsaANJyfmj8Z8csZRP8jLB4Eovc1M6LWmL36fuDDtOnXO+Xwk=
+	t=1749316029; cv=none; b=jGtd6BwbHhOpqk4GtEuJMZnNqzHg6HH9xLwHhmzUGTlkFZh0CWQyCLPrxadXfo83YtGVJBR6OhFgp55bBFQf/gNBMXbCN2N2EYH1RfKaIrn1LKpZXaUuhBj4UU9MekgaWVLV+Khdsm2GDXKV1JZXYzf9uu2iXn+i3ThLl/u+kkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749315685; c=relaxed/simple;
-	bh=FErgFTQWl8H3HT1zKbY8lysoJhYePPaFVJeTh/hkcRQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G7ivTsYjoedO6qwvi1ogJVajBjQR41yNs0e7yWo/D12N9HZVm+OwIcodUKgaWa4zJavTUwuEuwdSwa2VWdFrqaoLlsE+2xFMuKJ2v+sp4HGjrVCpE22JkKcvdFYf0SBbKq9jzTc9g6GqGMlM8TKH1rWZanF7LsYefG2gAXmMIHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V6BQaLrB; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749316029; c=relaxed/simple;
+	bh=Azz48mpCYMvYjRFCNahCCCmGCYAn+g8SuVXJdTJDQRE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ryEXoS3hbV4u35gOuUt6pSWF4IhclxBNz5ec3knI3RLpi/C+ARlUERhXhH8siufkErQGHlaGpzmNwbrXfE7JXjLrPYGsr/AXOsgyKu07jFZaMaErYmh0hpqvgBM8SO36te6OM+bmEZKdo34E6tUhKZ2FWAJaCJudqdZn7UVpy2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f+O+VVvq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V6BQaLrB"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-32ac52f78c1so31084801fa.3;
-        Sat, 07 Jun 2025 10:01:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749315680; x=1749920480; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I6WVk+/JB7rAPGcjYfN10L46jlxYRiAfY3gkjwFH4xg=;
-        b=V6BQaLrBFqO+MfbeQnbOOVx2H5AiUeJiu1WRWDKGj5K766aSOJvuHmhvZnZwP7kWrb
-         EdfGYwHLACw6TPk2mEn1KqlSDhf9iPFGD0fHqyP/stcZWrhtF8kvykEe1dL5Yyu/bBwq
-         5Cvw8AenFqrPiRJxpQ8heocMNJnpKvka8HwR2GdMJBgtfjTAkXQI17IVI7gHQ46K1I3l
-         On78MX7goLMfCxOO5iifbOq12lTiqojQiVRbA8GjPL6BN91a3ofVEDuAGmDDg26m/+Ew
-         P18MqDPffJOvyT7VizlefpN1j4qqTLrYrxjfqDUQ4zVzKQbkynn344ngF1PkzLEMvjpj
-         KGqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749315680; x=1749920480;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I6WVk+/JB7rAPGcjYfN10L46jlxYRiAfY3gkjwFH4xg=;
-        b=eahDq00v/vd7JCAfWpYUuMnLQOty71FgFM6XEaDhCtRU0DM/V1R9ap+ZkqaZkrs/2Q
-         eqBTGa+ovpgCqVX7X1uc6sIm/Dz9lQw/My+d6TxbVgIBg6nCHkKNX/mTD1LB6GdhHitA
-         oBZcsWbcNttDJFzhfPpF2u8HnzF5CO6SzEFEjGWAvyAWdYkoamI9vdwr/8Mw8zMiQara
-         dAiVgB3WPfGxdYBPv/0lBEp8H5rZZ2Ug+hbEn3w96d8SGSBT0LpbR0JtXDRknGXRwnCN
-         J1cuBQO5KPjXyfN81XbqnIluVQPwX2yqNxtVrDehzi8GJL80+f6WGc0eNvCuj917NoXy
-         yBlw==
-X-Forwarded-Encrypted: i=1; AJvYcCUFj/qx/80y4HTJrW0WZAKyAuewO/puOvezo6Lkb7nvQwG5VrOl+pdgWTWudiAEeFaTXlQB7/6LEFhvv5C0@vger.kernel.org, AJvYcCVM8Jig6wwZrYzfLXo0N13ekQBPjezpG1vdKhDSw4gZJR3iF6jWwBnzFt2TG3v4yXfE5VhpVxSfWqTiO4zZ@vger.kernel.org, AJvYcCW2eqOJ46yTR28SH0cyAioUoDYk2YhAY6hklAdz+XghTbATrx7vM+xeN3YR9+uTOnHgK8sQ3zqxDmyGqUg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwG2Mh7ch/GtVNqyF1qxVjqCjzs+/Ju7M4ZvKSYFdAGo/44Q198
-	YCWK5hKa6gVyYnNTaYRn96QOz85taAQh52JyzLe/YiKIKTrSxLYLSIzyq53enuyayBN7hUy+njE
-	672skAERAJIc/ZG0XN/1ikYiDNMee1f6WCOR8
-X-Gm-Gg: ASbGnctkJ980kbai9vnwAgK7pHU3lrZuZoBCwuTG9g/Udgd1JYPc1RYKvE6DlYpPoqS
-	l9SDwkaFAan1XfD/RIpbYrENpa9CNus8eyf830he9/y3qO+BDtjDbV/4ruiHsEzsxExk6O35R1B
-	FwQYezcgmts3FHAqVHWxSUK/jKWRWiUnwX30B64PMx2fjKEF2vz8NggWe/CgcvijqTYhmUzpnmS
-	9E=
-X-Google-Smtp-Source: AGHT+IFTv+PnCR1FFBFPRRlL4qtVEdUNkKNqxhFRPW5zZOEZxpfo1u8xvtcxJr+p89SlDmyvPhb1WzwAuII8GgFHvgo=
-X-Received: by 2002:a05:651c:19a2:b0:32a:6b16:3a27 with SMTP id
- 38308e7fff4ca-32adfe1dbf3mr20542471fa.35.1749315679583; Sat, 07 Jun 2025
- 10:01:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f+O+VVvq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5B43C4CEE4;
+	Sat,  7 Jun 2025 17:07:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749316029;
+	bh=Azz48mpCYMvYjRFCNahCCCmGCYAn+g8SuVXJdTJDQRE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=f+O+VVvqoZnFgHp4UtWWwkXnfxmWbHHt62ws/XtukL3DohEp41faqTsSCABsruJnd
+	 X7AaKckZYS8KZxnXGDoUsNdGcT1VtPx/dekv/5xsHpDg674gaq70TWW1x0IpdT7wRQ
+	 A14RlLEUh4XmylTnkfNu3dnzQDvP9kSFWNzMeER2gYdzCwMOCWUDlmz/BPjX/qw5jQ
+	 TkPeJiXiEzg3UqV7viPXTbVlE/TuMIwoX0VUVcBI7Da62fjxPQYmhIwys6x9qphioT
+	 BX1L9wruC1lKpxPujvPhG2gZGDf3YBcUJyQgTUNHdgH6e4rsUI8ERqmHR7oxqKb2At
+	 JEZB2+4vba2iw==
+Date: Sat, 7 Jun 2025 18:06:58 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <lars@metafoo.de>, <Michael.Hennerich@analog.com>, <dlechner@baylibre.com>,
+ <nuno.sa@analog.com>, <andy@kernel.org>, <robh@kernel.org>,
+ <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <linus.walleij@linaro.org>,
+ <brgl@bgdev.pl>, <marcelo.schmitt1@gmail.com>
+Subject: Re: [PATCH v4 06/11] iio: adc: ad4170: Add support for buffered
+ data capture
+Message-ID: <20250607180658.7db5271c@jic23-huawei>
+In-Reply-To: <1e966af21b33b7dd969e1faa8126159c5dc501f7.1748829860.git.marcelo.schmitt@analog.com>
+References: <cover.1748829860.git.marcelo.schmitt@analog.com>
+	<1e966af21b33b7dd969e1faa8126159c5dc501f7.1748829860.git.marcelo.schmitt@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250531-topic-venus_98_tbl-v1-1-68e5523a39dc@oss.qualcomm.com>
- <btmzhyullmggev43b3syp3anxlm6o5mpz2mthaskuyl7kfx5gw@w5gesyaaytkh>
- <CAN5H-g7WLsowjW6CMee5T=W4Lmia9mLWGgX17-mOMjtBo2SwvQ@mail.gmail.com>
- <b9b456bc-beb8-769d-5f9f-e13b8860e659@quicinc.com> <c98ebb32-7207-40b4-90d1-8bac62d54c8f@oss.qualcomm.com>
-In-Reply-To: <c98ebb32-7207-40b4-90d1-8bac62d54c8f@oss.qualcomm.com>
-From: Arnaud Vrac <rawoul@gmail.com>
-Date: Sat, 7 Jun 2025 19:01:07 +0200
-X-Gm-Features: AX0GCFstInUACsl9X2b2Lde8y05sK1CuKP_7VX10ft9wYvNQ9qbC30Pa-0LHqoE
-Message-ID: <CAN5H-g7uxH2sqxXdzE-BQtLXYgaEg+h7A=9kuKqwdAZEMXp4Zw@mail.gmail.com>
-Subject: Re: [PATCH] media: venus: Fix MSM8998 frequency table
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Vikash Garodia <quic_vgarodia@quicinc.com>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Dikshita Agarwal <quic_dikshita@quicinc.com>, "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, 
-	Marc Gonzalez <mgonzalez@freebox.fr>, Pierre-Hugues Husson <phhusson@freebox.fr>, 
-	Hans Verkuil <hverkuil@xs4all.nl>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Le sam. 7 juin 2025 =C3=A0 11:36, Konrad Dybcio
-<konrad.dybcio@oss.qualcomm.com> a =C3=A9crit :
->
-> On 6/6/25 2:14 PM, Vikash Garodia wrote:
-> > Hi,
-> >
-> > On 6/6/2025 5:29 PM, Arnaud Vrac wrote:
-> >> Le dim. 1 juin 2025 =C3=A0 09:46, Dmitry Baryshkov
-> >> <dmitry.baryshkov@oss.qualcomm.com> a =C3=A9crit :
-> >>>
-> >>> On Sat, May 31, 2025 at 02:22:00PM +0200, Konrad Dybcio wrote:
-> >>>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> >>>>
-> >>>> Fill in the correct data for the production SKU.
-> >>>>
-> >>>> Fixes: 193b3dac29a4 ("media: venus: add msm8998 support")
-> >>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> >>>> ---
-> >>>>  drivers/media/platform/qcom/venus/core.c | 10 +++++-----
-> >>>>  1 file changed, 5 insertions(+), 5 deletions(-)
-> >>>>
-> >>>
-> >>> Verified against msm-4.4
-> >>
-> >> Hello,
-> >>
-> >> The current values are based on
-> >> https://git.codelinaro.org/clo/la/kernel/msm-4.4/-/blob/caf_migration/=
-kernel.lnx.4.4.r38-rel/arch/arm/boot/dts/qcom/msm8998-vidc.dtsi
-> >> which we've been using in production for many years.
-> >
-> > I see -v2 updates these to 533/444/.. MHz [1]. If the value changes bas=
-ed on
-> > board variants, these need to be picked from board DT instead of driver=
- then.
->
-> I believe they don't (although there exist some SoCs where fuses determin=
-e
-> maximum frequency for a given target). We really want to move off of in-d=
-river
-> freq tables but that is still in progress.
->
-> >
-> > [1]
-> > https://git.codelinaro.org/clo/la/kernel/msm-4.4/-/blob/caf_migration/k=
-ernel.lnx.4.4.r38-rel/arch/arm/boot/dts/qcom/msm8998-v2.dtsi#L1140
->
-> Arnaud, as Vikash mentioned, dvfs tables and some other magic values may
-> get overriden in socname-v2/-v2.1/v3 etc. I'm not a fan that downstream
-> leaves irrelevant information for old revisions in place, instead of
-> simply replacing them, but what can I do..
->
-> Unless you somehow came into posession of v1 SoCs (which I believe were
-> totally internal), your hw has not been stretching its legs fully for
-> all this time.
->
+On Mon, 2 Jun 2025 08:38:46 -0300
+Marcelo Schmitt <marcelo.schmitt@analog.com> wrote:
 
-Yes, I missed that the values were overridden in the msm8998-v2.dtsi
-file, sorry for the confusion.
+> Extend the AD4170 driver to allow buffered data capture in continuous read
+> mode. In continuous read mode, the chip skips the instruction phase and
+> outputs just ADC sample data, enabling faster sample rates to be reached.
+> The internal channel sequencer always starts sampling from channel 0 and
+> channel 0 must be enabled if more than one channel is selected for data
+> capture. The scan mask validation callback checks if the aforementioned
+> condition is met.
+> 
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
 
--Arnaud
+A comment inline about possibly relaxing the channel 0 constraint
+as far as userspace is concerned anyway. Not necessary for now though.
+
+
+> diff --git a/drivers/iio/adc/ad4170.c b/drivers/iio/adc/ad4170.c
+> index 3d83c3ace569..86ef70acbf21 100644
+> --- a/drivers/iio/adc/ad4170.c
+> +++ b/drivers/iio/adc/ad4170.c
+> @@ -13,7 +13,11 @@
+
+> +static bool ad4170_validate_scan_mask(struct iio_dev *indio_dev,
+> +				      const unsigned long *scan_mask)
+> +{
+> +	unsigned int masklength = iio_get_masklength(indio_dev);
+
+If this becomes a useability issue we could probably generative appropriate
+available_scan_masks entries and let the demuxer in the IIO core deal with
+dropping the unwanted first channel.  That might be preferable to just
+failing if the channel isn't enabled.
+
+As a general rule, I think we've always used validate_scan_mask
+to prevent too many channels being turned on, or incompatible sets of channels
+rather than to prevent too few being enabled.
+
+Anyhow that would be a relaxation of constraints so can be done if it
+turns out to be needed later.
+
+> +
+> +	/*
+> +	 * The channel sequencer cycles through the enabled channels in
+> +	 * sequential order, from channel 0 to channel 15, bypassing disabled
+> +	 * channels. When more than one channel is enabled, channel 0 must
+> +	 * always be enabled. See datasheet channel_en register description at
+> +	 * page 95.
+> +	 */
+> +	if (bitmap_weight(scan_mask, masklength) > 1)
+> +		return test_bit(0, scan_mask);
+> +
+> +	return bitmap_weight(scan_mask, masklength) == 1;
+> +}
+
+
