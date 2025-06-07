@@ -1,105 +1,122 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A8AC3BBF2;
-	Sat,  7 Jun 2025 17:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6181C1F05;
+	Sat,  7 Jun 2025 17:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749317423; cv=none; b=NcaI5fSwZ7HQDPotubqo1N4ssfTaIOe+hVzIh6XFODkFVTxR1Rj8EX5xuxnMU0zwNLzLxpYFF40s7GAEy6ZLzMNvegnNXOSXvrXfJqMfeTKwpH9K6lIXa9W3YroW57xQAeA1zrsl/41NouRRHdh9sYIN0FfAkUviL/L405946Tk=
+	t=1749317858; cv=none; b=JYTDSykT8WSl0od88blgRkXKJ1r1Z0cZpv0G3nqEiiBQQXPPUNKgCk2Gazbm1TNnlc4JxdQSaibO2aLW5QSuZpORJW6ll9tLopAnoA8w79em8+syOfyHJc5AtYynIS+MX7msKLDO5ByORcmHlXZ+bANDQ77GAOFMqU/h24/hEsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749317423; c=relaxed/simple;
-	bh=5QdmPWlZNgjhTezfrcYSpb88MvFDjq9ek7pK6GBAKv8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dX8w+AaJneDLoV2kqofO8YuiT33uZXxbSfgySAnjAu9Z/DtB+aqh6VnHK1xlzDJyWc+Y3ttFZh/l6kVf+6O0UJyMZTm6k/bdum/UGpeaBLR2mBBAVfyIhgyro7/NjReyxLN7Ms/j08tjm/1EsmGwK16Mlf2UHCQsU5xHzv8Ey7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Td/0dTtF; arc=none smtp.client-ip=209.85.216.45
+	s=arc-20240116; t=1749317858; c=relaxed/simple;
+	bh=MNXMy8HfI2waq2G8oxNDKiH7bMr9b+jPeQUK+EXCUcs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SIbV/VdVnQaTEFJwWDKC37Hkq+/2Di23asKo3brvM3rd4iyUrIZjWc5D/Jk7L9hpveitoeN1xkGLv/p5WV6q0YU/PAWJuJ3z0Gl6G2pvxiYhNIWyVykO8jxhCLKYLoSKLN/pvVZpHxo0k6B0pY0vNMNj0sJs8rTA31DhNgsAUY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VEMoS17J; arc=none smtp.client-ip=209.85.219.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Td/0dTtF"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-31306794b30so478666a91.2;
-        Sat, 07 Jun 2025 10:30:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VEMoS17J"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e7dc89108bfso2596064276.3;
+        Sat, 07 Jun 2025 10:37:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749317421; x=1749922221; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5QdmPWlZNgjhTezfrcYSpb88MvFDjq9ek7pK6GBAKv8=;
-        b=Td/0dTtFNUGuhzaGqf226YElQT4uj3XmEi2tgPEsSGeP+Lzk3CIg5PzmSorDIrWy+N
-         neyuSxrWvTWLbVSYGYTfyGdBXXVhSPCS/g2goRac7ZFlSsqN7b9WD/w+M42dH6JMDNeW
-         2Qvt2NSlZ+z+ik+0witK2uryPptlstUk4HwFD6CHCdP1Jcx6qEHdJPXpTDAf30MgYb/b
-         QbS/TxDrp7JC0cPJfPO8VdZbUXQSlQxyyeRHyyUCStdf/C3bxr1GafZ+erkNuBu9nO/c
-         Q6nHO+v1AIZzCfzdoUO8Xpdrkcw5FDOU5K1l6xz7dm9buLHXeFhbimc1CKpRGas/hrX+
-         zeZQ==
+        d=gmail.com; s=20230601; t=1749317855; x=1749922655; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ayCFwbQaqYgpw8qE16BOWR3xG+gqmq5PSTWYGpCJhm4=;
+        b=VEMoS17JABk0y1BiPvgCrU7mpyBQ6LQKpvPxe9FbSrevYw65yAiJwOA7KbMt7UNOsH
+         BEs34MtjH6/mveLF0k5tv7t+IINdijY4/3PHThMnwQ6LBQVevTOuFhALCCFke1Ae7Rai
+         5LBJn3HimETa8vj2idP5hH3vxxJPZDrCi4YZPNwQm3Mbj+ZM7KbwHyoJjDUdkGxqiOo1
+         ic4ky1jWkKVJW+a+1D3PrljMevBKUOYtzU1fjjltPx1C6p9AcM+ibDLcJPUnOdAH+qSu
+         9d6bzWDqIWU1gY6P1lJfYJp/EDfM+OijQ4fV3Q65qI3fTBHVTuck2s6RRRptBUFgKrNG
+         oSZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749317421; x=1749922221;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5QdmPWlZNgjhTezfrcYSpb88MvFDjq9ek7pK6GBAKv8=;
-        b=kY9dBnIkdwsOCdjTiIgQezogZGUN1T1taqSszOeZXxM6VvTfSob8bmMlKqAYBvzoI+
-         3saFK8OUG3Jfs6AmmT/xnsn5+m1OT1mnc9MZOWs0MkMpBCukAJOXwCHjXvyOmuLB0FVW
-         5+3v+86SeMk/DB5NI2YLS/ho3cBrXpNw7HlmrkzKl+glqnyC1xaWRGq73dnBEaaRVC1H
-         QIeQW33U1a+vemvb1bBUEfH1hDhTbnY6YaazQLIFnrvpxAyJ+5Kv1Xje+G+4qLPsc8E5
-         lTNbPNwQ8WuSCoon3c6UH+u998Xu5HFUl03G4pEDmilSeiuXcduD0Cfn0HrF34539S0I
-         rTOw==
-X-Forwarded-Encrypted: i=1; AJvYcCWfqHTpG74bbChQEfEBdwHAgUtaWjSiCLgGBl4qoLHimhmqgYTYb/PrDsRYunAtJvKVTvK0Z+jpAC+qnacbVE4=@vger.kernel.org, AJvYcCWxlu4NWzMn5KYAPthfMK1fD9cKp6KG6XhBGo52czQoJWfNdT3OTZ/4//1CpdotTUfB0HaFeGaHEQCt+Bs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPWMSx4emD74T/AEenrOj9uma5C3EWz+0NGka9d7Z3AfVEJEqF
-	e/Gv12oLwQwNbXu2x88K1o6yWJ+odRhLqqRsy+iVzq9kFZE4/GQiw9Ictpu+C/5wbWfOATRdBad
-	Eetn97RL8ASOrwiVeGHJsfcALzMWTKXY/Yt+UQM8=
-X-Gm-Gg: ASbGncslN9GwkjyKSjkt32hRbf3y/7FP9KAaGzbkhydFq8w9IduzSfywBSoDDZUNqxx
-	u/3p0xDmqYlE2tZEKzbiynjJpd3sIib1p3Sy/bp0q3mdyebjZBkfAkW5eOlhNEmxZu8z3n49BLQ
-	jDii3n+5unMUMks0bUVlNbFaX7/8EiY5+R
-X-Google-Smtp-Source: AGHT+IGW/LDxuSB/3nYGAdGDq6RIhvnQtQyrgCDYzBZ3yFxjOFtw3GS9BRdis5xtEJqwV/BCpkwpkndBZ37C1zCl4Bs=
-X-Received: by 2002:a17:90b:2247:b0:30a:80bc:ad4 with SMTP id
- 98e67ed59e1d1-31346af79bdmr4449901a91.0.1749317421422; Sat, 07 Jun 2025
- 10:30:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749317855; x=1749922655;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ayCFwbQaqYgpw8qE16BOWR3xG+gqmq5PSTWYGpCJhm4=;
+        b=GX+WpmefVWHuL2uPgk5iPpzLI1LPakyvJ1rWde9VHCsjPjBriGg4kdGYu7z61WwKS7
+         SCb6dWqVEyt4FK0lLadDUqQqoATGwa92vvoD+0fMQDQ6Nje9lXvD7JIux70afEftPl+i
+         o4gvwm50feMSOAn4d3EcMD0oadv5m8xKfyPThIqRM1C0htQE7+N+wcTiSzf679FAPXwn
+         2SvRhmKzS7abdMHIZvIb2w6tlqZ41b8qdhnpUlwoLtuV1NVyoPJEewoqp05pyY6NdN3w
+         Lwobq6sHJUPtW1h+R8OYSQqFsuFFPJKO71EFTZfNKE10h/mCGbzt2DycOAZ/cBi2LJpJ
+         21mA==
+X-Forwarded-Encrypted: i=1; AJvYcCUT6JJy3RwUV+8Dj5svEdhTYAzTuS5W3CDmDOVQccxPyhZ5jGM58agMA+177AkuWaAa/IgE0O6mGf7u5lA=@vger.kernel.org, AJvYcCVXPJUgS4FFJiF8xO9yOFMCNS/tlychMFjmnXSOsfbvD+nH6SEzs4OmiwMyCSd0dPVFg6LJgvLXd+BbtK8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzz/SQOkTXJ74/HHyAKR1e2QawryPfh7tpO2U75BruqziIRz5FM
+	+Xwp9zADpONVwjs46fUlBFPX+svTbxNQImQ6sNBXv3Nsrl0HlKI4x+8M
+X-Gm-Gg: ASbGncsAa/pr7plzK7zDoVVc2jxo4EcM04WysBRVSu2s9hC0RuJCG0QLnkdre9nk4MF
+	yfi7F1FRrDuTmE93vL3HIZCNnt1DYMIPKwyR1w66jKjuwYcHXAhMibtHUpNH9YD/D73hRCG5D5e
+	CSIC5CqKIMG/rIyjgpH2Z2UPnq8yiulmZr77bVfX0UciQI7LcwegZG+zI7cSAHgEkneL/JUU0xV
+	nAH/izgGLmNxIVT0IKB9wOxXPNcvCGpA2XapK/OecOByuC1PLleVDunLQFZfa4EynPGk01daAXl
+	52fwgXza1b4jPjFhbnIWAuJIOQZsImTLuJeacsXDBhaDiGgP2CzlRFS4rMqMWcQGblt705yxqww
+	6
+X-Google-Smtp-Source: AGHT+IF8HYZHL86TOdKhSN8xXmSsXpoDN0N4Vah9KTbf2hlYodxVc7jqNj7xPRMTMBU3/mTgBb5F4Q==
+X-Received: by 2002:a05:6902:2605:b0:e7b:607b:54b7 with SMTP id 3f1490d57ef6-e81a22dae24mr10039925276.24.1749317855571;
+        Sat, 07 Jun 2025 10:37:35 -0700 (PDT)
+Received: from trojai4.cs.purdue.edu ([128.210.0.165])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e81a440cafbsm1144373276.24.2025.06.07.10.37.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Jun 2025 10:37:35 -0700 (PDT)
+From: Alex Guo <alexguo1023@gmail.com>
+To: mchehab@kernel.org
+Cc: hverkuil@xs4all.nl,
+	algonell@gmail.com,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alex Guo <alexguo1023@gmail.com>
+Subject: [PATCH] media: dvb-frontends: dib7090: fix null-ptr-deref in dib7090_tuner_xfer()
+Date: Sat,  7 Jun 2025 13:37:31 -0400
+Message-Id: <20250607173731.2363567-1-alexguo1023@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250607-assert_sync-v1-1-b18261da83e2@gmail.com>
- <DAGEZCRR61A0.30H1MJQXW4CV5@kernel.org> <2531463d-fa6e-430c-a3a6-b179654cfbbe@gmail.com>
-In-Reply-To: <2531463d-fa6e-430c-a3a6-b179654cfbbe@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 7 Jun 2025 19:30:08 +0200
-X-Gm-Features: AX0GCFu-3IHC_l70zzTiuV93NAq4M5Z6SVWOXfPDAAJLHI2u-sfAg81oIIt8AVc
-Message-ID: <CANiq72mv3RAT0rxApNV=xftTjMBKikRMrdFnPfUuiCBN=YRhkA@mail.gmail.com>
-Subject: Re: [PATCH] rust: add `assert_sync` function
-To: Christian Schrefl <chrisi.schrefl@gmail.com>
-Cc: Benno Lossin <lossin@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 7, 2025 at 5:54=E2=80=AFPM Christian Schrefl
-<chrisi.schrefl@gmail.com> wrote:
->
-> Should I already add this in V2 for this series?
+In dib7090_tuner_xfer, msg is controlled by user. When msg[0].buf is null
+and msg[0].len is zero, former checks on msg[0].buf would be passed. If 
+accessing msg[0].buf[0] without sanity check, null pointer deref would 
+happen. We add check on msg[0].len to prevent crash. Similar issue occurs
+when access msg[1].buf[0] and msg[1].buf[1].
 
-I would do that in a separate patch (possibly in this series, or later on).
+Similar commit: commit 0ed554fd769a ("media: dvb-usb: az6027: fix null-ptr-deref in az6027_i2c_xfer()")
 
-> I've tried it with `compile_fail` and it didn't work, I think
-> that's not supported in (kernel) doc tests yet.
+Signed-off-by: Alex Guo <alexguo1023@gmail.com>
+---
+ drivers/media/dvb-frontends/dib7000p.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Yeah, it isn't -- please leave a normal comment to indicate it, so
-that we can replace it with the real annotation in the future.
+diff --git a/drivers/media/dvb-frontends/dib7000p.c b/drivers/media/dvb-frontends/dib7000p.c
+index b40daf242046..46753d2ae212 100644
+--- a/drivers/media/dvb-frontends/dib7000p.c
++++ b/drivers/media/dvb-frontends/dib7000p.c
+@@ -2270,6 +2270,8 @@ static int dib7090_tuner_xfer(struct i2c_adapter *i2c_adap, struct i2c_msg msg[]
+ {
+ 	struct dib7000p_state *state = i2c_get_adapdata(i2c_adap);
+ 
++	if (msg[0].len < 1)
++		return -EOPNOTSUPP;
+ 	u16 apb_address = 0, word;
+ 	int i = 0;
+ 	switch (msg[0].buf[0]) {
+@@ -2360,11 +2362,15 @@ static int dib7090_tuner_xfer(struct i2c_adapter *i2c_adap, struct i2c_msg msg[]
+ 	case 0x1d:
+ 		i = ((dib7000p_read_word(state, 72) >> 12) & 0x3);
+ 		word = dib7000p_read_word(state, 384 + i);
++		if (msg[1].len < 2)
++			return -EOPNOTSUPP;
+ 		msg[1].buf[0] = (word >> 8) & 0xff;
+ 		msg[1].buf[1] = (word) & 0xff;
+ 		return num;
+ 	case 0x1f:
+ 		if (num == 1) {	/* write */
++			if (msg[0].len < 3)
++				return -EOPNOTSUPP;
+ 			word = (u16) ((msg[0].buf[1] << 8) | msg[0].buf[2]);
+ 			word &= 0x3;
+ 			word = (dib7000p_read_word(state, 72) & ~(3 << 12)) | (word << 12);
+-- 
+2.34.1
 
-> That might make sense, with macros we would not need to write
-> a const block to ensure its not executed at runtime (although
-> it's probably optimized out anyways). It would also mean that
-
-There is nothing to execute, no? It is `#[inline(always)]`, and even
-if that wasn't enough, we always build with optimizations enabled.
-
-But yeah, if needed, we may want to have macro(s) like that.
-
-Thanks!
-
-Cheers,
-Miguel
