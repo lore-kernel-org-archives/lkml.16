@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63710156C40;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687B21E9B22;
 	Sat,  7 Jun 2025 19:19:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749323980; cv=none; b=s2mprmD3R6NZxjuk2QiKRQdbwsoSayYc2luhoFTVssd3uKYGMMWjD3Jum05XkIOzG/VPYiTqV/tSGdaKGm7Gr1sIMzJyTRsE4HabGjjV5JcWSEKxhWjP5kaLjzatckIqx5vzGpy47BlL94APcKOOmmndDxjLrZKBo641Gi4qeUE=
+	t=1749323980; cv=none; b=pt9kYhi5h9zCnqgkBsagKe0tlhKcpTps8SWKvTNQ9fTYbhXkF1zdZxMLg8SeYMXb4VCnYhIhzW2VgLytUmG8hjsjH72YnTpCP9/WtOMWatyYj6ck6GlEaLUt95wylPD2zdCG87Xr5GbK4Gj544YzuOASBdbZxnQd9WXGvrdWLQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749323980; c=relaxed/simple;
-	bh=pZ40dvcgy1Iojqw1+7qpiys0ZFgdHWgMOfcvPB2SjqY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=usXhIr6tHMSDkcYjCxwNhsFTyubEiV1HN7FW4rGUcB803AhoO43F2aS+Ql5jbd2HopLQF3QERZUN3YXjHEgqaPlwO7C+f5aUyPJA1A+stRrk8DdsqCPMJcymYzaVE0+24AHFrmpf2KVPxWvYOG8a/P0B8AX76mlXk3e4jOof8PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pWFzioDf; arc=none smtp.client-ip=10.30.226.201
+	bh=wTLGkwqOLledvtih3ZabZyv0t/oLrYH/9pso8RQbfsE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=l4kuLpli8GflRTk83GOtaq7j6iNMGFXh8i2RhS5VC1DOMIIDN6/FpwyFhENW/ktxi0zHZJOq1iUQThMmA7NEYYnVAZJf8VGj3xDhALMw8VcXwnCqDGBUraOhI8Z5WVjvEOJe6/uyfLPYcPeGrdp2Bx832uDpgKcyMyhpC/4VIdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D3bEswoq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pWFzioDf"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EC560C4CEF0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D3bEswoq"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D73C7C4CEE4;
 	Sat,  7 Jun 2025 19:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749323980;
-	bh=pZ40dvcgy1Iojqw1+7qpiys0ZFgdHWgMOfcvPB2SjqY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=pWFzioDf9SYey1QSEkOz6HVjgikK8izN8bXFxqZj96zXVWK05Bwmw0I5Nz8wWvIQf
-	 uAfCqsbUBJniHZH+o0RpVCZbk8QH2QcAPghDNWZT6pW9pC4BuPjwIv8Sv6p9JE0owm
-	 mHNHj018hJ1N2ABYmci9tAcLtVq6PLpbaHXW0+PvnXV9O+/5DvTBGWv8VpPCrceWFj
-	 IzgrENWAKlvBuVo6dIbjX2KyW2WPL8A8ipPYJmHfsNt+XU4wTfyGP7ea6Vb22jcj4N
-	 LIAUDp/H8yp2ZeLItsHhinJ0EE8q7zf+CpH3EGs3WivbZKD2PBGLKvFqoE3r7qMSqJ
-	 0nMWl4shVULTQ==
+	s=k20201202; t=1749323979;
+	bh=wTLGkwqOLledvtih3ZabZyv0t/oLrYH/9pso8RQbfsE=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=D3bEswoq9ccabscu3S2xC/oPv4EWcrjGDhPfL0jq3fA4TWt1tguH8btvot+jJSMJM
+	 HAP7abZWMcMAILTg1LOTm13xBZx7DNXiwcUM7ZB5Cf+lYM6jZmuhmPaI8c6woSkJbu
+	 c55zg5kqcCr2ILD+3Bu6PQo8JynkXbZPWENN88l1zNBVwfc+JkcjYeZNiesqBlCG/c
+	 W5rTca1Q8oP2udCOkEBfB2Ca53X0ipkGNLF0qiubL30ERCwo7kCXh8cjtseNH+XoOy
+	 CiLbxGVCIhsNBQU0bptmbmQOG/m5bm5exe3LP7nyFwV/RH973Gb71Nd3SRUi8upPYo
+	 /cGpu2d6Y7Uog==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC19C677C4;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2961C5B543;
 	Sat,  7 Jun 2025 19:19:39 +0000 (UTC)
 From: Jens Glathe via B4 Relay <devnull+jens.glathe.oldschoolsolutions.biz@kernel.org>
-Date: Sat, 07 Jun 2025 21:19:37 +0200
-Subject: [PATCH v6 2/4] usb: misc: onboard_usb_dev: Add Bison Electronics
- Inc. Integrated Camera
+Subject: [PATCH v6 0/4] arm64: dts: qcom: Add Lenovo ThinkBook 16 device
+ tree
+Date: Sat, 07 Jun 2025 21:19:35 +0200
+Message-Id: <20250607-tb16-dt-v6-0-61a31914ee72@oldschoolsolutions.biz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +41,12 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250607-tb16-dt-v6-2-61a31914ee72@oldschoolsolutions.biz>
-References: <20250607-tb16-dt-v6-0-61a31914ee72@oldschoolsolutions.biz>
-In-Reply-To: <20250607-tb16-dt-v6-0-61a31914ee72@oldschoolsolutions.biz>
+X-B4-Tracking: v=1; b=H4sIAMeQRGgC/33OTWrDMBCG4asErauin5mR3FXvUbqwpXEtMFGwX
+ JM0+O5VAq2ziZfvx/AwV1F4SlzE2+EqJl5SSflYg14OIgzt8YtlirWFUQYVai3nTpOMs2QPAay
+ N3nVa1OvTxH0636WPz9pDKnOeLnd40bf1z8B/Y9FSyRjQA7UGA/j3PMYShpzHksfvuf5SXrv0I
+ 27gYh4R2hBTERegaSii50i7iH1ADGyIrYh2bCg2FtnZXQSeIFAREzST0j7aXu0iuCGk3IZgRVq
+ GxlqCHg0+RdZ1/QWyYugTvwEAAA==
+X-Change-ID: 20250511-tb16-dt-e84c433d87b1
 To: Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -52,14 +55,15 @@ To: Bjorn Andersson <andersson@kernel.org>,
 Cc: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>, 
  linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
- Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+ Jens Glathe <jens.glathe@oldschoolsolutions.biz>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749323978; l=2669;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749323978; l=5716;
  i=jens.glathe@oldschoolsolutions.biz; s=20240919;
  h=from:subject:message-id;
- bh=SV/p7KDSyWL9rkQIFy/TOjIl8HBAh1upgaaKIpkGrwc=;
- b=dvNFU3rgMtgqVKBf8Q0zDyYaEkN58mDHbPCAcmt4ixQawSTSoelflsucHRtH1NIwRR3oluu82
- vRXopo1dkjJDgWF1BaW2yHSceyqCuUOg7TsIxb1xrAdTHC2OJdNFN3s
+ bh=wTLGkwqOLledvtih3ZabZyv0t/oLrYH/9pso8RQbfsE=;
+ b=0pKGOxPkkcCU7ouSwDLbUAV6MQj+xrggP1Yu9+crSI6/xZwCcZVZdpKsoh3xrZIav0JrQklgX
+ ZOve73sLp2HDYaAE5kPKg02BSWWcro/7fsmdG23mqg7JPFomtxe7Wq/
 X-Developer-Key: i=jens.glathe@oldschoolsolutions.biz; a=ed25519;
  pk=JcRJqJc/y8LsxOlPakALD3juGfOKmFBWtO+GfELMJVg=
 X-Endpoint-Received: by B4 Relay for
@@ -67,68 +71,137 @@ X-Endpoint-Received: by B4 Relay for
 X-Original-From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 Reply-To: jens.glathe@oldschoolsolutions.biz
 
-From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+Device tree for the Lenovo Thinkbook 16 G7 QOY
 
-The Camera is built into the Thinkbook 16 G7 QOY and directly attached on the
-usb_2 controller (dwc3 USB2 only). It has a separate power supply that needs
-to be controlled for PM.
+The Laptop is a Snapdragon X1 / X1 Plus (Purwa) based device [1].
 
-Add the support for this device for the power supply.
+Supported features:
+
+- USB type-c and type-a ports
+- Keyboard
+- Touchpad (all that are described in the dsdt)
+- Touchscreen (described in the dsdt, no known SKUss)
+- Display including PWM backlight control
+- PCIe devices
+- nvme
+- SDHC card reader
+- ath12k WCN7850 Wifi and Bluetooth
+- ADSP and CDSP
+- GPIO keys (Lid switch)
+- Sound via internal speakers / DMIC / USB / headphone jack
+- DP Altmode with 2 lanes (as all of these still do)
+- Integrated fingerprint reader (FPC)
+- Integrated UVC camera
+
+Not supported yet:
+
+- HDMI port.
+- EC and some fn hotkeys.
+
+Limited support yet:
+
+- SDHC card reader is based on the on-chip sdhc_2 controller, but the driver from
+the Snapdragon Dev Kit is only a partial match. It can do normal slow sd cards,
+but not UHS-I (SD104) and UHS-II.
+
+- The GPU is not yet supported. Graphics is only software rendered. However, the 
+node is defined and active since the available of the X1-45 support is soon-ish
+and the Laptop boots with it enabled, too.
+
+Notes:
+
+- Putting the camera behind usb_2_dwc3 results in the camera switched of after 30 
+seconds. With the stand-alone node as previously defined it stays usable and 
+suspends, as intended. Sincethe sole reason for the USB camera to be in the 
+devicetree is the required extra supply (which is guessed, as mentioned), and
+its handling by power management, I would propose to keep it this way.
+
+- The gpi_dma nodes appear to be implicitly enabled when a serial device is used.
+I added them, no change in behaviour, though. Since this would be the only X1 
+device adding them afaik, I left them out.
+
+- The cma-memory is removed, it is not on all x1 devices as I assumed. 
+Haven't found a case where it is required.
+
+- i2c2 defines the keyboard and 4 different touchpad interfaces. With the bundling
+of the pinctrl it seems to work better. I've had issues with only clock and touchpad
+pinctrl on the i2c2 node, and not keyboard.
+
+This work was done without any schematics or non-public knowledge of the device.
+So, it is based on the existing x1 device trees, dsdt analysis, using HWInfo
+ARM64, and pure guesswork. It has been confirmed, however, that the device really
+has 4 NXP PTN3222 eUSB2 repeaters, one of which doesn't have a reset GPIO (eusb5
+@43).
+
+I have brought up the Thinkbook over the last 4 months since the x1p42100-crd
+patches were available. The laptop is very usable now, and quite solid as a dev/
+test platform. GPU support would be nice, though :)
+
+Big thanks to Aleksandrs Vinarskis for helping (and sort of persisting) on the
+fingerprint, camera and HDMI issues.
+
+[1]: https://psref.lenovo.com/syspool/Sys/PDF/ThinkBook/ThinkBook_16_G7_QOY/ThinkBook_16_G7_QOY_Spec.pdf
 
 Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 ---
- drivers/usb/misc/onboard_usb_dev.c | 2 ++
- drivers/usb/misc/onboard_usb_dev.h | 8 ++++++++
- 2 files changed, 10 insertions(+)
+Changes in v6:
+- removed compatible for qcom,sm8550-pmic-glink" in pmic-glink
+- fixed malformed gpu node
+- Link to v5: https://lore.kernel.org/r/20250607-tb16-dt-v5-0-ae493364f525@oldschoolsolutions.biz
 
-diff --git a/drivers/usb/misc/onboard_usb_dev.c b/drivers/usb/misc/onboard_usb_dev.c
-index 5b481876af1b2c10ce625fcf0fb8bfbe8905aa8c..41360a7591e56b2b1fe973ff1c42e68707fff54d 100644
---- a/drivers/usb/misc/onboard_usb_dev.c
-+++ b/drivers/usb/misc/onboard_usb_dev.c
-@@ -564,6 +564,7 @@ static struct platform_driver onboard_dev_driver = {
- 
- /************************** USB driver **************************/
- 
-+#define VENDOR_ID_BISON		0x5986
- #define VENDOR_ID_CYPRESS	0x04b4
- #define VENDOR_ID_GENESYS	0x05e3
- #define VENDOR_ID_MICROCHIP	0x0424
-@@ -647,6 +648,7 @@ static void onboard_dev_usbdev_disconnect(struct usb_device *udev)
- }
- 
- static const struct usb_device_id onboard_dev_id_table[] = {
-+	{ USB_DEVICE(VENDOR_ID_BISON, 0x1198) }, /* Bison Electronics Inc. Integrated Camera */
- 	{ USB_DEVICE(VENDOR_ID_CYPRESS, 0x6500) }, /* CYUSB330x 3.0 HUB */
- 	{ USB_DEVICE(VENDOR_ID_CYPRESS, 0x6502) }, /* CYUSB330x 2.0 HUB */
- 	{ USB_DEVICE(VENDOR_ID_CYPRESS, 0x6503) }, /* CYUSB33{0,1}x 2.0 HUB, Vendor Mode */
-diff --git a/drivers/usb/misc/onboard_usb_dev.h b/drivers/usb/misc/onboard_usb_dev.h
-index e017b8e22f936be66da73789abb4f620e6af4d6a..b95ac757868e7cd3f23eb4b80eb595a2c18e9613 100644
---- a/drivers/usb/misc/onboard_usb_dev.h
-+++ b/drivers/usb/misc/onboard_usb_dev.h
-@@ -73,6 +73,13 @@ static const struct onboard_dev_pdata ti_tusb8041_data = {
- 	.is_hub = true,
- };
- 
-+static const struct onboard_dev_pdata bison_intcamera_data = {
-+	.reset_us = 1000,
-+	.num_supplies = 1,
-+	.supply_names = { "vdd" },
-+	.is_hub = false,
-+};
-+
- static const struct onboard_dev_pdata cypress_hx3_data = {
- 	.reset_us = 10000,
- 	.num_supplies = 2,
-@@ -127,6 +134,7 @@ static const struct of_device_id onboard_dev_match[] = {
- 	{ .compatible = "usb451,8142", .data = &ti_tusb8041_data, },
- 	{ .compatible = "usb451,8440", .data = &ti_tusb8041_data, },
- 	{ .compatible = "usb451,8442", .data = &ti_tusb8041_data, },
-+	{ .compatible = "usb5986,1198", .data = &bison_intcamera_data, },
- 	{ .compatible = "usb4b4,6504", .data = &cypress_hx3_data, },
- 	{ .compatible = "usb4b4,6506", .data = &cypress_hx3_data, },
- 	{ .compatible = "usb4b4,6570", .data = &cypress_hx2vl_data, },
+Changes in v5:
+- removed patch for the CMN N160JCE-ELL panel, got reviewed
+- re-ordered code in onboard_usb_dev as requested by Dmitry Baryshkov
+- amended device tree with review notes from Dmitry Baryshkov where possible
+  and resuting in a working laptop - added notes section
+- Link to v4: https://lore.kernel.org/r/20250524-tb16-dt-v4-0-2c1e6018d3f0@oldschoolsolutions.biz
 
+Changes in v4:
+- squashed Makefile and dts commits to one
+- picked up r-b from Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+- Link to v3: https://lore.kernel.org/r/20250524-tb16-dt-v3-0-17e26d935e73@oldschoolsolutions.biz
+
+Changes in v3:
+- removed changes in x1e80100.dtsi and x1p42100.dtsi - resolved with [2]
+- fixed schema errors with correct compatible string for the model
+- added power management for the camera via onboard_usb_dev.c
+- amended node ordering
+- changed the panel driver used to edp-panel, added panel in the driver
+- amended x1e80100.dtsi for exposing PM8010: This one is not present in the design, 
+  added /delete-node/ for it.
+- removed commented-out lines for sdhc, specified which don't work.
+- corrected ZAP shader firmware name
+- Link to v2: https://lore.kernel.org/r/20250516-tb16-dt-v2-0-7c4996d58ed6@oldschoolsolutions.biz
+
+Changes in v2:
+- removed nodes that gave DTC compile errors (pm8010_thermal, edp0_hpd_active)
+- amended qcom.yaml
+- shortened the commit titles to fit 75 chars
+- Link to v1: https://lore.kernel.org/r/20250515-tb16-dt-v1-0-dc5846a25c48@oldschoolsolutions.biz
+
+[2]: 20250520-topic-x1p4_tsens-v2-1-9687b789a4fb@oss.qualcomm.com
+
+---
+Jens Glathe (4):
+      dt-bindings: arm: qcom: Add Lenovo TB16 support
+      usb: misc: onboard_usb_dev: Add Bison Electronics Inc. Integrated Camera
+      firmware: qcom: scm: Allow QSEECOM on Lenovo Thinkbook 16
+      arm64: dts: qcom: Add Lenovo ThinkBook 16 G7 QOY device tree
+
+ Documentation/devicetree/bindings/arm/qcom.yaml    |    1 +
+ arch/arm64/boot/dts/qcom/Makefile                  |    2 +
+ arch/arm64/boot/dts/qcom/x1e80100-pmics.dtsi       |    2 +-
+ .../boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dts | 1650 ++++++++++++++++++++
+ drivers/firmware/qcom/qcom_scm.c                   |    1 +
+ drivers/usb/misc/onboard_usb_dev.c                 |    2 +
+ drivers/usb/misc/onboard_usb_dev.h                 |    8 +
+ 7 files changed, 1665 insertions(+), 1 deletion(-)
+---
+base-commit: 475c850a7fdd0915b856173186d5922899d65686
+change-id: 20250511-tb16-dt-e84c433d87b1
+
+Best regards,
 -- 
-2.48.1
+Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 
 
