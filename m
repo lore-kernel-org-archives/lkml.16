@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70293259C98;
-	Sat,  7 Jun 2025 05:10:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711091362;
+	Sat,  7 Jun 2025 05:11:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749273037; cv=none; b=YZqHC9xPOlK6W7D6qz+G4mY51nIw7Paq65FPt0P7Ov9STn3SCsz/1yRXU3kZqPl6XVKQaxzy46dfgLqibQ1GvpiAfyBn8EbZs85UqAfHClJRMQRXqbu8oiVb9xOH8VRxnFIzKPY6PAY8ZT02WcfferlG9owBRK1S0AkyAUy4x48=
+	t=1749273086; cv=none; b=gdTURVKihVvJ1kuPFvnP52g/5qduIeuW514Kb/nZe7sOCuQF9QJibcr7vcpdxS3jcVC0qKx2962HPjU9nr80wsf0VMOTT6rvMK5RGcDqA1b9JV2m4gLwgQ9JYY3mJ2SPlepu5JI0GaMJm3hDDowc7vEHZwG2BISOrZwsJmfS3gI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749273037; c=relaxed/simple;
-	bh=j+0OZyLMRkX4Y8/WGxY1L/1aKUefvrtC32F+GWIY++k=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=SxnljP/4im9Jd5eBwuCfghmOXxSnYvTjpN99fckC+quhV3Ga70SJPneLuAn+fMBzgJjQrmkVvygvw3wJ1jEQZ7j1t3kbRbL/dFf1BheV1UtBVQkWGTn2BxGiW55PbXaYhXqsLVtpyqIjc2LItczSKdTu2wx/qoblEkHlHQokEws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d7wT+JXr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749273086; c=relaxed/simple;
+	bh=oagHtqgG00v7CpfKSWHen8+OHswPm3pmxNhewj1W4xI=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ID9pl1eg9UIlZmFTMDZ1vYkZ3c/Np3G36s3oqE9/MndnrgBXPQX7TcoCz8RM9AxgFZnbI7EOSrMCHaxBzHTMkNBRUQQPtxkNR12I5T9IEz0vPwfklycbO5kRiBPboHcQIAgQXbKdW0SIktDkWszQikgT4MV9FFf1/XTy99oyZYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZD8TE94B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d7wT+JXr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52206C4CEF2;
-	Sat,  7 Jun 2025 05:10:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZD8TE94B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0751DC4CEE4;
+	Sat,  7 Jun 2025 05:11:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749273037;
-	bh=j+0OZyLMRkX4Y8/WGxY1L/1aKUefvrtC32F+GWIY++k=;
+	s=k20201202; t=1749273086;
+	bh=oagHtqgG00v7CpfKSWHen8+OHswPm3pmxNhewj1W4xI=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=d7wT+JXrOGsaGi0rUjoCI2FBWzeSN0cu4BozCGvYk0cSpj/bAf5MzuqD8ng8DlGT/
-	 OvGU5jLI4fXAol3ofujBPU/KXq9spFQCUuJPmFkKbL7Kxx9gvlzgwcKTCS87AoRoCr
-	 ZJnrBiuf7FmrmMEFQpdT8kPdCuLzFtpr8h+i1RUU5C5aRmLe+Dv9besLtP0RdNMeEv
-	 bVGkIgxbSn2LmpZ90fD7n7YmYtxO42CAKdB2QJMnC+9+ly/5xkFFn0tPhDa3nsn8er
-	 xOs0Ve90sjS5MzLIjhX7KrCaf4k9hkOwEh9bWD1pHxurn1unD5voMmHurqCdBtlDbb
-	 dfqqjtfEca+sw==
+	b=ZD8TE94BpPJg2fg0iIcNZjm0upfuNTma0pm+tc7bhxQ+FcuMxWpgt7efzbRyFyq4D
+	 8pGZC4fBIsSJ4hs+isMoUbpLuj2grlBRPEGLOfrX3Wf5gp216r8wc85CCySFH1Eq5d
+	 AT2SJv4YTDl5+pQFcdRJ/vjWl44NuNBMMHbwxL5M9pDkdBSJjEIuNWdN8x/z6Bn/wg
+	 BoYw9wvfoeFssWlIHC6JwXO6YXJ46F7vmchX0fmHy5d1bi+Z3RamdWsZMUtYOfNVh3
+	 vrkP1ejWT1W7idYP4kXiwE45CF4ibpB3ehqeBCpyw/yTgp5cayiGhd7jgiFuF0I2gm
+	 EcX+oAt1NjZCA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 0D47938111CC;
-	Sat,  7 Jun 2025 05:11:10 +0000 (UTC)
-Subject: Re: [GIT PULL] Final MM updates for 6.16-rc1
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADFE33806649;
+	Sat,  7 Jun 2025 05:11:58 +0000 (UTC)
+Subject: Re: [GIT PULL] SCSI fixes for the 6.15+ merge window
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250606161231.c9e10415b320f8cbc7006d26@linux-foundation.org>
-References: <20250606161231.c9e10415b320f8cbc7006d26@linux-foundation.org>
-X-PR-Tracked-List-Id: <mm-commits.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250606161231.c9e10415b320f8cbc7006d26@linux-foundation.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm tags/mm-stable-2025-06-06-16-09
-X-PR-Tracked-Commit-Id: efe99fabeb11b030c89a7dc5a5e7a7558d0dc7ec
+In-Reply-To: <b71ba161ecc1e31fde20291f9734eeb56d746279.camel@HansenPartnership.com>
+References: <b71ba161ecc1e31fde20291f9734eeb56d746279.camel@HansenPartnership.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <b71ba161ecc1e31fde20291f9734eeb56d746279.camel@HansenPartnership.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
+X-PR-Tracked-Commit-Id: 7831003165d37ecb7b33843fcee05cada0359a82
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: bdc7f8c5adad50dad2ec762e317f8b212f5782ac
-Message-Id: <174927306882.4099510.9632313349738457384.pr-tracker-bot@kernel.org>
-Date: Sat, 07 Jun 2025 05:11:08 +0000
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, mm-commits@vger.kernel.org
+X-PR-Merge-Commit-Id: 949ea6f3f4c016852406bfdd3374e2ba5d4c30a9
+Message-Id: <174927311737.4100571.16327985833015321773.pr-tracker-bot@kernel.org>
+Date: Sat, 07 Jun 2025 05:11:57 +0000
+To: James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, linux-scsi <linux-scsi@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 6 Jun 2025 16:12:31 -0700:
+The pull request you sent on Fri, 06 Jun 2025 17:04:10 -0400:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm tags/mm-stable-2025-06-06-16-09
+> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/bdc7f8c5adad50dad2ec762e317f8b212f5782ac
+https://git.kernel.org/torvalds/c/949ea6f3f4c016852406bfdd3374e2ba5d4c30a9
 
 Thank you!
 
