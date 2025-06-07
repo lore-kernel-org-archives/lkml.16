@@ -1,178 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4708F6B;
-	Sat,  7 Jun 2025 09:46:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E3D1C7009;
+	Sat,  7 Jun 2025 09:57:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749289586; cv=none; b=O6AaaKy5cCbVNQdi7VXyDmiyeyxgv//jVGGC8PN2ecT6CgeaxNqFb9poViI3p41aPl2EIEgec9VuhxOne8MfhfjZ8bi6MmBwt591lGPLu6Mbg9UuXn8awXs/SY5PU3MDU0iO59F//2bka1BA+dZ2euXiczuMLPMw9STftni6Rns=
+	t=1749290253; cv=none; b=ZLA+Tie91C6ATo6vcVFsrJSoccIhH8E3Q7VZvyv7VySr5/3RsW1bhHL1a2mOuvbigBRYAeQo/Mhba4CshQwaSV3Tr1eK6F6MmV6ipbLrkUiTrFFGZK575Kgcu54YnZwQ5tbF6fQH2KbV86+0dFEs7iwcI1DSkt7PImn2pNbYZxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749289586; c=relaxed/simple;
-	bh=O79a+nbp6s/2+z86uMxBH1Qs3BThdL/vVT+uQXrMH0Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aksDbEXIBSKETleJeMtBLc5e9TalHHPKAzihZ7TZ699+jljYRcnzlIma2XtZxLLifayB8e3Iyp1YL1yleEV3FBVGaGZds8WxKyugONxSE/rnxgtldBen3dwjHLkG9+S+NTcaiu2u8Wi3zVXJ7ey2OXOo1AkODFh84GCrbGr85PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SWjp5+hk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749290253; c=relaxed/simple;
+	bh=VzdmqcMNvBqE3KC0zj0VVYLrni/GN1NT9ay8sXX/Oms=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sj0oi/LbvHZI7r5eQGahBQII8Qvs+PndsW3ukFxpubAP/aSRXuoFng5K5ughyo07OlCg18i8OrVV66OQgG7SgQ5OBtJu/FbiLk6t3bR0sd6hlmaM7H+FnICNEuVoONWE15r2N6XcxpntJsFn6HadBh6tO01I55XIJeEKzsrvP64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ns5odZjJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SWjp5+hk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 851B3C4CEE4;
-	Sat,  7 Jun 2025 09:46:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749289586;
-	bh=O79a+nbp6s/2+z86uMxBH1Qs3BThdL/vVT+uQXrMH0Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SWjp5+hkTratYZnhlPOEeQQbX759cy6GvwhyCZCuB4EkE7dPzeCCcq3msjcsJdEQ5
-	 HP9cqCStxo6SCVF85cX8N3yuXOiOBTSrVoyk5XYCCiHevj+I3vCa+GNcXu2V8xvtqy
-	 mQGJsqDjNpDEqHdc9wcu/RfXzsAZtyJ7xUy9NWkLmcXX2nIgjPKl5ptjpqLxJ7opUS
-	 kpFII6o+sH/SG6WXkfPt/s39J4oEeKVOqXAPJ6V51qPjH8QoqasE3Rqcs836/T3iFN
-	 FshFF1rbc6pWhljRW5YRDBPKt1Kau1mQlEo++gVYR+KtYQLr0PKwNJSP4gRYu7xnzP
-	 e0vIRNe3MmmqQ==
-Message-ID: <5b6864a9-f0ee-4bc5-aba2-c165d14b0b75@kernel.org>
-Date: Sat, 7 Jun 2025 11:46:20 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ns5odZjJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31C51C4CEE4;
+	Sat,  7 Jun 2025 09:57:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1749290252;
+	bh=VzdmqcMNvBqE3KC0zj0VVYLrni/GN1NT9ay8sXX/Oms=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ns5odZjJt6lhUyX0pMfYyXcMLXpOPa+xQACBahwgKkqgsMf5wo087OjgjS6NihT75
+	 eshtaC6q6950Gjl+0Pt8Dzg1KrBozq2Dvkksjd+1Ucy9dxqUrawcZ1BwRuDZc8Acpt
+	 NXGi66sE4YW1tZhPCCsJ9IfxzvxTyt0sm30jVFrw=
+Date: Sat, 7 Jun 2025 11:57:30 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Macpaul Lin <macpaul.lin@mediatek.com>
+Cc: patches@lists.linux.dev, stable@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Ajay Agarwal <ajayagarwal@google.com>,
+	Daniel Stodden <daniel.stodden@gmail.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Deren Wu <Deren.Wu@mediatek.com>, Ramax Lo <ramax.lo@mediatek.com>,
+	Macpaul Lin <macpaul@gmail.com>,
+	MediaTek Chromebook Upstream <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	Johnny-CC Chang <Johnny-CC.Chang@mediatek.com>
+Subject: Re: [PATCH 6.11 1/1] PCI/ASPM: Disable L1 before disabling L1 PM
+ Substates
+Message-ID: <2025060702-deviate-faceted-bd57@gregkh>
+References: <20250606015738.2724220-1-macpaul.lin@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 0/3] media: venus: enable venus on qcs615
-To: Renjiang Han <quic_renjiang@quicinc.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, Nicolas Dufresne <nicolas.dufresne@collabora.com>
-References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
- <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
- <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
- <5854a587-aba7-4e71-87f8-249ba00cbc59@linaro.org>
- <996c9a39-5520-4b43-adfa-06ce29223ba0@quicinc.com>
- <713b87cb-0003-4ee3-a599-9cd41629bb42@kernel.org>
- <7aa36a0f-6741-40c2-93f4-036823d245fd@quicinc.com>
- <247002c0-ee68-4d0d-857a-768bf68bce75@kernel.org>
- <d5aee491-3ba2-4beb-8b8f-4ba8372e6d16@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <d5aee491-3ba2-4beb-8b8f-4ba8372e6d16@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250606015738.2724220-1-macpaul.lin@mediatek.com>
 
-On 06/06/2025 15:32, Renjiang Han wrote:
+On Fri, Jun 06, 2025 at 09:57:38AM +0800, Macpaul Lin wrote:
+> From: Ajay Agarwal <ajayagarwal@google.com>
 > 
-> On 6/6/2025 8:56 PM, Krzysztof Kozlowski wrote:
->> On 06/06/2025 14:51, Renjiang Han wrote:
->>> On 6/6/2025 8:44 PM, Krzysztof Kozlowski wrote:
->>>> On 06/06/2025 14:37, Renjiang Han wrote:
->>>>> On 6/5/2025 8:34 PM, Bryan O'Donoghue wrote:
->>>>>> On 31/05/2025 01:05, Renjiang Han wrote:
->>>>>>>>> Note:
->>>>>>>>> This series consist of DT patches and a venus driver patch. The patch
->>>>>>>>> 1/3, which is venus driver patch, can be picked independently without
->>>>>>>>> having any functional dependency. But patch 2/3 & patch 3/3, which are
->>>>>>>>> DT patches, still depend on [1].
->>>>>>>> I'd say 2/3 and 3/3 still depend on 1/3, otherwise we can get video
->>>>>>>> core
->>>>>>>> on QCS615 over(?)clocked.
->>>>>>> Agree, so we need to make sure that the driver patch is not picked
->>>>>>> after the DT patch.
->>>>>> This statement is confusing.
->>>>>>
->>>>>> 1/3 states that there will be a fallback if there is no OPP table
->>>>>> present.
->>>>>>
->>>>>> Giving the code a glance, I believe that is so, freq_table should be
->>>>>> used if there is no OPP specified in the DT.
->>>>>>
->>>>>> I think we are having a hard time here understanding what you are saying.
->>>>>>
->>>>>> My understanding:
->>>>>>
->>>>>> - venus modification is standalone 1/3
->>>>>>     Qcs615 will fallback if no OPP is present
->>>>>>
->>>>>> - dt modification 2/3 3/3 is therefore also independent of driver
->>>>>>
->>>>>> ---
->>>>>> bod
->>>>> yes, let me re-spin this with driver patch alone. Once that gets in,
->>>>> will bring in the DT patches.
->>>> Did you read my feedback? There is no "once that gets in". DTS is an
->>>> independent hardware description and your patchset claiming there is
->>>> dependency is just broken.
->>>>
->>>> I am repeating this since few emails, so shall I NAK it that you will
->>>> address the main issue you have?
->>>>
->>>> Best regards,
->>>> Krzysztof
->>> Hi Krzysztof
->>>
->>> SC7180 and QCS615 use the same video core. Only difference lies in the
->>> freq_table for the video. Freq_table is generally determined at SOC level.
->>> The Venus driver does not currently handle freq_table compatibility well
->>> across platforms. This patch enables the driver to use the OPP-table from
->>> the DT, addressing the frequency compatibility issue.
->> This does not resolve the main problem at all. If SW cannot use the
->> fallback alone, your fallback has no meaning and is not only confusing
->> but actually incorrect. And based on previous statements like
->> "overclocking" it is not only incorrect, but even harmful.
->>
->> Best regards,
->> Krzysztof
-> The fallback is only triggered when there is no OPP table in the DT.
+> [ Upstream commit 7447990137bf06b2aeecad9c6081e01a9f47f2aa ]
+> 
+> PCIe r6.2, sec 5.5.4, requires that:
+> 
+>   If setting either or both of the enable bits for ASPM L1 PM Substates,
+>   both ports must be configured as described in this section while ASPM L1
+>   is disabled.
+> 
+> Previously, pcie_config_aspm_l1ss() assumed that "setting enable bits"
+> meant "setting them to 1", and it configured L1SS as follows:
+> 
+>   - Clear L1SS enable bits
+>   - Disable L1
+>   - Configure L1SS enable bits as required
+>   - Enable L1 if required
+> 
+> With this sequence, when disabling L1SS on an ARM A-core with a Synopsys
+> DesignWare PCIe core, the CPU occasionally hangs when reading
+> PCI_L1SS_CTL1, leading to a reboot when the CPU watchdog expires.
+> 
+> Move the L1 disable to the caller (pcie_config_aspm_link(), where L1 was
+> already enabled) so L1 is always disabled while updating the L1SS bits:
+> 
+>   - Disable L1
+>   - Clear L1SS enable bits
+>   - Configure L1SS enable bits as required
+>   - Enable L1 if required
+> 
+> Change pcie_aspm_cap_init() similarly.
+> 
+> Link: https://lore.kernel.org/r/20241007032917.872262-1-ajayagarwal@google.com
+> Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
+> [bhelgaas: comments, commit log, compute L1SS setting before config access]
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Tested-by: Johnny-CC Chang <Johnny-CC.Chang@mediatek.com>
+> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
+> ---
+>  drivers/pci/pcie/aspm.c | 92 ++++++++++++++++++++++-------------------
+>  1 file changed, 50 insertions(+), 42 deletions(-)
 
-No. I don't think you understand how fallback works. Fallback will be
-applied on any QCS615 DTS without front compatible.
+6.11.y is long end-of-life, sorry.  See the front page of www.kernel.org
+for the list of currently supported kernels.
 
+thanks,
 
-Best regards,
-Krzysztof
+greg k-h
