@@ -1,177 +1,182 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0641CEEBE
-	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 17:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB1C1D6195
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 17:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749318688; cv=none; b=Aqg4exDx/4Y1mSuHLEL4tMvqkJ84/A4nE5gh0eSH5j2y9xjrIoDZgM2Vkj2FfH6R55giQ3woYrvnuztm6Xs9EAPNdSwh+H4pfUpT2skjMvrioKOML5AlCqSLQqDJbXEk45iLtTwjjB70fGCRO5wyzAjcDNSiZsKdPwAevhTReTo=
+	t=1749319146; cv=none; b=DwrvvbvhXE23XbYEnPKpq3hItE9pzud8PHaz5dRwXMDAP+gg+JpBplscoF9YH8R1XSnVWoa5h9SUXNfYjCuGxxpnnb5+cDzDh+dLcxteN6TP7bfx/9ku663YUuRIPKb2j3tVd5Rmr670ItU19KejoI4OOGjlahyBB6v50s2rC/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749318688; c=relaxed/simple;
-	bh=raNXHsePfyHpIXPLiU9dmg5kvTx8ukod16UtTmcMCYo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DN+gFRPLJ7kyJsZWagER3l+i8NUoAZXXYvYdMtzNlifbZnMHQBaWY6o0j5mLTtxRrWfp/itBykgInqYqvlgWc6aG2dyWSXCustNHElJEoiIRqcItvOsO0yabgQrhRtWAsHxa5HhzX7z7+LkURTXv3Tp3s75YpC6sBwtw42VY6IQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=tSgRdf79; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1749319146; c=relaxed/simple;
+	bh=c3OLCpcLRs9jPKX6YL/P3U5btA76bYODG0jomrnpKow=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T3L1/1DsMcdGmVLQxuAEZFH5gMDcu3v6W7JD4rRfbep+0bAmNozy7fzOKxfrRvxxV2xBy6DT9jWI7VV66mO4wBiuwJ8QywhTInqxo59aenwVwlDWrWApqcqEb9FuubUV+BA/Diu8tW/1Upiab9Bx2pulsys03BAJKqH5uoZC1Ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L5frffjp; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="tSgRdf79"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4a5903bceffso38063441cf.3
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 10:51:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1749318684; x=1749923484; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5x7tqpY7FFQTqwJyBba7fEUnGOPyC2xMtgUC5Nr2hd8=;
-        b=tSgRdf79hMFqkZvfjRJKW21el8YKnVD/QCdzm++TpLxuStOuD2kJCL4X6ADCoghxVL
-         p6kztvCO40j/35WpXOvKlliYgEFhWAF2YKwTXNQkgyGHzjZiqTag4BkZVTKwoDItcLZV
-         cdG6rJRPaqYJhLoFOoR/ah6+OLE9V+aqOyy78zB3W+EnJU7sCqc5QTB2tr6knSsjsLz/
-         9ZiuNPtxO0eTLg987S8TJwhgPgIdUExWM1itSPXACgxjATiNHuy6jMric8xZQa4trFDx
-         X2lneAAxjInGIKcJYAww6YZglOid+u/nG4OWy2JIAvkuEmyFOq96gkAlZ0go9CuP+ai9
-         S+OA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L5frffjp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749319144;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=zCyitC2uUhJtc07ZYGkM5rqqD+R23R8ZG1MZEso9NGU=;
+	b=L5frffjpjPbCwjUAAgUk9l4jT3oeXCh3WKQuOXjrojf/RLquiVjzx+ZP8kYrmYqHSydJnk
+	CSBKzyZ9oruLUi7s8XrJfwTZWSXsWen3nYAR0NDTXrOZ6orhAdBFJiaPmB4MLP1H7QzoVs
+	EKGUfqHc4OF3KYXZVwZFDWw5+RnWLjg=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-57-Y1asvzqwMY22PQBMI3OoJA-1; Sat, 07 Jun 2025 13:59:02 -0400
+X-MC-Unique: Y1asvzqwMY22PQBMI3OoJA-1
+X-Mimecast-MFC-AGG-ID: Y1asvzqwMY22PQBMI3OoJA_1749319141
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-442dc702850so19530725e9.1
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 10:59:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749318684; x=1749923484;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5x7tqpY7FFQTqwJyBba7fEUnGOPyC2xMtgUC5Nr2hd8=;
-        b=xUSpXMZmMIiheHfM9A6sGlGSJby8Pt8lazk8q4HoqReJQFmy5AzqGt1fvu7LbVDDFh
-         xAhFPjEnpUkwpXCUjkwR/WkMZXK48M0Von6wfsIlNSNgUHR82mtUf/3YMKJo2wQDLVER
-         25SS42zm5HErdHma5Re3YV1WCDZol4rB4v1ruziscfBP35kHVaU/W60gJGll+w/Pwgri
-         hFkwjVDs+8PQf5/l3muzEGEOo8vCyBm6Iv5dVlMEnBfXl8MoQ5P0V4qPBX3IbHXJR/dV
-         pDtA5rda7H8Lw2w3f/QkCKUSoppz9yVZUiUAjTjQP/pDv65CBMD65udk8QkQ6p+L1K0D
-         jGJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXOeeKfH0WHWcnbiq2IXSeMigTB9ZCEeKXuiBbYdfHjQm7WpbYDnNCd+uAUefOnMiXSWd+eR0e7GWFBLeA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTD0OKJcs6Nd9rOpGmbDXJd2mJUyXU23P7oV3SEM8mBx4Kxv/U
-	CD6tXrKbTNJQQOLe0E06wL9qIvyrs+/lK0aVlt+183U6RQJA+j0C0m0lR1TDfInQBEOrYVdDUS9
-	cMGTu7IKoS5Dpr1MLqQNCoW/DbGUdy7S3/0rujlsITQ==
-X-Gm-Gg: ASbGncvmzoBbCzjg3X47bADs4wQLlZ46niObA4EAwkAHrZnkKtErXzURb2PVsqSkE36
-	14M0M1hINd9HRcIbgahNn0H/C9W4L9xXtoWLT/iA7MPmUpftNroqUOq29qkhZMP2LgfWBi4fBvU
-	An3bBsX894KoHD0fG/8f/ODeB+1N+1SQ==
-X-Google-Smtp-Source: AGHT+IEFn03IT5C9pJFdS9tKXW+5B//fadk0OraiYcKgA8zAKYeMYRVrgrdQO/iYtEedwVrjla+0YNmycwBcp+tbU+w=
-X-Received: by 2002:a05:622a:59c6:b0:494:aa40:b0c3 with SMTP id
- d75a77b69052e-4a5b9a0546bmr105143941cf.10.1749318684345; Sat, 07 Jun 2025
- 10:51:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749319141; x=1749923941;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zCyitC2uUhJtc07ZYGkM5rqqD+R23R8ZG1MZEso9NGU=;
+        b=nTfQgttSVi2/+47eJFqOgd3aeBfmamfRaA3Hcxp9PaaHwqF3ToohWAwjkIz5u+yYMn
+         R216iA5aJMe8Dz0osOdPiBKNV+85G+AK+zygkekqU9V5I4VFGWSp1395TxQQM2zkteKA
+         ktHu2H1HVTEqxuLPpMxsO5TBgL0vPzwqZpeU8oMBDu4EvvdgoAPHqlFkoeRSb5GPq/Y8
+         tuZb1RCZ5OCk6v2JstkloXCMAihXD9ROtqalYkKHQeyB/6RALP14uwF5MOt+JGoWMLzl
+         9PSG4G5FquchQbRgueNQTTCBPc3ZhBKDYL08cuMuUqj9NNv7RCjDxzMNYDt3cAdlxty0
+         DcmQ==
+X-Gm-Message-State: AOJu0YzNcH1sWFXYC6HZwR6OeUjDx8DGB1hqasyYVNls9X02nNPHkt/Z
+	fycJCRhUodZ2pLFHbbGG/JAgLT9LmPKq43pTpbrsiNGEkzOeXp6QyvDsIyZJO0fqXIMZSiX1UP4
+	653XpHJwfRdTUnH1akh6M2y7RWC+nSfdFf6u7E6AmL1G1k4kJa80B+unF6YWr46Epp/xM0ju9to
+	Sq
+X-Gm-Gg: ASbGncuBz0gjVo/O7KOKwUBAtFCH/2vuLY3hexG84wXlEQEAelrMwk12E2WUnhdvqrL
+	tiCkFbFm1BJ59Wagso7iYK0htbTMvp/JzXFjS73YVfqSbHIQLAdEGtQANT/fHs7awqMjmL703mm
+	BJc0zbuI8VBuHnsAZ+O2m0tpSqcyy6uX2gc1RPfJ0LawAgp4QwyQ5BKo7dmEBOrNUd2wgv/GFRJ
+	30BEvpE1r8wsTxDr0hJOj3eJkRz23gcJWcf6mm5doraEdc0YnucL0154UfXB2j1X4CfmbgpvAdb
+	GQyljyyhBo2LGbYdclZfVesQoiVYFVLMaT9D64KNdluhDR0oDJ4CtYQRdrWcaAuwmBiu6OvH/j4
+	bCCYarBFisT00FTkCgIgnYrolcbR87nzTLQ==
+X-Received: by 2002:a05:600c:1986:b0:442:e9ec:4654 with SMTP id 5b1f17b1804b1-4520135618bmr66669555e9.8.1749319141329;
+        Sat, 07 Jun 2025 10:59:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IES2jinM7KszDyipSIbZ9eFBb1F0Ocbr6OW9GFOiirbLBd9I0uI7j50qo6ztekZX9O40Pe3Mg==
+X-Received: by 2002:a05:600c:1986:b0:442:e9ec:4654 with SMTP id 5b1f17b1804b1-4520135618bmr66669455e9.8.1749319140905;
+        Sat, 07 Jun 2025 10:59:00 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f4d:9f00:3bce:123:c78a:cc8? (p200300d82f4d9f003bce0123c78a0cc8.dip0.t-ipconnect.de. [2003:d8:2f4d:9f00:3bce:123:c78a:cc8])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532436668sm5194505f8f.54.2025.06.07.10.58.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 07 Jun 2025 10:58:59 -0700 (PDT)
+Message-ID: <e4d9e46d-37c7-478d-b543-07ac91413e5b@redhat.com>
+Date: Sat, 7 Jun 2025 19:58:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
- <20250515182322.117840-6-pasha.tatashin@soleen.com> <aDQV1bAt0i8d95MQ@kernel.org>
-In-Reply-To: <aDQV1bAt0i8d95MQ@kernel.org>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Sat, 7 Jun 2025 13:50:47 -0400
-X-Gm-Features: AX0GCFucvwsWUVtQaH9FvUCH6_T_TwPU1EcsbQ3OjZROJgpiTAuxkweKotJ6ncQ
-Message-ID: <CA+CK2bAn5Y71FgZvfY0oJ+-65TT19O4=h5DXguRbEQdRvhurFg@mail.gmail.com>
-Subject: Re: [RFC v2 05/16] luo: luo_core: integrate with KHO
-To: Mike Rapoport <rppt@kernel.org>
-Cc: pratyush@kernel.org, jasonmiu@google.com, graf@amazon.com, 
-	changyuanl@google.com, dmatlack@google.com, rientjes@google.com, 
-	corbet@lwn.net, rdunlap@infradead.org, ilpo.jarvinen@linux.intel.com, 
-	kanie@linux.alibaba.com, ojeda@kernel.org, aliceryhl@google.com, 
-	masahiroy@kernel.org, akpm@linux-foundation.org, tj@kernel.org, 
-	yoann.congal@smile.fr, mmaurer@google.com, roman.gushchin@linux.dev, 
-	chenridong@huawei.com, axboe@kernel.dk, mark.rutland@arm.com, 
-	jannh@google.com, vincent.guittot@linaro.org, hannes@cmpxchg.org, 
-	dan.j.williams@intel.com, david@redhat.com, joel.granados@kernel.org, 
-	rostedt@goodmis.org, anna.schumaker@oracle.com, song@kernel.org, 
-	zhangguopeng@kylinos.cn, linux@weissschuh.net, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, gregkh@linuxfoundation.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, rafael@kernel.org, 
-	dakr@kernel.org, bartosz.golaszewski@linaro.org, cw00.choi@samsung.com, 
-	myungjoo.ham@samsung.com, yesanishhere@gmail.com, Jonathan.Cameron@huawei.com, 
-	quic_zijuhu@quicinc.com, aleksander.lobakin@intel.com, ira.weiny@intel.com, 
-	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
-	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
-	stuart.w.hayes@gmail.com, ptyadav@amazon.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] /proc/pid/smaps: add mo info for vma in NOMMU system
+To: wangfushuai <wangfushuai@baidu.com>, akpm@linux-foundation.org,
+ andrii@kernel.org, osalvador@suse.de, Liam.Howlett@Oracle.com,
+ christophe.leroy@csgroup.eu
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20250607165335.87054-1-wangfushuai@baidu.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250607165335.87054-1-wangfushuai@baidu.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 26, 2025 at 3:19=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
-te:
->
-> On Thu, May 15, 2025 at 06:23:09PM +0000, Pasha Tatashin wrote:
-> > Integrate the LUO with the KHO framework to enable passing LUO state
-> > across a kexec reboot.
-> >
-> > This patch introduces the following changes:
-> > - During the KHO finalization phase allocate FDT blob.
-> > - Populate this FDT with a LUO compatibility string ("luo-v1") and the
-> >   current LUO state (`luo_state`).
-> > - Implement a KHO notifier
->
-> Would be nice to have more details about how LUO interacts with KHO, like
-> how LUO states correspond to the state of KHO, what may trigger
-> corresponding state transitions etc.
+On 07.06.25 18:53, wangfushuai wrote:
+> Add mo in /proc/[pid]/smaps to indicate vma is marked VM_MAYOVERLAY,
+> which means the file mapping may overlay in NOMMU system.
+> 
+> Fixes: b6b7a8faf05c ("mm/nommu: don't use VM_MAYSHARE for MAP_PRIVATE mappings")
+> Signed-off-by: wangfushuai <wangfushuai@baidu.com>
+> ---
+>   Documentation/filesystems/proc.rst | 1 +
+>   fs/proc/task_mmu.c                 | 4 ++++
+>   2 files changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
+> index 2a17865dfe39..d280594656a3 100644
+> --- a/Documentation/filesystems/proc.rst
+> +++ b/Documentation/filesystems/proc.rst
+> @@ -609,6 +609,7 @@ encoded manner. The codes are the following:
+>       uw    userfaultfd wr-protect tracking
+>       ss    shadow/guarded control stack page
+>       sl    sealed
+> +    mo    may overlay file mapping
+>       ==    =======================================
+>   
+>   Note that there is no guarantee that every flag and associated mnemonic will
+> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> index 27972c0749e7..ad08807847de 100644
+> --- a/fs/proc/task_mmu.c
+> +++ b/fs/proc/task_mmu.c
+> @@ -970,7 +970,11 @@ static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
+>   		[ilog2(VM_HUGEPAGE)]	= "hg",
+>   		[ilog2(VM_NOHUGEPAGE)]	= "nh",
+>   		[ilog2(VM_MERGEABLE)]	= "mg",
+> +#ifdef CONFIG_MMU
+>   		[ilog2(VM_UFFD_MISSING)]= "um",
+> +#else
+> +		[ilog2(VM_MAYOVERLAY)]	= "mo",
+> +#endif
+>   		[ilog2(VM_UFFD_WP)]	= "uw",
+>   #ifdef CONFIG_ARM64_MTE
+>   		[ilog2(VM_MTE)]		= "mt",
 
-Updated.
+That is mostly an internal-only flag. Why would we want to expose that 
+to user space?
 
->
-> > LUO now depends on `CONFIG_KEXEC_HANDOVER`. The core state transition
-> > logic (`luo_do_*_calls`) remains unimplemented in this patch.
-> >
-> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> > ---
-> >  drivers/misc/liveupdate/luo_core.c | 222 ++++++++++++++++++++++++++++-
-> >  1 file changed, 219 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/misc/liveupdate/luo_core.c b/drivers/misc/liveupda=
-te/luo_core.c
-> > index 919c37b0b4d1..a76e886bc3b1 100644
-> > --- a/drivers/misc/liveupdate/luo_core.c
-> > +++ b/drivers/misc/liveupdate/luo_core.c
-> > @@ -36,9 +36,12 @@
-> >  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> >
-> >  #include <linux/err.h>
-> > +#include <linux/kexec_handover.h>
-> >  #include <linux/kobject.h>
-> > +#include <linux/libfdt.h>
-> >  #include <linux/liveupdate.h>
-> >  #include <linux/rwsem.h>
-> > +#include <linux/sizes.h>
-> >  #include <linux/string.h>
-> >  #include "luo_internal.h"
-> >
-> > @@ -55,6 +58,12 @@ const char *const luo_state_str[] =3D {
-> >
-> >  bool luo_enabled;
-> >
-> > +static void *luo_fdt_out;
-> > +static void *luo_fdt_in;
-> > +#define LUO_FDT_SIZE         SZ_1M
->
-> Does LUO really need that much?
+-- 
+Cheers,
 
-Not, really, but I am keeping it simple in this patch. I added the
-following comment:
+David / dhildenb
 
-/*
- * The LUO FDT size depends on the number of participating subsystems,
- * preserved file descriptors, and devices. While the total size could be
- * calculated precisely during the "prepare" phase, it would require
- * iterating through all participants twice: once to calculate the required
- * size, and a second time to actually preserve the data and populate the F=
-DT.
- *
- * Given that each participant stores only a small amount of metadata
- * (e.g., an 8-byte payload or pointer) directly in the LUO FDT, and that
- * this FDT is used only during the relatively short kexec transition
- * period (including the blackout window and early boot of the next kernel)=
-,
- * a fixed size is used for simplicity.
- *
- * The current fixed size (1M) is large enough to handle reasonable number =
-of
- * preserved entities. If this size ever becomes insufficient, it can eithe=
-r be
- * increased, or a dynamic size calculation mechanism could be implemented =
-in
- * the future.
- */
-
-Pasha
