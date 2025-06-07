@@ -1,71 +1,89 @@
-Received: from baidu.com (mx24.baidu.com [111.206.215.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCDACA5A;
-	Sat,  7 Jun 2025 13:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.206.215.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91181C1F05;
+	Sat,  7 Jun 2025 13:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749301834; cv=none; b=eVIm6B9YwUekJWrqot4CjfUuzLJmjfnFxCjYbJ5Wb0iaNwAlM+8Xo3BerCRcNSnjBtsF4Q+TzXeLuxPJxjpxMZcG10p5sDfwO4jJv8ktNU8pDnAWgDMZ4TMCl3KIoyQF2k2hfb/SnsE6D0yaYbjbGx4nUeSAAxMv7h+zd29ghqY=
+	t=1749301877; cv=none; b=rAF9goDvNFvThDb1nr1WPeWX3PF+pVbWV8xZf7cOzh/jlpbUx15UN429aZtz8Iz0G4OARR+7GXUfxB5fhJzcFT4U7tCqGpi7Cy2TpFrqTQnDv45oSiEMYL0ZiFDyFewWItLVCtyAXrNPVgJftvDHb42oBPpn2VP1UMdR7j+ystc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749301834; c=relaxed/simple;
-	bh=WOYQ6xWwJEuJwlVoF7FZKQNdjh/wOaLF4xZxjrOdDT8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jfdil4QgDp+6KALE37O3peghWS16XTUj/CFBf6HwAfuJbqcoXAYA+8u6YpwPIQP1dGC4cM2dtE7oJPZ31bsSJz9tQ7U6bnWLzGM3MrhcD04IKIhPpHxwMjSv8bMMy+ZlVgqtYvM5TbrP8tnwtwfYzEYEJHF820OlAjLt9TBFVyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=111.206.215.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
-From: wangfushuai <wangfushuai@baidu.com>
-To: <wangfushuai@baidu.com>
-CC: <Liam.Howlett@Oracle.com>, <akpm@linux-foundation.org>,
-	<andrii@kernel.org>, <christophe.leroy@csgroup.eu>, <david@redhat.com>,
-	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<osalvador@suse.de>
-Subject: Re: [PATCH] fs/proc/task_mmu: add VM_SHADOW_STACK for arm64 when support GCS
-Date: Sat, 7 Jun 2025 21:08:38 +0800
-Message-ID: <20250607130838.76035-1-wangfushuai@baidu.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
-In-Reply-To: <20250607060741.69902-1-wangfushuai@baidu.com>
-References: <20250607060741.69902-1-wangfushuai@baidu.com>
+	s=arc-20240116; t=1749301877; c=relaxed/simple;
+	bh=6FIk+SotQ2ttPX+ZDy1YxfSy1GjFl9fNYzOZFSVWSjk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YfLBO8EVN+kt/M11wtdYb2ML4yDlIis/f2nCxnDh9g3Ji+HgZIaNwmLg+G/fWDDTA9nmct96k12zX/jF81GDLnkMlBi6AgdI1cOH9UgqlvqVdOKafS91/DaWAvmvNYelWRYF8VyrNYvfcRf6voALEeRYDPLAgPrug0oIfuqVpYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DTXonBva; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DTXonBva"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B489EC4CEE4;
+	Sat,  7 Jun 2025 13:11:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749301876;
+	bh=6FIk+SotQ2ttPX+ZDy1YxfSy1GjFl9fNYzOZFSVWSjk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=DTXonBva6OOUcPiSytcgUF6bzREc25gEf0ymt00q81+EB8XYS9eAv6o1iYcNdSgD+
+	 vT3Z9YHagkBw2HTAQR9XAo9xpXoYSCW/fl5/Sb+A5+y6NwOZFC7M1OvXb2qLZzdNgw
+	 2PgD7SXyP2VMoEOOs8sf6jNvlWyiqQTEfphnkIeC1HzUZv7WxgFZ5gZGStol0IxbVe
+	 4B8LX54T8MmKU5ULgEeM7rtVpumUWIuwJRcdI6pQ+CNfRe0rcVV3b5tsf5WtSc4SKl
+	 6qDM3JVhXOGQF5pPNfm99c/FZXrThdQRC+G1aENM7rRr9cXoyBmFho2U9tZbVo0cT6
+	 lF760jmb6XXGw==
+Date: Sat, 7 Jun 2025 14:11:06 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Angelo Dureghello <adureghello@baylibre.com>, David Lechner
+ <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v9 0/7] iio: adc: add ad7606 calibration support
+Message-ID: <20250607141106.2e6e50d1@jic23-huawei>
+In-Reply-To: <20250607140811.4bff9232@jic23-huawei>
+References: <20250606-wip-bl-ad7606-calibration-v9-0-6e014a1f92a2@baylibre.com>
+	<aEM-C0HHPcYTTpBd@smile.fi.intel.com>
+	<20250607140811.4bff9232@jic23-huawei>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: bjkjy-exc4.internal.baidu.com (172.31.50.48) To
- bjkjy-mail-ex22.internal.baidu.com (172.31.50.16)
-X-FEAS-Client-IP: 172.31.50.16
-X-FE-Policy-ID: 52:10:53:SYSTEM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-> The recent commit adding VM_SHADOW_STACK for arm64 GCS did not update
-> the /proc/[pid]/smaps display logic to show the "ss" flag for GCS pages.
-> This patch adds the necessary condition to display "ss" flag.
->  
-> Fixes: ae80e1629aea ("mm: Define VM_SHADOW_STACK for arm64 when we support GCS")
-> Signed-off-by: wangfushuai <wangfushuai@baidu.com>
-> ---
->  fs/proc/task_mmu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Sat, 7 Jun 2025 14:08:11 +0100
+Jonathan Cameron <jic23@kernel.org> wrote:
+
+> On Fri, 6 Jun 2025 22:14:19 +0300
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 > 
-> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> index 27972c0749e7..c4c942cc6e72 100644
-> --- a/fs/proc/task_mmu.c
-> +++ b/fs/proc/task_mmu.c
-> @@ -991,7 +991,7 @@ static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
->  #ifdef CONFIG_HAVE_ARCH_USERFAULTFD_MINOR
->  		[ilog2(VM_UFFD_MINOR)]	= "ui",
->  #endif /* CONFIG_HAVE_ARCH_USERFAULTFD_MINOR */
-> -#ifdef CONFIG_ARCH_HAS_USER_SHADOW_STACK
-> +#ifdef CONFIG_ARCH_HAS_USER_SHADOW_STACK || defined(CONFIG_ARM64_GCS)
->  		[ilog2(VM_SHADOW_STACK)] = "ss",
->  #endif
->  #if defined(CONFIG_64BIT) || defined(CONFIG_PPC32)
-> -- 
-Hi Maintainers,
+> > On Fri, Jun 06, 2025 at 04:19:15PM +0200, Angelo Dureghello wrote:  
+> > > Add gain, offset and phase (as a delay) calibration support, for
+> > > ad7606b, ad7606c16 and ad7606c18.
+> > > 
+> > > Calibration is available for devices with software mode capability. 
+> > > 
+> > > Offset and phase calibration is configurable by sysfs attributes, while
+> > > gain calibration value in ohms must match the external RFilter value,
+> > > when an external RFilter is available, so implemented through a specific
+> > > devicetree "adi,rfilter-ohms" property.    
+> > 
+> > FWIW,
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >   
+> 
+> Applied to the testing branch of iio.git.  I'll rebase that on rc1
+> shortly and push out as togreg.
+> 
 
-Please disregard this patch. I accidentally uploaded the wrong version of the code.
-I will send the corrected patch shortly. Apologies for the confusion.
+I just saw that David gave non trivial feedback on v8.
+I'll keep this queued up but I'm happy to rebase if we do need to make
+any additional tweaks (or to add tags if appropriate!)
 
-Thanks,
+Jonathan
+
+> Thanks,
+> 
+> Jonathan
+
