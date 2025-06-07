@@ -1,63 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711091362;
-	Sat,  7 Jun 2025 05:11:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234FCFC08;
+	Sat,  7 Jun 2025 05:39:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749273086; cv=none; b=gdTURVKihVvJ1kuPFvnP52g/5qduIeuW514Kb/nZe7sOCuQF9QJibcr7vcpdxS3jcVC0qKx2962HPjU9nr80wsf0VMOTT6rvMK5RGcDqA1b9JV2m4gLwgQ9JYY3mJ2SPlepu5JI0GaMJm3hDDowc7vEHZwG2BISOrZwsJmfS3gI=
+	t=1749274746; cv=none; b=iB6GC/eCN1zlzu7iFjL1jCjC29M5fbNIzAsK+S2zzDvxvE6Fm6Nrhmo0KX9i2XHx3ZbNu2lew/sTP6tZIVZ1e5SnEm2zYDnv0bUUjzLCW6qrEdlfZJc5C7AXapoJOI/pIJgdNn39LZSXK1tYifYmlV4lJ5XHbqMIo8K/hhUv6h4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749273086; c=relaxed/simple;
-	bh=oagHtqgG00v7CpfKSWHen8+OHswPm3pmxNhewj1W4xI=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ID9pl1eg9UIlZmFTMDZ1vYkZ3c/Np3G36s3oqE9/MndnrgBXPQX7TcoCz8RM9AxgFZnbI7EOSrMCHaxBzHTMkNBRUQQPtxkNR12I5T9IEz0vPwfklycbO5kRiBPboHcQIAgQXbKdW0SIktDkWszQikgT4MV9FFf1/XTy99oyZYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZD8TE94B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749274746; c=relaxed/simple;
+	bh=AVThBw/F33fAeb2r1HgHu8ZbHxRoQavzAslSvTHulLw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nuSlANtp+aCfpf04OThFsxRKJjalRp36GPAlNFPalyeimXdfjUTc5lte044Xu8XxY+i/ArJnzTBpHIbvHgVogQ5Rs4OQbdDRAOxDdXFfLPB1fj+WFYXhB+CNN5gcL8QRBkU46P7BHBj9+p78tTTpvzZu/LxLepiJr9F9MUvyHIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CUzWu+8G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZD8TE94B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0751DC4CEE4;
-	Sat,  7 Jun 2025 05:11:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CUzWu+8G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE8A5C4CEF0;
+	Sat,  7 Jun 2025 05:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749273086;
-	bh=oagHtqgG00v7CpfKSWHen8+OHswPm3pmxNhewj1W4xI=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=ZD8TE94BpPJg2fg0iIcNZjm0upfuNTma0pm+tc7bhxQ+FcuMxWpgt7efzbRyFyq4D
-	 8pGZC4fBIsSJ4hs+isMoUbpLuj2grlBRPEGLOfrX3Wf5gp216r8wc85CCySFH1Eq5d
-	 AT2SJv4YTDl5+pQFcdRJ/vjWl44NuNBMMHbwxL5M9pDkdBSJjEIuNWdN8x/z6Bn/wg
-	 BoYw9wvfoeFssWlIHC6JwXO6YXJ46F7vmchX0fmHy5d1bi+Z3RamdWsZMUtYOfNVh3
-	 vrkP1ejWT1W7idYP4kXiwE45CF4ibpB3ehqeBCpyw/yTgp5cayiGhd7jgiFuF0I2gm
-	 EcX+oAt1NjZCA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADFE33806649;
-	Sat,  7 Jun 2025 05:11:58 +0000 (UTC)
-Subject: Re: [GIT PULL] SCSI fixes for the 6.15+ merge window
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <b71ba161ecc1e31fde20291f9734eeb56d746279.camel@HansenPartnership.com>
-References: <b71ba161ecc1e31fde20291f9734eeb56d746279.camel@HansenPartnership.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <b71ba161ecc1e31fde20291f9734eeb56d746279.camel@HansenPartnership.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
-X-PR-Tracked-Commit-Id: 7831003165d37ecb7b33843fcee05cada0359a82
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 949ea6f3f4c016852406bfdd3374e2ba5d4c30a9
-Message-Id: <174927311737.4100571.16327985833015321773.pr-tracker-bot@kernel.org>
-Date: Sat, 07 Jun 2025 05:11:57 +0000
-To: James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, linux-scsi <linux-scsi@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+	s=k20201202; t=1749274745;
+	bh=AVThBw/F33fAeb2r1HgHu8ZbHxRoQavzAslSvTHulLw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=CUzWu+8G+kFlFl5yy4QydF4j3r5jMreiweCGJl2URKy4YcWCi2P9bePeTuSD/xtmM
+	 mRJ4PKLRILilB4+uVEo2S0P2kU5At58gl8EfAwcy4KNjfzkP7VZWmZ24MyeiOtHe4Z
+	 0kdLKuFVYcmBEQRcpRjwTKUNgWhaOEmlNym2N4xx96WJofEO5dRw4rDnFfPZCDrnWG
+	 nsmd+VD3Bu0WBH3zv7cIjpRr2AqWPP9BYyGqne2toZXJeuMSL7mk82OqWr6T8hZQgC
+	 tvJuQYDvXwFPlXtCMUUTyMs3z38AstQ2y2ZwL+DIoLoYHPdzCZUWRmaEzTU5eq32JL
+	 ecYgFW/3KMNHg==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5533a86a134so2691369e87.3;
+        Fri, 06 Jun 2025 22:39:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW/p85ruCsjAQz8/BA7m7PNVTv+Wl1V+S7BQ49tvAANRuDQJbF348fGT/eJBzCXf27/CktWRY8ps28s@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYNXOe7HkMpGQSIkdfKsyBlJyCgndvsd3ZXLf2AHXsSS3jNIgC
+	6D/QGHZJzHOEA6TdMEOEnsGzeLeRHiTs9TEavtDGk/ODetB9t+nNY5SWtUa0mqQQIjMQ5ifwe8T
+	gv9m23jt8GBoLuJeYVtnEyAEEm09VkDw=
+X-Google-Smtp-Source: AGHT+IHuxD3D0b+KPglNs5+al6yPwC3eDxiUtjLJrZ8CrxSPS9EnyZWM1loozXqR5KbCyXhknFbzm1XH0Z7NW1+2HuY=
+X-Received: by 2002:a05:6512:ea1:b0:553:2191:d334 with SMTP id
+ 2adb3069b0e04-55366c0e5bdmr1787948e87.35.1749274744355; Fri, 06 Jun 2025
+ 22:39:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250606140126.10b191fa@canb.auug.org.au>
+In-Reply-To: <20250606140126.10b191fa@canb.auug.org.au>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 7 Jun 2025 14:38:28 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR_5U6qr5f+i9AY5UYmVZcC7YE7hgMYJQ7gtN_Vw7=WKA@mail.gmail.com>
+X-Gm-Features: AX0GCFtw9MN79PH0yaN6g8aK_M_w7e-w2wf0mT2xdCmKoKm8GUe21rA7GiwVwvo
+Message-ID: <CAK7LNAR_5U6qr5f+i9AY5UYmVZcC7YE7hgMYJQ7gtN_Vw7=WKA@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the kbuild tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The pull request you sent on Fri, 06 Jun 2025 17:04:10 -0400:
+On Fri, Jun 6, 2025 at 1:01=E2=80=AFPM Stephen Rothwell <sfr@canb.auug.org.=
+au> wrote:
+>
+> Hi all,
+>
+> After merging the kbuild tree, today's linux-next build (htmldocs)
+> produced this warning:
+>
+> Documentation/kbuild/makefiles.rst:1104: ERROR: Unknown target name: "non=
+-builtin vmlinux targets - extra-y". [docutils]
+>
+> Introduced by commit
+>
+>   3db6f0026e85 ("kbuild: set y instead of 1 to KBUILD_{BUILTIN,MODULES}")
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/949ea6f3f4c016852406bfdd3374e2ba5d4c30a9
+Fixed now. Thanks.
 
-Thank you!
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+--=20
+Best Regards
+Masahiro Yamada
