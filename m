@@ -1,128 +1,221 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9965F1F4CB8;
-	Sat,  7 Jun 2025 10:11:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2125620A5F2
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 10:11:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749291083; cv=none; b=ETMuFjP+iOMkzDaPSc/AlBuU6DgO7F4tpxnGPruSiiAqw4iu2DafI+hVNnqJxsj/WBg1StFVYN9509V6Zre/pvo15WHoxd9nFrDjzAOdCDODVTunecKJmuOYQL82ysRwh6k289SZeIOnPLxEWyNu4rphnFy2Cpsw3RIpTLV+3D8=
+	t=1749291112; cv=none; b=qmOcif1kGf1ZbbRS5EaPU78nENu+n/6NZ7hElCRfwHCbQpMDIUMQwiciHHgcGYQF1H0MAyFIq83De2+Wdr+fKGoPvjO0ieNVgBzBTtZP6sa+OHm5xhcEOdxhfC6wmNDKVK9f05GBzQGRum1haCfnlYHeAnmrQgJDs6rTcqUHA7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749291083; c=relaxed/simple;
-	bh=fXsO+sY1TQdxuHjZ7D/ldPyUI6Eq5DROOCyo6WXcORY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m9BTobGcbAfQth/QBVCrCGkOq4Flrgxnz+4na6hDp+ShIvVJhXiYnBSBKC6EKQ3drvvsNxXkf7gkLX6bQi49iFTrOBuDyqi1fgpLCNZzPgsFbcNTwP7bUfx+IArE0W5RmCq8ivt6r8E+aizlMDeEVomA4Y1amhB5W2lKIQXju9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jBo+O3oS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749291112; c=relaxed/simple;
+	bh=Ez+aVavrDl+bcGJ8v2v1Hbst6KI+rrbJU4JZFTLUG44=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iAwuQCycYX79t8BRuJV5Q9tQODZhTvTs6rKf/+rRak3RwTuRA96r9VsjCbpX1HdSDMkSPA40JYe2fGByyZCmk0Q92GQuKZm9lWp/mNPUIKhHSsgIszZAC5lh5DCW8FN7Rg1A/t9j41VvGS7wcX+BCBtHpyGy3xrRZCsNQAgyo1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AMuaoauD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jBo+O3oS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ADBEC4CEF2;
-	Sat,  7 Jun 2025 10:11:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AMuaoauD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BB7BC4CEF4
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 10:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749291083;
-	bh=fXsO+sY1TQdxuHjZ7D/ldPyUI6Eq5DROOCyo6WXcORY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jBo+O3oSyaGh84xg52kSNj+uGbO/hd6yy3yq7W3xs0Pp+5gKQadLJrk9CHNckCn4N
-	 00NasTHujgFdLabdqLQ7WYha33FZQPPJV0hrunA+JdTx9xo/E6pNAHtMb7yBTNCac3
-	 xAJnkiDOT3vZQ+KvkqU9s7EYvd2vsa6TkCeMo+zJMK8srC8vZjK0pzKC7OKn1+GNTO
-	 vmD48QGWQNklVGfhkKLN+X0GCwzdnhy++MLe89VKCppktGsRluAiI9L62N8+cQpaFJ
-	 mhQxZdZyyK8fGlHgycDDRUdkPJhR2adKNbzCAZqwv9TSmZfDaO8Ezi+cQdUInJ+kIA
-	 q8RGrYCjhDHbw==
-Date: Sat, 7 Jun 2025 12:11:19 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 8/9] docs: kdoc: move the declaration regexes out of
- process_name()
-Message-ID: <20250607121119.0025047a@foz.lan>
-In-Reply-To: <20250606163438.229916-9-corbet@lwn.net>
-References: <20250606163438.229916-1-corbet@lwn.net>
-	<20250606163438.229916-9-corbet@lwn.net>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	s=k20201202; t=1749291111;
+	bh=Ez+aVavrDl+bcGJ8v2v1Hbst6KI+rrbJU4JZFTLUG44=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=AMuaoauDy4Fw78pCdugebYV0sc9wAhwP1e1WkgFF5OirU19DndWt/99DBpJ+IzHXu
+	 AHmz9TASVYGP3YzXiDWSIZHCcdoN0jUii29cGDRoM35d4DKm3n9o1QkhyAnxg3t2SS
+	 3wQGBuPTxGuaaojC2DANw0kyFU+MKc9HYOjw48L+zU7BeYG+uidpBFxBXLp5G9cbJe
+	 mvCARWPUrVIILLNyhI/+NNvyXVkiASQ+Znx5J6bkV7VTm5arPdYHTDl/L6JtaMDLrF
+	 imEBMYmpPKHdzTehv9KS6/ZyH+xtkOZJ9M7yNH4DUTOUyZigmtz0wmFziWpjmIN8ac
+	 mOEvkfu1R+oFQ==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-55365c63fa5so1998984e87.1
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 03:11:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWqjb666Lxe/SwrKTymOzNzqQtybnCLrzwmBp8l/mVgaI4L+TajlCdwg6M+gs8FVlWlZ9d049YfIIkQuII=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTf3X6AuvPLZbqimpHvgEvrNsIOJLsGNNWTqYEd42wY8Rm74wv
+	+HCMP6TQtldbBMbeRke0eHYlmEjdTjMixC0VYSZn+4JU6qNZk1Z+Od87dpr8EfGmC6UM+ld2Hwu
+	4ISGQlCoy4aIS70xDpXh+DqUSOER30l4=
+X-Google-Smtp-Source: AGHT+IEI2bs/0jXH/T7pWFaEju8lELpkZETzvdeIJrpTezJj9MSNL2pLm44w/DikSPpWhxkprvbylpNtTrpVMEO6vGw=
+X-Received: by 2002:a05:6512:3d22:b0:553:24f4:8736 with SMTP id
+ 2adb3069b0e04-55366c38af4mr1542594e87.53.1749291110235; Sat, 07 Jun 2025
+ 03:11:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250602163302.478765-1-masahiroy@kernel.org> <3cebc3c4-dbaf-41f6-b98d-1d33bea2eeeb@csgroup.eu>
+In-Reply-To: <3cebc3c4-dbaf-41f6-b98d-1d33bea2eeeb@csgroup.eu>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 7 Jun 2025 19:11:13 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQvRFVOeQhVos1T-R-Uq9ekY9Fo7HS+D=TCZziLo5TpHQ@mail.gmail.com>
+X-Gm-Features: AX0GCFskQI7_1BipMyRKkhnCetBQ-sEAvQ7WPpuNuUYF5uN2v6D3k9IXLtnWZ3w
+Message-ID: <CAK7LNAQvRFVOeQhVos1T-R-Uq9ekY9Fo7HS+D=TCZziLo5TpHQ@mail.gmail.com>
+Subject: Re: [PATCH] powerpc: use always-y instead of extra-y in Makefiles
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, linuxppc-dev@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Em Fri,  6 Jun 2025 10:34:37 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
+On Tue, Jun 3, 2025 at 3:50=E2=80=AFPM Christophe Leroy
+<christophe.leroy@csgroup.eu> wrote:
+>
+>
+>
+> Le 02/06/2025 =C3=A0 18:32, Masahiro Yamada a =C3=A9crit :
+> > The extra-y syntax is planned for deprecation because it is similar
+> > to always-y.
+> >
+> > When building the boot wrapper, always-y and extra-y are equivalent.
+> > Use always-y instead.
+> >
+> > In arch/powerpc/kernel/Makefile, I added ifdef KBUILD_BUILTIN to
+> > keep the current behavior: prom_init_check is skipped when building
+> > only modular objects.
+>
+> I don't understand what you mean.
+>
+> CONFIG_PPC_OF_BOOT_TRAMPOLINE is a bool, it cannot be a module.
+>
+> prom_init_check is only to check the content of prom_init.o which is
+> never a module.
+>
+> Is always-y to run _after_ prom_init.o is built ?
 
-> Move two complex regexes up with the other patterns, decluttering this
-> function and allowing the compilation to be done once rather than for every
-> kerneldoc comment.
-> 
-> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+The intent of "make ARCH=3Dpowerpc modules"
+is to compile objects that are necessary for modules,
+that is, all built-in objects are skipped.
 
-LGTM.
-Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+However,
+always-$(CONFIG_PPC_OF_BOOT_TRAMPOLINE) +=3D prom_init_check
+would generate prom_init_check regardless,
+and its prerequisite, prom_init.o as well.
 
-> ---
->  scripts/lib/kdoc/kdoc_parser.py | 30 +++++++++++++++++-------------
->  1 file changed, 17 insertions(+), 13 deletions(-)
-> 
-> diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
-> index 4e1ab28ff7cc..55f38240d4e5 100644
-> --- a/scripts/lib/kdoc/kdoc_parser.py
-> +++ b/scripts/lib/kdoc/kdoc_parser.py
-> @@ -47,7 +47,6 @@ doc_sect = doc_com + \
->                  flags=re.I, cache=False)
->  
->  doc_content = doc_com_body + KernRe(r'(.*)', cache=False)
-> -doc_block = doc_com + KernRe(r'DOC:\s*(.*)?', cache=False)
->  doc_inline_start = KernRe(r'^\s*/\*\*\s*$', cache=False)
->  doc_inline_sect = KernRe(r'\s*\*\s*(@\s*[\w][\w\.]*\s*):(.*)', cache=False)
->  doc_inline_end = KernRe(r'^\s*\*/\s*$', cache=False)
-> @@ -60,6 +59,18 @@ export_symbol_ns = KernRe(r'^\s*EXPORT_SYMBOL_NS(_GPL)?\s*\(\s*(\w+)\s*,\s*"\S+"
->  
->  type_param = KernRe(r"\@(\w*((\.\w+)|(->\w+))*(\.\.\.)?)", cache=False)
->  
-> +#
-> +# Tests for the beginning of a kerneldoc block in its various forms.
-> +#
-> +doc_block = doc_com + KernRe(r'DOC:\s*(.*)?', cache=False)
-> +doc_begin_data = KernRe(r"^\s*\*?\s*(struct|union|enum|typedef)\b\s*(\w*)", cache = False)
-> +doc_begin_func = KernRe(str(doc_com) +			# initial " * '
-> +                        r"(?:\w+\s*\*\s*)?" + 		# type (not captured)
-> +                        r'(?:define\s+)?' + 		# possible "define" (not captured)
-> +                        r'(\w+)\s*(?:\(\w*\))?\s*' +	# name and optional "(...)"
-> +                        r'(?:[-:].*)?$',		# description (not captured)
-> +                        cache = False)
-> +
->  #
->  # A little helper to get rid of excess white space
->  #
-> @@ -1224,22 +1235,15 @@ class KernelDoc:
->          if doc_decl.search(line):
->              self.entry.identifier = doc_decl.group(1)
->  
-> -            decl_start = str(doc_com)       # comment block asterisk
-> -            fn_type = r"(?:\w+\s*\*\s*)?"  # type (for non-functions)
-> -            parenthesis = r"(?:\(\w*\))?"   # optional parenthesis on function
-> -            decl_end = r"(?:[-:].*)"         # end of the name part
-> -
->              # Test for data declaration
-> -            r = KernRe(r"^\s*\*?\s*(struct|union|enum|typedef)\b\s*(\w*)")
-> -            r2 = KernRe(fr"^{decl_start}{fn_type}(?:define\s+)?(\w+)\s*{parenthesis}\s*{decl_end}?$")
-> -            if r.search(line):
-> -                self.entry.decl_type = r.group(1)
-> -                self.entry.identifier = r.group(2)
-> +            if doc_begin_data.search(line):
-> +                self.entry.decl_type = doc_begin_data.group(1)
-> +                self.entry.identifier = doc_begin_data.group(2)
->              #
->              # Look for a function description
->              #
-> -            elif r2.search(line):
-> -                self.entry.identifier = r2.group(1)
-> +            elif doc_begin_func.search(line):
-> +                self.entry.identifier = doc_begin_func.group(1)
->                  self.entry.decl_type = "function"
->              #
->              # We struck out.
+With CONFIG_MODULES=3Dy and
+CONFIG_MODVERSIONS=3Dn,
+and without ifdef KBUILD_BUILTIN,
+
+$ make ARCH=3Dpowerpc CROSS_COMPILE=3Dpowerpc64-linux-gnu-   modules
+
+would result in this:
 
 
+  CC [M]  arch/powerpc/kvm/book3s_xive_native.o
+  CC [M]  arch/powerpc/kvm/book3s_64_vio.o
+  LD [M]  arch/powerpc/kvm/kvm.o
+  CC [M]  arch/powerpc/kvm/book3s_hv.o
+  AS [M]  arch/powerpc/kvm/book3s_hv_interrupts.o
+  CC [M]  arch/powerpc/kvm/book3s_64_mmu_hv.o
+  CC [M]  arch/powerpc/kvm/book3s_64_mmu_radix.o
+  CC [M]  arch/powerpc/kvm/book3s_hv_nested.o
+  CC [M]  arch/powerpc/kvm/book3s_hv_tm.o
+  LD [M]  arch/powerpc/kvm/kvm-hv.o
+  CC [M]  arch/powerpc/kernel/rtas_flash.o
+  CC      arch/powerpc/kernel/prom_init.o
+  PROMCHK arch/powerpc/kernel/prom_init_check
+  CC [M]  kernel/locking/locktorture.o
+  CC [M]  kernel/time/test_udelay.o
+  CC [M]  kernel/time/time_test.o
+  CC [M]  kernel/backtracetest.o
+  CC [M]  kernel/torture.o
+  CC [M]  kernel/resource_kunit.o
+  CC [M]  kernel/sysctl-test.o
+  CC [M]  fs/ext4/inode-test.o
+  LD [M]  fs/ext4/ext4-inode-test.o
+  CC [M]  fs/fat/namei_vfat.o
+  LD [M]  fs/fat/vfat.o
+  CC [M]  fs/fat/fat_test.o
+  CC [M]  fs/nls/nls_ucs2_utils.o
+  CC [M]  fs/netfs/buffered_read.o
+  CC [M]  fs/netfs/buffered_write.o
+...
 
-Thanks,
-Mauro
+
+
+You can see these two lines:
+
+  CC      arch/powerpc/kernel/prom_init.o
+  PROMCHK arch/powerpc/kernel/prom_init_check
+
+are supposed to be skipped when "make modules",
+but actually compiled without ifdef.
+
+So, I added ifdef KBUILD_BUILTIN to preserve
+the current behavior.
+
+
+
+
+
+
+
+> Christophe
+>
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > ---
+> >
+> >   arch/powerpc/boot/Makefile   | 6 +++---
+> >   arch/powerpc/kernel/Makefile | 4 +++-
+> >   2 files changed, 6 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
+> > index 184d0680e661..b003f7ac8755 100644
+> > --- a/arch/powerpc/boot/Makefile
+> > +++ b/arch/powerpc/boot/Makefile
+> > @@ -242,13 +242,13 @@ $(obj)/wrapper.a: $(obj-wlib) FORCE
+> >   hostprogs   :=3D addnote hack-coff mktree
+> >
+> >   targets             +=3D $(patsubst $(obj)/%,%,$(obj-boot) wrapper.a)=
+ zImage.lds
+> > -extra-y              :=3D $(obj)/wrapper.a $(obj-plat) $(obj)/empty.o =
+\
+> > +always-y     :=3D $(obj)/wrapper.a $(obj-plat) $(obj)/empty.o \
+> >                  $(obj)/zImage.lds $(obj)/zImage.coff.lds $(obj)/zImage=
+.ps3.lds
+> >
+> >   dtstree             :=3D $(src)/dts
+> >
+> >   wrapper             :=3D $(src)/wrapper
+> > -wrapperbits  :=3D $(extra-y) $(addprefix $(obj)/,addnote hack-coff mkt=
+ree) \
+> > +wrapperbits  :=3D $(always-y) $(addprefix $(obj)/,addnote hack-coff mk=
+tree) \
+> >                       $(wrapper) FORCE
+> >
+> >   #############
+> > @@ -455,7 +455,7 @@ WRAPPER_DTSDIR :=3D /usr/lib/kernel-wrapper/dts
+> >   WRAPPER_BINDIR :=3D /usr/sbin
+> >   INSTALL :=3D install
+> >
+> > -extra-installed              :=3D $(patsubst $(obj)/%, $(DESTDIR)$(WRA=
+PPER_OBJDIR)/%, $(extra-y))
+> > +extra-installed              :=3D $(patsubst $(obj)/%, $(DESTDIR)$(WRA=
+PPER_OBJDIR)/%, $(always-y))
+> >   hostprogs-installed :=3D $(patsubst %, $(DESTDIR)$(WRAPPER_BINDIR)/%,=
+ $(hostprogs))
+> >   wrapper-installed   :=3D $(DESTDIR)$(WRAPPER_BINDIR)/wrapper
+> >   dts-installed               :=3D $(patsubst $(dtstree)/%, $(DESTDIR)$=
+(WRAPPER_DTSDIR)/%, $(wildcard $(dtstree)/*.dts))
+> > diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefil=
+e
+> > index 4d2daa8e7bca..ac01cedad107 100644
+> > --- a/arch/powerpc/kernel/Makefile
+> > +++ b/arch/powerpc/kernel/Makefile
+> > @@ -201,7 +201,9 @@ obj-$(CONFIG_ALTIVEC)             +=3D vector.o
+> >
+> >   obj-$(CONFIG_PPC_OF_BOOT_TRAMPOLINE) +=3D prom_init.o
+> >   obj64-$(CONFIG_PPC_OF_BOOT_TRAMPOLINE) +=3D prom_entry_64.o
+> > -extra-$(CONFIG_PPC_OF_BOOT_TRAMPOLINE) +=3D prom_init_check
+> > +ifdef KBUILD_BUILTIN
+> > +always-$(CONFIG_PPC_OF_BOOT_TRAMPOLINE) +=3D prom_init_check
+> > +endif
+> >
+> >   obj-$(CONFIG_PPC64)         +=3D $(obj64-y)
+> >   obj-$(CONFIG_PPC32)         +=3D $(obj32-y)
+>
+
+
+--=20
+Best Regards
+Masahiro Yamada
