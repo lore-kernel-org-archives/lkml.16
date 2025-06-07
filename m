@@ -1,365 +1,525 @@
-Received: from sonic303-28.consmr.mail.ne1.yahoo.com (sonic303-28.consmr.mail.ne1.yahoo.com [66.163.188.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2049.outbound.protection.outlook.com [40.107.212.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F62E13AA2F
-	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 00:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.188.154
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749257516; cv=none; b=tNvJiooJVN4wQkKxC5T7oKSMuZMoxSgOVLt2bzjy5Pf4n1GH5ohG5RPE7lRDMHz00t1dCLdQVQD1GLParOuDtZdGOMh6wGlvE0cCSlj4tW0uAilEb4Z28F3A7z5gRfCvFwiYJrITDs7riTYxOEBgNLGTlRz9byyvNjJG4uVFXpo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749257516; c=relaxed/simple;
-	bh=vGsEpcIPU9W5C09hrCglfhLAg/B4+bFwjnvpYSKNo08=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jgW8kfsvC7YdoWR28M+YYsf/FvJZjbYJRABsxVAiVI4cFZJW5nqEz+0DDostFI3OlOs49c111MBcJXIPDZq6VYh0EX6RwtUawzkXC6qdL+2b8bJ485mIo8SC4xkkPXEvSYSuyoWqVrQL1jKkyC14Z1UOls1sz6hFPZSRMIBlj3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=Rtf91VQa; arc=none smtp.client-ip=66.163.188.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CE739FD9
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 00:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749257555; cv=fail; b=oGBO81P3edq9/j5hmdqyO3qNPgHQ6QsrZng7tNZ9OUEs7dKMcx95rbBvhQ+Qnlqyv5CRlxxAfDUn8Awt+jQ2mKd0gHRvhJVeXrkU8RvacsL0oCMSrE8gMjniNNM78IdqYNq6ML4beaGVJ6h9omB+a6cpqXKgkp/MngDhFALBfNI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749257555; c=relaxed/simple;
+	bh=KYDJHQrgY1jMb3otetQhKsHXXfZPr9VItQlGSyTQkbk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=jcxpM7ubMSVUSXR/NlZY/uyhgO5A7XolSfX71B1dSEVyPU5NpLy37Bz3FzZs4UkrCuXWZPPG88dhVMDJu790l+FyC634Ms6e7S2YHbn0XUocP/RpusrBkxgjDq1QuFMxTd8YBx3iihriAZ0i0CGPc/udypUhZFxef34MNeQRMZo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=e+NhElLq; arc=fail smtp.client-ip=40.107.212.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="Rtf91VQa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1749257510; bh=+KkE7dU6+udHw+pWKo4BbVy1LpUBIWuhx+iNhEuxF8o=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=Rtf91VQaWBSybcnh03HSDffFJaPtvf++8eDkG7o7DUaHzJS5yy272v1hrE8ORFwaULlTg4t6qc9z9XhMypF1xIPTZSJWacoaif9W9a79WTq49b/Gf8JfvQvyadn34CDLfbIQvu77RfmlieTspEoDPFmPfbZhzU3/5dgPBYyJeyh6BQO3l06LrW0b5d0u3JyapzUwpoRKJHsLGoHIhdaxS3W3wENm+/66BeGIjlXcp43EI2SUDfP2fqR7hDZpxH8xPm6BEI5KgsqLzi8eqLK4grvItNHd0vAJYJBgOEmYnGAFADey1LZuQ9WWSIcRJxJG1GwNfHHn7R85Rn7ClGrH6w==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1749257510; bh=AA0SY4JFR3aARh3w6ci9+Q3IW1QA2xSzCn2deePagt+=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=YZszLGlf568FC9044CBSgrvhoFIv1gtE8zNQ+0wIfDt2MiX6KhNOFJ9kgDkVyM/X6iY3qs14QTRkdgzy+RZ1dM7pd4HlTlpH4ezwfpvgijRjHM0ms1yw/V4BXknDSzMop86zE3KSiXtusPAUQne1YNra9E0sIC0ntSmUGTcnKrqk2GYPIyaSi4POH5f3/wb7hR/0aiSisWmlKL8o0JMkVqsjmsJRE+UhPjWrkufwEKudC9QeguUQq6tfSRo60ryTCTA2SCh1B3pcTrKgIhbWjUbNhqk0JfDqrfcCiN5N2iNxZaDMU7ekaDD+FSgKU4TnvAUrTDZwdbVWFVVzkVTosA==
-X-YMail-OSG: rZv.rQAVM1lYj7JHy8QOKu14m1TZQTkoj2ydzpbgQh7zWfThl3sWZ88jCF30orS
- Y0K8waTHbkXKhcnL.5TUiHJjeMo04gq.nrA1DvpeTxy3QERXMF4hUb7DuhYTd96kWv6J6E4_q4W2
- m7qQporufMHy99IKnph_7hM8rb9lHb9piF0Qo7CmlVGBU4Dm16bhJh5.UuaktjocwZ_bDbS5fLOv
- OJx9tHWGJ3UKv7UWNVG4RllpGWaF8KoBUjHiZR5CFwF8_enNJehgsSK9K5zavDf.9ZMHSkguuHEp
- ePU_1izaYLkwxNkENIXRIRRpXaQXbClM1BMGH8xG_W3h6fbUq884U.d_HMFinDC272vCS6she.TK
- 9zI_b2aKAXFSKmWiiqJ2lTXTulDJyHfqUZYTdokfkDaqWZQBnJFOVuJHDjp8eeAIpK8fcX3zyYIt
- jFF7IC.6gJldV80uxV5o_VCGvF.rwgsDhaTlFKRWMBbTtrq_pBL3g5Ee1ZuhIw3.KP1a9qGsmLPi
- krKV74kktxNTCdM1O07ikPBtVPGiIKIGwMvl2O5slNNGbvnH6dxsKbYoFR1ZiEvC5qChaaEtYdrl
- 4o3OubsHdF.K2Vw2YlH0i_dMzTVo2HQYZk498tBpS7DAJKv4GkO0UrJemFl158gZMJy_DC6t4ccN
- t7KaXhLv2MOC6vzC2o5anzqks.nt_ncVlh2.dA_mADzblos.pa_je4cdI.uOTuxt1F17IbZoxMLm
- JultLUuqmhwu2RLQXkpr76w5.1FQgwfntfurLUbUHrs0poINBrl_lZ6lAbDAIAlpniYAt8agHulT
- 0OzqqGWiedY6n5nCJA1U9NqmESLCi3jirgxrFU4wKQW2GY4iVkOsMTjXVVfMvjiVkeKcI9dhqRlM
- C.4L7djD23sbGsovJwCK__oYaeCQSkuyi8cuPC7r9QTFSlhyspvlkTpHC8y.LGEbm40ZGW8EXfld
- VNRChiwuw2b9CxeEYMnLuMxEx989tOsH2Cr4uWGVlLMiShuUXhLIblZaafrlU03iodRMN0E0ZMRb
- 4IUJGe0iFc8XglPk2wZC8x9NoGTN3r8LUCPM2x.qJuzqIkWOwi_FZTtItIB1k1.AEHiVFrznqBC6
- BuC1AROl6LcuvZPTrbcNxcFWS273r5SMMIVTSP8Fpx2EvEmNCeA1PxcN2tK9m0IuAWA4SrXDOJDq
- yc5DMT5j9rlrItg.1J7iNQQh0dW0boAXfsldZT4Ojq2q51BHzMT7yZ3jAuSPerRLyZvN__tk5hK8
- WokpsI5N0n.2UwByilUCrALOF5eI0_usvBZJqrjsUH.pnXB3GbEzUbD1BmRDV9H8rJ1lq2xG0dSm
- n7_jXGSswtCgxUNpBwkSlLHKIJAdTsyRXm3UDpaZ8UpBOIcCizzg6T7LbjQn8eTwDsSgh4rXeNAV
- QbwSNzKOEmRypY8C1R.LkWtTUgFzVf3.B6CTTLolTA21m.7PCjmKmPQrCIoPB7KA0EMLF0Pho3Cy
- 3.wvzytabdvh.baECkj00xb9lQ2OXAogkxqynU33kEiR_hdw2k7AcKUX77z1WekHNuU1tqWnc_eo
- 6CTigjWePNOOQpj2fn6Pa.zEf9rw07dK6PV5ojoeeR2rKXMMCDFEaGkUJRKMhNir1_gouOSZqYEx
- 58mLnKHus2XTlAkcHkYK.JwTtsK88S6C_xqjvCygMAn19_OAimdnbvWNp9LjjKKl4H3eryDpYCJn
- VcbsQ2tjtP9Kkqfa09WPs8v.uJS2C7FrU0IDiB7gWUVxzyf3nWk3Uq_hrQD0lwkCL8hxzo8BAJh5
- DmOYgtqNp9V7Gk_ntua51AfLUmiAc81OQWyUtffH8BiPEGJh2bBth6P4pAzYU956dnXneFsx1ucH
- AwcYdAR4R5hdGmTkDFT29lx3liCZq5afDnvkTYnqNYgck_SrXZMtTPYQ5TldNp72zCqcEcMTmMUr
- tut9iQUt8V3Z34FaZY7RTFcDW7Prm5r9HCfMX9REj2Z0KI_dIQ0Wly6G2plGr3vdxVA6DT1TruIw
- EyjsQDfkrCQS9NNFdclxkVcnTdyOUAH_twYnrW02bQzzdEZUv..PWjDoLWBQNk1Z7KmvAbQwDByR
- 1LGAP0_i9PuNnIc6ITVjdoUrhLpSS_uWMJJRr_0BtU5_gvPrzEUtZ7mDcyWbDP5z1wrMD2ad3OOi
- U9o0hcWeEX8h8HJQc_2R61FhyCImr47_UHGJnkM3_J8WM3uhU85w7Azkg1shyhpMvrTCy2J96gAh
- 4HRS7GXjWaeCJ6SlsUK549aYyvU9FtxI2SRxv7Ah3FSAs3FawkMcjvkLMSVJB_NtmCwYcMNOzoM3
- uquy52ksX5ETQDPZpsNwEe6PU7nzl
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: 17919ce2-3d53-4202-97d5-c9c31b3a2267
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.ne1.yahoo.com with HTTP; Sat, 7 Jun 2025 00:51:50 +0000
-Received: by hermes--production-gq1-74d64bb7d7-5qmwx (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 7461f2feac0d1a8decd03521522bae75;
-          Sat, 07 Jun 2025 00:51:44 +0000 (UTC)
-From: Casey Schaufler <casey@schaufler-ca.com>
-To: casey@schaufler-ca.com,
-	paul@paul-moore.com,
-	eparis@redhat.com,
-	linux-security-module@vger.kernel.org,
-	audit@vger.kernel.org
-Cc: jmorris@namei.org,
-	serge@hallyn.com,
-	keescook@chromium.org,
-	john.johansen@canonical.com,
-	penguin-kernel@i-love.sakura.ne.jp,
-	stephen.smalley.work@gmail.com,
-	linux-kernel@vger.kernel.org,
-	selinux@vger.kernel.org
-Subject: [PATCH v4 4/4] Audit: Add record for multiple object contexts
-Date: Fri,  6 Jun 2025 17:51:34 -0700
-Message-ID: <20250607005134.10488-5-casey@schaufler-ca.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250607005134.10488-1-casey@schaufler-ca.com>
-References: <20250607005134.10488-1-casey@schaufler-ca.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="e+NhElLq"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Vvl5CcS1XJtpHq4ncQS1nQCr4zqmUjVobUG2MD9CuBZ2QxeSXPpMvVIAXzr/vXUXXztjEEIKy5itzLo7q9g/LcMDpCMPYvYwNwueeFubWZHFSGaoRRLbvnR9FeMt3rCKxeGxJK4vqlUPN3DKPB1l2AvehFvUSQjg/V7cJMhpK3sjhZcgDDMYTSpCJfWDFsDJ48VcztSIH0+LBKHvwChfFT7rigz64+Run5pV1BK6CyMYDcJpcRmwFIY9rSrRE2SuiYhjSVgqpGH7zL49FWKSfeFeIrn9ZauaGyvetFD2gSOhLgh9D1h1/Az8Nyg7VN/H9cZZyafGZZ7HVbeBxaqVgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TL9P/nrQfrNXIipPgxPLqfrpVZ+nd0uxd6XWdhTkPfM=;
+ b=Okp0gRmcUU1swxnBgBtCGgkmRA/ygbptby3DOZ8cx23o3gjKBZcWMMbDIGkVJm9KodCYSvNr5PJSZmGN5HK6y78W/eY9XmE6I89U8k9kVXKrZEP+4Ga2W3SIBui+hm3h4Ui3S0K0wYEFG+OtOLTAka4A5YAGeNh4OJf6AmDhPsvLNlH37PLBrn1KWkfyceD/38NRTwklI3kU/ZLelDuTt6LTGyK9mciYJwgqutJ65YFmgjycaC75fk9/2U6owPMHAU7MYTUHehSol+UKmbZpSPPC/uYfHO5FnUX4a9w1N3MtoDWEMNpVfAJSHPQVYda9ZBVlCZIsMyNaZzZVz35ewA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TL9P/nrQfrNXIipPgxPLqfrpVZ+nd0uxd6XWdhTkPfM=;
+ b=e+NhElLqkqimCesfEN6LfdZKcv/6ZC64zt9konEbVhfRqhSsLbNrjGwZUEFZEHQS6HJGbdh287Y7XeEtp5Zpg+P7d1Peu1x7rkGI31wTMNGgEQdmbQKv44Rc1qDSstkw6VBJGpymhxtN/CJ4G8XeovfrzXJ/oALXT+gJDnQrmmmX1xDuAyhnwBUZybH+OOxRQ+16k9c1gUTo+5+txTF0zTwfPWsAgNzk2443QgaO/dRoDEmhECNlOXrgM9CN9nwlS5KquzAFwL0zj5T7/QNwQIj0uJOdgHyTdymwcUUvTqTND1hqSXkWK9ux5EWR6svg0JJxOJlQyXdWDTRialoqpQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB2667.namprd12.prod.outlook.com (2603:10b6:5:42::28) by
+ PH0PR12MB7930.namprd12.prod.outlook.com (2603:10b6:510:283::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8792.35; Sat, 7 Jun 2025 00:52:29 +0000
+Received: from DM6PR12MB2667.namprd12.prod.outlook.com
+ ([fe80::bd88:b883:813d:54a2]) by DM6PR12MB2667.namprd12.prod.outlook.com
+ ([fe80::bd88:b883:813d:54a2%6]) with mapi id 15.20.8792.034; Sat, 7 Jun 2025
+ 00:52:29 +0000
+Message-ID: <ccb22f13-c717-478d-ab0f-ab4fbb0a8862@nvidia.com>
+Date: Fri, 6 Jun 2025 17:52:16 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 10/29] x86/resctrl: Change generic domain functions to
+ use struct rdt_domain_hdr
+To: Tony Luck <tony.luck@intel.com>,
+ Reinette Chatre <reinette.chatre@intel.com>,
+ Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+ Peter Newman <peternewman@google.com>, James Morse <james.morse@arm.com>,
+ Babu Moger <babu.moger@amd.com>, Drew Fustini <dfustini@baylibre.com>,
+ Dave Martin <Dave.Martin@arm.com>,
+ Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+ Chen Yu <yu.c.chen@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, patches@lists.linux.dev
+References: <20250521225049.132551-1-tony.luck@intel.com>
+ <20250521225049.132551-11-tony.luck@intel.com>
+Content-Language: en-US
+From: Fenghua Yu <fenghuay@nvidia.com>
+In-Reply-To: <20250521225049.132551-11-tony.luck@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BY5PR13CA0023.namprd13.prod.outlook.com
+ (2603:10b6:a03:180::36) To DM6PR12MB2667.namprd12.prod.outlook.com
+ (2603:10b6:5:42::28)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2667:EE_|PH0PR12MB7930:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0f28e92a-4855-4614-ffbc-08dda55d9098
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TURpU0RaWXF4a1NYSmJSNEZVb2treWRtUTZ2NDlMUGFQUjIrZU83MWQ3KzYr?=
+ =?utf-8?B?M2wydmpLcSs3S2QrTnpKTVZKV1djMTlCYUJDOWE1WkxscjNRQVhBcUczbW9R?=
+ =?utf-8?B?UHo3ZFlZOW5FcGxnUHpaMTdEVWtHV0xJbUdsNENPelF0alN5dGpSNjJ3WTJl?=
+ =?utf-8?B?bUtPVWtDQ0hjWExlakRoU3JSdFFQU09oU1BkRlJ6Y1BpK0Zqdk5BdUEwdVl1?=
+ =?utf-8?B?cEdoY2lhYTBweDNSSVE2TEFhQUFmQkw2MEY1VVZmRDRpNzZuaFZzeDVKUmxn?=
+ =?utf-8?B?bW9nOWRaZG1LR1lNeHBpZEdkVnc1UERVL2JDaGk3dTlGdmZnZVAxL0lBNVJN?=
+ =?utf-8?B?ZVRIa05nam1XRmFlU3psaW5HK0NmWWZrLzVYYXB6WjJLbVJxUFRGeDc5eE13?=
+ =?utf-8?B?VUhkb0htbVIvN25hOXJxVGZoakI0Y05YYW5rL1pXcUFqTXdGU1hXeWpRUXlN?=
+ =?utf-8?B?dGxyUVdiV2lJVDNJR0l3M0Qvd2VUdjFEL2p0VlVzN29BQXloaFA0ckZTazdi?=
+ =?utf-8?B?cGJQZml4TGQ0dFB5NDE1OUlLWnA4TjNPUC8renVRd1JMU2ZINFpQSitkZUkx?=
+ =?utf-8?B?SG5UWmttWHZJeHo0c1lPOVhKcElqbkRSRmJMTkREM3U3TUorNjE3dG9CT1FJ?=
+ =?utf-8?B?aUg2MlArdnJPMlRveWJVTnUwalA0ZGNiVUZuYkE1THVYTW1UcVlpNVdUMFBj?=
+ =?utf-8?B?OUdNWFRpZzROTkZTaW1MUXkrTVJQdDlVMFZ2UHV0UWtuWHZQUEd4Z2loVnM3?=
+ =?utf-8?B?Z3JmK3ZnVFNrRUJjVXJXRzFTcGx0K0NXbFFhNmZJRDFsU3VkWVhSR3pHTDlt?=
+ =?utf-8?B?S2xxR1U1SXJqcTFqa29NWXJEKzVsUHdpZTVUUXNqNUo0S29iRVd5d2IwSGlp?=
+ =?utf-8?B?djIwMVRCWFM4OWl5bmNLa2FYMmpwYiszWkVxWXRBS0tGS1MrYWJ6Q0h3Kzcy?=
+ =?utf-8?B?MEdCVlAyRVExYkt4MnQvM2gvL1pzSDJWbTE1WTdyREJibHppWGUrcDJXMzh2?=
+ =?utf-8?B?WkFvK2NORHgydXdyVnBBSTJ2QW9LTDViVDcycmh1OVpsdkZFVEplSmVTQm1y?=
+ =?utf-8?B?MG5JSmQrS3Zsd2RybnFyYXVBZ0UwTFBzZ1RrY0NBSWtHSWduS3VRVmJvdi9Q?=
+ =?utf-8?B?Qlgva0NTV2NlOEc1ZU01K1VCdFBrZVhYek5Db0NwRHZhQ0puY0x2bkFyTHpM?=
+ =?utf-8?B?dDMrU3QvZEtPaXJySUl1THFRY1RTc2lJeW1lRTZDaUg1b250QXgzdndjR1FN?=
+ =?utf-8?B?cU4vMnMzSDRoRFJUQXUxTy8wTWtiQTlKVU9YR3h0VUhMT1R0dG9GQ1gvRE8y?=
+ =?utf-8?B?VEpLcHlBRXpBbXZBTXE2MjFrZU56am40QkhabXAyS09Sa3V1Vk1lSWJLV0NZ?=
+ =?utf-8?B?dEpMU2t2bXRoWm1UejVzazlNMVo2ZHNhN3pJTnc4djNkQ21IaHNnc05PV280?=
+ =?utf-8?B?ajh4aWRNZXFYSXdBMzM4aC95QTRORHhRcTNGVTNxd3NvSXF0S214ZVlTY3BR?=
+ =?utf-8?B?TDMvbCtJRzNFY2ZIeVBuY2wyclNxSXBTK2Ezd3F0RjN1aVl6RU1ra0NnUHAy?=
+ =?utf-8?B?bXhrODduSURrVmRIZlgwNnpCVGd4NllKdU5YekFjOHluTFdnQjBQYlRwT09S?=
+ =?utf-8?B?YkFJOVN3eEFNV2xLYUdYbkIyNmR4MnMzUzEvQUhqcWNhWG56amt3RHlBOHlI?=
+ =?utf-8?B?aFduSkxZdEdlL1hacERjalE0VWs3cElQbktIT0NsRTY5SnVVMExsUVlhT1lF?=
+ =?utf-8?B?TW95RGExZlZDM2tvTlJaSTF3cGpuVnZHOXk2U2p2NjNCR2pqWFoyeEJsdStM?=
+ =?utf-8?B?ZVZML3pGOWlOY2Y1TjFyYnN2YTFPYVFCMTJDclFhQ295WnZ0NHJvWlpZVUgr?=
+ =?utf-8?B?eTkzdjh1MEhhd1kvUVFMOUNPQzlBbHlkeThjekxhbERlL0RjV2hWVFpTUHd5?=
+ =?utf-8?B?NGNSbzFyNGVlTGYwWmYwaEFVOHFsMFFnVGlQa1RrU0tKZXpsWlZjM0JLQUZF?=
+ =?utf-8?B?MXh1OXVIODJRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UHBPRjhXcElYczlPeDR0RW1UVG10UnVDVHVRNWpaOGlmUjQrRU9mcnRVb3kw?=
+ =?utf-8?B?WDZhQVUzTlUyNWpRSGVDS3BhT2c4L0FJcXZCd0NWTmRUWUJ0RnBwN05ML2Fk?=
+ =?utf-8?B?YmJmbTRXOU45M1hlT05wWFF4eW5kRE1MbnlJTmxhTkROY2tpS1dFb05SaDZE?=
+ =?utf-8?B?UDNtdFQ3dU1Ka0dKcjZyZy95dm1VMjVUcERFV2lqVnhlcWJkc2ZNSGlNQzA5?=
+ =?utf-8?B?a1FqUDlwR2RVSnNyNHZRaEZMRnB1S3VpNDdqZ3ZiVVkwcWN1UEgyUUY5OXpy?=
+ =?utf-8?B?VHhPVXptdGFtMkJTRXQ1NGd6RzBwcDlJQ3YwK2EvaG5rc2dWQjFyUlZhWGdN?=
+ =?utf-8?B?ay9icVhCTDZqWFVLWVhMV3gxdGRkcGJVTEI1Uk5QemRDSmQwL2J5bWp6dFBx?=
+ =?utf-8?B?bkJQZll2RGJnSzRMVlNUN2phOWNpeUp4K1I2V3Y2YjhDVGpmaURETVJlT2RU?=
+ =?utf-8?B?QXdlL0cyRXpnem02Y0tpejUzL3FhNHFEdVpCRWxYeDJSSm83VnhxYlNzUGlh?=
+ =?utf-8?B?NEl1QTM4TWRYYXp4MFBxYkF6ZHZpR3RoNXZranFCVlN5d2g1R2h1Nm9LRWpo?=
+ =?utf-8?B?cFBKL0dSRGs3WEFvVUUxb2JCTVhSRlVjM3pKMmJDRDkrV2JRM252NHpvdWtH?=
+ =?utf-8?B?NTBXaWdjOE10YkxSUkhNd21qREtCZ05vY3U3RW5Sa2FsUmljSDlpWEVZM250?=
+ =?utf-8?B?QU9MeDl4NzJtUE5KWVU1eGpEeGV4RThqT0VEejUyNnkrT3dGQWtyczZ3ZVFM?=
+ =?utf-8?B?VFVpcTNTQjZSWXNVVklLN0RBVWpwWGlaZXRucmVBUTVURk0zYTVnZjBUazRQ?=
+ =?utf-8?B?SzBmQVlRWXJGL0grTlNzZTB6elY4RUFiWTMzWWhINisxV0NNTFRtMTk0Z2V0?=
+ =?utf-8?B?ZFlwRTAzSzJ2Z3NJUlNWNDlrS1duWTNvdS9SU0hheURWRGdEdHJ3emsrSjl2?=
+ =?utf-8?B?VTFQNFFmRHpGdEluU3dpZy8yK1psbEl4dXRUM0NRMXpmSjZQSE1UZnB4c1Ja?=
+ =?utf-8?B?eTNPM0JWLzlKUGh2VkV6R3RFOTZkRlpPdG9STmFIWnRqNDFDTWwxL0gyYUNp?=
+ =?utf-8?B?Y3ZndHJJOUc2OUhvS01rYkdMZ29qNUJiM296SVpBYzVzbmdPWkdITXhzTjR0?=
+ =?utf-8?B?SVVibGV1bW9xcmFML0JtR1BFMUZ0dCtDVmhaeXoyOEpPNFFTaXlSWU53THRj?=
+ =?utf-8?B?UG81bGFjc1E2ZEkzRzZCUGZ6aitKakxjK1h5RExIYXJSVURLajZxWnNIUDlW?=
+ =?utf-8?B?SUZyaVNXVGJHWEdhR2ZJQVlrcHdoRUdCMkwxQ1lDdVl1Z2V5MS9FcndRdWlD?=
+ =?utf-8?B?aDExRjQ0UjJEbUtXYWM3N25xMkdnNGY1bTNTN3VHMU5KZVZ4dm04cGJVZm5I?=
+ =?utf-8?B?Y1BSMXc4bGV6cmFmRjdaTWUzeGxuTytzWjkxMTNXZTJnU3ZFWDJ6WHhyVGlQ?=
+ =?utf-8?B?YUpCRnFrdjZJV0txSitVMTFQTXNhOFVHR1NYNU4rVU5QbklOUTQzVVBMUG9L?=
+ =?utf-8?B?NnRvTURZSSsweVBka000dWowa25ZR3liMjErMWU1ZG1iWnZvdzhWVUI0UEh5?=
+ =?utf-8?B?dUxoend4QWdBcVdHNHZvMGFEWjNKUXVReHFnOVBleWhqWVZaNWJ0ZHVFc0tl?=
+ =?utf-8?B?Ny9KM0lLT1FxaWdhaFFnK2Q1bjV5NDBuWEFtNUdOQit4Q2Npc1hrZm5CVzVr?=
+ =?utf-8?B?T0ZIWmZPSG5NRFZjb09KY1cxOVloV2tpeThnWlNkOHJ6YlhvY0EwV2M2c3Vw?=
+ =?utf-8?B?bkE2eEFoTmFPYkY4YVpKa2ZoQll6L3lieUdoZkZkS3FmNDBMTHQycWpDak8r?=
+ =?utf-8?B?TUcrc25IV2JydENMRnlKYm4yT1o0MEhPZTRvd09MWldtN3RvMVVQR0hHZEJD?=
+ =?utf-8?B?Zk1WSXJ3MWVrWGZFWW11aW5TTVJ5YjFEMjFkOFdiU0xhVTc4TTY1bTVqdzlo?=
+ =?utf-8?B?dlBIYnVKckxUMjg1NDZBeFZYeXgwZXFNL3NUUFVmZjFVV2Z5M1pzM2NCMHJ4?=
+ =?utf-8?B?OXY2Vjl6a0thSzRaQ1lmanlUc2NqVGJ0OU8yZUZnOXRmelppd2xacWM3dnpj?=
+ =?utf-8?B?eUVoQ3ZROGh2cHFtS2FDeU1CRTY2QW1UaW9FZ3ZtckdBdjIrbUZiRHNmd0pQ?=
+ =?utf-8?Q?n4zc9ssXQd3el7B1iPvMV1ueS?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f28e92a-4855-4614-ffbc-08dda55d9098
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2667.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2025 00:52:29.8008
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: g8Z5cRvGw7itx3kLQuXRAslCRk4WfyXDucnzoDEk/cOGppAKaIGaa8bKPZz/F+mTIYvoS9Q43MrwwjGp38g3Ig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7930
 
-Create a new audit record AUDIT_MAC_OBJ_CONTEXTS.
-An example of the MAC_OBJ_CONTEXTS record is:
+Hi, Tony,
 
-    type=MAC_OBJ_CONTEXTS
-    msg=audit(1601152467.009:1050):
-    obj_selinux=unconfined_u:object_r:user_home_t:s0
+On 5/21/25 15:50, Tony Luck wrote:
+> Historically all monitoring events have been associated with the L3
+> resource and it made sense to use "struct rdt_mon_domain *" arguments
+> to functions manipulating domains. But the addition of monitor events
+> tied to other resources changes this assumption.
+>
+> Some functionality like:
+> *) adding a CPU to an existing domain
+> *) removing a CPU that is not the last one from a domain
+> can be achieved with just access to the rdt_domain_hdr structure.
+>
+> Change arguments from "rdt_*_domain" to rdt_domain_hdr so functions
+> can be used on domains from any resource.
+>
+> Add sanity checks where container_of() is used to find the surrounding
+> domain structure that hdr has the expected type.
+>
+> Simplify code that uses "d->hdr." to "hdr->" where possible.
+>
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> ---
+>   include/linux/resctrl.h            |  4 +-
+>   arch/x86/kernel/cpu/resctrl/core.c | 39 +++++++-------
+>   fs/resctrl/rdtgroup.c              | 83 +++++++++++++++++++++---------
+>   3 files changed, 79 insertions(+), 47 deletions(-)
+>
+> diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+> index d6b09952ef92..c02a4d59f3eb 100644
+> --- a/include/linux/resctrl.h
+> +++ b/include/linux/resctrl.h
+> @@ -444,9 +444,9 @@ int resctrl_arch_update_one(struct rdt_resource *r, struct rdt_ctrl_domain *d,
+>   u32 resctrl_arch_get_config(struct rdt_resource *r, struct rdt_ctrl_domain *d,
+>   			    u32 closid, enum resctrl_conf_type type);
+>   int resctrl_online_ctrl_domain(struct rdt_resource *r, struct rdt_ctrl_domain *d);
+> -int resctrl_online_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d);
+> +int resctrl_online_mon_domain(struct rdt_resource *r, struct rdt_domain_hdr *hdr);
+>   void resctrl_offline_ctrl_domain(struct rdt_resource *r, struct rdt_ctrl_domain *d);
+> -void resctrl_offline_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d);
+> +void resctrl_offline_mon_domain(struct rdt_resource *r, struct rdt_domain_hdr *hdr);
+>   void resctrl_online_cpu(unsigned int cpu);
+>   void resctrl_offline_cpu(unsigned int cpu);
+>   
+> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+> index e4125161ffbd..71b884f25475 100644
+> --- a/arch/x86/kernel/cpu/resctrl/core.c
+> +++ b/arch/x86/kernel/cpu/resctrl/core.c
+> @@ -458,9 +458,7 @@ static void domain_add_cpu_ctrl(int cpu, struct rdt_resource *r)
+>   	if (hdr) {
+>   		if (!domain_header_is_valid(hdr, RESCTRL_CTRL_DOMAIN, r->rid))
+>   			return;
+> -		d = container_of(hdr, struct rdt_ctrl_domain, hdr);
+> -
+> -		cpumask_set_cpu(cpu, &d->hdr.cpu_mask);
+> +		cpumask_set_cpu(cpu, &hdr->cpu_mask);
+>   		if (r->cache.arch_has_per_cpu_cfg)
+>   			rdt_domain_reconfigure_cdp(r);
+>   		return;
+> @@ -524,7 +522,7 @@ static void l3_mon_domain_setup(int cpu, int id, struct rdt_resource *r, struct
+>   
+>   	list_add_tail_rcu(&d->hdr.list, add_pos);
+>   
+> -	err = resctrl_online_mon_domain(r, d);
+> +	err = resctrl_online_mon_domain(r, &d->hdr);
+>   	if (err) {
+>   		list_del_rcu(&d->hdr.list);
+>   		synchronize_rcu();
+> @@ -597,25 +595,24 @@ static void domain_remove_cpu_ctrl(int cpu, struct rdt_resource *r)
+>   	if (!domain_header_is_valid(hdr, RESCTRL_CTRL_DOMAIN, r->rid))
+>   		return;
+>   
+> +	cpumask_clear_cpu(cpu, &d->hdr.cpu_mask);
+> +	if (!cpumask_empty(&hdr->cpu_mask))
+> +		return;
+> +
+>   	d = container_of(hdr, struct rdt_ctrl_domain, hdr);
+>   	hw_dom = resctrl_to_arch_ctrl_dom(d);
+>   
+> -	cpumask_clear_cpu(cpu, &d->hdr.cpu_mask);
+> -	if (cpumask_empty(&d->hdr.cpu_mask)) {
+> -		resctrl_offline_ctrl_domain(r, d);
+> -		list_del_rcu(&d->hdr.list);
+> -		synchronize_rcu();
+> -
+> -		/*
+> -		 * rdt_ctrl_domain "d" is going to be freed below, so clear
+> -		 * its pointer from pseudo_lock_region struct.
+> -		 */
+> -		if (d->plr)
+> -			d->plr->d = NULL;
+> -		ctrl_domain_free(hw_dom);
+> +	resctrl_offline_ctrl_domain(r, d);
+> +	list_del_rcu(&hdr->list);
+> +	synchronize_rcu();
+>   
+> -		return;
+> -	}
+> +	/*
+> +	 * rdt_ctrl_domain "d" is going to be freed below, so clear
+> +	 * its pointer from pseudo_lock_region struct.
+> +	 */
+> +	if (d->plr)
+> +		d->plr->d = NULL;
+> +	ctrl_domain_free(hw_dom);
+>   }
+>   
+>   static void domain_remove_cpu_mon(int cpu, struct rdt_resource *r)
+> @@ -651,8 +648,8 @@ static void domain_remove_cpu_mon(int cpu, struct rdt_resource *r)
+>   	case RDT_RESOURCE_L3:
+>   		d = container_of(hdr, struct rdt_mon_domain, hdr);
+>   		hw_dom = resctrl_to_arch_mon_dom(d);
+> -		resctrl_offline_mon_domain(r, d);
+> -		list_del_rcu(&d->hdr.list);
+> +		resctrl_offline_mon_domain(r, hdr);
+> +		list_del_rcu(&hdr->list);
+>   		synchronize_rcu();
+>   		l3_mon_domain_free(hw_dom);
+>   		break;
+> diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
+> index 828c743ec470..0213fb3a1113 100644
+> --- a/fs/resctrl/rdtgroup.c
+> +++ b/fs/resctrl/rdtgroup.c
+> @@ -3022,7 +3022,7 @@ static void mon_rmdir_one_subdir(struct kernfs_node *pkn, char *name, char *subn
+>    * when last domain being summed is removed.
+>    */
+>   static void rmdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
+> -					   struct rdt_mon_domain *d)
+> +					   struct rdt_domain_hdr *hdr)
+>   {
+>   	struct rdtgroup *prgrp, *crgrp;
+>   	char subname[32];
+> @@ -3030,9 +3030,17 @@ static void rmdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
+>   	char name[32];
+>   
+>   	snc_mode = r->mon_scope == RESCTRL_L3_NODE;
+> -	sprintf(name, "mon_%s_%02d", r->name, snc_mode ? d->ci->id : d->hdr.id);
+> -	if (snc_mode)
+> -		sprintf(subname, "mon_sub_%s_%02d", r->name, d->hdr.id);
+> +	if (snc_mode) {
+> +		struct rdt_mon_domain *d;
+> +
+> +		if (!domain_header_is_valid(hdr, RESCTRL_MON_DOMAIN, r->rid))
+> +			return;
+> +		d = container_of(hdr, struct rdt_mon_domain, hdr);
+> +		sprintf(name, "mon_%s_%02d", r->name, d->ci->id);
+> +		sprintf(subname, "mon_sub_%s_%02d", r->name, hdr->id);
+> +	} else {
+> +		sprintf(name, "mon_%s_%02d", r->name, hdr->id);
+> +	}
+>   
+>   	list_for_each_entry(prgrp, &rdt_all_groups, rdtgroup_list) {
+>   		mon_rmdir_one_subdir(prgrp->mon.mon_data_kn, name, subname);
+> @@ -3042,11 +3050,12 @@ static void rmdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
+>   	}
+>   }
+>   
+> -static int mon_add_all_files(struct kernfs_node *kn, struct rdt_mon_domain *d,
+> +static int mon_add_all_files(struct kernfs_node *kn, struct rdt_domain_hdr *hdr,
+>   			     struct rdt_resource *r, struct rdtgroup *prgrp,
+>   			     bool do_sum)
+>   {
+>   	struct rmid_read rr = {0};
+> +	struct rdt_mon_domain *d;
+>   	struct mon_data *priv;
+>   	struct mon_evt *mevt;
+>   	int ret, domid;
+> @@ -3054,7 +3063,14 @@ static int mon_add_all_files(struct kernfs_node *kn, struct rdt_mon_domain *d,
+>   	for (mevt = &mon_event_all[0]; mevt < &mon_event_all[QOS_NUM_EVENTS]; mevt++) {
+>   		if (mevt->rid != r->rid || !mevt->enabled)
+>   			continue;
+> -		domid = do_sum ? d->ci->id : d->hdr.id;
+> +		if (r->rid == RDT_RESOURCE_L3) {
+> +			if (!domain_header_is_valid(hdr, RESCTRL_MON_DOMAIN, r->rid))
+> +				return -EINVAL;
+> +			d = container_of(hdr, struct rdt_mon_domain, hdr);
+> +			domid = do_sum ? d->ci->id : d->hdr.id;
+> +		} else {
+> +			domid = hdr->id;
+> +		}
+>   		priv = mon_get_kn_priv(r->rid, domid, mevt, do_sum);
+>   		if (WARN_ON_ONCE(!priv))
+>   			return -EINVAL;
+> @@ -3063,18 +3079,19 @@ static int mon_add_all_files(struct kernfs_node *kn, struct rdt_mon_domain *d,
+>   		if (ret)
+>   			return ret;
+>   
+> -		if (!do_sum && resctrl_is_mbm_event(mevt->evtid))
+> -			mon_event_read(&rr, r, d, prgrp, &d->hdr.cpu_mask, mevt->evtid, true);
+> +		if (r->rid == RDT_RESOURCE_L3 && !do_sum && resctrl_is_mbm_event(mevt->evtid))
+> +			mon_event_read(&rr, r, d, prgrp, &hdr->cpu_mask, mevt->evtid, true);
+>   	}
+>   
+>   	return 0;
+>   }
+>   
+>   static int mkdir_mondata_subdir(struct kernfs_node *parent_kn,
+> -				struct rdt_mon_domain *d,
+> +				struct rdt_domain_hdr *hdr,
+>   				struct rdt_resource *r, struct rdtgroup *prgrp)
+>   {
+>   	struct kernfs_node *kn, *ckn;
+> +	struct rdt_mon_domain *d;
+>   	char name[32];
+>   	bool snc_mode;
+>   	int ret = 0;
+> @@ -3082,7 +3099,14 @@ static int mkdir_mondata_subdir(struct kernfs_node *parent_kn,
+>   	lockdep_assert_held(&rdtgroup_mutex);
+>   
+>   	snc_mode = r->mon_scope == RESCTRL_L3_NODE;
+> -	sprintf(name, "mon_%s_%02d", r->name, snc_mode ? d->ci->id : d->hdr.id);
+> +	if (snc_mode) {
+> +		if (!domain_header_is_valid(hdr, RESCTRL_MON_DOMAIN, r->rid))
+> +			return -EINVAL;
+> +		d = container_of(hdr, struct rdt_mon_domain, hdr);
+> +		sprintf(name, "mon_%s_%02d", r->name, d->ci->id);
+> +	} else {
+> +		sprintf(name, "mon_%s_%02d", r->name, hdr->id);
+> +	}
+>   	kn = kernfs_find_and_get(parent_kn, name);
+>   	if (kn) {
+>   		/*
+> @@ -3098,13 +3122,13 @@ static int mkdir_mondata_subdir(struct kernfs_node *parent_kn,
+>   		ret = rdtgroup_kn_set_ugid(kn);
+>   		if (ret)
+>   			goto out_destroy;
+> -		ret = mon_add_all_files(kn, d, r, prgrp, snc_mode);
+> +		ret = mon_add_all_files(kn, hdr, r, prgrp, snc_mode);
+>   		if (ret)
+>   			goto out_destroy;
+>   	}
+>   
+>   	if (snc_mode) {
+> -		sprintf(name, "mon_sub_%s_%02d", r->name, d->hdr.id);
+> +		sprintf(name, "mon_sub_%s_%02d", r->name, hdr->id);
+>   		ckn = kernfs_create_dir(kn, name, parent_kn->mode, prgrp);
+>   		if (IS_ERR(ckn)) {
+>   			ret = -EINVAL;
+> @@ -3115,7 +3139,7 @@ static int mkdir_mondata_subdir(struct kernfs_node *parent_kn,
+>   		if (ret)
+>   			goto out_destroy;
+>   
+> -		ret = mon_add_all_files(ckn, d, r, prgrp, false);
+> +		ret = mon_add_all_files(ckn, hdr, r, prgrp, false);
+>   		if (ret)
+>   			goto out_destroy;
+>   	}
+> @@ -3133,7 +3157,7 @@ static int mkdir_mondata_subdir(struct kernfs_node *parent_kn,
+>    * and "monitor" groups with given domain id.
+>    */
+>   static void mkdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
+> -					   struct rdt_mon_domain *d)
+> +					   struct rdt_domain_hdr *hdr)
+>   {
+>   	struct kernfs_node *parent_kn;
+>   	struct rdtgroup *prgrp, *crgrp;
+> @@ -3141,12 +3165,12 @@ static void mkdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
+>   
+>   	list_for_each_entry(prgrp, &rdt_all_groups, rdtgroup_list) {
+>   		parent_kn = prgrp->mon.mon_data_kn;
+> -		mkdir_mondata_subdir(parent_kn, d, r, prgrp);
+> +		mkdir_mondata_subdir(parent_kn, hdr, r, prgrp);
+>   
+>   		head = &prgrp->mon.crdtgrp_list;
+>   		list_for_each_entry(crgrp, head, mon.crdtgrp_list) {
+>   			parent_kn = crgrp->mon.mon_data_kn;
+> -			mkdir_mondata_subdir(parent_kn, d, r, crgrp);
+> +			mkdir_mondata_subdir(parent_kn, hdr, r, crgrp);
+>   		}
+>   	}
+>   }
+> @@ -3155,14 +3179,14 @@ static int mkdir_mondata_subdir_alldom(struct kernfs_node *parent_kn,
+>   				       struct rdt_resource *r,
+>   				       struct rdtgroup *prgrp)
+>   {
+> -	struct rdt_mon_domain *dom;
+> +	struct rdt_domain_hdr *hdr;
+>   	int ret;
+>   
+>   	/* Walking r->domains, ensure it can't race with cpuhp */
+>   	lockdep_assert_cpus_held();
+>   
+> -	list_for_each_entry(dom, &r->mon_domains, hdr.list) {
+> -		ret = mkdir_mondata_subdir(parent_kn, dom, r, prgrp);
+> +	list_for_each_entry(hdr, &r->mon_domains, list) {
+> +		ret = mkdir_mondata_subdir(parent_kn, hdr, r, prgrp);
+>   		if (ret)
+>   			return ret;
+>   	}
+> @@ -4030,8 +4054,10 @@ void resctrl_offline_ctrl_domain(struct rdt_resource *r, struct rdt_ctrl_domain
+>   	mutex_unlock(&rdtgroup_mutex);
+>   }
+>   
+> -void resctrl_offline_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d)
+> +void resctrl_offline_mon_domain(struct rdt_resource *r, struct rdt_domain_hdr *hdr)
+>   {
+> +	struct rdt_mon_domain *d;
+> +
+>   	mutex_lock(&rdtgroup_mutex);
+>   
+>   	/*
+> @@ -4039,11 +4065,15 @@ void resctrl_offline_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d
+>   	 * per domain monitor data directories.
+>   	 */
+>   	if (resctrl_mounted && resctrl_arch_mon_capable())
+> -		rmdir_mondata_subdir_allrdtgrp(r, d);
+> +		rmdir_mondata_subdir_allrdtgrp(r, hdr);
+>   
+>   	if (r->rid != RDT_RESOURCE_L3)
+>   		goto done;
+>   
+> +	if (!domain_header_is_valid(hdr, RESCTRL_MON_DOMAIN, r->rid))
+> +		return;
 
-When an audit event includes a AUDIT_MAC_OBJ_CONTEXTS record
-the "obj=" field in other records in the event will be "obj=?".
-An AUDIT_MAC_OBJ_CONTEXTS record is supplied when the system has
-multiple security modules that may make access decisions based
-on an object security context.
+rdtgroup_mutex is being locked right now. Cannot return without 
+unlocking it.
 
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
----
- include/linux/audit.h      |  7 +++++
- include/uapi/linux/audit.h |  1 +
- kernel/audit.c             | 58 +++++++++++++++++++++++++++++++++++++-
- kernel/auditsc.c           | 45 ++++++++---------------------
- security/selinux/hooks.c   |  3 +-
- security/smack/smack_lsm.c |  3 +-
- 6 files changed, 80 insertions(+), 37 deletions(-)
+s/return;/goto done;/
 
-diff --git a/include/linux/audit.h b/include/linux/audit.h
-index 5020939fb8bc..c507fdfcf534 100644
---- a/include/linux/audit.h
-+++ b/include/linux/audit.h
-@@ -151,6 +151,7 @@ extern unsigned compat_signal_class[];
- 
- /* bit values for audit_lsm_secctx */
- #define AUDIT_SECCTX_SUBJECT	BIT(0)
-+#define AUDIT_SECCTX_OBJECT	BIT(1)
- 
- struct filename;
- 
-@@ -191,6 +192,7 @@ extern void		    audit_log_path_denied(int type,
- extern void		    audit_log_lost(const char *message);
- 
- extern int audit_log_subj_ctx(struct audit_buffer *ab, struct lsm_prop *prop);
-+extern int audit_log_obj_ctx(struct audit_buffer *ab, struct lsm_prop *prop);
- extern int audit_log_task_context(struct audit_buffer *ab);
- extern void audit_log_task_info(struct audit_buffer *ab);
- 
-@@ -258,6 +260,11 @@ static inline int audit_log_subj_ctx(struct audit_buffer *ab,
- {
- 	return 0;
- }
-+static inline int audit_log_obj_ctx(struct audit_buffer *ab,
-+				    struct lsm_prop *prop)
-+{
-+	return 0;
-+}
- static inline int audit_log_task_context(struct audit_buffer *ab)
- {
- 	return 0;
-diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
-index 8cad2f307719..14a1c1fe013a 100644
---- a/include/uapi/linux/audit.h
-+++ b/include/uapi/linux/audit.h
-@@ -149,6 +149,7 @@
- #define AUDIT_LANDLOCK_ACCESS	1423	/* Landlock denial */
- #define AUDIT_LANDLOCK_DOMAIN	1424	/* Landlock domain status */
- #define AUDIT_MAC_TASK_CONTEXTS	1425	/* Multiple LSM task contexts */
-+#define AUDIT_MAC_OBJ_CONTEXTS	1426	/* Multiple LSM objext contexts */
- 
- #define AUDIT_FIRST_KERN_ANOM_MSG   1700
- #define AUDIT_LAST_KERN_ANOM_MSG    1799
-diff --git a/kernel/audit.c b/kernel/audit.c
-index 0987b2f391cc..451c36965889 100644
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -85,7 +85,9 @@ static unsigned int audit_net_id;
- /* Number of modules that provide a security context.
-    List of lsms that provide a security context */
- static u32 audit_subj_secctx_cnt;
-+static u32 audit_obj_secctx_cnt;
- static const struct lsm_id *audit_subj_lsms[MAX_LSM_COUNT];
-+static const struct lsm_id *audit_obj_lsms[MAX_LSM_COUNT];
- 
- /**
-  * struct audit_net - audit private network namespace data
-@@ -305,6 +307,12 @@ void audit_lsm_secctx(const struct lsm_id *lsmid, int flags)
- 				return;
- 		audit_subj_lsms[audit_subj_secctx_cnt++] = lsmid;
- 	}
-+	if (flags & AUDIT_SECCTX_OBJECT) {
-+		for (i = 0 ; i < audit_obj_secctx_cnt; i++)
-+			if (audit_obj_lsms[i] == lsmid)
-+				return;
-+		audit_obj_lsms[audit_obj_secctx_cnt++] = lsmid;
-+	}
- }
- 
- /**
-@@ -1142,7 +1150,6 @@ static int is_audit_feature_set(int i)
- 	return af.features & AUDIT_FEATURE_TO_MASK(i);
- }
- 
--
- static int audit_get_feature(struct sk_buff *skb)
- {
- 	u32 seq;
-@@ -2337,6 +2344,55 @@ int audit_log_task_context(struct audit_buffer *ab)
- }
- EXPORT_SYMBOL(audit_log_task_context);
- 
-+int audit_log_obj_ctx(struct audit_buffer *ab, struct lsm_prop *prop)
-+{
-+	int i;
-+	int rc;
-+	int error = 0;
-+	char *space = "";
-+	struct lsm_context ctx;
-+
-+	if (audit_obj_secctx_cnt < 2) {
-+		error = security_lsmprop_to_secctx(prop, &ctx, LSM_ID_UNDEF);
-+		if (error < 0) {
-+			if (error != -EINVAL)
-+				goto error_path;
-+			return error;
-+		}
-+		audit_log_format(ab, " obj=%s", ctx.context);
-+		security_release_secctx(&ctx);
-+		return 0;
-+	}
-+	audit_log_format(ab, " obj=?");
-+	error = audit_buffer_aux_new(ab, AUDIT_MAC_OBJ_CONTEXTS);
-+	if (error)
-+		goto error_path;
-+
-+	for (i = 0; i < audit_obj_secctx_cnt; i++) {
-+		rc = security_lsmprop_to_secctx(prop, &ctx,
-+						audit_obj_lsms[i]->id);
-+		if (rc < 0) {
-+			audit_log_format(ab, "%sobj_%s=?", space,
-+					 audit_obj_lsms[i]->name);
-+			if (rc != -EINVAL)
-+				audit_panic("error in audit_log_obj_ctx");
-+			error = rc;
-+		} else {
-+			audit_log_format(ab, "%sobj_%s=%s", space,
-+					 audit_obj_lsms[i]->name, ctx.context);
-+			security_release_secctx(&ctx);
-+		}
-+		space = " ";
-+	}
-+
-+	audit_buffer_aux_end(ab);
-+	return error;
-+
-+error_path:
-+	audit_panic("error in audit_log_obj_ctx");
-+	return error;
-+}
-+
- void audit_log_d_path_exe(struct audit_buffer *ab,
- 			  struct mm_struct *mm)
- {
-diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-index 322d4e27f28e..0c28fa33d099 100644
---- a/kernel/auditsc.c
-+++ b/kernel/auditsc.c
-@@ -1098,7 +1098,6 @@ static int audit_log_pid_context(struct audit_context *context, pid_t pid,
- 				 char *comm)
- {
- 	struct audit_buffer *ab;
--	struct lsm_context ctx;
- 	int rc = 0;
- 
- 	ab = audit_log_start(context, GFP_KERNEL, AUDIT_OBJ_PID);
-@@ -1108,15 +1107,9 @@ static int audit_log_pid_context(struct audit_context *context, pid_t pid,
- 	audit_log_format(ab, "opid=%d oauid=%d ouid=%d oses=%d", pid,
- 			 from_kuid(&init_user_ns, auid),
- 			 from_kuid(&init_user_ns, uid), sessionid);
--	if (lsmprop_is_set(prop)) {
--		if (security_lsmprop_to_secctx(prop, &ctx, LSM_ID_UNDEF) < 0) {
--			audit_log_format(ab, " obj=(none)");
--			rc = 1;
--		} else {
--			audit_log_format(ab, " obj=%s", ctx.context);
--			security_release_secctx(&ctx);
--		}
--	}
-+	if (lsmprop_is_set(prop) && audit_log_obj_ctx(ab, prop))
-+		rc = 1;
-+
- 	audit_log_format(ab, " ocomm=");
- 	audit_log_untrustedstring(ab, comm);
- 	audit_log_end(ab);
-@@ -1392,16 +1385,8 @@ static void show_special(struct audit_context *context, int *call_panic)
- 				 from_kgid(&init_user_ns, context->ipc.gid),
- 				 context->ipc.mode);
- 		if (lsmprop_is_set(&context->ipc.oprop)) {
--			struct lsm_context lsmctx;
--
--			if (security_lsmprop_to_secctx(&context->ipc.oprop,
--						       &lsmctx,
--						       LSM_ID_UNDEF) < 0) {
-+			if (audit_log_obj_ctx(ab, &context->ipc.oprop))
- 				*call_panic = 1;
--			} else {
--				audit_log_format(ab, " obj=%s", lsmctx.context);
--				security_release_secctx(&lsmctx);
--			}
- 		}
- 		if (context->ipc.has_perm) {
- 			audit_log_end(ab);
-@@ -1558,18 +1543,9 @@ static void audit_log_name(struct audit_context *context, struct audit_names *n,
- 				 from_kgid(&init_user_ns, n->gid),
- 				 MAJOR(n->rdev),
- 				 MINOR(n->rdev));
--	if (lsmprop_is_set(&n->oprop)) {
--		struct lsm_context ctx;
--
--		if (security_lsmprop_to_secctx(&n->oprop, &ctx,
--					       LSM_ID_UNDEF) < 0) {
--			if (call_panic)
--				*call_panic = 2;
--		} else {
--			audit_log_format(ab, " obj=%s", ctx.context);
--			security_release_secctx(&ctx);
--		}
--	}
-+	if (lsmprop_is_set(&n->oprop) &&
-+	    audit_log_obj_ctx(ab, &n->oprop))
-+		*call_panic = 2;
- 
- 	/* log the audit_names record type */
- 	switch (n->type) {
-@@ -1780,15 +1756,16 @@ static void audit_log_exit(void)
- 						  axs->target_sessionid[i],
- 						  &axs->target_ref[i],
- 						  axs->target_comm[i]))
--				call_panic = 1;
-+			call_panic = 1;
- 	}
- 
- 	if (context->target_pid &&
- 	    audit_log_pid_context(context, context->target_pid,
- 				  context->target_auid, context->target_uid,
- 				  context->target_sessionid,
--				  &context->target_ref, context->target_comm))
--			call_panic = 1;
-+				  &context->target_ref,
-+				  context->target_comm))
-+		call_panic = 1;
- 
- 	if (context->pwd.dentry && context->pwd.mnt) {
- 		ab = audit_log_start(context, GFP_KERNEL, AUDIT_CWD);
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index a89561c1fdea..0ffe3a7cacf3 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -7517,7 +7517,8 @@ static __init int selinux_init(void)
- 	cred_init_security();
- 
- 	/* Inform the audit system that secctx is used */
--	audit_lsm_secctx(&selinux_lsmid, AUDIT_SECCTX_SUBJECT);
-+	audit_lsm_secctx(&selinux_lsmid,
-+			 AUDIT_SECCTX_SUBJECT | AUDIT_SECCTX_OBJECT);
- 
- 	default_noexec = !(VM_DATA_DEFAULT_FLAGS & VM_EXEC);
- 	if (!default_noexec)
-diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-index 06603c328079..b54d93d31600 100644
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -5276,7 +5276,8 @@ static __init int smack_init(void)
- 	init_smack_known_list();
- 
- 	/* Inform the audit system that secctx is used */
--	audit_lsm_secctx(&smack_lsmid, AUDIT_SECCTX_SUBJECT);
-+	audit_lsm_secctx(&smack_lsmid,
-+			 AUDIT_SECCTX_SUBJECT | AUDIT_SECCTX_OBJECT);
- 
- 	return 0;
- }
--- 
-2.47.0
+> +
+> +	d = container_of(hdr, struct rdt_mon_domain, hdr);
+>   	if (resctrl_is_mbm_enabled())
+>   		cancel_delayed_work(&d->mbm_over);
+>   	if (resctrl_is_mon_event_enabled(QOS_L3_OCCUP_EVENT_ID) && has_busy_rmid(d)) {
+> @@ -4126,12 +4156,17 @@ int resctrl_online_ctrl_domain(struct rdt_resource *r, struct rdt_ctrl_domain *d
+>   	return err;
+>   }
+>   
+> -int resctrl_online_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d)
+> +int resctrl_online_mon_domain(struct rdt_resource *r, struct rdt_domain_hdr *hdr)
+>   {
+> -	int err;
+> +	struct rdt_mon_domain *d;
+> +	int err = -EINVAL;
+>   
+>   	mutex_lock(&rdtgroup_mutex);
+>   
+> +	if (!domain_header_is_valid(hdr, RESCTRL_MON_DOMAIN, r->rid))
+> +		goto out_unlock;
+> +
+> +	d = container_of(hdr, struct rdt_mon_domain, hdr);
+>   	err = domain_setup_l3_mon_state(r, d);
+>   	if (err)
+>   		goto out_unlock;
+> @@ -4152,7 +4187,7 @@ int resctrl_online_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d)
+>   	 * If resctrl is mounted, add per domain monitor data directories.
+>   	 */
+>   	if (resctrl_mounted && resctrl_arch_mon_capable())
+> -		mkdir_mondata_subdir_allrdtgrp(r, d);
+> +		mkdir_mondata_subdir_allrdtgrp(r, hdr);
+>   
+>   out_unlock:
+>   	mutex_unlock(&rdtgroup_mutex);
+
+Thanks.
+
+-Fenghua
 
