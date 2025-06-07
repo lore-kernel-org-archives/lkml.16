@@ -1,120 +1,167 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6580E1DFFD;
-	Sat,  7 Jun 2025 22:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D6413A26D;
+	Sat,  7 Jun 2025 22:32:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749335119; cv=none; b=oU/qlEk8sc8NkghMse3+Qh7v7QP5uGru8dZGEJJ6V/picbRkowmKWGLuXRGsVE7yUCBNP7VGxnKGAL2iu4/WKUDWzUfhPYX7h4yp3tSV/sd0fDDReg2OM8oyTOuT1toQCUzuJYwcN5/gO4ugBblYlMkHenTW5CCUSdM2MsATMyw=
+	t=1749335522; cv=none; b=G0SMrE7UpmqeobLd1ns7cdNHNxsdMtuUFh/ifI0hbGkaZIKOwYVvnGQEi4mf1SZALm2Ey7eBReTyrPedg9sTPRBHpJejGgqjwLRGqPgNrMy9g4S1B1MkgOmUilLlsVPbtBUB2xAy2L7V02Re9xXPWWMd0gw4iR/3zhUItEdv1JA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749335119; c=relaxed/simple;
-	bh=BLnpYT3tIjxoOgloeFcWLZNjx3PnOBfRHMI8+URAW1M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k+5WwL22edarIMLVlets16KTYEGhAnN7pnH1ivqgQadpAVS7tnG1thaC07kY7196sybx8xrV8qhsFK5hGBH/N0y5AuF1XblfEJEs/OfQj0CNo9pKwNo2x8GZ+18PGxR89kPuKCokUN25rz2UkUY5m9KF/XNY4DWQHVbqw7oQXYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DwzdHG9d; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749335522; c=relaxed/simple;
+	bh=5J7Fr5rmwhfz0NSkqMCXhDC603RLUuOSgyDTh8OvDo8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=FVk3w7UZUBA5B4VM4uqFyYN6tJu/UMWT/xTCKdbI5eKCs4ecYsThmFfvp52sJ/yYa6RsNhEJLWTitq+zwIUGFmZdMO0nAXGfvqvM0SQYUbo0ZLJYKnNExxnd09LMor2+dO7ujynOSy/RZ51Ub/dqvV1xk+VY8xtis8eMyMq20Hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UcObktIt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DwzdHG9d"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so25199595e9.1;
-        Sat, 07 Jun 2025 15:25:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749335114; x=1749939914; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sea8Gg8ezTMJqHnowDTp53rVa8UnGfLbbrawMe2YBRQ=;
-        b=DwzdHG9db8gNTOYUGAqjvWr5vTvTScp7xqD10IyspQRVe+CqAL6u3u/475zy9JE2ZP
-         SYStZgfj1qh3qXe0bbEBAsR4x2XxfJtDFPPjzZwZWnCMyY9eB7yZ33iyM45veHqEYihI
-         PAr+NWCEp1dhQ7ZlaZzmjk2vNrCbNFEXB95+mS/yJDgxigUkPrUjI5vTJvdZ693e/jw+
-         h4lno4zqNGAjj3r8KaxuCdr5kVdYTWwUR+sOn8bYk5j6XS3wg/sRCGIltS4ciGD3SrFZ
-         uW2wpKQ80tBcLamN3OKK4UU92BUj9oTJBUkusJVS6qGa2ewp/6DcKWiJHesngJZu3+tx
-         NS2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749335114; x=1749939914;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sea8Gg8ezTMJqHnowDTp53rVa8UnGfLbbrawMe2YBRQ=;
-        b=bfIv9opqThENjx9UQ+gvOCjsSC0/696klsPKIEQs1po25L6B5DJ+EQ6GS1he8f0M1Z
-         d+Ivh5Y6z7YKlgMKlYvug3gRJoluCj3b2ksEeRA/J9S5TkdFhlQ8zoy27FylhqKOCglL
-         rNYMB2c83ornVpujk3FhSIbJCFrkzaJEaXLYTWh3pqE+vdJXNsfxII5HxmSEBvzlG9Dk
-         bWm25WpmOz9aTC3FXrk3vemhU2FE+orP/YoHpy6VaGHb9oEqivIxgFJiJtigk2fun76Q
-         ukBogV4cocNwI/jVzZ7fuTbXwOal44of+YMWlMN8XhYlMmwVxkhZdeBU4f1Ik2vPGaTt
-         8UNg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHe8RkFiB9qwO3MVPgqKxSPOkJqUrIqMKTcaznurDd5dKn6V0RwUbT3thSjwqAel3HbrwueG4xvFRW@vger.kernel.org, AJvYcCVbsse5QtV2WB8xH4gs79MhNU+g8y7xqSyRcuo1vj1e/Xm7b5fF7YXZ0zDZIlbcPRoRFlKomPcggxV3aclL@vger.kernel.org, AJvYcCXkWpsaPZDoXWaX10n8Zy/yUvwjizv/7DQpFLs9OW/m5Z1hv9M48VmX2jipS5tAHKjd3Bo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWdlWXKFToH7RCYUfiw6J94p30LW196hmlNHJSJZB2VfG5cnOS
-	E0Wen0iOSATvUbSUU0VUWHqMLyVoHtDb1YjGyFtKCZV3pWlra9dg0gsV
-X-Gm-Gg: ASbGnctENkG5ssk2FQaeZ0cQ8P7YPlP/xK+SOns+duNzfGdIYMKejWW7cyeRHbzK6K7
-	vO94cZ0bGGEIr4cnaIRdsbEz4wT/IR9dqMEKcdTV9iEU3Reheu0fMZjprDJARHKxVaUqMhRp/03
-	ogRZIzFw3IxecM2gzw+fgwzFIJBANLCVCcq/2ByiTG7JQwvIrqkXU+SOWjXuJixRJfG+pRNweBx
-	7uEBOF8VwXnE8oKyaR2XT4/IN8dm409kf0RKuC67JB2u+7ULtPWi4NnR3a4KphcDsuyQwCi+5A/
-	k80EjyRl8oRxtIyc4lRhJwg3/JmnuPBwFQnm4rwRAkP3s8nlcTnEaitdmj5BnwLlTfIHpQYs3Ro
-	knhy9jhS0y6v0xj7qFsYYRIy8sOo=
-X-Google-Smtp-Source: AGHT+IH2kxAFqwhXhvh1J4Q6sLDBM7OkVBUQneiruJ6EFCVe6l7dbSq4sqdx2KY7TLILAfMMiSUwAw==
-X-Received: by 2002:a05:600c:3510:b0:43c:f509:2bbf with SMTP id 5b1f17b1804b1-451f88d836amr128626825e9.15.1749335113330;
-        Sat, 07 Jun 2025 15:25:13 -0700 (PDT)
-Received: from ekhafagy-ROG-Zephyrus-M16-GU603HR-GU603HR.. ([41.232.132.179])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323be604sm5546262f8f.42.2025.06.07.15.25.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Jun 2025 15:25:13 -0700 (PDT)
-From: Eslam Khafagy <eslam.medhat1993@gmail.com>
-To: 
-Cc: skhan@linuxfoundation.org,
-	eslam.medhat1993@gmail.com,
-	David Vernet <void@manifault.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Dave Thaler <dthaler1968@googlemail.com>,
-	bpf@vger.kernel.org (open list:BPF [DOCUMENTATION] (Related to Standardization)),
-	bpf@ietf.org (open list:BPF [DOCUMENTATION] (Related to Standardization)),
-	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH bpf-next] Documentation: Enhance readability in BPF docs
-Date: Sun,  8 Jun 2025 01:24:25 +0300
-Message-ID: <20250607222434.227890-1-eslam.medhat1993@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UcObktIt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0138C4CEE4;
+	Sat,  7 Jun 2025 22:31:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749335522;
+	bh=5J7Fr5rmwhfz0NSkqMCXhDC603RLUuOSgyDTh8OvDo8=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=UcObktItjCit5VFA4KSOkbOERQbktODTW2MzonUHi/suWmgarWyx7C+od4gGp93SC
+	 4rqXf81xH27HKcyCD3nSjDRS4MnzqSUyIB3CgyK86IdDsYYgJuPGvOfpC7QQDnJjOP
+	 FYQ07lV40viTOA9Fm+xSoCO6NDT1V2Sls4beSLLuu6UqfkUJKlHlFnO2W4eYEq6L5m
+	 IuKmgx9ZxtinITZ/xbBquJ0Ml/GsirnKne8HE4UV716v/HRvDan37MovfJSccNok5n
+	 vtF3lWVaKZOvaFnzZM+iemShIVnZ655hdkGNLLTdw81NIMyOupanFG7qbK5QNSQAur
+	 3GcSldViHtT8A==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 08 Jun 2025 00:31:58 +0200
+Message-Id: <DAGNOQOY3B3X.MQD616P04I3U@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH] rust: add `assert_sync` function
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Christian Schrefl" <chrisi.schrefl@gmail.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250607-assert_sync-v1-1-b18261da83e2@gmail.com>
+ <DAGEZCRR61A0.30H1MJQXW4CV5@kernel.org>
+ <2531463d-fa6e-430c-a3a6-b179654cfbbe@gmail.com>
+ <DAGI57J7WBD0.2BOT553TRIXH8@kernel.org>
+ <407f04ff-b313-4629-bbdd-f25df14f44da@gmail.com>
+In-Reply-To: <407f04ff-b313-4629-bbdd-f25df14f44da@gmail.com>
 
-The phrase "dividing -1" is one I find confusing.  E.g.,
-"INT_MIN dividing -1" sounds like "-1 / INT_MIN" rather than the inverse.
-"divided by" instead of "dividing" assuming the inverse is meant.
+On Sat Jun 7, 2025 at 9:20 PM CEST, Christian Schrefl wrote:
+> On 07.06.25 8:11 PM, Benno Lossin wrote:
+>> On Sat Jun 7, 2025 at 5:54 PM CEST, Christian Schrefl wrote:
+>>> On 07.06.25 5:42 PM, Benno Lossin wrote:
+>>>> On Sat Jun 7, 2025 at 3:02 PM CEST, Christian Schrefl wrote:
+>>>>> - Add `assert_send` as well.
+>>>>
+>>>> Sounds like a good idea.
+>>>
+>>> Should I already add this in V2 for this series?
+>>=20
+>> If you want to then sure, but we can also wait until we have a use-case.
+>> Also, let's finish the discussion about the macro idea below.
+>>=20
+>>>>> +///     assert_sync::<i32>(); // Succeeds because `i32` is Sync
+>>>>> +///     // assert_sync::<NotThreadSafe>(); // Fails because `NotThre=
+adSafe` is not `Sync`.
+>>>>
+>>>> Can you split this into two examples and mark the failing one with
+>>>> `compile_fail`?
+>>>
+>>> I've tried it with `compile_fail` and it didn't work, I think
+>>> that's not supported in (kernel) doc tests yet.=20
+>>=20
+>> Hmm, I thought that this worked... @Miguel any idea?
+>>=20
+>>>> We also could provide a macro similar to [1].
+>>>>
+>>>> [1]: https://docs.rs/static_assertions/latest/static_assertions/
+>>>
+>>> You mean the `assert_impl_*!` macros?
+>>=20
+>> Yes, but the others might also be useful from time to time.
+>> >> That might make sense, with macros we would not need to write
+>>> a const block to ensure its not executed at runtime (although
+>>> it's probably optimized out anyways).
+>>=20
+>> It 100% will be optimized out.
+>>=20
+>>> It would also mean that we won't need a assert for every Trait, which
+>>> seems nice. So a macro sounds pretty good to me.
+>>=20
+>> It depends, the macro impl needs to define its own function, which might
+>> be inefficient if one uses it a lot. But there is no way to be generic
+>> over traits, so there is no other way.
+>>=20
+>> Let's see what the others think.
+>
+> The error messages in the macro are slightly worse:
+> error[E0277]: `*mut ()` cannot be shared between threads safely
+>    --> rust/kernel/compile_assert.rs:40:18
+>     |
+> 40  | assert_impl_all!(NotThreadSafe: Sync); // Fails because `NotThreadS=
+afe` is not `Sync`
+>     |                  ^^^^^^^^^^^^^ `*mut ()` cannot be shared between t=
+hreads safely
+>     |
+>     =3D help: within `PhantomData<*mut ()>`, the trait `Sync` is not impl=
+emented for `*mut ()`, which is required by `PhantomData<*mut ()>: Sync`
+> note: required because it appears within the type `PhantomData<*mut ()>`
+>    --> /home/chrisi/.rustup/toolchains/1.78-x86_64-unknown-linux-gnu/lib/=
+rustlib/src/rust/library/core/src/marker.rs:740:12
+>     |
+> 740 | pub struct PhantomData<T: ?Sized>;
+>     |            ^^^^^^^^^^^
+> note: required by a bound in `assert_impl`
+>    --> rust/kernel/compile_assert.rs:34:48
+>     |
+> 34  |             const fn assert_impl<T: ?Sized $(+ $trait)+>() {}
+>     |                                                ^^^^^^ required by t=
+his bound in `assert_impl`
+> ...
+> 40  | assert_impl_all!(NotThreadSafe: Sync); // Fails because `NotThreadS=
+afe` is not `Sync`
+>     | ------------------------------------- in this macro invocation
+>     =3D note: this error originates in the macro `assert_impl_all` (in Ni=
+ghtly builds, run with -Z macro-backtrace for more info)
+>
+> error: aborting due to 1 previous error
+>
+> compared to the function:
+>
+> error[E0277]: `*mut ()` cannot be shared between threads safely
+>    --> rust/kernel/compile_assert.rs:28:31
+>     |
+> 28  | const _: () =3D { assert_sync::<NotThreadSafe>() };
+>     |                               ^^^^^^^^^^^^^ `*mut ()` cannot be sha=
+red between threads safely
+>     |
+>     =3D help: within `PhantomData<*mut ()>`, the trait `Sync` is not impl=
+emented for `*mut ()`, which is required by `PhantomData<*mut ()>: Sync`
+> note: required because it appears within the type `PhantomData<*mut ()>`
+>    --> /home/chrisi/.rustup/toolchains/1.78-x86_64-unknown-linux-gnu/lib/=
+rustlib/src/rust/library/core/src/marker.rs:740:12
+>     |
+> 740 | pub struct PhantomData<T: ?Sized>;
+>     |            ^^^^^^^^^^^
+> note: required by a bound in `assert_sync`
+>    --> rust/kernel/compile_assert.rs:26:38
+>     |
+> 26  | pub const fn assert_sync<T: ?Sized + Sync>() {}
+>     |                                      ^^^^ required by this bound in=
+ `assert_sync`
+>
+> I guess I'll keep it as a function for now.
 
-Signed-off-by: Eslam Khafagy <eslam.medhat1993@gmail.com>
+Can we improve this by using a proc-macro instead and manipulating the
+span? I honestly don't think the error is too bad.
+
 ---
- Documentation/bpf/standardization/instruction-set.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/bpf/standardization/instruction-set.rst b/Documentation/bpf/standardization/instruction-set.rst
-index ac950a5bb6ad..39c74611752b 100644
---- a/Documentation/bpf/standardization/instruction-set.rst
-+++ b/Documentation/bpf/standardization/instruction-set.rst
-@@ -350,8 +350,8 @@ Underflow and overflow are allowed during arithmetic operations, meaning
- the 64-bit or 32-bit value will wrap. If BPF program execution would
- result in division by zero, the destination register is instead set to zero.
- Otherwise, for ``ALU64``, if execution would result in ``LLONG_MIN``
--dividing -1, the destination register is instead set to ``LLONG_MIN``. For
--``ALU``, if execution would result in ``INT_MIN`` dividing -1, the
-+divided by -1, the destination register is instead set to ``LLONG_MIN``. For
-+``ALU``, if execution would result in ``INT_MIN`` divided by -1, the
- destination register is instead set to ``INT_MIN``.
- 
- If execution would result in modulo by zero, for ``ALU64`` the value of
--- 
-2.43.0
-
+Cheers,
+Benno
