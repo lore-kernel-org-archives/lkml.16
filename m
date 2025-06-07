@@ -1,101 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFB414EC5B;
-	Sat,  7 Jun 2025 15:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 656A6184F;
+	Sat,  7 Jun 2025 15:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749311704; cv=none; b=ZDyBj7XNDg31WngUXAmRht3bKJednlwi4r97jG5dUEe+CZiAmkDDJPWy1HWLi11QuUOxowOu9QHndU7pwfsiaWW6m49Xex5+K/kRnuWzVGULFh0mAlmpJ6jwr7Uq+cCuPaxY1VgkXgmBrFhYddwYYlH+MoHRbngQedzpLp4BVBs=
+	t=1749311785; cv=none; b=UfUQuFuAA3iTAIHr7rY1pfDj/Zy8GZHOmty4tQWggPnjKCubRR+P8q5fHKiRRCprDQovIx+Es6NEGaoHcmwM98hvo2RBPm96Es9D02EAHiQoGfUAhNMKVmDlqqalpfIlklbFmrdv8mdfWtn1Vq6EuxUsY3EtBzuu1amiDn7xMSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749311704; c=relaxed/simple;
-	bh=H8+ldFDAJXy/+SmjSpm+HxUKlQFuAhpqeic+7vEpHjg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IpbgKwJ4j45O9nE6OAwSJglv9ms37RVRTHDGI0XhQaTMqSmNml9cTN9hbO3BdbYM+mS7OaGv9FynBIM9e8rwZfgDFNhHhwjyGgFPRPOLGMBFcICV8rn4lv+3DpGDDD1bzBgFstQEUXXDNKuvNSOq9Vghn08jsq12v2y/2MEeTGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BvqU0NtL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749311785; c=relaxed/simple;
+	bh=WsNR2SmiSh7BZPADmuWTrFANirlmqcGhSK4rh60bu+s=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bOSym98w78a67q5xwuoH+MZ9lDmEiEWQPqfW/PV9D5nQ95hdhdKdyw7TDM7oF7e1GxZmfpkVT4zikE3aqnrFJB4qqrJyB9zM5aacGOte+zz6zXNg0sxDB4c6GOkuJFhgxiXV+hUQfAge4yy2DDhyfUzJmDLNhSkicnDoknN3o50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=fFsnUK2y; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BvqU0NtL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B3DAC4CEEE;
-	Sat,  7 Jun 2025 15:55:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749311703;
-	bh=H8+ldFDAJXy/+SmjSpm+HxUKlQFuAhpqeic+7vEpHjg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BvqU0NtLcp8SXMQdn8quk1affj7ZYyPoCqIeOUIsXKqo5MfvxqWkxlY9zYq6c8nX4
-	 mtMGec4X15TqPFCcIAD2GyJ9A6DazXUBfkbneB+L1qzSLDA6A/u5Dlm2+9TogY+Rli
-	 LgqczcNeiBV4tNexznrBsNcvuELoF75Qo6hNUY3qt3iXxYkddbEYYRlm9R4uciu/Th
-	 lNP882d3sdp8AxwueQqcWXqX6xDbzvDAgtgxSn43CwEP2VoO+a24hc4N8SRPzMa1JZ
-	 jyTztd34ASMRUfr8b2kA+Ur4XLFHbtB+FCVDaFojZEbRm+zSxe9RqkIA+4K6CiX/xa
-	 ssazjJ0OD2VbA==
-Date: Sat, 7 Jun 2025 16:54:57 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Gustavo Silva <gustavograzs@gmail.com>
-Cc: Alex Lanzano <lanzano.alex@gmail.com>, David Lechner
- <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
- Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] iio: imu: bmi270: add step counter watermark
- event
-Message-ID: <20250607165457.3e886c62@jic23-huawei>
-In-Reply-To: <20250605-bmi270-events-v2-2-8b2c07d0c213@gmail.com>
-References: <20250605-bmi270-events-v2-0-8b2c07d0c213@gmail.com>
-	<20250605-bmi270-events-v2-2-8b2c07d0c213@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="fFsnUK2y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=X/
+	WBIqYRbYLnjTD8APSSM3WfSwD1nNWWxZufGQx512k=; b=fFsnUK2yIOgJZkorYl
+	GCPjegiph6oCPmTU5UMWVlXANrgBU1TaHN34xz3qqDtKJEj3NssPYqiCkDSzyBs8
+	LICfhZInKRqFAZn2pct5FsUgNYSbWj+2CkRKpgktEpCQlPaagrGIyTk8nYHk/axM
+	r2d7rzrFZwLsvueMcaNGdx4c0=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wC3dpsKYURonH09Gw--.59622S3;
+	Sat, 07 Jun 2025 23:55:55 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: bhelgaas@google.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	kwilczynski@kernel.org,
+	mani@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	jingoohan1@gmail.com
+Cc: robh@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH v2 1/3] PCI: Add PCIE_SPEED2LNKCTL2_TLS conversion macro
+Date: Sat,  7 Jun 2025 23:55:43 +0800
+Message-Id: <20250607155545.806496-2-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250607155545.806496-1-18255117159@163.com>
+References: <20250607155545.806496-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wC3dpsKYURonH09Gw--.59622S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Cry8uFy3Cr43CFyfZFWfAFb_yoW8JFWxpa
+	47AF1UArW8Ww1UAr98Was2qa4rXFZ3GF4UuF47W39xXFySya4kCr12yFW3tr9rZr4jkry8
+	Z3ZrKrWUCFyI9F7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piF_MsUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwBlo2hEWUa55AABsm
 
-On Thu, 05 Jun 2025 19:05:02 -0300
-Gustavo Silva <gustavograzs@gmail.com> wrote:
+Introduce PCIE_SPEED2LNKCTL2_TLS() macro to standardize the conversion
+between PCIe speed enumerations and LNKCTL2_TLS register values. This
+centralizes speed-to-register mapping logic, eliminating duplicated
+conversion code across multiple drivers.
 
-> Add support for generating events when the step counter reaches the
-> configurable watermark.
-> 
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
-> Signed-off-by: Gustavo Silva <gustavograzs@gmail.com>
-Trivial stuff inline given you are going to be doing a v3.
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+ drivers/pci/pci.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 12215ee72afb..b5a3ce6c239b 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -419,6 +419,15 @@ void pci_bus_put(struct pci_bus *bus);
+ 	 (lnkctl2) == PCI_EXP_LNKCTL2_TLS_2_5GT ? PCIE_SPEED_2_5GT : \
+ 	 PCI_SPEED_UNKNOWN)
+ 
++#define PCIE_SPEED2LNKCTL2_TLS(speed) \
++	((speed) == PCIE_SPEED_2_5GT ? PCI_EXP_LNKCTL2_TLS_2_5GT : \
++	 (speed) == PCIE_SPEED_5_0GT ? PCI_EXP_LNKCTL2_TLS_5_0GT : \
++	 (speed) == PCIE_SPEED_8_0GT ? PCI_EXP_LNKCTL2_TLS_8_0GT : \
++	 (speed) == PCIE_SPEED_16_0GT ? PCI_EXP_LNKCTL2_TLS_16_0GT : \
++	 (speed) == PCIE_SPEED_32_0GT ? PCI_EXP_LNKCTL2_TLS_32_0GT : \
++	 (speed) == PCIE_SPEED_64_0GT ? PCI_EXP_LNKCTL2_TLS_64_0GT : \
++	 0)
++
+ /* PCIe speed to Mb/s reduced by encoding overhead */
+ #define PCIE_SPEED2MBS_ENC(speed) \
+ 	((speed) == PCIE_SPEED_64_0GT ? 64000*1/1 : \
+-- 
+2.25.1
 
-
-> +
-> +static int bmi270_step_wtrmrk_en(struct bmi270_data *data, bool state)
-> +{
-> +	int ret, reg;
-> +
-> +	guard(mutex)(&data->mutex);
-> +	if (!data->steps_enabled)
-> +		return -EINVAL;
-> +
-> +	reg = bmi270_int_map_reg(data->irq_pin);
-> +	if (reg < 0)
-> +		return reg;
-> +
-> +	ret = regmap_update_bits(data->regmap, reg,
-> +				 BMI270_INT_MAP_FEAT_STEP_CNT_WTRMRK_MSK,
-> +				 FIELD_PREP(BMI270_INT_MAP_FEAT_STEP_CNT_WTRMRK_MSK,
-> +					    state));
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-
-	return regmap_update_bits()
-and save a couple of lines.
-
-> +}
-
-
-> +static const struct iio_event_spec bmi270_step_wtrmrk_event = {
-> +	.type = IIO_EV_TYPE_CHANGE,
-> +	.dir = IIO_EV_DIR_NONE,
-> +	.mask_shared_by_type = BIT(IIO_EV_INFO_ENABLE) |
-> +			       BIT(IIO_EV_INFO_VALUE),
-
-Could put those on one line as it's under 80 chars (just!)
-
-
-> +};
