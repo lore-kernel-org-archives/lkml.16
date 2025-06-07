@@ -1,105 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E3D1C7009;
-	Sat,  7 Jun 2025 09:57:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D38E1C7009;
+	Sat,  7 Jun 2025 09:58:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749290253; cv=none; b=ZLA+Tie91C6ATo6vcVFsrJSoccIhH8E3Q7VZvyv7VySr5/3RsW1bhHL1a2mOuvbigBRYAeQo/Mhba4CshQwaSV3Tr1eK6F6MmV6ipbLrkUiTrFFGZK575Kgcu54YnZwQ5tbF6fQH2KbV86+0dFEs7iwcI1DSkt7PImn2pNbYZxM=
+	t=1749290287; cv=none; b=NV4PRXM3XP2GaBBD9UvwA+GysoOePHA5eu+WRCKrPmShN9HpPGqao9a6l0zr2PPk7mKdeeolhwCWnhZveFBjXs2+oEql1nRUn/LAUtoPrboasjp+ymToT2e4/JRlTIFaXzXuFpqdSzV5/IDAOjbUtSKktTQRI2jcTRRhLqXmdtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749290253; c=relaxed/simple;
-	bh=VzdmqcMNvBqE3KC0zj0VVYLrni/GN1NT9ay8sXX/Oms=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sj0oi/LbvHZI7r5eQGahBQII8Qvs+PndsW3ukFxpubAP/aSRXuoFng5K5ughyo07OlCg18i8OrVV66OQgG7SgQ5OBtJu/FbiLk6t3bR0sd6hlmaM7H+FnICNEuVoONWE15r2N6XcxpntJsFn6HadBh6tO01I55XIJeEKzsrvP64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ns5odZjJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749290287; c=relaxed/simple;
+	bh=lSpSS0EzOkBuVxvWvFJ1gqXaLx6zLSewgz/9e/JU9HM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LgMjLer4SMTIzDjbb/+QPaFdMeUrOvH9XHKGQ4QBv6Cwk1RCIpVqSkhzyXW4F8T9YySQUWobEh06vQ7vAAQ3bLcuOSo5xoOFdoPiIfTwQAkzIHJAcaKQ3vHTwG4AqrfX6sAdtFU5tbcf7ui9uogqU53wButchVKjLL6y5Ocns34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ID4sVFmM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ns5odZjJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31C51C4CEE4;
-	Sat,  7 Jun 2025 09:57:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1749290252;
-	bh=VzdmqcMNvBqE3KC0zj0VVYLrni/GN1NT9ay8sXX/Oms=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ns5odZjJt6lhUyX0pMfYyXcMLXpOPa+xQACBahwgKkqgsMf5wo087OjgjS6NihT75
-	 eshtaC6q6950Gjl+0Pt8Dzg1KrBozq2Dvkksjd+1Ucy9dxqUrawcZ1BwRuDZc8Acpt
-	 NXGi66sE4YW1tZhPCCsJ9IfxzvxTyt0sm30jVFrw=
-Date: Sat, 7 Jun 2025 11:57:30 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Macpaul Lin <macpaul.lin@mediatek.com>
-Cc: patches@lists.linux.dev, stable@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Ajay Agarwal <ajayagarwal@google.com>,
-	Daniel Stodden <daniel.stodden@gmail.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Deren Wu <Deren.Wu@mediatek.com>, Ramax Lo <ramax.lo@mediatek.com>,
-	Macpaul Lin <macpaul@gmail.com>,
-	MediaTek Chromebook Upstream <Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	Johnny-CC Chang <Johnny-CC.Chang@mediatek.com>
-Subject: Re: [PATCH 6.11 1/1] PCI/ASPM: Disable L1 before disabling L1 PM
- Substates
-Message-ID: <2025060702-deviate-faceted-bd57@gregkh>
-References: <20250606015738.2724220-1-macpaul.lin@mediatek.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ID4sVFmM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CADAC4CEE4;
+	Sat,  7 Jun 2025 09:58:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749290286;
+	bh=lSpSS0EzOkBuVxvWvFJ1gqXaLx6zLSewgz/9e/JU9HM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ID4sVFmMe9+1Phqgim3HmjHXhhNNgOCypLNwC0r1OtIZ+bT4QqnOPYXweMAQfe0JO
+	 albcSHDVhJwdBlqPTT/OUcDPqYD0SYLlfQqpjFlHsbanm1LgOuE4qOJSxEc49N6FIW
+	 9CdnGVNBeu6GsQEMRkT82H6X4JZyXn61tUh1fKYhB85dZ/NJM2ugXCgEMFMA23DPvr
+	 Lfo6Mq/p7vC8bTIMwNbDQJ0P0FqtIDAVr3YEkQ2z3u+Xp4zRVRnc1uSEtLL6s9fHAi
+	 YLV73htQt9QDJ16sxhIynUqQwUpIaViLqDcULRLQCtctJm4MzzGBhujvGCkLSreaQr
+	 DXHtHAXAEdncw==
+Date: Sat, 7 Jun 2025 11:58:02 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/9] A series of kernel-doc tweaks
+Message-ID: <20250607115802.0ce61a17@foz.lan>
+In-Reply-To: <20250606163438.229916-1-corbet@lwn.net>
+References: <20250606163438.229916-1-corbet@lwn.net>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250606015738.2724220-1-macpaul.lin@mediatek.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 06, 2025 at 09:57:38AM +0800, Macpaul Lin wrote:
-> From: Ajay Agarwal <ajayagarwal@google.com>
-> 
-> [ Upstream commit 7447990137bf06b2aeecad9c6081e01a9f47f2aa ]
-> 
-> PCIe r6.2, sec 5.5.4, requires that:
-> 
->   If setting either or both of the enable bits for ASPM L1 PM Substates,
->   both ports must be configured as described in this section while ASPM L1
->   is disabled.
-> 
-> Previously, pcie_config_aspm_l1ss() assumed that "setting enable bits"
-> meant "setting them to 1", and it configured L1SS as follows:
-> 
->   - Clear L1SS enable bits
->   - Disable L1
->   - Configure L1SS enable bits as required
->   - Enable L1 if required
-> 
-> With this sequence, when disabling L1SS on an ARM A-core with a Synopsys
-> DesignWare PCIe core, the CPU occasionally hangs when reading
-> PCI_L1SS_CTL1, leading to a reboot when the CPU watchdog expires.
-> 
-> Move the L1 disable to the caller (pcie_config_aspm_link(), where L1 was
-> already enabled) so L1 is always disabled while updating the L1SS bits:
-> 
->   - Disable L1
->   - Clear L1SS enable bits
->   - Configure L1SS enable bits as required
->   - Enable L1 if required
-> 
-> Change pcie_aspm_cap_init() similarly.
-> 
-> Link: https://lore.kernel.org/r/20241007032917.872262-1-ajayagarwal@google.com
-> Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
-> [bhelgaas: comments, commit log, compute L1SS setting before config access]
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Tested-by: Johnny-CC Chang <Johnny-CC.Chang@mediatek.com>
-> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
-> ---
->  drivers/pci/pcie/aspm.c | 92 ++++++++++++++++++++++-------------------
->  1 file changed, 50 insertions(+), 42 deletions(-)
+Em Fri,  6 Jun 2025 10:34:29 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-6.11.y is long end-of-life, sorry.  See the front page of www.kernel.org
-for the list of currently supported kernels.
+> I will freely confess that I merged the kernel-doc Python rewrite without
+> fully understanding the code; at the time, the fact that it worked as
+> advertised sufficed.  I *do* feel the need to understand this code, though,
+> going forward, so I've dedicated some time to digging through it.
+> 
+> In the process, I've been making some adjustments to the code that, IMO,
+> make it a bit more approachable - for myself and, hopefully, for others.
+> The goal is to try to get functions to the point where people of limited
+> mind (like me) can soak them up, make the code slightly more Pythonic, and
+> removing redundant code.
+> 
+> Here is the first set of tweaks.  The output from "make htmldocs" remains
+> entirely unchanged throughout the series.  The docs build is slightly
+> faster afterward - but that's not the point.
+> 
+> Mauro, the more I dig into this the happier I am that you pushed this
+> change through - it was far overdue.  Hopefully you don't mind me sweeping
+> up a bit around the edges...
 
-thanks,
+Sure, feel free to help improving it! The main goal of the conversion
+was to make it as close as possible to the Perl version, being
+bug-compatible. Due to that, there are several places where it can
+(and should) be improved. It is now time to clean it up and improve
+it ;-)
 
-greg k-h
+> 
+> Jonathan Corbet (9):
+>   docs: kdoc: simplify the PROTO continuation logic
+>   docs: kdoc: move the core dispatch into a state table
+>   docs: kdoc: remove the section_intro variable
+>   docs: kdoc: simplify the kerneldoc recognition code
+>   docs: kdoc: remove the KernelEntry::is_kernel_comment member
+>   docs: kdoc: remove the KernelEntry::descr pseudo member
+>   docs: kdoc: remove some ineffective code
+>   docs: kdoc: move the declaration regexes out of process_name()
+>   docs: kdoc: some final touches for process_name()
+> 
+>  scripts/lib/kdoc/kdoc_parser.py | 152 ++++++++++++++++----------------
+>  1 file changed, 75 insertions(+), 77 deletions(-)
+> 
+
+
+
+Thanks,
+Mauro
