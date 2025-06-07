@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD62D44C94;
-	Sat,  7 Jun 2025 01:17:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549891EA73;
+	Sat,  7 Jun 2025 01:17:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749259026; cv=none; b=H38uNf1fTXMTSJL0rY2K3M50F79JXAP/r+W0uEibA2+GNbIvwQxbQjLwnrBUZwKJywIQ09WLPg/MUaCw6j/aONTkxv/dQAILVNUS0mQOD/wmq4MH5EAlaQRXN+8YWZ6e5f1AWI09ydBd1lOkthlsDPB56BmBPv5/uz2iiUsp6gw=
+	t=1749259039; cv=none; b=GJXQNWhBaf0E+qLPD05TEBN3fQJ398TVMUCGLX9HVz2HbbVItn46Pz7aVFND8/7UIIT2RVUW7pjR2iYsKDtCapgKGslte/qz6zbRE/JAWA9VbrVObi4G6lDC78MT/283YsNBbCZ9x4TQ2eKcluEqxNXOi7+qfbHBL8eOLClSApY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749259026; c=relaxed/simple;
-	bh=CfXGrQYDLOmsZAQkoaghRfnFl/jjWo8ANCgUQ4EhtKM=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=HxxwjECk4MuHNuH8MIQ9HIYvGJYV7LcOVTbeyxa0g+jG3rX9CPNDZp/5H18cwgcMACz83G0/VX7g8MjoqK1Nk9pqxtpuT1Udz6uCIg8RGCHcYi/RhbTV99RyphAiIb91Ce2C9iwgtwshWdchtg46aiAAlfxukEATbVnaLhHTjcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ryJdpWF5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749259039; c=relaxed/simple;
+	bh=WAbrwWok54fMblxXdWAKnZbSzWhmGyMI5rX9Bz/t8h4=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=He6Mltsm8a9SxlD1+jD12gl/xMHhQH7Us5NwC46EtXa8aXlrS3nmV/iJiVf3JvYfUiKf4uVaR/JmiKkPthcCWvMVCJ1TaYDKruvJkKvv2awJHGAheCqR4YaS7p4rcXILw3W0gVwlAn2xqNY7OBYMhQf6QAnPJbA0cbofe3h54iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CA+KFfUg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ryJdpWF5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF7AFC4CEEB;
-	Sat,  7 Jun 2025 01:17:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CA+KFfUg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3566AC4CEEB;
+	Sat,  7 Jun 2025 01:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749259026;
-	bh=CfXGrQYDLOmsZAQkoaghRfnFl/jjWo8ANCgUQ4EhtKM=;
+	s=k20201202; t=1749259039;
+	bh=WAbrwWok54fMblxXdWAKnZbSzWhmGyMI5rX9Bz/t8h4=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=ryJdpWF5TYa4bG2DxF4wIBj84665dnpbcm213tCJCcZtoKcgDP1YoqagLSyEPAbln
-	 /DGPgsbJGoDpe3jnCoVjEkrOp+znsbtewGtROX7fwf3NieLOaRrulqkHPo+m2Po4yF
-	 SMdg7T7B7ks9XqOyRI5Ybe11oB++jEiO41bb+w2nod9KoxCRLA3Fip5M/GHZADuvRR
-	 az7uIRkj1c8cxAaWfHGm7UD6+H1rh5mm6m7X/sjfZ/OXUVybRo3VusrxHmrOiwJzmX
-	 BiPtfK5dMWBxJvTbFPGvM9Rs+qgcnvcjqi9bsHJA6ba7LuTF0cUHuiZVp0uPZS4egg
-	 YGWaAarn4xu3w==
+	b=CA+KFfUgAC8GIGxXWLPA5tzGUsd3AlF0KYcLcxKwQl8lBrCePZ5fi0UV8JEKiSh9Z
+	 s0plNUISxcXTnc4fjk0JqLDeI3Y+E0NVNA4mv1O4NM4f9lwbgUBcnfJ6SRp1sYoR61
+	 SC0/rDTxutEofwrfyydtx3s3+aLN1fjsCSpjY1fq9OMQMMupxOlzh6pMJjw+Zu49Zj
+	 TQLPBe2a15zwefUfckA3XNJ195k3z1U/5vdvLKAoT2uV2K3OeBCsJLokkmszzekFEA
+	 v+VyG0MMaS2840mDdef8L6MGYugBYrTKEBpv5Q+Q7LF0ag04wvbNhLzVIG6FSPbb0P
+	 eFlGr1jNTROAA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70ED53822E05;
-	Sat,  7 Jun 2025 01:17:39 +0000 (UTC)
-Subject: Re: [GIT PULL v2] overlayfs update for 6.16
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAE823822E05;
+	Sat,  7 Jun 2025 01:17:51 +0000 (UTC)
+Subject: Re: [GIT PULL] Ceph fixes for 6.16-rc1
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <CAJfpegssS_nOs1T+LTZBY9afFcmvpQH3gaSEph0NDx4neXNGRA@mail.gmail.com>
-References: <CAJfpegssS_nOs1T+LTZBY9afFcmvpQH3gaSEph0NDx4neXNGRA@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJfpegssS_nOs1T+LTZBY9afFcmvpQH3gaSEph0NDx4neXNGRA@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/overlayfs/vfs.git tags/ovl-update-v2-6.16
-X-PR-Tracked-Commit-Id: 6f9ccdad0feaef58b05f07e0fc9d31004147177c
+In-Reply-To: <20250606175250.218814-1-idryomov@gmail.com>
+References: <20250606175250.218814-1-idryomov@gmail.com>
+X-PR-Tracked-List-Id: <ceph-devel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250606175250.218814-1-idryomov@gmail.com>
+X-PR-Tracked-Remote: https://github.com/ceph/ceph-client.git tags/ceph-for-6.16-rc1
+X-PR-Tracked-Commit-Id: b828b4bf29d10a3e505a76a39c4daea969e19dc9
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 28fb80f0891c01dc706a5f6cada94c9cf0f2b1c2
-Message-Id: <174925905806.4051830.2114231702835187245.pr-tracker-bot@kernel.org>
-Date: Sat, 07 Jun 2025 01:17:38 +0000
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, overlayfs <linux-unionfs@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>
+X-PR-Merge-Commit-Id: a3fb8a61e4a18f11dab281d5afa370e4aaded47b
+Message-Id: <174925907043.4051830.9226740252386126959.pr-tracker-bot@kernel.org>
+Date: Sat, 07 Jun 2025 01:17:50 +0000
+To: Ilya Dryomov <idryomov@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 6 Jun 2025 11:39:27 +0200:
+The pull request you sent on Fri,  6 Jun 2025 19:52:35 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/overlayfs/vfs.git tags/ovl-update-v2-6.16
+> https://github.com/ceph/ceph-client.git tags/ceph-for-6.16-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/28fb80f0891c01dc706a5f6cada94c9cf0f2b1c2
+https://git.kernel.org/torvalds/c/a3fb8a61e4a18f11dab281d5afa370e4aaded47b
 
 Thank you!
 
