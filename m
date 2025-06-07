@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72AC21A434;
-	Sat,  7 Jun 2025 21:26:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB9621A434;
+	Sat,  7 Jun 2025 21:26:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749331579; cv=none; b=vA5xkk3N9QnD2DhoeURaMh7qiEei5LfyKWKFRxGF2vFRNmm2G7nXUjK7A5WHDuCllD8oczN+1PAJT7zLQR7kqLBZVBVUrcu23VvUrRCM7zgwFhw0pnXOzudH7riPtBQSHuuz1dhPi0BJKkO+WLBbfHJ48oHkU38Q+jfLAMJz3lg=
+	t=1749331583; cv=none; b=geo1emlKqLU7nnHdwgPXopBrkPQANGqb9gCy0g02zPLB9G5CzrbGr7cK1GX+ZBFOFK/YEWyurk1eHLbHFWM/LYk8NIpXemuSIiDZq3A2SIccr/I/ru8RPHlmWkBkj5AoosMLTzwRxeRPiGRRviMUUV9Cnj17a+Q1yE9Knf2ZTHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749331579; c=relaxed/simple;
-	bh=riGBJKNEXXOJxez01Kr2XlCx/B+HZH1yrpRkVzIDIPY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R+VPidPQ9l/SonqF28TxVEAXzX018WL8yPdpsGthKm9ztNLQQVPkR/6+zr2usw4URV6K1K+O0hX4tKnzhQ5OqSX3rEw95tFHd/mi/z1QNEg7+6wzvbs4Bxpn/4OfTMQvDmTaV5YACprjclZPihlBggccF5A4zfVSK8bQWdKBiYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rLaarE1C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749331583; c=relaxed/simple;
+	bh=qPWaXK9VAayAy2Zn/upVRookXCud3+76+B7m5D2a/V4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b4RxIeni+rpm7b52eyv86PScwEORUZdsrM6/fUUYixEGBGoLJvuC30NqfywGsQZwcZjIQxVTzq4cHCdu8/0NdQeourVMO69bYM1zHeyqPUg5LgILxnYzqa0/MvPShKUsA7UUuDFGoyViGjHAtgwTz04RPUG47x5AJfVaBMyvP6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N6xeJSl0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rLaarE1C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96803C4CEE4;
-	Sat,  7 Jun 2025 21:26:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N6xeJSl0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FD5BC4CEE4;
+	Sat,  7 Jun 2025 21:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749331579;
-	bh=riGBJKNEXXOJxez01Kr2XlCx/B+HZH1yrpRkVzIDIPY=;
+	s=k20201202; t=1749331583;
+	bh=qPWaXK9VAayAy2Zn/upVRookXCud3+76+B7m5D2a/V4=;
 	h=From:To:Cc:Subject:Date:From;
-	b=rLaarE1CzBtBaHSt1HQWqAAvk7eelpgWFRpVqU4VhMR8GsBkpS2J3qLhNF0OOxlpM
-	 Mgevp5wjtWBWM6AZyyG9Gwm+757B3XJ6USigOw1FrL6Atu8NfNLYPkDdvxX40hrMXn
-	 cauPKArk9FuUHwZQq8Oke6CtoKBa1px/uETYCeZHh2jI+uUDqrfABx+h6Ev8EqmA0f
-	 5yqaz1MTcv1OLilgl8L+hzSEomrUHDVDT95D/NqUTmw6nSd1WJPgxedJr3Z8Z7RTl1
-	 fK/DzN9xewWmq0AnvX8k3JliaAwXbZMcElga4L7lxuLMEtJJcseMPwwr9k7fc4bW7A
-	 D/qtbG96bUI2g==
+	b=N6xeJSl0Pt2c7+uplpIxh4Ygc8KkdWP2twNJ726W2rnRCpnPos0XGVRp+6mhJxmuF
+	 OEPxu9br0i/VojMF436Xi0gtGS9TlaLqIgY4XzpwEvXTd6E9f3+js+3zBXq4MmZ+4S
+	 8iTY8npvv12boqBW4A62PEdu8MnKWwGldov7FPnedVptPdPv1Sq/rvhPngtPAetaOt
+	 XIfzn1BIksLxpwrn67NkrPDsLzflVDfgCCYCdsOUgOoXAj6BNq+z2S7J4httv1Y+7Z
+	 ysUQq8M0gL3CNvPW+1/oG/TonSsObRtFxdd6VGK3xUVFqqBFql+5Si1ofQNl7/doYZ
+	 lLJWVUnpGmZgA==
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Lee Jones <lee@kernel.org>,
+To: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
 	Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-phy@lists.infradead.org
-Subject: [PATCH] dt-bindings: phy: Convert motorola,cpcap-usb-phy to DT schema
-Date: Sat,  7 Jun 2025 16:26:15 -0500
-Message-ID: <20250607212616.743674-1-robh@kernel.org>
+Cc: linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: phy: Convert motorola,mapphone-mdm6600 to DT schema
+Date: Sat,  7 Jun 2025 16:26:20 -0500
+Message-ID: <20250607212621.743859-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -47,117 +46,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the Motorola CPCAP PMIC USB PHY binding to DT schema format.
-It's a straight forward conversion.
+Convert the Motorola Mapphone MDM6600 USB PHY binding to DT schema
+format. It's a straight forward conversion.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../bindings/mfd/motorola-cpcap.txt           |   2 +-
- .../bindings/phy/motorola,cpcap-usb-phy.yaml  | 107 ++++++++++++++++++
- .../devicetree/bindings/phy/phy-cpcap-usb.txt |  40 -------
- 3 files changed, 108 insertions(+), 41 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/motorola,cpcap-usb-phy.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/phy-cpcap-usb.txt
+ .../phy/motorola,mapphone-mdm6600.yaml        | 81 +++++++++++++++++++
+ .../bindings/phy/phy-mapphone-mdm6600.txt     | 29 -------
+ 2 files changed, 81 insertions(+), 29 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/motorola,mapphone-mdm6600.yaml
+ delete mode 100644 Documentation/devicetree/bindings/phy/phy-mapphone-mdm6600.txt
 
-diff --git a/Documentation/devicetree/bindings/mfd/motorola-cpcap.txt b/Documentation/devicetree/bindings/mfd/motorola-cpcap.txt
-index f00827c9b67f..18c3fc26ca93 100644
---- a/Documentation/devicetree/bindings/mfd/motorola-cpcap.txt
-+++ b/Documentation/devicetree/bindings/mfd/motorola-cpcap.txt
-@@ -19,7 +19,7 @@ which are described in the following files:
- - Documentation/devicetree/bindings/power/supply/cpcap-battery.yaml
- - Documentation/devicetree/bindings/power/supply/cpcap-charger.yaml
- - Documentation/devicetree/bindings/regulator/cpcap-regulator.txt
--- Documentation/devicetree/bindings/phy/phy-cpcap-usb.txt
-+- Documentation/devicetree/bindings/phy/motorola,cpcap-usb-phy.yaml
- - Documentation/devicetree/bindings/input/cpcap-pwrbutton.txt
- - Documentation/devicetree/bindings/rtc/cpcap-rtc.txt
- - Documentation/devicetree/bindings/leds/leds-cpcap.txt
-diff --git a/Documentation/devicetree/bindings/phy/motorola,cpcap-usb-phy.yaml b/Documentation/devicetree/bindings/phy/motorola,cpcap-usb-phy.yaml
+diff --git a/Documentation/devicetree/bindings/phy/motorola,mapphone-mdm6600.yaml b/Documentation/devicetree/bindings/phy/motorola,mapphone-mdm6600.yaml
 new file mode 100644
-index 000000000000..0febd04a61f4
+index 000000000000..cb6544b3478d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/motorola,cpcap-usb-phy.yaml
-@@ -0,0 +1,107 @@
++++ b/Documentation/devicetree/bindings/phy/motorola,mapphone-mdm6600.yaml
+@@ -0,0 +1,81 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/phy/motorola,cpcap-usb-phy.yaml#
++$id: http://devicetree.org/schemas/phy/motorola,mapphone-mdm6600.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Motorola CPCAP PMIC USB PHY
++title: Motorola Mapphone MDM6600 USB PHY
 +
 +maintainers:
 +  - Tony Lindgren <tony@atomide.com>
 +
 +properties:
 +  compatible:
-+    enum:
-+      - motorola,cpcap-usb-phy
-+      - motorola,mapphone-cpcap-usb-phy
++    items:
++      - const: motorola,mapphone-mdm6600
++
++  enable-gpios:
++    description: GPIO to enable the USB PHY
++    maxItems: 1
++
++  power-gpios:
++    description: GPIO to power on the device
++    maxItems: 1
++
++  reset-gpios:
++    description: GPIO to reset the device
++    maxItems: 1
++
++  motorola,mode-gpios:
++    description: Two GPIOs to configure MDM6600 USB start-up mode for normal mode versus USB flashing mode
++    items:
++      - description: normal mode select GPIO
++      - description: USB flashing mode select GPIO
++
++  motorola,cmd-gpios:
++    description: Three GPIOs to control the power state of the MDM6600
++    items:
++      - description: power state control GPIO 0
++      - description: power state control GPIO 1
++      - description: power state control GPIO 2
++
++  motorola,status-gpios:
++    description: Three GPIOs to read the power state of the MDM6600
++    items:
++      - description: power state read GPIO 0
++      - description: power state read GPIO 1
++      - description: power state read GPIO 2
 +
 +  '#phy-cells':
 +    const: 0
 +
-+  interrupts:
-+    description: CPCAP PMIC interrupts used by the USB PHY
-+    items:
-+      - description: id_ground interrupt
-+      - description: id_float interrupt
-+      - description: se0conn interrupt
-+      - description: vbusvld interrupt
-+      - description: sessvld interrupt
-+      - description: sessend interrupt
-+      - description: se1 interrupt
-+      - description: dm interrupt
-+      - description: dp interrupt
-+
-+  interrupt-names:
-+    description: Interrupt names
-+    items:
-+      - const: id_ground
-+      - const: id_float
-+      - const: se0conn
-+      - const: vbusvld
-+      - const: sessvld
-+      - const: sessend
-+      - const: se1
-+      - const: dm
-+      - const: dp
-+
-+  io-channels:
-+    description: IIO ADC channels used by the USB PHY
-+    items:
-+      - description: vbus channel
-+      - description: id channel
-+
-+  io-channel-names:
-+    items:
-+      - const: vbus
-+      - const: id
-+
-+  vusb-supply: true
-+
-+  pinctrl-names:
-+    items:
-+      - const: default
-+      - const: ulpi
-+      - const: utmi
-+      - const: uart
-+
-+  mode-gpios:
-+    description: Optional GPIOs for configuring alternate modes
-+    items:
-+      - description: "mode selection GPIO #0"
-+      - description: "mode selection GPIO #1"
-+
 +required:
 +  - compatible
-+  - '#phy-cells'
-+  - interrupts-extended
-+  - interrupt-names
-+  - io-channels
-+  - io-channel-names
-+  - vusb-supply
++  - enable-gpios
++  - power-gpios
++  - reset-gpios
++  - motorola,mode-gpios
++  - motorola,cmd-gpios
++  - motorola,status-gpios
 +
 +additionalProperties: false
 +
@@ -165,71 +129,55 @@ index 000000000000..0febd04a61f4
 +  - |
 +    #include <dt-bindings/gpio/gpio.h>
 +
-+    phy {
-+        compatible = "motorola,mapphone-cpcap-usb-phy";
++    usb-phy {
++        compatible = "motorola,mapphone-mdm6600";
++        enable-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
++        power-gpios = <&gpio2 22 GPIO_ACTIVE_HIGH>;
++        reset-gpios = <&gpio2 17 GPIO_ACTIVE_HIGH>;
++        motorola,mode-gpios = <&gpio5 20 GPIO_ACTIVE_HIGH>,
++                              <&gpio5 21 GPIO_ACTIVE_HIGH>;
++        motorola,cmd-gpios = <&gpio4 7 GPIO_ACTIVE_HIGH>,
++                              <&gpio4 8 GPIO_ACTIVE_HIGH>,
++                              <&gpio5 14 GPIO_ACTIVE_HIGH>;
++        motorola,status-gpios = <&gpio2 20 GPIO_ACTIVE_HIGH>,
++                                <&gpio2 21 GPIO_ACTIVE_HIGH>,
++                                <&gpio2 23 GPIO_ACTIVE_HIGH>;
 +        #phy-cells = <0>;
-+        interrupts-extended = <
-+            &cpcap 15 0 &cpcap 14 0 &cpcap 28 0 &cpcap 19 0
-+            &cpcap 18 0 &cpcap 17 0 &cpcap 16 0 &cpcap 49 0
-+            &cpcap 48 1
-+        >;
-+        interrupt-names = "id_ground", "id_float", "se0conn", "vbusvld",
-+                          "sessvld", "sessend", "se1", "dm", "dp";
-+        io-channels = <&cpcap_adc 2>, <&cpcap_adc 7>;
-+        io-channel-names = "vbus", "id";
-+        vusb-supply = <&vusb>;
-+        pinctrl-0 = <&usb_gpio_mux_sel1 &usb_gpio_mux_sel2>;
-+        pinctrl-1 = <&usb_ulpi_pins>;
-+        pinctrl-2 = <&usb_utmi_pins>;
-+        pinctrl-3 = <&uart3_pins>;
-+        pinctrl-names = "default", "ulpi", "utmi", "uart";
-+        mode-gpios = <&gpio2 28 GPIO_ACTIVE_HIGH>, <&gpio1 0 GPIO_ACTIVE_HIGH>;
 +    };
-diff --git a/Documentation/devicetree/bindings/phy/phy-cpcap-usb.txt b/Documentation/devicetree/bindings/phy/phy-cpcap-usb.txt
+diff --git a/Documentation/devicetree/bindings/phy/phy-mapphone-mdm6600.txt b/Documentation/devicetree/bindings/phy/phy-mapphone-mdm6600.txt
 deleted file mode 100644
-index 2eb9b2b69037..000000000000
---- a/Documentation/devicetree/bindings/phy/phy-cpcap-usb.txt
+index 29427d4f047a..000000000000
+--- a/Documentation/devicetree/bindings/phy/phy-mapphone-mdm6600.txt
 +++ /dev/null
-@@ -1,40 +0,0 @@
--Motorola CPCAP PMIC USB PHY binding
+@@ -1,29 +0,0 @@
+-Device tree binding documentation for Motorola Mapphone MDM6600 USB PHY
 -
 -Required properties:
--compatible: Shall be either "motorola,cpcap-usb-phy" or
--	    "motorola,mapphone-cpcap-usb-phy"
--#phy-cells: Shall be 0
--interrupts: CPCAP PMIC interrupts used by the USB PHY
--interrupt-names: Interrupt names
--io-channels: IIO ADC channels used by the USB PHY
--io-channel-names: IIO ADC channel names
--vusb-supply: Regulator for the PHY
--
--Optional properties:
--pinctrl: Optional alternate pin modes for the PHY
--pinctrl-names: Names for optional pin modes
--mode-gpios: Optional GPIOs for configuring alternate modes
+-- compatible		Must be "motorola,mapphone-mdm6600"
+-- enable-gpios		GPIO to enable the USB PHY
+-- power-gpios		GPIO to power on the device
+-- reset-gpios		GPIO to reset the device
+-- motorola,mode-gpios	Two GPIOs to configure MDM6600 USB start-up mode for
+-			normal mode versus USB flashing mode
+-- motorola,cmd-gpios	Three GPIOs to control the power state of the MDM6600
+-- motorola,status-gpios	Three GPIOs to read the power state of the MDM6600
 -
 -Example:
--cpcap_usb2_phy: phy {
--	compatible = "motorola,mapphone-cpcap-usb-phy";
--	pinctrl-0 = <&usb_gpio_mux_sel1 &usb_gpio_mux_sel2>;
--	pinctrl-1 = <&usb_ulpi_pins>;
--	pinctrl-2 = <&usb_utmi_pins>;
--	pinctrl-3 = <&uart3_pins>;
--	pinctrl-names = "default", "ulpi", "utmi", "uart";
+-
+-usb-phy {
+-	compatible = "motorola,mapphone-mdm6600";
+-	enable-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
+-	power-gpios = <&gpio2 22 GPIO_ACTIVE_HIGH>;
+-	reset-gpios = <&gpio2 17 GPIO_ACTIVE_HIGH>;
+-	motorola,mode-gpios = <&gpio5 20 GPIO_ACTIVE_HIGH>,
+-			      <&gpio5 21 GPIO_ACTIVE_HIGH>;
+-	motorola,cmd-gpios = <&gpio4 7 GPIO_ACTIVE_HIGH>,
+-			     <&gpio4 8 GPIO_ACTIVE_HIGH>,
+-			     <&gpio5 14 GPIO_ACTIVE_HIGH>;
+-	motorola,status-gpios = <&gpio2 20 GPIO_ACTIVE_HIGH>,
+-				<&gpio2 21 GPIO_ACTIVE_HIGH>,
+-				<&gpio2 23 GPIO_ACTIVE_HIGH>;
 -	#phy-cells = <0>;
--	interrupts-extended = <
--		&cpcap 15 0 &cpcap 14 0 &cpcap 28 0 &cpcap 19 0
--		&cpcap 18 0 &cpcap 17 0 &cpcap 16 0 &cpcap 49 0
--		&cpcap 48 1
--	>;
--	interrupt-names =
--		"id_ground", "id_float", "se0conn", "vbusvld",
--		"sessvld", "sessend", "se1", "dm", "dp";
--	mode-gpios = <&gpio2 28 GPIO_ACTIVE_HIGH
--		      &gpio1 0 GPIO_ACTIVE_HIGH>;
--	io-channels = <&cpcap_adc 2>, <&cpcap_adc 7>;
--	io-channel-names = "vbus", "id";
--	vusb-supply = <&vusb>;
 -};
 -- 
 2.47.2
