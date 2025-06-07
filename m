@@ -1,90 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5A435957;
-	Sat,  7 Jun 2025 21:31:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F521C84B6;
+	Sat,  7 Jun 2025 21:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749331890; cv=none; b=uILABHe7F3QH4dipYrczYlbnLlXgFgoI3iQ9MgXVYYPMOAbHAY2vdphwlQgN3i/znnkSBl8rrlIbsKNNrF9xMC7CypjJ3Yo2sGTXZW+XX+Dm/2SCg8c8FYgtPnDhALFq9C2JjfzYdngtloH9XLnLn4y5PpaMs04RtWgESjuGJKc=
+	t=1749332581; cv=none; b=rpca5RI5a5xxjOH23NnUY8Dx7nKWnETlnRk18Fv3/kwEccuo5HMdyUVgXx5Kce+dTcypBvNb1cC9vrrKRzezzbB1+zA8pSU1yOe58Rgu7Isy9ewINWeYNvbE9z6dIX/Qn0OHYtl6O8CKOvuSMc7pe1PeKKGlCuMd0DwnZDeEZtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749331890; c=relaxed/simple;
-	bh=8aIyffKejPWFzUAjtn7mONxd6kcAwOjWhbvLV30cHpA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=e/3oUEejHrOqXOvaxYrWY09b3wyKgrKyCRnFeCjg3OdJ7GM4FH0eBU6Mv3gt3O99qdhfh2f+h6J7u+Ieftg1A5YPF7lXbwuiZBbSqQrwKZ7pMxZZdSP23vyU5c6L2qdzK4ZKxeEJUOI181/lM21foERuO56rXixp5nGqaj5TkvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=d5eH7hOk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749332581; c=relaxed/simple;
+	bh=gm4fasS9vdQQbKuCZtoPAMG4B6dKjldt1nwRY4/n4nw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PSsAy4YW9EEbVJzcgXT7EIilg5QCBbnp6u+HDa+x5itHPldrVjdd6OTRlpx7YUBp94x/HukOvmE47PbIWKahNnli4TDeul+pvh3thFC7/q+CHMEnLF2xLw9VuF6xa9hPd0NQWvYHRTE2f8v6wCuwFhL+iEVhg/iVOhknKf3Uw84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qemd9i48; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="d5eH7hOk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61277C4CEE4;
-	Sat,  7 Jun 2025 21:31:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1749331889;
-	bh=8aIyffKejPWFzUAjtn7mONxd6kcAwOjWhbvLV30cHpA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=d5eH7hOkXO+2GLIjd3Zsk5dRCih1mBAwA6gIAZWUaDp3jBv9zX+7ymfH6NeZmoK+1
-	 rzLn9Cn058pWhtneEzEQleuRD3YGNqKkKXOdo7vNhvIqDZO/VqNuK1mHwEMpbBoLIs
-	 xNNUz3saTvHrtJIg/s2GE5bOFhwpX3pfmVvRAA/Q=
-Date: Sat, 7 Jun 2025 14:31:28 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: wangfushuai <wangfushuai@baidu.com>
-Cc: <david@redhat.com>, <andrii@kernel.org>, <osalvador@suse.de>,
- <Liam.Howlett@Oracle.com>, <christophe.leroy@csgroup.eu>,
- <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>, Mark Brown
- <broonie@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v2] fs/proc/task_mmu: add VM_SHADOW_STACK for arm64 when
- support GCS
-Message-Id: <20250607143128.d3ae86e8ebf9dcab02870421@linux-foundation.org>
-In-Reply-To: <20250607131525.76746-1-wangfushuai@baidu.com>
-References: <20250607131525.76746-1-wangfushuai@baidu.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qemd9i48"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-710e344bbf9so29562147b3.2;
+        Sat, 07 Jun 2025 14:42:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749332578; x=1749937378; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YjscHMC+1NsZwBWXAeWQleUywfW88cG3lx1fz7LMCSU=;
+        b=Qemd9i48lPyVPkU7oJZ6SbaFVjMsnNNLzxvjxeqrb477FA8FPIM0P4z/B84bC766O7
+         8xQxRw2ac8JH0pkHHIlgctZSbyMRp6RKmhZlQw7nCNrDNmEVPqNoUFoaymcSLbMfHMZE
+         7+umecH4Pb7T6QgtaUd/oNS9v0udlTCmaGaAK+B2Y25AoqoAwy26RC2QvNcSM3RdGlsw
+         UOOFb0tnIAga6WD/IGTK1kTvj2ACNu/A71SFk/kmYWCs6HV8QFmK5k8VII8chrBlssoC
+         UwTza8qZwVaNaalWgcwhbzUxXOAIE9J6j4BNEovKjohgmkjo5sKw4jTMtUoM8c04inQt
+         8axA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749332578; x=1749937378;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YjscHMC+1NsZwBWXAeWQleUywfW88cG3lx1fz7LMCSU=;
+        b=oCUAPW5YYm2/3T0FPq+E8LrMsuj6Nfl5nDgpHtc68vDbO1XfN4xrdHhGx6R5sI9B0o
+         hskB6aIBcasUSytVjOqxc1LA8oqGY0f+CuNwq5z/o4g3Grk/WSGr1+TqYkki5UfT4g5P
+         hCJnx8I2/hLrtvy3kYNC8/ljrvl/U5HnAxbmDf70/JOM/nPQlYSOSQusdL0DZCdv3rBu
+         +cVqiEoR7QMQRCP/ed+AD2XZj+RCjmXdgmKN8i9BWo0SvyoTzmpJrMFoTdORNsqz41X7
+         KhG0f/yiJhK80rOfbe0EdzXyhkpLVcKILXwxkTGF7Ld+TH00QqmgkKhu7sgm52zvu5iN
+         kq3A==
+X-Forwarded-Encrypted: i=1; AJvYcCXVU7stdrgMCmho4MAYaM2sJxAptPYLD3FjxbvwgRtV5OPgfOiKU9xOAxk3LwZxayaA9JcdedBaUVg=@vger.kernel.org, AJvYcCXw74g8BpfAvjlrNYe9DTKQ3kLtASM3iObf51mOBJ5Mcg0B8l9Bi5dlPMc7zfHNzrP6VnIxRSQyGIJpYP6P@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzjccz9Qe/D0MWTCvHUl/y8ohVh9CykXD/rnN6Ms1waOF7Avm1C
+	FpEahlWfalNpWoLCO7l5Hi7dV4MfF21NC3vXIRPAkswq1zJ3B+/AZ1f+
+X-Gm-Gg: ASbGncuA0FnOt5MjlNimZ28g7GVlPZSrg4rheLlIxIvd5JBdSdjvRH4lQFrDzNBjAb5
+	kVyLpdmzKtUWrk5WGndWA0kC2t2Mks01fQ0Z7XHZS0M5F+R4XMM0Rw5/di2z8HzpOvKO/VdUsdB
+	Sfy+wChnNRY2eCDoU0zXp00ea3IpK8bFgT1DgwjVULCcLEIP1jSu2Cdxnx4Bg0WLdKVLUCrfb0H
+	zwrycmYf5yMjUxNll0NVmURgcBDg7sHD1LjT8S/SoigtCkqqhqPFn+PeDsACy4OJTkTiJPMsrzU
+	n6ZkP7mWQVlYRzzRuKTcdIQ+mTWQhwXdQ8nFhivrgKKD8bohyXxBR/Ssp/rMITvYrw==
+X-Google-Smtp-Source: AGHT+IFi7sCc6zUWOl2n8ocwxXau8vfpIhvgXEPkIJZ0ahc2fKnvKNbUQDVVfPk5ZO4jM0FFXS0NtA==
+X-Received: by 2002:a05:690c:7088:b0:70f:8883:eb1a with SMTP id 00721157ae682-710f763609amr114840637b3.6.1749332578501;
+        Sat, 07 Jun 2025 14:42:58 -0700 (PDT)
+Received: from trojai4.cs.purdue.edu ([128.210.0.165])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-710f9a1255bsm7116987b3.103.2025.06.07.14.42.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Jun 2025 14:42:58 -0700 (PDT)
+From: Alex Guo <alexguo1023@gmail.com>
+To: kblaiech@nvidia.com,
+	asmaa@nvidia.com
+Cc: andi.shyti@kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alex Guo <alexguo1023@gmail.com>
+Subject: [PATCH] i2c: mlxbf: Fix out-of-bounds bug in mlxbf_i2c_smbus_xfer()
+Date: Sat,  7 Jun 2025 17:42:55 -0400
+Message-Id: <20250607214255.2579865-1-alexguo1023@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Sat, 7 Jun 2025 21:15:25 +0800 wangfushuai <wangfushuai@baidu.com> wrote:
+The data->block[0] variable comes from user. Without proper check,
+the variable may be very large to cause an out-of-bounds bug.
 
-> The recent commit adding VM_SHADOW_STACK for arm64 GCS did not update
-> the /proc/[pid]/smaps display logic to show the "ss" flag for GCS pages.
-> This patch adds the necessary condition to display "ss" flag.
-> 
-> ...
->
-> --- a/fs/proc/task_mmu.c
-> +++ b/fs/proc/task_mmu.c
-> @@ -994,6 +994,9 @@ static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
->  #ifdef CONFIG_ARCH_HAS_USER_SHADOW_STACK
->  		[ilog2(VM_SHADOW_STACK)] = "ss",
->  #endif
-> +#if defined(CONFIG_ARM64_GCS)
-> +		[ilog2(VM_SHADOW_STACK)] = "ss",
-> +#endif
->  #if defined(CONFIG_64BIT) || defined(CONFIG_PPC32)
->  		[ilog2(VM_DROPPABLE)] = "dp",
->  #endif
+Fix this bug by checking the value of data->block[0] first.
 
-It is possible to have CONFIG_ARM64_GCS=y when
-CONFIG_ARCH_HAS_USER_SHADOW_STACK=n?  If so, is this a correct
-combination?
+Similar commit:
+1. commit 39244cc7548 ("i2c: ismt: Fix an out-of-bounds bug in
+ismt_access()")
+2. commit 92fbb6d1296 ("i2c: xgene-slimpro: Fix out-of-bounds
+bug in xgene_slimpro_i2c_xfer()")
 
+Signed-off-by: Alex Guo <alexguo1023@gmail.com>
+---
+ drivers/i2c/busses/i2c-mlxbf.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Also, wouldn't it be nicer to code this as 
-
---- a/fs/proc/task_mmu.c~a
-+++ a/fs/proc/task_mmu.c
-@@ -991,7 +991,7 @@ static void show_smap_vma_flags(struct s
- #ifdef CONFIG_HAVE_ARCH_USERFAULTFD_MINOR
- 		[ilog2(VM_UFFD_MINOR)]	= "ui",
- #endif /* CONFIG_HAVE_ARCH_USERFAULTFD_MINOR */
--#ifdef CONFIG_ARCH_HAS_USER_SHADOW_STACK
-+#if defined(CONFIG_ARCH_HAS_USER_SHADOW_STACK) || defined(CONFIG_ARM64_GCS)
- 		[ilog2(VM_SHADOW_STACK)] = "ss",
- #endif
- #if defined(CONFIG_64BIT) || defined(CONFIG_PPC32)
-_
-
-
+diff --git a/drivers/i2c/busses/i2c-mlxbf.c b/drivers/i2c/busses/i2c-mlxbf.c
+index 8345f7e6385d..73fe8914f3f1 100644
+--- a/drivers/i2c/busses/i2c-mlxbf.c
++++ b/drivers/i2c/busses/i2c-mlxbf.c
+@@ -2071,6 +2071,8 @@ static s32 mlxbf_i2c_smbus_xfer(struct i2c_adapter *adap, u16 addr,
+ 		break;
+ 
+ 	case I2C_SMBUS_I2C_BLOCK_DATA:
++		if (data->block[0] < 1 || data->block[0] > I2C_SMBUS_BLOCK_MAX)
++			return -EINVAL;
+ 		byte_cnt = data->block[0];
+ 		mlxbf_i2c_smbus_i2c_block_func(&request, &command, data->block,
+ 					       &byte_cnt, read, pec);
+@@ -2079,6 +2081,8 @@ static s32 mlxbf_i2c_smbus_xfer(struct i2c_adapter *adap, u16 addr,
+ 		break;
+ 
+ 	case I2C_SMBUS_BLOCK_DATA:
++		if (data->block[0] < 1 || data->block[0] > I2C_SMBUS_BLOCK_MAX)
++			return -EINVAL;
+ 		byte_cnt = read ? I2C_SMBUS_BLOCK_MAX : data->block[0];
+ 		mlxbf_i2c_smbus_block_func(&request, &command, data->block,
+ 					   &byte_cnt, read, pec);
+@@ -2094,6 +2098,8 @@ static s32 mlxbf_i2c_smbus_xfer(struct i2c_adapter *adap, u16 addr,
+ 		break;
+ 
+ 	case I2C_FUNC_SMBUS_BLOCK_PROC_CALL:
++		if (data->block[0] < 1 || data->block[0] > I2C_SMBUS_BLOCK_MAX)
++			return -EINVAL;
+ 		byte_cnt = data->block[0];
+ 		mlxbf_i2c_smbus_blk_process_call_func(&request, &command,
+ 						      data->block, &byte_cnt,
+-- 
+2.34.1
 
