@@ -1,177 +1,128 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D313517BA5
-	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 01:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6D717E4
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 01:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749259786; cv=none; b=oJGDXm5hmKfQWLdrR8PiFzOsKZoSfWSVkRqASFKH5jy1xUeMJBiDWtN53/SqSB6PyzCCWNq74xaw9uFIowxLJNvOqbSDWPkN6pHEm7TXiHFaRe/Wka8RvFaFXvtlQtvVd3CT6TQtdTPtZu/xAqh/FValymnbs1cOki47pIkjiY0=
+	t=1749261592; cv=none; b=YvJjcArzzmZqyaIidTDmMWRWhwgm4Rhk+yAtcJqdmSRn5g1F167nxFig4rw36dzjbxVosd29jgKEbNO74Wk79Q7dDcWQn+9Uy7r/+J1kuz4cZjseQTtsVqZGY3REw4b+QlFG31jow1nx9pkDLVV2LY7h7KjHOgmL9GI6a29xmik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749259786; c=relaxed/simple;
-	bh=P6dPF0lif6+mdau5er/7SNd3JJGxGCbqj5YFW7yBEyc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=XsFrttmZyQefHGbGa5B7tqrGYp91aS2oskDYN0TeQKaB65tNiwjhlw/341PFRRdUi/R/gkiBsCSWp7kQF2h4iFaGytJX+btDsliGn4yTC+0BlGv5wH8MPxfXnTns+EWiOlRrLES2hPqBXoG1zjEUU9ojrGPAFniMHrmWYVuNfvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bDgYl2mhkztRTG;
-	Sat,  7 Jun 2025 09:28:27 +0800 (CST)
-Received: from kwepemo200002.china.huawei.com (unknown [7.202.195.209])
-	by mail.maildlp.com (Postfix) with ESMTPS id D1A521402C4;
-	Sat,  7 Jun 2025 09:29:39 +0800 (CST)
-Received: from [10.174.179.13] (10.174.179.13) by
- kwepemo200002.china.huawei.com (7.202.195.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Sat, 7 Jun 2025 09:29:38 +0800
-Message-ID: <3c56a8ba-235b-3fe9-d988-dd750bc0feaa@huawei.com>
-Date: Sat, 7 Jun 2025 09:29:38 +0800
+	s=arc-20240116; t=1749261592; c=relaxed/simple;
+	bh=V+B0Q7AYqYfuVBQ1dmrmPh2y+a5r6BWJhwLd3ttn8F8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=SZDD3i0k9Rm+APYBM6QwlLNaDzT3Rkm8XvMHZd1v3akYroyX4vEqhnx/7PO5pTARn2PotsnqyB18sfszLXGBsm0wKorVyX4pXr/Vb4xemmzpdBnBIavybNytLP3jKewPSYHSAXsUPyPdfqXgCGcOM3QlAMta5G35jCjtd2MdAvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kru0FQh6; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kru0FQh6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749261591; x=1780797591;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=V+B0Q7AYqYfuVBQ1dmrmPh2y+a5r6BWJhwLd3ttn8F8=;
+  b=kru0FQh6/ez/VAJvGnh5ls79FMIlFYGzcWUfp6P5iEpw6+Yyl/1UNNTY
+   nKBRfbxDsOA4Zk7EqLl16KOXX4hgAsLEyu8Rsu9c5psmueCMQ2TEeAF0Z
+   EZRN7HsdyuwdhKfXCJDeGKmMnBX/l4IXeCuVp14Fj0fXVkgDYcPTkAmqP
+   oSlCvG6IN2EoqqlLv5dsswt0KeOpdOqdbG50GdbnzGyJkQGVcCP+3JHip
+   5XkwVtg2LO7aY0JaDXG/UUNEXu1UbLFboJ5bylt2Kts6M7ty9+R4QsFcq
+   9I2HvwjuXIpE/P4Sh0NEd7cjzZQRchQWlQfi1zm2gn5dYyuVN1KpeH2LJ
+   A==;
+X-CSE-ConnectionGUID: eT4PNExJSIeAUJopUW26JQ==
+X-CSE-MsgGUID: GGO2QxKQRsyIL5k8ODbbdw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="51558561"
+X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
+   d="scan'208";a="51558561"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 18:59:50 -0700
+X-CSE-ConnectionGUID: 6E3HmmnWQaaMXMTFORRs6A==
+X-CSE-MsgGUID: oU8EgnXkRWy97aJieUvznw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
+   d="scan'208";a="176863548"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 06 Jun 2025 18:59:49 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uNiqZ-0005P1-09;
+	Sat, 07 Jun 2025 01:59:47 +0000
+Date: Sat, 7 Jun 2025 09:59:34 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: [gustavoars:testing/wfamnae-next20250606 16/16]
+ kernel/sched/ext.c:3748:24: error: returning 'struct cgroup_hdr *' from a
+ function with incompatible return type 'struct cgroup *'
+Message-ID: <202506070954.D6Eg0juq-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [syzbot] [mm?] kernel BUG in try_to_unmap_one (2)
-To: David Hildenbrand <david@redhat.com>, syzbot
-	<syzbot+3b220254df55d8ca8a61@syzkaller.appspotmail.com>,
-	<Liam.Howlett@oracle.com>, <akpm@linux-foundation.org>,
-	<harry.yoo@oracle.com>, <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<lorenzo.stoakes@oracle.com>, <riel@surriel.com>,
-	<syzkaller-bugs@googlegroups.com>, <vbabka@suse.cz>, Jens Axboe
-	<axboe@kernel.dk>, Catalin Marinas <catalin.marinas@arm.com>, Miaohe Lin
-	<linmiaohe@huawei.com>
-References: <68412d57.050a0220.2461cf.000e.GAE@google.com>
- <4fc2c008-2384-4d94-b1bf-f0a076585a4a@redhat.com>
- <fda7a3e3-1711-4f1b-a0bb-6a4369aa80ab@redhat.com>
- <b9a43f6d-1865-4074-b91c-a5bd7e10f2a9@redhat.com>
- <d1e1896b-8685-fd7c-d17d-f4328939b96f@huawei.com>
- <02fd89c3-d0f9-412c-8f31-d343803c0982@redhat.com>
-From: Jinjiang Tu <tujinjiang@huawei.com>
-In-Reply-To: <02fd89c3-d0f9-412c-8f31-d343803c0982@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemo200002.china.huawei.com (7.202.195.209)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/wfamnae-next20250606
+head:   2aebeb5c325881159c6896f61fa4b16f2af46067
+commit: 2aebeb5c325881159c6896f61fa4b16f2af46067 [16/16] cgroup: Avoid -Wflex-array-member-not-at-end warnings
+config: x86_64-buildonly-randconfig-006-20250607 (https://download.01.org/0day-ci/archive/20250607/202506070954.D6Eg0juq-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250607/202506070954.D6Eg0juq-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506070954.D6Eg0juq-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from kernel/sched/build_policy.c:63:
+   kernel/sched/ext.c: In function 'tg_cgrp':
+>> kernel/sched/ext.c:3748:24: error: returning 'struct cgroup_hdr *' from a function with incompatible return type 'struct cgroup *' [-Werror=incompatible-pointer-types]
+    3748 |                 return &cgrp_dfl_root.cgrp;
+         |                        ^~~~~~~~~~~~~~~~~~~
+   kernel/sched/ext.c: In function 'scx_vexit':
+   kernel/sched/ext.c:5361:9: warning: function 'scx_vexit' might be a candidate for 'gnu_printf' format attribute [-Wsuggest-attribute=format]
+    5361 |         vscnprintf(ei->msg, SCX_EXIT_MSG_LEN, fmt, args);
+         |         ^~~~~~~~~~
+   kernel/sched/ext.c: In function '__bstr_format':
+   kernel/sched/ext.c:7150:27: warning: function '__bstr_format' might be a candidate for 'gnu_printf' format attribute [-Wsuggest-attribute=format]
+    7150 |                           bprintf_data.bin_args);
+         |                           ^~~~~~~~~~~~
+   kernel/sched/ext.c: In function 'scx_bpf_task_cgroup':
+>> kernel/sched/ext.c:7445:31: error: initialization of 'struct cgroup *' from incompatible pointer type 'struct cgroup_hdr *' [-Werror=incompatible-pointer-types]
+    7445 |         struct cgroup *cgrp = &cgrp_dfl_root.cgrp;
+         |                               ^
+   cc1: some warnings being treated as errors
 
 
-在 2025/6/6 15:56, David Hildenbrand 写道:
-> On 05.06.25 09:18, Jinjiang Tu wrote:
->>
->> 在 2025/6/5 14:37, David Hildenbrand 写道:
->>> On 05.06.25 08:27, David Hildenbrand wrote:
->>>> On 05.06.25 08:11, David Hildenbrand wrote:
->>>>> On 05.06.25 07:38, syzbot wrote:
->>>>>> Hello,
->>>>>>
->>>>>> syzbot found the following issue on:
->>>>>>
->>>>>> HEAD commit:    d7fa1af5b33e Merge branch 'for-next/core' into
->>>>>> for-kernelci
->>>>>
->>>>> Hmmm, another very odd page-table mapping related problem on that 
->>>>> tree
->>>>> found on arm64 only:
->>>>
->>>> In this particular reproducer we seem to be having MADV_HUGEPAGE and
->>>> io_uring_setup() be racing with MADV_HWPOISON, MADV_PAGEOUT and
->>>> io_uring_register(IORING_REGISTER_BUFFERS).
->>>>
->>>> I assume the issue is related to MADV_HWPOISON, MADV_PAGEOUT and
->>>> io_uring_register racing, only. I suspect MADV_HWPOISON is trying to
->>>> split a THP, while MADV_PAGEOUT tries paging it out.
->>>>
->>>> IORING_REGISTER_BUFFERS ends up in
->>>> io_sqe_buffers_register->io_sqe_buffer_register where we GUP-fast and
->>>> try coalescing buffers.
->>>>
->>>> And something about THPs is not particularly happy :)
->>>>
->>>
->>> Not sure if realted to io_uring.
->>>
->>> unmap_poisoned_folio() calls try_to_unmap() without TTU_SPLIT_HUGE_PMD.
->>>
->>> When called from memory_failure(), we make sure to never call it on a
->>> large folio: WARN_ON(folio_test_large(folio));
->>>
->>> However, from shrink_folio_list() we might call unmap_poisoned_folio()
->>> on a large folio, which doesn't work if it is still PMD-mapped. Maybe
->>> passing TTU_SPLIT_HUGE_PMD would fix it.
->>>
->> TTU_SPLIT_HUGE_PMD only converts the PMD-mapped THP to PTE-mapped 
->> THP, and may trigger the below WARN_ON_ONCE in try_to_unmap_one.
->>
->>     if (PageHWPoison(subpage) && (flags & TTU_HWPOISON)) {
->>         ...
->>     } else if (likely(pte_present(pteval)) && pte_unused(pteval) &&
->>         !userfaultfd_armed(vma)) {
->>          ....
->>     } else if (folio_test_anon(folio)) {
->>         swp_entry_t entry = page_swap_entry(subpage);
->>         pte_t swp_pte;
->>         /*
->>          * Store the swap location in the pte.
->>          * See handle_pte_fault() ...
->>         */
->>         if (unlikely(folio_test_swapbacked(folio) !=
->>             folio_test_swapcache(folio))) {
->>             WARN_ON_ONCE(1);          // here. if the subpage isn't 
->> hwposioned, and we hasn't call add_to_swap() for the THP
->>             goto walk_abort;
->>          }
->
-> This makes me wonder if we should start splitting up try_to_unmap(), 
-> to handle the individual cases more cleanly at some point ...
->
-> Maybe for now something like:
->
-> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> index b91a33fb6c694..995486a3ff4d2 100644
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -1566,6 +1566,14 @@ int unmap_poisoned_folio(struct folio *folio, 
-> unsigned long pfn, bool must_kill)
->         enum ttu_flags ttu = TTU_IGNORE_MLOCK | TTU_SYNC | TTU_HWPOISON;
->         struct address_space *mapping;
->
-> +       /*
-> +        * try_to_unmap() cannot deal with some subpages of an anon folio
-> +        * not being hwpoisoned: we cannot unmap them without swap.
-> +        */
-> +       if (folio_test_large(folio) && !folio_test_hugetlb(folio) &&
-> +           folio_test_anon(folio) && !folio_test_swapcache(folio))
-> +               return -EBUSY;
-> +
+vim +3748 kernel/sched/ext.c
 
-If the THP is in swapcache, we also have to split PMD-mapped to PTE-mapped first.
+f0e1a0643a59bf Tejun Heo 2024-06-18  3736  
+8195136669661f Tejun Heo 2024-09-04  3737  #ifdef CONFIG_EXT_GROUP_SCHED
+8195136669661f Tejun Heo 2024-09-04  3738  static struct cgroup *tg_cgrp(struct task_group *tg)
+8195136669661f Tejun Heo 2024-09-04  3739  {
+8195136669661f Tejun Heo 2024-09-04  3740  	/*
+8195136669661f Tejun Heo 2024-09-04  3741  	 * If CGROUP_SCHED is disabled, @tg is NULL. If @tg is an autogroup,
+8195136669661f Tejun Heo 2024-09-04  3742  	 * @tg->css.cgroup is NULL. In both cases, @tg can be treated as the
+8195136669661f Tejun Heo 2024-09-04  3743  	 * root cgroup.
+8195136669661f Tejun Heo 2024-09-04  3744  	 */
+8195136669661f Tejun Heo 2024-09-04  3745  	if (tg && tg->css.cgroup)
+8195136669661f Tejun Heo 2024-09-04  3746  		return tg->css.cgroup;
+8195136669661f Tejun Heo 2024-09-04  3747  	else
+8195136669661f Tejun Heo 2024-09-04 @3748  		return &cgrp_dfl_root.cgrp;
+8195136669661f Tejun Heo 2024-09-04  3749  }
+8195136669661f Tejun Heo 2024-09-04  3750  
 
-> if (folio_test_swapcache(folio)) {
->                 pr_err("%#lx: keeping poisoned page in swap cache\n", 
-> pfn);
->                 ttu &= ~TTU_HWPOISON;
->
->
->
->>
->> If we want to unmap in shrink_folio_list, we have to 
->> try_to_split_thp_page() like memory_failure(). But it't too 
->> complicated, maybe just skip the
->> hwpoisoned folio is enough? If the folio is accessed again, 
->> memory_failure will be trigerred again and kill the accessing process 
->> since the folio
->> has be hwpoisoned.
->
->
-> Maybe we should try splitting in there? But staring at 
-> shrink_folio_list(), not that easy.
->
-> We could return -E2BIG and let the caller try splitting, to then retry.
+:::::: The code at line 3748 was first introduced by commit
+:::::: 8195136669661fdfe54e9a8923c33b31c92fc1da sched_ext: Add cgroup support
 
-Since UCE is rare in real world, and could race with any subsystem, which is more race. Taking too much time to handle UCE in other subsystem is
-meaningless and complicated. Just skipping is enough. memory_failure() will handle it if the UCE is trigerred again.
+:::::: TO: Tejun Heo <tj@kernel.org>
+:::::: CC: Tejun Heo <tj@kernel.org>
 
-CC Miaohe Lin
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
