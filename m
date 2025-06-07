@@ -1,216 +1,254 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic303-28.consmr.mail.ne1.yahoo.com (sonic303-28.consmr.mail.ne1.yahoo.com [66.163.188.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E98D2FF
-	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 00:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749257266; cv=fail; b=TZkDDmFyFbNLmb6SbVgWd5B6V8nXnOjtq0gtshPinmqRd0CAx850N0XKDegJQcjLG+xJuW6cVEkuipp8C85HhLPnlbMWWcZ3A+4i1Z6ddGOAEXjfF3XuiwYXVC7b2+UscB2+oLwoyYotclYkOiy1YTBnSVqRKvbJ8mRr7lT64bo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749257266; c=relaxed/simple;
-	bh=2va6wLJ8Y+EiOi/kbzBfJzrAD5FD6snlIpF4efYUpLE=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=eFjnH/ckRaB4lr/YjvzTkIBGwEFQQIrV8fFIrYx+FLmq+W9MhEjR/4jpcbxTo2sGKvuJvUmMaPynBAdSB/GTxu5sZZoggRuPkzX3TRoDMY46V9GNHR2+P+CIlyA8mjqlxKYpgh3VwvEDfw/KJWQW2LF5DwjbMOkShP2sTTTTdnk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dqqlxsc3; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF04B39FD9
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 00:51:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.188.154
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749257509; cv=none; b=GB/K66ryM/Wtq7V8rNxPj4fMK0CDFESog9N7DwZwHeBYIXGeNyANFiNTGz0DagHK9YZIK+4wLr0/bcHHvRHT8y3Mowf3+xDwAU9BBc1iLv8gKDwQsG9PNwLLrRl2emF9vxQlG2JDdcwVX6bk6/MY7pXDozj+2FIjvHge3FinmZo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749257509; c=relaxed/simple;
+	bh=2pOezyS2qZSc5TQVN6o92sO38Z6T9iIfdEifdZOn8G4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NkiOpUz4eTOdFVvYxqJgk+J+S/h6EHpAKn8ZDCdaACqz0Y5mjOk3816vV1M8gZGF3jrB/LZj5PybPN5Jy6yHhrUmawqGznN9PWYs0f+/S7BYc+orBBVol46i9NxYgPgkQFpqHwRp+2ltmFezFoOgVhy8mWZKKzyRbhF2s5FLgLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=Gx23wNyv; arc=none smtp.client-ip=66.163.188.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dqqlxsc3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749257264; x=1780793264;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=2va6wLJ8Y+EiOi/kbzBfJzrAD5FD6snlIpF4efYUpLE=;
-  b=dqqlxsc32YHsjUjReEdj4b9AyftR5s6n7idIGap/h5UySI8JPlzqxvGl
-   l4hHD8Ah4gyxpzJHoC5giOqfh4OEPiBEwBXCtukENl28hR5bKW1uqkGGg
-   3Be2OCgfxmY0QGmsaSyJl0rG6tCv+mLM6YERuqBK17pYwJIxzSvbjL1zy
-   ANw3xIipVViTjQv4Wv6cIdMNR0AvQdGcb9DAGwZabRFHrX4dw81f+9l1+
-   fKtbalYIoSaPQdgy3vFwzOvN3UYxbeJQwO6TviLRw85ZfWJaxKVNG0XR3
-   YKwMYQ3XW3cAL4nJeHDpsT/JfAWtd/BraGzA+q8DfrIA9BCWppKbNHphq
-   w==;
-X-CSE-ConnectionGUID: QrT2ptirRcm2VjXOoqKHkg==
-X-CSE-MsgGUID: HAH74+0PTY+pVXqiL8cqeg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="54044363"
-X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
-   d="scan'208";a="54044363"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 17:47:43 -0700
-X-CSE-ConnectionGUID: zCy/WvJoRZinbT3TaosUEg==
-X-CSE-MsgGUID: Nj/fHiplRFGbAvnEq3FccQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,216,1744095600"; 
-   d="scan'208";a="146911678"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 17:47:43 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Fri, 6 Jun 2025 17:47:42 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Fri, 6 Jun 2025 17:47:42 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (40.107.220.70)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Fri, 6 Jun 2025 17:47:41 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=I/hNbkeqo5d3rDhGtC3NBCUbhc75p0OurJY7b1vsccW/y9Aq0wPjs9+x1bdMXXjyx10VhxGOLvFLUPJDe6SrP1az9HIZjHybWVJNg2cnYvXZ+HOz2eScSbW6cATrSgb9fgt56wMCDOLHwh6IYrAC4CUl5KdorM7/1H6mctOtS5GTlHYOaJPMCzN9hNEH/ZyKZtUZ+ZTb0gQMMljSb3AwHWptKOISw01jtuELcb6NvfHo1trONwYVoeYIybTwW6KyJEamb6fqACacUjoUEjHkhA8Mpi/1CFaoSE0RDJM1jvN9m4/vh7d9vE8zOwxytuQ2U+5gpY/u1Mc4/yiAOsHC0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FlgGA3N6PCyuprIlyboELsvuUAYzHOJKTtwVfkhwb3o=;
- b=d4AJt808tDJogWzpeqfJE8+6mTh+Bcs9M8HogDzGhNWkzCTFkQgs1R3eoZbtEK2flVR80oyvXflv/Aoo8lOQ9lqU1jQ9L5Q1YW3YFog4wKor3dT0qQuvlnEWg8P4RKWHNUT3ykJj/TWGnA1QNpOmbwf6haqIrvRdeXs3/wvYS9020M7P9rKxS4qDBHPmIp15d0LtSv6I6yxYhYchBoYOmvCm6zQxJNu7mO5P4u5Ddd6DVRLlKkvMTdxz/IMPhwgM/ok221aqrKAPy1vy7AE4Rm5E1anCbzOf80XX8rZec5sMrUL/0aw1TsCG1UZ0eZbOuFGLsioHnEg80KjVlMT6pA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH0PR11MB5674.namprd11.prod.outlook.com (2603:10b6:510:ec::10)
- by MN6PR11MB8193.namprd11.prod.outlook.com (2603:10b6:208:47a::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Sat, 7 Jun
- 2025 00:47:32 +0000
-Received: from PH0PR11MB5674.namprd11.prod.outlook.com
- ([fe80::77d3:dfb2:3bd:e02a]) by PH0PR11MB5674.namprd11.prod.outlook.com
- ([fe80::77d3:dfb2:3bd:e02a%4]) with mapi id 15.20.8813.021; Sat, 7 Jun 2025
- 00:47:32 +0000
-Date: Sat, 7 Jun 2025 08:47:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Masahiro Yamada <masahiroy@kernel.org>
-CC: <llvm@lists.linux.dev>, <oe-kbuild-all@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>
-Subject: ld.lld: error: Function Import: link error: linking module flags
- 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at
- 870780), and 'i32 1' from vmlinux.a(mballoc.o at 901800)
-Message-ID: <aEOMHCHD62EaNZb5@rli9-mobl>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-X-ClientProxiedBy: SG2PR04CA0157.apcprd04.prod.outlook.com (2603:1096:4::19)
- To PH0PR11MB5674.namprd11.prod.outlook.com (2603:10b6:510:ec::10)
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="Gx23wNyv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1749257505; bh=ztbvXsukeivLvQbhQeIQBI0l9DOjlssE9T9GW9VTq1o=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=Gx23wNyvhnqsrqyNKoThrUa09uWArZTFjGFx+OzGiAuwGqIxsM7/HTW87E9eRNk4BhEd07rEutF7s9QazbJ5e49o5ZT7/SO6LhbaW/wnWpxSr4lA0zbHQlo313AeNsPBJ/RI2QKdFRQS8srmcwiyveKVYwazE7lqJl6XBNYo3WovxhYawrgkR9Hc76GKPFCCbZ+UZQ1Yaw0InUS4TJpl6Y754r86nl2uXdo1MqRPoUD2bq9qVpnKYBZ3Yoi9lWY/BBnzi1Plw77A6J/YpYOB89abTxGEABtFxd4qhZMCz3L/MMA2MWQnB6OsuNXyq3aNlFsaxmQdXvROfLTnRQox2A==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1749257505; bh=CZt7aJZlmfbjhZZ+sB+H1ocFquYWVoehBvoESd9kWeC=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=DX7rsuSGa5+GBHWOFkDcSXOXA8csdHuP8ocOF3F8xbCoMTYIrWF95aCfOdN+mIiMActrJ22ICilp2mmK9/QttHJ/CG7NAswz09T4CFM0jRw9DGHLfcD5a7PZ4f+O2REsQvwg9VAt9Ui9gPiUO0wnHyDSlHVE2Ti8dxpyz7i6+tF0BYE++c7RwOiFbkD1S/czRgCbE/pPwWlIQn2RgZvOGLHe3Z7O6td88bks4D/AzJqYdhWk0o4dIlUswMy8f9o0ax+XJeW09WtfkZ+JbmczEhoDz8sj28kPUiV1qRjU7t0ckD0at6EtaEaAg9OZshO8O+vCk5DWgCTNUfdzvxLGkw==
+X-YMail-OSG: p9HGJPIVM1k.yY8zVrgLB8q2oDhvJ.E7YrXSQvM4IYJ9_Ou6mFFfzbv2d9pBCP2
+ AcVEWwCJXmKQBs9yS1N5c9m2rOLqbwQrtcthxHnXI.AfpzaOjoUmL9iZXO_yL5r4b6xLnFo8LUkO
+ 3qO9KM6zLQe0nwzWmMAA_qSVgQ_1iUd9VPzamvjIkWSqYMZ2i2itr2d6cN27v07ASm5kYUnHa1wq
+ JeAKulMtkAnDVNNbZ9pfIpxeOoSO_we.CVTUUgd9h_YzkwjOjxTQq0qHY4gKqz3sbrQKrK4ZY8UB
+ 1N94qu1lgQBs6sGWtnzA.y.KfWe6zvdsllkB6T2T0e2bjzTjPdu2iZPfQ1vMe5MH0udvfVM5YGZq
+ nvPPoj6rHOYB2s5uouIzB02h0HL184BjsxC.N33_eHJGVkB06k5pfXImubmgqPvaN0CUqX4Uww9t
+ Lsck_aOqMk1teqXHK5eRSpjsmvk2.gtyy23W876zV8rPIJZoejwjtNmqlFixKYxfs_Wix4Jedxbr
+ 9P5YbQXPyhK9kBV8dSIV4hx.OWITamPP_BzRMzGMvZupiPRY1Ur3GjmOkAosqxMSkplmHWtrdkon
+ Nt4XCpa0pqF85UDbd.sPpQvnOUQVWmH7i82FzrsiydMa_.MWk280gqDS6CbGWnLwIYxeafq58_yY
+ Cm1L88_jij8Tqz8zEKvaAvbNdRQlXw1IySPF5wuNgAmoKIFV9DCG29PQHVOOqP4XUVJqCKSS3Nww
+ cvzCbvlk6g1DmC9rjTCfiFen7aDSFT0sWPK2hS1F7m9ypPrIu.MnwAIQ0HroNE.GgNLvw_cdn4Qx
+ MpFRHlUz5IHAJeHazgmMF6ptWyEigtFlwAJVnMqHnfzBO.iOA.BCewDaZ3mCET11Q_JFFxa6A42X
+ txQo2UFSKv96rN2BWOpR6AkyvkCZI1ZqPl.jW9o.cJkDJWVg5EwM1GMvNXFw5LzABlT8KHs7J3aq
+ 0tfehKsQA9N578S6oP8zQy3UGxB98CRdZEHB7ZOO4O_Pjev8LqWqQv0UgbOGOnY6PUTDC0VYmGpB
+ ycJth7UNByejyJ9W9F8LOjE.cYPQ2K4BIdxWZfB9PCnQgeLOCCEbMH4_ba6LOd7AnyasseE6pwbo
+ rgZTxojRGYbtVZ86ElBN_RhafGnc80V7DroTAuDFW7Mh718Rs8rBmxruc2jDZSmMSEfqzEI_F0iR
+ q2VxEz7PNzGnXZDlnxquP00h5woQ4FTkHzoRDCOKPAgabLYT_jeQeSVxQtS32cInOGf6eJgGJQZp
+ 3d.c3bILshXC4Ciw0dS8ETy8aCD_EWmj13WEIEBNY6ZWfI9edITLtTFGyrTK2kk0VWiu6wdSmjna
+ SlbLTfF0CyqWw_9s_6U8j_WmWnUT3d8Nr8igCTSId982ljBP7XNHUD8u6T8AB9t6smrLwUsFuf2O
+ xi3pGFnlZQF8IKTzR1S57JXQq9FhUoPF3xaLLjlvWZ9DtYsruZQIS2ro2NhqGhxyMFs3inwHTeI3
+ kUed.TPAt.VXA0fLzcZtqfCk_e.gkvwbvYq4J68rnbCv4E.o0WN.WhUeQ.LR33khJxGEd7VQuoJ5
+ .OvpdjyEn_fjMUTAH3xhQVZyidq_3o1TCfeLXtVyk1P9kyCLgG35RhFMD9HVjkBFCbbee4dJd.8D
+ ztTrAcHR9PcIozMEklyhXfIc4J.7iTFxqph5lNQdGpg3xHO8U9bksPGyM7sgydUO6e8kGxXEPCjU
+ mybGifjqpka889u_8pRbVbIPARrSBotUCouAqinplRjflRmlQShH9CdvB1kFkGMx71uEGJAQPL8_
+ ZDej_tmTBAAMOQiyDBMaRc8NrWE0xM.NN2hy7v.soOYiQYvQgZFuweoTowZ5m3jlGhZ3LaxNWgKq
+ 9gXV4EevI6FnCNTd0.uq0FpuKvdkxXRWeeHmb8jVDjh0OZMb1aGu.x_EGzdTlR_y9NXA2m4K2nbL
+ Bz9bJ5YnWYtCeM6josv9kt9S9VQATe6iR45rky9Lz1kxVFjykLFD_9QM9Jl5ZpiJvuNFlkV5BDhG
+ 5.8rxpkH0JJy7akymbr1tTH7UTuLEjs06yBS2GseAd7UBqbosaoLxPvS4C7LgiJ2f3bEIPfUcd7u
+ pKEnKlKbVa.Fq5j8eoWmNTpOYcFGKbSmPJgTQqkLjS4kCUCBRCHWYjEmWOyJteVSlUjh7Ae3UbJi
+ ETAYHRRTqthj5fNhWgwuXeiVKMObBzKICjNwNkE5zVKDcMKsBRhbF1U9a9qkQN1DWRvw_fNlORbb
+ bjf.RrfnaGHuMAgQYYmQexdyM6NvwxfCgXzHANUR1iWG.gag.85p7PPq7WkDWtDr5JVL7UsMukOP
+ rXPfhNNdnNEGaFzGCtXUqDfR6ukE-
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: 95528723-bf9e-4362-aebe-92442b848819
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.ne1.yahoo.com with HTTP; Sat, 7 Jun 2025 00:51:45 +0000
+Received: by hermes--production-gq1-74d64bb7d7-5qmwx (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 7461f2feac0d1a8decd03521522bae75;
+          Sat, 07 Jun 2025 00:51:39 +0000 (UTC)
+From: Casey Schaufler <casey@schaufler-ca.com>
+To: casey@schaufler-ca.com,
+	paul@paul-moore.com,
+	eparis@redhat.com,
+	linux-security-module@vger.kernel.org,
+	audit@vger.kernel.org
+Cc: jmorris@namei.org,
+	serge@hallyn.com,
+	keescook@chromium.org,
+	john.johansen@canonical.com,
+	penguin-kernel@i-love.sakura.ne.jp,
+	stephen.smalley.work@gmail.com,
+	linux-kernel@vger.kernel.org,
+	selinux@vger.kernel.org
+Subject: [PATCH v4 1/4] Audit: Create audit_stamp structure
+Date: Fri,  6 Jun 2025 17:51:31 -0700
+Message-ID: <20250607005134.10488-2-casey@schaufler-ca.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250607005134.10488-1-casey@schaufler-ca.com>
+References: <20250607005134.10488-1-casey@schaufler-ca.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR11MB5674:EE_|MN6PR11MB8193:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1cb2dc9a-88fa-4acc-8620-08dda55ce320
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?oFtW26fk8tvVElm4eCkHBZXL+3u+qi0Aj3NAkv8PChahecKn3+3gn0G0Jrd8?=
- =?us-ascii?Q?Hmt87zv3EQAGb6wFN94vDQuvB4+iGdSRwHAr2mCKlWwY0FB8g442NWG46Di1?=
- =?us-ascii?Q?RNeO5Aqag/KWFNgtNCND7rcejI4CkACR+Ov7OdjOlsVhDgfnHXbwwreLpleP?=
- =?us-ascii?Q?tXOy6eMKpLj7TrorloWui8kSdyh4dGtTy+mUtIkaEJs1zlSxHyXKDM9vH1vh?=
- =?us-ascii?Q?nOV7tSL3iPrAf6JVnLb5dZjjGmqeu04SVx4kfl/XhrTkifQ8kU/D/8ek1AAS?=
- =?us-ascii?Q?ZBVAGGfeKba5+QSI8ppvU3OzQPm3xPEQPHLa8L8zd6jhJHTmlFnMgD7yUDof?=
- =?us-ascii?Q?7/TtSW3eViIs+e4UgOuJ0DYGeNPLRxiKalFOxJjjeWEnnz0houMtyRwrQc2s?=
- =?us-ascii?Q?LRUMgbZw24AOr99pDwQX5SgMQNc8gpToQP0959LnhUi67I3AUiqkwkrvSfp6?=
- =?us-ascii?Q?HnSgw6spsVZjaGZF7fOdej2DD4MA7LPVksvYdy9y7eAvlAODkTSEC1Et5sTW?=
- =?us-ascii?Q?9yp5AYkfz3wf5ELD2U/ekWRA7UXdyGXNL8SpnHyGzLVds6QJZ2u/5sNTOtSg?=
- =?us-ascii?Q?LgUtXju1vjPFygl4prt9GtI8SJpnlR0TpgJoo/WMPEMZ39iYMRJYZGaKGkwB?=
- =?us-ascii?Q?iTifFQC/uf67m1W+OD6laEf+utNYY1Cibpz9jV8WJLiEW4NpKidewtt0bIdc?=
- =?us-ascii?Q?QKkmTMOQbaoz3bWACZ0Vp7hB/9pQyLAe75rKacwFySYLtB/vO/Yn2SZhNLW3?=
- =?us-ascii?Q?evTu0LY2ex6uiAFs3iPgJRqhlj0y9QvaqATkGwHvdBbKXL6NKWzdDKWbc/D9?=
- =?us-ascii?Q?xB+Ivamj6tr2sml/VW3J6eOMXoXEiPWDhtYz8h4BbpH/wao1GPkLaDUJM1f2?=
- =?us-ascii?Q?9kJz9Wx465CWxZZ9h2BN/SOWdMBayn+k4jbd+SAmXChKFV8r4zEs8v+qWS+D?=
- =?us-ascii?Q?8btAW/WPY6/BNmZ2fKW8cuT0y1nYnU+zHPthOKcyo/lIwFI6g7sl8O+dIcJ4?=
- =?us-ascii?Q?kM6ak9y4dGHjm/b5SmDkLb8VF/kkXDE6nVbw7tc6zrwpmnL/L1lrl3bln0dv?=
- =?us-ascii?Q?HeCIWAdAYNE9PdAAF5DiHq1UFQY6rmcYDer821jkPXWtbSjG+KLhUqqbnoRv?=
- =?us-ascii?Q?aRG61We/HPPB5KBpNPfuP4XwxSDo15ST52Pm3q7gwbZ/MbWKscxnXwJ9pXnY?=
- =?us-ascii?Q?+rEGL3ZvM9Jgf1e+qPHKN6z3eMb4D7oUMVNxuxzbNdMDhE8DYt1MH3/byJ2x?=
- =?us-ascii?Q?wMCCEf4jHRJv04vsQ8Zyu/ooVYwf/PoCuqzDmljLIzCEcb/8QPiO+RwMgVdJ?=
- =?us-ascii?Q?BXkB8VXpgHOhXdPZZiYHsR0Y4jpTUcVaR5iNZuUZPQ+mrVm1R7OGzxpG9Bt8?=
- =?us-ascii?Q?k2us7FxPEH2Jd+X+3vzjULI4+6hE?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB5674.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?BF/FZOotXUpP2xqoTU2KZXCmVKPOWF1bSFQuVCz0vGUxQWEYFhtjgpVwUMBq?=
- =?us-ascii?Q?hC+jXmtcTp/Wgn4TX36/rQj94XdrlQHlPeCg0n3GM+banPoowy+A2xJsELsr?=
- =?us-ascii?Q?SfIEbRSqknmflhwmi5b4AMkfcDanCtVuyAp85p0FUIOiQIu+aDu+bIV9Px4H?=
- =?us-ascii?Q?jGAlHP568m4C53jlmxoqufEnuENpiSaZbZCd0rbLoUrFhDQwP69kl+6Ao/YY?=
- =?us-ascii?Q?L4UyBCCz47xNoIAPgW579L3BqeNbM+PgHsNcoigNZEpgS0zukgWZZ28y2fGn?=
- =?us-ascii?Q?o+W1nPIZRd6D3JnQ9UrOYL7vR6hdcTjMSrEkSB4quHG03UsAkpf5aswAB6WQ?=
- =?us-ascii?Q?GluykrgfIeS8j/jcm5dnkKhb/2EnbqufUbKCtNvrj1IS/G4Gru49ahWM7Zvk?=
- =?us-ascii?Q?TFkxpFKkGoljo7eZXHS/7CwcpH6nAQZ/qmUqtgMqBHV8I8RlZu4kfXozuCeP?=
- =?us-ascii?Q?p+/ljVlkNKP1/SVq5e0iBh90jdInRWLP8217idgSxSne9YfQVPf2ZzWdegaN?=
- =?us-ascii?Q?HjRxMGSqOehUDSC/mpyO0vXMycFOWXSX5oDJbEXzLzCVEicSp9S4Tz89Nqq0?=
- =?us-ascii?Q?rBzbWdBu2MGdloQZ8CoZ8ojEG4ymGG4w05TllaK2eNFY0Td5jUv5s5Rvw7C1?=
- =?us-ascii?Q?NtWfhcpaBy3rpI2JaqVAYMz6e0oeUz95v35ieU6w3BORb5kvEtC0BoDViPvM?=
- =?us-ascii?Q?wZKEAnzPRTMzcd8OCIc6U4bBA3P+Z6DqwpVlzkrUsLQHNMk2puS0wZFLyXjx?=
- =?us-ascii?Q?5YQhbeicxwRdoNBEqMyIWXUoHgIMPJVDHuwjC3G7U57E4eDBEuiyox65D0d5?=
- =?us-ascii?Q?tiR1InqF7xy3akxYYwkSuFAjWAYFBLstfG9BjgV7m+umT+bvNLhy4X8ZqcM6?=
- =?us-ascii?Q?IaCn8Y8tSscsdVTec6O+EJelBO2x8zgh4JSuiLdWtSc8EudCSKuowxCX45ha?=
- =?us-ascii?Q?7HoXHz3zRy51pDkkd3uh03vvzkE8BAs4gVwnKwhGeG2uVmBeSyxFE7SR0iSK?=
- =?us-ascii?Q?MIstqfki/EKyggZQsMNF1c8D/5zbUvR0inGB3iXCKpfz/Os5n6dt2WX0UeMW?=
- =?us-ascii?Q?lyDFk35RyvT/F4tCRMRKZ6dJPF8vnkw9Zf4E8l/0EJ9cU6T30VXYd5K5FWkI?=
- =?us-ascii?Q?SS0RR15tbG+5afz9Xdxj69sq7wHxJxi0/sdLIGI/u50v7CEHspzhVlU2iA/t?=
- =?us-ascii?Q?dmDCdyYouNEIHTyxX5xwUTlr52J3VHc7FPnpkwjG0jnHTH7oFp8AGIHGUK7P?=
- =?us-ascii?Q?f+qMVR+tjrX9yESOfA/27L24I+FMERZqkbGiJJT9oLHr21HOcLayLWqS2gag?=
- =?us-ascii?Q?lbSzvWAfVxitBdnsCoCN+DmrEYqvphXXem3fuYLh/t3g3GEUBX27CKITrZKB?=
- =?us-ascii?Q?mivw34SzfR5sSZ1/Io6xGKZonfkSB1deULfQqP+BDW6cjz7XCpaTLrtEKrlU?=
- =?us-ascii?Q?NwQQDlHgsKZj9bWIa9U4y9IujLek/MbPLkCyR49jz5jiSFi8UipsfLjBX/MF?=
- =?us-ascii?Q?ZLykoyLblvBW5ZGYQqNLGELzotnj4x+2f4cytAa9skl65s+4yBKRauSl2bgy?=
- =?us-ascii?Q?IVegj5UeaqWYuAjBJ4OF5If3Vj9bYUkb0pqMHuux6wulPHmEGHcb1GQ16XnA?=
- =?us-ascii?Q?fw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1cb2dc9a-88fa-4acc-8620-08dda55ce320
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB5674.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2025 00:47:32.6313
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: R4XdR9K71RMj/w9FaOB6dohTicZu9HTwHQvZvABPNPYLiztWZfGHMrBUlr+MpgFnw2qJnm9XoOTelprlBqUimA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR11MB8193
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-Hi Masahiro,
+Replace the timestamp and serial number pair used in audit records
+with a structure containing the two elements.
 
-FYI, the error/warning still remains.
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+---
+ kernel/audit.c   | 17 +++++++++--------
+ kernel/audit.h   | 13 +++++++++----
+ kernel/auditsc.c | 22 +++++++++-------------
+ 3 files changed, 27 insertions(+), 25 deletions(-)
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   c0c9379f235df33a12ceae94370ad80c5278324d
-commit: 695ed93bb30e03e9f826ee70abdd83f970741a37 kbuild: fix Clang LTO with CONFIG_OBJTOOL=n
-date:   4 months ago
-:::::: branch date: 3 hours ago
-:::::: commit date: 4 months ago
-config: riscv-randconfig-001-20250607 (https://download.01.org/0day-ci/archive/20250607/202506070617.O7yPB5MW-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250607/202506070617.O7yPB5MW-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/r/202506070617.O7yPB5MW-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 870780), and 'i32 1' from vmlinux.a(e1000_main.o at 975540)
-   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 870780), and 'i32 1' from vmlinux.a(net-traces.o at 999960)
-   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 870780), and 'i32 1' from vmlinux.a(hugetlb.o at 890520)
-   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 870780), and 'i32 1' from vmlinux.a(trace.o at 881700)
-   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 870780), and 'i32 1' from vmlinux.a(tcp.o at 1003740)
-   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 870780), and 'i32 1' from vmlinux.a(skbuff.o at 997800)
-   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 870780), and 'i32 1' from vmlinux.a(core.o at 973860)
-   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 870780), and 'i32 1' from vmlinux.a(syscall.o at 883920)
-   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 870780), and 'i32 1' from vmlinux.a(slub.o at 890400)
-   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 870780), and 'i32 1' from vmlinux.a(super.o at 912660)
-   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 870780), and 'i32 1' from vmlinux.a(filter.o at 998880)
->> ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 870780), and 'i32 1' from vmlinux.a(mballoc.o at 901800)
-   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 870780), and 'i32 1' from vmlinux.a(page_alloc.o at 890100)
-   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 870780), and 'i32 1' from vmlinux.a(core.o at 886860)
-   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 870780), and 'i32 1' from vmlinux.a(vmscan.o at 888060)
->> ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 870780), and 'i32 1' from vmlinux.a(volumes.o at 913800)
-   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 870780), and 'i32 1' from vmlinux.a(af_packet.o at 1009260)
-   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 870780), and 'i32 1' from vmlinux.a(ring_buffer.o at 881640)
->> ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 870780), and 'i32 1' from vmlinux.a(inode.o at 913260)
-   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 870780), and 'i32 1' from vmlinux.a(core.o at 883860)
-   ld.lld: error: too many errors emitted, stopping now (use --error-limit=0 to see all errors)
-
+diff --git a/kernel/audit.c b/kernel/audit.c
+index 5f5bf85bcc90..2a567f667528 100644
+--- a/kernel/audit.c
++++ b/kernel/audit.c
+@@ -1833,11 +1833,11 @@ unsigned int audit_serial(void)
+ }
+ 
+ static inline void audit_get_stamp(struct audit_context *ctx,
+-				   struct timespec64 *t, unsigned int *serial)
++				   struct audit_stamp *stamp)
+ {
+-	if (!ctx || !auditsc_get_stamp(ctx, t, serial)) {
+-		ktime_get_coarse_real_ts64(t);
+-		*serial = audit_serial();
++	if (!ctx || !auditsc_get_stamp(ctx, stamp)) {
++		ktime_get_coarse_real_ts64(&stamp->ctime);
++		stamp->serial = audit_serial();
+ 	}
+ }
+ 
+@@ -1860,8 +1860,7 @@ struct audit_buffer *audit_log_start(struct audit_context *ctx, gfp_t gfp_mask,
+ 				     int type)
+ {
+ 	struct audit_buffer *ab;
+-	struct timespec64 t;
+-	unsigned int serial;
++	struct audit_stamp stamp;
+ 
+ 	if (audit_initialized != AUDIT_INITIALIZED)
+ 		return NULL;
+@@ -1916,12 +1915,14 @@ struct audit_buffer *audit_log_start(struct audit_context *ctx, gfp_t gfp_mask,
+ 		return NULL;
+ 	}
+ 
+-	audit_get_stamp(ab->ctx, &t, &serial);
++	audit_get_stamp(ab->ctx, &stamp);
+ 	/* cancel dummy context to enable supporting records */
+ 	if (ctx)
+ 		ctx->dummy = 0;
+ 	audit_log_format(ab, "audit(%llu.%03lu:%u): ",
+-			 (unsigned long long)t.tv_sec, t.tv_nsec/1000000, serial);
++			 (unsigned long long)stamp.ctime.tv_sec,
++			 stamp.ctime.tv_nsec/1000000,
++			 stamp.serial);
+ 
+ 	return ab;
+ }
+diff --git a/kernel/audit.h b/kernel/audit.h
+index 0211cb307d30..4d6dd2588f9b 100644
+--- a/kernel/audit.h
++++ b/kernel/audit.h
+@@ -99,6 +99,12 @@ struct audit_proctitle {
+ 	char	*value;	/* the cmdline field */
+ };
+ 
++/* A timestamp/serial pair to identify an event */
++struct audit_stamp {
++	struct timespec64	ctime;	/* time of syscall entry */
++	unsigned int		serial;	/* serial number for record */
++};
++
+ /* The per-task audit context. */
+ struct audit_context {
+ 	int		    dummy;	/* must be the first element */
+@@ -108,10 +114,9 @@ struct audit_context {
+ 		AUDIT_CTX_URING,	/* in use by io_uring */
+ 	} context;
+ 	enum audit_state    state, current_state;
+-	unsigned int	    serial;     /* serial number for record */
++	struct audit_stamp  stamp;	/* event identifier */
+ 	int		    major;      /* syscall number */
+ 	int		    uring_op;   /* uring operation */
+-	struct timespec64   ctime;      /* time of syscall entry */
+ 	unsigned long	    argv[4];    /* syscall arguments */
+ 	long		    return_code;/* syscall return code */
+ 	u64		    prio;
+@@ -263,7 +268,7 @@ extern void audit_put_tty(struct tty_struct *tty);
+ extern unsigned int audit_serial(void);
+ #ifdef CONFIG_AUDITSYSCALL
+ extern int auditsc_get_stamp(struct audit_context *ctx,
+-			      struct timespec64 *t, unsigned int *serial);
++			     struct audit_stamp *stamp);
+ 
+ extern void audit_put_watch(struct audit_watch *watch);
+ extern void audit_get_watch(struct audit_watch *watch);
+@@ -304,7 +309,7 @@ extern void audit_filter_inodes(struct task_struct *tsk,
+ 				struct audit_context *ctx);
+ extern struct list_head *audit_killed_trees(void);
+ #else /* CONFIG_AUDITSYSCALL */
+-#define auditsc_get_stamp(c, t, s) 0
++#define auditsc_get_stamp(c, s) 0
+ #define audit_put_watch(w) do { } while (0)
+ #define audit_get_watch(w) do { } while (0)
+ #define audit_to_watch(k, p, l, o) (-EINVAL)
+diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+index 78fd876a5473..528b6d2f5cb0 100644
+--- a/kernel/auditsc.c
++++ b/kernel/auditsc.c
+@@ -994,10 +994,10 @@ static void audit_reset_context(struct audit_context *ctx)
+ 	 */
+ 
+ 	ctx->current_state = ctx->state;
+-	ctx->serial = 0;
++	ctx->stamp.serial = 0;
++	ctx->stamp.ctime = (struct timespec64){ .tv_sec = 0, .tv_nsec = 0 };
+ 	ctx->major = 0;
+ 	ctx->uring_op = 0;
+-	ctx->ctime = (struct timespec64){ .tv_sec = 0, .tv_nsec = 0 };
+ 	memset(ctx->argv, 0, sizeof(ctx->argv));
+ 	ctx->return_code = 0;
+ 	ctx->prio = (ctx->state == AUDIT_STATE_RECORD ? ~0ULL : 0);
+@@ -1917,7 +1917,7 @@ void __audit_uring_entry(u8 op)
+ 
+ 	ctx->context = AUDIT_CTX_URING;
+ 	ctx->current_state = ctx->state;
+-	ktime_get_coarse_real_ts64(&ctx->ctime);
++	ktime_get_coarse_real_ts64(&ctx->stamp.ctime);
+ }
+ 
+ /**
+@@ -2039,7 +2039,7 @@ void __audit_syscall_entry(int major, unsigned long a1, unsigned long a2,
+ 	context->argv[3]    = a4;
+ 	context->context = AUDIT_CTX_SYSCALL;
+ 	context->current_state  = state;
+-	ktime_get_coarse_real_ts64(&context->ctime);
++	ktime_get_coarse_real_ts64(&context->stamp.ctime);
+ }
+ 
+ /**
+@@ -2508,21 +2508,17 @@ EXPORT_SYMBOL_GPL(__audit_inode_child);
+ /**
+  * auditsc_get_stamp - get local copies of audit_context values
+  * @ctx: audit_context for the task
+- * @t: timespec64 to store time recorded in the audit_context
+- * @serial: serial value that is recorded in the audit_context
++ * @stamp: timestamp to record
+  *
+  * Also sets the context as auditable.
+  */
+-int auditsc_get_stamp(struct audit_context *ctx,
+-		       struct timespec64 *t, unsigned int *serial)
++int auditsc_get_stamp(struct audit_context *ctx, struct audit_stamp *stamp)
+ {
+ 	if (ctx->context == AUDIT_CTX_UNUSED)
+ 		return 0;
+-	if (!ctx->serial)
+-		ctx->serial = audit_serial();
+-	t->tv_sec  = ctx->ctime.tv_sec;
+-	t->tv_nsec = ctx->ctime.tv_nsec;
+-	*serial    = ctx->serial;
++	if (!ctx->stamp.serial)
++		ctx->stamp.serial = audit_serial();
++	*stamp = ctx->stamp;
+ 	if (!ctx->prio) {
+ 		ctx->prio = 1;
+ 		ctx->current_state = AUDIT_STATE_RECORD;
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.47.0
 
