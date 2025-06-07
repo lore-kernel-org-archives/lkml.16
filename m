@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7922153CE;
-	Sat,  7 Jun 2025 21:25:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973DB1EA7F4;
+	Sat,  7 Jun 2025 21:25:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749331507; cv=none; b=Y8oOZFm9dGSjEF/1pWCHcBQE8cmkjZTH7MNewGO8p67LqbRCm+yguKcPLo6q6rqD6S7xSAz7r2JM3N9gnMkSl8I2C8tF2fu8ATmJ2gJVSHqjGI1/YB6q07ToMLtIEWK1TuIbQuiyx5vRxlOQP9GTp3Yo6rBgvoX9FAPeNMtzEa4=
+	t=1749331513; cv=none; b=R0lilapFdQiHJ0ymmD9IZrEvGlj1YZwYKVzbNs8vXFP0bJO8NQJkkVFsWzOI1J2rFg3ubATOtdWi/QXmT1FfHykXDu/5AMwCIzrFBBUfwCFvfvNlZwUdIrBcXTybIbu+/ltxf9FL7cAVJNYD1TGQvXlQDdW6w4T8DC46zYhn1+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749331507; c=relaxed/simple;
-	bh=r8l2B+sq5zJq9kjyJ/SwpIdD6MXgJ5moKqvpI2Iv3ys=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BkxNmQ9xdaTEw2O4MjM+pHRZHvSwXNx3M/wZDq/sVjji5bR3IE7Zl2GIne9nHQZjU/sIQgbxZ6yojKZ9xhUrb6a618bwxlvmQpRHPxE07KGp6HzO1kde/5C1O6Qb8gfzE1vTrTDPZeqczdh+8078C54rs8yMO6dnlRGFUUtduHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OimRilvv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749331513; c=relaxed/simple;
+	bh=qx2zwBcl3wNpob4mAq9+wFt2npdqpRCKjBcRH1CJvIA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ryvtQtWAQjqQ8JWrCTbs3ORINapqPIJbhWM1y8RCo+YWvw618E2BW0mr0MNAmcNUmJZEV/u5FaT4lxEfn2QElSnqJvvFF9OI5NGp7g0mXXwxGQtZmM12T5WCXjAIKED9iIkO08Yd6VOeqXZq5SwSrmPAQAFZZUDwMeKBosRRMFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IPhiHrbH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OimRilvv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEF12C4CEF2;
-	Sat,  7 Jun 2025 21:25:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IPhiHrbH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04F46C4CEE4;
+	Sat,  7 Jun 2025 21:25:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749331507;
-	bh=r8l2B+sq5zJq9kjyJ/SwpIdD6MXgJ5moKqvpI2Iv3ys=;
+	s=k20201202; t=1749331513;
+	bh=qx2zwBcl3wNpob4mAq9+wFt2npdqpRCKjBcRH1CJvIA=;
 	h=From:To:Cc:Subject:Date:From;
-	b=OimRilvvQlHBauX0GxAHKRZFr+/AM3M8GlVRXmuLiqnMlvAXrt2WMN5FvJtNkUo5y
-	 48E2Oa6xgfiLIR2BxCaWeM7J4a4HE4rUuzU8ngn9CTSZzumI8vIG3xCEq+qq+pmaH5
-	 DJ66W/ygxNAxcCi4V6IbcpCgGY5XbTHFit685UjREFq4Fx63a1sVP4oMN/TkzqXSP8
-	 lDdzBAlP7Gi4BvCUAUgP3fwuk69EaNnjvwXOttk0DuD35pi179K1oYTBFFiRtLDfF4
-	 A3qVvGebkHsTeiy3F9Vftn7GpLZO/m4/nmKh0x+nyBEKKfDb3Xah1aucuWJIj1wWtj
-	 ppJTMipWXNbWg==
+	b=IPhiHrbH5f8+A5NmvaBnF/m7CUnZogDiCEHj3to5pHvZ4G0bABPm3a4zVBwHosSv5
+	 JtSCG1UbWjhWxWbYRfagN+KJFNN3sOu/JOMHB/UJ0Pe7VZOkZCln0VlIH5c8LKvD1S
+	 PCyPezXgfuTtyj3QEwj3rPRQZqJA/bxBZEFvxRvUsQySO0whZkkqacWwbYQ7n6NYjg
+	 zCdE3LoOyxidwqS2aWVBLFDzjrgvQkJxBgWmrrFJcVW5KAg6wMyZdgxdEQf1gWvRau
+	 p4Qw3CO4uPqio7q3RpCQdDH+LrL498gaaS2kuFDHEEHDtIHpj3Sm0fVGEe6CS9R7jA
+	 Bquw7I1HhMVJA==
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Vinod Koul <vkoul@kernel.org>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Hauke Mehrtens <hauke@hauke-m.de>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+	Ray Jui <ray.jui@broadcom.com>
 Cc: linux-phy@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: phy: Convert brcm,ns2-drd-phy to DT schema
-Date: Sat,  7 Jun 2025 16:24:48 -0500
-Message-ID: <20250607212456.740697-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: phy: Convert brcm,sr-pcie-phy to DT schema
+Date: Sat,  7 Jun 2025 16:25:07 -0500
+Message-ID: <20250607212508.741193-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,123 +44,117 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Convert the Broadcom NS2 USB2 PHY binding to DT schema format. It's a
-straight forward conversion.
+Convert the Broadcom Stingray PCIe PHY binding to DT schema format. It's
+a straight forward conversion.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../bindings/phy/brcm,ns2-drd-phy.txt         | 30 ---------
- .../bindings/phy/brcm,ns2-drd-phy.yaml        | 62 +++++++++++++++++++
- 2 files changed, 62 insertions(+), 30 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.txt
- create mode 100644 Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.yaml
+ .../bindings/phy/brcm,sr-pcie-phy.txt         | 41 -----------------
+ .../bindings/phy/brcm,sr-pcie-phy.yaml        | 46 +++++++++++++++++++
+ 2 files changed, 46 insertions(+), 41 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/phy/brcm,sr-pcie-phy.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,sr-pcie-phy.yaml
 
-diff --git a/Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.txt b/Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.txt
+diff --git a/Documentation/devicetree/bindings/phy/brcm,sr-pcie-phy.txt b/Documentation/devicetree/bindings/phy/brcm,sr-pcie-phy.txt
 deleted file mode 100644
-index 04f063aa7883..000000000000
---- a/Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.txt
+index e8d82286beb9..000000000000
+--- a/Documentation/devicetree/bindings/phy/brcm,sr-pcie-phy.txt
 +++ /dev/null
-@@ -1,30 +0,0 @@
--BROADCOM NORTHSTAR2 USB2 (DUAL ROLE DEVICE) PHY
+@@ -1,41 +0,0 @@
+-Broadcom Stingray PCIe PHY
 -
 -Required properties:
-- - compatible: brcm,ns2-drd-phy
-- - reg: offset and length of the NS2 PHY related registers.
-- - reg-names
--   The below registers must be provided.
--   icfg - for DRD ICFG configurations
--   rst-ctrl - for DRD IDM reset
--   crmu-ctrl - for CRMU core vdd, PHY and PHY PLL reset
--   usb2-strap - for port over current polarity reversal
-- - #phy-cells: Must be 0. No args required.
-- - vbus-gpios: vbus gpio binding
-- - id-gpios: id gpio binding
+-- compatible: must be "brcm,sr-pcie-phy"
+-- reg: base address and length of the PCIe SS register space
+-- brcm,sr-cdru: phandle to the CDRU syscon node
+-- brcm,sr-mhb: phandle to the MHB syscon node
+-- #phy-cells: Must be 1, denotes the PHY index
 -
--Refer to phy/phy-bindings.txt for the generic PHY binding properties
+-For PAXB based root complex, one can have a configuration of up to 8 PHYs
+-PHY index goes from 0 to 7
+-
+-For the internal PAXC based root complex, PHY index is always 8
 -
 -Example:
--	usbdrd_phy: phy@66000960 {
--			#phy-cells = <0>;
--			compatible = "brcm,ns2-drd-phy";
--			reg = <0x66000960 0x24>,
--			      <0x67012800 0x4>,
--			      <0x6501d148 0x4>,
--			      <0x664d0700 0x4>;
--			reg-names = "icfg", "rst-ctrl",
--				    "crmu-ctrl", "usb2-strap";
--			id-gpios = <&gpio_g 30 0>;
--			vbus-gpios = <&gpio_g 31 0>;
+-	mhb: syscon@60401000 {
+-		compatible = "brcm,sr-mhb", "syscon";
+-		reg = <0 0x60401000 0 0x38c>;
 -	};
-diff --git a/Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.yaml b/Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.yaml
+-
+-	cdru: syscon@6641d000 {
+-		compatible = "brcm,sr-cdru", "syscon";
+-		reg = <0 0x6641d000 0 0x400>;
+-	};
+-
+-	pcie_phy: phy@40000000 {
+-		compatible = "brcm,sr-pcie-phy";
+-		reg = <0 0x40000000 0 0x800>;
+-		brcm,sr-cdru = <&cdru>;
+-		brcm,sr-mhb = <&mhb>;
+-		#phy-cells = <1>;
+-	};
+-
+-	/* users of the PCIe PHY */
+-
+-	pcie0: pcie@48000000 {
+-		...
+-		...
+-		phys = <&pcie_phy 0>;
+-		phy-names = "pcie-phy";
+-	};
+diff --git a/Documentation/devicetree/bindings/phy/brcm,sr-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/brcm,sr-pcie-phy.yaml
 new file mode 100644
-index 000000000000..1fab97de5c0d
+index 000000000000..60ccc0813ed5
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.yaml
-@@ -0,0 +1,62 @@
++++ b/Documentation/devicetree/bindings/phy/brcm,sr-pcie-phy.yaml
+@@ -0,0 +1,46 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/phy/brcm,ns2-drd-phy.yaml#
++$id: http://devicetree.org/schemas/phy/brcm,sr-pcie-phy.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Broadcom Northstar2 USB2 Dual Role Device PHY
++title: Broadcom Stingray PCIe PHY
 +
 +maintainers:
-+  - Florian Fainelli <florian.fainelli@broadcom.com>
-+  - Hauke Mehrtens <hauke@hauke-m.de>
-+  - Rafał Miłecki <zajec5@gmail.com>
++  - Ray Jui <ray.jui@broadcom.com>
++
++description: >
++  For PAXB based root complex, one can have a configuration of up to 8 PHYs.
++  PHY index goes from 0 to 7.
++
++  For the internal PAXC based root complex, PHY index is always 8.
 +
 +properties:
 +  compatible:
-+    const: brcm,ns2-drd-phy
++    const: brcm,sr-pcie-phy
 +
 +  reg:
-+    items:
-+      - description: DRD ICFG configurations
-+      - description: DRD IDM reset
-+      - description: CRMU core vdd, PHY and PHY PLL reset
-+      - description: Port over current polarity reversal
-+
-+  reg-names:
-+    items:
-+      - const: icfg
-+      - const: rst-ctrl
-+      - const: crmu-ctrl
-+      - const: usb2-strap
++    maxItems: 1
 +
 +  '#phy-cells':
-+    const: 0
++    const: 1
 +
-+  id-gpios:
-+    maxItems: 1
-+    description: ID GPIO line
++  brcm,sr-cdru:
++    description: phandle to the CDRU syscon node
++    $ref: /schemas/types.yaml#/definitions/phandle
 +
-+  vbus-gpios:
-+    maxItems: 1
-+    description: VBUS GPIO line
-+
-+required:
-+  - '#phy-cells'
-+  - compatible
-+  - reg
-+  - reg-names
-+  - id-gpios
-+  - vbus-gpios
++  brcm,sr-mhb:
++    description: phandle to the MHB syscon node
++    $ref: /schemas/types.yaml#/definitions/phandle
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    phy@66000960 {
-+        #phy-cells = <0>;
-+        compatible = "brcm,ns2-drd-phy";
-+        reg = <0x66000960 0x24>, <0x67012800 0x4>, <0x6501d148 0x4>, <0x664d0700 0x4>;
-+        reg-names = "icfg", "rst-ctrl", "crmu-ctrl", "usb2-strap";
-+        id-gpios = <&gpio_g 30 0>;
-+        vbus-gpios = <&gpio_g 31 0>;
++    phy@40000000 {
++        compatible = "brcm,sr-pcie-phy";
++        reg = <0x40000000 0x800>;
++        brcm,sr-cdru = <&cdru>;
++        brcm,sr-mhb = <&mhb>;
++        #phy-cells = <1>;
 +    };
 -- 
 2.47.2
