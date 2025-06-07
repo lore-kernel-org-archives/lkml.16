@@ -1,103 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55C43228CBE;
-	Sat,  7 Jun 2025 13:06:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443FECA5A;
+	Sat,  7 Jun 2025 13:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749301594; cv=none; b=fCMt+4GnF1tKxfqbju6DOrMArMN9qUeh+4Iv/+xlR2j5svmKsJg/wq0WkzVE3UO27aqBk6kGGtzPMXoDl7GztG9ZIzrNDfiPs2x7Q9ApkuRi1k1o+0koohIX6ipy62yrA23q9QvEm8uuZWJzJsn76YzlS+2TD+zUJaNuCd7h5jM=
+	t=1749301702; cv=none; b=sKB+zDHvGPu6BDD2k3XBChrtRgAJnDiLw7gZU8Wvip79zn/Kui0qvcskO4YDpBk+l3ylQfYouRk6wLsUjAzoCsy1/Qe1pM243djsP+NJtRtn7eBEq8BEKo2aBUBkDFNKiQ2yumrmpQoOt/Swvfy+k6WYm7nsub9rB76tmUZ2EpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749301594; c=relaxed/simple;
-	bh=MZXxfUSkH1A79O9u48J/QWYARZQdYKawpA/PHmDBm+U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XYkYUYWaQ6Uz2KvPYF+6KaJnCl30N0odPAkhIIkKxffT5HB/8M+ERQd/sTDxp3EvhOkuQexN3lJ/nnBy2RFK0Gi5jtY38YMJ2vFjuV41QHbMA2xRRoEDPqJqrdYiwmo6wWxbqUmcaZMKsF3StTDXb8nEvjQV4UrAjDqC/ShqasY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D64AA5h1; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749301702; c=relaxed/simple;
+	bh=yhoju7r33G8rTolP8uGuqI1d8kbL53ldIMQ+cw+zaBU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QEyP4GlFulS58ZUe7KO8pvFu/DYxCV2mAIlg2Uwq+IZ/as5bCoKoAJrOSxsdpKKXpdmTUhqBAKONT5SAN9es4JVhyxE6sQXbTI8sDVMl9608HBlNf54XSJj/OlcH+vd9791c6dafb5Vu12w4eRoErg2o4zY96qN0czX3Y1V6NwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BtJFaQc8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D64AA5h1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749301593; x=1780837593;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=MZXxfUSkH1A79O9u48J/QWYARZQdYKawpA/PHmDBm+U=;
-  b=D64AA5h120fb2CwRRJ1P67kNeSxBQpy9+wOBudHuz7e8FdY0rkD8ZEsL
-   BrJ0LH6Y78BeZL+SnaIZH4W0gLi6YOtoa2jZdimD+HMxcvBcBY8/LgQxq
-   gR0+vMM5LolbY8A5LcFBSNRM7sppQMg+yAPfllOH3Ay24OSP1gqF1NoUN
-   37+feeqLVyMvOjj23lhvvKw0BMVj/BskE2D6eml7FjpLlU7ZOBSNwlZVv
-   B7D4WDR443A3+c97Kap/7NpDfK3wlbxfqXaC+CQFTF/u7VpFQrPXy61qJ
-   YSKn7aWzvXBmocDjsEqXi8QYFp/nmKidWIdw6JYh3LXlaMUrreLcD62fO
-   Q==;
-X-CSE-ConnectionGUID: Mo4yF/cPQVeE9r/tpA2/UA==
-X-CSE-MsgGUID: 4c6u7zLqSJeRBkHM12L65Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11457"; a="55242778"
-X-IronPort-AV: E=Sophos;i="6.16,218,1744095600"; 
-   d="scan'208";a="55242778"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2025 06:06:32 -0700
-X-CSE-ConnectionGUID: zfpFekLQQFWIrVNFszrPpQ==
-X-CSE-MsgGUID: j6iCpDsST++BuTxrOtabNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,218,1744095600"; 
-   d="scan'208";a="151074672"
-Received: from ysun46-mobl (HELO YSUN46-MOBL..) ([10.239.96.51])
-  by orviesa004.jf.intel.com with ESMTP; 07 Jun 2025 06:06:31 -0700
-From: Yi Sun <yi.sun@intel.com>
-To: vinicius.gomes@intel.com,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: yi.sun@intel.com,
-	gordon.jin@intel.com
-Subject: [PATCH v2 2/2] dmaengine: idxd: Fix refcount underflow on module unload
-Date: Sat,  7 Jun 2025 21:06:16 +0800
-Message-ID: <20250607130616.514984-3-yi.sun@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250607130616.514984-1-yi.sun@intel.com>
-References: <20250607130616.514984-1-yi.sun@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BtJFaQc8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58DCDC4CEE4;
+	Sat,  7 Jun 2025 13:08:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749301701;
+	bh=yhoju7r33G8rTolP8uGuqI1d8kbL53ldIMQ+cw+zaBU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=BtJFaQc8n6srES9D67KgwVj0HeR2/pM79QAXzEkcUTCTcExCEN5WXA9hIVWNEeH80
+	 gUqOvruxNxYncVEAPcDcqh5Mu3zyYhlNjDEv8KzChQVHUS0h3Z7K7yh4WwZ2KBSINn
+	 nSejnzW23RS4BR8Y2aQtOVI4Ei5NDyuvRsciEW0s87sEKlDOiKpgy5zwIClmMMqc0M
+	 EEgqwjh7XYx2kPu6WobG1Ovxg2qQPNZirS3H/RNeBlSky3waoclnMEKpNSIiDonXl2
+	 fzbTQ+ov4NqXjpWw2DIbmNvuUeURvkj3p/M322rdQagZEiWWGt8EZFMOlMLHwhsbIh
+	 C/Rq5WJramDTw==
+Date: Sat, 7 Jun 2025 14:08:11 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Angelo Dureghello <adureghello@baylibre.com>, David Lechner
+ <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v9 0/7] iio: adc: add ad7606 calibration support
+Message-ID: <20250607140811.4bff9232@jic23-huawei>
+In-Reply-To: <aEM-C0HHPcYTTpBd@smile.fi.intel.com>
+References: <20250606-wip-bl-ad7606-calibration-v9-0-6e014a1f92a2@baylibre.com>
+	<aEM-C0HHPcYTTpBd@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-A recent refactor introduced a misplaced put_device() call, leading to a
-reference count underflow during module unload.
+On Fri, 6 Jun 2025 22:14:19 +0300
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-There is no need to add additional put_device() calls for idxd groups,
-engines, or workqueues. Although commit a409e919ca3 claims:"Note, this
-also fixes the missing put_device() for idxd groups, engines, and wqs."
-It appears no such omission existed. The required cleanup is already
-handled by the call chain:
-idxd_unregister_devices() -> device_unregister() -> put_device()
+> On Fri, Jun 06, 2025 at 04:19:15PM +0200, Angelo Dureghello wrote:
+> > Add gain, offset and phase (as a delay) calibration support, for
+> > ad7606b, ad7606c16 and ad7606c18.
+> > 
+> > Calibration is available for devices with software mode capability. 
+> > 
+> > Offset and phase calibration is configurable by sysfs attributes, while
+> > gain calibration value in ohms must match the external RFilter value,
+> > when an external RFilter is available, so implemented through a specific
+> > devicetree "adi,rfilter-ohms" property.  
+> 
+> FWIW,
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
 
-Extend idxd_cleanup() to perform the necessary cleanup, and remove
-idxd_cleanup_internals() which was not originally part of the driver
-unload path and introduced unintended reference count underflow.
+Applied to the testing branch of iio.git.  I'll rebase that on rc1
+shortly and push out as togreg.
 
-Fixes: a409e919ca32 ("dmaengine: idxd: Refactor remove call with idxd_cleanup() helper")
-Signed-off-by: Yi Sun <yi.sun@intel.com>
+Thanks,
 
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 504aca0fd597..a5eabeb6a8bd 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -1321,7 +1321,12 @@ static void idxd_remove(struct pci_dev *pdev)
- 	device_unregister(idxd_confdev(idxd));
- 	idxd_shutdown(pdev);
- 	idxd_device_remove_debugfs(idxd);
--	idxd_cleanup(idxd);
-+	perfmon_pmu_remove(idxd);
-+	idxd_cleanup_interrupts(idxd);
-+	if (device_pasid_enabled(idxd))
-+		idxd_disable_system_pasid(idxd);
-+	if (device_user_pasid_enabled(idxd))
-+		idxd_disable_sva(idxd->pdev);
- 	pci_iounmap(pdev, idxd->reg_base);
- 	put_device(idxd_confdev(idxd));
- 	pci_disable_device(pdev);
--- 
-2.43.0
-
+Jonathan
