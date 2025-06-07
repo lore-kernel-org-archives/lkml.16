@@ -1,176 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E15A1F151C;
-	Sat,  7 Jun 2025 11:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF048221269
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 11:43:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749296621; cv=none; b=WClDthUTVk4woPP0JNelHaXEmLgWHecUM3MaEmowdPptFQYUNo6KRsZalb+Q1Ypcu8/0hE5JYczU9r4sHCIiBckFyEVrlwMkuIxkAysTpqOZm/KFbgBo+e+yPW3VU1mYgII4dTW37Gi9RhLXj3CHkMtahVBz1Vgog2bC4ER+62Y=
+	t=1749296627; cv=none; b=BN43FbB9z1gdFHiUQPBlS+tNWhaPk50xzw/ui9DuVbU7lsD7BOIlomP1vKjr+P5lWciAcfqVmeDrNHkJEqFMTUxAp+HFjzA8jNH2mqxbHuDGVgf+HbdNXJlgz3xVtMEI0y6ZSCC5jdB2gIE2JviZ1imww/vK3elHSJpAzo7WfzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749296621; c=relaxed/simple;
-	bh=SX6x8lcMQQu92DOlDbnahesgKUUjd2UjQLVSnWHmy/w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V8KiKCj9cbsErLkgDUC8bfF+oIuoF8gjIts4noZLoF4PkGvhqirDsKmdoeQm0yskT5U/BO1yk9OYaO6E4gxooDKKJCkbNn5IeZPrVNFw8j4S6Dvje+mwO/6Z1mV1b04Qop/xYov3H920mX2RYstrrJDw0RiC1sP6sPPQzenlnQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XH9gD9ZH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749296627; c=relaxed/simple;
+	bh=483QbhpRjLlPRWt3JzF5NtZ16KbMBWa4Gy7wbpDG398=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=gRjGo0l5MWipbic21B/AnLWP4QvPPVfGMSZcGePdwx97K7xDgpDYMEOG0lIzdAq3bI+v1mQDUwKbUePPwMu7XuTfYg0ibp2WO19o8A9722N44C5NbOLcK0uSLhyFRwf2CJR3UrE5h5qnuFZ57Zq69B7WK9OkUkBfAgaoMlL6BHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KANGIfyA; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XH9gD9ZH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF833C4CEF1;
-	Sat,  7 Jun 2025 11:43:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749296620;
-	bh=SX6x8lcMQQu92DOlDbnahesgKUUjd2UjQLVSnWHmy/w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=XH9gD9ZH8faoABoPA/CliUC9yAKk4xUdMOP/CGm9HCPAimf7aNV6YyiG5axdHa51I
-	 fB154CDwDFaIAvzfqWuOvIXQ7dMN3mezliivBjbF155oOHwKzErK4OWFVQxkN9k6Kg
-	 O6J+ewRwWaLAIKi43RE5jjK6r5+JoION0uQh8zW38bsDHPUineneXgS7dN6ZgvzNMg
-	 nWNl3OIdcqRzTnvrA9VjFMBGtugJ4xOjUY3has+dW/q4sZLyu/uQkUIXNzJK+QF7S8
-	 kuaXEbO3P7o34FksdTsgUamzIfoUvyA93m3zEan6tAXt0A6VXiZwz0U+HLjHS2LGk2
-	 QNwC8jOD462Lw==
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-4067ac8f6cdso2408469b6e.2;
-        Sat, 07 Jun 2025 04:43:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUsdl2+UZpu18H9Y1Mtd6ChRpxA3iV+qjxMy5twa9OxjEXXipQte/L8QgheiE/Lt5gsrdWBasmAntdi11sekMmK+s0=@vger.kernel.org, AJvYcCVjt8y1siObcXrpBC03q/KaqV62KpBSuNkwjsmzpDbGcGPaCNw7vNAgELstd97tAbEx+2yscY4kR/Q=@vger.kernel.org, AJvYcCVoYszi+NFoJTSTnP9a1oyzSK1qCyOqnLmcz+yH64TJ4uWYCZyvRK4X6AFAmKoAqtjbVgrrb0uxJueU1XYf@vger.kernel.org, AJvYcCWMDoJWOyFWPeemLSFCb81030mDJ1csZJ0vYeS6yocwQZMniuIN43eqEOTMaQIB8XIJ5lJIt+yeXEw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yygd8WsO1VSTfEOBIl2GkONu18qVnxya3LZxcQvXvYPQa5jjaf/
-	+op0YVHp9kewvxZFUVwiTsr/BAfPgMKqhEId7u+2H/0xLnd4BDLS51clkQaOQ0CRbYk+qlBgUwM
-	kW14D3EgVZ1IIEsfvOFCAyeaSwl10jNo=
-X-Google-Smtp-Source: AGHT+IF3MnqzphsP0Aj2aIg2yl7XI8dp/NM9Y6H+A8UL7T966MeN/B7HkHpxRiSvUvZLVuLMG/CCjA7BjOvTOW9l/Jc=
-X-Received: by 2002:a05:6808:3a06:b0:3fe:ab15:5ed6 with SMTP id
- 5614622812f47-409051b20b3mr4396736b6e.12.1749296620023; Sat, 07 Jun 2025
- 04:43:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KANGIfyA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749296626; x=1780832626;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=483QbhpRjLlPRWt3JzF5NtZ16KbMBWa4Gy7wbpDG398=;
+  b=KANGIfyAaw2vr5JN2Q1hr6r/ybnv/rO9dMNfk+XV6SIE7hBExpAyfuUQ
+   5cuk0ITBSElLaDQ3hU/tHMtq3gVTP4iMfezyK2dOLwiBjLAHvu8Usc8qL
+   ncyy7kXy32iaoNlq0XX5NWlgWCJydn8BKJgFxnqh/Dmx2BR5VPKrrtoOL
+   7zWCzgD0ord4OMEa+R0kgGh/GY2uCqwN3TVIlnJuGaLCzzu6Zbo/NL8/1
+   BCzjuU7Z9DyVXEEv614KT5+fJxY8mp3DXfuoP5yuUVr785i6PQgRaP67t
+   d+SZ6QonkNmEH5nTel0HF+8i8K+iKzUcA7xW8iR6d+tDXUmsabF73xspy
+   w==;
+X-CSE-ConnectionGUID: fHE6mS6NReSaZOE6N8NjFQ==
+X-CSE-MsgGUID: rOW3FPjYTw2piTXCtE6RtA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11457"; a="73965157"
+X-IronPort-AV: E=Sophos;i="6.16,218,1744095600"; 
+   d="scan'208";a="73965157"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2025 04:43:46 -0700
+X-CSE-ConnectionGUID: Udb+b8oXTX+HZ6hiL4rcog==
+X-CSE-MsgGUID: Zz+8sZQwRAunckrl9KL+HQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,218,1744095600"; 
+   d="scan'208";a="150934943"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 07 Jun 2025 04:43:43 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uNrxd-0005lR-1k;
+	Sat, 07 Jun 2025 11:43:41 +0000
+Date: Sat, 7 Jun 2025 19:43:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: mm/maccess.c:41:17: sparse: sparse: incorrect type in argument 2
+ (different address spaces)
+Message-ID: <202506071929.Ane6iZuz-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606111749.3142348-1-claudiu.beznea.uj@bp.renesas.com>
- <20250606111749.3142348-2-claudiu.beznea.uj@bp.renesas.com>
- <CAJZ5v0i_Ey+OVpSZHXru=tubMaZi=y-uOh_0M6zmWZ2DqqA7Vg@mail.gmail.com>
- <zhjytvj35lknj7v3jhva3n3nbv6qctvqgykwyi5huj6omet7lz@wchd7f4p4dpv> <CAJZ5v0hsT-Q2hz=qoBo409oungaCmexJwwGheN7KRLFqz=6_Dw@mail.gmail.com>
-In-Reply-To: <CAJZ5v0hsT-Q2hz=qoBo409oungaCmexJwwGheN7KRLFqz=6_Dw@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Sat, 7 Jun 2025 13:43:28 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hSqLGF_7xmiEf-=0gvHcNJjAsu-X60v6i3csv6ibc40g@mail.gmail.com>
-X-Gm-Features: AX0GCFv4XobSvj2dlLBGvOdVJ5KhLGQQoql-NVH0ppX4BNmroN0ev4Uw8EHd3Zw
-Message-ID: <CAJZ5v0hSqLGF_7xmiEf-=0gvHcNJjAsu-X60v6i3csv6ibc40g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] PM: domains: Add devres variant for dev_pm_domain_attach()
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Claudiu <claudiu.beznea@tuxon.dev>
-Cc: gregkh@linuxfoundation.org, dakr@kernel.org, len.brown@intel.com, 
-	pavel@kernel.org, ulf.hansson@linaro.org, jic23@kernel.org, 
-	daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, bhelgaas@google.com, geert@linux-m68k.org, 
-	linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	fabrizio.castro.jz@renesas.com, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Fri, Jun 6, 2025 at 10:01=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
-g> wrote:
->
-> On Fri, Jun 6, 2025 at 8:55=E2=80=AFPM Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> >
-> > On Fri, Jun 06, 2025 at 06:00:34PM +0200, Rafael J. Wysocki wrote:
-> > > On Fri, Jun 6, 2025 at 1:18=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.=
-dev> wrote:
-> > > >
-> > > > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> > > >
-> > > > The dev_pm_domain_attach() function is typically used in bus code a=
-longside
-> > > > dev_pm_domain_detach(), often following patterns like:
-> > > >
-> > > > static int bus_probe(struct device *_dev)
-> > > > {
-> > > >     struct bus_driver *drv =3D to_bus_driver(dev->driver);
-> > > >     struct bus_device *dev =3D to_bus_device(_dev);
-> > > >     int ret;
-> > > >
-> > > >     // ...
-> > > >
-> > > >     ret =3D dev_pm_domain_attach(_dev, true);
-> > > >     if (ret)
-> > > >         return ret;
-> > > >
-> > > >     if (drv->probe)
-> > > >         ret =3D drv->probe(dev);
-> > > >
-> > > >     // ...
-> > > > }
-> > > >
-> > > > static void bus_remove(struct device *_dev)
-> > > > {
-> > > >     struct bus_driver *drv =3D to_bus_driver(dev->driver);
-> > > >     struct bus_device *dev =3D to_bus_device(_dev);
-> > > >
-> > > >     if (drv->remove)
-> > > >         drv->remove(dev);
-> > > >     dev_pm_domain_detach(_dev);
-> > > > }
-> > > >
-> > > > When the driver's probe function uses devres-managed resources that=
- depend
-> > > > on the power domain state, those resources are released later durin=
-g
-> > > > device_unbind_cleanup().
-> > > >
-> > > > Releasing devres-managed resources that depend on the power domain =
-state
-> > > > after detaching the device from its PM domain can cause failures.
-> > > >
-> > > > For example, if the driver uses devm_pm_runtime_enable() in its pro=
-be
-> > > > function, and the device's clocks are managed by the PM domain, the=
-n
-> > > > during removal the runtime PM is disabled in device_unbind_cleanup(=
-) after
-> > > > the clocks have been removed from the PM domain. It may happen that=
- the
-> > > > devm_pm_runtime_enable() action causes the device to be runtime-res=
-umed.
-> > >
-> > > Don't use devm_pm_runtime_enable() then.
-> >
-> > What about other devm_ APIs? Are you suggesting that platform drivers
-> > should not be using devm_clk*(), devm_regulator_*(),
-> > devm_request_*_irq() and devm_add_action_or_reset()? Because again,
-> > dev_pm_domain_detach() that is called by platform bus_remove() may shut
-> > off the device too early, before cleanup code has a chance to execute
-> > proper cleanup.
-> >
-> > The issue is not limited to runtime PM.
-> >
-> > >
-> > > > If the driver specific runtime PM APIs access registers directly, t=
-his
-> > > > will lead to accessing device registers without clocks being enable=
-d.
-> > > > Similar issues may occur with other devres actions that access devi=
-ce
-> > > > registers.
-> > > >
-> > > > Add devm_pm_domain_attach(). When replacing the dev_pm_domain_attac=
-h() and
-> > > > dev_pm_domain_detach() in bus probe and bus remove, it ensures that=
- the
-> > > > device is detached from its PM domain in device_unbind_cleanup(), o=
-nly
-> > > > after all driver's devres-managed resources have been release.
-> > > >
-> > > > For flexibility, the implemented devm_pm_domain_attach() has 2 stat=
-e
-> > > > arguments, one for the domain state on attach, one for the domain s=
-tate on
-> > > > detach.
-> > >
-> > > dev_pm_domain_attach() is not part driver API and I'm not convinced a=
-t
-> >
-> > Is the concern that devm_pm_domain_attach() will be [ab]used by drivers=
-?
->
-> Yes, among other things.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   bdc7f8c5adad50dad2ec762e317f8b212f5782ac
+commit: ca1a66cdd685030738cf077e3955fdedfe39fbb9 riscv: uaccess: do not do misaligned accesses in get/put_user()
+date:   2 days ago
+config: riscv-randconfig-r133-20250607 (https://download.01.org/0day-ci/archive/20250607/202506071929.Ane6iZuz-lkp@intel.com/config)
+compiler: riscv64-linux-gcc (GCC) 12.4.0
+reproduce: (https://download.01.org/0day-ci/archive/20250607/202506071929.Ane6iZuz-lkp@intel.com/reproduce)
 
-This would be much less objectionable to me if it were not devm_, but
-also the current expectation is that the PM domain will be gone after
-device_remove() has returned.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506071929.Ane6iZuz-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> mm/maccess.c:41:17: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void const [noderef] __user *from @@     got unsigned long long [usertype] * @@
+   mm/maccess.c:41:17: sparse:     expected void const [noderef] __user *from
+   mm/maccess.c:41:17: sparse:     got unsigned long long [usertype] *
+>> mm/maccess.c:43:17: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void const [noderef] __user *from @@     got unsigned int [usertype] * @@
+   mm/maccess.c:43:17: sparse:     expected void const [noderef] __user *from
+   mm/maccess.c:43:17: sparse:     got unsigned int [usertype] *
+>> mm/maccess.c:45:17: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void const [noderef] __user *from @@     got unsigned short [usertype] * @@
+   mm/maccess.c:45:17: sparse:     expected void const [noderef] __user *from
+   mm/maccess.c:45:17: sparse:     got unsigned short [usertype] *
+>> mm/maccess.c:46:9: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void const [noderef] __user *from @@     got unsigned char [usertype] * @@
+   mm/maccess.c:46:9: sparse:     expected void const [noderef] __user *from
+   mm/maccess.c:46:9: sparse:     got unsigned char [usertype] *
+>> mm/maccess.c:73:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void [noderef] __user *to @@     got unsigned long long [usertype] * @@
+   mm/maccess.c:73:17: sparse:     expected void [noderef] __user *to
+   mm/maccess.c:73:17: sparse:     got unsigned long long [usertype] *
+>> mm/maccess.c:75:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void [noderef] __user *to @@     got unsigned int [usertype] * @@
+   mm/maccess.c:75:17: sparse:     expected void [noderef] __user *to
+   mm/maccess.c:75:17: sparse:     got unsigned int [usertype] *
+>> mm/maccess.c:77:17: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void [noderef] __user *to @@     got unsigned short [usertype] * @@
+   mm/maccess.c:77:17: sparse:     expected void [noderef] __user *to
+   mm/maccess.c:77:17: sparse:     got unsigned short [usertype] *
+>> mm/maccess.c:78:9: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void [noderef] __user *to @@     got unsigned char [usertype] * @@
+   mm/maccess.c:78:9: sparse:     expected void [noderef] __user *to
+   mm/maccess.c:78:9: sparse:     got unsigned char [usertype] *
+   mm/maccess.c:98:17: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void const [noderef] __user *from @@     got unsigned char [usertype] * @@
+   mm/maccess.c:98:17: sparse:     expected void const [noderef] __user *from
+   mm/maccess.c:98:17: sparse:     got unsigned char [usertype] *
+
+vim +41 mm/maccess.c
+
+eab0c6089b6897 Christoph Hellwig    2020-06-08  15  
+e4137f08816bbf Sabyrzhan Tasbolatov 2024-10-11  16  /*
+e4137f08816bbf Sabyrzhan Tasbolatov 2024-10-11  17   * The below only uses kmsan_check_memory() to ensure uninitialized kernel
+e4137f08816bbf Sabyrzhan Tasbolatov 2024-10-11  18   * memory isn't leaked.
+e4137f08816bbf Sabyrzhan Tasbolatov 2024-10-11  19   */
+fe557319aa06c2 Christoph Hellwig    2020-06-17  20  #define copy_from_kernel_nofault_loop(dst, src, len, type, err_label)	\
+b58294ead14cde Christoph Hellwig    2020-06-08  21  	while (len >= sizeof(type)) {					\
+b58294ead14cde Christoph Hellwig    2020-06-08  22  		__get_kernel_nofault(dst, src, type, err_label);	\
+e4137f08816bbf Sabyrzhan Tasbolatov 2024-10-11  23  		kmsan_check_memory(src, sizeof(type));			\
+b58294ead14cde Christoph Hellwig    2020-06-08  24  		dst += sizeof(type);					\
+b58294ead14cde Christoph Hellwig    2020-06-08  25  		src += sizeof(type);					\
+b58294ead14cde Christoph Hellwig    2020-06-08  26  		len -= sizeof(type);					\
+b58294ead14cde Christoph Hellwig    2020-06-08  27  	}
+b58294ead14cde Christoph Hellwig    2020-06-08  28  
+fe557319aa06c2 Christoph Hellwig    2020-06-17  29  long copy_from_kernel_nofault(void *dst, const void *src, size_t size)
+b58294ead14cde Christoph Hellwig    2020-06-08  30  {
+2423de2e6f4d86 Arnd Bergmann        2021-08-11  31  	unsigned long align = 0;
+2423de2e6f4d86 Arnd Bergmann        2021-08-11  32  
+2423de2e6f4d86 Arnd Bergmann        2021-08-11  33  	if (!IS_ENABLED(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS))
+2423de2e6f4d86 Arnd Bergmann        2021-08-11  34  		align = (unsigned long)dst | (unsigned long)src;
+2423de2e6f4d86 Arnd Bergmann        2021-08-11  35  
+fe557319aa06c2 Christoph Hellwig    2020-06-17  36  	if (!copy_from_kernel_nofault_allowed(src, size))
+2a71e81d321987 Christoph Hellwig    2020-06-08  37  		return -ERANGE;
+b58294ead14cde Christoph Hellwig    2020-06-08  38  
+b58294ead14cde Christoph Hellwig    2020-06-08  39  	pagefault_disable();
+2423de2e6f4d86 Arnd Bergmann        2021-08-11  40  	if (!(align & 7))
+fe557319aa06c2 Christoph Hellwig    2020-06-17 @41  		copy_from_kernel_nofault_loop(dst, src, size, u64, Efault);
+2423de2e6f4d86 Arnd Bergmann        2021-08-11  42  	if (!(align & 3))
+fe557319aa06c2 Christoph Hellwig    2020-06-17 @43  		copy_from_kernel_nofault_loop(dst, src, size, u32, Efault);
+2423de2e6f4d86 Arnd Bergmann        2021-08-11  44  	if (!(align & 1))
+fe557319aa06c2 Christoph Hellwig    2020-06-17 @45  		copy_from_kernel_nofault_loop(dst, src, size, u16, Efault);
+fe557319aa06c2 Christoph Hellwig    2020-06-17 @46  	copy_from_kernel_nofault_loop(dst, src, size, u8, Efault);
+b58294ead14cde Christoph Hellwig    2020-06-08  47  	pagefault_enable();
+b58294ead14cde Christoph Hellwig    2020-06-08  48  	return 0;
+b58294ead14cde Christoph Hellwig    2020-06-08  49  Efault:
+b58294ead14cde Christoph Hellwig    2020-06-08  50  	pagefault_enable();
+b58294ead14cde Christoph Hellwig    2020-06-08  51  	return -EFAULT;
+b58294ead14cde Christoph Hellwig    2020-06-08  52  }
+fe557319aa06c2 Christoph Hellwig    2020-06-17  53  EXPORT_SYMBOL_GPL(copy_from_kernel_nofault);
+b58294ead14cde Christoph Hellwig    2020-06-08  54  
+fe557319aa06c2 Christoph Hellwig    2020-06-17  55  #define copy_to_kernel_nofault_loop(dst, src, len, type, err_label)	\
+b58294ead14cde Christoph Hellwig    2020-06-08  56  	while (len >= sizeof(type)) {					\
+b58294ead14cde Christoph Hellwig    2020-06-08  57  		__put_kernel_nofault(dst, src, type, err_label);	\
+e4137f08816bbf Sabyrzhan Tasbolatov 2024-10-11  58  		instrument_write(dst, sizeof(type));			\
+b58294ead14cde Christoph Hellwig    2020-06-08  59  		dst += sizeof(type);					\
+b58294ead14cde Christoph Hellwig    2020-06-08  60  		src += sizeof(type);					\
+b58294ead14cde Christoph Hellwig    2020-06-08  61  		len -= sizeof(type);					\
+b58294ead14cde Christoph Hellwig    2020-06-08  62  	}
+b58294ead14cde Christoph Hellwig    2020-06-08  63  
+fe557319aa06c2 Christoph Hellwig    2020-06-17  64  long copy_to_kernel_nofault(void *dst, const void *src, size_t size)
+b58294ead14cde Christoph Hellwig    2020-06-08  65  {
+2423de2e6f4d86 Arnd Bergmann        2021-08-11  66  	unsigned long align = 0;
+2423de2e6f4d86 Arnd Bergmann        2021-08-11  67  
+2423de2e6f4d86 Arnd Bergmann        2021-08-11  68  	if (!IS_ENABLED(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS))
+2423de2e6f4d86 Arnd Bergmann        2021-08-11  69  		align = (unsigned long)dst | (unsigned long)src;
+2423de2e6f4d86 Arnd Bergmann        2021-08-11  70  
+b58294ead14cde Christoph Hellwig    2020-06-08  71  	pagefault_disable();
+2423de2e6f4d86 Arnd Bergmann        2021-08-11  72  	if (!(align & 7))
+fe557319aa06c2 Christoph Hellwig    2020-06-17 @73  		copy_to_kernel_nofault_loop(dst, src, size, u64, Efault);
+2423de2e6f4d86 Arnd Bergmann        2021-08-11  74  	if (!(align & 3))
+fe557319aa06c2 Christoph Hellwig    2020-06-17 @75  		copy_to_kernel_nofault_loop(dst, src, size, u32, Efault);
+2423de2e6f4d86 Arnd Bergmann        2021-08-11  76  	if (!(align & 1))
+fe557319aa06c2 Christoph Hellwig    2020-06-17 @77  		copy_to_kernel_nofault_loop(dst, src, size, u16, Efault);
+fe557319aa06c2 Christoph Hellwig    2020-06-17 @78  	copy_to_kernel_nofault_loop(dst, src, size, u8, Efault);
+b58294ead14cde Christoph Hellwig    2020-06-08  79  	pagefault_enable();
+b58294ead14cde Christoph Hellwig    2020-06-08  80  	return 0;
+b58294ead14cde Christoph Hellwig    2020-06-08  81  Efault:
+b58294ead14cde Christoph Hellwig    2020-06-08  82  	pagefault_enable();
+b58294ead14cde Christoph Hellwig    2020-06-08  83  	return -EFAULT;
+b58294ead14cde Christoph Hellwig    2020-06-08  84  }
+ca79a00bb9a899 Sabyrzhan Tasbolatov 2024-10-16  85  EXPORT_SYMBOL_GPL(copy_to_kernel_nofault);
+b58294ead14cde Christoph Hellwig    2020-06-08  86  
+
+:::::: The code at line 41 was first introduced by commit
+:::::: fe557319aa06c23cffc9346000f119547e0f289a maccess: rename probe_kernel_{read,write} to copy_{from,to}_kernel_nofault
+
+:::::: TO: Christoph Hellwig <hch@lst.de>
+:::::: CC: Linus Torvalds <torvalds@linux-foundation.org>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
