@@ -1,100 +1,136 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BB4B184F;
-	Sat,  7 Jun 2025 16:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E487B184F;
+	Sat,  7 Jun 2025 16:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749312316; cv=none; b=n2qJwJ+ba3yH3XgN9zYbVa92ZJ4byAck47ZeT0rdg0Z2zMEm/REngY+lKUqSzFE95cKOTHOt7WrcL3Q8uFTyAfTrq675WtnFHsl9Luq4oMnCp+bRkupmTs0jue9rynBNNuUDJ+QtYsV6u0WCt7kezn38ygmY/7Lup6wKCOSydJo=
+	t=1749312323; cv=none; b=HM5U0HhWq498C+UQyw0/ogCwUUG3+zt+ELfV1bpLHudhxI4F/QFe/vHtZbB9PgAE796Hjpur7KfhckoaiaPR9i/2ShjUA6grGb4B7m2/kmRG6vJmZUeHzPTyYjBR1KYhtNsTBAwAsMmvIeXGCAeCK48c45DQiStPr80ejt0Pn/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749312316; c=relaxed/simple;
-	bh=TdjSTlUdgP4LXrNuClt9rd2nGipjznUd5ZXNwClX9iY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uyLoInV/GK+eNa/CPbCfKzDaw9iJaxaaZq5AvvnqSyoCrUqQ9ZoHtURJfbx644W/h7YcqNQ9xJqlwz93fghj2BQQ77sWsj687zFWadap821lP/426uW5lRK1bzVurKrnFQ4QyUnUXjfOthHNzZWGtaiuER2sbDSHb/nISewZeGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Yoq6TCtq; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1749312323; c=relaxed/simple;
+	bh=5UuRKP/GED7Ma9tEc7DBrUHi85LOEHSI5EExSladv38=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gk/Upnu5OvgEYbhtCalt4rzKUisTHCVCyNTu4QBTa5vC0xCxEmgSnXy8ifefgX61P6owN3L7hSq0FINUChWWZmEBGT/+3c4ut4vh97MSQIuBsw1PyrYjV/63qYsQlMl4tL1keZNHz/GzgknuQ/hfkkXhxZGVg84oiTxRIPhm1DU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gR0DQVGX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Yoq6TCtq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Q5
-	Ms93Khz/oAEynWixPmT3I+2jyhZg/bPBQtyT4UV60=; b=Yoq6TCtqv3swQV5HpA
-	43HND+U/e1hn+2zn94r44R5j5TG2Qv6yWIWfdRI6ZOY8fxLlA/1oDhsGFKuMt2R3
-	n/7G6nM+ZoOsRGOpd4M7l0D38ctOBsiGsXOIAmHcxZhBsQxeVOsm9RLIbDpmgQSm
-	XFTUsjll2M+cMT8XDtrIZvHqM=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wDnzz17X0RoTZo8Gw--.4221S4;
-	Sat, 07 Jun 2025 23:49:17 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	bhelgaas@google.com,
-	kwilczynski@kernel.org,
-	shawn.lin@rock-chips.com,
-	heiko@sntech.de
-Cc: robh@kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH 2/2] PCI: rockchip: Remove redundant PCIe message routing definitions
-Date: Sat,  7 Jun 2025 23:49:13 +0800
-Message-Id: <20250607154913.805027-3-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250607154913.805027-1-18255117159@163.com>
-References: <20250607154913.805027-1-18255117159@163.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gR0DQVGX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BBC0C4CEEE;
+	Sat,  7 Jun 2025 16:05:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749312322;
+	bh=5UuRKP/GED7Ma9tEc7DBrUHi85LOEHSI5EExSladv38=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=gR0DQVGXYehoTtiJ01YlpFGsebRY24rV65x0SNs8hzlsVAi6qineppTZPgjW0DLcq
+	 ZYxf8B5Q6J+mzJ/WgEBj9wOvoS3ZiRNPjzZT2t7umZj+DryF30aguiIbcN8AyXLXUD
+	 XHBZKSoWlQytxHTzmK90p46i8BA0N4Z4kqfmTc6yLtwvDK2TtPGeoF4rMmf7uSA5mL
+	 5f+c20/YPMFDgXwX4QvNk4QHCwZOjkw4Gf+pcY7d7TfwHuxRD5dljTvsNi0eyvBcF4
+	 /rdPbFxwcfJVaEVukjHD3l9QHXrYxgwqnN6iHRZr/7bGn54WLUhgOc6XD+k4pGPrfr
+	 eNavS/FNRI2CQ==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5533302b49bso3223960e87.2;
+        Sat, 07 Jun 2025 09:05:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVa9Yna8mYz/167//pky+DxIusnMHIM6Qc2vGMD1jbB+q+mKjDWH4lw/JFVgvUBjtF1Pxo6f8/A2DDbnsw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGUQxGf2jrO9/RmSUHVXA87ru/i9rbScWaoj8CeyWMnbsxM9OZ
+	RxwMS6wjTpcOQ4YVQZayuvkXzo4Wlmq03Hgk+K5reMQ0LTWbI1yU2hJJUVnDTvDg7Gl9EKgA7ws
+	Hz7a1YhX9NCFcT45lrsM7znNFSXRMjBs=
+X-Google-Smtp-Source: AGHT+IFnUzUfmJf8+6n/k+t7BODZMuPZ4kU2DTxCVevpBuFh0eoT48KXlVV8PMha4QdyhDNOvE002Ws8z+7nmRag8cI=
+X-Received: by 2002:a05:6512:39c3:b0:553:5135:69fb with SMTP id
+ 2adb3069b0e04-55366bdca22mr1947220e87.10.1749312321095; Sat, 07 Jun 2025
+ 09:05:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnzz17X0RoTZo8Gw--.4221S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxJr48KFWxXr1xtFWfXFWDurg_yoW8Zry8pr
-	WUJ3y0yF4xKw43u3W3XF4fXa17Xa9rtF4qvrn29a13KF1fW34rGa4UZF43Grn8JrW8Xrn2
-	k390kayDtrZ8GrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zEWrWrUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxRlo2hEXgkg6gAAs4
+References: <20250522172941.1669424-1-jeremy.linton@arm.com>
+In-Reply-To: <20250522172941.1669424-1-jeremy.linton@arm.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sun, 8 Jun 2025 01:04:44 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQzkh+DO7ZBVEgLu63k0H5qB-etV_jpo67k+itLWGAosA@mail.gmail.com>
+X-Gm-Features: AX0GCFu0RkuGqzGc1uMYQcW9V9XAt0tYFrCsHUnK_xgj9T68jkZERZQKNUnNhdU
+Message-ID: <CAK7LNAQzkh+DO7ZBVEgLu63k0H5qB-etV_jpo67k+itLWGAosA@mail.gmail.com>
+Subject: Re: [PATCH] scripts: add zboot support to extract-vmlinux
+To: Jeremy Linton <jeremy.linton@arm.com>
+Cc: linux-kbuild@vger.kernel.org, nathan@kernel.org, nicolas.schier@linux.dev, 
+	linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The Rockchip driver contained duplicated message routing and INTx code
-definitions (e.g., ROCKCHIP_PCIE_MSG_ROUTING_TO_RC,
-ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTA). These are already provided by the
-PCI core in drivers/pci/pci.h as PCIE_MSG_TYPE_R_RC and
-PCIE_MSG_CODE_ASSERT_INTA, respectively.
+On Fri, May 23, 2025 at 2:29=E2=80=AFAM Jeremy Linton <jeremy.linton@arm.co=
+m> wrote:
+>
+> Zboot compressed kernel images are used for arm kernels on various
+> distros.
 
-Remove the driver-specific definitions and use the common PCIe macros
-instead. This aligns the driver with the PCIe specification and reduces
-maintenance overhead.
+Are you talking about arm 32 bit here?
+(arch/arm/boot/zImage)
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
- drivers/pci/controller/pcie-rockchip.h | 14 --------------
- 1 file changed, 14 deletions(-)
+> extract-vmlinux fails with those kernels because the wrapped image is
+> another PE. While this could be a bit confusing, the tools primary
+> purpose of unwrapping and decompressing the contained vmlinux image
+> makes it the obvious place for this functionality.
+>
+> Add a 'file' check in check_vmlinux() that detects a contained PE
+> image before trying readelf. Recent file implementations output
+> something like:
+>
+> "Linux kernel ARM64 boot executable Image, little-endian, 4K pages"
 
-diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-index 5864a20323f2..12bc8da59d73 100644
---- a/drivers/pci/controller/pcie-rockchip.h
-+++ b/drivers/pci/controller/pcie-rockchip.h
-@@ -215,20 +215,6 @@
- #define RC_REGION_0_TYPE_MASK			GENMASK(3, 0)
- #define MAX_AXI_WRAPPER_REGION_NUM		33
- 
--#define ROCKCHIP_PCIE_MSG_ROUTING_TO_RC		0x0
--#define ROCKCHIP_PCIE_MSG_ROUTING_VIA_ADDR		0x1
--#define ROCKCHIP_PCIE_MSG_ROUTING_VIA_ID		0x2
--#define ROCKCHIP_PCIE_MSG_ROUTING_BROADCAST		0x3
--#define ROCKCHIP_PCIE_MSG_ROUTING_LOCAL_INTX		0x4
--#define ROCKCHIP_PCIE_MSG_ROUTING_PME_ACK		0x5
--#define ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTA		0x20
--#define ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTB		0x21
--#define ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTC		0x22
--#define ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTD		0x23
--#define ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTA		0x24
--#define ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTB		0x25
--#define ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTC		0x26
--#define ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTD		0x27
- #define ROCKCHIP_PCIE_MSG_ROUTING_MASK			GENMASK(7, 5)
- #define ROCKCHIP_PCIE_MSG_ROUTING(route) \
- 	(((route) << 5) & ROCKCHIP_PCIE_MSG_ROUTING_MASK)
--- 
-2.25.1
+Are you talking about arm64 here?
 
+I am confused, as arm64 adopts a simple-compressed image.
+
+
+Apparently, this patch did not work for me.
+
+$ ./scripts/extract-vmlinux  arch/arm/boot/zImage
+extract-vmlinux: Cannot find vmlinux.
+
+The 'file' command says, it is "data".
+Is my 'file' command too old?
+
+$ file arch/arm/boot/Image
+arch/arm/boot/Image: data
+
+
+> Which is also a stronger statement than readelf provides so drop that
+> part of the comment. At the same time this means that kernel images
+> which don't appear to contain a compressed image will be returned
+> rather than reporting an error. Which matches the behavior for
+> existing ELF files.
+>
+> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  scripts/extract-vmlinux | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/scripts/extract-vmlinux b/scripts/extract-vmlinux
+> index 8995cd304e6e..edda1abe226c 100755
+> --- a/scripts/extract-vmlinux
+> +++ b/scripts/extract-vmlinux
+> @@ -12,10 +12,11 @@
+>
+>  check_vmlinux()
+>  {
+> -       # Use readelf to check if it's a valid ELF
+> -       # TODO: find a better to way to check that it's really vmlinux
+> -       #       and not just an elf
+> -       readelf -h $1 > /dev/null 2>&1 || return 1
+> +       file $1 |grep 'Linux kernel.*boot executable Image' > /dev/null
+> +       if [ "$?" -ne "0" ]; then
+> +               # Use readelf to check if it's a valid ELF, if 'file' fai=
+ls
+> +               readelf -h $1 > /dev/null 2>&1 || return 1
+> +       fi
+>
+>         cat $1
+>         exit 0
+> --
+> 2.49.0
+>
+
+
+--=20
+Best Regards
+Masahiro Yamada
