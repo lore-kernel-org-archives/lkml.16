@@ -1,206 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F7E1E8338;
-	Sat,  7 Jun 2025 10:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA4C1FCF41
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 10:30:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749292184; cv=none; b=WcsQofITzE+9/8Aigf3sTC06I+dcTOD6aa9XbRLjLU+4mpBTXv0FOZ+AWm06tYRw4W9TVxX91yzj+4c1nspGj3VlZNBTEvc+aqDGPUxfxZG1ME8vVyLicq02ARXdrR8tKvGEjvmO4kSUWiWA3GNB8edvKKiK+yMuGwq0tBbo4Hs=
+	t=1749292223; cv=none; b=U/3xRRhucSLvUEpbVuJNY1eybniCibBB3/0rdHufZDowVvqjEA0gi1m7mFsRINM0hpmXpl7LyQidOyhlHpQ+5LbdiSvau5ScwX7TldfrZuUrHuTD69hzOQtESCNMXycR0dnjAG3Owi8j2HHA07rCZootZfKeo4b6UxfmFRnUrWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749292184; c=relaxed/simple;
-	bh=HUErItk+IykV8jb9k+DxC8wOGdpP83t+IkeVHoy1mbE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SBxfk3C1cTRrV3dRMziOLo7fIUYSD08Aal9YDqq85jQYjhZfeFvyXu3JnwM7vaWBV/TeGLUKVRJ2WTrKHU0MjAhZvXsoXgQyMKuiidqbnNSyc2+n8IhIRObiToKMMsC/RD8cCy7rdhReiz2qS3lXhZcQXUOnVGljkJyD0aQ5FP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FsZSWq4m; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749292223; c=relaxed/simple;
+	bh=G1+BNuLhcw1t1MyHcjWB9Vz3MPiKC7HoYO80D7cnruY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=n0AIG+Gog44YyVfWV36YuCFe0b0CSGX8AsS99/9SvGdnVfyfx/RD47gH5U5twHGsPMRee9wwI7yAKStEF1/SFsikX4B/IrZ7KGJ1JUV588gP4fXz9PMYpbaO5jh46k0v7m16GMhZwgbfHgI5oSSNvyB9Wr8E1nOgcrAcWGdHluI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M2ZryTDw; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FsZSWq4m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749292182; x=1780828182;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HUErItk+IykV8jb9k+DxC8wOGdpP83t+IkeVHoy1mbE=;
-  b=FsZSWq4mn3Up4nOpSt3PSFYWW0a7Fv14gYkTWQ5Qcb3sY7nHY88cpL5Y
-   YJQU/3YSPNKW3l5LoTfAsTojNU/HQey9xRHVPvAz/J11aA1hLAMixdrAR
-   b4pCM1vT40wspJWMQ8DP+c6dEDaggdb95YmRMIIzKybueIVDE7xNPUQxK
-   V8l2OpTWFYDMzNxxtiUK/OcMCqi31wOrvYY5On5l5LBkJ/hOyYq21hopi
-   7RJ9sNG1TYGAzpbOEeN5Aku79xFSFWCn0oinya+ySXJ3imfnlHmSx48ua
-   eQMQaXKdNspkpbPGw4lRx/74GQhJO7C1NrznK1EMBn2NDKES5hGTYShHO
-   w==;
-X-CSE-ConnectionGUID: XDGHLUpcT6C41EGMVAkmwA==
-X-CSE-MsgGUID: JQVDAluKSpaLhwbIWysq4Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="51430862"
-X-IronPort-AV: E=Sophos;i="6.16,217,1744095600"; 
-   d="scan'208";a="51430862"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2025 03:29:41 -0700
-X-CSE-ConnectionGUID: //5h4T4EQHy8JqBmwILrZg==
-X-CSE-MsgGUID: cSCGMFoJQxaOHhvnzWtjPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,217,1744095600"; 
-   d="scan'208";a="146401279"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 07 Jun 2025 03:29:38 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uNqnv-0005in-2o;
-	Sat, 07 Jun 2025 10:29:35 +0000
-Date: Sat, 7 Jun 2025 18:29:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: wangfushuai <wangfushuai@baidu.com>, akpm@linux-foundation.org,
-	david@redhat.com, andrii@kernel.org, osalvador@suse.de,
-	Liam.Howlett@oracle.com, christophe.leroy@csgroup.eu
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	wangfushuai <wangfushuai@baidu.com>
-Subject: Re: [PATCH] fs/proc/task_mmu: add VM_SHADOW_STACK for arm64 when
- support GCS
-Message-ID: <202506071806.mshFK42h-lkp@intel.com>
-References: <20250607060741.69902-1-wangfushuai@baidu.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2ZryTDw"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso2359191b3a.2
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 03:30:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749292221; x=1749897021; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IE7X6x8OHAkTg697FSnh0gpU0EcjCgRFSk8bs9ZLu1g=;
+        b=M2ZryTDwd6zNyt96vTd3lJRZOpOfQNTWt2CjuUILJE4jb7G1UVAiUFV8K/lMQRZIrG
+         wQjeyFD1fKlyBX+A4yGc67yyFjoC2e8TAlCQhw/GQGeyAUPIiYzSp1gxCdbuP0p5bQdZ
+         tBdfPa79/lzWZFIeXzs3EsgRcuA9+YDkc+Dic7nC6C6uFJIrFviqNkWymKdc4KP7APUR
+         k/jUMqjAeFeN0fHFhDhVlv1bgF5dUxLstfXtUkWf1qDFDK/dqxkBZOWG+UBLWzDu5XSe
+         mWFPj7RhTrA5aDCa4LisAtyM/xlIjimJZD4K4r7GIaWGcJiAf//gaFlfFwtK0Ur8rCj7
+         AdDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749292221; x=1749897021;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IE7X6x8OHAkTg697FSnh0gpU0EcjCgRFSk8bs9ZLu1g=;
+        b=BBIl6iXJkILt8tN2EjGoILhBWZ4zBWOLyy/IEnq9SqxmbZnyjRntdf14asMCqMi27g
+         6BaDGgZ5b8yWW/1KZtrD2tKV/YP5hQkouIu4WoxLLJRoIHpmCWvx2UUo3et4Nk3k4sa5
+         PtsuQp6+7LjADbXCPNexMv+q52s5/9OkG4KbvrBJ3sfyWLohdzNnZ/IHK9SoeA1Yngky
+         sjacXfMS0KEmctnfid8RTyuh2xYoOa54JcJTBl4M3QnNsxUKp1LCN3KVTgPj/SxRFatF
+         RiHxIvz3FFwZlVjtmr4OhZo9uiiYNPdW2nc2xSyUvjBboqJZMyKThTFJtXojB+gFhnFF
+         S8CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWMCzc3J5UICsbsHJMGma1KYsQ3v5LMz5Ci24qZeFcKasN67y1YKF9VGHi8o91dphUBGKm87DoKCfS/F6Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9AHSuwvAel2Bv/Vss6/BqH68KIN85Ny9NXuTzzbrQN53ZDuvT
+	e6uCZcG5ifTgkiUETypRl+AUI1frz5jmT8jQDuKQqql71WQytJqpEl4YDSYBpQ==
+X-Gm-Gg: ASbGncvfvaxZXbCoaxUgAp2EU4SC2QXMFE1UG52HlrtLp0E//Uw8hGqsV963qvYu2a4
+	5e9EPBbpvC5dU8fVhLbVne/B9zFpEuIulpFJ/UTX4FOdchdfb8z/jaRXrHTQXJYv/9Eb4BnvLJ6
+	gbQ2bKYcH4kyDtnVG7OwxhCWZktADdEhSvet6cq7stHupXJ4Bp2CibuSRlA4njVUSe1WMLjgF27
+	k811c8sZqUELGyGuGV0pfdBL9xACGZBpl6Nn5rKHWtft1jC3cVtnRJZWY9JNY2ibMcmOA0PXUbL
+	l4P0rySxl7ZlU/wFuxaJjZuf/MXYcON1zPjvK3193KyjCs9KS/FG/poo96S4xcp7fLel
+X-Google-Smtp-Source: AGHT+IHS4E582z/SnH7fI8JfMS6qlHo/a7BVD3y+bqEg+XzD7UN+PrUslIyVIHHn5dbKrBsLZbhzVw==
+X-Received: by 2002:a05:6a00:9a4:b0:736:a6e0:e66d with SMTP id d2e1a72fcca58-74827e7ea01mr8869585b3a.6.1749292221553;
+        Sat, 07 Jun 2025 03:30:21 -0700 (PDT)
+Received: from Barrys-MBP.hub ([118.92.145.159])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0836bdsm2598807b3a.93.2025.06.07.03.30.16
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Sat, 07 Jun 2025 03:30:21 -0700 (PDT)
+From: Barry Song <21cnbao@gmail.com>
+To: lorenzo.stoakes@oracle.com
+Cc: 21cnbao@gmail.com,
+	Liam.Howlett@oracle.com,
+	akpm@linux-foundation.org,
+	david@redhat.com,
+	jannh@google.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lokeshgidra@google.com,
+	surenb@google.com,
+	v-songbaohua@oppo.com,
+	vbabka@suse.cz,
+	zhengqi.arch@bytedance.com,
+	zhengtangquan@oppo.com
+Subject: Re: [PATCH v3] mm: use per_vma lock for MADV_DONTNEED
+Date: Sat,  7 Jun 2025 22:30:12 +1200
+Message-Id: <20250607103012.25332-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <5fc1de4d-7c2d-4f5f-9fb2-65bef5b6931b@lucifer.local>
+References: <5fc1de4d-7c2d-4f5f-9fb2-65bef5b6931b@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250607060741.69902-1-wangfushuai@baidu.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi wangfushuai,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on brauner-vfs/vfs.all]
-[also build test WARNING on akpm-mm/mm-everything linus/master v6.15 next-20250606]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/wangfushuai/fs-proc-task_mmu-add-VM_SHADOW_STACK-for-arm64-when-support-GCS/20250607-141047
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
-patch link:    https://lore.kernel.org/r/20250607060741.69902-1-wangfushuai%40baidu.com
-patch subject: [PATCH] fs/proc/task_mmu: add VM_SHADOW_STACK for arm64 when support GCS
-config: x86_64-buildonly-randconfig-001-20250607 (https://download.01.org/0day-ci/archive/20250607/202506071806.mshFK42h-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250607/202506071806.mshFK42h-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506071806.mshFK42h-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> fs/proc/task_mmu.c:994:42: warning: extra tokens at end of #ifdef directive [-Wextra-tokens]
-     994 | #ifdef CONFIG_ARCH_HAS_USER_SHADOW_STACK || defined(CONFIG_ARM64_GCS)
-         |                                          ^
-         |                                          //
-   1 warning generated.
+> Sort of a nice-to-have/thought but:
+>
+> Actually, when I proposed the refactor I wondered whether we'd use more state in
+> madv_behaviour here but turns out we don't so we may as well just switch back to
+> using int behavior here?
+>
+> If we do that then we can adjust process_madvise_remote_valid() with:
+>
+>  static bool process_madvise_remote_valid(int behavior)
+>  {
+> +       /* Due to lack of address untag atomicity, we need mmap lock. */
+> +       VM_WARN_ON_ONCE(madvise_lock(behavior) != MADVISE_VMA_READ_LOCK);
 
 
-vim +994 fs/proc/task_mmu.c
+process_madvise_remote_valid() is called before vector_madvise(), so I'm not
+sure what this code is supposed to do. Are you trying to do something like:
 
-   920	
-   921	static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
-   922	{
-   923		/*
-   924		 * Don't forget to update Documentation/ on changes.
-   925		 *
-   926		 * The length of the second argument of mnemonics[]
-   927		 * needs to be 3 instead of previously set 2
-   928		 * (i.e. from [BITS_PER_LONG][2] to [BITS_PER_LONG][3])
-   929		 * to avoid spurious
-   930		 * -Werror=unterminated-string-initialization warning
-   931		 *  with GCC 15
-   932		 */
-   933		static const char mnemonics[BITS_PER_LONG][3] = {
-   934			/*
-   935			 * In case if we meet a flag we don't know about.
-   936			 */
-   937			[0 ... (BITS_PER_LONG-1)] = "??",
-   938	
-   939			[ilog2(VM_READ)]	= "rd",
-   940			[ilog2(VM_WRITE)]	= "wr",
-   941			[ilog2(VM_EXEC)]	= "ex",
-   942			[ilog2(VM_SHARED)]	= "sh",
-   943			[ilog2(VM_MAYREAD)]	= "mr",
-   944			[ilog2(VM_MAYWRITE)]	= "mw",
-   945			[ilog2(VM_MAYEXEC)]	= "me",
-   946			[ilog2(VM_MAYSHARE)]	= "ms",
-   947			[ilog2(VM_GROWSDOWN)]	= "gd",
-   948			[ilog2(VM_PFNMAP)]	= "pf",
-   949			[ilog2(VM_LOCKED)]	= "lo",
-   950			[ilog2(VM_IO)]		= "io",
-   951			[ilog2(VM_SEQ_READ)]	= "sr",
-   952			[ilog2(VM_RAND_READ)]	= "rr",
-   953			[ilog2(VM_DONTCOPY)]	= "dc",
-   954			[ilog2(VM_DONTEXPAND)]	= "de",
-   955			[ilog2(VM_LOCKONFAULT)]	= "lf",
-   956			[ilog2(VM_ACCOUNT)]	= "ac",
-   957			[ilog2(VM_NORESERVE)]	= "nr",
-   958			[ilog2(VM_HUGETLB)]	= "ht",
-   959			[ilog2(VM_SYNC)]	= "sf",
-   960			[ilog2(VM_ARCH_1)]	= "ar",
-   961			[ilog2(VM_WIPEONFORK)]	= "wf",
-   962			[ilog2(VM_DONTDUMP)]	= "dd",
-   963	#ifdef CONFIG_ARM64_BTI
-   964			[ilog2(VM_ARM64_BTI)]	= "bt",
-   965	#endif
-   966	#ifdef CONFIG_MEM_SOFT_DIRTY
-   967			[ilog2(VM_SOFTDIRTY)]	= "sd",
-   968	#endif
-   969			[ilog2(VM_MIXEDMAP)]	= "mm",
-   970			[ilog2(VM_HUGEPAGE)]	= "hg",
-   971			[ilog2(VM_NOHUGEPAGE)]	= "nh",
-   972			[ilog2(VM_MERGEABLE)]	= "mg",
-   973			[ilog2(VM_UFFD_MISSING)]= "um",
-   974			[ilog2(VM_UFFD_WP)]	= "uw",
-   975	#ifdef CONFIG_ARM64_MTE
-   976			[ilog2(VM_MTE)]		= "mt",
-   977			[ilog2(VM_MTE_ALLOWED)]	= "",
-   978	#endif
-   979	#ifdef CONFIG_ARCH_HAS_PKEYS
-   980			/* These come out via ProtectionKey: */
-   981			[ilog2(VM_PKEY_BIT0)]	= "",
-   982			[ilog2(VM_PKEY_BIT1)]	= "",
-   983			[ilog2(VM_PKEY_BIT2)]	= "",
-   984	#if VM_PKEY_BIT3
-   985			[ilog2(VM_PKEY_BIT3)]	= "",
-   986	#endif
-   987	#if VM_PKEY_BIT4
-   988			[ilog2(VM_PKEY_BIT4)]	= "",
-   989	#endif
-   990	#endif /* CONFIG_ARCH_HAS_PKEYS */
-   991	#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_MINOR
-   992			[ilog2(VM_UFFD_MINOR)]	= "ui",
-   993	#endif /* CONFIG_HAVE_ARCH_USERFAULTFD_MINOR */
- > 994	#ifdef CONFIG_ARCH_HAS_USER_SHADOW_STACK || defined(CONFIG_ARM64_GCS)
-   995			[ilog2(VM_SHADOW_STACK)] = "ss",
-   996	#endif
-   997	#if defined(CONFIG_64BIT) || defined(CONFIG_PPC32)
-   998			[ilog2(VM_DROPPABLE)] = "dp",
-   999	#endif
-  1000	#ifdef CONFIG_64BIT
-  1001			[ilog2(VM_SEALED)] = "sl",
-  1002	#endif
-  1003		};
-  1004		size_t i;
-  1005	
-  1006		seq_puts(m, "VmFlags: ");
-  1007		for (i = 0; i < BITS_PER_LONG; i++) {
-  1008			if (!mnemonics[i][0])
-  1009				continue;
-  1010			if (vma->vm_flags & (1UL << i))
-  1011				seq_printf(m, "%s ", mnemonics[i]);
-  1012		}
-  1013		seq_putc(m, '\n');
-  1014	}
-  1015	
+VM_WARN_ON_ONCE(get_lock_mode(behavior) == MADVISE_VMA_READ_LOCK);
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+If so, that seems problematic — the same madvise operation might be allowed
+to use the per-VMA lock for local processes, but disallowed for remote ones.
+
+I suppose this will only start to make sense after we support per-VMA locking
+for remote madvise operations such as "case MADV_XXX":
+
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 8382614b71d1..9815445284d5 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -1641,7 +1641,8 @@ int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
+  * take mmap_lock for writing. Others, which simply traverse vmas, need
+  * to only take it for reading.
+  */
+-static enum madvise_lock_mode get_lock_mode(struct madvise_behavior *madv_behavior)
++static enum madvise_lock_mode get_lock_mode(struct mm_struct *mm,
++		struct madvise_behavior *madv_behavior)
+ {
+ 	int behavior = madv_behavior->behavior;
+ 
+@@ -1659,6 +1660,9 @@ static enum madvise_lock_mode get_lock_mode(struct madvise_behavior *madv_behavi
+ 	case MADV_COLLAPSE:
+ 	case MADV_GUARD_INSTALL:
+ 	case MADV_GUARD_REMOVE:
+		...
++ 	case MADV_XXX:
++		return current->mm == mm ? MADVISE_VMA_READ_LOCK :
++				MADVISE_MMAP_READ_LOCK;
+ 	case MADV_DONTNEED:
+ 	case MADV_DONTNEED_LOCKED:
+
+Thanks
+Barry
