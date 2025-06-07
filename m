@@ -1,162 +1,136 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96A020CCED
-	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 10:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6F13B2A0;
+	Sat,  7 Jun 2025 10:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749292374; cv=none; b=a4OwpKNX0FoxOAKFSJ0UBe2Qxd22CvWBiHiApKvIYvqTkRMrUo32u2ZWH7AX34biBO89C5JR6KrbnKHEZxQ8Qr+M/HXIkLe2jkwh2OLcmlGPWUlKnd4jjrNDpW/YgrcJZ+GUbSvhJtS3/u3iUJKiSBAxx32iz+Fx2+rc8S33YNg=
+	t=1749292637; cv=none; b=ByGf/TbKvfCuooR2uF6kKtB3u5jw5rLLcV0RequondlQp+0zWzu8b0r+HtXc1TLNylvDLVKGKl09AtGxqF1OQzKy5cCmEliqoSjIKHk2OwzUE9jnD/ra8b2JMHFe4cofn4SP7zzzri5XWhYDG6yHiVL7hOGPfYtV3ww0XZlNT6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749292374; c=relaxed/simple;
-	bh=DfkiZuVme3n4FvzxhxFbP8GC088bc6XKMPvAk2xdFY8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tq8zx2Gc0wI2eplOrJwyzj9va+FslsU0Gi6yDiz+wGnS7usqvdk3btmeJHCSSVU5/mxKok7I8XfGNUMjEQpRjuukf6MnXj7HBlBe9GuzNjck/rbmxxgkYIvlPrYQ/mC8cN2NmYgbF1a2Mb4Nzx+DvC9Z78GvUs2mBYkpFpi0swM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=P/ze0UI2; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749292637; c=relaxed/simple;
+	bh=gY5IB5+OXmtOZhxYSyPMZEpmkUHeAnHZwVikIIs8rpA=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=lPX2JZpYEb0xDEDqoYunijk2nLz5QDomUg68Px8i+iU/t1L1OGbY7OBTCI5NScSicZAln7rz/uNds1noMEmWQv8wOx+AQkOL4SBcVDp19P7KDPqFy9KiUM30vLKU6sNCjRnbUHovyvFQOJK7lFyHMBynERWuJnGhsn6eg1+Ieqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=ssuhWOIZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ea63CQyY; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="P/ze0UI2"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 557AODYv032638
-	for <linux-kernel@vger.kernel.org>; Sat, 7 Jun 2025 10:32:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	iZ6+dp0ad8amdnO4X+sS5UZnq9PAZ9SW1yad5IwngOU=; b=P/ze0UI2u6/lr+9O
-	4Tt/m9mo8M793kJIEheDa3FRtgH+yUrbt2HBK1ywS4o+AXVTQAKRtQ2Tv9uuoV2s
-	5PKiLyCh0rHApAhzCQVTW6YHk+J980mYs0D1YKXkBqOLSeVTahJQpIT8VBO0Z2X4
-	Cn+tIulVyuqd1VZIp5vVaN8Hp5hZDDndrc8I1CbkSVxcmpQXlsTvdkHoyeXeaDVu
-	eZ7eEM8Ct69kzkW+Ihfwe+5rgsgosusd9jRjme2Khq6jjtlqDQO7NKEXj6BEhsrN
-	KQIngbd1Y4OPSObb1GYM7fT9jT80n7arlecSEiqzGQPsNrnI2fcUI2E0SD/goM/H
-	0mG78w==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474dgxgepu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 10:32:51 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d15c975968so537808185a.2
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 03:32:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749292371; x=1749897171;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iZ6+dp0ad8amdnO4X+sS5UZnq9PAZ9SW1yad5IwngOU=;
-        b=vmvlhdI4yhHQTO04YRFyn2+ndzRLo6IabPMSFZPmqqICHZkT7ORrqKSm+srBy3u/HD
-         zRo0yKv5ZLB+ZZ99cmijeciaRILv5d07bg2oAm2L4n5v8lD3zBh83JFKEAZJHcbcavC2
-         jGfvLhWXv7UGXxJUZdukVVDfJU5SoI1oU5rnXX9p3F19b1LI1MQS1C5YCM4ZCGUFTItU
-         Moxg0eCbVAy45uhn5pl4uB4xioHOsQkf2x1B/WFQ2HZyVHZBD3vXHzSUkgittzLQ/03j
-         uYZt0tbnvV9phoDozDQB6qa46jxL34TID1vzP1K+SFBD4t3+UX+WenbyP4npT3ICgJ1O
-         F/iA==
-X-Forwarded-Encrypted: i=1; AJvYcCWMkO9wUqhCdGXQUwhE7zAWIeqSSQTjPda1PuW1uj51vvEm9U13QcnxrwMBXtcLIZUH+isBRtPG6wasQ6s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7wfwuJTEvrHRWLmRu/HnP9FqanWEvP6Rpl6mFN05uOHcXbuHE
-	XL7+VGKhdYHugbAC6YsxmW2kjFx7r2arh1wnjusV5hx9XZk3lUsqyW9Msa42tvDxIWrsgCLsDnE
-	QiCy4PiFWik3oi/205dkPqW7MFSBue+89quXiDQ41mHoZU7/K5U3Kstfd/Psf8sN/6p0=
-X-Gm-Gg: ASbGncuJfanIeg5OTcgV96M1Fxf85/y6lZuUJEv9CqQeKD26c2bwW8cLArAR/SztO/U
-	czt77yAEMk6axG6MsrAgYmaLJz9yROmlxxOkuwf+HjEjGGJzJ/67fOY8959yENLYQgTmy/Rlrxo
-	iV+GgLYZM6EFn48wSksLLg3O944T4CDOKiW7wTUKKabCpRsDZhei0IZph0OJC1W0TgN4uNFwZql
-	o2CRG0ImT+R/HHsG6LLnppM6kBw9aDnfytgqJopJ066jPpPzdgsTXD3qIKw7bzc4lExH4yrxJnd
-	N63qq/n2KQgiFMs11uRzKDxA+VR+i3qi/9ApwMbpljL7aB272lMZh+geJ1kd6wuepIrsS09YJaH
-	k7UAjbPgX/Kem5A==
-X-Received: by 2002:a05:620a:3905:b0:7d2:139b:a994 with SMTP id af79cd13be357-7d2298ca7bbmr832501885a.34.1749292370842;
-        Sat, 07 Jun 2025 03:32:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEegvXUEIWt6ZR7mMr3jMuWc8lA4hAWqYVM4uXihi3Zu1Hg0GSu808Wsiprlc5zXotdcjP5gQ==
-X-Received: by 2002:a05:620a:3905:b0:7d2:139b:a994 with SMTP id af79cd13be357-7d2298ca7bbmr832500285a.34.1749292370490;
-        Sat, 07 Jun 2025 03:32:50 -0700 (PDT)
-Received: from ?IPV6:2001:14ba:a0c3:3a00::4c9? (2001-14ba-a0c3-3a00--4c9.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::4c9])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5536772240csm468780e87.120.2025.06.07.03.32.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Jun 2025 03:32:48 -0700 (PDT)
-Message-ID: <c9b83c8b-68d1-43bc-99d6-d2d2b9e445f4@oss.qualcomm.com>
-Date: Sat, 7 Jun 2025 13:32:47 +0300
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ssuhWOIZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ea63CQyY"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id D3A8511400DE;
+	Sat,  7 Jun 2025 06:37:13 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-06.internal (MEProxy); Sat, 07 Jun 2025 06:37:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1749292633;
+	 x=1749379033; bh=cvgmmEJtABl4x5NTALpRDuyvTzE9kDx+5yiLNZhZiaQ=; b=
+	ssuhWOIZOo5qakjbKHT1vaBwKkd7qkWhuUY6YXO1o+oyA+Q5lsCcz4J8ASrBIG2g
+	IyJ1B5V89Sj9nEOQiHHG/EWabMv4CEfp1tzMQVttNRe22//299phYBdP+5881v8P
+	mzvyLbR5vd5RUAXxZ7POo6Wn638PFMJZ/1L/etXnhAQ8JzEdXqrfubXcctJXcNEJ
+	RJxs2f4aPxdkMnuKNsSA2xCMCRXaLMJZdb7gJRLLMGwsk3No3MkEHnbK6+KO9fUv
+	CIqZgcd81PQuXzFxLRw66OdruH0vSbqKz5wIq7WSxSx3tb2Z1LsxXG275j2YifuI
+	hpt/iE+fwChBq3gfTj5a1A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749292633; x=
+	1749379033; bh=cvgmmEJtABl4x5NTALpRDuyvTzE9kDx+5yiLNZhZiaQ=; b=e
+	a63CQyYxcxcFXHM5HGmEDe0SQ24+DQSnkNGkv7lPi3K3zdOpsZ2B7u7H7y+EPVQo
+	j5oHXXZeIA1vQs7MDQ9jeqtCKIkxRayQijsIZNJHKZJSoQs0XbuYin2JkRklZdA2
+	DdG4fcWv8nIPKpkn1Bkc9rIhJWIVJnz5v2ccF0IKhePK6cyMWeMgBTXJsQjD28Gi
+	vEY43knl07VKPok3K9S0/OnPCuyBh2w5JMQcN9PNOMqu+BgldrPxFgHTa8UD5AeE
+	R/k1/O8EnmNlKoohDIahMrmlzXURW2XJ7N+flBU822fK1/03SZOqSLSf4E82+S6P
+	6tI/g3J1cBxETgmq8qwow==
+X-ME-Sender: <xms:WRZEaNz-cPlBbFfeLuVDW_Hcz5lWWSEy_rt8Bu-5gvMISB0VWKHrDA>
+    <xme:WRZEaNRH3Ly8b1wqmsxdBo2gpLbReF3Acmee95C5lnAqFRXbYXz6k-HltDWh4mGNG
+    k6LDCZGlINxzSg9YIM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdeigeduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
+    necuhfhrohhmpedflfhirgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfh
+    hlhihgohgrthdrtghomheqnecuggftrfgrthhtvghrnhepjeehfeduvddtgffgvdffkeet
+    hefhlefgvdevvdekuefffeekheehgeevhfevteejnecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgr
+    thdrtghomhdpnhgspghrtghpthhtohepgedpmhhouggvpehsmhhtphhouhhtpdhrtghpth
+    htohepthhssghoghgvnhgusegrlhhphhgrrdhfrhgrnhhkvghnrdguvgdprhgtphhtthho
+    pehmrggtrhhosehorhgtrghmrdhmvgdruhhkpdhrtghpthhtoheplhhinhhugidqkhgvrh
+    hnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhhi
+    phhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:WRZEaHVlI1lhmvhphAh2EJKoI8_hRP7g-S7qDSL93NlPnUQZm2914w>
+    <xmx:WRZEaPi8-AM8OqWb3trPoji071n7wQjMGaSXHyAzMTzJHyWzyrarQA>
+    <xmx:WRZEaPAJk6u-VctWH8CPpz3PgdG3fOs--O4mh0UmuNX5mt1cQyxpLA>
+    <xmx:WRZEaIJ3r_JA9g9xOdb49zGcMj_m2gTNLEFZt3caJjRs6Qoz-wuzAA>
+    <xmx:WRZEaMM8xw9lINe3PUXZTeYvfmLoyT4l9Kz0rmiWfY7DlehyEScR5k8y>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 27A182CE0065; Sat,  7 Jun 2025 06:37:13 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 0/3] media: venus: enable venus on qcs615
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Renjiang Han <quic_renjiang@quicinc.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>
-References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
- <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
- <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
- <5854a587-aba7-4e71-87f8-249ba00cbc59@linaro.org>
- <996c9a39-5520-4b43-adfa-06ce29223ba0@quicinc.com>
- <713b87cb-0003-4ee3-a599-9cd41629bb42@kernel.org>
- <7aa36a0f-6741-40c2-93f4-036823d245fd@quicinc.com>
- <247002c0-ee68-4d0d-857a-768bf68bce75@kernel.org>
- <d5aee491-3ba2-4beb-8b8f-4ba8372e6d16@quicinc.com>
- <fa6a7983-27bf-40db-9843-0891bdadf523@linaro.org>
- <a258433f-f1da-4be7-a0af-645571aab871@oss.qualcomm.com>
- <e0405dea-bad2-408c-a65d-f9a3456dd92e@linaro.org>
-Content-Language: en-US
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-In-Reply-To: <e0405dea-bad2-408c-a65d-f9a3456dd92e@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: P3Esjv_rEKAFq1QYI707crUF5X_32AAE
-X-Authority-Analysis: v=2.4 cv=HMbDFptv c=1 sm=1 tr=0 ts=68441553 cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=6IFa9wvqVegA:10 a=1BIh7cnd6DHUqvcSSZQA:9 a=QEXdDO2ut3YA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-ORIG-GUID: P3Esjv_rEKAFq1QYI707crUF5X_32AAE
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA3MDA3NSBTYWx0ZWRfX1Cq8o0AHSNjY
- CF1A27FBAu4shxWIlA695sLj++VPQUOBFy4M0cqM4Nbx+WV4bPb2dMn6I+goZlghkqCfGT+sL6c
- Jd6PeByzIkVxChHcx/SxMWpYbs+X+/cMaQYsdlBma0UU6ibZPx8NCbB6MFTtjln0zedqiRyGGvy
- X3XzLX5o/hzBTkoH5w94B2U0WUZuvx4X1jOimamU4x/LBps6Wfnzl/yZ27zNqiPUwnejT8oywYP
- V5RSHBr5JuGIA0Gckn2YnbZhWEYgo2+O4wNK7kUK2MDYdfQvt4Sj3ntT7FEO5UlbsuHNYcW7glK
- hejQgfEPlvQoTIjp02dP3INucZqnU5N1f0Y2dg679cxEp+mkxez5JCVp/07TmH8eBioQRTKOboR
- W6t8Kquai+O0RzpdKOg87/cNQlCUuCowodEF3RPRRGkjMhvrzEGkZjYkaN1K0HbmY8A3reaT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-07_04,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 mlxlogscore=999 priorityscore=1501 impostorscore=0
- suspectscore=0 malwarescore=0 phishscore=0 spamscore=0 lowpriorityscore=0
- adultscore=0 mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506070075
-
-On 07/06/2025 10:16, Bryan O'Donoghue wrote:
-> On 07/06/2025 03:13, Dmitry Baryshkov wrote:
->>>
->>> As we've established the fallback isn't a fallback because it falls 
->>> back to wrong data, so lets fix that.
->>
->> Why isn't it a fallback? With the driver changes in place, the 
->> fallback is totally correct.
-> 
-> Its not a fallback _as_is_
-> 
-> I'm fine either way
-> 
-> - Apply 1/3 and then re-submit 2/3 3/3
-
-Let's settle on this option. I think it is the cleanest option.
-
-> 
-> or
-> 
-> - Enumerate a QCS615 table
-> - Apply 1/3 here
-> 
-> ---
-> bod
+X-ThreadId: Tfa3886415041e94f
+Date: Sat, 07 Jun 2025 11:36:52 +0100
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Message-Id: <40ff6065-2f2b-4a07-b247-02e11fd46eb8@app.fastmail.com>
+In-Reply-To: <alpine.DEB.2.21.2506070300430.1790@angie.orcam.me.uk>
+References: <20250605-tlb-fix-v1-1-4af496f17b2f@flygoat.com>
+ <alpine.DEB.2.21.2506070300430.1790@angie.orcam.me.uk>
+Subject: Re: [PATCH] MIPS: mm: tlb-r4k: Uniquify TLB entries on init
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
--- 
-With best wishes
-Dmitry
+
+=E5=9C=A82025=E5=B9=B46=E6=9C=887=E6=97=A5=E5=91=A8=E5=85=AD =E4=B8=8A=E5=
+=8D=883:48=EF=BC=8CMaciej W. Rozycki=E5=86=99=E9=81=93=EF=BC=9A
+> On Thu, 5 Jun 2025, Jiaxun Yang wrote:
+>
+>> +static unsigned long r4k_safe_entryhi(void)
+>> +{
+>> +	int entry =3D current_cpu_data.tlbsize;
+>> +	int old_index;
+>> +
+>> +	old_index =3D read_c0_index();
+>> +	while (entry >=3D 0) {
+> [...]
+>> +		entry++;
+>> +	}
+>
+>  Hmm, how is it supposed to work: you start from say 48 and then itera=
+te=20
+> until 0x80000000 before giving up?  Also a signed overflow condition i=
+s UB=20
+> pre-C23, so the compiler may well optimise the loop control away.
+
+Ah sorry I didn't realise it's a UB. However, this loop is likely to be
+terminated very early as it should be fairly easily to find a free Entry=
+Hi
+value with TLBP.
+
+>
+>  How did you verify this code?
+
+Boot tested on Boston as well as M5150 simulation. I tried to manually s=
+etup a
+TLB entry collision situation with Boot-MIPS.
+
+>
+>   Maciej
+
+Thanks
+
+--=20
+- Jiaxun
