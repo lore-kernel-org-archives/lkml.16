@@ -1,183 +1,118 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF75B1E2853;
-	Sat,  7 Jun 2025 19:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99A3FC08
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 19:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749324050; cv=none; b=m8BGcVWyfVW0H5Rz8v1a3MkmO76PUGVeyrElyDXwCbU8R6+7qw2uwJO2pS4NU/34n6+/L6gmr8zGhsQbWAzo7d1GED1zSbHTxBwRKhHfbryqtj9QZP3SPZWWGA6XrRPr55l9I1R25Y1sU5o2Jy5HeLL69oRVEcx4sQ7/JNJAfWs=
+	t=1749324504; cv=none; b=Tmizgw3FkJtancSKh7EmqI9u1ZElyrsyFTyi2ZYFDEBEUgNbgTVYAvxobzyIdUaNUDxRy3hKJTed0TigGrFMIyus5jvodhZmwg3ODG+jKtfqhp9J4iDHUDCUfOO9IrqBCOxhoRSv5LSyqvZkP3ofP1nc84oIHyvQLtACMZvKbps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749324050; c=relaxed/simple;
-	bh=O5+gwYnLCWFLqbGYPlc6bH+VFDr9laPWOhkQEwvF9Bc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nU7CtxizsWGIOt3PYCxssypoXFKqRZWk3wWHqYN95g/dLUaYQ/Fha1+ZcvhKkfSUK+GFGJpoJoZ38WcIFUzFLihstrxUP58KFt55CRjeOnMBaWgJAEOLv4yoeTj2dIJ5QIJzMqZWNKL4TAMqIK9ogNgIKpANHQe7O0BNFGBfutI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YWGgQJ2u; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWGgQJ2u"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so2196826f8f.0;
-        Sat, 07 Jun 2025 12:20:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749324047; x=1749928847; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DFOortVeZ0TnxwCANWeF+9bEBLuGOdK91fhIJ/AcWp0=;
-        b=YWGgQJ2u27hhIxajjgLMCm+CEkksnT6XME2GKl6mjU7u/kn2rFpY5zEIngK2iKsZH3
-         XHN98igjZfwyKkrf2noHO6Q0NH51/1q0lD0nZrmaCGL+u7+8q9BwL2zMaRpDLfc4Om3f
-         MtR/Ck4dldqiX/5D0cm5x8v9xwKhSIah8jL+ZbMeP2AjE+YCVQ4Guve0h3kUmao0aDoW
-         hVE/81kdchsmbmtC8pGllDOUvM08LFytREBLG3u3HMzJbNpNdO/UKxMoErkuBlvR863S
-         fnrgwViGGh4Vs50vHDydnycDjYTOHNQ0jPJy4De1YSsadLqIz8BBPE1xvkFYU9BU14Nd
-         H/4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749324047; x=1749928847;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DFOortVeZ0TnxwCANWeF+9bEBLuGOdK91fhIJ/AcWp0=;
-        b=vJOToc+d8b7wFZNXwGVaJpTbD3bBgz9gCCaMjKrbq0OFN8ESv+jqfg9U3rBe33lZyS
-         H85Qy1gCbA7hfrN3gMmy5DlDcFbFy7oSwc8Fv6lQpRrcEbpksDehWCA1xy3DWfsgX7/t
-         QIPIsXwCHmVn7FzQjxP7RdknOG7w20X+aHDTf1Iw95W3w7Ouc1RayYAn+tEqntW8i8AO
-         O+0PiOrTKKm4cyM4ZSzINo+HGUPMMZ3awA+vmNgt48e5Tb08u7SSjg++hJ8POUdEYmQi
-         1ufirgcvUrn6ZAkHz3n/M7w4UVAS71Jx+mnUeJ0CiqEZxZCqWbI2A+xP1giqYmD5nDoZ
-         Wvwg==
-X-Forwarded-Encrypted: i=1; AJvYcCUe1sZEbYVffM+cppHYOGeezycUODReDNW/RVlrdZs26yQccN1S2aTibIb3Ollkupda71u3IFNH+2dm5zjYew==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaKSXuSGxJrtnTlwDc7hTuM7aLVtkFm+qhqs1okpZLughjUnE9
-	yuzs32A7CwGJaGoNLowxB6bBKd/2g6i0PMGqIhLSHqKVWd6Y+vpWsb4w
-X-Gm-Gg: ASbGnctupUcb9tNdzqclm1+Xvpbpqipq/lzfutA+rZsCLZ5D1P6jSNJFk5qTE1ZhdxO
-	gGT8eJHBD7UlR/FI7Q5AWmgqGL911qz/u+OG4xgDHsXHZmR02cnl64JVS1EZApFsHh8pfrwrApa
-	iH/Jh8i/JsOiApx0KybJ3BipQieZwF0G7sHldwrCMl1bGDaF0shFrCN1Z2Og3YDF5qPem8zeqjD
-	9MH2/8VhMEJ+UGctDMJlpRZhJJ0ctxOWxwgPKmMddCR/MSjzGRvwq8x3U8gv+iaaRBwMcgVcemR
-	9xbC2J/83tVmyNPs08ZPOEsXmU2UmCCSxwwfvOq6Av6wA0bc6IeV/3XrsTMhdxQNQ3zqWGtS1vY
-	=
-X-Google-Smtp-Source: AGHT+IFlMAi5uuxWHFLjqXqmXICNX0dyq4/PTE3nckSzXR2r3LpSGjXr9QIYJPmJOq98yEXqEZelSA==
-X-Received: by 2002:a05:6000:4011:b0:3a4:edf5:8a41 with SMTP id ffacd0b85a97d-3a526dc5605mr9713682f8f.4.1749324046796;
-        Sat, 07 Jun 2025 12:20:46 -0700 (PDT)
-Received: from ?IPV6:2001:871:22a:3372::1ad1? ([2001:871:22a:3372::1ad1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45213709637sm63780325e9.26.2025.06.07.12.20.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Jun 2025 12:20:46 -0700 (PDT)
-Message-ID: <407f04ff-b313-4629-bbdd-f25df14f44da@gmail.com>
-Date: Sat, 7 Jun 2025 21:20:45 +0200
+	s=arc-20240116; t=1749324504; c=relaxed/simple;
+	bh=6LtZlLoLr4VabaHb5rMPs+djcI33bZAaAP95uOT2n6Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Q9i3nRz2/EVLem5x45GHnNya+Ns1oaEugsSauuWMfEwSnCUOuv7uFYDWiEufQo7xVr6ZLMSpEX2U8vIsYB47gPmH1GLd6AD75fShfzjj4bDiawtG1NFBoI2UY/kWfkV63ezxLXg+2RwBGE9FdwS4GeKHzmv6iUlnusucG87YRQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 4E8D982713;
+	Sat,  7 Jun 2025 19:28:15 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id EA04320028;
+	Sat,  7 Jun 2025 19:28:13 +0000 (UTC)
+Date: Sat, 7 Jun 2025 15:29:37 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [for-linus][PATCH] tracing: Add rcu annotation around file->filter
+ accesses
+Message-ID: <20250607152937.7e9cccb0@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rust: add `assert_sync` function
-To: Benno Lossin <lossin@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-References: <20250607-assert_sync-v1-1-b18261da83e2@gmail.com>
- <DAGEZCRR61A0.30H1MJQXW4CV5@kernel.org>
- <2531463d-fa6e-430c-a3a6-b179654cfbbe@gmail.com>
- <DAGI57J7WBD0.2BOT553TRIXH8@kernel.org>
-Content-Language: en-US, de-DE
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-In-Reply-To: <DAGI57J7WBD0.2BOT553TRIXH8@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: EA04320028
+X-Stat-Signature: 16gyqcbrze4hmrxybnitseptnp8ctwn1
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/nUOrOG2ummSX4lxvKwmNLn1N9RinFVFM=
+X-HE-Tag: 1749324493-237557
+X-HE-Meta: U2FsdGVkX18NxUn8M612AgcJ+YzzXeU6aY61PgThzSGHRHhm6ToYMA94VfqghzGrWqsrLfBsI5911Gq2rYtcZQFWwFD8eO+Q8Apo692hvo0fJDfJx0Wy4dTw1EHhV/GXHMocSeXr2/xxRJf1Ee8X1NBFZCCQ4ubyxVCKHTqEnLetIY3C3q0tKyjJUtgGB3Y5c/0oJAI4lqBPJNfk2zzSMIUyzshzAe43+JqcVwrnSD9sSIHHnjl5kSk8ONJgsd/qN1a3oUiREqk4dbj9oX4cI9nf/ERKOGwKgbnhOtT1hZLYXBcBQFD+sayhDBS5GPTZ3sl34YOZoLEZQwRkO7WAFs5j6FFCuygDSTTzOnsyEY7czI7hL1Jiq8piO8y3EXM/nBYjalWLeoD6fpOSAJbiqZTR+++5I0zbbWy4pBtO0w9ZFPE6NQI6CH4eMezkpc2eDN5f5bSr3rf40I83/+EefA==
 
-On 07.06.25 8:11 PM, Benno Lossin wrote:
-> On Sat Jun 7, 2025 at 5:54 PM CEST, Christian Schrefl wrote:
->> On 07.06.25 5:42 PM, Benno Lossin wrote:
->>> On Sat Jun 7, 2025 at 3:02 PM CEST, Christian Schrefl wrote:
->>>> - Add `assert_send` as well.
->>>
->>> Sounds like a good idea.
->>
->> Should I already add this in V2 for this series?
-> 
-> If you want to then sure, but we can also wait until we have a use-case.
-> Also, let's finish the discussion about the macro idea below.
-> 
->>>> +///     assert_sync::<i32>(); // Succeeds because `i32` is Sync
->>>> +///     // assert_sync::<NotThreadSafe>(); // Fails because `NotThreadSafe` is not `Sync`.
->>>
->>> Can you split this into two examples and mark the failing one with
->>> `compile_fail`?
->>
->> I've tried it with `compile_fail` and it didn't work, I think
->> that's not supported in (kernel) doc tests yet. 
-> 
-> Hmm, I thought that this worked... @Miguel any idea?
-> 
->>> We also could provide a macro similar to [1].
->>>
->>> [1]: https://docs.rs/static_assertions/latest/static_assertions/
->>
->> You mean the `assert_impl_*!` macros?
-> 
-> Yes, but the others might also be useful from time to time.
-> >> That might make sense, with macros we would not need to write
->> a const block to ensure its not executed at runtime (although
->> it's probably optimized out anyways).
-> 
-> It 100% will be optimized out.
-> 
->> It would also mean that we won't need a assert for every Trait, which
->> seems nice. So a macro sounds pretty good to me.
-> 
-> It depends, the macro impl needs to define its own function, which might
-> be inefficient if one uses it a lot. But there is no way to be generic
-> over traits, so there is no other way.
-> 
-> Let's see what the others think.
 
-The error messages in the macro are slightly worse:
-error[E0277]: `*mut ()` cannot be shared between threads safely
-   --> rust/kernel/compile_assert.rs:40:18
-    |
-40  | assert_impl_all!(NotThreadSafe: Sync); // Fails because `NotThreadSafe` is not `Sync`
-    |                  ^^^^^^^^^^^^^ `*mut ()` cannot be shared between threads safely
-    |
-    = help: within `PhantomData<*mut ()>`, the trait `Sync` is not implemented for `*mut ()`, which is required by `PhantomData<*mut ()>: Sync`
-note: required because it appears within the type `PhantomData<*mut ()>`
-   --> /home/chrisi/.rustup/toolchains/1.78-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/marker.rs:740:12
-    |
-740 | pub struct PhantomData<T: ?Sized>;
-    |            ^^^^^^^^^^^
-note: required by a bound in `assert_impl`
-   --> rust/kernel/compile_assert.rs:34:48
-    |
-34  |             const fn assert_impl<T: ?Sized $(+ $trait)+>() {}
-    |                                                ^^^^^^ required by this bound in `assert_impl`
-...
-40  | assert_impl_all!(NotThreadSafe: Sync); // Fails because `NotThreadSafe` is not `Sync`
-    | ------------------------------------- in this macro invocation
-    = note: this error originates in the macro `assert_impl_all` (in Nightly builds, run with -Z macro-backtrace for more info)
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+trace/fixes
 
-error: aborting due to 1 previous error
+Head SHA1: 549e914c96ae67760f36b9714b424dc992a0a69b
 
-compared to the function:
 
-error[E0277]: `*mut ()` cannot be shared between threads safely
-   --> rust/kernel/compile_assert.rs:28:31
-    |
-28  | const _: () = { assert_sync::<NotThreadSafe>() };
-    |                               ^^^^^^^^^^^^^ `*mut ()` cannot be shared between threads safely
-    |
-    = help: within `PhantomData<*mut ()>`, the trait `Sync` is not implemented for `*mut ()`, which is required by `PhantomData<*mut ()>: Sync`
-note: required because it appears within the type `PhantomData<*mut ()>`
-   --> /home/chrisi/.rustup/toolchains/1.78-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/marker.rs:740:12
-    |
-740 | pub struct PhantomData<T: ?Sized>;
-    |            ^^^^^^^^^^^
-note: required by a bound in `assert_sync`
-   --> rust/kernel/compile_assert.rs:26:38
-    |
-26  | pub const fn assert_sync<T: ?Sized + Sync>() {}
-    |                                      ^^^^ required by this bound in `assert_sync`
+Steven Rostedt (1):
+      tracing: Add rcu annotation around file->filter accesses
 
-I guess I'll keep it as a function for now.
+----
+ kernel/trace/trace_events_filter.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+---------------------------
+commit 549e914c96ae67760f36b9714b424dc992a0a69b
+Author: Steven Rostedt <rostedt@goodmis.org>
+Date:   Sat Jun 7 10:28:21 2025 -0400
 
-Cheers
-Christian
+    tracing: Add rcu annotation around file->filter accesses
+    
+    Running sparse on trace_events_filter.c triggered several warnings about
+    file->filter being accessed directly even though it's annotated with __rcu.
+    
+    Add rcu_dereference() around it and shuffle the logic slightly so that
+    it's always referenced via accessor functions.
+    
+    Cc: Masami Hiramatsu <mhiramat@kernel.org>
+    Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+    Link: https://lore.kernel.org/20250607102821.6c7effbf@gandalf.local.home
+    Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 711520081741..ea8b364b6818 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -1250,7 +1250,9 @@ static void append_filter_err(struct trace_array *tr,
+ 
+ static inline struct event_filter *event_filter(struct trace_event_file *file)
+ {
+-	return file->filter;
++	return rcu_dereference_protected(file->filter,
++					 lockdep_is_held(&event_mutex));
++
+ }
+ 
+ /* caller must hold event_mutex */
+@@ -1320,7 +1322,7 @@ void free_event_filter(struct event_filter *filter)
+ static inline void __remove_filter(struct trace_event_file *file)
+ {
+ 	filter_disable(file);
+-	remove_filter_string(file->filter);
++	remove_filter_string(event_filter(file));
+ }
+ 
+ static void filter_free_subsystem_preds(struct trace_subsystem_dir *dir,
+@@ -1405,7 +1407,7 @@ static void try_delay_free_filter(struct event_filter *filter)
+ 
+ static inline void __free_subsystem_filter(struct trace_event_file *file)
+ {
+-	__free_filter(file->filter);
++	__free_filter(event_filter(file));
+ 	file->filter = NULL;
+ }
+ 
+@@ -1465,7 +1467,7 @@ static void filter_free_subsystem_filters(struct trace_subsystem_dir *dir,
+ 	list_for_each_entry(file, &tr->events, list) {
+ 		if (file->system != dir || !file->filter)
+ 			continue;
+-		__free_filter(file->filter);
++		__free_subsystem_filter(file);
+ 	}
+ 	__free_filter(filter);
+ }
