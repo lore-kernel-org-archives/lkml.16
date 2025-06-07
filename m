@@ -1,126 +1,91 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailo.com (msg-2.mailo.com [213.182.54.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F521C84B6;
-	Sat,  7 Jun 2025 21:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9401C84B6;
+	Sat,  7 Jun 2025 21:43:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.182.54.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749332581; cv=none; b=rpca5RI5a5xxjOH23NnUY8Dx7nKWnETlnRk18Fv3/kwEccuo5HMdyUVgXx5Kce+dTcypBvNb1cC9vrrKRzezzbB1+zA8pSU1yOe58Rgu7Isy9ewINWeYNvbE9z6dIX/Qn0OHYtl6O8CKOvuSMc7pe1PeKKGlCuMd0DwnZDeEZtA=
+	t=1749332621; cv=none; b=T7J2mxZCVuj4xKFU+JJtUQjqBrfccVPGFKITWpO9TLcVp4BYfLZGeFNfmFwvAKTdAtoWZIrWjpVyFezDM14ccL3iHJ/cr8XWoTUwu/wFLs3X88fP4FnZm+jezi8Dv0d3HnAUWLgMsCSwMDUGOc3QcDwI/tnnKs6A9ICOGaELPK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749332581; c=relaxed/simple;
-	bh=gm4fasS9vdQQbKuCZtoPAMG4B6dKjldt1nwRY4/n4nw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PSsAy4YW9EEbVJzcgXT7EIilg5QCBbnp6u+HDa+x5itHPldrVjdd6OTRlpx7YUBp94x/HukOvmE47PbIWKahNnli4TDeul+pvh3thFC7/q+CHMEnLF2xLw9VuF6xa9hPd0NQWvYHRTE2f8v6wCuwFhL+iEVhg/iVOhknKf3Uw84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qemd9i48; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749332621; c=relaxed/simple;
+	bh=xI/OvOkoISAXRncaDWVm0qhOdTlzYGDe6owbkI0AdPE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ZJ2CwC1l/3TJHn4NbeDBnpSdzhp0HkYNwE8ieBjtwYs1MamLmmLnfetozEJhiRriGb2uVMslWdlEohTARPJEAFJ/4XKo4mCsyaWJ5RSHtxMzWppas2u1J929fTZ1aH442yMUS92XwvV/ZH7M7HzbsQIJpVfXdEQrBv8G4GFgq0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mailoo.org; spf=pass smtp.mailfrom=mailoo.org; dkim=pass (1024-bit key) header.d=mailoo.org header.i=@mailoo.org header.b=aEbKIoQO; arc=none smtp.client-ip=213.182.54.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mailoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailoo.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qemd9i48"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-710e344bbf9so29562147b3.2;
-        Sat, 07 Jun 2025 14:42:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749332578; x=1749937378; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YjscHMC+1NsZwBWXAeWQleUywfW88cG3lx1fz7LMCSU=;
-        b=Qemd9i48lPyVPkU7oJZ6SbaFVjMsnNNLzxvjxeqrb477FA8FPIM0P4z/B84bC766O7
-         8xQxRw2ac8JH0pkHHIlgctZSbyMRp6RKmhZlQw7nCNrDNmEVPqNoUFoaymcSLbMfHMZE
-         7+umecH4Pb7T6QgtaUd/oNS9v0udlTCmaGaAK+B2Y25AoqoAwy26RC2QvNcSM3RdGlsw
-         UOOFb0tnIAga6WD/IGTK1kTvj2ACNu/A71SFk/kmYWCs6HV8QFmK5k8VII8chrBlssoC
-         UwTza8qZwVaNaalWgcwhbzUxXOAIE9J6j4BNEovKjohgmkjo5sKw4jTMtUoM8c04inQt
-         8axA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749332578; x=1749937378;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YjscHMC+1NsZwBWXAeWQleUywfW88cG3lx1fz7LMCSU=;
-        b=oCUAPW5YYm2/3T0FPq+E8LrMsuj6Nfl5nDgpHtc68vDbO1XfN4xrdHhGx6R5sI9B0o
-         hskB6aIBcasUSytVjOqxc1LA8oqGY0f+CuNwq5z/o4g3Grk/WSGr1+TqYkki5UfT4g5P
-         hCJnx8I2/hLrtvy3kYNC8/ljrvl/U5HnAxbmDf70/JOM/nPQlYSOSQusdL0DZCdv3rBu
-         +cVqiEoR7QMQRCP/ed+AD2XZj+RCjmXdgmKN8i9BWo0SvyoTzmpJrMFoTdORNsqz41X7
-         KhG0f/yiJhK80rOfbe0EdzXyhkpLVcKILXwxkTGF7Ld+TH00QqmgkKhu7sgm52zvu5iN
-         kq3A==
-X-Forwarded-Encrypted: i=1; AJvYcCXVU7stdrgMCmho4MAYaM2sJxAptPYLD3FjxbvwgRtV5OPgfOiKU9xOAxk3LwZxayaA9JcdedBaUVg=@vger.kernel.org, AJvYcCXw74g8BpfAvjlrNYe9DTKQ3kLtASM3iObf51mOBJ5Mcg0B8l9Bi5dlPMc7zfHNzrP6VnIxRSQyGIJpYP6P@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzjccz9Qe/D0MWTCvHUl/y8ohVh9CykXD/rnN6Ms1waOF7Avm1C
-	FpEahlWfalNpWoLCO7l5Hi7dV4MfF21NC3vXIRPAkswq1zJ3B+/AZ1f+
-X-Gm-Gg: ASbGncuA0FnOt5MjlNimZ28g7GVlPZSrg4rheLlIxIvd5JBdSdjvRH4lQFrDzNBjAb5
-	kVyLpdmzKtUWrk5WGndWA0kC2t2Mks01fQ0Z7XHZS0M5F+R4XMM0Rw5/di2z8HzpOvKO/VdUsdB
-	Sfy+wChnNRY2eCDoU0zXp00ea3IpK8bFgT1DgwjVULCcLEIP1jSu2Cdxnx4Bg0WLdKVLUCrfb0H
-	zwrycmYf5yMjUxNll0NVmURgcBDg7sHD1LjT8S/SoigtCkqqhqPFn+PeDsACy4OJTkTiJPMsrzU
-	n6ZkP7mWQVlYRzzRuKTcdIQ+mTWQhwXdQ8nFhivrgKKD8bohyXxBR/Ssp/rMITvYrw==
-X-Google-Smtp-Source: AGHT+IFi7sCc6zUWOl2n8ocwxXau8vfpIhvgXEPkIJZ0ahc2fKnvKNbUQDVVfPk5ZO4jM0FFXS0NtA==
-X-Received: by 2002:a05:690c:7088:b0:70f:8883:eb1a with SMTP id 00721157ae682-710f763609amr114840637b3.6.1749332578501;
-        Sat, 07 Jun 2025 14:42:58 -0700 (PDT)
-Received: from trojai4.cs.purdue.edu ([128.210.0.165])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-710f9a1255bsm7116987b3.103.2025.06.07.14.42.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Jun 2025 14:42:58 -0700 (PDT)
-From: Alex Guo <alexguo1023@gmail.com>
-To: kblaiech@nvidia.com,
-	asmaa@nvidia.com
-Cc: andi.shyti@kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alex Guo <alexguo1023@gmail.com>
-Subject: [PATCH] i2c: mlxbf: Fix out-of-bounds bug in mlxbf_i2c_smbus_xfer()
-Date: Sat,  7 Jun 2025 17:42:55 -0400
-Message-Id: <20250607214255.2579865-1-alexguo1023@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=mailoo.org header.i=@mailoo.org header.b="aEbKIoQO"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mailoo.org; s=mailo;
+	t=1749332607; bh=xI/OvOkoISAXRncaDWVm0qhOdTlzYGDe6owbkI0AdPE=;
+	h=X-EA-Auth:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=aEbKIoQO+l7C7MLt9a6SuB590DT46JFza4bQskV6NSOnACnFw81MauRawk2w4VwmZ
+	 /edbHScs3xZ106G02Pys8xBJEg6kcYH92+wTl3/JqKRRxTSb6Z6AEfmIDXNL4ghWJk
+	 ovF8eARkJWcLrWHhH0aAjYqG/4KCPWffCDVPRvqY=
+Received: by b221-6.in.mailobj.net [192.168.90.26] with ESMTP
+	via ip-22.mailoo.org [213.182.54.22]
+	Sat,  7 Jun 2025 23:43:26 +0200 (CEST)
+X-EA-Auth: tcnuv6EiHZjbchC6kmH0/Ii7nnvOoLM4TEin+CbKNq8wrSTgu1rvm6JumEmT79Enp2m+k7dPzaxOaWT47optlAuYenc93FDrPejq6nJgMP8=
+Message-ID: <e73d676ba1901437d471a2a633e94a07b19a3e05.camel@mailoo.org>
+Subject: Re: [PATCH v4 2/4] media: qcom: camss: Add support for MSM8939
+From: Vincent Knecht <vincent.knecht@mailoo.org>
+To: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>, Robert Foss	
+ <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, Bryan O'Donoghue	
+ <bryan.odonoghue@linaro.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,  Bjorn Andersson
+ <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ =?ISO-8859-1?Q?Andr=E9?= Apitzsch
+	 <git@apitzsch.eu>, phone-devel@vger.kernel.org, 
+	~postmarketos/upstreaming@lists.sr.ht
+Date: Sat, 07 Jun 2025 23:43:26 +0200
+In-Reply-To: <877a72fa-cdae-4a66-9991-5ea86ef76aac@linaro.org>
+References: <20250602-camss-8x39-vbif-v4-0-32c277d8f9bf@mailoo.org>
+	 <20250602-camss-8x39-vbif-v4-2-32c277d8f9bf@mailoo.org>
+	 <877a72fa-cdae-4a66-9991-5ea86ef76aac@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42app2) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The data->block[0] variable comes from user. Without proper check,
-the variable may be very large to cause an out-of-bounds bug.
+Le vendredi 06 juin 2025 =C3=A0 13:59 +0300, Vladimir Zapolskiy a =C3=A9cri=
+t=C2=A0:
+> Hello Vincent.
+>=20
+> On 6/2/25 20:27, Vincent Knecht via B4 Relay wrote:
+> > From: Vincent Knecht <vincent.knecht@mailoo.org>
+> >=20
+> > The camera subsystem for the MSM8939 is the same as MSM8916 except with
+> > 3 CSID instead of 2, and some higher clock rates.
+> >=20
+> > As a quirk, this SoC needs writing values to 2 VFE VBIF registers
+> > (see downstream msm8939-camera.dtsi vbif-{regs,settings} properties).
+> > This fixes black stripes across sensor and garbage in CSID TPG outputs.
+> >=20
+> > Add support for the MSM8939 camera subsystem.
+> >=20
+> > Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> > Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
+>=20
+> There was a preceding and partially reviewed changeset published on
+> linux-media [1] before v1 of the MSM8939 platform support in CAMSS,
+> due to a merge conflict this platform changeset should be rebased IMHO.
+>=20
+> [1] https://lore.kernel.org/all/20250513142353.2572563-4-vladimir.zapolsk=
+iy@linaro.org/
+>=20
+> --
+> Best wishes,
+> Vladimir
 
-Fix this bug by checking the value of data->block[0] first.
+Thank you, I'll look into it
 
-Similar commit:
-1. commit 39244cc7548 ("i2c: ismt: Fix an out-of-bounds bug in
-ismt_access()")
-2. commit 92fbb6d1296 ("i2c: xgene-slimpro: Fix out-of-bounds
-bug in xgene_slimpro_i2c_xfer()")
-
-Signed-off-by: Alex Guo <alexguo1023@gmail.com>
----
- drivers/i2c/busses/i2c-mlxbf.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/i2c/busses/i2c-mlxbf.c b/drivers/i2c/busses/i2c-mlxbf.c
-index 8345f7e6385d..73fe8914f3f1 100644
---- a/drivers/i2c/busses/i2c-mlxbf.c
-+++ b/drivers/i2c/busses/i2c-mlxbf.c
-@@ -2071,6 +2071,8 @@ static s32 mlxbf_i2c_smbus_xfer(struct i2c_adapter *adap, u16 addr,
- 		break;
- 
- 	case I2C_SMBUS_I2C_BLOCK_DATA:
-+		if (data->block[0] < 1 || data->block[0] > I2C_SMBUS_BLOCK_MAX)
-+			return -EINVAL;
- 		byte_cnt = data->block[0];
- 		mlxbf_i2c_smbus_i2c_block_func(&request, &command, data->block,
- 					       &byte_cnt, read, pec);
-@@ -2079,6 +2081,8 @@ static s32 mlxbf_i2c_smbus_xfer(struct i2c_adapter *adap, u16 addr,
- 		break;
- 
- 	case I2C_SMBUS_BLOCK_DATA:
-+		if (data->block[0] < 1 || data->block[0] > I2C_SMBUS_BLOCK_MAX)
-+			return -EINVAL;
- 		byte_cnt = read ? I2C_SMBUS_BLOCK_MAX : data->block[0];
- 		mlxbf_i2c_smbus_block_func(&request, &command, data->block,
- 					   &byte_cnt, read, pec);
-@@ -2094,6 +2098,8 @@ static s32 mlxbf_i2c_smbus_xfer(struct i2c_adapter *adap, u16 addr,
- 		break;
- 
- 	case I2C_FUNC_SMBUS_BLOCK_PROC_CALL:
-+		if (data->block[0] < 1 || data->block[0] > I2C_SMBUS_BLOCK_MAX)
-+			return -EINVAL;
- 		byte_cnt = data->block[0];
- 		mlxbf_i2c_smbus_blk_process_call_func(&request, &command,
- 						      data->block, &byte_cnt,
--- 
-2.34.1
 
