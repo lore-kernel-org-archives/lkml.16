@@ -1,73 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A9C1B040B;
-	Sat,  7 Jun 2025 14:40:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C501A841A
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 14:40:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749307225; cv=none; b=DMsMAwhlRI3q+CxbrZq3WO/6QsyRKZJH6WJ0m9jeC2rx2f79wp1t7AtJ5ESvibv7G1t/sb9L8+82Kg/AuQPmAFfY7yGos+lkV16xVdYzrno5573xKmycmucep+i2XxQxX9db307nzJkVxb99S0iRS2jHrvWjrC8dcngL6xDsDYw=
+	t=1749307235; cv=none; b=gr16WJ5g2Hu07oTSZM1gkDitkqnlxTPV5l1gqwCoWWcXKlpRc//WK8CX5WVShSzQIy2L5LUNJLrjw0ptliH93Nk4u7Y6NPCy1qdeU9eBbpu8Vi0AzG+RXs6TAXGXDF7g1iFm0szEdtIXRwleOPoyIBcf8rljGq+XmzfUyjS+jUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749307225; c=relaxed/simple;
-	bh=5VolnRO61Za8S7y0JMKrqdDUEEvmN+IauyhDVM+vW0A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VTGRSITW1+IABDXazMtSSn+Nfk1h5ddZM/TI+yJVUfmBF8+UwGxbJjn61CgXsY/1DtnuSjBuwYa9mkDoB5TeSMgGS66+BHYvwVyZ08UnwgZzR8WO7SopJSB5iFnP1llD6w6u4qisb+ZQWTpVOtWFz3IwU/lHPlt/Wu1T4szo99s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=OWwSzy+G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749307235; c=relaxed/simple;
+	bh=yXUT3i0z6a8WQl96H5LHFhs7mbe0fZvd8f3Eywv3fcM=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Arxlc82REk36/e9ow9d5HuCZs60/871etNB5QIJic0F2o8NOrRWIrYLDDehY6zdiGBgzfDmhqa0Bmsx0LOIVqUv2mGpc1oPuZLgHJdLWcRZ7k7kxz4XRTn1+FcV6wb0yRNXt6ZXcfbUWWK+SDcyoN25MQiGKPppMIxj4grdguXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n0s5U68L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="OWwSzy+G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABF05C4CEE4;
-	Sat,  7 Jun 2025 14:40:23 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="OWwSzy+G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1749307220;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Kq41Ond10mXUHWVV/vnahXJAC8HnwJxzy4Wdqc+zAVc=;
-	b=OWwSzy+G/TwmeEFLU5ro4fU/JkjaYJImSIS6NF39LxjoYpH8t/GbwTaTCh0m7Dwu6qXHL4
-	ETAF0onYqtUwYWf3Jxo/egSURAGAmAeFj37SDswL3aH1vyZyffarqRmHOoVREP0Ea5o7il
-	3SPTTyr0oqkqBKvcMrcuyakjOCMdmOU=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id eef4a3a4 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Sat, 7 Jun 2025 14:40:20 +0000 (UTC)
-Date: Sat, 7 Jun 2025 08:40:14 -0600
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Tal Zussman <tz2294@columbia.edu>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Peter Xu <peterx@redhat.com>,
-	David Hildenbrand <david@redhat.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] userfaultfd: correctly prevent registering
- VM_DROPPABLE regions
-Message-ID: <aERPTlivjt16jCVH@zx2c4.com>
-References: <20250607-uffd-fixes-v2-0-339dafe9a2fe@columbia.edu>
- <20250607-uffd-fixes-v2-1-339dafe9a2fe@columbia.edu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n0s5U68L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A7C7C4CEE4;
+	Sat,  7 Jun 2025 14:40:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749307235;
+	bh=yXUT3i0z6a8WQl96H5LHFhs7mbe0fZvd8f3Eywv3fcM=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=n0s5U68LRd5heC+3GkXG4iqV/Uahx4l4Pan+aqGayY7SKbSbisvIHtD0DRasEtzf1
+	 jyLF/wQeVj8ZSy8xmmScMNrg2BpywZh3h6sW3kCZGw5Pu9KBpsAwX9Hgj2FLjJNnuC
+	 Owmvjj+hy9/7b8+vcGzhxc6UUH9YtNP1hVq8N7sGjbf6WCRkB41rpApry1CiMebtQg
+	 +avHq1lYX2bmXvRq5mjH7EfUf9eN0TKl6k/vJCZSSTXa+MhymKBMDZGKpr6IkgEYbt
+	 N6M87KYHuNG8vmg006y+EckBxrS8f6TLEhxb6azVP58gAZDYIv1lD1cZxkpDm46jKq
+	 1Leh5G4aP4frA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB0BD3806649;
+	Sat,  7 Jun 2025 14:41:07 +0000 (UTC)
+Subject: Re: [GIT PULL] JFFS2 and UBIFS fixes for v6.16-rc1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <1612150437.134340417.1749275991560.JavaMail.zimbra@nod.at>
+References: <1612150437.134340417.1749275991560.JavaMail.zimbra@nod.at>
+X-PR-Tracked-List-Id: Linux MTD discussion mailing list <linux-mtd.lists.infradead.org>
+X-PR-Tracked-Message-Id: <1612150437.134340417.1749275991560.JavaMail.zimbra@nod.at>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rw/ubifs.git tags/ubifs-for-linus-6.16-rc1
+X-PR-Tracked-Commit-Id: 2b6d96503255a3ed676cd70f8368870c6d6a25c6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 5b032cac622533631b8f9b7826498b7ce75001c6
+Message-Id: <174930726655.61778.51942806686421281.pr-tracker-bot@kernel.org>
+Date: Sat, 07 Jun 2025 14:41:06 +0000
+To: Richard Weinberger <richard@nod.at>
+Cc: torvalds <torvalds@linux-foundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250607-uffd-fixes-v2-1-339dafe9a2fe@columbia.edu>
 
-On Sat, Jun 07, 2025 at 02:40:00AM -0400, Tal Zussman wrote:
-> vma_can_userfault() masks off non-userfaultfd VM flags from vm_flags.
-> The vm_flags & VM_DROPPABLE test will then always be false, incorrectly
-> allowing VM_DROPPABLE regions to be registered with userfaultfd.
-> 
-> Additionally, vm_flags is not guaranteed to correspond to the actual
-> VMA's flags. Fix this test by checking the VMA's flags directly.
-> 
-> Link: https://lore.kernel.org/linux-mm/5a875a3a-2243-4eab-856f-bc53ccfec3ea@redhat.com/
-> Fixes: 9651fcedf7b9 ("mm: add MAP_DROPPABLE for designating always lazily freeable mappings")
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Acked-by: Peter Xu <peterx@redhat.com>
-> Signed-off-by: Tal Zussman <tz2294@columbia.edu>
+The pull request you sent on Sat, 7 Jun 2025 07:59:51 +0200 (CEST):
 
-Nice catch and thanks for fixing this.
+> git://git.kernel.org/pub/scm/linux/kernel/git/rw/ubifs.git tags/ubifs-for-linus-6.16-rc1
 
-Acked-by: Jason A. Donenfeld <Jason@zx2c4.com>
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/5b032cac622533631b8f9b7826498b7ce75001c6
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
