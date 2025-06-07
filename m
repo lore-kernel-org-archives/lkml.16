@@ -1,170 +1,149 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354C212C544
-	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 09:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13CF41C5F2C;
+	Sat,  7 Jun 2025 09:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749287945; cv=none; b=tawl35nJJPR7hdy+bYRuhelSxzPBed7gAgk/i2gBBVRkezitbnUtywXhQ09Bf3Z07fQIl6waYYtm93ejyXDBpgPtXHubJHUTAznAsS6yjQvV0DAU6TZESEo4dTeAgfQE47h7DLoZI7ZZ4XOhrrdx+4Qd03eKpNrh18RUoRY2Wr0=
+	t=1749288343; cv=none; b=EqHsFHVTsZ/VHVeteTuGTR9t5KmIPLcTi4FQ6PKJJ296CgT+qQUfAkv3+iSlGMcLC6JDK/ua8i0eUrYMobTcl5PK0nvw7UJiZXXUFqoGg2nKkX44gMLgotO32UDimaTwVQlfXcf3/NN9QiGKCCXdU3SN/eyixM/SDHEtSAVhtC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749287945; c=relaxed/simple;
-	bh=us8UMFHrTvf/c4L/EDwQDzS0xj4wQ2c5EggbHgG7Gbg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=jWukAlsQOpaC9H7F3Do62k3UTMa3g8q+NlqWGu4iC9mzzdOiLxGd/eZuw4Ca1tY2hricAOG7mr45s81KzJ3thq4c/4qsYah9zopRnzD9/IikDQ2CTZ/rxFMz1HdbT+hO18lw9cz1UVQOE0BD/ZbRX98G6G89Fge5TM/jTGT4E24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddc4908c4dso40183065ab.3
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 02:19:03 -0700 (PDT)
+	s=arc-20240116; t=1749288343; c=relaxed/simple;
+	bh=wMZdUT8ZYtgcy1PIxd8XI00/UrSPJ3L828tLjp3oGAg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=N+3TsDzCkKMDV6b4ra1T+JpMB0S+w8yZ/pRdlpJUjbAY2/5jiDpclXGxKb3DfwTjT7ikcA/pKzGUNQgR1ui9xwY7Z5QmG7xIDtv28HxDReUd1bUEZOP+QPvmzFPzCRu6YrVy0RhZmZLUuwFkbq/4kRpauoUJHXRyGqw84IpVSpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bhKME5wm; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bhKME5wm"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a36efcadb8so2382604f8f.0;
+        Sat, 07 Jun 2025 02:25:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749288340; x=1749893140; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+z+86mq9W/t3Q/qE4fezl2zhBtr7b7dF6dt3NaksCxI=;
+        b=bhKME5wmIW4Ll6xRCAtGp6maiiupEyqky9OeE7XDEr5SXARTyEgb2kWB6Ir8fGpJP1
+         JzHenwh+n+8GB6TaFVn54Tr7Rk9fUIus+gk0wBSm+c/7XPgNneChDo5KdKj0JaLJF3QC
+         5Y8jO2hoTQDRbVTz+/Jfp+xM9irYtwWkHJCpS96+JA8oTQ4mFafXmMQJz9YWKrDAYOkF
+         3iuU+zlCAfXIr9SF+xcYnHQd1fPY98zv/6CUSj9q9X62zPVDiRLvYaphaaQyILiT5SUw
+         O6yCsNt6+BTNW+2F3mt4kJbYMCzyVVZWXFdXoOMjRSIrpyhAlUcCv7J0fizNykn5lLSd
+         mUXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749287943; x=1749892743;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4roFLiJYMHgUNdEwJKkOt4wXq+PypXCVtiuF3YXoMQg=;
-        b=MiFRNDRsveDAc79ZDL9dwIaXenYjpmiifhBO5o1FtAe1xdyFTFGZlw63Wn/xk1AAFp
-         OBRb9y5+aONKUDS4MWFRExAbsM3uGdvnOwznumHwH7bbCDGczqsp03cK3ZXDP9fqCUOq
-         m65yg43ZXioRWWkSnwWz8eMi0My/Gw9IEgTgrO77leByMB1Qv1JGNB7lNZf+sMu6jmT9
-         JIpglA16ZYtCVCP707BQ5sdUoSnDV56lHxlxdtOSgr2Hty/SKhE+1Zr1aCd0m3BoxM3Y
-         44dvvM77iX2PKVvhZOgFYu2zhRBjzp1wlPF19/KeFm180jNmdgqBNskkYyU3dah9Bsud
-         fAkA==
-X-Forwarded-Encrypted: i=1; AJvYcCWDbTs/rMcO94DYR6sS9emmzu6/5E5ZNQ8aX85KgMgpJFOoz7qpRkfw76KD+rqVylh6cyDQfVMlSq6uljo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweHJREzORyqgMaqWeNitlz1OmAIAryXfVkKQ1cKwX/j420jr7H
-	JT6O9mVef6KubwUl7vptPkzpCJ5lzq4AHI1gJ/kChlq3R2cccAOb/mRYnr46Hn8TNk1du1FX4kH
-	jtkboY3xaBcToDeoW3UjnAA2BwIecBc0Y1JQY3YZFX+Z48AQ8QIHlxxWe+SM=
-X-Google-Smtp-Source: AGHT+IGuKL+xzHtA5diFin9yEKXyXD0VaC4tCliOb52ILtozMpZWyk4i6xQT6kbIVC9O2BQjLHrwuPHjh6fxoRKmJbyP3l1/JucW
+        d=1e100.net; s=20230601; t=1749288340; x=1749893140;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+z+86mq9W/t3Q/qE4fezl2zhBtr7b7dF6dt3NaksCxI=;
+        b=U9JRo4o8mH9M/bb4xDLYp9xgQJeNYBvhOx8q+2UAKujatF6Y29uti9TQd3BjX7Zsi4
+         PWLqPIAl64Z5es4hn94xLZLoCpDE1Bwy+aDrn/fkO5v5A2K4zMl48WOFhEHN7WPBVWrG
+         c9vrZ5Y3sgpn0gwE2tj/KKr97rrV8m9OEe4VMd3XNQ+nmojEMMURE7APUA5utAWJylhL
+         iqowQGLvd0fXf4b5tnepXkaCf9JK9gW1O3vjNzQx0zs41d8E2ZWZ8UZeVepzmyOfhJpR
+         yzlNcuWhJ/mU3CLJVPGYQSjEyMf34NeHREuMvBS5a4g0ITTVNQaNDHzFJGz50IxozLE4
+         txog==
+X-Forwarded-Encrypted: i=1; AJvYcCUaJgRSkmHKc4/miSM+jnoKxxVWktklHANlRmNlfQBOgzx902y2w6oexSS383gC4QdpoO7H9aOfeUEp@vger.kernel.org, AJvYcCW/uSRhS3I0bkngbYlB5Zg7jFlYOSfIN24dNikDOSSlej/jg7CYRb0cr63qu63r9acXJQbm9My3UZCqZdVy@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFx2AhK2cA94yiYldwlZ/x9AFAgAdSYfhHXXcwU5I+9SRA4oIM
+	OzMtOS1zFBq2UmhxIkWRJV9y68gyBoEttoVXuN5HGXeZRMm9pJs30pS3
+X-Gm-Gg: ASbGnctSRYmOyh8bYHrUOmgbzIQ3kkQdWran/lDKrb9q45ygQQtsynxQKE6709GFpCc
+	48DVzWMNbWEwK8ezA4o0c+O3wEIbWuQC1K/hm68f4KARU+G0ZgQ97ThR/hXHCjI5RSuD/j9fBVE
+	XKbXNDBRssfE++A3yHJTqiIlILa3BA/OAygNo87F/EvZW+QJdnavHHiaB+s/FqcmqlnEY0RtDYm
+	YuuTiMRNyzwm2WzxnhcxLkYWOYAZzeH8tgwgfHN+WnTvC0HKWkZk60MgQ3b1Kei8Xb58NY0+kNp
+	SIZwBC2hiob/Dm/UL/zsohThRUYa+4T5J5Z1/0HBNqyW9XI4QJPwfTtavrzaefEE8Mwu1fQkB8t
+	b+Iowe9eguYTygA==
+X-Google-Smtp-Source: AGHT+IH+BhmBoFInA8dQPTfWml7u5S+vkK/CgoVMIu8oqjObrsbfhuYhbDsFfis6vTozvFnWM6zNuQ==
+X-Received: by 2002:a05:6000:4284:b0:3a4:deb9:8964 with SMTP id ffacd0b85a97d-3a5318a0156mr5245689f8f.17.1749288340123;
+        Sat, 07 Jun 2025 02:25:40 -0700 (PDT)
+Received: from masalkhi.. (ip-109-43-113-198.web.vodafone.de. [109.43.113.198])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5322ab413sm4114778f8f.23.2025.06.07.02.25.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Jun 2025 02:25:39 -0700 (PDT)
+From: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
+To: gregkh@linuxfoundation.org
+Cc: abd.masalkhi@gmail.com,
+	arnd@arndb.de,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	krzk+dt@kernel.org,
+	linux-kernel@vger.kernel.org,
+	robh@kernel.org
+Subject: Re: [PATCH v3 3/3] ABI: sysfs: add documentation for ST M24LR EEPROM and control interface
+Date: Sat,  7 Jun 2025 09:25:37 +0000
+Message-ID: <20250607092537.3141131-1-abd.masalkhi@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <2025060618-errant-audible-4c52@gregkh>
+References: <2025060618-errant-audible-4c52@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:378c:b0:3dc:7b3d:6a5a with SMTP id
- e9e14a558f8ab-3ddce40b5cbmr64650715ab.10.1749287943266; Sat, 07 Jun 2025
- 02:19:03 -0700 (PDT)
-Date: Sat, 07 Jun 2025 02:19:03 -0700
-In-Reply-To: <20250607084517.897-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68440407.a00a0220.29ac89.0052.GAE@google.com>
-Subject: Re: [syzbot] [usb?] stack segment fault in __usb_hcd_giveback_urb
-From: syzbot <syzbot+9a4aec827829942045ff@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Hi Greg,
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-stack segment fault in __usb_hcd_giveback_urb
+> > >> +What:           /sys/bus/i2c/devices/<busnum>-<primary-addr>/sss<N>
+> > >> +Date:           2025-05-31
+> > >> +KernelVersion:  6.16
+> > >> +Contact:        Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
+> > >> +Description:
+> > >> +                Read/write attribute representing the Sector Security Status
+> > >> +                (SSS) byte for EEPROM sector <N> in the M24LR chips. Each sector
+> > >> +                has one SSS byte, which defines I2c and RF access control via a
+> > >> +                combination of protection and password settings.
+> > >> +                Format:
+> > >> +                  - Read: returns a 8-bit hexadecimal value followed by a
+> > >> +                          newline
+> > >> +                  - Write: requires exactly one or two hexadecimal digits
+> > >> +                      - No "0x" prefix, whitespace, or trailing newline
+> > >> +                      - Case-insensitive
+> > >> +
+> > >> +                Notes:
+> > >> +                  - Refer to the M24LR chip datasheet for full bit definitions
+> > >> +                    and usage
+> > >> +                  - Write access requires prior password authentication in I2C
+> > >> +                    mode
+> > >
+> > > How "deep" does this sysfs tree get here?  This feels like the wrong api
+> > > for read/write to the device, just do it with a single binary file if
+> > > you really want a "passthrough" way to get to the hardware.
+> > 
+> > The depth of the sysfs tree depends on the M24LR variant. For example,
+> > the M24LR04E-R has 4 sectors, resulting in 4 entries: sss0 through sss3.
+> > 
+> > I understand the concern about exposing multiple sysfs entries. The
+> > reason for this design is that each sector has its own SSS byte, and
+> > separating them helps reflect the per-sector nature of the access
+> > control. That said, I'm open to refactoring this to expose the SSS
+> > area via a single binary file if that's more in line with expected
+> > kernel interfaces.
+> 
+> Who and what is going to be talking to this device through this
+> interface?  Is this unique and special to ONLY this one chip/device or
+> does it fit in with all other types of this device (i.e. eeproms)?  You
+> can't create a userspace api without actually having a user at all, so
+> if there is no userspace code using this, why even have this?
 
-Oops: stack segment: 0000 [#1] SMP KASAN PTI
-CPU: 0 UID: 0 PID: 5953 Comm: kworker/0:3 Not tainted 6.15.0-syzkaller-13655-gbdc7f8c5adad-dirty #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:__queue_work+0x9e/0xfe0 kernel/workqueue.c:2256
-Code: 8b 1d fe 53 12 11 31 ff 89 de e8 5d 97 35 00 85 db 0f 85 fc 0c 00 00 e8 10 93 35 00 49 8d 97 c0 01 00 00 48 89 d5 48 c1 ed 03 <42> 0f b6 44 25 00 84 c0 48 89 54 24 08 0f 85 44 0d 00 00 8b 1a 89
-RSP: 0018:ffffc90000007708 EFLAGS: 00010002
-RAX: ffffffff818ac910 RBX: 0000000000000000 RCX: ffff88802f028000
-RDX: 00000000000001c0 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000038 R08: ffff88807cca3bf7 R09: 1ffff1100f99477e
-R10: dffffc0000000000 R11: ffffed100f99477f R12: dffffc0000000000
-R13: ffff88807cca3bf0 R14: 0000000000000008 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff888125c52000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f2c1ba76e90 CR3: 000000007655c000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- queue_work_on+0x181/0x270 kernel/workqueue.c:2392
- __usb_hcd_giveback_urb+0x41a/0x690 drivers/usb/core/hcd.c:1650
- dummy_timer+0x862/0x4550 drivers/usb/gadget/udc/dummy_hcd.c:1994
- __run_hrtimer kernel/time/hrtimer.c:1761 [inline]
- __hrtimer_run_queues+0x52c/0xc60 kernel/time/hrtimer.c:1825
- hrtimer_run_softirq+0x187/0x2b0 kernel/time/hrtimer.c:1842
- handle_softirqs+0x286/0x870 kernel/softirq.c:579
- __do_softirq kernel/softirq.c:613 [inline]
- invoke_softirq kernel/softirq.c:453 [inline]
- __irq_exit_rcu+0xca/0x1f0 kernel/softirq.c:680
- irq_exit_rcu+0x9/0x30 kernel/softirq.c:696
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1050 [inline]
- sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1050
- </IRQ>
- <TASK>
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-RIP: 0010:check_kcov_mode kernel/kcov.c:194 [inline]
-RIP: 0010:write_comp_data kernel/kcov.c:246 [inline]
-RIP: 0010:__sanitizer_cov_trace_const_cmp4+0x37/0x90 kernel/kcov.c:314
-Code: 08 e0 9c 92 65 8b 0d b8 7f dc 10 81 e1 00 01 ff 00 74 11 81 f9 00 01 00 00 75 5b 83 ba 3c 16 00 00 00 74 52 8b 8a 18 16 00 00 <83> f9 03 75 47 48 8b 8a 20 16 00 00 44 8b 8a 1c 16 00 00 49 c1 e1
-RSP: 0018:ffffc90003fdf4d0 EFLAGS: 00000246
-RAX: ffffffff825d79a5 RBX: ffffffff825d787c RCX: 0000000000000000
-RDX: ffff88802f028000 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: 0000000000000001 R08: 0000000000000000 R09: ffffffff825d787c
-R10: dffffc0000000000 R11: ffffed100e5500d3 R12: dffffc0000000000
-R13: 0000000000000001 R14: ffff88801b2ff000 R15: ffff88802fa68e10
- rcu_read_unlock include/linux/rcupdate.h:869 [inline]
- class_rcu_destructor include/linux/rcupdate.h:1155 [inline]
- kernfs_root+0x145/0x230 fs/kernfs/kernfs-internal.h:80
- kernfs_put+0x57/0x480 fs/kernfs/dir.c:571
- device_del+0x251/0x8e0 drivers/base/core.c:3856
- device_unregister+0x20/0xc0 drivers/base/core.c:3922
- usb_remove_ep_devs+0x50/0x80 drivers/usb/core/endpoint.c:189
- remove_intf_ep_devs drivers/usb/core/message.c:1266 [inline]
- usb_disable_device+0x36b/0x8a0 drivers/usb/core/message.c:1417
- usb_disconnect+0x304/0x8f0 drivers/usb/core/hub.c:2314
- hub_port_connect drivers/usb/core/hub.c:5373 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5673 [inline]
- port_event drivers/usb/core/hub.c:5833 [inline]
- hub_event+0x1cdb/0x4a00 drivers/usb/core/hub.c:5915
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3f9/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:__queue_work+0x9e/0xfe0 kernel/workqueue.c:2256
-Code: 8b 1d fe 53 12 11 31 ff 89 de e8 5d 97 35 00 85 db 0f 85 fc 0c 00 00 e8 10 93 35 00 49 8d 97 c0 01 00 00 48 89 d5 48 c1 ed 03 <42> 0f b6 44 25 00 84 c0 48 89 54 24 08 0f 85 44 0d 00 00 8b 1a 89
-RSP: 0018:ffffc90000007708 EFLAGS: 00010002
-RAX: ffffffff818ac910 RBX: 0000000000000000 RCX: ffff88802f028000
-RDX: 00000000000001c0 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000038 R08: ffff88807cca3bf7 R09: 1ffff1100f99477e
-R10: dffffc0000000000 R11: ffffed100f99477f R12: dffffc0000000000
-R13: ffff88807cca3bf0 R14: 0000000000000008 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff888125c52000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f2c1ba76e90 CR3: 000000007655c000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	8b 1d fe 53 12 11    	mov    0x111253fe(%rip),%ebx        # 0x11125404
-   6:	31 ff                	xor    %edi,%edi
-   8:	89 de                	mov    %ebx,%esi
-   a:	e8 5d 97 35 00       	call   0x35976c
-   f:	85 db                	test   %ebx,%ebx
-  11:	0f 85 fc 0c 00 00    	jne    0xd13
-  17:	e8 10 93 35 00       	call   0x35932c
-  1c:	49 8d 97 c0 01 00 00 	lea    0x1c0(%r15),%rdx
-  23:	48 89 d5             	mov    %rdx,%rbp
-  26:	48 c1 ed 03          	shr    $0x3,%rbp
-* 2a:	42 0f b6 44 25 00    	movzbl 0x0(%rbp,%r12,1),%eax <-- trapping instruction
-  30:	84 c0                	test   %al,%al
-  32:	48 89 54 24 08       	mov    %rdx,0x8(%rsp)
-  37:	0f 85 44 0d 00 00    	jne    0xd81
-  3d:	8b 1a                	mov    (%rdx),%ebx
-  3f:	89                   	.byte 0x89
+A userspace application specific to the M24LR series is intended to
+interface with this driver. The M24LR devices support dual access
+to the EEPROM: via I2C and over RFID. The purpose of exposing the
+Sector Security Status (SSS) registers to userspace is to provide
+dynamic control over when and how the EEPROM is accessible to an
+RFID reader. This allows userspace to decide whether to permit or
+deny EEPROM reads/writes via RFID, or to configure protection for
+specific memory sectors.
 
+The SSS registers define per-sector read/write permissions and
+password protection, directly determining how external RFID readers
+interact with the tag. By exposing this configuration through sysfs,
+userspace software can modify RFID access behavior at runtime for
+example, to enable secure provisioning workflows, implement time-based
+access, or prevent unauthorized access after setup.
 
-Tested on:
+Given that this is a per-sector control mechanism unique to the M24LR
+series, would exposing the entire SSS region via a single binary sysfs
+file be considered more appropriate than individual attributes per sector?
 
-commit:         bdc7f8c5 Merge tag 'mm-stable-2025-06-06-16-09' of git..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1052e20c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fd0cea6d0f67318f
-dashboard link: https://syzkaller.appspot.com/bug?extid=9a4aec827829942045ff
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=155f5570580000
-
+Best regards,
+Abd-Alrhman Masalkhi
