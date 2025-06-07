@@ -1,100 +1,228 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic307-16.consmr.mail.ne1.yahoo.com (sonic307-16.consmr.mail.ne1.yahoo.com [66.163.190.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B34F1367;
-	Sat,  7 Jun 2025 00:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA548C2D1
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 01:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.190.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749257937; cv=none; b=CD4UBGHakonRcmDHadCErmL+DGTFGJ3fwaVcHXM4i9O5tzBsJDBZEe25L/mB/2LUNsers/+tlAlYe5yxc1F7l//z7MFrdXuWcq6G7/EqsvJTP6sQ6K5+UQB7EHpTgitPcBH9OWc8nnklA4DCfP5xPlIxJ7AbAN3n0MmfZNYPWso=
+	t=1749258112; cv=none; b=l+sRvfZeS91TERdcrUU0DG6iU/RihvvC9skZDdYClp5E4N9jrHULr9wtnyT5aUKftgzojJSdvDJ91V1LOMCqtA7zn5w0d2D5TkF1Hmv74qDfUx7TL/ftTmSMUwZPoWFn0XV5son7EdINABQoT9TXkuORpmhb0pA6k6Z1sYBkCXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749257937; c=relaxed/simple;
-	bh=gbMdOOaPfp/Km6obIuvPLgSKGFsNBi+m+HlAcVIMPyQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E6d2Ro82RHZdzPyhJ1T/8tD7hI7gOZ3Dr3dZ7DmBPXOJBtqKRJgNZ0s17NWcAsBRD5OPQOnOlNptMGWg1EJLqyE0cwo6xYYDGeawrOCDxKNQNaH9lG/s1T+iL57oLDlN5Z46d8VvRXBNWJZ/bJ11ix6t+0BpaIm3ZRCNUSIXojM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=b+RXMVJh; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1749258112; c=relaxed/simple;
+	bh=f+VG72yA/9T00NO5XecApQNOq7FGbanG93lY5CQ5PiE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KuwOSFZPYozMxB8OYUxSmUGOV1IN5AwjHXXki+rjvY2fbpgrATXlgSrRoyIPJ+7uUStUg2Fv83gsCT7CFy0EWyjpDchJz3sVSrrqkFM6BsoKcq4+oQy2W99vnz4DFUcX4Sy583r82uxkWsuLozqMjgH34qS8JJH0uPvNPvfiaCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=R1ndSfw/; arc=none smtp.client-ip=66.163.190.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="b+RXMVJh"
-Received: from [IPV6:2601:646:8081:9482:7437:c350:20af:75f1] ([IPv6:2601:646:8081:9482:7437:c350:20af:75f1])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 5570w7L71126981
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 6 Jun 2025 17:58:08 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 5570w7L71126981
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025052101; t=1749257890;
-	bh=4v2v2mCM9JnVjwUKDEQ0CdYtzrh9MjRpJTRKPi/K33c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=b+RXMVJh71w0hethEOc1Ld39rrQGD819p8LxfGzk5kACs8T9Z9sy8Q85Jpg5YXC8U
-	 veR7tfFvxWqo2sRLC38rLOR439bK5tApqkfL6VQOi8MpyZS/JgZlODUJugg3/4afKy
-	 2WqbMMiqwHzkLctOOqxa34OVK1Ochk5B9z3+nQj12uweK6cfcyoiR+o8VFMOaEYzzh
-	 G9L5PxjCWh8ScjuAKW/DXhGZONncyUupbN2V/SlCxvPsJUWcUemTxflIWpY+mfseNK
-	 oCwV5nlxVCAavBmJcHGQ3dHKG5ZWtn6D9Q1d1n8sKJ0YEunoayeW373sOuWGw0eiTR
-	 6Bl33vc5AmuqA==
-Message-ID: <4a66adfa-fc10-4668-9986-55f6cf231988@zytor.com>
-Date: Fri, 6 Jun 2025 17:58:02 -0700
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="R1ndSfw/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1749258110; bh=O9MvVXnnEISjr9pVZvv/llW9gwDfpO8uAVzxHg2LCSk=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=R1ndSfw/wTO71XmRU5la+pNeCC1OEWW7BBdj9WxTm3G6goo5DfE/tTfCYFSKDlwap6z4CfRv7GJgrp62Dor58EYu5rM5HLOtu0Cb73bAd1k3hhTq0zbCYAVvfQaUxsN3PzvbF/thBbKOkPUL6x9d3keGQlguckRNemwMnKXydVWOf+LvAfaig9+7H/l0Z98/jJu1QTUp/TIuFl9eApXbGbnsSVx/bV84WWgbQPeIntAMYKsQ0Hf0Yvd0zCL0RC5n4qwiZhgFuFGAxQVLR/vG55++79GpxOdvcshNS5phVoOTauVtTqVTf9pTxF3c0xYRx6UNRIWwHHcqAIyYykkE0w==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1749258110; bh=fCikjnWmUHDEwqPjsDTrIC48BN19NHAB9mwc5YWkLgX=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=jnt3g/D6/8qZ/+kHQGq3Mx/GE2tFDzpyouJ2dcNkKtVwI3UdWwMrhuuW+X/LeW/abxxNlpEnoQ4AxwmMaUnqUFZ1ugOlpGE0M+tU7WkzTbsx1NMl3zijphnd0gubQmvN6uTRHNW+HdHs0HlpYsdqOLCd4wKRLkJju3xR2L8wnHW5CbWnkdXgzg6dGkijIrk4iSYY0JTWiLsX50M0pdVYPNE55qOhd09baYk3EiJ6QutNkLUlyzrXxwqX7S3kSxPf3bkoQzfILm4PX947PrRkxHaMxo82kzknBRv4SINuUknrwAFUazOkj/wbwWE/NFz3QdtqCYb+0j483/7vGuzasQ==
+X-YMail-OSG: vJ4JTX8VM1kCmzlA7AujyLVGA743S0s26eeyOC23IvayHwWhwj2EtKIity9FEjT
+ vkiOJ4MeT_75GmQiqypzpMiFEa.AD26dQGAYN.P7WNoDAY4EKb0oAJjWW8fUDb2C2dK4.00ql4Ie
+ oHKWa7_fWUT5ou0XUktnSsNErw.TnfKbAgYzy4i2bmQDsfATZL9yQ.CvbN_eUOHleRlF7LUFEW.i
+ CyUPKBR3GorO_FAMgnYYouF57ULc.VzDAWmngZyTIjraX0ixhARiqtUojqrmr0cC.we2yUXYEDNB
+ 9Amm77wuX72rqYHNnSm.hAelQOEPAFER3IJFKOtgeh7RX9bLSNUdFYOmzxaJGV5JYP7UhuYiQty9
+ xXjGu9DZf39q2tcZyYIteO2M7.CETqWHlmtd9eBTCJKe6rTWei3PNapakuG7V6dwAaqwBDtL8mBQ
+ 5EYOrKh4p_potIcuBRADNv6JEFoUNIh8xA60I94nvnAVwwyzk5J1cGqmTJ_ehLQb.uszz46urpTe
+ av2qGhUlVK7u_5_OhKqHR3nMyaffSs_hGH_G80_e_Ui4BAPIZAK9nEPppzmYrpdU85ZUz3o7DQW6
+ 5WQvFLq1FpDva2IkyIxeu85wjoIBekzyt9wV_XPaDw8N50JMSlXFrQm4DmaIY1JErpeD0WzKeHh5
+ AoYf0czj7ug8E04Eoyzh9Uq8gvOHTfRYsDSWNV9aFq3jegONqIgHm_4Ui6E5fqdnHnHmCu2GdOHd
+ s._XFd9ff7XKd.bFdoqJrufWKhgrU3NXmUXDPvExnNr_pQhafMRlmWx2Rz26twFnib62s.E.Rq0Y
+ wVgY6l47N2KYXQ81mr7SLWbsvfhp5ohKYyfkwdhnPZ8fTip9sYKOfJeIxgZnbavNPM6ZmG84PX3H
+ J7uB3w_EDOxP49YMJBud.KXnmwOft0_8Hpa0ZF2dFz.KGTdZmf77sKFsyanVX0oRYEXThiW2QD3o
+ JvofKr7E5hiRrIkqOjlKN490pqGKeTVhkaF41o59Vi_y6O8VO2XVef2ZZ00ZEeVLUehtOLL7nu24
+ 5tLM2vRWd_prpRs_j9ZxrDCfRc7OvKD2uwoS1FcOvTT6AWzZoJp09K29GkGR4n2Wo3H8byTXZPTR
+ dcvDg9aWKOnFpLd3MQYB2WFZuiZ2K8YQ_r9QAJYRTw_qgqK6PhAiXyDaL9.D5sqg_SMKVjAOzJzr
+ tbyEZbkjtYr3uMBFp.9RyUVdtFZI1wvcnTxmhRa9dyMmCOTDWl92e3WJf9jHXgni.Fvnhp733mia
+ vyutfBgKirYSwuaehYxS_U4Mt2gdT9xKE_GHK0CH.aBm_l7Tr1X8Phe5itFyol3lOOFc6TLm2hTo
+ RiLe6tgmHCTQpM_zJdgCju63b_XrM2CBjJjcQRJGSkeN5lfnnDmn3ThWtxHwFhymqP9dz7OWnB7B
+ V1Xz2Q5uNrGQKzB_RMcxy674sMWvSsH7XTJ7ycJn2cULs0FFZaFd24k_Ax.T1CLocLIXug7ZDE0A
+ V_YqsxfqjGj16FPCPWzv61WENnYbjtzKQwx0FwoMAd4hW3G_PSfuFGnm4bHxUTfblfG9I8khNsZh
+ IqfnrKy2DZhT03fzCEvvZa6LT67uZ8mnpnSWiKCsORgqFsWi_2lazj.g6k9HGtfWsDma0CHXBN4n
+ 0Q_7FmyoYL.DGpuQQboDPAXBYPhcYxA82rurUgaqSKZzlTQl_XZuNiM51uUHUvLLKooayUUvHixR
+ S5cfhsY8WA72fkagXcK9RQg.C6lJZ6HW.8_KuDnxVm_Irok6W6VBMMsRiUj.J7kd65ghOYX5RYxp
+ VvGgMKVSewknvhhtx9QBc_QX4M_nKK82kpCIes0CitEylOHVsKdhHn5jLcM3fE9t2QXp2LvRz8eB
+ 4m4QxgM3uDxI2w.8CWFShikIk5yixbHne66x1AKWOeVYCWoumcp9B_PssWwVHVFK3rr0Y6aIdcqT
+ ui9C6uCFQkAmospAxTvN1pr6XM422bBU6mUm_7rUPLOZk.nu2J1z2lRfcUpT7VR6jBb6hMDn.VZ7
+ taTf5U7K65ne9GmrqDjryeI3808LsdvQJwVQZGZwUB2LiLcm8DncviG7nK0lmsgNNwQr6RZsa_a0
+ AhBPPF5_RIShYnSmY3fi3SLGxvWfMUUenhvTC04ORX7.wUM.fiYpDfsr3H8_7lJ6GaBlZZQYvM0c
+ Zfb1PrICBo0MFSTDRSjta1muMFyd3sImjIQyJymTz150iBs6n0DmB.RY__H89rBDT0y4H3mkOL_g
+ brNqOKeHb_oiDEN_BjLU2HdZ.pKwoIfpDGStje6KitwZiDt7lsAuTx3Ez13XuzeGnL5Gj4.cmIQR
+ pvKGB28lv9JtvettdlTECOGkB6TY-
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: 27deef14-fe58-42dc-87e1-fbb32ce10e4e
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.ne1.yahoo.com with HTTP; Sat, 7 Jun 2025 01:01:50 +0000
+Received: by hermes--production-gq1-74d64bb7d7-5qmwx (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 7461f2feac0d1a8decd03521522bae75;
+          Sat, 07 Jun 2025 00:51:41 +0000 (UTC)
+From: Casey Schaufler <casey@schaufler-ca.com>
+To: casey@schaufler-ca.com,
+	paul@paul-moore.com,
+	eparis@redhat.com,
+	linux-security-module@vger.kernel.org,
+	audit@vger.kernel.org
+Cc: jmorris@namei.org,
+	serge@hallyn.com,
+	keescook@chromium.org,
+	john.johansen@canonical.com,
+	penguin-kernel@i-love.sakura.ne.jp,
+	stephen.smalley.work@gmail.com,
+	linux-kernel@vger.kernel.org,
+	selinux@vger.kernel.org
+Subject: [PATCH v4 2/4] LSM: security_lsmblob_to_secctx module selection
+Date: Fri,  6 Jun 2025 17:51:32 -0700
+Message-ID: <20250607005134.10488-3-casey@schaufler-ca.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250607005134.10488-1-casey@schaufler-ca.com>
+References: <20250607005134.10488-1-casey@schaufler-ca.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] KVM: X86: Raise #GP when clearing CR0_PG in 64 bit mode
-To: Paolo Bonzini <pbonzini@redhat.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc: Lai Jiangshan <laijs@linux.alibaba.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>, Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
-References: <20211207095230.53437-1-jiangshanlai@gmail.com>
- <51bb6e75-4f0a-e544-d2e4-ff23c5aa2f49@redhat.com>
-Content-Language: en-US
-From: "H. Peter Anvin" <hpa@zytor.com>
-In-Reply-To: <51bb6e75-4f0a-e544-d2e4-ff23c5aa2f49@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 2021-12-09 09:55, Paolo Bonzini wrote:
-> On 12/7/21 10:52, Lai Jiangshan wrote:
->> From: Lai Jiangshan <laijs@linux.alibaba.com>
->>
->> In the SDM:
->> If the logical processor is in 64-bit mode or if CR4.PCIDE = 1, an
->> attempt to clear CR0.PG causes a general-protection exception (#GP).
->> Software should transition to compatibility mode and clear CR4.PCIDE
->> before attempting to disable paging.
->>
->> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
->> ---
->>   arch/x86/kvm/x86.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> index 00f5b2b82909..78c40ac3b197 100644
->> --- a/arch/x86/kvm/x86.c
->> +++ b/arch/x86/kvm/x86.c
->> @@ -906,7 +906,8 @@ int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned 
->> long cr0)
->>           !load_pdptrs(vcpu, kvm_read_cr3(vcpu)))
->>           return 1;
->> -    if (!(cr0 & X86_CR0_PG) && kvm_read_cr4_bits(vcpu, X86_CR4_PCIDE))
->> +    if (!(cr0 & X86_CR0_PG) &&
->> +        (is_64_bit_mode(vcpu) || kvm_read_cr4_bits(vcpu, 
->> X86_CR4_PCIDE)))
->>           return 1;
->>       static_call(kvm_x86_set_cr0)(vcpu, cr0);
->>
-> 
-> Queued, thanks.
-> 
+Add a parameter lsmid to security_lsmblob_to_secctx() to identify which
+of the security modules that may be active should provide the security
+context. If the value of lsmid is LSM_ID_UNDEF the first LSM providing
+a hook is used. security_secid_to_secctx() is unchanged, and will
+always report the first LSM providing a hook.
 
-Have you actually checked to see what real CPUs do in this case?
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+---
+ include/linux/security.h     |  6 ++++--
+ kernel/audit.c               |  4 ++--
+ kernel/auditsc.c             |  8 +++++---
+ net/netlabel/netlabel_user.c |  3 ++-
+ security/security.c          | 13 +++++++++++--
+ 5 files changed, 24 insertions(+), 10 deletions(-)
 
-	-hpa
+diff --git a/include/linux/security.h b/include/linux/security.h
+index a0ff4fc69375..2707b514670f 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -565,7 +565,8 @@ int security_setprocattr(int lsmid, const char *name, void *value, size_t size);
+ int security_netlink_send(struct sock *sk, struct sk_buff *skb);
+ int security_ismaclabel(const char *name);
+ int security_secid_to_secctx(u32 secid, struct lsm_context *cp);
+-int security_lsmprop_to_secctx(struct lsm_prop *prop, struct lsm_context *cp);
++int security_lsmprop_to_secctx(struct lsm_prop *prop, struct lsm_context *cp,
++			       int lsmid);
+ int security_secctx_to_secid(const char *secdata, u32 seclen, u32 *secid);
+ void security_release_secctx(struct lsm_context *cp);
+ void security_inode_invalidate_secctx(struct inode *inode);
+@@ -1542,7 +1543,8 @@ static inline int security_secid_to_secctx(u32 secid, struct lsm_context *cp)
+ }
+ 
+ static inline int security_lsmprop_to_secctx(struct lsm_prop *prop,
+-					     struct lsm_context *cp)
++					     struct lsm_context *cp,
++					     int lsmid)
+ {
+ 	return -EOPNOTSUPP;
+ }
+diff --git a/kernel/audit.c b/kernel/audit.c
+index 2a567f667528..6bbadb605ca3 100644
+--- a/kernel/audit.c
++++ b/kernel/audit.c
+@@ -1473,7 +1473,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 	case AUDIT_SIGNAL_INFO:
+ 		if (lsmprop_is_set(&audit_sig_lsm)) {
+ 			err = security_lsmprop_to_secctx(&audit_sig_lsm,
+-							 &lsmctx);
++							 &lsmctx, LSM_ID_UNDEF);
+ 			if (err < 0)
+ 				return err;
+ 		}
+@@ -2188,7 +2188,7 @@ int audit_log_task_context(struct audit_buffer *ab)
+ 	if (!lsmprop_is_set(&prop))
+ 		return 0;
+ 
+-	error = security_lsmprop_to_secctx(&prop, &ctx);
++	error = security_lsmprop_to_secctx(&prop, &ctx, LSM_ID_UNDEF);
+ 	if (error < 0) {
+ 		if (error != -EINVAL)
+ 			goto error_path;
+diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+index 528b6d2f5cb0..322d4e27f28e 100644
+--- a/kernel/auditsc.c
++++ b/kernel/auditsc.c
+@@ -1109,7 +1109,7 @@ static int audit_log_pid_context(struct audit_context *context, pid_t pid,
+ 			 from_kuid(&init_user_ns, auid),
+ 			 from_kuid(&init_user_ns, uid), sessionid);
+ 	if (lsmprop_is_set(prop)) {
+-		if (security_lsmprop_to_secctx(prop, &ctx) < 0) {
++		if (security_lsmprop_to_secctx(prop, &ctx, LSM_ID_UNDEF) < 0) {
+ 			audit_log_format(ab, " obj=(none)");
+ 			rc = 1;
+ 		} else {
+@@ -1395,7 +1395,8 @@ static void show_special(struct audit_context *context, int *call_panic)
+ 			struct lsm_context lsmctx;
+ 
+ 			if (security_lsmprop_to_secctx(&context->ipc.oprop,
+-						       &lsmctx) < 0) {
++						       &lsmctx,
++						       LSM_ID_UNDEF) < 0) {
+ 				*call_panic = 1;
+ 			} else {
+ 				audit_log_format(ab, " obj=%s", lsmctx.context);
+@@ -1560,7 +1561,8 @@ static void audit_log_name(struct audit_context *context, struct audit_names *n,
+ 	if (lsmprop_is_set(&n->oprop)) {
+ 		struct lsm_context ctx;
+ 
+-		if (security_lsmprop_to_secctx(&n->oprop, &ctx) < 0) {
++		if (security_lsmprop_to_secctx(&n->oprop, &ctx,
++					       LSM_ID_UNDEF) < 0) {
+ 			if (call_panic)
+ 				*call_panic = 2;
+ 		} else {
+diff --git a/net/netlabel/netlabel_user.c b/net/netlabel/netlabel_user.c
+index 0d04d23aafe7..6d6545297ee3 100644
+--- a/net/netlabel/netlabel_user.c
++++ b/net/netlabel/netlabel_user.c
+@@ -98,7 +98,8 @@ struct audit_buffer *netlbl_audit_start_common(int type,
+ 			 audit_info->sessionid);
+ 
+ 	if (lsmprop_is_set(&audit_info->prop) &&
+-	    security_lsmprop_to_secctx(&audit_info->prop, &ctx) > 0) {
++	    security_lsmprop_to_secctx(&audit_info->prop, &ctx,
++				       LSM_ID_UNDEF) > 0) {
+ 		audit_log_format(audit_buf, " subj=%s", ctx.context);
+ 		security_release_secctx(&ctx);
+ 	}
+diff --git a/security/security.c b/security/security.c
+index 2b9dde02f4de..306860434200 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -3774,6 +3774,7 @@ EXPORT_SYMBOL(security_ismaclabel);
+  * security_secid_to_secctx() - Convert a secid to a secctx
+  * @secid: secid
+  * @cp: the LSM context
++ * @lsmid: which security module to report
+  *
+  * Convert secid to security context.  If @cp is NULL the length of the
+  * result will be returned, but no data will be returned.  This
+@@ -3800,9 +3801,17 @@ EXPORT_SYMBOL(security_secid_to_secctx);
+  *
+  * Return: Return length of data on success, error on failure.
+  */
+-int security_lsmprop_to_secctx(struct lsm_prop *prop, struct lsm_context *cp)
++int security_lsmprop_to_secctx(struct lsm_prop *prop, struct lsm_context *cp,
++			       int lsmid)
+ {
+-	return call_int_hook(lsmprop_to_secctx, prop, cp);
++	struct lsm_static_call *scall;
++
++	lsm_for_each_hook(scall, lsmprop_to_secctx) {
++		if (lsmid != LSM_ID_UNDEF && lsmid != scall->hl->lsmid->id)
++			continue;
++		return scall->hl->hook.lsmprop_to_secctx(prop, cp);
++	}
++	return LSM_RET_DEFAULT(lsmprop_to_secctx);
+ }
+ EXPORT_SYMBOL(security_lsmprop_to_secctx);
+ 
+-- 
+2.47.0
 
