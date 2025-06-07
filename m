@@ -1,91 +1,95 @@
-Received: from mailo.com (msg-2.mailo.com [213.182.54.12])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9401C84B6;
-	Sat,  7 Jun 2025 21:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.182.54.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA5F4C81;
+	Sat,  7 Jun 2025 21:51:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749332621; cv=none; b=T7J2mxZCVuj4xKFU+JJtUQjqBrfccVPGFKITWpO9TLcVp4BYfLZGeFNfmFwvAKTdAtoWZIrWjpVyFezDM14ccL3iHJ/cr8XWoTUwu/wFLs3X88fP4FnZm+jezi8Dv0d3HnAUWLgMsCSwMDUGOc3QcDwI/tnnKs6A9ICOGaELPK8=
+	t=1749333123; cv=none; b=IwLpInTlydnyWfccpL6tb5+2WnkRocZwx7UzbaOAZPwZyYaZXvNfR/BYQwrutCCigvrMvXDF75Fr7Zo+NIeKSSmzlDeeh3WyG1Fz+YfdLmogIIxySPbQvrh/6OlsmDgb0EZFAVuhRXBrrbwj0TpllH5hQGshOWwnGVvTWSWGAVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749332621; c=relaxed/simple;
-	bh=xI/OvOkoISAXRncaDWVm0qhOdTlzYGDe6owbkI0AdPE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZJ2CwC1l/3TJHn4NbeDBnpSdzhp0HkYNwE8ieBjtwYs1MamLmmLnfetozEJhiRriGb2uVMslWdlEohTARPJEAFJ/4XKo4mCsyaWJ5RSHtxMzWppas2u1J929fTZ1aH442yMUS92XwvV/ZH7M7HzbsQIJpVfXdEQrBv8G4GFgq0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mailoo.org; spf=pass smtp.mailfrom=mailoo.org; dkim=pass (1024-bit key) header.d=mailoo.org header.i=@mailoo.org header.b=aEbKIoQO; arc=none smtp.client-ip=213.182.54.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mailoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailoo.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailoo.org header.i=@mailoo.org header.b="aEbKIoQO"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mailoo.org; s=mailo;
-	t=1749332607; bh=xI/OvOkoISAXRncaDWVm0qhOdTlzYGDe6owbkI0AdPE=;
-	h=X-EA-Auth:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=aEbKIoQO+l7C7MLt9a6SuB590DT46JFza4bQskV6NSOnACnFw81MauRawk2w4VwmZ
-	 /edbHScs3xZ106G02Pys8xBJEg6kcYH92+wTl3/JqKRRxTSb6Z6AEfmIDXNL4ghWJk
-	 ovF8eARkJWcLrWHhH0aAjYqG/4KCPWffCDVPRvqY=
-Received: by b221-6.in.mailobj.net [192.168.90.26] with ESMTP
-	via ip-22.mailoo.org [213.182.54.22]
-	Sat,  7 Jun 2025 23:43:26 +0200 (CEST)
-X-EA-Auth: tcnuv6EiHZjbchC6kmH0/Ii7nnvOoLM4TEin+CbKNq8wrSTgu1rvm6JumEmT79Enp2m+k7dPzaxOaWT47optlAuYenc93FDrPejq6nJgMP8=
-Message-ID: <e73d676ba1901437d471a2a633e94a07b19a3e05.camel@mailoo.org>
-Subject: Re: [PATCH v4 2/4] media: qcom: camss: Add support for MSM8939
-From: Vincent Knecht <vincent.knecht@mailoo.org>
-To: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>, Robert Foss	
- <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, Bryan O'Donoghue	
- <bryan.odonoghue@linaro.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,  Bjorn Andersson
- <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- =?ISO-8859-1?Q?Andr=E9?= Apitzsch
-	 <git@apitzsch.eu>, phone-devel@vger.kernel.org, 
-	~postmarketos/upstreaming@lists.sr.ht
-Date: Sat, 07 Jun 2025 23:43:26 +0200
-In-Reply-To: <877a72fa-cdae-4a66-9991-5ea86ef76aac@linaro.org>
-References: <20250602-camss-8x39-vbif-v4-0-32c277d8f9bf@mailoo.org>
-	 <20250602-camss-8x39-vbif-v4-2-32c277d8f9bf@mailoo.org>
-	 <877a72fa-cdae-4a66-9991-5ea86ef76aac@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42app2) 
+	s=arc-20240116; t=1749333123; c=relaxed/simple;
+	bh=da2YN5ON/y2KIIci4lo7lBCbcWNV54pOAsnmClww+g0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sLEAWSe7iSZYAoP5jL7E+wiDUvmPh9iVV3Gk0Tc0OFNUjAyRRGcyusqSH/vVcQy+k+S8ziPElXuf1HHWB5FX3RWptABNwPwGbW/yEbYM5hhWsdOAYL/9EU+GRqblMqg5ffHEylH5lLkagMK9i4C+NWSbn76WXGw0gCF2bnifCsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timmermann.space; spf=pass smtp.mailfrom=timmermann.space; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timmermann.space
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timmermann.space
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bFBjR6KLpz9t2W;
+	Sat,  7 Jun 2025 23:51:55 +0200 (CEST)
+From: Lukas Timmermann <linux@timmermann.space>
+To: lee@kernel.org,
+	pavel@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@timmermann.space
+Subject: [PATCH v4 0/2] Support for Osram as3668 LED driver
+Date: Sat,  7 Jun 2025 23:50:47 +0200
+Message-ID: <20250607215049.29259-1-linux@timmermann.space>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4bFBjR6KLpz9t2W
 
-Le vendredi 06 juin 2025 =C3=A0 13:59 +0300, Vladimir Zapolskiy a =C3=A9cri=
-t=C2=A0:
-> Hello Vincent.
->=20
-> On 6/2/25 20:27, Vincent Knecht via B4 Relay wrote:
-> > From: Vincent Knecht <vincent.knecht@mailoo.org>
-> >=20
-> > The camera subsystem for the MSM8939 is the same as MSM8916 except with
-> > 3 CSID instead of 2, and some higher clock rates.
-> >=20
-> > As a quirk, this SoC needs writing values to 2 VFE VBIF registers
-> > (see downstream msm8939-camera.dtsi vbif-{regs,settings} properties).
-> > This fixes black stripes across sensor and garbage in CSID TPG outputs.
-> >=20
-> > Add support for the MSM8939 camera subsystem.
-> >=20
-> > Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> > Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
->=20
-> There was a preceding and partially reviewed changeset published on
-> linux-media [1] before v1 of the MSM8939 platform support in CAMSS,
-> due to a merge conflict this platform changeset should be rebased IMHO.
->=20
-> [1] https://lore.kernel.org/all/20250513142353.2572563-4-vladimir.zapolsk=
-iy@linaro.org/
->=20
-> --
-> Best wishes,
-> Vladimir
+This patch adds basic support for the as3668 driver IC via I2C interface. 
+The IC is capable of driving four individual LEDs up to 25.5mA per 
+channel. Hardware blinking would be theoretically possible, but this chip
+only supports a few set on/off-delays which makes using that feature 
+unfeasable, therefore my driver doesn't offer that capability. 
+It's intended applications is in mobile devices such as phones, 
+tablets and cameras. This driver was tested and is working on 
+a samsung-manta which is running postmarketOS with a near mainline kernel.
 
-Thank you, I'll look into it
+Please note: This is my first suggested patch to the kernel. 
+checkpatch.pl runs without warnings or errors. 
+I've read the docs in regards to the led subsystem, 
+coding style and submission of patches, 
+but I'm still a bit unsure about the general workflow. 
 
+I will try my best.
+
+Changes in v4:
+- Fixed some mistakes made in the dt file pointed out in v3.
+- Swapped dt and driver in patch series. DT now comes first.
+- Fixed errors in Kconfig due to last minute changes.
+- Added dt file into MAINTAINERS file.
+- Link to v3: https://lore.kernel.org/lkml/20250604225838.102910-2-linux@timmermann.space/
+Changes in v3:
+- Fixed an extra whitespace in the dt bindings documentation.
+- Sent patch to all related lists and maintainers.
+- Link to v2: https://lore.kernel.org/lkml/20250531120715.302870-4-linux@timmermann.space/
+Changes in v2:
+- Fixed reading led subnodes in dt incorrectly, 
+  which caused wrong numbering and a segfault when removing the driver module
+- Fixed calling of_property_read_u8 with an int, causing a compiler error
+- Added more error checking during writes to the i2c bus
+- Link to v1: https://lore.kernel.org/linux-leds/20250530184219.78085-3-linux@timmermann.space/
+
+Signed-off-by: Lukas Timmermann <linux@timmermann.space>
+
+Lukas Timmermann (2):
+  dt-bindings: leds: Add new as3668 support
+  leds: as3668: Driver for the ams Osram 4-channel i2c LED driver
+
+ .../devicetree/bindings/leds/ams,as3668.yaml  |  74 +++++++
+ MAINTAINERS                                   |   7 +
+ drivers/leds/Kconfig                          |  13 ++
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-as3668.c                    | 196 ++++++++++++++++++
+ 5 files changed, 291 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/ams,as3668.yaml
+ create mode 100644 drivers/leds/leds-as3668.c
+
+-- 
+2.49.0
 
