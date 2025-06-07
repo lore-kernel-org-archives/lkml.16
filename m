@@ -1,163 +1,79 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41BF01990A7;
-	Sat,  7 Jun 2025 16:14:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD1E2F3E;
+	Sat,  7 Jun 2025 16:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749312879; cv=none; b=m+rq81b+Njpkm1J17IWEXwvRD75lz4xeqfMLiMJzTLdpxWvBIPve5z0035YM6+FpPiMGE9j3a/2/8ao34m5UFpxk74fnnVhn0P/DxyED8aUyLGpP9MXS+U5YuvfRRrEXQSNXmaKEQyd+fVOnlt40RByrVWE4qNLXwITha5EiY/s=
+	t=1749313276; cv=none; b=I9fHi9nC2ys7A+6jtopEJziLRWuEoKxuLYBf/08ddL6QNnkM+ESR4UA0mWn5bCgIhCN3kbrDciVeHOgXdDwqikAyWi/yqbOyEYapQp3PFhrvkUITti5SNm2b3Jd0iu3sdkoTQ5YThcHqsPRiSmUKxJ3NKwCY4SOfYJR3qCbXlX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749312879; c=relaxed/simple;
-	bh=m5LVRSiV4O+mgO9aljggdoVFKYIXnhDMrYz6/KNbiDg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YfMtMdBsM1Mv0o3pI0cM0nrkF0gDelp4fUX3TxFsUFUeWFhjtaSYibAbGtggDgg8bL4xlTRPoYznzM111qjQVz3bWMN+yTv2SuvMwx5hkALXCzGt8s/Pawr1t9nF8GXsR7SXFDMuSaX27PWllbkclQGP9VNEPfj0rUaRFHDehPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=dhAPJ0wE; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1749313276; c=relaxed/simple;
+	bh=oiI/UBIp22xDHCckuTpupPI1ZnNEyqHPaX1KMdJp0rE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t1apQ/scL4ADvViLxFyjoQYFv/Xno3PSeyoBMbdcMfjhvwDyzF23C4s4/TYo561gywMIYOeTGHU+WUv+9pSm2c/T55pVFHw5WEshQoIMdmhYhj/MKzwurGXqodLFCVBqeEq6JztQu4n+38qR0CyimZgO1jlvkZ6p3f0xYDvuYoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PZBiEfQq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="dhAPJ0wE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=FO
-	SHr1PcbnEECb/jKlEUKH21O31HhmWFUyfLGKeAUfU=; b=dhAPJ0wEznyAVsfxXS
-	aH1RwqBgiO7Vl8mH2qpHhj7uvJbG9TkXw3PHFSxrd0Vv7b8bGu/jLOs4DlkL3j9k
-	snV/vOfMEn35jd0cjidraP1pylzLKC3Qg/9XICYko+ncEp+JWTUgNqESbcD1g9o3
-	VGEA31v4vIp9Wya2+c2RpUaDY=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wBHuXJPZURoL9paGw--.4161S7;
-	Sun, 08 Jun 2025 00:14:13 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	bhelgaas@google.com,
-	mani@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	kwilczynski@kernel.org
-Cc: robh@kernel.org,
-	jingoohan1@gmail.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v13 5/6] PCI: cadence: Use common PCI host bridge APIs for finding the capabilities
-Date: Sun,  8 Jun 2025 00:14:04 +0800
-Message-Id: <20250607161405.808585-6-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250607161405.808585-1-18255117159@163.com>
-References: <20250607161405.808585-1-18255117159@163.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PZBiEfQq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD844C4CEE4;
+	Sat,  7 Jun 2025 16:21:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749313275;
+	bh=oiI/UBIp22xDHCckuTpupPI1ZnNEyqHPaX1KMdJp0rE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PZBiEfQqujGjVpyqz8adTEM705B7KVMUfSgJlzeViiwwh4N+aqa5a/Z44MmIE5W/c
+	 wu1MduHg0/1b7KSea1myrHVzzyPHQ5ZSySxT0Qf7fDH8lfLwlKEpXpPrGtHEud1EPO
+	 guAcoYvH5Fa/yuDMFv9ek+dAsNZdp/xrS6YSf2cdWM64frwnZ6DBmIINsbfaCLKVKt
+	 qO33LH1aLdDgTMg/RzSXy+nOWBfZidZqCmunLrDXxD2Q5ldmLYD7Py7kpBWjRJ1ggg
+	 2KXkk44C1BfY2FX0FFQRfUiDcpdyI9wL3kt7G7wiAGoRKnS+0wr+dI0SqwWpLHlp3e
+	 6clzCiH8rFyug==
+Date: Sat, 7 Jun 2025 17:21:10 +0100
+From: Simon Horman <horms@kernel.org>
+To: Bartlomiej Dziag <bartlomiejdziag@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	Wojciech Drewek <wojciech.drewek@intel.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Alexis =?utf-8?Q?Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
+	netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: stmmac: Change the busy-wait loops timing
+Message-ID: <20250607162110.GB197663@horms.kernel.org>
+References: <20250606102100.12576-1-bartlomiejdziag@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBHuXJPZURoL9paGw--.4161S7
-X-Coremail-Antispam: 1Uf129KBjvJXoWxury7Ww48Ar17Cw4Duw13CFg_yoW5tF4DpF
-	WDCFyfCF1rJFW3uFn3A3W5Xr13tFn3C347ta92kw1xZF17Cr1UGFnFgFy3Kr9xKrs7Wr17
-	X3yDJF4kGrn0yFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pN0PTQUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhZlo2hEXNrG1wABsQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250606102100.12576-1-bartlomiejdziag@gmail.com>
 
-Use the PCI core is now exposing generic macros for the host bridges to
-search for the PCIe capabilities, make use of them in the CDNS driver.
+On Fri, Jun 06, 2025 at 12:19:49PM +0200, Bartlomiej Dziag wrote:
+> After writing a new value to the PTP_TAR or PTP_STSUR registers,
+> the driver waits for the addend/adjust operations to complete.
+> Sometimes, the first check operation fails, resulting in
+> a 10 milliseconds busy-loop before performing the next check.
+> Since updating the registers takes much less than 10 milliseconds,
+> the kernel gets stuck unnecessarily. This may increase the CPU usage.
+> Fix that with changing the busy-loop interval to 5 microseconds.
+> The registers will be checked more often.
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
-Changes since v12:
-- Modify the function's return value.
+Hi Bartlomiej,
 
-Changes since v11:
-- Modify the return value of cdns_pcie_readw from u32 to u16. 
-- Modify the return value of cdns_pcie_readb from u32 to u8. 
+I am curious.
 
-Changes since v8 ~ v10:
-- None
+Does it always take much less than 10ms, or is that usually so.
+If it is the former, then do we need to wait for in the order of
+10000 x 5us = 50ms before giving up?
 
-Changes since v7:
-- Resolve compilation errors.
+> 
+> Signed-off-by: Bartlomiej Dziag <bartlomiejdziag@gmail.com>
 
-Changes since v6:
-https://lore.kernel.org/linux-pci/20250323164852.430546-4-18255117159@163.com/
-
-- The patch commit message were modified.
-
-Changes since v5:
-https://lore.kernel.org/linux-pci/20250321163803.391056-4-18255117159@163.com
-
-- Kconfig add "select PCI_HOST_HELPERS"
----
- drivers/pci/controller/cadence/pcie-cadence.c | 30 +++++++++++++++++++
- drivers/pci/controller/cadence/pcie-cadence.h | 13 ++++++++
- 2 files changed, 43 insertions(+)
-
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
-index 70a19573440e..c72bc886dbb4 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence.c
-@@ -8,6 +8,36 @@
- #include <linux/of.h>
- 
- #include "pcie-cadence.h"
-+#include "../../pci.h"
-+
-+static int cdns_pcie_read_cfg(void *priv, int where, int size, u32 *val)
-+{
-+	struct cdns_pcie *pcie = priv;
-+
-+	if (size == 4)
-+		*val = cdns_pcie_readl(pcie, where);
-+	else if (size == 2)
-+		*val = cdns_pcie_readw(pcie, where);
-+	else if (size == 1)
-+		*val = cdns_pcie_readb(pcie, where);
-+	else
-+		return PCIBIOS_BAD_REGISTER_NUMBER;
-+
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
-+u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap)
-+{
-+	return PCI_FIND_NEXT_CAP_TTL(cdns_pcie_read_cfg, PCI_CAPABILITY_LIST,
-+				     cap, pcie);
-+}
-+EXPORT_SYMBOL_GPL(cdns_pcie_find_capability);
-+
-+u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap)
-+{
-+	return PCI_FIND_NEXT_EXT_CAPABILITY(cdns_pcie_read_cfg, 0, cap, pcie);
-+}
-+EXPORT_SYMBOL_GPL(cdns_pcie_find_ext_capability);
- 
- void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie)
- {
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index a149845d341a..38f7a8cdf7f1 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -387,6 +387,16 @@ static inline u32 cdns_pcie_readl(struct cdns_pcie *pcie, u32 reg)
- 	return readl(pcie->reg_base + reg);
- }
- 
-+static inline u16 cdns_pcie_readw(struct cdns_pcie *pcie, u32 reg)
-+{
-+	return readw(pcie->reg_base + reg);
-+}
-+
-+static inline u8 cdns_pcie_readb(struct cdns_pcie *pcie, u32 reg)
-+{
-+	return readb(pcie->reg_base + reg);
-+}
-+
- static inline u32 cdns_pcie_read_sz(void __iomem *addr, int size)
- {
- 	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
-@@ -556,6 +566,9 @@ static inline void cdns_pcie_ep_disable(struct cdns_pcie_ep *ep)
- }
- #endif
- 
-+u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap);
-+u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap);
-+
- void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie);
- 
- void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u8 fn,
--- 
-2.25.1
-
+...
