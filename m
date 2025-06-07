@@ -1,73 +1,72 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A60A1B7F4
-	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 18:13:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0453B2A0
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 18:17:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749319995; cv=none; b=bu0qdm0xVDeMtXfaQI4ey/6DpvJuGDtApgxJO9XFr9GYHocbB5LkE2bXIIVc2XaUUfk08eSMwt2KJx5aNZELjrQu55XjAvLjwEoc8b7mtEXtJtA+vJsZqbrZJfDsV9V6OcOgH+KsZQNteTEgi9pyBDC/x6SOsxcmXeyLaoI5PQI=
+	t=1749320230; cv=none; b=KKPoW8KiuG9qT0l7sgOJHqUB+ZUSPdgudYjNy4F50R1sy/DCLgMuxhnXZWr4VKPx1wnwz+BlfIiISK3M6OIRitHqDNXbx1Rxryi5vGBo7s058RZz7AxU4baO72ZeO7/2Po9rxvY2c8veX1Ei6wbatn/BJzgC0rE5fKSd3gqQhBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749319995; c=relaxed/simple;
-	bh=771EgWHmZ27YrKHyY5MR8yckTZDwg/eVg77jI7TgWzs=;
+	s=arc-20240116; t=1749320230; c=relaxed/simple;
+	bh=YqZZguyaQZnHAF6KrLbVEz7cRXJTVlsD5fx5dH4me3o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vA31edzhxYanavunACOEeEHB9TdVDxlVVTPsl0i2Jg9SzvP1sDbYZYhFNq43LsondJ/W7yhGzQNqQVZK9ndQCYU5AAO03fSDpQEfStccxVBGRhhHEL5R2YCrsjsujPznCDFQEtH4saGOMKWl8AeubrKSVi6dlRN6UAmk+/UNKY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RvzYHrjg; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=TgrZcDFDt7mhcRkM4LHWeHpDfpDcSfEsLVFsRgO6DaHwPBcPQv1Ld3Efj3GnpH9qS9l5dr81d6VORWjeVRbkSouCnNM5fEqOFJAYNgWtED1/TFAJhRrTsmrvc3n2KJkHDsjYY8uM+ibGkIRZlFvpz5l0e8UC96OdGsF3M7V2MfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GRPXAB34; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RvzYHrjg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GRPXAB34"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749319992;
+	s=mimecast20190719; t=1749320227;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=29uFvuOP3q7rMVz1eFPMEyXv+qkCGU0VGEskSTBBmwc=;
-	b=RvzYHrjg0UpfN5cV/wn8iLKwM+zFmJutXLN7zkRJckL4kHgN2GHWNWSzPY6n1OXWs3E54M
-	d6qBglGRJEC9Fu2l1f1BAzUgxvNWJOIkcTYq/0fQiBYjvEG6HPMHmIooR2gifVNFg+MJqI
-	ZxnIUbbZtwbptVYl011gpNuhs3eRK0U=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=v2CwoiOcZ5Lm7ZChShu0UdyCOIaiIaGNbqSuftFNKIc=;
+	b=GRPXAB34djN13d/bgSBC3qRDV4SvDOQV8R5LpKd/yiIlq+DY3kDxz0IFLiwYD1TJZjnw4g
+	sYqlopkwvgGIyRA2guWZE6qyFetKp5NKbBR3D6A8Jhueo9I1+C0F+ehCNhaQyagFErprFy
+	L+aTduv/vdXZOhK5Oa05WYANDLQgeJs=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-153-mzoWqvSUM-GBS6hMw8ugXA-1; Sat, 07 Jun 2025 14:13:10 -0400
-X-MC-Unique: mzoWqvSUM-GBS6hMw8ugXA-1
-X-Mimecast-MFC-AGG-ID: mzoWqvSUM-GBS6hMw8ugXA_1749319989
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450eaae2934so26391135e9.2
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 11:13:10 -0700 (PDT)
+ us-mta-607-ykS8eJyFMbyxlKRQ2Ceq0A-1; Sat, 07 Jun 2025 14:17:06 -0400
+X-MC-Unique: ykS8eJyFMbyxlKRQ2Ceq0A-1
+X-Mimecast-MFC-AGG-ID: ykS8eJyFMbyxlKRQ2Ceq0A_1749320225
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f858bc5eso2307238f8f.0
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 11:17:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749319989; x=1749924789;
+        d=1e100.net; s=20230601; t=1749320225; x=1749925025;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=29uFvuOP3q7rMVz1eFPMEyXv+qkCGU0VGEskSTBBmwc=;
-        b=I2J0sASO+9/UjXIp78OYPoKVeORNM3Cbz774dYoId2SshFtWDB0SUmTVUeTcZYxsnt
-         FhdN4ToJ/0GvQVLQ9Ud9EwnoT5HgijyjBEjCPoyThPS2twkFN2IyhKhQ9/3SKjiASQN5
-         p0PZtulAPejeBRSKUrw2YJ3B6ID1sEI6b46LTHTEd8+N6I5kxP1/9DaVR08MW1Wzw93V
-         fNyxvnQLnd7dMaKf9PDeLWwbFfDSFusBJzDtN4+cUAtdbDgeqXKRTdbBqjadKXlr1H2y
-         hAjlK5/3YDfys5nTTicyfaTDMmbFVrd5Z4h2rsWXj8USnUfZMbWJSwVerDrjDFsiMH5l
-         BtXA==
-X-Forwarded-Encrypted: i=1; AJvYcCWnTPo1SQ7E7yr+PKaUAq5L3fbTekWdXytt3ZHYw3xy6C09BSuscVxW9PCu/Pq3FbzxNxSY2m/BL/245h4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXpNIcrhp95nvo2MErsM9/hZKT9aM1/IWk8Nwx+gsDENaRWjm0
-	MrCSOEMUzN2urPzjWucpu/mrB/yrb2FkGM7Aj1cG3YOxaiAz9SA7iisVtf2+YhfYmMMcB6HffKe
-	loldIeVj6C6/+c5jx3EQqZklEAdrlAv9+cqscZoJOkieuqYkMHLPtwl5rGSAmVJwJ7A==
-X-Gm-Gg: ASbGncsdI4hvlbZohDzCiGsGbw5KIQ4x+MovudhTu6PzhJFo+JkN8C7dC9HSE9wdoV7
-	m4+oIzNPG0fjoQKKnSo8LqYbl0djH5cSU0N972NNV0W9aoBcEUe0sVuzQZT0fR2pEclZPsTVAYA
-	b80RD6AwYI9mnRCZnhaLcXdicPFn25kt+wqt65hUW51HNStFwfvATCNG0PHSmuX3gvViIbDZAKG
-	A8QLllVkhrih8ky212WPj472+n9lLQbaJ5YZ5kvr5aiHGuALw1pqHlUW5eBHgg4VpH8XyQLRphi
-	eY5hgfJaX4uMcN3QKGsNHLjsTkXQiHVDotl1TqGMHMICs8wkkgq5kZQANNuWHcMdLFL11zlWPQ2
-	OqWRWvTr8Q/9vwfqvUr37sB/zj21t6tQBHg==
-X-Received: by 2002:a05:600c:8b57:b0:444:34c7:3ed9 with SMTP id 5b1f17b1804b1-452014d97b6mr65420075e9.26.1749319989430;
-        Sat, 07 Jun 2025 11:13:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG/pIpFNXUFob0u68ykRfY8AaVZm6baVknHkl8tlWjirCBRTSx3Hhj1WqNTeV+3GhyDuMHJ/Q==
-X-Received: by 2002:a05:600c:8b57:b0:444:34c7:3ed9 with SMTP id 5b1f17b1804b1-452014d97b6mr65419885e9.26.1749319989059;
-        Sat, 07 Jun 2025 11:13:09 -0700 (PDT)
+        bh=v2CwoiOcZ5Lm7ZChShu0UdyCOIaiIaGNbqSuftFNKIc=;
+        b=nv7bCAyvZndijkFBOCqwsPW4qe/Lnr0EsS1HOA7jxBoB9v13YMi9/GFR0WdRmsOUfR
+         WEPJicNSYbPcB+GybY2NVBvtvZkEV+t5fF3CZF2xCsn6flRJhx4pU/XNGjNzbMTANVi3
+         0Ty7W0b3b7LxrxEebOUxkLUtdrw50m8K8ZtpWAh/U8gzcJ06dLHc2YYtmZO5Vnsgq5n3
+         1TqqD+DtLDS9KKOGvachbJyxv7fyXrLleov1sWkAu0dS1XrG03B1zq9Zn79Co6ncLb5D
+         IoCl2VQGi/httqOtR1iywkvngv6bfd1UBgGo5LjFg4iYCchI/u2AJescq8P2EJYaHHf0
+         3vvw==
+X-Gm-Message-State: AOJu0YzPvgWNmf4WDbI+J4snl4JrKJH3kxMqzFOOQIQIQumJ1I7K9PT0
+	qfUXr6tH/E0ujtKsmjPJBISl2z8k1MDDAowEb6xKOa+ai/wo8nltyZ1iPsnSaF1C80NuQQ8y7r0
+	BBOwUKC3aLy0chuSkQ3mdljKI18JDq76d/+Xn+3Wg7MqozZMxitax6B119qn8xK9R0A==
+X-Gm-Gg: ASbGncvjIwh5GMAtLSfgldS2wNtjLb+sNyDIiIUcCOJQocOYYc4td3+ZmWRNt96FQGw
+	eZWQJ4PH3OJiyopr1woGepWT7O74vv+UcbhXJ21woq5YJLaiBGedSqpE9o008C57pGOEcuRDK0S
+	hmjd3jE7a22AfkjUNfiW55A3UJILRCpPJfiee9AYYB26PLkJg8AYIo8zn7d6oDHg+cSsPwYLi3F
+	+Eumf8YK4ieg+dna/grmMDsoUWYQykqJJdqGS/1FvVuqh/FD2sY1iZ57GfIrH4P++CFl9KAxomq
+	UREMfulfwUM0MUnVnckIdXtBvPHXF7lCjz71qudJ/amcTDbXGBn5Zq12uOMlKCGsLjDYFfYWGgy
+	muPJNQ86lqeuH5qf/P5UYT+Fw4IdiDgR5AbLbfZRxJ/Rg
+X-Received: by 2002:a05:6000:2411:b0:3a5:2e59:833a with SMTP id ffacd0b85a97d-3a5319b173emr6412397f8f.1.1749320224873;
+        Sat, 07 Jun 2025 11:17:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF4Pkfa8eynAY3tDB8x72AOlK0O1TnmMmYBTx1UHVpYpetN22WOwBXdABTxLCISotP2ZkVMqA==
+X-Received: by 2002:a05:6000:2411:b0:3a5:2e59:833a with SMTP id ffacd0b85a97d-3a5319b173emr6412384f8f.1.1749320224465;
+        Sat, 07 Jun 2025 11:17:04 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f4d:9f00:3bce:123:c78a:cc8? (p200300d82f4d9f003bce0123c78a0cc8.dip0.t-ipconnect.de. [2003:d8:2f4d:9f00:3bce:123:c78a:cc8])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532131df6sm5079756f8f.0.2025.06.07.11.13.08
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323b653dsm5207399f8f.39.2025.06.07.11.17.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Jun 2025 11:13:08 -0700 (PDT)
-Message-ID: <366227be-e22d-4757-b3c7-3eedc07df1b2@redhat.com>
-Date: Sat, 7 Jun 2025 20:13:07 +0200
+        Sat, 07 Jun 2025 11:17:03 -0700 (PDT)
+Message-ID: <ebaa1561-eb42-43f6-ba33-e59982f6b359@redhat.com>
+Date: Sat, 7 Jun 2025 20:17:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,17 +74,13 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/debug: Use BUILD_BUG_ON_INVALID() for VIRTUAL_BUG_ON()
-To: Tal Zussman <tz2294@columbia.edu>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250607-virtual_bug_on_invalid-v1-1-b792ac2b0920@columbia.edu>
- <2a768123-4423-4f52-a0ef-96fa69872949@redhat.com>
- <CAKha_soMjczpY3HTpPVuw-fKTq0ZATdCnaPKPrsnTj_5ROepmA@mail.gmail.com>
+Subject: Re: [PATCH v2] fs/proc/task_mmu: add VM_SHADOW_STACK for arm64 when
+ support GCS
+To: wangfushuai <wangfushuai@baidu.com>, akpm@linux-foundation.org,
+ andrii@kernel.org, osalvador@suse.de, Liam.Howlett@Oracle.com,
+ christophe.leroy@csgroup.eu
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20250607131525.76746-1-wangfushuai@baidu.com>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -133,60 +128,40 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <CAKha_soMjczpY3HTpPVuw-fKTq0ZATdCnaPKPrsnTj_5ROepmA@mail.gmail.com>
+In-Reply-To: <20250607131525.76746-1-wangfushuai@baidu.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 07.06.25 18:21, Tal Zussman wrote:
-> On Sat, Jun 7, 2025 at 3:59 AM David Hildenbrand <david@redhat.com> wrote:
->> On 07.06.25 09:09, Tal Zussman wrote:
->>> This allows the compiler to validate the condition even with
->>> CONFIG_DEBUG_VIRTUAL disabled, and aligns VIRTUAL_BUG_ON() with the
->>> other macros in mmdebug.h.
->>>
->>
->> In the light of recent discussions, I think we should get rid of
->> VIRTUAL_BUG_ON completely.
->>
->> There are only a hand full of callers, and I am preety sure for most of
->> them VM_WARN_ON is a suitable replacement.
+On 07.06.25 15:15, wangfushuai wrote:
+> The recent commit adding VM_SHADOW_STACK for arm64 GCS did not update
+> the /proc/[pid]/smaps display logic to show the "ss" flag for GCS pages.
+> This patch adds the necessary condition to display "ss" flag.
 > 
-> Makes sense. However, all of the callers (except for vmalloc) are already
-> gated by CONFIG_DEBUG_VIRTUAL, which doesn't depend on CONFIG_DEBUG_VM, so
-> using VM_WARN_ON_ONCE() would break DEBUG_VIRTUAL on its own.
-
-It should either be folded or made dependent on DEBUG_VM
-
+> Fixes: ae80e1629aea ("mm: Define VM_SHADOW_STACK for arm64 when we support GCS")
+> Signed-off-by: wangfushuai <wangfushuai@baidu.com>
+> ---
+>   fs/proc/task_mmu.c | 3 +++
+>   1 file changed, 3 insertions(+)
 > 
-> Perhaps it makes sense to convert the non-vmalloc callers to WARN_ON_ONCE()
-> instead so DEBUG_VIRTUAL still works.
- > The vmalloc caller would then become>
->          if (IS_ENABLED(CONFIG_DEBUG_VIRTUAL))
->                  WARN_ON_ONCE(...);
-> 
-> as opposed to VM_WARN_ON_ONCE(), in order to maintain the existing
-> DEBUG_VIRTUAL behavior.
+> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> index 27972c0749e7..2c2ee893a797 100644
+> --- a/fs/proc/task_mmu.c
+> +++ b/fs/proc/task_mmu.c
+> @@ -994,6 +994,9 @@ static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
+>   #ifdef CONFIG_ARCH_HAS_USER_SHADOW_STACK
+>   		[ilog2(VM_SHADOW_STACK)] = "ss",
+>   #endif
+> +#if defined(CONFIG_ARM64_GCS)
+> +		[ilog2(VM_SHADOW_STACK)] = "ss",
+> +#endif
 
- From a quick glimpse, I am not even sure Fedora/RHEL enable it in the 
-debug config (and if so, probably it's not enabled by mistake)
+Which makes me wonder why we don't select 
+CONFIG_ARCH_HAS_USER_SHADOW_STACK for CONFIG_ARM64_GCS?
 
-I think we can make it depend on DEBUG_VM.
+>   #if defined(CONFIG_64BIT) || defined(CONFIG_PPC32)
+>   		[ilog2(VM_DROPPABLE)] = "dp",
+>   #endif
 
-> 
-> Alternatively, DEBUG_VIRTUAL could be folded into DEBUG_VM, but that seems
-> like a slightly more invasive change...
-
-I'd start with making it depend on DEBUG_VM.
-
-If there is good reason to not fold it, then all VIRTUAL_BUG_ON should 
-be renamed to VIRTUAL_WARN_ON and get defined as VM_WARN_ON.
-
-If there is good reason to fold it, then all VIRTUAL_BUG_ON should be 
-replaced by VM_WARN_ON.
-
-The only question is what the performance overhead is. I mean, 
-performance with DEBUG_VM is already bad (debug kernels), so not sure if 
-we really care that much.
 
 -- 
 Cheers,
