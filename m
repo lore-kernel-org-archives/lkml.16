@@ -1,168 +1,206 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2842520B218;
-	Sat,  7 Jun 2025 10:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F7E1E8338;
+	Sat,  7 Jun 2025 10:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749292001; cv=none; b=EdPTDlLOLOsFSkZ85oIiDMnOtMEYNNPVW2PaFfpu5UKsj23Q9ti3tPCwL+6fu2zzKjgiJ7hocZG2W1KEuRE6Va0JnRmNHYy0MX1OC4tk/WkESMdFEKjO9oyq52JUvXuOX0hCpdLa2Rr7upcIwpUA/WSpLwO6UsvkUrWxrQ93K04=
+	t=1749292184; cv=none; b=WcsQofITzE+9/8Aigf3sTC06I+dcTOD6aa9XbRLjLU+4mpBTXv0FOZ+AWm06tYRw4W9TVxX91yzj+4c1nspGj3VlZNBTEvc+aqDGPUxfxZG1ME8vVyLicq02ARXdrR8tKvGEjvmO4kSUWiWA3GNB8edvKKiK+yMuGwq0tBbo4Hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749292001; c=relaxed/simple;
-	bh=xhWjKQ8VDK+b3VbtdhQAl8fVROrwhjeRh5V49FGDdSo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KV28x7y3kXPnFDD64kkp+I13Nl+o6EN64TMSYo8+CCt3T0LLdWw98OlAsfE+NYywr55ppXB0TnBOQhBXt7DYguo7ZfLgl/yasJ79LDbkVFOZe26Y+KvDc+SMYXPeAiLEOsatfUirO+D58lNzKX4PkActunnTXySZcVYsKaBPIlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JEJnFlye; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749292184; c=relaxed/simple;
+	bh=HUErItk+IykV8jb9k+DxC8wOGdpP83t+IkeVHoy1mbE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SBxfk3C1cTRrV3dRMziOLo7fIUYSD08Aal9YDqq85jQYjhZfeFvyXu3JnwM7vaWBV/TeGLUKVRJ2WTrKHU0MjAhZvXsoXgQyMKuiidqbnNSyc2+n8IhIRObiToKMMsC/RD8cCy7rdhReiz2qS3lXhZcQXUOnVGljkJyD0aQ5FP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FsZSWq4m; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JEJnFlye"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a4f78ebec8so1721335f8f.0;
-        Sat, 07 Jun 2025 03:26:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749291998; x=1749896798; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8kMnH4MMHk5QRxG66Od//k1SzcWeydGzVk2zl6BYx08=;
-        b=JEJnFlyePfwY+jfl4MCEs0ShxGO8UvWsWQGTOUziwVWhKGy4zYKC9MGXLr4NsAPZOb
-         umaoSTZAt06O3JDOWdRMIg8zzMgWJI2jYSob1X9bbvgXaI2ii7W8x+0psrmMqozg5VtG
-         yHUThPyb55ML/EHOexgKHb6roc1BcRlXXZkzkq2C/KQeKj616nt9bUvWri6W3JDYMpYn
-         KdR9x9dn0g+cpGdsYIFSIiVuzzDweWtjHH+TBTNA1Xp30tA4NjNBYqTT/tCjcX7ux76y
-         y5aeItnqeoAmkofmI/vFNHbF32VL2jJIxwR3T7ZsQOcvRWG4BYiy0kq5M4qTg9ypCfjx
-         BQYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749291998; x=1749896798;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8kMnH4MMHk5QRxG66Od//k1SzcWeydGzVk2zl6BYx08=;
-        b=JdFZoBt4K/BOhoTRANMxxfHpi5R1u50ou6NorTlzMrE9XlNmouaQM3kcEP3VRtzJ1y
-         Zo3zWVxzXBOJ/R7L6pZlh4sbsQMraMF+vzD3pTAE9ac6v38KrVWfCHT7mbhA2fHlL73R
-         7ozWzYdb046SLQD8Aprx7tS/PTUvif84f7F6GioCxEQWWvRWDs4mVI87VYBmUuvstOHZ
-         qIqWarGcJIv+AGETvAh3bCab/9ixNakL+0NdCRG4jwL/UMh7JN80kZTCC1ujLIrDRoX4
-         vtFkEK+AatvNVn8YKoKsZ0FKMShh6rS0Awq4wa6c7U8QTHvEpc2Yj+KAACRE0vG5ar+M
-         eamQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUKatDut4+i719g6NDbBnMgGp/pBsoqjaxCoHmriFywMhu6rZD2XBYjedufw1tB33KRKyH8GUqYsVs619lZ@vger.kernel.org, AJvYcCUeVVS2WhMyg5eE0lQE91UJV9824d3ccmGmm34Er2hJW17slelRH3EwdBXK2I5YOahKAkeP1nQbyYM=@vger.kernel.org, AJvYcCV4Q0xn6vjCSQzMsBRxpifRiK9A8i7MHdi4aJm8BM9Z2cW1bHpCfUyDuG7SWq2KtBXJZc/zihfeiOXKwsM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTwikEm16ZyHhqlYdHcs02xtW/fPD9afYRfXk9X/2J7rR7Lm8u
-	BCzKDla0Kmoqn48ecM5raEDAPp1P4EbFAK3SLx2jNG1zacIDIjqjymKA
-X-Gm-Gg: ASbGncsWR86GVa4Xnz7rJn7Y5i1r1rIImzIqw7aP776/4hpb+B5s5lMI//vl72qEfIA
-	bFETYwSzL4ejdwb5Cs6vAyU5AcyinPb7zWLhSvFQo6ZAnvktN4Qeiq4YY8d4MCHbIcp/sHTHabU
-	VOtPrKh+x/q4G/umtk0ewWcoiNsPzTcfqb2bIYbBgKZ1IqAM2OrF0+rd14t4+du+Cmfj3mAcGs/
-	pqluQ3eDKZA2FdIJ7QouiAIWepZRhahWz4nmHUrQeooLGqbJ5iH+w24MbPDKywKWqK6xoeaUZAF
-	P9Ap8Ed3HkQ8BYizn5MrrpTUIDmqPJw0x/tKyMRa0o5qVUz750OqWyLYXss5xIE4C1V+7RwRBqD
-	tvvW1oEIWuWlihGiuS2IhS3T66yKORYqQRetBkzr6drz6g3xLwZIG+w==
-X-Google-Smtp-Source: AGHT+IGDU4BpgZ+v+ZeR2Se3v6PPEanjAJJR9kff7FpbE/7rfV7Lly9gG/GELi3rza45Cr90WLoUTg==
-X-Received: by 2002:a5d:64e7:0:b0:3a4:f902:3872 with SMTP id ffacd0b85a97d-3a531cab757mr5178306f8f.19.1749291998211;
-        Sat, 07 Jun 2025 03:26:38 -0700 (PDT)
-Received: from puma.museclub.art (p200300cf9f0587008b7592e367d28d7e.dip0.t-ipconnect.de. [2003:cf:9f05:8700:8b75:92e3:67d2:8d7e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532435771sm4395732f8f.63.2025.06.07.03.26.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Jun 2025 03:26:37 -0700 (PDT)
-From: Eugene Shalygin <eugene.shalygin@gmail.com>
-To: eugene.shalygin@gmail.com
-Cc: Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] hwmon: (asus-ec-sensors) add ProArt X870E-CREATOR WIFI
-Date: Sat,  7 Jun 2025 12:26:14 +0200
-Message-ID: <20250607102626.9051-1-eugene.shalygin@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FsZSWq4m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749292182; x=1780828182;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HUErItk+IykV8jb9k+DxC8wOGdpP83t+IkeVHoy1mbE=;
+  b=FsZSWq4mn3Up4nOpSt3PSFYWW0a7Fv14gYkTWQ5Qcb3sY7nHY88cpL5Y
+   YJQU/3YSPNKW3l5LoTfAsTojNU/HQey9xRHVPvAz/J11aA1hLAMixdrAR
+   b4pCM1vT40wspJWMQ8DP+c6dEDaggdb95YmRMIIzKybueIVDE7xNPUQxK
+   V8l2OpTWFYDMzNxxtiUK/OcMCqi31wOrvYY5On5l5LBkJ/hOyYq21hopi
+   7RJ9sNG1TYGAzpbOEeN5Aku79xFSFWCn0oinya+ySXJ3imfnlHmSx48ua
+   eQMQaXKdNspkpbPGw4lRx/74GQhJO7C1NrznK1EMBn2NDKES5hGTYShHO
+   w==;
+X-CSE-ConnectionGUID: XDGHLUpcT6C41EGMVAkmwA==
+X-CSE-MsgGUID: JQVDAluKSpaLhwbIWysq4Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="51430862"
+X-IronPort-AV: E=Sophos;i="6.16,217,1744095600"; 
+   d="scan'208";a="51430862"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2025 03:29:41 -0700
+X-CSE-ConnectionGUID: //5h4T4EQHy8JqBmwILrZg==
+X-CSE-MsgGUID: cSCGMFoJQxaOHhvnzWtjPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,217,1744095600"; 
+   d="scan'208";a="146401279"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 07 Jun 2025 03:29:38 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uNqnv-0005in-2o;
+	Sat, 07 Jun 2025 10:29:35 +0000
+Date: Sat, 7 Jun 2025 18:29:34 +0800
+From: kernel test robot <lkp@intel.com>
+To: wangfushuai <wangfushuai@baidu.com>, akpm@linux-foundation.org,
+	david@redhat.com, andrii@kernel.org, osalvador@suse.de,
+	Liam.Howlett@oracle.com, christophe.leroy@csgroup.eu
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	wangfushuai <wangfushuai@baidu.com>
+Subject: Re: [PATCH] fs/proc/task_mmu: add VM_SHADOW_STACK for arm64 when
+ support GCS
+Message-ID: <202506071806.mshFK42h-lkp@intel.com>
+References: <20250607060741.69902-1-wangfushuai@baidu.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250607060741.69902-1-wangfushuai@baidu.com>
 
-Adds support for the ProArt X870E-CREATOR WIFI board.
+Hi wangfushuai,
 
-Signed-off-by: Eugene Shalygin <eugene.shalygin@gmail.com>
----
- Documentation/hwmon/asus_ec_sensors.rst |  1 +
- drivers/hwmon/asus-ec-sensors.c         | 28 +++++++++++++++++++++++++
- 2 files changed, 29 insertions(+)
+kernel test robot noticed the following build warnings:
 
-diff --git a/Documentation/hwmon/asus_ec_sensors.rst b/Documentation/hwmon/asus_ec_sensors.rst
-index 502b0faf3b31..de2f2985f06f 100644
---- a/Documentation/hwmon/asus_ec_sensors.rst
-+++ b/Documentation/hwmon/asus_ec_sensors.rst
-@@ -11,6 +11,7 @@ Supported boards:
-  * Pro WS X570-ACE
-  * ProArt X570-CREATOR WIFI
-  * ProArt X670E-CREATOR WIFI
-+ * ProArt X870E-CREATOR WIFI
-  * ProArt B550-CREATOR
-  * ROG CROSSHAIR VIII DARK HERO
-  * ROG CROSSHAIR VIII HERO (WI-FI)
-diff --git a/drivers/hwmon/asus-ec-sensors.c b/drivers/hwmon/asus-ec-sensors.c
-index c3d5bcbd63f8..4ac554731e98 100644
---- a/drivers/hwmon/asus-ec-sensors.c
-+++ b/drivers/hwmon/asus-ec-sensors.c
-@@ -165,6 +165,7 @@ enum board_family {
- 	family_amd_400_series,
- 	family_amd_500_series,
- 	family_amd_600_series,
-+	family_amd_800_series,
- 	family_intel_300_series,
- 	family_intel_400_series,
- 	family_intel_600_series
-@@ -260,6 +261,20 @@ static const struct ec_sensor_info sensors_family_amd_600[] = {
- 		EC_SENSOR("Water_Out", hwmon_temp, 1, 0x01, 0x01),
- };
- 
-+static const struct ec_sensor_info sensors_family_amd_800[] = {
-+	[ec_sensor_temp_cpu] = EC_SENSOR("CPU", hwmon_temp, 1, 0x00, 0x30),
-+	[ec_sensor_temp_cpu_package] =
-+		EC_SENSOR("CPU Package", hwmon_temp, 1, 0x00, 0x31),
-+	[ec_sensor_temp_mb] =
-+		EC_SENSOR("Motherboard", hwmon_temp, 1, 0x00, 0x32),
-+	[ec_sensor_temp_vrm] =
-+		EC_SENSOR("VRM", hwmon_temp, 1, 0x00, 0x33),
-+	[ec_sensor_temp_t_sensor] =
-+		EC_SENSOR("T_Sensor", hwmon_temp, 1, 0x00, 0x36),
-+	[ec_sensor_fan_cpu_opt] =
-+		EC_SENSOR("CPU_Opt", hwmon_fan, 2, 0x00, 0xb0),
-+};
-+
- static const struct ec_sensor_info sensors_family_intel_300[] = {
- 	[ec_sensor_temp_chipset] =
- 		EC_SENSOR("Chipset", hwmon_temp, 1, 0x00, 0x3a),
-@@ -377,6 +392,14 @@ static const struct ec_board_info board_info_pro_art_x670E_creator_wifi = {
- 	.family = family_amd_600_series,
- };
- 
-+static const struct ec_board_info board_info_pro_art_x870E_creator_wifi = {
-+	.sensors = SENSOR_TEMP_CPU | SENSOR_TEMP_CPU_PACKAGE |
-+		SENSOR_TEMP_MB | SENSOR_TEMP_VRM |
-+		SENSOR_TEMP_T_SENSOR | SENSOR_FAN_CPU_OPT,
-+	.mutex_path = ACPI_GLOBAL_LOCK_PSEUDO_PATH,
-+	.family = family_amd_800_series,
-+};
-+
- static const struct ec_board_info board_info_pro_art_b550_creator = {
- 	.sensors = SENSOR_SET_TEMP_CHIPSET_CPU_MB |
- 		SENSOR_TEMP_T_SENSOR |
-@@ -575,6 +598,8 @@ static const struct dmi_system_id dmi_table[] = {
- 					&board_info_pro_art_x570_creator_wifi),
- 	DMI_EXACT_MATCH_ASUS_BOARD_NAME("ProArt X670E-CREATOR WIFI",
- 					&board_info_pro_art_x670E_creator_wifi),
-+	DMI_EXACT_MATCH_ASUS_BOARD_NAME("ProArt X870E-CREATOR WIFI",
-+					&board_info_pro_art_x870E_creator_wifi),
- 	DMI_EXACT_MATCH_ASUS_BOARD_NAME("ProArt B550-CREATOR",
- 					&board_info_pro_art_b550_creator),
- 	DMI_EXACT_MATCH_ASUS_BOARD_NAME("Pro WS X570-ACE",
-@@ -1087,6 +1112,9 @@ static int asus_ec_probe(struct platform_device *pdev)
- 	case family_amd_600_series:
- 		ec_data->sensors_info = sensors_family_amd_600;
- 		break;
-+	case family_amd_800_series:
-+		ec_data->sensors_info = sensors_family_amd_800;
-+		break;
- 	case family_intel_300_series:
- 		ec_data->sensors_info = sensors_family_intel_300;
- 		break;
+[auto build test WARNING on brauner-vfs/vfs.all]
+[also build test WARNING on akpm-mm/mm-everything linus/master v6.15 next-20250606]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/wangfushuai/fs-proc-task_mmu-add-VM_SHADOW_STACK-for-arm64-when-support-GCS/20250607-141047
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
+patch link:    https://lore.kernel.org/r/20250607060741.69902-1-wangfushuai%40baidu.com
+patch subject: [PATCH] fs/proc/task_mmu: add VM_SHADOW_STACK for arm64 when support GCS
+config: x86_64-buildonly-randconfig-001-20250607 (https://download.01.org/0day-ci/archive/20250607/202506071806.mshFK42h-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250607/202506071806.mshFK42h-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506071806.mshFK42h-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> fs/proc/task_mmu.c:994:42: warning: extra tokens at end of #ifdef directive [-Wextra-tokens]
+     994 | #ifdef CONFIG_ARCH_HAS_USER_SHADOW_STACK || defined(CONFIG_ARM64_GCS)
+         |                                          ^
+         |                                          //
+   1 warning generated.
+
+
+vim +994 fs/proc/task_mmu.c
+
+   920	
+   921	static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
+   922	{
+   923		/*
+   924		 * Don't forget to update Documentation/ on changes.
+   925		 *
+   926		 * The length of the second argument of mnemonics[]
+   927		 * needs to be 3 instead of previously set 2
+   928		 * (i.e. from [BITS_PER_LONG][2] to [BITS_PER_LONG][3])
+   929		 * to avoid spurious
+   930		 * -Werror=unterminated-string-initialization warning
+   931		 *  with GCC 15
+   932		 */
+   933		static const char mnemonics[BITS_PER_LONG][3] = {
+   934			/*
+   935			 * In case if we meet a flag we don't know about.
+   936			 */
+   937			[0 ... (BITS_PER_LONG-1)] = "??",
+   938	
+   939			[ilog2(VM_READ)]	= "rd",
+   940			[ilog2(VM_WRITE)]	= "wr",
+   941			[ilog2(VM_EXEC)]	= "ex",
+   942			[ilog2(VM_SHARED)]	= "sh",
+   943			[ilog2(VM_MAYREAD)]	= "mr",
+   944			[ilog2(VM_MAYWRITE)]	= "mw",
+   945			[ilog2(VM_MAYEXEC)]	= "me",
+   946			[ilog2(VM_MAYSHARE)]	= "ms",
+   947			[ilog2(VM_GROWSDOWN)]	= "gd",
+   948			[ilog2(VM_PFNMAP)]	= "pf",
+   949			[ilog2(VM_LOCKED)]	= "lo",
+   950			[ilog2(VM_IO)]		= "io",
+   951			[ilog2(VM_SEQ_READ)]	= "sr",
+   952			[ilog2(VM_RAND_READ)]	= "rr",
+   953			[ilog2(VM_DONTCOPY)]	= "dc",
+   954			[ilog2(VM_DONTEXPAND)]	= "de",
+   955			[ilog2(VM_LOCKONFAULT)]	= "lf",
+   956			[ilog2(VM_ACCOUNT)]	= "ac",
+   957			[ilog2(VM_NORESERVE)]	= "nr",
+   958			[ilog2(VM_HUGETLB)]	= "ht",
+   959			[ilog2(VM_SYNC)]	= "sf",
+   960			[ilog2(VM_ARCH_1)]	= "ar",
+   961			[ilog2(VM_WIPEONFORK)]	= "wf",
+   962			[ilog2(VM_DONTDUMP)]	= "dd",
+   963	#ifdef CONFIG_ARM64_BTI
+   964			[ilog2(VM_ARM64_BTI)]	= "bt",
+   965	#endif
+   966	#ifdef CONFIG_MEM_SOFT_DIRTY
+   967			[ilog2(VM_SOFTDIRTY)]	= "sd",
+   968	#endif
+   969			[ilog2(VM_MIXEDMAP)]	= "mm",
+   970			[ilog2(VM_HUGEPAGE)]	= "hg",
+   971			[ilog2(VM_NOHUGEPAGE)]	= "nh",
+   972			[ilog2(VM_MERGEABLE)]	= "mg",
+   973			[ilog2(VM_UFFD_MISSING)]= "um",
+   974			[ilog2(VM_UFFD_WP)]	= "uw",
+   975	#ifdef CONFIG_ARM64_MTE
+   976			[ilog2(VM_MTE)]		= "mt",
+   977			[ilog2(VM_MTE_ALLOWED)]	= "",
+   978	#endif
+   979	#ifdef CONFIG_ARCH_HAS_PKEYS
+   980			/* These come out via ProtectionKey: */
+   981			[ilog2(VM_PKEY_BIT0)]	= "",
+   982			[ilog2(VM_PKEY_BIT1)]	= "",
+   983			[ilog2(VM_PKEY_BIT2)]	= "",
+   984	#if VM_PKEY_BIT3
+   985			[ilog2(VM_PKEY_BIT3)]	= "",
+   986	#endif
+   987	#if VM_PKEY_BIT4
+   988			[ilog2(VM_PKEY_BIT4)]	= "",
+   989	#endif
+   990	#endif /* CONFIG_ARCH_HAS_PKEYS */
+   991	#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_MINOR
+   992			[ilog2(VM_UFFD_MINOR)]	= "ui",
+   993	#endif /* CONFIG_HAVE_ARCH_USERFAULTFD_MINOR */
+ > 994	#ifdef CONFIG_ARCH_HAS_USER_SHADOW_STACK || defined(CONFIG_ARM64_GCS)
+   995			[ilog2(VM_SHADOW_STACK)] = "ss",
+   996	#endif
+   997	#if defined(CONFIG_64BIT) || defined(CONFIG_PPC32)
+   998			[ilog2(VM_DROPPABLE)] = "dp",
+   999	#endif
+  1000	#ifdef CONFIG_64BIT
+  1001			[ilog2(VM_SEALED)] = "sl",
+  1002	#endif
+  1003		};
+  1004		size_t i;
+  1005	
+  1006		seq_puts(m, "VmFlags: ");
+  1007		for (i = 0; i < BITS_PER_LONG; i++) {
+  1008			if (!mnemonics[i][0])
+  1009				continue;
+  1010			if (vma->vm_flags & (1UL << i))
+  1011				seq_printf(m, "%s ", mnemonics[i]);
+  1012		}
+  1013		seq_putc(m, '\n');
+  1014	}
+  1015	
+
 -- 
-2.49.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
