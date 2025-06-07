@@ -1,114 +1,145 @@
-Received: from mail-24418.protonmail.ch (mail-24418.protonmail.ch [109.224.244.18])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96DB838DEC
-	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 15:32:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62ADD1362;
+	Sat,  7 Jun 2025 15:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749310344; cv=none; b=XuUEMeArcP65Y6sXlvq/K9PAddnvDBaFnsWM9Vb0V0q6vgQ3n3lDlWD2/mrffVN8XkmeUXe1JjKDlRfrhfNfmKZ1cjjocXUM3UHVsr7oD7NMK5+7E4vzOmVUp6d+zowfC2allgRucoIGK0wyquzayiMdN5WPxApoIxw7qi5lvGw=
+	t=1749310402; cv=none; b=l8Y+A+6H9LoEpG1Tf7cptcJbeKB5C9Qwx/BbmPYOFtcqBpZ+ZPQlmKPF5GXUptgSYQ1hCxHHvu0jVLsnmHuF7vJGdE4rnio3ePjwmacW54O+9SHDngvRMUv3IU2vxJiULMxzVDzp/PBu+L2D3WHQsvcNe806OoXg11S15ND9pIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749310344; c=relaxed/simple;
-	bh=gvbxnUgRFBMWdeIANvRl8BGLckj66c+EtDmClvsMtfU=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OuZaQkew5cJyUvrpllLEP0n9ywOo/U5LWDjSfUlziMHmRwsVChBbkmPfC+psdXinjKiLiaskmTYsojbOu7A+6r96H4IdxlavW3T1u1HSvaOGxv8f3wdUJVgPJjbYjiLL72f/WrC0yyEbyTI5dZPBoh6b+1qOcY64JKny3rz55Go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=BdhtvZMV; arc=none smtp.client-ip=109.224.244.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1749310402; c=relaxed/simple;
+	bh=mL3bMPxtlWeP4omW9jhy3oREP5l10pyt+mXfirZFTiw=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=RriiADCMEVc9q731AiWzNrGJqMvDHyInSFBWbEjprW9KETuFfjVxceyk8MLvDn6Ia6ehvBqDf6NXAJWVY+IO0Gy/v3+8Wgvb8OUTN7J+aD0dGQ8wVK6karVUR79TxkeKwsx10KA6MTQe9MdDhbJavBrgiRjpAXJN4gZDdCCVH64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=dG62WXl/; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="BdhtvZMV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1749310333; x=1749569533;
-	bh=gvbxnUgRFBMWdeIANvRl8BGLckj66c+EtDmClvsMtfU=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=BdhtvZMVRJQEFBsaQIeeUMjlWEDt/rtSZs19jXDkD9EPgtm7gExe4UQHnESUmwq5B
-	 VjikVewQf+brgldPU7fHlppj/aotNxznUHAE6VqGGpVk0Oz2DM24Jws8W9eAi/gtnL
-	 3JPbO/xC30AAqiAQTN6tDtt8+cAxJBSbWKqFGxmAj96GlHKjY+f9onEQSZcdGvxaFt
-	 duTjYhRLqVFmlj/8MJHWBqq/uekhJH6jRke199b+RzbFiJJVXGw1bAfS42zAP20k7w
-	 NcQXN+hVVwPXqIngyrmeFoKBDCJW0Uzz3iVYHvN6e9YsYKAAMSRsamROauO0GM/t2Q
-	 na1NozBdCZXdA==
-Date: Sat, 07 Jun 2025 15:32:07 +0000
-To: Diederik de Haas <didi.debian@cknow.org>
-From: Piotr Zalewski <pZ010001011111@proton.me>
-Cc: hjc@rock-chips.com, heiko@sntech.de, andy.yan@rock-chips.com, maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, Dang Huynh <danct12@riseup.net>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH drm-misc-next] rockchip/drm: vop2: don't check color_mgmt_changed in atomic_enable
-Message-ID: <mArHDRo5bhIAjG8sDOR-kM7DsVdbXxxcC8hfuEEPfUWIdMwNnSUy8ZFoLis66DFSuIEq8TrnAxUGkyo5IUTGw3AG4k3vuVVz0fsoI27BAms=@proton.me>
-In-Reply-To: <DAEVDSTMWI1E.J454VZN0R9MA@cknow.org>
-References: <20241206192013.342692-3-pZ010001011111@proton.me> <DAEVDSTMWI1E.J454VZN0R9MA@cknow.org>
-Feedback-ID: 53478694:user:proton
-X-Pm-Message-ID: 352bfcde3cb3dc6da16c674e8ab61db239ac70f4
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="dG62WXl/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=8iUcTrsbpF5lvVp8YW0lY7JI5M8cSHdudxeylxSoV/4=; t=1749310400; x=1749915200; 
+	b=dG62WXl/I7MjwwfDskgcYNfSOaZV6155wvGPLx2bqIU9YoPF0xkoD7CzCmXP7SLPSvw0CupTlnN
+	RAAS2av5WcWcnU5Z+5QO7TAEeCAdM5untjpnxb/JDSE7rW5CIOl29aqfZ3cuWT0+KCpeGMKQMsF7v
+	eKXECXoiL5AzLpb4q0yFsjXITQUvl9bIrM05/1Zg90lRY4w8TRym2T3FnNmb49AaFO0XIle/qegcE
+	Nerz4HxlT5TBHx1DhGPIqEKg/b64kOFPbTtHD1cB+ZKNDy8WJibnV3WBo6z3KYH0gBCY7Jy7H5JW3
+	SqskYzMHGqag3a1GbV7i3y6xkes/k+m/V/ow==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.98)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1uNvXo-00000002GG3-111a; Sat, 07 Jun 2025 17:33:16 +0200
+Received: from p5b13afe4.dip0.t-ipconnect.de ([91.19.175.228] helo=[192.168.178.61])
+          by inpost2.zedat.fu-berlin.de (Exim 4.98)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1uNvXn-00000003fZb-49FC; Sat, 07 Jun 2025 17:33:16 +0200
+Message-ID: <878859a81e32c216669a9f80a6c30eaf83be5a9d.camel@physik.fu-berlin.de>
+Subject: [GIT PULL] sh updates for v6.16
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Thomas Huth <thuth@redhat.com>, Geert Uytterhoeven
+ <geert+renesas@glider.be>,  Mike Rapoport <rppt@kernel.org>, Rich Felker
+ <dalias@libc.org>, Yoshinori Sato <ysato@users.sourceforge.jp>,  linux-sh
+ <linux-sh@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Date: Sat, 07 Jun 2025 17:33:15 +0200
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-On Thursday, June 5th, 2025 at 10:13 PM, Diederik de Haas <didi.debian@ckno=
-w.org> wrote:
+Hi Linus,
 
-> Hi Piotr,
->=20
-> Since kernel 6.14-rc1 I have the problem that visual output is no longer
-> shown on my PineTab2 and a `git bisect` pointed to this patch/commit
-> as the culprit. What is important to note is that `CONFIG_DRM=3Dm` seems
-> to be required as the problem does not occur with `CONFIG_DRM=3Dy`.
->=20
-> Near the end of my bisect session, something interesting occurred.
-> I was booted into a 'bad' kernel (ie no visual output) and when I
-> started to build my final kernel, I closed the lid of the PineTab2 which
-> made it go into suspend. When my final kernel was built, I opened the
-> lid again, which made it resume, to transfer my final kernel to it.
-> And much to my surprise, I then did have visual output.
-> When I read the (below) commit message of the 'offending' commit, it may
-> not be such a surprise after all.
->=20
-> When I build a (new) 6.14-rc1 kernel with a revert of this commit on
-> top, then I did not have the above mentioned problem, confirming this
-> commit was the 'bad' commit.
->=20
-> I did try it on a Quartz64-B (also rk3566) and it did not have any issue
-> (output via HDMI).
-> I don't know what the cause for this issue is, hopefully you do.
->=20
+this is my pull request for v6.16 which contains one fix and two code clean=
+ups.
 
-Hi Diederik,
+The first patch by Thomas Huth replaces the __ASSEMBLY__ with __ASSEMBLER__=
+ macro
+in all headers since the latter is now defined automatically by both GCC an=
+d Clang
+when compiling assembly code.
 
-I tested and confirmed that this happens with drm=3Dm but also in my case=
-=20
-it happened when drm=3Dy. After some testing I found out that at boot modes=
-et
-happened twice and at short interval and since this patch allows for gamma=
-=20
-LUT update regardless of color_mgmt_changed state this makes DSP CTRL GAMMA=
-=20
-LUT EN bit to be unset twice too. It seems that VOP does not like it. I=20
-patched vop2_vp_dsp_lut_disable function so that dsp_ctrl is set only if=20
-GAMMA LUT EN bit is set. I checked that this also does not break the gamma=
-=20
-lut functionality with emphasis on out-of/into suspend behavior.
+The second patch by Geert Uytterhoeven sets the default SPI mode for the ec=
+ovec24
+board which became necessary after a new mode member as added to the sh_msi=
+of_spi_info
+struct in cf9e4784f3bde3e4 ("spi: sh-msiof: Add slave mode support").
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm=
-/rockchip/rockchip_drm_vop2.c
-index d0f5fea15e21..7ddf311b38c6 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-@@ -897,6 +897,9 @@ static void vop2_vp_dsp_lut_disable(struct vop2_video_p=
-ort *vp)
- {
- =09u32 dsp_ctrl =3D vop2_vp_read(vp, RK3568_VP_DSP_CTRL);
-=20
-+=09if ((dsp_ctrl & RK3568_VP_DSP_CTRL__DSP_LUT_EN) =3D=3D 0)
-+=09=09return;
-+
- =09dsp_ctrl &=3D ~RK3568_VP_DSP_CTRL__DSP_LUT_EN;
- =09vop2_vp_write(vp, RK3568_VP_DSP_CTRL, dsp_ctrl);
- }
+Finally, the third patch by Mike Rapoport removes unused variables in the k=
+probes
+code in kprobe_exceptions_notify().
 
-I will wait with sending a patch because maybe Andy has something to add=20
-to this.
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8=
+:
 
-Best regards, Piotr Zalewski
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/glaubitz/sh-linux.git tags/=
+sh-for-v6.16-tag1
+
+for you to fetch changes up to 8a3682601ddaa4ef0c400f627a7f4b9388bbccef:
+
+  sh: kprobes: Remove unused variables in kprobe_exceptions_notify() (2025-=
+06-07 15:16:41 +0200)
+
+Thanks for pulling!
+
+Adrian
+
+----------------------------------------------------------------
+sh updates for v6.16
+
+- sh: kprobes: Remove unused variables in kprobe_exceptions_notify()
+- sh: ecovec24: Make SPI mode explicit
+- sh: Replace __ASSEMBLY__ with __ASSEMBLER__ in all headers
+
+----------------------------------------------------------------
+Geert Uytterhoeven (1):
+      sh: ecovec24: Make SPI mode explicit
+
+Mike Rapoport (1):
+      sh: kprobes: Remove unused variables in kprobe_exceptions_notify()
+
+Thomas Huth (1):
+      sh: Replace __ASSEMBLY__ with __ASSEMBLER__ in all headers
+
+ arch/sh/boards/mach-ecovec24/setup.c          |  1 +
+ arch/sh/include/asm/cache.h                   |  4 ++--
+ arch/sh/include/asm/dwarf.h                   |  6 +++---
+ arch/sh/include/asm/fpu.h                     |  4 ++--
+ arch/sh/include/asm/ftrace.h                  |  8 ++++----
+ arch/sh/include/asm/mmu.h                     |  4 ++--
+ arch/sh/include/asm/page.h                    |  8 ++++----
+ arch/sh/include/asm/pgtable.h                 |  4 ++--
+ arch/sh/include/asm/pgtable_32.h              |  8 ++++----
+ arch/sh/include/asm/processor.h               |  4 ++--
+ arch/sh/include/asm/smc37c93x.h               |  4 ++--
+ arch/sh/include/asm/suspend.h                 |  2 +-
+ arch/sh/include/asm/thread_info.h             | 10 +++++-----
+ arch/sh/include/asm/tlb.h                     |  4 ++--
+ arch/sh/include/asm/types.h                   |  4 ++--
+ arch/sh/include/mach-common/mach/romimage.h   |  6 +++---
+ arch/sh/include/mach-ecovec24/mach/romimage.h |  6 +++---
+ arch/sh/include/mach-kfr2r09/mach/romimage.h  |  6 +++---
+ arch/sh/kernel/kprobes.c                      |  4 ----
+ 19 files changed, 47 insertions(+), 50 deletions(-)
+
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
