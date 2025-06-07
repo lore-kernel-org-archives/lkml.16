@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C61317BA9;
-	Sat,  7 Jun 2025 10:13:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE5E1D5AD4;
+	Sat,  7 Jun 2025 10:14:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749291197; cv=none; b=BssfL4GOMjZYov7dJQYSZ6DbKKjIBCY+R3T1Xrek0CvTAapZvyu4DybCV0yATJZDZsWkeFq79T5SArPs/yPn2zKJTvHsLfQv+8i3/ZzORl48GDbX/Mv7nZJQukxoAuacMiWk8FMAH7qeHN/ihRThtqvA363IuA9PiE9irS88o2w=
+	t=1749291293; cv=none; b=TS/PYBP5ODhZA8CmXPdjAPToKHxvBtN/jC9TZIk7/FEVJ/eHMA6SQ6N164jMxO0aqPTrSxIJ98/+KNjYhfVe7NKTHoL7ag1Pv4cxPtwB6PYaeAauQMMP/5taCuMMJzAvAhWVH4Hf5OtpMl9xO2JqzAIgUEhwDoOKVIjPaETje4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749291197; c=relaxed/simple;
-	bh=tQ0PPfxfsC6VJq8L61IYitT0si7iO7YI036iLWsgbl0=;
+	s=arc-20240116; t=1749291293; c=relaxed/simple;
+	bh=pbR4Uyu14HhS6c3c+zCWCCPOgjBihCsXzUcgZhFwf6Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uHMnMf3ak22gX6B/dqyUOzLFP+0HHNmoGr70pL/i50Wp8aOPv6C8vTZwK9uvO67OIBJwqq2a8nYqdA4G35qwDf3ZmIziuVuXiAcLVqk5S+0C+o/2qRggDZJ3Nj5bJZa45d9EzWNrPnj7XpsPKXl6Vt6JSV99dV8umdMq3kSfSi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pa7/j0dd; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=WYcGLDmUmwpUlOyhuzy6f/N6IogxmhFLv7BgZm9ZnIS6fRbFLEQNTRYXR4hTq39xHRpsyf4jk2IMMloK5L2+VRubWE52oYfXYHevZP8CufN9zVIZ9DiKwhXGKlpz9ORbT2g/pssn+lHxvg8HGm2os3EeVblSweOvbWnrVvZ+gFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qTlJ5+M8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pa7/j0dd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30BF2C4CEE4;
-	Sat,  7 Jun 2025 10:13:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qTlJ5+M8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB5A9C4CEE4;
+	Sat,  7 Jun 2025 10:14:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749291197;
-	bh=tQ0PPfxfsC6VJq8L61IYitT0si7iO7YI036iLWsgbl0=;
+	s=k20201202; t=1749291292;
+	bh=pbR4Uyu14HhS6c3c+zCWCCPOgjBihCsXzUcgZhFwf6Y=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Pa7/j0dd6i3AKzS09zlu+cv/jxJ8nnydTdnBEox2JBdCCE9e9/lc9xNRnOq257GNT
-	 pdeU/2FfcItX3ZmOM04lh7eyaghkKUZjaJLPmdlh8f+bjiE4LvKLc8Pi0KYY3z6iGm
-	 QxGGZjyr3N8MysuPqjjo8WJzA25B3Gcsf10c1yTsdZm7IFxCTM3hGhETXjU7xIyVQJ
-	 oj5Pqy29jBJA4zZam+jyv+DTd5xM32zsh/FYPmnPis1yLkE1Yfgeh7oDdWtU5z3aU5
-	 trFb+5KrX8n/GhFelzXsLfkE2SxjnrcCGIfB9q8YDJiOwQMURcIqfjXzqAvTbXzjpb
-	 bFGjHn5EDrDGw==
-Date: Sat, 7 Jun 2025 12:13:13 +0200
+	b=qTlJ5+M8RWR7FUevBa3Tu0fEsNoJKtU7xJLRCLFh6qi8HtGxOkBj1PZTQGfzVDogh
+	 dVJ97vIce79gCC/pHu8QYqsyxq5AxFa8ddQBMPqArGnhaReQMbeTMsOiVQemiTpAhz
+	 6EXtxiEtu5qFDvX99d4SmMg6URKnnr6cAwsPTbkVHKcE/n27RIb93EtvLzJX1TUr2j
+	 K3dV5VOYeKLJ+6FhfRpxVbGDcJA/tapoCgPdbLLIEIo4wvJY2hQ0BqlCjI2wqYs1yW
+	 Qncmy0hsaB9GSE7khkPV3rKltfFJDbOl22YaTfTSBJSclFor0LIhdWkXYSHrWwatdR
+	 N59gPwjdrns1A==
+Date: Sat, 7 Jun 2025 12:14:48 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>
 Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 9/9] docs: kdoc: some final touches for process_name()
-Message-ID: <20250607121313.0edc0a3d@foz.lan>
-In-Reply-To: <20250606163438.229916-10-corbet@lwn.net>
+Subject: Re: [PATCH 6/9] docs: kdoc: remove the KernelEntry::descr pseudo
+ member
+Message-ID: <20250607121448.11411bf9@foz.lan>
+In-Reply-To: <20250606163438.229916-7-corbet@lwn.net>
 References: <20250606163438.229916-1-corbet@lwn.net>
-	<20250606163438.229916-10-corbet@lwn.net>
+	<20250606163438.229916-7-corbet@lwn.net>
 X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -45,93 +46,57 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Em Fri,  6 Jun 2025 10:34:38 -0600
+Em Fri,  6 Jun 2025 10:34:35 -0600
 Jonathan Corbet <corbet@lwn.net> escreveu:
 
-> Add some comments to process_name() to cover its broad phases of operation,
-> and slightly restructure the if/then/else structure to remove some early
-> returns.
+> The entry.descr value used in process_name() is not actually a member of
+> the KernelEntry class; it is a bit of local state.  So just manage it
+> locally.
+> 
+> A trim_whitespace() helper was added to clean up the code slightly.
 > 
 > Signed-off-by: Jonathan Corbet <corbet@lwn.net>
 
-More comments describing the parse steps are always welcomed!
+LGTM.
 
 Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
 > ---
->  scripts/lib/kdoc/kdoc_parser.py | 33 ++++++++++++++++++++-------------
->  1 file changed, 20 insertions(+), 13 deletions(-)
+>  scripts/lib/kdoc/kdoc_parser.py | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
 > 
 > diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
-> index 55f38240d4e5..9a1ce6ed8605 100644
+> index 56299695abd1..7c635000f3de 100644
 > --- a/scripts/lib/kdoc/kdoc_parser.py
 > +++ b/scripts/lib/kdoc/kdoc_parser.py
-> @@ -1219,7 +1219,9 @@ class KernelDoc:
->          """
->          STATE_NAME: Looking for the "name - description" line
->          """
-> -
-> +        #
-> +        # Check for a DOC: block and handle them specially.
-> +        #
->          if doc_block.search(line):
->              self.entry.new_start_line = ln
+> @@ -60,6 +60,13 @@ export_symbol_ns = KernRe(r'^\s*EXPORT_SYMBOL_NS(_GPL)?\s*\(\s*(\w+)\s*,\s*"\S+"
 >  
-> @@ -1230,9 +1232,10 @@ class KernelDoc:
+>  type_param = KernRe(r"\@(\w*((\.\w+)|(->\w+))*(\.\.\.)?)", cache=False)
 >  
->              self.entry.identifier = self.entry.section
->              self.state = state.DOCBLOCK
-> -            return
-> -
-> -        if doc_decl.search(line):
-> +        #
-> +        # Otherwise we're looking for a normal kerneldoc declaration line.
-> +        #
-> +        elif doc_decl.search(line):
->              self.entry.identifier = doc_decl.group(1)
+> +#
+> +# A little helper to get rid of excess white space
+> +#
+> +multi_space = KernRe(r'\s\s+')
+> +def trim_whitespace(s):
+> +    return multi_space.sub(' ', s.strip())
+> +
+>  class state:
+>      """
+>      State machine enums
+> @@ -1258,12 +1265,7 @@ class KernelDoc:
 >  
->              # Test for data declaration
-> @@ -1253,15 +1256,19 @@ class KernelDoc:
->                                f"This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst\n{line}")
->                  self.state = state.NORMAL
->                  return
-> -
-> -            self.entry.identifier = self.entry.identifier.strip(" ")
-> -
-> +            #
-> +            # OK, set up for a new kerneldoc entry.
-> +            #
->              self.state = state.BODY
-> -
-> +            self.entry.identifier = self.entry.identifier.strip(" ")
->              # if there's no @param blocks need to set up default section here
->              self.entry.section = SECTION_DEFAULT
->              self.entry.new_start_line = ln + 1
-> -
-> +            #
-> +            # Find the description portion, which *should* be there but
-> +            # isn't always.
-> +            # (We should be able to capture this from the previous parsing - someday)
-> +            #
 >              r = KernRe("[-:](.*)")
 >              if r.search(line):
->                  self.entry.declaration_purpose = trim_whitespace(r.group(1))
-> @@ -1282,11 +1289,11 @@ class KernelDoc:
->                  self.emit_msg(ln,
->                                f"Scanning doc for {self.entry.decl_type} {self.entry.identifier}",
->                                    warning=False)
+> -                # strip leading/trailing/multiple spaces
+> -                self.entry.descr = r.group(1).strip(" ")
 > -
-> -            return
-> -
-> +        #
->          # Failed to find an identifier. Emit a warning
-> -        self.emit_msg(ln, f"Cannot find identifier on line:\n{line}")
-> +        #
-> +        else:
-> +            self.emit_msg(ln, f"Cannot find identifier on line:\n{line}")
->  
->      def process_body(self, ln, line):
->          """
+> -                r = KernRe(r"\s+")
+> -                self.entry.descr = r.sub(" ", self.entry.descr)
+> -                self.entry.declaration_purpose = self.entry.descr
+> +                self.entry.declaration_purpose = trim_whitespace(r.group(1))
+>                  self.state = state.BODY_MAYBE
+>              else:
+>                  self.entry.declaration_purpose = ""
 
 
 
