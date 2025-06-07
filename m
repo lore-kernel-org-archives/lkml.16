@@ -1,160 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92ADF1D5CD7;
-	Sat,  7 Jun 2025 15:42:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A259BA3D;
+	Sat,  7 Jun 2025 15:44:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749310964; cv=none; b=F+v221GkGjIOVFwhNEfCby3bA5H4ds+HOr+7OIFtvG6wCT9cz9ZRL9hGJeDsFc0AwuX8GJDKZ3k8bOmI+n+dkjOPV1rgTPI7cHjcOWYKD5qQMT/StSSiR2diMlehOKuqyERRiJmL5faXFKv7/7cCz7eDSK0wZWCiggQOVMsrUgQ=
+	t=1749311083; cv=none; b=JrnddMNpfaqiVTJ9nNL9mjrcaSLzGn8BoFL5Dce58myR/BYSVrizoy0lY7SgyoRymZAIIp8KtIgdqzoFP556YYqSqhLMhlQihlgR7GrpYvQLls4IKiCFo8S1boHq5axlPl5nYl0XCZgiHcHv3axoBv+ZYmsExjjaheS0Vb+DQqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749310964; c=relaxed/simple;
-	bh=K7N1yZ/ACyy0cnPfQJ3bvI0ju0eq3ZaUwsSAruKdVHc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=nFpPK16DqJJcGXaMB7ZSPNQwhIE5ENs49Vj+Kr3bwcErfdUJj815Zx5UdYwoZjhRSVXUTxz5pXSNbDmudLS84Shz116d2w4ViUepEru9JqMF4uPa2LBEfth78CouVoBaxXDhdqwrjua1voWB/GX/NVHHJvdBd98rYlaXj27y+Ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mUyUjrL6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749311083; c=relaxed/simple;
+	bh=8Hgf8UjA55xEC4RTiYbsr75l0/paF8Di6tHJfITn3QI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=M+GCj4nm3MWuVeIl5I36v0/xoAlr0JljvteexVbJYUpdzpLKfMCJOipCrjVSg/cYzps6hPsIk9/w1OgMI0hrEsYSPeGkAdrPcZW8mf/rFsVmBYzZRbmeqkkS8QGqkV7xi+td3heuaHX2XXSAYyYjj4Cuv/oRpfXh2HogJ/v2ZDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IV1gldYT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mUyUjrL6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF58FC4CEE4;
-	Sat,  7 Jun 2025 15:42:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IV1gldYT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 155C9C4CEE4;
+	Sat,  7 Jun 2025 15:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749310964;
-	bh=K7N1yZ/ACyy0cnPfQJ3bvI0ju0eq3ZaUwsSAruKdVHc=;
-	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
-	b=mUyUjrL67i2wNj/nX3TSyBJba1sEh8Zmp9YUkehU99GXwyLlmklnPpJOpXClK0EFx
-	 avk1ckEAwHtIOEklZ6PIxCKAyO+biGkKsIdKSid6JBQnVZO3W3RZkBiRk5OcejZDbK
-	 AkDOtRte8s3ZH5s4COXUWbRzBPsAlmd8X4K+ypUK0IwIpk3m6oXvuHDTo1862TMJBI
-	 kHy6Ml+Dw77yufBTpiXKrEjvVu9uOQ5b6rqZNd3ZvvD/lUWACfie/NvBjk20DCytve
-	 UF0zw+oOPyf758dXYPO5EaE9RkQPsT8CezL71N3PihafnDLqQoG/AXlnAsGEcuygVN
-	 yGyO1p7UrEkng==
+	s=k20201202; t=1749311083;
+	bh=8Hgf8UjA55xEC4RTiYbsr75l0/paF8Di6tHJfITn3QI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=IV1gldYTM2BayDSWKgSDYcxq0pw/6u2tDU32id/Xpxy1I9EjoVtvAMuOU48DxNp9R
+	 elorXXDBnX+3or4yy2nH924IewCd+1YPP5wf43cST+0bMxzIsKjtMlUvsiA6gdQnfp
+	 q4JHx+lcG5iAnrZd1aWsjZMLXPkmv4aKedV7Zn7qeNrBDaWDcYOt30BjCJutPzNOYy
+	 4cemjoqs2c9rBNV0O0e1zlBqBM+XzWy5NAKIHBezyEfabbCuXaI8pSwEoianS99b7y
+	 TCJW6tV4x6PCS3ymUnv+5mbdN56S/uWok2zZStjuHr2vXSPhhjf/lU6/ZQLwqQfSSB
+	 9pLzb+74wlAww==
+Date: Sat, 7 Jun 2025 16:44:28 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, "David Lechner" <dlechner@baylibre.com>,
+ Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
+ <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Sergiu Cuciurean
+ <sergiu.cuciurean@analog.com>, "Dragos Bogdan" <dragos.bogdan@analog.com>,
+ Antoniu Miclaus <antoniu.miclaus@analog.com>, Olivier Moysan
+ <olivier.moysan@foss.st.com>, Javier Carrasco
+ <javier.carrasco.cruz@gmail.com>, Matti Vaittinen
+ <mazziesaccount@gmail.com>, Angelo Dureghello <adureghello@baylibre.com>,
+ Guillaume Stols <gstols@baylibre.com>, Tobias Sperling
+ <tobias.sperling@softing.com>, Marcelo Schmitt
+ <marcelo.schmitt@analog.com>, Trevor Gamblin <tgamblin@baylibre.com>,
+ Alisa-Dariana Roman <alisadariana@gmail.com>, Ramona Alexandra Nechita
+ <ramona.nechita@analog.com>, Herve Codina <herve.codina@bootlin.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ "Thomas Bonnefille" <thomas.bonnefille@bootlin.com>, =?UTF-8?B?Sm/Do28=?=
+ Paulo =?UTF-8?B?R29uw6dhbHZlcw==?= <joao.goncalves@toradex.com>,
+ <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 5/5] iio: adc: ad7405: add ad7405 driver
+Message-ID: <20250607164428.7a245af5@jic23-huawei>
+In-Reply-To: <20250605150948.3091827-6-pop.ioan-daniel@analog.com>
+References: <20250605150948.3091827-1-pop.ioan-daniel@analog.com>
+	<20250605150948.3091827-6-pop.ioan-daniel@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Sat, 07 Jun 2025 17:42:39 +0200
-Message-Id: <DAGEZCRR61A0.30H1MJQXW4CV5@kernel.org>
-To: "Christian Schrefl" <chrisi.schrefl@gmail.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH] rust: add `assert_sync` function
-From: "Benno Lossin" <lossin@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250607-assert_sync-v1-1-b18261da83e2@gmail.com>
-In-Reply-To: <20250607-assert_sync-v1-1-b18261da83e2@gmail.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Sat Jun 7, 2025 at 3:02 PM CEST, Christian Schrefl wrote:
-> Adds a new file `compile_assert.rs` for asserts during compile time and
-> add the `assert_sync` function to this file.
->
-> This will be used in `miscdevice` to avoid regression in case a `: Send`
-> bound falsely gets dropped in the future.
->
-> Suggested-by: Benno Lossin <lossin@kernel.org>
-> Link: https://lore.kernel.org/rust-for-linux/20250530-b4-rust_miscdevice_=
-registrationdata-v4-0-d313aafd7e59@gmail.com/T/#mdf3328834ce1d136daf836c9e0=
-89b5a8627a6d53
-> Signed-off-by: Christian Schrefl <chrisi.schrefl@gmail.com>
+On Thu, 5 Jun 2025 18:09:43 +0300
+Pop Ioan Daniel <pop.ioan-daniel@analog.com> wrote:
 
-Thanks!
+> Add support for the AD7405/ADUM770x, a high performance isolated ADC,
+> 1-channel, 16-bit with a second-order =CE=A3-=CE=94 modulator that conver=
+ts an
+> analog input signal into a high speed, single-bit data stream.
+>=20
+> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
 
-> ---
-> For now I've only added the function.
->
-> Some things that might make sense to do as well:
-> - Move `static_assert` into `compile_assert.rs`.
+Hi Pop,
 
-Sounds reasonable.
+Only one comment from me. I can tidy that up whilst applying but
+given there were 3 versions and quite a bit of feedback in the last week
+I'd like to give others time to take another look before picking this up.
 
-> - Add `assert_sync` to prelude.
+If everyone is happy with it, I'll apply with tweak as below unless
+you let me know you will be using different channel types in a follow
+up series that you are going to post very soon?
 
-I don't think we need to do that. At least not yet.
+Jonathan
 
-> - Add `assert_send` as well.
-
-Sounds like a good idea.
-
-> - Use these asserts in various places around the kernel. (I'm not sure
-> where it would make sense)
-> ---
->  rust/kernel/compile_assert.rs | 24 ++++++++++++++++++++++++
->  rust/kernel/lib.rs            |  1 +
->  2 files changed, 25 insertions(+)
->
-> diff --git a/rust/kernel/compile_assert.rs b/rust/kernel/compile_assert.r=
-s
+> diff --git a/drivers/iio/adc/ad7405.c b/drivers/iio/adc/ad7405.c
 > new file mode 100644
-> index 0000000000000000000000000000000000000000..2a99de1ba919dc3952d7a1585=
-869567a44106b44
+> index 000000000000..c07b90fbd429
 > --- /dev/null
-> +++ b/rust/kernel/compile_assert.rs
-> @@ -0,0 +1,24 @@
-> +// SPDX-License-Identifier: GPL-2.0
+> +++ b/drivers/iio/adc/ad7405.c
+> @@ -0,0 +1,259 @@
+
+> +#define AD7405_IIO_CHANNEL {					\
+> +	.type =3D IIO_VOLTAGE,					\
+> +	.info_mask_shared_by_type =3D BIT(IIO_CHAN_INFO_SCALE) |	\
+> +			BIT(IIO_CHAN_INFO_OFFSET),		\
+> +	.info_mask_shared_by_all =3D IIO_CHAN_INFO_SAMP_FREQ |	\
+> +			BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),	\
+> +	.info_mask_shared_by_all_available =3D			\
+> +			BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),	\
+> +	.indexed =3D 1,						\
+> +	.channel =3D 0,						\
+> +	.channel2 =3D 1,						\
+> +	.differential =3D 1,					\
+> +	.scan_index =3D 0,					\
+> +	.scan_type =3D {						\
+> +		.sign =3D 'u',					\
+> +		.realbits =3D 16,					\
+> +		.storagebits =3D 16,				\
+> +	},							\
+> +}
 > +
-> +//! Compile-time asserts.
+> +static const struct ad7405_chip_info ad7405_chip_info =3D {
+> +	.name =3D "ad7405",
+> +	.full_scale_mv =3D 320,
+> +	.channel =3D AD7405_IIO_CHANNEL,
+
+Why do we need this .channel element if all instances use the
+same one?  If you are are shortly going to add support for more devices
+where this will change then this is ok.  If not, just have one
+static const channel and use that without looking it up via these
+chip_info structures.
+
+
+> +};
 > +
-> +/// Asserts that the given type is [`Sync`]. This check is done at compi=
-le time and does nothing
-> +/// at runtime.
-> +///
-> +/// Note that this is only intended to avoid regressions and for sanity =
-checks.
-> +///
-> +/// # Examples
-> +/// ```
-> +/// # use kernel::compile_assert::assert_sync;
-> +/// # use kernel::types::NotThreadSafe;
-> +///
-> +///
-> +/// // Do the assertion in a const block to make sure it won't be execut=
-ed at runtime.
-> +/// const _:() =3D {
-
-s/_:()/_: ()/
-
-> +///     assert_sync::<i32>(); // Succeeds because `i32` is Sync
-> +///     // assert_sync::<NotThreadSafe>(); // Fails because `NotThreadSa=
-fe` is not `Sync`.
-
-Can you split this into two examples and mark the failing one with
-`compile_fail`?
-
-We also could provide a macro similar to [1].
-
-[1]: https://docs.rs/static_assertions/latest/static_assertions/
-
----
-Cheers,
-Benno
-
-> +/// };
-> +///
-> +/// ```
-> +#[inline(always)]
-> +pub const fn assert_sync<T: ?Sized + Sync>() {}
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index 7e227b52b4d8ff23d39d5cc9ad3ab57132c448d0..e1630e5079b2436eda6f8b712=
-25bd5371af337b4 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -56,6 +56,7 @@
->  pub mod block;
->  #[doc(hidden)]
->  pub mod build_assert;
-> +pub mod compile_assert;
->  pub mod cred;
->  pub mod device;
->  pub mod device_id;
->
-> ---
-> base-commit: 7a17bbc1d952057898cb0739e60665908fbb8c72
-> change-id: 20250607-assert_sync-62fddc5a0adc
->
-> Best regards,
+> +static const struct ad7405_chip_info adum7701_chip_info =3D {
+> +	.name =3D "adum7701",
+> +	.full_scale_mv =3D 320,
+> +	.channel =3D AD7405_IIO_CHANNEL,
+> +};
+> +
+> +static const struct ad7405_chip_info adum7702_chip_info =3D {
+> +	.name =3D "adum7702",
+> +	.full_scale_mv =3D 64,
+> +	.channel =3D AD7405_IIO_CHANNEL,
+> +};
+> +
+> +static const struct ad7405_chip_info adum7703_chip_info =3D {
+> +	.name =3D "adum7703",
+> +	.full_scale_mv =3D 320,
+> +	.channel =3D AD7405_IIO_CHANNEL,
+> +};
 
