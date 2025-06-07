@@ -1,117 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 310521EE033;
-	Sat,  7 Jun 2025 10:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D723E15D1
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 10:01:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749290424; cv=none; b=djMC1j/YYcGCmHy9gQM617KMjAO+YGB/fMgUoUsmJkR+j/8+4+WsqPtFpNUZLIsBJkgzrFv34ay1IvHhWRX3Tv/7AfJkXH+0w8h4BW8+2unUkUxD3FIDOU83QcipUKGC/kTKlij7znrp0wSaRYA2JpoXjA9c5EtZajrKRU8Hiw8=
+	t=1749290465; cv=none; b=ANUPqQ6xvTSYDNugHcBQXvMjsKbg8UxgttNtlBr1cc5nszt+Qrn7JJwRZ5VGVkar0cOZkRA0I5EH80dYXKuERZOsNZ7arPNaA1XJ7gKXn1fzwYnqRNwi0URwm1xtbNmbhskXuFSGSJEw+o0MYVyvU4bspH7ltaApDHDtaKyjwAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749290424; c=relaxed/simple;
-	bh=6G5mgrIzKGtDdZjd0DxjZ9iI7TZ73Yu68An/fXTKRBs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HRgPMmjX3pkUnzung+7wu44pWaI+PvTk9UMQxCT20W2lZzq9XLP6HYNOPT0Gjn65TES+M2zlDSy1e/CPqkwpjxkF5kqv0bZQhN/d7Cbj95Apx0oLI7IkOHFo38KWbH2a7WFBmKcXlkxl2c/Y3pj24LWBxArTXw1YRmTiu2z8K5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kYNhXHyW; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kYNhXHyW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0EF4C4CEE4;
-	Sat,  7 Jun 2025 10:00:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749290423;
-	bh=6G5mgrIzKGtDdZjd0DxjZ9iI7TZ73Yu68An/fXTKRBs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kYNhXHyW3e4sXegY2l4NRrE5e47uJy+5sn0AmD8BlmH0PUn418Dazf0HPwt68v76j
-	 wMPCfsItjbqIXMM4n0uY8Usp6zgledTklKHJyBgUMqvVFtnTs5mWEf3sb5ndZf/+cb
-	 DR5nW6CITXh++mc6tePGaz3zaeFJGL70C6/0Uerh9UKb6CAlMPkER/bPz8f8+ZTAzU
-	 MhUHvCJtrM5zMsrhdoYC7XSEpQY3bX+9tGTyGhbOnfpMmRpRIvrPO3SI/Ao8kIrkzo
-	 1XTS7mxRth1upwUNYcEMgdnVWpmLgVvOiqVzwBn3UQgtF0KBFreOMpelZUTWL4XrFA
-	 JS90TMrjqM+Cg==
-Date: Sat, 7 Jun 2025 12:00:19 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/9] docs: kdoc: move the core dispatch into a state
- table
-Message-ID: <20250607120019.20dff0a3@foz.lan>
-In-Reply-To: <20250606163438.229916-3-corbet@lwn.net>
-References: <20250606163438.229916-1-corbet@lwn.net>
-	<20250606163438.229916-3-corbet@lwn.net>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1749290465; c=relaxed/simple;
+	bh=haXDDy0jhSubRISAwi0kW5POr2APZOU+vOXOdU7Lg7A=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ek0q9vAzdnMmRFZUvAT/Kz5cZdTj0CwnW7KzgywSViYq0vq3rYgOxpC5KA2oizvQW/vs2sLzkQnR/ULUl0dU9Pp5Gcq+uY6wh6WGIRxgZSGk41R/DWRNHuUuB4viPZw8s6xzwiqaWzjd49bRqvvqkIOhNulE+Yfk2pEFvbH3SGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4bDtcX6GHbz27hct;
+	Sat,  7 Jun 2025 17:46:36 +0800 (CST)
+Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0875718005F;
+	Sat,  7 Jun 2025 17:45:45 +0800 (CST)
+Received: from localhost.localdomain (10.50.165.33) by
+ kwepemh100008.china.huawei.com (7.202.181.93) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Sat, 7 Jun 2025 17:45:44 +0800
+From: Lifeng Zheng <zhenglifeng1@huawei.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>
+CC: <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+	<jonathan.cameron@huawei.com>, <viresh.kumar@linaro.org>,
+	<yangyicong@hisilicon.com>, <zhanjie9@hisilicon.com>, <lihuisong@huawei.com>,
+	<yubowen8@huawei.com>, <zhenglifeng1@huawei.com>
+Subject: [PATCH] arm64: topology: Setup amu fie when cpu hotplugging
+Date: Sat, 7 Jun 2025 17:45:33 +0800
+Message-ID: <20250607094533.416368-1-zhenglifeng1@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemh100008.china.huawei.com (7.202.181.93)
 
-Em Fri,  6 Jun 2025 10:34:31 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
+Amu fie was set up by a cpufreq policy notifier after the policy was
+created. This caused some problems:
 
-> Since all of the handlers already nicely have the same prototype, put them
-> into a table and call them from there and take out the extended
-> if-then-else series.
-> 
-> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+1. The cpus related to the same policy would all fail to set up amu fie if
+one of them couldn't pass the freq_counters_valid() check.
 
-LGTM.
-Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+2. The cpus fail to set up amu fie would never have a chance to set up
+again.
 
-> ---
->  scripts/lib/kdoc/kdoc_parser.py | 30 +++++++++++++++++-------------
->  1 file changed, 17 insertions(+), 13 deletions(-)
-> 
-> diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
-> index b193cf9dc0d1..37b7e501af7c 100644
-> --- a/scripts/lib/kdoc/kdoc_parser.py
-> +++ b/scripts/lib/kdoc/kdoc_parser.py
-> @@ -1670,6 +1670,21 @@ class KernelDoc:
->  
->          return export_table
->  
-> +    #
-> +    # The state/action table telling us which function to invoke in
-> +    # each state.
-> +    #
-> +    state_actions = {
-> +        state.NORMAL:			process_normal,
-> +        state.NAME:			process_name,
-> +        state.BODY:			process_body,
-> +        state.BODY_MAYBE:		process_body,
-> +        state.BODY_WITH_BLANK_LINE:	process_body,
-> +        state.INLINE:			process_inline,
-> +        state.PROTO:			process_proto,
-> +        state.DOCBLOCK:			process_docblock,
-> +        }
-> +
->      def parse_kdoc(self):
->          """
->          Open and process each line of a C source file.
-> @@ -1721,19 +1736,8 @@ class KernelDoc:
->                      self.process_export(export_table, line)
->  
->                      # Hand this line to the appropriate state handler
-> -                    if self.state == state.NORMAL:
-> -                        self.process_normal(ln, line)
-> -                    elif self.state == state.NAME:
-> -                        self.process_name(ln, line)
-> -                    elif self.state in [state.BODY, state.BODY_MAYBE,
-> -                                        state.BODY_WITH_BLANK_LINE]:
-> -                        self.process_body(ln, line)
-> -                    elif self.state == state.INLINE:  # scanning for inline parameters
-> -                        self.process_inline(ln, line)
-> -                    elif self.state == state.PROTO:
-> -                        self.process_proto(ln, line)
-> -                    elif self.state == state.DOCBLOCK:
-> -                        self.process_docblock(ln, line)
-> +                    self.state_actions[self.state](self, ln, line)
-> +
->          except OSError:
->              self.config.log.error(f"Error: Cannot open file {self.fname}")
->  
+When boot with maxcpu=1 restrict, the support amu flags of the offline cpus
+would never be setup. After that, when cpufreq policy was being created,
+the online cpu might set up amu fie fail because the other cpus related to
+the same policy couldn't pass the freq_counters_valid() check. Hotplug the
+offline cpus, since the policy was already created, amu_fie_setup() would
+never be called again. All cpus couldn't setup amu fie in this situation.
 
+After commit 1f023007f5e7 ("arm64/amu: Use capacity_ref_freq() to set AMU
+ratio"), the max_freq stores in policy data is never needed when setting up
+amu fie.  This indicates that the setting up of amu fie does not depend on
+the policy any more. So each cpu can set up amu fie separately during
+hotplug and the problems above will be solved.
 
+Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
+---
+ arch/arm64/kernel/topology.c | 56 ++++++++++++++----------------------
+ 1 file changed, 21 insertions(+), 35 deletions(-)
 
-Thanks,
-Mauro
+diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
+index 5d07ee85bdae..207eab4fa31f 100644
+--- a/arch/arm64/kernel/topology.c
++++ b/arch/arm64/kernel/topology.c
+@@ -351,63 +351,49 @@ int arch_freq_get_on_cpu(int cpu)
+ 	return freq;
+ }
+ 
+-static void amu_fie_setup(const struct cpumask *cpus)
++static void amu_fie_setup(unsigned int cpu)
+ {
+-	int cpu;
+-
+-	/* We are already set since the last insmod of cpufreq driver */
+ 	if (cpumask_available(amu_fie_cpus) &&
+-	    unlikely(cpumask_subset(cpus, amu_fie_cpus)))
++	    cpumask_test_cpu(cpu, amu_fie_cpus))
+ 		return;
+ 
+-	for_each_cpu(cpu, cpus)
+-		if (!freq_counters_valid(cpu))
+-			return;
++	if (!freq_counters_valid(cpu))
++		return;
+ 
+ 	if (!cpumask_available(amu_fie_cpus) &&
+ 	    !zalloc_cpumask_var(&amu_fie_cpus, GFP_KERNEL)) {
+-		WARN_ONCE(1, "Failed to allocate FIE cpumask for CPUs[%*pbl]\n",
+-			  cpumask_pr_args(cpus));
++		WARN_ONCE(1, "Failed to allocate FIE cpumask for CPUs[%u]\n",
++			  cpu);
+ 		return;
+ 	}
+ 
+-	cpumask_or(amu_fie_cpus, amu_fie_cpus, cpus);
++	cpumask_set_cpu(cpu, amu_fie_cpus);
+ 
+ 	topology_set_scale_freq_source(&amu_sfd, amu_fie_cpus);
+ 
+-	pr_debug("CPUs[%*pbl]: counters will be used for FIE.",
+-		 cpumask_pr_args(cpus));
++	pr_debug("CPUs[%u]: counters will be used for FIE.", cpu);
+ }
+ 
+-static int init_amu_fie_callback(struct notifier_block *nb, unsigned long val,
+-				 void *data)
++static int cpuhp_topology_online(unsigned int cpu)
+ {
+-	struct cpufreq_policy *policy = data;
+-
+-	if (val == CPUFREQ_CREATE_POLICY)
+-		amu_fie_setup(policy->related_cpus);
+-
+-	/*
+-	 * We don't need to handle CPUFREQ_REMOVE_POLICY event as the AMU
+-	 * counters don't have any dependency on cpufreq driver once we have
+-	 * initialized AMU support and enabled invariance. The AMU counters will
+-	 * keep on working just fine in the absence of the cpufreq driver, and
+-	 * for the CPUs for which there are no counters available, the last set
+-	 * value of arch_freq_scale will remain valid as that is the frequency
+-	 * those CPUs are running at.
+-	 */
++	amu_fie_setup(cpu);
+ 
+ 	return 0;
+ }
+ 
+-static struct notifier_block init_amu_fie_notifier = {
+-	.notifier_call = init_amu_fie_callback,
+-};
+-
+ static int __init init_amu_fie(void)
+ {
+-	return cpufreq_register_notifier(&init_amu_fie_notifier,
+-					CPUFREQ_POLICY_NOTIFIER);
++	int ret;
++
++	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
++				"arm64/topology:online",
++				cpuhp_topology_online,
++				NULL);
++
++	if (ret < 0)
++		return ret;
++
++	return 0;
+ }
+ core_initcall(init_amu_fie);
+ 
+-- 
+2.33.0
+
