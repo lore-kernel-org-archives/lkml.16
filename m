@@ -1,141 +1,162 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA4C1FCF41
-	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 10:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96A020CCED
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 10:32:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749292223; cv=none; b=U/3xRRhucSLvUEpbVuJNY1eybniCibBB3/0rdHufZDowVvqjEA0gi1m7mFsRINM0hpmXpl7LyQidOyhlHpQ+5LbdiSvau5ScwX7TldfrZuUrHuTD69hzOQtESCNMXycR0dnjAG3Owi8j2HHA07rCZootZfKeo4b6UxfmFRnUrWo=
+	t=1749292374; cv=none; b=a4OwpKNX0FoxOAKFSJ0UBe2Qxd22CvWBiHiApKvIYvqTkRMrUo32u2ZWH7AX34biBO89C5JR6KrbnKHEZxQ8Qr+M/HXIkLe2jkwh2OLcmlGPWUlKnd4jjrNDpW/YgrcJZ+GUbSvhJtS3/u3iUJKiSBAxx32iz+Fx2+rc8S33YNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749292223; c=relaxed/simple;
-	bh=G1+BNuLhcw1t1MyHcjWB9Vz3MPiKC7HoYO80D7cnruY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n0AIG+Gog44YyVfWV36YuCFe0b0CSGX8AsS99/9SvGdnVfyfx/RD47gH5U5twHGsPMRee9wwI7yAKStEF1/SFsikX4B/IrZ7KGJ1JUV588gP4fXz9PMYpbaO5jh46k0v7m16GMhZwgbfHgI5oSSNvyB9Wr8E1nOgcrAcWGdHluI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M2ZryTDw; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749292374; c=relaxed/simple;
+	bh=DfkiZuVme3n4FvzxhxFbP8GC088bc6XKMPvAk2xdFY8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tq8zx2Gc0wI2eplOrJwyzj9va+FslsU0Gi6yDiz+wGnS7usqvdk3btmeJHCSSVU5/mxKok7I8XfGNUMjEQpRjuukf6MnXj7HBlBe9GuzNjck/rbmxxgkYIvlPrYQ/mC8cN2NmYgbF1a2Mb4Nzx+DvC9Z78GvUs2mBYkpFpi0swM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=P/ze0UI2; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2ZryTDw"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso2359191b3a.2
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 03:30:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749292221; x=1749897021; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IE7X6x8OHAkTg697FSnh0gpU0EcjCgRFSk8bs9ZLu1g=;
-        b=M2ZryTDwd6zNyt96vTd3lJRZOpOfQNTWt2CjuUILJE4jb7G1UVAiUFV8K/lMQRZIrG
-         wQjeyFD1fKlyBX+A4yGc67yyFjoC2e8TAlCQhw/GQGeyAUPIiYzSp1gxCdbuP0p5bQdZ
-         tBdfPa79/lzWZFIeXzs3EsgRcuA9+YDkc+Dic7nC6C6uFJIrFviqNkWymKdc4KP7APUR
-         k/jUMqjAeFeN0fHFhDhVlv1bgF5dUxLstfXtUkWf1qDFDK/dqxkBZOWG+UBLWzDu5XSe
-         mWFPj7RhTrA5aDCa4LisAtyM/xlIjimJZD4K4r7GIaWGcJiAf//gaFlfFwtK0Ur8rCj7
-         AdDg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="P/ze0UI2"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 557AODYv032638
+	for <linux-kernel@vger.kernel.org>; Sat, 7 Jun 2025 10:32:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	iZ6+dp0ad8amdnO4X+sS5UZnq9PAZ9SW1yad5IwngOU=; b=P/ze0UI2u6/lr+9O
+	4Tt/m9mo8M793kJIEheDa3FRtgH+yUrbt2HBK1ywS4o+AXVTQAKRtQ2Tv9uuoV2s
+	5PKiLyCh0rHApAhzCQVTW6YHk+J980mYs0D1YKXkBqOLSeVTahJQpIT8VBO0Z2X4
+	Cn+tIulVyuqd1VZIp5vVaN8Hp5hZDDndrc8I1CbkSVxcmpQXlsTvdkHoyeXeaDVu
+	eZ7eEM8Ct69kzkW+Ihfwe+5rgsgosusd9jRjme2Khq6jjtlqDQO7NKEXj6BEhsrN
+	KQIngbd1Y4OPSObb1GYM7fT9jT80n7arlecSEiqzGQPsNrnI2fcUI2E0SD/goM/H
+	0mG78w==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474dgxgepu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 10:32:51 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d15c975968so537808185a.2
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 03:32:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749292221; x=1749897021;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IE7X6x8OHAkTg697FSnh0gpU0EcjCgRFSk8bs9ZLu1g=;
-        b=BBIl6iXJkILt8tN2EjGoILhBWZ4zBWOLyy/IEnq9SqxmbZnyjRntdf14asMCqMi27g
-         6BaDGgZ5b8yWW/1KZtrD2tKV/YP5hQkouIu4WoxLLJRoIHpmCWvx2UUo3et4Nk3k4sa5
-         PtsuQp6+7LjADbXCPNexMv+q52s5/9OkG4KbvrBJ3sfyWLohdzNnZ/IHK9SoeA1Yngky
-         sjacXfMS0KEmctnfid8RTyuh2xYoOa54JcJTBl4M3QnNsxUKp1LCN3KVTgPj/SxRFatF
-         RiHxIvz3FFwZlVjtmr4OhZo9uiiYNPdW2nc2xSyUvjBboqJZMyKThTFJtXojB+gFhnFF
-         S8CQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWMCzc3J5UICsbsHJMGma1KYsQ3v5LMz5Ci24qZeFcKasN67y1YKF9VGHi8o91dphUBGKm87DoKCfS/F6Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9AHSuwvAel2Bv/Vss6/BqH68KIN85Ny9NXuTzzbrQN53ZDuvT
-	e6uCZcG5ifTgkiUETypRl+AUI1frz5jmT8jQDuKQqql71WQytJqpEl4YDSYBpQ==
-X-Gm-Gg: ASbGncvfvaxZXbCoaxUgAp2EU4SC2QXMFE1UG52HlrtLp0E//Uw8hGqsV963qvYu2a4
-	5e9EPBbpvC5dU8fVhLbVne/B9zFpEuIulpFJ/UTX4FOdchdfb8z/jaRXrHTQXJYv/9Eb4BnvLJ6
-	gbQ2bKYcH4kyDtnVG7OwxhCWZktADdEhSvet6cq7stHupXJ4Bp2CibuSRlA4njVUSe1WMLjgF27
-	k811c8sZqUELGyGuGV0pfdBL9xACGZBpl6Nn5rKHWtft1jC3cVtnRJZWY9JNY2ibMcmOA0PXUbL
-	l4P0rySxl7ZlU/wFuxaJjZuf/MXYcON1zPjvK3193KyjCs9KS/FG/poo96S4xcp7fLel
-X-Google-Smtp-Source: AGHT+IHS4E582z/SnH7fI8JfMS6qlHo/a7BVD3y+bqEg+XzD7UN+PrUslIyVIHHn5dbKrBsLZbhzVw==
-X-Received: by 2002:a05:6a00:9a4:b0:736:a6e0:e66d with SMTP id d2e1a72fcca58-74827e7ea01mr8869585b3a.6.1749292221553;
-        Sat, 07 Jun 2025 03:30:21 -0700 (PDT)
-Received: from Barrys-MBP.hub ([118.92.145.159])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0836bdsm2598807b3a.93.2025.06.07.03.30.16
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sat, 07 Jun 2025 03:30:21 -0700 (PDT)
-From: Barry Song <21cnbao@gmail.com>
-To: lorenzo.stoakes@oracle.com
-Cc: 21cnbao@gmail.com,
-	Liam.Howlett@oracle.com,
-	akpm@linux-foundation.org,
-	david@redhat.com,
-	jannh@google.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	lokeshgidra@google.com,
-	surenb@google.com,
-	v-songbaohua@oppo.com,
-	vbabka@suse.cz,
-	zhengqi.arch@bytedance.com,
-	zhengtangquan@oppo.com
-Subject: Re: [PATCH v3] mm: use per_vma lock for MADV_DONTNEED
-Date: Sat,  7 Jun 2025 22:30:12 +1200
-Message-Id: <20250607103012.25332-1-21cnbao@gmail.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <5fc1de4d-7c2d-4f5f-9fb2-65bef5b6931b@lucifer.local>
-References: <5fc1de4d-7c2d-4f5f-9fb2-65bef5b6931b@lucifer.local>
+        d=1e100.net; s=20230601; t=1749292371; x=1749897171;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iZ6+dp0ad8amdnO4X+sS5UZnq9PAZ9SW1yad5IwngOU=;
+        b=vmvlhdI4yhHQTO04YRFyn2+ndzRLo6IabPMSFZPmqqICHZkT7ORrqKSm+srBy3u/HD
+         zRo0yKv5ZLB+ZZ99cmijeciaRILv5d07bg2oAm2L4n5v8lD3zBh83JFKEAZJHcbcavC2
+         jGfvLhWXv7UGXxJUZdukVVDfJU5SoI1oU5rnXX9p3F19b1LI1MQS1C5YCM4ZCGUFTItU
+         Moxg0eCbVAy45uhn5pl4uB4xioHOsQkf2x1B/WFQ2HZyVHZBD3vXHzSUkgittzLQ/03j
+         uYZt0tbnvV9phoDozDQB6qa46jxL34TID1vzP1K+SFBD4t3+UX+WenbyP4npT3ICgJ1O
+         F/iA==
+X-Forwarded-Encrypted: i=1; AJvYcCWMkO9wUqhCdGXQUwhE7zAWIeqSSQTjPda1PuW1uj51vvEm9U13QcnxrwMBXtcLIZUH+isBRtPG6wasQ6s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7wfwuJTEvrHRWLmRu/HnP9FqanWEvP6Rpl6mFN05uOHcXbuHE
+	XL7+VGKhdYHugbAC6YsxmW2kjFx7r2arh1wnjusV5hx9XZk3lUsqyW9Msa42tvDxIWrsgCLsDnE
+	QiCy4PiFWik3oi/205dkPqW7MFSBue+89quXiDQ41mHoZU7/K5U3Kstfd/Psf8sN/6p0=
+X-Gm-Gg: ASbGncuJfanIeg5OTcgV96M1Fxf85/y6lZuUJEv9CqQeKD26c2bwW8cLArAR/SztO/U
+	czt77yAEMk6axG6MsrAgYmaLJz9yROmlxxOkuwf+HjEjGGJzJ/67fOY8959yENLYQgTmy/Rlrxo
+	iV+GgLYZM6EFn48wSksLLg3O944T4CDOKiW7wTUKKabCpRsDZhei0IZph0OJC1W0TgN4uNFwZql
+	o2CRG0ImT+R/HHsG6LLnppM6kBw9aDnfytgqJopJ066jPpPzdgsTXD3qIKw7bzc4lExH4yrxJnd
+	N63qq/n2KQgiFMs11uRzKDxA+VR+i3qi/9ApwMbpljL7aB272lMZh+geJ1kd6wuepIrsS09YJaH
+	k7UAjbPgX/Kem5A==
+X-Received: by 2002:a05:620a:3905:b0:7d2:139b:a994 with SMTP id af79cd13be357-7d2298ca7bbmr832501885a.34.1749292370842;
+        Sat, 07 Jun 2025 03:32:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEegvXUEIWt6ZR7mMr3jMuWc8lA4hAWqYVM4uXihi3Zu1Hg0GSu808Wsiprlc5zXotdcjP5gQ==
+X-Received: by 2002:a05:620a:3905:b0:7d2:139b:a994 with SMTP id af79cd13be357-7d2298ca7bbmr832500285a.34.1749292370490;
+        Sat, 07 Jun 2025 03:32:50 -0700 (PDT)
+Received: from ?IPV6:2001:14ba:a0c3:3a00::4c9? (2001-14ba-a0c3-3a00--4c9.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::4c9])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5536772240csm468780e87.120.2025.06.07.03.32.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 07 Jun 2025 03:32:48 -0700 (PDT)
+Message-ID: <c9b83c8b-68d1-43bc-99d6-d2d2b9e445f4@oss.qualcomm.com>
+Date: Sat, 7 Jun 2025 13:32:47 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 0/3] media: venus: enable venus on qcs615
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Renjiang Han <quic_renjiang@quicinc.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>
+References: <20250530-add-venus-for-qcs615-v8-0-c0092ac616d0@quicinc.com>
+ <wmri66tkksq6i3hfyoveedq5slghnnpozjzx6gck5r3zsiwsg6@xevgh54rnlqd>
+ <285cae4a-219c-4514-818f-34c8225529de@quicinc.com>
+ <5854a587-aba7-4e71-87f8-249ba00cbc59@linaro.org>
+ <996c9a39-5520-4b43-adfa-06ce29223ba0@quicinc.com>
+ <713b87cb-0003-4ee3-a599-9cd41629bb42@kernel.org>
+ <7aa36a0f-6741-40c2-93f4-036823d245fd@quicinc.com>
+ <247002c0-ee68-4d0d-857a-768bf68bce75@kernel.org>
+ <d5aee491-3ba2-4beb-8b8f-4ba8372e6d16@quicinc.com>
+ <fa6a7983-27bf-40db-9843-0891bdadf523@linaro.org>
+ <a258433f-f1da-4be7-a0af-645571aab871@oss.qualcomm.com>
+ <e0405dea-bad2-408c-a65d-f9a3456dd92e@linaro.org>
+Content-Language: en-US
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+In-Reply-To: <e0405dea-bad2-408c-a65d-f9a3456dd92e@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: P3Esjv_rEKAFq1QYI707crUF5X_32AAE
+X-Authority-Analysis: v=2.4 cv=HMbDFptv c=1 sm=1 tr=0 ts=68441553 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=6IFa9wvqVegA:10 a=1BIh7cnd6DHUqvcSSZQA:9 a=QEXdDO2ut3YA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-ORIG-GUID: P3Esjv_rEKAFq1QYI707crUF5X_32AAE
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA3MDA3NSBTYWx0ZWRfX1Cq8o0AHSNjY
+ CF1A27FBAu4shxWIlA695sLj++VPQUOBFy4M0cqM4Nbx+WV4bPb2dMn6I+goZlghkqCfGT+sL6c
+ Jd6PeByzIkVxChHcx/SxMWpYbs+X+/cMaQYsdlBma0UU6ibZPx8NCbB6MFTtjln0zedqiRyGGvy
+ X3XzLX5o/hzBTkoH5w94B2U0WUZuvx4X1jOimamU4x/LBps6Wfnzl/yZ27zNqiPUwnejT8oywYP
+ V5RSHBr5JuGIA0Gckn2YnbZhWEYgo2+O4wNK7kUK2MDYdfQvt4Sj3ntT7FEO5UlbsuHNYcW7glK
+ hejQgfEPlvQoTIjp02dP3INucZqnU5N1f0Y2dg679cxEp+mkxez5JCVp/07TmH8eBioQRTKOboR
+ W6t8Kquai+O0RzpdKOg87/cNQlCUuCowodEF3RPRRGkjMhvrzEGkZjYkaN1K0HbmY8A3reaT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-07_04,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 mlxlogscore=999 priorityscore=1501 impostorscore=0
+ suspectscore=0 malwarescore=0 phishscore=0 spamscore=0 lowpriorityscore=0
+ adultscore=0 mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506070075
 
-> Sort of a nice-to-have/thought but:
->
-> Actually, when I proposed the refactor I wondered whether we'd use more state in
-> madv_behaviour here but turns out we don't so we may as well just switch back to
-> using int behavior here?
->
-> If we do that then we can adjust process_madvise_remote_valid() with:
->
->  static bool process_madvise_remote_valid(int behavior)
->  {
-> +       /* Due to lack of address untag atomicity, we need mmap lock. */
-> +       VM_WARN_ON_ONCE(madvise_lock(behavior) != MADVISE_VMA_READ_LOCK);
+On 07/06/2025 10:16, Bryan O'Donoghue wrote:
+> On 07/06/2025 03:13, Dmitry Baryshkov wrote:
+>>>
+>>> As we've established the fallback isn't a fallback because it falls 
+>>> back to wrong data, so lets fix that.
+>>
+>> Why isn't it a fallback? With the driver changes in place, the 
+>> fallback is totally correct.
+> 
+> Its not a fallback _as_is_
+> 
+> I'm fine either way
+> 
+> - Apply 1/3 and then re-submit 2/3 3/3
+
+Let's settle on this option. I think it is the cleanest option.
+
+> 
+> or
+> 
+> - Enumerate a QCS615 table
+> - Apply 1/3 here
+> 
+> ---
+> bod
 
 
-process_madvise_remote_valid() is called before vector_madvise(), so I'm not
-sure what this code is supposed to do. Are you trying to do something like:
-
-VM_WARN_ON_ONCE(get_lock_mode(behavior) == MADVISE_VMA_READ_LOCK);
-
-If so, that seems problematic — the same madvise operation might be allowed
-to use the per-VMA lock for local processes, but disallowed for remote ones.
-
-I suppose this will only start to make sense after we support per-VMA locking
-for remote madvise operations such as "case MADV_XXX":
-
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 8382614b71d1..9815445284d5 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -1641,7 +1641,8 @@ int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
-  * take mmap_lock for writing. Others, which simply traverse vmas, need
-  * to only take it for reading.
-  */
--static enum madvise_lock_mode get_lock_mode(struct madvise_behavior *madv_behavior)
-+static enum madvise_lock_mode get_lock_mode(struct mm_struct *mm,
-+		struct madvise_behavior *madv_behavior)
- {
- 	int behavior = madv_behavior->behavior;
- 
-@@ -1659,6 +1660,9 @@ static enum madvise_lock_mode get_lock_mode(struct madvise_behavior *madv_behavi
- 	case MADV_COLLAPSE:
- 	case MADV_GUARD_INSTALL:
- 	case MADV_GUARD_REMOVE:
-		...
-+ 	case MADV_XXX:
-+		return current->mm == mm ? MADVISE_VMA_READ_LOCK :
-+				MADVISE_MMAP_READ_LOCK;
- 	case MADV_DONTNEED:
- 	case MADV_DONTNEED_LOCKED:
-
-Thanks
-Barry
+-- 
+With best wishes
+Dmitry
