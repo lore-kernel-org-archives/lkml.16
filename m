@@ -1,71 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8FE17E4;
-	Sat,  7 Jun 2025 05:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71AF3EC4;
+	Sat,  7 Jun 2025 05:52:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749275237; cv=none; b=F+EzvUHL8ydVA1IG3fSeqkYEcaBVDVJ0wKkmKXlCO3F/ssbFO+7+iB5ywa95gcj+ST214ItvIowMcju2sqMHzxqf/SxtB3HAOKIxnNe8IFm2R0YfVBNqIgYZX/6sYbEjseJRXyISs9vqThPdoXOBjXzZE5x8qgkdxKSk+X6V+SM=
+	t=1749275551; cv=none; b=eN0Ux5pwwv1rkndOo2ot0JP7LQR8xwBmpHYuKth7glIsXf/lOwNub0Ve121C0pgOKTs65cDQSBxXcgfjbAbV4ivzs6T0ZLdNfrDnbMM3jG6HC8F8ZA11nVDHZF/7+NSZdAGhnDWdx2AYrx+Qw/eCQMz2flmpwfV2S406k2Xk0vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749275237; c=relaxed/simple;
-	bh=5C3lLj8+AbKhyCtUA5RyohQ8t2Ydl8exCq8AJb7blUs=;
+	s=arc-20240116; t=1749275551; c=relaxed/simple;
+	bh=BffRPMZS0paUH38IS1RnszD9kUJrM2Awzb4ZIxPKgJk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XAdojLj58hXuadApm0aF7GO+e/gtTk57vbZPYfaCNT4K+Sa4hOVuRr4udw/RvNsRs91nmWpoD8alWCw0vmCgDAr2d+h8tpHLvM5gDf8Hnr74aowyMJ2tDV5lknkTbDjfSN95PSUXyPv4gZ+XlnKErDKaagS8eRtnd8WqTEKZSzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jpKLe0YW; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=YRdi5FqaKB5miMeM+v1Y4wh9My020ro/3PbhYUmnVUdM9D5nGw8ZjTlI+LiyrMl/Ov6tn6w2ryB9uxJQvo8Who/yTsj4O/wuwiPoZWYgV+eNm2G0tRrewe4Us0xN5Fee4w58P3XC8kgsqqTBubp/dRQnYKz6vgPeLaO3RRe6KjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YrgiEkfP; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jpKLe0YW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749275236; x=1780811236;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5C3lLj8+AbKhyCtUA5RyohQ8t2Ydl8exCq8AJb7blUs=;
-  b=jpKLe0YWsk7j+wCMvboiQoTwyeR0yO908TV8XOTE+PlJpnW83tVQUWQ/
-   ptzhbsBGFzzU+ro/MuUaGpIgMMpyCe/VJG3yQleB3qA7YzY0Oxn1qswDi
-   yws44TD8+DpNIMgGXAJJDYbUc01lyRj+sj9MrMllNpzma/6oSQHn2mcYC
-   FhWzwdbzcxuuxUvI0SZYwoKN9IWygdt5yNhm453UedApkpPYm4z79/M0H
-   sgU+aWojU6MsvML3v97EFpgLppCdn/FY6ilgQNuYVptze1B02GwqHGQee
-   fAwIkLp9xfBFOL755Ff+Drzjor4e3T/l0p/abZdYen/N/YkzI2bFNX0ic
-   A==;
-X-CSE-ConnectionGUID: Nz+tbCj/Sju8p7MM4rpTlw==
-X-CSE-MsgGUID: rI7rWEfbQhCG12mRbZnCwg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11456"; a="51420673"
-X-IronPort-AV: E=Sophos;i="6.16,217,1744095600"; 
-   d="scan'208";a="51420673"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2025 22:47:15 -0700
-X-CSE-ConnectionGUID: gRFQIGf+THm/L1f2j86avw==
-X-CSE-MsgGUID: 1n4MLOnHQoSB0ABW7+8A9Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,217,1744095600"; 
-   d="scan'208";a="146528813"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 06 Jun 2025 22:47:11 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uNmOb-0005UP-1w;
-	Sat, 07 Jun 2025 05:47:09 +0000
-Date: Sat, 7 Jun 2025 13:46:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: Quentin Schulz <foss+kernel@0leil.net>, Lee Jones <lee@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Lukasz Czechowski <lukasz.czechowski@thaumatec.com>,
-	Daniel Semkowicz <dse@thaumatec.com>,
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Quentin Schulz <quentin.schulz@cherry.de>
-Subject: Re: [PATCH v2 2/4] mfd: rk8xx-core: allow to customize RK806 reset
- mode
-Message-ID: <202506071321.Ze0gsxC0-lkp@intel.com>
-References: <20250605-rk8xx-rst-fun-v2-2-143d190596dd@cherry.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YrgiEkfP"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-451d41e1ad1so22438355e9.1;
+        Fri, 06 Jun 2025 22:52:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749275548; x=1749880348; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RQYvJdp5wMu8CmB5J4isx6Lt367NUPdd0MkYltQHtPM=;
+        b=YrgiEkfPJGwdB1lnivV7RYrHlmySoUEpDX7Srp5nOcNHJ5GG10ACwLE3kUaAm0Bn5K
+         9l+gKrC6h3cQrOCT0mfjpmqSniNEfteMIU5WBnt/GuvfqW320GgLiUYZRCOEjJbyivg3
+         veUtYEBJNcoZu3sXrP9MFyh67kFR/J66L6JaJkBYex/4mjb9llJ+oEz081OP2CgvBFDO
+         purcLEH8KYnscEIN+E6DVn7dJSP4Q4KC7Lc20mpvO9k7j0wvgQpxHKt8QfPyeuwpjOTB
+         45eXd+k5goAym6REGO1b1XCLXrjwCv49bogB4n98Yzuhy/CvKNd8nEPl/mFpXw+fM6or
+         9XMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749275548; x=1749880348;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RQYvJdp5wMu8CmB5J4isx6Lt367NUPdd0MkYltQHtPM=;
+        b=DEVhiB1d1IWzuZTSTgaaL9cppSv+DJcNM/5lmJA7wRPkCefvONJvnHPfG8rVAocG3w
+         cJBvclUKHw2dA+H8JJyNnwgIX1WXu3AuGilHO+LeMA8/Ojn0kc8jIojwhXwmTPPlqpLs
+         p/gb9KdnRXDCqLFfMhCd6kn7tHzTTW1PBLwEvQ3QZe1QZkTM0SUhe1ZgdnaizKQLCbRD
+         OL66LxzrQaxOtEhKPElHE9n9PGzs6lUc5GerpnJWyAdF3G6Uw8PCjGS/dKIb0CYfPFMI
+         H5dk0UZ9CQXc5pJQWcUAys+QREfFMkZzml2/p91X3D29rCVHPl9mHK2lg4Bq0ATSNGLo
+         x7/g==
+X-Forwarded-Encrypted: i=1; AJvYcCU1JZQUEQmpS1BWmLf8kH9zx/DDZCu8c6SYvNOG/cQuCSVtGCX1sd+p9D69bfka3dy62bIizF+6O3+8@vger.kernel.org, AJvYcCUfVPYyCZjLPcsTdIlsV7t17Dv077hBlxIQ+bSLYzS2rF9BFMCWLaBb0JPVsho0ALixr6kvhzeb4gF8yNb2pAQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yydm+jbWpyxYyQBGsxwoxPRo8DKP/qgxol1ISuqXsq+kRbj4OoY
+	1r9dSH+PzePzaCUvRy3hRAwBf+GL/sKvkz8M3p4ctqu6Ojt7y9z5dsSv
+X-Gm-Gg: ASbGnctd4c2PsETyF70LicgG3OfjUBXMHQSV8BLj4vgc0rP1CMA+0v1Yurm9OJrZ/rq
+	CJOBHh1ssjL9D/dwO4b/qCR8f1qVvQFo/ROkrg6uOxkdzSIvSdTYgA2R0KvH6mGySQwIz741GUA
+	gOGoGJJ/WrqgvNU0CRqzPyDWeJ77QeVZ3s/Au9a8nE2gLDupmRZTMu72lm3Brfaxs7dO5Jvzv1/
+	C8kSOLi6UrgXHjJBMMjYDklNgY4vTqTT29pvzkiG1vmLFyoTzA4jis9/DkcIogRtuKhw8fDu49z
+	kFQ6U6LPgTszs83CS80wxomRbpL64khm2sBPgcc04zZMhXPpDTlEpNhCmu3Fh2TwePfs6VgoIYG
+	otBx8Ztk2uMo+FIyV+XAMGOjrtg==
+X-Google-Smtp-Source: AGHT+IE8TyIJYiSlKIxjtQWt3VI2y2JysdK8gWE006ylw4OtOZzyOqEU8PbjdtlsBzu5U/vb/wWXyg==
+X-Received: by 2002:a05:600c:1e1c:b0:43c:fe5e:f040 with SMTP id 5b1f17b1804b1-452fbbf6c36mr33907375e9.23.1749275547529;
+        Fri, 06 Jun 2025 22:52:27 -0700 (PDT)
+Received: from localhost (cpc1-brnt4-2-0-cust862.4-2.cable.virginm.net. [86.9.131.95])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323ad0c4sm3767041f8f.30.2025.06.06.22.52.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 22:52:25 -0700 (PDT)
+Date: Sat, 7 Jun 2025 06:52:24 +0100
+From: Stafford Horne <shorne@gmail.com>
+To: Thomas Huth <thuth@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	linux-arch@vger.kernel.org, Jonas Bonn <jonas@southpole.se>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	linux-openrisc@vger.kernel.org
+Subject: Re: [PATCH 22/41] openrisc: Replace __ASSEMBLY__ with __ASSEMBLER__
+ in uapi headers
+Message-ID: <aEPTmFCT18dxnONh@antec>
+References: <20250314071013.1575167-1-thuth@redhat.com>
+ <20250314071013.1575167-23-thuth@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,174 +77,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250605-rk8xx-rst-fun-v2-2-143d190596dd@cherry.de>
+In-Reply-To: <20250314071013.1575167-23-thuth@redhat.com>
 
-Hi Quentin,
+On Fri, Mar 14, 2025 at 08:09:53AM +0100, Thomas Huth wrote:
+> __ASSEMBLY__ is only defined by the Makefile of the kernel, so
+> this is not really useful for uapi headers (unless the userspace
+> Makefile defines it, too). Let's switch to __ASSEMBLER__ which
+> gets set automatically by the compiler when compiling assembly
+> code.
+> 
+> This is a completely mechanical patch (done with a simple "sed -i"
+> statement).
 
-kernel test robot noticed the following build errors:
+Thanks Thomas,
 
-[auto build test ERROR on ec7714e4947909190ffb3041a03311a975350fe0]
+This makes sense to me, I see the other discussions now and it look's
+like there is still some discussions going on.  For now I have added
+this to the OpenRISC queue, but I don't think it will get in until 6.16.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Quentin-Schulz/dt-bindings-mfd-rk806-allow-to-customize-PMIC-reset-mode/20250605-234243
-base:   ec7714e4947909190ffb3041a03311a975350fe0
-patch link:    https://lore.kernel.org/r/20250605-rk8xx-rst-fun-v2-2-143d190596dd%40cherry.de
-patch subject: [PATCH v2 2/4] mfd: rk8xx-core: allow to customize RK806 reset mode
-config: arc-randconfig-001-20250607 (https://download.01.org/0day-ci/archive/20250607/202506071321.Ze0gsxC0-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250607/202506071321.Ze0gsxC0-lkp@intel.com/reproduce)
+That should give a bit more time for the discussion and more time to
+test for me.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506071321.Ze0gsxC0-lkp@intel.com/
+-Stafford
 
-All errors (new ones prefixed by >>):
-
-   drivers/mfd/rk8xx-core.c: In function 'rk8xx_probe':
->> drivers/mfd/rk8xx-core.c:740:42: error: implicit declaration of function 'FIELD_PREP' [-Wimplicit-function-declaration]
-     740 |                                          FIELD_PREP(RK806_RST_FUN_MSK, rst_fun));
-         |                                          ^~~~~~~~~~
-
-
-vim +/FIELD_PREP +740 drivers/mfd/rk8xx-core.c
-
-   694	
-   695	int rk8xx_probe(struct device *dev, int variant, unsigned int irq, struct regmap *regmap)
-   696	{
-   697		struct rk808 *rk808;
-   698		const struct rk808_reg_data *pre_init_reg;
-   699		const struct mfd_cell *cells;
-   700		int dual_support = 0;
-   701		int nr_pre_init_regs;
-   702		u32 rst_fun = 0;
-   703		int nr_cells;
-   704		int ret;
-   705		int i;
-   706	
-   707		rk808 = devm_kzalloc(dev, sizeof(*rk808), GFP_KERNEL);
-   708		if (!rk808)
-   709			return -ENOMEM;
-   710		rk808->dev = dev;
-   711		rk808->variant = variant;
-   712		rk808->regmap = regmap;
-   713		dev_set_drvdata(dev, rk808);
-   714	
-   715		switch (rk808->variant) {
-   716		case RK805_ID:
-   717			rk808->regmap_irq_chip = &rk805_irq_chip;
-   718			pre_init_reg = rk805_pre_init_reg;
-   719			nr_pre_init_regs = ARRAY_SIZE(rk805_pre_init_reg);
-   720			cells = rk805s;
-   721			nr_cells = ARRAY_SIZE(rk805s);
-   722			break;
-   723		case RK806_ID:
-   724			rk808->regmap_irq_chip = &rk806_irq_chip;
-   725			pre_init_reg = rk806_pre_init_reg;
-   726			nr_pre_init_regs = ARRAY_SIZE(rk806_pre_init_reg);
-   727			cells = rk806s;
-   728			nr_cells = ARRAY_SIZE(rk806s);
-   729			dual_support = IRQF_SHARED;
-   730	
-   731			ret = device_property_read_u32(dev, "rockchip,reset-mode", &rst_fun);
-   732			if (ret) {
-   733				dev_dbg(dev,
-   734					"rockchip,reset-mode property missing, not setting RST_FUN\n");
-   735				break;
-   736			}
-   737	
-   738			ret = regmap_update_bits(rk808->regmap, RK806_SYS_CFG3,
-   739						 RK806_RST_FUN_MSK,
- > 740						 FIELD_PREP(RK806_RST_FUN_MSK, rst_fun));
-   741			if (ret)
-   742				return dev_err_probe(dev, ret, "RST_FUN write err\n");
-   743			break;
-   744		case RK808_ID:
-   745			rk808->regmap_irq_chip = &rk808_irq_chip;
-   746			pre_init_reg = rk808_pre_init_reg;
-   747			nr_pre_init_regs = ARRAY_SIZE(rk808_pre_init_reg);
-   748			cells = rk808s;
-   749			nr_cells = ARRAY_SIZE(rk808s);
-   750			break;
-   751		case RK816_ID:
-   752			rk808->regmap_irq_chip = &rk816_irq_chip;
-   753			pre_init_reg = rk816_pre_init_reg;
-   754			nr_pre_init_regs = ARRAY_SIZE(rk816_pre_init_reg);
-   755			cells = rk816s;
-   756			nr_cells = ARRAY_SIZE(rk816s);
-   757			break;
-   758		case RK818_ID:
-   759			rk808->regmap_irq_chip = &rk818_irq_chip;
-   760			pre_init_reg = rk818_pre_init_reg;
-   761			nr_pre_init_regs = ARRAY_SIZE(rk818_pre_init_reg);
-   762			cells = rk818s;
-   763			nr_cells = ARRAY_SIZE(rk818s);
-   764			break;
-   765		case RK809_ID:
-   766		case RK817_ID:
-   767			rk808->regmap_irq_chip = &rk817_irq_chip;
-   768			pre_init_reg = rk817_pre_init_reg;
-   769			nr_pre_init_regs = ARRAY_SIZE(rk817_pre_init_reg);
-   770			cells = rk817s;
-   771			nr_cells = ARRAY_SIZE(rk817s);
-   772			break;
-   773		default:
-   774			dev_err(dev, "Unsupported RK8XX ID %lu\n", rk808->variant);
-   775			return -EINVAL;
-   776		}
-   777	
-   778		if (!irq)
-   779			return dev_err_probe(dev, -EINVAL, "No interrupt support, no core IRQ\n");
-   780	
-   781		ret = devm_regmap_add_irq_chip(dev, rk808->regmap, irq,
-   782					       IRQF_ONESHOT | dual_support, -1,
-   783					       rk808->regmap_irq_chip, &rk808->irq_data);
-   784		if (ret)
-   785			return dev_err_probe(dev, ret, "Failed to add irq_chip\n");
-   786	
-   787		for (i = 0; i < nr_pre_init_regs; i++) {
-   788			ret = regmap_update_bits(rk808->regmap,
-   789						pre_init_reg[i].addr,
-   790						pre_init_reg[i].mask,
-   791						pre_init_reg[i].value);
-   792			if (ret)
-   793				return dev_err_probe(dev, ret, "0x%x write err\n",
-   794						     pre_init_reg[i].addr);
-   795		}
-   796	
-   797		ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, cells, nr_cells, NULL, 0,
-   798				      regmap_irq_get_domain(rk808->irq_data));
-   799		if (ret)
-   800			return dev_err_probe(dev, ret, "failed to add MFD devices\n");
-   801	
-   802		if (device_property_read_bool(dev, "system-power-controller") ||
-   803		    device_property_read_bool(dev, "rockchip,system-power-controller")) {
-   804			ret = devm_register_sys_off_handler(dev,
-   805					    SYS_OFF_MODE_POWER_OFF_PREPARE, SYS_OFF_PRIO_HIGH,
-   806					    &rk808_power_off, rk808);
-   807			if (ret)
-   808				return dev_err_probe(dev, ret,
-   809						     "failed to register poweroff handler\n");
-   810	
-   811			switch (rk808->variant) {
-   812			case RK809_ID:
-   813			case RK817_ID:
-   814				ret = devm_register_sys_off_handler(dev,
-   815								    SYS_OFF_MODE_RESTART, SYS_OFF_PRIO_HIGH,
-   816								    &rk808_restart, rk808);
-   817				if (ret)
-   818					dev_warn(dev, "failed to register rst handler, %d\n", ret);
-   819				break;
-   820			default:
-   821				dev_dbg(dev, "pmic controlled board reset not supported\n");
-   822				break;
-   823			}
-   824		}
-   825	
-   826		return 0;
-   827	}
-   828	EXPORT_SYMBOL_GPL(rk8xx_probe);
-   829	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Cc: Jonas Bonn <jonas@southpole.se>
+> Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+> Cc: Stafford Horne <shorne@gmail.com>
+> Cc: linux-openrisc@vger.kernel.org
+> Signed-off-by: Thomas Huth <thuth@redhat.com>
+> ---
+>  arch/openrisc/include/uapi/asm/ptrace.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/openrisc/include/uapi/asm/ptrace.h b/arch/openrisc/include/uapi/asm/ptrace.h
+> index a77cc9915ca8f..1f12a60d5a06c 100644
+> --- a/arch/openrisc/include/uapi/asm/ptrace.h
+> +++ b/arch/openrisc/include/uapi/asm/ptrace.h
+> @@ -20,7 +20,7 @@
+>  #ifndef _UAPI__ASM_OPENRISC_PTRACE_H
+>  #define _UAPI__ASM_OPENRISC_PTRACE_H
+>  
+> -#ifndef __ASSEMBLY__
+> +#ifndef __ASSEMBLER__
+>  /*
+>   * This is the layout of the regset returned by the GETREGSET ptrace call
+>   */
+> -- 
+> 2.48.1
+> 
