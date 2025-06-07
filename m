@@ -1,135 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795D236D;
-	Sat,  7 Jun 2025 16:59:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BF582866;
+	Sat,  7 Jun 2025 17:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749315556; cv=none; b=R0GgXWYcKzVHpmu4HNrqpmxV4MYqVWl+eQ9VlX96sb/noDgN19/Te3lgvrv+qIcx+M34RKYBfrRb18E5yk4bN+8g9qeKcWjjArWRSZaLrMC+IihpRqpEyKOg7MqE+cqj0DPiSOHp8fCNbjr4ZuDciTz77Zg2HeEubPfBB0VmRqc=
+	t=1749315685; cv=none; b=kpbq6lU1aap/As8FCrxG/APyGd4co83swqxcG5MtnHk9v17+gdVWrUCnSXDz1SA9hdigtyP8VtOE3tJaPx8ODVJf+OTQFn0Dv5PkQr9MClVLf02bq/lpTkU8x0nsaANJyfmj8Z8csZRP8jLB4Eovc1M6LWmL36fuDDtOnXO+Xwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749315556; c=relaxed/simple;
-	bh=Yd7rpYba+Q4AtfrfgdJ46W7L8QFSYgftwPePKTRDz38=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jEEUtW7VYdBt+thrNv5KIRXNEHi2qmb9rWx4DR5wzAOlsceAuBPcJNkzl6aHStG1otHZ2bvem0JbPM1GWXoVHMbQSnsKm1S53fSdl1aZOkWVGMdxT+hxvYQK4jpP5e93M+tY1IiKmRh8+lE/m3vx7UgxGrtWAHFrr/UMw+eiX7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F+n4g9Jk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749315685; c=relaxed/simple;
+	bh=FErgFTQWl8H3HT1zKbY8lysoJhYePPaFVJeTh/hkcRQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G7ivTsYjoedO6qwvi1ogJVajBjQR41yNs0e7yWo/D12N9HZVm+OwIcodUKgaWa4zJavTUwuEuwdSwa2VWdFrqaoLlsE+2xFMuKJ2v+sp4HGjrVCpE22JkKcvdFYf0SBbKq9jzTc9g6GqGMlM8TKH1rWZanF7LsYefG2gAXmMIHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V6BQaLrB; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F+n4g9Jk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 716AEC4CEE4;
-	Sat,  7 Jun 2025 16:59:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749315555;
-	bh=Yd7rpYba+Q4AtfrfgdJ46W7L8QFSYgftwPePKTRDz38=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=F+n4g9JkLDIXpUcOmEt3RcnI5lX0AzFfVQ1LrI9iydTutPYEFPwzcLKe7bc3JVqdA
-	 +GDc7DEpwm/mgAtYLJyTKFM1xCyodYxnRw2t8bnuzakYfkocqJKmyapQE+YGRmnp/Y
-	 rKOuzu/u9D7e76+9m5Mj+RE6ds8EolRrCBwz6iRuT1tOaJKbjDgBfRjlJQN2I+ofUb
-	 RYNwjM/lwjsmFpl3it/Ti3o4zFwk0VG+zd68IJQM7j8uh1gGNCJ533Xknupy4h9T0G
-	 Mxw0hqY1JK+ZWksA+MWkhlZFswIPn6JCeVtpyh+hWVhVSI1IjCXaNmlk/4IzwHcFqJ
-	 1jprErtTtiLFQ==
-Date: Sat, 7 Jun 2025 17:59:04 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Marcelo Schmitt <marcelo.schmitt1@gmail.com>, Marcelo Schmitt
- <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, Ana-Maria Cusco <ana-maria.cusco@analog.com>,
- lars@metafoo.de, Michael.Hennerich@analog.com, dlechner@baylibre.com,
- nuno.sa@analog.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl
-Subject: Re: [PATCH v4 02/11] iio: adc: Add basic support for AD4170
-Message-ID: <20250607175904.08d7b994@jic23-huawei>
-In-Reply-To: <aD78Di51VHxtOtJG@smile.fi.intel.com>
-References: <cover.1748829860.git.marcelo.schmitt@analog.com>
-	<e79f9a126672b33b8a7c01f650fee43a68c74029.1748829860.git.marcelo.schmitt@analog.com>
-	<aD27cobHWeBX8o30@smile.fi.intel.com>
-	<aD3XQfUfxIiz62ZU@debian-BULLSEYE-live-builder-AMD64>
-	<aD6x2caTMd1eBInM@smile.fi.intel.com>
-	<aD7kcFupREh4lW0s@debian-BULLSEYE-live-builder-AMD64>
-	<aD78Di51VHxtOtJG@smile.fi.intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V6BQaLrB"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-32ac52f78c1so31084801fa.3;
+        Sat, 07 Jun 2025 10:01:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749315680; x=1749920480; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I6WVk+/JB7rAPGcjYfN10L46jlxYRiAfY3gkjwFH4xg=;
+        b=V6BQaLrBFqO+MfbeQnbOOVx2H5AiUeJiu1WRWDKGj5K766aSOJvuHmhvZnZwP7kWrb
+         EdfGYwHLACw6TPk2mEn1KqlSDhf9iPFGD0fHqyP/stcZWrhtF8kvykEe1dL5Yyu/bBwq
+         5Cvw8AenFqrPiRJxpQ8heocMNJnpKvka8HwR2GdMJBgtfjTAkXQI17IVI7gHQ46K1I3l
+         On78MX7goLMfCxOO5iifbOq12lTiqojQiVRbA8GjPL6BN91a3ofVEDuAGmDDg26m/+Ew
+         P18MqDPffJOvyT7VizlefpN1j4qqTLrYrxjfqDUQ4zVzKQbkynn344ngF1PkzLEMvjpj
+         KGqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749315680; x=1749920480;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=I6WVk+/JB7rAPGcjYfN10L46jlxYRiAfY3gkjwFH4xg=;
+        b=eahDq00v/vd7JCAfWpYUuMnLQOty71FgFM6XEaDhCtRU0DM/V1R9ap+ZkqaZkrs/2Q
+         eqBTGa+ovpgCqVX7X1uc6sIm/Dz9lQw/My+d6TxbVgIBg6nCHkKNX/mTD1LB6GdhHitA
+         oBZcsWbcNttDJFzhfPpF2u8HnzF5CO6SzEFEjGWAvyAWdYkoamI9vdwr/8Mw8zMiQara
+         dAiVgB3WPfGxdYBPv/0lBEp8H5rZZ2Ug+hbEn3w96d8SGSBT0LpbR0JtXDRknGXRwnCN
+         J1cuBQO5KPjXyfN81XbqnIluVQPwX2yqNxtVrDehzi8GJL80+f6WGc0eNvCuj917NoXy
+         yBlw==
+X-Forwarded-Encrypted: i=1; AJvYcCUFj/qx/80y4HTJrW0WZAKyAuewO/puOvezo6Lkb7nvQwG5VrOl+pdgWTWudiAEeFaTXlQB7/6LEFhvv5C0@vger.kernel.org, AJvYcCVM8Jig6wwZrYzfLXo0N13ekQBPjezpG1vdKhDSw4gZJR3iF6jWwBnzFt2TG3v4yXfE5VhpVxSfWqTiO4zZ@vger.kernel.org, AJvYcCW2eqOJ46yTR28SH0cyAioUoDYk2YhAY6hklAdz+XghTbATrx7vM+xeN3YR9+uTOnHgK8sQ3zqxDmyGqUg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG2Mh7ch/GtVNqyF1qxVjqCjzs+/Ju7M4ZvKSYFdAGo/44Q198
+	YCWK5hKa6gVyYnNTaYRn96QOz85taAQh52JyzLe/YiKIKTrSxLYLSIzyq53enuyayBN7hUy+njE
+	672skAERAJIc/ZG0XN/1ikYiDNMee1f6WCOR8
+X-Gm-Gg: ASbGnctkJ980kbai9vnwAgK7pHU3lrZuZoBCwuTG9g/Udgd1JYPc1RYKvE6DlYpPoqS
+	l9SDwkaFAan1XfD/RIpbYrENpa9CNus8eyf830he9/y3qO+BDtjDbV/4ruiHsEzsxExk6O35R1B
+	FwQYezcgmts3FHAqVHWxSUK/jKWRWiUnwX30B64PMx2fjKEF2vz8NggWe/CgcvijqTYhmUzpnmS
+	9E=
+X-Google-Smtp-Source: AGHT+IFTv+PnCR1FFBFPRRlL4qtVEdUNkKNqxhFRPW5zZOEZxpfo1u8xvtcxJr+p89SlDmyvPhb1WzwAuII8GgFHvgo=
+X-Received: by 2002:a05:651c:19a2:b0:32a:6b16:3a27 with SMTP id
+ 38308e7fff4ca-32adfe1dbf3mr20542471fa.35.1749315679583; Sat, 07 Jun 2025
+ 10:01:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250531-topic-venus_98_tbl-v1-1-68e5523a39dc@oss.qualcomm.com>
+ <btmzhyullmggev43b3syp3anxlm6o5mpz2mthaskuyl7kfx5gw@w5gesyaaytkh>
+ <CAN5H-g7WLsowjW6CMee5T=W4Lmia9mLWGgX17-mOMjtBo2SwvQ@mail.gmail.com>
+ <b9b456bc-beb8-769d-5f9f-e13b8860e659@quicinc.com> <c98ebb32-7207-40b4-90d1-8bac62d54c8f@oss.qualcomm.com>
+In-Reply-To: <c98ebb32-7207-40b4-90d1-8bac62d54c8f@oss.qualcomm.com>
+From: Arnaud Vrac <rawoul@gmail.com>
+Date: Sat, 7 Jun 2025 19:01:07 +0200
+X-Gm-Features: AX0GCFstInUACsl9X2b2Lde8y05sK1CuKP_7VX10ft9wYvNQ9qbC30Pa-0LHqoE
+Message-ID: <CAN5H-g7uxH2sqxXdzE-BQtLXYgaEg+h7A=9kuKqwdAZEMXp4Zw@mail.gmail.com>
+Subject: Re: [PATCH] media: venus: Fix MSM8998 frequency table
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Vikash Garodia <quic_vgarodia@quicinc.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Dikshita Agarwal <quic_dikshita@quicinc.com>, "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, 
+	Marc Gonzalez <mgonzalez@freebox.fr>, Pierre-Hugues Husson <phhusson@freebox.fr>, 
+	Hans Verkuil <hverkuil@xs4all.nl>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 3 Jun 2025 16:43:42 +0300
-Andy Shevchenko <andy@kernel.org> wrote:
+Le sam. 7 juin 2025 =C3=A0 11:36, Konrad Dybcio
+<konrad.dybcio@oss.qualcomm.com> a =C3=A9crit :
+>
+> On 6/6/25 2:14 PM, Vikash Garodia wrote:
+> > Hi,
+> >
+> > On 6/6/2025 5:29 PM, Arnaud Vrac wrote:
+> >> Le dim. 1 juin 2025 =C3=A0 09:46, Dmitry Baryshkov
+> >> <dmitry.baryshkov@oss.qualcomm.com> a =C3=A9crit :
+> >>>
+> >>> On Sat, May 31, 2025 at 02:22:00PM +0200, Konrad Dybcio wrote:
+> >>>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> >>>>
+> >>>> Fill in the correct data for the production SKU.
+> >>>>
+> >>>> Fixes: 193b3dac29a4 ("media: venus: add msm8998 support")
+> >>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> >>>> ---
+> >>>>  drivers/media/platform/qcom/venus/core.c | 10 +++++-----
+> >>>>  1 file changed, 5 insertions(+), 5 deletions(-)
+> >>>>
+> >>>
+> >>> Verified against msm-4.4
+> >>
+> >> Hello,
+> >>
+> >> The current values are based on
+> >> https://git.codelinaro.org/clo/la/kernel/msm-4.4/-/blob/caf_migration/=
+kernel.lnx.4.4.r38-rel/arch/arm/boot/dts/qcom/msm8998-vidc.dtsi
+> >> which we've been using in production for many years.
+> >
+> > I see -v2 updates these to 533/444/.. MHz [1]. If the value changes bas=
+ed on
+> > board variants, these need to be picked from board DT instead of driver=
+ then.
+>
+> I believe they don't (although there exist some SoCs where fuses determin=
+e
+> maximum frequency for a given target). We really want to move off of in-d=
+river
+> freq tables but that is still in progress.
+>
+> >
+> > [1]
+> > https://git.codelinaro.org/clo/la/kernel/msm-4.4/-/blob/caf_migration/k=
+ernel.lnx.4.4.r38-rel/arch/arm/boot/dts/qcom/msm8998-v2.dtsi#L1140
+>
+> Arnaud, as Vikash mentioned, dvfs tables and some other magic values may
+> get overriden in socname-v2/-v2.1/v3 etc. I'm not a fan that downstream
+> leaves irrelevant information for old revisions in place, instead of
+> simply replacing them, but what can I do..
+>
+> Unless you somehow came into posession of v1 SoCs (which I believe were
+> totally internal), your hw has not been stretching its legs fully for
+> all this time.
+>
 
-> On Tue, Jun 03, 2025 at 09:02:56AM -0300, Marcelo Schmitt wrote:
-> > On 06/03, Andy Shevchenko wrote:  
-> > > On Mon, Jun 02, 2025 at 01:54:25PM -0300, Marcelo Schmitt wrote:  
-> 
-> ...
-> 
-> > > > > > +static bool ad4170_setup_eq(struct ad4170_setup *a, struct ad4170_setup *b)
-> > > > > > +{
-> > > > > > +	/*
-> > > > > > +	 * The use of static_assert() here is to make sure that the comparison
-> > > > > > +	 * is adapted whenever struct ad4170_setup is changed.
-> > > > > > +	 */  
-> > Does the reason given in the comment justify the use of static_assert?  
-> 
-> Should I repeat myself? It makes a little sense when no memcmp() is involved.
+Yes, I missed that the values were overridden in the msm8998-v2.dtsi
+file, sorry for the confusion.
 
-The intent I think is to reduce the chance of a field being added without
-this match function being updated.   Not a very strong test but maybe
-better than nothing...
-
-Not sure how memcmp() is relevant.
-
-> 
-> > > > > > +	static_assert(sizeof(*a) ==
-> > > > > > +		      sizeof(struct {
-> > > > > > +				     u16 misc;
-> > > > > > +				     u16 afe;
-> > > > > > +				     u16 filter;
-> > > > > > +				     u16 filter_fs;
-> > > > > > +				     u32 offset;
-> > > > > > +				     u32 gain;
-> > > > > > +			     }));  
-> > > > > 
-> > > > > I think it doesn't make much sense unless one uses memcpy().  
-> > > > 
-> > > > memcpy() is used to update the setups after reg write succeeds.
-> > > > Also, previously, memcmp() was used to compare setups.
-> > > > Since struct ad4170_setup has only unsigned integers (no floating point fields
-> > > > like ad7124 had [1]), ad4170 works properly when comparing setups with memcmp().
-> > > > Though, it was asked to do explicit field matching on previous reviews [2] so
-> > > > that's how it had been since then. Well, both ways work for ad4170. We can
-> > > > compare setup with memcmp(), or do the comparison field by field. I don't mind
-> > > > changing it again if requested. I guess we only need to reach an agreement about
-> > > > what to go with.  
-> > > 
-> > > The question was "why do you need the static_assert() now?"  
-> > 
-> > To ensure that the comparison function gets updated if struct ad4170_setup is
-> > ever modified? This intends to be similar to what was implemented in ad7124
-> > driver as the chips have similar channel configuration mechanisms. We also
-> > have ad7173 and ad4130 using static_assert for analogous purpose. There was
-> > also a comment about static_assert above.  
-> 
-> Does this won;t work if you changes field types? (Assuming only integers to
-> integers) I believe it doesn't affect the field-by-field comparison.
-> 
-> The other drivers may have different approach, have you studied them? Do they
-> use memcmp()
-> 
-> > > > [1]: https://lore.kernel.org/all/20250303114659.1672695-13-u.kleine-koenig@baylibre.com/
-> > > > [2]: https://lore.kernel.org/linux-iio/20250504192117.5e19f44b@jic23-huawei/
-> > > >   
-> > > > > > +	if (a->misc != b->misc ||
-> > > > > > +	    a->afe != b->afe ||
-> > > > > > +	    a->filter != b->filter ||
-> > > > > > +	    a->filter_fs != b->filter_fs ||
-> > > > > > +	    a->offset != b->offset ||
-> > > > > > +	    a->gain != b->gain)
-> > > > > > +		return false;
-> > > > > > +
-> > > > > > +	return true;
-> > > > > > +}  
-> 
-
+-Arnaud
