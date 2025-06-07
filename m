@@ -1,104 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE5E1D5AD4;
-	Sat,  7 Jun 2025 10:14:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3DD209F38
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 10:20:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749291293; cv=none; b=TS/PYBP5ODhZA8CmXPdjAPToKHxvBtN/jC9TZIk7/FEVJ/eHMA6SQ6N164jMxO0aqPTrSxIJ98/+KNjYhfVe7NKTHoL7ag1Pv4cxPtwB6PYaeAauQMMP/5taCuMMJzAvAhWVH4Hf5OtpMl9xO2JqzAIgUEhwDoOKVIjPaETje4c=
+	t=1749291632; cv=none; b=UVUHtwuB+X8Rfzsv0q0OKa7RjGU4P4WO/U9A8rP0oH2z/J4Q9K8fhyqxQunWYdlCNVjPbcIyrfQ1Bgz6dzQxtDo9U5BWbIvEvsEOLf3SF9fS+WPLH+BN3vwkzfkKz6Lrc7DxE5alG4JtPNLhF+lWLj8k9f0JlCSW8at25zGOqGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749291293; c=relaxed/simple;
-	bh=pbR4Uyu14HhS6c3c+zCWCCPOgjBihCsXzUcgZhFwf6Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WYcGLDmUmwpUlOyhuzy6f/N6IogxmhFLv7BgZm9ZnIS6fRbFLEQNTRYXR4hTq39xHRpsyf4jk2IMMloK5L2+VRubWE52oYfXYHevZP8CufN9zVIZ9DiKwhXGKlpz9ORbT2g/pssn+lHxvg8HGm2os3EeVblSweOvbWnrVvZ+gFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qTlJ5+M8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749291632; c=relaxed/simple;
+	bh=sh9beUAbIuorf1w+V3JI/MqIYcQqK9+9r0fObvWZ0h0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CNpFLgxt9x5jwuw1mehVSv7AJ0hZOWztYcNj43pM8/WgEyXK7ke533Ek3h4NMR6PLoJQPA9Em2pI2HSTbvvxntiVldo8COBIxzZUGOJMizP7Quxapj7Gp4RNQYr9frhq2/UP/n3wHGuuPOJadDIeYbbx/d4m0OF4a3uwwsrfeCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jFAmJS/U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qTlJ5+M8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB5A9C4CEE4;
-	Sat,  7 Jun 2025 10:14:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jFAmJS/U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6287EC4CEE4;
+	Sat,  7 Jun 2025 10:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749291292;
-	bh=pbR4Uyu14HhS6c3c+zCWCCPOgjBihCsXzUcgZhFwf6Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qTlJ5+M8RWR7FUevBa3Tu0fEsNoJKtU7xJLRCLFh6qi8HtGxOkBj1PZTQGfzVDogh
-	 dVJ97vIce79gCC/pHu8QYqsyxq5AxFa8ddQBMPqArGnhaReQMbeTMsOiVQemiTpAhz
-	 6EXtxiEtu5qFDvX99d4SmMg6URKnnr6cAwsPTbkVHKcE/n27RIb93EtvLzJX1TUr2j
-	 K3dV5VOYeKLJ+6FhfRpxVbGDcJA/tapoCgPdbLLIEIo4wvJY2hQ0BqlCjI2wqYs1yW
-	 Qncmy0hsaB9GSE7khkPV3rKltfFJDbOl22YaTfTSBJSclFor0LIhdWkXYSHrWwatdR
-	 N59gPwjdrns1A==
-Date: Sat, 7 Jun 2025 12:14:48 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/9] docs: kdoc: remove the KernelEntry::descr pseudo
- member
-Message-ID: <20250607121448.11411bf9@foz.lan>
-In-Reply-To: <20250606163438.229916-7-corbet@lwn.net>
-References: <20250606163438.229916-1-corbet@lwn.net>
-	<20250606163438.229916-7-corbet@lwn.net>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	s=k20201202; t=1749291631;
+	bh=sh9beUAbIuorf1w+V3JI/MqIYcQqK9+9r0fObvWZ0h0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jFAmJS/UyNsfXfaorEpuD0R6fH6cidqEDXXXMjB/CIuz6Eq3BtqYPvKPaS2kZiGut
+	 Bf2sDj0isVcFBE2tBd+fQ7E+XDZpaY8K5Q6V+TePXiX/fosCU+xGYrOV/nwKYKiY4A
+	 a/N5OJij5HmSRegpp+Poo46fSCJth0g49D0o5l3exYFfaInBOWGdIA0VKghEi7BUkr
+	 4cgLnHnjQdaSMYsgskNj5lq7b7WkX9qsBAcmDnwymU+MVDe/mFwwxPgs8HBaJe0YDZ
+	 B+yIJSA8cYRrjAHuV6/kEnnh1FgjGKNteaaQ3O4qpD18N0hBkQ+tDggQjPo4G+dMb/
+	 R1CSxpwGv/oXw==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	linuxppc-dev@lists.ozlabs.org
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] powerpc: unify two CONFIG_POWERPC64_CPU entries in the same choice block
+Date: Sat,  7 Jun 2025 19:13:51 +0900
+Message-ID: <20250607102005.1965409-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Em Fri,  6 Jun 2025 10:34:35 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
+There are two CONFIG_POWERPC64_CPU entries in the "CPU selection"
+choice block.
 
-> The entry.descr value used in process_name() is not actually a member of
-> the KernelEntry class; it is a bit of local state.  So just manage it
-> locally.
-> 
-> A trim_whitespace() helper was added to clean up the code slightly.
-> 
-> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+I guess the intent is to display a different prompt depending on
+CPU_LITTLE_ENDIAN: "Generic (POWER5 and PowerPC 970 and above)" for big
+endian, and "Generic (POWER8 and above)" for little endian.
 
-LGTM.
+I stumbled on this tricky use case, and worked around it on Kconfig with
+commit 4d46b5b623e0 ("kconfig: fix infinite loop in sym_calc_choice()").
+However, I doubt that supporting multiple entries with the same symbol
+in a choice block is worth the complexity - this is the only such case
+in the kernel tree.
 
-Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+This commit merges the two entries. Once this cleanup is accepted in
+the powerpc subsystem, I will proceed to refactor the Kconfig parser.
 
-> ---
->  scripts/lib/kdoc/kdoc_parser.py | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
-> 
-> diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
-> index 56299695abd1..7c635000f3de 100644
-> --- a/scripts/lib/kdoc/kdoc_parser.py
-> +++ b/scripts/lib/kdoc/kdoc_parser.py
-> @@ -60,6 +60,13 @@ export_symbol_ns = KernRe(r'^\s*EXPORT_SYMBOL_NS(_GPL)?\s*\(\s*(\w+)\s*,\s*"\S+"
->  
->  type_param = KernRe(r"\@(\w*((\.\w+)|(->\w+))*(\.\.\.)?)", cache=False)
->  
-> +#
-> +# A little helper to get rid of excess white space
-> +#
-> +multi_space = KernRe(r'\s\s+')
-> +def trim_whitespace(s):
-> +    return multi_space.sub(' ', s.strip())
-> +
->  class state:
->      """
->      State machine enums
-> @@ -1258,12 +1265,7 @@ class KernelDoc:
->  
->              r = KernRe("[-:](.*)")
->              if r.search(line):
-> -                # strip leading/trailing/multiple spaces
-> -                self.entry.descr = r.group(1).strip(" ")
-> -
-> -                r = KernRe(r"\s+")
-> -                self.entry.descr = r.sub(" ", self.entry.descr)
-> -                self.entry.declaration_purpose = self.entry.descr
-> +                self.entry.declaration_purpose = trim_whitespace(r.group(1))
->                  self.state = state.BODY_MAYBE
->              else:
->                  self.entry.declaration_purpose = ""
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
+ arch/powerpc/platforms/Kconfig.cputype | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
+diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
+index 613b383ed8b3..7b527d18aa5e 100644
+--- a/arch/powerpc/platforms/Kconfig.cputype
++++ b/arch/powerpc/platforms/Kconfig.cputype
+@@ -122,16 +122,11 @@ choice
+ 	  If unsure, select Generic.
+ 
+ config POWERPC64_CPU
+-	bool "Generic (POWER5 and PowerPC 970 and above)"
+-	depends on PPC_BOOK3S_64 && !CPU_LITTLE_ENDIAN
++	bool "Generic 64 bits powerpc"
++	depends on PPC_BOOK3S_64
++	select ARCH_HAS_FAST_MULTIPLIER if CPU_LITTLE_ENDIAN
+ 	select PPC_64S_HASH_MMU
+-
+-config POWERPC64_CPU
+-	bool "Generic (POWER8 and above)"
+-	depends on PPC_BOOK3S_64 && CPU_LITTLE_ENDIAN
+-	select ARCH_HAS_FAST_MULTIPLIER
+-	select PPC_64S_HASH_MMU
+-	select PPC_HAS_LBARX_LHARX
++	select PPC_HAS_LBARX_LHARX if CPU_LITTLE_ENDIAN
+ 
+ config POWERPC_CPU
+ 	bool "Generic 32 bits powerpc"
+-- 
+2.43.0
 
-Thanks,
-Mauro
