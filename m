@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477091FF1D1;
-	Sat,  7 Jun 2025 19:06:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F0B20487E;
+	Sat,  7 Jun 2025 19:06:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749323209; cv=none; b=RPuVhAKF9iJ4P6RIXUoX/YEkWUhc39U/2EmVu4+bVHL25pA9Go5r8kzB75FRlqQt2nFF6biTRilZkhkvlGaIER7jG+CYWQa5VJnf4M1COY7xV8UPDZz73918kzxPCIte2lTDuDj+IFSL/kjDNEjjl4rd+Zhc055ER5KgVYNlyj8=
+	t=1749323219; cv=none; b=hbkpyuAclSRkaiH53ptqNSbLCqW01lyVvKCMKyXpO43pgxbUDJ2Xpw/4bbug1LlbII18pxycY2EbrCJMVSVuErtD9kw3DLpeTcg+cYph2d2a03X3Mv/4sYNF83jsDcW+zsvdmSkslGPSeNQNAAaaeWngenlpujb1I1/1bldAEVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749323209; c=relaxed/simple;
-	bh=nSRqcFqOHlvP1tYvNAWX84xol0W+4lUh9kVCRnkLdEQ=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=VDwDk2+HejuXMvcLjBwkX0UpgkVZQc38+dZkNsDd3iqF+NOu0yfl3qyE/TErASFw5KDciWs9iydbWwjA2x/Ct0DP5O0G9u26ELENNHQmaOeF+n/RZ7DlpX5laihe8/TqnQ0F9Hp5xFHSC2ATefG5RTiATv+rvrGEq7M28KEYhBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=freZi6eH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749323219; c=relaxed/simple;
+	bh=eTEyRjfq0QfBLld3BGuJhjFCrp7Wg5wSkHaty9DDl6M=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=EQ20/eg/LwVc6JZYo4HEE8+VF6lpPfOttb4AIrzJ7xsyJm2xlRTXzmfpxF1o320ELwLeNYhXH3pv5qFX1IXr1wHn6R2hpPX3ulwESz4g4hYCrQqTz9fqpk1DB4JPF2LlJT1+Enauxc6twX4kpMKAmGb46Z57TV1JJJMoGzu9isY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c3U5jRT0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="freZi6eH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A638C4CEE4;
-	Sat,  7 Jun 2025 19:06:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c3U5jRT0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E56D1C4CEE4;
+	Sat,  7 Jun 2025 19:06:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749323209;
-	bh=nSRqcFqOHlvP1tYvNAWX84xol0W+4lUh9kVCRnkLdEQ=;
+	s=k20201202; t=1749323218;
+	bh=eTEyRjfq0QfBLld3BGuJhjFCrp7Wg5wSkHaty9DDl6M=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=freZi6eHR6540tejlwpuBwlIlGEHkskTp4QMl8jSBtmhpgbsdhqRFlZZUfMZ2U6xN
-	 +RzXA42lYh3rc3AYrcmMkWTZCbTXCGsOFZUQrJlU6S1H83DRC5pemg6koiGOiLfSXC
-	 gJoi/0ii6wf+48GgH+KRtHRQA/33SH/guB6UgJjxWbGn3ptSRqW2c1kHSDUvQjmpPy
-	 rkzSyKiMg8ocW3jIwVrOsCXlgMQzg51akPlvPslo8DbqxYaBi/PWIReLDfhBQBbAhU
-	 38wecJwf19Jfsjtg8jFekGBYa02RPFgI+TaCWU94IOb0JDDEDsi4QAYdjJUL8YnTpI
-	 GACWa6+H4Uc5w==
+	b=c3U5jRT0osGmIM1cvXPkTI+5eFzpqOMR9JQCSiRpP2tGjBXEhaMkyr0f9PNlzgB4g
+	 Xl61cmmf/vTIt8oIrlI2RAk5FdTN0SAerKlxGnNs4oGILgHFWeAzYFoXkLmDV7RCES
+	 OfBOuGH56lHkE+ym+ZpjyMEvyfrx1bxFT26r5eYQd6/d1dciBZbkZ9TmGt/1vObXz+
+	 +GgenAWHBIfAtKYi+bspvoy9BPRhQgyfWKNXLR85hI2heSmzoUVTNqEJabGU7Fwo/d
+	 XPijD3ov2FTXXm5vnQcH/qBqFe5Bnc8h55tGY9a0wyUXUo8u7VgRoFHHKAr7WvN3gF
+	 zHeTtvq6bnqEA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADCDC3806649;
-	Sat,  7 Jun 2025 19:07:21 +0000 (UTC)
-Subject: Re: [GIT PULL] Kbuild updates for v6.16-rc1
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70F583806649;
+	Sat,  7 Jun 2025 19:07:31 +0000 (UTC)
+Subject: Re: [GIT PULL] sh updates for v6.16
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <CAK7LNAQunzxOHR+vMZLf8kqxyRtLx-Z2G2VZquJmndrT9TZjiQ@mail.gmail.com>
-References: <CAK7LNAQunzxOHR+vMZLf8kqxyRtLx-Z2G2VZquJmndrT9TZjiQ@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kbuild.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAK7LNAQunzxOHR+vMZLf8kqxyRtLx-Z2G2VZquJmndrT9TZjiQ@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git tags/kbuild-v6.16
-X-PR-Tracked-Commit-Id: c50a04f8f45c7f13972f9097622d1d929033ea8c
+In-Reply-To: <878859a81e32c216669a9f80a6c30eaf83be5a9d.camel@physik.fu-berlin.de>
+References: <878859a81e32c216669a9f80a6c30eaf83be5a9d.camel@physik.fu-berlin.de>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <878859a81e32c216669a9f80a6c30eaf83be5a9d.camel@physik.fu-berlin.de>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/glaubitz/sh-linux.git tags/sh-for-v6.16-tag1
+X-PR-Tracked-Commit-Id: 8a3682601ddaa4ef0c400f627a7f4b9388bbccef
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8630c59e99363c4b655788fd01134aef9bcd9264
-Message-Id: <174932324029.115837.17716299217862228487.pr-tracker-bot@kernel.org>
-Date: Sat, 07 Jun 2025 19:07:20 +0000
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+X-PR-Merge-Commit-Id: b3154a6ff1f53b794c01096577700f35b1be9cc2
+Message-Id: <174932325013.115837.4506232687079260591.pr-tracker-bot@kernel.org>
+Date: Sat, 07 Jun 2025 19:07:30 +0000
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Thomas Huth <thuth@redhat.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Mike Rapoport <rppt@kernel.org>, Rich Felker <dalias@libc.org>, Yoshinori Sato <ysato@users.sourceforge.jp>, linux-sh <linux-sh@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Sun, 8 Jun 2025 01:41:18 +0900:
+The pull request you sent on Sat, 07 Jun 2025 17:33:15 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git tags/kbuild-v6.16
+> git://git.kernel.org/pub/scm/linux/kernel/git/glaubitz/sh-linux.git tags/sh-for-v6.16-tag1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8630c59e99363c4b655788fd01134aef9bcd9264
+https://git.kernel.org/torvalds/c/b3154a6ff1f53b794c01096577700f35b1be9cc2
 
 Thank you!
 
