@@ -1,312 +1,464 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA0221ABA8;
-	Sat,  7 Jun 2025 21:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A8D2CA6
+	for <linux-kernel@vger.kernel.org>; Sat,  7 Jun 2025 22:02:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749333133; cv=none; b=ii7vxCL+QMQlriWGwPPtr7+YurgLYWCri9y9Z4FwnZPbF5VqD+7s0xAdCFAHKgjjy4h0iefQRoIihaBxR0ftXAmxHVKL7pqKNE1RfzOISI2Hmya52s/a6z2CaAQ16zMutS31CTLTpPNWiNM09ipCOfdpvjtrXe8Myf5RvO0KBK0=
+	t=1749333729; cv=none; b=hPuWfszEYx2cmEZaCLXHeOryZhfzgYXBuJhZhm/LpyRv6WV5jmazOg2auNpl1JIUOuzRiyxXvmztaJm2m9ozDTkmsGrnouzRVq+TbEXZoKS1uv+D/dpFW4rqxy9Y99jsdTOIbRDhiP2T9vB6CyoaKfBPHhVADeIPzkMkMehrvIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749333133; c=relaxed/simple;
-	bh=ro13YKGz88KYcj43BPL02gYx2FUdYxyATbykMLPoOio=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SxzGAd/9Pwn69XYuqDDPeef3/k/QsyY+V2sQINLgT+Q4xodt7vHSxM+ZrJ+SKKyjcOJOtWEkMSZLF5grvMqEGeQJNQmu5I/v/y+465WfWu9MuxnGv7fRm+UjCWOJPwmFKCBTpHvl5FiWh0Ch1VF1oVtMXwZqzds73FKrg5fbDL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timmermann.space; spf=pass smtp.mailfrom=timmermann.space; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timmermann.space
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timmermann.space
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bFBjg2RDlz9sqq;
-	Sat,  7 Jun 2025 23:52:07 +0200 (CEST)
-From: Lukas Timmermann <linux@timmermann.space>
-To: lee@kernel.org,
-	pavel@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux@timmermann.space
-Subject: [PATCH v4 2/2] leds: as3668: Driver for the ams Osram 4-channel i2c LED driver
-Date: Sat,  7 Jun 2025 23:50:49 +0200
-Message-ID: <20250607215049.29259-3-linux@timmermann.space>
-In-Reply-To: <20250607215049.29259-1-linux@timmermann.space>
-References: <20250607215049.29259-1-linux@timmermann.space>
+	s=arc-20240116; t=1749333729; c=relaxed/simple;
+	bh=ZOecyM9Z3DL8s6M2H8YpAyfJt26VuhcBnXUBvB4ld4E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=nOEZ5pRc6v7zsHW+Ihm9gBWH9haMpW7+PGNWXcGlLfk6cjkSicc13DnJk+WO6H8X4xggZao4JAFaf3OayhJvPsB0+1Wmn4Zm0q7JEuJnKG1vxRimaMg4MfBrUzDhxWnXMMEXmMmeatVSPihO+oLc06SzhsMpo/zeRb48QPqGpQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SYxTuT8L; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SYxTuT8L"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7425bd5a83aso2739126b3a.0
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 15:02:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749333726; x=1749938526; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9T2hh4LXe9mzTbq9SoRU54PmUX07cPYHS8buY92NpiA=;
+        b=SYxTuT8LQRUPDrRaKL4Rl3l0WU42P7KsFXzrTtjIK2broH2zqerOTWHNehIyXKkZRo
+         K5/PSApsQz7/T+7Klcp9NWYUiendmAatTuV9QzHWIU854VmL2U+v88UaGS4lG1PD/00p
+         s4uzEP+Jx8MocsKJTxOcxbfrNDI6lXJoVOCIhBzwQnqC8MWf9hy8uUhLezypa39LVPdP
+         MTmIqB+NzIcgSRrhrZjcsEiv4NER/ZvsSA7YDGw09EAkNAMOGhU0fiEX3/hhx4lPhKqe
+         Z7lS/f7w087ijKmh//7cWWSDwhxllEcCB1sZkqnzJHx1VA78cAZX7rVKUMytxXu0RpST
+         vsBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749333726; x=1749938526;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9T2hh4LXe9mzTbq9SoRU54PmUX07cPYHS8buY92NpiA=;
+        b=gfUW5ijLWpFk36sJ3VhGB1++ZexUKgEtcFyQKw6i8zmpiFXJepwedNtW7iv+LbvTE8
+         Xs97328Qr8bXtnWfgjFG6nOg2aQJ9JVQn4aNUci7T6ayAjVhcFVfdJvk2iQ4JyMqRuiZ
+         2xDSoodGH1S4VU5Ob5xNHo9VL8V/4KDqMnafQc5fuziS52QSJZTboN0/hLSOKi6MvEsT
+         GzW1Q0tzSbTpPVYWgia3I7KMOk11cuKZFpNGGz5bw5IzYVedlQc8a5U+y+kPkP5vIOhS
+         84wdRzWuQUS2Y4lNDt60XWTs3860EjV6myz4redpc7ltitCK+PiTIKWBmaPf3NkcUbk4
+         hajA==
+X-Gm-Message-State: AOJu0YxY2zMv1+tdCpiiXmZQgA7a287EX4LJ5/B7WqBxPANhdTTgk8fT
+	k2EKcTvYkjUP+YZiJ49rsVgMJ3shsVu/QusJxduOPpPx2akVG6SpBEwa
+X-Gm-Gg: ASbGncvPozcfZn2uh8xL3KFHeQC+oZCpWzJTOLhIog1O37hbhFT3MjUudtwguutmJZs
+	McsjjlGWoVjaQjhvruI3QbrIID/AgccVxShculRSWJYtBDcrVeD9jgHPuhiX5B03FU7Hs1Sb/Wj
+	hIbAb0xmIAa+Nzqkr46wEd0pGb++q230m3hQkge/bApWzzobIm55lDTXhnfICBZ1oMq9Pcthcms
+	+VWb1RERrrVcKy419UsieP43+8J7sVCXuw0ISCQweVmRb9GwSLlM49gXlJth6xt6cwsFYtd7nWA
+	6Ja0rkvj4TgnvzKRWGC4lHr46HRSaU7upIhMbXrRCsOaLAkWy1JGuEHunTYb4XY=
+X-Google-Smtp-Source: AGHT+IFUzvuj2HHkXu+av+nYCrNdVfg2JBeIYJtIt3WbE7P0guHHqSuc8AEf9+s+Jx1CCciM9A4HsA==
+X-Received: by 2002:a05:6a00:848:b0:736:5f75:4a3b with SMTP id d2e1a72fcca58-74827e74aacmr11067010b3a.7.1749333726461;
+        Sat, 07 Jun 2025 15:02:06 -0700 (PDT)
+Received: from Barrys-MBP.hub ([118.92.145.159])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482af7b09dsm3173179b3a.43.2025.06.07.15.02.01
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Sat, 07 Jun 2025 15:02:05 -0700 (PDT)
+From: Barry Song <21cnbao@gmail.com>
+To: akpm@linux-foundation.org,
+	linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	Barry Song <v-songbaohua@oppo.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	David Hildenbrand <david@redhat.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Jann Horn <jannh@google.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Lokesh Gidra <lokeshgidra@google.com>,
+	Tangquan Zheng <zhengtangquan@oppo.com>,
+	Qi Zheng <zhengqi.arch@bytedance.com>
+Subject: [PATCH v4] mm: use per_vma lock for MADV_DONTNEED
+Date: Sun,  8 Jun 2025 10:01:50 +1200
+Message-Id: <20250607220150.2980-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Since there were no existing drivers for the AS3668 or related devices,
-a new driver was introduced in a separate file. Similar devices were
-reviewed, but none shared enough characteristics to justify code reuse.
-As a result, this driver is written specifically for the AS3668.
+From: Barry Song <v-songbaohua@oppo.com>
 
-Signed-off-by: Lukas Timmermann <linux@timmermann.space>
+Certain madvise operations, especially MADV_DONTNEED, occur far more
+frequently than other madvise options, particularly in native and Java
+heaps for dynamic memory management.
+
+Currently, the mmap_lock is always held during these operations, even when
+unnecessary. This causes lock contention and can lead to severe priority
+inversion, where low-priority threads—such as Android's HeapTaskDaemon—
+hold the lock and block higher-priority threads.
+
+This patch enables the use of per-VMA locks when the advised range lies
+entirely within a single VMA, avoiding the need for full VMA traversal. In
+practice, userspace heaps rarely issue MADV_DONTNEED across multiple VMAs.
+
+Tangquan’s testing shows that over 99.5% of memory reclaimed by Android
+benefits from this per-VMA lock optimization. After extended runtime,
+217,735 madvise calls from HeapTaskDaemon used the per-VMA path, while
+only 1,231 fell back to mmap_lock.
+
+To simplify handling, the implementation falls back to the standard
+mmap_lock if userfaultfd is enabled on the VMA, avoiding the complexity of
+userfaultfd_remove().
+
+Many thanks to Lorenzo's work[1] on:
+"Refactor the madvise() code to retain state about the locking mode
+utilised for traversing VMAs.
+
+Then use this mechanism to permit VMA locking to be done later in the
+madvise() logic and also to allow altering of the locking mode to permit
+falling back to an mmap read lock if required."
+
+One important point, as pointed out by Jann[2], is that
+untagged_addr_remote() requires holding mmap_lock. This is because
+address tagging on x86 and RISC-V is quite complex.
+
+Until untagged_addr_remote() becomes atomic—which seems unlikely in
+the near future—we cannot support per-VMA locks for remote processes.
+So for now, only local processes are supported.
+
+Link: https://lore.kernel.org/all/0b96ce61-a52c-4036-b5b6-5c50783db51f@lucifer.local/ [1]
+Link: https://lore.kernel.org/all/CAG48ez11zi-1jicHUZtLhyoNPGGVB+ROeAJCUw48bsjk4bbEkA@mail.gmail.com/ [2]
+Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Jann Horn <jannh@google.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Lokesh Gidra <lokeshgidra@google.com>
+Cc: Tangquan Zheng <zhengtangquan@oppo.com>
+Cc: Qi Zheng <zhengqi.arch@bytedance.com>
+Signed-off-by: Barry Song <v-songbaohua@oppo.com>
 ---
- MAINTAINERS                |   1 +
- drivers/leds/Kconfig       |  13 +++
- drivers/leds/Makefile      |   1 +
- drivers/leds/leds-as3668.c | 196 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 211 insertions(+)
- create mode 100644 drivers/leds/leds-as3668.c
+ -v4:
+ * collect Lorenzo's RB;
+ * use visit() for per-vma path
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 091206c54c63..945d78fef380 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3511,6 +3511,7 @@ M:	Lukas Timmermann <linux@timmermann.space>
- L:	linux-leds@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/leds/ams,as3668.yaml
-+F:	drivers/leds/leds-as3668.c
+ mm/madvise.c | 195 ++++++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 147 insertions(+), 48 deletions(-)
+
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 56d9ca2557b9..8382614b71d1 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -48,38 +48,19 @@ struct madvise_walk_private {
+ 	bool pageout;
+ };
  
- ASAHI KASEI AK7375 LENS VOICE COIL DRIVER
- M:	Tianshu Qiu <tian.shu.qiu@intel.com>
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index a104cbb0a001..8cfb423ddf82 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -100,6 +100,19 @@ config LEDS_ARIEL
- 
- 	  Say Y to if your machine is a Dell Wyse 3020 thin client.
- 
-+config LEDS_AS3668
-+	tristate "LED support for AMS AS3668"
-+	depends on LEDS_CLASS
-+	depends on I2C
-+	help
-+	  This option enables support for the AMS AS3668 LED controller.
-+	  The AS3668 provides up to four LED channels and is controlled via
-+	  the I2C bus. This driver offers basic brightness control for each
-+	  channel, without support for blinking or other advanced features.
++enum madvise_lock_mode {
++	MADVISE_NO_LOCK,
++	MADVISE_MMAP_READ_LOCK,
++	MADVISE_MMAP_WRITE_LOCK,
++	MADVISE_VMA_READ_LOCK,
++};
 +
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called leds-as3668.
-+
- config LEDS_AW200XX
- 	tristate "LED support for Awinic AW20036/AW20054/AW20072/AW20108"
- 	depends on LEDS_CLASS
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 2f170d69dcbf..983811384fec 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_LEDS_ADP5520)		+= leds-adp5520.o
- obj-$(CONFIG_LEDS_AN30259A)		+= leds-an30259a.o
- obj-$(CONFIG_LEDS_APU)			+= leds-apu.o
- obj-$(CONFIG_LEDS_ARIEL)		+= leds-ariel.o
-+obj-$(CONFIG_LEDS_AS3668)		+= leds-as3668.o
- obj-$(CONFIG_LEDS_AW200XX)		+= leds-aw200xx.o
- obj-$(CONFIG_LEDS_AW2013)		+= leds-aw2013.o
- obj-$(CONFIG_LEDS_BCM6328)		+= leds-bcm6328.o
-diff --git a/drivers/leds/leds-as3668.c b/drivers/leds/leds-as3668.c
-new file mode 100644
-index 000000000000..e3f90078f6ec
---- /dev/null
-+++ b/drivers/leds/leds-as3668.c
-@@ -0,0 +1,196 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
+ struct madvise_behavior {
+ 	int behavior;
+ 	struct mmu_gather *tlb;
++	enum madvise_lock_mode lock_mode;
+ };
+ 
+-/*
+- * Any behaviour which results in changes to the vma->vm_flags needs to
+- * take mmap_lock for writing. Others, which simply traverse vmas, need
+- * to only take it for reading.
+- */
+-static int madvise_need_mmap_write(int behavior)
+-{
+-	switch (behavior) {
+-	case MADV_REMOVE:
+-	case MADV_WILLNEED:
+-	case MADV_DONTNEED:
+-	case MADV_DONTNEED_LOCKED:
+-	case MADV_COLD:
+-	case MADV_PAGEOUT:
+-	case MADV_FREE:
+-	case MADV_POPULATE_READ:
+-	case MADV_POPULATE_WRITE:
+-	case MADV_COLLAPSE:
+-	case MADV_GUARD_INSTALL:
+-	case MADV_GUARD_REMOVE:
+-		return 0;
+-	default:
+-		/* be safe, default to 1. list exceptions explicitly */
+-		return 1;
+-	}
+-}
+-
+ #ifdef CONFIG_ANON_VMA_NAME
+ struct anon_vma_name *anon_vma_name_alloc(const char *name)
+ {
+@@ -1486,6 +1467,44 @@ static bool process_madvise_remote_valid(int behavior)
+ 	}
+ }
+ 
 +/*
-+ *  Osram AMS AS3668 LED Driver IC
++ * Try to acquire a VMA read lock if possible.
 + *
-+ *  Copyright (C) 2025 Lukas Timmermann <linux@timmermann.space>
++ * We only support this lock over a single VMA, which the input range must
++ * span either partially or fully.
++ *
++ * This function always returns with an appropriate lock held. If a VMA read
++ * lock could be acquired, we return the locked VMA.
++ *
++ * If a VMA read lock could not be acquired, we return NULL and expect caller to
++ * fallback to mmap lock behaviour.
 + */
-+
-+#include <linux/i2c.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/uleds.h>
-+
-+#define AS3668_MAX_LEDS 4
-+
-+/* Chip Registers */
-+#define AS3668_CHIP_ID1 0x3e
-+#define AS3668_CHIP_ID2 0x3f
-+
-+#define AS3668_CHIP_ID2_SERIAL_MASK GENMASK(7, 4)
-+#define AS3668_CHIP_ID2_REV_MASK GENMASK(3, 0)
-+
-+#define AS3668_CURRX_CONTROL 0x01
-+#define AS3668_CURR1 0x02
-+#define AS3668_CURR2 0x03
-+#define AS3668_CURR3 0x04
-+#define AS3668_CURR4 0x05
-+
-+/* Constants */
-+#define AS3668_CHIP_IDENT 0xa5
-+#define AS3668_CHIP_REV1 0x01
-+
-+struct as3668_led {
-+	struct led_classdev cdev;
-+	struct as3668 *chip;
-+	struct fwnode_handle *fwnode;
-+
-+	int num;
-+};
-+
-+struct as3668 {
-+	struct i2c_client *client;
-+	struct as3668_led leds[AS3668_MAX_LEDS];
-+};
-+
-+static int as3668_read_value(struct i2c_client *client, u8 reg)
++static struct vm_area_struct *try_vma_read_lock(struct mm_struct *mm,
++		struct madvise_behavior *madv_behavior,
++		unsigned long start, unsigned long end)
 +{
-+	return i2c_smbus_read_byte_data(client, reg);
++	struct vm_area_struct *vma;
++
++	vma = lock_vma_under_rcu(mm, start);
++	if (!vma)
++		goto take_mmap_read_lock;
++	/*
++	 * Must span only a single VMA; uffd and remote processes are
++	 * unsupported.
++	 */
++	if (end > vma->vm_end || current->mm != mm ||
++	    userfaultfd_armed(vma)) {
++		vma_end_read(vma);
++		goto take_mmap_read_lock;
++	}
++	return vma;
++
++take_mmap_read_lock:
++	mmap_read_lock(mm);
++	madv_behavior->lock_mode = MADVISE_MMAP_READ_LOCK;
++	return NULL;
 +}
 +
-+static int as3668_write_value(struct i2c_client *client, u8 reg, u8 value)
-+{
-+	int err = i2c_smbus_write_byte_data(client, reg, value);
+ /*
+  * Walk the vmas in range [start,end), and call the visit function on each one.
+  * The visit function will get start and end parameters that cover the overlap
+@@ -1496,7 +1515,8 @@ static bool process_madvise_remote_valid(int behavior)
+  */
+ static
+ int madvise_walk_vmas(struct mm_struct *mm, unsigned long start,
+-		      unsigned long end, void *arg,
++		      unsigned long end, struct madvise_behavior *madv_behavior,
++		      void *arg,
+ 		      int (*visit)(struct vm_area_struct *vma,
+ 				   struct vm_area_struct **prev, unsigned long start,
+ 				   unsigned long end, void *arg))
+@@ -1505,6 +1525,20 @@ int madvise_walk_vmas(struct mm_struct *mm, unsigned long start,
+ 	struct vm_area_struct *prev;
+ 	unsigned long tmp;
+ 	int unmapped_error = 0;
++	int error;
 +
-+	if (err)
-+		dev_err(&client->dev, "error writing to reg 0x%tx, returned %d", reg, err);
-+
-+	return err;
-+}
-+
-+static enum led_brightness as3668_brightness_get(struct led_classdev *cdev)
-+{
-+	struct as3668_led *led = container_of(cdev, struct as3668_led, cdev);
-+
-+	return as3668_read_value(led->chip->client, AS3668_CURR1 + led->num);
-+}
-+
-+static void as3668_brightness_set(struct led_classdev *cdev, enum led_brightness brightness)
-+{
-+	struct as3668_led *led = container_of(cdev, struct as3668_led, cdev);
-+
-+	as3668_write_value(led->chip->client, AS3668_CURR1 + led->num, brightness);
-+}
-+
-+static int as3668_dt_init(struct as3668 *as3668)
-+{
-+	struct device *dev = &as3668->client->dev;
-+	struct as3668_led *led;
-+	struct led_init_data init_data = {};
-+	int err;
-+	u32 reg;
-+	int i = 0;
-+
-+	for_each_available_child_of_node_scoped(dev_of_node(dev), child) {
-+		err = of_property_read_u32(child, "reg", &reg);
-+		if (err)
-+			dev_err(dev, "unable to read device tree led reg, err %d", err);
-+
-+		i = reg;
-+
-+		if (i < 0 || i > AS3668_MAX_LEDS) {
-+			dev_err(dev, "unsupported led reg %d\n", i);
-+			return -EOPNOTSUPP;
-+		}
-+
-+		led = &as3668->leds[i];
-+		led->fwnode = of_fwnode_handle(child);
-+
-+		led->num = i;
-+		led->chip = as3668;
-+
-+		led->cdev.max_brightness = U8_MAX;
-+		led->cdev.brightness_get = as3668_brightness_get;
-+		led->cdev.brightness_set = as3668_brightness_set;
-+
-+		init_data.fwnode = led->fwnode;
-+		init_data.default_label = ":";
-+
-+		err = devm_led_classdev_register_ext(dev, &led->cdev, &init_data);
-+		if (err) {
-+			dev_err(dev, "failed to register %d LED\n", i);
-+			return err;
++	/*
++	 * If VMA read lock is supported, apply madvise to a single VMA
++	 * tentatively, avoiding walking VMAs.
++	 */
++	if (madv_behavior && madv_behavior->lock_mode == MADVISE_VMA_READ_LOCK) {
++		vma = try_vma_read_lock(mm, madv_behavior, start, end);
++		if (vma) {
++			error = visit(vma, &prev, start, end, arg);
++			vma_end_read(vma);
++			return error;
 +		}
 +	}
+ 
+ 	/*
+ 	 * If the interval [start,end) covers some unmapped address
+@@ -1516,8 +1550,6 @@ int madvise_walk_vmas(struct mm_struct *mm, unsigned long start,
+ 		prev = vma;
+ 
+ 	for (;;) {
+-		int error;
+-
+ 		/* Still start < end. */
+ 		if (!vma)
+ 			return -ENOMEM;
+@@ -1598,34 +1630,86 @@ int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
+ 	if (end == start)
+ 		return 0;
+ 
+-	return madvise_walk_vmas(mm, start, end, anon_name,
++	return madvise_walk_vmas(mm, start, end, NULL, anon_name,
+ 				 madvise_vma_anon_name);
+ }
+ #endif /* CONFIG_ANON_VMA_NAME */
+ 
+-static int madvise_lock(struct mm_struct *mm, int behavior)
 +
-+	return 0;
++/*
++ * Any behaviour which results in changes to the vma->vm_flags needs to
++ * take mmap_lock for writing. Others, which simply traverse vmas, need
++ * to only take it for reading.
++ */
++static enum madvise_lock_mode get_lock_mode(struct madvise_behavior *madv_behavior)
+ {
++	int behavior = madv_behavior->behavior;
++
+ 	if (is_memory_failure(behavior))
+-		return 0;
++		return MADVISE_NO_LOCK;
+ 
+-	if (madvise_need_mmap_write(behavior)) {
++	switch (behavior) {
++	case MADV_REMOVE:
++	case MADV_WILLNEED:
++	case MADV_COLD:
++	case MADV_PAGEOUT:
++	case MADV_FREE:
++	case MADV_POPULATE_READ:
++	case MADV_POPULATE_WRITE:
++	case MADV_COLLAPSE:
++	case MADV_GUARD_INSTALL:
++	case MADV_GUARD_REMOVE:
++		return MADVISE_MMAP_READ_LOCK;
++	case MADV_DONTNEED:
++	case MADV_DONTNEED_LOCKED:
++		return MADVISE_VMA_READ_LOCK;
++	default:
++		return MADVISE_MMAP_WRITE_LOCK;
++	}
 +}
 +
-+static int as3668_probe(struct i2c_client *client)
++static int madvise_lock(struct mm_struct *mm,
++		struct madvise_behavior *madv_behavior)
 +{
-+	u8 chip_id1, chip_id2, chip_serial, chip_rev;
-+	struct as3668 *as3668;
++	enum madvise_lock_mode lock_mode = get_lock_mode(madv_behavior);
 +
-+	/* Check for sensible i2c address */
-+	if (client->addr != 0x42)
-+		return dev_err_probe(&client->dev, -EFAULT,
-+				     "unexpected address for as3668 device\n");
++	switch (lock_mode) {
++	case MADVISE_NO_LOCK:
++		break;
++	case MADVISE_MMAP_WRITE_LOCK:
+ 		if (mmap_write_lock_killable(mm))
+ 			return -EINTR;
+-	} else {
++		break;
++	case MADVISE_MMAP_READ_LOCK:
+ 		mmap_read_lock(mm);
++		break;
++	case MADVISE_VMA_READ_LOCK:
++		/* We will acquire the lock per-VMA in madvise_walk_vmas(). */
++		break;
+ 	}
 +
-+	/* Read identifier from chip */
-+	chip_id1 = as3668_read_value(client, AS3668_CHIP_ID1);
++	madv_behavior->lock_mode = lock_mode;
+ 	return 0;
+ }
+ 
+-static void madvise_unlock(struct mm_struct *mm, int behavior)
++static void madvise_unlock(struct mm_struct *mm,
++		struct madvise_behavior *madv_behavior)
+ {
+-	if (is_memory_failure(behavior))
++	switch (madv_behavior->lock_mode) {
++	case  MADVISE_NO_LOCK:
+ 		return;
+-
+-	if (madvise_need_mmap_write(behavior))
++	case MADVISE_MMAP_WRITE_LOCK:
+ 		mmap_write_unlock(mm);
+-	else
++		break;
++	case MADVISE_MMAP_READ_LOCK:
+ 		mmap_read_unlock(mm);
++		break;
++	case MADVISE_VMA_READ_LOCK:
++		/* We will drop the lock per-VMA in madvise_walk_vmas(). */
++		break;
++	}
 +
-+	if (chip_id1 != AS3668_CHIP_IDENT)
-+		return dev_err_probe(&client->dev, -ENODEV,
-+				"chip reported wrong id: 0x%tx\n", chip_id1);
-+
-+	/* Check the revision*/
-+	chip_id2 = as3668_read_value(client, AS3668_CHIP_ID2);
-+	chip_serial = FIELD_GET(AS3668_CHIP_ID2_SERIAL_MASK, chip_id2);
-+	chip_rev = FIELD_GET(AS3668_CHIP_ID2_REV_MASK, chip_id2);
-+
-+	if (chip_rev != AS3668_CHIP_REV1)
-+		dev_warn(&client->dev, "unexpected chip revision\n");
-+
-+	/* Print out information about the chip */
-+	dev_dbg(&client->dev,
-+		"chip_id: 0x%tx | chip_id2: 0x%tx | chip_serial: 0x%tx | chip_rev: 0x%tx\n",
-+		chip_id1, chip_id2, chip_serial, chip_rev);
-+
-+	as3668 = devm_kzalloc(&client->dev, struct_size(as3668, leds, AS3668_MAX_LEDS), GFP_KERNEL);
-+	as3668->client = client;
-+
-+	as3668_dt_init(as3668);
-+
-+	/* Initialize the chip */
-+	as3668_write_value(client, AS3668_CURRX_CONTROL, 0x55);
-+	as3668_write_value(client, AS3668_CURR1, 0x00);
-+	as3668_write_value(client, AS3668_CURR2, 0x00);
-+	as3668_write_value(client, AS3668_CURR3, 0x00);
-+	as3668_write_value(client, AS3668_CURR4, 0x00);
-+
-+	return 0;
-+}
-+
-+static void as3668_remove(struct i2c_client *client)
++	madv_behavior->lock_mode = MADVISE_NO_LOCK;
+ }
+ 
+ static bool madvise_batch_tlb_flush(int behavior)
+@@ -1710,6 +1794,21 @@ static bool is_madvise_populate(int behavior)
+ 	}
+ }
+ 
++/*
++ * untagged_addr_remote() assumes mmap_lock is already held. On
++ * architectures like x86 and RISC-V, tagging is tricky because each
++ * mm may have a different tagging mask. However, we might only hold
++ * the per-VMA lock (currently only local processes are supported),
++ * so untagged_addr is used to avoid the mmap_lock assertion for
++ * local processes.
++ */
++static inline unsigned long get_untagged_addr(struct mm_struct *mm,
++		unsigned long start)
 +{
-+	as3668_write_value(client, AS3668_CURRX_CONTROL, 0x0);
++	return current->mm == mm ? untagged_addr(start) :
++				   untagged_addr_remote(mm, start);
 +}
 +
-+static const struct i2c_device_id as3668_idtable[] = {
-+	{"as3668"},
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(i2c, as3668_idtable);
-+
-+static const struct of_device_id as3668_match_table[] = {
-+	{.compatible = "ams,as3668"},
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(of, as3668_match_table);
-+
-+static struct i2c_driver as3668_driver = {
-+	.driver = {
-+		.name           = "leds_as3668",
-+		.of_match_table = as3668_match_table,
-+	},
-+	.probe          = as3668_probe,
-+	.remove         = as3668_remove,
-+	.id_table       = as3668_idtable,
-+};
-+
-+module_i2c_driver(as3668_driver);
-+
-+MODULE_AUTHOR("Lukas Timmermann <linux@timmermann.space>");
-+MODULE_DESCRIPTION("AS3668 LED driver");
-+MODULE_LICENSE("GPL");
+ static int madvise_do_behavior(struct mm_struct *mm,
+ 		unsigned long start, size_t len_in,
+ 		struct madvise_behavior *madv_behavior)
+@@ -1721,7 +1820,7 @@ static int madvise_do_behavior(struct mm_struct *mm,
+ 
+ 	if (is_memory_failure(behavior))
+ 		return madvise_inject_error(behavior, start, start + len_in);
+-	start = untagged_addr_remote(mm, start);
++	start = get_untagged_addr(mm, start);
+ 	end = start + PAGE_ALIGN(len_in);
+ 
+ 	blk_start_plug(&plug);
+@@ -1729,7 +1828,7 @@ static int madvise_do_behavior(struct mm_struct *mm,
+ 		error = madvise_populate(mm, start, end, behavior);
+ 	else
+ 		error = madvise_walk_vmas(mm, start, end, madv_behavior,
+-					  madvise_vma_behavior);
++				madv_behavior, madvise_vma_behavior);
+ 	blk_finish_plug(&plug);
+ 	return error;
+ }
+@@ -1817,13 +1916,13 @@ int do_madvise(struct mm_struct *mm, unsigned long start, size_t len_in, int beh
+ 
+ 	if (madvise_should_skip(start, len_in, behavior, &error))
+ 		return error;
+-	error = madvise_lock(mm, behavior);
++	error = madvise_lock(mm, &madv_behavior);
+ 	if (error)
+ 		return error;
+ 	madvise_init_tlb(&madv_behavior, mm);
+ 	error = madvise_do_behavior(mm, start, len_in, &madv_behavior);
+ 	madvise_finish_tlb(&madv_behavior);
+-	madvise_unlock(mm, behavior);
++	madvise_unlock(mm, &madv_behavior);
+ 
+ 	return error;
+ }
+@@ -1847,7 +1946,7 @@ static ssize_t vector_madvise(struct mm_struct *mm, struct iov_iter *iter,
+ 
+ 	total_len = iov_iter_count(iter);
+ 
+-	ret = madvise_lock(mm, behavior);
++	ret = madvise_lock(mm, &madv_behavior);
+ 	if (ret)
+ 		return ret;
+ 	madvise_init_tlb(&madv_behavior, mm);
+@@ -1880,8 +1979,8 @@ static ssize_t vector_madvise(struct mm_struct *mm, struct iov_iter *iter,
+ 
+ 			/* Drop and reacquire lock to unwind race. */
+ 			madvise_finish_tlb(&madv_behavior);
+-			madvise_unlock(mm, behavior);
+-			ret = madvise_lock(mm, behavior);
++			madvise_unlock(mm, &madv_behavior);
++			ret = madvise_lock(mm, &madv_behavior);
+ 			if (ret)
+ 				goto out;
+ 			madvise_init_tlb(&madv_behavior, mm);
+@@ -1892,7 +1991,7 @@ static ssize_t vector_madvise(struct mm_struct *mm, struct iov_iter *iter,
+ 		iov_iter_advance(iter, iter_iov_len(iter));
+ 	}
+ 	madvise_finish_tlb(&madv_behavior);
+-	madvise_unlock(mm, behavior);
++	madvise_unlock(mm, &madv_behavior);
+ 
+ out:
+ 	ret = (total_len - iov_iter_count(iter)) ? : ret;
 -- 
-2.49.0
+2.39.3 (Apple Git-146)
 
