@@ -1,143 +1,72 @@
-Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A5F1372;
-	Sun,  8 Jun 2025 06:07:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.204
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3D62AE6F
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 06:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749362866; cv=none; b=De3jo7naEIRjojoaEW237m495MQp0qf5YEo6prUPpbOgQLp0MyjiAQK/Y76wAZpIaCP/hGEjdmn3FqMbA2whhvqFkW/KZsAYZeSR6EnUBPzqDZVC7O/M9T1xsGjUq0fnGtD2HFMObL5rBBJiOlRQtWbkMNx/uEnRhTRJXq67kQY=
+	t=1749363184; cv=none; b=BPPardfqAmTXIFBxpY0dYErrtFEuNxyvzx+DV85/Wy5FIKRNLCsP3BTq8zN1pGoF2s/GW97u/6b78k2Z4GMNdoHMBR+MG3uLugCe3O3T+kfTN6qZhXi7NSE+fcoCXR2GktR3tnoK+rvgy7U/ER5mTGsdn7afmB9C6Pg5OahsysQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749362866; c=relaxed/simple;
-	bh=6CKfrQXaIsxvYjLqtf2J+UBK9lHsV3t17BaJqRbua1A=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fhNQayLR7CiFGX2oaptGoBR0ssd+/UsT1u1a3qjtY+Eiw3nO2BMKa043Q8EFyhvDQjK5hEMRTS6T0rHg4inn8e9vJaY1MdRQd8L4oKNZImyiriwuRp8NzVrvnokBLQk/uEa2rQhedFM37bB5eNYewbFwTAGxQT63btxlpNiA1do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=W5Q5WZM7; arc=none smtp.client-ip=207.171.188.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="W5Q5WZM7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1749362865; x=1780898865;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=avBttXiSSME7van6tk2bFmYzW6QRRSSGD0yy3TEB3M4=;
-  b=W5Q5WZM7h1ajYIQbQdwl7NWkHhiViKLX4JlYRq6O1Vn6RUgv+iCAuHXp
-   nC4TFb9FBhHE7vpxRb1SOYzy/0fu2tjSipLoB6HocZgEpdk1nc9+f0X6B
-   1jWX1twFDqK/LLpGqAZoQDhHo+s8xrL66uWDJSgrFJHGc1r7z8ebbOMGM
-   +/uQVegIAxOwyECQumBgJm5MF5ii1dbhMoucHVsZBcX4N5Xq6OhQE0ABD
-   BnLsR9Um/9rl6PiPd/jyl9NAmEDz9SwcH7t6MU1GQk5tqlMmi46rGbd1f
-   pOFk4+JuYaxCjNYGjfHShUy8kjdDeyRCVHn1LHzFujEkw5wJeFLPpMvfM
-   A==;
-X-IronPort-AV: E=Sophos;i="6.16,219,1744070400"; 
-   d="scan'208";a="28319561"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2025 06:07:38 +0000
-Received: from EX19MTAEUA001.ant.amazon.com [10.0.10.100:21462]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.19.236:2525] with esmtp (Farcaster)
- id 65724dd7-c7be-4e89-b106-23a5e8fab81f; Sun, 8 Jun 2025 06:07:37 +0000 (UTC)
-X-Farcaster-Flow-ID: 65724dd7-c7be-4e89-b106-23a5e8fab81f
-Received: from EX19D018EUA004.ant.amazon.com (10.252.50.85) by
- EX19MTAEUA001.ant.amazon.com (10.252.50.192) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Sun, 8 Jun 2025 06:07:37 +0000
-Received: from dev-dsk-farbere-1a-46ecabed.eu-west-1.amazon.com
- (172.19.116.181) by EX19D018EUA004.ant.amazon.com (10.252.50.85) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Sun, 8 Jun 2025
- 06:07:34 +0000
-From: Eliav Farber <farbere@amazon.com>
-To: <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>, <yoshfuji@linux-ipv6.org>,
-	<kuba@kernel.org>, <kuniyu@amazon.com>, <sashal@kernel.org>,
-	<edumazet@google.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <farbere@amazon.com>
-Subject: [PATCH] net/ipv4: fix type mismatch in inet_ehash_locks_alloc() causing build failure
-Date: Sun, 8 Jun 2025 06:07:26 +0000
-Message-ID: <20250608060726.43331-1-farbere@amazon.com>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1749363184; c=relaxed/simple;
+	bh=banS8Im8D+4EymUmgquCmjjnmIq3TOYNQfR+UksTTFU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=MOfaPG/AOQT+y1Q8xUvLsHc7zOEF2xLETF2fdao7qxN30ONtDt7XQ1JZS9WAtOU2xo2BX5s/c6HLm9/PXPplaUfUkoiD1E42Yzgo+Sg70GNJCXNuD1IuB4aUEqrxl2NQef+DqtN5rTcidydekIOOjQj6PxyFyjaiYiUlJ1g3M9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ddb4dcebfaso79273095ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 23:13:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749363182; x=1749967982;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=k4u/+PVIsoFW3lTlJLCtnxq6Ama9WuRlhe1po2MbTd0=;
+        b=J8CuJP+QnlsBM+cLbl1dJm2ecAh6peSDQj+fCVfNTCP1/wnhnlYhG2rFP9C78MPv/r
+         MiNCziNLI42qJkEjGlh+KtLAR4ScUb0sXOjbW65rENeVNaFlvXU/sNhimCUkUEavqgHg
+         J6+pb7h33uLeudczk88D3gfrwkgkGJURJ3dhe7zkOgFd9zpErIyczDTX/5KIccBjzMnr
+         7IH+WCHs1y6YdvJje5UpuK9OM6lWUGQVb91TP1YlUG/cL9u/6r3RIMUXS1bTEMOj4WLt
+         pjuB3Tl+pucZzxAhlUaEMSaRyGK78440EXWzETn6Y5N+D2ovKMniFL7lnbECW4PV0CoJ
+         l0fA==
+X-Forwarded-Encrypted: i=1; AJvYcCXLcmt9OAbZxBb7hPd5m7d3JycLlmKjAFazdt9ySAU3QQJn1ZabMosufuixhj/pO5DRxl8RoeXlQmUk7CE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7rGKiGMqWOGjOmeoljjDk9XmV7vpoLPvANsWUp/n9AA3rVBof
+	1iY2tleEQtfnq2iAf29Z71IHvEFWvA5OpRS4/pwRM0QR6jHeZjnkJGsliQNKp4z5dfhdW22QKPi
+	BFrHrcTgEj29HTY1Xv8iiuCrc04e/ozqfCubcTMMLIgyu5HmBBFjdEOPzRTA=
+X-Google-Smtp-Source: AGHT+IHw4iEfWXDsL46PG7yHWQfEOLsPZmyRwjcEIUy8cuTkBmKDjBTF1rq7sEaWfFeIFbvm/jHVzKpbKOhcpqezVjijH33gJg+I
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1c0f:b0:3dd:cb82:3088 with SMTP id
+ e9e14a558f8ab-3ddce3fce92mr100532285ab.6.1749363182287; Sat, 07 Jun 2025
+ 23:13:02 -0700 (PDT)
+Date: Sat, 07 Jun 2025 23:13:02 -0700
+In-Reply-To: <20250608054619.924-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <684529ee.a70a0220.27c366.004b.GAE@google.com>
+Subject: Re: [syzbot] [afs?] INFO: task hung in afs_cell_purge (2)
+From: syzbot <syzbot+750f21d691e244b473b1@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EX19D035UWB004.ant.amazon.com (10.13.138.104) To
- EX19D018EUA004.ant.amazon.com (10.252.50.85)
 
-Fix compilation warning:
+Hello,
 
-In file included from ./include/linux/kernel.h:15,
-                 from ./include/linux/list.h:9,
-                 from ./include/linux/module.h:12,
-                 from net/ipv4/inet_hashtables.c:12:
-net/ipv4/inet_hashtables.c: In function ‘inet_ehash_locks_alloc’:
-./include/linux/minmax.h:20:35: warning: comparison of distinct pointer types lacks a cast
-   20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
-      |                                   ^~
-./include/linux/minmax.h:26:18: note: in expansion of macro ‘__typecheck’
-   26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
-      |                  ^~~~~~~~~~~
-./include/linux/minmax.h:36:31: note: in expansion of macro ‘__safe_cmp’
-   36 |         __builtin_choose_expr(__safe_cmp(x, y), \
-      |                               ^~~~~~~~~~
-./include/linux/minmax.h:52:25: note: in expansion of macro ‘__careful_cmp’
-   52 | #define max(x, y)       __careful_cmp(x, y, >)
-      |                         ^~~~~~~~~~~~~
-net/ipv4/inet_hashtables.c:946:19: note: in expansion of macro ‘max’
-  946 |         nblocks = max(nblocks, num_online_nodes() * PAGE_SIZE / locksz);
-      |                   ^~~
-  CC      block/badblocks.o
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-When warnings are treated as errors, this causes the build to fail.
+Reported-by: syzbot+750f21d691e244b473b1@syzkaller.appspotmail.com
+Tested-by: syzbot+750f21d691e244b473b1@syzkaller.appspotmail.com
 
-The issue is a type mismatch between the operands passed to the max()
-macro. Here, nblocks is an unsigned int, while the expression
-num_online_nodes() * PAGE_SIZE / locksz is promoted to unsigned long.
+Tested on:
 
-This happens because:
- - num_online_nodes() returns int
- - PAGE_SIZE is typically defined as an unsigned long (depending on the
-   architecture)
- - locksz is unsigned int
+commit:         8630c59e Merge tag 'kbuild-v6.16' of git://git.kernel...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1799120c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d9ebb51ccc2ec42f
+dashboard link: https://syzkaller.appspot.com/bug?extid=750f21d691e244b473b1
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=10620a82580000
 
-The resulting arithmetic expression is promoted to unsigned long.
-
-Thus, the max() macro compares values of different types: unsigned int
-vs unsigned long.
-
-This issue was introduced in commit b53d6e9525af ("tcp: bring back NUMA
-dispersion in inet_ehash_locks_alloc()") during the update from kernel
-v5.10.237 to v5.10.238.
-
-It does not exist in newer kernel branches (e.g., v5.15.185 and all 6.x
-branches), because they include commit d53b5d862acd ("minmax: allow
-min()/max()/clamp() if the arguments have the same signedness.")
-
-Fix the issue by using max_t(unsigned int, ...) to explicitly cast both
-operands to the same type, avoiding the type mismatch and ensuring
-correctness.
-
-Fixes: b53d6e9525af ("tcp: bring back NUMA dispersion in inet_ehash_locks_alloc()")
-Signed-off-by: Eliav Farber <farbere@amazon.com>
----
- net/ipv4/inet_hashtables.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
-index fea74ab2a4be..ac2d185c04ef 100644
---- a/net/ipv4/inet_hashtables.c
-+++ b/net/ipv4/inet_hashtables.c
-@@ -943,7 +943,7 @@ int inet_ehash_locks_alloc(struct inet_hashinfo *hashinfo)
- 	nblocks = max(2U * L1_CACHE_BYTES / locksz, 1U) * num_possible_cpus();
- 
- 	/* At least one page per NUMA node. */
--	nblocks = max(nblocks, num_online_nodes() * PAGE_SIZE / locksz);
-+	nblocks = max_t(unsigned int, nblocks, num_online_nodes() * PAGE_SIZE / locksz);
- 
- 	nblocks = roundup_pow_of_two(nblocks);
- 
--- 
-2.47.1
-
+Note: testing is done by a robot and is best-effort only.
