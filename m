@@ -1,273 +1,291 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2956178C9C
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 15:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08AB924DD02
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 15:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749395329; cv=none; b=TCX8mLS2EWFlMyZKLXiF8Q/yq2rcRzhShmD0jZpCo5JFOGROx3dbfS7QZeZDuPZfq5XV6SKmqunbddtQWcpTRFgIkYoKRNy1WYICi6D30tos8yc6Pai5yGjt15vg8Dk6tcGjmwR00dyBY/oq9k3FnH2+FsHn7Yh17RreYr2mPF4=
+	t=1749395373; cv=none; b=Lcqn7KW5pduOjli9iCLkcpU1JTWngRUo5tB6jgAOIeLCUzN3YMPU57RwP2jMYZc5LSOf3tifUpGaHBNJQy1AQWX1QiEXUYjcF1n/i6OZsiYFm8ZBkCgPkPyfgEpl6EN01ATK2kBeqjJp9nQYERZD1zvXs3AI+lab/kgGj1KQsYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749395329; c=relaxed/simple;
-	bh=RiBPPqH3cfvIyD2u2C3gJbSOjM0gUID+3lZejJ4EnUw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lVqwCGLch3YxMtVj91FxUt1QpdBxy3pPruuXGeFbJ06dSKlbhoYkHIccrLCz3KWzTRf/cHrnqwCyajVQ38z1+A7l9ze/+4v7Moj9B9X6HB3rmQ8izXNyT+kpXtB3ndXpMWITPOGxK3TRt0D0qwwuctk5I7pG8fTTCuoti9laEPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=aLX6eM5q; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1749395373; c=relaxed/simple;
+	bh=7um7X5NeZjHikLWzlty4JC7AasspTawyi987o6ubjWQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K9NZq4IQEHMnr2LDGlGnJ4PqUlyz7eVKZStSjhOAd/1vXdGsbYgGE+JJbQT3h60+NTmxbQHg7OZpWdMHHzkbu7MAkQ/vUIifU7eBwN58RPX310msGDoitIUW9XZW1z/HMCNJVcQyeqI40SSnrlvq6xlfkEv9njz0RPY4iB3hIhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=QiCoVzmt; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="aLX6eM5q"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4a43e277198so28835541cf.1
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 08:08:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1749395325; x=1750000125; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lzuRPFYIZRvhRVOmWKy01BEcZ/VAU38+zCshzHdk5c8=;
-        b=aLX6eM5qvBiY9fPMLXXaBJC8UcSpmUTerKaf6eKfCfKRbk42mCI65Uc+9aJLuFXnqG
-         G1uMLg5GfI/KOG4SD2Wyi3yNzkZnWM42AWekznmvZTM7ClruRaC3mszSLVUvNbIklqc9
-         kjs+aUxk7ccTHf7tgLJSnNjQFmuPuzQvDkBS4hxjHnNuq1UjOPa2p2J42TWNZCKU9FW8
-         0SDZAwyfwYzwsh7sUUOtdFP9TKUOUQOugqSX+czOgB1Usq5CmnYY/+ViRCJzRuvsGerB
-         VuS672lex+Jic7VuGnuvCCD6IytVoDJbd1x1Smn524s7p451/SGRSgjnlvLq17fMFUri
-         Jabg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="QiCoVzmt"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 558C0Pva007932
+	for <linux-kernel@vger.kernel.org>; Sun, 8 Jun 2025 15:09:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	uZg6uov4M3COUU/cAjeod0ONVmFRFP7In1KT2LtVH5c=; b=QiCoVzmtOQGUjWRl
+	KvbzAgMg4OkzYlkppjTxMBmsoTwcFjEqOxxluJY9kzVfEFAcS4/XbtlQn2wnzEdX
+	2FPbyv4k4aOhQrqm7Xhu4rVVxpkXYrFHSGEhhPYTTOA2p8Gh11AVC0g7gwa9u7Ey
+	jGDD/efgrW63QJA75+mFclI+gGIO0lJGPqbU0FyHEzSHmQxGxrPT0gObyfyMEkT8
+	Ny0ORRN4suBnqVna6TaKiIua24aPLUBNyFa+gs2S2UzyMz7/Fz182/YDV+xVPYlz
+	J0IkxAJF2qrT0J4ity+mIEetpb8RhyVsKLjBVqoNBoDNy+Pyi66IX2xs8OuRZI3R
+	VhzrEQ==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ekpjy5s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 15:09:31 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c760637fe5so706594285a.0
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 08:09:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749395325; x=1750000125;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lzuRPFYIZRvhRVOmWKy01BEcZ/VAU38+zCshzHdk5c8=;
-        b=CScnLg4dFblbVEBjAPPdu5xuLVQZB1bdQDcrqVR+2rIToDZd0T4ha5J4nMzFi1YjyO
-         BtULNxeMGnv+8MgQu0IT0oIl6mqTQA/RXDkSx3awN8lE6o5N4iw7jsw7Aw3ElnLFmsWJ
-         v935lmLFa9H6+chAd0fmmXhEInVilzwzSRAVVgxrGiugcGH+5bikeu2hfj8t/mPGUXrZ
-         qW+USrEJCg4cLJ6wpwRETlUl44dd72w9SCv0nU9px3vr1XtC40CKp2vFJVJiKwjZA/sy
-         gSy63YVVGUSrraMP9vjUz7OfD/S9NEBz670x4eSGoZ0aDNBTAvOLxOZ3zvKPkF61GAE7
-         8Cxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUrHQDInIDwu1z8IbrREAK2hfrcTObod7FtivmqYMjSIYFbkuFweLOrYspiX9dCjMLedcUcKrPZrp/WEyE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIj1F6nh14FyUFTohBS0KNvIGFYD4c6llR0sRD1X9R+DSOuDWG
-	Ky7uL9bKkPEEj0oQTc7sDpBc73B65nDYohIKCoaW0XgvUxOjt7KEJSxKAhH8wJiMC5ViiwZx+/v
-	ZJliE9aqrfscqKcjuqboXfYiBGyqPLljiKVoiC+R3/Q==
-X-Gm-Gg: ASbGncu+eZ+Q/5JADZZWcTmEDNaGvnHGOfgCoDkt4J0Rh5R4PZK/Jpo3O45rP76FZOI
-	1WEnpmt8lNN2vKRXT8bjmgLCM9s2yxqkhK6KKV1Jhd/34xLHinmqwrV5YltVzamdEJpEF3ayNrj
-	DqvD3AMJXDZWydEYqrfMxH0JAItDOhBw==
-X-Google-Smtp-Source: AGHT+IE6Wavjh9lcZ08UG2JWQl0zBb+su/qycW7Wdsq/33CsGFoBpF8qSQTR9wAEzhKeUToBRdcuafqk0yX/KDtvId8=
-X-Received: by 2002:a05:622a:411b:b0:4a6:f99c:395f with SMTP id
- d75a77b69052e-4a6f99c3abdmr46534851cf.44.1749395325030; Sun, 08 Jun 2025
- 08:08:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749395370; x=1750000170;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uZg6uov4M3COUU/cAjeod0ONVmFRFP7In1KT2LtVH5c=;
+        b=uCXoo1VM4rjn5cAu6Q/DwKIZCD4GdnX84m6551RM0oYIDjxfW9o24qi0rJ8w7EtVn6
+         oKxi6h+5GzVI3vgUGO2H8eDf+Stnkpld5drsi8RsTXJWqomduq9Y1qPTRLOKhiDFkWnj
+         R9/38MmhMoY5VAW8y48L9U7cmQez64WX8kWWj+O9ThppyLhaHbi7N0fNe0uQGjmracno
+         yMlZHV7KcaPDJdR0xniiTaiGffm0rdXnToDzpIcVrPywuxHN8dM03jHU2Ih++KiMpZyx
+         IYCsZEwaH1614X/xmRc6VS8ev4d07Zx2VUCcjfcLX+5dVmkgJqaX1qvd7ej/d/Oz6XV/
+         MqKg==
+X-Forwarded-Encrypted: i=1; AJvYcCVJjfS4iEmfRynvBTZnm2sPtxWmhQMfYjgRkAvDUVHJJodPXGm8j1SliRJS35ZxKwoYJc1aTJvg1W9qZFs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztmVEQaD3m3jTNhkjyTjL9wHiN0jOdwmy9pk3V8imMcIONop4V
+	FmlgV1wzOeAWp838QaAvGMJ03P30WfiCBkGiKdJnzlUxEg38CfrwcRZJSUDEa9GWzGTJBmXfPar
+	coILJIpl4GggpZtx1YF87VI3iCRMqt1psR4Atq0/u69OC6CLR6GiMLCltLQEajxmCdUE=
+X-Gm-Gg: ASbGncuM1Tt/p0OuXouIcO84WHCreUhGiyfuC11lyS6z7lGLmX8It0ASRE4xuug/NaY
+	3OaDRFE8BTP/8uAS0paLTeYcOFNQ8MktQDAfLjHduWZr9Pdwau5zH12EDHosXqUknCsdLlC6az6
+	oBHZuYHMxaxjDPxuABwSByTTmIPloHq+f3rnRO3eWT3LMSd7tqFI5pOFEtpPOMdYvdnYtedg9nj
+	sALoIsS/CyqVl0/S4rF1M+IZ+MRPsZmOAHIwTrUJFq/tQJ1L7QjS2S1acXBMmdwYZBQ0TSkDxsS
+	mMvT7xKWBu54YhJPtB7bAf1KG0KDymoLQZsgqQvv2meHgv4a1oEvNp+GDUUvvQhkZ1jxzkV0Cnk
+	=
+X-Received: by 2002:a05:620a:454a:b0:7ce:b9ed:24dc with SMTP id af79cd13be357-7d22986ec74mr1503742585a.23.1749395369645;
+        Sun, 08 Jun 2025 08:09:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHWojoQQKm6zmBmTfsN6DQaVIzipmhF3tAmQHC4y9/wG04I+Q+kLtPPteL2vns5BpTi9vfIOw==
+X-Received: by 2002:a05:620a:454a:b0:7ce:b9ed:24dc with SMTP id af79cd13be357-7d22986ec74mr1503737685a.23.1749395369172;
+        Sun, 08 Jun 2025 08:09:29 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55367722289sm792024e87.117.2025.06.08.08.09.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Jun 2025 08:09:28 -0700 (PDT)
+Date: Sun, 8 Jun 2025 18:09:25 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Rob Clark <rob.clark@oss.qualcomm.com>
+Cc: Akhil P Oommen <akhilpo@oss.qualcomm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Sean Paul <sean@poorly.run>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: Add GPU support to X1P42100 SoC
+Message-ID: <rwjc7zkitubi6cdre5a7owmo76nopavkgifvvn6yq2mv2hrth4@bhwbodchd2gx>
+References: <20250607-x1p-adreno-v1-0-a8ea80f3b18b@oss.qualcomm.com>
+ <20250607-x1p-adreno-v1-3-a8ea80f3b18b@oss.qualcomm.com>
+ <wayrour74vlli27xrtxi2ff2v7q7ye2yknmk2mjpur5ry5gruv@hhh2mdb6lw2i>
+ <CACSVV03X5EyAb5yCPDn1ot8vOFV_dKG7f6+yO5t9srr31AiUKw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
- <20250515182322.117840-11-pasha.tatashin@soleen.com> <aDQpfiykuRrk_xnr@kernel.org>
-In-Reply-To: <aDQpfiykuRrk_xnr@kernel.org>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Sun, 8 Jun 2025 11:08:07 -0400
-X-Gm-Features: AX0GCFv10U-Kg40y4yXNpa11mJu1sY2K43SsH2vGJvqSKTOZOwQxZ_Kd2f14iWc
-Message-ID: <CA+CK2bBrH6ExCzWMpzHpX6vUFvSW6ca_edR_hzEj84xLw20UXQ@mail.gmail.com>
-Subject: Re: [RFC v2 10/16] luo: luo_ioctl: add ioctl interface
-To: Mike Rapoport <rppt@kernel.org>
-Cc: pratyush@kernel.org, jasonmiu@google.com, graf@amazon.com, 
-	changyuanl@google.com, dmatlack@google.com, rientjes@google.com, 
-	corbet@lwn.net, rdunlap@infradead.org, ilpo.jarvinen@linux.intel.com, 
-	kanie@linux.alibaba.com, ojeda@kernel.org, aliceryhl@google.com, 
-	masahiroy@kernel.org, akpm@linux-foundation.org, tj@kernel.org, 
-	yoann.congal@smile.fr, mmaurer@google.com, roman.gushchin@linux.dev, 
-	chenridong@huawei.com, axboe@kernel.dk, mark.rutland@arm.com, 
-	jannh@google.com, vincent.guittot@linaro.org, hannes@cmpxchg.org, 
-	dan.j.williams@intel.com, david@redhat.com, joel.granados@kernel.org, 
-	rostedt@goodmis.org, anna.schumaker@oracle.com, song@kernel.org, 
-	zhangguopeng@kylinos.cn, linux@weissschuh.net, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, gregkh@linuxfoundation.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, rafael@kernel.org, 
-	dakr@kernel.org, bartosz.golaszewski@linaro.org, cw00.choi@samsung.com, 
-	myungjoo.ham@samsung.com, yesanishhere@gmail.com, Jonathan.Cameron@huawei.com, 
-	quic_zijuhu@quicinc.com, aleksander.lobakin@intel.com, ira.weiny@intel.com, 
-	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
-	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
-	stuart.w.hayes@gmail.com, ptyadav@amazon.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACSVV03X5EyAb5yCPDn1ot8vOFV_dKG7f6+yO5t9srr31AiUKw@mail.gmail.com>
+X-Authority-Analysis: v=2.4 cv=JcO8rVKV c=1 sm=1 tr=0 ts=6845a7ab cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=NEwny6fml6yhTjldVekA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA4MDEyMCBTYWx0ZWRfX7LYyOcV2anZt
+ 8vAwQLgawcjm7fmRvTWVoEEreyJu/kHQUiKPjzQmt+A1Z4od799/Q/uz8hrzk+nMPd//pkV2zlr
+ LzLXFoEE7YvNOAydEBsIm4erKgM0YqefMdnQ5cIitLBitANA/5vohKHlpHMbZWO66G7UnIGCb3K
+ UO+4Y58hSw50hOUC9jNuKaZRW+8h571+uVhbBvUpJ+6Tof9HkvpuxH86be2LuhGFREl9U3EuD6j
+ wdVHgxq7TLh+JBm+DTQXJYYbNj8Eqp3qlCYShb/WOyuAkAJEM5C62bAAOiZlazLEWiY7lfEX+tJ
+ 8jJOBFUzC5OXlvL/huwe4hKMhiUUde0ArHUoW5P7nz36MZCYHrVHBraYaUKULHBBbuj86xhXnaW
+ b58tebBLnLYHoAqUfCjg9K5OkxIxkLQEIywMBppc+iqgIVHCm1OJLBgnGAQJvOw9V/4xcwkb
+X-Proofpoint-GUID: XYzKFr5s_nZ7UdIGF6XiuMUENsceklHU
+X-Proofpoint-ORIG-GUID: XYzKFr5s_nZ7UdIGF6XiuMUENsceklHU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-08_02,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=999 bulkscore=0 spamscore=0 impostorscore=0 phishscore=0
+ priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1015 malwarescore=0
+ suspectscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506080120
 
-On Mon, May 26, 2025 at 4:43=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
-te:
->
-> On Thu, May 15, 2025 at 06:23:14PM +0000, Pasha Tatashin wrote:
-> > Introduce the user-space interface for the Live Update Orchestrator
-> > via ioctl commands, enabling external control over the live update
-> > process and management of preserved resources.
+On Sun, Jun 08, 2025 at 07:10:11AM -0700, Rob Clark wrote:
+> On Sat, Jun 7, 2025 at 1:17 PM Dmitry Baryshkov
+> <dmitry.baryshkov@oss.qualcomm.com> wrote:
 > >
-> > Create a misc character device at /dev/liveupdate. Access
-> > to this device requires the CAP_SYS_ADMIN capability.
+> > On Sat, Jun 07, 2025 at 07:45:01PM +0530, Akhil P Oommen wrote:
+> > > X1P42100 SoC has a new GPU called Adreno X1-45 which is a smaller
+> > > version of Adreno X1-85 GPU. Describe this new GPU and also add
+> > > the secure gpu firmware path that should used for X1P42100 CRD.
+> > >
+> > > Signed-off-by: Akhil P Oommen <akhilpo@oss.qualcomm.com>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/x1e80100.dtsi    |   7 ++
+> > >  arch/arm64/boot/dts/qcom/x1p42100-crd.dts |   4 +
+> > >  arch/arm64/boot/dts/qcom/x1p42100.dtsi    | 121 +++++++++++++++++++++++++++++-
+> > >  3 files changed, 131 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> > > index a8eb4c5fe99fe6dd49af200a738b6476d87279b2..558d7d387d7710770244fcc901f461384dd9b0d4 100644
+> > > --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> > > @@ -8245,6 +8245,13 @@ sbsa_watchdog: watchdog@1c840000 {
+> > >                       interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+> > >               };
+> > >
+> > > +             qfprom: efuse@221c8000 {
+> > > +                     compatible = "qcom,x1e80100-qfprom", "qcom,qfprom";
+> > > +                     reg = <0 0x221c8000 0 0x1000>;
+> > > +                     #address-cells = <1>;
+> > > +                     #size-cells = <1>;
+> > > +             };
+> > > +
+> > >               pmu@24091000 {
+> > >                       compatible = "qcom,x1e80100-llcc-bwmon", "qcom,sc7280-llcc-bwmon";
+> > >                       reg = <0 0x24091000 0 0x1000>;
+> > > diff --git a/arch/arm64/boot/dts/qcom/x1p42100-crd.dts b/arch/arm64/boot/dts/qcom/x1p42100-crd.dts
+> > > index cf07860a63e97c388909fb5721ae7b9729b6c586..cf999c2cf8d4e0af83078253fd39ece3a0c26a49 100644
+> > > --- a/arch/arm64/boot/dts/qcom/x1p42100-crd.dts
+> > > +++ b/arch/arm64/boot/dts/qcom/x1p42100-crd.dts
+> > > @@ -15,3 +15,7 @@ / {
+> > >       model = "Qualcomm Technologies, Inc. X1P42100 CRD";
+> > >       compatible = "qcom,x1p42100-crd", "qcom,x1p42100";
+> > >  };
+> > > +
+> > > +&gpu_zap_shader {
+> > > +     firmware-name = "qcom/x1p42100/gen71500_zap.mbn";
+> > > +};
+> > > diff --git a/arch/arm64/boot/dts/qcom/x1p42100.dtsi b/arch/arm64/boot/dts/qcom/x1p42100.dtsi
+> > > index 27f479010bc330eb6445269a1c46bf78ec6f1bd4..5ed461ed5cca271d43647888aa6eacac3de2ac9d 100644
+> > > --- a/arch/arm64/boot/dts/qcom/x1p42100.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/x1p42100.dtsi
+> > > @@ -17,15 +17,134 @@
+> > >  /delete-node/ &cpu_pd9;
+> > >  /delete-node/ &cpu_pd10;
+> > >  /delete-node/ &cpu_pd11;
+> > > +/delete-node/ &gpu_opp_table;
+> > >  /delete-node/ &pcie3_phy;
+> > >
+> > >  &gcc {
+> > >       compatible = "qcom,x1p42100-gcc", "qcom,x1e80100-gcc";
+> > >  };
+> > >
+> > > -/* The GPU is physically different and will be brought up later */
+> > > +&gmu {
+> > > +     /delete-property/ compatible;
+> > > +     compatible = "qcom,adreno-gmu-x145.0", "qcom,adreno-gmu";
+> > > +};
+> > > +
+> > > +&qfprom {
+> > > +     gpu_speed_bin: gpu_speed_bin@119 {
+> > > +             reg = <0x119 0x2>;
+> > > +             bits = <7 9>;
+> > > +     };
+> > > +};
+> > > +
+> > >  &gpu {
+> > >       /delete-property/ compatible;
 > >
-> > A new UAPI header, <uapi/linux/liveupdate.h>, defines the necessary
-> > structures. The magic number is registered in
-> > Documentation/userspace-api/ioctl/ioctl-number.rst.
+> > I think, you can drop this line.
 > >
-> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
->
-> ...
->
-> > -/**
-> > - * enum liveupdate_state - Defines the possible states of the live upd=
-ate
-> > - * orchestrator.
-> > - * @LIVEUPDATE_STATE_NORMAL:         Default state, no live update in =
-progress.
-> > - * @LIVEUPDATE_STATE_PREPARED:       Live update is prepared for reboo=
-t; the
-> > - *                                   LIVEUPDATE_PREPARE callbacks have=
- completed
-> > - *                                   successfully.
-> > - *                                   Devices might operate in a limite=
-d state
-> > - *                                   for example the participating dev=
-ices might
-> > - *                                   not be allowed to unbind, and als=
-o the
-> > - *                                   setting up of new DMA mappings mi=
-ght be
-> > - *                                   disabled in this state.
-> > - * @LIVEUPDATE_STATE_FROZEN:         The final reboot event
-> > - *                                   (%LIVEUPDATE_FREEZE) has been sen=
-t, and the
-> > - *                                   system is performing its final st=
-ate saving
-> > - *                                   within the "blackout window". Use=
-r
-> > - *                                   workloads must be suspended. The =
-actual
-> > - *                                   reboot (kexec) into the next kern=
-el is
-> > - *                                   imminent.
-> > - * @LIVEUPDATE_STATE_UPDATED:        The system has rebooted into the =
-next
-> > - *                                   kernel via live update the system=
- is now
-> > - *                                   running the next kernel, awaiting=
- the
-> > - *                                   finish event.
-> > - *
-> > - * These states track the progress and outcome of a live update operat=
-ion.
-> > - */
-> > -enum liveupdate_state  {
-> > -     LIVEUPDATE_STATE_NORMAL =3D 0,
-> > -     LIVEUPDATE_STATE_PREPARED =3D 1,
-> > -     LIVEUPDATE_STATE_FROZEN =3D 2,
-> > -     LIVEUPDATE_STATE_UPDATED =3D 3,
-> > -};
-> > -
->
-> Nit: this seems an unnecessary churn, these definitions can go to
-> include/uapi from the start.
+> > > +
+> > > +     compatible = "qcom,adreno-43030c00", "qcom,adreno";
+> > > +
+> > > +     nvmem-cells = <&gpu_speed_bin>;
+> > > +     nvmem-cell-names = "speed_bin";
+> > > +
+> > > +     gpu_opp_table: opp-table {
+> > > +             compatible = "operating-points-v2-adreno", "operating-points-v2";
+> > > +
+> > > +             opp-1400000000 {
+> > > +                     opp-hz = /bits/ 64 <1400000000>;
+> > > +                     opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L4>;
+> > > +                     opp-peak-kBps = <16500000>;
+> > > +                     qcom,opp-acd-level = <0xa8295ffd>;
+> > > +                     opp-supported-hw = <0x3>;
+> > > +             };
+> > > +
+> > > +             opp-1250000000 {
+> > > +                     opp-hz = /bits/ 64 <1250000000>;
+> > > +                     opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L3>;
+> > > +                     opp-peak-kBps = <16500000>;
+> > > +                     qcom,opp-acd-level = <0x882a5ffd>;
+> > > +                     opp-supported-hw = <0x7>;
+> > > +             };
+> > > +
+> > > +             opp-1107000000 {
+> > > +                     opp-hz = /bits/ 64 <1107000000>;
+> > > +                     opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
+> > > +                     opp-peak-kBps = <16500000>;
+> > > +                     qcom,opp-acd-level = <0x882a5ffd>;
+> > > +                     opp-supported-hw = <0xf>;
+> > > +             };
+> > > +
+> > > +             opp-1014000000 {
+> > > +                     opp-hz = /bits/ 64 <1014000000>;
+> > > +                     opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
+> > > +                     opp-peak-kBps = <14398438>;
+> > > +                     qcom,opp-acd-level = <0xa82a5ffd>;
+> > > +                     opp-supported-hw = <0xf>;
+> > > +             };
+> > > +
+> > > +             opp-940000000 {
+> > > +                     opp-hz = /bits/ 64 <940000000>;
+> > > +                     opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
+> > > +                     opp-peak-kBps = <14398438>;
+> > > +                     qcom,opp-acd-level = <0xa82a5ffd>;
+> > > +                     opp-supported-hw = <0xf>;
+> > > +             };
+> > > +
+> > > +             opp-825000000 {
+> > > +                     opp-hz = /bits/ 64 <825000000>;
+> > > +                     opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
+> > > +                     opp-peak-kBps = <12449219>;
+> > > +                     qcom,opp-acd-level = <0x882b5ffd>;
+> > > +                     opp-supported-hw = <0xf>;
+> > > +             };
+> > > +
+> > > +             opp-720000000 {
+> > > +                     opp-hz = /bits/ 64 <720000000>;
+> > > +                     opp-level = <RPMH_REGULATOR_LEVEL_SVS_L2>;
+> > > +                     opp-peak-kBps = <10687500>;
+> > > +                     qcom,opp-acd-level = <0xa82c5ffd>;
+> > > +                     opp-supported-hw = <0xf>;
+> > > +             };
+> > > +
+> > > +             opp-666000000-0 {
+> > > +                     opp-hz = /bits/ 64 <666000000>;
+> > > +                     opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
+> > > +                     opp-peak-kBps = <8171875>;
+> > > +                     qcom,opp-acd-level = <0xa82d5ffd>;
+> > > +                     opp-supported-hw = <0xf>;
+> > > +             };
+> > > +
+> > > +             /* Only applicable for SKUs which has 666Mhz as Fmax */
+> > > +             opp-666000000-1 {
+> > > +                     opp-hz = /bits/ 64 <666000000>;
+> > > +                     opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
+> > > +                     opp-peak-kBps = <16500000>;
+> >
+> > This looks odd, why is it so high?
+> 
+> You want max bandwidth on max opp
 
-True, but we do not have a user api at that moment yet :-)
+Yes, but can it actually sustain / provide this BW?
 
->
-> > diff --git a/include/uapi/linux/liveupdate.h b/include/uapi/linux/liveu=
-pdate.h
-> > +/**
-> > + * struct liveupdate_fd - Holds parameters for preserving and restorin=
-g file
-> > + * descriptors across live update.
-> > + * @fd:    Input for %LIVEUPDATE_IOCTL_FD_PRESERVE: The user-space fil=
-e
-> > + *         descriptor to be preserved.
-> > + *         Output for %LIVEUPDATE_IOCTL_FD_RESTORE: The new file descr=
-iptor
-> > + *         representing the fully restored kernel resource.
-> > + * @flags: Unused, reserved for future expansion, must be set to 0.
-> > + * @token: Output for %LIVEUPDATE_IOCTL_FD_PRESERVE: An opaque, unique=
- token
-> > + *         generated by the kernel representing the successfully prese=
-rved
-> > + *         resource state.
-> > + *         Input for %LIVEUPDATE_IOCTL_FD_RESTORE: The token previousl=
-y
-> > + *         returned by the preserve ioctl for the resource to be resto=
-red.
-> > + *
-> > + * This structure is used as the argument for the %LIVEUPDATE_IOCTL_FD=
-_PRESERVE
-> > + * and %LIVEUPDATE_IOCTL_FD_RESTORE ioctls. These ioctls allow specifi=
-c types
-> > + * of file descriptors (for example memfd, kvm, iommufd, and VFIO) to =
-have their
-> > + * underlying kernel state preserved across a live update cycle.
-> > + *
-> > + * To preserve an FD, user space passes this struct to
-> > + * %LIVEUPDATE_IOCTL_FD_PRESERVE with the @fd field set. On success, t=
-he
-> > + * kernel populates the @token field.
-> > + *
-> > + * After the live update transition, user space passes the struct popu=
-lated with
-> > + * the *same* @token to %LIVEUPDATE_IOCTL_FD_RESTORE. The kernel uses =
-the @token
-> > + * to find the preserved state and, on success, populates the @fd fiel=
-d with a
-> > + * new file descriptor referring to the fully restored resource.
-> > + */
-> > +struct liveupdate_fd {
-> > +     int             fd;
-> > +     __u32           flags;
-> > +     __u64           token;
-> > +};
->
-> Consider using __aligned_u64 here for size-based versioning.
-
-Good suggestion, added.
-
->
-> > +
-> > +/* The ioctl type, documented in ioctl-number.rst */
-> > +#define LIVEUPDATE_IOCTL_TYPE                0xBA
->
-> ...
->
-> > +/**
-> > + * LIVEUPDATE_IOCTL_EVENT_PREPARE - Initiate preparation phase and tri=
-gger state
-> > + * saving.
->
-> This (and others below) is more a command than an event IMHO. Maybe just
-> LIVEUPDATE_IOCTL_PREPARE?
-
-Renamed.
-
->
-> > + * Argument: None.
-> > + *
-> > + * Initiates the live update preparation phase. This action correspond=
-s to
-> > + * the internal %LIVEUPDATE_PREPARE kernel event and can also be trigg=
-ered
->
-> This action is a reason for LIVEUPDATE_PREPARE event, isn't it?
-> The same applies to other IOCTL_EVENTS
-
-It is.
-
->
-> > + * by writing '1' to ``/sys/kernel/liveupdate/prepare``. This typicall=
-y
-
-Oops, this is a leftover from LUO RFCv1, fixed.
-
-> > + * triggers the main state saving process for items marked via the PRE=
-SERVE
-> > + * ioctls. This occurs *before* the main "blackout window", while user
-> > + * applications (e.g., VMs) may still be running. Kernel subsystems
-> > + * receiving the %LIVEUPDATE_PREPARE event should serialize necessary =
-state.
-> > + * This command does not transfer data.
->
-> I'm not sure I follow what this sentence means.
-
-Fixed
-
-Thanks,
-Pasha
+-- 
+With best wishes
+Dmitry
