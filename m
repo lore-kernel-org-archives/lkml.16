@@ -1,62 +1,62 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9D71F542A;
-	Sun,  8 Jun 2025 23:23:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6DF1F542A;
+	Sun,  8 Jun 2025 23:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749425015; cv=none; b=MtBFypsoK/gLxEGoDi/11kKX1Qx+sAYF67tNgLgn9j4qaN4UXwYVa4karNnKNTXKajNQToHAQv4n5NlDjP46PgH2xSmkZhBsQJV/M/rua7USrgG3pQYixvh0PAy8UOZrGt2coY3plH83C3hPnBP76bBFrg0AH0bOiiUvkBbtlGM=
+	t=1749425020; cv=none; b=hxN+XVmUHBnvVhfS70WLwaoEx/z9I7sXZqHp2oU4P6pxU8Pn52tGne5vieSqwzMaJW/eIJ5vheccklmSJUmyNAKPIj2aCE+bnARFidlYBVjSTw8hqAMl//MaArKZUvf7iYnHtVRXkduKxjktiu8lB8mLTsol0UIOzfjZK2yq5S4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749425015; c=relaxed/simple;
-	bh=6W7L6mLae0Gwk7i/q8VTDrfQXggHDNqoAV/kISEHYUc=;
+	s=arc-20240116; t=1749425020; c=relaxed/simple;
+	bh=nArarwAlz2lpSFVw8+fLjNwR+Nq2mIZBhK4d4N2fTx8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q4OcfyUITpzxVztu4y4KglumElUUc/CrTJIdDEpG6pP3zWC+SDqzflC9fLUOz8t+MsgQD4GV6ct6lm+dWsCJKDaTiP5ypIN3myjUOVBQDncUZD+jJ8Y3FQ+S3PvUdjQi7ztWE3HNygTD0ckQplG4gchTWjj1vV1N/13UzX0pRjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G29JLaHx; arc=none smtp.client-ip=209.85.160.170
+	 MIME-Version; b=dRjK07+PxigYYUksKZ/7eTA05pLnrrNh4NhbXgX/QH7wGCFOouUMRsUvlCMwkJoehuIfTOAfgaVB01H1XcF30yKh45mvWzrXgh4FG+TPovVBzuV4r6cEPRnLNiR/+eJ7WTqR0iHyrePKfB2V9TdwzJX3w0/ihjNIXuYdK1ARieg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QVYsQdqr; arc=none smtp.client-ip=209.85.222.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G29JLaHx"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4a43d2d5569so50607561cf.0;
-        Sun, 08 Jun 2025 16:23:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QVYsQdqr"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7caeeef95d4so376092285a.2;
+        Sun, 08 Jun 2025 16:23:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749425013; x=1750029813; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749425016; x=1750029816; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hnz/0tuwhYz4DMu7YFaY4+MBrOn4ASwg3VdpZXlOjs0=;
-        b=G29JLaHx6tztws7yxFz4Dq6OLtKSRjEAPFpzE+oAmxGgY7kS1YZLLqwqF6v+MDxejJ
-         qisYvnXjvS77OtNdGvcMOCAhxuRDPGpjC1Ox5ta0izID9/4x0XbljprR7TS2cAjbqw6W
-         4TAr5MMlxrdTm8gFz8ZpwIbD2bZ2vINQ1QcBB4pKb1aek4D4HVA/e1pbRmbH0WRj177x
-         sGCd08jErzY//K8F39G2aZG6iPq+gaxUgTOPioLwqlzcDsiSvh8UyLF/6frtxombaZpT
-         IgNNVdG8MJbs2r61KRqgTdcl+b039zEBV5iT/45J17kN6+LGupXqQqPqsLu37msAEAOV
-         EQJQ==
+        bh=HzlaTY0tHdKvyrCrJLv+ChjIQt2LAnmKHtpsPVtNlOI=;
+        b=QVYsQdqrQ5QCvrthAAxRVz9lhh56Uyq1p35iGEigdiQDWu+Ne2NHp0Zu1BILJegvUc
+         kWKHppalOBNEjO6c7WAiHsAydmLyM0N5CWgFOAXAPNw8JfpEIN0TuH2XsmtsLE05Fqro
+         9zqpAdgS2CQBs4dmWj7UJgdjmH3OZqGmteCRzRIBprpS5VaDGFDoPwf5SMLvOYhIQk/q
+         uMsi/GHaDTMIbJuCORsJTBJWsuK0wFzoVOM4pFcBMglTOpZzr0J6U3z/UpmSZDO5jniy
+         pLo1odtJNM4LluPqlHr+9IBbVklETW95q9Cg8KkvO5vl1fdV8h2USplnNL8cUluoe5pq
+         G5UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749425013; x=1750029813;
+        d=1e100.net; s=20230601; t=1749425016; x=1750029816;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hnz/0tuwhYz4DMu7YFaY4+MBrOn4ASwg3VdpZXlOjs0=;
-        b=Hdnip5f5+eyiwT00s4KBBk3fAFDN5dp5l172iZ7ML8YixDBBOCsyZ32qsDLLXzgm08
-         lc7RvOgi6RLT9qYvg3nKe9f0/2mf5mgpE+vf8VNCfKYEaplIrfN6SLzTH2MxpsWvgzZs
-         5/NkYOPGC3JMFBKkH6SMYlvcU/JRsZjzzFzuQDIHMa3QH98JFFRnwmV4COX1wGqOaAuc
-         cqdxY/xQa+ckWtDDJvu46kghK0q24wMDKxHkbDrUfmcb9JzFh1diIduRpDFqPeME8eMc
-         q/zlh7rPvh36UtHf3LH1EilhZcxdM9yndJqDqgCpjWy63wademgN08/n6Yv75m38GwwD
-         AWYw==
-X-Forwarded-Encrypted: i=1; AJvYcCWTFZdbrLtxmUYuYr6VdH0zHUNVIJzZ+JXWHjvbK44lmVJTWl/orfyQWAT4HSfhm3bWaW1mVDUhLZjW@vger.kernel.org, AJvYcCXNVcN/A+zvtunuHHXIOABF9zFc1nM8tdOzg3C2nKEeeY1GQ5aReoet6DKioaXDoMsynKFqMuW7FyUPwDDJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7iXkw5KaGbKceKgSTD1lBtdWVgtvquS3+zeKcHqmi11EmYdJ9
-	BAbTPGnd1/f25v9GhvmeCfNkkbjiOAFWBjKZlh0DZ2t3TOg1TVkvXmVP
-X-Gm-Gg: ASbGnctepgySYYpH5kEZi4RiKjpq/8WFcFCD70Kb0rSwuY5qESbIfxWCr/QQPRgUkwJ
-	Cd5Jt6WLYVrK2Fd2U6ZH4QvBk+pOrulpHJ+GzoPyYFbLcSWhD9k+D5Eq6dCiSS4QIPNqoKqPOy7
-	Bxe74LNdidwWz/UNmIzcpq1iu/CMOpctzAqiL+PCSSDb17VrGY11QR6+Y1pvyne1r9g9PNApDPR
-	k78BlRs5Diy1tt1o8PQ5OVrWwl8xKyb/Ok5Wsyav2v+DVJ2T0oy2xj1FiUecJZb97dPPSQE8NKa
-	693XsivaU2ECE7+uylRbqQJtTAxI6qMGvd3mQA==
-X-Google-Smtp-Source: AGHT+IF3xphXoXKZTtdXVGAmCrM+vdD5L5L35t04k2N082DOU5EycEu6eHnJomWRNQdN0alz4WHfCA==
-X-Received: by 2002:a05:622a:5909:b0:4a5:a5df:d1f9 with SMTP id d75a77b69052e-4a5b9db110fmr208752761cf.43.1749425012955;
-        Sun, 08 Jun 2025 16:23:32 -0700 (PDT)
+        bh=HzlaTY0tHdKvyrCrJLv+ChjIQt2LAnmKHtpsPVtNlOI=;
+        b=jE6IxCKfdGqEJBwPuDMj4pACuL2812CFsGheBHl/T5FXxuM9q2aa7uVe2wcM5yIBeJ
+         g4bmbqkJzxSZlbwcXjhAulqt5AD4x3+cgM/17uLeG8Wl9uwqfShDYoDUQqoAsj9yQ+4c
+         yATMsS5yeo3ajHZyXlKipQuacwBfeQSESNZJWsDQo+44m8sWxxyKuUnutqkL0wb/TDMN
+         XR9eH2/m04ApRP90leOe4VOLG6bg86X0XKeUtyEnAp7iplhx9Ducosu6cehxaivHYDMa
+         2Uu1TpojlJOGKGaMQnsaMSzN2f72kwXOVZ6L5PGOEXf6ucyP1eOlfeKGoKt9KbbOUfDt
+         ocvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGl2Rh54sC9wvKghsKZIlq/3F/dIZYkKp+n2nGKHovq0RUGPZ/DF77/l8GX16Lg8MU336oakG18gSM@vger.kernel.org, AJvYcCXR7wS5dmKBc9C29ZCe/Pk0FPpib1FcflY8VL2ceDmqZXGAOH6cVyyQrJiHraAdaJDaF7SWy9Ew61zvZkTM@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhAHr8N+hZSf6a7p3norWCIQucQEjFTxrP51b8vC2dVmeyAgtU
+	qPNx8WaVtqIDdMR+qqAm08l/OaFmH17sG5su3MUF6/hsOlyiRduOn+o+
+X-Gm-Gg: ASbGncvoGffKOjPTdn/0+dmzgrvkBBLV/cE3N8iOup2VrPGCX1FJ4+deXu5oVeSa9x+
+	S3pNjtZEVuyw3yXzxMFkWmDYq9JnbzOSAvXjP1VGsyTkloWfpsVqRtqmI3HvfSePpJgU3fEbKYo
+	+OtMJ6DwUEJavZdnhOg1OPvbkCceLxxpwTmfKzMkzdp+gLWZak2IYQierplXz3AA16fKbmQKD9C
+	yjdGAoMt1/rrICKfpvrtzhA+goNF1HyrdJu1Dx/19iPZGo+mIKKiIrlWOVLAtoZhAxsLr9HhN65
+	WoKdz74g5ftLUhxtrqcTxb7ZsRs=
+X-Google-Smtp-Source: AGHT+IGjbwg1Bauz9LJ+K9RIr3N4RPJEfKPtO0PGQCVeGinq1IMDmYmAae0bHoznkVtegbGh0XJUbQ==
+X-Received: by 2002:a05:620a:198f:b0:7d2:2673:883a with SMTP id af79cd13be357-7d229874d7cmr1953579185a.7.1749425016456;
+        Sun, 08 Jun 2025 16:23:36 -0700 (PDT)
 Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-4a61116b780sm48297791cf.19.2025.06.08.16.23.31
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7d250f64b80sm466522585a.23.2025.06.08.16.23.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Jun 2025 16:23:32 -0700 (PDT)
+        Sun, 08 Jun 2025 16:23:36 -0700 (PDT)
 From: Inochi Amaoto <inochiama@gmail.com>
 To: Philipp Zabel <p.zabel@pengutronix.de>,
 	Rob Herring <robh@kernel.org>,
@@ -78,9 +78,9 @@ Cc: Junhui Liu <junhui.liu@pigmoral.tech>,
 	linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	Longbin Li <looong.bin@gmail.com>
-Subject: [PATCH v2 1/4] dt-bindings: reset: sophgo: Add CV1800B support
-Date: Mon,  9 Jun 2025 07:22:07 +0800
-Message-ID: <20250608232214.771855-2-inochiama@gmail.com>
+Subject: [PATCH v2 2/4] reset: simple: add support for Sophgo CV1800B
+Date: Mon,  9 Jun 2025 07:22:08 +0800
+Message-ID: <20250608232214.771855-3-inochiama@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250608232214.771855-1-inochiama@gmail.com>
 References: <20250608232214.771855-1-inochiama@gmail.com>
@@ -92,27 +92,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add bindings for the reset generator on the SOPHGO CV1800B
-RISC-V SoC.
+Reuse reset-simple driver for the Sophgo CV1800B reset generator.
 
 Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/reset/reset-simple.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml b/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
-index 1d1b84575960..bd8dfa998939 100644
---- a/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
-+++ b/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
-@@ -17,6 +17,7 @@ properties:
-               - sophgo,sg2044-reset
-           - const: sophgo,sg2042-reset
-       - const: sophgo,sg2042-reset
-+      - const: sophgo,cv1800b-reset
- 
-   reg:
-     maxItems: 1
+diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
+index 276067839830..79e94ecfe4f5 100644
+--- a/drivers/reset/reset-simple.c
++++ b/drivers/reset/reset-simple.c
+@@ -151,6 +151,8 @@ static const struct of_device_id reset_simple_dt_ids[] = {
+ 	{ .compatible = "snps,dw-high-reset" },
+ 	{ .compatible = "snps,dw-low-reset",
+ 		.data = &reset_simple_active_low },
++	{ .compatible = "sophgo,cv1800b-reset",
++		.data = &reset_simple_active_low },
+ 	{ .compatible = "sophgo,sg2042-reset",
+ 		.data = &reset_simple_active_low },
+ 	{ /* sentinel */ },
 -- 
 2.49.0
 
