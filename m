@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4F11367;
-	Sun,  8 Jun 2025 22:31:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9124A1DEFE8;
+	Sun,  8 Jun 2025 22:33:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749421878; cv=none; b=ngeskO9dIfaZjE6exEbZpILz52rWVAb+kWWHk/UjoCIJAfte36srE4inUvYFCxatp+fBg3ibkHwXdCOcL8SP4KrarzSYkMOXJqKlfx7fTchfL9DYFDvgbi9QR3lN9Z5XLHizejPTX2Rn8+CkrkJ4AhZvyqdv78MJxqWrrd+1dOE=
+	t=1749422001; cv=none; b=OZcDui2rikYPTVvFlpDLX5JwAzXmyN78kooIb4mD/Lx/8OGnEkdXKnnZniNoJVJZ1AgaO1ELyMk13+VKts9uiuZOppHq9lM0d7WzUmqCtoZjY7mxw+UQwYPiYuiNOB/8Bompza3xIM6X+5KtSMSdQwYPhH/M0GNuNWb2lVaFucc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749421878; c=relaxed/simple;
-	bh=4dWHCcv/TNvaFvWOoo9HhctpsWZz7rUqDMNQES+E4X0=;
+	s=arc-20240116; t=1749422001; c=relaxed/simple;
+	bh=B2h1+W9i/ZhBWpBc0DbE7ILKJxEIopJX2/mIFpxQL4o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m4YBu+DRLi9wlDQ/LTyu7v1t4YJ49tXMzUQxRF8mxg7TgPAab4RSJxNpx0omYmf+sWvXzdgkn2mHRBxJvz715z0G2VoLEvrg2AdYh8Ou6RiQkshCxFSiyeqsscZVf7XWopFi1wWDiY07XYRcIcZ6iXpVL6oMuz9RfNIi9m4Wivg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sFQkPrNf; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bsqmivyOkoLpg5ra8qWlnn/D+DHhnjR130JV2cQoC0PDILkarv/zw9bXIvqzZtNg3YXSbpWBQbVBFSTz79rxltwhx8hwrSxkJs9S6s7CKr+50ELqun4nqptSEde4NrMsAREVAaxI4/2gxBOElMgpjjtPfzD7N3kjb3QJUYUMQHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D6Pi0AP5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sFQkPrNf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26C9BC4CEEE;
-	Sun,  8 Jun 2025 22:31:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D6Pi0AP5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B084C4CEEE;
+	Sun,  8 Jun 2025 22:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749421877;
-	bh=4dWHCcv/TNvaFvWOoo9HhctpsWZz7rUqDMNQES+E4X0=;
+	s=k20201202; t=1749421999;
+	bh=B2h1+W9i/ZhBWpBc0DbE7ILKJxEIopJX2/mIFpxQL4o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sFQkPrNf1psLGc9LJL98yoBImNdlVQdktAn6edCY+3aOLjsb/Izi7cCjjurM66rkT
-	 K/C7ejasfUsTmOCVwdW7W7GF24GtzzWm2AYCtvmt6S5gcdn5CzVOS7hAEyHWZl1e8I
-	 XUaU056yThgs2BRSlKRFAqxZ7eYDwTrR7IgPCuU5cTaLlgcEHcg/U170s+2yTJFIMs
-	 9nFzDnCzOnsogaJxfdw09yE1IFS6C27c0AFYzurn11gUmXawu2sSNTtsNdKkskZjFG
-	 rlkrML2+5n+rzbErKsrHCBZPRPOSaMg4nrQyOoyiPurpD/6GyE8+8BfNOX9qxs2bXL
-	 xb3jRifkrnhEw==
-Date: Sun, 8 Jun 2025 23:31:10 +0100
+	b=D6Pi0AP5bCwL2JbyvY4kn4Uc/3NPLmMHGtAheuuY6XqBdeuaAbA8iojPvrWpXfPEF
+	 +JqawQrvybtit7cBYVafHWNEUq9V3uuSByNbvmEasr22epuF+/Li1PvxQdqa0emd1d
+	 1pDA1e5J3agyQdmCMIW5+3teqtioBZ2Q8sYdY1NgNZbS6B+JibS/bKw5qGBIhJXh0H
+	 BcFbHxhQiWrIW4ILfG+QOswqqxz3+hHiCIfa8C8gRnJpO5OEDVj4R2YWe0U/UX/k+m
+	 dTIvnZcV9uHdcEm3YIInRNccQhYIY7HTOimxDFaD8G/Bj22kn9K2986R4gHMLUNsKN
+	 9OkxyAKJkIVUQ==
+Date: Sun, 8 Jun 2025 23:33:13 +0100
 From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 6.15 00/34] 6.15.2-rc1 review
-Message-ID: <75e6789d-7243-44d2-9abf-706f2ca4ee84@sirena.org.uk>
-References: <20250607100719.711372213@linuxfoundation.org>
+To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	jens.glathe@oldschoolsolutions.biz, konrad.dybcio@oss.qualcomm.com
+Subject: Re: [RFC PATCH v1 0/2] Introduce dummy regulator consumer
+Message-ID: <8a688e9f-012e-461c-a916-f06b34fdd913@sirena.org.uk>
+References: <20250607212654.126412-1-alex.vinarskis@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,37 +44,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Ca27qktuIHoeEUrs"
+	protocol="application/pgp-signature"; boundary="LdWWYvFZl8SdA2Xp"
 Content-Disposition: inline
-In-Reply-To: <20250607100719.711372213@linuxfoundation.org>
+In-Reply-To: <20250607212654.126412-1-alex.vinarskis@gmail.com>
 X-Cookie: The eyes of taxes are upon you.
 
 
---Ca27qktuIHoeEUrs
+--LdWWYvFZl8SdA2Xp
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sat, Jun 07, 2025 at 12:07:41PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.15.2 release.
-> There are 34 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Sat, Jun 07, 2025 at 11:25:37PM +0200, Aleksandrs Vinarskis wrote:
 
-Tested-by: Mark Brown <broonie@kernel.org>
+> There are two main reasons for this driver:
+> 1. Create a pseudo-consumer in place of real devices which are not or
+>    cannot be described in the device-tree. Examples would be integrated
+>    USB UVC camera (present on some arm64 laptops) or dedicated keyboard
+>    backlight regulator (hypothetical). Instead of leaving regulator
+>    without consumer and `regulator-always-on` property, one could bind
+>    to dummy consumer to save some power during suspend.
 
---Ca27qktuIHoeEUrs
+Those examples both seem like physical things that exist and can have DT
+bindings written for them, why not do that?
+
+> 2. A great development tool.
+
+That's what the userspace consumer is there for...
+
+--LdWWYvFZl8SdA2Xp
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhGDy4ACgkQJNaLcl1U
-h9BMZgf+Pu5EI8c7awK05SpheCCkzPZxnUwIE1FMpUVVzbej1vwRfSb01M1mppBR
-FoGdpo6MhA67RWuUS9It99AbXRoyasHT/CJkQ6u2FEunxXtltlT/3jQOT9QXzkcG
-FXLYT03HLTEyFtY8VooQFbI3Xp+CNDTnJ5PEVLHvmCs6NPjOGYFKa5l+RqMNwsHS
-BBirCqSfH0CrvJ8G/Yq+tWQl878g9ipE9YxicmIjWK2gRTORggcsVU4+fyN0spxD
-oKwk29zD1MAHQituEqixDP8jYKHaLNXM7LgexhEUDW8dirVGLj2uAMjhKEPj8Dt0
-EUWQ7RVM/hIHEBC0qUkfBKfXL8lxbA==
-=GZel
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhGD6gACgkQJNaLcl1U
+h9AafAf+O+PIcQ3RdxKO0vRisEqvNshn/SWiNixQQnY/m1zs/mqFpR9YlzCUoH1d
+skICMQyQ8N6xyZP0HQSY2mXp65x9GQlvZksCu8r09gACMubpCdyxp4pdU2I+pGYn
+4e6lNNU41Mi7ZgqcXi0Dsu7OsEaH0a+km/qbVZtBU5GCc86qzLNWLFjhr/d8NwWa
+slH/bnX/qxrIij4bZbp4izEoTVmGwmgI69WiOJN50Vl8d9QZJFYD7ToduV5w0AR8
+B3ANv0ZlP2GiqDAqYxDmiY4sJF4/nzpLWckcxIVZ+A5oFBM5IrmeykzN856heFh4
+uYh8AiUDnqn1c2mRrtz3B5DPbBDWtg==
+=Jl3w
 -----END PGP SIGNATURE-----
 
---Ca27qktuIHoeEUrs--
+--LdWWYvFZl8SdA2Xp--
