@@ -1,109 +1,131 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E638317E
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 16:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3092D2746A
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 16:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749400595; cv=none; b=XRsjI5WrE4KvdMe3PL4pgmFtbSeihE/vlqMI6sl4Y0IZBS7n9tlj919vN/lN2ueupVvke+iuYVYE/IyjlsyzZ7AlyC0aifOUO5emPiW27YtqLSMGzGykUzbPLzjipyyrsAcXuZ3X0CDCCseajQ83DZhrq4Z1So52P+Ba+TCJ/84=
+	t=1749400643; cv=none; b=i2IHZf8xiJ+5s9DskQq9tTJ3pjO3r6n3uWFUWj61OJgsSw06UJRN+YWm/jqM2/M9SovbC59MZ25RuCwITaqKd4rR3WjSGJKon/7EH0IhjtaEXNRf4Xs0H7KDaxZM4OwCOBY+qqi7SfIau9nGInqmhO1OcKH9UjDVc8ECTSnfAno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749400595; c=relaxed/simple;
-	bh=hj2yvKwaz4HPBqnod+imLpfi6c1ncbnMWlaRYz+/2Wc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TyXOkU7G0lhAa7lrk002tE135CmTakgLy/BXLPik0+yKGqU5yQWNNyan8CJEiiVsXU+96mOtTe+7KRbgJcGS6M4eF04A61zMJYds9aha6TdVOUYO7D43KCxN1ErcDOvaB3KOvgNwyGKNU37xQcxfABCD62MgQyU58FstlFJHCgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Emu5GhKQ; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749400643; c=relaxed/simple;
+	bh=Ab5IYEMCSXnjXJoa81zazAM9xrhkF9LpgVvghvLw2Y4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mHQEtDrn84CZNeRzsrFGS3zBc7taAEI8jctp5/HvLqN+TrTmyhAANVa2zPNGngTShaB951tMTLphlwJstikIrOpej2Zpm9jrPZDRGpqTJtdJGOmZHMSL3QBp722tWTV3/AajEu8Z92dY7EI7k1nbifUm+aXhkQqHmE90NjZ/Sjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=AGZODqcR; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Emu5GhKQ"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-450ce671a08so22697345e9.3
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 09:36:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="AGZODqcR"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4a442a3a2bfso66326661cf.1
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 09:37:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749400592; x=1750005392; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JcHy/YwMLMy9jhyQE0SeKG1qlVwYgM1apCAB9rcjt2o=;
-        b=Emu5GhKQlPc/o2kE7rF6Eh75Y4A3Bg4liIzN17bm9H9hpdlVQ+FG66w2aqGuC/WVtP
-         /fwtkkKALtbCNtU50fAQqrEfN3K76/iBeXoQi2kNKZnmWu4+pPwJYP5HuMPiy48JFC98
-         8brtV9E5DhufSjpZ7oBlGUy+mWeuffSQFjCOkvTtNYhrOxks5dIWpde+wrlD7MgFCnIl
-         QQK5y2LZLfkqtHI0z7icFFGCfNNUlYz12Q5Hc/r9HtT5dJSg3UUCCsTA23wfpMWCBZmW
-         wUkg3zXg2ADZ5ezEEP1l+r4ZPmk0jCZKm0m9fP0MU8TLe9sYXCmxeZlfsyF3LriieKQw
-         uFFA==
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1749400641; x=1750005441; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ab5IYEMCSXnjXJoa81zazAM9xrhkF9LpgVvghvLw2Y4=;
+        b=AGZODqcRzRvUYYgErAyMF/wGHWUGKSma66FKvYzlB1iX/UFSouRI4RRRwJDThWxWSR
+         bQ0ua9ZCSj302JljzkujjHaSWPbs+M9oSDvtrr+/LWKlPrWyuppw7IY9gbCyccSClxVr
+         P0pHsjb3i/on/A79jVliW2KMT3fKW5zSiFYxAazXr9NwdRhwHhRAsv89qOkirm1tbxfa
+         +8tCjVfsGgX/DxQ/SqI1xW+F45EmerZNITP9yxiLTuZap2mRPqMJYbmeR23zjlYXR31g
+         /3V1Za6KGG2OSPA1/wtZow7cx/iwGuI5xJGl65Gd4BfcKhKbZ3XHU/lDXCylsTP6Lp5o
+         2W3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749400592; x=1750005392;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JcHy/YwMLMy9jhyQE0SeKG1qlVwYgM1apCAB9rcjt2o=;
-        b=bIEMecFDrL7pJ5Kd1tZennNOAzQjzEYqm4g+DzLpMqttYHyLfYJiL7iIN7wbTGSj7x
-         jKR4KXspbBwVlTG2+XH9kDHGGKg/BIzSp775I/cKhv4mluXRPfi7vblVE6SfZ//I0qkO
-         gQVkvq2ULSeBoet2+Zin2HcnW4H9Hb5OzS6NFtr/kk0ci1R9atVHdLjfy4/lP7A5Xd7A
-         eYFpF8oQbzM7MzJ5C3ymJE+cW5UjlNSNupsh/MzRrLvw1RbO0Cm2AlG0ayEoVjvd+Z4u
-         UzpbCFI3Fgk0hORmm/plm2mgpuH30Rt3USFWn9fs24AXX5SdLMr8qufaWQQNliYsMS0S
-         0l0A==
-X-Forwarded-Encrypted: i=1; AJvYcCXtoZpUxBcFB0kZhxesVMgXNZj8wBpOkIi0/CLVkS4SWu2EFFc/x1X5Xw5nWXwgyL6L0WDF7cK2IUSD7kI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWrbv2v7OCsC/basOR/ZivrOK4s6v+dJ5O6Ga02yMojHiDY2+M
-	/JZeDL3P5r+3U1mTx77r0wvMTcEXL/2D1Cczi9qtBpkjy/MZP4zPxyyG
-X-Gm-Gg: ASbGncuBDtM5LfwEWjkpaKlAapDth19DEMA7F5vksuKtATJytAeQ7rifpO3ISyY5XBx
-	Bz/cm+w4QGHOBE2xNwWMn8o7KLNoca57Kj6Bm+Dvtx5VhKOqMQeZhUuKsArAQH2cctwBAUZWFP3
-	pyCIvaDULIDzmM0vmXMCscxByYTrFVyP2hrEa9qVyCTMfQRupkTjt5axyjrqTrZS4lWwN03IUvh
-	9QAZQxjhHRNVJH2w0oV2Vup0t3re+5ln5Uj4jN0Cee1s3cXwBUkfOKNr1qIantyaxB+iXHddjTZ
-	HhXnxqjuubnSB7Zuvm20r2aysMLsiyT7S/eixzdIGaGd7R0GNG8JtvVREU9o32b/yNUBRdPgUGq
-	FTJfT69PL/A==
-X-Google-Smtp-Source: AGHT+IH3RzRgjVWFh+M2G8uO1iYSf7nzpnq4V3NFj1xtsBA66oG7a/q0SoHc/4qhw72uAI6NwRREUQ==
-X-Received: by 2002:a05:6000:420c:b0:3a4:eae1:a79f with SMTP id ffacd0b85a97d-3a5318869f5mr8490128f8f.33.1749400592008;
-        Sun, 08 Jun 2025 09:36:32 -0700 (PDT)
-Received: from Reodus.localdomain ([83.120.60.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532452d7esm7466396f8f.85.2025.06.08.09.36.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Jun 2025 09:36:31 -0700 (PDT)
-From: Amir Mohammad Jahangirzad <a.jahangirzad@gmail.com>
-To: hubcap@omnibond.com
-Cc: martin@omnibond.com,
-	devel@lists.orangefs.org,
-	linux-kernel@vger.kernel.org,
-	Amir Mohammad Jahangirzad <a.jahangirzad@gmail.com>
-Subject: [PATCH] fs/orangefs: use snprintf() instead of sprintf()
-Date: Sun,  8 Jun 2025 20:05:59 +0330
-Message-ID: <20250608163559.36401-1-a.jahangirzad@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1749400641; x=1750005441;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ab5IYEMCSXnjXJoa81zazAM9xrhkF9LpgVvghvLw2Y4=;
+        b=FGK2U24OiLJvhwCvrF1xbZlPn8fGsQbxQZdZyza1pYLtBaxz9J9bNjgRRy0DZ/ueAZ
+         f/ZhCCg7zW6aW+G3clSur/kDfaGfhB9yVZnDqQMODRw4kvBLUi+5Ctoe2AaDSGjvfofn
+         znnHP1xFfPB9SzoCED6ht4zu3gd4apXARKdCD9NmNCoTqtBex38VoTNdu/1PjkB6TqeF
+         mzR90WC9C8WsE6j4NPgFEmy6PSD/YBAuaRnnLh6RCRbfybE0hgC9EkHuuFb2JA7Bsqsj
+         zo928e6pPJCShumkaGtC1A0TH1OW3mptd86lG1JZPH6SW9iXQs9wAxjDYWXO/ellKgN7
+         0Zrw==
+X-Forwarded-Encrypted: i=1; AJvYcCVcTGknVtg6HzOrq00zCjiI7Q2If3O+Xe9b/BF8ae2BLMrSJhjn+oJ4pCEVfvUprDr0cGNp6AWs16tQ/OE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+tZkj8RqB+g9O+kFM7xn0T/rvqtwk4gDLasuACshfLgdfq93M
+	CAEI9XP61eHHnGcrSrAkw2eFjKQDCTh67Xh7N4BFVt2DNMQauH5AEEUjDWE8KpGXyNp7uZ+ArAR
+	IgfR9mQ3j20gf1ZG8v96SQAoURoRwi0pMaVj9zYjAeA==
+X-Gm-Gg: ASbGnctzqHL0MHMnMasQotHsEA9sH4uUMup0rLulLh9vDeyU+YEEvkll8UW6ygqx45r
+	P4/UZsC0V+fONNrX7g/kUV2i1h/R259FeDlrQ+g8kXNG5vqSV1AOU3SUJh160bX0tdlbcV26SuW
+	XkWj6qRTJmgcq5BJi3Kr4EixLd72s0zw==
+X-Google-Smtp-Source: AGHT+IG7TGR/SrekoDc0+onJRf0onfQpl+KhRAPN38op7Z3+HE8nHerXh4JUuGRqCdAEroRR8Wt0dCQLMoLZ0skTHL0=
+X-Received: by 2002:a05:622a:2606:b0:476:8fcb:9aa3 with SMTP id
+ d75a77b69052e-4a5b9a2891dmr242085871cf.13.1749400641136; Sun, 08 Jun 2025
+ 09:37:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
+ <20250515182322.117840-12-pasha.tatashin@soleen.com> <mafs0plfirwh3.fsf@kernel.org>
+In-Reply-To: <mafs0plfirwh3.fsf@kernel.org>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Sun, 8 Jun 2025 12:36:44 -0400
+X-Gm-Features: AX0GCFuZQeD3HS-9cAYV1p6O4Tqr1uPw5wV4go1oCDGi974z2b27RRui1WzOPv8
+Message-ID: <CA+CK2bCnMpRy=wYtt02Xy+R7BFhrY_RsdaZ7X4i+CUASv5Uo0Q@mail.gmail.com>
+Subject: Re: [RFC v2 11/16] luo: luo_sysfs: add sysfs state monitoring
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: jasonmiu@google.com, graf@amazon.com, changyuanl@google.com, 
+	rppt@kernel.org, dmatlack@google.com, rientjes@google.com, corbet@lwn.net, 
+	rdunlap@infradead.org, ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, 
+	ojeda@kernel.org, aliceryhl@google.com, masahiroy@kernel.org, 
+	akpm@linux-foundation.org, tj@kernel.org, yoann.congal@smile.fr, 
+	mmaurer@google.com, roman.gushchin@linux.dev, chenridong@huawei.com, 
+	axboe@kernel.dk, mark.rutland@arm.com, jannh@google.com, 
+	vincent.guittot@linaro.org, hannes@cmpxchg.org, dan.j.williams@intel.com, 
+	david@redhat.com, joel.granados@kernel.org, rostedt@goodmis.org, 
+	anna.schumaker@oracle.com, song@kernel.org, zhangguopeng@kylinos.cn, 
+	linux@weissschuh.net, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-mm@kvack.org, gregkh@linuxfoundation.org, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, rafael@kernel.org, dakr@kernel.org, 
+	bartosz.golaszewski@linaro.org, cw00.choi@samsung.com, 
+	myungjoo.ham@samsung.com, yesanishhere@gmail.com, Jonathan.Cameron@huawei.com, 
+	quic_zijuhu@quicinc.com, aleksander.lobakin@intel.com, ira.weiny@intel.com, 
+	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
+	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
+	stuart.w.hayes@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-sprintf() is discouraged for use with bounded destination buffers
-as it does not prevent buffer overflows when the formatted output
-exceeds the destination buffer size. snprintf() is a safer
-alternative as it limits the number of bytes written and ensures
-NUL-termination.
+On Thu, Jun 5, 2025 at 12:20=E2=80=AFPM Pratyush Yadav <pratyush@kernel.org=
+> wrote:
+>
+> On Thu, May 15 2025, Pasha Tatashin wrote:
+>
+> > Introduce a sysfs interface for the Live Update Orchestrator
+> > under /sys/kernel/liveupdate/. This interface provides a way for
+> > userspace tools and scripts to monitor the current state of the LUO
+> > state machine.
+>
+> I am not sure if adding and maintaining a new UAPI that does the same
+> thing is worth it. Can't we just have commandline utilities that can do
+> the ioctls and fetch the LUO state, and those can be called from tools
+> and scripts?
+>
 
-Replace sprintf() with snprintf() for copying the debug string
-into a temporary buffer, using ORANGEFS_MAX_DEBUG_STRING_LEN as
-the maximum size to ensure safe formatting and prevent memory
-corruption in edge cases.
+This is based on discussion from SystemD people. It is much simpler
+for units to check the current 'state' via sysfs, and act accordingly.
 
-
-Signed-off-by: Amir Mohammad Jahangirzad <a.jahangirzad@gmail.com>
----
- fs/orangefs/orangefs-debugfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/orangefs/orangefs-debugfs.c b/fs/orangefs/orangefs-debugfs.c
-index f7095c91660c..e1613e0847e8 100644
---- a/fs/orangefs/orangefs-debugfs.c
-+++ b/fs/orangefs/orangefs-debugfs.c
-@@ -396,7 +396,7 @@ static ssize_t orangefs_debug_read(struct file *file,
- 		goto out;
- 
- 	mutex_lock(&orangefs_debug_lock);
--	sprintf_ret = sprintf(buf, "%s", (char *)file->private_data);
-+	sprintf_ret = snprintf(buf, ORANGEFS_MAX_DEBUG_STRING_LEN, "%s", (char *)file->private_data);
- 	mutex_unlock(&orangefs_debug_lock);
- 
- 	read_ret = simple_read_from_buffer(ubuf, count, ppos, buf, sprintf_ret);
--- 
-2.43.0
-
+> >
+> > The main feature is a read-only file, state, which displays the
+> > current LUO state as a string ("normal", "prepared", "frozen",
+> > "updated"). The interface uses sysfs_notify to allow userspace
+> > listeners (e.g., via poll) to be efficiently notified of state changes.
+> >
+> > ABI documentation for this new sysfs interface is added in
+> > Documentation/ABI/testing/sysfs-kernel-liveupdate.
+> >
+> > This read-only sysfs interface complements the main ioctl interface
+> > provided by /dev/liveupdate, which handles LUO control operations and
+> > resource management.
+> >
+> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> [...]
+>
+> --
+> Regards,
+> Pratyush Yadav
