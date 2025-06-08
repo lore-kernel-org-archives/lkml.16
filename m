@@ -1,87 +1,159 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29DD1A5B91
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 18:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46D71519BA;
+	Sun,  8 Jun 2025 18:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749408878; cv=none; b=F7Ak0ZAqZ3A/F1SvWKgQhX+Or72982bgZEx/RLQQBRFLy3GnubmaxVwL+Oxy+hZqhnYm2GiOOFI6jOpnP0ptuJLX3p8cZmqEW6ycG/yMuqMeF8NDPMromIHujwdgc4aZvDlxC7lAtRZ7g970ZwdSQvAc7CvyyQyl0Ab11XpVqvQ=
+	t=1749409103; cv=none; b=RE1FYe1TJTx9TjkpiCySmzZ8L4m5lPBQS++0WbIerNJptq0pS8K4Fyu/pBGn4A0V3ibJwhMJE94DlOvEi/00Ap8B3aYRO2Rq9d9cBv2cu6nhRAaHGKs2P0VxRfSezQHaTBVdMMoeFYiobRso9Yq8GGweT9B8yJe4yyLYQSoIxxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749408878; c=relaxed/simple;
-	bh=0e+ZPgS4d1SgXPwa7fKgOCMnZMTdfvr8q/YXFT4v6JY=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=VIG1zN/yVXUIB8Gz72lOxADNcq0mY0Ahhr6Yabr783sX+OVRo71SGudrinIVAPhlDgi5Qbiv28J0FDE5tvcClCZ5rXuJj9gp7Dw402N9d1jMzWrwMMl0/jpqZ1UOqv/Se6hDpcfpW1abDoUO6mIZxG+pBzA4VzXhUd/Th7G0FGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddd90ca184so7344715ab.0
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 11:54:36 -0700 (PDT)
+	s=arc-20240116; t=1749409103; c=relaxed/simple;
+	bh=88Uh/dRShAqEMRZ9HjGQGMvcN1IivebAqc9Wm9lCQFI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QuwAsBc1U+1rVnJTS/YhPti125Y3MdSDVXFTtLsvKRe0QVMHLod4jiFaRKudWc0b6MIt1v81WaRrybAZd2W9iJB6iXSuk1GUj3jMBsBQsval7rIcWvfw+niQ40hfkaqHHMdWXssGIwLeFy8s7DBF4EvaufXWvvL6dNQzoo3mWH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=imkYx/3B; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="imkYx/3B"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-450cb2ddd46so23490725e9.2;
+        Sun, 08 Jun 2025 11:58:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749409100; x=1750013900; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QspH1QXhZUOGOJ5T/E0jFenLoFrw9f9dtqDQBN6qV2k=;
+        b=imkYx/3Bh+nETLC/nun7yoA0/mo6cROK9QNZmm9PqUQB8rWtVXZV2RZ1pyyrU0vUCF
+         8Sc7l+M7FQQi77OAuxrSwnC5TEnBsqzG71z6FSyswwmlBy8vZDr6A130cAwitKgCfN1U
+         XLgoC4bEveBu+2GMgg+pwOFoCWk3zKbuI7ADkL9JtysYKEWUAmfowmcNazsqVbSyIDuB
+         YlOmQ/I7Fzn6ixXTIIVbbHzDZIDf5iguFa3QrNSlXE9BZMAOi4dTChWixjX4nMlSPv3C
+         keroH0QaXel/dPj3RQZruHQA4ofU/dOhOAqNuhQ0cs2XLbN4766etv620MiEQVS4fwBG
+         cSLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749408876; x=1750013676;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hgsijAwwECKxtIfaX6vID5yInExtJ80pYGQbSecD5bU=;
-        b=aa+sM7pQV/5Ho0AgsdV81CTFmOqC0Ih8fEo5v5soaSBkaNRPzYsQtwVCa6pwHtMKmr
-         d3rDDRXDkqkWiSMEdsMdZNjhai9VeudBoXaF6rps1g+oNJ2NgK9xvyCOkT1r6h4zkJwo
-         2Weq8dF/q6gHyQvCFkUFCXkETn2ni0CKubPeSU/kqVpP/Oa1qdaJjr+5GOQZ3vmKu4q1
-         4aSCuVHDn/YvsX5h2GatmnuT1NKjZoHhYQaHOlhNuiuzskMvlQoqZuBL7jcy3gl5xn3k
-         mYW/bo1FF1g0msMVARVstDCO0nSm9FlRHw4ADNLjOmNj1tsUhggZcTTxILiCF6i38T58
-         s3Aw==
-X-Gm-Message-State: AOJu0Yz6wQK0SIitObwOQDbCdPRnj/TvmfZBAkBfWhgMmHre7EyBMvgF
-	HbISJ1Fn5V0Wgm17bvmHBg7qxxkPJT2CyKUt2Z7EG2Rz7GzBlMMkp9uZXfCvLP/7nvsLd47aQeW
-	32vGxDDJvpbjwAWGW1hQYXsx6Z4Vhn/hlVh/CKnSngZAAoYwi333G3Uy0/0c=
-X-Google-Smtp-Source: AGHT+IHf5dEhS9FMvjdPKtBV8GytrlcYVTCI2NIpJ8tGDRIK/eNSRgRaS0VwaIATVTJ/HlJah6BX1dNevklvOnswiYLBjrXNTnDX
+        d=1e100.net; s=20230601; t=1749409100; x=1750013900;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QspH1QXhZUOGOJ5T/E0jFenLoFrw9f9dtqDQBN6qV2k=;
+        b=rLqXwDGXATtZG6DtTiCuU/EgoKicQUpvnB0hBpgkZHKCKY6bcu3hmGXSu/Y6sHZofO
+         O8OZD3iWuzTVO7ga2wz2dzdylnqUU+RLiKo9fzTW1OUtkXcB6bu4xCJiLX1x5kFVe4Z3
+         xF3qkHYNaXBkPfQaZvXZBEx5HxPze98Gfr8/N86IW08U3ISzQcGwZi4DCeOoRjALIkF8
+         u8Do70IRRHs6cIUVH/s95THy9i0iXn62RwGE3zJjEiPu0M+PlC4T3O1GmQ+C5v5oX2nm
+         Ao2sUeKsGPaynjzGTWxgUbf1YuSVsKeHFQAYWJgVQL3AXhs/kgXPjNVb1wijKrct0wyN
+         qYJw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/L4oI5JuFARZyHIgpM1FToePgSucKg7JZAD7xK0W+mBBHSnWJU87JC2lAMUvYSmAQmgU2MpHRXDrhDpA=@vger.kernel.org, AJvYcCXH2PwCNah8RYrltbZsquJkhsEU3tSfuYF7c5fgEZ3v+mNokA/0cBqfwzExN9twXgFsiKPOIPDYBuF2CaY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9VVX9dCkoipppSHY03cnL45NmUs0+dCuMuvPpgxpkaTj6SQCt
+	N3btiI4rE7ngB2MUMXYVMU9roFvRbUAfosRw5Xbu9JVRJUV8iH8+3afkbuRh9w==
+X-Gm-Gg: ASbGncv9d1/84eSDfDFbLhyzTy6UmzNhMzf/nQUMYZaovm+RI/GONYjgq2Ohtt82Mr1
+	roo+sDRdBMowYEzjMlje7DhAs0ggRnP4lZ3EJNCraHnYkdhzwylCfJg1dSnQvfUX+HgvPoSEfit
+	ca8XxdmFyLO63uP9rOYvZ+i1tW49lfGknlUSeFRbKNziTdc4RelAYJBuImSovotZv6BXQHvNu+L
+	w8rTClboiNp+XRyrgBdJc4zwmL3KMPhxc8N1uSq8y6atqtf4hul2F5h7wVwmX3OwYlLu3GKFWdp
+	3DvXU+L2bs8vtzY2i5drSbVG1uxthhOO90hVZBAwNKmuEqHbQf8IFc+pwduNGTln
+X-Google-Smtp-Source: AGHT+IFwSWal1Zw5l3HeLqEQUgPizdxwO1ui7AxbVpUKdP678hvNhFUMh28xHc67H/xJ7L8UWGhkBw==
+X-Received: by 2002:a05:600c:859a:b0:453:c39:d0c2 with SMTP id 5b1f17b1804b1-4530c39d5a4mr13919265e9.24.1749409099945;
+        Sun, 08 Jun 2025 11:58:19 -0700 (PDT)
+Received: from demon-pc.localdomain ([188.27.131.45])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53229e009sm8005335f8f.16.2025.06.08.11.58.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Jun 2025 11:58:19 -0700 (PDT)
+From: Cosmin Tanislav <demonsingur@gmail.com>
+To: 
+Cc: Sean Young <sean@mess.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Cosmin Tanislav <demonsingur@gmail.com>
+Subject: [PATCH] media: rc: ir-spi: reallocate buffer dynamically
+Date: Sun,  8 Jun 2025 21:58:04 +0300
+Message-ID: <20250608185805.2159705-1-demonsingur@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a0a:b0:3dd:cacd:8fe2 with SMTP id
- e9e14a558f8ab-3ddce44f9f0mr133195335ab.18.1749408875995; Sun, 08 Jun 2025
- 11:54:35 -0700 (PDT)
-Date: Sun, 08 Jun 2025 11:54:35 -0700
-In-Reply-To: <67eaa688.050a0220.1547ec.014a.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6845dc6b.050a0220.daf97.0af4.GAE@google.com>
-Subject: Re: [syzbot] Re: [syzbot] [bluetooth?] KASAN: vmalloc-out-of-bounds
- Read in hci_devcd_dump
-From: syzbot <syzbot+ac3c79181f6aecc5120c@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+Replace the static transmit buffer with a dynamically allocated one,
+allowing the buffer to grow as needed based on the length of the
+message being transmitted.
 
-***
+Introduce a helper function ir_buf_realloc() to manage the allocation
+and reallocation of the buffer. Use it during probe to preallocate
+a buffer matching the original static buffer, then reallocate it as
+needed, with an overhead to avoid frequent reallocations.
 
-Subject: Re: [syzbot] [bluetooth?] KASAN: vmalloc-out-of-bounds Read in hci_devcd_dump
-Author: ipravdin.official@gmail.com
+Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+---
+ drivers/media/rc/ir-spi.c | 34 +++++++++++++++++++++++++++++++---
+ 1 file changed, 31 insertions(+), 3 deletions(-)
 
-#syz test
-
-diff --git a/net/bluetooth/coredump.c b/net/bluetooth/coredump.c
-index 819eacb38762..720cb79adf96 100644
---- a/net/bluetooth/coredump.c
-+++ b/net/bluetooth/coredump.c
-@@ -249,15 +249,15 @@ static void hci_devcd_dump(struct hci_dev *hdev)
+diff --git a/drivers/media/rc/ir-spi.c b/drivers/media/rc/ir-spi.c
+index 8fc8e496e6aa..b13efd61fb8c 100644
+--- a/drivers/media/rc/ir-spi.c
++++ b/drivers/media/rc/ir-spi.c
+@@ -27,7 +27,8 @@ struct ir_spi_data {
+ 	u32 freq;
+ 	bool negated;
  
-        size = hdev->dump.tail - hdev->dump.head;
+-	u16 tx_buf[IR_SPI_MAX_BUFSIZE];
++	u16 *tx_buf;
++	size_t tx_len;
+ 	u16 pulse;
+ 	u16 space;
  
--       /* Emit a devcoredump with the available data */
--       dev_coredumpv(&hdev->dev, hdev->dump.head, size, GFP_KERNEL);
--
-        /* Send a copy to monitor as a diagnostic packet */
-        skb = bt_skb_alloc(size, GFP_ATOMIC);
-        if (skb) {
-                skb_put_data(skb, hdev->dump.head, size);
-                hci_recv_diag(hdev, skb);
-        }
+@@ -36,6 +37,28 @@ struct ir_spi_data {
+ 	struct regulator *regulator;
+ };
+ 
++static int ir_buf_realloc(struct ir_spi_data *idata, size_t len)
++{
++	u16 *tx_buf;
 +
-+       /* Emit a devcoredump with the available data */
-+       dev_coredumpv(&hdev->dev, hdev->dump.head, size, GFP_KERNEL);
++	if (len <= idata->tx_len)
++		return 0;
++
++	len = max(len, idata->tx_len + IR_SPI_MAX_BUFSIZE);
++
++	tx_buf = devm_kmalloc(&idata->spi->dev, len * sizeof(*tx_buf),
++			      GFP_KERNEL);
++	if (!tx_buf)
++		return -ENOMEM;
++
++	devm_kfree(&idata->spi->dev, idata->tx_buf);
++
++	idata->tx_buf = tx_buf;
++	idata->tx_len = len;
++
++	return 0;
++}
++
+ static int ir_spi_tx(struct rc_dev *dev, unsigned int *buffer, unsigned int count)
+ {
+ 	int i;
+@@ -52,8 +75,9 @@ static int ir_spi_tx(struct rc_dev *dev, unsigned int *buffer, unsigned int coun
+ 
+ 		periods = DIV_ROUND_CLOSEST(buffer[i] * idata->freq, 1000000);
+ 
+-		if (len + periods >= IR_SPI_MAX_BUFSIZE)
+-			return -EINVAL;
++		ret = ir_buf_realloc(idata, len + periods);
++		if (ret)
++			return ret;
+ 
+ 		/*
+ 		 * The first value in buffer is a pulse, so that 0, 2, 4, ...
+@@ -153,6 +177,10 @@ static int ir_spi_probe(struct spi_device *spi)
+ 
+ 	idata->freq = IR_SPI_DEFAULT_FREQUENCY;
+ 
++	ret = ir_buf_realloc(idata, IR_SPI_MAX_BUFSIZE);
++	if (ret)
++		return ret;
++
+ 	return devm_rc_register_device(dev, idata->rc);
  }
-
-Ivan Pravdin
+ 
+-- 
+2.49.0
 
