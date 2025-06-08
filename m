@@ -1,147 +1,195 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96351250BEC;
-	Sun,  8 Jun 2025 20:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E70250BEC;
+	Sun,  8 Jun 2025 20:12:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749413458; cv=none; b=s+Mf9mx6mqyzr+nFmMsjipX/Q5yuK5suQhln/HP2ZBq1JkvtA0Z158hXs8x9ILz5JYU2JOgMYflXLYiYyXnsifyh5aDks3wJLZ9C6mRDpB3QQq+NfvCgbTqyVNsW4jlSFH46ekrBloVDqAdmu5xoqUli38Z1wm024xb3NSMRNng=
+	t=1749413551; cv=none; b=Hyra2DDgeZPc3upzP5EM0BmVEhobdbgsn7TyqmtL+bThKtAP4YYv5aQ7Tgo3b5E/qmcda5TZnKGKuR26LBjFLOX6LBM9PuSky48TFpvC5H/x6E4PSI6X4gNFMFVYOrEzru9EHHVtfYdxz8RmKFxdYTc/nBy32eDkSrvwLdO2vpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749413458; c=relaxed/simple;
-	bh=3f9Ym9Pd0K33b8I/7KW2GFr/TT/wU87P+hjasPRaAAQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=tJXFpxc5cmIwzeQQLkz1V5kj5gNbfr1Vv3SHuH09MoLkFAgMa4DgPiZsb1dmGvdFcwIi0vOmJkSqAJaHxF9MGfvxaG4kakOszX4N4LgjAlmJ51Vv4TGjtu5q0IUJg8/PgYcD9b8++nph5LnU3e17TySdy6XQmuQmALYoscWPmX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GJ4Sp6wm; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749413551; c=relaxed/simple;
+	bh=N1eSTFvJKNoqU8AEqaskHYhTlh2oo+27+yZhAYeBUio=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VN5CBXowZ1Hnk8EyY6IRGG+1jiMn7B0jx/8vgzzfIx7B/+MWg7a1IwXvdI6zgUPJkcgoqQUDBhWd8ew8RsTqVBCnfgZawzG+B/i4p/PBurHbHr3Eb3SWnjBO7v5WPqxy64LBLVFeVeCTn/XrMfSkBQojrK6/TqwX1hG/av6F1p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V6AWvpH8; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GJ4Sp6wm"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 558JvfDA013294;
-	Sun, 8 Jun 2025 20:10:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	VMqwClsGucxOnCvIC7ieB8B3Zk2MDDXeIyx8pwhbeik=; b=GJ4Sp6wmMdsUKdSu
-	7XqPo69suRCI2VnCm7g6IliYhqnccb16OjIL4/cDiRS/25F6MOJ4FbOM2m8VjYpK
-	crH+93b0DmUeKWbPssRaBl7g80xquR8lKr4H1UxJHHynbr/8BCsWme20mrrZLC2c
-	iWgIn0QICd/exWbG+Kpf3qmds7szksYVVeZ3APJvnHwB78SjaDtuFpJZWzy6RqmJ
-	2SCdjM7/gEnwxjdkPwJQw6r3OATzMk2YYw1ouw+ldSQHWl43DxJY1ly+xKWQw6vM
-	YlJrvw8xqZhRg9AFpH9yUjFLgS7F9hzODjR6F6WwUI3p0w5H38akCwvjDmK5NJ9L
-	h+bUSg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ce9m1rv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 08 Jun 2025 20:10:36 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 558KAY2n004996
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 8 Jun 2025 20:10:34 GMT
-Received: from [10.216.51.238] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 8 Jun 2025
- 13:10:27 -0700
-Message-ID: <421aadf3-9e2d-4028-bfe2-e29d2ade8432@quicinc.com>
-Date: Mon, 9 Jun 2025 01:40:23 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V6AWvpH8"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-234f17910d8so35342785ad.3;
+        Sun, 08 Jun 2025 13:12:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749413549; x=1750018349; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UxHLeyRnsKqoym12d89ymZgGhfKHaU9GX2ztWPNSHWk=;
+        b=V6AWvpH8poD7nljNK/+kWPtTgYd/8WnNsARwv+9A4s6wXHddxHJra1b2ghI4uIF/Mw
+         nEVNTnxGnaC8i3dwOBSItDYO5oaNdODRLBYzb7sWBBzk8iwvhxS2ZNrApwpY78wFSG4p
+         rD8zWdMUjBZHVa3RVy3WqrhJgZfKRG9ka5swr2rX8oUpHRuVPd8NO7ZJlbsf5740CekZ
+         lkZMkq+D+JIj4quC1CO+PDVmv4r9H9RYzqHEDq7sBmmEg5sB2CGnlMUZF0UhpSssmIBC
+         NSxjIAdS5BaTlWrW0qlqLRkSlsnuQZg0pIh6q/4IXkBmKUyPCJP+Xv9NHAJ0Qal1eAu+
+         2UKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749413549; x=1750018349;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UxHLeyRnsKqoym12d89ymZgGhfKHaU9GX2ztWPNSHWk=;
+        b=JxXRuMNcwekAHV5d0cbubed6Jd5T2TGNPwcTKEpjSjifQFtHYW9ULaanbRUtTUaHJW
+         jduF/Q1YLsr89xB6GWj/VN3pXHVnw0vhG2yurS84UQvof3b1tJa2FgruIPEjGMbh9ZiL
+         1gwKR8tZqb6cRQPlblIehieF2cT4/eGet+OGKI9YFuPYZtTJGGkVb/tGDLhHTian+P9r
+         RuntLicPgGKUs+LGUUCQ421AHg87z7yLiPFLnLUFJjIUTPrABw4huwX2uwb92VnSMixQ
+         Zkr9rS1RgROSP5ok0L3XWUhFOaR54RGOes97qOA4EMucucP+sg/Vkb/9PBmLOKIuR9y2
+         Gs4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV3yNX9avkx9Xb1QEn8CdIq0RO8pdeVBvrHL+o/WOc9aK9t1eZ468KyotPLR7NWRgiPvJ/j2DHk@vger.kernel.org, AJvYcCWKd9ZAkqN88TRWdhXHnRhmtB2ih5IRC24yTY5wRsxHMuk6SP20ErJxnXX5y66xIDqV5XfI9fUUTJzdTbQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+pHdK3+58S9fXOKPG81ZwVd0ZtlXkEzTXJxW8GAww9QAHBlEc
+	qdFL+L2SOolXfD8cDw0G0M2xT9eZPxd66WnZrc6MpbkQwF/Yjx/8IsLRvXoQA1uX4Q==
+X-Gm-Gg: ASbGncuSQnAfW2jK8QydQpjYleCCXDb74fG2NF8f8iups8GY4ajru+0UAhbr/n7KvzY
+	RaCRJETA6Xbm3PBXTNbXooLeFI2ZKTcSa0ArV0bJcy99rrwOX984z2515Be262gXURcNCdrIoy2
+	Pe/kvTZBAXXcIO/tPxjAVc3MyIgxqpr3Tz41t2edR8gd1Ab1YH1d15UOruv0tCtjJ+oN9FApDg+
+	HRjnHs0TPHD764LOtMMwWO9DG6TqswNGgJY6ZydRX7Udur3fxrFQiTZIy5UaMrl2d4tuY5Biep3
+	WAlkCxsWMgXcPB95UPpuHc4kP8UeLNqv+CopdFw=
+X-Google-Smtp-Source: AGHT+IG5U06yyoQPCY2LojyGdsbBtg78ndpLkKTR8tlgEcN1NTJBSMqDq1y6/hy9dPqPQNAUjhiOag==
+X-Received: by 2002:a17:902:da84:b0:22f:c19c:810c with SMTP id d9443c01a7336-23601debfabmr132882975ad.51.1749413548965;
+        Sun, 08 Jun 2025 13:12:28 -0700 (PDT)
+Received: from fedora.. ([2601:647:6700:3390::c8d1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236037ae33dsm41967515ad.206.2025.06.08.13.12.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Jun 2025 13:12:28 -0700 (PDT)
+From: Kuniyuki Iwashima <kuni1840@gmail.com>
+To: farbere@amazon.com
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	kuniyu@amazon.com,
+	kuznet@ms2.inr.ac.ru,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	sashal@kernel.org,
+	yoshfuji@linux-ipv6.org
+Subject: Re: [PATCH] net/ipv4: fix type mismatch in inet_ehash_locks_alloc() causing build failure
+Date: Sun,  8 Jun 2025 13:11:51 -0700
+Message-ID: <20250608201227.3970666-1-kuni1840@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250608060726.43331-1-farbere@amazon.com>
+References: <20250608060726.43331-1-farbere@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] drm/msm/adreno: Add Adreno X1-45 support
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Akhil P Oommen
-	<akhilpo@oss.qualcomm.com>
-CC: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-        Rob Clark <robin.clark@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
-        "Konrad Dybcio" <konradybcio@kernel.org>,
-        Abhinav Kumar
-	<abhinav.kumar@linux.dev>,
-        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie
-	<airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
-        Bjorn Andersson
-	<andersson@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>
-References: <20250607-x1p-adreno-v1-0-a8ea80f3b18b@oss.qualcomm.com>
- <20250607-x1p-adreno-v1-2-a8ea80f3b18b@oss.qualcomm.com>
- <5xb35clc3wnnwpdnmqfminl4z6ok6nhoxg65hwgyxegxguby5d@fuks7fc2n3pf>
-From: Akhil P Oommen <quic_akhilpo@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <5xb35clc3wnnwpdnmqfminl4z6ok6nhoxg65hwgyxegxguby5d@fuks7fc2n3pf>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: BszDk49latyru2SxwMd1H6DHiNz1f0QD
-X-Authority-Analysis: v=2.4 cv=drjbC0g4 c=1 sm=1 tr=0 ts=6845ee3c cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8
- a=XhjLoxLiZ051MZkV3CIA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: BszDk49latyru2SxwMd1H6DHiNz1f0QD
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA4MDE2MyBTYWx0ZWRfX7gpHMqsCA/Mu
- SgkW+NQvexJf4ppn59QwKvLVTctgDptCXm1Go0AgfDSQVF90IF7qQZt7UBidbrznfHjyYjNmfea
- BC5/m9zYvXkr7oqpvn/nvX20CMYZ/AxivdZapB0eu5gdQIY6CsPL3dkXvq+KC2VMSOlradtXddu
- iEOyfA2gUvZrQyBjQ9CoNm6Y13MabNwtmoHPojmZ2gOkiRrGh7QyOxBVNPhmz0vPvkiBway6Qtg
- fg5ApBxl+phdBN0AoplyHwBzZIaSXPi8CciPYFHOK39KF4SG0yhEn9pdd9uXb9Hukyt6ECvWvG1
- x/nm6LGK6cCqi8qt+eAmO1o6d3RMt+rRwhr75e6Gm3UCZkJJc/cN0dPa/jpu8RUPrsHxKgTioOi
- K1qG/EJmzaQIuBPXDdVvgNb5OL/d+Rtv8OEjSMYN/mujHypnzbx4un5ICQIDHTPVkbycsbQH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-08_04,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1011
- priorityscore=1501 suspectscore=0 bulkscore=0 mlxlogscore=999 adultscore=0
- phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506080163
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 6/8/2025 1:44 AM, Dmitry Baryshkov wrote:
-> On Sat, Jun 07, 2025 at 07:45:00PM +0530, Akhil P Oommen wrote:
->> Add support for Adreno X1-45 GPU present Snapdragon X1P42100
->> series of compute chipsets. This GPU is a smaller version of
->> X1-85 GPU with lower core count and smaller internal memories.
->>
->> Signed-off-by: Akhil P Oommen <akhilpo@oss.qualcomm.com>
->> ---
->>  drivers/gpu/drm/msm/adreno/a6xx_catalog.c | 38 +++++++++++++++++++++++++++++++
->>  1 file changed, 38 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
->> index 70f7ad806c34076352d84f32d62c2833422b6e5e..2db748ce7df57a9151ed1e7f1b025a537bb5f653 100644
->> --- a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
->> +++ b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
->> @@ -1474,6 +1474,44 @@ static const struct adreno_info a7xx_gpus[] = {
->>  			},
->>  		},
->>  		.preempt_record_size = 3572 * SZ_1K,
->> +	}, {
->> +		.chip_ids = ADRENO_CHIP_IDS(0x43030c00),
->> +		.family = ADRENO_7XX_GEN2,
->> +		.fw = {
->> +			[ADRENO_FW_SQE] = "gen71500_sqe.fw",
->> +			[ADRENO_FW_GMU] = "gen71500_gmu.bin",
+From: Eliav Farber <farbere@amazon.com>
+Date: Sun, 8 Jun 2025 06:07:26 +0000
+> Fix compilation warning:
 > 
-> Any chance of getting these and ZAP into linux-firmware?
+> In file included from ./include/linux/kernel.h:15,
+>                  from ./include/linux/list.h:9,
+>                  from ./include/linux/module.h:12,
+>                  from net/ipv4/inet_hashtables.c:12:
+> net/ipv4/inet_hashtables.c: In function ‘inet_ehash_locks_alloc’:
+> ./include/linux/minmax.h:20:35: warning: comparison of distinct pointer types lacks a cast
+>    20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+>       |                                   ^~
+> ./include/linux/minmax.h:26:18: note: in expansion of macro ‘__typecheck’
+>    26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
+>       |                  ^~~~~~~~~~~
+> ./include/linux/minmax.h:36:31: note: in expansion of macro ‘__safe_cmp’
+>    36 |         __builtin_choose_expr(__safe_cmp(x, y), \
+>       |                               ^~~~~~~~~~
+> ./include/linux/minmax.h:52:25: note: in expansion of macro ‘__careful_cmp’
+>    52 | #define max(x, y)       __careful_cmp(x, y, >)
+>       |                         ^~~~~~~~~~~~~
+> net/ipv4/inet_hashtables.c:946:19: note: in expansion of macro ‘max’
+>   946 |         nblocks = max(nblocks, num_online_nodes() * PAGE_SIZE / locksz);
+>       |                   ^~~
+>   CC      block/badblocks.o
+> 
+> When warnings are treated as errors, this causes the build to fail.
+> 
+> The issue is a type mismatch between the operands passed to the max()
+> macro. Here, nblocks is an unsigned int, while the expression
+> num_online_nodes() * PAGE_SIZE / locksz is promoted to unsigned long.
+> 
+> This happens because:
+>  - num_online_nodes() returns int
+>  - PAGE_SIZE is typically defined as an unsigned long (depending on the
+>    architecture)
+>  - locksz is unsigned int
+> 
+> The resulting arithmetic expression is promoted to unsigned long.
+> 
+> Thus, the max() macro compares values of different types: unsigned int
+> vs unsigned long.
+> 
+> This issue was introduced in commit b53d6e9525af ("tcp: bring back NUMA
+> dispersion in inet_ehash_locks_alloc()") during the update from kernel
+> v5.10.237 to v5.10.238.
 
-Yeah. Haven't got the legal clearance to publish the firmwares yet. Will
-post it in a few days.
-
--Akhil.
+Please use the upstream SHA1, f8ece40786c9.
 
 > 
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> 
-> 
+> It does not exist in newer kernel branches (e.g., v5.15.185 and all 6.x
+> branches), because they include commit d53b5d862acd ("minmax: allow
 
+Same here, d03eba99f5bf.
+
+But why not backport it to stable instead ?
+
+In the first place, f8ece40786c9 does not have Fixes: and seems
+to be cherry-picked accidentally by AUTOSEL.
+
+
+> min()/max()/clamp() if the arguments have the same signedness.")
+> 
+> Fix the issue by using max_t(unsigned int, ...) to explicitly cast both
+> operands to the same type, avoiding the type mismatch and ensuring
+> correctness.
+
+The cover letter of d03eba99f5bf says:
+https://lore.kernel.org/all/b97faef60ad24922b530241c5d7c933c@AcuMS.aculab.com/
+
+---8<---
+The min() (etc) functions in minmax.h require that the arguments have
+exactly the same types.
+
+However when the type check fails, rather than look at the types and
+fix the type of a variable/constant, everyone seems to jump on min_t().
+In reality min_t() ought to be rare - when something unusual is being
+done, not normality.
+---8<---
+
+So, the typecheck variant should be rare, and it was merged 2 years ago,
+so there should be more places depending on the commit.
+
+Once someone backported such a change to stable trees again and required
+this type of "fix", it would revert the less-typecheck effor gradually,
+which should be avoided.
+
+
+> 
+> Fixes: b53d6e9525af ("tcp: bring back NUMA dispersion in inet_ehash_locks_alloc()")
+> Signed-off-by: Eliav Farber <farbere@amazon.com>
+> ---
+>  net/ipv4/inet_hashtables.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
+> index fea74ab2a4be..ac2d185c04ef 100644
+> --- a/net/ipv4/inet_hashtables.c
+> +++ b/net/ipv4/inet_hashtables.c
+> @@ -943,7 +943,7 @@ int inet_ehash_locks_alloc(struct inet_hashinfo *hashinfo)
+>  	nblocks = max(2U * L1_CACHE_BYTES / locksz, 1U) * num_possible_cpus();
+>  
+>  	/* At least one page per NUMA node. */
+> -	nblocks = max(nblocks, num_online_nodes() * PAGE_SIZE / locksz);
+> +	nblocks = max_t(unsigned int, nblocks, num_online_nodes() * PAGE_SIZE / locksz);
+>  
+>  	nblocks = roundup_pow_of_two(nblocks);
+>  
+> -- 
+> 2.47.1
