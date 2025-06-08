@@ -1,140 +1,163 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E404370830
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 16:47:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2088633F
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 16:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749401281; cv=none; b=c+tOzBC6q+bk8xjOaW2f2OqO2D4WoQ+0mkldiz0vZDahYneKnTopjiaf2+NOWzi3CPacdgJF55+2rsd0NkYtldd9/wijjP843nrIgRWb7AjPQZTf4powpBxhb38gc5O7HWg2jdWq0n3yogci4l6CfK89VRZw3vfy2FpWS7P3Wd8=
+	t=1749401891; cv=none; b=HltGD5sGMD4FgoHl2mUFGmPH9sPYrVWMwSX9x/ulYlJykkbGvp43ft6f8wrSZfcDSJ6tOyAg+Zm2t7FFKl5Y1HUFCd5P+OoyNHpBBa7lg0SNQA0Tfvsz1fL37YiUR9um1GT7vfDS17kkctdrLsIEPoM1YARxfef3vgcin9U07yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749401281; c=relaxed/simple;
-	bh=pcc00lKL07ldGo8PyyfZ8jInejYQP/wQpM8Kg9OlyoY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k7KsO1xe4UekznEexvd3K8nZ9d8a8JEdwrd1yngTG9tHIYJtdCGFOoQdbGfzFrtLMP066dHRMmoHtKPDsY41OZmO3+xsA/vjvpCXqS4jdQwCwrwQ0YwBM+IqkhYqWmBEukf0OKRUxyLfYcfxd+QmyEn58xuf1xoeiKa4IiWSghQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=NTJCV3zq; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1749401891; c=relaxed/simple;
+	bh=u4wQyLjJp+430rQ0oMLZAAtB4ucOgT4UzH6dUPzhvIU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CQvUvUBHA85CTx1HwrhXqQYWaczAyYNgkRSbFG1D0/UTBjBCDm/CuyX0c3N8zYpOLIKeFtyP3qZkmLhdVxtTwOl8o+JHV0uYj1baLV5TOLNSkcPSo/kZKkncfsO6mKQs1XyVvQvAxtXaseGs7ejXJQcrx/ab7BL6RoctDgJ3Iys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=ubv0t9Ts; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="NTJCV3zq"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7d20f79a00dso489248885a.0
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 09:47:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="ubv0t9Ts"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-235f9ea8d08so26896225ad.1
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 09:58:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1749401278; x=1750006078; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z4mLD6ZBDCacy+5KKbwWASUNAXTCWi/82rv4+F3m5es=;
-        b=NTJCV3zqRJKBcPQsaMocIBN4yZC5locd1ZresRihskMaqluYi/0f5AHHacc9LrNB1V
-         x1oBrJBUNMNk5n5TXVc2lEzwjVgRwsPcs6FED17V5Z7GTHmR0SgxtxQGZ0dBFZeGtWSP
-         Lnr8ASqBvxVOwWj455Fm9Ruvq0CaO98Ng6S++xllKRSQr+V8t6XAxOQijpW24210YbpT
-         IVMRKB8iPSVW0a7t6yZni6ExptvWraMnJnPmRT+0NxuG5p3hKZBWhpP8+l1HEjDHmMhh
-         kK+55n51dFfOk9UmcgPwnOhg3OzrrRZyboqawL4TNZMFqbX1qyXUqiChtPRXNjccXoCN
-         izEQ==
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1749401889; x=1750006689; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nuldK7MCvX30cQFzWuI0PzalznhEarc6NW9MP8uHyXE=;
+        b=ubv0t9TsGF7bJ5L5UAGBLT7VVfzMwkPEMnxeVbIs7hUxjNkeyvA/nXZHIGBSWR1QXW
+         RrpuBIdAVpulaKdt663KHjNI0k8k1x23mLTWtyZvk503HnaUsyIG4BNvdjSxKiuGixaY
+         zhFy+sPmiCDbmZTU3qZmxIVHs5ULE29mroS/N8nc3fp80eZfwnnRxEnIe+rpAh1xyhUj
+         OqIKuO1Iigagd7Ikd0LfyHYGORKNCFUjubUeMPyzjBwwrNyTT8aHn7EG5axb2LpnFwmN
+         Rz4/0CKTeICF2HsIWcMzd8Ekpp13T5JmT3e9otw6k6j23UuPBY9ctO6yYzyjaYC5ayWh
+         qnQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749401278; x=1750006078;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z4mLD6ZBDCacy+5KKbwWASUNAXTCWi/82rv4+F3m5es=;
-        b=AHj2P4XBKpPsayEvBfwPeD0kiGnA53GIFSYU1HaKo10KVKVOBOJPvdbzz+cCsLSw7X
-         wvsTO2v3Wl35bnWdlkYzFsdERpE6Y2mMa2ddxxSYHTmYMNS0jxldwWe4BXw/1BwXVz5p
-         dyAAnqgRn/WBxXaFID7vxl2NjaIUF/XE5HC3lD80iC+434jUoNKYVisK7Y2m8KQpp2AC
-         Z236KfkQaEVrmNDuE145zhAw2RSjYbpCAE7MOi2vBren8TWkemIPvGmLSOcuHxdK+fgG
-         6kDzlaHvuTWezNveMxmHLu7yLCbwpA3ltyq6Agzbn4MkvSpZ2MSo9NchFPO0f2fKYCaj
-         GS2w==
-X-Forwarded-Encrypted: i=1; AJvYcCV8SPfmK45TN3mqzRVQbyztIQPTnORCAECkVEjJ1bvspFh/MbavdXnIMdkcqGq4cPP7FLTCMFVSt2AMcFQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBIMrd1gZTKDiuAnYgJERKfkEB8gLkr9FXoviu/vHrstdcBPSI
-	e17YNnwN6F52zuHfLddKY71bTzpJDI521TUDBLs/eh5LLsTvWnsJkBsIWrVP8P+n9mj92ols+/q
-	ISKzuhnuDnjiyweNPDrFO0L1/dvipz1PkPgghLetoPQ==
-X-Gm-Gg: ASbGnctS9mLyK6hGjCghk6G9GDfx2/lJdOv4HQUneH00yr3KnJRPVfeO9givJH+R2Ca
-	+os5Viw7maGUJcYyWDaWk0YCBbunlqJ+RuUklxGsQWFajGnluPAKQKf0swZIfBArSgaSyFfBT/h
-	o2FZ58If493IY8xb3lCcWq2NlUP7jjAWl/O9hwdWYT
-X-Google-Smtp-Source: AGHT+IEs/C9sBlNWz2wXNsGbPqskhgwVgo/QLWX02D5Sf9R590oESJfie1k8PTRBskdNsn7eCrILFqcX6T3swqr/wZA=
-X-Received: by 2002:a05:622a:260b:b0:48e:9e05:cede with SMTP id
- d75a77b69052e-4a5b9dc4512mr199150681cf.52.1749401277864; Sun, 08 Jun 2025
- 09:47:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749401889; x=1750006689;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nuldK7MCvX30cQFzWuI0PzalznhEarc6NW9MP8uHyXE=;
+        b=Y376duKFnQLQMT8zA/A2c7/fTt10n/cSg3pP/WWRsysCwt+TGDXUIS7VHGRDs3WDCw
+         CObtv4FnhZD8jlOywx7clj99m0q8hvPNe82jQYgwubYqVl5rjMZowk8Get8bfSlJlV5f
+         QL9cI5nsW/huElRngilrYb9CpIHi2ai08x4mLOu0lXIlZ/C8yX+yVIsuPqk4l91LdReG
+         Hfn/wJcsIb/wDrJ07YmNs6V2jOnb5N3OqRQZ/pb8rUK0hTuCvBLxMKVH0vJavypMINAP
+         qTloTc5L56xnBKYM/mVgWYpbedEyaHWE428tJCMEki5001frnKNSyIcgYu8OWSygTwO+
+         dxtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVc5MK+ZDGiKsSIyfPO/JzDwhiTPRvgyNM8+vlBQIE03OD1T2/8y02Bbvl6iZUU0GCwcxRQS4tzmzaYAk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXnHPJnpQZKEmqCZrbvI7+iJneTbE0p0VB/maahA2roGhRH8Lz
+	Ie9v4idsxND8rrKdkemr6MqQYwq+0/xXYld+bUgmYg4jxI7XNM7rzMQMqG6PHTSRCGw=
+X-Gm-Gg: ASbGncsURdsM9r3q5uKmTutZ/HOns/Nz+eSJOIeS6wqPgG0OoYZfID6atTe++N8h9Tu
+	BLPAAYmPkmP1u3ysZuaScsaTuNlw8jhLT8AAJZWMrOEsxxyNEFZy7VypkqRWRhFogZmoC4XWmMP
+	DOcwQZWPw3i0t/dL2MJLfJmlCpRovsy5lQgfl/HI0TuB2zcSpYYAD26dYuRRGYGuq8P7thYN2ma
+	zATLpyuY7+4+V+/lz3+K/qlqL1zAPY/+oosbsQTopdmUcaj/lctY0iLEaruvkFY1XKmuHfP5itu
+	zS3FnG+/uw2uu4oGVQxyznX5HPLqJ5sEDnPKyRGxyPgNWfabymRTgg==
+X-Google-Smtp-Source: AGHT+IHP9TwOiQS18SeLvT6WZ+KAoJi7YVDOIp4T0wyLfQJcuq/fKfkoNHs572ijakJZtNeFSPJvBA==
+X-Received: by 2002:a17:902:cf01:b0:234:ef42:5d6d with SMTP id d9443c01a7336-23601e78185mr142424575ad.23.1749401889406;
+        Sun, 08 Jun 2025 09:58:09 -0700 (PDT)
+Received: from x1 ([97.120.245.255])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236034056f8sm40902275ad.161.2025.06.08.09.58.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Jun 2025 09:58:08 -0700 (PDT)
+Date: Sun, 8 Jun 2025 09:58:07 -0700
+From: Drew Fustini <drew@pdp7.com>
+To: Benno Lossin <lossin@kernel.org>,
+	Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH RFC 0/6] Rust Abstractions for PWM subsystem with TH1520
+ PWM driver
+Message-ID: <aEXBH5r05FkTxpV+@x1>
+References: <CGME20250524211519eucas1p218997c69b98b14d3af2eb6bf4e9d3187@eucas1p2.samsung.com>
+ <20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com>
+ <aDJGgLZ9tITwGBxq@x1>
+ <b5f4af17-05ef-453d-8f04-283590ae5b87@samsung.com>
+ <DA5YY0YF28GO.3DONTQDLY6VBD@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
- <20250515182322.117840-14-pasha.tatashin@soleen.com> <aDQr1E31Gw-x-XTE@kernel.org>
-In-Reply-To: <aDQr1E31Gw-x-XTE@kernel.org>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Sun, 8 Jun 2025 12:47:21 -0400
-X-Gm-Features: AX0GCFtdRr0JczX7XZvcuUGFk7aKkG5txkDs_LzBQs6_5QSoVZeflqKUSwLoHnM
-Message-ID: <CA+CK2bDTjnumpYjaEor=2-bG--4YtbuJuei2bc-Af-hCguO+4A@mail.gmail.com>
-Subject: Re: [RFC v2 13/16] luo: add selftests for subsystems un/registration
-To: Mike Rapoport <rppt@kernel.org>
-Cc: pratyush@kernel.org, jasonmiu@google.com, graf@amazon.com, 
-	changyuanl@google.com, dmatlack@google.com, rientjes@google.com, 
-	corbet@lwn.net, rdunlap@infradead.org, ilpo.jarvinen@linux.intel.com, 
-	kanie@linux.alibaba.com, ojeda@kernel.org, aliceryhl@google.com, 
-	masahiroy@kernel.org, akpm@linux-foundation.org, tj@kernel.org, 
-	yoann.congal@smile.fr, mmaurer@google.com, roman.gushchin@linux.dev, 
-	chenridong@huawei.com, axboe@kernel.dk, mark.rutland@arm.com, 
-	jannh@google.com, vincent.guittot@linaro.org, hannes@cmpxchg.org, 
-	dan.j.williams@intel.com, david@redhat.com, joel.granados@kernel.org, 
-	rostedt@goodmis.org, anna.schumaker@oracle.com, song@kernel.org, 
-	zhangguopeng@kylinos.cn, linux@weissschuh.net, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, gregkh@linuxfoundation.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, rafael@kernel.org, 
-	dakr@kernel.org, bartosz.golaszewski@linaro.org, cw00.choi@samsung.com, 
-	myungjoo.ham@samsung.com, yesanishhere@gmail.com, Jonathan.Cameron@huawei.com, 
-	quic_zijuhu@quicinc.com, aleksander.lobakin@intel.com, ira.weiny@intel.com, 
-	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
-	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
-	stuart.w.hayes@gmail.com, ptyadav@amazon.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DA5YY0YF28GO.3DONTQDLY6VBD@kernel.org>
 
-On Mon, May 26, 2025 at 4:52=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
-te:
->
-> On Thu, May 15, 2025 at 06:23:17PM +0000, Pasha Tatashin wrote:
-> > Introduce a self-test mechanism for the LUO to allow verification of
-> > core subsystem management functionality. This is primarily intended
-> > for developers and system integrators validating the live update
-> > feature.
+On Mon, May 26, 2025 at 11:01:58AM +0200, Benno Lossin wrote:
+> On Mon May 26, 2025 at 10:22 AM CEST, Michal Wilczynski wrote:
+> > On 5/25/25 00:21, Drew Fustini wrote:
+> >> Thanks for the patch series. It will be great to have PWM working
+> >> upstream.
+> >> 
+> >> I've not built Linux with Rust before, so I'm going through the quick
+> >> start [1]. I've also never built Linux with LLVM before but clang seems
+> >> like the best compiler to use for Rust. Are you using LLVM?
 > >
-> > The tests are enabled via the new Kconfig option
-> > CONFIG_LIVEUPDATE_SELFTESTS (default 'n') and are triggered through
-> > a new ioctl command, LIVEUPDATE_IOCTL_SELFTESTS, added to the
-> > /dev/liveupdate device node.
-> >
-> > This ioctl accepts commands defined in luo_selftests.h to:
-> > - LUO_CMD_SUBSYSTEM_REGISTER: Creates and registers a dummy LUO
-> >   subsystem using the liveupdate_register_subsystem() function. It
-> >   allocates a data page and copies initial data from userspace.
-> > - LUO_CMD_SUBSYSTEM_UNREGISTER: Unregisters the specified dummy
-> >   subsystem using the liveupdate_unregister_subsystem() function and
-> >   cleans up associated test resources.
-> > - LUO_CMD_SUBSYSTEM_GETDATA: Copies the data page associated with a
-> >   registered test subsystem back to userspace, allowing verification of
-> >   data potentially modified or preserved by test callbacks.
-> > This provides a way to test the fundamental registration and
-> > unregistration flows within the LUO framework from userspace without
-> > requiring a full live update sequence.
->
-> I don't think ioctl for selftest is a good idea.
-> Can't we test register/unregister and state machine transitions with kuni=
-t?
->
-> And have a separate test module that registers as a subsystem, preserves
-> it's state and then verifies the state after the reboot. This will requir=
-e
-> running qemu and qemu usage in tools/testing is a mess right now, but
-> still.
+> > Hi Drew,
+> > You're correct, Clang is the way to go for Rust in the kernel. I also
+> > followed the official quick start guide. To answer your question
+> > directly: yes, I'm using LLVM.
+> 
+> Just to let you know, there is an effort to get rustc to work with a gcc
+> backend rustc_gcc_codegen [1]. And there also is the gccrs project [2]
+> trying to create a gnu Rust compiler.
+> 
+> [1]: https://rust-for-linux.com/rustc_codegen_gcc
+> [2]: https://rust-for-linux.com/gccrs
+> 
+> They have made a lot of progress over the last year, so we're hopeful
+> that they become usable in the near future. But for the moment,
+> Clang/LLVM is the way to go.
+> 
+> Hope this helps!
+> 
+> ---
+> Cheers,
+> Benno
 
-Normally, I would agree with you, but LUO is special as it has two
-parts: user states and kernel states, and it is already driven through
-ioctl() interface to do state transitions, and preservation
-management. So, in this particular case having an extended IOCTLs to
-configure a specific kernel state, and then use normal IOCTLs to drive
-tests is very useful. In the future, I plan to add support to QEMU,
-but we need more work for that to happen.
+Thanks for letting me know about gccrs.
 
-Pasha
+I was able to build linux okay with clang:
+
+make LLVM=1 ARCH=riscv -j16
+
+It booted okay on the lpi4a:
+
+Linux version 6.15.0-next-20250606 (pdp7@thelio) (Ubuntu clang version 18.1.3 (1ubuntu1), Ubuntu LLD 18.1.3) 
+
+I installed rust with:
+
+ rustup default beta
+ rustup component add rust-src
+
+ $ make LLVM=1 rustavailable
+ ***
+ *** Rust bindings generator 'bindgen' versions 0.66.0 and 0.66.1 may not
+ *** work due to a bug (https://github.com/rust-lang/rust-bindgen/pull/2567),
+ *** unless patched (like Debian's).
+ ***   Your version:     0.66.1
+ ***
+ ***
+ *** Please see Documentation/rust/quick-start.rst for details
+ *** on how to set up the Rust support.
+ ***
+ Rust is available!
+
+I'm not sure if that bindgen warning matters?
+
+Thanks,
+Drew
