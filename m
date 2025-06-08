@@ -1,233 +1,274 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1346A33B;
-	Sun,  8 Jun 2025 19:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B6D194137
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 19:37:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749411105; cv=none; b=QpltcHaq4eS6jav3f87YFKc/oyykgQ1+657/3oOZ72HWReSLUQEFATx9lGQpms59S8sS13wL7lcUh3ijTmPk31FEhOOpK7GujBF89/QdtFS8/yW9BceH58AKeg9gH/yzLRE9KR8fWO0SU0D8Fgt/mCMKaMvIxRJSEgDOpAdg37I=
+	t=1749411463; cv=none; b=hweXOaGZoqzQ3v/M8o07H0chAyLj3yZ4B1eYppIgiWRMjhYBAfruwlkcM93Lw1XrX0RmnRy0CPYZ3bnRFoBKP1M6Enx1TYlxKB+THvJca0Y35/5uOhtCVfYS3WgyClD0hwxjqmOBDmEe3oeM0ryNAFIibP8G8KrlCTSjtT+CV/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749411105; c=relaxed/simple;
-	bh=gifPlaHBYfzezWCVEDpNS3T26y78KL1GGVGcXJ1yV2g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lO5KYPm2/ZJT8YsQc8K5+W1noqBpwKw4XyAGGnavKbPpq+QL7pbeUsCIF8ahwmkg/QTG1Nt9H3kXrG2t1dMvWP2/GOkH5610jlAuQkUQgV41w9M0H5oS7yaRyoMy99IMboVJc63hbUQsErnYNiMokZ13mTrbAIgUJtVEt4RMSkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iwiFYwLP; arc=none smtp.client-ip=192.198.163.15
+	s=arc-20240116; t=1749411463; c=relaxed/simple;
+	bh=GQolLZCaQAW1YLfc8qiRtS2D7x03bwSxsxSo5NAKkv4=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=bRswc4PRO1RS7aUyh+2ub7s7gagA24+QcYYalhZ/aB31ms77NCgnur6BC7QgbRufKJPw8r3EZFaNmXpvJJqd3Uuhnsbc2Rb01tDWM+N71sUfDnhlK36GktsQQejA33QqWvA3JRLnSHGQ+9j1WqtyUkLNriNb3nee7jxx7zRUGYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IJ7xDFNc; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iwiFYwLP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IJ7xDFNc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749411103; x=1780947103;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gifPlaHBYfzezWCVEDpNS3T26y78KL1GGVGcXJ1yV2g=;
-  b=iwiFYwLPc2mP+zG/JuK56fSm2g9p9g1lxinNI10EvkB2hpAInPd9yRC+
-   zpdTjOLlyFpyISMCnckXm1gk2eSHO49lR22n0dVrXdAl5ajJF6i9bxSfB
-   MblavJs5Js1Jul8bMFabevlAP6CAZXcTJ7Bn2NPuQ8DynErknXrGzxx8j
-   TEgludIDWMaHwzoqj9lGIJUUcSDAMbnGwYL4V0nE7leSJzQSNYJTbu8vO
-   51TqXsp/BI7MPsd3qy9eDolXbzkbJ+T60+a2WFn+uY82gNKUmJdflDE3A
-   Pv4XgS++62QMpyOKSF0rvkk6v2/+jUNC46qwKc6+M7NjiWGYikaTWVM5x
+  t=1749411461; x=1780947461;
+  h=date:from:to:cc:subject:message-id;
+  bh=GQolLZCaQAW1YLfc8qiRtS2D7x03bwSxsxSo5NAKkv4=;
+  b=IJ7xDFNc8Lm4dXXNDr6E6XEmU/40eJBABQO7wuH7zVhxzkeHvsxVyVpx
+   z3ifjQPUNxgjDW0YU9DAmeFdZYPiLdnMRyrQxLr3W1UdBstWgwfN5radH
+   Mh6PQDhMgkwdnepJEM72uwc46m8cqpXSEZ77ztU5phAOXbQO5xeUq5LqQ
+   IZese2H2HSSm+XWlYelisG4dtTfr5w/V4grH4EYJ+//Rq5RYGN713VSJf
+   rBReqLgpznoWI+xa3pumGgturJkiXqtoK6/VXmLNcBYoFEaq8ldCWLXs3
+   2SdBJSJXsRKUaiADj4RuMVKruNS5KjdWxZh3pToEyfkDvVLD/k186vCau
    A==;
-X-CSE-ConnectionGUID: wGga2QymRFW4gAjiWO9KMg==
-X-CSE-MsgGUID: +BsGuReVRB+oBLBcvHpJ7w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="51636828"
+X-CSE-ConnectionGUID: myKUX2ujRZCoPpO5/HONnA==
+X-CSE-MsgGUID: 0b+vnAAaTaqvOzejzlpjbg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="62893705"
 X-IronPort-AV: E=Sophos;i="6.16,221,1744095600"; 
-   d="scan'208";a="51636828"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2025 12:31:42 -0700
-X-CSE-ConnectionGUID: +iDqu+SLTnmB9lbjJ9Zhjg==
-X-CSE-MsgGUID: a3JqnYI8TYC8kncyZS6nww==
+   d="scan'208";a="62893705"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2025 12:37:40 -0700
+X-CSE-ConnectionGUID: ZCZkRo3tTtes6uqrDeyNdA==
+X-CSE-MsgGUID: kV7r8NCoSMubgNpp8A1O3A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,221,1744095600"; 
-   d="scan'208";a="177264927"
+   d="scan'208";a="177219890"
 Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 08 Jun 2025 12:31:39 -0700
+  by fmviesa001.fm.intel.com with ESMTP; 08 Jun 2025 12:37:39 -0700
 Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uOLk0-0006X7-1I;
-	Sun, 08 Jun 2025 19:31:36 +0000
-Date: Mon, 9 Jun 2025 03:30:50 +0800
+	id 1uOLpo-0006XB-2R;
+	Sun, 08 Jun 2025 19:37:36 +0000
+Date: Mon, 09 Jun 2025 03:37:13 +0800
 From: kernel test robot <lkp@intel.com>
-To: Alex Elder <elder@riscstar.com>, mturquette@baylibre.com,
-	sboyd@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, dlan@gentoo.org, heylenay@4d2.org,
-	inochiama@outlook.com, elder@riscstar.com,
-	linux-clk@vger.kernel.org, spacemit@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Guodong Xu <guodong@riscstar.com>
-Subject: Re: [PATCH] clk: spacemit: mark K1 pll1_d8 as critical
-Message-ID: <202506090339.Jy504MGo-lkp@intel.com>
-References: <20250607202759.4180579-1-elder@riscstar.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:timers/cleanups] BUILD SUCCESS
+ 41cb08555c4164996d67c78b3bf1c658075b75f1
+Message-ID: <202506090303.HEbVKjoQ-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250607202759.4180579-1-elder@riscstar.com>
 
-Hi Alex,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/cleanups
+branch HEAD: 41cb08555c4164996d67c78b3bf1c658075b75f1  treewide, timers: Rename from_timer() to timer_container_of()
 
-kernel test robot noticed the following build warnings:
+elapsed time: 722m
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on next-20250606]
-[cannot apply to v6.15]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+configs tested: 197
+configs skipped: 5
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Alex-Elder/clk-spacemit-mark-K1-pll1_d8-as-critical/20250608-042952
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250607202759.4180579-1-elder%40riscstar.com
-patch subject: [PATCH] clk: spacemit: mark K1 pll1_d8 as critical
-config: csky-randconfig-r111-20250608 (https://download.01.org/0day-ci/archive/20250609/202506090339.Jy504MGo-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 15.1.0
-reproduce: (https://download.01.org/0day-ci/archive/20250609/202506090339.Jy504MGo-lkp@intel.com/reproduce)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506090339.Jy504MGo-lkp@intel.com/
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                                 defconfig    gcc-15.1.0
+arc                   randconfig-001-20250608    gcc-8.5.0
+arc                   randconfig-002-20250608    gcc-8.5.0
+arc                        vdk_hs38_defconfig    clang-21
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-15.1.0
+arm                     am200epdkit_defconfig    clang-21
+arm                         bcm2835_defconfig    clang-21
+arm                     davinci_all_defconfig    clang-19
+arm                                 defconfig    clang-21
+arm                                 defconfig    gcc-15.1.0
+arm                            mps2_defconfig    clang-21
+arm                        mvebu_v7_defconfig    clang-21
+arm                       omap2plus_defconfig    clang-21
+arm                          pxa3xx_defconfig    clang-21
+arm                            qcom_defconfig    clang-21
+arm                   randconfig-001-20250608    gcc-8.5.0
+arm                   randconfig-002-20250608    gcc-8.5.0
+arm                   randconfig-003-20250608    gcc-12.4.0
+arm                   randconfig-004-20250608    gcc-8.5.0
+arm                             rpc_defconfig    clang-18
+arm                          sp7021_defconfig    clang-21
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                               defconfig    gcc-15.1.0
+arm64                 randconfig-001-20250608    clang-21
+arm64                 randconfig-002-20250608    gcc-12.3.0
+arm64                 randconfig-003-20250608    clang-21
+arm64                 randconfig-004-20250608    gcc-13.3.0
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20250608    gcc-10.5.0
+csky                  randconfig-002-20250608    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    clang-21
+hexagon                             defconfig    gcc-15.1.0
+hexagon               randconfig-001-20250608    clang-21
+hexagon               randconfig-002-20250608    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250608    clang-20
+i386        buildonly-randconfig-002-20250608    clang-20
+i386        buildonly-randconfig-003-20250608    gcc-12
+i386        buildonly-randconfig-004-20250608    clang-20
+i386        buildonly-randconfig-005-20250608    gcc-12
+i386        buildonly-randconfig-006-20250608    gcc-12
+i386                                defconfig    clang-20
+i386                  randconfig-001-20250609    clang-20
+i386                  randconfig-002-20250609    clang-20
+i386                  randconfig-003-20250609    clang-20
+i386                  randconfig-004-20250609    clang-20
+i386                  randconfig-005-20250609    clang-20
+i386                  randconfig-006-20250609    clang-20
+i386                  randconfig-007-20250609    clang-20
+i386                  randconfig-011-20250609    clang-20
+i386                  randconfig-012-20250609    clang-20
+i386                  randconfig-013-20250609    clang-20
+i386                  randconfig-014-20250609    clang-20
+i386                  randconfig-015-20250609    clang-20
+i386                  randconfig-016-20250609    clang-20
+i386                  randconfig-017-20250609    clang-20
+loongarch                        allmodconfig    gcc-15.1.0
+loongarch                         allnoconfig    gcc-15.1.0
+loongarch                           defconfig    gcc-15.1.0
+loongarch             randconfig-001-20250608    gcc-14.3.0
+loongarch             randconfig-002-20250608    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                           rs90_defconfig    clang-21
+mips                        vocore2_defconfig    clang-21
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                               defconfig    gcc-15.1.0
+nios2                 randconfig-001-20250608    gcc-12.4.0
+nios2                 randconfig-002-20250608    gcc-8.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250608    gcc-8.5.0
+parisc                randconfig-002-20250608    gcc-8.5.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-21
+powerpc                          allyesconfig    gcc-15.1.0
+powerpc                   bluestone_defconfig    clang-21
+powerpc                     kmeter1_defconfig    gcc-15.1.0
+powerpc                     mpc512x_defconfig    clang-21
+powerpc                     mpc5200_defconfig    clang-21
+powerpc                    mvme5100_defconfig    gcc-15.1.0
+powerpc                     ppa8548_defconfig    clang-21
+powerpc               randconfig-001-20250608    clang-21
+powerpc               randconfig-002-20250608    gcc-8.5.0
+powerpc               randconfig-003-20250608    clang-21
+powerpc                 xes_mpc85xx_defconfig    gcc-15.1.0
+powerpc64             randconfig-001-20250608    clang-21
+powerpc64             randconfig-002-20250608    gcc-8.5.0
+powerpc64             randconfig-003-20250608    clang-21
+riscv                            allmodconfig    clang-21
+riscv                            allmodconfig    gcc-15.1.0
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                            allyesconfig    gcc-15.1.0
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250608    gcc-13.3.0
+riscv                 randconfig-002-20250608    gcc-8.5.0
+s390                             alldefconfig    gcc-15.1.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250608    clang-21
+s390                  randconfig-002-20250608    gcc-12.4.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                        apsh4ad0a_defconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sh                         ecovec24_defconfig    gcc-15.1.0
+sh                               j2_defconfig    clang-21
+sh                 kfr2r09-romimage_defconfig    clang-21
+sh                     magicpanelr2_defconfig    clang-21
+sh                    randconfig-001-20250608    gcc-11.5.0
+sh                    randconfig-002-20250608    gcc-13.3.0
+sh                      rts7751r2d1_defconfig    gcc-15.1.0
+sh                           se7722_defconfig    gcc-15.1.0
+sh                     sh7710voipgw_defconfig    clang-21
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                 randconfig-001-20250608    gcc-11.5.0
+sparc                 randconfig-002-20250608    gcc-12.4.0
+sparc64                             defconfig    gcc-15.1.0
+sparc64               randconfig-001-20250608    gcc-13.3.0
+sparc64               randconfig-002-20250608    gcc-12.4.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250608    gcc-12
+um                    randconfig-002-20250608    gcc-12
+um                           x86_64_defconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250608    gcc-11
+x86_64      buildonly-randconfig-002-20250608    clang-20
+x86_64      buildonly-randconfig-003-20250608    gcc-12
+x86_64      buildonly-randconfig-004-20250608    gcc-12
+x86_64      buildonly-randconfig-005-20250608    clang-20
+x86_64      buildonly-randconfig-006-20250608    gcc-12
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20250609    gcc-12
+x86_64                randconfig-002-20250609    gcc-12
+x86_64                randconfig-003-20250609    gcc-12
+x86_64                randconfig-004-20250609    gcc-12
+x86_64                randconfig-005-20250609    gcc-12
+x86_64                randconfig-006-20250609    gcc-12
+x86_64                randconfig-007-20250609    gcc-12
+x86_64                randconfig-008-20250609    gcc-12
+x86_64                randconfig-071-20250609    clang-20
+x86_64                randconfig-072-20250609    clang-20
+x86_64                randconfig-073-20250609    clang-20
+x86_64                randconfig-074-20250609    clang-20
+x86_64                randconfig-075-20250609    clang-20
+x86_64                randconfig-076-20250609    clang-20
+x86_64                randconfig-077-20250609    clang-20
+x86_64                randconfig-078-20250609    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                           rhel-9.4-bpf    gcc-12
+x86_64                         rhel-9.4-kunit    gcc-12
+x86_64                           rhel-9.4-ltp    gcc-12
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250608    gcc-9.3.0
+xtensa                randconfig-002-20250608    gcc-14.3.0
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/clk/spacemit/ccu-k1.c:168:1: sparse: sparse: symbol 'pll1_d3' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:170:1: sparse: sparse: symbol 'pll1_d5' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:172:1: sparse: sparse: symbol 'pll1_d7' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:175:1: sparse: sparse: symbol 'pll1_d11_223p4' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:176:1: sparse: sparse: symbol 'pll1_d13_189' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:177:1: sparse: sparse: symbol 'pll1_d23_106p8' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:178:1: sparse: sparse: symbol 'pll1_d64_38p4' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:179:1: sparse: sparse: symbol 'pll1_aud_245p7' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:180:1: sparse: sparse: symbol 'pll1_aud_24p5' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:182:1: sparse: sparse: symbol 'pll2_d1' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:183:1: sparse: sparse: symbol 'pll2_d2' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:184:1: sparse: sparse: symbol 'pll2_d3' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:185:1: sparse: sparse: symbol 'pll2_d4' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:186:1: sparse: sparse: symbol 'pll2_d5' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:187:1: sparse: sparse: symbol 'pll2_d6' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:188:1: sparse: sparse: symbol 'pll2_d7' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:189:1: sparse: sparse: symbol 'pll2_d8' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:191:1: sparse: sparse: symbol 'pll3_d1' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:192:1: sparse: sparse: symbol 'pll3_d2' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:193:1: sparse: sparse: symbol 'pll3_d3' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:194:1: sparse: sparse: symbol 'pll3_d4' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:195:1: sparse: sparse: symbol 'pll3_d5' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:196:1: sparse: sparse: symbol 'pll3_d6' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:197:1: sparse: sparse: symbol 'pll3_d7' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:198:1: sparse: sparse: symbol 'pll3_d8' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:214:1: sparse: sparse: symbol 'pll1_d24_102p4' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:215:1: sparse: sparse: symbol 'pll1_d48_51p2' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:216:1: sparse: sparse: symbol 'pll1_d48_51p2_ap' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:217:1: sparse: sparse: symbol 'pll1_m3d128_57p6' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:218:1: sparse: sparse: symbol 'pll1_d96_25p6' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:219:1: sparse: sparse: symbol 'pll1_d192_12p8' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:220:1: sparse: sparse: symbol 'pll1_d192_12p8_wdt' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:221:1: sparse: sparse: symbol 'pll1_d384_6p4' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:228:1: sparse: sparse: symbol 'pll1_d12_204p8' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:231:1: sparse: sparse: symbol 'pll1_d10_245p76' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:234:1: sparse: sparse: symbol 'pll1_d52_47p26' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:235:1: sparse: sparse: symbol 'pll1_d78_31p5' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:247:1: sparse: sparse: symbol 'i2s_sysclk' was not declared. Should it be static?
->> drivers/clk/spacemit/ccu-k1.c:248:1: sparse: sparse: symbol 'i2s_bclk' was not declared. Should it be static?
-
-vim +/pll1_d3 +168 drivers/clk/spacemit/ccu-k1.c
-
-1b72c59db0add8 Haylen Chu 2025-04-16  159  
-1b72c59db0add8 Haylen Chu 2025-04-16  160  CCU_PLL_DEFINE(pll1, pll1_rate_tbl, APBS_PLL1_SWCR1, APBS_PLL1_SWCR3, MPMU_POSR, POSR_PLL1_LOCK,
-1b72c59db0add8 Haylen Chu 2025-04-16  161  	       CLK_SET_RATE_GATE);
-1b72c59db0add8 Haylen Chu 2025-04-16  162  CCU_PLL_DEFINE(pll2, pll2_rate_tbl, APBS_PLL2_SWCR1, APBS_PLL2_SWCR3, MPMU_POSR, POSR_PLL2_LOCK,
-1b72c59db0add8 Haylen Chu 2025-04-16  163  	       CLK_SET_RATE_GATE);
-1b72c59db0add8 Haylen Chu 2025-04-16  164  CCU_PLL_DEFINE(pll3, pll3_rate_tbl, APBS_PLL3_SWCR1, APBS_PLL3_SWCR3, MPMU_POSR, POSR_PLL3_LOCK,
-1b72c59db0add8 Haylen Chu 2025-04-16  165  	       CLK_SET_RATE_GATE);
-1b72c59db0add8 Haylen Chu 2025-04-16  166  
-1b72c59db0add8 Haylen Chu 2025-04-16  167  CCU_FACTOR_GATE_DEFINE(pll1_d2, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(1), 2, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @168  CCU_FACTOR_GATE_DEFINE(pll1_d3, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(2), 3, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16  169  CCU_FACTOR_GATE_DEFINE(pll1_d4, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(3), 4, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @170  CCU_FACTOR_GATE_DEFINE(pll1_d5, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(4), 5, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16  171  CCU_FACTOR_GATE_DEFINE(pll1_d6, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(5), 6, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @172  CCU_FACTOR_GATE_DEFINE(pll1_d7, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(6), 7, 1);
-5d0122955ef9fd Alex Elder 2025-06-07  173  CCU_FACTOR_GATE_FLAGS_DEFINE(pll1_d8, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(7), 8, 1,
-5d0122955ef9fd Alex Elder 2025-06-07  174  		CLK_IS_CRITICAL);
-1b72c59db0add8 Haylen Chu 2025-04-16 @175  CCU_FACTOR_GATE_DEFINE(pll1_d11_223p4, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(15), 11, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @176  CCU_FACTOR_GATE_DEFINE(pll1_d13_189, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(16), 13, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @177  CCU_FACTOR_GATE_DEFINE(pll1_d23_106p8, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(20), 23, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @178  CCU_FACTOR_GATE_DEFINE(pll1_d64_38p4, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(0), 64, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @179  CCU_FACTOR_GATE_DEFINE(pll1_aud_245p7, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(10), 10, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @180  CCU_FACTOR_GATE_DEFINE(pll1_aud_24p5, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(11), 100, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16  181  
-1b72c59db0add8 Haylen Chu 2025-04-16 @182  CCU_FACTOR_GATE_DEFINE(pll2_d1, CCU_PARENT_HW(pll2), APBS_PLL2_SWCR2, BIT(0), 1, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @183  CCU_FACTOR_GATE_DEFINE(pll2_d2, CCU_PARENT_HW(pll2), APBS_PLL2_SWCR2, BIT(1), 2, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @184  CCU_FACTOR_GATE_DEFINE(pll2_d3, CCU_PARENT_HW(pll2), APBS_PLL2_SWCR2, BIT(2), 3, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @185  CCU_FACTOR_GATE_DEFINE(pll2_d4, CCU_PARENT_HW(pll2), APBS_PLL2_SWCR2, BIT(3), 4, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @186  CCU_FACTOR_GATE_DEFINE(pll2_d5, CCU_PARENT_HW(pll2), APBS_PLL2_SWCR2, BIT(4), 5, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @187  CCU_FACTOR_GATE_DEFINE(pll2_d6, CCU_PARENT_HW(pll2), APBS_PLL2_SWCR2, BIT(5), 6, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @188  CCU_FACTOR_GATE_DEFINE(pll2_d7, CCU_PARENT_HW(pll2), APBS_PLL2_SWCR2, BIT(6), 7, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @189  CCU_FACTOR_GATE_DEFINE(pll2_d8, CCU_PARENT_HW(pll2), APBS_PLL2_SWCR2, BIT(7), 8, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16  190  
-1b72c59db0add8 Haylen Chu 2025-04-16 @191  CCU_FACTOR_GATE_DEFINE(pll3_d1, CCU_PARENT_HW(pll3), APBS_PLL3_SWCR2, BIT(0), 1, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @192  CCU_FACTOR_GATE_DEFINE(pll3_d2, CCU_PARENT_HW(pll3), APBS_PLL3_SWCR2, BIT(1), 2, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @193  CCU_FACTOR_GATE_DEFINE(pll3_d3, CCU_PARENT_HW(pll3), APBS_PLL3_SWCR2, BIT(2), 3, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @194  CCU_FACTOR_GATE_DEFINE(pll3_d4, CCU_PARENT_HW(pll3), APBS_PLL3_SWCR2, BIT(3), 4, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @195  CCU_FACTOR_GATE_DEFINE(pll3_d5, CCU_PARENT_HW(pll3), APBS_PLL3_SWCR2, BIT(4), 5, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @196  CCU_FACTOR_GATE_DEFINE(pll3_d6, CCU_PARENT_HW(pll3), APBS_PLL3_SWCR2, BIT(5), 6, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @197  CCU_FACTOR_GATE_DEFINE(pll3_d7, CCU_PARENT_HW(pll3), APBS_PLL3_SWCR2, BIT(6), 7, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @198  CCU_FACTOR_GATE_DEFINE(pll3_d8, CCU_PARENT_HW(pll3), APBS_PLL3_SWCR2, BIT(7), 8, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16  199  
-1b72c59db0add8 Haylen Chu 2025-04-16  200  CCU_FACTOR_DEFINE(pll3_20, CCU_PARENT_HW(pll3_d8), 20, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16  201  CCU_FACTOR_DEFINE(pll3_40, CCU_PARENT_HW(pll3_d8), 10, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16  202  CCU_FACTOR_DEFINE(pll3_80, CCU_PARENT_HW(pll3_d8), 5, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16  203  
-1b72c59db0add8 Haylen Chu 2025-04-16  204  /* APBS clocks end */
-1b72c59db0add8 Haylen Chu 2025-04-16  205  
-1b72c59db0add8 Haylen Chu 2025-04-16  206  /* MPMU clocks start */
-1b72c59db0add8 Haylen Chu 2025-04-16  207  CCU_GATE_DEFINE(pll1_d8_307p2, CCU_PARENT_HW(pll1_d8), MPMU_ACGR, BIT(13), 0);
-1b72c59db0add8 Haylen Chu 2025-04-16  208  
-1b72c59db0add8 Haylen Chu 2025-04-16  209  CCU_FACTOR_DEFINE(pll1_d32_76p8, CCU_PARENT_HW(pll1_d8_307p2), 4, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16  210  
-1b72c59db0add8 Haylen Chu 2025-04-16  211  CCU_FACTOR_DEFINE(pll1_d40_61p44, CCU_PARENT_HW(pll1_d8_307p2), 5, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16  212  
-1b72c59db0add8 Haylen Chu 2025-04-16  213  CCU_FACTOR_DEFINE(pll1_d16_153p6, CCU_PARENT_HW(pll1_d8), 2, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @214  CCU_FACTOR_GATE_DEFINE(pll1_d24_102p4, CCU_PARENT_HW(pll1_d8), MPMU_ACGR, BIT(12), 3, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @215  CCU_FACTOR_GATE_DEFINE(pll1_d48_51p2, CCU_PARENT_HW(pll1_d8), MPMU_ACGR, BIT(7), 6, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @216  CCU_FACTOR_GATE_DEFINE(pll1_d48_51p2_ap, CCU_PARENT_HW(pll1_d8), MPMU_ACGR, BIT(11), 6, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @217  CCU_FACTOR_GATE_DEFINE(pll1_m3d128_57p6, CCU_PARENT_HW(pll1_d8), MPMU_ACGR, BIT(8), 16, 3);
-1b72c59db0add8 Haylen Chu 2025-04-16 @218  CCU_FACTOR_GATE_DEFINE(pll1_d96_25p6, CCU_PARENT_HW(pll1_d8), MPMU_ACGR, BIT(4), 12, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @219  CCU_FACTOR_GATE_DEFINE(pll1_d192_12p8, CCU_PARENT_HW(pll1_d8), MPMU_ACGR, BIT(3), 24, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @220  CCU_FACTOR_GATE_DEFINE(pll1_d192_12p8_wdt, CCU_PARENT_HW(pll1_d8), MPMU_ACGR, BIT(19), 24, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @221  CCU_FACTOR_GATE_DEFINE(pll1_d384_6p4, CCU_PARENT_HW(pll1_d8), MPMU_ACGR, BIT(2), 48, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16  222  
-1b72c59db0add8 Haylen Chu 2025-04-16  223  CCU_FACTOR_DEFINE(pll1_d768_3p2, CCU_PARENT_HW(pll1_d384_6p4), 2, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16  224  CCU_FACTOR_DEFINE(pll1_d1536_1p6, CCU_PARENT_HW(pll1_d384_6p4), 4, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16  225  CCU_FACTOR_DEFINE(pll1_d3072_0p8, CCU_PARENT_HW(pll1_d384_6p4), 8, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16  226  
-1b72c59db0add8 Haylen Chu 2025-04-16  227  CCU_GATE_DEFINE(pll1_d6_409p6, CCU_PARENT_HW(pll1_d6), MPMU_ACGR, BIT(0), 0);
-1b72c59db0add8 Haylen Chu 2025-04-16 @228  CCU_FACTOR_GATE_DEFINE(pll1_d12_204p8, CCU_PARENT_HW(pll1_d6), MPMU_ACGR, BIT(5), 2, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16  229  
-1b72c59db0add8 Haylen Chu 2025-04-16  230  CCU_GATE_DEFINE(pll1_d5_491p52, CCU_PARENT_HW(pll1_d5), MPMU_ACGR, BIT(21), 0);
-1b72c59db0add8 Haylen Chu 2025-04-16 @231  CCU_FACTOR_GATE_DEFINE(pll1_d10_245p76, CCU_PARENT_HW(pll1_d5), MPMU_ACGR, BIT(18), 2, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16  232  
-1b72c59db0add8 Haylen Chu 2025-04-16  233  CCU_GATE_DEFINE(pll1_d4_614p4, CCU_PARENT_HW(pll1_d4), MPMU_ACGR, BIT(15), 0);
-1b72c59db0add8 Haylen Chu 2025-04-16 @234  CCU_FACTOR_GATE_DEFINE(pll1_d52_47p26, CCU_PARENT_HW(pll1_d4), MPMU_ACGR, BIT(10), 13, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @235  CCU_FACTOR_GATE_DEFINE(pll1_d78_31p5, CCU_PARENT_HW(pll1_d4), MPMU_ACGR, BIT(6), 39, 2);
-1b72c59db0add8 Haylen Chu 2025-04-16  236  
-1b72c59db0add8 Haylen Chu 2025-04-16  237  CCU_GATE_DEFINE(pll1_d3_819p2, CCU_PARENT_HW(pll1_d3), MPMU_ACGR, BIT(14), 0);
-1b72c59db0add8 Haylen Chu 2025-04-16  238  
-1b72c59db0add8 Haylen Chu 2025-04-16  239  CCU_GATE_DEFINE(pll1_d2_1228p8, CCU_PARENT_HW(pll1_d2), MPMU_ACGR, BIT(16), 0);
-1b72c59db0add8 Haylen Chu 2025-04-16  240  
-1b72c59db0add8 Haylen Chu 2025-04-16  241  CCU_GATE_DEFINE(slow_uart, CCU_PARENT_NAME(osc), MPMU_ACGR, BIT(1), CLK_IGNORE_UNUSED);
-1b72c59db0add8 Haylen Chu 2025-04-16  242  CCU_DDN_DEFINE(slow_uart1_14p74, pll1_d16_153p6, MPMU_SUCCR, 16, 13, 0, 13, 0);
-1b72c59db0add8 Haylen Chu 2025-04-16  243  CCU_DDN_DEFINE(slow_uart2_48, pll1_d4_614p4, MPMU_SUCCR_1, 16, 13, 0, 13, 0);
-1b72c59db0add8 Haylen Chu 2025-04-16  244  
-1b72c59db0add8 Haylen Chu 2025-04-16  245  CCU_GATE_DEFINE(wdt_clk, CCU_PARENT_HW(pll1_d96_25p6), MPMU_WDTPCR, BIT(1), 0);
-1b72c59db0add8 Haylen Chu 2025-04-16  246  
-1b72c59db0add8 Haylen Chu 2025-04-16 @247  CCU_FACTOR_GATE_DEFINE(i2s_sysclk, CCU_PARENT_HW(pll1_d16_153p6), MPMU_ISCCR, BIT(31), 50, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16 @248  CCU_FACTOR_GATE_DEFINE(i2s_bclk, CCU_PARENT_HW(i2s_sysclk), MPMU_ISCCR, BIT(29), 1, 1);
-1b72c59db0add8 Haylen Chu 2025-04-16  249  
-
--- 
+--
 0-DAY CI Kernel Test Service
 https://github.com/intel/lkp-tests/wiki
