@@ -1,133 +1,172 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7945B13AC1;
-	Sun,  8 Jun 2025 15:50:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D194C9D
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 15:52:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749397851; cv=none; b=t/Jn7x2JMhGHrEp10gBudcheq7bsNcklMAzJKdw0EhfuQZgplGB5Ek7Cd/+yR/dazGCcfM+GN3evk3VtH11/HfPILXCWSYHm1RaYc+6RbYEPIt1dZ6spJ1RNuhZkdoQRHIQOaxFsBVBCWh9po1PlYdrp9Xoxg2P3laIbvLGcXcs=
+	t=1749397930; cv=none; b=e8F9AAqg9mn4dfyzGW2Fzw+1nSY3B9uVwZF5XUQs6Ax8/7AaxyLXjJSXibcYj4bVKzPykCrT0R7Z/591V2TWz/HoYGsyJozEBWrkBreKfwtmqrlCiLVLAZ1R55lr0JDDbD/qZ3FBHSmy355PTPyAHqWGraUPOei9wJme4Ow7xJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749397851; c=relaxed/simple;
-	bh=ld66+8SPUF5eKkfV5/4/6/qekk9HAbDZ/uR2gvnokE0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S0gP0b481mZKRQUO5SZYPfyy+1epHC8VevSaxJIy8XnEx4DrDjCy2o9usl4o4ql2EwM/8SF36Blokq73iJ+mTAFzdycSxSm0eYFJ9wG5z9tMIiqIGdZkbTdhAMNILIEVy88hL6rUK5I4yZDLoCwFh6b/35b5JBkRiwXyAcF8PYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O0+t4l0I; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749397930; c=relaxed/simple;
+	bh=ZoAA3vuK/kol5O673dlsy5ItLmK0L4GXKNFdqazixd8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=C/gEtxlU22qR50TeOMLtRqdStQ5A1wAQA3Fnatz/0tImm675MJzUzGMH7Y3Vo61sZCVIY/Hp4RoOnXB5D6XHuOIIMU1H7V4R8YC95X31fK/ygqDwd4KHKkphyoya2s6LsqUT8hbb8z16JopAG2GzmIydb34y+zL8e7sz3m98JBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PN/V09y1; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O0+t4l0I"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-adb47e0644dso777801866b.0;
-        Sun, 08 Jun 2025 08:50:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749397848; x=1750002648; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mawc/hjEIEP4GahIikXDvnZC+zUB4+YLU7y4fFNxo+0=;
-        b=O0+t4l0IBUU192wh9dd6nZfNcBe6tRV0BPCtiIVtb9TijvIBko/M9JIcuyFTuwpr4e
-         pJ0CfrYQniQn6XDhiJw7/yeY4SMqGSBoSF1WEr3R8w5SeqcelZb9hHc+q/v+0wGu5yhK
-         HkHEuUYK+hjsGwqyjRyW9SR1MyCDKogyWTwE/ASciOvkWNBPpjJMIt9wHHkxb9KWz+UL
-         wayPBXNQNgeFO0oHJoIPs7rSK+JJ5GECaXTgzdAGN1tC1foshYWSzzMdhgsNhevKfKsN
-         B6yEvbHpMHcVIQEfQDpt7k0w4vTZ/kaeuOr18tFi0L8KkSL0zylqOnrYcTJH7YPjqR0+
-         TJlA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PN/V09y1"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5589tE7v019483
+	for <linux-kernel@vger.kernel.org>; Sun, 8 Jun 2025 15:52:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=boZFxi7Ddh45D8urWAKV+2
+	Jls0MVjnq7y9F6R2rPKr0=; b=PN/V09y1o/FgirIo0GDW6xn2JkwvQzTCZYzjO/
+	nfwa/vquMsOySdPWIPeBAVCjX170BkviL/+/pknsv8/EHPIh3ia99120r2TThIC1
+	Blb53L2q7O7RWO+dT8m6tC7enrbilKVKbi0tDClhuBV+/DZ/GUggh7fecmaSJmQi
+	r9EhkmBIN/GbkstopOp3P18m2GMK5Gle86op7vGoQngeoBVbh0qMNmI3vsOnoUe5
+	AV07/wiSaIiwbE+Nr76K/dvf6MrqZ5C+moisvsJS+Fk/qcOtCvdHhne2nL6PbpHv
+	pMyZ3V9KHLFUhKkJ7SCfw0Az4bBJPX1zHZayIsEXgzwuzFVg==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474asrkkyg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 15:52:07 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7ceb5b5140eso726412385a.2
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 08:52:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749397848; x=1750002648;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mawc/hjEIEP4GahIikXDvnZC+zUB4+YLU7y4fFNxo+0=;
-        b=v+5bmPSNnFd8wvX+krfASxhxXc0oMuGYC/afXsL0BMkQx4o2wtVwN9bPF3X3daKbAe
-         ee+YjMFnu+KydVrikCOnBvvLTF9WOzqGzMG5+pYVl3rz85xW+BpNnwlXXoCNQgwz6dwe
-         MW9HBjZM3WkOuN6rytwWwmcw2JPQKXxaagiy9hcs+2fLBXIPpd5nlMS/Q3Qp4MXIArzf
-         sYHwhucFSNGlcPaMdBpWg0cQwwA1zMvzt2lEnJS0YXrdMOyAU2vducb55oAolAao7dcv
-         46XbFAZ3iFBaaC/A+hAr8hlkL4bXc8/5c4HoqIdpZkMQcKqLR24QlqZPnPehpR88GaLO
-         HTRA==
-X-Forwarded-Encrypted: i=1; AJvYcCUuA0Dpfyw1s1AwFFH09ZLcRnoCEei8njhzFb54RMhbeVzGm+tb5lhhLp5WPAsDajD3h+HFPO1czDo=@vger.kernel.org, AJvYcCXh4XdarG5eB3YhaBgYKHfwZiCQmi1vCEc5rJDtyTm6OBmsBTxY9fX1Z5q8xszrYKkjd/NFkgLFO+SoorA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgdDlxMIBWZqx0/2jQYjt5DhsSAbokUe4WmNIeuNXPY0qZkNyn
-	GK5UMCius7iRkcsYRWPMh1RPRoEY6IS8WRyIK84CyBTbhqUjTKSYZOaJ
-X-Gm-Gg: ASbGncupze9bt8402ZBRoljRjlf9Te+zD1MU4mRDqFZE7370MYD23Zx4oTmpq5TWHbx
-	Dt9eq46ywFT3uIMCb7Qfh9ea3fFNC/6L0REeYdu0laNAqPaPH3C/5MUjmfD1Ic/kOoslN7NhQ5O
-	z9D3rBlYwvykkAf+SBLYZMudn2b4NlY0rRbgC6rxB26JZgsbRdOMZePVWix4xE2kepcpUJnc0zK
-	sZ108rtSRAGGA9uRulzw0A+hAGhPUUARXxzf/1tZjNGG3Kx5lwqyUpmFoomMUwsm6pKfV/b8sWq
-	5m3C0Loj7+U9octIl4zQhNBqE49M26uY8qoJ9OwcDfLLV1vsxYEhr1oQEEEauOripzE=
-X-Google-Smtp-Source: AGHT+IH1a7k2SlTTME9RiKmu2TSHuf5P++u1/KhfTj8OVZsWfdSp1kkhb3YRrJfUvAKQ7HGUKPLiFQ==
-X-Received: by 2002:a17:907:9726:b0:ade:4121:8d2d with SMTP id a640c23a62f3a-ade4121a183mr483102866b.20.1749397847367;
-        Sun, 08 Jun 2025 08:50:47 -0700 (PDT)
-Received: from f (cst-prg-65-195.cust.vodafone.cz. [46.135.65.195])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc1c4c9sm430116666b.108.2025.06.08.08.50.40
+        d=1e100.net; s=20230601; t=1749397927; x=1750002727;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=boZFxi7Ddh45D8urWAKV+2Jls0MVjnq7y9F6R2rPKr0=;
+        b=jgZukILoDO9oKIJkfSFgv3ShgH95z3bHc2tMB4PsOw20MN5KqNQfzlzpsoXiQMjPSZ
+         xGqHgluanRPo8l63L0PSoY2lUyJnpKgu29HJJGHPh7pPw6mSCDDIFOVQ3hAU2/24f1IW
+         GfXT5H6LRh9rIj98C75lHfwTyeBdj5CkgYWH6fajYG6o1U8styAnfJf/N6l8Q1ZQ35ED
+         9o0N/z9iTXLNNcdnFWGvc1gqhglINknKMdvVoXaqIYdu/x0jMjefUxNiYZrLH7hoJ0AN
+         UeZtQ4DMO3AFIzcnbuWglHbxHaab6okV84jFHHLrES0BdR+Gkh0ifJZf2wqRbBvXsmPA
+         Z6kA==
+X-Forwarded-Encrypted: i=1; AJvYcCWHcIHDCIXKzV/AFcSQevH+4/yV3EE+clMCamBYAjsqBxzMqkV73sqy/16kvb03OdEZkJSbZ/Az73p7/as=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbQ9Z7IYbbCrXKDqt8WbAqixJqW5VVM0GG07zWlGOV638hyptH
+	6ME96TxydoObvzbZuhjPEUFvvz2RxFQiUTuEfzrpAGIJAKGvEVNv3VoKSOtpRMFPKg62AADC3o4
+	XGcoHGoZSLmdSLWW8e0G81YujBWBcL5bvtbAje+sdq1NP3jH+650JBsnCtA5uHoxcr1o=
+X-Gm-Gg: ASbGncse2FNr0NUMMtO2S3Lv44o/TJje95B9DhJAT7qHHY0GH+MfrCyjch/z9Hgm752
+	Lrghb3OLstkW6rieVhbfNqIzyvqbsyHLxpkvR59CDWF1LclLfZu5C1uG43i0DryYPusLF2a77K8
+	4RAFUNbcCGqoKx2bHpmYMUemYSMSuOvH+Qv9QSjDBInF8dGHrpnmT0kXWUkVFMKRA2ER9Vqnv8q
+	ggONp/Bcu0SYrm/wlC4G0r7kugcQKiWh7+5BafptYITvjPcFzMTv1UkP2O04g2WGXtmMuDcgaM1
+	zT5t6SBuUN/M8wA2N6UwCnMdcvE4UE1MzldmF7tPeMGpNieIy3FA+OwE8hVMwxmGe1MMDCVncz5
+	KY/wJz+1RTvV6v4xCvPYQzU9z
+X-Received: by 2002:a05:620a:4413:b0:7ca:f2cf:eb8b with SMTP id af79cd13be357-7d229889682mr1366809885a.34.1749397926871;
+        Sun, 08 Jun 2025 08:52:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEP9sj/pKViK1P2M5QiclQ+hkJ6yBVJVUeBZ72zOARopK77awg/D4ihbcFbUOzv33Cm3bqtPA==
+X-Received: by 2002:a05:620a:4413:b0:7ca:f2cf:eb8b with SMTP id af79cd13be357-7d229889682mr1366808185a.34.1749397926564;
+        Sun, 08 Jun 2025 08:52:06 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5536772a80csm801827e87.162.2025.06.08.08.52.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Jun 2025 08:50:46 -0700 (PDT)
-Date: Sun, 8 Jun 2025 17:50:33 +0200
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: zhangzihuan <zhangzihuan@kylinos.cn>
-Cc: David Hildenbrand <david@redhat.com>, rafael@kernel.org, 
-	len.brown@intel.com, pavel@kernel.org, kees@kernel.org, mingo@redhat.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, 
-	vschneid@redhat.com, akpm@linux-foundation.org, lorenzo.stoakes@oracle.com, 
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com, 
-	mhocko@suse.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org
-Subject: Re: [RFC PATCH] PM: Optionally block user fork during freeze to
- improve performance
-Message-ID: <5mj4mc7asiplmgbqyl2uaw5cdpt6dpdrhtapi63dcrowozcwuq@c4cxyaxwe6aw>
-References: <20250606062502.19607-1-zhangzihuan@kylinos.cn>
- <0030581f-d50a-48f4-86f5-58e7883f705d@redhat.com>
- <6350624c-7293-43de-8788-e52a236d91fb@kylinos.cn>
+        Sun, 08 Jun 2025 08:52:05 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Sun, 08 Jun 2025 18:52:04 +0300
+Subject: [PATCH] drm/bridge: aux-hpd-bridge: fix assignment of the of_node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <6350624c-7293-43de-8788-e52a236d91fb@kylinos.cn>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250608-fix-aud-hpd-bridge-v1-1-4641a6f8e381@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAKOxRWgC/x2MSQqAMAwAv1JyNlCXun1FPNQ22lxUWhRB+neDx
+ 4GZeSFRZEowqhci3Zz42AXKQoELdt8I2QtDpSujW93jyg/ay2M4PS6RvRhDR86Yuild40DCM5J
+ Y/3Sac/4AHXAJ4GQAAAA=
+X-Change-ID: 20250608-fix-aud-hpd-bridge-97ec55341c4c
+To: Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dmitry Baryshkov <lumag@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1696;
+ i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
+ bh=ZoAA3vuK/kol5O673dlsy5ItLmK0L4GXKNFdqazixd8=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoRbGlXnyYaa+wLYGYQBFyyj7+KhDRSOQ32gbL5
+ 8GpmF0+75GJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaEWxpQAKCRCLPIo+Aiko
+ 1baGB/0f3R9LVi0bPxXCWU4QLHL44VbMsPlfobciX7JknfLTghj3MojTN2qx3ag2X5awDTFx3Yp
+ Gd38oHY2Tc3gd4mcgFbYB/0y4LOfk0p5QZ4R5rlFoU1mUIeT7ZArTrQ3S/9Sab94RX4l9Npxf6l
+ GNFGVwV7aH5vOLqJ3N/bR88ToXAk3GQ/Xk2RYb6SdZYzpVujPY90nX916nX3ZcfCbHnoT735usd
+ 25Yr6NxmxYSxHIHP7GwkOWyDziXGB0H1+DJDTSnOiHt8/xWGQ65Do+A6VzuNDs4FTiQLOvxRF8a
+ V7fI1cHuIz8N9ze0X+PQpoSMuDvpUAwYrKwZ/QqnyQIEjJH1
+X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+X-Proofpoint-ORIG-GUID: 1osPT_YNfKF0ozrqsxIc-0RiePScEKc1
+X-Proofpoint-GUID: 1osPT_YNfKF0ozrqsxIc-0RiePScEKc1
+X-Authority-Analysis: v=2.4 cv=AMUSjw+a c=1 sm=1 tr=0 ts=6845b1a7 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=QisQagpBsXa4eD-aF94A:9 a=QEXdDO2ut3YA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA4MDEyNyBTYWx0ZWRfX/3gKUAmiTfZw
+ rC76UZNqo6g2wmnwn/0sCd9IGIqWmiWmKGeDmXgczohUeK+YxzpfTKs2sgzqWSMu4XYaK9gRxzh
+ 9emPWHtkLw+3gGhRztAtQJFEIokdQhszFdOuSKpYu52JddYwHE96L3Y5mPbc65iieWjp6gTG2cD
+ iOchtEJqAGHg/2rrYJwqyDj5AlW2vout41W+ChVd8ExTr8C4xcbJVEK1LAFMrqNO65y8b+2740U
+ KCt6srmpzFxR6MMuAGZlopSE95R7ABzsbY3+fPDW7kKIQbe0yA/p2K629JuAq03M7qSd9shKzhc
+ tQhF6OPjQ4fxmfjPYf0Leni3RVwZI8D44ZXubEekvwFDbmCOk6EuZdW//MLmnH1hyvWcvOSoqRx
+ Y3tx9NdDA1C7F1ymqlNiRjNrDO32BjZrcaIJwW9aNVeNuievUq812UIx+AnwQRjlnHnn2HXw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-08_02,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 malwarescore=0 spamscore=0 adultscore=0 impostorscore=0
+ bulkscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0 priorityscore=1501
+ suspectscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506080127
 
-On Sun, Jun 08, 2025 at 03:22:20PM +0800, zhangzihuan wrote:
-> One alternative could be to block in kernel_clone() until freezing ends,
-> instead of returning an error. That way, fork() would not fail, just
-> potentially block briefly (similar to memory pressure or cgroup limits). Do
-> you think that's more acceptable?
+Perform fix similar to the one in the commit 85e444a68126 ("drm/bridge:
+Fix assignment of the of_node of the parent to aux bridge").
 
-So I had a look at the freezing loop and it operates with
-tasklist_lock held, meaning it already stalls clone().
+The assignment of the of_node to the aux HPD bridge needs to mark the
+of_node as reused, otherwise driver core will attempt to bind resources
+like pinctrl, which is going to fail as corresponding pins are already
+marked as used by the parent device.
+Fix that by using the device_set_of_node_from_dev() helper instead of
+assigning it directly.
 
-try_to_freeze_tasks() in kernel/power/process.c contains:
+Fixes: e560518a6c2e ("drm/bridge: implement generic DP HPD bridge")
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+---
+ drivers/gpu/drm/bridge/aux-hpd-bridge.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-	todo = 0;
-	read_lock(&tasklist_lock);
-	for_each_process_thread(g, p) {
-		if (p == current || !freeze_task(p))
-			continue;
+diff --git a/drivers/gpu/drm/bridge/aux-hpd-bridge.c b/drivers/gpu/drm/bridge/aux-hpd-bridge.c
+index b3f588b71a7d7ad5c2ee7b07c39079bc5ba34cee..af6f79793407f400b57f945fc958d613155417ea 100644
+--- a/drivers/gpu/drm/bridge/aux-hpd-bridge.c
++++ b/drivers/gpu/drm/bridge/aux-hpd-bridge.c
+@@ -64,10 +64,11 @@ struct auxiliary_device *devm_drm_dp_hpd_bridge_alloc(struct device *parent, str
+ 	adev->id = ret;
+ 	adev->name = "dp_hpd_bridge";
+ 	adev->dev.parent = parent;
+-	adev->dev.of_node = of_node_get(parent->of_node);
+ 	adev->dev.release = drm_aux_hpd_bridge_release;
+ 	adev->dev.platform_data = of_node_get(np);
+ 
++	device_set_of_node_from_dev(&adev->dev, parent);
++
+ 	ret = auxiliary_device_init(adev);
+ 	if (ret) {
+ 		of_node_put(adev->dev.platform_data);
 
-		todo++;
-	}
-	read_unlock(&tasklist_lock);
+---
+base-commit: 4f27f06ec12190c7c62c722e99ab6243dea81a94
+change-id: 20250608-fix-aud-hpd-bridge-97ec55341c4c
 
-I don't get where the assumption that fork itself is a factor is coming
-from.
+Best regards,
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-Looking at freezing itself it seems to me perf trouble starts with tons
-of processes existing to begin with in arbitrary states (not with racing
-against fork), requring a retry with preceeded by a sleep:
-
-	/*
-	 * We need to retry, but first give the freezing tasks some
-	 * time to enter the refrigerator.  Start with an initial
-	 * 1 ms sleep followed by exponential backoff until 8 ms.
-	 */
-	usleep_range(sleep_usecs / 2, sleep_usecs);
-	if (sleep_usecs < 8 * USEC_PER_MSEC)
-		sleep_usecs *= 2;
-
-For a race against fork to have any effect, the new thread has to be
-linked in to the global list -- otherwise the todo var wont get bumped.
-
-But then if it gets added in a state which is freezable, the racing fork
-did not cause any trouble.
-
-If it gets added in a state which is *NOT* freezable by the current
-code, maybe it should be patched to be freezable.
-
-All in all I'm not confident any of this warrants any work -- do you
-have a setup where the above causes a real problem?
