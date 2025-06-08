@@ -1,104 +1,149 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8D61E1A3B;
-	Sun,  8 Jun 2025 11:43:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3022A1BA;
+	Sun,  8 Jun 2025 11:46:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749383042; cv=none; b=Qlf54byqWWGSmYBBaOs7mrS0hxiEvfsZWr//CnQk3kORnL4jo/FJFfdLnRwtuWSQnKRkC8vOTKC0X2Tyw+moHLGqhS5J2J6kIiMAik4YDbIVrsqkKSbTDsuyaiCaCJTloYy0RNlDHI8Y/Ln0WFk7KAI+xINcKkZVXVDwUJE+r2o=
+	t=1749383183; cv=none; b=XHast8gtxSR482zkVYhx3bLgSAF0LPv3SU2yrohO3Ny7SxsQG47L/retbVqrE6ShGlxlBheJikmuAwo7TkjHa4NvU37ssDADXlWQzFvuzxd5m9qtiqUvCtHgygnj9lsbSbbCX8Rn4MiXPqnw1fw59/VDN+QoezQyi0lcj45ONJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749383042; c=relaxed/simple;
-	bh=ArzTRoRwLsrFlvjmTXvixgq3rSuyXXAC2djNWUQm0Io=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hfGYmdLVK4lYy/JVySnq07nXbZ6lFZO0KMj5BBVqxk15csUyDvOEsoQJUUviCAylyqJgSl54VC4D97QhBrx2vpA2jVPHrvdpXJdAtARVLORNmWgq7GvK0s8wG3KHQbvrX/Nq81BXdMJ9anRXrY2fIZ4UnftMt79jUhTVrBguqSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TPM1zBCs; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749383183; c=relaxed/simple;
+	bh=FQhGPKHnjDJWBuphMJJy3evL9nvvs5J8uvzpqEW7mIs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=Y61WuGvXaE+p0PFtO49pYm9qnK20svA+4m/UdVrjOvAjliQZfVuQ+sGTVsKbJAnznACsTGpeIjRXmWTai4UNwdBJvOWeOQBbKYNylIGBPIgYPX6gkC6fWCrxvOjrUKnF7csW4OQPVXaDee2k5rC2yEX9QgjOwOaeYBYhOgsDnMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HBGEVAno; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TPM1zBCs"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-451d54214adso29448605e9.3;
-        Sun, 08 Jun 2025 04:43:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749383037; x=1749987837; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mNCQjnVu5PH7nIy1RPU7m+FfVDlTCjN0DisQa600buY=;
-        b=TPM1zBCswu9wseHmwQ6X0FozXHzkXEjL5B6CKO4M+QCjeYA1NyAUckkUaWmLgzlo/L
-         +wrA+rB5c1qz18HRHnf9YXrk0yOL6EYiyUuOUBefGTUShah5vcCjyPeGZJDR12/RxVk2
-         dVK/7372kguizdhOT+IPar/TY67NnNz2PRqKtQ3EXfEie491ckTYiTT5Lg9zMJfGv56A
-         3DF8g5CL1E+JiPDiHiqPGz368/i415tw3bqNb0o7+onPzq5AoKDtAN8SXsvrklPQjXeD
-         sIfpxS7c9XU8g65sN/b8DfmX9dt2nIWbk0kHsbbzO7VNcNQBvax8hOitoYaxNaKN1QEv
-         FAlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749383037; x=1749987837;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mNCQjnVu5PH7nIy1RPU7m+FfVDlTCjN0DisQa600buY=;
-        b=gwawzkba5chmpy1MXtMT0SaBoHVTdaf6t86jR10223KZEst1UVZZBlL9XljwwYnhEC
-         yJXuuT1UiKQXjieVuEaY8qNLVNOLBjG1I5FUasLncmZusT1750dixV0ERWJ/VClKqlWc
-         Lt9qNx5minuoyuqqIV/nAKRsk0UuWEFWGufSvbr3IRn1SIaMtMoWtBNpJTA/kLaAh6+s
-         Z/z8mOWggnsFJqPL2MY9bUsRoM6462DCH+YXOOd0hIHhGRhGsD6+FwhFcl6Dm/HJViqN
-         sn3qTetg2EPU2hAv/rrg5Qan3CGS35+gydhRLFdPHI8ZWlbTIOXL35yEzymcZiu6RF7h
-         6JfA==
-X-Forwarded-Encrypted: i=1; AJvYcCUf2O+fR1HRlWIBO26eSxlzwgE9OzK8mbT1GvpKYR2ACE824pKO0LEcwiKDuyiIRIrzv7MvaetzQ3UsiKVS2+0=@vger.kernel.org, AJvYcCWDm9n5B2kkxi12OE0cUBCAKgS9MFLTPPrDXsjRbc8uqoZVE09U/rHYerPLoDcwpe9uwt4pRORsRW9GxtY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywz7TkemfWpuL2rvesf/m9BoZ+PnCikgBsSaoR6xCzHOoHgq2AY
-	f2aGVqInPhsJi5H4kb9QAAEnOPVDN8yO3Cx1wPnNyM1w8z/foefh1KCq
-X-Gm-Gg: ASbGncsGHtkIUSq87brcRQTV04xfEpfCztJlGIDHjghymj7OccZ+ODV4espWGUc6KbN
-	fDhbUMAqkpz6uYpH/aUAeoe8K5iItk0FyqJZTtyOpC4UuheJ7NaPsdcff4Yr19z3mvwf9c2EQrL
-	EXM729fT7K2H0wB1z2EWu8fyM3izwCdR4fJ57OCpK11sbvxB+Cv6e+Rfn7yejO+bUG16lzxVi8i
-	QUuDgjonensuaCw04zwq5WsfLNlK1pY2EwKjEBDEmWsW0brY/gna1TqVpmgUZyOR2ShSdN0ZM7S
-	I6KjuqxNzN1seNPaMVcvYl0Ib97mVNQw19COg2M5MFWJBJrA7Z9GSldMnw6wViwT6G0L2caMDL8
-	=
-X-Google-Smtp-Source: AGHT+IGik1GwWjbfvKCisBtGH3LVP4ekbyIrYTL6B5d5f/bo/OH62T1e1yQVY9BOTqAGh5kQRUGr+Q==
-X-Received: by 2002:a05:600c:3849:b0:441:d4e8:76c6 with SMTP id 5b1f17b1804b1-452013ec612mr104012535e9.30.1749383036899;
-        Sun, 08 Jun 2025 04:43:56 -0700 (PDT)
-Received: from ?IPV6:2001:871:22a:3372::1ad1? ([2001:871:22a:3372::1ad1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323b67ccsm7027604f8f.40.2025.06.08.04.43.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Jun 2025 04:43:56 -0700 (PDT)
-Message-ID: <d5204efb-dae6-4e6a-a1fc-3803bb4f1674@gmail.com>
-Date: Sun, 8 Jun 2025 13:43:55 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HBGEVAno"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 081BAC4CEEE;
+	Sun,  8 Jun 2025 11:46:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749383183;
+	bh=FQhGPKHnjDJWBuphMJJy3evL9nvvs5J8uvzpqEW7mIs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HBGEVAnoZBtcaOukjsVBCFyOEs0WVrKtZ62+0dngja02fxCQM+NJcz0p+/aOsSYxK
+	 btNZ89U9tV1A3ay37XWlLjEjU44vJiR9FpkDj/xejo8LbAS1Hct8GoEl8CnG8pfFeD
+	 9J13nd3cn/obwYXhx6Z7ULMAK+rh8KDFCS/f0Y83WORyHxT/zPMeVB1X832GaBIZV/
+	 Hk1uoBgr4NTzeB8o24p5KzO0idgvMpJHYvis/vPTfOw5fur6UjaN/0IgQH9FwSGOo2
+	 YCw4ZX8nykvO1FwG/xdAh8Rw/634QBZdvUCn8yD7eUa26eZR5o3dx6dYn5ocii2mzQ
+	 4yFWFlKwhas+Q==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/3] rust: implement `Wrapper<T>` for `Opaque<T>`
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lee Jones <lee@kernel.org>,
- Daniel Almeida <daniel.almeida@collabora.com>,
- Benno Lossin <lossin@kernel.org>,
- =?UTF-8?Q?Gerald_Wisb=C3=B6ck?= <gerald.wisboeck@feather.ink>,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250607-b4-rust_miscdevice_registrationdata-v5-0-b77b5b7aab5b@gmail.com>
- <20250607-b4-rust_miscdevice_registrationdata-v5-1-b77b5b7aab5b@gmail.com>
- <CANiq72m=cw7kqc2hBU5_REXPMOpiW4g=NtXRNqvd9uajZGtSZQ@mail.gmail.com>
-Content-Language: en-US, de-DE
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-In-Reply-To: <CANiq72m=cw7kqc2hBU5_REXPMOpiW4g=NtXRNqvd9uajZGtSZQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Date: Sun, 08 Jun 2025 13:46:17 +0200
+Message-Id: <DAH4KX3Y3M3P.3B82LSVWU172Q@kernel.org>
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>
+Cc: "Igor Korotin" <igor.korotin.linux@gmail.com>, <ojeda@kernel.org>,
+ <alex.gaynor@gmail.com>, <rafael@kernel.org>, <gregkh@linuxfoundation.org>,
+ <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <linux-acpi@vger.kernel.org>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
+ <bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>,
+ <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
+ <lenb@kernel.org>, <wedsonaf@gmail.com>, <viresh.kumar@linaro.org>,
+ <alex.hung@amd.com>, <dingxiangfei2009@gmail.com>, "Igor Korotin"
+ <igorkor.3vium@gmail.com>
+Subject: Re: [PATCH v3 2/4] rust: driver: Add ACPI id table support to
+ Adapter trait
+X-Mailer: aerc 0.20.1
+References: <20250606170341.3880941-1-igor.korotin.linux@gmail.com>
+ <20250606170817.3881748-1-igor.korotin.linux@gmail.com>
+ <DAGZNG518T0C.1PXOK55IXHZOF@kernel.org> <aEVqgUtflBCzZi1X@pollux>
+In-Reply-To: <aEVqgUtflBCzZi1X@pollux>
 
-On 08.06.25 1:42 PM, Miguel Ojeda wrote:
-> On Sat, Jun 7, 2025 at 2:07 PM Christian Schrefl
-> <chrisi.schrefl@gmail.com> wrote:
->>
->> Reviewed-by: Gerald Wisböck <gerald.wisboeck@feather.ink>
-> 
-> Was this a privately-given tag?
+On Sun Jun 8, 2025 at 12:48 PM CEST, Danilo Krummrich wrote:
+> On Sun, Jun 08, 2025 at 09:54:30AM +0200, Benno Lossin wrote:
+>> On Fri Jun 6, 2025 at 7:08 PM CEST, Igor Korotin wrote:
+>> > @@ -141,6 +141,38 @@ pub trait Adapter {
+>> >      /// The type holding driver private data about each device id sup=
+ported by the driver.
+>> >      type IdInfo: 'static;
+>> > =20
+>> > +    /// The [`acpi::IdTable`] of the corresponding driver
+>> > +    fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>>;
+>> > +
+>> > +    /// Returns the driver's private data from the matching entry in =
+the [`acpi::IdTable`], if any.
+>> > +    ///
+>> > +    /// If this returns `None`, it means there is no match with an en=
+try in the [`acpi::IdTable`].
+>> > +    #[cfg(CONFIG_ACPI)]
+>> > +    fn acpi_id_info(dev: &device::Device) -> Option<&'static Self::Id=
+Info> {
+>> > +        let table =3D Self::acpi_id_table()?;
+>> > +
+>> > +        // SAFETY:
+>> > +        // - `table` has static lifetime, hence it's valid for read,
+>> > +        // - `dev` is guaranteed to be valid while it's alive, and so=
+ is `pdev.as_ref().as_raw()`.
+>> > +        let raw_id =3D unsafe { bindings::acpi_match_device(table.as_=
+ptr(), dev.as_raw()) };
+>> > +
+>> > +        if raw_id.is_null() {
+>> > +            None
+>> > +        } else {
+>> > +            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper =
+of `struct of_device_id` and
+>> > +            // does not add additional invariants, so it's safe to tr=
+ansmute.
+>> > +            let id =3D unsafe { &*raw_id.cast::<acpi::DeviceId>() };
+>> > +
+>> > +            Some(table.info(<acpi::DeviceId as crate::device_id::RawD=
+eviceId>::index(id)))
+>> > +        }
+>> > +    }
+>> > +
+>> > +    #[cfg(not(CONFIG_ACPI))]
+>> > +    #[allow(missing_docs)]
+>>=20
+>> I think we should change this to one single definition and do
+>>=20
+>>     if cfg!(not(CONFIG_ACPI)) {
+>>         return None;
+>>     }
+>>     /* body from above */
+>>=20
+>> In a single function instead.
+>
+> Generally, that's fine, but in this case I'd rather keep it as it is for
+> consistency with the rest of the file.
 
-Yes, sent it to him before sending it publicly and he gave
-it to me there.
+Then let's also change the OF bindings in this file to that style :)
 
-Cheers
-Christian
+>> > +    fn acpi_id_info(_dev: &device::Device) -> Option<&'static Self::I=
+dInfo> {
+>> > +        None
+>> > +    }
+>> > +
+>> >      /// The [`of::IdTable`] of the corresponding driver.
+>> >      fn of_id_table() -> Option<of::IdTable<Self::IdInfo>>;
+>> > =20
+>> > @@ -178,6 +210,11 @@ fn of_id_info(_dev: &device::Device) -> Option<&'=
+static Self::IdInfo> {
+>> >      /// If this returns `None`, it means that there is no match in an=
+y of the ID tables directly
+>> >      /// associated with a [`device::Device`].
+>> >      fn id_info(dev: &device::Device) -> Option<&'static Self::IdInfo>=
+ {
+>> > +        let id =3D Self::acpi_id_info(dev);
+>> > +        if id.is_some() {
+>> > +            return id;
+>> > +        }
+>>=20
+>> Is a driver only going to have one id_info? Or is there some kind of
+>> precedence?
+>
+> A driver potentially has lots of them, but the device is only matching a =
+single
+> entry in one of the driver's ID tables and hence a single ID info.
+
+Ah so if `of_id_info` and `acpi_id_info` return `Some(_)`, then both
+values are the same?
+
+---
+Cheers,
+Benno
