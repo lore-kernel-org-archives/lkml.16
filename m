@@ -1,105 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A29D1519A6;
-	Sun,  8 Jun 2025 20:03:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96351250BEC;
+	Sun,  8 Jun 2025 20:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749413004; cv=none; b=sCSqUUcIlgzMvupxLrj/OUTNlIlHBQmg0Pf7L4JYScEVa8DHdhNupCyjhmYH4hgxBrlyMidi/Vo+NP51ZqvphjVkgtzjVi4bsFpbbm6q32tjbytBgM7qhAAsEEDOPis3S18/WoxTR3s1EmXoYfgdc85X7sPpH3XYrZ9+QSx9gd8=
+	t=1749413458; cv=none; b=s+Mf9mx6mqyzr+nFmMsjipX/Q5yuK5suQhln/HP2ZBq1JkvtA0Z158hXs8x9ILz5JYU2JOgMYflXLYiYyXnsifyh5aDks3wJLZ9C6mRDpB3QQq+NfvCgbTqyVNsW4jlSFH46ekrBloVDqAdmu5xoqUli38Z1wm024xb3NSMRNng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749413004; c=relaxed/simple;
-	bh=OeZ6xbcvogfmPu5nXcqXy3BwJeFRU/9mf3HJ/785B3g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G5U117AyYmDqNbwfmmzfreEXZ+YY0vTqNGuX/4/Np/W3r8LHqUkMoqfbVFmIte0qUAbJJ+SR7UdZP0HihWyBx1vXKiQrx0BZ5egOQ4R1C8ixwQGs3P6t0DHMiNJmQjK8cRc+ArcuyFgV4GypDi1rDL3VthftRFs8PtXCuuTdcF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iubu/FfH; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749413458; c=relaxed/simple;
+	bh=3f9Ym9Pd0K33b8I/7KW2GFr/TT/wU87P+hjasPRaAAQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=tJXFpxc5cmIwzeQQLkz1V5kj5gNbfr1Vv3SHuH09MoLkFAgMa4DgPiZsb1dmGvdFcwIi0vOmJkSqAJaHxF9MGfvxaG4kakOszX4N4LgjAlmJ51Vv4TGjtu5q0IUJg8/PgYcD9b8++nph5LnU3e17TySdy6XQmuQmALYoscWPmX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GJ4Sp6wm; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iubu/FfH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749413003; x=1780949003;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OeZ6xbcvogfmPu5nXcqXy3BwJeFRU/9mf3HJ/785B3g=;
-  b=iubu/FfHghOn5SJ9xvkL2YMPxmzaOuN5vj5GLmaf73zleZ6Fh+KPK/u6
-   rKNVpyYasXZ7zaYRt+m21Ylzvr9rFTmudKu+vK/K0gTZ7P2Wpy844+jDZ
-   c8blgX6s8yloYLeEDMMFidThkzzfEz2t2tmRMqXXzTk2eWy8bRi8PDAKj
-   MsBKJeugh+xZ7ppDf5K5V3HkV9aXshxU8Jupnxp4gkWS9qSDsBgANLU9L
-   3NNAz+GZj1kMBJgRr0DcDr2Zdl/Snm2wT3qflBrCixc7023P2vHxUBiLU
-   zhtDpJ4gxm7dMNqVs0tQc7VtlAhTQr0jzzpEpDtSGpEdARruFE98DTqTy
-   A==;
-X-CSE-ConnectionGUID: Ax4VrffYSlyUnNg+bFs5Mw==
-X-CSE-MsgGUID: IUPmRpu3QrSjkQmgBfufUA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="51352758"
-X-IronPort-AV: E=Sophos;i="6.16,221,1744095600"; 
-   d="scan'208";a="51352758"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2025 13:03:22 -0700
-X-CSE-ConnectionGUID: r3bJTbIKSByB1u6+roiOPQ==
-X-CSE-MsgGUID: RecwGYQRTTOLlZ3lcy/9pA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,221,1744095600"; 
-   d="scan'208";a="151197343"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2025 13:03:21 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uOMEg-00000004qfp-1WM1;
-	Sun, 08 Jun 2025 23:03:18 +0300
-Date: Sun, 8 Jun 2025 23:03:18 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Gustavo Silva <gustavograzs@gmail.com>,
-	Alex Lanzano <lanzano.alex@gmail.com>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] iio: imu: bmi270: add channel for step counter
-Message-ID: <aEXshsLK0JLUp37s@smile.fi.intel.com>
-References: <20250605-bmi270-events-v2-0-8b2c07d0c213@gmail.com>
- <20250605-bmi270-events-v2-1-8b2c07d0c213@gmail.com>
- <aEKxhPFDQEIN1xnm@smile.fi.intel.com>
- <20250607165004.4673e9f5@jic23-huawei>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GJ4Sp6wm"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 558JvfDA013294;
+	Sun, 8 Jun 2025 20:10:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	VMqwClsGucxOnCvIC7ieB8B3Zk2MDDXeIyx8pwhbeik=; b=GJ4Sp6wmMdsUKdSu
+	7XqPo69suRCI2VnCm7g6IliYhqnccb16OjIL4/cDiRS/25F6MOJ4FbOM2m8VjYpK
+	crH+93b0DmUeKWbPssRaBl7g80xquR8lKr4H1UxJHHynbr/8BCsWme20mrrZLC2c
+	iWgIn0QICd/exWbG+Kpf3qmds7szksYVVeZ3APJvnHwB78SjaDtuFpJZWzy6RqmJ
+	2SCdjM7/gEnwxjdkPwJQw6r3OATzMk2YYw1ouw+ldSQHWl43DxJY1ly+xKWQw6vM
+	YlJrvw8xqZhRg9AFpH9yUjFLgS7F9hzODjR6F6WwUI3p0w5H38akCwvjDmK5NJ9L
+	h+bUSg==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ce9m1rv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 08 Jun 2025 20:10:36 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 558KAY2n004996
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 8 Jun 2025 20:10:34 GMT
+Received: from [10.216.51.238] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 8 Jun 2025
+ 13:10:27 -0700
+Message-ID: <421aadf3-9e2d-4028-bfe2-e29d2ade8432@quicinc.com>
+Date: Mon, 9 Jun 2025 01:40:23 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250607165004.4673e9f5@jic23-huawei>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] drm/msm/adreno: Add Adreno X1-45 support
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Akhil P Oommen
+	<akhilpo@oss.qualcomm.com>
+CC: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+        Rob Clark <robin.clark@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
+        "Konrad Dybcio" <konradybcio@kernel.org>,
+        Abhinav Kumar
+	<abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie
+	<airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
+        Bjorn Andersson
+	<andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>
+References: <20250607-x1p-adreno-v1-0-a8ea80f3b18b@oss.qualcomm.com>
+ <20250607-x1p-adreno-v1-2-a8ea80f3b18b@oss.qualcomm.com>
+ <5xb35clc3wnnwpdnmqfminl4z6ok6nhoxg65hwgyxegxguby5d@fuks7fc2n3pf>
+From: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <5xb35clc3wnnwpdnmqfminl4z6ok6nhoxg65hwgyxegxguby5d@fuks7fc2n3pf>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: BszDk49latyru2SxwMd1H6DHiNz1f0QD
+X-Authority-Analysis: v=2.4 cv=drjbC0g4 c=1 sm=1 tr=0 ts=6845ee3c cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8
+ a=XhjLoxLiZ051MZkV3CIA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: BszDk49latyru2SxwMd1H6DHiNz1f0QD
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA4MDE2MyBTYWx0ZWRfX7gpHMqsCA/Mu
+ SgkW+NQvexJf4ppn59QwKvLVTctgDptCXm1Go0AgfDSQVF90IF7qQZt7UBidbrznfHjyYjNmfea
+ BC5/m9zYvXkr7oqpvn/nvX20CMYZ/AxivdZapB0eu5gdQIY6CsPL3dkXvq+KC2VMSOlradtXddu
+ iEOyfA2gUvZrQyBjQ9CoNm6Y13MabNwtmoHPojmZ2gOkiRrGh7QyOxBVNPhmz0vPvkiBway6Qtg
+ fg5ApBxl+phdBN0AoplyHwBzZIaSXPi8CciPYFHOK39KF4SG0yhEn9pdd9uXb9Hukyt6ECvWvG1
+ x/nm6LGK6cCqi8qt+eAmO1o6d3RMt+rRwhr75e6Gm3UCZkJJc/cN0dPa/jpu8RUPrsHxKgTioOi
+ K1qG/EJmzaQIuBPXDdVvgNb5OL/d+Rtv8OEjSMYN/mujHypnzbx4un5ICQIDHTPVkbycsbQH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-08_04,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1011
+ priorityscore=1501 suspectscore=0 bulkscore=0 mlxlogscore=999 adultscore=0
+ phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506080163
 
-On Sat, Jun 07, 2025 at 04:50:04PM +0100, Jonathan Cameron wrote:
-> On Fri, 6 Jun 2025 12:14:44 +0300
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > On Thu, Jun 05, 2025 at 07:05:01PM -0300, Gustavo Silva wrote:
-
-...
-
-> > > +	set_mask_bits(&regval, mask, val);  
-> > 
-> > You can't do this on the 16-bit values on some architectures.
-> > Maybe it's easy to implement cmpxchg() for 16-bit values there,
-> > though.
+On 6/8/2025 1:44 AM, Dmitry Baryshkov wrote:
+> On Sat, Jun 07, 2025 at 07:45:00PM +0530, Akhil P Oommen wrote:
+>> Add support for Adreno X1-45 GPU present Snapdragon X1P42100
+>> series of compute chipsets. This GPU is a smaller version of
+>> X1-85 GPU with lower core count and smaller internal memories.
+>>
+>> Signed-off-by: Akhil P Oommen <akhilpo@oss.qualcomm.com>
+>> ---
+>>  drivers/gpu/drm/msm/adreno/a6xx_catalog.c | 38 +++++++++++++++++++++++++++++++
+>>  1 file changed, 38 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+>> index 70f7ad806c34076352d84f32d62c2833422b6e5e..2db748ce7df57a9151ed1e7f1b025a537bb5f653 100644
+>> --- a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+>> @@ -1474,6 +1474,44 @@ static const struct adreno_info a7xx_gpus[] = {
+>>  			},
+>>  		},
+>>  		.preempt_record_size = 3572 * SZ_1K,
+>> +	}, {
+>> +		.chip_ids = ADRENO_CHIP_IDS(0x43030c00),
+>> +		.family = ADRENO_7XX_GEN2,
+>> +		.fw = {
+>> +			[ADRENO_FW_SQE] = "gen71500_sqe.fw",
+>> +			[ADRENO_FW_GMU] = "gen71500_gmu.bin",
 > 
-> It doesn't need to be atomic, so stick to traditional
+> Any chance of getting these and ZAP into linux-firmware?
+
+Yeah. Haven't got the legal clearance to publish the firmwares yet. Will
+post it in a few days.
+
+-Akhil.
+
 > 
-> 	regval &= ~mask;
-> 	regval |= bits;
 > 
-> And avoid the fun of architectural corner cases entirely.
-
-Standard pattern is
-
-	regval = (regval & ~mask) | (val & mask);
-
-this will be robust against any changes in the val.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> 
+> 
 
