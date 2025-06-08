@@ -1,140 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DBD5635;
-	Sun,  8 Jun 2025 11:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FB1E1D9A54
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 12:29:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749383398; cv=none; b=slyiielvLoO259mkxhE/PFwcWjIsEiFGoMZQc+oT1KrDiXQ9WveB518DbhtR70nMVLUzV/U9qYgN5TPWZiVK367fl58Sks4Vsfb/H9XmXUeffn94Rx2rusSMPOUFvxFBq7NEQaeqf0n4lg+rAluHh4Fy/LOn2jx5J1glMw0DW9c=
+	t=1749385772; cv=none; b=UxCybv7OzZbG6BpU5Jh5x41NGHcXZQNeu9G85dz187Q0a2xdxabMKEERaamfC1gt0psu4By/Xxelp4JMxduEldYMxEnnsaVf9ghjwKXhg7ZPkQtMHd6+68Y7Icy5Wdj7vzLYO4RUx4JwhGJveTLIVdX19rMq/s/siI8uL10wMpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749383398; c=relaxed/simple;
-	bh=k6pMNcwV0zxTMuLsmCGwWquM4fEvZLtbEk4eKhiRONQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GFqRsJkxGCHmQdKu5YQIWfKCuHd3lnHutIOX3SifyEzaB8sq/1fbNAlN1AeS3yR6j5jFLumpFOEZwC5imWT0FQOTjSRGiol7S1akZVh+Y8vx7Qnqg2sLYYxFreKy998rIdabMzewS0zYwwmTorn23GMYy4QNbmkYYX2ElpEwcXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DsUeEJpp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749385772; c=relaxed/simple;
+	bh=EHG2UFZrSkmNLLRsICfukpKZjcRZlcakLtgAR+/8dwU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=ezXny7MPrM9Yg4QhhdX84kcbpSXHSW4SbXO4Yxz+Jz+9s9/Maol6VLqBQ+mA4aN0cLx3+H05wD819InHyR+18iW5WhVLwUlLazKjq+3pHzQ36a6YDqNsS7iym+8uTKe01kmyVU3cAvb32Hnlp8rlR9cMB2i6XjZEw/dm8BHFYGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=DI//GBP0 reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DsUeEJpp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24EE6C4CEEF;
-	Sun,  8 Jun 2025 11:49:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749383398;
-	bh=k6pMNcwV0zxTMuLsmCGwWquM4fEvZLtbEk4eKhiRONQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DsUeEJpporxG7D8uvJL18YxmvfWj5oqQQvnKklpFH9LArRfX3mFn9LiDoER1CM07+
-	 zspwxAPN4jXk1ksVZxU2aRxpMw6aNOgZFMkedArITPji7C3rWSOKHKqSFzkp2pKi/a
-	 JtKfaSqdLFBslT/dhFAWGSgvcdIbsvyBLHssE1Kc3gvUTKVtz/7+1i0rhcllCZp/4s
-	 4WWMeziGPgtP4ZnD1ePOhMEi9G2Li2yX3drm72nYqxC0R3NAyPlVDeZAJDkbep7shP
-	 Lds+5op+ZqjojKQA0BTErTvWzlOkFG3t0kVaE2FG7wVJX2B4HMnbik/TLFxNTfae+/
-	 vfVXbjF8sR4gg==
-Date: Sun, 8 Jun 2025 13:49:51 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <lossin@kernel.org>
-Cc: Igor Korotin <igor.korotin.linux@gmail.com>, ojeda@kernel.org,
-	alex.gaynor@gmail.com, rafael@kernel.org,
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org,
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
-	tmgross@umich.edu, lenb@kernel.org, wedsonaf@gmail.com,
-	viresh.kumar@linaro.org, alex.hung@amd.com,
-	dingxiangfei2009@gmail.com, Igor Korotin <igorkor.3vium@gmail.com>
-Subject: Re: [PATCH v3 2/4] rust: driver: Add ACPI id table support to
- Adapter trait
-Message-ID: <aEV43zxZmWvDgKES@pollux>
-References: <20250606170341.3880941-1-igor.korotin.linux@gmail.com>
- <20250606170817.3881748-1-igor.korotin.linux@gmail.com>
- <DAGZNG518T0C.1PXOK55IXHZOF@kernel.org>
- <aEVqgUtflBCzZi1X@pollux>
- <DAH4KX3Y3M3P.3B82LSVWU172Q@kernel.org>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="DI//GBP0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=6ID2jv7IpjaXZzgsAbSl29cz1HomlrbIYorhudp6eMU=; b=D
+	I//GBP0/zif9lnNfCP7BuGJRcw1TxfVyga3LEDmTvpP74hDNGvNaX2iC/TWbrDUF
+	H7sxr2Oszcp5sixfUheml85vsz4M/NuTUUl+qsUjrzZK6h4iJYHr7LX49vDq5DbI
+	OfjttHtMwKqR3WXViX68QEBBJM05wWy/wu6BTtoXzU=
+Received: from andyshrk$163.com ( [103.29.142.67] ) by
+ ajax-webmail-wmsvr-40-123 (Coremail) ; Sun, 8 Jun 2025 20:10:35 +0800 (CST)
+Date: Sun, 8 Jun 2025 20:10:35 +0800 (CST)
+From: "Andy Yan" <andyshrk@163.com>
+To: "Diederik de Haas" <didi.debian@cknow.org>
+Cc: "Piotr Zalewski" <pZ010001011111@proton.me>, hjc@rock-chips.com,
+	heiko@sntech.de, andy.yan@rock-chips.com,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+	"Dang Huynh" <danct12@riseup.net>, dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re:Re: [PATCH drm-misc-next] rockchip/drm: vop2: don't check
+ color_mgmt_changed in atomic_enable
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <DAH3S8O66J47.3NT18EJCXWKL9@cknow.org>
+References: <20241206192013.342692-3-pZ010001011111@proton.me>
+ <DAEVDSTMWI1E.J454VZN0R9MA@cknow.org>
+ <mArHDRo5bhIAjG8sDOR-kM7DsVdbXxxcC8hfuEEPfUWIdMwNnSUy8ZFoLis66DFSuIEq8TrnAxUGkyo5IUTGw3AG4k3vuVVz0fsoI27BAms=@proton.me>
+ <DAH3S8O66J47.3NT18EJCXWKL9@cknow.org>
+X-NTES-SC: AL_Qu2fC/+Tu04o4yeZYekfmkcVgOw9UcO5v/Qk3oZXOJF8jAnp/T0CbXlFHVfO8eidIg6+nh6RWQNCz8Zhe5Z8T5o5HoaUcXQ50738KpYJAcUkaw==
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DAH4KX3Y3M3P.3B82LSVWU172Q@kernel.org>
+Message-ID: <47773829.1fce.1974f732545.Coremail.andyshrk@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:eygvCgDnT8i7fUVoqngWAA--.39866W
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbBkBFmXmhFcczhegACsw
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On Sun, Jun 08, 2025 at 01:46:17PM +0200, Benno Lossin wrote:
-> On Sun Jun 8, 2025 at 12:48 PM CEST, Danilo Krummrich wrote:
-> > On Sun, Jun 08, 2025 at 09:54:30AM +0200, Benno Lossin wrote:
-> >> On Fri Jun 6, 2025 at 7:08 PM CEST, Igor Korotin wrote:
-> >> > @@ -141,6 +141,38 @@ pub trait Adapter {
-> >> >      /// The type holding driver private data about each device id supported by the driver.
-> >> >      type IdInfo: 'static;
-> >> >  
-> >> > +    /// The [`acpi::IdTable`] of the corresponding driver
-> >> > +    fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>>;
-> >> > +
-> >> > +    /// Returns the driver's private data from the matching entry in the [`acpi::IdTable`], if any.
-> >> > +    ///
-> >> > +    /// If this returns `None`, it means there is no match with an entry in the [`acpi::IdTable`].
-> >> > +    #[cfg(CONFIG_ACPI)]
-> >> > +    fn acpi_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
-> >> > +        let table = Self::acpi_id_table()?;
-> >> > +
-> >> > +        // SAFETY:
-> >> > +        // - `table` has static lifetime, hence it's valid for read,
-> >> > +        // - `dev` is guaranteed to be valid while it's alive, and so is `pdev.as_ref().as_raw()`.
-> >> > +        let raw_id = unsafe { bindings::acpi_match_device(table.as_ptr(), dev.as_raw()) };
-> >> > +
-> >> > +        if raw_id.is_null() {
-> >> > +            None
-> >> > +        } else {
-> >> > +            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
-> >> > +            // does not add additional invariants, so it's safe to transmute.
-> >> > +            let id = unsafe { &*raw_id.cast::<acpi::DeviceId>() };
-> >> > +
-> >> > +            Some(table.info(<acpi::DeviceId as crate::device_id::RawDeviceId>::index(id)))
-> >> > +        }
-> >> > +    }
-> >> > +
-> >> > +    #[cfg(not(CONFIG_ACPI))]
-> >> > +    #[allow(missing_docs)]
-> >> 
-> >> I think we should change this to one single definition and do
-> >> 
-> >>     if cfg!(not(CONFIG_ACPI)) {
-> >>         return None;
-> >>     }
-> >>     /* body from above */
-> >> 
-> >> In a single function instead.
-> >
-> > Generally, that's fine, but in this case I'd rather keep it as it is for
-> > consistency with the rest of the file.
-> 
-> Then let's also change the OF bindings in this file to that style :)
-
-Fine for me.
-
-@Igor: If you do so, please do it in a seaparate patch.
-
-> >> > +    fn acpi_id_info(_dev: &device::Device) -> Option<&'static Self::IdInfo> {
-> >> > +        None
-> >> > +    }
-> >> > +
-> >> >      /// The [`of::IdTable`] of the corresponding driver.
-> >> >      fn of_id_table() -> Option<of::IdTable<Self::IdInfo>>;
-> >> >  
-> >> > @@ -178,6 +210,11 @@ fn of_id_info(_dev: &device::Device) -> Option<&'static Self::IdInfo> {
-> >> >      /// If this returns `None`, it means that there is no match in any of the ID tables directly
-> >> >      /// associated with a [`device::Device`].
-> >> >      fn id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
-> >> > +        let id = Self::acpi_id_info(dev);
-> >> > +        if id.is_some() {
-> >> > +            return id;
-> >> > +        }
-> >> 
-> >> Is a driver only going to have one id_info? Or is there some kind of
-> >> precedence?
-> >
-> > A driver potentially has lots of them, but the device is only matching a single
-> > entry in one of the driver's ID tables and hence a single ID info.
-> 
-> Ah so if `of_id_info` and `acpi_id_info` return `Some(_)`, then both
-> values are the same?
-
-No, if one of them returns Some(_), the other one will always return None. Or
-phrased differently, the first match will always be the only match.
+CkhlbGxv77yMCgpBdCAyMDI1LTA2LTA4IDE5OjA4OjUwLCAiRGllZGVyaWsgZGUgSGFhcyIgPGRp
+ZGkuZGViaWFuQGNrbm93Lm9yZz4gd3JvdGU6Cj5IaSBQaW90ciwKPgo+T24gU2F0IEp1biA3LCAy
+MDI1IGF0IDU6MzIgUE0gQ0VTVCwgUGlvdHIgWmFsZXdza2kgd3JvdGU6Cj4+IE9uIFRodXJzZGF5
+LCBKdW5lIDV0aCwgMjAyNSBhdCAxMDoxMyBQTSwgRGllZGVyaWsgZGUgSGFhcyA8ZGlkaS5kZWJp
+YW5AY2tub3cub3JnPiB3cm90ZToKPj4+IFNpbmNlIGtlcm5lbCA2LjE0LXJjMSBJIGhhdmUgdGhl
+IHByb2JsZW0gdGhhdCB2aXN1YWwgb3V0cHV0IGlzIG5vIGxvbmdlcgo+Pj4gc2hvd24gb24gbXkg
+UGluZVRhYjIgYW5kIGEgYGdpdCBiaXNlY3RgIHBvaW50ZWQgdG8gdGhpcyBwYXRjaC9jb21taXQK
+Pj4+IGFzIHRoZSBjdWxwcml0LiBXaGF0IGlzIGltcG9ydGFudCB0byBub3RlIGlzIHRoYXQgYENP
+TkZJR19EUk09bWAgc2VlbXMKPj4+IHRvIGJlIHJlcXVpcmVkIGFzIHRoZSBwcm9ibGVtIGRvZXMg
+bm90IG9jY3VyIHdpdGggYENPTkZJR19EUk09eWAuCj4+PiAKPj4+IE5lYXIgdGhlIGVuZCBvZiBt
+eSBiaXNlY3Qgc2Vzc2lvbiwgc29tZXRoaW5nIGludGVyZXN0aW5nIG9jY3VycmVkLgo+Pj4gSSB3
+YXMgYm9vdGVkIGludG8gYSAnYmFkJyBrZXJuZWwgKGllIG5vIHZpc3VhbCBvdXRwdXQpIGFuZCB3
+aGVuIEkKPj4+IHN0YXJ0ZWQgdG8gYnVpbGQgbXkgZmluYWwga2VybmVsLCBJIGNsb3NlZCB0aGUg
+bGlkIG9mIHRoZSBQaW5lVGFiMiB3aGljaAo+Pj4gbWFkZSBpdCBnbyBpbnRvIHN1c3BlbmQuIFdo
+ZW4gbXkgZmluYWwga2VybmVsIHdhcyBidWlsdCwgSSBvcGVuZWQgdGhlCj4+PiBsaWQgYWdhaW4s
+IHdoaWNoIG1hZGUgaXQgcmVzdW1lLCB0byB0cmFuc2ZlciBteSBmaW5hbCBrZXJuZWwgdG8gaXQu
+Cj4+PiBBbmQgbXVjaCB0byBteSBzdXJwcmlzZSwgSSB0aGVuIGRpZCBoYXZlIHZpc3VhbCBvdXRw
+dXQuCj4+PiBXaGVuIEkgcmVhZCB0aGUgKGJlbG93KSBjb21taXQgbWVzc2FnZSBvZiB0aGUgJ29m
+ZmVuZGluZycgY29tbWl0LCBpdCBtYXkKPj4+IG5vdCBiZSBzdWNoIGEgc3VycHJpc2UgYWZ0ZXIg
+YWxsLgo+Pj4gCj4+PiBJIGRpZCB0cnkgaXQgb24gYSBRdWFydHo2NC1CIChhbHNvIHJrMzU2Nikg
+YW5kIGl0IGRpZCBub3QgaGF2ZSBhbnkgaXNzdWUKPj4+IChvdXRwdXQgdmlhIEhETUkpLgo+Pj4g
+SSBkb24ndCBrbm93IHdoYXQgdGhlIGNhdXNlIGZvciB0aGlzIGlzc3VlIGlzLCBob3BlZnVsbHkg
+eW91IGRvLgo+Pgo+PiBJIHRlc3RlZCBhbmQgY29uZmlybWVkIHRoYXQgdGhpcyBoYXBwZW5zIHdp
+dGggZHJtPW0gYnV0IGFsc28gaW4gbXkgY2FzZSAKPj4gaXQgaGFwcGVuZWQgd2hlbiBkcm09eS4g
+QWZ0ZXIgc29tZSB0ZXN0aW5nIEkgZm91bmQgb3V0IHRoYXQgYXQgYm9vdCBtb2Rlc2V0Cj4KPklu
+dGVyZXN0aW5nIHRoYXQgaXQgYWxzbyBoYXBwZW5lZCB3aXRoIGRybT15Lgo+QXMgeW91J3JlIG1v
+cmUga25vd2xlZGdlYWJsZSB0aGVuIEkgYW0gd2l0aCB0aGlzLCBtYXliZSBsb29rIHRocm91Z2gK
+Pmh0dHBzOi8vbGlzdHMuc3IuaHQvfmRpZWRlcmlrL3BpbmU2NC1kaXNjdXNzLzxEOUFNMk9PTFJF
+TzAuMkpNQUk0MkowNlRXMEBja25vdy5vcmc+Cj4KPnRvIHNlZSBpZiB5b3UgbWF5IHNwb3Qgc29t
+ZXRoaW5nIHJlbGV2YW50Pwo+Cj4+IGhhcHBlbmVkIHR3aWNlIGFuZCBhdCBzaG9ydCBpbnRlcnZh
+bCBhbmQgc2luY2UgdGhpcyBwYXRjaCBhbGxvd3MgZm9yIGdhbW1hIAo+PiBMVVQgdXBkYXRlIHJl
+Z2FyZGxlc3Mgb2YgY29sb3JfbWdtdF9jaGFuZ2VkIHN0YXRlIHRoaXMgbWFrZXMgRFNQIENUUkwg
+R0FNTUEgCj4+IExVVCBFTiBiaXQgdG8gYmUgdW5zZXQgdHdpY2UgdG9vLiBJdCBzZWVtcyB0aGF0
+IFZPUCBkb2VzIG5vdCBsaWtlIGl0LiBJIAo+Cj5IYXBweSB0byBzZWUgeW91IGZvdW5kIHRoZSBj
+YXVzZSA6LSkKPkRvIHlvdSBoYXBwZW4gdG8ga25vdyB3aHkgaXQgd2FzIHVuc2V0IHR3aWNlPyBU
+aGF0IHNvdW5kcyBzdWJvcHRpbWFsLgo+QnV0IChJSVVDKSBzZXR0aW5nIGEgYml0IHRvIGEgdmFs
+dWUgaXQgYWxyZWFkeSBoYXMgY2F1c2luZyBpc3N1ZXMsCj5zb3VuZHMgc3VycHJpc2luZyBhcyB3
+ZWxsLgoKCkkgaGF2ZSBjb25kdWN0ZWQgdGVzdHMgb24gYm90aCByazM1NjYtYm94LWRlbW8gKHdp
+dGggZHJtIHNldCB0byB5KSBhbmQgcmszNTY4LWx1YmFuY2F0LTIgKHdpdGggZHJtIHNldCB0byBt
+KSwgCmJ1dCBJIHdhcyB1bmFibGUgdG8gcmVwcm9kdWNlIHRoaXMgaXNzdWUuIENvdWxkIHlvdSB0
+d28gcGxlYXNlIHNoYXJlIHlvdXIga2VybmVsIGRlZmNvbmZpZyBhbmQgdGhlIGNvcnJlc3BvbmRp
+bmcga2VybmVsIHN0YXJ0dXAgbG9ncz8gCkFkZGl0aW9uYWxseSwgYm90aCBvZiBteSB0d28gYm9h
+cmRzIHRlc3RlZCB3aXRoIEhETUkgb3V0cHV0LiBXaGF0IGtpbmQgb2YgZGlzcGxheSBpbnRlcmZh
+Y2UgZG9lcyB5b3VyIGJvYXJkIHVzZSBmb3Igb3V0cHV0PwoKPgo+PiBwYXRjaGVkIHZvcDJfdnBf
+ZHNwX2x1dF9kaXNhYmxlIGZ1bmN0aW9uIHNvIHRoYXQgZHNwX2N0cmwgaXMgc2V0IG9ubHkgaWYg
+Cj4+IEdBTU1BIExVVCBFTiBiaXQgaXMgc2V0LiBJIGNoZWNrZWQgdGhhdCB0aGlzIGFsc28gZG9l
+cyBub3QgYnJlYWsgdGhlIGdhbW1hIAo+PiBsdXQgZnVuY3Rpb25hbGl0eSB3aXRoIGVtcGhhc2lz
+IG9uIG91dC1vZi9pbnRvIHN1c3BlbmQgYmVoYXZpb3IuCj4+Cj4+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX3ZvcDIuYyBiL2RyaXZlcnMvZ3B1L2Ry
+bS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fdm9wMi5jCj4+IGluZGV4IGQwZjVmZWExNWUyMS4uN2Rk
+ZjMxMWIzOGM2IDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2No
+aXBfZHJtX3ZvcDIuYwo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBf
+ZHJtX3ZvcDIuYwo+PiBAQCAtODk3LDYgKzg5Nyw5IEBAIHN0YXRpYyB2b2lkIHZvcDJfdnBfZHNw
+X2x1dF9kaXNhYmxlKHN0cnVjdCB2b3AyX3ZpZGVvX3BvcnQgKnZwKQo+PiAgewo+PiAgCXUzMiBk
+c3BfY3RybCA9IHZvcDJfdnBfcmVhZCh2cCwgUkszNTY4X1ZQX0RTUF9DVFJMKTsKPj4gIAo+PiAr
+CWlmICgoZHNwX2N0cmwgJiBSSzM1NjhfVlBfRFNQX0NUUkxfX0RTUF9MVVRfRU4pID09IDApCj4+
+ICsJCXJldHVybjsKPj4gKwo+PiAgCWRzcF9jdHJsICY9IH5SSzM1NjhfVlBfRFNQX0NUUkxfX0RT
+UF9MVVRfRU47Cj4+ICAJdm9wMl92cF93cml0ZSh2cCwgUkszNTY4X1ZQX0RTUF9DVFJMLCBkc3Bf
+Y3RybCk7Cj4+ICB9Cj4KPkkgYnVpbHQgYSBrZXJuZWwgd2l0aCA2LjE0LXJjMSArIHRoaXMgcGF0
+Y2ggYW5kIGNhbiBjb25maXJtIHRoZSBzY3JlZW4KPmhhcyBvdXRwdXQgYWdhaW4gOi0pCj4KPj4g
+SSB3aWxsIHdhaXQgd2l0aCBzZW5kaW5nIGEgcGF0Y2ggYmVjYXVzZSBtYXliZSBBbmR5IGhhcyBz
+b21ldGhpbmcgdG8gYWRkIAo+PiB0byB0aGlzLgo+Cj5Tb3VuZHMgbGlrZSBhIHBsYW4uIEl0IGNv
+dWxkIGJlIHRoYXQgdGhpcyBpc3N1ZSBzdXJmYWNlZCBhbiB1bmRlcmxheWluZwo+aXNzdWUgYW5k
+IGlmIHNvLCBmaXhpbmcgdGhhdCB3b3VsZCBiZSBldmVuIGJldHRlci4KPgo+PiBCZXN0IHJlZ2Fy
+ZHMsIFBpb3RyIFphbGV3c2tpCj4KPlRoYW5rcyBhIGxvdCEKPgo+Q2hlZXJzLAo+ICBEaWVkZXJp
+awo=
