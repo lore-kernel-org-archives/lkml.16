@@ -1,109 +1,119 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5C219258E
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 00:07:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A82382;
+	Sun,  8 Jun 2025 00:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749341260; cv=none; b=OP14XAsMXpDHvnHUypQQQw0buxmT+ouHiLGAlIDi8lqlGerzfXvzk3eSXN83BMsHhZN6xSuSJsgkKCg1ibyw5YO3PzGkFLrBIXBfPm/Rhq7DVTL2rxNG8e7RJP57GdkuSVX81P5Z0LUYX3uNEeKt/P44xnYVRmSt0CoyvUmY6nM=
+	t=1749341639; cv=none; b=era6L9XdoTEx2uzalTjSPj+t5bPrTeP/drAV72I4J9u8MiJN18uYWZGY24ecWktFJ31PxMK7bsUYQoO8fOBthGGqppjNgn5XvCe9lHPBsM7mTCTCIJKtBU1Z6ovu9huBbuTEl77nbEA/bjDr8MGLJXLgHtXRESLGcnBE9OzbrFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749341260; c=relaxed/simple;
-	bh=0UHtAUcnJfFf44KjoiEAzK/GgbeDg6XEKPgsifKNFJI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=teosi8pihm1b9b2AcKgNRIo0V237yOEl7JfH7gbJB4gd32ESWHLJ9i8H5Wi3XhBgVlFdvsl16o4qLpaMETnPfi62B2ZcK1ba8L+p66JILDWIGUQcjkbUh29BilMLhWdfoONzDfnc7gr5IAjHBxNPk1XCXs6TaQIv281px8G/h3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=bo5ZRkmi; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1749341639; c=relaxed/simple;
+	bh=quZdiXcvNr3IBppY0g+Z1c7C/jdGgRtoRWBt5ZrMY5g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BYCBSknRhxenbFKIFweeou6ebBMCvPo1+CFiMX8lyOr4AAw1ABNiDmzqMePjCev7s1m58jbPGBzFrX1rqulL32iaUkcIAnqM9R/oTt4pK2xozQytOYCIf41q5TIAT7lCnYkhfO0kqXfJM7OarJR/SYkMJca5l8NUDYHBR4i7KFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eBqnfaCO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="bo5ZRkmi"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4a6f6d52af7so4554511cf.1
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 17:07:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1749341258; x=1749946058; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0UHtAUcnJfFf44KjoiEAzK/GgbeDg6XEKPgsifKNFJI=;
-        b=bo5ZRkmi673wFRTTZdjmi2VX+/ESFRowURL0Xy3X2kYxQmK9Ij+JLv7xGoaSv0N4i9
-         Qc+DoysiXzeDzW1zONrbKWziPyIp2Udv2KGvHsqbFodiADzcq8DW3vnWfs4wwuAieJhR
-         z91O2ivXuTsrMCVshK1xS/kFZ1PoACHbYsMNJN2RnRnwBe34AZmfcpDSKoC2HQbhBfgk
-         sXtci7tVscfGRaqS+EWVtwrQoWVRCRDtODlUNEjl5dLEjly1/ZZ/S+UR3hmCzFiQS+Ho
-         dT8bMjf9N8nBhltzA2oW63+TeI1z3irlhAOwGQX6jkS/V8F3sc+fYdFna5tWsQAurx/M
-         gjLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749341258; x=1749946058;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0UHtAUcnJfFf44KjoiEAzK/GgbeDg6XEKPgsifKNFJI=;
-        b=PYm9gMgwHPy7Jp8wahNpaNUGrh+AbYseOm0cgJ+fqdlMQw9Na7U3HLdhPbQ+Mu65UP
-         duuuwjweaeUXoiHaoNPHQn/kD9mZNhzTV7u86/DaRhmSye6QsLcwywl7sxigtdH/GR5Z
-         i/f/BcPNYq6UTA58+CByxIRljK/kVzF4Ih6Pi+66y6L5cP/Kpo/9WKZ/pSmCovMbvmf4
-         8rtbg8B1Z6Yo8DOZ9QhonBqGSXrdtMNOd8aktVROBNIaQG/7KNeluJhUGMluYatS3EyL
-         zNcCHh0X77U+sGp6U9qC6yy6umGvZ0Wqm0cEHblX3ngCWSfwai8MC1dpClHcHKtfjWnc
-         x04w==
-X-Forwarded-Encrypted: i=1; AJvYcCWpikR0PQkiilNiw1DB5BWv0UF1Eucjys5YBcQcQM99kQ+LQnd4IyCPOvPuZfYi1eNAmvJYe0L8bLYbjko=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yze/a2ATAvGQrm1k9J7Ux1AAZyMcNWyHXJW/M6V2sddPTgATf0c
-	EoupuhHWsbyjFQs7fQCFiNLkepsX/dEGd/GA9QUycj2xHhkfXtQW/LPISoQoy08UYRVTkbCF6NQ
-	pb6R+u1uRv4TRKaQVgk7+SQ+HN8CV7rmCU9UzagnloA==
-X-Gm-Gg: ASbGnctyMS4EHkjdt9n+c/yO9ZernKcePlW/34qFyiiSVAw/IOVqSDxhNkor5MWBcYz
-	eEIRMSXGBdvYR4sMxn1jNy3VrTsDYIF5wk6Gm3Qq7eDluCc+g8VGd2WU0ILlRV+U7D4cUwKv3KZ
-	nmW7ud8LbQzvdX6AH+9DBVhm4B8EjWW7UltpYSLqmd
-X-Google-Smtp-Source: AGHT+IGZXoZIxS9/yln1HGP/gC39IRXpdwmbCIccfIgA/QRPKVyeFdcL/3Evwv4wy0rGEIkAT0IK7awaOmhPrDGklrU=
-X-Received: by 2002:a05:622a:2287:b0:4a4:4da5:8b55 with SMTP id
- d75a77b69052e-4a5b9d39e8cmr156784701cf.28.1749341257836; Sat, 07 Jun 2025
- 17:07:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eBqnfaCO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94DFCC4CEE4;
+	Sun,  8 Jun 2025 00:13:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749341639;
+	bh=quZdiXcvNr3IBppY0g+Z1c7C/jdGgRtoRWBt5ZrMY5g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eBqnfaCO76quaRDAFJ/zY7KJKPGHXyxXmPOzQ917mWwC4jLmFf7+u7y2WRaoCpems
+	 B9dT5/bv24LPrb+M8C7tXXqa4bLmCZp7x63KtU51b54wQWLRo3ZFTALPCMfuGTMdM4
+	 WszzWfXZql6dFuelmbo8SErtO2zOTmRDT6HQZ5oBIRuS3bNk7055Sm1zIe+PxA7WJP
+	 YErLjTVlrT7+KbXx3SfLW+1NHHSfzgG6yTyadcClVxvNCNYNhX6be/hA/VaIwWYjCe
+	 WVtotFAzRo6g4PdrR5ZWcLt27ckdzfIfF6xv2uEqCg2r1hf4Ph60oxtNbGovQToqMu
+	 ADgR88FmyYQ9A==
+Date: Sat, 7 Jun 2025 19:13:56 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: quic_utiwari@quicinc.com
+Cc: Thara Gopinath <thara.gopinath@gmail.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, 
+	linux-crypto@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bartosz.golaszewski@linaro.org, quic_neersoni@quicinc.com
+Subject: Re: [PATCH] crypto: qce - Add suspend and resume support
+Message-ID: <6dfweyi65aoly24nhrq3dc5u3dpaqv4fhdwerc6axu63dkgltx@i5y7lptwnuwu>
+References: <20250606105808.2119280-1-quic_utiwari@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+Sjx0XP2A+rsA95NVwX7czQGNREXcFT=psedA7fawwKJb5rkw@mail.gmail.com>
-In-Reply-To: <CA+Sjx0XP2A+rsA95NVwX7czQGNREXcFT=psedA7fawwKJb5rkw@mail.gmail.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Sat, 7 Jun 2025 20:07:00 -0400
-X-Gm-Features: AX0GCFt1ImFK2hsbn3A789K1X_AfOKzUxJEaw3s1RQYNVvl-mWg1uEajt-sMD-4
-Message-ID: <CA+CK2bDJ6eYrVh4qewzH63HUUwKwGjcw=e8NhTF5AQ3f3N01cg@mail.gmail.com>
-Subject: Re: [RFC v2 08/16] luo: luo_files: add infrastructure for FDs
-To: Anish Moorthy <anish.moorthy@gmail.com>
-Cc: Jonathan.Cameron@huawei.com, akpm@linux-foundation.org, 
-	aleksander.lobakin@intel.com, aliceryhl@google.com, 
-	andriy.shevchenko@linux.intel.com, anna.schumaker@oracle.com, axboe@kernel.dk, 
-	bartosz.golaszewski@linaro.org, bhelgaas@google.com, bp@alien8.de, 
-	changyuanl@google.com, chenridong@huawei.com, corbet@lwn.net, 
-	cw00.choi@samsung.com, dakr@kernel.org, dan.j.williams@intel.com, 
-	dave.hansen@linux.intel.com, david@redhat.com, djeffery@redhat.com, 
-	dmatlack@google.com, graf@amazon.com, gregkh@linuxfoundation.org, 
-	hannes@cmpxchg.org, hpa@zytor.com, ilpo.jarvinen@linux.intel.com, 
-	ira.weiny@intel.com, jannh@google.com, jasonmiu@google.com, 
-	joel.granados@kernel.org, kanie@linux.alibaba.com, leon@kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux@weissschuh.net, lukas@wunner.de, mark.rutland@arm.com, 
-	masahiroy@kernel.org, mingo@redhat.com, mmaurer@google.com, 
-	myungjoo.ham@samsung.com, ojeda@kernel.org, pratyush@kernel.org, 
-	ptyadav@amazon.de, quic_zijuhu@quicinc.com, rafael@kernel.org, 
-	rdunlap@infradead.org, rientjes@google.com, roman.gushchin@linux.dev, 
-	rostedt@goodmis.org, rppt@kernel.org, song@kernel.org, 
-	stuart.w.hayes@gmail.com, tglx@linutronix.de, tj@kernel.org, 
-	vincent.guittot@linaro.org, wagi@kernel.org, x86@kernel.org, 
-	yesanishhere@gmail.com, yoann.congal@smile.fr, zhangguopeng@kylinos.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250606105808.2119280-1-quic_utiwari@quicinc.com>
 
-On Fri, Jun 6, 2025 at 6:28=E2=80=AFPM Anish Moorthy <anish.moorthy@gmail.c=
-om> wrote:
->
-> > + token =3D luo_next_file_token;
-> > + luo_next_file_token++;
->
-> This seems like it should be an atomic fetch_add: I'm only seeing read lo=
-cks up till this point
->
-> (Sorry if this is too nitpicky. Also for any formatting issues, I'm on mo=
-bile atm)
+On Fri, Jun 06, 2025 at 04:28:08PM +0530, quic_utiwari@quicinc.com wrote:
+> From: Udit Tiwari <quic_utiwari@quicinc.com>
+> 
+> Add basic suspend and resume callbacks to the QCE platform driver to
+> manage interconnect bandwidth during system sleep and wake-up cycles.
 
-Thank you, this was also found by other reviewers. I have updated this
-to use atomic.
+Please follow
+https://docs.kernel.org/process/submitting-patches.html#describe-your-changes
+and start your commit message with a problem description. Why do we want
+to "manage interconnect bandwidth"?
 
-Pasha
+> 
+> Signed-off-by: Udit Tiwari <quic_utiwari@quicinc.com>
+> ---
+>  drivers/crypto/qce/core.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/drivers/crypto/qce/core.c b/drivers/crypto/qce/core.c
+> index e95e84486d9a..2566bdad5d4a 100644
+> --- a/drivers/crypto/qce/core.c
+> +++ b/drivers/crypto/qce/core.c
+> @@ -249,6 +249,21 @@ static int qce_crypto_probe(struct platform_device *pdev)
+>  	return devm_qce_register_algs(qce);
+>  }
+>  
+> +static int qce_crypto_suspend(struct platform_device *pdev, pm_message_t state)
+> +{
+> +	struct qce_device *qce = platform_get_drvdata(pdev);
+> +
+> +	return icc_set_bw(qce->mem_path, 0, 0);
+
+Couldn't you be using icc_disable(); here?
+
+> +}
+> +
+> +static int qce_crypto_resume(struct platform_device *pdev)
+> +{
+> +	struct qce_device *qce = platform_get_drvdata(pdev);
+> +
+> +	return icc_set_bw(qce->mem_path, QCE_DEFAULT_MEM_BANDWIDTH,
+> +		QCE_DEFAULT_MEM_BANDWIDTH);
+
+icc_enable();
+
+
+That said, as already requested, please also drop these votes at runtime
+when the block is unused.
+
+> +}
+> +
+>  static const struct of_device_id qce_crypto_of_match[] = {
+>  	{ .compatible = "qcom,crypto-v5.1", },
+>  	{ .compatible = "qcom,crypto-v5.4", },
+> @@ -259,6 +274,8 @@ MODULE_DEVICE_TABLE(of, qce_crypto_of_match);
+>  
+>  static struct platform_driver qce_crypto_driver = {
+>  	.probe = qce_crypto_probe,
+> +	.suspend = qce_crypto_suspend,
+> +	.resume = qce_crypto_resume,
+
+Please implement .driver.pm instead.
+
+Regards,
+Bjorn
+
+>  	.driver = {
+>  		.name = KBUILD_MODNAME,
+>  		.of_match_table = qce_crypto_of_match,
+> -- 
+> 2.34.1
+> 
