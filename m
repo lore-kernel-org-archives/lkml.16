@@ -1,209 +1,105 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BDB1372;
-	Sun,  8 Jun 2025 21:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0293E2580F1
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 22:00:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749419594; cv=none; b=MmPV9zMdyPnVNwXc4FMaXLa+Db2vCy3SVQUaGVHKF6RHW+taPeUkVJoxPmei7gA3s/1vkRx8jCR5gC1mDyIPzfDOKrilu5hZ2KXPoyzxShe7eoFCqeX5+BkSX5GQ5LvK3f8V/ArRmDUFNN6giLpsnMAW2pYQeIfTiynpt4/8MRo=
+	t=1749420003; cv=none; b=TB5Hm5vHe3UtSFb/Km1uREapwtdzJppxio79Jf08aCNwEw7wfOLuQi7xdRyv1JJGbAYO8Mrn3FBLs8Aa2xnJ9/LQPeKbt6o9AUABPy8EnUEbX6Josomdzh8r5vxmQg6O1O3ga//fsSdcXhdiFu/0oTjzDV4vWJ5djbcyjsalhRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749419594; c=relaxed/simple;
-	bh=wOquQRKcqCTvElOurCE/UoM3j19NupLZVOftDa6RwX8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L3z7UAB81COUu4N08mUU88S/Wp2rfzQtJOxwRqWVeUtqQ7H08bhu93E3rrAugclRxVFRXzMWV9JD6P+0uKR/g345FR2ym3HsR0Kwrhy2STcApp2nY6eOsPKlfFq4kd8SQ/Jtz2uFtN58WwGN0xSK8kEcTPfdv/8AWnusO3GgeLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RfSTpyZ+; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749420003; c=relaxed/simple;
+	bh=7EutwoH4X9Mh1hoaQBaw6NBPwLfzRL9LKYyc4fUNNPk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JpQSS2zWNqJv5Veon9D/V7v5WGCLHE0b5vruegXgtDE22YKC4Pl3YVT2hfOi+IZlqcihx2tCNQq8EAwnKLEIVLpiLLXDAJTYlr555W9KEJMnU2EKPQ8LptKLZIXDe5fQG4PJuot/GxmmHYasKDLECBjaD8Y9GXVFsUIFk2F5THk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EK4ozIkj; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RfSTpyZ+"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-60179d8e65fso2159391a12.0;
-        Sun, 08 Jun 2025 14:53:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749419591; x=1750024391; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4NduPR+gg4BA8Uu7aYd3QeksMa8DB1S3qK6CG6TmcMY=;
-        b=RfSTpyZ+P4nDn2Frni3COdwblCaHja2IeHetxftgO18nRE/0oZxXL/8R8IDrzaYFM4
-         SWs2i2gBEYKvTfX5gX+dNU++kjcc55tOPkwsq4Om6rdxBJxa2H8QrAvpHt0PEX9FXnV2
-         Jwk67jMmctD5Brd8Lu0a1+KK1WvaSz05oD7wZLRIcwoc/tcI8kUYpgnqbXhEOgg21DsU
-         Gre93e84uC5pJT+H23+2BeIlu4Xhgr+DNe2HDfrazoLJIU8jQnnIjIvM8bDJ3SJUlI+K
-         8ryVXT29Z7Hoxr5BbmRyN2PRdUGFc8MWaNRzFC2V6SmyGCHfU8ulDZylUtDmqG83Jj/A
-         p9fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749419591; x=1750024391;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4NduPR+gg4BA8Uu7aYd3QeksMa8DB1S3qK6CG6TmcMY=;
-        b=phftKw5Kwh1mb6BKlyYXROOpaxb2qk0kZybnKPiSSs/ld7ssThvzNe5RCK9rMSnVPR
-         hmeK3sHn3KR1/iGPl8uMoBtLodkVChADT4VB9j0ncEN8dIldwnljxB/jzQSXlhjSBWMi
-         Vy+gUFSq5l+QS5JT+lzYj1Ab/k7HzYt95avPKFUEoS5ahnuQolBuEQ60SIRDX5BUWttI
-         qTUKobeKsd1etasgRFZGK7H8+ZWyIqFZIn0a1fYmkbjUJRM2Rbu0hZhk92qHdKeyW+Sx
-         RRWpOKyY/8m1Z0ZiKZiRXzTipMfr3nRh624HyIWvdm353jEkwDeSUM7tWmoUaak1Dade
-         JgLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWFn5woFvuGL/TMXBOeuuupAXsZKhCNqPgTq2O3V6Ljcfc9wQrFWCfVQK+UiCCytUi9odDPb+SzjfSGR8=@vger.kernel.org, AJvYcCWaEMhftm2j4yV8DjIRPSsjP4latfHsxeYFSzvajEfw/eB8QDMq5mXaiLCDMxtb8z4G6uz5dEzI404Ode4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHQYS0+ykXC4r0oWpI2HX0l6hF3SgQt+KA3L1GUHuqcx377i4t
-	m+ihJXf+Qd99uSm6aaFGbBQpnxpoYJXuZVduDOfr1GvFMZZuICi3Ppxn
-X-Gm-Gg: ASbGncs4zP3p65epwYMAFHgMG2DBew+jtyTHX1A4gjiovN/VpQ6xq1qZFZXk02SiTYD
-	v5jIU+TTGvm57GQVkAD1T9pch29Ce7PAlmZt7+kuJtmnKGRUBQTQEHBo7nLseUTWlv3Bg5AKEBp
-	J7MhI7wx38PnSb5cfsqeUL1t6jEVjlJVM8bzDcasU42UUJOI41Chdwc0Bbh+okWkVEq5+CTPyLZ
-	/6126Tb2doUkkdZMMk6xPicAzzbjZyEehp1Wflpdfh9uFPEZCYTcO4j++SOG/IpE0DaMUGfoFmV
-	0ANP5iN4ZcJEH0k/ODmmcbB0b9Tjt0JC3C0PWQuTnxp+JsnBTTgGhOuOgXRz47fBUurC
-X-Google-Smtp-Source: AGHT+IEhIWM4jqRZI65dNRncFhmR3kABVmoPpBzqZie0cZ3iQ1dBZ9kp1yY8bfVpBdqgvR9LtTP69g==
-X-Received: by 2002:a05:6402:1941:b0:607:f557:73b1 with SMTP id 4fb4d7f45d1cf-607f5578da3mr900563a12.5.1749419590378;
-        Sun, 08 Jun 2025 14:53:10 -0700 (PDT)
-Received: from [192.168.0.100] ([188.27.131.45])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-607783de2bcsm3812831a12.68.2025.06.08.14.53.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Jun 2025 14:53:09 -0700 (PDT)
-Message-ID: <f6730384-92ca-4f3d-8316-996edc2750fa@gmail.com>
-Date: Mon, 9 Jun 2025 00:52:56 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EK4ozIkj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749420002; x=1780956002;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=7EutwoH4X9Mh1hoaQBaw6NBPwLfzRL9LKYyc4fUNNPk=;
+  b=EK4ozIkj1s0qgj/tKc5pB0RhZaeVigtKgKcC8+U8/QTFv8TnXv0RKf/g
+   S0ymtMC960FwwgHKLpg6L2VK8KNREQozmRSgJlUXzZAxYDylSwko1XMXm
+   VSK9Y7v3saOerZUiUunaU7WlD9mjD+1GRFhBCbT28TJIXiT9RK3A3Gdnx
+   Uv1ZXVrk253EbTaawApviHkUKXVzzDJmhkkVk2VuozJ8ZItke6RtMWQna
+   Lqi1FU/QTh+qu9EoI9WQowbD+8A2s75gEoHqiB4bLT9nthmcZNvLJkOm4
+   J4mf7GSAM6UJHMUo5cew5gvOEXOznYxCJYgjELTKu+IiHLmEwcGo98aU7
+   w==;
+X-CSE-ConnectionGUID: 0hdCw5ZpTnCED+3GmjOUag==
+X-CSE-MsgGUID: ZsWQ2c87QuSQ73JoBhUSSQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="62147827"
+X-IronPort-AV: E=Sophos;i="6.16,221,1744095600"; 
+   d="scan'208";a="62147827"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2025 15:00:01 -0700
+X-CSE-ConnectionGUID: /Z/2ii+6TzO5xNezwEZt3g==
+X-CSE-MsgGUID: ZCIKP44gTUyGSmj4bRt+0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,221,1744095600"; 
+   d="scan'208";a="146239261"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2025 15:00:01 -0700
+Date: Sun, 8 Jun 2025 14:59:59 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Fenghua Yu <fenghuay@nvidia.com>
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	Chen Yu <yu.c.chen@intel.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH v5 04/29] x86,fs/resctrl: Prepare for more monitor events
+Message-ID: <aEYH38g4N_ZNlv6b@agluck-desk3>
+References: <20250521225049.132551-1-tony.luck@intel.com>
+ <20250521225049.132551-5-tony.luck@intel.com>
+ <462eb5cb-56bc-4639-9029-5166cb71b5bf@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] media: rc: ir-spi: reallocate buffer dynamically
-To: Sean Young <sean@mess.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250608191536.2181756-1-demonsingur@gmail.com>
- <aEXxs4xsNR7Srdvx@gofer.mess.org>
-From: Cosmin Tanislav <demonsingur@gmail.com>
-Content-Language: en-US
-In-Reply-To: <aEXxs4xsNR7Srdvx@gofer.mess.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <462eb5cb-56bc-4639-9029-5166cb71b5bf@nvidia.com>
 
+On Fri, Jun 06, 2025 at 05:45:58PM -0700, Fenghua Yu wrote:
+[SNIP]
 
-
-On 6/8/25 11:25 PM, Sean Young wrote:
-> On Sun, Jun 08, 2025 at 10:15:33PM +0300, Cosmin Tanislav wrote:
->> Replace the static transmit buffer with a dynamically allocated one,
->> allowing the buffer to grow as needed based on the length of the
->> message being transmitted.
->>
->> Introduce a helper function ir_buf_realloc() to manage the allocation
->> and reallocation of the buffer. Use it during probe to preallocate
->> a buffer matching the original static buffer, then reallocate it as
->> needed, with an overhead to avoid frequent reallocations.
->>
->> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
->> ---
->> V2:
->>   * use devm_krealloc_array
->>
->>   drivers/media/rc/ir-spi.c | 32 +++++++++++++++++++++++++++++---
->>   1 file changed, 29 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/media/rc/ir-spi.c b/drivers/media/rc/ir-spi.c
->> index 8fc8e496e6aa..2f931950e107 100644
->> --- a/drivers/media/rc/ir-spi.c
->> +++ b/drivers/media/rc/ir-spi.c
->> @@ -27,7 +27,8 @@ struct ir_spi_data {
->>   	u32 freq;
->>   	bool negated;
->>   
->> -	u16 tx_buf[IR_SPI_MAX_BUFSIZE];
->> +	u16 *tx_buf;
->> +	size_t tx_len;
->>   	u16 pulse;
->>   	u16 space;
->>   
->> @@ -36,6 +37,26 @@ struct ir_spi_data {
->>   	struct regulator *regulator;
->>   };
->>   
->> +static int ir_buf_realloc(struct ir_spi_data *idata, size_t len)
->> +{
->> +	u16 *tx_buf;
->> +
->> +	if (len <= idata->tx_len)
->> +		return 0;
->> +
->> +	len = max(len, idata->tx_len + IR_SPI_MAX_BUFSIZE);
->> +
->> +	tx_buf = devm_krealloc_array(&idata->spi->dev, idata->tx_buf, len,
->> +				     sizeof(*idata->tx_buf), GFP_KERNEL);
->> +	if (!tx_buf)
->> +		return -ENOMEM;
->> +
->> +	idata->tx_buf = tx_buf;
->> +	idata->tx_len = len;
->> +
->> +	return 0;
->> +}
->> +
->>   static int ir_spi_tx(struct rc_dev *dev, unsigned int *buffer, unsigned int count)
->>   {
->>   	int i;
->> @@ -52,8 +73,9 @@ static int ir_spi_tx(struct rc_dev *dev, unsigned int *buffer, unsigned int coun
->>   
->>   		periods = DIV_ROUND_CLOSEST(buffer[i] * idata->freq, 1000000);
->>   
->> -		if (len + periods >= IR_SPI_MAX_BUFSIZE)
->> -			return -EINVAL;
->> +		ret = ir_buf_realloc(idata, len + periods);
+> > diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+> > index 819bc7a09327..4403a820db12 100644
+> > --- a/arch/x86/kernel/cpu/resctrl/core.c
+> > +++ b/arch/x86/kernel/cpu/resctrl/core.c
+> > @@ -364,8 +364,8 @@ static void ctrl_domain_free(struct rdt_hw_ctrl_domain *hw_dom)
+> >   static void mon_domain_free(struct rdt_hw_mon_domain *hw_dom)
+> >   {
+> > -	kfree(hw_dom->arch_mbm_total);
+> > -	kfree(hw_dom->arch_mbm_local);
+> > +	for (int i = 0; i < QOS_NUM_L3_MBM_EVENTS; i++)
+> > +		kfree(hw_dom->arch_mbm_states[i]);
 > 
-> You're reallocating in a loop. That causes a lot of churn.
+> Is it better to define a helper for_each_mon_event_idx(i)?
 > 
-
-I'm allocating in a loop indeed, but I add at least IR_SPI_MAX_BUFSIZE
-each time the new length exceeds the existing length. This should cut
-down on the amount of allocations.
-
-In my testing, controlling various devices around the house using IR,
-I haven't exceeded two allocations, aka 8192. But having this static
-size in place prevents bigger transfers from being done.
-
->> +		if (ret)
->> +			return ret;
->>   
->>   		/*
->>   		 * The first value in buffer is a pulse, so that 0, 2, 4, ...
->> @@ -153,6 +175,10 @@ static int ir_spi_probe(struct spi_device *spi)
->>   
->>   	idata->freq = IR_SPI_DEFAULT_FREQUENCY;
->>   
->> +	ret = ir_buf_realloc(idata, IR_SPI_MAX_BUFSIZE);
->> +	if (ret)
->> +		return ret;
->> +
+> #define for_each_mbm_event_idx(i) \
 > 
-> By default, you're allocating IR_SPI_MAX_BUFSIZE already at probe time. So
-> until someone does a transmit, you haven't saved any memory compared to
-> before. In fact, the text size will be more so things are worse.
+>     for (int i = 0; i < QOS_NUM_L3_MBM_EVENTS; i++)
 > 
-> It might make sense to allocate IR_SPI_MAX_BUFSIZE once for each transmit;
-> most drivers do an allocation per transmit which is perfectly acceptable.
+> Then the above for loop can be simplified to:
 > 
-
-My reasoning was not to save memory, but to allow transfers bigger than
-IR_SPI_MAX_BUFSIZE, which currently is 4096. Note that that's periods,
-not number of pulses/spaces.
-
-If you want an allocation per transfer then we should compute the total
-period size and allocate a big enough buffer to fit all the periods.
-
-Each pulse/space value translates to a different period (depending on
-the carrier frequency) so we'd have to compute it once ahead of time
-to allocate the periods buffer, and once again afterwards.
-
-To avoid doing the period finding two times we could reuse the passed in
-buffer to hold the calculated period, but we'd still be iterating two
-times over the passed in buffer.
-
+>     for_each_mbm_event_idxd(i)
 > 
-> Thanks,
+> 	kfree(hw_dom->arch_mbm_states[i]);
 > 
-> Sean
-> 
->>   	return devm_rc_register_device(dev, idata->rc);
->>   }
->>   
->> -- 
->> 2.49.0
+> The helper can be used in other places as well (see below).
 
+I think there are only two places total. So maybe?
+
+-Tony
