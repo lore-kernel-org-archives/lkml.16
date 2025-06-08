@@ -1,274 +1,179 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0907E54673;
-	Sun,  8 Jun 2025 18:08:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC8F13B58A;
+	Sun,  8 Jun 2025 18:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749406107; cv=none; b=VZjT7M9kV5jeCJm29SsUG5gCACNBRnOShINTSHLKfi2RWDuB5xkNECr3KTE/VDOMg9sj4+Zp73RJjvazmygkRvJxR52korSN0NC1HOR53NmeYCM8QqEmovCNffXC1XvmA1wg4mSM9RbmuPximoAQjpiQl0G9bH41SODj9BEVmdw=
+	t=1749407022; cv=none; b=kv4jgtvNGK5ljUDZzHg9tO3vssCaiUBNjEPFNiUZUsfTdxEEksBMmZ040Rt50/Dm57mGQpqkeZdRfKBStGkIu1Jty5Dg7qmc1SMZLyI2qlmiYR5dsPN9TWIOEUqUwtbGGiuXwHNJdVu/Qwa6wGzW33C2xN/s4wqogRA18pkRBmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749406107; c=relaxed/simple;
-	bh=YRzBMWNvMQrUT0C6+8hN4fqFMs9saZah8OLG7lORPgk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ekz2WqdPUPuKPNEf+NI/1SF0hMyww5JFjEAD6gcMbtBlnKv4Ur3vD8RIUdN68MCcDo+AwEuyUotL0Jo9e4Fy/Zi4C02UiDjaOfcgPBN7gLQ5tyrrDTZWXgj9M3mcPZy3G04QO3YrR9sMJ1QJOJfwhhhmQ8JLRx1gf/iVUY6nV4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H2fpRLGQ; arc=none smtp.client-ip=209.85.219.47
+	s=arc-20240116; t=1749407022; c=relaxed/simple;
+	bh=JDNe7oT5jmZxHCK+hLJFyqlGVnzPX0XUp2TdGuv5uoE=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OG57PezrfeINMNCaWIKL9fTyi5qIewIjNelyPZpSd1KTg1l5Tn1GGZ8GvSlID50QH8tflc29/MeBnxOWIY4U0AR/sFOcqbgHp1d2UBjMuKL+6y+hHPf2K7VZSDtw8tNV4wdqvenDrW5/DmGTHoLJj1Uluqb+qrJ81YjJlIuO8IQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hFRwUwSf; arc=none smtp.client-ip=209.85.208.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H2fpRLGQ"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6facf4d8e9eso39712416d6.1;
-        Sun, 08 Jun 2025 11:08:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hFRwUwSf"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-32ae3e94e57so18666911fa.1;
+        Sun, 08 Jun 2025 11:23:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749406105; x=1750010905; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eFQ7caybu9rQddJ9irYmtvrlk/s+4EGu9XOi4WyXEX4=;
-        b=H2fpRLGQvDAOf3FHksVqnhnzOAjKDggndoqXcASfB79emMMkGp3udfPTu8junaAJqd
-         2rIpg7yLgG0t4ttzsF3wcqGXsAWrg/IYNncf0mKiI6g1rNsci5yKkQrL+pAvkoa1WsYE
-         C4UygTGaMvlcRYcANDSDmaZgdiKbv0gWdoeulKbVuLigyuOhUOsNgGIK8QxZYrlV6DAL
-         zu9e3M1BU/qvta6uBLiFxjpJmlRtLWvV0Ddheq87ZGskClj0hVDkGQKIRCcrq6nnHQMz
-         YBYzFeWMVWH9kNrsERZfNS0QtVaBy1mP82HVIPRRcnzf9KqLfAfGPnzfYW+MQTkOOrqA
-         Il1w==
+        d=gmail.com; s=20230601; t=1749407019; x=1750011819; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=U8R9ajSxF0D4ByAji1QcuYH71phyynAaen4Z3JnG7gA=;
+        b=hFRwUwSf85FydiG5iASgydkkodP3J5wGEbw9CZ0ffH79fcIqhE3VhjbOj1c4iV4oqZ
+         09oI18K9g8xvfShD0JwNpsFuToTtkop++OmyJOn+OVqne4ZTzVJTAgIEWAeuCBMd9JBY
+         x6kfM5IOzHKfgVidhQLgSAqhPse+c3uhCCzyhbqSp/tsJomIv/d8d1kv7rTmo9P9wN/C
+         qqZ9n0u97z77eVUDLCR8F51oTObnPetcYk2dF/pbSIZ0scgcJJ+PKQpTe7t80ufA1HAA
+         b5fbd24Y0sv8vXDFPqP2tNSjyPoP+JeMZhmcmGGxh7hcKigBQyFu7q3nJtzzaaHsGG0I
+         qGPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749406105; x=1750010905;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eFQ7caybu9rQddJ9irYmtvrlk/s+4EGu9XOi4WyXEX4=;
-        b=TqsmgPNqwNoJo0cyeAqHOWWZKrX7Ez7DVBlYaKVBtCzw7t7Zy11OEkPWM1Zc3/yxk+
-         ku7IfWla04j0wN7ut24v3+TYUU+9D8p10sqSGdrRSb/kyZjVDMNBXZe+AZ+g+Lw/Z+MS
-         NTduMJNtIZn+vPpR3aQmleGLpicX+OEqCtHgEnMAAd+QhTc0gUpsgTIFafH9YTRqjpSy
-         egWYU/63HyF/zghCFqyCPJaQdOpkUZdVdtrmqhlCtPqYp07JcW/V2kA4HoK6zWLHTnr3
-         kW2dXjTgP0RRM+f28Lfwr8RmBO+qLy5kxHpHyS6e+ubyDf4zYvXAlhb5EoGKSgEd1So8
-         +73Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW0gewzXNsXWRgLT9I2K3eZ3SVBICOI3QSxNlcYcYa2F7BnpA0FEhgSCIinWEF+/NlxNtHjirTA0qMD6/M9@vger.kernel.org, AJvYcCXmWVAJ9tBIayIiFziThPcFTVECsmaH5GI+ARAgWLPSGL7a+HbRUSFh1pRN6Y+3mG7tL8TwSI0bWcrEBg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyL1awRuW2tKZJQlFlo0+X0URY8FY/J7kGCmrYR1ka0QElq8zzY
-	XQQz5hjyVzvkKYdXaNsqvaBAuHvx0FgJsv6DVVDt80Bs1lJHFt55PAVFRFaQgFloVW/3ytJ4rOL
-	DjbAChAnsdzLu3ot828OdzmwgqsjfhdIVuQ==
-X-Gm-Gg: ASbGncsJ3+ZfuiIq9NtuKveAP7dOXbao/G7x9BrLz6b76Zt19tCJpP4XhK9EA2lFSAM
-	mI/ghk0s6CU2u/22TQfYxXjZ2TbQ5SpvE+FTucA/YrClSRfLdlzNLiknNNByjxeTUJnYMv2O2Cw
-	pHSSStRSWLe3/sJIDaLAiK3U/IoemkWFILOg==
-X-Google-Smtp-Source: AGHT+IF5V7NFVj1dygApgejA4rFQzCP0XZt02o2UIOL+T37G4goLT4zvr8qB+A+pOr1HXTAbaurTyJNNdQ3NK7avPuU=
-X-Received: by 2002:ad4:5ce8:0:b0:6fa:cdc9:8afa with SMTP id
- 6a1803df08f44-6fb08f54be2mr172769956d6.17.1749406104638; Sun, 08 Jun 2025
- 11:08:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749407019; x=1750011819;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U8R9ajSxF0D4ByAji1QcuYH71phyynAaen4Z3JnG7gA=;
+        b=Pb+JOOd4sl7wmbLZh8pYj0X4O/y/qMZga6Tn3podrgNDAUxW7b7S2Ygi0vlZ1f5ZSB
+         5mPFLQBK/RBnWhOW3wALNY6kf2b+3jHck9Lvw1wtInzUDSVM9tgUcekX+0F+A7jtPpt/
+         t8QitK4YsdhhN5cGnaywnFN6RwjzCNhizNoEfkyF9HVeL5bYdnN979tULjGsMcqFJbRH
+         XeB+9spUv+H9dHHdUzg599dtdAwsauKfWVujqM61G7T8n8ZL4/BFUIPea0tPd1IaSFsN
+         VIOvdz03TdH+Y2KEF+cz/azacwZBZAJHfVQ/qEhtTKddiJ4swZ9AEqGrjenlyqTBwK5W
+         kXkA==
+X-Forwarded-Encrypted: i=1; AJvYcCUeuUlx4dPN3iRwsypWh3JgnAQMUh/oEhPaCHWZTldxntHYrcX68gArGo3XRlqRlgkAbA7slfJpxyvtp5XXPg==@vger.kernel.org, AJvYcCUzthznQmTbgyA+6t3sufZNQxtl5yiYPtNZJevPnDGSYmuCkVJYHucZ+TrQ3XlYNfQk6EO+@vger.kernel.org, AJvYcCXWbEu3lSHhLeq9e0ZZrjKzR+Ry3X/M/WBcxz85B0+yAy7cMNRmaPo3uYo7R3wOsmzEFzFSaGO7fxduDt/W@vger.kernel.org
+X-Gm-Message-State: AOJu0YwA5ESNBWm1LQ5HGvmYXmjpI/9FNPH8bnnXF6bpp3PUY4d5GQdE
+	GPnYG2wjhZvwdnbHImEED41Qt5rgtu95uXKj1Oxw58Q9rTnqZRpF8RlA
+X-Gm-Gg: ASbGncsOX/WeRTjXKF9NTM9KmGLc8AOfdGgSo/AIweZgsKMH9q8Rtb4Fluv2kC4KcVp
+	7yJ29mbBFjpspGi11dPfwWpcy0qD4lHgi1bvR+nYNFC86jHc0NCmzC4QQXx0xgVdw39jMFo8GKX
+	r9A1HWm9zo3RF4d/WITkuwCqt2CV2lRbjCjhZTIcQALAxAiqtdIHewFkpElRtP1eFSafjFBMkGN
+	m8AJ+QLjk1NqOiD9+1OsC3zU0CtxYNTXtj3H0Li8Ry4ao/7CbVJlkwQZpW62x27oFxDgb4/K1Fj
+	taxl5unheSSULTvziFak3mU61WfE
+X-Google-Smtp-Source: AGHT+IF/5R7jbUNTrFZyIpdBBQTRKrlF/vZyyTM5GqfQ/xcx9pdFblrY6i2OVwDAqjN0ePESnzCZXA==
+X-Received: by 2002:a2e:2243:0:b0:32a:864a:46f1 with SMTP id 38308e7fff4ca-32adfdd91f6mr23303191fa.30.1749407018248;
+        Sun, 08 Jun 2025 11:23:38 -0700 (PDT)
+Received: from pc636 ([2001:9b1:d5a0:a500::800])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32ae1cad433sm7751971fa.53.2025.06.08.11.23.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Jun 2025 11:23:37 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Sun, 8 Jun 2025 20:23:36 +0200
+To: Kent Overstreet <kent.overstreet@linux.dev>,
+	"Paul E. McKenney" <paulmck@kernel.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>,
+	syzbot <syzbot+80e5d6f453f14a53383a@syzkaller.appspotmail.com>,
+	akpm@linux-foundation.org, josh@joshtriplett.org,
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, rcu@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [rcu?] [bcachefs?] BUG: unable to handle kernel NULL
+ pointer dereference in rcu_core (3)
+Message-ID: <aEXVKNVLI3VQInSc@pc636>
+References: <67a2b20a.050a0220.50516.0003.GAE@google.com>
+ <9694d40a-072e-47c2-a950-3b258bbe04f5@paulmck-laptop>
+ <jzknqese5idob37wxgclq7ptxnsd66qbqkxtjpjormymsrwv2j@xjum5exljlh6>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508210148.799578-1-titanv3585@gmail.com> <20250508214305.836406-1-titanv3585@gmail.com>
-In-Reply-To: <20250508214305.836406-1-titanv3585@gmail.com>
-From: Roderick Colenbrander <thunderbird2k@gmail.com>
-Date: Sun, 8 Jun 2025 11:08:13 -0700
-X-Gm-Features: AX0GCFvczihxTsEvy0_u8di2ZRyXfc5GG-9Xlv3uaNVs6P8bJbpH6F2sUSHaYO8
-Message-ID: <CAEc3jaCEENSMbWFcQyjWLP+4UPv3_2inARZLJsmXYF7zVbhkug@mail.gmail.com>
-Subject: Re: [PATCH] HID: playstation: DS4: Add BT poll interval adjustment
-To: Vadym Tytan <titanv3585@gmail.com>
-Cc: Roderick Colenbrander <roderick.colenbrander@sony.com>, Jiri Kosina <jikos@kernel.org>, 
-	Benjamin Tissoires <bentiss@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-input@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <jzknqese5idob37wxgclq7ptxnsd66qbqkxtjpjormymsrwv2j@xjum5exljlh6>
 
-Hi,
+On Sun, Jun 08, 2025 at 11:26:28AM -0400, Kent Overstreet wrote:
+> On Wed, Feb 05, 2025 at 06:56:19AM -0800, Paul E. McKenney wrote:
+> > On Tue, Feb 04, 2025 at 04:34:18PM -0800, syzbot wrote:
+> > > Hello,
+> > > 
+> > > syzbot found the following issue on:
+> > > 
+> > > HEAD commit:    0de63bb7d919 Merge tag 'pull-fix' of git://git.kernel.org/..
+> > > git tree:       upstream
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=10faf5f8580000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=1909f2f0d8e641ce
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=80e5d6f453f14a53383a
+> > > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b69d18580000
+> > > 
+> > > Downloadable assets:
+> > > disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-0de63bb7.raw.xz
+> > > vmlinux: https://storage.googleapis.com/syzbot-assets/1142009a30a7/vmlinux-0de63bb7.xz
+> > > kernel image: https://storage.googleapis.com/syzbot-assets/5d9e46a8998d/bzImage-0de63bb7.xz
+> > > mounted in repro: https://storage.googleapis.com/syzbot-assets/526692501242/mount_0.gz
+> > > 
+> > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > > Reported-by: syzbot+80e5d6f453f14a53383a@syzkaller.appspotmail.com
+> > > 
+> > >  slab radix_tree_node start ffff88803bf382c0 pointer offset 24 size 576
+> > > BUG: kernel NULL pointer dereference, address: 0000000000000000
+> > > #PF: supervisor instruction fetch in kernel mode
+> > > #PF: error_code(0x0010) - not-present page
+> > > PGD 0 P4D 0 
+> > > Oops: Oops: 0010 [#1] PREEMPT SMP KASAN NOPTI
+> > > CPU: 0 UID: 0 PID: 5705 Comm: syz-executor Not tainted 6.14.0-rc1-syzkaller-00020-g0de63bb7d919 #0
+> > > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+> > > RIP: 0010:0x0
+> > > Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+> > > RSP: 0018:ffffc90000007bd8 EFLAGS: 00010246
+> > > RAX: dffffc0000000000 RBX: 1ffff110077e705c RCX: 23438dd059a4b100
+> > > RDX: 0000000000000100 RSI: 0000000000000000 RDI: ffff88803bf382d8
+> > > RBP: ffffc90000007e10 R08: ffffffff819f146c R09: 1ffff11003f8519a
+> > > R10: dffffc0000000000 R11: 0000000000000000 R12: ffffffff81a6d507
+> > > R13: ffff88803bf382e0 R14: 0000000000000000 R15: ffff88803bf382d8
+> > > FS:  0000555567992500(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
+> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > CR2: ffffffffffffffd6 CR3: 000000004da38000 CR4: 0000000000352ef0
+> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > Call Trace:
+> > >  <IRQ>
+> > >  rcu_do_batch kernel/rcu/tree.c:2546 [inline]
+> > 
+> > The usual way that this happens is that someone clobbers the rcu_head
+> > structure of something that has been passed to call_rcu().  The most
+> > popular way of clobbering this structure is to pass the same something to
+> > call_rcu() twice in a row, but other creative arrangements are possible.
+> > 
+> > Building your kernel with CONFIG_DEBUG_OBJECTS_RCU_HEAD=y can usually
+> > spot invoking call_rcu() twice in a row.
+> 
+> I don't think it's that - syzbot's .config already has that enabled.
+> KASAN, too.
+> 
+> And the only place we do call_rcu() is from rcu_pending.c, where we've
+> got a rearming rcu callback - but we track whether it's outstanding, and
+> we do all relevant operations with a lock held.
+> 
+> And we only use rcu_pending.c with SRCU, not regular RCU.
+> 
+> We do use kfree_rcu() in a few places (all boring, I expect), but that
+> doesn't (generally?) use the rcu callback list.
+>
+Right, kvfree_rcu() does not intersect with regular callbacks, it has
+its own path. 
 
-Sorry for the late reply (business travel / vacation). This is the
-only code I left out during hid-playstation creation. At the time when
-I added this to hid-sony it felt like a good idea. But we later found
-out the console wasn't even using this code itself. We haven't had a
-need for it in various embedded projects. The code had significant
-impact on battery (especially when set to like 1ms). The timing itself
-was not that stable, it made it better from the hardware side
-(measured using a BT packet sniffer), but there is overhead in
-bluetooth stacks, which makes the timing not that predictable
+It looks like the problem is here:
 
-Do you have a strong use case or reason to add it back?
+<snip>
+  f = rhp->func;
+  debug_rcu_head_callback(rhp);
+  WRITE_ONCE(rhp->func, (rcu_callback_t)0L);
+  f(rhp);
+<snip>
 
-Thanks,
-Roderick
+we do not check if callback, "f", is a NULL. If it is, the kernel bug
+is triggered right away. For example:
 
-On Thu, May 8, 2025 at 2:43=E2=80=AFPM Vadym Tytan <titanv3585@gmail.com> w=
-rote:
->
-> Between v6.1 and v6.2 versions of Linux kernel,
-> DualShock4 related code was moved from `hid-sony.c`
-> to `hid-playstation.c` (near DualSense code) and
-> Bluetooth poll interval adjustment functionality was lost
->
-> Signed-off-by: Vadym Tytan <titanv3585@gmail.com>
-> ---
->  CREDITS                       |  4 +++
->  drivers/hid/hid-playstation.c | 64 +++++++++++++++++++++++++++++++++--
->  2 files changed, 65 insertions(+), 3 deletions(-)
->
-> diff --git a/CREDITS b/CREDITS
-> index f74d230992d6..137c3636e318 100644
-> --- a/CREDITS
-> +++ b/CREDITS
-> @@ -4001,6 +4001,10 @@ S: 44 Campbell Park Crescent
->  S: Edinburgh EH13 0HT
->  S: United Kingdom
->
-> +N: Vadym Tytan
-> +E: titanv3585@gmail.com
-> +D: Minor game controllers features
-> +
->  N: Thomas Uhl
->  E: uhl@sun1.rz.fh-heilbronn.de
->  D: Application programmer
-> diff --git a/drivers/hid/hid-playstation.c b/drivers/hid/hid-playstation.=
-c
-> index 1468fb11e39d..fd51f00b0516 100644
-> --- a/drivers/hid/hid-playstation.c
-> +++ b/drivers/hid/hid-playstation.c
-> @@ -337,7 +337,7 @@ struct dualsense_output_report {
->   * 0x3F - disabled
->   */
->  #define DS4_OUTPUT_HWCTL_BT_POLL_MASK  0x3F
-> -/* Default to 4ms poll interval, which is same as USB (not adjustable). =
-*/
-> +/* Default to 4ms poll interval, which is same as USB (adjustable). */
+call_rcu(&rh, NULL);
 
-The not adjustable referred to USB, which is not adjustable. So keep
-that one the way it is.
+@Paul, do you think it makes sense to narrow callers which apparently
+pass NULL as a callback? To me it seems the case of this bug. But we
+do not know the source.
 
->  #define DS4_BT_DEFAULT_POLL_INTERVAL_MS        4
->  #define DS4_OUTPUT_HWCTL_CRC32         0x40
->  #define DS4_OUTPUT_HWCTL_HID           0x80
-> @@ -542,6 +542,7 @@ static inline void dualsense_schedule_work(struct dua=
-lsense *ds);
->  static inline void dualshock4_schedule_work(struct dualshock4 *ds4);
->  static void dualsense_set_lightbar(struct dualsense *ds, uint8_t red, ui=
-nt8_t green, uint8_t blue);
->  static void dualshock4_set_default_lightbar_colors(struct dualshock4 *ds=
-4);
-> +static int dualshock4_set_bt_poll_interval(struct dualshock4 *ds4, uint8=
-_t interval);
->
->  /*
->   * Add a new ps_device to ps_devices if it doesn't exist.
-> @@ -1738,6 +1739,43 @@ static struct ps_device *dualsense_create(struct h=
-id_device *hdev)
->         return ERR_PTR(ret);
->  }
->
-> +static ssize_t dualshock4_show_poll_interval(struct device *dev,
-> +                               struct device_attribute
-> +                               *attr, char *buf)
-> +{
-> +       struct hid_device *hdev =3D to_hid_device(dev);
-> +       struct ps_device *ps_dev =3D hid_get_drvdata(hdev);
-> +       struct dualshock4 *ds4 =3D container_of(ps_dev, struct dualshock4=
-, base);
-> +
-> +       return sysfs_emit(buf, "%i\n", ds4->bt_poll_interval);
-> +}
-> +
-> +static ssize_t dualshock4_store_poll_interval(struct device *dev,
-> +                               struct device_attribute *attr,
-> +                               const char *buf, size_t count)
-> +{
-> +       struct hid_device *hdev =3D to_hid_device(dev);
-> +       struct ps_device *ps_dev =3D hid_get_drvdata(hdev);
-> +       struct dualshock4 *ds4 =3D container_of(ps_dev, struct dualshock4=
-, base);
-> +       int ret;
-> +       u8 interval;
-> +
-> +       if (kstrtou8(buf, 0, &interval))
-> +               return -EINVAL;
-> +
-> +       ret =3D dualshock4_set_bt_poll_interval(ds4, interval);
-> +       if (ret)
-> +               return ret;
-> +
-> +       return count;
-> +}
-> +
-> +struct device_attribute dev_attr_dualshock4_bt_poll_interval =3D {
-> +       .attr   =3D { .name =3D "bt_poll_interval", .mode =3D 0644 },
-> +       .show   =3D dualshock4_show_poll_interval,
-> +       .store  =3D dualshock4_store_poll_interval,
-> +};
-> +
->  static void dualshock4_dongle_calibration_work(struct work_struct *work)
->  {
->         struct dualshock4 *ds4 =3D container_of(work, struct dualshock4, =
-dongle_hotplug_worker);
-> @@ -2493,6 +2531,9 @@ static void dualshock4_remove(struct ps_device *ps_=
-dev)
->         struct dualshock4 *ds4 =3D container_of(ps_dev, struct dualshock4=
-, base);
->         unsigned long flags;
->
-> +       if (ps_dev->hdev->bus =3D=3D BUS_BLUETOOTH)
-> +               device_remove_file(&ps_dev->hdev->dev, &dev_attr_dualshoc=
-k4_bt_poll_interval);
-> +
->         spin_lock_irqsave(&ds4->base.lock, flags);
->         ds4->output_worker_initialized =3D false;
->         spin_unlock_irqrestore(&ds4->base.lock, flags);
-> @@ -2513,11 +2554,16 @@ static inline void dualshock4_schedule_work(struc=
-t dualshock4 *ds4)
->         spin_unlock_irqrestore(&ds4->base.lock, flags);
->  }
->
-> -static void dualshock4_set_bt_poll_interval(struct dualshock4 *ds4, uint=
-8_t interval)
-> +static int dualshock4_set_bt_poll_interval(struct dualshock4 *ds4, uint8=
-_t interval)
->  {
-> +       if (interval >=3D DS4_OUTPUT_HWCTL_BT_POLL_MASK)
-> +               return -EINVAL;
-> +
->         ds4->bt_poll_interval =3D interval;
->         ds4->update_bt_poll_interval =3D true;
->         dualshock4_schedule_work(ds4);
-> +
-> +       return 0;
->  }
->
->  /* Set default lightbar color based on player. */
-> @@ -2659,7 +2705,17 @@ static struct ps_device *dualshock4_create(struct =
-hid_device *hdev)
->                         goto err;
->         }
->
-> -       dualshock4_set_bt_poll_interval(ds4, DS4_BT_DEFAULT_POLL_INTERVAL=
-_MS);
-> +       if (hdev->bus =3D=3D BUS_BLUETOOTH) {
-> +               ret =3D dualshock4_set_bt_poll_interval(ds4, DS4_BT_DEFAU=
-LT_POLL_INTERVAL_MS);
-> +               if (ret) {
-> +                       hid_err(hdev, "Failed to set poll interval for Du=
-alShock4: %d\n", ret);
-> +                       goto err;
-> +               }
-> +
-> +               ret =3D device_create_file(&hdev->dev, &dev_attr_dualshoc=
-k4_bt_poll_interval);
-> +               if (ret)
-> +                       hid_warn(hdev, "can't create sysfs bt_poll_interv=
-al attribute err: %d\n", ret);
-> +       }
->
->         ret =3D ps_device_set_player_id(ps_dev);
->         if (ret) {
-> @@ -2678,6 +2734,8 @@ static struct ps_device *dualshock4_create(struct h=
-id_device *hdev)
->         return &ds4->base;
->
->  err:
-> +       if (hdev->bus =3D=3D BUS_BLUETOOTH)
-> +               device_remove_file(&hdev->dev, &dev_attr_dualshock4_bt_po=
-ll_interval);
->         ps_devices_list_remove(ps_dev);
->         return ERR_PTR(ret);
->  }
-> --
-> 2.49.0
->
->
+It would give at least a stack-trace of caller which passes a NULL.
+
+--
+Uladzislau Rezki
