@@ -1,308 +1,120 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6711F7904
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 15:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF707261B
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 15:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749396182; cv=none; b=XGvPNr+2qgh/CLRMawS7SxXhIO1gh5fkwcAgxt5SolL150lR2Su2WjzSc6HJbtuXmsQsE/dREIIPgLV6ewV5JKw4b48O+VE+veJ8NrfoL+/Bhcw3H79NP4cME4Zn1nmNBZOWFgcuSScuSOJxRMv0qe396lIvFTCJT7XgmOrrJgo=
+	t=1749396407; cv=none; b=Omum5PKB+U4iX2P1RsCLqqG2FcnWTGwwztox7+5rABI+xBfi4H/Wk1EkOPzPv1LSQNjs/q10ns5jzB+/7WezX5dSLM4pgKXd4FHJ1owPVqkyiamWMDLObL6z+D19/2nh1wgr3w9Lb9vBJedhFDwhCEjjwQ2o5q1j6OqO8PRB76c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749396182; c=relaxed/simple;
-	bh=ptQFao/OofQlTfqLItAwl+GhxtDOI0XRBcE6Lieou/k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OEDStOhExCjkKAHOrO2TP7w97CSxE7TUuNJM/4/8WLLqewpqMGkgiH/LbiO2L6d8lWGxTbz+lfCKRlqN/3B2cuEsSZUb35JYwHgbSUn0YociqZrjmaAlFsaoKMeTjqJOrCXkmbgVF+E3Js3nLApnwgbBrFaCgQwZhKzF11gU7xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=cVuFddRP; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749396407; c=relaxed/simple;
+	bh=TAcN2Wqva1vjaooOAydwl8d2WBh+sYR8wGRrqqZUGlw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=leBxtfBFRRJAK3H2wsPhqWoQoTXaTqGCUOJbYZtcLu13TPzoixYCysp5ghk+uLLOe6KMk10Fa+3NvQeWIxhRs0vBBl5H7rF9ZxHmEnkvAf6jMbiybgHfazqSnL7J8tE8D5Wsl/gtYNrlBXbuZzpAo5SUD6tNFo2pSjfypAJz5q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XXFUfr2/; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="cVuFddRP"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5588eLmx023589
-	for <linux-kernel@vger.kernel.org>; Sun, 8 Jun 2025 15:23:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	13P65ulnafQqWcDpy1/wER8wngffFs27twU25vBaqvs=; b=cVuFddRPlSAGRaz1
-	T5lZpRUwacP3P7VOp8cw+vUU5FaUnLcX1hx7O6T+R+d2lJs4symDIKwM4dWakOIe
-	hPh8DtJ9CFRqUMgZknPDV0CveDVL04DdQ9tAwYc5qjPeGBBdcq8ZwcacNL1Yet7t
-	KoFncOBxCUdCJjpOcLFsIwms0v+JxX3QQf/57DGSpZ+zZe9V4JfmJOoav2PV/ee6
-	PRKZkcOgeD603ZsOcULghJMHz8/TJ9Q+ewxAfU82jkzsKc9jiPYFW6johDAxh+15
-	lCB2NauGw2Y15s7WuBuf5ilsJIR4yi56pNbf44xF4KxcJKs51OGg8yBVyxtNjjAx
-	xFARsA==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ccv34yn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 15:22:59 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7d38c5c3130so199656485a.1
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 08:22:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749396178; x=1750000978;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=13P65ulnafQqWcDpy1/wER8wngffFs27twU25vBaqvs=;
-        b=tUPAdeMNhaeomG8lw9x5utn4Dtxk51ntW9bgR0eIb/wEti2IMTag3SvYhzXnoweyFj
-         FNqN8UQxBdNvB8jSACvgdU4HCIcUthlHXZgRL4+nwvZrpa7iZPaPh+x+wBIgXLnsrrJG
-         f/5rHQrhkU2PmXqykWhYX+RTjvP22cwJ8igcPx1o0/s1DQCwU9ig4WZpDvX9Uzv5ZvaI
-         FEqEYQY66I5Y9GKC8ZNWkwbEeJsHxWkoG9vMV9KMB5dpsGelwARsP+PoDsAQkg9CV1T+
-         KXQkyEvmKSj+MekrHQxcV6MtDlrWw03mAfHZkxDCR43wr1pzA+JyiFZobkDWotg5qIvB
-         5RBw==
-X-Forwarded-Encrypted: i=1; AJvYcCUK94YMHiuVovcX9KoEGrHygpfnjpRR2k7RvT6Q69d8Symk4OTrgIrt89RHGbazgR+LCnz0ZF4N7q76d90=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5Ef1nuwgz1/RjH1z91CEmzCcuR4OT+5YGzuo43EJ13PomYK+X
-	zdMKRE5NEVN8ngffD0bK4jx99bayVf2Rr0o69hg/9bLFIfsgsTPpb6FFHfY3WCpdooSRhypA0tt
-	WtprOkcijcGYSU8nLIGUk6JSrZQBvGjOl23jcN1IEUh33f4xzT/WQRcDdB+24vsjOCUo=
-X-Gm-Gg: ASbGncvlnB9sJGsHapv2XI7TR05BLX54sSpGfDHKLABGY9X/OD0xEuH17I8UhSBzHOd
-	mbIfTXfx/mfoIiQI1XDmcH0u0FAgPjICiw+fEasiSj6r/THsI26Q4WDjqN7rVLSRnlIRL/pQOZr
-	xX4yS+STRLzPeaLZHPQSMe9gdoGeRC3jYet0vr26gvMo05+vuqkl8/fwCo0jGEiz5epSGztAIzW
-	I+MIH6vWkodukBc7xa4fu7UrgMCpBiJ6trvs2KdlQ6O57JWg8ifMEZ1gsgeYwP8e7xfcC7e8at6
-	ZjV95qUnH83D83hDb5J+VwY8KvwrmvRosW4FMItQklyTMa1DqhIoXQF+6BnOtCofJhgIsfsBLkQ
-	C8+H/KPL328jhGg==
-X-Received: by 2002:a05:620a:4115:b0:7ca:f3d0:e7c8 with SMTP id af79cd13be357-7d229902399mr1639045185a.52.1749396178129;
-        Sun, 08 Jun 2025 08:22:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGnSqt4f5d27nfmpGHazAr/AHomdNBLRlQ7g+WSi7FPRafeIv8WYiG9jip5qK2a13UFctyKXg==
-X-Received: by 2002:a05:620a:4115:b0:7ca:f3d0:e7c8 with SMTP id af79cd13be357-7d229902399mr1639040585a.52.1749396177705;
-        Sun, 08 Jun 2025 08:22:57 -0700 (PDT)
-Received: from ?IPV6:2001:14ba:a0c3:3a00::4c9? (2001-14ba-a0c3-3a00--4c9.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::4c9])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5536773896dsm796917e87.254.2025.06.08.08.22.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Jun 2025 08:22:55 -0700 (PDT)
-Message-ID: <42a69fa4-48ac-4a2f-a2ff-b4e1fe3a228a@oss.qualcomm.com>
-Date: Sun, 8 Jun 2025 18:22:54 +0300
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XXFUfr2/"
+Date: Sun, 8 Jun 2025 11:26:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749396392;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0Jt4JQmErq4Yny7pnS33f1+VIu1hHHRGrT6P+hATzHU=;
+	b=XXFUfr2/HE2QR5HzLf3Za2ogrd27YGSJfSOqWBrR1Zz8UJFlMtLOqrXlSl41lKdvy50MJj
+	E9eLgGe7RAd3UhbMEaojSl62uK/F8Bb80qBbZesusr492NOg9DKncZ78ypNau4hijhDmD5
+	IUZ0na7Jr1lphTdNWeWjLfFAad3HWPU=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: syzbot <syzbot+80e5d6f453f14a53383a@syzkaller.appspotmail.com>, 
+	akpm@linux-foundation.org, josh@joshtriplett.org, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, rcu@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [rcu?] [bcachefs?] BUG: unable to handle kernel NULL
+ pointer dereference in rcu_core (3)
+Message-ID: <jzknqese5idob37wxgclq7ptxnsd66qbqkxtjpjormymsrwv2j@xjum5exljlh6>
+References: <67a2b20a.050a0220.50516.0003.GAE@google.com>
+ <9694d40a-072e-47c2-a950-3b258bbe04f5@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] arm64: dts: qcom: Add GPU support to X1P42100 SoC
-To: rob.clark@oss.qualcomm.com
-Cc: Akhil P Oommen <akhilpo@oss.qualcomm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Sean Paul <sean@poorly.run>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-References: <20250607-x1p-adreno-v1-0-a8ea80f3b18b@oss.qualcomm.com>
- <20250607-x1p-adreno-v1-3-a8ea80f3b18b@oss.qualcomm.com>
- <wayrour74vlli27xrtxi2ff2v7q7ye2yknmk2mjpur5ry5gruv@hhh2mdb6lw2i>
- <CACSVV03X5EyAb5yCPDn1ot8vOFV_dKG7f6+yO5t9srr31AiUKw@mail.gmail.com>
- <rwjc7zkitubi6cdre5a7owmo76nopavkgifvvn6yq2mv2hrth4@bhwbodchd2gx>
- <CACSVV03mNkELWDB_uxdjEa5GeWZUY=42O8QG4qTrg6zquT1Bgw@mail.gmail.com>
-Content-Language: en-US
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-In-Reply-To: <CACSVV03mNkELWDB_uxdjEa5GeWZUY=42O8QG4qTrg6zquT1Bgw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: y7TKpTRsVjBtWDxvh7g0nOmvZfCwEZpN
-X-Authority-Analysis: v=2.4 cv=TsLmhCXh c=1 sm=1 tr=0 ts=6845aad3 cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=qMk0qIXPt1Ot_Wd-wSIA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
-X-Proofpoint-GUID: y7TKpTRsVjBtWDxvh7g0nOmvZfCwEZpN
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA4MDEyMiBTYWx0ZWRfX5NdbOWWy7yFE
- iGC1eFAU/cz0F0dvmqg1zwl6YApceDbV3ZaA8zOc6gwZjqd6G/usQi3qLNjPJoHcISlsVIPuNxh
- 0lyQrgGepFDDZYsjQMj+WiHRxfsxoTjV6hssaigcoJaMr++Rv3vtt6E18woyHbLRA7zOf0nW7Ao
- dcITlvlJ6uDFZWRsFtWfqPquKq6y9V1PjAn2xwJ+R2CZ/mBzZXJNTyi8EIiZ89Swz8RlfdQtnSo
- Ali+ZGgQQ4E2qfbZlzFi2jtkB2EY7FNRhdYG/9fgckp9Vao6IScsiJjw3gAijiFmQNPlWoPSKNC
- uhmfVwH3/8vl2HkOfQxmd7xLsysMHbWZY3GyTGpNXdppv6dNpgWYt6XmmUeWpQYobhEUIFcmfOr
- f5z2DJnJHf+Uq9y2hIRzGFb/6AJb+iGNOANnSjgYalaYTRvLT3xzmKsmxD9l8kKui+/5I2Jp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-08_02,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 clxscore=1015 mlxscore=0
- malwarescore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506080122
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9694d40a-072e-47c2-a950-3b258bbe04f5@paulmck-laptop>
+X-Migadu-Flow: FLOW_OUT
 
-On 08/06/2025 18:20, Rob Clark wrote:
-> On Sun, Jun 8, 2025 at 8:09 AM Dmitry Baryshkov
-> <dmitry.baryshkov@oss.qualcomm.com> wrote:
->>
->> On Sun, Jun 08, 2025 at 07:10:11AM -0700, Rob Clark wrote:
->>> On Sat, Jun 7, 2025 at 1:17 PM Dmitry Baryshkov
->>> <dmitry.baryshkov@oss.qualcomm.com> wrote:
->>>>
->>>> On Sat, Jun 07, 2025 at 07:45:01PM +0530, Akhil P Oommen wrote:
->>>>> X1P42100 SoC has a new GPU called Adreno X1-45 which is a smaller
->>>>> version of Adreno X1-85 GPU. Describe this new GPU and also add
->>>>> the secure gpu firmware path that should used for X1P42100 CRD.
->>>>>
->>>>> Signed-off-by: Akhil P Oommen <akhilpo@oss.qualcomm.com>
->>>>> ---
->>>>>   arch/arm64/boot/dts/qcom/x1e80100.dtsi    |   7 ++
->>>>>   arch/arm64/boot/dts/qcom/x1p42100-crd.dts |   4 +
->>>>>   arch/arm64/boot/dts/qcom/x1p42100.dtsi    | 121 +++++++++++++++++++++++++++++-
->>>>>   3 files changed, 131 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
->>>>> index a8eb4c5fe99fe6dd49af200a738b6476d87279b2..558d7d387d7710770244fcc901f461384dd9b0d4 100644
->>>>> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
->>>>> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
->>>>> @@ -8245,6 +8245,13 @@ sbsa_watchdog: watchdog@1c840000 {
->>>>>                        interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
->>>>>                };
->>>>>
->>>>> +             qfprom: efuse@221c8000 {
->>>>> +                     compatible = "qcom,x1e80100-qfprom", "qcom,qfprom";
->>>>> +                     reg = <0 0x221c8000 0 0x1000>;
->>>>> +                     #address-cells = <1>;
->>>>> +                     #size-cells = <1>;
->>>>> +             };
->>>>> +
->>>>>                pmu@24091000 {
->>>>>                        compatible = "qcom,x1e80100-llcc-bwmon", "qcom,sc7280-llcc-bwmon";
->>>>>                        reg = <0 0x24091000 0 0x1000>;
->>>>> diff --git a/arch/arm64/boot/dts/qcom/x1p42100-crd.dts b/arch/arm64/boot/dts/qcom/x1p42100-crd.dts
->>>>> index cf07860a63e97c388909fb5721ae7b9729b6c586..cf999c2cf8d4e0af83078253fd39ece3a0c26a49 100644
->>>>> --- a/arch/arm64/boot/dts/qcom/x1p42100-crd.dts
->>>>> +++ b/arch/arm64/boot/dts/qcom/x1p42100-crd.dts
->>>>> @@ -15,3 +15,7 @@ / {
->>>>>        model = "Qualcomm Technologies, Inc. X1P42100 CRD";
->>>>>        compatible = "qcom,x1p42100-crd", "qcom,x1p42100";
->>>>>   };
->>>>> +
->>>>> +&gpu_zap_shader {
->>>>> +     firmware-name = "qcom/x1p42100/gen71500_zap.mbn";
->>>>> +};
->>>>> diff --git a/arch/arm64/boot/dts/qcom/x1p42100.dtsi b/arch/arm64/boot/dts/qcom/x1p42100.dtsi
->>>>> index 27f479010bc330eb6445269a1c46bf78ec6f1bd4..5ed461ed5cca271d43647888aa6eacac3de2ac9d 100644
->>>>> --- a/arch/arm64/boot/dts/qcom/x1p42100.dtsi
->>>>> +++ b/arch/arm64/boot/dts/qcom/x1p42100.dtsi
->>>>> @@ -17,15 +17,134 @@
->>>>>   /delete-node/ &cpu_pd9;
->>>>>   /delete-node/ &cpu_pd10;
->>>>>   /delete-node/ &cpu_pd11;
->>>>> +/delete-node/ &gpu_opp_table;
->>>>>   /delete-node/ &pcie3_phy;
->>>>>
->>>>>   &gcc {
->>>>>        compatible = "qcom,x1p42100-gcc", "qcom,x1e80100-gcc";
->>>>>   };
->>>>>
->>>>> -/* The GPU is physically different and will be brought up later */
->>>>> +&gmu {
->>>>> +     /delete-property/ compatible;
->>>>> +     compatible = "qcom,adreno-gmu-x145.0", "qcom,adreno-gmu";
->>>>> +};
->>>>> +
->>>>> +&qfprom {
->>>>> +     gpu_speed_bin: gpu_speed_bin@119 {
->>>>> +             reg = <0x119 0x2>;
->>>>> +             bits = <7 9>;
->>>>> +     };
->>>>> +};
->>>>> +
->>>>>   &gpu {
->>>>>        /delete-property/ compatible;
->>>>
->>>> I think, you can drop this line.
->>>>
->>>>> +
->>>>> +     compatible = "qcom,adreno-43030c00", "qcom,adreno";
->>>>> +
->>>>> +     nvmem-cells = <&gpu_speed_bin>;
->>>>> +     nvmem-cell-names = "speed_bin";
->>>>> +
->>>>> +     gpu_opp_table: opp-table {
->>>>> +             compatible = "operating-points-v2-adreno", "operating-points-v2";
->>>>> +
->>>>> +             opp-1400000000 {
->>>>> +                     opp-hz = /bits/ 64 <1400000000>;
->>>>> +                     opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L4>;
->>>>> +                     opp-peak-kBps = <16500000>;
->>>>> +                     qcom,opp-acd-level = <0xa8295ffd>;
->>>>> +                     opp-supported-hw = <0x3>;
->>>>> +             };
->>>>> +
->>>>> +             opp-1250000000 {
->>>>> +                     opp-hz = /bits/ 64 <1250000000>;
->>>>> +                     opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L3>;
->>>>> +                     opp-peak-kBps = <16500000>;
->>>>> +                     qcom,opp-acd-level = <0x882a5ffd>;
->>>>> +                     opp-supported-hw = <0x7>;
->>>>> +             };
->>>>> +
->>>>> +             opp-1107000000 {
->>>>> +                     opp-hz = /bits/ 64 <1107000000>;
->>>>> +                     opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
->>>>> +                     opp-peak-kBps = <16500000>;
->>>>> +                     qcom,opp-acd-level = <0x882a5ffd>;
->>>>> +                     opp-supported-hw = <0xf>;
->>>>> +             };
->>>>> +
->>>>> +             opp-1014000000 {
->>>>> +                     opp-hz = /bits/ 64 <1014000000>;
->>>>> +                     opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
->>>>> +                     opp-peak-kBps = <14398438>;
->>>>> +                     qcom,opp-acd-level = <0xa82a5ffd>;
->>>>> +                     opp-supported-hw = <0xf>;
->>>>> +             };
->>>>> +
->>>>> +             opp-940000000 {
->>>>> +                     opp-hz = /bits/ 64 <940000000>;
->>>>> +                     opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
->>>>> +                     opp-peak-kBps = <14398438>;
->>>>> +                     qcom,opp-acd-level = <0xa82a5ffd>;
->>>>> +                     opp-supported-hw = <0xf>;
->>>>> +             };
->>>>> +
->>>>> +             opp-825000000 {
->>>>> +                     opp-hz = /bits/ 64 <825000000>;
->>>>> +                     opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
->>>>> +                     opp-peak-kBps = <12449219>;
->>>>> +                     qcom,opp-acd-level = <0x882b5ffd>;
->>>>> +                     opp-supported-hw = <0xf>;
->>>>> +             };
->>>>> +
->>>>> +             opp-720000000 {
->>>>> +                     opp-hz = /bits/ 64 <720000000>;
->>>>> +                     opp-level = <RPMH_REGULATOR_LEVEL_SVS_L2>;
->>>>> +                     opp-peak-kBps = <10687500>;
->>>>> +                     qcom,opp-acd-level = <0xa82c5ffd>;
->>>>> +                     opp-supported-hw = <0xf>;
->>>>> +             };
->>>>> +
->>>>> +             opp-666000000-0 {
->>>>> +                     opp-hz = /bits/ 64 <666000000>;
->>>>> +                     opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
->>>>> +                     opp-peak-kBps = <8171875>;
->>>>> +                     qcom,opp-acd-level = <0xa82d5ffd>;
->>>>> +                     opp-supported-hw = <0xf>;
->>>>> +             };
->>>>> +
->>>>> +             /* Only applicable for SKUs which has 666Mhz as Fmax */
->>>>> +             opp-666000000-1 {
->>>>> +                     opp-hz = /bits/ 64 <666000000>;
->>>>> +                     opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
->>>>> +                     opp-peak-kBps = <16500000>;
->>>>
->>>> This looks odd, why is it so high?
->>>
->>> You want max bandwidth on max opp
->>
->> Yes, but can it actually sustain / provide this BW?
->>
+On Wed, Feb 05, 2025 at 06:56:19AM -0800, Paul E. McKenney wrote:
+> On Tue, Feb 04, 2025 at 04:34:18PM -0800, syzbot wrote:
+> > Hello,
+> > 
+> > syzbot found the following issue on:
+> > 
+> > HEAD commit:    0de63bb7d919 Merge tag 'pull-fix' of git://git.kernel.org/..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=10faf5f8580000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=1909f2f0d8e641ce
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=80e5d6f453f14a53383a
+> > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b69d18580000
+> > 
+> > Downloadable assets:
+> > disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-0de63bb7.raw.xz
+> > vmlinux: https://storage.googleapis.com/syzbot-assets/1142009a30a7/vmlinux-0de63bb7.xz
+> > kernel image: https://storage.googleapis.com/syzbot-assets/5d9e46a8998d/bzImage-0de63bb7.xz
+> > mounted in repro: https://storage.googleapis.com/syzbot-assets/526692501242/mount_0.gz
+> > 
+> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > Reported-by: syzbot+80e5d6f453f14a53383a@syzkaller.appspotmail.com
+> > 
+> >  slab radix_tree_node start ffff88803bf382c0 pointer offset 24 size 576
+> > BUG: kernel NULL pointer dereference, address: 0000000000000000
+> > #PF: supervisor instruction fetch in kernel mode
+> > #PF: error_code(0x0010) - not-present page
+> > PGD 0 P4D 0 
+> > Oops: Oops: 0010 [#1] PREEMPT SMP KASAN NOPTI
+> > CPU: 0 UID: 0 PID: 5705 Comm: syz-executor Not tainted 6.14.0-rc1-syzkaller-00020-g0de63bb7d919 #0
+> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+> > RIP: 0010:0x0
+> > Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+> > RSP: 0018:ffffc90000007bd8 EFLAGS: 00010246
+> > RAX: dffffc0000000000 RBX: 1ffff110077e705c RCX: 23438dd059a4b100
+> > RDX: 0000000000000100 RSI: 0000000000000000 RDI: ffff88803bf382d8
+> > RBP: ffffc90000007e10 R08: ffffffff819f146c R09: 1ffff11003f8519a
+> > R10: dffffc0000000000 R11: 0000000000000000 R12: ffffffff81a6d507
+> > R13: ffff88803bf382e0 R14: 0000000000000000 R15: ffff88803bf382d8
+> > FS:  0000555567992500(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: ffffffffffffffd6 CR3: 000000004da38000 CR4: 0000000000352ef0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > Call Trace:
+> >  <IRQ>
+> >  rcu_do_batch kernel/rcu/tree.c:2546 [inline]
 > 
-> I'd have to trust Akhil on that one, but I have no reason to believe
-> otherwise.  Just pointing out we've done analogous things elsewhere
-> (for ex, cpu bw for sc7180-lite.dtsi)
+> The usual way that this happens is that someone clobbers the rcu_head
+> structure of something that has been passed to call_rcu().  The most
+> popular way of clobbering this structure is to pass the same something to
+> call_rcu() twice in a row, but other creative arrangements are possible.
+> 
+> Building your kernel with CONFIG_DEBUG_OBJECTS_RCU_HEAD=y can usually
+> spot invoking call_rcu() twice in a row.
 
-Ack. Then I'll wait for v2 with no deleting of compatible lines (a new 
-line here would just replace the existing one).
+I don't think it's that - syzbot's .config already has that enabled.
+KASAN, too.
 
+And the only place we do call_rcu() is from rcu_pending.c, where we've
+got a rearming rcu callback - but we track whether it's outstanding, and
+we do all relevant operations with a lock held.
 
--- 
-With best wishes
-Dmitry
+And we only use rcu_pending.c with SRCU, not regular RCU.
+
+We do use kfree_rcu() in a few places (all boring, I expect), but that
+doesn't (generally?) use the rcu callback list.
+
+So I'm not sure this is even a bcachefs bug.
