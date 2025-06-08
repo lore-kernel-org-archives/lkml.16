@@ -1,90 +1,75 @@
-Received: from baidu.com (mx22.baidu.com [220.181.50.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE321D9A54;
-	Sun,  8 Jun 2025 07:37:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.181.50.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A811367;
+	Sun,  8 Jun 2025 07:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749368234; cv=none; b=YloJzPJAwO4psOu6jfoDxAohK8gD1dKX5AX5Qqct9BV38psyYSI8pDbZBdaoJw6iLC6lvb80YwNdzFrpIBteQzpJN7VMjnhR2mMOu1sY+1t4PblXp4mGo3ArW1jnNHhj3tAWAP8WzaBR/E0uh9qdPGh7rm3FKWsXCO8MLA4yUqw=
+	t=1749368480; cv=none; b=afLDjjGToBearoiZqQc4e54JRC3+R8jx2jVIRCy27tNhBTAWT8tYP2loPQvkKMTwDhg+4eGBpbqTcW+fvYWYqwumx9ykZJMYNRY/ZWUDzUswOmMu81ttCjiMsdOkhQzhMLzZ8TSRDCYIjBpEFPNp3Cc5y/2bGj0/vp4ke2pkB3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749368234; c=relaxed/simple;
-	bh=jnTo92m2IlMApVTpukuZMOlOy0IQg59i7fceuedhtNk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=br6MpyBH8A1fbJc2PSrIWIu8Ps4sGEZ49Qwy0GjOtaSx69LpdG9Vm81u2/CE74RL4+aywt0t5yR62RUM6tqEtJNgZun9oRBGZ5LjlZy9zDGudp6MWCssLEl+0GMLmv6ksa3KCDy9o3OQF5HOYk0v7z1JhePDC9QOmO2Y/T2YWPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=220.181.50.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
-From: wangfushuai <wangfushuai@baidu.com>
-To: <akpm@linux-foundation.org>
-CC: <Liam.Howlett@Oracle.com>, <andrii@kernel.org>, <broonie@kernel.org>,
-	<catalin.marinas@arm.com>, <christophe.leroy@csgroup.eu>, <david@redhat.com>,
-	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<osalvador@suse.de>, <wangfushuai@baidu.com>
-Subject: Re: [PATCH v2] fs/proc/task_mmu: add VM_SHADOW_STACK for arm64 when support GCS
-Date: Sun, 8 Jun 2025 15:35:17 +0800
-Message-ID: <20250608073517.98789-1-wangfushuai@baidu.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
-In-Reply-To: <20250607143128.d3ae86e8ebf9dcab02870421@linux-foundation.org>
-References: <20250607143128.d3ae86e8ebf9dcab02870421@linux-foundation.org>
+	s=arc-20240116; t=1749368480; c=relaxed/simple;
+	bh=Ae/Eq0mvumW6wbNzTIN5amb/zidt0s9bSkgBMomJ9fc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=scDP3AIok83Yv0gsmcHV3VbybgYjxLaT2iUc4B1H7+8uQpZaRk5bbFV/u5xyZv0Ax4jDk/t6i/m9aMqSrOXd/OOwdhM+Ph3OAeTRxkuhFyJTxRdJ8pV5pGrQoEUMdO2N0QrOVhYj6gE3V57BxtfcxIqLTlmn7yYvFhHVSVfj0Vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dFrXyjgh; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dFrXyjgh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4995C4CEEF;
+	Sun,  8 Jun 2025 07:41:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749368480;
+	bh=Ae/Eq0mvumW6wbNzTIN5amb/zidt0s9bSkgBMomJ9fc=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=dFrXyjghQ8Gq3gCZBdUIL1+0FoPdUQU0/OwG5RMjMlths9AEONwAwKSa00Y4Ok9lr
+	 RXdjvV0u8mw57ddmOWl0iNBTD9hwPqQu56ZMTSudSP68NhF9qot9ncC0zLhOEVJX0a
+	 4qDpdz0JLvGDQ7XjP4KdRgSjaen6HBF6H8RtxWqJVadjfdmDEn7fTlTCN2F4NRiVtY
+	 Pv9wgT0u2a9rTl0NrLEBmRdxTVHadzxAd5DrKOtWO7qWy3n9MFayjiaEgwY7PQYbpn
+	 raQCU0pReC2s+8ZndaNQQuimTD8jqAq18LSOsUAXZx5/rLS+NWguhvQptX3O92e99l
+	 j/jjbGPmnoPFw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: bjkjy-exc8.internal.baidu.com (172.31.50.52) To
- bjkjy-mail-ex22.internal.baidu.com (172.31.50.16)
-X-FEAS-Client-IP: 172.31.50.16
-X-FE-Policy-ID: 52:10:53:SYSTEM
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 08 Jun 2025 09:41:15 +0200
+Message-Id: <DAGZDB274O7S.1WW1Y530WRYVY@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH] rust: add `assert_sync` function
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Christian Schrefl" <chrisi.schrefl@gmail.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250607-assert_sync-v1-1-b18261da83e2@gmail.com>
+ <DAGEZCRR61A0.30H1MJQXW4CV5@kernel.org>
+ <2531463d-fa6e-430c-a3a6-b179654cfbbe@gmail.com>
+ <DAGI57J7WBD0.2BOT553TRIXH8@kernel.org>
+ <407f04ff-b313-4629-bbdd-f25df14f44da@gmail.com>
+ <DAGNOQOY3B3X.MQD616P04I3U@kernel.org>
+ <eba1cfdd-3756-4f8e-a2b2-e15b8b8b4a18@gmail.com>
+In-Reply-To: <eba1cfdd-3756-4f8e-a2b2-e15b8b8b4a18@gmail.com>
 
->> The recent commit adding VM_SHADOW_STACK for arm64 GCS did not update
->> the /proc/[pid]/smaps display logic to show the "ss" flag for GCS pages.
->> This patch adds the necessary condition to display "ss" flag.
->> 
->> ...
->>
->> --- a/fs/proc/task_mmu.c
->> +++ b/fs/proc/task_mmu.c
->> @@ -994,6 +994,9 @@ static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
->>  #ifdef CONFIG_ARCH_HAS_USER_SHADOW_STACK
->>  		[ilog2(VM_SHADOW_STACK)] = "ss",
->>  #endif
->> +#if defined(CONFIG_ARM64_GCS)
->> +		[ilog2(VM_SHADOW_STACK)] = "ss",
->> +#endif
->>  #if defined(CONFIG_64BIT) || defined(CONFIG_PPC32)
->>  		[ilog2(VM_DROPPABLE)] = "dp",
->>  #endif
-> 
-> It is possible to have CONFIG_ARM64_GCS=y when
-> CONFIG_ARCH_HAS_USER_SHADOW_STACK=n?  If so, is this a correct
-> combination?
-Hi, Morton
-After revisiting the code logic, I realized that if CONFIG_ARM64_GCS is enabled,
-CONFIG_ARCH_HAS_USER_SHADOW_STACK will always be enabled as well. Therefore,
-it seems unnecessary to add separate VM_SHADOW_STACK support specifically for
-CONFIG_ARM64_GCS at this stage.
+On Sun Jun 8, 2025 at 1:38 AM CEST, Christian Schrefl wrote:
+> I don't see any point in paying the compile time hit for a proc macro.
+>
+> The Error is not that bad, just a bit worse. I just don't really see the
+> point since this is only really need for marker traits and realistically
+> only for `Send` and `Sync`. Also the macro would create a function
+> definition for every invocation which would be a (very) small compile tim=
+e
+> hit. So I think that we should just add the `Send` and `Sync` functions f=
+or
+> now and reconsider changing to a macro once/if more than these two is
+> actually needed.=20
 
-I will make sure to review future patches more carefully to avoid such oversights.
+Sounds good.
 
-Regards,
-Wang
-> 
-> 
-> Also, wouldn't it be nicer to code this as 
-> 
-> --- a/fs/proc/task_mmu.c~a
-> +++ a/fs/proc/task_mmu.c
-> @@ -991,7 +991,7 @@ static void show_smap_vma_flags(struct s
->  #ifdef CONFIG_HAVE_ARCH_USERFAULTFD_MINOR
->  		[ilog2(VM_UFFD_MINOR)]	= "ui",
->  #endif /* CONFIG_HAVE_ARCH_USERFAULTFD_MINOR */
-> -#ifdef CONFIG_ARCH_HAS_USER_SHADOW_STACK
-> +#if defined(CONFIG_ARCH_HAS_USER_SHADOW_STACK) || defined(CONFIG_ARM64_GCS)
->  		[ilog2(VM_SHADOW_STACK)] = "ss",
->  #endif
->  #if defined(CONFIG_64BIT) || defined(CONFIG_PPC32)
-> _
-> --
+---
+Cheers,
+Benno
