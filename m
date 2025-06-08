@@ -1,86 +1,124 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B411E635;
-	Sun,  8 Jun 2025 10:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01BB12F3E;
+	Sun,  8 Jun 2025 10:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749379505; cv=none; b=ab2Qopijw8bJcOF0qLnK6TxUAex7Fm6QKBIUF/F99pdye2IgvpwDx0Ab21j/Z28h9vs8S5ty+3JUAK3HkUW7YBAgrJylTyKhkyWITC4wjf9Aqo5SPK2pLWEFw8E40NUaaIWeqKGU99iHMTm82FCkx45+TjVIvyYUHPq9YQcrbk4=
+	t=1749379721; cv=none; b=sAciZloOT/8JQAPsgWTSPFeOwb0zKbxRyr2RFu2ifYjWAEPw6lpA5gWBS1uxpIZZUGmEqjtSj/vsRfk/JezFmHVfn9dBs8+OM+DBJEZU2IKfV5JtFJh/ifKeaOYJ6zwkUyT/SSnAOFZ1fi/s83WUtNujPSjRIo9fExim6+Zv1ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749379505; c=relaxed/simple;
-	bh=XqdKlSyA1x3wAP2oaLII0/8MRAREl75HnHHUM2ZEPhk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o6vgMGqxI6/AATJQ9OnAKGVOTa4JSxAGjT/IDbSjeUkt9ltSoJv48YCYX974GuHSOtUH5D2fYnVEd2u+b3lVWPf+BunjgKBTWxvwplSe0zGDJscsCepmcmVkDHNNXCvCEQcFawvyQ9mejfqnSrGGEl9S6QB2SjKGi5GJ/aD/XZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a528243636so1928689f8f.3;
-        Sun, 08 Jun 2025 03:45:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749379502; x=1749984302;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LIvD9g5pC58Ztk0zOCRRAzy2zEC5MQKjWs7oUbzPh2c=;
-        b=aF22KidtjsyW8PLvMFcxxTDZGmYQBg+pvKD7IzFK0B4aaQCHNWSkwHUZLPc4zr7jF3
-         iGo5ydr1Pz4pSuuFekkAzGqqQVLu9mkXdOHAhK2PVkVyAPfn9X0I9QVyorgaoRS7sZSv
-         sNQaJ9wU23NyTuFjFxpF9x3Bhoa6c1FcehRo8RhPuCIR9em8A/LH5wcK6t1YtWHa4t1d
-         gSfLEeyDpZDl/TQUCCAG0nK2AbdDJ+xVuHP1IKCt6d6ZXbL5aVEJTSfpWcjIkpPXSFqR
-         y9KMiL4LuMz5w5Q1K4Hsjda8/XfffL+2xpeAET7NNcXECGwHwlGVaPzrUj8hGf4HoTA9
-         q5lw==
-X-Forwarded-Encrypted: i=1; AJvYcCVAYTJcOc7DbyQoDGWSFnTp+FScCXxWPN77TlmMazeaTtWsAd6zEq7LtSJ8UCBzZPjOqlo8FUXmmN0=@vger.kernel.org, AJvYcCVDi6m7nA/Ds45fBt4/s79R/uvzx2jYOOzqG3XoYu6jNT2CBVeY4BeM7/yEGbbRti74c/kt9JcAyD/XkgeW9skO/0v6@vger.kernel.org, AJvYcCW4COvZBRGTrfbXlRjyttVx+bPvAdw7S5tGNq7IPqrq/GqvjCTn+uNbCxbfvKO921YS+eUHvio6kRsjFw4Q@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy36HhWuC7YNPo2uvA5VNYTdZfwtoYeoFtzebsrLQyOj9XwxB4j
-	i35e/mcee5XbUsKmyDoXTz2NUjlGWUXpDWISHa6kKIRLMaas2UYoU94c
-X-Gm-Gg: ASbGnctp/JC+iY3y6KeREbk7XQGsO6bz2FI9sjqKgnRstuhALdVYlYIaAnlmc6vjkHn
-	6Ke1BhDalBtLy0rWk1CexTJbaVJnxfP3vQZbfYgPmq9ejXAycL3R/UhMRH/Qzj7SHU16PTaXSJE
-	zka75VePs0o7hKCuUW7LoG/jIjU8jm1Yu3QPPLVx3hFuJvuewjMtwNUHxL+GckaacWVR8SNWe2/
-	amMSg1iw9grOR8GV9oIgc5V1jX6C3xCUN8to56xgS3L3Dmrh50J/8aY7waaVF59jP/o2fz7R1WQ
-	eD2tUxntoaF0rsJTigNd3fhRtiXi7lbXRkSW9hQpwPT9f2BF5Nfk3AkwKV2K0ZOi7U0z
-X-Google-Smtp-Source: AGHT+IGNFGDMfHfIEL0sJ7ZD7k7TZPhXhBYgp26b9eOex0Dz6soSxZxw1jxgnEFXR22EthMgy5D0Cw==
-X-Received: by 2002:a5d:42d1:0:b0:3a4:f90c:31e3 with SMTP id ffacd0b85a97d-3a53188e4b7mr6104014f8f.31.1749379501863;
-        Sun, 08 Jun 2025 03:45:01 -0700 (PDT)
-Received: from costa-tp.redhat.com ([2a00:a041:e280:5300:9068:704e:a31a:c135])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452137290b9sm81516285e9.34.2025.06.08.03.45.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Jun 2025 03:45:01 -0700 (PDT)
-From: Costa Shulyupin <costa.shul@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Tomas Glozar <tglozar@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>
-Subject: [PATCH] Documentation/rtla: Add include common_appendix.rst
-Date: Sun,  8 Jun 2025 13:44:36 +0300
-Message-ID: <20250608104437.753708-2-costa.shul@redhat.com>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1749379721; c=relaxed/simple;
+	bh=AnI/cidWMnRFA5NIz5etjUog1SNqGjwokm1tz/aotaQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X1X+G4bYNZllayjs8USFIi07YBoQlPF8QX1omYHP7xNK8psDjIgKKnDmCXN6NSDkA+GIN2mU0cKLpWAP9nvv9SqKHmzG0g1tcSYy2rlwHpFgtZDyjgEi3ZHiA87WdfUTw3alY5c+/odiLnRL+fCQUs6CrbAtWvV/+OSFgK//Vzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c+FzWM05; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c+FzWM05"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 708B4C4CEEE;
+	Sun,  8 Jun 2025 10:48:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749379720;
+	bh=AnI/cidWMnRFA5NIz5etjUog1SNqGjwokm1tz/aotaQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c+FzWM05XYK4BIU51gGGGgEJAWMslEGiEpppSHl69eCMoo0WO2Zr1Rw+nMb88GQyY
+	 bag2Cx7wtbzfNraPq9K4PF4C7x4L4Rr0nS/BgJhRzPizjdEx5RxT5OVeLXPEiU6uk3
+	 TmVNVVDVOVHVsaIDmR2BCiPvO1fjdsW1BOK2SCqAmg6JUwKqWrG36SUk+dumsG5NZh
+	 ExLjsrUGpNxdjb9+CYx8Pt/9DKGG0fRn3R843CV0B1ZNpF2UzkF7/yWtsjq6diPw6y
+	 olNrkOjfYCue1r/p5gq7vxrJkHpOohpnsRPtaFiQpe8KGPUjwLPsoeKG4HcQ4oeOU0
+	 uA/JY0ol5VMZg==
+Date: Sun, 8 Jun 2025 12:48:33 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Benno Lossin <lossin@kernel.org>
+Cc: Igor Korotin <igor.korotin.linux@gmail.com>, ojeda@kernel.org,
+	alex.gaynor@gmail.com, rafael@kernel.org,
+	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org,
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, lenb@kernel.org, wedsonaf@gmail.com,
+	viresh.kumar@linaro.org, alex.hung@amd.com,
+	dingxiangfei2009@gmail.com, Igor Korotin <igorkor.3vium@gmail.com>
+Subject: Re: [PATCH v3 2/4] rust: driver: Add ACPI id table support to
+ Adapter trait
+Message-ID: <aEVqgUtflBCzZi1X@pollux>
+References: <20250606170341.3880941-1-igor.korotin.linux@gmail.com>
+ <20250606170817.3881748-1-igor.korotin.linux@gmail.com>
+ <DAGZNG518T0C.1PXOK55IXHZOF@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DAGZNG518T0C.1PXOK55IXHZOF@kernel.org>
 
-Add include common_appendix.rst into
-Documentation/tools/rtla/rtla-timerlat-hist.rst - the only file of
-rtla-*.rst still without common_appendix.rst.
+On Sun, Jun 08, 2025 at 09:54:30AM +0200, Benno Lossin wrote:
+> On Fri Jun 6, 2025 at 7:08 PM CEST, Igor Korotin wrote:
+> > @@ -141,6 +141,38 @@ pub trait Adapter {
+> >      /// The type holding driver private data about each device id supported by the driver.
+> >      type IdInfo: 'static;
+> >  
+> > +    /// The [`acpi::IdTable`] of the corresponding driver
+> > +    fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>>;
+> > +
+> > +    /// Returns the driver's private data from the matching entry in the [`acpi::IdTable`], if any.
+> > +    ///
+> > +    /// If this returns `None`, it means there is no match with an entry in the [`acpi::IdTable`].
+> > +    #[cfg(CONFIG_ACPI)]
+> > +    fn acpi_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
+> > +        let table = Self::acpi_id_table()?;
+> > +
+> > +        // SAFETY:
+> > +        // - `table` has static lifetime, hence it's valid for read,
+> > +        // - `dev` is guaranteed to be valid while it's alive, and so is `pdev.as_ref().as_raw()`.
+> > +        let raw_id = unsafe { bindings::acpi_match_device(table.as_ptr(), dev.as_raw()) };
+> > +
+> > +        if raw_id.is_null() {
+> > +            None
+> > +        } else {
+> > +            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
+> > +            // does not add additional invariants, so it's safe to transmute.
+> > +            let id = unsafe { &*raw_id.cast::<acpi::DeviceId>() };
+> > +
+> > +            Some(table.info(<acpi::DeviceId as crate::device_id::RawDeviceId>::index(id)))
+> > +        }
+> > +    }
+> > +
+> > +    #[cfg(not(CONFIG_ACPI))]
+> > +    #[allow(missing_docs)]
+> 
+> I think we should change this to one single definition and do
+> 
+>     if cfg!(not(CONFIG_ACPI)) {
+>         return None;
+>     }
+>     /* body from above */
+> 
+> In a single function instead.
 
-Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
----
- Documentation/tools/rtla/rtla-timerlat-hist.rst | 2 ++
- 1 file changed, 2 insertions(+)
+Generally, that's fine, but in this case I'd rather keep it as it is for
+consistency with the rest of the file.
 
-diff --git a/Documentation/tools/rtla/rtla-timerlat-hist.rst b/Documentation/tools/rtla/rtla-timerlat-hist.rst
-index 03b7f3deb069..b2d8726271b3 100644
---- a/Documentation/tools/rtla/rtla-timerlat-hist.rst
-+++ b/Documentation/tools/rtla/rtla-timerlat-hist.rst
-@@ -107,3 +107,5 @@ SEE ALSO
- AUTHOR
- ======
- Written by Daniel Bristot de Oliveira <bristot@kernel.org>
-+
-+.. include:: common_appendix.rst
--- 
-2.48.1
+> > +    fn acpi_id_info(_dev: &device::Device) -> Option<&'static Self::IdInfo> {
+> > +        None
+> > +    }
+> > +
+> >      /// The [`of::IdTable`] of the corresponding driver.
+> >      fn of_id_table() -> Option<of::IdTable<Self::IdInfo>>;
+> >  
+> > @@ -178,6 +210,11 @@ fn of_id_info(_dev: &device::Device) -> Option<&'static Self::IdInfo> {
+> >      /// If this returns `None`, it means that there is no match in any of the ID tables directly
+> >      /// associated with a [`device::Device`].
+> >      fn id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
+> > +        let id = Self::acpi_id_info(dev);
+> > +        if id.is_some() {
+> > +            return id;
+> > +        }
+> 
+> Is a driver only going to have one id_info? Or is there some kind of
+> precedence?
 
+A driver potentially has lots of them, but the device is only matching a single
+entry in one of the driver's ID tables and hence a single ID info.
