@@ -1,120 +1,124 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF707261B
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 15:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4627261B;
+	Sun,  8 Jun 2025 15:27:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749396407; cv=none; b=Omum5PKB+U4iX2P1RsCLqqG2FcnWTGwwztox7+5rABI+xBfi4H/Wk1EkOPzPv1LSQNjs/q10ns5jzB+/7WezX5dSLM4pgKXd4FHJ1owPVqkyiamWMDLObL6z+D19/2nh1wgr3w9Lb9vBJedhFDwhCEjjwQ2o5q1j6OqO8PRB76c=
+	t=1749396468; cv=none; b=TpH+SzifeoFSEzuC7xGyP7l/yy/Uz8aUhzBaaLMBi8Xy5sAmXSJJvZRROMZCvfL4NiS71+ktxI/A8enPghJcOKUmYQTunGd9uGzjIu59iVZc9UZjr+XeywgodzBYR1BrWXskqQS9Qnmqets2l75d9Vp5pWdHdzntQyLYSrzxYa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749396407; c=relaxed/simple;
-	bh=TAcN2Wqva1vjaooOAydwl8d2WBh+sYR8wGRrqqZUGlw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=leBxtfBFRRJAK3H2wsPhqWoQoTXaTqGCUOJbYZtcLu13TPzoixYCysp5ghk+uLLOe6KMk10Fa+3NvQeWIxhRs0vBBl5H7rF9ZxHmEnkvAf6jMbiybgHfazqSnL7J8tE8D5Wsl/gtYNrlBXbuZzpAo5SUD6tNFo2pSjfypAJz5q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XXFUfr2/; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749396468; c=relaxed/simple;
+	bh=EuSTOe6/qMN3/LBueliKwj7QBZAIU9oGW22JAbGeBY8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IBlz6MfLLE+4cpq4BEUSTDJWSxzfK7qiqIVOMZkLdHYHngR1K1+jzfK4RSdwofC3dER6s8VK9BaJS0OvsrFNmhPRhEm5ptJd9JhlogYP+r2VY7FMSTRiG4rH1dTi5eTofUSdlYsFoyZo5H3tF08E7E6BRgoyjizOoq/Z1EaJmLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KU4auRJh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XXFUfr2/"
-Date: Sun, 8 Jun 2025 11:26:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749396392;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0Jt4JQmErq4Yny7pnS33f1+VIu1hHHRGrT6P+hATzHU=;
-	b=XXFUfr2/HE2QR5HzLf3Za2ogrd27YGSJfSOqWBrR1Zz8UJFlMtLOqrXlSl41lKdvy50MJj
-	E9eLgGe7RAd3UhbMEaojSl62uK/F8Bb80qBbZesusr492NOg9DKncZ78ypNau4hijhDmD5
-	IUZ0na7Jr1lphTdNWeWjLfFAad3HWPU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: syzbot <syzbot+80e5d6f453f14a53383a@syzkaller.appspotmail.com>, 
-	akpm@linux-foundation.org, josh@joshtriplett.org, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, rcu@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [rcu?] [bcachefs?] BUG: unable to handle kernel NULL
- pointer dereference in rcu_core (3)
-Message-ID: <jzknqese5idob37wxgclq7ptxnsd66qbqkxtjpjormymsrwv2j@xjum5exljlh6>
-References: <67a2b20a.050a0220.50516.0003.GAE@google.com>
- <9694d40a-072e-47c2-a950-3b258bbe04f5@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KU4auRJh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CB8DC4CEF1;
+	Sun,  8 Jun 2025 15:27:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749396467;
+	bh=EuSTOe6/qMN3/LBueliKwj7QBZAIU9oGW22JAbGeBY8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KU4auRJhrFD+9wRLtcvxQxP99v7SW27CMo5pPLquBnWAVYKIWOW+RE9gwqbJi2LVv
+	 sBznw7WPziN5Dw/a6rQpdJGIGYs9QuPGd/InRhwkoKeLt8oElMMF/YJDrIz/QPLgpw
+	 YfzSgaaxRUyagEIJk4iw7Av/NbYcweme5fkjlrm6xVAfgFRka7aNdxuRb/+gyFN/cb
+	 d0+pPMmFfLtOV/hpxno9RNaGD28ZnttDm9tDlLo+PABZHBxM5DKkS++H5xsBCZiEp8
+	 JddDyx9ug4BEPmc1FaJ+kkBD5NU7FDrbPh+qWhIhZfz6ciAYbQqFua4KXME2VDbvcz
+	 oQh0IB3mv+Lxw==
+Date: Sun, 8 Jun 2025 16:27:38 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+ corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
+ Michael.Hennerich@analog.com, bagasdotme@gmail.com,
+ linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 04/11] iio: accel: adxl313: add function to enable
+ measurement
+Message-ID: <20250608162738.407c7d20@jic23-huawei>
+In-Reply-To: <20250601172139.59156-5-l.rubusch@gmail.com>
+References: <20250601172139.59156-1-l.rubusch@gmail.com>
+	<20250601172139.59156-5-l.rubusch@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9694d40a-072e-47c2-a950-3b258bbe04f5@paulmck-laptop>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 05, 2025 at 06:56:19AM -0800, Paul E. McKenney wrote:
-> On Tue, Feb 04, 2025 at 04:34:18PM -0800, syzbot wrote:
-> > Hello,
-> > 
-> > syzbot found the following issue on:
-> > 
-> > HEAD commit:    0de63bb7d919 Merge tag 'pull-fix' of git://git.kernel.org/..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=10faf5f8580000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=1909f2f0d8e641ce
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=80e5d6f453f14a53383a
-> > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b69d18580000
-> > 
-> > Downloadable assets:
-> > disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-0de63bb7.raw.xz
-> > vmlinux: https://storage.googleapis.com/syzbot-assets/1142009a30a7/vmlinux-0de63bb7.xz
-> > kernel image: https://storage.googleapis.com/syzbot-assets/5d9e46a8998d/bzImage-0de63bb7.xz
-> > mounted in repro: https://storage.googleapis.com/syzbot-assets/526692501242/mount_0.gz
-> > 
-> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > Reported-by: syzbot+80e5d6f453f14a53383a@syzkaller.appspotmail.com
-> > 
-> >  slab radix_tree_node start ffff88803bf382c0 pointer offset 24 size 576
-> > BUG: kernel NULL pointer dereference, address: 0000000000000000
-> > #PF: supervisor instruction fetch in kernel mode
-> > #PF: error_code(0x0010) - not-present page
-> > PGD 0 P4D 0 
-> > Oops: Oops: 0010 [#1] PREEMPT SMP KASAN NOPTI
-> > CPU: 0 UID: 0 PID: 5705 Comm: syz-executor Not tainted 6.14.0-rc1-syzkaller-00020-g0de63bb7d919 #0
-> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-> > RIP: 0010:0x0
-> > Code: Unable to access opcode bytes at 0xffffffffffffffd6.
-> > RSP: 0018:ffffc90000007bd8 EFLAGS: 00010246
-> > RAX: dffffc0000000000 RBX: 1ffff110077e705c RCX: 23438dd059a4b100
-> > RDX: 0000000000000100 RSI: 0000000000000000 RDI: ffff88803bf382d8
-> > RBP: ffffc90000007e10 R08: ffffffff819f146c R09: 1ffff11003f8519a
-> > R10: dffffc0000000000 R11: 0000000000000000 R12: ffffffff81a6d507
-> > R13: ffff88803bf382e0 R14: 0000000000000000 R15: ffff88803bf382d8
-> > FS:  0000555567992500(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: ffffffffffffffd6 CR3: 000000004da38000 CR4: 0000000000352ef0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > Call Trace:
-> >  <IRQ>
-> >  rcu_do_batch kernel/rcu/tree.c:2546 [inline]
+On Sun,  1 Jun 2025 17:21:32 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
+
+> Rework controlling measurement and standby of the sensor. Therefore,
+> replace writing the register directly by encapsulating this and dealing
+> with the return value in a separte function to enable and disable
+> measurement. This will help to avoid redundant code in all locations
+> where the sensor configuration needs to be adjusted, thus measurement will
+> be set to standby, in follow up patches.
 > 
-> The usual way that this happens is that someone clobbers the rcu_head
-> structure of something that has been passed to call_rcu().  The most
-> popular way of clobbering this structure is to pass the same something to
-> call_rcu() twice in a row, but other creative arrangements are possible.
+> Further, reduce the control mask to only the measurement bit. The sleep bit
+> actually controls a different behavior (not just putting the sensor to
+> standby for configuration, but turning it into sleep mode) and it is not
+> used so far. In consequence, there is no need to cover sleep bit and
+> measurement with the same mask.
 > 
-> Building your kernel with CONFIG_DEBUG_OBJECTS_RCU_HEAD=y can usually
-> spot invoking call_rcu() twice in a row.
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+This is a good bit to have as a precursor patch (as you have done)
+because it is refactoring the existing code.  It doesn't stand on it's
+own though given for now there is only one caller, so I won't pick it up
+until the patch that uses it is ready to go.
 
-I don't think it's that - syzbot's .config already has that enabled.
-KASAN, too.
+Jonathan
 
-And the only place we do call_rcu() is from rcu_pending.c, where we've
-got a rearming rcu callback - but we track whether it's outstanding, and
-we do all relevant operations with a lock held.
+> ---
+>  drivers/iio/accel/adxl313.h      |  3 +--
+>  drivers/iio/accel/adxl313_core.c | 10 +++++++---
+>  2 files changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/iio/accel/adxl313.h b/drivers/iio/accel/adxl313.h
+> index fc937bdf83b6..9bf2facdbf87 100644
+> --- a/drivers/iio/accel/adxl313.h
+> +++ b/drivers/iio/accel/adxl313.h
+> @@ -36,8 +36,7 @@
+>  #define ADXL313_RATE_MSK		GENMASK(3, 0)
+>  #define ADXL313_RATE_BASE		6
+>  
+> -#define ADXL313_POWER_CTL_MSK		GENMASK(3, 2)
+> -#define ADXL313_MEASUREMENT_MODE	BIT(3)
+> +#define ADXL313_POWER_CTL_MSK		BIT(3)
+>  
+>  #define ADXL313_RANGE_MSK		GENMASK(1, 0)
+>  #define ADXL313_RANGE_MAX		3
+> diff --git a/drivers/iio/accel/adxl313_core.c b/drivers/iio/accel/adxl313_core.c
+> index 0c893c286017..6170c9daa30f 100644
+> --- a/drivers/iio/accel/adxl313_core.c
+> +++ b/drivers/iio/accel/adxl313_core.c
+> @@ -63,6 +63,12 @@ bool adxl313_is_volatile_reg(struct device *dev, unsigned int reg)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(adxl313_is_volatile_reg, "IIO_ADXL313");
+>  
+> +static int adxl313_set_measure_en(struct adxl313_data *data, bool en)
+> +{
+> +	return regmap_assign_bits(data->regmap, ADXL313_REG_POWER_CTL,
+> +				  ADXL313_POWER_CTL_MSK, en);
+> +}
+> +
+>  static int adxl312_check_id(struct device *dev,
+>  			    struct adxl313_data *data)
+>  {
+> @@ -410,9 +416,7 @@ static int adxl313_setup(struct device *dev, struct adxl313_data *data,
+>  	}
+>  
+>  	/* Enables measurement mode */
+> -	return regmap_update_bits(data->regmap, ADXL313_REG_POWER_CTL,
+> -				  ADXL313_POWER_CTL_MSK,
+> -				  ADXL313_MEASUREMENT_MODE);
+> +	return adxl313_set_measure_en(data, true);
+>  }
+>  
+>  /**
 
-And we only use rcu_pending.c with SRCU, not regular RCU.
-
-We do use kfree_rcu() in a few places (all boring, I expect), but that
-doesn't (generally?) use the rcu callback list.
-
-So I'm not sure this is even a bcachefs bug.
