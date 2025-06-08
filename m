@@ -1,123 +1,194 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C71335C7
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 15:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19C433EA;
+	Sun,  8 Jun 2025 15:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749396920; cv=none; b=TjLRRBUxFiN/NGGCxDOapX1b3oPpQXYwsTqf0Y8o8+7TcewZtrF4nkFR2N3U4+nhjq0SwLKumqigDJSHu1PsMiddr+EpLTqg9xg6V+eJtmmQMvvwXkiaAfqLJPTZn2ctxAd8OmknrcQ1Mwsoyl/VHrxrz+C76slMrHTLc/+3kNo=
+	t=1749397102; cv=none; b=P2WtGVBcGLLk9RPF6KZGI8CnEbR05rdi/rp53aDUMm3nnjw9ZRvv8f1WSBRfO8fWreY3Apdp3oGxDVyhUcPFsjhA50SHDf4rupZ2AiVN4Yo9jxeVbkEeZygsiVxdNuCYJrGh8eaTWQpeiJC26f9KI1/Xw670FyItsa7H/dTkdrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749396920; c=relaxed/simple;
-	bh=+7FrqGD94iVWcdbGz2+uCljqiSBoVQtmboCi9o5L1VE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=lC4MQjncTzjG3wCYfvYfZR7WwPFow5p8oo+aW/78G6V9L4255WaIJzH6EHPvbBSZBzKAOSHt33cU44VSW2q0M3vGxjv/lOCcBtPaGPMW+Lcs1Qxu7ZALS0/4IEBXclitV8IPwBkGQ47Ts5ip4bS3AOHdOl02aFrnrnebKNvBbJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (3072-bit key) header.d=posteo.net header.i=@posteo.net header.b=LkOSeTj/; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1749397102; c=relaxed/simple;
+	bh=44+K9pJQHVmddnoq6jFcbDPxDh9T4ucmfXnzaPivNNk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ej1k2ELCKuzHvyhdC3RsiT6j5cdCkdU1c+BmEtP0nQwLVNGJ2Ykx5cL3kCntqIWRLLp/7q2d2zwSnrsDLOKq4l/jd8cpTr7OKdukuFoVcjidccYrmCZ6SkMMh3CftDshDLAnTSbxIOSe3Wm1rNuXrxbk7iDfIoBgWP71T2fBUGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJcz/yh9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (3072-bit key) header.d=posteo.net header.i=@posteo.net header.b="LkOSeTj/"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 6022424002B
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 17:35:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net;
-	s=1984.ea087b; t=1749396917;
-	bh=+7FrqGD94iVWcdbGz2+uCljqiSBoVQtmboCi9o5L1VE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Message-Id:To:Cc:From;
-	b=LkOSeTj/YHKtLcJ/mB8whXDh7KtNkhjkCAzn9WTjlG7gvMEsLWqiJA+opAt++/fI5
-	 YXKcTfP0QBufkq826TnL9qHarKSp9acOTKh7wjBMTfqI3TC3pEJZbqV168sAB/xjzq
-	 01bz2j13nxIqMdKH/nn8tj2IVrvmJaM8lrKb9ZLCRBet9cs9cQh/pYwSOct29t5VeK
-	 v+1T6AgY8Rm5MU57aHOSYNihJKgt49FmXQBKQ2iCNrOcyEU3c3e+i+pfNdcfgcPb0K
-	 mtWat8/c6Fg99C9XXN4IreikGmzcZk0/hGVGI5j8GhkpArLEvqi5UyH8RGK4n+nK/P
-	 nHHJOd0a+bRX+7JwF0nx03OPpMl8fFDFNIbBc4lG3uzKCVHZ23CPukwmmJMQwtGkKz
-	 mU4u0BJn/aBVPtulV0dW2REvUpxln3KGidTT+Qg3TsyJ97Iv5ZKMWxdiUeQvM/C4qt
-	 fRzMDeWIPUH3tEjOg47ZKEaIZCR+8RyP7kx8hBJrlJgx2/h21DD
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4bFfJK1d0pz6tvc;
-	Sun,  8 Jun 2025 17:35:13 +0200 (CEST)
-From: Charalampos Mitrodimas <charmitro@posteo.net>
-Date: Sun, 08 Jun 2025 15:34:55 +0000
-Subject: [PATCH bpf-next] bpf: Fix RCU usage in bpf_get_cgroup_classid_curr
- helper
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJcz/yh9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2924EC4CEEE;
+	Sun,  8 Jun 2025 15:38:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749397102;
+	bh=44+K9pJQHVmddnoq6jFcbDPxDh9T4ucmfXnzaPivNNk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UJcz/yh9hq0xmgpaI275pp0Vj65B5Wlig8p3n21YqR4/YV+HlO4u9L5VrRhshqEif
+	 +IrBIXJqe7aei1eRUGHD11X3qmGykufsupFMupwgESrHm2rhfinC7crdR6SAL5EBEo
+	 tjDukZBb3vOstjuSDMP8GW3BMwg8Tr4owzvfrS/oTIV4x0Q6VdtoioSYisS1JLOAHo
+	 ObOZUnQZcx2eoutKJgL25zR2p8ks8UkGFqiNet24OBzAC8AB6iCqlMCrFzVU2SQ5M4
+	 jvpsuyFHaVFo/FRZKhIRzn4jhuPpfeW2YNzDL9zCjN5JuyaqIQ9KvBPPeLY8h7osIr
+	 5vDMrYOoWgkoQ==
+Date: Sun, 8 Jun 2025 16:38:12 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+ corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
+ Michael.Hennerich@analog.com, bagasdotme@gmail.com,
+ linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 03/11] iio: accel: adxl313: make use of regmap cache
+Message-ID: <20250608163812.4a1a93df@jic23-huawei>
+In-Reply-To: <20250608162215.0d1789d0@jic23-huawei>
+References: <20250601172139.59156-1-l.rubusch@gmail.com>
+	<20250601172139.59156-4-l.rubusch@gmail.com>
+	<20250608162215.0d1789d0@jic23-huawei>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250608-rcu-fix-task_cls_state-v1-1-2a2025b4603b@posteo.net>
-X-B4-Tracking: v=1; b=H4sIAJ6tRWgC/x2M7QpAQBAAX0X729ZxvvIqkq67xUbo9kjJu7v8n
- JqZB4Q8k0CbPODpYuF9i5ClCdjZbBMhu8iQq7xUlWrQ2xNHvjEYWQa7yiDBBEJFrtZjoWuXEcT
- 48BStf9z17/sBBQ7m8GgAAAA=
-X-Change-ID: 20250608-rcu-fix-task_cls_state-0ed73f437d1e
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Daniel Borkmann <daniel@iogearbox.net>, 
- John Fastabend <john.fastabend@gmail.com>, 
- Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Feng Yang <yangfeng@kylinos.cn>, 
- Tejun Heo <tj@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- bpf@vger.kernel.org, syzbot+b4169a1cfb945d2ed0ec@syzkaller.appspotmail.com, 
- Charalampos Mitrodimas <charmitro@posteo.net>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749396896; l=1811;
- i=charmitro@posteo.net; s=20250526; h=from:subject:message-id;
- bh=+7FrqGD94iVWcdbGz2+uCljqiSBoVQtmboCi9o5L1VE=;
- b=YnnNXup1gwqyVg+Q760GVOdLmszHN8jeFOIQHKavcH7xBLebR+ekaAPuUS7md/qk9y1was3qj
- QLScmUeznjwCQec6DbpYC67nuAyHEyCP5kpLdrgSBwV/9ZPGoq2Zxve
-X-Developer-Key: i=charmitro@posteo.net; a=ed25519;
- pk=PNHEh5o1dcr5kfKoZhfwdsfm3CxVfRje7vFYKIW0Mp4=
 
-The commit ee971630f20f ("bpf: Allow some trace helpers for all prog
-types") made bpf_get_cgroup_classid_curr helper available to all BPF
-program types.  This helper used __task_get_classid() which calls
-task_cls_state() that requires rcu_read_lock_bh_held().
+On Sun, 8 Jun 2025 16:22:15 +0100
+Jonathan Cameron <jic23@kernel.org> wrote:
 
-This triggers an RCU warning when called from BPF syscall programs
-which run under rcu_read_lock_trace():
+> On Sun,  1 Jun 2025 17:21:31 +0000
+> Lothar Rubusch <l.rubusch@gmail.com> wrote:
+> 
+> > Setup regmap cache to cache register configuration. This is a preparatory
+> > step for follow up patches. Using cached settings will help at inerrupt
+> > handling, to generate activity and inactivity events.  
+> 
+> The regmap cache will reduce traffic to the device for things like reading
+> back sampling frequency, so no need to justify this patch with 'future'
+> stuff.  Justify it with current.   I've applied with the description of
+> simply
+> 
+> "Setup regmap cache to cache register configuration, reducing bus traffic
+> for repeated accesses to non volatile registers."
+> 
+Dropped again.  The is_volatile should include all volatile registers
+not just ones we happen to be using so far. 
 
-  WARNING: suspicious RCU usage
-  6.15.0-rc4-syzkaller-g079e5c56a5c4 #0 Not tainted
-  -----------------------------
-  net/core/netclassid_cgroup.c:24 suspicious rcu_dereference_check() usage!
+You added debug accesses in previous patch which will not take the volatile
+nature into account unless the register is in that switch statement.
 
-Fix this by replacing __task_get_classid() with task_cls_classid()
-which handles RCU locking internally using regular rcu_read_lock() and
-is safe to call from any context.
+Put the all in from the start.
 
-Reported-by: syzbot+b4169a1cfb945d2ed0ec@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=b4169a1cfb945d2ed0ec
-Fixes: ee971630f20f ("bpf: Allow some trace helpers for all prog types")
-Signed-off-by: Charalampos Mitrodimas <charmitro@posteo.net>
----
- net/core/filter.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Jonathan
 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 30e7d36790883b29174654315738e93237e21dd0..3b3f81cf674dde7d2bd83488450edad4e129bdac 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -3083,7 +3083,7 @@ static const struct bpf_func_proto bpf_msg_pop_data_proto = {
- #ifdef CONFIG_CGROUP_NET_CLASSID
- BPF_CALL_0(bpf_get_cgroup_classid_curr)
- {
--	return __task_get_classid(current);
-+	return task_cls_classid(current);
- }
- 
- const struct bpf_func_proto bpf_get_cgroup_classid_curr_proto = {
-
----
-base-commit: 079e5c56a5c41d285068939ff7b0041ab10386fa
-change-id: 20250608-rcu-fix-task_cls_state-0ed73f437d1e
-
-Best regards,
--- 
-Charalampos Mitrodimas <charmitro@posteo.net>
+> > 
+> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> > ---
+> >  drivers/iio/accel/adxl313.h      |  2 ++
+> >  drivers/iio/accel/adxl313_core.c | 17 +++++++++++++++++
+> >  drivers/iio/accel/adxl313_i2c.c  |  6 ++++++
+> >  drivers/iio/accel/adxl313_spi.c  |  6 ++++++
+> >  4 files changed, 31 insertions(+)
+> > 
+> > diff --git a/drivers/iio/accel/adxl313.h b/drivers/iio/accel/adxl313.h
+> > index 72f624af4686..fc937bdf83b6 100644
+> > --- a/drivers/iio/accel/adxl313.h
+> > +++ b/drivers/iio/accel/adxl313.h
+> > @@ -54,6 +54,8 @@ extern const struct regmap_access_table adxl312_writable_regs_table;
+> >  extern const struct regmap_access_table adxl313_writable_regs_table;
+> >  extern const struct regmap_access_table adxl314_writable_regs_table;
+> >  
+> > +bool adxl313_is_volatile_reg(struct device *dev, unsigned int reg);
+> > +
+> >  enum adxl313_device_type {
+> >  	ADXL312,
+> >  	ADXL313,
+> > diff --git a/drivers/iio/accel/adxl313_core.c b/drivers/iio/accel/adxl313_core.c
+> > index 06a771bb4726..0c893c286017 100644
+> > --- a/drivers/iio/accel/adxl313_core.c
+> > +++ b/drivers/iio/accel/adxl313_core.c
+> > @@ -46,6 +46,23 @@ const struct regmap_access_table adxl314_readable_regs_table = {
+> >  };
+> >  EXPORT_SYMBOL_NS_GPL(adxl314_readable_regs_table, IIO_ADXL313);
+> >  
+> > +bool adxl313_is_volatile_reg(struct device *dev, unsigned int reg)
+> > +{
+> > +	switch (reg) {
+> > +	case ADXL313_REG_DATA_AXIS(0):
+> > +	case ADXL313_REG_DATA_AXIS(1):
+> > +	case ADXL313_REG_DATA_AXIS(2):
+> > +	case ADXL313_REG_DATA_AXIS(3):
+> > +	case ADXL313_REG_DATA_AXIS(4):
+> > +	case ADXL313_REG_DATA_AXIS(5):
+> > +	case ADXL313_REG_FIFO_STATUS:
+> > +		return true;
+> > +	default:
+> > +		return false;
+> > +	}
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(adxl313_is_volatile_reg, "IIO_ADXL313");
+> > +
+> >  static int adxl312_check_id(struct device *dev,
+> >  			    struct adxl313_data *data)
+> >  {
+> > diff --git a/drivers/iio/accel/adxl313_i2c.c b/drivers/iio/accel/adxl313_i2c.c
+> > index a4cf0cf2c5aa..e8636e8ab14f 100644
+> > --- a/drivers/iio/accel/adxl313_i2c.c
+> > +++ b/drivers/iio/accel/adxl313_i2c.c
+> > @@ -21,6 +21,8 @@ static const struct regmap_config adxl31x_i2c_regmap_config[] = {
+> >  		.rd_table	= &adxl312_readable_regs_table,
+> >  		.wr_table	= &adxl312_writable_regs_table,
+> >  		.max_register	= 0x39,
+> > +		.volatile_reg	= adxl313_is_volatile_reg,
+> > +		.cache_type	= REGCACHE_MAPLE,
+> >  	},
+> >  	[ADXL313] = {
+> >  		.reg_bits	= 8,
+> > @@ -28,6 +30,8 @@ static const struct regmap_config adxl31x_i2c_regmap_config[] = {
+> >  		.rd_table	= &adxl313_readable_regs_table,
+> >  		.wr_table	= &adxl313_writable_regs_table,
+> >  		.max_register	= 0x39,
+> > +		.volatile_reg	= adxl313_is_volatile_reg,
+> > +		.cache_type	= REGCACHE_MAPLE,
+> >  	},
+> >  	[ADXL314] = {
+> >  		.reg_bits	= 8,
+> > @@ -35,6 +39,8 @@ static const struct regmap_config adxl31x_i2c_regmap_config[] = {
+> >  		.rd_table	= &adxl314_readable_regs_table,
+> >  		.wr_table	= &adxl314_writable_regs_table,
+> >  		.max_register	= 0x39,
+> > +		.volatile_reg	= adxl313_is_volatile_reg,
+> > +		.cache_type	= REGCACHE_MAPLE,
+> >  	},
+> >  };
+> >  
+> > diff --git a/drivers/iio/accel/adxl313_spi.c b/drivers/iio/accel/adxl313_spi.c
+> > index 9a16b40bff34..68e323e81aeb 100644
+> > --- a/drivers/iio/accel/adxl313_spi.c
+> > +++ b/drivers/iio/accel/adxl313_spi.c
+> > @@ -24,6 +24,8 @@ static const struct regmap_config adxl31x_spi_regmap_config[] = {
+> >  		.max_register	= 0x39,
+> >  		/* Setting bits 7 and 6 enables multiple-byte read */
+> >  		.read_flag_mask	= BIT(7) | BIT(6),
+> > +		.volatile_reg	= adxl313_is_volatile_reg,
+> > +		.cache_type	= REGCACHE_MAPLE,
+> >  	},
+> >  	[ADXL313] = {
+> >  		.reg_bits	= 8,
+> > @@ -33,6 +35,8 @@ static const struct regmap_config adxl31x_spi_regmap_config[] = {
+> >  		.max_register	= 0x39,
+> >  		/* Setting bits 7 and 6 enables multiple-byte read */
+> >  		.read_flag_mask	= BIT(7) | BIT(6),
+> > +		.volatile_reg	= adxl313_is_volatile_reg,
+> > +		.cache_type	= REGCACHE_MAPLE,
+> >  	},
+> >  	[ADXL314] = {
+> >  		.reg_bits	= 8,
+> > @@ -42,6 +46,8 @@ static const struct regmap_config adxl31x_spi_regmap_config[] = {
+> >  		.max_register	= 0x39,
+> >  		/* Setting bits 7 and 6 enables multiple-byte read */
+> >  		.read_flag_mask	= BIT(7) | BIT(6),
+> > +		.volatile_reg	= adxl313_is_volatile_reg,
+> > +		.cache_type	= REGCACHE_MAPLE,
+> >  	},
+> >  };
+> >    
+> 
 
