@@ -1,147 +1,107 @@
-Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96271148850;
-	Sun,  8 Jun 2025 20:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.97.38.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E429BA45;
+	Sun,  8 Jun 2025 20:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749414921; cv=none; b=A2caKYODCZpgt0Cq1qonr1UijV4NDoSEG3bVNnprXtFCmQZtk0L0W8l5BJOI3bWM8aaDKm9pHN4oLVUdLlzmTNwPHJCOsHMtBxzpc9+m6NeZf7cyK7VLF5nM8igwbHoRKiIzZKJYiJAQa74tCTW13cECSqBcqTbV0mleaN35YLI=
+	t=1749415674; cv=none; b=f3SPR3jhFKq08vJ1e+S+g9qnwYRUI9xmrULTYqJGWj8Df1ukyvd6j6NTACGWR9AyK6Yc0CtM526WIibs1jiSs/WbELNuCI3d7Z59NLGZ/Dfs0EWUxY2FNjneTlJgZfLD61sDkbBVN96K086Vj7M8uhpV1XGyH61E38I5gN2RA54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749414921; c=relaxed/simple;
-	bh=3osOd4N+A2iVsWtQM8/3BkjPQWM9WE3z52e2zkBanmI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hdzny3AGr3lHs63lOT9gG8UBkIS4JJpyqyGicKtJ5VUsIalEKfcXSzOPBC+orb5JuVUdJrfz0eZFDrU+5Eeg/sVTlkTfk1CCilO2ZMftd9OB6SQ0XNsdO9F0IhuaZdn58u3Kk8pP97K1Ry+yQWD7tu9MQsM7LP3t48l3FdBWCu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org; spf=pass smtp.mailfrom=mess.org; dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b=q6Ugdy5I; arc=none smtp.client-ip=88.97.38.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mess.org
+	s=arc-20240116; t=1749415674; c=relaxed/simple;
+	bh=ebF6L3yW+3ohMAChacTbx/9GAwBaMrhyLwIY4VviJvQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ILSqCOJfMrw8AtpB77K1lQsKNcx4QWP1SGCWroHUyOpLZX2rhTatZMQ2woHPU1pZNpqCqqXfGw1O9NXgX9eZCbqBdwzL/2SQpdhScdMfs0tsrbztWwYqzQLpkVnu80Tt4gvbVCbscyFe3qKJWQ+gD/4A2NyxCV+Ime0Br/z+jWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PbATWU2c; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="q6Ugdy5I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
-	t=1749414323; bh=3osOd4N+A2iVsWtQM8/3BkjPQWM9WE3z52e2zkBanmI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q6Ugdy5IP+Zyzm7NnWy/VwhYxvGHunLpTPNyNu1LzGAKVatRTascTRiKfQY4XIL6d
-	 MWKsPzTrLCipvdXzVUlzkhnp/EDegSOAR8nXqn1sARyj5xSt2CaI2l088r+5skvMEd
-	 Fbu01CrVNyw/eHR5TOqQ4naA9Tt/ejFO3Fd1o42MInsupuvFqT28FPT+HeiVBR59l4
-	 5VY2ROJm+WPgVE/xBpDtYFMojkhzrKNaEiRDBtILuJmBHuJd5aUD74bJXjRfmLCkhT
-	 fBJT6j7gA+kXW0MmHb3zc9UrbthTQN8B3YnAnqajR1c9Xy4AOcLw+bE09PJ/WcAUMJ
-	 bETC0h95hWc/A==
-Received: by gofer.mess.org (Postfix, from userid 1000)
-	id 4FF96100069; Sun,  8 Jun 2025 21:25:23 +0100 (BST)
-Date: Sun, 8 Jun 2025 21:25:23 +0100
-From: Sean Young <sean@mess.org>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] media: rc: ir-spi: reallocate buffer dynamically
-Message-ID: <aEXxs4xsNR7Srdvx@gofer.mess.org>
-References: <20250608191536.2181756-1-demonsingur@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PbATWU2c"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b1276984386so453254a12.0;
+        Sun, 08 Jun 2025 13:47:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749415672; x=1750020472; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e/NepSzNK7cHJVdKlMHYuPZmDL7EOzwuHy5xSr7Gp+s=;
+        b=PbATWU2cnA/SJSTcjsUFNYFRMnJxXPBSZ9jq4nykcGbBITiMTZICtDAAWGE9hbLc74
+         +r2aQEVQ1OPQTcC3XK3JtT9QGcemkMUOB/21Z3jn5CNgt2dlHajC0mqv/5z++UlKFTy1
+         DdJX0UjyPk32tsmb5Gyv/l1No5mHlhyWe7R6aBV1Hg7+mLOoSxiWlxS4PAwUmLa1aleo
+         4/SpROQjze/BRCflv4H2DBJzwAdVkZDoMMBqgtIdN8d8jTyheDtlp13NTPnxWgDbIRpb
+         NXMxgTF0o+ZbovwKO9cWOndgFOGJed/oaDAXgPdNqVE6ZnaxqssW9rd0zP0kY2jjt3CW
+         fpzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749415672; x=1750020472;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e/NepSzNK7cHJVdKlMHYuPZmDL7EOzwuHy5xSr7Gp+s=;
+        b=IckfEKyFQxNLYBh9Wv417YZZ6bst92mdKyBtY0VyGWGGO+9fAl8BQE19xH1c3FTFM9
+         PvOhR4Zo40fNHSPsLe6Abf/Mx4vpcfzi4ylEcSRN1vjAo/65fv024djde+IL3KIZ4LHR
+         k2C6BilEDOrPruYHCvMcHzSJ1VcK7iwqg+Ci+t66GTWUz3ALfcwkYabU89kzIuijb2Y1
+         hJK4H88EGa2JJpDF/K8bs+xLTSVGn4Tj9R4ZiiCME4fVPr8AUgjwhZGoDaaboSVEr6vJ
+         CeBfO7IyugGlt3/lP+DPz6d4M/y72EpuxUPT1XeI36cFunupsXss35z9Ch/gmwBeZUR+
+         r45A==
+X-Forwarded-Encrypted: i=1; AJvYcCV9ye9+OTO9RFOUjNXWkjxyzMzOZgyFAiCbE1rFkXeq3XRcZ1IeV74xjQ2OgjJR4HLfUx74cZkzHNeY3tBc@vger.kernel.org, AJvYcCWGbObFsCsw7vXZ04+vHgoKa7BkTwsK5wiAvpjE2xL/SRHb3BsNpExZI04ogaj7hKyaS1iVvVdrkb9Z@vger.kernel.org, AJvYcCX/uRfVnHGduK49IT2AmXlRs2HmLZxFWHsSHgz7ePUuvMS5JMJ5YlkRsQPOg/4JCq2dIeg70onVUuZd1PwR618=@vger.kernel.org, AJvYcCX0dNziQ/0bDSQRDd3Lnw3OiW88ooslvWM7r5PgEwuF/TK85DNTsGbBR+7CE69ZcUmvg990LiQdYFGU@vger.kernel.org
+X-Gm-Message-State: AOJu0YycDja4eIm0aEUIBvwLTVKu5nVRBUWzE2mVhhuxTllmFvMnlO5R
+	PLwT9sSsOFh06FI5gLtc87/2GZp8cL0LW+CDKKxWCwt40lYvNRDz3QfSaGygtDGPfahYHrWgPIz
+	wuM/sW13ymyI7GyGDFE8LVI9CQFzWzB0=
+X-Gm-Gg: ASbGncv/aVpDtkeUT0Jn3ZIrJc4PQNnxrp0NFNTkS38e40AIjEGFAHc3Hx9WPaLSTBN
+	PIRIu9MsqRvv3y09Oih00gFWphXd3z8OD6fyfo8n/MX4/r21gM0ybnSsIeUX+LeZuZuiTUYuI8u
+	5kvW0lUazJzTZKM0M+eeaCk0uP6CQI1VSi
+X-Google-Smtp-Source: AGHT+IGMuXINEZm4WUqJIT66MF2vg+ybkmXgawlTKOKqE5f3w0CWVXxYZlA0lxfrGl70z+aRQlCRwjGEVMSn8hyBYU4=
+X-Received: by 2002:a17:90b:4b85:b0:313:2bfc:94c with SMTP id
+ 98e67ed59e1d1-3134e43144amr5309627a91.8.1749415672501; Sun, 08 Jun 2025
+ 13:47:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250608191536.2181756-1-demonsingur@gmail.com>
+References: <CGME20250524211519eucas1p218997c69b98b14d3af2eb6bf4e9d3187@eucas1p2.samsung.com>
+ <20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com>
+ <aDJGgLZ9tITwGBxq@x1> <b5f4af17-05ef-453d-8f04-283590ae5b87@samsung.com>
+ <DA5YY0YF28GO.3DONTQDLY6VBD@kernel.org> <aEXBH5r05FkTxpV+@x1>
+ <CANiq72k-FmZe3P_y6FjmiqXViqLKXkDqHY1-KLfmgwAe98oBAQ@mail.gmail.com> <aEXrZvpTD30a5OhT@x1>
+In-Reply-To: <aEXrZvpTD30a5OhT@x1>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 8 Jun 2025 22:47:40 +0200
+X-Gm-Features: AX0GCFtkgb9NQ12mbcXrlhdSwOY0B7uS6yd2CXG1hnJnfVtwyAWwRJ7-DZ7mFxY
+Message-ID: <CANiq72mn4sRzmkFAJ0fKhwZMLUi33DBLNzyEF2BTPML_4Ya+Bg@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/6] Rust Abstractions for PWM subsystem with TH1520
+ PWM driver
+To: Drew Fustini <drew@pdp7.com>
+Cc: Benno Lossin <lossin@kernel.org>, Michal Wilczynski <m.wilczynski@samsung.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jun 08, 2025 at 10:15:33PM +0300, Cosmin Tanislav wrote:
-> Replace the static transmit buffer with a dynamically allocated one,
-> allowing the buffer to grow as needed based on the length of the
-> message being transmitted.
-> 
-> Introduce a helper function ir_buf_realloc() to manage the allocation
-> and reallocation of the buffer. Use it during probe to preallocate
-> a buffer matching the original static buffer, then reallocate it as
-> needed, with an overhead to avoid frequent reallocations.
-> 
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-> ---
-> V2:
->  * use devm_krealloc_array
-> 
->  drivers/media/rc/ir-spi.c | 32 +++++++++++++++++++++++++++++---
->  1 file changed, 29 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/media/rc/ir-spi.c b/drivers/media/rc/ir-spi.c
-> index 8fc8e496e6aa..2f931950e107 100644
-> --- a/drivers/media/rc/ir-spi.c
-> +++ b/drivers/media/rc/ir-spi.c
-> @@ -27,7 +27,8 @@ struct ir_spi_data {
->  	u32 freq;
->  	bool negated;
->  
-> -	u16 tx_buf[IR_SPI_MAX_BUFSIZE];
-> +	u16 *tx_buf;
-> +	size_t tx_len;
->  	u16 pulse;
->  	u16 space;
->  
-> @@ -36,6 +37,26 @@ struct ir_spi_data {
->  	struct regulator *regulator;
->  };
->  
-> +static int ir_buf_realloc(struct ir_spi_data *idata, size_t len)
-> +{
-> +	u16 *tx_buf;
-> +
-> +	if (len <= idata->tx_len)
-> +		return 0;
-> +
-> +	len = max(len, idata->tx_len + IR_SPI_MAX_BUFSIZE);
-> +
-> +	tx_buf = devm_krealloc_array(&idata->spi->dev, idata->tx_buf, len,
-> +				     sizeof(*idata->tx_buf), GFP_KERNEL);
-> +	if (!tx_buf)
-> +		return -ENOMEM;
-> +
-> +	idata->tx_buf = tx_buf;
-> +	idata->tx_len = len;
-> +
-> +	return 0;
-> +}
-> +
->  static int ir_spi_tx(struct rc_dev *dev, unsigned int *buffer, unsigned int count)
->  {
->  	int i;
-> @@ -52,8 +73,9 @@ static int ir_spi_tx(struct rc_dev *dev, unsigned int *buffer, unsigned int coun
->  
->  		periods = DIV_ROUND_CLOSEST(buffer[i] * idata->freq, 1000000);
->  
-> -		if (len + periods >= IR_SPI_MAX_BUFSIZE)
-> -			return -EINVAL;
-> +		ret = ir_buf_realloc(idata, len + periods);
+On Sun, Jun 8, 2025 at 9:58=E2=80=AFPM Drew Fustini <drew@pdp7.com> wrote:
+>
+> Thanks for the quick response. I seemed to have updated it with:
+>
+>  cargo install bindgen-cli
+>
+> And it seems Linux is now happy :)
 
-You're reallocating in a loop. That causes a lot of churn.
+You're welcome!
 
-> +		if (ret)
-> +			return ret;
->  
->  		/*
->  		 * The first value in buffer is a pulse, so that 0, 2, 4, ...
-> @@ -153,6 +175,10 @@ static int ir_spi_probe(struct spi_device *spi)
->  
->  	idata->freq = IR_SPI_DEFAULT_FREQUENCY;
->  
-> +	ret = ir_buf_realloc(idata, IR_SPI_MAX_BUFSIZE);
-> +	if (ret)
-> +		return ret;
-> +
+(By the way, I always recommend passing `--locked` to `cargo install`
+unless there is a good reason not to -- sadly it is not the default
+for that subcommand)
 
-By default, you're allocating IR_SPI_MAX_BUFSIZE already at probe time. So
-until someone does a transmit, you haven't saved any memory compared to
-before. In fact, the text size will be more so things are worse.
-
-It might make sense to allocate IR_SPI_MAX_BUFSIZE once for each transmit;
-most drivers do an allocation per transmit which is perfectly acceptable.
-
-
-Thanks,
-
-Sean
-
->  	return devm_rc_register_device(dev, idata->rc);
->  }
->  
-> -- 
-> 2.49.0
+Cheers,
+Miguel
