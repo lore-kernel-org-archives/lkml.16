@@ -1,103 +1,153 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6FD913C8FF
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 22:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D89213C8FF
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 22:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749420307; cv=none; b=GLdxbdBm2kceUNCLLG6pM6+T2kfHMyA9F6DTj5CiEDMHNhNYnwngFPTBqg3RYh9O7CoR+atPwKslm72Arf6Z39iAAXkMzHJ81am5rmcWv7jEC2exbxLEPDkUM4eQKjCTNkl+C/tEDOI6kq+3Gs7o/RpYT5rPZ748X6dFb7HeAOQ=
+	t=1749420631; cv=none; b=VvFNpVksxb695DtsB2ALNT4DM1CQ4T11Ok9Q2VXZLjT9qmXnPSCjLHQgFibzAmE5BBIDsTfSC8A1fS5Coz9v8WeX5hDs/E0TrS9nYE/vryGSYH99OUOapuBsjUUKKXes8nS1TotS6s3/KNojeI3nibRhb5BhNdX3XOXofpCSOOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749420307; c=relaxed/simple;
-	bh=VFqBlw1ityMj1ZRZZ/8UV2lj+Vl0zY08vGR/qD2MUNw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LBBum1LvVTGQpYv/IdEwhyorvuyYopCijQwS959ll1iggEMa2XJAP3Nnob2XYcSWAvP64tLQBQoQDh+VWuxGFO9IFKed5Dc7aJ6oCHCvS1ZlZwJwcZiki/YRlc1h1BQoSvP5JT8EsF6mc/sNA0KCY2+0VRKMaYfOnqWAHbb9eUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C7OKgtEY; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C7OKgtEY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749420306; x=1780956306;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VFqBlw1ityMj1ZRZZ/8UV2lj+Vl0zY08vGR/qD2MUNw=;
-  b=C7OKgtEYCydDKSysial9ZjF/TECQEqGL3T4NGz37SGK8cHOdAKN/JZg3
-   Hy44FaPqK7L0EV4sDKrtcA0MvVXwibQkplEbDLnRpmMffPaC4zYHzYDwE
-   qFaBW2f1vLb6ZIJebXbF9+++4cK5Ygx7tPXl63e5eBeUVZIzC+sdHuYnv
-   mO5FOn9DPnhX/5MHFLdP9UQwtgwCxu18AIuQ0XxM018M4W2z4D3KmqAG5
-   MsQdNz8jnwUPPx1rJqwGY68PC85mRyAPoRKv7fX8isfViqqwy7V82hXYc
-   DDnbCh0AUiwwHVH5JWcj1OEmekFMaIxBqBDnChUzeAd/dmRd3q8W/IAaG
-   g==;
-X-CSE-ConnectionGUID: Vlemguu1TpGVpWY+Yn7JuQ==
-X-CSE-MsgGUID: YsCmBVbvR6aUfk2RZnvGLw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="61761085"
-X-IronPort-AV: E=Sophos;i="6.16,221,1744095600"; 
-   d="scan'208";a="61761085"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2025 15:05:06 -0700
-X-CSE-ConnectionGUID: 61Lci9KwTjG1IDwwkLJqAA==
-X-CSE-MsgGUID: V17FTmdJS/yzI5qwFKaxiw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,221,1744095600"; 
-   d="scan'208";a="183533038"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2025 15:05:04 -0700
-Date: Sun, 8 Jun 2025 15:05:03 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Fenghua Yu <fenghuay@nvidia.com>
-Cc: Reinette Chatre <reinette.chatre@intel.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Chen Yu <yu.c.chen@intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH v5 20/29] x86,fs/resctrl: Fill in details of Clearwater
- Forest events
-Message-ID: <aEYJD8OUis3O1Tdd@agluck-desk3>
-References: <20250521225049.132551-1-tony.luck@intel.com>
- <20250521225049.132551-21-tony.luck@intel.com>
- <68782596-4e0a-429a-9456-e535faadf465@nvidia.com>
+	s=arc-20240116; t=1749420631; c=relaxed/simple;
+	bh=lPSB7kzCuFDsyKZcCDyQcY133wGxZ8f2OySUDkXj3Ck=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=km0uJzyRC4hJW5TLH16sYC/MuskACOClcr2+XHkSg+2SPdaikHigMGmEtN4P7TnUoeJM3rU3pyLnPWQ96sCGhRAT+AFfzb1qBHdbbJ4To4iNLA87rMMPi80y1iVNXG+I8sBKP0QHmF6Ni85FRCQ1NCYVwm/8Ucpu1q7RU9nbyHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3ddc0a6d4bdso52866575ab.0
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 15:10:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749420628; x=1750025428;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rfvDTEqcQRn5tT2CV9k08iD+3Mt7MRIhn+0umO+AibY=;
+        b=wz33LDnTzJg9dAoaF6iTx29Qy485Yo9Cawc3A66NY0N23juYRcaXKB4yb5+D79NdeX
+         SchG0vzk7k6geXHlpahyE2Ss7ZtBgCnShL9toav2eGErqYgoohHmJcFJowVZseNjrhNs
+         dZSfA0byAa5A2pTUETwsKUSoFjPMGCcnZ2eQ6k3bkgg7areyIstTNMmVy5r1irUbGzFd
+         sJyRZCGpY2bIq4ps2tITSwZ3MJGSyXBtbec1CjEau2tfpHx3Zpp71jtZ7Q4+vr2yts3T
+         AulJoYdLrByh0rRJVz1JPkzthTjaNeLLK2Wl3yOVrPGVH/kglqDWeTveyl32IxZLrCP7
+         ouig==
+X-Forwarded-Encrypted: i=1; AJvYcCXe0WVMa5foljjWLZEpe4gPgVecPwmE6ZRFRcNhvvazi4POtaPnyDe3FnyO5+FaMeE7TokK404K7EFKbSU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/+taLOZb/3FlJoT7JJNuF8dqrH3apPQ7Qeryrup32h6y7Y+4E
+	8IXXSjCzzl/6nrU9KTlbjpi6oni8mzKZC5gw6Ke7KAm9Q/V+6FoacvIR2+1xtKKE0ymD1rf4V/8
+	nLjP1BSPzpIDrV47vU8NCB7Zz5M586+h0HDD2O8p6rd19TwblcG6bXb/wtPs=
+X-Google-Smtp-Source: AGHT+IGJsCHEu/pt7o7yqGhvL24hgEVMtSq2pQsQ/muXg1IsOa11NA8rXFwNdC627zKAFeqiAzKHCiUgy5trS3yHtVseAJV2VCqa
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <68782596-4e0a-429a-9456-e535faadf465@nvidia.com>
+X-Received: by 2002:a05:6e02:2142:b0:3dd:c4ed:39ba with SMTP id
+ e9e14a558f8ab-3ddce3ce038mr126748085ab.1.1749420628664; Sun, 08 Jun 2025
+ 15:10:28 -0700 (PDT)
+Date: Sun, 08 Jun 2025 15:10:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68460a54.050a0220.daf97.0af5.GAE@google.com>
+Subject: [syzbot] [btrfs?] WARNING in btrfs_rebuild_free_space_tree
+From: syzbot <syzbot+d0014fb0fc39c5487ae5@syzkaller.appspotmail.com>
+To: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jun 06, 2025 at 05:57:09PM -0700, Fenghua Yu wrote:
-> > @@ -60,6 +78,11 @@ struct event_group {
-> >   static struct event_group energy_0x26696143 = {
-> >   	.guid		= 0x26696143,
-> >   	.mmio_size	= (576 * 2 + 3) * 8,
-> > +	.num_events	= 2,
-> > +	.evts				= {
-> Please align the "=" with the above "=".
+Hello,
 
-Fixed.
+syzbot found the following issue on:
 
-> > +		EVT(PMT_EVENT_ENERGY, 0, 18),
-> > +		EVT(PMT_EVENT_ACTIVITY, 1, 18),
-> > +	}
-> >   };
-> >   /*
-> > @@ -69,6 +92,16 @@ static struct event_group energy_0x26696143 = {
-> >   static struct event_group perf_0x26557651 = {
-> >   	.guid		= 0x26557651,
-> >   	.mmio_size	= (576 * 7 + 3) * 8,
-> > +	.num_events	= 7,
-> > +	.evts				= {
-> 
-> Ditto.
+HEAD commit:    d7fa1af5b33e Merge branch 'for-next/core' into for-kernelci
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=143b9282580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=89c13de706fbf07a
+dashboard link: https://syzkaller.appspot.com/bug?extid=d0014fb0fc39c5487ae5
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+userspace arch: arm64
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1264740c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=123b9282580000
 
-Ditto fixed.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/da97ad659b2c/disk-d7fa1af5.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/659e123552a8/vmlinux-d7fa1af5.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6ec5dbf4643e/Image-d7fa1af5.gz.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/c104fe6fa41d/mount_0.gz
+  fsck result: OK (log: https://syzkaller.appspot.com/x/fsck.log?x=16d34c0c580000)
 
-Thanks
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+d0014fb0fc39c5487ae5@syzkaller.appspotmail.com
 
--Tony
+btrfs: Deprecated parameter 'usebackuproot'
+BTRFS warning: 'usebackuproot' is deprecated, use 'rescue=usebackuproot' instead
+------------[ cut here ]------------
+BTRFS: Transaction aborted (error -17)
+WARNING: CPU: 0 PID: 8268 at fs/btrfs/free-space-tree.c:1339 btrfs_rebuild_free_space_tree+0x470/0x54c fs/btrfs/free-space-tree.c:1339
+Modules linked in:
+CPU: 0 UID: 0 PID: 8268 Comm: syz-executor373 Not tainted 6.15.0-rc7-syzkaller-gd7fa1af5b33e #0 PREEMPT 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : btrfs_rebuild_free_space_tree+0x470/0x54c fs/btrfs/free-space-tree.c:1339
+lr : btrfs_rebuild_free_space_tree+0x470/0x54c fs/btrfs/free-space-tree.c:1339
+sp : ffff80009c4d7740
+x29: ffff80009c4d77b0 x28: ffff0000c1934000 x27: 0000000000000000
+x26: dfff800000000000 x25: ffff70001389aee8 x24: 0000000000000003
+x23: 1fffe0001bb6ceea x22: 0000000000000000 x21: ffff0000ddb67750
+x20: 00000000ffffffef x19: ffff0000ddb676f0 x18: 00000000ffffffff
+x17: 0000000000000000 x16: ffff80008adbe9e4 x15: 0000000000000001
+x14: 1fffe0003386aae2 x13: 0000000000000000 x12: 0000000000000000
+x11: ffff60003386aae3 x10: 0000000000ff0100 x9 : c8aea423d56d4800
+x8 : c8aea423d56d4800 x7 : 0000000000000001 x6 : 0000000000000001
+x5 : ffff80009c4d7098 x4 : ffff80008f415ba0 x3 : ffff8000807b4b68
+x2 : 0000000000000001 x1 : 0000000100000000 x0 : 0000000000000000
+Call trace:
+ btrfs_rebuild_free_space_tree+0x470/0x54c fs/btrfs/free-space-tree.c:1339 (P)
+ btrfs_start_pre_rw_mount+0xa78/0xe10 fs/btrfs/disk-io.c:3074
+ btrfs_remount_rw fs/btrfs/super.c:1319 [inline]
+ btrfs_reconfigure+0x828/0x2418 fs/btrfs/super.c:1543
+ reconfigure_super+0x1d4/0x6f0 fs/super.c:1083
+ do_remount fs/namespace.c:3365 [inline]
+ path_mount+0xb34/0xde0 fs/namespace.c:4200
+ do_mount fs/namespace.c:4221 [inline]
+ __do_sys_mount fs/namespace.c:4432 [inline]
+ __se_sys_mount fs/namespace.c:4409 [inline]
+ __arm64_sys_mount+0x3e8/0x468 fs/namespace.c:4409
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
+ el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
+ do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
+ el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
+ el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
+ el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+irq event stamp: 230
+hardirqs last  enabled at (229): [<ffff80008055041c>] __up_console_sem kernel/printk/printk.c:344 [inline]
+hardirqs last  enabled at (229): [<ffff80008055041c>] __console_unlock+0x70/0xc4 kernel/printk/printk.c:2885
+hardirqs last disabled at (230): [<ffff80008adb9eb8>] el1_dbg+0x24/0x80 arch/arm64/kernel/entry-common.c:511
+softirqs last  enabled at (8): [<ffff8000801fbf10>] local_bh_enable+0x10/0x34 include/linux/bottom_half.h:32
+softirqs last disabled at (6): [<ffff8000801fbedc>] local_bh_disable+0x10/0x34 include/linux/bottom_half.h:19
+---[ end trace 0000000000000000 ]---
+BTRFS: error (device loop2 state MA) in btrfs_rebuild_free_space_tree:1339: errno=-17 Object already exists
+BTRFS warning (device loop2 state EMA): failed to rebuild free space tree: -17
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
