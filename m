@@ -1,204 +1,126 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDDC15D1;
-	Sun,  8 Jun 2025 07:24:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B2C179BD
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 07:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749367466; cv=none; b=PPQAzh09hxDB3pIZHsAFRy06rOiFVisqMntwLmvNond7Gq6a4T5M0vSW4DW4S9tUlQqudNOftqjmtVQ2p7Yrgg5OuTmwSYTdujJFTvR6KCsDitiQ7Pt7AOmIllBneou8SaTOL2DeRTqOqqyMezAP9+HUfoXlAMPSx2sfRfoHpLQ=
+	t=1749367539; cv=none; b=ivUKiIPMX894hYDyLoM9pTe3itW1hpIJ8aWDJynaiN0DvZoNiIoZZFq/Ur7Z2jU6Ldk558olGRAOHAe2TlffqCJEseUWO2Sq74qbQSVl6uhgj6JQ0wmH7UUJ93wgRTSAFLSeSJeRMvjJBpWQjMamYRT2mnmrKUjYvCTY9ruM+ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749367466; c=relaxed/simple;
-	bh=57hSiaTP5shRl7ezdEzQTTVn75tu6DF7CI6RglBP6D4=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=AqC7fEAhm09OnW1JTFPJxR5Jj6DvtxZZI5luTM3KNbxF4o5DlGa59nKJ+S+h8HVBsX4GOYTMBGSFDDtKqPa2cg2qljJQgzqvuLczaD+aaHFFAKucdWqoUgf/haQKSr0l6qc1C3Lqn2Iv7xq2B7qZeKtbwE9kHRlMQlRVNM96/eU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EzeHcGu4; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749367539; c=relaxed/simple;
+	bh=CjBYKoeh+JUKRiVHmPnsj1xPsz1WrazHWtHcqg6xjhs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nQLuy2KbDRG7qQ5i0GIcwkf63JRUvoEqfnuYsNM5pkLLH0qIHRqX3oCPf+HNNJ1h0+MUAsQG/MXTOWak1203Ps6VRZ8+ufUgxOpfikfdPZSIFrQ9yyUHEEWZH1l/ZNpU/y55qdae6zeu4rDKVbds5JpOWLqv2qS3BehdNfKWUe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dO6hgtBL; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EzeHcGu4"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ad89c32a7b5so538945666b.2;
-        Sun, 08 Jun 2025 00:24:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dO6hgtBL"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so29545675e9.3
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 00:25:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749367463; x=1749972263; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eME8R9QRUtbMs6yNjgukeDUBZeLszNLIRLLaAcTHowg=;
-        b=EzeHcGu4H0u5AeUarGh98PNi15CCaNX9qKG5Q3S0dIqhI3yBf1GcevBwcVRGmgIwVJ
-         Cumv2RWDdrY3LJo0NJlNSP2es+sd911PXimueeJLH9t2X9jBpL3GzWFsBhQEq7kEqwnU
-         LslXFwFWqro/0W+smOogpB44JG3GeuHtcK58wk+9UXFBpC4ANWYgOqOgWO0XcqU8xazJ
-         0ob2wypQ5eTB1jjxjmsORntCkLnVl+u92j+DNi3vksh9xKnhHb5Ee63GczpjQBese8qI
-         roT9iBlW9sf2pL0i+emDlAOASfBXY3khbFGDydkh5SBeUf+h8wdZegsExfuGMbaPNjEU
-         BwnQ==
+        d=suse.com; s=google; t=1749367536; x=1749972336; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=U5zxKH1RRPFE+pq7qzzrPXBdTSkahxpWL82kTyaPaww=;
+        b=dO6hgtBLENEsjmIlf2spsPRu1O5YEurQAXwTlM+ZKvpXbhtyjsXXOPJrYjqJ5WCcmz
+         4swoMVswMGwYpL8YGPN9B0iCHXQpJJqGwt7AIAp1IC3Nt3yhhHd4hSY/3PgieJrCe9jj
+         cQSUB1K/A23Uhnxq1yZshaMP6ODGCuieTq+PpFHgZOxKRgFN0lUi+ZigiNNgReKaOD6f
+         UbcbtZYwjnt943IjT5+ku+9bLNl2dK1v3wkQebqFMmT5SSWfPpNKyTmtLJE9IHaEmKcd
+         /ZGl7zQ1B8l+tPcrHG6slaE/gCSZBgB7OFrGmPgV4NOZgwYJbWAAjZUwk5RM7ifIR9hU
+         FBvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749367463; x=1749972263;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eME8R9QRUtbMs6yNjgukeDUBZeLszNLIRLLaAcTHowg=;
-        b=xVgylB3fxjxLac/7MfbDvqUfPrX8YK9OV1l9qest9gfP5Bju11EGhIVITU5qKjRT39
-         lilgHezvIoCWx2sS41pCbf8399TPmDxfLG+WGayHbGrxsMZdUpSzNgBhAfYXxpLoUad1
-         8aZRIjnICY5MAa/7LkQdDolOXfXCAdNGqJrPxi+KDAYKgUdFU9XRRBBp1LzkljHeb7Ga
-         x87Tl+rcM4hCKDMI7/VukXDoS6oQwKRMjlbqG87iK1jXIT0oePZz9LUaYf7kYMOPdSeZ
-         xh9UmwUSN5j0aOvgH13q+1B4w/V7WuwbgRFEKDabEM3woe98dftTClOJmb/qcEV2J9WG
-         lWgw==
-X-Forwarded-Encrypted: i=1; AJvYcCUZ+WdWRgLjflrGeBhWleT6EM6katyd1WrHsrScwD2CGjt4JfwHewF5GHeLNphahPDAo4X1PeVYOvNo0upU@vger.kernel.org, AJvYcCV6LwR6ZgLRA82aXe6Tjc7ZZEQT2Q0v/u3jIZbclaivLSUOZr+Gz2WRJMLqjUCmpnmeo9XK36dSTSRe@vger.kernel.org
-X-Gm-Message-State: AOJu0YznCGkzF0oQAYUAhNgqHqZa0MYK9FELzvJ8JsASfBq/xQizQUvY
-	6WvFZsexlxtl1l21VClfLjDd56Z8lGqqUGTMQzKG+RM/Hjjr4HopUqoC
-X-Gm-Gg: ASbGncvQmG3gvNbLbytxXbdds97DDX19TwnfNrLZ05n1eMt6nJunb/KKWOKXCSgQT76
-	oY7vEFWDwtBkDlXFlwxvihprZ2zajCtq1NWpkkE9KqE77Eq92yDtlTJUQXFT+p25HbuxD3XTPse
-	Gqgo0uxy0ganfZEXFM+oYK6HtWP6bECEOkL+rr3EvQxshH/4KBV1p7RYhTZfDL2xe44BIF/5/JI
-	+yM/oyM520m7SVs2SeuAIruDNR9nI9qZ3xuAyf3aKOVKkYJEj4Lk2hxxKoEEaTozmOd7eIP5t6b
-	OIYNVPYPtt+CeAq5E2zE2bU+4WOZAUzR9tK6zGcYyU4QIzAoHaXRc8k/D3FsBeeZ70NjgNWvt5H
-	7zqIk3UlH5g==
-X-Google-Smtp-Source: AGHT+IHs2Im8ufOJ5O1PoZh7we14S+ZSLXjoRhkB7jNicHTv/HzPCNoDXtBRaSPrY7thT1gbcil+tA==
-X-Received: by 2002:a17:907:6d0e:b0:ad8:8efe:3201 with SMTP id a640c23a62f3a-ade1aaba1cemr833053066b.43.1749367462288;
-        Sun, 08 Jun 2025 00:24:22 -0700 (PDT)
-Received: from smtpclient.apple ([89.66.237.154])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade44af8215sm180104366b.15.2025.06.08.00.24.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 08 Jun 2025 00:24:21 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+        d=1e100.net; s=20230601; t=1749367536; x=1749972336;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=U5zxKH1RRPFE+pq7qzzrPXBdTSkahxpWL82kTyaPaww=;
+        b=meu2P4ChOQRWrO/dDx29O/JOx5zMUlt0eeOyMTPmsu956YrhSlAEL4d8+MyFdaRx81
+         c3QhRtHEHTqzi6J6tuY5DtzWHt5VrpIUUn0km3LkPtwhYA2KLpJnP4hbMJf90ezL58pv
+         s5E7m2Xv9QLW5Qsz8d+1kb/j7Ia6551O4NRTK9i6OYyePu0ctqTjvrmVi7iXpSpHgli8
+         3eDUpmtJa/dwYKPXzMHHHHyd2cTSIi1zNDtMp7QAy0YKUwwpEx2xqES+FSkDbCbjvnKm
+         BLCwioNdoE85UzGDR1gdhKu1ozTf9SQCMDut8Xu6Gvi4SAoAIe2KKXnHg0/fYiKllZvw
+         W7rg==
+X-Forwarded-Encrypted: i=1; AJvYcCXe4jb5pLOtCG5gQURKQ19nxKO3wrUur/fxHHWtn+0f/OdfZOqc8RXGyLjsrX/QEvV+6k6yrDYdALt52+k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz59HILCtyRAVkS2TsJkNAtGFHPeikg4nKWS/AB8fWX0zrzKJ3P
+	EvPFbPEms+wXjVqbnpXorTulPD+qUFGryQ4SebM47oEEST+1bBgrLDxp5KOPysZu3ZEf9Xiz8Cq
+	kt97QvBQ=
+X-Gm-Gg: ASbGncs1huaJoKFAZDLSQecCYecBlsXfEITdHTgZ0a9hPghVQd6B7on6P55UDXdBKCv
+	WSnUgpKYBPzg+PaxnWPQgIC+4zXUw5XgwQKAYh9E0NaFqj2r9s9Uy8rle4sYdoCx1qQBxBEi76i
+	LZEwZ/UelO5vwMFFJo+hd6WYZejKmno22j8UfUFz6EykjE1HNK112s6dTvF5sz1QaoP1PfqKO7U
+	oL+SgalfzR4/HR4Vej8ryKK/rC/JkPemRUEK0O4RVSgF88aYJgNb9PSfc1EDnoPlY1yUTLBtZsT
+	2nIYFY863FTLK5P/BOBunr3DISMce6kINk7ziIiWLi3UWx8GxikDGg86wZ8Je59rPME/qg==
+X-Google-Smtp-Source: AGHT+IF/TT9gpo9gWlFm0wUaY6aLXBpdcRMEPm4klh6YKqHJVpnZ2y/4vfFm+DSI/hGsGt0wqWEm6w==
+X-Received: by 2002:a05:600c:1913:b0:453:9bf:6f7c with SMTP id 5b1f17b1804b1-45309bf71a7mr19489325e9.9.1749367535678;
+        Sun, 08 Jun 2025 00:25:35 -0700 (PDT)
+Received: from [10.0.1.22] (109-81-1-248.rct.o2.cz. [109.81.1.248])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45213754973sm77337195e9.35.2025.06.08.00.25.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 Jun 2025 00:25:35 -0700 (PDT)
+Message-ID: <f6fa3df3-38d5-4191-96d1-9a8a2152cedf@suse.com>
+Date: Sun, 8 Jun 2025 09:25:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH 1/4] arm64: dts: rockchip: list all CPU supplies on ArmSoM
- Sige5
-From: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
-In-Reply-To: <CABjd4YxGQP=rH15EX12w36b7+82Dedf+rVH3v5V6gBwNv3V3iw@mail.gmail.com>
-Date: Sun, 8 Jun 2025 09:24:09 +0200
-Cc: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Heiko Stuebner <heiko@sntech.de>,
- devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <90218D7B-0CF5-4F5D-969A-909A44E6044F@gmail.com>
-References: <20250603-sige5-updates-v1-0-717e8ce4ab77@gmail.com>
- <20250603-sige5-updates-v1-1-717e8ce4ab77@gmail.com>
- <6656934.DvuYhMxLoT@workhorse>
- <CABjd4Yx05SCm+03jWbsEP-A5AuhL14wLj=+VdKyQgqMbnxi3xQ@mail.gmail.com>
- <512E950E-E8CB-443B-8E47-79F073D217E8@gmail.com>
- <CABjd4YxGQP=rH15EX12w36b7+82Dedf+rVH3v5V6gBwNv3V3iw@mail.gmail.com>
-To: Alexey Charkov <alchark@gmail.com>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] module: Fix memory deallocation on error path in
+ move_module()
+To: Luis Chamberlain <mcgrof@kernel.org>,
+ Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>
+Cc: linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250607161823.409691-1-petr.pavlu@suse.com>
+ <20250607161823.409691-2-petr.pavlu@suse.com>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20250607161823.409691-2-petr.pavlu@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 6/7/25 6:16 PM, Petr Pavlu wrote:
+> The function move_module() uses the variable t to track how many memory
+> types it has allocated and consequently how many should be freed if an
+> error occurs.
+> 
+> The variable is initially set to 0 and is updated when a call to
+> module_memory_alloc() fails. However, move_module() can fail for other
+> reasons as well, in which case t remains set to 0 and no memory is freed.
+> 
+> Fix the problem by setting t to MOD_MEM_NUM_TYPES after all memory types
+> have been allocated. Additionally, make the deallocation loop more robust
+> by not relying on the mod_mem_type_t enum having a signed integer as its
+> underlying type.
+> 
+> Fixes: c7ee8aebf6c0 ("module: add stop-grap sanity check on module memcpy()")
+> Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
+> ---
+>  kernel/module/main.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/module/main.c b/kernel/module/main.c
+> index 08b59c37735e..322b38c0a782 100644
+> --- a/kernel/module/main.c
+> +++ b/kernel/module/main.c
+> [...]
+>  	pr_debug("Final section addresses for %s:\n", mod->name);
+> @@ -2693,8 +2694,8 @@ static int move_module(struct module *mod, struct load_info *info)
+>  	return 0;
+>  out_err:
+>  	module_memory_restore_rox(mod);
+> -	for (t--; t >= 0; t--)
+> -		module_memory_free(mod, t);
+> +	for (; t > 0; t--)
+> +		module_memory_free(mod, t - 1);
+>  	if (codetag_section_found)
+>  		codetag_free_module_sections(mod);
+>  
 
+This can actually be simply:
 
-> Wiadomo=C5=9B=C4=87 napisana przez Alexey Charkov <alchark@gmail.com> =
-w dniu 5 cze 2025, o godz. 15:42:
->>=20
->>>=20
->>>=20
->>=20
->> Alexey,
->> I see you are using rk3576 board like me (nanopi-m5)
->> Have you on your board correctly working cpu dvfs?
->> I mean: [1][desired clocks reported by kernel sysfs are in pair with =
-[2[]cur clocks?
->> In my case i see mine cpu lives totally on it=E2=80=99s own with =
-dvfs:
->=20
-> Hi Piotr,
->=20
-> I haven't tried to validate actual running frequencies vs. requested
-> frequencies, but subjective performance and power consumption seem to
-> be in line with what I expect.
+	while (t--)
+		module_memory_free(mod, t);
 
-well - my subjective l&f is that  - currently - my rk3576 seems =
-=E2=80=9Eslower" than i.e. 4xA53 h618.=20
-This directed me to investigate this issue.
-Test run was media player (mythtv) where ui has gl effects and ui gl =
-transitions =E2=80=9Espeed=E2=80=9D are quite proportional to cpu speed =
-(and gpu).
-My overall feeling is: ux is comparable to slow socs 4xA53@1.4GHz/G31. =
-This is with mainline atf + collabora uboot [1] and on-demand gov.
-I done test with replacing uboot from mainline atf + collabora uboot to =
-bin. dump of vendor uboot (2017.09) and with this ux become almost as =
-expected (i mean comparable with i.e. rk3399).
-
-I done test with perf gov. and
-
-1.collabora uboot[1] + mainline atf 2.13
-2.collabora uboot[1] + rockchip rkbin bl31 blob [2]
-3.vendor uboot (bin dump from friendlyelec ubuntu image)  =20
-
-[a] on vendor uboot:
-Requested CPU4: 2304 MHz=20
-Requested CPU0: 2208 MHz=20
-Running CPU4: 1008 MHz=20
-Running CPU0: 1008 MHz=20
-Measured on HW: 1580.11 MHz=20
-
-[b] on collabora uboot + mainline atf:
-Requested CPU4: 2304 MHz
-Requested CPU0: 2208 MHz
-Running CPU4: 816 MHz
-Running CPU0: 816 MHz
-Measured on HW: 808.72 MHz  =20
-
-[c] on collabora uboot + rockchip rkbin bl31 blob:
-Requested CPU4: 2304 MHz
-Requested CPU0: 2208 MHz
-Running CPU4: 816 MHz
-Running CPU0: 816 MHz
-Measured on HW: 812.49 MHz
-
-in all cases all clocks are constant as they should
-Interesting that on collabora uboot [b][c] measured clock is 808 vs 1580 =
-on vendor uboot [a]...
-sw video decode conforms this diff: hd h264 gets cpu load: 172%[b][c] vs =
-87%[a]
-
-=E2=80=A6.
-
->=20
->=20
-> Are these taken on the mainline kernel or Rockchip one?
-
-I tested:
-
-6.15 mainline + some collabora patches
-
-1.collabora uboot[1] + mainline atf 2.13
-2.collabora uboot[1] + rockchip rkbin bl31 blob [2]
-3.vendor uboot (bin dump from friendlyelec ubuntu image)  =20
-
-
-> Binary BL31
-> from Rockchip or opensource TF-A? With big-core CPUs linked up to
-> their supply regulator (as per this patch)
-
-yes
-
-So summarising:
-
-1. i see kind of issue with clock values (e.g. perf gov gives 800MHz on =
-mainline atf).=20
-imho rot cause seems to be in collabora uboot
-
-2. on-demand gov. seems behave much more like powersave.
-this seems to be 3576 specific:=20
--on 3588 change from perf to on_demand is hardly noticeable in ux
--on 3576 such change makes ux feeling noticeable slow (like 4xA53 soc)
-i think this is more related to diff between scmi mcu gov algo in 3576 =
-vs. 3588
-(imho 3576 algo has high latency in clock increases when demand happens =
-+ too short delay for  clocks decreases to save power)
-    =20
-
-
-[1] =
-https://gitlab.collabora.com/hardware-enablement/rockchip-3588/u-boot
-[2] =
-https://github.com/rockchip-linux/rkbin/blob/master/bin/rk35/rk3576_bl31_v=
-1.15.elf
-
+-- Petr
