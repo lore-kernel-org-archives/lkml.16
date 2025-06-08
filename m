@@ -1,52 +1,52 @@
-Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB568BFF
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 23:38:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658A17081A
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 23:38:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749425897; cv=none; b=ZYKkuYkw/D2TTpan67GYYNcUkHYsmtftyKDKCcxT2FrNbwTweNIZ39dhzp6hkxTQjfndRocUmj2F3t/u9myOe2803styUxfkgLAvmosUNO01OLiPWAxdGxKd/3l2weMD5nhNAzwIh/IrEPccCkt/2mvw9Jorad4ecbACD94NCXY=
+	t=1749425899; cv=none; b=EBGylvj4F4YgTrwJ1gNJrA9DRPsRke9ZCZHuXnkabau+OSzsjGn8PF1TUxD1MJAeouz24GHHLsczl0fTjg4zFlqMPnLxkFN/vESzGyB5w+cRKDLnjtJ2PKHYsyNXYw0wlYAIGONijxDe28GZMFIHhMv7KtNaMdhC6I8E8M0X9bE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749425897; c=relaxed/simple;
-	bh=cEu9CCcX778eVSqvJkvGz139e4Hply15sFkCs/JuvpE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GFktfbVtAZrCINZIZSxHhHQHkYMKviEb84XDm4V0UtM5TJslkLlJjEWswH9JszyBQ1dLdfqXVW48Kq4IHCJc3dcq/As7OFLRge/TLDmpGvgKUoEp85IcwxVRGzTavzu1cBvaSGpi5a9FAuMPIAOEZraAE/T0zaRsRekgRaPS/cA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=kxE+RtcK; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=WAir7bk4; arc=none smtp.client-ip=202.12.124.145
+	s=arc-20240116; t=1749425899; c=relaxed/simple;
+	bh=lsT/fCfjpBnItBtp+Cy/V9ovM7kes8PYz6L+AR2m0NA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MmQaFdvfDsK5c+RqWpZJ4V/eO1BU2ZlHNC5qSU0qAtU3FSg/edvLpvORctuKo53HzWrz8lFo4BdpunFlI/wq2bE0G/bna1TFnOGlzX84BEyZIj4SIOevQNKaprYUu1Fsa4bbwzJ3nZ+bm2SKAsBXE9AaR8Lfz8FIOEh0/q6CTpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=gdFrrAoF; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=rLPJNKoY; arc=none smtp.client-ip=202.12.124.152
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="kxE+RtcK";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WAir7bk4"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfout.stl.internal (Postfix) with ESMTP id A4A4E1140155;
-	Sun,  8 Jun 2025 19:38:13 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="gdFrrAoF";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rLPJNKoY"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 52FAC2540132;
+	Sun,  8 Jun 2025 19:38:15 -0400 (EDT)
 Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Sun, 08 Jun 2025 19:38:13 -0400
+  by phl-compute-05.internal (MEProxy); Sun, 08 Jun 2025 19:38:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
 	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
 	:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to; s=fm1; t=1749425893; x=1749512293; bh=asezo7wgD0
-	P09a8YPAx032aUXq2d/5SDAKgsL4qpYEk=; b=kxE+RtcK97ujbPllUahf0y0/gr
-	GGVX4rc3y21KqCpSJnbstL8pLGYMAMV7GYvTf+IeftJhoDFUb5ozSvuAQ0mQyOQD
-	Ow2kVHSQcU2tal3Zt36ESO8GQ4ogtJx5pjwx313u9jwL4WlUaZMDck0nK+c/fHkn
-	fi4sgnEkDVcbGh2tKKUPKeWkOpUybYZZDqUBzuOudfOwfbClYj/tU/VOgG1/5r0W
-	0MEyUd+0b/7uCP+lH/WyN5PHxZbn5XwcEtb/xeDD+gOz/Sjg3IXBXgwIwxLD0v+d
-	6FD6f9ebRLerk4wJtnVM0Dn0jCyXHMMCPI15rXw+QT2N+k6y3JDqhY16Y+bQ==
+	:subject:to:to; s=fm1; t=1749425895; x=1749512295; bh=bNQm/MRDMb
+	bD83iW9zl9AvGib4jDg2NSsHRm/axzsA0=; b=gdFrrAoF5yVIIfbw795hLJT3Hs
+	ibVpvgZOLbINZRJjDBAfF+ptj2sBoY4+ga8QVmYwm+qncHta5+41Hb5TWtfCsb97
+	HaH20u5IAvzUZwhWYNsWvRvKoApqP0jKMQVOy1NmPdgP0qIT060eqFNRvfUBrZHN
+	3NzvqYYQPvets5JQbO/607FHRUvznBULbq+GWTVMB8oJCzQho8mQUdFsmjnRD7Xl
+	YHz3y4r8T/4hLsEsrde6H4XyCGCLQc+ZjpqwBftRpF5498YtTJtNpHNn8OYU6xqr
+	GSPlSxKwpvpzkwLY0D9Iv6qQoB+k2FJ98ZaynY/vzyzKRqE6nIIk2Pspomfw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
 	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1749425893; x=1749512293; bh=asezo7wgD0P09a8YPAx032aUXq2d/5SDAKg
-	sL4qpYEk=; b=WAir7bk4KhcidaUg8WjAIUKJ/yf3xNgPHugJOYNRctPxGx5pVvM
-	L1zkvk+Ss+9DSnJldO+9r+s8JTUXAzkpaLRkc4flelB09xmkNAskvG1SkqYM7aCU
-	HQgNf7XJ8DO4bBrJQEGvUknAWD1CR2f9pmlH7iD+dL4mnK5SR2EHlmMnH1m9Hkfx
-	+YfGh4kwHA4924MNN/6MDx2Fpd1LxTjg1YIBFn8Vz6h8rXjrEVVaqc0H3ixkQeHH
-	x1HD9KCNy2PoHSLrcWqLePZGP5qfSU6LzQtTmlU9bx+fLf3IUg9S/T7G7uCzfL+r
-	4flBi75jP09tH7proNDVeUlWKvG5SbPyhXA==
-X-ME-Sender: <xms:5R5GaPSCOJYN777DjSHv0RsiP-Pk0Rf8bhzh-C5agCd_-PtMPbaPlQ>
-    <xme:5R5GaAwWnVQFs6CMP5hueE-F2R4u6T0JVMueyx8mg4THH0lAcPQPWmqMqxwakZ4iW
-    nkgCQakoJCYbUoDMj0>
-X-ME-Received: <xmr:5R5GaE2DIdsl-CiMBE0QsJTjgcJ8h3JvpK2DPWi2Hi2rKP1NQ4-oV_gKio4A7x_hzKEiY0yRAOYErNMH6MfufeFkNg2B9mFL0je8SkRNS05rKUg>
+	1749425895; x=1749512295; bh=bNQm/MRDMbbD83iW9zl9AvGib4jDg2NSsHR
+	m/axzsA0=; b=rLPJNKoYheg0S60SAEGZl4hw8c2vFPAOTFJPdq46+ejdqHZtYIZ
+	BBB5ZJ7m6nZnZIr0c4evkymGv1RN37y0HCZ9hONGMFZnhUMTdhRMYPaEXBSFodwm
+	f+qGr/cHYuAXMzBykhfYSgQQOmufJKnr3D80fJuog+BbVUKYmoNuWnel+o6Puh1c
+	S7glnH5WU2B89IA2H92QS6AuYFzCr2RlNxebCwNNdpn+1WjZfjZe9Unk1hJ0VWBa
+	Y3pXJd462tR2AwpDEa0HKFmou6OsZsnZIeHRXSLn5KGxkEpMKiVQXrEMEK/2+G4H
+	fe1lZzJTWrNJ6UoHp+9+YQQQI7eJuXp1rQA==
+X-ME-Sender: <xms:5h5GaLif3ExJ6XTHAAcD9wZMyS6XwUVEpHbcXqYWVqk9uCSOyf-MoA>
+    <xme:5h5GaIBtBQdAaYr43aw562stCUHiLPa5a8KU83mrSFPgK78GTmO-_UJ2g5hQUAaYp
+    eqmmXmuMF3_QibQMxw>
+X-ME-Received: <xmr:5h5GaLH3EMeSGlTrN8uCzFqiRv9m2csD_SpCHbLsS6TIRKpnTmRRmV842F_GWtw2Wyq-sYkJM18LeY--f4wVI1pgf6GZyit3EOEzwYMq4Mb1g-g>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdekhedvucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
     rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevuf
@@ -58,20 +58,20 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdekhedvucetufdoteggod
     ohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigudefleegqdguvghvvghlse
     hlihhsthhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtoheplhhinhhugidq
     khgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:5R5GaPCBG38vlIUK7hUS7GZp8lDi0z9_rztHSFZN8IkyVSpng7OY_Q>
-    <xmx:5R5GaIi39_q3D5D12jiZEQOK8yODFvtI7i_CEfBM1P6XpEsn6eEylw>
-    <xmx:5R5GaDrxowyjaW86XagxknqUJidQ3EIjGbf5uHep28m6lIu8VBFf3Q>
-    <xmx:5R5GaDhjncyNmZ3n65JmFJ8Krq8mrHF68orDvJGIsLemKnToVqd4XA>
-    <xmx:5R5GaLVdlzjt2VW7Bfc4-ffIQEO6swehJJwdG_9vj-lLZUOm94r7sVKp>
+X-ME-Proxy: <xmx:5x5GaITo0Rr_d0lQw0LyJXxXZZsGcmMXNFuYciqs7PANF1vuf0g6hA>
+    <xmx:5x5GaIxcOhD0Tb4aJjQADjlglsEzStZ45-l0FMdg8kfjCUmggRFyzQ>
+    <xmx:5x5GaO7L9ZF44cs-hafzEJs7-FSGkZEiR9a2-ZsFzqJyklAP35Aa5Q>
+    <xmx:5x5GaNw55dBxc9Qs8iO7rU95cE1TAIxaq3WysIgo-yThAhHZJRwKhA>
+    <xmx:5x5GaNiOR4F3pLkAHE9QglnvFDsk5tC8Pn-nI41Am9Ebj372vfkUF7nR>
 Feedback-ID: ie8e14432:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 8 Jun 2025 19:38:12 -0400 (EDT)
+ 8 Jun 2025 19:38:13 -0400 (EDT)
 From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 To: linux1394-devel@lists.sourceforge.net
 Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH] firewire: ohci: correct code comments about bus_reset tasklet
-Date: Mon,  9 Jun 2025 08:38:06 +0900
-Message-ID: <20250608233808.202355-1-o-takashi@sakamocchi.jp>
+Subject: [PATCH] firewire: ohci: use from_work() macro to expand parent structure of work_struct
+Date: Mon,  9 Jun 2025 08:38:07 +0900
+Message-ID: <20250608233808.202355-2-o-takashi@sakamocchi.jp>
 X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -81,48 +81,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The tasklet for bus reset event has been replaced with work item, while
-some code comments still address to the tasklet.
+A commit 60b2ebf48526 ("workqueue: Introduce from_work() helper for cleaner
+callback declarations") introduces a new macro to retrieve a poiner for the
+parent structure of the work item. It is convenient to reduce input text.
 
-This commit corrects them.
+This commit uses the macro in PCI driver for 1394 OHCI.
 
-Fixes: 2d7a36e23300 ("firewire: ohci: Move code from the bus reset tasklet into a workqueue")
 Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 ---
- drivers/firewire/ohci.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/firewire/ohci.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/firewire/ohci.c b/drivers/firewire/ohci.c
-index edaedd156a6d..27e3e998e6fc 100644
+index 27e3e998e6fc..40313a3ec63e 100644
 --- a/drivers/firewire/ohci.c
 +++ b/drivers/firewire/ohci.c
-@@ -2528,7 +2528,7 @@ static int ohci_enable(struct fw_card *card,
- 	 * They shouldn't do that in this initial case where the link
- 	 * isn't enabled.  This means we have to use the same
- 	 * workaround here, setting the bus header to 0 and then write
--	 * the right values in the bus reset tasklet.
-+	 * the right values in the bus reset work item.
- 	 */
+@@ -1190,7 +1190,7 @@ static void context_tasklet(unsigned long data)
  
- 	if (config_rom) {
-@@ -2617,7 +2617,7 @@ static int ohci_set_config_rom(struct fw_card *card,
- 	 * during the atomic update, even on little endian
- 	 * architectures.  The workaround we use is to put a 0 in the
- 	 * header quadlet; 0 is endian agnostic and means that the
--	 * config rom isn't ready yet.  In the bus reset tasklet we
-+	 * config rom isn't ready yet.  In the bus reset work item we
- 	 * then set up the real values for the two registers.
- 	 *
- 	 * We use ohci->lock to avoid racing with the code that sets
-@@ -2659,7 +2659,7 @@ static int ohci_set_config_rom(struct fw_card *card,
- 	/*
- 	 * Now initiate a bus reset to have the changes take
- 	 * effect. We clean up the old config rom memory and DMA
--	 * mappings in the bus reset tasklet, since the OHCI
-+	 * mappings in the bus reset work item, since the OHCI
- 	 * controller could need to access it before the bus reset
- 	 * takes effect.
- 	 */
+ static void ohci_isoc_context_work(struct work_struct *work)
+ {
+-	struct fw_iso_context *base = container_of(work, struct fw_iso_context, work);
++	struct fw_iso_context *base = from_work(base, work, work);
+ 	struct iso_context *isoc_ctx = container_of(base, struct iso_context, base);
+ 
+ 	context_retire_descriptors(&isoc_ctx->context);
+@@ -2028,8 +2028,7 @@ static int find_and_insert_self_id(struct fw_ohci *ohci, int self_id_count)
+ 
+ static void bus_reset_work(struct work_struct *work)
+ {
+-	struct fw_ohci *ohci =
+-		container_of(work, struct fw_ohci, bus_reset_work);
++	struct fw_ohci *ohci = from_work(ohci, work, bus_reset_work);
+ 	int self_id_count, generation, new_generation, i, j;
+ 	u32 reg, quadlet;
+ 	void *free_rom = NULL;
 -- 
 2.48.1
 
