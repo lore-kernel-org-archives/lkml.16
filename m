@@ -1,190 +1,230 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD0716132F;
-	Sun,  8 Jun 2025 16:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813C717E
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 16:35:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749400413; cv=none; b=ZLOv09pqsU7zxKEb9BGIak7+hM6Gsps9suWQBhujUZk/DX1qz8bH+aPTtznKNWf22LUalIO7YXwM/ierfpC3g2DgE2f89QyxazKticSMJWrrfIUjD5BRzz75iK4vVk1J4EEm2gtfbON1FIBq7kLqPIbXKmGqHG4fQFmEtBmRhvM=
+	t=1749400559; cv=none; b=SRFbX9nWxDtPZQyeolIiT809jtQuZvOexpVznDPTzLgRYRju4Ij0UyNgtpMcBFWaOrlfqsfO7tAjtk5Meon+h5UQRdT7DpNOSo047xc2uFMcavnfIBf0fTNpdY1fVFhYLnXrut6fZqI7R1G2XEvFrkaIabxYw6F5cHZfSxc7emg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749400413; c=relaxed/simple;
-	bh=5UaJKy+PK+BeyZzfXGi92iOZ13ufZqJEChURi7S104E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TnrcsuWNbmNfl83kDYU5zbEEbq+1gzVoF0/oLZpKRxNAlqRW5lAQ4pgfUcRIdI1TUD0gunvSqwqW2jg/vHmESfKRoG9S0Swa98YD8y144EKHX13HRxO1kyef8+jGnmDE3XRTmOrZmwh+DD8pDV5KxWQnQxNxje5AfEzBtNc7sP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=djhHOUoy; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1749400559; c=relaxed/simple;
+	bh=G+nB+5r3+idVDUDgXEpuU874M6pCPfeB02P2+ip+IMo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FAZNgq2oc92Mfu7eyxhhDF+cJKFHq2KAhYLtD0C7k+FwuyVVMYcQC10t6ICc3YE/UBJM+FYQOKdkbULHiBDjim5Yb68SVfydW56vbVcBVLidbVWHM1c2LtvQ48L2wba/Ce80jSkiwEZII2vC5goWbT/iZKMpUwaL32xCMEbnZew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=ddhvU2aR; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="djhHOUoy"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5A25E10397298;
-	Sun,  8 Jun 2025 18:33:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1749400402; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding; bh=q9L8aiejltW49BwuW1MY7Fse2bm2uhwAe8TBfe1zjr4=;
-	b=djhHOUoylnit2guL3TJHiiKRS1sBTwO/9E6txnGp/5LCUgz3wSpBs0swERQ/Ib5/pdtZt/
-	uPIHwtZ2Ds/dFaA7+WuWF2uj1pzqVfBMjtZhGyo/4hwlbJhER3X4EOLTa5JVlwJCtjLP+t
-	i3CWS8FgiarfcDo1a2LGKwr7j9fHvYPWR5FB+y/8Fkd4dOxwtnIsFbaw+TeZ/p2/gjNlIz
-	PzjCLCCcxbzSu1kK47LkT0pwAqDsSnPJKcZGQMiWfDqBTna4aplciXsTdsAe1gcPCZhfnt
-	wB+l7+4dS/o0QbVkKUtoy4zQ5vIv/f23agzEwkM9tAnU+H4yejlv7BA77/zmpg==
-From: Heiko Schocher <hs@denx.de>
-To: linux-kernel@vger.kernel.org
-Cc: Heiko Schocher <hs@denx.de>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Rishi Gupta <gupt21@gmail.com>,
-	linux-i2c@vger.kernel.org,
-	linux-input@vger.kernel.org
-Subject: [PATCH] HID: mcp2221: set gpio pin mode
-Date: Sun,  8 Jun 2025 18:33:15 +0200
-Message-Id: <20250608163315.24842-1-hs@denx.de>
-X-Mailer: git-send-email 2.20.1
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="ddhvU2aR"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4a4323fe8caso23922221cf.2
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 09:35:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1749400556; x=1750005356; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hn9Sb4IlvfXIFtJ8XIXM20qiAkkg1B8bbJW0HdlNMEk=;
+        b=ddhvU2aR+ha86BYd16YZyDX7HjticK7TLFiDSPFe+9eqGafG0sjYGk0Nh59cGyyXHe
+         mi0P9VejPhJhpbEgayneL5nnoYq/M6CVFG1HK47hQeZPfMkWwm8s3LQILGr/50PiqMN6
+         v+3VwTjcEoeB6o/BgUBogcR+kb32utiteGK/XYAC4Wiz6jObMVpCMVmlZzSUbSJJJsUB
+         BeT86OrrxEmev4/RtFTxArfTR3knOTQAjaQRuT6ZIqxwK0DnCCBdGc3M4rPv2X47g8v2
+         y9WGPAAfwTlOCBkPIlsS1jdzUXZK+mGMSCtgaGQ5PKkZO1rI61bnMlHlUwW9uuLS1f1v
+         Ao3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749400556; x=1750005356;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hn9Sb4IlvfXIFtJ8XIXM20qiAkkg1B8bbJW0HdlNMEk=;
+        b=AoiHydfEezze2pEDpb+sjeHTHLbgTBMhGmr9z4pChPse01maTYPNYp+v9Zo7wzkfXs
+         tyi+Lq5nlqGpJAVtfKc8vK4N9xmPkrvfnAKkXwIjbmzV2oDQ/2WFVdGSLmCTbmvg8hVv
+         V0zjhB/+NJG3sP+OPY85nxdrHbfDOD5fQLcOR4CzpUoheQlPrZYxZ3JdQEobNpCMSJld
+         hY+nTbqGZsaqSrhCjcm5+kir28QAyoaCOvYH3ZNuKkaPxegU/JoV67JX+XSkC/b7flVz
+         csSLp6GToBQa2AoafQyk4B8fRZAugb1qh7guUYHYSDVASj1ni38YImb/fgOcG/wlnTh4
+         5+3w==
+X-Forwarded-Encrypted: i=1; AJvYcCV7d82bC/vEmOQQUmaxkfmky6wIL1TASvvnf3SumQGbXmtkYBgDVsne2vW3UHuBOqDAysMRsqSSMMAsO0w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw54qSYpiJfb5p0FS7n4PD8GbFdkmlFF+6VceesVEuPAqpvdvM9
+	Ptcw391/NUxAz5g6t+Fxj8sS7A30J6rLrNIvHvGt5frIq0G1mVHB3HeHodrUvrNFP/U88iDRB1x
+	yZmx45JsCxQpalxPD60RfxPLzQMzSH5mzG6qgJ5VN9w==
+X-Gm-Gg: ASbGncsOYiuDJVfO4eM/UaQ4NVkFMiJVqRjK3FJV8hOm72vo+uod+vLc6xF6T66IPFg
+	2e5DZOSyB1ugWHGChiM7phq3nbpO7VO3lFYxHaJDIikrEk1+a8qPO5i8BdQWdsBSCVuwp//tViW
+	nnFKPfze1OXIU56hDFj+wn8XVJrYiOHP18dfJM2bNs
+X-Google-Smtp-Source: AGHT+IFqe9ejTPlAsTaPj7L7N+1gJedHDl31WYCkzxJQefBFZZ1c4isRvgInmAri9CFv7dkQjmquxrP4qLVUvalWYQ4=
+X-Received: by 2002:a05:622a:590c:b0:4a4:34ed:b64c with SMTP id
+ d75a77b69052e-4a5b9dab813mr183961441cf.45.1749400556526; Sun, 08 Jun 2025
+ 09:35:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
+ <20250515182322.117840-11-pasha.tatashin@soleen.com> <mafs0tt4urwp0.fsf@kernel.org>
+In-Reply-To: <mafs0tt4urwp0.fsf@kernel.org>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Sun, 8 Jun 2025 12:35:19 -0400
+X-Gm-Features: AX0GCFteXcRxC3-vZZL_aqHL2ebAE0Lr6ln_w6d3VAVqndZjIpLQe59BlkOtgJc
+Message-ID: <CA+CK2bDx6DAKvW5jDajDkTzzsaR9fLWS6EFSDHCq893hOCW_7Q@mail.gmail.com>
+Subject: Re: [RFC v2 10/16] luo: luo_ioctl: add ioctl interface
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: jasonmiu@google.com, graf@amazon.com, changyuanl@google.com, 
+	rppt@kernel.org, dmatlack@google.com, rientjes@google.com, corbet@lwn.net, 
+	rdunlap@infradead.org, ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, 
+	ojeda@kernel.org, aliceryhl@google.com, masahiroy@kernel.org, 
+	akpm@linux-foundation.org, tj@kernel.org, yoann.congal@smile.fr, 
+	mmaurer@google.com, roman.gushchin@linux.dev, chenridong@huawei.com, 
+	axboe@kernel.dk, mark.rutland@arm.com, jannh@google.com, 
+	vincent.guittot@linaro.org, hannes@cmpxchg.org, dan.j.williams@intel.com, 
+	david@redhat.com, joel.granados@kernel.org, rostedt@goodmis.org, 
+	anna.schumaker@oracle.com, song@kernel.org, zhangguopeng@kylinos.cn, 
+	linux@weissschuh.net, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-mm@kvack.org, gregkh@linuxfoundation.org, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, rafael@kernel.org, dakr@kernel.org, 
+	bartosz.golaszewski@linaro.org, cw00.choi@samsung.com, 
+	myungjoo.ham@samsung.com, yesanishhere@gmail.com, Jonathan.Cameron@huawei.com, 
+	quic_zijuhu@quicinc.com, aleksander.lobakin@intel.com, ira.weiny@intel.com, 
+	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
+	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
+	stuart.w.hayes@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-in case we have GPIOLIB enabled the gpio pins are used
-from the current driver as gpio pins. But may the gpio
-functions of this pins are not enabled in the flash
-of the chip and so gpio access fails.
+On Thu, Jun 5, 2025 at 12:16=E2=80=AFPM Pratyush Yadav <pratyush@kernel.org=
+> wrote:
+>
+> On Thu, May 15 2025, Pasha Tatashin wrote:
+>
+> > Introduce the user-space interface for the Live Update Orchestrator
+> > via ioctl commands, enabling external control over the live update
+> > process and management of preserved resources.
+> >
+> > Create a misc character device at /dev/liveupdate. Access
+> > to this device requires the CAP_SYS_ADMIN capability.
+> >
+> > A new UAPI header, <uapi/linux/liveupdate.h>, defines the necessary
+> > structures. The magic number is registered in
+> > Documentation/userspace-api/ioctl/ioctl-number.rst.
+> >
+> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> > ---
+> [...]
+> > +static int luo_ioctl_fd_preserve(struct liveupdate_fd *luo_fd)
+> > +{
+> > +     struct file *file;
+> > +     int ret;
+> > +
+> > +     file =3D fget(luo_fd->fd);
+> > +     if (!file) {
+> > +             pr_err("Bad file descriptor\n");
+> > +             return -EBADF;
+> > +     }
+> > +
+> > +     ret =3D luo_register_file(&luo_fd->token, file);
+> > +     if (ret)
+> > +             fput(file);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static int luo_ioctl_fd_unpreserve(u64 token)
+> > +{
+>
+> This leaks the refcount on the file that preserve took. Perhaps
+> luo_unregister_file() should return the file it unregistered, so this
+> can do fput(file)?
 
-In case CONFIG_IIO is not enabled we can prevent this
-issue of the driver simply by enabling the gpio mode
-for all pins.
+Thank you, David Matlack also noticed this leak, I fixed it.
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
----
+>
+> > +     return luo_unregister_file(token);
+> > +}
+> > +
+> > +static int luo_ioctl_fd_restore(struct liveupdate_fd *luo_fd)
+> > +{
+> > +     struct file *file;
+> > +     int ret;
+> > +     int fd;
+> > +
+> > +     fd =3D get_unused_fd_flags(O_CLOEXEC);
+> > +     if (fd < 0) {
+> > +             pr_err("Failed to allocate new fd: %d\n", fd);
+> > +             return fd;
+> > +     }
+> > +
+> > +     ret =3D luo_retrieve_file(luo_fd->token, &file);
+> > +     if (ret < 0) {
+> > +             put_unused_fd(fd);
+> > +
+> > +             return ret;
+> > +     }
+> > +
+> > +     fd_install(fd, file);
+> > +     luo_fd->fd =3D fd;
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int luo_open(struct inode *inodep, struct file *filep)
+> > +{
+> > +     if (!capable(CAP_SYS_ADMIN))
+> > +             return -EACCES;
+> > +
+> > +     if (filep->f_flags & O_EXCL)
+> > +             return -EINVAL;
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static long luo_ioctl(struct file *filep, unsigned int cmd, unsigned l=
+ong arg)
+> > +{
+> > +     void __user *argp =3D (void __user *)arg;
+> > +     struct liveupdate_fd luo_fd;
+> > +     enum liveupdate_state state;
+> > +     int ret =3D 0;
+> > +     u64 token;
+> > +
+> > +     if (_IOC_TYPE(cmd) !=3D LIVEUPDATE_IOCTL_TYPE)
+> > +             return -ENOTTY;
+> > +
+> > +     switch (cmd) {
+> > +     case LIVEUPDATE_IOCTL_GET_STATE:
+> > +             state =3D READ_ONCE(luo_state);
+> > +             if (copy_to_user(argp, &state, sizeof(luo_state)))
+> > +                     ret =3D -EFAULT;
+> > +             break;
+> > +
+> > +     case LIVEUPDATE_IOCTL_EVENT_PREPARE:
+> > +             ret =3D luo_prepare();
+> > +             break;
+> > +
+> > +     case LIVEUPDATE_IOCTL_EVENT_FREEZE:
+> > +             ret =3D luo_freeze();
+> > +             break;
+> > +
+> > +     case LIVEUPDATE_IOCTL_EVENT_FINISH:
+> > +             ret =3D luo_finish();
+> > +             break;
+> > +
+> > +     case LIVEUPDATE_IOCTL_EVENT_CANCEL:
+> > +             ret =3D luo_cancel();
+> > +             break;
+> > +
+> > +     case LIVEUPDATE_IOCTL_FD_PRESERVE:
+> > +             if (copy_from_user(&luo_fd, argp, sizeof(luo_fd))) {
+> > +                     ret =3D -EFAULT;
+> > +                     break;
+> > +             }
+> > +
+> > +             ret =3D luo_ioctl_fd_preserve(&luo_fd);
+> > +             if (!ret && copy_to_user(argp, &luo_fd, sizeof(luo_fd)))
+> > +                     ret =3D -EFAULT;
+>
+> luo_unregister_file() is needed here on error.
+>
 
- drivers/hid/hid-mcp2221.c | 97 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 97 insertions(+)
+Done, thank you.
 
-diff --git a/drivers/hid/hid-mcp2221.c b/drivers/hid/hid-mcp2221.c
-index 0f93c22a479f..f693e920dffe 100644
---- a/drivers/hid/hid-mcp2221.c
-+++ b/drivers/hid/hid-mcp2221.c
-@@ -55,6 +55,27 @@ enum {
- 	MCP2221_ALT_F_NOT_GPIOD = 0xEF,
- };
- 
-+/* MCP SRAM read offsets cmd: MCP2221_GET_SRAM_SETTINGS */
-+enum {
-+	MCP2221_SRAM_RD_GP0 = 22,
-+	MCP2221_SRAM_RD_GP1 = 23,
-+	MCP2221_SRAM_RD_GP2 = 24,
-+	MCP2221_SRAM_RD_GP3 = 25,
-+};
-+
-+/* MCP SRAM write offsets cmd: MCP2221_SET_SRAM_SETTINGS */
-+enum {
-+	MCP2221_SRAM_WR_GP_ENA_ALTER = 7,
-+	MCP2221_SRAM_WR_GP0 = 8,
-+	MCP2221_SRAM_WR_GP1 = 9,
-+	MCP2221_SRAM_WR_GP2 = 10,
-+	MCP2221_SRAM_WR_GP3 = 11,
-+};
-+
-+#define MCP2221_SRAM_GP_DESIGN_MASK		0x07
-+#define MCP2221_SRAM_GP_DIRECTION_MASK		0x08
-+#define MCP2221_SRAM_GP_VALUE_MASK		0x10
-+
- /* MCP GPIO direction encoding */
- enum {
- 	MCP2221_DIR_OUT = 0x00,
-@@ -607,6 +628,80 @@ static const struct i2c_algorithm mcp_i2c_algo = {
- };
- 
- #if IS_REACHABLE(CONFIG_GPIOLIB)
-+static int mcp_gpio_read_sram(struct mcp2221 *mcp)
-+{
-+	int ret;
-+
-+	memset(mcp->txbuf, 0, 64);
-+	mcp->txbuf[0] = MCP2221_GET_SRAM_SETTINGS;
-+
-+	mutex_lock(&mcp->lock);
-+	ret = mcp_send_data_req_status(mcp, mcp->txbuf, 64);
-+	mutex_unlock(&mcp->lock);
-+
-+	return ret;
-+}
-+
-+/*
-+ * If CONFIG_IIO is not enabled, check for the gpio pins
-+ * if they are in gpio mode. For the ones which are not
-+ * in gpio mode, set them into gpio mode.
-+ */
-+static int mcp2221_check_gpio_pinfunc(struct mcp2221 *mcp)
-+{
-+	int i;
-+	int needgpiofix = 0;
-+	int ret;
-+
-+	if (IS_ENABLED(CONFIG_IIO))
-+		return 0;
-+
-+	ret = mcp_gpio_read_sram(mcp);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < MCP_NGPIO; i++) {
-+		if ((mcp->mode[i] & MCP2221_SRAM_GP_DESIGN_MASK) != 0x0) {
-+			dev_warn(&mcp->hdev->dev,
-+				 "GPIO %d not in gpio mode\n", i);
-+			needgpiofix = 1;
-+		}
-+	}
-+
-+	if (!needgpiofix)
-+		return 0;
-+
-+	/*
-+	 * Set all bytes to 0, so Bit 7 is not set. The chip
-+	 * only changes content of a register when bit 7 is set.
-+	 */
-+	memset(mcp->txbuf, 0, 64);
-+	mcp->txbuf[0] = MCP2221_SET_SRAM_SETTINGS;
-+
-+	/*
-+	 * Set bit 7 in MCP2221_SRAM_WR_GP_ENA_ALTER to enable
-+	 * loading of a new set of gpio settings to GP SRAM
-+	 */
-+	mcp->txbuf[MCP2221_SRAM_WR_GP_ENA_ALTER] = 0x80;
-+	for (i = 0; i < MCP_NGPIO; i++) {
-+		if ((mcp->mode[i] & MCP2221_SRAM_GP_DESIGN_MASK) == 0x0) {
-+			/* write current GPIO mode */
-+			mcp->txbuf[MCP2221_SRAM_WR_GP0 + i] = mcp->mode[i];
-+		} else {
-+			/* pin is not in gpio mode, set it to input mode */
-+			mcp->txbuf[MCP2221_SRAM_WR_GP0 + i] = 0x08;
-+			dev_warn(&mcp->hdev->dev,
-+				 "Set GPIO mode for gpio pin %d!\n", i);
-+		}
-+	}
-+
-+	mutex_lock(&mcp->lock);
-+	ret = mcp_send_data_req_status(mcp, mcp->txbuf, 64);
-+	mutex_unlock(&mcp->lock);
-+
-+	return ret;
-+}
-+
- static int mcp_gpio_get(struct gpio_chip *gc,
- 				unsigned int offset)
- {
-@@ -1216,6 +1311,8 @@ static int mcp2221_probe(struct hid_device *hdev,
- 	ret = devm_gpiochip_add_data(&hdev->dev, mcp->gc, mcp);
- 	if (ret)
- 		return ret;
-+
-+	mcp2221_check_gpio_pinfunc(mcp);
- #endif
- 
- #if IS_REACHABLE(CONFIG_IIO)
--- 
-2.20.1
-
-base-commit: 546b1c9e93c2bb8cf5ed24e0be1c86bb089b3253
-branch: abb-mcp2221-v1
+Pasha
