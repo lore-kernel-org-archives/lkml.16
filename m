@@ -1,185 +1,124 @@
-Received: from mxout3.routing.net (mxout3.routing.net [134.0.28.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597AE257423;
-	Sun,  8 Jun 2025 21:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2920254852;
+	Sun,  8 Jun 2025 21:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749417317; cv=none; b=iypmreIp/7Bp0LGWEO3DitcmEnynVFrOynds947TjEo/S0qcVfi964t+53HNP/DsW3rxCO5FVGBXCMnQn6GSbbD698EO0vhHxtBxtaQfQUJHEWfTU4+8lpA3pTljBzrNPB4An37wDxR2vTbe0kRjH00wlaXaBZ5xUuVkW84rwjM=
+	t=1749417375; cv=none; b=ET1YQpfB47zBr7K3KAjkSOtZhdPSFizmrxeK64n1CGcYhucZaEPngbACQU9ngjh4sKGL2OjkXv2kBvYSTvmmoWMB2DSeSWszAvYAxTitxGhLOCk3zrrp+zuHWNofEc/0wx1nRc3/jC+O4djrnN59Ey24rvgDsSgJNJI9vRScBJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749417317; c=relaxed/simple;
-	bh=OYcr8qXnY4Akdf0Ph0cILSwEOSItA0bwfuk+h/XIGBs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NM95/l+77XO5qogpr3Tu9Nh/6us+tcqVdr2ZQUEgyLYJ+YZqi/BE3sFxzTcmpHapJAkTF35Uo6lhEBgaP+ptHMTEFMZmf/CMZ/Jynk6eOhGUfEzrdCRsVSQ5gDbzNA9Q4PEDgtIjzayS+LQHFHPJp1lW3XOLpjr+eOE3wWWh4vM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=PJ/cCjGl; arc=none smtp.client-ip=134.0.28.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
+	s=arc-20240116; t=1749417375; c=relaxed/simple;
+	bh=ROMnbxB2A/F6Fvu/BM6R9kuzlo9+xJJX8W2nDVs24Gc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nloNUrstlEjnS0q642pixFXWajeoKVkBT0ETi/97hFCe1pmt96cZAp/ibxjKSS5g7kOT4yvc2IYuekqs4uakv1v/wNYOiMILspHlk8doEdtyE2Q8LL2etqQNwXI8XOJr5GOE7lvHEIPrM82hMVBO2niiErEDgavr4uQfo6z2MeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F42ytKTF; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="PJ/cCjGl"
-Received: from mxbulk.masterlogin.de (unknown [192.168.10.85])
-	by mxout3.routing.net (Postfix) with ESMTP id D991C601B5;
-	Sun,  8 Jun 2025 21:15:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1749417303;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=O+IhUztd6jkEKnUjCh07ODP20v3CuuoWXyT/W7fl/Ak=;
-	b=PJ/cCjGlA5gOqD36tt1cxEiFxlPhUqKH9uExaV39mb809oBXpBoz3sHl/QoaJas65CtO3j
-	RHo2ybDqOcpczH0IKpDRuh74yAcjYXORvxXR5UQsZjEj28NDoyV/ItcUWKYc+4vZHqJdUx
-	UW2c4jjOc7Am0JGbqG3TKqBuJCBgQpg=
-Received: from frank-u24.. (fttx-pool-80.245.77.166.bambit.de [80.245.77.166])
-	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id 7F4171226D6;
-	Sun,  8 Jun 2025 21:15:03 +0000 (UTC)
-From: Frank Wunderlich <linux@fw-web.de>
-To: MyungJoo Ham <myungjoo.ham@samsung.com>,
-	Kyungmin Park <kyungmin.park@samsung.com>,
-	Chanwoo Choi <cw00.choi@samsung.com>,
-	Georgi Djakov <djakov@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Frank Wunderlich <frank-w@public-files.de>,
-	Jia-Wei Chang <jia-wei.chang@mediatek.com>,
-	Johnson Wang <johnson.wang@mediatek.com>,
-	=?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
-	Landen Chao <Landen.Chao@mediatek.com>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Felix Fietkau <nbd@nbd.name>,
-	linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH v3 12/13] arm64: dts: mediatek: mt7988a-bpi-r4: add sfp cages and link to gmac
-Date: Sun,  8 Jun 2025 23:14:45 +0200
-Message-ID: <20250608211452.72920-13-linux@fw-web.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250608211452.72920-1-linux@fw-web.de>
-References: <20250608211452.72920-1-linux@fw-web.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F42ytKTF"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-31306794b30so699029a91.2;
+        Sun, 08 Jun 2025 14:16:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749417373; x=1750022173; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ROMnbxB2A/F6Fvu/BM6R9kuzlo9+xJJX8W2nDVs24Gc=;
+        b=F42ytKTF/oQgtoz8Bpapn6xX3Cy0wFjRg4Qc2WoCuhhrJnUq3ayfepn9KQ1u3bpQy3
+         J75UgHNPSv3HYDIMt4U9RJqvGcrsVLiK8oJSrFAEL8UvbwN21pS25hMFHZsKAVg8PA4F
+         P+kNyLye1CVl0fRJn3sQxIGY8U53ZkrnMaZ5IYvbqtWgt4WyqdhkKLIHEmYVEH7e8/Mj
+         R6KFp//sctTh4v3tfzVnddCtfXwwfXWGmYnNsMNIRqOP0VO0szy2hPW4P/n7GkcrOaqE
+         q8pAjaR9+8XMtVX9YSBdLdV9UGPijpDsiBCym/6LeseoWlvmgGAWb35uzolw7c1mZeZI
+         rvFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749417373; x=1750022173;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ROMnbxB2A/F6Fvu/BM6R9kuzlo9+xJJX8W2nDVs24Gc=;
+        b=aFdKTwFsdAmPAIQx5mW+hud9i7C3QiWtCmt9WYkCbU+StXDRSsCzwK0awZt+CMwZDI
+         yzJDVjfl1m/vcqrsgeMOBeAeKWYwnGYAWcrTMbcp8d7ZiR2f5ot5ELPabgeLqWp0LK3j
+         IdS3wEefuoWjASg7SGelIXv7XWJUWs8zZT0ofjm4BQKv71TFwD/PuOlyjfUd6ABXr6Uo
+         gzt26+VIYjuvHEvs/oLXrz8Oe5o3pErybJ6J6LeV995MAFrFMEhB8oZIT3Do31X9J1UK
+         ziyhg3ibj5ch8Vk6wPLdbw12TCnV+7eNFU2TRUZr23C0JU/kj9j1LpnOXgODjg1jIY6E
+         pYIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUyB8mJrCIUdTF34dWWVEziewMdPqGedKlZLUPkwbB0pEV3XAgTTyzXnyfwQqtUbSGhaVY5vg5ojRTe@vger.kernel.org, AJvYcCVB92/2m//n9o7JpnH2T4Rbd8f0xDgOxESjzLh8bZXguaEFKfz7DJynKTc4pA1tEh/bBiJLTQlvEUecy4AK0Xr1@vger.kernel.org, AJvYcCVgsiBaaPhPC5UtQTXsBtKNf0tuDacxXe2jnv+D1VbUPd7yCapp6ZMiCGIHA0lpVv874qIku+ro1xf936Jr@vger.kernel.org, AJvYcCW4Bz++acQJtaCql2FLXnwKG95pTC8P7GAEws1TzAK4xBWJS/p2cM2aCQbC7xpOqig1ul6csdCwneMpEaIuFgs=@vger.kernel.org, AJvYcCWXczlquP3wUag/KtdImK+qZUmqpfXe0Ah2DxDhIqV3ljLvqmajqrPOiVPJGqJRQXnIv1Ka5tRIKx2D@vger.kernel.org, AJvYcCXLzw8KPCzrnFR26+Z7PF4uVsBMEpWirJDsBcEy9hfOZKDfUgHZgs/1stlBSuRrZzcqJr7tOyRxDY8PS3wV@vger.kernel.org, AJvYcCXPjT5Nb6XPyGiBRff7jiDF8e+BojPAmiQS+S5zGzq9PZ5MxBpYxe8Cn22GVzqAZOKYHQT5esuh8gFYgLY=@vger.kernel.org, AJvYcCXn+ETdiWYuEqc5OlFNyGTJDhqlfn45EE2qpX4h3bGmrYKHgRpaiOTCdCuslwQgkqu3KnRsxFnp@vger.kernel.org
+X-Gm-Message-State: AOJu0YysjLWQvvuSfKMbPC2xy/Cez+k1BULMLGdOANqzrp3fCT9tyM1n
+	WwIJ0HEAuOylNX9/KTe1v/WHQR999beiVlfz8WSpwy/2OyoR/ucyswjlSATWJc8Buf+yLgnO94C
+	IM0TdxsBZvDQ6HLBH5nhGAheq6BUS+sc=
+X-Gm-Gg: ASbGncs41ZQYYEEp68K/V5FVheZMxnBjMIHD9S3LDE95SxwOcrO+xRAb0bgbvYeGgyP
+	AmPtS9cMV9BV/qi57ObZMJHlA0brxiCqvaQXLOOSV5aOzaQtv2MfmuFlMBdRmvfg6bA1xNXnFDa
+	5QUntoX9GGZusiy1fU+SH/iq2+brH5d8QoHDEnHzct5ac=
+X-Google-Smtp-Source: AGHT+IHcnKxE4P/cFhuEWZW0D4lMoOaOrfEZtsoCHwxA4JPSsZt+wbEk5r3gKugcA90wbKi32QwaTUF3LYa15AmI+uM=
+X-Received: by 2002:a17:90b:3c89:b0:310:cf92:7899 with SMTP id
+ 98e67ed59e1d1-31347506b75mr5866067a91.3.1749417372649; Sun, 08 Jun 2025
+ 14:16:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250418-ptr-as-ptr-v10-0-3d63d27907aa@gmail.com>
+In-Reply-To: <20250418-ptr-as-ptr-v10-0-3d63d27907aa@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 8 Jun 2025 23:15:58 +0200
+X-Gm-Features: AX0GCFu7kEGuuhs8xaCtkzWNC6Znk5oSHyCpfKw_qD8poEL7ZBxhU_Wo9Kw_iYo
+Message-ID: <CANiq72km=RmQcVAkTcs3UoZzSUXKthW0ru8UH4r0KFFmUSjwgQ@mail.gmail.com>
+Subject: Re: [PATCH v10 0/6] rust: reduce `as` casts, enable related lints
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
+	linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Frank Wunderlich <frank-w@public-files.de>
+On Fri, Apr 18, 2025 at 5:37=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
+>
+> This started with a patch that enabled `clippy::ptr_as_ptr`. Benno
+> Lossin suggested I also look into `clippy::ptr_cast_constness` and I
+> discovered `clippy::as_ptr_cast_mut`. This series now enables all 3
+> lints. It also enables `clippy::as_underscore` which ensures other
+> pointer casts weren't missed.
+>
+> As a later addition, `clippy::cast_lossless` and `clippy::ref_as_ptr`
+> are also enabled.
+>
+> This series depends on "rust: retain pointer mut-ness in
+> `container_of!`"[1].
+>
+> Link: https://lore.kernel.org/all/20250409-container-of-mutness-v1-1-64f4=
+72b94534@gmail.com/ [1]
+>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-Add SFP cages to Bananapi-R4 board. The 2.5g phy variant only contains the
-wan-SFP, so add this to common dtsi and the lan-sfp only to the dual-SFP
-variant.
+Now that -rc1 is out, could you please spin a v11? There are some new
+ones in configfs, drm/device, cpufreq, nova-core and mm/virt.
 
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
-v3:
-- enable mac with 2.5g phy on r4 phy variant because driver is now mainline
----
- .../mediatek/mt7988a-bananapi-bpi-r4-2g5.dts   | 12 ++++++++++++
- .../dts/mediatek/mt7988a-bananapi-bpi-r4.dts   | 18 ++++++++++++++++++
- .../dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi  | 18 ++++++++++++++++++
- 3 files changed, 48 insertions(+)
+(Please also see my comments in the underscore one).
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.dts b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.dts
-index 53de9c113f60..e63e17ae35a0 100644
---- a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.dts
-@@ -9,3 +9,15 @@ / {
- 	model = "Banana Pi BPI-R4 (1x SFP+, 1x 2.5GbE)";
- 	chassis-type = "embedded";
- };
-+
-+&gmac1 {
-+	phy-mode = "internal";
-+	phy-connection-type = "internal";
-+	phy = <&int_2p5g_phy>;
-+	status = "okay";
-+};
-+
-+&int_2p5g_phy {
-+	pinctrl-names = "i2p5gbe-led";
-+	pinctrl-0 = <&i2p5gbe_led0_pins>;
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts
-index 36bd1ef2efab..3136dc4ba4cc 100644
---- a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts
-@@ -8,6 +8,24 @@ / {
- 	compatible = "bananapi,bpi-r4", "mediatek,mt7988a";
- 	model = "Banana Pi BPI-R4 (2x SFP+)";
- 	chassis-type = "embedded";
-+
-+	/* SFP2 cage (LAN) */
-+	sfp2: sfp2 {
-+		compatible = "sff,sfp";
-+		i2c-bus = <&i2c_sfp2>;
-+		los-gpios = <&pio 2 GPIO_ACTIVE_HIGH>;
-+		mod-def0-gpios = <&pio 83 GPIO_ACTIVE_LOW>;
-+		tx-disable-gpios = <&pio 0 GPIO_ACTIVE_HIGH>;
-+		tx-fault-gpios = <&pio 1 GPIO_ACTIVE_HIGH>;
-+		rate-select0-gpios = <&pio 3 GPIO_ACTIVE_LOW>;
-+		maximum-power-milliwatt = <3000>;
-+	};
-+};
-+
-+&gmac1 {
-+	sfp = <&sfp2>;
-+	managed = "in-band-status";
-+	phy-mode = "usxgmii";
- };
- 
- &pca9545 {
-diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-index 20073eb4d1bd..d8b9cd794ee3 100644
---- a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-@@ -63,6 +63,18 @@ reg_3p3v: regulator-3p3v {
- 		regulator-boot-on;
- 		regulator-always-on;
- 	};
-+
-+	/* SFP1 cage (WAN) */
-+	sfp1: sfp1 {
-+		compatible = "sff,sfp";
-+		i2c-bus = <&i2c_sfp1>;
-+		los-gpios = <&pio 54 GPIO_ACTIVE_HIGH>;
-+		mod-def0-gpios = <&pio 82 GPIO_ACTIVE_LOW>;
-+		tx-disable-gpios = <&pio 70 GPIO_ACTIVE_HIGH>;
-+		tx-fault-gpios = <&pio 69 GPIO_ACTIVE_HIGH>;
-+		rate-select0-gpios = <&pio 21 GPIO_ACTIVE_LOW>;
-+		maximum-power-milliwatt = <3000>;
-+	};
- };
- 
- &cci {
-@@ -133,6 +145,12 @@ map-cpu-active-low {
- 	};
- };
- 
-+&gmac2 {
-+	sfp = <&sfp1>;
-+	managed = "in-band-status";
-+	phy-mode = "usxgmii";
-+};
-+
- &i2c0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_pins>;
--- 
-2.43.0
+Thanks!
 
+Cheers,
+Miguel
