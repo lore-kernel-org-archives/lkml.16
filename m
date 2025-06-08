@@ -1,63 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85DB91E7C16
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 18:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29DD1A5B91
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 18:54:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749408789; cv=none; b=sAkiCX0hhAL4TJE/rRFdZ9v/zSfo+avfEjIWas/oeZAJGX6XxyDL0wH2NqcZ8TLPRshog3ZLGO4fhF+qDum/rI9s9hVQTaXPh6sxM36sfaq/KxLPSiX5UjCHPbuTW3Grg0p4S06Z0QKUxrnCkhmf4qofPLlKwdsYwdE8NEH+Z8M=
+	t=1749408878; cv=none; b=F7Ak0ZAqZ3A/F1SvWKgQhX+Or72982bgZEx/RLQQBRFLy3GnubmaxVwL+Oxy+hZqhnYm2GiOOFI6jOpnP0ptuJLX3p8cZmqEW6ycG/yMuqMeF8NDPMromIHujwdgc4aZvDlxC7lAtRZ7g970ZwdSQvAc7CvyyQyl0Ab11XpVqvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749408789; c=relaxed/simple;
-	bh=zq8lig5ccW0xtxtM/mrSbZCoyIYwAcnij9bmaTIJF4s=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=L/32HnkOHsI+PKGx9qkka8eiH0NAdrUEENWfmc9Ff6kJWMNaPk+0mw0n8AkWtF8bSrHQxs9haFyvJVkhNbvSQTQhwbfQdXjRSdqMcT4qHaL32vhvvT9nVvL4+vC0iQ3EsV6JHVvrVu43MZWO20GuW4voAEctkHTHNxQSJovGU+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MyrsJSex; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MyrsJSex"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F9B7C4AF0B;
-	Sun,  8 Jun 2025 18:53:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749408789;
-	bh=zq8lig5ccW0xtxtM/mrSbZCoyIYwAcnij9bmaTIJF4s=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=MyrsJSexQb7XuOOwYTgvpJ3ohxxNFZFXoC+4L5gOXI8x4lmAtRX20eW5VVswsFJCh
-	 +fEu2Br+y+zTY2QQ2uX30i10lJOr3tbdToqaTFJ9k/MA2enAw1l1RM5CBBVQxWJKmQ
-	 sYnvq6bZzHjXgdOmjiGkbuSHF2vq0+m3Kr6I8p+rmrDiEoWjKDCau0w+xK2/iPa9km
-	 HMZ0jNaPHnyK4yquD0IqQEEV25GT1tzs7YtHv1vAp6U0DvmC2V4WRtO93evWVML5Kc
-	 bcPjm+pnCmxS3L3+sU2hFuLGiPfglHt7L2erz/e1XPK+OSzkoC3999wjeOf/gU5TVz
-	 H5vJ+En8bTptQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70C81380AAE2;
-	Sun,  8 Jun 2025 18:53:41 +0000 (UTC)
-Subject: Re: [GIT pull] timers/cleanups for v6.16-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <174936765117.749406.13346468046512826474.tglx@xen13>
-References: <174936764731.749406.17114868218275391074.tglx@xen13> <174936765117.749406.13346468046512826474.tglx@xen13>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <174936765117.749406.13346468046512826474.tglx@xen13>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-cleanups-2025-06-08
-X-PR-Tracked-Commit-Id: 41cb08555c4164996d67c78b3bf1c658075b75f1
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: be54f8c558027a218423134dd9b8c7c46d92204a
-Message-Id: <174940882003.385950.892989699399951784.pr-tracker-bot@kernel.org>
-Date: Sun, 08 Jun 2025 18:53:40 +0000
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, x86@kernel.org
+	s=arc-20240116; t=1749408878; c=relaxed/simple;
+	bh=0e+ZPgS4d1SgXPwa7fKgOCMnZMTdfvr8q/YXFT4v6JY=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=VIG1zN/yVXUIB8Gz72lOxADNcq0mY0Ahhr6Yabr783sX+OVRo71SGudrinIVAPhlDgi5Qbiv28J0FDE5tvcClCZ5rXuJj9gp7Dw402N9d1jMzWrwMMl0/jpqZ1UOqv/Se6hDpcfpW1abDoUO6mIZxG+pBzA4VzXhUd/Th7G0FGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddd90ca184so7344715ab.0
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 11:54:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749408876; x=1750013676;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hgsijAwwECKxtIfaX6vID5yInExtJ80pYGQbSecD5bU=;
+        b=aa+sM7pQV/5Ho0AgsdV81CTFmOqC0Ih8fEo5v5soaSBkaNRPzYsQtwVCa6pwHtMKmr
+         d3rDDRXDkqkWiSMEdsMdZNjhai9VeudBoXaF6rps1g+oNJ2NgK9xvyCOkT1r6h4zkJwo
+         2Weq8dF/q6gHyQvCFkUFCXkETn2ni0CKubPeSU/kqVpP/Oa1qdaJjr+5GOQZ3vmKu4q1
+         4aSCuVHDn/YvsX5h2GatmnuT1NKjZoHhYQaHOlhNuiuzskMvlQoqZuBL7jcy3gl5xn3k
+         mYW/bo1FF1g0msMVARVstDCO0nSm9FlRHw4ADNLjOmNj1tsUhggZcTTxILiCF6i38T58
+         s3Aw==
+X-Gm-Message-State: AOJu0Yz6wQK0SIitObwOQDbCdPRnj/TvmfZBAkBfWhgMmHre7EyBMvgF
+	HbISJ1Fn5V0Wgm17bvmHBg7qxxkPJT2CyKUt2Z7EG2Rz7GzBlMMkp9uZXfCvLP/7nvsLd47aQeW
+	32vGxDDJvpbjwAWGW1hQYXsx6Z4Vhn/hlVh/CKnSngZAAoYwi333G3Uy0/0c=
+X-Google-Smtp-Source: AGHT+IHf5dEhS9FMvjdPKtBV8GytrlcYVTCI2NIpJ8tGDRIK/eNSRgRaS0VwaIATVTJ/HlJah6BX1dNevklvOnswiYLBjrXNTnDX
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1a0a:b0:3dd:cacd:8fe2 with SMTP id
+ e9e14a558f8ab-3ddce44f9f0mr133195335ab.18.1749408875995; Sun, 08 Jun 2025
+ 11:54:35 -0700 (PDT)
+Date: Sun, 08 Jun 2025 11:54:35 -0700
+In-Reply-To: <67eaa688.050a0220.1547ec.014a.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6845dc6b.050a0220.daf97.0af4.GAE@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [bluetooth?] KASAN: vmalloc-out-of-bounds
+ Read in hci_devcd_dump
+From: syzbot <syzbot+ac3c79181f6aecc5120c@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The pull request you sent on Sun,  8 Jun 2025 09:28:11 +0200 (CEST):
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-cleanups-2025-06-08
+***
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/be54f8c558027a218423134dd9b8c7c46d92204a
+Subject: Re: [syzbot] [bluetooth?] KASAN: vmalloc-out-of-bounds Read in hci_devcd_dump
+Author: ipravdin.official@gmail.com
 
-Thank you!
+#syz test
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+diff --git a/net/bluetooth/coredump.c b/net/bluetooth/coredump.c
+index 819eacb38762..720cb79adf96 100644
+--- a/net/bluetooth/coredump.c
++++ b/net/bluetooth/coredump.c
+@@ -249,15 +249,15 @@ static void hci_devcd_dump(struct hci_dev *hdev)
+ 
+        size = hdev->dump.tail - hdev->dump.head;
+ 
+-       /* Emit a devcoredump with the available data */
+-       dev_coredumpv(&hdev->dev, hdev->dump.head, size, GFP_KERNEL);
+-
+        /* Send a copy to monitor as a diagnostic packet */
+        skb = bt_skb_alloc(size, GFP_ATOMIC);
+        if (skb) {
+                skb_put_data(skb, hdev->dump.head, size);
+                hci_recv_diag(hdev, skb);
+        }
++
++       /* Emit a devcoredump with the available data */
++       dev_coredumpv(&hdev->dev, hdev->dump.head, size, GFP_KERNEL);
+ }
+
+Ivan Pravdin
+
