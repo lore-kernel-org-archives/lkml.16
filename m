@@ -1,75 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D88213AA2F;
-	Sun,  8 Jun 2025 10:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B411E635;
+	Sun,  8 Jun 2025 10:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749379383; cv=none; b=B1iHIx3xKwQrdA9BM66x7V5UVp6/6U1aNUIcJIYF9hDKVw4Y/0y5lVFyJJMl5rMAkJzGt/yCwNUOT83oQvuigfqJYSLO2e70UzZph+/cOPHoWDe2tvAG6tHp4xVcdXkW+1XeqpJV7b1O/8eRgsYNPrwNyRUWlv2/qeVT8HQhuzs=
+	t=1749379505; cv=none; b=ab2Qopijw8bJcOF0qLnK6TxUAex7Fm6QKBIUF/F99pdye2IgvpwDx0Ab21j/Z28h9vs8S5ty+3JUAK3HkUW7YBAgrJylTyKhkyWITC4wjf9Aqo5SPK2pLWEFw8E40NUaaIWeqKGU99iHMTm82FCkx45+TjVIvyYUHPq9YQcrbk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749379383; c=relaxed/simple;
-	bh=IZis6emlWrEmjsjf57puJXxO84axvdnHEGFmX6HRIy4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VaP0X5eE2x++AFd/Bry6B1zYJtec/8JKdYeXCebcisa/92MkoMF011clMolGHrYNdVY6e3NI/ScVBtaHTq0z3aZJUhKlJHti5SgXoaNc41R4eCZdfxMyNDxwpaQ5uyJ+zuGsafECoyhJ+rgEouRqe9BSsBTziZAdmKlx0lEAKM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cURS+zMN; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cURS+zMN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5928FC4CEEE;
-	Sun,  8 Jun 2025 10:42:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749379382;
-	bh=IZis6emlWrEmjsjf57puJXxO84axvdnHEGFmX6HRIy4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cURS+zMNjLbct3bzWrK4N2GY+KlYJXKu70Z6+PI8xwq05QpGS12Br/cmg4qcdi6m7
-	 CISBBLfHo2T/Gy44OjZpALLQ1T5AZUjxUcH14w+BIfhl4mUkFy6dAuBy8i8LQR1vHF
-	 SqqSpNXdn7Nd7MEXA0O0GFZSIJLd6v/Df3R18IMZXKCJZGdExg+VEaBuRo4U0ADVLQ
-	 /kb6tgtS6FvRNFfqrLto5TEvLqe9mihF5Hi+dI4XdbuHYfHtPG1lg55RrIGWnqH8/f
-	 XDbKZsxFAiLpV1Jq2NTDNrA7Vo03e/NCWsBvck8t9lpy//LGays3hYaDdRs8nFTtp4
-	 FQxhNZrJs7E9g==
-Date: Sun, 8 Jun 2025 12:42:55 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <lossin@kernel.org>
-Cc: Igor Korotin <igor.korotin.linux@gmail.com>, ojeda@kernel.org,
-	alex.gaynor@gmail.com, rafael@kernel.org,
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org,
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
-	tmgross@umich.edu, lenb@kernel.org, wedsonaf@gmail.com,
-	viresh.kumar@linaro.org, alex.hung@amd.com,
-	dingxiangfei2009@gmail.com
-Subject: Re: [PATCH v3 1/4] rust: acpi: add `acpi::DeviceId` abstraction
-Message-ID: <aEVpL8wIfGDZRyUN@pollux>
-References: <20250606170341.3880941-1-igor.korotin.linux@gmail.com>
- <20250606170641.3881401-1-igor.korotin.linux@gmail.com>
- <DAGZIHBVBI6Z.32401TQB5MNTL@kernel.org>
+	s=arc-20240116; t=1749379505; c=relaxed/simple;
+	bh=XqdKlSyA1x3wAP2oaLII0/8MRAREl75HnHHUM2ZEPhk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o6vgMGqxI6/AATJQ9OnAKGVOTa4JSxAGjT/IDbSjeUkt9ltSoJv48YCYX974GuHSOtUH5D2fYnVEd2u+b3lVWPf+BunjgKBTWxvwplSe0zGDJscsCepmcmVkDHNNXCvCEQcFawvyQ9mejfqnSrGGEl9S6QB2SjKGi5GJ/aD/XZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a528243636so1928689f8f.3;
+        Sun, 08 Jun 2025 03:45:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749379502; x=1749984302;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LIvD9g5pC58Ztk0zOCRRAzy2zEC5MQKjWs7oUbzPh2c=;
+        b=aF22KidtjsyW8PLvMFcxxTDZGmYQBg+pvKD7IzFK0B4aaQCHNWSkwHUZLPc4zr7jF3
+         iGo5ydr1Pz4pSuuFekkAzGqqQVLu9mkXdOHAhK2PVkVyAPfn9X0I9QVyorgaoRS7sZSv
+         sNQaJ9wU23NyTuFjFxpF9x3Bhoa6c1FcehRo8RhPuCIR9em8A/LH5wcK6t1YtWHa4t1d
+         gSfLEeyDpZDl/TQUCCAG0nK2AbdDJ+xVuHP1IKCt6d6ZXbL5aVEJTSfpWcjIkpPXSFqR
+         y9KMiL4LuMz5w5Q1K4Hsjda8/XfffL+2xpeAET7NNcXECGwHwlGVaPzrUj8hGf4HoTA9
+         q5lw==
+X-Forwarded-Encrypted: i=1; AJvYcCVAYTJcOc7DbyQoDGWSFnTp+FScCXxWPN77TlmMazeaTtWsAd6zEq7LtSJ8UCBzZPjOqlo8FUXmmN0=@vger.kernel.org, AJvYcCVDi6m7nA/Ds45fBt4/s79R/uvzx2jYOOzqG3XoYu6jNT2CBVeY4BeM7/yEGbbRti74c/kt9JcAyD/XkgeW9skO/0v6@vger.kernel.org, AJvYcCW4COvZBRGTrfbXlRjyttVx+bPvAdw7S5tGNq7IPqrq/GqvjCTn+uNbCxbfvKO921YS+eUHvio6kRsjFw4Q@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy36HhWuC7YNPo2uvA5VNYTdZfwtoYeoFtzebsrLQyOj9XwxB4j
+	i35e/mcee5XbUsKmyDoXTz2NUjlGWUXpDWISHa6kKIRLMaas2UYoU94c
+X-Gm-Gg: ASbGnctp/JC+iY3y6KeREbk7XQGsO6bz2FI9sjqKgnRstuhALdVYlYIaAnlmc6vjkHn
+	6Ke1BhDalBtLy0rWk1CexTJbaVJnxfP3vQZbfYgPmq9ejXAycL3R/UhMRH/Qzj7SHU16PTaXSJE
+	zka75VePs0o7hKCuUW7LoG/jIjU8jm1Yu3QPPLVx3hFuJvuewjMtwNUHxL+GckaacWVR8SNWe2/
+	amMSg1iw9grOR8GV9oIgc5V1jX6C3xCUN8to56xgS3L3Dmrh50J/8aY7waaVF59jP/o2fz7R1WQ
+	eD2tUxntoaF0rsJTigNd3fhRtiXi7lbXRkSW9hQpwPT9f2BF5Nfk3AkwKV2K0ZOi7U0z
+X-Google-Smtp-Source: AGHT+IGNFGDMfHfIEL0sJ7ZD7k7TZPhXhBYgp26b9eOex0Dz6soSxZxw1jxgnEFXR22EthMgy5D0Cw==
+X-Received: by 2002:a5d:42d1:0:b0:3a4:f90c:31e3 with SMTP id ffacd0b85a97d-3a53188e4b7mr6104014f8f.31.1749379501863;
+        Sun, 08 Jun 2025 03:45:01 -0700 (PDT)
+Received: from costa-tp.redhat.com ([2a00:a041:e280:5300:9068:704e:a31a:c135])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452137290b9sm81516285e9.34.2025.06.08.03.45.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Jun 2025 03:45:01 -0700 (PDT)
+From: Costa Shulyupin <costa.shul@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Tomas Glozar <tglozar@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>
+Subject: [PATCH] Documentation/rtla: Add include common_appendix.rst
+Date: Sun,  8 Jun 2025 13:44:36 +0300
+Message-ID: <20250608104437.753708-2-costa.shul@redhat.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DAGZIHBVBI6Z.32401TQB5MNTL@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 08, 2025 at 09:48:00AM +0200, Benno Lossin wrote:
-> On Fri Jun 6, 2025 at 7:06 PM CEST, Igor Korotin wrote:
-> > +impl DeviceId {
-> > +    const ACPI_ID_LEN: usize = 16;
-> > +
-> > +    /// Create a new device id from an ACPI 'id' string.
-> > +    pub const fn new(id: &'static CStr) -> Self {
-> > +        assert!(id.len() <= Self::ACPI_ID_LEN, "ID exceeds 16 bytes");
-> > +        let src = id.as_bytes_with_nul();
-> > +        // Replace with `bindings::acpi_device_id::default()` once stabilized for `const`.
-> > +        // SAFETY: FFI type is valid to be zero-initialized.
-> > +        let mut acpi: bindings::acpi_device_id = unsafe { core::mem::zeroed() };
-> 
-> This can be made safe using this series:
-> 
->     https://lore.kernel.org/all/20250523145125.523275-1-lossin@kernel.org
+Add include common_appendix.rst into
+Documentation/tools/rtla/rtla-timerlat-hist.rst - the only file of
+rtla-*.rst still without common_appendix.rst.
 
-Indeed, I did not mention this though since I think this series should not
-depend on the one above. They'll land through different trees and the
-improvement can still be made later on.
+Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+---
+ Documentation/tools/rtla/rtla-timerlat-hist.rst | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/tools/rtla/rtla-timerlat-hist.rst b/Documentation/tools/rtla/rtla-timerlat-hist.rst
+index 03b7f3deb069..b2d8726271b3 100644
+--- a/Documentation/tools/rtla/rtla-timerlat-hist.rst
++++ b/Documentation/tools/rtla/rtla-timerlat-hist.rst
+@@ -107,3 +107,5 @@ SEE ALSO
+ AUTHOR
+ ======
+ Written by Daniel Bristot de Oliveira <bristot@kernel.org>
++
++.. include:: common_appendix.rst
+-- 
+2.48.1
+
