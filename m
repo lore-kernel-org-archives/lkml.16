@@ -1,35 +1,37 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEBE4BA3D;
-	Sun,  8 Jun 2025 14:15:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 788311FE455;
+	Sun,  8 Jun 2025 14:27:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749392139; cv=none; b=imZJ41GW39Fyzu6O24udwJ96v1gOYDn4cMpnitDkEdf63uPgyZOZhs34pQ9PFbgf0BHgdp5MP0cFidgbQfVVh/tnVShkCI30bdZl790LY2tuZrMR6OelazhFB9sEHJItEVjOBnXDD2uCP0Jm0PQJ7piGJdXlN/0/xoD3K0lo6Ag=
+	t=1749392877; cv=none; b=qxyx4BOFSY4QWUDW4eRf3rT4v4l1k+nk3AgilUZIcjMPNxRm8qNT4TGpPP+5XMm1k/GZtHcoEif2aRE47P8vvagKtXQCA5Mq3t2jRj6ftiCnEd0ardtMDsljAK1Myh+JVFtkh4Bv89Gk/aHZ5+5Ghj8kMCfM6qmmDqFBy/iTTFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749392139; c=relaxed/simple;
-	bh=2B2F4SmN1Wp2kS7kwfEunZrwEvooVefZYD54jf2i9hc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JVTWE8m2gkduZ44qhoYggP/F0VUGvzDjifPhydskqgWyVzaWmUgexLjFwJZwxgBMG1meQiaM96KtbM4lyuHtI4jRo53GzIpY9vWoaIJOSVD5TDKCJeYCOkmxCLZaU6rz+ZAFHr+dJDV4DHUZtUJrxM5Uy9MNaV0FnwlYtOdbj8Q=
+	s=arc-20240116; t=1749392877; c=relaxed/simple;
+	bh=yWQL4s47QCYcRIFV28KOQF6sJyk9kJ3f9WRi8LtlGWQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=osw48s7tFFyvWxDC//LvbKU6jwXKhAUQFzWD7fxVQ7ScGrB+k+YI345Byn7uMNJI2kAwj9OUIxVEn+3bsmrCtLtBKCTuuLNvNbGnTVpNMJWbpdEzvrIy6JmkL/MtGZMTz9I03brttgTTgij5Q8c9POaC2ygONq1QBVONpWbua/Q=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.69.3])
-	by gateway (Coremail) with SMTP id _____8Bx7eL+mkVocHIQAQ--.7691S3;
-	Sun, 08 Jun 2025 22:15:26 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxSWrnnUVolnQQAQ--.7257S3;
+	Sun, 08 Jun 2025 22:27:51 +0800 (CST)
 Received: from localhost.localdomain (unknown [223.64.69.3])
-	by front1 (Coremail) with SMTP id qMiowMBxrMb3mkVoU70QAQ--.3812S2;
-	Sun, 08 Jun 2025 22:15:24 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMAxTsXhnUVoVsEQAQ--.2327S2;
+	Sun, 08 Jun 2025 22:27:50 +0800 (CST)
 From: Huacai Chen <chenhuacai@loongson.cn>
 To: Masahiro Yamada <masahiroy@kernel.org>,
 	linux-kbuild@vger.kernel.org,
+	Takashi Iwai <tiwai@suse.com>,
+	Mark Brown <broonie@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
 	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Guo Ren <guoren@kernel.org>,
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	Xuerui Wang <kernel@xen0n.name>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
 	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Fix build warnings about export.h
-Date: Sun,  8 Jun 2025 22:15:09 +0800
-Message-ID: <20250608141509.157300-1-chenhuacai@loongson.cn>
+Subject: [PATCH] ASoC: loongson: Fix build warnings about export.h
+Date: Sun,  8 Jun 2025 22:27:37 +0800
+Message-ID: <20250608142737.168829-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -38,202 +40,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxrMb3mkVoU70QAQ--.3812S2
+X-CM-TRANSID:qMiowMAxTsXhnUVoVsEQAQ--.2327S2
 X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Xw4UZrW7Cw1fAw17Kr1Utwc_yoW3Gry3pF
-	WDCF4kJr4rCF1DJ34qv3ZIvr1DXayDWw12qa42yFy8ur42qr1kXws5ZrnFqF1Utw4qgrW0
-	gF95Grs0gF4UXabCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkUUUUU=
+X-Coremail-Antispam: 1Uk129KBj9xXoW7GFWrZw4kJryrGryDKFy8JFc_yoWDurc_Cw
+	1Igw4rWry7JFy2k343Aa1DAr15X34rJa15uF1vyr13X3ZFy39agayxCa4DuF1xWr1vvFs5
+	Zr48Wr18ZryFkosvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb28YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j83kZUUUUU=
 
 After commit a934a57a42f64a4 ("scripts/misc-check: check missing #include
 <linux/export.h> when W=1") and 7d95680d64ac8e836c ("scripts/misc-check:
 check unnecessary #include <linux/export.h> when W=1"), we get some build
 warnings with W=1:
 
-arch/loongarch/kernel/acpi.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
-arch/loongarch/kernel/alternative.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
-arch/loongarch/kernel/kfpu.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
-arch/loongarch/kernel/traps.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
-arch/loongarch/kernel/unwind_guess.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
-arch/loongarch/kernel/unwind_orc.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
-arch/loongarch/kernel/unwind_prologue.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
-arch/loongarch/lib/crc32-loongarch.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
-arch/loongarch/lib/csum.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
-arch/loongarch/kernel/elf.c: warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present
-arch/loongarch/kernel/paravirt.c: warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present
-arch/loongarch/pci/pci.c: warning: EXPORT_SYMBOL() is not used, but #include <linux/export.h> is present
+sound/soc/loongson/loongson_i2s.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
 
-So fix these build warnings for LoongArch.
+So fix these build warnings for ASoC/Loongson.
 
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/kernel/acpi.c            | 1 +
- arch/loongarch/kernel/alternative.c     | 1 +
- arch/loongarch/kernel/elf.c             | 1 -
- arch/loongarch/kernel/kfpu.c            | 1 +
- arch/loongarch/kernel/paravirt.c        | 1 -
- arch/loongarch/kernel/traps.c           | 1 +
- arch/loongarch/kernel/unwind_guess.c    | 1 +
- arch/loongarch/kernel/unwind_orc.c      | 3 ++-
- arch/loongarch/kernel/unwind_prologue.c | 1 +
- arch/loongarch/lib/crc32-loongarch.c    | 1 +
- arch/loongarch/lib/csum.c               | 1 +
- arch/loongarch/pci/pci.c                | 1 -
- 12 files changed, 10 insertions(+), 4 deletions(-)
+ sound/soc/loongson/loongson_i2s.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
-index a54cd6fd3796..1367ca759468 100644
---- a/arch/loongarch/kernel/acpi.c
-+++ b/arch/loongarch/kernel/acpi.c
-@@ -10,6 +10,7 @@
- #include <linux/init.h>
- #include <linux/acpi.h>
- #include <linux/efi-bgrt.h>
-+#include <linux/export.h>
- #include <linux/irq.h>
- #include <linux/irqdomain.h>
- #include <linux/memblock.h>
-diff --git a/arch/loongarch/kernel/alternative.c b/arch/loongarch/kernel/alternative.c
-index 4ad13847e962..0e0c766df1e3 100644
---- a/arch/loongarch/kernel/alternative.c
-+++ b/arch/loongarch/kernel/alternative.c
-@@ -1,4 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/export.h>
- #include <linux/mm.h>
+diff --git a/sound/soc/loongson/loongson_i2s.c b/sound/soc/loongson/loongson_i2s.c
+index e8852a30f213..e336656e13eb 100644
+--- a/sound/soc/loongson/loongson_i2s.c
++++ b/sound/soc/loongson/loongson_i2s.c
+@@ -9,6 +9,7 @@
  #include <linux/module.h>
- #include <asm/alternative.h>
-diff --git a/arch/loongarch/kernel/elf.c b/arch/loongarch/kernel/elf.c
-index 0fa81ced28dc..3d98c6aa00db 100644
---- a/arch/loongarch/kernel/elf.c
-+++ b/arch/loongarch/kernel/elf.c
-@@ -6,7 +6,6 @@
- 
- #include <linux/binfmts.h>
- #include <linux/elf.h>
--#include <linux/export.h>
- #include <linux/sched.h>
- 
- #include <asm/cpu-features.h>
-diff --git a/arch/loongarch/kernel/kfpu.c b/arch/loongarch/kernel/kfpu.c
-index 4c476904227f..141b49bd989c 100644
---- a/arch/loongarch/kernel/kfpu.c
-+++ b/arch/loongarch/kernel/kfpu.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <linux/cpu.h>
+ #include <linux/platform_device.h>
+ #include <linux/delay.h>
 +#include <linux/export.h>
- #include <linux/init.h>
- #include <asm/fpu.h>
- #include <asm/smp.h>
-diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
-index e5a39bbad078..b1b51f920b23 100644
---- a/arch/loongarch/kernel/paravirt.c
-+++ b/arch/loongarch/kernel/paravirt.c
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#include <linux/export.h>
- #include <linux/types.h>
- #include <linux/interrupt.h>
- #include <linux/irq_work.h>
-diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index 47fc2de6d150..3d9be6ca7ec5 100644
---- a/arch/loongarch/kernel/traps.c
-+++ b/arch/loongarch/kernel/traps.c
-@@ -13,6 +13,7 @@
- #include <linux/kernel.h>
- #include <linux/kexec.h>
- #include <linux/module.h>
-+#include <linux/export.h>
- #include <linux/extable.h>
- #include <linux/mm.h>
- #include <linux/sched/mm.h>
-diff --git a/arch/loongarch/kernel/unwind_guess.c b/arch/loongarch/kernel/unwind_guess.c
-index 98379b7d4147..33d5f33b374e 100644
---- a/arch/loongarch/kernel/unwind_guess.c
-+++ b/arch/loongarch/kernel/unwind_guess.c
-@@ -3,6 +3,7 @@
-  * Copyright (C) 2022 Loongson Technology Corporation Limited
-  */
- #include <asm/unwind.h>
-+#include <linux/export.h>
- 
- unsigned long unwind_get_return_address(struct unwind_state *state)
- {
-diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kernel/unwind_orc.c
-index d623935a7547..0005be49b056 100644
---- a/arch/loongarch/kernel/unwind_orc.c
-+++ b/arch/loongarch/kernel/unwind_orc.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
--#include <linux/objtool.h>
-+#include <linux/export.h>
- #include <linux/module.h>
-+#include <linux/objtool.h>
- #include <linux/sort.h>
- #include <asm/exception.h>
- #include <asm/orc_header.h>
-diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/kernel/unwind_prologue.c
-index 929ae240280a..729e775bd40d 100644
---- a/arch/loongarch/kernel/unwind_prologue.c
-+++ b/arch/loongarch/kernel/unwind_prologue.c
-@@ -3,6 +3,7 @@
-  * Copyright (C) 2022 Loongson Technology Corporation Limited
-  */
- #include <linux/cpumask.h>
-+#include <linux/export.h>
- #include <linux/ftrace.h>
- #include <linux/kallsyms.h>
- 
-diff --git a/arch/loongarch/lib/crc32-loongarch.c b/arch/loongarch/lib/crc32-loongarch.c
-index b37cd8537b45..db22c2ec55e2 100644
---- a/arch/loongarch/lib/crc32-loongarch.c
-+++ b/arch/loongarch/lib/crc32-loongarch.c
-@@ -11,6 +11,7 @@
- 
- #include <asm/cpu-features.h>
- #include <linux/crc32.h>
-+#include <linux/export.h>
- #include <linux/module.h>
- #include <linux/unaligned.h>
- 
-diff --git a/arch/loongarch/lib/csum.c b/arch/loongarch/lib/csum.c
-index df309ae4045d..bcc9d01d8c41 100644
---- a/arch/loongarch/lib/csum.c
-+++ b/arch/loongarch/lib/csum.c
-@@ -2,6 +2,7 @@
- // Copyright (C) 2019-2020 Arm Ltd.
- 
- #include <linux/compiler.h>
-+#include <linux/export.h>
- #include <linux/kasan-checks.h>
- #include <linux/kernel.h>
- 
-diff --git a/arch/loongarch/pci/pci.c b/arch/loongarch/pci/pci.c
-index 2726639150bc..5bc9627a6cf9 100644
---- a/arch/loongarch/pci/pci.c
-+++ b/arch/loongarch/pci/pci.c
-@@ -3,7 +3,6 @@
-  * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
-  */
- #include <linux/kernel.h>
--#include <linux/export.h>
- #include <linux/init.h>
- #include <linux/acpi.h>
- #include <linux/types.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/dma-mapping.h>
+ #include <sound/soc.h>
 -- 
 2.47.1
 
