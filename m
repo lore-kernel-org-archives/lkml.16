@@ -1,135 +1,142 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90EB120F069;
-	Sun,  8 Jun 2025 22:57:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749423481; cv=pass; b=Vx/ihC05Zu2lcM8HIX5mNnFRiMPoJrTAZZuIGnZc76oQWZo8RbFlHJrhZBx1hbD7gkRm+dhkw2I7cxArKc5Wx48PBYQ3Nclk84AnxKNat0F0haAgGPThFTQpXp49J/CQWDjttZPaFeTMWvKmBTYJ/qH+sPw3aDrVkOtxPtQrvp4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749423481; c=relaxed/simple;
-	bh=CkCQ/sC8APhLpnw/J5o2x0EMAxl/8BjS9udEH3fE3Og=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=orIIK2aXI4NXFR9awkLfW/0twKn3FqkLSguiF027VlQUdkcKOlouE5Yt8O8gxTVvZV33cnCn+RWGTxzaEO440RY04ubkSguKfL3dbY9QtDOdke0pSmMBZwUt7zOjEarMDYmHiOzhJYQfzeYQUoiZIId95wC2kLYNuHYcbMPuj2M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=RrH6Tee0; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE05E2AE6D
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 23:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749424145; cv=none; b=IydlG4WJjfxvoA30AevDuURPfjLxQp0fhDSRWzEEaERcxfHWomonWyPuxAckczGbWUqn9Mh5HRREE+Mt0ceO+wYoqXOmXHJI+YjK6ZikGwf2BH6HoZ/6csqTgeq+qtHf+6TboO8RFMmmu+QhpGzXCfKQxnEzwU+izf003TfblDM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749424145; c=relaxed/simple;
+	bh=eHIc/r2kJL8Bf3OZTdnVJuSsvTjZcUX7pWON43k4PBA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nn5E2yDMYEj/FLqqalRht7jDtDj4s4v2CfY5mJE73y3931BtdidqPLjBisFivfS+Cx5ePzGkKAF1DGuoat4pTMvCZF77aE4/fmISYQrUl6jeb99VVj4qN2hmLgmiaOoTCfbrweMFdN9jhqR8BZ8nDg73W5eSS8DxxP+IKaNxmNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=sAlPPgLB; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="RrH6Tee0"
-ARC-Seal: i=1; a=rsa-sha256; t=1749423463; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Xp0OclK6eEHNmxKsFxFz9e1nl3REcWmdWlaI56tFB5vp5dkmarxLaVowtil94jYvexlmyfzx6PvNjX9gGF+fCLZKS7RN0OnfPSkHYEw4sqGIubHiI3PEIbKltXaPTUmxMI9J1GQMRcO1iuld+iOIqFvcOaaVvHzlrYHCqCDx6RQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749423463; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=2s63SOE1NoYXN+GdFgykz83zv7+aivrpcY1WlxZbQwU=; 
-	b=Y7dw1cayq5RePppcr5KUw9dAT1qndkuXwgUMWsbA6pVhGA1ZE1k+Bvs1gvqfdiyzZ4k05nV6i2iC5kE/HLRkkUA6uddNH0Q2DWw1p0I3aCSnxivOA2WJkShZgONtznuwtQHpLIaRT9DeevvofcEN+rB5yUT9SQ7uOJnd7gbxt1o=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749423463;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=2s63SOE1NoYXN+GdFgykz83zv7+aivrpcY1WlxZbQwU=;
-	b=RrH6Tee0jSphoDTgSjhySl+j8U5G/+EJtOkXKNdq7g2zTpvv9eZDnvNIJ9yEHkHz
-	S6dDG8wpcq00dN67VbQZownvErV0ksHBUbO5Z4K2nVXboDhX4b0ekjTIb0s+l/slKz9
-	b+5u9nX5Bb6vlG7pbR8YNGlZCzq7ZgyjOYSTIjg0=
-Received: by mx.zohomail.com with SMTPS id 1749423460299953.9085347616196;
-	Sun, 8 Jun 2025 15:57:40 -0700 (PDT)
-From: Daniel Almeida <daniel.almeida@collabora.com>
-Date: Sun, 08 Jun 2025 19:51:11 -0300
-Subject: [PATCH v4 6/6] rust: pci: add irq accessors
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="sAlPPgLB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=1XordT2+tifrABW/XWsOYg0WlgNHPQUd2W5FWs01AX4=; b=sAlPPgLBiYjbAxZe
+	4dS0FIIB1on/Vl2RHZ6URYqUHEkhrC5aFOqlSI2mlH5uBfmcPvU1pABZTEG25FlrJ3ELokfkztEZE
+	5KjLmYmF2DgFhfjJPL8xUy3laMQuhqVSZM1HWLSzUB4brJTwf7UgZgXO61O3YC0KSPxEnH+7wJ8ME
+	nvAHbSK5DHKT/QC5GB3Cv6vKuNJArr5wD2MQPfFJtwmiLlarkd5mT2ObK1Kh/MelQ2lsTDICLoLkj
+	O9Y9ByohqJM8xs6VyopYQOCNeyF5XUWOmJ3XicNX2t5xsJI7jlsO1DR8vEYeImve2mFsocfYDPCl6
+	ZPeZ1J1Bo0a4dPh1Tw==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1uOP8B-008IgC-0V;
+	Sun, 08 Jun 2025 23:08:47 +0000
+From: linux@treblig.org
+To: richard@nod.at,
+	chengzhihao1@huawei.com
+Cc: linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] ubifs: Remove uncallable debug code
+Date: Mon,  9 Jun 2025 00:08:46 +0100
+Message-ID: <20250608230846.166822-1-linux@treblig.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250608-topics-tyr-request_irq-v4-6-81cb81fb8073@collabora.com>
-References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
-In-Reply-To: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Benno Lossin <lossin@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Benno Lossin <lossin@kernel.org>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- linux-pci@vger.kernel.org, Daniel Almeida <daniel.almeida@collabora.com>
-X-Mailer: b4 0.14.2
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-These accessors can be used to retrieve a irq::Registration or a
-irq::ThreadedRegistration from a pci device.
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-These accessors ensure that only valid IRQ lines can ever be registered.
+ubifs_dump_budget_req() and ubifs_dump_index() have been unused
+since they were originally added back in 2008's
+commit 1e51764a3c2a ("UBIFS: add new flash file system")
 
-Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
+They were renamed from dbg_dump_budget_req() and dbg_dump_index() in
+2012.
+
+Remove them.
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 ---
- rust/kernel/pci.rs | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ fs/ubifs/debug.c | 36 ------------------------------------
+ fs/ubifs/debug.h |  2 --
+ 2 files changed, 38 deletions(-)
 
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index 8435f8132e38129ccc3495e7c4d3237fcaa97ad9..c690fa1c739c937324e902e61e68df238dbd733b 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -395,6 +395,32 @@ pub fn resource_len(&self, bar: u32) -> Result<bindings::resource_size_t> {
-     }
+diff --git a/fs/ubifs/debug.c b/fs/ubifs/debug.c
+index b01f382ce8db..05124392d1d9 100644
+--- a/fs/ubifs/debug.c
++++ b/fs/ubifs/debug.c
+@@ -580,23 +580,6 @@ void ubifs_dump_node(const struct ubifs_info *c, const void *node, int node_len)
+ 	spin_unlock(&dbg_lock);
  }
  
-+macro_rules! gen_irq_accessor {
-+    ($(#[$meta:meta])* $fn_name:ident, $reg_type:ident, $handler_trait:ident) => {
-+        $(#[$meta])*
-+        pub fn $fn_name<T: crate::irq::$handler_trait + 'static>(
-+            &self,
-+            index: u32,
-+            flags: crate::irq::flags::Flags,
-+            name: &'static crate::str::CStr,
-+            handler: T,
-+        ) -> Result<impl PinInit<crate::irq::$reg_type<T>, crate::error::Error> + '_> {
-+            // SAFETY: `self.as_raw` returns a valid pointer to a `struct pci_dev`.
-+            let irq = unsafe { crate::bindings::pci_irq_vector(self.as_raw(), index) };
-+            if irq < 0 {
-+                return Err(crate::error::Error::from_errno(irq));
-+            }
-+            Ok(crate::irq::$reg_type::<T>::register(
-+                self.as_ref(),
-+                irq as u32,
-+                flags,
-+                name,
-+                handler,
-+            ))
-+        }
-+    };
-+}
-+
- impl Device<device::Bound> {
-     /// Mapps an entire PCI-BAR after performing a region-request on it. I/O operation bound checks
-     /// can be performed on compile time for offsets (plus the requested type size) < SIZE.
-@@ -413,6 +439,15 @@ pub fn iomap_region_sized<const SIZE: usize>(
-     pub fn iomap_region(&self, bar: u32, name: &CStr) -> Result<Devres<Bar>> {
-         self.iomap_region_sized::<0>(bar, name)
-     }
-+
-+    gen_irq_accessor!(
-+        /// Returns a [`kernel::irq::Registration`] for the IRQ vector at the given index.
-+        irq_by_index, Registration, Handler
-+    );
-+    gen_irq_accessor!(
-+        /// Returns a [`kernel::irq::ThreadedRegistration`] for the IRQ vector at the given index.
-+        threaded_irq_by_index, ThreadedRegistration, ThreadedHandler
-+    );
+-void ubifs_dump_budget_req(const struct ubifs_budget_req *req)
+-{
+-	spin_lock(&dbg_lock);
+-	pr_err("Budgeting request: new_ino %d, dirtied_ino %d\n",
+-	       req->new_ino, req->dirtied_ino);
+-	pr_err("\tnew_ino_d   %d, dirtied_ino_d %d\n",
+-	       req->new_ino_d, req->dirtied_ino_d);
+-	pr_err("\tnew_page    %d, dirtied_page %d\n",
+-	       req->new_page, req->dirtied_page);
+-	pr_err("\tnew_dent    %d, mod_dent     %d\n",
+-	       req->new_dent, req->mod_dent);
+-	pr_err("\tidx_growth  %d\n", req->idx_growth);
+-	pr_err("\tdata_growth %d dd_growth     %d\n",
+-	       req->data_growth, req->dd_growth);
+-	spin_unlock(&dbg_lock);
+-}
+-
+ void ubifs_dump_lstats(const struct ubifs_lp_stats *lst)
+ {
+ 	spin_lock(&dbg_lock);
+@@ -963,25 +946,6 @@ void ubifs_dump_tnc(struct ubifs_info *c)
+ 	pr_err("(pid %d) finish dumping TNC tree\n", current->pid);
  }
  
- impl Device<device::Core> {
-
+-static int dump_znode(struct ubifs_info *c, struct ubifs_znode *znode,
+-		      void *priv)
+-{
+-	ubifs_dump_znode(c, znode);
+-	return 0;
+-}
+-
+-/**
+- * ubifs_dump_index - dump the on-flash index.
+- * @c: UBIFS file-system description object
+- *
+- * This function dumps whole UBIFS indexing B-tree, unlike 'ubifs_dump_tnc()'
+- * which dumps only in-memory znodes and does not read znodes which from flash.
+- */
+-void ubifs_dump_index(struct ubifs_info *c)
+-{
+-	dbg_walk_index(c, NULL, dump_znode, NULL);
+-}
+-
+ /**
+  * dbg_save_space_info - save information about flash space.
+  * @c: UBIFS file-system description object
+diff --git a/fs/ubifs/debug.h b/fs/ubifs/debug.h
+index d425861e6b82..1d5c8ee8b64a 100644
+--- a/fs/ubifs/debug.h
++++ b/fs/ubifs/debug.h
+@@ -245,7 +245,6 @@ const char *dbg_snprintf_key(const struct ubifs_info *c,
+ void ubifs_dump_inode(struct ubifs_info *c, const struct inode *inode);
+ void ubifs_dump_node(const struct ubifs_info *c, const void *node,
+ 		     int node_len);
+-void ubifs_dump_budget_req(const struct ubifs_budget_req *req);
+ void ubifs_dump_lstats(const struct ubifs_lp_stats *lst);
+ void ubifs_dump_budg(struct ubifs_info *c, const struct ubifs_budg_info *bi);
+ void ubifs_dump_lprop(const struct ubifs_info *c,
+@@ -260,7 +259,6 @@ void ubifs_dump_heap(struct ubifs_info *c, struct ubifs_lpt_heap *heap,
+ void ubifs_dump_pnode(struct ubifs_info *c, struct ubifs_pnode *pnode,
+ 		      struct ubifs_nnode *parent, int iip);
+ void ubifs_dump_tnc(struct ubifs_info *c);
+-void ubifs_dump_index(struct ubifs_info *c);
+ void ubifs_dump_lpt_lebs(const struct ubifs_info *c);
+ 
+ int dbg_walk_index(struct ubifs_info *c, dbg_leaf_callback leaf_cb,
 -- 
 2.49.0
 
