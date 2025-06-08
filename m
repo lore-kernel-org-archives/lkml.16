@@ -1,33 +1,43 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E5B1428E7;
-	Sun,  8 Jun 2025 20:01:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749412889; cv=none; b=BbKlplxJlQ9iChNQe/f58eROHR1mFAbMsem+XOe7eY6yL1ZqjR0SFf4RxjSnWhQpyYSuWLYul2jaRcp0IOtRmEpT+ecMhAs4Y8o/psDnkJG8Q7JJf86PTsEsq3Y32X/2CqJcp6MKHdkUhZ0+XJB1dFkcYVXZNdnuu+2D7H/GkKo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749412889; c=relaxed/simple;
-	bh=fuA/hr7VD5/JtnxVdRo7SFZ0CMh9LDP9qzuRuyY2vFI=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624541519A6
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 20:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749412999; cv=pass; b=Qg5DUBAQ+iwX3Y3SWJZSlRqqzUKpFf9nr135BUGu1PtcfftXHo1l00/nQuZ5cwp5ALA6AvUisnw5IjTqXrwY5lf7DzcLJZP4jNdT8bkb6qub+8ENX+MBzoyMF/jBEZx7XRtYlvcJZgcLfuFGSHehR9QRu8UK/1Qz6X45gA/CIwU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749412999; c=relaxed/simple;
+	bh=+n+o8Qpvh/7RYRgJjII+zOxHxxgs4h1hUT4pvJNG4lQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iOJEKGe6C5HR87LmkLa2Z5mG8jeKTWj9pvInwOW+jsbj1auAUqG+5CxgMr1qvCJpZ7yGCeI9a2LDhXTwFEEjIQfWsZE8I/I+d4LuyUaUTQlDVqQ+IqqsXMvj/+cXiBoGWHrMy9Rty3+I9r6vcNxRDYYEMBd2ruCb0JjAw7/pGmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FXnpcwTF; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=qCKfl7IYyXCBZ9UcuCLlYBOgN8iZh3QCAQnVSLlVobUmAB1Rt0RrazSrlD5Du1nTiXhTLhVJrX4pdUkTaVnuGUCrSrw595nJtUcrqmCIPHvt32j0/GwrXlCr8xnrArbhfKkB5HWKxDqixhM2p1LlMmj5Yya/oxUU6pD63Vcl8VY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=KZbvDN10; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FXnpcwTF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50FC3C4CEEE;
-	Sun,  8 Jun 2025 20:01:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749412888;
-	bh=fuA/hr7VD5/JtnxVdRo7SFZ0CMh9LDP9qzuRuyY2vFI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FXnpcwTFSntd7MBkj3IlFzF4Wm1Nbf17gRrAQ33Y5he0MxwSJ3Gw23r7b//6qGJX1
-	 IetW29FsrudgqqO4Jdaqar0ncu42TC68ki2i3ItknDlpMs5FGcNYs/tJkdiv6sSUo8
-	 TMV249zfF18buNViodF1zXMEWxJuj2H3XCpfN1ODaHM37RI/i8NGd3dZHGtZNql/Ye
-	 Cl2g+Yg8x2zNbhqaRJXWOGWdTQrS1eOXE4WSPZUu/j9SNRN1b5c0MKeGrb7D0C/h6N
-	 n9fuolBulS6sW9eXCeZtyA7Wq2Sie/7hsBTmTMJzyfVTYHC0lKfV5tXy3ZFGAjgVZR
-	 ul/nNb8QECVjg==
-Message-ID: <134ce55c-2213-417c-a3d0-de9a7695ec91@kernel.org>
-Date: Sun, 8 Jun 2025 22:01:23 +0200
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="KZbvDN10"
+ARC-Seal: i=1; a=rsa-sha256; t=1749412991; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=c5+ujBFocU4bPsvFtO3x1L4N8nmS3Qub86PQInR5FoxrWBc6/xOOxs6rdjyrR1YILRxcp4B3nbNQIQr1oqxdolxhY38I8V45iSO5ZT1TX3ILEs0ge0i1oM7nhlhtRINZuUag94PU2euRS2T1WexqyawrAnmJphhMNr04ySy1nqQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749412991; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=oYD+9wugRPVZ9yTQeDUm3MLVIWdKfIzKBhHgfAs7+Yg=; 
+	b=lWVqWviX5JSp69MMr+HL8+6UORtx4fTzr0xYbeUb9ydtX6fhdBSCae+q8KU39I63NR9eDTjVjcDqLX7O6ZCDoqmI7WDmbieTReTjMtPXllz0PztSNrSd7PrUKyRCrTjhZ/Et6HjapyXF9We3MV1KUlHq9yQvPhs1lLsP9DCWI+M=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749412991;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=oYD+9wugRPVZ9yTQeDUm3MLVIWdKfIzKBhHgfAs7+Yg=;
+	b=KZbvDN10pSLU06+JYR+OmqRww5sGvio1bLpUH+p1YqfRe5XYKcJ2Hh8OhYOkybkj
+	rdBzMNJcMF3HWbTGx+uWGzC/w9JW31C3lR4EFQFe0G8VxfkNFFnPHekkMdV5ytReMY8
+	Fc9SpRep8/Cn0VPqihLQVvpPEJA6dAHBP5sbNRD8=
+Received: by mx.zohomail.com with SMTPS id 1749412988671446.1912413843944;
+	Sun, 8 Jun 2025 13:03:08 -0700 (PDT)
+Message-ID: <582f86fb-bcf1-4b58-ad54-acacf4326dd1@collabora.com>
+Date: Sun, 8 Jun 2025 23:03:06 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,255 +45,65 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/5] power: supply: core: convert to fwnnode
-To: Sebastian Reichel <sebastian.reichel@collabora.com>,
- Sebastian Reichel <sre@kernel.org>, Mark Brown <broonie@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- Matti Vaittinen <mazziesaccount@gmail.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
- <pali@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250430-psy-core-convert-to-fwnode-v2-0-f9643b958677@collabora.com>
- <20250430-psy-core-convert-to-fwnode-v2-4-f9643b958677@collabora.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250430-psy-core-convert-to-fwnode-v2-4-f9643b958677@collabora.com>
+Subject: Re: [PATCH] reboot: Remove unused unregister_platform_power_off
+To: linux@treblig.org, akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org
+References: <20250608174235.116424-1-linux@treblig.org>
+Content-Language: en-US
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+In-Reply-To: <20250608174235.116424-1-linux@treblig.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-Hi, 
+Hi,
 
-On 30-Apr-25 12:54 AM, Sebastian Reichel wrote:
-> Replace any DT specific code with fwnode in the power-supply
-> core.
+On 6/8/25 20:42, linux@treblig.org wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
 > 
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-
-Thanks, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hansg@kernel.org>
-
-Regards,
-
-Hans
-
-
-
+> unregister_platform_power_off() was added as part of 2022's
+> commit fb61375ecfba ("kernel/reboot: Add register_platform_power_off()")
+> but has remained unused.
+> 
+> Remove it.
+> 
+> Note it's a pair with register_platform_power_off() so
+> seems symmetric; however, I think platforms are chosen
+> and then stay that way for the boot - so don't
+> get unregistered.
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 > ---
->  drivers/power/supply/bq2415x_charger.c   |  2 +-
->  drivers/power/supply/power_supply_core.c | 65 ++++++++++++++++----------------
->  include/linux/power_supply.h             |  2 +-
->  3 files changed, 34 insertions(+), 35 deletions(-)
-> 
-> diff --git a/drivers/power/supply/bq2415x_charger.c b/drivers/power/supply/bq2415x_charger.c
-> index 9e3b9181ee76a4f473228bba022917677acce256..1ecbca510bba99ee7abcda33a719035adfceeb5f 100644
-> --- a/drivers/power/supply/bq2415x_charger.c
-> +++ b/drivers/power/supply/bq2415x_charger.c
-> @@ -1674,7 +1674,7 @@ static int bq2415x_probe(struct i2c_client *client)
->  	/* Query for initial reported_mode and set it */
->  	if (bq->nb.notifier_call) {
->  		if (np) {
-> -			notify_psy = power_supply_get_by_phandle(np,
-> +			notify_psy = power_supply_get_by_phandle(of_fwnode_handle(np),
->  						"ti,usb-charger-detection");
->  			if (IS_ERR(notify_psy))
->  				notify_psy = NULL;
-> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-> index a8d1fe66e2486a833ccaa3ed77b861c6e52c5760..1d53ceaa8fd161e7e72b90befabb9380393c99f2 100644
-> --- a/drivers/power/supply/power_supply_core.c
-> +++ b/drivers/power/supply/power_supply_core.c
-> @@ -18,7 +18,6 @@
->  #include <linux/device.h>
->  #include <linux/notifier.h>
->  #include <linux/err.h>
-> -#include <linux/of.h>
->  #include <linux/power_supply.h>
->  #include <linux/property.h>
->  #include <linux/thermal.h>
-> @@ -196,24 +195,24 @@ static int __power_supply_populate_supplied_from(struct power_supply *epsy,
->  						 void *data)
->  {
->  	struct power_supply *psy = data;
-> -	struct device_node *np;
-> +	struct fwnode_handle *np;
->  	int i = 0;
->  
->  	do {
-> -		np = of_parse_phandle(psy->dev.of_node, "power-supplies", i++);
-> -		if (!np)
-> +		np = fwnode_find_reference(psy->dev.fwnode, "power-supplies", i++);
-> +		if (IS_ERR(np))
->  			break;
->  
-> -		if (np == epsy->dev.of_node) {
-> +		if (np == epsy->dev.fwnode) {
->  			dev_dbg(&psy->dev, "%s: Found supply : %s\n",
->  				psy->desc->name, epsy->desc->name);
->  			psy->supplied_from[i-1] = (char *)epsy->desc->name;
->  			psy->num_supplies++;
-> -			of_node_put(np);
-> +			fwnode_handle_put(np);
->  			break;
->  		}
-> -		of_node_put(np);
-> -	} while (np);
-> +		fwnode_handle_put(np);
-> +	} while (!IS_ERR(np));
->  
->  	return 0;
->  }
-> @@ -232,16 +231,16 @@ static int power_supply_populate_supplied_from(struct power_supply *psy)
->  static int  __power_supply_find_supply_from_node(struct power_supply *epsy,
->  						 void *data)
->  {
-> -	struct device_node *np = data;
-> +	struct fwnode_handle *fwnode = data;
->  
->  	/* returning non-zero breaks out of power_supply_for_each_psy loop */
-> -	if (epsy->dev.of_node == np)
-> +	if (epsy->dev.fwnode == fwnode)
->  		return 1;
->  
->  	return 0;
->  }
->  
-> -static int power_supply_find_supply_from_node(struct device_node *supply_node)
-> +static int power_supply_find_supply_from_fwnode(struct fwnode_handle *supply_node)
->  {
->  	int error;
->  
-> @@ -249,7 +248,7 @@ static int power_supply_find_supply_from_node(struct device_node *supply_node)
->  	 * power_supply_for_each_psy() either returns its own errors or values
->  	 * returned by __power_supply_find_supply_from_node().
->  	 *
-> -	 * __power_supply_find_supply_from_node() will return 0 (no match)
-> +	 * __power_supply_find_supply_from_fwnode() will return 0 (no match)
->  	 * or 1 (match).
->  	 *
->  	 * We return 0 if power_supply_for_each_psy() returned 1, -EPROBE_DEFER if
-> @@ -262,7 +261,7 @@ static int power_supply_find_supply_from_node(struct device_node *supply_node)
->  
->  static int power_supply_check_supplies(struct power_supply *psy)
->  {
-> -	struct device_node *np;
-> +	struct fwnode_handle *np;
->  	int cnt = 0;
->  
->  	/* If there is already a list honor it */
-> @@ -270,24 +269,24 @@ static int power_supply_check_supplies(struct power_supply *psy)
->  		return 0;
->  
->  	/* No device node found, nothing to do */
-> -	if (!psy->dev.of_node)
-> +	if (!psy->dev.fwnode)
->  		return 0;
->  
->  	do {
->  		int ret;
->  
-> -		np = of_parse_phandle(psy->dev.of_node, "power-supplies", cnt++);
-> -		if (!np)
-> +		np = fwnode_find_reference(psy->dev.fwnode, "power-supplies", cnt++);
-> +		if (IS_ERR(np))
->  			break;
->  
-> -		ret = power_supply_find_supply_from_node(np);
-> -		of_node_put(np);
-> +		ret = power_supply_find_supply_from_fwnode(np);
-> +		fwnode_handle_put(np);
->  
->  		if (ret) {
->  			dev_dbg(&psy->dev, "Failed to find supply!\n");
->  			return ret;
->  		}
-> -	} while (np);
-> +	} while (!IS_ERR(np));
->  
->  	/* Missing valid "power-supplies" entries */
->  	if (cnt == 1)
-> @@ -498,14 +497,14 @@ void power_supply_put(struct power_supply *psy)
->  EXPORT_SYMBOL_GPL(power_supply_put);
->  
->  #ifdef CONFIG_OF
-> -static int power_supply_match_device_node(struct device *dev, const void *data)
-> +static int power_supply_match_device_fwnode(struct device *dev, const void *data)
->  {
-> -	return dev->parent && dev->parent->of_node == data;
-> +	return dev->parent && dev_fwnode(dev->parent) == data;
->  }
->  
->  /**
->   * power_supply_get_by_phandle() - Search for a power supply and returns its ref
-> - * @np: Pointer to device node holding phandle property
-> + * @fwnode: Pointer to fwnode holding phandle property
->   * @property: Name of property holding a power supply name
->   *
->   * If power supply was found, it increases reference count for the
-> @@ -515,21 +514,21 @@ static int power_supply_match_device_node(struct device *dev, const void *data)
->   * Return: On success returns a reference to a power supply with
->   * matching name equals to value under @property, NULL or ERR_PTR otherwise.
->   */
-> -struct power_supply *power_supply_get_by_phandle(struct device_node *np,
-> -							const char *property)
-> +struct power_supply *power_supply_get_by_phandle(struct fwnode_handle *fwnode,
-> +						 const char *property)
->  {
-> -	struct device_node *power_supply_np;
-> +	struct fwnode_handle *power_supply_fwnode;
->  	struct power_supply *psy = NULL;
->  	struct device *dev;
->  
-> -	power_supply_np = of_parse_phandle(np, property, 0);
-> -	if (!power_supply_np)
-> -		return ERR_PTR(-ENODEV);
-> +	power_supply_fwnode = fwnode_find_reference(fwnode, property, 0);
-> +	if (IS_ERR(power_supply_fwnode))
-> +		return ERR_CAST(power_supply_fwnode);
->  
-> -	dev = class_find_device(&power_supply_class, NULL, power_supply_np,
-> -				power_supply_match_device_node);
-> +	dev = class_find_device(&power_supply_class, NULL, power_supply_fwnode,
-> +				power_supply_match_device_fwnode);
->  
-> -	of_node_put(power_supply_np);
-> +	fwnode_handle_put(power_supply_fwnode);
->  
->  	if (dev) {
->  		psy = dev_to_psy(dev);
-> @@ -561,14 +560,14 @@ struct power_supply *devm_power_supply_get_by_phandle(struct device *dev,
->  {
->  	struct power_supply **ptr, *psy;
->  
-> -	if (!dev->of_node)
-> +	if (!dev_fwnode(dev))
->  		return ERR_PTR(-ENODEV);
->  
->  	ptr = devres_alloc(devm_power_supply_put, sizeof(*ptr), GFP_KERNEL);
->  	if (!ptr)
->  		return ERR_PTR(-ENOMEM);
->  
-> -	psy = power_supply_get_by_phandle(dev->of_node, property);
-> +	psy = power_supply_get_by_phandle(dev_fwnode(dev), property);
->  	if (IS_ERR_OR_NULL(psy)) {
->  		devres_free(ptr);
->  	} else {
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index b6eb31a23c878aa9ed8ad7bcb02a13721354e1cb..c95f098374cbdeafe8cddb52da3903f4f0e0f0fc 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -805,7 +805,7 @@ static inline struct power_supply *power_supply_get_by_name(const char *name)
->  { return NULL; }
->  #endif
->  #ifdef CONFIG_OF
-> -extern struct power_supply *power_supply_get_by_phandle(struct device_node *np,
-> +extern struct power_supply *power_supply_get_by_phandle(struct fwnode_handle *fwnode,
->  							const char *property);
->  extern struct power_supply *devm_power_supply_get_by_phandle(
->  				    struct device *dev, const char *property);
-> 
+>  include/linux/reboot.h |  1 -
+>  kernel/reboot.c        | 16 ----------------
+>  2 files changed, 17 deletions(-)
 
+The patches converting those platform drivers to use
+register[un]_platform_power_off() haven't been sent to ML. This is the
+reason this func is unused.
+
+There were apm_32 [1], platform/iris [2], mcu_mpc8349emitx [3],
+olpc-xo1-pm [4] and sgy_cts1000 [5] drivers that I had patches prepared
+to convert them to new power-off API. They weren't sent out back then in
+2022 because of a nontrivial dependencies between drivers. At least some
+of those deps has been resolved by now and potentially the API
+conversion may continue. Currently other things keep me busy and don't
+have immediate plans to continue the conversion work, maybe sometime later.
+
+Leaving it up to Rafael to decide whether to keep this func unused or
+re-add later, once it actually will become needed.
+
+[1]
+https://gitlab.collabora.com/dmitry.osipenko/linux-kernel-rd/-/commit/e42f1264161085f01fed16986a23592519d9f49e
+[2]
+https://gitlab.collabora.com/dmitry.osipenko/linux-kernel-rd/-/commit/24cd048ad801aab6221f2b0bb4576dfc2fe25faa
+[3]
+https://gitlab.collabora.com/dmitry.osipenko/linux-kernel-rd/-/commit/486b69b43c47d85a0f292dca127f0b9063443a54
+[4]
+https://gitlab.collabora.com/dmitry.osipenko/linux-kernel-rd/-/commit/fe5344b3f8a8e1c52e1cd7108aa7e615123be4b2
+[5]
+https://gitlab.collabora.com/dmitry.osipenko/linux-kernel-rd/-/commit/0d761d6139c9dacbbda9f2e095577b084685603f
+
+-- 
+Best regards,
+Dmitry
