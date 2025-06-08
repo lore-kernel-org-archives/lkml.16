@@ -1,114 +1,214 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B2AA59
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 00:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055923FF1
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 00:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749340912; cv=none; b=Fo4Pc8hCUi7Dl9GQlj488f2IASWSGXc01MoFDNlBKgj/2l0OfM2Vu3ZPjV4oSm9esY/UI6IKvCJEAsUlU+CgxNS8j1VE/jJWcQBvbZ4jHk2SN27njla+1rVSqZOdVkfSqhWew3Ot+1hj65cSBfj8zpC9Iv1kgjeyXOAa5VZC3Lk=
+	t=1749341082; cv=none; b=ikQWPrjKHtm83jHe/OR63dCO86BeSo7EVl1XY3aJlaBsEnBhtNJuQ1qkSWUcYqBXzYypqnHc3sle0+WqnjjFxwj/exJRpoaSkZIrnN/W7T2oxX//THJ+xl21TO6Zemi/EoImAz3k1N5T3tG/GPcL4Z2dKkGht/LKVOUpLvRC01E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749340912; c=relaxed/simple;
-	bh=8R2uPY1f+jWcsKfkH2Pjb0Fl6unpyZmQFq81JP1d2ec=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Bn1jtNggJxveG/t3GumZwXYJIZuzgBx2CanjnwknUd+eDPMeT2xgJBBdMkzcYHgkQdtiAyUcgtCeQ1qZ6RCnIa9BPXo3uURL2oE7loEk7fgNx6W/xPMznmHXiO7kFxaVN+OnwxeESMQ8QH9LQHlKIOGdaXTCSH5x/+zAmKhMfHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m6XtU9l/; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749341082; c=relaxed/simple;
+	bh=3nrXo6s/BNr8vei07z9IKKe/5qIGj4qXfxgKcrALLnE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Br+vpAJuYDt8+pmuk28R0yrHd5FbYlT3hGYQZA/fdjT1pcODaIHcPY+STx70YDtwJIw7NQ0fLQ9vjlO8LKyh8St/SVjDR1OxtRG5N4qdVrKz9/lE5RvEpWyy+cSeAvfTNPfSlQd0VGXS82zeuOY4kRdRS7cFt0QcNuEanYOyRbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=sXPSIOqc; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m6XtU9l/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749340910; x=1780876910;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=8R2uPY1f+jWcsKfkH2Pjb0Fl6unpyZmQFq81JP1d2ec=;
-  b=m6XtU9l/DZWV4N3ixnvFtv2jrz99kwh6qZhFpA+/Dr81wkC9qOKfMsNB
-   XhNRtJ0E5ZHnOLBFOoULaGdKIZZ8gd2PxgyPTqfbwGJjRnzZy2x5su0/N
-   6A6AG86H2QR4+vaKmbcH3FvsLaYuLVaox6GXPbdqiRTPiMEZu3yLNknp8
-   jPmHOJ9m3rSy98XDll70SdHJ+aFtIXqOI7QZ89pE3QL12NiUXXGkFFD5h
-   H7bdxr0/XCx7AxiGhopOkusneN/NtGHFVWyZpZkH8tabQyySEztzOyKli
-   8grX6PCKWOmY6vUS89mjjVF0V64gHWeaePEEjpc8UthDl7Ar2u6zWH0wh
-   w==;
-X-CSE-ConnectionGUID: RBVBP4w/SbaqQcC5WRimeA==
-X-CSE-MsgGUID: zHZgsNd+SCGRdqFwMggnGg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11457"; a="51337218"
-X-IronPort-AV: E=Sophos;i="6.16,219,1744095600"; 
-   d="scan'208";a="51337218"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2025 17:01:50 -0700
-X-CSE-ConnectionGUID: iNQOHQ0PSyedeM5BC4DK7A==
-X-CSE-MsgGUID: B0bPJYRkTgGjk49R2v6ivw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,219,1744095600"; 
-   d="scan'208";a="146666359"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 07 Jun 2025 17:01:49 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uO3Tu-00064z-2u;
-	Sun, 08 Jun 2025 00:01:46 +0000
-Date: Sun, 8 Jun 2025 08:01:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Raul E Rangel <rrangel@chromium.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Petr Mladek <pmladek@suse.com>
-Subject: init/main.c:753:(.init.text+0x7a): relocation truncated to fit:
- R_ARC_S25W_PCREL against symbol `__st_r13_to_r16' defined in .text section
- in ../lib/gcc/arc-linux/8.5.0/libgcc.a(_millicodethunk_st.o)
-Message-ID: <202506080718.Q9VUfXsm-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="sXPSIOqc"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4a58ba6c945so52809001cf.2
+        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 17:04:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1749341079; x=1749945879; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zp/D6Nx8BfMiScISjeIblyGMtACHkzJtCPjT0UaHWyY=;
+        b=sXPSIOqcR+uRUP1M3yJgrgvtormDP1CUe3U+Wj+dWQGTexfgekJpOnPM3anFwgCR3B
+         I78T6ydDpf+21so0ENVzw6PuN3DAHV5oKATGruzPBB5o4MIqnT7XEQ122X0L7BcFu2kI
+         X/+G7yQoe5OO4jJTGTDQ1NlRolKjuXwGLx5xDzj66uqZmImHhzlCAA7gqDGzgbUS6ewS
+         89mvyjD0GI0nrie4ndUWTciMfl8rtD/biOPXns5UILg5IvNpfaeHM4IpdakEkja6zJs/
+         q2WhAnGAjJbBcJNcIGgmDxmQEeyvhu14xSVDPFFn5OWDd+qcpw8cqq3h5l7EEk4pZ/dr
+         WwpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749341079; x=1749945879;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zp/D6Nx8BfMiScISjeIblyGMtACHkzJtCPjT0UaHWyY=;
+        b=pDSxXk9/mITJoGT4Qk10FmHOICL7wMyr1DOjmqRbzdmBpFjk5Lr/ndVTpdyWVBKSm0
+         nPTRzGeTTeZL5rdEEMZEkVxWjkSKrgrq2B3xmnvIJpKVBcevDRQK1TPPJcb9Lm/7BNmW
+         ad74vKDQDvn2sxR4/ZiDh7SkauT3UkucF7IsOXYaT2bhS+7P1eSM1V74Pc70Yr4jZ1Iu
+         Mbi8dHS0KbDL/cVD7x8nB7Q7Uv1G2lZvlhYvJJT6G8fMIcXgUnlQ1xB1YbM5ZIn794mL
+         px1ulCP9+N05znPAt+4F/qMjo61ANnBALVkkmEtyLH2VIMYFtbmIssMYXx11HZx1cnDO
+         QBpw==
+X-Forwarded-Encrypted: i=1; AJvYcCX7lTgCNP8rvWSuf53gAleML3yznSgMoZgX0kMX8W4oFCwdAnn24Lax6VDSDrC8KOUiIrWoeKXgeiSi2lI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDT96zc71LmOJKvhi58prN3MxseheRZdQwWV98V9A30faY5wBn
+	IGX9o3Ul8Fsm9sKzCXjTfthTHytGVlClqgL84L4h2+rZec52kyZOMWvIiUGRaMu3tmabo2jeHnt
+	7Yeeus2za5RgzA3wS8XYUWb6P+wOtySOzuCMXQADNuw==
+X-Gm-Gg: ASbGncuGadKyucd8dogs38sDw7vEbVhjDAIEmy/WaPsmZS9xbuD+q+B3bNgAj812EL/
+	phWfOa6oeERP049eARhbuS0x0r/uwfZIgZWlSxVe0xcUQQrHwZ1I6dR89h5rYW37XkAJICezQ6v
+	9U1mXq3k8WlJ9bv7s08J8euye8R2W+Q/yhqmG9+xx/
+X-Google-Smtp-Source: AGHT+IEHyFkt2x/bEAiQ5dSYS8a+nTEZ4nXGxUXv1xBh/B/nln1ArBefBSOd6jxdD7aTJ5evdbG2kp9u/gDYdQ8Odpo=
+X-Received: by 2002:a05:622a:1b0b:b0:4a3:800d:2a9a with SMTP id
+ d75a77b69052e-4a5b9a0498fmr129085641cf.6.1749341078791; Sat, 07 Jun 2025
+ 17:04:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
+ <20250515182322.117840-7-pasha.tatashin@soleen.com> <mafs0iklbtqpc.fsf@kernel.org>
+In-Reply-To: <mafs0iklbtqpc.fsf@kernel.org>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Sat, 7 Jun 2025 20:04:00 -0400
+X-Gm-Features: AX0GCFuiagbyWhs5WKRlcCrzhjgoTlRaZx67U0f0XBer66fayKl3tu7mrARjDcI
+Message-ID: <CA+CK2bDrvd1dgZSbN08aDuNYD9hOxTawR-RL2jTFLmT7B608ow@mail.gmail.com>
+Subject: Re: [RFC v2 06/16] luo: luo_subsystems: add subsystem registration
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: jasonmiu@google.com, graf@amazon.com, changyuanl@google.com, 
+	rppt@kernel.org, dmatlack@google.com, rientjes@google.com, corbet@lwn.net, 
+	rdunlap@infradead.org, ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, 
+	ojeda@kernel.org, aliceryhl@google.com, masahiroy@kernel.org, 
+	akpm@linux-foundation.org, tj@kernel.org, yoann.congal@smile.fr, 
+	mmaurer@google.com, roman.gushchin@linux.dev, chenridong@huawei.com, 
+	axboe@kernel.dk, mark.rutland@arm.com, jannh@google.com, 
+	vincent.guittot@linaro.org, hannes@cmpxchg.org, dan.j.williams@intel.com, 
+	david@redhat.com, joel.granados@kernel.org, rostedt@goodmis.org, 
+	anna.schumaker@oracle.com, song@kernel.org, zhangguopeng@kylinos.cn, 
+	linux@weissschuh.net, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-mm@kvack.org, gregkh@linuxfoundation.org, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, rafael@kernel.org, dakr@kernel.org, 
+	bartosz.golaszewski@linaro.org, cw00.choi@samsung.com, 
+	myungjoo.ham@samsung.com, yesanishhere@gmail.com, Jonathan.Cameron@huawei.com, 
+	quic_zijuhu@quicinc.com, aleksander.lobakin@intel.com, ira.weiny@intel.com, 
+	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
+	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
+	stuart.w.hayes@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   8630c59e99363c4b655788fd01134aef9bcd9264
-commit: 17b655759e83fd5e28931a0ece96fa9c2ab718e7 init: Don't proxy `console=` to earlycon
-date:   8 months ago
-config: arc-randconfig-r113-20250607 (https://download.01.org/0day-ci/archive/20250608/202506080718.Q9VUfXsm-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 8.5.0
-reproduce: (https://download.01.org/0day-ci/archive/20250608/202506080718.Q9VUfXsm-lkp@intel.com/reproduce)
+On Wed, Jun 4, 2025 at 12:30=E2=80=AFPM Pratyush Yadav <pratyush@kernel.org=
+> wrote:
+>
+> On Thu, May 15 2025, Pasha Tatashin wrote:
+>
+> > Introduce the framework for kernel subsystems (e.g., KVM, IOMMU, device
+> > drivers) to register with LUO and participate in the live update proces=
+s
+> > via callbacks.
+> >
+> > Subsystem Registration:
+> > - Defines struct liveupdate_subsystem in linux/liveupdate.h,
+> >   which subsystems use to provide their name and optional callbacks
+> >   (prepare, freeze, cancel, finish). The callbacks accept
+> >   a u64 *data intended for passing state/handles.
+> > - Exports liveupdate_register_subsystem() and
+> >   liveupdate_unregister_subsystem() API functions.
+> > - Adds drivers/misc/liveupdate/luo_subsystems.c to manage a list
+> >   of registered subsystems.
+> >   Registration/unregistration is restricted to
+> >   specific LUO states (NORMAL/UPDATED).
+> >
+> > Callback Framework:
+> > - The main luo_core.c state transition functions
+> >   now delegate to new luo_do_subsystems_*_calls() functions
+> >   defined in luo_subsystems.c.
+> > - These new functions are intended to iterate through the registered
+> >   subsystems and invoke their corresponding callbacks.
+> >
+> > FDT Integration:
+> > - Adds a /subsystems subnode within the main LUO FDT created in
+> >   luo_core.c. This node has its own compatibility string
+> >   (subsystems-v1).
+> > - luo_subsystems_fdt_setup() populates this node by adding a
+> >   property for each registered subsystem, using the subsystem's
+> >   name.
+> >   Currently, these properties are initialized with a placeholder
+> >   u64 value (0).
+> > - luo_subsystems_startup() is called from luo_core.c on boot to
+> >   find and validate the /subsystems node in the FDT received via
+> >   KHO. It panics if the node is missing or incompatible.
+> > - Adds a stub API function liveupdate_get_subsystem_data() intended
+> >   for subsystems to retrieve their persisted u64 data from the FDT
+> >       in the new kernel.
+> >
+> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> [...]
+> > +/**
+> > + * liveupdate_unregister_subsystem - Unregister a kernel subsystem han=
+dler from
+> > + * LUO
+> > + * @h: Pointer to the same liveupdate_subsystem structure that was use=
+d during
+> > + * registration.
+> > + *
+> > + * Unregisters a previously registered subsystem handler. Typically ca=
+lled
+> > + * during module exit or subsystem teardown. LUO removes the structure=
+ from its
+> > + * internal list; the caller is responsible for any necessary memory c=
+leanup
+> > + * of the structure itself.
+> > + *
+> > + * Return: 0 on success, negative error code otherwise.
+> > + * -EINVAL if h is NULL.
+> > + * -ENOENT if the specified handler @h is not found in the registratio=
+n list.
+> > + * -EBUSY if LUO is not in the NORMAL state.
+> > + */
+> > +int liveupdate_unregister_subsystem(struct liveupdate_subsystem *h)
+> > +{
+> > +     struct liveupdate_subsystem *iter;
+> > +     bool found =3D false;
+> > +     int ret =3D 0;
+> > +
+> > +     luo_state_read_enter();
+> > +     if (!liveupdate_state_normal() && !liveupdate_state_updated()) {
+> > +             luo_state_read_exit();
+> > +             return -EBUSY;
+> > +     }
+> > +
+> > +     mutex_lock(&luo_subsystem_list_mutex);
+> > +     list_for_each_entry(iter, &luo_subsystems_list, list) {
+> > +             if (iter =3D=3D h) {
+> > +                     found =3D true;
+>
+> Nit: you don't actually need the found variable. You can do the same
+> check that list_for_each_entry() uses, which is to call
+> list_entry_is_head().
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506080718.Q9VUfXsm-lkp@intel.com/
+True, but for readability, 'found' makes more sense here. I do not
+like using iterator outside of the loop, and also if
+(list_entry_is_head(iter, &luo_subsystems_list, list) {} harder to
+understand, and would require a  comment, instead of simple:  if
+(found) {}
 
-All errors (new ones prefixed by >>):
-
-   init/main.o: in function `do_early_param':
->> init/main.c:753:(.init.text+0x7a): relocation truncated to fit: R_ARC_S25W_PCREL against symbol `__st_r13_to_r16' defined in .text section in ../lib/gcc/arc-linux/8.5.0/libgcc.a(_millicodethunk_st.o)
-
-
-vim +753 init/main.c
-
-^1da177e4c3f41 Linus Torvalds    2005-04-16  749  
-^1da177e4c3f41 Linus Torvalds    2005-04-16  750  /* Check for early params. */
-ecc8617053e0a9 Luis R. Rodriguez 2015-03-30  751  static int __init do_early_param(char *param, char *val,
-ecc8617053e0a9 Luis R. Rodriguez 2015-03-30  752  				 const char *unused, void *arg)
-^1da177e4c3f41 Linus Torvalds    2005-04-16 @753  {
-914dcaa84c53f2 Rusty Russell     2010-08-11  754  	const struct obs_kernel_param *p;
-^1da177e4c3f41 Linus Torvalds    2005-04-16  755  
-^1da177e4c3f41 Linus Torvalds    2005-04-16  756  	for (p = __setup_start; p < __setup_end; p++) {
-17b655759e83fd Raul E Rangel     2024-09-11  757  		if (p->early && parameq(param, p->str)) {
-^1da177e4c3f41 Linus Torvalds    2005-04-16  758  			if (p->setup_func(val) != 0)
-ea676e846a8171 Andrew Morton     2013-04-29  759  				pr_warn("Malformed early option '%s'\n", param);
-^1da177e4c3f41 Linus Torvalds    2005-04-16  760  		}
-^1da177e4c3f41 Linus Torvalds    2005-04-16  761  	}
-^1da177e4c3f41 Linus Torvalds    2005-04-16  762  	/* We accept everything at this stage. */
-^1da177e4c3f41 Linus Torvalds    2005-04-16  763  	return 0;
-^1da177e4c3f41 Linus Torvalds    2005-04-16  764  }
-^1da177e4c3f41 Linus Torvalds    2005-04-16  765  
-
-:::::: The code at line 753 was first introduced by commit
-:::::: 1da177e4c3f41524e886b7f1b8a0c1fc7321cac2 Linux-2.6.12-rc2
-
-:::::: TO: Linus Torvalds <torvalds@ppc970.osdl.org>
-:::::: CC: Linus Torvalds <torvalds@ppc970.osdl.org>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>
+> > +                     break;
+> > +             }
+> > +     }
+> > +
+> > +     if (found) {
+> > +             list_del_init(&h->list);
+> > +     } else {
+> > +             pr_warn("Subsystem handler '%s' not found for unregistrat=
+ion.\n",
+> > +                     h->name);
+> > +             ret =3D -ENOENT;
+> > +     }
+> > +
+> > +     mutex_unlock(&luo_subsystem_list_mutex);
+> > +     luo_state_read_exit();
+> > +
+> > +     return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(liveupdate_unregister_subsystem);
+> [...]
+>
+> --
+> Regards,
+> Pratyush Yadav
