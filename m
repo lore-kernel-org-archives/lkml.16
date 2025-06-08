@@ -1,34 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C83224FA;
-	Sun,  8 Jun 2025 20:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109BA2F3E;
+	Sun,  8 Jun 2025 20:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749413772; cv=none; b=KBgeRNZUQ8k8Jczn3shg/OC7oUycVqjsme1mvYAlDAOYI0pD3QFtPXr16r60A/tAE7M3hOi8pKFSxJ4FaAR4V+IscWmXgsOnDn/g6gie1yJCyipHWz12+9n9x/QMKz+vCg4Cu+95vfVajZdQQ4vOz6M89JFBEHtgOInuTPuOWWY=
+	t=1749413961; cv=none; b=b8l0PYchE4Skp/jmp/Xs3zZiuWPQcQEd9hMts180z+RN5Pj+1TR9du419I999UKmh4UO6DjXI3wytsoLiyNYq/BM4JC85Tmo+Mx/ApvsH+j+4TLzo3SoIisAZmdxKpKyYv4OM4i9iShoC/jliZrx+kLh1jpa4yCb+Nw6QgaXfrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749413772; c=relaxed/simple;
-	bh=Zx99mTGDyI9wNhPFH1HycDpWouTtdJwY2KghgkzAwMA=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:From:To:Cc:
-	 References:In-Reply-To; b=ZOv6uICsfy47vAeOWL7Fb8Zq/kSrGEi+sGSXzOs4+g6UC88euI2q3XuhnJky49pIWxX6r8rLKvBRzFfrxjLMPKJSt3h+Xq7FD4ynpKw+hsxnEF8e5G0q1eiJEdklYXWtMZxEoQrlyjki1zg+TIG3h7TxqTrwWmv542XtFSl/xoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZxWihf5p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749413961; c=relaxed/simple;
+	bh=cONj4emF+bUKx+2/Fz9eaI7uHKJ65pmqUhKcwfxFXRc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ZEQzeIxbcd1FPefrwRyrl1GQTNWpunkO0zrzIowS2hvi1yfd1y5NuohEATDs+2uBoWaU+SEKmuRc4qsJJPem9qX2ga08WOw9Wfxp1wg6yBEmiXd/iWxnIALuIlJ4dPpX3Jk1ouuDmgnpwWSOju2n5/Q99FKFhgj5a3RJXmAZArs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bS5KRQr1; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZxWihf5p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2808BC4CEF3;
-	Sun,  8 Jun 2025 20:16:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749413771;
-	bh=Zx99mTGDyI9wNhPFH1HycDpWouTtdJwY2KghgkzAwMA=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=ZxWihf5pGiSbnpoh+bo0KA+yM8CP3/WMVk4Cusrjv8UfHdZuhMUZa7G+VMbfBq18C
-	 rRRT/8k2t+70yuuh7BjVQzbbxydxBDMRexHbF3Ngl2+SsDBTyWXA/DgZbWaHBZdII4
-	 DkboUwpLuzKdNVv3KXe7dmeHcPRsrKmr03TdDN8LbLJCWweMcOCCVgbxPIvgSouu5c
-	 kfmURVwMwGhocEopvnS2za7Oe8eEPWtA/KTjgOVIKDUtTStopN8evKlWl1eLXGcKtb
-	 DfZaO5JPnsreJy/d7pWa/QKNpoMlrwm+3xiTE8MVa8fGEIrDP5bDAj656IMsUcEhix
-	 KV+Pq4nOepBlA==
-Content-Type: multipart/mixed; boundary="------------mMPJXQTdp5jjwHYKdLNs1Lq0"
-Message-ID: <c76fe3f8-8884-4769-af69-a9a527d2a202@kernel.org>
-Date: Sun, 8 Jun 2025 22:16:06 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bS5KRQr1"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5589eTe4001097;
+	Sun, 8 Jun 2025 20:18:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ebjeNRseKqUDttm9BjoWMCbWg+pOJ3HwUqTpbP41Hfg=; b=bS5KRQr1+FUcJVd6
+	2jLkeyN71QdLA56H3/wKqgC4H3NEPZNV4ffSyALggB2aCQEC/fHsFSj2hXeX6ACV
+	Hy6/j1WjSJ0pfsqZ4eOcbnMtVnVSsdeejtF+NvqM9lm26j3m1RqqV1PbxQGFBdLP
+	74NC3H/t/bc/K/5bMk1okQmgJBcIPss+slkzuAyiggjPlb3xzKmME6xW+i8LZ6Gj
+	TBEVKlxW227OMPh3UXTNN72p0EhdcFtw85njZqiPqZOoDyir1vuasT+EEB/B1NS0
+	oniaBg+aC2nuid2rrnVLL28qn7Bpva1/q8r5x0w/bEhGIVtVQaaDrfjrygsCDmnI
+	PyavVg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ccv3ryx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 08 Jun 2025 20:18:51 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 558KIowt001788
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 8 Jun 2025 20:18:50 GMT
+Received: from [10.216.51.238] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 8 Jun 2025
+ 13:18:43 -0700
+Message-ID: <dbbcc6b5-0d7d-440e-97e6-07b430d4f657@quicinc.com>
+Date: Mon, 9 Jun 2025 01:48:40 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,450 +50,265 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/5] power: supply: core: battery-info: fully switch to
- fwnode
-From: Hans de Goede <hansg@kernel.org>
-To: Sebastian Reichel <sebastian.reichel@collabora.com>,
- Sebastian Reichel <sre@kernel.org>, Mark Brown <broonie@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- Matti Vaittinen <mazziesaccount@gmail.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
- <pali@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250430-psy-core-convert-to-fwnode-v2-0-f9643b958677@collabora.com>
- <20250430-psy-core-convert-to-fwnode-v2-3-f9643b958677@collabora.com>
- <68792092-4689-4e3e-8dbb-9157889f1a3d@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <68792092-4689-4e3e-8dbb-9157889f1a3d@kernel.org>
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: Add GPU support to X1P42100 SoC
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        <rob.clark@oss.qualcomm.com>
+CC: Akhil P Oommen <akhilpo@oss.qualcomm.com>,
+        Catalin Marinas
+	<catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Sean Paul
+	<sean@poorly.run>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Abhinav Kumar
+	<abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Bjorn Andersson
+	<andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>
+References: <20250607-x1p-adreno-v1-0-a8ea80f3b18b@oss.qualcomm.com>
+ <20250607-x1p-adreno-v1-3-a8ea80f3b18b@oss.qualcomm.com>
+ <wayrour74vlli27xrtxi2ff2v7q7ye2yknmk2mjpur5ry5gruv@hhh2mdb6lw2i>
+ <CACSVV03X5EyAb5yCPDn1ot8vOFV_dKG7f6+yO5t9srr31AiUKw@mail.gmail.com>
+ <rwjc7zkitubi6cdre5a7owmo76nopavkgifvvn6yq2mv2hrth4@bhwbodchd2gx>
+ <CACSVV03mNkELWDB_uxdjEa5GeWZUY=42O8QG4qTrg6zquT1Bgw@mail.gmail.com>
+ <42a69fa4-48ac-4a2f-a2ff-b4e1fe3a228a@oss.qualcomm.com>
+From: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <42a69fa4-48ac-4a2f-a2ff-b4e1fe3a228a@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: gIssG8YUeIYlp7vgTBTkhvyilbuiGDki
+X-Authority-Analysis: v=2.4 cv=TsLmhCXh c=1 sm=1 tr=0 ts=6845f02b cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8
+ a=jk5spBuy_7rvZDU0t7YA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: gIssG8YUeIYlp7vgTBTkhvyilbuiGDki
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA4MDE2NSBTYWx0ZWRfX8+GaHB3UvpfZ
+ pNYvCtSCb/GhPuuKQlUpl8Zn7icxtjEtOnR/W1M/7wSLHpLDBjUapt3avXNkxwAWXqUjP0OE7r5
+ s+D/ja+ayUtu+JF+WA7igMK1mdo6XsQRhKem1puBl11qRsklPrDb/LlJIXRck7gHCqWJTFH3NNo
+ VqhU3fXoDFfwYSZO6vIKSWhDxWgsyABk2H/j34E8PngxTyskM5Me3jbaEe+gq+IZwc6GapZ7u+r
+ f+xmYi/M7wt95Myj4B9yRGzz7wcJgY9aHKn2NL3cPVZNcu/CUcKg9eyDi/ik6tv6Q7uVAEPu3pe
+ RcaHHKgRquPBaZXwAU1uolXVEKxFXsHNXe4BRECaHFG0+kG/LhGf/4ndH+CBC9g6I/pdO5u88Q9
+ HIKIFqtLs8F7aRnhjaCTBYhJC/jQjWYJQz98OeO/w9woGKDSOYs7w8FjVBJVmWWr1F39h00H
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-08_04,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
+ priorityscore=1501 bulkscore=0 adultscore=0 clxscore=1015 mlxscore=0
+ malwarescore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506080165
 
-This is a multi-part message in MIME format.
---------------mMPJXQTdp5jjwHYKdLNs1Lq0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+On 6/8/2025 8:52 PM, Dmitry Baryshkov wrote:
+> On 08/06/2025 18:20, Rob Clark wrote:
+>> On Sun, Jun 8, 2025 at 8:09 AM Dmitry Baryshkov
+>> <dmitry.baryshkov@oss.qualcomm.com> wrote:
+>>>
+>>> On Sun, Jun 08, 2025 at 07:10:11AM -0700, Rob Clark wrote:
+>>>> On Sat, Jun 7, 2025 at 1:17 PM Dmitry Baryshkov
+>>>> <dmitry.baryshkov@oss.qualcomm.com> wrote:
+>>>>>
+>>>>> On Sat, Jun 07, 2025 at 07:45:01PM +0530, Akhil P Oommen wrote:
+>>>>>> X1P42100 SoC has a new GPU called Adreno X1-45 which is a smaller
+>>>>>> version of Adreno X1-85 GPU. Describe this new GPU and also add
+>>>>>> the secure gpu firmware path that should used for X1P42100 CRD.
+>>>>>>
+>>>>>> Signed-off-by: Akhil P Oommen <akhilpo@oss.qualcomm.com>
+>>>>>> ---
+>>>>>>   arch/arm64/boot/dts/qcom/x1e80100.dtsi    |   7 ++
+>>>>>>   arch/arm64/boot/dts/qcom/x1p42100-crd.dts |   4 +
+>>>>>>   arch/arm64/boot/dts/qcom/x1p42100.dtsi    | 121 ++++++++++++++++
+>>>>>> +++++++++++++-
+>>>>>>   3 files changed, 131 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/
+>>>>>> boot/dts/qcom/x1e80100.dtsi
+>>>>>> index
+>>>>>> a8eb4c5fe99fe6dd49af200a738b6476d87279b2..558d7d387d7710770244fcc901f461384dd9b0d4 100644
+>>>>>> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+>>>>>> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+>>>>>> @@ -8245,6 +8245,13 @@ sbsa_watchdog: watchdog@1c840000 {
+>>>>>>                        interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>>                };
+>>>>>>
+>>>>>> +             qfprom: efuse@221c8000 {
+>>>>>> +                     compatible = "qcom,x1e80100-qfprom",
+>>>>>> "qcom,qfprom";
+>>>>>> +                     reg = <0 0x221c8000 0 0x1000>;
+>>>>>> +                     #address-cells = <1>;
+>>>>>> +                     #size-cells = <1>;
+>>>>>> +             };
+>>>>>> +
+>>>>>>                pmu@24091000 {
+>>>>>>                        compatible = "qcom,x1e80100-llcc-bwmon",
+>>>>>> "qcom,sc7280-llcc-bwmon";
+>>>>>>                        reg = <0 0x24091000 0 0x1000>;
+>>>>>> diff --git a/arch/arm64/boot/dts/qcom/x1p42100-crd.dts b/arch/
+>>>>>> arm64/boot/dts/qcom/x1p42100-crd.dts
+>>>>>> index
+>>>>>> cf07860a63e97c388909fb5721ae7b9729b6c586..cf999c2cf8d4e0af83078253fd39ece3a0c26a49 100644
+>>>>>> --- a/arch/arm64/boot/dts/qcom/x1p42100-crd.dts
+>>>>>> +++ b/arch/arm64/boot/dts/qcom/x1p42100-crd.dts
+>>>>>> @@ -15,3 +15,7 @@ / {
+>>>>>>        model = "Qualcomm Technologies, Inc. X1P42100 CRD";
+>>>>>>        compatible = "qcom,x1p42100-crd", "qcom,x1p42100";
+>>>>>>   };
+>>>>>> +
+>>>>>> +&gpu_zap_shader {
+>>>>>> +     firmware-name = "qcom/x1p42100/gen71500_zap.mbn";
+>>>>>> +};
+>>>>>> diff --git a/arch/arm64/boot/dts/qcom/x1p42100.dtsi b/arch/arm64/
+>>>>>> boot/dts/qcom/x1p42100.dtsi
+>>>>>> index
+>>>>>> 27f479010bc330eb6445269a1c46bf78ec6f1bd4..5ed461ed5cca271d43647888aa6eacac3de2ac9d 100644
+>>>>>> --- a/arch/arm64/boot/dts/qcom/x1p42100.dtsi
+>>>>>> +++ b/arch/arm64/boot/dts/qcom/x1p42100.dtsi
+>>>>>> @@ -17,15 +17,134 @@
+>>>>>>   /delete-node/ &cpu_pd9;
+>>>>>>   /delete-node/ &cpu_pd10;
+>>>>>>   /delete-node/ &cpu_pd11;
+>>>>>> +/delete-node/ &gpu_opp_table;
+>>>>>>   /delete-node/ &pcie3_phy;
+>>>>>>
+>>>>>>   &gcc {
+>>>>>>        compatible = "qcom,x1p42100-gcc", "qcom,x1e80100-gcc";
+>>>>>>   };
+>>>>>>
+>>>>>> -/* The GPU is physically different and will be brought up later */
+>>>>>> +&gmu {
+>>>>>> +     /delete-property/ compatible;
+>>>>>> +     compatible = "qcom,adreno-gmu-x145.0", "qcom,adreno-gmu";
+>>>>>> +};
+>>>>>> +
+>>>>>> +&qfprom {
+>>>>>> +     gpu_speed_bin: gpu_speed_bin@119 {
+>>>>>> +             reg = <0x119 0x2>;
+>>>>>> +             bits = <7 9>;
+>>>>>> +     };
+>>>>>> +};
+>>>>>> +
+>>>>>>   &gpu {
+>>>>>>        /delete-property/ compatible;
+>>>>>
+>>>>> I think, you can drop this line.
 
-Hi,
+I wasn't sure about this and I thought it was harmless to delete it.
+Anyway, I will remove the "delete" from both GPU and GMU nodes.
 
-On 8-Jun-25 9:57 PM, Hans de Goede wrote:
-> Hi Sebastian,
-> On 30-Apr-25 12:54 AM, Sebastian Reichel wrote:
->> Also use fwnode based parsing for "ocv-capacity-celsius" and
->> "resistance-temp-table", so that any DT specific bits are
->> removed from the power-supply core.
+>>>>>
+>>>>>> +
+>>>>>> +     compatible = "qcom,adreno-43030c00", "qcom,adreno";
+>>>>>> +
+>>>>>> +     nvmem-cells = <&gpu_speed_bin>;
+>>>>>> +     nvmem-cell-names = "speed_bin";
+>>>>>> +
+>>>>>> +     gpu_opp_table: opp-table {
+>>>>>> +             compatible = "operating-points-v2-adreno",
+>>>>>> "operating-points-v2";
+>>>>>> +
+>>>>>> +             opp-1400000000 {
+>>>>>> +                     opp-hz = /bits/ 64 <1400000000>;
+>>>>>> +                     opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L4>;
+>>>>>> +                     opp-peak-kBps = <16500000>;
+>>>>>> +                     qcom,opp-acd-level = <0xa8295ffd>;
+>>>>>> +                     opp-supported-hw = <0x3>;
+>>>>>> +             };
+>>>>>> +
+>>>>>> +             opp-1250000000 {
+>>>>>> +                     opp-hz = /bits/ 64 <1250000000>;
+>>>>>> +                     opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L3>;
+>>>>>> +                     opp-peak-kBps = <16500000>;
+>>>>>> +                     qcom,opp-acd-level = <0x882a5ffd>;
+>>>>>> +                     opp-supported-hw = <0x7>;
+>>>>>> +             };
+>>>>>> +
+>>>>>> +             opp-1107000000 {
+>>>>>> +                     opp-hz = /bits/ 64 <1107000000>;
+>>>>>> +                     opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
+>>>>>> +                     opp-peak-kBps = <16500000>;
+>>>>>> +                     qcom,opp-acd-level = <0x882a5ffd>;
+>>>>>> +                     opp-supported-hw = <0xf>;
+>>>>>> +             };
+>>>>>> +
+>>>>>> +             opp-1014000000 {
+>>>>>> +                     opp-hz = /bits/ 64 <1014000000>;
+>>>>>> +                     opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
+>>>>>> +                     opp-peak-kBps = <14398438>;
+>>>>>> +                     qcom,opp-acd-level = <0xa82a5ffd>;
+>>>>>> +                     opp-supported-hw = <0xf>;
+>>>>>> +             };
+>>>>>> +
+>>>>>> +             opp-940000000 {
+>>>>>> +                     opp-hz = /bits/ 64 <940000000>;
+>>>>>> +                     opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
+>>>>>> +                     opp-peak-kBps = <14398438>;
+>>>>>> +                     qcom,opp-acd-level = <0xa82a5ffd>;
+>>>>>> +                     opp-supported-hw = <0xf>;
+>>>>>> +             };
+>>>>>> +
+>>>>>> +             opp-825000000 {
+>>>>>> +                     opp-hz = /bits/ 64 <825000000>;
+>>>>>> +                     opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
+>>>>>> +                     opp-peak-kBps = <12449219>;
+>>>>>> +                     qcom,opp-acd-level = <0x882b5ffd>;
+>>>>>> +                     opp-supported-hw = <0xf>;
+>>>>>> +             };
+>>>>>> +
+>>>>>> +             opp-720000000 {
+>>>>>> +                     opp-hz = /bits/ 64 <720000000>;
+>>>>>> +                     opp-level = <RPMH_REGULATOR_LEVEL_SVS_L2>;
+>>>>>> +                     opp-peak-kBps = <10687500>;
+>>>>>> +                     qcom,opp-acd-level = <0xa82c5ffd>;
+>>>>>> +                     opp-supported-hw = <0xf>;
+>>>>>> +             };
+>>>>>> +
+>>>>>> +             opp-666000000-0 {
+>>>>>> +                     opp-hz = /bits/ 64 <666000000>;
+>>>>>> +                     opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
+>>>>>> +                     opp-peak-kBps = <8171875>;
+>>>>>> +                     qcom,opp-acd-level = <0xa82d5ffd>;
+>>>>>> +                     opp-supported-hw = <0xf>;
+>>>>>> +             };
+>>>>>> +
+>>>>>> +             /* Only applicable for SKUs which has 666Mhz as Fmax */
+>>>>>> +             opp-666000000-1 {
+>>>>>> +                     opp-hz = /bits/ 64 <666000000>;
+>>>>>> +                     opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
+>>>>>> +                     opp-peak-kBps = <16500000>;
+>>>>>
+>>>>> This looks odd, why is it so high?
+>>>>
+>>>> You want max bandwidth on max opp
+>>>
+>>> Yes, but can it actually sustain / provide this BW?
+>>>
 >>
->> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> 
-> I have been testing this converting the ug3105 driver to
-> use power_supply_batinfo_ocv2cap(), replacing the hardcoded
-> ocv -> capacity table in that driver.
-> 
-> While testing I hit a bug and while looking closer at this
-> patch it needs more work on top of fixing that bug.
-> 
-> See comments inline, also I've attached 3 fixup patches
-> which can be squashed into this patch to address the remarks.
-> 
->> ---
->>  drivers/power/supply/power_supply_core.c | 109 ++++++++++++++++++-------------
->>  1 file changed, 63 insertions(+), 46 deletions(-)
->>
->> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
->> index 89947f1fe610d8a75756e1e4e5339b06349f9ab8..a8d1fe66e2486a833ccaa3ed77b861c6e52c5760 100644
->> --- a/drivers/power/supply/power_supply_core.c
->> +++ b/drivers/power/supply/power_supply_core.c
->> @@ -585,32 +585,19 @@ int power_supply_get_battery_info(struct power_supply *psy,
->>  {
->>  	struct power_supply_resistance_temp_table *resist_table;
->>  	struct power_supply_battery_info *info;
->> -	struct device_node *battery_np = NULL;
->> -	struct fwnode_reference_args args;
->> -	struct fwnode_handle *fwnode = NULL;
->> +	struct fwnode_handle *srcnode, *fwnode;
->>  	const char *value;
->> -	int err, len, index;
->> -	const __be32 *list;
->> +	int err, len, index, proplen;
->> +	u32 *propdata;
-> 
-> propname which is also a local-variable for a temporary
-> malloc-ed buffer uses __free(kfree) instead of explicit
-> kfree() calls IMHO it would be good to do that here too.
-> 
-> This requires declaring it inside the
-> "for (index = 0; index < len; index++)" loop like how
-> this is done for propname, so that it gets freed on
-> every loop iteration.
-> 
-> 
->>  	u32 min_max[2];
->>  
->> -	if (psy->dev.of_node) {
->> -		battery_np = of_parse_phandle(psy->dev.of_node, "monitored-battery", 0);
->> -		if (!battery_np)
->> -			return -ENODEV;
->> +	srcnode = dev_fwnode(&psy->dev);
->> +	if (!srcnode && psy->dev.parent)
->> +		srcnode = dev_fwnode(psy->dev.parent);
->>  
->> -		fwnode = fwnode_handle_get(of_fwnode_handle(battery_np));
->> -	} else if (psy->dev.parent) {
->> -		err = fwnode_property_get_reference_args(
->> -					dev_fwnode(psy->dev.parent),
->> -					"monitored-battery", NULL, 0, 0, &args);
->> -		if (err)
->> -			return err;
->> -
->> -		fwnode = args.fwnode;
->> -	}
->> -
->> -	if (!fwnode)
->> -		return -ENOENT;
->> +	fwnode = fwnode_find_reference(srcnode, "monitored-battery", 0);
->> +	if (IS_ERR(fwnode))
->> +		return PTR_ERR(fwnode);
->>  
->>  	err = fwnode_property_read_string(fwnode, "compatible", &value);
->>  	if (err)
->> @@ -740,15 +727,7 @@ int power_supply_get_battery_info(struct power_supply *psy,
->>  		info->temp_max = min_max[1];
->>  	}
->>  
->> -	/*
->> -	 * The below code uses raw of-data parsing to parse
->> -	 * /schemas/types.yaml#/definitions/uint32-matrix
->> -	 * data, so for now this is only support with of.
->> -	 */
->> -	if (!battery_np)
->> -		goto out_ret_pointer;
->> -
->> -	len = of_property_count_u32_elems(battery_np, "ocv-capacity-celsius");
->> +	len = fwnode_property_count_u32(fwnode, "ocv-capacity-celsius");
->>  	if (len < 0 && len != -EINVAL) {
->>  		err = len;
->>  		goto out_put_node;
->> @@ -757,13 +736,13 @@ int power_supply_get_battery_info(struct power_supply *psy,
->>  		err = -EINVAL;
->>  		goto out_put_node;
->>  	} else if (len > 0) {
->> -		of_property_read_u32_array(battery_np, "ocv-capacity-celsius",
->> +		fwnode_property_read_u32_array(fwnode, "ocv-capacity-celsius",
->>  					   info->ocv_temp, len);
->>  	}
->>  
->>  	for (index = 0; index < len; index++) {
->>  		struct power_supply_battery_ocv_table *table;
->> -		int i, tab_len, size;
->> +		int i, tab_len;
->>  
->>  		char *propname __free(kfree) = kasprintf(GFP_KERNEL, "ocv-capacity-table-%d",
->>  							 index);
->> @@ -772,60 +751,98 @@ int power_supply_get_battery_info(struct power_supply *psy,
->>  			err = -ENOMEM;
->>  			goto out_put_node;
->>  		}
->> -		list = of_get_property(battery_np, propname, &size);
->> -		if (!list || !size) {
->> +		proplen = fwnode_property_count_u32(fwnode, propname);
->> +		if (proplen < 0 || proplen % 2 != 0) {
->>  			dev_err(&psy->dev, "failed to get %s\n", propname);
->>  			power_supply_put_battery_info(psy, info);
->>  			err = -EINVAL;
->>  			goto out_put_node;
->>  		}
->> +		propdata = kcalloc(proplen, sizeof(*propdata), GFP_KERNEL);
-> 
-> As mentioned above I suggest to use the following here instead:
-> 
-> 		u32 *propdata __free(kfree) = kcalloc(proplen, sizeof(*propdata), GFP_KERNEL);
-> 		
-> 
->> +		if (!propdata) {
->> +			kfree(propname);
-> 
-> propname must NOT be free-ed here since it is marked __free(kfree),
-> freeing it here will cause a double-free bug.
-> 
->> +			power_supply_put_battery_info(psy, info);
->> +			err = -EINVAL;
->> +			goto out_put_node;
->> +		}
->> +		err = fwnode_property_read_u32_array(fwnode, propname, propdata, proplen);
->> +		if (err < 0) {
->> +			dev_err(&psy->dev, "failed to get %s\n", propname);
->> +			kfree(propname);
-> 
-> same as above.
-> 
->> +			kfree(propdata);
-> 
-> with the suggested "u32 *propdata __free(kfree)" this can and must be dropped.
-> 
->> +			power_supply_put_battery_info(psy, info);
->> +			goto out_put_node;
->> +		}
->>  
->> -		tab_len = size / (2 * sizeof(__be32));
->> +		tab_len = proplen / 2;
->>  		info->ocv_table_size[index] = tab_len;
->>  
->>  		info->ocv_table[index] = table =
->>  			devm_kcalloc(&psy->dev, tab_len, sizeof(*table), GFP_KERNEL);
->>  		if (!info->ocv_table[index]) {
->> +			kfree(propdata);
-> 
-> with the suggested "u32 *propdata __free(kfree)" this can and must be dropped.
-> 
->>  			power_supply_put_battery_info(psy, info);
->>  			err = -ENOMEM;
->>  			goto out_put_node;
->>  		}
->>  
->>  		for (i = 0; i < tab_len; i++) {
->> -			table[i].ocv = be32_to_cpu(*list);
->> -			list++;
->> -			table[i].capacity = be32_to_cpu(*list);
->> -			list++;
->> +			table[i].ocv = propdata[i*2];
->> +			table[i].capacity = propdata[i*2+1];
->>  		}
->> +
->> +		kfree(propdata);
-> 
-> with the suggested "u32 *propdata __free(kfree)" this can and must be dropped.
-> 
->>  	}
->>  
->> -	list = of_get_property(battery_np, "resistance-temp-table", &len);
->> -	if (!list || !len)
->> +	proplen = fwnode_property_count_u32(fwnode, "resistance-temp-table");
-> 
-> This will return -EINVAL when the property does not exist, making
-> power_supply_get_battery_info() always fail when there is no
-> "resistance-temp-table" in the battery fwnode. See the attached fixup
-> patch for a suggested fix.
-> 
->> +	if (proplen < 0 || proplen % 2 != 0) {
->> +		power_supply_put_battery_info(psy, info);
->> +		err = -ENOMEM;
-> 
-> -ENOMEM is the wrong error code here.
-> 
->>  		goto out_ret_pointer;
-> 
-> This should be "goto out_put_node" since this is an error path.
-> 
->> +	} else if (proplen == 0) {
->> +		goto out_ret_pointer;
->> +	}
->>  
->> -	info->resist_table_size = len / (2 * sizeof(__be32));
->> +	propdata = kcalloc(proplen, sizeof(*propdata), GFP_KERNEL);
-> 
-> As mentioned above I suggest to use the following here instead:
-> 
-> 		u32 *propdata __free(kfree) = kcalloc(proplen, sizeof(*propdata), GFP_KERNEL);
+>> I'd have to trust Akhil on that one, but I have no reason to believe
+>> otherwise.  Just pointing out we've done analogous things elsewhere
+>> (for ex, cpu bw for sc7180-lite.dtsi)
 
-Ok, so this does not work, because we jump over this causing
-propdata to not get initialized, but the __free(kfree) still
-triggers.
+Window's GPU KMD seems to vote Max bandwidth for this SKU, so I think
+this is fine. Our GPUs from last few generations can easily saturate DDR
+with the right usecase.
 
-Lesson learned: do not use modern C style mixing of declarations
-and statements together with __free().
-
-Attached are updated fixup patches which do not make things crash.
-
-Regards,
-
-Hans
-
-
-
+-Akhil
 
 > 
->> +	if (!propdata) {
->> +		power_supply_put_battery_info(psy, info);
->> +		err = -ENOMEM;
->> +		goto out_ret_pointer;
-> 
-> This should be "goto out_put_node" since this is an error path.
-> 
->> +	}
->> +
->> +	err = fwnode_property_read_u32_array(fwnode, "resistance-temp-table",
->> +					     propdata, proplen);
->> +	if (err < 0) {
->> +		kfree(propdata);
-> 
-> with the suggested "u32 *propdata __free(kfree)" this can and must be dropped.
-> 
->> +		power_supply_put_battery_info(psy, info);
->> +		goto out_put_node;
->> +	}
->> +
->> +	info->resist_table_size = proplen / 2;
->>  	info->resist_table = resist_table = devm_kcalloc(&psy->dev,
->>  							 info->resist_table_size,
->>  							 sizeof(*resist_table),
->>  							 GFP_KERNEL);
->>  	if (!info->resist_table) {
->> +		kfree(propdata);
-> 
-> with the suggested "u32 *propdata __free(kfree)" this can and must be dropped.
-> 
->>  		power_supply_put_battery_info(psy, info);
->>  		err = -ENOMEM;
->>  		goto out_put_node;
->>  	}
->>  
->>  	for (index = 0; index < info->resist_table_size; index++) {
->> -		resist_table[index].temp = be32_to_cpu(*list++);
->> -		resist_table[index].resistance = be32_to_cpu(*list++);
->> +		resist_table[index].temp = propdata[index*2];
->> +		resist_table[index].resistance = propdata[index*2+1];
->>  	}
->>  
->> +	kfree(propdata);
-> 
-> with the suggested "u32 *propdata __free(kfree)" this can and must be dropped.
-> 
->> +
->>  out_ret_pointer:
->>  	/* Finally return the whole thing */
->>  	*info_out = info;
->>  
->>  out_put_node:
->>  	fwnode_handle_put(fwnode);
->> -	of_node_put(battery_np);
->>  	return err;
->>  }
->>  EXPORT_SYMBOL_GPL(power_supply_get_battery_info);
->>
-> 
-> Regards,
-> 
-> Hans
+> Ack. Then I'll wait for v2 with no deleting of compatible lines (a new
+> line here would just replace the existing one).
 > 
 > 
 
---------------mMPJXQTdp5jjwHYKdLNs1Lq0
-Content-Type: text/x-patch; charset=UTF-8;
- name="0004-fixup-power-supply-core-battery-info-fully-switch-to.patch"
-Content-Disposition: attachment;
- filename*0="0004-fixup-power-supply-core-battery-info-fully-switch-to.pa";
- filename*1="tch"
-Content-Transfer-Encoding: base64
-
-RnJvbSA2OGQyNDE0ZDIwMTA4MzkwNGRhZDgzYWY0ZWJiMmMzNWZjODUwYjc5IE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBIYW5zIGRlIEdvZWRlIDxoYW5zZ0BrZXJuZWwub3Jn
-PgpEYXRlOiBTdW4sIDggSnVuIDIwMjUgMjE6MTg6MTEgKzAyMDAKU3ViamVjdDogW1BBVENI
-IDA0LzEwXSBmaXh1cCEgcG93ZXI6IHN1cHBseTogY29yZTogYmF0dGVyeS1pbmZvOiBmdWxs
-eSBzd2l0Y2gKIHRvIGZ3bm9kZQoKQWZ0ZXIgKCJwb3dlcjogc3VwcGx5OiBjb3JlOiBiYXR0
-ZXJ5LWluZm86IGZ1bGx5IHN3aXRjaCB0byBmd25vZGUiKQpwb3dlcl9zdXBwbHlfZ2V0X2Jh
-dHRlcnlfaW5mbygpIHdpbGwgYWx3YXlzIGZhaWwgZm9yIGJhdHRlcnkgZndub2Rlcwp3aGlj
-aCBkbyBub3QgZGVmaW5lIGEgInJlc2lzdGFuY2UtdGVtcC10YWJsZSIuCgpGaXggdGhpcyBi
-eSBjbGVhbmx5IGV4aXRpbmcgb24gYm90aCAwIGFuZCBFSU5WQUwgcmV0dXJucyBmcm9tCmZ3
-bm9kZV9wcm9wZXJ0eV9jb3VudF91MzIoZndub2RlLCAicmVzaXN0YW5jZS10ZW1wLXRhYmxl
-Iikgd2hpY2gKaW5kaWNhdGVzIHRoYXQgdGhlIHByb3BlcnR5IGlzIGVtcHR5IG9yIG5vdCB0
-aGVyZS4KCldoaWxlIGF0IGl0IGFsc28gZml4OgoKMS4gVGhlIHdlaXJkIC1FTk9NRU0gcmV0
-dXJuIGZvciBvdGhlciBlcnJvcnMuIEZvciBvdGhlciBlcnJvcnMKcHJvcGFnYXRlIHRoZSBl
-eGlzdGluZyBlcnJvciBvciAtRUlOVkFMIGZvciBhbiBvZGQgcHJvcGxlbi4KMi4gV3Jvbmds
-eSB1c2luZyAiZ290byBvdXRfcmV0X3BvaW50ZXIiIG9uIGVycm9ycywgb3V0X3JldF9wb2lu
-dGVyCnNob3VsZCBvbmx5IGJlIHVzZWQgb24gc3VjY2VzcywgZXJyb3IgcGF0aHMgc2hvdWxk
-IHVzZQpvdXRfcHV0X25vZGU7CgpTaWduZWQtb2ZmLWJ5OiBIYW5zIGRlIEdvZWRlIDxoYW5z
-Z0BrZXJuZWwub3JnPgotLS0KIGRyaXZlcnMvcG93ZXIvc3VwcGx5L3Bvd2VyX3N1cHBseV9j
-b3JlLmMgfCAxMyArKysrKysrLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25z
-KCspLCA2IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvcG93ZXIvc3VwcGx5
-L3Bvd2VyX3N1cHBseV9jb3JlLmMgYi9kcml2ZXJzL3Bvd2VyL3N1cHBseS9wb3dlcl9zdXBw
-bHlfY29yZS5jCmluZGV4IGE4ZDFmZTY2ZTI0OC4uOWJiYzNiZTJlNDgzIDEwMDY0NAotLS0g
-YS9kcml2ZXJzL3Bvd2VyL3N1cHBseS9wb3dlcl9zdXBwbHlfY29yZS5jCisrKyBiL2RyaXZl
-cnMvcG93ZXIvc3VwcGx5L3Bvd2VyX3N1cHBseV9jb3JlLmMKQEAgLTc5NSwxOSArNzk1LDIw
-IEBAIGludCBwb3dlcl9zdXBwbHlfZ2V0X2JhdHRlcnlfaW5mbyhzdHJ1Y3QgcG93ZXJfc3Vw
-cGx5ICpwc3ksCiAJfQogCiAJcHJvcGxlbiA9IGZ3bm9kZV9wcm9wZXJ0eV9jb3VudF91MzIo
-Zndub2RlLCAicmVzaXN0YW5jZS10ZW1wLXRhYmxlIik7Ci0JaWYgKHByb3BsZW4gPCAwIHx8
-IHByb3BsZW4gJSAyICE9IDApIHsKKwlpZiAocHJvcGxlbiA9PSAwIHx8IHByb3BsZW4gPT0g
-LUVJTlZBTCkgeworCQllcnIgPSAwOworCQlnb3RvIG91dF9yZXRfcG9pbnRlcjsKKwl9IGVs
-c2UgaWYgKHByb3BsZW4gPCAwIHx8IHByb3BsZW4gJSAyICE9IDApIHsKIAkJcG93ZXJfc3Vw
-cGx5X3B1dF9iYXR0ZXJ5X2luZm8ocHN5LCBpbmZvKTsKLQkJZXJyID0gLUVOT01FTTsKLQkJ
-Z290byBvdXRfcmV0X3BvaW50ZXI7Ci0JfSBlbHNlIGlmIChwcm9wbGVuID09IDApIHsKLQkJ
-Z290byBvdXRfcmV0X3BvaW50ZXI7CisJCWVyciA9IChwcm9wbGVuIDwgMCkgPyBwcm9wbGVu
-IDogLUVJTlZBTDsKKwkJZ290byBvdXRfcHV0X25vZGU7CiAJfQogCiAJcHJvcGRhdGEgPSBr
-Y2FsbG9jKHByb3BsZW4sIHNpemVvZigqcHJvcGRhdGEpLCBHRlBfS0VSTkVMKTsKIAlpZiAo
-IXByb3BkYXRhKSB7CiAJCXBvd2VyX3N1cHBseV9wdXRfYmF0dGVyeV9pbmZvKHBzeSwgaW5m
-byk7CiAJCWVyciA9IC1FTk9NRU07Ci0JCWdvdG8gb3V0X3JldF9wb2ludGVyOworCQlnb3Rv
-IG91dF9wdXRfbm9kZTsKIAl9CiAKIAllcnIgPSBmd25vZGVfcHJvcGVydHlfcmVhZF91MzJf
-YXJyYXkoZndub2RlLCAicmVzaXN0YW5jZS10ZW1wLXRhYmxlIiwKLS0gCjIuNDkuMAoK
---------------mMPJXQTdp5jjwHYKdLNs1Lq0
-Content-Type: text/x-patch; charset=UTF-8;
- name="0005-fixup-power-supply-core-battery-info-fully-switch-to.patch"
-Content-Disposition: attachment;
- filename*0="0005-fixup-power-supply-core-battery-info-fully-switch-to.pa";
- filename*1="tch"
-Content-Transfer-Encoding: base64
-
-RnJvbSAxZTJkNTRiMWM5NDYwNzU1OTBkMDExZGExN2Q5Njc5NmVkZTU4ODk0IE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBIYW5zIGRlIEdvZWRlIDxoYW5zZ0BrZXJuZWwub3Jn
-PgpEYXRlOiBTdW4sIDggSnVuIDIwMjUgMjE6Mzc6NTkgKzAyMDAKU3ViamVjdDogW1BBVENI
-IDA1LzEwXSBmaXh1cCEgcG93ZXI6IHN1cHBseTogY29yZTogYmF0dGVyeS1pbmZvOiBmdWxs
-eSBzd2l0Y2gKIHRvIGZ3bm9kZQoKcHJvcG5hbWUgbXVzdCBOT1QgYmUgbWFudWFsbHkgZnJl
-ZS1lZCBoZXJlIHNpbmNlIGl0IGlzIG1hcmtlZApfX2ZyZWUoa2ZyZWUpLCBmcmVlaW5nIGl0
-IHdpbGwgY2F1c2UgYSBkb3VibGUtZnJlZSBidWcuCgpBbHNvIG1vdmUgcHJvcGRhdGEgdG8g
-YmUgYSBfX2ZyZWUoa2ZyZWUpIHZhbHVlIGZvciBjb25zaXN0ZW5jeQphbmQgYWxzbyBmb3Ig
-Y2xlYW5lciBjb2RlLgoKU2lnbmVkLW9mZi1ieTogSGFucyBkZSBHb2VkZSA8aGFuc2dAa2Vy
-bmVsLm9yZz4KLS0tCiBkcml2ZXJzL3Bvd2VyL3N1cHBseS9wb3dlcl9zdXBwbHlfY29yZS5j
-IHwgMTUgKysrLS0tLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCsp
-LCAxMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL3Bvd2VyL3N1cHBseS9w
-b3dlcl9zdXBwbHlfY29yZS5jIGIvZHJpdmVycy9wb3dlci9zdXBwbHkvcG93ZXJfc3VwcGx5
-X2NvcmUuYwppbmRleCA5YmJjM2JlMmU0ODMuLmYyYzc5ZjE1ODM4ZCAxMDA2NDQKLS0tIGEv
-ZHJpdmVycy9wb3dlci9zdXBwbHkvcG93ZXJfc3VwcGx5X2NvcmUuYworKysgYi9kcml2ZXJz
-L3Bvd2VyL3N1cHBseS9wb3dlcl9zdXBwbHlfY29yZS5jCkBAIC01ODgsNyArNTg4LDcgQEAg
-aW50IHBvd2VyX3N1cHBseV9nZXRfYmF0dGVyeV9pbmZvKHN0cnVjdCBwb3dlcl9zdXBwbHkg
-KnBzeSwKIAlzdHJ1Y3QgZndub2RlX2hhbmRsZSAqc3Jjbm9kZSwgKmZ3bm9kZTsKIAljb25z
-dCBjaGFyICp2YWx1ZTsKIAlpbnQgZXJyLCBsZW4sIGluZGV4LCBwcm9wbGVuOwotCXUzMiAq
-cHJvcGRhdGE7CisJdTMyICpwcm9wZGF0YSBfX2ZyZWUoa2ZyZWUpID0gTlVMTDsKIAl1MzIg
-bWluX21heFsyXTsKIAogCXNyY25vZGUgPSBkZXZfZndub2RlKCZwc3ktPmRldik7CkBAIC03
-NTgsOSArNzU4LDkgQEAgaW50IHBvd2VyX3N1cHBseV9nZXRfYmF0dGVyeV9pbmZvKHN0cnVj
-dCBwb3dlcl9zdXBwbHkgKnBzeSwKIAkJCWVyciA9IC1FSU5WQUw7CiAJCQlnb3RvIG91dF9w
-dXRfbm9kZTsKIAkJfQotCQlwcm9wZGF0YSA9IGtjYWxsb2MocHJvcGxlbiwgc2l6ZW9mKCpw
-cm9wZGF0YSksIEdGUF9LRVJORUwpOworCisJCXUzMiAqcHJvcGRhdGEgX19mcmVlKGtmcmVl
-KSA9IGtjYWxsb2MocHJvcGxlbiwgc2l6ZW9mKCpwcm9wZGF0YSksIEdGUF9LRVJORUwpOwog
-CQlpZiAoIXByb3BkYXRhKSB7Ci0JCQlrZnJlZShwcm9wbmFtZSk7CiAJCQlwb3dlcl9zdXBw
-bHlfcHV0X2JhdHRlcnlfaW5mbyhwc3ksIGluZm8pOwogCQkJZXJyID0gLUVJTlZBTDsKIAkJ
-CWdvdG8gb3V0X3B1dF9ub2RlOwpAQCAtNzY4LDggKzc2OCw2IEBAIGludCBwb3dlcl9zdXBw
-bHlfZ2V0X2JhdHRlcnlfaW5mbyhzdHJ1Y3QgcG93ZXJfc3VwcGx5ICpwc3ksCiAJCWVyciA9
-IGZ3bm9kZV9wcm9wZXJ0eV9yZWFkX3UzMl9hcnJheShmd25vZGUsIHByb3BuYW1lLCBwcm9w
-ZGF0YSwgcHJvcGxlbik7CiAJCWlmIChlcnIgPCAwKSB7CiAJCQlkZXZfZXJyKCZwc3ktPmRl
-diwgImZhaWxlZCB0byBnZXQgJXNcbiIsIHByb3BuYW1lKTsKLQkJCWtmcmVlKHByb3BuYW1l
-KTsKLQkJCWtmcmVlKHByb3BkYXRhKTsKIAkJCXBvd2VyX3N1cHBseV9wdXRfYmF0dGVyeV9p
-bmZvKHBzeSwgaW5mbyk7CiAJCQlnb3RvIG91dF9wdXRfbm9kZTsKIAkJfQpAQCAtNzgwLDcg
-Kzc3OCw2IEBAIGludCBwb3dlcl9zdXBwbHlfZ2V0X2JhdHRlcnlfaW5mbyhzdHJ1Y3QgcG93
-ZXJfc3VwcGx5ICpwc3ksCiAJCWluZm8tPm9jdl90YWJsZVtpbmRleF0gPSB0YWJsZSA9CiAJ
-CQlkZXZtX2tjYWxsb2MoJnBzeS0+ZGV2LCB0YWJfbGVuLCBzaXplb2YoKnRhYmxlKSwgR0ZQ
-X0tFUk5FTCk7CiAJCWlmICghaW5mby0+b2N2X3RhYmxlW2luZGV4XSkgewotCQkJa2ZyZWUo
-cHJvcGRhdGEpOwogCQkJcG93ZXJfc3VwcGx5X3B1dF9iYXR0ZXJ5X2luZm8ocHN5LCBpbmZv
-KTsKIAkJCWVyciA9IC1FTk9NRU07CiAJCQlnb3RvIG91dF9wdXRfbm9kZTsKQEAgLTc5MCw4
-ICs3ODcsNiBAQCBpbnQgcG93ZXJfc3VwcGx5X2dldF9iYXR0ZXJ5X2luZm8oc3RydWN0IHBv
-d2VyX3N1cHBseSAqcHN5LAogCQkJdGFibGVbaV0ub2N2ID0gcHJvcGRhdGFbaSoyXTsKIAkJ
-CXRhYmxlW2ldLmNhcGFjaXR5ID0gcHJvcGRhdGFbaSoyKzFdOwogCQl9Ci0KLQkJa2ZyZWUo
-cHJvcGRhdGEpOwogCX0KIAogCXByb3BsZW4gPSBmd25vZGVfcHJvcGVydHlfY291bnRfdTMy
-KGZ3bm9kZSwgInJlc2lzdGFuY2UtdGVtcC10YWJsZSIpOwpAQCAtODE0LDcgKzgwOSw2IEBA
-IGludCBwb3dlcl9zdXBwbHlfZ2V0X2JhdHRlcnlfaW5mbyhzdHJ1Y3QgcG93ZXJfc3VwcGx5
-ICpwc3ksCiAJZXJyID0gZndub2RlX3Byb3BlcnR5X3JlYWRfdTMyX2FycmF5KGZ3bm9kZSwg
-InJlc2lzdGFuY2UtdGVtcC10YWJsZSIsCiAJCQkJCSAgICAgcHJvcGRhdGEsIHByb3BsZW4p
-OwogCWlmIChlcnIgPCAwKSB7Ci0JCWtmcmVlKHByb3BkYXRhKTsKIAkJcG93ZXJfc3VwcGx5
-X3B1dF9iYXR0ZXJ5X2luZm8ocHN5LCBpbmZvKTsKIAkJZ290byBvdXRfcHV0X25vZGU7CiAJ
-fQpAQCAtODI1LDcgKzgxOSw2IEBAIGludCBwb3dlcl9zdXBwbHlfZ2V0X2JhdHRlcnlfaW5m
-byhzdHJ1Y3QgcG93ZXJfc3VwcGx5ICpwc3ksCiAJCQkJCQkJIHNpemVvZigqcmVzaXN0X3Rh
-YmxlKSwKIAkJCQkJCQkgR0ZQX0tFUk5FTCk7CiAJaWYgKCFpbmZvLT5yZXNpc3RfdGFibGUp
-IHsKLQkJa2ZyZWUocHJvcGRhdGEpOwogCQlwb3dlcl9zdXBwbHlfcHV0X2JhdHRlcnlfaW5m
-byhwc3ksIGluZm8pOwogCQllcnIgPSAtRU5PTUVNOwogCQlnb3RvIG91dF9wdXRfbm9kZTsK
-QEAgLTgzNiw4ICs4MjksNiBAQCBpbnQgcG93ZXJfc3VwcGx5X2dldF9iYXR0ZXJ5X2luZm8o
-c3RydWN0IHBvd2VyX3N1cHBseSAqcHN5LAogCQlyZXNpc3RfdGFibGVbaW5kZXhdLnJlc2lz
-dGFuY2UgPSBwcm9wZGF0YVtpbmRleCoyKzFdOwogCX0KIAotCWtmcmVlKHByb3BkYXRhKTsK
-LQogb3V0X3JldF9wb2ludGVyOgogCS8qIEZpbmFsbHkgcmV0dXJuIHRoZSB3aG9sZSB0aGlu
-ZyAqLwogCSppbmZvX291dCA9IGluZm87Ci0tIAoyLjQ5LjAKCg==
-
---------------mMPJXQTdp5jjwHYKdLNs1Lq0--
