@@ -1,194 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19C433EA;
-	Sun,  8 Jun 2025 15:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C71B513CF9C;
+	Sun,  8 Jun 2025 15:38:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749397102; cv=none; b=P2WtGVBcGLLk9RPF6KZGI8CnEbR05rdi/rp53aDUMm3nnjw9ZRvv8f1WSBRfO8fWreY3Apdp3oGxDVyhUcPFsjhA50SHDf4rupZ2AiVN4Yo9jxeVbkEeZygsiVxdNuCYJrGh8eaTWQpeiJC26f9KI1/Xw670FyItsa7H/dTkdrQ=
+	t=1749397118; cv=none; b=MFpIy8XYAJtDCn4am/9wyX+tpie/DuMdlZMxL5h9Xu+sp4ZLRADvoOg0rSEpmRo+tntBp29HVXj7BJ1gCDSnh2nrKsw2HfMZ19xHQ2V8iPuQPC/QTYDx19VtMcICAUgtXV1QcV58GN1/n5aG/kQNzca4w7wtS7GRYT/W6fx0Fxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749397102; c=relaxed/simple;
-	bh=44+K9pJQHVmddnoq6jFcbDPxDh9T4ucmfXnzaPivNNk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ej1k2ELCKuzHvyhdC3RsiT6j5cdCkdU1c+BmEtP0nQwLVNGJ2Ykx5cL3kCntqIWRLLp/7q2d2zwSnrsDLOKq4l/jd8cpTr7OKdukuFoVcjidccYrmCZ6SkMMh3CftDshDLAnTSbxIOSe3Wm1rNuXrxbk7iDfIoBgWP71T2fBUGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJcz/yh9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749397118; c=relaxed/simple;
+	bh=m1oUG0x77rJWQXsqAeuZMVS9z9c19VzPu+Q1YtyLFzo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JMwzLCxDUaFtH5zyWYpFvMz2iiNNsS3M4okVDLYxuZAWRBgw1ozNsNWDjw7pWTsYSxbfPNzjkIUHyuiyTFixFb6NpEpJHpF71Xx7EruUsskfhpq6aVTMn4uR5yMlHnYXK9El4XnrKGzQJKhpTeMiBOBIgjeijwq3T9MWddrsGbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=iV+Z9B5p; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJcz/yh9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2924EC4CEEE;
-	Sun,  8 Jun 2025 15:38:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749397102;
-	bh=44+K9pJQHVmddnoq6jFcbDPxDh9T4ucmfXnzaPivNNk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=UJcz/yh9hq0xmgpaI275pp0Vj65B5Wlig8p3n21YqR4/YV+HlO4u9L5VrRhshqEif
-	 +IrBIXJqe7aei1eRUGHD11X3qmGykufsupFMupwgESrHm2rhfinC7crdR6SAL5EBEo
-	 tjDukZBb3vOstjuSDMP8GW3BMwg8Tr4owzvfrS/oTIV4x0Q6VdtoioSYisS1JLOAHo
-	 ObOZUnQZcx2eoutKJgL25zR2p8ks8UkGFqiNet24OBzAC8AB6iCqlMCrFzVU2SQ5M4
-	 jvpsuyFHaVFo/FRZKhIRzn4jhuPpfeW2YNzDL9zCjN5JuyaqIQ9KvBPPeLY8h7osIr
-	 5vDMrYOoWgkoQ==
-Date: Sun, 8 Jun 2025 16:38:12 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
- corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
- Michael.Hennerich@analog.com, bagasdotme@gmail.com,
- linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 03/11] iio: accel: adxl313: make use of regmap cache
-Message-ID: <20250608163812.4a1a93df@jic23-huawei>
-In-Reply-To: <20250608162215.0d1789d0@jic23-huawei>
-References: <20250601172139.59156-1-l.rubusch@gmail.com>
-	<20250601172139.59156-4-l.rubusch@gmail.com>
-	<20250608162215.0d1789d0@jic23-huawei>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="iV+Z9B5p"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-450cb2ddd46so22989725e9.2;
+        Sun, 08 Jun 2025 08:38:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1749397114; x=1750001914; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mAPW9CEAQTkA9ZtJQM59eScIy81/xXlC54hdG5dtI+E=;
+        b=iV+Z9B5pt1/n7NTQ6pfeVcJC289CH9Q9hk5sdPQt0CS12GLFdNrF/cdFFqRVLjqniW
+         UF+cvjyrpMnaahM3vyG2e8o9VUpvHwdNQfm3s1/P/o91+NL1kTBPbhF7SnlUHyPycd2N
+         lHZe/33iJNT/qKfmWmOrw3Ow9FufB0CYODYdTP8APCwdLIFzDzruzoykRTlSW40vGISb
+         2xU9tPzjUsn+DDFBa4dqqTjlYceJ5wNg+F5+IqqDhEieUA51dvXUPAMzPPvkbB2HC15d
+         +34qj+n6WkiN9RlDFvtxOgHxxP0XNg4A+2vpt9aBWts2q7etiD0NqZOP0xI2cYotBCXR
+         GjVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749397114; x=1750001914;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mAPW9CEAQTkA9ZtJQM59eScIy81/xXlC54hdG5dtI+E=;
+        b=b285yiiRyZ2CyQGTrtDRGYIZTB+68MxO5d7mod0bMdbJxfgOuyW+Lqj6wR1JO1kt66
+         okKYvIDPDTF0xK1KVq8i+2eM/rjI8sg5Ki8Eg1dF0vp12Oa6PNyS6KXpcxropeLmdvCw
+         QtTCp4ODEM1qb7WSj1Ek4JxMvO3wjBJyjFDzh+anGvkvtssmHxeA8T+fe9P9Nlw9Ycvv
+         ZY0tBnacXj0jnRKsLHdHiucvIop0fiP0s4Fo9aJLVsIsMDys5mXllzIb+b2FDPCMZzN+
+         H1tUq2C5niwI4vOjOhkqXZ6tsRqoesYEtQir8xXNVOPZA6r2M8N7BSewjJJmyWdQOKa7
+         zfRg==
+X-Forwarded-Encrypted: i=1; AJvYcCW7C6HU/HYXD1iXrm+XbpTrPKHrIW/1HKSLdDNmfJumPqiRTb+TzaMTMWCBjaxopCcnBg2c+7fFusf0Nrs=@vger.kernel.org, AJvYcCXfZBOgBvmkyQ8+FNHUq/F8jmGE/c2cajz5O6uGq+jHyX2rHDukDOz/kk4y+t4DdszbL+pjgZEC@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4prV3NjILDEgxGMOk7o9qrlcjf/gsklx4xH+cbndtMH15rC89
+	EEGrMuNI9T/w21q4L3znR5kAG9Aey6vj1TRDJl0yoqkycCiL9lBIu5U=
+X-Gm-Gg: ASbGncsQ22/n7z17A5sLEhtZQpEE8IkFtuCDAMIr/b5coqe4urG5Pcyu7McCjmK6BPN
+	4GcyQbtiZBXoTTbUtj0KTLWendofP58sJZic/cZSM+fLQ7bMXI6bd32tMWnj6SNoHye/IZk+oUT
+	sb4Zsj7nTY48nPmR/NSf6JMw2ZwI+4C4JHbzPXvOboyF4bcviERVEEp2ikFeUjja7tJo24g3ZgG
+	WUbt8dwpOuRZioUhghJB9dXhrMOMSCc/RvZrHAaptamRpCdQQY1PE7QctwTYnC+YvgpwmJnnMD4
+	HHstt1wFRbhPQs6ujzMObvNxZz++795AGg3aI98LRTAQVl1W4apdr0OxGsfRPsbtoHzPWVd02hu
+	RF9ZQlYJhbEbr/0IV+pNw5zxC36iMcDLXL6/qBw==
+X-Google-Smtp-Source: AGHT+IE+yeRQhGLyvfPMEYFhMszTng6Bd900060XU6yLxwA8zMJMGepOitYZ4xu2+e6pOdpNKpKBag==
+X-Received: by 2002:a5d:58f9:0:b0:3a5:3b03:3bc6 with SMTP id ffacd0b85a97d-3a53b033bd0mr3601348f8f.28.1749397113741;
+        Sun, 08 Jun 2025 08:38:33 -0700 (PDT)
+Received: from [192.168.1.3] (p5b2ace02.dip0.t-ipconnect.de. [91.42.206.2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532436650sm4642069f8f.65.2025.06.08.08.38.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 Jun 2025 08:38:31 -0700 (PDT)
+Message-ID: <d8374546-e88b-412c-9e8f-4a6356430db9@googlemail.com>
+Date: Sun, 8 Jun 2025 17:38:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.12 00/24] 6.12.33-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250607100717.910797456@linuxfoundation.org>
+Content-Language: de-DE
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250607100717.910797456@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, 8 Jun 2025 16:22:15 +0100
-Jonathan Cameron <jic23@kernel.org> wrote:
+Am 07.06.2025 um 12:07 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.12.33 release.
+> There are 24 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-> On Sun,  1 Jun 2025 17:21:31 +0000
-> Lothar Rubusch <l.rubusch@gmail.com> wrote:
-> 
-> > Setup regmap cache to cache register configuration. This is a preparatory
-> > step for follow up patches. Using cached settings will help at inerrupt
-> > handling, to generate activity and inactivity events.  
-> 
-> The regmap cache will reduce traffic to the device for things like reading
-> back sampling frequency, so no need to justify this patch with 'future'
-> stuff.  Justify it with current.   I've applied with the description of
-> simply
-> 
-> "Setup regmap cache to cache register configuration, reducing bus traffic
-> for repeated accesses to non volatile registers."
-> 
-Dropped again.  The is_volatile should include all volatile registers
-not just ones we happen to be using so far. 
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-You added debug accesses in previous patch which will not take the volatile
-nature into account unless the register is in that switch statement.
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-Put the all in from the start.
 
-Jonathan
+Beste Grüße,
+Peter Schneider
 
-> > 
-> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> > ---
-> >  drivers/iio/accel/adxl313.h      |  2 ++
-> >  drivers/iio/accel/adxl313_core.c | 17 +++++++++++++++++
-> >  drivers/iio/accel/adxl313_i2c.c  |  6 ++++++
-> >  drivers/iio/accel/adxl313_spi.c  |  6 ++++++
-> >  4 files changed, 31 insertions(+)
-> > 
-> > diff --git a/drivers/iio/accel/adxl313.h b/drivers/iio/accel/adxl313.h
-> > index 72f624af4686..fc937bdf83b6 100644
-> > --- a/drivers/iio/accel/adxl313.h
-> > +++ b/drivers/iio/accel/adxl313.h
-> > @@ -54,6 +54,8 @@ extern const struct regmap_access_table adxl312_writable_regs_table;
-> >  extern const struct regmap_access_table adxl313_writable_regs_table;
-> >  extern const struct regmap_access_table adxl314_writable_regs_table;
-> >  
-> > +bool adxl313_is_volatile_reg(struct device *dev, unsigned int reg);
-> > +
-> >  enum adxl313_device_type {
-> >  	ADXL312,
-> >  	ADXL313,
-> > diff --git a/drivers/iio/accel/adxl313_core.c b/drivers/iio/accel/adxl313_core.c
-> > index 06a771bb4726..0c893c286017 100644
-> > --- a/drivers/iio/accel/adxl313_core.c
-> > +++ b/drivers/iio/accel/adxl313_core.c
-> > @@ -46,6 +46,23 @@ const struct regmap_access_table adxl314_readable_regs_table = {
-> >  };
-> >  EXPORT_SYMBOL_NS_GPL(adxl314_readable_regs_table, IIO_ADXL313);
-> >  
-> > +bool adxl313_is_volatile_reg(struct device *dev, unsigned int reg)
-> > +{
-> > +	switch (reg) {
-> > +	case ADXL313_REG_DATA_AXIS(0):
-> > +	case ADXL313_REG_DATA_AXIS(1):
-> > +	case ADXL313_REG_DATA_AXIS(2):
-> > +	case ADXL313_REG_DATA_AXIS(3):
-> > +	case ADXL313_REG_DATA_AXIS(4):
-> > +	case ADXL313_REG_DATA_AXIS(5):
-> > +	case ADXL313_REG_FIFO_STATUS:
-> > +		return true;
-> > +	default:
-> > +		return false;
-> > +	}
-> > +}
-> > +EXPORT_SYMBOL_NS_GPL(adxl313_is_volatile_reg, "IIO_ADXL313");
-> > +
-> >  static int adxl312_check_id(struct device *dev,
-> >  			    struct adxl313_data *data)
-> >  {
-> > diff --git a/drivers/iio/accel/adxl313_i2c.c b/drivers/iio/accel/adxl313_i2c.c
-> > index a4cf0cf2c5aa..e8636e8ab14f 100644
-> > --- a/drivers/iio/accel/adxl313_i2c.c
-> > +++ b/drivers/iio/accel/adxl313_i2c.c
-> > @@ -21,6 +21,8 @@ static const struct regmap_config adxl31x_i2c_regmap_config[] = {
-> >  		.rd_table	= &adxl312_readable_regs_table,
-> >  		.wr_table	= &adxl312_writable_regs_table,
-> >  		.max_register	= 0x39,
-> > +		.volatile_reg	= adxl313_is_volatile_reg,
-> > +		.cache_type	= REGCACHE_MAPLE,
-> >  	},
-> >  	[ADXL313] = {
-> >  		.reg_bits	= 8,
-> > @@ -28,6 +30,8 @@ static const struct regmap_config adxl31x_i2c_regmap_config[] = {
-> >  		.rd_table	= &adxl313_readable_regs_table,
-> >  		.wr_table	= &adxl313_writable_regs_table,
-> >  		.max_register	= 0x39,
-> > +		.volatile_reg	= adxl313_is_volatile_reg,
-> > +		.cache_type	= REGCACHE_MAPLE,
-> >  	},
-> >  	[ADXL314] = {
-> >  		.reg_bits	= 8,
-> > @@ -35,6 +39,8 @@ static const struct regmap_config adxl31x_i2c_regmap_config[] = {
-> >  		.rd_table	= &adxl314_readable_regs_table,
-> >  		.wr_table	= &adxl314_writable_regs_table,
-> >  		.max_register	= 0x39,
-> > +		.volatile_reg	= adxl313_is_volatile_reg,
-> > +		.cache_type	= REGCACHE_MAPLE,
-> >  	},
-> >  };
-> >  
-> > diff --git a/drivers/iio/accel/adxl313_spi.c b/drivers/iio/accel/adxl313_spi.c
-> > index 9a16b40bff34..68e323e81aeb 100644
-> > --- a/drivers/iio/accel/adxl313_spi.c
-> > +++ b/drivers/iio/accel/adxl313_spi.c
-> > @@ -24,6 +24,8 @@ static const struct regmap_config adxl31x_spi_regmap_config[] = {
-> >  		.max_register	= 0x39,
-> >  		/* Setting bits 7 and 6 enables multiple-byte read */
-> >  		.read_flag_mask	= BIT(7) | BIT(6),
-> > +		.volatile_reg	= adxl313_is_volatile_reg,
-> > +		.cache_type	= REGCACHE_MAPLE,
-> >  	},
-> >  	[ADXL313] = {
-> >  		.reg_bits	= 8,
-> > @@ -33,6 +35,8 @@ static const struct regmap_config adxl31x_spi_regmap_config[] = {
-> >  		.max_register	= 0x39,
-> >  		/* Setting bits 7 and 6 enables multiple-byte read */
-> >  		.read_flag_mask	= BIT(7) | BIT(6),
-> > +		.volatile_reg	= adxl313_is_volatile_reg,
-> > +		.cache_type	= REGCACHE_MAPLE,
-> >  	},
-> >  	[ADXL314] = {
-> >  		.reg_bits	= 8,
-> > @@ -42,6 +46,8 @@ static const struct regmap_config adxl31x_spi_regmap_config[] = {
-> >  		.max_register	= 0x39,
-> >  		/* Setting bits 7 and 6 enables multiple-byte read */
-> >  		.read_flag_mask	= BIT(7) | BIT(6),
-> > +		.volatile_reg	= adxl313_is_volatile_reg,
-> > +		.cache_type	= REGCACHE_MAPLE,
-> >  	},
-> >  };
-> >    
-> 
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
 
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
