@@ -1,74 +1,133 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72E624DCE5
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 14:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B6622B595;
+	Sun,  8 Jun 2025 14:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749393546; cv=none; b=kGZw+vN/KcQQKP5HDH1kZl4mT3aGLHZqJ18kQSf9WN0G2MVV+DEKYlHybRz+e7/2dHz3YjKokFPaD+Z6GDfqT5pazuIv0pdjrAXMafgralWK5huO7Qb3v5bUX9qgY104hRRNx2BUoyVtXThYMxyn98Yhun3cWXDYt2QS5Py+bAg=
+	t=1749393712; cv=none; b=buBjRrnqcFZS6FdGIDYBrduP94VErjzRHD1ZEg/4JOxkGY0lUa2/tu8c5DdAm8T21K/QYb+6j+DcU1yNmDjRQqPo0UFgM3+J5jDT7onB/t3uDA5nsHSFmD3CstnTInv9NTjaqiOOTWVARZAsMXFlDt9FBinX8bxnpcNPtbR4CA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749393546; c=relaxed/simple;
-	bh=ANm8RttGvSJuhx0wrKeTt3NL6cimr89RyDzhx2D7RZo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=XHgK9HzM7kinUETZEQ8hBidwJzhqyqj71SXZIjkaIyqnUIxrrOaXmLDG8w8Z8e83gGrJsHeOTBRVdNxOlqQVcqgvSate5akNZ3J3l4B9mUdX9ojy9nbPtEhoH7kVmLVeaWIIyYion7rg91q3D4h6T39ncRmSmGyklpReeM+W2rA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddc4908c4dso50222035ab.3
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 07:39:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749393544; x=1749998344;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Byyo7kC3a/3rB2EMu+T1mfO8ZATgul+9Bm2fnUNoq7A=;
-        b=t9lvw1QcWM2ZxtF6MCCbAr9htEJkpXzXGOHR06EWxMTD5ljVRZp5qo+O3zkxQOU2JY
-         2Z11ISAhe3Z9DEvDYerImpJVbaUhilKFOXGx0HEjgKKk9RhTgoud9tfi2Z+mb7brK0JO
-         8Vp6s9zcnxrWvYcWcBMa5of4y1tWzbYmz48C/0w0TIzO4HHFxIXzERqQ4ymFTDn/w+w8
-         LYbejZ4lJdjWbxjXUBV7MveSO7Iawmiqr8q4B5xpc1mtGUyCurkPwzv6WMefv66BwE0o
-         VkVsI0SWqa4NccbtSXy6y8FJnWyG/dZdV+8cSA6zxFnH/cfBr5BOe8Q2CLc/LAkDLETF
-         uY+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVrj9L1fFq/v7kXM9JwqZQX4nD97e8hkI8S2brW8Z6v/svwyZBjHC+SWMF/y6rVUvMwKNrmOSyoTyObmNg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeOR0l9OpuEK1geHQHMGK/ncEeldnwmy37m5O/qUD8F+yiUqib
-	Jbfa7aW0FHB3GTWCI+3SKb+0I263V8BUpPfQQDZpPS8lnX0S5dQX9plhauab2Y8ankqzvdZ5is3
-	GH9/Co/50LcuAM76GclVaET54mJMDuDc/5MpkRZAW5liS28caXnGLga9SA70=
-X-Google-Smtp-Source: AGHT+IE3/7VhsAobctqaGXi1Yv2kjR1bAWM4ep3qse+qKfQCsnidE0mOZE8tDfBEq57yMyQTPHpjgfC2CbxduJ0mwt1MtEZU0VYh
+	s=arc-20240116; t=1749393712; c=relaxed/simple;
+	bh=SEVxqWYLI5gH7l4hRWpGhLGXhILHIQnxl/8LtaFFPaM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XO00z9hWDSsFFDtaCdYmEceCbizmM0uxpnOfneeSX0HRyutzi13R8HGEiar6DQd62vmK1fUSTJuYZWTGjWMhkToDB3zpq1ai9zMh/h+tTzuNUIx9E1c9T2z/c39wc7M+B3y/zJphBRjWp67Su/e1xiBa5SA6/f6NwTwtr+RtZOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EA4+Xhx/; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EA4+Xhx/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43757C4CEEE;
+	Sun,  8 Jun 2025 14:41:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749393711;
+	bh=SEVxqWYLI5gH7l4hRWpGhLGXhILHIQnxl/8LtaFFPaM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EA4+Xhx/Z1AWIeqlbFrA8ETWQhSs6pAffOedSzm7AOSKVForTBEt9BFiPCgO90Oev
+	 zmEr4GLn5A+hbHoZXUGQoEIt0jQiEy5ZhsmY9WE3Fng4XJCg9bfsek6fubiigR8y3c
+	 kJMhJGOGukOnHDFmZpBwajH3/aHgH7RpxPzlq9E1GfS///RgQ486m5pZjTeQGBqYzS
+	 DJ66LSDE9kFiPKb0fqf7hBlF3Vw+lJgkV72706LHdUGWiHecWffMGho0LeWsQffzrR
+	 vZxyy7qrylH3++QGrvgMisw/wHsd7LZkaRcSlwAx6MJwHRh3/hi7rGF1qkIcBIshbT
+	 r7kGGllRNVDDQ==
+Message-ID: <c3e1e527-07e4-4288-a446-19fdcfd57733@kernel.org>
+Date: Sun, 8 Jun 2025 16:41:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a8a:b0:3dd:a4f0:8339 with SMTP id
- e9e14a558f8ab-3ddce3fe9damr114184095ab.8.1749393543935; Sun, 08 Jun 2025
- 07:39:03 -0700 (PDT)
-Date: Sun, 08 Jun 2025 07:39:03 -0700
-In-Reply-To: <87frgafi49.fsf@posteo.net>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6845a087.050a0220.daf97.0af0.GAE@google.com>
-Subject: Re: [syzbot] [net?] WARNING: suspicious RCU usage in task_cls_state
-From: syzbot <syzbot+b4169a1cfb945d2ed0ec@syzkaller.appspotmail.com>
-To: andrii@kernel.org, charmitro@posteo.net, davem@davemloft.net, 
-	edumazet@google.com, horms@kernel.org, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com, tj@kernel.org, yangfeng@kylinos.cn
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] dt-bindings: leds: Add new as3668 support
+To: Lukas Timmermann <linux@timmermann.space>, lee@kernel.org,
+ pavel@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250607215049.29259-1-linux@timmermann.space>
+ <20250607215049.29259-2-linux@timmermann.space>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250607215049.29259-2-linux@timmermann.space>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 07/06/2025 23:50, Lukas Timmermann wrote:
+> This patch documents the device tree bindings for
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Your previous style was correct. I don't get why you changed it to
+incorrect "This patch".
 
-Reported-by: syzbot+b4169a1cfb945d2ed0ec@syzkaller.appspotmail.com
-Tested-by: syzbot+b4169a1cfb945d2ed0ec@syzkaller.appspotmail.com
+See longer explanation here:
+https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
 
-Tested on:
+> the OSRAM AS3668 LED driver. Note that the bindings
+> are not entirely complete, as the GPIO/Audio Input pin
+> is undocumented. The hardware used for testing this patch series
+> does not allow modification, so this pin has been omitted.
+> 
+> Signed-off-by: Lukas Timmermann <linux@timmermann.space>
+> ---
 
-commit:         e5c42d49 net: Fix RCU warning in task_cls_state for BP..
-git tree:       https://github.com/charmitro/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=12750a0c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c6c517d2f439239
-dashboard link: https://syzkaller.appspot.com/bug?extid=b4169a1cfb945d2ed0ec
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Note: no patches were applied.
-Note: testing is done by a robot and is best-effort only.
+<form letter>
+This is an automated instruction, just in case, because many review tags
+are being ignored. If you know the process, just skip it entirely
+(please do not feel offended by me posting it here - no bad intentions
+intended, no patronizing, I just want to avoid wasted efforts). If you
+do not know the process, here is a short explanation:
+
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
+of patchset, under or above your Signed-off-by tag, unless patch changed
+significantly (e.g. new properties added to the DT bindings). Tag is
+"received", when provided in a message replied to you on the mailing
+list. Tools like b4 can help here ('b4 trailers -u ...'). However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for tags received on the version they apply.
+
+Full context and explanation:
+https://elixir.bootlin.com/linux/v6.15/source/Documentation/process/submitting-patches.rst#L591
+</form letter>
+
+Best regards,
+Krzysztof
