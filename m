@@ -1,226 +1,108 @@
-Received: from flow-a6-smtp.messagingengine.com (flow-a6-smtp.messagingengine.com [103.168.172.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302801401C;
-	Sun,  8 Jun 2025 17:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6507D54673;
+	Sun,  8 Jun 2025 17:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749404126; cv=none; b=qOs8xwJsfBdBjAm3RQk/IhdqpEZYtoTR8CyM7S08TMtd/8yNwZi8q/3NPZCwgGP+s1zsyfVMkn3iHGuGVIXmqfAJGqYGYArY3+LyOJ6hCJadh1diSxmr3MhzIHhVPv+1a1ycafPxQNeDXl10tUsGGyHjRGdhWp7f8ngrAa1ixh4=
+	t=1749404460; cv=none; b=ozrITUPAdLHxCmt+47dN080Y8nKeyIhqVEJnDU1SzU7tN61gLhd+0vR82f4oZUHDxLKGMDH2ki5tXt7aHyoqfYGsX6aKH4VEfw3DzJ8Z3N2oQniq5mNG8UKRCV7O1GG4jeJimNE5L2ipfVL30nkzXRqi0aXxOGnULQN4AEr8qhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749404126; c=relaxed/simple;
-	bh=s+ZZ9XEgFAo4sFhNg0qJu9lkS3Q1APFw5rpz16qZeF0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QmIifwXMB2Q6C++YBrxnNEYZLdRMc/lX7tYZm+pJn+7wUYzbBIyqsO/VpHBsb4TxfI8gwU9RqqCpkWi+YsfKiJbgVggvpT+WIURO8mjC39WFEkg0om6wUy6MCcLZYA7mHAINfpODo3yyDOEmi3IbY/ggXn+IxzCI1szMjbisjXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org; spf=pass smtp.mailfrom=maowtm.org; dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b=TbbuAvWU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=E/hURk7E; arc=none smtp.client-ip=103.168.172.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maowtm.org
+	s=arc-20240116; t=1749404460; c=relaxed/simple;
+	bh=tNa7t++GLpb5XVp7b/gfkdm8zfOa/b9SJSrTVO5CBW0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uxQARyjuBKwSEAGefo7gOvSSB1PzmZ51DL9QzLtQ20UqJHhykbXN8Py8rC1TLv6QC2Qe8cb5H4oaAv0QUiTYUCrjmpQrF8Ns6MUT09jsPTXp40auEQohCBQLRTXiPR27HnlnQz4PB0T/Ii0tzChsoU6tAVWS9j/jRK2/wAME+sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=S2m1kAyM; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b="TbbuAvWU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="E/hURk7E"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailflow.phl.internal (Postfix) with ESMTP id 21CC920034A;
-	Sun,  8 Jun 2025 13:35:23 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-11.internal (MEProxy); Sun, 08 Jun 2025 13:35:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maowtm.org; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1749404123; x=
-	1749411323; bh=wh/MxpBJZ3+0ErayESGRZXiw/uDy6OAY57TTmqYgFes=; b=T
-	bbuAvWUN4u5IElYw6mkYrVTrVw7UwfnSPylRRh5kCktfpoYxMb8jYioA3fWME9WK
-	7rOqWW7dLoVA+pNAwj6y6f3Fx6PZntvr1yksxY5DUWAOWO/x+ZeM8wcCdSnMQyV5
-	AnRSb9NslblN3ColrXzSCHcoMZLAZ5cq5VYmUyq4+bzM6xIH1SXUwxujp1hHI67h
-	b6o/ictI7hN+7PPD3o0La7CCUXAq4/gaLxhwkxpWo3iUULBCDHljzntKNNaIt44z
-	IB7tYOVziLCgR2+oXtpq/5a0tT5IAQMUPPxKYy+bVDbbvngLQuokbvCqAr+JLUSm
-	6A3lsR6/WKLzfHYLUYsXA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1749404123; x=1749411323; bh=w
-	h/MxpBJZ3+0ErayESGRZXiw/uDy6OAY57TTmqYgFes=; b=E/hURk7Ek7ZG1YOYp
-	XOGb+ParWaSBzYwoENwrai9M/iUqh16vt7IL8oJ0fTlTMb+K4q/q00Zlh7zWXqRc
-	hvT4US/ratmskkX6a4Qn78pEo1d7qyMDGstcONGbCstOHPYliGfE37dUl9CMTVif
-	mh9rGQ6jJSb6bt3vbqE+rh3x39GCHHlze6z53+IPDXGEMfl7+fmix+X5DK9rwRzs
-	1ZLpZhbmqm/w5DKK/5d6jx2v4Lo4NSwl+93P2ESZqpt6sn3/QA/u3XD6HRaH5b+u
-	wmwAhJyY6wfEp6ifNUng6NMqxfNjbKCrWNt1XJtzzL8bPExeGNCGdIT8hXAdDMYY
-	p1/gQ==
-X-ME-Sender: <xms:2slFaJiALuZN4h5yMoQfq9rB_NixL987P2aL8lQKsEgY2gainnT1ig>
-    <xme:2slFaOBsa219Hw3lKt3JgLK3tCNipunAzfQOraataPEKr4G2Ea7OAXB-gQkA3RfeH
-    ljMVYuF2Aks06AYK8Y>
-X-ME-Received: <xmr:2slFaJHzbrBEqdorF7C2ID5eC3pqrlGivbW5r4CavYUmPv3ukbXps6Zu6kb6PqWW6ZoymbFVBuRo-Ep70dRrsJsPOzi6PeQ4-2czqod-0kFJdaQI7hgvC7UfCobd_1Ja>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdekudeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttden
-    ucfhrhhomhepvfhinhhgmhgrohcuhggrnhhguceomhesmhgrohifthhmrdhorhhgqeenuc
-    ggtffrrghtthgvrhhnpeeuuddthefhhefhvdejteevvddvteefffegteetueegueeljeef
-    ueekjeetieeuleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpehmsehmrghofihtmhdrohhrghdpnhgspghrtghpthhtohepvdefpdhmohguvgep
-    shhmthhpohhuthdprhgtphhtthhopehsohhngheskhgvrhhnvghlrdhorhhgpdhrtghpth
-    htohepmhhitgesughighhikhhougdrnhgvthdprhgtphhtthhopehvihhrohesiigvnhhi
-    vhdrlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepsghrrghunhgvrheskhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtohepmhesmhgrohifthhmrdhorhhgpdhrtghpthhtoheprghm
-    ihhrjeefihhlsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrihhisehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopegrshhtsehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pegsphhfsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:2slFaORmoVpxBka7gamkFUSQf03ThYXcLTC1MVqr9fjgvIRP4NvVhg>
-    <xmx:2slFaGxrnWckiQvJlxLcKVTH9SSC5M83DSrq3R5bfoPNMPga1Rxfcw>
-    <xmx:2slFaE5hAL3oYD2Ex9lyL3xbyWq_vD9V_1kwBNhd_lG4UcO8E2DnTA>
-    <xmx:2slFaLwTG5teBm-lbBp4lAyNgAeE0vILVYc4ct-iJg_qjQdjfOIV5w>
-    <xmx:28lFaJKM3TiOZZAfLjua0Fcgi2HSyPXoAT2TTgFhZKD3dN_tHyGRvazF>
-Feedback-ID: i580e4893:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 8 Jun 2025 13:35:18 -0400 (EDT)
-From: Tingmao Wang <m@maowtm.org>
-To: Song Liu <song@kernel.org>,
-	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>
-Cc: Tingmao Wang <m@maowtm.org>,
-	amir73il@gmail.com,
-	andrii@kernel.org,
-	ast@kernel.org,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	eddyz87@gmail.com,
-	gnoack@google.com,
-	jack@suse.cz,
-	jlayton@kernel.org,
-	josef@toxicpanda.com,
-	kernel-team@meta.com,
-	kpsingh@kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	martin.lau@linux.dev,
-	mattbobrowski@google.com,
-	repnop@google.com
-Subject: Re: [PATCH v3 bpf-next 0/5] bpf path iterator
-Date: Sun,  8 Jun 2025 18:32:56 +0100
-Message-ID: <20250608173437.73874-1-m@maowtm.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <dbc7ee0f1f483b7bc2ec9757672a38d99015e9ae.1749402769@maowtm.org>
-References: <dbc7ee0f1f483b7bc2ec9757672a38d99015e9ae.1749402769@maowtm.org>, <20250606213015.255134-1-song@kernel.org>
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="S2m1kAyM"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a548a73ff2so346551f8f.0;
+        Sun, 08 Jun 2025 10:40:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1749404457; x=1750009257; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=V298GByS0UihQqnZbWCQzM9pjzFH0uvqjj1S1drsO9Y=;
+        b=S2m1kAyMi7TEQNxt14rX7zNjeT5SKz05ivyS86hay/sZt8nJ3sfV3F56l4sWkcuDOu
+         NCy57P//D40ijs27cJ+n5TDvnjjiHOmAMhWQc0SRxc0lo0QPN1NxAjfvcgrwwUM3wzjX
+         X0LTfiCAIFzeUinziibUabEzx2WFpqia22vNgnMZuW87G/lmgtH1Jq0FSkJiNgiwXFrU
+         C/koXrcZRTFLz26OZSVGS5smLcWhUg78VNwzx3Nqr2K2o7z0EceCmknidVfoWMroHE0P
+         7sDAB/2Lq+TL7rRkx5kzEYvDMisKAUw/U1qastsduISRvH5sHmqqrl+pBXCH4sNp35pU
+         Odzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749404457; x=1750009257;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V298GByS0UihQqnZbWCQzM9pjzFH0uvqjj1S1drsO9Y=;
+        b=FQVDWwe0hgCrilC28KkPAM5tNIdjTYwn6YYJbq59vOeu/nWBCFyQgaAw0kaFOasoDW
+         S8ICzNldqx90gHplO58oTgmR3HZcgGVyrRT5eL4mzefKE3FVqMhwYYDgxxZzpbDWM+dK
+         g4PPrlbb3yhE+Xf8rdVkG6YSHbR6tf6Rjmbt68qZRmZDTJf/IF7pfdPEPAkJO/uF0wTw
+         LWfN+6NYpR3kaOFuWEjuJ1h5AO/WPdPXWCV5jZTnlRPcTm/ZOkjetOC/QtZxxfKUmVeC
+         NeQUWDXlFaomSNvjXdcZpAEqiAIefjxruoQ1XU7V3+C3l78Dy0JFY8KDKNlcbF8g7Dln
+         EazQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW7k51UYGwEX9s352XvUstI6sv4JgYedolMavj1cIhrYp2TxaONVhyEgV1Darg9BjF/ZpM6O2JOTLUL4qw=@vger.kernel.org, AJvYcCWllNXfoudTQV7fgV73W46EifiKq6WLfhgvMs2VlUR6gfuBiGxGjXR1F33+SdFVyQqbVZ37Mnz9@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhNOkbu8/OcqaQfUJ4MLKEFTFI7FNlU6sak8r1xTmsDJc3/oQG
+	PxNfBvuQn5l+kUtfIysWG37NStvnBkdfkrlgmumApYNacAokRtSrsRs=
+X-Gm-Gg: ASbGncsFUNgWRRKxtmn/y4/WH4hpLvpHYgzfMjzXyEshm/8oVnqvhEDmqAO1V68ARjJ
+	MpWuSc2dWTsjNo6j8zHL7gcCPhK+mzKr5Six66+sE88tt26Xxbh3Xlusg74DEiudykR06DYxvEX
+	s73p3dqqrjhGm1Lh7FO7G6Psiel/PBTSHyc0d6PrPToRu6AlswPJ7SQWrvSusFjQFxoTQPmzinl
+	I8Mq5rNaYHwLGOiDsHK/fZeoGQm4XjZgUWdOCG1ZCEv9YX/YAqkfrDflDMylyZFwUow7oSDeeKU
+	T+EIhJ/RfF491+asdQVzFNv5AM4ZZYrJ5B5R8/nHh5cAVHnx3Tk0yo7n3zJQAsoZ7MLZVm65WSu
+	+Snv1+duFIGlcgOYH72KXU2mVfUc=
+X-Google-Smtp-Source: AGHT+IHnN4ArvaernVN0i2Q3r5CdugEYMRzyU+aoqQurZJvd+6mjnN24e9YgyDP9K/6+UPyhBfAazw==
+X-Received: by 2002:a05:6000:2585:b0:39f:175b:a68d with SMTP id ffacd0b85a97d-3a53188da55mr8344003f8f.11.1749404456378;
+        Sun, 08 Jun 2025 10:40:56 -0700 (PDT)
+Received: from [192.168.1.3] (p5b2ace02.dip0.t-ipconnect.de. [91.42.206.2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323ae18esm7821035f8f.33.2025.06.08.10.40.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 Jun 2025 10:40:55 -0700 (PDT)
+Message-ID: <79767ec6-14cd-4fdc-975d-e303d3d2fd78@googlemail.com>
+Date: Sun, 8 Jun 2025 19:40:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.15 00/34] 6.15.2-rc1 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250607100719.711372213@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250607100719.711372213@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Update bpf_fs_kfuncs to match path_walk_parent changes.
+Am 07.06.2025 um 12:07 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.15.2 release.
+> There are 34 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-It compiles, but I've not tested this yet.
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-Signed-off-by: Tingmao Wang <m@maowtm.org>
----
- fs/bpf_fs_kfuncs.c | 55 +++++++++++++++++++++++-----------------------
- 1 file changed, 28 insertions(+), 27 deletions(-)
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-diff --git a/fs/bpf_fs_kfuncs.c b/fs/bpf_fs_kfuncs.c
-index 8c618154df0a..6599342dd0de 100644
---- a/fs/bpf_fs_kfuncs.c
-+++ b/fs/bpf_fs_kfuncs.c
-@@ -327,23 +327,18 @@ __bpf_kfunc_end_defs();
- 
- /* open-coded path iterator */
- struct bpf_iter_path {
--	__u64 __opaque[2];
--} __aligned(8);
--
--struct bpf_iter_path_kern {
--	struct path path;
-+	__u64 __opaque[sizeof(struct parent_iterator) / sizeof(__u64)];
- } __aligned(8);
- 
- __bpf_kfunc_start_defs();
- 
--__bpf_kfunc int bpf_iter_path_new(struct bpf_iter_path *it,
--				  struct path *start,
-+__bpf_kfunc int bpf_iter_path_new(struct bpf_iter_path *it, struct path *start,
- 				  __u64 flags)
- {
--	struct bpf_iter_path_kern *kit = (void *)it;
-+	struct parent_iterator *pit = (void *)it;
- 
--	BUILD_BUG_ON(sizeof(*kit) > sizeof(*it));
--	BUILD_BUG_ON(__alignof__(*kit) != __alignof__(*it));
-+	BUILD_BUG_ON(sizeof(*pit) > sizeof(*it));
-+	BUILD_BUG_ON(__alignof__(*pit) != __alignof__(*it));
- 
- 	if (flags) {
- 		/*
-@@ -351,45 +346,51 @@ __bpf_kfunc int bpf_iter_path_new(struct bpf_iter_path *it,
- 		 * kit->path so that it be passed to path_put() safely.
- 		 * Note: path_put() is no-op for zero'ed path.
- 		 */
--		memset(&kit->path, 0, sizeof(struct path));
-+		memset(pit, 0, sizeof(*pit));
- 		return -EINVAL;
- 	}
- 
--	kit->path = *start;
--	path_get(&kit->path);
--
--	return 0;
--}
--
--__bpf_kfunc struct path *bpf_iter_path_next(struct bpf_iter_path *it)
--{
--	struct bpf_iter_path_kern *kit = (void *)it;
--	struct path root = {};
--
- 	/*
--	 * "root" is zero'ed. Therefore, unless the loop is explicitly
-+	 * "root" is NULL. Therefore, unless the loop is explicitly
- 	 * terminated, bpf_iter_path_next() will continue looping until
- 	 * we've reached the global root of the VFS.
- 	 *
- 	 * If a root of walk is needed, the user can check "path" against
- 	 * that root on each iteration.
- 	 */
--	if (!path_walk_parent(&kit->path, &root)) {
-+	path_walk_parent_start(pit, start, NULL, false);
-+
-+	return 0;
-+}
-+
-+__bpf_kfunc struct path *bpf_iter_path_next(struct bpf_iter_path *it)
-+{
-+	struct parent_iterator *pit = (void *)it;
-+	struct path p;
-+
-+	switch (path_walk_parent(pit, &p)) {
-+	case PATH_WALK_PARENT_UPDATED:
-+		return &pit->path;
-+	case PATH_WALK_PARENT_ALREADY_ROOT:
- 		/*
- 		 * Return NULL, but keep valid kit->path. _destroy() will
- 		 * always path_put(&kit->path).
- 		 */
- 		return NULL;
-+	default:
-+		WARN_ONCE(
-+			1,
-+			"did not expect any other return from path_walk_parent");
- 	}
- 
--	return &kit->path;
-+	return &pit->path;
- }
- 
- __bpf_kfunc void bpf_iter_path_destroy(struct bpf_iter_path *it)
- {
--	struct bpf_iter_path_kern *kit = (void *)it;
-+	struct parent_iterator *pit = (void *)it;
- 
--	path_put(&kit->path);
-+	path_walk_parent_end(pit);
- }
- 
- __bpf_kfunc_end_defs();
+
+Beste Grüße,
+Peter Schneider
+
 -- 
-2.49.0
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
+
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
