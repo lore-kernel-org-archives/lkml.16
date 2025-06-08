@@ -1,234 +1,485 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8002224FA
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 20:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C83224FA;
+	Sun,  8 Jun 2025 20:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749413765; cv=none; b=dZqCkdWKD0ME1NvKid7PmnCbykOSkDvklubBoI+HP0YU9yambH8tETQMlha9yJn0n+vfVMJliWpNDpRj50QOX0dkTTgYW4zKAUkyDi/ctWP6yl0aKAr7RpUkBu/Ob1sCLFi/Dus/zt4LN/s72/fXTrbSTRYoCyJjHjLGOpo3j/8=
+	t=1749413772; cv=none; b=KBgeRNZUQ8k8Jczn3shg/OC7oUycVqjsme1mvYAlDAOYI0pD3QFtPXr16r60A/tAE7M3hOi8pKFSxJ4FaAR4V+IscWmXgsOnDn/g6gie1yJCyipHWz12+9n9x/QMKz+vCg4Cu+95vfVajZdQQ4vOz6M89JFBEHtgOInuTPuOWWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749413765; c=relaxed/simple;
-	bh=Dz417L2k9jG2apG2xek5qmISU8WnR+rMvYYwzbXcThU=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=kVNefRBJVN+udiUsm2GQ4PY8ymzNi/7WviRL/PvpqxrFy959TCPy3fb98ErbE372unO7A0tgtk1r30ZYbtFNpttqH81CaGcC+lbU4uNB4MO1k/h71PlcXhI25tlYvRnxXiLXLQxjqAUA68spMoic5p5/EQ0qa2zZCrPkkUjdBjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddc6d66787so53448675ab.3
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 13:16:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749413763; x=1750018563;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sfQeZN112qJNVFTmN3Leo3JApbmju5bPvJzr8JGwFuk=;
-        b=GRDU4XbfftOezaclsujXiDk011nMrvY21dAn+bKJY05879Y07yPzqkj6jDsDfDgyRt
-         gC8+0P5VVY8MZSSjgCLouLau69+1+lwEZJrMGmgH6+ziAVPX8CnNOR0JnUwSyLY9FjV2
-         2FUZP8DDwMP94u/GenndoBi/iPKWuUn8KwD4iZUBuAQOSFRBaKRuanH/mf8zXKKiaIbi
-         PY3HJ3tvH24dg3m28HeqST6uWPpTlpyPmh1DOPf5sYk2POvVCMOIkj80prLZ3QnOSbtt
-         nBnn175ez8dmB8xHVLfI1fnJGrl+KNt3kIvhu/ZR/RLeXM6ONGd2cKxx4clLR4Dyw7JF
-         C9cg==
-X-Forwarded-Encrypted: i=1; AJvYcCWT1C7LRR7ONdHxutKHAmnRUuvYuOIe2TTXTnTlUDz/uvjAr7mS/DlHw3pd/wSNQtB0jH0I6TYKGq0bDAk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBwWzmoL9VXe+WmKor8NupNPvdoqZGRCl0ADMukRMPsrK0Dhzj
-	65M8eV2afwZ34SmTQ4DFHNZHYPyjzD7iYlRorwYavtZWWU5QBYF5K/0at4VZEdIdswuFSKh35kv
-	JRanV0gVYJuo5NOOYWFiIsikH2xNpk1NCPtISQ9k+ScoUDl3M9JuadnBayQ8=
-X-Google-Smtp-Source: AGHT+IH37MWdj3ftTxsMV69qiIZDjW66dJ9UUbZivQ8vUWjmuw9YV7scjt30ruJEjaoVjbqJbr6tQxblWD87YlcwNZ7wNl80uGP5
+	s=arc-20240116; t=1749413772; c=relaxed/simple;
+	bh=Zx99mTGDyI9wNhPFH1HycDpWouTtdJwY2KghgkzAwMA=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:From:To:Cc:
+	 References:In-Reply-To; b=ZOv6uICsfy47vAeOWL7Fb8Zq/kSrGEi+sGSXzOs4+g6UC88euI2q3XuhnJky49pIWxX6r8rLKvBRzFfrxjLMPKJSt3h+Xq7FD4ynpKw+hsxnEF8e5G0q1eiJEdklYXWtMZxEoQrlyjki1zg+TIG3h7TxqTrwWmv542XtFSl/xoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZxWihf5p; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZxWihf5p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2808BC4CEF3;
+	Sun,  8 Jun 2025 20:16:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749413771;
+	bh=Zx99mTGDyI9wNhPFH1HycDpWouTtdJwY2KghgkzAwMA=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=ZxWihf5pGiSbnpoh+bo0KA+yM8CP3/WMVk4Cusrjv8UfHdZuhMUZa7G+VMbfBq18C
+	 rRRT/8k2t+70yuuh7BjVQzbbxydxBDMRexHbF3Ngl2+SsDBTyWXA/DgZbWaHBZdII4
+	 DkboUwpLuzKdNVv3KXe7dmeHcPRsrKmr03TdDN8LbLJCWweMcOCCVgbxPIvgSouu5c
+	 kfmURVwMwGhocEopvnS2za7Oe8eEPWtA/KTjgOVIKDUtTStopN8evKlWl1eLXGcKtb
+	 DfZaO5JPnsreJy/d7pWa/QKNpoMlrwm+3xiTE8MVa8fGEIrDP5bDAj656IMsUcEhix
+	 KV+Pq4nOepBlA==
+Content-Type: multipart/mixed; boundary="------------mMPJXQTdp5jjwHYKdLNs1Lq0"
+Message-ID: <c76fe3f8-8884-4769-af69-a9a527d2a202@kernel.org>
+Date: Sun, 8 Jun 2025 22:16:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a26:b0:3dc:875e:ed7e with SMTP id
- e9e14a558f8ab-3ddce4524b2mr124232545ab.12.1749413762922; Sun, 08 Jun 2025
- 13:16:02 -0700 (PDT)
-Date: Sun, 08 Jun 2025 13:16:02 -0700
-In-Reply-To: <01c4295e-1fe8-48c9-8bee-c43c8023dd2b@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6845ef82.a70a0220.27c366.004f.GAE@google.com>
-Subject: Re: [syzbot] [bluetooth?] KASAN: vmalloc-out-of-bounds Read in hci_devcd_dump
-From: syzbot <syzbot+ac3c79181f6aecc5120c@syzkaller.appspotmail.com>
-To: ipravdin.official@gmail.com, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/5] power: supply: core: battery-info: fully switch to
+ fwnode
+From: Hans de Goede <hansg@kernel.org>
+To: Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Sebastian Reichel <sre@kernel.org>, Mark Brown <broonie@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>,
+ Matti Vaittinen <mazziesaccount@gmail.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
+ <pali@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250430-psy-core-convert-to-fwnode-v2-0-f9643b958677@collabora.com>
+ <20250430-psy-core-convert-to-fwnode-v2-3-f9643b958677@collabora.com>
+ <68792092-4689-4e3e-8dbb-9157889f1a3d@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <68792092-4689-4e3e-8dbb-9157889f1a3d@kernel.org>
 
-Hello,
+This is a multi-part message in MIME format.
+--------------mMPJXQTdp5jjwHYKdLNs1Lq0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-KASAN: slab-use-after-free Read in force_devcd_write
+Hi,
 
-==================================================================
-BUG: KASAN: slab-use-after-free in force_devcd_write+0x312/0x340 drivers/bluetooth/hci_vhci.c:327
-Read of size 8 at addr ffff88807b5f6000 by task syz.0.616/7999
+On 8-Jun-25 9:57 PM, Hans de Goede wrote:
+> Hi Sebastian,
+> On 30-Apr-25 12:54 AM, Sebastian Reichel wrote:
+>> Also use fwnode based parsing for "ocv-capacity-celsius" and
+>> "resistance-temp-table", so that any DT specific bits are
+>> removed from the power-supply core.
+>>
+>> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> 
+> I have been testing this converting the ug3105 driver to
+> use power_supply_batinfo_ocv2cap(), replacing the hardcoded
+> ocv -> capacity table in that driver.
+> 
+> While testing I hit a bug and while looking closer at this
+> patch it needs more work on top of fixing that bug.
+> 
+> See comments inline, also I've attached 3 fixup patches
+> which can be squashed into this patch to address the remarks.
+> 
+>> ---
+>>  drivers/power/supply/power_supply_core.c | 109 ++++++++++++++++++-------------
+>>  1 file changed, 63 insertions(+), 46 deletions(-)
+>>
+>> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
+>> index 89947f1fe610d8a75756e1e4e5339b06349f9ab8..a8d1fe66e2486a833ccaa3ed77b861c6e52c5760 100644
+>> --- a/drivers/power/supply/power_supply_core.c
+>> +++ b/drivers/power/supply/power_supply_core.c
+>> @@ -585,32 +585,19 @@ int power_supply_get_battery_info(struct power_supply *psy,
+>>  {
+>>  	struct power_supply_resistance_temp_table *resist_table;
+>>  	struct power_supply_battery_info *info;
+>> -	struct device_node *battery_np = NULL;
+>> -	struct fwnode_reference_args args;
+>> -	struct fwnode_handle *fwnode = NULL;
+>> +	struct fwnode_handle *srcnode, *fwnode;
+>>  	const char *value;
+>> -	int err, len, index;
+>> -	const __be32 *list;
+>> +	int err, len, index, proplen;
+>> +	u32 *propdata;
+> 
+> propname which is also a local-variable for a temporary
+> malloc-ed buffer uses __free(kfree) instead of explicit
+> kfree() calls IMHO it would be good to do that here too.
+> 
+> This requires declaring it inside the
+> "for (index = 0; index < len; index++)" loop like how
+> this is done for propname, so that it gets freed on
+> every loop iteration.
+> 
+> 
+>>  	u32 min_max[2];
+>>  
+>> -	if (psy->dev.of_node) {
+>> -		battery_np = of_parse_phandle(psy->dev.of_node, "monitored-battery", 0);
+>> -		if (!battery_np)
+>> -			return -ENODEV;
+>> +	srcnode = dev_fwnode(&psy->dev);
+>> +	if (!srcnode && psy->dev.parent)
+>> +		srcnode = dev_fwnode(psy->dev.parent);
+>>  
+>> -		fwnode = fwnode_handle_get(of_fwnode_handle(battery_np));
+>> -	} else if (psy->dev.parent) {
+>> -		err = fwnode_property_get_reference_args(
+>> -					dev_fwnode(psy->dev.parent),
+>> -					"monitored-battery", NULL, 0, 0, &args);
+>> -		if (err)
+>> -			return err;
+>> -
+>> -		fwnode = args.fwnode;
+>> -	}
+>> -
+>> -	if (!fwnode)
+>> -		return -ENOENT;
+>> +	fwnode = fwnode_find_reference(srcnode, "monitored-battery", 0);
+>> +	if (IS_ERR(fwnode))
+>> +		return PTR_ERR(fwnode);
+>>  
+>>  	err = fwnode_property_read_string(fwnode, "compatible", &value);
+>>  	if (err)
+>> @@ -740,15 +727,7 @@ int power_supply_get_battery_info(struct power_supply *psy,
+>>  		info->temp_max = min_max[1];
+>>  	}
+>>  
+>> -	/*
+>> -	 * The below code uses raw of-data parsing to parse
+>> -	 * /schemas/types.yaml#/definitions/uint32-matrix
+>> -	 * data, so for now this is only support with of.
+>> -	 */
+>> -	if (!battery_np)
+>> -		goto out_ret_pointer;
+>> -
+>> -	len = of_property_count_u32_elems(battery_np, "ocv-capacity-celsius");
+>> +	len = fwnode_property_count_u32(fwnode, "ocv-capacity-celsius");
+>>  	if (len < 0 && len != -EINVAL) {
+>>  		err = len;
+>>  		goto out_put_node;
+>> @@ -757,13 +736,13 @@ int power_supply_get_battery_info(struct power_supply *psy,
+>>  		err = -EINVAL;
+>>  		goto out_put_node;
+>>  	} else if (len > 0) {
+>> -		of_property_read_u32_array(battery_np, "ocv-capacity-celsius",
+>> +		fwnode_property_read_u32_array(fwnode, "ocv-capacity-celsius",
+>>  					   info->ocv_temp, len);
+>>  	}
+>>  
+>>  	for (index = 0; index < len; index++) {
+>>  		struct power_supply_battery_ocv_table *table;
+>> -		int i, tab_len, size;
+>> +		int i, tab_len;
+>>  
+>>  		char *propname __free(kfree) = kasprintf(GFP_KERNEL, "ocv-capacity-table-%d",
+>>  							 index);
+>> @@ -772,60 +751,98 @@ int power_supply_get_battery_info(struct power_supply *psy,
+>>  			err = -ENOMEM;
+>>  			goto out_put_node;
+>>  		}
+>> -		list = of_get_property(battery_np, propname, &size);
+>> -		if (!list || !size) {
+>> +		proplen = fwnode_property_count_u32(fwnode, propname);
+>> +		if (proplen < 0 || proplen % 2 != 0) {
+>>  			dev_err(&psy->dev, "failed to get %s\n", propname);
+>>  			power_supply_put_battery_info(psy, info);
+>>  			err = -EINVAL;
+>>  			goto out_put_node;
+>>  		}
+>> +		propdata = kcalloc(proplen, sizeof(*propdata), GFP_KERNEL);
+> 
+> As mentioned above I suggest to use the following here instead:
+> 
+> 		u32 *propdata __free(kfree) = kcalloc(proplen, sizeof(*propdata), GFP_KERNEL);
+> 		
+> 
+>> +		if (!propdata) {
+>> +			kfree(propname);
+> 
+> propname must NOT be free-ed here since it is marked __free(kfree),
+> freeing it here will cause a double-free bug.
+> 
+>> +			power_supply_put_battery_info(psy, info);
+>> +			err = -EINVAL;
+>> +			goto out_put_node;
+>> +		}
+>> +		err = fwnode_property_read_u32_array(fwnode, propname, propdata, proplen);
+>> +		if (err < 0) {
+>> +			dev_err(&psy->dev, "failed to get %s\n", propname);
+>> +			kfree(propname);
+> 
+> same as above.
+> 
+>> +			kfree(propdata);
+> 
+> with the suggested "u32 *propdata __free(kfree)" this can and must be dropped.
+> 
+>> +			power_supply_put_battery_info(psy, info);
+>> +			goto out_put_node;
+>> +		}
+>>  
+>> -		tab_len = size / (2 * sizeof(__be32));
+>> +		tab_len = proplen / 2;
+>>  		info->ocv_table_size[index] = tab_len;
+>>  
+>>  		info->ocv_table[index] = table =
+>>  			devm_kcalloc(&psy->dev, tab_len, sizeof(*table), GFP_KERNEL);
+>>  		if (!info->ocv_table[index]) {
+>> +			kfree(propdata);
+> 
+> with the suggested "u32 *propdata __free(kfree)" this can and must be dropped.
+> 
+>>  			power_supply_put_battery_info(psy, info);
+>>  			err = -ENOMEM;
+>>  			goto out_put_node;
+>>  		}
+>>  
+>>  		for (i = 0; i < tab_len; i++) {
+>> -			table[i].ocv = be32_to_cpu(*list);
+>> -			list++;
+>> -			table[i].capacity = be32_to_cpu(*list);
+>> -			list++;
+>> +			table[i].ocv = propdata[i*2];
+>> +			table[i].capacity = propdata[i*2+1];
+>>  		}
+>> +
+>> +		kfree(propdata);
+> 
+> with the suggested "u32 *propdata __free(kfree)" this can and must be dropped.
+> 
+>>  	}
+>>  
+>> -	list = of_get_property(battery_np, "resistance-temp-table", &len);
+>> -	if (!list || !len)
+>> +	proplen = fwnode_property_count_u32(fwnode, "resistance-temp-table");
+> 
+> This will return -EINVAL when the property does not exist, making
+> power_supply_get_battery_info() always fail when there is no
+> "resistance-temp-table" in the battery fwnode. See the attached fixup
+> patch for a suggested fix.
+> 
+>> +	if (proplen < 0 || proplen % 2 != 0) {
+>> +		power_supply_put_battery_info(psy, info);
+>> +		err = -ENOMEM;
+> 
+> -ENOMEM is the wrong error code here.
+> 
+>>  		goto out_ret_pointer;
+> 
+> This should be "goto out_put_node" since this is an error path.
+> 
+>> +	} else if (proplen == 0) {
+>> +		goto out_ret_pointer;
+>> +	}
+>>  
+>> -	info->resist_table_size = len / (2 * sizeof(__be32));
+>> +	propdata = kcalloc(proplen, sizeof(*propdata), GFP_KERNEL);
+> 
+> As mentioned above I suggest to use the following here instead:
+> 
+> 		u32 *propdata __free(kfree) = kcalloc(proplen, sizeof(*propdata), GFP_KERNEL);
 
-CPU: 0 UID: 0 PID: 7999 Comm: syz.0.616 Not tainted 6.15.0-syzkaller-13804-g939f15e640f1-dirty #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xcd/0x680 mm/kasan/report.c:521
- kasan_report+0xe0/0x110 mm/kasan/report.c:634
- force_devcd_write+0x312/0x340 drivers/bluetooth/hci_vhci.c:327
- full_proxy_write+0x13f/0x200 fs/debugfs/file.c:398
- vfs_write+0x29d/0x1150 fs/read_write.c:684
- ksys_write+0x12a/0x250 fs/read_write.c:738
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x490 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f3210d8e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f3211b9b038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007f3210fb5fa0 RCX: 00007f3210d8e969
-RDX: 000000000000000e RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 00007f3210e10ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f3210fb5fa0 R15: 00007fff9eb91938
- </TASK>
+Ok, so this does not work, because we jump over this causing
+propdata to not get initialized, but the __free(kfree) still
+triggers.
 
-Allocated by task 6438:
- kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
- kasan_save_track+0x14/0x30 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
- __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
- kmalloc_noprof include/linux/slab.h:905 [inline]
- kzalloc_noprof include/linux/slab.h:1039 [inline]
- vhci_open+0x4c/0x430 drivers/bluetooth/hci_vhci.c:635
- misc_open+0x35d/0x420 drivers/char/misc.c:161
- chrdev_open+0x231/0x6a0 fs/char_dev.c:414
- do_dentry_open+0x744/0x1c10 fs/open.c:964
- vfs_open+0x82/0x3f0 fs/open.c:1094
- do_open fs/namei.c:3887 [inline]
- path_openat+0x1de4/0x2cb0 fs/namei.c:4046
- do_filp_open+0x20b/0x470 fs/namei.c:4073
- do_sys_openat2+0x11b/0x1d0 fs/open.c:1437
- do_sys_open fs/open.c:1452 [inline]
- __do_sys_openat fs/open.c:1468 [inline]
- __se_sys_openat fs/open.c:1463 [inline]
- __x64_sys_openat+0x174/0x210 fs/open.c:1463
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x490 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Lesson learned: do not use modern C style mixing of declarations
+and statements together with __free().
 
-Freed by task 6438:
- kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
- kasan_save_track+0x14/0x30 mm/kasan/common.c:68
- kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:576
- poison_slab_object mm/kasan/common.c:247 [inline]
- __kasan_slab_free+0x51/0x70 mm/kasan/common.c:264
- kasan_slab_free include/linux/kasan.h:233 [inline]
- slab_free_hook mm/slub.c:2381 [inline]
- slab_free mm/slub.c:4643 [inline]
- kfree+0x2b4/0x4d0 mm/slub.c:4842
- vhci_release+0xbb/0xf0 drivers/bluetooth/hci_vhci.c:671
- __fput+0x402/0xb70 fs/file_table.c:465
- task_work_run+0x150/0x240 kernel/task_work.c:227
- exit_task_work include/linux/task_work.h:40 [inline]
- do_exit+0x864/0x2bd0 kernel/exit.c:955
- do_group_exit+0xd3/0x2a0 kernel/exit.c:1104
- get_signal+0x2673/0x26d0 kernel/signal.c:3034
- arch_do_signal_or_restart+0x8f/0x790 arch/x86/kernel/signal.c:337
- exit_to_user_mode_loop+0x84/0x110 kernel/entry/common.c:111
- exit_to_user_mode_prepare include/linux/entry-common.h:330 [inline]
- syscall_exit_to_user_mode_work include/linux/entry-common.h:414 [inline]
- syscall_exit_to_user_mode include/linux/entry-common.h:449 [inline]
- do_syscall_64+0x3f6/0x490 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Attached are updated fixup patches which do not make things crash.
 
-The buggy address belongs to the object at ffff88807b5f6000
- which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 0 bytes inside of
- freed 1024-byte region [ffff88807b5f6000, ffff88807b5f6400)
+Regards,
 
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x7b5f0
-head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 00fff00000000040 ffff88801b441dc0 dead000000000100 dead000000000122
-raw: 0000000000000000 0000000000100010 00000000f5000000 0000000000000000
-head: 00fff00000000040 ffff88801b441dc0 dead000000000100 dead000000000122
-head: 0000000000000000 0000000000100010 00000000f5000000 0000000000000000
-head: 00fff00000000003 ffffea0001ed7c01 00000000ffffffff 00000000ffffffff
-head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5498, tgid 5498 (S41dhcpcd), ts 56157746693, free_ts 56113477136
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x1c0/0x230 mm/page_alloc.c:1704
- prep_new_page mm/page_alloc.c:1712 [inline]
- get_page_from_freelist+0x1321/0x3890 mm/page_alloc.c:3669
- __alloc_frozen_pages_noprof+0x261/0x23f0 mm/page_alloc.c:4959
- alloc_pages_mpol+0x1fb/0x550 mm/mempolicy.c:2419
- alloc_slab_page mm/slub.c:2451 [inline]
- allocate_slab mm/slub.c:2619 [inline]
- new_slab+0x23b/0x330 mm/slub.c:2673
- ___slab_alloc+0xd9c/0x1940 mm/slub.c:3859
- __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3949
- __slab_alloc_node mm/slub.c:4024 [inline]
- slab_alloc_node mm/slub.c:4185 [inline]
- __do_kmalloc_node mm/slub.c:4327 [inline]
- __kmalloc_noprof+0x2f2/0x510 mm/slub.c:4340
- kmalloc_noprof include/linux/slab.h:909 [inline]
- load_elf_phdrs+0x102/0x210 fs/binfmt_elf.c:525
- load_elf_binary+0x1fa/0x4f00 fs/binfmt_elf.c:854
- search_binary_handler fs/exec.c:1665 [inline]
- exec_binprm fs/exec.c:1697 [inline]
- bprm_execve fs/exec.c:1749 [inline]
- bprm_execve+0x8c3/0x1650 fs/exec.c:1725
- do_execveat_common.isra.0+0x4a5/0x610 fs/exec.c:1855
- do_execve fs/exec.c:1929 [inline]
- __do_sys_execve fs/exec.c:2005 [inline]
- __se_sys_execve fs/exec.c:2000 [inline]
- __x64_sys_execve+0x8e/0xb0 fs/exec.c:2000
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x490 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-page last free pid 5184 tgid 5184 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1248 [inline]
- __free_frozen_pages+0x7fe/0x1180 mm/page_alloc.c:2706
- discard_slab mm/slub.c:2717 [inline]
- __put_partials+0x16d/0x1c0 mm/slub.c:3186
- qlink_free mm/kasan/quarantine.c:163 [inline]
- qlist_free_all+0x4d/0x120 mm/kasan/quarantine.c:179
- kasan_quarantine_reduce+0x195/0x1e0 mm/kasan/quarantine.c:286
- __kasan_slab_alloc+0x69/0x90 mm/kasan/common.c:329
- kasan_slab_alloc include/linux/kasan.h:250 [inline]
- slab_post_alloc_hook mm/slub.c:4148 [inline]
- slab_alloc_node mm/slub.c:4197 [inline]
- kmem_cache_alloc_lru_noprof+0x1d0/0x3b0 mm/slub.c:4216
- __d_alloc+0x31/0xaa0 fs/dcache.c:1690
- d_alloc+0x4a/0x1e0 fs/dcache.c:1769
- d_alloc_parallel+0xe3/0x12e0 fs/dcache.c:2533
- __lookup_slow+0x193/0x460 fs/namei.c:1802
- lookup_slow fs/namei.c:1834 [inline]
- walk_component+0x353/0x5b0 fs/namei.c:2138
- lookup_last fs/namei.c:2639 [inline]
- path_lookupat+0x142/0x6d0 fs/namei.c:2663
- filename_lookup+0x224/0x5f0 fs/namei.c:2692
- vfs_statx+0x101/0x3e0 fs/stat.c:353
- vfs_fstatat+0x7b/0xf0 fs/stat.c:375
- __do_sys_newfstatat+0x97/0x120 fs/stat.c:542
-
-Memory state around the buggy address:
- ffff88807b5f5f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff88807b5f5f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff88807b5f6000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                   ^
- ffff88807b5f6080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88807b5f6100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+Hans
 
 
-Tested on:
 
-commit:         939f15e6 Merge tag 'turbostat-2025.06.08' of git://git..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15698a82580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6678e7c8a50af095
-dashboard link: https://syzkaller.appspot.com/bug?extid=ac3c79181f6aecc5120c
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=15c18a82580000
 
+> 
+>> +	if (!propdata) {
+>> +		power_supply_put_battery_info(psy, info);
+>> +		err = -ENOMEM;
+>> +		goto out_ret_pointer;
+> 
+> This should be "goto out_put_node" since this is an error path.
+> 
+>> +	}
+>> +
+>> +	err = fwnode_property_read_u32_array(fwnode, "resistance-temp-table",
+>> +					     propdata, proplen);
+>> +	if (err < 0) {
+>> +		kfree(propdata);
+> 
+> with the suggested "u32 *propdata __free(kfree)" this can and must be dropped.
+> 
+>> +		power_supply_put_battery_info(psy, info);
+>> +		goto out_put_node;
+>> +	}
+>> +
+>> +	info->resist_table_size = proplen / 2;
+>>  	info->resist_table = resist_table = devm_kcalloc(&psy->dev,
+>>  							 info->resist_table_size,
+>>  							 sizeof(*resist_table),
+>>  							 GFP_KERNEL);
+>>  	if (!info->resist_table) {
+>> +		kfree(propdata);
+> 
+> with the suggested "u32 *propdata __free(kfree)" this can and must be dropped.
+> 
+>>  		power_supply_put_battery_info(psy, info);
+>>  		err = -ENOMEM;
+>>  		goto out_put_node;
+>>  	}
+>>  
+>>  	for (index = 0; index < info->resist_table_size; index++) {
+>> -		resist_table[index].temp = be32_to_cpu(*list++);
+>> -		resist_table[index].resistance = be32_to_cpu(*list++);
+>> +		resist_table[index].temp = propdata[index*2];
+>> +		resist_table[index].resistance = propdata[index*2+1];
+>>  	}
+>>  
+>> +	kfree(propdata);
+> 
+> with the suggested "u32 *propdata __free(kfree)" this can and must be dropped.
+> 
+>> +
+>>  out_ret_pointer:
+>>  	/* Finally return the whole thing */
+>>  	*info_out = info;
+>>  
+>>  out_put_node:
+>>  	fwnode_handle_put(fwnode);
+>> -	of_node_put(battery_np);
+>>  	return err;
+>>  }
+>>  EXPORT_SYMBOL_GPL(power_supply_get_battery_info);
+>>
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+
+--------------mMPJXQTdp5jjwHYKdLNs1Lq0
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0004-fixup-power-supply-core-battery-info-fully-switch-to.patch"
+Content-Disposition: attachment;
+ filename*0="0004-fixup-power-supply-core-battery-info-fully-switch-to.pa";
+ filename*1="tch"
+Content-Transfer-Encoding: base64
+
+RnJvbSA2OGQyNDE0ZDIwMTA4MzkwNGRhZDgzYWY0ZWJiMmMzNWZjODUwYjc5IE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBIYW5zIGRlIEdvZWRlIDxoYW5zZ0BrZXJuZWwub3Jn
+PgpEYXRlOiBTdW4sIDggSnVuIDIwMjUgMjE6MTg6MTEgKzAyMDAKU3ViamVjdDogW1BBVENI
+IDA0LzEwXSBmaXh1cCEgcG93ZXI6IHN1cHBseTogY29yZTogYmF0dGVyeS1pbmZvOiBmdWxs
+eSBzd2l0Y2gKIHRvIGZ3bm9kZQoKQWZ0ZXIgKCJwb3dlcjogc3VwcGx5OiBjb3JlOiBiYXR0
+ZXJ5LWluZm86IGZ1bGx5IHN3aXRjaCB0byBmd25vZGUiKQpwb3dlcl9zdXBwbHlfZ2V0X2Jh
+dHRlcnlfaW5mbygpIHdpbGwgYWx3YXlzIGZhaWwgZm9yIGJhdHRlcnkgZndub2Rlcwp3aGlj
+aCBkbyBub3QgZGVmaW5lIGEgInJlc2lzdGFuY2UtdGVtcC10YWJsZSIuCgpGaXggdGhpcyBi
+eSBjbGVhbmx5IGV4aXRpbmcgb24gYm90aCAwIGFuZCBFSU5WQUwgcmV0dXJucyBmcm9tCmZ3
+bm9kZV9wcm9wZXJ0eV9jb3VudF91MzIoZndub2RlLCAicmVzaXN0YW5jZS10ZW1wLXRhYmxl
+Iikgd2hpY2gKaW5kaWNhdGVzIHRoYXQgdGhlIHByb3BlcnR5IGlzIGVtcHR5IG9yIG5vdCB0
+aGVyZS4KCldoaWxlIGF0IGl0IGFsc28gZml4OgoKMS4gVGhlIHdlaXJkIC1FTk9NRU0gcmV0
+dXJuIGZvciBvdGhlciBlcnJvcnMuIEZvciBvdGhlciBlcnJvcnMKcHJvcGFnYXRlIHRoZSBl
+eGlzdGluZyBlcnJvciBvciAtRUlOVkFMIGZvciBhbiBvZGQgcHJvcGxlbi4KMi4gV3Jvbmds
+eSB1c2luZyAiZ290byBvdXRfcmV0X3BvaW50ZXIiIG9uIGVycm9ycywgb3V0X3JldF9wb2lu
+dGVyCnNob3VsZCBvbmx5IGJlIHVzZWQgb24gc3VjY2VzcywgZXJyb3IgcGF0aHMgc2hvdWxk
+IHVzZQpvdXRfcHV0X25vZGU7CgpTaWduZWQtb2ZmLWJ5OiBIYW5zIGRlIEdvZWRlIDxoYW5z
+Z0BrZXJuZWwub3JnPgotLS0KIGRyaXZlcnMvcG93ZXIvc3VwcGx5L3Bvd2VyX3N1cHBseV9j
+b3JlLmMgfCAxMyArKysrKysrLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25z
+KCspLCA2IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvcG93ZXIvc3VwcGx5
+L3Bvd2VyX3N1cHBseV9jb3JlLmMgYi9kcml2ZXJzL3Bvd2VyL3N1cHBseS9wb3dlcl9zdXBw
+bHlfY29yZS5jCmluZGV4IGE4ZDFmZTY2ZTI0OC4uOWJiYzNiZTJlNDgzIDEwMDY0NAotLS0g
+YS9kcml2ZXJzL3Bvd2VyL3N1cHBseS9wb3dlcl9zdXBwbHlfY29yZS5jCisrKyBiL2RyaXZl
+cnMvcG93ZXIvc3VwcGx5L3Bvd2VyX3N1cHBseV9jb3JlLmMKQEAgLTc5NSwxOSArNzk1LDIw
+IEBAIGludCBwb3dlcl9zdXBwbHlfZ2V0X2JhdHRlcnlfaW5mbyhzdHJ1Y3QgcG93ZXJfc3Vw
+cGx5ICpwc3ksCiAJfQogCiAJcHJvcGxlbiA9IGZ3bm9kZV9wcm9wZXJ0eV9jb3VudF91MzIo
+Zndub2RlLCAicmVzaXN0YW5jZS10ZW1wLXRhYmxlIik7Ci0JaWYgKHByb3BsZW4gPCAwIHx8
+IHByb3BsZW4gJSAyICE9IDApIHsKKwlpZiAocHJvcGxlbiA9PSAwIHx8IHByb3BsZW4gPT0g
+LUVJTlZBTCkgeworCQllcnIgPSAwOworCQlnb3RvIG91dF9yZXRfcG9pbnRlcjsKKwl9IGVs
+c2UgaWYgKHByb3BsZW4gPCAwIHx8IHByb3BsZW4gJSAyICE9IDApIHsKIAkJcG93ZXJfc3Vw
+cGx5X3B1dF9iYXR0ZXJ5X2luZm8ocHN5LCBpbmZvKTsKLQkJZXJyID0gLUVOT01FTTsKLQkJ
+Z290byBvdXRfcmV0X3BvaW50ZXI7Ci0JfSBlbHNlIGlmIChwcm9wbGVuID09IDApIHsKLQkJ
+Z290byBvdXRfcmV0X3BvaW50ZXI7CisJCWVyciA9IChwcm9wbGVuIDwgMCkgPyBwcm9wbGVu
+IDogLUVJTlZBTDsKKwkJZ290byBvdXRfcHV0X25vZGU7CiAJfQogCiAJcHJvcGRhdGEgPSBr
+Y2FsbG9jKHByb3BsZW4sIHNpemVvZigqcHJvcGRhdGEpLCBHRlBfS0VSTkVMKTsKIAlpZiAo
+IXByb3BkYXRhKSB7CiAJCXBvd2VyX3N1cHBseV9wdXRfYmF0dGVyeV9pbmZvKHBzeSwgaW5m
+byk7CiAJCWVyciA9IC1FTk9NRU07Ci0JCWdvdG8gb3V0X3JldF9wb2ludGVyOworCQlnb3Rv
+IG91dF9wdXRfbm9kZTsKIAl9CiAKIAllcnIgPSBmd25vZGVfcHJvcGVydHlfcmVhZF91MzJf
+YXJyYXkoZndub2RlLCAicmVzaXN0YW5jZS10ZW1wLXRhYmxlIiwKLS0gCjIuNDkuMAoK
+--------------mMPJXQTdp5jjwHYKdLNs1Lq0
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0005-fixup-power-supply-core-battery-info-fully-switch-to.patch"
+Content-Disposition: attachment;
+ filename*0="0005-fixup-power-supply-core-battery-info-fully-switch-to.pa";
+ filename*1="tch"
+Content-Transfer-Encoding: base64
+
+RnJvbSAxZTJkNTRiMWM5NDYwNzU1OTBkMDExZGExN2Q5Njc5NmVkZTU4ODk0IE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBIYW5zIGRlIEdvZWRlIDxoYW5zZ0BrZXJuZWwub3Jn
+PgpEYXRlOiBTdW4sIDggSnVuIDIwMjUgMjE6Mzc6NTkgKzAyMDAKU3ViamVjdDogW1BBVENI
+IDA1LzEwXSBmaXh1cCEgcG93ZXI6IHN1cHBseTogY29yZTogYmF0dGVyeS1pbmZvOiBmdWxs
+eSBzd2l0Y2gKIHRvIGZ3bm9kZQoKcHJvcG5hbWUgbXVzdCBOT1QgYmUgbWFudWFsbHkgZnJl
+ZS1lZCBoZXJlIHNpbmNlIGl0IGlzIG1hcmtlZApfX2ZyZWUoa2ZyZWUpLCBmcmVlaW5nIGl0
+IHdpbGwgY2F1c2UgYSBkb3VibGUtZnJlZSBidWcuCgpBbHNvIG1vdmUgcHJvcGRhdGEgdG8g
+YmUgYSBfX2ZyZWUoa2ZyZWUpIHZhbHVlIGZvciBjb25zaXN0ZW5jeQphbmQgYWxzbyBmb3Ig
+Y2xlYW5lciBjb2RlLgoKU2lnbmVkLW9mZi1ieTogSGFucyBkZSBHb2VkZSA8aGFuc2dAa2Vy
+bmVsLm9yZz4KLS0tCiBkcml2ZXJzL3Bvd2VyL3N1cHBseS9wb3dlcl9zdXBwbHlfY29yZS5j
+IHwgMTUgKysrLS0tLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCsp
+LCAxMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL3Bvd2VyL3N1cHBseS9w
+b3dlcl9zdXBwbHlfY29yZS5jIGIvZHJpdmVycy9wb3dlci9zdXBwbHkvcG93ZXJfc3VwcGx5
+X2NvcmUuYwppbmRleCA5YmJjM2JlMmU0ODMuLmYyYzc5ZjE1ODM4ZCAxMDA2NDQKLS0tIGEv
+ZHJpdmVycy9wb3dlci9zdXBwbHkvcG93ZXJfc3VwcGx5X2NvcmUuYworKysgYi9kcml2ZXJz
+L3Bvd2VyL3N1cHBseS9wb3dlcl9zdXBwbHlfY29yZS5jCkBAIC01ODgsNyArNTg4LDcgQEAg
+aW50IHBvd2VyX3N1cHBseV9nZXRfYmF0dGVyeV9pbmZvKHN0cnVjdCBwb3dlcl9zdXBwbHkg
+KnBzeSwKIAlzdHJ1Y3QgZndub2RlX2hhbmRsZSAqc3Jjbm9kZSwgKmZ3bm9kZTsKIAljb25z
+dCBjaGFyICp2YWx1ZTsKIAlpbnQgZXJyLCBsZW4sIGluZGV4LCBwcm9wbGVuOwotCXUzMiAq
+cHJvcGRhdGE7CisJdTMyICpwcm9wZGF0YSBfX2ZyZWUoa2ZyZWUpID0gTlVMTDsKIAl1MzIg
+bWluX21heFsyXTsKIAogCXNyY25vZGUgPSBkZXZfZndub2RlKCZwc3ktPmRldik7CkBAIC03
+NTgsOSArNzU4LDkgQEAgaW50IHBvd2VyX3N1cHBseV9nZXRfYmF0dGVyeV9pbmZvKHN0cnVj
+dCBwb3dlcl9zdXBwbHkgKnBzeSwKIAkJCWVyciA9IC1FSU5WQUw7CiAJCQlnb3RvIG91dF9w
+dXRfbm9kZTsKIAkJfQotCQlwcm9wZGF0YSA9IGtjYWxsb2MocHJvcGxlbiwgc2l6ZW9mKCpw
+cm9wZGF0YSksIEdGUF9LRVJORUwpOworCisJCXUzMiAqcHJvcGRhdGEgX19mcmVlKGtmcmVl
+KSA9IGtjYWxsb2MocHJvcGxlbiwgc2l6ZW9mKCpwcm9wZGF0YSksIEdGUF9LRVJORUwpOwog
+CQlpZiAoIXByb3BkYXRhKSB7Ci0JCQlrZnJlZShwcm9wbmFtZSk7CiAJCQlwb3dlcl9zdXBw
+bHlfcHV0X2JhdHRlcnlfaW5mbyhwc3ksIGluZm8pOwogCQkJZXJyID0gLUVJTlZBTDsKIAkJ
+CWdvdG8gb3V0X3B1dF9ub2RlOwpAQCAtNzY4LDggKzc2OCw2IEBAIGludCBwb3dlcl9zdXBw
+bHlfZ2V0X2JhdHRlcnlfaW5mbyhzdHJ1Y3QgcG93ZXJfc3VwcGx5ICpwc3ksCiAJCWVyciA9
+IGZ3bm9kZV9wcm9wZXJ0eV9yZWFkX3UzMl9hcnJheShmd25vZGUsIHByb3BuYW1lLCBwcm9w
+ZGF0YSwgcHJvcGxlbik7CiAJCWlmIChlcnIgPCAwKSB7CiAJCQlkZXZfZXJyKCZwc3ktPmRl
+diwgImZhaWxlZCB0byBnZXQgJXNcbiIsIHByb3BuYW1lKTsKLQkJCWtmcmVlKHByb3BuYW1l
+KTsKLQkJCWtmcmVlKHByb3BkYXRhKTsKIAkJCXBvd2VyX3N1cHBseV9wdXRfYmF0dGVyeV9p
+bmZvKHBzeSwgaW5mbyk7CiAJCQlnb3RvIG91dF9wdXRfbm9kZTsKIAkJfQpAQCAtNzgwLDcg
+Kzc3OCw2IEBAIGludCBwb3dlcl9zdXBwbHlfZ2V0X2JhdHRlcnlfaW5mbyhzdHJ1Y3QgcG93
+ZXJfc3VwcGx5ICpwc3ksCiAJCWluZm8tPm9jdl90YWJsZVtpbmRleF0gPSB0YWJsZSA9CiAJ
+CQlkZXZtX2tjYWxsb2MoJnBzeS0+ZGV2LCB0YWJfbGVuLCBzaXplb2YoKnRhYmxlKSwgR0ZQ
+X0tFUk5FTCk7CiAJCWlmICghaW5mby0+b2N2X3RhYmxlW2luZGV4XSkgewotCQkJa2ZyZWUo
+cHJvcGRhdGEpOwogCQkJcG93ZXJfc3VwcGx5X3B1dF9iYXR0ZXJ5X2luZm8ocHN5LCBpbmZv
+KTsKIAkJCWVyciA9IC1FTk9NRU07CiAJCQlnb3RvIG91dF9wdXRfbm9kZTsKQEAgLTc5MCw4
+ICs3ODcsNiBAQCBpbnQgcG93ZXJfc3VwcGx5X2dldF9iYXR0ZXJ5X2luZm8oc3RydWN0IHBv
+d2VyX3N1cHBseSAqcHN5LAogCQkJdGFibGVbaV0ub2N2ID0gcHJvcGRhdGFbaSoyXTsKIAkJ
+CXRhYmxlW2ldLmNhcGFjaXR5ID0gcHJvcGRhdGFbaSoyKzFdOwogCQl9Ci0KLQkJa2ZyZWUo
+cHJvcGRhdGEpOwogCX0KIAogCXByb3BsZW4gPSBmd25vZGVfcHJvcGVydHlfY291bnRfdTMy
+KGZ3bm9kZSwgInJlc2lzdGFuY2UtdGVtcC10YWJsZSIpOwpAQCAtODE0LDcgKzgwOSw2IEBA
+IGludCBwb3dlcl9zdXBwbHlfZ2V0X2JhdHRlcnlfaW5mbyhzdHJ1Y3QgcG93ZXJfc3VwcGx5
+ICpwc3ksCiAJZXJyID0gZndub2RlX3Byb3BlcnR5X3JlYWRfdTMyX2FycmF5KGZ3bm9kZSwg
+InJlc2lzdGFuY2UtdGVtcC10YWJsZSIsCiAJCQkJCSAgICAgcHJvcGRhdGEsIHByb3BsZW4p
+OwogCWlmIChlcnIgPCAwKSB7Ci0JCWtmcmVlKHByb3BkYXRhKTsKIAkJcG93ZXJfc3VwcGx5
+X3B1dF9iYXR0ZXJ5X2luZm8ocHN5LCBpbmZvKTsKIAkJZ290byBvdXRfcHV0X25vZGU7CiAJ
+fQpAQCAtODI1LDcgKzgxOSw2IEBAIGludCBwb3dlcl9zdXBwbHlfZ2V0X2JhdHRlcnlfaW5m
+byhzdHJ1Y3QgcG93ZXJfc3VwcGx5ICpwc3ksCiAJCQkJCQkJIHNpemVvZigqcmVzaXN0X3Rh
+YmxlKSwKIAkJCQkJCQkgR0ZQX0tFUk5FTCk7CiAJaWYgKCFpbmZvLT5yZXNpc3RfdGFibGUp
+IHsKLQkJa2ZyZWUocHJvcGRhdGEpOwogCQlwb3dlcl9zdXBwbHlfcHV0X2JhdHRlcnlfaW5m
+byhwc3ksIGluZm8pOwogCQllcnIgPSAtRU5PTUVNOwogCQlnb3RvIG91dF9wdXRfbm9kZTsK
+QEAgLTgzNiw4ICs4MjksNiBAQCBpbnQgcG93ZXJfc3VwcGx5X2dldF9iYXR0ZXJ5X2luZm8o
+c3RydWN0IHBvd2VyX3N1cHBseSAqcHN5LAogCQlyZXNpc3RfdGFibGVbaW5kZXhdLnJlc2lz
+dGFuY2UgPSBwcm9wZGF0YVtpbmRleCoyKzFdOwogCX0KIAotCWtmcmVlKHByb3BkYXRhKTsK
+LQogb3V0X3JldF9wb2ludGVyOgogCS8qIEZpbmFsbHkgcmV0dXJuIHRoZSB3aG9sZSB0aGlu
+ZyAqLwogCSppbmZvX291dCA9IGluZm87Ci0tIAoyLjQ5LjAKCg==
+
+--------------mMPJXQTdp5jjwHYKdLNs1Lq0--
