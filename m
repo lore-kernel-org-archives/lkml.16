@@ -1,87 +1,133 @@
-Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5D5749C
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 09:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1021F872D
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 09:29:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749374481; cv=none; b=AmqC00KcFryu8G/bjLkh5najjB8w83j0kpPR56/yBwDMuB7HsAmwEPQBw8XlBcX5Pjq4VUVPu+7FrRUb7YevnaucKfWwUqVo2a5EHPeIJsxrBo/8P1AVV1jGcWYRwvms7c6ay9Rja3fqlfBcB2aRQJvoZy+4IQTORLbYnKdn+8I=
+	t=1749374967; cv=none; b=btLHsz1OytQoyhmhaOvzLodWQZF3oo8VZ0vXJzes5I92i2BLTyFAQweFX3D9sy2A/M6ISWdG1Va8s3uqEgjuCwRwku44cJoFqlUIe39+QsCawLASqD0H2pimIpXBdAXBd+uCkUEl3cZDZFYg647aTHErySDQpeFbr9N6wD63wn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749374481; c=relaxed/simple;
-	bh=mVfnbJht8rwIEf1+tkEzHADYwQp7BhR2ZNpvh4Mar1w=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=jfCM8JveBkgYUma5/uRKr6bbwSaVmGxSBdaVyIuXIeB1X1l9P95ws0fZnzLZw6HZTkPxpBevHbyljNkgTzohj39nmTYf083O/itAYOI3Xps7gSlftIk/HiMxlVg1xmOXjFl/CiSy97kHU7Ke7uLIDLa/przQExn2kvIunFTE1b4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OdHEgMdf; arc=none smtp.client-ip=202.12.124.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+	s=arc-20240116; t=1749374967; c=relaxed/simple;
+	bh=OffBpAIXRWfvepR34kuRrpweLfuH2ywLE7wtRA8e7v8=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MfEZe+LC8EAyv4RwMRwghksZ/DEtQ8WdteyetNvkCspw17BdMoLkaOMTEghHQ2nKbAwW/a08JFfMlf/Vs1s5kgecpy5sGE3BbKZV6jpB5xWes42lVdRmlNs8Cv3FHLpIH/kdX5HbuQBbFunC0kbfnBNw/4YrlgdIwcUuvm+IOgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=E6p20/aL; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7XqceUJH; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=v9K/RxIO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=D9F9xBjk; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OdHEgMdf"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfout.stl.internal (Postfix) with ESMTP id 2C4C111400C3;
-	Sun,  8 Jun 2025 05:21:18 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Sun, 08 Jun 2025 05:21:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1749374478; x=1749460878; bh=M28RBFdXpVoeGqBRyHqsq+T77yEEWMi+JRy
-	I7xzcgVQ=; b=OdHEgMdf+YSChJ9rOe+OqIeLEFrlz6qmpdn56P1uavSglRhSYCt
-	mxtSCsmN3eOJz58EyMI3LpulPOY53uPYhOAxolK0JDhXHBGWdnUlgOVbNlYpZr5Q
-	gI4WcJqckvwZtqyAfcqma8nidF6O+mJvXB0OHsjJgrLrMXPbvxutV9K2SysXyZUP
-	9tMapHEurwHTqIrYQtWVT2wi0w+83XRM5xAifxl5MA9HSgkrnFmvqmRYbMb8hz2n
-	IPliAAA7LpcuEOnGjRDKWPZzkF0JS5WgEQn9kMnj5K+X5pDrhiT0JKfpQixaRlYN
-	iEe4bGBnR2sv+JydKRuUmua2zS0eMNMPuxA==
-X-ME-Sender: <xms:DVZFaJU3ZLkt4KJ2wJ-5MNf8xHtiGcuiuxYxAnoSS67J84JvCJ9dEw>
-    <xme:DVZFaJmk7bRNoGhdcODwOSX8z5clPBnELcPnR_AcNogpdL-GR1vwueGYkZ2KdvyAb
-    7xY72tV76JPa4x0Uhs>
-X-ME-Received: <xmr:DVZFaFbjfO3IAz4H7jpp7D90I7QdTKx_7uO9bIF7Wks7G-melUktRYPo9-QiUhPHO5LdvRcY8l1PF_gHMlUGkmZQ43ZLyoNeOn0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdejieeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevufgjkfhfgggtsehttdertddttddvnecu
-    hfhrohhmpefhihhnnhcuvfhhrghinhcuoehfthhhrghinheslhhinhhugidqmheikehkrd
-    horhhgqeenucggtffrrghtthgvrhhnpeelueehleehkefgueevtdevteejkefhffekfeff
-    ffdtgfejveekgeefvdeuheeuleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehfthhhrghinheslhhinhhugidqmheikehkrdhorhhgpdhnsggp
-    rhgtphhtthhopeehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehgvghrgheslh
-    hinhhugidqmheikehkrdhorhhgpdhrtghpthhtohepuggrnhhivghlsedtgidtfhdrtgho
-    mhdprhgtphhtthhopehgvggvrhhtsehlihhnuhigqdhmieekkhdrohhrghdprhgtphhtth
-    hopehlihhnuhigqdhmieekkheslhhishhtshdrlhhinhhugidqmheikehkrdhorhhgpdhr
-    tghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:DVZFaMV7l77JpbGO9E-3MojSdid32zZXnpx0XwLvZB-9EN1GHiTZDQ>
-    <xmx:DVZFaDl1kmvv3SJre6FZS6b7TGeis06C3M_mZOHPYSZuUeD462F14A>
-    <xmx:DVZFaJe7H2K-MZVrCvnNE7P_FubnUIElsbntZfAlbMpMyMcCjc0Izg>
-    <xmx:DVZFaNEa3p2PHKAbYhis7kxVFIzvHS0ymU8rjKaAjjffXJec-dqkbA>
-    <xmx:DlZFaE1ViggqMLb48W59WxnkupFlnUy6B0Dv_8e1pn0Ojw9FNKTQxvM6>
-Feedback-ID: i58a146ae:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 8 Jun 2025 05:21:14 -0400 (EDT)
-Date: Sun, 8 Jun 2025 19:22:02 +1000 (AEST)
-From: Finn Thain <fthain@linux-m68k.org>
-To: Greg Ungerer <gerg@linux-m68k.org>
-cc: Daniel Palmer <daniel@0x0f.com>, geert@linux-m68k.org, 
-    linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] m68k: Enable dead code elimination
-In-Reply-To: <5bc4ad99-3432-c7e1-32a7-e9f9db86f94a@linux-m68k.org>
-Message-ID: <0b8aa376-7059-2939-ab37-68f8a69eb57d@linux-m68k.org>
-References: <20250416114240.2929832-1-daniel@0x0f.com> <ac188e54-7f23-4ecd-805c-c0437a53247a@linux-m68k.org> <CAFr9PXmrVUL1HubP04iHR1ObhaNo+mObg7FC+-HpTF7QR0og3g@mail.gmail.com> <42674c5a-42fe-4846-bf90-340310393fea@linux-m68k.org>
- <5bc4ad99-3432-c7e1-32a7-e9f9db86f94a@linux-m68k.org>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="E6p20/aL";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7XqceUJH";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="v9K/RxIO";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="D9F9xBjk"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B34DD21172;
+	Sun,  8 Jun 2025 09:29:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749374956; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mRKrC5CoI2qpKhIypUg5jdMTEVyo7fGBuDeZ+DLjf54=;
+	b=E6p20/aLr38crvdpYviVHULCVuCYMcIBq+fsORBfxMkPf9+sIAZ+BhOT7XUJGHKHhhmw+l
+	jEJU2AEQVqMpKKxCPhFwMTMDzjfB8P275r8c9SfpbmTQ8MKAA5QsfdJh/rrSkzqRtXEYgc
+	/VfLQTnMjkiYVcQ8QPScqHZphdwax7Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749374956;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mRKrC5CoI2qpKhIypUg5jdMTEVyo7fGBuDeZ+DLjf54=;
+	b=7XqceUJHV2p0La2QU0LaEfL5vHC2a5XCwOfiLNoBs3DlZvj+CcE2lzkbDh6duJcRzWHqFT
+	V2fdUewEFXZAFECQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749374955; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mRKrC5CoI2qpKhIypUg5jdMTEVyo7fGBuDeZ+DLjf54=;
+	b=v9K/RxIOX0bohZ6HLOSh9mZtjHuOVTnapSoQQAE8kVjDkR8gFMZdv6C+DtTEeAAqgw7tQY
+	8JsM2HFPeqPFRLkM6iALvHzM8zelCLyKxxOwPkyWnMb2Cm1JgqFrgGC6dYy+1tjYq244ux
+	4BqJuTgP7XxuZNVfF7DB2JgU5c+AjSg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749374955;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mRKrC5CoI2qpKhIypUg5jdMTEVyo7fGBuDeZ+DLjf54=;
+	b=D9F9xBjknFc6PpT42xQw3e0w4M2TCaVyZrQloy3jt6Dxlyu13Uqw51XdXQuwgT7C9jtC+5
+	Ka0hIgV64yqq4JBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 89CE113A78;
+	Sun,  8 Jun 2025 09:29:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id tow1IOtXRWi3LQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Sun, 08 Jun 2025 09:29:15 +0000
+Date: Sun, 08 Jun 2025 11:29:15 +0200
+Message-ID: <87qzzu8tuc.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: SunOfLife1 <sunoflife1.git@gmail.com>
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ALSA: hda/realtek - Enable mute LED on HP Pavilion Laptop 15-eg100
+In-Reply-To: <20250606192650.10948-1-sunoflife1.git@gmail.com>
+References: <87sekixkqg.wl-tiwai@suse.de>
+	<20250606192650.10948-1-sunoflife1.git@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spamd-Result: default: False [-1.79 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.19)[-0.965];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -1.79
 
-
-On Sun, 8 Jun 2025, Finn Thain wrote:
-
+On Fri, 06 Jun 2025 21:24:59 +0200,
+SunOfLife1 wrote:
 > 
-> Anyway, I think this patch should not cause any unpleasant surprises, 
-> given that "make oldconfig" says dead code elimination is EXPERIMENTAL.
+> Of course, thank you for notifying me. Is this better?
 > 
+> Signed-off-by: Yasmin Fitzgerald <sunoflife1.git@gmail.com>
 
-(their emphasis).
+Improved, but the patch description is missing now...
+Please restore your original patch description and resubmit with the
+proper sign-off.
+
+
+thanks,
+
+Takashi
