@@ -1,107 +1,173 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E429BA45;
-	Sun,  8 Jun 2025 20:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08383BA45
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 20:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749415674; cv=none; b=f3SPR3jhFKq08vJ1e+S+g9qnwYRUI9xmrULTYqJGWj8Df1ukyvd6j6NTACGWR9AyK6Yc0CtM526WIibs1jiSs/WbELNuCI3d7Z59NLGZ/Dfs0EWUxY2FNjneTlJgZfLD61sDkbBVN96K086Vj7M8uhpV1XGyH61E38I5gN2RA54=
+	t=1749415892; cv=none; b=ml2u5Mk0Xme5WxHVOYgF7iVCZqvjbgEDOACLFbwyMs113+0sBpWIlarwMeArvSJyB1S64Q/ha6QiX4+yxLzB3V7cAmi/cX3sapHX+InErgAHeHLENLFIC02QICBxr+db7XiApKq4HGSYZmCcYRdvRVmu7vSnbxc8EH0+D8tiqus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749415674; c=relaxed/simple;
-	bh=ebF6L3yW+3ohMAChacTbx/9GAwBaMrhyLwIY4VviJvQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ILSqCOJfMrw8AtpB77K1lQsKNcx4QWP1SGCWroHUyOpLZX2rhTatZMQ2woHPU1pZNpqCqqXfGw1O9NXgX9eZCbqBdwzL/2SQpdhScdMfs0tsrbztWwYqzQLpkVnu80Tt4gvbVCbscyFe3qKJWQ+gD/4A2NyxCV+Ime0Br/z+jWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PbATWU2c; arc=none smtp.client-ip=209.85.215.174
+	s=arc-20240116; t=1749415892; c=relaxed/simple;
+	bh=Px/0YFFfQgAp30uBoSemkeCnWbqWdso70tivvs4AZV0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aEbHEOHa58spOMDdVkab3cMSb6p4XUK/MEAeQyvpM05pc+vweI0c04CtZ3/rDE8kLMH0KLVn47ziyMyCublUJFQUhZp7XnryZZDYAcNWNAN3TiQ++3ly/tbI7pg6WfQM7bywg09f4957ixuwKEm6g0DoXbXWmsCoP0f712yzXi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KkLTsX4R; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PbATWU2c"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b1276984386so453254a12.0;
-        Sun, 08 Jun 2025 13:47:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KkLTsX4R"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a4f72cba73so3243974f8f.1
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 13:51:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749415672; x=1750020472; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1749415889; x=1750020689; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=e/NepSzNK7cHJVdKlMHYuPZmDL7EOzwuHy5xSr7Gp+s=;
-        b=PbATWU2cnA/SJSTcjsUFNYFRMnJxXPBSZ9jq4nykcGbBITiMTZICtDAAWGE9hbLc74
-         +r2aQEVQ1OPQTcC3XK3JtT9QGcemkMUOB/21Z3jn5CNgt2dlHajC0mqv/5z++UlKFTy1
-         DdJX0UjyPk32tsmb5Gyv/l1No5mHlhyWe7R6aBV1Hg7+mLOoSxiWlxS4PAwUmLa1aleo
-         4/SpROQjze/BRCflv4H2DBJzwAdVkZDoMMBqgtIdN8d8jTyheDtlp13NTPnxWgDbIRpb
-         NXMxgTF0o+ZbovwKO9cWOndgFOGJed/oaDAXgPdNqVE6ZnaxqssW9rd0zP0kY2jjt3CW
-         fpzQ==
+        bh=oZL2agAs0w4h8Qs0E9WxTiUlnuBLzdLqPYeCaLtTnuk=;
+        b=KkLTsX4RpjANiBmnxhB7khvSWC/pq8XVcWOH1/B7jAHPJSMHBTfqGnfKs7QaFxMvlW
+         QHQUWiBOzsgXcVlj3fOGU5Yuevg4gwxN30Pf5dTOhbQ7Pz8o0rATfdsQb+z9hVlv67Zs
+         BFIrdEhYvmEQF+sT6AiLhwoJ2jkOTHA+Y51bY2lJ+vzP9pMSnDbFVGnZavkbVy+3vMA5
+         kp9CXQGBjaltBfcaIjIi0pXvhrd+jVuTB+8yFy4ZxNKYzB8JPS1ALvSGECPk7dabkFrj
+         otN+wgtolnymBNY5cXHLqAipDNsE1S3MFXyfjI2CnqvIbOiwTp2WvlfexfnEJEutdJXo
+         QEzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749415672; x=1750020472;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1749415889; x=1750020689;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=e/NepSzNK7cHJVdKlMHYuPZmDL7EOzwuHy5xSr7Gp+s=;
-        b=IckfEKyFQxNLYBh9Wv417YZZ6bst92mdKyBtY0VyGWGGO+9fAl8BQE19xH1c3FTFM9
-         PvOhR4Zo40fNHSPsLe6Abf/Mx4vpcfzi4ylEcSRN1vjAo/65fv024djde+IL3KIZ4LHR
-         k2C6BilEDOrPruYHCvMcHzSJ1VcK7iwqg+Ci+t66GTWUz3ALfcwkYabU89kzIuijb2Y1
-         hJK4H88EGa2JJpDF/K8bs+xLTSVGn4Tj9R4ZiiCME4fVPr8AUgjwhZGoDaaboSVEr6vJ
-         CeBfO7IyugGlt3/lP+DPz6d4M/y72EpuxUPT1XeI36cFunupsXss35z9Ch/gmwBeZUR+
-         r45A==
-X-Forwarded-Encrypted: i=1; AJvYcCV9ye9+OTO9RFOUjNXWkjxyzMzOZgyFAiCbE1rFkXeq3XRcZ1IeV74xjQ2OgjJR4HLfUx74cZkzHNeY3tBc@vger.kernel.org, AJvYcCWGbObFsCsw7vXZ04+vHgoKa7BkTwsK5wiAvpjE2xL/SRHb3BsNpExZI04ogaj7hKyaS1iVvVdrkb9Z@vger.kernel.org, AJvYcCX/uRfVnHGduK49IT2AmXlRs2HmLZxFWHsSHgz7ePUuvMS5JMJ5YlkRsQPOg/4JCq2dIeg70onVUuZd1PwR618=@vger.kernel.org, AJvYcCX0dNziQ/0bDSQRDd3Lnw3OiW88ooslvWM7r5PgEwuF/TK85DNTsGbBR+7CE69ZcUmvg990LiQdYFGU@vger.kernel.org
-X-Gm-Message-State: AOJu0YycDja4eIm0aEUIBvwLTVKu5nVRBUWzE2mVhhuxTllmFvMnlO5R
-	PLwT9sSsOFh06FI5gLtc87/2GZp8cL0LW+CDKKxWCwt40lYvNRDz3QfSaGygtDGPfahYHrWgPIz
-	wuM/sW13ymyI7GyGDFE8LVI9CQFzWzB0=
-X-Gm-Gg: ASbGncv/aVpDtkeUT0Jn3ZIrJc4PQNnxrp0NFNTkS38e40AIjEGFAHc3Hx9WPaLSTBN
-	PIRIu9MsqRvv3y09Oih00gFWphXd3z8OD6fyfo8n/MX4/r21gM0ybnSsIeUX+LeZuZuiTUYuI8u
-	5kvW0lUazJzTZKM0M+eeaCk0uP6CQI1VSi
-X-Google-Smtp-Source: AGHT+IGMuXINEZm4WUqJIT66MF2vg+ybkmXgawlTKOKqE5f3w0CWVXxYZlA0lxfrGl70z+aRQlCRwjGEVMSn8hyBYU4=
-X-Received: by 2002:a17:90b:4b85:b0:313:2bfc:94c with SMTP id
- 98e67ed59e1d1-3134e43144amr5309627a91.8.1749415672501; Sun, 08 Jun 2025
- 13:47:52 -0700 (PDT)
+        bh=oZL2agAs0w4h8Qs0E9WxTiUlnuBLzdLqPYeCaLtTnuk=;
+        b=GfNm1omoIvnXwbcC8krD+cmFDXcyfmBSMGip6z6+TUJ8evDDFqr7qdwGMxsjUvTN84
+         Uox7W6v3u9QPa853SM+k1lCN2jsXQpppnDhLIwTTutXCcehdF0OJFJBX5YAKS2yGKCl2
+         am5eSV48i4eYnW30Z0dMuFE3KbnQ6/jcbUf4lN/tsq46AmV/jCafraSTnvE3zxRKtQXQ
+         H0BiMuZpACKpm4o7cfrP4L5KNAjd1XLLvHdrb/KHuglsIZrqSMBxbbA6JV+0yKgjMHER
+         V7D5mTo8nbPsccOvHmSTDH0CmGsKZzU+6OFpen2JBBdX6Nk3ZBK/hIryy7Jk50U3WTPE
+         4U1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVehzWgiuMMIVdCnP44xfmTQsK54YYpOfDP/7lCuyXo/FavQJBSHykxsYluVf5OYAYN7jmspld+Vcifo28=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6d6qHnS6BugmoPBvKbcSXGFphWBiN28bKq9wQE2Lk/QOmlK/f
+	su2IPoF8T4mmlrbSBqRd9ejqnzx3xYuzjyw7KtZsVUO5c5Zm8wEuMGLQ
+X-Gm-Gg: ASbGnctuiyIZq9ov3SrRLV16wqUTcc0UQAqx/lEi7zVhl7dIKtnnWTNVhfaie3Nndv7
+	87z8NPfPNQkarFBigVdsl0Ribf88O+Hk1Mj9HyjKOpKeK23JpsY7QS935MFlYnMhKa0FCUtpLfr
+	PgM1AcL//IjA/lGpEOphF+XmjwxQM28ZruwtlkVLv5dvDAeDGHtfCR5LiuRfApQS/GUIgTilsWR
+	ToWnpjlwSIXIHAriDaE8xZND2Yzibogx5YjNdjbCZLqQbpmwkiwU8vvotcvd73mM2E3UdQ+UDKJ
+	RIfQ+fxRVU91Y/FXPnHTNBpoQSsHHkhtfDwPZURkzFA8up5R47ilUVxXzK4rmrLTyEF6e4gI4NK
+	K9INFjM+RPsJreA==
+X-Google-Smtp-Source: AGHT+IGj5EYWggnjYu7fm7eBZ41riqiowTD9DYcYGljwyKfKd+sTFhb3Nu10gVXzDU6Lq/VyjqIITg==
+X-Received: by 2002:a05:6000:40c9:b0:3a4:e0f4:e455 with SMTP id ffacd0b85a97d-3a526dcdee2mr12375938f8f.11.1749415888918;
+        Sun, 08 Jun 2025 13:51:28 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5322ab845sm7813959f8f.24.2025.06.08.13.51.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Jun 2025 13:51:28 -0700 (PDT)
+Date: Sun, 8 Jun 2025 21:51:27 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Mateusz Guzik
+ <mjguzik@gmail.com>, torvalds@linux-foundation.org, mingo@redhat.com,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] x86: prevent gcc from emitting rep movsq/stosq for
+ inlined ops
+Message-ID: <20250608215127.3b41ac1d@pumpkin>
+In-Reply-To: <CAFULd4Z4SJZErfV1AG_a-+SDd=gnXa88=suRAFN3RHB5M+=bFw@mail.gmail.com>
+References: <20250605164733.737543-1-mjguzik@gmail.com>
+	<20250605190054.GH30486@noisy.programming.kicks-ass.net>
+	<CAFULd4Z4SJZErfV1AG_a-+SDd=gnXa88=suRAFN3RHB5M+=bFw@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250524211519eucas1p218997c69b98b14d3af2eb6bf4e9d3187@eucas1p2.samsung.com>
- <20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com>
- <aDJGgLZ9tITwGBxq@x1> <b5f4af17-05ef-453d-8f04-283590ae5b87@samsung.com>
- <DA5YY0YF28GO.3DONTQDLY6VBD@kernel.org> <aEXBH5r05FkTxpV+@x1>
- <CANiq72k-FmZe3P_y6FjmiqXViqLKXkDqHY1-KLfmgwAe98oBAQ@mail.gmail.com> <aEXrZvpTD30a5OhT@x1>
-In-Reply-To: <aEXrZvpTD30a5OhT@x1>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 8 Jun 2025 22:47:40 +0200
-X-Gm-Features: AX0GCFtkgb9NQ12mbcXrlhdSwOY0B7uS6yd2CXG1hnJnfVtwyAWwRJ7-DZ7mFxY
-Message-ID: <CANiq72mn4sRzmkFAJ0fKhwZMLUi33DBLNzyEF2BTPML_4Ya+Bg@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/6] Rust Abstractions for PWM subsystem with TH1520
- PWM driver
-To: Drew Fustini <drew@pdp7.com>
-Cc: Benno Lossin <lossin@kernel.org>, Michal Wilczynski <m.wilczynski@samsung.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jun 8, 2025 at 9:58=E2=80=AFPM Drew Fustini <drew@pdp7.com> wrote:
->
-> Thanks for the quick response. I seemed to have updated it with:
->
->  cargo install bindgen-cli
->
-> And it seems Linux is now happy :)
+On Fri, 6 Jun 2025 09:27:07 +0200
+Uros Bizjak <ubizjak@gmail.com> wrote:
 
-You're welcome!
+> On Thu, Jun 5, 2025 at 9:00=E2=80=AFPM Peter Zijlstra <peterz@infradead.o=
+rg> wrote:
+> >
+> > On Thu, Jun 05, 2025 at 06:47:33PM +0200, Mateusz Guzik wrote: =20
+> > > gcc is over eager to use rep movsq/stosq (starts above 40 bytes), whi=
+ch
+> > > comes with a significant penalty on CPUs without the respective fast
+> > > short ops bits (FSRM/FSRS). =20
+> >
+> > I don't suppose there's a magic compiler toggle to make it emit prefix
+> > padded 'rep movs'/'rep stos' variants such that they are 5 bytes each,
+> > right?
+> >
+> > Something like:
+> >
+> >    2e 2e 2e f3 a4          cs cs rep movsb %ds:(%rsi),%es:(%rdi)
+> >
+> > because if we can get the compilers to do this; then I can get objtool
+> > to collect all these locations and then we can runtime patch them to be:
+> >
+> >    call rep_movs_alternative / rep_stos_alternative
+> >
+> > or whatever other crap we want really. =20
+>=20
+> BTW: You can achieve the same effect by using -mstringop-strategy=3Dlibca=
+ll
+>=20
+> Please consider the following testcase:
+>=20
+> --cut here--
+> struct a { int r[40]; };
+> struct a foo (struct a b) { return b; }
+> --cut here--
+>=20
+> By default, the compiler emits SSE copy (-O2):
+>=20
+> foo:
+> .LFB0:
+>        .cfi_startproc
+>        movdqu  8(%rsp), %xmm0
+>        movq    %rdi, %rax
+>        movups  %xmm0, (%rdi)
+>        movdqu  24(%rsp), %xmm0
+>        movups  %xmm0, 16(%rdi)
+>        ...
+>        movdqu  152(%rsp), %xmm0
+>        movups  %xmm0, 144(%rdi)
+>        ret
+>=20
+> but kernel doesn't enable SSE, so the compiler falls back to (-O2 -mno-ss=
+e):
+>=20
+> foo:
+>        movq    8(%rsp), %rdx
+>        movq    %rdi, %rax
+>        leaq    8(%rdi), %rdi
+>        leaq    8(%rsp), %rsi
+>        movq    %rax, %rcx
+>        movq    %rdx, -8(%rdi)
+>        movq    160(%rsp), %rdx
+>        movq    %rdx, 144(%rdi)
+>        andq    $-8, %rdi
+>        subq    %rdi, %rcx
+>        subq    %rcx, %rsi
+>        addl    $160, %ecx
+>        shrl    $3, %ecx
+>        rep movsq
+>        ret
+>=20
+> Please note the code that aligns pointers before "rep movsq".
 
-(By the way, I always recommend passing `--locked` to `cargo install`
-unless there is a good reason not to -- sadly it is not the default
-for that subcommand)
+Do you ever want it?
+=46rom what I remember of benchmarking 'rep movsb' even on Ivy bridge the
+alignment makes almost no difference to throughput.
+I don't have any old zen cpu though.
+On zen5 pretty much the only thing that matters is cache-line aligning
+the destination buffer - but there are some strange oddities.
 
-Cheers,
-Miguel
+I need to revisit my 'rep mosvb' benchmarks though.
+If you make %cx depend on the initial timestamp (cx =3D cx + (timestamp & z=
+ero))
+will do it, and then make the final timestamp depend on a result of the copy
+(easiest if using the performance counters) you should get a pretty true
+value for the setup cost (pretty impossibly if you try to synchronise with
+lfence or mfence).
+
+	David
