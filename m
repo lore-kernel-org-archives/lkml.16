@@ -1,79 +1,100 @@
-Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5A51D7E57;
-	Sun,  8 Jun 2025 23:10:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.235.159.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAF7266EFE;
+	Sun,  8 Jun 2025 23:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749424243; cv=none; b=oeMxwGbqu9xjPBkcRbIJhGXmi07Z2/to/CGGKhaDvgL8U/qQZJ+mQ+tifUhIFG/5XB7MRwVE1laR/hFjfhoDPblFV91mA8li9JtBqDvQlK6MPm213EsLrxxVaOkD6hM2WViddSu5JwTEmCy7ftt08NkKZ+1TsrlW1gNyh6Iz8Sw=
+	t=1749424762; cv=none; b=I8n+W34B/UcYSBZYH7bF8HwvRocoK9909DHd3d3ad6bcMP6w1foUA5lB9PbQ5cl8qS99UBva4gRGAUQiaDt5s5uGfYOSuVNHb34pHqy7c8JLOWx9U8BNGc3KjjRQUph98mUPNvtXd12e4tJhv9sgSbdvK2VWwR10abHQVADzvoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749424243; c=relaxed/simple;
-	bh=fSvI8EAUGmbdTio+UKw3YEPG/ZDUdKmwz1ZZrB37JGI=;
-	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
-	 MIME-Version:Content-Type; b=Y2J5Dnaw19E37LzLN6Q06DwZhWfmRqIiYF/hR8xi73EJU5npe8SoZrfGZl62WHVQP9b2yBji+oFVPeiM92l2vFCgiOhfBQqI1MpmbfKv1kPEdjGtYw/1NMluN9OHm/ADYHjegKGiCMF4O+mwRuS7+5sarK4MsJPPXPr2TO6853o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=EsKPY+OR; arc=none smtp.client-ip=167.235.159.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="EsKPY+OR"
-Message-ID: <17c70afea9476e5a2ebb0ed37ea780ca@manguebit.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1749424240;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fSvI8EAUGmbdTio+UKw3YEPG/ZDUdKmwz1ZZrB37JGI=;
-	b=EsKPY+OR5KsZ3uWsPJWWsVp3FTLbyT4dD67aAZDJvbLR+qc4bKOS17phcJF+9vXBJr+1fC
-	inB39wxO1u6zz/qVExwND4vGqHzn0A04l2DN7to08oapwQZVJtqsxHTI1aMpFAxJUIEL6A
-	1wuMXsAe/BtZRxtZojyCtJ4q58FNLvDVKdXDY7CWsB1ugz3qEPpij/6pdAXte4mFYHyXI4
-	HZIJlQn9oTjvhif45YpctZKZCfkda/wnHY6srgYF0h4xTuj1RRPvYM5sJGmybOMfYl9+d8
-	Guz7vC+yYDhmpj95MFO1q7zV50D6VTQ9tZZSyr5H02pQehQj3Tvb7FGtpyKV9A==
-From: Paulo Alcantara <pc@manguebit.com>
-To: Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>
-Cc: Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] cifs: Fix validation of SMB2_OP_QUERY_WSL_EA
- response size
-In-Reply-To: <20250608221536.fdwxexewsntxs3em@pali>
-References: <20250608170119.6813-1-pali@kernel.org>
- <20250608170119.6813-4-pali@kernel.org>
- <1bde0a162a5905828806e0993ba9e524@manguebit.com>
- <20250608221536.fdwxexewsntxs3em@pali>
-Date: Sun, 08 Jun 2025 20:10:24 -0300
+	s=arc-20240116; t=1749424762; c=relaxed/simple;
+	bh=1zN3+2MJ6FEXsCEUEk+PRff98eDgn6xyGV9w1N2dOQo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kClpBbgIWR7CFr/HX8YK6IGOBTA0uNYkqVUblPPJ9VS1/ZDvmYPf0AEWPHw4Omc4+ciyq0keckD4zjnuV8lzgRuN2jBm3D1a62t5+CmbI0gg9mFXpAK6vJtUPPrhcB6DNRVj0WvKI6pA01CrdeHhOQwWT2TC8u1CqlcXs2w+Vjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timmermann.space; spf=pass smtp.mailfrom=timmermann.space; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timmermann.space
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timmermann.space
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bFrbk4zSSz9sd7;
+	Mon,  9 Jun 2025 01:19:14 +0200 (CEST)
+From: Lukas Timmermann <linux@timmermann.space>
+To: lee@kernel.org,
+	pavel@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@timmermann.space
+Subject: [PATCH v5 0/2] Support for Osram as3668 LED driver
+Date: Mon,  9 Jun 2025 01:18:52 +0200
+Message-ID: <20250608231854.75668-1-linux@timmermann.space>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4bFrbk4zSSz9sd7
 
-Pali Roh=C3=A1r <pali@kernel.org> writes:
+This patch adds basic support for the as3668 driver IC via I2C interface. 
+The IC is capable of driving four individual LEDs up to 25.5mA per 
+channel. Hardware blinking would be theoretically possible, but this chip
+only supports a few set on/off-delays which makes using that feature 
+unfeasable, therefore my driver doesn't offer that capability. 
+It's intended applications is in mobile devices such as phones, 
+tablets and cameras. This driver was tested and is working on 
+a samsung-manta which is running postmarketOS with a near mainline kernel.
 
-> On Sunday 08 June 2025 18:49:43 Paulo Alcantara wrote:
->> Pali Roh=C3=A1r <pali@kernel.org> writes:
->>=20
->> If we're querying all those EAs and the file has only $LXMOD, wouldn't
->> the server return empty EAs except for $LXMOD?
->
-> We are using FILE_FULL_EA_INFORMATION for querying EAs, which means that
-> always all stored EAs are returned. It is not 4 calls (one by one), but
-> rather one call to return everything at once.
+Please note: This is my first suggested patch to the kernel. 
+checkpatch.pl runs without warnings or errors. 
+I've read the docs in regards to the led subsystem, 
+coding style and submission of patches, 
+but I'm still a bit unsure about the general workflow. 
 
-Yes.
+I will try my best.
 
-> Windows server in this case returns just one EA in its response: $LXMOD E=
-A.
-> And SMB2_WSL_MIN_QUERY_EA_RESP_SIZE specifies that at least 3 EAs must
-> be returned, otherwise check_wsl_eas() throws error and do not try to
-> parse response.
+Changes in v5:
+- Fixed debug and error messages using wrong format specifiers.
+- Fixed missing include bitwise.h.
+- Changed commit message for dt file to fit expected style.
+- Link to v4: https://lore.kernel.org/lkml/20250607215049.29259-1-linux@timmermann.space/
+Changes in v4:
+- Fixed some mistakes made in the dt file pointed out in v3.
+- Swapped dt and driver in patch series. DT now comes first.
+- Fixed errors in Kconfig due to last minute changes.
+- Added dt file into MAINTAINERS file.
+- Link to v3: https://lore.kernel.org/lkml/20250604225838.102910-2-linux@timmermann.space/
+Changes in v3:
+- Fixed an extra whitespace in the dt bindings documentation.
+- Sent patch to all related lists and maintainers.
+- Link to v2: https://lore.kernel.org/lkml/20250531120715.302870-4-linux@timmermann.space/
+Changes in v2:
+- Fixed reading led subnodes in dt incorrectly, 
+  which caused wrong numbering and a segfault when removing the driver module
+- Fixed calling of_property_read_u8 with an int, causing a compiler error
+- Added more error checking during writes to the i2c bus
+- Link to v1: https://lore.kernel.org/linux-leds/20250530184219.78085-3-linux@timmermann.space/
 
-Can you share a trace of the server returning only a single EA in the
-response when we query $LXUID, $LXGID, $LXMOD and $LXDEV?
+Signed-off-by: Lukas Timmermann <linux@timmermann.space>
 
-What I mean is that we query all those EAs when we find reparse points
-on non-POSIX mounts, and if the file doesn't have them, the server still
-returns the EAs but with a zero smb2_file_full_ea_info::ea_value_len.
-check_wsl_eas() skips the EA when is @vlen zero.
+Lukas Timmermann (2):
+  dt-bindings: leds: Add new as3668 support
+  leds: as3668: Driver for the ams Osram 4-channel i2c LED driver
+
+ .../devicetree/bindings/leds/ams,as3668.yaml  |  74 +++++++
+ MAINTAINERS                                   |   7 +
+ drivers/leds/Kconfig                          |  13 ++
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-as3668.c                    | 197 ++++++++++++++++++
+ 5 files changed, 292 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/ams,as3668.yaml
+ create mode 100644 drivers/leds/leds-as3668.c
+
+-- 
+2.49.0
+
