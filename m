@@ -1,109 +1,105 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624541519A6
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 20:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749412999; cv=pass; b=Qg5DUBAQ+iwX3Y3SWJZSlRqqzUKpFf9nr135BUGu1PtcfftXHo1l00/nQuZ5cwp5ALA6AvUisnw5IjTqXrwY5lf7DzcLJZP4jNdT8bkb6qub+8ENX+MBzoyMF/jBEZx7XRtYlvcJZgcLfuFGSHehR9QRu8UK/1Qz6X45gA/CIwU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749412999; c=relaxed/simple;
-	bh=+n+o8Qpvh/7RYRgJjII+zOxHxxgs4h1hUT4pvJNG4lQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qCKfl7IYyXCBZ9UcuCLlYBOgN8iZh3QCAQnVSLlVobUmAB1Rt0RrazSrlD5Du1nTiXhTLhVJrX4pdUkTaVnuGUCrSrw595nJtUcrqmCIPHvt32j0/GwrXlCr8xnrArbhfKkB5HWKxDqixhM2p1LlMmj5Yya/oxUU6pD63Vcl8VY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=KZbvDN10; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A29D1519A6;
+	Sun,  8 Jun 2025 20:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749413004; cv=none; b=sCSqUUcIlgzMvupxLrj/OUTNlIlHBQmg0Pf7L4JYScEVa8DHdhNupCyjhmYH4hgxBrlyMidi/Vo+NP51ZqvphjVkgtzjVi4bsFpbbm6q32tjbytBgM7qhAAsEEDOPis3S18/WoxTR3s1EmXoYfgdc85X7sPpH3XYrZ9+QSx9gd8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749413004; c=relaxed/simple;
+	bh=OeZ6xbcvogfmPu5nXcqXy3BwJeFRU/9mf3HJ/785B3g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G5U117AyYmDqNbwfmmzfreEXZ+YY0vTqNGuX/4/Np/W3r8LHqUkMoqfbVFmIte0qUAbJJ+SR7UdZP0HihWyBx1vXKiQrx0BZ5egOQ4R1C8ixwQGs3P6t0DHMiNJmQjK8cRc+ArcuyFgV4GypDi1rDL3VthftRFs8PtXCuuTdcF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iubu/FfH; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="KZbvDN10"
-ARC-Seal: i=1; a=rsa-sha256; t=1749412991; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=c5+ujBFocU4bPsvFtO3x1L4N8nmS3Qub86PQInR5FoxrWBc6/xOOxs6rdjyrR1YILRxcp4B3nbNQIQr1oqxdolxhY38I8V45iSO5ZT1TX3ILEs0ge0i1oM7nhlhtRINZuUag94PU2euRS2T1WexqyawrAnmJphhMNr04ySy1nqQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749412991; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=oYD+9wugRPVZ9yTQeDUm3MLVIWdKfIzKBhHgfAs7+Yg=; 
-	b=lWVqWviX5JSp69MMr+HL8+6UORtx4fTzr0xYbeUb9ydtX6fhdBSCae+q8KU39I63NR9eDTjVjcDqLX7O6ZCDoqmI7WDmbieTReTjMtPXllz0PztSNrSd7PrUKyRCrTjhZ/Et6HjapyXF9We3MV1KUlHq9yQvPhs1lLsP9DCWI+M=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749412991;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=oYD+9wugRPVZ9yTQeDUm3MLVIWdKfIzKBhHgfAs7+Yg=;
-	b=KZbvDN10pSLU06+JYR+OmqRww5sGvio1bLpUH+p1YqfRe5XYKcJ2Hh8OhYOkybkj
-	rdBzMNJcMF3HWbTGx+uWGzC/w9JW31C3lR4EFQFe0G8VxfkNFFnPHekkMdV5ytReMY8
-	Fc9SpRep8/Cn0VPqihLQVvpPEJA6dAHBP5sbNRD8=
-Received: by mx.zohomail.com with SMTPS id 1749412988671446.1912413843944;
-	Sun, 8 Jun 2025 13:03:08 -0700 (PDT)
-Message-ID: <582f86fb-bcf1-4b58-ad54-acacf4326dd1@collabora.com>
-Date: Sun, 8 Jun 2025 23:03:06 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iubu/FfH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749413003; x=1780949003;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OeZ6xbcvogfmPu5nXcqXy3BwJeFRU/9mf3HJ/785B3g=;
+  b=iubu/FfHghOn5SJ9xvkL2YMPxmzaOuN5vj5GLmaf73zleZ6Fh+KPK/u6
+   rKNVpyYasXZ7zaYRt+m21Ylzvr9rFTmudKu+vK/K0gTZ7P2Wpy844+jDZ
+   c8blgX6s8yloYLeEDMMFidThkzzfEz2t2tmRMqXXzTk2eWy8bRi8PDAKj
+   MsBKJeugh+xZ7ppDf5K5V3HkV9aXshxU8Jupnxp4gkWS9qSDsBgANLU9L
+   3NNAz+GZj1kMBJgRr0DcDr2Zdl/Snm2wT3qflBrCixc7023P2vHxUBiLU
+   zhtDpJ4gxm7dMNqVs0tQc7VtlAhTQr0jzzpEpDtSGpEdARruFE98DTqTy
+   A==;
+X-CSE-ConnectionGUID: Ax4VrffYSlyUnNg+bFs5Mw==
+X-CSE-MsgGUID: IUPmRpu3QrSjkQmgBfufUA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="51352758"
+X-IronPort-AV: E=Sophos;i="6.16,221,1744095600"; 
+   d="scan'208";a="51352758"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2025 13:03:22 -0700
+X-CSE-ConnectionGUID: r3bJTbIKSByB1u6+roiOPQ==
+X-CSE-MsgGUID: RecwGYQRTTOLlZ3lcy/9pA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,221,1744095600"; 
+   d="scan'208";a="151197343"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2025 13:03:21 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uOMEg-00000004qfp-1WM1;
+	Sun, 08 Jun 2025 23:03:18 +0300
+Date: Sun, 8 Jun 2025 23:03:18 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Gustavo Silva <gustavograzs@gmail.com>,
+	Alex Lanzano <lanzano.alex@gmail.com>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] iio: imu: bmi270: add channel for step counter
+Message-ID: <aEXshsLK0JLUp37s@smile.fi.intel.com>
+References: <20250605-bmi270-events-v2-0-8b2c07d0c213@gmail.com>
+ <20250605-bmi270-events-v2-1-8b2c07d0c213@gmail.com>
+ <aEKxhPFDQEIN1xnm@smile.fi.intel.com>
+ <20250607165004.4673e9f5@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] reboot: Remove unused unregister_platform_power_off
-To: linux@treblig.org, akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org
-References: <20250608174235.116424-1-linux@treblig.org>
-Content-Language: en-US
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-In-Reply-To: <20250608174235.116424-1-linux@treblig.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250607165004.4673e9f5@jic23-huawei>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi,
+On Sat, Jun 07, 2025 at 04:50:04PM +0100, Jonathan Cameron wrote:
+> On Fri, 6 Jun 2025 12:14:44 +0300
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > On Thu, Jun 05, 2025 at 07:05:01PM -0300, Gustavo Silva wrote:
 
-On 6/8/25 20:42, linux@treblig.org wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+...
+
+> > > +	set_mask_bits(&regval, mask, val);  
+> > 
+> > You can't do this on the 16-bit values on some architectures.
+> > Maybe it's easy to implement cmpxchg() for 16-bit values there,
+> > though.
 > 
-> unregister_platform_power_off() was added as part of 2022's
-> commit fb61375ecfba ("kernel/reboot: Add register_platform_power_off()")
-> but has remained unused.
+> It doesn't need to be atomic, so stick to traditional
 > 
-> Remove it.
+> 	regval &= ~mask;
+> 	regval |= bits;
 > 
-> Note it's a pair with register_platform_power_off() so
-> seems symmetric; however, I think platforms are chosen
-> and then stay that way for the boot - so don't
-> get unregistered.
-> 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> ---
->  include/linux/reboot.h |  1 -
->  kernel/reboot.c        | 16 ----------------
->  2 files changed, 17 deletions(-)
+> And avoid the fun of architectural corner cases entirely.
 
-The patches converting those platform drivers to use
-register[un]_platform_power_off() haven't been sent to ML. This is the
-reason this func is unused.
+Standard pattern is
 
-There were apm_32 [1], platform/iris [2], mcu_mpc8349emitx [3],
-olpc-xo1-pm [4] and sgy_cts1000 [5] drivers that I had patches prepared
-to convert them to new power-off API. They weren't sent out back then in
-2022 because of a nontrivial dependencies between drivers. At least some
-of those deps has been resolved by now and potentially the API
-conversion may continue. Currently other things keep me busy and don't
-have immediate plans to continue the conversion work, maybe sometime later.
+	regval = (regval & ~mask) | (val & mask);
 
-Leaving it up to Rafael to decide whether to keep this func unused or
-re-add later, once it actually will become needed.
-
-[1]
-https://gitlab.collabora.com/dmitry.osipenko/linux-kernel-rd/-/commit/e42f1264161085f01fed16986a23592519d9f49e
-[2]
-https://gitlab.collabora.com/dmitry.osipenko/linux-kernel-rd/-/commit/24cd048ad801aab6221f2b0bb4576dfc2fe25faa
-[3]
-https://gitlab.collabora.com/dmitry.osipenko/linux-kernel-rd/-/commit/486b69b43c47d85a0f292dca127f0b9063443a54
-[4]
-https://gitlab.collabora.com/dmitry.osipenko/linux-kernel-rd/-/commit/fe5344b3f8a8e1c52e1cd7108aa7e615123be4b2
-[5]
-https://gitlab.collabora.com/dmitry.osipenko/linux-kernel-rd/-/commit/0d761d6139c9dacbbda9f2e095577b084685603f
+this will be robust against any changes in the val.
 
 -- 
-Best regards,
-Dmitry
+With Best Regards,
+Andy Shevchenko
+
+
