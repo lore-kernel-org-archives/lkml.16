@@ -1,89 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9124A1DEFE8;
-	Sun,  8 Jun 2025 22:33:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4A01E25F8;
+	Sun,  8 Jun 2025 22:33:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749422001; cv=none; b=OZcDui2rikYPTVvFlpDLX5JwAzXmyN78kooIb4mD/Lx/8OGnEkdXKnnZniNoJVJZ1AgaO1ELyMk13+VKts9uiuZOppHq9lM0d7WzUmqCtoZjY7mxw+UQwYPiYuiNOB/8Bompza3xIM6X+5KtSMSdQwYPhH/M0GNuNWb2lVaFucc=
+	t=1749422027; cv=none; b=TW1mWcAfySsNYLAHA8KVYh3IuGdpr5eQ1LFiKb7ih7QR8RHH25avbJ2a1FZ8tg+xOGWJFTQj4Ofxw1pLT3tK9i1x7WnOHzTK0oxC1D+TwEIO3zOPzoh8RmlJUVvuf0wzAiAx2zZ/8L1K57fmsaLn/ykw/xVoJ7KIpRS46pbUPyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749422001; c=relaxed/simple;
-	bh=B2h1+W9i/ZhBWpBc0DbE7ILKJxEIopJX2/mIFpxQL4o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bsqmivyOkoLpg5ra8qWlnn/D+DHhnjR130JV2cQoC0PDILkarv/zw9bXIvqzZtNg3YXSbpWBQbVBFSTz79rxltwhx8hwrSxkJs9S6s7CKr+50ELqun4nqptSEde4NrMsAREVAaxI4/2gxBOElMgpjjtPfzD7N3kjb3QJUYUMQHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D6Pi0AP5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749422027; c=relaxed/simple;
+	bh=p6e6O6y2Pf8XwXH8KwfPsonKx6xmLEy+p8t4oVtHFiU=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=SDTxJ/96cAVu73IDLXBC1ZnZFSg0Mz0qWUempB4hF3brSxHQaSG1WY+DCCg24WJ0DZBrmEJIj4Aj/pddbXK7/04x8QX+ScyPBFMArhbTWLESwNeFOfr7pFgNGD+mVJT8r8MNkjYOFEIptXEmBOhml9RwgKtV0AgkwQuP+jqwrlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oXG9j1IX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D6Pi0AP5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B084C4CEEE;
-	Sun,  8 Jun 2025 22:33:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oXG9j1IX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6B8AC4CEEE;
+	Sun,  8 Jun 2025 22:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749421999;
-	bh=B2h1+W9i/ZhBWpBc0DbE7ILKJxEIopJX2/mIFpxQL4o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D6Pi0AP5bCwL2JbyvY4kn4Uc/3NPLmMHGtAheuuY6XqBdeuaAbA8iojPvrWpXfPEF
-	 +JqawQrvybtit7cBYVafHWNEUq9V3uuSByNbvmEasr22epuF+/Li1PvxQdqa0emd1d
-	 1pDA1e5J3agyQdmCMIW5+3teqtioBZ2Q8sYdY1NgNZbS6B+JibS/bKw5qGBIhJXh0H
-	 BcFbHxhQiWrIW4ILfG+QOswqqxz3+hHiCIfa8C8gRnJpO5OEDVj4R2YWe0U/UX/k+m
-	 dTIvnZcV9uHdcEm3YIInRNccQhYIY7HTOimxDFaD8G/Bj22kn9K2986R4gHMLUNsKN
-	 9OkxyAKJkIVUQ==
-Date: Sun, 8 Jun 2025 23:33:13 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	jens.glathe@oldschoolsolutions.biz, konrad.dybcio@oss.qualcomm.com
-Subject: Re: [RFC PATCH v1 0/2] Introduce dummy regulator consumer
-Message-ID: <8a688e9f-012e-461c-a916-f06b34fdd913@sirena.org.uk>
-References: <20250607212654.126412-1-alex.vinarskis@gmail.com>
+	s=k20201202; t=1749422026;
+	bh=p6e6O6y2Pf8XwXH8KwfPsonKx6xmLEy+p8t4oVtHFiU=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=oXG9j1IXnd7uqUad9rWrublROUqma5WYKkJFk7VKvsBObe3saFsB9O60ydQPeJHA9
+	 0rDaNCPi7k95xSMEoKxP9gkrjge0+j9NHDoGkiVjmcNG95b/5/89Kzmm1/FL5pI0d+
+	 JxA2y0/st2moSDYTdRaN12Ih4r04QvqCxpcOYL2UZcwj+GTI/h7tQg4+OaJ0DlJneD
+	 tOYZ4JwMkzIfKsAwlbeiKVyVHcKRx87nt90nMzf4Z9FZh/Ih3J55vFLrvx9D2mllLT
+	 VFNAbxbaVfWsM2vawLCwHgx81PANivaQuK4LgIWfxJFJDO2ZiuMAVUpUW36rpwecfj
+	 unTgWWxTMbpSw==
+Date: Sun, 08 Jun 2025 17:33:45 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="LdWWYvFZl8SdA2Xp"
-Content-Disposition: inline
-In-Reply-To: <20250607212654.126412-1-alex.vinarskis@gmail.com>
-X-Cookie: The eyes of taxes are upon you.
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, jens.glathe@oldschoolsolutions.biz, 
+ Conor Dooley <conor+dt@kernel.org>, konrad.dybcio@oss.qualcomm.com, 
+ Liam Girdwood <lgirdwood@gmail.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+In-Reply-To: <20250607212654.126412-2-alex.vinarskis@gmail.com>
+References: <20250607212654.126412-1-alex.vinarskis@gmail.com>
+ <20250607212654.126412-2-alex.vinarskis@gmail.com>
+Message-Id: <174942202584.3889182.15644402442833643578.robh@kernel.org>
+Subject: Re: [RFC PATCH v1 1/2] regulator: Add dummy regulator consumer
+ binding
 
 
---LdWWYvFZl8SdA2Xp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Sat, 07 Jun 2025 23:25:38 +0200, Aleksandrs Vinarskis wrote:
+> Add the devicetree binding for the upcoming driver.
+> 
+> Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+> ---
+>  .../bindings/regulator/dummy-consumer.yaml    | 39 +++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/dummy-consumer.yaml
+> 
 
-On Sat, Jun 07, 2025 at 11:25:37PM +0200, Aleksandrs Vinarskis wrote:
+My bot found errors running 'make dt_binding_check' on your patch:
 
-> There are two main reasons for this driver:
-> 1. Create a pseudo-consumer in place of real devices which are not or
->    cannot be described in the device-tree. Examples would be integrated
->    USB UVC camera (present on some arm64 laptops) or dedicated keyboard
->    backlight regulator (hypothetical). Instead of leaving regulator
->    without consumer and `regulator-always-on` property, one could bind
->    to dummy consumer to save some power during suspend.
+yamllint warnings/errors:
 
-Those examples both seem like physical things that exist and can have DT
-bindings written for them, why not do that?
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/regulator/dummy-consumer.yaml: properties:vdd-supply: '$ref' is not one of ['description', 'deprecated']
+	from schema $id: http://devicetree.org/meta-schemas/core.yaml#
 
-> 2. A great development tool.
+doc reference errors (make refcheckdocs):
 
-That's what the userspace consumer is there for...
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250607212654.126412-2-alex.vinarskis@gmail.com
 
---LdWWYvFZl8SdA2Xp
-Content-Type: application/pgp-signature; name="signature.asc"
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
------BEGIN PGP SIGNATURE-----
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhGD6gACgkQJNaLcl1U
-h9AafAf+O+PIcQ3RdxKO0vRisEqvNshn/SWiNixQQnY/m1zs/mqFpR9YlzCUoH1d
-skICMQyQ8N6xyZP0HQSY2mXp65x9GQlvZksCu8r09gACMubpCdyxp4pdU2I+pGYn
-4e6lNNU41Mi7ZgqcXi0Dsu7OsEaH0a+km/qbVZtBU5GCc86qzLNWLFjhr/d8NwWa
-slH/bnX/qxrIij4bZbp4izEoTVmGwmgI69WiOJN50Vl8d9QZJFYD7ToduV5w0AR8
-B3ANv0ZlP2GiqDAqYxDmiY4sJF4/nzpLWckcxIVZ+A5oFBM5IrmeykzN856heFh4
-uYh8AiUDnqn1c2mRrtz3B5DPbBDWtg==
-=Jl3w
------END PGP SIGNATURE-----
+pip3 install dtschema --upgrade
 
---LdWWYvFZl8SdA2Xp--
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
