@@ -1,160 +1,111 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36701519A6;
-	Sun,  8 Jun 2025 19:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505181B040B;
+	Sun,  8 Jun 2025 19:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749410154; cv=none; b=mnXWStOj5IYj07mT+tEngTcLxkpHB25Y12PFVfuk6Ddvz/lE1KAXUbCLmjwpuvF0RQBTfulaqBnaAPKWw131jotX79c8Gp6eMAFPs8ewykLDDs06ahcd/eAvz0MsydEElQtnBFmpFtwp/dWjs6AREHvzZEAD2zM1yW+TorTiAbc=
+	t=1749410504; cv=none; b=N7G13EifFV7sI2+ed0F364GvuELZc2vwGXx1KNXHuFvwVKasQSFDZIA4fKxjWi2+/OlNmvq46Bixs436ZJtiKrhisQufyqVFIVpse9ZEQTQ9u0ehFoUAF+a/Te/DR7iw8A/FguHa43LCPtOwPsUTHcaB3tuXqfWTe6sbzGM+abQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749410154; c=relaxed/simple;
-	bh=0n+FP6IKP0h8dUZFNxMKHOQyd4miE987XFTH1/jTiyI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LmXo4SgKL36bHf/HqiU2E5dujzaBhMFrLDFWP4hSkTVcwok6PH3sv+bv2hKy4LH7jpul3WxmwmYK3hLQdH/3fpnERsc7r45DfmPuAwb3OfVECM2Rnz/7GgvtCfxMlH9b53YsP5dcd7vf0kBruI0qG5FreiZhO/ce6nhcj6wwBPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eOd4Kn1s; arc=none smtp.client-ip=209.85.208.42
+	s=arc-20240116; t=1749410504; c=relaxed/simple;
+	bh=z6pDM7n161e7ASEL2VWQOkxKn2/u0AaHSXnzI5iLjS8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=TudVmhmg6GhSoycqPCE4AMIriwRIteJn+LY6+qEHjgk7Kd3V1x90VelXQiRhvArMfsBIMqEQRmjhI3H9NATbNQXNz3lW6px6zdJV+XwklGX2vL+gj5Esn7UtdgAIDEFt2aT/xfrH8fV+o9DCS7oP3h5xZS95ZfWlcgIEP8vnjTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UH4ngKKj; arc=none smtp.client-ip=209.85.210.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eOd4Kn1s"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-60702d77c60so7128542a12.3;
-        Sun, 08 Jun 2025 12:15:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UH4ngKKj"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso4141945b3a.2;
+        Sun, 08 Jun 2025 12:21:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749410151; x=1750014951; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BWLGTyZAa3gfmbNyB/lRce7+iTbTYhGZk9b72pmxMus=;
-        b=eOd4Kn1slp1XRmPgsoeaOtfgpm/YkZtYyeCUR+KM5v06ZM86dKOdFLv5rcmYNY/a+W
-         ZdRM1+FQ+zOORHVhhJJtq4OoGVwUzlxkGqj9sj7DKduG5+MukF9AS2edt4oXEAY5G7y0
-         RlaoqAp9cPuehNPalEmG86IKZoPmPbxQnjtU7VFQXXtqQSg5eX+EsThnev/evohON44y
-         SIPJiEO7mUUXGF7J7tf7BQ54Klf/jrQK5d14J6mFfWoxaGXSF81XsljSBCm3BO8r7abW
-         bz29FcrrShuwy7Iy+HFEizyLkzIkp+ua/VBse3bXYrovKZ/1GHORLfnVrKHmRjgnZ86Y
-         JQMA==
+        d=gmail.com; s=20230601; t=1749410502; x=1750015302; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from:subject
+         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XEBHAv9xkzy6xa7wK9C1MXh7dCKcxoM0mrh1n66r7Fs=;
+        b=UH4ngKKjEuA9fluXAuz+qWzEQkNNtuucB1N/79Q+94dfe6fren5wLMr20AlOamHjB7
+         WkKI8hTKEw2knLUU0Dx2YuwSARiYTTAC6kRvk7g78AIZ4iF2FgVNB1D5w4WA5/ytz44o
+         Grzd2cUWiBt7yTrGvVEoEtZUEESj6zE+xWOHGJX9ThlaQjnSE2E2oV04nXEJCqEsmCQ/
+         sICbFywdqd6zuMBHxHCINB8UBG8Ms3sF/teLSE2y4HfS1vRLHIq3cnqpUxM0vPwa0eLy
+         ptP0ev82uM7xviz9juhhsO83oensxCOwTcWJkZtoDb/JOSUpAypGABqKEs0Bt/Z/9Qnd
+         gUYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749410151; x=1750014951;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BWLGTyZAa3gfmbNyB/lRce7+iTbTYhGZk9b72pmxMus=;
-        b=Na8t4BhE85RmciqhhqE/0kKDYPkMzCvLDzvQc3GypKhWBrd7IXqy7+FP5NRo8U66hz
-         uyhoO8MvvzhrmKQHcORPY310uiBdx4+vhkYk/sdELompKmqUBt1tml9Mx9k++f381u+4
-         kHbks4XhieC5SFfjlxnVyOJ1Fy1MGaLKJUChkdzBS2z0PZlyygeY6abOMzUk9DTLWH8u
-         fdXmbwmBSep+l75EM/iXl7nI4c2f+GvWL+uwyG7Q5JkxtDQb94aigx7tlJLSazbk7AS6
-         0R0w1GXOYrexpXPLP0ngqRt0Zx1ZDHz+d4TWMVIdug9bnvZli3GLFGNXfzomNKGzJTBn
-         czuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWhpMC6CLD7KJJjU1t54aN4GL4Q5gQ7k84D0QfndnBk5Kz3yVybBhvbU/qmPUXVNAbcrHqvs1nWlwHAveA=@vger.kernel.org, AJvYcCXuf7maA+FSY8fofa+HmmadsIpqR2QA27xZYlCu2SuKNNfuVFBGxx/hqD9t/5cFNTqOM577ssVQOyiHxko=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKVW+zCUX2aumep9Pv+/gBIHnimT3OayQja6MXwuF0Y+WyPFzq
-	U1w4bMKzjR2KPnx7sk1vgfIx6P8UgdLenQTHfMgpWbqnL8cXTlH1e65EfhgboA==
-X-Gm-Gg: ASbGncsgOJQECirkQkvg8kVz/gxMerBbsvR55/IAWNfAgUq2Wsk5H/TUyDhv6MODHQh
-	d0/DVMwzYAs5AMG0DnpfzhkQIgbncOp9qVP7zUuzYUi0MKRsqDpHfW2gJj6R2hA+eZloCYklc0b
-	LYAJRM/Qw0PRQFyFklOoYbJqg0ICQioCA5HUW//mr/35f08+Si683BJOSAFQNEXwDgzKtiwjH/b
-	Ppm7dtX1p1MVlE1FgaS8TF11g6CSsvGH1/p8EWXEtV2Ey+z/ls09r3tJ3qfs+9XgOk677qAxduv
-	UWqyPjxDFdgDSeZPWt7b817ROAlHh318U7PaxAn5e9aLxHZKxkFB4ItieQLgCjEc
-X-Google-Smtp-Source: AGHT+IGGZ4kpIgA5XTYvjIK27+j4SKnMshCGIC8nLAh/2siSl+pSKVczTVCuUkau7d/U6WjZlOj5NQ==
-X-Received: by 2002:a17:906:f5a9:b0:ad8:8529:4f86 with SMTP id a640c23a62f3a-ade1ab5ebe0mr981831066b.58.1749410151015;
-        Sun, 08 Jun 2025 12:15:51 -0700 (PDT)
-Received: from demon-pc.localdomain ([188.27.131.45])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc39c34sm441037466b.117.2025.06.08.12.15.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Jun 2025 12:15:50 -0700 (PDT)
-From: Cosmin Tanislav <demonsingur@gmail.com>
-To: 
-Cc: Sean Young <sean@mess.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Cosmin Tanislav <demonsingur@gmail.com>
-Subject: [PATCH v2] media: rc: ir-spi: reallocate buffer dynamically
-Date: Sun,  8 Jun 2025 22:15:33 +0300
-Message-ID: <20250608191536.2181756-1-demonsingur@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1749410502; x=1750015302;
+        h=content-transfer-encoding:in-reply-to:content-language:from:subject
+         :references:cc:to:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XEBHAv9xkzy6xa7wK9C1MXh7dCKcxoM0mrh1n66r7Fs=;
+        b=isD3W1OO8XiApygblyq1rHS8ITc2KlRnnO2fVa6cJTVBenJKOu/G+YtzSP/xMOcKOH
+         sz2kiadj6JhEDEXhQbxVL7OFcKXQUNSOjSvq2kpcidiiTayxH8R+/Dl2gwwgYyhXAY5+
+         LI0+gxJeX3IGrUql8QJSZ/24YBzO2uVA8TubYADZsq3IPzc/XsxBNmVfqUWVQlM7bRq2
+         igMAo/PPn2i8cjuEmUHIlWbAp13Z4m3gwjSsTmCIk7EiWK1Cu639IwzuRKbpl5BcUnlc
+         fig0BXbv0AQwkp9KFLa5lqY3o/Mn+/nFFoO63lcy3+no/2DbbwYfpULEe7VA4kR8EJvw
+         IhXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV53mp2hQqhQJw03ci5f3YZzpevHvfphDPwKMD238/cu2QD76xn6XJ0BARPtcARzaMvw2lmuwOJZ4R3mwc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzFja6gVfIEE6ujjWD+igTvAcvDDDqHZL06QoyqlwEKfmv2av5
+	9tfR28iaKd79tfx6OVxhA2pMsUHkKGSJ0StsDLjInxCSanjG331HGeS0
+X-Gm-Gg: ASbGncvcbMDX35hY3yUexuwXJOtqChrJOvtB5BLaJdjJJQbFXOyqhw7U9doY91/dGad
+	kR9bFBLgx88aa2h3vVzfKvoKEkLVIBG3r2ZbWIa6uXYd+sN2kpo6ZvM/jXOdFT+dnR3DwiLmLwW
+	a3D4943NIKqLXJsJeO+0AgUyvGHu9xdHHM5pAYHT0nnhXXGkKV7mR1Exuuf030QBb5a5fpaWqBf
+	FgAaRNSLz1k18TJ5tmgbg6S68+BtOX0H35Ii0+jm9o5kBByJyjHYUxi+2GUDckQJcZCJ5rH/69C
+	lfVU0/ayvtUgBDG9KWRMHWkJS9vTjRuroMtM0nJL+AY4OKoIgLTAijE2eAgEDxagWW/vwGVYRy/
+	01+MxHwEBlJDl1ZKs5JLLbCb1XMVa4PmOSw==
+X-Google-Smtp-Source: AGHT+IGg7LmA5G+L48cVcxhfoa2u1/D818F3A1iUL3CmvBg7wDC+ry4NHlcOaYYIUtyOaNyoUFkvaQ==
+X-Received: by 2002:a05:6a20:b40b:b0:216:5f68:c83a with SMTP id adf61e73a8af0-21ee699a0b6mr15384364637.36.1749410502474;
+        Sun, 08 Jun 2025 12:21:42 -0700 (PDT)
+Received: from ?IPV6:2601:646:a000:5fc0:64d8:7dc1:9e89:fbeb? ([2601:646:a000:5fc0:64d8:7dc1:9e89:fbeb])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5f89d639sm4033189a12.77.2025.06.08.12.21.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 Jun 2025 12:21:42 -0700 (PDT)
+Message-ID: <01c4295e-1fe8-48c9-8bee-c43c8023dd2b@gmail.com>
+Date: Sun, 8 Jun 2025 15:21:41 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+To: syzbot+ac3c79181f6aecc5120c@syzkaller.appspotmail.com
+Cc: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+ syzkaller-bugs@googlegroups.com
+References: <67eaa688.050a0220.1547ec.014a.GAE@google.com>
+Subject: Re: [syzbot] [bluetooth?] KASAN: vmalloc-out-of-bounds Read in
+ hci_devcd_dump
+From: Ivan Pravdin <ipravdin.official@gmail.com>
+Content-Language: en-US
+In-Reply-To: <67eaa688.050a0220.1547ec.014a.GAE@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Replace the static transmit buffer with a dynamically allocated one,
-allowing the buffer to grow as needed based on the length of the
-message being transmitted.
+#syz test
 
-Introduce a helper function ir_buf_realloc() to manage the allocation
-and reallocation of the buffer. Use it during probe to preallocate
-a buffer matching the original static buffer, then reallocate it as
-needed, with an overhead to avoid frequent reallocations.
-
-Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
----
-V2:
- * use devm_krealloc_array
-
- drivers/media/rc/ir-spi.c | 32 +++++++++++++++++++++++++++++---
- 1 file changed, 29 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/media/rc/ir-spi.c b/drivers/media/rc/ir-spi.c
-index 8fc8e496e6aa..2f931950e107 100644
---- a/drivers/media/rc/ir-spi.c
-+++ b/drivers/media/rc/ir-spi.c
-@@ -27,7 +27,8 @@ struct ir_spi_data {
- 	u32 freq;
- 	bool negated;
- 
--	u16 tx_buf[IR_SPI_MAX_BUFSIZE];
-+	u16 *tx_buf;
-+	size_t tx_len;
- 	u16 pulse;
- 	u16 space;
- 
-@@ -36,6 +37,26 @@ struct ir_spi_data {
- 	struct regulator *regulator;
- };
- 
-+static int ir_buf_realloc(struct ir_spi_data *idata, size_t len)
-+{
-+	u16 *tx_buf;
-+
-+	if (len <= idata->tx_len)
-+		return 0;
-+
-+	len = max(len, idata->tx_len + IR_SPI_MAX_BUFSIZE);
-+
-+	tx_buf = devm_krealloc_array(&idata->spi->dev, idata->tx_buf, len,
-+				     sizeof(*idata->tx_buf), GFP_KERNEL);
-+	if (!tx_buf)
-+		return -ENOMEM;
-+
-+	idata->tx_buf = tx_buf;
-+	idata->tx_len = len;
-+
-+	return 0;
-+}
-+
- static int ir_spi_tx(struct rc_dev *dev, unsigned int *buffer, unsigned int count)
+diff --git a/net/bluetooth/coredump.c b/net/bluetooth/coredump.c
+index 819eacb38762..1232c9a94f95 100644
+--- a/net/bluetooth/coredump.c
++++ b/net/bluetooth/coredump.c
+@@ -243,6 +243,7 @@ static void hci_devcd_handle_pkt_pattern(struct hci_dev *hdev,
+ static void hci_devcd_dump(struct hci_dev *hdev)
  {
- 	int i;
-@@ -52,8 +73,9 @@ static int ir_spi_tx(struct rc_dev *dev, unsigned int *buffer, unsigned int coun
+        struct sk_buff *skb;
++       char *coredump;
+        u32 size;
  
- 		periods = DIV_ROUND_CLOSEST(buffer[i] * idata->freq, 1000000);
+        bt_dev_dbg(hdev, "state %d", hdev->dump.state);
+@@ -250,7 +251,11 @@ static void hci_devcd_dump(struct hci_dev *hdev)
+        size = hdev->dump.tail - hdev->dump.head;
  
--		if (len + periods >= IR_SPI_MAX_BUFSIZE)
--			return -EINVAL;
-+		ret = ir_buf_realloc(idata, len + periods);
-+		if (ret)
-+			return ret;
+        /* Emit a devcoredump with the available data */
+-       dev_coredumpv(&hdev->dev, hdev->dump.head, size, GFP_KERNEL);
++       coredump = vmalloc(size);
++       if (coredump) {
++               memcpy(coredump, hdev->dump.head, size);
++               dev_coredumpv(&hdev->dev, coredump, size, GFP_KERNEL);
++       }
  
- 		/*
- 		 * The first value in buffer is a pulse, so that 0, 2, 4, ...
-@@ -153,6 +175,10 @@ static int ir_spi_probe(struct spi_device *spi)
- 
- 	idata->freq = IR_SPI_DEFAULT_FREQUENCY;
- 
-+	ret = ir_buf_realloc(idata, IR_SPI_MAX_BUFSIZE);
-+	if (ret)
-+		return ret;
-+
- 	return devm_rc_register_device(dev, idata->rc);
- }
- 
--- 
-2.49.0
+        /* Send a copy to monitor as a diagnostic packet */
+        skb = bt_skb_alloc(size, GFP_ATOMIC);
+
+Ivan Pravdin
 
