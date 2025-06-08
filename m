@@ -1,118 +1,161 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DA31CEACB;
-	Sun,  8 Jun 2025 22:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749423047; cv=none; b=e08iFFZOr5vPCNFFhcU17nwgYNvxkuXme7LNumhF7cs2n2ZNax/9RTU0/7hrIbhFlWRJcuiaqc+CGSfalks2H4oX2fG4oxdYeiof11Quio5DDQn76xL6Csf3sOtskk6E5DHZTR9ziarPW9IOWO5Nq1NEMVMLs9fB1ciQHj5OqNM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749423047; c=relaxed/simple;
-	bh=WA48rYTHajKvL/v+o1GDONAug3SMZ9Szm2cVeOrNvzk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ilenp/HZV9d9yK7cBwM8lkdpgeJF5nOKBWhiikDYBTbn9jd4Ir2lbn5GE3I0//hRRhRuwaKZWjke0SZ2y80G22FsHFu22gqGvYnY/2ept81VwSxc9ysyIZLBYFbxOjRp2dI2RO6pbG2xfQaon613aZPLH/M/lo10N9PKtJu+Erw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M7VrBG3E; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7DE1B040B;
+	Sun,  8 Jun 2025 22:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749423299; cv=pass; b=ZZOfE+nOw+YYZ5Ej+SBTlNcRYGlZpCW9nAJgTiyyxYt//uer3D0Wka/PJiHpQns81SuHqpeIPULth5Sb83ZGQ8mY3d1l1BuS1Iw2fNCL1j6wAm12YVnRUz9fY5jviiQ65HwKP1w08HVuWOUIhSDmzMm8vADlvXD6A40NkC9ndNQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749423299; c=relaxed/simple;
+	bh=2fZoZ5jJv9HHeP1leAw3yhUquA5EcdamhflkOAvzgXQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Lt0fkmr5irC+BieTrHZqoy3KG0w2K2uXsX42QI9knwu0q2qUjsFDk3wB4ImuSjDzu75+Yvdu4dKNb4s/YH2a7cdFvClplWO3WhzbUF7GeEs8dhPPfEXgZ9wfDOWRybDq66hjwzQJVeZOwQh2uDji3Bg2EKx8EXDszFb6pNu1G8w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=E7gJuhok; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7VrBG3E"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6fa980d05a8so37206036d6.2;
-        Sun, 08 Jun 2025 15:50:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749423043; x=1750027843; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EqDgz0NCcZN9QC0253LFQnVVu6/oAnqnobzuB0mHNx0=;
-        b=M7VrBG3EieOb025KPIBBtz7mQToA2ZlEa5y6ii04QiCPmGVegth0lbxzoSVs2qKKz6
-         N40b7eOqjgSZwF0XA0YVFvkWBuhrwz1MsgAsv45jAyIgX3hFB9M9EHLPeqapVP0s/uXO
-         WfD4IeLpfULc10miSYYTSSDJ3SdeF0EH9pRDIzAVX8JKiq6i0WeGOY/+7JPj4heI/3+j
-         W/LMWbErLdwti7Apk6YXH26et4orY6FNiLRZl8fCNPMgxUZJyHacV5otlLvbrYPPxjcZ
-         Lxm/TopCvzmg0ORavIlQiOlgzkIMkspV1lD/kzgudyVLSqnQag732l5cnXVluYwcE/M1
-         w66Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749423043; x=1750027843;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EqDgz0NCcZN9QC0253LFQnVVu6/oAnqnobzuB0mHNx0=;
-        b=mBVGnh6jGts44WxBIxuK8z4b8lp9ntDLWreB2W5B7PBQtF3C+i/HSTA9VN+Bz4/6gx
-         kyl4HLyFlngDXFtUWl5qnPpBrxihq9S1hLtVUyJCQfORWfRfXvsQspx4rSZfjCLnX4WG
-         2ZJ7Z+oQl6uOdh9J1kcIPNpp7JVR9EwVZVyunflAgdHFWWnF6JTYmhEdFxzi+A/tYWBN
-         rwpUa93RAPbh9U4qpiWP6GVz3ryQD0PocRoQCF96Iw5UnABuxbZW44uFRaNFkVbLVSV4
-         BTkMKQIUC5lqY5VLzAfNiYckHWaA3ezWT4+q8ao2KzKYqVFfDIt10bGhBdJ5yvMvKUEH
-         YBbg==
-X-Forwarded-Encrypted: i=1; AJvYcCUWPkQ2FA4FBQ3bc3Ipc2CNeeIWrvSOciSqyXwt6+n6VUoFNCUdKCCl7biXr0ociFtkTmAjvdIC0xGq@vger.kernel.org, AJvYcCX86QED8tYNuIGJ0Z8s8wAEe297vNCu3UvE96LoLuPybQylvIdEhycpKBZjSNUj0RaTxaJtqo8YV5Bl12r/@vger.kernel.org, AJvYcCXeBL4fFmD0jF+DKgjorqNjM6Qt505jnNmA/BpvkvGQb2AUEPU98dwDxnC6UVl++BNcxQHvETbVm64/@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBNKkPH0UiQ+vMM3YVMdkMTq6Ao7apCpO+Gh7NvqTs/s2a5r2S
-	aDjVnCeK4VFIJoTOmlL2FeWpH0EwfiWDBrInNH0yEwG0cEhsB+Sw1e3I
-X-Gm-Gg: ASbGncuXeIXO49iWvS/q3nynhM07C+xR1Qevu4QKRQuvs7d/RoAxaban2fWziT0D4ZX
-	az/wmVZ3XUsMTjCph45qq3ZHREMQJgG6gCAD2aJnGbB7dSFsnsc9zLqeawcE34Y3nvnyu4HaoFP
-	rg8+Sf7kzDxcFEae1o1fsGkzQpEQBwuGVETfpyHHLTA+UCJWoH2bqvFMcX43q5MRb+cewajKAf6
-	JPd+iV9Hh8QfRSfdQa4xtWlDtI3x+kcoetDTk/nc423uoa3n/HENqfTGVBpNVU/0Px7u2LeBOzM
-	G/9otZb1+Ra3N3SgMdBjeDrG+nctJew5aTxmtQ==
-X-Google-Smtp-Source: AGHT+IGShP7EvG1pOezpXTDRng7WHyQP/iIeqU3gPsNBUfzfAa+p9z332xR/0u2mhjLf3j/kbENbew==
-X-Received: by 2002:a05:6214:f0d:b0:6e6:6c7f:1116 with SMTP id 6a1803df08f44-6fb08f82f25mr160146206d6.24.1749423043070;
-        Sun, 08 Jun 2025 15:50:43 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6fb09a0e8d7sm43952456d6.0.2025.06.08.15.50.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Jun 2025 15:50:42 -0700 (PDT)
-Date: Mon, 9 Jun 2025 06:49:38 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, 
-	Inochi Amaoto <inochiama@gmail.com>, sophgo@lists.linux.dev, Jingbao Qiu <qiujingbao.dlmu@gmail.com>, 
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Move sophgo,cv1800b-rtc to rtc directory
-Message-ID: <ywln42bb3i5hyzlsmfbx3xt2kjbefqmcxytcqxdcgah77gcesi@2cdw3cgxbg4c>
-References: <20250608224252.3902421-1-robh@kernel.org>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="E7gJuhok"
+ARC-Seal: i=1; a=rsa-sha256; t=1749423259; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=i6VNEIIZaAQyopT/rIoj+OCKhe4wQPTDxP79YOayS/QmrYSjZe8+YthBagyQ3K/BpvyXiSsdvF3NxmjFQKSw9L3bOE3dFAsHdJMo+XhPJVWQB/ANEQmmPrf4/oHbdtrzCDxbW2xYEZCqvymkp9fk5KBBhBfDwIXDqsKwNvJ3DFw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749423259; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=J5enc0/kvMz/L1DnMYOJvLCUp+cT1jmXCz+cBPtfPRg=; 
+	b=WBNGRJLgL9KcpvcOXruG/HQWGHstEFhjpoIcfrFybkZXdf87pT+PZk8vYA9cgO/5zpOiyswwPQyIJvjGJiGPgAQyN9d1duLS6R6z8asZG9WA++UHXc3Zp0L58Io2nole7sHoAcvVI/jaA0+SyT0fWL7Agnk8q6tafGfN2avpyhM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749423259;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
+	bh=J5enc0/kvMz/L1DnMYOJvLCUp+cT1jmXCz+cBPtfPRg=;
+	b=E7gJuhok8ws/fSgfrkixSKB51PnoHzfIRG8mOhSFV7c74asDKE+flqmnYnC8jaRu
+	7uwC4rWcfAce/wB5Cn6C6nqxPveNeKI2MTR1QJDsbCJZ22JjdXmBSj/Wf8IgnoBjTpf
+	toWUaMEJ4OyzNNI7e922lZEvTPLg+nbUf3Du/JVw=
+Received: by mx.zohomail.com with SMTPS id 174942325721399.7236909146244;
+	Sun, 8 Jun 2025 15:54:17 -0700 (PDT)
+From: Daniel Almeida <daniel.almeida@collabora.com>
+Subject: [PATCH v4 0/6] rust: add support for request_irq
+Date: Sun, 08 Jun 2025 19:51:05 -0300
+Message-Id: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250608224252.3902421-1-robh@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANkTRmgC/6WPQQ6CMBBFr2K6dghtoYIr72GMGcsgkwDVFomEc
+ HcBFyYu3Lh8k7z3M6MI5JmC2G9G4annwK6dIdluhK2wvRJwMbNQsUrjVCbQuRvbAN3gwdP9QaE
+ 7s79DUhrUcaZ3hJmY5Zunkp9r+HiaueLQOT+sO71cru+kVEoanWsVJcbkO5BQYMtUR1g3xAUer
+ KtrvDiPkXWNWFK9+k/XH/3HQ72GGApTWqvSXGKWfaemaXoB3tFIKz4BAAA=
+X-Change-ID: 20250514-topics-tyr-request_irq-4f6a30837ea8
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Benno Lossin <lossin@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Benno Lossin <lossin@kernel.org>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+ linux-pci@vger.kernel.org, Daniel Almeida <daniel.almeida@collabora.com>
+X-Mailer: b4 0.14.2
+X-ZohoMailClient: External
 
-On Sun, Jun 08, 2025 at 05:42:51PM -0500, Rob Herring (Arm) wrote:
-> The $id path for the sophgo,cv1800b-rtc binding was missing part of the
-> path 'soc'. However, the correct place for RTC bindings (even if it's
-> also a "syscon") is the rtc directory, so move the binding there while
-> fixing the $id value.
-> 
-> Fixes: 76517429dbfd ("dt-bindings: soc: sophgo: add RTC support for Sophgo CV1800 series")
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  .../bindings/{soc/sophgo => rtc}/sophgo,cv1800b-rtc.yaml        | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->  rename Documentation/devicetree/bindings/{soc/sophgo => rtc}/sophgo,cv1800b-rtc.yaml (96%)
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-rtc.yaml b/Documentation/devicetree/bindings/rtc/sophgo,cv1800b-rtc.yaml
-> similarity index 96%
-> rename from Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-rtc.yaml
-> rename to Documentation/devicetree/bindings/rtc/sophgo,cv1800b-rtc.yaml
-> index 5cf186c396c9..c695d2ff9fcc 100644
-> --- a/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-rtc.yaml
-> +++ b/Documentation/devicetree/bindings/rtc/sophgo,cv1800b-rtc.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/sophgo/sophgo,cv1800b-rtc.yaml#
-> +$id: http://devicetree.org/schemas/rtc/sophgo,cv1800b-rtc.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
->  title: Real Time Clock of the Sophgo CV1800 SoC
-> -- 
-> 2.47.2
-> 
 
-As the rtc syscon has a sub function for remoteproc, is it proper to
-move this binding into rtc subsystem?
+---
+Changes in v4:
 
-Regards,
-Inochi
+Thanks, Benno {
+  - Split series into more patches (see patches 1-4)
+  - Use cast() where possible
+  - Merge pub use statements.
+  - Add {Threaded}IrqReturn::into_inner() instead of #[repr(u32)]
+  - Used AtomicU32 instead of SpinLock to add interior mutability to the
+    handler's data. SpinLockIrq did not land yet.
+  - Mention that `&self` is !Unpin and was initialized using pin_init in
+    drop()
+  - Fix the docs slightly
+}
+
+- Add {try_}synchronize_irq().
+- Use Devres for the irq registration (see RegistrationInner). This idea
+  was suggested by Danilo and Alice.
+- Added PCI accessors (as asked by Joel Fernandez)
+- Fix a major oversight: we were passing in a pointer to Registration
+  in register_{threaded}_irq() but casting it to Handler/ThreadedHandler in
+  the callbacks.
+- Make register() pub(crate) so drivers can only retrieve registrations
+  through device-specific accessors. This forbids drivers from trying to
+  register an invalid irq.
+- I think this will still go through a few rounds, so I'll defer the
+  patch to update MAINTAINERS for now.
+
+- Link to v3: https://lore.kernel.org/r/20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com
+
+Changes in v3:
+- Rebased on driver-core-next
+- Added patch to get the irq numbers from a platform device (thanks,
+  Christian!)
+- Split flags into its own file.
+- Change iff to "if and only if"
+- Implement PartialEq and Eq for Flags
+- Fix some broken docs/markdown
+- Reexport most things so users can elide ::request from the path
+- Add a blanket implementation of ThreadedHandler and Handler for
+  Arc/Box<T: Handler> that just forwards the call to the T. This lets us
+  have Arc<Foo> and Box<Foo> as handlers if Foo: Handler.
+- Rework the examples a bit.
+- Remove "as _" casts in favor of "as u64" for flags. This is needed to
+  cast the individual flags into u64.
+- Use #[repr(u32)] for ThreadedIrqReturn and IrqReturn.
+- Wrapped commit messages to < 75 characters
+
+- Link to v2: https://lore.kernel.org/r/20250122163932.46697-1-daniel.almeida@collabora.com
+
+Changes in v2:
+- Added Co-developed-by tag to account for the work that Alice did in order to
+figure out how to do this without Opaque<T> (Thanks!)
+- Removed Opaque<T> in favor of plain T
+- Fixed the examples
+- Made sure that the invariants sections are the last entry in the docs
+- Switched to slot.cast() where applicable,
+- Mentioned in the safety comments that we require that T: Sync,
+- Removed ThreadedFnReturn in favor of IrqReturn,
+- Improved the commit message
+
+Link to v1: https://lore.kernel.org/rust-for-linux/20241024-topic-panthor-rs-request_irq-v1-1-7cbc51c182ca@collabora.com/
+
+---
+Daniel Almeida (6):
+      rust: irq: add irq module
+      rust: irq: add flags module
+      rust: irq: add support for non-threaded IRQs and handlers
+      rust: irq: add support for threaded IRQs and handlers
+      rust: platform: add irq accessors
+      rust: pci: add irq accessors
+
+ rust/bindings/bindings_helper.h |   1 +
+ rust/helpers/helpers.c          |   1 +
+ rust/helpers/irq.c              |   9 +
+ rust/kernel/irq.rs              |  21 ++
+ rust/kernel/irq/flags.rs        | 102 ++++++++
+ rust/kernel/irq/request.rs      | 515 ++++++++++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs              |   1 +
+ rust/kernel/pci.rs              |  35 +++
+ rust/kernel/platform.rs         | 127 +++++++++-
+ 9 files changed, 810 insertions(+), 2 deletions(-)
+---
+base-commit: e271ed52b344ac02d4581286961d0c40acc54c03
+change-id: 20250514-topics-tyr-request_irq-4f6a30837ea8
+
+Best regards,
+-- 
+Daniel Almeida <daniel.almeida@collabora.com>
+
