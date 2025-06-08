@@ -1,126 +1,281 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C925613CF9C
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 17:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539991547D2;
+	Sun,  8 Jun 2025 17:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749402636; cv=none; b=KuZyx3E2LB9DSbGdIXBEReyGW3mDALcqubgOXVd+tKg7Ix8FTyfv49ZJWTUFmK7FtgleT8Alswz+cvTajH8S95Brc6NlaRAR4/kivk1uZv8FGuaWEJsyqd8FHk3YVjTkSl5j0fWP213p3+JeSXXkwY59vkPYvl9TEFuGx0aRZR8=
+	t=1749402804; cv=none; b=uDloQ5iHUvbHkseBduuAjdTenO1WOErod1BS/13O/CE3tGx3vSlleVvfUO8ekMW50TE4WsYWcuVkyigvmWF7QS38EJ5u3EdakoyBthI3iFmsaozR8a7Vkm0sfUVfab0EgYixx6KUdJfbpudaABrpEi/tGep7dIgB/wQex6r5q3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749402636; c=relaxed/simple;
-	bh=AV/4+MnVBVsPbWACgTfTE2rp31DkL/Ozd9nIj9gNI60=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AC7b/oIwwO4Sa1NVuQrPMe2mYnMkDbyQmiCmpwnTiBK3+qC7baG1epv2AXUDNNkKQa6WbaABpiFMcCG8OHO65+RW8GlHdpD+UUIZQqeE1giMXFrttgmn8YKGmVAjACFUIqANZe5b2HJRJj+FJ2kpehz8DK/m+TRuLpeLIiJUfPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cCbswJDq; arc=none smtp.client-ip=209.85.128.54
+	s=arc-20240116; t=1749402804; c=relaxed/simple;
+	bh=m+EoCFMxjYw9Ar69UF6bMBSGvTD8Er/Yt1M9FwegE6A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Awr9sB/C1C+DR6+ZiHesf7mkF9cXF8D9cTkpxY2heJTohLKAEZNWeTl5qTY55kM6IhFcNAEsUC3MCr9SZaOgJzfT+eLYsnOpVudtakW6aB1nggckT1MgZL1iPlwywNtEcHPWSR65PDePB1JxnEqINdwzFygcjGwlGHkD/wQ/RKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dZvNgGfF; arc=none smtp.client-ip=209.85.218.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cCbswJDq"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-451dbe494d6so45212575e9.1
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 10:10:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dZvNgGfF"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ade33027bcfso226706066b.1;
+        Sun, 08 Jun 2025 10:13:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749402633; x=1750007433; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MFSTL7eGs6OXg4Ss6Ww7Bg0XbEMi8+OcWq/O40mgWYw=;
-        b=cCbswJDqEjanAQQSj3OT76uxDVFAYpKZN02xrjkBVPWN2OLybZa/4wDUb4AC7Jh6TP
-         pnbCigQEkd7eGzUX3pw7mJOv4HbTa83joLrtek5Nml3bUq6+qReBDgUhZ68bYg/WX9YA
-         k+TS3T62Y6azEiOIeLv3YalGWWXXBvEBsgong9vs8hhJ1Sp7ODc51q3o71it+9PDNVrR
-         7QRt6nODtoscdfU9XkgtKC5/yCt4D1vazUV6bu73ZOd5g40e2iaCHgjExJ5lORpPKGYB
-         3RPLjIQhZqYTYFwHKM5RX4g3E90Ro3hMTANyxLmb+H3ZAA/eKkVx5FsgVObVtEzEClnZ
-         gZEg==
+        d=gmail.com; s=20230601; t=1749402800; x=1750007600; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QjbfX1fbIV8T50DrEqaU+DfCTlIuWvkjOJ7fSp2QxDo=;
+        b=dZvNgGfFhnijCgVyIBRm2Ei8bf4LqszDd+LKalv8fHbiLzzobkhPYblGzWoplwNxDb
+         ZGZ0UjmlE4TNRGVpVbTXYWiCwQyepUZfGxzgRY6SQlwiQ+ppk9Km2ACslkMrn9Ayvq75
+         YdqiyjAWz316YoBoSERbEjD4txFj5GtxwJn0xg3RziF6eoQdtLL/hpTp37Tk/yEkUia8
+         jtU7xKOfwyajgtcJDyZozcK6nMBLIx6cNBo2+DIJjCq0KnO9SD07Sug23cNOHuOTYe5W
+         NF0O9YC0kbSx4hyL6MFDaVsOPn3tHPfUwMI4L5DFHP2uGqGX+KF4mJoOp1B1xOSPVobl
+         RQqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749402633; x=1750007433;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MFSTL7eGs6OXg4Ss6Ww7Bg0XbEMi8+OcWq/O40mgWYw=;
-        b=sxmYYarJeksnXXcT3X+QaGur+QdacnrUyUSNKri3pUCslvGg+v969Jwei66FD6g4Th
-         Ngy/fDi1+meh8htTokpYSA6nwlpE7YTKaoGlv6RRo+KEz0yv7xNJaamqaIMP5EpMRjpP
-         Wj2wMXoiPSa+jEgcn19O/zTB5a6FCYybgrdlZ5npvtsWE5uvUr8ckFedshQmKM7HCGwa
-         iuIcqbKapmG6Y4+yDEVbuc/cTLsrsoXgcXnSwuMCmDqk6pcSpzmNYu9c1cugbTizq7/z
-         3g15k8c+AndoSwVkicCdQzgGl34BVcBbZCfWFn2hMS+W5naPJaRsopbnVsIifOXcyj2w
-         PDAg==
-X-Forwarded-Encrypted: i=1; AJvYcCVIWZDQsKkif/NMxJk/2jObXCfJr6xrLkiTFWLNvBOAAAFHcPTIIHQKu+8mRF5DtrpbxzX/g687lHEy9AQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/nUMmLf7BEtqK4hbxZRQjoEVUBzW2VXPuBBwJ5rhHHnzv0GOO
-	TgB37qMvq0Ilol6lQmQY+oC6sLtthqvZ8rr467uYD33rEmz5j3lmlLRyjWmZvQ==
-X-Gm-Gg: ASbGncsVfwq6jlPAp/Rd83Uis6q7NhIuF833IYxb/ZXGkPYtshj2ED/ZMpeI9QWg3S1
-	IG90Xqbco6PVbcJRob04fSW9QOwpmcNUyN5WVqNBf/wX+Cjt2UH1wfZS/q64tRbQ6MejwFI//AM
-	M4HAV7C5x2jMa3GbpqlfoK5UDhKPXPlFtOIKSijF1WgITLLHWSwNEm2Hy31bjkMpEaGWjK2HqaT
-	YBqVdMcoQN6fRjod16174f5jbCG8kGqMpJR+apdrDhP68K30DQ9stYcevwaX/OrJWG1xhuuheNJ
-	jiJFuK8R5rTqbznzxbFgLCFJ6hcgHofI2RP+5GTC/NRW+XoJ4CeLZUjAM8jOYke7RKFGpYVwWx+
-	7UloYst6HP296CQHM9gjLek6v
-X-Google-Smtp-Source: AGHT+IGB2W7rBEJhc9lsd74+MvtUod/ZOo3q6kM5X8xylBnc+7d/6WK5AGrTESPvH7AA0N7LGV9+fA==
-X-Received: by 2002:a05:600c:c166:b0:43c:f895:cb4e with SMTP id 5b1f17b1804b1-452013ab4b2mr108370195e9.17.1749402632853;
-        Sun, 08 Jun 2025 10:10:32 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452730b9b33sm85698495e9.26.2025.06.08.10.10.32
+        d=1e100.net; s=20230601; t=1749402800; x=1750007600;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QjbfX1fbIV8T50DrEqaU+DfCTlIuWvkjOJ7fSp2QxDo=;
+        b=fq+JmKfyK7vtinB5Y3KhpTfQ4LPwNRnH8m61m2Pl/pONHrXVsaCERJHEbY3bpw3uYQ
+         wRWKy7GNLWlDSCtXKU7CEdcamYR574579kUqoHhNKB8xcJnbsf8PGuf7btFLv9xaeVOS
+         lfB41FefOodiKzdA2mtvzI6I3EOTRdc7KBXz4apaymQoHYEg8fvmR1ib1o453NwWFQ7A
+         /gINqc7ME3aiI1Nb0vxyKQLHQEqpyukFQ2Rf1sfgjf3JNMjmdp8DplSHqD62w1ehqmjA
+         D1cf8mySnKMz83mVrPXNqtiy2x34oD9Z9dpoxraiDLLRlNfphLpELZNY0Ds2K7cl13ra
+         muKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUwxpeWMFqYmwO0N/t9guy0eJURaxANitbyYVxpK5uYwf1PE3Tor1gVeHCA+m0RB2n2jlktOaixOHs=@vger.kernel.org, AJvYcCVKAUFZ1ffybeo6MHoEleE15i2tOxg+m+vz1q4HZeZoZNuEp510vEtn8EiOKNc4qKBUv7qycIz4BKc3/s3s@vger.kernel.org
+X-Gm-Message-State: AOJu0YykFLcaLBtslJx4Au/PC53/NRzN3zmXh0EJITBllB6vfWUM8R5L
+	es/lEVxvZ7flS/xwSVHUQGoSjaNvu+p3bPnvf3hHUGHyAlc+2vvlXgeB
+X-Gm-Gg: ASbGncuQ0K+cmpnTy19qlMBRQJbBlq7isrS9hAtDufbOtqTgSkBZwNmQt0NSWQZ1ovY
+	s2Qkc/6UBYBiTF8Z5EwT58IAf4tmdcVpRi0UDrvjVu8Jy0+HSG8xrBA3BSiNdy58nylLg8K2eBd
+	xhEJsx0clR2tc/RV5WWlS/JS6w70/iqswHwPOnLdc9K9zKpqHy7NEiynE2eP6IWoiVYq4F3FDr7
+	iPswT9rbKW5M4YNG6Tsf/KXRFvHB0kRvUBB0NUyb8+HgVF6L8hGQpCIA/UlgLbUmQxWEKBpArnI
+	SpLXep1GWj5nhN+pB2UxhYld9Uz3baZQH6BqS0G0XCCnz+rT2ILV9+CTeDq0b8w1+g==
+X-Google-Smtp-Source: AGHT+IG3xR5v5kUXLn4fsu7ZdkOmphG+QVMf1ufEPwxLiBQ+KtVduIT43cDZ0VN7vD0Z3Uv0KQaNqg==
+X-Received: by 2002:a17:906:4fca:b0:ad8:9a3b:b274 with SMTP id a640c23a62f3a-ade1aaff72bmr983386466b.52.1749402799299;
+        Sun, 08 Jun 2025 10:13:19 -0700 (PDT)
+Received: from localhost.localdomain ([41.79.198.22])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc76feesm433253566b.147.2025.06.08.10.13.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Jun 2025 10:10:32 -0700 (PDT)
-Date: Sun, 8 Jun 2025 18:10:30 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: lizhe.67@bytedance.com, akpm@linux-foundation.org, jgg@ziepe.ca,
- jhubbard@nvidia.com, peterx@redhat.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, muchun.song@linux.dev, dev.jain@arm.com
-Subject: Re: [PATCH v4] gup: optimize longterm pin_user_pages() for large
- folio
-Message-ID: <20250608181030.20741f9b@pumpkin>
-In-Reply-To: <8b68e7f0-46b8-4814-99a2-02f0044cda9c@redhat.com>
-References: <20250606023742.58344-1-lizhe.67@bytedance.com>
-	<8b68e7f0-46b8-4814-99a2-02f0044cda9c@redhat.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        Sun, 08 Jun 2025 10:13:19 -0700 (PDT)
+From: Khalid Ali <khaliidcaliy@gmail.com>
+X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
+To: ardb@kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com
+Cc: hpa@zytor.com,
+	x86@kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Khalid Ali <khaliidcaliy@gmail.com>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH v2] x86/efi: error handling on efi memory map
+Date: Sun,  8 Jun 2025 17:11:25 +0000
+Message-ID: <20250608171220.4528-1-khaliidcaliy@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Fri, 6 Jun 2025 09:21:25 +0200
-David Hildenbrand <david@redhat.com> wrote:
+From: Khalid Ali <khaliidcaliy@gmail.com>
 
-> >    * Returns the number of collected folios. Return value is always >= 0.
-> >    */
-> > @@ -2324,16 +2349,12 @@ static void collect_longterm_unpinnable_folios(
-> >   		struct list_head *movable_folio_list,
-> >   		struct pages_or_folios *pofs)
-> >   {
-> > -	struct folio *prev_folio = NULL;
-> >   	bool drain_allow = true;
-> > -	unsigned long i;
-> > -
-> > -	for (i = 0; i < pofs->nr_entries; i++) {
-> > -		struct folio *folio = pofs_get_folio(pofs, i);
-> > +	struct folio *folio;
-> > +	long i = 0;
-> >   
-> > -		if (folio == prev_folio)
-> > -			continue;
-> > -		prev_folio = folio;
-> > +	for (folio = pofs_get_folio(pofs, i); folio;
-> > +		 folio = pofs_next_folio(folio, pofs, &i)) {  
-> 
-> Nit: indentation is still off?
+Memory mapping could fail and we need account it and handle it
+gracefully or at least do some actions about it.
 
-I tend to move the 'initialisation' to the line above:
-	folio = pofs_get_folio(pofs, i);
-	for (; folio; folio = pofs_next_folio(folio, pofs, &i)) {
-		code...
-For 'search' loops you don't always want the conditional, so:
-	folio = pofs_get_folio(pofs, i);
-	for (;; folio = pofs_next_folio(folio, pofs, &i)) {
-		if (!folio)
-			return -ENOENT;
-		code...
+Currently this patch from the surface look incomplete, and the reason for
+that is i didn't know what to do with mapping failures, and how to react
+with.
 
-The 'really useful (tm)' part of a 'for' loop is the statement
-executed by 'continue'.
+The point is this patch addresses it assuming the worse case scenario all
+or some mappings failed. Also i found FIXME that is
+saying missing error handling and i think this is the best way we can
+fix it. The functions i modified there prototype are important however there usage propably was
+once or twice so they have low risk.
 
-:-)
+Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
+Reported-by: kernel test robot <lkp@intel.com>
+---
+ arch/x86/include/asm/efi.h     |  4 ++--
+ arch/x86/platform/efi/efi.c    | 10 ++++++----
+ arch/x86/platform/efi/efi_32.c |  9 ++++++---
+ arch/x86/platform/efi/efi_64.c | 34 ++++++++++++++++++++++------------
+ 4 files changed, 36 insertions(+), 21 deletions(-)
 
-	David
+diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
+index f227a70ac91f..bc73c07e5d7c 100644
+--- a/arch/x86/include/asm/efi.h
++++ b/arch/x86/include/asm/efi.h
+@@ -127,8 +127,8 @@ extern bool efi_disable_ibt_for_runtime;
+ 
+ extern int __init efi_memblock_x86_reserve_range(void);
+ extern void __init efi_print_memmap(void);
+-extern void __init efi_map_region(efi_memory_desc_t *md);
+-extern void __init efi_map_region_fixed(efi_memory_desc_t *md);
++extern int __init efi_map_region(efi_memory_desc_t *md);
++extern int __init efi_map_region_fixed(efi_memory_desc_t *md);
+ extern void efi_sync_low_kernel_mappings(void);
+ extern int __init efi_alloc_page_tables(void);
+ extern int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages);
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index 463b784499a8..0a614039e4bb 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -690,7 +690,8 @@ static void * __init efi_map_regions(int *count, int *pg_shift)
+ 		if (!should_map_region(md))
+ 			continue;
+ 
+-		efi_map_region(md);
++		if (efi_map_region(md))
++			return NULL;
+ 
+ 		if (left < desc_size) {
+ 			new_memmap = realloc_pages(new_memmap, *pg_shift);
+@@ -736,9 +737,10 @@ static void __init kexec_enter_virtual_mode(void)
+ 	* Map efi regions which were passed via setup_data. The virt_addr is a
+ 	* fixed addr which was used in first kernel of a kexec boot.
+ 	*/
+-	for_each_efi_memory_desc(md)
+-		efi_map_region_fixed(md); /* FIXME: add error handling */
+-
++	for_each_efi_memory_desc(md) {
++		if (efi_map_region_fixed(md))
++			return;
++	}
+ 	/*
+ 	 * Unregister the early EFI memmap from efi_init() and install
+ 	 * the new EFI memory map.
+diff --git a/arch/x86/platform/efi/efi_32.c b/arch/x86/platform/efi/efi_32.c
+index b2cc7b4552a1..ed827dacd493 100644
+--- a/arch/x86/platform/efi/efi_32.c
++++ b/arch/x86/platform/efi/efi_32.c
+@@ -33,7 +33,7 @@
+ #include <asm/tlbflush.h>
+ #include <asm/efi.h>
+ 
+-void __init efi_map_region(efi_memory_desc_t *md)
++int __init efi_map_region(efi_memory_desc_t *md)
+ {
+ 	u64 start_pfn, end_pfn, end;
+ 	unsigned long size;
+@@ -54,8 +54,11 @@ void __init efi_map_region(efi_memory_desc_t *md)
+ 	}
+ 
+ 	md->virt_addr = (unsigned long)va;
+-	if (!va)
++	if (!va) {
+ 		pr_err("ioremap of 0x%llX failed!\n", md->phys_addr);
++		return -EINVAL;
++	}
++	return 0;
+ }
+ 
+ /*
+@@ -84,7 +87,7 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+ 	return 0;
+ }
+ 
+-void __init efi_map_region_fixed(efi_memory_desc_t *md) {}
++int __init efi_map_region_fixed(efi_memory_desc_t *md) {}
+ void __init parse_efi_setup(u64 phys_addr, u32 data_len) {}
+ 
+ efi_status_t efi_call_svam(efi_runtime_services_t * const *,
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index e7e8f77f77f8..b75a9557685c 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -268,12 +268,12 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+ 	return 0;
+ }
+ 
+-static void __init __map_region(efi_memory_desc_t *md, u64 va)
++static int __init __map_region(efi_memory_desc_t *md, u64 va)
+ {
+ 	unsigned long flags = _PAGE_RW;
+ 	unsigned long pfn;
+ 	pgd_t *pgd = efi_mm.pgd;
+-
++	int retval;
+ 	/*
+ 	 * EFI_RUNTIME_SERVICES_CODE regions typically cover PE/COFF
+ 	 * executable images in memory that consist of both R-X and
+@@ -298,22 +298,25 @@ static void __init __map_region(efi_memory_desc_t *md, u64 va)
+ 		flags |= _PAGE_ENC;
+ 
+ 	pfn = md->phys_addr >> PAGE_SHIFT;
+-	if (kernel_map_pages_in_pgd(pgd, pfn, va, md->num_pages, flags))
++	retval = kernel_map_pages_in_pgd(pgd, pfn, va, md->num_pages, flags);	
++	if (retval)
+ 		pr_warn("Error mapping PA 0x%llx -> VA 0x%llx!\n",
+ 			   md->phys_addr, va);
++	return retval;
+ }
+ 
+-void __init efi_map_region(efi_memory_desc_t *md)
++int __init efi_map_region(efi_memory_desc_t *md)
+ {
+ 	unsigned long size = md->num_pages << PAGE_SHIFT;
+ 	u64 pa = md->phys_addr;
++	int retval = 0;
+ 
+ 	/*
+ 	 * Make sure the 1:1 mappings are present as a catch-all for b0rked
+ 	 * firmware which doesn't update all internal pointers after switching
+ 	 * to virtual mode and would otherwise crap on us.
+ 	 */
+-	__map_region(md, md->phys_addr);
++	retval = __map_region(md, md->phys_addr);
+ 
+ 	/*
+ 	 * Enforce the 1:1 mapping as the default virtual address when
+@@ -322,7 +325,7 @@ void __init efi_map_region(efi_memory_desc_t *md)
+ 	 */
+ 	if (efi_is_mixed()) {
+ 		md->virt_addr = md->phys_addr;
+-		return;
++		return retval;
+ 	}
+ 
+ 	efi_va -= size;
+@@ -343,12 +346,13 @@ void __init efi_map_region(efi_memory_desc_t *md)
+ 
+ 	if (efi_va < EFI_VA_END) {
+ 		pr_warn(FW_WARN "VA address range overflow!\n");
+-		return;
++		return retval;
+ 	}
+ 
+ 	/* Do the VA map */
+-	__map_region(md, efi_va);
++	retval = __map_region(md, efi_va);
+ 	md->virt_addr = efi_va;
++	return retval;
+ }
+ 
+ /*
+@@ -356,10 +360,16 @@ void __init efi_map_region(efi_memory_desc_t *md)
+  * md->virt_addr is the original virtual address which had been mapped in kexec
+  * 1st kernel.
+  */
+-void __init efi_map_region_fixed(efi_memory_desc_t *md)
+-{
+-	__map_region(md, md->phys_addr);
+-	__map_region(md, md->virt_addr);
++int __init efi_map_region_fixed(efi_memory_desc_t *md)
++{
++	int retval;
++	retval = __map_region(md, md->phys_addr);
++	if (retval)
++		return retval;
++	retval = __map_region(md, md->virt_addr);
++	if (retval)
++		return retval;
++	return 0;
+ }
+ 
+ void __init parse_efi_setup(u64 phys_addr, u32 data_len)
+-- 
+2.49.0
 
