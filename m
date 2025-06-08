@@ -1,173 +1,143 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDB11372
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 05:52:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A5F1372;
+	Sun,  8 Jun 2025 06:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749361949; cv=none; b=szbH3qyNtPudzjdtviaiNTSkIWrbVUUWf4freU09c+8edpP9O/o271WjwaHeU2KCkPtID36E2LMDWphN+Fs/LFxMeX0WpaTe4IutIbro+v31cE3GjFgENzz5HTeEE+LI6bC6GQgtIuuDqk0KBZYeiuErSEbm6d54dkYq1dVRyA0=
+	t=1749362866; cv=none; b=De3jo7naEIRjojoaEW237m495MQp0qf5YEo6prUPpbOgQLp0MyjiAQK/Y76wAZpIaCP/hGEjdmn3FqMbA2whhvqFkW/KZsAYZeSR6EnUBPzqDZVC7O/M9T1xsGjUq0fnGtD2HFMObL5rBBJiOlRQtWbkMNx/uEnRhTRJXq67kQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749361949; c=relaxed/simple;
-	bh=qKfRNG4CDlfDLTDcwYrI3sQenEFSFY+8eszH/djEgpw=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=LSBWXUFl6Y/DzL+7Cb+CJMIZxETeyec/Nhv9+A+3WAltyZ42d4Og/dljEIByJSbU/6VW1vYCm+2VIXIqNlo+sgAbnFbAiC7g2f5OXFZZgzwH9as4dbRtScCi0pZdqNxzlIw8cmaUGKQs6WyAt2At99oaXrMInLSZBV/qb1Pn/1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3ddbfe1fc8fso88103805ab.2
-        for <linux-kernel@vger.kernel.org>; Sat, 07 Jun 2025 22:52:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749361947; x=1749966747;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jcpD0WAjPXInoYOjIEM2gCgbdLZHAzXILaKBUQO5vQI=;
-        b=ebP4jtTL6D/eTHwgKhafKNn3EsTBlkIaz0BUOkHJECykyW85WQiQAsilZPYlr0Fzh4
-         V/wjFv6/kb88oKnw1jFxiHvSgRlfBEybMQeyl1UAv2HK14xUvQpNy5D9wi8cYkPnNatH
-         bQcP8TWQm6I/wNlCNyhBpJBZDyNOpSseK0lVHGng60Xnh15JjCBgMp62ERSrLdef+dkY
-         bG4yNfYj5BZc4qy4ZnWKjxV0Il2ZiOyfiWGDLeEuVo+HS6qKsAGpk9+fHKa54u3Yt/d9
-         e8sU+BYDc9PwPe3/xDzUTMPPEZPAe3kLR2VDaI3ZLgYKrOLbA1fHxtffiZLdnVBbGzYJ
-         toVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVHr/HGXCDfFis6YN8b3fS2GjC4DMBxVuIL4MyT+8kEzheg83KDDVLWzLOhqKJneyZZuKIvTvG8vJHUUQc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiqfQ9iHZ9orX88MN1mIf5D/lVmI+XE2SU3GWs9IC4u1ZcbZ1B
-	zEUWeQ+6I9DTCFYLGRluNlQROt/+xkllZs7JsSt+rI/0gr9oxfrAzOTf1FwZtAfzVlWidivvTu3
-	mm/kYuJrXCbuiyXlTzPcpoJi7dhLt+wyddeXnV4CbpSJAaLasF/Zuzs1WBT4=
-X-Google-Smtp-Source: AGHT+IGxpDaJrmlySBLqlw/KI8UBV6V43VtsKHhfdAabbQN0gual+U7s2e4m87WT1EHQ12tptZaJOSaZvnkhB+iBsY25DpGpBVEc
+	s=arc-20240116; t=1749362866; c=relaxed/simple;
+	bh=6CKfrQXaIsxvYjLqtf2J+UBK9lHsV3t17BaJqRbua1A=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fhNQayLR7CiFGX2oaptGoBR0ssd+/UsT1u1a3qjtY+Eiw3nO2BMKa043Q8EFyhvDQjK5hEMRTS6T0rHg4inn8e9vJaY1MdRQd8L4oKNZImyiriwuRp8NzVrvnokBLQk/uEa2rQhedFM37bB5eNYewbFwTAGxQT63btxlpNiA1do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=W5Q5WZM7; arc=none smtp.client-ip=207.171.188.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="W5Q5WZM7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1749362865; x=1780898865;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=avBttXiSSME7van6tk2bFmYzW6QRRSSGD0yy3TEB3M4=;
+  b=W5Q5WZM7h1ajYIQbQdwl7NWkHhiViKLX4JlYRq6O1Vn6RUgv+iCAuHXp
+   nC4TFb9FBhHE7vpxRb1SOYzy/0fu2tjSipLoB6HocZgEpdk1nc9+f0X6B
+   1jWX1twFDqK/LLpGqAZoQDhHo+s8xrL66uWDJSgrFJHGc1r7z8ebbOMGM
+   +/uQVegIAxOwyECQumBgJm5MF5ii1dbhMoucHVsZBcX4N5Xq6OhQE0ABD
+   BnLsR9Um/9rl6PiPd/jyl9NAmEDz9SwcH7t6MU1GQk5tqlMmi46rGbd1f
+   pOFk4+JuYaxCjNYGjfHShUy8kjdDeyRCVHn1LHzFujEkw5wJeFLPpMvfM
+   A==;
+X-IronPort-AV: E=Sophos;i="6.16,219,1744070400"; 
+   d="scan'208";a="28319561"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2025 06:07:38 +0000
+Received: from EX19MTAEUA001.ant.amazon.com [10.0.10.100:21462]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.19.236:2525] with esmtp (Farcaster)
+ id 65724dd7-c7be-4e89-b106-23a5e8fab81f; Sun, 8 Jun 2025 06:07:37 +0000 (UTC)
+X-Farcaster-Flow-ID: 65724dd7-c7be-4e89-b106-23a5e8fab81f
+Received: from EX19D018EUA004.ant.amazon.com (10.252.50.85) by
+ EX19MTAEUA001.ant.amazon.com (10.252.50.192) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Sun, 8 Jun 2025 06:07:37 +0000
+Received: from dev-dsk-farbere-1a-46ecabed.eu-west-1.amazon.com
+ (172.19.116.181) by EX19D018EUA004.ant.amazon.com (10.252.50.85) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Sun, 8 Jun 2025
+ 06:07:34 +0000
+From: Eliav Farber <farbere@amazon.com>
+To: <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>, <yoshfuji@linux-ipv6.org>,
+	<kuba@kernel.org>, <kuniyu@amazon.com>, <sashal@kernel.org>,
+	<edumazet@google.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <farbere@amazon.com>
+Subject: [PATCH] net/ipv4: fix type mismatch in inet_ehash_locks_alloc() causing build failure
+Date: Sun, 8 Jun 2025 06:07:26 +0000
+Message-ID: <20250608060726.43331-1-farbere@amazon.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1521:b0:3dc:7f17:72e6 with SMTP id
- e9e14a558f8ab-3ddce461b22mr106219555ab.5.1749361947068; Sat, 07 Jun 2025
- 22:52:27 -0700 (PDT)
-Date: Sat, 07 Jun 2025 22:52:27 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6845251b.050a0220.daf97.0aed.GAE@google.com>
-Subject: [syzbot] [bcachefs?] kernel BUG in vfs_get_tree (2)
-From: syzbot <syzbot+10a214d962941493d1dd@syzkaller.appspotmail.com>
-To: brauner@kernel.org, jack@suse.cz, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	viro@zeniv.linux.org.uk
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EX19D035UWB004.ant.amazon.com (10.13.138.104) To
+ EX19D018EUA004.ant.amazon.com (10.252.50.85)
 
-Hello,
+Fix compilation warning:
 
-syzbot found the following issue on:
+In file included from ./include/linux/kernel.h:15,
+                 from ./include/linux/list.h:9,
+                 from ./include/linux/module.h:12,
+                 from net/ipv4/inet_hashtables.c:12:
+net/ipv4/inet_hashtables.c: In function ‘inet_ehash_locks_alloc’:
+./include/linux/minmax.h:20:35: warning: comparison of distinct pointer types lacks a cast
+   20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+      |                                   ^~
+./include/linux/minmax.h:26:18: note: in expansion of macro ‘__typecheck’
+   26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
+      |                  ^~~~~~~~~~~
+./include/linux/minmax.h:36:31: note: in expansion of macro ‘__safe_cmp’
+   36 |         __builtin_choose_expr(__safe_cmp(x, y), \
+      |                               ^~~~~~~~~~
+./include/linux/minmax.h:52:25: note: in expansion of macro ‘__careful_cmp’
+   52 | #define max(x, y)       __careful_cmp(x, y, >)
+      |                         ^~~~~~~~~~~~~
+net/ipv4/inet_hashtables.c:946:19: note: in expansion of macro ‘max’
+  946 |         nblocks = max(nblocks, num_online_nodes() * PAGE_SIZE / locksz);
+      |                   ^~~
+  CC      block/badblocks.o
 
-HEAD commit:    911483b25612 Add linux-next specific files for 20250604
-git tree:       linux-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=161761d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=28859360c84ac63d
-dashboard link: https://syzkaller.appspot.com/bug?extid=10a214d962941493d1dd
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1106940c580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10ce7c82580000
+When warnings are treated as errors, this causes the build to fail.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/1067df4a0ae9/disk-911483b2.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/1ec468cccc74/vmlinux-911483b2.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/02250b138a0f/bzImage-911483b2.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/ac45824a405f/mount_0.gz
+The issue is a type mismatch between the operands passed to the max()
+macro. Here, nblocks is an unsigned int, while the expression
+num_online_nodes() * PAGE_SIZE / locksz is promoted to unsigned long.
 
-The issue was bisected to:
+This happens because:
+ - num_online_nodes() returns int
+ - PAGE_SIZE is typically defined as an unsigned long (depending on the
+   architecture)
+ - locksz is unsigned int
 
-commit ad7a2ae339342ce4721993e637ecd9f7dc654f3b
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Mon Jun 2 00:22:17 2025 +0000
+The resulting arithmetic expression is promoted to unsigned long.
 
-    bcachefs: Add missing restart handling to check_topology()
+Thus, the max() macro compares values of different types: unsigned int
+vs unsigned long.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=162c2c0c580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=152c2c0c580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=112c2c0c580000
+This issue was introduced in commit b53d6e9525af ("tcp: bring back NUMA
+dispersion in inet_ehash_locks_alloc()") during the update from kernel
+v5.10.237 to v5.10.238.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+10a214d962941493d1dd@syzkaller.appspotmail.com
-Fixes: ad7a2ae33934 ("bcachefs: Add missing restart handling to check_topology()")
+It does not exist in newer kernel branches (e.g., v5.15.185 and all 6.x
+branches), because they include commit d53b5d862acd ("minmax: allow
+min()/max()/clamp() if the arguments have the same signedness.")
 
-bcachefs (loop0): error in recovery: ENOMEMemergency read only at seq 10
-bcachefs (loop0): bch2_fs_start(): error starting filesystem ENOMEM
-bcachefs (loop0): shutting down
-bcachefs (loop0): shutdown complete
-bcachefs: bch2_fs_get_tree() error: ENOMEM
-Filesystem bcachefs get_tree() didn't set fc->root, returned 12
-------------[ cut here ]------------
-kernel BUG at fs/super.c:1812!
-Oops: invalid opcode: 0000 [#1] SMP KASAN PTI
-CPU: 0 UID: 0 PID: 5842 Comm: syz-executor187 Not tainted 6.15.0-next-20250604-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:vfs_get_tree+0x29f/0x2b0 fs/super.c:1812
-Code: 1b 48 89 d8 48 c1 e8 03 42 80 3c 28 00 74 08 48 89 df e8 14 8b ee ff 48 8b 33 48 c7 c7 00 31 99 8b 44 89 f2 e8 d2 42 f2 fe 90 <0f> 0b 66 66 66 66 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90
-RSP: 0018:ffffc9000437fd58 EFLAGS: 00010246
-RAX: 000000000000003f RBX: ffffffff8e7829a0 RCX: ad6f5de195933e00
-RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000003 R09: 0000000000000004
-R10: dffffc0000000000 R11: fffffbfff1bfa9ec R12: 1ffff1100ea3c216
-R13: dffffc0000000000 R14: 000000000000000c R15: 0000000000000000
-FS:  000055558ea4c380(0000) GS:ffff888125c4d000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005620027d9f60 CR3: 0000000075234000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- do_new_mount+0x24a/0xa40 fs/namespace.c:3874
- do_mount fs/namespace.c:4211 [inline]
- __do_sys_mount fs/namespace.c:4422 [inline]
- __se_sys_mount+0x317/0x410 fs/namespace.c:4399
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7ff57623fe2a
-Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffda26af7f8 EFLAGS: 00000282 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007ffda26af810 RCX: 00007ff57623fe2a
-RDX: 00002000000000c0 RSI: 0000200000000000 RDI: 00007ffda26af810
-RBP: 0000200000000000 R08: 00007ffda26af850 R09: 0000000000005972
-R10: 0000000000800000 R11: 0000000000000282 R12: 00002000000000c0
-R13: 00007ffda26af850 R14: 0000000000000003 R15: 0000000000800000
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:vfs_get_tree+0x29f/0x2b0 fs/super.c:1812
-Code: 1b 48 89 d8 48 c1 e8 03 42 80 3c 28 00 74 08 48 89 df e8 14 8b ee ff 48 8b 33 48 c7 c7 00 31 99 8b 44 89 f2 e8 d2 42 f2 fe 90 <0f> 0b 66 66 66 66 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90
-RSP: 0018:ffffc9000437fd58 EFLAGS: 00010246
-RAX: 000000000000003f RBX: ffffffff8e7829a0 RCX: ad6f5de195933e00
-RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000003 R09: 0000000000000004
-R10: dffffc0000000000 R11: fffffbfff1bfa9ec R12: 1ffff1100ea3c216
-R13: dffffc0000000000 R14: 000000000000000c R15: 0000000000000000
-FS:  000055558ea4c380(0000) GS:ffff888125c4d000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffe40667f19 CR3: 0000000075234000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Fix the issue by using max_t(unsigned int, ...) to explicitly cast both
+operands to the same type, avoiding the type mismatch and ensuring
+correctness.
 
-
+Fixes: b53d6e9525af ("tcp: bring back NUMA dispersion in inet_ehash_locks_alloc()")
+Signed-off-by: Eliav Farber <farbere@amazon.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ net/ipv4/inet_hashtables.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
+index fea74ab2a4be..ac2d185c04ef 100644
+--- a/net/ipv4/inet_hashtables.c
++++ b/net/ipv4/inet_hashtables.c
+@@ -943,7 +943,7 @@ int inet_ehash_locks_alloc(struct inet_hashinfo *hashinfo)
+ 	nblocks = max(2U * L1_CACHE_BYTES / locksz, 1U) * num_possible_cpus();
+ 
+ 	/* At least one page per NUMA node. */
+-	nblocks = max(nblocks, num_online_nodes() * PAGE_SIZE / locksz);
++	nblocks = max_t(unsigned int, nblocks, num_online_nodes() * PAGE_SIZE / locksz);
+ 
+ 	nblocks = roundup_pow_of_two(nblocks);
+ 
+-- 
+2.47.1
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
