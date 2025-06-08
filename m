@@ -1,154 +1,143 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97AF617E;
-	Sun,  8 Jun 2025 16:30:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029511553A3
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 16:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749400222; cv=none; b=lEndkRfHwDhfGuNICAcSSzZwP+2qgpE03vD8q5Bfei/Hy7eOytoZ9HPOIySuFQtK9dH/KEVe9jYWLj/dHEtpDFy6Svkuw4shwt9cBeeog2NlFz+Hsky1cnAkAubsP06J7MmX37UJh0RWrw7qJf0hr5N9OhJFlWQDdRBjkG8Dq7I=
+	t=1749400383; cv=none; b=OPUEa+TjoVvRa5i+kH2iPpJCCtxE/u7M7nTovyhqGtWF7LasfFucM2E385w0sun4C73GE3tDzb4UY0Fv9WhFxLJkW0SzHXX7bSGE1qUBkvH4PNDR2RqRRA4O/vcBayp5MpDRInc4p7fMb3W3gm6Fko7A6vYQuvtUZp3MwwjzQks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749400222; c=relaxed/simple;
-	bh=KKCobZU0yXS4VapKICqzmCPWDXyQK5S0HNaDg/mE+oQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ubDC9mpmWJ1LEnNwlZU2UawKBOcll33021F8y+jdH3zJHBLnxFKyyTaRNWHbrNLrIA8RsIRtLwLXcaWhFLlDuOlKmdMBAQwzhJCSuEvkib8pDbf4L0plm/BR8j3L0uHZ1vzqNYlMVzz7F7wiy2F0NudRlefYYrPtOJHuu/vOE5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oFVoGBz2; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1749400383; c=relaxed/simple;
+	bh=Tx4MGUsST5PHQCrNmFWznKqxDMYt7EFT3jPu2toPcB8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m5e4grTfTvPdwiv70z8BNLR/ydxZRn5khsp6guTISzORCe5pn4jwMdOZwNkScD2Pfd6v9o6axQhgA0wMJb2hanakqX9v1QPMXywTR/xfI6wPKeSOskiS91MKT+hDrIssZ4V7IvZy3eNrw/w+7lh4dZS14JpVaZVricNsgMqMNRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=nVrbl6P3; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oFVoGBz2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=+tcecrk7heh9FwxWkRvFliEQqq76xVf2B8trKQMClRs=; b=oFVoGBz23sF9Y/j3f7L80zFCHo
-	cwG0C1wd/Y1AsHPWTh8zC8LiiUb6bKYipPyKMXpelG2pIpusv8zzFp/HGcR5mLtRVY/jFepL5M8Kz
-	ikc3toLcoYlOyREW0jlpELC7XjisknD8mP9/VBX/mf+kVm1azO4hbO8mzbvpO3QLvG9/TCSmIOeE3
-	R1WT137yuwusXSTrOwyp7BYB8IrFBtLIz97aGM5r+vQuaAkfX5UhXH8XUxmYGuEGuG95m/1UwKNwi
-	EXKQtPJ5y6Adl/SicNxarjcUvUzDkmI4zF7rfIxc+OdOF/iwbhoCaPsGPPteIlmac5WHj6LDk94TV
-	NzDpPKcg==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uOIuJ-00000007Myt-2K3N;
-	Sun, 08 Jun 2025 16:30:03 +0000
-Message-ID: <1736ad95-566d-4c87-835e-257a091fac59@infradead.org>
-Date: Sun, 8 Jun 2025 09:30:00 -0700
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="nVrbl6P3"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4a58ebece05so41365961cf.1
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 09:33:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1749400381; x=1750005181; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OuRYivZ74nBEObAg4Esdur1pUm1rPSerTOQh0jJQjUg=;
+        b=nVrbl6P39MLhWqELEXvO/ZI+xS01pQPrZfngKIWrbOsfbW4bvQ5jwfoYG0dhhjlFdD
+         Qt2sAzchEQF1qMLM7+kGICBUyEoGuQoctoz2GG37mvvAZNGJW+Akhl6iIHWXuSHKrQ/W
+         xI6eaej0oy00+wCaSaHEZMdWty45XacO9fPfIhT3Rfyv85JDTwizp28UCSwLwwRwi2Ex
+         LADc2V3L0xWs/31NrYHHMif2PH5HIpYCtYJBAh9ZmEuJypw8rTh9YYA4eJRQHy7kXHMJ
+         ERRsauysjKqGmE4vsvBehghPlzpUj48wE7A2uJEU+Y1rwbAXpR92xulDJrx+KzPLvIlD
+         62IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749400381; x=1750005181;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OuRYivZ74nBEObAg4Esdur1pUm1rPSerTOQh0jJQjUg=;
+        b=FLHFBz87Z2zfRGsnMIzUnB+EAOeQPQeqFrwrkrTTOlmhPY1WZ4qbLXFv0sc5WW8KzC
+         rMS6vpZGNf07ZfPvbaDx6lbZAZuNlfBdyc/6af7W0J8jW0lFlQoC+M5hOVs34lyYwD1S
+         mQq9/Dvx7rFBltZNhz0T+K4Cw5SDVxsazOYgGwQVfMtxpve/f+4fe4w/lYGZQk8hkEnX
+         bgW6kS0mt7DubkiKoPLagVEXhnRCMX3ahXZQEjj7EV0fSSxFV6OouDSDHQdUnPbZFx5N
+         pu1zf2QMG6sKRWikOO6L5boEZAx6RPJKEbE9Jet30AWTCDCd84B8lCyA5iuBCuKSIqU4
+         wA6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVhhHyKHPV/fKKlocf5DQlhLfMd4Yst4AxATQZQcj7HZbARIVBhXDPa9te0IXM/3TJ6QseJNnVbr+PnMos=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywpn2imMg7G7FBWAcGa0EXkINWysNTf3ObwNco1/vkp/nZuneBu
+	APgVZfBYG0aVO2nh0nJ6rRsGB0XRc0NUtMrXYQywbH4bQWhcxFFIBDPFDsa1efxrjbg9548c1gU
+	3LaxsxfKwwg8f+FHqBBu957zuPeQKJnGybDY47PAzkg==
+X-Gm-Gg: ASbGncvaSKbs+c8PsBoVKpeXMShsY04y+mBgkKvhY7tcYw+XZJ81dFMXMcHsTuf2Xod
+	zXzfUmTQq6Fc3Uqin5XBZts5VWrvC+sB7sNhwyjfsiiY9XTyqm/0Vg6IgLc1EuuZWIKJwUOtesF
+	rBdWsJH53Y5E35v/wng2wv1yZRI2qOdg==
+X-Google-Smtp-Source: AGHT+IHM7A0yo5EwU0URGl5qPD/nSWVFx1Uch1mkQMPpJ9jiESTc768PtJKyMnU3hW6gMNfEhsZROCE5EGkLP46xzl4=
+X-Received: by 2002:a05:622a:5a15:b0:4a2:719b:122e with SMTP id
+ d75a77b69052e-4a5b9a40939mr176026001cf.18.1749400380740; Sun, 08 Jun 2025
+ 09:33:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] serial: Remove unused uart_get_console
-To: linux@treblig.org, gregkh@linuxfoundation.org, jirislaby@kernel.org,
- corbet@lwn.net
-Cc: linux-serial@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250608154654.73994-1-linux@treblig.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250608154654.73994-1-linux@treblig.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
+ <20250515182322.117840-11-pasha.tatashin@soleen.com> <CALzav=eAWdADOyZHxCTF-eKwiYhw2ELj3mKJ+8uQY6sOf0Hmuw@mail.gmail.com>
+In-Reply-To: <CALzav=eAWdADOyZHxCTF-eKwiYhw2ELj3mKJ+8uQY6sOf0Hmuw@mail.gmail.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Sun, 8 Jun 2025 12:32:23 -0400
+X-Gm-Features: AX0GCFshnOWS2B6OWr1wN-XQzYf4DQDY1vQdBPzBZzA3h43rNR_DwPDF1zPI47g
+Message-ID: <CA+CK2bB61cv2JMVoMLqBAL1iFTK6w3WznPwWepePYk441V5RvQ@mail.gmail.com>
+Subject: Re: [RFC v2 10/16] luo: luo_ioctl: add ioctl interface
+To: David Matlack <dmatlack@google.com>
+Cc: pratyush@kernel.org, jasonmiu@google.com, graf@amazon.com, 
+	changyuanl@google.com, rppt@kernel.org, rientjes@google.com, corbet@lwn.net, 
+	rdunlap@infradead.org, ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, 
+	ojeda@kernel.org, aliceryhl@google.com, masahiroy@kernel.org, 
+	akpm@linux-foundation.org, tj@kernel.org, yoann.congal@smile.fr, 
+	mmaurer@google.com, roman.gushchin@linux.dev, chenridong@huawei.com, 
+	axboe@kernel.dk, mark.rutland@arm.com, jannh@google.com, 
+	vincent.guittot@linaro.org, hannes@cmpxchg.org, dan.j.williams@intel.com, 
+	david@redhat.com, joel.granados@kernel.org, rostedt@goodmis.org, 
+	anna.schumaker@oracle.com, song@kernel.org, zhangguopeng@kylinos.cn, 
+	linux@weissschuh.net, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-mm@kvack.org, gregkh@linuxfoundation.org, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, rafael@kernel.org, dakr@kernel.org, 
+	bartosz.golaszewski@linaro.org, cw00.choi@samsung.com, 
+	myungjoo.ham@samsung.com, yesanishhere@gmail.com, Jonathan.Cameron@huawei.com, 
+	quic_zijuhu@quicinc.com, aleksander.lobakin@intel.com, ira.weiny@intel.com, 
+	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
+	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
+	stuart.w.hayes@gmail.com, ptyadav@amazon.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, May 28, 2025 at 4:29=E2=80=AFPM David Matlack <dmatlack@google.com>=
+ wrote:
+>
+> On Thu, May 15, 2025 at 11:23=E2=80=AFAM Pasha Tatashin
+> <pasha.tatashin@soleen.com> wrote:
+> > +static int luo_open(struct inode *inodep, struct file *filep)
+> > +{
+> > +       if (!capable(CAP_SYS_ADMIN))
+> > +               return -EACCES;
+>
+> It makes sense that LIVEUPDATE_IOCTL_EVENT* would require
+> CAP_SYS_ADMIN. But I think requiring it for LIVEUPDATE_IOCTL_FD* will
+> add a lot of complexity.
+> It would essentially require a central userspace process to mediate
+> all preserving/restoring of file descriptors across Live Update to
+> enforce security. If we need a central authority to enforce security,
+> I don't see why that authority can't just be the kernel or what the
+> industry gains by punting the problem to userspace. It seems like all
+> users of LUO are going to want the same security guarantees when it
+> comes to FDs: a FD preserved inside a given "security domain" should
+> not be accessible outside that domain.
+>
+> One way to do this in the kernel would be to have the kernel hand out
+> Live Update security tokens (say, some large random number). Then
+> require userspace to pass in a security token when preserving an FD.
+> Userspace can then only restore or unpreserve an FD if it passes back
+> in the security token associated with the FD. Then it's just up to
+> each userspace process to remember their token across kexec, keep it
+> secret from other untrusted processes, and pass it back in when
+> recovering FDs.
+>
+> All the kernel has to do is generate secure tokens, which I imagine
+> can't be that hard.
 
+Based on current discussions at the bi-weekly hypervisor live update
+sync [1], one proposed idea is for LIVEUPDATE_IOCTL_FD_* operations to
+be managed by a dedicated userspace agent. This agent would be
+responsible for preserving and restoring file descriptors,
+subsequently passing them to their respective owners (e.g., VMMs).
+While the complexity of implementing such a userspace architecture in
+a cloud environment is unclear to me, introducing kernel-enforced
+security boundaries around /dev/liveupdate tokens themselves (instead
+of CAP_SYS_ADMIN for the device node) seems too complex and
+potentially risky to incorporate at this stage of LUO's development.
+If finer-grained, token-based security is necessary, it could perhaps
+be an optional extension to LUO in the future managed by a dedicated
+CONFIG_*.
 
-On 6/8/25 8:46 AM, linux@treblig.org wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> 
-> uart_get_console() has been unused since 2019's
-> commit bd0d9d159988 ("serial: remove ks8695 driver")
-> 
-> Remove it, and it's associated docs.
-> 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks.
-
-> ---
->  Documentation/driver-api/serial/driver.rst |  7 +++---
->  drivers/tty/serial/serial_core.c           | 27 ----------------------
->  include/linux/serial_core.h                |  2 --
->  3 files changed, 3 insertions(+), 33 deletions(-)
-> 
-> diff --git a/Documentation/driver-api/serial/driver.rst b/Documentation/driver-api/serial/driver.rst
-> index fa1ebfcd4472..c1db6a1a67c4 100644
-> --- a/Documentation/driver-api/serial/driver.rst
-> +++ b/Documentation/driver-api/serial/driver.rst
-> @@ -24,9 +24,8 @@ console support.
->  Console Support
->  ---------------
->  
-> -The serial core provides a few helper functions.  This includes identifying
-> -the correct port structure (via uart_get_console()) and decoding command line
-> -arguments (uart_parse_options()).
-> +The serial core provides a few helper functions.  This includes
-> +decoding command line arguments (uart_parse_options()).
->  
->  There is also a helper function (uart_console_write()) which performs a
->  character by character write, translating newlines to CRLF sequences.
-> @@ -76,7 +75,7 @@ Other functions
->             uart_add_one_port uart_remove_one_port uart_console_write
->             uart_parse_earlycon uart_parse_options uart_set_options
->             uart_get_lsr_info uart_handle_dcd_change uart_handle_cts_change
-> -           uart_try_toggle_sysrq uart_get_console
-> +           uart_try_toggle_sysrq
->  
->  .. kernel-doc:: include/linux/serial_core.h
->     :identifiers: uart_port_tx_limited uart_port_tx
-> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-> index 1f7708a91fc6..c15e005047bb 100644
-> --- a/drivers/tty/serial/serial_core.c
-> +++ b/drivers/tty/serial/serial_core.c
-> @@ -2131,33 +2131,6 @@ void uart_console_write(struct uart_port *port, const char *s,
->  }
->  EXPORT_SYMBOL_GPL(uart_console_write);
->  
-> -/**
-> - * uart_get_console - get uart port for console
-> - * @ports: ports to search in
-> - * @nr: number of @ports
-> - * @co: console to search for
-> - * Returns: uart_port for the console @co
-> - *
-> - * Check whether an invalid uart number has been specified (as @co->index), and
-> - * if so, search for the first available port that does have console support.
-> - */
-> -struct uart_port * __init
-> -uart_get_console(struct uart_port *ports, int nr, struct console *co)
-> -{
-> -	int idx = co->index;
-> -
-> -	if (idx < 0 || idx >= nr || (ports[idx].iobase == 0 &&
-> -				     ports[idx].membase == NULL))
-> -		for (idx = 0; idx < nr; idx++)
-> -			if (ports[idx].iobase != 0 ||
-> -			    ports[idx].membase != NULL)
-> -				break;
-> -
-> -	co->index = idx;
-> -
-> -	return ports + idx;
-> -}
-> -
->  /**
->   * uart_parse_earlycon - Parse earlycon options
->   * @p:	     ptr to 2nd field (ie., just beyond '<name>,')
-> diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-> index 914b5e97e056..cfd891357573 100644
-> --- a/include/linux/serial_core.h
-> +++ b/include/linux/serial_core.h
-> @@ -1101,8 +1101,6 @@ static inline bool uart_console_registered(struct uart_port *port)
->  	return uart_console(port) && console_is_registered(port->cons);
->  }
->  
-> -struct uart_port *uart_get_console(struct uart_port *ports, int nr,
-> -				   struct console *c);
->  int uart_parse_earlycon(char *p, enum uart_iotype *iotype,
->  			resource_size_t *addr, char **options);
->  void uart_parse_options(const char *options, int *baud, int *parity, int *bits,
-
--- 
-~Randy
+[1] https://lore.kernel.org/all/958b2ec3-f5f1-b714-1256-1b06dcf7470f@google=
+.com/
