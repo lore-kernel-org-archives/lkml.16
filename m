@@ -1,321 +1,137 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F581DD9AB
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 23:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633BD2686B1
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 23:59:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749427085; cv=none; b=JBk5Mn3oG2xt8BZ692bxcL4Fd8uY6/iJ7DzMAqDRFfxbfFNwYwoFNZ4mEhKoI0gneb5JYARUZT4AbY+klfGT8h6R7Z8ZEScXQwSbxXCA9owPP6qOzr3VIR+oVfbSTjJ1FUcwt7RGrBXdlGU8AZqcU3Ev9EuqjEgD8MxWPfeCHhM=
+	t=1749427160; cv=none; b=fkRCVDhsUIhmJR58xT++EOuaINQktNEp68WV8i99rsmzUlLBzNdulY+CB1GdjHYzIdT2W9a4ZQDQ4E0jwiuozNpe4eNPJC9+7p+B0WXo5BiZ1+V7VusNtMBzuSBPESurFkrkachtVM8d4bXkeHGvfn7Rzf1VedZ0toRDcblP2z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749427085; c=relaxed/simple;
-	bh=8FEgVl2BB6VekZGu3HxTdXWCfjGEe9g9sTbXFxCOVB4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aZ/iv2uEfANpR5KadPubMZVrDWd6+K2Nnpf9HH8USzv3n35Z/zMPYMIXUEaqgevN9W9nIgTDjJiX9ECFiAtGnElGfN0n7pe35CGTZ+3nq3JSqaV6wEHtfqlS4dxaerqLZcXZGq/1OiFjYZ5hYTx/Y79H8JTeAu6CHjuvgR95vtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LkCEC5N+; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749427160; c=relaxed/simple;
+	bh=pophgDGQcTCoOGYTvZJPnSg+Dj9iwuitVrCurYQEid8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=mlptrk6fAPuUkqeeKLkQRUkqfEETLoVdE4zO5EBVx1uD2KaT7GTw46Sn4/10XH2Ht6BnqMGbmZgG/AIUxXYImYT9oGbyO1N2w8y2iQAnhfaCHB3IbFx5FGSccR70DUJiHkH+BcKK2HPBz7Cg+yTeEyPTv/W+JKda+nVn4KMG+sU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UMacrvot; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LkCEC5N+"
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-530f9edf5a3so294720e0c.1
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 16:58:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749427082; x=1750031882; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iGmH5ljuY513Q7oN1sZEkjkw4WvDdwuxctgU+jqBt18=;
-        b=LkCEC5N+4t/egudGL03dFdmYtS00Y7d1opilQ4exR1yUeYcdNP9kShueKiGU4ugdoJ
-         rYnGBInGDQMz6rDbCJSc0VJPRa5XjGJxX41evEk+6U00CBKSSvmiblUdndMTMERjpa+i
-         mSVSl/NmH1ga5b6WO1ucxrvZu6OaBaGzGkJ2qn6bBjNcg/3utq7tgOuyvihMa7wAmbky
-         hk1EvVptLHXoQ2csNEusMYige2V6X1CuIm64Vnz2DCvMv2eRo5u4fa7krNmj4FpCI56q
-         K69U5yP2Uukz7TGq2QLy0wU7LPU32cklHpKQ/9MByq36buY2lfEX7wf5umLprMnkkuK+
-         IsPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749427082; x=1750031882;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iGmH5ljuY513Q7oN1sZEkjkw4WvDdwuxctgU+jqBt18=;
-        b=Hm2GNcKhwFoSO036sdWwQklAg/kM0k8+6v54dXU9VPSRWmUqawHrCQ3BHEFR+pI4SH
-         hMONy356sHENGD8CN7E72U01i02baY/yMLKQ+QkHpG5sQksBZUwAV7ViapAxqHEpASeg
-         NZWLdvauQtsT+289KYuVEmZH6+3P3veZ5QE3AShaQbiAtJ3r1k/dr2U8cRXsIQUQkzI1
-         uijIfYci6d4FX4r1Ng8Yoy/QXTXg37nEfyfDnpNEEc2C+g93/itjXIA+w6vdpZ5Z4d67
-         +OFb23x4t9uwrmLGYtIT0935LFR/gTb7kwJfOKL9rWhkEKzYofIYh2vyZFQKKw2T4ilP
-         DzXg==
-X-Forwarded-Encrypted: i=1; AJvYcCW+7/oSwEwpXdQryTmqXkCMlygLp+k58azhhqmVbXzyXGRwgrcbMwZIFnBam+81l0/w1jt2S8sKdcNgVr8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZySA/nfUlcATNFaaIKbEt1GDisgVYgwsz79jMaFFa5DERGQ2b
-	wDOGvgocBGpasgBttVE9u1G9BATMxmjbPP+rZ8pjRDD3i6Pto+msM2ZPvgPFLeIJuytQBrERa3x
-	A/4liJ+hvCSkKHbrQYFIrj6W9/6RgH/Y=
-X-Gm-Gg: ASbGncvY/DJmE3HgMys2xjYFM8CQdky3Fck/ZwZ4A6fdRc6DTUChSuCHGZ0CKxjTpRm
-	vfzQo1x3ewMrXCrb5DLGvWem2pGHKceJdM3IDt9BRmeHiiuBcY08m3TZB0XN7HA/BVZzoG7BTQQ
-	nanLF0qNEg6DYMqLkdXo0VBgy9QeLPTZyj/ua4O7i/dLBKa9+tBw9FhNA=
-X-Google-Smtp-Source: AGHT+IHyYhYjhNPGYT7+MJcc3pDVXLQUEp31kNf1HcGDh9BBe5Dw8biv9DE9152RZLiLmZEOevEMDeEjmYciDnsJJ6A=
-X-Received: by 2002:a05:6122:1313:b0:530:5fe5:7ea4 with SMTP id
- 71dfb90a1353d-530e48cac7cmr9116549e0c.11.1749427081653; Sun, 08 Jun 2025
- 16:58:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UMacrvot"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749427159; x=1780963159;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=pophgDGQcTCoOGYTvZJPnSg+Dj9iwuitVrCurYQEid8=;
+  b=UMacrvotCJNdxdQ+8NASllfRbTDEUQ3jDuUbjIK4F99U8YBz0p+BIrBc
+   GEN4KuqLNcA/w+GD+ANySE8jNcpFra0io/TQSHv1VpJJqUSMNvxDY5q+u
+   WrHtat/BJ7MFfavzI9szGmZ9XkAhMH4C9G5KiLaTZO2ZiEO3q4iUWGK7V
+   EMT7M2nLtq32XG8g2vOgHP6eOAUFLp3oWd5JAAewkD6oyujVpciSB0L/x
+   IaqTQbE/C9oUFDSuQ9ZAa9iDyMKpry+t0Fx4GkgxSk6wZTsbJ/l8IHb0E
+   hPYbAm7LWR37AU/ZJo/ZOLdcrYzVYO0IzozE+b5yOziqHZ8f6IgFqGU3r
+   g==;
+X-CSE-ConnectionGUID: 9DL3gd4ZTQmEzXEGZW+fVg==
+X-CSE-MsgGUID: A5RqeSh6QEiWKTJMAMOKkA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="62114523"
+X-IronPort-AV: E=Sophos;i="6.16,221,1744095600"; 
+   d="scan'208";a="62114523"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2025 16:59:17 -0700
+X-CSE-ConnectionGUID: p4rjQpA4TimTuzCdtaOfqA==
+X-CSE-MsgGUID: 93sC67mCSYK3TZeNpQPr5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,221,1744095600"; 
+   d="scan'208";a="146279352"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 08 Jun 2025 16:59:16 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uOPuz-0006e5-35;
+	Sun, 08 Jun 2025 23:59:13 +0000
+Date: Mon, 9 Jun 2025 07:58:59 +0800
+From: kernel test robot <lkp@intel.com>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: arch/mips/txx9/generic/setup.c:837:32: error: assignment to 'ssize_t
+ (*)(struct file *, struct kobject *, const struct bin_attribute *, char *,
+ loff_t,  size_t)' {aka 'int (*)(struct file *, struct kobject *, const
+ struct bin_attribute *, char *, long lon...
+Message-ID: <202506090720.YHNaPWqT-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250608192713.95875-1-ryncsn@gmail.com>
-In-Reply-To: <20250608192713.95875-1-ryncsn@gmail.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Mon, 9 Jun 2025 11:57:50 +1200
-X-Gm-Features: AX0GCFtYdJBSCWbKG8V1Cn7s2VDARmRAoLxVqB4RKD2jr24r86XEJoL93eK_Ygk
-Message-ID: <CAGsJ_4xSRdjVac_UdUKBk2-5upeHMEEow3_Q-F_VSa8HYj0mtw@mail.gmail.com>
-Subject: Re: [PATCH] mm/shmem, swap: fix softlockup with mTHP swapin
-To: Kairui Song <kasong@tencent.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Hugh Dickins <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Chris Li <chrisl@kernel.org>, 
-	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Usama Arif <usamaarif642@gmail.com>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, Jun 9, 2025 at 7:27=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wrote=
-:
->
-> From: Kairui Song <kasong@tencent.com>
->
-> Following softlockup can be easily reproduced on my test machine with:
->
-> echo always > /sys/kernel/mm/transparent_hugepage/hugepages-64kB/enabled
-> swapon /dev/zram0 # zram0 is a 48G swap device
-> mkdir -p /sys/fs/cgroup/memory/test
-> echo 1G > /sys/fs/cgroup/test/memory.max
-> echo $BASHPID > /sys/fs/cgroup/test/cgroup.procs
-> while true; do
->     dd if=3D/dev/zero of=3D/tmp/test.img bs=3D1M count=3D5120
->     cat /tmp/test.img > /dev/null
->     rm /tmp/test.img
-> done
->
-> Then after a while:
-> watchdog: BUG: soft lockup - CPU#0 stuck for 763s! [cat:5787]
-> Modules linked in: zram virtiofs
-> CPU: 0 UID: 0 PID: 5787 Comm: cat Kdump: loaded Tainted: G             L =
-     6.15.0.orig-gf3021d9246bc-dirty #118 PREEMPT(voluntary)=C2=B7
-> Tainted: [L]=3DSOFTLOCKUP
-> Hardware name: Red Hat KVM/RHEL-AV, BIOS 0.0.0 02/06/2015
-> RIP: 0010:mpol_shared_policy_lookup+0xd/0x70
-> Code: e9 b8 b4 ff ff 31 c0 c3 cc cc cc cc 90 90 90 90 90 90 90 90 90 90 9=
-0 90 90 90 90 90 90 66 0f 1f 00 0f 1f 44 00 00 41 54 55 53 <48> 8b 1f 48 85=
- db 74 41 4c 8d 67 08 48 89 fb 48 89 f5 4c 89 e7 e8
-> RSP: 0018:ffffc90002b1fc28 EFLAGS: 00000202
-> RAX: 00000000001c20ca RBX: 0000000000724e1e RCX: 0000000000000001
-> RDX: ffff888118e214c8 RSI: 0000000000057d42 RDI: ffff888118e21518
-> RBP: 000000000002bec8 R08: 0000000000000001 R09: 0000000000000000
-> R10: 0000000000000bf4 R11: 0000000000000000 R12: 0000000000000001
-> R13: 00000000001c20ca R14: 00000000001c20ca R15: 0000000000000000
-> FS:  00007f03f995c740(0000) GS:ffff88a07ad9a000(0000) knlGS:0000000000000=
-000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f03f98f1000 CR3: 0000000144626004 CR4: 0000000000770eb0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> PKRU: 55555554
-> Call Trace:
->  <TASK>
->  shmem_alloc_folio+0x31/0xc0
->  shmem_swapin_folio+0x309/0xcf0
->  ? filemap_get_entry+0x117/0x1e0
->  ? xas_load+0xd/0xb0
->  ? filemap_get_entry+0x101/0x1e0
->  shmem_get_folio_gfp+0x2ed/0x5b0
->  shmem_file_read_iter+0x7f/0x2e0
->  vfs_read+0x252/0x330
->  ksys_read+0x68/0xf0
->  do_syscall_64+0x4c/0x1c0
->  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> RIP: 0033:0x7f03f9a46991
-> Code: 00 48 8b 15 81 14 10 00 f7 d8 64 89 02 b8 ff ff ff ff eb bd e8 20 a=
-d 01 00 f3 0f 1e fa 80 3d 35 97 10 00 00 74 13 31 c0 0f 05 <48> 3d 00 f0 ff=
- ff 77 4f c3 66 0f 1f 44 00 00 55 48 89 e5 48 83 ec
-> RSP: 002b:00007fff3c52bd28 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-> RAX: ffffffffffffffda RBX: 0000000000040000 RCX: 00007f03f9a46991
-> RDX: 0000000000040000 RSI: 00007f03f98ba000 RDI: 0000000000000003
-> RBP: 00007fff3c52bd50 R08: 0000000000000000 R09: 00007f03f9b9a380
-> R10: 0000000000000022 R11: 0000000000000246 R12: 0000000000040000
-> R13: 00007f03f98ba000 R14: 0000000000000003 R15: 0000000000000000
->  </TASK>
->
-> The reason is simple, readahead brought some order 0 folio in swap
-> cache, and the swapin mTHP folio being allocated is in confict with it,
-> so swapcache_prepare fails and causes shmem_swap_alloc_folio to return
-> -EEXIST, and shmem simply retries again and again causing this loop.
->
-> Fix it by applying a similar fix for anon mTHP swapin.
->
-> The performance change is very slight, time of swapin 10g zero folios
-> (test for 12 times):
-> Before:  2.49s
-> After:   2.52s
->
-> Fixes: 1dd44c0af4fa1 ("mm: shmem: skip swapcache for swapin of synchronou=
-s swap device")
-> Signed-off-by: Kairui Song <kasong@tencent.com>
->
-> ---
->
-> I found this issue while doing a performance comparing of mm-new with
-> swap table series [1] on top of mm-new. This issue no longer exists
-> if the swap table series is applied, because it elimated both
-> SWAP_HAS_CACHE and SWP_SYNCHRONOUS_IO swapin completely while improving
-> the performance and simplify the code, and the race swapin is solved
-> differently by then.
->
-> (The zero map fix might still need to stay for a while, but could be
-> optimized too later with swap table).
->
-> It will be good if the swap table series could get reviewed and merged
-> to avoid more fixes like this. SWAP_HAS_CACHE and SWP_SYNCHRONOUS_IO has
-> a history of causing many issues. I'll do a swap table rebase on top of
-> this fix, if this one is accepted.
->
-> And for a comparision, swap in 10G into shmem:
->
-> Before this patch:  2.49s
-> After this patch:   2.52s
-> After swap table:   2.37s (Removing SWAP_HAS_CACHE and SWP_SYNCHRONOUS_IO=
-,
->                            still not in the best shape but looking good)
->
-> Link: https://lore.kernel.org/linux-mm/20250514201729.48420-1-ryncsn@gmai=
-l.com/ [1]
->
->  mm/memory.c | 20 --------------------
->  mm/shmem.c  | 12 +++++++++++-
->  mm/swap.h   | 19 +++++++++++++++++++
->  3 files changed, 30 insertions(+), 21 deletions(-)
->
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 9ead7ab07e8e..3845ed068d74 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -4313,26 +4313,6 @@ static struct folio *__alloc_swap_folio(struct vm_=
-fault *vmf)
->  }
->
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> -static inline int non_swapcache_batch(swp_entry_t entry, int max_nr)
-> -{
-> -       struct swap_info_struct *si =3D swp_swap_info(entry);
-> -       pgoff_t offset =3D swp_offset(entry);
-> -       int i;
-> -
-> -       /*
-> -        * While allocating a large folio and doing swap_read_folio, whic=
-h is
-> -        * the case the being faulted pte doesn't have swapcache. We need=
- to
-> -        * ensure all PTEs have no cache as well, otherwise, we might go =
-to
-> -        * swap devices while the content is in swapcache.
-> -        */
-> -       for (i =3D 0; i < max_nr; i++) {
-> -               if ((si->swap_map[offset + i] & SWAP_HAS_CACHE))
-> -                       return i;
-> -       }
-> -
-> -       return i;
-> -}
-> -
->  /*
->   * Check if the PTEs within a range are contiguous swap entries
->   * and have consistent swapcache, zeromap.
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index 73182e904f9c..484cd3043a78 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -1995,6 +1995,14 @@ static struct folio *shmem_swap_alloc_folio(struct=
- inode *inode,
->          */
->         if (swapcache_prepare(entry, nr_pages)) {
->                 folio_put(new);
-> +
-> +               /*
-> +                * A smaller folio is in the swap cache, mTHP swapin will=
- always fail
-> +                * until it's gone. Return -EINVAL to fallback to order 0=
-.
-> +                */
-> +               if (non_swapcache_batch(entry, nr_pages) !=3D nr_pages)
-> +                       return ERR_PTR(-EINVAL);
-> +
+Hi Thomas,
 
-We're doing this before swapcache_prepare() for mTHP swapin. Why does it
-happen after swapcache_prepare() in the shmem case?
+FYI, the error/warning still remains.
 
->                 return ERR_PTR(-EEXIST);
->         }
->
-> @@ -2256,6 +2264,7 @@ static int shmem_swapin_folio(struct inode *inode, =
-pgoff_t index,
->         folio =3D swap_cache_get_folio(swap, NULL, 0);
->         order =3D xa_get_order(&mapping->i_pages, index);
->         if (!folio) {
-> +               int nr_pages =3D 1 << order;
->                 bool fallback_order0 =3D false;
->
->                 /* Or update major stats only when swapin succeeds?? */
-> @@ -2271,7 +2280,8 @@ static int shmem_swapin_folio(struct inode *inode, =
-pgoff_t index,
->                  * to swapin order-0 folio, as well as for zswap case.
->                  */
->                 if (order > 0 && ((vma && unlikely(userfaultfd_armed(vma)=
-)) ||
-> -                                 !zswap_never_enabled()))
-> +                                 !zswap_never_enabled() ||
-> +                                 nr_pages !=3D swap_zeromap_batch(swap, =
-nr_pages, NULL)))
->                         fallback_order0 =3D true;
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+commit: 97d06802d10a2827ef46fd31789a26117ce7f3d9 sysfs: constify bin_attribute argument of bin_attribute::read/write()
+date:   8 weeks ago
+config: mips-rbtx49xx_defconfig (https://download.01.org/0day-ci/archive/20250609/202506090720.YHNaPWqT-lkp@intel.com/config)
+compiler: mips-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250609/202506090720.YHNaPWqT-lkp@intel.com/reproduce)
 
-I mean, why don't we reject large folios at this point instead?
-Because if we do the check here, we might end up with a small folio in
-swapcache afterward?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506090720.YHNaPWqT-lkp@intel.com/
 
->
->                 /* Skip swapcache for synchronous device. */
-> diff --git a/mm/swap.h b/mm/swap.h
-> index e87a0f19a0ee..2d8ce1102153 100644
-> --- a/mm/swap.h
-> +++ b/mm/swap.h
-> @@ -108,6 +108,25 @@ static inline int swap_zeromap_batch(swp_entry_t ent=
-ry, int max_nr,
->                 return find_next_bit(sis->zeromap, end, start) - start;
->  }
->
-> +static inline int non_swapcache_batch(swp_entry_t entry, int max_nr)
-> +{
-> +       struct swap_info_struct *si =3D swp_swap_info(entry);
-> +       pgoff_t offset =3D swp_offset(entry);
-> +       int i;
-> +
-> +       /*
-> +        * While allocating a large folio and doing mTHP swapin, we need =
-to
-> +        * ensure all entries are not cached, otherwise, the mTHP folio w=
-ill
-> +        * be in conflict with the folio in swap cache.
-> +        */
-> +       for (i =3D 0; i < max_nr; i++) {
-> +               if ((si->swap_map[offset + i] & SWAP_HAS_CACHE))
-> +                       return i;
-> +       }
-> +
-> +       return i;
-> +}
-> +
->  #else /* CONFIG_SWAP */
->  struct swap_iocb;
->  static inline void swap_read_folio(struct folio *folio, struct swap_iocb=
- **plug)
-> --
-> 2.49.0
->
+All errors (new ones prefixed by >>):
 
-Thanks
-Barry
+   arch/mips/txx9/generic/setup.c: In function 'txx9_sramc_init':
+>> arch/mips/txx9/generic/setup.c:837:32: error: assignment to 'ssize_t (*)(struct file *, struct kobject *, const struct bin_attribute *, char *, loff_t,  size_t)' {aka 'int (*)(struct file *, struct kobject *, const struct bin_attribute *, char *, long long int,  unsigned int)'} from incompatible pointer type 'ssize_t (*)(struct file *, struct kobject *, struct bin_attribute *, char *, loff_t,  size_t)' {aka 'int (*)(struct file *, struct kobject *, struct bin_attribute *, char *, long long int,  unsigned int)'} [-Wincompatible-pointer-types]
+     837 |         dev->bindata_attr.read = txx9_sram_read;
+         |                                ^
+   arch/mips/txx9/generic/setup.c:776:16: note: 'txx9_sram_read' declared here
+     776 | static ssize_t txx9_sram_read(struct file *filp, struct kobject *kobj,
+         |                ^~~~~~~~~~~~~~
+   arch/mips/txx9/generic/setup.c:838:33: error: assignment to 'ssize_t (*)(struct file *, struct kobject *, const struct bin_attribute *, char *, loff_t,  size_t)' {aka 'int (*)(struct file *, struct kobject *, const struct bin_attribute *, char *, long long int,  unsigned int)'} from incompatible pointer type 'ssize_t (*)(struct file *, struct kobject *, struct bin_attribute *, char *, loff_t,  size_t)' {aka 'int (*)(struct file *, struct kobject *, struct bin_attribute *, char *, long long int,  unsigned int)'} [-Wincompatible-pointer-types]
+     838 |         dev->bindata_attr.write = txx9_sram_write;
+         |                                 ^
+   arch/mips/txx9/generic/setup.c:791:16: note: 'txx9_sram_write' declared here
+     791 | static ssize_t txx9_sram_write(struct file *filp, struct kobject *kobj,
+         |                ^~~~~~~~~~~~~~~
+
+
+vim +837 arch/mips/txx9/generic/setup.c
+
+1610c8a8f2d3eb Levente Kurusa 2013-12-19  813  
+c3b28ae260d99a Atsushi Nemoto 2009-05-25  814  void __init txx9_sramc_init(struct resource *r)
+c3b28ae260d99a Atsushi Nemoto 2009-05-25  815  {
+269a3eb1bf10a0 Kay Sievers    2011-12-21  816  	struct txx9_sramc_dev *dev;
+c3b28ae260d99a Atsushi Nemoto 2009-05-25  817  	size_t size;
+c3b28ae260d99a Atsushi Nemoto 2009-05-25  818  	int err;
+c3b28ae260d99a Atsushi Nemoto 2009-05-25  819  
+269a3eb1bf10a0 Kay Sievers    2011-12-21  820  	err = subsys_system_register(&txx9_sramc_subsys, NULL);
+269a3eb1bf10a0 Kay Sievers    2011-12-21  821  	if (err)
+c3b28ae260d99a Atsushi Nemoto 2009-05-25  822  		return;
+c3b28ae260d99a Atsushi Nemoto 2009-05-25  823  	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+c3b28ae260d99a Atsushi Nemoto 2009-05-25  824  	if (!dev)
+c3b28ae260d99a Atsushi Nemoto 2009-05-25  825  		return;
+c3b28ae260d99a Atsushi Nemoto 2009-05-25  826  	size = resource_size(r);
+c3b28ae260d99a Atsushi Nemoto 2009-05-25  827  	dev->base = ioremap(r->start, size);
+1610c8a8f2d3eb Levente Kurusa 2013-12-19  828  	if (!dev->base) {
+1610c8a8f2d3eb Levente Kurusa 2013-12-19  829  		kfree(dev);
+1610c8a8f2d3eb Levente Kurusa 2013-12-19  830  		return;
+1610c8a8f2d3eb Levente Kurusa 2013-12-19  831  	}
+1610c8a8f2d3eb Levente Kurusa 2013-12-19  832  	dev->dev.release = &txx9_device_release;
+269a3eb1bf10a0 Kay Sievers    2011-12-21  833  	dev->dev.bus = &txx9_sramc_subsys;
+f937331b3f92cb Wolfram Sang   2010-03-15  834  	sysfs_bin_attr_init(&dev->bindata_attr);
+c3b28ae260d99a Atsushi Nemoto 2009-05-25  835  	dev->bindata_attr.attr.name = "bindata";
+c3b28ae260d99a Atsushi Nemoto 2009-05-25  836  	dev->bindata_attr.attr.mode = S_IRUSR | S_IWUSR;
+c3b28ae260d99a Atsushi Nemoto 2009-05-25 @837  	dev->bindata_attr.read = txx9_sram_read;
+
+:::::: The code at line 837 was first introduced by commit
+:::::: c3b28ae260d99a5364a31210a36a3246bd9647f7 MIPS: TXx9: Add SRAMC support
+
+:::::: TO: Atsushi Nemoto <anemo@mba.ocn.ne.jp>
+:::::: CC: Ralf Baechle <ralf@linux-mips.org>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
