@@ -1,108 +1,108 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6507D54673;
-	Sun,  8 Jun 2025 17:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447658BEC
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 17:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749404460; cv=none; b=ozrITUPAdLHxCmt+47dN080Y8nKeyIhqVEJnDU1SzU7tN61gLhd+0vR82f4oZUHDxLKGMDH2ki5tXt7aHyoqfYGsX6aKH4VEfw3DzJ8Z3N2oQniq5mNG8UKRCV7O1GG4jeJimNE5L2ipfVL30nkzXRqi0aXxOGnULQN4AEr8qhs=
+	t=1749404566; cv=none; b=VqBnL93joK7+i3lqVj75oeRkmq/10czjyaDJq2GYo4CJt+ZB8dnndlYm8xXAxKij9mbJXH6I+XH0u+RHzRgO6a+hTrS9Zx7uFsxtXKlGkzUigJzIaX0FrampNx0Ti67yQ7W9frKYNNu0gPxYJJSv/qXa11/tQUzTlo8lhAP0IsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749404460; c=relaxed/simple;
-	bh=tNa7t++GLpb5XVp7b/gfkdm8zfOa/b9SJSrTVO5CBW0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uxQARyjuBKwSEAGefo7gOvSSB1PzmZ51DL9QzLtQ20UqJHhykbXN8Py8rC1TLv6QC2Qe8cb5H4oaAv0QUiTYUCrjmpQrF8Ns6MUT09jsPTXp40auEQohCBQLRTXiPR27HnlnQz4PB0T/Ii0tzChsoU6tAVWS9j/jRK2/wAME+sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=S2m1kAyM; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1749404566; c=relaxed/simple;
+	bh=xWhyC3WG8AsFwE2Gvf8cfSmK25lZwLYI0n25Uu1fifs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fRY+jwKvYEFHgFkrDHnU+jipkfvmmwDHbzSuKeEwyxbDyxbbuy/7pqanPc3jjTVEUSEfVqgSKhK3frT6yyvM4OszHCD/TLi4j576wTeYO0+UoPJFSvZ2m5yZXx9kZncWv8UWrdEk9fcJCqyd9Nj9U81qDGKGPVEvOqaDdIf3E+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=XKS8jhZT; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="S2m1kAyM"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a548a73ff2so346551f8f.0;
-        Sun, 08 Jun 2025 10:40:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1749404457; x=1750009257; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V298GByS0UihQqnZbWCQzM9pjzFH0uvqjj1S1drsO9Y=;
-        b=S2m1kAyMi7TEQNxt14rX7zNjeT5SKz05ivyS86hay/sZt8nJ3sfV3F56l4sWkcuDOu
-         NCy57P//D40ijs27cJ+n5TDvnjjiHOmAMhWQc0SRxc0lo0QPN1NxAjfvcgrwwUM3wzjX
-         X0LTfiCAIFzeUinziibUabEzx2WFpqia22vNgnMZuW87G/lmgtH1Jq0FSkJiNgiwXFrU
-         C/koXrcZRTFLz26OZSVGS5smLcWhUg78VNwzx3Nqr2K2o7z0EceCmknidVfoWMroHE0P
-         7sDAB/2Lq+TL7rRkx5kzEYvDMisKAUw/U1qastsduISRvH5sHmqqrl+pBXCH4sNp35pU
-         Odzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749404457; x=1750009257;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V298GByS0UihQqnZbWCQzM9pjzFH0uvqjj1S1drsO9Y=;
-        b=FQVDWwe0hgCrilC28KkPAM5tNIdjTYwn6YYJbq59vOeu/nWBCFyQgaAw0kaFOasoDW
-         S8ICzNldqx90gHplO58oTgmR3HZcgGVyrRT5eL4mzefKE3FVqMhwYYDgxxZzpbDWM+dK
-         g4PPrlbb3yhE+Xf8rdVkG6YSHbR6tf6Rjmbt68qZRmZDTJf/IF7pfdPEPAkJO/uF0wTw
-         LWfN+6NYpR3kaOFuWEjuJ1h5AO/WPdPXWCV5jZTnlRPcTm/ZOkjetOC/QtZxxfKUmVeC
-         NeQUWDXlFaomSNvjXdcZpAEqiAIefjxruoQ1XU7V3+C3l78Dy0JFY8KDKNlcbF8g7Dln
-         EazQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW7k51UYGwEX9s352XvUstI6sv4JgYedolMavj1cIhrYp2TxaONVhyEgV1Darg9BjF/ZpM6O2JOTLUL4qw=@vger.kernel.org, AJvYcCWllNXfoudTQV7fgV73W46EifiKq6WLfhgvMs2VlUR6gfuBiGxGjXR1F33+SdFVyQqbVZ37Mnz9@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhNOkbu8/OcqaQfUJ4MLKEFTFI7FNlU6sak8r1xTmsDJc3/oQG
-	PxNfBvuQn5l+kUtfIysWG37NStvnBkdfkrlgmumApYNacAokRtSrsRs=
-X-Gm-Gg: ASbGncsFUNgWRRKxtmn/y4/WH4hpLvpHYgzfMjzXyEshm/8oVnqvhEDmqAO1V68ARjJ
-	MpWuSc2dWTsjNo6j8zHL7gcCPhK+mzKr5Six66+sE88tt26Xxbh3Xlusg74DEiudykR06DYxvEX
-	s73p3dqqrjhGm1Lh7FO7G6Psiel/PBTSHyc0d6PrPToRu6AlswPJ7SQWrvSusFjQFxoTQPmzinl
-	I8Mq5rNaYHwLGOiDsHK/fZeoGQm4XjZgUWdOCG1ZCEv9YX/YAqkfrDflDMylyZFwUow7oSDeeKU
-	T+EIhJ/RfF491+asdQVzFNv5AM4ZZYrJ5B5R8/nHh5cAVHnx3Tk0yo7n3zJQAsoZ7MLZVm65WSu
-	+Snv1+duFIGlcgOYH72KXU2mVfUc=
-X-Google-Smtp-Source: AGHT+IHnN4ArvaernVN0i2Q3r5CdugEYMRzyU+aoqQurZJvd+6mjnN24e9YgyDP9K/6+UPyhBfAazw==
-X-Received: by 2002:a05:6000:2585:b0:39f:175b:a68d with SMTP id ffacd0b85a97d-3a53188da55mr8344003f8f.11.1749404456378;
-        Sun, 08 Jun 2025 10:40:56 -0700 (PDT)
-Received: from [192.168.1.3] (p5b2ace02.dip0.t-ipconnect.de. [91.42.206.2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323ae18esm7821035f8f.33.2025.06.08.10.40.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Jun 2025 10:40:55 -0700 (PDT)
-Message-ID: <79767ec6-14cd-4fdc-975d-e303d3d2fd78@googlemail.com>
-Date: Sun, 8 Jun 2025 19:40:54 +0200
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="XKS8jhZT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=uQrr9+ziq2Ag/Su5s1v4GfCl6IT6CAMwFN43MphlDhw=; b=XKS8jhZTeNodgfuk
+	9AoFzszaTnnJVTTfjPtaonJEcbvzTg94jS/pOD+rh01l70LQyAbweT2g5QJxOJCtpBJinWPZ6dB2n
+	wvRINBfLS6Z2vkgxiHLNm2Z3q18TuQ4TnHtS7qVhRYliwA1fxL448hJpkw3GaOQJLkwH9BCpzRrF3
+	An4/NVK2Fzmc/gAYrKdsUVLvh2iaTydmDcQDYBLwYBIX4H4oXxBPEHGqLlKc54QgqEHoSCf0STXar
+	eFzOL0DIc6p+DOC6CsyXXlUVXSv4ei/6hcZ4KNQOcT21oGP5/IinKuPGSN4oQpg7vW97mPt7Dipat
+	yvlnSnDOKKda2Tm5uw==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1uOK2W-008HRa-28;
+	Sun, 08 Jun 2025 17:42:36 +0000
+From: linux@treblig.org
+To: akpm@linux-foundation.org,
+	dmitry.osipenko@collabora.com
+Cc: linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] reboot: Remove unused unregister_platform_power_off
+Date: Sun,  8 Jun 2025 18:42:35 +0100
+Message-ID: <20250608174235.116424-1-linux@treblig.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.15 00/34] 6.15.2-rc1 review
-Content-Language: de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250607100719.711372213@linuxfoundation.org>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250607100719.711372213@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Am 07.06.2025 um 12:07 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.15.2 release.
-> There are 34 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+unregister_platform_power_off() was added as part of 2022's
+commit fb61375ecfba ("kernel/reboot: Add register_platform_power_off()")
+but has remained unused.
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+Remove it.
 
+Note it's a pair with register_platform_power_off() so
+seems symmetric; however, I think platforms are chosen
+and then stay that way for the boot - so don't
+get unregistered.
 
-Beste Grüße,
-Peter Schneider
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+ include/linux/reboot.h |  1 -
+ kernel/reboot.c        | 16 ----------------
+ 2 files changed, 17 deletions(-)
 
+diff --git a/include/linux/reboot.h b/include/linux/reboot.h
+index aa08c3bbbf59..82c0a373c58c 100644
+--- a/include/linux/reboot.h
++++ b/include/linux/reboot.h
+@@ -161,7 +161,6 @@ int devm_register_restart_handler(struct device *dev,
+ 				  void *cb_data);
+ 
+ int register_platform_power_off(void (*power_off)(void));
+-void unregister_platform_power_off(void (*power_off)(void));
+ 
+ /*
+  * Architecture independent implemenations of sys_reboot commands.
+diff --git a/kernel/reboot.c b/kernel/reboot.c
+index ec087827c85c..515716afc101 100644
+--- a/kernel/reboot.c
++++ b/kernel/reboot.c
+@@ -626,22 +626,6 @@ int register_platform_power_off(void (*power_off)(void))
+ }
+ EXPORT_SYMBOL_GPL(register_platform_power_off);
+ 
+-/**
+- *	unregister_platform_power_off - Unregister platform-level power-off callback
+- *	@power_off: Power-off callback
+- *
+- *	Unregisters previously registered platform power-off callback.
+- */
+-void unregister_platform_power_off(void (*power_off)(void))
+-{
+-	if (platform_power_off_handler &&
+-	    platform_power_off_handler->cb_data == power_off) {
+-		unregister_sys_off_handler(platform_power_off_handler);
+-		platform_power_off_handler = NULL;
+-	}
+-}
+-EXPORT_SYMBOL_GPL(unregister_platform_power_off);
+-
+ static int legacy_pm_power_off(struct sys_off_data *data)
+ {
+ 	if (pm_power_off)
 -- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
+2.49.0
 
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
