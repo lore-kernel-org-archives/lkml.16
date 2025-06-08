@@ -1,143 +1,190 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029511553A3
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 16:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD0716132F;
+	Sun,  8 Jun 2025 16:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749400383; cv=none; b=OPUEa+TjoVvRa5i+kH2iPpJCCtxE/u7M7nTovyhqGtWF7LasfFucM2E385w0sun4C73GE3tDzb4UY0Fv9WhFxLJkW0SzHXX7bSGE1qUBkvH4PNDR2RqRRA4O/vcBayp5MpDRInc4p7fMb3W3gm6Fko7A6vYQuvtUZp3MwwjzQks=
+	t=1749400413; cv=none; b=ZLOv09pqsU7zxKEb9BGIak7+hM6Gsps9suWQBhujUZk/DX1qz8bH+aPTtznKNWf22LUalIO7YXwM/ierfpC3g2DgE2f89QyxazKticSMJWrrfIUjD5BRzz75iK4vVk1J4EEm2gtfbON1FIBq7kLqPIbXKmGqHG4fQFmEtBmRhvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749400383; c=relaxed/simple;
-	bh=Tx4MGUsST5PHQCrNmFWznKqxDMYt7EFT3jPu2toPcB8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m5e4grTfTvPdwiv70z8BNLR/ydxZRn5khsp6guTISzORCe5pn4jwMdOZwNkScD2Pfd6v9o6axQhgA0wMJb2hanakqX9v1QPMXywTR/xfI6wPKeSOskiS91MKT+hDrIssZ4V7IvZy3eNrw/w+7lh4dZS14JpVaZVricNsgMqMNRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=nVrbl6P3; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1749400413; c=relaxed/simple;
+	bh=5UaJKy+PK+BeyZzfXGi92iOZ13ufZqJEChURi7S104E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TnrcsuWNbmNfl83kDYU5zbEEbq+1gzVoF0/oLZpKRxNAlqRW5lAQ4pgfUcRIdI1TUD0gunvSqwqW2jg/vHmESfKRoG9S0Swa98YD8y144EKHX13HRxO1kyef8+jGnmDE3XRTmOrZmwh+DD8pDV5KxWQnQxNxje5AfEzBtNc7sP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=djhHOUoy; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="nVrbl6P3"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4a58ebece05so41365961cf.1
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 09:33:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1749400381; x=1750005181; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OuRYivZ74nBEObAg4Esdur1pUm1rPSerTOQh0jJQjUg=;
-        b=nVrbl6P39MLhWqELEXvO/ZI+xS01pQPrZfngKIWrbOsfbW4bvQ5jwfoYG0dhhjlFdD
-         Qt2sAzchEQF1qMLM7+kGICBUyEoGuQoctoz2GG37mvvAZNGJW+Akhl6iIHWXuSHKrQ/W
-         xI6eaej0oy00+wCaSaHEZMdWty45XacO9fPfIhT3Rfyv85JDTwizp28UCSwLwwRwi2Ex
-         LADc2V3L0xWs/31NrYHHMif2PH5HIpYCtYJBAh9ZmEuJypw8rTh9YYA4eJRQHy7kXHMJ
-         ERRsauysjKqGmE4vsvBehghPlzpUj48wE7A2uJEU+Y1rwbAXpR92xulDJrx+KzPLvIlD
-         62IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749400381; x=1750005181;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OuRYivZ74nBEObAg4Esdur1pUm1rPSerTOQh0jJQjUg=;
-        b=FLHFBz87Z2zfRGsnMIzUnB+EAOeQPQeqFrwrkrTTOlmhPY1WZ4qbLXFv0sc5WW8KzC
-         rMS6vpZGNf07ZfPvbaDx6lbZAZuNlfBdyc/6af7W0J8jW0lFlQoC+M5hOVs34lyYwD1S
-         mQq9/Dvx7rFBltZNhz0T+K4Cw5SDVxsazOYgGwQVfMtxpve/f+4fe4w/lYGZQk8hkEnX
-         bgW6kS0mt7DubkiKoPLagVEXhnRCMX3ahXZQEjj7EV0fSSxFV6OouDSDHQdUnPbZFx5N
-         pu1zf2QMG6sKRWikOO6L5boEZAx6RPJKEbE9Jet30AWTCDCd84B8lCyA5iuBCuKSIqU4
-         wA6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVhhHyKHPV/fKKlocf5DQlhLfMd4Yst4AxATQZQcj7HZbARIVBhXDPa9te0IXM/3TJ6QseJNnVbr+PnMos=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywpn2imMg7G7FBWAcGa0EXkINWysNTf3ObwNco1/vkp/nZuneBu
-	APgVZfBYG0aVO2nh0nJ6rRsGB0XRc0NUtMrXYQywbH4bQWhcxFFIBDPFDsa1efxrjbg9548c1gU
-	3LaxsxfKwwg8f+FHqBBu957zuPeQKJnGybDY47PAzkg==
-X-Gm-Gg: ASbGncvaSKbs+c8PsBoVKpeXMShsY04y+mBgkKvhY7tcYw+XZJ81dFMXMcHsTuf2Xod
-	zXzfUmTQq6Fc3Uqin5XBZts5VWrvC+sB7sNhwyjfsiiY9XTyqm/0Vg6IgLc1EuuZWIKJwUOtesF
-	rBdWsJH53Y5E35v/wng2wv1yZRI2qOdg==
-X-Google-Smtp-Source: AGHT+IHM7A0yo5EwU0URGl5qPD/nSWVFx1Uch1mkQMPpJ9jiESTc768PtJKyMnU3hW6gMNfEhsZROCE5EGkLP46xzl4=
-X-Received: by 2002:a05:622a:5a15:b0:4a2:719b:122e with SMTP id
- d75a77b69052e-4a5b9a40939mr176026001cf.18.1749400380740; Sun, 08 Jun 2025
- 09:33:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="djhHOUoy"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5A25E10397298;
+	Sun,  8 Jun 2025 18:33:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1749400402; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding; bh=q9L8aiejltW49BwuW1MY7Fse2bm2uhwAe8TBfe1zjr4=;
+	b=djhHOUoylnit2guL3TJHiiKRS1sBTwO/9E6txnGp/5LCUgz3wSpBs0swERQ/Ib5/pdtZt/
+	uPIHwtZ2Ds/dFaA7+WuWF2uj1pzqVfBMjtZhGyo/4hwlbJhER3X4EOLTa5JVlwJCtjLP+t
+	i3CWS8FgiarfcDo1a2LGKwr7j9fHvYPWR5FB+y/8Fkd4dOxwtnIsFbaw+TeZ/p2/gjNlIz
+	PzjCLCCcxbzSu1kK47LkT0pwAqDsSnPJKcZGQMiWfDqBTna4aplciXsTdsAe1gcPCZhfnt
+	wB+l7+4dS/o0QbVkKUtoy4zQ5vIv/f23agzEwkM9tAnU+H4yejlv7BA77/zmpg==
+From: Heiko Schocher <hs@denx.de>
+To: linux-kernel@vger.kernel.org
+Cc: Heiko Schocher <hs@denx.de>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>,
+	Rishi Gupta <gupt21@gmail.com>,
+	linux-i2c@vger.kernel.org,
+	linux-input@vger.kernel.org
+Subject: [PATCH] HID: mcp2221: set gpio pin mode
+Date: Sun,  8 Jun 2025 18:33:15 +0200
+Message-Id: <20250608163315.24842-1-hs@denx.de>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
- <20250515182322.117840-11-pasha.tatashin@soleen.com> <CALzav=eAWdADOyZHxCTF-eKwiYhw2ELj3mKJ+8uQY6sOf0Hmuw@mail.gmail.com>
-In-Reply-To: <CALzav=eAWdADOyZHxCTF-eKwiYhw2ELj3mKJ+8uQY6sOf0Hmuw@mail.gmail.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Sun, 8 Jun 2025 12:32:23 -0400
-X-Gm-Features: AX0GCFshnOWS2B6OWr1wN-XQzYf4DQDY1vQdBPzBZzA3h43rNR_DwPDF1zPI47g
-Message-ID: <CA+CK2bB61cv2JMVoMLqBAL1iFTK6w3WznPwWepePYk441V5RvQ@mail.gmail.com>
-Subject: Re: [RFC v2 10/16] luo: luo_ioctl: add ioctl interface
-To: David Matlack <dmatlack@google.com>
-Cc: pratyush@kernel.org, jasonmiu@google.com, graf@amazon.com, 
-	changyuanl@google.com, rppt@kernel.org, rientjes@google.com, corbet@lwn.net, 
-	rdunlap@infradead.org, ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, 
-	ojeda@kernel.org, aliceryhl@google.com, masahiroy@kernel.org, 
-	akpm@linux-foundation.org, tj@kernel.org, yoann.congal@smile.fr, 
-	mmaurer@google.com, roman.gushchin@linux.dev, chenridong@huawei.com, 
-	axboe@kernel.dk, mark.rutland@arm.com, jannh@google.com, 
-	vincent.guittot@linaro.org, hannes@cmpxchg.org, dan.j.williams@intel.com, 
-	david@redhat.com, joel.granados@kernel.org, rostedt@goodmis.org, 
-	anna.schumaker@oracle.com, song@kernel.org, zhangguopeng@kylinos.cn, 
-	linux@weissschuh.net, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-mm@kvack.org, gregkh@linuxfoundation.org, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	hpa@zytor.com, rafael@kernel.org, dakr@kernel.org, 
-	bartosz.golaszewski@linaro.org, cw00.choi@samsung.com, 
-	myungjoo.ham@samsung.com, yesanishhere@gmail.com, Jonathan.Cameron@huawei.com, 
-	quic_zijuhu@quicinc.com, aleksander.lobakin@intel.com, ira.weiny@intel.com, 
-	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
-	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
-	stuart.w.hayes@gmail.com, ptyadav@amazon.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Wed, May 28, 2025 at 4:29=E2=80=AFPM David Matlack <dmatlack@google.com>=
- wrote:
->
-> On Thu, May 15, 2025 at 11:23=E2=80=AFAM Pasha Tatashin
-> <pasha.tatashin@soleen.com> wrote:
-> > +static int luo_open(struct inode *inodep, struct file *filep)
-> > +{
-> > +       if (!capable(CAP_SYS_ADMIN))
-> > +               return -EACCES;
->
-> It makes sense that LIVEUPDATE_IOCTL_EVENT* would require
-> CAP_SYS_ADMIN. But I think requiring it for LIVEUPDATE_IOCTL_FD* will
-> add a lot of complexity.
-> It would essentially require a central userspace process to mediate
-> all preserving/restoring of file descriptors across Live Update to
-> enforce security. If we need a central authority to enforce security,
-> I don't see why that authority can't just be the kernel or what the
-> industry gains by punting the problem to userspace. It seems like all
-> users of LUO are going to want the same security guarantees when it
-> comes to FDs: a FD preserved inside a given "security domain" should
-> not be accessible outside that domain.
->
-> One way to do this in the kernel would be to have the kernel hand out
-> Live Update security tokens (say, some large random number). Then
-> require userspace to pass in a security token when preserving an FD.
-> Userspace can then only restore or unpreserve an FD if it passes back
-> in the security token associated with the FD. Then it's just up to
-> each userspace process to remember their token across kexec, keep it
-> secret from other untrusted processes, and pass it back in when
-> recovering FDs.
->
-> All the kernel has to do is generate secure tokens, which I imagine
-> can't be that hard.
+in case we have GPIOLIB enabled the gpio pins are used
+from the current driver as gpio pins. But may the gpio
+functions of this pins are not enabled in the flash
+of the chip and so gpio access fails.
 
-Based on current discussions at the bi-weekly hypervisor live update
-sync [1], one proposed idea is for LIVEUPDATE_IOCTL_FD_* operations to
-be managed by a dedicated userspace agent. This agent would be
-responsible for preserving and restoring file descriptors,
-subsequently passing them to their respective owners (e.g., VMMs).
-While the complexity of implementing such a userspace architecture in
-a cloud environment is unclear to me, introducing kernel-enforced
-security boundaries around /dev/liveupdate tokens themselves (instead
-of CAP_SYS_ADMIN for the device node) seems too complex and
-potentially risky to incorporate at this stage of LUO's development.
-If finer-grained, token-based security is necessary, it could perhaps
-be an optional extension to LUO in the future managed by a dedicated
-CONFIG_*.
+In case CONFIG_IIO is not enabled we can prevent this
+issue of the driver simply by enabling the gpio mode
+for all pins.
 
-[1] https://lore.kernel.org/all/958b2ec3-f5f1-b714-1256-1b06dcf7470f@google=
-.com/
+Signed-off-by: Heiko Schocher <hs@denx.de>
+---
+
+ drivers/hid/hid-mcp2221.c | 97 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 97 insertions(+)
+
+diff --git a/drivers/hid/hid-mcp2221.c b/drivers/hid/hid-mcp2221.c
+index 0f93c22a479f..f693e920dffe 100644
+--- a/drivers/hid/hid-mcp2221.c
++++ b/drivers/hid/hid-mcp2221.c
+@@ -55,6 +55,27 @@ enum {
+ 	MCP2221_ALT_F_NOT_GPIOD = 0xEF,
+ };
+ 
++/* MCP SRAM read offsets cmd: MCP2221_GET_SRAM_SETTINGS */
++enum {
++	MCP2221_SRAM_RD_GP0 = 22,
++	MCP2221_SRAM_RD_GP1 = 23,
++	MCP2221_SRAM_RD_GP2 = 24,
++	MCP2221_SRAM_RD_GP3 = 25,
++};
++
++/* MCP SRAM write offsets cmd: MCP2221_SET_SRAM_SETTINGS */
++enum {
++	MCP2221_SRAM_WR_GP_ENA_ALTER = 7,
++	MCP2221_SRAM_WR_GP0 = 8,
++	MCP2221_SRAM_WR_GP1 = 9,
++	MCP2221_SRAM_WR_GP2 = 10,
++	MCP2221_SRAM_WR_GP3 = 11,
++};
++
++#define MCP2221_SRAM_GP_DESIGN_MASK		0x07
++#define MCP2221_SRAM_GP_DIRECTION_MASK		0x08
++#define MCP2221_SRAM_GP_VALUE_MASK		0x10
++
+ /* MCP GPIO direction encoding */
+ enum {
+ 	MCP2221_DIR_OUT = 0x00,
+@@ -607,6 +628,80 @@ static const struct i2c_algorithm mcp_i2c_algo = {
+ };
+ 
+ #if IS_REACHABLE(CONFIG_GPIOLIB)
++static int mcp_gpio_read_sram(struct mcp2221 *mcp)
++{
++	int ret;
++
++	memset(mcp->txbuf, 0, 64);
++	mcp->txbuf[0] = MCP2221_GET_SRAM_SETTINGS;
++
++	mutex_lock(&mcp->lock);
++	ret = mcp_send_data_req_status(mcp, mcp->txbuf, 64);
++	mutex_unlock(&mcp->lock);
++
++	return ret;
++}
++
++/*
++ * If CONFIG_IIO is not enabled, check for the gpio pins
++ * if they are in gpio mode. For the ones which are not
++ * in gpio mode, set them into gpio mode.
++ */
++static int mcp2221_check_gpio_pinfunc(struct mcp2221 *mcp)
++{
++	int i;
++	int needgpiofix = 0;
++	int ret;
++
++	if (IS_ENABLED(CONFIG_IIO))
++		return 0;
++
++	ret = mcp_gpio_read_sram(mcp);
++	if (ret)
++		return ret;
++
++	for (i = 0; i < MCP_NGPIO; i++) {
++		if ((mcp->mode[i] & MCP2221_SRAM_GP_DESIGN_MASK) != 0x0) {
++			dev_warn(&mcp->hdev->dev,
++				 "GPIO %d not in gpio mode\n", i);
++			needgpiofix = 1;
++		}
++	}
++
++	if (!needgpiofix)
++		return 0;
++
++	/*
++	 * Set all bytes to 0, so Bit 7 is not set. The chip
++	 * only changes content of a register when bit 7 is set.
++	 */
++	memset(mcp->txbuf, 0, 64);
++	mcp->txbuf[0] = MCP2221_SET_SRAM_SETTINGS;
++
++	/*
++	 * Set bit 7 in MCP2221_SRAM_WR_GP_ENA_ALTER to enable
++	 * loading of a new set of gpio settings to GP SRAM
++	 */
++	mcp->txbuf[MCP2221_SRAM_WR_GP_ENA_ALTER] = 0x80;
++	for (i = 0; i < MCP_NGPIO; i++) {
++		if ((mcp->mode[i] & MCP2221_SRAM_GP_DESIGN_MASK) == 0x0) {
++			/* write current GPIO mode */
++			mcp->txbuf[MCP2221_SRAM_WR_GP0 + i] = mcp->mode[i];
++		} else {
++			/* pin is not in gpio mode, set it to input mode */
++			mcp->txbuf[MCP2221_SRAM_WR_GP0 + i] = 0x08;
++			dev_warn(&mcp->hdev->dev,
++				 "Set GPIO mode for gpio pin %d!\n", i);
++		}
++	}
++
++	mutex_lock(&mcp->lock);
++	ret = mcp_send_data_req_status(mcp, mcp->txbuf, 64);
++	mutex_unlock(&mcp->lock);
++
++	return ret;
++}
++
+ static int mcp_gpio_get(struct gpio_chip *gc,
+ 				unsigned int offset)
+ {
+@@ -1216,6 +1311,8 @@ static int mcp2221_probe(struct hid_device *hdev,
+ 	ret = devm_gpiochip_add_data(&hdev->dev, mcp->gc, mcp);
+ 	if (ret)
+ 		return ret;
++
++	mcp2221_check_gpio_pinfunc(mcp);
+ #endif
+ 
+ #if IS_REACHABLE(CONFIG_IIO)
+-- 
+2.20.1
+
+base-commit: 546b1c9e93c2bb8cf5ed24e0be1c86bb089b3253
+branch: abb-mcp2221-v1
