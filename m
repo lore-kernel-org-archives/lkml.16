@@ -1,45 +1,78 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D6D3209F56;
-	Sun,  8 Jun 2025 23:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB568BFF
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 23:38:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749425624; cv=none; b=GSvDuc7UNSwB0pMFbIjJgvDXVTe9d8zNjpLzop6ziisyn1MKlR6XBHUb4h6bw1KA5ch1kVNsJkPqmDX0hL5qw6j/nlLpTq9rhj0gJXjeA4fZKW/QblJ/A1eoT6qYhFKAAaotFoCSonPshdHxj/h7VFc0CxJKhza4VQYc4NGrSn0=
+	t=1749425897; cv=none; b=ZYKkuYkw/D2TTpan67GYYNcUkHYsmtftyKDKCcxT2FrNbwTweNIZ39dhzp6hkxTQjfndRocUmj2F3t/u9myOe2803styUxfkgLAvmosUNO01OLiPWAxdGxKd/3l2weMD5nhNAzwIh/IrEPccCkt/2mvw9Jorad4ecbACD94NCXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749425624; c=relaxed/simple;
-	bh=/cvVKyHzhQoI48LJcgkMrdv6qtdw4CLFdD26xKbOEl8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZUs2q9nxW9f5p8LrFQxeMgde0bj4VLxZCL74tk9OuHKO+imQrtVbt1K1d3MyW4N/oTkG+F8FN/PDw2fEjulULm9FuRlN2imiKmvZ4WOOiZdUy4ueOj4Qr2opcELldLnxqzAOFR9+Nhjd0CssRFvKoHxeyXeEgSBe70umbqrtkgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=qxPC5wev; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1749425897; c=relaxed/simple;
+	bh=cEu9CCcX778eVSqvJkvGz139e4Hply15sFkCs/JuvpE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GFktfbVtAZrCINZIZSxHhHQHkYMKviEb84XDm4V0UtM5TJslkLlJjEWswH9JszyBQ1dLdfqXVW48Kq4IHCJc3dcq/As7OFLRge/TLDmpGvgKUoEp85IcwxVRGzTavzu1cBvaSGpi5a9FAuMPIAOEZraAE/T0zaRsRekgRaPS/cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=kxE+RtcK; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=WAir7bk4; arc=none smtp.client-ip=202.12.124.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="qxPC5wev"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=P1RZtMesjHHey3Igxou9b7mtw18agArL8q30UcPKfGU=; b=qxPC5wevDeeW6+N8
-	ihWwDIk+yKwxKP1b39etRXnRrAHqoTwSuvlgyaaLbopvXQbill4R1Pn2I9F9BvhCizxnMv+qRZMzN
-	R4bXkFH2hXO3LmnuznJ/N+or4BNMrOmlI79vK8p7rdzK75AMcPYoaBkUEE8kkn9qEoYZiTEklblOO
-	f5CkN1lTOyrDsw6H5nt0m9tgf+JsVx+brb1FwHjgnhLNN/v7nVkSs8TNwqlpjlymUpOFZZGFTklHT
-	+atfG3sC0cPlzTaMPgUrxifL0mtiytPnQPL3m6ei4adZBlZlQQnUbPVVdfF8YYigd4JxDIXV3G/Kb
-	hqNHt/UuMMMcr3pGrA==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1uOPWF-008IvT-23;
-	Sun, 08 Jun 2025 23:33:39 +0000
-From: linux@treblig.org
-To: gregkh@linuxfoundation.org,
-	linux-usb@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH 1/2] usb: gadget: config: Remove unused usb_gadget_config_buf
-Date: Mon,  9 Jun 2025 00:33:37 +0100
-Message-ID: <20250608233338.179894-2-linux@treblig.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250608233338.179894-1-linux@treblig.org>
-References: <20250608233338.179894-1-linux@treblig.org>
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="kxE+RtcK";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WAir7bk4"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfout.stl.internal (Postfix) with ESMTP id A4A4E1140155;
+	Sun,  8 Jun 2025 19:38:13 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-06.internal (MEProxy); Sun, 08 Jun 2025 19:38:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
+	:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to; s=fm1; t=1749425893; x=1749512293; bh=asezo7wgD0
+	P09a8YPAx032aUXq2d/5SDAKgsL4qpYEk=; b=kxE+RtcK97ujbPllUahf0y0/gr
+	GGVX4rc3y21KqCpSJnbstL8pLGYMAMV7GYvTf+IeftJhoDFUb5ozSvuAQ0mQyOQD
+	Ow2kVHSQcU2tal3Zt36ESO8GQ4ogtJx5pjwx313u9jwL4WlUaZMDck0nK+c/fHkn
+	fi4sgnEkDVcbGh2tKKUPKeWkOpUybYZZDqUBzuOudfOwfbClYj/tU/VOgG1/5r0W
+	0MEyUd+0b/7uCP+lH/WyN5PHxZbn5XwcEtb/xeDD+gOz/Sjg3IXBXgwIwxLD0v+d
+	6FD6f9ebRLerk4wJtnVM0Dn0jCyXHMMCPI15rXw+QT2N+k6y3JDqhY16Y+bQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1749425893; x=1749512293; bh=asezo7wgD0P09a8YPAx032aUXq2d/5SDAKg
+	sL4qpYEk=; b=WAir7bk4KhcidaUg8WjAIUKJ/yf3xNgPHugJOYNRctPxGx5pVvM
+	L1zkvk+Ss+9DSnJldO+9r+s8JTUXAzkpaLRkc4flelB09xmkNAskvG1SkqYM7aCU
+	HQgNf7XJ8DO4bBrJQEGvUknAWD1CR2f9pmlH7iD+dL4mnK5SR2EHlmMnH1m9Hkfx
+	+YfGh4kwHA4924MNN/6MDx2Fpd1LxTjg1YIBFn8Vz6h8rXjrEVVaqc0H3ixkQeHH
+	x1HD9KCNy2PoHSLrcWqLePZGP5qfSU6LzQtTmlU9bx+fLf3IUg9S/T7G7uCzfL+r
+	4flBi75jP09tH7proNDVeUlWKvG5SbPyhXA==
+X-ME-Sender: <xms:5R5GaPSCOJYN777DjSHv0RsiP-Pk0Rf8bhzh-C5agCd_-PtMPbaPlQ>
+    <xme:5R5GaAwWnVQFs6CMP5hueE-F2R4u6T0JVMueyx8mg4THH0lAcPQPWmqMqxwakZ4iW
+    nkgCQakoJCYbUoDMj0>
+X-ME-Received: <xmr:5R5GaE2DIdsl-CiMBE0QsJTjgcJ8h3JvpK2DPWi2Hi2rKP1NQ4-oV_gKio4A7x_hzKEiY0yRAOYErNMH6MfufeFkNg2B9mFL0je8SkRNS05rKUg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdekhedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevuf
+    ffkffoggfgsedtkeertdertddtnecuhfhrohhmpefvrghkrghshhhiucfurghkrghmohht
+    ohcuoehoqdhtrghkrghshhhisehsrghkrghmohgttghhihdrjhhpqeenucggtffrrghtth
+    gvrhhnpeffvdeuleffveekudfhteejudffgefhtedtgfeutdfgvdfgueefudehveehveek
+    keenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqd
+    htrghkrghshhhisehsrghkrghmohgttghhihdrjhhppdhnsggprhgtphhtthhopedvpdhm
+    ohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigudefleegqdguvghvvghlse
+    hlihhsthhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtoheplhhinhhugidq
+    khgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:5R5GaPCBG38vlIUK7hUS7GZp8lDi0z9_rztHSFZN8IkyVSpng7OY_Q>
+    <xmx:5R5GaIi39_q3D5D12jiZEQOK8yODFvtI7i_CEfBM1P6XpEsn6eEylw>
+    <xmx:5R5GaDrxowyjaW86XagxknqUJidQ3EIjGbf5uHep28m6lIu8VBFf3Q>
+    <xmx:5R5GaDhjncyNmZ3n65JmFJ8Krq8mrHF68orDvJGIsLemKnToVqd4XA>
+    <xmx:5R5GaLVdlzjt2VW7Bfc4-ffIQEO6swehJJwdG_9vj-lLZUOm94r7sVKp>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 8 Jun 2025 19:38:12 -0400 (EDT)
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To: linux1394-devel@lists.sourceforge.net
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH] firewire: ohci: correct code comments about bus_reset tasklet
+Date: Mon,  9 Jun 2025 08:38:06 +0900
+Message-ID: <20250608233808.202355-1-o-takashi@sakamocchi.jp>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,99 +81,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+The tasklet for bus reset event has been replaced with work item, while
+some code comments still address to the tasklet.
 
-usb_gadget_config_buf() has been unused since 2012's
-commit fa06920a3ece ("usb: gadget: Remove File-backed Storage Gadget
-(g_file_storage).")
+This commit corrects them.
 
-Remove it.
-
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+Fixes: 2d7a36e23300 ("firewire: ohci: Move code from the bus reset tasklet into a workqueue")
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 ---
- drivers/usb/gadget/config.c | 53 -------------------------------------
- include/linux/usb/gadget.h  |  4 ---
- 2 files changed, 57 deletions(-)
+ drivers/firewire/ohci.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/gadget/config.c b/drivers/usb/gadget/config.c
-index 95f144a54ed9..256364d4b941 100644
---- a/drivers/usb/gadget/config.c
-+++ b/drivers/usb/gadget/config.c
-@@ -53,59 +53,6 @@ usb_descriptor_fillbuf(void *buf, unsigned buflen,
- }
- EXPORT_SYMBOL_GPL(usb_descriptor_fillbuf);
+diff --git a/drivers/firewire/ohci.c b/drivers/firewire/ohci.c
+index edaedd156a6d..27e3e998e6fc 100644
+--- a/drivers/firewire/ohci.c
++++ b/drivers/firewire/ohci.c
+@@ -2528,7 +2528,7 @@ static int ohci_enable(struct fw_card *card,
+ 	 * They shouldn't do that in this initial case where the link
+ 	 * isn't enabled.  This means we have to use the same
+ 	 * workaround here, setting the bus header to 0 and then write
+-	 * the right values in the bus reset tasklet.
++	 * the right values in the bus reset work item.
+ 	 */
  
--/**
-- * usb_gadget_config_buf - builts a complete configuration descriptor
-- * @config: Header for the descriptor, including characteristics such
-- *	as power requirements and number of interfaces.
-- * @buf: Buffer for the resulting configuration descriptor.
-- * @length: Length of buffer.  If this is not big enough to hold the
-- *	entire configuration descriptor, an error code will be returned.
-- * @desc: Null-terminated vector of pointers to the descriptors (interface,
-- *	endpoint, etc) defining all functions in this device configuration.
-- *
-- * This copies descriptors into the response buffer, building a descriptor
-- * for that configuration.  It returns the buffer length or a negative
-- * status code.  The config.wTotalLength field is set to match the length
-- * of the result, but other descriptor fields (including power usage and
-- * interface count) must be set by the caller.
-- *
-- * Gadget drivers could use this when constructing a config descriptor
-- * in response to USB_REQ_GET_DESCRIPTOR.  They will need to patch the
-- * resulting bDescriptorType value if USB_DT_OTHER_SPEED_CONFIG is needed.
-- */
--int usb_gadget_config_buf(
--	const struct usb_config_descriptor	*config,
--	void					*buf,
--	unsigned				length,
--	const struct usb_descriptor_header	**desc
--)
--{
--	struct usb_config_descriptor		*cp = buf;
--	int					len;
--
--	/* config descriptor first */
--	if (length < USB_DT_CONFIG_SIZE || !desc)
--		return -EINVAL;
--	*cp = *config;
--
--	/* then interface/endpoint/class/vendor/... */
--	len = usb_descriptor_fillbuf(USB_DT_CONFIG_SIZE + (u8 *)buf,
--			length - USB_DT_CONFIG_SIZE, desc);
--	if (len < 0)
--		return len;
--	len += USB_DT_CONFIG_SIZE;
--	if (len > 0xffff)
--		return -EINVAL;
--
--	/* patch up the config descriptor */
--	cp->bLength = USB_DT_CONFIG_SIZE;
--	cp->bDescriptorType = USB_DT_CONFIG;
--	cp->wTotalLength = cpu_to_le16(len);
--	cp->bmAttributes |= USB_CONFIG_ATT_ONE;
--	return len;
--}
--EXPORT_SYMBOL_GPL(usb_gadget_config_buf);
--
- /**
-  * usb_copy_descriptors - copy a vector of USB descriptors
-  * @src: null-terminated vector to copy
-diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
-index df33333650a0..0f28c5512fcb 100644
---- a/include/linux/usb/gadget.h
-+++ b/include/linux/usb/gadget.h
-@@ -860,10 +860,6 @@ container_of(str_item, struct gadget_string, item)
- int usb_descriptor_fillbuf(void *, unsigned,
- 		const struct usb_descriptor_header **);
- 
--/* build config descriptor from single descriptor vector */
--int usb_gadget_config_buf(const struct usb_config_descriptor *config,
--	void *buf, unsigned buflen, const struct usb_descriptor_header **desc);
--
- /* copy a NULL-terminated vector of descriptors */
- struct usb_descriptor_header **usb_copy_descriptors(
- 		struct usb_descriptor_header **);
+ 	if (config_rom) {
+@@ -2617,7 +2617,7 @@ static int ohci_set_config_rom(struct fw_card *card,
+ 	 * during the atomic update, even on little endian
+ 	 * architectures.  The workaround we use is to put a 0 in the
+ 	 * header quadlet; 0 is endian agnostic and means that the
+-	 * config rom isn't ready yet.  In the bus reset tasklet we
++	 * config rom isn't ready yet.  In the bus reset work item we
+ 	 * then set up the real values for the two registers.
+ 	 *
+ 	 * We use ohci->lock to avoid racing with the code that sets
+@@ -2659,7 +2659,7 @@ static int ohci_set_config_rom(struct fw_card *card,
+ 	/*
+ 	 * Now initiate a bus reset to have the changes take
+ 	 * effect. We clean up the old config rom memory and DMA
+-	 * mappings in the bus reset tasklet, since the OHCI
++	 * mappings in the bus reset work item, since the OHCI
+ 	 * controller could need to access it before the bus reset
+ 	 * takes effect.
+ 	 */
 -- 
-2.49.0
+2.48.1
 
