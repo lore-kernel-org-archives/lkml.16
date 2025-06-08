@@ -1,173 +1,329 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B0F156CA;
-	Sun,  8 Jun 2025 08:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA9D1DE2C9;
+	Sun,  8 Jun 2025 08:53:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749372358; cv=none; b=SCcXiZhxp5TNhq/bC+f1QJoNE1O+hcIrrhwut39g54xnBI4WWYRn9YSvpNCVQY3AWec2qIPlKd2JV5ZKxSyvwtM4v8TXmT4fyrTZaZ6jwTvwajFgzmnuCesEjeauhDh/2mRK45Y10/I1PfP8j7+SpJFXrwOeGlwxsIlKl+FneTo=
+	t=1749372784; cv=none; b=uKYYTZMKv3cZSczv85yu5pD5oG/Oq0wfZa8WGRYVwlQBLN4n3PRqTXXdGQoURxRr32dhxtXNO5nqS+M1grJnpN0xtpORtDzgLx9LCDo4VD8SJuC6IdFzpW30uWNP8vCFogRYftoVQdxbHumhWctahA7uyo4ixgkhNW0OezwJbTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749372358; c=relaxed/simple;
-	bh=v4PkM/Ar22LVKA1uuGEftCXiCqmcHBsUUBjFLYyvYiI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ExTaebQla9ryWNBp0BJXFPVvC2hKkBdZPWr84BFW0fqCPIpW+LCUZt7hFv2Prloj2uW2ujGVWTURAn1bbGhxYEiDm1Zh6qyWFC98O2KUrn2kUJbemRvZq4P/225sJyZN71QS75L0OFicfUOVey8NPCwX/Dc5zg7BGTD4fyXCo/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=hEHPKKK3; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1749372784; c=relaxed/simple;
+	bh=IURka8PIWHXyzmvJRrOYnPeA8lb/KRRi53oneAZE6Y4=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=TkeTMUKyh/NHUzIIn5DE2tw9DK7TAMahhU+m7QmKT9o1i5v4x5AeLh3ukDzPxPVRPjMUiAPnZzD7iKODOrNfsR/yrTCpbpaGZs4ig1VuMCk075d07Gqu7odX3BgXSB8x7H+eAFL2tyAd8Q+JMfSjcwwg/gd3U7Cs3pYzDH0dtVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ff0sg7UB; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="hEHPKKK3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1749372338; x=1749977138; i=spasswolf@web.de;
-	bh=EdEG80i6V1qMQITbp6edf3dtJZUmhxxsKi7heRnjiwg=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=hEHPKKK3kdkSbkgnyzXo3MrxRSvK6LwLLb7qKRPXzWD9KGC17Z9IErE3Z9qRZNvB
-	 vbpMyvcgxaUvqAtEo9laPpcSPVgEL9jkJH0WgAifPhcfjD/mAHECBdZ8rfaxAlQeR
-	 wKMLA4IBZ90yWs8CO6Wa7GoOrC9dRtpGWsA2i67uDuXTVFeu2mtWHfXwWmqgFQWLX
-	 pPmK1cCyvItwktisbU2K3BoXWkqoZqLlkOdtAQoPaKpmDFgx7fE0MYt7kuP2VEv32
-	 Z7dJmWSXDteH8QZIHEuKF8hMr1yBr8TTl2mxJT3wuMRcuSgiDWTX2Lo12xof4Lb4r
-	 dg0x37OFPhDP7mw8Gw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M4sXj-1uNMJR1tHL-0091Bv; Sun, 08
- Jun 2025 10:45:38 +0200
-Message-ID: <0b1f48ba715a16c4d4874ae65bc01914de4d5a90.camel@web.de>
-Subject: Re: BUG: scheduling while atomic with PREEMPT_RT=y and bpf selftests
-From: Bert Karwatzki <spasswolf@web.de>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Steven Rostedt
-	 <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-rt-users@vger.kernel.org, 
-	linux-rt-devel@lists.linux.dev, Thomas Gleixner <tglx@linutronix.de>,
- Alexei Starovoitov <alexei.starovoitov@gmail.com>, spasswolf@web.de
-Date: Sun, 08 Jun 2025 10:45:36 +0200
-In-Reply-To: <20250605125133.RSTingmi@linutronix.de>
-References: <20250605091904.5853-1-spasswolf@web.de>
-		 <20250605084816.3e5d1af1@gandalf.local.home>
-		 <20250605125133.RSTingmi@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.1-1 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ff0sg7UB"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-313132d1f7aso2596616a91.3;
+        Sun, 08 Jun 2025 01:53:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749372781; x=1749977581; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=avdQMIlThhCh5I5aJXPZj1sqS0yK8djyk+mRbHuq5Ic=;
+        b=Ff0sg7UBSwoZcLHxsu+WrKdHeo11iLzfUy9ZubGlxzHZZcbqjsrjGGssDN3pGpUSO/
+         8I/C/DFxB1x1Z94eBITZjSZetvGORv44EkgFA2AJsE/hO+py0rMzEG67whiDmsMuY2Ju
+         xdAdA9BWhpMtzSY4Uz4WIiLZhk4+oNFjU8Eo0X9ERwyz2NlPrxX50RoaLOLhJk3VXxMT
+         /TRlbb4zip56t1scK415IUpjdyYAuqnQ5GNaUIZPG1vfOGJGhlnA5Ku2jeb4uQaB08iW
+         lkm7YJv4DwvtnN/uARoyVF3i1jTgjvczytiwamlgFfkSwhqyP1ycCQ1h9GowqQ+amac1
+         EOsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749372781; x=1749977581;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=avdQMIlThhCh5I5aJXPZj1sqS0yK8djyk+mRbHuq5Ic=;
+        b=b2ZNlvlWbAXtaL7Yh+MVTG6EDI6Z3IjiCilMt5sAPNWEsMDqi2tsbm6fgd5nqJWy34
+         tZtbzBg5KHMKG30Zri3GB52mXbRevn/zoajG/O0TkHMX4pj011+lEV36yxulHR3MtyFS
+         2IurKh8VZf2AKV4rJ/+SLjYE0I/wnfQKjtt/yA00PGogNR38aTKlxaZCK1ujs8Pw/XWr
+         EGZkR0FcoKWaEp+8ytA/JtASl6EZDhCee8+pHZ5NT5SQN9JXFHfOp4JChlwP3sQoep1y
+         ooIM6Q6qouLarTb4zLUPbslwcPNTJZF6yYTh22MP6yzwLxS1a3NnwaMUdsB+FNLToDvm
+         18ag==
+X-Forwarded-Encrypted: i=1; AJvYcCUH/jfIuK2jxrz92Xs1dxU4Xdrc/rr1BgxLVV042d651lk5a/YD65VW43HcvbtVRL1bE1ay4dMA@vger.kernel.org, AJvYcCWmHQuL2jfeEa+/cTbID41HkwSzSeL3ikkWmSZsGJ7VRhz6St1zxsgzh9QflReN/pfvuuohwvL449PaTJBE@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCOhRfXFDxJIUAwyPJq6w2z5EyGMM22KSLBS6wCYqkWxfxBpcy
+	3HswAdXnhMm4M3RQ0ow5NdAIbhsjThBpfUTH7KGw6IEYCIDtyo7hFEGl
+X-Gm-Gg: ASbGncuKQBHUhv3nhs7UO4FJB32ITa9ScuOqXaWOrCNbCwn8sDiJwMr+0R1xsBAUOXn
+	h+TwzVuFOdx0+dOZRuARGzzXQMQXjlPXACQZSxp2/0u+lhaEYFxAMuU7EKWK24u0b7gM9dNK91I
+	3sRH+5/c+O+jdFVJaZTvzKsYaytI+FS7/Q2o5LXY+XkexFVIOCwkMAd5I5UAJvPg9S6OOBqRk8D
+	piPBgAzdIZshkAfp3BCkcYRjX6hphu/gOnsaH1Ni5cgNkQ75Lj3pn+TTL+hcU9H3dNhH+BUPqrh
+	vg78TebJzn90hsQf7jzX1s2qTpRSHKK+X3Km5c9SgrZYBE+H+99etd5ykGC7gkXhcNjEHYzD
+X-Google-Smtp-Source: AGHT+IH3yukOeEjm/597ooOmzsx1Zyoag4XjUjLJPh3zqnZ/Oo0K5xrOEJtjVGRsrKAgpyrvFKz2jg==
+X-Received: by 2002:a17:90b:4fd2:b0:311:2f5:6b1 with SMTP id 98e67ed59e1d1-31346f5af24mr10914709a91.22.1749372781425;
+        Sun, 08 Jun 2025 01:53:01 -0700 (PDT)
+Received: from smtpclient.apple ([202.8.105.124])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236034059cbsm36546095ad.165.2025.06.08.01.52.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 08 Jun 2025 01:53:00 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v1 3/3] cgroup: add lock guard support for others
+From: Jemmy Wong <jemmywong512@gmail.com>
+In-Reply-To: <202506071822.ERv4i34r-lkp@intel.com>
+Date: Sun, 8 Jun 2025 16:52:46 +0800
+Cc: Jemmy <jemmywong512@gmail.com>,
+ =?utf-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+ oe-kbuild-all@lists.linux.dev,
+ Tejun Heo <tj@kernel.org>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Waiman Long <longman@redhat.com>,
+ cgroups@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Avuy5UJuZKURJRTxQ764K+K7sZX230PJvIemxiufXAdVCKOLnBJ
- doNxe9ya2SO8EH2duok+ueOTbm8cZCc4GLSAK7En2qdmqPZFIN7jrZBeUqo/rUAxm2tzaaL
- f9EA6sZrqgu/F40AxBI9SvI6Wo5/i1ufEjFlbMI5riowijuk7bvxF7cqfoVFOsBQVcDG/52
- r0UWHzHzHRiJGTK0ztbwA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:BA8NKV7akWg=;dBQYN42GqmZDJpDPPWyybh4vwaO
- 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
+Message-Id: <722C5824-0381-4E43-B8AE-AE8503CFF51E@gmail.com>
+References: <20250606161841.44354-4-jemmywong512@gmail.com>
+ <202506071822.ERv4i34r-lkp@intel.com>
+To: kernel test robot <lkp@intel.com>,
+ peterz@infradead.org,
+ dan.j.williams@intel.com,
+ mingo@kernel.org
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
 
-Am Donnerstag, dem 05.06.2025 um 14:51 +0200 schrieb Sebastian Andrzej Sie=
-wior:
-> On 2025-06-05 08:48:38 [-0400], Steven Rostedt wrote:
-> > On Thu,  5 Jun 2025 11:19:03 +0200
-> > Bert Karwatzki <spasswolf@web.de> wrote:
-> >=20
-> > > This patch seems to create so much output that the orginal error mes=
-sage and
-> > > backtrace often get lost, so I needed several runs to get a meaningf=
-ul message
-> > > when running
-> >=20
-> > Are you familiar with preempt count tracing?
+Hi Peter, Dam, Ingo,
+
+Do you have any recommendations to eliminate this false positive, given =
+that sparse recognizes scoped_guard but not guard?
+
+Looks like false positives. Some of these warnings were already present=20=
+
+due to asymmetric lock/unlock behavior in a specific function,
+
+while others were introduced by the use of guard,=20
+which can be resolved by replacing it with scoped_guard,=20
+but I don=E2=80=99t like this solution which could add additional =
+indentation.
+
+=E2=80=94=E2=80=94
+
+Previous warnings - caused by asymmetric lock/unlock:
+
+kernel/cgroup/cgroup.c:3161:9: sparse: warning: context imbalance in =
+'cgroup_lock_and_drain_offline' - wrong count at exit
+kernel/cgroup/cgroup.c:6530:12: sparse: warning: context imbalance in =
+'cgroup_css_set_fork' - wrong count at exit
+kernel/cgroup/cgroup.c:6646:9: sparse: warning: context imbalance in =
+'cgroup_css_set_put_fork' - wrong count at exit
+kernel/cgroup/cgroup.c:6666:5: sparse: warning: context imbalance in =
+'cgroup_can_fork' - wrong count at exit
+kernel/cgroup/cgroup.c:6715:9: sparse: warning: context imbalance in =
+'cgroup_cancel_fork' - unexpected unlock
+
+New warnings - caused by guard:
+
+kernel/cgroup/cgroup.c:345:13: sparse: sparse: context imbalance in =
+'cgroup_idr_replace' - wrong count at exit
+kernel/cgroup/cgroup.c:351:13: sparse: sparse: context imbalance in =
+'cgroup_idr_remove' - wrong count at exit
+kernel/cgroup/cgroup.c:626:5: sparse: sparse: context imbalance in =
+'cgroup_task_count' - wrong count at exit
+kernel/cgroup/cgroup.c:2225:9: sparse: sparse: context imbalance in =
+'cgroup_do_get_tree' - different lock contexts for basic block
+kernel/cgroup/cgroup.c:2418:5: sparse: sparse: context imbalance in =
+'cgroup_path_ns' - wrong count at exit
+kernel/cgroup/cgroup.c:2734:9: sparse: sparse: context imbalance in =
+'cgroup_migrate_finish' - wrong count at exit
+kernel/cgroup/cgroup.c:4532:9: sparse: sparse: context imbalance in =
+'cgroup_file_notify' - wrong count at exit
+kernel/cgroup/cgroup.c:4994:9: sparse: sparse: context imbalance in =
+'css_task_iter_start' - wrong count at exit
+kernel/cgroup/cgroup.c:5027:9: sparse: sparse: context imbalance in =
+'css_task_iter_next' - wrong count at exit
+kernel/cgroup/cgroup.c:5047:9: sparse: sparse: context imbalance in =
+'css_task_iter_end' - wrong count at exit
+
+Best,
+Jemmy
+
+> On Jun 7, 2025, at 6:50=E2=80=AFPM, kernel test robot <lkp@intel.com> =
+wrote:
 >=20
-> I have an initial set of patches to tackle this problem, I'm going to
-> send them after the merge window.
+> Hi Jemmy,
 >=20
-> Sebastian
+> kernel test robot noticed the following build warnings:
+>=20
+> [auto build test WARNING on tj-cgroup/for-next]
+> [also build test WARNING on linus/master next-20250606]
+> [cannot apply to v6.15]
+> [If your patch is applied to the wrong git tree, kindly drop us a =
+note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>=20
+> url:    =
+https://github.com/intel-lab-lkp/linux/commits/Jemmy-Wong/cgroup-add-lock-=
+guard-support-for-cgroup_muetx/20250607-002109
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git =
+for-next
+> patch link:    =
+https://lore.kernel.org/r/20250606161841.44354-4-jemmywong512%40gmail.com
+> patch subject: [PATCH v1 3/3] cgroup: add lock guard support for =
+others
+> config: sparc-randconfig-r121-20250607 =
+(https://download.01.org/0day-ci/archive/20250607/202506071822.ERv4i34r-lk=
+p@intel.com/config)
+> compiler: sparc-linux-gcc (GCC) 8.5.0
+> reproduce: =
+(https://download.01.org/0day-ci/archive/20250607/202506071822.ERv4i34r-lk=
+p@intel.com/reproduce)
+>=20
+> If you fix the issue in a separate patch/commit (i.e. not just a new =
+version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: =
+https://lore.kernel.org/oe-kbuild-all/202506071822.ERv4i34r-lkp@intel.com/=
 
-I've found the reason for the "mysterious" increase of preempt_count:
+>=20
+> sparse warnings: (new ones prefixed by >>)
+>>> kernel/cgroup/cgroup.c:6721:33: sparse: sparse: incorrect type in =
+argument 1 (different address spaces) @@     expected struct spinlock =
+[usertype] *l @@     got struct spinlock [noderef] __rcu * @@
+>   kernel/cgroup/cgroup.c:6721:33: sparse:     expected struct spinlock =
+[usertype] *l
+>   kernel/cgroup/cgroup.c:6721:33: sparse:     got struct spinlock =
+[noderef] __rcu *
+>   kernel/cgroup/cgroup.c:345:13: sparse: sparse: context imbalance in =
+'cgroup_idr_replace' - wrong count at exit
+>   kernel/cgroup/cgroup.c:351:13: sparse: sparse: context imbalance in =
+'cgroup_idr_remove' - wrong count at exit
+>   kernel/cgroup/cgroup.c:626:5: sparse: sparse: context imbalance in =
+'cgroup_task_count' - wrong count at exit
+>   kernel/cgroup/cgroup.c:2225:9: sparse: sparse: context imbalance in =
+'cgroup_do_get_tree' - different lock contexts for basic block
+>   kernel/cgroup/cgroup.c:2418:5: sparse: sparse: context imbalance in =
+'cgroup_path_ns' - wrong count at exit
+>   kernel/cgroup/cgroup.c:2734:9: sparse: sparse: context imbalance in =
+'cgroup_migrate_finish' - wrong count at exit
+>   kernel/cgroup/cgroup.c:3131:9: sparse: sparse: context imbalance in =
+'cgroup_lock_and_drain_offline' - wrong count at exit
+>   kernel/cgroup/cgroup.c:4532:9: sparse: sparse: context imbalance in =
+'cgroup_file_notify' - wrong count at exit
+>   kernel/cgroup/cgroup.c:4994:9: sparse: sparse: context imbalance in =
+'css_task_iter_start' - wrong count at exit
+>   kernel/cgroup/cgroup.c:5027:9: sparse: sparse: context imbalance in =
+'css_task_iter_next' - wrong count at exit
+>   kernel/cgroup/cgroup.c:5047:9: sparse: sparse: context imbalance in =
+'css_task_iter_end' - wrong count at exit
+>   kernel/cgroup/cgroup.c:6485:12: sparse: sparse: context imbalance in =
+'cgroup_css_set_fork' - wrong count at exit
+>   kernel/cgroup/cgroup.c:6601:9: sparse: sparse: context imbalance in =
+'cgroup_css_set_put_fork' - wrong count at exit
+>   kernel/cgroup/cgroup.c:6621:5: sparse: sparse: context imbalance in =
+'cgroup_can_fork' - wrong count at exit
+>   kernel/cgroup/cgroup.c:6670:9: sparse: sparse: context imbalance in =
+'cgroup_cancel_fork' - unexpected unlock
+>   kernel/cgroup/cgroup.c:6813:9: sparse: sparse: context imbalance in =
+'cgroup_release' - different lock contexts for basic block
+>=20
+> vim +6721 kernel/cgroup/cgroup.c
+>=20
+>  6672=20
+>  6673 /**
+>  6674 * cgroup_post_fork - finalize cgroup setup for the child process
+>  6675 * @child: the child process
+>  6676 * @kargs: the arguments passed to create the child process
+>  6677 *
+>  6678 * Attach the child process to its css_set calling the subsystem =
+fork()
+>  6679 * callbacks.
+>  6680 */
+>  6681 void cgroup_post_fork(struct task_struct *child,
+>  6682      struct kernel_clone_args *kargs)
+>  6683 __releases(&cgroup_threadgroup_rwsem) __releases(&cgroup_mutex)
+>  6684 {
+>  6685 unsigned int cgrp_kill_seq =3D 0;
+>  6686 unsigned long cgrp_flags =3D 0;
+>  6687 bool kill =3D false;
+>  6688 struct cgroup_subsys *ss;
+>  6689 struct css_set *cset;
+>  6690 int i;
+>  6691=20
+>  6692 cset =3D kargs->cset;
+>  6693 kargs->cset =3D NULL;
+>  6694=20
+>  6695 scoped_guard(spinlock_irq, &css_set_lock) {
+>  6696 /* init tasks are special, only link regular threads */
+>  6697 if (likely(child->pid)) {
+>  6698 if (kargs->cgrp) {
+>  6699 cgrp_flags =3D kargs->cgrp->flags;
+>  6700 cgrp_kill_seq =3D kargs->cgrp->kill_seq;
+>  6701 } else {
+>  6702 cgrp_flags =3D cset->dfl_cgrp->flags;
+>  6703 cgrp_kill_seq =3D cset->dfl_cgrp->kill_seq;
+>  6704 }
+>  6705=20
+>  6706 WARN_ON_ONCE(!list_empty(&child->cg_list));
+>  6707 cset->nr_tasks++;
+>  6708 css_set_move_task(child, NULL, cset, false);
+>  6709 } else {
+>  6710 put_css_set(cset);
+>  6711 cset =3D NULL;
+>  6712 }
+>  6713=20
+>  6714 if (!(child->flags & PF_KTHREAD)) {
+>  6715 if (unlikely(test_bit(CGRP_FREEZE, &cgrp_flags))) {
+>  6716 /*
+>  6717 * If the cgroup has to be frozen, the new task has
+>  6718 * too. Let's set the JOBCTL_TRAP_FREEZE jobctl bit to
+>  6719 * get the task into the frozen state.
+>  6720 */
+>> 6721 scoped_guard(spinlock, &child->sighand->siglock) {
+>  6722 WARN_ON_ONCE(child->frozen);
+>  6723 child->jobctl |=3D JOBCTL_TRAP_FREEZE;
+>  6724 }
+>  6725=20
+>  6726 /*
+>  6727 * Calling cgroup_update_frozen() isn't required here,
+>  6728 * because it will be called anyway a bit later from
+>  6729 * do_freezer_trap(). So we avoid cgroup's transient
+>  6730 * switch from the frozen state and back.
+>  6731 */
+>  6732 }
+>  6733=20
+>  6734 /*
+>  6735 * If the cgroup is to be killed notice it now and take the
+>  6736 * child down right after we finished preparing it for
+>  6737 * userspace.
+>  6738 */
+>  6739 kill =3D kargs->kill_seq !=3D cgrp_kill_seq;
+>  6740 }
+>  6741 }
+>  6742 /*
+>  6743 * Call ss->fork().  This must happen after @child is linked on
+>  6744 * css_set; otherwise, @child might change state between ->fork()
+>  6745 * and addition to css_set.
+>  6746 */
+>  6747 do_each_subsys_mask(ss, i, have_fork_callback) {
+>  6748 ss->fork(child);
+>  6749 } while_each_subsys_mask();
+>  6750=20
+>  6751 /* Make the new cset the root_cset of the new cgroup namespace. =
+*/
+>  6752 if (kargs->flags & CLONE_NEWCGROUP) {
+>  6753 struct css_set *rcset =3D child->nsproxy->cgroup_ns->root_cset;
+>  6754=20
+>  6755 get_css_set(cset);
+>  6756 child->nsproxy->cgroup_ns->root_cset =3D cset;
+>  6757 put_css_set(rcset);
+>  6758 }
+>  6759=20
+>  6760 /* Cgroup has to be killed so take down child immediately. */
+>  6761 if (unlikely(kill))
+>  6762 do_send_sig_info(SIGKILL, SEND_SIG_NOINFO, child, PIDTYPE_TGID);
+>  6763=20
+>  6764 cgroup_css_set_put_fork(kargs);
+>  6765 }
+>  6766=20
+>=20
+> --=20
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
 
-[   70.821750] [   T2746] bpf_link_settle calling fd_install() preemt_coun=
-t =3D 0
-[   70.821751] [   T2746] preempt_count_add 5898: preempt_count =3D 0x0 co=
-unter =3D 0x1b232c
-[   70.821752] [   T2746] preempt_count_add 5900: preempt_count =3D 0x1 co=
-unter =3D 0x1b232d
-[   70.821754] [   T2746] preempt_count_sub 5966: preempt_count =3D 0x1 co=
-unter =3D 0x1b232e
-[   70.821755] [   T2746] preempt_count_sub 5968: preempt_count =3D 0x0 co=
-unter =3D 0x1b232f
-[   70.821761] [   T2746] __bpf_trace_sys_enter 18: preempt_count =3D 0x0
-[   70.821762] [   T2746] __bpf_trace_sys_enter 18: preempt_count =3D 0x1
-[   70.821764] [   T2746] __bpf_trace_run: preempt_count =3D 1
-[   70.821765] [   T2746] bpf_prog_run: preempt_count =3D 1
-[   70.821766] [   T2746] __bpf_prog_run: preempt_count =3D 1
-
-It's caused by this macro from include/trace/bpf_probe.h (with my pr_err()=
-):
-
-#define __BPF_DECLARE_TRACE_SYSCALL(call, proto, args) \
-static notrace void \
-__bpf_trace_##call(void *__data, proto) \
-{ \
- might_fault(); \
- if (!strcmp(get_current()->comm, "test_progs")) \
- pr_err("%s %d: preempt_count =3D 0x%x", __func__, __LINE__, preempt_count=
-());\
- preempt_disable_notrace(); \
- if (!strcmp(get_current()->comm, "test_progs")) \
- pr_err("%s %d: preempt_count =3D 0x%x", __func__, __LINE__, preempt_count=
-());\
- CONCATENATE(bpf_trace_run, COUNT_ARGS(args))(__data, CAST_TO_U64(args)); =
-\
- preempt_enable_notrace(); \
-}
-
-The preempt_{en,dis}able_notrace were introduced in
-commit 4aadde89d81f ("tracing/bpf: disable preemption in syscall probe")
-This commit is present in v6.14 and v6.15, but the bug already appears in
-v6.12 so in that case preemption is disable somewhere else.=20
-
-Bert Karwatzki
