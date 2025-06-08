@@ -1,142 +1,144 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90D8BA3F;
-	Sun,  8 Jun 2025 01:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218CBEEDE
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 01:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749344609; cv=none; b=N4dWvewT04BwskSDQqbd4GYMWNs/qNYTqXx1j5VnIfPlioNiop+4ydzqut5M0bwx4iyqqcQ8jZ15YF8Aze0yRQmf1QpFfV7L9Wt3A63Vp+kOYg3liZjeFsTBKAUXBTof2MuJC0HUIutUEeNMWTcJz48aG5JkOSV383fasWKgOag=
+	t=1749344638; cv=none; b=cAZ9NkfSDHtoXBnHFpI4ILNkg9uqOaWDaIukcWFl5ahbjD1d9+8/03pGRC3+BGWgx9Ls7A4F4oyTdw/ovI01D9OfQtl2P6Mq/vg4czByyw72OYrfwAuHN0/j6DLDXzmwv/vdkZP9CP7FT61mOYlrJNk088IafFhbbpAntbEtOqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749344609; c=relaxed/simple;
-	bh=1DBk1/3hW6AD0jC2kHKQB4BwxaYpmiMAJ2x9dIk/uEQ=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=eKsK8TeNk7h7JjJjGjJqr7jEIrq/wy92bbqV51keFj7fub6xJgm9uLx3Vi6myCw44hjdYt8bxJCf321Na0cZcWqqyhKgYXaFt1hz8pDdlAxzIU0fpCeQ1RNNHDmfljNAHuRRVWrb2aR+G4hridfMhopAsWJum6aHwdkO7Zv1L5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zi8AW5Bc; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749344638; c=relaxed/simple;
+	bh=NRIa/LbPRW8mOnkqUqqn0cCDl9cTBkCpVjOIQ50QLw4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=rSyBvPD3th2DcKim1W4DpJzc+I6RIPXuI4T7imqXrBpkZ6ySPFpatv4aavgwTHD93pv9BRvwA3BPkEoqHHeLd/lUMiyR9beKcaZDLO7A1jwkWhnR3VHdc14j4YB+LPbrG8te6A4BJ5N8b+oQC4/tvcYSGcvzsLPIc1MMPgNvntg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V31ppRS+; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zi8AW5Bc"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-553543ddfc7so3241006e87.0;
-        Sat, 07 Jun 2025 18:03:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749344604; x=1749949404; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=eOno41Y5407AxKrCDHPBscevc6cncFpgsXyyghp6mJw=;
-        b=Zi8AW5BczqzIaD1YRPXVpq99xVl/dgJK63007IysjOWYkDo2CNJ3kM8GZXuuco6K4J
-         6XsYLZ7RbijJAwfoGz9mIP76VbQpHtNv3/gID5gwRXa56kWpeyduSI1wLKonfM5O6zI+
-         HXTdZ6XqMcsoEwZm0QCeKtippBKR+pDc+j9mANBSHuqW7Y0M96eVQMbDq7MHk1UcrZRk
-         g9r0FO+fRR1Vx4arzkfIO9icJVD2NRPvIQy377cBvmRbWnYCJLQhx8rxLBgQ7US9r0P4
-         xnscUm6SMkdTTfJOeLxSmRRdIilBwCl71s8raz4bWFWrburrpwgWOFIL6SOJVjghKVgn
-         I+rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749344604; x=1749949404;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eOno41Y5407AxKrCDHPBscevc6cncFpgsXyyghp6mJw=;
-        b=goK5xPDaSaN94yu6wqHIu/4ABDyegEJbG8hEgu3lUSQ0WbzQNuI4v4vV4jSUqemBxv
-         QkGsaPYY5i8HGTVMo6UN0Ws02eUU/yU/J5nuFRYZoDCRH9GZ6ZcqIsfUHE0aKw1lsSfb
-         TxETRfttVz3uY6S4qByI+tsHGMxvm6GidpVsFjijiz84rE8BEk+/ZhbcQrrh6yruuYF4
-         dH9yIGZIGXO5Kh5oO/45XYEdkWVw5L0RlPYD0kRF3XM7CwLUf1FiQS0QGFCb60DFqOrE
-         lRjrVmi8VoxkJ67U6jQi+LgfAX3N2W3vGygi2l/F4ISanzY8Z0hhmnPI72nuksdHghev
-         eSxg==
-X-Forwarded-Encrypted: i=1; AJvYcCWTU2sjsq594md9JNzR/5A8SaQvCrY21ZbfbvOajXSz1BAwQ/botgsjelcpOko6dfYlhUcFFnflfVU2CwM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfE9H93x6VS+iXVKcyF0Uap2V0eNxBm+X13iiJPuunL462iRDI
-	tyBtW3wgrPscyawR31hCTHGuww41rvgAitBiMOUQZyqpZRawlu1fKaxD9e1PVajov2PDZTU+UjF
-	QdcDY2jIA2AbKVioDFRX+QQbc4+3QGSkSpKqp
-X-Gm-Gg: ASbGncvokGDdt9s+8Ur8ISepqBQAy8BDbJ8pdTWx559tIWedPx1NbvPvR84AoJIRG87
-	T67Tl+PPRFw/KxIpkeDeWNt9brTyjUayuOm2n4Sekb0Kmj5FPg8cc0OZr6HF+aL9k54D5Z5r/N4
-	D4G89jxt715N9QqSPpf5FChpzAWnOBmCMrQJwrplF9/ouDdavlMGCKUd3ga5Tx23aZtfqFPEzMW
-	pAi
-X-Google-Smtp-Source: AGHT+IFI24gvQuV0lGx4sjAUCwKgKFqloJT6lRkQB3DiJjy7Sbt6+T7udpvVwKHBE6p6TYUV5b4G5Xv14XpUvwbyjdg=
-X-Received: by 2002:a05:651c:1545:b0:30b:b987:b6a7 with SMTP id
- 38308e7fff4ca-32adf92f552mr22704691fa.0.1749344604123; Sat, 07 Jun 2025
- 18:03:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V31ppRS+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749344636; x=1780880636;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=NRIa/LbPRW8mOnkqUqqn0cCDl9cTBkCpVjOIQ50QLw4=;
+  b=V31ppRS+q2T2PYZHXXlfjgYrei7S0yD0fQ5KmZPBVk6VNZGeho3DsHp3
+   afaQorM9Vx6tHoEGJ33OaG6E6gnvLyJoSmY/BXxONysrMw+bS6+iU+NFQ
+   Cw+ZO9et6KnsAew64UN20zRHXSr7tet+TU09a0EP9998q43RH+33HFTZt
+   M8zx1bSALzkhSbUlLQsax8lGLH/Vx9ASzHtC12iP45duwc/Z2Va78cmgf
+   bk+viBVjSCejJ6FlnvPWLWx4Wgs4zXDE7Li6Pzr+0+yAaqfTvQDF5Bv4g
+   zHAE7Jf8wj6VL/nkqUyg+O5By2SukwmDPDZltQ5p/moViwmK0BGs5ZVKh
+   Q==;
+X-CSE-ConnectionGUID: FPB4kZH9QlKxp0m1DL2oXw==
+X-CSE-MsgGUID: 5KOoaB/6TdWqn4M/PCPKiQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11457"; a="51454100"
+X-IronPort-AV: E=Sophos;i="6.16,219,1744095600"; 
+   d="scan'208";a="51454100"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2025 18:03:55 -0700
+X-CSE-ConnectionGUID: XhHHoTbwSsCozvp03qM4Dg==
+X-CSE-MsgGUID: kq7BfiU2TWCfK98SK065rg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,219,1744095600"; 
+   d="scan'208";a="150990374"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 07 Jun 2025 18:03:54 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uO4Rz-00066f-2p;
+	Sun, 08 Jun 2025 01:03:51 +0000
+Date: Sun, 8 Jun 2025 09:03:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Wei Liu <wei.liu@kernel.org>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>
+Subject: screen_info_pci.c:undefined reference to `screen_info'
+Message-ID: <202506080820.1wmkQufc-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Steve French <smfrench@gmail.com>
-Date: Sat, 7 Jun 2025 20:03:12 -0500
-X-Gm-Features: AX0GCFuWRQgqxBkBM-zybVWhjF-NUFhn8WNZ4Cl-lGBCqaHjgXLlWyhZgXTZ500
-Message-ID: <CAH2r5muDjjJVcngtDHa87ZWKGD_uZPV7KVO=Fg7g57-OyudMxQ@mail.gmail.com>
-Subject: [GIT PULL] smb3 client fixes
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: CIFS <linux-cifs@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Please pull the following changes since commit
-6d9b5f6b81ace1b2b0830271ad46628d6fad31bb:
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   8630c59e99363c4b655788fd01134aef9bcd9264
+commit: 96959283a58d91ae20d025546f00e16f0a555208 Drivers: hv: Always select CONFIG_SYSFB for Hyper-V guests
+date:   2 weeks ago
+config: arm64-randconfig-r113-20250607 (https://download.01.org/0day-ci/archive/20250608/202506080820.1wmkQufc-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 8.5.0
+reproduce: (https://download.01.org/0day-ci/archive/20250608/202506080820.1wmkQufc-lkp@intel.com/reproduce)
 
-  Merge tag 'v6.16-rc-part1-smb-client-fixes' of
-git://git.samba.org/sfrench/cifs-2.6 (2025-06-03 16:04:29 -0700)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506080820.1wmkQufc-lkp@intel.com/
 
-are available in the Git repository at:
+All errors (new ones prefixed by >>):
 
-  git://git.samba.org/sfrench/cifs-2.6.git tags/6.16-rc-part2-smb3-client-fixes
-
-for you to fetch changes up to 8e9d6efccdd728fb1193e4faada45dff03773608:
-
-  cifs: update internal version number (2025-06-05 10:21:17 -0500)
-
-----------------------------------------------------------------
-Fourteen smb3 client fixes
-- 3 multichannel/reconnect fixes
-- 8 fixes to move smbdirect (smb over RDMA) defines to fs/smb/common
-so they will be able to be used in the future more broadly, and a
-documentation update explaining setting up smbdirect mounts
-- Update email address for Paulo
-
-----------------------------------------------------------------
-Meetakshi Setiya (1):
-      cifs: add documentation for smbdirect setup
-
-Paulo Alcantara (1):
-      MAINTAINERS, mailmap: Update Paulo Alcantara's email address
-
-Shyam Prasad N (3):
-      cifs: deal with the channel loading lag while picking channels
-      cifs: serialize other channels when query server interfaces is pending
-      cifs: do not disable interface polling on failure
-
-Stefan Metzmacher (8):
-      smb: smbdirect: add smbdirect_pdu.h with protocol definitions
-      smb: client: make use of common smbdirect_pdu.h
-      smb: smbdirect: add smbdirect.h with public structures
-      smb: client: make use of common smbdirect.h
-      smb: smbdirect: add smbdirect_socket.h
-      smb: client: make use of common smbdirect_socket
-      smb: smbdirect: introduce smbdirect_socket_parameters
-      smb: client: make use of common smbdirect_socket_parameters
-
-Steve French (1):
-      cifs: update internal version number
-
- .mailmap                                    |   6 +
- Documentation/filesystems/smb/index.rst     |   1 +
- Documentation/filesystems/smb/smbdirect.rst | 103 ++++++++
- MAINTAINERS                                 |   4 +-
- fs/smb/client/cifs_debug.c                  |  23 +-
- fs/smb/client/cifsfs.h                      |   4 +-
- fs/smb/client/cifsglob.h                    |   1 +
- fs/smb/client/connect.c                     |   6 +-
- fs/smb/client/smb2ops.c                     |  14 +-
- fs/smb/client/smb2pdu.c                     |  50 ++--
- fs/smb/client/smbdirect.c                   | 389 ++++++++++++++++-------------
- fs/smb/client/smbdirect.h                   |  71 +-----
- fs/smb/client/transport.c                   |  14 +-
- fs/smb/common/smbdirect/smbdirect.h         |  37 +++
- fs/smb/common/smbdirect/smbdirect_pdu.h     |  55 ++++
- fs/smb/common/smbdirect/smbdirect_socket.h  |  43 ++++
- 16 files changed, 533 insertions(+), 288 deletions(-)
- create mode 100644 Documentation/filesystems/smb/smbdirect.rst
- create mode 100644 fs/smb/common/smbdirect/smbdirect.h
- create mode 100644 fs/smb/common/smbdirect/smbdirect_pdu.h
- create mode 100644 fs/smb/common/smbdirect/smbdirect_socket.h
-
+   aarch64-linux-ld: aarch64-linux-ld: DWARF error: could not find abbrev number 50
+   drivers/video/screen_info_pci.o: in function `screen_info_fixup_lfb':
+>> screen_info_pci.c:(.text+0x1b4): undefined reference to `screen_info'
+   aarch64-linux-ld: drivers/video/screen_info_pci.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+>> screen_info_pci.c:(.text+0x1b4): dangerous relocation: unsupported relocation
+>> aarch64-linux-ld: screen_info_pci.c:(.text+0x1b8): undefined reference to `screen_info'
+   aarch64-linux-ld: screen_info_pci.c:(.text+0x1bc): undefined reference to `screen_info'
+   aarch64-linux-ld: drivers/video/screen_info_pci.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   screen_info_pci.c:(.text+0x1bc): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: screen_info_pci.c:(.text+0x1c0): undefined reference to `screen_info'
+   aarch64-linux-ld: screen_info_pci.c:(.text+0x248): undefined reference to `screen_info'
+   aarch64-linux-ld: drivers/video/screen_info_pci.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   screen_info_pci.c:(.text+0x248): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: drivers/video/screen_info_pci.o:screen_info_pci.c:(.text+0x24c): more undefined references to `screen_info' follow
+   aarch64-linux-ld: drivers/video/screen_info_pci.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   drivers/video/screen_info_pci.o: in function `screen_info_fixup_lfb':
+   screen_info_pci.c:(.text+0x25c): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: drivers/video/screen_info_pci.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   drivers/video/screen_info_pci.o: in function `screen_info_apply_fixups':
+   screen_info_pci.c:(.text+0x3e8): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: drivers/video/screen_info_pci.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   screen_info_pci.c:(.text+0x3f0): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: drivers/video/screen_info_pci.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   screen_info_pci.c:(.text+0x404): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: drivers/video/screen_info_pci.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   screen_info_pci.c:(.text+0x498): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: drivers/video/screen_info_pci.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   screen_info_pci.c:(.text+0x4ac): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: drivers/video/screen_info_pci.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   screen_info_pci.c:(.text+0x4c0): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: drivers/video/screen_info_pci.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   screen_info_pci.c:(.text+0x4cc): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: drivers/video/screen_info_pci.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   screen_info_pci.c:(.text+0x520): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: drivers/video/screen_info_pci.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   screen_info_pci.c:(.text+0x538): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: drivers/video/screen_info_pci.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   screen_info_pci.c:(.text+0x54c): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: drivers/firmware/sysfb.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   aarch64-linux-ld: DWARF error: could not find abbrev number 4733
+   drivers/firmware/sysfb.o: in function `sysfb_parent_dev.constprop.3':
+>> sysfb.c:(.text+0x60): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: drivers/firmware/sysfb.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   drivers/firmware/sysfb.o: in function `sysfb_handles_screen_info':
+   sysfb.c:(.text+0x170): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: drivers/firmware/sysfb.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   sysfb.c:(.text+0x180): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: drivers/firmware/sysfb.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   sysfb.c:(.text+0x20c): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: drivers/firmware/sysfb.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   sysfb.c:(.text+0x224): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: drivers/firmware/sysfb.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   sysfb.c:(.text+0x238): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: drivers/firmware/sysfb.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   sysfb.c:(.text+0x248): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: drivers/firmware/sysfb.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   drivers/firmware/sysfb.o: in function `sysfb_init':
+>> sysfb.c:(.init.text+0x50): dangerous relocation: unsupported relocation
+   aarch64-linux-ld: drivers/firmware/sysfb.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `screen_info' which may bind externally can not be used when making a shared object; recompile with -fPIC
+   sysfb.c:(.init.text+0x58): dangerous relocation: unsupported relocation
 
 -- 
-Thanks,
-
-Steve
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
