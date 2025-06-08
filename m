@@ -1,80 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B670F1D47B4;
-	Sun,  8 Jun 2025 22:37:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5ECB1D47B4;
+	Sun,  8 Jun 2025 22:42:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749422230; cv=none; b=uFoXdr40opnpENcf73405t1hrwCQxopV51LqFuy4bmV5AYdkUk0C8ypzTNsY2ST4HgzlEcEYoQvhYDPFLP7UgYeNlq4JBSDvuYsbg4VN+m/etl9YWPEj+lm8WQpvRXibRm4WuNQjNo8VLQBkTH7GaujkfiMt1NECEmobOIfsNyo=
+	t=1749422578; cv=none; b=WgLfZtTetHqCamuglMtLPIxnpIXR47uGpNWtzOoOuN1arc+PFWPA3vE26YoATiOVQK40xhbhOCHBF0TymsCCDcN4G9QIqaxdWkwtL5qgRkAYPUk6zsiGOj9Wery+qInc3SDjlx4mSdVS98o+wCKxLIo+U392HXPMU1QF/Is779U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749422230; c=relaxed/simple;
-	bh=prd3tOf0SvXuPF48qrLMv5PQGW/Mf3lzY1R4U3NkFk0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EM/drMlV+Q3usOwb1+jGmXvQ2El4DrtFuosgTqu2TUbdfjVxGhNw2aUyaSiENs5IiRPT+9mof4PRhhrfd7sjbyxhdaQiGbIZa3ygt6P5TwBMRpp1kd98BsNkuYjDN1AXVSrlsasIo+O+p+ZfvjiYi9M+xJWj2IUjmGBVvXeuROs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b6f0QvfT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749422578; c=relaxed/simple;
+	bh=+Ow8C5IDyvj7h168sBfQeN9yDKxNW7U1c0diPxjACy8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IDgIoQW0mMMM3OoQFTWmMKtQ0TXOqmZCgkuoe4wlu6HJpTKJrUxoMiGlE3TOyMhHGp4Wm8wgl4prb+v5YJnpwZof4jxWY13O5AXpUhqr3hvT9jFkr9WEaWPjjsYZwNNFOpRdz9BAWHzLX+VIeF0lb6io0d/KbEM6G/Kz0UCuvFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=At/yWD8z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b6f0QvfT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6B95C4CEEE;
-	Sun,  8 Jun 2025 22:37:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="At/yWD8z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A258C4CEEE;
+	Sun,  8 Jun 2025 22:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749422230;
-	bh=prd3tOf0SvXuPF48qrLMv5PQGW/Mf3lzY1R4U3NkFk0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b6f0QvfTENNe2lj6vYHStzImiG9HrzHWnlqyEJ420vpn8n0w8blUTtZPEKRaGltMW
-	 NxAVlwAW9CZdIKXF5vkM7yHa2eJYB0sbiy5IAIBKANbgiBQJJVAxwgOdgG7ciP7VHQ
-	 VTHr+86dU1atQTlicC9EZtRCTGAik/MkTZS9xP0ZE6kmwspomju0Dwbu+4OmM+JRXL
-	 7y61yy9WhMRskuXXoaf7I0be3uk4NlSwD1BMwWAuA5Tw5SACSeKZQPCY3o9uEUSmBD
-	 labfMYt1W5X+3Y8xrD4Gfr2i6ryR4PQxI3zOVFIFZJBBJjcQpqHAag7KxYg89lenN4
-	 IdUzP4DowUfjA==
-Date: Sun, 8 Jun 2025 23:37:06 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Bence =?iso-8859-1?B?Q3Pza+Fz?= <csokas.bence@prolan.hu>
-Cc: linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Subject: Re: [PATCH v5 2/2] spi: atmel-quadspi: Use `devm_dma_request_chan()`
-Message-ID: <77c38cda-7ad0-4893-b16d-33a7a55d1080@sirena.org.uk>
-References: <20250505184936.312274-1-csokas.bence@prolan.hu>
- <20250505184936.312274-3-csokas.bence@prolan.hu>
+	s=k20201202; t=1749422577;
+	bh=+Ow8C5IDyvj7h168sBfQeN9yDKxNW7U1c0diPxjACy8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=At/yWD8zn/DyP6c3CHHI5pK+CKgjyJU8SwVXiL7V8F3s/OeoVg5V428lBc0ahyxs3
+	 7xVOaOFJDFv0td7SbS1GwgWQLXKDXJ4dTf+V0cREAN48wlVQ/ZkW5dw/Arcoj6dFbw
+	 2R5LJTo/n9KYKHuuPW0p5JBaQFb5rfEOuTszmNaPC9AMjAHhuWuShc6DlzyS+vjwIl
+	 iuTnWjTiuB58EacNORhPo6EgBp4ZbjmlNvQszi9bIz3EUrlPwmh+op5YCGTP1KJmTf
+	 +Bn3dxleOLqRS5tINJFanfiI4iT8RGgIK9uNCzvf4h2lmJc3w3lQi9EmER2DA/nk3A
+	 /LmKBQ9x2DHMA==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@gmail.com>,
+	sophgo@lists.linux.dev,
+	Jingbao Qiu <qiujingbao.dlmu@gmail.com>,
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-rtc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: Move sophgo,cv1800b-rtc to rtc directory
+Date: Sun,  8 Jun 2025 17:42:51 -0500
+Message-ID: <20250608224252.3902421-1-robh@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="xpRD4nOZFRzRxibN"
-Content-Disposition: inline
-In-Reply-To: <20250505184936.312274-3-csokas.bence@prolan.hu>
-X-Cookie: Body by Nautilus, Brain by Mattel.
+Content-Transfer-Encoding: 8bit
 
+The $id path for the sophgo,cv1800b-rtc binding was missing part of the
+path 'soc'. However, the correct place for RTC bindings (even if it's
+also a "syscon") is the rtc directory, so move the binding there while
+fixing the $id value.
 
---xpRD4nOZFRzRxibN
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: 76517429dbfd ("dt-bindings: soc: sophgo: add RTC support for Sophgo CV1800 series")
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ .../bindings/{soc/sophgo => rtc}/sophgo,cv1800b-rtc.yaml        | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+ rename Documentation/devicetree/bindings/{soc/sophgo => rtc}/sophgo,cv1800b-rtc.yaml (96%)
 
-On Mon, May 05, 2025 at 08:49:34PM +0200, Bence Cs=F3k=E1s wrote:
-> Leave releasing of DMA channels up to the devm facilities. This way we can
-> eliminate the rest of the "goto ladder".
+diff --git a/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-rtc.yaml b/Documentation/devicetree/bindings/rtc/sophgo,cv1800b-rtc.yaml
+similarity index 96%
+rename from Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-rtc.yaml
+rename to Documentation/devicetree/bindings/rtc/sophgo,cv1800b-rtc.yaml
+index 5cf186c396c9..c695d2ff9fcc 100644
+--- a/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-rtc.yaml
++++ b/Documentation/devicetree/bindings/rtc/sophgo,cv1800b-rtc.yaml
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+ %YAML 1.2
+ ---
+-$id: http://devicetree.org/schemas/sophgo/sophgo,cv1800b-rtc.yaml#
++$id: http://devicetree.org/schemas/rtc/sophgo,cv1800b-rtc.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ 
+ title: Real Time Clock of the Sophgo CV1800 SoC
+-- 
+2.47.2
 
-This doesn't apply against current code, please check and resend.
-
---xpRD4nOZFRzRxibN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhGEJEACgkQJNaLcl1U
-h9BGBwf/U0uYeO/irhlkSLmI5OrYjwEiPAKVvSh1CMw103wqerGcpcr81zg0To40
-7/gK2xMK4ZpdhYOuapd4KCSWYW3A7TH9xEau1K1VVpgg/ZrH4Fuai/avuURweqWF
-464v9g5PhimDB5dWYO0r9OE6kqTqYBsgXEYV+WgrJS2FuJo0pt720XbKzg14Q4NZ
-6ruL3Va6C3kkjfRnfncGfoonyXVohdF06RHe5FckHYEruxTr2BNk+71xVed04ZKI
-sh2qqcVBXneHQHgEoUeeyVnj5ywtEWI3KhE5EpF02k/N+KFGCRmop+BsWogo+U0+
-DufDwXMnnYsabXtCbT1eQVXuQitZpw==
-=mwQ7
------END PGP SIGNATURE-----
-
---xpRD4nOZFRzRxibN--
