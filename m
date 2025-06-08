@@ -1,162 +1,288 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B291A08A4
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 16:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A25E3B19A;
+	Sun,  8 Jun 2025 16:08:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749398863; cv=none; b=Xxg4EtkGwttmWZHkb1t/C99pHt8/9regFWXe6Qc5pjIoUl+ju4wJq7pXCXQxP3GDfivcmM7mkgDOe7HYO7RSzTBcLaNEQ4HGSPhej7oqL7oV9CVP98xzFl7fQsDK9c2xnWrl7iEfuqQ6YL6xGmV7H5/6CJqNTlYdVuFDSYFTb/o=
+	t=1749398910; cv=none; b=cioKllml9T7UmNNN/jdHWAfT8hZVwhfM0Ns2+b55jLBaR07iXKjcbmi98vGiMAlzfPjg93/bs1uAPfyisKMITvyH89JsOTmPPTHibNGIbfP++oD8zF2cJiqSX/7gXOrQEh/b6izb6YUV5pZiKBNhvwZF99gPQYD87K90QvsYNhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749398863; c=relaxed/simple;
-	bh=Ja7y+pGdQgwUzowAi5cmrMH/tc4IyP9MAX2i9fmwei4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HZUDptNg2Qn1HZ3M6K6d3opvhLgRoaYouNFaYk1b5EBnn+WN3J+Lo2pKlRY0r+vH9x+vh0R0qnSRd82ZaCzSKlwh8dZIS6ykG0Z8YoTYcLI4acKGhP/GvI+/yxcD5JgSDHdGXIkwSOGb4vfJOpbiO+Gc3ymclqEMhrGx7WbzA2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=K4yx41m2; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749398910; c=relaxed/simple;
+	bh=zT8pfwQggTwjmmpDXtomNlqsYnWtwB9hIB8F6T6RC+E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=asAoavyqFhBglrE7HJcySulLCzO7t7YOptH0wTPdBpMcaogOxly2B8mbfCLnpnVGUrFzFT45UXvfyrhiTQuo0vKjgImIjr/GiqNbdaImc55tyThvLXu3Tsrd1x/Bsc+wwqOSZYAtkHF6D57GwxAo3CsK72p8IVxj1i2HUJMCGX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xj8w+fMy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="K4yx41m2"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 558BwKFa003345
-	for <linux-kernel@vger.kernel.org>; Sun, 8 Jun 2025 16:07:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	WjjsGKsB1xdYsLZ6YNVi3mtNLuj0pPjbrGZ/TI7MJeU=; b=K4yx41m2ilpKCZ2t
-	5hMqhZJWt4cXL1Z9xyHe/2jMuP1h9vIu5im3C3dmJWmLZPJI8f4IahNsAbA6kLrC
-	5p+rTQwHbvGxoB0bWfrpi6KYxIVymWVvbHEJ0MKIWdrAbSGJoRkLTRLFCXvYTVf9
-	3zz+N3YC+tzuTsW6L+kPJs9gS7C2u+VgwUr0P98+GBKjpALw7V0fQ82lW0bsERYu
-	s3U7bBPwP3rP2SZhZRorOL+62Jx58B9BPcb+JW3iqGxP5wmreQTJ9tliurx6TBjw
-	6MgNrgralcZwvRm03ei7vCJC3zvjUXHNv/0uHmD3yyI0ohI4opV1gRMmZ8CnxD6o
-	DRCfMQ==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ekpk39d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 16:07:41 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c760637fe5so711175985a.0
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 09:07:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749398860; x=1750003660;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WjjsGKsB1xdYsLZ6YNVi3mtNLuj0pPjbrGZ/TI7MJeU=;
-        b=i3VSM2oJFdWlNWmOJxzC1b1r8oTTsyf38oOrDPFvQY3elPItpieXctXBGrgTNEphO6
-         JqUPoiAfK1LmwHT+3CUSbGdqs254+gdM5gZoUN1l4ea8eJeOil3nev0XedeVJblnDgsP
-         2UiwvVP/KdwhcDRi5uisWYPBv21ln/Eqz0QPlzobx8jtR0WSC6CCjzK2lJNmNgfDvuGM
-         AWYcd+LdPR6Lf2Vpr/dY5eo5uQOJQqTExxF/z4i+I6l0qLS1Am5UL5zmSZ5Jjlnlpzun
-         n72ydVvcerT62LJZLhDGIev4R/Ct9CkUw0O4bfICIK5yQChHAyvMdjzbtEhiw+fLkVsU
-         zS3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWifgT/cbrXLvQv+inAPzNB2NWAwabShw73rY0uvhLBYVxachijV79DLpy0n7Q/2wso9+W/N7Bf1pPnZsA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcWY8riLbfJ8U2EV87dPbIo+zOIoYHBCF2Z8uEBWVPCdp8yRsg
-	lFUIeabsdV0PkvKgLOn3xEBhdfYd9E2SrLO2NwDjUvzAMGmN+22ZtnhpjfnxGyytnCY492TBCaZ
-	lSCgRf5SF2+dnuW1tt4NlMOrHTvAu6iKPl1grGAS8pRRmDpxfE0lJBWZE5X1rYwjTw4s=
-X-Gm-Gg: ASbGncu1uyH1PMXA+gU/vMMgc+roDgwF9CgvS051TKmLlKSAqBMZF922Hr1bC2Bfzdx
-	txrAgy09J98Vjty3JU8m95zU2aYEbaewkh8i4TuHFSXjLIJ9BBWEcAqzazlR55p//58wYlzcplS
-	OhRtECghvyqfqzmpwCSHr/U8Rnp451JYCO1Pk8pT87eXo8V5OVb9LQb6BApW519KitFyqxfMvQa
-	OmwUqIGtzZUKOgFQLaotfkoPDNgMf1EycrYU8MDF2mcGsT0NzJ1VQa0cvsGrWt4UL4XAr2mJGTY
-	yQ+iUNixywFs+s5jf4A2R2Xt9169qnic0lfCVrUUgcBZLcs/Erpnn2orCqJqhNQSu1EYoVgjFLg
-	h0Zd+qk3GsmNR+oD19Pr8xAkV
-X-Received: by 2002:a05:620a:471f:b0:7cd:3b13:c5b4 with SMTP id af79cd13be357-7d22986f383mr1316408485a.24.1749398860201;
-        Sun, 08 Jun 2025 09:07:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEkAkK134bF8HAhnjIeMvEJ6gzJOUf5lkkbjTlj+NO8H3oRmYxxEvdr+8qCIH19fwewJMeiTA==
-X-Received: by 2002:a05:620a:471f:b0:7cd:3b13:c5b4 with SMTP id af79cd13be357-7d22986f383mr1316405485a.24.1749398859844;
-        Sun, 08 Jun 2025 09:07:39 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5536772a9d2sm818970e87.186.2025.06.08.09.07.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Jun 2025 09:07:38 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Sun, 08 Jun 2025 19:07:31 +0300
-Subject: [PATCH 2/2] dt-bindings: usb: genesys,gl850g: add downstream
- facing ports
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xj8w+fMy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E69DC4CEEE;
+	Sun,  8 Jun 2025 16:08:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749398910;
+	bh=zT8pfwQggTwjmmpDXtomNlqsYnWtwB9hIB8F6T6RC+E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Xj8w+fMyKv7xpICegf/+7VHdDm9sO30btmf3HpDcyvX23r097EtVi4JXHIXgd7WND
+	 U+JlaHDLEEhqB/Z4jQaFmJyA/NeBYFS++fd9vgbeQQgUTy5h8RK7XRqgrxIOeUvqsa
+	 JYXOQQQRQoXMGe0C2X9S0kUwnSDaEwTXiOHOpRmZE4f8SoUCwhjDd5XYvTzx4FPvfr
+	 9upcldIwK9Og8I5u9dxGRVPD75kp9NLDxAUs3aQUI95mveS+iLJ9IrQf7dY9+G7R8y
+	 6FVGGNpgupbDp3smUgEDnTv3ECNaurCWBUdmkqH1R/GE6AUgWCMcN7Bq5DvSRje2Br
+	 zH2OSedBg4nqw==
+Date: Sun, 8 Jun 2025 17:08:19 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+ corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
+ Michael.Hennerich@analog.com, bagasdotme@gmail.com,
+ linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 07/11] iio: accel: adxl313: add activity sensing
+Message-ID: <20250608170819.3de87f4e@jic23-huawei>
+In-Reply-To: <20250601172139.59156-8-l.rubusch@gmail.com>
+References: <20250601172139.59156-1-l.rubusch@gmail.com>
+	<20250601172139.59156-8-l.rubusch@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250608-genesys-ports-v1-2-09ca19f6838e@oss.qualcomm.com>
-References: <20250608-genesys-ports-v1-0-09ca19f6838e@oss.qualcomm.com>
-In-Reply-To: <20250608-genesys-ports-v1-0-09ca19f6838e@oss.qualcomm.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Icenowy Zheng <uwu@icenowy.me>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1185;
- i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=Ja7y+pGdQgwUzowAi5cmrMH/tc4IyP9MAX2i9fmwei4=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoRbVHZHbuZNbk37VsDq7RZ3NX8JKLnVMNJCYDU
- B1rJrBhkhyJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaEW1RwAKCRCLPIo+Aiko
- 1RS3B/oC8pc4ycmRKSl/KifoG28GEHRpiKouJURhSXjX48DWgKNWVVqojEcx3P5pcg1z2ErbCXH
- w7STIo+XWcU6Vu6ayifDnOM4aCHPB6KSgaD3eEkjUuIfQmdSmTCuPrbR66LRYcFm1OQx+FUhoXW
- JyiWFvD9R5JG4qL9gREe/xwcFPnAhIkUU8wlyGRKxB07Ls02t2MY7tgtn44vwowmtklZg+c50HQ
- 5betlQVjY4+up+GpR4ynXFegvyswGQsqjtzyfm5XITNT7QhWYXpiOfcYtUQxyu9C3VL7h+KO8y+
- GfVt9BDI56lBA1CrC90upWf4VspGf2vwSBR19N6okh+1Yi5+
-X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Authority-Analysis: v=2.4 cv=JcO8rVKV c=1 sm=1 tr=0 ts=6845b54d cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=YHzl7gtIdm5AkKPMTYkA:9 a=QEXdDO2ut3YA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA4MDEyOCBTYWx0ZWRfX+kcrVa3LGUdv
- +yTk9cR9u4ZVSFvd9IJNV9e11ifnOX7dYOg0fF+0kNT+bZSCBuUQNm2uuIG43vQ/vTS4V43rk2Q
- fGuf4wouhcP5xWydx+uWv9SuhK1anpZFIzM/dE2BUHDbRl1WRCci8Pd7jVr2amWm+zh1PE75omq
- ij/lLuXYDEHqqyf3RrAdUMbLRA4A6sFmv86aEGzvou+q1BiX07jCGJojL7b4+QaQb6MaysZ6Avp
- /h9HWcO9A7/NOBYWYD9bv0XXFmQCJAVqlIXxWdZr/BYC4iR4DZ6EhmCDZLjSH7IP67Mg87n1MZD
- qyL3QScMcbfsdvcXojwhD8Bbh5Rxd/qfpvjUNjFlukU3j/mUFuGKFefMXz85/1Q0x+KQyv6VDmA
- qnCzs9Q0fgiSKEtGJTgNSx/ICAaF5EcQtn8hO7nUEqLrmHznmxl2SUIGE4vh0AJadz4C+zNG
-X-Proofpoint-GUID: J2t0CFGzAlxJ8_LCdVjWrF2mbim_BAGY
-X-Proofpoint-ORIG-GUID: J2t0CFGzAlxJ8_LCdVjWrF2mbim_BAGY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-08_02,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=885 bulkscore=0 spamscore=0 impostorscore=0 phishscore=0
- priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1015 malwarescore=0
- suspectscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506080128
 
-In order to describe connections between Genesys GL850G hub and
-corresponding Type-C connectors, follow example of RTS5411 and describe
-downstream facing ports. Unline normal case of ports being connected to
-a USB device, hotplug ports use OF graph representation.
+On Sun,  1 Jun 2025 17:21:35 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
----
- Documentation/devicetree/bindings/usb/genesys,gl850g.yaml | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+> Add possibilities to set a threshold for activity sensing. Extend the
+> interrupt handler to process activity interrupts. Provide functions to set
+> the activity threshold and to enable/disable activity sensing. Further add
+> a fake channel for having x, y and z axis anded on the iio channel.
+> 
+> This is a preparatory patch. Some of the definitions and functions are
+> supposed to be extended for inactivity later on.
+> 
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
 
-diff --git a/Documentation/devicetree/bindings/usb/genesys,gl850g.yaml b/Documentation/devicetree/bindings/usb/genesys,gl850g.yaml
-index 7f74f181b75c5924f18d3a1b09f713ca03cf9d8c..9a94b2a74a1eb26025a183583702e9ea02372a74 100644
---- a/Documentation/devicetree/bindings/usb/genesys,gl850g.yaml
-+++ b/Documentation/devicetree/bindings/usb/genesys,gl850g.yaml
-@@ -28,6 +28,18 @@ properties:
- 
-   peer-hub: true
- 
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+
-+    patternProperties:
-+      '^port@':
-+        $ref: /schemas/graph.yaml#/properties/port
-+
-+        properties:
-+          reg:
-+            minimum: 1
-+            maximum: 4
-+
- required:
-   - compatible
-   - reg
+Hi Lothar,
 
--- 
-2.39.5
+My main question from this read through is whether we need to be quite
+so careful on disabling measurement when configuring events.  It is rather
+unusual if that is necessary and I'm not sure that's what the datasheet
+is implying with the vague bit of advice.
 
+>  static const unsigned long adxl313_scan_masks[] = {
+> @@ -297,6 +331,68 @@ static int adxl313_read_freq_avail(struct iio_dev *indio_dev,
+>  	}
+>  }
+>  
+> +static int adxl313_is_act_inact_en(struct adxl313_data *data,
+> +				   enum adxl313_activity_type type)
+> +{
+> +	unsigned int axis_ctrl;
+> +	unsigned int regval;
+> +	int axis_en, int_en, ret;
+> +
+> +	ret = regmap_read(data->regmap, ADXL313_REG_ACT_INACT_CTL, &axis_ctrl);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Check if axis for activity are enabled */
+> +	if (type != ADXL313_ACTIVITY)
+
+As below - only one value possible, so don't check it.
+
+> +		return 0;
+> +
+> +	axis_en = FIELD_GET(ADXL313_ACT_XYZ_EN, axis_ctrl);
+> +
+> +	/* The axis are enabled, now check if specific interrupt is enabled */
+> +	ret = regmap_read(data->regmap, ADXL313_REG_INT_ENABLE, &regval);
+> +	if (ret)
+> +		return ret;
+> +
+> +	int_en = adxl313_act_int_reg[type] & regval;
+> +
+> +	return axis_en && int_en;
+> +}
+> +
+> +static int adxl313_set_act_inact_en(struct adxl313_data *data,
+> +				    enum adxl313_activity_type type,
+> +				    bool cmd_en)
+> +{
+> +	unsigned int axis_ctrl;
+> +	unsigned int threshold;
+> +	int ret;
+> +
+> +	if (type != ADXL313_ACTIVITY)
+
+As the enum only has one value you can drop this check.
+Obviously it's dropped in next patch anyway but better to never
+introduce it.
+
+> +		return 0;
+> +
+> +	axis_ctrl = ADXL313_ACT_XYZ_EN;
+> +
+> +	ret = adxl313_set_measure_en(data, false);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_assign_bits(data->regmap, ADXL313_REG_ACT_INACT_CTL,
+> +				 axis_ctrl, cmd_en);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_read(data->regmap, adxl313_act_thresh_reg[type], &threshold);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_assign_bits(data->regmap, ADXL313_REG_INT_ENABLE,
+> +				 adxl313_act_int_reg[type],
+> +				 cmd_en && threshold);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return adxl313_set_measure_en(data, true);
+> +}
+> +
+>  static int adxl313_read_raw(struct iio_dev *indio_dev,
+>  			    struct iio_chan_spec const *chan,
+>  			    int *val, int *val2, long mask)
+> @@ -370,6 +466,113 @@ static int adxl313_write_raw(struct iio_dev *indio_dev,
+>  	}
+>  }
+
+> +
+> +static int adxl313_read_event_value(struct iio_dev *indio_dev,
+> +				    const struct iio_chan_spec *chan,
+> +				    enum iio_event_type type,
+> +				    enum iio_event_direction dir,
+> +				    enum iio_event_info info,
+> +				    int *val, int *val2)
+> +{
+> +	struct adxl313_data *data = iio_priv(indio_dev);
+> +	unsigned int act_threshold;
+> +	int ret;
+> +
+> +	/* Measurement stays enabled, reading from regmap cache */
+
+If it isn't safe to read whilst measurements are in progress (as opposed
+to maybe getting a small variation in timing) then this seems more
+fragile than I'd like (to future code changes for example).
+
+Might need an explicit check on it being cached regcache_reg_cached()
+for example though that is very rarely used which makes me dubious
+about using it here.
+
+
+> +
+> +	if (type != IIO_EV_TYPE_MAG)
+> +		return -EINVAL;
+> +
+> +	if (info != IIO_EV_INFO_VALUE)
+> +		return -EINVAL;
+> +
+> +	switch (dir) {
+> +	case IIO_EV_DIR_RISING:
+> +		ret = regmap_read(data->regmap,
+> +				  adxl313_act_thresh_reg[ADXL313_ACTIVITY],
+> +				  &act_threshold);
+> +		if (ret)
+> +			return ret;
+> +		*val = act_threshold * 15625;
+> +		*val2 = MICRO;
+> +		return IIO_VAL_FRACTIONAL;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int adxl313_write_event_value(struct iio_dev *indio_dev,
+> +				     const struct iio_chan_spec *chan,
+> +				     enum iio_event_type type,
+> +				     enum iio_event_direction dir,
+> +				     enum iio_event_info info,
+> +				     int val, int val2)
+> +{
+> +	struct adxl313_data *data = iio_priv(indio_dev);
+> +	unsigned int regval;
+> +	int ret;
+> +
+> +	ret = adxl313_set_measure_en(data, false);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (type != IIO_EV_TYPE_MAG)
+> +		return -EINVAL;
+> +
+> +	if (info != IIO_EV_INFO_VALUE)
+> +		return -EINVAL;
+> +
+> +	/* Scale factor 15.625 mg/LSB */
+> +	regval = DIV_ROUND_CLOSEST(MICRO * val + val2, 15625);
+> +	switch (dir) {
+> +	case IIO_EV_DIR_RISING:
+> +		ret = regmap_write(data->regmap,
+> +				   adxl313_act_thresh_reg[ADXL313_ACTIVITY],
+> +				   regval);
+
+I'm surprised this can only be set with measurement disabled.
+Maybe a spec reference.   It's common to tweak event values as events
+come in and we generally don't have to stop data flow whilst we do.
+
+There are a few specific bits where the datasheet suggests updating
+them has unwanted side effects in measurement mode.  + there is a general
+suggestion to do configuration before enabling measurement mode.  
+I don't see anything saying it is a problem for this register.
+
+> +		if (ret)
+> +			return ret;
+> +		return adxl313_set_measure_en(data, true);
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+>  static int adxl313_set_watermark(struct iio_dev *indio_dev, unsigned int value)
+>  {
+>  	struct adxl313_data *data = iio_priv(indio_dev);
+> @@ -502,19 +705,32 @@ static int adxl313_fifo_push(struct iio_dev *indio_dev, int samples)
+>  
+>  static int adxl313_push_event(struct iio_dev *indio_dev, int int_stat)
+
+Ah. This does not also have events.  Still it's a mix, so maybe
+adxl313_handle_interrupts() or something like that.
+
+>  {
+> +	s64 ts = iio_get_time_ns(indio_dev);
+>  	struct adxl313_data *data = iio_priv(indio_dev);
+>  	int samples;
+> +	int ret = -ENOENT;
+> +
+> +	if (FIELD_GET(ADXL313_INT_ACTIVITY, int_stat)) {
+> +		ret = iio_push_event(indio_dev,
+> +				     IIO_MOD_EVENT_CODE(IIO_ACCEL, 0,
+> +							IIO_MOD_X_OR_Y_OR_Z,
+> +							IIO_EV_TYPE_MAG,
+> +							IIO_EV_DIR_RISING),
+> +				     ts);
+> +		if (ret)
+> +			return ret;
+> +	}
+>  
+>  	if (FIELD_GET(ADXL313_INT_WATERMARK, int_stat)) {
+>  		samples = adxl313_get_samples(data);
+>  		if (samples < 0)
+>  			return samples;
+>  
+> -		return adxl313_fifo_push(indio_dev, samples);
+> +		ret = adxl313_fifo_push(indio_dev, samples);
+>  	}
+>  
+>  	/* Return error if no event data was pushed to the IIO channel. */
+> -	return -ENOENT;
+> +	return ret;
+This handling works, but as Andy observed maybe the comment is now confusing
+given ret is mostly not an error.  Perhaps put that where ret is declared
+instead, or use a separate mask check at the start to quickly
+error out if no bits that we handle are set.
+>  }
