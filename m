@@ -1,143 +1,201 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6A18BEC;
-	Sun,  8 Jun 2025 15:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0899617A5BE
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 15:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749397624; cv=none; b=luhTSF9qhEJFlae+wRFd8z4cJTarOQBlA3L6cybauYQNWK2qr9yKcvrnlT5+sl50Tca3fgmi2PhuhMGnTbRzGb+zEVZFXfh7IiqDKSubmBoTWQUqhsKzFtVOf6sySjPco6UH1Fq/MxD0TYuqSOjYSJsn2KkQ2i0UBMld5c3RF4k=
+	t=1749397792; cv=none; b=tdX1o6qN/Pg35kUuH1xj8rWBWSpi7mBP+wlY40qeRy2xa/Q4Ma6tqQRv02czVqz2YYV8czGIiAx/U7cuDhBTfBmp/FpfyiizcXt3Z8n6dFp3Oh5Cv8uEpM3RlZ9Z5YcdU86H+7UmyhpXQiCzYDVzJwn06U7QmxDUSlYJEvEdcV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749397624; c=relaxed/simple;
-	bh=VtIBuujtVAe9ASiGT9BsyX+qi6TyxqLYyqSi7Zr+ZGE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qeVGFfxUDK43MATMTHP+M2THwSz76FI/8XGByq4zOcCgp+GzLmZMDcZDn4IKOJfAYOO2hGyzWgUGm7VBf2Gz+EwoYS+yn9Y6v0wwQobvlNfQQU8iAS+i7lNI4n181kw7NpwEnRjpRExBI40aoa1Dz/F0oGdY9y+oBuc451kSa+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=sZcJT/5L; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1749397792; c=relaxed/simple;
+	bh=MKsTM1+C9QeCGD0Pjs9eZErUYlC1Pyuc2805DCEa5Ew=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Vwg69pBVBPgC5cu7I0YhulrMr3EDWC/nwno93JjPKJeb0sd28On8jt67lcJ9bdcQFLeBG61mvtlEvx0t3/KBKwgtGd1AYcWENqnR7/OnwEX/SSuxGcUxuy68EUSO/tGJt+Gf7XRmwLs+Xu/U5ZlGmDzndfo6BKLvtlsqUBknX1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=qFBaxcwr; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="sZcJT/5L"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=TFKJzYrumdhep1lYtqFRG7p84j1OyXJi+ZaTUY9ohok=; b=sZcJT/5LY9QryJOT
-	6oK3PfNhYE+2f9eNgqOW+QXw40/dycc0eVuBfWFQ6LNU5Jp6XWMvesPsezc/3AAxxxhLocSSvh9KZ
-	kPB5MLAANJ7A25pb/OI7OWW4hsfTJKs0xty+yCKowUNw3B4f4PpDM52E/LxhiJ+awZuhXu5KtRvbF
-	mvqlGAXmZMdlXkYLseUXZTZnqVkhMZQJI4BYP23rjt09DS/PK2xru45BEu13xP3AZnDbUKJW9y45U
-	Gl9tjVTvnXJIJtgGDLB/sLIho595b0R0B/Wjvffl+xJoIIERuZZe1p6JmQLkq/K/w9zgknkf3DcUa
-	r7didnBtgMixzGPKRQ==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1uOIEY-008GlJ-1u;
-	Sun, 08 Jun 2025 15:46:54 +0000
-From: linux@treblig.org
-To: gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	corbet@lwn.net
-Cc: linux-serial@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] serial: Remove unused uart_get_console
-Date: Sun,  8 Jun 2025 16:46:54 +0100
-Message-ID: <20250608154654.73994-1-linux@treblig.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="qFBaxcwr"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7d3862646eeso58891385a.2
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 08:49:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1749397789; x=1750002589; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=15SfyzB2KZkvwixg00o+49m0a1+RaFWhfwNSGqXDKgg=;
+        b=qFBaxcwrGwx3aC4keLcL1yxTx9LInLVOMMYK5CmMizK9qjXY9C3o221FK2DC9cBFJa
+         i0FJjBgYkCxNKBw4qQbWmAchJ61jl1pcxmPUUsX8+OTonLcqH7Ks1JbO1WhqS+rMjngn
+         1Qhk0GRZP7Q6iIuPhV5yJjrDsGr4YqymemcP3H4k29FfwbPeOBXb3yt/TODOB3AOg8yN
+         I8SROv+PIBKd1ereY3L7onL+lQTPsdITHJO1U83Xh03NzOm60f4o0wzJB48vj8QjCQee
+         9gUeBu3fZTO9qNY7T0nZVgpdu6LlRskPWtMDKEfRk4YhzG3rSgakJSMbRDf6BlG+UJlk
+         0S0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749397789; x=1750002589;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=15SfyzB2KZkvwixg00o+49m0a1+RaFWhfwNSGqXDKgg=;
+        b=q0ppEqgCkTU/yNTZwHkD8T9ozYcFymfjceGWnbArcq5B1VVCb96A4k0zwMS7wOIllv
+         VNDYmifhHJ67tlN/6P/ErwW2oLZ5HbUHm1LEIPKF3mb3RKDyt1uPO1UmsbV8Fe8rIBiN
+         3Q9Nbxum5nJG/a6pigQhxQJgPJFBq0snp0+4eZTsnZyCP65AiJsA8iOsr0Mix7pX5mG4
+         foWBLIMgKR9vT4FB813kHR2z09qpj18CfMhPxNFaiAwLl8RyH1/eM5uVGcisL/bKHCLb
+         G7nbwrqRIbqSgQHJUkxzzfcuUexfwMIh42qJnRePvLjmMNuSM5X79VQ38SYBu+QwDn5w
+         WTzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVV9gZSxHaBq8Z+FW1LJKGXaaJV/cXvxc1hmal49Q15tu/43ooF+LNdy2XYsMG6ipkrC0NbkCG5YPaC2vA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeESa07ztxz5orhESU/jkUp1wgEdXTmvzf4Jg8XDTmQiEry9AB
+	y+Zry88fPV40vnsGz+inipSxWYN0WIE3g/Ttpji9YUt/K1Nuqgszk307Y4ozZYT6p/E=
+X-Gm-Gg: ASbGncu9mzw+9x/RKRO3od8QbuwoMkWWz2jn3Ur7l7DH5NJNhoWOBkGaNdSHXuElvYJ
+	4LJLwz+WAKthWa9oPE8cEWMQb11q9D9o2MQl6RnngoUm5TROytlysEJiF7X6i2Dlgqv+AulmfjI
+	Z68G1rw+CjXYdYwDZHub7C7gUUGN8NY1SfVFwvY/V/o7ttwhLSUD4cAiafUudhTr+ic4vH4yRFJ
+	iAaxRjYdEfkUP2Zx44eY951Qk3YM1gYzpuPKB7ps3tvK80wU48FGpIJmDXuIvbtHLor07gX4kAE
+	FtIejZE94Di3XJfNAKdN+kBvb7IOEqc8Je2D3HSHIy+vQYJxq+EQGyaxojquC4i6MscRB+3FfGw
+	ps5AKWw7quWXNr0keziNmjB9jTZ8GPX2LoSZJLf0=
+X-Google-Smtp-Source: AGHT+IFMItTRkpFBvAJi4PVEEUt3/gJfRAjUZYN3c1UYEfhEKFgqVle4xRdj02wbVxFz+gkYB1ZUlw==
+X-Received: by 2002:a05:620a:9163:b0:7d3:8df7:af6e with SMTP id af79cd13be357-7d38df7ba37mr494433985a.32.1749397788793;
+        Sun, 08 Jun 2025 08:49:48 -0700 (PDT)
+Received: from hermes.local (204-195-96-226.wavecable.com. [204.195.96.226])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d25a61b5fesm425460185a.93.2025.06.08.08.49.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Jun 2025 08:49:48 -0700 (PDT)
+Date: Sun, 8 Jun 2025 08:49:45 -0700
+From: Stephen Hemminger <stephen@networkplumber.org>
+To: moyuanhao3676@163.com
+Cc: edumazet@google.com, kuniyu@amazon.com, pabeni@redhat.com,
+ willemb@google.com, davem@davemloft.net, kuba@kernel.org, horms@kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Subject: Re: [PATCH] net: core: fix UNIX-STREAM alignment in
+ /proc/net/protocols
+Message-ID: <20250608084945.0342a4f1@hermes.local>
+In-Reply-To: <20250608144652.27079-1-moyuanhao3676@163.com>
+References: <20250608144652.27079-1-moyuanhao3676@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Sun,  8 Jun 2025 22:46:52 +0800
+moyuanhao3676@163.com wrote:
 
-uart_get_console() has been unused since 2019's
-commit bd0d9d159988 ("serial: remove ks8695 driver")
+> From: MoYuanhao <moyuanhao3676@163.com>
+>=20
+> Widen protocol name column from %-9s to %-11s to properly display
+> UNIX-STREAM and keep table alignment.
+>=20
+> before modification=EF=BC=9A
+> console:/ # cat /proc/net/protocols
+> protocol  size sockets  memory press maxhdr  slab module     cl co di ac =
+io in de sh ss gs se re sp bi br ha uh gp em
+> PPPOL2TP   920      0      -1   NI       0   no   kernel      n  n  n  n =
+ n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> HIDP       808      0      -1   NI       0   no   kernel      n  n  n  n =
+ n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> BNEP       808      0      -1   NI       0   no   kernel      n  n  n  n =
+ n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> RFCOMM     840      0      -1   NI       0   no   kernel      n  n  n  n =
+ n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> KEY        864      0      -1   NI       0   no   kernel      n  n  n  n =
+ n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> PACKET    1536      0      -1   NI       0   no   kernel      n  n  n  n =
+ n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> PINGv6    1184      0      -1   NI       0   yes  kernel      y  y  y  n =
+ n  y  n  n  y  y  y  y  n  y  y  y  y  y  n
+> RAWv6     1184      0      -1   NI       0   yes  kernel      y  y  y  n =
+ y  y  y  n  y  y  y  y  n  y  y  y  y  n  n
+> UDPLITEv6 1344      0       0   NI       0   yes  kernel      y  y  y  n =
+ y  y  y  n  y  y  y  y  n  n  n  y  y  y  n
+> UDPv6     1344      0       0   NI       0   yes  kernel      y  y  y  n =
+ y  y  y  n  y  y  y  y  n  n  n  y  y  y  n
+> TCPv6     2352      0       0   no     320   yes  kernel      y  y  y  y =
+ y  y  y  y  y  y  y  y  y  n  y  y  y  y  y
+> PPTP       920      0      -1   NI       0   no   kernel      n  n  n  n =
+ n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> PPPOE      920      0      -1   NI       0   no   kernel      n  n  n  n =
+ n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> UNIX-STREAM 1024     29      -1   NI       0   yes  kernel      y  n  n  =
+n  n  n  n  n  n  n  n  n  n  n  n  n  y  n  n
+> UNIX      1024    193      -1   NI       0   yes  kernel      y  n  n  n =
+ n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> UDP-Lite  1152      0       0   NI       0   yes  kernel      y  y  y  n =
+ y  y  y  n  y  y  y  y  y  n  n  y  y  y  n
+> PING       976      0      -1   NI       0   yes  kernel      y  y  y  n =
+ n  y  n  n  y  y  y  y  n  y  y  y  y  y  n
+> RAW        984      0      -1   NI       0   yes  kernel      y  y  y  n =
+ y  y  y  n  y  y  y  y  n  y  y  y  y  n  n
+> UDP       1152      0       0   NI       0   yes  kernel      y  y  y  n =
+ y  y  y  n  y  y  y  y  y  n  n  y  y  y  n
+> TCP       2192      0       0   no     320   yes  kernel      y  y  y  y =
+ y  y  y  y  y  y  y  y  y  n  y  y  y  y  y
+> SCO        848      0      -1   NI       0   no   kernel      n  n  n  n =
+ n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> L2CAP      824      0      -1   NI       0   no   kernel      n  n  n  n =
+ n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> HCI        888      0      -1   NI       0   no   kernel      n  n  n  n =
+ n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> NETLINK   1104     18      -1   NI       0   no   kernel      n  n  n  n =
+ n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+>=20
+> after modification:
+> console:/ # cat /proc/net/protocols
+> protocol    size sockets  memory press maxhdr  slab module     cl co di a=
+c io in de sh ss gs se re sp bi br ha uh gp em
+> PPPOL2TP     920      0      -1   NI       0   no   kernel      n  n  n  =
+n  n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> HIDP         808      0      -1   NI       0   no   kernel      n  n  n  =
+n  n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> BNEP         808      0      -1   NI       0   no   kernel      n  n  n  =
+n  n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> RFCOMM       840      0      -1   NI       0   no   kernel      n  n  n  =
+n  n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> KEY          864      0      -1   NI       0   no   kernel      n  n  n  =
+n  n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> PACKET      1536      0      -1   NI       0   no   kernel      n  n  n  =
+n  n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> PINGv6      1184      0      -1   NI       0   yes  kernel      y  y  y  =
+n  n  y  n  n  y  y  y  y  n  y  y  y  y  y  n
+> RAWv6       1184      0      -1   NI       0   yes  kernel      y  y  y  =
+n  y  y  y  n  y  y  y  y  n  y  y  y  y  n  n
+> UDPLITEv6   1344      0       0   NI       0   yes  kernel      y  y  y  =
+n  y  y  y  n  y  y  y  y  n  n  n  y  y  y  n
+> UDPv6       1344      0       0   NI       0   yes  kernel      y  y  y  =
+n  y  y  y  n  y  y  y  y  n  n  n  y  y  y  n
+> TCPv6       2352      0       0   no     320   yes  kernel      y  y  y  =
+y  y  y  y  y  y  y  y  y  y  n  y  y  y  y  y
+> PPTP         920      0      -1   NI       0   no   kernel      n  n  n  =
+n  n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> PPPOE        920      0      -1   NI       0   no   kernel      n  n  n  =
+n  n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> UNIX-STREAM 1024     29      -1   NI       0   yes  kernel      y  n  n  =
+n  n  n  n  n  n  n  n  n  n  n  n  n  y  n  n
+> UNIX        1024    193      -1   NI       0   yes  kernel      y  n  n  =
+n  n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> UDP-Lite    1152      0       0   NI       0   yes  kernel      y  y  y  =
+n  y  y  y  n  y  y  y  y  y  n  n  y  y  y  n
+> PING         976      0      -1   NI       0   yes  kernel      y  y  y  =
+n  n  y  n  n  y  y  y  y  n  y  y  y  y  y  n
+> RAW          984      0      -1   NI       0   yes  kernel      y  y  y  =
+n  y  y  y  n  y  y  y  y  n  y  y  y  y  n  n
+> UDP         1152      0       0   NI       0   yes  kernel      y  y  y  =
+n  y  y  y  n  y  y  y  y  y  n  n  y  y  y  n
+> TCP         2192      0       0   no     320   yes  kernel      y  y  y  =
+y  y  y  y  y  y  y  y  y  y  n  y  y  y  y  y
+> SCO          848      0      -1   NI       0   no   kernel      n  n  n  =
+n  n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> L2CAP        824      0      -1   NI       0   no   kernel      n  n  n  =
+n  n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> HCI          888      0      -1   NI       0   no   kernel      n  n  n  =
+n  n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+> NETLINK     1104     18      -1   NI       0   no   kernel      n  n  n  =
+n  n  n  n  n  n  n  n  n  n  n  n  n  n  n  n
+>=20
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Signed-off-by: MoYuanhao <moyuanhao3676@163.com>
+> ---
 
-Remove it, and it's associated docs.
-
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- Documentation/driver-api/serial/driver.rst |  7 +++---
- drivers/tty/serial/serial_core.c           | 27 ----------------------
- include/linux/serial_core.h                |  2 --
- 3 files changed, 3 insertions(+), 33 deletions(-)
-
-diff --git a/Documentation/driver-api/serial/driver.rst b/Documentation/driver-api/serial/driver.rst
-index fa1ebfcd4472..c1db6a1a67c4 100644
---- a/Documentation/driver-api/serial/driver.rst
-+++ b/Documentation/driver-api/serial/driver.rst
-@@ -24,9 +24,8 @@ console support.
- Console Support
- ---------------
- 
--The serial core provides a few helper functions.  This includes identifying
--the correct port structure (via uart_get_console()) and decoding command line
--arguments (uart_parse_options()).
-+The serial core provides a few helper functions.  This includes
-+decoding command line arguments (uart_parse_options()).
- 
- There is also a helper function (uart_console_write()) which performs a
- character by character write, translating newlines to CRLF sequences.
-@@ -76,7 +75,7 @@ Other functions
-            uart_add_one_port uart_remove_one_port uart_console_write
-            uart_parse_earlycon uart_parse_options uart_set_options
-            uart_get_lsr_info uart_handle_dcd_change uart_handle_cts_change
--           uart_try_toggle_sysrq uart_get_console
-+           uart_try_toggle_sysrq
- 
- .. kernel-doc:: include/linux/serial_core.h
-    :identifiers: uart_port_tx_limited uart_port_tx
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 1f7708a91fc6..c15e005047bb 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -2131,33 +2131,6 @@ void uart_console_write(struct uart_port *port, const char *s,
- }
- EXPORT_SYMBOL_GPL(uart_console_write);
- 
--/**
-- * uart_get_console - get uart port for console
-- * @ports: ports to search in
-- * @nr: number of @ports
-- * @co: console to search for
-- * Returns: uart_port for the console @co
-- *
-- * Check whether an invalid uart number has been specified (as @co->index), and
-- * if so, search for the first available port that does have console support.
-- */
--struct uart_port * __init
--uart_get_console(struct uart_port *ports, int nr, struct console *co)
--{
--	int idx = co->index;
--
--	if (idx < 0 || idx >= nr || (ports[idx].iobase == 0 &&
--				     ports[idx].membase == NULL))
--		for (idx = 0; idx < nr; idx++)
--			if (ports[idx].iobase != 0 ||
--			    ports[idx].membase != NULL)
--				break;
--
--	co->index = idx;
--
--	return ports + idx;
--}
--
- /**
-  * uart_parse_earlycon - Parse earlycon options
-  * @p:	     ptr to 2nd field (ie., just beyond '<name>,')
-diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-index 914b5e97e056..cfd891357573 100644
---- a/include/linux/serial_core.h
-+++ b/include/linux/serial_core.h
-@@ -1101,8 +1101,6 @@ static inline bool uart_console_registered(struct uart_port *port)
- 	return uart_console(port) && console_is_registered(port->cons);
- }
- 
--struct uart_port *uart_get_console(struct uart_port *ports, int nr,
--				   struct console *c);
- int uart_parse_earlycon(char *p, enum uart_iotype *iotype,
- 			resource_size_t *addr, char **options);
- void uart_parse_options(const char *options, int *baud, int *parity, int *bits,
--- 
-2.49.0
-
+This could break existing applications. Changing the format of /proc output
+is an ABI change.
