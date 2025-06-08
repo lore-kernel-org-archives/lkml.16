@@ -1,470 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF76881E;
-	Sun,  8 Jun 2025 19:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A85165F1A
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 19:58:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749412640; cv=none; b=pGsGFoaclbL48qspBrKor4f9ikSd+flcIq2fMTm+Ll446h/MQ/tr8Sse51F0oLIg//qJe8enyCa7zpWneYPb3Bnk+WMm7JYlwF6BS7lwOLXgZwzQ4yZHZeLugxF/eBWuX3f3M9UWmdBXs1J7W1F36XnqWFe/0OYqm9ZujkxjGNQ=
+	t=1749412714; cv=none; b=hbigdOLts9E0TRR/njZJ7GE8Poo7EOiepDm9tzbZw/ZI5FeakCi05nJOFmv3fhW4owuWAX4rMOfs7bPHuIM/8tTsQALUAafF2aLlbTKQkwR+mEPwuHrKuyikDzOubUYK+9SURb8BeRxPC7s5T3HtCZUjlnI/qgov++5bIjOaqp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749412640; c=relaxed/simple;
-	bh=ylVWuWbcslRUxp/akiw3ucHCZDJ/urSc/Solwwfox2I=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To; b=akCbFMDUAIqXgSLFGKyz5oK0TK0VJEeUnq5rLCkr6tNSwJtJfowtu+4vg+MKlyq5ym1KcwHqoFfMgASjGcdznE68C+meQSoeEfb9WKI0i1slapE9Gt0f8U9oNVq3MXVGJewt+ZTYydtdQpZRpiOlF+BJitEbBMDJ0od+CnfQDIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TTpXHIwT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749412714; c=relaxed/simple;
+	bh=BLmXJzTM5ia8opzo1LdCoiOFsDBXD+MPSBLR8pplt3k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ABNkRARBi9zD22MsZ7mFgCh92VlJmcebIJ80QrkWmruKj78teqQ1eVJe/qCvipkfKD9Sw9qaCpHI1C6Q/3n6VI7Jgd6LyXrS6J7DVwuw8piquHQkL6VkcYNVnpHg9z0q7KwLeC6x8DEMyFr5QrXSwcqL2Grf2CViu4tDyy9F+dQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=o0zl0a5W; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TTpXHIwT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34C95C4CEEE;
-	Sun,  8 Jun 2025 19:57:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749412639;
-	bh=ylVWuWbcslRUxp/akiw3ucHCZDJ/urSc/Solwwfox2I=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TTpXHIwTykQ1UeeNuOCO4036kgEyp5Wb874HWOS+3Lv2WGAvHEhBdeJFd4Vz7aF70
-	 h3lJfvI6m7gdkF+KA918p+iwAh2x/jF0WMb3oKRTROMKzvgN3/Wb5OKRieGIvRLUrS
-	 0PVfSH6RBQvzBsZCXU6qKEsMLePY6bTVpAxpeg1GkIPWLqgU1gJ6SSt6R4V8Ibs4dO
-	 iXzpbW+VUpL7sLIvtUnzAg6hlo9kfKACU+TstzgKa6Cz0c9Ctum3lnF0VmBvDn2/Lz
-	 QYaWB6RMXHsySMS3zN2s653n3e4C4h5C7eL/byT5YnmFwhS38/3nZEc/Pj+OC/Aabt
-	 1PMIFypEuTtyA==
-Content-Type: multipart/mixed; boundary="------------FrbKWL0OQveqTjOdyhRgfJWF"
-Message-ID: <68792092-4689-4e3e-8dbb-9157889f1a3d@kernel.org>
-Date: Sun, 8 Jun 2025 21:57:14 +0200
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="o0zl0a5W"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-747fc77bb2aso2754845b3a.3
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 12:58:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1749412713; x=1750017513; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=SO/TiV/eetgiNfMpNbC5+xBYaQpqY6ayGmPuNTPhj0k=;
+        b=o0zl0a5W2JtCxMthNz0mlEdGoO5932iXTBqqEUQTXIn/7roxnt/UGnc6klhq1fFad/
+         oh7W4Kfc/lihWp2q1xXCxz6M8WnvrPn+3mzQNG7uUh3CLd8VhRVNxFg3FjF3/S7mHZaP
+         016iZkVXqfash9pU937ZpNr9TXAgRSGtp+LqVRHn3qrM5L79k+vD5A4LggEFd5JlMJ1t
+         Ma6f6aCvL4G14LkjX19k5u506at6hU4ZIUR5LwndFX9CH2frP2Ah4X2Hk4C5idOU2ydl
+         JHsRt0OhOdMQDdmzJ16QSRhHgh+OwFXY0QAQt5+r+X+s41FLNwT5zbxpjGSPt8Tj1ODE
+         0Gcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749412713; x=1750017513;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SO/TiV/eetgiNfMpNbC5+xBYaQpqY6ayGmPuNTPhj0k=;
+        b=J1OqThPeBk5UpkAyAdrzVhEF7DC0ve9f+OQVtZgUVZCU7l8ACMFTVuJhreY8EzsdRU
+         nfxOGAftNrY4DXgk630j8xxmFm75qJJYrnAe81tShb5Z8YRmIq/h5RLxYV14uzsGYbsA
+         Sos6jIC5igLcta1oew8YY0sGTUZWqef/kT6j0dsseiaWxaC1Tx8zTqJljZJPvGK17H6R
+         irByjLE5mwNnhMxJVcHBC9P/tb7hmIhPnTQj+EZa00EPczlfNzum7CJDIokoufnqvpzj
+         eBRrMLygmJZAuJtpm5brTBiUT5PhepPiOUx7DV+HPtfct29p8LkB/oki+Gabm0GyQibh
+         JkbA==
+X-Forwarded-Encrypted: i=1; AJvYcCWG4nE8T6n3ZzvPChvGQYzb8R4hURlRSgnC/LVhc81Ue6SAXnHevTo5AtXARBPlNzaETvVTQzB9uGP7obs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyP0pkxBZtUGAHt60FwQh+YcZOAGD21WcLNEjM1ohijZZsa/WJz
+	yWgzL0GdOgMUp+hd0jjQTVIUBeXCA6LRJpm9dokdfo9bHtS8MRVmzYhQa7GxbvVUGe3Sr7VvjH6
+	g9tGS7MU=
+X-Gm-Gg: ASbGnctxVwHQtt3+guP8yefJ6mmDS/1v0DD26wz/mJtC5oUE4uubBLr4EU6DZUrA7Bq
+	mPTM3esiyo2sne5mKBSJlJoDrQuuhsfkluaplrJwH9eAG6vQCNer00zlbuQdYdPG44cdlxP8G+9
+	Qtt/PSy6rwCx9PEh/uaz2VL9xYviJGYzsA0IUhkGHjMYlhOoUyvR3gTWDB8hkfT6bI7v6qcqQ3e
+	ToSNJD5E4UeXhnr13ppMeT9aGc0I90GiOsh57aU1zuo6mfBQlV5NvHTap8adWPi7tXryYRkRa6Y
+	101uJW0W1U4i0lkdEKXmwoFUiwntCf0r
+X-Google-Smtp-Source: AGHT+IFbXbhXFIU9zLa+fXurTHgYmeXx2QZmDu603fA5wHw0+5DeqF3jW9IscpN1oxDbST4x8Tn+iw==
+X-Received: by 2002:a05:6300:6c03:b0:21f:54aa:2004 with SMTP id adf61e73a8af0-21f54aa2170mr4488578637.2.1749412712968;
+        Sun, 08 Jun 2025 12:58:32 -0700 (PDT)
+Received: from x1 ([97.120.245.255])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5ee73e2asm3467343a12.29.2025.06.08.12.58.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Jun 2025 12:58:32 -0700 (PDT)
+Date: Sun, 8 Jun 2025 12:58:30 -0700
+From: Drew Fustini <drew@pdp7.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Benno Lossin <lossin@kernel.org>,
+	Michal Wilczynski <m.wilczynski@samsung.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH RFC 0/6] Rust Abstractions for PWM subsystem with TH1520
+ PWM driver
+Message-ID: <aEXrZvpTD30a5OhT@x1>
+References: <CGME20250524211519eucas1p218997c69b98b14d3af2eb6bf4e9d3187@eucas1p2.samsung.com>
+ <20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com>
+ <aDJGgLZ9tITwGBxq@x1>
+ <b5f4af17-05ef-453d-8f04-283590ae5b87@samsung.com>
+ <DA5YY0YF28GO.3DONTQDLY6VBD@kernel.org>
+ <aEXBH5r05FkTxpV+@x1>
+ <CANiq72k-FmZe3P_y6FjmiqXViqLKXkDqHY1-KLfmgwAe98oBAQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/5] power: supply: core: battery-info: fully switch to
- fwnode
-To: Sebastian Reichel <sebastian.reichel@collabora.com>,
- Sebastian Reichel <sre@kernel.org>, Mark Brown <broonie@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- Matti Vaittinen <mazziesaccount@gmail.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
- <pali@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250430-psy-core-convert-to-fwnode-v2-0-f9643b958677@collabora.com>
- <20250430-psy-core-convert-to-fwnode-v2-3-f9643b958677@collabora.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250430-psy-core-convert-to-fwnode-v2-3-f9643b958677@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72k-FmZe3P_y6FjmiqXViqLKXkDqHY1-KLfmgwAe98oBAQ@mail.gmail.com>
 
-This is a multi-part message in MIME format.
---------------FrbKWL0OQveqTjOdyhRgfJWF
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-Hi Sebastian,
-On 30-Apr-25 12:54 AM, Sebastian Reichel wrote:
-> Also use fwnode based parsing for "ocv-capacity-celsius" and
-> "resistance-temp-table", so that any DT specific bits are
-> removed from the power-supply core.
+On Sun, Jun 08, 2025 at 07:14:18PM +0200, Miguel Ojeda wrote:
+> On Sun, Jun 8, 2025 at 6:58 PM Drew Fustini <drew@pdp7.com> wrote:
+> >
+> > I'm not sure if that bindgen warning matters?
 > 
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-
-I have been testing this converting the ug3105 driver to
-use power_supply_batinfo_ocv2cap(), replacing the hardcoded
-ocv -> capacity table in that driver.
-
-While testing I hit a bug and while looking closer at this
-patch it needs more work on top of fixing that bug.
-
-See comments inline, also I've attached 3 fixup patches
-which can be squashed into this patch to address the remarks.
-
-> ---
->  drivers/power/supply/power_supply_core.c | 109 ++++++++++++++++++-------------
->  1 file changed, 63 insertions(+), 46 deletions(-)
+> If you don't see the `FromBytesWithNulError` error, then it should be
+> fine, but I would recommend using a newer version anyway.
 > 
-> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-> index 89947f1fe610d8a75756e1e4e5339b06349f9ab8..a8d1fe66e2486a833ccaa3ed77b861c6e52c5760 100644
-> --- a/drivers/power/supply/power_supply_core.c
-> +++ b/drivers/power/supply/power_supply_core.c
-> @@ -585,32 +585,19 @@ int power_supply_get_battery_info(struct power_supply *psy,
->  {
->  	struct power_supply_resistance_temp_table *resist_table;
->  	struct power_supply_battery_info *info;
-> -	struct device_node *battery_np = NULL;
-> -	struct fwnode_reference_args args;
-> -	struct fwnode_handle *fwnode = NULL;
-> +	struct fwnode_handle *srcnode, *fwnode;
->  	const char *value;
-> -	int err, len, index;
-> -	const __be32 *list;
-> +	int err, len, index, proplen;
-> +	u32 *propdata;
-
-propname which is also a local-variable for a temporary
-malloc-ed buffer uses __free(kfree) instead of explicit
-kfree() calls IMHO it would be good to do that here too.
-
-This requires declaring it inside the
-"for (index = 0; index < len; index++)" loop like how
-this is done for propname, so that it gets freed on
-every loop iteration.
-
-
->  	u32 min_max[2];
->  
-> -	if (psy->dev.of_node) {
-> -		battery_np = of_parse_phandle(psy->dev.of_node, "monitored-battery", 0);
-> -		if (!battery_np)
-> -			return -ENODEV;
-> +	srcnode = dev_fwnode(&psy->dev);
-> +	if (!srcnode && psy->dev.parent)
-> +		srcnode = dev_fwnode(psy->dev.parent);
->  
-> -		fwnode = fwnode_handle_get(of_fwnode_handle(battery_np));
-> -	} else if (psy->dev.parent) {
-> -		err = fwnode_property_get_reference_args(
-> -					dev_fwnode(psy->dev.parent),
-> -					"monitored-battery", NULL, 0, 0, &args);
-> -		if (err)
-> -			return err;
-> -
-> -		fwnode = args.fwnode;
-> -	}
-> -
-> -	if (!fwnode)
-> -		return -ENOENT;
-> +	fwnode = fwnode_find_reference(srcnode, "monitored-battery", 0);
-> +	if (IS_ERR(fwnode))
-> +		return PTR_ERR(fwnode);
->  
->  	err = fwnode_property_read_string(fwnode, "compatible", &value);
->  	if (err)
-> @@ -740,15 +727,7 @@ int power_supply_get_battery_info(struct power_supply *psy,
->  		info->temp_max = min_max[1];
->  	}
->  
-> -	/*
-> -	 * The below code uses raw of-data parsing to parse
-> -	 * /schemas/types.yaml#/definitions/uint32-matrix
-> -	 * data, so for now this is only support with of.
-> -	 */
-> -	if (!battery_np)
-> -		goto out_ret_pointer;
-> -
-> -	len = of_property_count_u32_elems(battery_np, "ocv-capacity-celsius");
-> +	len = fwnode_property_count_u32(fwnode, "ocv-capacity-celsius");
->  	if (len < 0 && len != -EINVAL) {
->  		err = len;
->  		goto out_put_node;
-> @@ -757,13 +736,13 @@ int power_supply_get_battery_info(struct power_supply *psy,
->  		err = -EINVAL;
->  		goto out_put_node;
->  	} else if (len > 0) {
-> -		of_property_read_u32_array(battery_np, "ocv-capacity-celsius",
-> +		fwnode_property_read_u32_array(fwnode, "ocv-capacity-celsius",
->  					   info->ocv_temp, len);
->  	}
->  
->  	for (index = 0; index < len; index++) {
->  		struct power_supply_battery_ocv_table *table;
-> -		int i, tab_len, size;
-> +		int i, tab_len;
->  
->  		char *propname __free(kfree) = kasprintf(GFP_KERNEL, "ocv-capacity-table-%d",
->  							 index);
-> @@ -772,60 +751,98 @@ int power_supply_get_battery_info(struct power_supply *psy,
->  			err = -ENOMEM;
->  			goto out_put_node;
->  		}
-> -		list = of_get_property(battery_np, propname, &size);
-> -		if (!list || !size) {
-> +		proplen = fwnode_property_count_u32(fwnode, propname);
-> +		if (proplen < 0 || proplen % 2 != 0) {
->  			dev_err(&psy->dev, "failed to get %s\n", propname);
->  			power_supply_put_battery_info(psy, info);
->  			err = -EINVAL;
->  			goto out_put_node;
->  		}
-> +		propdata = kcalloc(proplen, sizeof(*propdata), GFP_KERNEL);
-
-As mentioned above I suggest to use the following here instead:
-
-		u32 *propdata __free(kfree) = kcalloc(proplen, sizeof(*propdata), GFP_KERNEL);
-		
-
-> +		if (!propdata) {
-> +			kfree(propname);
-
-propname must NOT be free-ed here since it is marked __free(kfree),
-freeing it here will cause a double-free bug.
-
-> +			power_supply_put_battery_info(psy, info);
-> +			err = -EINVAL;
-> +			goto out_put_node;
-> +		}
-> +		err = fwnode_property_read_u32_array(fwnode, propname, propdata, proplen);
-> +		if (err < 0) {
-> +			dev_err(&psy->dev, "failed to get %s\n", propname);
-> +			kfree(propname);
-
-same as above.
-
-> +			kfree(propdata);
-
-with the suggested "u32 *propdata __free(kfree)" this can and must be dropped.
-
-> +			power_supply_put_battery_info(psy, info);
-> +			goto out_put_node;
-> +		}
->  
-> -		tab_len = size / (2 * sizeof(__be32));
-> +		tab_len = proplen / 2;
->  		info->ocv_table_size[index] = tab_len;
->  
->  		info->ocv_table[index] = table =
->  			devm_kcalloc(&psy->dev, tab_len, sizeof(*table), GFP_KERNEL);
->  		if (!info->ocv_table[index]) {
-> +			kfree(propdata);
-
-with the suggested "u32 *propdata __free(kfree)" this can and must be dropped.
-
->  			power_supply_put_battery_info(psy, info);
->  			err = -ENOMEM;
->  			goto out_put_node;
->  		}
->  
->  		for (i = 0; i < tab_len; i++) {
-> -			table[i].ocv = be32_to_cpu(*list);
-> -			list++;
-> -			table[i].capacity = be32_to_cpu(*list);
-> -			list++;
-> +			table[i].ocv = propdata[i*2];
-> +			table[i].capacity = propdata[i*2+1];
->  		}
-> +
-> +		kfree(propdata);
-
-with the suggested "u32 *propdata __free(kfree)" this can and must be dropped.
-
->  	}
->  
-> -	list = of_get_property(battery_np, "resistance-temp-table", &len);
-> -	if (!list || !len)
-> +	proplen = fwnode_property_count_u32(fwnode, "resistance-temp-table");
-
-This will return -EINVAL when the property does not exist, making
-power_supply_get_battery_info() always fail when there is no
-"resistance-temp-table" in the battery fwnode. See the attached fixup
-patch for a suggested fix.
-
-> +	if (proplen < 0 || proplen % 2 != 0) {
-> +		power_supply_put_battery_info(psy, info);
-> +		err = -ENOMEM;
-
--ENOMEM is the wrong error code here.
-
->  		goto out_ret_pointer;
-
-This should be "goto out_put_node" since this is an error path.
-
-> +	} else if (proplen == 0) {
-> +		goto out_ret_pointer;
-> +	}
->  
-> -	info->resist_table_size = len / (2 * sizeof(__be32));
-> +	propdata = kcalloc(proplen, sizeof(*propdata), GFP_KERNEL);
-
-As mentioned above I suggest to use the following here instead:
-
-		u32 *propdata __free(kfree) = kcalloc(proplen, sizeof(*propdata), GFP_KERNEL);
-
-> +	if (!propdata) {
-> +		power_supply_put_battery_info(psy, info);
-> +		err = -ENOMEM;
-> +		goto out_ret_pointer;
-
-This should be "goto out_put_node" since this is an error path.
-
-> +	}
-> +
-> +	err = fwnode_property_read_u32_array(fwnode, "resistance-temp-table",
-> +					     propdata, proplen);
-> +	if (err < 0) {
-> +		kfree(propdata);
-
-with the suggested "u32 *propdata __free(kfree)" this can and must be dropped.
-
-> +		power_supply_put_battery_info(psy, info);
-> +		goto out_put_node;
-> +	}
-> +
-> +	info->resist_table_size = proplen / 2;
->  	info->resist_table = resist_table = devm_kcalloc(&psy->dev,
->  							 info->resist_table_size,
->  							 sizeof(*resist_table),
->  							 GFP_KERNEL);
->  	if (!info->resist_table) {
-> +		kfree(propdata);
-
-with the suggested "u32 *propdata __free(kfree)" this can and must be dropped.
-
->  		power_supply_put_battery_info(psy, info);
->  		err = -ENOMEM;
->  		goto out_put_node;
->  	}
->  
->  	for (index = 0; index < info->resist_table_size; index++) {
-> -		resist_table[index].temp = be32_to_cpu(*list++);
-> -		resist_table[index].resistance = be32_to_cpu(*list++);
-> +		resist_table[index].temp = propdata[index*2];
-> +		resist_table[index].resistance = propdata[index*2+1];
->  	}
->  
-> +	kfree(propdata);
-
-with the suggested "u32 *propdata __free(kfree)" this can and must be dropped.
-
-> +
->  out_ret_pointer:
->  	/* Finally return the whole thing */
->  	*info_out = info;
->  
->  out_put_node:
->  	fwnode_handle_put(fwnode);
-> -	of_node_put(battery_np);
->  	return err;
->  }
->  EXPORT_SYMBOL_GPL(power_supply_get_battery_info);
+> I hope that helps.
 > 
+> Cheers,
+> Miguel
 
-Regards,
+Thanks for the quick response. I seemed to have updated it with:
 
-Hans
+ cargo install bindgen-cli
 
+And it seems Linux is now happy :)
 
+ $ make LLVM=1 rustavailable
+ Rust is available!
 
---------------FrbKWL0OQveqTjOdyhRgfJWF
-Content-Type: text/x-patch; charset=UTF-8;
- name="0004-fixup-power-supply-core-battery-info-fully-switch-to.patch"
-Content-Disposition: attachment;
- filename*0="0004-fixup-power-supply-core-battery-info-fully-switch-to.pa";
- filename*1="tch"
-Content-Transfer-Encoding: base64
-
-RnJvbSA2OGQyNDE0ZDIwMTA4MzkwNGRhZDgzYWY0ZWJiMmMzNWZjODUwYjc5IE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBIYW5zIGRlIEdvZWRlIDxoYW5zZ0BrZXJuZWwub3Jn
-PgpEYXRlOiBTdW4sIDggSnVuIDIwMjUgMjE6MTg6MTEgKzAyMDAKU3ViamVjdDogW1BBVENI
-IDA0LzEwXSBmaXh1cCEgcG93ZXI6IHN1cHBseTogY29yZTogYmF0dGVyeS1pbmZvOiBmdWxs
-eSBzd2l0Y2gKIHRvIGZ3bm9kZQoKQWZ0ZXIgKCJwb3dlcjogc3VwcGx5OiBjb3JlOiBiYXR0
-ZXJ5LWluZm86IGZ1bGx5IHN3aXRjaCB0byBmd25vZGUiKQpwb3dlcl9zdXBwbHlfZ2V0X2Jh
-dHRlcnlfaW5mbygpIHdpbGwgYWx3YXlzIGZhaWwgZm9yIGJhdHRlcnkgZndub2Rlcwp3aGlj
-aCBkbyBub3QgZGVmaW5lIGEgInJlc2lzdGFuY2UtdGVtcC10YWJsZSIuCgpGaXggdGhpcyBi
-eSBjbGVhbmx5IGV4aXRpbmcgb24gYm90aCAwIGFuZCBFSU5WQUwgcmV0dXJucyBmcm9tCmZ3
-bm9kZV9wcm9wZXJ0eV9jb3VudF91MzIoZndub2RlLCAicmVzaXN0YW5jZS10ZW1wLXRhYmxl
-Iikgd2hpY2gKaW5kaWNhdGVzIHRoYXQgdGhlIHByb3BlcnR5IGlzIGVtcHR5IG9yIG5vdCB0
-aGVyZS4KCldoaWxlIGF0IGl0IGFsc28gZml4OgoKMS4gVGhlIHdlaXJkIC1FTk9NRU0gcmV0
-dXJuIGZvciBvdGhlciBlcnJvcnMuIEZvciBvdGhlciBlcnJvcnMKcHJvcGFnYXRlIHRoZSBl
-eGlzdGluZyBlcnJvciBvciAtRUlOVkFMIGZvciBhbiBvZGQgcHJvcGxlbi4KMi4gV3Jvbmds
-eSB1c2luZyAiZ290byBvdXRfcmV0X3BvaW50ZXIiIG9uIGVycm9ycywgb3V0X3JldF9wb2lu
-dGVyCnNob3VsZCBvbmx5IGJlIHVzZWQgb24gc3VjY2VzcywgZXJyb3IgcGF0aHMgc2hvdWxk
-IHVzZQpvdXRfcHV0X25vZGU7CgpTaWduZWQtb2ZmLWJ5OiBIYW5zIGRlIEdvZWRlIDxoYW5z
-Z0BrZXJuZWwub3JnPgotLS0KIGRyaXZlcnMvcG93ZXIvc3VwcGx5L3Bvd2VyX3N1cHBseV9j
-b3JlLmMgfCAxMyArKysrKysrLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25z
-KCspLCA2IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvcG93ZXIvc3VwcGx5
-L3Bvd2VyX3N1cHBseV9jb3JlLmMgYi9kcml2ZXJzL3Bvd2VyL3N1cHBseS9wb3dlcl9zdXBw
-bHlfY29yZS5jCmluZGV4IGE4ZDFmZTY2ZTI0OC4uOWJiYzNiZTJlNDgzIDEwMDY0NAotLS0g
-YS9kcml2ZXJzL3Bvd2VyL3N1cHBseS9wb3dlcl9zdXBwbHlfY29yZS5jCisrKyBiL2RyaXZl
-cnMvcG93ZXIvc3VwcGx5L3Bvd2VyX3N1cHBseV9jb3JlLmMKQEAgLTc5NSwxOSArNzk1LDIw
-IEBAIGludCBwb3dlcl9zdXBwbHlfZ2V0X2JhdHRlcnlfaW5mbyhzdHJ1Y3QgcG93ZXJfc3Vw
-cGx5ICpwc3ksCiAJfQogCiAJcHJvcGxlbiA9IGZ3bm9kZV9wcm9wZXJ0eV9jb3VudF91MzIo
-Zndub2RlLCAicmVzaXN0YW5jZS10ZW1wLXRhYmxlIik7Ci0JaWYgKHByb3BsZW4gPCAwIHx8
-IHByb3BsZW4gJSAyICE9IDApIHsKKwlpZiAocHJvcGxlbiA9PSAwIHx8IHByb3BsZW4gPT0g
-LUVJTlZBTCkgeworCQllcnIgPSAwOworCQlnb3RvIG91dF9yZXRfcG9pbnRlcjsKKwl9IGVs
-c2UgaWYgKHByb3BsZW4gPCAwIHx8IHByb3BsZW4gJSAyICE9IDApIHsKIAkJcG93ZXJfc3Vw
-cGx5X3B1dF9iYXR0ZXJ5X2luZm8ocHN5LCBpbmZvKTsKLQkJZXJyID0gLUVOT01FTTsKLQkJ
-Z290byBvdXRfcmV0X3BvaW50ZXI7Ci0JfSBlbHNlIGlmIChwcm9wbGVuID09IDApIHsKLQkJ
-Z290byBvdXRfcmV0X3BvaW50ZXI7CisJCWVyciA9IChwcm9wbGVuIDwgMCkgPyBwcm9wbGVu
-IDogLUVJTlZBTDsKKwkJZ290byBvdXRfcHV0X25vZGU7CiAJfQogCiAJcHJvcGRhdGEgPSBr
-Y2FsbG9jKHByb3BsZW4sIHNpemVvZigqcHJvcGRhdGEpLCBHRlBfS0VSTkVMKTsKIAlpZiAo
-IXByb3BkYXRhKSB7CiAJCXBvd2VyX3N1cHBseV9wdXRfYmF0dGVyeV9pbmZvKHBzeSwgaW5m
-byk7CiAJCWVyciA9IC1FTk9NRU07Ci0JCWdvdG8gb3V0X3JldF9wb2ludGVyOworCQlnb3Rv
-IG91dF9wdXRfbm9kZTsKIAl9CiAKIAllcnIgPSBmd25vZGVfcHJvcGVydHlfcmVhZF91MzJf
-YXJyYXkoZndub2RlLCAicmVzaXN0YW5jZS10ZW1wLXRhYmxlIiwKLS0gCjIuNDkuMAoK
---------------FrbKWL0OQveqTjOdyhRgfJWF
-Content-Type: text/x-patch; charset=UTF-8;
- name="0005-fixup-power-supply-core-battery-info-fully-switch-to.patch"
-Content-Disposition: attachment;
- filename*0="0005-fixup-power-supply-core-battery-info-fully-switch-to.pa";
- filename*1="tch"
-Content-Transfer-Encoding: base64
-
-RnJvbSBiOTJhYzIyNmZhNjg4OGQ3YTUzZmM3NjgxNTExMGU3NmUxM2I4NWFlIE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBIYW5zIGRlIEdvZWRlIDxoYW5zZ0BrZXJuZWwub3Jn
-PgpEYXRlOiBTdW4sIDggSnVuIDIwMjUgMjE6Mzc6NTkgKzAyMDAKU3ViamVjdDogW1BBVENI
-IDA1LzEwXSBmaXh1cCEgcG93ZXI6IHN1cHBseTogY29yZTogYmF0dGVyeS1pbmZvOiBmdWxs
-eSBzd2l0Y2gKIHRvIGZ3bm9kZQoKcHJvcG5hbWUgbXVzdCBOT1QgYmUgbWFudWFsbHkgZnJl
-ZS1lZCBoZXJlIHNpbmNlIGl0IGlzIG1hcmtlZApfX2ZyZWUoa2ZyZWUpLCBmcmVlaW5nIGl0
-IHdpbGwgY2F1c2UgYSBkb3VibGUtZnJlZSBidWcuCgpBbHNvIG1vdmUgcHJvcGRhdGEgdG8g
-YmUgYSBfX2ZyZWUoa2ZyZWUpIHZhbHVlIGZvciBjb25zaXN0ZW5jeQphbmQgYWxzbyBmb3Ig
-Y2xlYW5lciBjb2RlLgoKU2lnbmVkLW9mZi1ieTogSGFucyBkZSBHb2VkZSA8aGFuc2dAa2Vy
-bmVsLm9yZz4KLS0tCiBkcml2ZXJzL3Bvd2VyL3N1cHBseS9wb3dlcl9zdXBwbHlfY29yZS5j
-IHwgMTYgKysrLS0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygr
-KSwgMTMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9wb3dlci9zdXBwbHkv
-cG93ZXJfc3VwcGx5X2NvcmUuYyBiL2RyaXZlcnMvcG93ZXIvc3VwcGx5L3Bvd2VyX3N1cHBs
-eV9jb3JlLmMKaW5kZXggOWJiYzNiZTJlNDgzLi4wZTQyYjliYWZjYWIgMTAwNjQ0Ci0tLSBh
-L2RyaXZlcnMvcG93ZXIvc3VwcGx5L3Bvd2VyX3N1cHBseV9jb3JlLmMKKysrIGIvZHJpdmVy
-cy9wb3dlci9zdXBwbHkvcG93ZXJfc3VwcGx5X2NvcmUuYwpAQCAtNTg4LDcgKzU4OCw2IEBA
-IGludCBwb3dlcl9zdXBwbHlfZ2V0X2JhdHRlcnlfaW5mbyhzdHJ1Y3QgcG93ZXJfc3VwcGx5
-ICpwc3ksCiAJc3RydWN0IGZ3bm9kZV9oYW5kbGUgKnNyY25vZGUsICpmd25vZGU7CiAJY29u
-c3QgY2hhciAqdmFsdWU7CiAJaW50IGVyciwgbGVuLCBpbmRleCwgcHJvcGxlbjsKLQl1MzIg
-KnByb3BkYXRhOwogCXUzMiBtaW5fbWF4WzJdOwogCiAJc3Jjbm9kZSA9IGRldl9md25vZGUo
-JnBzeS0+ZGV2KTsKQEAgLTc1OCw5ICs3NTcsOSBAQCBpbnQgcG93ZXJfc3VwcGx5X2dldF9i
-YXR0ZXJ5X2luZm8oc3RydWN0IHBvd2VyX3N1cHBseSAqcHN5LAogCQkJZXJyID0gLUVJTlZB
-TDsKIAkJCWdvdG8gb3V0X3B1dF9ub2RlOwogCQl9Ci0JCXByb3BkYXRhID0ga2NhbGxvYyhw
-cm9wbGVuLCBzaXplb2YoKnByb3BkYXRhKSwgR0ZQX0tFUk5FTCk7CisKKwkJdTMyICpwcm9w
-ZGF0YSBfX2ZyZWUoa2ZyZWUpID0ga2NhbGxvYyhwcm9wbGVuLCBzaXplb2YoKnByb3BkYXRh
-KSwgR0ZQX0tFUk5FTCk7CiAJCWlmICghcHJvcGRhdGEpIHsKLQkJCWtmcmVlKHByb3BuYW1l
-KTsKIAkJCXBvd2VyX3N1cHBseV9wdXRfYmF0dGVyeV9pbmZvKHBzeSwgaW5mbyk7CiAJCQll
-cnIgPSAtRUlOVkFMOwogCQkJZ290byBvdXRfcHV0X25vZGU7CkBAIC03NjgsOCArNzY3LDYg
-QEAgaW50IHBvd2VyX3N1cHBseV9nZXRfYmF0dGVyeV9pbmZvKHN0cnVjdCBwb3dlcl9zdXBw
-bHkgKnBzeSwKIAkJZXJyID0gZndub2RlX3Byb3BlcnR5X3JlYWRfdTMyX2FycmF5KGZ3bm9k
-ZSwgcHJvcG5hbWUsIHByb3BkYXRhLCBwcm9wbGVuKTsKIAkJaWYgKGVyciA8IDApIHsKIAkJ
-CWRldl9lcnIoJnBzeS0+ZGV2LCAiZmFpbGVkIHRvIGdldCAlc1xuIiwgcHJvcG5hbWUpOwot
-CQkJa2ZyZWUocHJvcG5hbWUpOwotCQkJa2ZyZWUocHJvcGRhdGEpOwogCQkJcG93ZXJfc3Vw
-cGx5X3B1dF9iYXR0ZXJ5X2luZm8ocHN5LCBpbmZvKTsKIAkJCWdvdG8gb3V0X3B1dF9ub2Rl
-OwogCQl9CkBAIC03ODAsNyArNzc3LDYgQEAgaW50IHBvd2VyX3N1cHBseV9nZXRfYmF0dGVy
-eV9pbmZvKHN0cnVjdCBwb3dlcl9zdXBwbHkgKnBzeSwKIAkJaW5mby0+b2N2X3RhYmxlW2lu
-ZGV4XSA9IHRhYmxlID0KIAkJCWRldm1fa2NhbGxvYygmcHN5LT5kZXYsIHRhYl9sZW4sIHNp
-emVvZigqdGFibGUpLCBHRlBfS0VSTkVMKTsKIAkJaWYgKCFpbmZvLT5vY3ZfdGFibGVbaW5k
-ZXhdKSB7Ci0JCQlrZnJlZShwcm9wZGF0YSk7CiAJCQlwb3dlcl9zdXBwbHlfcHV0X2JhdHRl
-cnlfaW5mbyhwc3ksIGluZm8pOwogCQkJZXJyID0gLUVOT01FTTsKIAkJCWdvdG8gb3V0X3B1
-dF9ub2RlOwpAQCAtNzkwLDggKzc4Niw2IEBAIGludCBwb3dlcl9zdXBwbHlfZ2V0X2JhdHRl
-cnlfaW5mbyhzdHJ1Y3QgcG93ZXJfc3VwcGx5ICpwc3ksCiAJCQl0YWJsZVtpXS5vY3YgPSBw
-cm9wZGF0YVtpKjJdOwogCQkJdGFibGVbaV0uY2FwYWNpdHkgPSBwcm9wZGF0YVtpKjIrMV07
-CiAJCX0KLQotCQlrZnJlZShwcm9wZGF0YSk7CiAJfQogCiAJcHJvcGxlbiA9IGZ3bm9kZV9w
-cm9wZXJ0eV9jb3VudF91MzIoZndub2RlLCAicmVzaXN0YW5jZS10ZW1wLXRhYmxlIik7CkBA
-IC04MDQsNyArNzk4LDcgQEAgaW50IHBvd2VyX3N1cHBseV9nZXRfYmF0dGVyeV9pbmZvKHN0
-cnVjdCBwb3dlcl9zdXBwbHkgKnBzeSwKIAkJZ290byBvdXRfcHV0X25vZGU7CiAJfQogCi0J
-cHJvcGRhdGEgPSBrY2FsbG9jKHByb3BsZW4sIHNpemVvZigqcHJvcGRhdGEpLCBHRlBfS0VS
-TkVMKTsKKwl1MzIgKnByb3BkYXRhIF9fZnJlZShrZnJlZSkgPSBrY2FsbG9jKHByb3BsZW4s
-IHNpemVvZigqcHJvcGRhdGEpLCBHRlBfS0VSTkVMKTsKIAlpZiAoIXByb3BkYXRhKSB7CiAJ
-CXBvd2VyX3N1cHBseV9wdXRfYmF0dGVyeV9pbmZvKHBzeSwgaW5mbyk7CiAJCWVyciA9IC1F
-Tk9NRU07CkBAIC04MTQsNyArODA4LDYgQEAgaW50IHBvd2VyX3N1cHBseV9nZXRfYmF0dGVy
-eV9pbmZvKHN0cnVjdCBwb3dlcl9zdXBwbHkgKnBzeSwKIAllcnIgPSBmd25vZGVfcHJvcGVy
-dHlfcmVhZF91MzJfYXJyYXkoZndub2RlLCAicmVzaXN0YW5jZS10ZW1wLXRhYmxlIiwKIAkJ
-CQkJICAgICBwcm9wZGF0YSwgcHJvcGxlbik7CiAJaWYgKGVyciA8IDApIHsKLQkJa2ZyZWUo
-cHJvcGRhdGEpOwogCQlwb3dlcl9zdXBwbHlfcHV0X2JhdHRlcnlfaW5mbyhwc3ksIGluZm8p
-OwogCQlnb3RvIG91dF9wdXRfbm9kZTsKIAl9CkBAIC04MjUsNyArODE4LDYgQEAgaW50IHBv
-d2VyX3N1cHBseV9nZXRfYmF0dGVyeV9pbmZvKHN0cnVjdCBwb3dlcl9zdXBwbHkgKnBzeSwK
-IAkJCQkJCQkgc2l6ZW9mKCpyZXNpc3RfdGFibGUpLAogCQkJCQkJCSBHRlBfS0VSTkVMKTsK
-IAlpZiAoIWluZm8tPnJlc2lzdF90YWJsZSkgewotCQlrZnJlZShwcm9wZGF0YSk7CiAJCXBv
-d2VyX3N1cHBseV9wdXRfYmF0dGVyeV9pbmZvKHBzeSwgaW5mbyk7CiAJCWVyciA9IC1FTk9N
-RU07CiAJCWdvdG8gb3V0X3B1dF9ub2RlOwpAQCAtODM2LDggKzgyOCw2IEBAIGludCBwb3dl
-cl9zdXBwbHlfZ2V0X2JhdHRlcnlfaW5mbyhzdHJ1Y3QgcG93ZXJfc3VwcGx5ICpwc3ksCiAJ
-CXJlc2lzdF90YWJsZVtpbmRleF0ucmVzaXN0YW5jZSA9IHByb3BkYXRhW2luZGV4KjIrMV07
-CiAJfQogCi0Ja2ZyZWUocHJvcGRhdGEpOwotCiBvdXRfcmV0X3BvaW50ZXI6CiAJLyogRmlu
-YWxseSByZXR1cm4gdGhlIHdob2xlIHRoaW5nICovCiAJKmluZm9fb3V0ID0gaW5mbzsKLS0g
-CjIuNDkuMAoK
-
---------------FrbKWL0OQveqTjOdyhRgfJWF--
+-Drew
