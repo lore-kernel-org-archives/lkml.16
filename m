@@ -1,220 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6E62F3E;
-	Sun,  8 Jun 2025 20:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551891372;
+	Sun,  8 Jun 2025 20:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749414356; cv=none; b=is7SWa3GetRedcRRHjxXyiJb6gy/toRdjrEnPi9wQVP6fLxouEfINSuexBdFu9zc1n9kmZ2jklj3Dm0RWHCTYSSjZ07PlHT4415iamYFG7QWKj2GURtp4VxWVHDcQpJZlnsP09Y5lncZy0NKCLL4U0y68/wEYqFgI4k35PTWVgE=
+	t=1749414658; cv=none; b=rDew2abIO4voEMQ53k3+EJyp3tOomUpoesReHW+6x8+B3099pW2eil54C67iqNG1DgHsKeV/nho9awqs0LFqolRR8fVhSk1HgPYlYyYIeczDal7IbCRzSEqjOCAIS/SEspdIRKqrZ90uyA//ZnF3qdPl89T4gSvFJQFhoOjUWqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749414356; c=relaxed/simple;
-	bh=6o08xt4TDUOpfAyITCoVWKYI87XvO9fz6dJK8f0qC/0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fNG8EmUUDxto8BDwGsAIPlTaM8V3zWO8qhKITjhGebYbT6o/dTEVBopkq+N8mHIW9zpTabrvtti/q74i+72GHr50rpDbWG59LDjz6g4pUg3h46Lf7uz/hxhvSWHWf/mae+60LMWaCxsZXQETC++uDkXhWWOhzj8VSRaMiBw52WQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PO6YsvO+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749414658; c=relaxed/simple;
+	bh=paJQsm8VjqkQeElUHQdhqGI3+WnM0KsTXGD75t0j5tE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LEKTmgO/jsnAoIPfHjcCMeacfAv0hWXe93y2puoOVKXOyqsUXQWZtqh02tSm/nkFj9M42sh+Bw+EmsMWvqDOzZ7g+bhT+CSBrKvgJlA8A7o/t4Na1bNZJLPLqQ7MRc9g7+YGH3Not89J8VGX1r7XkZNWOwtxsEX86gZCAt+4Qc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZrTR4ANk; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PO6YsvO+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3C2CC4CEEE;
-	Sun,  8 Jun 2025 20:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749414356;
-	bh=6o08xt4TDUOpfAyITCoVWKYI87XvO9fz6dJK8f0qC/0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PO6YsvO+K+ofD8NUVNZyd6f6Vx5kI7ejo2oSqqTiOYYHXXTK7dTcZG8Uzlzpdrn3P
-	 /5mfOZuZESHC1vJOnxhobH3SvT05u7fpsgWoFSAYUmucetRgiMHVmuevJUz+6YMeGd
-	 /42CeitaHqexv/MIgpmWf8OLud68U+/No4RQmddVG97Y57UO0q8lMQdDWDpkZEGiCS
-	 9yeFE3LUda+/2uFb39YlZAfLDhfqoxErb1OE/T6Ktr9wLX7cSt8I2L/d9imVGXSgyn
-	 KXuTzNoCc4o0I/ox4OszRg9OZ5LQ8dDrEdyKSA64ShcCXXjIaYnNAHw99WL5knyOYq
-	 Dhkr5YvwhYw4A==
-Message-ID: <6a466a7d-5355-4712-8953-fa9569ec30a9@kernel.org>
-Date: Sun, 8 Jun 2025 22:25:51 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZrTR4ANk"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-235e1d4cba0so27768715ad.2;
+        Sun, 08 Jun 2025 13:30:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749414656; x=1750019456; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j9aCplgkp0V+7+yNOgN7cid7kDTOh/cSiZAss2NRX2s=;
+        b=ZrTR4ANkvt3rlwAkuKBxXX/WJZW3DiFa4jb052y4JWa7l6oMbz7FSQePXn8mICEjpB
+         Yi3761wt63Uyky3n22z8mg3+A4NYNZOLhJFJydLQccBKHPPZFbot7g90m8NZKxGe4W1y
+         trZs1zJCEMq+Y5R2T1LnZ0ZielbhBAW97C8w9mFqe2nkl74lwlMBwaWgj6mBGPbyVZlS
+         OaeQy1KVgwDsIDCbDlnfY2LMJ3Gx/CbaTK5D9hJs6SBWucts8V9sV7HFv3nothihl9W0
+         /6YCL/UF3c/OyBYmhTRhPz/GXumlgtgL4AIJGRAuSb6xSfGSuKpsy5wBj5kEkTSAUmks
+         zAxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749414656; x=1750019456;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j9aCplgkp0V+7+yNOgN7cid7kDTOh/cSiZAss2NRX2s=;
+        b=KaQPCkgOvCPc03l1LtV5YtJSEMTwkA722knU2vFtg8SP0LLbdAuBZeBDWVw3m+cIjw
+         Errcw3sOf+QDKMVLq6yIjJ7z/HMBnwPsK0keElfsOnGod22EdbzYLUPQGS5XUZNAyQzo
+         t3OJFzpoNAj3HDNy8anOkgGhx4MRH7toyEJUs8LKuOUInIxRU2eYskBo0vmAZAAcFDdM
+         0KkxjLDTWxSzISzc3FdAzIl0cgzFO0LobkfeATKblzRaR0vWr4/lCWhirmCAmYCQvZ6j
+         OcJXvuQdj4E4nrcYpRsE7IZjmg1h4j7TcSNyG7/2+50Z4LeVNzxGCFPGeK+82WxDfqbW
+         ATZw==
+X-Forwarded-Encrypted: i=1; AJvYcCV7h7Kw+J/OuNdCBufTxtkbeTHGdSuNyqa1DNAnq7jB3MJJS7Ws/9kP5SEwIG+qNWlPEyZBv2ve@vger.kernel.org, AJvYcCX+bi7wf62Gdhcu+PlYuDK71Q1LwUNrUY5WdSm3tzBOwZCMpUxU38netW/nhvDx3NGUFmE59wBE61ZKlew=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfCksmlhASbfeKG3YvgBPmcLixO7GnofomTFRmYAHQwVUAx8w3
+	v3bd9PnyjEZoLYdIoKhej9hvgsSoNYGuly7LR6igcFiuVFY4svL/gfY=
+X-Gm-Gg: ASbGnctz6uJTYd9w6CQOabShPoHZBV6JWClooUwKdtjPxDBbUiTmC7Fu5sEEE7K5h3O
+	zUZL76d/QaR8kKhwRliXgCLpKGYWvdxpWIQoTHjJWz14mKKvGj0FNGMxgCxE7biOV4sls7FGCUr
+	N3+kTZPyC8tbsVwZOkpBzkPTdCyQdmn6E1fGnkuLPGq2ZuGiIqxVDcfGqeqbdYhZblRze6ukBBN
+	VdCwuH7x2ULSn05/e/ImaVWtC3YU+KDZM7L6Cl0e1N/1BFbM8p2PI6G7qRlJlU+i5uSBX4I0Z3N
+	USSWQJJA9/NSpESeMVKssdMFcwZ5H9D+19ac5so=
+X-Google-Smtp-Source: AGHT+IFc0GXXFM0S7BM66k77mQmeDxGNeGyEjOIpwCp2uK7mlnuXSQ+Nl2QHhuJl0ddM21M0YVbyzw==
+X-Received: by 2002:a17:902:d48f:b0:234:b41e:37a4 with SMTP id d9443c01a7336-23601cf5aadmr113552755ad.6.1749414656594;
+        Sun, 08 Jun 2025 13:30:56 -0700 (PDT)
+Received: from fedora.. ([2601:647:6700:3390::c8d1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236030789c2sm42380285ad.29.2025.06.08.13.30.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Jun 2025 13:30:56 -0700 (PDT)
+From: Kuniyuki Iwashima <kuni1840@gmail.com>
+To: kuni1840@gmail.com
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	farbere@amazon.com,
+	kuba@kernel.org,
+	kuniyu@amazon.com,
+	kuznet@ms2.inr.ac.ru,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	sashal@kernel.org,
+	yoshfuji@linux-ipv6.org
+Subject: Re: [PATCH] net/ipv4: fix type mismatch in inet_ehash_locks_alloc() causing build failure
+Date: Sun,  8 Jun 2025 13:30:18 -0700
+Message-ID: <20250608203054.3982608-1-kuni1840@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250608201227.3970666-1-kuni1840@gmail.com>
+References: <20250608201227.3970666-1-kuni1840@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] power: supply: core: rename
- power_supply_get_by_phandle to power_supply_get_by_reference
-To: Sebastian Reichel <sebastian.reichel@collabora.com>,
- Sebastian Reichel <sre@kernel.org>, Mark Brown <broonie@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Hans de Goede <hdegoede@redhat.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- Matti Vaittinen <mazziesaccount@gmail.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
- <pali@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-phy@vger.kernel.org
-References: <20250430-psy-core-convert-to-fwnode-v2-0-f9643b958677@collabora.com>
- <20250430-psy-core-convert-to-fwnode-v2-5-f9643b958677@collabora.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250430-psy-core-convert-to-fwnode-v2-5-f9643b958677@collabora.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
-
-
-On 30-Apr-25 12:54 AM, Sebastian Reichel wrote:
-> (devm_)power_supply_get_by_phandle now internally uses fwnode and are no
-> longer DT specific. Thus drop the ifdef check for CONFIG_OF and rename
-> to (devm_)power_supply_get_by_reference to avoid the DT terminology.
+From: Kuniyuki Iwashima <kuni1840@gmail.com>
+Date: Sun,  8 Jun 2025 13:11:51 -0700
+> From: Eliav Farber <farbere@amazon.com>
+> Date: Sun, 8 Jun 2025 06:07:26 +0000
+> > Fix compilation warning:
+> > 
+> > In file included from ./include/linux/kernel.h:15,
+> >                  from ./include/linux/list.h:9,
+> >                  from ./include/linux/module.h:12,
+> >                  from net/ipv4/inet_hashtables.c:12:
+> > net/ipv4/inet_hashtables.c: In function ‘inet_ehash_locks_alloc’:
+> > ./include/linux/minmax.h:20:35: warning: comparison of distinct pointer types lacks a cast
+> >    20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+> >       |                                   ^~
+> > ./include/linux/minmax.h:26:18: note: in expansion of macro ‘__typecheck’
+> >    26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
+> >       |                  ^~~~~~~~~~~
+> > ./include/linux/minmax.h:36:31: note: in expansion of macro ‘__safe_cmp’
+> >    36 |         __builtin_choose_expr(__safe_cmp(x, y), \
+> >       |                               ^~~~~~~~~~
+> > ./include/linux/minmax.h:52:25: note: in expansion of macro ‘__careful_cmp’
+> >    52 | #define max(x, y)       __careful_cmp(x, y, >)
+> >       |                         ^~~~~~~~~~~~~
+> > net/ipv4/inet_hashtables.c:946:19: note: in expansion of macro ‘max’
+> >   946 |         nblocks = max(nblocks, num_online_nodes() * PAGE_SIZE / locksz);
+> >       |                   ^~~
+> >   CC      block/badblocks.o
+> > 
+> > When warnings are treated as errors, this causes the build to fail.
+> > 
+> > The issue is a type mismatch between the operands passed to the max()
+> > macro. Here, nblocks is an unsigned int, while the expression
+> > num_online_nodes() * PAGE_SIZE / locksz is promoted to unsigned long.
+> > 
+> > This happens because:
+> >  - num_online_nodes() returns int
+> >  - PAGE_SIZE is typically defined as an unsigned long (depending on the
+> >    architecture)
+> >  - locksz is unsigned int
+> > 
+> > The resulting arithmetic expression is promoted to unsigned long.
+> > 
+> > Thus, the max() macro compares values of different types: unsigned int
+> > vs unsigned long.
+> > 
+> > This issue was introduced in commit b53d6e9525af ("tcp: bring back NUMA
+> > dispersion in inet_ehash_locks_alloc()") during the update from kernel
+> > v5.10.237 to v5.10.238.
 > 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-
-Thanks, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hansg@kernel.org>
-
-Regards,
-
-Hans
-
-
-> ---
->  drivers/phy/allwinner/phy-sun4i-usb.c    |  2 +-
->  drivers/power/supply/bq2415x_charger.c   |  2 +-
->  drivers/power/supply/power_supply_core.c | 22 ++++++++++------------
->  include/linux/power_supply.h             | 15 +++------------
->  4 files changed, 15 insertions(+), 26 deletions(-)
+> Please use the upstream SHA1, f8ece40786c9.
 > 
-> diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
-> index 29b8fd4b935113f3e4790ee7f78141226048492d..8873aed3a52aa3f26564b6b2e576110c4069d28c 100644
-> --- a/drivers/phy/allwinner/phy-sun4i-usb.c
-> +++ b/drivers/phy/allwinner/phy-sun4i-usb.c
-> @@ -754,7 +754,7 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
->  	}
->  
->  	if (of_property_present(np, "usb0_vbus_power-supply")) {
-> -		data->vbus_power_supply = devm_power_supply_get_by_phandle(dev,
-> +		data->vbus_power_supply = devm_power_supply_get_by_reference(dev,
->  						     "usb0_vbus_power-supply");
->  		if (IS_ERR(data->vbus_power_supply)) {
->  			dev_err(dev, "Couldn't get the VBUS power supply\n");
-> diff --git a/drivers/power/supply/bq2415x_charger.c b/drivers/power/supply/bq2415x_charger.c
-> index 1ecbca510bba99ee7abcda33a719035adfceeb5f..917c26ee56bc9f9da2f95f75a7d7f1afb0cea8d8 100644
-> --- a/drivers/power/supply/bq2415x_charger.c
-> +++ b/drivers/power/supply/bq2415x_charger.c
-> @@ -1674,7 +1674,7 @@ static int bq2415x_probe(struct i2c_client *client)
->  	/* Query for initial reported_mode and set it */
->  	if (bq->nb.notifier_call) {
->  		if (np) {
-> -			notify_psy = power_supply_get_by_phandle(of_fwnode_handle(np),
-> +			notify_psy = power_supply_get_by_reference(of_fwnode_handle(np),
->  						"ti,usb-charger-detection");
->  			if (IS_ERR(notify_psy))
->  				notify_psy = NULL;
-> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-> index 1d53ceaa8fd161e7e72b90befabb9380393c99f2..37b9fa48faab27754d14d8379ed40d9bdda098ef 100644
-> --- a/drivers/power/supply/power_supply_core.c
-> +++ b/drivers/power/supply/power_supply_core.c
-> @@ -496,14 +496,13 @@ void power_supply_put(struct power_supply *psy)
->  }
->  EXPORT_SYMBOL_GPL(power_supply_put);
->  
-> -#ifdef CONFIG_OF
->  static int power_supply_match_device_fwnode(struct device *dev, const void *data)
->  {
->  	return dev->parent && dev_fwnode(dev->parent) == data;
->  }
->  
->  /**
-> - * power_supply_get_by_phandle() - Search for a power supply and returns its ref
-> + * power_supply_get_by_reference() - Search for a power supply and returns its ref
->   * @fwnode: Pointer to fwnode holding phandle property
->   * @property: Name of property holding a power supply name
->   *
-> @@ -514,8 +513,8 @@ static int power_supply_match_device_fwnode(struct device *dev, const void *data
->   * Return: On success returns a reference to a power supply with
->   * matching name equals to value under @property, NULL or ERR_PTR otherwise.
->   */
-> -struct power_supply *power_supply_get_by_phandle(struct fwnode_handle *fwnode,
-> -						 const char *property)
-> +struct power_supply *power_supply_get_by_reference(struct fwnode_handle *fwnode,
-> +						   const char *property)
->  {
->  	struct fwnode_handle *power_supply_fwnode;
->  	struct power_supply *psy = NULL;
-> @@ -537,7 +536,7 @@ struct power_supply *power_supply_get_by_phandle(struct fwnode_handle *fwnode,
->  
->  	return psy;
->  }
-> -EXPORT_SYMBOL_GPL(power_supply_get_by_phandle);
-> +EXPORT_SYMBOL_GPL(power_supply_get_by_reference);
->  
->  static void devm_power_supply_put(struct device *dev, void *res)
->  {
-> @@ -547,16 +546,16 @@ static void devm_power_supply_put(struct device *dev, void *res)
->  }
->  
->  /**
-> - * devm_power_supply_get_by_phandle() - Resource managed version of
-> - *  power_supply_get_by_phandle()
-> + * devm_power_supply_get_by_reference() - Resource managed version of
-> + *  power_supply_get_by_reference()
->   * @dev: Pointer to device holding phandle property
->   * @property: Name of property holding a power supply phandle
->   *
->   * Return: On success returns a reference to a power supply with
->   * matching name equals to value under @property, NULL or ERR_PTR otherwise.
->   */
-> -struct power_supply *devm_power_supply_get_by_phandle(struct device *dev,
-> -						      const char *property)
-> +struct power_supply *devm_power_supply_get_by_reference(struct device *dev,
-> +							const char *property)
->  {
->  	struct power_supply **ptr, *psy;
->  
-> @@ -567,7 +566,7 @@ struct power_supply *devm_power_supply_get_by_phandle(struct device *dev,
->  	if (!ptr)
->  		return ERR_PTR(-ENOMEM);
->  
-> -	psy = power_supply_get_by_phandle(dev_fwnode(dev), property);
-> +	psy = power_supply_get_by_reference(dev_fwnode(dev), property);
->  	if (IS_ERR_OR_NULL(psy)) {
->  		devres_free(ptr);
->  	} else {
-> @@ -576,8 +575,7 @@ struct power_supply *devm_power_supply_get_by_phandle(struct device *dev,
->  	}
->  	return psy;
->  }
-> -EXPORT_SYMBOL_GPL(devm_power_supply_get_by_phandle);
-> -#endif /* CONFIG_OF */
-> +EXPORT_SYMBOL_GPL(devm_power_supply_get_by_reference);
->  
->  int power_supply_get_battery_info(struct power_supply *psy,
->  				  struct power_supply_battery_info **info_out)
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index c95f098374cbdeafe8cddb52da3903f4f0e0f0fc..158227e86cfcb91b0fae7b1f9c944c5c395969ca 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -804,19 +804,10 @@ static inline void power_supply_put(struct power_supply *psy) {}
->  static inline struct power_supply *power_supply_get_by_name(const char *name)
->  { return NULL; }
->  #endif
-> -#ifdef CONFIG_OF
-> -extern struct power_supply *power_supply_get_by_phandle(struct fwnode_handle *fwnode,
-> -							const char *property);
-> -extern struct power_supply *devm_power_supply_get_by_phandle(
-> +extern struct power_supply *power_supply_get_by_reference(struct fwnode_handle *fwnode,
-> +							  const char *property);
-> +extern struct power_supply *devm_power_supply_get_by_reference(
->  				    struct device *dev, const char *property);
-> -#else /* !CONFIG_OF */
-> -static inline struct power_supply *
-> -power_supply_get_by_phandle(struct device_node *np, const char *property)
-> -{ return NULL; }
-> -static inline struct power_supply *
-> -devm_power_supply_get_by_phandle(struct device *dev, const char *property)
-> -{ return NULL; }
-> -#endif /* CONFIG_OF */
->  
->  extern const enum power_supply_property power_supply_battery_info_properties[];
->  extern const size_t power_supply_battery_info_properties_size;
+> > 
+> > It does not exist in newer kernel branches (e.g., v5.15.185 and all 6.x
+> > branches), because they include commit d53b5d862acd ("minmax: allow
 > 
+> Same here, d03eba99f5bf.
+> 
+> But why not backport it to stable instead ?
 
+I just checked the 5.10.238 thread.
+https://lore.kernel.org/stable/2025060412-cursor-navigate-126d@gregkh/
+
+---8<---
+> > For both of these, I'll just let them be as they are ok, it's just the
+> > mess of our min/max macro unwinding causes these issues.
+> > 
+> > Unless they really bother someone, and in that case, a patch to add the
+> > correct type to the backport to make the noise go away would be greatly
+> > appreciated.
+> 
+> Yeah that's a reasonable resolution, I will try to track down the missing
+> patches for minmax.h so we are warning free for the stable kernels.
+
+I tried in the past, it's non-trivial.  What would be easier is to just
+properly cast the variables in the places where this warning is showing
+up to get rid of that warning.  We've done that in some backports in the
+past as well.
+---8<---
+
+So this should be fixed up in the backport, and I guess this patch
+targeted the stable trees ?
+
+If so, please clarify that by specifying the stable version in the
+subject and CCing the stable mainling list:
+
+  Subject: [PATCH 5.10.y] tcp: ...
+  Cc: stable@vger.kernel.org, ...
