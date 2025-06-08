@@ -1,55 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717B31EB1AF
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 07:43:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F87713C3CD
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 07:45:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749368622; cv=none; b=fGYjE3w72mPLxRKx1u4/4IKl1/pMfnOiGu9F2FFKwmZNrFhHMct86wZymyK/u4yAL+91t34HDDUqiUPdIPrMDu843GmztBVBBX5RjbQ8AeVB61HlrgQw1bXPOpwHTodNkX7mQ30I6FsXtlXUyl0fRNcM40n0NbxmxXbvd9yxWNU=
+	t=1749368738; cv=none; b=a+pC3Up5Z690o4pJMmISDctSuLKSp6J5RWQZUALlV4uceVkFqMoxYFPOio6Iha+YQ2tG4rtLqoQyx1wy0eN8noVB+xGfKQzulk+ZbBOh27/BGp8Hd3AP6223Cq3Axzi/wHJ2UKCzbhD9dzlS/dxkHhFBPGVJHmYcmiUgtL7Fgl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749368622; c=relaxed/simple;
-	bh=/Vf86A0ebxGilNdhG1dz5TC6E56Cz1PRMYHsT3di8Iw=;
+	s=arc-20240116; t=1749368738; c=relaxed/simple;
+	bh=ViI2T46sFsE2M2eJ+AsfB8fxQS0qJtQGyUSaJmesw0g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TKiLX0+1bVfOlDMmqo+LKnvlIN4giC9JqrFFJ6ne8xCZzS7tP0md1pffXankq3TBMM1DI7arTsY6+jzxARHVJItuqZelnOX+ZzzyBn06SwoUkMTPCD4dHH8waBEDMrZ8yOGQUmTGL5aXWo85itgQODPBDygYtOjUz8xjBZGwgxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=isNxsDYB; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=ZOh/Xd9YWZjOQiKa5imU4lwfLe/gk/Tsi5fcTYzBlACxRTQp1+mmm5y/Af/qfJuIGMU+i7GZJ3xqtQ9LD3NOo5r1x/za6JzIU+zOR7PFyIOXF59rIR0Ec5a8dQalSIjsEaLvlqG86zKMlSOpKp32qRx8Cu58HfXndmwlYcIaHMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ffdaPPLJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="isNxsDYB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CA59C4AF09
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 07:43:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ffdaPPLJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4E82C4CEF5
+	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 07:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749368622;
-	bh=/Vf86A0ebxGilNdhG1dz5TC6E56Cz1PRMYHsT3di8Iw=;
+	s=k20201202; t=1749368737;
+	bh=ViI2T46sFsE2M2eJ+AsfB8fxQS0qJtQGyUSaJmesw0g=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=isNxsDYBKwyw936JgPxipKQsoXDeyh5p1PHkQ7JTknaq1JJlSJ48Z2OpixgbMcJoc
-	 g4NeVa9b6HL7Y1c6bxIsr23VSQ0XwUEn+qklvN8lN/o2fDuCrU4os3sTr1q+9OUPx2
-	 l4jtIDVHNJGCtK1MClTNXr17gXBLNkTQOAJPP1ykewWbNS0f1y8D/NobIJhst+sRB2
-	 Q5W+TNrDl/hcnYqF5jc9X4cnKiODe+yC5hK7inYIJbWIpp4ji0PSFKXE/ZowWicjR/
-	 rgMojzNjab9mSX6fsIaQJoFwMFpsXmjyGyq+1zwRmPC9RZbOVBjW/WkBS57cgejj1L
-	 pn/eTpPDraemw==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-607b59b447bso1785633a12.1
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 00:43:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW1UIkL2GiFvf8ocGnQHsheyAJfxGNGX/Psm/h9cX8Qmm+g2Kabn3XUissZYAE62c6j/dKFpKMBpIqVWYk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhkoadtKYPw7k9UPZUEX2naEMlITUWvM+e/gbjirf372uVzyQc
-	soNXb86YSTpmkYSEKjEH9C0bSRTCxcadinjMO+2bxAtnTJzApeN+sPVSUIlxw0k3gLo4h9JZMI0
-	af0H3VSW0ib0iYpgE6gRGvI/lMAGgSr8=
-X-Google-Smtp-Source: AGHT+IFFS/PUZhCHROxSOVmpOinMUsY8Yc2US6M/1MG6XogHFtohhk/zQUPmdqfFY9Ayh2erR5xGyePNeoiGmdVSHHc=
-X-Received: by 2002:a05:6402:4307:b0:607:28e4:d70e with SMTP id
- 4fb4d7f45d1cf-607743a60b9mr9221323a12.17.1749368620583; Sun, 08 Jun 2025
- 00:43:40 -0700 (PDT)
+	b=ffdaPPLJs4E7vUx4CteoVjxwQp/d9oGRy5xxdR6vHlrqQcjIb5L90tVh9Lncjm8ho
+	 OZpZGQM4QQ777ERglHpLF6VXRdQiyDty1rVxGJZ9EUf5zOXOmzNuHCQw3vNwUrRelP
+	 lQQMBfZ+hsvzg5Mg2xHLSoOoyJ6/8et0Uyymv5JHZP46IXcfqMWS75SSxsAywPLOOO
+	 RQpQasLROLCfHkWpsa++pMBH9DTcUVUwDRCL3X80Q/qQYRFoThBAoY/lMDFWTze/zu
+	 yOo2jXahJUCg8lyw2fXq2+xOwIaYZYcSU0TrUGuFkMnsld92KASgu7ja5NkjeqU4fw
+	 x2Tfhg/dJcyjg==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-607c5715ef2so1261613a12.0
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 00:45:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXCTaT5BY9AFPnJ22EXi0E9V+ZNBO9Oux5O9NdDMUyNXV3CImzd09hQOBCUQ+t7GcnX+PcA1Y+aGepuRZo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXpt3Fk3lOAxGD9n/ogLcP8xQbhisKeuBO8IBHkTwlF/lj02EI
+	aXZrHHBPOHHi417/gnx2mxWiVsrs+1E5RpWiQqp73qQznUXrPG+515Gff6sRaDLG/HUiunT3Oh+
+	Ib0z0MQG/TiMH/5azLxnnxP+eJvSnY2o=
+X-Google-Smtp-Source: AGHT+IEMxiC61/WdIzKDDhTsddX3se4U2/Ek3Y5G+M7rk+ts69pqUn08kEk+NWD2RirZytq1A5O9kffxy+5LYh5IL3U=
+X-Received: by 2002:a05:6402:510c:b0:602:28d9:d555 with SMTP id
+ 4fb4d7f45d1cf-607748963dfmr7945203a12.32.1749368736343; Sun, 08 Jun 2025
+ 00:45:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1748505446.git.zhoubinbin@loongson.cn> <47fd3483be9bb14d0f70edc7c6fbc2aef827be11.1748505446.git.zhoubinbin@loongson.cn>
-In-Reply-To: <47fd3483be9bb14d0f70edc7c6fbc2aef827be11.1748505446.git.zhoubinbin@loongson.cn>
+References: <cover.1748505446.git.zhoubinbin@loongson.cn> <01805f8d1b9c8e6564a2d6d83964f78ed29b8f1f.1748505446.git.zhoubinbin@loongson.cn>
+In-Reply-To: <01805f8d1b9c8e6564a2d6d83964f78ed29b8f1f.1748505446.git.zhoubinbin@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 8 Jun 2025 15:43:30 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6smO0RV2pvOb6acD4R_jP3x8zgmu9j+hSWEsNmdLv8Jw@mail.gmail.com>
-X-Gm-Features: AX0GCFv96RTCuZ5r6f2xj1nDRXksieL8Xfp3h3lHgte1xz8EoulxxBX4bZVGWyI
-Message-ID: <CAAhV-H6smO0RV2pvOb6acD4R_jP3x8zgmu9j+hSWEsNmdLv8Jw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] mfd: ls2kbmc: Introduce Loongson-2K BMC core driver
+Date: Sun, 8 Jun 2025 15:45:25 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H41kek9HmM99dZRak2wu24e12ytYu+4Ji-Zo0TkxXmv=g@mail.gmail.com>
+X-Gm-Features: AX0GCFt4I7HLiM-K0sxDHw6ATO2018f3KDTcxmIN0cLyV0f8WNgLpCy4hoPCmgU
+Message-ID: <CAAhV-H41kek9HmM99dZRak2wu24e12ytYu+4Ji-Zo0TkxXmv=g@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] ipmi: Add Loongson-2K BMC support
 To: Binbin Zhou <zhoubinbin@loongson.cn>
 Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
 	Lee Jones <lee@kernel.org>, Corey Minyard <minyard@acm.org>, Xuerui Wang <kernel@xen0n.name>, 
@@ -64,82 +64,98 @@ Hi, Binbin,
 On Thu, May 29, 2025 at 8:23=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
 > wrote:
 >
-> The Loongson-2K Board Management Controller provides an PCIe interface
-> to the host to access the feature implemented in the BMC.
+> This patch adds Loongson-2K BMC IPMI support.
 >
-> The BMC is assembled on a server similar to the server machine with
-> Loongson-3C6000 CPUs. It supports multiple sub-devices like DRM.
-Technically the BMC is not bound to Loongson-3C6000, so replace it
-with Loongson-3, or a long list
-"Loongson-3C5000/Loongson-3D5000/Loongson-3C6000/Loongson-3D6000".
-
+> According to the existing design, we use software simulation to
+> implement the KCS interface registers: Stauts/Command/Data_Out/Data_In.
+>
+> Also since both host side and BMC side read and write kcs status, fifo fl=
+ag
+> is used to ensure data consistency.
+>
+> The single KCS message block is as follows:
+>
+> +------------------------------------------------------------------------=
+-+
+> |FIFO flags| KCS register data | CMD data | KCS version | WR REQ | WR ACK=
+ |
+> +------------------------------------------------------------------------=
+-+
 >
 > Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
 > Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
 > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 > ---
->  drivers/mfd/Kconfig       |  12 +++
->  drivers/mfd/Makefile      |   2 +
->  drivers/mfd/ls2kbmc-mfd.c | 156 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 170 insertions(+)
->  create mode 100644 drivers/mfd/ls2kbmc-mfd.c
+>  drivers/char/ipmi/Makefile       |   1 +
+>  drivers/char/ipmi/ipmi_si.h      |   7 ++
+>  drivers/char/ipmi/ipmi_si_intf.c |   3 +
+>  drivers/char/ipmi/ipmi_si_ls2k.c | 190 +++++++++++++++++++++++++++++++
+>  4 files changed, 201 insertions(+)
+>  create mode 100644 drivers/char/ipmi/ipmi_si_ls2k.c
 >
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 22b936310039..4993b0708fe5 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -2422,5 +2422,17 @@ config MFD_UPBOARD_FPGA
->           To compile this driver as a module, choose M here: the module w=
-ill be
->           called upboard-fpga.
+> diff --git a/drivers/char/ipmi/Makefile b/drivers/char/ipmi/Makefile
+> index e0944547c9d0..17308dd6be20 100644
+> --- a/drivers/char/ipmi/Makefile
+> +++ b/drivers/char/ipmi/Makefile
+> @@ -8,6 +8,7 @@ ipmi_si-y :=3D ipmi_si_intf.o ipmi_kcs_sm.o ipmi_smic_sm.=
+o ipmi_bt_sm.o \
+>         ipmi_si_mem_io.o
+>  ipmi_si-$(CONFIG_HAS_IOPORT) +=3D ipmi_si_port_io.o
+>  ipmi_si-$(CONFIG_PCI) +=3D ipmi_si_pci.o
+> +ipmi_si-$(CONFIG_MFD_LS2K_BMC) +=3D ipmi_si_ls2k.o
+>  ipmi_si-$(CONFIG_PARISC) +=3D ipmi_si_parisc.o
 >
-> +config MFD_LS2K_BMC
-> +       tristate "Loongson-2K Board Management Controller Support"
-> +       depends on LOONGARCH
-> +       default y if LOONGARCH
-> +       select MFD_CORE
-> +       help
-> +         Say yes here to add support for the Loongson-2K BMC which is a =
-Board
-> +         Management Controller connected to the PCIe bus. The device sup=
-ports
-> +         multiple sub-devices like DRM. This driver provides common supp=
-ort for
-like DRM and IPMI?
-
-> +         accessing the devices; additional drivers must be enabled in or=
-der to
-> +         use the functionality of the BMC device.
-And moving this block after MFD_INTEL_M10_BMC_PMCI is a little better
-(BMC drivers are together).
-
+>  obj-$(CONFIG_IPMI_HANDLER) +=3D ipmi_msghandler.o
+> diff --git a/drivers/char/ipmi/ipmi_si.h b/drivers/char/ipmi/ipmi_si.h
+> index 508c3fd45877..f38ea4f4c891 100644
+> --- a/drivers/char/ipmi/ipmi_si.h
+> +++ b/drivers/char/ipmi/ipmi_si.h
+> @@ -101,6 +101,13 @@ void ipmi_si_pci_shutdown(void);
+>  static inline void ipmi_si_pci_init(void) { }
+>  static inline void ipmi_si_pci_shutdown(void) { }
+>  #endif
+> +#ifdef CONFIG_MFD_LS2K_BMC
+> +void ipmi_si_ls2k_init(void);
+> +void ipmi_si_ls2k_shutdown(void);
+> +#else
+> +static inline void ipmi_si_ls2k_init(void) { }
+> +static inline void ipmi_si_ls2k_shutdown(void) { }
+> +#endif
+>  #ifdef CONFIG_PARISC
+>  void ipmi_si_parisc_init(void);
+>  void ipmi_si_parisc_shutdown(void);
+> diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si=
+_intf.c
+> index 7fe891783a37..c13d5132fffc 100644
+> --- a/drivers/char/ipmi/ipmi_si_intf.c
+> +++ b/drivers/char/ipmi/ipmi_si_intf.c
+> @@ -2120,6 +2120,7 @@ static int __init init_ipmi_si(void)
+>
+>         ipmi_si_pci_init();
+>
+> +       ipmi_si_ls2k_init();
+>         ipmi_si_parisc_init();
+>
+>         mutex_lock(&smi_infos_lock);
+> @@ -2334,6 +2335,8 @@ static void cleanup_ipmi_si(void)
+>
+>         ipmi_si_pci_shutdown();
+>
+> +       ipmi_si_ls2k_shutdown();
 > +
->  endmenu
->  endif
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 948cbdf42a18..18960ea13b64 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -290,3 +290,5 @@ obj-$(CONFIG_MFD_RSMU_I2C)  +=3D rsmu_i2c.o rsmu_core=
-.o
->  obj-$(CONFIG_MFD_RSMU_SPI)     +=3D rsmu_spi.o rsmu_core.o
+>         ipmi_si_parisc_shutdown();
 >
->  obj-$(CONFIG_MFD_UPBOARD_FPGA) +=3D upboard-fpga.o
-> +
-> +obj-$(CONFIG_MFD_LS2K_BMC)     +=3D ls2kbmc-mfd.o
-Also move it after MFD_INTEL_M10_BMC_PMCI.
-
-Huacai
-
-> diff --git a/drivers/mfd/ls2kbmc-mfd.c b/drivers/mfd/ls2kbmc-mfd.c
+>         ipmi_si_platform_shutdown();
+> diff --git a/drivers/char/ipmi/ipmi_si_ls2k.c b/drivers/char/ipmi/ipmi_si=
+_ls2k.c
 > new file mode 100644
-> index 000000000000..9dbcb5b371f9
+> index 000000000000..71159e9882b7
 > --- /dev/null
-> +++ b/drivers/mfd/ls2kbmc-mfd.c
-> @@ -0,0 +1,156 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
+> +++ b/drivers/char/ipmi/ipmi_si_ls2k.c
+> @@ -0,0 +1,190 @@
+> +// SPDX-License-Identifier: GPL-2.0+
 > +/*
-> + * Loongson-2K Board Management Controller (BMC) Core Driver.
+> + * Driver for Loongson-2K BMC IPMI
 > + *
 > + * Copyright (C) 2024-2025 Loongson Technology Corporation Limited.
 > + *
@@ -148,170 +164,203 @@ Huacai
 > + *     Binbin Zhou <zhoubinbin@loongson.cn>
 > + */
 > +
-> +#include <linux/aperture.h>
-> +#include <linux/errno.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/core.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/ioport.h>
 > +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/pci_ids.h>
-> +#include <linux/platform_data/simplefb.h>
-> +#include <linux/platform_device.h>
+> +#include <linux/types.h>
 > +
-> +/* LS2K BMC resources */
-> +#define LS2K_DISPLAY_RES_START         (SZ_16M + SZ_2M)
-> +#define LS2K_IPMI_RES_SIZE             0x1C
-> +#define LS2K_IPMI0_RES_START           (SZ_16M + 0xF00000)
-> +#define LS2K_IPMI1_RES_START           (LS2K_IPMI0_RES_START + LS2K_IPMI=
-_RES_SIZE)
-> +#define LS2K_IPMI2_RES_START           (LS2K_IPMI1_RES_START + LS2K_IPMI=
-_RES_SIZE)
-> +#define LS2K_IPMI3_RES_START           (LS2K_IPMI2_RES_START + LS2K_IPMI=
-_RES_SIZE)
-> +#define LS2K_IPMI4_RES_START           (LS2K_IPMI3_RES_START + LS2K_IPMI=
-_RES_SIZE)
+> +#include "ipmi_si.h"
 > +
-> +static struct resource ls2k_display_resources[] =3D {
-> +       DEFINE_RES_MEM_NAMED(LS2K_DISPLAY_RES_START, SZ_4M, "simpledrm-re=
-s"),
-> +};
+> +#define LS2K_KCS_FIFO_IBFH     0x0
+> +#define LS2K_KCS_FIFO_IBFT     0x1
+> +#define LS2K_KCS_FIFO_OBFH     0x2
+> +#define LS2K_KCS_FIFO_OBFT     0x3
 > +
-> +static struct resource ls2k_ipmi0_resources[] =3D {
-> +       DEFINE_RES_MEM_NAMED(LS2K_IPMI0_RES_START, LS2K_IPMI_RES_SIZE, "i=
-pmi0-res"),
-> +};
+> +/* KCS registers */
+> +#define LS2K_KCS_REG_STS       0x4
+> +#define LS2K_KCS_REG_DATA_OUT  0x5
+> +#define LS2K_KCS_REG_DATA_IN   0x6
+> +#define LS2K_KCS_REG_CMD       0x8
 > +
-> +static struct resource ls2k_ipmi1_resources[] =3D {
-> +       DEFINE_RES_MEM_NAMED(LS2K_IPMI1_RES_START, LS2K_IPMI_RES_SIZE, "i=
-pmi1-res"),
-> +};
+> +#define LS2K_KCS_CMD_DATA      0xa
+> +#define LS2K_KCS_VERSION       0xb
+> +#define LS2K_KCS_WR_REQ                0xc
+> +#define LS2K_KCS_WR_ACK                0x10
 > +
-> +static struct resource ls2k_ipmi2_resources[] =3D {
-> +       DEFINE_RES_MEM_NAMED(LS2K_IPMI2_RES_START, LS2K_IPMI_RES_SIZE, "i=
-pmi2-res"),
-> +};
+> +#define LS2K_KCS_STS_OBF       BIT(0)
+> +#define LS2K_KCS_STS_IBF       BIT(1)
+> +#define LS2K_KCS_STS_SMS_ATN   BIT(2)
+> +#define LS2K_KCS_STS_CMD       BIT(3)
 > +
-> +static struct resource ls2k_ipmi3_resources[] =3D {
-> +       DEFINE_RES_MEM_NAMED(LS2K_IPMI3_RES_START, LS2K_IPMI_RES_SIZE, "i=
-pmi3-res"),
-> +};
+> +#define LS2K_KCS_DATA_MASK     (LS2K_KCS_STS_OBF | LS2K_KCS_STS_IBF | LS=
+2K_KCS_STS_CMD)
 > +
-> +static struct resource ls2k_ipmi4_resources[] =3D {
-> +       DEFINE_RES_MEM_NAMED(LS2K_IPMI4_RES_START, LS2K_IPMI_RES_SIZE, "i=
-pmi4-res"),
-> +};
+> +static bool ls2k_registered;
 > +
-> +static struct mfd_cell ls2k_bmc_cells[] =3D {
-> +       MFD_CELL_RES("simple-framebuffer", ls2k_display_resources),
-> +       MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi0_resources),
-> +       MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi1_resources),
-> +       MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi2_resources),
-> +       MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi3_resources),
-> +       MFD_CELL_RES("ls2k-ipmi-si", ls2k_ipmi4_resources),
-> +};
-> +
-> +/*
-> + * Currently the Loongson-2K BMC hardware does not have an I2C interface=
- to adapt to the
-> + * resolution. We set the resolution by presetting "video=3D1280x1024-16=
-@2M" to the BMC memory.
-> + */
-> +static int ls2k_bmc_parse_mode(struct pci_dev *pdev, struct simplefb_pla=
-tform_data *pd)
+> +static unsigned char ls2k_mem_inb_v0(const struct si_sm_io *io, unsigned=
+ int offset)
 > +{
-> +       char *mode;
-> +       int depth, ret;
+> +       void __iomem *addr =3D io->addr;
+> +       int reg_offset;
 > +
-> +       /* The last 16M of PCI BAR0 is used to store the resolution strin=
-g. */
-> +       mode =3D devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + S=
-Z_16M, SZ_16M);
-> +       if (!mode)
-> +               return -ENOMEM;
+> +       if (offset & BIT(0)) {
+> +               reg_offset =3D LS2K_KCS_REG_STS;
+> +       } else {
+> +               writeb(readb(addr + LS2K_KCS_REG_STS) & ~LS2K_KCS_STS_OBF=
+,
+> +                      addr + LS2K_KCS_REG_STS);
+Newline is unnecessary here.
+
+Huacai
+
+> +               reg_offset =3D LS2K_KCS_REG_DATA_OUT;
+> +       }
 > +
-> +       /* The resolution field starts with the flag "video=3D". */
-> +       if (!strncmp(mode, "video=3D", 6))
-> +               mode =3D mode + 6;
+> +       return readb(addr + reg_offset);
+> +}
 > +
-> +       ret =3D kstrtoint(strsep(&mode, "x"), 10, &pd->width);
-> +       if (ret)
-> +               return ret;
+> +static unsigned char ls2k_mem_inb_v1(const struct si_sm_io *io, unsigned=
+ int offset)
+> +{
+> +       void __iomem *addr =3D io->addr;
+> +       unsigned char inb =3D 0, cmd;
+> +       bool obf, ibf;
 > +
-> +       ret =3D kstrtoint(strsep(&mode, "-"), 10, &pd->height);
-> +       if (ret)
-> +               return ret;
+> +       obf =3D readb(addr + LS2K_KCS_FIFO_OBFH) ^ readb(addr + LS2K_KCS_=
+FIFO_OBFT);
+> +       ibf =3D readb(addr + LS2K_KCS_FIFO_IBFH) ^ readb(addr + LS2K_KCS_=
+FIFO_IBFT);
+> +       cmd =3D readb(addr + LS2K_KCS_CMD_DATA);
 > +
-> +       ret =3D kstrtoint(strsep(&mode, "@"), 10, &depth);
-> +       if (ret)
-> +               return ret;
+> +       if (offset & BIT(0)) {
+> +               inb =3D readb(addr + LS2K_KCS_REG_STS) & ~LS2K_KCS_DATA_M=
+ASK;
+> +               inb |=3D FIELD_PREP(LS2K_KCS_STS_OBF, obf)
+> +                   | FIELD_PREP(LS2K_KCS_STS_IBF, ibf)
+> +                   | FIELD_PREP(LS2K_KCS_STS_CMD, cmd);
+> +       } else {
+> +               inb =3D readb(addr + LS2K_KCS_REG_DATA_OUT);
+> +               writeb(readb(addr + LS2K_KCS_FIFO_OBFH), addr + LS2K_KCS_=
+FIFO_OBFT);
+> +       }
 > +
-> +       pd->stride =3D pd->width * depth / 8;
-> +       pd->format =3D depth =3D=3D 32 ? "a8r8g8b8" : "r5g6b5";
+> +       return inb;
+> +}
+> +
+> +static void ls2k_mem_outb_v0(const struct si_sm_io *io, unsigned int off=
+set,
+> +                            unsigned char val)
+> +{
+> +       void __iomem *addr =3D io->addr;
+> +       unsigned char sts =3D readb(addr + LS2K_KCS_REG_STS);
+> +       int reg_offset;
+> +
+> +       if (sts & LS2K_KCS_STS_IBF)
+> +               return;
+> +
+> +       if (offset & BIT(0)) {
+> +               reg_offset =3D LS2K_KCS_REG_CMD;
+> +               sts |=3D LS2K_KCS_STS_CMD;
+> +       } else {
+> +               reg_offset =3D LS2K_KCS_REG_DATA_IN;
+> +               sts &=3D ~LS2K_KCS_STS_CMD;
+> +       }
+> +
+> +       writew(val, addr + reg_offset);
+> +       writeb(sts | LS2K_KCS_STS_IBF, addr + LS2K_KCS_REG_STS);
+> +       writel(readl(addr + LS2K_KCS_WR_REQ) + 1, addr + LS2K_KCS_WR_REQ)=
+;
+> +}
+> +
+> +static void ls2k_mem_outb_v1(const struct si_sm_io *io, unsigned int off=
+set,
+> +                            unsigned char val)
+> +{
+> +       void __iomem *addr =3D io->addr;
+> +       unsigned char ibfh, ibft;
+> +       int reg_offset;
+> +
+> +       ibfh =3D readb(addr + LS2K_KCS_FIFO_IBFH);
+> +       ibft =3D readb(addr + LS2K_KCS_FIFO_IBFT);
+> +
+> +       if (ibfh ^ ibft)
+> +               return;
+> +
+> +       reg_offset =3D (offset & BIT(0)) ? LS2K_KCS_REG_CMD : LS2K_KCS_RE=
+G_DATA_IN;
+> +       writew(val, addr + reg_offset);
+> +
+> +       writeb(offset & BIT(0), addr + LS2K_KCS_CMD_DATA);
+> +       writeb(!ibft, addr + LS2K_KCS_FIFO_IBFH);
+> +       writel(readl(addr + LS2K_KCS_WR_REQ) + 1, addr + LS2K_KCS_WR_REQ)=
+;
+> +}
+> +
+> +static void ls2k_mem_cleanup(struct si_sm_io *io)
+> +{
+> +       if (io->addr)
+> +               iounmap(io->addr);
+> +}
+> +
+> +static int ipmi_ls2k_mem_setup(struct si_sm_io *io)
+> +{
+> +       unsigned char version;
+> +
+> +       io->addr =3D ioremap(io->addr_data, io->regspacing);
+> +       if (!io->addr)
+> +               return -EIO;
+> +
+> +       version =3D readb(io->addr + LS2K_KCS_VERSION);
+> +
+> +       io->inputb =3D version ? ls2k_mem_inb_v1 : ls2k_mem_inb_v0;
+> +       io->outputb =3D version ? ls2k_mem_outb_v1 : ls2k_mem_outb_v0;
+> +       io->io_cleanup =3D ls2k_mem_cleanup;
 > +
 > +       return 0;
 > +}
 > +
-> +static int ls2k_bmc_probe(struct pci_dev *dev, const struct pci_device_i=
-d *id)
+> +static int ipmi_ls2k_probe(struct platform_device *pdev)
 > +{
-> +       struct simplefb_platform_data pd;
-> +       resource_size_t base;
-> +       int ret;
+> +       struct si_sm_io io;
 > +
-> +       ret =3D pci_enable_device(dev);
-> +       if (ret)
-> +               return ret;
+> +       memset(&io, 0, sizeof(io));
 > +
-> +       ret =3D ls2k_bmc_parse_mode(dev, &pd);
-> +       if (ret)
-> +               goto disable_pci;
+> +       io.si_info      =3D &ipmi_kcs_si_info;
+> +       io.io_setup     =3D ipmi_ls2k_mem_setup;
+> +       io.addr_data    =3D pdev->resource[0].start;
+> +       io.regspacing   =3D resource_size(&pdev->resource[0]);
+> +       io.dev          =3D &pdev->dev;
 > +
-> +       ls2k_bmc_cells[0].platform_data =3D &pd;
-> +       ls2k_bmc_cells[0].pdata_size =3D sizeof(pd);
-> +       base =3D dev->resource[0].start + LS2K_DISPLAY_RES_START;
+> +       dev_dbg(&pdev->dev, "addr 0x%lx, spacing %d.\n", io.addr_data, io=
+.regspacing);
 > +
-> +       /* Remove conflicting efifb device */
-> +       ret =3D aperture_remove_conflicting_devices(base, SZ_4M, "simple-=
-framebuffer");
-> +       if (ret) {
-> +               dev_err(&dev->dev, "Failed to removed firmware framebuffe=
-rs: %d\n", ret);
-> +               goto disable_pci;
-> +       }
-> +
-> +       return devm_mfd_add_devices(&dev->dev, PLATFORM_DEVID_AUTO,
-> +                                   ls2k_bmc_cells, ARRAY_SIZE(ls2k_bmc_c=
-ells),
-> +                                   &dev->resource[0], 0, NULL);
-> +
-> +disable_pci:
-> +       pci_disable_device(dev);
-> +       return ret;
+> +       return ipmi_si_add_smi(&io);
 > +}
 > +
-> +static void ls2k_bmc_remove(struct pci_dev *dev)
+> +static void ipmi_ls2k_remove(struct platform_device *pdev)
 > +{
-> +       pci_disable_device(dev);
+> +       ipmi_si_remove_by_dev(&pdev->dev);
 > +}
 > +
-> +static struct pci_device_id ls2k_bmc_devices[] =3D {
-> +       { PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, 0x1a05) },
-> +       { }
+> +struct platform_driver ipmi_ls2k_platform_driver =3D {
+> +       .driver =3D {
+> +               .name =3D "ls2k-ipmi-si",
+> +       },
+> +       .probe  =3D ipmi_ls2k_probe,
+> +       .remove =3D ipmi_ls2k_remove,
 > +};
-> +MODULE_DEVICE_TABLE(pci, ls2k_bmc_devices);
 > +
-> +static struct pci_driver ls2k_bmc_driver =3D {
-> +       .name =3D "ls2k-bmc",
-> +       .id_table =3D ls2k_bmc_devices,
-> +       .probe =3D ls2k_bmc_probe,
-> +       .remove =3D ls2k_bmc_remove,
-> +};
-> +module_pci_driver(ls2k_bmc_driver);
+> +void ipmi_si_ls2k_init(void)
+> +{
+> +       platform_driver_register(&ipmi_ls2k_platform_driver);
+> +       ls2k_registered =3D true;
+> +}
 > +
-> +MODULE_DESCRIPTION("Loongson-2K BMC driver");
-> +MODULE_AUTHOR("Loongson Technology Corporation Limited");
-> +MODULE_LICENSE("GPL");
+> +void ipmi_si_ls2k_shutdown(void)
+> +{
+> +       if (ls2k_registered)
+> +               platform_driver_unregister(&ipmi_ls2k_platform_driver);
+> +}
 > --
 > 2.47.1
 >
