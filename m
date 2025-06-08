@@ -1,128 +1,289 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A85165F1A
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 19:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E5B1428E7;
+	Sun,  8 Jun 2025 20:01:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749412714; cv=none; b=hbigdOLts9E0TRR/njZJ7GE8Poo7EOiepDm9tzbZw/ZI5FeakCi05nJOFmv3fhW4owuWAX4rMOfs7bPHuIM/8tTsQALUAafF2aLlbTKQkwR+mEPwuHrKuyikDzOubUYK+9SURb8BeRxPC7s5T3HtCZUjlnI/qgov++5bIjOaqp4=
+	t=1749412889; cv=none; b=BbKlplxJlQ9iChNQe/f58eROHR1mFAbMsem+XOe7eY6yL1ZqjR0SFf4RxjSnWhQpyYSuWLYul2jaRcp0IOtRmEpT+ecMhAs4Y8o/psDnkJG8Q7JJf86PTsEsq3Y32X/2CqJcp6MKHdkUhZ0+XJB1dFkcYVXZNdnuu+2D7H/GkKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749412714; c=relaxed/simple;
-	bh=BLmXJzTM5ia8opzo1LdCoiOFsDBXD+MPSBLR8pplt3k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ABNkRARBi9zD22MsZ7mFgCh92VlJmcebIJ80QrkWmruKj78teqQ1eVJe/qCvipkfKD9Sw9qaCpHI1C6Q/3n6VI7Jgd6LyXrS6J7DVwuw8piquHQkL6VkcYNVnpHg9z0q7KwLeC6x8DEMyFr5QrXSwcqL2Grf2CViu4tDyy9F+dQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=o0zl0a5W; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
+	s=arc-20240116; t=1749412889; c=relaxed/simple;
+	bh=fuA/hr7VD5/JtnxVdRo7SFZ0CMh9LDP9qzuRuyY2vFI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iOJEKGe6C5HR87LmkLa2Z5mG8jeKTWj9pvInwOW+jsbj1auAUqG+5CxgMr1qvCJpZ7yGCeI9a2LDhXTwFEEjIQfWsZE8I/I+d4LuyUaUTQlDVqQ+IqqsXMvj/+cXiBoGWHrMy9Rty3+I9r6vcNxRDYYEMBd2ruCb0JjAw7/pGmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FXnpcwTF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="o0zl0a5W"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-747fc77bb2aso2754845b3a.3
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 12:58:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1749412713; x=1750017513; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=SO/TiV/eetgiNfMpNbC5+xBYaQpqY6ayGmPuNTPhj0k=;
-        b=o0zl0a5W2JtCxMthNz0mlEdGoO5932iXTBqqEUQTXIn/7roxnt/UGnc6klhq1fFad/
-         oh7W4Kfc/lihWp2q1xXCxz6M8WnvrPn+3mzQNG7uUh3CLd8VhRVNxFg3FjF3/S7mHZaP
-         016iZkVXqfash9pU937ZpNr9TXAgRSGtp+LqVRHn3qrM5L79k+vD5A4LggEFd5JlMJ1t
-         Ma6f6aCvL4G14LkjX19k5u506at6hU4ZIUR5LwndFX9CH2frP2Ah4X2Hk4C5idOU2ydl
-         JHsRt0OhOdMQDdmzJ16QSRhHgh+OwFXY0QAQt5+r+X+s41FLNwT5zbxpjGSPt8Tj1ODE
-         0Gcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749412713; x=1750017513;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SO/TiV/eetgiNfMpNbC5+xBYaQpqY6ayGmPuNTPhj0k=;
-        b=J1OqThPeBk5UpkAyAdrzVhEF7DC0ve9f+OQVtZgUVZCU7l8ACMFTVuJhreY8EzsdRU
-         nfxOGAftNrY4DXgk630j8xxmFm75qJJYrnAe81tShb5Z8YRmIq/h5RLxYV14uzsGYbsA
-         Sos6jIC5igLcta1oew8YY0sGTUZWqef/kT6j0dsseiaWxaC1Tx8zTqJljZJPvGK17H6R
-         irByjLE5mwNnhMxJVcHBC9P/tb7hmIhPnTQj+EZa00EPczlfNzum7CJDIokoufnqvpzj
-         eBRrMLygmJZAuJtpm5brTBiUT5PhepPiOUx7DV+HPtfct29p8LkB/oki+Gabm0GyQibh
-         JkbA==
-X-Forwarded-Encrypted: i=1; AJvYcCWG4nE8T6n3ZzvPChvGQYzb8R4hURlRSgnC/LVhc81Ue6SAXnHevTo5AtXARBPlNzaETvVTQzB9uGP7obs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyP0pkxBZtUGAHt60FwQh+YcZOAGD21WcLNEjM1ohijZZsa/WJz
-	yWgzL0GdOgMUp+hd0jjQTVIUBeXCA6LRJpm9dokdfo9bHtS8MRVmzYhQa7GxbvVUGe3Sr7VvjH6
-	g9tGS7MU=
-X-Gm-Gg: ASbGnctxVwHQtt3+guP8yefJ6mmDS/1v0DD26wz/mJtC5oUE4uubBLr4EU6DZUrA7Bq
-	mPTM3esiyo2sne5mKBSJlJoDrQuuhsfkluaplrJwH9eAG6vQCNer00zlbuQdYdPG44cdlxP8G+9
-	Qtt/PSy6rwCx9PEh/uaz2VL9xYviJGYzsA0IUhkGHjMYlhOoUyvR3gTWDB8hkfT6bI7v6qcqQ3e
-	ToSNJD5E4UeXhnr13ppMeT9aGc0I90GiOsh57aU1zuo6mfBQlV5NvHTap8adWPi7tXryYRkRa6Y
-	101uJW0W1U4i0lkdEKXmwoFUiwntCf0r
-X-Google-Smtp-Source: AGHT+IFbXbhXFIU9zLa+fXurTHgYmeXx2QZmDu603fA5wHw0+5DeqF3jW9IscpN1oxDbST4x8Tn+iw==
-X-Received: by 2002:a05:6300:6c03:b0:21f:54aa:2004 with SMTP id adf61e73a8af0-21f54aa2170mr4488578637.2.1749412712968;
-        Sun, 08 Jun 2025 12:58:32 -0700 (PDT)
-Received: from x1 ([97.120.245.255])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5ee73e2asm3467343a12.29.2025.06.08.12.58.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Jun 2025 12:58:32 -0700 (PDT)
-Date: Sun, 8 Jun 2025 12:58:30 -0700
-From: Drew Fustini <drew@pdp7.com>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Benno Lossin <lossin@kernel.org>,
-	Michal Wilczynski <m.wilczynski@samsung.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, Guo Ren <guoren@kernel.org>,
-	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH RFC 0/6] Rust Abstractions for PWM subsystem with TH1520
- PWM driver
-Message-ID: <aEXrZvpTD30a5OhT@x1>
-References: <CGME20250524211519eucas1p218997c69b98b14d3af2eb6bf4e9d3187@eucas1p2.samsung.com>
- <20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com>
- <aDJGgLZ9tITwGBxq@x1>
- <b5f4af17-05ef-453d-8f04-283590ae5b87@samsung.com>
- <DA5YY0YF28GO.3DONTQDLY6VBD@kernel.org>
- <aEXBH5r05FkTxpV+@x1>
- <CANiq72k-FmZe3P_y6FjmiqXViqLKXkDqHY1-KLfmgwAe98oBAQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FXnpcwTF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50FC3C4CEEE;
+	Sun,  8 Jun 2025 20:01:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749412888;
+	bh=fuA/hr7VD5/JtnxVdRo7SFZ0CMh9LDP9qzuRuyY2vFI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FXnpcwTFSntd7MBkj3IlFzF4Wm1Nbf17gRrAQ33Y5he0MxwSJ3Gw23r7b//6qGJX1
+	 IetW29FsrudgqqO4Jdaqar0ncu42TC68ki2i3ItknDlpMs5FGcNYs/tJkdiv6sSUo8
+	 TMV249zfF18buNViodF1zXMEWxJuj2H3XCpfN1ODaHM37RI/i8NGd3dZHGtZNql/Ye
+	 Cl2g+Yg8x2zNbhqaRJXWOGWdTQrS1eOXE4WSPZUu/j9SNRN1b5c0MKeGrb7D0C/h6N
+	 n9fuolBulS6sW9eXCeZtyA7Wq2Sie/7hsBTmTMJzyfVTYHC0lKfV5tXy3ZFGAjgVZR
+	 ul/nNb8QECVjg==
+Message-ID: <134ce55c-2213-417c-a3d0-de9a7695ec91@kernel.org>
+Date: Sun, 8 Jun 2025 22:01:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72k-FmZe3P_y6FjmiqXViqLKXkDqHY1-KLfmgwAe98oBAQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/5] power: supply: core: convert to fwnnode
+To: Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Sebastian Reichel <sre@kernel.org>, Mark Brown <broonie@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>,
+ Matti Vaittinen <mazziesaccount@gmail.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
+ <pali@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250430-psy-core-convert-to-fwnode-v2-0-f9643b958677@collabora.com>
+ <20250430-psy-core-convert-to-fwnode-v2-4-f9643b958677@collabora.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250430-psy-core-convert-to-fwnode-v2-4-f9643b958677@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jun 08, 2025 at 07:14:18PM +0200, Miguel Ojeda wrote:
-> On Sun, Jun 8, 2025 at 6:58 PM Drew Fustini <drew@pdp7.com> wrote:
-> >
-> > I'm not sure if that bindgen warning matters?
+Hi, 
+
+On 30-Apr-25 12:54 AM, Sebastian Reichel wrote:
+> Replace any DT specific code with fwnode in the power-supply
+> core.
 > 
-> If you don't see the `FromBytesWithNulError` error, then it should be
-> fine, but I would recommend using a newer version anyway.
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+
+Thanks, patch looks good to me:
+
+Reviewed-by: Hans de Goede <hansg@kernel.org>
+
+Regards,
+
+Hans
+
+
+
+> ---
+>  drivers/power/supply/bq2415x_charger.c   |  2 +-
+>  drivers/power/supply/power_supply_core.c | 65 ++++++++++++++++----------------
+>  include/linux/power_supply.h             |  2 +-
+>  3 files changed, 34 insertions(+), 35 deletions(-)
 > 
-> I hope that helps.
+> diff --git a/drivers/power/supply/bq2415x_charger.c b/drivers/power/supply/bq2415x_charger.c
+> index 9e3b9181ee76a4f473228bba022917677acce256..1ecbca510bba99ee7abcda33a719035adfceeb5f 100644
+> --- a/drivers/power/supply/bq2415x_charger.c
+> +++ b/drivers/power/supply/bq2415x_charger.c
+> @@ -1674,7 +1674,7 @@ static int bq2415x_probe(struct i2c_client *client)
+>  	/* Query for initial reported_mode and set it */
+>  	if (bq->nb.notifier_call) {
+>  		if (np) {
+> -			notify_psy = power_supply_get_by_phandle(np,
+> +			notify_psy = power_supply_get_by_phandle(of_fwnode_handle(np),
+>  						"ti,usb-charger-detection");
+>  			if (IS_ERR(notify_psy))
+>  				notify_psy = NULL;
+> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
+> index a8d1fe66e2486a833ccaa3ed77b861c6e52c5760..1d53ceaa8fd161e7e72b90befabb9380393c99f2 100644
+> --- a/drivers/power/supply/power_supply_core.c
+> +++ b/drivers/power/supply/power_supply_core.c
+> @@ -18,7 +18,6 @@
+>  #include <linux/device.h>
+>  #include <linux/notifier.h>
+>  #include <linux/err.h>
+> -#include <linux/of.h>
+>  #include <linux/power_supply.h>
+>  #include <linux/property.h>
+>  #include <linux/thermal.h>
+> @@ -196,24 +195,24 @@ static int __power_supply_populate_supplied_from(struct power_supply *epsy,
+>  						 void *data)
+>  {
+>  	struct power_supply *psy = data;
+> -	struct device_node *np;
+> +	struct fwnode_handle *np;
+>  	int i = 0;
+>  
+>  	do {
+> -		np = of_parse_phandle(psy->dev.of_node, "power-supplies", i++);
+> -		if (!np)
+> +		np = fwnode_find_reference(psy->dev.fwnode, "power-supplies", i++);
+> +		if (IS_ERR(np))
+>  			break;
+>  
+> -		if (np == epsy->dev.of_node) {
+> +		if (np == epsy->dev.fwnode) {
+>  			dev_dbg(&psy->dev, "%s: Found supply : %s\n",
+>  				psy->desc->name, epsy->desc->name);
+>  			psy->supplied_from[i-1] = (char *)epsy->desc->name;
+>  			psy->num_supplies++;
+> -			of_node_put(np);
+> +			fwnode_handle_put(np);
+>  			break;
+>  		}
+> -		of_node_put(np);
+> -	} while (np);
+> +		fwnode_handle_put(np);
+> +	} while (!IS_ERR(np));
+>  
+>  	return 0;
+>  }
+> @@ -232,16 +231,16 @@ static int power_supply_populate_supplied_from(struct power_supply *psy)
+>  static int  __power_supply_find_supply_from_node(struct power_supply *epsy,
+>  						 void *data)
+>  {
+> -	struct device_node *np = data;
+> +	struct fwnode_handle *fwnode = data;
+>  
+>  	/* returning non-zero breaks out of power_supply_for_each_psy loop */
+> -	if (epsy->dev.of_node == np)
+> +	if (epsy->dev.fwnode == fwnode)
+>  		return 1;
+>  
+>  	return 0;
+>  }
+>  
+> -static int power_supply_find_supply_from_node(struct device_node *supply_node)
+> +static int power_supply_find_supply_from_fwnode(struct fwnode_handle *supply_node)
+>  {
+>  	int error;
+>  
+> @@ -249,7 +248,7 @@ static int power_supply_find_supply_from_node(struct device_node *supply_node)
+>  	 * power_supply_for_each_psy() either returns its own errors or values
+>  	 * returned by __power_supply_find_supply_from_node().
+>  	 *
+> -	 * __power_supply_find_supply_from_node() will return 0 (no match)
+> +	 * __power_supply_find_supply_from_fwnode() will return 0 (no match)
+>  	 * or 1 (match).
+>  	 *
+>  	 * We return 0 if power_supply_for_each_psy() returned 1, -EPROBE_DEFER if
+> @@ -262,7 +261,7 @@ static int power_supply_find_supply_from_node(struct device_node *supply_node)
+>  
+>  static int power_supply_check_supplies(struct power_supply *psy)
+>  {
+> -	struct device_node *np;
+> +	struct fwnode_handle *np;
+>  	int cnt = 0;
+>  
+>  	/* If there is already a list honor it */
+> @@ -270,24 +269,24 @@ static int power_supply_check_supplies(struct power_supply *psy)
+>  		return 0;
+>  
+>  	/* No device node found, nothing to do */
+> -	if (!psy->dev.of_node)
+> +	if (!psy->dev.fwnode)
+>  		return 0;
+>  
+>  	do {
+>  		int ret;
+>  
+> -		np = of_parse_phandle(psy->dev.of_node, "power-supplies", cnt++);
+> -		if (!np)
+> +		np = fwnode_find_reference(psy->dev.fwnode, "power-supplies", cnt++);
+> +		if (IS_ERR(np))
+>  			break;
+>  
+> -		ret = power_supply_find_supply_from_node(np);
+> -		of_node_put(np);
+> +		ret = power_supply_find_supply_from_fwnode(np);
+> +		fwnode_handle_put(np);
+>  
+>  		if (ret) {
+>  			dev_dbg(&psy->dev, "Failed to find supply!\n");
+>  			return ret;
+>  		}
+> -	} while (np);
+> +	} while (!IS_ERR(np));
+>  
+>  	/* Missing valid "power-supplies" entries */
+>  	if (cnt == 1)
+> @@ -498,14 +497,14 @@ void power_supply_put(struct power_supply *psy)
+>  EXPORT_SYMBOL_GPL(power_supply_put);
+>  
+>  #ifdef CONFIG_OF
+> -static int power_supply_match_device_node(struct device *dev, const void *data)
+> +static int power_supply_match_device_fwnode(struct device *dev, const void *data)
+>  {
+> -	return dev->parent && dev->parent->of_node == data;
+> +	return dev->parent && dev_fwnode(dev->parent) == data;
+>  }
+>  
+>  /**
+>   * power_supply_get_by_phandle() - Search for a power supply and returns its ref
+> - * @np: Pointer to device node holding phandle property
+> + * @fwnode: Pointer to fwnode holding phandle property
+>   * @property: Name of property holding a power supply name
+>   *
+>   * If power supply was found, it increases reference count for the
+> @@ -515,21 +514,21 @@ static int power_supply_match_device_node(struct device *dev, const void *data)
+>   * Return: On success returns a reference to a power supply with
+>   * matching name equals to value under @property, NULL or ERR_PTR otherwise.
+>   */
+> -struct power_supply *power_supply_get_by_phandle(struct device_node *np,
+> -							const char *property)
+> +struct power_supply *power_supply_get_by_phandle(struct fwnode_handle *fwnode,
+> +						 const char *property)
+>  {
+> -	struct device_node *power_supply_np;
+> +	struct fwnode_handle *power_supply_fwnode;
+>  	struct power_supply *psy = NULL;
+>  	struct device *dev;
+>  
+> -	power_supply_np = of_parse_phandle(np, property, 0);
+> -	if (!power_supply_np)
+> -		return ERR_PTR(-ENODEV);
+> +	power_supply_fwnode = fwnode_find_reference(fwnode, property, 0);
+> +	if (IS_ERR(power_supply_fwnode))
+> +		return ERR_CAST(power_supply_fwnode);
+>  
+> -	dev = class_find_device(&power_supply_class, NULL, power_supply_np,
+> -				power_supply_match_device_node);
+> +	dev = class_find_device(&power_supply_class, NULL, power_supply_fwnode,
+> +				power_supply_match_device_fwnode);
+>  
+> -	of_node_put(power_supply_np);
+> +	fwnode_handle_put(power_supply_fwnode);
+>  
+>  	if (dev) {
+>  		psy = dev_to_psy(dev);
+> @@ -561,14 +560,14 @@ struct power_supply *devm_power_supply_get_by_phandle(struct device *dev,
+>  {
+>  	struct power_supply **ptr, *psy;
+>  
+> -	if (!dev->of_node)
+> +	if (!dev_fwnode(dev))
+>  		return ERR_PTR(-ENODEV);
+>  
+>  	ptr = devres_alloc(devm_power_supply_put, sizeof(*ptr), GFP_KERNEL);
+>  	if (!ptr)
+>  		return ERR_PTR(-ENOMEM);
+>  
+> -	psy = power_supply_get_by_phandle(dev->of_node, property);
+> +	psy = power_supply_get_by_phandle(dev_fwnode(dev), property);
+>  	if (IS_ERR_OR_NULL(psy)) {
+>  		devres_free(ptr);
+>  	} else {
+> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> index b6eb31a23c878aa9ed8ad7bcb02a13721354e1cb..c95f098374cbdeafe8cddb52da3903f4f0e0f0fc 100644
+> --- a/include/linux/power_supply.h
+> +++ b/include/linux/power_supply.h
+> @@ -805,7 +805,7 @@ static inline struct power_supply *power_supply_get_by_name(const char *name)
+>  { return NULL; }
+>  #endif
+>  #ifdef CONFIG_OF
+> -extern struct power_supply *power_supply_get_by_phandle(struct device_node *np,
+> +extern struct power_supply *power_supply_get_by_phandle(struct fwnode_handle *fwnode,
+>  							const char *property);
+>  extern struct power_supply *devm_power_supply_get_by_phandle(
+>  				    struct device *dev, const char *property);
 > 
-> Cheers,
-> Miguel
 
-Thanks for the quick response. I seemed to have updated it with:
-
- cargo install bindgen-cli
-
-And it seems Linux is now happy :)
-
- $ make LLVM=1 rustavailable
- Rust is available!
-
--Drew
