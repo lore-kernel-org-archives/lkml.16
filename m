@@ -1,172 +1,308 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D194C9D
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 15:52:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555034C9D;
+	Sun,  8 Jun 2025 15:53:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749397930; cv=none; b=e8F9AAqg9mn4dfyzGW2Fzw+1nSY3B9uVwZF5XUQs6Ax8/7AaxyLXjJSXibcYj4bVKzPykCrT0R7Z/591V2TWz/HoYGsyJozEBWrkBreKfwtmqrlCiLVLAZ1R55lr0JDDbD/qZ3FBHSmy355PTPyAHqWGraUPOei9wJme4Ow7xJI=
+	t=1749398027; cv=none; b=aLZnflUqyF1SeH08OCF8IJhNfaAS8jJVbXKuRU1kfpOPu4HUnX06xgPOUlvs1dk+hYXBy9rKdiwEUSjRkknCBFUZiFekOX4ejUwY4Lj+RKReobNUBjZ4aq5vdusmS6wdFa5Ui5ojjDaPXJkPj1e4F7vEwNbDm1XddtIhkCqC71g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749397930; c=relaxed/simple;
-	bh=ZoAA3vuK/kol5O673dlsy5ItLmK0L4GXKNFdqazixd8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=C/gEtxlU22qR50TeOMLtRqdStQ5A1wAQA3Fnatz/0tImm675MJzUzGMH7Y3Vo61sZCVIY/Hp4RoOnXB5D6XHuOIIMU1H7V4R8YC95X31fK/ygqDwd4KHKkphyoya2s6LsqUT8hbb8z16JopAG2GzmIydb34y+zL8e7sz3m98JBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PN/V09y1; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749398027; c=relaxed/simple;
+	bh=n/pRS8TC0DhYOpQkk+ckni+vx3w+9lx1cmNbt4ePB+8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=elZiueiuUiBlz0A+0UnY/7HLVdxuXm2B03ayR7g3YzXTaBA3NSTTZC7TKLAFX2/Gmj2S68M7hUES3i7PHynQFw8ho0QEy2Dhyf7X4bSORas9PIAOK1nRXPvcOO9tJ0G+koj1JlyErd5hPaYowXtQmFaxl2Ym3DcF8K/2Q+j4as4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=U89m3wNL; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PN/V09y1"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5589tE7v019483
-	for <linux-kernel@vger.kernel.org>; Sun, 8 Jun 2025 15:52:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=boZFxi7Ddh45D8urWAKV+2
-	Jls0MVjnq7y9F6R2rPKr0=; b=PN/V09y1o/FgirIo0GDW6xn2JkwvQzTCZYzjO/
-	nfwa/vquMsOySdPWIPeBAVCjX170BkviL/+/pknsv8/EHPIh3ia99120r2TThIC1
-	Blb53L2q7O7RWO+dT8m6tC7enrbilKVKbi0tDClhuBV+/DZ/GUggh7fecmaSJmQi
-	r9EhkmBIN/GbkstopOp3P18m2GMK5Gle86op7vGoQngeoBVbh0qMNmI3vsOnoUe5
-	AV07/wiSaIiwbE+Nr76K/dvf6MrqZ5C+moisvsJS+Fk/qcOtCvdHhne2nL6PbpHv
-	pMyZ3V9KHLFUhKkJ7SCfw0Az4bBJPX1zHZayIsEXgzwuzFVg==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474asrkkyg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 15:52:07 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7ceb5b5140eso726412385a.2
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 08:52:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749397927; x=1750002727;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=boZFxi7Ddh45D8urWAKV+2Jls0MVjnq7y9F6R2rPKr0=;
-        b=jgZukILoDO9oKIJkfSFgv3ShgH95z3bHc2tMB4PsOw20MN5KqNQfzlzpsoXiQMjPSZ
-         xGqHgluanRPo8l63L0PSoY2lUyJnpKgu29HJJGHPh7pPw6mSCDDIFOVQ3hAU2/24f1IW
-         GfXT5H6LRh9rIj98C75lHfwTyeBdj5CkgYWH6fajYG6o1U8styAnfJf/N6l8Q1ZQ35ED
-         9o0N/z9iTXLNNcdnFWGvc1gqhglINknKMdvVoXaqIYdu/x0jMjefUxNiYZrLH7hoJ0AN
-         UeZtQ4DMO3AFIzcnbuWglHbxHaab6okV84jFHHLrES0BdR+Gkh0ifJZf2wqRbBvXsmPA
-         Z6kA==
-X-Forwarded-Encrypted: i=1; AJvYcCWHcIHDCIXKzV/AFcSQevH+4/yV3EE+clMCamBYAjsqBxzMqkV73sqy/16kvb03OdEZkJSbZ/Az73p7/as=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbQ9Z7IYbbCrXKDqt8WbAqixJqW5VVM0GG07zWlGOV638hyptH
-	6ME96TxydoObvzbZuhjPEUFvvz2RxFQiUTuEfzrpAGIJAKGvEVNv3VoKSOtpRMFPKg62AADC3o4
-	XGcoHGoZSLmdSLWW8e0G81YujBWBcL5bvtbAje+sdq1NP3jH+650JBsnCtA5uHoxcr1o=
-X-Gm-Gg: ASbGncse2FNr0NUMMtO2S3Lv44o/TJje95B9DhJAT7qHHY0GH+MfrCyjch/z9Hgm752
-	Lrghb3OLstkW6rieVhbfNqIzyvqbsyHLxpkvR59CDWF1LclLfZu5C1uG43i0DryYPusLF2a77K8
-	4RAFUNbcCGqoKx2bHpmYMUemYSMSuOvH+Qv9QSjDBInF8dGHrpnmT0kXWUkVFMKRA2ER9Vqnv8q
-	ggONp/Bcu0SYrm/wlC4G0r7kugcQKiWh7+5BafptYITvjPcFzMTv1UkP2O04g2WGXtmMuDcgaM1
-	zT5t6SBuUN/M8wA2N6UwCnMdcvE4UE1MzldmF7tPeMGpNieIy3FA+OwE8hVMwxmGe1MMDCVncz5
-	KY/wJz+1RTvV6v4xCvPYQzU9z
-X-Received: by 2002:a05:620a:4413:b0:7ca:f2cf:eb8b with SMTP id af79cd13be357-7d229889682mr1366809885a.34.1749397926871;
-        Sun, 08 Jun 2025 08:52:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEP9sj/pKViK1P2M5QiclQ+hkJ6yBVJVUeBZ72zOARopK77awg/D4ihbcFbUOzv33Cm3bqtPA==
-X-Received: by 2002:a05:620a:4413:b0:7ca:f2cf:eb8b with SMTP id af79cd13be357-7d229889682mr1366808185a.34.1749397926564;
-        Sun, 08 Jun 2025 08:52:06 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5536772a80csm801827e87.162.2025.06.08.08.52.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Jun 2025 08:52:05 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Sun, 08 Jun 2025 18:52:04 +0300
-Subject: [PATCH] drm/bridge: aux-hpd-bridge: fix assignment of the of_node
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="U89m3wNL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1749397992; x=1750002792; i=spasswolf@web.de;
+	bh=PnHniw1I6lBBQY7VbSfM4GmT9OXA2J4T8IFN/uKRYDU=;
+	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=U89m3wNL1s4Xj/UCxuOFbJ7hmEqIMBozqc9vhj0qeyWHZDLyWqIBawdm4SLb4HpP
+	 Pvjv4y7CMXwHllxzv/o6s8a6igNC2D1wzRRMctRDaq/W7ylJtbtb3lz3A8uDFLvD/
+	 YjyQR15K7/jXglB2sWCT1GkMTU8SXmVf7G4S3SMK6IVoXNpw/yLigG6QG+nCDWZMZ
+	 oLK3J0m28+WlLzZxkTk6vFoj2SdTBOTXfl/9aEvXhuHRGYcmckj+tMcAgKcUk3eF/
+	 aUCM6pGkUF0VzY4kJldHZSgnjld+4YpVbHkoGm5i5OgjYNinJfsF3Q5pHGlczN20S
+	 InxD6ns9HhuPm+o6qQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MDe2F-1uWEwh2g2J-00GEqT; Sun, 08
+ Jun 2025 17:53:12 +0200
+Message-ID: <727212f9d3c324787ddd9ede9e2d800a02b629b2.camel@web.de>
+Subject: Re: BUG: scheduling while atomic with PREEMPT_RT=y and bpf selftests
+From: Bert Karwatzki <spasswolf@web.de>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Steven Rostedt
+	 <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-rt-users@vger.kernel.org, 
+	linux-rt-devel@lists.linux.dev, Thomas Gleixner <tglx@linutronix.de>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>, spasswolf@web.de
+Date: Sun, 08 Jun 2025 17:53:10 +0200
+In-Reply-To: <0b1f48ba715a16c4d4874ae65bc01914de4d5a90.camel@web.de>
+References: <20250605091904.5853-1-spasswolf@web.de>
+			 <20250605084816.3e5d1af1@gandalf.local.home>
+			 <20250605125133.RSTingmi@linutronix.de>
+	 <0b1f48ba715a16c4d4874ae65bc01914de4d5a90.camel@web.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250608-fix-aud-hpd-bridge-v1-1-4641a6f8e381@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAKOxRWgC/x2MSQqAMAwAv1JyNlCXun1FPNQ22lxUWhRB+neDx
- 4GZeSFRZEowqhci3Zz42AXKQoELdt8I2QtDpSujW93jyg/ay2M4PS6RvRhDR86Yuild40DCM5J
- Y/3Sac/4AHXAJ4GQAAAA=
-X-Change-ID: 20250608-fix-aud-hpd-bridge-97ec55341c4c
-To: Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Dmitry Baryshkov <lumag@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1696;
- i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=ZoAA3vuK/kol5O673dlsy5ItLmK0L4GXKNFdqazixd8=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoRbGlXnyYaa+wLYGYQBFyyj7+KhDRSOQ32gbL5
- 8GpmF0+75GJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaEWxpQAKCRCLPIo+Aiko
- 1baGB/0f3R9LVi0bPxXCWU4QLHL44VbMsPlfobciX7JknfLTghj3MojTN2qx3ag2X5awDTFx3Yp
- Gd38oHY2Tc3gd4mcgFbYB/0y4LOfk0p5QZ4R5rlFoU1mUIeT7ZArTrQ3S/9Sab94RX4l9Npxf6l
- GNFGVwV7aH5vOLqJ3N/bR88ToXAk3GQ/Xk2RYb6SdZYzpVujPY90nX916nX3ZcfCbHnoT735usd
- 25Yr6NxmxYSxHIHP7GwkOWyDziXGB0H1+DJDTSnOiHt8/xWGQ65Do+A6VzuNDs4FTiQLOvxRF8a
- V7fI1cHuIz8N9ze0X+PQpoSMuDvpUAwYrKwZ/QqnyQIEjJH1
-X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-ORIG-GUID: 1osPT_YNfKF0ozrqsxIc-0RiePScEKc1
-X-Proofpoint-GUID: 1osPT_YNfKF0ozrqsxIc-0RiePScEKc1
-X-Authority-Analysis: v=2.4 cv=AMUSjw+a c=1 sm=1 tr=0 ts=6845b1a7 cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=QisQagpBsXa4eD-aF94A:9 a=QEXdDO2ut3YA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA4MDEyNyBTYWx0ZWRfX/3gKUAmiTfZw
- rC76UZNqo6g2wmnwn/0sCd9IGIqWmiWmKGeDmXgczohUeK+YxzpfTKs2sgzqWSMu4XYaK9gRxzh
- 9emPWHtkLw+3gGhRztAtQJFEIokdQhszFdOuSKpYu52JddYwHE96L3Y5mPbc65iieWjp6gTG2cD
- iOchtEJqAGHg/2rrYJwqyDj5AlW2vout41W+ChVd8ExTr8C4xcbJVEK1LAFMrqNO65y8b+2740U
- KCt6srmpzFxR6MMuAGZlopSE95R7ABzsbY3+fPDW7kKIQbe0yA/p2K629JuAq03M7qSd9shKzhc
- tQhF6OPjQ4fxmfjPYf0Leni3RVwZI8D44ZXubEekvwFDbmCOk6EuZdW//MLmnH1hyvWcvOSoqRx
- Y3tx9NdDA1C7F1ymqlNiRjNrDO32BjZrcaIJwW9aNVeNuievUq812UIx+AnwQRjlnHnn2HXw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-08_02,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 malwarescore=0 spamscore=0 adultscore=0 impostorscore=0
- bulkscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0 priorityscore=1501
- suspectscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506080127
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:kiswLnRj5CoWTFnpEPm3rm6NLB5FuHqQxT331vr2xKRlOow2vlR
+ KVZDVH7L+9mptZQ5KKndTsFvClLQMNzD8/YR6UW0ekuoWWS8j6kXQIz0Li7zDwb4STYocco
+ jdoWqv5YvNEszgkWajsQW6kXC48Q64qdUIvhLP7RLcr4i+Ss9JBoilOI0ntEcO8Wc1cy0YF
+ nT7yF8OsSbpALL5LypNhw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:1aA72nA/ChA=;Shet2+Ozwo5ECxV4dwhkCwAuWC/
+ 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
+ qmYu1W8d9O1NV/qF
 
-Perform fix similar to the one in the commit 85e444a68126 ("drm/bridge:
-Fix assignment of the of_node of the parent to aux bridge").
+Am Sonntag, dem 08.06.2025 um 10:45 +0200 schrieb Bert Karwatzki:
+> Am Donnerstag, dem 05.06.2025 um 14:51 +0200 schrieb Sebastian Andrzej S=
+iewior:
+> > On 2025-06-05 08:48:38 [-0400], Steven Rostedt wrote:
+> > > On Thu,  5 Jun 2025 11:19:03 +0200
+> > > Bert Karwatzki <spasswolf@web.de> wrote:
+> > >=20
+> > > > This patch seems to create so much output that the orginal error m=
+essage and
+> > > > backtrace often get lost, so I needed several runs to get a meanin=
+gful message
+> > > > when running
+> > >=20
+> > > Are you familiar with preempt count tracing?
+> >=20
+> > I have an initial set of patches to tackle this problem, I'm going to
+> > send them after the merge window.
+> >=20
+> > Sebastian
+>=20
+> I've found the reason for the "mysterious" increase of preempt_count:
+>=20
+> [   70.821750] [   T2746] bpf_link_settle calling fd_install() preemt_co=
+unt =3D 0
+> [   70.821751] [   T2746] preempt_count_add 5898: preempt_count =3D 0x0 =
+counter =3D 0x1b232c
+> [   70.821752] [   T2746] preempt_count_add 5900: preempt_count =3D 0x1 =
+counter =3D 0x1b232d
+> [   70.821754] [   T2746] preempt_count_sub 5966: preempt_count =3D 0x1 =
+counter =3D 0x1b232e
+> [   70.821755] [   T2746] preempt_count_sub 5968: preempt_count =3D 0x0 =
+counter =3D 0x1b232f
+> [   70.821761] [   T2746] __bpf_trace_sys_enter 18: preempt_count =3D 0x=
+0
+> [   70.821762] [   T2746] __bpf_trace_sys_enter 18: preempt_count =3D 0x=
+1
+> [   70.821764] [   T2746] __bpf_trace_run: preempt_count =3D 1
+> [   70.821765] [   T2746] bpf_prog_run: preempt_count =3D 1
+> [   70.821766] [   T2746] __bpf_prog_run: preempt_count =3D 1
+>=20
+> It's caused by this macro from include/trace/bpf_probe.h (with my pr_err=
+()):
+>=20
+> #define __BPF_DECLARE_TRACE_SYSCALL(call, proto, args) \
+> static notrace void \
+> __bpf_trace_##call(void *__data, proto) \
+> { \
+>  might_fault(); \
+>  if (!strcmp(get_current()->comm, "test_progs")) \
+>  pr_err("%s %d: preempt_count =3D 0x%x", __func__, __LINE__, preempt_cou=
+nt());\
+>  preempt_disable_notrace(); \
+>  if (!strcmp(get_current()->comm, "test_progs")) \
+>  pr_err("%s %d: preempt_count =3D 0x%x", __func__, __LINE__, preempt_cou=
+nt());\
+>  CONCATENATE(bpf_trace_run, COUNT_ARGS(args))(__data, CAST_TO_U64(args))=
+; \
+>  preempt_enable_notrace(); \
+> }
+>=20
+> The preempt_{en,dis}able_notrace were introduced in
+> commit 4aadde89d81f ("tracing/bpf: disable preemption in syscall probe")
+> This commit is present in v6.14 and v6.15, but the bug already appears i=
+n
+> v6.12 so in that case preemption is disable somewhere else.=20
+>=20
+> Bert Karwatzki
 
-The assignment of the of_node to the aux HPD bridge needs to mark the
-of_node as reused, otherwise driver core will attempt to bind resources
-like pinctrl, which is going to fail as corresponding pins are already
-marked as used by the parent device.
-Fix that by using the device_set_of_node_from_dev() helper instead of
-assigning it directly.
+After reading this=C2=A0
+https://lore.kernel.org/bpf/CAADnVQJf535hwud5XtQKStOge9=3DpYVYWSiq_8Q2YAvN=
+5rba=3D=3DA@mail.gmail.com/
+I tried using migrate_{en,disable} like this (in v6.15)
 
-Fixes: e560518a6c2e ("drm/bridge: implement generic DP HPD bridge")
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
----
- drivers/gpu/drm/bridge/aux-hpd-bridge.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
+index 183fa2aa2935..49257cb90209 100644
+=2D-- a/include/trace/bpf_probe.h
++++ b/include/trace/bpf_probe.h
+@@ -58,9 +58,9 @@ static notrace void							\
+ __bpf_trace_##call(void *__data, proto)					\
+ {									\
+ 	might_fault();							\
+-	preempt_disable_notrace();					\
++	migrate_disable();					\
+ 	CONCATENATE(bpf_trace_run, COUNT_ARGS(args))(__data, CAST_TO_U64(args));=
+	\
+-	preempt_enable_notrace();					\
++	migrate_enable();					\
+ }
+=20
+ #undef DECLARE_EVENT_SYSCALL_CLASS
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 187dc37d61d4..ec0326405fc3 100644
+=2D-- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2350,7 +2350,7 @@ void __bpf_trace_run(struct bpf_raw_tp_link *link, u=
+64 *args)
+ 	struct bpf_run_ctx *old_run_ctx;
+ 	struct bpf_trace_run_ctx run_ctx;
+=20
+-	cant_sleep();
++	cant_migrate();
+ 	if (unlikely(this_cpu_inc_return(*(prog->active)) !=3D 1)) {
+ 		bpf_prog_inc_misses_counter(prog);
+ 		goto out;
+diff --git a/tools/testing/selftests/bpf/progs/dynptr_success.c b/tools/te=
+sting/selftests/bpf/progs/dynptr_success.c
+index e1fba28e4a86..7cfb9473a526 100644
+=2D-- a/tools/testing/selftests/bpf/progs/dynptr_success.c
++++ b/tools/testing/selftests/bpf/progs/dynptr_success.c
+@@ -7,6 +7,7 @@
+ #include <bpf/bpf_helpers.h>
+ #include <bpf/bpf_tracing.h>
+ #include "bpf_misc.h"
++#include "bpf_kfuncs.h"
+ #include "errno.h"
+=20
+ char _license[] SEC("license") =3D "GPL";
 
-diff --git a/drivers/gpu/drm/bridge/aux-hpd-bridge.c b/drivers/gpu/drm/bridge/aux-hpd-bridge.c
-index b3f588b71a7d7ad5c2ee7b07c39079bc5ba34cee..af6f79793407f400b57f945fc958d613155417ea 100644
---- a/drivers/gpu/drm/bridge/aux-hpd-bridge.c
-+++ b/drivers/gpu/drm/bridge/aux-hpd-bridge.c
-@@ -64,10 +64,11 @@ struct auxiliary_device *devm_drm_dp_hpd_bridge_alloc(struct device *parent, str
- 	adev->id = ret;
- 	adev->name = "dp_hpd_bridge";
- 	adev->dev.parent = parent;
--	adev->dev.of_node = of_node_get(parent->of_node);
- 	adev->dev.release = drm_aux_hpd_bridge_release;
- 	adev->dev.platform_data = of_node_get(np);
- 
-+	device_set_of_node_from_dev(&adev->dev, parent);
-+
- 	ret = auxiliary_device_init(adev);
- 	if (ret) {
- 		of_node_put(adev->dev.platform_data);
 
----
-base-commit: 4f27f06ec12190c7c62c722e99ab6243dea81a94
-change-id: 20250608-fix-aud-hpd-bridge-97ec55341c4c
+This fixes the warnings when running the bpf cgroup examples:
 
-Best regards,
--- 
-Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+./test_progs -a "cgrp_local_storage/cgrp1*"
 
+but I still get a warning from another example (I don't know which, yet):
+[ T4696] BUG: sleeping function called from invalid context at kernel/lock=
+ing/spinlock_rt.c:48
+[ T4696] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 4696, name=
+: test_progs
+[ T4696] preempt_count: 1, expected: 0
+[ T4696] RCU nest depth: 0, expected: 0
+[ T4696] 2 locks held by test_progs/4696:
+[ T4696]  #0: ffffffff91d30860 (rcu_read_lock_trace){....}-{0:0}, at: bpf_=
+prog_test_run_syscall+0xbb/0x250
+[ T4696]  #1: ffff9ca88e6741c8 ((&c->lock)){+.+.}-{3:3}, at: ___slab_alloc=
++0x68/0xde0
+[ T4696] irq event stamp: 100
+[ T4696] hardirqs last  enabled at (99): [<ffffffff91199098>] do_syscall_6=
+4+0x38/0xfa0
+[ T4696] hardirqs last disabled at (100): [<ffffffff907bc57b>] __bpf_async=
+_init+0xdb/0x310
+[ T4696] softirqs last  enabled at (0): [<ffffffff9057b694>] copy_process+=
+0xc84/0x3840
+[ T4696] softirqs last disabled at (0): [<0000000000000000>] 0x0
+[ T4696] CPU: 1 UID: 0 PID: 4696 Comm: test_progs Tainted: G           O  =
+      6.15.0-bpf-00003-g5197b534e6ad #4 PREEMPT_{RT,(full)}=20
+[ T4696] Tainted: [O]=3DOOT_MODULE
+[ T4696] Hardware name: Micro-Star International Co., Ltd. Alpha 15 B5EEK/=
+MS-158L, BIOS E158LAMS.10F 11/11/2024
+[ T4696] Call Trace:
+[ T4696]  <TASK>
+[ T4696]  dump_stack_lvl+0x6d/0xb0
+[ T4696]  __might_resched.cold+0xe1/0xf3
+[ T4696]  rt_spin_lock+0x5f/0x190
+[ T4696]  ? ___slab_alloc+0x68/0xde0
+[ T4696]  ? srso_alias_return_thunk+0x5/0xfbef5
+[ T4696]  ___slab_alloc+0x68/0xde0
+[ T4696]  ? find_held_lock+0x2b/0x80
+[ T4696]  ? try_to_wake_up+0x47b/0xbb0
+[ T4696]  ? srso_alias_return_thunk+0x5/0xfbef5
+[ T4696]  ? bpf_map_kmalloc_node+0x72/0x220
+[ T4696]  ? srso_alias_return_thunk+0x5/0xfbef5
+[ T4696]  ? _raw_spin_unlock_irqrestore+0x40/0x80
+[ T4696]  ? srso_alias_return_thunk+0x5/0xfbef5
+[ T4696]  ? try_to_wake_up+0x47b/0xbb0
+[ T4696]  ? bpf_map_kmalloc_node+0x72/0x220
+[ T4696]  __kmalloc_node_noprof+0xee/0x490
+[ T4696]  bpf_map_kmalloc_node+0x72/0x220
+[ T4696]  __bpf_async_init+0x107/0x310
+[ T4696]  bpf_timer_init+0x33/0x40
+[ T4696]  bpf_prog_7e15f1bc7d1d26d0_start_cb+0x5d/0x91
+[ T4696]  bpf_prog_d85f43676fabf521_start_timer+0x65/0x8a
+[ T4696]  bpf_prog_test_run_syscall+0x103/0x250
+[ T4696]  ? fput+0x3f/0x90
+[ T4696]  __sys_bpf+0xd33/0x26d0
+[ T4696]  __x64_sys_bpf+0x21/0x30
+[ T4696]  do_syscall_64+0x72/0xfa0
+[ T4696]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[ T4696] RIP: 0033:0x7f6e173fa779
+[ T4696] Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8=
+ 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d=
+ 01 f0 ff ff
+73 01 c3 48 8b 0d 4f 86 0d 00 f7 d8 64 89 01 48
+[ T4696] RSP: 002b:00007f6e0f95a878 EFLAGS: 00000202 ORIG_RAX: 00000000000=
+00141
+[ T4696] RAX: ffffffffffffffda RBX: 00007f6e0f95bcdc RCX: 00007f6e173fa779
+[ T4696] RDX: 0000000000000050 RSI: 00007f6e0f95a8b0 RDI: 000000000000000a
+[ T4696] RBP: 00007f6e0f95a890 R08: 0000000000000003 R09: 00007f6e0f95a8b0
+[ T4696] R10: 00007ffcf6d23f80 R11: 0000000000000202 R12: 0000000000000020
+[ T4696] R13: 000000000000005f R14: 00007ffcf6d23d70 R15: 00007f6e0f15b000
+[ T4696]  </TASK>
+
+Soon after that (1-2 min) while still running the bpf test_progs I got a k=
+ernel panic
+(flashing capslock and lockup) and needed to reboot.
+
+Bert Karwatzki
