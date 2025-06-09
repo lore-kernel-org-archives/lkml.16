@@ -1,116 +1,297 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857BD1FF1B5
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 15:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E9D78F4C
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 15:15:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749482005; cv=none; b=O1ezegGm8OHfIL+cJ05FFvAvUHJf3mjfyTWYgIBd20SegQdWKimEQ9iaCaseTOTW2K/kJoJbGE/Casnpe9txuXDwQ4sk+pmpw8/8WcVvsXm9OA8c9XFw6vBqbJjXdtDGhNlhNjYVlzzp4E5wnWOvuat+OGaU1jmQkfnO0yZNK6E=
+	t=1749482152; cv=none; b=avzowqs8nDm3chTFYxrtxkq6BseRNZDFQ+o0zeLo6eLXOOSlJSqadyyIEJvxWQLttf0+QhUNpSMOEC3bogNHqS5j75DRCmOB8+iyDQOK04ay8So5/vAqf8H2UE2iI9YvJjG3P7dDIPLxclZlnPkJV65PnBmp3vxa8nMiiRfw1O4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749482005; c=relaxed/simple;
-	bh=5YqNGf/cGlymW3XgUoEw7B3PohtEOnJMscJX1o7OaT8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Np3ejNKlLrmlGEReFq1E+8LvehzumOjelRdJfbsmfj9DxpmVgf/wxaZT1KoaBsX3BeCWEtT8Bdjq6kOZ+ZzTw7hiT42c4Xa6K0wQuN7PNLS+Ij0pCZn+S37HtTFRv3zTzUw8iDu1eA/OffhPhrujOXTPMtfGhbSKDfJeb4S8n9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=NjN6NKk9; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1749482152; c=relaxed/simple;
+	bh=/Ev6hZ23/AKmJ6YEb5MBZgqxtEb29qqJwWBRokt5q2c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hYte6HV3gwn9iNHTZbTr84+LHLnT0d7CTa87In0ABP3+3+Kw9wCyCip0YFVmDXLrpYNHqr05JfvmOB6Iy6Cfl/1WtSHQqApP0hLGXlnPCW3ydxEPAiv2ZtkH8ouBOcVHloSRzRDEW77wYvM4L5Jk5oUa2nZQEGGjuiDKJ77mlq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Lrj9f/w8; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="NjN6NKk9"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a35c894313so3973717f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 08:13:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749482002; x=1750086802; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=115U0atOdCsNHTutWzQlIOaInHOFsxVptLCsxbc7wOA=;
-        b=NjN6NKk94cDeEa3LBQKKVEEXGuCOpWa0T27BnTfl6+w3dN8OBcNx2fFey9PULuiZwx
-         tSCb3iMt2VT5HD4kKrYSR2vRYKKocG5lD2nsCDiqJpSN+fy3DGw6O/PnsmCkKod7KaO5
-         AJKwmoK6nBzAQxSqvNjNdN9o/Ahd1Q1CHLhJXInLWnlkSBQ9Lc+UjHOikSyhaIureGyG
-         Od/54TzapP6Wo/Wt+lgzYhMB0XRb1NTyR2s2VCU8dnAYB6XqKrbFHNHRjKdYsu7obzgn
-         J4ELBKwd890vI1/xXU2UuzkhonL+IGEbYelK3EGPjz9i9vWZkO4aHw5/EmW9r+z0Zo5X
-         scGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749482002; x=1750086802;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=115U0atOdCsNHTutWzQlIOaInHOFsxVptLCsxbc7wOA=;
-        b=twM+TkQNNuxMP9ok6nH5OZ1U03FZHo2aVmI/ZqPXVbgKbhIhSmVeI7edSN/pWwdCJJ
-         pCiisJY4GSmcySDrnA/cIZr2khc9J4J+iQ2ws1Q+OwgMcUjyzvawptxJ2DYmhzXpc17w
-         6Y0g6CNskw/p3S08NnVwbwh4G9f0OH0rz7DxouOPQJrx78bxhe6gyY8vcLc/nnPeYtew
-         N2qi8qb9a6xJrLh7250AlwaA/cJlecXjMWjqJG82Zaq1+8IhmcE3v4aOc22kyi3TR9eJ
-         xgh2EQJJoyuAds3nPovdLhRBALqYTJs05XUeiIGkrkLlSNr84hmIWF/I06O9S23bRait
-         0t2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU1VvbpYJqtUfB4S7Q33huqukC4x7xj3MLHXo/pHDNJL6/f7izW5/ortutX6hgA1hnOgG0ghPyMcD+33sg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzN/emHmo9+V0Hs29R3W0o5apqQsO1RBZZCOhJwwuzk8Xd7okdF
-	tbw9JQ6e68YdNITu3molkGybZpbKeftlUQlfR8HC3r+hIxu0HFIF4bdWbe2c6QVrcBA=
-X-Gm-Gg: ASbGncsDNwVtaaDP/0QDyw7ntOzbv63eOYKAfEa2K0ULUd32sX7zCfACwlFhMdcpipc
-	vmBLWife7+ueuYllT8rVCa0x+wE/QFeONL1edO7/BlKBea+ZjJaHCYIfsTZbJxFjGe0jFLOi1lg
-	TmdYXMQ7jILTGACFBcygJDp99MoDMhpDprvLeZae3GMSVXKvnajfd3/p3J9Uu1KbgNFxHo/y+Sa
-	n3hwU8mQraudqMS5YM8NtCSSdeOtsoaAIZLQ898lIGaOevx3ZEq5RkKHffWSjF2yfVS/98vl9fz
-	S9ZwIv+a1I3fM67FuSVVjpbHdnuYMIvq8fJ3VS/TgSdKBugFc+LR51jIdU9pMZAS
-X-Google-Smtp-Source: AGHT+IEFprjPP+DiCCV17LSIzeABJVh1gE0I30CjfTegeTleM6Q9xGeiwJ5QQBZWcD4HJvcatAT/OA==
-X-Received: by 2002:a05:6000:310e:b0:3a4:e480:b5df with SMTP id ffacd0b85a97d-3a531cdcf1bmr11774546f8f.44.1749482001785;
-        Mon, 09 Jun 2025 08:13:21 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0c5f73sm5804250b3a.126.2025.06.09.08.13.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 08:13:21 -0700 (PDT)
-Date: Mon, 9 Jun 2025 17:12:57 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Michael Cobb <mcobb@thegoodpenguin.co.uk>, rostedt@goodmis.org,
-	senozhatsky@chromium.org, linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] printk: Allow to use the printk kthread immediately even
- for 1st nbcon
-Message-ID: <aEb5-fzIPobOEfHW@pathway.suse.cz>
-References: <20250604142045.253301-1-pmladek@suse.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Lrj9f/w8"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749482147;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=gp8VaSlJtMCxI9ONz+kLpmKgpOC3P8CeRW5yzkc1cN0=;
+	b=Lrj9f/w8Kn7s+WkeEJabg/0j0f9z/5/dedpaolc7ndkhbTAU+ws3UHawIJmjDlUcJWX+Rb
+	8ua+f0AsdJlWlgdVsgv9KjqQt6AaBMJtWWgWFUVdWsQ4jTMGvBP0eeVXV6R+/wUYotBn50
+	ygP2kBnFe/XmnK0R/8EGWrnxmP4Tk6o=
+From: Dawei Li <dawei.li@linux.dev>
+To: andersson@kernel.org,
+	mathieu.poirier@linaro.org
+Cc: linux-remoteproc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dawei.li@linux.dev,
+	set_pte_at@outlook.com
+Subject: [PATCH v4 0/3] rpmsg: Introduce RPMSG_CREATE_EPT_FD_IOCTL uAPI
+Date: Mon,  9 Jun 2025 23:15:28 +0800
+Message-Id: <20250609151531.22621-1-dawei.li@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250604142045.253301-1-pmladek@suse.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed 2025-06-04 16:20:45, Petr Mladek wrote:
-> The kthreads for nbcon consoles are created by nbcon_alloc() at
-> the beginning of the console registration. But it currently works
-> only for the 2nd or later nbcon console because the code checks
-> @printk_kthreads_running.
-> 
-> The kthread for the 1st registered nbcon console is created at the very
-> end of register_console() by printk_kthreads_check_locked(). As a result,
-> the entire log is replayed synchronously when the "enabled" message
-> gets printed. It might block the boot for a long time with a slow serial
-> console.
-> 
-> Prevent the synchronous flush by creating the kthread even for the 1st
-> nbcon console when it is safe (kthreads ready and no boot consoles).
-> 
-> Also inform printk() to use the kthread by setting
-> @printk_kthreads_running. Note that the kthreads already must be
-> running when it is safe and this is not the 1st nbcon console.
-> 
-> Symmetrically, clear @printk_kthreads_running when the last nbcon
-> console was unregistered by nbcon_free(). This requires updating
-> @have_nbcon_console before nbcon_free() gets called.
-> 
-> Note that there is _no_ problem when the 1st nbcon console replaces boot
-> consoles. In this case, the kthread will be started at the end
-> of registration after the boot consoles are removed. But the console
-> does not reply the entire log buffer in this case. Note that
-> the flag CON_PRINTBUFFER is always cleared when the boot consoles are
-> removed and vice versa.
-> 
-> Closes: https://lore.kernel.org/r/20250514173514.2117832-1-mcobb@thegoodpenguin.co.uk
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
+Hi,
 
-JFYI, the patch has been committed into printk/linux.git,
-branch rework/optimizations.
+This is V4 of series which introduce new uAPI(RPMSG_CREATE_EPT_FD_IOCTL)
+for rpmsg subsystem.
 
-Best Regards,
-Petr
+Current uAPI implementation for rpmsg ctrl & char device manipulation is
+abstracted in procedures below:
+- fd = open("/dev/rpmsg_ctrlX")
+- ioctl(fd, RPMSG_CREATE_EPT_IOCTL, &info); /dev/rpmsgY devnode is
+  generated.
+- fd_ep = open("/dev/rpmsgY", O_RDWR) 
+- operations on fd_ep(write, read, poll ioctl)
+- ioctl(fd_ep, RPMSG_DESTROY_EPT_IOCTL)
+- close(fd_ep)
+- close(fd)
+
+This /dev/rpmsgY abstraction is less favorable for:
+- Performance issue: It's time consuming for some operations are
+invovled:
+  - Device node creation.
+    Depends on specific config, especially CONFIG_DEVTMPFS, the overall
+    overhead is based on coordination between DEVTMPFS and userspace
+    tools such as udev and mdev.
+
+  - Extra kernel-space switch cost.
+
+  - Other major costs brought by heavy-weight logic like device_add().
+
+- /dev/rpmsgY node can be opened only once. It doesn't make much sense
+    that a dynamically created device node can be opened only once.
+
+- For some container application such as docker, a client can't access
+  host's dev unless specified explicitly. But in case of /dev/rpmsgY, which
+  is generated dynamically and whose existence is unknown for clients in
+  advance, this uAPI based on device node doesn't fit well.
+
+An anonymous inode based approach is introduced to address the issues above.
+Rather than generating device node and opening it, rpmsg code just creates
+an anonymous inode representing eptdev and return the fd to userspace.
+
+# Performance demo
+
+An simple C application is tested to verify performance of new uAPI.
+
+$ cat test.c
+
+#include <linux/rpmsg.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/ioctl.h>
+#include <fcntl.h>
+#include <string.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <sys/time.h>
+
+#define N (1 << 20)
+
+int main(int argc, char *argv[])
+{
+	int ret, fd, ep_fd, loop;
+	struct rpmsg_endpoint_info info; 
+	struct rpmsg_endpoint_fd_info fd_info; 
+	struct timeval start, end;
+	int i = 0;
+	double t1, t2;
+
+	fd = -1;
+	ep_fd = -1;
+	loop = N;
+
+	if (argc == 1) {
+		loop = N;
+	} else if (argc > 1) {
+		loop = atoi(argv[1]);
+	}
+
+	printf("loop[%d]\n", loop);
+
+	strcpy(info.name, "epx");
+	info.src = -1;
+	info.dst = -1;
+
+	strcpy(fd_info.name, "epx");
+	fd_info.src = -1;
+	fd_info.dst = -1;
+	fd_info.fd = -1;
+
+	while (fd < 0) {
+		fd = open("/dev/rpmsg_ctrl0", O_RDWR);
+		if (fd < 0) {
+			printf("open rpmsg_ctrl0 failed, fd[%d]\n", fd);
+		}
+	}
+
+	gettimeofday(&start, NULL);
+
+	while (loop--) {
+		ret = ioctl(fd, RPMSG_CREATE_EPT_IOCTL, &info);
+		if (ret < 0) {
+			printf("ioctl[RPMSG_CREATE_EPT_IOCTL] failed, ret[%d]\n", ret);
+		}
+
+		ep_fd = -1;
+		i = 0;
+
+		while (ep_fd < 0) {
+			ep_fd = open("/dev/rpmsg0", O_RDWR);
+			if (ep_fd < 0) {
+				i++;
+				printf("open rpmsg0 failed, epfd[%d]\n", ep_fd);
+			}
+		}
+
+		//printf("Number of open failed[%d]\n", i);
+
+		ret = ioctl(ep_fd, RPMSG_DESTROY_EPT_IOCTL, &info);
+		if (ret < 0) {
+			printf("old ioctl[RPMSG_DESTROY_EPT_IOCTL] failed, ret[%d], errno[%d]\n", ret, errno);
+		}
+
+		close(ep_fd);
+	}
+	
+	gettimeofday(&end, NULL);
+
+	printf("time for old way: [%ld] us\n", 1000000 * (end.tv_sec - start.tv_sec) + end.tv_usec - start.tv_usec);
+	t1 = 1000000 * (end.tv_sec - start.tv_sec) + end.tv_usec - start.tv_usec;
+
+	if (argc == 1) {
+		loop = N;
+	} else if (argc > 1) {
+		loop = atoi(argv[1]);
+	}
+
+	printf("loop[%d]\n", loop);
+
+	gettimeofday(&start, NULL);
+
+	while (loop--) {
+		fd_info.fd = -1;
+		fd_info.flags = O_RDWR | O_CLOEXEC | O_NONBLOCK;
+		ret = ioctl(fd, RPMSG_CREATE_EPT_FD_IOCTL, &fd_info);
+		if (ret < 0 || fd_info.fd < 0) {
+			printf("ioctl[RPMSG_CREATE_EPT_FD_IOCTL] failed, ret[%d]\n", ret);
+		}
+
+		ret = ioctl(fd_info.fd, RPMSG_DESTROY_EPT_IOCTL, &info);
+		if (ret < 0) {
+			printf("new ioctl[RPMSG_DESTROY_EPT_IOCTL] failed, ret[%d]\n", ret);
+		}
+
+		close(fd_info.fd);
+	}
+	
+	gettimeofday(&end, NULL);
+
+	printf("time for new way: [%ld] us\n", 1000000 * (end.tv_sec - start.tv_sec) + end.tv_usec - start.tv_usec);
+	t2 = 1000000 * (end.tv_sec - start.tv_sec) + end.tv_usec - start.tv_usec;
+
+	printf("t1(old) / t2(new) = %f\n", t1 / t2);
+
+	close(fd);
+}
+
+# Performance benchmark
+
+- Legacy means benchmark based on old uAPI
+- New means benchmark based on new uAPI(the one this series introduce)
+- Time are in units of us(10^-6 s)
+
+Test	loops	Total time(legacy)	Total time(new)	legacy/new	
+1	1000	218472			2445		89.354601
+2	1000	223435			2419		92.366680
+3	1000	224263			2487		90.174105
+4	1000	218982			2465		88.836511
+5	1000	209640			2574		81.445221
+6	1000	203816			2509		81.233958
+7	1000	203266			2458		82.695688
+8	1000	222842			2835		78.603880
+9	1000	209590			2719		77.083487
+10	1000	194558			2621		74.230446
+
+11	10000	2129021			31239		68.152662
+12	10000	2081722			27997		74.355181
+13	10000	2077086			31724		65.473648
+14	10000	2073547			28290		73.296112
+15	10000	2055153			26957		76.238194
+16	10000	2022767			29809		67.857593
+17	10000	2054562			25884		79.375753
+18	10000	2036320			28511		71.422258
+19	10000	2062547			28725		71.803203
+20	10000	2110498			26740		78.926627
+
+21	100000	20802565		260392		79.889417
+22	100000	20373178		259836		78.407834
+23	100000	20361077		256404		79.410138
+24	100000	20207000		256759		78.700260
+25	100000	20220358		268118		75.415892
+26	100000	20711593		259130		79.927423
+27	100000	20301064		258545		78.520428
+28	100000	20393203		256070		79.639173
+29	100000	20162830		259942		77.566649
+30	100000	20471632		259291		78.952343
+
+# Changelog:
+
+Changes in v4:
+- Build warning of copy_to_user (Dan).
+- ioctl() branches reorder (Beleswar).
+- Remove local variable fd and pass &ept_fd_info.fd to rpmsg_anonymous_eptdev_create().
+- Link to v3: https://lore.kernel.org/all/20250519150823.62350-1-dawei.li@linux.dev/ 
+
+Changes in v3:
+- s/anon/anonymous (Mathieu)
+
+- API naming adjustment (Mathieu)
+  - __rpmsg_chrdev_eptdev_alloc ->  rpmsg_eptdev_alloc
+  - __rpmsg_chrdev_eptdev_add ->  rpmsg_eptdev_add
+
+- Add parameter 'flags' to uAPI so user can specify file flags
+  explicitly on creating anonymous inode.
+- Link to v2: https://lore.kernel.org/all/20250509155927.109258-1-dawei.li@linux.dev/ 
+
+Changes in v2:
+- Fix compilation error for !CONFIG_RPMSG_CHAR config(Test robot).
+- Link to v1: https://lore.kernel.org/all/20250507141712.4276-1-dawei.li@linux.dev/
+
+Dawei Li (3):
+  rpmsg: char: Reuse eptdev logic for anonymous device
+  rpmsg: char: Implement eptdev based on anonymous inode
+  rpmsg: ctrl: Introduce RPMSG_CREATE_EPT_FD_IOCTL uAPI
+
+ drivers/rpmsg/rpmsg_char.c | 129 ++++++++++++++++++++++++++++++-------
+ drivers/rpmsg/rpmsg_char.h |  23 +++++++
+ drivers/rpmsg/rpmsg_ctrl.c |  35 ++++++++--
+ include/uapi/linux/rpmsg.h |  27 +++++++-
+ 4 files changed, 182 insertions(+), 32 deletions(-)
+
+---
+base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
+
+Thanks,
+
+	Dawei
+-- 
+2.25.1
+
