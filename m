@@ -1,137 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633BD2686B1
-	for <linux-kernel@vger.kernel.org>; Sun,  8 Jun 2025 23:59:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A70FD528;
+	Mon,  9 Jun 2025 00:00:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749427160; cv=none; b=fkRCVDhsUIhmJR58xT++EOuaINQktNEp68WV8i99rsmzUlLBzNdulY+CB1GdjHYzIdT2W9a4ZQDQ4E0jwiuozNpe4eNPJC9+7p+B0WXo5BiZ1+V7VusNtMBzuSBPESurFkrkachtVM8d4bXkeHGvfn7Rzf1VedZ0toRDcblP2z0=
+	t=1749427252; cv=none; b=GuYme31+5lon76fbQjTCSFYt4pWmeMaiTLImDZIu32hxjRAwLSUIhvVpn0Pd5oimXNOYQJv6JvR/qFe416ewF968Yb9a6HoFgo3nzR9WOsmiR3ZTJoa7wItkQBC7RrjOOqi+fEGdIVB9AD/VixRA21I0dhWLL5VmuwAzQgI2dbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749427160; c=relaxed/simple;
-	bh=pophgDGQcTCoOGYTvZJPnSg+Dj9iwuitVrCurYQEid8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=mlptrk6fAPuUkqeeKLkQRUkqfEETLoVdE4zO5EBVx1uD2KaT7GTw46Sn4/10XH2Ht6BnqMGbmZgG/AIUxXYImYT9oGbyO1N2w8y2iQAnhfaCHB3IbFx5FGSccR70DUJiHkH+BcKK2HPBz7Cg+yTeEyPTv/W+JKda+nVn4KMG+sU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UMacrvot; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749427252; c=relaxed/simple;
+	bh=uuM5izvj/XnRQdh/BhX6Ts2GEjuL9/AlU1DPrp2Tw8c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OSLRFTHjs6TiYLi8tH7qqWIWQLb5FaaxKZy4Dfkl8nKMl8oIZgw5bPSw9Pbkp4Z1/a9yBc9kZwnu5brZ9j6JUAhimYudgHE3OFDQ4/9SaxBEABS5gutOkgdGAcWdyU5bWtaxKBAQIPjBbDd5uoee6HR8ypBm7rLoV0PnZb6PyL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jOHeHm6d; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UMacrvot"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749427159; x=1780963159;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=pophgDGQcTCoOGYTvZJPnSg+Dj9iwuitVrCurYQEid8=;
-  b=UMacrvotCJNdxdQ+8NASllfRbTDEUQ3jDuUbjIK4F99U8YBz0p+BIrBc
-   GEN4KuqLNcA/w+GD+ANySE8jNcpFra0io/TQSHv1VpJJqUSMNvxDY5q+u
-   WrHtat/BJ7MFfavzI9szGmZ9XkAhMH4C9G5KiLaTZO2ZiEO3q4iUWGK7V
-   EMT7M2nLtq32XG8g2vOgHP6eOAUFLp3oWd5JAAewkD6oyujVpciSB0L/x
-   IaqTQbE/C9oUFDSuQ9ZAa9iDyMKpry+t0Fx4GkgxSk6wZTsbJ/l8IHb0E
-   hPYbAm7LWR37AU/ZJo/ZOLdcrYzVYO0IzozE+b5yOziqHZ8f6IgFqGU3r
-   g==;
-X-CSE-ConnectionGUID: 9DL3gd4ZTQmEzXEGZW+fVg==
-X-CSE-MsgGUID: A5RqeSh6QEiWKTJMAMOKkA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="62114523"
-X-IronPort-AV: E=Sophos;i="6.16,221,1744095600"; 
-   d="scan'208";a="62114523"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2025 16:59:17 -0700
-X-CSE-ConnectionGUID: p4rjQpA4TimTuzCdtaOfqA==
-X-CSE-MsgGUID: 93sC67mCSYK3TZeNpQPr5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,221,1744095600"; 
-   d="scan'208";a="146279352"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 08 Jun 2025 16:59:16 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uOPuz-0006e5-35;
-	Sun, 08 Jun 2025 23:59:13 +0000
-Date: Mon, 9 Jun 2025 07:58:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: arch/mips/txx9/generic/setup.c:837:32: error: assignment to 'ssize_t
- (*)(struct file *, struct kobject *, const struct bin_attribute *, char *,
- loff_t,  size_t)' {aka 'int (*)(struct file *, struct kobject *, const
- struct bin_attribute *, char *, long lon...
-Message-ID: <202506090720.YHNaPWqT-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jOHeHm6d"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=Lg7kReYkoTtDRNxZFaKTUsqHlGGWFcRB0L18kpt6j+U=; b=jOHeHm6dP0E3AMD0orVC5fLvWA
+	3++rM0WLmpqjX7PtxuntXcRvkEjTEB+5gFdJIqBiGUYvCRrrNHC9361QbJ58jxPGL8pzCqKkNuZio
+	pXY4KOV1hKTxZAnmApRmEJjNGlNit4riOegG3fAHzKxRTjTM4ZfjsFl7bF9X9GwDWUg4yMudEtobI
+	vt0oQfTfWOMV0z3sies9a/C9GRKb4DfL3yItcqyOpwDh15Tythqq+evNbgXzb/eto4bjRplJ6lBg9
+	ZxRBrHI5x92jH9Zdgw32pC9ux2P9rxUbLPFyHreTr1li2S1BheeZmMeUcjP2FwvmhCko8TSEDeXII
+	L+4u5NUQ==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uOPwU-00000007edu-2HIK;
+	Mon, 09 Jun 2025 00:00:47 +0000
+Message-ID: <f154dfd9-006a-43e0-9127-9f7f2e377027@infradead.org>
+Date: Sun, 8 Jun 2025 17:00:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Thomas,
-
-FYI, the error/warning still remains.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-commit: 97d06802d10a2827ef46fd31789a26117ce7f3d9 sysfs: constify bin_attribute argument of bin_attribute::read/write()
-date:   8 weeks ago
-config: mips-rbtx49xx_defconfig (https://download.01.org/0day-ci/archive/20250609/202506090720.YHNaPWqT-lkp@intel.com/config)
-compiler: mips-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250609/202506090720.YHNaPWqT-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506090720.YHNaPWqT-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   arch/mips/txx9/generic/setup.c: In function 'txx9_sramc_init':
->> arch/mips/txx9/generic/setup.c:837:32: error: assignment to 'ssize_t (*)(struct file *, struct kobject *, const struct bin_attribute *, char *, loff_t,  size_t)' {aka 'int (*)(struct file *, struct kobject *, const struct bin_attribute *, char *, long long int,  unsigned int)'} from incompatible pointer type 'ssize_t (*)(struct file *, struct kobject *, struct bin_attribute *, char *, loff_t,  size_t)' {aka 'int (*)(struct file *, struct kobject *, struct bin_attribute *, char *, long long int,  unsigned int)'} [-Wincompatible-pointer-types]
-     837 |         dev->bindata_attr.read = txx9_sram_read;
-         |                                ^
-   arch/mips/txx9/generic/setup.c:776:16: note: 'txx9_sram_read' declared here
-     776 | static ssize_t txx9_sram_read(struct file *filp, struct kobject *kobj,
-         |                ^~~~~~~~~~~~~~
-   arch/mips/txx9/generic/setup.c:838:33: error: assignment to 'ssize_t (*)(struct file *, struct kobject *, const struct bin_attribute *, char *, loff_t,  size_t)' {aka 'int (*)(struct file *, struct kobject *, const struct bin_attribute *, char *, long long int,  unsigned int)'} from incompatible pointer type 'ssize_t (*)(struct file *, struct kobject *, struct bin_attribute *, char *, loff_t,  size_t)' {aka 'int (*)(struct file *, struct kobject *, struct bin_attribute *, char *, long long int,  unsigned int)'} [-Wincompatible-pointer-types]
-     838 |         dev->bindata_attr.write = txx9_sram_write;
-         |                                 ^
-   arch/mips/txx9/generic/setup.c:791:16: note: 'txx9_sram_write' declared here
-     791 | static ssize_t txx9_sram_write(struct file *filp, struct kobject *kobj,
-         |                ^~~~~~~~~~~~~~~
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] usb: core: Remove unused usb_unlink_anchored_urbs
+To: linux@treblig.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org
+Cc: corbet@lwn.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250608235617.200731-1-linux@treblig.org>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250608235617.200731-1-linux@treblig.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-vim +837 arch/mips/txx9/generic/setup.c
 
-1610c8a8f2d3eb Levente Kurusa 2013-12-19  813  
-c3b28ae260d99a Atsushi Nemoto 2009-05-25  814  void __init txx9_sramc_init(struct resource *r)
-c3b28ae260d99a Atsushi Nemoto 2009-05-25  815  {
-269a3eb1bf10a0 Kay Sievers    2011-12-21  816  	struct txx9_sramc_dev *dev;
-c3b28ae260d99a Atsushi Nemoto 2009-05-25  817  	size_t size;
-c3b28ae260d99a Atsushi Nemoto 2009-05-25  818  	int err;
-c3b28ae260d99a Atsushi Nemoto 2009-05-25  819  
-269a3eb1bf10a0 Kay Sievers    2011-12-21  820  	err = subsys_system_register(&txx9_sramc_subsys, NULL);
-269a3eb1bf10a0 Kay Sievers    2011-12-21  821  	if (err)
-c3b28ae260d99a Atsushi Nemoto 2009-05-25  822  		return;
-c3b28ae260d99a Atsushi Nemoto 2009-05-25  823  	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
-c3b28ae260d99a Atsushi Nemoto 2009-05-25  824  	if (!dev)
-c3b28ae260d99a Atsushi Nemoto 2009-05-25  825  		return;
-c3b28ae260d99a Atsushi Nemoto 2009-05-25  826  	size = resource_size(r);
-c3b28ae260d99a Atsushi Nemoto 2009-05-25  827  	dev->base = ioremap(r->start, size);
-1610c8a8f2d3eb Levente Kurusa 2013-12-19  828  	if (!dev->base) {
-1610c8a8f2d3eb Levente Kurusa 2013-12-19  829  		kfree(dev);
-1610c8a8f2d3eb Levente Kurusa 2013-12-19  830  		return;
-1610c8a8f2d3eb Levente Kurusa 2013-12-19  831  	}
-1610c8a8f2d3eb Levente Kurusa 2013-12-19  832  	dev->dev.release = &txx9_device_release;
-269a3eb1bf10a0 Kay Sievers    2011-12-21  833  	dev->dev.bus = &txx9_sramc_subsys;
-f937331b3f92cb Wolfram Sang   2010-03-15  834  	sysfs_bin_attr_init(&dev->bindata_attr);
-c3b28ae260d99a Atsushi Nemoto 2009-05-25  835  	dev->bindata_attr.attr.name = "bindata";
-c3b28ae260d99a Atsushi Nemoto 2009-05-25  836  	dev->bindata_attr.attr.mode = S_IRUSR | S_IWUSR;
-c3b28ae260d99a Atsushi Nemoto 2009-05-25 @837  	dev->bindata_attr.read = txx9_sram_read;
+On 6/8/25 4:56 PM, linux@treblig.org wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> 
+> usb_unlink_anchored_urbs() has been unused since it's last use was
 
-:::::: The code at line 837 was first introduced by commit
-:::::: c3b28ae260d99a5364a31210a36a3246bd9647f7 MIPS: TXx9: Add SRAMC support
+s/it's/its/ (same in previous patch's description)
 
-:::::: TO: Atsushi Nemoto <anemo@mba.ocn.ne.jp>
-:::::: CC: Ralf Baechle <ralf@linux-mips.org>
+> removed in 2009 by
+> commit 9b9c5aaeedfd ("ar9170: xmit code revamp")
+> 
+> Remove it.
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+
+Thanks.
+
+> ---
+>  Documentation/driver-api/usb/anchors.rst | 11 ---------
+>  drivers/usb/core/urb.c                   | 29 +++---------------------
+>  include/linux/usb.h                      |  1 -
+>  3 files changed, 3 insertions(+), 38 deletions(-)
+> 
+> diff --git a/Documentation/driver-api/usb/anchors.rst b/Documentation/driver-api/usb/anchors.rst
+> index 4b248e691bd6..5a93d171e76c 100644
+> --- a/Documentation/driver-api/usb/anchors.rst
+> +++ b/Documentation/driver-api/usb/anchors.rst
+> @@ -45,17 +45,6 @@ This function kills all URBs associated with an anchor. The URBs
+>  are called in the reverse temporal order they were submitted.
+>  This way no data can be reordered.
+>  
+> -:c:func:`usb_unlink_anchored_urbs`
+> -----------------------------------
+> -
+> -
+> -This function unlinks all URBs associated with an anchor. The URBs
+> -are processed in the reverse temporal order they were submitted.
+> -This is similar to :c:func:`usb_kill_anchored_urbs`, but it will not sleep.
+> -Therefore no guarantee is made that the URBs have been unlinked when
+> -the call returns. They may be unlinked later but will be unlinked in
+> -finite time.
+> -
+>  :c:func:`usb_scuttle_anchored_urbs`
+>  -----------------------------------
+>  
+> diff --git a/drivers/usb/core/urb.c b/drivers/usb/core/urb.c
+> index 5e52a35486af..0e58a8531d6e 100644
+> --- a/drivers/usb/core/urb.c
+> +++ b/drivers/usb/core/urb.c
+> @@ -597,10 +597,9 @@ EXPORT_SYMBOL_GPL(usb_submit_urb);
+>   * code).
+>   *
+>   * Drivers should not call this routine or related routines, such as
+> - * usb_kill_urb() or usb_unlink_anchored_urbs(), after their disconnect
+> - * method has returned.  The disconnect function should synchronize with
+> - * a driver's I/O routines to insure that all URB-related activity has
+> - * completed before it returns.
+> + * usb_kill_urb(), after their disconnect method has returned. The
+> + * disconnect function should synchronize with a driver's I/O routines
+> + * to insure that all URB-related activity has completed before it returns.
+>   *
+>   * This request is asynchronous, however the HCD might call the ->complete()
+>   * callback during unlink. Therefore when drivers call usb_unlink_urb(), they
+> @@ -890,28 +889,6 @@ void usb_unpoison_anchored_urbs(struct usb_anchor *anchor)
+>  	spin_unlock_irqrestore(&anchor->lock, flags);
+>  }
+>  EXPORT_SYMBOL_GPL(usb_unpoison_anchored_urbs);
+> -/**
+> - * usb_unlink_anchored_urbs - asynchronously cancel transfer requests en masse
+> - * @anchor: anchor the requests are bound to
+> - *
+> - * this allows all outstanding URBs to be unlinked starting
+> - * from the back of the queue. This function is asynchronous.
+> - * The unlinking is just triggered. It may happen after this
+> - * function has returned.
+> - *
+> - * This routine should not be called by a driver after its disconnect
+> - * method has returned.
+> - */
+> -void usb_unlink_anchored_urbs(struct usb_anchor *anchor)
+> -{
+> -	struct urb *victim;
+> -
+> -	while ((victim = usb_get_from_anchor(anchor)) != NULL) {
+> -		usb_unlink_urb(victim);
+> -		usb_put_urb(victim);
+> -	}
+> -}
+> -EXPORT_SYMBOL_GPL(usb_unlink_anchored_urbs);
+>  
+>  /**
+>   * usb_anchor_suspend_wakeups
+> diff --git a/include/linux/usb.h b/include/linux/usb.h
+> index 1b2545b4363b..e8662843e68c 100644
+> --- a/include/linux/usb.h
+> +++ b/include/linux/usb.h
+> @@ -1780,7 +1780,6 @@ extern void usb_block_urb(struct urb *urb);
+>  extern void usb_kill_anchored_urbs(struct usb_anchor *anchor);
+>  extern void usb_poison_anchored_urbs(struct usb_anchor *anchor);
+>  extern void usb_unpoison_anchored_urbs(struct usb_anchor *anchor);
+> -extern void usb_unlink_anchored_urbs(struct usb_anchor *anchor);
+>  extern void usb_anchor_suspend_wakeups(struct usb_anchor *anchor);
+>  extern void usb_anchor_resume_wakeups(struct usb_anchor *anchor);
+>  extern void usb_anchor_urb(struct urb *urb, struct usb_anchor *anchor);
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+~Randy
