@@ -1,239 +1,110 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09727226520;
-	Mon,  9 Jun 2025 23:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05AC8226545
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 23:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749510254; cv=none; b=NI8E60+b5NzgFljOQT90lARRkOkw3BACIvWuf8e6jrB6CH5oz8NOZ3o9PgzV8v9MpcfvDGtc1KyyT8sBIcqRu/Rc1wI3f13qBQMF6JdJF+18plsd9cN7LRSdyqkPRIQwq4DnBle02bMB66qiG8HUtyLphH5x6RLQYyy//2qqzek=
+	t=1749510284; cv=none; b=IdfNkr2dpokBFhQ2+cwhch2qYZqgoRXod3gwLaHrs5Ta5vLgBv3popIJTvghuMC4aIeYiJaupSZPMGa6SU1BKX3qCcAtvj7MTEkSiDJSMFCQ2UjPLt4jrdYy5PEjCXbDr3XE8inL/S5igZ08+ZaR9RFQ3VXY5FsYcxBb2w9nKHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749510254; c=relaxed/simple;
-	bh=4P/wiuPesFnh/Uyov5jXLEjhp3/xkYsDmOpBw88N8HQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FPr/LC6fEjNQ9LNI0eKLWXsgz/xHaRbTEJksnPQtplohOC4oZ6r82Y+Sph/jr9M4EzaUORjgkUyKwbrbas6vt8IdGc+s4lVkFQcvO4Ef3KZwuIVX6FsmEP0mUHo93/7+YIDuwOh5U868lhs/ho/dszAISELZZiP8FevPqJyuX3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AacSO7Z3; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749510284; c=relaxed/simple;
+	bh=mm9ObijEefmfg8v3eCEzUJlAljhd8U87/Nzt9GDpk3Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BTFHF92GU9xo/oWjTKK1aRuWCdQthJi5TdLHL6xgdzhkT6EV1jv8+GwEzK7udRyMFMa5YWsAC4EGZ+dv6df1RBlB+ZCs2oJ8gkEw+pUxCIh2dJ/TrI7R8Z81ijeIVqPZuzSiDGsEoxaxSvJzXETwlwyIgFIUDIhy60p4jQoYUuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=n5X+yCJ5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hO1X/2Hf; arc=none smtp.client-ip=202.12.124.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AacSO7Z3"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a536ecbf6fso1902468f8f.2;
-        Mon, 09 Jun 2025 16:04:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749510251; x=1750115051; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XCo+d97U76PkBGkWutYUHF4lfk0UocX8ijiUCJ/8WCQ=;
-        b=AacSO7Z3r9ir/mFD5gH9ro8u8kYK9VxKKOnKD0yhOKBsV6oucqO41hbOzMydqqsrVH
-         wGindFk6m8VfhV7F8g6R7rWETNSGzk46MIBAASEc8tYmNNQTS40UdeNd6BZxdoe0Fcg3
-         WYY8AJW19j2Nt1srVr7kC3Vd9ew1nHBG+dZ7Jo9lNm70NGxiPSHd+uAGYEK+4S/f9tRK
-         EzUriqUmCX/bxmyp5oY68ah8MORg0NkbZnDyE5eMYGUrKm/UiX5Ok7KJh9mIg3ab/Nmq
-         7AmZkoKmqtpbjMpXZPaCR1HT/02U1JwcfsmAQ9zU60SkGcFkAbWIP9VFZjNRZWC/ViYf
-         n+YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749510251; x=1750115051;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XCo+d97U76PkBGkWutYUHF4lfk0UocX8ijiUCJ/8WCQ=;
-        b=bok0KukcCReWjziULI+kypkwZhjXo6/3yB4u/RzDkWWlZIrPQl4vd+HO5s9VMOLJg2
-         oTlT3UZwRsXEajoi8tIhEL6R6NbCCRMDjwPiDQ2HACR1XesRLEJ7P6Mz99uHCLjvdgtP
-         UHNARJKdTEJXbp5Kp/ouiMscR1or0AtEW7NG2Ac3uUUUOIJnZkYR2YA5da1rqC3CBtI7
-         g4gwsDbOiVjoSQWE5kPfn1dRr8q6Cs1f2i5i5pKBCaHMxSe+btVDhrHDH6e1KZqzslhM
-         qu9yI7AySt4HlEnb8y4+iPH1ROQYhDNL5xFCrp4HXSS71ABmqGpOc7a0c7/AVr4ErLvp
-         ddcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWDwVAuYuFgRfubTb9qXNgJTIbr1wyHXtmTyvix7iBfkBUzw4Zg5mAnGamYcxZEmBWkF1N0WCHZ1wHa@vger.kernel.org
-X-Gm-Message-State: AOJu0YzByKrCgZtpad5qtangKslp+C2FQbD6HeqGKfUBgZRBgF0sFRFo
-	QmeFf71h2QMA0iHtE7Ihti1esjDRqA0L5rPCmuOb9qHMXf/A3Met5VjoFlZlGJE6Hso=
-X-Gm-Gg: ASbGnctlKvDIfLTLVJ28p5Edu+4ui3r5z4QdU2eKAsW98WksjQ6Sg3W5wJ2tqrM4YRq
-	Cp91Co5Ks8kQUfWQKZh9m+Bm/MQS1pCFBRH2FrUqeHcTD380xlcU/apJUX1fd35kp5dFSN0FKTG
-	ORlU6dGBjVXdg92Nay6wh5N5SZUM7cOqHHX8hf0SNwJ1WMaNcndEutZvkpE9CczkzeuNhUTO8bz
-	BxrppCB/cT9nOc/+mhK6rc8ggG0+njBVozBRazmyswExm9YmP8UPEs/gEdODhbg6oUF695vXROo
-	NAEPZdKq/GvTn4iACGdSw3Eh12iEMusw0ORx387Rh8AIQoZWG9mYOHoF6N8g8m117vXV4GAQ9h8
-	0te+jqove5A==
-X-Google-Smtp-Source: AGHT+IHBOLrX9hJVpiyQi7xpuFvt7jnPbdlf4ABzm7L9Q4dlQ+R6Fz+CFJzUT+ceifsEKtvMg0L7wQ==
-X-Received: by 2002:a05:6000:2203:b0:3a3:7593:818b with SMTP id ffacd0b85a97d-3a552272cccmr312945f8f.21.1749510250875;
-        Mon, 09 Jun 2025 16:04:10 -0700 (PDT)
-Received: from giga-mm.. ([2a02:1210:8608:9200:82ee:73ff:feb8:99e3])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452730b92d4sm121340585e9.19.2025.06.09.16.04.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 16:04:10 -0700 (PDT)
-From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	devicetree@vger.kernel.org,
-	sophgo@lists.linux.dev
-Subject: [PATCH 1/2] dt-bindings: reset: sophgo: support SG2000
-Date: Tue, 10 Jun 2025 01:04:14 +0200
-Message-ID: <20250609230417.620089-2-alexander.sverdlin@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250609230417.620089-1-alexander.sverdlin@gmail.com>
-References: <20250609230417.620089-1-alexander.sverdlin@gmail.com>
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="n5X+yCJ5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hO1X/2Hf"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfout.stl.internal (Postfix) with ESMTP id D1B781140344;
+	Mon,  9 Jun 2025 19:04:39 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-11.internal (MEProxy); Mon, 09 Jun 2025 19:04:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1749510279; x=
+	1749596679; bh=k0uJ+LCSai8jTgkwXDZp2XvJHcOSKF00RO3GVFcycTA=; b=n
+	5X+yCJ52eeJtMf/hCgnWlXaoI7n5kKwg70aGZEagDIfhiP15Cj4uCZkOVQK42Lcb
+	h8YuzfM+ktKtpntaz65jqMzMk/130Te558EBoxIDT3nkSJEtrDWohJ4fU0VzKi4T
+	IJRh78UoVvmHxAsjGPD8wHmuLvMg6tMNabIjprdourxZmBplxrUFYiySZTDIAto+
+	iDdlXir+dY6c4cyVgD45ocwUeokavtOQZ3kge9ECeOT8jsZ6/DLc9Z2mdQnsRpY2
+	X/VX634FxVrJcrG3XluA9KnqFaj8Dc6S7tx5D48RC1MEvYlFJi7IK+svCcnW6atP
+	Ha5FLoQeifOXwzOYUDDUw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1749510279; x=1749596679; bh=k0uJ+LCSai8jTgkwXDZp2XvJHcOSKF00RO3
+	GVFcycTA=; b=hO1X/2HfUOL+PLc/2VnGN0SKAqTbgO9BYlKm8tpdear8J3wvkqv
+	AP8rcUKK1ze+VbHi+sYdmSrWCJsIUTmWN/tmv6zPzy+pLI2qC8GO98KUoTcY3xhX
+	saCL9oIv9JhHuggAH8lJfMSb19Orf7SHhmDQFNnbJfhoHWCuYTwviNhmWqGVWC9O
+	BP7qrkveTuIeIEioxSgrGAFZhvSe4G2pK4oukGXgU8zUGyQOS2Mxr+QpH/cHjbrr
+	KvQ81keg2t3R4dhARF/ILbyLFAliOukbMZY383Rqp8ns0R+99ZJB74o5hDMTIGm9
+	hqmgiSjg3AyVnIkfu7HHPjWiwjGpzrqSY1w==
+X-ME-Sender: <xms:h2hHaFYkXBpfNyYob6XZ94yxJh_9DY5a5nLxK2uIF7Nrk2PB5xnM2Q>
+    <xme:h2hHaMbYHl1YXyCbWflM0NdAaKwS1lEEbtWHw3JvxDnn11tTMdpJGAKkR9yJk2pkL
+    YFOUzx3xXg9iwFViw0>
+X-ME-Received: <xmr:h2hHaH-IzN7-tPU5u2uiKs73eea2RF_15yC_enDT7aLBfIRnHF7YLImKkh6_F0h7SWxucUb1MN8rqEbIICr7pbEKWSwWEpnoSUOU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdelleefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvve
+    fukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefvrghkrghshhhiucfurghkrghm
+    ohhtohcuoehoqdhtrghkrghshhhisehsrghkrghmohgttghhihdrjhhpqeenucggtffrrg
+    htthgvrhhnpeehhffhteetgfekvdeiueffveevueeftdelhfejieeitedvleeftdfgfeeu
+    udekueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hoqdhtrghkrghshhhisehsrghkrghmohgttghhihdrjhhppdhnsggprhgtphhtthhopedv
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigudefleegqdguvghvvg
+    hlsehlihhsthhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtoheplhhinhhu
+    gidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:h2hHaDqkr9szpPxNztVJZN-9CdDodlr131oRbqQSO9G9d-RAcj35AA>
+    <xmx:h2hHaArNEEWyf2v9kvVK0mQ2e_03Tl1c9zRCNJpVJnCj5m_xEp-c5A>
+    <xmx:h2hHaJTlfLKzmvH5_jyDNWoRuXqn_S6_99WXKy2Acn3dJtvt6pC59g>
+    <xmx:h2hHaIpJfqS6qNwNmPkIdPb2mj9CM7pWUh0dhT22iK4BEQ2hoyjj-A>
+    <xmx:h2hHaOZqo1_LuTNQ_UrdAXbl6yNoTo5IRO128fUGw8kJ1Vvj1Zjzv3w3>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 9 Jun 2025 19:04:38 -0400 (EDT)
+Date: Tue, 10 Jun 2025 08:04:35 +0900
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To: linux1394-devel@lists.sourceforge.net
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] firewire: ohci: correct code comments about bus_reset
+ tasklet
+Message-ID: <20250609230435.GA229165@workstation.local>
+Mail-Followup-To: linux1394-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org
+References: <20250608233808.202355-1-o-takashi@sakamocchi.jp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250608233808.202355-1-o-takashi@sakamocchi.jp>
 
-Add bindings for the reset module on the Sophgo SG2000 SoC.
+Hi,
 
-Link: https://github.com/sophgo/sophgo-doc/tree/main/SG200X/TRM
-Cc: Chen Wang <unicorn_wang@outlook.com>
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
----
- .../bindings/reset/sophgo,sg2000-reset.yaml   | 35 +++++++
- .../dt-bindings/reset/sophgo,sg2000-reset.h   | 92 +++++++++++++++++++
- 2 files changed, 127 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/sophgo,sg2000-reset.yaml
- create mode 100644 include/dt-bindings/reset/sophgo,sg2000-reset.h
+On Mon, Jun 09, 2025 at 08:38:06AM +0900, Takashi Sakamoto wrote:
+> The tasklet for bus reset event has been replaced with work item, while
+> some code comments still address to the tasklet.
+> 
+> This commit corrects them.
+> 
+> Fixes: 2d7a36e23300 ("firewire: ohci: Move code from the bus reset tasklet into a workqueue")
+> Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+> ---
+>  drivers/firewire/ohci.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/reset/sophgo,sg2000-reset.yaml b/Documentation/devicetree/bindings/reset/sophgo,sg2000-reset.yaml
-new file mode 100644
-index 000000000000..ab44d45ae061
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/sophgo,sg2000-reset.yaml
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/reset/sophgo,sg2000-reset.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Sophgo SG2000 SoC Reset Controller
-+
-+maintainers:
-+  - Chen Wang <unicorn_wang@outlook.com>
-+
-+properties:
-+  compatible:
-+    const: sophgo,sg2000-reset
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#reset-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#reset-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    rstgen: reset-controller@3003000 {
-+        compatible = "sophgo,sg2000-reset";
-+        reg = <0x3003000 0x28>;
-+        #reset-cells = <1>;
-+    };
-diff --git a/include/dt-bindings/reset/sophgo,sg2000-reset.h b/include/dt-bindings/reset/sophgo,sg2000-reset.h
-new file mode 100644
-index 000000000000..23604a800f66
---- /dev/null
-+++ b/include/dt-bindings/reset/sophgo,sg2000-reset.h
-@@ -0,0 +1,92 @@
-+/* SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause */
-+
-+#ifndef __DT_BINDINGS_RESET_SOPHGO_SG2000_H_
-+#define __DT_BINDINGS_RESET_SOPHGO_SG2000_H_
-+
-+#define RST_DDR			2
-+#define RST_H264C		3
-+#define RST_JPEG		4
-+#define RST_H265C		5
-+#define RST_VIPSYS		6
-+#define RST_TDMA		7
-+#define RST_TPU			8
-+#define RST_TPUSYS		9
-+#define RST_USB			11
-+#define RST_ETH0		12
-+#define RST_ETH1		13
-+#define RST_NAND		14
-+#define RST_EMMC		15
-+#define RST_SD0			16
-+#define RST_SDMA		18
-+#define RST_I2S0		19
-+#define RST_I2S1		20
-+#define RST_I2S2		21
-+#define RST_I2S3		22
-+#define RST_UART0		23
-+#define RST_UART1		24
-+#define RST_UART2		25
-+#define RST_UART3		26
-+#define RST_I2C0		27
-+#define RST_I2C1		28
-+#define RST_I2C2		29
-+#define RST_I2C3		30
-+#define RST_I2C4		31
-+
-+#define RST_PWM0		32
-+#define RST_PWM1		33
-+#define RST_PWM2		34
-+#define RST_PWM3		35
-+#define RST_SPI0		40
-+#define RST_SPI1		41
-+#define RST_SPI2		42
-+#define RST_SPI3		43
-+#define RST_GPIO0		44
-+#define RST_GPIO1		45
-+#define RST_GPIO2		46
-+#define RST_EFUSE		47
-+#define RST_WDT			48
-+#define RST_AHB_ROM		49
-+#define RST_SPIC		50
-+#define RST_TEMPSEN		51
-+#define RST_SARADC		52
-+#define RST_COMBO_PHY0		58
-+#define RST_SPI_NAND		61
-+#define RST_SE			62
-+
-+#define RST_UART4		74
-+#define RST_GPIO3		75
-+#define RST_SYSTEM		76
-+#define RST_TIMER		77
-+#define RST_TIMER0		78
-+#define RST_TIMER1		79
-+#define RST_TIMER2		80
-+#define RST_TIMER3		81
-+#define RST_TIMER4		82
-+#define RST_TIMER5		83
-+#define RST_TIMER6		84
-+#define RST_TIMER7		85
-+#define RST_WGN0		86
-+#define RST_WGN1		87
-+#define RST_WGN2		88
-+#define RST_KEYSCAN		89
-+#define RST_AUDDAC		91
-+#define RST_AUDDAC_APB		92
-+#define RST_AUDADC		93
-+#define RST_VCSYS		95
-+
-+#define RST_ETHPHY		96
-+#define RST_ETHPHY_APB		97
-+#define RST_AUDSRC		98
-+#define RST_VIP_CAM0		99
-+#define RST_WDT1		100
-+#define RST_WDT2		101
-+
-+#define RST_CPUCORE0		1152
-+#define RST_CPUCORE1		1153
-+#define RST_CPUCORE2		1154
-+#define RST_CPUCORE3		1155
-+#define RST_CPUSYS0		1156
-+#define RST_CPUSYS1		1157
-+#define RST_CPUSYS2		1158
-+
-+#endif /* __DT_BINDINGS_RESET_SOPHGO_SG2000_H_ */
--- 
-2.49.0
+Applied to for-next branch.
 
+
+Regards
+
+Takashi Sakamoto
