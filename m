@@ -1,204 +1,178 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBFB355E69
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 18:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDA655E69
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 18:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749493214; cv=none; b=rudB5ZPJb0Wtb7RrEZbmmcvFCN2ST+teI6DxUfo7F3HL2KuM7e4I98ZFi7NI8+ctIyGEV53Y/GG25fOS/H/A+i+xDt77RNHeYRnEuAZ7X2EJKwRdJELQRId8tQ9oxLKbqc52hR7NQ4+Zdllt7MVrpdNvvHfRGqTC8/QchnF4VsM=
+	t=1749493221; cv=none; b=mFGCj3VL25KnJQ7o61PZDIo2i5xBTOGqZ/htt3Ij5bvOD5D13L7/iQHMnFzo9m3m0sSYRLUhyBZvPKukgkQdsfza3trXhFfrU5cAEhituDy1VWt9clj0DyDgZI4wPrJBICkYRekUhNvvl/wjcSxuNqOppcA5X7zW8Fellr4xEu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749493214; c=relaxed/simple;
-	bh=6iXXn1i08444My9GAn1Q9mxmSPhpIxPBQDnn3gF3aYQ=;
+	s=arc-20240116; t=1749493221; c=relaxed/simple;
+	bh=hXtDQVtzBt05LQPWiaTJRzc2pDfK+7mriXwEfggveQA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e2i5yd0EhisZgYNw3A+PDd7ewaJtBYJ1Nd476K3O5aahLbAlSlTF7QUw8Cm84CEYUfKadzuouz3MYTSIfkWaIP4X9wyGvGNVo6BJR8yriZoanFdWUg0hdTac4Hzt/bI2hS2xwC/cQ42ss6Lh1tH4i1xuGijS72Y+CfvCJBeZlbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TMYrS0z6; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=qy1DT4ODt5jP/IdQ8mgA0Wr4Y6XxEBH96J+1Q1ApWB4f+gXRb2hmuG2mpvVcPSldnuzjxNDQKNXNHi2Zf1TWCpxk5OQU4ytLYCLfJN5O7C4/6VXBlMeLDdx21rainjF5MrTVL7uNpk++FUulkC/+J0TFWYq3i6fae18uLvefTq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B1O2WMIa; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TMYrS0z6"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a54690d369so1284035f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 11:20:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B1O2WMIa"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-601a67c6e61so1677a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 11:20:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749493211; x=1750098011; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4umDxSaa/CllRJxP6WItn4fR2Uskfj6zvGKYnDBtNR8=;
-        b=TMYrS0z6Dn9FHPqRUbphMMo+EewjIIEoFTn9YSfXQgACC+V9JXDUxPszokWigpKKr2
-         jvkFL4pToeervzTwgoMpQdZhCByKoqbGZoZxH6V+1a/IwiAK9e+pjvtTqEbXUIBdZlIK
-         Uyip4uIGXbMicTF2ThwQJUvfjI+hEvos3nZiMFSQOjmZ22zJOQfC9LuJCIy87oK24SmB
-         tU+pHgSBCUaZJwsDx7SOY65ZuXOn1RrJiQXvih7/sHiRaDbE2BkIwUxy36IA3hoK5nIs
-         i4HCx/+KC0vaXgMraAfCq+hKdpyLjgPm1kFLbov+yxO7Z+VOxHeQQzxbG1K01M5m2pkH
-         exwQ==
+        d=google.com; s=20230601; t=1749493218; x=1750098018; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3blXDd8YInSQ/c19Uv1xImmNssJZC2qn40udTqZrJH8=;
+        b=B1O2WMIapby5lRLQKgUQ4yAugam9O1aL16OSFVqIpBHxzxsX6GTINPFme5ghCrZWOz
+         U7+FWzEmtj7iJydGnZKRSinDPA1BZXz/6uHqTHnKHUHTVK99rIDkN4er/fnE36yBudlY
+         yJ1oil+eQ81BFsr7BQL04QlPSUgz6WlEkAIM1/httl2bSrJJcpkxYYeij4iSOK+y+KOz
+         NqoKunezJ11MvGJPWfgve/jzAgd2LckW5/RPJ5AOesUQz5iPIJ7pc5WCU5cQXuzou/A+
+         VO4Yy5G83U1TwX4NjflYU7lNhAACeizMdWYVambze3c+nVDqMu5BXmD5W+pjOR/iuBuD
+         YdaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749493211; x=1750098011;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4umDxSaa/CllRJxP6WItn4fR2Uskfj6zvGKYnDBtNR8=;
-        b=ltIahV30UZ/GukconLHcYBt2qrr3gELJXfwT6gEGX2YUemmacJxFq136oKodx9cJaI
-         Okf8dNvTxIMx2CDDJrHKVYLVsZ2bJ2E3PvTy2t+h44+g5EO9ipF8Bb4+ocUzTPblFa41
-         HFv2jFWmjPE15bgtJ2uvPeNZv1cx6/NY0zS5PHVg+RTqJoRgX/fZAa1R4xsFet4XIAp5
-         QgbWT9wfY6/b26sEEDoRr4DNxgJsPAbJZPkks9wverkL2quSV0UmtLETS0DSGN1+kT4a
-         NOVOfpX9nLHuEeMzfHP7XvwM0gYb7lsJSFfTOC03H3fcaA9R/QbD0L5kQ4dqLkGLw9A5
-         IrTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUIwLR+C7yEVv9V4nCUF054xGrNtBUKaO6jEP6SwFvm4i6eif9S2CTki6VztTyPMLBGyoqhoPn3x39K/yg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9gQQz3IvCzTB6M3IxIxcRvvlB2+WqRFty5ifVGWjacCj72bPm
-	5SS5DTKHqPzN4rB0Vbahrtbx/NilIebF2KWCfhIvG+RRy5s8WWHh2CZ5T5psLkZiYw1EjMkk0Kp
-	+fVAUY+ygx6ppisdt3i6Kuj2A5o4Q8A==
-X-Gm-Gg: ASbGncst5LAbXQL5rghdm/xX48h+Bp9G22J9E2+lx9mTM9Xy8xDvFCFf0eu0/UOwT1v
-	+WtRZw8thHvuJaf6J23m4jwm+kKD/9GdDZd4ZW9hZMGNZn7hqRoN++62AHEtj0T7A85BsZ0Q8QT
-	Ca/pnxXCLmuy6uzzzoYgKW5ybB0cNrZOxH0wNYGbEoM84=
-X-Google-Smtp-Source: AGHT+IHQvMk7IA6vhDefSLchGmrpzxT38bhJMPUtrBKemqHdaXLGZ0KKeFC3cFMFutfbgWsbX5+lpM6JeAWy8TPNNus=
-X-Received: by 2002:a05:6000:2289:b0:3a5:2fad:17af with SMTP id
- ffacd0b85a97d-3a531cf30abmr10584332f8f.57.1749493210803; Mon, 09 Jun 2025
- 11:20:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749493218; x=1750098018;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3blXDd8YInSQ/c19Uv1xImmNssJZC2qn40udTqZrJH8=;
+        b=BEl//+8wE8e8cg5kaODglEGmSku5VnooqfKhPb4QVorq7Jh4zfRc/Z3HWpkDOGXrBp
+         D8bLCs2Q1ASSA5EayuJgO9/yuGzZdmpr1LAPHY3QVOfVFLJtEFuf5VntDzNVwgG732GV
+         knhyR7gDUnVXRA+HIj54stWuIlPXw7RwmoP+34Fjt3Q4Gf1Yh1JVQcgA9MmIQRlhxOYz
+         BLABiNzVudmKFVgZxWEXzvVkUF4MR+I01OrxLaJkzPB8K237T52tNDp2MZUlbiMMGRYc
+         +UqcrpAdd+2aC/1CQVfdDJWzOjDpeAnOP8PnSCmSuk0VMOJq08RB0St6/Ukej9eL7p8t
+         DBwg==
+X-Forwarded-Encrypted: i=1; AJvYcCW0UnT71IFzCE9SfgAm+Yacn80t24TwOQyPvhjtn8T9QrgZb7i45M0hH7ze2Wwl9leA6usnW+N6Ulgp3/0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9R4NPpWFIXhRwB285xgtfrDfNPWG4PlZYF4aboaI5/VHdwOjG
+	DFdWxs1J/7jCkMAV96nmvMlB2ucFnNEFO/Q/gNxY89ctbkqlDUttAYYTcswH2lBicYethWiRE1m
+	1cID/cV61qvA/cqeMwXc5X2Uzmv/7yFeRozvJIskC
+X-Gm-Gg: ASbGncvOYLdGRQtlHNQashaGlnt10x4Sv9RfcuVdMr57xmckRaSmsoxCoS/orzWPbb3
+	nRx06ZUUIpS7MJpmvd3DNyoEygcXgPszrLFdk/MATcBkMTIU9yKROfTt85382Xbxlgve03NDOOv
+	hqquwlIqWyuPXYrJdfs2OXd2claOLXjXtiJ+USEyNW1gsvT64PxvLNhg==
+X-Google-Smtp-Source: AGHT+IG9ztMok/aqL/yvVGIqj8nxbavXUaNllC13qZXPpar9TQggxm6DeKT3NAwmq8GRl8lwhJ95MohJ1nUbYJr/WL4=
+X-Received: by 2002:aa7:d286:0:b0:606:b6da:5028 with SMTP id
+ 4fb4d7f45d1cf-607aad5dd84mr154060a12.0.1749493218088; Mon, 09 Jun 2025
+ 11:20:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514201353.3481400-1-briannorris@chromium.org>
- <20250514201353.3481400-2-briannorris@chromium.org> <24ec4adc-7c80-49e9-93ee-19908a97ab84@gmail.com>
- <aEcWTM3Y1roOf4Ph@google.com>
-In-Reply-To: <aEcWTM3Y1roOf4Ph@google.com>
-From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Date: Mon, 9 Jun 2025 20:19:58 +0200
-X-Gm-Features: AX0GCFvI5C7RKrze_v26NEgsnROlH1i7tbicnaAyQrsiit-73tC7NTkUoVX9-fk
-Message-ID: <CAMcHhXqq9DHgip3rr0=24Y-LEBq5n4rDrE6AsWyjyBmsS7s+-A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] genirq: Retain depth for managed IRQs across CPU hotplug
-To: Brian Norris <briannorris@chromium.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Tsai Sung-Fu <danielsftsai@google.com>, 
-	Douglas Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, 
-	Johan Hovold <johan@kernel.org>
+References: <20211207095230.53437-1-jiangshanlai@gmail.com>
+ <51bb6e75-4f0a-e544-d2e4-ff23c5aa2f49@redhat.com> <4a66adfa-fc10-4668-9986-55f6cf231988@zytor.com>
+ <aEbuSmAf4aAHztwC@google.com> <CALMp9eSA0u5+_dPA7-M4oZgqt4sv-qez4fMuZ6S5X4rUp=33xQ@mail.gmail.com>
+In-Reply-To: <CALMp9eSA0u5+_dPA7-M4oZgqt4sv-qez4fMuZ6S5X4rUp=33xQ@mail.gmail.com>
+From: Jim Mattson <jmattson@google.com>
+Date: Mon, 9 Jun 2025 11:20:05 -0700
+X-Gm-Features: AX0GCFuZIV6CD7DM3SYh0VfLc_yWYx6NF-Qt3paJZCJhW2qN5kiwzTX3YMaH12Y
+Message-ID: <CALMp9eQOCrUDKoLDokgJ2ZTJQGnhLchdPi=-GWdrOJH6ztEvsQ@mail.gmail.com>
+Subject: Re: [PATCH] KVM: X86: Raise #GP when clearing CR0_PG in 64 bit mode
+To: Sean Christopherson <seanjc@google.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Lai Jiangshan <jiangshanlai@gmail.com>, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Lai Jiangshan <laijs@linux.alibaba.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	Wanpeng Li <wanpengli@tencent.com>, Joerg Roedel <joro@8bytes.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 9 Jun 2025 at 19:13, Brian Norris <briannorris@chromium.org> wrote:
+On Mon, Jun 9, 2025 at 11:16=E2=80=AFAM Jim Mattson <jmattson@google.com> w=
+rote:
 >
-> Hi Alex,
->
-> On Fri, Jun 06, 2025 at 02:21:54PM +0200, Aleksandrs Vinarskis wrote:
-> > On 5/14/25 22:13, Brian Norris wrote:
-> > > Affinity-managed IRQs may be shut down and restarted during CPU
-> > > hotunplug/plug, and the IRQ may be left in an unexpected state.
-> > > Specifically:
->
-> [...]
->
-> > It appears that this commit introduces a critical bug observed on at least
-> > some Qualcomm Snapdragon X1E/X1P laptops, rendering the suspend function
-> > unusable.
+> On Mon, Jun 9, 2025 at 7:23=E2=80=AFAM Sean Christopherson <seanjc@google=
+.com> wrote:
 > >
-> > With this change in place, after successful suspend the device either:
-> > 1. Cannot wake up at all. Screen stays black, even though PM has existed
-> > suspend (observed by external LEDs controlled by PM)
+> > On Fri, Jun 06, 2025, H. Peter Anvin wrote:
+> > > On 2021-12-09 09:55, Paolo Bonzini wrote:
+> > > > On 12/7/21 10:52, Lai Jiangshan wrote:
+> > > > > From: Lai Jiangshan <laijs@linux.alibaba.com>
+> > > > >
+> > > > > In the SDM:
+> > > > > If the logical processor is in 64-bit mode or if CR4.PCIDE =3D 1,=
+ an
+> > > > > attempt to clear CR0.PG causes a general-protection exception (#G=
+P).
+> > > > > Software should transition to compatibility mode and clear CR4.PC=
+IDE
+> > > > > before attempting to disable paging.
+> > > > >
+> > > > > Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+> > > > > ---
+> > > > >   arch/x86/kvm/x86.c | 3 ++-
+> > > > >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > > > > index 00f5b2b82909..78c40ac3b197 100644
+> > > > > --- a/arch/x86/kvm/x86.c
+> > > > > +++ b/arch/x86/kvm/x86.c
+> > > > > @@ -906,7 +906,8 @@ int kvm_set_cr0(struct kvm_vcpu *vcpu, unsign=
+ed
+> > > > > long cr0)
+> > > > >           !load_pdptrs(vcpu, kvm_read_cr3(vcpu)))
+> > > > >           return 1;
+> > > > > -    if (!(cr0 & X86_CR0_PG) && kvm_read_cr4_bits(vcpu, X86_CR4_P=
+CIDE))
+> > > > > +    if (!(cr0 & X86_CR0_PG) &&
+> > > > > +        (is_64_bit_mode(vcpu) || kvm_read_cr4_bits(vcpu,
+> > > > > X86_CR4_PCIDE)))
+> > > > >           return 1;
+> > > > >       static_call(kvm_x86_set_cr0)(vcpu, cr0);
+> > > > >
+>
+> Isn't this redundant with the "if (cs_l)" check above?
+
+Never mind. That's an attempt to set CR0.PG, not to clear it.
+
+> > > > Queued, thanks.
+> > > >
+> > >
+> > > Have you actually checked to see what real CPUs do in this case?
 > >
-> > 2. Wakes up eventually after minutes (instead of seconds) with SSD related
-> > errors in dmesg. System still exhibits errors eg. UI icons are not properly
-> > loaded, WiFi does not (always) connect.
->
-> I'm sorry to hear this has caused regressions. I don't yet know why your
-> particular problems have occurred, but I did notice last week that there
-> were some issues with the patch in question. I wrote a patch which I'll
-> append, and have started (but not completely finished) testing it.
-> Perhaps you could try it out and let me know how it goes?
-
-Hi Brian,
-
-I have tested your attached patch in addition to the original one, and
-unfortunately it did not resolve the problem on either of the two
-laptops: neither managed to wake up, just like before.
-Will be happy to promptly test other proposed solutions.
-
-Thanks,
-Alex
-
->
-> > Is it possible to have this addressed/patched up/reverted before 6.16-rc1
-> > goes live and introduces the regression?
-> > It also appears this series was selected for backporting to 6.6, 6.12, 6.14,
-> > 6.15:  perhaps this should be postponed/aborted until better solution is
-> > found?
->
-> Regarding stable backports: yes, please. It looks like Johan requested
-> holding this back on stable here:
->
-> https://lore.kernel.org/all/aELf3QmuEJOlR7Dv@hovoldconsulting.com/
->
-> Hopefully we can figure out a mainline solution promptly enough, but
-> revert is also OK if it comes down to it.
->
-> Below is a patch I'm working with so far. I can submit it as a separate
-> patch if that helps you.
->
-> Brian
->
-> ---
->
-> Subject: [PATCH] genirq: Rebalance managed interrupts across multi-CPU hotplug
->
-> Commit 788019eb559f ("genirq: Retain disable depth for managed
-> interrupts across CPU hotplug") intended to only decrement the disable
-> depth once per managed shutdown, but instead it decrements for each CPU
-> hotplug in the affinity mask, until its depth reaches a point where it
-> finally gets re-started.
->
-> For example, consider:
->
-> 1. Interrupt is affine to CPU {M,N}
-> 2. disable_irq() -> depth is 1
-> 3. CPU M goes offline -> interrupt migrates to CPU N / depth is still 1
-> 4. CPU N goes offline -> irq_shutdown() / depth is 2
-> 5. CPU N goes online
->     -> irq_restore_affinity_of_irq()
->        -> irqd_is_managed_and_shutdown()==true
->           -> irq_startup_managed() -> depth is 1
-> 6. CPU M goes online
->     -> irq_restore_affinity_of_irq()
->        -> irqd_is_managed_and_shutdown()==true
->           -> irq_startup_managed() -> depth is 0
->           *** BUG: driver expects the interrupt is still disabled ***
->              -> irq_startup() -> irqd_clr_managed_shutdown()
-> 7. enable_irq() -> depth underflow / unbalanced enable_irq() warning
->
-> We should clear the managed-shutdown flag at step 6, so that further
-> hotplugs don't cause further imbalance.
->
-> Fixes: commit 788019eb559f ("genirq: Retain disable depth for managed interrupts across CPU hotplug")
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> ---
->  kernel/irq/chip.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-> index b0e0a7332993..1af5fe14f3e0 100644
-> --- a/kernel/irq/chip.c
-> +++ b/kernel/irq/chip.c
-> @@ -175,8 +175,6 @@ __irq_startup_managed(struct irq_desc *desc, const struct cpumask *aff,
->         if (!irqd_affinity_is_managed(d))
->                 return IRQ_STARTUP_NORMAL;
->
-> -       irqd_clr_managed_shutdown(d);
-> -
->         if (!cpumask_intersects(aff, cpu_online_mask)) {
->                 /*
->                  * Catch code which fiddles with enable_irq() on a managed
-> @@ -205,12 +203,15 @@ __irq_startup_managed(struct irq_desc *desc, const struct cpumask *aff,
->
->  void irq_startup_managed(struct irq_desc *desc)
->  {
-> +       struct irq_data *d = irq_desc_get_irq_data(desc);
-> +
->         /*
->          * Only start it up when the disable depth is 1, so that a disable,
->          * hotunplug, hotplug sequence does not end up enabling it during
->          * hotplug unconditionally.
->          */
->         desc->depth--;
-> +       irqd_clr_managed_shutdown(d);
->         if (!desc->depth)
->                 irq_startup(desc, IRQ_RESEND, IRQ_START_COND);
->  }
-> --
-> 2.50.0.rc0.642.g800a2b2222-goog
->
+> > I have now, and EMR at least behaves as the SDM describes.  Why do you =
+ask?
+> >
+> >
+> > kvm_intel: Clearing CR0.PG faulted (vector =3D 13)
+> >
+> >
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index f79604bc0127..f90ad464ab7e 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -8637,6 +8637,23 @@ void vmx_exit(void)
+> >         kvm_x86_vendor_exit();
+> >  }
+> >
+> > +static noinline void vmx_disable_paging(void)
+> > +{
+> > +       unsigned long cr0 =3D native_read_cr0();
+> > +       long vector =3D -1;
+> > +
+> > +       asm volatile("1: mov %1, %%cr0\n\t"
+> > +                    "   mov %2, %%cr0\n\t"
+> > +                    "2:"
+> > +                    _ASM_EXTABLE_FAULT(1b, 2b)
+> > +                    : "+a" (vector)
+> > +                    : "r" (cr0 & ~X86_CR0_PG), "r" (cr0)
+> > +                    : "cc", "memory" );
+> > +
+> > +       pr_warn("Clearing CR0.PG %s (vector =3D %ld)\n",
+> > +               vector < 0 ? "succeeded" : "faulted", vector);
+> > +}
+> > +
+> >  int __init vmx_init(void)
+> >  {
+> >         int r, cpu;
+> > @@ -8644,6 +8661,8 @@ int __init vmx_init(void)
+> >         if (!kvm_is_vmx_supported())
+> >                 return -EOPNOTSUPP;
+> >
+> > +       vmx_disable_paging();
+> > +
+> >         /*
+> >          * Note, hv_init_evmcs() touches only VMX knobs, i.e. there's n=
+othing
+> >          * to unwind if a later step fails.
+> >
