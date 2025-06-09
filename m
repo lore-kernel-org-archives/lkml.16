@@ -1,106 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632ED1E1C1A;
-	Mon,  9 Jun 2025 21:00:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D87224898;
+	Mon,  9 Jun 2025 21:00:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749502838; cv=none; b=CyvzjHjfuLa48qQq6fpqQTwtXVe53pETM38+Ly6t+0MetgIJRy9GFqL6WNqPHgAlYKAom4q/5prE1+cvtpMzPvD2pMSkeWtZDsBi9nK15N1RGIHNwvV9DfffgJd5oGsP8D4SrTxJJrwYphemWl8wHFwt3ogZTi7wHS2Jfh+3//U=
+	t=1749502839; cv=none; b=g26p4BsNWohvHC8jQNrhFpovD2M4uVZFNv7Ln6cEOd7VbBdMAWaSXwuuSqok4QIFAZMe4pBsHSSfsSb1/lXiw+wqs0o8qzo0C5VUoa/GtHn261N0niICgJ1cNGgC0LVjOG+GqOL0vXx/OpeO5XjEkrDGRl3Qqpz7R9/CoJ+RJdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749502838; c=relaxed/simple;
-	bh=zqrMe1sn7XHdZVE7LCOKTyfEo8TpwJkf0G8jdLXjznM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=fxwn9PJHo4gNH5l8rIc7FCgK127qF/3LH60Tmdmzftg5DCBh8x0Y5aZN40J3EgTnKnxJ1JSxNcxcLxeO+T2TJCYq5UiaeHoAVZioKnUBjp2x3hESm7WVuVQSUt2ANRCkACzaWHIJ+5S6qv12iSyk1y8mFwLTXCblyUvqAxEgTd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KUPkIIyl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749502839; c=relaxed/simple;
+	bh=M/coZXhQQ5JmlbDvSNuvMpg57QjB4kX+quGxRRZiPos=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nx0DkXYb+obBs28usu4u5R32MildpazbFncI3PChY3AV9mksPPiK+Gj5TOsjcYIAZAZPsKT1v8Na761FKuwicSES1ewLQoYbBsZLF9I6sNvOHoZAqdSoHPS3lXp2RNY+jj2IXV5Xg8CYkFvOAjbdYmJL2Les0XLOwDdqBu0b6EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AZBsVfKA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KUPkIIyl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CCE7C4CEEF;
-	Mon,  9 Jun 2025 21:00:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AZBsVfKA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB12EC4CEF8;
+	Mon,  9 Jun 2025 21:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749502837;
-	bh=zqrMe1sn7XHdZVE7LCOKTyfEo8TpwJkf0G8jdLXjznM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=KUPkIIyla7GStsdPfBCxwIp7zBZcKRNwfODNlQP68t8IhkD9BJKZ/FiALoJXLptA6
-	 +4cyStfaNISmp5STLNwFyfFhjYJH1rquAxXNX14e3H6tvnpAZFiABYqTQP8bSiS7MJ
-	 rpWpypO876E76VkRrsw7JsYtTX6wdnKcNgufLrihS79RAdwlqR3JCmnsA8e5bUXTLL
-	 azPyyEnaolGGbuJ/zdKLQXs6qnFq9uYe0R97005Wzen8+drUcMFB7JDwTuHh3Pb3bS
-	 mHmrxFYWBE1I1wwPpKe1KksyymrYu/vxQflKfBGGN4M3yzTzaCvO3jA3/4TxcZY6gF
-	 KXEXe/XveO+Ow==
-From: Mark Brown <broonie@kernel.org>
-To: Srinivas Kandagatla <srini@kernel.org>, 
- Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Luca Weiss <luca.weiss@fairphone.com>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org, 
- linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>
-In-Reply-To: <20250507-fp5-dp-sound-v4-0-4098e918a29e@fairphone.com>
-References: <20250507-fp5-dp-sound-v4-0-4098e918a29e@fairphone.com>
-Subject: Re: (subset) [PATCH v4 0/5] Add DisplayPort sound support for
- Fairphone 5 smartphone
-Message-Id: <174950283411.277844.1603420608213566024.b4-ty@kernel.org>
-Date: Mon, 09 Jun 2025 22:00:34 +0100
+	s=k20201202; t=1749502839;
+	bh=M/coZXhQQ5JmlbDvSNuvMpg57QjB4kX+quGxRRZiPos=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AZBsVfKA4+cQciMNAA1531xF4xjKiihVj3AcVb/X7gF2q0P/DUUVV8U9APsM58oXf
+	 NHhe1LOymRiY/ecwoaftWdCpWedETJ/KJfXAPi/V8gobDUpES+AxvPL9wA17PanmBt
+	 U/AJWaHK5GwBHgUzI4sNEPHQ6zwp941I3DppEjq9Yj9MK5gOIXcal83X/b/XNcb1CX
+	 feQWADzw/R97zYRs+iiKBPJ2QKLJxHN98JvGwrCQUHecICn/NXS50aCunWFYNn5WSC
+	 n1UJ1GiSVz2ciMjXD6+Wjpa24r1Tkr4X8hW3ey80fFJF/pJC0H7nR7fEMjOJ9E9Uys
+	 J5sxMPfqBk8KA==
+Date: Tue, 10 Jun 2025 00:00:35 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Prachotan Bathi <prachotan.bathi@arm.com>
+Cc: Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Stuart Yoder <stuart.yoder@arm.com>,
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/1] tpm_ffa_crb: handle tpm busy return code
+Message-ID: <aEdLc_OpTNvsk5pl@kernel.org>
+References: <20250609141600.3601340-1-prachotan.bathi@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250609141600.3601340-1-prachotan.bathi@arm.com>
 
-On Wed, 07 May 2025 10:01:36 +0200, Luca Weiss wrote:
-> Add the necessary sound card bits and some dts additions to enable sound
-> over DisplayPort-over-USB-C, e.g. to a connected TV or monitor.
+On Mon, Jun 09, 2025 at 09:15:59AM -0500, Prachotan Bathi wrote:
+> Platforms supporting direct message request v2 can
+> support SPs that support multiple services.
+
+What is "direct message request v2"?
+
+> If the TPM service is sharing the SP with another service,
+> it could get an error code of BUSY if the other service is
+> in process.
+> We need a way for the driver to retry sending the message
+> to the TPM service until it succeeds or we know that no forward progress
+> can be made.
+> This patch adds a parameterized variable (default 2000ms)
+> that indicates the maximum time to keep retrying for.
 > 
-> The UCM files can be found here:
-> https://gitlab.postmarketos.org/postmarketOS/pmaports/-/tree/master/device/testing/device-fairphone-fp5/ucm
+> Prachotan Bathi (1):
+>   tpm_ffa_crb: handle tpm busy return code
 > 
-> This series - in spirit - depends on the series enabling DisplayPort in
-> the first place, but can land pretty independently, especially the ASoC
-> bits:
-> https://lore.kernel.org/linux-arm-msm/20250312-fp5-pmic-glink-dp-v2-0-a55927749d77@fairphone.com/
+>  drivers/char/tpm/tpm_crb_ffa.c | 74 +++++++++++++++++++++++-----------
+>  1 file changed, 50 insertions(+), 24 deletions(-)
 > 
-> [...]
+> -- 
+> 2.43.0
+> 
+> 
 
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-
-Thanks!
-
-[1/5] ASoC: dt-bindings: qcom,sm8250: Add Fairphone 5 sound card
-      (no commit info)
-[2/5] ASoC: qcom: sm8250: set card driver name from match data
-      commit: c4b79a2fbfb28308e958e4ffdd988f3cf678fe2a
-[3/5] ASoC: qcom: sm8250: add DisplayPort Jack support
-      commit: ed82808c6a0f333e51fee4e97cbe8e0189b7f354
-[4/5] ASoC: qcom: sm8250: Add Fairphone 5 soundcard compatible
-      commit: e6e8897995a9e6028563ce36c27877e5478c8571
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+BR, Jarkko
