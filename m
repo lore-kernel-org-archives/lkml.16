@@ -1,72 +1,122 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3326B1E521B;
-	Mon,  9 Jun 2025 22:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7D4194C96;
+	Mon,  9 Jun 2025 22:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749507783; cv=none; b=Q0elkajTGwgLvhwC/bcklCcZkaY5yC0zF5NjO4PJ3dRD/eeI6NmfbfPbO+rRvQueF7X4GQf9CfnmbUMWjxAngLs7bLxeeKFaL4dTRR4cDd3Bl1MEibij9Xbm7c3bv6Gkj+ljwxBpT7YW5icTWr71twj0juEa3rER3UFAWhEqJPY=
+	t=1749508386; cv=none; b=XG53fCFSvS6jFSjoLpn78ma+SsBBADip6Z2FaK+uuZA7phO8Bu3Y92yTm7BF3f7L6zGGaRFhhMkyxoyi3LnC7l5P/JsCXjpf88Ea4QUSigN3NAzrHKn90hg0QO+LcQMx586J4OP9T+Q8PmKAVaG/uCaXj7E2MVXniwS5yGlP86I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749507783; c=relaxed/simple;
-	bh=VaUIKhr9K7NDCCL3tVxwzKuCpQ3/ESayhC9+FlDM510=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=a88mbg5CBuE4C4wWcu78h6mJVNgVhw+14n7oaNoG+3vRpWa1lklo29vij8nAFjpTRUlcSBbIKPVZma8Z+LP6vAJxzLa2HDbnlShb+DKf8stoeY4RHcHTJt7g6kfYhJCnPCjeTYVWYthJa0uJxAdz2YPe2087RZuaWx/fGcKyYY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=DG5a2Ye5; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1749508386; c=relaxed/simple;
+	bh=B5RTP5TEqx/43XoEAFJ63qL0/SGvM6bAn37nrX3ZvJQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=og4y4peM+fWmUClDfPVHgVlwOOKtakTTPeo7Qbk0olo7ugB4YDWWISVfB1QPsDRkN5iBKTY1tOQG5N/p9wAlTRnNRLtmbTfb3KOm+Aec8h3HbYQVsoZFZMlDONJZpDXkP3q9HqJ9AVmCUHGLFO5wlSSE4yY9UYqv67aEc+5sfH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KqnioY//; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="DG5a2Ye5"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 5285D41AA1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1749507781; bh=E91NmzyhKhHUs7IzCQWOajEB1EYNtF10BTHf2NYCdio=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=DG5a2Ye5Tuka2amQYJQXXpIMiCRCP8cfDVin/RFEvPyhzZXBUxGhQtbhDvLMyEcnC
-	 DunB3FgYmDxyr6OuJ3nxuFJdu1blLBdt9M5nebk+cP5uo0h7CPK0P1BdWl7uZRzUW9
-	 lqwyV6y9YEu6njiFdg9TAgirfi46j76f8E79YQ7i8vDRYBtCWJPO5vq1z7jq0Ulout
-	 fpo9vMbkknplEdWMSLyqh13aROCOVX9v2OKXp/oQBJ/u3cG3zQR2qyJ9H7RRV6RA+s
-	 x4MXQqzYqVJsiqAPXHCgR3BZaxbhoKUpRrfTAPcxnBXh3ATw8d2wQv94zPFiw184uB
-	 n1dZTju3EmOtA==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 5285D41AA1;
-	Mon,  9 Jun 2025 22:23:01 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Shouye Liu <shouyeliu@tencent.com>, shouyeliu <shouyeliu@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the jc_docs tree
-In-Reply-To: <20250610081759.185e7982@canb.auug.org.au>
-References: <20250610081759.185e7982@canb.auug.org.au>
-Date: Mon, 09 Jun 2025 16:23:00 -0600
-Message-ID: <874iwo8shn.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KqnioY//"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749508386; x=1781044386;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=B5RTP5TEqx/43XoEAFJ63qL0/SGvM6bAn37nrX3ZvJQ=;
+  b=KqnioY//b8V4OE1rxV0p6ha3Pi+x7BCFyj5X/S3aKE1qCDacNEbf/dRa
+   s0DnA2YaPT+pRwmm0OQd2u1zqrZdk/y829bHvHUrxKrrnrzatE9GMhXEY
+   JCsFNPDw73hhgjcaEIJYQB+Rf/Sk/ywg4kf0tzAxH7wX5uk2MxSZsJP1j
+   w8ArFxY74kYTpUZVhNsiBoA4VcAGeKeAh9TngpA6MwcwIkNrLX/F8Lust
+   g9gUnXw3u9pJZq3wwILJ9N1vppNATmao145rlVNbrDefZdWQceMmkhTK/
+   SfsP9x1UiamKGrWVR0pzDcqKHdKBYzDlQoHVXnGUe1orvLSaSWiu+REYy
+   g==;
+X-CSE-ConnectionGUID: v9IpdkDGQFKrtJBRLFMDFA==
+X-CSE-MsgGUID: 6wq+su7lQ5ihfQUto1ed5Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51311540"
+X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
+   d="scan'208";a="51311540"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 15:33:05 -0700
+X-CSE-ConnectionGUID: G6iSwhMsQeS6WC/DZEsJqg==
+X-CSE-MsgGUID: QC2jJJg+RlCEgXHXUxYifg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
+   d="scan'208";a="147158328"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 15:33:04 -0700
+Received: from [10.124.223.148] (unknown [10.124.223.148])
+	by linux.intel.com (Postfix) with ESMTP id B08DB20B5736;
+	Mon,  9 Jun 2025 15:33:03 -0700 (PDT)
+Message-ID: <5cf7045f-f199-492b-9e4d-8de9664a585d@linux.intel.com>
+Date: Mon, 9 Jun 2025 15:33:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI/PTM: Build debugfs code only if CONFIG_DEBUG_FS is
+ enabled
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Eric Biggers <ebiggers@kernel.org>
+References: <20250608033305.15214-1-manivannan.sadhasivam@linaro.org>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250608033305.15214-1-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Stephen Rothwell <sfr@canb.auug.org.au> writes:
 
-> Hi all,
+On 6/7/25 8:33 PM, Manivannan Sadhasivam wrote:
+> Otherwise, the following build error will happen for CONFIG_DEBUG_FS=n &&
+> CONFIG_PCIE_PTM=y.
 >
-> Commit
+>      drivers/pci/pcie/ptm.c:498:25: error: redefinition of 'pcie_ptm_create_debugfs'
+>        498 | struct pci_ptm_debugfs *pcie_ptm_create_debugfs(struct device *dev, void *pdata,
+>            |                         ^
+>      ./include/linux/pci.h:1915:2: note: previous definition is here
+>       1915 | *pcie_ptm_create_debugfs(struct device *dev, void *pdata,
+>            |  ^
+>      drivers/pci/pcie/ptm.c:546:6: error: redefinition of 'pcie_ptm_destroy_debugfs'
+>        546 | void pcie_ptm_destroy_debugfs(struct pci_ptm_debugfs *ptm_debugfs)
+>            |      ^
+>      ./include/linux/pci.h:1918:1: note: previous definition is here
+>       1918 | pcie_ptm_destroy_debugfs(struct pci_ptm_debugfs *ptm_debugfs) { }
+>            |
 >
->   47cbe79dedbe ("Documentation: amd-pstate:fix minimum performance state label error")
+> Fixes: 132833405e61 ("PCI: Add debugfs support for exposing PTM context")
+> Reported-by: Eric Biggers <ebiggers@kernel.org>
+> Closes: https://lore.kernel.org/linux-pci/20250607025506.GA16607@sol
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+
+Looks good to me.
+
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>   drivers/pci/pcie/ptm.c | 2 ++
+>   1 file changed, 2 insertions(+)
 >
-> is missing a Signed-off-by from its author.
->
-> Actually it looks like 2 different email addresses have been used.
+> diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
+> index ee5f615a9023..4bd73f038ffb 100644
+> --- a/drivers/pci/pcie/ptm.c
+> +++ b/drivers/pci/pcie/ptm.c
+> @@ -254,6 +254,7 @@ bool pcie_ptm_enabled(struct pci_dev *dev)
+>   }
+>   EXPORT_SYMBOL(pcie_ptm_enabled);
+>   
+> +#if IS_ENABLED(CONFIG_DEBUG_FS)
+>   static ssize_t context_update_write(struct file *file, const char __user *ubuf,
+>   			     size_t count, loff_t *ppos)
+>   {
+> @@ -552,3 +553,4 @@ void pcie_ptm_destroy_debugfs(struct pci_ptm_debugfs *ptm_debugfs)
+>   	debugfs_remove_recursive(ptm_debugfs->debugfs);
+>   }
+>   EXPORT_SYMBOL_GPL(pcie_ptm_destroy_debugfs);
+> +#endif
 
-Gee, I must have pushed that tree at least five minutes ago, you
-couldn't find this sooner? :)
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
-Shouye, can you send me a version with a matching signoff, please?
-
-Thanks,
-
-jon
