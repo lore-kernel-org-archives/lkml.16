@@ -1,391 +1,237 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF212512F5;
-	Mon,  9 Jun 2025 09:53:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749462824; cv=fail; b=jT5N594vYy27KnDEeCmLgUcGbB6CS/4dvEz94MbGhaJ2Ldmp79BoACQpare0FHOSeZUdxO0iMew299jX5IBkexqQ7+h4yQ/uptdjyVy7rInVMEXu9VBGz3/YIp0jApNWMkHBHjlEYpQuHnik6/muWnyqcOZXAD70bYmRAixJ62o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749462824; c=relaxed/simple;
-	bh=yAt9PQjWo5toASrBktZxsZaY9Dq5iEr+N95s4uWZdyI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=tfwhSuCsZ+PWyy4veTalAAIJnNAvWLu0+QcnRM5JL4zzDC/EXomYicgpCl0RoscEQHuE6wGji6Nz0Syd/1IeFUyzAMyJmDqqKbOqD5kB2KUAt312RztHqwSqXkVjNhL+n9cwMjyrppdecw9T2PBbQsIn48rT8QiGREe8zTB6kP4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j5Mn2Lc2; arc=fail smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2408541C63;
+	Mon,  9 Jun 2025 09:54:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749462881; cv=none; b=fk/KmBPluhl4Qpd1NAElENee6Upr7LL5JTC1c+K/4nP+WjVnNdo89snIv3iCysK7pSRAUT852V8OLYcWstdTUlcEP+Xumj16wN/yDtSOU1V7Wsgofcj0Y810fz/S4I16mxgEFFNdcPQ/k60Rk9KjWWGMyml5Lv+lF3zMQbis2s4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749462881; c=relaxed/simple;
+	bh=eOgMCR2qJQTO7OxJCrTlsFRVzvCtziaqjcV0SI0FU0M=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=epuBwlpIcb2xAYrRiSiDL2uagemXyibAiTdaYqtfwDuyuHKGv5cuFhrVWq0h9hYvoTE/6px42dek2uvYKELN83iV9CkfZOT8lbMH+uPuovqMyfUgxr6pd5IfxKXSMAsdGKeKJERvy0iJdvK9cdP8DjYm4Y58PkDq+NMugAYV9XQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YtLz+01m; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j5Mn2Lc2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749462822; x=1780998822;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=yAt9PQjWo5toASrBktZxsZaY9Dq5iEr+N95s4uWZdyI=;
-  b=j5Mn2Lc2Ak5k+3bUIDqXz3T8kZf9qLOEp8VUu86Ip/JBY/r93PhCVvGV
-   O9QFJdl3rUQh8rmKE3wQMJxIYz82IOC+RN3gfS3mEcRSyToUPmY8ycTe5
-   1KGo7cJVXaOOab1tFmTP8k9rSJ3ybiBYbLaSJU45YR4/vo3J90vbkjpJx
-   Ibols3DnNUcLMc1BIWrAGbnr6JqAdBxbHBv1qSq6DWKQ2wmSCmi8ShMSa
-   SJJqBtb1IPmP5wCjY+Z98aTreDFAi+l9S+NsYvYFc3PiHo5hlpaWN+Nli
-   22dnEuQ2PmAdlazku4I4eE0ul6rqLCWo4MPKjNDPNy3Fy0Z3Nh4pjItnL
-   g==;
-X-CSE-ConnectionGUID: lDxXr/4BQ6G7VNdSjBn/sw==
-X-CSE-MsgGUID: Da6J3hzESr2tsEeo43qQ9g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="69092275"
-X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="69092275"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 02:53:41 -0700
-X-CSE-ConnectionGUID: qI0cWgc2QRGuYOyCfHQ0aw==
-X-CSE-MsgGUID: TsiU0HnDSmKbK1vH+vxgZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="146345723"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 02:53:39 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YtLz+01m"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55934vfI020014;
+	Mon, 9 Jun 2025 09:54:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=7lcrrRHKoLWZrxnSLwacatN1
+	dshNcspmS+DeJ5CdxmU=; b=YtLz+01mJAtSV+KbxJaClOR1nfa5V3+URhX0AuUN
+	YUiTxY95ws4RIBy0Tdwh5hMrOKm+bf2VsSn61okD/ougoLvtnGOD6lffaUm0JfDB
+	fT5ux8/L1dCipbSYBbUoONV2nsFZEBLt7dV3jwvq9wzzIaVxvvs0zvvlMpnUxyQx
+	f7sYMUkan3QPjHRI6o4CbxV9zhOcnUYcy+WNJR9+MXc0OOLvv+J4N4RmCcrExjft
+	HeleiOghl6FuWfSdWKShqgOUrJ0GyXKjb/NNyP9tg17jn5qpp3Z+hP5xW0pdV6e/
+	C4nwFXWp0wh/g6GuHksLm6Am5fSqfyoQpzPHKsdefn1L7g==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 475qcts1ay-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 09 Jun 2025 09:54:36 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5599sZhX014112
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 9 Jun 2025 09:54:35 GMT
+Received: from hu-wasimn-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 9 Jun 2025 02:53:39 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Mon, 9 Jun 2025 02:53:39 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (40.107.236.70)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Mon, 9 Jun 2025 02:53:38 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IJldM992VW7Ja3qxLlqiXG9Ev89a/0rqml7mYyggf4YCLfT9Jq7C03DPT0wT0nJNW9W2hL/o/p2e+goGwMUcLkk1eA27SVxZndF692xrUy76TIdSgRRHE71BKG91eyFZdsmnCd1VFS1HTF8lxaGJ9iNB0cvAc56hd4WO43jyTKRTRJK83gQlQJM7qBDF/NjLG9m5LD7mCC2WbBhK+vAhbeb8Lm9hS6nnGGVSCHaFAUL8LuHlMe7O0zinkAyVTbUakmPE3QspEV+xNUW8q09e+nGf1WKAKDPuOUC2XCBXbCghxrCPPOBAtBfhgpdLpDCjRtiCrL6n/4721HZ5JJFwJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=R4xBkHHl4h30qLRnOpDbHe7pFNgQzmIroRZ7UK1lD+c=;
- b=Grc2DJJ+ur2SPGGsHavHnOKvDsOKqMp9jaEPfPq2ies7AVTC94Z0N2vYXfR2LQEDJYYBu2ZWx70duJ14F/qwjQUusd42AYoDSN3ysUJ1g2B5cK7aXzuqPN59DxzaM5YibA5lNRIIoSYEQ/ZmdtGbiyfW4lJS587xJSYSawV1FLqqKmPSmROLHihQr6o83dSxqkIE8i0vIchmjiVk6ZAECkwMBl34ZAN335RPD9uppuziTJjC4JAUE+LY7x83AF+1MY5oVZDqOYUIt3G+T5aqQzDmQsjCK3SCoECmoQ9tuJ4VjJ4GHBlyBJlf79jfDrBWPqx3IPWOhjg/HWUi1TABrQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from PH7PR11MB8455.namprd11.prod.outlook.com (2603:10b6:510:30d::11)
- by CH2PR11MB8868.namprd11.prod.outlook.com (2603:10b6:610:284::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.23; Mon, 9 Jun
- 2025 09:53:08 +0000
-Received: from PH7PR11MB8455.namprd11.prod.outlook.com
- ([fe80::e4c5:6a15:8e35:634f]) by PH7PR11MB8455.namprd11.prod.outlook.com
- ([fe80::e4c5:6a15:8e35:634f%5]) with mapi id 15.20.8813.024; Mon, 9 Jun 2025
- 09:53:08 +0000
-From: "Miao, Jun" <jun.miao@intel.com>
-To: Subbaraya Sundeep <sbhatta@marvell.com>
-CC: "oneukum@suse.com" <oneukum@suse.com>, "andrew+netdev@lunn.ch"
-	<andrew+netdev@lunn.ch>, "davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
-	<kuba@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] net: usb: Convert tasklet API to new bottom half
- workqueue mechanism
-Thread-Topic: [PATCH] net: usb: Convert tasklet API to new bottom half
- workqueue mechanism
-Thread-Index: AQHb2Q+P+xtcjrqHp0eA51vEw2F9rLP6iROAgAAKjCA=
-Date: Mon, 9 Jun 2025 09:53:08 +0000
-Message-ID: <PH7PR11MB84552A6D3723B68D5B83E4BE9A6BA@PH7PR11MB8455.namprd11.prod.outlook.com>
-References: <20250609072610.2024729-1-jun.miao@intel.com>
- <aEajxQxP_aWhqHHB@82bae11342dd>
-In-Reply-To: <aEajxQxP_aWhqHHB@82bae11342dd>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR11MB8455:EE_|CH2PR11MB8868:EE_
-x-ms-office365-filtering-correlation-id: 973b1181-d31a-495b-e370-08dda73b7052
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?Wd3F9a9GdxBw0zKHHQEVJ75zGL3vXyike+6Slzw74zzXNKWKFxUrCsoETuNu?=
- =?us-ascii?Q?TTXxIU3CNR1c+RPJehasC4BDkHrekP1TTxyK8hphnw5q+MR2meP0TD2vxdPD?=
- =?us-ascii?Q?9e4Iusms7/T14MKqEKEP7HErOerOyJhcHZZm4yfGNJdn6bNqaioa/Rf63lpU?=
- =?us-ascii?Q?38X2wYRwNycJjIZBTKWG82pUVYklU4KzNnD0Nvi/F6TOcTSEs7+OmdTkH7Kn?=
- =?us-ascii?Q?BQRQiS+NoB12vW9TmcxtmwRCH1bolIY5nZTT54fK02VP1Zs4t2LQmSYwSSy0?=
- =?us-ascii?Q?HD9CCxYDNLACyX7GPhn0c12Q2812LMlFgqRfvRAuxFi1YjX93wJ2Z1GXytOh?=
- =?us-ascii?Q?a67h7ZADnyWeiMktJO4DRfwMPlb3gn6Dl74fey0NsYiazGbw+ED0gm1ALteB?=
- =?us-ascii?Q?3VIKD40+svH/2upXhomUAUNuPVEsTaSsJEWX8tuoO/pzXuptvYdfN25NonYM?=
- =?us-ascii?Q?vPMDNSjyNhU725b1ZQ5sHbg8AL3X42WuFgyD+owyrD9u6pSXOcOB2eYhi5ST?=
- =?us-ascii?Q?OSan2UsPehXN5w43ihgf6DHFhDlhDj3z2xwE0IxrwKpv40LK/LstyW5Tr35U?=
- =?us-ascii?Q?9FaPYFwkEI0Jo1VOCXo1BJJYIAvri3UCXMBr0x/TGFw+2qZKmsFb4ggKi6z/?=
- =?us-ascii?Q?9HBk2wkL+dfzRGObsEX/XEWVW7buLyl3pkN4Q64WtdZ5I605lZgtU2H/Jh+r?=
- =?us-ascii?Q?Ylx65f+5rSXHnk3VbYPJJCAPeh/DIff2+o4eOQ89c4PDVLhsZZubqjG8h1zn?=
- =?us-ascii?Q?vXxs1kr6sTt+uHBA5ZosTLFoeMhYsa7gZ4WvSkG7MgDzbTCTv1TrKthK4xX5?=
- =?us-ascii?Q?RQReljLrl7NTzo9eRfj9NhiPP2VTWipxVFxncD7CciD6YXMaVagcrakfq20Y?=
- =?us-ascii?Q?ip6Z7WwltgtNbhKgdt56Jl0mpbqYACdUQkddVr/bktzKm1Cdw9Aa6paFp1zs?=
- =?us-ascii?Q?wVz3S6X56bu/isxniCeyyL2XlMOyl5k+HEimv6VjHrK3P4nFiALqiF8LooqK?=
- =?us-ascii?Q?cXfmB89OOabGX1UrATLG7qjMzfhlfcT1vAPIE16r2xf8jQ3NvM0wRbMiy6Cp?=
- =?us-ascii?Q?FKNqt76buC0hl/UAJcyDD4oIygEKYHXaT0borPdrzZ7jcw5NIiAy8CeBhM+s?=
- =?us-ascii?Q?iPWZD1zEIvk0Yhjn55t7FHGoF8InDz5HtNu7MfSBdacl5UA/HzR73zrt6QZZ?=
- =?us-ascii?Q?3wXTlxt2H/jHTgzDgzhxRN39kKJpG4x/TITB5WfAs7mOFOu1y85tukmdgv6P?=
- =?us-ascii?Q?BtiBHj4DxFIesRKKDt3duCPtkcocqbV9NLCHzNZCIRQrjd62eWhdZzKsfAHb?=
- =?us-ascii?Q?6BaXeKx3aw7x1bl3Y1BCX7G6GB3tC+pLrrY4yBEz9wbjbosepiTb7OGQ94YM?=
- =?us-ascii?Q?cd6neS6Xh2lBzgoaGLsOAx9W0kVNA44ulwt6I2bGDQDWciuMxnywB6K9ijVq?=
- =?us-ascii?Q?fixd4y/qYV/ZVUYZCsEGm3J4pAHzObyTBivGJY8o0WKfllVhiJ0mCi/7v/f4?=
- =?us-ascii?Q?AQ2ot2lElbnrl4U=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB8455.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?zJvrmJ00yiULjSdwhooTvCsiCAGIN84Zei/spDq8IuPrgIoaP6xI9pe6IpXG?=
- =?us-ascii?Q?9NMgBm+wsVIUPDMy1zOuWjFQhVRGKM+8bn43oNOBlzyiQvF+iKuyfkWzFuV3?=
- =?us-ascii?Q?Bv3culxYnsEKC+ZAHJz3Qr7tguzncNJkt39eqWPkTDC/TTlCvF/6nShukXM9?=
- =?us-ascii?Q?FV8PBGqLs6LlX9oK8wQHzgsvtfOpCuYykaBvoKWQTdjjljCQDHmQ/8DYyr7g?=
- =?us-ascii?Q?ifoimH/rREyWIBzhkigaG/MYowEGPXXltJ+atzmNgHfkxmayhdc1+SWgPK5U?=
- =?us-ascii?Q?Nt8qQJ29BT5q15YwqbUY3Jxm2LuQ2yRzqDRSiFrGKgulIPms+9G9IsIktuSC?=
- =?us-ascii?Q?szQwZzIxirBqC/MA7sHHvJnm/Adwo/6LPuFqCGnoHsKxkODgBYgKdmhT6Lct?=
- =?us-ascii?Q?e8pRGim4eQWjgjuyJqQGDnNpoGHwij2PsjvUBv2d8EX+gyP/esaqgZwuqc5Z?=
- =?us-ascii?Q?S9X4Vpemm5tixih141t2/eeUmfyAPsYIg8kR7aJkB+asQh5EVJ/NPecAu+Gv?=
- =?us-ascii?Q?fpg4WrB4EKSB9JCz/oNyJPYcdXPcENYaguFz8gGR5Q7SPvgy3YB8kWETj3oF?=
- =?us-ascii?Q?4RdhulfqnvX//9Pqzz6MFAExlnAIosJH+N8TqnbvtavZ6vmsQk1v41Sx1asz?=
- =?us-ascii?Q?WM5RKc7DnGvoj8RNCEBKsM1rEYrT72BwNowvV6+gKQyphCAinW5hvDz61wmw?=
- =?us-ascii?Q?s+PToCSzKj/aRJOWoF5YHL0URtjV4OnayBi7F+/H+n1COcZt6uSqnkX3ct4z?=
- =?us-ascii?Q?fZUL7ieaDQMFokMlL3b2KaaBpZuYoVbbQekFHuOWPtIeyg9PCvEScfkzW82Z?=
- =?us-ascii?Q?vfD5r7/iJuGwUkMykWLjiE5tI8FPNRKopIBpqUjD/VdCYb/B60hQ2mNM4QJ7?=
- =?us-ascii?Q?K0z+DY8t7Jnxp2qw9X5OW6VOmfHtzEf2GnSKYHUgQ6j5f9ozCgiSm8CAUDfY?=
- =?us-ascii?Q?QwnEgCkyUgWhWNm3C66v1sTb9Y4bypavOK7B1tEEuHQ5bK9thtqLVCoAbdEp?=
- =?us-ascii?Q?Wbu4QrY2AfsBE3jXlKRzDpblLCl/hFWerErdvDadXXEKiPC3yk+T3TGbtf2o?=
- =?us-ascii?Q?7qX4zgY73J4ARzf6v9C/dndAADlMxpJjht4h2NHhO76V8duYnC6uWMd5eXoN?=
- =?us-ascii?Q?XJAJs9m3aarSHrqaZKRi6wNSbynBljJ71WBR5RDjxJmV6RXTrOyMFPjQ/OeP?=
- =?us-ascii?Q?uvvL6A2cxEp9EzMFwcjNHe9uAcVBO8iqg7kVmBJfTH5KDbZOYdKbuZ3K54DL?=
- =?us-ascii?Q?lN7j7RRIpHVp5fKiUv4sMcqfHTbGDlxQOA/1kN+WjXMQ6ekIKCI1xp4ejv7m?=
- =?us-ascii?Q?UMT0hIVDgLCM3ZA0VFJnWxUFV/FlmaOo5jt5VXI9DT0IBjGmF7tMAtiaYdCq?=
- =?us-ascii?Q?ewlsct2xYAEqXCu06orDvWyePaa8cbYeXRxuvxqvmgIsSTMYibKUGwzCP3qs?=
- =?us-ascii?Q?nQ4wC39ssAZA4W8+yIiyZo5AzIHDFXwAN6/uUKLTXkPTCIMpSTMbp7m1SN3B?=
- =?us-ascii?Q?c1AO8qEvP9acTgGc9QopffuOUaR3ZQR+FS10iZbXuI9LQzP34azmSsgBt5sp?=
- =?us-ascii?Q?Qicg+YPXp3glAY7IuC6SOb/uHIS1V9znLp6wdTo8?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ 15.2.1544.9; Mon, 9 Jun 2025 02:54:27 -0700
+Date: Mon, 9 Jun 2025 15:24:18 +0530
+From: Wasim Nazir <quic_wasimn@quicinc.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@quicinc.com>, <kernel@oss.qualcomm.com>,
+        Pratyush Brahma <quic_pbrahma@quicinc.com>,
+        Prakash Gupta <quic_guptap@quicinc.com>
+Subject: Re: [PATCH v9 2/4] arm64: dts: qcom: iq9: Introduce new memory map
+ for qcs9100/qcs9075
+Message-ID: <aEavSv3VWuMvzyBw@hu-wasimn-hyd.qualcomm.com>
+References: <20250530092850.631831-1-quic_wasimn@quicinc.com>
+ <20250530092850.631831-3-quic_wasimn@quicinc.com>
+ <ss3xhat6v3s4ivcypw6fqcmblqait56pqhzwuhzyfhevp4kzlr@5e3f5nwb6lhb>
+ <aEATe3pi1SsfZVI3@hu-wasimn-hyd.qualcomm.com>
+ <q3hzryk4s7jd4kyavcg7s6d3oyzfpnjy4jhpeluvnikiglbeng@r4ydugwidgv7>
+ <aEBzNnnyqt/aZ35r@hu-wasimn-hyd.qualcomm.com>
+ <aEKnstzguH7f0A92@hu-wasimn-hyd.qualcomm.com>
+ <n3et5jemuiin5c5pwi3r5gycnicxdhrwbmxapnsg2arlwabxcv@7b734qnxwaof>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB8455.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 973b1181-d31a-495b-e370-08dda73b7052
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2025 09:53:08.5251
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EsYUqfTxJsPGn3Um3/HSY+GuVJUdCldxtF+v5smHhviJYjqyqxwh/4JY4I8kweGnzfbgr38dHSGBZSGo9eqTiA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR11MB8868
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <n3et5jemuiin5c5pwi3r5gycnicxdhrwbmxapnsg2arlwabxcv@7b734qnxwaof>
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: c_0WZxpIbSWgC6ad4N2cE_taKB_l5Edt
+X-Authority-Analysis: v=2.4 cv=Lco86ifi c=1 sm=1 tr=0 ts=6846af5c cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=-YevBJ-UrPJtX6aMaiwA:9 a=CjuIK1q_8ugA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA3NiBTYWx0ZWRfX/3veLVIKMeWb
+ 1oA+c09Zd51VTBy1dOH+WlRF1BdlnCfAMVHHfzXh1LJ/pxPBtwae4Tw6ccCRlBDX/8b1Yq05z7C
+ 7xx0m9N3KFEnStkhGrBh4QUT4CN0MvDH/L2CKw/ArsTkm1IeKT0quaBDe3w9TZyGobf7yTSQXpF
+ NliCY23H4DKH3m6FAGgS4s3CjNJOpl1YdSplDIk2N4f0GIl7OUHzFbmmbi2d4jOhOObZ5jCh+Gp
+ DL+NLVriGP9Sa1pFcPaeCWDsQQL9tlgYg/HMupOnxXF3lpa7Zj+/dgnUZ2j4nrodxdrWtEbORuG
+ MmqLLkdMHZJ2/2lT7Lhx0xrQiuyuOoQJBsGyHyzoNd9Qm0WOUvhYO0wUx7MvpT4+mNw06RbYxxN
+ Y3+Km0GRoko6CChLdu+fHFcpEff3GOTe3b7N1vXV+VL4M6GKFp/ZGNjiX2IB68wQ/y4g0FkN
+X-Proofpoint-ORIG-GUID: c_0WZxpIbSWgC6ad4N2cE_taKB_l5Edt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-09_04,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 priorityscore=1501 suspectscore=0 clxscore=1015
+ impostorscore=0 spamscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
+ bulkscore=0 adultscore=0 lowpriorityscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506090076
 
->
->Hi,
->
->On 2025-06-09 at 07:26:10, Jun Miao (jun.miao@intel.com) wrote:
->>  Migrate tasklet APIs to the new bottom half workqueue mechanism. It
->> replaces all occurrences of tasklet usage with the appropriate
->> workqueue  APIs throughout the usbnet driver. This transition ensures
->> compatibility  with the latest design and enhances performance.
->>
->> Signed-off-by: Jun Miao <jun.miao@intel.com>
->> ---
->>  drivers/net/usb/usbnet.c   | 36 ++++++++++++++++++------------------
->>  include/linux/usb/usbnet.h |  2 +-
->>  2 files changed, 19 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c index
->> c04e715a4c2a..566127b4e0ba 100644
->> --- a/drivers/net/usb/usbnet.c
->> +++ b/drivers/net/usb/usbnet.c
->> @@ -461,7 +461,7 @@ static enum skb_state defer_bh(struct usbnet *dev,
->> struct sk_buff *skb,
->>
->>  	__skb_queue_tail(&dev->done, skb);
->>  	if (dev->done.qlen =3D=3D 1)
->> -		tasklet_schedule(&dev->bh);
->> +		queue_work(system_bh_wq, &dev->bh_work);
->>  	spin_unlock(&dev->done.lock);
->>  	spin_unlock_irqrestore(&list->lock, flags);
->>  	return old_state;
->> @@ -549,7 +549,7 @@ static int rx_submit (struct usbnet *dev, struct urb=
- *urb,
->gfp_t flags)
->>  		default:
->>  			netif_dbg(dev, rx_err, dev->net,
->>  				  "rx submit, %d\n", retval);
->> -			tasklet_schedule (&dev->bh);
->> +			queue_work(system_bh_wq, &dev->bh_work);
->>  			break;
->>  		case 0:
->>  			__usbnet_queue_skb(&dev->rxq, skb, rx_start); @@ -
->709,7 +709,7 @@
->> void usbnet_resume_rx(struct usbnet *dev)
->>  		num++;
->>  	}
->>
->> -	tasklet_schedule(&dev->bh);
->> +	queue_work(system_bh_wq, &dev->bh_work);
->>
->>  	netif_dbg(dev, rx_status, dev->net,
->>  		  "paused rx queue disabled, %d skbs requeued\n", num); @@ -
->778,7
->> +778,7 @@ void usbnet_unlink_rx_urbs(struct usbnet *dev)  {
->>  	if (netif_running(dev->net)) {
->>  		(void) unlink_urbs (dev, &dev->rxq);
->> -		tasklet_schedule(&dev->bh);
->> +		queue_work(system_bh_wq, &dev->bh_work);
->>  	}
->>  }
->>  EXPORT_SYMBOL_GPL(usbnet_unlink_rx_urbs);
->> @@ -861,14 +861,14 @@ int usbnet_stop (struct net_device *net)
->>  	/* deferred work (timer, softirq, task) must also stop */
->>  	dev->flags =3D 0;
->>  	timer_delete_sync(&dev->delay);
->> -	tasklet_kill(&dev->bh);
->> +	disable_work_sync(&dev->bh_work);
->>  	cancel_work_sync(&dev->kevent);
->>
->>  	/* We have cyclic dependencies. Those calls are needed
->>  	 * to break a cycle. We cannot fall into the gaps because
->>  	 * we have a flag
->>  	 */
->> -	tasklet_kill(&dev->bh);
->> +	disable_work_sync(&dev->bh_work);
->>  	timer_delete_sync(&dev->delay);
->>  	cancel_work_sync(&dev->kevent);
->>
->> @@ -955,7 +955,7 @@ int usbnet_open (struct net_device *net)
->>  	clear_bit(EVENT_RX_KILL, &dev->flags);
->>
->>  	// delay posting reads until we're fully open
->> -	tasklet_schedule (&dev->bh);
->> +	queue_work(system_bh_wq, &dev->bh_work);
->>  	if (info->manage_power) {
->>  		retval =3D info->manage_power(dev, 1);
->>  		if (retval < 0) {
->> @@ -1123,7 +1123,7 @@ static void __handle_link_change(struct usbnet *de=
-v)
->>  		 */
->>  	} else {
->>  		/* submitting URBs for reading packets */
->> -		tasklet_schedule(&dev->bh);
->> +		queue_work(system_bh_wq, &dev->bh_work);
->>  	}
->>
->>  	/* hard_mtu or rx_urb_size may change during link change */ @@
->> -1198,11 +1198,11 @@ usbnet_deferred_kevent (struct work_struct *work)
->>  		} else {
->>  			clear_bit (EVENT_RX_HALT, &dev->flags);
->>  			if (!usbnet_going_away(dev))
->> -				tasklet_schedule(&dev->bh);
->> +				queue_work(system_bh_wq, &dev->bh_work);
->>  		}
->>  	}
->>
->> -	/* tasklet could resubmit itself forever if memory is tight */
->> +	/* workqueue could resubmit itself forever if memory is tight */
->>  	if (test_bit (EVENT_RX_MEMORY, &dev->flags)) {
->>  		struct urb	*urb =3D NULL;
->>  		int resched =3D 1;
->> @@ -1224,7 +1224,7 @@ usbnet_deferred_kevent (struct work_struct
->> *work)
->>  fail_lowmem:
->>  			if (resched)
->>  				if (!usbnet_going_away(dev))
->> -					tasklet_schedule(&dev->bh);
->> +					queue_work(system_bh_wq, &dev-
->>bh_work);
->>  		}
->>  	}
->>
->> @@ -1325,7 +1325,7 @@ void usbnet_tx_timeout (struct net_device *net,
->unsigned int txqueue)
->>  	struct usbnet		*dev =3D netdev_priv(net);
->>
->>  	unlink_urbs (dev, &dev->txq);
->> -	tasklet_schedule (&dev->bh);
->> +	queue_work(system_bh_wq, &dev->bh_work);
->>  	/* this needs to be handled individually because the generic layer
->>  	 * doesn't know what is sufficient and could not restore private
->>  	 * information if a remedy of an unconditional reset were used.
->> @@ -1547,7 +1547,7 @@ static inline void usb_free_skb(struct sk_buff
->> *skb)
->>
->>
->> /*--------------------------------------------------------------------
->> -----*/
->>
->> -// tasklet (work deferred from completions, in_irq) or timer
->> +// workqueue (work deferred from completions, in_irq) or timer
->>
->>  static void usbnet_bh (struct timer_list *t)  { @@ -1601,16 +1601,16
->> @@ static void usbnet_bh (struct timer_list *t)
->>  					  "rxqlen %d --> %d\n",
->>  					  temp, dev->rxq.qlen);
->>  			if (dev->rxq.qlen < RX_QLEN(dev))
->> -				tasklet_schedule (&dev->bh);
->> +				queue_work(system_bh_wq, &dev->bh_work);
->Correct me if am wrong.
->Just above this code there is - if (rx_alloc_submit(dev, GFP_ATOMIC) =3D=
-=3D -
->ENOLINK).
->You can change it to GFP_KERNEL since this is not atomic context now.
->
+On Sat, Jun 07, 2025 at 11:22:39PM +0300, Dmitry Baryshkov wrote:
+> On Fri, Jun 06, 2025 at 02:02:50PM +0530, Wasim Nazir wrote:
+> > On Wed, Jun 04, 2025 at 09:54:38PM +0530, Wasim Nazir wrote:
+> > > On Wed, Jun 04, 2025 at 04:21:46PM +0300, Dmitry Baryshkov wrote:
+> > > > On Wed, Jun 04, 2025 at 03:05:55PM +0530, Wasim Nazir wrote:
+> > > > > On Mon, Jun 02, 2025 at 10:41:39AM -0500, Bjorn Andersson wrote:
+> > > > > > On Fri, May 30, 2025 at 02:58:45PM +0530, Wasim Nazir wrote:
+> > > > > > > From: Pratyush Brahma <quic_pbrahma@quicinc.com>
+> > > > > > > 
+> > > > > > > SA8775P has a memory map which caters to the auto specific requirements.
+> > > > > > 
+> > > > > > I thought SA8775P was the IoT platform and SA8255P was the automotive
+> > > > > > one. Has this changed?
+> > > > > 
+> > > > > Both SA8775P & SA8255P is for auto but former one is non-SCMI based while
+> > > > > the later one is SCMI based chip.
+> > > > > 
+> > > > > Only IQ9 series of chips (QCS9100 & QCS9075) are for IOT.
+> > > > > 
+> > > > > > 
+> > > > > > > QCS9100 & QCS9075 are its IOT variants (with marketing name as IQ9) which
+> > > > > > > inherit the memory map of SA8775P require a slightly different memory
+> > > > > > > map as compared to SA8775P auto parts.
+> > > > > > > This new memory map is applicable for all the IoT boards which inherit
+> > > > > > > the initial SA8775P memory map. This is not applicable for non-IoT
+> > > > > > 
+> > > > > > Is there are platform out there that actually uses the "initial SA8775P
+> > > > > > memory map"?
+> > > > > 
+> > > > > Yes currently sa8775p-ride and sa8775p-ride-r3 are using initial memory
+> > > > > map.
+> > > > > 
+> > > > > > 
+> > > > > > > boards.
+> > > > > > > 
+> > > > > > > Some new carveouts (viz. gunyah_md and a few pil dtb carveouts) have been
+> > > > > > > introduced as part of firmware updates for IoT. The size and base address
+> > > > > > > have been updated for video PIL carveout compared to SA8775P since it is
+> > > > > > > being brought up for the first time on IoT boards. The base addresses
+> > > > > > > of the rest of the PIL carveouts have been updated to accommodate the
+> > > > > > > change in size of video since PIL regions are relocatable and their
+> > > > > > > functionality is not impacted due to this change. The size of camera
+> > > > > > > pil has also been increased without breaking any feature.
+> > > > > > > 
+> > > > > > > The size of trusted apps carveout has also been reduced since it is
+> > > > > > > sufficient to meet IoT requirements. Also, audio_mdf_mem & tz_ffi_mem
+> > > > > > > carveout and its corresponding scm reference has been removed as these
+> > > > > > > are not required for IoT parts.
+> > > > > > > 
+> > > > > > > Incorporate these changes in the updated memory map.
+> > > > > > > 
+> > > > > > > Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
+> > > > > > > Signed-off-by: Prakash Gupta <quic_guptap@quicinc.com>
+> > > > > > > Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
+> > > > > > > ---
+> > > > > > >  .../boot/dts/qcom/iq9-reserved-memory.dtsi    | 113 ++++++++++++++++++
+> > > > > > >  1 file changed, 113 insertions(+)
+> > > > > > >  create mode 100644 arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
+> > > > > > > 
+> > > > > > > diff --git a/arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi b/arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
+> > > > > > > new file mode 100644
+> > > > > > > index 000000000000..ff2600eb5e3d
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
+> > > > > > 
+> > > > > > The naming convention is <soc>-<something>.dtsi and I don't see any
+> > > > > > other uses of the "iq9" naming.
+> > > > > 
+> > > > > As this new memory map is common for IQ9 series of SoC (QCS9100 &
+> > > > > QCS9075), so we have used its common name.
+> > > > 
+> > > > IQ9 name is not known or visible outside of this commit.
+> > > 
+> > > Are you referring to add the same in cover-letter?
+> > > 
+> > > > 
+> > > > > Once the DT structure for QCS9100 is refactored, we would update this
+> > > > > common file there.
+> > > > 
+> > > > Can you refactor it first?
+> > > 
+> > > This refactoring involves changes in all the ride/ride-r3 boards which
+> > > are based on sa8775p & qcs9100. Even though we had sent v0[1] but we still
+> > > need to conclude on the final structure. Since, ethernet is broken in upstream,
+> > > we are working on its fix before sending another series.
+> > > 
+> > > Hence, we want to proceed for iq9075-evk for now and once qcs9100 is
+> > > finalized, we can use the memory-map there.
+> > > 
+> > > But to avoid this dependency and to proceed with iq9075-evk alone,
+> > > I can rename it to qcs9075-reserved-memory.dtsi.
+> > > 
+> > > Let me know if that works here.
+> > > 
+> > > [1] https://lore.kernel.org/all/20250507065116.353114-1-quic_wasimn@quicinc.com/
+> > 
+> > Hi Dmitry,
+> > 
+> > Shall I proceed with qcs9075-reserved-memory.dtsi or do you have any
+> > other suggestion that we should discuss?
+> > 
+> > Aparently, this series is for qcs9075 only so using exact (not common)
+> > name also aligns the naming format.
+> 
+> Squash it into qcs9075.dtsi.
 
-Thanks,  the usbnet_bh() function only be called by usbnet_bh_workqueue whi=
-ch is sleepable.
+We don't have qcs9075.dtsi.
+Is it ok to squash it into qcs9075-som.dtsi ?
 
----Jun Miao=20
+> 
+> > 
+> > > 
+> > > > 
+> > > > > 
+> > > > > > 
+> > > > 
+> > > > -- 
+> > > > With best wishes
+> > > > Dmitry
+> > > 
+> > > Regards,
+> > > Wasim
+> > 
+> > -- 
+> > Regards,
+> > Wasim
+> 
+> -- 
+> With best wishes
+> Dmitry
 
->Thanks,
->Sundeep
->>  		}
->>  		if (dev->txq.qlen < TX_QLEN (dev))
->>  			netif_wake_queue (dev->net);
->>  	}
->>  }
->>
->> -static void usbnet_bh_tasklet(struct tasklet_struct *t)
->> +static void usbnet_bh_workqueue(struct work_struct *work)
->>  {
->> -	struct usbnet *dev =3D from_tasklet(dev, t, bh);
->> +	struct usbnet *dev =3D from_work(dev, work, bh_work);
->>
->>  	usbnet_bh(&dev->delay);
->>  }
->> @@ -1742,7 +1742,7 @@ usbnet_probe (struct usb_interface *udev, const
->struct usb_device_id *prod)
->>  	skb_queue_head_init (&dev->txq);
->>  	skb_queue_head_init (&dev->done);
->>  	skb_queue_head_init(&dev->rxq_pause);
->> -	tasklet_setup(&dev->bh, usbnet_bh_tasklet);
->> +	INIT_WORK (&dev->bh_work, usbnet_bh_workqueue);
->>  	INIT_WORK (&dev->kevent, usbnet_deferred_kevent);
->>  	init_usb_anchor(&dev->deferred);
->>  	timer_setup(&dev->delay, usbnet_bh, 0); @@ -1971,7 +1971,7 @@ int
->> usbnet_resume (struct usb_interface *intf)
->>
->>  			if (!(dev->txq.qlen >=3D TX_QLEN(dev)))
->>  				netif_tx_wake_all_queues(dev->net);
->> -			tasklet_schedule (&dev->bh);
->> +			queue_work(system_bh_wq, &dev->bh_work);
->>  		}
->>  	}
->>
->> diff --git a/include/linux/usb/usbnet.h b/include/linux/usb/usbnet.h
->> index 0b9f1e598e3a..208682f77179 100644
->> --- a/include/linux/usb/usbnet.h
->> +++ b/include/linux/usb/usbnet.h
->> @@ -58,7 +58,7 @@ struct usbnet {
->>  	unsigned		interrupt_count;
->>  	struct mutex		interrupt_mutex;
->>  	struct usb_anchor	deferred;
->> -	struct tasklet_struct	bh;
->> +	struct work_struct	bh_work;
->>
->>  	struct work_struct	kevent;
->>  	unsigned long		flags;
->> --
->> 2.43.0
->>
+-- 
+Regards,
+Wasim
