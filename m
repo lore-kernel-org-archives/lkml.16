@@ -1,276 +1,185 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2066.outbound.protection.outlook.com [40.107.220.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E66610E3
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 12:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749473307; cv=none; b=uc3iRTIxpdfa0AAgL8DOtPsPyJ3qs187IFUJbG5buo2MjzSQnVyeyCVZ2iCmOOwl3X5ovvX7SBWTD88TYNibuSoYURj63yXXMa25QWrUkRFCYdESifiJo4Ytwd5DAF1tsrD8Fh/yk79JHFdI1pfQjwZfa8VAMvnpYLZldNzdz1A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749473307; c=relaxed/simple;
-	bh=aacK6avPEmppWf0KrdU8v4CPVZ1owJ3o9wIfWYbfXoc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bvJEblAT4NcILdPJhJcluZfgPYRmmidfQNN7dEuVOMgJ4hGi9ObN52tg/2MqbnQdnJw9raDRIZ/wX4KWgkxKOW3giC3ikhBDqoJkQC5LF7vBGyEoIfe89JFV8K6EPghoefx6qA8Q2VZWYmE3aFuhXkqabeBcF42F7Dt5eNLbx9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ppOgmj1U; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA6213635C;
+	Mon,  9 Jun 2025 12:48:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749473341; cv=fail; b=MuZ6z6hCZaFgX2hmZNW541z3ySF7/AWXYsN+kyIOt0LzINR80FdDYLN1K9+w5Z9Xoy4DR2YygU6tDTXyIInwAEdenmUsUMdwsHy1flFcJPUxcNiWyX2HQs94BHXBbaWaWtyVDsNEIfp92bZBmuSfHrhBZoyZUmYeX9pJ1vU2PS0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749473341; c=relaxed/simple;
+	bh=l8nYKVyjG14+XuU/mqvsNVAvubwZ/MBdAPI3EsWS3vE=;
+	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID:Date; b=kTPwRqRPUzTB17CSORA0uwgDqgM1qbuJ0efUE21qj/zO95nzn09zp7KFxmBOJneWnygNRWqFyoMfXoYxtoPpoUpOuTYPby6FBCPNprNd1YQb9QP7GN8rL2F1UKIuTF6NGHtkeSKa5V0qjH044ozbDf16C9UUUomAoG4u+EAt5bA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=f96cVBWt; arc=fail smtp.client-ip=40.107.220.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ppOgmj1U"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5599nK3q005324
-	for <linux-kernel@vger.kernel.org>; Mon, 9 Jun 2025 12:48:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=cyXFr9Y7VCghsyBDYdoliPS4
-	dImMk/Plhfn+EfNGrh8=; b=ppOgmj1UytR9V80yaQB3qZgPIFTj4AMrsnGFWyHP
-	556ZFaJ1ECNjt/F2UBKpHd0rKAfqkWFhxkWnG5BTJuwJvU1cisPUiyXCFls8k4uH
-	ffiApl5ovhv7z4r8u5VY8kg6FPGjeX2PDrS3zVesCxvB1vaRx5Ur3SVfSe43RLfg
-	9TM0OHQA4WIbf9xsvdvQwoszPJQKwloPbp6OP5eAV3Okw18dsrua4JX4oDJErXwa
-	UM3ZX0ETmXsHvD49XvZdndBoLOd+2VgZBq11/zDu9tXRNd5NpuDKs7eEoC+2Qi5D
-	DIkJumhx2GVAzMAMU7zdkaCnGQ2ybpUIw638pfz/XFyrxQ==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ekpns1p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 12:48:24 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d399070cecso85214285a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 05:48:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749473303; x=1750078103;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cyXFr9Y7VCghsyBDYdoliPS4dImMk/Plhfn+EfNGrh8=;
-        b=ECz2Z4v/i/IYSRvf6zkotGtgLL+4h6AOKspNzanpAw6iH3ZG5C7yLXNUaeDAoWq0FV
-         31RES8IuCu5gaN+rRl+4mglQv6vnAWmxvtMm5Yo/om27cC2pwWxZde5TCd9kmYmKjMNP
-         2siOk2f9v76X+LrBw4NNe2U5I7nebaYAdgZgWMbNr/b0lUUaEUIrqdCNau5ZnVO0tBI9
-         uvxlv4T25nFIws8XsueCJ+MMmAqdqrZ4QQEwoAPqXq+jxS3PwQGFzcIzKp54QQ1dQSy1
-         /mTlgN216cPLXCi0xEQKdyD9od+2LZHfgFETEux1EKVeRNUaZyQFQmluLrqv2Ig3NiF3
-         kvUw==
-X-Forwarded-Encrypted: i=1; AJvYcCVK7PREEZ3CWt6t9dBahnbjXs4itPo8G9+8bYPgYOrgKC2embRNbqkY0AsRrABkHHDgpHt+sh/6AZmNNwg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNjUrACNz4csPmSAS9Z/P4N8YjAXqV1u/Fbt9Jo1evcu0mxp9W
-	9nQmtg1NPNFJnm9tmpbS8wL1uBJ3uKkD0iAyPEDhDm4Ivt9JofFxB6rSv1Rj2xaOXKr5iV0Bb9V
-	vp5CxIwkgqjUM+nuywHvEVL5vi4Lz4p60+v1LM/b9QgW2J/PeDeR7jN89V8PTUL6WKu0=
-X-Gm-Gg: ASbGncv4wWi9E/H6XSsJj29ajhLBAEumefaoDCwYq76JEZPqLDZ56YZ2fV/CxehGE92
-	rRY5ytmEMvyyXShtlUAJW+GU0TB12wbIUPCO2vB1Lhk4rEznpEJ6uQHL5TM8o+9GbAIyckg7wh9
-	AB0lUvbE3QT6Qy7c9TIHOW4FbXFuLzKZebMDfom4GMYsxfGi4SxF6+UJAp4hOz/IG7lhHN9aPTK
-	CXpStCBhrvKGrFnyhOZDWLIzr7KSNqBXtsjVzD51sqOoCkGNkQu/kmJ+xtxRzhIGIfhnc93Y+ut
-	B49vbgMBbylxwPJKv2NKoU0vEFZTNLrqUusq4Qngi4xrJ/G0xDq0lDmBA083a8hltuCA2ZRg2ao
-	=
-X-Received: by 2002:a05:620a:31a3:b0:7d2:2a6:2dec with SMTP id af79cd13be357-7d22987e5a8mr2018509785a.30.1749473303327;
-        Mon, 09 Jun 2025 05:48:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGKm0NMJWSaZh2z/7vc6FgW1171qs+SXoa6vIis6CtV0cigHkuKg7hRjWnXTpnl2/Cl7Qaj4A==
-X-Received: by 2002:a05:620a:31a3:b0:7d2:2a6:2dec with SMTP id af79cd13be357-7d22987e5a8mr2018503685a.30.1749473302861;
-        Mon, 09 Jun 2025 05:48:22 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55367722172sm1154372e87.98.2025.06.09.05.48.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 05:48:21 -0700 (PDT)
-Date: Mon, 9 Jun 2025 15:48:19 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Yongxing Mou <quic_yongmou@quicinc.com>
-Cc: Rob Clark <robin.clark@oss.qualcomm.com>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>
-Subject: Re: [PATCH v2 02/38] drm/msm/dp: remove dp_display's dp_mode and use
- dp_panel's instead
-Message-ID: <kq6tb2wnte6v5z7uxgzc22kjwcevgvcdluzqbelvnbpbxlkotd@ltlv3u2guj4u>
-References: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
- <20250609-msm-dp-mst-v2-2-a54d8902a23d@quicinc.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="f96cVBWt"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XM0XWfoEoGmKhN6zLtBZrwO3iqyRZoQPVDTO1y38I4H1ICxffyt7gOPVFuKsj4yctt+OfM4sRCdTgTfpDGIL7ODpWQdKU644hAQLM6gVnFzdacq9CeOtoTtGp9rSLPI9sadnnmkJtz30OwSB5rD706zxsVT26unoAmc9NAUUn07AAJetHTXRUJbSiqedeAJnnqJuH8K4xVG0Ws9u4h+Na5LevbuTSkEh5bE0YphPRyyiRQgafq9c/sD84FnLtyFQuTWJwfSAXb615hP4ANEnE8650mHPyKKhx3/Euap03oAZdlT5dBB2nyr+3pmcxFOVuoHstP95KzBttTPdh0BcZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Aaai0z5HGxwzYMPXjINyfQ4EZ0COXAqrQ98S8Usi4uE=;
+ b=iwzzU2PAoV5tad0DoCbgdUR0LXhofjcLxYdm3GXoMx9/25sYrw/aRmfdnyNlqK2jI+0YSe6d5wYM+yxVcfEJ9phWoosYNVKPwvIm2ioANrPp3HiMnFOi+fIUlAfOQ+8c/n3+3C+JZllRSsvivh01UMmTkyN92oWjp5QufcB7jLAVJHFU39fKri70haurrxzfAR18d8J4/1leDKBHo/GCiiRCiUIZHKo7uFSxzNKVXx/6HpM4B90WCaI5M7RlWH3usXwbo2txOQUmUijpsMhVY2PQJNXvEzp44smOtDjiop5qnn2e4oh/dfPdRyTpzx2VPzjk3tKzysll/vid61wefg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=linuxfoundation.org
+ smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
+ header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Aaai0z5HGxwzYMPXjINyfQ4EZ0COXAqrQ98S8Usi4uE=;
+ b=f96cVBWt6hi5eZWAkM/Hmb/ti5myP0LNJ0LzhSO2W+bdlbAYvjwtavMwzB6MkbkWWpnjUq2wbxxImEFGWvsp4DNe0QE5U5pnNx6EAZPCLbwFzeQMpcS7maWAd9MrD7aDr5R1464JW7Di+qoJPnJTqA4OJ/6nUhrtt9nnfvQTD5J+4sHZfo0oyeZK0H09D7aEE1uImwMsNNJIEKPYaSMzglrxPGMENIK6MU1Fv+8yVaCaoEoqWKErBxYlZB3kj7hoxUvn2fpCnv2EXnBSQg2zd3uGgRyI2Qi2FlnUHwEjf6z5GmjBbL38j92SJB+LVv7GdOo9fHtrl11FdC0V/gOaAw==
+Received: from SJ0PR03CA0386.namprd03.prod.outlook.com (2603:10b6:a03:3a1::31)
+ by SA3PR12MB7857.namprd12.prod.outlook.com (2603:10b6:806:31e::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Mon, 9 Jun
+ 2025 12:48:56 +0000
+Received: from SN1PEPF0002BA52.namprd03.prod.outlook.com
+ (2603:10b6:a03:3a1:cafe::a0) by SJ0PR03CA0386.outlook.office365.com
+ (2603:10b6:a03:3a1::31) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18 via Frontend Transport; Mon,
+ 9 Jun 2025 12:48:55 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ SN1PEPF0002BA52.mail.protection.outlook.com (10.167.242.75) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.15 via Frontend Transport; Mon, 9 Jun 2025 12:48:55 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 9 Jun 2025
+ 05:48:40 -0700
+Received: from drhqmail202.nvidia.com (10.126.190.181) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 9 Jun 2025 05:48:40 -0700
+Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.126.190.181) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Mon, 9 Jun 2025 05:48:40 -0700
+From: Jon Hunter <jonathanh@nvidia.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
+	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
+	<rwarsow@gmx.de>, <conor@kernel.org>, <hargar@microsoft.com>,
+	<broonie@kernel.org>, <linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: Re: [PATCH 6.12 00/24] 6.12.33-rc1 review
+In-Reply-To: <20250607100717.910797456@linuxfoundation.org>
+References: <20250607100717.910797456@linuxfoundation.org>
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250609-msm-dp-mst-v2-2-a54d8902a23d@quicinc.com>
-X-Authority-Analysis: v=2.4 cv=JcO8rVKV c=1 sm=1 tr=0 ts=6846d818 cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=LRmimyFsA7i-Op6yJAUA:9 a=CjuIK1q_8ugA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA5NSBTYWx0ZWRfX2Itf4IqYM108
- 4qC2OOivmHu1D2GEt+oFwmhLeT4kzM8Mba9hzDHzQGnD5DhP+oDxDIP6qzu5cuOhwSCvclRJWxQ
- NwHWmzsXOZvdz397FgApCU12MSxtC/iOPnrUqs1HwOP/I++yWawmJ35KUabA7H/F19OLWiL83NN
- fcjYmUmatfd5ShfnEQhxA7A6l7Vwb0a5WQYBmtlcF6BAnfWn0g7qDsWFQdoCce/KOu1Gx7p6Zvs
- rYuNql1bZTbcisAVGCabInh5IflJNQYFkmo3PSWYKV9wvZzv19emacxXecZ5oFhwH26XtRobxmW
- 3Q9ii7l1ykJsSzaMIqZX9xnEe+mvyehnjupoRdtsemj2vsEJQgJIMp8AHpzI+v71IPO1/MC7AnA
- YbgxPYxqNi0uillDgEaDI5yYzkCOZwlNPMJaANeLti4tscdV0btIuvJJw0v7x7c+Vi2MNkN7
-X-Proofpoint-GUID: mpSLKY-28_CEQIaK2HbB4JUZmIlDx0um
-X-Proofpoint-ORIG-GUID: mpSLKY-28_CEQIaK2HbB4JUZmIlDx0um
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-09_05,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=999 bulkscore=0 spamscore=0 impostorscore=0 phishscore=0
- priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1015 malwarescore=0
- suspectscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506090095
+Message-ID: <f2bdbda8-3ba1-4045-b231-cce83ac7ddcd@drhqmail202.nvidia.com>
+Date: Mon, 9 Jun 2025 05:48:40 -0700
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA52:EE_|SA3PR12MB7857:EE_
+X-MS-Office365-Filtering-Correlation-Id: 08c70d66-1a69-42a6-ecab-08dda753fed1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cmpHWk9KT3A2bEFUYjMwTWgxaGp6UXY2Y3FBdU9DTGxmVjJxaTJZMkZmWG9T?=
+ =?utf-8?B?KzI2dVhUMDZCQ0pzYWRpSU9wTWIxeG1tNm9rQmVwNXh3dW1Dek5RajhOZGJJ?=
+ =?utf-8?B?U1NWMzRaTWh2WE4xb2ZyWHF6NEVvQjkwOVZkSFNYQWxqR2lieE5QdUxZM3Jk?=
+ =?utf-8?B?ZHU2dW5EYTh2WjF4cGpsUzlzaVcwRGlEVHNSWjZzQmRxa2tlZnI4TXJVNTJK?=
+ =?utf-8?B?cW1HL0NkWElrVWtFYW1ibG5vMThidUJKS2I4N2tCaDBnTklvZmxXUWRzNWNI?=
+ =?utf-8?B?bTkzRjdqMHIwN0xNa3JEeFlnRVlsQ0U4b2huNDA0Yzg2aGZGdlFRWUlQbm1i?=
+ =?utf-8?B?RFVEbjJoczJkZHlTZDd0Unhvd3pJWVh6cUorT0szdGxjK1l5SFdibGhEcjNP?=
+ =?utf-8?B?TURDU2ZwNU9vZFN0MndkN1owNEovR0lUbEtMV1VuK0dRcmZUaHdkVUt2SlBZ?=
+ =?utf-8?B?czJJbFlWQjNrMldvN0I3UXpuRkpRdVQrR1BtVXNlQjQ2M0NVdGtETkpsU3VQ?=
+ =?utf-8?B?V1NPU2ZzSTh0eHlDeFVqU0V2bkxZMmdyaWxlQy9XZVlXQS9YdzJmT2NHa1du?=
+ =?utf-8?B?S1ZmRlF2WWJGWUpGOC9RZ0JnTHFsaWE0ZnZhS0I3TnhSUCtUa0lDTU9hd0g0?=
+ =?utf-8?B?dGJZMGFrMnUzeU9zUjEwMUJIcENybVBTMGVLU2dnWEd5c0FscGFwVEZpUysr?=
+ =?utf-8?B?d1BCbWRpQ05TeCt6YlZPbDRYaVhXK3pxTUpTVDZ2NVNKVVBKZHZlemFOYVB6?=
+ =?utf-8?B?QkxyUjlNNEdRL0o3NkwwMkV3ZDlFcDQ1ZEcvUTlkKy9SRGNOYTduV0pUUlVi?=
+ =?utf-8?B?NW1EMnJrajZReVd1RmN4b2ZQTEZaZUl1RW5pT1AyTDFnUW9lc1k1SzNiTVpU?=
+ =?utf-8?B?bEFRSlFkS2RELzFTQ2hrNEd3Mmd1eHAxOUxzaEEzRHlFQWhjc3hCaytpZGxI?=
+ =?utf-8?B?MWVNck9SZVk5OFpKQURpSnluVWEvOElKKzBDZksxWUZxQk9DWVFvVnc3bHFQ?=
+ =?utf-8?B?ZlY4a1lFc3Eva1pkZURHV1JsbVJFd1NidktoS0EvM2dHWGJuTkRkdHNUWHVt?=
+ =?utf-8?B?N0VZSVRmakxtNDZQSy91dGMzVXN5K3ZiVFMrcGVtUTZBc0FtcnVTS3lidUFr?=
+ =?utf-8?B?Q3lrTi9WK0hvdElDN1lRUktudXQzWWRtOFR3NGI3R0cwQjNIRk1nbUZFbmZw?=
+ =?utf-8?B?c3kyZEhmcXJNMU51dzN6L1R6WHJPTDBrWDNhMU9RbDJ0K3ZQM1ZVbXU1QU9I?=
+ =?utf-8?B?OEZWZ0wrM0xWdmhYUDZKTE5YOHVDeHRVVDRYUHFyRmtKcEU3ME5xd0ZaNGVI?=
+ =?utf-8?B?TVVYQ0VFYjAwQkg4aG9PVWJ6dXJGbWFrVDllVHBuOXVUSlozZHUrblNEUGRG?=
+ =?utf-8?B?bFFaTE16aExQODdMelZvbGE4dDA2dllnV0YrKzNjVzZKd3JhNktUQ045aDMy?=
+ =?utf-8?B?SUlodmxFQnNrMGo2TDNFNGhlQTVYNE1tYThWaDRkOC9SVXRETjFYTm42aHNM?=
+ =?utf-8?B?MVVnT0ZEK0V1RHlkZGR1ZTh2cTBaaHYzV1lTOTBEK3ZxYnR1bnBqTEFzbzAy?=
+ =?utf-8?B?REZNcWtidDhEUXhlb0VnOGZ4TDFycEtJOElmaG1IVDYraTl0Q1UwZ0p6b0gz?=
+ =?utf-8?B?bjF0ZUVJTmswT3hXRzVOUVB0dlZicHNibUYvcE9vdlpjdVpJSXlvb3VzRlhk?=
+ =?utf-8?B?cFBadDV1cklPWmNMLy9Db0VDWDc1NzNScmxyOEU0cjRpYkJ1a0VVRU54eGJu?=
+ =?utf-8?B?KzRmN0U5ZEdxaVRjN0pQSW5WR090LzRkT0VwaHJtaVhuMzE5WWR1UWZ3dGJw?=
+ =?utf-8?B?TjQ3U2U4ckQ3ZXppRFhhbVhWbE9yZUtMcWNZT05td1d1QU04SVJQYjhUVFV4?=
+ =?utf-8?B?SkZkdWc2bHd3SUlWVExRUHB6elJwWUhETFZXN3hPZTN4UXIzK3lmTXVORWk3?=
+ =?utf-8?B?N2dvdHgrNVZ5bFZ2RWxoOGQ2MmJtWGlQWjd4QlNUeVA3OE4zbzdNenB6eG4z?=
+ =?utf-8?B?ZzJqUFYxZisrcDJYV25pWWozMXJzSXdRUmhBeGJVd2xlODdBSVY1VEdQRTdk?=
+ =?utf-8?B?SUQvc3RFcUlFNzdzeW8wYTMzUWFxcDdMa0NOQT09?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 12:48:55.3801
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 08c70d66-1a69-42a6-ecab-08dda753fed1
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002BA52.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7857
 
-On Mon, Jun 09, 2025 at 08:21:21PM +0800, Yongxing Mou wrote:
-> From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+On Sat, 07 Jun 2025 12:07:31 +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.12.33 release.
+> There are 24 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> dp_display caches the current display mode and then passes it onto
-> the panel to be used for programming the panel params. Remove this
-> two level passing and directly populated the panel's dp_display_mode
-> instead.
-
-- Why do we need to cache / copy it anyway? Can't we just pass the
-  corresponding drm_atomic_state / drm_crtc_state / drm_display_mode ?
-
+> Responses should be made by Mon, 09 Jun 2025 10:07:05 +0000.
+> Anything received after that time might be too late.
 > 
-> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
-> Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
-> ---
->  drivers/gpu/drm/msm/dp/dp_display.c | 76 ++++++++++++++-----------------------
->  1 file changed, 29 insertions(+), 47 deletions(-)
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.33-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
+> and the diffstat can be found below.
 > 
-> diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
-> index 4a9b65647cdef1ed6c3bb851f93df0db8be977af..9d2db9cbd2552470a36a63f70f517c35436f7280 100644
-> --- a/drivers/gpu/drm/msm/dp/dp_display.c
-> +++ b/drivers/gpu/drm/msm/dp/dp_display.c
-> @@ -92,7 +92,6 @@ struct msm_dp_display_private {
->  	struct msm_dp_panel   *panel;
->  	struct msm_dp_ctrl    *ctrl;
->  
-> -	struct msm_dp_display_mode msm_dp_mode;
->  	struct msm_dp msm_dp_display;
->  
->  	/* wait for audio signaling */
-> @@ -806,16 +805,29 @@ static int msm_dp_init_sub_modules(struct msm_dp_display_private *dp)
->  }
->  
->  static int msm_dp_display_set_mode(struct msm_dp *msm_dp_display,
-> -			       struct msm_dp_display_mode *mode)
-> +				   const struct drm_display_mode *adjusted_mode,
-> +				   struct msm_dp_panel *msm_dp_panel)
->  {
-> -	struct msm_dp_display_private *dp;
-> +	u32 bpp;
->  
-> -	dp = container_of(msm_dp_display, struct msm_dp_display_private, msm_dp_display);
-> +	drm_mode_copy(&msm_dp_panel->msm_dp_mode.drm_mode, adjusted_mode);
-> +
-> +	if (msm_dp_display_check_video_test(msm_dp_display))
-> +		bpp = msm_dp_display_get_test_bpp(msm_dp_display);
-> +	else
-> +		bpp = msm_dp_panel->connector->display_info.bpc * 3;
-> +
-> +	msm_dp_panel->msm_dp_mode.bpp = bpp;
-> +
-> +	msm_dp_panel->msm_dp_mode.v_active_low =
-> +		!!(adjusted_mode->flags & DRM_MODE_FLAG_NVSYNC);
-> +	msm_dp_panel->msm_dp_mode.h_active_low =
-> +		!!(adjusted_mode->flags & DRM_MODE_FLAG_NHSYNC);
-> +	msm_dp_panel->msm_dp_mode.out_fmt_is_yuv_420 =
-> +		drm_mode_is_420_only(&msm_dp_panel->connector->display_info, adjusted_mode) &&
-> +		msm_dp_panel->vsc_sdp_supported;
->  
-> -	drm_mode_copy(&dp->panel->msm_dp_mode.drm_mode, &mode->drm_mode);
-> -	dp->panel->msm_dp_mode.bpp = mode->bpp;
-> -	dp->panel->msm_dp_mode.out_fmt_is_yuv_420 = mode->out_fmt_is_yuv_420;
-> -	msm_dp_panel_init_panel_info(dp->panel);
-> +	msm_dp_panel_init_panel_info(msm_dp_panel);
->  	return 0;
->  }
->  
-> @@ -1431,10 +1443,13 @@ bool msm_dp_needs_periph_flush(const struct msm_dp *msm_dp_display,
->  bool msm_dp_wide_bus_available(const struct msm_dp *msm_dp_display)
->  {
->  	struct msm_dp_display_private *dp;
-> +	struct msm_dp_panel *dp_panel;
->  
->  	dp = container_of(msm_dp_display, struct msm_dp_display_private, msm_dp_display);
->  
-> -	if (dp->msm_dp_mode.out_fmt_is_yuv_420)
-> +	dp_panel = dp->panel;
-> +
-> +	if (dp_panel->msm_dp_mode.out_fmt_is_yuv_420)
->  		return false;
->  
->  	return dp->wide_bus_supported;
-> @@ -1496,10 +1511,6 @@ void msm_dp_bridge_atomic_enable(struct drm_bridge *drm_bridge,
->  	bool force_link_train = false;
->  
->  	msm_dp_display = container_of(dp, struct msm_dp_display_private, msm_dp_display);
-> -	if (!msm_dp_display->msm_dp_mode.drm_mode.clock) {
-> -		DRM_ERROR("invalid params\n");
-> -		return;
-> -	}
->  
->  	if (dp->is_edp)
->  		msm_dp_hpd_plug_handle(msm_dp_display, 0);
-> @@ -1517,15 +1528,6 @@ void msm_dp_bridge_atomic_enable(struct drm_bridge *drm_bridge,
->  		return;
->  	}
->  
-> -	rc = msm_dp_display_set_mode(dp, &msm_dp_display->msm_dp_mode);
-> -	if (rc) {
-> -		DRM_ERROR("Failed to perform a mode set, rc=%d\n", rc);
-> -		mutex_unlock(&msm_dp_display->event_mutex);
-> -		return;
-> -	}
-
-It should be done other way around: keep this call and drop
-msm_dp_bridge_mode_set().
-
-> -
-> -	hpd_state =  msm_dp_display->hpd_state;
-> -
->  	if (hpd_state == ST_CONNECTED && !dp->power_on) {
->  		msm_dp_display_host_phy_init(msm_dp_display);
->  		force_link_train = true;
-> @@ -1604,33 +1606,13 @@ void msm_dp_bridge_mode_set(struct drm_bridge *drm_bridge,
->  	msm_dp_display = container_of(dp, struct msm_dp_display_private, msm_dp_display);
->  	msm_dp_panel = msm_dp_display->panel;
->  
-> -	memset(&msm_dp_display->msm_dp_mode, 0x0, sizeof(struct msm_dp_display_mode));
-> -
-> -	if (msm_dp_display_check_video_test(dp))
-> -		msm_dp_display->msm_dp_mode.bpp = msm_dp_display_get_test_bpp(dp);
-> -	else /* Default num_components per pixel = 3 */
-> -		msm_dp_display->msm_dp_mode.bpp = dp->connector->display_info.bpc * 3;
-> -
-> -	if (!msm_dp_display->msm_dp_mode.bpp)
-> -		msm_dp_display->msm_dp_mode.bpp = 24; /* Default bpp */
-> -
-> -	drm_mode_copy(&msm_dp_display->msm_dp_mode.drm_mode, adjusted_mode);
-> -
-> -	msm_dp_display->msm_dp_mode.v_active_low =
-> -		!!(msm_dp_display->msm_dp_mode.drm_mode.flags & DRM_MODE_FLAG_NVSYNC);
-> -
-> -	msm_dp_display->msm_dp_mode.h_active_low =
-> -		!!(msm_dp_display->msm_dp_mode.drm_mode.flags & DRM_MODE_FLAG_NHSYNC);
-> -
-> -	msm_dp_display->msm_dp_mode.out_fmt_is_yuv_420 =
-> -		drm_mode_is_420_only(&dp->connector->display_info, adjusted_mode) &&
-> -		msm_dp_panel->vsc_sdp_supported;
-> +	msm_dp_display_set_mode(dp, adjusted_mode, msm_dp_panel);
->  
->  	/* populate wide_bus_support to different layers */
-> -	msm_dp_display->ctrl->wide_bus_en =
-> -		msm_dp_display->msm_dp_mode.out_fmt_is_yuv_420 ? false : msm_dp_display->wide_bus_supported;
-> -	msm_dp_display->catalog->wide_bus_en =
-> -		msm_dp_display->msm_dp_mode.out_fmt_is_yuv_420 ? false : msm_dp_display->wide_bus_supported;
-> +	msm_dp_display->ctrl->wide_bus_en = msm_dp_panel->msm_dp_mode.out_fmt_is_yuv_420 ?
-> +		false : msm_dp_display->wide_bus_supported;
-> +	msm_dp_display->catalog->wide_bus_en = msm_dp_panel->msm_dp_mode.out_fmt_is_yuv_420 ?
-> +		false : msm_dp_display->wide_bus_supported;
->  }
->  
->  void msm_dp_bridge_hpd_enable(struct drm_bridge *bridge)
+> thanks,
 > 
-> -- 
-> 2.34.1
-> 
+> greg k-h
 
--- 
-With best wishes
-Dmitry
+All tests passing for Tegra ...
+
+Test results for stable-v6.12:
+    10 builds:	10 pass, 0 fail
+    28 boots:	28 pass, 0 fail
+    116 tests:	116 pass, 0 fail
+
+Linux version:	6.12.33-rc1-g6fa41e6c65f7
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra186-p3509-0000+p3636-0001, tegra194-p2972-0000,
+                tegra194-p3509-0000+p3668-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra210-p3450-0000,
+                tegra30-cardhu-a04
+
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+
+Jon
