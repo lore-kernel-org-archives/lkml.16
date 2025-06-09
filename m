@@ -1,228 +1,115 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8165D255E4E
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 10:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C03F1F4191;
+	Mon,  9 Jun 2025 10:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749466366; cv=none; b=ujKpuGid73iBUasLFvc7BLACJ7xxz6sgverfFdTrQz1UW+xvF0qx1s4Bl9OaF+mc28xpfQ956ZZ4FLUYYD0SJKfsW1a1hrYUDDdgSHOW9s9A7bieeKIhT2pWeLUGpcWQFpqkrvExtz/I0qbFIZEiJjTKD7pbFdOQv0/RKp89Tmk=
+	t=1749466518; cv=none; b=aSziqtir0Mb8bm2IN9RMG7RNH+ZQgd+jnSsz1g31Ys9PzP7tSlRkG8WnXJLR6TIkTFopACdOrxZjw6wkuQ+BoxqmZEoNjeIaQZHpggHi0scgZxBOW8SEULcbUiaP1qnEvwZ1WhzXql6M875KyyD43zpwwvs7IJL3ReFCDvGQYPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749466366; c=relaxed/simple;
-	bh=SCzRjnsF82IPQ+p5OMRJvQtpgb4O/1tjQ+rlEoSNyUw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DM7F91xmV3v0KCI4GmMdR5FMZC+Ziqr34uRVqrH6y/FXCYmVWyb7ryS2qbg5F6KY30u3ZDhoGZsSgbhMXx38tmaqEpS0AJZ282OkBdsnvGLS0WlX1+ONRXa7FW6So3a8G+yPVbCKICEpomBTfRWtux/Q3BE9+w4VAbXPB//Haiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=oOmf0hh3; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749466518; c=relaxed/simple;
+	bh=tnWO+lQ/sTdHYK94IxXlayYAXVY+emKXiNfprDofk2k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rrWVcX133snwJtkHMf2Wf064C4Ni7kJm73Pd+qcUw0pVSRsPR5iaYLMxpBvrkQx4vbIWxuY5Vf8xH/Au83opVaLTldoETvuuQPQaKwZsIWp+n23AGZ9lu9GP5pY3oWjjECyqaSANOAGNZGLAXVJNJGN4BK105K778MkmtX0BrTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=E9NU+5LZ; arc=none smtp.client-ip=95.143.211.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="oOmf0hh3"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55993X2o011530
-	for <linux-kernel@vger.kernel.org>; Mon, 9 Jun 2025 10:52:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	XMSKmDs8UZabzmzJG8jBh2aHanEhhhPV+f/N8Ve7e2c=; b=oOmf0hh3N51YlmXq
-	ZKEYmu08rgyq2kYpbz5jERVIzqb/rPyo186IJnjtxAdf/TDDkbDqPzshfEWuB4O2
-	yzv12cwASwYq1BLmbM3MGO/XGzX98O8NVeVjrQkRIKDsQjUQSpMXbf6qNGFO2XPS
-	pt0e+cuDzwQ8ilo+kqBxhFCdIuXaSsA1ij5I2mBvGoOxVRxvB8h+fcgsOGTTDk1m
-	d4d3VGQ+pwfA57im0kH2nB2clEBFfH1CRvzMYSoQH2LdzY8oX+2/hEeXYCObAkp6
-	iwCfeaNKgd9ggvcZ/MgXQNEOrLPvvtvNERfEftE/DE9nD5BdabJOpAm+VxnMtmuH
-	U5OW4A==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474dgxp3be-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 10:52:43 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2355651d204so39207245ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 03:52:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749466362; x=1750071162;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XMSKmDs8UZabzmzJG8jBh2aHanEhhhPV+f/N8Ve7e2c=;
-        b=J831Yz8OAjS5bvPdY2p7qLCiVoM6ujQJnPwxIytvWDHQ2h6w/JUC/TMJeVm8mPSmGl
-         9If/g9ZBf3oEAZGMUY5YWa589/ion/QzEi7HAGRTNjA9RNJWuMc06zoBHX/rwD6YTwMh
-         mFqyWXYCxWSa+htdWSWpULEZmKLlWu+YOcgAxoA9XIy1KbdD+l/aEUBbH3qXx7mcxU9/
-         Uk0QhY/nloDPT2AeWPWzDonA6+nG5a/ERfZX0jkkbPzTV0xJ8lYhqi7T3BehNi1oEnqE
-         v/3gc4IOSyJHqLoo2mtdHlj1akckRNmjn93UAuXjLYqSSXQF7OzkAveGMndjxT9L0m25
-         JQDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXzqtgJjkTKSaWx6/gQLPe7087Q7Puf/wUL5d/Qo+87d+AKXFphDo/0jXHB0H1Tj9+H2628H79zn7XVCgo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhjFPFylC9qeY8nHq9TKiLWgNyou/w/e5WvQuC9066be40AEBb
-	lDKi3tkLNJxQASW9ANnAOWAPIj1MYtsCDiY2uAhO4Nn3S6iach6SOoRnwYv0Y0qNx0MxzmoPL1V
-	GWzmSV9OpbdonxgU1yswmm+sRY6kxBNtgJ3ohIT5uUOnH8BgP/BBbDNYODeW7ti8kEE0=
-X-Gm-Gg: ASbGncvOigCrJ7wpVLx/WdOUbKEGPJnSEMv1whPm8SkchyFh0J11Q+nyu+5/GgRhNsp
-	RFxJ6Tr9xB3rlxhYrtAwPPnBkA0BYRf7itH8hvy/VpwH90cvUeacIF5uxgHMMTe5BAIEQjqSlvB
-	BlZliibOfwbvDsC8XbWcVuhfXJwoUyi/MoNjBR/te1/w7SW03u3YQDM2GUi3DKnpuKuEjT/z1xi
-	pF2Kf/Bd4WOF+HKC13ZMpCcHyWJ7W4kAY41WFlAOhGpflJqda4EFN5NsEkz+VHjrFBVgVZdnpos
-	kcYeijaF5Vl1kV2ltcpjfLHCVyad4zNHH88LCRRfStr8qzk=
-X-Received: by 2002:a17:903:22c6:b0:234:986c:66bf with SMTP id d9443c01a7336-23601e21e73mr197952345ad.11.1749466362151;
-        Mon, 09 Jun 2025 03:52:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHWPyhHD9XxH9T4qz5fLsYDL+SED/9vTigep2ZpbnbET9oeQcBqBu94wuXuHPx0ZtmVvPvTAQ==
-X-Received: by 2002:a17:903:22c6:b0:234:986c:66bf with SMTP id d9443c01a7336-23601e21e73mr197952025ad.11.1749466361751;
-        Mon, 09 Jun 2025 03:52:41 -0700 (PDT)
-Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603092f44sm51836465ad.63.2025.06.09.03.52.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 03:52:41 -0700 (PDT)
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Date: Mon, 09 Jun 2025 16:21:32 +0530
-Subject: [PATCH v4 11/11] wifi: ath11k: Add support for MHI bandwidth
- scaling
+	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="E9NU+5LZ"
+From: Denis Arefev <arefev@swemel.ru>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
+	t=1749466513;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Zonziy8bKKs9HmH5q002b/uuhFJHjUBmz9TKkYANDTw=;
+	b=E9NU+5LZrMe54Lz4cEg5CglbA8dU6J9V3aWIVVEgh8v2D3YGF7w92CeeN/ABweRo+Q0Bo9
+	kn/zoUKRKjLeZSMFHVaO62TK77nF9s3DNpRxYKjcdrqF4U5F6Khxjzxw+rINV3Un5hezrw
+	HHwec3Ig0heOjUr7evg/2umOe8trWAM=
+To: stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Dave Taht <dave.taht@bufferbloat.net>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	Gerrard Tai <gerrard.tai@starlabs.sg>,
+	Simon Horman <horms@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Subject: [PATCH 5.10] codel: remove sch->q.qlen check before qdisc_tree_reduce_backlog()
+Date: Mon,  9 Jun 2025 13:55:11 +0300
+Message-ID: <20250609105513.39042-1-arefev@swemel.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250609-mhi_bw_up-v4-11-3faa8fe92b05@qti.qualcomm.com>
-References: <20250609-mhi_bw_up-v4-0-3faa8fe92b05@qti.qualcomm.com>
-In-Reply-To: <20250609-mhi_bw_up-v4-0-3faa8fe92b05@qti.qualcomm.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
-        linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
-        qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com,
-        quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-        Miaoqing Pan <quic_miaoqing@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749466291; l=3170;
- i=krichai@qti.qualcomm.com; s=20230907; h=from:subject:message-id;
- bh=0RMRGjVQy5V22bePXtjwsrcyRhPyFXhPokQ5rNoOCPo=;
- b=MNDXA2dYcwLCousStsTKANlp0JTVnaDX94/mS+I9WznZ/upyqZYAq8u535wBq2VkfOsmV9Zfl
- piw6Pg4EfGsDSrpvmNY6Ys/M4EwuMHln7+S6/tyI1nv1Le/XJ1OYyRe
-X-Developer-Key: i=krichai@qti.qualcomm.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-Proofpoint-GUID: RkRP__LYOEwFQP8OCrs5QHlAcAgfv1XD
-X-Authority-Analysis: v=2.4 cv=HMbDFptv c=1 sm=1 tr=0 ts=6846bcfb cx=c_pps
- a=JL+w9abYAAE89/QcEU+0QA==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8
- a=262QNBeyodYRG1lUGOYA:9 a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: RkRP__LYOEwFQP8OCrs5QHlAcAgfv1XD
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA4MiBTYWx0ZWRfX4Jhp+JFA51Pb
- 5ZLrl+uVZW6igFQyU0EJAb2KF+SETftMxP7i/T1opEcowySCxwRJcxdczdagkyRPJt/mhKbugKT
- uVv8FjMHdwGR/X8JGFXvDpu3M5GahXLiNAkV7Ti1DHrjtbda2Ws9v00n0ZWCztN0on/bPPdOjp+
- LNJVlIDCt2A4NjsZ/BxWe7xhc5NMTQiRXdVVjGy/IXvG17VGIR1VzPxXxnTwIKCnPSdbNtj5Cwv
- lW6rUuODArg8F9FaG+b043JFMkU2FPHMklX7mkYTQMphIXeKRKXXg9buXtVYUFy4Neg+OddK0tC
- oc4D6dwsZlq60ZWlVINscaXKeB7RybIZbJQsIrkvngaH8wcEUMxYyhEvXfvXSKQSfPjQaLEcb+R
- K1xFPUDRjIxoa0/MUMPepREQhD32XQS0ogLQxSBSsCytusNJy0Hk2utrcbnUHC60meOVs+Q2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-09_04,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 mlxlogscore=999 priorityscore=1501 impostorscore=0
- suspectscore=0 malwarescore=0 phishscore=0 spamscore=0 lowpriorityscore=0
- adultscore=0 mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506090082
+Content-Transfer-Encoding: 8bit
 
-From: Miaoqing Pan <quic_miaoqing@quicinc.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-Add support for MHI bandwidth scaling, which will reduce power consumption
-if WLAN operates with lower bandwidth. This feature is only enabled for
-QCA6390.
+commit 342debc12183b51773b3345ba267e9263bdfaaef upstream. 
 
-Bandwidth scaling is initiated by the endpoint firmware based upon the
-bandwidth requirements, if there is high bandwidth data endpoint requests
-for higher data rates or if there is less bandwidth they request for lower
-data rates to reduce power. Endpoint initiates this through MHI protocol.
+After making all ->qlen_notify() callbacks idempotent, now it is safe to
+remove the check of qlen!=0 from both fq_codel_dequeue() and
+codel_qdisc_dequeue().
 
-Tested-on: WCN6855 hw2.1 PCI WLAN.HSP.1.1-04546-QCAHSPSWPL_V1_V2_SILICONZ_IOE-1
-
-Signed-off-by: Miaoqing Pan <quic_miaoqing@quicinc.com>
-Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Reported-by: Gerrard Tai <gerrard.tai@starlabs.sg>
+Fixes: 4b549a2ef4be ("fq_codel: Fair Queue Codel AQM")
+Fixes: 76e3cc126bb2 ("codel: Controlled Delay AQM")
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Link: https://patch.msgid.link/20250403211636.166257-1-xiyou.wangcong@gmail.com
+Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+[Denis: minor fix to resolve merge conflict.]                                           
+Signed-off-by: Denis Arefev <arefev@swemel.ru>                                    
 ---
- drivers/net/wireless/ath/ath11k/mhi.c | 41 +++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+Backport fix for CVE-2025-37798
+Link: https://nvd.nist.gov/vuln/detail/CVE-2025-37798
+---
+ net/sched/sch_codel.c    | 5 +----
+ net/sched/sch_fq_codel.c | 6 ++----
+ 2 files changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath11k/mhi.c b/drivers/net/wireless/ath/ath11k/mhi.c
-index acd76e9392d31192aca6776319ef0829a1c69628..f79507c7a82244f9e9d8a3ae6765df3f9432ae8c 100644
---- a/drivers/net/wireless/ath/ath11k/mhi.c
-+++ b/drivers/net/wireless/ath/ath11k/mhi.c
-@@ -20,6 +20,7 @@
- #define MHI_TIMEOUT_DEFAULT_MS	20000
- #define RDDM_DUMP_SIZE	0x420000
- #define MHI_CB_INVALID	0xff
-+#define MHI_BW_SCALE_CHAN_DB 126
+diff --git a/net/sched/sch_codel.c b/net/sched/sch_codel.c
+index d99c7386e24e..0d4228bfd1a0 100644
+--- a/net/sched/sch_codel.c
++++ b/net/sched/sch_codel.c
+@@ -95,10 +95,7 @@ static struct sk_buff *codel_qdisc_dequeue(struct Qdisc *sch)
+ 			    &q->stats, qdisc_pkt_len, codel_get_enqueue_time,
+ 			    drop_func, dequeue_func);
  
- static const struct mhi_channel_config ath11k_mhi_channels_qca6390[] = {
- 	{
-@@ -73,6 +74,17 @@ static struct mhi_event_config ath11k_mhi_events_qca6390[] = {
- 		.client_managed = false,
- 		.offload_channel = false,
- 	},
-+	{
-+		.num_elements = 8,
-+		.irq_moderation_ms = 0,
-+		.irq = 1,
-+		.mode = MHI_DB_BRST_DISABLE,
-+		.data_type = MHI_ER_BW_SCALE,
-+		.priority = 2,
-+		.hardware_event = false,
-+		.client_managed = false,
-+		.offload_channel = false,
-+	},
- };
- 
- static const struct mhi_controller_config ath11k_mhi_config_qca6390 = {
-@@ -313,6 +325,33 @@ static void ath11k_mhi_op_write_reg(struct mhi_controller *mhi_cntrl,
- 	writel(val, addr);
- }
- 
-+static int ath11k_mhi_op_get_misc_doorbell(struct mhi_controller *mhi_cntrl,
-+					   enum mhi_er_data_type type)
-+{
-+	if (type == MHI_ER_BW_SCALE)
-+		return MHI_BW_SCALE_CHAN_DB;
+-	/* We cant call qdisc_tree_reduce_backlog() if our qlen is 0,
+-	 * or HTB crashes. Defer it for next round.
+-	 */
+-	if (q->stats.drop_count && sch->q.qlen) {
++	if (q->stats.drop_count) {
+ 		qdisc_tree_reduce_backlog(sch, q->stats.drop_count, q->stats.drop_len);
+ 		q->stats.drop_count = 0;
+ 		q->stats.drop_len = 0;
+diff --git a/net/sched/sch_fq_codel.c b/net/sched/sch_fq_codel.c
+index 60dbc549e991..3c1efe360def 100644
+--- a/net/sched/sch_fq_codel.c
++++ b/net/sched/sch_fq_codel.c
+@@ -314,10 +314,8 @@ static struct sk_buff *fq_codel_dequeue(struct Qdisc *sch)
+ 	}
+ 	qdisc_bstats_update(sch, skb);
+ 	flow->deficit -= qdisc_pkt_len(skb);
+-	/* We cant call qdisc_tree_reduce_backlog() if our qlen is 0,
+-	 * or HTB crashes. Defer it for next round.
+-	 */
+-	if (q->cstats.drop_count && sch->q.qlen) {
 +
-+	return -EINVAL;
-+}
-+
-+static int ath11k_mhi_op_bw_scale(struct mhi_controller *mhi_cntrl,
-+				  struct mhi_link_info *link_info)
-+{
-+	enum pci_bus_speed speed = pci_lnkctl2_bus_speed(link_info->target_link_speed);
-+	struct ath11k_base *ab = dev_get_drvdata(mhi_cntrl->cntrl_dev);
-+	struct pci_dev *pci_dev = to_pci_dev(ab->dev);
-+	struct pci_dev *pdev;
-+
-+	if (!pci_dev)
-+		return -EINVAL;
-+
-+	pdev = pci_upstream_bridge(pci_dev);
-+	if (!pdev)
-+		return -ENODEV;
-+
-+	return pcie_set_target_speed(pdev, speed, true);
-+}
-+
- static int ath11k_mhi_read_addr_from_dt(struct mhi_controller *mhi_ctrl)
- {
- 	struct device_node *np;
-@@ -389,6 +428,8 @@ int ath11k_mhi_register(struct ath11k_pci *ab_pci)
- 	mhi_ctrl->status_cb = ath11k_mhi_op_status_cb;
- 	mhi_ctrl->read_reg = ath11k_mhi_op_read_reg;
- 	mhi_ctrl->write_reg = ath11k_mhi_op_write_reg;
-+	mhi_ctrl->bw_scale = ath11k_mhi_op_bw_scale;
-+	mhi_ctrl->get_misc_doorbell = ath11k_mhi_op_get_misc_doorbell;
- 
- 	switch (ab->hw_rev) {
- 	case ATH11K_HW_QCN9074_HW10:
-
++	if (q->cstats.drop_count) {
+ 		qdisc_tree_reduce_backlog(sch, q->cstats.drop_count,
+ 					  q->cstats.drop_len);
+ 		q->cstats.drop_count = 0;
 -- 
-2.34.1
+2.43.0
 
