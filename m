@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E75219A71;
-	Mon,  9 Jun 2025 15:01:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1CFC224896;
+	Mon,  9 Jun 2025 15:01:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749481273; cv=none; b=gogxBjISwZ1v1OJ9ruty5ipCf5swjCPV7zCHMXsfNM7mtmxSn1df47Q3dlMORSp+trzTwnDDaodTENAu0K2YXbkM30WIRViYiEkanlXmcF7ancud0YiQzAELCSR3it/8GEpQEcF4BCarDvtBRKg7f324/Vxnd32zLvVVh+YOu6s=
+	t=1749481275; cv=none; b=ePn25rha9V9e6s55J6bpgBam0b0GB0DFVyd8BU9fA5S0TirdTx14kMhXJj1LkNoxcl5N7CPgfcQ2sc+SFGca9QDWceAE+S5PfFYeXgkh7QPgewFK+Eol/kUwLIeU7CvSN4P/nG5fESkbMJlAe4VgY6lhRsZT8/92ckVwJNPakQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749481273; c=relaxed/simple;
-	bh=49cU8Ts94cgb4QkrriKDZFEwuDxhQXvYqP0FbuF4YZQ=;
+	s=arc-20240116; t=1749481275; c=relaxed/simple;
+	bh=bMGu6bXrspSd6vTEsv4p9+r2Ppn+jbVNqYWzYKyLmsc=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=Q76gCHwXWZHEUg8W1CNT9sRjehFQf+kS0bYUYyOwywVgrosSO3bxz/nM36DPBdqbYhESAfgPIqYZJ942j+5q6pPQcut3ku3P8iTNPsPQu0/WAylT3xMbX+6wlXpVYnasf9rj5mYlK40q+lBqvrsk/dgOgRVwmyGAIXjmdIe+qjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pUyftA65; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=mwAf2XPviKkbb5zhcUQ1Pz6T4gmsQimc8NnYvEjtoABznPyYV6Gfu96wmGvADSj+6JaUKQJ/hr7aFb991mvaHc/YIHABNHaXNT+7KhY6l6ZY+7cYvRN02pxhRET22bDVhlUMYcGfNsF3Lwsv26fJP0d4StkQ/NONT6vwCyNB308=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PlNiwZTR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pUyftA65"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 332ABC4CEED;
-	Mon,  9 Jun 2025 15:01:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PlNiwZTR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FF32C4CEED;
+	Mon,  9 Jun 2025 15:01:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749481273;
-	bh=49cU8Ts94cgb4QkrriKDZFEwuDxhQXvYqP0FbuF4YZQ=;
+	s=k20201202; t=1749481274;
+	bh=bMGu6bXrspSd6vTEsv4p9+r2Ppn+jbVNqYWzYKyLmsc=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=pUyftA65BFa7f/aOR3L+uaX+HTauesh20t2Rq7zturUKTtFX0ptHSDOMnDf/100Q+
-	 QcTyTIQyuostNjRegk4soHMyzDRavWRNsYNaV6LrNvbTwAB41Yss5dLQgQC7nA0fGe
-	 ZQxSFTQmuDg3M3Kmjwj3nD8O/pg9VfbqNhyqc+mVSfuiqjFmPFha940csLTM9mD0TM
-	 r2EDzqVF4UgPMBsZ2msvMtuo4z382SszHx4EG9CdoyYDF+6sL+ksgeZ/o7+KLiYXGB
-	 7ehe5kT5cEeFpr3HvthoR70OD2nSYeYR/NXollVQCI1GxYNLNSOc66ApvHfojq/zLM
-	 OxnxR+j3tZBSA==
-Date: Mon, 09 Jun 2025 10:01:12 -0500
+	b=PlNiwZTRJPkkXxfWUEzS1zcKmJu8KlkIOzzjW1FsR7sK4Gn3ni/93dukK9cY3j+LB
+	 7MPRAbYD2qOQ0Nk/gMVMWyVHJx8/toOAf5YplIoI5vWGr/DoCDZJUlwykkbHzQgDG3
+	 vQESo1gUBumToIvlohybBWWYOsqY+LRsvDYwy8w1MxVv2SyFbHg/o5m8VG2NIB1ZnO
+	 lSr5VrJp6Vm06sSFpQJNda+GLToqbP9q6Jhou26kx8VaNosaHyuZb2Io6r7yJ7NaWJ
+	 ROwEn9x+J3O9W3oJ2HtBb9/MD9pqqoWqSrB8ybrfwB9FvpJFPE34ClHN3ujfgSQh3f
+	 g5dxuwfMzxFVw==
+Date: Mon, 09 Jun 2025 10:01:13 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,54 +36,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, 
- Abhinav Kumar <abhinav.kumar@linux.dev>, Will Deacon <will@kernel.org>, 
- linux-arm-kernel@lists.infradead.org, freedreno@lists.freedesktop.org, 
- Konrad Dybcio <konradybcio@kernel.org>, Simona Vetter <simona@ffwll.ch>, 
- Rob Clark <robin.clark@oss.qualcomm.com>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, 
- Jessica Zhang <jessica.zhang@oss.qualcomm.com>, 
- dri-devel@lists.freedesktop.org, Dmitry Baryshkov <lumag@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>, Sean Paul <sean@poorly.run>, 
- Bjorn Andersson <andersson@kernel.org>, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org
-To: Akhil P Oommen <akhilpo@oss.qualcomm.com>
-In-Reply-To: <20250607-x1p-adreno-v1-0-a8ea80f3b18b@oss.qualcomm.com>
-References: <20250607-x1p-adreno-v1-0-a8ea80f3b18b@oss.qualcomm.com>
-Message-Id: <174948104999.2282575.3222487103979882730.robh@kernel.org>
-Subject: Re: [PATCH 0/3] Support for Adreno X1-45 GPU
+Cc: linux-tegra@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>, 
+ Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: Aaron Kling <webgeek1234@gmail.com>
+In-Reply-To: <20250608-p3452-v1-0-4c2c1d7e4310@gmail.com>
+References: <20250608-p3452-v1-0-4c2c1d7e4310@gmail.com>
+Message-Id: <174948105045.2282609.1608022090248656959.robh@kernel.org>
+Subject: Re: [PATCH RFC 0/2] arm64: tegra: Add NVIDIA Jetson Nano 2GB
+ Developer Kit support
 
 
-On Sat, 07 Jun 2025 19:44:58 +0530, Akhil P Oommen wrote:
-> Add support for X1-45 GPU found in X1P41200 chipset (8 cpu core
-> version). X1-45 is a smaller version of X1-85 with lower core count and
-> smaller memories. From UMD perspective, this is similar to "FD735"
-> present in Mesa.
-> 
-> Tested Glmark & Vkmark on Debian Gnome desktop.
-> 
-> Signed-off-by: Akhil P Oommen <akhilpo@oss.qualcomm.com>
+On Sun, 08 Jun 2025 23:24:34 -0500, Aaron Kling wrote:
+> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
 > ---
-> Akhil P Oommen (3):
->       arm64: defconfig: Enable X1P42100_GPUCC driver
->       drm/msm/adreno: Add Adreno X1-45 support
->       arm64: dts: qcom: Add GPU support to X1P42100 SoC
+> Aaron Kling (2):
+>       dt-bindings: arm: tegra: Document Jetson Nano Devkits
+>       arm64: tegra: Add NVIDIA Jetson Nano 2GB Developer Kit support
 > 
->  arch/arm64/boot/dts/qcom/x1e80100.dtsi    |   7 ++
->  arch/arm64/boot/dts/qcom/x1p42100-crd.dts |   4 +
->  arch/arm64/boot/dts/qcom/x1p42100.dtsi    | 121 +++++++++++++++++++++++++++++-
->  arch/arm64/configs/defconfig              |   1 +
->  drivers/gpu/drm/msm/adreno/a6xx_catalog.c |  38 ++++++++++
->  5 files changed, 170 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/arm/tegra.yaml   |  5 +++
+>  arch/arm64/boot/dts/nvidia/Makefile                |  2 +
+>  arch/arm64/boot/dts/nvidia/tegra210-p3541-0000.dts | 43 ++++++++++++++++++++++
+>  3 files changed, 50 insertions(+)
 > ---
-> base-commit: b3bded85d838336326ce78e394e7818445e11f20
-> change-id: 20250603-x1p-adreno-219da2fd4ca4
+> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+> change-id: 20250513-p3452-059708ca9993
 > 
 > Best regards,
 > --
-> Akhil P Oommen <akhilpo@oss.qualcomm.com>
+> Aaron Kling <webgeek1234@gmail.com>
 > 
 > 
 > 
@@ -104,15 +86,45 @@ make sure dt-schema is up to date:
 
 
 This patch series was applied (using b4) to base:
- Base: using specified base-commit b3bded85d838336326ce78e394e7818445e11f20
+ Base: using specified base-commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250607-x1p-adreno-v1-0-a8ea80f3b18b@oss.qualcomm.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/nvidia/' for 20250608-p3452-v1-0-4c2c1d7e4310@gmail.com:
 
-arch/arm64/boot/dts/qcom/x1p42100-crd.dtb: opp-table (operating-points-v2-adreno): 'opp-666000000-0', 'opp-666000000-1' do not match any of the regexes: '^opp-[0-9]+$', '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/opp/opp-v2-qcom-adreno.yaml#
+arch/arm64/boot/dts/nvidia/tegra210-p3541-0000.dtb: /pcie@1003000: failed to match any schema with compatible: ['nvidia,tegra210-pcie']
+arch/arm64/boot/dts/nvidia/tegra210-p3541-0000.dtb: /host1x@50000000/tsec@54100000: failed to match any schema with compatible: ['nvidia,tegra210-tsec']
+arch/arm64/boot/dts/nvidia/tegra210-p3541-0000.dtb: /host1x@50000000/tsec@54500000: failed to match any schema with compatible: ['nvidia,tegra210-tsec']
+arch/arm64/boot/dts/nvidia/tegra210-p3541-0000.dtb: /gpu@57000000: failed to match any schema with compatible: ['nvidia,gm20b']
+arch/arm64/boot/dts/nvidia/tegra210-p3541-0000.dtb: /interrupt-controller@60004000: failed to match any schema with compatible: ['nvidia,tegra210-ictlr']
+arch/arm64/boot/dts/nvidia/tegra210-p3541-0000.dtb: /dma@60020000: failed to match any schema with compatible: ['nvidia,tegra210-apbdma', 'nvidia,tegra148-apbdma']
+arch/arm64/boot/dts/nvidia/tegra210-p3541-0000.dtb: /dma@60020000: failed to match any schema with compatible: ['nvidia,tegra210-apbdma', 'nvidia,tegra148-apbdma']
+arch/arm64/boot/dts/nvidia/tegra210-p3541-0000.dtb: /i2c@7000d000/pmic@3c: failed to match any schema with compatible: ['maxim,max77620']
+arch/arm64/boot/dts/nvidia/tegra210-p3541-0000.dtb: /memory-controller@70019000: failed to match any schema with compatible: ['nvidia,tegra210-mc']
+arch/arm64/boot/dts/nvidia/tegra210-p3541-0000.dtb: external-memory-controller@7001b000 (nvidia,tegra210-emc): '#cooling-cells' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/memory-controllers/nvidia,tegra210-emc.yaml#
+arch/arm64/boot/dts/nvidia/tegra210-p3541-0000.dtb: /clock@70110000: failed to match any schema with compatible: ['nvidia,tegra210-dfll']
+arch/arm64/boot/dts/nvidia/tegra210-p3541-0000.dtb: usb-phy@7d000000 (nvidia,tegra210-usb-phy): compatible: 'oneOf' conditional failed, one must be fixed:
+	['nvidia,tegra210-usb-phy', 'nvidia,tegra30-usb-phy'] is too long
+	'nvidia,tegra210-usb-phy' is not one of ['nvidia,tegra124-usb-phy', 'nvidia,tegra114-usb-phy']
+	'nvidia,tegra210-usb-phy' is not one of ['nvidia,tegra30-usb-phy', 'nvidia,tegra20-usb-phy']
+	from schema $id: http://devicetree.org/schemas/phy/nvidia,tegra20-usb-phy.yaml#
+arch/arm64/boot/dts/nvidia/tegra210-p3541-0000.dtb: /usb-phy@7d000000: failed to match any schema with compatible: ['nvidia,tegra210-usb-phy', 'nvidia,tegra30-usb-phy']
+arch/arm64/boot/dts/nvidia/tegra210-p3541-0000.dtb: usb-phy@7d004000 (nvidia,tegra210-usb-phy): compatible: 'oneOf' conditional failed, one must be fixed:
+	['nvidia,tegra210-usb-phy', 'nvidia,tegra30-usb-phy'] is too long
+	'nvidia,tegra210-usb-phy' is not one of ['nvidia,tegra124-usb-phy', 'nvidia,tegra114-usb-phy']
+	'nvidia,tegra210-usb-phy' is not one of ['nvidia,tegra30-usb-phy', 'nvidia,tegra20-usb-phy']
+	from schema $id: http://devicetree.org/schemas/phy/nvidia,tegra20-usb-phy.yaml#
+arch/arm64/boot/dts/nvidia/tegra210-p3541-0000.dtb: /usb-phy@7d004000: failed to match any schema with compatible: ['nvidia,tegra210-usb-phy', 'nvidia,tegra30-usb-phy']
+arch/arm64/boot/dts/nvidia/tegra210-p3541-0000.dtb: cpu@0 (arm,cortex-a57): 'operating-points' is a dependency of 'clock-latency'
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/nvidia/tegra210-p3541-0000.dtb: cpu@0 (arm,cortex-a57): Unevaluated properties are not allowed ('clock-latency' was unexpected)
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/nvidia/tegra210-p3541-0000.dtb: thermal-zones: cpu-thermal:cooling-maps: 'cpu-active', 'cpu-critical', 'cpu-hot', 'cpu-passive' do not match any of the regexes: '^map[-a-zA-Z0-9]*$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/thermal/thermal-zones.yaml#
+arch/arm64/boot/dts/nvidia/tegra210-p3541-0000.dtb: thermal-zones: mem-thermal:cooling-maps: 'dram-active', 'dram-passive' do not match any of the regexes: '^map[-a-zA-Z0-9]*$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/thermal/thermal-zones.yaml#
 
 
 
