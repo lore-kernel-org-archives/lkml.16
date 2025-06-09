@@ -1,292 +1,198 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9AEB21CC79
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 18:49:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE051922DE
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 18:50:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749494989; cv=none; b=kB+1orScKlktAIjl4WJDra7UchhNo28E8B5vnrXtCbSpZmThOOPxevSmdLaHG48ZnqtdJer/Nv3NrqXvP5md8XTQxnqA+pEeTzcQAzcnZQUrkUzfxdl1lv8+/Np9EzYCD83+VwSazqeSfnyrhCErm9EsJSgO9LY8kaXgx7ZObiw=
+	t=1749495009; cv=none; b=UHdCIE6rocYeyzR1qV8Xmvh9xP871K9a+g1aQA6HeknQaYuN9N5CF7XbkkTr5CLUq1rIgsYc0z7NjJYhYHjbC75ox14bsrDxTjOQqw0ohRKp34g7v3qry2BCVaTjFUHJcticL6gbbou6Cbbijo5bmgJGL//irzj4qaOOj1M+fDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749494989; c=relaxed/simple;
-	bh=ui78fKG/j0BBOrRHqLHpqq5sKokZGqYCCMrjcYPaejI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LWDQQPcz6LEhqbTuYIEKozYzvIrHuyyDnbJbx073nu2Bv1xc92UqE78LrzWL9OQH3q3FBBaRHnwk99VJVCMixuDjtPxf1qa9okjolQowi2jyI4SMo1ntF4IGzMebw5U7Vqt94LT0y92UmyhP/hHG3XDANBJEB7q5wYDYXFAv8MU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V/9L7iLM; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749495009; c=relaxed/simple;
+	bh=dlB/izkdaB1ozoX7/2o/IAFt5/gOoG9WnvZcUvg5Fbs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=C+PLFWy8+q4UFt1dESslmKjt8kZADB8Mx0PUIUWjyg7LVWwVE2BC44/6LNZY+pgjsbTRdJ1iuweBJKrtpwGi1n5X2I5QDGFbMHXvEIwAaOYeaHaI4U8n/k0tk/Nadw25IF5kZIrcXAECh87y3/cJZRg9LHxuormq1IcBD5zM3KA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=CnSEZOH5; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V/9L7iLM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749494986; x=1781030986;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=ui78fKG/j0BBOrRHqLHpqq5sKokZGqYCCMrjcYPaejI=;
-  b=V/9L7iLM3OxycMUdHJ/r838FHoNf+NTCOJFOZfKLHyu0/80xSil/1LZh
-   /mD1XBXUSd+YY+5IvgRFRv3DNINgTuZRrEWOkxyipYsusE9lYcOpaUErj
-   gwaau35vHmBqHl+30H/4BUc2iFM47g0ZBIavLDcN8b1eAvxvaGpRhokpr
-   NQwZl20E+GgOQw1VAXUqNl8lXvLxmQwAw+StgFxYfPTjv5bTbuJs8xy5m
-   oWgUhueCnpXvZqEMe1RNgKEjNOlpIYwiQu7y747TTq+I9yET8LuUvnhOn
-   cFl3GRVQo8nod9CKu6ca17v/VGGcuNIOVt1Ft5yl+3on9PIwZ8k60x3mu
-   A==;
-X-CSE-ConnectionGUID: 1TOQAh5MT22tiLRNMAGmSw==
-X-CSE-MsgGUID: 0u7CWFx6TfioP08VH5iUzQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="69145279"
-X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
-   d="scan'208";a="69145279"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 11:49:45 -0700
-X-CSE-ConnectionGUID: 7ckXQPO2Rmy/E1/meaBz/w==
-X-CSE-MsgGUID: B7ZqAD11S4uaq/hmoJ76/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
-   d="scan'208";a="183775988"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 11:49:44 -0700
-Date: Mon, 9 Jun 2025 11:49:42 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghuay@nvidia.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Chen Yu <yu.c.chen@intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Subject: Re: [PATCH v5 27/29] fs/resctrl: Add file system mechanism for
- architecture info file
-Message-ID: <aEcsxjWroliWf3G0@agluck-desk3>
-References: <20250521225049.132551-1-tony.luck@intel.com>
- <20250521225049.132551-28-tony.luck@intel.com>
- <f25d136c-b1d3-483a-ac77-92464d7fe25c@intel.com>
- <aEIxzbuFybLBE3xt@agluck-desk3>
- <9eb9a466-2895-405a-91f7-cda75e75f7ae@intel.com>
- <aEMlznLgnn6bK9lo@agluck-desk3>
- <d2be3a4e-1075-459d-9bf7-b6aefcb93820@intel.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CnSEZOH5"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250609185000euoutp02b46dc17b7fd78ed78114403a60447a67~HdG8QpTum0055100551euoutp02B
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 18:50:00 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250609185000euoutp02b46dc17b7fd78ed78114403a60447a67~HdG8QpTum0055100551euoutp02B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1749495000;
+	bh=D3EwerJDP3/oe+lpK7aG+PkHixXXb/9NDy3mgdvJFy0=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=CnSEZOH5OhpnceUvwFY1EbrdFJRLtcez/h2usFjBAY+rFD/xHRx+wJMhVhSKcTL+e
+	 3UeuHM88PyfCmoLYICDhRath6GwL/8f/8wXP07sW6EmF3BcNswgDlft+bl8qASQUOr
+	 FsbGWY2gX352WKe2Ur4sjl09tp1RXJGs6D+CqnDg=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250609184959eucas1p19815e72a3491891985d9793e0d144818~HdG6-FGOr2469924699eucas1p1W;
+	Mon,  9 Jun 2025 18:49:59 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250609184958eusmtip1b172ca4c99c57fffacd869a372c9d211~HdG59PY_L1659816598eusmtip1V;
+	Mon,  9 Jun 2025 18:49:58 +0000 (GMT)
+Message-ID: <9e8a12db-236d-474c-b110-b3be96edf057@samsung.com>
+Date: Mon, 9 Jun 2025 20:49:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 5/6] riscv: dts: thead: Add PVT node
+To: Drew Fustini <drew@pdp7.com>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Miguel Ojeda
+	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng
+	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin
+	<benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice
+	Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo
+	Krummrich <dakr@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei
+	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Paul Walmsley
+	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Marek Szyprowski
+	<m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <aDyOyg6eqDEFg2ua@x1>
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d2be3a4e-1075-459d-9bf7-b6aefcb93820@intel.com>
+X-CMS-MailID: 20250609184959eucas1p19815e72a3491891985d9793e0d144818
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250524211525eucas1p244963b69e0531c95a9052e4a7a1d1e01
+X-EPHeader: CA
+X-CMS-RootMailID: 20250524211525eucas1p244963b69e0531c95a9052e4a7a1d1e01
+References: <20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com>
+	<CGME20250524211525eucas1p244963b69e0531c95a9052e4a7a1d1e01@eucas1p2.samsung.com>
+	<20250524-rust-next-pwm-working-fan-for-sending-v1-5-bdd2d5094ff7@samsung.com>
+	<aDVxDJi0KkWXiPCK@x1> <61eecafb-8ad1-4306-88cb-a032eefb2e48@samsung.com>
+	<aDyOyg6eqDEFg2ua@x1>
 
-On Fri, Jun 06, 2025 at 02:14:56PM -0700, Reinette Chatre wrote:
-> Hi Tony,
-> 
-> On 6/6/25 10:30 AM, Luck, Tony wrote:
-> > On Fri, Jun 06, 2025 at 09:26:06AM -0700, Reinette Chatre wrote:
-> >> With /sys/kernel/debug/resctrl potentially mirroring /sys/fs/resctrl to
-> >> support various debugging scenarios there may later be resource level
-> >> debugging for which a "/sys/kernel/debug/resctrl/info/<resource>/<debugfile>" can
-> >> be used. Considering this it looks to me as though one possible boundary could
-> >> be to isolate arch specific debug to, for example, a new directory named
-> >> "/sys/kernel/debug/resctrl/info/arch_debug_name_tbd/". By placing the
-> >> arch debug in a sub-directory named "info" it avoids collision with resource
-> >> group names with naming that also avoids collision with resource names since
-> >> all these names are controlled by resctrl fs. 
-> > 
-> > 
-> > That seems like a good path. PoC patch below. Note that I put the dentry
-> > for the debug info directory into struct rdt_resource. So no call from
-> > architecture to file system code needed to access.
-> 
-> ok, reading between the lines there is now a switch to per-resource
-> requirement, which fits with the use.
-> 
-> > 
-> > Directory layout looks like this:
-> > 
-> > # tree /sys/kernel/debug/resctrl/
-> > /sys/kernel/debug/resctrl/
-> > └── info
-> >     ├── L2
-> >     ├── L3
-> >     ├── MB
-> >     └── SMBA
-> > 
-> 
-> This looks like something that needs to be owned and managed by
-> resctrl fs (more below).
-> 
-> > 6 directories, 0 files
-> > 
-> > -Tony
-> > 
-> > ---
-> > 
-> > diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-> > index 5e28e81b35f6..78dd0f8f7ad8 100644
-> > --- a/include/linux/resctrl.h
-> > +++ b/include/linux/resctrl.h
-> > @@ -281,6 +281,7 @@ enum resctrl_schema_fmt {
-> >   * @mbm_cfg_mask:	Bandwidth sources that can be tracked when bandwidth
-> >   *			monitoring events can be configured.
-> >   * @cdp_capable:	Is the CDP feature available on this resource
-> > + * @arch_debug_info:	Debugfs info directory for architecture use
-> >   */
-> >  struct rdt_resource {
-> >  	int			rid;
-> > @@ -297,6 +298,7 @@ struct rdt_resource {
-> >  	enum resctrl_schema_fmt	schema_fmt;
-> >  	unsigned int		mbm_cfg_mask;
-> >  	bool			cdp_capable;
-> > +	struct dentry		*arch_debug_info;
-> >  };
-> 
-> ok ... but maybe not quite exactly (more below)
 
-Would have been useful with the "always create directories" approach.
-As you point out below the name is problematic. Would need separate
-entries for control and monitor resources like RDT_RESOURCE_L3.
 
-I don't think it is useful in the "only make directories when requested
-by architecture" mode.
-
-> >  
-> >  /*
-> > diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
-> > index ed4fc45da346..48c587201fb6 100644
-> > --- a/fs/resctrl/rdtgroup.c
-> > +++ b/fs/resctrl/rdtgroup.c
-> > @@ -4274,6 +4274,8 @@ void resctrl_offline_cpu(unsigned int cpu)
-> >   */
-> >  int resctrl_init(void)
-> >  {
-> > +	struct dentry *debuginfodir;
-> > +	struct rdt_resource *r;
-> >  	int ret = 0;
-> >  
-> >  	seq_buf_init(&last_cmd_status, last_cmd_status_buf,
-> > @@ -4320,6 +4322,12 @@ int resctrl_init(void)
-> >  	 */
-> >  	debugfs_resctrl = debugfs_create_dir("resctrl", NULL);
-> >  
-> > +	/* Create debug info directories for each resource */
-> > +	debuginfodir = debugfs_create_dir("info", debugfs_resctrl);
-> > +
-> > +	for_each_rdt_resource(r)
-> > +		r->arch_debug_info = debugfs_create_dir(r->name, debuginfodir);
+On 6/1/25 19:32, Drew Fustini wrote:
+> On Sun, Jun 01, 2025 at 09:50:52AM +0200, Michal Wilczynski wrote:
+>>
+>>
+>> On 5/27/25 10:00, Drew Fustini wrote:
+>>> On Sat, May 24, 2025 at 11:14:59PM +0200, Michal Wilczynski wrote:
+>>>> Add PVT DT node for thermal sensor.
+>>>>
+>>>> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+>>>> ---
+>>>>  arch/riscv/boot/dts/thead/th1520.dtsi | 11 +++++++++++
+>>>>  1 file changed, 11 insertions(+)
+>>>>
+>>>> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
+>>>> index f24e12d7259fabcfbdc2dfa966d759db06684ab4..faf5c3aaf209b24cd99ddc377a88e08a8cce24fe 100644
+>>>> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
+>>>> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
+>>>> @@ -648,6 +648,17 @@ padctrl_aosys: pinctrl@fffff4a000 {
+>>>>  			thead,pad-group = <1>;
+>>>>  		};
+>>>>  
+>>>> +		pvt: pvt@fffff4e000 {
+>>>> +			compatible = "moortec,mr75203";
+>>>> +			reg = <0xff 0xfff4e000 0x0 0x80>,
+>>>> +			      <0xff 0xfff4e080 0x0 0x100>,
+>>>> +			      <0xff 0xfff4e180 0x0 0x680>,
+>>>> +			      <0xff 0xfff4e800 0x0 0x600>;
+>>>> +			reg-names = "common", "ts", "pd", "vm";
+>>>> +			clocks = <&aonsys_clk>;
+>>>> +			#thermal-sensor-cells = <1>;
+>>>> +		};
+>>>> +
+>>>>  		gpio@fffff52000 {
+>>>>  			compatible = "snps,dw-apb-gpio";
+>>>>  			reg = <0xff 0xfff52000 0x0 0x1000>;
+>>>>
+>>>> -- 
+>>>> 2.34.1
+>>>>
+>>>
+>>> I found that on my lpi4a that boot while hang after applying this patch.
+>>> I think that it is related to clocks as boot finished okay when using
+>>> clk_ignore_unused on the kernel cmdline. Do you happen have that in your
+>>> kernel cmdline?
+>>>
+>>> I need to investigate further to understand which clocks are causing the
+>>> problem.
+>>>
+>>> Thanks,
+>>> Drew
+>>>
+>>
+>> Thanks for your earlier message. I've investigated, and you were right
+>> about the clocks – the specific one causing the hang is CLK_CPU2AON_X2H.
 > 
-> This ignores (*) several of the boundaries my response aimed to establish. 
+> Thanks for tracking down the clk causing the hang. I can confirm that
+> this fixes the boot hang:
 > 
-> Here are some red flags:
-> - This creates the resource named directory and hands off that pointer to the
->   arch. As I mentioned the arch should not have control over resctrl's debugfs.
->   I believe this is the type of information that should be in control of resctrl fs
->   since, as I mentioned, resctrl fs may need to add debugging that mirrors /sys/fs/resctrl. 
-> - Blindly creating these directories (a) without the resource even existing on the
->   system, and (b) without being used/requested by the architecture does not create a good
->   interface in my opinion. User space will see a bunch of empty directories
->   associated with resources that are not present on the system.
-> - The directories created do not even match /sys/fs/resctrl/info when it comes
->   to the resources. Note that the directories within /sys/fs/resctrl/info are created
->   from the schema for control resources and appends _MON to monitor resources. Like
->   I mentioned in my earlier response there should ideally be space for a future
->   resctrl fs extension to mirror layout of /sys/fs/resctrl for resctrl fs debug
->   in debugfs. This solution ignores all of that.
->   
-> I still think that the architecture should request the debugfs directory from resctrl fs.
-> This avoids resctrl fs needing to create directories/files that are never used and
-> does not present user space with an empty tree. Considering that the new PERF_PKG
-> resource may not come online until resctrl mount this should be something that can be
-> called at any time.
+> diff --git a/drivers/clk/thead/clk-th1520-ap.c b/drivers/clk/thead/clk-th1520-ap.c
+> index ebfb1d59401d..4d0179b8c17c 100644
+> --- a/drivers/clk/thead/clk-th1520-ap.c
+> +++ b/drivers/clk/thead/clk-th1520-ap.c
+> @@ -792,7 +792,7 @@ static CCU_GATE(CLK_AON2CPU_A2X, aon2cpu_a2x_clk, "aon2cpu-a2x", axi4_cpusys2_ac
+>                 0x134, BIT(8), 0);
+>  static CCU_GATE(CLK_X2X_CPUSYS, x2x_cpusys_clk, "x2x-cpusys", axi4_cpusys2_aclk_pd,
+>                 0x134, BIT(7), 0);
+> -static CCU_GATE(CLK_CPU2AON_X2H, cpu2aon_x2h_clk, "cpu2aon-x2h", axi_aclk_pd, 0x138, BIT(8), 0);
+> +static CCU_GATE(CLK_CPU2AON_X2H, cpu2aon_x2h_clk, "cpu2aon-x2h", axi_aclk_pd, 0x138, BIT(8), CLK_IGNORE_UNUSED);
+>  static CCU_GATE(CLK_CPU2PERI_X2H, cpu2peri_x2h_clk, "cpu2peri-x2h", axi4_cpusys2_aclk_pd,
+>                 0x140, BIT(9), CLK_IGNORE_UNUSED);
+>  static CCU_GATE(CLK_PERISYS_APB1_HCLK, perisys_apb1_hclk, "perisys-apb1-hclk", perisys_ahb_hclk_pd,
 > 
-> One possibility, that supports intended use while keeping the door open to support
-> future resctrl fs use of the debugfs, could be  a new resctrl fs function,
-> for example resctrl_create_mon_resource_debugfs(struct rdt_resource *r), that will initialize
-> rdt_resource::arch_debug_info(*) to point to the dentry of newly created
-> /sys/kernel/debug/resctrl/info/<rdt_resource::name>_MON/arch_debug_name_TBD *if*
-> the associated resource is capable of monitoring ... or do you think an architecture
-> may want to add debugging information before a resource is discovered/enabled?
-> If doing this then rdt_resource::arch_debug_info is no longer appropriate since it needs
-> to be specific to the monitoring resource. Perhaps then rdt_resource::arch_mon_debugfs
-> that would eventually live in [1]?
+>>
+>> This appears to be an AHB bus clock required for CPU access to the AON
+>> domain. My proposed solution is to make the pvt node a child of a new
+>> parent bus node in the Device Tree. This new "AON bus" node would then
+>> explicitly request and manage CLK_CPU2AON_X2H, ensuring it's enabled
+>> when its children are accessed.
+>>
+>> What are your thoughts on this approach?
 > 
-> This is feeling rushed and I am sharing some top of mind ideas. I will give this
-> more thought.
+> I think that is a good approach. The alternative would be to just add
+> CLK_IGNORE_UNUSED like above. I've done it before but it is a bit of a
+> hack.
+
+I've followed up on the idea of creating a parent bus node. My attempt
+using simple-pm-bus ran into a couple of significant issues that suggest
+it's not the correct path.
+
+First, the TRM doesn't seem to specify an address range for this bus.
+The range I used in my test was only for the PVT controller itself,
+which would be an incorrect abstraction in the device tree.
+
+Second, simple-pm-bus requires its child nodes to use the PM runtime API
+(pm_runtime_resume_and_get, etc.). Forcing this on consumer drivers like
+the PVT sensor seems like an inappropriate dependency.
+
+Additionally, I discovered that the PWM driver has a similar problem,
+silently failing because another clock, CLK_PERISYS_APB1_HCLK, is not
+enabled.
+
+The most correct solution likely involves refactoring the clock parent
+relationships in clk-th1520-ap.c. However, as a more immediate and less
+invasive fix, I propose we apply the CLK_IGNORE_UNUSED flag for both
+CLK_CPU2AON_X2H and CLK_PERISYS_APB1_HCLK in the v2 patch. This will fix
+the boot hang and the PWM issue while we consider the larger clock
+driver changes separately.
+
+Does that sound like a reasonable plan for the v2 series?
+
 > 
-> Reinette
+> Thanks,
+> Drew
 > 
-> [1] https://lore.kernel.org/lkml/cb8425c73f57280b0b4f22e089b2912eede42f7a.1747349530.git.babu.moger@amd.com/
-> 
-> (*) I have now asked several times to stop ignoring feedback. This should not even
->     be necessary in the first place. I do not require you to agree with me and I do not claim
->     to always be right, please just stop ignoring feedback. The way forward I plan to ignore
->     messages that ignores feedback.
 
-So here's a second PoC. Takes into account all of the points you make
-above with the following adjustments:
-
-1) Not adding the rdt_resource::arch_mon_debugfs field.  Just returning
-the "struct dentry *" looks to be adequate for existing use case.
-
-Having the pointer in "struct resource" would be useful if some future
-use case needed to access the debugfs locations from calls to
-architecture code that pass in the rdt_resource pointer. Could be
-added if ever needed.
-
-2) I can't envision a need for debugfs entries for resources
-pre-discovery, or when not enabled. So keep things simple for
-now.
-
-3) I think the function name resctrl_debugfs_mon_info_mkdir() is a bit
-more descriptive (it is making a directory and we usually have such
-functions include "mkdir" in the name).
-
--Tony
-
----
-
-diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-index 8bec8f766b01..771e69c0c5c1 100644
---- a/include/linux/resctrl.h
-+++ b/include/linux/resctrl.h
-@@ -564,6 +564,12 @@ void resctrl_arch_reset_all_ctrls(struct rdt_resource *r);
- extern unsigned int resctrl_rmid_realloc_threshold;
- extern unsigned int resctrl_rmid_realloc_limit;
- 
-+/**
-+ * resctrl_debugfs_mon_info_mkdir() - Create a debugfs info directory.
-+ * @r:	Resource (must be mon_capable).
-+ */
-+struct dentry *resctrl_debugfs_mon_info_mkdir(struct rdt_resource *r);
-+
- int resctrl_init(void);
- void resctrl_exit(void);
- 
-diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
-index 8d094a3acf2f..0f11b8d0ce0b 100644
---- a/fs/resctrl/rdtgroup.c
-+++ b/fs/resctrl/rdtgroup.c
-@@ -4344,6 +4344,22 @@ int resctrl_init(void)
- 	return ret;
- }
- 
-+struct dentry *resctrl_debugfs_mon_info_mkdir(struct rdt_resource *r)
-+{
-+	static struct dentry *debugfs_resctrl_info;
-+	char name[32];
-+
-+	if (!r->mon_capable)
-+		return NULL;
-+
-+	if (!debugfs_resctrl_info)
-+		debugfs_resctrl_info = debugfs_create_dir("info", debugfs_resctrl);
-+
-+	sprintf(name, "%s_MON", r->name);
-+
-+	return debugfs_create_dir(name, debugfs_resctrl_info);
-+}
-+
- static bool resctrl_online_domains_exist(void)
- {
- 	struct rdt_resource *r;
+Best regards,
 -- 
-2.49.0
-
+Michal Wilczynski <m.wilczynski@samsung.com>
