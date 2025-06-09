@@ -1,126 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5294D1EB39;
-	Mon,  9 Jun 2025 07:47:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD7B1D6194
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 07:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749455224; cv=none; b=iSSIcdpx/NHkogStzKH6IM3ytnSLggvts3sCM0LqiR5OHdMng4LlRF8zOJhsQq1JHVAWqdabMsFqEyR6zbIEXrcYyJybW0c9M1WQJnaNtI35beug+946Bu6bcstqe+jmpBjmMvp6Q8kh8JRqHOSb1dUPMOMA3d3vs9mLT1uVw9c=
+	t=1749455275; cv=none; b=p7YnmxR28ohcsLa8u2CmjJs1sjtC2LirrAJAR0eLF51DfnnXSWomda8I1cYFcvJ73CPHEnLD5byIYe6M7IOIXT7w8FFcM8ixAzhl22cOt3iLBmcKM/yKYo0M/efEZ2mNq8QW2/3F50phjWo0OOUIAK+OojvaR1PCvrHe9aVlOxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749455224; c=relaxed/simple;
-	bh=EjYiWxwuGJBa4mMQSG85+fR2fIar5kDV1gsocLjcxRE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=lkWS3VvWFNJcv64I5Moidnri196EM8p3SkRgTlUJ/VfxziFQBjHpqgdWlgFh8dDWCDJCfS7Eh47PS3QYYeunqnJSZZDQfa0x9pKZD7VP58iDrHW4Q33o/fFMU7QJsDJFXbEoiMb+DXC1ZdMH248Mb2RYW9uLf1+KkVx8WlfHnOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=atp8aQje; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749455275; c=relaxed/simple;
+	bh=DVZmFDRN34wedu9EopZdzBpF92Y8lkbGctIbaZuk0UM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Lu8/TsfSa7+lf4V3Z9oBDBxSmRrbaet874yy9RXjbrZuyOn+m1QG2+DpvXkWTH9QWeNfmrDJ8Fsh7b6Hi8Ytcbb+kvyEniEOZ9rq9AReaO95w2LZ6ITmv/ynSUSlxt+WxPpAJI9BTonQ47t90CyBqj9AM1cYx4A/f1k54Cn1R+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BrPXUiE2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LL4ukOCX; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BrPXUiE2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LL4ukOCX; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="atp8aQje"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D502C4CEED;
-	Mon,  9 Jun 2025 07:47:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749455223;
-	bh=EjYiWxwuGJBa4mMQSG85+fR2fIar5kDV1gsocLjcxRE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=atp8aQjetDwe3Lw/IgYCcN1a/6GwIT5uyo5GZhfrw3Nx9uqn2GQqk+7dDPhnB4uSL
-	 rrs2bokC6uG5E6Lw+RVuJJJXH5/km7ugimcazdAAnQfBEEafxC4PDFByuQ1GW33UCm
-	 Yto1S6ZrVqVBIjV3T1DwDiiChKC5CyA2WYfRbwffYdElEzpWMcPvQMMvONT43Da9gF
-	 G4nxhgHNZz60+Cq73los/HYuTlA2ezGqeykWn5rOXYKCqDQGPrtTafIdEuLL9oeBw5
-	 TehVg68F0n0fo6PghG6m5MEotsdfNgVK8XKbzcWeaXOVryR9OLew4/wDcTzKFKOGyo
-	 Rx0Gg5+9TNwAA==
-Date: Mon, 9 Jun 2025 16:47:00 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Aditya Bodkhe <adityab1@linux.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, maddy@linux.ibm.com,
- mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
- rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com, Hari
- Bathini <hbathini@linux.ibm.com>, Aditya Bodkhe <aditya.b1@linux.ibm.com>
-Subject: Re: [PATCH 2/2] powerpc/fprobe: fix updated fprobe for
- function-graph tracer
-Message-Id: <20250609164700.d8afe4ac1b4dea195bb7e379@kernel.org>
-In-Reply-To: <20250528134820.74121-2-adityab1@linux.ibm.com>
-References: <20250528134820.74121-1-adityab1@linux.ibm.com>
-	<20250528134820.74121-2-adityab1@linux.ibm.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BrPXUiE2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LL4ukOCX";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BrPXUiE2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LL4ukOCX"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 77ED81F38D;
+	Mon,  9 Jun 2025 07:47:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749455270; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8qKTHDnHNUm56SfYdpRWGsl0y8TWAmzpz6qTvuBz+E8=;
+	b=BrPXUiE2ZDlzzcO8GIfGdgRktHmmm4U95gf5NNNebOERxII3YYYtFeN6+puyLkTZjB9ref
+	PEB6ihKicW8ZVxMWofPN9QY5VprICkLbXfZzVbxeU+Zo7iO+c0sVkQFBLKak5p6k/3I12J
+	skgmO/P4H/V57Rvp9UCT9INLoTGWMkY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749455270;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8qKTHDnHNUm56SfYdpRWGsl0y8TWAmzpz6qTvuBz+E8=;
+	b=LL4ukOCXDCfg4mu6OsN7GaZ25PI7qrDMaE3vhNcAsGgaTy3SkSjBtvFDYepNvLWLZU1keT
+	lFULLJa2qPBHf4Dw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=BrPXUiE2;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=LL4ukOCX
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749455270; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8qKTHDnHNUm56SfYdpRWGsl0y8TWAmzpz6qTvuBz+E8=;
+	b=BrPXUiE2ZDlzzcO8GIfGdgRktHmmm4U95gf5NNNebOERxII3YYYtFeN6+puyLkTZjB9ref
+	PEB6ihKicW8ZVxMWofPN9QY5VprICkLbXfZzVbxeU+Zo7iO+c0sVkQFBLKak5p6k/3I12J
+	skgmO/P4H/V57Rvp9UCT9INLoTGWMkY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749455270;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8qKTHDnHNUm56SfYdpRWGsl0y8TWAmzpz6qTvuBz+E8=;
+	b=LL4ukOCXDCfg4mu6OsN7GaZ25PI7qrDMaE3vhNcAsGgaTy3SkSjBtvFDYepNvLWLZU1keT
+	lFULLJa2qPBHf4Dw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 450C913A1D;
+	Mon,  9 Jun 2025 07:47:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id sTwLD6aRRmhCfQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 09 Jun 2025 07:47:50 +0000
+Date: Mon, 09 Jun 2025 09:47:49 +0200
+Message-ID: <87bjqx8ifu.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: edip@medip.dev
+Cc: perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] ALSA: hda/realtek - Add mute LED support for HP Victus 16-s1xxx and HP Victus 15-fa1xxx
+In-Reply-To: <20250607105051.41162-1-edip@medip.dev>
+References: <20250607105051.41162-1-edip@medip.dev>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_NONE(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 77ED81F38D
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -3.51
 
-On Wed, 28 May 2025 19:18:20 +0530
-Aditya Bodkhe <adityab1@linux.ibm.com> wrote:
-
-> From: Hari Bathini <hbathini@linux.ibm.com>
+On Sat, 07 Jun 2025 12:50:51 +0200,
+edip@medip.dev wrote:
 > 
-> Since commit 4346ba160409 ("fprobe: Rewrite fprobe on function-graph
-> tracer"), FPROBE depends on HAVE_FUNCTION_GRAPH_FREGS. With previous
-> patch adding HAVE_FUNCTION_GRAPH_FREGS for powerpc, FPROBE can be
-> enabled on powerpc. But with the commit b5fa903b7f7c ("fprobe: Add
-> fprobe_header encoding feature"), asm/fprobe.h header is needed to
-> define arch dependent encode/decode macros. The fprobe header MSB
-> pattern on powerpc is not 0xf. So, define FPROBE_HEADER_MSB_PATTERN
-> expected on powerpc.
+> From: Edip Hazuri <edip@medip.dev>
 > 
-> Also, commit 762abbc0d09f ("fprobe: Use ftrace_regs in fprobe exit
-> handler") introduced HAVE_FTRACE_REGS_HAVING_PT_REGS for archs that
-> have pt_regs in ftrace_regs. Advertise that on powerpc to reuse
-> common definitions like ftrace_partial_regs().
+> The mute led on those laptops is using ALC245 but requires a quirk to work
+> This patch enables the existing quirk for the devices.
 > 
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> Signed-off-by: Aditya Bodkhe <aditya.b1@linux.ibm.com>
-
-This patch in this series looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-I think this series go through powerpc tree. But you have
-some comments on 1/2, so please solve it at first.
-
-Thank you,
-
+> Tested on my Victus 16-s1011nt Laptop and my friend's Victus 15-fa1xxx. The LED behaviour works as intended.
+> 
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Edip Hazuri <edip@medip.dev>
 > ---
->  arch/powerpc/Kconfig              |  1 +
->  arch/powerpc/include/asm/fprobe.h | 12 ++++++++++++
->  2 files changed, 13 insertions(+)
->  create mode 100644 arch/powerpc/include/asm/fprobe.h
+>  sound/pci/hda/patch_realtek.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index 9163521bc4b9..2203e4fb64c1 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -246,6 +246,7 @@ config PPC
->  	select HAVE_EFFICIENT_UNALIGNED_ACCESS
->  	select HAVE_GUP_FAST
->  	select HAVE_FTRACE_GRAPH_FUNC
-> +	select HAVE_FTRACE_REGS_HAVING_PT_REGS
->  	select HAVE_FTRACE_MCOUNT_RECORD
->  	select HAVE_FUNCTION_ARG_ACCESS_API
->  	select HAVE_FUNCTION_DESCRIPTORS	if PPC64_ELF_ABI_V1
-> diff --git a/arch/powerpc/include/asm/fprobe.h b/arch/powerpc/include/asm/fprobe.h
-> new file mode 100644
-> index 000000000000..d64bc28fb3d3
-> --- /dev/null
-> +++ b/arch/powerpc/include/asm/fprobe.h
-> @@ -0,0 +1,12 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_PPC_FPROBE_H
-> +#define _ASM_PPC_FPROBE_H
-> +
-> +#include <asm-generic/fprobe.h>
-> +
-> +#ifdef CONFIG_64BIT
-> +#undef FPROBE_HEADER_MSB_PATTERN
-> +#define FPROBE_HEADER_MSB_PATTERN	(PAGE_OFFSET & ~FPROBE_HEADER_MSB_MASK)
-> +#endif
-> +
-> +#endif /* _ASM_PPC_FPROBE_H */
-> -- 
-> 2.43.5
-> 
+> diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+> index cd0d7ba73..1e07da9c6 100644
+> --- a/sound/pci/hda/patch_realtek.c
+> +++ b/sound/pci/hda/patch_realtek.c
+> @@ -10733,6 +10733,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
+>  	SND_PCI_QUIRK(0x103c, 0x8a0f, "HP Pavilion 14-ec1xxx", ALC287_FIXUP_HP_GPIO_LED),
+>  	SND_PCI_QUIRK(0x103c, 0x8a20, "HP Laptop 15s-fq5xxx", ALC236_FIXUP_HP_MUTE_LED_COEFBIT2),
+>  	SND_PCI_QUIRK(0x103c, 0x8a25, "HP Victus 16-d1xxx (MB 8A25)", ALC245_FIXUP_HP_MUTE_LED_COEFBIT),
+> +	SND_PCI_QUIRK(0x103c, 0x8c9c, "HP Victus 16-s1xxx (MB 8C9C)", ALC245_FIXUP_HP_MUTE_LED_COEFBIT),
+>  	SND_PCI_QUIRK(0x103c, 0x8a28, "HP Envy 13", ALC287_FIXUP_CS35L41_I2C_2),
+>  	SND_PCI_QUIRK(0x103c, 0x8a29, "HP Envy 15", ALC287_FIXUP_CS35L41_I2C_2),
+>  	SND_PCI_QUIRK(0x103c, 0x8a2a, "HP Envy 15", ALC287_FIXUP_CS35L41_I2C_2),
+
+The table entries are sorted in (PCI) SSID order.
+Could you try to put the new item at the right position?
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> @@ -10805,6 +10806,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
+>  	SND_PCI_QUIRK(0x103c, 0x8c16, "HP Spectre x360 2-in-1 Laptop 16-aa0xxx", ALC245_FIXUP_HP_SPECTRE_X360_16_AA0XXX),
+>  	SND_PCI_QUIRK(0x103c, 0x8c17, "HP Spectre 16", ALC287_FIXUP_CS35L41_I2C_2),
+>  	SND_PCI_QUIRK(0x103c, 0x8c21, "HP Pavilion Plus Laptop 14-ey0XXX", ALC245_FIXUP_HP_X360_MUTE_LEDS),
+> +	SND_PCI_QUIRK(0x103c, 0x8bc8, "HP Victus 15-fa1xxx", ALC245_FIXUP_HP_MUTE_LED_COEFBIT),
+
+Ditto.
+
+
+thanks,
+
+Takashi
