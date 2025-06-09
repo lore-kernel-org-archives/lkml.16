@@ -1,990 +1,278 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.77.159])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011071.outbound.protection.outlook.com [52.101.65.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499022AE6D;
-	Mon,  9 Jun 2025 11:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.77.159
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749468738; cv=none; b=iR2RvJsBd0Qf4Pvns4u9glUYI7+hg83zAoH67b+uA2RubtQ8D3AkAIZ5C/YSHea7por7nmcAGUMscba6vkp9X4kGdH0yG3tIBuB80QwAUJNK5jxMShug2jPvP8/CJO8iQ+4pWCZSLFO/M450XTPw8Q7w+EH9xKxFeK6SeSfHgX4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749468738; c=relaxed/simple;
-	bh=ablYkUJMOKO1ba8d4FZeLylh1buhqKIuo8NrLuwnH+U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oTZc1fLC4ClMnyQn7GF36dWhFr0sM+AnHyPefEVAzmPczLK+AaBZLPwYWa+BPJ0G4nbnWhaQ7O8WIuvB0zgpgSLyAQG8zcyUVC1fhSNyEcgOGmNrihDrMhTcSHkhPmhbMBS9zfy7UIlHI+2YhiNfg4/uKTxhiesz6YZQwKV6qaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn; spf=pass smtp.mailfrom=chainsx.cn; arc=none smtp.client-ip=114.132.77.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chainsx.cn
-X-QQ-mid: zesmtpgz1t1749468656tb10d95a5
-X-QQ-Originating-IP: TaVagfpjahVs5gwOzOZTxxSp3JhHyZRXcguqxfin8U4=
-Received: from chainsx-ubuntu-server.lan ( [182.245.65.180])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 09 Jun 2025 19:30:55 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 2248699892133780430
-EX-QQ-RecipientCnt: 16
-From: Hsun Lai <i@chainsx.cn>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: i@chainsx.cn,
-	heiko@sntech.de,
-	andrew@lunn.ch,
-	inindev@gmail.com,
-	quentin.schulz@cherry.de,
-	jonas@kwiboo.se,
-	sfr@canb.auug.org.au,
-	nicolas.frattaroli@collabora.com,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	krzysztof.kozlowski@linaro.org,
-	linux-rockchip@lists.infradead.org
-Subject: [RESEND PATCH v5 2/2] arm64: dts: rockchip: add DTs for Firefly ROC-RK3588S-PC
-Date: Mon,  9 Jun 2025 19:30:44 +0800
-Message-Id: <20250609113044.8846-3-i@chainsx.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250609113044.8846-1-i@chainsx.cn>
-References: <20250609113044.8846-1-i@chainsx.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D72253F1E
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 11:32:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.71
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749468757; cv=fail; b=rfvORZ2aF6TnQL9t8D0jA9rkCYb5Oe66+nQJGbANJHSjtO7hkmvNqT1BKjK2KbVY7smWfZi2MdeGdBgcZujdBHYaU4LApO0b6At8t5vPlfwPkQkho8nxNPzeHb7QJ9vsGfUDrJeAi6Ay7XNYXJiCnKaqIIcR/e23i3tdK6BTA7o=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749468757; c=relaxed/simple;
+	bh=Bx2CPxcRnMfbzhsURCeG7FrWBeGhX6RjdeSYRHm/GUo=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=VFDMIR9UrVC0+eoIZNEWCL0/+t2DZKlWYHNUhoXxhH1BBVyy3GadndCBd4Z+JK7FnC3RTx4XFDiQI3U2JF3Ty/Mt8Fse7LlkNmesYdPc90LjYcreIkyXFI2BX4VyDTUcGuA33X7IwdtIDxXNMGz3zmWf+Pvd8LrboknrJDKQo1o=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=cS+YZCz7; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=cS+YZCz7; arc=fail smtp.client-ip=52.101.65.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="cS+YZCz7";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="cS+YZCz7"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=jFBHy/Lu5gL0OdMvqW02h50vQIR0ap1q78aQoLBuv8ONsexiltS86oPZCEeT1o3g3zflA93Tu01qx3N+XvykH440mqwpEiCOBi0Oc1FDyWnA3mRkzsKyqso2OWKYOnk09jdAoIjdY3kE4mq6iDRnYfSfB6Hr/RPeTsvgfeJFOFnC6j1wm/EZLG94J1gxFxoF4pDdYTFjJH3kZlMpfdbIbJA50o1XHMpKB0MAa61bjjwPHGo8wwmSi9bzSVeUGUAbrqZMs6KqCqQxsZmvIDT4FKFKlPImhJvRXMrUiIcexg5WNpS+4P7b3IuwDp2A3NItjjb68isJW/6t+Sq2dHwE7w==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KfSNiV8Uws0OkA6WeqYD0l3QatwidjpGSGvgL06beFs=;
+ b=MyKPYjsCeIuZ54MKRUlkBLwqha6jKdtqmkJMuzweNCMpT6wErjesssmx0mynLbCSebWTEDp8JRDXFDhFTJT2iy4cLz07YA+7ESjUsk40ir1p1wDtry7yQoMG34sTwJqYxOByk1if/QYL0klJMYSektIesJx6vMtUu9QbaIzU1WmJRnDQTJQpUfXfYLpBH/AE9CatEIHtPauHdov8u0Z7k7EkyHcv9jKHWvEM2F6rNwgLbcmXddOEtk7JzzLU8rnyszaCHfdVtikjlIvllISfSxcpIjkG9U7k0By7/zjlgnjx8vGS0Smvq1MC/dasd/kN6rTJiaTOAi39QiGrDoMRpQ==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=oracle.com smtp.mailfrom=arm.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
+ (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KfSNiV8Uws0OkA6WeqYD0l3QatwidjpGSGvgL06beFs=;
+ b=cS+YZCz79vSz2KeekpL2Dix3TT50CO32a6Hw0CtmUT6lmM4SD1i3nWgNyHqRPlUHoDK9ElT7Cv96k6ps6C5yqAuXgvk/FEyQ+x9+WfanPAKYoCpA0yVpqGf5AEy/eCHdQdpoiJPojXQ2b5gOxd+QmIUB4Dxv9Dqfz2K+9BJaDrA=
+Received: from DU2PR04CA0040.eurprd04.prod.outlook.com (2603:10a6:10:234::15)
+ by DBBPR08MB5882.eurprd08.prod.outlook.com (2603:10a6:10:200::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.19; Mon, 9 Jun
+ 2025 11:32:31 +0000
+Received: from DU2PEPF00028D0E.eurprd03.prod.outlook.com
+ (2603:10a6:10:234:cafe::d9) by DU2PR04CA0040.outlook.office365.com
+ (2603:10a6:10:234::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.35 via Frontend Transport; Mon,
+ 9 Jun 2025 11:32:31 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ DU2PEPF00028D0E.mail.protection.outlook.com (10.167.242.22) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.15
+ via Frontend Transport; Mon, 9 Jun 2025 11:32:30 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cvWosvNNPHGPw2g26NXGm0eM1ado7dTEO4ze5qHsDSvRpZ4pb8Jv6RFgqJviP8jAuTZSlVzfrXFFUGK5F60mN3Dix5+lBAYbZlOVNlzGRV9pjPdP+jqIDDnvvQI0XYvj8BghDc+D0SRobX3eYMWuJIFXEdZrDiDvBkvFzZJBBcWRFPJPSiRDgbG2WjSLh+f4CrupNQ679owiMUykWNSnM5VEnxcrIEFcdyCJgcu7nLnD7xaESmmif60ntITz/kd2Ur6fRkTi8Ilq87Wzv3aHVHSZNb9f8A0Nv9jiZhCuNlj7098PMmttvE5gqnD6UqHcWs/5OQx+2ejhkJrqlq6Sag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KfSNiV8Uws0OkA6WeqYD0l3QatwidjpGSGvgL06beFs=;
+ b=B/NXKEg6JbGS/xcgGHBEoZOs7Bi573ycauewwtvbjIpxeS1WO8bYFp5vRZi7By4/F4LrtUwCFJoiLckLxrh40jCkeUhJ+XhRwXVHtP6swxkQQyOpsPqh9CubcrScETtQ1FsCgwhHFuoFElrA2buF+LEHZTFY0CyaeALMYYyCf/yX5fTNgyOxkJ2Q/+qPdVAuvIb/rDR0T+I6CznFYZML2tmmFb8TPgprwqpD4T2FdxMXKq/AZqrPPY1Aoml+jS3xIAPxvOR2umg2Z++TxsbzoYOpQ23Ri28YGLC3x97d/70zTNinj7L+/y+uPuXtz0qSHe2k6B/b5HWFeim2KmzWkA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KfSNiV8Uws0OkA6WeqYD0l3QatwidjpGSGvgL06beFs=;
+ b=cS+YZCz79vSz2KeekpL2Dix3TT50CO32a6Hw0CtmUT6lmM4SD1i3nWgNyHqRPlUHoDK9ElT7Cv96k6ps6C5yqAuXgvk/FEyQ+x9+WfanPAKYoCpA0yVpqGf5AEy/eCHdQdpoiJPojXQ2b5gOxd+QmIUB4Dxv9Dqfz2K+9BJaDrA=
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+Received: from AM9PR08MB7120.eurprd08.prod.outlook.com (2603:10a6:20b:3dc::22)
+ by AS8PR08MB8298.eurprd08.prod.outlook.com (2603:10a6:20b:536::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.20; Mon, 9 Jun
+ 2025 11:31:59 +0000
+Received: from AM9PR08MB7120.eurprd08.prod.outlook.com
+ ([fe80::2933:29aa:2693:d12e]) by AM9PR08MB7120.eurprd08.prod.outlook.com
+ ([fe80::2933:29aa:2693:d12e%2]) with mapi id 15.20.8813.024; Mon, 9 Jun 2025
+ 11:31:58 +0000
+Message-ID: <6f4c2e70-0702-49d9-acdb-f87adab196ac@arm.com>
+Date: Mon, 9 Jun 2025 17:01:51 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] arm64: pageattr: Use walk_page_range_novma() to
+ change memory permissions
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: akpm@linux-foundation.org, david@redhat.com, catalin.marinas@arm.com,
+ will@kernel.org, Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+ surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, suzuki.poulose@arm.com, steven.price@arm.com,
+ gshan@redhat.com, linux-arm-kernel@lists.infradead.org
+References: <20250530090407.19237-1-dev.jain@arm.com>
+ <20250530090407.19237-3-dev.jain@arm.com>
+ <f528506e-b04d-4c80-93c3-93ba4ca385bd@lucifer.local>
+ <58d53c0a-1b61-4276-bdd5-9eb2e583f865@arm.com>
+ <eb0b075a-e6f8-4561-ba3c-3019710847d7@lucifer.local>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <eb0b075a-e6f8-4561-ba3c-3019710847d7@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA0PR01CA0047.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:81::18) To AM9PR08MB7120.eurprd08.prod.outlook.com
+ (2603:10a6:20b:3dc::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:chainsx.cn:qybglogicsvrsz:qybglogicsvrsz3a-0
-X-QQ-XMAILINFO: MpO6L0LObisWLGZMEiq7c5MEFS618WC45THK20VahhK6FLrxLnhh4+Td
-	tCLLK/IKqf1NuWdeox17mJ+kLFajp7n2qQWb46mfvrMbR9tBC/7DiUuuqrzLEIun6DMCPF1
-	d1L5EaGpVkCLzWFNBSdWHM9U/08n0tbdRbXix3iLCOpau2AqydSUYYCU5bsPRMrLcYtwxA5
-	Su0lKq4lFtCTQ0sUdo9uoRCzgdfVTJBn0Nr8Fr8iU1RZymJtxSi/c5z8ZrZuQULerfjgG4H
-	6DBoKZ4R6iorzP5rKeUqyyARz9GgFvv8GEZsubREN8PUvDqQhCwq6x8ACPQ5xjNlOzAEhts
-	zOMO6rEQxwK0LJW9tIjgZsCUfJ5GnAz0Jw/FJJMubj/7yw/NneByAoqfVZk72IHby97L7XP
-	jBiB8pmsnmrwIPR0De7QghgTc4GFLzlOSEZm2k7onQXgUPP32X7UndhFgQyBtadCFzwpGrc
-	dvjQmpOg6j3VGtqFMzjmFV/QbYd3IdeHiK1bsUQ4VozMcXC+K7VgcS1N6YbeqZOSgu/89hp
-	Qm1rS/yqcVc2Uhj06QEn0Odp92eAfmitUIs1a3/pbb58sLdMX9ZykIn6ErSXUglDXMZjcHg
-	u+SiqfZ6Gr79Dzrt6p1FQtEfS4jEuKPXfLGngt7CXTxZvQKuGUWpkfxzAF+fLCfqRTpyFdU
-	xBY5XGhz+aQxtF7OGcGmH/N7KST0HGZjpoWD8CY6Q0wm/H5FS/cpRrGpDPMSU5yRZcb2HnM
-	FZv2WmHk/P4r72cMQ6BsreFIZzeSh0mtsR8Fg81c+C2zcU7dmpIbJNm/2+PGvwSyocJFkhp
-	6ZH/XRxjeJiqRhEuL9UT4r8kRv7FemOm+/8osApvRk7SqDuP+E4l6iH+sUVIXYcLvH0dCqZ
-	zz18FiV51MlVqcv2khyC57eLXHa15xHEzAuYBinsswGOjzIS1kQwecMDvahxxqXmBKsa7W0
-	iU7gXU6w80nq6DOjXhkwN9Ul6IuEpWo1qgWroGjSkFuxW3BMVhvLWp1md1sHU1TELHfZrrv
-	4jLupI/86m+B+GuZybdnuJYJELhI4=
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-X-QQ-RECHKSPAM: 0
+X-MS-TrafficTypeDiagnostic:
+	AM9PR08MB7120:EE_|AS8PR08MB8298:EE_|DU2PEPF00028D0E:EE_|DBBPR08MB5882:EE_
+X-MS-Office365-Filtering-Correlation-Id: 734d3f42-33c4-4a07-f3b0-08dda7495237
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?utf-8?B?WUlSaW9KME9ialhQbHhZU3dVVUgxbThxbis3NFZvTzNkS2NNYnBWTmhGZG16?=
+ =?utf-8?B?OFRudE1XOWZWNVJGa3pOdWt6OXkyYnliUDQ2ZWNwbDZYbFdDaEV6YWpZZGxC?=
+ =?utf-8?B?VUdsdHF6amx0T2pyb08wa0tZNEIyb01zZC9mK1dqR2xyUkRpblFTUytPUno2?=
+ =?utf-8?B?VC9xckR2OHZhMUJhMjBZZnpibEZhUXpGajRya0ZJc3cvclRwOWRwVWUrOXJr?=
+ =?utf-8?B?S1FaYnNFdkpjbW9JeXRTSVNBNnhGam8xV1pWNnMvMDcyT3dNZER4YVJCQ2Fj?=
+ =?utf-8?B?ajN0d2R5MDkxdFRxQkhLMHBWeW5UcjJZZnhkMFp1OW5idFJVMm1wNkJTSkRp?=
+ =?utf-8?B?bEhaWXRpWk16VHBCRHVpcmd4WWtlUzhlaGlwd3F3dnJCdEloUjJuN2lSeXJU?=
+ =?utf-8?B?aHJua2lXekpldEZaQXZvR3RPenovZEV1QzQvWWlWT2dXYWJGYjJiejRhNGVO?=
+ =?utf-8?B?M0FzeTgvakV3dzJQZXFyRWYwWjFnZTU5TU9DZlJMOVlQRUtzQW9qak1UREsw?=
+ =?utf-8?B?T1lrODVFVkRlY09vSHNSUVhaeW1xeVZGaVB0UHZGNFV6L0JoTkpmRGxYWjB1?=
+ =?utf-8?B?S2xhTmU5UW8xMHlNNVB5TTBNeWRYOFo3QzU5Ti9NRjhyZy84MzI2bVJkTXlM?=
+ =?utf-8?B?bnNhQVIrVUNHUFVmckc1OGNwcFgxTTlkQ3pHanZMejMydFJZN0ZseWp2WTVV?=
+ =?utf-8?B?NW9sditOTTM3VytBbTdob1NjOHE2Ni9EQ0hNa1I2RFFMQnR0M01adnVBM0Fu?=
+ =?utf-8?B?SlhsUXFJcnVLWkJqc0Fiai9QMXhUNGNvNzhJY3MyZUt3UG1FTnNrczczZWdv?=
+ =?utf-8?B?MWlaZ0xidHdEajhNdEFIdHFwbDI5WVF6UW44Zy9RdGtSSDB5TmlLUG43Zkk1?=
+ =?utf-8?B?TlE3eHNSRmJrMFpHYUNvcnM4QVRlcWtqUmlEUHVqc0JkVmdiWlltdTN0OHcv?=
+ =?utf-8?B?R25Kbi9jTXIrNkxEODZPZ0dXU0lRTXhQMitpRi9lYjl1RUVvb0Y1cFYxTlRR?=
+ =?utf-8?B?bnFudStSMXBVcUdvRHloSTIxWThVYU9xSFN0ZXRQZDRGSzIxeVprUWlZSDBB?=
+ =?utf-8?B?bUpDTHJOZ2JocjZYaWRqN0cvNWtRaHJibGhjc2ZJeGx2MS8wY1oraTk3eElQ?=
+ =?utf-8?B?MmdrYXp4NEJldWY5ZFpSUFBBalgxZTZYN3RRMHFBVWo0UjZFT2pWTVRFclV1?=
+ =?utf-8?B?NVY0OHFKTHVHbW9XaytJTFBCWFlYYXd1VjJQeU9nditHb1BhR2p1bERDVUZ0?=
+ =?utf-8?B?aGp2QjdoWm1acXZCVnZ3b3hVRFVad0prdCs2SmN2VHlDTmlKTk1GQkp6Z0NW?=
+ =?utf-8?B?aCt5ZFNHR2NmL1BBbXJ1ZEVMRWcrU2JLWkwxT29sQi8xV3FqTzhuZjdTWE83?=
+ =?utf-8?B?bzNadFoxWXk3bGNhRWZzMGQ3aEFJTFM0bi9PQ2hEOTdZeEtmQmVtbVArNjhN?=
+ =?utf-8?B?UWg1alJvYUgyaUF3QnNPdTRoQ2ZacE5BQk1vYUI1UVdZNFNxQk56KzRaVng4?=
+ =?utf-8?B?cjA1RHBvN1lydURBN1BKQjlyMm44V1FWMHJLT2ZsTDF5SVZKcTl2NWtoOGpF?=
+ =?utf-8?B?WXpMaENUQThCV3VWalQ2QldWSFBRVG9TODY0UkVZTDJlKy9ZWC9DMkw2MVAr?=
+ =?utf-8?B?Sk1FcnBkSWRCYTJVZ3AvNStoNXNkaGE2N2xKaVNyQ0FuTDc5RVFVTjM3bFVJ?=
+ =?utf-8?B?NVJOcnlMZFJnVklRZmloVXhVS2wvTWlyTTNkOU1OblZ2N0NxU3BiR21pbzRU?=
+ =?utf-8?B?SjJqR2M5Y3ZrRkpiQzJiZUVZZ2VkM3liMzV5bStMWUJtNlRPN1VoajVzRHFs?=
+ =?utf-8?B?WmxLbUNoWDZwSXVXSjRyVCthUVh4R09relcwWUp4djIxM05sSUpKWlljdlN2?=
+ =?utf-8?B?WVkvK0lEcncrZHZNSHVDcDl4OFEzM1FPUGZZQjlSb2tXSDdrZ0YyWW4vdDZt?=
+ =?utf-8?Q?Ku2cBz5FLYw=3D?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR08MB7120.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB8298
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ DU2PEPF00028D0E.eurprd03.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	81bb163c-a672-4fb9-b2df-08dda7493ebc
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|35042699022|1800799024|376014|14060799003|82310400026|36860700013|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?N0NTYmJtRmRDcjBzU0ZlZVY5Uis1VGdDckdwK3NTTmVSdzdubkVudXNCWThJ?=
+ =?utf-8?B?MEhyZjVXem5jVEJhL0J4NDl4YStCK3lhcjFlVHFxUmxNVHJKU2phRmI5bDZL?=
+ =?utf-8?B?TEs4ejd0dDZRaW9BU0Jnb0U2K1V6MHYzaWdQMzduQTZHVTkvczZRQiswb241?=
+ =?utf-8?B?TVBORDZEdDFnTFlTSnZKbDZ4TENWcTdjNk44MTM2VG1mQTNvNm9MYklMRXQy?=
+ =?utf-8?B?dHJUdEkzZ0w2UHUwdnZaVGh3RkFlZWNaQVY5UERROTkwSXc2MVNYUEdpcTNU?=
+ =?utf-8?B?WlJoQ1o5cGI5OVNzQWN2NXMzUzk2ajlhUjhoTHY3YVNrM2RReElWN0hrNzMz?=
+ =?utf-8?B?SWlLVThZdDJmK0xQbVpGV1VReVYwRmRmS2RjbXhSNmJKYXNlNkdzR2p5ME1p?=
+ =?utf-8?B?UGgwNXdpOHJkUEY0Ui9wRW1mZVNVU0tXU0pnVXVFdTJ5RzRhb3QyZENzVXhY?=
+ =?utf-8?B?NVU1MWliSHBsbkEvVnpUbkRvQmg4M0dqQzNGMHlqcXVDTndEL0pVOWlLY0Rq?=
+ =?utf-8?B?WWFqSzJhZ2QzVWJTUHczcVRxUkVoejFZNDQzdlBLcDNXaW5obHRNL1ArWkhH?=
+ =?utf-8?B?eUtOWGJwKzRiQnNpMm15Q2kyZ2FwU2RmWFB3aHpBbFpvcGNEUFgxMFVOeG56?=
+ =?utf-8?B?RjU5S1oyM2cvV2x1K05Sb2VxeU5RcVA2OHduKzZ6QlZRMk8vU0hRemk3VnZm?=
+ =?utf-8?B?WTVhRkM2RStUWGhUSkVJczlwWTU4anREcDREZm9IT1VQeW5rZ3JVQU5HS1Ro?=
+ =?utf-8?B?SEtYMkFBR3c2ZitNVldRQTZKdGdPMmdHdnJNUE9pREgzSWFZRnJFMEZQcEpq?=
+ =?utf-8?B?VTAvRmFSQ2dLK2x0YldCdDloN2R3cUhuSW9DYmpoZzNIUHNYK2JORnZ5bjdj?=
+ =?utf-8?B?UlhTdUlCdnFiZlN2ZXdSdGd4M2JjNm9XSER0V2VlaFZwd1liNi81M08xSU0y?=
+ =?utf-8?B?eWRJYWt2UFZCejZoT3B3R21makJXQVJKVDJrcDRXZkNNQnRMQ3RNcWFwZ2Vq?=
+ =?utf-8?B?NGNvQVFoRlJNK0NSalkvUXBvdHp5WWh5NStTbVdyZVZFY3VQSlYwbVNuVmZR?=
+ =?utf-8?B?SjhqSkdxdmpucW9qMVNWSzg1d29qdDBzZnpyQkNXQ1ZGei91bmNwOTdqUnAx?=
+ =?utf-8?B?Y2pFM2c1MGFsL1hPZUsxSmV3N2V3TlBjd05NVDQzdXJick5ZQ004YVc2Q1h6?=
+ =?utf-8?B?VmZTMlBtK0pZbms1V2FSQ0I3STh0ZU1qRmdHNktpRzNqYnhNSW5SWDlFWGMy?=
+ =?utf-8?B?WkRtMk5sMjJ0aUwrcWU4dlRUblRrVTlVUndPaWRMRnJKcjZRdjVma0RRaFgx?=
+ =?utf-8?B?TlVHbXBGOWc3cUlrK0xRZ2ZETXNZYUZPNE8wN01ubk9DZUxnVjFoNVhmQVlZ?=
+ =?utf-8?B?NWtKVHFHZmQ0cGJxNmlQTkRIQjJSRFNCeE9lNXpienRTZlZVbDJzVEdMTFRG?=
+ =?utf-8?B?VXlUQnV5WmUxTm9tckd3cXUvVGh5aG1oakRzNDdHREJnTEorVU1nenI0THZV?=
+ =?utf-8?B?amxpb09kTGxSQ0c1SGl0b0xVdFV1ckpqdEJuRUU3blJJTlZaMHg3UXpWRk5R?=
+ =?utf-8?B?aTlWaTkyUTlibERpQ0lBVlRoZzg0MlZYc2dhR1ZINzRNZmpWOVlmU1lUalU5?=
+ =?utf-8?B?MjhYVEl1dlV2WXFXZVlvSiszdjVhNVd1VmRVN1VKZzQzWkVlaEIzeVVNZWhO?=
+ =?utf-8?B?Mi9jcEl6ZDkvM21nWGphR3ZUZm40bEh1Mk4xNTNXciszL2E1UXJtSElvcW1R?=
+ =?utf-8?B?TitWSythY0QwSXFsbGZESGN5Ty80ZGtzQlZ2K3ZWejB4NzNhYUJjQndscnBz?=
+ =?utf-8?B?QXNOL0NoWGhWWDY2OHdFbnRnaVcvMHl2SE13SStyK3VVeHNTM0RXMHJITC8r?=
+ =?utf-8?B?MFdOZ3MzWldSU3I1ZnlweU9Sbi83ZHJhYktNZDFoaTFaWVlZOFdGaVhwQ2ZS?=
+ =?utf-8?B?U1FldWJGLzB2d0YzS3BhR2N2cFUwcTZ0YXFrdzBSYUdoN3JUbUlJekx1QjZ5?=
+ =?utf-8?B?S3lYbGxkMnY2TExtaDM4Vkp6akk1U0JSaTRNVDZFUVRkamZDVEdvai9uQ1Y0?=
+ =?utf-8?Q?KXN/V1?=
+X-Forefront-Antispam-Report:
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(35042699022)(1800799024)(376014)(14060799003)(82310400026)(36860700013)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 11:32:30.9353
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 734d3f42-33c4-4a07-f3b0-08dda7495237
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DU2PEPF00028D0E.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB5882
 
-The Firefly ROC-RK3588S-PC is a SBC based on the Rockchip RK3588s SoC.
 
-Link: https://wiki.t-firefly.com/en/Station-M3/index.html
+On 09/06/25 4:30 pm, Lorenzo Stoakes wrote:
+> On Mon, Jun 09, 2025 at 03:11:59PM +0530, Dev Jain wrote:
+>> On 06/06/25 3:19 pm, Lorenzo Stoakes wrote:
+>>> On Fri, May 30, 2025 at 02:34:06PM +0530, Dev Jain wrote:
+>>>> Move away from apply_to_page_range(), which does not honour leaf mappings,
+>>>> to walk_page_range_novma(). The callbacks emit a warning and return EINVAL
+>>>> if a partial range is detected.
+>>> Hm a follow up question here - why not just improve apply_to_page_range() to
+>>> honour leaf mappings?
+>>>
+>>> What does honouring leaf mappings actually mean? You mean handling huge pages?
+>>>
+>>> Would it be all that difficult to implement?
+>>>
+>>> It seems like you're pushing a bunch of the 'applying' logic over from there to
+>>> a walker that isn't maybe best suited to it and having to introduce an iffy new
+>>> form of locking...
+>>>
+>>> Can we go vice-versa? :)
+>>>
+>>> Also obviously walk_page_range_novma() doesn't exist any more :P
+>>> walk_kernel_page_table_range() is the preferred solution.
+>> I cannot see this function in mm-unstable. Also, mm-unstable is broken - I get
+>> some RCU message in dmesg, and after some 20-30 second delay the kernel boots.
+>> So on which branch do I base my work on...
+> mm-unstable shouldn't be broken as that's what should be in -next, concerning!
+> Worth investigating... But rebase! :)
+>
+> Sorry maybe isn't clear as we changed this recently - you should base all
+> changes intended for the next release on mm-new.
+>
+> As I understand it:
+>
+> - mm-new is the _rawest_ form of the state of mm, Andrew described it as
+>    the 'crazy' branch that basiclaly has everything.
+>
+> - mm-unstable is when things have been percolating for a while and are
+>    considered reasonably stable-ish kinda, but most importantly - ready for
+>    -next testing. And is what goes to -next.
+>
+> - mm-stable is gathered shortly before the merge window starts and is all
+>    the stuff Andrew will send to Linus.
+>
+> To pick up on the most recent changes therefore use mm-new. Using anything
+> else risks issues like this where your patch will conflict, etc.
+>
+> Another point to note is, during the merge window, mm-new is where changes
+> due for the release after the one being currently merged are kept
+> (e.g. over the past 2 weeks of 6.16 merge window, this would be changes for
+> 6.17).
+>
+> Not all subsystems even take patches at all during the merge window, but mm
+> does.
+>
+> So especially during merge window it's important to base you changes on
+> mm-new.
 
-The device contains the following hardware that is tested/working:
- - 32 or 64GB eMMC
- - SDMMC card slot
- - Realtek USB WiFi 5/BT
- - NVME 2242 socket
- - 4 or 8GB of RAM
- - RTL8211 GbE
- - USB 3.0 port
- - USB 2.0 port
- - HDMI port
+Thanks. I will base my changes on mm-new.
 
-Signed-off-by: Hsun Lai <i@chainsx.cn>
-
----
-
-Changes in v5:
-- Make led-1 off by default (Chukun Pan, v4)
-- Add color settings for led (Chukun Pan, v4)
-- Remove vcc5v0_usbdcin
-- Put enable/gpio before regulator (Chukun Pan, v4)
-- Remove always-on and boot-on from vcc5v0_host (Chukun Pan, v4)
-- Update the name of vbus_typec (Chukun Pan, v4)
-- Remove always-on and boot-on from vbus5v0_typec (Chukun Pan, v4)
-- Put pinctrl-names before pinctrl-0 (Chukun Pan, v4)
-- Remove usb_con node
-- Remove extra blank lines (Chukun Pan, v4)
-- Add phy-supply for u2phy3_host (Chukun Pan, v4)
-
-Changes in v4:
-- Update the name of the regulator
-- Remove the i2s5_8ch node
-
-Changes in v3:
-- Update the name of leds
-- Add more cpu nodes
-- Update mdio compatible
-- Fix the order in the node
-- Add the default serial port(uart2)
-- Patch 1: Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
-
-Changes in v2:
-- Fix rgmii delays
-
-Changes in v1:
-- Add support for Firefly ROC-RK3588S-PC
-
- arch/arm64/boot/dts/rockchip/Makefile         |   1 +
- .../boot/dts/rockchip/rk3588s-roc-pc.dts      | 838 ++++++++++++++++++
- 2 files changed, 839 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dts
-
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index e63c3f5eb..dd6ae546d 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -182,6 +182,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-nanopi-r6c.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-odroid-m2.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-orangepi-5.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-orangepi-5b.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-roc-pc.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-rock-5a.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-rock-5c.dtb
- 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dts
-new file mode 100644
-index 000000000..39a1bdbe7
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dts
-@@ -0,0 +1,838 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/leds/common.h>
-+#include <dt-bindings/pinctrl/rockchip.h>
-+#include <dt-bindings/soc/rockchip,vop2.h>
-+#include <dt-bindings/usb/pd.h>
-+#include "rk3588s.dtsi"
-+
-+/ {
-+	model = "Firefly Station M3";
-+	compatible = "firefly,rk3588s-roc-pc", "rockchip,rk3588s";
-+
-+	aliases {
-+		ethernet0 = &gmac1;
-+		mmc0 = &sdhci;
-+		mmc1 = &sdmmc;
-+	};
-+
-+	analog-sound {
-+		compatible = "simple-audio-card";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&hp_detect>;
-+		simple-audio-card,name = "rockchip,es8388";
-+		simple-audio-card,bitclock-master = <&masterdai>;
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,frame-master = <&masterdai>;
-+		simple-audio-card,hp-det-gpios = <&gpio1 RK_PA6 GPIO_ACTIVE_LOW>;
-+		simple-audio-card,mclk-fs = <256>;
-+		simple-audio-card,pin-switches = "Headphones";
-+		simple-audio-card,routing =
-+			"Headphones", "LOUT1",
-+			"Headphones", "ROUT1",
-+			"LINPUT1", "Microphone Jack",
-+			"RINPUT1", "Microphone Jack",
-+			"LINPUT2", "Onboard Microphone",
-+			"RINPUT2", "Onboard Microphone";
-+		simple-audio-card,widgets =
-+			"Microphone", "Microphone Jack",
-+			"Microphone", "Onboard Microphone",
-+			"Headphone", "Headphones";
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&i2s0_8ch>;
-+		};
-+
-+		masterdai: simple-audio-card,codec {
-+			sound-dai = <&es8388>;
-+			system-clock-frequency = <12288000>;
-+		};
-+	};
-+
-+	chosen {
-+		stdout-path = "serial2:1500000n8";
-+	};
-+
-+	hdmi-con {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi0_out_con>;
-+			};
-+		};
-+	};
-+
-+	fan: fan {
-+		compatible = "pwm-fan";
-+		cooling-levels = <60 100 140 160 185 220 255>;
-+		fan-supply = <&vcc12v_dcin>;
-+		pwms = <&pwm11 0 50000 1>;
-+		#cooling-cells = <2>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&led_pins>;
-+
-+		led-0 {
-+			color = <LED_COLOR_ID_GREEN>;
-+			default-state = "on";
-+			function = LED_FUNCTION_POWER;
-+			gpios = <&gpio1 RK_PD5 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led-1 {
-+			color = <LED_COLOR_ID_BLUE>;
-+			default-state = "off";
-+			gpios = <&gpio3 RK_PB2 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led-2 {
-+			color = <LED_COLOR_ID_RED>;
-+			default-state = "off";
-+			gpios = <&gpio3 RK_PC0 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	vcc12v_dcin: regulator-vcc12v-dcin {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc12v_dcin";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+	};
-+
-+	vcc5v0_sys: regulator-vcc5v0-sys {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v0_sys";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc12v_dcin>;
-+	};
-+
-+	vcc5v0_usb: regulator-vcc5v0-usb {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v0_usb";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc12v_dcin>;
-+	};
-+
-+	vcc3v3_pcie20: regulator-vcc3v3-pcie20 {
-+		compatible = "regulator-fixed";
-+		gpio = <&gpio1 RK_PD7 GPIO_ACTIVE_HIGH>;
-+		regulator-name = "vcc3v3_pcie20";
-+		enable-active-high;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <5000>;
-+		vin-supply = <&vcc12v_dcin>;
-+	};
-+
-+	vcc5v0_host: regulator-vcc5v0-host {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio1 RK_PB6 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vcc5v0_host_en>;
-+		regulator-name = "vcc5v0_host";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+
-+	vbus5v0_typec: regulator-vbus5v0-typec {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio1 RK_PB1 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&typec5v_pwren>;
-+		regulator-name = "vbus5v0_typec";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+};
-+
-+&combphy0_ps {
-+	status = "okay";
-+};
-+
-+&combphy2_psu {
-+	status = "okay";
-+};
-+
-+&cpu_b0 {
-+	cpu-supply = <&vdd_cpu_big0_s0>;
-+};
-+
-+&cpu_b1 {
-+	cpu-supply = <&vdd_cpu_big0_s0>;
-+};
-+
-+&cpu_b2 {
-+	cpu-supply = <&vdd_cpu_big1_s0>;
-+};
-+
-+&cpu_b3 {
-+	cpu-supply = <&vdd_cpu_big1_s0>;
-+};
-+
-+&cpu_l0 {
-+	cpu-supply = <&vdd_cpu_lit_s0>;
-+};
-+
-+&cpu_l1 {
-+	cpu-supply = <&vdd_cpu_lit_s0>;
-+};
-+
-+&cpu_l2 {
-+	cpu-supply = <&vdd_cpu_lit_s0>;
-+};
-+
-+&cpu_l3 {
-+	cpu-supply = <&vdd_cpu_lit_s0>;
-+};
-+
-+&gmac1 {
-+	clock_in_out = "output";
-+	phy-handle = <&rgmii_phy1>;
-+	phy-mode = "rgmii-id";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&gmac1_miim
-+		     &gmac1_tx_bus2
-+		     &gmac1_rx_bus2
-+		     &gmac1_rgmii_clk
-+		     &gmac1_rgmii_bus>;
-+	status = "okay";
-+};
-+
-+&gpu {
-+	mali-supply = <&vdd_gpu_s0>;
-+	status = "okay";
-+};
-+
-+&hdmi0 {
-+	status = "okay";
-+};
-+
-+&hdmi0_in {
-+	hdmi0_in_vp0: endpoint {
-+		remote-endpoint = <&vp0_out_hdmi0>;
-+	};
-+};
-+
-+&hdmi0_out {
-+	hdmi0_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
-+&hdptxphy0 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	pinctrl-0 = <&i2c0m2_xfer>;
-+	status = "okay";
-+
-+	vdd_cpu_big0_s0: regulator@42 {
-+		compatible = "rockchip,rk8602";
-+		reg = <0x42>;
-+		fcs,suspend-voltage-selector = <1>;
-+		regulator-name = "vdd_cpu_big0_s0";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <550000>;
-+		regulator-max-microvolt = <1050000>;
-+		regulator-ramp-delay = <2300>;
-+		vin-supply = <&vcc5v0_sys>;
-+
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
-+	};
-+
-+	vdd_cpu_big1_s0: regulator@43 {
-+		compatible = "rockchip,rk8603", "rockchip,rk8602";
-+		reg = <0x43>;
-+		fcs,suspend-voltage-selector = <1>;
-+		regulator-name = "vdd_cpu_big1_s0";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <550000>;
-+		regulator-max-microvolt = <1050000>;
-+		regulator-ramp-delay = <2300>;
-+		vin-supply = <&vcc5v0_sys>;
-+
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
-+	};
-+};
-+
-+&i2c2 {
-+	pinctrl-0 = <&i2c2m0_xfer>;
-+	status = "okay";
-+
-+	vdd_npu_s0: regulator@42 {
-+		compatible = "rockchip,rk8602";
-+		reg = <0x42>;
-+		fcs,suspend-voltage-selector = <1>;
-+		regulator-name = "vdd_npu_s0";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <550000>;
-+		regulator-max-microvolt = <950000>;
-+		regulator-ramp-delay = <2300>;
-+		vin-supply = <&vcc5v0_sys>;
-+
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
-+	};
-+
-+	hym8563: rtc@51 {
-+		compatible = "haoyu,hym8563";
-+		reg = <0x51>;
-+		#clock-cells = <0>;
-+		clock-output-names = "hym8563";
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <RK_PB0 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&hym8563_int>;
-+	};
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+
-+	es8388: audio-codec@10 {
-+		compatible = "everest,es8388", "everest,es8328";
-+		reg = <0x10>;
-+		clocks = <&cru I2S1_8CH_MCLKOUT>;
-+		AVDD-supply = <&vcc_3v3_s0>;
-+		DVDD-supply = <&vcc_1v8_s0>;
-+		HPVDD-supply = <&vcc_3v3_s0>;
-+		PVDD-supply = <&vcc_3v3_s0>;
-+		assigned-clocks = <&cru I2S1_8CH_MCLKOUT>;
-+		assigned-clock-rates = <12288000>;
-+		#sound-dai-cells = <0>;
-+	};
-+};
-+
-+&i2s0_8ch {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2s0_lrck
-+		     &i2s0_mclk
-+		     &i2s0_sclk
-+		     &i2s0_sdi0
-+		     &i2s0_sdo0>;
-+	status = "okay";
-+};
-+
-+&mdio1 {
-+	rgmii_phy1: ethernet-phy@1 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <0x1>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&rtl8211f_rst>;
-+		reset-assert-us = <20000>;
-+		reset-deassert-us = <100000>;
-+		reset-gpios = <&gpio0 RK_PD3 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+&pcie2x1l1 {
-+	reset-gpios = <&gpio3 RK_PD1 GPIO_ACTIVE_HIGH>;
-+	vpcie3v3-supply = <&vcc3v3_pcie20>;
-+	status = "okay";
-+};
-+
-+&pd_gpu {
-+	domain-supply = <&vdd_gpu_s0>;
-+};
-+
-+&pinctrl {
-+	hym8563 {
-+		hym8563_int: hym8563-int {
-+			rockchip,pins = <0 RK_PB0 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+
-+	headphone {
-+		hp_detect: hp-detect {
-+			rockchip,pins = <1 RK_PA6 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	leds {
-+		led_pins: led-pins {
-+			rockchip,pins = <1 RK_PD5 RK_FUNC_GPIO &pcfg_pull_none>,
-+					<3 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>,
-+					<3 RK_PC0 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	rtl8211 {
-+		rtl8211f_rst: rtl8211f-rst {
-+			rockchip,pins = <0 RK_PD3 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+
-+	usb {
-+		vcc5v0_host_en: vcc5v0-host-en {
-+			rockchip,pins = <1 RK_PB6 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		typec5v_pwren: typec5v-pwren {
-+			rockchip,pins = <1 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+};
-+
-+&pwm11 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm11m3_pins>;
-+	status = "okay";
-+};
-+
-+&saradc {
-+	vref-supply = <&vcc_1v8_s0>;
-+	status = "okay";
-+};
-+
-+&sdhci {
-+	bus-width = <8>;
-+	mmc-hs400-1_8v;
-+	mmc-hs400-enhanced-strobe;
-+	no-sdio;
-+	no-sd;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&sdmmc {
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	disable-wp;
-+	max-frequency = <150000000>;
-+	no-sdio;
-+	no-mmc;
-+	sd-uhs-sdr104;
-+	vmmc-supply = <&vcc_3v3_s3>;
-+	vqmmc-supply = <&vccio_sd_s0>;
-+	status = "okay";
-+};
-+
-+&spi2 {
-+	assigned-clocks = <&cru CLK_SPI2>;
-+	assigned-clock-rates = <200000000>;
-+	num-cs = <1>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi2m2_cs0 &spi2m2_pins>;
-+	status = "okay";
-+
-+	pmic@0 {
-+		compatible = "rockchip,rk806";
-+		reg = <0x0>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pmic_pins>, <&rk806_dvs1_null>,
-+			    <&rk806_dvs2_null>, <&rk806_dvs3_null>;
-+		spi-max-frequency = <1000000>;
-+		system-power-controller;
-+
-+		vcc1-supply = <&vcc5v0_sys>;
-+		vcc2-supply = <&vcc5v0_sys>;
-+		vcc3-supply = <&vcc5v0_sys>;
-+		vcc4-supply = <&vcc5v0_sys>;
-+		vcc5-supply = <&vcc5v0_sys>;
-+		vcc6-supply = <&vcc5v0_sys>;
-+		vcc7-supply = <&vcc5v0_sys>;
-+		vcc8-supply = <&vcc5v0_sys>;
-+		vcc9-supply = <&vcc5v0_sys>;
-+		vcc10-supply = <&vcc5v0_sys>;
-+		vcc11-supply = <&vcc_2v0_pldo_s3>;
-+		vcc12-supply = <&vcc5v0_sys>;
-+		vcc13-supply = <&vcc_1v1_nldo_s3>;
-+		vcc14-supply = <&vcc_1v1_nldo_s3>;
-+		vcca-supply = <&vcc5v0_sys>;
-+
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		rk806_dvs1_null: dvs1-null-pins {
-+			pins = "gpio_pwrctrl1";
-+			function = "pin_fun0";
-+		};
-+
-+		rk806_dvs2_null: dvs2-null-pins {
-+			pins = "gpio_pwrctrl2";
-+			function = "pin_fun0";
-+		};
-+
-+		rk806_dvs3_null: dvs3-null-pins {
-+			pins = "gpio_pwrctrl3";
-+			function = "pin_fun0";
-+		};
-+
-+		regulators {
-+			vdd_gpu_s0: dcdc-reg1 {
-+				regulator-name = "vdd_gpu_s0";
-+				regulator-boot-on;
-+				regulator-min-microvolt = <550000>;
-+				regulator-max-microvolt = <950000>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-enable-ramp-delay = <400>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdd_cpu_lit_s0: dcdc-reg2 {
-+				regulator-name = "vdd_cpu_lit_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <550000>;
-+				regulator-max-microvolt = <950000>;
-+				regulator-ramp-delay = <12500>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdd_log_s0: dcdc-reg3 {
-+				regulator-name = "vdd_log_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <675000>;
-+				regulator-max-microvolt = <750000>;
-+				regulator-ramp-delay = <12500>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+					regulator-suspend-microvolt = <750000>;
-+				};
-+			};
-+
-+			vdd_vdenc_s0: dcdc-reg4 {
-+				regulator-name = "vdd_vdenc_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <550000>;
-+				regulator-max-microvolt = <950000>;
-+				regulator-ramp-delay = <12500>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdd_ddr_s0: dcdc-reg5 {
-+				regulator-name = "vdd_ddr_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <675000>;
-+				regulator-max-microvolt = <900000>;
-+				regulator-ramp-delay = <12500>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+					regulator-suspend-microvolt = <850000>;
-+				};
-+			};
-+
-+			vcc_1v1_nldo_s3: vdd2_ddr_s3: dcdc-reg6 {
-+				regulator-name = "vdd2_ddr_s3";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-max-microvolt = <1100000>;
-+				regulator-min-microvolt = <1100000>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+				};
-+			};
-+
-+			vcc_2v0_pldo_s3: dcdc-reg7 {
-+				regulator-name = "vdd_2v0_pldo_s3";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <2000000>;
-+				regulator-max-microvolt = <2000000>;
-+				regulator-ramp-delay = <12500>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <2000000>;
-+				};
-+			};
-+
-+			vcc_3v3_s3: dcdc-reg8 {
-+				regulator-name = "vcc_3v3_s3";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <3300000>;
-+				};
-+			};
-+
-+			vddq_ddr_s0: dcdc-reg9 {
-+				regulator-name = "vddq_ddr_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc_1v8_s3: dcdc-reg10 {
-+				regulator-name = "vcc_1v8_s3";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <1800000>;
-+				};
-+			};
-+
-+			avcc_1v8_s0: pldo-reg1 {
-+				regulator-name = "avcc_1v8_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc_1v8_s0: pldo-reg2 {
-+				regulator-name = "vcc_1v8_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+					regulator-suspend-microvolt = <1800000>;
-+				};
-+			};
-+
-+			avdd_1v2_s0: pldo-reg3 {
-+				regulator-name = "avdd_1v2_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc_3v3_s0: pldo-reg4 {
-+				regulator-name = "vcc_3v3_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-ramp-delay = <12500>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vccio_sd_s0: pldo-reg5 {
-+				regulator-name = "vccio_sd_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-ramp-delay = <12500>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			pldo6_s3: pldo-reg6 {
-+				regulator-name = "pldo6_s3";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <1800000>;
-+				};
-+			};
-+
-+			vdd_0v75_s3: nldo-reg1 {
-+				regulator-name = "vdd_0v75_s3";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <750000>;
-+				regulator-max-microvolt = <750000>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <750000>;
-+				};
-+			};
-+
-+			vdd_ddr_pll_s0: nldo-reg2 {
-+				regulator-name = "vdd_ddr_pll_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <850000>;
-+				regulator-max-microvolt = <850000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+					regulator-suspend-microvolt = <850000>;
-+				};
-+			};
-+
-+			avdd_0v75_s0: nldo-reg3 {
-+				regulator-name = "avdd_0v75_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <750000>;
-+				regulator-max-microvolt = <750000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdd_0v85_s0: nldo-reg4 {
-+				regulator-name = "vdd_0v85_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <850000>;
-+				regulator-max-microvolt = <850000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdd_0v75_s0: nldo-reg5 {
-+				regulator-name = "vdd_0v75_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <750000>;
-+				regulator-max-microvolt = <750000>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&tsadc {
-+	status = "okay";
-+};
-+
-+&u2phy0 {
-+	status = "okay";
-+};
-+
-+&u2phy0_otg {
-+	status = "okay";
-+};
-+
-+&u2phy2 {
-+	status = "okay";
-+};
-+
-+&u2phy3 {
-+	status = "okay";
-+};
-+
-+&u2phy2_host {
-+	phy-supply = <&vcc5v0_host>;
-+	status = "okay";
-+};
-+
-+&u2phy3_host {
-+	phy-supply = <&vcc5v0_host>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2m0_xfer>;
-+	status = "okay";
-+};
-+
-+&uart7 {
-+	pinctrl-0 = <&uart7m2_xfer>;
-+	status = "okay";
-+};
-+
-+&usb_host0_ehci {
-+	status = "okay";
-+};
-+
-+&usb_host0_ohci {
-+	status = "okay";
-+};
-+
-+&usb_host0_xhci {
-+	extcon = <&u2phy0>;
-+	status = "okay";
-+};
-+
-+&usb_host1_ehci {
-+	status = "okay";
-+};
-+
-+&usb_host1_ohci {
-+	status = "okay";
-+};
-+
-+&vop {
-+	status = "okay";
-+};
-+
-+&vop_mmu {
-+	status = "okay";
-+};
-+
-+&vp0 {
-+	vp0_out_hdmi0: endpoint@ROCKCHIP_VOP2_EP_HDMI0 {
-+		reg = <ROCKCHIP_VOP2_EP_HDMI0>;
-+		remote-endpoint = <&hdmi0_in_vp0>;
-+	};
-+};
--- 
-2.34.1
-
+>
+> Cheers, Lorenzo
+>
