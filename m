@@ -1,148 +1,120 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509DE1FC3
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 01:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB611FC3;
+	Mon,  9 Jun 2025 01:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749430923; cv=none; b=mUoYWafeS0536cV4Mhzc21qIruGf7MZEhL0fF+acpzo64FMHqu44MHBFELzbVmOjPUuElniEJwcsmO036gSX7U2Ym0ktnE26Ao4bvp44s1soPn6EYxp+1DmkQcBHa+Vxhzb3/11roeL40ttk9K1fL7/jGrJEJQ0Hlf144wKIWV8=
+	t=1749431095; cv=none; b=dPBH2egrzIq0B819WOv2LZts1GZACopRjuhr5R0UfOoPFkJdpwlh1ZXF5jeR1kqq4iqvvZSwpc+RqHuE0xTnhLXCNMukJn+Flk8yFQX+i8DK36tHVkPxf1lftE6wgKtnFyFNy4RXrj3EYJ4+xAi6Mp2SrVl8wvTPsB+gmUjdJPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749430923; c=relaxed/simple;
-	bh=62QbUzFjx64g5vfBud5EFb1qLPMajBupVcx93RCvacI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=u38+PHq1vgqAxllUD9BZ6+i+pVGu04yxYmZvbHNRdO43e1RL3mWcISg6+oIZVYwKJRaD6bHAqmnxwUZqcnJQtDJGRdwGfIjTWEunSCAxQPGlZWTosLtcUwoABma2/ktS7HHXCcPXl5R+pw5hBxQv9E8GwkpjHQFFUK8lsp9qdvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=RiLXG88B; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	s=arc-20240116; t=1749431095; c=relaxed/simple;
+	bh=PqFx+ehS4nlPd3jSAmPpzks9zf+GnwOrYtwQiEFaktA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j6Y8MNuIbvcDrg++dUBx17IsaEWVLBsN08AA8lob3ruAT8WzDQo2gMlMy6vrCc+hKxLaxKaT3LuIgmj6Tlbh9h2UZXXNTgAB7Bpk18bQPULoTuSJ67acq9PN87jya3v8uPWOlZXFSbTCzWiXNasa6KB9FAsc/ApYkYR3W8eQn84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VVFt0ZDl; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="RiLXG88B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1749430919;
-	bh=bM1FuAwutJ/XU9U3yqDnYzeNLS1EQ8LX08NArNTlPK0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=RiLXG88B5CZwIkIRgwxz09WFiVurrmWE2P+aI7lZn5tRpb7TAnmWoze7e3eTwO9Ru
-	 jBAU/Ach//d6vDOyUZCtn9qwfUz3fBuGQsFShpgZrfRfBP8ZkMnTPiSjxvzg757f9Y
-	 BO0uPE/Ts36SE1uW55Ehh9l+Uzt7YI9FaDgqeLE5F/WorkD+rUsftJoL5C+SXHj+gs
-	 +bYwOM2QLO2MLs4xhOB/tBrfw/p9zKasmPkT7H0YGhkg+iBwT5XmJuMlzE/GnX0lfB
-	 BhbKUfUzWz9hx26cF3RsY7eRz6KSdFP5w8DhcpLaDZsAuEVGS3XbtShVscQhIHuK2j
-	 EqIZAxDyb8ywg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bFttH376Lz4wbv;
-	Mon,  9 Jun 2025 11:01:59 +1000 (AEST)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Masahiro Yamada <masahiroy@kernel.org>, Christophe Leroy
- <christophe.leroy@csgroup.eu>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>, Nicholas Piggin
- <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>,
- linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc: use always-y instead of extra-y in Makefiles
-In-Reply-To: <CAK7LNAQvRFVOeQhVos1T-R-Uq9ekY9Fo7HS+D=TCZziLo5TpHQ@mail.gmail.com>
-References: <20250602163302.478765-1-masahiroy@kernel.org>
- <3cebc3c4-dbaf-41f6-b98d-1d33bea2eeeb@csgroup.eu>
- <CAK7LNAQvRFVOeQhVos1T-R-Uq9ekY9Fo7HS+D=TCZziLo5TpHQ@mail.gmail.com>
-Date: Mon, 09 Jun 2025 11:01:56 +1000
-Message-ID: <8734c9wwvv.fsf@mpe.ellerman.id.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VVFt0ZDl"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-235e1d710d8so46389375ad.1;
+        Sun, 08 Jun 2025 18:04:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749431093; x=1750035893; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fvXnrkBGZ288qQ2hBdLfgL2bkdoVrtsdri+R3jNXWXk=;
+        b=VVFt0ZDltxOQOqGLRJcJ3FyXTOkJ8YKfqiu+htxWuCRxR6+6Q/1ir7q2CehMLeqOUz
+         w1fXS7pXpGyIHX8mZF0CYTWSK+7lOmUC5zEtyU91y7Jc29D0w6ReY2gjOSvSqJzx88vB
+         UgkRp6pmTjcLqyvxV0/LaItaPF7ot+i9sEi3wDFg1OHqnnN8rvAvEmuYfN6wCgfanfeo
+         PkoBZKGNDNhHzaXpdZkQOmCOs6xBP3l2ZleNDVedwwjYYZ+zsIbgI5Xt2SLe0ulFnok1
+         n2/HR60Y3q8JqmxhbuMSam0cENwSSYKI/avxYvuabRkd1prHe409q9JPNJmybJwrTOWh
+         gNXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749431093; x=1750035893;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fvXnrkBGZ288qQ2hBdLfgL2bkdoVrtsdri+R3jNXWXk=;
+        b=a24l/MDyskHJldPWTPkkOIkuQcdbR0q95ZAbUFN+Ssq7nUepiYp7GsIpdkSQ6xearA
+         6Gtr+H0cc8dqmb5Ljldi3/A2agx5KMumfWis0+S/GBAOUSQ94S+L1m+N+Xm2CJpi2tZK
+         lJrOcweRUVZcKhnrz/DxXCsmqcO5QPbceisHEVmpcA9BREWk+jcFZy2TkOSPtkH+Tf2S
+         GMLFUO3A6jqRxqC1+bChkqJ97MYdvUZ5QPV9fR2RTCY/7KAN0CAqfkVQhrEF7IFiA05O
+         YXsDwNtwQOZxHCaosbg4as9PW/8kZlh8+yy1kqCTu8jJS6Jo9wZQ60F19SueVqXbrEW4
+         wMig==
+X-Forwarded-Encrypted: i=1; AJvYcCVsaGt4+WRY+RR5XcTkw+5PCg5kWpTOfu+XZL9K2BN/P7jcQpCEsnj/J+rduLQLJV6PKcNQWkBkYMysrV52E1E=@vger.kernel.org, AJvYcCWk9Jw89D9u+qMI9c3bsFYNicqLTZV8APEtN03h3UP2ZtIM3UbKYqS5FbwIMKRqyyB219YT5pr4waETMK4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzCbfJxrp+H/R/VtcKOvgvdMrppj7kg4AWCeRpBlZJyEg1cU/R
+	Pp+SeI5IW8V04HsLiGFW8v4v7mOE3g7ye2zOYXJMRZVOGrW46F2aP5lu
+X-Gm-Gg: ASbGncvb18RQvUpsIBY3/gViKvBJ+d3O68BnTpuRTURfqXOs7aCPqhb1/Twik9h4Plk
+	m7iySucYCYRzvopFj99I1c8LCnrDwODET3ZFvyh84QxfcWw6TKzx8EEqrWzNIQwS/JP2cYPm/6Z
+	qmAb/vHYcqnv1kzptz1eMGSIDNjxD2Y7nkCVc3M9GIhef0rU50sLei8AHzG+tmyDX9+AojU/LX0
+	vf+wbB67QWmnhWfvt1hOTi92gmbzfSet8pih5ZHU7abNKvsOsZDc79at11t/wzeutJcLXz17izU
+	j5l96wstLRm2n6kbgZDVQ3F1J8a9yuTQ6dJhz/+cy6Z2c4qKPGAkUelPO+Swfnd8aAAPRwsqVRg
+	kYMT5zQGe9tIuviXQ1lhoKvYB/V5x
+X-Google-Smtp-Source: AGHT+IFrSiK91aIxAJLr0HkuoM1VwNzpqPNyJSrhhGAewGmTM1Sdtl8tM2xs37aqyGerbzUiVpI/OA==
+X-Received: by 2002:a17:902:ced0:b0:224:24d3:6103 with SMTP id d9443c01a7336-23601d7129bmr172249585ad.35.1749431092807;
+        Sun, 08 Jun 2025 18:04:52 -0700 (PDT)
+Received: from bee.. (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5f6683b1sm3652201a12.50.2025.06.08.18.04.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Jun 2025 18:04:52 -0700 (PDT)
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+To: a.hindborg@kernel.org,
+	alex.gaynor@gmail.com,
+	ojeda@kernel.org
+Cc: aliceryhl@google.com,
+	anna-maria@linutronix.de,
+	bjorn3_gh@protonmail.com,
+	boqun.feng@gmail.com,
+	dakr@kernel.org,
+	frederic@kernel.org,
+	gary@garyguo.net,
+	jstultz@google.com,
+	linux-kernel@vger.kernel.org,
+	lossin@kernel.org,
+	lyude@redhat.com,
+	rust-for-linux@vger.kernel.org,
+	sboyd@kernel.org,
+	tglx@linutronix.de,
+	tmgross@umich.edu
+Subject: [PATCH v3 0/3] rust: time: Introduce typed clock sources and generalize Instant
+Date: Mon,  9 Jun 2025 10:04:10 +0900
+Message-ID: <20250609010415.3302835-1-fujita.tomonori@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Masahiro Yamada <masahiroy@kernel.org> writes:
-> On Tue, Jun 3, 2025 at 3:50=E2=80=AFPM Christophe Leroy
-> <christophe.leroy@csgroup.eu> wrote:
->> Le 02/06/2025 =C3=A0 18:32, Masahiro Yamada a =C3=A9crit :
->> > The extra-y syntax is planned for deprecation because it is similar
->> > to always-y.
->> >
->> > When building the boot wrapper, always-y and extra-y are equivalent.
->> > Use always-y instead.
->> >
->> > In arch/powerpc/kernel/Makefile, I added ifdef KBUILD_BUILTIN to
->> > keep the current behavior: prom_init_check is skipped when building
->> > only modular objects.
->>
->> I don't understand what you mean.
->>
->> CONFIG_PPC_OF_BOOT_TRAMPOLINE is a bool, it cannot be a module.
->>
->> prom_init_check is only to check the content of prom_init.o which is
->> never a module.
->>
->> Is always-y to run _after_ prom_init.o is built ?
->
-> The intent of "make ARCH=3Dpowerpc modules"
-> is to compile objects that are necessary for modules,
-> that is, all built-in objects are skipped.
->
-> However,
-> always-$(CONFIG_PPC_OF_BOOT_TRAMPOLINE) +=3D prom_init_check
-> would generate prom_init_check regardless,
-> and its prerequisite, prom_init.o as well.
->
-> With CONFIG_MODULES=3Dy and
-> CONFIG_MODVERSIONS=3Dn,
-> and without ifdef KBUILD_BUILTIN,
->
-> $ make ARCH=3Dpowerpc CROSS_COMPILE=3Dpowerpc64-linux-gnu-   modules
->
-> would result in this:
->
->
->   CC [M]  arch/powerpc/kvm/book3s_xive_native.o
->   CC [M]  arch/powerpc/kvm/book3s_64_vio.o
->   LD [M]  arch/powerpc/kvm/kvm.o
->   CC [M]  arch/powerpc/kvm/book3s_hv.o
->   AS [M]  arch/powerpc/kvm/book3s_hv_interrupts.o
->   CC [M]  arch/powerpc/kvm/book3s_64_mmu_hv.o
->   CC [M]  arch/powerpc/kvm/book3s_64_mmu_radix.o
->   CC [M]  arch/powerpc/kvm/book3s_hv_nested.o
->   CC [M]  arch/powerpc/kvm/book3s_hv_tm.o
->   LD [M]  arch/powerpc/kvm/kvm-hv.o
->   CC [M]  arch/powerpc/kernel/rtas_flash.o
->   CC      arch/powerpc/kernel/prom_init.o
->   PROMCHK arch/powerpc/kernel/prom_init_check
->   CC [M]  kernel/locking/locktorture.o
->   CC [M]  kernel/time/test_udelay.o
->   CC [M]  kernel/time/time_test.o
->   CC [M]  kernel/backtracetest.o
->   CC [M]  kernel/torture.o
->   CC [M]  kernel/resource_kunit.o
->   CC [M]  kernel/sysctl-test.o
->   CC [M]  fs/ext4/inode-test.o
->   LD [M]  fs/ext4/ext4-inode-test.o
->   CC [M]  fs/fat/namei_vfat.o
->   LD [M]  fs/fat/vfat.o
->   CC [M]  fs/fat/fat_test.o
->   CC [M]  fs/nls/nls_ucs2_utils.o
->   CC [M]  fs/netfs/buffered_read.o
->   CC [M]  fs/netfs/buffered_write.o
-> ...
->
->
->
-> You can see these two lines:
->
->   CC      arch/powerpc/kernel/prom_init.o
->   PROMCHK arch/powerpc/kernel/prom_init_check
->
-> are supposed to be skipped when "make modules",
-> but actually compiled without ifdef.
->
-> So, I added ifdef KBUILD_BUILTIN to preserve
-> the current behavior.
+This patch series introduces a type-safe abstraction over clock
+sources. The goal is to remove the need for runtime clock selection
+(via ClockId) and instead leverage Rust's type system to statically
+associate the Instant type with a specific clock.
 
-OK, that makes sense.
+This approach enables compile-time enforcement of clock correctness
+across the APIs of Instant type.
 
-I don't really ever build just modules, so I wouldn't notice, but some
-folks probably do.
+v3:
+- rebased on 6.16-rc1
+v2: https://lore.kernel.org/rust-for-linux/20250504042436.237756-1-fujita.tomonori@gmail.com/
+- removed most of changes to hrtimer code 
+v1: https://lore.kernel.org/rust-for-linux/20250413105629.162349-1-fujita.tomonori@gmail.com/
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+FUJITA Tomonori (3):
+  rust: time: Replace ClockId enum with ClockSource trait
+  rust: time: Make Instant generic over ClockSource
+  rust: time: Add ktime_get() to ClockSource trait
 
-cheers
+ rust/helpers/helpers.c      |   1 +
+ rust/helpers/time.c         |  18 ++++
+ rust/kernel/time.rs         | 201 ++++++++++++++++++++++--------------
+ rust/kernel/time/hrtimer.rs |   6 +-
+ 4 files changed, 148 insertions(+), 78 deletions(-)
+ create mode 100644 rust/helpers/time.c
+
+
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+-- 
+2.43.0
+
