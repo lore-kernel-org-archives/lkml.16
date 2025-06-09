@@ -1,92 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43EAE207A20;
-	Mon,  9 Jun 2025 20:59:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B88221DB0;
+	Mon,  9 Jun 2025 20:59:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749502781; cv=none; b=Y9stBw2RPy3+9xEJKTPpJ9xdxF+FVppSpB2KWJnmzpxYwdEC/Sgl0caZifVr+BCHHXr8vdqOogFcoXO3+JMWdBRKuM/atxF17u+DscFYnmEi59GCcaOSh7+RZbjv+On8Cceg7rnYrh5gG4VDBcJFW2mXiEYDCmfATJdY6iqYKP8=
+	t=1749502794; cv=none; b=qX8s2ebIk96FNg+VDFTPKMuapnyGE7hOM1VrtCmndwJA+LhsG4dGQKmm2TVoaAl7lJUltmvC8RDEFIVqyZi15jnOGmb9Q2QZgfeHTNG3qYfdj9XIi02uksysqz+tfc8ZqB3sqCAGCrc13uQM/g1SI5NVzbw/9aiycE9UUu/ACTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749502781; c=relaxed/simple;
-	bh=Q8wlcxSfI2C49/3WlyqJcY/1pWE9xD8JeXXXOkS61Eg=;
+	s=arc-20240116; t=1749502794; c=relaxed/simple;
+	bh=HhXZSXZLO35D8QWVJipm9tjH8I5ZsK+s/Vom8tBqYsM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IAgIdh4aLCzqjiy0oMZU+BRAUwcmwQh/cPY3pNijndWNlq2hh6cCP90qNzzN0XpRI2r6Z5Aiz6O1F3FGSY7aTms9jLMyAcMRftCr02zF86LoAn+Sh/K1q74ExRThVB2IivvpCU97Fih3BwkaezrgdhAr8SDHcLMsIU+sP2BT/UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UvJlV8Fk; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TAZ3273ntZFO69XCLzlbx/r941005/uToXPDGwWZ0+yY1BAUL/fRBTgMyyKPIfu28sT58J3kYCNUjr7YzFAHElBqxjMkGWgxkLTxKnd3k1esAbZrG5D28etAv+RVrW/fOoiCCZhVZaw1/pE3lU9yrgS/2tT9EYizhoyohaQ23NU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OXrSKn0R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UvJlV8Fk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 897AEC4CEEB;
-	Mon,  9 Jun 2025 20:59:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OXrSKn0R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83C55C4CEEF;
+	Mon,  9 Jun 2025 20:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749502780;
-	bh=Q8wlcxSfI2C49/3WlyqJcY/1pWE9xD8JeXXXOkS61Eg=;
+	s=k20201202; t=1749502793;
+	bh=HhXZSXZLO35D8QWVJipm9tjH8I5ZsK+s/Vom8tBqYsM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UvJlV8FkqEHOwffmigf9MVhomFOyzEqxs99x41Zi6PcTsgfOcCp/7yI7ZrFQHgjHM
-	 sZ77HvPjPHRMgjGRhKPqfeB6jl2H+x5cEX9Zufj00QY7aiRC6qKfmCsz0+iAkalLd+
-	 oUKf7OKBQ+bfJhct2DK/RPSdhefLG3Arng8x7b9E5migJp8p8Ij+BtaWWk304522Ww
-	 GyIZtLDWA316nC2c2o2kfmtHK0EOCKfH0Z9St6VmTCNIcpC6qtZAda2notHVQndouY
-	 n0iRb/Q6xoT00NoFbfb67cyC6mfOEfUwUJLTS5fcWmD7/eP26e1zJoQdcabI6IyDTN
-	 c46/LMxGH/vpw==
-Date: Mon, 9 Jun 2025 23:59:37 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: sudeep.holla@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
-	stuart.yoder@arm.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
-Subject: Re: [PATCH 2/2] tpm: tpm_crb_ffa: maunally register tpm_crb_ffa
- driver when it's built-in
-Message-ID: <aEdLOb3V3EgBZJof@kernel.org>
-References: <20250606105754.1202649-1-yeoreum.yun@arm.com>
- <20250606105754.1202649-3-yeoreum.yun@arm.com>
- <aEMdGXXBSym7cXmK@kernel.org>
- <aEMvm2MW9bBXf2gM@e129823.arm.com>
+	b=OXrSKn0RfMilXSK7MqCdv1wBNOsHj3hBqL+GK7n/7Cb5KtdmbdoeMgmJD4sdp+qo0
+	 Ttms6ih4CkosKE6N3TdUAKfNWRRX5EyxTcQ4QLP+Ew5dDtEDCgyAwWIQN47j5BQdMA
+	 ritEYYFO3C8JP8nZPxAZxztc1AnH5LTXAOdvnez4hn3WQp7RhukRUjv/+gkCuwt9ar
+	 86cWme37MjfXkRmuPoDfqeZ2UeaerLWOUuEi+TfgEA8ka7vDSqwWk1Wd0JGc29DS9k
+	 MIVLoIhHRbmaw9bwbC+ec2RPmur3nIzA60BwyVIgM7Ad1okVZ4/iSul/zhp3NsnjbR
+	 3/DV+e4pH970w==
+Date: Mon, 9 Jun 2025 21:59:46 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
+	Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>,
+	Will Deacon <will@kernel.org>, Han Xu <han.xu@nxp.com>,
+	Haibo Chen <haibo.chen@nxp.com>,
+	Yogesh Gaur <yogeshgaur.83@gmail.com>, Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>, Andrew Davis <afd@ti.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-spi@vger.kernel.org, imx@lists.linux.dev,
+	linux-leds@vger.kernel.org
+Subject: Re: [PATCH v6 1/3] spi: spi-nxp-fspi: check return value of
+ devm_mutex_init()
+Message-ID: <7afc214a-affd-4a99-8528-c58c31fbcc59@sirena.org.uk>
+References: <20250609-must_check-devm_mutex_init-v6-0-9540d5df9704@weissschuh.net>
+ <20250609-must_check-devm_mutex_init-v6-1-9540d5df9704@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="z+sgE4AtUlEKe0OU"
 Content-Disposition: inline
-In-Reply-To: <aEMvm2MW9bBXf2gM@e129823.arm.com>
+In-Reply-To: <20250609-must_check-devm_mutex_init-v6-1-9540d5df9704@weissschuh.net>
+X-Cookie: Restaurant package, not for resale.
 
-On Fri, Jun 06, 2025 at 07:12:43PM +0100, Yeoreum Yun wrote:
-> Hi Jarkko,
-> 
-> > > To integrate tpm_event_log with IMA subsystem,
-> > > tpm_crb and tpm_crb_ffa driver should be built as built-in
-> > > (CONFIG_TCG_CRB=y && CONFIG_TCG_CRB_FFA=y).
-> > >
-> > > However, this could make failure for ima_init() gets tpm chip when
-> > > each initcall function deployed like:
-> > >
-> > > 0000000000000888 l       .initcall6.init	0000000000000000 crb_acpi_driver_init
-> > > 000000000000088c l       .initcall6.init	0000000000000000 tpm_crb_ffa_driver_init
-> >
-> > The only failure I see is the patch 1/2 which changes init call level,
-> > and leaves kernel Git to a broken state.
-> >
-> > It breaks the famous "zero regressions policy".
-> >
-> > BR, Jarkko
-> 
-> Sorry, would you let me know what is broken more detail?
-> IMHO, by changing the init call level for ffa_init()
-> it's called early than before device_initcall() and it seems not to
-> break anything.
-> 
-> What breaks do you mean?
 
-Your description in the cover letter and commit messages in unclear
-and convoluted. Please describe exact causalities instead of something
-not defined could cause "failure" (which is also abstract concept).
+--z+sgE4AtUlEKe0OU
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'll check the next round.
+On Mon, Jun 09, 2025 at 10:38:37PM +0200, Thomas Wei=DFschuh wrote:
+> Even if it's not critical, the avoidance of checking the error code
+> from devm_mutex_init() call today diminishes the point of using devm
+> variant of it. Tomorrow it may even leak something.
 
-> 
-> Thanks.
-> 
-> --
-> Sincerely,
-> Yeoreum Yun
+I don't understand the comment about leaking here?  We might end up with
+an unitialised mutex but how would we leak anything?
 
-BR, Jarkko
+--z+sgE4AtUlEKe0OU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhHS0IACgkQJNaLcl1U
+h9AvMQf/ZkJYeAwrUQ4F4rCGjAWVy17mDms38DGjaQ0Yq/1UKgmweOqRHNTFlHeQ
+6UzQmRlWPrCfneewFmNi5AZJHLuf70gLYLtpnI18yoyyNv0hlGbPtpKVDExJR653
+rU6OyzZgpntN4D6wyVZs1MStJdv/YECV8XCs0S25lgKvXFNhSuLzWCfO0QHGzHqz
+RTLDs1STaeK5rJltaHSBESQ9lj9ho0mD3zQKZKwPwcfPU+GuCYHVkLjvxoL0+J7D
+rbXVb+DRr8HStEPn3ZmrmlRbiPwopUTdTw5sfAWK7xTvx1kYeyGUR1kjEEw4u4A9
+V8eG2ZFRaMNmxKTRgtlRWkU95uSHIA==
+=t0MM
+-----END PGP SIGNATURE-----
+
+--z+sgE4AtUlEKe0OU--
