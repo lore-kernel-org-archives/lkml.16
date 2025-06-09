@@ -1,138 +1,167 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1514220F23
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 20:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F1A1CF7AF
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 20:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749500021; cv=none; b=nIVy9UlkLtEvV9Y4SMMPJddJ1HK2W+glt7NJ37szlX3/Ne3DDU92h8uXwk1P3+uWOs3ReU6rWkHY8SXMDHp6wKA/qyQrMrn6ikUe47EindBqjRj0lMKszOLtMBhhXUcsBvroz22a8h+jeyFBK2k90BRu1tMDda4XTC396npClJo=
+	t=1749500071; cv=none; b=nLzPfHHkbV0UtuSTEypMTQQqmyDczEFJvhuX9fv0qppXlWwj8xcXW3La73Z36eUeL3ksrCZmrIJF4PkTxwPWw3XWXW4IZiijSVjAmYxX0zHsD7+Pv4J77X21mf/tdOXwy0XuIOuU3fK7KILS3s8B+ZXqL19BOloIcIRDel5dXP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749500021; c=relaxed/simple;
-	bh=6NIEMC0xnA+C5jNliqunaIOn/xrFyw0xsARx0C0pKpI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tRwEP43ot8UXhkBbkwTmfblu59uNg11ZM58rQX23LKJYArU7oaHnIodZn0ylR5aq1zBEVIZ29QteQNG+7PTQFgeHWRhwgyNYZeY5NY71OqnkavGomHPQRiVN4p3CrX97mJ/5LVpN4f5yJJ+6ngHahuPG0coWYgQ7mu0PPxVmjyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lsWmM95w; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1749500071; c=relaxed/simple;
+	bh=cc13l7pbpIRdIEC25QVqWj0lamcvY3YyLME1tijvOPE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S6iCryjJjzP0ZLq+7LVNMBNrcf8Ogp/7ZO/ZQNGp+vYnZ8dFjxXsXPnWzl2QZOUPaVFfY4R8qsMfo3/ZWcNXUhcsvvkyL5LCKJOKrPcUvHLL+vOsFJk6WrSZoC+2f2oc2taS8KCLcCACEtwp4hY/UCHLARLib8ClhbSK6KgAMH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=fBv/pCWD; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lsWmM95w"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-3122368d7cfso3771607a91.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 13:13:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="fBv/pCWD"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6ecf99dd567so61618646d6.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 13:14:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749500016; x=1750104816; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9yFNgGlGCkVHg1knXwtU8l8k12+pdKexGY49aaidt7U=;
-        b=lsWmM95wuh3avqSZS452d5EgDMSss8VmzsVSDAmXHhhLohYGSAAlMdP8G23nM23ich
-         F55STEEc0hN3iOzPFS2FkTkNjyA2Omm3gV0kgtkststABzUpbdWNbRos43amymwQScDN
-         iYSSfx+T4MMbLpp0tN8m0wSdksn6e+sQ2AUxI=
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1749500067; x=1750104867; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bFj+rnVnwrli61+RW3pW0hp2hmvQPvdmAdNSR40r1ZE=;
+        b=fBv/pCWDZBsrmhi+S5m15nxdEmb6BnFtmvfNSy1cBdVTHR95TiSSrT8bjV/0jMq8bP
+         yad/mpUqZw5k24orKm27KxVWETuwuHNyP+1ocWo8Khzcz5hmEf5QJ246igPfgIjGaPnc
+         cYxUaoRvYWb9lkDlzYCUIxjyZijSyTVILgPDMwJn8H4luK6X/G2YMoRpwodgrJAqkRZX
+         F/BAIaJey0SVFnBBun71bT5dTx9Sw7EVg9L4kyZ97xB3QtO/D4WMkdYEg4FVVEAyX1JA
+         s9MRe5PAsc3YFDVi1qHTfauuAr24COOug7RINrORwnbhe8ZfdxWMWMal94RgXoTndp1m
+         tbSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749500016; x=1750104816;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9yFNgGlGCkVHg1knXwtU8l8k12+pdKexGY49aaidt7U=;
-        b=oFbDNnAevGJ80vUDI7GgwFVgWMIyLqA/j9QODGAVC7coXEgtoDgEtC/jj4KMk2R6Jm
-         xBlJwnHD5y9aSHnjDCSLwu3fC0mPmD6maG9yGQpcMNHyCZAAzNzGruFvjkmSDdHpx8WW
-         MweFCNAWrdc4RTazRLKC/hxJQdhcRclqqth0/ZgUOiZ+wIBXBUPVOIKuhR752zsoBk3r
-         LLM6K7p9hGFDpFLwU9Q4NetaFfJSpxwC5hZB9SvJ/RY27A+3hD7ZcB/T175WUB9n5yHP
-         KVkMjDpNTRIvNFnwo2b9G0t78zNf+TTr6iXzMBH5r+jUFdVYDAgy/2XAVQBedXuFgCWL
-         Q7lA==
-X-Forwarded-Encrypted: i=1; AJvYcCV6HDkPvglILRNVAmb70ZiXq06yXzIqXrwLYZIx3l1Zkw2dTpjqtCPBI4XTByquZrqRKF2w04Q34rl1Ges=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvcvfiKVC2YFgY7LgBla+110I9ms1XpXIXJe0PfBwJPMt6hGt0
-	vaqn+8mPXngS73Eh+etzyBku4x+sBKRksk0pk2BKz+JEPmIMp3mCUkxVXzrS9OUPUAJmbdc296X
-	c1pc=
-X-Gm-Gg: ASbGnctqQ4YFrq6kHT5u2F91uzihIuGLdLu2TLq/msieAhWzrVs0Ka1ZHC5Awuc5vcy
-	JjDxT5KacIu6Q6WkXqLrlp5N6fQNr2zQfIwmnfi4dh5MZIhTNCFvykB4ufAbNyD6jjwxNl2qhd0
-	UaQnvwW5MGdbKzKQMtBKLZRuuQB33oLHOyoHv4Bl0J4gIHpgU84eE1IsfKhfgaVRf2t1Ow8uP8M
-	FdFCGHDgATsLc/2vwfQ+jb4GFRUFjn91nHxKd3i3t7JOZwXmxEU4gKjIM7dm2Jo06ZdZ+goK63g
-	nqtujsiNtlXkajkPnspfn94ApzaSR3EfmMedNbS/skgs9ZeZYAsiwsZH8B/3AaTnlIowjkjcNAD
-	SzQ9qjH5U7kiFbanSuDeDFSbZoznunb5aRXyxk+oM
-X-Google-Smtp-Source: AGHT+IFY+gr/SVWjzr2Rqd4eipAVojpSAPr3CeWkVbBS7syKlc7XyqFMLQj4FgvQQoU2/6psC0JS4Q==
-X-Received: by 2002:a17:90b:4a45:b0:311:c1ec:7cfd with SMTP id 98e67ed59e1d1-31347678455mr17512302a91.26.1749500016488;
-        Mon, 09 Jun 2025 13:13:36 -0700 (PDT)
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com. [209.85.215.178])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313286ff748sm2639025a91.0.2025.06.09.13.13.33
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1749500067; x=1750104867;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bFj+rnVnwrli61+RW3pW0hp2hmvQPvdmAdNSR40r1ZE=;
+        b=s2di4Unu6yCixAetyMEqBvtvXvJTe7HhF1oHEXVSKQP1f9pud6dNcfSvmOh4TR+hO8
+         vwYw4B3K1W6NhvIKoTg9tt49FpZedpZRWkHhsqFLlqKus0hF+M+ev6uKkeCmbIwnN1RD
+         8e/60HgnmHtlwbuyKV1rice74yJXX31NuXF2eukolMlEXwba5jAQ+IXAwzgHQ6tkh/4g
+         1kIzssx5DpQViGfIaQKOjHLnQpsrUobtsHsYbrqD6lqBSmJc7BB34TvDSjwLd/5Dn42L
+         Pqexle4h5h+5GzwVqCsDm96hPakThOfSYiq3jVcreu6HCC0d3TPIolSkbYYKt34hRDZc
+         O1Ig==
+X-Forwarded-Encrypted: i=1; AJvYcCXsy39bzAOL3vWriSogIffA24FQMxbdz0hEUrTIBhAi0j2qEjkdEBs9fySS4ETcLasd3tj8tALJ/5mYL4A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywhd3ar+z2CbwItpOvxdwFRMpIE3ArT5BMeOJNkzlh16SqPmABw
+	ff0f/oed6IA0YWYpWjOnwjkrSav1/ZYHYj2umBPNbUYrLxJ6yONNmKHz3eiVUhZ+pq0=
+X-Gm-Gg: ASbGncsweqKyACEyCIno59936x48Ek58or8w0aoZezsgkB2fmeI46nE4FJyOGnGp09z
+	HxGg6KUL80brw61dz7OmbY6m3pWRTrQ6EG8CGwSQWxnCNEem45x7DYAF6E/oabJiJ2v+qtNae8J
+	cQpPGVW44Lhz+IG1RO5TSBj1RJ/qdJKJ0xobSg9O3jSBA6m7eW9WMfZTdxSNUC5eZunC2AdumE+
+	qHDm/8XzSU2mDUfufdFGb9gp7mU64CP03htJxQmrrkYmHPMe95WK+78GbO7DOxsuyY18jKsqIqK
+	x5QlE+ae99k5NdaI3NYRPOgSMX3h5/PyPFr4npso2lVOVwmsfyIezncwC2g6MHJY9xfJRyM+Io+
+	vSdvKpVmA/qxomMBS9pAzOi8hfWQ6gWjGSQ61
+X-Google-Smtp-Source: AGHT+IEoxsMyfv1zl4Eq2z6OuyNYN5zJiRV3axkBglw2RaCBqnFhaHAJb4H6tYu0A3sn+TFxdgVaMQ==
+X-Received: by 2002:a05:6214:1256:b0:6fb:14:5e89 with SMTP id 6a1803df08f44-6fb08fe7f6fmr255840366d6.19.1749500067642;
+        Mon, 09 Jun 2025 13:14:27 -0700 (PDT)
+Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb09ac8415sm56510096d6.27.2025.06.09.13.14.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Jun 2025 13:13:34 -0700 (PDT)
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b1fb650bdf7so2563374a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 13:13:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXbkkmP5LEreNh1h7NS5GCeRkllXStG/allweksWj+yYfZaEZPufhqcL282DpYtvRlci8iDIt6suJINBwQ=@vger.kernel.org
-X-Received: by 2002:a17:90b:2d4e:b0:311:afd1:745b with SMTP id
- 98e67ed59e1d1-313472e8c6dmr21398818a91.11.1749500013266; Mon, 09 Jun 2025
- 13:13:33 -0700 (PDT)
+        Mon, 09 Jun 2025 13:14:27 -0700 (PDT)
+Message-ID: <17a7ab55-aa1a-4d1d-b8f6-27bbe51fe761@riscstar.com>
+Date: Mon, 9 Jun 2025 15:14:26 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606-printk-cleanup-part2-v1-0-f427c743dda0@suse.com> <20250606-printk-cleanup-part2-v1-4-f427c743dda0@suse.com>
-In-Reply-To: <20250606-printk-cleanup-part2-v1-4-f427c743dda0@suse.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 9 Jun 2025 13:13:21 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XXQyZLYKoszj68ZGFDY=9-cmEUp406WeOeSBVZOHyUHw@mail.gmail.com>
-X-Gm-Features: AX0GCFtFMIswKIAvt6rQB2Iu1HAY0gUkQ581gK2nBv_6C3TWCO4_jkt3VeYMeO4
-Message-ID: <CAD=FV=XXQyZLYKoszj68ZGFDY=9-cmEUp406WeOeSBVZOHyUHw@mail.gmail.com>
-Subject: Re: [PATCH 4/7] drivers: serial: kgdboc: Check CON_SUSPENDED instead
- of CON_ENABLED
-To: Marcos Paulo de Souza <mpdesouza@suse.com>
-Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	John Ogness <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Jason Wessel <jason.wessel@windriver.com>, Daniel Thompson <danielt@kernel.org>, 
-	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net, 
-	linux-um@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] clk: spacemit: mark K1 pll1_d8 as critical
+To: mturquette@baylibre.com, sboyd@kernel.org
+Cc: dlan@gentoo.org, heylenay@4d2.org, inochiama@outlook.com,
+ linux-clk@vger.kernel.org, spacemit@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Guodong Xu <guodong@riscstar.com>
+References: <20250609200822.468482-1-elder@riscstar.com>
+Content-Language: en-US
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <20250609200822.468482-1-elder@riscstar.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 6/9/25 3:08 PM, Alex Elder wrote:
+> The pll1_d8 clock is enabled by the boot loader, and is ultimately a
+> parent for numerous clocks, including those used by APB and AXI buses.
+> Guodong Xu discovered that this clock got disabled while responding to
+> getting -EPROBE_DEFER when requesting a reset controller.
+> 
+> The needed clock (CLK_DMA, along with its parents) had already been
+> enabled.  To respond to the probe deferral return, the CLK_DMA clock
+> was disabled, and this led to parent clocks also reducing their enable
+> count.  When the enable count for pll1_d8 was decremented it became 0,
+> which caused it to be disabled.  This led to a system hang.
+> 
+> Marking that clock critical resolves this by preventing it from being
+> disabled.
+> 
+> Define a new macro CCU_FACTOR_GATE_DEFINE() to allow clock flags to
+> be supplied for a CCU_FACTOR_GATE clock.
+> 
+> Fixes: 1b72c59db0add ("clk: spacemit: Add clock support for SpacemiT K1 SoC")
+> Signed-off-by: Alex Elder <elder@riscstar.com>
+> Tested-by: Guodong Xu <guodong@riscstar.com>
 
-On Fri, Jun 6, 2025 at 7:54=E2=80=AFPM Marcos Paulo de Souza <mpdesouza@sus=
-e.com> wrote:
->
-> All consoles found on for_each_console are registered, meaning that all o=
-f
-> them are CON_ENABLED. The code tries to find an active console, so check =
-if the
-> console is not suspended instead.
->
-> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+I'm very sorry, this path is v2 and I neglected to indicate that
+in the subject line.  Here is v1:
+   https://lore.kernel.org/lkml/20250607202759.4180579-1-elder@riscstar.com/
+
+					-Alex
 > ---
->  drivers/tty/serial/kgdboc.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-> index 85f6c5a76e0fff556f86f0d45ebc5aadf5b191e8..af6d2208b8ddb82d62f33292b=
-006b2923583a0d2 100644
-> --- a/drivers/tty/serial/kgdboc.c
-> +++ b/drivers/tty/serial/kgdboc.c
-> @@ -577,7 +577,8 @@ static int __init kgdboc_earlycon_init(char *opt)
->         console_list_lock();
->         for_each_console(con) {
->                 if (con->write && con->read &&
-> -                   (con->flags & (CON_BOOT | CON_ENABLED)) &&
-> +                   (con->flags & CON_BOOT) &&
-> +                   ((con->flags & CON_SUSPENDED) =3D=3D 0) &&
+> v2: Reworded the description to provide better detail
+> 
+>   drivers/clk/spacemit/ccu-k1.c  |  3 ++-
+>   drivers/clk/spacemit/ccu_mix.h | 21 +++++++++++++--------
+>   2 files changed, 15 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/clk/spacemit/ccu-k1.c b/drivers/clk/spacemit/ccu-k1.c
+> index cdde37a052353..df65009a07bb1 100644
+> --- a/drivers/clk/spacemit/ccu-k1.c
+> +++ b/drivers/clk/spacemit/ccu-k1.c
+> @@ -170,7 +170,8 @@ CCU_FACTOR_GATE_DEFINE(pll1_d4, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(3), 4,
+>   CCU_FACTOR_GATE_DEFINE(pll1_d5, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(4), 5, 1);
+>   CCU_FACTOR_GATE_DEFINE(pll1_d6, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(5), 6, 1);
+>   CCU_FACTOR_GATE_DEFINE(pll1_d7, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(6), 7, 1);
+> -CCU_FACTOR_GATE_DEFINE(pll1_d8, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(7), 8, 1);
+> +CCU_FACTOR_GATE_FLAGS_DEFINE(pll1_d8, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(7), 8, 1,
+> +		CLK_IS_CRITICAL);
+>   CCU_FACTOR_GATE_DEFINE(pll1_d11_223p4, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(15), 11, 1);
+>   CCU_FACTOR_GATE_DEFINE(pll1_d13_189, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(16), 13, 1);
+>   CCU_FACTOR_GATE_DEFINE(pll1_d23_106p8, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(20), 23, 1);
+> diff --git a/drivers/clk/spacemit/ccu_mix.h b/drivers/clk/spacemit/ccu_mix.h
+> index 51d19f5d6aacb..668c8139339e1 100644
+> --- a/drivers/clk/spacemit/ccu_mix.h
+> +++ b/drivers/clk/spacemit/ccu_mix.h
+> @@ -101,16 +101,21 @@ static struct ccu_mix _name = {							\
+>   	}									\
+>   }
+>   
+> +#define CCU_FACTOR_GATE_FLAGS_DEFINE(_name, _parent, _reg_ctrl, _mask_gate, _div,	\
+> +			       _mul, _flags)					\
+> +struct ccu_mix _name = {							\
+> +	.gate	= CCU_GATE_INIT(_mask_gate),					\
+> +	.factor	= CCU_FACTOR_INIT(_div, _mul),					\
+> +	.common = {								\
+> +		.reg_ctrl	= _reg_ctrl,					\
+> +		CCU_MIX_INITHW(_name, _parent, spacemit_ccu_factor_gate_ops, _flags)	\
+> +	}									\
+> +}
+> +
+>   #define CCU_FACTOR_GATE_DEFINE(_name, _parent, _reg_ctrl, _mask_gate, _div,	\
+>   			       _mul)						\
+> -static struct ccu_mix _name = {							\
+> -	.gate	= CCU_GATE_INIT(_mask_gate),					\
+> -	.factor	= CCU_FACTOR_INIT(_div, _mul),					\
+> -	.common = {								\
+> -		.reg_ctrl	= _reg_ctrl,					\
+> -		CCU_MIX_INITHW(_name, _parent, spacemit_ccu_factor_gate_ops, 0)	\
+> -	}									\
+> -}
+> +	CCU_FACTOR_GATE_FLAGS_DEFINE(_name, _parent, _reg_ctrl, _mask_gate, _div,	\
+> +			       _mul, 0)
+>   
+>   #define CCU_MUX_GATE_DEFINE(_name, _parents, _reg_ctrl, _shift, _width,		\
+>   			    _mask_gate, _flags)					\
+> 
+> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
 
-I haven't tried running the code, so I could easily be mistaken, but...
-
-...the above doesn't seem like the correct conversion. The old expression w=
-as:
-
-(con->flags & (CON_BOOT | CON_ENABLED))
-
-That would evaluate to non-zero (true) if the console was _either_
-"boot" or "enabled".
-
-The new expression is is:
-
-(con->flags & CON_BOOT) && ((con->flags & CON_SUSPENDED) =3D=3D 0)
-
-That's only true if the console is _both_ "boot" and "not suspended".
-
--Doug
