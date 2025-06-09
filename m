@@ -1,168 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from dane.soverin.net (dane.soverin.net [185.233.34.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1084202F6D;
-	Mon,  9 Jun 2025 09:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFE21A314D;
+	Mon,  9 Jun 2025 09:49:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.34.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749462453; cv=none; b=CzP7VdOoLl/NbnCdoqVhZ+Frp+EMgZOq5jjSmw3pXrdnp+S2yv6Cvn56OlFtJitTm+v18Vkg0oCOlXBvZf2jsxg34XkS+DskTiw388Yvn04hdbrMab3lCVDgxbngSQyJdbJ4Pif2LgTbAbdBhOQ4caLOU0FZLZ3SksNSuzvUqDM=
+	t=1749462565; cv=none; b=XUVC+x7e4OABdxBuBxXsmp8YH0prWW/QHLfA8jryerNjm9mNK/7c2Ho1p+0YEfrPA2MeMj3ZRqyr64mOyfCVOqDAlcZnCXr3u1DAHA66nwV69tr2KXUqgJntDVYZ0/H3V/65csT8uoCDuNES0YeRwdTYsIhvYwpui7KA4uK+8Fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749462453; c=relaxed/simple;
-	bh=1S9Nm6f5O7m3vI4hvRuferiAQBF4taD3Nf0gweHpbdU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WbxlGi65mYRXPfkt50lpqa/rqfkIZBblBjMeNqJ1usE20a5kmTDyoubH9ZxU0a9XFi4C2WrLsAa3PLyC+oTTJwC4YVDtb1MtNCa+7/k0w8zH5GMBaBbGi9JupYz8yVGiXEdyGwC0nFh1o/Vg/NR2RrNVS2KqgPWdBm0G9Nzy6wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hvwRkiU7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749462565; c=relaxed/simple;
+	bh=xeoqtO29dYPDJoZwM/M/M2SRqRGtQkO4SfG9al4Xy4I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vg1LTgk82wYjy/HlPJMDHmpQzrcBUUerqqWV8MQ5vTzznx+S3RendoTPAnrwy/SvlJnKrAIBiVtmJbmg0naj++SjAgWb+Y6icrL+BPw+ujTxpPM6loFTuwbl95H2iLpCCpITD7y6POdutJHb5gY+TjhmGP1L2dWZpqL+aNi4TVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl; spf=pass smtp.mailfrom=jjverkuil.nl; dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b=tK0ZTmIC; arc=none smtp.client-ip=185.233.34.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jjverkuil.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hvwRkiU7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A536C4CEEB;
-	Mon,  9 Jun 2025 09:47:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749462453;
-	bh=1S9Nm6f5O7m3vI4hvRuferiAQBF4taD3Nf0gweHpbdU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=hvwRkiU7h8ctg2xeY2aHY8qarL7QCRjdKDyKh3YyX0kfU0ngw0WWHBRiVfyxrRrvr
-	 r+/JpfqOjCh+h0WRt6zmeR6n9/wnRxoB6NK8yO5ZrGU4MjilF3x6CcXGz/RtHfzhs7
-	 9G1L0iWfzNoWQ7XcWWa3iQmrOHJ1Qk8ClE++87ZwtFGLA3JS3ehfjwMont8BQ1CM4a
-	 d481YcTWJrtJkiE1A8XB80L/McR+q2JucMSXwecG+OHcTj24X4gF5J6HI1866WSe2k
-	 uEaopo6XsNgr2NL3j++7zBNXxfetlIOdK2d4QL48hBd+5dTr0osTsNw9YhRNgdamJo
-	 nGbsstIkBZR+g==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 02F00CE0B6C; Mon,  9 Jun 2025 02:47:33 -0700 (PDT)
-Date: Mon, 9 Jun 2025 02:47:32 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>,
-	syzbot <syzbot+80e5d6f453f14a53383a@syzkaller.appspotmail.com>,
-	akpm@linux-foundation.org, josh@joshtriplett.org,
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, rcu@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [rcu?] [bcachefs?] BUG: unable to handle kernel NULL
- pointer dereference in rcu_core (3)
-Message-ID: <e3187e7a-cac2-46c4-9c56-3a649e122353@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <67a2b20a.050a0220.50516.0003.GAE@google.com>
- <9694d40a-072e-47c2-a950-3b258bbe04f5@paulmck-laptop>
- <jzknqese5idob37wxgclq7ptxnsd66qbqkxtjpjormymsrwv2j@xjum5exljlh6>
- <aEXVKNVLI3VQInSc@pc636>
- <602bb1be-f4a4-4194-803f-856e95711870@paulmck-laptop>
- <aEac1veMLffwOdv8@pc636>
+	dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b="tK0ZTmIC"
+Received: from smtp.freedom.nl (unknown [10.10.4.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	by dane.soverin.net (Postfix) with ESMTPS id 4bG6ZY4mzbz1PxQ;
+	Mon,  9 Jun 2025 09:49:09 +0000 (UTC)
+Received: from smtp.freedom.nl (smtp.freedom.nl [10.10.4.107]) by freedom.nl (Postfix) with ESMTPSA id 4bG6ZX5Qrcz7T;
+	Mon,  9 Jun 2025 09:49:08 +0000 (UTC)
+Authentication-Results: smtp.freedom.nl;
+	dkim=pass (2048-bit key; unprotected) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.a=rsa-sha256 header.s=soverin1 header.b=tK0ZTmIC;
+	dkim-atps=neutral
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jjverkuil.nl;
+	s=soverin1; t=1749462549;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=kGSTCvir3yITm8KzBPa1e7r9+ZrZgHkYcRBdCR9WUx8=;
+	b=tK0ZTmICKWRZTiMu34QFNUBMz7i4O7ubahnxWLj3TmSPrtIXW5DIfh+58OsqLutln0LbUG
+	b0YB4QpKg10mqxadw8nmLZeWaGjHLJ6+qQL4NYQLMimgjk8KfEVc/0vFwpw3hDG1Y/rnQM
+	qgu8jWoPdvRdK2bYh0QR+C3CAAU2V2zuEC1C7RhMB0rwa3UsnfQqNfk8KNdrHGvZewLtwJ
+	Srk19Cp7ebAthYMZ9oGjW1arVXwv8hhAcZxstxQarp9n045Iiiv8mZHDoVPqZU9RHzj11H
+	MFdtxbcF1FlVNB76FkjdxwMMFRssoxWVd13l5P4uAv4Pw9SifNPmUnTQ+GKX+A==
+X-CM-Analysis: v=2.4 cv=I7afRMgg c=1 sm=1 tr=0 ts=6846ae15 a=IkcTkHD0fZMA:10 a=0deYd5exgp-1WSfvuSMA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+Message-ID: <2e4ef756-a8cf-415c-99ba-a3d72f3288e1@jjverkuil.nl>
+Date: Mon, 9 Jun 2025 11:49:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEac1veMLffwOdv8@pc636>
+Subject: Re: [PATCH v3 1/5] media: mc: add manual request completion
+To: Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
+ <hverkuil@xs4all.nl>, Tiffany Lin <tiffany.lin@mediatek.com>,
+ Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+ Yunfei Dong <yunfei.dong@mediatek.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, kernel@collabora.com,
+ linux-media@vger.kernel.org,
+ Sebastian Fricke <sebastian.fricke@collabora.com>
+References: <20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-0-603db4749d90@collabora.com>
+ <20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-1-603db4749d90@collabora.com>
+ <aEC05991kEIIifDB@kekkonen.localdomain>
+ <1ccaaec7f782afc71bae5c3b0f60a786a907555c.camel@collabora.com>
+ <aEE-VFfJDhUbM2nA@kekkonen.localdomain>
+ <8b1ed01a-b6e3-4670-a4e0-d8eee7ddc524@jjverkuil.nl>
+ <aEFoCvPe4zE48UG7@kekkonen.localdomain>
+ <608f95249ff3a39efb063ab9c6a543259a7b0ac9.camel@collabora.com>
+ <aEasmfi3VBkuFU3g@kekkonen.localdomain>
+Content-Language: en-US, nl
+From: Hans Verkuil <hans@jjverkuil.nl>
+Autocrypt: addr=hans@jjverkuil.nl; keydata=
+ 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
+In-Reply-To: <aEasmfi3VBkuFU3g@kekkonen.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spampanel-Class: ham
 
-On Mon, Jun 09, 2025 at 10:35:34AM +0200, Uladzislau Rezki wrote:
-> On Sun, Jun 08, 2025 at 05:25:05PM -0700, Paul E. McKenney wrote:
-> > On Sun, Jun 08, 2025 at 08:23:36PM +0200, Uladzislau Rezki wrote:
-> > > On Sun, Jun 08, 2025 at 11:26:28AM -0400, Kent Overstreet wrote:
-> > > > On Wed, Feb 05, 2025 at 06:56:19AM -0800, Paul E. McKenney wrote:
-> > > > > On Tue, Feb 04, 2025 at 04:34:18PM -0800, syzbot wrote:
-> > > > > > Hello,
-> > > > > > 
-> > > > > > syzbot found the following issue on:
-> > > > > > 
-> > > > > > HEAD commit:    0de63bb7d919 Merge tag 'pull-fix' of git://git.kernel.org/..
-> > > > > > git tree:       upstream
-> > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=10faf5f8580000
-> > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=1909f2f0d8e641ce
-> > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=80e5d6f453f14a53383a
-> > > > > > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b69d18580000
-> > > > > > 
-> > > > > > Downloadable assets:
-> > > > > > disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-0de63bb7.raw.xz
-> > > > > > vmlinux: https://storage.googleapis.com/syzbot-assets/1142009a30a7/vmlinux-0de63bb7.xz
-> > > > > > kernel image: https://storage.googleapis.com/syzbot-assets/5d9e46a8998d/bzImage-0de63bb7.xz
-> > > > > > mounted in repro: https://storage.googleapis.com/syzbot-assets/526692501242/mount_0.gz
-> > > > > > 
-> > > > > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > > > > > Reported-by: syzbot+80e5d6f453f14a53383a@syzkaller.appspotmail.com
-> > > > > > 
-> > > > > >  slab radix_tree_node start ffff88803bf382c0 pointer offset 24 size 576
-> > > > > > BUG: kernel NULL pointer dereference, address: 0000000000000000
-> > > > > > #PF: supervisor instruction fetch in kernel mode
-> > > > > > #PF: error_code(0x0010) - not-present page
-> > > > > > PGD 0 P4D 0 
-> > > > > > Oops: Oops: 0010 [#1] PREEMPT SMP KASAN NOPTI
-> > > > > > CPU: 0 UID: 0 PID: 5705 Comm: syz-executor Not tainted 6.14.0-rc1-syzkaller-00020-g0de63bb7d919 #0
-> > > > > > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-> > > > > > RIP: 0010:0x0
-> > > > > > Code: Unable to access opcode bytes at 0xffffffffffffffd6.
-> > > > > > RSP: 0018:ffffc90000007bd8 EFLAGS: 00010246
-> > > > > > RAX: dffffc0000000000 RBX: 1ffff110077e705c RCX: 23438dd059a4b100
-> > > > > > RDX: 0000000000000100 RSI: 0000000000000000 RDI: ffff88803bf382d8
-> > > > > > RBP: ffffc90000007e10 R08: ffffffff819f146c R09: 1ffff11003f8519a
-> > > > > > R10: dffffc0000000000 R11: 0000000000000000 R12: ffffffff81a6d507
-> > > > > > R13: ffff88803bf382e0 R14: 0000000000000000 R15: ffff88803bf382d8
-> > > > > > FS:  0000555567992500(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
-> > > > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > > > CR2: ffffffffffffffd6 CR3: 000000004da38000 CR4: 0000000000352ef0
-> > > > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > > > > Call Trace:
-> > > > > >  <IRQ>
-> > > > > >  rcu_do_batch kernel/rcu/tree.c:2546 [inline]
-> > > > > 
-> > > > > The usual way that this happens is that someone clobbers the rcu_head
-> > > > > structure of something that has been passed to call_rcu().  The most
-> > > > > popular way of clobbering this structure is to pass the same something to
-> > > > > call_rcu() twice in a row, but other creative arrangements are possible.
-> > > > > 
-> > > > > Building your kernel with CONFIG_DEBUG_OBJECTS_RCU_HEAD=y can usually
-> > > > > spot invoking call_rcu() twice in a row.
-> > > > 
-> > > > I don't think it's that - syzbot's .config already has that enabled.
-> > > > KASAN, too.
-> > > > 
-> > > > And the only place we do call_rcu() is from rcu_pending.c, where we've
-> > > > got a rearming rcu callback - but we track whether it's outstanding, and
-> > > > we do all relevant operations with a lock held.
-> > > > 
-> > > > And we only use rcu_pending.c with SRCU, not regular RCU.
-> > > > 
-> > > > We do use kfree_rcu() in a few places (all boring, I expect), but that
-> > > > doesn't (generally?) use the rcu callback list.
-> > > >
-> > > Right, kvfree_rcu() does not intersect with regular callbacks, it has
-> > > its own path. 
-> > > 
-> > > It looks like the problem is here:
-> > > 
-> > > <snip>
-> > >   f = rhp->func;
-> > >   debug_rcu_head_callback(rhp);
-> > >   WRITE_ONCE(rhp->func, (rcu_callback_t)0L);
-> > >   f(rhp);
-> > > <snip>
-> > > 
-> > > we do not check if callback, "f", is a NULL. If it is, the kernel bug
-> > > is triggered right away. For example:
-> > > 
-> > > call_rcu(&rh, NULL);
-> > > 
-> > > @Paul, do you think it makes sense to narrow callers which apparently
-> > > pass NULL as a callback? To me it seems the case of this bug. But we
-> > > do not know the source.
-> > > 
-> > > It would give at least a stack-trace of caller which passes a NULL.
-> > 
-> > Adding a check for NULL func passed to __call_rcu_common(), you mean?
-> > 
-> Yes. Currently there is no any check. So passing a NULL just triggers
-> kernel panic.
+On 09/06/2025 11:42, Sakari Ailus wrote:
+> Hi,
 > 
-> >
-> > That wouldn't hurt, and would either (as you say) catch the culprit
-> > or show that the problem is elsewhere.
-> > 
-> I can add it then and send out the patch if no objections.
+> On Thu, Jun 05, 2025 at 08:41:45AM -0400, Nicolas Dufresne wrote:
+>> Hi Hans, Sakari,
+>>
+>> Le jeudi 05 juin 2025 à 09:48 +0000, Sakari Ailus a écrit :
+>>>> It's not user-triggerable, if this happens, then it is a driver bug.
+>>>
+>>> If there is a driver bug, it could well be user-triggerable, wouldn't it?
+>>> Testing may not uncover all such cases.
+>>
+>> You are both right, if the driver is not used, the warning will never
+>> trigger. I was worried of the hit of a thread safe ONCE implementation,
+>> but WARN_ONCE is simply not, it can warn few time before it stops if
+>> called from multiple CPUs at the same time. In that specific function,
+>> I can move all the checks inside the lock to make it truly once.
+>>
+>> Now its up to you, I don't have strong preference. These are driver errors,
+>> and usually quite critical. They are not bug_on simply because we have a
+>> crash free resolution, but its probably not functional anymore.
+> 
+> I'd prefer _ONCE variants, I wonder what Hans thinks.
+> 
 
-No objections from me!
+I have no particular preference.
 
-						Thanx, Paul
+Regards,
+
+	Hans
