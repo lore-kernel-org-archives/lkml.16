@@ -1,189 +1,157 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010065.outbound.protection.outlook.com [52.101.69.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168B419DFA2
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 08:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749458973; cv=none; b=AcNIRhlNovpmZa2SvIWqak+qif7xg/sjnLFuY99Yd0SAJHHFxT3IMgTl4aK6x5tAew2utZmXC19NoxMiP/9Lc+wMwzmCkEcOQFoNdEFV3HBr5hQq1S+TY7pwnnV9w39nxMDDSZGVj4UN24GOd8LATteUKUJpeCTrs3GGNUwEb0g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749458973; c=relaxed/simple;
-	bh=QquhVEUPYxZYLS2Wb/Gjw9Sy4Y0OOjtcFGnZEhBuUbQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=joMxl65iAx/txhTLkQF4xGN2/4QUYv9u53+HA58xBX5RfALXpPyp+bFr39I01uje7Rencd8zals8NVMKCH2I0FKH6HjPYzBXxG2cS1dXsm+JqidD5ArP4YbuIS9XR7vhDt5Hxdo9hrsW653UJyN1UJywcGnVxqo3U2GShvzZwT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=AiL+YaRO; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5F21E412A;
+	Mon,  9 Jun 2025 08:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749459039; cv=fail; b=VZNXWqwYDEnQoU9aQk4TUFEvUhTR2eEiU3NbswKz99eu+BR6gtd/OGoUFpAa4e3pfWXsms0w5724iLV5gruEWM6dXUZ41dEHyFMDOmVrEDjETu5HmW7Fs6r8aq+iyoyMMhcEDldaQ2tgw4Uy53Oc7o8KHoRuh71M/oNQf5IvgEc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749459039; c=relaxed/simple;
+	bh=V/wCmWLdVTzvEj35n6jSPrfofBKFb8Q1S7pjLjTwmDc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=G40DZRVnRDViwvx326scehAZHN4n+0DnXLLYJI0O7KrbzWFVrg8kr6gZdy5f8pL6YBV4WoOym3wR2SYjf6G8vEdVzcILT9DOxoww0b9m11f5TAM93XriZyXK/ebkvZokm9NYNS/BrIZnEuz78sAqxLKwpqhztjYsdSyPekefLCM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=DlkUEzXq; arc=fail smtp.client-ip=52.101.69.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="AiL+YaRO"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1749458966; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=5bJmfGljLGyk00an7Cg65VH+uCqXVJGk/LoQfeiR5C8=;
-	b=AiL+YaRODxz3NY5V8VbaHcxiXTpIp/W9aGtQsinDJIHQBAflC38d+uoi5dPd+VnJ4SwGfHq0ivsb9wN67TADHi15iRKPh06YuOavAaV52u1qHuM6sEZ4CZoRTXBhPdpoWWKKR9A8U5aLGmHBK9OKo70fFdEtGbUzqmQ+211YHvA=
-Received: from 30.74.144.144(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WdO7Itq_1749458964 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 09 Jun 2025 16:49:25 +0800
-Message-ID: <1452d0c6-50ab-4680-9aa9-13290d51177d@linux.alibaba.com>
-Date: Mon, 9 Jun 2025 16:49:24 +0800
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="DlkUEzXq"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wiUgBgjBfniPNgC3lEHkAecC7EKbsxsnMi+enmZZ9y6kz1y1RsCl1FpZReVu3keQHtevgRFEa8JrV6ZFwCqPb5/uOQNm+SCkifpGzBj5OmYzCSVTirG7/4u1XbVLRfSfBK1r2jiF0WWZGPDR49E6aMgfVA88dACynjBobKMySAXpHW6nEYASKTJBlJpqgYab0b5TKADHtFoSK5crJ8ICD5/AGblkvg+GhNtwCcevkXS6c8IMZQNRO0r3RzWqvlAIiECLNkM2OY5HUudXI0EGLYtrKojP7pkSKJkpxTvgFS49lQkowBYUbAKr6mqLBpq0WgvFt6Qg2N6ciEw49QH/Iw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=V/wCmWLdVTzvEj35n6jSPrfofBKFb8Q1S7pjLjTwmDc=;
+ b=FiGswLw0q+pPxsr3FssVzqcHvVDfWkdQ2ky7sf0EYQyY2+8pojWLfUwiloZKqhHIr+pEVf0BIM0OOImJfZZP4bsTP0GXKZo/zEz0wGKIbI+Hq82pfBURkSps9Q3kEvFsb2vXz5ulLEOLdaEZ+ACTLs2JhMP+WG6qAwbq2bcULPbaNMyR1o+0WjelfgGEJZAutIHvSvk2LMnGdCP4abJnjsRNduYsRbbc9Q+wxe+G0naFTF7/6agIVOF57KbIvL3gRF4HzLSjCDKbhVqN1I2DRFBVnQqPEeutC3LDOPHTUkqIpB4x+2D5iagS/Uz6bazm1mqvnJ+Kb3vTAWizlCOXjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V/wCmWLdVTzvEj35n6jSPrfofBKFb8Q1S7pjLjTwmDc=;
+ b=DlkUEzXqcMseJAtcAxWVZBK40VjuTnTP4dOBaLRNBnfeNbFTDoTEXweew6jn8Tiy2oWwopCWlQFyifdJHS3Wu+8Hhci7UPmFQdZ10hsx797Vm4cMgwBcJqmXe69l4+XS+DiKXts/4LCPW3ZxRkxBVLMAxNXT2qvIRXQ7cKTq+NFCossHHEU0a+nZgiKpy0VHqqtnixsidjm8JVZMjWaB6zl1T0NKvl3xPwkDGY1PW+nZW+Sj4cQGrGWKJUAXSGZ/DaFI2533vq778RSrJwkHmUDnm6eTueFoxbV2WOcd9lFG92QRdqEgP4s4HVPOajFPrVSVW9i+BjQrXRI8XQEdtg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by PAXPR04MB9155.eurprd04.prod.outlook.com (2603:10a6:102:22e::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Mon, 9 Jun
+ 2025 08:50:31 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%3]) with mapi id 15.20.8813.024; Mon, 9 Jun 2025
+ 08:50:31 +0000
+Date: Mon, 9 Jun 2025 18:00:37 +0800
+From: Peng Fan <peng.fan@oss.nxp.com>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
+	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/4] arm64: dts: imx95-19x19-evk: add adc0
+ flexcan[1,2] i2c[2,3] uart5 spi3 and tpm3
+Message-ID: <20250609100037.GF13113@nxa18884-linux>
+References: <20250606190045.1438740-1-Frank.Li@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250606190045.1438740-1-Frank.Li@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: SG2PR06CA0220.apcprd06.prod.outlook.com
+ (2603:1096:4:68::28) To PAXPR04MB8459.eurprd04.prod.outlook.com
+ (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/shmem, swap: fix softlockup with mTHP swapin
-To: Kairui Song <ryncsn@gmail.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
- Hugh Dickins <hughd@google.com>, Kemeng Shi <shikemeng@huaweicloud.com>,
- Chris Li <chrisl@kernel.org>, Nhat Pham <nphamcs@gmail.com>,
- Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>,
- Usama Arif <usamaarif642@gmail.com>, linux-kernel@vger.kernel.org
-References: <20250608192713.95875-1-ryncsn@gmail.com>
- <36f52466-071a-4efb-adc2-8514b11f120c@linux.alibaba.com>
- <CAMgjq7AawxHKX8TRnshZzzUznCZbdfncThyLmA5URKBGq3r4Hw@mail.gmail.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <CAMgjq7AawxHKX8TRnshZzzUznCZbdfncThyLmA5URKBGq3r4Hw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|PAXPR04MB9155:EE_
+X-MS-Office365-Filtering-Correlation-Id: 582c59a1-bc42-4bbe-7e3d-08dda732b0c5
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|1800799024|366016|376014|7416014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?BzlY0Xfb93SdDiTpRLAO2rGGAG+iw7Tk7F6q6ZBVu4YFq3mzKh2DUMVlZtYc?=
+ =?us-ascii?Q?XPLNzNA8S/j3mU7Ic6hIZEhbuT40MrUOYQX++5/fuxlUe9hxCKyrvZF98qVE?=
+ =?us-ascii?Q?XHOBUH1qIjhDUUe34GxY29txYTjqjzvadDeT62YDdZz6EFIVkkG4PZ0arXWE?=
+ =?us-ascii?Q?ayCFJWbTiNRfTKrdwVV+JF2aVYe8kbM9NJ1VgT+btRHjRB+CY5Q00wIDd31L?=
+ =?us-ascii?Q?ljoBbTSfTYs5wb2lK4K7rInmsVhLz8ZfiN2Vc/XM5u32vpDp31ihUZK534vG?=
+ =?us-ascii?Q?T/rNzFwo7Z07dNVSI7j1PPt0ulby9btjxKM319hELe6JhUt514AG9RDXkkqE?=
+ =?us-ascii?Q?+jCDbFH/3BGVNqCmfnapO3J+VPmmyd9TlhQKPZzKpZoCpFjuxXiFoqRNaCM9?=
+ =?us-ascii?Q?/xG8I89+iIR5UvAHKodiw88DdNxXkjTFEJhtt3PReH26wZ9AX8n6bv1EcDbn?=
+ =?us-ascii?Q?ItmQTFeSZxAhPDV7KkJo9vZ4hIixHtU3G9p4iHHpPOO7YSSRAlOEroKD32OO?=
+ =?us-ascii?Q?pf7MhSF1KJudrYuahnTRj2tVd2Icb6fV5l3CWAOsnoNG2fD8DF43CliKzD4v?=
+ =?us-ascii?Q?v381cvdb6fLV1NWkeS9xxNMcLg2zTl3Q0/44OzhEF2FCWohQ8CdcHhAIrqwB?=
+ =?us-ascii?Q?yH2COomYFf9oJ1WeN7JUV9KA1QauUaiRHtKYOneTl3k3nvc36YkxlKrOtmLC?=
+ =?us-ascii?Q?2IPSE4JGgxtL9wbBj0GO2Ce/cxevBBayWQ29PCBHa02VBV8eSlSYaykVVhEk?=
+ =?us-ascii?Q?Ha55p8b3vdpGJgJcZCdFwV1PLAGCKSn1TFFiktFUeTjrJ5xXo4vMMjN6tolJ?=
+ =?us-ascii?Q?jVP+5pVW6+BELUQf6s/6MsVK9k4VpNgqaNnpsMc9b66x0kAm12OsjZRqCkcV?=
+ =?us-ascii?Q?/4iR7PGev9VRo9Z4ihjcYPv+NcIXtjUXqo2DY6Ip1Yjcj1GjfZSqpxJCqci6?=
+ =?us-ascii?Q?Dc4HC0fLeXQzUOh73qLdaL9WAZx5esUyxpWvPXH+7xYVdcaRPWH3Iekik3YS?=
+ =?us-ascii?Q?zwH8eJCpWYOPUBACdYKbnJfqi4ZvVBRe7oNfg3i0yKwCI7jLkkOjioM5x0oA?=
+ =?us-ascii?Q?/ev6ms4mKAfeLwjKJeCICj3Dp75dOuUEFAxrhVAguAYJ41E3am1mZ/jx0+wc?=
+ =?us-ascii?Q?vhQMirDfvXIxWqBsW269CuKdHqOtuWZ5axjR2a/ZVYXB+Di2gVxnCCrPKw8o?=
+ =?us-ascii?Q?/oUmwItAUFO3Cxnj4TEB2KGev+p9tVqaRIqX6tyTUv44q45k4tLrzhl5UG1e?=
+ =?us-ascii?Q?1E0AcvjHGYIrK2MF6sNwxqoX/zuPQ4u1eKovzKC18ulbbjjZCk6KDgeEtub/?=
+ =?us-ascii?Q?90X/Ba93paaImJYx4Fjo1N5XgWyYIOUH0PM58pASdHuH9RoBb4PbS9pzS8ty?=
+ =?us-ascii?Q?rBCwflU6lnvzG8LOEZXeA90rNHbQkTU+PSusrrUFVJ8dAocD0VrivlAK9P6s?=
+ =?us-ascii?Q?QtXt5K2QFIL7CNsgGPbnHRjt5VUEbXro4fkhwMecCUmrLJkyXdP9/Q=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(1800799024)(366016)(376014)(7416014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?7MqtFCCFdSkEsW5lQTNcvsGFRzvdVMQbFJt2donukKkfDIAmdcT6X2mWokir?=
+ =?us-ascii?Q?pfAlxRABwdjt5/mRdEHM6VTpvylBUtM5S6F/TpKE9mqfN3TesU9jrET76VK/?=
+ =?us-ascii?Q?I0UVBw1IBzBTah/DeDIyTn/VWpYQIWqZyGq3vzWHTsjgVyaSAQVT9co5nyzc?=
+ =?us-ascii?Q?YFDbWhAii4NXVuGAgZLN8CrT74B5Esz8SzNeAovyiGS7Tnh9frD05UlJ3BUk?=
+ =?us-ascii?Q?8Nphb5wTschHEpka66CiS152CgXgzFI2r1Ij/jc6okBk/4uVklhg4yRYsC3J?=
+ =?us-ascii?Q?BH1n1o1Q+AZKvlGEAgPcUbkFu/6TgV4IjBOuEs4u11Z1BQl4cEH7SFbm+jsi?=
+ =?us-ascii?Q?NcdPlHj2kWQVICdRKSs2T6a85Ah89M/CPMztYLSulg0aFfgP8KN2rT+aFTD9?=
+ =?us-ascii?Q?Vr40LTncCaylkBLbvtHaI3LESeZsqMgWQJN7VlH3X9EA/P+g1VVrfZOXAQlE?=
+ =?us-ascii?Q?hSIxP3OA4tjXTDWuBEZr//hPnK0cDH0PMg3OBgMHN15Bva9b1YTylNNDV5aX?=
+ =?us-ascii?Q?yUKZCTK/Hj49zo4ahcjSNqf4D7Oa7rCoHd5YokHKmqT/g3bYdTToSr2ofFlc?=
+ =?us-ascii?Q?0tdLE/jy61H2+IfVLVH6hRhquuYbvBoYYB7mFcAXIIffPYvIayJ8hk2dpYj4?=
+ =?us-ascii?Q?V375OKvJRqdsUHKsd+O8R697+YIjH6+RSnHkDmNoZsTxxt0zAbPnhd/Ptr0S?=
+ =?us-ascii?Q?grGTKOdMCwh3d06MWwycPq7mDA1GW+7vqsXkL0eqnj1KxQGm/Iovmd2iIjwa?=
+ =?us-ascii?Q?RryjVNLUvVP6onr8XTXfVP8iLQF5fNUvgjf7k3B37o8UpON5ZMg9UO11WmYj?=
+ =?us-ascii?Q?0o+RIukIloKyNtQBNjWEEqV4/OQFj9VXooI7zz3A9bl3MD/qY3baQy1p2j4k?=
+ =?us-ascii?Q?YL+HzNmSC41kyXyMtze5gQJGH4uMK0rSz1YqKKFAxcPJ2/aFH2FP1Q2UyEfl?=
+ =?us-ascii?Q?b9UQKyGg5aQwRySYLqN91wGBy/mszvuZ/2RXUJbFsXkTn1k8+hbN/GU2OM4s?=
+ =?us-ascii?Q?IlFKjrLtFbmIeC1jLCmmHLriXPbBikTFLPQa/VdHyjevJ5fWDpQ+gOLUoVQP?=
+ =?us-ascii?Q?3T5HKSMpBANGrdkHF4x083Wq03+PvK1OqkowYElOeze1KMkNkyGmd0hgIUMV?=
+ =?us-ascii?Q?MUEhUvS9Q+138/wFwkmF5p/6H+YbhTil7WxMXI+gga/D/PIyFxhII9DJKsGS?=
+ =?us-ascii?Q?8EkXkK+h5TCaiioiDrKqzu+Ff0z7vIv0XyX+TdyZrFTke1ZPupSwh2UvSlSf?=
+ =?us-ascii?Q?BRhBt6nBHSo0GHHEiqNqOmZbeLya6SKMIQu4KNsgoGIZF3OWMG8A4ZHs5Epm?=
+ =?us-ascii?Q?e6UrpuzV9fGsZy3IV7jygj/ZETlNKgWSRCdA0lX8eo49E2mxYQeWh5qCuZl0?=
+ =?us-ascii?Q?DY6EqBVIGCibJycX9kVnxKA8pKqqAaQv/R81MUl3kAto6McgnLpgg4SpatZs?=
+ =?us-ascii?Q?Xq7RNR6AuWQAtEgCls+3yAIaCd2gDSK/tNVZ8HnCqNPD1K82jiVKM4NFcbeH?=
+ =?us-ascii?Q?pk0YlHJEMxlaNm4ywxoCz9EHb/EzJoidM/9hecUH6TWOos0L32LkmkVFUouI?=
+ =?us-ascii?Q?cj5CX3GpSm1Jr4AMdpUCrSAoWh7IKtxZTQLMXhap?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 582c59a1-bc42-4bbe-7e3d-08dda732b0c5
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 08:50:31.3851
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NK3dbvLBcpULYXh6uP1PEM+JMoV/g7XbUb+zB0XyeZCzZWxdQMo0eUn45lELJSJ4BOJVFcQ6xBAKocgORp3h+g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9155
 
+On Fri, Jun 06, 2025 at 03:00:41PM -0400, Frank Li wrote:
+>Add adc0 flexcan[1,2] i2c[2,3] uart5 spi3 tpm3 netc_timer and related phys
+>regulators pinmux and related child nodes.
+>
 
-
-On 2025/6/9 16:36, Kairui Song wrote:
-> On Mon, Jun 9, 2025 at 4:27 PM Baolin Wang
-> <baolin.wang@linux.alibaba.com> wrote:
->> On 2025/6/9 03:27, Kairui Song wrote:
->>> From: Kairui Song <kasong@tencent.com>
->>>
->>> Following softlockup can be easily reproduced on my test machine with:
->>>
->>> echo always > /sys/kernel/mm/transparent_hugepage/hugepages-64kB/enabled
->>> swapon /dev/zram0 # zram0 is a 48G swap device
->>> mkdir -p /sys/fs/cgroup/memory/test
->>> echo 1G > /sys/fs/cgroup/test/memory.max
->>> echo $BASHPID > /sys/fs/cgroup/test/cgroup.procs
->>> while true; do
->>>       dd if=/dev/zero of=/tmp/test.img bs=1M count=5120
->>>       cat /tmp/test.img > /dev/null
->>>       rm /tmp/test.img
->>> done
->>>
->>> Then after a while:
->>> watchdog: BUG: soft lockup - CPU#0 stuck for 763s! [cat:5787]
->>> Modules linked in: zram virtiofs
->>> CPU: 0 UID: 0 PID: 5787 Comm: cat Kdump: loaded Tainted: G             L      6.15.0.orig-gf3021d9246bc-dirty #118 PREEMPT(voluntary)·
->>> Tainted: [L]=SOFTLOCKUP
->>> Hardware name: Red Hat KVM/RHEL-AV, BIOS 0.0.0 02/06/2015
->>> RIP: 0010:mpol_shared_policy_lookup+0xd/0x70
->>> Code: e9 b8 b4 ff ff 31 c0 c3 cc cc cc cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 66 0f 1f 00 0f 1f 44 00 00 41 54 55 53 <48> 8b 1f 48 85 db 74 41 4c 8d 67 08 48 89 fb 48 89 f5 4c 89 e7 e8
->>> RSP: 0018:ffffc90002b1fc28 EFLAGS: 00000202
->>> RAX: 00000000001c20ca RBX: 0000000000724e1e RCX: 0000000000000001
->>> RDX: ffff888118e214c8 RSI: 0000000000057d42 RDI: ffff888118e21518
->>> RBP: 000000000002bec8 R08: 0000000000000001 R09: 0000000000000000
->>> R10: 0000000000000bf4 R11: 0000000000000000 R12: 0000000000000001
->>> R13: 00000000001c20ca R14: 00000000001c20ca R15: 0000000000000000
->>> FS:  00007f03f995c740(0000) GS:ffff88a07ad9a000(0000) knlGS:0000000000000000
->>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>> CR2: 00007f03f98f1000 CR3: 0000000144626004 CR4: 0000000000770eb0
->>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->>> PKRU: 55555554
->>> Call Trace:
->>>    <TASK>
->>>    shmem_alloc_folio+0x31/0xc0
->>>    shmem_swapin_folio+0x309/0xcf0
->>>    ? filemap_get_entry+0x117/0x1e0
->>>    ? xas_load+0xd/0xb0
->>>    ? filemap_get_entry+0x101/0x1e0
->>>    shmem_get_folio_gfp+0x2ed/0x5b0
->>>    shmem_file_read_iter+0x7f/0x2e0
->>>    vfs_read+0x252/0x330
->>>    ksys_read+0x68/0xf0
->>>    do_syscall_64+0x4c/0x1c0
->>>    entry_SYSCALL_64_after_hwframe+0x76/0x7e
->>> RIP: 0033:0x7f03f9a46991
->>> Code: 00 48 8b 15 81 14 10 00 f7 d8 64 89 02 b8 ff ff ff ff eb bd e8 20 ad 01 00 f3 0f 1e fa 80 3d 35 97 10 00 00 74 13 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 4f c3 66 0f 1f 44 00 00 55 48 89 e5 48 83 ec
->>> RSP: 002b:00007fff3c52bd28 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
->>> RAX: ffffffffffffffda RBX: 0000000000040000 RCX: 00007f03f9a46991
->>> RDX: 0000000000040000 RSI: 00007f03f98ba000 RDI: 0000000000000003
->>> RBP: 00007fff3c52bd50 R08: 0000000000000000 R09: 00007f03f9b9a380
->>> R10: 0000000000000022 R11: 0000000000000246 R12: 0000000000040000
->>> R13: 00007f03f98ba000 R14: 0000000000000003 R15: 0000000000000000
->>>    </TASK>
->>>
->>> The reason is simple, readahead brought some order 0 folio in swap
->>> cache, and the swapin mTHP folio being allocated is in confict with it,
->>> so swapcache_prepare fails and causes shmem_swap_alloc_folio to return
->>> -EEXIST, and shmem simply retries again and again causing this loop.
->>
->> If swapcache_prepare() fails and retries, the folio's order (order 0)
->> getting from swapcache will be different from the order stored in the
->> shmem mapping, so we will split the large swap entry by the following
->> logic in shmem_swapin_folio(). So I am not sure why causing a softlockup?
->>
->>          } else if (order != folio_order(folio)) {
->>                  /*
->>                   * Swap readahead may swap in order 0 folios into swapcache
->>                   * asynchronously, while the shmem mapping can still stores
->>                   * large swap entries. In such cases, we should split the
->>                   * large swap entry to prevent possible data corruption.
->>                   */
->>                  split_order = shmem_split_large_entry(inode, index, swap, gfp);
->>                  if (split_order < 0) {
->>                          error = split_order;
->>                          goto failed;
->>                  }
->>
->>                  /*
->>                   * If the large swap entry has already been split, it is
->>                   * necessary to recalculate the new swap entry based on
->>                   * the old order alignment.
->>                   */
->>                  if (split_order > 0) {
->>                          pgoff_t offset = index - round_down(index, 1 << split_order);
->>
->>                          swap = swp_entry(swp_type(swap), swp_offset(swap) + offset);
->>                  }
->>          }
-> 
-> For example if the swap entry is 0x0 in shmem with order 4 (so it
-> corresponds to swap entries 0x0 - 0x10), and a order 0 folio is
-> currently cached with swap entry 0xa, then shmem swapin will try to
-> use a folio with order 4, that will always fails swapcache_prepare,
-> but filemap/swapcache lookup use entry 0x0 will return NULL, causing a
-> loop.
-
-OK. Thanks for the explanation.
-
->>> Fix it by applying a similar fix for anon mTHP swapin.
->>>
->>> The performance change is very slight, time of swapin 10g zero folios
->>> (test for 12 times):
->>> Before:  2.49s
->>> After:   2.52s
->>>
->>> Fixes: 1dd44c0af4fa1 ("mm: shmem: skip swapcache for swapin of synchronous swap device")
->>> Signed-off-by: Kairui Song <kasong@tencent.com>
->>>
->>> ---
->>>
->>> I found this issue while doing a performance comparing of mm-new with
->>> swap table series [1] on top of mm-new. This issue no longer exists
->>> if the swap table series is applied, because it elimated both
->>> SWAP_HAS_CACHE and SWP_SYNCHRONOUS_IO swapin completely while improving
->>> the performance and simplify the code, and the race swapin is solved
->>> differently by then.
->>>
->>> (The zero map fix might still need to stay for a while, but could be
->>> optimized too later with swap table).
->>
->> I don't understand why adding zeromap changes, and should explain this
->> explicitly.
-> 
-> To stay in consistency with anon mTHP swapin, swap_zeromap_batch have
-> it's own comments that a hybird folio with zero and non-zero pages
-> can't be brought back as a whole. I can mention that in the commit
-> message.
-
-Yes. Thanks.
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
