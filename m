@@ -1,74 +1,221 @@
-Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2541DF25A;
-	Mon,  9 Jun 2025 23:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A2E922A4D2
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 23:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749513393; cv=none; b=A23n2MkTDnVBxRFO0V8WTy1p+Ub8xysxqyynTBHp+Ne9jKDlz3bST9DDlTr4rVRiK6aAhg6YZpQccON0h9A0dKpc7bjXhAPX2xARHaW4c2GP+A60NEk1myXSEBHu+4UY04XldGdfCC7NJTf/s7+dYyKm/A4Am/MKewbCfXhIjrE=
+	t=1749513436; cv=none; b=GPKOPGqZJhhtvW3ESs/2b1/JG1NeSh62ZSmkK/HOLuksXChgPGv64tnwmnsz69h1/UI0DLdke3r3S3k+kZVXTkQogYjFTnV27hcDcYf3AGQPS4pOOY+RK7WeWEW72XSW34qmTl9K/ezScWb3CPmAakeJ2sJyQfmySkL3RErOOFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749513393; c=relaxed/simple;
-	bh=KSjEolPVe5dvnnsbVZqlsdVH46zQi+4/hbX6+f8Dy+E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K52DaSEW0utQV2KOZ11kqOigrPcF5uimU5SxQD6C8rMEh+aBgEb0mSjdYonHSPQbzksyZDeF577xFeC28pMKH3Q0Ae3DufzWcZ/2pBlk3A5EKSWrQm4tdjPErWoPBQYElNYxnbfvq9KsrL4sS+odGwLy/ZYNFIVCYWcXlYIRims=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=K472MJD9; arc=none smtp.client-ip=199.89.3.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1749513436; c=relaxed/simple;
+	bh=tRzQqHrUutyzBhHIn6fDKm+FqsbWULiZFM05BhfTP+M=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=jqWOwnuhW8fiLi0ZJEMl85PM0cJNOUyP6Mnr/3Aaj5myZlJtNLWFmkqvHrz5AuQ+xwzFK6EBih1mzg+eAVM1tGUknW1Iau6CW82S2xpw5nLojSKDHZCblX6Ln1BYNAm8PF/YtNYcJB+KWy/vVmtiuZhUsq3dOwS6MdC2+IV3GuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nFPjWKAM; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="K472MJD9"
-Received: from localhost (localhost [127.0.0.1])
-	by 003.mia.mailroute.net (Postfix) with ESMTP id 4bGTN83r7FzlgqyR;
-	Mon,  9 Jun 2025 23:56:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1749513383; x=1752105384; bh=KYCXaUY9ndNL8OgV5qFsqIP2
-	lhBk9b/78jW3INTU7XQ=; b=K472MJD9q6eQSV2yMg5Xkz/cxsGKzy9818VA8ASW
-	OPqsYuNIJrMvNZsufihh6HXt1+27cX8Jn7yFTyx/VekkaK3kIhjSNzcdDXUgImyT
-	y57foXKClO4b+6kbx/11N/63gf/ItxAIjlyjByzRoK+FhX4mAAw6+TzaB1nuTta3
-	JM011xICvezk77plh64/SLIUjsnXfrRWqUyTLj6Oe8vXWhpFPoKy+lygxtCRJ9Lz
-	YOB+JVNnq3dBJkTSduG1laiCT5Rn5+4dIxF5vnxtkxX5fFpMAlETtGx/UbBff6x9
-	bnD+yjVtOByPO9iLfBZe0ZLm8XZJWQ3ioW61iJQoIs3mIQ==
-X-Virus-Scanned: by MailRoute
-Received: from 003.mia.mailroute.net ([127.0.0.1])
- by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id lOStajVoL0oe; Mon,  9 Jun 2025 23:56:23 +0000 (UTC)
-Received: from [192.168.50.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4bGTN32MHnzlgqyD;
-	Mon,  9 Jun 2025 23:56:18 +0000 (UTC)
-Message-ID: <7cfda015-75df-4ac9-897a-41cfc6338046@acm.org>
-Date: Mon, 9 Jun 2025 16:56:16 -0700
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nFPjWKAM"
+Message-ID: <cb354fd2-bece-42ef-9213-de7512e80912@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749513432;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MA2f4Uv02tKPXsFx6OHw+Cx+7nXIdLjvoA4VfDNY4ak=;
+	b=nFPjWKAM4H/2hsS40TUC4K/2dozlE+zUTL+oHvQSylbgnqedmiWHYQxcsKB6OI5zGUEUkf
+	j9FQDMnXndb08pA2BVXura3IDpHXqRh5aFkAYY/kRCsdxu7pcerqVugmWxnruqjkGNXPyH
+	5V1h/AgsHLuFWFMOrfB8gSa6IeDMFIg=
+Date: Mon, 9 Jun 2025 19:57:05 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] scsi: scsi_devinfo: remove redundant 'found'
-To: mrigendrachaubey <mrigendra.chaubey@gmail.com>,
- James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250531054638.46256-1-mrigendra.chaubey@gmail.com>
 Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250531054638.46256-1-mrigendra.chaubey@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Saravana Kannan <saravanak@google.com>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+Subject: [BUG] Deferred probe loop with child devices
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On 5/30/25 10:46 PM, mrigendrachaubey wrote:
-> +	list_for_each_entry(devinfo_table, &scsi_dev_info_list, node) {
-> +		if (devinfo_table->key == key)
-> +			return devinfo_table;
-> +	}
+Hi,
 
-The braces around the loop body are not necessary. Please remove these.
+I've been running into a deferred probe loop when a device gets
+EPROBE_DEFER after registering a bus with children:
 
-Thanks,
+deferred_probe_work_func()
+  driver_probe_device(parent)
+    test_parent_probe(parent)
+      device_add(child)
+        (probe successful)
+        driver_bound(child)
+          driver_deferred_probe_trigger()
+      return -EPROBE_DEFER
+    driver_deferred_probe_add(parent)
+    // deferred_trigger_count changed, so...
+    driver_deferred_probe_trigger()
 
-Bart.
+Because there was another successful probe during the parent's probe,
+driver_probe_device thinks we need to retry the whole probe process. But
+we will never make progress this way because the only thing that changed
+was a direct result of our own probe function.
+
+Ideally I'd like to ignore probe events resulting from our own children
+when probing. I think this would need a per-device probe counter that
+gets added to the parent's on removal. Is that the right way to approach
+things?
+
+I've attached a minimal example below. When you load it, the console
+will be filled with 
+
+    test_parent_driver test_parent_driver.0: probing...
+
+If this occurs because the module for the affected resource is missing
+then the entire boot process will come to a halt (or not, depending on
+how you look at things) while waiting for the parent.
+
+While this example is contrived, this situation really does occur with
+netdevs that acquire resources after creating their internal MDIO bus.
+Reordering things so the MDIO bus is created last is not a very
+satisfying solution, since the affected resources may itself be on the
+MDIO bus.
+
+--Sean
+
+---
+ drivers/base/test/Makefile              |   1 +
+ drivers/base/test/test_deferred_probe.c | 103 ++++++++++++++++++++++++
+ 2 files changed, 104 insertions(+)
+ create mode 100644 drivers/base/test/test_deferred_probe.c
+
+diff --git a/drivers/base/test/Makefile b/drivers/base/test/Makefile
+index e321dfc7e922..f5ba5bca7bce 100644
+--- a/drivers/base/test/Makefile
++++ b/drivers/base/test/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_TEST_ASYNC_DRIVER_PROBE)	+= test_async_driver_probe.o
++obj-m += test_deferred_probe.o
+ 
+ obj-$(CONFIG_DM_KUNIT_TEST)	+= root-device-test.o
+ obj-$(CONFIG_DM_KUNIT_TEST)	+= platform-device-test.o
+diff --git a/drivers/base/test/test_deferred_probe.c b/drivers/base/test/test_deferred_probe.c
+new file mode 100644
+index 000000000000..89b68afed348
+--- /dev/null
++++ b/drivers/base/test/test_deferred_probe.c
+@@ -0,0 +1,103 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright (c) 2025 Sean Anderson <sean.anderson@seco.com>
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++
++static struct platform_driver child_driver = {
++	.driver = {
++		.name = "test_child_driver",
++	},
++};
++
++static int test_parent_probe(struct platform_device *pdev)
++{
++	struct platform_device *child;
++	struct device *dev = &pdev->dev;
++	int ret;
++
++	dev_info(dev, "probing...\n");
++
++	/* Probe a child on a bus of some kind */
++	child = platform_device_alloc("test_child_driver", 0);
++	if (!child)
++		return -ENOMEM;
++
++	child->dev.parent = dev;
++	ret = platform_device_add(child);
++	if (ret) {
++		dev_err(dev, "could not add child: %d\n", ret);
++		platform_device_put(child);
++		return ret;
++	}
++
++	/* Whoops, we got -EPROBE_DEFER from something else! */
++	platform_device_unregister(child);
++	return dev_err_probe(dev, -EPROBE_DEFER, "deferring...\n");
++}
++
++static struct platform_driver parent_driver = {
++	.driver = {
++		.name = "test_parent_driver",
++	},
++	.probe = test_parent_probe,
++};
++
++static struct platform_device *parent;
++
++static int __init test_deferred_probe_init(void)
++{
++	int ret;
++
++	ret = platform_driver_register(&parent_driver);
++	if (ret) {
++		pr_err("could not register parent driver: %d\n", ret);
++		return ret;
++	}
++
++	ret = platform_driver_register(&child_driver);
++	if (ret) {
++		pr_err("could not register child driver: %d\n", ret);
++		goto err_parent_driver;
++	}
++
++	parent = platform_device_alloc("test_parent_driver", 0);
++	if (!parent) {
++		ret = -ENOMEM;
++		goto err_child_driver;
++	}
++
++	pr_info("registering parent device\n");
++	ret = platform_device_add(parent);
++	if (ret) {
++		pr_err("Failed to add parent: %d\n", ret);
++		platform_device_put(parent) ;
++		goto err_child_driver;
++	}
++
++	return 0;
++
++err_child_driver:
++	platform_driver_unregister(&child_driver);
++err_parent_driver:
++	platform_driver_unregister(&parent_driver);
++	return ret;
++}
++module_init(test_deferred_probe_init);
++
++static void __exit test_deferred_probe_exit(void)
++{
++	platform_driver_unregister(&parent_driver);
++	platform_driver_unregister(&child_driver);
++	platform_device_unregister(parent);
++}
++module_exit(test_deferred_probe_exit);
++
++MODULE_DESCRIPTION("Test module for deferred driver probing");
++MODULE_AUTHOR("Sean Anderson <sean.anderson@seco.com>");
++MODULE_LICENSE("GPL");
+-- 
+2.35.1.1320.gc452695387.dirty
+
