@@ -1,113 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711187DA6D;
-	Mon,  9 Jun 2025 03:13:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BB022AE6B
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 03:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749438790; cv=none; b=rgW615bAlQkFlog3UCDWM7gkfoMR+2im9a3sHtXhFtm3gu7OADQsFWf6sUUk1bgFn/vbyXROIxQIhoUho3xg2VJ2iLSZ8rn9rI2dgXru3cq+Ice2WiZ+RLkCjYxTWUKsC/lhL+o1MkO97R8RpW5qENkuJiNyOpGjCZbcrvTro7U=
+	t=1749438851; cv=none; b=hDQYbXcgaXAu7ODVHcwQKrFnFCbgZWlVo+pU9O7YFmOR+4gjS1By5ycFU2iFhyQ4So6+Tq4bYTJA3xrpHleYDAYE08JrrFBBaiNcSynoJoRWrZO+2zbxwDitfDSLr8yRDU3iWpAt7P3c2upT6D6XglByPoTElt7Gr8fAs3sQjiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749438790; c=relaxed/simple;
-	bh=K4hlRrQnQJCWwJYZciXsYQ+Uhs0lDRqIdB00BdRadwU=;
+	s=arc-20240116; t=1749438851; c=relaxed/simple;
+	bh=LuC1REvqf2J3I3cUlm7xbcAhQI+rzhMmPRvSkoVm7lU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s2JLHGzxPyR/agATP+zCbUIGK8AXKrhR1Rg2fYqG32ECatYdENA2JZYn0QqiapLGNExebQyCqbXugwq9zGHADEze9lZYygD5UqgWTeru5YgaYCsBCpPE4bH2s1NNyc83BJvv1NRbyR3M9MF6swprNW93nEInHlD9dqAxwWc31vE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ad1yNjNU; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DPQAs85/1WEhZB97dH83OObeJKilCs3520bVqpOCSDwGX5H7+MsmT8FperlAbKfAp81FjJIEsdKVfUpkzMD9/n7wo0fbaPs3OWjLc/A2ccz1DSs4mBQ3KRc99WUyNqTGJXtPekxkjYimLTGT8QzxnFf64qBiuwmr6LYxjWKX6YA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qYTrw9yX; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ad1yNjNU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03071C4CEEE;
-	Mon,  9 Jun 2025 03:13:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749438790;
-	bh=K4hlRrQnQJCWwJYZciXsYQ+Uhs0lDRqIdB00BdRadwU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ad1yNjNUKDCtv0Ln0TE6oLLSgw4lne/KoZK+lhfFLnzyQMt/Y4ez4BnQ1RNQ2zWF6
-	 m2l9bLC8QQuiiWIeBhKwDYyUciOjePlBkteV6Gq6/rYMlv2tosdosSl511zvxVr8kp
-	 5esf1ejT6cZ3bq3BjRSweTZYH70JtZpflNRaVbomuYy6ZDutcBagoV6IKaOjvhXL4x
-	 2AXJjEJsqpLFESaMPJWyH3kF6hYz0FWlUldbv1AkrnI/utSj5zAgfhBi65M5Tv1XIS
-	 ED9ph3UgVOCoijac7XceGafOkK3PQAGx47X9yz9XGWR20mbFmVT0cr5OvrUdfvvj17
-	 SlDK6sC77pxaA==
-Date: Mon, 9 Jun 2025 08:43:03 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/PTM: Build debugfs code only if CONFIG_DEBUG_FS is
- enabled
-Message-ID: <aoqcrof6edexuem4b2xtboiiwwihyolkfpwj7pchy32mgp2o4r@ib5rlna4z2v7>
-References: <20250608033305.15214-1-manivannan.sadhasivam@linaro.org>
- <20250609000809.GH1259@sol>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qYTrw9yX"
+Date: Sun, 8 Jun 2025 23:13:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749438836;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=77SKXZFXlxBTThsqWIARMtmSrc8b3NwkGRLW9sc79K0=;
+	b=qYTrw9yX7COcwvS0mDjTbr4ppYaj300vjOxEhmTd6THWMYtqJMndvebID1h4bhxujzs4lq
+	DRB3vMvP9XUzsR93JNVVYfOj9yEWcUMPFgO50iHdC1sBxYKSh4m0nsxxske+gWyRqeh9wn
+	UHXnM6uPk2Jpbe38sJPRIbXSTjHgST8=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: syzbot <syzbot+e37a1730d63d207fe403@syzkaller.appspotmail.com>
+Cc: gregkh@linuxfoundation.org, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tj@kernel.org
+Subject: Re: [syzbot] [kernfs?] [bcachefs?] general protection fault in
+ kernfs_dop_revalidate
+Message-ID: <yashsei2srtn35imny476up2r3vui3mj3totulsshbbpvouiqd@ajuj6lafmh4x>
+References: <6745a8df.050a0220.1286eb.0015.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250609000809.GH1259@sol>
+In-Reply-To: <6745a8df.050a0220.1286eb.0015.GAE@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Sun, Jun 08, 2025 at 05:08:09PM -0700, Eric Biggers wrote:
-> On Sun, Jun 08, 2025 at 09:03:05AM +0530, Manivannan Sadhasivam wrote:
-> > Otherwise, the following build error will happen for CONFIG_DEBUG_FS=n &&
-> > CONFIG_PCIE_PTM=y.
-> > 
-> >     drivers/pci/pcie/ptm.c:498:25: error: redefinition of 'pcie_ptm_create_debugfs'
-> >       498 | struct pci_ptm_debugfs *pcie_ptm_create_debugfs(struct device *dev, void *pdata,
-> >           |                         ^
-> >     ./include/linux/pci.h:1915:2: note: previous definition is here
-> >      1915 | *pcie_ptm_create_debugfs(struct device *dev, void *pdata,
-> >           |  ^
-> >     drivers/pci/pcie/ptm.c:546:6: error: redefinition of 'pcie_ptm_destroy_debugfs'
-> >       546 | void pcie_ptm_destroy_debugfs(struct pci_ptm_debugfs *ptm_debugfs)
-> >           |      ^
-> >     ./include/linux/pci.h:1918:1: note: previous definition is here
-> >      1918 | pcie_ptm_destroy_debugfs(struct pci_ptm_debugfs *ptm_debugfs) { }
-> >           |
-> > 
-> > Fixes: 132833405e61 ("PCI: Add debugfs support for exposing PTM context")
-> > Reported-by: Eric Biggers <ebiggers@kernel.org>
-> > Closes: https://lore.kernel.org/linux-pci/20250607025506.GA16607@sol
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  drivers/pci/pcie/ptm.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-> > index ee5f615a9023..4bd73f038ffb 100644
-> > --- a/drivers/pci/pcie/ptm.c
-> > +++ b/drivers/pci/pcie/ptm.c
-> > @@ -254,6 +254,7 @@ bool pcie_ptm_enabled(struct pci_dev *dev)
-> >  }
-> >  EXPORT_SYMBOL(pcie_ptm_enabled);
-> >  
-> > +#if IS_ENABLED(CONFIG_DEBUG_FS)
-> >  static ssize_t context_update_write(struct file *file, const char __user *ubuf,
-> >  			     size_t count, loff_t *ppos)
-> >  {
-> > @@ -552,3 +553,4 @@ void pcie_ptm_destroy_debugfs(struct pci_ptm_debugfs *ptm_debugfs)
-> >  	debugfs_remove_recursive(ptm_debugfs->debugfs);
-> >  }
-> >  EXPORT_SYMBOL_GPL(pcie_ptm_destroy_debugfs);
-> > +#endif
+I'm not seeing anything connecting this to bcachefs.
+
+On Tue, Nov 26, 2024 at 02:54:23AM -0800, syzbot wrote:
+> Hello,
 > 
-> Tested-by: Eric Biggers <ebiggers@kernel.org>
+> syzbot found the following issue on:
 > 
-> DEBUG_FS is a bool, not a tristate.  It would be more conventional to write
-> '#ifdef CONFIG_DEBUG_FS' instead of '#if IS_ENABLED(CONFIG_DEBUG_FS)'.
+> HEAD commit:    28eb75e178d3 Merge tag 'drm-next-2024-11-21' of https://gi..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17955b78580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=402159daa216c89d
+> dashboard link: https://syzkaller.appspot.com/bug?extid=e37a1730d63d207fe403
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=163706e8580000
 > 
-
-I intentionally wanted to avoid using '#ifdef' since mixing both '#ifdef' and
-'#if IS_ENABLED' always create issues when one mistakenly uses the former for
-tristate symbols. So I always prefer using '#if IS_ENABLED'.
-
-> Also, the #if guards 300 lines of code.  Perhaps they belong in a separate .c
-> file?
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/e3c9c97af7d9/disk-28eb75e1.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/1e22f3d29103/vmlinux-28eb75e1.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/8ff56ec30fa6/bzImage-28eb75e1.xz
+> mounted in repro: https://storage.googleapis.com/syzbot-assets/92ddc9fa5ec9/mount_0.gz
 > 
-
-Perhaps, but not for this fix patch.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+e37a1730d63d207fe403@syzkaller.appspotmail.com
+> 
+> Oops: general protection fault, probably for non-canonical address 0xdffffc000000000a: 0000 [#1] PREEMPT SMP KASAN PTI
+> KASAN: null-ptr-deref in range [0x0000000000000050-0x0000000000000057]
+> CPU: 0 UID: 0 PID: 5210 Comm: udevd Not tainted 6.12.0-syzkaller-07749-g28eb75e178d3 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/30/2024
+> RIP: 0010:kernfs_root fs/kernfs/kernfs-internal.h:70 [inline]
+> RIP: 0010:kernfs_dop_revalidate+0x8e/0x560 fs/kernfs/dir.c:1158
+> Code: c5 80 04 00 00 48 89 e8 48 c1 e8 03 42 80 3c 30 00 74 08 48 89 ef e8 c1 9e c1 ff 4c 8b 7d 00 4d 8d 67 30 4c 89 e3 48 c1 eb 03 <42> 80 3c 33 00 74 08 4c 89 e7 e8 a3 9e c1 ff 49 8b 6f 30 48 85 ed
+> RSP: 0018:ffffc900033efa90 EFLAGS: 00010206
+> RAX: 1ffff1100c748639 RBX: 000000000000000a RCX: ffff88807deada00
+> RDX: ffff88807deada00 RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: ffff888063a431c8 R08: ffffffff823b3da8 R09: 1ffffffff20391a6
+> R10: dffffc0000000000 R11: ffffffff823b3d80 R12: 0000000000000051
+> R13: ffff88807affb318 R14: dffffc0000000000 R15: 0000000000000021
+> FS:  00007fa024cb5c80(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007fe48c1ff000 CR3: 000000007d586000 CR4: 00000000003526f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  lookup_fast+0x1f4/0x4a0
+>  walk_component+0x57/0x410 fs/namei.c:2108
+>  lookup_last fs/namei.c:2610 [inline]
+>  path_lookupat+0x16f/0x450 fs/namei.c:2634
+>  filename_lookup+0x2a3/0x670 fs/namei.c:2663
+>  do_readlinkat+0xf0/0x3a0 fs/stat.c:562
+>  __do_sys_readlink fs/stat.c:599 [inline]
+>  __se_sys_readlink fs/stat.c:596 [inline]
+>  __x64_sys_readlink+0x7f/0x90 fs/stat.c:596
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7fa024917d47
+> Code: 73 01 c3 48 8b 0d e1 90 0d 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 59 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d b1 90 0d 00 f7 d8 64 89 01 48
+> RSP: 002b:00007ffdac68fa58 EFLAGS: 00000246 ORIG_RAX: 0000000000000059
+> RAX: ffffffffffffffda RBX: 00007ffdac68fa68 RCX: 00007fa024917d47
+> RDX: 0000000000000400 RSI: 00007ffdac68fa68 RDI: 00007ffdac68ff48
+> RBP: 0000000000000400 R08: 000055b53fcce374 R09: 0000000000000000
+> R10: 0000000000000812 R11: 0000000000000246 R12: 00007ffdac68ff48
+> R13: 00007ffdac68feb8 R14: 000055b53fcc3910 R15: 0000000000000000
+>  </TASK>
+> Modules linked in:
+> ---[ end trace 0000000000000000 ]---
+> RIP: 0010:kernfs_root fs/kernfs/kernfs-internal.h:70 [inline]
+> RIP: 0010:kernfs_dop_revalidate+0x8e/0x560 fs/kernfs/dir.c:1158
+> Code: c5 80 04 00 00 48 89 e8 48 c1 e8 03 42 80 3c 30 00 74 08 48 89 ef e8 c1 9e c1 ff 4c 8b 7d 00 4d 8d 67 30 4c 89 e3 48 c1 eb 03 <42> 80 3c 33 00 74 08 4c 89 e7 e8 a3 9e c1 ff 49 8b 6f 30 48 85 ed
+> RSP: 0018:ffffc900033efa90 EFLAGS: 00010206
+> 
+> RAX: 1ffff1100c748639 RBX: 000000000000000a RCX: ffff88807deada00
+> RDX: ffff88807deada00 RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: ffff888063a431c8 R08: ffffffff823b3da8 R09: 1ffffffff20391a6
+> R10: dffffc0000000000 R11: ffffffff823b3d80 R12: 0000000000000051
+> R13: ffff88807affb318 R14: dffffc0000000000 R15: 0000000000000021
+> FS:  00007fa024cb5c80(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000001b2ee5ffff CR3: 000000007d586000 CR4: 00000000003526f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> ----------------
+> Code disassembly (best guess), 1 bytes skipped:
+>    0:	80 04 00 00          	addb   $0x0,(%rax,%rax,1)
+>    4:	48 89 e8             	mov    %rbp,%rax
+>    7:	48 c1 e8 03          	shr    $0x3,%rax
+>    b:	42 80 3c 30 00       	cmpb   $0x0,(%rax,%r14,1)
+>   10:	74 08                	je     0x1a
+>   12:	48 89 ef             	mov    %rbp,%rdi
+>   15:	e8 c1 9e c1 ff       	call   0xffc19edb
+>   1a:	4c 8b 7d 00          	mov    0x0(%rbp),%r15
+>   1e:	4d 8d 67 30          	lea    0x30(%r15),%r12
+>   22:	4c 89 e3             	mov    %r12,%rbx
+>   25:	48 c1 eb 03          	shr    $0x3,%rbx
+> * 29:	42 80 3c 33 00       	cmpb   $0x0,(%rbx,%r14,1) <-- trapping instruction
+>   2e:	74 08                	je     0x38
+>   30:	4c 89 e7             	mov    %r12,%rdi
+>   33:	e8 a3 9e c1 ff       	call   0xffc19edb
+>   38:	49 8b 6f 30          	mov    0x30(%r15),%rbp
+>   3c:	48 85 ed             	test   %rbp,%rbp
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+> 
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
+> 
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+> 
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+> 
+> If you want to undo deduplication, reply with:
+> #syz undup
