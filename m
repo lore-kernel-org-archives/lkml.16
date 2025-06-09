@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092CE259CA4;
-	Mon,  9 Jun 2025 13:40:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08771259CA4
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 13:40:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749476423; cv=none; b=XpEE8/cjAu31RNTTXfyZZJg3DvUQYVONR7LwtzS8QkGKY13ELnc+lKq3gpmScgEN7UoZ7kojTC/Kzd5EbydWazWaUDSSmDjV2UsI6Y5/lOmrWOx6RualLkrOilq1SWjfBNg5+UmbrLfujCqMAn7As/cn96b9pbRWpU2t7kDyAHo=
+	t=1749476429; cv=none; b=GyqGEtf2quJessYGhJOi54oFP38QGd6vwqtFWDO9JMEG10YGV1sXaq8sGr/5vzwXex13z1P3icBn22tycqUKlzpZvyWCW8DVBPzHtiJiGJNoA5ZgzB8ljr9q4UAB02ZGMBLEsQ72eX1CQZM6a/8FdL7d0hFCPypReUnGWqTcMQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749476423; c=relaxed/simple;
-	bh=vom0D/WvWlkg1JF/ExNR9+I+0VGrFhg2XqPiT+4ITcs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JciQePpGY249okK+A6T4o1exPLOw8PA+sJTWElOeKlc0SJxZ3BWKAc40EhI6dPbCDN1G1q8CQIo/OK8zxqlYVhnRgKWqFdPo36TfE9Aj2Sq5DY4dLiCCxvB760r1IrbZ/QyyR/wB1VrsQVZqKDyuzTWXUeSKYQdls/ZlHnVrtLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pp6+Q2Iz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749476429; c=relaxed/simple;
+	bh=aG8Or/augGCtlQoOopeF+AbVi3vR+yrUd4NFn/Z5mQs=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=MWpHjruf29/TbOVZGRYh4/PVWqCUvTp6KXBg3QR/XiVZ4ZgIub23Vd1fdVSiyUFWRWSNY0cKbWVX/WG4p9IL39B2ObO38yD8VLSwlhoCbOeBi9rmadIBeJHjYkwoYXsZFqvqybaTg0rqwZoR6pAO4hZr4lsgewlUkCsIwdQIprM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fGjM5S95; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pp6+Q2Iz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4F95C4CEF0;
-	Mon,  9 Jun 2025 13:40:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fGjM5S95"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9BDFC4CEEB;
+	Mon,  9 Jun 2025 13:40:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749476422;
-	bh=vom0D/WvWlkg1JF/ExNR9+I+0VGrFhg2XqPiT+4ITcs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=pp6+Q2IzM2pCPVl7xnUjRkrZzBs0v/D33Z6VhLJceULESnkviiJnm8bk4G0x6uw/7
-	 JlnBcNeF6e4tAGTzd9xPYfJma4odXoBzH0GcrRVdj5CjFAuQ7pBloDXmL5e+MdDjNq
-	 adCoOnG2iC1fz6+kTCCZZZnjM87sKAoZjAjUwKcbQef7FbI6L5kAhR5Pbnw8kyoxgb
-	 pn7PpHYXXZgd0cxuos8OzRfqsAFYte6Skowf4trYrQVOs+6Zybd50ueSkXG/8sCh+t
-	 y0nzAUvdF0xx7BmO14nncdWbBAAZNMa3npN2aZArfOlrzRQ0Rhl5KE6vbyjj4wZLSM
-	 z/6ihjXQWbA0w==
+	s=k20201202; t=1749476428;
+	bh=aG8Or/augGCtlQoOopeF+AbVi3vR+yrUd4NFn/Z5mQs=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=fGjM5S95T6EcOKWZCnvNU6pD5AAXubjnEn1ZrnO4MFIHonoVWogFpAm9yZqNK8jSh
+	 VKYwfOpdwLj8dIQeaaeUOmLMPcWcu7tZ6sj1GxGJKEXnN7lwl+r8ZHNu+o3pmWqjhn
+	 Kzq3nwmuGDsgJlWdoTzZJSGBaq9OL2LnPokkfTtRJD2A8JQy4DrzFwM8nRXkTAcd+S
+	 LDfqlwLqNKBRNIA00j/Q2bA7Lv4ambkuXGhz6JZUVZICL8CaW71/3iMRnoMBg2gZkc
+	 Cpg8Kr8XA/bvvvKXzXYT6MBCc8mLakehNghgxn1oDMHFE3Vj5yscyhJUZT096u5aOP
+	 JiEoR4dvQY2MA==
 From: Mark Brown <broonie@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org, 
- Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, 
- Huacai Chen <chenhuacai@kernel.org>, Huacai Chen <chenhuacai@kernel.org>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>
-In-Reply-To: <20250608142737.168829-1-chenhuacai@loongson.cn>
-References: <20250608142737.168829-1-chenhuacai@loongson.cn>
-Subject: Re: [PATCH] ASoC: loongson: Fix build warnings about export.h
-Message-Id: <174947642066.126747.2342329587404506443.b4-ty@kernel.org>
-Date: Mon, 09 Jun 2025 14:40:20 +0100
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+ linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250528194501.567366-2-krzysztof.kozlowski@linaro.org>
+References: <20250528194501.567366-2-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH] regmap: kunit: Constify regmap_range_cfg array
+Message-Id: <174947642762.126895.6773181163664093682.b4-ty@kernel.org>
+Date: Mon, 09 Jun 2025 14:40:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,24 +46,20 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Sun, 08 Jun 2025 22:27:37 +0800, Huacai Chen wrote:
-> After commit a934a57a42f64a4 ("scripts/misc-check: check missing #include
-> <linux/export.h> when W=1") and 7d95680d64ac8e836c ("scripts/misc-check:
-> check unnecessary #include <linux/export.h> when W=1"), we get some build
-> warnings with W=1:
+On Wed, 28 May 2025 21:45:02 +0200, Krzysztof Kozlowski wrote:
+> Static 'struct regmap_range_cfg' array is not modified so can be changed
+> to const for more safety.
 > 
-> sound/soc/loongson/loongson_i2s.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
 > 
-> [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git for-next
 
 Thanks!
 
-[1/1] ASoC: loongson: Fix build warnings about export.h
-      commit: a4e469c1e2e0ec7f08fff9ed29f5500f187ba9f2
+[1/1] regmap: kunit: Constify regmap_range_cfg array
+      commit: c8c4694ede7ed42d8d4db0e8927dea9839a3e248
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
