@@ -1,145 +1,102 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.166.231])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE9F220F2F;
-	Mon,  9 Jun 2025 21:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071A121B9F7
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 21:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749504680; cv=none; b=eKtfT+lgMs4czCDh9niR2yB4ryx9npmP0aFfigq9+sRmzbL3sHRq6oGL3j3rBklANtoPNUIgpAkvCg+aGLYHZl4yFe/Tu5Krxbd7smoF29YDMuGrAxRDsfv9EupBL2i07ghIABAeTTxQpqEQX+GDDi4FGrP7OAgpCfpOuNEjCDs=
+	t=1749505214; cv=none; b=pWvbY57Dl0os2vuDLmbsEfOz75fcFxV8nYtTaEqMxgve26m5M4//hh6NkK5qvC9BCOHVi41bqdMFFXipzziqHh/OpZvqNZCJkV4cqYXzfhn6/E0az0+QGKgieXlUDsI1aeWKNuM4qGVVSjlPDf6fsxZ+6RMunoMoQVwDnyHWVMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749504680; c=relaxed/simple;
-	bh=siG3t5h5VI/vBQgaAeu+KAIZnYD30RwbGz60qGNfCG8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nVNiZJ7apR2jYIt3zMwLZmBm2zHVL+euIE1KBlf10URCKkGMwk8QD5/v4SGQGaw7v4f+JgLSTmtaAwuEO8y8BdKk18qIIlp68SdywaoddHhQ+p5M/vdPbDbzAZJMB1Ke2FveSvlF+MIk3vbFxWUKAcfXnJGRXSHHr0exT6qp32c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=kFl3RpCb; arc=none smtp.client-ip=192.19.166.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="kFl3RpCb"
-Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 94DF8C000320;
-	Mon,  9 Jun 2025 14:23:13 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 94DF8C000320
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1749504193;
-	bh=siG3t5h5VI/vBQgaAeu+KAIZnYD30RwbGz60qGNfCG8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kFl3RpCbWaRqC2pY0b+rw6E2shSaIF4eRTIO6zVbjFUz4hA/kJfOt1SfTXkVbzjlL
-	 1NgVl/JfkF56q/xMcDYzo7EPauESG6Ssj0KZdvXeHRvjD4nY33s+IKEQwz94ESqluu
-	 KP6yZz8veLgC/YcAJjxzTV/iaE/PGN/U+csJeMzk=
-Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 75C5418000847;
-	Mon,  9 Jun 2025 14:23:13 -0700 (PDT)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: linux-kernel@vger.kernel.orgg
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	linux-kernel@vger.kernel.org (open list:MEMORY CONTROLLER DRIVERS),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE)
-Subject: [PATCH v2 1/2] dt-bindings: memory-controller: Define fallback compatible
-Date: Mon,  9 Jun 2025 14:23:10 -0700
-Message-ID: <20250609212311.2264108-2-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250609212311.2264108-1-florian.fainelli@broadcom.com>
-References: <20250609212311.2264108-1-florian.fainelli@broadcom.com>
+	s=arc-20240116; t=1749505214; c=relaxed/simple;
+	bh=tyRhSby89jcb+kTMmSAEqj7R2w2vsG40jy1iv8bU/Eg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F/3SvuWwQwy2UDB5XYi8J6lCKvjhQRAFs9i4gkJ0W1P9b8dBpAX2UeH+vxpFwrN2AatJp7zVBiR+drEgAocKiLeElB4KIWmelEtaFC81giFhPg2u43tFWno2eUFT493zuhej7kXFz2Hdjc51CnXPH2vJ0FByYluQN3sNdLctMs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 20948803B0;
+	Mon,  9 Jun 2025 21:32:07 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 20C9E20;
+	Mon,  9 Jun 2025 21:32:05 +0000 (UTC)
+Date: Mon, 9 Jun 2025 17:33:33 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Prakash Sangappa <prakash.sangappa@oracle.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>, "kprateek.nayak@amd.com"
+ <kprateek.nayak@amd.com>, "vineethr@linux.ibm.com" <vineethr@linux.ibm.com>
+Subject: Re: [PATCH V5 1/6] Sched: Scheduler time slice extension
+Message-ID: <20250609173333.6e0b6a55@gandalf.local.home>
+In-Reply-To: <20250609165532.3265e142@gandalf.local.home>
+References: <20250603233654.1838967-1-prakash.sangappa@oracle.com>
+	<20250603233654.1838967-2-prakash.sangappa@oracle.com>
+	<20250604103106.1465f847@gandalf.local.home>
+	<20250604145433.KCPMF8zm@linutronix.de>
+	<80120491-7F90-4171-9FB8-9FE89B09F728@oracle.com>
+	<20250604192327.sVjt6c4u@linutronix.de>
+	<20250609165532.3265e142@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 20C9E20
+X-Stat-Signature: z44hdu3pm7zgsmbotg35qsjd9yk5yi7f
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+aC5farrRC3IxJvpfUN9zRC2TmxMWHuV8=
+X-HE-Tag: 1749504725-677061
+X-HE-Meta: U2FsdGVkX1/rW8g8877/joGOvcce/oBqSlRnp28q7Qa4CbfjlFSSOhWimea9wC/eIV2RPQnEiq8hAkJdlJCnS2iavKAZ7gvltlvwtlvfu7uGIVqFuLa8TxjQYfwWfi0Fb4lK02hqbm7hrwF9ftPOlmdSNRbN1K+6u9/xuK/RGzD/KRmd0GvBx2TMksId0G30AU1//4nZxVfY5yquRx9tTNw8MAxfsw0tO64NxsiFJyVgyektE0moUIEzg1TtMlo+sWwldtdT+yErvAc1Mu3aschMvIpizvb6v7rj5j0SctfAEDWNjIFEyLeWeXdRXtOf
 
-All of the DDR controllers beyond revision b.2.1 have had a consistent
-layout, therefore define a "brcm,brcmstb-memc-ddr-rev-b.2.1" fallback
-compatible string to match them all rather than having to continuously
-add to the list.
 
-Link: https://lore.kernel.org/all/20241217194439.929040-2-florian.fainelli@broadcom.com/
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
----
- .../brcm,brcmstb-memc-ddr.yaml                | 54 ++++++++++++-------
- 1 file changed, 34 insertions(+), 20 deletions(-)
+Now I put the machine under load.
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/brcm,brcmstb-memc-ddr.yaml b/Documentation/devicetree/bindings/memory-controllers/brcm,brcmstb-memc-ddr.yaml
-index 4b072c879b02..b935894bd4fc 100644
---- a/Documentation/devicetree/bindings/memory-controllers/brcm,brcmstb-memc-ddr.yaml
-+++ b/Documentation/devicetree/bindings/memory-controllers/brcm,brcmstb-memc-ddr.yaml
-@@ -11,25 +11,37 @@ maintainers:
- 
- properties:
-   compatible:
--    items:
--      - enum:
--          - brcm,brcmstb-memc-ddr-rev-b.1.x
--          - brcm,brcmstb-memc-ddr-rev-b.2.0
--          - brcm,brcmstb-memc-ddr-rev-b.2.1
--          - brcm,brcmstb-memc-ddr-rev-b.2.2
--          - brcm,brcmstb-memc-ddr-rev-b.2.3
--          - brcm,brcmstb-memc-ddr-rev-b.2.5
--          - brcm,brcmstb-memc-ddr-rev-b.2.6
--          - brcm,brcmstb-memc-ddr-rev-b.2.7
--          - brcm,brcmstb-memc-ddr-rev-b.2.8
--          - brcm,brcmstb-memc-ddr-rev-b.3.0
--          - brcm,brcmstb-memc-ddr-rev-b.3.1
--          - brcm,brcmstb-memc-ddr-rev-c.1.0
--          - brcm,brcmstb-memc-ddr-rev-c.1.1
--          - brcm,brcmstb-memc-ddr-rev-c.1.2
--          - brcm,brcmstb-memc-ddr-rev-c.1.3
--          - brcm,brcmstb-memc-ddr-rev-c.1.4
--      - const: brcm,brcmstb-memc-ddr
-+    oneOf:
-+      - description: Revision > 2.1 controllers
-+        items:
-+          - enum:
-+              - brcm,brcmstb-memc-ddr-rev-b.2.2
-+              - brcm,brcmstb-memc-ddr-rev-b.2.3
-+              - brcm,brcmstb-memc-ddr-rev-b.2.5
-+              - brcm,brcmstb-memc-ddr-rev-b.2.6
-+              - brcm,brcmstb-memc-ddr-rev-b.2.7
-+              - brcm,brcmstb-memc-ddr-rev-b.2.8
-+              - brcm,brcmstb-memc-ddr-rev-b.3.0
-+              - brcm,brcmstb-memc-ddr-rev-b.3.1
-+              - brcm,brcmstb-memc-ddr-rev-c.1.0
-+              - brcm,brcmstb-memc-ddr-rev-c.1.1
-+              - brcm,brcmstb-memc-ddr-rev-c.1.2
-+              - brcm,brcmstb-memc-ddr-rev-c.1.3
-+              - brcm,brcmstb-memc-ddr-rev-c.1.4
-+          - const: brcm,brcmstb-memc-ddr-rev-b.2.1
-+          - const: brcm,brcmstb-memc-ddr
-+      - description: Revision 2.1 controllers
-+        items:
-+          - const: brcm,brcmstb-memc-ddr-rev-b.2.1
-+          - const: brcm,brcmstb-memc-ddr
-+      - description: Revision 2.0 controllers
-+        items:
-+          - const: brcm,brcmstb-memc-ddr-rev-b.2.0
-+          - const: brcm,brcmstb-memc-ddr
-+      - description: Revision 1.x controllers
-+        items:
-+          - const: brcm,brcmstb-memc-ddr-rev-b.1.x
-+          - const: brcm,brcmstb-memc-ddr
- 
-   reg:
-     maxItems: 1
-@@ -46,7 +58,9 @@ additionalProperties: false
- examples:
-   - |
-     memory-controller@9902000 {
--        compatible = "brcm,brcmstb-memc-ddr-rev-c.1.1", "brcm,brcmstb-memc-ddr";
-+        compatible = "brcm,brcmstb-memc-ddr-rev-c.1.1",
-+                     "brcm,brcmstb-memc-ddr-rev-b.2.1",
-+                     "brcm,brcmstb-memc-ddr";
-         reg = <0x9902000 0x600>;
-         clock-frequency = <2133000000>;
-     };
--- 
-2.43.0
+In one window I ran:
 
+  $ cd linux.git
+  $ make j=20
+
+[ This is just a 8 core machine. I just noticed that I have isolcpus=3 so
+only 7 are running ]
+
+And in another window I ran:
+
+  $ while :; ./hackbench 50; done
+
+This made the system have:
+
+~# cyclictest --smp -p95 -m -s --system -l 100000  -b 1000
+# /dev/cpu_dma_latency set to 0us
+policy: fifo: loadavg: 38.84 19.89 8.05 29/2609 80387           
+
+T: 0 (71748) P:95 I:1000 C:  23386 Min:      5 Act:   10 Avg:    9 Max:      30
+T: 1 (71749) P:95 I:1500 C:  15635 Min:      5 Act:    7 Avg:    9 Max:      24
+T: 2 (71750) P:95 I:2000 C:  11735 Min:      6 Act:   11 Avg:   10 Max:      27
+T: 3 (71751) P:95 I:2500 C:   9388 Min:      6 Act:    9 Avg:   10 Max:      24
+T: 4 (71753) P:95 I:3000 C:   7823 Min:      6 Act:   10 Avg:   10 Max:      24
+T: 5 (71755) P:95 I:3500 C:   6699 Min:      6 Act:   10 Avg:   10 Max:      23
+T: 6 (71756) P:95 I:4000 C:   5865 Min:      6 Act:   10 Avg:    9 Max:      23
+
+Then running my extend-sched with 5us delay, it jumped up slightly.
+
+T: 0 (104507) P:95 I:1000 C:  69385 Min:      4 Act:   10 Avg:    8 Max:      34
+T: 1 (104509) P:95 I:1500 C:  46378 Min:      4 Act:   14 Avg:    9 Max:      29
+T: 2 (104510) P:95 I:2000 C:  34829 Min:      5 Act:   13 Avg:    9 Max:      27
+T: 3 (104511) P:95 I:2500 C:  27885 Min:      5 Act:   11 Avg:    9 Max:      28
+T: 4 (104512) P:95 I:3000 C:  23246 Min:      5 Act:   12 Avg:    9 Max:      29
+T: 5 (104514) P:95 I:3500 C:  19931 Min:      5 Act:   11 Avg:    9 Max:      32
+T: 6 (104518) P:95 I:4000 C:  17446 Min:      5 Act:   11 Avg:    9 Max:      24
+
+This is more in the noise but still sightly noticeable. I still argue that
+this extends any worst case scenario with the delay, as if the path that
+causes the worst case scenario happens when the extended slice happens,
+they are combined. Which is the definition of worst case scenario.
+
+-- Steve
