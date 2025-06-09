@@ -1,186 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024DE1F3BB0;
-	Mon,  9 Jun 2025 20:04:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75441F3BB0;
+	Mon,  9 Jun 2025 20:05:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749499476; cv=none; b=TDkt567hlzDFu4qXXLctf2+S7snCPU+T9ZxVAw0oSUYUU8TJC2Ziu2u6RIw7GelW/Z5oXECNUQkaGXp7Wq0bLwxaiAAeqFPZ5wNTorzLBfKZ2/Rb3FHylWeRRLAItLi4gU5QwKTI4nZXsoNMfChER3azvj9PmgwDvHMtKwM2N4Q=
+	t=1749499526; cv=none; b=BNDRIwTLSuQVvvs8tj0opSmrolfIcWh0RjF2QMOSxkL8AMRp4zUk9AxuA791oEMduM0SFuqCLJ1Kcr3D1EBASLnbtx15tiitA3xwQLn7eIp1xYftHSD36krBFJ3GZLZSsA4oXxJuQYnTcXrzT1YnSIT3Ebbxt/Pwi9EKdEdSqjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749499476; c=relaxed/simple;
-	bh=yUuvb828aWvLH8lzzQnIsJ5D980USIpuviHfRjTllQ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FWo+v3uCVDs24bS9fPGX0Cyqx3YLc3OHUeaMYJuPzOrX9nEleQ3ZTwhbXKM8alve2Dacb1Om4Tu+YXs35M81vJAG+34YSmwrW1F27JJDOUDtKeL2Ve5u3Lw8n7NBUMloBUhcz3PEOreRCfSQJGoVut1x/wLCQQzIVZQ6j4fmn2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XJqCxF2i; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749499526; c=relaxed/simple;
+	bh=K1VwXTUztkatZ1a//3npskpLt0l90xtkJZUgIPEdnGE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sXimMwed0wC/MdRiN7bdoN9CS1lnBxe1GkRp1/FV3Pib2zRIwai9FkEx7F3rTVdT9T/GtDWPQzOC4zenslX3Id6Jzv4I6aaGaWW2D8CFw2mcJLZtlWme/WGvgO/JZz1mrDO3j4+Ldki7AhiyiHR74nUgEfM2kvxd3xCa3PJ7uzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Flvd0MCk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XJqCxF2i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749499475; x=1781035475;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=yUuvb828aWvLH8lzzQnIsJ5D980USIpuviHfRjTllQ0=;
-  b=XJqCxF2i4yOqJ+Sp79NNTRL+meiLk1U8Qigndz7/0WIwTNOTLjQyfPVh
-   /9hz0dQ3o4Ujc4UEGOdvzfKGCA9Ew6M6GKJAoN+p0x9bV0pkERAiOY4ZX
-   3vIHZUY5QXgc4z+kYBP6TM/DTM3qnRd1SIm/VlK12QeYrqOWs5Y532AFf
-   h4rg+FGvRQx21mCaeKpFq1tLHJWfI8G3EZdmFcKv2eQOoN/d6V4ZCW8eJ
-   v7e/OQDmiaBVegpDgMavdaLLu6hpMXUaSOfM5Owv1gzyCU73iawoQsOwQ
-   njks8u7g0ldywYUuzhtAGhhU+RqVcboCjheLaqtdSrhmaGLtYQlLc8I1J
-   g==;
-X-CSE-ConnectionGUID: Vpr6emWZSqmCWKHQt054RA==
-X-CSE-MsgGUID: XxLqTnDkT3Sj0ggxTIKWOQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="62626255"
-X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
-   d="scan'208";a="62626255"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 13:04:34 -0700
-X-CSE-ConnectionGUID: MxTEgy0kRCSr/efLPe7Dlw==
-X-CSE-MsgGUID: pSrDO/9FQgO05dfgzHptsA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
-   d="scan'208";a="151489909"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 13:04:28 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uOijI-000000059OT-2Hi4;
-	Mon, 09 Jun 2025 23:04:24 +0300
-Date: Mon, 9 Jun 2025 23:04:24 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Flvd0MCk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D03BDC4CEEF;
+	Mon,  9 Jun 2025 20:05:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749499526;
+	bh=K1VwXTUztkatZ1a//3npskpLt0l90xtkJZUgIPEdnGE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Flvd0MCklqqmksqeMaI334ngLSuiw8gJ0v8n+8w6JxbDpnhJfZZqBJI/sm5HLtd5Y
+	 MO/LduBuL+mczBidY0sG3TaPExawf/ee00BoLJgH4OCdIBCbxxWRCKQKyn0xS0M8N1
+	 kCJSHnwNFUtt7E3EVbbiPyTMBM5PTuYx6xFWFgLtySjrR3b/+kh54NwrBFvYRhI7FG
+	 2n9PdRRLr1a/E1cJNmHlsSk2gsnpi9/Dfe1kvujEeXHj8cS8lKKH3c8vi8lbQYMdoL
+	 diCffKaQt1aVVWNr7gEm7wCpPznxBgY46SoG5kgpGf50ULvvBuPdoW5nkNnmiG7NIn
+	 KVMvFtU5THwjA==
+From: Mario Limonciello <superm1@kernel.org>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <perry.yuan@amd.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Huang Rui <ray.huang@amd.com>,
+	"Gautham R . Shenoy" <gautham.shenoy@amd.com>,
 	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 07/23] mailbox: Add RISC-V SBI message proxy (MPXY)
- based mailbox driver
-Message-ID: <aEc-SHvL187xdj-m@smile.fi.intel.com>
-References: <20250525084710.1665648-1-apatel@ventanamicro.com>
- <20250525084710.1665648-8-apatel@ventanamicro.com>
- <aDbrBFcgaJxgBRVZ@smile.fi.intel.com>
- <CAK9=C2XJwgsC5AK-eVOHQqN1tPxtrsTjVoKdHgALbREv=sb8zQ@mail.gmail.com>
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	platform-driver-x86@vger.kernel.org (open list:AMD HETERO CORE HARDWARE FEEDBACK DRIVER),
+	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+	linux-pm@vger.kernel.org (open list:AMD PSTATE DRIVER)
+Subject: [PATCH v11 00/13] Add support for AMD hardware feedback interface
+Date: Mon,  9 Jun 2025 15:05:05 -0500
+Message-ID: <20250609200518.3616080-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK9=C2XJwgsC5AK-eVOHQqN1tPxtrsTjVoKdHgALbREv=sb8zQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Jun 09, 2025 at 05:59:40PM +0530, Anup Patel wrote:
-> On Wed, May 28, 2025 at 4:23 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Sun, May 25, 2025 at 02:16:54PM +0530, Anup Patel wrote:
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-...
+The AMD Heterogeneous core design and Hardware Feedback Interface (HFI)
+provide behavioral classification of tasks.
 
-> > > +#include <asm/sbi.h>
-> >
-> > asm/* usually goes after generic linux/* ones. Why here?
-> 
-> I am not aware of any such convention but I will update anyway.
+Threads are classified during runtime into enumerated classes.
+Currently, the driver supports 3 classes (0 through 2). These classes
+represent thread performance/power characteristics that may benefit from
+special scheduling behaviors. The real-time thread classification is
+consumed by the operating system and is intended to be used to inform the scheduler
+of where the thread should be placed for optimal performance or energy efficiency.
 
-It's just a common sense. We include most generic first and most custom at
-last.
+The thread classification can be used to helps to select CPU from a ranking table
+that describes an efficiency and performance ranking for each classification from
+two dimensions. This is not currently done in this series, but is intended for future
+follow ups after the plumbing is laid down.
 
-...
+The ranking data provided by the ranking table are numbers ranging from 0 to 255,
+where a higher performance value indicates higher performance capability and a higher
+efficiency value indicates greater efficiency. All the CPU cores are ranked into
+different class IDs. Within each class ranking, the cores may have different ranking
+values. Therefore, picking from each classification ID will later allow the scheduler
+to select the best core while threads are classified into the specified workload class.
 
-> > > +static int mpxy_write_attrs(u32 channel_id, u32 base_attrid, u32 attr_count,
-> > > +                         u32 *attrs_buf)
-> > > +{
-> > > +     struct mpxy_local *mpxy = this_cpu_ptr(&mpxy_local);
-> > > +     struct sbiret sret;
-> > > +     u32 i;
-> > > +
-> > > +     if (!mpxy->shmem_active)
-> > > +             return -ENODEV;
-> > > +     if (!attr_count || !attrs_buf)
-> > > +             return -EINVAL;
-> > > +
-> > > +     get_cpu();
-> > > +
-> > > +     for (i = 0; i < attr_count; i++)
-> > > +             ((__le32 *)mpxy->shmem)[i] = cpu_to_le32(attrs_buf[i]);
-> >
-> > Don't we have helpers for this? They are suffixed with _array.
-> > https://elixir.bootlin.com/linux/v6.15-rc6/source/include/linux/byteorder/generic.h#L168
-> > Don't forget to have asm/byteorder.h being included.
-> >
-> > Ditto for the similar case(s).
-> 
-> The cpu_to_le32_array() and le32_to_cpu_array() helpers update data
-> in-place but over here we have separate source and destination.
+This series was originally submitted by Perry Yuan [1] but he is now doing a different
+role and he asked me to take over.
 
-Fair enough. Perhaps add something like memcpy_to_le32() / memcpy_from_le32()
-or alike for your case?
+Link: https://lore.kernel.org/all/cover.1724748733.git.perry.yuan@amd.com/
 
-> > > +     sret = sbi_ecall(SBI_EXT_MPXY, SBI_EXT_MPXY_WRITE_ATTRS,
-> > > +                      channel_id, base_attrid, attr_count, 0, 0, 0);
-> > > +
-> > > +     put_cpu();
-> > > +     return sbi_err_map_linux_errno(sret.error);
-> > > +}
+v10->v11:
+ * rebase on v6.16-rc1
+ * Adjust for Randy's and Ingo's feedback
 
-...
+Mario Limonciello (5):
+  MAINTAINERS: Add maintainer entry for AMD Hardware Feedback Driver
+  cpufreq/amd-pstate: Disable preferred cores on designs with workload
+    classification
+  platform/x86/amd: hfi: Set ITMT priority from ranking data
+  platform/x86/amd: hfi: Add debugfs support
+  x86/itmt: Add debugfs file to show core priorities
 
-> > > +                            sizeof(mchan->rpmi_attrs) / sizeof(u32),
-> > > +                            (u32 *)&mchan->rpmi_attrs);
-> >
-> > Why casting? What about alignment?
-> 
-> The RPMI attributes (aka struct sbi_mpxy_rpmi_channel_attrs) are
-> a collection of u32 attributes hence we can also treat rpmi_attrs
-> as a u32 array. Further, the rpmi_attrs is XLEN aligned within the
-> struct mpxy_mbox_channel so no alignment issue with the casting
-> on both RV32 and RV64.
-> 
-> If we want to avoid the casting then we will have to use a temporary
-> u32 array plus additional memcpy().
+Perry Yuan (8):
+  Documentation: x86: Add AMD Hardware Feedback Interface documentation
+  x86/msr-index: define AMD heterogeneous CPU related MSR
+  platform/x86: hfi: Introduce AMD Hardware Feedback Interface Driver
+  platform/x86: hfi: parse CPU core ranking data from shared memory
+  platform/x86: hfi: init per-cpu scores for each class
+  platform/x86: hfi: add online and offline callback support
+  platform/x86: hfi: add power management callback
+  x86/process: Clear hardware feedback history for AMD processors
 
-OK.
-
-...
-
-> > > +     if (mbox->msi_count)
-> >
-> > Is this check really needed?
-> 
-> MSIs are optional for the SBI MPXY mailbox so we should only use
-> platform_device_msi_xyz() APIs only when MSIs are available.
-
-> > > +             platform_device_msi_free_irqs_all(mbox->dev);
-
-Hmm... I am not sure why. Do you have any Oops or warnings if the check
-is not there and no MSI provided?
-
-> > > +}
+ Documentation/arch/x86/amd-hfi.rst    | 133 +++++++
+ Documentation/arch/x86/index.rst      |   1 +
+ MAINTAINERS                           |   9 +
+ arch/x86/include/asm/msr-index.h      |   5 +
+ arch/x86/kernel/itmt.c                |  23 ++
+ arch/x86/kernel/process_64.c          |   4 +
+ drivers/cpufreq/amd-pstate.c          |   6 +
+ drivers/platform/x86/amd/Kconfig      |   1 +
+ drivers/platform/x86/amd/Makefile     |   1 +
+ drivers/platform/x86/amd/hfi/Kconfig  |  18 +
+ drivers/platform/x86/amd/hfi/Makefile |   7 +
+ drivers/platform/x86/amd/hfi/hfi.c    | 551 ++++++++++++++++++++++++++
+ 12 files changed, 759 insertions(+)
+ create mode 100644 Documentation/arch/x86/amd-hfi.rst
+ create mode 100644 drivers/platform/x86/amd/hfi/Kconfig
+ create mode 100644 drivers/platform/x86/amd/hfi/Makefile
+ create mode 100644 drivers/platform/x86/amd/hfi/hfi.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0
 
