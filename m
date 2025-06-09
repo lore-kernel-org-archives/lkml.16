@@ -1,76 +1,110 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C06622A811
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 03:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEBF2701C8;
+	Mon,  9 Jun 2025 03:12:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749438664; cv=none; b=dSQVyvtNmnlul8Kk7jgBO9/wRYbKplyKIz8n4q3HKg25pEY/oOQojPyjJ4IpUvwrOEzif1mSE1wsC1CN68ZN9UPUnr7booU2Je3aiKPGfQLA+kKsKqk78r7P4h2VTx8nhZKcfLu1kQzIzKZpouIVG21rubAbVhA1+kEyb+l7teA=
+	t=1749438740; cv=none; b=uMgRaizXnuSUrIFSLkwI/bmQJT0VriItncs4lsk2urS/TsoXudlQBQX72wU5t/pEW7Tph8aWzXDutm+VkIAMG4aAfAt6ZFO2eIIF+Iui1jzEIseqQZWN2RXYm6nBA5sW3Oymdx/SwSE+qReHsGoNRCde6HlTIJKD2fKIxQkacsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749438664; c=relaxed/simple;
-	bh=XqX8W0WXjmvJmcTYPtm3CDkoRO35HGBnjqGMJwyZerM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=SZdXywH9jQMrgG43xy0fYSk6zzjsLaikce/mI+9ixrmFHIUVoWW+QxkUe2bxC+TVYYY47bSAB3g07gYi1HR51AjXqCu0F0H0saiUmyszVuhqwqf9QDksd2gzDDhlscr/W5U+RejpA0o+oBDSD0WoLlaNtp92GJJbyxMM+l3FvTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-869e9667f58so696339239f.3
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 20:11:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749438662; x=1750043462;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wo7UpV8gmOqqjSSyDcx4sdLxk2Thz6qXIr6g3frrVp8=;
-        b=u1O0U/s/pG6GCD838T0tQkve4ORhILs4xRLWEfb0UKm9Cqu6UOz4RdiEFb49toq9U2
-         BPgz2Chre/TBDRNLwJlRJZknbU51bIXS+jhL3qYG+1B+oh/OneqnH626+UcPL/lzBU8Y
-         qVrj/QOZERPe/K9lCUErLFRzLc5gh8x6ucJSFHtqFA8efCfFxfdytoEY1v9jFsZF3BZn
-         JOHUHRL40iqfjiR/bRXNmzwi8iZ6vmCuRVNdBLyb6i2WYa6fZ44B2Hm9CdMzuuuayRNi
-         NKozXbjKsfyh2EFtalueiMKHJxos3bLjYk8IM8nf2CvRFki5utw1+a1SiilKM3IZTqme
-         nCuA==
-X-Forwarded-Encrypted: i=1; AJvYcCXx55/Ewees06qFRCGssyCPCOHjPZSAHZe+VK+BpFIcTHLib0Mv/xwisNj+ef998iU4MU6tHbFyzR0qkHw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwG6oiY2FBQzp3Y/412OVCsAkOJqVM0o3qjrYX7m8hhkHt6hees
-	cunHL9V2hD9wlzfRkjz6goHliRGDcsqOZKIhAggVH6eg7FuIX7WEwMAqijBG3AjjWMquVdSq/pp
-	BH41/L+JPmQYhU6qMKakNmjNKyjzlCeb5w2GDrJANhgswCIHmQBPrSZhP2wI=
-X-Google-Smtp-Source: AGHT+IEpUfLTrGAb9S5XjnQfzSLe9AUGAJcv3mfxO7vTH7UhO3BuyGZJcFzIEYx7ZuJlkvXzjBZ3b7JZGRRDDZiZx0cs0Ss6h8uI
+	s=arc-20240116; t=1749438740; c=relaxed/simple;
+	bh=dDrMQ92LuLGu55pFGVPF5AMJ71MKlzo/xb2Mi66ibTQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ebsWsQIHgyOpmoZjLZCsJaz5S6XZoAgEDg/7btKdft9BBo7nlWReNuuyICzfiO3GeP+fMaPAHdKVVJioDyK+D7Gjl7YDt6uDbgSCc+c65uuyMV4DA+OSoi4WGxUkQglYB9h6zJ1vn5jNVR/YJudUnD1NUPUg+xx+fgukOv7X5nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=hbain1Vd; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="hbain1Vd"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1749438728; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=D4pMAoDuYGVY/y/srg/WEDjx+BfgvSMCUgZlsMgt/Ck=;
+	b=hbain1Vdj7xorIGvIBqBRxwg0OMHYcQrJsEpzIi3BWXQAMAs1jak91L3bybDxVuKY3Kr7M1VvfeX8inQt8uJGGKM2n3zg0GcFy1qp6zWzMKuP6IGDg6c5sZiBeMlPQWIoR+N4H2SepO+enz0agItrjQmQqgMuME9gmzovH/GdWE=
+Received: from 30.74.144.144(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WdK.fGG_1749438403 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 09 Jun 2025 11:06:44 +0800
+Message-ID: <4a2c359e-79d9-447b-a43e-164333d08319@linux.alibaba.com>
+Date: Mon, 9 Jun 2025 11:06:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:188a:b0:3dd:b7da:5256 with SMTP id
- e9e14a558f8ab-3ddce48b1efmr123961825ab.19.1749438662672; Sun, 08 Jun 2025
- 20:11:02 -0700 (PDT)
-Date: Sun, 08 Jun 2025 20:11:02 -0700
-In-Reply-To: <6745a8df.050a0220.1286eb.0015.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <684650c6.050a0220.d8705.0018.GAE@google.com>
-Subject: Re: [syzbot] [kernfs?] general protection fault in kernfs_dop_revalidate
-From: syzbot <syzbot+e37a1730d63d207fe403@syzkaller.appspotmail.com>
-To: bfoster@redhat.com, gregkh@linuxfoundation.org, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, tj@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 12/12] Documentation: mm: update the admin guide for
+ mTHP collapse
+To: Nico Pache <npache@redhat.com>, Dev Jain <dev.jain@arm.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, ryan.roberts@arm.com, corbet@lwn.net,
+ rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ akpm@linux-foundation.org, baohua@kernel.org, willy@infradead.org,
+ peterx@redhat.com, wangkefeng.wang@huawei.com, usamaarif642@gmail.com,
+ sunnanyong@huawei.com, vishal.moola@gmail.com,
+ thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+ kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
+ anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
+ will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
+ jglisse@google.com, surenb@google.com, zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+ rdunlap@infradead.org, Bagas Sanjaya <bagasdotme@gmail.com>
+References: <20250515032226.128900-1-npache@redhat.com>
+ <20250515032226.128900-13-npache@redhat.com>
+ <bc8f72f3-01d9-43db-a632-1f4b9a1d5276@arm.com>
+ <CAA1CXcDOEdJRvZMu2Fyy4wsdy8k8nj4c45s4JanO9HzyJgyXOw@mail.gmail.com>
+ <b09d7553-c3c6-453a-8e3a-86dc4caeb431@arm.com>
+ <CAA1CXcB-A9U8GEodPrm3QdndzB2MY7eZHnoojVYU5fi_DJBbcw@mail.gmail.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <CAA1CXcB-A9U8GEodPrm3QdndzB2MY7eZHnoojVYU5fi_DJBbcw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-syzbot has bisected this issue to:
 
-commit f7643bc9749f270d487c32dc35b578575bf1adb0
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Wed Apr 17 05:26:02 2024 +0000
 
-    bcachefs: make btree read errors silent during scan
+On 2025/6/9 03:50, Nico Pache wrote:
+> On Sat, Jun 7, 2025 at 8:35 AM Dev Jain <dev.jain@arm.com> wrote:
+>>
+>>
+>> On 07/06/25 6:27 pm, Nico Pache wrote:
+>>> On Sat, Jun 7, 2025 at 12:45 AM Dev Jain <dev.jain@arm.com> wrote:
+>>>>
+>>>> On 15/05/25 8:52 am, Nico Pache wrote:
+>>>>
+>>>> Now that we can collapse to mTHPs lets update the admin guide to
+>>>> reflect these changes and provide proper guidence on how to utilize it.
+>>>>
+>>>> Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+>>>> Signed-off-by: Nico Pache <npache@redhat.com>
+>>>> ---
+>>>>    Documentation/admin-guide/mm/transhuge.rst | 14 +++++++++++++-
+>>>>    1 file changed, 13 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+>>>> index dff8d5985f0f..5c63fe51b3ad 100644
+>>>> --- a/Documentation/admin-guide/mm/transhuge.rst
+>>>> +++ b/Documentation/admin-guide/mm/transhuge.rst
+>>>>
+>>>>
+>>>> We need to modify/remove the following paragraph:
+>>>>
+>>>> khugepaged currently only searches for opportunities to collapse to
+>>>> PMD-sized THP and no attempt is made to collapse to other THP
+>>>> sizes.
+>>> On this version this is currently still true, but once I add Baolin's
+>>> patch it will not be true. Thanks for the reminder :)
+>>
+>> You referenced Baolin's patch in the other email too, can you send the link,
+>> or the patch?
+> 
+> He didn't send it to the mailing list, but rather off chain to all the
+> recipients of this series. You should have it in your email look for
+> 
+> Subject: "mm: khugepaged: allow khugepaged to check all anonymous mTHP
+> orders" and "mm: khugepaged: kick khugepaged for enabling
+> none-PMD-sized mTHPs"
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17abb20c580000
-start commit:   28eb75e178d3 Merge tag 'drm-next-2024-11-21' of https://gi..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=146bb20c580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=106bb20c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=402159daa216c89d
-dashboard link: https://syzkaller.appspot.com/bug?extid=e37a1730d63d207fe403
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=163706e8580000
-
-Reported-by: syzbot+e37a1730d63d207fe403@syzkaller.appspotmail.com
-Fixes: f7643bc9749f ("bcachefs: make btree read errors silent during scan")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+You can find them at the following link:
+https://lore.kernel.org/all/ac9ed6d71b439611f9c94b3506a8ce975d4636e9.1748435162.git.baolin.wang@linux.alibaba.com/
