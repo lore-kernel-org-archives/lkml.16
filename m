@@ -1,119 +1,220 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F483A1B6;
-	Mon,  9 Jun 2025 16:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749486696; cv=pass; b=Utpmz663rusCqZ/htXN5FgynEhnj8WJ4VMctywBMfgowNsSr8CPqcPWbmkMFc9Cl+/d+PMwtHo8dsLPyV1PwRViS4IcTDS8DgpQqU9XypqOrLGIN+Z9QwytgVAM+Xgt+9t05VvtZ8crS1H+PatyVteQHAroEn9C28zhXiDPaSdo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749486696; c=relaxed/simple;
-	bh=RIqUGHWj9G1NHN2LaUPxE8EZCB7QaOCQlXKKlDcIt3w=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=J3Ylp9uof9IgQirNiY+ubhv7udWQmNfk2ffF7m8tR2ZWR/L0FLSL9R66iKfUkdV1E6vFeCdqjjHZZjBQfCjX306SrOe2HDBE7yLSx2lzcN7gO4OPQjo+7YMx2otGX+F1ODCFUrHrMUYWGzSnrElYJFTlacQi27eDKCVDxN9plO4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=IDlwgt3h; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950343A1B6;
+	Mon,  9 Jun 2025 16:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749486843; cv=none; b=lWblVKsrzm9C+NNOG1dXkBIuh5lA1jn/PBmbjMuCRVzw/NmQbJM+UxlmTqPAOAplqBHIH8F5fRLqsPo7ErbqnRbHzeMTgKYNnguo9UmhJINyyGLF8oiLC/c4NJIdy050VFKmiqn9zDGWJDd2VGEtZt5JQmVKBeQEO8F38CZg5kY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749486843; c=relaxed/simple;
+	bh=GTnFfGyaol0WHB79nJS8vHJ5V67NBcsQeSu7yPvQUIk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=LuKRHxbqzHI9v31neKUtX3euiausaFgPBNCPa/uCct3B44LPJNAh3L6IX99VvInQLwtUND6PbuT0UVFC7DZYQwLIYnNtVl7+wXIptTaM2g/lsZ5jQ677AKgXWWDnOjqxbx/uiaO42IEjvDsqS5Ye/N4BCTlOGODuxLdSIU/+Uc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=l5x8CTLt; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="IDlwgt3h"
-ARC-Seal: i=1; a=rsa-sha256; t=1749486670; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=cD/hGH9ef3n3ol2dV9xcmlS4/oFxjes7q353WZe76/hYXi5wHtSrZOxzjPUOkO4IiL83uhCe31K1S+dKve2egIVc3NSFHvT8yxn8BCy8x45Fau8stPZH/nxRl3RoHB8IA0i6lhxBF8ur0Av3MfxRjo4GFunOkwck7+VIu6e/6Ak=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749486670; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=He8HfUMJPmf3+p3sciXTNekEt/o7neEWLhlyiB54XII=; 
-	b=mqJS4wzwcrqMqKH/F/EadRzfEOrzVHxcZkPV2Tq2xC8Ykbry/bcbuGZpCLjRDi2ihY+DYyTY9/0vArFFpy/TLy6nh/GgGsgpAUJfH/02ko+NCd38AZbYsXNOmhZuEemsuTL1Aafy8AKgbh/oYnDAgF81MsQiYKUtL2g01UanORE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749486670;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=He8HfUMJPmf3+p3sciXTNekEt/o7neEWLhlyiB54XII=;
-	b=IDlwgt3hIzNfsOtPqZQR7fZy6lW5jg9Tx9ezgCpGUyx4NB2b9Sh71f/LW5mWwCIe
-	KbpHUE6/EcN1iNJpnLh9GcIs4HLqqW0RykpmAfA4cZOEg/TJfvw1U8MyQkSL9zLt1Vs
-	Wm2PbV6Iz/Z/gh4CRm4TWTSRrqY7Z9EW7AMSGAXw=
-Received: by mx.zohomail.com with SMTPS id 174948666825955.29392187532949;
-	Mon, 9 Jun 2025 09:31:08 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="l5x8CTLt"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 559Fxc8D010757;
+	Mon, 9 Jun 2025 18:33:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	XdsCmzlviAN7D8zW7RN1bkzetwH59L+fJQ05vlqmlxk=; b=l5x8CTLtU5RADRo6
+	SxU13ZIwSRejlojuW9TaZ6uGJVu49k/9cAUsTCzU6JM1hW+eEUkHZOmqDCmbDvW/
+	Rlgk3Q1Qw0Ec6ZUMpHN3ajvuStAjAiSDldeDTaB80zeSD8ZjKgXncHounqKYRxlq
+	KYsC5TyOe6AsBUlnqsXBz8lAdCYM3qZbLL99yUJrs1vEkXngi73WG39pYvYnWVSC
+	O1sUpZeXV3Q2exKZD7j1bWn2VF37XEfHzvFOqHeo7H0zl8vcv1KHTks1Z7m61pn7
+	pQTUsZLgeyVgnJLFNYeuKhcmQs37PTvi932ECEProqA/gJ1Oc0yytWrPqRNHkIdS
+	61sKNQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474cahfx2q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 09 Jun 2025 18:33:40 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 26A7D400CF;
+	Mon,  9 Jun 2025 18:32:19 +0200 (CEST)
+Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 70948BF25F3;
+	Mon,  9 Jun 2025 18:30:09 +0200 (CEST)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
+ (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 9 Jun
+ 2025 18:30:09 +0200
+Received: from [10.48.86.121] (10.48.86.121) by SAFDAG1NODE1.st.com
+ (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 9 Jun
+ 2025 18:30:08 +0200
+Message-ID: <7850c6f4-6a6f-4934-895d-9ec0688cda2a@foss.st.com>
+Date: Mon, 9 Jun 2025 18:30:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v4] rust: regulator: add a bare minimum regulator
- abstraction
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <CANiq72kcF-CqUwvCBRt5FjX2Yrj517UYjXHA9Sf7-Xevsy=2Kw@mail.gmail.com>
-Date: Mon, 9 Jun 2025 13:30:52 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <09F9A01B-70CA-421C-9A48-E0FD0A192026@collabora.com>
-References: <20250609-topics-tyr-regulator-v4-1-b4fdcf1385a7@collabora.com>
- <CANiq72kcF-CqUwvCBRt5FjX2Yrj517UYjXHA9Sf7-Xevsy=2Kw@mail.gmail.com>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH v16 0/6] Introduction of a remoteproc tee to load
+ signed firmware
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Jens Wiklander
+	<jens.wiklander@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <op-tee@lists.trustedfirmware.org>, <devicetree@vger.kernel.org>
+References: <20250603100808.1074812-1-arnaud.pouliquen@foss.st.com>
+ <aEb8XbhY5dR__GM-@p14s>
+Content-Language: en-US
+From: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
+Organization: STMicroelectronics
+In-Reply-To: <aEb8XbhY5dR__GM-@p14s>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-09_06,2025-06-09_02,2025-03-28_01
 
-Hi Miguel,
+Hello Mathieu,
 
-Sure, thank you!
+On 6/9/25 17:23, Mathieu Poirier wrote:
+> On Tue, Jun 03, 2025 at 12:08:02PM +0200, Arnaud Pouliquen wrote:
+>> Hello Bjorn and Mathieu,
+>>
+>> I am resending this series after waiting for over two months for Bjorn's
+>> feedback, despite a prior reminder.
+>>
+>> Please could you coordinate between yourselves to determine who will continue
+>> reviewing this series? It would be greatly appreciated if the review could
+>> proceed within a more reasonable timeframe.
+>>
+>> Thanks in advance and best regards,
+>> Arnaud
+>>
+>>
+>> Main updates from version V15[1]:
+>> - Removed the rproc_ops:load_fw() operation introduced in the previous version.
+>> - Returned to managing the remoteproc firmware loading in rproc_tee_parse_fw to
+>>   load and authenticate the firmware before getting the resource table.
+>> - Added spinlock and dev_link mechanisms in remoteproc TEE to better manage
+>>   bind/unbind.
+>>
+> 
+> Have all pending issues been resolved or is there still questions about some
+> aspects of the design?
+>  
 
-By the way, are you using some lint to generate this?
+No pending issues on my side.
 
-> On 9 Jun 2025, at 13:23, Miguel Ojeda =
-<miguel.ojeda.sandonis@gmail.com> wrote:
->=20
-> On Mon, Jun 9, 2025 at 5:34=E2=80=AFPM Daniel Almeida
-> <daniel.almeida@collabora.com> wrote:
->>=20
->> Add a bare minimum regulator abstraction to be used by Rust drivers.
->> This abstraction adds a small subset of the regulator API, which is
->> thought to be sufficient for the drivers we have now.
->=20
-> For future versions, or at apply time, please see the attached diff
-> for some documentation fixes (mostly) -- please check with
-> `--ignore-space-change`, since some indentation fixes can hide other
-> changes.
->=20
-> Most should be self-explanatory, but if there is something that you
-> think should not be done, please let me know of course.
->=20
-> Thanks!
->=20
-> Cheers,
-> Miguel
-> <docfixes.diff>
+In terms of design, I resend an equivalent of the V13 design incorporating
+Bjorn's comments on V15.
+The pending questions are:
+- is that V13/V16 is aligned with Bjorn's expectations[1].
+- are you also aligned on this design even if you proposed an alternative that
+  implemented in V14 and V15
+Few details on the V13/V16 design:
+
+The main point of discussion is the rproc_tee_parse_fw() implementation.
+In V13, this function loaded the firmware and then parses the resource table.
+
+You proposed an alternative, to add a new rproc->load ops
+in the remoteproc core instead (implemented in V14 and V15).
+Bjorn expressed concerns about this and proposed a solution that, from my
+understanding, is equivalent to the V13 implementation.
+
+Thanks,
+Arnaud
 
 
-Also,
+[1] https://lkml.org/lkml/2025/3/5/906
 
-> -/// Enabling a regulator:
-> +/// ## Enabling a regulator
->  ///
-
-Did you try to render this? I tried it before submitting, but it did not =
-render
-correctly after the first time it was used, i.e.: only the first =
-subsection was
-rendered correctly and the others remained as-is.
-
-=E2=80=94 Daniel=
+>> More details are available in each patch commit message.
+>>
+>> [1] https://lore.kernel.org/linux-remoteproc/20241128084219.2159197-7-arnaud.pouliquen@foss.st.com/T/
+>>
+>> Tested-on: commit 0ff41df1cb26 ("Linux 6.15")
+>>
+>> Description of the feature:
+>> --------------------------
+>> This series proposes the implementation of a remoteproc tee driver to
+>> communicate with a TEE trusted application responsible for authenticating
+>> and loading the remoteproc firmware image in an Arm secure context.
+>>
+>> 1) Principle:
+>>
+>> The remoteproc tee driver provides services to communicate with the OP-TEE
+>> trusted application running on the Trusted Execution Context (TEE).
+>> The trusted application in TEE manages the remote processor lifecycle:
+>>
+>> - authenticating and loading firmware images,
+>> - isolating and securing the remote processor memories,
+>> - supporting multi-firmware (e.g., TF-M + Zephyr on a Cortex-M33),
+>> - managing the start and stop of the firmware by the TEE.
+>>
+>> 2) Format of the signed image:
+>>
+>> Refer to:
+>> https://github.com/OP-TEE/optee_os/blob/master/ta/remoteproc/src/remoteproc_core.c#L18-L57
+>>
+>> 3) OP-TEE trusted application API:
+>>
+>> Refer to:
+>> https://github.com/OP-TEE/optee_os/blob/master/ta/remoteproc/include/ta_remoteproc.h
+>>
+>> 4) OP-TEE signature script
+>>
+>> Refer to:
+>> https://github.com/OP-TEE/optee_os/blob/master/scripts/sign_rproc_fw.py
+>>
+>> Example of usage:
+>> sign_rproc_fw.py --in <fw1.elf> --in <fw2.elf> --out <signed_fw.sign> --key ${OP-TEE_PATH}/keys/default.pem
+>>
+>>
+>> 5) Impact on User space Application
+>>
+>> No sysfs impact. The user only needs to provide the signed firmware image
+>> instead of the ELF image.
+>>
+>>
+>> For more information about the implementation, a presentation is available here
+>> (note that the format of the signed image has evolved between the presentation
+>> and the integration in OP-TEE).
+>>
+>> https://resources.linaro.org/en/resource/6c5bGvZwUAjX56fvxthxds
+>>
+>> Arnaud Pouliquen (6):
+>>   remoteproc: core: Introduce rproc_pa_to_va helper
+>>   remoteproc: Add TEE support
+>>   remoteproc: Introduce release_fw optional operation
+>>   dt-bindings: remoteproc: Add compatibility for TEE support
+>>   remoteproc: stm32: Create sub-functions to request shutdown and
+>>     release
+>>   remoteproc: stm32: Add support of an OP-TEE TA to load the firmware
+>>
+>>  .../bindings/remoteproc/st,stm32-rproc.yaml   |  58 +-
+>>  drivers/remoteproc/Kconfig                    |  10 +
+>>  drivers/remoteproc/Makefile                   |   1 +
+>>  drivers/remoteproc/remoteproc_core.c          |  52 ++
+>>  drivers/remoteproc/remoteproc_internal.h      |   6 +
+>>  drivers/remoteproc/remoteproc_tee.c           | 619 ++++++++++++++++++
+>>  drivers/remoteproc/stm32_rproc.c              | 139 +++-
+>>  include/linux/remoteproc.h                    |   4 +
+>>  include/linux/remoteproc_tee.h                |  90 +++
+>>  9 files changed, 935 insertions(+), 44 deletions(-)
+>>  create mode 100644 drivers/remoteproc/remoteproc_tee.c
+>>  create mode 100644 include/linux/remoteproc_tee.h
+>>
+>>
+>> base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+>> -- 
+>> 2.25.1
+>>
