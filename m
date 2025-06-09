@@ -1,95 +1,98 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC44725D21A;
-	Mon,  9 Jun 2025 13:51:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731A712CDAE;
+	Mon,  9 Jun 2025 13:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749477086; cv=none; b=Tjk0A4coox6Q5kRxbjpypJdeGcNZzTVgVHQLSmhKP8bXu509KLsG68b+TDn/t4TZMX6qujEtgTOSBcB/bsQ4M+klDxzUP+vWxQ6AJchhFrxPj911+cWclhhbZd1U0bZs8HZtcFNV27nEvfIt16piNMlvuEKEnoWMu0ET+bHW7Vc=
+	t=1749477209; cv=none; b=QoUp6RljnNaeQZzx6ZLCMhCXRCGRAuvxyE81HtlPdbpH2uWi+bG2AbNsXIxrCu37xSiyW8hL4yYEo36x2tBPs9vkZsi1hR977I03T36mvxdvnmXVuLgh/rxfCeWeTgr0K1eTDdcHti2Rx3fGsLqU2q9A4/oENJQITU2s+nuCHXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749477086; c=relaxed/simple;
-	bh=eACaxt02WUWamov4/PRFJ2M1YIB5DvQrMTadVks0Ha0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fnJk7ZkMVU1QAtMYbVQL836Y/qIRnGSq9XcpERiLmhCTl5mC0xZXGGoKnFnCH8hnWCY67ohiT0/jMDVoQX4pQ3u2+z8JDdnCTyYotqnMA0aI9ptsqgRIXYLh4ypBTonG0wiqiQL32tm+8W7MR14MiCw0mbdlRthdjDlL/cK2Trs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xgszirsx; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749477209; c=relaxed/simple;
+	bh=V+mythbreill/uQ07oLyN3AK3aHIgulv4FDYTI1Uhu0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=S/J0fBa1ioErsSrsKiTHSMiNNjXzi7qdkjkX6he46aDg+6Voe0zdbB0HpkHjgzA2I2ZClD14RADVtUrUtzR5zPijfD/8N3Z4/ihVm1Jc13EGEbntJBmL9ikOxbs1TAcf0REynCGAcxQ0GCjHu8xejqTZgarbdAM0anrDeVU2EJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J5eKYb80; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xgszirsx"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-313067339e9so680475a91.2;
-        Mon, 09 Jun 2025 06:51:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749477084; x=1750081884; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eACaxt02WUWamov4/PRFJ2M1YIB5DvQrMTadVks0Ha0=;
-        b=XgszirsxsnEa5PPQmZKlCbIjhOhIjqV+T8x8IF81InX18SdqzgygswOV8OUtRLh2Hz
-         702uSKFMuPxir2JVRMUBdR4pBWDnMoWsyUoccj2kBuwdxJXnciF1K28Q/xTEA1xnNYNE
-         XwVWSSsPFtJIA5az/9Mlfbu3eQmnGvaL0ObKam7j+RD8OvXUtbjE4oSRq2tRw3FSxyVE
-         jRdUhD5/f7aJteyCFyAr/YH9imE+dlJzjlB5bg7TkWAhNCGGF4rv6Ff1QRPccN297fQt
-         O8oWkFOrm45uDyuzNYEoJToSiId++wxN66zEH19qDt/Z4k07ubbtdfhqR7+TD89uNq0e
-         6s1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749477084; x=1750081884;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eACaxt02WUWamov4/PRFJ2M1YIB5DvQrMTadVks0Ha0=;
-        b=jDPWTnl2CooIOZDcVIGRGNJqZqAwLgbBOT5CmVTGd/O9fSKCgmUNyrk9pLyiS+p8g6
-         v1ejj0tTIEcAtYxS2+KPOiwgIVBV2rwlU0J7tDYxQYFeomaD7V1SHwJZ/CqC7XrcCAPa
-         lDe2TS1whaH8zyudxI92DRyu1awJZKVSfFAK8L0RmbK1KrvjuEaKAQq7uUBo6qg7QQiw
-         XzvZ3jgRgtiecxH0ILlW+WmDqdZbNLb0Gi4orp5Hj2N9xy69qSVLSf4YBUZnYX3Lix5q
-         /lUoFjO8djowF8JDA+yS/zYJT8GG3++RxS4rRmtzPYNI2XqeufJ+x5Nd49aKAliZm3aJ
-         n4Lw==
-X-Forwarded-Encrypted: i=1; AJvYcCWX7Zh4MJpe9+/9HQJqgteXB5r4PfsqLWo9F0CA9nEYmxGI9rEX3q2yRZx2q3Ykkp7tj/+dybOhzB0+4U5J0Nc=@vger.kernel.org, AJvYcCWwy6lkttTxIUt6kYd9OwS9pbT2ZSIlAbIYdIKoehOZT/vnwan5XygVE7OqUzxlBcUusJ7+gdPI@vger.kernel.org, AJvYcCWz2tPG4GkaWyzD1KZhZftL88qYuaYKFISPsV608cJ7i54i+WtT7uil2l6A/Xd5OOeIDdZ3sxknLWpQ4cqp@vger.kernel.org
-X-Gm-Message-State: AOJu0YynbtKAfTlnT8EX9vKaXniX3Ad5cbMuc/JOXNcSdTsPDaGR3y08
-	eBSgX3E8LN3o3lmbHmtPivuOgAlJx9uvROz4akkMOzSaLmJaFYcME1CrhUMIrojQmf1JOuwA+uN
-	Nm1a7P/O6XGVeP9C+tfZxAywSbqL5fsg=
-X-Gm-Gg: ASbGncvQgfx0uLCcEsVBh6jLTQX/w2zNv+53ebOo4rl1JJ+JwpeN2YY6RE0SAU3ccvg
-	XwtEgD9LxvVJH4h2X45TwMX6PO569ExXHDdzNiy5Mq7o5KINT3/jbWlw/SmMfTf4f9AhrIBa2UD
-	4thsYBX+GP0nN2XWSlWJhXafx6sBHk7eh0zBPmxKdJjRo=
-X-Google-Smtp-Source: AGHT+IGkkCxVNET2hTnCQKkB5ht2XhMJXmVkVA6QMXG//p+Iy2xKOFDBp1eOArmCKNe88x3UOn8NtAfKsUQfancfTHU=
-X-Received: by 2002:a17:90b:1801:b0:313:2f9a:13c0 with SMTP id
- 98e67ed59e1d1-3134e2b90f8mr6572065a91.1.1749477084002; Mon, 09 Jun 2025
- 06:51:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J5eKYb80"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EC038C4CEEB;
+	Mon,  9 Jun 2025 13:53:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749477209;
+	bh=V+mythbreill/uQ07oLyN3AK3aHIgulv4FDYTI1Uhu0=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=J5eKYb80gQiCBy4nO60/Sr7CO54fAZTk8MzQzfip5fr54nmDMMR2ygpczVRo82ehX
+	 gwruTPuor7Jqr2cj3hrr7Tsi6mQ2hiq9pFR2UBo7qTRpYSktmyDsKSQXqYzGIXOjnr
+	 AF1McJ2R1+ujKaz11PjpXxg6XQK7P+tP81lye3XVDvPoJF28YnKhiY2hh8hH0yjCwi
+	 jl8Fjp1UmDQyQLUgofEyEhbDF6Y0P3vQnTcD+vGMQX0PgaupRPFgDk2DMYI92+kYgK
+	 jD+hdpqfGYvzUma8VlTIYfsweBrdrhtghGZGAkdBD410vO1dmlmVx/SO7T2fmG6Ki9
+	 lgMLc3/E8oN5Q==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA80C5B552;
+	Mon,  9 Jun 2025 13:53:28 +0000 (UTC)
+From: Koakuma via B4 Relay <devnull+koachan.protonmail.com@kernel.org>
+Subject: [PATCH 0/2] sparc/module: R_SPARC_UA64 handling to help with LLVM
+ IAS enablement
+Date: Mon, 09 Jun 2025 20:53:10 +0700
+Message-Id: <20250609-b4-sparc-relocs-v1-0-aa52631735af@protonmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241029140036.577804-1-kernel@jfarr.cc> <20241029140036.577804-2-kernel@jfarr.cc>
- <paezt3cuux5kwv7dvyuo4rrff2felwzmjunkdpyxqjp3fbnyzn@rcdj4xq6djio>
-In-Reply-To: <paezt3cuux5kwv7dvyuo4rrff2felwzmjunkdpyxqjp3fbnyzn@rcdj4xq6djio>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 9 Jun 2025 15:51:12 +0200
-X-Gm-Features: AX0GCFs-AANvO4jrbUE-NjAZoTdqBDYVE5mIEuWtE19UmN1xM-LkNwTb5ope6jY
-Message-ID: <CANiq72=kjk5Kkebz2-QrOuwRKENAziTXhXrnKNL4eoOo4diO3A@mail.gmail.com>
-Subject: Re: [PATCH 1/1] Compiler Attributes: disable __counted_by for clang < 19.1.3
-To: Dafna Hirschfeld <dafna.hirschfeld@intel.com>
-Cc: Jan Hendrik Farr <kernel@jfarr.cc>, kees@kernel.org, nathan@kernel.org, ojeda@kernel.org, 
-	ndesaulniers@google.com, morbo@google.com, justinstitt@google.com, 
-	thorsten.blum@toblux.com, ardb@kernel.org, oliver.sang@intel.com, 
-	gustavoars@kernel.org, kent.overstreet@linux.dev, arnd@arndb.de, 
-	gregkh@linuxfoundation.org, akpm@linux-foundation.org, 
-	tavianator@tavianator.com, linux-hardening@vger.kernel.org, 
-	llvm@lists.linux.dev, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEbnRmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDYwNT3SQT3eKCxKJk3aLUnPzkYl0z08Rkc/PkRAtLIwMloK6CotS0zAq
+ widGxtbUA0+z9X2EAAAA=
+X-Change-ID: 20250305-b4-sparc-relocs-65ac77ca8920
+To: "David S. Miller" <davem@davemloft.net>, 
+ Andreas Larsson <andreas@gaisler.com>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+Cc: sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ llvm@lists.linux.dev, Koakuma <koachan@protonmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749477207; l=971;
+ i=koachan@protonmail.com; s=20240620; h=from:subject:message-id;
+ bh=V+mythbreill/uQ07oLyN3AK3aHIgulv4FDYTI1Uhu0=;
+ b=DTvScNJYKi4QCDIPcpVUpBhr7cM6oJp4mKjnD++hSRipZtVeyLWgyFUFxyKQf9lO9wr1ZXLX/
+ If7HLxjnZ17CZkF0EP2ln29vZ5SNMbXjYH4DjbHtv1Qe5VpcxAzLRhq
+X-Developer-Key: i=koachan@protonmail.com; a=ed25519;
+ pk=UA59FS3yiAA1cnAAUZ1rehTmr6skh95PgkNRBLcoKCg=
+X-Endpoint-Received: by B4 Relay for koachan@protonmail.com/20240620 with
+ auth_id=174
+X-Original-From: Koakuma <koachan@protonmail.com>
+Reply-To: koachan@protonmail.com
 
-On Mon, Jun 9, 2025 at 3:14=E2=80=AFPM Dafna Hirschfeld
-<dafna.hirschfeld@intel.com> wrote:
->
-> Why is the define of __counted_by moved from here (compiler_attributes.h)
-> to a different location (compiler_types.h) ?
+Hello~
 
-`compiler_attributes.h` is supposed to have only things that do not
-depend on the kernel configuration and so on.
+This series lets the module loader handle R_SPARC_UA64, which is emitted
+by LLVM's IAS in certain conditions. Additionally, I put on a small change
+to the error log to make it clearer that the printed relocation number
+is in hex.
 
-It sounds like those out-of-tree headers should be fixed.
+The intention is to get both the kernel and LLVM in a state where
+doing a clang+IAS build is possible.
 
-I hope that helps.
+As with before, on the LLVM side the project is tracked here:
+https://github.com/llvm/llvm-project/issues/40792
 
-Cheers,
-Miguel
+Signed-off-by: Koakuma <koachan@protonmail.com>
+---
+Koakuma (2):
+      sparc/module: Add R_SPARC_UA64 relocation handling
+      sparc/module: Make it clear that relocation numbers are shown in hex
+
+ arch/sparc/include/asm/elf_64.h | 1 +
+ arch/sparc/kernel/module.c      | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250305-b4-sparc-relocs-65ac77ca8920
+
+Best regards,
+-- 
+Koakuma <koachan@protonmail.com>
+
+
