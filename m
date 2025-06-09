@@ -1,227 +1,130 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CAE7224895
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 22:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9DF224234
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 22:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749506990; cv=none; b=fYTlnS67v9+XIUSsVNGScaZhAlO25nQ239tOqshUUvM4t4C3xKIaBYPdW1sHoMsC4pG4nSaTiL9+ALSpkq1qh6A85qjTvPM5XvF8KL4+YrZGTqmtiyA/GLUGaSZFd8h0kF1zZEfShkpOZ8psR3bak5tTp/NqgOf3IfZX2ltSapA=
+	t=1749507132; cv=none; b=qogupXFAqcfOT5fU6DEsXLUCLoQSzy+onnC9QA7hqlE4KZkcbGQAOV6KMpTlplL+7d5p3Et2fL2Hcbpm6WZsZiAUuQAuTpf1lJpVFVZRmttH3a1lK+sRmHc5RSfccbbzysiNYxRzGFEQKMcnRLoASrqmV7ypdFqx8T9DoP6Gi48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749506990; c=relaxed/simple;
-	bh=FNpQEWBDwyXEagWhUdVdgd4CDdreeQKyCibBUA0RLwg=;
+	s=arc-20240116; t=1749507132; c=relaxed/simple;
+	bh=Q096VwiTTUVf+mPt3DUqJJru+Vb3D0DDUtk3t41e+mI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t1HIBEL05lGkC+SW0Vrry3Sdq+JCwsB9bHifXPAzPqSU+eJsD2rePXff7UESUfs5bk+xOrddgSObdwwzidCmTPkzaksXLVm5PIvtg9oNzIdIpMTitCClgX+sgYr/5OTRde/0u9rizO9dgTGt/LRE0BZutLp7hAPwav6UxOidkOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=Vln5kUvI; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=qiTzyvB3uK1kpwf3eo0dSTAUYTNtawcmD9B0D1MSa2fa3LbJEMvMb/8wxAKXIKbaYOSYEfVL2dE/1GMWLroQmXNwfN6rkSUD0DY+/sBrdrbcVpixXC7EtDvYCICcJRs+o4xyQ9rjanNVNASrD9tmWP4KDLgUDOSH3cmrhTl0xnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T/bxh2O+; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="Vln5kUvI"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-235a3dd4f0dso33159665ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 15:09:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T/bxh2O+"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-235ca5eba8cso17175ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 15:12:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1749506987; x=1750111787; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=aXUrxDWDE1rz5GW1/FGYZyrQqnRIMW5wSQ+qWnYbv8k=;
-        b=Vln5kUvIPrZdzjaks/7fN/NQHnZl41fDDD0sqlbHFHdhLx8kpfxnY7F2rTCuK/3JeZ
-         eNdKwuuTgauR5Tgm7hFB2B0RecEXSyvBKNcd8irZkt9oC4XLNLawVUvjaQo66ZuOf8a9
-         oI4Ks0n1gLfAuhGTtTWcjEkFH//4w1F8CbtzfByrbY5uZGd7RbgA6ew2Jl/u7RGq2saE
-         ukfx5vtvGZjn6CJPlm6ncJG0nYFdpMudjSV/0dNPQWPkpw3mf6XZU7ht0cCK0x1GrYUX
-         dBV4x1NvT3n9jC6VPG0Jguoj30KDM2JwzgK0EgfVmv1NnQfb/maWg9jrCQbrMYj1H2St
-         6fYQ==
+        d=google.com; s=20230601; t=1749507130; x=1750111930; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HOEpQR48459oRBgMpH+r3088NqHoqtjm5LRzsigSh8M=;
+        b=T/bxh2O+Gbr5dVl97lML/A6ZxR+uehVTdoljFXZkysaypggDFM5ejiXqrHpcNcP3TB
+         BErk8t6V9h6+ZcD8toi6oKiWNsuf37WhqmFPRbrkqgDW1NP9I/R7NHOk8fZezv82jHh+
+         BjymawOPmBNELarNMPirCcRJji5RPy/IAxP3SReT20UVetTGEm+LaEgKhhKDS5kD5UMJ
+         /pCTp5w58REiJvgiJsj/StWLI+jgbXjbNRBtsRHiQhcU8fBfnKgk4NFP0i7sI9GPoFhO
+         VQiNbIxa5TxH7qziWd8lKz8CbSCMcYn/CKoTnaKMM7SiwTUk39nIekSw85Rgwz1lhgXk
+         ViUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749506987; x=1750111787;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aXUrxDWDE1rz5GW1/FGYZyrQqnRIMW5wSQ+qWnYbv8k=;
-        b=BF412mn++6KDtH/87sStsRb+WTGevQl7zc6A+h8/vlOUoFULUQ538DeczG2FRUEdpZ
-         4gGIIkjE4/DG86VLOvOEp+HXXbaXtOMu/kPb42D9JGSrputCcBJtDxZj+djbXfDs8WwZ
-         oay2zgbE3/DItWT/UUyGXJ4ZLowWx8EZBQZcNS7YbQSiXdJjV7cBXTcAqyEIjsiU40lc
-         4X5wvGrgTC63lwlsgFpl1Q9gLsu77TVnHOpKQIciccHcwgDJOPQ8VHv6C3F83F97BLeh
-         B0V5YZGpcl52NzSPAQWVLsiPRrutXxkW4q8r2LqJDSS1P5pT3kDSdiZFIjEHob6uJMIq
-         DX0g==
-X-Forwarded-Encrypted: i=1; AJvYcCXcjdTRsh2kJV6jO23EfoJXA3AG+NT6OutsPXAgUjbkDJEBw+1W/ISx8J8qvYOsXgUROXu4fFgY4fGFOfI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywz45MqQH+c5f+E01Wdb+xdJKLH4f1Ye1grIxOHaJI3fXdIlfpI
-	7rNX3LZmnwgNsUNEVkwjFlbtP1n8nNxkkadP5KFyz72gyU60z36UE+Td7kj/hjZ1QqA=
-X-Gm-Gg: ASbGncurr6saRbFVrT5MRSZcb7uNvLLvhGfP4IuGOLLL2VLWN1XSY3VJPUxldwn7WVL
-	/+2qp1BIoMe4Qu/qi8kzpGA5nsRBVDvkeAmrxdmHV3bIU9/tiZQ4xSEKmZ56/hTjRW9b2qeP3GD
-	j2aIyTTq79Rrg38XFg5nZ25VR6E2zBz7D/io34YtaOdjwcgCu60Dr8v0jBTjnltfFLgGQp4DXmQ
-	sphIJGQq/G5K1SBhxIaGv9EK3mEIrftpuS8yX3M5C1EMCru+fHUpIa61fDFlaqgdp3Vxi8pwbGA
-	FKAwQ1rTZYxyf/drQ5BihNb52fmchBO47XIZ4LyPzac5EbEm0Gx2B8jlrCDgai3D46HsKWBKQQ=
-	=
-X-Google-Smtp-Source: AGHT+IEmC2cH56sY2Qaxupk/vYIkWpD0/7VSc7N28TaMH7rVO1PkIEtaUHkk3Y4nHUVSyRzLwMzWGg==
-X-Received: by 2002:a17:902:e888:b0:234:8a4a:ada5 with SMTP id d9443c01a7336-23638390915mr2466705ad.37.1749506987465;
-        Mon, 09 Jun 2025 15:09:47 -0700 (PDT)
-Received: from x1 (97-120-245-201.ptld.qwest.net. [97.120.245.201])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3134b13ba47sm6079708a91.40.2025.06.09.15.09.46
+        d=1e100.net; s=20230601; t=1749507130; x=1750111930;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HOEpQR48459oRBgMpH+r3088NqHoqtjm5LRzsigSh8M=;
+        b=QSF9TaWMwvKJTPIMOFOE9NuRWVgnTKYatdZDfHbYykmUb1eOauj/XmYwmpju2cHsbG
+         5+0hlbTcEPpz0PMLfMmOarVYsmKrlkDFD01pQl5joIFTS1QAvSIMTWIQaDW+Q5dLbSqw
+         RRqIL3zDPQ9XHpfIvZm4PfvK3odtjmT2w723OpodI3fSrqnbVRZYulYWMWAA1X0/xjw0
+         moPU9lrsSq3qnzY/jAjEsQtlp6IzKy7Nr4vReNP0nsNyzom9Y3x/cAIgDExZ5S2Hro/3
+         +ytOzb+3XDUI0W8xQ/Ap6rGHhyCnftWmCHORDDdAk7FuFtIq4sImNDeF7Nhy1nH6y7Fz
+         5m9g==
+X-Forwarded-Encrypted: i=1; AJvYcCWAv9txglRyB6+S2Zc8nirBMUTgWc1cxMjOi2WoVwISYAv5xyhlHjCpr3sFk8P8mo/JwyW4iZpCYF5Dzs0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5T3mD2b20rR6eDMvgcTTyugu1FcNprN60sI1FaSaMkkc7ji2F
+	ItMgkcnSsgoXPp3ZbXSKCpLuk9p85JAyPKtKbDkecKoKmM26bVgEle6lwMa1qDERNg==
+X-Gm-Gg: ASbGnct6Jw7SW8Ub0QBioW6g2KtWOS313N3Snq4R0bls0rrM7E37byihp/ns9gaLpyZ
+	VRHH2AsiENXtQkSQrE+0TSGNwC+LYRc+C/VMiduRRDoZU+WTT9PG6+jFb0wkwIKMwrGQankhzL1
+	csc7z+Ub/2SMXoKkwPpUVe7wwjRQqz4K4L11s62o8at2yK7FZhyPcf3J02W4UB9a5jWJ8ULflk+
+	PgI3UiFx7Rjagvsa314qphxenNIbIeDiG1TAJk9msbs6nf+yHJCnYoNW0SoZPwBjGlcXdy8kNHz
+	0NfkKEkt6VuDoND2lFZwXiv7cYVJMVsDQutpxpZ93KFyLJep8JNtj8CjvzxhVH4gXKr4ke984wF
+	K0bDYRhwXtvDGGDsPFbTjEnipKrOTF94H
+X-Google-Smtp-Source: AGHT+IF2AY3T20FOy8DmpoVu7vdEGvItzPx4tSajszVB/X4+P5zS/jWc325IG5gFLeSy31rddi6wAg==
+X-Received: by 2002:a17:903:1b4f:b0:215:f0c6:4dbf with SMTP id d9443c01a7336-23611fd8362mr6331895ad.14.1749507130159;
+        Mon, 09 Jun 2025 15:12:10 -0700 (PDT)
+Received: from google.com (164.135.233.35.bc.googleusercontent.com. [35.233.135.164])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313286f38c4sm6694653a91.0.2025.06.09.15.12.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 15:09:46 -0700 (PDT)
-Date: Mon, 9 Jun 2025 15:09:45 -0700
-From: Drew Fustini <drew@pdp7.com>
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, Guo Ren <guoren@kernel.org>,
-	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH RFC 5/6] riscv: dts: thead: Add PVT node
-Message-ID: <aEdbqSjpHyHx54UF@x1>
-References: <20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com>
- <CGME20250524211525eucas1p244963b69e0531c95a9052e4a7a1d1e01@eucas1p2.samsung.com>
- <20250524-rust-next-pwm-working-fan-for-sending-v1-5-bdd2d5094ff7@samsung.com>
- <aDVxDJi0KkWXiPCK@x1>
- <61eecafb-8ad1-4306-88cb-a032eefb2e48@samsung.com>
- <aDyOyg6eqDEFg2ua@x1>
- <9e8a12db-236d-474c-b110-b3be96edf057@samsung.com>
+        Mon, 09 Jun 2025 15:12:09 -0700 (PDT)
+Date: Mon, 9 Jun 2025 22:12:05 +0000
+From: Sami Tolvanen <samitolvanen@google.com>
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>,
+	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] module: Fix memory deallocation on error path in
+ move_module()
+Message-ID: <20250609221205.GA1439779@google.com>
+References: <20250607161823.409691-1-petr.pavlu@suse.com>
+ <20250607161823.409691-2-petr.pavlu@suse.com>
+ <f6fa3df3-38d5-4191-96d1-9a8a2152cedf@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9e8a12db-236d-474c-b110-b3be96edf057@samsung.com>
+In-Reply-To: <f6fa3df3-38d5-4191-96d1-9a8a2152cedf@suse.com>
 
-On Mon, Jun 09, 2025 at 08:49:57PM +0200, Michal Wilczynski wrote:
-> 
-> 
-> On 6/1/25 19:32, Drew Fustini wrote:
-> > On Sun, Jun 01, 2025 at 09:50:52AM +0200, Michal Wilczynski wrote:
-> >>
-> >>
-> >> On 5/27/25 10:00, Drew Fustini wrote:
-> >>> On Sat, May 24, 2025 at 11:14:59PM +0200, Michal Wilczynski wrote:
-> >>>> Add PVT DT node for thermal sensor.
-> >>>>
-> >>>> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
-> >>>> ---
-> >>>>  arch/riscv/boot/dts/thead/th1520.dtsi | 11 +++++++++++
-> >>>>  1 file changed, 11 insertions(+)
-> >>>>
-> >>>> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
-> >>>> index f24e12d7259fabcfbdc2dfa966d759db06684ab4..faf5c3aaf209b24cd99ddc377a88e08a8cce24fe 100644
-> >>>> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
-> >>>> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
-> >>>> @@ -648,6 +648,17 @@ padctrl_aosys: pinctrl@fffff4a000 {
-> >>>>  			thead,pad-group = <1>;
-> >>>>  		};
-> >>>>  
-> >>>> +		pvt: pvt@fffff4e000 {
-> >>>> +			compatible = "moortec,mr75203";
-> >>>> +			reg = <0xff 0xfff4e000 0x0 0x80>,
-> >>>> +			      <0xff 0xfff4e080 0x0 0x100>,
-> >>>> +			      <0xff 0xfff4e180 0x0 0x680>,
-> >>>> +			      <0xff 0xfff4e800 0x0 0x600>;
-> >>>> +			reg-names = "common", "ts", "pd", "vm";
-> >>>> +			clocks = <&aonsys_clk>;
-> >>>> +			#thermal-sensor-cells = <1>;
-> >>>> +		};
-> >>>> +
-> >>>>  		gpio@fffff52000 {
-> >>>>  			compatible = "snps,dw-apb-gpio";
-> >>>>  			reg = <0xff 0xfff52000 0x0 0x1000>;
-> >>>>
-> >>>> -- 
-> >>>> 2.34.1
-> >>>>
-> >>>
-> >>> I found that on my lpi4a that boot while hang after applying this patch.
-> >>> I think that it is related to clocks as boot finished okay when using
-> >>> clk_ignore_unused on the kernel cmdline. Do you happen have that in your
-> >>> kernel cmdline?
-> >>>
-> >>> I need to investigate further to understand which clocks are causing the
-> >>> problem.
-> >>>
-> >>> Thanks,
-> >>> Drew
-> >>>
-> >>
-> >> Thanks for your earlier message. I've investigated, and you were right
-> >> about the clocks – the specific one causing the hang is CLK_CPU2AON_X2H.
+On Sun, Jun 08, 2025 at 09:25:34AM +0200, Petr Pavlu wrote:
+> On 6/7/25 6:16 PM, Petr Pavlu wrote:
+> > The function move_module() uses the variable t to track how many memory
+> > types it has allocated and consequently how many should be freed if an
+> > error occurs.
 > > 
-> > Thanks for tracking down the clk causing the hang. I can confirm that
-> > this fixes the boot hang:
+> > The variable is initially set to 0 and is updated when a call to
+> > module_memory_alloc() fails. However, move_module() can fail for other
+> > reasons as well, in which case t remains set to 0 and no memory is freed.
 > > 
-> > diff --git a/drivers/clk/thead/clk-th1520-ap.c b/drivers/clk/thead/clk-th1520-ap.c
-> > index ebfb1d59401d..4d0179b8c17c 100644
-> > --- a/drivers/clk/thead/clk-th1520-ap.c
-> > +++ b/drivers/clk/thead/clk-th1520-ap.c
-> > @@ -792,7 +792,7 @@ static CCU_GATE(CLK_AON2CPU_A2X, aon2cpu_a2x_clk, "aon2cpu-a2x", axi4_cpusys2_ac
-> >                 0x134, BIT(8), 0);
-> >  static CCU_GATE(CLK_X2X_CPUSYS, x2x_cpusys_clk, "x2x-cpusys", axi4_cpusys2_aclk_pd,
-> >                 0x134, BIT(7), 0);
-> > -static CCU_GATE(CLK_CPU2AON_X2H, cpu2aon_x2h_clk, "cpu2aon-x2h", axi_aclk_pd, 0x138, BIT(8), 0);
-> > +static CCU_GATE(CLK_CPU2AON_X2H, cpu2aon_x2h_clk, "cpu2aon-x2h", axi_aclk_pd, 0x138, BIT(8), CLK_IGNORE_UNUSED);
-> >  static CCU_GATE(CLK_CPU2PERI_X2H, cpu2peri_x2h_clk, "cpu2peri-x2h", axi4_cpusys2_aclk_pd,
-> >                 0x140, BIT(9), CLK_IGNORE_UNUSED);
-> >  static CCU_GATE(CLK_PERISYS_APB1_HCLK, perisys_apb1_hclk, "perisys-apb1-hclk", perisys_ahb_hclk_pd,
+> > Fix the problem by setting t to MOD_MEM_NUM_TYPES after all memory types
+> > have been allocated. Additionally, make the deallocation loop more robust
+> > by not relying on the mod_mem_type_t enum having a signed integer as its
+> > underlying type.
 > > 
-> >>
-> >> This appears to be an AHB bus clock required for CPU access to the AON
-> >> domain. My proposed solution is to make the pvt node a child of a new
-> >> parent bus node in the Device Tree. This new "AON bus" node would then
-> >> explicitly request and manage CLK_CPU2AON_X2H, ensuring it's enabled
-> >> when its children are accessed.
-> >>
-> >> What are your thoughts on this approach?
+> > Fixes: c7ee8aebf6c0 ("module: add stop-grap sanity check on module memcpy()")
+> > Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
+> > ---
+> >  kernel/module/main.c | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
 > > 
-> > I think that is a good approach. The alternative would be to just add
-> > CLK_IGNORE_UNUSED like above. I've done it before but it is a bit of a
-> > hack.
+> > diff --git a/kernel/module/main.c b/kernel/module/main.c
+> > index 08b59c37735e..322b38c0a782 100644
+> > --- a/kernel/module/main.c
+> > +++ b/kernel/module/main.c
+> > [...]
+> >  	pr_debug("Final section addresses for %s:\n", mod->name);
+> > @@ -2693,8 +2694,8 @@ static int move_module(struct module *mod, struct load_info *info)
+> >  	return 0;
+> >  out_err:
+> >  	module_memory_restore_rox(mod);
+> > -	for (t--; t >= 0; t--)
+> > -		module_memory_free(mod, t);
+> > +	for (; t > 0; t--)
+> > +		module_memory_free(mod, t - 1);
+> >  	if (codetag_section_found)
+> >  		codetag_free_module_sections(mod);
+> >  
 > 
-> I've followed up on the idea of creating a parent bus node. My attempt
-> using simple-pm-bus ran into a couple of significant issues that suggest
-> it's not the correct path.
+> This can actually be simply:
 > 
-> First, the TRM doesn't seem to specify an address range for this bus.
-> The range I used in my test was only for the PVT controller itself,
-> which would be an incorrect abstraction in the device tree.
-> 
-> Second, simple-pm-bus requires its child nodes to use the PM runtime API
-> (pm_runtime_resume_and_get, etc.). Forcing this on consumer drivers like
-> the PVT sensor seems like an inappropriate dependency.
-> 
-> Additionally, I discovered that the PWM driver has a similar problem,
-> silently failing because another clock, CLK_PERISYS_APB1_HCLK, is not
-> enabled.
-> 
-> The most correct solution likely involves refactoring the clock parent
-> relationships in clk-th1520-ap.c. However, as a more immediate and less
-> invasive fix, I propose we apply the CLK_IGNORE_UNUSED flag for both
-> CLK_CPU2AON_X2H and CLK_PERISYS_APB1_HCLK in the v2 patch. This will fix
-> the boot hang and the PWM issue while we consider the larger clock
-> driver changes separately.
-> 
-> Does that sound like a reasonable plan for the v2 series?
+> 	while (t--)
+> 		module_memory_free(mod, t);
 
-Yes, I think that sounds like a good plan. I am okay with adding
-CLK_IGNORE_UNUSED for CLK_CPU2AON_X2H and CLK_PERISYS_APB1_HCLK until a
-better solution is found.
+Looks correct to me either way.
 
-I like the idea of revisting the parent relationships in the driver. I
-added CLK_IGNORE_UNUSED to several clocks in order to fix boot hangs
-when I removed clk_ignore_unused from the kernel cmdline. However, I
-don't think that I addressed the root cause.
+Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
 
-Thanks,
-Drew
-.
+Sami
