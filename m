@@ -1,179 +1,141 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD24BC148;
-	Mon,  9 Jun 2025 13:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0DA257429
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 13:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749474586; cv=none; b=so6pDhbB+5Vbn35PcHTjBVuGpOr/G8UVHMXmHjOvOgB5NwiTWspWYcrz1CLH+nmyGsYJ3h3EjXsY5NgmIeTjkQktpqJDEGDCdliEZHlgGPhUsSbadhO+8mNCTwtJwCCtYrl5ooIQWpaemcVfWRDsdIrrlhZSgIekbr13n111tu8=
+	t=1749474721; cv=none; b=nj91A3qEgUuMyVaQgndIkpguMfVC182lfErj7zGeUtyLKIw3d+mwvDTEHrMMPwwiQ1dg8Cn4nvQ2ttpv2uawYS0qofBnY5uDbT61JL+/fWqNYLHCBQ6f5joK5CsYXR0/c4ucO6h670FlmUjuvWrfvs5dubdaeevUfChJz3M2DT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749474586; c=relaxed/simple;
-	bh=3mRMkIYVTSZC714iTPiHLfKYftqKrauXc24RysnTVR8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b67rf+5O/1C/ZMcuRsBsF1/nLvzZEYdeSzea4GmJEE5EbLIaXSm7/Cd3ecJRXHy65N5HPLrFCSyWboe2Ago9PrfOlglNwp5MJkZVrZ4mveHT0wculkT0ReficMEhJjJtbsOZMu5UhuDip4ESsLWsBHey2lliaiLWt/uuS/X015k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TFWhoZ+4; arc=none smtp.client-ip=209.85.160.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749474721; c=relaxed/simple;
+	bh=HemcbqMmgRHK16eJTLxADLZuI4x27GbGQS2CfbnVQpU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Sw+lo3sbUSsJVM5cuQb5RV6fwHuxH1VZgUQVzATgmvKdkJ3ankjgo3rQfAJP5i5i8TEhCDb80aKHJJhJ6UPqpiXim64DRavjZRyT7Efj3LIYOZK38wjvjDX09W3ZrPtPOjUC0XUPbEFCYqhjbC5bwpc/3ymzv69F6gfyeyy411I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bypAm1PR; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFWhoZ+4"
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2cc82edcf49so1278500fac.1;
-        Mon, 09 Jun 2025 06:09:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bypAm1PR"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a531fcaa05so1536189f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 06:11:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749474583; x=1750079383; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dzGMkDK3n8nVOfYPfCVF/Okket+ksQrM0KYKB81Tg4M=;
-        b=TFWhoZ+4XLGTwVTfl9nP5o1g2u1xLrRz44So7yR38y770gbjlExFs34ZEN9W5raOUq
-         0Uu9HQcwlT4Af1gHBcWdUsUM8hpqH1CyGQR+uHY0GStgoomDa8cfD1eP0H49bomXWvzi
-         ijRqvDJDt5q5eU3Gyyg6pHO6/rjCn0Rzh3HZ9sGbapONtcHbECNTI0gklvzY9MX2ic+k
-         NUhU7y/fqYD0X3QlW8UorQkWfr86Ec6u+RJcro4J8X46OF58hTLVPPgxBlicDI4xiVFj
-         i2GcYEZ85FjUw36+5wWA/cHymJzpFLTJC+24TmfWlG2u7pQFjF2h2cRhXFMQ9lgGDhqS
-         bm2g==
+        d=linaro.org; s=google; t=1749474718; x=1750079518; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YIDEZTcLMIX8NSBMninMC+pCHmUrBf8fr/oqws99Skw=;
+        b=bypAm1PR8FOT4zciR0lACcksq/CnauXGx7j/7SNtaz5r+AL6xTPM7rVR9Vz1Z4cEno
+         rDUvkBetVPMPKGuefIYt3zc7ukv12HkaGLpd660hiPAutAczrTutUuOVZLPyATe92cw1
+         Cmu+kiDhCBpmAs7cEe4egaos3gTmmboNAPOy5uEgHR2SjVLcntYYrmZhE5gY6Erm1A5s
+         CSNWZaAznW3dVSB8Npj1bdcpDc/FQ9dX418veI7twjlnWSVMbFS9Ibi1UxTYaE5NaCyq
+         TeUJQolUv2UTOeqb4pWRokVSEJkgNraLKG1k77ewJe2ol653O2+QNufpMViAKRNzFUvv
+         UvEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749474583; x=1750079383;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dzGMkDK3n8nVOfYPfCVF/Okket+ksQrM0KYKB81Tg4M=;
-        b=csUdgv65daLlzslSkL/sEhQx3eMkqPLtUDzglEo1voePd/z1AcokcTitrYi8hZDIIw
-         N1vAyKawBj/LCQ/4dsisNq1N8dASGjrqoUU8Ev7tn72suLm9q3nzD+/9NxdJ7CYBvW87
-         k5XI06rhLgfxq6a57qZGVTv24XjLQkQ4c1Ed0jvqGdNwAl5UIaki2gMB3P0hiVkjwlEw
-         TgZ2evLfz3UvwBWAoL9S/Iyb4wvUD/ENj54494SGbzp7oQQVH3SCaWLouWyRM7xGbBKo
-         E4X0qSa8nIgxLA2rBFR5y14oOBMZNjMTNuZqjCzWhjLKDXJYQ342bWRJkuoIdfhCzMdy
-         VjDA==
-X-Forwarded-Encrypted: i=1; AJvYcCUQS4DsBjyx4pfS2/cx2e5SlSE2h653eRaoUgAkvdDLBLDfXObMZiEDA5+Gfu/WLiKFhRSHG5VpDuV5jRMD@vger.kernel.org, AJvYcCUrydWJfWUQ6dt+Gu42f7ABev7TXINRC0xf0VNNDfXLTWH+pAoty57IAqZhwIEea2rdchO2Qs1YVMDJhGqzOgI=@vger.kernel.org, AJvYcCXPs4Oq4HxF1cza0sqJ0MIrUoUREZcyQhoeKdWLjfaXA/tGYw/DsFrULkaw43sYC6/MoEbvrkCytqTs@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMFhX+XWFSQP0Z9qMeaziC+1wQRkXDjVKSI0HpjM+zPD/DXOiO
-	8++V2/g/UyKsYUAB+py9QpK7f0mKI/l+FSt1h7cSHYRisl2E73cGkJ0fQKjYMQkR+HXigffJVKU
-	CdTDMd8MZDPXGovc+oqJwg+nZPQKfis4=
-X-Gm-Gg: ASbGncuWSxfi1PJRsgtnsf5eqYXuu+iPTg2IZr0mhvXs5ej0QzK27W4J3ZfHuPlS1nM
-	5tEIaGELOip5y6Yb2nmvBjkWiyzWLe2ezK1m4gccb1h3exyHO7Xbohf7cWca9N9xFYPiKfQtysW
-	8xjIVFMtV5NUvPye7hPuLHaLcoIiJW39UUNiapC2lr
-X-Google-Smtp-Source: AGHT+IGnzkyGtvwG+PkwyrLhW1g6LMDUIy3ysZMstnNvvxnDsNT5JOLjNFrH7oJPuDjxN77q2VErwB50gLBUlN21Uuk=
-X-Received: by 2002:a05:6870:44e:b0:2e8:f5d4:607f with SMTP id
- 586e51a60fabf-2ea00f35d72mr8148337fac.26.1749474582685; Mon, 09 Jun 2025
- 06:09:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749474718; x=1750079518;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YIDEZTcLMIX8NSBMninMC+pCHmUrBf8fr/oqws99Skw=;
+        b=xM0wv2IvrCID82VpWnrSBHCP4P2QTVMU9PtHXOh4MIX8CSp1fc8u4jU19pwLIGIuoA
+         9lN6ApZYxnNe5pEPe7vVIISNU2fJeQSAF/JOpCAvmZ6izqdjXJuIQrc0XEXjCFQggv6v
+         6AnYtGpl7lDoZDloiAvtTOu75HZNwzV6A4VzeqqcVYWTPYImUvxOrQgL+PcQvFm++VwI
+         H8noA501n45mKKaDhoVcva5K7OpuOx1DyAtOv6z/8fesMSi7ss5PLov4UDEzktyJ3a0p
+         Ohf2ESKaHedWm0tanlzu4y0sgWRqaBit1GIommoqn1Xev0/WythUtMVk9IJP/ZBjtptI
+         FOlw==
+X-Forwarded-Encrypted: i=1; AJvYcCVlubq5eQq8vQ1KpEBtx0pNVNgo10SROiTTv8xrVpeyIUNw88Ci/9nDd0jC37OWqAS7mXKTx12AsO7X5w4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuLIjXGOZt8WiyxuvAkLzBo3nNYPHcwxeZ2aYEw6M+Q1Y+WUvc
+	YAOYdRm9T8OwcxiuodtRKxiTeeY22gpmhN0scGnmSHQV6/82Xn3rnhVQYfnbuNtSHas=
+X-Gm-Gg: ASbGncvLeJz8JBz5lY3+ZzTzO++GqEag9ygK7MY3vlY+P8JBrwUjFK8uMFfcRu5syzE
+	58SqphsK7IHX8S/p25gB6FWbsnMKjJSQ3EfKkVafgaNyTLPe592aj2Z0LTjky3azHntK0rOooe/
+	x06JUM3VlHtYxgqUJ5mtRJc4Tvf7YmzSoaq6Z+qyL4+C7dkGoPU05piv1PqexJen8vRzbHK2oG1
+	eVHAxjQJMPkPt4lwzv5L00mYsB8UyLNro9Ph2T6eiIe8UwMcc/TYjjD8MeYejxXsAHpuKSSlEqm
+	ftfKkhXzXHZSsrY9CnhMJz2Rt+vVVS6D/Q+f90s79fzfofgnl6QjyBq4bH9/rEkKOKasmeicOo9
+	kgiwizXZsJgmwJdVu45Z9LFQdW8B3XZsH41odtC9Jb6bV9vGTRdyEWwL3oWYm
+X-Google-Smtp-Source: AGHT+IGcP9WDP2sOnDqdsr1hUuGAfaqNH9xtyLz55f2uKfpJWh0O5VielrBpshkl/5AnNTfQlngdEg==
+X-Received: by 2002:a05:6000:2dc9:b0:3a4:da87:3a73 with SMTP id ffacd0b85a97d-3a531ce16b6mr9212551f8f.42.1749474718219;
+        Mon, 09 Jun 2025 06:11:58 -0700 (PDT)
+Received: from green.cable.virginm.net (nail-04-b2-v4wan-166353-cust693.vm26.cable.virginm.net. [82.35.130.182])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323c0819sm9396058f8f.45.2025.06.09.06.11.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 06:11:57 -0700 (PDT)
+From: Terry Tritton <terry.tritton@linaro.org>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Shuah Khan <shuah@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
+	Wei Gao <wegao@suse.com>
+Cc: ttritton@google.com,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Terry Tritton <terry.tritton@linaro.org>
+Subject: [PATCH] selftests/futex: Convert 32bit timespec struct to 64bit version for 32bit compatibility mode
+Date: Mon,  9 Jun 2025 14:10:55 +0100
+Message-Id: <20250609131055.84547-1-terry.tritton@linaro.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606170341.3880941-1-igor.korotin.linux@gmail.com>
- <20250606170817.3881748-1-igor.korotin.linux@gmail.com> <DAGZNG518T0C.1PXOK55IXHZOF@kernel.org>
- <aEVqgUtflBCzZi1X@pollux> <DAH4KX3Y3M3P.3B82LSVWU172Q@kernel.org> <aEV43zxZmWvDgKES@pollux>
-In-Reply-To: <aEV43zxZmWvDgKES@pollux>
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-Date: Mon, 9 Jun 2025 14:09:31 +0100
-X-Gm-Features: AX0GCFsQpkVbAKR-ZkgrNy0-Z7eCS0NS5RCA_sLS9MyOdTTnUwHtGQuu6IUDE0g
-Message-ID: <CAJxaTdNZEdK21mFPu2kTJPa7aQ+PpnkwFVdEP5MCt6w+bD0wXA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] rust: driver: Add ACPI id table support to Adapter trait
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Benno Lossin <lossin@kernel.org>, ojeda@kernel.org, alex.gaynor@gmail.com, 
-	rafael@kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com, 
-	tmgross@umich.edu, lenb@kernel.org, wedsonaf@gmail.com, 
-	viresh.kumar@linaro.org, alex.hung@amd.com, dingxiangfei2009@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 8, 2025 at 12:50=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
-wrote:
->
-> On Sun, Jun 08, 2025 at 01:46:17PM +0200, Benno Lossin wrote:
-> > On Sun Jun 8, 2025 at 12:48 PM CEST, Danilo Krummrich wrote:
-> > > On Sun, Jun 08, 2025 at 09:54:30AM +0200, Benno Lossin wrote:
-> > >> On Fri Jun 6, 2025 at 7:08 PM CEST, Igor Korotin wrote:
-> > >> > @@ -141,6 +141,38 @@ pub trait Adapter {
-> > >> >      /// The type holding driver private data about each device id=
- supported by the driver.
-> > >> >      type IdInfo: 'static;
-> > >> >
-> > >> > +    /// The [`acpi::IdTable`] of the corresponding driver
-> > >> > +    fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>>;
-> > >> > +
-> > >> > +    /// Returns the driver's private data from the matching entry=
- in the [`acpi::IdTable`], if any.
-> > >> > +    ///
-> > >> > +    /// If this returns `None`, it means there is no match with a=
-n entry in the [`acpi::IdTable`].
-> > >> > +    #[cfg(CONFIG_ACPI)]
-> > >> > +    fn acpi_id_info(dev: &device::Device) -> Option<&'static Self=
-::IdInfo> {
-> > >> > +        let table =3D Self::acpi_id_table()?;
-> > >> > +
-> > >> > +        // SAFETY:
-> > >> > +        // - `table` has static lifetime, hence it's valid for re=
-ad,
-> > >> > +        // - `dev` is guaranteed to be valid while it's alive, an=
-d so is `pdev.as_ref().as_raw()`.
-> > >> > +        let raw_id =3D unsafe { bindings::acpi_match_device(table=
-.as_ptr(), dev.as_raw()) };
-> > >> > +
-> > >> > +        if raw_id.is_null() {
-> > >> > +            None
-> > >> > +        } else {
-> > >> > +            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrap=
-per of `struct of_device_id` and
-> > >> > +            // does not add additional invariants, so it's safe t=
-o transmute.
-> > >> > +            let id =3D unsafe { &*raw_id.cast::<acpi::DeviceId>()=
+Futex_waitv can not accept old_timespec32 struct, so userspace should
+convert it from 32bit to 64bit before syscall in 32bit compatible mode.
+
+This fix is based off [1] 
+
+Link: https://lore.kernel.org/all/20231203235117.29677-1-wegao@suse.com/ [1]
+
+Signed-off-by: Terry Tritton <terry.tritton@linaro.org>
+Signed-off-by: Wei Gao <wegao@suse.com>
+---
+
+The original patch is for an identically named file and function in ltp
+and we need the same fix in kselftest. The patch is near identical with
+only a slight change to `syscall` instead of `tst_syscall`.
+
+Is the way I have tagged this appropriate?
+
+
+ .../testing/selftests/futex/include/futex2test.h  | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/tools/testing/selftests/futex/include/futex2test.h b/tools/testing/selftests/futex/include/futex2test.h
+index ea79662405bc..6780e51eb2d6 100644
+--- a/tools/testing/selftests/futex/include/futex2test.h
++++ b/tools/testing/selftests/futex/include/futex2test.h
+@@ -55,6 +55,13 @@ struct futex32_numa {
+ 	futex_t numa;
  };
-> > >> > +
-> > >> > +            Some(table.info(<acpi::DeviceId as crate::device_id::=
-RawDeviceId>::index(id)))
-> > >> > +        }
-> > >> > +    }
-> > >> > +
-> > >> > +    #[cfg(not(CONFIG_ACPI))]
-> > >> > +    #[allow(missing_docs)]
-> > >>
-> > >> I think we should change this to one single definition and do
-> > >>
-> > >>     if cfg!(not(CONFIG_ACPI)) {
-> > >>         return None;
-> > >>     }
-> > >>     /* body from above */
-> > >>
-> > >> In a single function instead.
-> > >
-> > > Generally, that's fine, but in this case I'd rather keep it as it is =
-for
-> > > consistency with the rest of the file.
-> >
-> > Then let's also change the OF bindings in this file to that style :)
->
-> Fine for me.
->
-> @Igor: If you do so, please do it in a seaparate patch.
+ 
++#if !defined(__LP64__)
++struct timespec64 {
++	int64_t tv_sec;
++	int64_t tv_nsec;
++};
++#endif
++
+ /**
+  * futex_waitv - Wait at multiple futexes, wake on any
+  * @waiters:    Array of waiters
+@@ -65,7 +72,15 @@ struct futex32_numa {
+ static inline int futex_waitv(volatile struct futex_waitv *waiters, unsigned long nr_waiters,
+ 			      unsigned long flags, struct timespec *timo, clockid_t clockid)
+ {
++#if !defined(__LP64__)
++	struct timespec64 timo64 = {0};
++
++	timo64.tv_sec = timo->tv_sec;
++	timo64.tv_nsec = timo->tv_nsec;
++	return syscall(__NR_futex_waitv, waiters, nr_waiters, flags, &timo64, clockid);
++#else
+ 	return syscall(__NR_futex_waitv, waiters, nr_waiters, flags, timo, clockid);
++#endif
+ }
+ 
+ /*
+-- 
+2.39.5
 
-That's definitely not possible with `if cfg!(not(CONFIG_ACPI))`
-because it is a runtime condition and it breaks compilation in case
-either `CONFIG_OF` or `CONFIG_ACPI` is not set, the Rust compiler
-can't find `of_match_device`/`acpi_match_device` because in that case
-they are defined as `static inline` and are not parsed by bindgen.
-
-Alternatively the following pattern works:
-
-    fn foo() {
-        #[cfg(not(CONFIG_ACPI))] {
-            None
-        }
-
-        #[cfg(CONFIG_ACPI)] {
-             // some logic.
-        }
-    }
-
-Also the argument `dev` of `both of_id_info` and `acpi_id_info`  must be
-renamed into `_dev` to mark it as unused in case CONFIG_ACPI/CONFIG_OF
-is off and the argument is not used.
-
-Let me know if this pattern is acceptable. To my opinion it is not much
-different from the original 2 functions conditioned by #[cfg] and
-requires some nasty changes.
-
-Thanks
-Igor
