@@ -1,215 +1,154 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784503597B;
-	Mon,  9 Jun 2025 22:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C243597B
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 22:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749508613; cv=none; b=DDXzXlQvI+zc8psKYA/f4U0dAtyhXNeicFvV47+kh2wKYJsmNLgiHfPKbfH68sXMLdSkb20mgLi6XyJZx+N1WT83i5G+rOgZSRyUXC5a3kdVNL6nT4xT7xWnT1VP1sSqzHYN8lWJ5tKnD1WBgB1tTqVH7HEU8u62/ZoRHBNXJmg=
+	t=1749508651; cv=none; b=iY5RH303WuttrH9pXO9Uq1+IrOQJgv9t7W/CIhnvjsp/fYxzyeqCbBz6NUkrxoaSx7gV6IBOCi0wK3MMD6nQFgSOC4qyLURrwismaNdwoH6xDoIXDfXgqZrqWWtxTyEG/xpANdDhNoBUu0lBoDIhDM9/eAr9dKh4zhhPDJrPmUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749508613; c=relaxed/simple;
-	bh=zDKYNbdF0rH3+FimkZczocsoz+9nXxDjaYj98TTwVZc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xi7LItcGrdh5Q+bd9ERJdyjW4Aw0QigJZyl1BAn9N0U2/PUBYKWf/ekzgQauwQ5Om2twOcwSsXnaxdvbx0BB83Hr1PsforDTetqzdIN3vZSEGoAp/XNNU/ahdJbznTrBD+dzctbvYjFX4Rm4wvUM8ERCc5G5XYJb3MKYNIPL+2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gi2/HbR6; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749508651; c=relaxed/simple;
+	bh=CVcNhkCzVJXNxsfjcFB0uximKknWhCLAWZi2qsiuWmE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lbTnPnQu+Y1UnUbkbeIPhRMNDP9Gdj2GrAOTmZaUzni3AZJbaqExnFEEkUCFpCxYB8r7z9bLyF8RENLTtyj/rTzsXK9an0big2W7lPeDl5DdGVz3vyiIq/1fsursRdxXft+AVkAAo/nVHhZp1jmDQfqI3kqB6O41yXn4qWjRiag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=WrJD5m+i; arc=none smtp.client-ip=185.70.43.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gi2/HbR6"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4a43cbc1ab0so58952611cf.0;
-        Mon, 09 Jun 2025 15:36:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749508610; x=1750113410; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/hq0btBK5TQK/jQfASAZ7ArH/Py2u4qhWqQQYIBxtEI=;
-        b=Gi2/HbR6MYHWkFxwVMBbDFwZMjBT+aygp8CDf4Ur9uSyIGGJQZ/+mJTcP1V43cnXE5
-         QCW9fPrTvKxKXEHjkoXlHrsRraUcSB2qOkkiaATh6DtzUSR2HhA5w43YQUDpPOCUj7f7
-         yr8BtRncOVR1Oz0IZZv50J86+AfA/lgPGc6XCl2oU4gs+HhdcA3c0sqPlHKS1fQRZ/b/
-         yufAdKbPlVEtXk8hhTXv1BqphryIEtW5PoNOKd4lEstzHVuGCiP6XfRmMbVABW+1lMym
-         XOb1g1KVjin6yAPj3RM3x1Oi8zQQMyoCXpNMNWPiILCWw1EQTreCcFuFk7Z7+p05KEt2
-         soZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749508610; x=1750113410;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/hq0btBK5TQK/jQfASAZ7ArH/Py2u4qhWqQQYIBxtEI=;
-        b=G0yYnEx6R/XsM9DoXvWk9oJXOVwZFWmgy/gguMTPtDGHEMw1KX78hxTak1cqS8qrW3
-         rLEYeyBxqd1mg5Ij2mxHasIRgZ8wmTstBcgXHwTU0TRFFIDtmUNEEhTwLw8yO9MqmOHf
-         bct9BH8NSw/sssM9e5sGuoncrqODQFWKLCE+VUS81ePbNXNYmncjtTlx4GOLiBSHzu6B
-         i1rTW4f/1PYno7rcNCpHVw4nDnnLzIqnvorkpXq4NJBi7F5WVYSKElzyMNj/vkG0tuFB
-         kzAUW/pa2BIqVmZ3qeVJN6OCZgvtWNf7HmzMsbTPJ7w9vEtV1Wju2bBpFuf4UTukxvms
-         RpvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUmvWixXkaScPS75uRAuzOIJri9oLOWbO1hA/OvZvH9vOgmUkxdObruRtvfp5VxSG2R1OszG5exgUPuCw==@vger.kernel.org, AJvYcCVPp7Ixdr3SPSKeXN5DmnyGywp0NFr5gbHpYrFE8kDfGUHoprhl2Vlcg4XK1DakDEndmVY9W+0rP9CcOA==@vger.kernel.org, AJvYcCXJ1Bx7HTAaoUoIxuADKSr62ZW3xGxGBA/Cc/cyHukk86B4Pm2sqiphYoZOR9DA9gBu2KzltPwuYK9bfz+l@vger.kernel.org, AJvYcCXgeAHGQ2K5cldJ7bM2jCiXEDmwKxHJnGl5R/2NpADGyrzPpafMU6g8tDjm1Z1nbuD0OIRkZ4BBPZVG@vger.kernel.org, AJvYcCXkbaSfIGMjq0iEoPGzYGB4QzV6PbH7KgtYDyne0DXuIVJ98SQdOtcqSZCJK+Q17JjV/U8Z+zz8LfUooQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmbxwS+kGEt9OC8/zsAQcCU/ifqWD6BfgsbkKsgXC/QuKq17Fn
-	34yX63eGSHr1bcnrIOE7ry0kAJBdY5fZsFEkHo3t7PylsoPshAVZ9KLmsfqQwtCnj1eUWFG8nju
-	TEZisg5ex189ZFiK1CP4v2PEwMpZMe8ioZEpV+eU=
-X-Gm-Gg: ASbGnct0UJ3xn2+D0JZuSB6PHv9VwghU/+k5nail+IPIVCKoylVRrorK57eabAU+TdG
-	zVCZjllE3N9a5sQjROEsitWJEqBbn2VvftdGX7QJLuoB3eDUadJYWSBf0UBFQV6Sqgsn55Z8+6g
-	foPc4ZYEiXONNiZWL6gH9z9iDAku3gVAZUXFonUnHuxSM=
-X-Google-Smtp-Source: AGHT+IEs8tHro3Bqg7q8bk+joLEpnvyUJ+PSWmsKZZ858+7uklxqykPVE6FCaw1PpU8qCZAfdipBs10XMfJUvah5VmA=
-X-Received: by 2002:a05:6214:f2a:b0:6fa:f94e:6e75 with SMTP id
- 6a1803df08f44-6fb08f5f7c4mr277251346d6.25.1749508610272; Mon, 09 Jun 2025
- 15:36:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="WrJD5m+i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1749508640; x=1749767840;
+	bh=ePwAWTLBP0goybEt9LUIGj7rug40FGOIf/8aHv/KjBQ=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=WrJD5m+ipdpSFadzxKB0513AbmaX9XQq4ZXwkX0b9R5PNLMlLgSklRsCqnqGmCz+B
+	 l/FvELmUNanPkE9pn6163SFxF58VU5ztnU1KpG0xLGC3385+Q7m9SH5zr7D/HFHHCc
+	 Hr99Mx7Xm01Q8YuABJDhPPpeg/4FrmCcSFX2sDdc9K7VEHcWkhXhZv/pqjtN9M3QqL
+	 k2kvPFMdeb8ZTlmssngBovN8oQ11PhLI2Ibe1GUtTRmXzHwaY5+pbW77WPMvsnupJ2
+	 4udTcopn6ZWkYH0TrRXqiZb55EFInMJVJOkBtEGvuRyjE1en5IXcVW4J0bR2hMawtS
+	 QTjYTQ9YtZUXA==
+Date: Mon, 09 Jun 2025 22:37:13 +0000
+To: Diederik de Haas <didi.debian@cknow.org>
+From: Piotr Zalewski <pZ010001011111@proton.me>
+Cc: hjc@rock-chips.com, heiko@sntech.de, andy.yan@rock-chips.com, maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, Dang Huynh <danct12@riseup.net>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH drm-misc-next] rockchip/drm: vop2: don't check color_mgmt_changed in atomic_enable
+Message-ID: <4z0y_F1ZT_xfO0-DwU-D5NwL3t3wHuGmivOB3QFjDsn0hzpz_hOeU63pRVBIgSU1j89jmYPq-TJHPqMCj3fAygwwX6IaPoVsqKqVi2jxmCc=@proton.me>
+In-Reply-To: <DAH3S8O66J47.3NT18EJCXWKL9@cknow.org>
+References: <20241206192013.342692-3-pZ010001011111@proton.me> <DAEVDSTMWI1E.J454VZN0R9MA@cknow.org> <mArHDRo5bhIAjG8sDOR-kM7DsVdbXxxcC8hfuEEPfUWIdMwNnSUy8ZFoLis66DFSuIEq8TrnAxUGkyo5IUTGw3AG4k3vuVVz0fsoI27BAms=@proton.me> <DAH3S8O66J47.3NT18EJCXWKL9@cknow.org>
+Feedback-ID: 53478694:user:proton
+X-Pm-Message-ID: 21961013ddd1adef816f64a8c4bc9f75454c6cf5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250607200454.73587-1-ebiggers@kernel.org> <CAGRGNgV_4X3O-qo3XFGexi9_JqJXK9Mf82=p8CQ4BoD3o-Hypw@mail.gmail.com>
- <20250609194845.GC1255@sol>
-In-Reply-To: <20250609194845.GC1255@sol>
-From: Julian Calaby <julian.calaby@gmail.com>
-Date: Tue, 10 Jun 2025 08:36:39 +1000
-X-Gm-Features: AX0GCFuUtzPWjE_fUMffnG3t-eGyXruP1OclUqP-Gat86eROO8R2ly8lc5p3jN0
-Message-ID: <CAGRGNgXw5LcykjiRS3yteb0K8FmYtb9wp1CJPM+GCKAw7j4ktQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/12] lib/crc: improve how arch-optimized code is integrated
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	sparclinux@vger.kernel.org, x86@kernel.org, linux-arch@vger.kernel.org, 
-	Ard Biesheuvel <ardb@kernel.org>, "Jason A . Donenfeld" <Jason@zx2c4.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi Eric,
+Hi Diederik, sorry for late response
 
-On Tue, Jun 10, 2025 at 5:49=E2=80=AFAM Eric Biggers <ebiggers@kernel.org> =
-wrote:
->
-> On Mon, Jun 09, 2025 at 06:15:24PM +1000, Julian Calaby wrote:
-> > Hi Eric,
-> >
-> > On Sun, Jun 8, 2025 at 6:07=E2=80=AFAM Eric Biggers <ebiggers@kernel.or=
-g> wrote:
-> > >
-> > > This series is also available at:
-> > >
-> > >     git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebigger=
-s/linux.git lib-crc-arch-v2
-> > >
-> > > This series improves how lib/crc supports arch-optimized code.  First=
-,
-> > > instead of the arch-optimized CRC code being in arch/$(SRCARCH)/lib/,=
- it
-> > > will now be in lib/crc/$(SRCARCH)/.  Second, the API functions (e.g.
-> > > crc32c()), arch-optimized functions (e.g. crc32c_arch()), and generic
-> > > functions (e.g. crc32c_base()) will now be part of a single module fo=
-r
-> > > each CRC type, allowing better inlining and dead code elimination.  T=
-he
-> > > second change is made possible by the first.
-> > >
-> > > As an example, consider CONFIG_CRC32=3Dm on x86.  We'll now have just
-> > > crc32.ko instead of both crc32-x86.ko and crc32.ko.  The two modules
-> > > were already coupled together and always both got loaded together via
-> > > direct symbol dependency, so the separation provided no benefit.
-> > >
-> > > Note: later I'd like to apply the same design to lib/crypto/ too, whe=
-re
-> > > often the API functions are out-of-line so this will work even better=
-.
-> > > In those cases, for each algorithm we currently have 3 modules all
-> > > coupled together, e.g. libsha256.ko, libsha256-generic.ko, and
-> > > sha256-x86.ko.  We should have just one, inline things properly, and
-> > > rely on the compiler's dead code elimination to decide the inclusion =
-of
-> > > the generic code instead of manually setting it via kconfig.
-> > >
-> > > Having arch-specific code outside arch/ was somewhat controversial wh=
-en
-> > > Zinc proposed it back in 2018.  But I don't think the concerns are
-> > > warranted.  It's better from a technical perspective, as it enables t=
-he
-> > > improvements mentioned above.  This model is already successfully use=
+> Interesting that it also happened with drm=3Dy.
+
+I actually checked now and i don't have the issue with drm=3Dy, sorry for=
+=20
+misinforming you all, hopefully no one's time was wasted.
+
+> As you're more knowledgeable then I am with this, maybe look through
+> https://lists.sr.ht/~diederik/pine64-discuss/D9AM2OOLREO0.2JMAI42J06TW0@c=
+know.org
+>=20
+> to see if you may spot something relevant?
+
+Heh, I'm not that knowledgeable but I will look through it.
+
+> > happened twice and at short interval and since this patch allows for ga=
+mma
+> > LUT update regardless of color_mgmt_changed state this makes DSP CTRL G=
+AMMA
+> > LUT EN bit to be unset twice too. It seems that VOP does not like it. I
+>=20
+>=20
+> Happy to see you found the cause :-)
+> Do you happen to know why it was unset twice? That sounds suboptimal.
+
+It is due to DRM modeset which can happens when CRTC (display) config chang=
+es=20
+"significantly". AFAIK modeset happens def. when you go out of suspend or
+display timings change. I might have been fooled by serial console last tim=
+e
+as it does not appear to happen twice in short interval when i review the=
+=20
+journal entries.
+
+> But (IIUC) setting a bit to a value it already has causing issues,
+> sounds surprising as well.
+
+Depends on what hardware does, when you write to a register it might cause
+many other things to happen and seems like for vop2 it messes something up.
+
+I made a second patch so that the first write is not permitted but all=20
+subsequent are permitted (regardless of lut en state) - issue disappeared=
+=20
+too. So it might be that very first write to dsp lut disable happens too=20
+fast (in relation to something else)?. It is not intuitive because when drm=
+ is
+a module it happens usually like ~second later.
+
+part of the log with drm=3Dy
+```
+[    6.543099] rockchip-drm display-subsystem: [drm] GAMMA LUT DISABLE
+```
+
+part of the log with drm=3Dm
+```
+[    7.944120] rockchip-drm display-subsystem: [drm] GAMMA LUT DISABLE
+```
+
+> > patched vop2_vp_dsp_lut_disable function so that dsp_ctrl is set only i=
+f
+> > GAMMA LUT EN bit is set. I checked that this also does not break the ga=
+mma
+> > lut functionality with emphasis on out-of/into suspend behavior.
+> >=20
+> > diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu=
+/drm/rockchip/rockchip_drm_vop2.c
+> > index d0f5fea15e21..7ddf311b38c6 100644
+> > --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+> > +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+> > @@ -897,6 +897,9 @@ static void vop2_vp_dsp_lut_disable(struct vop2_vid=
+eo_port *vp)
+> > {
+> > u32 dsp_ctrl =3D vop2_vp_read(vp, RK3568_VP_DSP_CTRL);
+> >=20
+> > + if ((dsp_ctrl & RK3568_VP_DSP_CTRL__DSP_LUT_EN) =3D=3D 0)
+> > + return;
+> > +
+> > dsp_ctrl &=3D ~RK3568_VP_DSP_CTRL__DSP_LUT_EN;
+> > vop2_vp_write(vp, RK3568_VP_DSP_CTRL, dsp_ctrl);
+> > }
+>=20
+>=20
+> I built a kernel with 6.14-rc1 + this patch and can confirm the screen
+> has output again :-)
+
+cool :)
+=20
+> > I will wait with sending a patch because maybe Andy has something to ad=
 d
-> > > in other places in the kernel such as lib/raid6/.  The community of e=
-ach
-> > > architecture still remains free to work on the code, even if it's not=
- in
-> > > arch/.  At the time there was also a desire to put the library code i=
-n
-> > > the same files as the old-school crypto API, but that was a mistake; =
-now
-> > > that the library is separate, that's no longer a constraint either.
-> >
-> > Quick question, and apologies if this has been covered elsewhere.
-> >
-> > Why not just use choice blocks in Kconfig to choose the compiled-in
-> > crc32 variant instead of this somewhat indirect scheme?
-> >
-> > This would keep the dependencies grouped by arch and provide a single p=
-lace to
-> > choose whether the generic or arch-specific method is used.
->
-> It's not clear exactly what you're suggesting, but it sounds like you're
-> complaining about this:
->
->     config CRC32_ARCH
->             bool
->             depends on CRC32 && CRC_OPTIMIZATIONS
->             default y if ARM && KERNEL_MODE_NEON
->             default y if ARM64
->             default y if LOONGARCH
->             default y if MIPS && CPU_MIPSR6
->             default y if PPC64 && ALTIVEC
->             default y if RISCV && RISCV_ISA_ZBC
->             default y if S390
->             default y if SPARC64
->             default y if X86
+> > to this.
+>=20
+>=20
+> Sounds like a plan. It could be that this issue surfaced an underlaying
+> issue and if so, fixing that would be even better.
 
-I was suggesting something roughly like:
+When i have time this week I will check on what version of the kernel i=20
+tested gamma lut when i sent the patches and test there.
 
-choice
-    prompt "CRC32 Variant"
-    depends on CRC32 && CRC_OPTIMIZATIONS
+> Thanks a lot!
+>=20
 
-config CRC32_ARCH_ARM_NEON
-    bool "ARM NEON"
-    default y
-    depends ARM && KERNEL_MODE_NEON
+Thank _you_ for taking your time to do all the bisecting.
 
-...
-
-config CRC32_GENERIC
-    bool "Generic"
-
-endchoice
-
-> This patchset strikes a balance where the vast majority of the arch-speci=
-fic CRC
-> code is isolated in lib/crc/$(SRCARCH), and the exceptions are just
-> lib/crc/Makefile and lib/crc/Kconfig.  I think these exceptions make sens=
-e,
-> given that we're building a single module per CRC variant.  We'd have to =
-go
-> through some hoops to isolate the arch-specific Kconfig and Makefile snip=
-pets
-> into per-arch files, which don't seem worth it here IMO.
-
-I was only really concerned with the Kconfig structure, I was
-expecting Kbuild to look roughly like this: (filenames are wrong)
-
-crc32-y +=3D crc32-base.o
-crc32-$(CRC32_ARCH_ARM_NEON) +=3D arch/arm/crc32-neon.o
-...
-crc32-$(CRC32_GENERIC) +=3D crc32-generic.o
-
-but yeah, your proposal here has grown on me now that I think about it
-and the only real "benefit" mine has is that architectures can display
-choices for variants that have Kconfig-visible requirements, which
-probably isn't that many so it wouldn't be useful in practice.
-
-Thanks for answering my question,
-
---=20
-Julian Calaby
-
-Email: julian.calaby@gmail.com
-Profile: http://www.google.com/profiles/julian.calaby/
+Best regards, Piotr Zalewski
