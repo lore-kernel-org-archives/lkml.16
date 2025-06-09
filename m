@@ -1,213 +1,120 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE752638BF;
-	Mon,  9 Jun 2025 12:24:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E22263C8F
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 12:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749471898; cv=none; b=cqUcvlAyyvayHhDuAUVcq5wPTRwN0vhyWt4QcdcejyieGJUHfsWm/P0fOwuY3Knz1dBzdiY92paVIl+mk2/zY7FaTiKBCW99T0yxh7Qn1Xm/rm/gYT1zhiNlHMLJhRtTHod2QWmftanyvyy/sa3ZtVv7IAYQHqnV1pz0qhgvlSU=
+	t=1749471901; cv=none; b=WhzCCEto41eVdBc/4xQDuFjKlGY+A6LvOI+dQpZ/y5ni1HZf/gyG6bAose2cpPtPT6y9OpFtLDM+331dTmG77qETS6jjjU8OF1kiMzVFH/tIAzkle0FcCFpJkrKRJXzeuufD/3/TcuRyH2/umYqKTC9HOyHW6JvxBKNHJ3iJQ1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749471898; c=relaxed/simple;
-	bh=j6XMM4JU4fy51ITq1sk/VrBTluM4AVXuoKESWwt5azk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=g/0n5LLzeO4Gh0GlAXnuh2dgGNUihpxqHl9sH8k/XQpK+PfbNAMUf9JkjURS5NN6mMf0f/xG9/C5HOinDjKyQ12BTlbaS0zUelE/imFPJopkDmWhzwQ+67zzBPdD8Uyq+n3DUaid5kYo4OD5eCUpEe93jDUKuDjP+hCiIwtbKCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Uvh82NQH; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749471901; c=relaxed/simple;
+	bh=eksIelLw5t+E1FpqLZamAqzDKsCM5SrUfrB2AptJFZg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qe//o7WFyS+RM+9i+s2+GM91w+JNA4mbQX5Ter2PnIsmbwFrlo7eHBwKIREiPq/wXtdjz5IFUtcBEEQEoobrXVHE1VdgoKctTDIKyXUKk1Z4Ne/rWq30pcEWCOnrWKHJwOXCW+fdCZ0AIy2Ts6pfHpIEEThvyXpeOxACePotx7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=V5cLRIk1; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Uvh82NQH"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5599XqSI015009;
-	Mon, 9 Jun 2025 12:24:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	IlBm34GPsHOdOC/kI9Ze5WD7aNKehTMA4D+RWssWO5U=; b=Uvh82NQHTPB6HwI7
-	eSr49An/Ssd43iD/9qYe55Bm+m7PU6WNFWDIfQlo9dRLLtfSgxxcCdufpZ21lhoQ
-	wm0r0i2zTZo/tvSTqp5i35NNeTCWrCO4mEMNvtMt3PSo2deKthT4+uUIZRMoGhp8
-	Y39LQVSXTlyy9Mw+KmX/Ai4Sydr/h3noG5Zu9l1WIgGS5iq5eT3JgR1n8jq4POIf
-	EHiXBJsBFM1bMULbIqZz8jceXqIv9+A0/N5C8twkvU6vRm7gwP0qN7KHxgHhnByo
-	5h0vXUeCo0WjeKC7L6RBOBcQUCbbbVtu3XL0mcFHOVZHIXVlRqeoSdGfjvT5Tpz4
-	FgJ1lw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ccv5vn4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Jun 2025 12:24:47 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 559COkgO014800
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 9 Jun 2025 12:24:46 GMT
-Received: from cse-cd01-lnx.ap.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 9 Jun 2025 05:24:43 -0700
-From: Yongxing Mou <quic_yongmou@quicinc.com>
-Date: Mon, 9 Jun 2025 20:21:50 +0800
-Subject: [PATCH v2 31/38] drm/msm/dp: propagate MST state changes to dp mst
- module
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="V5cLRIk1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=PRs8wlybJcPuh1a0Mj96EqtdKYAqzvngsmkwDOEMFaQ=; b=V5cLRIk1J1jTVQQc
+	1DSfpubgbtaa4YxEOeHhpvV5q/vdhPbrGgc6I+jIBHDP47ZCKj5/wojYci1SO01jK8/iQJLUrlmJX
+	Az1n79jmZnSqt8URb2yIoTT9UAEMxVyN7Y2BWo2roLFpWDX2KxtrR+DmEztdrtUoiThjVS3yIhdRB
+	sc9BzxSmeCG1ZyrAQ/d1Ap+G/6Jl8I5Q5ixxKKbrhA5yL8avtwjRrPlwwJXLYR1VvmyLGfYEB1rJP
+	sd7FQ+4sSk3zlfm/qBZObCX/JNjiq4ZtZxWrXuJvRV+MV6hNTT5pTNgmWGqnoUTTlLpQG5EzWtUB0
+	ZxVI8UwTh9OJyieeWA==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1uObYa-008Nmb-2c;
+	Mon, 09 Jun 2025 12:24:52 +0000
+Date: Mon, 9 Jun 2025 12:24:52 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: Dmitry Osipenko <dmitry.osipenko@collabora.com>, rafael@kernel.org
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] reboot: Remove unused unregister_platform_power_off
+Message-ID: <aEbSlN7BYT5qVlyb@gallifrey>
+References: <20250608174235.116424-1-linux@treblig.org>
+ <582f86fb-bcf1-4b58-ad54-acacf4326dd1@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250609-msm-dp-mst-v2-31-a54d8902a23d@quicinc.com>
-References: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
-In-Reply-To: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
-To: Rob Clark <robin.clark@oss.qualcomm.com>,
-        Dmitry Baryshkov
-	<lumag@kernel.org>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        Jessica Zhang
-	<jessica.zhang@oss.qualcomm.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, "Simona
- Vetter" <simona@ffwll.ch>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        "Yongxing
- Mou" <quic_yongmou@quicinc.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749471762; l=3795;
- i=quic_yongmou@quicinc.com; s=20241121; h=from:subject:message-id;
- bh=j6XMM4JU4fy51ITq1sk/VrBTluM4AVXuoKESWwt5azk=;
- b=Ya/kIksIDH8J+h3h7JdZ3jqwokPdD/KBTwEkF8FAWyv8Qu9LkJwAMyQM2mgjfkGoDxNsWgH6K
- ZC3q0CFnx1TBpfDEdxUCJka0QHRY0DbEW6Dc639aBkOsAcxzHVXn31B
-X-Developer-Key: i=quic_yongmou@quicinc.com; a=ed25519;
- pk=zeCnFRUqtOQMeFvdwex2M5o0Yf67UHYfwCyBRQ3kFbU=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: hL3---pek0Sq409HbsKBIWmPF2u6e0gY
-X-Authority-Analysis: v=2.4 cv=TsLmhCXh c=1 sm=1 tr=0 ts=6846d28f cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=E4lCa8gnfY7OAWYjri8A:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: hL3---pek0Sq409HbsKBIWmPF2u6e0gY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA5MyBTYWx0ZWRfX2WsQzZKgN2u3
- Ib1tb9UVBnnVZs3NNJN/TMWqhbpTts1nIw8w8U/Q/rqZdAcBjTq94L9WVmZOSUFznBMhU0LkQAh
- dzx5xVcgFkQEfPmjS5heKBxH06C1FQdrRsRRiPDv+7MLUADYxBIMPRNSkYgj/ouPCwGas7bBqQy
- ZX598wWivWS4PwJsf6FTF3FgF7D8LQWv7k6bH2/p+7JUVLq9rPYLYGZZJrjkgFphKam4SsQoIh4
- IXfGRb4yXRC3g49Gl1tzGC661uIdaKmyp3VtS/UTkJ0c88hNaWynQ03ALfS3pu0n+Jcv3Y9+BJp
- ovIauqN7pEp6WMJHKvu9E7ALi8X/nqKjcd2FszXP7Wivh+CuxLCegrrRxFsYA7n3mZ5pSB2AFPu
- mqlgrZwCALpj2GZIkkW8zSpUqh8gfDtOTHIFqD3JebcnjZH5EXM3e5X4SSPZv75L/FshMJhl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-09_05,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 clxscore=1015 mlxscore=0
- malwarescore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506090093
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <582f86fb-bcf1-4b58-ad54-acacf4326dd1@collabora.com>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-34-amd64 (x86_64)
+X-Uptime: 12:21:56 up 42 days, 20:35,  1 user,  load average: 0.08, 0.06, 0.01
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-Introduce APIs to update the MST state change to MST framework when
-device is plugged/unplugged.
+* Dmitry Osipenko (dmitry.osipenko@collabora.com) wrote:
+> Hi,
+> 
+> On 6/8/25 20:42, linux@treblig.org wrote:
+> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> > 
+> > unregister_platform_power_off() was added as part of 2022's
+> > commit fb61375ecfba ("kernel/reboot: Add register_platform_power_off()")
+> > but has remained unused.
+> > 
+> > Remove it.
+> > 
+> > Note it's a pair with register_platform_power_off() so
+> > seems symmetric; however, I think platforms are chosen
+> > and then stay that way for the boot - so don't
+> > get unregistered.
+> > 
+> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> > ---
+> >  include/linux/reboot.h |  1 -
+> >  kernel/reboot.c        | 16 ----------------
+> >  2 files changed, 17 deletions(-)
+> 
+> The patches converting those platform drivers to use
+> register[un]_platform_power_off() haven't been sent to ML. This is the
+> reason this func is unused.
 
-Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
-Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
----
- drivers/gpu/drm/msm/dp/dp_display.c | 20 ++++++++++++++++++++
- drivers/gpu/drm/msm/dp/dp_mst_drm.c | 15 +++++++++++++++
- drivers/gpu/drm/msm/dp/dp_mst_drm.h |  1 +
- 3 files changed, 36 insertions(+)
+Ah
 
-diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
-index 323d1c0a9efa4fa30ce97317e873607c54409a11..9dbcf4553cad70c9e3722160a87403fc815765d7 100644
---- a/drivers/gpu/drm/msm/dp/dp_display.c
-+++ b/drivers/gpu/drm/msm/dp/dp_display.c
-@@ -29,6 +29,7 @@
- #include "dp_drm.h"
- #include "dp_audio.h"
- #include "dp_debug.h"
-+#include "dp_mst_drm.h"
- 
- static bool psr_enabled = false;
- module_param(psr_enabled, bool, 0);
-@@ -420,6 +421,17 @@ static void msm_dp_display_mst_init(struct msm_dp_display_private *dp)
- 	msm_dp->mst_active = true;
- }
- 
-+static void msm_dp_display_set_mst_mgr_state(struct msm_dp_display_private *dp,
-+					     bool state)
-+{
-+	if (!dp->msm_dp_display.mst_active)
-+		return;
-+
-+	msm_dp_mst_display_set_mgr_state(&dp->msm_dp_display, state);
-+
-+	drm_dbg_dp(dp->drm_dev, "mst_mgr_state: %d\n", state);
-+}
-+
- static int msm_dp_display_process_hpd_high(struct msm_dp_display_private *dp)
- {
- 	struct drm_connector *connector = dp->msm_dp_display.connector;
-@@ -473,6 +485,8 @@ static int msm_dp_display_process_hpd_high(struct msm_dp_display_private *dp)
- 		goto end;
- 	}
- 
-+	msm_dp_display_set_mst_mgr_state(dp, true);
-+
- 	msm_dp_add_event(dp, EV_USER_NOTIFICATION, true, 0);
- 
- end:
-@@ -539,6 +553,12 @@ static int msm_dp_display_usbpd_configure_cb(struct device *dev)
- static int msm_dp_display_notify_disconnect(struct device *dev)
- {
- 	struct msm_dp_display_private *dp = dev_get_dp_display_private(dev);
-+	struct msm_dp *dp_display = &dp->msm_dp_display;
-+
-+	if (dp_display->mst_active) {
-+		msm_dp_mst_display_set_mgr_state(&dp->msm_dp_display, false);
-+		dp_display->mst_active = false;
-+	}
- 
- 	msm_dp_add_event(dp, EV_USER_NOTIFICATION, false, 0);
- 
-diff --git a/drivers/gpu/drm/msm/dp/dp_mst_drm.c b/drivers/gpu/drm/msm/dp/dp_mst_drm.c
-index 5f00ec2f83ad09b94fd6b602fc37f91cb55acf71..e8297d2222b07146fcfb2d98ab2053dd77717744 100644
---- a/drivers/gpu/drm/msm/dp/dp_mst_drm.c
-+++ b/drivers/gpu/drm/msm/dp/dp_mst_drm.c
-@@ -998,6 +998,21 @@ msm_dp_mst_add_connector(struct drm_dp_mst_topology_mgr *mgr,
- 	return &mst_connector->connector;
- }
- 
-+int msm_dp_mst_display_set_mgr_state(struct msm_dp *dp_display, bool state)
-+{
-+	int rc;
-+	struct msm_dp_mst *mst = dp_display->msm_dp_mst;
-+
-+	rc = drm_dp_mst_topology_mgr_set_mst(&mst->mst_mgr, state);
-+	if (rc < 0) {
-+		DRM_ERROR("failed to set topology mgr state to %d. rc %d\n",
-+			  state, rc);
-+	}
-+
-+	drm_dbg_dp(dp_display->drm_dev, "dp_mst_display_set_mgr_state state:%d\n", state);
-+	return rc;
-+}
-+
- static const struct drm_dp_mst_topology_cbs msm_dp_mst_drm_cbs = {
- 	.add_connector = msm_dp_mst_add_connector,
- };
-diff --git a/drivers/gpu/drm/msm/dp/dp_mst_drm.h b/drivers/gpu/drm/msm/dp/dp_mst_drm.h
-index d40cb8483f971b1331172b4e5da2c8f67e55e119..de31baa7548a51ff02e758ec43b03a0a31a217a0 100644
---- a/drivers/gpu/drm/msm/dp/dp_mst_drm.h
-+++ b/drivers/gpu/drm/msm/dp/dp_mst_drm.h
-@@ -101,5 +101,6 @@ int msm_dp_mst_drm_bridge_init(struct msm_dp *dp, struct drm_encoder *encoder);
- int msm_dp_mst_init(struct msm_dp *dp_display, u32 max_streams, struct drm_dp_aux *drm_aux);
- 
- void msm_dp_mst_display_hpd_irq(struct msm_dp *dp_display);
-+int msm_dp_mst_display_set_mgr_state(struct msm_dp *dp_display, bool state);
- 
- #endif /* _DP_MST_DRM_H_ */
+> There were apm_32 [1], platform/iris [2], mcu_mpc8349emitx [3],
+> olpc-xo1-pm [4] and sgy_cts1000 [5] drivers that I had patches prepared
+> to convert them to new power-off API. They weren't sent out back then in
+> 2022 because of a nontrivial dependencies between drivers. At least some
+> of those deps has been resolved by now and potentially the API
+> conversion may continue. Currently other things keep me busy and don't
+> have immediate plans to continue the conversion work, maybe sometime later.
 
+Yeh that's life!
+Of course if you could upstream one to get it rolling that would
+be great, but I understand.
+Most of those seem pretty old platforms, what makes those
+different?
+
+> Leaving it up to Rafael to decide whether to keep this func unused or
+> re-add later, once it actually will become needed.
+
+I've copied Rafael into the thread.
+
+Dave
+> [1]
+> https://gitlab.collabora.com/dmitry.osipenko/linux-kernel-rd/-/commit/e42f1264161085f01fed16986a23592519d9f49e
+> [2]
+> https://gitlab.collabora.com/dmitry.osipenko/linux-kernel-rd/-/commit/24cd048ad801aab6221f2b0bb4576dfc2fe25faa
+> [3]
+> https://gitlab.collabora.com/dmitry.osipenko/linux-kernel-rd/-/commit/486b69b43c47d85a0f292dca127f0b9063443a54
+> [4]
+> https://gitlab.collabora.com/dmitry.osipenko/linux-kernel-rd/-/commit/fe5344b3f8a8e1c52e1cd7108aa7e615123be4b2
+> [5]
+> https://gitlab.collabora.com/dmitry.osipenko/linux-kernel-rd/-/commit/0d761d6139c9dacbbda9f2e095577b084685603f
+> 
+> -- 
+> Best regards,
+> Dmitry
 -- 
-2.34.1
-
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
