@@ -1,199 +1,106 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A313638F80
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 08:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE293234
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 08:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749456656; cv=none; b=Vqqztz9GSgKoZuAvVLtGQ1fU+xBTVn3eoufm8ok/vC4LRSkXTtCV10a0K+7XVn4fYoQZAZzXaTKjFZwrjugQKmOHRYN0wzrSt5W0Bo0ldEEbF3GreZQ49wptZFoa0zeW29ghY91j4K/cnDcG5Xl4OY9kzx7mx4KgJ46Q2FErNkI=
+	t=1749456701; cv=none; b=R7XqujAtSmYUCpLqnU1s2RUED+k3stfKF+rgu2SJ3/ptRS88YPV1LPUsjd1VIDN4m+tXYXog5ia9SzuqQavIgyjyRXQig+k1b19laY2uqSQGB/AYX7EGrfbnlbj4NHsABDy1Yl/6+5pPsdlHvta01k3CvUnTe2tuBAZ6KI+LYd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749456656; c=relaxed/simple;
-	bh=I/F8iRJFzA27d/J4l6IxuXiNx5fCFVrmjq9JxH76Xys=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ltH4cGTtxo0pyp8CD9J13luLzb0Kh/lG2BX8+ysnRHI9QU1TBVQV9cmbw+YEQOcRXEBKIjWDAu4VS9preVc2ujQLcymxMGc+qO+wHCSQZIVtGgtyDC0NVnyJ8O+c3A3kPZKKiI53gzUga+vG1qMg5gQHqKofquJs3Q0tyfVyM7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=j9R54A2B; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rtdB3O4B; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dnC47jom; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bKunwmY1; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1749456701; c=relaxed/simple;
+	bh=Ky/TxtCfTe0l1Pac0CgEqfbI0HTvBXlStE1ol0qmIEs=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=N9a7Aygy3oQmDslqdoZ+miatTU2VIX5Icx7WQoryEYxI6XXndPqsp0/R5LRCNw8w6Ns5ePLzx8MqnLrHaW0BPRfKVTPrZPKNaOR/S9VqSmHEZHWNN7Z8XcEk28XhcQprxVkn1t9mbNLH3OaQhrRHHk3Qez6UQv2W869qPLjzvSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=V+hMvXor; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="j9R54A2B";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rtdB3O4B";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dnC47jom";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bKunwmY1"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D75DE21190;
-	Mon,  9 Jun 2025 08:10:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749456653; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KFsePeMY4LZ8aLc03SJlB+r//v0HN7fAgNJknJYZjtI=;
-	b=j9R54A2BILyVWwwe+Pqgc26tkXOIq6UpALqSUQTlnKHQWHHjDJ5wHcGOjJDYmtvYdkPH9g
-	P+vBdZjzC48tq8pd5qsq7ydgsRkynSdXCTh/D37ds+PPuUK34Ng9eXUGX+mEYJ2/CXCvLR
-	BHCWy9+RXr1nNdCY6k+tZ4rJPOo1sLw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749456653;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KFsePeMY4LZ8aLc03SJlB+r//v0HN7fAgNJknJYZjtI=;
-	b=rtdB3O4BBiVEkscPZQtehHYEvmGsYxlrWj63GSNX5WbLe90Iw6DJID2tSeCu+BBJUxFaJG
-	f/W0XWYDM5ohw3Cw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=dnC47jom;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=bKunwmY1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749456652; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KFsePeMY4LZ8aLc03SJlB+r//v0HN7fAgNJknJYZjtI=;
-	b=dnC47jom8Tw/2AEq2ZY68u2sKfQmYKQcFroIY0UZmzz1xS/ruaV10OlyyzZ41gQplAPSSw
-	y0vH2i0f/P4DkqdqlrflTWZa9tlUUSZRBTiK5kMDXLnnejrfHNDE+iXJ13frNhzNfs9FvZ
-	ESw1IPwjpV1XvuY0NgHtg30VlAQT8Y0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749456652;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KFsePeMY4LZ8aLc03SJlB+r//v0HN7fAgNJknJYZjtI=;
-	b=bKunwmY138SepDa30LNjP0NtgWGRS42JEzs9T2ZduzSMwVjVOcdyRMoQ/b97OiskY3cS3B
-	PzpDyl7QdrNcupBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9AEB113A1D;
-	Mon,  9 Jun 2025 08:10:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id or0xJAyXRmjjBAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 09 Jun 2025 08:10:52 +0000
-Date: Mon, 09 Jun 2025 10:10:52 +0200
-Message-ID: <87zfeh72sz.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-sound@vger.kernel.org,
-	Herve Codina <herve.codina@bootlin.com>,
-	Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2] ALSA: pcm: Convert multiple {get/put}_user to user_access_begin/user_access_end()
-In-Reply-To: <d2609397eafc2b55ec1f44a3f30ccec00e0c7f6e.1749455639.git.christophe.leroy@csgroup.eu>
-References: <d2609397eafc2b55ec1f44a3f30ccec00e0c7f6e.1749455639.git.christophe.leroy@csgroup.eu>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="V+hMvXor"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250609081138epoutp0494d0b08b61b9e5ff58820369253b8934~HUZkfJalQ1102911029epoutp04G
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 08:11:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250609081138epoutp0494d0b08b61b9e5ff58820369253b8934~HUZkfJalQ1102911029epoutp04G
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1749456698;
+	bh=cCKDTqb+uAHktuv4ggRzrPoN/1B3zoVL46D/W98jRPs=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=V+hMvXortCjz7/ycaM+ANIn3tvVjKG5syDeDrRzVdJpMospVaW3o2WZueE8JXJ7sq
+	 f6mPhixwNFzfwKMmu85rw/xAHYp8OUVPOFFk5Hvb40QdRTLjdwC7BGsMBqHEf1Ptwm
+	 KiPvilaSl+xr1PqF90uyQj7F/oBj++PulZ4u3iLU=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
+	20250609081137epcas5p158d45542b2752659b3c1c338c9cf0ed7~HUZj61i0M2901329013epcas5p1g;
+	Mon,  9 Jun 2025 08:11:37 +0000 (GMT)
+Received: from epcas5p2.samsung.com (unknown [182.195.38.183]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4bG4Pz5pMSz2SSKj; Mon,  9 Jun
+	2025 08:11:35 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250609081134epcas5p1c89e67af7350711fac95686a82981f74~HUZhNrfn72723027230epcas5p1g;
+	Mon,  9 Jun 2025 08:11:34 +0000 (GMT)
+Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250609081132epsmtip18db79fbd3b3f0d3e4080c9fdb9642fec~HUZezQJp_1346413464epsmtip1L;
+	Mon,  9 Jun 2025 08:11:32 +0000 (GMT)
+From: "Alim Akhtar" <alim.akhtar@samsung.com>
+To: "'Raghav Sharma'" <raghav.s@samsung.com>, <krzk@kernel.org>,
+	<s.nawrocki@samsung.com>, <cw00.choi@samsung.com>,
+	<mturquette@baylibre.com>, <sboyd@kernel.org>, <robh@kernel.org>,
+	<conor+dt@kernel.org>, <richardcochran@gmail.com>,
+	<sunyeal.hong@samsung.com>, <shin.son@samsung.com>
+Cc: <linux-samsung-soc@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<chandan.vn@samsung.com>, <karthik.sun@samsung.com>,
+	<dev.tailor@samsung.com>
+In-Reply-To: <20250529112640.1646740-4-raghav.s@samsung.com>
+Subject: RE: [PATCH v3 3/4] clk: samsung: exynosautov920: add block hsi2
+ clock support
+Date: Mon, 9 Jun 2025 13:41:30 +0530
+Message-ID: <043f01dbd916$1d8decf0$58a9c6d0$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: D75DE21190
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Score: -3.51
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIRyuXPQglR2pg1tLiplohNF2WAzQKeHRX1Aq1ypKGzZDlhYA==
+Content-Language: en-us
+X-CMS-MailID: 20250609081134epcas5p1c89e67af7350711fac95686a82981f74
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250529111715epcas5p19a63894e2556d2c8005845e01f67c783
+References: <20250529112640.1646740-1-raghav.s@samsung.com>
+	<CGME20250529111715epcas5p19a63894e2556d2c8005845e01f67c783@epcas5p1.samsung.com>
+	<20250529112640.1646740-4-raghav.s@samsung.com>
 
-On Mon, 09 Jun 2025 10:00:38 +0200,
-Christophe Leroy wrote:
+HI Raghav
+
+> -----Original Message-----
+> From: Raghav Sharma <raghav.s@samsung.com>
+> Sent: Thursday, May 29, 2025 4:57 PM
+> To: krzk@kernel.org; s.nawrocki@samsung.com; cw00.choi@samsung.com;
+> alim.akhtar@samsung.com; mturquette@baylibre.com; sboyd@kernel.org;
+> robh@kernel.org; conor+dt@kernel.org; richardcochran@gmail.com;
+> sunyeal.hong@samsung.com; shin.son@samsung.com
+> Cc: linux-samsung-soc@vger.kernel.org; linux-clk@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org; netdev@vger.kernel.org;
+> chandan.vn@samsung.com; karthik.sun@samsung.com;
+> dev.tailor@samsung.com; Raghav Sharma <raghav.s@samsung.com>
+> Subject: [PATCH v3 3/4] clk: samsung: exynosautov920: add block hsi2 clock
+> support
 > 
-> With user access protection (Called SMAP on x86 or KUAP on powerpc)
-> each and every call to get_user() or put_user() performs heavy
-> operations to unlock and lock kernel access to userspace.
+> Register compatible and cmu_info data to support clocks.
+> CMU_HSI2, this provides clocks for HSI2 block
 > 
-> To avoid that, perform user accesses by blocks using
-> user_access_begin/user_access_end() and unsafe_get_user()/
-> unsafe_put_user() and alike.
-> 
-> As an exemple, before the patch the 9 calls to put_user() at the
-> end of snd_pcm_ioctl_sync_ptr_compat() imply the following set of
-> instructions about 9 times (access_ok - enable user - write - disable
-> user):
->     0.00 :   c057f858:       3d 20 7f ff     lis     r9,32767
->     0.29 :   c057f85c:       39 5e 00 14     addi    r10,r30,20
->     0.77 :   c057f860:       61 29 ff fc     ori     r9,r9,65532
->     0.32 :   c057f864:       7c 0a 48 40     cmplw   r10,r9
->     0.36 :   c057f868:       41 a1 fb 58     bgt     c057f3c0 <snd_pcm_ioctl+0xbb0>
->     0.30 :   c057f86c:       3d 20 dc 00     lis     r9,-9216
->     1.95 :   c057f870:       7d 3a c3 a6     mtspr   794,r9
->     0.33 :   c057f874:       92 8a 00 00     stw     r20,0(r10)
->     0.27 :   c057f878:       3d 20 de 00     lis     r9,-8704
->     0.28 :   c057f87c:       7d 3a c3 a6     mtspr   794,r9
-> ...
-> 
-> A perf profile shows that in total the 9 put_user() represent 36% of
-> the time spent in snd_pcm_ioctl() and about 80 instructions.
-> 
-> With this patch everything is done in 13 instructions and represent
-> only 15% of the time spent in snd_pcm_ioctl():
-> 
->     0.57 :   c057f5dc:       3d 20 dc 00     lis     r9,-9216
->     0.98 :   c057f5e0:       7d 3a c3 a6     mtspr   794,r9
->     0.16 :   c057f5e4:       92 7f 00 04     stw     r19,4(r31)
->     0.63 :   c057f5e8:       93 df 00 0c     stw     r30,12(r31)
->     0.16 :   c057f5ec:       93 9f 00 10     stw     r28,16(r31)
->     4.95 :   c057f5f0:       92 9f 00 14     stw     r20,20(r31)
->     0.19 :   c057f5f4:       92 5f 00 18     stw     r18,24(r31)
->     0.49 :   c057f5f8:       92 bf 00 1c     stw     r21,28(r31)
->     0.27 :   c057f5fc:       93 7f 00 20     stw     r27,32(r31)
->     5.88 :   c057f600:       93 36 00 00     stw     r25,0(r22)
->     0.11 :   c057f604:       93 17 00 00     stw     r24,0(r23)
->     0.00 :   c057f608:       3d 20 de 00     lis     r9,-8704
->     0.79 :   c057f60c:       7d 3a c3 a6     mtspr   794,r9
-> 
-> Note that here the access_ok() in user_write_access_begin() is skipped
-> because the exact same verification has already been performed at the
-> beginning of the fonction with the call to user_read_access_begin().
-> 
-> A couple more can be converted as well but require
-> unsafe_copy_from_user() which is not defined on x86 and arm64, so
-> those are left aside for the time being and will be handled in a
-> separate patch.
-> 
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Signed-off-by: Raghav Sharma <raghav.s@samsung.com>
 > ---
-> v2: Split out the two hunks using copy_from_user() as unsafe_copy_from_user() is not implemented on x86 and arm64 yet.
 
-Thanks for the patch.
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
 
-The idea looks interesting, but the implementations with
-unsafe_get_user() leads to very ugly goto lines, and that's too bad;
-it makes the code flow much more difficult to follow.
-
-I guess that, in most cases this patch tries to cover, we just use
-another temporary variable for compat struct, copy fields locally,
-then run copy_to_user() in a shot instead.
-
-
-Takashi
