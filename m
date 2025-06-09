@@ -1,228 +1,200 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0621E47A5
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 15:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977C63D544
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 15:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749484172; cv=none; b=piEtHszoQPeKYiBgTeOWg/DuAOI6tfLaWea5xj/AvCCj964Pys3XkYbq+/ZvHIVYVKrzA8jBs+XAjPKmAMz9WlNAnG4022Kmh2fQ2LGDUZewm+ecAUDgyYSeOVpOvJvLjIl1p1ZrMrtBTYMnrD07hqtnmbDhpi+3zZtdehuIjBo=
+	t=1749484275; cv=none; b=RBJ6Lw6YYlpK/s4HoGTdKNKVRxc48akP/3EbP7bwRt2uknPC9igGmV2BQwareFD1mz3cgDU+Tbh+s7VQ/gaJ8t+Jx+iX45xMDdwg/2xSmL0BEM9BZMywvJbzanIJCgXB5vjIGI8xjbyih/Ngoo+6/BCngEHkm5g5LadVE7ZCW78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749484172; c=relaxed/simple;
-	bh=O16/i8ImN1omRqIDkVizfBKxq029hgU/VoUr9M+AMV4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=JrHRcK/IQFeIad4kqmPVzpE4FB0z1f37gR4BviBttrmz0xXZUmLlbo0fqzC9Zg/GFWlxU40qT1QX5JQSy/BPaDFgjmBDoIraaCRyEf0ezxWRDNcwZlFaLWEAxjtM7BKfXIHWqjCsFNofMdfkuxov1hlyuYeV95/uaPxkbXYd8f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LTV1pVZp; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com
+	s=arc-20240116; t=1749484275; c=relaxed/simple;
+	bh=XcnysmDGWQ8SMFXmEv3YzKpufjaFYWlqPdE9ZRih4FE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tQCShz0gcgVP2eh6AUPNZmtSCXQMzZbbiiUPuLiNxUVjwqeMv9JDsLLLuYvxGjNvD+byr6vyl6WqOSZ6ZIGh6ER6y6z9GX2SypEDapOV3dUaKaVf4Q54sun4iwenvsGbdhrJe4fdBT6+Q9FxsnBDZUg7wx18dmHv4H+JRlnCi5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=a8DfLomd; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LTV1pVZp"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7370e73f690so5428185b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 08:49:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749484170; x=1750088970; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=GbDXTAZxIXygNZLsCst7kpU0mT+2twAyV2birPGbUuE=;
-        b=LTV1pVZpd7OAOhKmd1jfLcoQ/EA0VPa0tvaxCJ7K732qTLPQV+6pS0dpXHKtuE6CFa
-         ZlO0ElWWkKHIsFe/rdWtr8gk4UbGtvKp1EkoRkREkqV/92daXLBawKqSh2rZOhzFo3q0
-         MJzIljsNv325bTPJQL4ucAMvGKYtyzDDvKGjVXKT7EfIClsiMWOm11WfG732D0erVeZD
-         GVdekJExKYJSQw87c7RE+E4SmdNU/l98ZYcuzttUSR81hSLeQNFz1NJgT8XrrQRISP8k
-         5Lz9iL+nxIhIoTj2Y1NAxVH84w/GqoT91enekMgU4HdH7315WPwPLzTWvVaB3M9ORQvd
-         eSSg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="a8DfLomd"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 559ADqjW012672
+	for <linux-kernel@vger.kernel.org>; Mon, 9 Jun 2025 15:51:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=K+GJtEmFeWWV7acoRA4FQCe7
+	suMJMwpWj1BE28bV0Ww=; b=a8DfLomddNxsdSt1oNauMa1WiRDQR41rKMnCrldL
+	mMbZS+/IXuFye+VD9bJ5A3IPH0PIk9ZQHS2pl/42durVPDVZ/+Slzt0/1CgxMQNz
+	ZE56kus+FBFoFT0dtvQfc1fqdoKOohjkHS0Dp/N3XVkir9lTVPCCIQBN1XhG6Qi7
+	0ZRCMWQuFPXeLhfBn3/5iu3r9ybN6c7566IQQH+4FMAIXLBzwDiZOMSfFbuXgvev
+	HxJKMfB5c/08YpfcvkEbyOGViDnCJtNHpikWGLb0dVihNutLnZmd8YBDa/pVPQcG
+	n0XufbzxXfYwKdep1aENBv997oPpLuuIi/vcS3U89Q0Xcg==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ccv6esx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 15:51:12 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d2107d6b30so585514285a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 08:51:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749484170; x=1750088970;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GbDXTAZxIXygNZLsCst7kpU0mT+2twAyV2birPGbUuE=;
-        b=pZJilaHEjHFsVrNm/H56bxATGhcXlRSztw8te1FymuqnlOTXDdAOo3crhD6kHbJkfF
-         xsCt8HjnMt+zC6LsJ/EqLdZ0MAPBcOFmSI2hxvzD/QNH0CMWGizNgvleFf9pjuPnD0iB
-         FQCTTUYCNRrKms+Rkl4kOOSqUnDzyYJKpF9tAeZ8W2QBwgiJQbI1AzCkmAxBxpwJJUbf
-         YsuM+xy2Ato137FYXDrNlIVZc55lKolyTg0+sCEH1BKY2fDVfjTC4rt1s70aH+lkD46n
-         U36sBCZ4/F5tF2p/luYyb4j5QIobKY3ZZGgtA2L4B2DXHs2KR0s2pMaERGgshQoHVLh+
-         tlVA==
-X-Forwarded-Encrypted: i=1; AJvYcCXlFO2Qw6eRqDFwFfwuLQ4wxIf3w8g0fzKsdt8nDUgYRMzOcSS4WcsGnFHCH/+hGYABqQpqiLFWYTh91A4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7KPRPvd+Ymk7rTLuWYID4wy5Vw5YI8gpb7gp4ZVGshdg2D82q
-	8T8fg9CkjKmtL3dfWPI8u2tgM05qQlek5c5C1jEwSDnavODATV7a1YCVDLtB78hd/fcecjRvvbz
-	dnK9ZJAXSyCpSbJ2WJJqZBiOVLkGrVw==
-X-Google-Smtp-Source: AGHT+IFrXkiR8WR8iG3nbOmJqUxBsjH3gTSS4afmh9YumbsXjLp04RKCNCIYb7Enm3IB8vOPOnUJONfHpnLgUPk2lAo=
-X-Received: from pfbdw27.prod.google.com ([2002:a05:6a00:369b:b0:747:a8e8:603e])
- (user=samitolvanen job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a21:9203:b0:1f5:8622:5ed5 with SMTP id adf61e73a8af0-21ee24e1c1cmr23128880637.3.1749484169917;
- Mon, 09 Jun 2025 08:49:29 -0700 (PDT)
-Date: Mon,  9 Jun 2025 15:49:27 +0000
+        d=1e100.net; s=20230601; t=1749484271; x=1750089071;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K+GJtEmFeWWV7acoRA4FQCe7suMJMwpWj1BE28bV0Ww=;
+        b=lyRIPrRZ9njzI4kLObBTiUm8vSalP39V/wnkBHh9wF9Jf722FAB3StYMXsSGgJP91d
+         a1c1u8tpIa1gDFXUdd6c4IXn2PBRKWxaaWwwZDN/xvtFdaXXV4PCOEBnyNjupK8flmSh
+         SbvZFz9Y4p5LMblBY/vSr/KbYhK3ljw71+yjU/QdmzW+fFZuxfmwxizpU0Q/irZMCvEm
+         Z0MwWKDe16pwYWW7GlWlbYmi/nsH7UpyURgUU+w+gxyAtgVxa1NPkzBRla8vXDOzcKnt
+         6tTdXG53B33lcHhTsIVsCkv44pTMta14W/mBNluJ5Mvv0ewAI8eawsq2O5m2KUB3pdNM
+         nQRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUsZZP9t4H2Ll2wXNPj0vHwWIhSWUmT8Uz++RKoCF7OzwrCSwFAjEuSsm1d/OMC6QtaLe+VAwPqkhmxNpI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/+lYZAKC0QhWISwG2tYS5S1dUeWG5o29yEfcEE7DgNkwHVw/d
+	Bf6O0d132r7sqQXa+Q8kWidSAV5mpNQAP5ikKLBFo7oTPxiac3hsO1h7aoH0rKxh/JiY9AfuUUo
+	RJgU3sckK1z8maTJXXWedH21UWwzo0nRg64NSwVPwWZuXYciuXS13xxSXHinwUvoOlpw=
+X-Gm-Gg: ASbGncuAPE3/8XYg13yEbHOgQQrWOH31gQ2DEMKuJVwPcGvbUc5Fvh6gvMwINkxwm9p
+	hXLF6+IAhV4lgyUrUIzRLAekQnwm0MGgyB0xF1m83Sx67FfCDfdXNlLOLp9owYnv8ae8rSGJyNv
+	NGh6L/OZc5uFP97WtAlkCaX/AfblwN91qjqezQCy6gIihojMzaU3MqsWyiQEUdUnPHMh8bdA6qg
+	7qRu0FsDIXzftO4bMCTeA/eUeZJBaH4zHoy6gaxGPU/7Y5xIxJ+QJLbrNeyX7Bbc6o9vO7U5A3X
+	wj4B7iZDWhp7RflS70Yviv8rSWub2aj2GfGZZplO+0BeBNdPfgNvTGkS/AQLMy8ig5exs5EGy0F
+	Wl6QF4B0rCg==
+X-Received: by 2002:a05:620a:2694:b0:7c5:a41a:b1a with SMTP id af79cd13be357-7d22985b912mr1886684985a.10.1749484271298;
+        Mon, 09 Jun 2025 08:51:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHkgTWv8MC/AitIaS/DA4ob4l3D99JLGsatSu5WEducw95bQhwsH7AW9Oj21iwH8CSCiLhHEg==
+X-Received: by 2002:a05:620a:2694:b0:7c5:a41a:b1a with SMTP id af79cd13be357-7d22985b912mr1886681885a.10.1749484270922;
+        Mon, 09 Jun 2025 08:51:10 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5536772a817sm1205198e87.171.2025.06.09.08.51.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 08:51:10 -0700 (PDT)
+Date: Mon, 9 Jun 2025 18:51:08 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Yongxing Mou <quic_yongmou@quicinc.com>
+Cc: Rob Clark <robin.clark@oss.qualcomm.com>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>
+Subject: Re: [PATCH v2 29/38] drm/msm/dp: add connector abstraction for DP MST
+Message-ID: <fcmbo5qhiifo3erfnejgtu6es2nmeo3c5r4plbutj23gdtydng@xy3mqkhbsjia>
+References: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
+ <20250609-msm-dp-mst-v2-29-a54d8902a23d@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4947; i=samitolvanen@google.com;
- h=from:subject; bh=O16/i8ImN1omRqIDkVizfBKxq029hgU/VoUr9M+AMV4=;
- b=owGbwMvMwCEWxa662nLh8irG02pJDBnuTG2Xpn3ULs9iaeX6fGIX85sQl4Rttj6+Atx9574xM
- qX8ZN3ZUcrCIMbBICumyNLydfXW3d+dUl99LpKAmcPKBDKEgYtTACbyZCUjw/eYyw5Lr3l4F0rw
- 7Dw31y/ntubxo15fE+5mGyxpEU05lc7wP3Lt/ZXTfKTy5m278shFOeD70azNMa/2SOUY3pf4ppD tzQYA
-X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
-Message-ID: <20250609154926.1237033-2-samitolvanen@google.com>
-Subject: [PATCH] gendwarfksyms: Fix structure type overrides
-From: Sami Tolvanen <samitolvanen@google.com>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
-	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Sami Tolvanen <samitolvanen@google.com>, Giuliano Procida <gprocida@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250609-msm-dp-mst-v2-29-a54d8902a23d@quicinc.com>
+X-Proofpoint-ORIG-GUID: vHx0w3vcaNH92iBqqVjesV5vl2ojvxzE
+X-Authority-Analysis: v=2.4 cv=TsLmhCXh c=1 sm=1 tr=0 ts=684702f0 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=BF5CnLKeIFxmMbDrz1YA:9 a=CjuIK1q_8ugA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: vHx0w3vcaNH92iBqqVjesV5vl2ojvxzE
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDExNyBTYWx0ZWRfX55X57I4krorg
+ Ao9H8fLknKxVyAHY93ak8mUsnwvc2Uy5neebYR7dJkSQjvSLrAEhvoPNSO0wc0cJ+1nGAoPAXTT
+ +E30hwNRfeDcA6EhoZl+ZhgUOzTdx3jXqcgBfrYruQ651ZAp+FVuUWHZF0lF6xaPtDwIKBjXlB7
+ wnNZd0/G/Vn8QjvRW83oMIAoZ6w5ls+Pu8UIHhbOkQA0wY4baSDK5uyt0DhEdVkBJeMijfCfzfY
+ CBMmax8tDudAPEQWUkW32Mul88W8adx0eMU+DdbPbI+RGOzaajRBwp+J/AIntIuKcsai+67Cx18
+ 26VLChYTvfq+EPhpsv29pA1ZYE3rg8xqdCyKB0TMTmmWzmxjZES8rMMDvTVFztBZn4gJGBMkY6F
+ fswv7ARM3GUYKW5YNeFmfBF5f8GqCRViMoo5+WLuxeltzdht0NvtOBorMocZwmKFX1Gs4zMi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-09_06,2025-06-09_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
+ priorityscore=1501 bulkscore=0 adultscore=0 clxscore=1015 mlxscore=0
+ malwarescore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506090117
 
-As we always iterate through the entire die_map when expanding
-type strings, recursively processing referenced types in
-type_expand_child() is not actually necessary. Furthermore,
-the type_string kABI rule added in commit c9083467f7b9
-("gendwarfksyms: Add a kABI rule to override type strings") can
-fail to override type strings for structures due to a missing
-kabi_get_type_string() check in this function.
+On Mon, Jun 09, 2025 at 08:21:48PM +0800, Yongxing Mou wrote:
+> From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+> 
+> Add connector abstraction for the DP MST. Each MST encoder
+> is connected through a DRM bridge to a MST connector and each
+> MST connector has a DP panel abstraction attached to it.
+> 
+> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+> Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
+> ---
+>  drivers/gpu/drm/msm/dp/dp_mst_drm.c | 515 ++++++++++++++++++++++++++++++++++++
+>  drivers/gpu/drm/msm/dp/dp_mst_drm.h |   3 +
+>  2 files changed, 518 insertions(+)
 
-Fix the issue by dropping the unnecessary recursion and moving
-the override check to type_expand(). Note that symbol versions
-are otherwise unchanged with this patch.
+> +
+> +static enum drm_mode_status msm_dp_mst_connector_mode_valid(struct drm_connector *connector,
+> +							    const struct drm_display_mode *mode)
+> +{
+> +	struct msm_dp_mst_connector *mst_conn;
+> +	struct msm_dp *dp_display;
+> +	struct drm_dp_mst_port *mst_port;
+> +	struct msm_dp_panel *dp_panel;
+> +	struct msm_dp_mst *mst;
+> +	u16 full_pbn, required_pbn;
+> +	int available_slots, required_slots;
+> +	struct msm_dp_mst_bridge_state *dp_bridge_state;
+> +	int i, slots_in_use = 0, active_enc_cnt = 0;
+> +	const u32 tot_slots = 63;
+> +
+> +	if (drm_connector_is_unregistered(connector))
+> +		return 0;
+> +
+> +	mst_conn = to_msm_dp_mst_connector(connector);
+> +	dp_display = mst_conn->msm_dp;
+> +	mst = dp_display->msm_dp_mst;
+> +	mst_port = mst_conn->mst_port;
+> +	dp_panel = mst_conn->dp_panel;
+> +
+> +	if (!dp_panel || !mst_port)
+> +		return MODE_ERROR;
+> +
+> +	for (i = 0; i < mst->max_streams; i++) {
+> +		dp_bridge_state = to_msm_dp_mst_bridge_state(&mst->mst_bridge[i]);
+> +		if (dp_bridge_state->connector &&
+> +		    dp_bridge_state->connector != connector) {
+> +			active_enc_cnt++;
+> +			slots_in_use += dp_bridge_state->num_slots;
+> +		}
+> +	}
+> +
+> +	if (active_enc_cnt < DP_STREAM_MAX) {
+> +		full_pbn = mst_port->full_pbn;
+> +		available_slots = tot_slots - slots_in_use;
+> +	} else {
+> +		DRM_ERROR("all mst streams are active\n");
+> +		return MODE_BAD;
+> +	}
+> +
+> +	required_pbn = drm_dp_calc_pbn_mode(mode->clock, (connector->display_info.bpc * 3) << 4);
+> +
+> +	required_slots = msm_dp_mst_find_vcpi_slots(&mst->mst_mgr, required_pbn);
+> +
+> +	if (required_pbn > full_pbn || required_slots > available_slots) {
+> +		drm_dbg_dp(dp_display->drm_dev,
+> +			   "mode:%s not supported. pbn %d vs %d slots %d vs %d\n",
+> +			   mode->name, required_pbn, full_pbn,
+> +			   required_slots, available_slots);
+> +		return MODE_BAD;
+> +	}
 
-Fixes: c9083467f7b9 ("gendwarfksyms: Add a kABI rule to override type strings")
-Reported-by: Giuliano Procida <gprocida@google.com>
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
----
- scripts/gendwarfksyms/types.c | 65 ++++++++++-------------------------
- 1 file changed, 19 insertions(+), 46 deletions(-)
+I almost missed this. Could you please point me, do other drivers
+perform mode_valid() check based on the current slots available or not?
+Could you please point me to the relevant code in other drivers? Because
+it doesn't look correct to me. The mode on the screen remains valid no
+matter if I plug or unplug other devices. The atomic_check() should fail
+if we don't have enough resources (which includes slots).
 
-diff --git a/scripts/gendwarfksyms/types.c b/scripts/gendwarfksyms/types.c
-index 39ce1770e463..7bd459ea6c59 100644
---- a/scripts/gendwarfksyms/types.c
-+++ b/scripts/gendwarfksyms/types.c
-@@ -333,37 +333,11 @@ static void calculate_version(struct version *version,
- 	cache_free(&expansion_cache);
- }
- 
--static void __type_expand(struct die *cache, struct type_expansion *type,
--			  bool recursive);
--
--static void type_expand_child(struct die *cache, struct type_expansion *type,
--			      bool recursive)
--{
--	struct type_expansion child;
--	char *name;
--
--	name = get_type_name(cache);
--	if (!name) {
--		__type_expand(cache, type, recursive);
--		return;
--	}
--
--	if (recursive && !__cache_was_expanded(&expansion_cache, cache->addr)) {
--		__cache_mark_expanded(&expansion_cache, cache->addr);
--		type_expansion_init(&child);
--		__type_expand(cache, &child, true);
--		type_map_add(name, &child);
--		type_expansion_free(&child);
--	}
--
--	type_expansion_append(type, name, name);
--}
--
--static void __type_expand(struct die *cache, struct type_expansion *type,
--			  bool recursive)
-+static void __type_expand(struct die *cache, struct type_expansion *type)
- {
- 	struct die_fragment *df;
- 	struct die *child;
-+	char *name;
- 
- 	list_for_each_entry(df, &cache->fragments, list) {
- 		switch (df->type) {
-@@ -379,7 +353,12 @@ static void __type_expand(struct die *cache, struct type_expansion *type,
- 				error("unknown child: %" PRIxPTR,
- 				      df->data.addr);
- 
--			type_expand_child(child, type, recursive);
-+			name = get_type_name(child);
-+			if (name)
-+				type_expansion_append(type, name, name);
-+			else
-+				__type_expand(child, type);
-+
- 			break;
- 		case FRAGMENT_LINEBREAK:
- 			/*
-@@ -397,12 +376,17 @@ static void __type_expand(struct die *cache, struct type_expansion *type,
- 	}
- }
- 
--static void type_expand(struct die *cache, struct type_expansion *type,
--			bool recursive)
-+static void type_expand(const char *name, struct die *cache,
-+			struct type_expansion *type)
- {
-+	const char *override;
-+
- 	type_expansion_init(type);
--	__type_expand(cache, type, recursive);
--	cache_free(&expansion_cache);
-+
-+	if (stable && kabi_get_type_string(name, &override))
-+		type_parse(name, override, type);
-+	else
-+		__type_expand(cache, type);
- }
- 
- static void type_parse(const char *name, const char *str,
-@@ -416,8 +400,6 @@ static void type_parse(const char *name, const char *str,
- 	if (!*str)
- 		error("empty type string override for '%s'", name);
- 
--	type_expansion_init(type);
--
- 	for (pos = 0; str[pos]; ++pos) {
- 		bool empty;
- 		char marker = ' ';
-@@ -478,7 +460,6 @@ static void type_parse(const char *name, const char *str,
- static void expand_type(struct die *cache, void *arg)
- {
- 	struct type_expansion type;
--	const char *override;
- 	char *name;
- 
- 	if (cache->mapped)
-@@ -504,11 +485,7 @@ static void expand_type(struct die *cache, void *arg)
- 
- 	debug("%s", name);
- 
--	if (stable && kabi_get_type_string(name, &override))
--		type_parse(name, override, &type);
--	else
--		type_expand(cache, &type, true);
--
-+	type_expand(name, cache, &type);
- 	type_map_add(name, &type);
- 	type_expansion_free(&type);
- 	free(name);
-@@ -518,7 +495,6 @@ static void expand_symbol(struct symbol *sym, void *arg)
- {
- 	struct type_expansion type;
- 	struct version version;
--	const char *override;
- 	struct die *cache;
- 
- 	/*
-@@ -532,10 +508,7 @@ static void expand_symbol(struct symbol *sym, void *arg)
- 	if (__die_map_get(sym->die_addr, DIE_SYMBOL, &cache))
- 		return; /* We'll warn about missing CRCs later. */
- 
--	if (stable && kabi_get_type_string(sym->name, &override))
--		type_parse(sym->name, override, &type);
--	else
--		type_expand(cache, &type, false);
-+	type_expand(sym->name, cache, &type);
- 
- 	/* If the symbol already has a version, don't calculate it again. */
- 	if (sym->state != SYMBOL_PROCESSED) {
+> +
+> +	return msm_dp_display_mode_valid(dp_display, &dp_display->connector->display_info, mode);
+> +}
+> +
 
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
 -- 
-2.50.0.rc0.604.gd4ff7b7c86-goog
-
+With best wishes
+Dmitry
