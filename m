@@ -1,102 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C859194C96
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 18:31:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF41218DB1E
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 18:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749493893; cv=none; b=a0tBwMqnIZ6IieI2X67CgQrLG2C5UX07fqQsd4TYrfd/HgbF+FFqUbu29Ptu7R/V6lYpRjO2VrRuFnKWgxjdLUHPwZN0RXZEHwVAtItUwaLki0Y+j2PHnfhg5r9Bw9U4BuedfPtb0V8OUj6XAjkfkq2LzRbEi7z+mipkeP5XTbA=
+	t=1749493953; cv=none; b=uFo6HV07bVBgKRln6tk5gyJBCY8+pAH+9Hv6wRyzp+lmJ3Hojh6A2NKUvQUT0kBV2gnAOidaJTI2s0beLRReHf87i2Tj/OZK1tq1FvZrcFYaNVZD4BFVDPa1rAh4JZ3EmVa73Gc6RK8Xf76g/05jbYawXiC/akDMjzUvW3xi3Ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749493893; c=relaxed/simple;
-	bh=fgueocZZowLpXdoMcanR7Q+bBOQqTNmunyp7ptJtW4Q=;
+	s=arc-20240116; t=1749493953; c=relaxed/simple;
+	bh=mSxBcrXA0w+KXiGmg2HLzqvC+derylyEkWVZ8CDXHXc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cqVhVVFtBt5wAy2CmUjbwgRKBEOcJUTsOHyMDmauclmmJSdQCcmF560eZmkRTZl1rWY7kRT6usju5AVANULXA1ENtUjKKQgvryHV05773UnBdrPG18sIw1CJrtqc67WtlxuOAI+EBrhHqBJa8z5l0EXcfF66oZn+Z8rRS2I9YiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LQHtV085; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=QirdtaERtv0nvlTj/deeKi8HYoRq5PgBFZK/sQw32QzbM2tIhHZiuqCUy4KRzkRwAh0NwgEayc9OmYYiqtrqD7immhlv18fDg9BX8/lXAxcEf6jK0t50cYTxvups3zcFqGx5I3c+ojm2x9NY8PboYaEb1B6xR7RRBUeqoavn9rM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FCWW+TPb; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LQHtV085"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5EC5C4CEEB;
-	Mon,  9 Jun 2025 18:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749493892;
-	bh=fgueocZZowLpXdoMcanR7Q+bBOQqTNmunyp7ptJtW4Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LQHtV085EALEU9Uh6NmdxJRQrpJUYNY1kFlkYssDG1y5EFUcuVA+6NSpxy/pafhfw
-	 MlvC58/dL1LWw9OSuuUykLpilsz0eNPKSHpZEUq8CIEtWzyn8IjGyzPA+PsxpbmmKc
-	 ozRBj4Kr0T7a7Nj8zq9NASeN7XQNDHTQoKCLi2+gPdin1HHJWaxpl+Kp6n7eV+36+D
-	 IiB6L0pBjc+Q/uWbCNtwH0qJW1/G520K2thzc8aV/Oe1UgecGPJIzcg75wfl6f/M9j
-	 6MnQ2sHwNlNYDiJpVMDwZzpo2Zu6YdnLl/AY3Qz5OcCSbB1Diwh4tS4WzzLfYe0D02
-	 hFz8fHY9H4Nfg==
-Date: Mon, 9 Jun 2025 11:31:30 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc: linux-kernel@vger.kernel.org, mingo@kernel.org, peterz@infradead.org
-Subject: Re: [RFC 00/13] objtool: Function validation tracing
-Message-ID: <vx6cxar2ium7zsqqzf57lmn2nhwemi2kmeu2kal6s4mazj3tp3@zdymccnsispv>
-References: <20250606153440.865808-1-alexandre.chartre@oracle.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FCWW+TPb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749493950;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IdszMmqewdn1OcGyIgGWWjzOYvoo8c+7qVHW/Cw3RRA=;
+	b=FCWW+TPbPwzt0UEcibEykooEIt4DAtK9aP1tUDE4NsSCOAVW5qIluqPQ8/geC0KyC4E+AT
+	thI6a/fjmtCp7jRD90hPeTGPAVXxxk/fAGXXOh1pEg2N0mzHMKN68V8J8qAuIBoCoWwO8n
+	c8nQOLayUNzU4YEVzcJ0+igRkodkWcs=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-691-cyYXWArdOF2mBlz9gxNe_g-1; Mon,
+ 09 Jun 2025 14:32:27 -0400
+X-MC-Unique: cyYXWArdOF2mBlz9gxNe_g-1
+X-Mimecast-MFC-AGG-ID: cyYXWArdOF2mBlz9gxNe_g_1749493945
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 57D111801BD8;
+	Mon,  9 Jun 2025 18:32:25 +0000 (UTC)
+Received: from redhat.com (unknown [10.22.81.60])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 31D151956087;
+	Mon,  9 Jun 2025 18:32:22 +0000 (UTC)
+Date: Mon, 9 Jun 2025 14:32:19 -0400
+From: Joe Lawrence <joe.lawrence@redhat.com>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
+	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
+	Marcos Paulo de Souza <mpdesouza@suse.com>,
+	Weinan Liu <wnliu@google.com>,
+	Fazla Mehrab <a.mehrab@bytedance.com>,
+	Chen Zhongjin <chenzhongjin@huawei.com>,
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 52/62] objtool/klp: Introduce klp diff subcommand for
+ diffing object files
+Message-ID: <aEcos4fig5KVDQSp@redhat.com>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <f6ffe58daf771670a6732fd0f741ca83b19ee253.1746821544.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250606153440.865808-1-alexandre.chartre@oracle.com>
+In-Reply-To: <f6ffe58daf771670a6732fd0f741ca83b19ee253.1746821544.git.jpoimboe@kernel.org>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Fri, Jun 06, 2025 at 05:34:27PM +0200, Alexandre Chartre wrote:
-> Hi,
-> 
-> This RFC provides two changes to objtool.
-> 
-> - Disassemble code with libopcodes instead of running objdump
-> 
->   objtool executes the objdump command to disassemble code. In particular,
->   if objtool fails to validate a function then it will use objdump to
->   disassemble the entire file which is not very helpful when processing
->   a large file (like vmlinux.o).
-> 
->   Using libopcodes provides more control about the disassembly scope and
->   output, and it is possible to disassemble a single instruction or
->   a single function. Now when objtool fails to validate a function it
->   will disassemble that single function instead of disassembling the
->   entire file.
-> 
-> - Add the --trace <function> option to trace function validation
-> 
->   Figuring out why a function validation has failed can be difficult because
->   objtool checks all code flows (including alternatives) and maintains
->   instructions states (in particular call frame information).
-> 
->   The trace option allows to follow the function validation done by objtool
->   instruction per instruction, see what objtool is doing and get function
->   validation information. An output example is shown below.
+On Fri, May 09, 2025 at 01:17:16PM -0700, Josh Poimboeuf wrote:
+> +static int validate_ffunction_fdata_sections(struct elf *elf)
+> +{
+> +	struct symbol *sym;
+> +	bool found_text = false, found_data = false;
+> +
+> +	for_each_sym(elf, sym) {
+> +		char sec_name[SEC_NAME_LEN];
+> +
+> +		if (!found_text && is_func_sym(sym)) {
+> +			snprintf(sec_name, SEC_NAME_LEN, ".text.%s", sym->name);
+> +			if (!strcmp(sym->sec->name, sec_name))
+> +				found_text = true;
+> +		}
+> +
+> +		if (!found_data && is_object_sym(sym)) {
+> +			snprintf(sec_name, SEC_NAME_LEN, ".data.%s", sym->name);
+> +			if (!strcmp(sym->sec->name, sec_name))
+> +				found_data = true;
 
-What do I need for this to build?  It wasn't compiling due to missing
-bfd.h, so I installed binutils-devel (Fedora) and now I get:
+Hi Josh,
 
-In file included from disas.c:12:
-/home/jpoimboe/git/linux/tools/include/tools/dis-asm-compat.h:10:6: error: redeclaration of ‘enum disassembler_style’
-   10 | enum disassembler_style {DISASSEMBLER_STYLE_NOT_EMPTY};
-      |      ^~~~~~~~~~~~~~~~~~
-In file included from /home/jpoimboe/git/linux/tools/objtool/include/objtool/arch.h:10,
-                 from disas.c:6:
-/usr/include/dis-asm.h:53:6: note: originally defined here
-   53 | enum disassembler_style
-      |      ^~~~~~~~~~~~~~~~~~
-/home/jpoimboe/git/linux/tools/include/tools/dis-asm-compat.h: In function ‘init_disassemble_info_compat’:
-/home/jpoimboe/git/linux/tools/include/tools/dis-asm-compat.h:50:9: error: too few arguments to function ‘init_disassemble_info’
-   50 |         init_disassemble_info(info, stream,
-      |         ^~~~~~~~~~~~~~~~~~~~~
-/usr/include/dis-asm.h:480:13: note: declared here
-  480 | extern void init_disassemble_info (struct disassemble_info *dinfo, void *stream,
-      |             ^~~~~~~~~~~~~~~~~~~~~
-make[4]: *** [/home/jpoimboe/git/linux/tools/build/Makefile.build:86: /home/jpoimboe/git/linux/tools/objtool/disas.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-make[3]: *** [Makefile:65: /home/jpoimboe/git/linux/tools/objtool/objtool-in.o] Error 2
-make[2]: *** [Makefile:73: objtool] Error 2
-make[1]: *** [/home/jpoimboe/git/linux/Makefile:1448: tools/objtool] Error 2
-make: *** [Makefile:248: __sub-make] Error 2
+Should we check for other data section prefixes here, like:
 
--- 
-Josh
+			else {
+				snprintf(sec_name, SEC_NAME_LEN, ".rodata.%s", sym->name);
+				if (!strcmp(sym->sec->name, sec_name))
+					found_data = true;
+			}
+
+because on my system, I tried patching net/netfilter/nft_tunnel.c, but
+if I look at its OBJECTS and their corresponding sections, I see:
+
+    24: 0000000000000000    24 OBJECT  LOCAL  DEFAULT   71 __msg.92
+  [71] .rodata.__msg.92  PROGBITS
+
+    43: 000000000000003f    22 OBJECT  LOCAL  DEFAULT   72 __UNIQUE_ID_alias_1010
+    42: 000000000000002f    16 OBJECT  LOCAL  DEFAULT   72 __UNIQUE_ID_alias_1011
+    44: 0000000000000055    47 OBJECT  LOCAL  DEFAULT   72 __UNIQUE_ID_author_1009
+    41: 0000000000000000    47 OBJECT  LOCAL  DEFAULT   72 __UNIQUE_ID_description_1012
+    45: 0000000000000084    12 OBJECT  LOCAL  DEFAULT   72 __UNIQUE_ID_license_1008
+  [72] .modinfo
+
+    47: 0000000000000000     8 OBJECT  LOCAL  DEFAULT   73 __UNIQUE_ID_addressable_cleanup_module_1007
+  [73] .exit.data
+
+    49: 0000000000000000     8 OBJECT  LOCAL  DEFAULT   75 __UNIQUE_ID_addressable_init_module_1006
+  [72] .modinfo
+
+    51: 0000000000000000    56 OBJECT  LOCAL  DEFAULT   77 nft_tunnel_obj_ops
+  [77] .rodata.nft_tunnel_obj_ops
+
+     5: 0000000000000000    64 OBJECT  LOCAL  DEFAULT   79 nft_tunnel_obj_type
+     4: 0000000000000040    80 OBJECT  LOCAL  DEFAULT   79 nft_tunnel_type
+  [79] .data..read_mostly
+
+    53: 0000000000000000   160 OBJECT  LOCAL  DEFAULT   81 nft_tunnel_key_policy
+  [81] .rodata.nft_tunnel_key_policy 
+
+    30: 0000000000000000    64 OBJECT  LOCAL  DEFAULT   82 nft_tunnel_opts_policy
+  [82] .rodata.nft_tunnel_opts_policy
+
+    23: 0000000000000000    64 OBJECT  LOCAL  DEFAULT   83 nft_tunnel_opts_geneve_policy
+  [83] .rodata.nft_tunnel_opts_geneve_policy
+
+    32: 0000000000000000    80 OBJECT  LOCAL  DEFAULT   84 nft_tunnel_opts_erspan_policy
+  [84] .rodata.nft_tunnel_opts_erspan_policy
+
+    31: 0000000000000000    32 OBJECT  LOCAL  DEFAULT   85 nft_tunnel_opts_vxlan_policy
+  [85] .rodata.nft_tunnel_opts_vxlan_policy
+
+    20: 0000000000000000    64 OBJECT  LOCAL  DEFAULT   86 nft_tunnel_ip6_policy
+  [86] .rodata.nft_tunnel_ip6_policy
+
+    29: 0000000000000000    48 OBJECT  LOCAL  DEFAULT   87 nft_tunnel_ip_policy
+  [87] .rodata.nft_tunnel_ip_policy
+
+    62: 0000000000000000   136 OBJECT  LOCAL  DEFAULT   88 nft_tunnel_get_ops
+  [88] .rodata.nft_tunnel_get_ops
+
+    64: 0000000000000000    64 OBJECT  LOCAL  DEFAULT   91 nft_tunnel_policy
+  [91] .rodata.nft_tunnel_policy
+
+I believe there are others like this, drivers/firmware/iscsi_ibft.o for
+one, so even though validate_ffunction_fdata_sections() only needs to
+find one .text.<section> and one .data.<section>, not all objects may be
+able to provide that.
+
+At the same time, while we're here, what about other .text.* section
+prefixes?
+
+--
+Joe
+
