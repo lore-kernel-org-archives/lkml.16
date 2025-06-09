@@ -1,75 +1,115 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE311FAA;
-	Mon,  9 Jun 2025 18:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A1E18DB1E;
+	Mon,  9 Jun 2025 18:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749493813; cv=none; b=fQpqx4gvKdJ9MevLjNt/jui4z8C/lqoS/lhT4qC9T/SDoHnwAogDF4CdUaZuqXhZGq0KsOpSMlA+vEyBfeK3ww/T6n0kk7V+h1vuHeI+erMwpGZuhxeac3mFT+X5gmA6lup7o8nyds0KA/WClssOiiVfxwn6+jcF++EZ+WjpB3c=
+	t=1749493849; cv=none; b=BF27SNzEZnIfXJGXrxbCU7Fhey/G1hGnxiNp4sjpG6ZUd70gSneT4VggxXRsi9FP+eIy5Am5nA8+XUnXImr+QtavS6zjXKaDwpmPQDhMB5BGE+wnEZu6iGwCHm+gFcMk/vbhQo3uxV/VJtwsNaHPxnMZBHZw7QD8525jiFeU9dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749493813; c=relaxed/simple;
-	bh=kjW3bXWtT9KddxypLMRSdi906UpsccRqwwYpDQtcvUo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=T/9dHvXNZk08Bt4GmKNLI7S6BKloY38j/A4277f4KbQ65pSvAYdGZ3KPYnAiVr17h3cEu87+s7rtBZK3dTUACyzguNDEXetrctALAAvXlcOYtB1V0esvlXNHEUIqJOwYJHcyNHbN8ng6wb3JQh0q6fnCiD06QtCOg5Y2Bcj96k4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=Y9CMZLa2; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1749493849; c=relaxed/simple;
+	bh=kSqp7xdGiH9obmGvICN2dilw+ZNLNFHGLUyAcwrnVF0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PuOlL4V7q5kswNYJgvJvFR3qiM6f39ZMLuvMnsZna50RxeYKXyezfyx3IWqRY3bQBIaH0qDVfjkHlpx7RWrRHwztcEpBtZ/c7LpZCnEInC/3NsqDkFVcc4CiQ3DyVuORmaWx4LFFRL/IpF704HhoAau8XIiQWtZPLSt+F+Vi5KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fsYlizaZ; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="Y9CMZLa2"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 8A51F41AA1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1749493808; bh=XYGYRkyG9IlI4ZNS524wiPaT2tN2DQXtYfqupXo9Sms=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Y9CMZLa294WgXKldnbrEh35bU4APnaG7nk+M8zmqx425Okivh2L2eg/21Yb85JUOs
-	 fLbXebU2jcIhWoZNGYXoIAGCJyiRrZXr7ysc5nyYV9EbfBWEzU44NniApGEYi0G1vm
-	 C3xYeE1f8lRiNgS/SsghKA2EycbugpwFPj7eYsPnZiX/YkCID4YO2sQohuVk86H9bY
-	 zERaN2ovvWVCpN1vfTr859JZgVDAJV+El7rghnoo1EuUZBbsMU1vRAw/HNGuP4QyDY
-	 SY8LSDGvmBamXubCVvYbDqS3z0McmJeWzVKji5xGp7ai47MJGWLOo5nX3CJofxUZoz
-	 gV3U0iRK+63JQ==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 8A51F41AA1;
-	Mon,  9 Jun 2025 18:30:08 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Collin Funk <collin.funk1@gmail.com>, olteanv@gmail.com
-Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Collin Funk <collin.funk1@gmail.com>
-Subject: Re: [PATCH] docs: packing: Fix a typo in example code.
-In-Reply-To: <e532b992a79999d3405a363db4b2bd4504fed592.1749434907.git.collin.funk1@gmail.com>
-References: <e532b992a79999d3405a363db4b2bd4504fed592.1749434907.git.collin.funk1@gmail.com>
-Date: Mon, 09 Jun 2025 12:30:07 -0600
-Message-ID: <87jz5kbweo.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fsYlizaZ"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-313336f8438so805215a91.0;
+        Mon, 09 Jun 2025 11:30:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749493848; x=1750098648; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kSqp7xdGiH9obmGvICN2dilw+ZNLNFHGLUyAcwrnVF0=;
+        b=fsYlizaZDKrzAvLdj4HlwGTbr6wCCOimehzPDdZjs4Sks4tErI4Gh6y2cdmqu6g0Ya
+         4l2JKlwczlRh7D5Vkq04mpIi3jTb3IwcHR5nJTsmqTsTHyZD02fq6kCNwiQ5jsnWwuII
+         J15rprIGoVCu4EakUzFAZWjxEp1LGmHL0d9CJ/BQtXdMG0gcjNc0Oaq6qjtfaJ1/wrx2
+         Mig+Qand+jZPkM2vZW/dTrKEC3NYA7G9wTZWOetC1EXc8EnXwTSIiGeGGn7RIhuawghO
+         esdisoCmsD7VM/OHcTUmE3eYwF7SeWFfO4pKiOs/kt3ZghUYQWqqIgk3MpKhLAOvkbO1
+         lMQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749493848; x=1750098648;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kSqp7xdGiH9obmGvICN2dilw+ZNLNFHGLUyAcwrnVF0=;
+        b=PFgcIUQJx//xf+dKhDNdBgFmbPhaJ5P+Tl6o9omw14I7azz7du22wtk5XIeOhX8xw7
+         l3eZAe5Zz66lcuf8QxhTxo3ErYO/Flf6VdLCpO9P91nfJa6BYsVPkR8gvAYxDvBlQelc
+         tDBNo+VUNdZQBQLwZXvxqKXvftLWXI8DkbNbCLgpGBZxVkL9mtUNcFCTu+fMlQK2lVCJ
+         mTnnFQMUy7WzzoLH/PP2nS1KweE2vho984FYG8iWx9jQIwfHNUiLH9TdZG1Q9qj5uABT
+         ghjjfutB8mNEoILft45HxjSOGnqpuaDlz7ypMotN0sM1JJ95CtXBG8qihRqhJwGJudyp
+         LraQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUt+TnoJH24yjDhNr3o6wrmpPHwC1idmKLSabnlRmHjL0f0+ASC1slHRKbq02LN5epNXNOjacxV4LPb@vger.kernel.org, AJvYcCV38lOykGhgL7Tq4+/1HJ+BcDMvl937HAXlkQwsDePe3b20nqE4jJFqeix3Zi/th41S71SXjBh+ALWnqik=@vger.kernel.org, AJvYcCWjEtwBU1wgTAIM+hyA7NThRhwpms8KHkIQeC/w/CrXGHNF1Z0RNYw/clZooxLX7XkcCh9UpIkS/tqQuQY6kqQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/VTcfbAV4N0JFAdDAXyt2HAosCqfWDgR0OZObsfuaKZmglUH4
+	0vvCPP/aX/8wzisMQno7FbbaZ9G9nxXr+Wq75oDFoQcL5uzB/AzqUtE4rd0PtC8GkzL3VwWEsqL
+	Oo4YkptryTfEXFeD0jqfCRSCEPw8PUThpbUsesAQ=
+X-Gm-Gg: ASbGncvHP44f7DrX7p92u0D7l8cRV51u6fri2nV0DVothl5CzA2WhZJRqWUk2Qiaze/
+	C2nI3kuvu2R/ZRglcgHK7uJmqb6MiwwWzJjRYlA7EhdbnQJTADHICb6BzfjQnj01GjMQChdcsMM
+	sl0IJrCDyAspJLLXY43OuGxYNreWxpdoSkI34U0cKyKF4=
+X-Google-Smtp-Source: AGHT+IG8O6dJD6YenGjKBAaB7Xp6ElZJ/t3q7SEEUy4RXr1SdRmbG0mytNXzQLPWJwZViCVdjJo9ZmcDn7+rjM8guew=
+X-Received: by 2002:a17:90b:268e:b0:311:e8cc:4250 with SMTP id
+ 98e67ed59e1d1-3134e3e4268mr6383005a91.3.1749493847851; Mon, 09 Jun 2025
+ 11:30:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
+ <20250608-topics-tyr-request_irq-v4-4-81cb81fb8073@collabora.com>
+ <aEbTOhdfmYmhPiiS@pollux> <5B3865E5-E343-4B5D-9BF7-7B9086AA9857@collabora.com>
+ <aEckTQ2F-s1YfUdu@pollux.localdomain>
+In-Reply-To: <aEckTQ2F-s1YfUdu@pollux.localdomain>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 9 Jun 2025 20:30:35 +0200
+X-Gm-Features: AX0GCFskVq8r2u558pBKMmbRLwweW4kkEdVpW6cWfF4ZluivSv1U_fzfgaAvmts
+Message-ID: <CANiq72keAJxDQHHa5gAoFyV1rXpdf_r_vY1R5bFyRC4ph3BRUA@mail.gmail.com>
+Subject: Re: [PATCH v4 4/6] rust: irq: add support for threaded IRQs and handlers
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Daniel Almeida <daniel.almeida@collabora.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Benno Lossin <lossin@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Collin Funk <collin.funk1@gmail.com> writes:
-
-> Fix misspelling of "typedef".
+On Mon, Jun 9, 2025 at 8:13=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> w=
+rote:
 >
-> Signed-off-by: Collin Funk <collin.funk1@gmail.com>
-> ---
->  Documentation/core-api/packing.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On Mon, Jun 09, 2025 at 01:24:40PM -0300, Daniel Almeida wrote:
+> >
+> > This iteration converted register() from pub to pub(crate). The idea wa=
+s to
+> > force drivers to use the accessors. I assumed this was enough to make t=
+he API
+> > safe, as the few users in the kernel crate (i.e.: so far platform and p=
+ci)
+> > could be manually checked for correctness.
+> >
+> > To summarize my point, there is still the possibility of misusing this =
+from the
+> > kernel crate itself, but that is no longer possible from a driver's
+> > perspective.
 >
-> diff --git a/Documentation/core-api/packing.rst b/Documentation/core-api/packing.rst
-> index 0ce2078c8e13..f68f1e08fef9 100644
-> --- a/Documentation/core-api/packing.rst
-> +++ b/Documentation/core-api/packing.rst
-> @@ -319,7 +319,7 @@ Here is an example of how to use the fields APIs:
->  
->     #define SIZE 13
->  
-> -   typdef struct __packed { u8 buf[SIZE]; } packed_buf_t;
-> +   typedef struct __packed { u8 buf[SIZE]; } packed_buf_t;
->  
+> Correct, you made Registration::new() crate private, such that drivers ca=
+n't
+> access it anymore. But that doesn't make the function safe by itself. It'=
+s still
+> unsafe to be used from platform::Device and pci::Device.
 
-Applied, thanks.
+Yeah.
 
-jon
+Even if a function is fully private (i.e. not even `pub(crate)`), then
+it should still be marked as unsafe if it is so.
+
+Cheers,
+Miguel
