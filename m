@@ -1,39 +1,38 @@
 Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380CA23A9B4;
-	Mon,  9 Jun 2025 09:51:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08019253347;
+	Mon,  9 Jun 2025 09:51:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749462675; cv=none; b=eUFFktGa19MrVt/sFGUltyX3s1YF1wK/CYHuEKgtOrTi+NCG190V/76SbQl1hSa1hQ9lWpOaPN6O/N1c4B9x5FNtuFLE32Z07uB9LN3nCnT7bAMgKRS9f/J3H45IRJuyp0iC/+bV4gqxVOMiwp/eP+H4PYua97aPiOEUPgrFdPg=
+	t=1749462677; cv=none; b=aAaTE+e+zY+th/Ua7qYwKgCtvvvFd329SayV9RS/fH0Xd+hWUFYpkR6V65qvP4tyD6B4qvIt2BIbcjy7Qw6+3JmyVK3BZkY7BIUZK9yvmCJzz6VBWGy32dlzeISRKlBHvPIcf6SnATAPF5YmlxG+mM1Ygfe71BSKBUph8Bz4QzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749462675; c=relaxed/simple;
-	bh=41oKepKpYU0m8ypYcTu1D/Elc2cVO3p9QdMctvoAPLU=;
+	s=arc-20240116; t=1749462677; c=relaxed/simple;
+	bh=c/VjgngVldLlTaqu+7JoDMmHcqtvz8kBdxTEdrJXtao=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XP16zlwLbETlkkcjzv4LukW1e4g6EE901Ls2ZqJX4Z5hlIOm7WB5XyzuLpGRvqgaKU2/43ox/GtR3QaVHykn7CQ2qHO2n7LP3+O26Ea7QG+IO/JF87ngEJpjJWOTG++RVIccw7mIGr0yIrb+ASSyl5h1q0GJiDK2j6Q0YJzdjxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Q9Ho6NU9; arc=none smtp.client-ip=217.70.183.193
+	 In-Reply-To:To:Cc; b=B2PfI1KEJWgrjdYgvitX1h52BcNVuLu24OqmhSPUhNyWgMCByouOfAtZ8edj3pbvaBODb3FP3vf5viox4zqYJ9/20LdZtHvkhstKw+l6RhokUcXnqdCShO0sW81+PfTT65phA/OTWrW9S94w3GPCWhU4MPzqn+/vHLM39B/8Vag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kn8no0hl; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Q9Ho6NU9"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D912F439FC;
-	Mon,  9 Jun 2025 09:51:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kn8no0hl"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3002C439FB;
+	Mon,  9 Jun 2025 09:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749462671;
+	t=1749462673;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lcWRNHC5VdvLObEjZlnfNKISP+IeJpfM6USdlnuoE10=;
-	b=Q9Ho6NU9ozrXrrFIKoOSrwQzi5Hlx/se7VnggRACs8wALYsvlgj2hAmAFA2D/e0XlaQHIi
-	1kXdigZUprkNGZeXGVE0YHUEEHFJF3TlubVXoMChSiTHhF7QJM3qDS28ki84d09ZcDyGG5
-	CRaPIw77jRmIKFR5wMBmL/UC3CDQgnJQZS9RXq/K1NeHhkFbIcKka1jjEO8xVRHHgQHKjE
-	n5jokxzjRdJJfKJq4oOaHnC1kzxtUGvwGHMm0rLM1S1PrB2pw2SOdmqwP4zUl9/BuYKGbX
-	IPk72reJ2p85UGnyr4YjP2AVlULhQqVgISBRhceprHSOnnl35/+k8dFrcuEGpA==
+	bh=8+O5hiCoC5alHeoniheaAHRlGSS5BBU+n2qDYbHK6bQ=;
+	b=kn8no0hlU5xRg6Wc9sQjbEyHZwwBl3ec9fCqZETZ7tEFX3No8ZFRTpmLEjReQ84nBnO8Zr
+	IgLDoiFBzzPek6amqS7MWEYFpziur3O9O3aVv2fyNBzzDAO0goxSjmT0CtcVTvc7RZX4iT
+	Vs9cMuASwDANzfHtA3SPykzGd8D8uZAgw9ldoYfuE1w9PqnxugOzL0+Ir8V8eHlgl5G9yn
+	Bb7cW9VNcsCmfhn1SJ+p+su1B2hdG9APOfbQGruiB8WuolfPRBX+7Z6h2NXXqr9xv9RpKI
+	t/c1rlq7+wHvzdAooAmmoWOlwVkR7MrF6oHsSsyu0z3ZOtvYaLgQm8AKwuZ5Ww==
 From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Mon, 09 Jun 2025 11:51:03 +0200
-Subject: [PATCH v7 05/10] gpio: aggregator: update
- gpiochip_fwd_setup_delay_line() parameters
+Date: Mon, 09 Jun 2025 11:51:07 +0200
+Subject: [PATCH v7 09/10] lib/string_choices: Add str_input_output() helper
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250609-aaeon-up-board-pinctrl-support-v7-5-1ab73ec0cb98@bootlin.com>
+Message-Id: <20250609-aaeon-up-board-pinctrl-support-v7-9-1ab73ec0cb98@bootlin.com>
 References: <20250609-aaeon-up-board-pinctrl-support-v7-0-1ab73ec0cb98@bootlin.com>
 In-Reply-To: <20250609-aaeon-up-board-pinctrl-support-v7-0-1ab73ec0cb98@bootlin.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -57,74 +56,37 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
 X-Mailer: b4 0.14.1
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdeludegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeektdehvdeiteehtdelteffheduveelgeelvdetgedvueejgefhhfekgefgfeduveenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopeffrghnihgvlhgvvehlvghrihesrggrvghonhdrvghupdhrtghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtt
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdeludegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeektdehvdeiteehtdelteffheduveelgeelvdetgedvueejgefhhfekgefgfeduveenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgepjeenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopeffrghnihgvlhgvvehlvghrihesrggrvghonhdrvghupdhrtghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtt
  hhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepifgrrhihhggrnhhgsegrrggvohhnrdgtohhmrdhtfidprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrgh
 X-GND-Sasl: thomas.richard@bootlin.com
 
-Remove useless parameters of gpiochip_fwd_setup_delay_line().
+Add str_input_output() helper to return 'input' or 'output' string literal.
+Also add the inversed variant str_output_input().
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Suggested-by: Andy Shevchenko <andy@kernel.org>
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 ---
- drivers/gpio/gpio-aggregator.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ include/linux/string_choices.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
-index 028ac79758d2..f1f48ceed75f 100644
---- a/drivers/gpio/gpio-aggregator.c
-+++ b/drivers/gpio/gpio-aggregator.c
-@@ -453,10 +453,11 @@ static int gpiochip_fwd_delay_of_xlate(struct gpio_chip *chip,
- 	return line;
+diff --git a/include/linux/string_choices.h b/include/linux/string_choices.h
+index f3ba4f52ff26..a27c87c954ae 100644
+--- a/include/linux/string_choices.h
++++ b/include/linux/string_choices.h
+@@ -41,6 +41,12 @@ static inline const char *str_high_low(bool v)
  }
+ #define str_low_high(v)		str_high_low(!(v))
  
--static int gpiochip_fwd_setup_delay_line(struct device *dev, struct gpio_chip *chip,
--					 struct gpiochip_fwd *fwd)
-+static int gpiochip_fwd_setup_delay_line(struct gpiochip_fwd *fwd)
- {
--	fwd->delay_timings = devm_kcalloc(dev, chip->ngpio,
-+	struct gpio_chip *chip = &fwd->chip;
++static inline const char *str_input_output(bool v)
++{
++	return v ? "input" : "output";
++}
++#define str_output_input(v)	str_input_output(!(v))
 +
-+	fwd->delay_timings = devm_kcalloc(chip->parent, chip->ngpio,
- 					  sizeof(*fwd->delay_timings),
- 					  GFP_KERNEL);
- 	if (!fwd->delay_timings)
-@@ -468,8 +469,7 @@ static int gpiochip_fwd_setup_delay_line(struct device *dev, struct gpio_chip *c
- 	return 0;
- }
- #else
--static int gpiochip_fwd_setup_delay_line(struct device *dev, struct gpio_chip *chip,
--					 struct gpiochip_fwd *fwd)
-+static int gpiochip_fwd_setup_delay_line(struct gpiochip_fwd *fwd)
+ static inline const char *str_on_off(bool v)
  {
- 	return 0;
- }
-@@ -571,7 +571,6 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
- 						unsigned long features)
- {
- 	struct gpiochip_fwd *fwd;
--	struct gpio_chip *chip;
- 	unsigned int i;
- 	int error;
- 
-@@ -579,8 +578,6 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
- 	if (IS_ERR(fwd))
- 		return fwd;
- 
--	chip = &fwd->chip;
--
- 	for (i = 0; i < ngpios; i++) {
- 		error = gpiochip_fwd_desc_add(fwd, descs[i], i);
- 		if (error)
-@@ -588,7 +585,7 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
- 	}
- 
- 	if (features & FWD_FEATURE_DELAY) {
--		error = gpiochip_fwd_setup_delay_line(dev, chip, fwd);
-+		error = gpiochip_fwd_setup_delay_line(fwd);
- 		if (error)
- 			return ERR_PTR(error);
- 	}
+ 	return v ? "on" : "off";
 
 -- 
 2.39.5
