@@ -1,230 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B837283120
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 07:34:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E0B27F160
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 07:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749454498; cv=none; b=r2IWwgVOCS0MSbHomDGbPTsYB9d8O0gAv1673TozPYJdmIXzTH7kRJ3/Vl7pqMP7bQVLGQcXe+WhzWBbOZul4fzSSApY1yWEp/DN9ibAHylocUa4XrEEb1MMD+HkmCHNeppxD/j85MmWEcc9pvg3+cmcuQ3U8Lrt1tDDIdEiGnc=
+	t=1749454547; cv=none; b=b0RzvFWgqch126EEMBVyeQvjGpMl5nXFIhHdm/QdF1pqJ7Jpw0B7itpZtee7JmRzLgX0FNdSWVskdpAmijxeUz5KqSCKw3gbZWRRwP24r/i4VkGlab72aX7WSBsHu8x1gooLVKPgifVHfJR5/1uNTZvVKb6QeroP2PvQkMKKIZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749454498; c=relaxed/simple;
-	bh=0vQ6N7iSJnD4P+9/KJRL22ef5jUU7oxYx6yBbjj9pHQ=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ra5WibmFnWU0k0EDZnO0sS6VIrNCQLBfUEZNXKa5B9bmDoUXR8sc3a1Ewva8QMdb0vcMufntk7yxuQlMnOlIAsL/lsqNmVZGf5AZABfYTa/tsractm/RAOCjAcnobxd+JBJnoLYDu/Km+Qe/Ka4TuNbXrAFm4z+x/QxpPzdzLzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QHXzVXmZ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749454547; c=relaxed/simple;
+	bh=6voCWdZWcG4RRH+vYohcvQyoOOny8z1Oe8Y1Z2MemY4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TKLdrHIjvpeEpazmEo2+2edw4C7j2nwAuz0CeKf7u6ko/IcAspj+apDcxBaeFPagBAbNprZrBjojmbKb76VRtoQjsB1HwuSbTCH+uQyUO6Y4H/LcwCKdJ/ORulMUuV9aweXo/9BCmPL1/oMWiCqp3hNhlRozQellBQzIih0VmfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=gSpZqNtm; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QHXzVXmZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749454495;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ha5cwWF1J5azN7tjHTmIZDXO2H/0tX5X1ldzABYBepU=;
-	b=QHXzVXmZozWQm7ltuo7tparqGmQx5rmkMRRVKMj8HXywc5PH+CPFht8aFDpqWfqeAQk6kC
-	dv7dhFQve1oi/apOvNIb4h8F2noEPE20hyTqddLxmHSrHDd6rQbBrup/r07xQI+ViQvxyY
-	pPS0N3WZqAc4Hs58EcVtd4eqi8AKhkA=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-628-Ez1jdxpFOfyoxJ1DxF1xyQ-1; Mon,
- 09 Jun 2025 03:34:52 -0400
-X-MC-Unique: Ez1jdxpFOfyoxJ1DxF1xyQ-1
-X-Mimecast-MFC-AGG-ID: Ez1jdxpFOfyoxJ1DxF1xyQ_1749454491
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 039FB195608B;
-	Mon,  9 Jun 2025 07:34:51 +0000 (UTC)
-Received: from server.redhat.com (unknown [10.72.112.22])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2449419560AB;
-	Mon,  9 Jun 2025 07:34:46 +0000 (UTC)
-From: Cindy Lu <lulu@redhat.com>
-To: lulu@redhat.com,
-	jasowang@redhat.com,
-	mst@redhat.com,
-	michael.christie@oracle.com,
-	sgarzare@redhat.com,
-	linux-kernel@vger.kernel.org,
-	virtualization@lists.linux-foundation.org,
-	netdev@vger.kernel.org
-Subject: [PATCH v11 3/3] vhost: Add configuration controls for vhost worker's mode
-Date: Mon,  9 Jun 2025 15:33:09 +0800
-Message-ID: <20250609073430.442159-4-lulu@redhat.com>
-In-Reply-To: <20250609073430.442159-1-lulu@redhat.com>
-References: <20250609073430.442159-1-lulu@redhat.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="gSpZqNtm"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-450cfb6a794so25938455e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 00:35:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1749454544; x=1750059344; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8RuWRqP0d99Xv1WKhTslXLfzi2R4jCLF5zn4rM3x2gk=;
+        b=gSpZqNtmgwPQ232q6nNNnR26rS8Vt0d5cztD3XHkpbQSFh/hr9pkl4EKugNIXqWLLu
+         Fb9/CzzuMgE+wqcTK8nwmS2n/ft6bqZ1ddGR5lzAUvR7JsR3tcObu/LXDLsRaxSFhem+
+         gTskFd3nQn8qbizWxhi/lBGi4wB2tEwE67PeHB56voHO9AYm62Ui8Mi16MKJBo+0idJg
+         xizuYBokQ++Sgxv3XVBViVelRefM4JljaLXWvXAbYsPCzHqr24Hw9B0FGB06NIcMbiFh
+         Eg/ddnB+BaSkpryRtaJ8RDQHIt45+FQ99oqbYV13W3B64Lon36xJPjH6oRZxpYy3nFSf
+         J9RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749454544; x=1750059344;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8RuWRqP0d99Xv1WKhTslXLfzi2R4jCLF5zn4rM3x2gk=;
+        b=pOgVEKDQA5Wzwe+vLOcHbUdcas6+lmSNwXtmJgDcpjm8gmnJchPWbPrSfJwuSLC10r
+         zt55Wplp4uet5TORhfWxa0Fw4MwtmJfBHhHGsqg4WqNpAKuulIrWm5BywGL21yd3Q7So
+         55FJVnZUVLED4xIV+30utaWzO/AFCqzmGVH9mNceyBxxS3cTOBOXEWZ3IRm5649yuAh1
+         HpRyEsW51wV+RufGLdVmLrcGdijjNcJxA5TivAc/zze//CqVjGnDQpFrQ9FSOXxbN2Jv
+         311nqyHrb6r/n4tGy0SauGShIEfVLZBw6CV4iwEKnOVmAEZ0/bsyLlZ5ZIqfuX17ixnn
+         lLsw==
+X-Forwarded-Encrypted: i=1; AJvYcCUEbaF2RFd5E02AZMoQ7fu1xULb46MkBxDGknCaVJq+PTzbVq3OlB/bobl5nGYlFgpx/Fcsm241DEJ2VFg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDXmQDyJ1lYUfTlVKSRIqxAdRLFwI9vQMhp/Ht2vunVHXQXajX
+	rk9+NXG80CgUOGhQzcTVpqCFebUM15cINIKzROWuTQLbS7wvOJ8UteR3Mumi5aqG+Us=
+X-Gm-Gg: ASbGnct1FawiCfMsJ/4L0RSHkDjxO7rczPDhSmrv6hLujsFSI3hNiKF3qNVLFpJmOEj
+	XVp2ImJ193QDImBFidiflN472bfJDaKaMSDsCgF9pX3frycBQTyDCp+AbZqVPs6EhdO1YaGhfr4
+	lk+sDbA6oz+FPIogC+7iG9gze4UTaGdFqJk5/gLcH4h+MpjUTDvBwI3YzvlTDIOesd6tlvOtsRj
+	HzcVhgq9BsAveneZDeT7tdCNVShI6otQNIech3NWfcEvQiP72uHGuoRpjm+iBz+1p6kWVH7Y27f
+	3YR/7x4NVOy5am4QFQsL7OOZhSd6XcuZU+sMPJj1VTnmPfi+G8Mm/RZGyYGCXz1SX3nr6vnDxGM
+	=
+X-Google-Smtp-Source: AGHT+IF6DM1q4q8CPakAyqZNCbPDwJpamBu3whbTRqn03tXemtCu5+RQvYP709FhwnPjbnmjHYqPmA==
+X-Received: by 2002:a05:600c:37cd:b0:442:d9f2:ded8 with SMTP id 5b1f17b1804b1-45201368cfcmr113234485e9.15.1749454543908;
+        Mon, 09 Jun 2025 00:35:43 -0700 (PDT)
+Received: from localhost (109-81-91-146.rct.o2.cz. [109.81.91.146])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-452f8f011c8sm97794095e9.3.2025.06.09.00.35.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 00:35:43 -0700 (PDT)
+Date: Mon, 9 Jun 2025 09:35:42 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Ritesh Harjani <ritesh.list@gmail.com>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
+	david@redhat.com, shakeel.butt@linux.dev,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+	rppt@kernel.org, surenb@google.com, donettom@linux.ibm.com,
+	aboorvad@linux.ibm.com, sj@kernel.org, linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm: fix the inaccurate memory statistics issue for
+ users
+Message-ID: <aEaOzpQElnG2I3Tz@tiehlicka>
+References: <f4586b17f66f97c174f7fd1f8647374fdb53de1c.1749119050.git.baolin.wang@linux.alibaba.com>
+ <87bjqx4h82.fsf@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87bjqx4h82.fsf@gmail.com>
 
-This patch introduces functionality to control the vhost worker mode:
+On Mon 09-06-25 10:57:41, Ritesh Harjani wrote:
+> Baolin Wang <baolin.wang@linux.alibaba.com> writes:
+> 
+> > On some large machines with a high number of CPUs running a 64K pagesize
+> > kernel, we found that the 'RES' field is always 0 displayed by the top
+> > command for some processes, which will cause a lot of confusion for users.
+> >
+> >     PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+> >  875525 root      20   0   12480      0      0 R   0.3   0.0   0:00.08 top
+> >       1 root      20   0  172800      0      0 S   0.0   0.0   0:04.52 systemd
+> >
+> > The main reason is that the batch size of the percpu counter is quite large
+> > on these machines, caching a significant percpu value, since converting mm's
+> > rss stats into percpu_counter by commit f1a7941243c1 ("mm: convert mm's rss
+> > stats into percpu_counter"). Intuitively, the batch number should be optimized,
+> > but on some paths, performance may take precedence over statistical accuracy.
+> > Therefore, introducing a new interface to add the percpu statistical count
+> > and display it to users, which can remove the confusion. In addition, this
+> > change is not expected to be on a performance-critical path, so the modification
+> > should be acceptable.
+> >
+> > In addition, the 'mm->rss_stat' is updated by using add_mm_counter() and
+> > dec/inc_mm_counter(), which are all wrappers around percpu_counter_add_batch().
+> > In percpu_counter_add_batch(), there is percpu batch caching to avoid 'fbc->lock'
+> > contention. This patch changes task_mem() and task_statm() to get the accurate
+> > mm counters under the 'fbc->lock', but this should not exacerbate kernel
+> > 'mm->rss_stat' lock contention due to the percpu batch caching of the mm
+> > counters. The following test also confirm the theoretical analysis.
+> >
+> > I run the stress-ng that stresses anon page faults in 32 threads on my 32 cores
+> > machine, while simultaneously running a script that starts 32 threads to
+> > busy-loop pread each stress-ng thread's /proc/pid/status interface. From the
+> > following data, I did not observe any obvious impact of this patch on the
+> > stress-ng tests.
+> >
+> > w/o patch:
+> > stress-ng: info:  [6848]          4,399,219,085,152 CPU Cycles          67.327 B/sec
+> > stress-ng: info:  [6848]          1,616,524,844,832 Instructions          24.740 B/sec (0.367 instr. per cycle)
+> > stress-ng: info:  [6848]          39,529,792 Page Faults Total           0.605 M/sec
+> > stress-ng: info:  [6848]          39,529,792 Page Faults Minor           0.605 M/sec
+> >
+> > w/patch:
+> > stress-ng: info:  [2485]          4,462,440,381,856 CPU Cycles          68.382 B/sec
+> > stress-ng: info:  [2485]          1,615,101,503,296 Instructions          24.750 B/sec (0.362 instr. per cycle)
+> > stress-ng: info:  [2485]          39,439,232 Page Faults Total           0.604 M/sec
+> > stress-ng: info:  [2485]          39,439,232 Page Faults Minor           0.604 M/sec
+> >
+> > Tested-by Donet Tom <donettom@linux.ibm.com>
+> > Reviewed-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+> > Tested-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+> > Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
+> > Acked-by: SeongJae Park <sj@kernel.org>
+> > Acked-by: Michal Hocko <mhocko@suse.com>
+> > Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> > ---
+> > Changes from v1:
+> >  - Update the commit message to add some measurements.
+> >  - Add acked tag from Michal. Thanks.
+> >  - Drop the Fixes tag.
+> 
+> Any reason why we dropped the Fixes tag? I see there were a series of
+> discussion on v1 and it got concluded that the fix was correct, then why
+> drop the fixes tag? 
 
-- Add two new IOCTLs:
-  * VHOST_SET_FORK_FROM_OWNER: Allows userspace to select between
-    task mode (fork_owner=1) and kthread mode (fork_owner=0)
-  * VHOST_GET_FORK_FROM_OWNER: Retrieves the current thread mode
-    setting
-
-- Expose module parameter 'fork_from_owner_default' to allow system
-  administrators to configure the default mode for vhost workers
-
-- Add KConfig option CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL to
-  control the availability of these IOCTLs and parameter, allowing
-  distributions to disable them if not needed
-
-- The VHOST_NEW_WORKER functionality requires fork_owner to be set
-  to true, with validation added to ensure proper configuration
-
-Signed-off-by: Cindy Lu <lulu@redhat.com>
----
- drivers/vhost/Kconfig      | 17 +++++++++++++++
- drivers/vhost/vhost.c      | 44 ++++++++++++++++++++++++++++++++++++++
- include/uapi/linux/vhost.h | 25 ++++++++++++++++++++++
- 3 files changed, 86 insertions(+)
-
-diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
-index 020d4fbb947c..49e1d9dc92b7 100644
---- a/drivers/vhost/Kconfig
-+++ b/drivers/vhost/Kconfig
-@@ -96,3 +96,20 @@ config VHOST_CROSS_ENDIAN_LEGACY
- 	  If unsure, say "N".
- 
- endif
-+
-+config CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL
-+	bool "Enable CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL"
-+	default n
-+	help
-+	  This option enables two IOCTLs: VHOST_SET_FORK_FROM_OWNER and
-+	  VHOST_GET_FORK_FROM_OWNER. These allow userspace applications
-+	  to modify the vhost worker mode for vhost devices.
-+
-+	  Also expose module parameter 'fork_from_owner_default' to allow users
-+	  to configure the default mode for vhost workers.
-+
-+	  By default, `CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL` is set to `n`,
-+	  which disables the IOCTLs and parameter.
-+	  When enabled (y), users can change the worker thread mode as needed.
-+
-+	  If unsure, say "N".
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index 37d3ed8be822..903d9c3f6784 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -43,6 +43,11 @@ module_param(max_iotlb_entries, int, 0444);
- MODULE_PARM_DESC(max_iotlb_entries,
- 	"Maximum number of iotlb entries. (default: 2048)");
- static bool fork_from_owner_default = true;
-+#ifdef CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL
-+module_param(fork_from_owner_default, bool, 0444);
-+MODULE_PARM_DESC(fork_from_owner_default,
-+		 "Set task mode as the default(default: Y)");
-+#endif
- 
- enum {
- 	VHOST_MEMORY_F_LOG = 0x1,
-@@ -1019,6 +1024,13 @@ long vhost_worker_ioctl(struct vhost_dev *dev, unsigned int ioctl,
- 	switch (ioctl) {
- 	/* dev worker ioctls */
- 	case VHOST_NEW_WORKER:
-+		/*
-+		 * vhost_tasks will account for worker threads under the parent's
-+		 * NPROC value but kthreads do not. To avoid userspace overflowing
-+		 * the system with worker threads fork_owner must be true.
-+		 */
-+		if (!dev->fork_owner)
-+			return -EFAULT;
- 		ret = vhost_new_worker(dev, &state);
- 		if (!ret && copy_to_user(argp, &state, sizeof(state)))
- 			ret = -EFAULT;
-@@ -1136,6 +1148,7 @@ void vhost_dev_reset_owner(struct vhost_dev *dev, struct vhost_iotlb *umem)
- 
- 	vhost_dev_cleanup(dev);
- 
-+	dev->fork_owner = fork_from_owner_default;
- 	dev->umem = umem;
- 	/* We don't need VQ locks below since vhost_dev_cleanup makes sure
- 	 * VQs aren't running.
-@@ -2289,6 +2302,37 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *argp)
- 		goto done;
- 	}
- 
-+#ifdef CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL
-+	u8 fork_owner;
-+
-+	if (ioctl == VHOST_SET_FORK_FROM_OWNER) {
-+		/*fork_owner can only be modified before owner is set*/
-+		if (vhost_dev_has_owner(d)) {
-+			r = -EBUSY;
-+			goto done;
-+		}
-+		if (copy_from_user(&fork_owner, argp, sizeof(u8))) {
-+			r = -EFAULT;
-+			goto done;
-+		}
-+		if (fork_owner > 1) {
-+			r = -EINVAL;
-+			goto done;
-+		}
-+		d->fork_owner = (bool)fork_owner;
-+		r = 0;
-+		goto done;
-+	}
-+	if (ioctl == VHOST_GET_FORK_FROM_OWNER) {
-+		fork_owner = d->fork_owner;
-+		if (copy_to_user(argp, &fork_owner, sizeof(u8))) {
-+			r = -EFAULT;
-+			goto done;
-+		}
-+		r = 0;
-+		goto done;
-+	}
-+#endif
- 	/* You must be the owner to do anything else */
- 	r = vhost_dev_check_owner(d);
- 	if (r)
-diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
-index d4b3e2ae1314..e51d6a347607 100644
---- a/include/uapi/linux/vhost.h
-+++ b/include/uapi/linux/vhost.h
-@@ -235,4 +235,29 @@
-  */
- #define VHOST_VDPA_GET_VRING_SIZE	_IOWR(VHOST_VIRTIO, 0x82,	\
- 					      struct vhost_vring_state)
-+
-+/**
-+ * VHOST_SET_FORK_FROM_OWNER - Set the fork_owner flag for the vhost device,
-+ * This ioctl must called before VHOST_SET_OWNER.
-+ * Only available when CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL=y
-+ *
-+ * @param fork_owner: An 8-bit value that determines the vhost thread mode
-+ *
-+ * When fork_owner is set to 1(default value):
-+ *   - Vhost will create vhost worker as tasks forked from the owner,
-+ *     inheriting all of the owner's attributes.
-+ *
-+ * When fork_owner is set to 0:
-+ *   - Vhost will create vhost workers as kernel threads.
-+ */
-+#define VHOST_SET_FORK_FROM_OWNER _IOW(VHOST_VIRTIO, 0x83, __u8)
-+
-+/**
-+ * VHOST_GET_FORK_OWNER - Get the current fork_owner flag for the vhost device.
-+ * Only available when CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL=y
-+ *
-+ * @return: An 8-bit value indicating the current thread mode.
-+ */
-+#define VHOST_GET_FORK_FROM_OWNER _IOR(VHOST_VIRTIO, 0x84, __u8)
-+
- #endif
+This seems more like an improvement than a bug fix.
 -- 
-2.45.0
-
+Michal Hocko
+SUSE Labs
