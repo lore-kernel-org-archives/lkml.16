@@ -1,116 +1,99 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E4619F41C
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 15:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1BD55E69;
+	Mon,  9 Jun 2025 15:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749481981; cv=none; b=DXNTTsPY4WhspEF5TpYY8++cBWNbSA9/dtdQtzT+U4mhMl2+8cxefg+ngzPPbcBzVoVs1PtfSnXLR7Ie8Vml7PnpMp4tZ79n33dDgcqwBLJZcJ2NwtvFEXIzKfvj+9S8y+IA+4evLh6HiT+I16quD+otzXTKj6jjIM9/SAd6ueY=
+	t=1749482000; cv=none; b=JQa5siEZlxVNpVbG85tY/5RssB5Agux43/8pY95KgzcMZHMBiZyGNq82WLqDJmP9HCK5Whh7lXXT3bsJX3LujQhXH32xGkGLPkJatqeumSd9VeYXlzQugYqio2utL8nxr03XHpvioDD67ta1OOuCuE6CneVCdb6V4n6vrhLVJKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749481981; c=relaxed/simple;
-	bh=qNArU2Vc44maup3ccsJRzzB+PISgJBFgqC9aDifnE40=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=iChHlVwkbqUOhDlyutnpXpGnss56zjlP8j3uRIlRrOJ9ZadMk+4IuIQaIQohYgh46MP4MCr1yU5DqTIC42ETWUfhko8u2FDRHe7mziF/TuY8aKXmsUG4arY1D88MQL737+Eun2F3uhNb88bOqIUidzUKvj34WCA4IS/s3R5MHoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4bGFLZ5ks4z1d1Ny;
-	Mon,  9 Jun 2025 22:54:14 +0800 (CST)
-Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
-	by mail.maildlp.com (Postfix) with ESMTPS id D501A180B43;
-	Mon,  9 Jun 2025 22:56:14 +0800 (CST)
-Received: from kwepemq100007.china.huawei.com (7.202.195.175) by
- dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 9 Jun 2025 22:56:14 +0800
-Received: from [10.159.166.136] (10.159.166.136) by
- kwepemq100007.china.huawei.com (7.202.195.175) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 9 Jun 2025 22:56:13 +0800
-Message-ID: <28d7d9c2-8498-41a7-ab37-821d574fbb2a@huawei.com>
-Date: Mon, 9 Jun 2025 22:56:09 +0800
+	s=arc-20240116; t=1749482000; c=relaxed/simple;
+	bh=KuL9QXFnbjP/6dnmbITZhX26APLbHlD5cgbjI49fUGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NaNZPGwqWPiwuj5Aal9V27C1CsGxQbPfuL+of40lqRKyHSUTTlJDe62w2fD0SQNKSFpP+Gnp7EwMNWG0/Q6GEhosnXvxyRB/egDI55E+0RB2JEeIhDK1NRjf9Ai36jEP3XRN+7kQbAhkKhVeBtaxFr6z8pC+caXZpj2BaGFojrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=MtYyNbCc; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="MtYyNbCc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=gqSBvYEPHPitebv2P1vYqvusEdj1tCP+6lQ1cirEEtc=; b=MtYyNbCc0fiTVgvVYWBKHGqS+i
+	8JxYiM6H+jVbkkHdygJCAruCGLEUS12pUfUNI4sBp0U1tG4yB6sZ+IUm3DSdE35d8gbJutci6jTxj
+	EFtec3cdQ5z5CZGDgKcouSAZmkr7KF47BcvSZuTeARGZvl/7UJ8WFt3+TDvVonkwOx4s=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uOeBG-00F9zg-2A; Mon, 09 Jun 2025 17:12:58 +0200
+Date: Mon, 9 Jun 2025 17:12:58 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Gal Pressman <gal@nvidia.com>
+Cc: Kory Maincent <kory.maincent@bootlin.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	Simon Horman <horms@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+	Kyle Swenson <kyle.swenson@est.tech>,
+	Dent Project <dentproject@linuxfoundation.org>,
+	kernel@pengutronix.de,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH net-next v12 00/13] Add support for PSE budget evaluation
+ strategy
+Message-ID: <cfb35f07-7f35-4c1f-9239-5c35cc301fce@lunn.ch>
+References: <20250524-feature_poe_port_prio-v12-0-d65fd61df7a7@bootlin.com>
+ <8b3cdc35-8bcc-41f6-84ec-aee50638b929@redhat.com>
+ <71dc12de-410d-4c69-84c5-26c1a5b3fa6e@nvidia.com>
+ <20250609103622.7e7e471d@kmaincent-XPS-13-7390>
+ <f5fb49b6-1007-4879-956d-cead2b0f1c86@nvidia.com>
+ <20250609160346.39776688@kmaincent-XPS-13-7390>
+ <0ba3c459-f95f-483e-923d-78bf406554ea@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH drm-dp 05/10] drm/hisilicon/hibmc: fix rare monitors
- cannot display problem
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-	<kong.kongxinwei@hisilicon.com>, <liangjian010@huawei.com>,
-	<chenjianmin@huawei.com>, <lidongming5@huawei.com>, <libaihan@huawei.com>,
-	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
-	<jani.nikula@linux.intel.com>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>, <shiyongbang@huawei.com>
-References: <20250530095432.1206966-1-shiyongbang@huawei.com>
- <20250530095432.1206966-6-shiyongbang@huawei.com>
- <j23q7vjp2s2gfautba7hcbvd5vrrycr5akl3m24eu4nlvy65s7@5uytzwucogxw>
-From: Yongbang Shi <shiyongbang@huawei.com>
-In-Reply-To: <j23q7vjp2s2gfautba7hcbvd5vrrycr5akl3m24eu4nlvy65s7@5uytzwucogxw>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemq100007.china.huawei.com (7.202.195.175)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0ba3c459-f95f-483e-923d-78bf406554ea@nvidia.com>
 
+> I think that in theory the userspace patches need to be posted together
+> with the kernel, from maintainer-netdev.rst:
+> 
+> 	User space code exercising kernel features should be posted
+> 	alongside kernel patches. This gives reviewers a chance to see
+> 	how any new interface is used and how well it works.
+> 
+> I am not sure if that's really the case though.
 
-> On Fri, May 30, 2025 at 05:54:27PM +0800, Yongbang Shi wrote:
->> From: Baihan Li <libaihan@huawei.com>
->>
->> DP Link training successful at 8.1Gbps with some monitors' max link rate
->> are 2.7Gbps. So change the default 8.1Gbps link rate to the rate that reads
->> from devices' capabilities.
-> I've hard time understanding this message.
+The ethtool Maintainer tends to wait to the end of the cycle to pick
+up all patches and then applies and releases a new ethtool binary. The
+same applies for iproute2. That means the CI tests are not capable of
+testing new features using ethtool. I'm also not sure if it needs a
+human to update the ethtool binary on the CI systems, and how active
+that human is. Could this be changed, sure, if somebody has the needed
+bandwidth.
 
-Sorry for misunderstanding. The problem is that dp link training success at 8.1Gbps, however,
+Using the APIs directly via ynl python is possible in CI, since that
+is all in tree, as far as i know. However, ethtool is the primary user
+tool, so i do see having tests for it as useful. But they might need
+to wait for a cycle, or at least fail gracefully until the ethtool
+binary is updated.
 
-the sink 's maximum supported rate is less than 8.1G.
-
-
->> Fixes: f9698f802e50 ("drm/hisilicon/hibmc: Restructuring the header dp_reg.h")
-> No, the tag is incorrect. Mentioned commit is not related.
-
-Ok.
-
-
->> Signed-off-by: Baihan Li <libaihan@huawei.com>
->> ---
->>   drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h  |  4 ++-
->>   drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c    |  6 +---
->>   drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c  | 33 +++++++++++++------
->>   .../gpu/drm/hisilicon/hibmc/dp/dp_serdes.c    | 12 -------
->>   4 files changed, 27 insertions(+), 28 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.c
->> index 676059d4c1e6..8191233aa965 100644
->> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.c
->> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.c
->> @@ -57,15 +57,3 @@ int hibmc_dp_serdes_rate_switch(u8 rate, struct hibmc_dp_dev *dp)
->>   
->>   	return 0;
->>   }
->> -
->> -int hibmc_dp_serdes_init(struct hibmc_dp_dev *dp)
->> -{
->> -	dp->serdes_base = dp->base + HIBMC_DP_HOST_OFFSET;
->> -
->> -	writel(FIELD_PREP(HIBMC_DP_PMA_TXDEEMPH, DP_SERDES_VOL0_PRE0),
->> -	       dp->serdes_base + HIBMC_DP_PMA_LANE0_OFFSET);
->> -	writel(FIELD_PREP(HIBMC_DP_PMA_TXDEEMPH, DP_SERDES_VOL0_PRE0),
->> -	       dp->serdes_base + HIBMC_DP_PMA_LANE1_OFFSET);
-> Where did these two writes go?
-
-It's the same as the cfg in hibmc_dp_serdes_set_tx_cfg(), and this function will be called certainly.
-
-
->> -
->> -	return hibmc_dp_serdes_rate_switch(DP_SERDES_BW_8_1, dp);
->> -}
->> -- 
->> 2.33.0
->>
+	Andrew
