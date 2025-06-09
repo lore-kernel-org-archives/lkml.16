@@ -1,112 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3799C1EB9E1;
-	Mon,  9 Jun 2025 20:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2701CF7AF;
+	Mon,  9 Jun 2025 20:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749499972; cv=none; b=eOTCPsdPvfYsTsXufiypuagVC0kQkWym2dMeo2peZ1y7skgyeAF1mb1UakPGEi8rqYoDq+CWAqE2jSkCSZ2L/BHXjcltHtRtYQ0F7WHYe8TMMzDGXQUHXEoTWHHg5NT/LWw01Y/T+0f5Kf/sjyq2hRbHPAIciYlakDnnXsB5epQ=
+	t=1749500015; cv=none; b=JWZq3CIV31GPpvE+sjPdiYrWV1Xm7wc4mx0Qj/SkfjhjswHQh9L6/3RYTxLq1WbuB2xvSq1y59zCB5yJtQ/2ADMvm3tfSxGbhf/RnL0QduG63CyISuhu0sEsZTTC/ad7GvbO7jpRoB8nV11JqRuq9VUsOmGbyTE/+dhI24p5WK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749499972; c=relaxed/simple;
-	bh=LJ/uZDXg4Dz+jNqe8xKGNosRt70el7DilOa/Q+s44xQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GfZAjbsPp8HUExtHvcs05G0lrrODVzkchdfumreyYile9gfqsh2EaiS2jAAbIUoEzwj86AvlkS10yobVDNac1NX+g9MNMl/eYOB4O1bs+cckZDBvBAsPcMlVVlo7dkExleqa7NpOKbKTB7EJvQBckHbeyfAQnoIMfxyjkiZUGq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SCgo9+6R; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SCgo9+6R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749499972; x=1781035972;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LJ/uZDXg4Dz+jNqe8xKGNosRt70el7DilOa/Q+s44xQ=;
-  b=SCgo9+6RTQAEQGbo1p7wLW9MaFAD0iC0EMpdrAQWEeL6wLttW5BcMtUE
-   djC2Q9hhoI9xETJxGDkbFzZLNslqYkajKqbh2tal22WsGUX2pVVJZopmi
-   jXDHeqwbTlgokzyb7dIVd5Rc/32sAr0lh1+r2+i9tUNDplHcmLnyal38z
-   Dhg/vAZc3NUAXVlO1Av000W1BBKstmgb5C6jr4rU9+8ZYsxM4I1BPvDIb
-   sse/gbrYXXhrcVOU5o/qmr0IUAKiJXsIzdeDdGQet/QsfMkSf58Q3vOe+
-   XxgPJrbUotMvzw9AouaL3Ud3S32lmcZwz5Xze8lVqG/ir3hL7A8NV/xMc
-   Q==;
-X-CSE-ConnectionGUID: 9ZAOTH3/TJqW0nN8XK+gkg==
-X-CSE-MsgGUID: /G/ORU5TQhaDTaEfodPc9g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51677175"
-X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
-   d="scan'208";a="51677175"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 13:12:50 -0700
-X-CSE-ConnectionGUID: JgUShucbQ3mQBwHf/RSvig==
-X-CSE-MsgGUID: MCcgyiSGT0aLouJwJOiQ5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
-   d="scan'208";a="147188410"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 13:12:43 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uOirG-000000059XK-27RQ;
-	Mon, 09 Jun 2025 23:12:38 +0300
-Date: Mon, 9 Jun 2025 23:12:38 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Petr Mladek <pmladek@suse.com>,
-	Sergio Perez Gonzalez <sperezglz@gmail.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	David Rientjes <rientjes@google.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org,
-	Thomas Huth <thuth@redhat.com>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] slab: Decouple slab_debug and no_hash_pointers
-Message-ID: <aEdANsGsQHqVQ9Wy@smile.fi.intel.com>
-References: <20250415170232.it.467-kees@kernel.org>
- <Z_-dPcdiGW0fo8Ji@pathway.suse.cz>
- <202506051314.D6EDFA91D@keescook>
- <aEbyHeG8qh8GChTh@pathway.suse.cz>
- <202506090823.33ED63C@keescook>
+	s=arc-20240116; t=1749500015; c=relaxed/simple;
+	bh=B+KKJw1mRV5eKyf8P3m5+SOLbQ1coDY0gwypLgQNMC8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XFfMLCB156Uih8NDayOIdXgYuiwXIW28xrBHkdd5FkS1GIuWZKfRFPuL6kLE/1JqsFmW+QAutXxhUcKAzrXpWdOIzkm96cUNZUsvvGq+vpVN9QpdV3aZVYrMLwMjWK+bhLNE6Qp2PtNNa30uKEUt3Twcd56rFT3kLaflxqqqk3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 0BB678022B;
+	Mon,  9 Jun 2025 20:13:29 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id D6C1C20026;
+	Mon,  9 Jun 2025 20:13:25 +0000 (UTC)
+Date: Mon, 9 Jun 2025 16:14:54 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Shivank Garg <shivankg@amd.com>, mhiramat@kernel.org, oleg@redhat.com,
+ peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, david@redhat.com,
+ akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-mm@kvack.org
+Subject: Re: [RFC] mm: use folio_expected_ref_count() helper for reference
+ counting
+Message-ID: <20250609161454.27122eb4@gandalf.local.home>
+In-Reply-To: <aEc7JG-OL2fp075j@casper.infradead.org>
+References: <20250609170806.447302-2-shivankg@amd.com>
+	<aEc0MNj9JNXbLHmw@casper.infradead.org>
+	<E40B36E2-1D0E-4769-B155-0175A06DE3AB@goodmis.org>
+	<aEc7JG-OL2fp075j@casper.infradead.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202506090823.33ED63C@keescook>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: D6C1C20026
+X-Stat-Signature: m8h6bcy535xytnunifrds675jimjbr3x
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/kJ8UB1vD94YuNV8XjvktY0cPUQseZ4mw=
+X-HE-Tag: 1749500005-938963
+X-HE-Meta: U2FsdGVkX1/AbnxVbfcKCr7R6XcbF+NIATcgnSZMqeSoBZ8tgnjmm580xehAFo1U66DT7y1URDoJxSnyr8Qlf62mu6jBBImbCRwlr0MNscNf+Hj6CqxRMCN0GzwKttDu7pUlJJbLA7ZxWr+cix70+sg0E5OZQJ5ldrwLMducYMV4wYZ/lGCG/7ww17qqnxgB4h/HvU0WIAkKxsxnTNG67UynRvV8XJt3cdsNFB29lBpkqzdJZVLvHa5/TnK8N88Tz4XMIdnomHicXdG6pAwLWz+HMQxBuMC+jjpalt6eZjcc5orXSNT50Xy9/wLZZKKvq952wSzt65Y1rRZVwFxNoUAVyCsr7b5IMh8SsfcpbKIjAwUHwmNlXPhlMNO7hQ+c
 
-On Mon, Jun 09, 2025 at 08:24:47AM -0700, Kees Cook wrote:
-> On Mon, Jun 09, 2025 at 04:39:25PM +0200, Petr Mladek wrote:
+On Mon, 9 Jun 2025 20:51:00 +0100
+Matthew Wilcox <willy@infradead.org> wrote:
 
-...
+> On Mon, Jun 09, 2025 at 03:31:40PM -0400, Steven Rostedt wrote:
+> > 
+> > 
+> > On June 9, 2025 3:21:20 PM EDT, Matthew Wilcox <willy@infradead.org> wrote:  
+> > >On Mon, Jun 09, 2025 at 05:08:07PM +0000, Shivank Garg wrote:  
+> > >> Replace open-coded folio reference count calculations with the
+> > >> folio_expected_ref_count() helper to improve code maintainability
+> > >> and reduce duplication.  
+> > >
+> > >If it needs this much additional commentary, perhaps it's not actually
+> > >clearer?  
+> > 
+> > I don't know. I tend to over explain as I rather make it totally
+> > obvious what is happening. I wouldn't say excessive commentary is
+> > necessarily a sign that it's not clearer.  
+> 
+> That was a Socratic question, not for you to answer.
+> 
+> My opinion is that the extra commentary is obfuscatory and should be
+> removed.
 
-> As long as it's in -next and scheduled to land, I'm happy. I'd always
-> like it earlier, but the less workflow disruption the better! :)
 
-Hmm... The __diag patch series were in Linux Next for a few weeks and did not
-land in v6.16-rc1. Just saying that there is always chance to go into cracks.
+Ah, sorry, your response wasn't clear ;-)
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+-- Steve
 
