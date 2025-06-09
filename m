@@ -1,31 +1,76 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088F95475E;
-	Mon,  9 Jun 2025 04:13:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746293A1DB;
+	Mon,  9 Jun 2025 04:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749442392; cv=none; b=X3xnDFpcti9pdcRykfvasMrCabZC0/yGQrFfOE2Tz3FSRsi+fu8mnpycWgpjl/WV6vSxOo4HY9Hvx2wcNOWnyDFUMT0qWqG2PzPoKAuzUfRCOIbc7ScW4YRO36JDTSPP1xAGeLyji4SiX2HzUueuAVGC5E05CjVRvMm+a2gYxV8=
+	t=1749442844; cv=none; b=eVy14TFPvbtj6w6vzm8kaZOcMHdn6WEpse/9YUpakWWusLZkNV61jcZDuDEIbhNziBrvbE4WtBVXJ16wFTpRxT7w+BPrCdzw+fB//JbdLc9tEes0rULbeNwQFsy4FYtOp68N4EyC5po+9JgLWMoQkyarzZluB55HljTIipjJLPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749442392; c=relaxed/simple;
-	bh=sU43XR4ELjMkvRmWTzngGULXdxWQ6qw6GWH4DnMgaaw=;
+	s=arc-20240116; t=1749442844; c=relaxed/simple;
+	bh=U0lQ7XugEXKGGzfczw8VnB1sNM8SX9qezu7R5K9s8Y0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hc/Pj7A6fCvrnCC0LkibNq+FxGg5axddkczHEdW4iCRQhv/UNm71DOyCMT/7JQnyU4M0cflo91FWXAIE85j5uGGdB7UKJFgr1FCaNwEtcxHH4zMz69pRCteEJ8lv2hzD7uayiETpKYu/nWswBw8UgvQffYN1yo+kYJY3HR7RXCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 93F5D68AFE; Mon,  9 Jun 2025 06:13:06 +0200 (CEST)
-Date: Mon, 9 Jun 2025 06:13:06 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the block tree
-Message-ID: <20250609041306.GA26287@lst.de>
-References: <20250606075230.6a13c53d@canb.auug.org.au> <aEISwo8LR8hG0zyV@kbusch-mbp>
+	 Content-Type:Content-Disposition:In-Reply-To; b=LfWRLI+W5owohihQT1Q2i8YHJAEn8iC/e+GaVu8FZl7feSuSq56qB9Wb1zOUhOB7UNVwAM0ZgQX56NWGQGB0HJ/Y5/ovxXjqUm0UX64bpGvMHcjOHH0HdxKg9cFRGSSC0F2FVgRRWksni6bDD6dNqKg3OBvPlk88n7kym29w7cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FlOonVhV; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FlOonVhV"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-747e41d5469so4319474b3a.3;
+        Sun, 08 Jun 2025 21:20:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749442843; x=1750047643; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=V4URcKEOTtG7gkDcQ+As7WhEjMnb7PTh9qAPDmOqKGs=;
+        b=FlOonVhVY/u8D2jrD1jAnzagfVynPBkBTyfLuMlCqiFnXK43goaLqIG8tjq7LYf86f
+         pxNyeKpnszOdYlUuuWWfVNcLlhsVGj2jAUDAlT6AB8tlISnBXPldbJLMZHO5LUArxH8u
+         lHhWaQmJ775CSqgcHqc0TT8EB1SVA5/xa6h4ZOpsmP9jCaFjkahS8e3bo0amphMKjPyV
+         Cgzu2oCpSgZP4d8QuttRz/WZ/TLyifxn6JSLwZ9GgE0xii1H2MnDqmdLQJQYefwtmNn/
+         Ur2dIE6Qs2ppq3xPK5BcJjQHHWPkfxhuJh/9B6TRZbQSq0koSy8A7G2aWDLKsLDNW10u
+         vn3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749442843; x=1750047643;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V4URcKEOTtG7gkDcQ+As7WhEjMnb7PTh9qAPDmOqKGs=;
+        b=aEvJi5c8FOyBumf7nH2syoa+onYZZ7IF+nEejR9q/jRr52S/oNP2ME0g5U0WoPAmFm
+         cX423xw9G+m0rJYy67McBWp7DRR3pirUFVplQ3L1m159ZulRdLhidOEqAVcWVam3bd3M
+         cPUUqoSEmmFtmC/x9OjdpWH4QHhkECwIGB9+ndaR25CQmNsfWMK9nSUTZJibKVeAQgWT
+         4MMMlUy88dxN2LlqmrIQyY9WYbVaeOlhuZGB744YQ3iOrJmUnbumYLWfgSmVgVdgd40f
+         M9/EaNseeoKIoUbpYyJ+JRYa6bshplhxGzyAew/UXH6glknD/nuAYZQJIYj/Zw37LZ/D
+         zd6A==
+X-Forwarded-Encrypted: i=1; AJvYcCU/vIIVTAjnYtd6f6xAPZ6xtaNAqtmdLMn2/NUBaczcNtIcDr3PsA5LpjAuACSOhu8cj7D4T6VP@vger.kernel.org, AJvYcCXtLXO9X0SiCNBsAmUTJwI7QTEBSThxkhGQconjvrePYGiNkpaJQDboy4aqA94pO8Ge7kw3+e8JTKeCF1I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJtbXpcMIF9mMTTNg4vIMXJ7DBBD2BHad4C9J2Z+qcMDF6Xinz
+	fdyeS38WSG6+REyQm0IRJZqTho5ZnZC5tSDnthPe0czkG0JGY3964cjwCy9z3w==
+X-Gm-Gg: ASbGncuCesICUCz7eLIgS3X5+y+cm3iFgy/Tlj4fA2vCVkdjI+ijhu/K6xHzkN2DpGo
+	kA9/0t61bxbzhpYxYC9crww/4WV/9GQXWhMlREbWGIF1rUCoK0BqadEyEKLMm6xTUCfJaVnWB64
+	Dws1XhkOS7xZX80bzwyE/cwvOkGkUB4++G+k0BTwDZhwjwfOwU/En47KZd7KE3WF9oQ/AR2zkSB
+	kfFGgYJZgx8MpAvCDQ0yK72Wvum3poh46eFHMvnuPyWicKJcp61IxD6o5fVt6C+olwmh80bHk0G
+	MLED2YOHdMtpMNOxcllpj/iwPTQDwaYZe6jCNVjvX1JhQS20NlvK
+X-Google-Smtp-Source: AGHT+IGPvy4kykj0lhb+spVXVfcSeM4rDVBSnkPv1sXyzGwUgPowc1odOEOQkiDn15B6rBudrNukHQ==
+X-Received: by 2002:a05:6a00:1d89:b0:748:2d1d:f7b7 with SMTP id d2e1a72fcca58-7482d1df920mr14224065b3a.21.1749442842714;
+        Sun, 08 Jun 2025 21:20:42 -0700 (PDT)
+Received: from gmail.com ([98.97.41.254])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7483318cc55sm3942180b3a.88.2025.06.08.21.20.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Jun 2025 21:20:42 -0700 (PDT)
+Date: Sun, 8 Jun 2025 21:20:24 -0700
+From: John Fastabend <john.fastabend@gmail.com>
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: bpf@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v2] bpf, sockmap: Fix psock incorrectly pointing
+ to sk
+Message-ID: <20250609042024.ta4fuiogxxklolst@gmail.com>
+References: <20250609025908.79331-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,21 +79,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aEISwo8LR8hG0zyV@kbusch-mbp>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20250609025908.79331-1-jiayuan.chen@linux.dev>
 
-On Thu, Jun 05, 2025 at 03:57:22PM -0600, Keith Busch wrote:
-> On Fri, Jun 06, 2025 at 07:52:30AM +1000, Stephen Rothwell wrote:
-> > Commit
-> > 
-> >   10f4a7cd724e ("nvme: fix command limits status code")
-> > 
-> > is missing a Signed-off-by from its author.
+On 2025-06-09 10:59:08, Jiayuan Chen wrote:
+> We observed an issue from the latest selftest: sockmap_redir where
+> sk_psock(psock->sk) != psock in the backlog. The root cause is the special
+> behavior in sockmap_redir - it frequently performs map_update() and
+> map_delete() on the same socket. During map_update(), we create a new
+> psock and during map_delete(), we eventually free the psock via rcu_work
+> in sk_psock_drop(). However, pending workqueues might still exist and not
+> be processed yet. If users immediately perform another map_update(), a new
+> psock will be allocated for the same sk, resulting in two psocks pointing
+> to the same sk.
 > 
-> FWIW, my Signed-off-by is in the original posting, so it must have
-> accidently been chopped off somewhere on the way.
-> 
->   https://lore.kernel.org/linux-nvme/20250520202037.2751433-1-kbusch@meta.com/
+> When the pending workqueue is later triggered, it uses the old psock to
+> access sk for I/O operations, which is incorrect.
 
-I guess that was me when editing it to make the commit log more
-detailed, sorry.
+[...]
+
+> 
+> Note: We cannot call cancel_delayed_work_sync() in map_delete() since this
+> might be invoked in BPF context by BPF helper, and the function may sleep.
+> 
+> Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
+> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+> 
+> ---
+> V1->V2: Use existing flag instead of adding new one.
+> https://lore.kernel.org/bpf/20250605142448.3llri3w7wbclfxwc@gmail.com/
+> 
+> Thanks to Michal Luczaj for providing the sockmap_redir test case, which
+> indeed covers almost all sockmap forwarding paths.
+> ---
+>  net/core/skmsg.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+
+Reviewed-by: John Fastabend <john.fastabend@gmail.com>
