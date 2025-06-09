@@ -1,72 +1,72 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F236721FF24;
-	Mon,  9 Jun 2025 18:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A5721C19F;
+	Mon,  9 Jun 2025 18:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749494843; cv=none; b=q99zrXhwuWWxRkQN2FKsCYmPpyFgNNuWwXnpoX7h0CoxGXUhKc0FDUT9rR5f/Q6j5lt4BrgRzWbQ7NAHbX+pf3aUVzRZhglcp0W1pYKREjQwxiGQWKGVk827bg5j8ZMxeDRi3raizXk5Ga/k9S7RFlDZHd++5K7fwCYa22vdUl4=
+	t=1749494844; cv=none; b=AU7AWEVj7qjlBMzL/3RzBniIRAbBIei9/6i2o6wwo/IIcWeRXUhjrEVnG3h0BdIGeUCxdBuDY0oparhaJMTliv5nEOOGZxtyAkHN9kQtOf8OPMC/7KJnnqiNMEZJ2qyZFPKkyIVJZjBNQuB5XFm6K9GU8EdWbII9Ln6Ndwj0kn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749494843; c=relaxed/simple;
-	bh=rmhaipyfzvFTUet4CzgciV8GW7lENMyYlvOXGJwmoRE=;
+	s=arc-20240116; t=1749494844; c=relaxed/simple;
+	bh=QBX0wKas8hMg8UqxUJo8euFBcQTuFEJmE6HLDNOpMw0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UCWWRzaJlRfgfLB4Znh7+tUKpj/HHrf6AxDbYIToB8AdQJun87+WPEP6qiriO9EbSm5E5jp6J16ZK6jrMc1uuxR+V4qnwiP+D7hmjf32aNFSQd8XNvV3/yQaz8MaPNPN7YiZWsBLFkuEIioU0fR+MmvRES3gGDGDfG7EIyQG3Zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MYCzRcKv; arc=none smtp.client-ip=209.85.160.48
+	 MIME-Version; b=ftIwTBlJiGAi4kv2xsKAGqocm+ev8aTA9zoSkYRVvfKTsoFhR5t4Jl5+Ue/APXzf6ABApF/mhrUM9tH8itt0WDib76lhwnM22Dzejml3aSQ9YpvTyab4eR4UmTrMzAQF4DWrOe6/nqSsdi4bac2aywkaFACiimS2i6cWeI9DGV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QeRfN+GH; arc=none smtp.client-ip=209.85.160.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MYCzRcKv"
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2ea08399ec8so1993456fac.1;
-        Mon, 09 Jun 2025 11:47:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QeRfN+GH"
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2db2f23f174so2677415fac.2;
+        Mon, 09 Jun 2025 11:47:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749494841; x=1750099641; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749494842; x=1750099642; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=L8MAicc+DqzsUNmkTOSviTgh6t6DU99MU86Mrya0BRs=;
-        b=MYCzRcKvoveQWNyCL7bQ6DkgADD8hwnNOhdiJ+wr2+0/RsWcxH/S9dOLWMf9dVEkWy
-         YATvRpKTf+XcMuOOjiymK6cyufvQiFfdFKUJk+4Bg7Tiy3uvg5cSspla9/s0fSCWys3r
-         qDb91v1xF+dgDtuzjjBsFwYK2CzisvjKrfxOO2UIljaF2dgLfb6ijeE7B69e4lM6CdtO
-         JIeg47B/4sQjXORdVXM921jA996sOn3ZJXD9aJF9GRhmMwZLqSwx95207tACfDNKwust
-         EPsMp93iGIp+sajHJbl4t3GoY06EWUVJzYRigUXXPKxLitoOCHFDNCAeC0Z9G7yYn5O2
-         Ui0w==
+        bh=DDwrjOc2P0lgnjjq9Q/Gy/AuUSnuvG7kFTIq26PL/EI=;
+        b=QeRfN+GHzOXOlXAnu1nVI2Pxjtg3Fvh07cSfvRFcqrtbaIPuSoM/7KpTwZrNRVx8dn
+         2i5pNR4eYvE5sQmstLLzeAfHVTB3NzcRUNCWyJbzDRIQic/WKOYLozwCYInj8/HtZoKb
+         cg8TRpTy6pUb+48oeCndFL8hgs3TgI6554t9pzYwAopx6LT5+S7YSanOgoo/PDw/RNna
+         qB7QV6wOUwnANuByjcFyEgRvoWidol1shFdm9Gzqbov7EDfEq9zmPgJmYxUNAB7a9Aeo
+         947gyDvekamFU8SbUVEGPTWzkirpKnuguT8J1AcRdszU0YKRJIq5aHafsQKSBVXaJZaI
+         Mggw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749494841; x=1750099641;
+        d=1e100.net; s=20230601; t=1749494842; x=1750099642;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=L8MAicc+DqzsUNmkTOSviTgh6t6DU99MU86Mrya0BRs=;
-        b=LXFr4AgKOG5YiEzJDizM3FnBHQXhhYntQ4ZvgAmlqj7dMcR0ux2XIUI3K9nl0Jm/09
-         5ALISb76xNDFbUg1oT0sJi88HlEHv5V/OG17Gie5CsFEVvnT8sjUGphzor3bZQwCNDYR
-         8nIY5ofxvMb+m61TK+vqnJBPb4Dba2deNeG0/SCDQFucTS9VWmIprgdjTn9/OtjG8Dkj
-         xl9s1k0DhP7r756KcOGeS1F/FEfuSBrBkE2hX2HLc6JjetsO91zU8buFW2R1mQG9CGra
-         EH0EMdeEUq0VaCsMvKEod5T5sFG29A+6yDcUcSK0pj8qlDo9UmYy2FPnKyeq36h51cZD
-         +uRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsMMUYby3B4fBlL2hbHc/aGaSTXbYZzaKjBsrT41U4Tnpe5XbNuW2nBvbtaRkuIytWuu0OkF3OFzbKETAiPfeHg7xx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0dz3mu3jDX2fNq93SVo/LGzSZwOUTX6mp6n5Wbx1Bk1ak2aco
-	7ibEkhmLeIr3EF5xomf0u8UQl0I3Xq+lTiyvQUpXQNfo5F7yyE9Enr+3PcQk6g==
-X-Gm-Gg: ASbGncufmUCniICFqFTyGWFxx2JVareIYffjQ3BByfIQSwxHNZDdWNOcu4aVoqQf8/U
-	gkOR1/b0CDEOGPcBLhUiVc9ypKesW5XeodbDAHWxVL4H75wPixjeFk/4n17LxzUJCsc6z+Lheh8
-	AL0/elbMSh44Q8XQqAJF60prOAD6HO7EO6hSjUQhIAhKdmLqgrUtNFRirrU5x+Mx9iOP4ICKB7a
-	beUcoXAnwDO7VBC4N2Qh4AmlEjpn93CkBXzvp3SbtnfXYrRrX6Up/ob2uJq7vp3ps5Wx9Kc453q
-	SdkNNgDRVN4cfzChuCm8fb+0VnPQBDrKFwrSRw2gtUagYwv87jpwlRJEVS5X7s5sgErsg+7jkT2
-	2p4hqn/+/DKzMWfNqLttJwJ7orOOFd51hEaibVoA=
-X-Google-Smtp-Source: AGHT+IHyq/vKQLED9Su1Jd0QEhZdlhfl/u6ki32haPcxOuv+dLXepFEpdo0E2eWGpreZkqGONLAelA==
-X-Received: by 2002:a05:6870:5147:b0:2d5:2955:aa6b with SMTP id 586e51a60fabf-2ea007cdf93mr9081717fac.5.1749494840890;
-        Mon, 09 Jun 2025 11:47:20 -0700 (PDT)
+        bh=DDwrjOc2P0lgnjjq9Q/Gy/AuUSnuvG7kFTIq26PL/EI=;
+        b=iValcymXMC9s/WOoBbOESPb6/3dm9ndQtLbnQE4E5WDDJw9/+p5m7yIdsNv9zfhE+Z
+         S8JDwlnPcMKdyahKyXFyJEmb5O8ZwyhSQNSkACsk3XfOLUOcrahPBRx6qrJgKKY9nkFd
+         HWjC6fPS2eClx3sMqmDKBNbHk5ittEEelz0hX+0Wf2ZwoYrcF2RbxsINMocsNRtwi729
+         PjNf6FJFJJUYYUbf0zL99uF0Sv8orH8jXEsIgfHKra170QMQJinh2011yZCDhI3vYCLe
+         jRb7TQmeE+MvPbpO+qXVTda1jYtqU3zANotBHAmGxMHmwuamzy1W6pWzqUMi04kE/U8T
+         4a0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU73cvZDBCSlf9OYU2GsZIkRv/8om2tynNNEAKaG07Q8RhIrvr3C2vOVZaWm52vqNFQ4Es8YMKDkKUMGWIlTbVHcL4C@vger.kernel.org
+X-Gm-Message-State: AOJu0YwESP6jKViqezb6IX/xcm5CPBt7zuYUQPl8pAkvWTet2GQhrX4Z
+	jqvO0f4E19AW1xdBfekpfMaj6NOjxL7nl7cfPUEx0Oeomd2r38L7BRFShgItlg==
+X-Gm-Gg: ASbGncttf3vqSDUXfCtWOeaYuLEAgFzvkjaCsUlIxN28PY9UR02V9ttD93IsF8TumVU
+	Iz3l6jRXb/Ws89rNr3DkJsiI0oRHbeGj0WCn4tOY8HpbVMEYe9x9YriluJ9zUvUYz+CQ+SaxyhK
+	76skKwOR4iOamqxyLX8kKFCO2Wrslu+cZJVU+0c3FQhNZoka0LWF2MnHK81M7JAc5BlVpM+rscj
+	BGiQphVtiXiYqQQExWQfXHWNjX2tzyVn25Pg9eurl3J2znZBhMziOw8np6S5sXD/0Rz/axs3xjN
+	rHEZNXbhy8/40yhkUkYJ/go6/kIkHbOnGeWQWMqSCSHLtUXcdvAWrrjGHgKVMrNt5nQGvO4Z7D4
+	nonta6U4cK47QPmi5JQ==
+X-Google-Smtp-Source: AGHT+IHpMFKjrAoLHyAokS1ybpSw77ZOAastSRyqcWmpTaoQn+3gbXFKypDR5+nK2z6vkOX5rzaz+w==
+X-Received: by 2002:a05:6871:e806:b0:2c1:ae41:6b5e with SMTP id 586e51a60fabf-2ea008793b9mr8549297fac.16.1749494842300;
+        Mon, 09 Jun 2025 11:47:22 -0700 (PDT)
 Received: from localhost.localdomain.adc.delllabs.net ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2ea072e4b5asm2035950fac.30.2025.06.09.11.47.20
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2ea072e4b5asm2035950fac.30.2025.06.09.11.47.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 11:47:20 -0700 (PDT)
+        Mon, 09 Jun 2025 11:47:21 -0700 (PDT)
 From: Stuart Hayes <stuart.w.hayes@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	Hans de Goede <hdegoede@redhat.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	platform-driver-x86@vger.kernel.org
 Cc: Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH v4 4/5] platform/x86: dell_rbu: Stop overwriting data buffer
-Date: Mon,  9 Jun 2025 13:46:58 -0500
-Message-ID: <20250609184659.7210-5-stuart.w.hayes@gmail.com>
+Subject: [PATCH v4 5/5] platform/x86: dell_rbu: Bump version
+Date: Mon,  9 Jun 2025 13:46:59 -0500
+Message-ID: <20250609184659.7210-6-stuart.w.hayes@gmail.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250609184659.7210-1-stuart.w.hayes@gmail.com>
 References: <20250609184659.7210-1-stuart.w.hayes@gmail.com>
@@ -78,42 +78,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The dell_rbu driver will use memset() to clear the data held by each
-packet when it is no longer needed (when the driver is unloaded, the
-packet size is changed, etc).
+Bump the module version.
 
-The amount of memory that is cleared (before this patch) is the normal
-packet size. However, the last packet in the list may be smaller.
-
-Fix this to only clear the memory actually used by each packet, to prevent
-it from writing past the end of data buffer.
-
-Because the packet data buffers are allocated with __get_free_pages() (in
-page-sized increments), this bug could only result in a buffer being
-overwritten when a packet size larger than one page is used. The only user
-of the dell_rbu module should be the Dell BIOS update program, which uses
-a packet size of 4096, so no issues should be seen without the patch, it
-just blocks the possiblity.
-
-Fixes: 6c54c28e69f2 ("[PATCH] dell_rbu: new Dell BIOS update driver")
 Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
 ---
  drivers/platform/x86/dell/dell_rbu.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/dell/dell_rbu.c b/drivers/platform/x86/dell/dell_rbu.c
-index c03d4d55fcc1..7d5b26735a20 100644
+index 7d5b26735a20..45c0a72e494a 100644
 --- a/drivers/platform/x86/dell/dell_rbu.c
 +++ b/drivers/platform/x86/dell/dell_rbu.c
-@@ -322,7 +322,7 @@ static void packet_empty_list(void)
- 		 * zero out the RBU packet memory before freeing
- 		 * to make sure there are no stale RBU packets left in memory
- 		 */
--		memset(newpacket->data, 0, rbu_data.packetsize);
-+		memset(newpacket->data, 0, newpacket->length);
- 		set_memory_wb((unsigned long)newpacket->data,
- 			1 << newpacket->ordernum);
- 		free_pages((unsigned long) newpacket->data,
+@@ -45,7 +45,7 @@
+ MODULE_AUTHOR("Abhay Salunke <abhay_salunke@dell.com>");
+ MODULE_DESCRIPTION("Driver for updating BIOS image on DELL systems");
+ MODULE_LICENSE("GPL");
+-MODULE_VERSION("3.2");
++MODULE_VERSION("3.3");
+ 
+ #define BIOS_SCAN_LIMIT 0xffffffff
+ #define MAX_IMAGE_LENGTH 16
 -- 
 2.47.1
 
