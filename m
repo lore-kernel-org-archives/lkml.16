@@ -1,34 +1,79 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 467AE1E8342
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 11:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781CF28F3
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 11:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749467695; cv=none; b=ZekV9WHfUMQ8F4vTnHBzPL64XFz0CslRZb9tBDPhsiclETpMYxqP+TLooxJNrvzSCfS1/QX9NV2dJgFyM9UwU6xjAmScOyU6ojZilE6JbttJQI023G41prAr2Zdwa3D0IvZPskNTyOTl3CpJqNtiG6OLfbgvNz7vqAf2DS4E4oQ=
+	t=1749467844; cv=none; b=LeRQyUxrb1EXOC+t2BOap/vw02AdSbjPkShsjhjKd6R7RhroanpEh3XWSm0OLpcns8LjBa/Z4F7ypYWTRKV4kSv5Cn+o1Hpw4WkaqA22MZO896BcrkZ2uEeiCDb4WGCT4VTDZMaU+HdwJzvh9MCA/hVYhZBn0YRX6qlTuAPHSOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749467695; c=relaxed/simple;
-	bh=9J4T6PCK6LDe9fYmDaIk4F/VysUp3DALxfb+kinou94=;
+	s=arc-20240116; t=1749467844; c=relaxed/simple;
+	bh=1rf4k3D4qfLQox3AK7UIIbUKUE/1gntkD5UCAGbx2u0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=APKalxLQp5uMHmoF0lINq8REx0TlL8u9zOuYjnd3lgfXD8TgMBgLcn3LPcCMCLBNim1PrWdd/Va3tJjlQrnENRk9U7id0MDdI5I7EC/FRUrDT2y2+U48mpoolsaBnLKRrobm3nHOx0iaMTEKjtla5VAV7he9L4hJKSkrWa7ggRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFFCC113E;
-	Mon,  9 Jun 2025 04:14:34 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 41F9E3F59E;
-	Mon,  9 Jun 2025 04:14:53 -0700 (PDT)
-Date: Mon, 9 Jun 2025 12:14:48 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Marc Zyngier <maz@kernel.org>, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] coresight: trbe: Add ISB after TRBLIMITR write
-Message-ID: <20250609111448.GI8020@e132581.arm.com>
-References: <20250609-james-cs-trblimitr-isb-v1-1-3a2aa4ee6770@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=H+LAJJ4iLDwySyNAmbd2L38/8iBOGA8AD3yO65Nb2dSM4IOuhVDAZ6JH+TI1AcatIOV2aLQaj48k0M6AMKQE2VtKbpwwmyfwdV0Zf8x5QA1rMIvsc2IqQ3en/FwYSn0qMO08Cl2Hf40nAWuZq/mI+ccVO7nypbgDlCickKk+aPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fMQeG99z; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fMQeG99z"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-747c2cc3419so2813364b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 04:17:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749467842; x=1750072642; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3jmcmYhpSc0FqNNEiRx4dLKTU/hJsjGZ9t0Q+PDFigY=;
+        b=fMQeG99z3RP37VErZF4qBvYuv9ljrKs2oiihvq5I1j84xL+Tysuymn6ATaf0v4QIq8
+         +5JD/ztWl/3cw5P+hupm7OsL17/YV/wsBmvxpv+ogZqDTAW06RFt7qcc+ghs0yCR6trj
+         cDuY+ZDIkWqHhcPiJeoZ1Q18D+/+xzXdQQ3wbw34REQtXuPoMiSHQy4x9ggDK+aWnyVq
+         W5tytAMTXKKVdVvJyHOTYnHN2uug4fW4Ux6Dj9IAMCwYs/8sDI59KMSIlQNileuHgYw1
+         eX3f15cXxybID/eFKvhzMSO1p2bfZ7grLQs/BNA0LsfJDdjKaELDbjvk+2Kgu+PTTTIS
+         TN6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749467842; x=1750072642;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3jmcmYhpSc0FqNNEiRx4dLKTU/hJsjGZ9t0Q+PDFigY=;
+        b=XYLxBMANVu+9TnNz/zCylTmftFlkxfyGC7QC0vHHyirxCmljZ0bc5PfTfVFoBIi4sn
+         LYBZQ+tjK4Jx9bizQVZ0D06jVdRWelYXlOIRZoU0MUTB51O4EUVKA4SPuO+HsmyiXnd5
+         zvr3jrjw7zkm9YdxNIP+ftlBPs2HVrQv2BX/vUz3vVzVXRlqpuLMAe9wZGvX2Ztmrq2/
+         uv0Vph3JXOSwVF9pC1asvjSej9qHDFXIR49OSEqXMJbXNBn19NxeFpwlNurRP9sOWmaC
+         fyZAbEDOTcb2cJt0NVC8H7l8zviAm9AVu32hlDQ0HGQLcubL03XLSBy3Q4Afyp1c0RJB
+         2sYw==
+X-Forwarded-Encrypted: i=1; AJvYcCWEcfMuyAXMaXKjheejjBU5nANpH1T1v+vO8xFp3y3JTiQ6ZwiuXJVnhytc6zBiqOqQxFu6X5BBAd1YD7E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFbxW8KD96nkZX9+pCPpgXQvIUfPrbV7gu+LQfkDUwgxiBw5up
+	8TsuqjwF0gUuBB74APw3PiMq4fKby8QG5VQGcc56IX9T0mTjBVCBcfLm3IYj7IJgT/Q=
+X-Gm-Gg: ASbGncvA+ZvCA36eQSjOi87OubJ41597UHlp3EeaFCjuYHdDx5/yJuZlXAenu6CYxS4
+	LbEdJz8yQKf805u4r/D0mSPY8zmbBjGYxwFUQv7/Vb0JkqaZLA6SfA+UHZTH9VCpPsK68kbB0lr
+	5xO64/u6wtCQq9aUMLwO2FtQJFI5G/cAMoKkZnz0Jz9PiSgDGC9YbZVu/UWFibJG5GJ0LmwDht1
+	CKa3Lu9+qFuEbdpN6q3cS7ikEpzf4eADgDqRrspaijqnKZZgFSzd1oy8/LDg7tU+WfTpvQd7aCN
+	bY4UNQ3zvObXS5fiQwcuHK25I1l80a15g/yAy+n+6KU1/cOQ1WBQ
+X-Google-Smtp-Source: AGHT+IEWqD5LrlH9rkiU0S5rSFvCTOABuN2T34dBr5ro8m9I229gWJ2E8+H+/Lj8DYJDHkqAZ13+KA==
+X-Received: by 2002:a05:6a20:12c5:b0:1f5:9016:3594 with SMTP id adf61e73a8af0-21ee255c80cmr20215648637.18.1749467841762;
+        Mon, 09 Jun 2025 04:17:21 -0700 (PDT)
+Received: from localhost ([122.172.81.72])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b08571dsm5502621b3a.84.2025.06.09.04.17.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 04:17:21 -0700 (PDT)
+Date: Mon, 9 Jun 2025 16:47:19 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH] rust: cpumask: Validate CPU number in set() and clear()
+Message-ID: <20250609111719.gne4mhchivobyv3y@vireshk-i7>
+References: <8b5fc7889a7aacbd9f1f7412c99f02c736bde190.1749183428.git.viresh.kumar@linaro.org>
+ <aEJwm16HSwCyt7aB@Mac.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,46 +82,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250609-james-cs-trblimitr-isb-v1-1-3a2aa4ee6770@linaro.org>
+In-Reply-To: <aEJwm16HSwCyt7aB@Mac.home>
 
-On Mon, Jun 09, 2025 at 11:19:05AM +0100, James Clark wrote:
-> DEN0154 states that hardware will be allowed to ignore writes to TRB*
-> registers while the trace buffer is enabled. Add an ISB to ensure that
-> it's disabled before clearing the other registers.
-> 
-> This is purely defensive because it's expected that arm_trbe_disable()
-> would be called before teardown which has the required ISB.
-> 
-> Fixes: a2b579c41fe9 ("coresight: trbe: Remove redundant disable call")
-> Signed-off-by: James Clark <james.clark@linaro.org>
+On 05-06-25, 21:37, Boqun Feng wrote:
+> While this can fix the current problem, but it's not a good solution for
+> the long run. Because outside a test, we should never use an arbitrary
+> i32 as a cpu number (we usually get it from smp_processor_id(), or
+> something else). So the `< nr_cpu_ids` testing is not necessary in
+> normal use cases.
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
+Thanks for the feedback Boqun.
 
-> ---
->  drivers/hwtracing/coresight/coresight-trbe.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-trbe.c b/drivers/hwtracing/coresight/coresight-trbe.c
-> index 8267dd1a2130..10f3fb401edf 100644
-> --- a/drivers/hwtracing/coresight/coresight-trbe.c
-> +++ b/drivers/hwtracing/coresight/coresight-trbe.c
-> @@ -257,6 +257,7 @@ static void trbe_drain_and_disable_local(struct trbe_cpudata *cpudata)
->  static void trbe_reset_local(struct trbe_cpudata *cpudata)
->  {
->  	write_sysreg_s(0, SYS_TRBLIMITR_EL1);
-> +	isb();
->  	trbe_drain_buffer();
->  	write_sysreg_s(0, SYS_TRBPTR_EL1);
->  	write_sysreg_s(0, SYS_TRBBASER_EL1);
-> 
-> ---
-> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-> change-id: 20250609-james-cs-trblimitr-isb-523f20d874d6
-> 
-> Best regards,
-> -- 
-> James Clark <james.clark@linaro.org>
-> 
-> _______________________________________________
-> CoreSight mailing list -- coresight@lists.linaro.org
-> To unsubscribe send an email to coresight-leave@lists.linaro.org
+I have sent a new version and hopefully took care of all the review
+comments:
+
+https://lore.kernel.org/all/cover.1749463570.git.viresh.kumar@linaro.org/
+
+-- 
+viresh
