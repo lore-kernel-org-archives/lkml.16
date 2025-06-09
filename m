@@ -1,50 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88BF221FD8;
-	Mon,  9 Jun 2025 21:00:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60062222598;
+	Mon,  9 Jun 2025 21:00:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749502845; cv=none; b=JyHOev6BTauC7QiJoL+vhAV2ynsFa6MGb9+yS4gtYTPWhy0all2sCB3md0PSqzAbvKEOG/F4Z6niTUNP+U2190fdSjJ0dQh0d8Z8ifZoBMYlN+tSzIvdW1zsaRZ5hKv5agP3FBhlHYiV9/8yAnJnOc1A9QCIxE90LiKZPCQQ/Ng=
+	t=1749502852; cv=none; b=NyQhC81KbUWAxF/zQEz/k/uD5QRRxKk2CY9bQ5hgwKDw31bfsjia56frwZS2vr9Y+hi/QOAcgq37yPyAXZf+FW4NL/UUQkJaJirIuEgxAYSAmuXymal03pHhiGEj9dd1lDnb/aG5jbZ47Mz+kiHARhajuu582qk0+AkerNRTd1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749502845; c=relaxed/simple;
-	bh=nKBc69Ss4RL/f6HqDzYsfnuaSZqHYo5VaYM8rb8GeWI=;
+	s=arc-20240116; t=1749502852; c=relaxed/simple;
+	bh=4kqJW1ciMSPYKms3Y+JdGC7f/q+aGKCLpMKAts86L60=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=css6ZiXqDB4lh2niNUNbSqUnLp5dxJvB1UyLPT2RWjS8hg7e0YjagANw3iD4CQyazWNBsnqxoD+3Xn5hLyD36jeQH+yotNvmcyxy6r1nx4IhzOPs8YHmSIqoh+IZ3fRtcLuqCdvI/kAE+APPOzMqI8mXE/qmwcWjFJ/rrT8AlTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NMgkE+8M; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=A3mcWssdBIH3WzJNM+khUew62WerBRDg5zhHRzq63KH88Ib29lVMDoD8ZvN8DGrQApbLDlxkUg0fE6rME6XdlODyc0Icva64Qgl7E8oaBOcHZ4ktifeGySdKqJi6vwwvbYvsmrh4MdMIZ0zG0HEuOquW461oT9qKA7VVAno5+uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pv/uXhpu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NMgkE+8M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41145C4CEF5;
-	Mon,  9 Jun 2025 21:00:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pv/uXhpu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C4ABC4CEEF;
+	Mon,  9 Jun 2025 21:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749502844;
-	bh=nKBc69Ss4RL/f6HqDzYsfnuaSZqHYo5VaYM8rb8GeWI=;
+	s=k20201202; t=1749502851;
+	bh=4kqJW1ciMSPYKms3Y+JdGC7f/q+aGKCLpMKAts86L60=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=NMgkE+8M/Uu+YDD9TzoQBBqlIrvaR+kKWwQBRPp00blQwh1Uq4usimq55b2ClnPlS
-	 E2KwChecqZFjgJFgx2DmbY2y4mDavg2RSIES0qu2gMpBQOomYNvpWsE/jtHJaQlu9y
-	 irGMEVo6adaaDja2ADlhrl8j9TZ8vwdd3/xO2ILpLqvX+eSDk3mF/oYYhhilo2rPFI
-	 60I544mJeqwf3/D/5brHAGtVhsYL6XbfCY6JUOR++fJpn+o87OIuIwZMAsmvZCcmsx
-	 ZjYgasdchQrSORNYDnBeu6HpDtbPAir56TQOhzcPkEB3GF4y3q5xh/q1zPmOs04ibx
-	 md1dqE7NLY0Tw==
+	b=pv/uXhpuR9ZUpJOCDfH4EtcgNdI2KVijdLyoVEFoklMIpiFMXuyX2w2RiUjll+Dvc
+	 epnH1q4y5U/p9R7+bGNyVh3F+MQdhXLSQZ+x8o5rRx0qDW4PUatpKOyj3U0dFTYMJT
+	 zqx5VSP9aGlyp5iR9xCEgkHn/GpMkIoyljRmwtR1iAgR3Smy3VySb50Wb92eHG8abT
+	 M6byrRuwZZwueXNpDOnevEJgZrHZGA1ohfpmhNVUsgbIfbl5Sr9ukuT9thIptFp/Fb
+	 mcuG/xJHfU6Rn/kmzdUWD+JvTaKi6qqhiQFtv9v6qVCMXsUJFal50MzDGwuhHcyAL3
+	 ugxLnp5j/933A==
 From: Mark Brown <broonie@kernel.org>
-To: David Rhodes <david.rhodes@cirrus.com>, 
- Richard Fitzgerald <rf@opensource.cirrus.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, 
- Support Opensource <support.opensource@diasemi.com>, 
- Oder Chiou <oder_chiou@realtek.com>, Srinivas Kandagatla <srini@kernel.org>, 
- Shengjiu Wang <shengjiu.wang@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, 
- Fabio Estevam <festevam@gmail.com>, Nicolin Chen <nicoleotsuka@gmail.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linuxppc-dev@lists.ozlabs.org
-In-Reply-To: <20250528-asoc-const-unused-v1-0-19a5d07b9d5c@linaro.org>
-References: <20250528-asoc-const-unused-v1-0-19a5d07b9d5c@linaro.org>
-Subject: Re: [PATCH 0/8] ASoC: codecs: More const and unused member
- cleanups
-Message-Id: <174950284100.277844.5516021122199665205.b4-ty@kernel.org>
-Date: Mon, 09 Jun 2025 22:00:41 +0100
+To: perex@perex.cz, tiwai@suse.com, kuninori.morimoto.gx@renesas.com, 
+ lgirdwood@gmail.com, jbrunet@baylibre.com, neil.armstrong@linaro.org, 
+ khilman@baylibre.com, martin.blumenstingl@googlemail.com, 
+ shengjiu.wang@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com, 
+ nicoleotsuka@gmail.com, shawnguo@kernel.org, s.hauer@pengutronix.de, 
+ kernel@pengutronix.de, Ai Chao <aichao@kylinos.cn>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org
+In-Reply-To: <20250603055109.3154061-1-aichao@kylinos.cn>
+References: <20250603055109.3154061-1-aichao@kylinos.cn>
+Subject: Re: (subset) [PATCH v4 0/4] Use helper function
+ for_each_child_of_node_scoped()
+Message-Id: <174950284791.277844.12094958567890827693.b4-ty@kernel.org>
+Date: Mon, 09 Jun 2025 22:00:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,15 +52,14 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Wed, 28 May 2025 21:59:54 +0200, Krzysztof Kozlowski wrote:
-> Make static data const for code safety and drop some unused fields in
-> structs.
+On Tue, 03 Jun 2025 13:51:05 +0800, Ai Chao wrote:
+> This patch series introduces wrapper functions for_each_child_of_node_scoped().
 > 
-> This is based on for-v6.16 branch in ASoC tree for context in wcd938x
-> driver.
+> The for_each_child_of_node_scoped() helper provides a scope-based clean-up
+> functionality to put the device_node automatically, and as such, there is
+> no need to call of_node_put() directly.
 > 
-> Best regards,
-> Krzysztof
+> Summary:
 > 
 > [...]
 
@@ -73,22 +69,12 @@ Applied to
 
 Thanks!
 
-[1/8] ASoC: codecs: Constify regmap configuration static variables
-      commit: 0045b902ad27f2676c2a5b6444494a8287b80072
-[2/8] ASoC: fsl: Constify reg_default array
-      commit: 239dab898b739f49b1bda8d65163fe4f5c773468
-[3/8] ASoC: codecs: wcd9335: Drop unused sido_input_src field
-      commit: 620d9687004ce877b340041b8213da166f329367
-[4/8] ASoC: codecs: wcd934x: Drop unused num_rx_port/num_tx_port fields
-      commit: 9afc53569d800f5e3caf9401d49ad2d89f340a54
-[5/8] ASoC: codecs: wcd937x: Drop unused 'struct wcd937x_priv' fields
-      commit: 87a2270fd1f560dbfc1b26391ff3b37f56d2a1a3
-[6/8] ASoC: codecs: wcd938x: Drop unused 'struct wcd938x_priv' fields
-      commit: fd32bd4467c13254cb52188034fce242f0f6340d
-[7/8] ASoC: codecs: wcd938x: Drop unused variant field
-      commit: ff228b6b9ed8f5d7ef418b6cbece772c6617d789
-[8/8] ASoC: codecs: wcd939x: Drop unused 'struct wcd939x_priv' fields
-      commit: ece5d881004f041c2e1493436409dbcbea3ad5f8
+[2/4] ASoC: renesas: Use helper function for_each_child_of_node_scoped()
+      commit: 077caf1d1763e069239101b4a72351fb38d37f13
+[3/4] ASoC: meson: Use helper function for_each_child_of_node_scoped()
+      commit: 618abc785e0cbe9993f7217c9f8ecb1cd2478e4f
+[4/4] ASoC: imx-card: Use helper function for_each_child_of_node_scoped()
+      commit: 111a2c8ab462d77d1519b71b46f13ae1b46920b4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
