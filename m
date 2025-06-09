@@ -1,95 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66362CA5A;
-	Mon,  9 Jun 2025 15:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D3621019C;
+	Mon,  9 Jun 2025 15:41:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749483601; cv=none; b=cQzzZAUaKcD7JWxyNfLL1ubq2BcR3pnvz7P+pVd+LGP9DJVuCdF5PvBAMAWvClShCpmegMVpseaEq++BZGWFVG7DI+NAuL3MqY0Uh3p0DGw7FuI9MhfEDZ462XGdA8QQmp7HjaeTnid9ZK5kdIJVp4GWtuV139AWMCAFA5H+GkQ=
+	t=1749483706; cv=none; b=AGM7R7N7sZpuHM0u10f7HBFH2HmEm/jUzk4ZvLc9v7ZRnpaIQdQZ1vBlUdoiJSJWtliUoyNS0/Gc2GqkegLgexRn033gK9oNWSWW7TISzg9GwKDaNZvQY/1ROrvdDkUzaaS9UdW1vNVUIoOcKsWGyngNL+EnMVNGR+tECSNZzaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749483601; c=relaxed/simple;
-	bh=79i4R9SAD/alYf7WTzRlygyu10EANW52xvy2M/Do+QY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=DizJUtAilF553o4vYi7+ZDmi+roeo0g+yrukiSLQP35GhsJqaqkVWNla6f6Yy2I/+Ap92y1vX/RCZlArBzHXYONA2oD7nPreygWRziNMuCvjrmGCjkFU0xRynorlX1uEou5blDQf/2pFLV4GRfkhrU+SUaDXadU5XYiM0iu1gjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jkd8Z7hy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749483706; c=relaxed/simple;
+	bh=oLninvSAGUYHt2k8oA6A6XsoeCG63qFLupVzHad1EYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O8AS/MA5RjnHFATN40y//XeFhPo7MxCh13fB20aKqYloO9MjMYuqV0eJxOmzmRrK5R1EmSqDzrNpxO3iOm9r2mLkqCf5r2AlL4nCPeA3f2jMhT3tHyOBxjqMWIUG15teO7ZnUXSOhHjGnwA6lpPjmq9YJ98fYryNYYVAzFF9+3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lVKsMRhF; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jkd8Z7hy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77850C4CEEF;
-	Mon,  9 Jun 2025 15:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749483600;
-	bh=79i4R9SAD/alYf7WTzRlygyu10EANW52xvy2M/Do+QY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=jkd8Z7hy9VcKFGVF/k3GMiuZNhA8hpfqrTKYXXW9Je8G7+feslv2lSkbwsZS8sFn5
-	 QHkWbADZUD9XV/luyZa1vbkWCt1YTgW7akHYZKWDy1u9qBHveFledA9n37B2QONLhc
-	 ZktHqXIL8WQg79ILLwbsqsTpd6QbQQChORr4D2Z059wold8li4fSPKbQ43s6UTBLk5
-	 upjF0NTuViNfBiXpLY8YpDs6hSLQJduk5+MecH8Rn1R99xoBKCITYInJG2v8E0UW5V
-	 wy4Iuom04TDjcvXLP3bV1uWBwQmfeOkoAp2zASX1+v/QVpagpQSE8hmgbp72YIZWE5
-	 LwbWi+g1AK2wg==
-From: Mark Brown <broonie@kernel.org>
-To: alsa-devel@alsa-project.org, 
- Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
-Cc: Vijendar.Mukunda@amd.com, Basavaraj.Hiregoudar@amd.com, 
- Sunil-kumar.Dommati@amd.com, syed.sabakareem@amd.com, 
- mario.limonciello@amd.com, yung-chuan.liao@linux.intel.com, 
- Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, 
- "open list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." <linux-sound@vger.kernel.org>, 
- open list <linux-kernel@vger.kernel.org>
-In-Reply-To: <20250609121251.639080-1-venkataprasad.potturu@amd.com>
-References: <20250609121251.639080-1-venkataprasad.potturu@amd.com>
-Subject: Re: [PATCH] ASoC: amd: acp: Fix pointer assignments for
- snd_soc_acpi_mach structures
-Message-Id: <174948359821.187608.7932953931685705829.b4-ty@kernel.org>
-Date: Mon, 09 Jun 2025 16:39:58 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lVKsMRhF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749483705; x=1781019705;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=oLninvSAGUYHt2k8oA6A6XsoeCG63qFLupVzHad1EYM=;
+  b=lVKsMRhF/5XEK8Gz4rxde9ac0QRuSrl0vVGE7lCpR3TZOBMVTgzqO7uy
+   lYQoeLGTNz6mmfx56SCcm/pP18YHfyWg4vQmMf0V+FcnmNnr6fS8ZC456
+   Y+JMTmrwmQfxa5Kt24Fhy6JmbyZWOjg0FqHqnf33FvvPQELz/qWUw5sfn
+   sjPrI+PFTlOTG1iWG28HcwTpS7Io9E5JcPb74sl3RDlpYqNecGQrPuLqM
+   D/btZXkzRgdncvs6k86Gxy+s/yyNOXEbZiGosJOnoawyMBzVLStdc4GTk
+   jodYOPF6bog7JhuLeXVs+xXKdavRQD0SB+PVn7/wZag4fG0Ixm5yMAH61
+   A==;
+X-CSE-ConnectionGUID: sPXBfHRlSXSC9+AwQtELvg==
+X-CSE-MsgGUID: 9x+VMEJMRieZ8rBZXRlPnA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51476339"
+X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
+   d="scan'208";a="51476339"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 08:41:41 -0700
+X-CSE-ConnectionGUID: ZG1wlEDuTmWBChkjQMEgyw==
+X-CSE-MsgGUID: IPmBLu+KS2mHIke0OJNJOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
+   d="scan'208";a="177455852"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 09 Jun 2025 08:41:15 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uOeca-000797-2c;
+	Mon, 09 Jun 2025 15:41:12 +0000
+Date: Mon, 9 Jun 2025 23:40:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: add mmap_prepare() compatibility layer for nested
+ file systems
+Message-ID: <202506092301.jUMzAZW1-lkp@intel.com>
+References: <20250609092413.45435-1-lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250609092413.45435-1-lorenzo.stoakes@oracle.com>
 
-On Mon, 09 Jun 2025 17:42:32 +0530, Venkata Prasad Potturu wrote:
-> This patch modifies the assignment of machine structure pointers in the
-> acp_pci_probe function. Previously, the machine pointers were assigned
-> using the address-of operator (&), which caused incompatibility issues
-> in type assignments.
-> 
-> Additionally, the declarations of the machine arrays in amd.h have been
-> updated to reflect that they are indeed arrays (`[]`). The code is
-> further cleaned up by declaring the codec structures in
-> amd-acpi-mach.c as static, reflecting their intended usage.
-> 
-> [...]
+Hi Lorenzo,
 
-Applied to
+kernel test robot noticed the following build warnings:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+[auto build test WARNING on akpm-mm/mm-everything]
 
-Thanks!
+url:    https://github.com/intel-lab-lkp/linux/commits/Lorenzo-Stoakes/mm-add-mmap_prepare-compatibility-layer-for-nested-file-systems/20250609-172628
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20250609092413.45435-1-lorenzo.stoakes%40oracle.com
+patch subject: [PATCH] mm: add mmap_prepare() compatibility layer for nested file systems
+config: arc-randconfig-002-20250609 (https://download.01.org/0day-ci/archive/20250609/202506092301.jUMzAZW1-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250609/202506092301.jUMzAZW1-lkp@intel.com/reproduce)
 
-[1/1] ASoC: amd: acp: Fix pointer assignments for snd_soc_acpi_mach structures
-      commit: 0779c0ad2a7cc0ae1865860c9bc8732613cc56b1
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506092301.jUMzAZW1-lkp@intel.com/
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+All warnings (new ones prefixed by >>):
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+>> Warning: mm/mmap.c:1921 function parameter 'vma' not described in 'compat_vma_mmap_prepare'
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
