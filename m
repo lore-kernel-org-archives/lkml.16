@@ -1,210 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5685010E3;
-	Mon,  9 Jun 2025 20:47:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99BCE1624DF;
+	Mon,  9 Jun 2025 20:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749502047; cv=none; b=PRpkUUzBrerVRDj6jOFCVNAe/f7MBcaXdZOSUwS8YZUuIEl/nSopJ3EFjPsZ7oYIL3d88PnuZG+d8Y4ecgwRQD5JmTCIrcg6TSs2gDfveuB6tdo2j1rsv8QaUCIkCA/ajswmyKW9fdQKWWID9eRV6Pj1YHVGN2pWCsCH3A99h4M=
+	t=1749502115; cv=none; b=T9p+urrgy1PKJ9KtoHta1ExbaOjpMona/5k1axqSRfjkOgZM0yX1jIVXstJin8dIoHyEV4J5FlJMPslhTYiefDZSUhjXZUbEFBy8cbhD3WcikIedD1hwaUd0YIxkcTtHYSCre/Xj8TJu8UkAQI5M1hG3kP8CgnqxG5stiHqTQjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749502047; c=relaxed/simple;
-	bh=efwRt9AsjY6DCceMMyJwt6Pe2f2DQsUY58BN5JsAsLI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=sLxr7+Ygl8cs0T2hqDfVGTjtusztJ8Hr4/VBC/Q9vfCXrbUsYIG+7/Lqbe+kWHxRfio9sd3WEzGhOvnfpk1ExM4PXeK0/+AtKeMjkPGSSzgCaoyjiwLpM1DH9ZQdP7OIB7xHeZOMY98KvEdyjiDrYlLTp+ruQIn96Bbl5rQ+npk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dvJ80d6K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749502115; c=relaxed/simple;
+	bh=Cf4DSQp3oAKhqHq4IyLu+NFvMCScLsyVxykgVagauOA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rGjFJwrojLeJmKJt2o50CctRwYtYD2UsdVmvBPYhxUBgARd9gUiMpP1Cc+Se5CtJblFkKh+cAknGCOqzZHCyYRW/iJfslZq0tf577Tzo/Zgy12tdc6LTvQolnunPM3qNStq6uVHstL6ZcEDzVP4WEigbNSmB1jb/yiYletquJso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EaAZ60Bf; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dvJ80d6K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 959B3C4CEEF;
-	Mon,  9 Jun 2025 20:47:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749502046;
-	bh=efwRt9AsjY6DCceMMyJwt6Pe2f2DQsUY58BN5JsAsLI=;
-	h=Date:From:To:Cc:Subject:From;
-	b=dvJ80d6KkiJd9yaU/MEiSsorsnNPpEQGf4a/vsu0IvoRS1MUuU3I+9BVHNsNABTP8
-	 ctw1pPA1y4J2NAB3HJFohUI2L2gfwbvuIc+JadAOzGEjErTdE2K6Rgj5Z1eRcVPKw0
-	 HZGzi8NqNM4wJHDcLz+NVyIuBLqW2SAnCk+CHILFesW7YvCbOAl0HS2pKqLIe25XXb
-	 wIfSpDFnitCb0L1/DP+L5k1QumDzNibCqPdU8HiWt53elfrOOnuGnflP8Cx6bnpRRN
-	 ThZzNKphtrdsPnn3mrtsnQFm2UOauOGgqas4KMG9CpC9m5s8c6+dh1NT7/54AxehPB
-	 D+1Vs4+OyDi7g==
-Date: Mon, 9 Jun 2025 10:47:25 -1000
-From: Tejun Heo <tj@kernel.org>
-To: "David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>
-Cc: Eric Dumazet <edumazet@google.com>, David Ahern <dsahern@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jason Xing <kerneljasonxing@gmail.com>
-Subject: [PATCH RESEND net-next] net: tcp: tsq: Convert from tasklet to BH
- workqueue
-Message-ID: <aEdIXQkxiORwc5v4@slm.duckdns.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EaAZ60Bf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749502113; x=1781038113;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Cf4DSQp3oAKhqHq4IyLu+NFvMCScLsyVxykgVagauOA=;
+  b=EaAZ60BfLY1oPN5iqJg+Ur36bbWV77jTdZaaikeuXAtQeWE6gxPTVfSD
+   Qiz3uw/GQ1hVkJVnVh6+S2Sk8ZQeAhSC0fxL5SzRVbitsabu1lzEinTwH
+   uQKhtQiwCpoPddp44siWsTp0FPkenTcDv/1cn4mD96QSFdKPgahr7WJCQ
+   fKzRQ1v45HvqLNyvAFWKTgxtHxEbPeuTzMGAN+o0dsaD+R4ogat1QAegG
+   kXt7Ucnd7O7Cs0HtnMH3eFiUNtqD6/tc75OI8vuG3K1p/OAEg2ivgmf2j
+   nZ17uwjpGqnDpLLg0E1HOXwqGP1eaPwUBtIGO6zWpsck4oKKc0Mh0AHC5
+   g==;
+X-CSE-ConnectionGUID: IfC4efbpQ9OXNlDu6n7YIA==
+X-CSE-MsgGUID: JJba1irtQk2Iy7SB71AEFA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51503885"
+X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
+   d="scan'208";a="51503885"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 13:48:31 -0700
+X-CSE-ConnectionGUID: z6Q7glW8TZWwX4fC8z4Yqg==
+X-CSE-MsgGUID: 50jpc8UfQb6SzBl41Hchfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
+   d="scan'208";a="147135248"
+Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.111.99]) ([10.125.111.99])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 13:48:30 -0700
+Message-ID: <1ea79803-a219-4297-9343-aa5b0a737abc@intel.com>
+Date: Mon, 9 Jun 2025 13:48:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] cxl/edac: Fix the min_scrub_cycle of a region
+ miscalculation
+To: Li Ming <ming.li@zohomail.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ shiju.jose@huawei.com
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250603104314.25569-1-ming.li@zohomail.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250603104314.25569-1-ming.li@zohomail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The only generic interface to execute asynchronously in the BH context is
-tasklet; however, it's marked deprecated and has some design flaws. To
-replace tasklets, BH workqueue support was recently added. A BH workqueue
-behaves similarly to regular workqueues except that the queued work items
-are executed in the BH context.
 
-This patch converts TCP Small Queues implementation from tasklet to BH
-workqueue.
 
-Semantically, this is an equivalent conversion and there shouldn't be any
-user-visible behavior changes. While workqueue's queueing and execution
-paths are a bit heavier than tasklet's, unless the work item is being queued
-every packet, the difference hopefully shouldn't matter.
+On 6/3/25 3:43 AM, Li Ming wrote:
+> When trying to update the scrub_cycle value of a cxl region, which means
+> updating the scrub_cycle value of each memdev under a cxl region. cxl
+> driver needs to guarantee the new scrub_cycle value is greater than the
+> min_scrub_cycle value of a memdev, otherwise the updating operation will
+> fail(Per Table 8-223 in CXL r3.2 section 8.2.10.9.11.1).
+> 
+> Current implementation logic of getting the min_scrub_cycle value of a
+> cxl region is that getting the min_scrub_cycle value of each memdevs
+> under the cxl region, then using the minimum min_scrub_cycle value as
+> the region's min_scrub_cycle. Checking if the new scrub_cycle value is
+> greater than this value. If yes, updating the new scrub_cycle value to
+> each memdevs. The issue is that the new scrub_cycle value is possibly
+> greater than the minimum min_scrub_cycle value of all memdevs but less
+> than the maximum min_scrub_cycle value of all memdevs if memdevs have
+> a different min_scrub_cycle value. The updating operation will always
+> fail on these memdevs which have a greater min_scrub_cycle than the new
+> scrub_cycle.
+> 
+> The correct implementation logic is to get the maximum value of these
+> memdevs' min_scrub_cycle, check if the new scrub_cycle value is greater
+> than the value. If yes, the new scrub_cycle value is fit for the region.
+> 
+> The change also impacts the result of
+> cxl_patrol_scrub_get_min_scrub_cycle(), the interface returned the
+> minimum min_scrub_cycle value among all memdevs under the region before
+> the change. The interface will return the maximum min_scrub_cycle value
+> among all memdevs under the region with the change.
+> 
+> Signed-off-by: Li Ming <ming.li@zohomail.com>
 
-My experience with the networking stack is very limited and this patch
-definitely needs attention from someone who actually understands networking.
+Both patches applied to cxl/next
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: "David S. Miller" <davem@davemloft.net> (maintainer:NETWORKING [IPv4/IPv6])
-Cc: David Ahern <dsahern@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org> (maintainer:NETWORKING [GENERAL])
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org (open list:NETWORKING [TCP])
----
- include/net/tcp.h     |  2 +-
- net/ipv4/tcp.c        |  2 +-
- net/ipv4/tcp_output.c | 36 ++++++++++++++++++------------------
- 3 files changed, 20 insertions(+), 20 deletions(-)
-
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index dd78a1181031..89f3702be47a 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -324,7 +324,7 @@ extern struct proto tcp_prot;
- #define TCP_DEC_STATS(net, field)	SNMP_DEC_STATS((net)->mib.tcp_statistics, field)
- #define TCP_ADD_STATS(net, field, val)	SNMP_ADD_STATS((net)->mib.tcp_statistics, field, val)
- 
--void tcp_tasklet_init(void);
-+void tcp_tsq_work_init(void);
- 
- int tcp_v4_err(struct sk_buff *skb, u32);
- 
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 1baa484d2190..d085ee5642fe 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -4772,6 +4772,6 @@ void __init tcp_init(void)
- 	tcp_v4_init();
- 	tcp_metrics_init();
- 	BUG_ON(tcp_register_congestion_control(&tcp_reno) != 0);
--	tcp_tasklet_init();
-+	tcp_tsq_work_init();
- 	mptcp_init();
- }
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index e3167ad96567..d11be6eebb6e 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -1049,15 +1049,15 @@ static unsigned int tcp_established_options(struct sock *sk, struct sk_buff *skb
-  * needs to be reallocated in a driver.
-  * The invariant being skb->truesize subtracted from sk->sk_wmem_alloc
-  *
-- * Since transmit from skb destructor is forbidden, we use a tasklet
-+ * Since transmit from skb destructor is forbidden, we use a BH work item
-  * to process all sockets that eventually need to send more skbs.
-- * We use one tasklet per cpu, with its own queue of sockets.
-+ * We use one work item per cpu, with its own queue of sockets.
-  */
--struct tsq_tasklet {
--	struct tasklet_struct	tasklet;
-+struct tsq_work {
-+	struct work_struct	work;
- 	struct list_head	head; /* queue of tcp sockets */
- };
--static DEFINE_PER_CPU(struct tsq_tasklet, tsq_tasklet);
-+static DEFINE_PER_CPU(struct tsq_work, tsq_work);
- 
- static void tcp_tsq_write(struct sock *sk)
- {
-@@ -1087,14 +1087,14 @@ static void tcp_tsq_handler(struct sock *sk)
- 	bh_unlock_sock(sk);
- }
- /*
-- * One tasklet per cpu tries to send more skbs.
-- * We run in tasklet context but need to disable irqs when
-+ * One work item per cpu tries to send more skbs.
-+ * We run in BH context but need to disable irqs when
-  * transferring tsq->head because tcp_wfree() might
-  * interrupt us (non NAPI drivers)
-  */
--static void tcp_tasklet_func(struct tasklet_struct *t)
-+static void tcp_tsq_workfn(struct work_struct *work)
- {
--	struct tsq_tasklet *tsq = from_tasklet(tsq,  t, tasklet);
-+	struct tsq_work *tsq = container_of(work, struct tsq_work, work);
- 	LIST_HEAD(list);
- 	unsigned long flags;
- 	struct list_head *q, *n;
-@@ -1164,15 +1164,15 @@ void tcp_release_cb(struct sock *sk)
- }
- EXPORT_SYMBOL(tcp_release_cb);
- 
--void __init tcp_tasklet_init(void)
-+void __init tcp_tsq_work_init(void)
- {
- 	int i;
- 
- 	for_each_possible_cpu(i) {
--		struct tsq_tasklet *tsq = &per_cpu(tsq_tasklet, i);
-+		struct tsq_work *tsq = &per_cpu(tsq_work, i);
- 
- 		INIT_LIST_HEAD(&tsq->head);
--		tasklet_setup(&tsq->tasklet, tcp_tasklet_func);
-+		INIT_WORK(&tsq->work, tcp_tsq_workfn);
- 	}
- }
- 
-@@ -1186,11 +1186,11 @@ void tcp_wfree(struct sk_buff *skb)
- 	struct sock *sk = skb->sk;
- 	struct tcp_sock *tp = tcp_sk(sk);
- 	unsigned long flags, nval, oval;
--	struct tsq_tasklet *tsq;
-+	struct tsq_work *tsq;
- 	bool empty;
- 
- 	/* Keep one reference on sk_wmem_alloc.
--	 * Will be released by sk_free() from here or tcp_tasklet_func()
-+	 * Will be released by sk_free() from here or tcp_tsq_workfn()
- 	 */
- 	WARN_ON(refcount_sub_and_test(skb->truesize - 1, &sk->sk_wmem_alloc));
- 
-@@ -1212,13 +1212,13 @@ void tcp_wfree(struct sk_buff *skb)
- 		nval = (oval & ~TSQF_THROTTLED) | TSQF_QUEUED;
- 	} while (!try_cmpxchg(&sk->sk_tsq_flags, &oval, nval));
- 
--	/* queue this socket to tasklet queue */
-+	/* queue this socket to BH workqueue */
- 	local_irq_save(flags);
--	tsq = this_cpu_ptr(&tsq_tasklet);
-+	tsq = this_cpu_ptr(&tsq_work);
- 	empty = list_empty(&tsq->head);
- 	list_add(&tp->tsq_node, &tsq->head);
- 	if (empty)
--		tasklet_schedule(&tsq->tasklet);
-+		queue_work(system_bh_wq, &tsq->work);
- 	local_irq_restore(flags);
- 	return;
- out:
-@@ -2623,7 +2623,7 @@ static bool tcp_small_queue_check(struct sock *sk, const struct sk_buff *skb,
- 	if (refcount_read(&sk->sk_wmem_alloc) > limit) {
- 		/* Always send skb if rtx queue is empty or has one skb.
- 		 * No need to wait for TX completion to call us back,
--		 * after softirq/tasklet schedule.
-+		 * after softirq schedule.
- 		 * This helps when TX completions are delayed too much.
- 		 */
- 		if (tcp_rtx_queue_empty_or_single_skb(sk))
--- 
-2.43.0
+> ---
+> Changes from RFC:
+> 1. Add more description about the max scrub cycle. (Alison)
+> 2. Add more description about the min scrub cycle of a region. (Alison)
+> 3. Drop RFC tag.
+> 
+> base-commit: 9f153b7fb5ae45c7d426851f896487927f40e501 cxl/next
+> ---
+>  drivers/cxl/core/edac.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
+> index 2cbc664e5d62..0ef245d0bd9f 100644
+> --- a/drivers/cxl/core/edac.c
+> +++ b/drivers/cxl/core/edac.c
+> @@ -103,10 +103,10 @@ static int cxl_scrub_get_attrbs(struct cxl_patrol_scrub_context *cxl_ps_ctx,
+>  				u8 *cap, u16 *cycle, u8 *flags, u8 *min_cycle)
+>  {
+>  	struct cxl_mailbox *cxl_mbox;
+> -	u8 min_scrub_cycle = U8_MAX;
+>  	struct cxl_region_params *p;
+>  	struct cxl_memdev *cxlmd;
+>  	struct cxl_region *cxlr;
+> +	u8 min_scrub_cycle = 0;
+>  	int i, ret;
+>  
+>  	if (!cxl_ps_ctx->cxlr) {
+> @@ -133,8 +133,12 @@ static int cxl_scrub_get_attrbs(struct cxl_patrol_scrub_context *cxl_ps_ctx,
+>  		if (ret)
+>  			return ret;
+>  
+> +		/*
+> +		 * The min_scrub_cycle of a region is the max of minimum scrub
+> +		 * cycles supported by memdevs that back the region.
+> +		 */
+>  		if (min_cycle)
+> -			min_scrub_cycle = min(*min_cycle, min_scrub_cycle);
+> +			min_scrub_cycle = max(*min_cycle, min_scrub_cycle);
+>  	}
+>  
+>  	if (min_cycle)
 
