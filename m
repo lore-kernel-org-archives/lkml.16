@@ -1,77 +1,73 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783EF21C9ED
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 19:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F37121CC4A;
+	Mon,  9 Jun 2025 19:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749496413; cv=none; b=LgDGaBrMdudswk7EprAdwAKN7XX3+9dw89/8DcxTCzI7S0tO4I+PWRL1ZyK68aKjpc59xw8Fanu8abyOUoAB5Vy+cMpHTNOBnNWWlDmjPQWMguk0hFV+qVUAT0QY2YbUcLCYgWtVQ6DXtXMxcu86OhkzPUkGr3cRBj+o7Wv+cpU=
+	t=1749496436; cv=none; b=ti590ZBRvl9bkykpXWnM2wU931d+9nBfjGxwXJs+ZSLiBXJlUpaE6xl50y7LtkbL5vw/zZ56BlOD6ssqh631qXzcjysSRl6zfFRzbBYphrA/e5Ntxh7qkXHT0rPtW+cAW4Kn8swZQKHI3GRxyTc6WQ33FmC5sGVb/xwW59lBIL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749496413; c=relaxed/simple;
-	bh=RH1moK8rgMoBpS61eJ1qLMUWxGsWt7u8Eenot99hHYg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=O03wwc4JL4U5JSVRJHvbAfCYyIrTk31DZMCfDABdj0aPLF9cz23yJzGOw5irmcEGeSUUD0cQdJGIx2tFHGpse3MxWVK2HPdgNKJUANeob+gywcSIfLKPzCclrhbfUzVA3qHa+lERzZP7hV6fSVZCReOthV2bB8y2MZuRU3vkxaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zceVzWVW; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749496436; c=relaxed/simple;
+	bh=qfB8VMSGySBtQwc24w5kS+61cOYDH+0r3VJ7G+xrbns=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jfbx5zM0yYupd/ZDcNnYC/2anckOcDWy+fTTklGvPXltFtex80vvBwebV9zteHhnvkAjem00UOhQM5tGfOYH6Sm0DW+DSNGuhd1igPg1uy6tJGkIN1YLpW9NMIQNjRs9FH3iGgHmZ/IxESWag+rkme5PzYXcAlXXCthIYAcDDUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cRcGCzSR; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zceVzWVW"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a4fb9c2436so2440025f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 12:13:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749496410; x=1750101210; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5oMpxxju5fqwiILJnsmlBVD5PQ4lHkNcFxE2f/RbQAQ=;
-        b=zceVzWVWE4XFWr9Nltt2wzjw09JHvukflD4JFSwbHR3CYy6WFgGd9BxnBMaLydaWwD
-         +JiNs0EP98tWwRAEABX/2nrmuJT6OkAqaf6qGFCQr/4gCrvqlz6icQXGhXT19pFGXPnI
-         1kDasAphI11xnLDQ1I3q8iGCWzuP2s0m3J2fVS9k9Pp6BJ1HOsvMqpNsDUK15G39z7YO
-         rYygMjPDlxPVOBgAzWB4hUMKmpzJPImyBr/4odpIZTlHCXj/uKlEEmjT9oC9n9NH0GDG
-         yTiQLJtCRk+CJB+DNSoohxItcIkiGMroep+6M7RxB4iTKyDlvoyLU+o809LFlgDMBrW0
-         +TCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749496410; x=1750101210;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5oMpxxju5fqwiILJnsmlBVD5PQ4lHkNcFxE2f/RbQAQ=;
-        b=mQHTukgEU1nnh/lCqSB5ddypSDJYGlylDx6vsRixhPcV9Bcsdjo+uwVMQwUX7/yfGE
-         8/9Vc4ajLr3tZcL2R3WsQwWYkxwqaPg3fWjvC2LRRPIket2fLrrETb/sVgj1SQ0WLqH4
-         P1rgag6GCD1887ZczKlvNX7Otg96/9fiOWW7YX40AIHvkKlWisf7L+Dqq+R5D4iPfMT+
-         cC2rv+QpeKk1M/K0/sDaGbXHnTnv5fX7mltKiiA7lRJQS+3cyOuYXQ6g2E+avfb7JlEt
-         h+tQK1tJNluWvjnZWWc5REIG7zV78+etFfkystALALuXpk+/U9o9uEz4zZB14IsmCeIl
-         QupA==
-X-Forwarded-Encrypted: i=1; AJvYcCUa3EP2Z8kewBlZFXejTkUqqQx6O32umSBaImQklUbZBB6wuKdzkF2oNcFWPz4fIWIJNdqWJj118jf9xMM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yznt/jC+rlgKq5Y7jUHrQMOgbifxuERwQKZuRjsxgpRSOT3nzhb
-	NvnrhPL3kj+ffCeaqJprNAcVqOiy7lUFFkxVx7oKkCgSeXLucdHc2hanImF3DD534GU=
-X-Gm-Gg: ASbGncuaEcMYIZHHb5csQpcKO7J4bceJtVXMrzBly9F0CW1kd8jrKieUAkjEyBA7w0K
-	HtA46xLRIW0PPuUV/yO53NGN6KtFELPkKZBU0Yo4BB4cxixHnuFSxVIyZ1B9uUgq5oZROSViGcE
-	adsS67e1Jod17UxJ0yBjoe8FBDtveJBHoEWuhcTiEJ4s9xfybNiajRfOVctIMVpncZvWl2KngnE
-	APKBfhrnY6KOFfvaBj2K8NYJZ0+wcoQk2wnVb7SFgSkooO8TimiVHJMfBl1nlVo29XKCI2ijoMx
-	DGH43uhhP5IYMIIDfYT+FviFrFf20mxGSfy2sMiaFOpaEENAbPMMfw3+32IepyLgXMxLbXREwpN
-	eQDtHjeOw9xONYthS2bWLDkWwDCK/66iVMRHcMEGAMLOJlQ3KJkU+1UoNF7vmL3eDHoYGdDs=
-X-Google-Smtp-Source: AGHT+IHa9LIxtooL5yOEEicTnKzc6G5QUyWFM9R6pj9cNKP1kvLuERjpBxUX1XqsC1CguSfVa3zGJQ==
-X-Received: by 2002:a05:6000:2004:b0:3a4:fc75:d017 with SMTP id ffacd0b85a97d-3a53188da32mr11342117f8f.26.1749496409749;
-        Mon, 09 Jun 2025 12:13:29 -0700 (PDT)
-Received: from green.cable.virginm.net (nail-04-b2-v4wan-166353-cust693.vm26.cable.virginm.net. [82.35.130.182])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4526e163447sm115089115e9.17.2025.06.09.12.13.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 12:13:29 -0700 (PDT)
-From: Terry Tritton <terry.tritton@linaro.org>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Shuah Khan <shuah@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
-Cc: ttritton@google.com,
-	linux-kselftest@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cRcGCzSR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749496435; x=1781032435;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=qfB8VMSGySBtQwc24w5kS+61cOYDH+0r3VJ7G+xrbns=;
+  b=cRcGCzSR163+wR7LZztxFsKYLdB+9mwLIf+p4IRS/KGWAppcYiZ7cLJx
+   Uls/gvafrKRJPGIXeRfZkT/WGiSRQ++xmFGYEWFtZXLpPKo9QM6E+0Hfk
+   ry/Omr4ljxDTtv1FI8aLmGP0fpu42iXPfQXRPB+BDKclCSJuF8nhdj0mb
+   063G4Iufvy8k5XHWHz0yV6DnJRbpqEOrhVm0+vxtshJHImYe/5Tyqgxc1
+   Rcp/mtY8yJferThr03IiLvrc6lTIp2sPgzfE1YZA/0JboHpRKNiiwaXeF
+   tZ7QXpdQmhop8plWB1XENFvaepmWzSer6C9VaB/009HzOpVCajCfu02OQ
+   Q==;
+X-CSE-ConnectionGUID: 1qzGlIQWRRim4+Q/Fpx9Sg==
+X-CSE-MsgGUID: hj8FW4tHTe+cY/TXquQPRA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51681740"
+X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
+   d="scan'208";a="51681740"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 12:13:54 -0700
+X-CSE-ConnectionGUID: B8SZt3eeQKKg6gaHNVT4ag==
+X-CSE-MsgGUID: YlEQp6tfSA22ulyBZtOKGw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
+   d="scan'208";a="147174157"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa007.jf.intel.com with ESMTP; 09 Jun 2025 12:13:51 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 0F88E290; Mon, 09 Jun 2025 22:13:49 +0300 (EEST)
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: pbonzini@redhat.com,
+	seanjc@google.com,
+	dave.hansen@linux.intel.com
+Cc: rick.p.edgecombe@intel.com,
+	isaku.yamahata@intel.com,
+	kai.huang@intel.com,
+	yan.y.zhao@intel.com,
+	chao.gao@intel.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	kvm@vger.kernel.org,
+	x86@kernel.org,
+	linux-coco@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	Terry Tritton <terry.tritton@linaro.org>
-Subject: [PATCH] selftests/futex: Add futex_numa to .gitignore
-Date: Mon,  9 Jun 2025 20:09:27 +0100
-Message-Id: <20250609190927.89655-1-terry.tritton@linaro.org>
-X-Mailer: git-send-email 2.39.5
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 02/12] x86/virt/tdx: Allocate page bitmap for Dynamic PAMT
+Date: Mon,  9 Jun 2025 22:13:30 +0300
+Message-ID: <20250609191340.2051741-3-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250609191340.2051741-1-kirill.shutemov@linux.intel.com>
+References: <20250609191340.2051741-1-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,23 +76,118 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-futex_numa was never added to the .gitignore file.
-Add it.
+The Physical Address Metadata Table (PAMT) holds TDX metadata for
+physical memory and must be allocated by the kernel during TDX module
+initialization.
 
-Signed-off-by: Terry Tritton <terry.tritton@linaro.org>
+The exact size of the required PAMT memory is determined by the TDX
+module and may vary between TDX module versions, but currently it is
+approximately 0.4% of the system memory. This is a significant
+commitment, especially if it is not known upfront whether the machine
+will run any TDX guests.
+
+The Dynamic PAMT feature reduces static PAMT allocations. PAMT_1G and
+PAMT_2M levels are still allocated on TDX module initialization, but the
+PAMT_4K level is allocated dynamically, reducing static allocations to
+approximately 0.004% of the system memory.
+
+With Dynamic PAMT, the kernel no longer needs to allocate PAMT_4K on
+boot, but instead must allocate a page bitmap. The TDX module determines
+how many bits per page need to be allocated (currently it is 1).
+
+Allocate the bitmap if the kernel boots on a machine with Dynamic PAMT.
+
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- tools/testing/selftests/futex/functional/.gitignore | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/include/asm/tdx.h                  |  5 +++++
+ arch/x86/include/asm/tdx_global_metadata.h  |  1 +
+ arch/x86/virt/vmx/tdx/tdx.c                 | 23 ++++++++++++++++++++-
+ arch/x86/virt/vmx/tdx/tdx_global_metadata.c |  3 +++
+ 4 files changed, 31 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/futex/functional/.gitignore b/tools/testing/selftests/futex/functional/.gitignore
-index 7b24ae89594a..776ad658f75e 100644
---- a/tools/testing/selftests/futex/functional/.gitignore
-+++ b/tools/testing/selftests/futex/functional/.gitignore
-@@ -11,3 +11,4 @@ futex_wait_timeout
- futex_wait_uninitialized_heap
- futex_wait_wouldblock
- futex_waitv
-+futex_numa
+diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
+index 9649308bd9c0..583d6fe66821 100644
+--- a/arch/x86/include/asm/tdx.h
++++ b/arch/x86/include/asm/tdx.h
+@@ -106,6 +106,11 @@ int tdx_enable(void);
+ const char *tdx_dump_mce_info(struct mce *m);
+ const struct tdx_sys_info *tdx_get_sysinfo(void);
+ 
++static inline bool tdx_supports_dynamic_pamt(const struct tdx_sys_info *sysinfo)
++{
++	return false; /* To be enabled when kernel is ready */
++}
++
+ int tdx_guest_keyid_alloc(void);
+ u32 tdx_get_nr_guest_keyids(void);
+ void tdx_guest_keyid_free(unsigned int keyid);
+diff --git a/arch/x86/include/asm/tdx_global_metadata.h b/arch/x86/include/asm/tdx_global_metadata.h
+index 060a2ad744bf..5eb808b23997 100644
+--- a/arch/x86/include/asm/tdx_global_metadata.h
++++ b/arch/x86/include/asm/tdx_global_metadata.h
+@@ -15,6 +15,7 @@ struct tdx_sys_info_tdmr {
+ 	u16 pamt_4k_entry_size;
+ 	u16 pamt_2m_entry_size;
+ 	u16 pamt_1g_entry_size;
++	u8  pamt_page_bitmap_entry_bits;
+ };
+ 
+ struct tdx_sys_info_td_ctrl {
+diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
+index 2457d13c3f9e..18179eb26eb9 100644
+--- a/arch/x86/virt/vmx/tdx/tdx.c
++++ b/arch/x86/virt/vmx/tdx/tdx.c
+@@ -470,6 +470,18 @@ static unsigned long tdmr_get_pamt_sz(struct tdmr_info *tdmr, int pgsz,
+ 	return pamt_sz;
+ }
+ 
++static unsigned long tdmr_get_pamt_bitmap_sz(struct tdmr_info *tdmr)
++{
++	unsigned long pamt_sz, nr_pamt_entries;
++	int bits_per_entry;
++
++	bits_per_entry = tdx_sysinfo.tdmr.pamt_page_bitmap_entry_bits;
++	nr_pamt_entries = tdmr->size >> PAGE_SHIFT;
++	pamt_sz = DIV_ROUND_UP(nr_pamt_entries * bits_per_entry, BITS_PER_BYTE);
++
++	return ALIGN(pamt_sz, PAGE_SIZE);
++}
++
+ /*
+  * Locate a NUMA node which should hold the allocation of the @tdmr
+  * PAMT.  This node will have some memory covered by the TDMR.  The
+@@ -522,7 +534,16 @@ static int tdmr_set_up_pamt(struct tdmr_info *tdmr,
+ 	 * and the total PAMT size.
+ 	 */
+ 	tdmr_pamt_size = 0;
+-	for (pgsz = TDX_PS_4K; pgsz < TDX_PS_NR; pgsz++) {
++	pgsz = TDX_PS_4K;
++
++	/* With Dynamic PAMT, PAMT_4K is replaced with a bitmap */
++	if (tdx_supports_dynamic_pamt(&tdx_sysinfo)) {
++		pamt_size[pgsz] = tdmr_get_pamt_bitmap_sz(tdmr);
++		tdmr_pamt_size += pamt_size[pgsz];
++		pgsz++;
++	}
++
++	for (; pgsz < TDX_PS_NR; pgsz++) {
+ 		pamt_size[pgsz] = tdmr_get_pamt_sz(tdmr, pgsz,
+ 					pamt_entry_size[pgsz]);
+ 		tdmr_pamt_size += pamt_size[pgsz];
+diff --git a/arch/x86/virt/vmx/tdx/tdx_global_metadata.c b/arch/x86/virt/vmx/tdx/tdx_global_metadata.c
+index 13ad2663488b..683925bcc9eb 100644
+--- a/arch/x86/virt/vmx/tdx/tdx_global_metadata.c
++++ b/arch/x86/virt/vmx/tdx/tdx_global_metadata.c
+@@ -33,6 +33,9 @@ static int get_tdx_sys_info_tdmr(struct tdx_sys_info_tdmr *sysinfo_tdmr)
+ 		sysinfo_tdmr->pamt_2m_entry_size = val;
+ 	if (!ret && !(ret = read_sys_metadata_field(0x9100000100000012, &val)))
+ 		sysinfo_tdmr->pamt_1g_entry_size = val;
++	if (!ret && tdx_supports_dynamic_pamt(&tdx_sysinfo) &&
++	    !(ret = read_sys_metadata_field(0x9100000100000013, &val)))
++		sysinfo_tdmr->pamt_page_bitmap_entry_bits = val;
+ 
+ 	return ret;
+ }
 -- 
-2.39.5
+2.47.2
 
