@@ -1,69 +1,128 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2077.outbound.protection.outlook.com [40.107.212.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DA154652;
-	Mon,  9 Jun 2025 22:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749509180; cv=fail; b=C5zkl9aG+Hsj3lHVSEoZTPH0cc+LBbOqsW/JtXRlo1/ChNmB0cs2SyXla1dM+x5FFmeVpw8vrOUU8gG9vyuiksrJiczhmv+U5gASQkYXS+U+SXYqwDtewpOspwhVxAH8f0rjTDyl+yRF8YTI8AKOYdrBB46H0nJu9U7EWGGbdV8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749509180; c=relaxed/simple;
-	bh=TV6241gsF6LJ4bx/DnjORA+W3f151hCz4aH6vgI4rCw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=X1v1Lqqg4I6uqD7hfUW6AQL1YJQ3odh2mpguCpws8AiUtecf5ksZjtVY82nlYIGXJETOY4NyMGxSB8NVth7Ihjl3q6jZerhn6QDpjK/SVhoU6oAfSylYy5Wjhmy5p6oTKjGaG/VRSBiNdsj9moCHm5NUq0Rdip70/p1AqieQhFk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=epEE18qP; arc=fail smtp.client-ip=40.107.212.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E674454652;
+	Mon,  9 Jun 2025 22:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749509195; cv=none; b=XxZZMq4Msn7LaMbSasmyJzYe2V3Fzi3ZfSRrFYzuj3B5ek3BeWuI8lh3PVqGoe/pOvDXbNW7NWt1n8I+GbROX9MFbd5MV4q6hsEQuA4ih5gb39E4HzXVuArwP3wQ5rPQwa1keUs9kXzeQ0gbE8AdRhmhoA1knk2Qtongam5cS8Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749509195; c=relaxed/simple;
+	bh=IEqm1JdCJmQGuOAMdzOGJLauECy2w663mdnt4zkoHAQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RlbhkyJB7tpdjgEM8M2Ya2HTCSDo8J/2B3Xae9WlcUpX1iwbg5RB4ybtcfBIhxHKLjLnwim3yC7N/vPfAHLIV9WLogHHfRuxSkF8DD2ckRKbu5g3lZUje0k+aCd5Q+p2EHQUZ72T18WzgnarUxmMx4C4gwqv3sm4fZDutwESnQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EnMMdYtQ; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="epEE18qP"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nSouoRosMxTvQ/PKF0ynkplNsBpe4uyHvVMzjH6Ql9diQAMuXtNaPkz5jn4fTKitvRSxrl/HDH11xXs84bUp8vHz/hPcMvea1RPPISZY1B/gdT1O/Goc67+/XrwbS6fEz2IMOusGE8w83xm4wNZV7wrAjWHmOVdCTBPwi1Dky9/euMZUEbpnwUbEPGOsJCFYjk8SJQgOvU22W8QmuM998zsHGVaF5+j19+7ySjCm9USOp2/qfrxsvAwJSGIx3vP4fu7Rw25GHvdk6Lw3d6cvhO6dGU54Rc7lBJlXqsOsFMmLIjYbIo7MK1sTpQnJvn6iC+bF/zNUb+0CNC+S+vx1Kg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HzsKF1bUsA3DQtAMce0eY8vqhL7S2G9HaCm/h7sqN4E=;
- b=U5HIaYIXyB6VE4lhrxcDaptydTfzypqayDwHEjIpuZaVbrumO0LaFyC0uHthnJBmGy9d0OpDtxh+cXhbN6VwMBleQrlGaowx0YDeSH2M0/ine7pyuN8eRTl5bsD3TcsRUDRk45TBxmQpuTECKOYAorF5qyhH1Csw/KeiFghMiSh/LIE/dYZq7+8BzmaETapHOMn140I92JtM9wpg4QYgElpbsftt8wxBVFRwE7PKkHPEHjanPNri6nHAJKBaNGfaqXbUSegdvdz2FPvYUwX9e2/0TGeddZyN6vj8XIkxhNceGipC1rCrjKRBnDGqDUOd1S37Pl6xCWfK2FoB4XcHhw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HzsKF1bUsA3DQtAMce0eY8vqhL7S2G9HaCm/h7sqN4E=;
- b=epEE18qPpp6Ar6xBgF+xBVQDkq0TTL7sQR/FXy6a5oB6SHFiMNV4UaetndRkUv1n5t38LugVI0eC5XM6UmJlSXgayTim8mFQCYmDf+a5oPZcy8X2We+uWR4ADbiG3yIC3Tq5ylkQ+W9ZXaGX24Ylxo1vgHBE89pfRWoInMP0Wcg=
-Received: from SN1PR12CA0081.namprd12.prod.outlook.com (2603:10b6:802:21::16)
- by DM4PR12MB6638.namprd12.prod.outlook.com (2603:10b6:8:b5::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8792.34; Mon, 9 Jun 2025 22:46:15 +0000
-Received: from SA2PEPF00003AEB.namprd02.prod.outlook.com
- (2603:10b6:802:21:cafe::2f) by SN1PR12CA0081.outlook.office365.com
- (2603:10b6:802:21::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.35 via Frontend Transport; Mon,
- 9 Jun 2025 22:46:15 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF00003AEB.mail.protection.outlook.com (10.167.248.11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8835.15 via Frontend Transport; Mon, 9 Jun 2025 22:46:15 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 9 Jun
- 2025 17:46:14 -0500
-Received: from xsjtanmays50.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Mon, 9 Jun 2025 17:46:13 -0500
-From: Tanmay Shah <tanmay.shah@amd.com>
-To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>
-CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	"Tanmay Shah" <tanmay.shah@amd.com>
-Subject: [PATCH] remoteproc: xlnx: allow single core use in split mode
-Date: Mon, 9 Jun 2025 15:46:12 -0700
-Message-ID: <20250609224612.2428151-1-tanmay.shah@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EnMMdYtQ"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7d098f7bd77so549518285a.0;
+        Mon, 09 Jun 2025 15:46:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749509193; x=1750113993; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=V5UGBtq13GxPtnNntFLWLuUNWSuRazB9K2mUu5fyq/A=;
+        b=EnMMdYtQzyrGIkXfAjksPNVV58qWUhO/HQH33C+ukjy79/M/Ibu8ieDNix8OIO/bmP
+         1jC83hij98FekEJ3hNiTdZuht5iNKgSgQVKRTyiPTJ6F9CRUOoI1tGPh3cLtoWqwQkbj
+         V7rMf7eJ6xJW0a5zopMZusgB3ad38igPBmh5BASveYUDWVKKWfvji6TB6JCD8mHNw98M
+         A2BJw5RfFgjBXZOqhhWimO0ekaQygaP0KzcOrFA4Z5L8rn1juEXRcV86MgUP8pvn6q5G
+         xnoPXiMX4yyKlXtkY1hke5+1ZZmpfibngBCMeuS9+EaJxoqkgEeszmV3gK804yKvEte1
+         S9xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749509193; x=1750113993;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:feedback-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V5UGBtq13GxPtnNntFLWLuUNWSuRazB9K2mUu5fyq/A=;
+        b=r+Ai3Y5527IcrqSIzvGYqVzNqMbsfL1cOMa7w2UCiQiD+0Vef0RUpqeWQYbsA2TTif
+         8/2GN/R6Cq98pwsl+iUEeqj/YojV71b8WXoGli/lkqmmUwa6TOj63rV1FP5ZthqqlSh9
+         y2jQGnRgpNLwjWz4540wnFu6iADrl7qSvBvTZss1e3PreBW8O19YNY80r/AgptcaJSgg
+         bT/kjTf3obLPgTYvaRJDvw4Y1GiqXAXN1x8gGS2+TqWXRITJjFyBB9NrrCLxa8bLB5N7
+         Ef50qsmEkGxR8Upe/ll/s3tDZZ1OcQtv27lNost3dndX6jqcY6A2dVG0GAj2wGnstNW3
+         qVWg==
+X-Forwarded-Encrypted: i=1; AJvYcCUE1KlHjE7sjcNlZ5SVO2v/bkgFQwcRc6LFJNdgMQp6Ju4zE9EEguVZyEQqCDWnZ04fBgtAC4EpeHV+@vger.kernel.org, AJvYcCWE/cPPoUPwNq30Wodp700dOHU+ynuUc/VSMKo0xRS+6Gnz8JUw6h/6c8aZCqIub3b3mhEfpTspnqckzsXgcME=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqiACz5JreikEulMJ5RxbK/2JoSP5/BvMpNPqfK+WXX310nFFg
+	gGnzwe3KFErWCy7ThY9n89nRXTEFJszfCMEaBK6HecuVkisA4IZYHP9D
+X-Gm-Gg: ASbGncu5xGVv1WfS6VI4J6ucxfqeRgL3wv7cFFak6E7PlNzloAy7GvRyK8ur2m75S+1
+	HStqYd/xHh6+KBFjXfJuYu6EcgWT3T4lLRKva50sLMQ+ikGZmwxRcJsJjLxGN7nYCQJfuUujal8
+	8i/w/lX3V2mA239xv3xg1NclyNR1e9jZRqcAa7SzmVwXpSfK8osc0djaw9X0m0PA+qB9VwxhKVt
+	fcnO9qN7P5k6FWdorlm1ufdDacP5/0pho5bn3S/v7kEZkvX9bZ3OZP+BMtkJgvazPw7HEROAjlE
+	1I1JgREv+ZVzIK/satqPEfKC7oLuL/XkxZSMWVsU4FhP+2rQ519W2fcn2C9detxr0SCAFXax8Tu
+	f85RAOUJBMGknfIGFbt84mqIQ4f7din1XPMYzfa2cNMGTB1Voyw96
+X-Google-Smtp-Source: AGHT+IENOpjPB1yljzfiMwwSApPRUkLli1+qtSLEn+wxBrXU5IyRAiAyOKuFF67UnXoHNcSDCEwJLg==
+X-Received: by 2002:a05:620a:4405:b0:7ce:ed0e:423c with SMTP id af79cd13be357-7d39d8a98c1mr206503185a.9.1749509192780;
+        Mon, 09 Jun 2025 15:46:32 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d250f64b80sm600930285a.23.2025.06.09.15.46.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 15:46:32 -0700 (PDT)
+Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 9CB111200043;
+	Mon,  9 Jun 2025 18:46:31 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-03.internal (MEProxy); Mon, 09 Jun 2025 18:46:31 -0400
+X-ME-Sender: <xms:R2RHaDFX-ayTKY_XEAtPlRZLaUJcmcTzMNqXxYt5tMIOMw2ZbL2Qhw>
+    <xme:R2RHaAVCotEba3hJ6wiE7eELRHOlN9cNpkq0idcja6IhRYZ5l-G79l5j5_Y7grJlA
+    AmDgu-D6WnfWHcCSA>
+X-ME-Received: <xmr:R2RHaFLyYjOrAK9AajBPQlvBK38jrTtlHgECn4abbmDU9j_ozl9mBvgLZI8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdelleduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhephffvvefufffkofgggfestdekredtredttdenucfh
+    rhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtoh
+    hmqeenucggtffrrghtthgvrhhnpeeggeeukeeghfevudektdevjeehhfekffevueefudei
+    vdelteeltdekheejgfeiveenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgv
+    shhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehhe
+    ehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+    pdhnsggprhgtphhtthhopedviedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplh
+    hinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    rhhushhtqdhfohhrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpth
+    htoheplhhkmhhmsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhu
+    gidqrghrtghhsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurg
+    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghi
+    lhdrtghomhdprhgtphhtthhopegsohhquhhnrdhfvghnghesghhmrghilhdrtghomhdprh
+    gtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhn
+    fegpghhhsehprhhothhonhhmrghilhdrtghomh
+X-ME-Proxy: <xmx:R2RHaBFFUoumlD9FVwR97VsnRb_VGE5ZjMU2O_H7o1alcLDtmh6-Tw>
+    <xmx:R2RHaJVyBOKURSgIPW_MM4HpqdtbuOrjj2f8vRhRXqQz_Bz6n5bsfQ>
+    <xmx:R2RHaMNDGZOUKtvkKEOaibtuuXJlhTBJb_R3RMYe2Rna5oYj4Dvm_A>
+    <xmx:R2RHaI2dBFkwHzWUnlTwZ93d9ieuVEvXRJI2eOsDr0qkFL8cJraYOA>
+    <xmx:R2RHaOWPMJkRRQo2mlVml8cuv0Ggdgy91zrVbjFfdtJApm9qDyX-HE-k>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 9 Jun 2025 18:46:31 -0400 (EDT)
+From: Boqun Feng <boqun.feng@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	lkmm@lists.linux.dev,
+	linux-arch@vger.kernel.org
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Lyude Paul <lyude@redhat.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Mitchell Levy <levymitchell0@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	"Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	"Thomas Gleixner" <tglx@linutronix.de>
+Subject: [PATCH v4 00/10] LKMM generic atomics in Rust 
+Date: Mon,  9 Jun 2025 15:46:05 -0700
+Message-Id: <20250609224615.27061-1-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,82 +130,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB04.amd.com: tanmay.shah@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00003AEB:EE_|DM4PR12MB6638:EE_
-X-MS-Office365-Filtering-Correlation-Id: 65690aee-516c-4634-3621-08dda7a77117
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?LS489Dqud8/RHu/n28D+a4cmpAUij7w5XKNJZ9GDFAx5jHs23BaC0MxPMFk7?=
- =?us-ascii?Q?zFl9va340i3C0cCCm7pxGeCSMA2C60sBxMwYH3U0GE+vrnDLmX9kDw2VAsoF?=
- =?us-ascii?Q?yrJSEfRq/HPT7LoOD7pDVMWzGWT25ygWV+bqqqOaXme0ZzM+V/UKGLDEnsun?=
- =?us-ascii?Q?gB5qN4lartu5smXYiuP5xhZ/vjsij4iuPR516fKL2v6WYa6hw5VGu4cSGZbv?=
- =?us-ascii?Q?zSpcyT6tPUqO5QALvv76JpsjWEbA3w+EGOo1OW5dLlSNTQqu/CxI1jdKteti?=
- =?us-ascii?Q?+rIISh154J+0TIt2C8oteMaKbcgTfhxm2evPqBDpIZYjw8I0lRSJlKtlmZcm?=
- =?us-ascii?Q?LIJS/mT3S5e2JOEIiDVRhdHj+5Aa7S9wLmJjQjycHP0hcO23OekodXnTY4x9?=
- =?us-ascii?Q?kkCRYrvnnPzXEVJ7qkMiM/tsO6jZbOmctHiVW0+ZQSkh1gq6cqelfDgCwHHl?=
- =?us-ascii?Q?07TZ/b+M9O4/Cu2K9fnYMioFaoRIkQ/J/2p2nWsmnsVhM+oHXYhFQTuMbWsb?=
- =?us-ascii?Q?zSq+tHepUfONnkwi4NhOT+gKhM8AgDjJn08G/JOEhsiEwLsr5+HXV5cQ0nvs?=
- =?us-ascii?Q?SXoDbqdDK6k8ZSGH5NRQF6Ak05XJssOquBeWTUsdEYSo/8xl6j+bWRr9sr/W?=
- =?us-ascii?Q?HI9UWn5cFy+zWn/KVBDPUghCotGEZOkyj1I3oO4Bkboom2Op3g0hwW0BB1AJ?=
- =?us-ascii?Q?gP8oCoxMOlRHw6quZsrXYhxeG0W5wy1r6SFGBEyasLAr0BHo/lNWGXJXmHLf?=
- =?us-ascii?Q?lB7ik954XijiKIjIrpmWLHA5CN5Iw7kNbKJ24HWTy/Al0Je8j65VigU7zL8s?=
- =?us-ascii?Q?Xq211dWl22ojG51M9o3v5UueSqzvFDOEv5H+NSpEBjtkuNUp7rdxmP6E7qV5?=
- =?us-ascii?Q?nOVbpvvG7JrHvlWR6R/Xx4qJvvG4HIl/y8ZIv+kG95M6tceag6T0sWOZoD1f?=
- =?us-ascii?Q?NtwArET/sCIY0wyGqlZM+YioE4dhCw/ULBnTlGMnuV5qtzKdiiPXZcvBhRyq?=
- =?us-ascii?Q?NLLf2h2QauoywcSWe9D9bgz7yBt1K0VkMs2xUf1KIL661pyMCvLarBOQPVBi?=
- =?us-ascii?Q?y1jQYc3PP1bKSj6bmE3kDvrfSQOnRxoZ6UkNDDmmNdhhNxwrmZG25PPJG3d2?=
- =?us-ascii?Q?manjQ389iq16G9vRG8sO7c15Y04jSgJWk7e6tZg/ZgmYpMC+NRmnxC0VXXee?=
- =?us-ascii?Q?RY8misE9j2wJbczOmqYSHd5QZ5OGnKZU0khKHUqjFoD13xUc2QnB0li59XMJ?=
- =?us-ascii?Q?F8fJkbOF6fIudr6WIZJBBXgZMtJNgvI44q+hh7vEAmLA8xUcdGhA0+MNtido?=
- =?us-ascii?Q?2PikQvgrKOgZGsp5BH8KpNf7LKtXYx7LStwbuieX5oztYZb/XKvMyYM4pJxl?=
- =?us-ascii?Q?lfX4FLnlTOO9x8mpKZvehot097oPVP3yhNTujMTAZSS4aQGtm0CvsW69ujLa?=
- =?us-ascii?Q?BGWKci+hM104hHXCMA1lCC3jDRtRNNxETBV8j6XW3qXnCG2S8OQH7z81dFgz?=
- =?us-ascii?Q?M5LV6BXTUtzgtAL4l7VN6MYKzpQCOcO87qDR?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 22:46:15.4466
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65690aee-516c-4634-3621-08dda7a77117
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00003AEB.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6638
 
-It's a valid use case to have only one core enabled in cluster in split
-mode. Remove exact core count expecatation from the driver.
+Hi,
 
-Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
----
- drivers/remoteproc/xlnx_r5_remoteproc.c | 3 ---
- 1 file changed, 3 deletions(-)
+v4 for LKMM atomics in Rust, you can find the previous versions:
 
-diff --git a/drivers/remoteproc/xlnx_r5_remoteproc.c b/drivers/remoteproc/xlnx_r5_remoteproc.c
-index 1af89782e116..f314dd5bdb26 100644
---- a/drivers/remoteproc/xlnx_r5_remoteproc.c
-+++ b/drivers/remoteproc/xlnx_r5_remoteproc.c
-@@ -1339,9 +1339,6 @@ static int zynqmp_r5_cluster_init(struct zynqmp_r5_cluster *cluster)
- 	if (core_count == 0) {
- 		dev_err(dev, "Invalid number of r5 cores %d", core_count);
- 		return -EINVAL;
--	} else if (cluster_mode == SPLIT_MODE && core_count != 2) {
--		dev_err(dev, "Invalid number of r5 cores for split mode\n");
--		return -EINVAL;
- 	} else if (cluster_mode == LOCKSTEP_MODE && core_count == 2) {
- 		dev_warn(dev, "Only r5 core0 will be used\n");
- 		core_count = 1;
+v3: https://lore.kernel.org/rust-for-linux/20250421164221.1121805-1-boqun.feng@gmail.com/
+v2: https://lore.kernel.org/rust-for-linux/20241101060237.1185533-1-boqun.feng@gmail.com/
+v1: https://lore.kernel.org/rust-for-linux/20240612223025.1158537-1-boqun.feng@gmail.com/
+wip: https://lore.kernel.org/rust-for-linux/20240322233838.868874-1-boqun.feng@gmail.com/
 
-base-commit: dc8417021bcd01914a416bf8bab811a6c5e7d99a
+The reason of providing our own LKMM atomics is because memory model
+wise Rust native memory model is not guaranteed to work with LKMM and
+having only one memory model throughout the kernel is always better for
+reasoning.
+
+
+I haven't gotten any review from last version but I got a few feedbacks
+during Rust-for-Linux weekly meeting. I trimmed two more patches to make
+the current series easier to review, the current version includes:
+
+* Generic atomic support of i32, i64, u32, u64, isize and usize on:
+  * load() and store()
+  * xchg() and cmpxchg()
+  * add() and fetch_add()
+
+* Atomic pointer support on:
+  * load() and store()
+  * xchg() and cmpxchg()
+
+* Barrier and ordering support.
+
+Any missing functionality can of course be added in a later patch. There
+are some use cases based on these API can be found at:
+
+	git://git.kernel.org/pub/scm/linux/kernel/git/boqun/linux.git rust-atomic-dev
+
+for example, RCU protected pointers and AtomicFlag.
+
+I think the current version is ready to merge (modulo some documentation
+improvement), and I would like to postpone small implementation
+improvement because we are seeing growing usages of atomics in Rust
+side. It's better to merge the API first so that we can clean up and
+help new users.
+
+But I do have one question about how to route the patch, basically I
+have three options:
+
+* via tip, I can send a pull request to Ingo at -rc4 or -rc5.
+
+* via rust-next, I can send a pull request to Miguel at -rc4 or -rc5.
+
+* via my own tree or atomic (Peter if you remember, we do have an atomic
+  group in kernel.org and I can create a shared tree under that group),
+  I can send a pull request to Linus for 6.17 merge window.
+
+Please advise.
+
+Regards,
+Boqun
+
+Boqun Feng (10):
+  rust: Introduce atomic API helpers
+  rust: sync: Add basic atomic operation mapping framework
+  rust: sync: atomic: Add ordering annotation types
+  rust: sync: atomic: Add generic atomics
+  rust: sync: atomic: Add atomic {cmp,}xchg operations
+  rust: sync: atomic: Add the framework of arithmetic operations
+  rust: sync: atomic: Add Atomic<u{32,64}>
+  rust: sync: atomic: Add Atomic<{usize,isize}>
+  rust: sync: atomic: Add Atomic<*mut T>
+  rust: sync: Add memory barriers
+
+ MAINTAINERS                               |    4 +-
+ rust/helpers/atomic.c                     | 1038 +++++++++++++++++++++
+ rust/helpers/barrier.c                    |   18 +
+ rust/helpers/helpers.c                    |    2 +
+ rust/kernel/sync.rs                       |    2 +
+ rust/kernel/sync/atomic.rs                |  176 ++++
+ rust/kernel/sync/atomic/generic.rs        |  524 +++++++++++
+ rust/kernel/sync/atomic/ops.rs            |  199 ++++
+ rust/kernel/sync/atomic/ordering.rs       |   94 ++
+ rust/kernel/sync/barrier.rs               |   67 ++
+ scripts/atomic/gen-atomics.sh             |    1 +
+ scripts/atomic/gen-rust-atomic-helpers.sh |   65 ++
+ 12 files changed, 2189 insertions(+), 1 deletion(-)
+ create mode 100644 rust/helpers/atomic.c
+ create mode 100644 rust/helpers/barrier.c
+ create mode 100644 rust/kernel/sync/atomic.rs
+ create mode 100644 rust/kernel/sync/atomic/generic.rs
+ create mode 100644 rust/kernel/sync/atomic/ops.rs
+ create mode 100644 rust/kernel/sync/atomic/ordering.rs
+ create mode 100644 rust/kernel/sync/barrier.rs
+ create mode 100755 scripts/atomic/gen-rust-atomic-helpers.sh
+
 -- 
-2.34.1
+2.39.5 (Apple Git-154)
 
