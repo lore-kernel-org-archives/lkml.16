@@ -1,274 +1,181 @@
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11022077.outbound.protection.outlook.com [52.101.71.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA827156F3C;
-	Mon,  9 Jun 2025 07:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749454001; cv=fail; b=hh3wZ2+eLOFpTVITUb1mHQxm8FY0d+QG+zY3W/Jyn21FaUapvn/SCc9rUhIV7aJKG/CGwzPFnWRSqFprqbAiADLD9RIrqAh9MXMEe0h+Z4hogZotvtR9qW8OEBkN0imhn0bQsvwgulijEsBlH40FBCt19mTGRCmuSWA3fFYSv8g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749454001; c=relaxed/simple;
-	bh=orwQWIFrm3tqGCzTyPyC5AxGmw+yGoIClDAwb+iU3Wk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WcLn+0WhAgJiuI1ATpKR2xSkfICYd+FB353+QReUkDxWV6/XeBzZnLlHKlRwnNe/H3HlDfWff4AWAeVQITIQxPbPaFUC9dkU3m1Oo3L3lXh3/vTID0B2ZFZ3Y434S7HTrSeBrSSa9tQpexhRd/xHel6+UmnIX2RwfHvrbNK8w24=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=technica-engineering.de; spf=pass smtp.mailfrom=technica-engineering.de; dkim=pass (1024-bit key) header.d=technica-engineering.de header.i=@technica-engineering.de header.b=fnfI6xVW; arc=fail smtp.client-ip=52.101.71.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=technica-engineering.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=technica-engineering.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61621D88A4;
+	Mon,  9 Jun 2025 07:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749454018; cv=none; b=O54ktigAlVpzvy5Q7hhAAXsNiMm56Apdof6SUJZiAd6gC/WIDEEE4n7sA+cI1EIJlh7djNZojrAWLYM/DzOYo23zCC7kqpG3TSaqvSEo5vhaoqn4xbJFgBArEil11wwywOoF1kh/l60krv09F9kunfjUd4VNf5GCWzwsO26EC/4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749454018; c=relaxed/simple;
+	bh=P/Tlp7nhzT5E7hujRZb9+kc9Yn5YzUCWa6Bd2jJDM84=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=qgDxWbYj0S0f5ENljhUZzc+Wqg2YiNNoIaHdv2pIT26A5Osjvte4bDz3tL47XIqHtBsDTuWiCS0el6jCHfp3bqNgId0Y3XDb3LprF3TJ8uDLbh0JnXuyqEzTs2U5SzqLXlt6gFwlSfPAUYsB9aX86BYv5elHwUQ4JDSvZfmOO7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B8HlIFrp; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=technica-engineering.de header.i=@technica-engineering.de header.b="fnfI6xVW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=crTXnzuqh3FfSE3AoXFXVtLW6jb6WI8IZKUlR96I68e2Gd3x1HGnueQzpg3+UEm4Y9Fz1eKnO8j11FENSuuNW4h7oRiMm8pcaaou3dcUHC1bnffxxYAGRAKccGX7w0iwlSe7l21/G5FvbVgGKGdW/e1TQoM4bTlUen/923WtSSZRpy7IQa28fc9IFI21Zzk7Jt3wmkfADGhEnYRnexAdGUNhbWyxxH6C3VslWA7TZAGMLvtXn23aOehZE7bOuVMK49kK4STTyB8HjDb2cRHsrNF5lMWH0SonC/eG2M/eXekTlyN/D6Wt5eKGmhHt4l/RLD9+V3njr8e3tIPuovN1aA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0N8qByr239pYC/7TJckYk+O2PbX39Qc7l1uIgfG1U64=;
- b=RdrTQMz2QpvWi/QgJIWx/vW9Hp9xtYY1UaGLdGir3r2GSdv46AuU+S9Js5gZ9dX3Xj6uA82ZSOxIJjG4Jt4VmZ2dV3lmp7SXr0lRZoBhDRL/4VKAjM9kN1A+ZSPDcwDrrpC0PGRn0VuV52Y/nTmDelyQgq6Zo3iY8/L7Hf3CV7LGI/TEPtvaJponMBKsg34PCm63OGAYh4UwkjDQxBy9c7sKVtuMSYoYRAp3Tr6nTrKPamWwVt+YunYoQIxqb5vFCghTZfC+lbosPRwljZaS/rNdSydb2pp9q2M+2EvjgO0BoMtBjXYy57ADKKD3VeCi3+8nT5cOELC3dVNMHZxWmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 2.136.200.136) smtp.rcpttodomain=davemloft.net
- smtp.mailfrom=technica-engineering.de; dmarc=fail (p=reject sp=reject
- pct=100) action=oreject header.from=technica-engineering.de; dkim=none
- (message not signed); arc=none (0)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B8HlIFrp"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5534f3722caso4507932e87.0;
+        Mon, 09 Jun 2025 00:26:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=technica-engineering.de; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0N8qByr239pYC/7TJckYk+O2PbX39Qc7l1uIgfG1U64=;
- b=fnfI6xVWZgazSooblIeAMkRs78nEkflWyvLWK4tCz+THtjbf6f5SAy8QBhLKf/lWIIUMrBchII6Gw3OIT1SKjYJ/Lp2xE11ayAhfXe8IyQu1p++IkF1M7R3JcwXXUYCbOAoL9Zuza8J6ha+fxCd5NKFdqcMQvKxc6yAriYSHrN8=
-Received: from AM0PR02CA0197.eurprd02.prod.outlook.com (2603:10a6:20b:28e::34)
- by AS8PR08MB8972.eurprd08.prod.outlook.com (2603:10a6:20b:5b1::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.22; Mon, 9 Jun
- 2025 07:26:34 +0000
-Received: from AM3PEPF0000A797.eurprd04.prod.outlook.com
- (2603:10a6:20b:28e:cafe::95) by AM0PR02CA0197.outlook.office365.com
- (2603:10a6:20b:28e::34) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.33 via Frontend Transport; Mon,
- 9 Jun 2025 07:26:34 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 2.136.200.136)
- smtp.mailfrom=technica-engineering.de; dkim=none (message not signed)
- header.d=none;dmarc=fail action=oreject header.from=technica-engineering.de;
-Received-SPF: Fail (protection.outlook.com: domain of technica-engineering.de
- does not designate 2.136.200.136 as permitted sender)
- receiver=protection.outlook.com; client-ip=2.136.200.136;
- helo=jump.ad.technica-electronics.es;
-Received: from jump.ad.technica-electronics.es (2.136.200.136) by
- AM3PEPF0000A797.mail.protection.outlook.com (10.167.16.102) with Microsoft
- SMTP Server id 15.20.8835.15 via Frontend Transport; Mon, 9 Jun 2025 07:26:33
- +0000
-Received: from dalek.ad.technica-electronics.es (unknown [10.10.2.101])
-	by jump.ad.technica-electronics.es (Postfix) with ESMTP id 05A2640220;
-	Mon,  9 Jun 2025 09:26:33 +0200 (CEST)
-From: Carlos Fernandez <carlos.fernandez@technica-engineering.de>
-To:
-Cc: carlos.fernandez@technica-engineering.de,
-	sbhatta@marvell.com,
-	Andreu Montiel <Andreu.Montiel@technica-engineering.de>,
-	Sabrina Dubroca <sd@queasysnail.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Hannes Frederic Sowa <hannes@stressinduktion.org>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net v5] macsec: MACsec SCI assignment for ES = 0
-Date: Mon,  9 Jun 2025 09:26:26 +0200
-Message-ID: <20250609072630.913017-1-carlos.fernandez@technica-engineering.de>
-X-Mailer: git-send-email 2.43.0
+        d=gmail.com; s=20230601; t=1749454015; x=1750058815; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=J8asJYVLLmvRF9jXuFG3YILtPbir4Lwv4+fdRPoHv0Q=;
+        b=B8HlIFrpEpe30BjcaJa0nQlLeLS2BlrQMhgO6WLDQFP/o6jFGiUtnfQ+KRH1xKhVjg
+         +Rj0BdzWupMIsajzdkzgUvFSLt53AZyRgc/kHZJEbwrQW5av68ms0OEBj3ZNuQIQWHmf
+         rX8OpCTYRuR0of5lZP4cdRfTHRtynFtaGCblSmEVLfzoVZfZnaV+gp+SVWK3F8JZf8+3
+         ymL0OZ6FCQF9TSWu9F6W3CzO4Ffu4BcZQkUL0/hBE/kxnoPlu0CkrqGjhtpYNwi8RAHq
+         +Eb0LNzMpmbC7xr4uHSi4g3vsiWR+WI7deoq1JvLs3eKkqmqWwbc9CgZHIPcEzALC0bg
+         F2cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749454015; x=1750058815;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=J8asJYVLLmvRF9jXuFG3YILtPbir4Lwv4+fdRPoHv0Q=;
+        b=lXoRc25e03iBBdWmfRa2T7zWi1eYTz2DKgZD/merPw6RAtgAT3xc3tSx9fAuQrF7O/
+         palrra/V1Ffn3WSPtLy7ZIzhL3hFnlHZm93FV4RnkkZrllcLWOEAk5199m4UCPJTHriP
+         M0h1dl9G0U/DH0/vPhK97LB9bpsRulfcV2Hq8B8NHtZaeah24dxDQrdhR6zlSP7gbHah
+         03hAd/ZG22HfZGY4dXScensOXXR8nKW9IjlUuUo2l94jNMV1ow3Py35174/O5VgDudJf
+         Uw28fsBlpCLHIc9ui1riU6REhakkf6ZxYr13MkFKOpWeJ9/DTb1m2gol2jfoV7WJ2SA0
+         VJcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUe7pqO5lRHjj5oBvQiHLgrXGXgDeE/EdqnE/evUqwKvk0720tvpJ9QXv9/IQ7A1GVQvh/+w2lsyLsx2ofM@vger.kernel.org, AJvYcCXupgK2Engx7ndc6Y0HUn3DnOBboFVU7Sipg4ij6ZUPl31tWI6CuDPLZnaGrCBqVRQNihpvPZo6I7ZO@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPC7fGgqaF9tspcqwmaQVpsnFOZ84XHFN6OK5vVBDG6/r4iT5A
+	0Zz5dEhBZUOz4+kNQLtFh2Jrwg9UACOY6lICJj7v4R57+md3oecwsHYp
+X-Gm-Gg: ASbGnctAqH89bWjTfOTvKWjIG11FKYW/c+37SqSNZZ2WVIpCrgfntVJ0SWJUpdQPcfb
+	CFrT3zK1oKPAnL/MIFspNdRwtKx6tyVtB8HZGMMmeuPLHQg4HgwjVBUbGkixlkB9iL1TIECcHtt
+	2yOJ44QZQt7K2UHcttJSsJDkS8w9kD4+bTLJuilvlX/KiQ74uJ5vey/B1sJmDpXuQ3y2J3TGWtG
+	YISrflP8kctvbNpM1QG8acTPP86O/63tK/OPQIsIRoNR1IVfVpcOhAz+YY8sqQTleFNILMhLtqH
+	S2s7uoj1FCIf03kd0ZEu9sGFcHM7E+m65mM4NFC4iJVPgheXqPfl3oYmcmFv2MH+
+X-Google-Smtp-Source: AGHT+IGW56BoLbRFAxmxey5wtHGtaDKmI9atARqYrwyMXCJU139FNdmXwAm7mP63FR+IeGDv7Zzvmw==
+X-Received: by 2002:a05:6512:31ce:b0:553:510d:f46b with SMTP id 2adb3069b0e04-55366c01635mr3125341e87.32.1749454014625;
+        Mon, 09 Jun 2025 00:26:54 -0700 (PDT)
+Received: from mva-rohm ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553677222edsm1008009e87.122.2025.06.09.00.26.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 00:26:53 -0700 (PDT)
+Date: Mon, 9 Jun 2025 10:26:47 +0300
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>
+Subject: [PATCH RESEND] device property: Use tidy for_each_named_* macros
+Message-ID: <c98b39a7195006fdd24590b8d11bb271a72a0c8a.1749453752.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM3PEPF0000A797:EE_|AS8PR08MB8972:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 165ea880-3369-4332-9338-08dda726f612
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?AYF0Ob7VK0D2HuE6fo0ONMwnOoQPlzMVGrVb0Mv5/92S1gFv61kDtRg5OeFU?=
- =?us-ascii?Q?oM2/1Xex7/GlEBPo6+UPu+O6Y96N2YQOSin5ArC1/dxr8Y85+iBMOvFySrWW?=
- =?us-ascii?Q?7SjwHo4BBgNsC2FwNKq7yIzLa8FOTjdJEuHqV7PtrcTaZrppnFwIDfZCL1Vh?=
- =?us-ascii?Q?I4Z7LyI1/OjcOK0YxnoKjmoCgRnZUJ25wg0mSs0EFr6Lm4YByYPmlyrELnZq?=
- =?us-ascii?Q?UuZb76VQoBZFVjT8KC3a+jG0o5KdeQAoWTjwIu5QgZinotbnluLQk6Y3Dgjn?=
- =?us-ascii?Q?xtUrfpH7PE1K1Mta/pd9raQSR/h0CnbYUifhyqKfguroPY3RXDuyoqrkGXRR?=
- =?us-ascii?Q?kWHslo6q1AMI/DssAhW394ogwIXygTnBuH3uIKOyKXQ6ggejRnlBNgGZgghn?=
- =?us-ascii?Q?NbbTOA1SAOu8yIICDUXNUdkq9+7x8j1norKN1VgO/sWXqkMkARldlcKcMe5W?=
- =?us-ascii?Q?swLtVezwPT0LZ7k6wW8BgRb6PkNI6BZRaHCx0TYLH2cUxD9ELiAF6gLLgPeF?=
- =?us-ascii?Q?gZha+iKAHgEARysJJkD5oiGQda+Ez3c6VRF3Qzh/6h/RCJdUtz/3zXzzrkek?=
- =?us-ascii?Q?7q+MYp25X8db4JCKxnjIhNsPWyGHY5exg72La9SWdBmnQs8aB02ORg9rNZs9?=
- =?us-ascii?Q?dHRNvVnczC60zlKgbW3IlJptKyuo6uxXo5O6pVa1MOSAsyaD568ELY82Rolg?=
- =?us-ascii?Q?aefsK+EYnkzQfm1408PwQZKOnlF1YICM6p2VFnJu1xeRQuSKilYEsrDJMmbt?=
- =?us-ascii?Q?7SYAeVNOci7Gd/8fyZZLh0EDnuxkSWlwVKm/jpfCgtbhonmiiKlMTY7/ucG5?=
- =?us-ascii?Q?jooKjGCl3R4TzU2hS/r55CgnfBMS+F17OZ3GqpWUxRqo50GqyjQIO5L82w1/?=
- =?us-ascii?Q?J+p5FhX2vKpDThXkG7V8Jt/yfXftEOMMHi+ll07bXfbUAtc0dltVmpzyNXA8?=
- =?us-ascii?Q?Wtjxkct8763qzeishW9/OP+fuyVjGvQX7kR9zwmK5FMcD7Ae6bnf+mfwcOH5?=
- =?us-ascii?Q?FeQGRcCIq8oeCyYRDbraUHUrGzGgOSFGU9Coq8qVISOQcYJOZe8GG0RxaAHO?=
- =?us-ascii?Q?Ra4fMUjVJenCeJ8YGX6nkhONfT8RHLkX82xbnjn+5xzRJqG2CO3fstW7Kv4K?=
- =?us-ascii?Q?2JqYaXvJA88RXRH2WSM+EA1gjAYcXpFcF4iwtJUQmdtdAAEwgXEkvYvXr4A+?=
- =?us-ascii?Q?QyhgyYMOuU+c/EdyjRS+pgT+5t8rKSv2GlRyX1LeTfBl7GGhawJ5c/SyFdU5?=
- =?us-ascii?Q?NdgyyRel/vUNaCCxxpbYP7aDmdxyUM8jC+bep6zU1KNzGJsvwxTW7g2EWDQf?=
- =?us-ascii?Q?VNVY+h28Z+mWlhXcdMEbSNcIKuTZE092JeG5OSUgBFpeNKhpMC8cUG+LZ6V9?=
- =?us-ascii?Q?6mGfUqa4sA/SQNavQbcGnrfYBWdxRdjRsmVWJQfPqIKeugQ1+e+1TDWaWztK?=
- =?us-ascii?Q?rKhkRjeYYVV3rk2hAgTlun5H1SAOFXT4J0jRS0CJNAJwH+IksTl6Dpggq3Ic?=
- =?us-ascii?Q?3weQF/u3ejHxR24l16CZsba7ieDqgZGz0AtJskTEPDsOHtxyKp/2Vvoe4w?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:2.136.200.136;CTRY:ES;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:jump.ad.technica-electronics.es;PTR:136.red-2-136-200.staticip.rima-tde.net;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013)(7416014);DIR:OUT;SFP:1102;
-X-OriginatorOrg: technica-engineering.de
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 07:26:33.4324
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 165ea880-3369-4332-9338-08dda726f612
-X-MS-Exchange-CrossTenant-Id: 1f04372a-6892-44e3-8f58-03845e1a70c1
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1f04372a-6892-44e3-8f58-03845e1a70c1;Ip=[2.136.200.136];Helo=[jump.ad.technica-electronics.es]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AM3PEPF0000A797.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB8972
-
-According to 802.1AE standard, when ES and SC flags in TCI are zero,
-used SCI should be the current active SC_RX. Current code uses the
-header MAC address. Without this patch, when ES flag is 0 (using a
-bridge or switch), header MAC will not fit the SCI and MACSec frames
-will be discarted.
-
-In order to test this issue, MACsec link should be stablished between
-two interfaces, setting SC and ES flags to zero and a port identifier
-different than one. For example, using ip macsec tools:
-
-ip link add link $ETH0 macsec0 type macsec port 11 send_sci off
-end_station off
-ip macsec add macsec0 tx sa 0 pn 2 on key 01 $ETH1_KEY
-ip macsec add macsec0 rx port 11 address $ETH1_MAC
-ip macsec add macsec0 rx port 11 address $ETH1_MAC sa 0 pn 2 on key 02
-ip link set dev macsec0 up
-
-ip link add link $ETH1 macsec1 type macsec port 11 send_sci off
-end_station off
-ip macsec add macsec1 tx sa 0 pn 2 on key 01 $ETH0_KEY
-ip macsec add macsec1 rx port 11 address $ETH0_MAC
-ip macsec add macsec1 rx port 11 address $ETH0_MAC sa 0 pn 2 on key 02
-ip link set dev macsec1 up
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="u0ARGKVMgDyOvbMB"
+Content-Disposition: inline
 
 
-Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
-Co-developed-by: Andreu Montiel <Andreu.Montiel@technica-engineering.de>
-Signed-off-by: Andreu Montiel <Andreu.Montiel@technica-engineering.de>
-Signed-off-by: Carlos Fernandez <carlos.fernandez@technica-engineering.de>
-Reviewed-by: Subbaraya Sundeep <sbhatta@marvell.com>
+--u0ARGKVMgDyOvbMB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Implementing if-conditions inside for_each_x() macros requires some
+thinking to avoid side effects in the calling code. Resulting code
+may look somewhat awkward, and there are couple of different ways it is
+usually done.
+
+Standardizing this to one way can help making it more obvious for a code
+reader and writer. The newly added for_each_if() is a way to achieve this.
+
+Use for_each_if() to make these macros look like many others which
+should in the long run help reading the code.
+
+Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
 ---
-v5: 
-* Corrected typo in commit.
-* Added Reviewed-by.
+I am pretty sure I forgot to re-spin this earlier. Well, better late
+than never :) Link to previous mail:
+https://lore.kernel.org/all/Z_ew4DN0z71nCX3C@mva-rohm/
 
-v4: https://patchwork.kernel.org/project/netdevbpf/patch/20250609064707.773982-1-carlos.fernandez@technica-engineering.de/
-* Added testing info in commit as suggested. 
+I suppose this can now go through a proper tree, because prerequisite
+patches were already merged to v6.16-rc1. (Assuming IIO is not the most
+natural one for this.) CC'ing still Jonathan so things aren't left
+hanging in the air for him :)
 
-v3: https://patchwork.kernel.org/project/netdevbpf/patch/20250604123407.2795263-1-carlos.fernandez@technica-engineering.de/
-* Wrong drop frame afer macsec_frame_sci
-* Wrong Fixes tag in message 
+---
+ include/linux/property.h | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-v2: https://patchwork.kernel.org/project/netdevbpf/patch/20250604113213.2595524-1-carlos.fernandez@technica-engineering.de/
-* Active sci lookup logic in a separate helper.
-* Unnecessary loops avoided. 
-* Check RXSC is exactly one for lower device.
-* Drops frame in case of error.
+diff --git a/include/linux/property.h b/include/linux/property.h
+index f718dd4789e5..82f0cb3abd1e 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -17,6 +17,7 @@
+ #include <linux/fwnode.h>
+ #include <linux/stddef.h>
+ #include <linux/types.h>
++#include <linux/util_macros.h>
+=20
+ struct device;
+=20
+@@ -169,7 +170,7 @@ struct fwnode_handle *fwnode_get_next_available_child_n=
+ode(
+=20
+ #define fwnode_for_each_named_child_node(fwnode, child, name)		\
+ 	fwnode_for_each_child_node(fwnode, child)			\
+-		if (!fwnode_name_eq(child, name)) { } else
++		for_each_if(fwnode_name_eq(child, name))
+=20
+ #define fwnode_for_each_available_child_node(fwnode, child)		       \
+ 	for (child =3D fwnode_get_next_available_child_node(fwnode, NULL); child;\
+@@ -184,7 +185,7 @@ struct fwnode_handle *device_get_next_child_node(const =
+struct device *dev,
+=20
+ #define device_for_each_named_child_node(dev, child, name)		\
+ 	device_for_each_child_node(dev, child)				\
+-		if (!fwnode_name_eq(child, name)) { } else
++		for_each_if(fwnode_name_eq(child, name))
+=20
+ #define device_for_each_child_node_scoped(dev, child)			\
+ 	for (struct fwnode_handle *child __free(fwnode_handle) =3D	\
+@@ -193,7 +194,7 @@ struct fwnode_handle *device_get_next_child_node(const =
+struct device *dev,
+=20
+ #define device_for_each_named_child_node_scoped(dev, child, name)	\
+ 	device_for_each_child_node_scoped(dev, child)			\
+-		if (!fwnode_name_eq(child, name)) { } else
++		for_each_if(fwnode_name_eq(child, name))
+=20
+ struct fwnode_handle *fwnode_get_named_child_node(const struct fwnode_hand=
+le *fwnode,
+ 						  const char *childname);
+
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+--=20
+2.49.0
 
 
-v1: https://patchwork.kernel.org/project/netdevbpf/patch/20250529124455.2761783-1-carlos.fernandez@technica-engineering.de/
+--u0ARGKVMgDyOvbMB
+Content-Type: application/pgp-signature; name=signature.asc
 
+-----BEGIN PGP SIGNATURE-----
 
- drivers/net/macsec.c | 40 ++++++++++++++++++++++++++++++++++------
- 1 file changed, 34 insertions(+), 6 deletions(-)
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmhGjLMACgkQeFA3/03a
+ocWtHAf7BPHc9gbQSZUO0ZzJWEf0yxwzmNRt7brQfQiZ/N1UVTb6VY7WlNk1qhZp
+0ScDlxnkLG4YFN32O5mxCt83jAuFjfrSVGU07v06ypxnv6/0uKEj2bqf7LEv+pSj
+kv2EsUkgVXsH+yD7d+mdzbAz8mXZ+cvxGL4a0OewO9Ow4HHauGz8/owcwVaHag8T
+e54BD2C/eiCQBM8cqO+EFHf5cdqGL6gRdqikeYeEveX8khE+qrIQZ1A/Xu2Qt7sN
+x+57Qto/4JBQ5bICJorhCuYbxpbNZFHJRSsk2no9CiwXlQmex1as4WLgicHULYOi
+Pqumqom3Fz7xW0eVoZYLTPhcUxNNkA==
+=ZegS
+-----END PGP SIGNATURE-----
 
-diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-index 3d315e30ee47..7edbe76b5455 100644
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -247,15 +247,39 @@ static sci_t make_sci(const u8 *addr, __be16 port)
- 	return sci;
- }
- 
--static sci_t macsec_frame_sci(struct macsec_eth_header *hdr, bool sci_present)
-+static sci_t macsec_active_sci(struct macsec_secy *secy)
- {
--	sci_t sci;
-+	struct macsec_rx_sc *rx_sc = rcu_dereference_bh(secy->rx_sc);
-+
-+	/* Case single RX SC */
-+	if (rx_sc && !rcu_dereference_bh(rx_sc->next))
-+		return (rx_sc->active) ? rx_sc->sci : 0;
-+	/* Case no RX SC or multiple */
-+	else
-+		return 0;
-+}
-+
-+static sci_t macsec_frame_sci(struct macsec_eth_header *hdr, bool sci_present,
-+			      struct macsec_rxh_data *rxd)
-+{
-+	struct macsec_dev *macsec;
-+	sci_t sci = 0;
- 
--	if (sci_present)
-+	/* SC = 1 */
-+	if (sci_present) {
- 		memcpy(&sci, hdr->secure_channel_id,
- 		       sizeof(hdr->secure_channel_id));
--	else
-+	/* SC = 0; ES = 0 */
-+	} else if ((!(hdr->tci_an & (MACSEC_TCI_ES | MACSEC_TCI_SC))) &&
-+		   (list_is_singular(&rxd->secys))) {
-+		/* Only one SECY should exist on this scenario */
-+		macsec = list_first_or_null_rcu(&rxd->secys, struct macsec_dev,
-+						secys);
-+		if (macsec)
-+			return macsec_active_sci(&macsec->secy);
-+	} else {
- 		sci = make_sci(hdr->eth.h_source, MACSEC_PORT_ES);
-+	}
- 
- 	return sci;
- }
-@@ -1109,7 +1133,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
- 	struct macsec_rxh_data *rxd;
- 	struct macsec_dev *macsec;
- 	unsigned int len;
--	sci_t sci;
-+	sci_t sci = 0;
- 	u32 hdr_pn;
- 	bool cbit;
- 	struct pcpu_rx_sc_stats *rxsc_stats;
-@@ -1156,11 +1180,14 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
- 
- 	macsec_skb_cb(skb)->has_sci = !!(hdr->tci_an & MACSEC_TCI_SC);
- 	macsec_skb_cb(skb)->assoc_num = hdr->tci_an & MACSEC_AN_MASK;
--	sci = macsec_frame_sci(hdr, macsec_skb_cb(skb)->has_sci);
- 
- 	rcu_read_lock();
- 	rxd = macsec_data_rcu(skb->dev);
- 
-+	sci = macsec_frame_sci(hdr, macsec_skb_cb(skb)->has_sci, rxd);
-+	if (!sci)
-+		goto drop_nosc;
-+
- 	list_for_each_entry_rcu(macsec, &rxd->secys, secys) {
- 		struct macsec_rx_sc *sc = find_rx_sc(&macsec->secy, sci);
- 
-@@ -1283,6 +1310,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
- 	macsec_rxsa_put(rx_sa);
- drop_nosa:
- 	macsec_rxsc_put(rx_sc);
-+drop_nosc:
- 	rcu_read_unlock();
- drop_direct:
- 	kfree_skb(skb);
--- 
-2.43.0
-
+--u0ARGKVMgDyOvbMB--
