@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78FDE25A331;
-	Mon,  9 Jun 2025 13:40:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9219225A2C3;
+	Mon,  9 Jun 2025 13:40:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749476435; cv=none; b=BZEqxC6dY2WT+MyB8D+oe5jW7Adp926dMnCQHq1PhrV/WedkEcmBew5YX2fcVTNpfiE4Lz7hwyqDdOwxc8zMGr7WNXvkzhz3SqAjRIfQ9oFFRky5feXLCfO0V/OtZL2zfh+3xDy97z9GyQf/wFXWUCBjZgUAqg+lHkzu0D1RGUo=
+	t=1749476441; cv=none; b=Ptfk92GvY/04PzGAzdKaUn0150XcqgWWBgFA2AfS9Ykj3dB99TvxFequamq669UixVCKCT5Wy6LVJk2z1+gcqSYzShnCcnqJmBR2DHK9YU9YKJ1ui5ijEYJ2AW2sW2TM03amoTr2N3ZdFJ7sW3/OJWI6EM9TfdJLzGDq+ut7uFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749476435; c=relaxed/simple;
-	bh=WEN6hSLNtEcsEoxQXaPJs4pu6JKGH9Xuw69C9y57tfE=;
+	s=arc-20240116; t=1749476441; c=relaxed/simple;
+	bh=USKTZ9fCu55+R7oUXsUvPI1rp8t8D7GxZjI7Rx0Goo8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Y8hLb1oVZ1zd1EFzIVPZosh/lsY4nEvIxKjZfRzTgr00xucOGbzPaQTgWld7336X1FQS/+5/ku3wAlrW0p6DVO+QtsgpEnOgLHfsptEeFbSxyamN2cELb42rZ5pV/JcFMSr/oJanF9LrvqNX7vSryk0AG8ZHtyRw8U895DMNxYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cqPvUWB2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=EN6qxEwGMgxg2yK/kMqbg8haqtPg2bRcbFRTR6Tfd68mEFLjAGt6BwQqtUJ3v7ycvWwjdwjSMfMMBFOz5/1MboiBtzdbu4bv2d+nclxned3Cno3nb8xKQRWYnc8TuJeRSWcOYgrGrbRW8jYFEjKd7c1DsvGh4W3G7OtCZVfCeVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qqye44Wd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cqPvUWB2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3219FC4CEEB;
-	Mon,  9 Jun 2025 13:40:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qqye44Wd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1B6BC4CEEB;
+	Mon,  9 Jun 2025 13:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749476435;
-	bh=WEN6hSLNtEcsEoxQXaPJs4pu6JKGH9Xuw69C9y57tfE=;
+	s=k20201202; t=1749476441;
+	bh=USKTZ9fCu55+R7oUXsUvPI1rp8t8D7GxZjI7Rx0Goo8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=cqPvUWB2dELjqH+wR6XFkMF39GPy6Eilf3jyGzzAgTBVndHrmqfZBGbnWu/O+2nBP
-	 MDxDJwOUaklQXwyo335M1zqMEjEQ1Md3WklUrVaNWvvyVDtTQQGHWoNjISUh7YG7cO
-	 P79rfqkNJqZkzAUqNiyRHaUm0nSalrhrfbwkSHNWebwsge67T0FouINh6/OCXTFcGd
-	 RK+4ux1LUF/xblNb615QZyA95MTu+WGb/nVRADEwqTWmbtZiafw7SSWKV56Grs3bDi
-	 6e19DheUl4SMUtNgn7M4XghDKGtGc+glxYzBPH9UOLp4X/rZ2TV9kRsUKRXedzAIOJ
-	 FYPCjr0uBeR1w==
+	b=qqye44WdcSZaC33CxV+RJApyqXSqf6xUL/mYdjNUndm1X6wPO220aGJd6CkuuIlWs
+	 FHzDcaWQrbKzdetZnEfGYasFWtZL3D57vxHtagfmdoBsMhMlt7Km4e/g8whrOrmmcv
+	 ZcOeouxdyAyfPuqnVImHNlOQ+QndLQZo9csTlTcfbAODTAeypY45wYUWx7li6Mvx3t
+	 wQYc3DH5oddfQeK8afOtHca3w0Cp2YyiNHuKewo+g1y3IKTpE8mzyhNzXyy7dZ/C43
+	 SVPUbrShxkGPRjXta0cGgU9RkO2pDyB5uwMptXxe6/LfYQT/qpq5HwkRAvmuyfpKEj
+	 XDZFUhJjBCBCA==
 From: Mark Brown <broonie@kernel.org>
-To: Cosmin Tanislav <demonsingur@gmail.com>, 
- Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, 
- kernel-janitors@vger.kernel.org
-In-Reply-To: <aDVRLqgJWMxYU03G@stanley.mountain>
-References: <aDVRLqgJWMxYU03G@stanley.mountain>
-Subject: Re: [PATCH] regulator: max20086: Fix refcount leak in
- max20086_parse_regulators_dt()
-Message-Id: <174947643393.126945.18182713164781359832.b4-ty@kernel.org>
-Date: Mon, 09 Jun 2025 14:40:33 +0100
+To: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Thangaraj Samynathan <thangaraj.s@microchip.com>
+Cc: UNGLinuxDriver@microchip.com
+In-Reply-To: <20250526104908.404564-1-thangaraj.s@microchip.com>
+References: <20250526104908.404564-1-thangaraj.s@microchip.com>
+Subject: Re: [PATCH v1 for-next] spi: spi-pci1xxxx: Add support for 25MHz
+ Clock frequency in C0
+Message-Id: <174947644039.127013.16420738597915018484.b4-ty@kernel.org>
+Date: Mon, 09 Jun 2025 14:40:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,21 +46,20 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Tue, 27 May 2025 08:44:14 +0300, Dan Carpenter wrote:
-> There is a missing call to of_node_put() if devm_kcalloc() fails.
-> Fix this by changing the code to use cleanup.h magic to drop the
-> refcount.
+On Mon, 26 May 2025 16:19:08 +0530, Thangaraj Samynathan wrote:
+> Adds support for 25MHz clock frequency. Support for this frequency
+> is added in C0.
 > 
 > 
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/1] regulator: max20086: Fix refcount leak in max20086_parse_regulators_dt()
-      commit: 06118ae36855b7d3d22688298e74a766ccf0cb7a
+[1/1] spi: spi-pci1xxxx: Add support for 25MHz Clock frequency in C0
+      commit: c459262159f39e6e6336797feb975799344b749b
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
