@@ -1,175 +1,129 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9209B1F8AC5;
-	Mon,  9 Jun 2025 14:34:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749479643; cv=fail; b=pxlRosyfqlK5//y8SQOZ67xE8nNlJoXYs9qlHPuWWSyZ7QhaqkBI7UIcHBtWEbUMV+Wgx+mz3fPeIPR6RR1V5vD6zI7li6sfgpIZe+vK2hpVejNFIkftc4511vwurjbAwuNg2rPxfmQGliyQIBBCR6mVVJRUw5sfjYGsHLq9IGc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749479643; c=relaxed/simple;
-	bh=v46ZTfxcCAvB3ErhoWztjkgkvFzcdRWmvGQnCfU5MBc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=WRInh6IMisATP2mq1EXqkvn3KsbuagU6mrGHQrkHQYs5sj9FL3uWFp812zI6QGDE/pSecupl3jogzke68JIwtTH0+ww0OdG/Cj0zWAw/alhIe1YdAwryaIS+rL8sn87CVhelma+/3SOO8LZAg6N0Zvy+9zAgSGakn8XkW2MuX3I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=OamOK5+Y; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=NGMOkwAu; arc=fail smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC49725D20A
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 14:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749479647; cv=none; b=omitYNsVAZQj/VL5C8YnWxFxBprLSZNUu8c256ezYqVWXyfyROAD93qwaV0oDhd1FaMG3T0Nhv6vGRbyhlBA1AXbvYZTD17sWrltmSMuFDzhRF1ezTkNDJUpqL3/QbRR7nQ0FPkb+jfe5PjPWaTnLY9GUW8ajo1J5AfljhGNxwA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749479647; c=relaxed/simple;
+	bh=RncucRipf1cYTuMs00M4ActoK6bvKzfNJNtvT9JpgjU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=DkyMZTiIyzox37V7GkaXBz8rRK7CwPWW0ntxHkocDXFlvz2iNUTAM5dz1FlUTHy0KzvyFc0u8cIoeKqg0v92kO9S+VwTICCecYwBXnqch7rkEdw/527jVtJJ5SBzaAiv99TvFsbhjcrr8owPIEpiO/icZb9Jqx70ERCQb1oWR/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tNGVlTLA; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="OamOK5+Y";
-	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="NGMOkwAu"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 559BWC76029240;
-	Mon, 9 Jun 2025 09:33:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=PODMain02222019; bh=cIOvrsXIM9XYMsip
-	J1dbw1d6C9zztUSarghlHs5NFmY=; b=OamOK5+YfkD2snSjYlvV7tcDy2JlVT0p
-	sjEKbUevsv6eHEqUf17VCRHQCER7ZjmXR1mthuqO94PkvsQiREhzfkBHKof3/I8E
-	1KkeL7ViNOJPk6VdivsCTwgQUarpOnz4i8Ff/FmwB6M/mOGIo11pZ5x9ALheps7L
-	+04hAxU1kv8hZqqI2o15CuFpIRy6+2zz6JRDHrrZaqLwxGWJ4MrQYvAtcMXHzUbi
-	W4Ue+GYrlC4Rsv4jg4orHqq4AOfaihO9OHfR5P3T2AMSCIdNprgwzaET6P6mqSM7
-	mROQ/zpL0TNTL9C0dgyt3KpzCtpcUSqoHA0ftErDjzT7Sm9p8C7SdA==
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10hn2238.outbound.protection.outlook.com [52.100.157.238])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 47529v1jr3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Jun 2025 09:33:53 -0500 (CDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fzFhyUlB6GUFbwl/v2cvi0cK8W3Y1we88kxh32sjwNi/+R/Y2CEmxC+2uZ55yqSh0CzRdnKuRA9ekPG1TsWlvasCW8XYrt8rLKlBJ0fudrV6f9/jyZ3Kn8FN/utRuUq7UvoimEI6KLDTCukvcQS10MO1dmMZji3PPHnkXANAAaNXZYjaFArPW/L06pHAf0Z8ws0MpwrH6XvDSGu67IQO7GtBjTn9cTJyShsYZNZQmMHGcBfA7L85i86557oURw8JzjjQKPZd7kxt43SFfYaq8WI35fbFBRg0u1CrnCpRg4BACRWFzcADWPOGHnsMPF7qzGd3HZ+rJijxk397uh6Izg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cIOvrsXIM9XYMsipJ1dbw1d6C9zztUSarghlHs5NFmY=;
- b=VNj7Zje16JretHzMT/yYlba1ug9FeSpfGMH8XFgz/8W+09dz8xt74gb0DMn8e3hEziXRYWurGJOwDR0A7/0arpybUIkfwrxRm5G5ZNqltQ6yD6hNpSgbhoNbINWTySmJi4gmGvrEzfQVPcpv01P4VRd9tF++jDPKPUwBZ/4y9DA2IQC0cPvD4Ro885Krda8ZCndS4PtR6R4MoqD7Kp/Qg1ce2gPfvmo1nzOjRfn7H2FrcR25qP0dxWZDpu4dzp+cUdd2e2HJh3kATkjCe2WAS+SX81F/L86h7/rvVuGSK6CXzq5H75zuIpE9tyehy3+V+bILcEVFuL8HEklzYpHz0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 84.19.233.75) smtp.rcpttodomain=cirrus.com
- smtp.mailfrom=opensource.cirrus.com; dmarc=fail (p=reject sp=reject pct=100)
- action=oreject header.from=opensource.cirrus.com; dkim=none (message not
- signed); arc=none (0)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tNGVlTLA"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-23507382e64so42485255ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 07:34:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cIOvrsXIM9XYMsipJ1dbw1d6C9zztUSarghlHs5NFmY=;
- b=NGMOkwAuYreJ1D73PhXZV1Q6eeI7dogJL/1aWg1rtblnNg/Qh70ac8i+2VYMHfHdi1Xvx46X7JkxnNmGVI70421bkX616BYhFYCFYr00xPplvItqNlclYkgB7xXYzQ52hHvzqvCnRZ2uvSywHlK5GlsNhYp7Mtn3WG9wU6v4aGA=
-Received: from SA0PR13CA0022.namprd13.prod.outlook.com (2603:10b6:806:130::27)
- by IA0PR19MB8097.namprd19.prod.outlook.com (2603:10b6:208:489::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.20; Mon, 9 Jun
- 2025 14:33:49 +0000
-Received: from SA2PEPF00003AE8.namprd02.prod.outlook.com
- (2603:10b6:806:130:cafe::54) by SA0PR13CA0022.outlook.office365.com
- (2603:10b6:806:130::27) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.13 via Frontend Transport; Mon,
- 9 Jun 2025 14:33:49 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
- smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
-Received-SPF: Fail (protection.outlook.com: domain of opensource.cirrus.com
- does not designate 84.19.233.75 as permitted sender)
- receiver=protection.outlook.com; client-ip=84.19.233.75;
- helo=edirelay1.ad.cirrus.com;
-Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
- SA2PEPF00003AE8.mail.protection.outlook.com (10.167.248.8) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.15
- via Frontend Transport; Mon, 9 Jun 2025 14:33:48 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 8CAEF406541;
-	Mon,  9 Jun 2025 14:33:46 +0000 (UTC)
-Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPSA id 6966782024A;
-	Mon,  9 Jun 2025 14:33:46 +0000 (UTC)
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: vkoul@kernel.org
-Cc: broonie@kernel.org, lgirdwood@gmail.com, linux-sound@vger.kernel.org,
-        patches@opensource.cirrus.com, yung-chuan.liao@linux.intel.com,
-        pierre-louis.bossart@linux.dev, peter.ujfalusi@linux.intel.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] Update SoundWire IRQ handling
-Date: Mon,  9 Jun 2025 15:30:38 +0100
-Message-Id: <20250609143041.495049-1-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.5
+        d=google.com; s=20230601; t=1749479645; x=1750084445; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=skrVgnKxd0KDctgtNsrczTFq3oqZuzABurM/ZDk3Ink=;
+        b=tNGVlTLAOWVhh49MatYphHt8c38PXeIXC/VlqluEaGDCaoyMJqVzC66HbKX7dnIciH
+         0PGoW11+LTlJaPuNgr72xM74cHpJJlgoUrAhEKIDBHCNDumx7T3cqAAkYiYSz9umdvd6
+         kmZNaJ5To8WX0ozlVBlRWrfhJ3a92+7UAlxZr/NJzam14jVHklQ532oHIGlYi0Ok/Mzs
+         Nq4VrgdsXK1fLnnkmsPK8l1DyGNrromCWfsrO934lBnczO0qHs3RFnoFkz8pNDt4nbMC
+         ZONo2klPV1pEDG0x5E7WXJXaakcJM99AclD53gZJ24apACkzx17/9LVDmGt7crsgw3Du
+         yLBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749479645; x=1750084445;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=skrVgnKxd0KDctgtNsrczTFq3oqZuzABurM/ZDk3Ink=;
+        b=fMAB/XFbzvFAsqU0g6GH7pWFZkmQ2zD1FcE93Q+rf7tpwlRI9KRfMJEQycqCORBP+o
+         FjHPtDsnCCneWYu/PCNs2k03jCc6JHQjHdKnrFJPe2G8BCTo8VFBz/dMPsKPelkXhZwr
+         3fhfresSpN6rjguV1RjIIXhfCSS96aZpjm+SdQzxPVwQPemaObCkXVAY+MbgjbwWASHQ
+         caTqeus5J+pZw14jHq8SA19evpoB21gZX85tocFL+gMpfwxQYrDrj1+3FHZ8FN2n9T3W
+         O0fmqROBz7ZfAfBbLIGk+YRHMleY6+N7IimNC1hc4viuvzq16WNl4S/gSi/QSZGmxZHf
+         rOBw==
+X-Forwarded-Encrypted: i=1; AJvYcCXYB+vE8M4dN3N3bkUod3rIDW++jRtFcpkL8g5lxWAvCy4f3J9J6SF32ffIca2QY34QwKPiNB4rCgqJfe0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbZGxDccEJ6cU6VCp7NDtcAnmhPSacmopfSL/MTIcWmAl2Yzhp
+	ZZJnCXkQsAyWLW1YDSe14LTMEa7sRJYbSpK/WLzEJLAwS2d3wdWVD4xUbCdDkAESfTZ3ALPVK86
+	2tgYYzg==
+X-Google-Smtp-Source: AGHT+IG0JGW+2ERvh9VAKD2SYT7EuVC5l/3/Q6a8vdYy73LZU6rmVVJeO2/2xeSR1j2Z/GlfjJU6yRXE7Fs=
+X-Received: from pjbsg3.prod.google.com ([2002:a17:90b:5203:b0:30e:6bb2:6855])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c950:b0:234:b430:cea7
+ with SMTP id d9443c01a7336-23601cff140mr191326735ad.22.1749479645053; Mon, 09
+ Jun 2025 07:34:05 -0700 (PDT)
+Date: Mon, 9 Jun 2025 07:34:03 -0700
+In-Reply-To: <20250609122050.28499-1-sarunkod@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00003AE8:EE_|IA0PR19MB8097:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 97d8f976-5ad5-4893-d0c1-08dda762a5a9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|34020700016|36860700013|82310400026|61400799027|376014|12100799063;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?UbWhvZnMbyRwAXuUcPRwRnRnActMX8sfwrnEvcS0oe17KAQUbsJT4kQGaajz?=
- =?us-ascii?Q?OM/roQnuV1FkMt9O25l++dzHpajKgO+jWminev9+M8LdU6ER3LWPSY7h0RVC?=
- =?us-ascii?Q?JDeLjvl4gAqwXkGNTyvGjv2iAco7bTNO/XVMNUn9zHdmBZYhXTpQP6S/xW+X?=
- =?us-ascii?Q?PmOM15FrgkVKM6psu+wEqblhrwOLkanryv7j1ManIQ+y5DVXcXv6f2Fy7pJD?=
- =?us-ascii?Q?+6dgqnITH0WUUVH9fYlpZW6y/uCuIwrgwKzbDU8FsyC69ClIpZL/alOHRm7g?=
- =?us-ascii?Q?0GPVLBwVGw1uFqwpp8wciou5ZCe0gHZRLvBXkgnM8k6H8SImW87qj+RKTFK2?=
- =?us-ascii?Q?Z75VTGtxgZp7NH5nTiIvz51ZOEgZRb/SG6zThHC77pQ8WBoMhQQTajO8o8/m?=
- =?us-ascii?Q?k0fTrQXbqwIWn7X6rVQwy8YLp0DfhUN0h++kVTI7kNSDwjYJ3rEfmJOzdKKt?=
- =?us-ascii?Q?zHJ2q6EeRiNCRq5KXco8fmErgHXd6EN3OaPfYMM7OoGOYQw85NkGHP99rpgi?=
- =?us-ascii?Q?aZd42kwJN78R4MjqFDEMCHOW09bxmmKabNGF69P2dFilgOsTwCiJPTMzTsi/?=
- =?us-ascii?Q?45jIzh4GrXd9Ey1gwQTE7uk6czGvFpFMbJ+oR/CwWxLr45djE3+A67xO2nm0?=
- =?us-ascii?Q?zdmdufup81bkNrhoQV/BOKONY80kN4Wu8u6PDH+W9JYzdqNvK7MFNrwVMsnp?=
- =?us-ascii?Q?FicTsp5CS5iPgz9l8dGdmHPQGv75WnoEdzKeux2SWTz/+0qOgvXXYYGDseYR?=
- =?us-ascii?Q?VYS57jkvbJBm4a0cUW+Qi94NQYWjZJiHvuFi24hyfYqWyDeFwwRQcpEp9EsX?=
- =?us-ascii?Q?J7nqh2bjWATju3Xy8IAzZVvprLwjTD27nlNvvW92Fjm6nvWhgbOz/sfOf3Jr?=
- =?us-ascii?Q?+bJhB38+MmwX5uFvr1OcODBhuH/Yoo0dqLwgoHRBtGMC+LDWe54cJe6gOZLx?=
- =?us-ascii?Q?ZCG9Sxw3fei7dHl8nPUD5CUaiJOX/p9WGaRpwG3qgVv2/zGqV4VgBoD+NaHL?=
- =?us-ascii?Q?vJtFRl5dRcXKAArul6w4PDCxHjHCmCqN+7M/DythKGtoBLjBu77E48cgpPd5?=
- =?us-ascii?Q?YjVrzb59J34ExBQ0806uvVI1Or8bQa7A+OQknwDOaoSDnfoD6/QO0XzW1Fk/?=
- =?us-ascii?Q?PuPTiybWbINDhw7ww1i5hbia/C6THAmvi0xWSgIO4X7vNR2qw2sVK4rkKbcU?=
- =?us-ascii?Q?v3VsTihqoBDFuXgCXGVIKXvKzwP6Yf0NgSPxtt1JKEhnx6/gwd+o3xxTq1uS?=
- =?us-ascii?Q?2BjMqa2jjnnbF1sgAq0V8/M+tiPhbvc0RZw0nspqXr213D24RPW9F8MTF0S3?=
- =?us-ascii?Q?PabggYEIMLY95kHVq6yG68e63sCF6ZPcRQrzZjy1/nRcdA8nFU0VtS/O86CC?=
- =?us-ascii?Q?4cpBOkajsshoDvYCapGdHPJJZU25CRlDt5CxYvKCoQOGnspl3rrXzofJH/fn?=
- =?us-ascii?Q?MjvPBPCPS01EtSCXouatNbDolygX0fcM0YdGgKcklqr1SmoiiJpD6yW532ZS?=
- =?us-ascii?Q?6lrUTebpb7i8DuRyc3bBKcVnt9cck4IWuwac?=
-X-Forefront-Antispam-Report:
-	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(34020700016)(36860700013)(82310400026)(61400799027)(376014)(12100799063);DIR:OUT;SFP:1501;
-X-OriginatorOrg: opensource.cirrus.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 14:33:48.1641
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97d8f976-5ad5-4893-d0c1-08dda762a5a9
-X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00003AE8.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR19MB8097
-X-Authority-Analysis: v=2.4 cv=Jfq8rVKV c=1 sm=1 tr=0 ts=6846f0d1 cx=c_pps a=RN04H64nGlLCbTMVOX801g==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=6IFa9wvqVegA:10
- a=RWc_ulEos4gA:10 a=mRuxpCjb-NPUBtbOopUA:9 a=jZz-an6Pvt0H8_Yc_ROU:22 a=VlVynqX4KLlZR1Cn4-IV:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDEwNiBTYWx0ZWRfX4300gH3Fx3Jx RU9WGihx5eV71TX4qwwmlGuS2VnAoJbxHtylpsUiCsRpZG/uQrnrSLltcBm4wxiNpOQ+grdo8gc eIvfw4ukrfVjteUkWypuPA8mmZO7gQmpuPgq624622lHG5ym94lIQyYPRKS2ONfnNWMCvVgcwm+
- wrMaWX4JHRF3GPK9jW5oEok3suEIOjf1aRQbUk/zoiXr4CBN8JqI6nqRi2KFUUbf3GXnGdfOSrf NCDR1ydrUmbXuls5sigry6ntzdelBv+N+CJtvl3lk27ZcJGkOgHsO3UU1a68LfQJvXKadp+MdFx s2ozAxv0+s9f9Cmw+VwTRt6qvnNYseobQfj5olPLdFIGQ+iQkXlnCLNWaIoVOCEH+Mj7YuPXTSr
- Mvi/wGm334FQI/htOAOLa8bH07rXOdav11jkbZ2+iwGXC3upy1h9ABPCTclfcs5WlGjinW22
-X-Proofpoint-ORIG-GUID: gncN6VqgtTZkq7Amy9K5UgDLjOkXyK3v
-X-Proofpoint-GUID: gncN6VqgtTZkq7Amy9K5UgDLjOkXyK3v
-X-Proofpoint-Spam-Reason: safe
+Mime-Version: 1.0
+References: <20250523010004.3240643-1-seanjc@google.com> <20250609122050.28499-1-sarunkod@amd.com>
+Message-ID: <aEbw2zBUQwJZ3D98@google.com>
+Subject: Re: [PATCH v2 00/59] KVM: iommu: Overhaul device posted IRQs support
+From: Sean Christopherson <seanjc@google.com>
+To: Sairaj Kodilkar <sarunkod@amd.com>
+Cc: baolu.lu@linux.intel.com, dmatlack@google.com, dwmw2@infradead.org, 
+	francescolavra.fl@gmail.com, iommu@lists.linux.dev, joao.m.martins@oracle.com, 
+	joro@8bytes.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	mlevitsk@redhat.com, pbonzini@redhat.com, vasant.hegde@amd.com
+Content-Type: text/plain; charset="us-ascii"
 
-Fix some difficulties in implementing IRQs for the SoundWire system, by
-moving the handle_nested_irq outside of the sdw_dev_lock. Also a minor
-maintainers update.
+On Mon, Jun 09, 2025, Sairaj Kodilkar wrote:
+> Hi Sean,
+> 
+> Sorry for the delay in testing. All sanity tests are OK. I reran the performance 
+> test on the V2 and noticed that V2 has significantly more GALOG entries than V1
+> for all three cases. I also noticed that the Guest Nvme interrupt rate has
+> dropped for the 192 VCPUS.
 
-Thanks,
-Charles
+Hmm, I don't see any obvious bugs or differences (based on a code diffed between
+v1 and v2).  I'll poke at the GALogIntr behavior just to double check, but my
+guess is that the differences are due to exernal factors, e.g. guest behavior,
+timing, scheduling, etc.
 
-Charles Keepax (3):
-  MAINTAINERS: Remove Sanyog Kale as reviewer on SoundWire
-  soundwire: Move handle_nested_irq outside of sdw_dev_lock
-  ASoC: cs42l43: Remove unnecessary work functions
+IOPS are all nearly identical, so I'm not terribly concerned.
+ 
+> I haven't figured out what is causing this.
 
- MAINTAINERS                     |  1 -
- drivers/soundwire/bus.c         |  6 ++---
- sound/soc/codecs/cs42l43-jack.c | 46 +++++++++++++--------------------
- sound/soc/codecs/cs42l43.c      | 24 ++++-------------
- sound/soc/codecs/cs42l43.h      |  5 ----
- 5 files changed, 26 insertions(+), 56 deletions(-)
+Might just be slight differences in guest behavior?  E.g. did you change the guest
+kernel?  
 
--- 
-2.39.5
+> I will continue my investigation further.
+> 
+>                           VCPUS = 32, Jobs per NVME = 8
+> ==============================================================================================
+>                                          V2                         V1          Percent change
+> ----------------------------------------------------------------------------------------------
+> Guest Nvme interrupts               124,260,796                 124,559,110             -0.20%
+> IOPS (in kilo)                            4,790                       4,796             -0.01%
 
+Uber nit, the percent change should be -0.10%
+
+> GALOG entries                              8117                         169              4702%
+> ----------------------------------------------------------------------------------------------
+> 
+> 
+>                           VCPUS = 64, Jobs per NVME = 16
+> ==============================================================================================
+>                                          V2                         V1          Percent change
+> ----------------------------------------------------------------------------------------------
+> Guest Nvme interrupts              102,394,358                   99,800,056             2.00% 
+> IOPS (in kilo)                           4,796                        4,798            -0.04% 
+> GALOG entries                           19,057                       11,923            59.83%
+> ----------------------------------------------------------------------------------------------
+> 
+> 
+>                          VCPUS = 192, Jobs per NVME = 48
+> ==============================================================================================
+>                                          V2                         V1          Percent change
+> ----------------------------------------------------------------------------------------------
+> Guest Nvme interrupts               68,363,232                  78,066,512             -12.42%
+> IOPS (in kilo)                           4,751                       4,749              -0.04%
+
+Uber nit #2, percent change should be postive 0.04%?  4,751 > 4,749.
+
+> GALOG entries                           62,768                      56,215              11.66%
+> ----------------------------------------------------------------------------------------------
+> 
+> Thanks
+> Sairaj
