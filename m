@@ -1,114 +1,124 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73622A59;
-	Mon,  9 Jun 2025 14:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AFBF25B1FC;
+	Mon,  9 Jun 2025 14:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749477831; cv=none; b=YLC/zBUPRTxiUeHG9v0TwIfPkBZgCBxc66+OObyZNS1HirTGcm9YkZVMMqlzW9Ex6TsqVDCPj5qI3bpsoqZCW36MgiREKSUd95m/E++jzYFuv+au8DLogDDlLKZTv/HS6N+4eV9ahWfBhUGHB/Fu9z6HckH8/NCBpkp5S+giNSs=
+	t=1749477839; cv=none; b=mVd3H0uht1kxHuz7uTBPWcvkdGE4AfSQDTIOgYP047pAxdalhMKoOSlm406eMk8aJQlelk6GKDmO4CzrzVs0BCnqg1BE9VGy6DpcZv5cCSTyHqOPRw1R3sSIAlt5jSLulclbg5/GdNIjn+MapdkEZBco1m25T10tjtreyedlW5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749477831; c=relaxed/simple;
-	bh=sqfo4EfU9H/OvZhdOK2jn5tW08tExXp4eULzYHcG9u8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KyEnS7PmIQVsXhAsSbyjFIpfntFCYHVNbNdbah2CaEZzGivtrxSw0sgS/SdSv/7miqodxUEbSnJkGCKpNLvdwiXNqyCg9dV1OlkiEA3CUAYZX6mqeJC6UHYfkVn/0PCDM12GEVuCbR85EtBdBnjnEKv4fpzN7KVVHCguBPXoWm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RR93ri7A; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749477839; c=relaxed/simple;
+	bh=G45qDbAehHP+NM/bfLTf8rrcj6I8n8nlynfPDbDRo3w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qdTWd1VEHKWbn+w2L+z+QkMXZ4wkBr0c8Vsn/bhFGGASHKLlIW29uTLT7myGdQVomjNFqvlbnlmw36PeCCq18hNgY7QirOUygcCdFMj34zsOKjOd/AZTlTcgdKIDmGF8AnHgDeCH5blfJe4XXSLCV9es+jnk+v4S8IiWUXZ7dbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dHb7UP9Q; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RR93ri7A"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-45024721cbdso37701445e9.2;
-        Mon, 09 Jun 2025 07:03:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749477828; x=1750082628; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ItkUwDuPvXDwuFTbW3/jhZWSpSP44wUlErpQgJpqPe8=;
-        b=RR93ri7AJpiDpzz6tGQ9zAay+Fp3C7GNWFZOf9iDWlQoYu12yyKst2etBFX5K+9olp
-         Eey46LNZS1GVmaBHr7FtVCcrvKPgkqj/UJ4vO2ZTP5VXOB4lym/r3ynjqt9tbiYC7PLB
-         m3V32+e0qY5n1DOngmFjE6n4XxhjGs9k/kxKyZO0hkDuG6qf8FfCS+56RHuabulMK8XP
-         A94ugymKtEOfKIbZegtBsTvPQF6jY0a3XkNFgzXEodawOByis4ZRnOozTQpu6H3Qkjrk
-         OxJRBnpX48ty8TAs0Lk/p2w7j+/hSzj9qSqIHszyHG/lDDvdZKdNeTjeBQVsBV6FG3hL
-         2PZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749477828; x=1750082628;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ItkUwDuPvXDwuFTbW3/jhZWSpSP44wUlErpQgJpqPe8=;
-        b=VW/dc5BP7xPBi255O2osyTqKqFbQETpMTLldkuy3edCHXauamxPMbCNpGyRsMstD6a
-         pwp1F2H23q4HUlaCD0cyFsuHu8WNt+KRqmJ1TfpwVN/trTZANsTuP7dro+UuZtdSYpt2
-         REwcXxhUJJp2PBZW81p3yQOKTj6n4Z1rZ4dhhcW1vCXhDa2ertUoTOwqb9TbtVVAfaf/
-         Il8nrVagdhY6lflaRNsnQ/eyVqfcm1nnSbmmwARqWySMI0I2LzHM6VrwLi1GySu7ihdL
-         SnPEae8GozFL87eO92Lvu0m4IExnYeWLFDqCk8PXk/y9GpSWpEOBaS6Rr6IyXIYsUjg6
-         KMhg==
-X-Forwarded-Encrypted: i=1; AJvYcCU2jwk3TtTeOw5sgme0bmthcuDtRSaWDOizrD9VYVxX+efe8QY9R+kFTSs0XYq5CNkD+w6lUrmzyLhQ6nyO@vger.kernel.org, AJvYcCU3g/nT4+GrFPvnFIYKspstoeF1AxrF/YBZGFht6im+BbvPk5zVDpa8V+b9/eC1rHcTwB3aFix4XHM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4BiqAuVRW6aVRiZLyIxyu3Nvn+EX2n4t/cZWT5nsJgc27OiWz
-	/w2pVn6/wAaD+SSZPHiKDvxkplYq+2qF0/JvgZxOCbUBB2ChKB6v2aq7
-X-Gm-Gg: ASbGnct3jMHum8ANt1jIpOS3YUhU+bINFN47V4j2XrI57ZPO/A6NUYPZRh7Sh5/pHQx
-	DzNipnwzOmbNt5azQNLXD9BHHMNGgCCNaWrRyvEgDmwN5ROLqcZTG216GCrpyJ4vMgIadeJr3fc
-	atmtFBAZWc3wO+GZ6Nzy7Qr0EoW+ErLeQTfneYdsWhbiZjjo7l2P0pAFatpzKTrhymk2VZrkBUF
-	uJqz7O4PIAoFohgJoS10Hut4H6wFyuHoSE3Bv5y/kV0smenbZOnrjGenNyG1O5NGaDlZ24HmRyU
-	sK813UuKZ95/yI/8RlP2ihTXbP3SakbwoMg0zooShDx0XlgSWk498LznkE7CKqmaQShXMIDf0Jv
-	796ImC074
-X-Google-Smtp-Source: AGHT+IHfGHWcceesO297NeI0HtViVZTiHychN7i4shTt694vmnxB+lj2Njit6TkH9CdQwKpMEqILhw==
-X-Received: by 2002:a05:600c:8b43:b0:43d:fa59:af97 with SMTP id 5b1f17b1804b1-45201427c5amr107071995e9.32.1749477826958;
-        Mon, 09 Jun 2025 07:03:46 -0700 (PDT)
-Received: from iku.example.org ([2a06:5906:61b:2d00:3c26:913e:81d:9d46])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451f8f12e16sm85688065e9.1.2025.06.09.07.03.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 07:03:46 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] clk: renesas: rzv2h-cpg: Fix missing CLK_SET_RATE_PARENT flag for ddiv clocks
-Date: Mon,  9 Jun 2025 15:03:41 +0100
-Message-ID: <20250609140341.235919-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dHb7UP9Q"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4124243EB4;
+	Mon,  9 Jun 2025 14:03:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749477829;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OqMBpg9+vjtHlgxrQiNduRjtVddZANrog7hUYnBT5YU=;
+	b=dHb7UP9Qm8R2b2sYhW4xHcgsGQGVkTY5pv94V/mgXxenhroYTbQr0jbuTLbIKYVTve/L/h
+	YBd6keuLT7NYBJo5fOX9RD0fAqjjmCGq5h5BCoFU/trCVwbqG+nx0vv24mCUaA8fKmWE1y
+	TrHh4BoFWSCS0Hx7GTU6xfNiEbd4c0HpDIiea7SNSSGvTKlqGSmec0jeiDTaFWu+FdinnG
+	q4j6FB6STjwvPfEb/hHVWhWRGQ4bdB5eUOYsO3zuyQw/0t6Oa66uHgAfydzBi4kmLyxorW
+	0R7UyUw4LU4cBdDSLNxnWT2eZB0EnUuqMs07cuowxpalKm6O0k/L9L8hiHStGg==
+Date: Mon, 9 Jun 2025 16:03:46 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Gal Pressman <gal@nvidia.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>, Oleksij
+ Rempel <o.rempel@pengutronix.de>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Donald Hunter <donald.hunter@gmail.com>,
+ Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, Simon
+ Horman <horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Russell
+ King <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, Dent
+ Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, Maxime
+ Chevallier <maxime.chevallier@bootlin.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Krzysztof Kozlowski
+ <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH net-next v12 00/13] Add support for PSE budget
+ evaluation strategy
+Message-ID: <20250609160346.39776688@kmaincent-XPS-13-7390>
+In-Reply-To: <f5fb49b6-1007-4879-956d-cead2b0f1c86@nvidia.com>
+References: <20250524-feature_poe_port_prio-v12-0-d65fd61df7a7@bootlin.com>
+	<8b3cdc35-8bcc-41f6-84ec-aee50638b929@redhat.com>
+	<71dc12de-410d-4c69-84c5-26c1a5b3fa6e@nvidia.com>
+	<20250609103622.7e7e471d@kmaincent-XPS-13-7390>
+	<f5fb49b6-1007-4879-956d-cead2b0f1c86@nvidia.com>
+Organization: bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdelfeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqheftdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfejveefgeeggefhgfduhfehvdevvdeukeelveejuddvudethfdvudegtdefledunecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdelpdhrtghpthhtohepghgrlhesnhhvihguihgrrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehordhrvghmphgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepuggrvhgvmhesuggrvhgvm
+ hhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhrsggvtheslhifnhdrnhgvth
+X-GND-Sasl: kory.maincent@bootlin.com
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Le Mon, 9 Jun 2025 14:03:46 +0300,
+Gal Pressman <gal@nvidia.com> a =C3=A9crit :
 
-Commit bc4d25fdfadf ("clk: renesas: rzv2h: Add support for dynamic
-switching divider clocks") missed setting the `CLK_SET_RATE_PARENT`
-flag when registering ddiv clocks.
+> On 09/06/2025 11:36, Kory Maincent wrote:
+> > Le Sun, 8 Jun 2025 09:17:59 +0300,
+> > Gal Pressman <gal@nvidia.com> a =C3=A9crit :
+> >  =20
+> >> On 28/05/2025 10:31, Paolo Abeni wrote: =20
+>  [...] =20
+> >>
+> >> Are all new uapi changes expected to come with a test that exercises t=
+he
+> >> functionality? =20
+> >=20
+> > I don't think so and I don't think it is doable for now on PSE. There is
+> > nothing that could get the PSE control of a dummy PSE controller driver=
+. We
+> > need either the support for a dummy PHY driver similarly to netdevsim or
+> > the support for the MDI ports.
+> > By luck Maxime Chevallier is currently working on both of these tasks a=
+nd
+> > had already sent several times the patch series for the MDI port suppor=
+t.
+> >  =20
+>=20
+> We shouldn't rule it out so quickly, testing is important, let's try to
+> accommodate to our rules.
+>=20
+> Why can't this be tested on real hardware using a drivers/net/hw
+> selftest? The test can skip if it lacks the needed hardware.
+> Or rebase this over Maxime's work?
 
-Without this flag, rate changes to the divider clock do not propagate
-to its parent, potentially resulting in incorrect clock configurations.
+How should I do it if I need to use ethtool to test it? It is a vicious cir=
+cle
+as ethtool need this to be merge before supporting it.
+Would it be ok to accept it like that and wait for ethtool support to add t=
+he
+selftest?
+Otherwise I could test it through ynl python command but there is no similar
+cases in the selftest.
 
-Fix this by setting `CLK_SET_RATE_PARENT` in the clock init data.
+Nevertheless, it would have been nicer to point this out earlier in the ser=
+ies.
 
-Fixes: bc4d25fdfadfa ("clk: renesas: rzv2h: Add support for dynamic switching divider clocks")
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/clk/renesas/rzv2h-cpg.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/clk/renesas/rzv2h-cpg.c b/drivers/clk/renesas/rzv2h-cpg.c
-index 2f045acc5080..761da3bf77ce 100644
---- a/drivers/clk/renesas/rzv2h-cpg.c
-+++ b/drivers/clk/renesas/rzv2h-cpg.c
-@@ -383,6 +383,7 @@ rzv2h_cpg_ddiv_clk_register(const struct cpg_core_clk *core,
- 		init.ops = &rzv2h_ddiv_clk_divider_ops;
- 	init.parent_names = &parent_name;
- 	init.num_parents = 1;
-+	init.flags = CLK_SET_RATE_PARENT;
- 
- 	ddiv->priv = priv;
- 	ddiv->mon = cfg_ddiv.monbit;
--- 
-2.49.0
-
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
