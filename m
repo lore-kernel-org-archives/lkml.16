@@ -1,122 +1,88 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1277927FD49;
-	Mon,  9 Jun 2025 03:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707ABDF59
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 03:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749439154; cv=none; b=s4qgG8sOuRXO/xOZk/wVZwyJ/TFrhzal/F3Rng4uQhXByXSJ/yz00aNPUguBE+Ci5lHG4gAnbcF5SGEk4Jf0dTpZw1H6EB2L/q7rWUjm5BsX9+ynASdUhdNBvPSP86Aw/XudbN6NJlma11MLKHx3+Q0idNj9wQ+6eedxKEDy0YM=
+	t=1749439197; cv=none; b=sMW5Cp++qGUc8u+tO+DHc2pVow09BeoU99CgqTRfPrH0TkNQAHOOxfcHob8753h5sFauVhJYEHLhrlYZOiA/BchKNhnvgf/0qLnNfdooTntqd0V/QWbMTcNCZkuodpgBBwLVljPVzJ3b7H/yP9rkLyyC9Jaxj77kSiSWfcyCey4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749439154; c=relaxed/simple;
-	bh=ZAsRHojzJMNFzoua3WF1+EIxkEZsc5RalZrhUXdjU10=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=qLDL7VPl5yCg6c5DQ41zX7Q/FAJnGTIlaSds+drAonmL4xS84K8eMmMMKManPxKdamcnE+e/U7kpvd8WLW3ylf5E+OzA1AAQsgFXdgK7FSpJT23fPDB03G9pLmAiuSk/z/2X8QD+2reA2wZeLxD8JCF3rAXyW0F4Y9dpW646scc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KbOTC8LR; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749439197; c=relaxed/simple;
+	bh=7MiFN1G2ewbQGhIlKY7kr0F5Nhr20TrQHsj7DzIl4Sg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=J1C9swBHqhHf9LcRihiRcqNBxCyFVoxka3owEbCtfRCFOSOr164LpjmtDCDCvqQaIfa93W/YQoBQLImdfGJxoYkQ6rSsGfPPfPs4/9FBRykFtj8jzT5aJjyN5FXTGNhIKWgK0T40yY0VVA7xNsHkOl3avtKWiVtkEWpLzdj0BU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TCQCoxxh; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KbOTC8LR"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5590KufS021751;
-	Mon, 9 Jun 2025 03:19:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=neOOCqGuLWm+KVMj7rLo1y
-	mhr1KTJeRa+0cIY4vP5BM=; b=KbOTC8LR1in63GNV1PE6PuMJm8DnJQxajy3Wfs
-	85021XjRjYn6BuMk0S2gPXFLxvfe0SQY/2GDbfONadjpPA2XQBXNclV1+TdXawRx
-	PzfKk0Cb4bqOJrBGZHLQll0PGHm4idWF3fvJoZWeyJlazowcN8TEKQcFAZPiTqgr
-	ME19MOlwJn8aL5H7i8YS++MQJIxyjYqyHqCAl4R1NTvoEXyb/gYKdFwFw8BM4xia
-	1sK8DP8cADpJ4Od/LCblLauBCUdiu1HXS1VaGj+71+vRey0lJMrYJElVMjBhYpJY
-	Dyp+vZNtRgaXNCDn54x+u/XrTVeF1nQatjPCfv0vCcKI1Zng==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ce9msm8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Jun 2025 03:19:04 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5593J3ef001703
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 9 Jun 2025 03:19:03 GMT
-Received: from hu-rajkbhag-blr.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Sun, 8 Jun 2025 20:19:02 -0700
-From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-Date: Mon, 9 Jun 2025 08:48:50 +0530
-Subject: [PATCH ath-next] wifi: ath12k: Enable REO queue lookup table
- feature on QCN9274 hw2.0
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TCQCoxxh"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749439192;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=3QjfSIcDDKRoeNKEr9f87nhcXeN9tmNpV8LR1Szzp14=;
+	b=TCQCoxxh7vxY2MElH6C75vX3TYLBIs2LYrdeoDrUpNrtM8lfR1CiRojj/f11p8/DgARzFO
+	QWmZ3+SvpMrox3grLZNLLucpF/FTgno+AZn1oTw0Y/nbrqf9t4cFHYhjGO8HEAaGowMRCi
+	0fIzQLdDF/V7gG8+VIJwUadZAYsvpXM=
+From: Ye Liu <ye.liu@linux.dev>
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Ye Liu <liuye@kylinos.cn>
+Subject: [PATCH] mm/memfd: Rename error labels for clarity
+Date: Mon,  9 Jun 2025 11:18:58 +0800
+Message-Id: <20250609031858.73415-1-ye.liu@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250609-qcn9274-reoq-v1-1-a92c91abc9b9@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAJlSRmgC/x3MTQqAIBBA4avErBsw6ce6SrSQccrZWGlEIN09a
- fkt3suQOAonmKoMkW9JsoeCpq6AvA0bo7hi0Ep3qlcGTwqjHlqMvJ9orCXqjGPqHZTkiLzK8+9
- msJfHwM8Fy/t+qcuY5GgAAAA=
-X-Change-ID: 20250608-qcn9274-reoq-8aacc58dec6d
-To: Jeff Johnson <jjohnson@kernel.org>
-CC: <linux-wireless@vger.kernel.org>, <ath12k@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ZFVp4cVxJoe8kjoAmgQnCOcc9zRRrPjw
-X-Authority-Analysis: v=2.4 cv=drjbC0g4 c=1 sm=1 tr=0 ts=684652a8 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=R5ACGwntwPhpxkBjR5gA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: ZFVp4cVxJoe8kjoAmgQnCOcc9zRRrPjw
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDAyNSBTYWx0ZWRfX7R08xUlgmpFY
- R2PHskYKGsnbNcZEThYW053RnpAMD//PFRT/8ZZVBRgC25cJFmpDatuRZS27ZFBFroTNLgiAvoE
- aUrluURN2D/hYPyiLaKsk3p7tblHPuHiLJAQkAslKDnRKPDz33ktRxrxnopRcBT0+tKLVsdH8Gb
- pDS0c4K7EUl0JeOwNJ7DIuLmrE2zHdBzFfem5eex7dhHv3+WW47o8UfIy7aXuXpD/aINU4K6zOJ
- DIQsOFDVXBQg6QUTKfgaQtvbqVMljrg1MpsHLB7VMycOAKoD4UxVrzk/C16w/1Z6+rcyQRgGD78
- 08TYb9mEigbHS/bYI768kf/Yb7zw0/NcLYyhoQx7kQ3gz9ZR5cikL/dApW2wJa3VbgEUXXdxv5e
- 7Ql7PWkZ0qq39EEXd/Rg7jb9qtQQDcO+QM1pyDf0MUAJZUUey0tvcLO4qWen+n5i6c55ZnUH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-09_01,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1015
- priorityscore=1501 suspectscore=0 bulkscore=0 mlxlogscore=926 adultscore=0
- phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506090025
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-The commit 89ac53e96217 ("wifi: ath12k: Enable REO queue lookup table
-feature on QCN9274") originally intended to enable the reoq_lut_support
-hardware parameter flag for both QCN9274 hw1.0 and hw2.0. However,
-it enabled it only for QCN9274 hw1.0.
+From: Ye Liu <liuye@kylinos.cn>
 
-Hence, enable REO queue lookup table feature on QCN9274 hw2.0.
+err_name --> err_fd (fd failure case)
+err_fd --> err_file (file failure case)
 
-Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.4.1-00199-QCAHKSWPL_SILICONZ-1
-
-Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+Signed-off-by: Ye Liu <liuye@kylinos.cn>
 ---
- drivers/net/wireless/ath/ath12k/hw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/memfd.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath12k/hw.c b/drivers/net/wireless/ath/ath12k/hw.c
-index 8254dc10b53bbfb54a44c7ff2f705c72461d1031..ec77ad498b33a20bc92e30e52257be70cc406d36 100644
---- a/drivers/net/wireless/ath/ath12k/hw.c
-+++ b/drivers/net/wireless/ath/ath12k/hw.c
-@@ -1478,7 +1478,7 @@ static const struct ath12k_hw_params ath12k_hw_params[] = {
- 		.download_calib = true,
- 		.supports_suspend = false,
- 		.tcl_ring_retry = true,
--		.reoq_lut_support = false,
-+		.reoq_lut_support = true,
- 		.supports_shadow_regs = false,
+diff --git a/mm/memfd.c b/mm/memfd.c
+index ab367e61553d..628bfa5fa9da 100644
+--- a/mm/memfd.c
++++ b/mm/memfd.c
+@@ -475,22 +475,22 @@ SYSCALL_DEFINE2(memfd_create,
+ 	fd = get_unused_fd_flags((flags & MFD_CLOEXEC) ? O_CLOEXEC : 0);
+ 	if (fd < 0) {
+ 		error = fd;
+-		goto err_name;
++		goto err_fd;
+ 	}
  
- 		.num_tcl_banks = 48,
-
----
-base-commit: 9f92c4a01c5268f57fa19dd7cbcb1f59b0e66da6
-change-id: 20250608-qcn9274-reoq-8aacc58dec6d
+ 	file = alloc_file(name, flags);
+ 	if (IS_ERR(file)) {
+ 		error = PTR_ERR(file);
+-		goto err_fd;
++		goto err_file;
+ 	}
+ 
+ 	fd_install(fd, file);
+ 	kfree(name);
+ 	return fd;
+ 
+-err_fd:
++err_file:
+ 	put_unused_fd(fd);
+-err_name:
++err_fd:
+ 	kfree(name);
+ 	return error;
+ }
+-- 
+2.25.1
 
