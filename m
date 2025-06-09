@@ -1,219 +1,105 @@
-Received: from mail-10627.protonmail.ch (mail-10627.protonmail.ch [79.135.106.27])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F338258CCE
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 14:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0A625A62B
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 14:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749478992; cv=none; b=iVhwlwqw1OZrA0kEaXVuPbDnSq2IOrXiM+QZnZa2xYZQgS6Jlo2cVNAqKpIgkxTaXmnYIe3TmTsxsz7gLtgd3/SB7VY2HW8dN7QTrgy9LK8ZdMfxUMmhRnrWxF/zyNX6vMJQnRSNIQWYZcgkWSPi3zUzGSMmpfDSDzpRoLmFql8=
+	t=1749479012; cv=none; b=ION/K6hlY1nDHVwu+4szBnlsPqRJwSon3tHPVetfA3RqnHt2tueDq6XirE8CgX+sXjEekhipPIOfBNv9XPSbc/mx955QWLKISeJCHIlsjC0Ts9WefxRESKxTLRcW8jjjg7llm0M5jTyPy1/xCMfTShdNCs1dGghLMh4CsmryBLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749478992; c=relaxed/simple;
-	bh=JQSxPuSgebu8ngU9w0fbtaPNsN1gzZlPt15SLF4hvf4=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cVTx2GUxdjVqIt46pKV/C9MXLjsDUu81Pa0IvrStABwlR5rURXQsJRpwyJVws7ViLIKkdoan8VuiN0bB2/MKAVp8obCVBXs1lAdC/3Vt69MbhCSl9k05iGFoqc/DIjNAunZwIOKVTlbgZrU0/5pbgL62Wduia9ajMM5Blp1PzGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=r26.me; spf=pass smtp.mailfrom=r26.me; dkim=pass (2048-bit key) header.d=r26.me header.i=@r26.me header.b=XQAIh+u2; arc=none smtp.client-ip=79.135.106.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=r26.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=r26.me
+	s=arc-20240116; t=1749479012; c=relaxed/simple;
+	bh=8EcgqC560eYHVLzzIVnGqJOfxiE1usTuKVMr5c5j3O8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jB9PQdID4bSgXBCqrfVNQcuKwYgV4dhu8DCpSb3uqMdqX9Kl/MACr4s2kT2IP3R6PxTiC8/1gKtSxZNoDlTVvfOMnCfCtQJas4A6+i7l84uoE+tU2HcyfmksDV4dp9nwgiKS+Q0nbEFaKCHOR55Wx856KaMD7+/qgYxFqswNKps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MpNQqY+0; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=r26.me header.i=@r26.me header.b="XQAIh+u2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r26.me;
-	s=protonmail3; t=1749478981; x=1749738181;
-	bh=JQSxPuSgebu8ngU9w0fbtaPNsN1gzZlPt15SLF4hvf4=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=XQAIh+u2WdmTWrdVozzGrqHM0fzEeqw3KYJcnwJOqCl9oit4MkOjRsfZ/ZlmmPSEb
-	 B2rsNhQsOYpc4P6b7htniepsKAGvdHS7JKFrBs8VkQMrEtZ7Gxb/DsnjijvccwJGmU
-	 joOaaJlA6o8pejq8QE0SWVh22W5TB3kc8zyEdVPMX0Re7H5L+iV7HR2tlWXwUt4I96
-	 WLnfgkQ7h2Cko+TVb+F1apq2iIQKEQqX1CKX0Y7r43H+9TVCNR4AVPYLJMWVVn67p2
-	 YAnhuUIauz5ZLH1SFVMy6M4IZ103fw8QyveXPVX8vnIKcrAkHtiGSKMvHoMgL/jA1y
-	 VedWy3z4w1bMg==
-Date: Mon, 09 Jun 2025 14:22:55 +0000
-To: =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-From: Rio Liu <rio@r26.me>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
-Subject: Re: [REGRESSION] amdgpu fails to load external RX 580 since PCI: Allow relaxed bridge window tail sizing for optional resources
-Message-ID: <w3gGcmhWNmeGetzLnhgkjfx0JTEyIOKN5sDu-uShZ_7JWthMgGP6plgDuhDbkYyaA7vtGbdl1WbMTZ5zM80OyJoqUa69krqDpuhqDangkLY=@r26.me>
-In-Reply-To: <7a7a3619-902c-06ee-6171-6d8ec2107f97@linux.intel.com>
-References: <o2bL8MtD_40-lf8GlslTw-AZpUPzm8nmfCnJKvS8RQ3NOzOW1uq1dVCEfRpUjJ2i7G2WjfQhk2IWZ7oGp-7G-jXN4qOdtnyOcjRR0PZWK5I=@r26.me> <7a7a3619-902c-06ee-6171-6d8ec2107f97@linux.intel.com>
-Feedback-ID: 77429777:user:proton
-X-Pm-Message-ID: 9e591caaea3c8cdf34da3a0674d87646d7d67758
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MpNQqY+0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749479009;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Bu95bqt5fllwDHdUjFRYtS/5XzWEF81181iRUHtLAbM=;
+	b=MpNQqY+0wnVLVxZVdPnhHJ9TxvvheI1eYL9P6t++aSow+kkSibsVtqEXYLJPvLArn6/C8M
+	1YM/9TOQqGFmyItg9/cIqw+PwYAT7L3rBzbcdW1csMchjRKT/SqGw/csJllXSpEIIYIOOY
+	lyGHdFcnxmpVId64AWYfvoQg6R0zkh8=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-610-rS85Egf-OIq4TMzuW1hTrw-1; Mon, 09 Jun 2025 10:23:28 -0400
+X-MC-Unique: rS85Egf-OIq4TMzuW1hTrw-1
+X-Mimecast-MFC-AGG-ID: rS85Egf-OIq4TMzuW1hTrw_1749479008
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-601df3b434cso4965070a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 07:23:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749479007; x=1750083807;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Bu95bqt5fllwDHdUjFRYtS/5XzWEF81181iRUHtLAbM=;
+        b=NeB/rKpIjhJhfApy6pqCa6W5JG7t/6CWlDYCrOp35Z9zIDuXFF4YwZ1F++/ubnmxJZ
+         kG1h37h/12mq/qGRG83gzV4oRchfNwAQfJekHm4CizMbgFGiB4+Me5o4GZQuypkqxfFL
+         IBZPEhk8FE/GzrRyM7aBuml46TF2JZuU9ENSGtNegO7IEuNTF0TeW5CAuuui7jc1ypKJ
+         uC4U4GJYZ1h9CFakfjHbFHLoO6W7A4vhqbrTd+FPUl0rQp9zkcdBgfgaQ5/zoQpYVDmI
+         pFJnbbeF/3/XCnJUZzACZM4undQLbjclEhzKWE2u7ctj4IWx5ZNzAi6COPsLQJPtzOXv
+         zyIQ==
+X-Gm-Message-State: AOJu0YyQq57mLMifw3DRDiFMx8SenunRfIfP3XPGbMML6GCKxMe1sTgi
+	tmznI8i5ueQYk8dWYkd74HTNNB5x7srhu/MvkQGq9u8eKjDDV6R9jH2+kZEefVquDX9KmvQjKIL
+	HH1r3zmrQlZ6XBW0ERUB+/z7Gri/Ce6C9138xDeuRaXh6/KRs+4G4avcoDAGxUt7aUI85kQhnmc
+	a4pioZ/UZstpCWQ0EBY1Q/sxcao0BGAU5Wj3fl/6XohhshS37n
+X-Gm-Gg: ASbGncs12pG9FCyD5sKp9y1ioxuksTj+U32nmcFM5F3Dj+geT8YC863ayOS0ffcT3bM
+	enCQDdoR2SPd8duYn6SsLi040Otxd54YJvO4WEP6Zv6wbJodYWVILajZ63kqroVaFol4fDMDPd1
+	t0YdwounD1j+RuqPW1KRj+J6A5MrRLWn4F6Sw=
+X-Received: by 2002:a17:907:7250:b0:ad8:959c:c567 with SMTP id a640c23a62f3a-ade75fc357dmr5540166b.10.1749479007499;
+        Mon, 09 Jun 2025 07:23:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFdFm50ZqTrtiAaeCZxzMTOJGmQspyn0ugpdOkFaeB92pob/RBEpCC1LY+p1SzFJRFwG9ViOjpKT8qUbWccq3U=
+X-Received: by 2002:a17:907:7250:b0:ad8:959c:c567 with SMTP id
+ a640c23a62f3a-ade75fc357dmr5538366b.10.1749479007066; Mon, 09 Jun 2025
+ 07:23:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250530200305.85319-2-jsavitz@redhat.com>
+In-Reply-To: <20250530200305.85319-2-jsavitz@redhat.com>
+From: Joel Savitz <jsavitz@redhat.com>
+Date: Mon, 9 Jun 2025 10:23:11 -0400
+X-Gm-Features: AX0GCFstG9gKn9d8F0xmlxeWHmxs0iVZJEdQNQ8-CUXHyj5wlOfl7zEH5cLtapA
+Message-ID: <CAL1p7m53yJ-dpg6L2QVQM7bshWYXAxOJjrVGdTG8cDMEhNogyA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] kernel/nsproxy: Minor nsproxy code simplification
+To: linux-kernel@vger.kernel.org
+Cc: Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Monday, June 9th, 2025 at AM 5:09, Ilpo J=C3=A4rvinen <ilpo.jarvinen@lin=
-ux.intel.com> wrote:
-
->=20
->=20
-> On Mon, 9 Jun 2025, rio@r26.me wrote:
->=20
-> > Hello,
-> >=20
-> > I have an external Radeon RX580 on my machine connected via Thunderbolt=
-, and
-> > since upgrading from 6.14.1 the setup stopped working. Dmesg showed war=
-ning from
-> > resource sanity check, followed by a stack trace https://pastebin.com/n=
-jR55rQW.
-> > Relevant snippet:
-> >=20
-> > [ 12.134907] amdgpu 0000:06:00.0: BAR 2 [mem 0x6000000000-0x60001fffff =
-64bit pref]: releasing
-> > [ 12.134910] [drm:amdgpu_device_resize_fb_bar [amdgpu]] ERROR Problem r=
-esizing BAR0 (-16).
-> > [ 12.135456] amdgpu 0000:06:00.0: BAR 2 [mem 0x6000000000-0x60001fffff =
-64bit pref]: assigned
-> > [ 12.135524] amdgpu 0000:06:00.0: amdgpu: VRAM: 8192M 0x000000F40000000=
-0 - 0x000000F5FFFFFFFF (8192M used)
-> > [ 12.135527] amdgpu 0000:06:00.0: amdgpu: GART: 256M 0x000000FF00000000=
- - 0x000000FF0FFFFFFF
-> > [ 12.135536] resource: resource sanity check: requesting [mem 0x0000000=
-000000000-0xffffffffffffffff], which spans more than PCI Bus 0000:00 [mem 0=
-x000a0000-0x000bffff window]
-> > [ 12.135542] ------------[ cut here ]------------
-> > [ 12.135543] WARNING: CPU: 6 PID: 599 at arch/x86/mm/pat/memtype.c:721 =
-memtype_reserve_io+0xfc/0x110
-> > [ 12.135551] Modules linked in: ccm amdgpu(+) snd_hda_codec_realtek ...
-> > [ 12.135652] CPU: 6 UID: 0 PID: 599 Comm: (udev-worker) Tainted: G S 6.=
-15.0-13743-g8630c59e9936 #16 PREEMPT(full) 3b462c924b3ffd8156fc3b77bcc8ddbf=
-7257fa57
-> > [ 12.135654] Tainted: [S]=3DCPU_OUT_OF_SPEC
-> > [ 12.135655] Hardware name: COPELION INTERNATIONAL INC. ZX Series/ZX Se=
-ries, BIOS 1.07.08TCOP3 03/27/2020
-> > [ 12.135656] RIP: 0010:memtype_reserve_io+0xfc/0x110
-> > [ 12.135659] Code: aa fb ff ff b8 f0 ff ff ff eb 88 8b 54 24 04 4c 89 e=
-e 48 89 df e8 04 fe ff ff 85 c0 75 db 8b 54 24 04 41 89 16 e9 69 ff ff ff <=
-0f> 0b e9 4b ff ff ff e8 b8 5c fc 00 0f 1f 84 00 00 00 00 00 90 90
-> >=20
-> > Bisecting the stable branch pointed me to the following commit:
-> >=20
-> > commit 22df32c984be9e9145978acf011642da042a2af3 (HEAD)
-> > Author: Ilpo J=C3=A4rvinen ilpo.jarvinen@linux.intel.com
-> > Date: Mon Dec 16 19:56:11 2024 +0200
-> >=20
-> > PCI: Allow relaxed bridge window tail sizing for optional resources
-> >=20
-> > [ Upstream commit 67f9085596ee55dd27b540ca6088ba0717ee511c ]
-> >=20
-> > I've tested on stable (as of now 8630c59e99363c4b655788fd01134aef9bcd92=
-64), and
-> > the issue persists. Reverting the offending commit via `git revert -n 2=
-2df32c984be9e9145978acf011642da042a2af3` allowed amdgpu to load again.
-> > Dmesg: https://pastebin.com/xd76rDsW.
-> >=20
-> > Additional information
-> > - Distribution: Artix
-> > - Arch: x86_64
-> > - Kernel config: https://pastebin.com/DWSERJL5
-> > - eGPU adapter: https://www.adt.link/product/R43SG-TB3.html
-> > - Booting with pci=3Drealloc,hpbussize=3D0x33,hpmmiosize=3D256M,hpmmiop=
-refsize=3D1G
-> >=20
-> > I'm reporting here as these are the contacts from the commit message.
-> > Please let me know if there's a more appropriate place for this, as wel=
-l
-> > as any more information I can provide.
->=20
->=20
-> Hi Rio,
->=20
-> Thanks for the report and I'm sorry about causing this issue. Could you
-> please try if the patch below solves the issue.
->=20
+On Fri, May 30, 2025 at 4:03=E2=80=AFPM Joel Savitz <jsavitz@redhat.com> wr=
+ote:
+>
+> The first patch removes an unnecessary guard by the same logic as
+> commit 5caa2d89b7f1 ("kernel/nsproxy: remove unnecessary guards").
+>
+> The second patch fixes the total ordering of resource acquisition
+> in validate_nsset().
+>
+> The third patch implements usage of the cleanup helper added by commit
+> d057c108155a ("nsproxy: add a cleanup helper for nsproxy").
+>
+> Joel Savitz (3):
+>   kernel/nsproxy: remove unnecessary guard in validate_nsset()
+>   kernel/nsproxy: fix put_*() call ordering in validate_nsset()
+>   kernel/nsproxy: utilize cleanup helper for nsproxy references
+>
+>  kernel/nsproxy.c | 12 +++---------
+>  1 file changed, 3 insertions(+), 9 deletions(-)
+>
 > --
-> From b94823a193032b5f87114cff9e8edc5c67e4ef40 Mon Sep 17 00:00:00 2001
-> From: =3D?UTF-8?q?Ilpo=3D20J=3DC3=3DA4rvinen?=3D ilpo.jarvinen@linux.inte=
-l.com
->=20
-> Date: Mon, 9 Jun 2025 12:05:20 +0300
-> Subject: [PATCH 1/1] PCI: Relaxed alignment should never increase min_ali=
-gn
-> MIME-Version: 1.0
-> Content-Type: text/plain; charset=3DUTF-8
-> Content-Transfer-Encoding: 8bit
->=20
-> When using relaxed tail alignment for the bridge window,
-> pbus_size_mem() also tries to minimize min_align, which can under
-> certain scenarios end up increasing min_align from that found by
-> calculate_mem_align().
->=20
-> Ensure min_align is not increased by the relaxed tail alignment.
->=20
-> Eventually, it would be better to add calculate_relaxed_head_align()
-> similar to calculate_mem_align() which finds out what alignment can be
-> used for the head without introducing any gaps into the bridge window
-> to give flexibility on head address too. But that looks relatively
-> complex algorithm so it requires much more testing than fixing the
-> immediate problem causing a regression.
->=20
-> Reported-by: Rio rio@r26.me
->=20
-> Signed-off-by: Ilpo J=C3=A4rvinen ilpo.jarvinen@linux.intel.com
->=20
-> ---
-> drivers/pci/setup-bus.c | 11 +++++++----
-> 1 file changed, 7 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index 07c3d021a47e..f90d49cd07da 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1169,6 +1169,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsig=
-ned long mask,
-> resource_size_t children_add_size =3D 0;
-> resource_size_t children_add_align =3D 0;
-> resource_size_t add_align =3D 0;
-> + resource_size_t relaxed_align;
->=20
-> if (!b_res)
-> return -ENOSPC;
-> @@ -1246,8 +1247,9 @@ static int pbus_size_mem(struct pci_bus *bus, unsig=
-ned long mask,
-> if (bus->self && size0 &&
->=20
-> !pbus_upstream_space_available(bus, mask | IORESOURCE_PREFETCH, type,
-> size0, min_align)) {
-> - min_align =3D 1ULL << (max_order + __ffs(SZ_1M));
-> - min_align =3D max(min_align, win_align);
-> + relaxed_align =3D 1ULL << (max_order + __ffs(SZ_1M));
-> + relaxed_align =3D max(relaxed_align, win_align);
-> + min_align =3D min(min_align, relaxed_align);
-> size0 =3D calculate_memsize(size, min_size, 0, 0, resource_size(b_res), w=
-in_align);
-> pci_info(bus->self, "bridge window %pR to %pR requires relaxed alignment =
-rules\n",
->=20
-> b_res, &bus->busn_res);
->=20
-> @@ -1261,8 +1263,9 @@ static int pbus_size_mem(struct pci_bus *bus, unsig=
-ned long mask,
-> if (bus->self && size1 &&
->=20
-> !pbus_upstream_space_available(bus, mask | IORESOURCE_PREFETCH, type,
-> size1, add_align)) {
-> - min_align =3D 1ULL << (max_order + __ffs(SZ_1M));
-> - min_align =3D max(min_align, win_align);
-> + relaxed_align =3D 1ULL << (max_order + __ffs(SZ_1M));
-> + relaxed_align =3D max(min_align, win_align);
-> + min_align =3D min(min_align, relaxed_align);
-> size1 =3D calculate_memsize(size, min_size, add_size, children_add_size,
-> resource_size(b_res), win_align);
-> pci_info(bus->self,
->=20
->=20
-> base-commit: 3719a04a80caf660f899a462cd8f3973bcfa676e
-> --
-> 2.39.5
+> 2.45.2
+>
 
-Hello Ilpo,
+ping
 
-I've tested the patch and it seems to fix the issue. Thank you!
-
-Rio Liu
