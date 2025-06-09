@@ -1,167 +1,151 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0CA20E71D;
-	Mon,  9 Jun 2025 15:03:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488BA20E71D
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 15:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749481407; cv=none; b=dnSTxlWCF5ZgQow6vSIlRv/R0TmdDR2PJYz4H06yuBeUXxISet4ZmxzhAhfrmQuj6Z/Vn6qhqBDn+qMXc+lDt/Mmo3PHKUn4/p45qas2lSu60eOHBbOXP/+eN9SZky+bRzGYEyOtNuTD0Ti71TFb6Atyy1NM9T5N6wQoqkr+eqo=
+	t=1749481413; cv=none; b=h+YQshHaN8Sfqja6TAvtjxolkbrM5KIb02nqFlcH0qm3OkOwYVLb5QkAljRKW1yKHJsTVSotHWlwHX0JmukGpEO7wPgamg/2pZiXJO3kzYPWOBVhx/iq0kQWJ9BfH0WGVbPzAGc+YLFLvRBSeBy7ODVy36AeNGUkLh/7KvzmI1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749481407; c=relaxed/simple;
-	bh=te9mvffqCREp87q3ohFeOWU95PBzSm1z999O0/Nq+YA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PFC8oM6KBVeOAuVl+2LNKUxqcyqgl/M9yZH0dJ2ILKTl5t2UcqkjqBkOPtUhhwLD4qqWozgOz4Hrz+bHcYEm+1pB4QK8YxrVE+r3SLJT5K/jUeIGa6uPnoY1eS90dYc71ZNk5v1WkiTVE2syTSySinIRObu+5ZLemE7cJB2AkgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=PcWfWChQ; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1749481413; c=relaxed/simple;
+	bh=l2eWT8HoRY4lQzvoTbRCxTdJU+1Vob2xQfguKELzLr8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qhu+b+KimSA5jA6l2t8el1v2Qmn9QzeyiZ4iBK4C54Lr8BISCOA0+GnglY0HAllTzp2tboc+Xxp+ujwVtGEEG3qI6JPZBw6pqu9cAMYcIpse8plPTEqNvJA4oiU0QKcOz9/EXM3DIdWZLpZPdA05VGuX/DlulU1c+JUEceZrf8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jbBcjp91; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="PcWfWChQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1749481388; x=1750086188; i=w_armin@gmx.de;
-	bh=te9mvffqCREp87q3ohFeOWU95PBzSm1z999O0/Nq+YA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=PcWfWChQ5s0VFspucQzX3Ft2vkh+c6Gur1httrG90ASIJT1/Pj6L7ES+Yy8bMXSY
-	 USPOI3UV43pi3BwnWNg5iYXC5T7IIYhn0/O2rmYBc7ZwBfpm7rVEWvxHO78TsJmCu
-	 MRHYt5bDUBCBImUd5sJONIQYs8BR/uhLApOYaKF9+95FNGuwyOSokph8lx0/cmMWP
-	 5x8eNFFZ64Nz3khlg4WbSebYU+Pvt9eeP+whlEvj2Una+Cq2D7/fUAUnNKa97O7Vn
-	 rhDNrwBDYLFw5YDOQQacfyElio1hsq41QGkYxBspqVmGpXhx20DS9U1bn7009fYaR
-	 icvKmdPY24euSz+9fA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M3DNt-1uQ1T71rHZ-005XPH; Mon, 09
- Jun 2025 17:03:08 +0200
-Message-ID: <06476e3b-3334-4c26-8762-6b410feb740d@gmx.de>
-Date: Mon, 9 Jun 2025 17:03:06 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jbBcjp91"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e7311e66a8eso3905931276.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 08:03:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749481411; x=1750086211; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KDb/VOiOtpMJD49T8izFT4MMpxqqKFYyAD2KxXOHMrA=;
+        b=jbBcjp916xHUB7OZbYMutoch/JPl4pim1yJUPonZ+B1yQ714nlPkoWCqwoJdokf2ZO
+         K2PClTP+jE6sWAALuWew9ie0WJQPxrSsu2XKPeJIT3Ahmk3OhH1JZNFxkMTU5JrgKExj
+         zrM464/SgAu+Y4hZC7VgWiIUbNa0AMxx2MNmwgGEFrOebFjy/PmNVelWbhVGXyC3QlxA
+         QkNPEMaz1KktUfG2TCgdXik85pxSVUq3cO4UidnYThzedXiirT8hxAN47dG5wzPVBLK7
+         6gPU1WF+mlVsw55pFbFGTBhwSjXjrWNHD+zsm1wiHbW6b86pYvKbnjKKWTJHuK41AzBl
+         J/Yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749481411; x=1750086211;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KDb/VOiOtpMJD49T8izFT4MMpxqqKFYyAD2KxXOHMrA=;
+        b=rlypIMEO10HAFxWK7h3cjQshS25RxcTv/V69o6ljf1VFB2YOkIOrDbPvwvccwcqoD8
+         1rvunJhKsS2+tSjcZu2vAvFEe0dBNh4ctE2hl1/V2VWVsB4PWkrWqtA+VrN65INpO9WK
+         HhKnU4Fx2xjCg0kmZMn5wfnlmVO1jbkVziVaYjPRPxl3rKjICWQsvSGojTE6T7zUSaLU
+         5NXkCDaouiYYwO17mWak91dsncN6AdcHCP9aNSvmLgGg2tjdxjtR2JZkM2I4t4iNlhQn
+         HfVEsy0Q7yIqBS3ApEBFw/XEkjDaMDAihmbrxZDfg5RhzJwu4JbrYR46Y1TKLBspEy0b
+         Umhg==
+X-Forwarded-Encrypted: i=1; AJvYcCWpehykjRdrGrT3faHtj7tVVITmXSf8wy69RwNZq+sfD7Rr/fUX/PG9JgXs7rDSDln59x0R7hdB5aGQ110=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5scWkDkKVn3si9C19Ri9YMLNFXdGNJuQsN1PgbnXv9pdGcNz+
+	Xtee/HPPmv4zB9ARX9SmE5kpxgPxo06axZpjpw7AIbXtXArhDhxOz/xy+XSwPQ==
+X-Gm-Gg: ASbGncujyFhcht7F+8huFDUNBKY7VM8iXgfgVMT3XrHf3lK59isxnhj9KhLC8k8TcGl
+	9nvuodjBWndZ/YgOTE4ox1a78UNRjmLYSB3bsrruhT/1HhEPU4SjjYTJ71PyPHEZeevaxn8PjGH
+	riLeWUh751X9SpOP3dpQQnxfl+oyNL+j2qA35Qk8HOBcATxR/Ct4nlpUIQ3yV9t9DCretHaLVas
+	+ZSjDKuDWXGfdbeizr/QAg1qsvVD4ZmaAIrD5zvNVC83zatILk7aA04WPzgHpyrXE4XQ8eh1HHb
+	FTHs6TS4AUMTC7p6d9PNYq2K9rXmBFAYLiGN8qRKZB+kfwnkXAmr/b+oKM54UxhqwCZ4TQAYPci
+	Cd1U3DsN2Qg79HFDCP5KOHA==
+X-Google-Smtp-Source: AGHT+IEIHbUnfmx5K0rNAxRVC3jD7L1P1PoNM9Go6Po11Q6pda2DdeCd9TIhD6DwrR4VVHJFW1KUtw==
+X-Received: by 2002:a05:6902:10c2:b0:e81:996c:aa3a with SMTP id 3f1490d57ef6-e81a21d6507mr16403234276.45.1749481411159;
+        Mon, 09 Jun 2025 08:03:31 -0700 (PDT)
+Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e81a41a0fccsm2334568276.48.2025.06.09.08.03.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 08:03:30 -0700 (PDT)
+Date: Mon, 9 Jun 2025 11:03:29 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Andrea Righi <arighi@nvidia.com>
+Cc: Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
+	Changwoo Min <changwoo@igalia.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] sched/topology: Fix for_each_node_numadist() lockup
+ with !CONFIG_NUMA
+Message-ID: <aEb3wfr3rgL2Pemu@yury>
+References: <20250609113536.29743-1-arighi@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] hwmon: Widespread TOCTOU vulnerabilities in the hwmon
- subsystem
-To: Guenter Roeck <linux@roeck-us.net>, Gui-Dong Han <hanguidong02@gmail.com>
-Cc: vt8231@hiddenengine.co.uk, steve.glendinning@shawell.net,
- jdelvare@suse.com, linux-hwmon@vger.kernel.org,
- linux-kernel@vger.kernel.org, baijiaju1990@gmail.com
-References: <CALbr=LYJ_ehtp53HXEVkSpYoub+XYSTU8Rg=o1xxMJ8=5z8B-g@mail.gmail.com>
- <3f5feb87-330c-4342-88a1-d5076538a86d@roeck-us.net>
- <3401727c-ad93-42df-8130-413eda41ab3a@roeck-us.net>
- <CALbr=LYe3p9GW2Z_RUxKG+w2Q1wfWGRW=dRLoTraS7qJ7imdgw@mail.gmail.com>
- <0a3a06df-5da9-4b39-bf38-0894b8084132@gmx.de>
- <72661c37-c4f4-4265-9fa4-e4b31b43f6df@roeck-us.net>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <72661c37-c4f4-4265-9fa4-e4b31b43f6df@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:g4/ClnNOa8Zi1pUoL05tePh2J3ypd/Jkg/gqCbkgbFWK0/V0EDi
- DQ38244iaoed5jo6BLqY2shRqY23bKQtTL16E3RlnQjbfz1DYh8m+5FTRDoir929yHSMDdy
- 6Z2jFodbp0QBF4FzFnq2kwYKdoVy6y0pg8DLHwZ0nLGAM0IOiJd06SRyKSZJ8jbHP4e9Ta/
- PX2qW8g6HrmAn5jAl0WTQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:43tp462bf/0=;w3Sz38rme9aD9wFO1omhI2sss48
- 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
- 3sELztm6lHMPJC6kFzY6JTQmv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250609113536.29743-1-arighi@nvidia.com>
 
-Am 07.06.25 um 01:20 schrieb Guenter Roeck:
+On Mon, Jun 09, 2025 at 01:35:36PM +0200, Andrea Righi wrote:
+> for_each_node_numadist() can lead to hard lockups on kernels built
+> without CONFIG_NUMA. For instance, the following was triggered by
+> sched_ext:
+> 
+>   watchdog: CPU5: Watchdog detected hard LOCKUP on cpu 5
+>   ...
+>   RIP: 0010:_find_first_and_bit+0x8/0x60
+>   ...
+>   Call Trace:
+>   <TASK>
+>    cpumask_any_and_distribute+0x49/0x80
+>    pick_idle_cpu_in_node+0xcf/0x140
+>    scx_bpf_pick_idle_cpu_node+0xaa/0x110
+>    bpf_prog_16ee5b1f077af006_pick_idle_cpu+0x57f/0x5de
+>    bpf_prog_df2ce5cfac58ce09_bpfland_select_cpu+0x37/0xf4
+>    bpf__sched_ext_ops_select_cpu+0x4b/0xb3
+> 
+> This happens because nearest_node_nodemask() always returns NUMA_NO_NODE
+> (-1) when CONFIG_NUMA is disabled, causing the loop to never terminate,
+> as the condition node >= MAX_NUMNODES is never satisfied.
+> 
+> Prevent this by providing a stub implementation based on
+> for_each_node_mask() when CONFIG_NUMA is disabled, which can safely
+> processes the single available node while still honoring the unvisited
+> nodemask.
+> 
+> Fixes: f09177ca5f242 ("sched/topology: Introduce for_each_node_numadist() iterator")
+> Signed-off-by: Andrea Righi <arighi@nvidia.com>
+> ---
+>  include/linux/topology.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> Changes in v2:
+>  - Provide a stub implementation for the !CONFIG_NUMA case
+>  - Link to v1: https://lore.kernel.org/all/20250603080402.170601-1-arighi@nvidia.com/
+> 
+> diff --git a/include/linux/topology.h b/include/linux/topology.h
+> index 33b7fda97d390..97c4f5fc75038 100644
+> --- a/include/linux/topology.h
+> +++ b/include/linux/topology.h
+> @@ -304,12 +304,17 @@ sched_numa_hop_mask(unsigned int node, unsigned int hops)
+>   *
+>   * Requires rcu_lock to be held.
+>   */
+> +#ifdef CONFIG_NUMA
 
-> On 6/6/25 14:30, Armin Wolf wrote:
->> Am 06.06.25 um 09:03 schrieb Gui-Dong Han:
->>
->>>> On Thu, Jun 05, 2025 at 07:33:24AM -0700, Guenter Roeck wrote:
->>>>>> I would like to discuss these issues further and collaborate on the
->>>>>> best way to address them comprehensively.
->>>>>>
->>>>> I'd suggest to start submitting patches, with the goal of minimizing
->>>>> the scope of changes. Sometimes that may mean expanding the scope of
->>>>> locks, sometimes it may mean converting macros to functions. When
->>>>> converting to functions, it doesn't have to be inline functions: I'd
->>>>> leave that up to the compiler to decide. None of that code is=20
->>>>> performance
->>>>> critical.
->>>>>
->>>> Actualy, that makes me wonder if it would make sense to introduce
->>>> subsystem-level locking. We could introduce a lock in struct
->>>> hwmon_device_attribute and lock it whenever a show or store function
->>>> executes in drivers/hwmon/hwmon.c. That would only help for drivers
->>>> using the _with_info API, but it would simplify driver code a lot.
->>>> Any thoughts on that ?
->>
->> Hi,
->>
->> i am against adding a subsystem lock just to work around buggy=20
->> drivers. Many drivers
->> should use fine-grained locking to avoid high latencies when reading=20
->> a single attribute.
->>
->
-> The point would be driver code simplification and increasing=20
-> robustness, not
-> working around buggy drivers.
->
-> Anyway, what high latency are you talking about ? Serialization of=20
-> attribute
-> accesses would only increase latency if multiple processes read=20
-> attributes from
-> the same driver at the same time, which is hardly a typical use case.
->
-> Guenter
+While there, can you expand this optimization to MAX_NUMNODES == 1
+case?
+        #if defined(CONFIG_NUMA) && (MAX_NUMNODES > 1)
 
-Some drivers read all registers (fan, temperature, etc) when updating the =
-readings, and depending
-on the underlying bus system this might take some time. With a global lock=
- reading a single value will thus
-take as much time as reading all values.
+With that:
+
+Acked-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
 
 Thanks,
-Armin Wolf
+Yury
 
+>  #define for_each_node_numadist(node, unvisited)					\
+>  	for (int __start = (node),						\
+>  	     (node) = nearest_node_nodemask((__start), &(unvisited));		\
+>  	     (node) < MAX_NUMNODES;						\
+>  	     node_clear((node), (unvisited)),					\
+>  	     (node) = nearest_node_nodemask((__start), &(unvisited)))
+> +#else
+> +#define for_each_node_numadist(node, unvisited)					\
+> +	for_each_node_mask((node), (unvisited))
+> +#endif
+>  
+>  /**
+>   * for_each_numa_hop_mask - iterate over cpumasks of increasing NUMA distance
+> -- 
+> 2.49.0
