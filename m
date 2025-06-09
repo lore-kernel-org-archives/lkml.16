@@ -1,120 +1,86 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6CDD18BBB9;
-	Mon,  9 Jun 2025 21:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A970193062;
+	Mon,  9 Jun 2025 21:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749503546; cv=none; b=q0uZEvgPSWgrL+ChPh8oscbAQV0DhDtolABXllWTPEO0WSQqeKhFT9e+ecs0Z4LErXojyOJk3AYqh/4FFPXLqv1E5Fa8x7XSgaM4Fja+gznvoPcDx8xd3RkOH3+PklcLEKaZWceCjB2gzoRiX0Kf8c6ObH0EMAYe6Yf1yVZWVPk=
+	t=1749503570; cv=none; b=pxxQeH3vtCJcMpHK27Bg33pnHhEDpvrqbW8mzSRh/N0fsmCF8s+5MBBFJ/5Ueoic+cSJDzgA7LGmuwWhoeDtGJ8kkPWdh+nqFuPz/FK6WjwQ5lfzEgVcP6Vw3WmMEVNX57FdKQsXHsBDDuMmmuKBQXI+iEw7BclqA2rOFkDKziA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749503546; c=relaxed/simple;
-	bh=v7Wyj6Fr90JtaXx9mPLXXO6DL0XRpjX4OlNToy9WZjY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=L48rMCbvSb5DryH8ApF33soNEEC/MSFRBqZ6OJe032qv0l2Tk0Nfd0u7+9Mb/MCuUNbkPEFgJ4rT/UUhnUn8+AyL5B5mddd/QT+qyGZVgjr74gEoK7Z1vQOXHmekKlfMViSQC7/BHBJeRd2K33FRQ8LLuMXYiOvH4isxMygytWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=OUWpIJ+g; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1749503570; c=relaxed/simple;
+	bh=NT2UgqnErpFBb9pVgnzpL0UiyzFv8Ul/DJKbfOdd8PY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=PgSC1ta9QtYYsLTD02D+HxlGlRB4fikODdsoTHTRLW0DnRYmi8bSj62BEqrGwC9oxSZDX5MngMTxor0Y+efuG2wYLxP7SqRghLkSP9wXcKZvo8eKlmvH3qx5BqYWNaH9Iol/txbwEXMa6lfzvORjbar41AM7OtQSoTYiAt4fBDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=gHZ1a3lY; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OUWpIJ+g"
-Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 559LBqg12102748;
-	Mon, 9 Jun 2025 16:11:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1749503512;
-	bh=46ToyLg6oP+8zwm16diPabgfMuXMygGMCndJmaqJXRs=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=OUWpIJ+gkR23sr1WZH3XJOiD/1ICYbhXvrJRY/rFW2cnGm9SKgz7Gegvu2AZ05vmw
-	 6F4qfYUZFF7VVEM75LWcXJ2qe1UQZdjnRVJCjrzsmH7cMxh5r2iJx+c0sVsTVqFFgo
-	 mz8dkAxYbReDt9bCcA+4cIwIoXoNny+m56ljEwj0=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 559LBptj3958032
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Mon, 9 Jun 2025 16:11:51 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 9
- Jun 2025 16:11:51 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 9 Jun 2025 16:11:51 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 559LBoxI1847054;
-	Mon, 9 Jun 2025 16:11:50 -0500
-Message-ID: <1983260a-4362-44ca-af1a-0e20d2fee6db@ti.com>
-Date: Mon, 9 Jun 2025 16:11:49 -0500
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="gHZ1a3lY"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net A90AB41AA1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1749503567; bh=kVmqBCyOZoSYjjiDKN0T/GrRw00/Wp5UCB2rbJmBnFc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=gHZ1a3lY6xmAElRtFXGIyYJ3uYWGUzxCd1lWY8xIXLmfg5tk4UzWEzWlz5wIZ2jVu
+	 rg6/Lk1Afwyyu85VAReg85zEuj621/ZOxjEU2rNK243hnTX8TUemJFuYPZZwK9b3wh
+	 gWBRscbilgpH3Y+Dv+L0aPxdVr4dI3jXBAb1vWyJOEQhiY075tOGcoPDEmWACvYZPt
+	 NZ6NzvXAtaTh0vFqUzS9U4llPSp8oklgfHN90XbyGTdsz7ng+l/L2E9eD+RGYLR3bt
+	 9f6tLamSFgS9UQ48pw+ZUHVDJd/0wdGaQyM/5n+XowSpdWji7hCLIWNTkscrVeuusn
+	 Ilt9wyWpmOPUg==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id A90AB41AA1;
+	Mon,  9 Jun 2025 21:12:47 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Hanne-Lotta =?utf-8?B?TcOkZW5ww6TDpA==?= <hannelotta@gmail.com>,
+ mchehab@kernel.org,
+ ribalda@chromium.org, hverkuil@xs4all.nl, sebastian.fricke@collabora.com,
+ hljunggr@cisco.com, dave.jiang@intel.com, jgg@ziepe.ca, saeedm@nvidia.com,
+ Jonathan.Cameron@huawei.com, ilpo.jarvinen@linux.intel.com,
+ mario.limonciello@amd.com, W_Armin@gmx.de, mpearson-lenovo@squebb.ca,
+ skhan@linuxfoundation.org
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kernel-mentees@lists.linux.dev, Hanne-Lotta =?utf-8?B?TcOkZW5ww6Q=?=
+ =?utf-8?B?w6Q=?=
+ <hannelotta@gmail.com>
+Subject: Re: [PATCH v2 3/4] docs: Improve grammar in Userspace API/fwctl
+In-Reply-To: <20250522115255.137450-3-hannelotta@gmail.com>
+References: <20250522115255.137450-1-hannelotta@gmail.com>
+ <20250522115255.137450-3-hannelotta@gmail.com>
+Date: Mon, 09 Jun 2025 15:12:46 -0600
+Message-ID: <878qm0aab5.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/3] leds: lp8860: Check return value of
- devm_mutex_init()
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-        Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Waiman Long
-	<longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
-        Vicentiu Galanopulo
-	<vicentiu.galanopulo@remote-tech.co.uk>,
-        Will Deacon <will@kernel.org>, Han
- Xu <han.xu@nxp.com>,
-        Haibo Chen <haibo.chen@nxp.com>,
-        Yogesh Gaur
-	<yogeshgaur.83@gmail.com>,
-        Mark Brown <broonie@kernel.org>, Lee Jones
-	<lee@kernel.org>,
-        Pavel Machek <pavel@kernel.org>
-CC: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Bartosz
- Golaszewski <bartosz.golaszewski@linaro.org>,
-        <linux-spi@vger.kernel.org>, <imx@lists.linux.dev>,
-        <linux-leds@vger.kernel.org>
-References: <20250609-must_check-devm_mutex_init-v6-0-9540d5df9704@weissschuh.net>
- <20250609-must_check-devm_mutex_init-v6-2-9540d5df9704@weissschuh.net>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20250609-must_check-devm_mutex_init-v6-2-9540d5df9704@weissschuh.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 6/9/25 3:38 PM, Thomas Weißschuh wrote:
-> Even if it's not critical, the avoidance of checking the error code
-> from devm_mutex_init() call today diminishes the point of using devm
-> variant of it. Tomorrow it may even leak something.
-> 
-> Add the missed check.
-> 
-> Fixes: 87a59548af95 ("leds: lp8860: Use new mutex guards to cleanup function exits")
-> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Hanne-Lotta M=C3=A4enp=C3=A4=C3=A4 <hannelotta@gmail.com> writes:
+
+> Fix typos and improve grammar in the documentation for
+> fwctl subsystem.
+>
+> Use the word user space consistently, instead of having
+> two variants (user space vs. userspace).
+>
+> Change wording of denied behaviour to be disallowed
+> behaviour when describing the interface.
+>
+> Signed-off-by: Hanne-Lotta M=C3=A4enp=C3=A4=C3=A4 <hannelotta@gmail.com>
 > ---
->   drivers/leds/leds-lp8860.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/leds/leds-lp8860.c b/drivers/leds/leds-lp8860.c
-> index 52b97c9f2a03567aa12d4f63a951593a5e7017d5..0962c00c215a11f555a7878a3b65824b5219a1fa 100644
-> --- a/drivers/leds/leds-lp8860.c
-> +++ b/drivers/leds/leds-lp8860.c
-> @@ -307,7 +307,9 @@ static int lp8860_probe(struct i2c_client *client)
->   	led->client = client;
->   	led->led_dev.brightness_set_blocking = lp8860_brightness_set;
->   
-> -	devm_mutex_init(&client->dev, &led->lock);
-> +	ret = devm_mutex_init(&client->dev, &led->lock);
-> +	if (ret)
-> +		return dev_err_probe(&client->dev, ret, "Failed to initialize lock\n");
+>
+> Notes:
+>     v1 -> v2: No changes
+>
+>  Documentation/userspace-api/fwctl/fwctl.rst | 30 ++++++++++-----------
+>  1 file changed, 15 insertions(+), 15 deletions(-)
 
-I don't think the lock initialization can actually fail, if anything ever breaks
-it will be the devm allocation, which is a ENOMEM situation, so probably not worth
-printing anything. Either way is fine for __must_check sake so,
+I've applied this one.
 
-Acked-by: Andrew Davis <afd@ti.com>
+Thanks,
 
->   
->   	led->regmap = devm_regmap_init_i2c(client, &lp8860_regmap_config);
->   	if (IS_ERR(led->regmap)) {
-> 
+jon
