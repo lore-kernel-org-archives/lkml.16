@@ -1,134 +1,95 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693A3280A47
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 07:50:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2969425487D
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 07:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749455428; cv=none; b=HrXHaBAWmh/vwdntX3amGWkP25c+jra/4vQh2nBWKOCQJ/IBbBfCnjWApNvRCEFtozwgnULV8TD+t+PJJ/3ysTh5WDCbIg6VuFYCECdPnVPFsoQAipSqrSTnalq2Blj7rLSdb5X2K8/M6PlH+FK8a3YWaIo0xfxSQWtBYrL13RQ=
+	t=1749455440; cv=none; b=FzTiNIujQXQVIZQ0E9K6ldNk9hkm+Nmfc0n1JF21Mc8Ayyr7SNX4DYOHhh0DoFTQN7IBMSSiY6n+33A1gvYfnVO1SBw3DHqULQKfgO/pebAdKNF8hqegPrLsc37bL/PfyfKywbjbXKeXgtxV3KO0nm4MRRpvMzjAxo2cRg5CAvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749455428; c=relaxed/simple;
-	bh=VzgaAo83KGzaU5ZuakpXRFzCoWnX8INmaPf4LX4LN5g=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VLflBceYR/P638IggV07/NLMuY6HO1VDSsGMqB8O8iLtqlFT2OQSEWyPuJdpbVlKTQBynXQmBY7S+Z7yRI2lLK4LqR8oczHst978uMJL63ghYLLTSVTrDFM/yQkmC84jlVuhlSrFvjwNNs8ZamP+M2pxzfQXdJe3361tamaWXYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Z3Npbeah; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RRCqypLW; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Z3Npbeah; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RRCqypLW; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Z3Npbeah";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RRCqypLW";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Z3Npbeah";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RRCqypLW"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 9092C21190;
-	Mon,  9 Jun 2025 07:50:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749455425; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+l/DpDgLJJI3yYllWX98p7zZsbjEpFjKDookGd3rOPg=;
-	b=Z3NpbeahU8YinUHBwGKQ2k/kQSKJqB8rqlq9uMZJrlJ07c31i+DV7n+/EtqInb16o5rFFQ
-	EYThF0+zlA9H47EDAipXODyxdcHUAwWIcaoUcYMesTUT1CLMcJaKUAy8Jb6IY63poeTXRY
-	uLq2RnQIzuaPDtQhopTMkoH6eTdDRsE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749455425;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+l/DpDgLJJI3yYllWX98p7zZsbjEpFjKDookGd3rOPg=;
-	b=RRCqypLWs40Z7uh2wbDPsyI1ThdLY/RCCjrocF4Xbh5Eq4IHZcEhl0ib95QPcDyGdWuAuV
-	OBEkeDrs/CJHOJDg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749455425; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+l/DpDgLJJI3yYllWX98p7zZsbjEpFjKDookGd3rOPg=;
-	b=Z3NpbeahU8YinUHBwGKQ2k/kQSKJqB8rqlq9uMZJrlJ07c31i+DV7n+/EtqInb16o5rFFQ
-	EYThF0+zlA9H47EDAipXODyxdcHUAwWIcaoUcYMesTUT1CLMcJaKUAy8Jb6IY63poeTXRY
-	uLq2RnQIzuaPDtQhopTMkoH6eTdDRsE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749455425;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+l/DpDgLJJI3yYllWX98p7zZsbjEpFjKDookGd3rOPg=;
-	b=RRCqypLWs40Z7uh2wbDPsyI1ThdLY/RCCjrocF4Xbh5Eq4IHZcEhl0ib95QPcDyGdWuAuV
-	OBEkeDrs/CJHOJDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3E87813A1D;
-	Mon,  9 Jun 2025 07:50:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id zlERDkGSRmj7fQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 09 Jun 2025 07:50:25 +0000
-Date: Mon, 09 Jun 2025 09:50:24 +0200
-Message-ID: <878qm18ibj.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Baojun Xu <baojun.xu@ti.com>
-Cc: <broonie@kernel.org>,
-	<andriy.shevchenko@linux.intel.com>,
-	<alsa-devel@alsa-project.org>,
-	<shenghao-ding@ti.com>,
-	<navada@ti.com>,
-	<13916275206@139.com>,
-	<v-hampiholi@ti.com>,
-	<v-po@ti.com>,
-	<linux-sound@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] ALSA: hda/tas2781: Add missed brace and hardware id re-order
-In-Reply-To: <20250602015809.20344-1-baojun.xu@ti.com>
-References: <20250602015809.20344-1-baojun.xu@ti.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	s=arc-20240116; t=1749455440; c=relaxed/simple;
+	bh=5uOztrQkQsHa0KrVLeK32BKkqwnB/6pJzduoFa9innQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nyETko4ypAbR6wSoAhA8p1YPSZMjEWMOFFQ1g9Dx6y5PYi47vCHNQ/j3y3a8UmjeU5lhGfOE9mmbYjtJnZ+JV2khbQcWiMT4pskZU3D232tP+6POGUmPdKndvQt5AkDPWGrwrQhsnfMyu2GtcSbEUfz7yOyu68QMfVBtu1PhOgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4bG3kR1Rjxz9sTD;
+	Mon,  9 Jun 2025 09:40:47 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id StlkMA7BaDrA; Mon,  9 Jun 2025 09:40:47 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4bG3kR0ZZyz9sN6;
+	Mon,  9 Jun 2025 09:40:47 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 0E72A8B764;
+	Mon,  9 Jun 2025 09:40:47 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id nvfTNSoQtYcj; Mon,  9 Jun 2025 09:40:46 +0200 (CEST)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 92C398B763;
+	Mon,  9 Jun 2025 09:40:46 +0200 (CEST)
+Message-ID: <fbe9378a-f3f0-4398-b91b-dd3713c0be5e@csgroup.eu>
+Date: Mon, 9 Jun 2025 09:40:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[139.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,linux.intel.com,alsa-project.org,ti.com,139.com,vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	URIBL_BLOCKED(0.00)[ti.com:email,imap1.dmz-prg2.suse.org:helo,suse.de:mid];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -3.30
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] (powerpc/512) Fix possible `dma_unmap_single()` on
+ uninitialized pointer
+To: Thomas Fourier <fourier.thomas@gmail.com>
+Cc: Anatolij Gustschin <agust@denx.de>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ "open list:LINUX FOR POWERPC EMBEDDED MPC5XXX"
+ <linuxppc-dev@lists.ozlabs.org>, open list <linux-kernel@vger.kernel.org>
+References: <20250605163717.18020-1-fourier.thomas@gmail.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250605163717.18020-1-fourier.thomas@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, 02 Jun 2025 03:58:09 +0200,
-Baojun Xu wrote:
+
+
+Le 05/06/2025 à 18:37, Thomas Fourier a écrit :
+> [Vous ne recevez pas souvent de courriers de fourier.thomas@gmail.com. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
 > 
-> This patch is do code clean and prepare for next patch,
-> which is relative with hardware id.
+> If the device configuration fails (if `dma_dev->device_config()`),
+> `sg_dma_address(&sg)` is not initialized and the jump to `err_dma_prep`
+> leads to calling `dma_unmap_single()` on `sg_dma_address(&sg)`.
 > 
-> Signed-off-by: Baojun Xu <baojun.xu@ti.com>
+> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+> ---
+>   arch/powerpc/platforms/512x/mpc512x_lpbfifo.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/platforms/512x/mpc512x_lpbfifo.c b/arch/powerpc/platforms/512x/mpc512x_lpbfifo.c
+> index 9668b052cd4b..ef3be438f914 100644
+> --- a/arch/powerpc/platforms/512x/mpc512x_lpbfifo.c
+> +++ b/arch/powerpc/platforms/512x/mpc512x_lpbfifo.c
+> @@ -241,8 +241,7 @@ static int mpc512x_lpbfifo_kick(void)
+> 
+>          /* Make DMA channel work with LPB FIFO data register */
+>          if (dma_dev->device_config(lpbfifo.chan, &dma_conf)) {
+> -               ret = -EINVAL;
+> -               goto err_dma_prep;
+> +               return -EINVAL;
+>          }
 
-Merged to for-next branch now.  Thanks.
+You should remove the { } as it is now a single line.
 
+> 
+>          sg_init_table(&sg, 1);
+> --
+> 2.43.0
+> 
 
-Takashi
