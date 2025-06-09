@@ -1,39 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA231DEFE8
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 16:26:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235FE1442F4
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 16:29:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749486369; cv=none; b=U8m8UFDxOdwbANhabj2w7gnnnbS6jDBKBX8qtt1rv8itkcvaqJ2SN9pcGAkfJJbCsiAA74S/8SrRsGwZKBbEXV7PzxO7wqoJCFhcpOAHLjVOQuTb6jNlH9fmJOFx6/Y2Y7+Xr8v//iyTCLWu9EEffcBBS8XMRdq8AIir/1Q0DTQ=
+	t=1749486555; cv=none; b=D+YR7iRryZm49NWrQAhzrfVI8sTQKAaUkxIRsjJ4ZLky730fQ6mChu44jTNTnXeZLfl7OTwY6lqgMRKUBtXzvDjw/YU2XEz2kM6sjdXE7RG/NXZhke6WHJ9vLjhNVQAdVQzWHN/vNnpDmmasDYUhuFhN+pDO8RuHng5BLOtfmAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749486369; c=relaxed/simple;
-	bh=9ougo49U8Jli9bzh/lX1P61wDzEtlGygZMNxFz0RfUI=;
+	s=arc-20240116; t=1749486555; c=relaxed/simple;
+	bh=/WIK+Zu5FCGDxkkG1lsiJBU0oVY383XAcjU5SWOwYcs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=atVMMElKbJS4js+V4GwO0sPNRnWsagiBCBHBFR4pDvMOf7nBanul8EOXhBDswR88EYEAAhkg5swF7Y7ZdVfp+de696llTG3c4FB7l2Hvo9ZFtiGojRTPTiZ1No8JVyq+HaeQJKh+NQGNG1EPIyNLXigVYy3dz6Ra6kxcgN0uJ0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K7BPYthw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=uMHa9MNtEuoBoDM9nu6tGOQ6WJZddrGMpNIAG7nTBShM3FYIf2jleMGdF62XxUekct1YRSVnePQjMANNkehE5FpBhbQE6vM1Dbc5pqGXx/wb48idb7HeyNALD3oEISEQRFMQkxMqRoJYrhiu0MJbniqZI+thFgQ0U1PMnmvZkkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EF29yWKH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K7BPYthw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 069B5C4CEEB;
-	Mon,  9 Jun 2025 16:26:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EF29yWKH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BE83C4CEEB;
+	Mon,  9 Jun 2025 16:29:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749486369;
-	bh=9ougo49U8Jli9bzh/lX1P61wDzEtlGygZMNxFz0RfUI=;
+	s=k20201202; t=1749486554;
+	bh=/WIK+Zu5FCGDxkkG1lsiJBU0oVY383XAcjU5SWOwYcs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K7BPYthwglUZNFa0WeaMiSZgyV4gJmK3L/dxR+Mn3/69YUXk3E8CiTAyOpvKls64j
-	 vSg6ezU4UrSmGfOECO2fBjOdxPbswGBiSDbTLMhTGZDheKk2sg24vQWMhbIzsuCVDG
-	 hT+YPqqdtbKG4lZznKtpi52cP7sNLR5taqViJIWF0eNd5PYRVz8YUJi9gRDEPP8Z5+
-	 qQ+U+3/jrgoz2cMRMm2ZS+hcOYDliEqJxMtO1UbSLfY0ANqEUSB9ndK6pRorP5HbpZ
-	 iC2gJ7Csh+LOXPcq74lqFGaI1gJJUtS+fcZQhyDUd8zkFAVQMZnxpC8/OmXX19W8Jd
-	 +N1AP+q/bjJVA==
-Date: Mon, 9 Jun 2025 06:26:08 -1000
+	b=EF29yWKH+jAhy1Po6wgH168ShjzMjameCB+oH1oOGd9v/b3FBDa5RuwyRhXa9bEAk
+	 +diAh2VmtK+VEiXsq/Uhc+f4ndWsHxY/kc9IoBu3wTXuWKpLo+Ax153UgYWrdDd6TS
+	 JVLWF4lV3UZS8qoOlodvMoptpLj5eEen/d3xfZLfaJF+VUNImnrooT9lmfwl2l50mn
+	 PefXjAvyoPLtMRo0Bcn0cCl6cBj93ZGnzYyiPlewzhDHC+YWxXGPqU0eiY+JawHtO1
+	 PMk2rN5UdhioxGYbvMrjGHpTBAen9ffLhDHrztRtsiKSw3E2v9lX3gedxml9vfjMqY
+	 EAo+wbB5sCNEw==
+Date: Mon, 9 Jun 2025 06:29:13 -1000
 From: Tejun Heo <tj@kernel.org>
 To: Andrea Righi <arighi@nvidia.com>
 Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
+	Jonathan Corbet <corbet@lwn.net>, Emily Soto <emilys@nvidia.com>,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] sched_ext: Improve code modularization
-Message-ID: <aEcLIGNPZZMOZVtz@slm.duckdns.org>
-References: <20250604143547.708202-1-arighi@nvidia.com>
+Subject: Re: [PATCH] sched_ext: Documentation: Clarify time slice handling in
+ task lifecycle
+Message-ID: <aEcL2Z42Krv0EEYt@slm.duckdns.org>
+References: <20250609162342.18790-1-arighi@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,25 +44,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250604143547.708202-1-arighi@nvidia.com>
+In-Reply-To: <20250609162342.18790-1-arighi@nvidia.com>
 
-On Wed, Jun 04, 2025 at 04:33:10PM +0200, Andrea Righi wrote:
-> Despite the unusual structure of the scheduler code, where the source code
-> of all scheduler classes is included in a single .c file, we should still
-> structure the code as if each .c file were a standalone build unit. This
-> means marking internal functions as static, declaring shared symbols via
-> proper function prototypes in a header file, etc.
+On Mon, Jun 09, 2025 at 06:23:42PM +0200, Andrea Righi wrote:
+> It is not always obvious how a task's time slice can be refilled, either
+> explicitly from ops.dispatch() or automatically by the sched_ext core,
+> to skip subsequent ops.enqueue() and ops.dispatch() calls. This
+> typically happens when the task is the only one running on a CPU.
 > 
-> This patch series is a first step toward such cleanup for the sched_ext
-> code. There is more work to do, but these changes are intentionally small
-> to minimize potential disruption to the ongoing development, laying some
-> groundwork for a cleaner and more maintainable code.
+> To make this behavior easier to understand, update the task lifecycle
+> diagram to explicitly document how time slice handling works in such
+> cases.
 > 
-> Andrea Righi (4):
->       sched_ext: idle: Remove unnecessary ifdef in scx_bpf_cpu_node()
->       sched_ext: idle: Make local functions static in ext_idle.c
->       sched_ext: Make scx_rq_bypassing() inline
->       sched_ext: Make scx_locked_rq() shared
+> Signed-off-by: Andrea Righi <arighi@nvidia.com>
 
 Applied to sched_ext/for-6.17.
 
