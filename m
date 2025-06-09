@@ -1,190 +1,158 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF02217660
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 15:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B0621322F
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 15:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749484653; cv=none; b=PiJdqRitZtsTAqV65AXGzEFMSWolgluHjAgA0/bPLm+dXJ3tkP/PAwoANXPsV7itDxkarpGRs1umF4pTix2LRYm0iZCJY7B1xwJKlV/mvIOLP0RRgGLk5JN/EyD2FNFOKPptjKoXw2qa1zbG5MTGtqPkToPvAPE4OBqDOfj3gjs=
+	t=1749484738; cv=none; b=dnYt1wgGh7ifgVCJ1xCr50Pcxzx64DqoLqOUwjBkC/EF6z7edBMb69Wd2Ka1QRFlNHwptPVHbBkqbx7X13j+jM/KLQnGPXzH3B+GfotKRsVRbaCkv0ytNzOrWnYaiWTnnPsVzi7dYtywda/Orzrcr48I7mp4koJTCBNHuvQo7Jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749484653; c=relaxed/simple;
-	bh=eBwnLg2xoAbZmZeQ6rQ/N0+wEy5r52XsJy8iLxAstT4=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=N8pTvR/7ztxEnRg4LPXr8LItF6IodxgLtHaRbpW0ojeY8zNiysN5ZcSRAS/4RFt60hUPBhwy8MR/gC41OGKUGAZZu1j8fkN9QsiWlDf5eUsTx2uz9tHXEKDP653awe6bv60boMLTdNTD70V1jJO3Tpdw+Nvhrz252o7/0+mjDks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3ddce94383bso17411205ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 08:57:31 -0700 (PDT)
+	s=arc-20240116; t=1749484738; c=relaxed/simple;
+	bh=oGQPDHyt8o5wmupzTzzqpDaFld/IFzmUGTmIhFY+rew=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VawzNwgqobzliWqilhRWkSYu3XwQN2yUknp9nO4rHU/XAu1BgWoYvI1cXUDttLNKRD3xwxmX31ibyoZcMzY7/gzxbwGUOCorgXaYUAseA/tVEa/g3O4G2OseMOspzSvaxKuHVeAlw0Lryu4vPUSj/y40MfOu8uwwfP6E0X7cE90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mLhvuV2z; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mLhvuV2z"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55993thE011063
+	for <linux-kernel@vger.kernel.org>; Mon, 9 Jun 2025 15:58:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=m/oHPEvdt3BMym8AUpjKM5ag
+	08QdTTyK7Hp5/0bClSc=; b=mLhvuV2zbVR4/brQWwKuFElCWc2siOd6LjrZ54O8
+	5c8qtXaINXFQjudluqcQOH/fKNAlGP5dMYJ6T2VaQWXtDBPz4eJdH2PeywhNfBdU
+	H5Pk8GIv3o1f2yJpJItOW/v2u2gdVNWNjVDkUPDS2YEnsa0JHXB7THnXvkWqKL+L
+	Q0pdwBfc3a5zlKKRcfUNdyzsINZhFBdnx9NL5dIRrM0ASaaTZ24Ogs6GXcFTCDA5
+	VlOCTqL0GYw02L/RS8+k5fM5ua5qkGt2P4bUAVTVtASc5y3q482bu8wqy/jByh0F
+	nbYKLEFjGNFFNiKT0Y/AD6F2qvrWXv4f4I6WWJmBQG0mAA==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474dgxpvwr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 15:58:56 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5750ca8b2so628809885a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 08:58:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749484650; x=1750089450;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JQMzVVfsh9sZSZRgT86ZYU+ugvIceGlt5LN3aAQ3nlo=;
-        b=ZG9Lgf3vt7pFg5+ZSgkijVE/TguAJE9vA7ctoh1XdpjyEPazpedX2ArkT0r+rZcNQl
-         zNQQanpi4EsbW1vy/M6k222p050k5XF0tQeCY2CjtFx43EzPilW2sc7QvFy5slJD88PL
-         74Z5pOapfWbNpgdt8RuzWATZnb8PWL1iN4fiFEPV50FV5W6ffh5RtugAGgsYSLkFcQs/
-         KbjW0OvhBHQHJzh3hRWEeycDNSwgWjFOGlj9BLxmqSDTyVDEBdqh2ZxvSwpCMcI2NpwY
-         C7THjscekdGrjkdfcsqiJO0alqU0mnAGZmNpcJBWD4tGT2wmw8gtadsvP9oCi1E0yMRO
-         me/A==
-X-Forwarded-Encrypted: i=1; AJvYcCUoLXQPhPrJe1PHcRxlc69dww2Z20QRDKCTFc77/AvP+urpplKLF6lrNoYtUOs2HHVXtN7vBdhjIFt9+D0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6XGiT+9QGnIcDvovamYuasbPddC55zZ/zs2q3/6unLQSs6fE/
-	h/D4jcqJBaiqrqo7ByXtGpzQFYyuL32t+6UOu89ElhxxTcdRCyhTDmXhiqkgnKO/eSr7rJm7am1
-	d3edir87PcKSC54hIzGGDOHZdVue+p5H7vfPnBhFBkZFJHiXVFssls70wKck=
-X-Google-Smtp-Source: AGHT+IHXU59SM76wNE/ilrXZy6B5JgJJb1vDpGKej7U4GZNYikx6cKqRVs3T/9g/ml9pJxywPE6zvK5eHnR/8R1WawgvqRQkMmAQ
+        d=1e100.net; s=20230601; t=1749484735; x=1750089535;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m/oHPEvdt3BMym8AUpjKM5ag08QdTTyK7Hp5/0bClSc=;
+        b=KIz96sboGnZ0Af43h4CAVfDzF7r/Rult6rptTTOdvEB7bdRvh0SWaKORvWKx9iTPlH
+         u2ydOdGnCI/NyDZkJKmZl/30XjYuq2tzozaTGgWoRPfwmotFqY1Rqyd5ZpNBwj+NHVZM
+         +d09FYfaMTlF+uLudoBtTo00fe67MXL0eXR90Q2XWUTaojkNsxUE5KYG0nuel5ZM0bhP
+         F6FcXoUsBHdcYlT6Pl8DbtzzeFhn5ZqarmIRmNelq+5M8p3KB+73bL8E/I0j7wU+fjE8
+         hQ2jrLuweb1KwAwe71ku/49QRq6kYPpbGqMgxnMavlQEdebtf2V8t/ACG53Bl41ZK5sc
+         xK9A==
+X-Forwarded-Encrypted: i=1; AJvYcCVsYwH/qWzetSgyFYbNBEkS6h9x9OaMS8mUJZrlh8UUxqk8nvMn/iifZebGTO+dbmC3J+YID6Qu9VKpU+A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/l+3zMng8BSudYEk3LftXQ+6AWIonSC+M7q/Az9Gr3mQu6GL4
+	Dgtf82yBMR0clowUj7V22tL5j+QjqJZcIuLHnil0ABomxh0Y0CEd327ZOHh25o/BRuQ9aMyoQM3
+	+lGhTJJzkJ2iglGR8E6MsRH06X552TxUF0g9Dlvv/QSjmdKbStjwHfO1R7hPohJXn7PM=
+X-Gm-Gg: ASbGnct+vrEUX+kGZLHnwVPge12vpy+/i8S5UTPthCM3vCL0UjDWF7dkCXYm39ZWarj
+	kJxcAzV6HUC5Q1+T3CQbiHk7dKUSAbY76hilKsgpCqKEZyhOB7dkKl37EqpxS2DeaIKRRaVb3VT
+	wp6R+1o0vAVIe5WyYhCoWEf/OE4miXRQYxQWPu6sfEm5KPt5dY1RzjCCDbI7fIOjjfxAOablACo
+	hCvcDjKaPPjuAhS7QzdskyMNNR0vibPhx+B0e7AnbJNQwiRF1PODhkylMqLS7R3qCJymeQrD2J9
+	udtupfQ9IvbNQ4zBWG7lGlC6O4D7H4Hkv0Yv9M+N2lXyLEYN/f3jrA9AJP8K3cZZePCeg7bd8h7
+	9XrBDbAwiVw==
+X-Received: by 2002:a05:620a:4385:b0:7c0:c469:d651 with SMTP id af79cd13be357-7d2298fe1d0mr1994329785a.57.1749484735415;
+        Mon, 09 Jun 2025 08:58:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHbNI21KBX497/aUWP6ZoFK3aYx+NQWMyhtvdoUvR9MJJt1pLIO3tvv8ZkDsXU7I0e7qf911g==
+X-Received: by 2002:a05:620a:4385:b0:7c0:c469:d651 with SMTP id af79cd13be357-7d2298fe1d0mr1994326285a.57.1749484734962;
+        Mon, 09 Jun 2025 08:58:54 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55367733280sm1218659e87.240.2025.06.09.08.58.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 08:58:54 -0700 (PDT)
+Date: Mon, 9 Jun 2025 18:58:52 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Yongxing Mou <quic_yongmou@quicinc.com>
+Cc: Rob Clark <robin.clark@oss.qualcomm.com>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>
+Subject: Re: [PATCH v2 26/38] drm/msm/dp: skip reading the EDID for MST cases
+Message-ID: <lusd35wv2pj5sy6mdiw7axqxnei2wqo57pf6ju5ys2ibfrkidu@63lkbckuu2n6>
+References: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
+ <20250609-msm-dp-mst-v2-26-a54d8902a23d@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:cd8c:0:b0:3dc:8b29:30b1 with SMTP id
- e9e14a558f8ab-3ddce42f5cbmr121291855ab.14.1749484650398; Mon, 09 Jun 2025
- 08:57:30 -0700 (PDT)
-Date: Mon, 09 Jun 2025 08:57:30 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6847046a.050a0220.33aa0e.02ad.GAE@google.com>
-Subject: [syzbot] [ocfs2?] general protection fault in ocfs2_prepare_dir_for_insert
- (2)
-From: syzbot <syzbot+ded9116588a7b73c34bc@syzkaller.appspotmail.com>
-To: jlbec@evilplan.org, joseph.qi@linux.alibaba.com, 
-	linux-kernel@vger.kernel.org, mark@fasheh.com, ocfs2-devel@lists.linux.dev, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250609-msm-dp-mst-v2-26-a54d8902a23d@quicinc.com>
+X-Proofpoint-GUID: xHuN7aJDjC94ES1fQmFp_jNARG5vTaG-
+X-Authority-Analysis: v=2.4 cv=HMbDFptv c=1 sm=1 tr=0 ts=684704c0 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=a3mUzBo2FLGOTCIFHJAA:9 a=CjuIK1q_8ugA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: xHuN7aJDjC94ES1fQmFp_jNARG5vTaG-
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDExOSBTYWx0ZWRfX9vjjoaOMT7Gw
+ m56RC1FyvukUwUUUlJNlxPcICL/bskHEjPSjKXeXOjnMZnoVhSv9xbwDJF9YcBvZsNr/YVQ/OUL
+ 5sNLoc/lja9ecogRto60IYMtKLN/A3qoYc0bBxCT/CWb7aoHMmFeC3UYd15Rh2ZaChUXoUTE7VQ
+ yh+Lc8nQ27oKNdo1QoYDAs0WMVi0wK1vIcEpkprpwTB2yjVzwCZo2R2ybO922ti2+w23vWjSO9j
+ tjq/Kc8J67nUV1aVK95tHbW3JknSd4sdzUKX0L0Oe0Hs+xeZ3LaSa6o9BxE/s4gOPpZygRMbFVr
+ xWq9TrsPCVzc8WUyWfWEv3EDmSoGTFErxGz203zq5e2ddZngh16i/qqDLk2ohX52oAcOcrJ+2Yk
+ eTva4u2n3RPMWZcQOASFFCVh/m7HFOYC8bWgglJhWyU+zmXTAgzfZ0GZ+TN8TWRZakho8TMS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-09_06,2025-06-09_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 mlxlogscore=999 priorityscore=1501 impostorscore=0
+ suspectscore=0 malwarescore=0 phishscore=0 spamscore=0 lowpriorityscore=0
+ adultscore=0 mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506090119
 
-Hello,
+On Mon, Jun 09, 2025 at 08:21:45PM +0800, Yongxing Mou wrote:
+> From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+> 
+> For MST cases, EDID is handled through AUX sideband messaging.
+> Skip the EDID read during hotplug handle for MST cases.
 
-syzbot found the following issue on:
+Why? It makes sense to read it during the HPD processing, ping HDMI
+codec, update CEC info, etc.
 
-HEAD commit:    ec7714e49479 Merge tag 'rust-6.16' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15bc2c0c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=73696606574e3967
-dashboard link: https://syzkaller.appspot.com/bug?extid=ded9116588a7b73c34bc
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13bc2c0c580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11a50c0c580000
+> 
+> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+> Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
+> ---
+>  drivers/gpu/drm/msm/dp/dp_display.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
+> index 88cae0ca66015377e59bee757462edeae5ae91bf..b1b025d1d356046f8f9e3d243fc774185df24318 100644
+> --- a/drivers/gpu/drm/msm/dp/dp_display.c
+> +++ b/drivers/gpu/drm/msm/dp/dp_display.c
+> @@ -438,9 +438,11 @@ static int msm_dp_display_process_hpd_high(struct msm_dp_display_private *dp)
+>  	if (rc)
+>  		goto end;
+>  
+> -	rc = msm_dp_panel_read_edid(dp->panel, connector);
+> -	if (rc)
+> -		goto end;
+> +	if (!dp->mst_supported || !drm_dp_read_mst_cap(dp->aux, dp->panel->dpcd)) {
+> +		rc = msm_dp_panel_read_edid(dp->panel, connector);
+> +		if (rc)
+> +			goto end;
+> +	}
+>  
+>  	msm_dp_link_process_request(dp->link);
+>  
+> 
+> -- 
+> 2.34.1
+> 
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-ec7714e4.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/13d41a3ddb72/vmlinux-ec7714e4.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/ae9a3fb85228/bzImage-ec7714e4.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/31be3ccfd03b/mount_0.gz
-  fsck result: OK (log: https://syzkaller.appspot.com/x/fsck.log?x=1463e570580000)
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ded9116588a7b73c34bc@syzkaller.appspotmail.com
-
-ocfs2: Mounting device (7,0) on (node local, slot 0) with writeback data mode.
-Oops: general protection fault, probably for non-canonical address 0xdffffc0000000001: 0000 [#1] SMP KASAN NOPTI
-KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
-CPU: 0 UID: 0 PID: 5317 Comm: syz-executor310 Not tainted 6.15.0-syzkaller-12141-gec7714e49479 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:ocfs2_find_dir_space_id fs/ocfs2/dir.c:3424 [inline]
-RIP: 0010:ocfs2_prepare_dir_for_insert+0x2f41/0x5450 fs/ocfs2/dir.c:4288
-Code: ca 8b e8 52 8f 19 00 e9 fd 11 00 00 e8 b8 a4 26 fe e9 a7 02 00 00 e8 ae a4 26 fe 49 8d 7f 08 4d 8d 77 09 48 89 f8 48 c1 e8 03 <42> 0f b6 04 20 84 c0 0f 85 41 20 00 00 4c 89 f0 48 c1 e8 03 42 0f
-RSP: 0018:ffffc9000d3e6320 EFLAGS: 00010202
-RAX: 0000000000000001 RBX: ffff88804710de48 RCX: ffff88801a3c8000
-RDX: 0000000000000000 RSI: 0000000000000400 RDI: 0000000000000008
-RBP: ffffc9000d3e6a30 R08: ffffc9000d3e6c90 R09: 608b7c562adf3b03
-R10: 23ec6d672c196c9a R11: 608b7c562adf3b03 R12: dffffc0000000000
-R13: ffff88804710ddf8 R14: 0000000000000009 R15: 0000000000000000
-FS:  00005555581f0380(0000) GS:ffff88808d255000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f8847f56100 CR3: 0000000043298000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __ocfs2_prepare_orphan_dir+0x145/0x2c0 fs/ocfs2/namei.c:2176
- ocfs2_prepare_orphan_dir+0xf9/0x3f0 fs/ocfs2/namei.c:2221
- ocfs2_add_inode_to_orphan+0x1d6/0x710 fs/ocfs2/namei.c:2669
- ocfs2_dio_wr_get_block+0x7ea/0x1770 fs/ocfs2/aops.c:2183
- get_more_blocks fs/direct-io.c:648 [inline]
- do_direct_IO fs/direct-io.c:936 [inline]
- __blockdev_direct_IO+0x16da/0x33d0 fs/direct-io.c:1243
- ocfs2_direct_IO+0x25f/0x2d0 fs/ocfs2/aops.c:2438
- generic_file_direct_write+0x1db/0x3e0 mm/filemap.c:4046
- __generic_file_write_iter+0x11d/0x230 mm/filemap.c:4215
- ocfs2_file_write_iter+0x157a/0x1d10 fs/ocfs2/file.c:2469
- iter_file_splice_write+0x937/0x1000 fs/splice.c:738
- do_splice_from fs/splice.c:935 [inline]
- direct_splice_actor+0x101/0x160 fs/splice.c:1158
- splice_direct_to_actor+0x5a5/0xcc0 fs/splice.c:1102
- do_splice_direct_actor fs/splice.c:1201 [inline]
- do_splice_direct+0x181/0x270 fs/splice.c:1227
- do_sendfile+0x4da/0x7e0 fs/read_write.c:1370
- __do_sys_sendfile64 fs/read_write.c:1431 [inline]
- __se_sys_sendfile64+0x13e/0x190 fs/read_write.c:1417
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f8847edab99
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 f1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffd3d732a28 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-RAX: ffffffffffffffda RBX: 0031656c69662f2e RCX: 00007f8847edab99
-RDX: 0000000000000000 RSI: 0000000000000005 RDI: 0000000000000004
-RBP: 00007f8847f525f0 R08: 0023706f6f6c2f76 R09: 00005555581f14c0
-R10: 0000000080000002 R11: 0000000000000246 R12: 00007ffd3d732a50
-R13: 00007ffd3d732c78 R14: 431bde82d7b634db R15: 00007f8847f2303b
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:ocfs2_find_dir_space_id fs/ocfs2/dir.c:3424 [inline]
-RIP: 0010:ocfs2_prepare_dir_for_insert+0x2f41/0x5450 fs/ocfs2/dir.c:4288
-Code: ca 8b e8 52 8f 19 00 e9 fd 11 00 00 e8 b8 a4 26 fe e9 a7 02 00 00 e8 ae a4 26 fe 49 8d 7f 08 4d 8d 77 09 48 89 f8 48 c1 e8 03 <42> 0f b6 04 20 84 c0 0f 85 41 20 00 00 4c 89 f0 48 c1 e8 03 42 0f
-RSP: 0018:ffffc9000d3e6320 EFLAGS: 00010202
-RAX: 0000000000000001 RBX: ffff88804710de48 RCX: ffff88801a3c8000
-RDX: 0000000000000000 RSI: 0000000000000400 RDI: 0000000000000008
-RBP: ffffc9000d3e6a30 R08: ffffc9000d3e6c90 R09: 608b7c562adf3b03
-R10: 23ec6d672c196c9a R11: 608b7c562adf3b03 R12: dffffc0000000000
-R13: ffff88804710ddf8 R14: 0000000000000009 R15: 0000000000000000
-FS:  00005555581f0380(0000) GS:ffff88808d255000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f8847f56100 CR3: 0000000043298000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess), 2 bytes skipped:
-   0:	e8 52 8f 19 00       	call   0x198f57
-   5:	e9 fd 11 00 00       	jmp    0x1207
-   a:	e8 b8 a4 26 fe       	call   0xfe26a4c7
-   f:	e9 a7 02 00 00       	jmp    0x2bb
-  14:	e8 ae a4 26 fe       	call   0xfe26a4c7
-  19:	49 8d 7f 08          	lea    0x8(%r15),%rdi
-  1d:	4d 8d 77 09          	lea    0x9(%r15),%r14
-  21:	48 89 f8             	mov    %rdi,%rax
-  24:	48 c1 e8 03          	shr    $0x3,%rax
-* 28:	42 0f b6 04 20       	movzbl (%rax,%r12,1),%eax <-- trapping instruction
-  2d:	84 c0                	test   %al,%al
-  2f:	0f 85 41 20 00 00    	jne    0x2076
-  35:	4c 89 f0             	mov    %r14,%rax
-  38:	48 c1 e8 03          	shr    $0x3,%rax
-  3c:	42                   	rex.X
-  3d:	0f                   	.byte 0xf
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+With best wishes
+Dmitry
