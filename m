@@ -1,70 +1,40 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6D525487D;
-	Mon,  9 Jun 2025 06:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2DA51C8603
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 06:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749451362; cv=none; b=QmY0H+DTptfPvvMD4IVrw7UQmswTqhHIl4ikXHrR2NEjF9b4F6vl6pRvfj7hwU82OPBBBY6eJSCKRGQdh592yUARaOcsyu2jZI5Y6E1CdpJIX+jS0ecI9XFXMvq6fG3Dk9o1yle8abnzX2EkRoliUtBgajvmM8oeasju6k37Ujs=
+	t=1749451404; cv=none; b=lvFFnnzftm+Fqa1tMDst97imVa+qyL/glBePsIFl444WkeH4f8n/3KY3QT+9iWVR1G4hQuHlMIpBMeP1I0YNrG6HwBDmeyKEP/Tj+dKuBqQzoN84jZlJQAYOyzVOb6qlEuSyzu22GLwWqBvGSOirJtneAdHk/tBeiKCH3NB3wcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749451362; c=relaxed/simple;
-	bh=2XdTmYQJi0Dve/gohPb33702aqfKwBa5HtvprFQQu1E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uxxfO8nNA7izsiZuIn3Bi4H1sT0kdRdkj6SPLVoAoCkz+6yyzA1btLXXBzcPEMBHmZoEtf2W0RgnMewaJc7q3tptm70+GXEp8j802x2HONBPqn0ZCwjE4CqU2w4OHQsksG7fM6wvJZ4JQPdOfHIrSjJCQEiH1MddSX5ALELrA0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i6zdAB+j; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749451404; c=relaxed/simple;
+	bh=+c4M4PoOw4XBGGf96ubgf9jyGb/9F/bTTVc06PQ3tPA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XEcBo08iWy6oWqoAEpmTvgx0SuivkSKjz3vUplrYzWV5lkLisKRCoh5Ah1E8j12NLv/4if7l5Szr1AbHPB2XHuQupDBKR5jsIeBxwKx1hs4IdULbxzTCPW+Q0J1Qj0gtTjRdX4SatyaeBauAGlc2Zl6VbSVjrlwG7jlr8P3uoHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=qG2M5RYF; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i6zdAB+j"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad51ba0af48so946977966b.0;
-        Sun, 08 Jun 2025 23:42:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749451359; x=1750056159; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZeBBqy6v2UZFNklROzVxIjgbTRxIdySSihaP3aLIF5A=;
-        b=i6zdAB+jx7FD+QfjT2TkRlg6uKhzyk4ZQJlk7nQwv7nSy7NaOF332zVbdCB8YP1qxz
-         k8MKEX0Eg/qOwXSZGwoSSXk7jg2JHhmGiHgGMoxc8kLDXdC1rsgzX1qafnkFqQj/VY3e
-         lWPW51N4MsR47MnJ/9Cl2rm5iKxhRa+qx1mw9l7dJJou3igLW87EOgEXLZf+55ke4bc5
-         2Wv6Nrb1lORz2yXc1rcdfctXw9s8WXvcqHlOzu2gH4avcBZlkC83gxiymd4hMo1LsGHr
-         xyQPxXn3c877nBH1WQEMJL9CR6OYGSpLmuDAHpewm8anOuY6wt5lj14XtfxqqwS15F/f
-         PgKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749451359; x=1750056159;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZeBBqy6v2UZFNklROzVxIjgbTRxIdySSihaP3aLIF5A=;
-        b=aJSwk87C23DPKXp3Ksj84P0to8B+5o+IuILHK/6UAOMGUn7yl+XJCb/4auIL1qqTTx
-         4pXZo0n/usPZjGjUfbPq+BEjJxSi7dmL7YmCYUQnM7ulmSlPm+RK956f4nvpw4CNmPIb
-         /E0MM8e0q1OnAoQtFOzbzjaw/jPPGxfAs9IYkcJaTudKe7TEVkGE30KY7+RpJrfc0QCw
-         2PoEgtAKPHRKPwhVQfoNjbjMwEsBgOrChSIwd4mvwcp79rau7tTxfV62Knm5WnPCoJty
-         02T559mH+XMStemryCoZjdpo4GfYL940nfuBLscbJ6wCtS47sEq1tPhBLpo5LmhKAXSe
-         0eHA==
-X-Forwarded-Encrypted: i=1; AJvYcCU97IgrAaB214Ox16sj4mNnf6qPkUyOU+qcVC5OU5MWeGqGrCERFf+s7SWqHTL7aXuWUSUtyEd+A6aPswY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzM5ztLmiiDb832iqgNcD4tYcgUyXhk/7Hc9m/drpJrWWsuZJIT
-	mQ9tt6eWSfhU3eixnIp6ZfpMB4QkGmizywhyT3d5vvjxhxNTwtMRXP4ol4WQwg==
-X-Gm-Gg: ASbGncsADCgJQMv0M6W3UfW5TrcGZp7IzKdMB1aa2eIXCVHMfMGg6nQn3uEMFwN/nrj
-	+dHrNyXs2wbt2SwR5UKnSByXQMJogxoyVwYLC01IoM/kiO3tzLfZpgbooGgKhmINXvwLHW0ibDU
-	Ph86CKJD+WMANZMhCL2MVs6g6Fv6GU4prRmtAZM3ZtqKliOGHjWYtbGzKNhUGal7XrSS1319+dC
-	3/AA9KS+Na3fzpwdSRwAEz9KPtr0oAD+LbAPl4VugYOG2DorZSfD87jcu1U6gmJwNTL79xwj3/Z
-	/V/FtsbcZUMTiQe0ufG4B4C+ASX9hQLnyNIhK7NVuKSnPr3Vcswy+yQLEg23YF4S
-X-Google-Smtp-Source: AGHT+IFmOMa/7gbKwA455ikZjHXKCcGC8wUocGzkIVxvO6+ix8dguCuIMmEGRWk+GFKZEBELG6zNXg==
-X-Received: by 2002:a17:906:ef0a:b0:add:fb1c:a9c3 with SMTP id a640c23a62f3a-ade1aaad9cbmr1108343666b.28.1749451358859;
-        Sun, 08 Jun 2025 23:42:38 -0700 (PDT)
-Received: from fedora.. ([193.77.86.199])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1d754896sm502881266b.36.2025.06.08.23.42.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Jun 2025 23:42:38 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>
-Subject: [PATCH] ACPI: acpi_pad: Update arguments of mwait_idle_with_hints()
-Date: Mon,  9 Jun 2025 08:42:06 +0200
-Message-ID: <20250609064235.49146-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="qG2M5RYF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Ho
+	cQixyqJX5SglWXSQpR314Ob9Cf09x/R4lOM/XbktY=; b=qG2M5RYFYseowA/FQY
+	5BSDvznNDT1tFQODxLPB2JOi1KS/97MlhT8eNsHcM1+W3QlplbkCwazAHDf+nkHg
+	KeuSkuQvjTpAChHGuazr3tsV/lDTp+JyuawC3EiJXCS6O8uuOebRKH/sFZANvHwU
+	4YUvNR+nlyWtyJj5De0T7QXRU=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id PCgvCgDnJGQ6gkZoDaP5BA--.30275S4;
+	Mon, 09 Jun 2025 14:42:18 +0800 (CST)
+From: David Wang <00107082@163.com>
+To: surenb@google.com
+Cc: kent.overstreet@linux.dev,
+	akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	David Wang <00107082@163.com>
+Subject: [PATCH v3 1/2] alloc_tag: add sequence number for module and iterator
+Date: Mon,  9 Jun 2025 14:42:00 +0800
+Message-Id: <20250609064200.112639-1-00107082@163.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <CAJuCfpGa2UxLY5Af_R6ZR4q57T0380bAWvwYWv2PzC=0sgCqKQ@mail.gmail.com>
+References: <CAJuCfpGa2UxLY5Af_R6ZR4q57T0380bAWvwYWv2PzC=0sgCqKQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,32 +42,106 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PCgvCgDnJGQ6gkZoDaP5BA--.30275S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxur13tr1UCFyDAw4fZw4ktFb_yoW5XrWrp3
+	Wku345GF48Ar47uFZ7ur4UZF1Y9ry3Kr48XF42k343Kas8tr47uF1UK3Wa9ryruFZYqFn7
+	KF1Fgw1kCFnrtFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pE1vVZUUUUU=
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0htnqmhGfxuEtgAAs8
 
-Commit a17b37a3f416 ("x86/idle: Change arguments of mwait_idle_with_hints() to u32")
-changed the type of arguments of mwait_idle_with_hints() from unsigned
-long to u32. Change the type of variables in the call to
-mwait_idle_with_hints() to unsigned int to follow the change.
+Codetag iterator use <id,address> pair to guarantee the
+validness. But both id and address can be reused, there is
+theoretical possibility when module inserted right after
+another module removed, kmalloc returns an address same as
+the address kfree by previous module and IDR key reuses
+the key recently removed.
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Len Brown <lenb@kernel.org>
+Add a sequence number to codetag_module and code_iterator,
+the sequence number is strickly incremented whenever a module
+is loaded. An iterator is valid if and only if its sequence
+number match codetag_module's.
+
+Signed-off-by: David Wang <00107082@163.com>
 ---
- drivers/acpi/acpi_pad.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes since v2:
+Rebase to 6.16-rc1
+---
+ include/linux/codetag.h |  1 +
+ lib/codetag.c           | 17 ++++++++++++++---
+ 2 files changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/acpi/acpi_pad.c b/drivers/acpi/acpi_pad.c
-index 6f8bbe1247a5..c9a0bcaba2e4 100644
---- a/drivers/acpi/acpi_pad.c
-+++ b/drivers/acpi/acpi_pad.c
-@@ -33,7 +33,7 @@
- static DEFINE_MUTEX(isolated_cpus_lock);
- static DEFINE_MUTEX(round_robin_lock);
+diff --git a/include/linux/codetag.h b/include/linux/codetag.h
+index 5f2b9a1f722c..457ed8fd3214 100644
+--- a/include/linux/codetag.h
++++ b/include/linux/codetag.h
+@@ -54,6 +54,7 @@ struct codetag_iterator {
+ 	struct codetag_module *cmod;
+ 	unsigned long mod_id;
+ 	struct codetag *ct;
++	unsigned long mod_seq;
+ };
  
--static unsigned long power_saving_mwait_eax;
-+static unsigned int power_saving_mwait_eax;
+ #ifdef MODULE
+diff --git a/lib/codetag.c b/lib/codetag.c
+index 650d54d7e14d..545911cebd25 100644
+--- a/lib/codetag.c
++++ b/lib/codetag.c
+@@ -11,8 +11,14 @@ struct codetag_type {
+ 	struct list_head link;
+ 	unsigned int count;
+ 	struct idr mod_idr;
+-	struct rw_semaphore mod_lock; /* protects mod_idr */
++	/*
++	 * protects mod_idr, next_mod_seq,
++	 * iter->mod_seq and cmod->mod_seq
++	 */
++	struct rw_semaphore mod_lock;
+ 	struct codetag_type_desc desc;
++	/* generates unique sequence number for module load */
++	unsigned long next_mod_seq;
+ };
  
- static unsigned char tsc_detected_unstable;
- static unsigned char tsc_marked_unstable;
+ struct codetag_range {
+@@ -23,6 +29,7 @@ struct codetag_range {
+ struct codetag_module {
+ 	struct module *mod;
+ 	struct codetag_range range;
++	unsigned long mod_seq;
+ };
+ 
+ static DEFINE_MUTEX(codetag_lock);
+@@ -48,6 +55,7 @@ struct codetag_iterator codetag_get_ct_iter(struct codetag_type *cttype)
+ 		.cmod = NULL,
+ 		.mod_id = 0,
+ 		.ct = NULL,
++		.mod_seq = 0,
+ 	};
+ 
+ 	return iter;
+@@ -91,11 +99,13 @@ struct codetag *codetag_next_ct(struct codetag_iterator *iter)
+ 		if (!cmod)
+ 			break;
+ 
+-		if (cmod != iter->cmod) {
++		if (!iter->cmod || iter->mod_seq != cmod->mod_seq) {
+ 			iter->cmod = cmod;
++			iter->mod_seq = cmod->mod_seq;
+ 			ct = get_first_module_ct(cmod);
+-		} else
++		} else {
+ 			ct = get_next_module_ct(iter);
++		}
+ 
+ 		if (ct)
+ 			break;
+@@ -191,6 +201,7 @@ static int codetag_module_init(struct codetag_type *cttype, struct module *mod)
+ 	cmod->range = range;
+ 
+ 	down_write(&cttype->mod_lock);
++	cmod->mod_seq = ++cttype->next_mod_seq;
+ 	mod_id = idr_alloc(&cttype->mod_idr, cmod, 0, 0, GFP_KERNEL);
+ 	if (mod_id >= 0) {
+ 		if (cttype->desc.module_load) {
 -- 
-2.49.0
+2.39.2
 
