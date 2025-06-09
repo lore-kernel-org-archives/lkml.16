@@ -1,30 +1,32 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05262226545
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 22:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A344226D09
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 22:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749509794; cv=none; b=SSGm7QW62ddqUkRVxAgX4k7rKoU3NpbwsrpcwKv33rJaLDurN0xT24u+fjQzUXArDMC5SBO07EqbYKuMBNFZixGnmwoJ7uCBB6rCRBVJoPGIyDHmtPGQW88zk2P5knOtW9t+4Mbc01ansBGPAayl6HlqsjqTJxczAEAVLjUSlvw=
+	t=1749509794; cv=none; b=QfpFi7iwVrAINfBOonuJbKb/P8O9EI5flDIw3DINuME/6fzrV/4oC/prwZpvhae5pDhIHCgr5fKlUCghd5dCf2l807wOmWrveSVft/H3mcYvdKskOR+GbguggUFkOKdH1i6NKHEJXZxtoZgDPCFjihLi6CICn91suJ/a3SuvTM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749509794; c=relaxed/simple;
-	bh=fnvgnGU/oZtXEwKHJwF4oXb0QENWEDEDPSOTdAb7sqc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L7Cm0dHJaR/uvchqQJJ8MuAbHcGDRzM52HF46Y34auaPn2nIqPjE0zQWB2CdhHiC1w9GwmQhxKmws+OVC8kFfZTHyapK5HvMV9ze6iGQDxlMyqo2+DYtXfb89flh8zAz4/sUIm0ZAAw3IZcXbDYrqYNs56gLoIcM9tLNBfRfv/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=eswxoG3G; arc=none smtp.client-ip=91.218.175.170
+	bh=oXikNS+kgN+2w3qPcZgZY0QITtEf/BerEbAt8eoZsE0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=h6P9O68W8gRgi8Mi8siULnOy0TB24tmy4cgtw5PJ7HXObH6g7AiZdRH4HCawB2hgMjqLcGIcRo8xMV7kt0/JRp+gDZr83bfDhQghrqolKyF0TLhcxboVDKFv2lCGYLBdkn7apuyQuGe8G6JnEkIFat2l12lwxxSxvgHyXfgbp2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UexM/xxs; arc=none smtp.client-ip=91.218.175.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="eswxoG3G"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UexM/xxs"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749509781;
+	t=1749509791;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=j3bC3QS+YLVQDjDxB/dMj/zdRv0EphT3+T18L+fEShg=;
-	b=eswxoG3GLoy2gFPGrmXzRUrJQnzdp7StbXSBdaIEFckRQ+Xr1i44A8obRqGLQyOcuIJA2g
-	NATLzItcQAxPHnD5rHiC/nBSU/rC8PGx9wR01no1RefepK2ElUk/5mQJukswVhj1sryRJE
-	5SiXj4Br0I35cLEZ1F4doWgqWizaF5Y=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ffjH9W3JevRTfPRrE/1Jq8fYf5w4/j5rXWB6dZVk6cA=;
+	b=UexM/xxstuk7PO7WmNao3E6L5a2hvVZU3noOUdaCSK3vBl6w4LkpusCz4PyJwsMfLacYe6
+	c8w4nELwZor22Ckt10ptR/Q3VtHD9SZHcunTB+jqRx0Z6SEcQh8guT7Xn8VIJbglgM6A6/
+	fZhsbNRWvYFQuIOtue0oDlEmeuuDChI=
 From: Shakeel Butt <shakeel.butt@linux.dev>
 To: Tejun Heo <tj@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>
@@ -43,9 +45,11 @@ Cc: Johannes Weiner <hannes@cmpxchg.org>,
 	cgroups@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Meta kernel team <kernel-team@meta.com>
-Subject: [PATCH 0/3] cgroup: nmi safe css_rstat_updated
-Date: Mon,  9 Jun 2025 15:56:08 -0700
-Message-ID: <20250609225611.3967338-1-shakeel.butt@linux.dev>
+Subject: [PATCH 3/3] memcg: cgroup: call memcg_rstat_updated irrespective of in_nmi()
+Date: Mon,  9 Jun 2025 15:56:11 -0700
+Message-ID: <20250609225611.3967338-4-shakeel.butt@linux.dev>
+In-Reply-To: <20250609225611.3967338-1-shakeel.butt@linux.dev>
+References: <20250609225611.3967338-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,48 +59,49 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-BPF programs can run in nmi context and may trigger memcg charged memory
-allocation in such context. Recently linux added support to nmi safe
-page allocation along with memcg charging of such allocations. However
-the kmalloc/slab support and corresponding memcg charging is still
-lacking,
+css_rstat_updated() is nmi safe, so there is no need to avoid it in
+in_nmi(), so remove the check.
 
-To provide nmi safe support for memcg charging for kmalloc/slab
-allocations, we need nmi safe memcg stats and for that we need nmi safe
-css_rstat_updated() which adds the given cgroup state whose stats are
-updated into the per-cpu per-ss update tree. This series took the aim to
-make css_rstat_updated() nmi safe.
+Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+---
+ mm/memcontrol.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-This series made css_rstat_updated by using per-cpu lockless lists whose
-node in embedded in individual struct cgroup_subsys_state and the
-per-cpu head is placed in struct cgroup_subsys. For rstat users without
-cgroup_subsys, a global per-cpu lockless list head is created. The main
-challenge to use lockless in this scenario was the potential multiple
-inserters using the same lockless node of a cgroup_subsys_state which is
-different from traditional users of lockless lists.
-
-The multiple inserters using potentially same lockless node was resolved
-by making one of them succeed on reset the lockless node and the winner
-gets to insert the lockless node in the corresponding lockless list.
-
-
-Changelog since v1:
-- Based on Yosry's suggestion always use llist on the update side and
-  create the update tree on flush side
-
-[v1] https://lore.kernel.org/cgroups/20250429061211.1295443-1-shakeel.butt@linux.dev/
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 902da8a9c643..d122bfe33e98 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -573,9 +573,7 @@ static inline void memcg_rstat_updated(struct mem_cgroup *memcg, int val,
+ 	if (!val)
+ 		return;
  
-
-Shakeel Butt (3):
-  cgroup: support to enable nmi-safe css_rstat_updated
-  cgroup: make css_rstat_updated nmi safe
-  memcg: cgroup: call memcg_rstat_updated irrespective of in_nmi()
-
- include/linux/cgroup-defs.h |  4 ++
- kernel/cgroup/rstat.c       | 80 ++++++++++++++++++++++++++++++-------
- mm/memcontrol.c             | 10 ++---
- 3 files changed, 75 insertions(+), 19 deletions(-)
-
+-	/* TODO: add to cgroup update tree once it is nmi-safe. */
+-	if (!in_nmi())
+-		css_rstat_updated(&memcg->css, cpu);
++	css_rstat_updated(&memcg->css, cpu);
+ 	statc_pcpu = memcg->vmstats_percpu;
+ 	for (; statc_pcpu; statc_pcpu = statc->parent_pcpu) {
+ 		statc = this_cpu_ptr(statc_pcpu);
+@@ -2530,7 +2528,8 @@ static inline void account_slab_nmi_safe(struct mem_cgroup *memcg,
+ 	} else {
+ 		struct mem_cgroup_per_node *pn = memcg->nodeinfo[pgdat->node_id];
+ 
+-		/* TODO: add to cgroup update tree once it is nmi-safe. */
++		/* preemption is disabled in_nmi(). */
++		css_rstat_updated(&memcg->css, smp_processor_id());
+ 		if (idx == NR_SLAB_RECLAIMABLE_B)
+ 			atomic_add(nr, &pn->slab_reclaimable);
+ 		else
+@@ -2753,7 +2752,8 @@ static inline void account_kmem_nmi_safe(struct mem_cgroup *memcg, int val)
+ 	if (likely(!in_nmi())) {
+ 		mod_memcg_state(memcg, MEMCG_KMEM, val);
+ 	} else {
+-		/* TODO: add to cgroup update tree once it is nmi-safe. */
++		/* preemption is disabled in_nmi(). */
++		css_rstat_updated(&memcg->css, smp_processor_id());
+ 		atomic_add(val, &memcg->kmem_stat);
+ 	}
+ }
 -- 
 2.47.1
 
