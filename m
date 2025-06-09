@@ -1,215 +1,234 @@
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB4218DB34
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 17:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577CD18DB34
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 17:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749491421; cv=none; b=mKUflGUIDf3nUF6s8Isbp8Vsa5F18NhD6m10VM+vHuPbAOF86Cie7GKgm+Kl1W+bxH3QRVh+V+udfUS9JCiteuwGAi2IHYd/5MpphBv/SPmeyZkTwi9fjN9prUCt8WCbxHv1uWOA8wDxo1NlvS4IlPq48mdvg3rcZWZABLNztig=
+	t=1749491491; cv=none; b=ub0HhuOPbxG4Rsu07+yQ0TXfIYO7ZiFumrnQ9pqsscP8vV8ws0XOiwjgHllXY4/tOYAl8yqkT2zgOkYiAoDKljZhlaOjmbLldmZc9eOks/ejSMUXdbhHdEaP/Cd4xzLSVEeSj2pyUhtOg9iOTqoikNNCTJbzRNiAGwba5W5Bkg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749491421; c=relaxed/simple;
-	bh=Qm2FMbTMlu8a44VbpLGTWPNEVrhTNnqPGI6wvTOVGk4=;
-	h=From:Date:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oW+amQ/7eyceHtj2yWr+rhdYeMw6w41NTkA4MH7aO30WYzRHvnGli5kWQ3OZnZ8FmH27Sr8NWhh1tMbiSrrJo+CTwOiK5R9bsfRsjFboQX5WsrE+N5AVIFs4W+g+Y86xN0FbqfVLv0Ye3zkMa/P0hMbdeuz+GUFAKNfvkjBl9TA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gtSZMA+r; arc=none smtp.client-ip=209.85.217.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gtSZMA+r"
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4e45ece38cdso3788178137.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 10:50:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749491418; x=1750096218; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZPh/zTAUptD4lhiq3HEZlLuyfAcXNYfHo1LNClJb28U=;
-        b=gtSZMA+rDVSDPSw7C1vovIgkuUY2vq/KxKRMhxjDXuNEPYwMz8smWsh6WoPQw+1G/o
-         hGJwRuIgNbxQdey8/qfl+gLaPIgSMDCwej3TdYXgv/OkkN/zvS/WMAeIRN3M+Sfe7MN5
-         Sozb3XJvgLsLRBQ2i/CLvRTxnqMDoBlm2/BZI9u4mQJcc6HErU0xRdqBVmpil5jjTK39
-         wkmTNcyEztcOHZ24UaB8YvngDCFoeU/XgJuyu28zBrxFoJFIBR9Zvqf/qJnj311ZcSB7
-         TwDsQZELLbsRGF3haJY4rghppOfdJBxxXc1F+a7niqWWvI+GYfegBByQXgI+O3iRfrgZ
-         Tubg==
+	s=arc-20240116; t=1749491491; c=relaxed/simple;
+	bh=qXNvVwjN185hbGLpvAFBN+nIFW0X3lPr4MrpmAr0DAk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=AutyBXJBpc1xYrGnZGW0MXpbIBD0DrPcga0b88+TVwVFc67zhqLs4DL3BsMO2XUuzEHzbmHXia4d77QKZ6uhMMSDlT1z+r6I//KfPj8HuhcPtD/hA+89JqLiU6tekAqLYs/0MsWBbiLamMG1PnomLrAp2cMeXGP8sP/F3UtCwjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3ddc147611fso101358255ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 10:51:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749491418; x=1750096218;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+        d=1e100.net; s=20230601; t=1749491488; x=1750096288;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZPh/zTAUptD4lhiq3HEZlLuyfAcXNYfHo1LNClJb28U=;
-        b=g5XwV8EUUKloicvhwgbb/DVozrsqi39FJlKCPyWA+ocdJbDku7BETASWtyIQzRL4Ud
-         eWsMm1Or144eI2vUUN6jiHmDFGcYwgSgtxVKTdopc5OdWLoN3NBdJaPM9/mQVUJCijNd
-         9qflIeLXTMMrkFdD8xhQ3t3RrpzCccb07Wjqkm0MXvxEykAA531Q4YKcThclLb8SO2RS
-         HpLTqla5v+Ig4dDiMP357ynG8PlxRe6h6U+L5bH5w3vZQ6CXPHEoUrNPEIaFOik0FFgZ
-         h9soF8LhmChnX2bTpg3j+5plG8nRDdTZBUdSJugtzZEKuDB6pxWe2xSuabAw+4x1glCK
-         nuUw==
-X-Gm-Message-State: AOJu0Yz6I5+Yb6YHlVEGhG1RdPbzugMqGKRfwh1SJ9IYGxtdSndcXLMx
-	4104auNAPiWZ15FZB/GKSHDw/cKus8mgJPxnh9xRBAfa6KLuDtr0eYa0d1i8rLPP9a8=
-X-Gm-Gg: ASbGncvmRPOPwzODJhFqmEGRE3wWC0GJgORB3+hIKMpUOEKI/kJiVDQrewPxF2CG1vY
-	agKmng79sTDDRPZcWF/ABwYQczj1hXjHHZhbDZKPzdZQziS7slo4kEVSAOuY/RsoKpAQtkPxLEa
-	L3YYZk/Wn1hoxir1seaCPaXGq/y1X289+nas8cl1G132Jev9clLF+R/y6g1JXsRlaFgiYGoIWW1
-	lP6qmqliRbmxB/oKu/WC3VXOEmNKWPKgI+KKKdYgXLrVl3nN/Cu8gwKjrbEolsWE/G0jdquaaNb
-	j1vsZAFVNPgCMsOhMp5sSDjKFqsdIbbHPqFVx6uebg1nROQ7kBdF//eD/Xo0r70=
-X-Google-Smtp-Source: AGHT+IEg54iD2AlcFNr953MlCul0IWYmGYqdfBvGBtl0L4UeLk8DkKnkVgEsPpZksieoUBPtLyVx6g==
-X-Received: by 2002:a05:6102:dc7:b0:4e5:8d09:7b12 with SMTP id ada2fe7eead31-4e7a5d8ed98mr600150137.7.1749491417937;
-        Mon, 09 Jun 2025 10:50:17 -0700 (PDT)
-Received: from localhost ([187.19.172.173])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e790dcf2c4sm2393065137.13.2025.06.09.10.50.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 10:50:17 -0700 (PDT)
-From: arnaldo.melo@gmail.com
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
-Date: Mon, 9 Jun 2025 14:50:14 -0300
-To: linux-kernel@vger.kernel.org
-Cc: Andrei Vagin <avagin@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Eric Biggers <ebiggers@google.com>, Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	John Garry <john.g.garry@oracle.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	"Liam R. Howlett" <liam.howlett@oracle.com>,
-	Namhyung Kim <namhyung@kernel.org>, sources@x1,
-	Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 1/1 FYI] tools headers: Update the fs headers with the kernel
-Message-ID: <aEce1keWdO-vGeqe@x1>
+        bh=CzrU8pbyqjYarig2Rb+thUxACpWpnT2BiF45uldu5XY=;
+        b=EkkVDPV0kJS2JN7Z2nNOYfogLGGUvluvoOkA+Rja9Y9w5BnbRg1qsgo/aq0pXDwGXw
+         D7Qkd8d4YqcwfR0nUUXwPLlZdLkMK9T6Tt7Kaev7GS30HOk5ejQvuIRoZ6YQWvApVI3c
+         xWGMV8i0iCCozRu8YPbhlKouhNtbJJ5j3ItG6Rfq4Q5AGPH2uDK7duEmb9sCvdlZ6Jx5
+         H7OE2hF1JQ5/jPqSyvC9IQT7CZAP11p1N6rQKyQXJwHfvqR5Cm0jfbiV7UTx4a36XHOO
+         qeZGmeXVzIUYh07vg2kCkNlAgTRRNTghkHdfFmiUgaTZ6+vBniT2Xm6hLkfMku1Xs6zk
+         6Ulw==
+X-Forwarded-Encrypted: i=1; AJvYcCVxGvdbzfIB66tRwug0M5yw82kIsyVVuh959sWdb41mLRqjCpfYVeNX9myZ81UsmbCqyNxIvG7WFBMd/dc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBxTLfd+hm81qsyrgd19PR4rv8xHA+hnUwbzsxhXkXlHcgezLJ
+	lxTHOi/QSf92WNgzS7jYJzFG/SxL8uEzq1wqALorHk8GijIeoEWVBrQ7oW2Oh7y+DPpFChHWpq4
+	78nSp63o6cFegeItnWITTV6F7dsEcT8wxTDc0g0i79eNmXr0oTWzgxoDyQko=
+X-Google-Smtp-Source: AGHT+IHwIyWwWv98v19qa/8CMkXbeIzdpgKZV2KTpiOJuMPaK5zI1ycDMVHtQzXffbO4u1e+g54kHlAXDkQzi5lDQp89g3J+FzoS
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Received: by 2002:a05:6e02:17c5:b0:3dd:cb92:f148 with SMTP id
+ e9e14a558f8ab-3ddce435ca5mr168374495ab.12.1749491488343; Mon, 09 Jun 2025
+ 10:51:28 -0700 (PDT)
+Date: Mon, 09 Jun 2025 10:51:28 -0700
+In-Reply-To: <683d5a99.a00a0220.d8eae.0049.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68471f20.050a0220.33aa0e.02c5.GAE@google.com>
+Subject: Re: [syzbot] [kernel?] possible deadlock in static_key_slow_inc (4)
+From: syzbot <syzbot+61afb501981e58b312f8@syzkaller.appspotmail.com>
+To: ardb@kernel.org, jbaron@akamai.com, jpoimboe@kernel.org, 
+	linux-kernel@vger.kernel.org, peterz@infradead.org, rostedt@goodmis.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-tldr; Just FYI, I'm carrying this on the perf tools tree.
+syzbot has found a reproducer for the following issue on:
 
-Full explanation:
+HEAD commit:    19272b37aa4f Linux 6.16-rc1
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1682f20c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c4c8362784bb7796
+dashboard link: https://syzkaller.appspot.com/bug?extid=61afb501981e58b312f8
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15fb29d4580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10c60d70580000
 
-There used to be no copies, with tools/ code using kernel headers
-directly. From time to time tools/perf/ broke due to legitimate kernel
-hacking. At some point Linus complained about such direct usage. Then we
-adopted the current model.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/0ceded60de88/disk-19272b37.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/51f4990c81f8/vmlinux-19272b37.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/7addf73549b9/bzImage-19272b37.xz
 
-See further details at:
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+61afb501981e58b312f8@syzkaller.appspotmail.com
 
- https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/include/uapi/README
+======================================================
+WARNING: possible circular locking dependency detected
+6.16.0-rc1-syzkaller #0 Not tainted
+------------------------------------------------------
+syz-executor966/5834 is trying to acquire lock:
+ffffffff8e2666d0 (cpu_hotplug_lock){++++}-{0:0}, at: static_key_slow_inc+0x12/0x30 kernel/jump_label.c:190
+
+but task is already holding lock:
+ffff888025d1a9c8 (&q->rq_qos_mutex){+.+.}-{4:4}, at: wbt_init+0x393/0x540 block/blk-wbt.c:923
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #3 (&q->rq_qos_mutex){+.+.}-{4:4}:
+       __mutex_lock_common kernel/locking/mutex.c:602 [inline]
+       __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:747
+       wbt_init+0x393/0x540 block/blk-wbt.c:923
+       queue_wb_lat_store+0x354/0x3d0 block/blk-sysfs.c:603
+       queue_attr_store+0x279/0x320 block/blk-sysfs.c:805
+       sysfs_kf_write+0xf2/0x150 fs/sysfs/file.c:145
+       kernfs_fop_write_iter+0x351/0x510 fs/kernfs/file.c:334
+       new_sync_write fs/read_write.c:593 [inline]
+       vfs_write+0x6c4/0x1150 fs/read_write.c:686
+       ksys_write+0x12a/0x250 fs/read_write.c:738
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xcd/0x490 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #2 (&q->q_usage_counter(io)#18){++++}-{0:0}:
+       blk_alloc_queue+0x619/0x760 block/blk-core.c:461
+       blk_mq_alloc_queue+0x175/0x290 block/blk-mq.c:4396
+       __blk_mq_alloc_disk+0x29/0x120 block/blk-mq.c:4443
+       loop_add+0x49e/0xb70 drivers/block/loop.c:2014
+       loop_init+0x164/0x270 drivers/block/loop.c:2249
+       do_one_initcall+0x120/0x6e0 init/main.c:1273
+       do_initcall_level init/main.c:1335 [inline]
+       do_initcalls init/main.c:1351 [inline]
+       do_basic_setup init/main.c:1370 [inline]
+       kernel_init_freeable+0x5c2/0x900 init/main.c:1583
+       kernel_init+0x1c/0x2b0 init/main.c:1473
+       ret_from_fork+0x5d4/0x6f0 arch/x86/kernel/process.c:148
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+-> #1 (fs_reclaim){+.+.}-{0:0}:
+       __fs_reclaim_acquire mm/page_alloc.c:4045 [inline]
+       fs_reclaim_acquire+0x102/0x150 mm/page_alloc.c:4059
+       might_alloc include/linux/sched/mm.h:318 [inline]
+       slab_pre_alloc_hook mm/slub.c:4099 [inline]
+       slab_alloc_node mm/slub.c:4177 [inline]
+       __kmalloc_cache_node_noprof+0x53/0x420 mm/slub.c:4367
+       kmalloc_node_noprof include/linux/slab.h:928 [inline]
+       alloc_worker kernel/workqueue.c:2647 [inline]
+       create_worker+0x10f/0x7e0 kernel/workqueue.c:2790
+       workqueue_prepare_cpu+0xb5/0x160 kernel/workqueue.c:6650
+       cpuhp_invoke_callback+0x3d5/0xa10 kernel/cpu.c:194
+       __cpuhp_invoke_callback_range+0x101/0x210 kernel/cpu.c:967
+       cpuhp_invoke_callback_range kernel/cpu.c:991 [inline]
+       cpuhp_up_callbacks kernel/cpu.c:1022 [inline]
+       _cpu_up+0x3f5/0x930 kernel/cpu.c:1687
+       cpu_up+0x1dc/0x240 kernel/cpu.c:1719
+       cpuhp_bringup_mask+0xd8/0x210 kernel/cpu.c:1785
+       cpuhp_bringup_cpus_parallel kernel/cpu.c:1875 [inline]
+       bringup_nonboot_cpus+0x176/0x1c0 kernel/cpu.c:1889
+       smp_init+0x34/0x160 kernel/smp.c:1010
+       kernel_init_freeable+0x3a8/0x900 init/main.c:1575
+       kernel_init+0x1c/0x2b0 init/main.c:1473
+       ret_from_fork+0x5d4/0x6f0 arch/x86/kernel/process.c:148
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+-> #0 (cpu_hotplug_lock){++++}-{0:0}:
+       check_prev_add kernel/locking/lockdep.c:3168 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3287 [inline]
+       validate_chain kernel/locking/lockdep.c:3911 [inline]
+       __lock_acquire+0x126f/0x1c90 kernel/locking/lockdep.c:5240
+       lock_acquire kernel/locking/lockdep.c:5871 [inline]
+       lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
+       percpu_down_read_internal include/linux/percpu-rwsem.h:53 [inline]
+       percpu_down_read include/linux/percpu-rwsem.h:77 [inline]
+       cpus_read_lock+0x42/0x160 kernel/cpu.c:490
+       static_key_slow_inc+0x12/0x30 kernel/jump_label.c:190
+       rq_qos_add+0x2f8/0x4b0 block/blk-rq-qos.c:349
+       wbt_init+0x3a9/0x540 block/blk-wbt.c:924
+       queue_wb_lat_store+0x354/0x3d0 block/blk-sysfs.c:603
+       queue_attr_store+0x279/0x320 block/blk-sysfs.c:805
+       sysfs_kf_write+0xf2/0x150 fs/sysfs/file.c:145
+       kernfs_fop_write_iter+0x351/0x510 fs/kernfs/file.c:334
+       new_sync_write fs/read_write.c:593 [inline]
+       vfs_write+0x6c4/0x1150 fs/read_write.c:686
+       ksys_write+0x12a/0x250 fs/read_write.c:738
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xcd/0x490 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+other info that might help us debug this:
+
+Chain exists of:
+  cpu_hotplug_lock --> &q->q_usage_counter(io)#18 --> &q->rq_qos_mutex
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&q->rq_qos_mutex);
+                               lock(&q->q_usage_counter(io)#18);
+                               lock(&q->rq_qos_mutex);
+  rlock(cpu_hotplug_lock);
+
+ *** DEADLOCK ***
+
+6 locks held by syz-executor966/5834:
+ #0: ffff888036170428 (sb_writers#7){.+.+}-{0:0}, at: ksys_write+0x12a/0x250 fs/read_write.c:738
+ #1: ffff8880350a8c88 (&of->mutex){+.+.}-{4:4}, at: kernfs_fop_write_iter+0x28f/0x510 fs/kernfs/file.c:325
+ #2: ffff888141331008 (kn->active#50){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x2b2/0x510 fs/kernfs/file.c:326
+ #3: ffff888025d1a7c8 (&q->q_usage_counter(io)#18){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:205
+ #4: ffff888025d1a800 (&q->q_usage_counter(queue)#20){+.+.}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:205
+ #5: ffff888025d1a9c8 (&q->rq_qos_mutex){+.+.}-{4:4}, at: wbt_init+0x393/0x540 block/blk-wbt.c:923
+
+stack backtrace:
+CPU: 0 UID: 0 PID: 5834 Comm: syz-executor966 Not tainted 6.16.0-rc1-syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_circular_bug+0x275/0x350 kernel/locking/lockdep.c:2046
+ check_noncircular+0x14c/0x170 kernel/locking/lockdep.c:2178
+ check_prev_add kernel/locking/lockdep.c:3168 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3287 [inline]
+ validate_chain kernel/locking/lockdep.c:3911 [inline]
+ __lock_acquire+0x126f/0x1c90 kernel/locking/lockdep.c:5240
+ lock_acquire kernel/locking/lockdep.c:5871 [inline]
+ lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
+ percpu_down_read_internal include/linux/percpu-rwsem.h:53 [inline]
+ percpu_down_read include/linux/percpu-rwsem.h:77 [inline]
+ cpus_read_lock+0x42/0x160 kernel/cpu.c:490
+ static_key_slow_inc+0x12/0x30 kernel/jump_label.c:190
+ rq_qos_add+0x2f8/0x4b0 block/blk-rq-qos.c:349
+ wbt_init+0x3a9/0x540 block/blk-wbt.c:924
+ queue_wb_lat_store+0x354/0x3d0 block/blk-sysfs.c:603
+ queue_attr_store+0x279/0x320 block/blk-sysfs.c:805
+ sysfs_kf_write+0xf2/0x150 fs/sysfs/file.c:145
+ kernfs_fop_write_iter+0x351/0x510 fs/kernfs/file.c:334
+ new_sync_write fs/read_write.c:593 [inline]
+ vfs_write+0x6c4/0x1150 fs/read_write.c:686
+ ksys_write+0x12a/0x250 fs/read_write.c:738
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x490 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fd083326329
+Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffd743f1218 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007ffd743f13
+
 
 ---
-
-To pick up changes from:
-
-  5d894321c49e6137 ("fs: add atomic write unit max opt to statx")
-  a516403787e08119 ("fs/proc: extend the PAGEMAP_SCAN ioctl to report guard regions")
-  c07d3aede2b26830 ("fscrypt: add support for hardware-wrapped keys")
-
-These are used to beautify fs syscall arguments, albeit the changes in
-this update are not affecting those beautifiers.
-
-This addresses these tools/ build warnings:
-
-  Warning: Kernel ABI header differences:
-  diff -u tools/include/uapi/linux/stat.h include/uapi/linux/stat.h
-  diff -u tools/perf/trace/beauty/include/uapi/linux/fs.h include/uapi/linux/fs.h
-  diff -u tools/perf/trace/beauty/include/uapi/linux/mount.h include/uapi/linux/mount.h
-  diff -u tools/perf/trace/beauty/include/uapi/linux/stat.h include/uapi/linux/stat.h
-
-Please see tools/include/uapi/README for details (it's in the first patch
-of this series).
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andrei Vagin <avagin@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>
-Cc: Darrick J. Wong <djwong@kernel.org>
-Cc: Eric Biggers <ebiggers@google.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: John Garry <john.g.garry@oracle.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Liam R. Howlett <liam.howlett@oracle.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/include/uapi/linux/fscrypt.h                | 6 ++++--
- tools/include/uapi/linux/stat.h                   | 8 ++++++--
- tools/perf/trace/beauty/include/uapi/linux/fs.h   | 1 +
- tools/perf/trace/beauty/include/uapi/linux/stat.h | 8 ++++++--
- 4 files changed, 17 insertions(+), 6 deletions(-)
-
-diff --git a/tools/include/uapi/linux/fscrypt.h b/tools/include/uapi/linux/fscrypt.h
-index 7a8f4c2901873f25..3aff99f2696a05cb 100644
---- a/tools/include/uapi/linux/fscrypt.h
-+++ b/tools/include/uapi/linux/fscrypt.h
-@@ -119,7 +119,7 @@ struct fscrypt_key_specifier {
-  */
- struct fscrypt_provisioning_key_payload {
- 	__u32 type;
--	__u32 __reserved;
-+	__u32 flags;
- 	__u8 raw[];
- };
- 
-@@ -128,7 +128,9 @@ struct fscrypt_add_key_arg {
- 	struct fscrypt_key_specifier key_spec;
- 	__u32 raw_size;
- 	__u32 key_id;
--	__u32 __reserved[8];
-+#define FSCRYPT_ADD_KEY_FLAG_HW_WRAPPED	0x00000001
-+	__u32 flags;
-+	__u32 __reserved[7];
- 	__u8 raw[];
- };
- 
-diff --git a/tools/include/uapi/linux/stat.h b/tools/include/uapi/linux/stat.h
-index f78ee3670dd5d7c8..1686861aae20a6e4 100644
---- a/tools/include/uapi/linux/stat.h
-+++ b/tools/include/uapi/linux/stat.h
-@@ -182,8 +182,12 @@ struct statx {
- 	/* File offset alignment for direct I/O reads */
- 	__u32	stx_dio_read_offset_align;
- 
--	/* 0xb8 */
--	__u64	__spare3[9];	/* Spare space for future expansion */
-+	/* Optimised max atomic write unit in bytes */
-+	__u32	stx_atomic_write_unit_max_opt;
-+	__u32	__spare2[1];
-+
-+	/* 0xc0 */
-+	__u64	__spare3[8];	/* Spare space for future expansion */
- 
- 	/* 0x100 */
- };
-diff --git a/tools/perf/trace/beauty/include/uapi/linux/fs.h b/tools/perf/trace/beauty/include/uapi/linux/fs.h
-index e762e1af650c4bf0..0098b0ce8ccb1f19 100644
---- a/tools/perf/trace/beauty/include/uapi/linux/fs.h
-+++ b/tools/perf/trace/beauty/include/uapi/linux/fs.h
-@@ -361,6 +361,7 @@ typedef int __bitwise __kernel_rwf_t;
- #define PAGE_IS_PFNZERO		(1 << 5)
- #define PAGE_IS_HUGE		(1 << 6)
- #define PAGE_IS_SOFT_DIRTY	(1 << 7)
-+#define PAGE_IS_GUARD		(1 << 8)
- 
- /*
-  * struct page_region - Page region with flags
-diff --git a/tools/perf/trace/beauty/include/uapi/linux/stat.h b/tools/perf/trace/beauty/include/uapi/linux/stat.h
-index f78ee3670dd5d7c8..1686861aae20a6e4 100644
---- a/tools/perf/trace/beauty/include/uapi/linux/stat.h
-+++ b/tools/perf/trace/beauty/include/uapi/linux/stat.h
-@@ -182,8 +182,12 @@ struct statx {
- 	/* File offset alignment for direct I/O reads */
- 	__u32	stx_dio_read_offset_align;
- 
--	/* 0xb8 */
--	__u64	__spare3[9];	/* Spare space for future expansion */
-+	/* Optimised max atomic write unit in bytes */
-+	__u32	stx_atomic_write_unit_max_opt;
-+	__u32	__spare2[1];
-+
-+	/* 0xc0 */
-+	__u64	__spare3[8];	/* Spare space for future expansion */
- 
- 	/* 0x100 */
- };
--- 
-2.49.0
-
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
