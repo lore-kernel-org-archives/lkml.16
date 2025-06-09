@@ -1,251 +1,226 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20366217654;
-	Mon,  9 Jun 2025 17:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B8D18633F;
+	Mon,  9 Jun 2025 17:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749488843; cv=none; b=nxx/g3X1Ytm8/6bopzA78hDPC/paGXlPh3t1YkRPIZEdqj1jm5L4nHZh8wDs+2wQI/kgNVGKlmWP9j1bJ/OWOhawx953OoOxm7erZSNxvyQ3qVn2chPL2YB6csgFHokUSLTTkaQL2+S26QYqLm7GoFf8yZH2Z9KHQWAEULu4p3k=
+	t=1749488860; cv=none; b=WqnlBdEjXKhLWhNAfHl9q/fQK8kYArxaTvDlX9v7KRdNRk7K6QJqCkn6bpGjKL8tfe9zBnEGSalUyhM2A9gLWClnfNTmSRV9cNv2tlnWewdfzBwB6UsOpYPHW7oN8MrObOctc3ffy6vRi2TkGCxGal65vBbBfh6j+82nKyJzT8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749488843; c=relaxed/simple;
-	bh=OYlhw1BjPK/7EbV6p8FJaWqGvxNhb0veN1hYTUnaj4Y=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ggdBWMYy6phxK6kI7dpnxqFRBNUuZMlI9IlI35iP1DbBGGga+Ymw+7L0yUWEvJBUVGQfDfgJr76mhFFZnFaeeobZS62tgwqXYVR1n07JCQhD+VvxZxP0wFyj7DfyOP6qRAQRYosuWPjgfrA/VgWHSFOgKEhPGgyfKyqPvZSHNn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KljyoXn+; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749488860; c=relaxed/simple;
+	bh=Ch2C2f0dQROPaS1DTJtHEKlSNL+mBdUuhKgHhovymg0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I8P/X6WswUdw36e+GlI7zfZLoh/BaUVM1eB00uohXV2n9OIlcn+OLk1yU1j+uTqXdFtygxWTWCVqZThzJ/vVRLm7cLcHOpukkwScqm+03uoMu25Vq2cGo6vTtFvj0wuhysaztkC5JAIibSfa1V2vg51Ce7Z0CsJM/MYy7mgnu+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vH2M/C69; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KljyoXn+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749488842; x=1781024842;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=OYlhw1BjPK/7EbV6p8FJaWqGvxNhb0veN1hYTUnaj4Y=;
-  b=KljyoXn+lzFKlmt4ww3R4sT+o7RNcZTQTAarB1DJPdrWWnBlvqQzCeCl
-   Lc7z4wnjztH4d0QINUdvOv8fqFGCL7hpZVq8S75PDlvFmTZMa037FwXYg
-   qUWl6jwOTNrtSsvJg8YzMGPM/t+/XkkMyfSkWILu0uIMwPjtsjUGc3oAK
-   95MwwyNloptDrkNDYuWAUS8uBtZpWmerm1H46QHaADpuRTHWR+2WUHate
-   j3q2WajSnOlnCAuX8tjGDOwNYQy1PmeU/aXMLn5EysnfqH/bVoL3jhrqu
-   kVFcWrExHqgHPftjc73KUzYoda3pmefp57Nlr59GctgqhBCpR3wcA4SqF
-   w==;
-X-CSE-ConnectionGUID: 6+SHvUyGSymlxJt729tYzw==
-X-CSE-MsgGUID: RACGii1HS+6/YGS8c64fRw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51667951"
-X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="51667951"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 10:07:14 -0700
-X-CSE-ConnectionGUID: OXgICkbPTXS3J8IOECVJMQ==
-X-CSE-MsgGUID: dYCtnEJKRuW1WrA2HPYLIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="146924028"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.22])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 10:07:10 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 9 Jun 2025 20:07:06 +0300 (EEST)
-To: Rio Liu <rio@r26.me>
-cc: Bjorn Helgaas <bhelgaas@google.com>, 
-    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-    "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
-    "regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
-    "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
-Subject: Re: [REGRESSION] amdgpu fails to load external RX 580 since PCI:
- Allow relaxed bridge window tail sizing for optional resources
-In-Reply-To: <w3gGcmhWNmeGetzLnhgkjfx0JTEyIOKN5sDu-uShZ_7JWthMgGP6plgDuhDbkYyaA7vtGbdl1WbMTZ5zM80OyJoqUa69krqDpuhqDangkLY=@r26.me>
-Message-ID: <21d41e66-d019-31c7-1e73-fed80cf54965@linux.intel.com>
-References: <o2bL8MtD_40-lf8GlslTw-AZpUPzm8nmfCnJKvS8RQ3NOzOW1uq1dVCEfRpUjJ2i7G2WjfQhk2IWZ7oGp-7G-jXN4qOdtnyOcjRR0PZWK5I=@r26.me> <7a7a3619-902c-06ee-6171-6d8ec2107f97@linux.intel.com>
- <w3gGcmhWNmeGetzLnhgkjfx0JTEyIOKN5sDu-uShZ_7JWthMgGP6plgDuhDbkYyaA7vtGbdl1WbMTZ5zM80OyJoqUa69krqDpuhqDangkLY=@r26.me>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vH2M/C69"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8588DC4CEEB;
+	Mon,  9 Jun 2025 17:07:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749488859;
+	bh=Ch2C2f0dQROPaS1DTJtHEKlSNL+mBdUuhKgHhovymg0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vH2M/C69bemRwZtTpWGOQO2awZinpECNdTHXCQlGpERQVQ6kmFmQN5+pz02+kDsgd
+	 2HCOFM6A0azkIR5ASADe60WIgHthdjpUQU7NuHzBnOlaiwFHXkTWJjh+FcK/2eM12U
+	 k7QL7Tcsr04MeTTIbr50z4VWJ+TtmMQMZw9a6GBqNo5uQyJ8F4LSimavzvJ33FUeX+
+	 bTGg8dKujmfsNgFDFGfGXSAL+8uggG/EXuu1t15On7wT3/H9qx3sj/d7deeS0MfWFc
+	 cqGW3PyTcIoOWTEOjZcq+FRCIUfQUq4B0D7vRV7cl9GW3oLE2ZzFOjGtuPfgsVJT6c
+	 PZVop9vFKFJmA==
+Date: Mon, 9 Jun 2025 10:07:36 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Brian Gerst <brgerst@gmail.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, 
+	Joe Lawrence <joe.lawrence@redhat.com>, live-patching@vger.kernel.org, Song Liu <song@kernel.org>, 
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
+	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
+	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 45/62] x86/extable: Define ELF section entry size for
+ exception tables
+Message-ID: <zsvgiietkr4qwrlnmvsov7xmgqe7khqmgluvr6f6hsqaw3sp4q@drakq47ntmhr>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <198cfbd12e54dfce1309828e146b90b1f7b200a5.1746821544.git.jpoimboe@kernel.org>
+ <CAMzpN2jbdRJWhAWOKWzYczMjXqadg_braRgaxyA080K9G=xp0g@mail.gmail.com>
+ <goiggh4js4t3g54fpcs6gugmp26uoumucszrx3e5cdrqdl7336@qijkbpy747jb>
+ <CAMzpN2gmbgts1fFm2x=Ao=X-9g0U000+fPk_i7mMA-f0AQsQYg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-169176343-1749488826=:948"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-169176343-1749488826=:948
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMzpN2gmbgts1fFm2x=Ao=X-9g0U000+fPk_i7mMA-f0AQsQYg@mail.gmail.com>
 
-On Mon, 9 Jun 2025, Rio Liu wrote:
-> On Monday, June 9th, 2025 at AM 5:09, Ilpo J=C3=A4rvinen <ilpo.jarvinen@l=
-inux.intel.com> wrote:
-> > On Mon, 9 Jun 2025, rio@r26.me wrote:
-> >=20
-> > > I have an external Radeon RX580 on my machine connected via Thunderbo=
-lt, and
-> > > since upgrading from 6.14.1 the setup stopped working. Dmesg showed w=
-arning from
-> > > resource sanity check, followed by a stack trace https://pastebin.com=
-/njR55rQW.
-> > > Relevant snippet:
-> > >=20
-> > > [ 12.134907] amdgpu 0000:06:00.0: BAR 2 [mem 0x6000000000-0x60001ffff=
-f 64bit pref]: releasing
-> > > [ 12.134910] [drm:amdgpu_device_resize_fb_bar [amdgpu]] ERROR Problem=
- resizing BAR0 (-16).
-> > > [ 12.135456] amdgpu 0000:06:00.0: BAR 2 [mem 0x6000000000-0x60001ffff=
-f 64bit pref]: assigned
-> > > [ 12.135524] amdgpu 0000:06:00.0: amdgpu: VRAM: 8192M 0x000000F400000=
-000 - 0x000000F5FFFFFFFF (8192M used)
-> > > [ 12.135527] amdgpu 0000:06:00.0: amdgpu: GART: 256M 0x000000FF000000=
-00 - 0x000000FF0FFFFFFF
-> > > [ 12.135536] resource: resource sanity check: requesting [mem 0x00000=
-00000000000-0xffffffffffffffff], which spans more than PCI Bus 0000:00 [mem=
- 0x000a0000-0x000bffff window]
-> > > [ 12.135542] ------------[ cut here ]------------
-> > > [ 12.135543] WARNING: CPU: 6 PID: 599 at arch/x86/mm/pat/memtype.c:72=
-1 memtype_reserve_io+0xfc/0x110
-> > > [ 12.135551] Modules linked in: ccm amdgpu(+) snd_hda_codec_realtek .=
-=2E.
-> > > [ 12.135652] CPU: 6 UID: 0 PID: 599 Comm: (udev-worker) Tainted: G S =
-6.15.0-13743-g8630c59e9936 #16 PREEMPT(full) 3b462c924b3ffd8156fc3b77bcc8dd=
-bf7257fa57
-> > > [ 12.135654] Tainted: [S]=3DCPU_OUT_OF_SPEC
-> > > [ 12.135655] Hardware name: COPELION INTERNATIONAL INC. ZX Series/ZX =
-Series, BIOS 1.07.08TCOP3 03/27/2020
-> > > [ 12.135656] RIP: 0010:memtype_reserve_io+0xfc/0x110
-> > > [ 12.135659] Code: aa fb ff ff b8 f0 ff ff ff eb 88 8b 54 24 04 4c 89=
- ee 48 89 df e8 04 fe ff ff 85 c0 75 db 8b 54 24 04 41 89 16 e9 69 ff ff ff=
- <0f> 0b e9 4b ff ff ff e8 b8 5c fc 00 0f 1f 84 00 00 00 00 00 90 90
-> > >=20
-> > > Bisecting the stable branch pointed me to the following commit:
-> > >=20
-> > > commit 22df32c984be9e9145978acf011642da042a2af3 (HEAD)
-> > > Author: Ilpo J=C3=A4rvinen ilpo.jarvinen@linux.intel.com
-> > > Date: Mon Dec 16 19:56:11 2024 +0200
-> > >=20
-> > > PCI: Allow relaxed bridge window tail sizing for optional resources
-> > >=20
-> > > [ Upstream commit 67f9085596ee55dd27b540ca6088ba0717ee511c ]
-> > >=20
-> > > I've tested on stable (as of now 8630c59e99363c4b655788fd01134aef9bcd=
-9264), and
-> > > the issue persists. Reverting the offending commit via `git revert -n=
- 22df32c984be9e9145978acf011642da042a2af3` allowed amdgpu to load again.
-> > > Dmesg: https://pastebin.com/xd76rDsW.
-> > >=20
-> > > Additional information
-> > > - Distribution: Artix
-> > > - Arch: x86_64
-> > > - Kernel config: https://pastebin.com/DWSERJL5
-> > > - eGPU adapter: https://www.adt.link/product/R43SG-TB3.html
-> > > - Booting with pci=3Drealloc,hpbussize=3D0x33,hpmmiosize=3D256M,hpmmi=
-oprefsize=3D1G
-> > >=20
-> > > I'm reporting here as these are the contacts from the commit message.
-> > > Please let me know if there's a more appropriate place for this, as w=
-ell
-> > > as any more information I can provide.
-> >=20
-> >=20
-> > Hi Rio,
-> >=20
-> > Thanks for the report and I'm sorry about causing this issue. Could you
-> > please try if the patch below solves the issue.
-> >=20
-> > --
-> > From b94823a193032b5f87114cff9e8edc5c67e4ef40 Mon Sep 17 00:00:00 2001
-> > From: =3D?UTF-8?q?Ilpo=3D20J=3DC3=3DA4rvinen?=3D ilpo.jarvinen@linux.in=
-tel.com
-> >=20
-> > Date: Mon, 9 Jun 2025 12:05:20 +0300
-> > Subject: [PATCH 1/1] PCI: Relaxed alignment should never increase min_a=
-lign
-> > MIME-Version: 1.0
-> > Content-Type: text/plain; charset=3DUTF-8
-> > Content-Transfer-Encoding: 8bit
-> >=20
-> > When using relaxed tail alignment for the bridge window,
-> > pbus_size_mem() also tries to minimize min_align, which can under
-> > certain scenarios end up increasing min_align from that found by
-> > calculate_mem_align().
-> >=20
-> > Ensure min_align is not increased by the relaxed tail alignment.
-> >=20
-> > Eventually, it would be better to add calculate_relaxed_head_align()
-> > similar to calculate_mem_align() which finds out what alignment can be
-> > used for the head without introducing any gaps into the bridge window
-> > to give flexibility on head address too. But that looks relatively
-> > complex algorithm so it requires much more testing than fixing the
-> > immediate problem causing a regression.
-> >=20
-> > Reported-by: Rio rio@r26.me
-> >=20
-> > Signed-off-by: Ilpo J=C3=A4rvinen ilpo.jarvinen@linux.intel.com
-> >=20
-> > ---
-> > drivers/pci/setup-bus.c | 11 +++++++----
-> > 1 file changed, 7 insertions(+), 4 deletions(-)
-> >=20
-> > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> > index 07c3d021a47e..f90d49cd07da 100644
-> > --- a/drivers/pci/setup-bus.c
-> > +++ b/drivers/pci/setup-bus.c
-> > @@ -1169,6 +1169,7 @@ static int pbus_size_mem(struct pci_bus *bus, uns=
-igned long mask,
-> > resource_size_t children_add_size =3D 0;
-> > resource_size_t children_add_align =3D 0;
-> > resource_size_t add_align =3D 0;
-> > + resource_size_t relaxed_align;
-> >=20
-> > if (!b_res)
-> > return -ENOSPC;
-> > @@ -1246,8 +1247,9 @@ static int pbus_size_mem(struct pci_bus *bus, uns=
-igned long mask,
-> > if (bus->self && size0 &&
-> >=20
-> > !pbus_upstream_space_available(bus, mask | IORESOURCE_PREFETCH, type,
-> > size0, min_align)) {
-> > - min_align =3D 1ULL << (max_order + __ffs(SZ_1M));
-> > - min_align =3D max(min_align, win_align);
-> > + relaxed_align =3D 1ULL << (max_order + __ffs(SZ_1M));
-> > + relaxed_align =3D max(relaxed_align, win_align);
-> > + min_align =3D min(min_align, relaxed_align);
-> > size0 =3D calculate_memsize(size, min_size, 0, 0, resource_size(b_res),=
- win_align);
-> > pci_info(bus->self, "bridge window %pR to %pR requires relaxed alignmen=
-t rules\n",
-> >=20
-> > b_res, &bus->busn_res);
-> >=20
-> > @@ -1261,8 +1263,9 @@ static int pbus_size_mem(struct pci_bus *bus, uns=
-igned long mask,
-> > if (bus->self && size1 &&
-> >=20
-> > !pbus_upstream_space_available(bus, mask | IORESOURCE_PREFETCH, type,
-> > size1, add_align)) {
-> > - min_align =3D 1ULL << (max_order + __ffs(SZ_1M));
-> > - min_align =3D max(min_align, win_align);
-> > + relaxed_align =3D 1ULL << (max_order + __ffs(SZ_1M));
-> > + relaxed_align =3D max(min_align, win_align);
-> > + min_align =3D min(min_align, relaxed_align);
-> > size1 =3D calculate_memsize(size, min_size, add_size, children_add_size=
-,
-> > resource_size(b_res), win_align);
-> > pci_info(bus->self,
-> >=20
-> >=20
-> > base-commit: 3719a04a80caf660f899a462cd8f3973bcfa676e
-> > --
-> > 2.39.5
->=20
-> Hello Ilpo,
->=20
-> I've tested the patch and it seems to fix the issue. Thank you!
+On Fri, Jun 06, 2025 at 09:26:30PM -0400, Brian Gerst wrote:
+> On Fri, Jun 6, 2025 at 3:48 AM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+> >
+> > On Thu, Jun 05, 2025 at 11:58:23PM -0400, Brian Gerst wrote:
+> > > On Fri, May 9, 2025 at 4:51 PM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+> > > >
+> > > > In preparation for the objtool klp diff subcommand, define the entry
+> > > > size for the __ex_table section in its ELF header.  This will allow
+> > > > tooling to extract individual entries.
+> > > >
+> > > > Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> > > > ---
+> > > >  arch/x86/include/asm/asm.h | 20 ++++++++++++--------
+> > > >  kernel/extable.c           |  2 ++
+> > > >  2 files changed, 14 insertions(+), 8 deletions(-)
+> > > >
+> > > > diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
+> > > > index f963848024a5..62dff336f206 100644
+> > > > --- a/arch/x86/include/asm/asm.h
+> > > > +++ b/arch/x86/include/asm/asm.h
+> > > > @@ -138,15 +138,17 @@ static __always_inline __pure void *rip_rel_ptr(void *p)
+> > > >
+> > > >  # include <asm/extable_fixup_types.h>
+> > > >
+> > > > +#define EXTABLE_SIZE 12
+> > >
+> > > Put this in asm-offsets.c instead.
+> >
+> > But that's only for .S code right?  This is also needed for inline asm.
+> 
+> <asm/asm-offsets.h> can be used in C code too.  Normally it wouldn't
+> be needed but the inline asm case is a valid use.
 
-Great, thanks for testing.
+Ah, nice.  This is much better.  Thanks!
 
-If you want, you can give your Tested-by tag so I can include it into the=
-=20
-official submission of the fix.
+diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
+index e206e0f96568..eb24d9ba30d7 100644
+--- a/arch/x86/include/asm/alternative.h
++++ b/arch/x86/include/asm/alternative.h
+@@ -16,8 +16,6 @@
+ #define ALT_DIRECT_CALL(feature) ((ALT_FLAG_DIRECT_CALL << ALT_FLAGS_SHIFT) | (feature))
+ #define ALT_CALL_ALWAYS		ALT_DIRECT_CALL(X86_FEATURE_ALWAYS)
+ 
+-#define ALTINSTR_SIZE		14
+-
+ #ifndef __ASSEMBLER__
+ 
+ #include <linux/stddef.h>
+@@ -200,7 +198,7 @@ static inline int alternatives_text_reserved(void *start, void *end)
+ 
+ #define ALTINSTR_ENTRY(ft_flags)					      \
+ 	".pushsection .altinstructions, \"aM\", @progbits, "		      \
+-		      __stringify(ALTINSTR_SIZE) "\n"			      \
++		      __stringify(ALT_INSTR_SIZE) "\n"			      \
+ 	" .long 771b - .\n"				/* label           */ \
+ 	" .long 774f - .\n"				/* new instruction */ \
+ 	" .4byte " __stringify(ft_flags) "\n"		/* feature + flags */ \
+@@ -363,7 +361,7 @@ void nop_func(void);
+ 741:									\
+ 	.skip -(((744f-743f)-(741b-740b)) > 0) * ((744f-743f)-(741b-740b)),0x90	;\
+ 742:									\
+-	.pushsection .altinstructions, "aM", @progbits, ALTINSTR_SIZE ;	\
++	.pushsection .altinstructions, "aM", @progbits, ALT_INSTR_SIZE ;\
+ 	altinstr_entry 740b,743f,flag,742b-740b,744f-743f ;		\
+ 	.popsection ;							\
+ 	.pushsection .altinstr_replacement,"ax"	;			\
+diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
+index 62dff336f206..eb0b33f02be3 100644
+--- a/arch/x86/include/asm/asm.h
++++ b/arch/x86/include/asm/asm.h
+@@ -138,7 +138,9 @@ static __always_inline __pure void *rip_rel_ptr(void *p)
+ 
+ # include <asm/extable_fixup_types.h>
+ 
+-#define EXTABLE_SIZE 12
++#ifndef COMPILE_OFFSETS
++#include <asm/asm-offsets.h>
++#endif
+ 
+ /* Exception table entry */
+ #ifdef __ASSEMBLER__
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index d01ab5fa631f..4888e1c8be6a 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -593,8 +593,6 @@ void __init_or_module noinline apply_alternatives(struct alt_instr *start,
+ 	u8 *instr, *replacement;
+ 	struct alt_instr *a, *b;
+ 
+-	BUILD_BUG_ON(ALTINSTR_SIZE != sizeof(struct alt_instr));
+-
+ 	DPRINTK(ALT, "alt table %px, -> %px", start, end);
+ 
+ 	/*
+diff --git a/arch/x86/kernel/asm-offsets.c b/arch/x86/kernel/asm-offsets.c
+index 6259b474073b..805da27854ee 100644
+--- a/arch/x86/kernel/asm-offsets.c
++++ b/arch/x86/kernel/asm-offsets.c
+@@ -123,4 +123,8 @@ static void __used common(void)
+ 	OFFSET(ARIA_CTX_rounds, aria_ctx, rounds);
+ #endif
+ 
++	BLANK();
++	DEFINE(EXTABLE_SIZE,	 sizeof(struct exception_table_entry));
++	DEFINE(UNWIND_HINT_SIZE, sizeof(struct unwind_hint));
++	DEFINE(ALT_INSTR_SIZE,	 sizeof(struct alt_instr));
+ }
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index 4624d6d916a2..977ee75e047c 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -199,8 +199,6 @@ static struct orc_entry *orc_find(unsigned long ip)
+ {
+ 	static struct orc_entry *orc;
+ 
+-	BUILD_BUG_ON(UNWIND_HINT_SIZE != sizeof(struct unwind_hint));
+-
+ 	if (ip == 0)
+ 		return &null_orc_entry;
+ 
+diff --git a/arch/x86/mm/extable.c b/arch/x86/mm/extable.c
+index d4aae98b3739..bf8dab18be97 100644
+--- a/arch/x86/mm/extable.c
++++ b/arch/x86/mm/extable.c
+@@ -303,8 +303,6 @@ int fixup_exception(struct pt_regs *regs, int trapnr, unsigned long error_code,
+ 	const struct exception_table_entry *e;
+ 	int type, reg, imm;
+ 
+-	BUILD_BUG_ON(EXTABLE_SIZE != sizeof(struct exception_table_entry));
+-
+ #ifdef CONFIG_PNPBIOS
+ 	if (unlikely(SEGMENT_IS_PNP_CODE(regs->cs))) {
+ 		extern u32 pnp_bios_fault_eip, pnp_bios_fault_esp;
+diff --git a/include/linux/objtool.h b/include/linux/objtool.h
+index d4137a46ee70..e93f0c28b54b 100644
+--- a/include/linux/objtool.h
++++ b/include/linux/objtool.h
+@@ -8,8 +8,6 @@
+ 
+ #include <asm/asm.h>
+ 
+-#define UNWIND_HINT_SIZE 12
+-
+ #ifndef __ASSEMBLY__
+ 
+ #define UNWIND_HINT(type, sp_reg, sp_offset, signal)		\
+diff --git a/kernel/bounds.c b/kernel/bounds.c
+index 29b2cd00df2c..02b619eb6106 100644
+--- a/kernel/bounds.c
++++ b/kernel/bounds.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #define __GENERATING_BOUNDS_H
++#define COMPILE_OFFSETS
+ /* Include headers that define the enum constants of interest */
+ #include <linux/page-flags.h>
+ #include <linux/mmzone.h>
+diff --git a/scripts/mod/devicetable-offsets.c b/scripts/mod/devicetable-offsets.c
+index d3d00e85edf7..ef2ffb68f69d 100644
+--- a/scripts/mod/devicetable-offsets.c
++++ b/scripts/mod/devicetable-offsets.c
+@@ -1,4 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
++#define COMPILE_OFFSETS
+ #include <linux/kbuild.h>
+ #include <linux/mod_devicetable.h>
+ 
 
---=20
- i.
-
---8323328-169176343-1749488826=:948--
