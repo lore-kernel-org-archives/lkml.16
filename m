@@ -1,144 +1,182 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DC44431
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 03:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13ACC25C6F7;
+	Mon,  9 Jun 2025 03:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749439868; cv=none; b=QwUj7gmc3VDByzDjHdiconcRi6bR+wUgwziAV2PP+O4voxVEwYLfC0gvTV9JbCosDu2TR1j+5IMgm9N4WtelHLo9fzJC6cTn9+dzs9HD69ZEptWzJhT0EURruEtnEVgFF+gql5lKoFnqyS3cvlUc9ZeUtqXzB7w8gUnkRRYnRrA=
+	t=1749440279; cv=none; b=sZENTArvUZNIjwZkvtBp6giBvaQsnI0oV3RGJwKSlAvXppcwllzKcyqx8OXdnSNCrnsEbod+9JpSAAJRDEi+4UGL7wJZnzdn625in7/P2vNuUSkQRs5bwDgNOcJ6kIh/GKualqfzaRlcnYfL2mwcUhAnfnEeouIYcca2eSLF+v4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749439868; c=relaxed/simple;
-	bh=DreDo2n2jK/0am3oWk/Bgn/gRIblHRe8vna5RxJhzJc=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=LSGmFKmbWYh9sr5Rw14qtXUvL1oyCtuQhw6vjfAn1FW39+Dt5VYtvw8U/BzVxQQMiicwGJZdtjZJQI6+3xSyRMx8GEFGgT0MBsKo/rh0tp/d4W4Pnhvvh9i6h8BEr3Bh/qbwVKCEe5Pj4OAFEPbwY5/769MxWHX0RYIiOgwJth0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bFy5P3sBMzRk3G;
-	Mon,  9 Jun 2025 11:26:49 +0800 (CST)
-Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
-	by mail.maildlp.com (Postfix) with ESMTPS id AE5E2140132;
-	Mon,  9 Jun 2025 11:31:01 +0800 (CST)
-Received: from [10.174.178.46] (10.174.178.46) by
- kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 9 Jun 2025 11:31:00 +0800
-Subject: Re: [PATCH] ubifs: Remove uncallable debug code
-To: <linux@treblig.org>, <richard@nod.at>
-CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20250608230846.166822-1-linux@treblig.org>
-From: Zhihao Cheng <chengzhihao1@huawei.com>
-Message-ID: <a3db4a26-fc36-f3fe-6d75-3fe1e6263a6d@huawei.com>
-Date: Mon, 9 Jun 2025 11:31:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+	s=arc-20240116; t=1749440279; c=relaxed/simple;
+	bh=EPTH44jqF1joHLOJRZq+d2ztXqqn7aJ98pXWigr/MQ0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WtCxtjPHcZkYh6Y4Iy4Nnk3MOj+s8oT9dsrKB0qWfPiLmX6q1jPPgNSaijbojGVYL+dhyudU/2FJljroL5tcKZb/7XNTqJiFXO3i9sxbGnsia5AGmRrdiiQOetDXqNrAHbbgeA+PGvcIjSX29EDIKGXEvq3mm8/u4qW/gvx5lU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bFyLB3V6nzKHN9n;
+	Mon,  9 Jun 2025 11:37:54 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id D11451A0FB3;
+	Mon,  9 Jun 2025 11:37:52 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.67.174.193])
+	by APP4 (Coremail) with SMTP id gCh0CgB3218NV0ZolkrOOw--.50094S4;
+	Mon, 09 Jun 2025 11:37:50 +0800 (CST)
+From: Luo Gengkun <luogengkun@huaweicloud.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] perf/core: Fix WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0) in perf_cgroup_switch
+Date: Mon,  9 Jun 2025 03:53:16 +0000
+Message-Id: <20250609035316.250557-1-luogengkun@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250608230846.166822-1-linux@treblig.org>
-Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- kwepemk500005.china.huawei.com (7.202.194.90)
+X-CM-TRANSID:gCh0CgB3218NV0ZolkrOOw--.50094S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxAF4DWr17XF1kuF1rZF1kXwb_yoWrJr4kpF
+	srCr4Ygws8XF9Iqay3tw1vvw1avw4FqaykWr17Kw4akrW5Xr1DGF47Ga15JFn8Zrn7tFy3
+	trZ0kr13C34Ut3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAa
+	w2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
+	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
+	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
+	xUF1v3UUUUU
+X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-ÔÚ 2025/6/9 7:08, linux@treblig.org Ð´µÀ:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> 
-> ubifs_dump_budget_req() and ubifs_dump_index() have been unused
-> since they were originally added back in 2008's
-> commit 1e51764a3c2a ("UBIFS: add new flash file system")
-> 
-> They were renamed from dbg_dump_budget_req() and dbg_dump_index() in
-> 2012.
-> 
-> Remove them.
-> 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> ---
->   fs/ubifs/debug.c | 36 ------------------------------------
->   fs/ubifs/debug.h |  2 --
->   2 files changed, 38 deletions(-)
+There may be concurrency between perf_cgroup_switch and
+perf_cgroup_event_disable. Consider the following scenario: after a new
+perf cgroup event is created on CPU0, the new event may not trigger
+a reprogramming, causing ctx->is_active to be 0. In this case, when CPU1
+disables this perf event, it executes __perf_remove_from_context->
+list_del_event->perf_cgroup_event_disable on CPU1, which causes a race
+with perf_cgroup_switch running on CPU0.
 
-I guess these functions are used to debug in early development. I use 
-them somtimes for debugging/developing. IMO, no need to drop them.
-> 
-> diff --git a/fs/ubifs/debug.c b/fs/ubifs/debug.c
-> index b01f382ce8db..05124392d1d9 100644
-> --- a/fs/ubifs/debug.c
-> +++ b/fs/ubifs/debug.c
-> @@ -580,23 +580,6 @@ void ubifs_dump_node(const struct ubifs_info *c, const void *node, int node_len)
->   	spin_unlock(&dbg_lock);
->   }
->   
-> -void ubifs_dump_budget_req(const struct ubifs_budget_req *req)
-> -{
-> -	spin_lock(&dbg_lock);
-> -	pr_err("Budgeting request: new_ino %d, dirtied_ino %d\n",
-> -	       req->new_ino, req->dirtied_ino);
-> -	pr_err("\tnew_ino_d   %d, dirtied_ino_d %d\n",
-> -	       req->new_ino_d, req->dirtied_ino_d);
-> -	pr_err("\tnew_page    %d, dirtied_page %d\n",
-> -	       req->new_page, req->dirtied_page);
-> -	pr_err("\tnew_dent    %d, mod_dent     %d\n",
-> -	       req->new_dent, req->mod_dent);
-> -	pr_err("\tidx_growth  %d\n", req->idx_growth);
-> -	pr_err("\tdata_growth %d dd_growth     %d\n",
-> -	       req->data_growth, req->dd_growth);
-> -	spin_unlock(&dbg_lock);
-> -}
-> -
->   void ubifs_dump_lstats(const struct ubifs_lp_stats *lst)
->   {
->   	spin_lock(&dbg_lock);
-> @@ -963,25 +946,6 @@ void ubifs_dump_tnc(struct ubifs_info *c)
->   	pr_err("(pid %d) finish dumping TNC tree\n", current->pid);
->   }
->   
-> -static int dump_znode(struct ubifs_info *c, struct ubifs_znode *znode,
-> -		      void *priv)
-> -{
-> -	ubifs_dump_znode(c, znode);
-> -	return 0;
-> -}
-> -
-> -/**
-> - * ubifs_dump_index - dump the on-flash index.
-> - * @c: UBIFS file-system description object
-> - *
-> - * This function dumps whole UBIFS indexing B-tree, unlike 'ubifs_dump_tnc()'
-> - * which dumps only in-memory znodes and does not read znodes which from flash.
-> - */
-> -void ubifs_dump_index(struct ubifs_info *c)
-> -{
-> -	dbg_walk_index(c, NULL, dump_znode, NULL);
-> -}
-> -
->   /**
->    * dbg_save_space_info - save information about flash space.
->    * @c: UBIFS file-system description object
-> diff --git a/fs/ubifs/debug.h b/fs/ubifs/debug.h
-> index d425861e6b82..1d5c8ee8b64a 100644
-> --- a/fs/ubifs/debug.h
-> +++ b/fs/ubifs/debug.h
-> @@ -245,7 +245,6 @@ const char *dbg_snprintf_key(const struct ubifs_info *c,
->   void ubifs_dump_inode(struct ubifs_info *c, const struct inode *inode);
->   void ubifs_dump_node(const struct ubifs_info *c, const void *node,
->   		     int node_len);
-> -void ubifs_dump_budget_req(const struct ubifs_budget_req *req);
->   void ubifs_dump_lstats(const struct ubifs_lp_stats *lst);
->   void ubifs_dump_budg(struct ubifs_info *c, const struct ubifs_budg_info *bi);
->   void ubifs_dump_lprop(const struct ubifs_info *c,
-> @@ -260,7 +259,6 @@ void ubifs_dump_heap(struct ubifs_info *c, struct ubifs_lpt_heap *heap,
->   void ubifs_dump_pnode(struct ubifs_info *c, struct ubifs_pnode *pnode,
->   		      struct ubifs_nnode *parent, int iip);
->   void ubifs_dump_tnc(struct ubifs_info *c);
-> -void ubifs_dump_index(struct ubifs_info *c);
->   void ubifs_dump_lpt_lebs(const struct ubifs_info *c);
->   
->   int dbg_walk_index(struct ubifs_info *c, dbg_leaf_callback leaf_cb,
-> 
+The following describes the details of this concurrency scenario:
+
+CPU0						CPU1
+
+perf_cgroup_switch:
+   ...
+   # cpuctx->cgrp is not NULL here
+   if (READ_ONCE(cpuctx->cgrp) == NULL)
+   	return;
+
+						perf_remove_from_context:
+						   ...
+						   raw_spin_lock_irq(&ctx->lock);
+						   ...
+						   # ctx->is_active == 0 because reprogramm is not
+						   # tigger, so CPU1 can do __perf_remove_from_context
+						   # for CPU0
+						   __perf_remove_from_context:
+						         perf_cgroup_event_disable:
+							    ...
+							    if (--ctx->nr_cgroups)
+							    ...
+
+   # this warning will happened because CPU1 changed
+   # ctx.nr_cgroups to 0.
+   WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
+
+To fix this problem, re-check the condition after hold the lock and take
+this opportunity to convert to guard instead of adding goto unlock.
+
+Fixes: db4a835601b7 ("perf/core: Set cgroup in CPU contexts for new cgroup events")
+Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+---
+Changes in v3:
+1. Using guard instead of adding goto unlock to make the code more robust.
+2. Re-check the condition instead of expand the lock-holding critical
+section.
+
+Link to v2: https://lore.kernel.org/all/20250604033924.3914647-1-luogengkun@huaweicloud.com/
+---
+ kernel/events/core.c | 32 ++++++++++++++++++++++++++++----
+ 1 file changed, 28 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 280d42b40b34..4759a051459f 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -207,6 +207,25 @@ static void perf_ctx_unlock(struct perf_cpu_context *cpuctx,
+ 	__perf_ctx_unlock(&cpuctx->ctx);
+ }
+ 
++typedef struct {
++	struct perf_cpu_context *cpuctx;
++	struct perf_event_context *ctx;
++} class_perf_ctx_lock_t;
++
++static inline void
++class_perf_ctx_lock_destructor(class_perf_ctx_lock_t *_T)
++{
++	perf_ctx_unlock(_T->cpuctx, _T->ctx);
++}
++
++static inline class_perf_ctx_lock_t
++class_perf_ctx_lock_constructor(struct perf_cpu_context *cpuctx,
++				struct perf_event_context *ctx)
++{
++	perf_ctx_lock(cpuctx, ctx);
++	return (class_perf_ctx_lock_t) {cpuctx, ctx};
++}
++
+ #define TASK_TOMBSTONE ((void *)-1L)
+ 
+ static bool is_kernel_event(struct perf_event *event)
+@@ -938,13 +957,19 @@ static void perf_cgroup_switch(struct task_struct *task)
+ 	if (READ_ONCE(cpuctx->cgrp) == NULL)
+ 		return;
+ 
+-	WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
+-
+ 	cgrp = perf_cgroup_from_task(task, NULL);
+ 	if (READ_ONCE(cpuctx->cgrp) == cgrp)
+ 		return;
+ 
+-	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
++	guard(perf_ctx_lock)(cpuctx, cpuctx->task_ctx);
++	/*
++	 * Re-check, could've raced vs perf_remove_from_context().
++	 */
++	if (READ_ONCE(cpuctx->cgrp) == NULL)
++		return;
++
++	WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
++
+ 	perf_ctx_disable(&cpuctx->ctx, true);
+ 
+ 	ctx_sched_out(&cpuctx->ctx, NULL, EVENT_ALL|EVENT_CGROUP);
+@@ -962,7 +987,6 @@ static void perf_cgroup_switch(struct task_struct *task)
+ 	ctx_sched_in(&cpuctx->ctx, NULL, EVENT_ALL|EVENT_CGROUP);
+ 
+ 	perf_ctx_enable(&cpuctx->ctx, true);
+-	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+ }
+ 
+ static int perf_cgroup_ensure_storage(struct perf_event *event,
+-- 
+2.34.1
 
