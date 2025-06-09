@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8150E1DE2D7;
-	Mon,  9 Jun 2025 16:17:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2390F1442F4;
+	Mon,  9 Jun 2025 16:17:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749485824; cv=none; b=p3Y6W8h9xxZtpCaoR99JVv6J7FbixOF4VoWz0jG9rLx3UMZYnlmXwZMOvtK5DsZKydfFglvBPUXNxazXPnBKnHGJISMXR1S4uv2JtxKSP/xOKaKyX5jGbwp7iH6lml9FBgvwO4TKQaLBULzlos47waSYUI+8X9wSOWH5w0B92ag=
+	t=1749485834; cv=none; b=nt7lQoHbb5gmb9Iwnf32ZazPMLlsat/l2RoQCfQ6U6MCeOjkJjVkNkvcBLa2fGxoSfv99atYTIhZ/n9Q4SRwDhoU/ws9eh/Al+l0wPFdlAgs7/VEqfu+E0wy+un2AOr2/+g8Nw/M9b1Qv2aAIt3xOAHol+hC5TQmMpcqYWrHwUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749485824; c=relaxed/simple;
-	bh=dXwjfSoGEdwX4UjzL1tnbGhb6idWIO1BMgB70KIqTP8=;
+	s=arc-20240116; t=1749485834; c=relaxed/simple;
+	bh=1UrG9nhoPoMfpbyA/DogGIHx2IpDgypd6UjQLhfcdjc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=gDNyOrYKQ/ApLtCo6zdkzKzq4YRRnVH7hMI1X+3NlQCLBYAOIt5R02X61LXaafmq7SImp0qxpfsWzmnNj/ruEdtLN0M1P6WE+St3whD1tpLwhZEKM7Jj/WzoW/CfFR54KNQrQ+8vMKQin91vmoCkNzvfwy/1xcfx1zl1cSmyfSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T+qP+bIM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=mToy5jmG8owIgW2K3Ksbmuzh40lKsGcgQtE+YcM615tI0JQoSe9mExZ/vzwEHjkbh4jCNp7n/I37RoQvsD0UxHTKvuvt8CMdvQ5aePWlYQnhifskkq4FuxhSlivcrLowYZ2yl0mCzaZOrfNsk40WxtINbpsWZLIwDIaN8iOzKgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z6k4nREi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T+qP+bIM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A60C1C4CEEB;
-	Mon,  9 Jun 2025 16:17:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z6k4nREi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5144BC4CEEB;
+	Mon,  9 Jun 2025 16:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749485824;
-	bh=dXwjfSoGEdwX4UjzL1tnbGhb6idWIO1BMgB70KIqTP8=;
+	s=k20201202; t=1749485833;
+	bh=1UrG9nhoPoMfpbyA/DogGIHx2IpDgypd6UjQLhfcdjc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=T+qP+bIMLxcb/FDR1I7JEL6scUyj0/qm7d8Fd5TUZVefPTFRipfZ8ZYDWOrJjCT9v
-	 E4ysL8GeFrIACjHCbcGzLUcIvFxDc2U/O/y4WXDZQVEdDet7YcTlRpQWWQUZK2ueUc
-	 uOY99UvOq6HnjS4hLUv+IBTXUd/8pmWWs4psyP0D+WlpvHtjV+f0LOQn7TLWuxRx8q
-	 MelKjSxBkIwJ8OMaa7BfNLCchoOJbfHVhSFqhCiXEfBx7s20lBLRQxVX67nGJhUhuI
-	 yNyybvYqaFgRZHz7qfSXbu17QQ9DFj0AMn6IB8Cm6jIX2Fy2y6KAhcA+3JzMrychjV
-	 DCP3uWgJtPKsA==
+	b=Z6k4nREiCRC4ZeWNxwXdpJXCegUyBF/O+uySGecEWZEbo9k8GwkOx8xeIhsOYARS0
+	 tL1vvVs6QFRnLOel8Ace4RADIFGviyWr1SDa3Cx7ebt60zuFxVa8BYbzSSjvVr6lp7
+	 fWJmI4esDvY0sqhn0jPKV6ZDMJTR55puih7LPqB5NThhJAZpK0j4jcqpoIByOlISJ3
+	 RbjhaDyar2aU9Z4IVEY1TJIjxSS+eiE9OtQq/0KIBM6ArWIxNDGLmPntCGXxCYz4YF
+	 2+TXq7CC55ZUXcPc22wF5wohdXIdzw9PP+AcCCP+R4aVL5YMZe6ZFGUYb/LYqcDCZK
+	 WiyLWVJuwqM0Q==
 From: Vinod Koul <vkoul@kernel.org>
-To: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-Cc: yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev, 
- sanyog.r.kale@intel.com, Basavaraj.Hiregoudar@amd.com, 
- Sunil-kumar.Dommati@amd.com, venkataprasad.potturu@amd.com, 
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250530054447.1645807-1-Vijendar.Mukunda@amd.com>
-References: <20250530054447.1645807-1-Vijendar.Mukunda@amd.com>
-Subject: Re: [PATCH 0/3] soundwire: amd: fixes and improvements
-Message-Id: <174948582129.818066.6657082052541545420.b4-ty@kernel.org>
-Date: Mon, 09 Jun 2025 21:47:01 +0530
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: broonie@kernel.org, lgirdwood@gmail.com, linux-sound@vger.kernel.org, 
+ patches@opensource.cirrus.com, yung-chuan.liao@linux.intel.com, 
+ pierre-louis.bossart@linux.dev, peter.ujfalusi@linux.intel.com, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250609143041.495049-1-ckeepax@opensource.cirrus.com>
+References: <20250609143041.495049-1-ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH 0/3] Update SoundWire IRQ handling
+Message-Id: <174948583095.818152.7190907792484657066.b4-ty@kernel.org>
+Date: Mon, 09 Jun 2025 21:47:10 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,27 +48,24 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Fri, 30 May 2025 11:13:38 +0530, Vijendar Mukunda wrote:
-> This patch series consists of fixes and improvements for
-> AMD Soundwire stack.
+On Mon, 09 Jun 2025 15:30:38 +0100, Charles Keepax wrote:
+> Fix some difficulties in implementing IRQs for the SoundWire system, by
+> moving the handle_nested_irq outside of the sdw_dev_lock. Also a minor
+> maintainers update.
 > 
-> Vijendar Mukunda (3):
->   soundwire: amd: fix for handling slave alerts after link is down
->   soundwire: amd: serialize amd manager resume sequence during
->     pm_prepare
->   soundwire: amd: cancel pending slave status handling workqueue during
->     remove sequence
+> Thanks,
+> Charles
 > 
 > [...]
 
 Applied, thanks!
 
-[1/3] soundwire: amd: fix for handling slave alerts after link is down
-      commit: 86a4371b76976158be875dc654ceee35c574b27b
-[2/3] soundwire: amd: serialize amd manager resume sequence during pm_prepare
-      (no commit info)
-[3/3] soundwire: amd: cancel pending slave status handling workqueue during remove sequence
-      (no commit info)
+[1/3] MAINTAINERS: Remove Sanyog Kale as reviewer on SoundWire
+      commit: 99d4a6e5c24fc05fc56a33d9d24e89720bfd5665
+[2/3] soundwire: Move handle_nested_irq outside of sdw_dev_lock
+      commit: ccb7bb13c00bcc3178d270da052635c56148bc16
+[3/3] ASoC: cs42l43: Remove unnecessary work functions
+      commit: 0cbce868fffaf115a26d6cb45516627cf13cc3d2
 
 Best regards,
 -- 
