@@ -1,157 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186BA3398B
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 17:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301E1149C53;
+	Mon,  9 Jun 2025 17:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749491812; cv=none; b=Fk7t63GwJVm+0yIu2F7q039mImXtCoqegKPRb5sL0QpkuwO+WutXi+XO7fW9JG14xjRCH3emis4CbUPWQKQd+Cen7lHBGpZrPIDXzgyKu0nzo+HSF3bScya1eeRP1Bvb8kiGYuIOGXafNYxWRlRfOk97f7HsKb7Jg4ZiO1huadw=
+	t=1749491945; cv=none; b=A4OJ7XSx7COs0K1ZLJU2jAmQoGTR9sTsj0pZwADELIgV65bG2bH4bOiVShMHXZeOGWGnQQ+efFQvVPKGYNEAHIL7gPR6xh/291sQ4GDETkazQaSYNYzcxqmn5YW+p9Env09Tjo0TpuW3UMOmgcc7p63ui76TwXu6DMnOzRCJyOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749491812; c=relaxed/simple;
-	bh=QMLX7USi3ZT3hX+mBAv46oBwb8mA2xy+q3erSnK4HKU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=guLTjycjVP3qAq8RhdvA1ZrdFlcyl3WHGs9B9dXArL6XtM1k9Xvl8rQSWvZZ3nVHZGyI0616XcYdd15OyjLgpb+G+PIhoJLyhdsglYo36dHlW6EBAdcNfz8ng6eNT5miash/YkO3eWOhsgqdc3N6VJ9o0Wkf2v6L146j4BMk/9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fGjz2kOb; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749491945; c=relaxed/simple;
+	bh=wjJiBM3SCsbx2Gfhgp55WbfbW9P1zm+NDaB0wNVkxCk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I12fYeHiG7yVNnQ+QZmfUFEmuKWHOqMWQqiROEZRtnryK59s6K7sQl02YsxNhGko+tOlMwfIApsq8ltmCoGbKc45JRYZlGoiKedpXyWjxq+u9wn8cSkPPkZBb9cKb9hQQU2eSH8HyQb7Gc8cCmU8SCpGK8CmsuWFT+1LsP5YIZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LZ5wom+H; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fGjz2kOb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749491811; x=1781027811;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QMLX7USi3ZT3hX+mBAv46oBwb8mA2xy+q3erSnK4HKU=;
-  b=fGjz2kObXMBeWPxHETLN3iSt5c1eMxcbiUtYNU4ciJwwyQDZNZ11oOfi
-   zyVWcgEDPHlAYTQrDWDg975YHbnSMUwmQ9dbq+Bgk+ppSA0t8joj7rvgj
-   LotQySWb93p+PWdmgROg59PO73z5/VfXoU5SLMCMgUlrqy4shTvdciQyE
-   ESDb4QuVIeiy8HBMst/RhZVX50XFPyrGyMRCTqCj2yv2eXHHC9sIH6s1i
-   l+fGQ+odvwPGrWz21Xg+kE8vCaZBGlGmPfG3O9OhGGUsuCvIjq8BmFjc1
-   TmeAUfnR0FW0p/FmdObjhHTUxiJFSazmtX39S++XEbJ3coS4jSqW5HZGI
-   A==;
-X-CSE-ConnectionGUID: iC6ks3rqTSaXOIQMQSq1yQ==
-X-CSE-MsgGUID: FJt8PTJmSkqk48V9vvbMyQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="55244970"
-X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="55244970"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 10:56:50 -0700
-X-CSE-ConnectionGUID: P3OX3CohRlmPIKkNdOgSOw==
-X-CSE-MsgGUID: GjD2x7DgQ4iWer9x7zVLfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="147101780"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 09 Jun 2025 10:56:46 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uOgjk-0007Ib-0A;
-	Mon, 09 Jun 2025 17:56:44 +0000
-Date: Tue, 10 Jun 2025 01:56:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Em Sharnoff <sharnoff@neon.tech>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, linux-mm@kvack.org
-Cc: oe-kbuild-all@lists.linux.dev, Ingo Molnar <mingo@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	Oleg Vasilev <oleg@neon.tech>,
-	Arthur Petukhovsky <arthur@neon.tech>,
-	Stefan Radig <stefan@neon.tech>, Misha Sakhnov <misha@neon.tech>
-Subject: Re: [PATCH v2 1/2] x86/mm: Handle alloc failure in phys_*_init()
-Message-ID: <202506100135.4iTfYLoH-lkp@intel.com>
-References: <25c5e747-107f-4450-8eb0-11b2f0dab14d@neon.tech>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LZ5wom+H"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a35c894313so4124871f8f.2;
+        Mon, 09 Jun 2025 10:59:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749491942; x=1750096742; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8kEamOVCHw/4zlvotX9q4weM03p9hs3gDWtDM1Wv15o=;
+        b=LZ5wom+H9l1+nvm3IeLTMimVV+JgzPMZOnejA2lV/E98ndv8g8Rz8yv5VgQwOYDy5L
+         BopfJfdnE3xPTPc819zR8UkcJMv+dwNWgzx9P8lFWW37rPe5eBhwGL6iSL2VDIJ9aPKC
+         eGpkFu+4vn9y8mrR1gQCAhmShUTexsI4aT7fz0PHV9uHDGpNHC9obUOeDuSEyyISmqKC
+         86UrGfQH58VhkbUzWFuBlUz7adZlAsNa8zvMMtlcOJdqH2N7MJbCvgjPPOw85J5NpZSl
+         xHPW7lqNO3OUFrDT7nYhSibBD8HpFcK5NKWSC5KblUmvHIkWQW6sKWQgM/fuetuEMi7w
+         vUeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749491942; x=1750096742;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8kEamOVCHw/4zlvotX9q4weM03p9hs3gDWtDM1Wv15o=;
+        b=BoHZqA/RTVAjPN0IHVMRTz9FMpRZKhRC2zKdhtJs+7FcVK7AqRCYSSPnKMDhywZ5jS
+         0aavwTAML+DW6ry/SzMHlsK1P1er4edull8KPuHexB1oJOn3ujxC/M6/96tdzEYe+Bhl
+         YgNj29Phz4jdHHqKYRcnF2kCBC72WXl9IbLeE4dPYTABYACDpfaOn+nUYDtLcBBv45IC
+         qZRrC0wrPODhlDQMaczpHiYTVMwHbI0ek4v9YWDm6eJRqbeVVoWKrcg3eoqgjQwI+NVo
+         +3p0lk3Ceoa4va01Q7GTONHtatetT+C9/W5EXIwWptp7P+QNdH4roLrLP5INpo7vN8B9
+         TBFA==
+X-Forwarded-Encrypted: i=1; AJvYcCU26iS+d9b1rtGghRYyNggeePaxK00P81s/99TdxdoLHPnVkIXcllhJPm/6QSvQNhJ4aEpmSz/Z+Xu7@vger.kernel.org, AJvYcCVV7HtQoriu6lVebnRhU+cqN4yhVnxMfMsdIXVDH5uPugLaDOcuHzEmGLvQjjaTGac8R0i5hDPAlwR7wMPh7SxBSm8=@vger.kernel.org, AJvYcCVgP//QgAqZ11qM77FEMqQYWEfqSE8tvtFsnRtwqiRsPf9jnV+bYvsT1m9NBWaVNqr9C0b4fn6locLe@vger.kernel.org, AJvYcCXGrau0CCFddQ28lOkwK4ILNDsop4XgXzhbN6lwI61D2s9tmhxUbkN5qhs2gRv7qwLTOOerVB4ShpYKQYM/@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJUO7c20+KV67GOwFR0OZrWApT6ORsmgV8TrFleAYKLlflBCic
+	oiJ5g9I8m4jZXPKJIUXLktPvUk5mDgGXRVdBcrULYQWXSQW0I8HQ/uue/rEa6+hTHT0SRU3F+sb
+	hlxHraJvmm9GoaygIMiohbMoX+QFAckU=
+X-Gm-Gg: ASbGncv6Bm98Q6UfQChLuhakvvF2rLIqbTSoi1ohrW8De7t5mteyFaSyVQqbEU3wnzr
+	AIQh+YrUe4kM1MHOUuwcHZB86eGen196vVlQJBiGs7V+3cn4hPc4Ubxk9qNobR6pSlRaMCQjUvH
+	u0d2Q1vABdGyYCOadWczdzomDdfr6gWIkvueEEo1yydcJ1kDhpPhlAswXhn9KGCZRURx1UwFH8O
+	iI=
+X-Google-Smtp-Source: AGHT+IHBm2KRx7wL1lda1RUovfI97fLLM2f0+lA/iR+BErMYL9/N7+VvPf9VeD/d2zFkv+FBRuAxpIfgKLD3ZJjK9/A=
+X-Received: by 2002:a05:6000:2410:b0:3a4:f379:65bc with SMTP id
+ ffacd0b85a97d-3a531cdd100mr11572082f8f.40.1749491942323; Mon, 09 Jun 2025
+ 10:59:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <25c5e747-107f-4450-8eb0-11b2f0dab14d@neon.tech>
+References: <20250530143135.366417-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250530143135.366417-7-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdX61j-6_GwnibUs-m0ASm5JGhGGzLe6i41vjcz1ouZUjQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdX61j-6_GwnibUs-m0ASm5JGhGGzLe6i41vjcz1ouZUjQ@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 9 Jun 2025 18:58:36 +0100
+X-Gm-Features: AX0GCFtz8mfUhx41DEp6fo99hxevsASKBaktWopZmYFZwVDj-m4Ow5dQ9UbjWi4
+Message-ID: <CA+V-a8u1g+LDZpR8o8GZtTRvsSgbw8DQ1osWiXjXXUnhBrjEsg@mail.gmail.com>
+Subject: Re: [PATCH 6/6] i2c: riic: Add support for RZ/T2H SoC
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Chris Brandt <chris.brandt@renesas.com>, Andi Shyti <andi.shyti@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Em,
+Hi Geert,
 
-kernel test robot noticed the following build warnings:
+Thank you for the review.
 
-[auto build test WARNING on 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3]
+On Fri, Jun 6, 2025 at 2:37=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68k=
+.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Fri, 30 May 2025 at 16:31, Prabhakar <prabhakar.csengg@gmail.com> wrot=
+e:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Add support for the Renesas RZ/T2H (R9A09G077) SoC, which features a
+> > different interrupt layout for the RIIC controller. Unlike other SoCs
+> > with individual error interrupts, RZ/T2H uses a combined error interrup=
+t
+> > (EEI).
+> >
+> > Introduce a new IRQ descriptor table for RZ/T2H, along with a custom
+> > ISR (`riic_eei_isr`) to handle STOP and NACK detection from the shared
+> > interrupt.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> > --- a/drivers/i2c/busses/i2c-riic.c
+> > +++ b/drivers/i2c/busses/i2c-riic.c
+> > @@ -326,6 +327,19 @@ static irqreturn_t riic_stop_isr(int irq, void *da=
+ta)
+> >         return IRQ_HANDLED;
+> >  }
+> >
+> > +static irqreturn_t riic_eei_isr(int irq, void *data)
+> > +{
+> > +       u8 icsr2 =3D riic_readb(data, RIIC_ICSR2);
+> > +
+> > +       if (icsr2 & ICSR2_NACKF)
+> > +               return riic_tend_isr(irq, data);
+> > +
+> > +       if (icsr2 & ICSR2_STOP)
+> > +               return riic_stop_isr(irq, data);
+>
+> Just wondering: can both ICSR2_NACKF and ICSR2_STOP be set?
+> As riic_tend_isr() clears only ICSR2_NACKF, while riic_stop_isr()
+> clears all bits, the two calls could be chained, if needed.
+>
+In the normal working scenario when verified both these bits were
+never set together, hence I took this path.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Em-Sharnoff/x86-mm-Handle-alloc-failure-in-phys_-_init/20250609-183537
-base:   82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3
-patch link:    https://lore.kernel.org/r/25c5e747-107f-4450-8eb0-11b2f0dab14d%40neon.tech
-patch subject: [PATCH v2 1/2] x86/mm: Handle alloc failure in phys_*_init()
-config: i386-buildonly-randconfig-006-20250609 (https://download.01.org/0day-ci/archive/20250610/202506100135.4iTfYLoH-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250610/202506100135.4iTfYLoH-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506100135.4iTfYLoH-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   arch/x86/mm/init.c: In function 'init_memory_mapping':
->> arch/x86/mm/init.c:555:28: warning: passing argument 1 of 'IS_ERR' makes pointer from integer without a cast [-Wint-conversion]
-     555 |                 if (IS_ERR(ret))
-         |                            ^~~
-         |                            |
-         |                            long unsigned int
-   In file included from include/linux/string.h:11,
-                    from arch/x86/include/asm/page_32.h:18,
-                    from arch/x86/include/asm/page.h:14,
-                    from arch/x86/include/asm/thread_info.h:12,
-                    from include/linux/thread_info.h:60,
-                    from include/linux/spinlock.h:60,
-                    from include/linux/mmzone.h:8,
-                    from include/linux/gfp.h:7,
-                    from arch/x86/mm/init.c:1:
-   include/linux/err.h:68:60: note: expected 'const void *' but argument is of type 'long unsigned int'
-      68 | static inline bool __must_check IS_ERR(__force const void *ptr)
-         |                                                ~~~~~~~~~~~~^~~
-
-
-vim +/IS_ERR +555 arch/x86/mm/init.c
-
-   531	
-   532	/*
-   533	 * Setup the direct mapping of the physical memory at PAGE_OFFSET.
-   534	 * This runs before bootmem is initialized and gets pages directly from
-   535	 * the physical memory. To access them they are temporarily mapped.
-   536	 * Allocation errors are returned with ERR_PTR.
-   537	 */
-   538	unsigned long __ref init_memory_mapping(unsigned long start,
-   539						unsigned long end, pgprot_t prot)
-   540	{
-   541		struct map_range mr[NR_RANGE_MR];
-   542		unsigned long ret = 0;
-   543		int nr_range, i;
-   544	
-   545		pr_debug("init_memory_mapping: [mem %#010lx-%#010lx]\n",
-   546		       start, end - 1);
-   547	
-   548		memset(mr, 0, sizeof(mr));
-   549		nr_range = split_mem_range(mr, 0, start, end);
-   550	
-   551		for (i = 0; i < nr_range; i++) {
-   552			ret = kernel_physical_mapping_init(mr[i].start, mr[i].end,
-   553							   mr[i].page_size_mask,
-   554							   prot);
- > 555			if (IS_ERR(ret))
-   556				return ret;
-   557		}
-   558	
-   559		add_pfn_range_mapped(start >> PAGE_SHIFT, ret >> PAGE_SHIFT);
-   560	
-   561		return ret >> PAGE_SHIFT;
-   562	}
-   563	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Cheers,
+Prabhakar
