@@ -1,116 +1,150 @@
-Received: from esa3.hc555-34.eu.iphmx.com (esa3.hc555-34.eu.iphmx.com [207.54.77.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62DF2609D5;
-	Mon,  9 Jun 2025 13:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.77.50
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DA5F25D1E4;
+	Mon,  9 Jun 2025 13:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749476956; cv=none; b=BRcQk83lj6/Ah3QvkL9GJPgoDWMblGR2HSl+DV7vvLw/4Up8uCQBpuDQZgAI7+ibzFmCtRsrSkccy/1Voz1dB9qk/8VcKbMVZjiEudmumqi6eFVGkBCsPExIashut2AnZnMMJwfpkX152RujtFlK+PXxn+/I32T84qQZQdz21WI=
+	t=1749476966; cv=none; b=rNAp7Gg8BuFjrjLi1ZFlVB7iTzu7/3P6O6G7+nMwRvc19T+6Tvsej+zmUP1rCyJfOji+0vdjeTFwCuBI//7zrz4NaseddJsEB1MY1Oy6xsGXxeR31E+w4vCwtIVSGoIHBp22OWpUETpNTUhYr9utZ04HY47W/czcNjtKJnt68cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749476956; c=relaxed/simple;
-	bh=6Nh0BgWjlfbVva8flxENTWTA3JDu+LJ9JIi1F50J/Rk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N3Rdiv3WD6jKR8lCvznkfXkVjaiTiKnNmT+rQ9g2GMXpExad+47caHXRDDhyS46+wvjUBUipwxO84+LGTxklxgqU/C+ucRJSwu9SyL18YwK+E9yMognZF2jKeTy4RrtFE8glJL/HLIkDIRwsP7YZEcW5CPhfAQD4ABC86a+bNpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com; spf=pass smtp.mailfrom=mobileye.com; dkim=fail (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b=FaCPWOFG reason="key not found in DNS"; arc=none smtp.client-ip=207.54.77.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
+	s=arc-20240116; t=1749476966; c=relaxed/simple;
+	bh=O8b1iR0BorA2fQJLiWlvFsiX8GqxGChfquVY8SFKOys=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=FA4DAEq4gkuikFFWCQC54zStTv+vy7d0ccJxqr80RWyY7f6zLZJqqOKTjc2TYIQwJU9ICUrHUdUEOE/XCksIMhSyOjj8ZXoSuEitQt8h+Xnay3BDCNQRU2AO9If6ZKDmOzhKjpuoxL6n22/WovCKLdpGjnHKfVhXX4vpda60mQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MCe5dOLe; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b="FaCPWOFG"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1749476954; x=1781012954;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=6Nh0BgWjlfbVva8flxENTWTA3JDu+LJ9JIi1F50J/Rk=;
-  b=FaCPWOFGr8+tq2enC37S417dYm2sq237e5f2Or7iM3VsrVHTO4oiiDbv
-   +XdHq8THklz5YdhZXemrp4hVuHgUeElnmVqtPKp3gYOShHp0ZWs12pcJ0
-   ly527uxLnItBGwDEdnJiNx1ulDB3kDsMLdAX3o6IJX2bKC1i5woSPLl0n
-   60DFBgMS/J2KZA+ZEs49k/gagtcJcPnlPd4B7cUNghy1pKHgi7RsDDeaL
-   ejLGFt+oLtOgPsiHZbg+JAPOfp1rzgFQ2EUpP2F6EIHoNm8XqH+FGX28l
-   TZslDVM2Nd9WyPuhRoJdoqUfDJB+HCTCIolM/5ugbUW5RyoqJwyc6Gwr5
-   Q==;
-X-CSE-ConnectionGUID: 77rEMxDSR6CSt0vSI5PimA==
-X-CSE-MsgGUID: a8QiHbDrSvWF3Kik3Z197w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from unknown (HELO ces02_data.me-corp.lan) ([146.255.191.134])
-  by esa3.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 16:48:04 +0300
-X-CSE-ConnectionGUID: 1XcxbeCbRB6oDqvIEWDlfA==
-X-CSE-MsgGUID: OvgSC2WfTua6fFF0uQRAxA==
-Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.6])
-  by ces02_data.me-corp.lan with SMTP; 09 Jun 2025 16:48:02 +0300
-Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Mon, 09 Jun 2025 16:48:03 +0300
-From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MCe5dOLe"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 3BBEC2117472; Mon,  9 Jun 2025 06:49:25 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3BBEC2117472
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749476965;
+	bh=OvAAbL/c+Rwk797WDOKhGH2iI5RVdUOq6aNBguP1zco=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=MCe5dOLelkLRrzRiKgyfJdx6IaN2E6aM64ZaHBgbh5/KbZZ3yU2Roc1CY1h/HX3KC
+	 VBU6ijR86mEGwixotLMM+wzPCromF6xLHS1ladssOogHmfLcp981ZeeUxEER2GhtJ5
+	 8W4N1Hi2am4akae/VNTirLKeH4ktYe+A6o85YxMY=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Dexuan Cui <decui@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Michael Kelley <mhklinux@outlook.com>
+Cc: Yury Norov <yury.norov@gmail.com>,
+	linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Anup Patel <anup@brainfault.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	Ryo Takakura <takakura@valinux.co.jp>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	sophgo@lists.linux.dev,
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-Subject: [PATCH v1 6/7] irqchip: aclint-sswi: reduce data scope
-Date: Mon,  9 Jun 2025 16:47:48 +0300
-Message-ID: <20250609134749.1453835-7-vladimir.kondratiev@mobileye.com>
-In-Reply-To: <20250609134749.1453835-1-vladimir.kondratiev@mobileye.com>
-References: <20250609134749.1453835-1-vladimir.kondratiev@mobileye.com>
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=EF=BF=BD=7EDski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH v5 3/5] net: mana: explain irq_setup() algorithm
+Date: Mon,  9 Jun 2025 06:49:24 -0700
+Message-Id: <1749476964-27606-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1749476901-27251-1-git-send-email-shradhagupta@linux.microsoft.com>
+References: <1749476901-27251-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Move variables to the innermost scope where it is used
+From: Yury Norov <yury.norov@gmail.com>
 
-Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+Commit 91bfe210e196 ("net: mana: add a function to spread IRQs per CPUs")
+added the irq_setup() function that distributes IRQs on CPUs according
+to a tricky heuristic. The corresponding commit message explains the
+heuristic.
+
+Duplicate it in the source code to make available for readers without
+digging git in history. Also, add more detailed explanation about how
+the heuristics is implemented.
+
+Signed-off-by: Yury Norov <yury.norov@gmail.com>
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
 ---
- drivers/irqchip/irq-aclint-sswi.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ Changes in v5:
+ * Corrected the Authur of the patch
+---
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 41 +++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-diff --git a/drivers/irqchip/irq-aclint-sswi.c b/drivers/irqchip/irq-aclint-sswi.c
-index 7ff43f685e92..92237fb44855 100644
---- a/drivers/irqchip/irq-aclint-sswi.c
-+++ b/drivers/irqchip/irq-aclint-sswi.c
-@@ -67,11 +67,7 @@ static int aclint_sswi_dying_cpu(unsigned int cpu)
- static int __init aclint_sswi_parse_irq(struct fwnode_handle *fwnode,
- 					void __iomem *reg)
- {
--	struct of_phandle_args parent;
--	unsigned long hartid;
--	u32 contexts, i;
--	int rc, cpu;
--	u32 hart_index;
-+	u32 contexts;
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index 3504507477c6..6c4e143972a1 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -1288,6 +1288,47 @@ void mana_gd_free_res_map(struct gdma_resource *r)
+ 	r->size = 0;
+ }
  
- 	contexts = of_irq_count(to_of_node(fwnode));
- 	if (!(contexts)) {
-@@ -79,7 +75,12 @@ static int __init aclint_sswi_parse_irq(struct fwnode_handle *fwnode,
- 		return -EINVAL;
- 	}
- 
--	for (i = 0; i < contexts; i++) {
-+	for (u32 i = 0; i < contexts; i++) {
-+		struct of_phandle_args parent;
-+		unsigned long hartid;
-+		int rc, cpu;
-+		u32 hart_index;
++/*
++ * Spread on CPUs with the following heuristics:
++ *
++ * 1. No more than one IRQ per CPU, if possible;
++ * 2. NUMA locality is the second priority;
++ * 3. Sibling dislocality is the last priority.
++ *
++ * Let's consider this topology:
++ *
++ * Node            0               1
++ * Core        0       1       2       3
++ * CPU       0   1   2   3   4   5   6   7
++ *
++ * The most performant IRQ distribution based on the above topology
++ * and heuristics may look like this:
++ *
++ * IRQ     Nodes   Cores   CPUs
++ * 0       1       0       0-1
++ * 1       1       1       2-3
++ * 2       1       0       0-1
++ * 3       1       1       2-3
++ * 4       2       2       4-5
++ * 5       2       3       6-7
++ * 6       2       2       4-5
++ * 7       2       3       6-7
++ *
++ * The heuristics is implemented as follows.
++ *
++ * The outer for_each() loop resets the 'weight' to the actual number
++ * of CPUs in the hop. Then inner for_each() loop decrements it by the
++ * number of sibling groups (cores) while assigning first set of IRQs
++ * to each group. IRQs 0 and 1 above are distributed this way.
++ *
++ * Now, because NUMA locality is more important, we should walk the
++ * same set of siblings and assign 2nd set of IRQs (2 and 3), and it's
++ * implemented by the medium while() loop. We do like this unless the
++ * number of IRQs assigned on this hop will not become equal to number
++ * of CPUs in the hop (weight == 0). Then we switch to the next hop and
++ * do the same thing.
++ */
 +
- 		rc = of_irq_parse_one(to_of_node(fwnode), i, &parent);
- 		if (rc)
- 			return rc;
+ static int irq_setup(unsigned int *irqs, unsigned int len, int node)
+ {
+ 	const struct cpumask *next, *prev = cpu_none_mask;
 -- 
-2.43.0
+2.34.1
 
