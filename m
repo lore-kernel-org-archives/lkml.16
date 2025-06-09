@@ -1,46 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35523224B0B;
-	Mon,  9 Jun 2025 21:00:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88BF221FD8;
+	Mon,  9 Jun 2025 21:00:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749502841; cv=none; b=OkeajcbFfRRcLh5f3YO9NkDG0KlwcuZLOgiACkaf3WJ+P7PeT9UoLXXe2x1zsB1rlDI0FG5hPtJYe5wm1koQTLYlTJUwdRrg1yuIMclZOl8tyWXn640YSgyeO2NN+PsYPD/0SVcpJJgok8ylgiFsHFyZUrd7/4Q7wu4b4q/JPho=
+	t=1749502845; cv=none; b=JyHOev6BTauC7QiJoL+vhAV2ynsFa6MGb9+yS4gtYTPWhy0all2sCB3md0PSqzAbvKEOG/F4Z6niTUNP+U2190fdSjJ0dQh0d8Z8ifZoBMYlN+tSzIvdW1zsaRZ5hKv5agP3FBhlHYiV9/8yAnJnOc1A9QCIxE90LiKZPCQQ/Ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749502841; c=relaxed/simple;
-	bh=PE6ib+uLRoqj590T1jWJYp0ehNnnQOpkGoqllX8Ob9o=;
+	s=arc-20240116; t=1749502845; c=relaxed/simple;
+	bh=nKBc69Ss4RL/f6HqDzYsfnuaSZqHYo5VaYM8rb8GeWI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=G8FlImeDBVDeL7DN5sGvyuZ+MXm1F1C+bhNNbttOP8JLaYgZcShiTlQfgo3vtyJWO8PIq75igRX4coogaUhdcYM1enqobWiVtYZ59KoC133RqydL/PjNOYG1Mvv8exO5bE0ke6lX7YJ1sU2NOYz28AHp4zF8emiGNY2ngyM/dqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=adv8bIF+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=css6ZiXqDB4lh2niNUNbSqUnLp5dxJvB1UyLPT2RWjS8hg7e0YjagANw3iD4CQyazWNBsnqxoD+3Xn5hLyD36jeQH+yotNvmcyxy6r1nx4IhzOPs8YHmSIqoh+IZ3fRtcLuqCdvI/kAE+APPOzMqI8mXE/qmwcWjFJ/rrT8AlTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NMgkE+8M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="adv8bIF+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61C05C4CEEB;
-	Mon,  9 Jun 2025 21:00:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NMgkE+8M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41145C4CEF5;
+	Mon,  9 Jun 2025 21:00:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749502840;
-	bh=PE6ib+uLRoqj590T1jWJYp0ehNnnQOpkGoqllX8Ob9o=;
+	s=k20201202; t=1749502844;
+	bh=nKBc69Ss4RL/f6HqDzYsfnuaSZqHYo5VaYM8rb8GeWI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=adv8bIF+ESe1aZAnZhp/JvEwuWLb9AtWvP4YJPnQjKG2At4nvcSbkQruAnba/ZxhU
-	 lDHZ2e6/Wk5YlVnKB+9j3X8GBA79stguKtyJOa6kWMHsexdTaPiQ/OyjqO26YX9Zt/
-	 oCmJ0/3qe7hR8qIjOvbOSKonOGIjMl5h5C8HtM3YMXtHsRMaQjJcyJMJZ281r4vUhz
-	 Pfd1OrQ0P6qWVj5hF1mOjgkwr8uLP5MiUZeo9iUttVmLs3XYp/oT96JY4FUJRNsWGp
-	 GvwIgGLpTaIrPdSx43Rjg0eaZ0Iq2jUnDzwk0CMiBTqhhvSOka2V8un5QEn12XErT4
-	 c3kOxv1I8Q9UA==
+	b=NMgkE+8M/Uu+YDD9TzoQBBqlIrvaR+kKWwQBRPp00blQwh1Uq4usimq55b2ClnPlS
+	 E2KwChecqZFjgJFgx2DmbY2y4mDavg2RSIES0qu2gMpBQOomYNvpWsE/jtHJaQlu9y
+	 irGMEVo6adaaDja2ADlhrl8j9TZ8vwdd3/xO2ILpLqvX+eSDk3mF/oYYhhilo2rPFI
+	 60I544mJeqwf3/D/5brHAGtVhsYL6XbfCY6JUOR++fJpn+o87OIuIwZMAsmvZCcmsx
+	 ZjYgasdchQrSORNYDnBeu6HpDtbPAir56TQOhzcPkEB3GF4y3q5xh/q1zPmOs04ibx
+	 md1dqE7NLY0Tw==
 From: Mark Brown <broonie@kernel.org>
-To: Kevin Cernekee <cernekee@chromium.org>, 
+To: David Rhodes <david.rhodes@cirrus.com>, 
+ Richard Fitzgerald <rf@opensource.cirrus.com>, 
  Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Bram Vlerick <bram.vlerick@openpixelsystems.org>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, peter@korsgaard.com
-In-Reply-To: <20250528-asoc-tas5753-support-v1-0-a50c3f6734ee@openpixelsystems.org>
-References: <20250528-asoc-tas5753-support-v1-0-a50c3f6734ee@openpixelsystems.org>
-Subject: Re: [PATCH 0/2] ASoC: tas571x: add support for tas5753
-Message-Id: <174950283813.277844.9032715257429571455.b4-ty@kernel.org>
-Date: Mon, 09 Jun 2025 22:00:38 +0100
+ Takashi Iwai <tiwai@suse.com>, 
+ Support Opensource <support.opensource@diasemi.com>, 
+ Oder Chiou <oder_chiou@realtek.com>, Srinivas Kandagatla <srini@kernel.org>, 
+ Shengjiu Wang <shengjiu.wang@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, 
+ Fabio Estevam <festevam@gmail.com>, Nicolin Chen <nicoleotsuka@gmail.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org
+In-Reply-To: <20250528-asoc-const-unused-v1-0-19a5d07b9d5c@linaro.org>
+References: <20250528-asoc-const-unused-v1-0-19a5d07b9d5c@linaro.org>
+Subject: Re: [PATCH 0/8] ASoC: codecs: More const and unused member
+ cleanups
+Message-Id: <174950284100.277844.5516021122199665205.b4-ty@kernel.org>
+Date: Mon, 09 Jun 2025 22:00:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,10 +55,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Wed, 28 May 2025 14:10:07 +0200, Bram Vlerick wrote:
-> Add support for the ti,tas5753 to tas571x driver.
+On Wed, 28 May 2025 21:59:54 +0200, Krzysztof Kozlowski wrote:
+> Make static data const for code safety and drop some unused fields in
+> structs.
 > 
+> This is based on for-v6.16 branch in ASoC tree for context in wcd938x
+> driver.
 > 
+> Best regards,
+> Krzysztof
+> 
+> [...]
 
 Applied to
 
@@ -62,10 +73,22 @@ Applied to
 
 Thanks!
 
-[1/2] ASoC: tas571x: add support for tas5753
-      commit: 23d3f6ecafbbc7cd98925a87a4f59794928348b9
-[2/2] ASoC: dt-bindings: tas57xx: add tas5753 compatibility
-      commit: f6f914893d478b7ba08e5c375de1ced16deb5e92
+[1/8] ASoC: codecs: Constify regmap configuration static variables
+      commit: 0045b902ad27f2676c2a5b6444494a8287b80072
+[2/8] ASoC: fsl: Constify reg_default array
+      commit: 239dab898b739f49b1bda8d65163fe4f5c773468
+[3/8] ASoC: codecs: wcd9335: Drop unused sido_input_src field
+      commit: 620d9687004ce877b340041b8213da166f329367
+[4/8] ASoC: codecs: wcd934x: Drop unused num_rx_port/num_tx_port fields
+      commit: 9afc53569d800f5e3caf9401d49ad2d89f340a54
+[5/8] ASoC: codecs: wcd937x: Drop unused 'struct wcd937x_priv' fields
+      commit: 87a2270fd1f560dbfc1b26391ff3b37f56d2a1a3
+[6/8] ASoC: codecs: wcd938x: Drop unused 'struct wcd938x_priv' fields
+      commit: fd32bd4467c13254cb52188034fce242f0f6340d
+[7/8] ASoC: codecs: wcd938x: Drop unused variant field
+      commit: ff228b6b9ed8f5d7ef418b6cbece772c6617d789
+[8/8] ASoC: codecs: wcd939x: Drop unused 'struct wcd939x_priv' fields
+      commit: ece5d881004f041c2e1493436409dbcbea3ad5f8
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
