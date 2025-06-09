@@ -1,70 +1,70 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6FA25C807
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 13:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A302325C6F3
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 13:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749475733; cv=fail; b=hZuaePYUwBpCHMbtFdr8zhB4Lt995AdkH3d4RRgrxYo/JgowyM8NDQPhEgXwvsfX1JtCgEvP+qYx4zrhPPduUwX0+9YV7t/GeB0c/bKxR4ODQTM+/YVqMfnQSlZRrhs+F72KGjj3kutZ7F9qaF3u+QhaMe0nLagvtf+aj4Tfe2c=
+	t=1749475734; cv=fail; b=EWmGG2CLzL6OmJuBnrqj+BdGn+xsNBK1Vq1eOdxHAZNqQkexkE9RbTTGhCfOUDj5rLoeY1YxSHGkwWpijDS5nUHBnTo6ck04ZFacAcfUIYzqGIJDElFbtNKV471cE43ZjgmJoKucYgk6JGuf4lLyTfLMcB26myp/Ss/bDfHKUG4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749475733; c=relaxed/simple;
-	bh=hunkGkzn8jGQiP6IwOMPt9qX2vGtIpVGx0TJtFhT19U=;
+	s=arc-20240116; t=1749475734; c=relaxed/simple;
+	bh=teh+pp+DZHC/mSogWyf+96TF5iJWTCOcIy9pWNrQm6M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=j+iP7wCbgp9qAgHI/6xhhivUoTrJF+KX2+oGCqvUVMwHUbRwKSjsKatml5uNHd+hHYpo/KAfL1ldEWYKngCfvXPySAY9sWdicUgxY+NKHoN5GrDGdLf2vE/+NRaifJC9lBwLglDKLmuIc4f6P4LPOF+wQpOM7wF9gH2jQ4ccRkA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=GJCoY2WE; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=JjS0F8GW; arc=fail smtp.client-ip=205.220.165.32
+	 Content-Type:MIME-Version; b=ZISCLt5b1+FdJy2Ky7Jgt8KufeTCe4bhALOi/5Hm8fbh+x5euJsmSHvZZWiPIM7+4TrtzqxQ841XPuDxvYFyV08AGmHLFj9qIXK/5VEax67AfC5Ia/s7pYig52zKKBTadft8WUn70AbgHQI81aMPVGb0OAj7qECvj4ketk+MXy4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Rb2xQXc5; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=XaBLgZLS; arc=fail smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GJCoY2WE";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="JjS0F8GW"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5593fdBO008027;
-	Mon, 9 Jun 2025 13:27:25 GMT
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Rb2xQXc5";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="XaBLgZLS"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5593jmGr013108;
+	Mon, 9 Jun 2025 13:27:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=ksWfpg7lQRSHxsVym2gvB5kLBlDxWkIXwh7YGY7y9ks=; b=
-	GJCoY2WEBqkmgon9pyxoDKLk7HXSaFopYvmpEapPrMFyrXu8oaIXtB3IDdKisp2C
-	yIaZchB89VS23OxmVgtYQ2y3U2FlTA8ERhdIG7uE2PaP9LMNHKayCZGE6jFMpr9F
-	W1vDzNqyCe1ooR+7jz3giznFO/5dWVvZzQF2lAQtIayZovIg++bPI94TvdvFcvoZ
-	uVqYg7KgKsYy6tYOPx2Vgen9Bu6hKd2MjNQXj7LelCgnZAVSliVPGJE/Setvbbfo
-	1tqNsYz/MSEqyK6i0nAZxZRKCPtR378tkm+SrTJGATH/o7ry2k9DfkfeNQopwq3l
-	bWqzUpAqSG9RMCwwynHdBw==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 474c14a4k9-1
+	corp-2025-04-25; bh=qenLDOfPapKT2/6yOEYVy7rqLND9VyacXUr+STyU4jg=; b=
+	Rb2xQXc5n6w8OX+mOWP/doD/7BuvV+PATAZ20mP33Y08govYOGqI4463yMSPZu46
+	EGIuVdVamucDWTpe+0KpJJ3bbgMGaLIWrIOU8sNxeEiOPDSThpUO2U9oB/Y/tWMg
+	pTmB7DTL1Hc6t6RREGs9xzoXk+pBKTOXxC7kJ3PMaj236vnADwoQex7hKgmA01W8
+	oyOM8HXyROvthTKhLC1C0MkWEgxIXEuvfJkeLctgWYOGPF7INK0/Y5E+ohbtBn/S
+	1VGwF/XIGc346eFR3+zNb8fWsLTr7873LjwLgNKrrfrr1Gx1k8/NI7b7zABKYZGv
+	L9kp6a43klKXfilRaFna+g==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 474buf24yh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 09 Jun 2025 13:27:25 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 559BtHk6003301;
-	Mon, 9 Jun 2025 13:27:23 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10on2060.outbound.protection.outlook.com [40.107.94.60])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 474bv7ee8c-1
+	Mon, 09 Jun 2025 13:27:27 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 559CAUJa021320;
+	Mon, 9 Jun 2025 13:27:27 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10on2077.outbound.protection.outlook.com [40.107.94.77])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 474bv85t7q-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 09 Jun 2025 13:27:23 +0000
+	Mon, 09 Jun 2025 13:27:27 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=a82pK1GVRaSnjp7ak7nzqzibwNge54rBhdPElsaZ1loLQSIc4LKjkRl4BHhFWi8j/Su6BNDUbUXVOO81Be6nmcp1Er+DnReL4h3TkUNdWsb7wLTCh5GdFfp9YQH5GUgI7pg3pY16S/ti/hAf6wVafi0hdPMUVQZb3cPDfJBgCnApy2skuw0JKIr1gUgOOWtZbS3iPUGlJZBzm1oVDpHZqM7eEtPBRm16sWHsdgEQ9/JVOdMqiOyD0yOlH2Io5hdM61ZCYvbMXcefT+xFsbi1ekbm+0irDpPS6EAK/9xDNkeKj5DoNONGq6QIHcfQDowXK43UrKKaR4KE/GRMyHllZQ==
+ b=xay2ihQMhxxYjKQXekIiEyp7cl5WweDEhPhPs7/yVLUcDqLSgdOUwc+2iVk6kJ5cMXW2OPckOSNiHlUMqOUJPPYeFkGCPjMpIuh3XIwTZUXuYZJQjVWy0abYFx9US4M0t6VB1fhVh+WRM0oXEOpJ30ZxIUIi2AeSppQgyxi1ffC+fPTe7E/YXROAVUlzZCg321P80Ujf6Soxzd4SZnC6l6phD9yzkAl+6dOmL+pStuUQe64+qVy0idiiSylzHXhMvkNviTSBqOoqevBX4Zkorw5TSBIQXydne3NW7EY+x177evaH6XjHUTkb569Z8HuXjE1nzWiTqHWlRic/BTn8rw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ksWfpg7lQRSHxsVym2gvB5kLBlDxWkIXwh7YGY7y9ks=;
- b=DoGqD3lUkGNJWX6QW3R6pGaoLexswVSwQ6KPFSK9o6ck57waixZrfRplndIZ0dmTl27XhUCv4EI0/MsYdwcJqsKYkNqLiOE/Mg+BoeNTq3oMuvze9oWzOFnmEgrliasLMCrDG/bc8jIatXgC6K28nFKjcg4CMgKvL+BnjN4dGGHcHL/1bQ3Pr3Mc34IypGpA4i8PzXN4teJjEUgSzItb6n6b9lKnF692TJS1LrYZ+S1EBcEB8eLIWCFXj9MtzD/WaiFMfkH+ThUM1tvkE2wAX3GjXdTob85pVSpJw4jTC1VRP9jgrPqU1PoeUTIPq/LjhBCUx3ugq59qcGHE7SwruQ==
+ bh=qenLDOfPapKT2/6yOEYVy7rqLND9VyacXUr+STyU4jg=;
+ b=D7ZdlQjVAZCFYPegvdScvCtr6cNLLCIH1BMCu8So848PA4e6ys3lcSkm7expm5coiqLb19TdTUYC1txeHXvXvFSJYdqFLoyxuKDk/H/DySiMvwolHZkz4/ZgCYxsn8wja1y5d5sxmJb1EkwQ/i5svPQO0UgeuSapoQ3LZvr/iYR9SgIi2ZCY+R+M3VEeZVQVWgAtDKrUm5st1Z0yBZ0bO2WCWMpuRVD0kMkj6B45U+InfhccAB8lZnfO+R04RFpd+gwkEAgR+9rbPjqgtP2MqtRABdR7UG1EwmtVZB9mt6OS10kJkh9Ef4d2gKrbE9NUo5W2m3K7V92Ld2ANEs649A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ksWfpg7lQRSHxsVym2gvB5kLBlDxWkIXwh7YGY7y9ks=;
- b=JjS0F8GWEZf0uRfKv56DB+nLnGeAuYjTv1cNGp2t8IwgE/ud4pkHr4WOj0moCotcJGwERW8y6KMzbEGqR+svEBh+ONg1CjMVI2Aq4NP1yO1hlTzx5l+JHBtvnBW71MMYJANdKmkHbT9Amld/uwqvFO+KW6X+0KbsfE8/RJDiqrY=
+ bh=qenLDOfPapKT2/6yOEYVy7rqLND9VyacXUr+STyU4jg=;
+ b=XaBLgZLSFXsF8QcRbVe7A2t8SEAsmFvsSreLV8yF5BX+GwzQjCt41qq9x8u1JogR6H7IL74aHuRs2sJMebmtVjNEIOXK7HNwnYrHapdJc2xDYIrjX38cdOJocDFLoawhYFOBRkczFL6mTdx5C40DT1VwJx2U7xrIadT71hXbjHQ=
 Received: from BL4PR10MB8229.namprd10.prod.outlook.com (2603:10b6:208:4e6::14)
  by DS0PR10MB7953.namprd10.prod.outlook.com (2603:10b6:8:1a1::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.41; Mon, 9 Jun
- 2025 13:27:18 +0000
+ 2025 13:27:20 +0000
 Received: from BL4PR10MB8229.namprd10.prod.outlook.com
  ([fe80::552b:16d2:af:c582]) by BL4PR10MB8229.namprd10.prod.outlook.com
  ([fe80::552b:16d2:af:c582%4]) with mapi id 15.20.8813.024; Mon, 9 Jun 2025
- 13:27:16 +0000
+ 13:27:20 +0000
 From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
@@ -78,16 +78,16 @@ Cc: Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
         Dev Jain <dev.jain@arm.com>, Jakub Matena <matenajakub@gmail.com>,
         Wei Yang <richard.weiyang@gmail.com>, Barry Song <baohua@kernel.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 09/11] tools/testing/selftests: have CoW self test use MREMAP_RELOCATE_ANON
-Date: Mon,  9 Jun 2025 14:26:43 +0100
-Message-ID: <0cbe373c1d14270f5fcaf3ba8734d50d761796c0.1749473726.git.lorenzo.stoakes@oracle.com>
+Subject: [PATCH 11/11] tools/testing/selftests: add MREMAP_RELOCATE_ANON fork tests
+Date: Mon,  9 Jun 2025 14:26:45 +0100
+Message-ID: <d52a781999622ed2f1de073d72ea4d9debbfe198.1749473726.git.lorenzo.stoakes@oracle.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1749473726.git.lorenzo.stoakes@oracle.com>
 References: <cover.1749473726.git.lorenzo.stoakes@oracle.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: LO3P265CA0033.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:387::16) To BL4PR10MB8229.namprd10.prod.outlook.com
+X-ClientProxiedBy: LO3P265CA0031.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:387::20) To BL4PR10MB8229.namprd10.prod.outlook.com
  (2603:10b6:208:4e6::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -97,183 +97,904 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: BL4PR10MB8229:EE_|DS0PR10MB7953:EE_
-X-MS-Office365-Filtering-Correlation-Id: d2b9fcd4-a55c-4597-a583-08dda7595a5a
+X-MS-Office365-Filtering-Correlation-Id: 7eaf5d6a-4161-4396-cd16-08dda7595c9b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ZCHuLcSO7IkaHra26SEENt5L4ICSCNwR37X6FyHK21rSZQOD/PLyMiCx6PuU?=
- =?us-ascii?Q?Bndmzpb+WrnUSECfXbA7gtGyCXh6PhBm1aLvi5gOTnhd6O9PLVBnTrSiGRdN?=
- =?us-ascii?Q?+Cz7jnNDEOPUEKi8cv1xMeonBi/VAId5mZCdyk70sK6lbzAKV8Wy47XVJqfQ?=
- =?us-ascii?Q?2Wr41mmNfsJFzhSWvDe54b4fqNfdSckruH7kcHYxLnaxQ/phy37os+S9YGBs?=
- =?us-ascii?Q?3fUWIIsCphl2w7kCQa/Ju+howB7SYugiw3gT2TfpihGlYDLn1lC01hAOWwvY?=
- =?us-ascii?Q?39Yh0H6C1VBbW6WMywiMWoHhQtmJK9TbbbQztrZHDgZUcIwq/0o3mbw8mUvn?=
- =?us-ascii?Q?ToZAAQs3xukpstItbjxJf3/uAt+58bQkLh6wMyFSGQvObYSV+42/nGf7ye2s?=
- =?us-ascii?Q?PMFG69R0hNv7ZHITdHh4jBpSoMZWUkspqJN/Wvy4Wf7akOTqyWRTKnAFTzF+?=
- =?us-ascii?Q?0ss4ZzjsGaTyBrFlBaoruA1NvEgW4bmfSyEVrUBaN8FzN69gIw0mg6dOgAKO?=
- =?us-ascii?Q?+Dv8NLRyTKmEmW4sZZdaNBKlzb028C2oWu3C9PCv78RAMYr0ShEUdzX33rGP?=
- =?us-ascii?Q?N/9TkjtqnP/YXXIBiTOZX0rVY7g3VLrMkTA9qoHTdio1J7Vm0OgXO1EC01Ly?=
- =?us-ascii?Q?SdsLTa3Gtc4v0jjHbEZFtbKVmd9exq2o3gmKe93ayXP1KOL51KN/JGCCfCsM?=
- =?us-ascii?Q?GmK2t23KM+pkWPYBgYys/u+rMnQRraaXCcduRiLGXSk3HAdrYzn4bijxdhEO?=
- =?us-ascii?Q?fvIfkgVBK/NMu5LPs7Dl/YeyNDxLUJsGOXiaHKFzL5yUVl7E4CqnlvyJcCpg?=
- =?us-ascii?Q?IeJdCMXZ/h8yynEMZSHYUU6+5/qyAc06/E5jaihdjJH5zuhE5Z+n6fcumTJF?=
- =?us-ascii?Q?ZK867rAm9B6b9et5On8V/0/+Z9BwpCMmTI7TdLXWWEHobH6mUN0W5/kDio6A?=
- =?us-ascii?Q?XkbHRjeNUaEda1+KOceDI95ETCluxE6ischQ3yoa6LKt9lj6rfncbHpAahLK?=
- =?us-ascii?Q?EIWgXHPOixxGH4980ihHQX071cqoF3yysq5F+vYrIJKcn54N4QTFmEMtuaDL?=
- =?us-ascii?Q?5x09r89xAV6QyUSXiqN6zEFSh02AgPtwhqvR+bN0G8bKlw1wK8SLWx+nNh3m?=
- =?us-ascii?Q?7l08eGjN/2jWKhfYCMpCBFVxREgcwWMZol0iYnvKAVVcKW75wg5TWG3dGXvy?=
- =?us-ascii?Q?XbXCsVygxBcG78BEXS5266bGqVqaxAbL01/6tR1XojBfZ3dhAnrORnnjEug5?=
- =?us-ascii?Q?EkSjjMol87k8SI6sglb7PvNL0ACgZc2morrrhXehOVTWo3NBumEnFXKWsYwQ?=
- =?us-ascii?Q?3ZyCEWF+qOZMe9k9MOr8eH1MsxZkTJrnACL0af8LvsVoQpHtz2/C1ChirxK0?=
- =?us-ascii?Q?ru2ZZg6ciokD/HiQu5tloNnAdwiGIoQgp6kkvEkw04IeUJERJJXBSzKXDqgo?=
- =?us-ascii?Q?q0vy+I0HQAw=3D?=
+	=?us-ascii?Q?374IrTeAuZcH0YuWygOzUVB9SyBsPRRqa5OgrMKfFan+Z/8f06qiTDRF//TJ?=
+ =?us-ascii?Q?y6ROtSDOVcI+DuKp72K2DvGUSLx+oo0niliWpDmOScJjUR86xIqMyM/gLhGn?=
+ =?us-ascii?Q?+4SF1Tf8DVC2eDkb1fyEzcBR6/Vm5YKdSjcMA7iEwIBv1uhFhOPDjmy2ORWq?=
+ =?us-ascii?Q?nK84oiaKWh1St8r39Td1TM7qnfR1LALHKjQiDr5cWr44eQUxeG49Pxl64akJ?=
+ =?us-ascii?Q?FBb4swuclVvhaebtfIeC8qGcAbOeSaQ2VLM7qUPBBbKqpWUQuXQTpmhrEH0R?=
+ =?us-ascii?Q?UCB1BgKYgc3ujKC8y7FhiHRPQ2UaU+nignhgcrZh5IzcFuNeVG4GijCOl8sp?=
+ =?us-ascii?Q?v7EwK2VvtqtlMoOmpnYb0QoGE/NvrOm/XX5OWZGuD9V7Ca2d25/C+y1EwYqh?=
+ =?us-ascii?Q?YMye4yC8+Kmnf3x1oLvRc13Mkox/p3MewejCb6S2RROqXUGcHRc3bROA9JWE?=
+ =?us-ascii?Q?/XJ9YE1IHBSJVyGz6qWKE70Ouftd5tokclFbBpBdLLMlfqKsjqDF/7d3gOGM?=
+ =?us-ascii?Q?x1UeW8k7WiYY6bsAQXCbZIipCkBEsM0SGxS7PW2FXUrLFip/T06ahFG09Lc3?=
+ =?us-ascii?Q?xSEzcBnoWTDj/dZsesGucOH8L/a0udWHoejWkQnTQMj7Ei55cF0Fnb4tCD9J?=
+ =?us-ascii?Q?boiL1gJ2m+AJymR8e3JSW5nFU9IslmMMQpNe0r2k98gkKbE80YYx4VzxuFMw?=
+ =?us-ascii?Q?QMWrwCECiuAUMfFeZLHIpkfua7lXRRtLvOiG+hALSI1O0mSKmOdkGFnsJDtn?=
+ =?us-ascii?Q?22RBcOo1SzuL91WpD3bwwMhPscKHZZhfFJ3+nRoiav2LZhFV/j5erL2MeAPk?=
+ =?us-ascii?Q?IgtofEFj5IFxL6aANnJNpdsQLU5LYT6AJ9L9etg2G4EidY5JpjUeIFrIumwA?=
+ =?us-ascii?Q?xOae7wLfSLknHEhOxZgvybKO83Bvr/KUbAMD+SaUl035WlABXsACCDEVa995?=
+ =?us-ascii?Q?lylNHaBCq5GGQhSnBcF2ebgdCetCZkA+EipPUq04AnmRKedxO/c+DzbqY/Ta?=
+ =?us-ascii?Q?+8wQobjQfFIF2KFP9TUeg/wQ+q4fzGrAqrL29PidKKYxke0+bBoFYkHHD7Or?=
+ =?us-ascii?Q?6QUIr03twO3q4xXDgiO2yA/JYE/bigYsb6NDo/fZKhkSLY//TYZmBtLJy+Ca?=
+ =?us-ascii?Q?3D3lodMUggUo3QblEyBavY5vdrGAQzzvV8Bsjk9weVsMGidDjJay8Fz8UUJI?=
+ =?us-ascii?Q?h5l7lUufGO1IWoOjB9+EkDp8r2KF9COz/XfU8ryLMLkz5bvKiIcT8C7XMNP7?=
+ =?us-ascii?Q?N84IZ4wK5ALRQhyHgIdTyvIZg2ouoEQxryhyXCvWGYHyYhuJ135QWd5paKm1?=
+ =?us-ascii?Q?5rsWuVs6wJqhbyqH0k/uP2IfL0bnayXQhpEqMAauAJpp2n6/v/VfpSw2beUO?=
+ =?us-ascii?Q?CflgEGE5njeQXHIx1BMBryQ2v7GxBX8htn1/xE0epJsLAHldqdaVUGG2G7c8?=
+ =?us-ascii?Q?LWahUtspGg0=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL4PR10MB8229.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?yH+Edo9JlNMdYEPerHtExjv8lNq0CBDllX2safzdd0KGXV1xXy8t5n2kbuOe?=
- =?us-ascii?Q?gQqt78BPpSR4qpz0vXaYEs9dVaAXuiLPvHaN/kHJ5Mo9a5G0PU6d1h/s6eD5?=
- =?us-ascii?Q?CBdc42yz24t7v9G/TUVVB4l3+eWnJ07zzZlrV4NbMeBGT/fBNaEAURpoLzse?=
- =?us-ascii?Q?sNRDDimN5BCs+c/61zmziFwK0kBMc3qUndW9nieiev4WAOQ2diqAKtE/TiFA?=
- =?us-ascii?Q?+XjfdGW2CdU4ZvrFOksd5M/pIgFnyGonhkHxzPt0J47WxWwe1cuTv6LuwoRg?=
- =?us-ascii?Q?JSS3ZS5k6NVGH2IlMdpZX6x+xmKyJAwHz7LIqhBVYVn9mx7fcShgLPpIDTeb?=
- =?us-ascii?Q?6YDSstiXEt6lSNida8+LBbWk0AIiODHgkTA6MomxhWTzMVztCivuqflONiJX?=
- =?us-ascii?Q?N0ugkSrcW7gNaGygt3JsyH36a7wLEUya/JjWC4LnC7RKf2va+YrARYx4WPf/?=
- =?us-ascii?Q?ssCAdJwOZQ6w7AiTKkFxerFw2lvY4kQ7QiUCNRkCiWKH0wvYQC6GIffSNiSN?=
- =?us-ascii?Q?VtMuQfwmSusWnfAiWUoJ8feW8CoFfAVfFJ9oUHPchi9ITpxn/PrcrnDieJxF?=
- =?us-ascii?Q?vCE6nuMJ9rJPD2CHJJH3xN6fp8/+beiJToDzFc1Zm/K5D7XfCTItmxW+1VcO?=
- =?us-ascii?Q?g5vaNjkpUXIrskzWfSexR6aDbCXx4HFFRTeNh0RDgwinzMmQivz1NwDgi11C?=
- =?us-ascii?Q?/CdDHNtIzAL3eVnSERuXkCBmjlDF/HaRRvh8GUfL6/83P7iMEDPW2IC+ebRx?=
- =?us-ascii?Q?3tc7Npa4t0QzHRepFixXAA4DBMj14fU5jLT/yKMMtAYouLddoz28XJ4j5dkb?=
- =?us-ascii?Q?x1pnjgnpdojuNE522anUPQ7Vd9PBq96P+0aKuKuMcvsuiiSRC7qO937Uc4yS?=
- =?us-ascii?Q?x+///euF1V33nIUZbPszqS6YpHrLVQ/4H3UEhwpe/8Eitpgeumk1Pqxn3O3N?=
- =?us-ascii?Q?TGNzHXQUY9fxjEWGza9iBx2wkgqJX5/5QZnSSQO2ecu7W0rdhph/9vzSEkZB?=
- =?us-ascii?Q?JxjDkOEWr+0vjAo/VrNeZHrcjgeDbGiHwMbIJkRiiQOtRY+5o0CB5XsRA+nm?=
- =?us-ascii?Q?flx/sJ0xshLdbUXaLJIhxbL6GdulCgvr81b/JNS430MJbHYwdmCfMfDDLcqk?=
- =?us-ascii?Q?O+7kbW0U7EHrPGCzpiFFacBoN46l1HpRCuZ0+s/oow/wHhziseG99lJTKp4v?=
- =?us-ascii?Q?Zm5rCkklwcLTQM+HF8ddoER0mo2xKaeRrWbDI8FMHfuYWsDczahslHrelB5H?=
- =?us-ascii?Q?ZRkuw1JInMgS5rNwxzu20o+nF0oDzW9Erikn4Y6wyt3KQL7SXE8tYJ9HpYcZ?=
- =?us-ascii?Q?S5n+r7OPBViCmBDpurTqSQt/buHsl/0BsqQdR8JRbWd4cNGtUEp1Gqsrefe9?=
- =?us-ascii?Q?87AyPhSclKmDBrvSl35UbgN0vvZaKY1kTdMngSJyW7FalOcOyeh/ddDH/YdG?=
- =?us-ascii?Q?PcPNeD2jZInK3ROxGLjrNVbdLn0hqBS8LrTTXZXyRCnJkUrHxdxaq0hl8jZy?=
- =?us-ascii?Q?M3GAdP2Hy7bnli6JO23KdfugLZYcG6cCfVLec8J19dHRULWoXCNHAp5Riixw?=
- =?us-ascii?Q?4ch6peh1O02lwVNnYdQw59t8D9PskV++/RM5CMp/YI6MKxJujn/jbGVpNkhP?=
- =?us-ascii?Q?Xg=3D=3D?=
+	=?us-ascii?Q?UgpJTdm4dlYMqL7GPwN6P4IRDzJcf0uoNEWzdi7t/aagyBwC0vNCrrMCs9sd?=
+ =?us-ascii?Q?jD839riPJ66FjXARc+wiCZfoC78uVP7M6QeQykXF5TOa0CaYHXe/sq3F/3vE?=
+ =?us-ascii?Q?b0ZRr/4iAGTxhDAw/PpkUAWBCEF5vSc0EUHBmZDv3nT+DsEr/R0tai3ma8h8?=
+ =?us-ascii?Q?K0hiW5WWOqSnCoEwBzkPCskWB2Sk052LvY1zQKYJTYgOWPHtvhSkS/VaCDTR?=
+ =?us-ascii?Q?1PkCAjxb7uHsOdcp01Tb4i+oSF8tbNxrpAIJ3/ph+51k4LJ14+ZFc+KsApKf?=
+ =?us-ascii?Q?97hOeXa6BTVQFiiceY18sXZOU3Gu/6QOTq0pXDbVpuzMEQ+LUcir/AsSB4ge?=
+ =?us-ascii?Q?TEYpD350KqHcMdC6+BiQRVAYaNiJ+ZVykp8dRlvH92cZa0Flc6ToXgWnq6vX?=
+ =?us-ascii?Q?XYjPw1V88TqcC204bhXyzvOFKpfD3POquL61zVu0dtvo7mKHSrCfUXvZM/qL?=
+ =?us-ascii?Q?ZzeeDX5gmErZ3bt9m6i8WLUwfHoM+fdyCitt7DtXm+V3qKV/Mlenv6/I1GYW?=
+ =?us-ascii?Q?nNkCoD4+1qJEcHRwowOHib3FJcxyY/8sHF+4IUyRZmSfhSZnrrrY0toJXBG0?=
+ =?us-ascii?Q?7hFR0+GfXSQIMcsv0rfVTmZK2BSBU7wgs37KCiVMPGM/BF2vXiDfxvZxioZF?=
+ =?us-ascii?Q?aG9UJPqaHjJvhE/QFZTmp3yz9zL3sjmmGF7upBo9TuWh8eAtqALhe0Xys4on?=
+ =?us-ascii?Q?Zozz/1cXKzG5rRlhobPEiJ4aJ9NCnkk1wlDczMp2CqE/9YrjlYXWUjkv3+sP?=
+ =?us-ascii?Q?D3U/v0JQkwfJXUvD/AFZW2qiPGu+oTW666T8MYWEr884cdmycbQafxmCA6C5?=
+ =?us-ascii?Q?N7zO3I1uq628HwqQH9wBI5UN7hpaAiwilm2/kR7x0272cmpVch22k+06bEL9?=
+ =?us-ascii?Q?+AP2QVrxRrM9nA2TCdb8UcioHSyoFxO8ce29DvCEtEaexFgmN+9h3epBox8d?=
+ =?us-ascii?Q?fsxABmK/BOUgs/YJnMBVB6HOt0zaKXWR6XEZm+46uulyXzLkAoRI9SIYorpT?=
+ =?us-ascii?Q?Kj8dv6QkiDrNnFayu7V0igiVGH9xBYT7LrYvdjcVwZhiYEom/pOh9Y4vGWAN?=
+ =?us-ascii?Q?fMfTZ2zJ+vXrlWWkIAOQMGP9dw+fJ9DDvXQQCEh1gopqtVRLscjZPsiYb5Pj?=
+ =?us-ascii?Q?879rkpZGkkqnFsX1olFFaZrQRLyfKS+wHh3ZIS45UskTO5HA88Fex0OQ9Iy9?=
+ =?us-ascii?Q?0Zk/fv4+8ECEF/gjsxR32a289W8LEWQSgHqeC8pidfiQDGfiyxRamWUR/jNE?=
+ =?us-ascii?Q?suPOtYZSbyUQgXtB9sZ5NvKxMq0pDlGr+3fUM/iYdK2hdaT6qjfcDAHN3bbd?=
+ =?us-ascii?Q?Y8FY4qX8Tn/u6h4psTKxnH6N4Rt/kBc472sihgn1B3eiKwMJsWCCIdd4SI5p?=
+ =?us-ascii?Q?HnZ5dO+qRx6EK4pLjIBLQ9EEkbvCAKCDf2T4BpB/Y/bSIvwbWqidQEDDMrPj?=
+ =?us-ascii?Q?d8N7hNkMhtHGoaXp2XLt286egniSZmMBkMcp2ASPSSphSqO55iesSNzrwMZZ?=
+ =?us-ascii?Q?ks9X1x7yjgCGye2Lue5GmD2OSXeqJpeDOcTfgMU94D+TjwjUK6xPF9G463pQ?=
+ =?us-ascii?Q?3Cah7qD3zVS+SLD4qaRfNkcZ0ODSKN0A7h/L9ba22w7AFFgxSltTArR0CWjB?=
+ =?us-ascii?Q?0w=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	T1UArsQI07qYkGCAKAWWAkqnsBHhXtgHqd5m57jF0J+9KnVKDsUPTKz2IcqAkcS3b9tfDGoznZR+fr4ZwvGsa4zN/x8sbhmjqSJ1p9/1IrccpVnXfJiSCDfMK/CGRyKA0Ectv4M70tkTWqz8HrGTQo6PHhubiR9T+KtgXZMM2saORn1GVd6sXfQsyubP/b02avKt68OU2PLpBhwKS9ND5lqzobLKjR3kCeWc9J6J2akUFEMCuy62XA7JFOrARWMoysgvNu8DhaWj9GWb232Bz4JgbSKfEh1T2H1T1sS8gu8h0EyYlHDYEGJswfpKVcTRLyrZKW+ENnuBJljrb92kGzeH6DtANW7pEQTIK9DYXD3WLDfj2ktqNkq8ZGNnR7kLd/Qtp3F3RLjSz/gvX3l8IDIRQnLiptJAavBlPhxX7gA1canVsbnv6w5TYN1zQu0UJrwQJbOyWzqVCyaQVxt3+g0ztuVuNk94yRF8xrcCBVTbBxpbdIl5Lh/jG2pIYhGAhUdxbRz+/oNuylcmAmsCne4Q5Zssd5IcqUzuh5ZxDoOPzVP862z+CsgdSTgDVMPqhbMFTtgMpcY0LWklm7UDguwL3CuGbr5NJuEHz5YADkw=
+	3IRRZ9IkFEddJIOqpypjfSMS1IdWC6cisXi91hNNY/NAZQx5a/s2B+e9gry6Gj3mEjXQk18G35w05+jbhDX2qn6fub3GJh1CgVxcXsY6Pgv/cOgCTKw6Wbz0tfH2FzeqTb8xQOasySoNCw8O0cVCIeZ99G23bwX5PW4e2kMz0djoJDjhE5JeUww4Cmp8M77mUiR+FUTuQqtGYAwnxF9jllp+d/sEFFwXEbhUFJCJl+uRyKUml+6gStyU00zbO3Mp6HjNArqkfTraObtwt+sSGCA2uhlnpgnsI3SXSEYpZCrNyL4z81B5VtFTCnclOih+aVqSXOgSfWYgQR5HAK49heplMPU4IwBICEKhtcowcQBQmWVJTaxdKc1SNAs9Itz4x9ODwTWnOnOIHP0Rjfn+Dffk/MISOJ9ecahfqzDbzKUAAOlaDN3H5wi0sUohrabRk4jAQFdIc37rnmK9/NCgH7mJtdinthTZikb3V1YqMeMCjfFSv70cep64pRX/TF6Ll0F93ryS8ygZd8cqLwfOhKWCXeO8oPYcvuKJy5qF8ptHkZS1aRrmN6LloOrvRS/38WIgWqg0sjV+5Pah8Ga5kbVIab7aZlLjpLRkhodxwQ0=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d2b9fcd4-a55c-4597-a583-08dda7595a5a
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7eaf5d6a-4161-4396-cd16-08dda7595c9b
 X-MS-Exchange-CrossTenant-AuthSource: BL4PR10MB8229.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 13:27:16.7189
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 13:27:20.5711
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: so26PojYYWMPXg0AvqX2cJCp1tw9O2HZH1ftHDZ9IR9v8b9KlhNtNEESyz5AoLEW49CmrM7/LhUNAhsJGT5b+CyZQDwoZkZ8gbR0gQNhJhk=
+X-MS-Exchange-CrossTenant-UserPrincipalName: hneT0WLQUIuU85rZDbSL2YQykHf9RBWri+6DrSaZiJuFmUg6qCsHgQAVW9ZGNXxjnPzz7g7CQkpU5uNVigKrIkjq31alvlyQnj3/qGObJ2w=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB7953
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-09_05,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 mlxscore=0
- mlxlogscore=999 phishscore=0 spamscore=0 suspectscore=0 adultscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 bulkscore=0
+ malwarescore=0 suspectscore=0 spamscore=0 phishscore=0 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
  definitions=main-2506090098
-X-Proofpoint-GUID: NtuPRQWSXDl8wmgWBwLDylmfYaepR8KT
-X-Authority-Analysis: v=2.4 cv=GcEXnRXL c=1 sm=1 tr=0 ts=6846e13d b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=JUZvRre7zh5LkbeaQN0A:9 cc=ntf awl=host:14714
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA5OCBTYWx0ZWRfXyUErld8svNo8 S3to+Q0Qax0ucwb1pIglX7A1LnUXx+46AOLILp4InPhwyKwlwlt6DxH9c3qJzvzH/7JFHsXIjN+ TakTLkWDOekBRYPEMpzpHCbYPJ1tG7XGOxbPOXRwapoV7Faz5THMQpUhwJIwvgx35NK2aZrMFwS
- VIbPzcQYQ43JN21ORP4F3mmXgVHM0dx+vC1/F/oyY0kWvfhqWEdfczegfnMfXFgOmcgoguXi0Cg GTIQZqDMRgEDPIc8cSk9IRqxBCwtPHzlB5n4SG7KWUXzNcIhDb++EZe1WBY3wML8/VDYnjPSl/N Xka01HIsJiEqZU1tYnbmk5KJBzwXv/NA0Iig9SzdVF3kQ0SKELvXO1PdDj91GA8Xb6WjnCtecFC
- agbea+OtNTY5WXZxe9NlaRgQpMzWGkheYZ3B+jQhcLeEMeU6vfdn7LNcsvHrxBl0duw/Tp50
-X-Proofpoint-ORIG-GUID: NtuPRQWSXDl8wmgWBwLDylmfYaepR8KT
+X-Authority-Analysis: v=2.4 cv=RZGQC0tv c=1 sm=1 tr=0 ts=6846e13f b=1 cx=c_pps a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=6_Ml3dIg780BFGbKHqYA:9 cc=ntf awl=host:13206
+X-Proofpoint-GUID: Nsai20aAg6Zzt1l932ZR12C1qcGnWJD2
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA5OCBTYWx0ZWRfXx/6m9bR5XkCP DcbPnMgg6L5NwEjjCB79lr384h7v/THJHSG28usUWfq8Sujh2fO3dKxvfxYApbXyifnOVYNJ2Np rMJ8/WNE0XK/MumFAsOeNJeTAf1B/uu6wC52S4ohkISn3N5A1Hx7yUctEpoJbrYSAvhPpcCkhwA
+ vFbfBzmy57kpy2qRrIe9Uc+pZ0RnrHeHmtiIAsGIwxc3IcUctfvr2BKinaR0RSNiUfrlZ9RBYm0 c3nH2UtudUmKcdfmVum8ti379BzUJpQRsRblNTgUj24+2TOq64PAifbQepfVBLOX5Lt30WELwne kKFsFBd5YnX8rkRjzRl+VhBrkqczY/FsOd/Eh1RGXKvhi3uoOjB1MgbRXWVAcEMP4h8X+WX5omK
+ yge8CvONsGzN1BVSyM94p0T2FrOH8Wt10vXGK2P4SWKzzls4xokE20HcmQ+9baWKCnc18AJZ
+X-Proofpoint-ORIG-GUID: Nsai20aAg6Zzt1l932ZR12C1qcGnWJD2
 
-It is useful to have the CoW self-test invoke MREMAP_RELOCATE_ANON on
-partial THP mappings, as this triggers folio split code paths and asserts
-that this behaves correctly.
+Add tests explicitly asserting that mremap() fails on forked VMAs whether
+they have parent anon_vma's or whether they have child ones, as these are
+cases where the folio might be mapped by multiple processes - in this case
+we don't even try to relocate folio metadata, but rather simply disallow
+the operation.
 
-Add an additional set of tests to explicitly do so.
+The tests use MREMAP_MUST_RELOCATE_ANON so we can detect the failure
+correctly.
+
+Were the mremap()'s to succeed, a merge would occur, so it remains
+appropriate to keep these in the merge test suite.
+
+We also explicitly test the anon_vma reuse case. This is one where a
+munmap() occurs on a parent anon_vma which still has children. We keep the
+empty anon_vma around, and then attempt to reuse it on the next fork of a
+VMA whose anon_vma references this empty anon_vma.
+
+Consider the first case over 3 forks:
+
+FORK 3 TIMES ONE AFTER ANOTHER
+==============================
+
+Process 1
+
+     |-------------|
+     | avc*        v
+  |-----|   vma |-----|
+  |  A  |<------| avc |
+  |-----|       |-----|
+     | anon_vma    ^
+     |             |
+     v     rb_root |
+  |---------------------|
+  | refcount = 1        |<--|
+  | num_children = 1    |   |
+  | num_active_vmas = 1 |---| parent
+  |---------------------|
+
+FORK
+
+Process 1
+
+     |-------------|
+     | avc         v
+  |-----|   vma |-----|
+  |  A  |<------| avc |
+  |-----|       |-----|
+     | anon_vma    ^
+     |             |--------------------|
+     v     rb_root |                    |
+  |---------------------|               |
+  | refcount = 2        | (self-parent) |
+  | num_children = 2    |<--------------x----|
+  | num_active_vmas = 1 |               |    |
+  |---------------------|               |    |
+                           |------------|    |
+Process 2                  |                 |
+                           |                 |
+     |-------------|       |                 |
+     | avc         v       v                 |
+  |-----|   vma |-----| |-----|              |
+  |  B  |<------| avc |.| avc |              |
+  |-----|       |-----| |-----|              |
+     | anon_vma    ^                         |
+     |             |                         |
+     v     rb_root |                         |
+  |---------------------|                    |
+  | refcount = 1        |                    |
+  | num_children = 0    |--------------------|
+  | num_active_vmas = 1 | parent
+  |---------------------|
+
+FORK
+
+Process 1
+
+     |-------------|
+     | avc         v
+  |-----|   vma |-----|
+  |  A  |<------| avc |
+  |-----|       |-----|        |--------------------------|
+     | anon_vma    ^           |                          |
+     |             |--------------------|                 |
+     v     rb_root |                    |                 |
+  |---------------------|               |                 |
+  | refcount = 3        | (self-parent) |                 |
+  | num_children = 2    |<--------------x----|            |
+  | num_active_vmas = 1 |               |    |            |
+  |---------------------|               |    |            |
+                           |------------|    |            |
+Process 2                  |                 |            |
+                           |                 |            |
+     |-------------|       |                 |            |
+     | avc         v       v                 |            |
+  |-----|   vma |-----| |-----|              |            |
+  |  B  |<------| avc |.| avc |              |            |
+  |-----|       |-----| |-----|              |            |
+     | anon_vma    ^                         |            |
+     |             |-------------------------x--------|   |
+     v     rb_root |                         |        |   |
+  |---------------------|                    |        |   |
+  | refcount = 1        |<-------------------x----|   |   |
+  | num_children = 1    |--------------------|    |   |   |
+  | num_active_vmas = 1 | parent                  |   |   |
+  |---------------------|                         |   |   |
+                                                  |   |   |
+Process 3                                         |   |   |
+                           |----------------------x---|   |
+     |-------------|       |       |--------------x-------|
+     | avc         v       v       v              |
+  |-----|   vma |-----| |-----| |-----|           |
+  |  C  |<------| avc |.| avc |.| avc |           |
+  |-----|       |-----| |-----| |-----|           |
+     | anon_vma    ^                              |
+     |             |                              |
+     v     rb_root |                              |
+  |---------------------|                         |
+  | refcount = 1        |                         |
+  | num_children = 0    |-------------------------|
+  | num_active_vmas = 1 | parent
+  |---------------------|
+
+FORK
+
+Process 1
+
+     |-------------|
+     | avc         v
+  |-----|   vma |-----|             |---------------------------------|
+  |  A  |<------| avc |             |                                 |
+  |-----|       |-----|        |--------------------------|           |
+     | anon_vma    ^           |                          |           |
+     |             |--------------------|                 |           |
+     v     rb_root |                    |                 |           |
+  |---------------------|               |                 |           |
+  | refcount = 4        | (self-parent) |                 |           |
+  | num_children = 2    |<--------------x----|            |           |
+  | num_active_vmas = 1 |               |    |            |           |
+  |---------------------|               |    |            |           |
+                           |------------|    |            |           |
+Process 2                  |                 |            |           |
+                           |                 |            |           |
+     |-------------|       |                 |            |           |
+     | avc         v       v                 |            |           |
+  |-----|   vma |-----| |-----|              |            |           |
+  |  B  |<------| avc |.| avc |              |            |           |
+  |-----|       |-----| |-----|     |--------x------------x-------|   |
+     | anon_vma    ^                |        |            |       |   |
+     |             |-------------------------x--------|   |       |   |
+     v     rb_root |                         |        |   |       |   |
+  |---------------------|                    |        |   |       |   |
+  | refcount = 1        |<-------------------x----|   |   |       |   |
+  | num_children = 1    |--------------------|    |   |   |       |   |
+  | num_active_vmas = 1 | parent                  |   |   |       |   |
+  |---------------------|                         |   |   |       |   |
+                                                  |   |   |       |   |
+Process 3                                         |   |   |       |   |
+                           |----------------------x---|   |       |   |
+     |-------------|       |       |--------------x-------|       |   |
+     | avc         v       v       v              |               |   |
+  |-----|   vma |-----| |-----| |-----|           |               |   |
+  |  C  |<------| avc |.| avc |.| avc |           |               |   |
+  |-----|       |-----| |-----| |-----|           |               |   |
+     | anon_vma    ^                              |               |   |
+     |             |------------------------------x-----------|   |   |
+     v     rb_root |                              |           |   |   |
+  |---------------------|                         |           |   |   |
+  | refcount = 1        |<------------------------x---|       |   |   |
+  | num_children = 1    |-------------------------|   |       |   |   |
+  | num_active_vmas = 1 | parent                      |       |   |   |
+  |---------------------|                             |       |   |   |
+                                                      |       |   |   |
+Process 4                                             |       |   |   |
+                           |--------------------------x-------|   |   |
+     |-------------|       |       |------------------x-----------|   |
+     | avc         v       v       v       v----------x---------------|
+  |-----|   vma |-----| |-----| |-----| |-----|       |
+  |  D  |<------| avc |.| avc |.| avc |.| avc |       |
+  |-----|       |-----| |-----| |-----| |-----|       |
+     | anon_vma    ^                                  |
+     |             |                                  |
+     v     rb_root |                                  |
+  |---------------------|                             |
+  | refcount = 1        |                             |
+  | num_children = 0    |-----------------------------|
+  | num_active_vmas = 1 | parent
+  |---------------------|
+
+We can see that at no point do we lack either a raised num_children count
+or anon_vma_chain list count.
+
+Equally with anon_vma reuse:
+
+FORK 3 TIMES ONE AFTER ANOTHER, UNMAPPING AFTER FORK FOR ANON_VMA REUSE
+=======================================================================
+
+Process 1
+
+     |-------------|
+     | avc*        v
+  |-----|   vma |-----|
+  |  A  |<------| avc |
+  |-----|       |-----|
+     | anon_vma    ^
+     |             |
+     v     rb_root |
+  |---------------------|
+  | refcount = 1        |<--|
+  | num_children = 1    |   |
+  | num_active_vmas = 1 |---| parent
+  |---------------------|
+
+FORK
+
+Process 1
+
+     |-------------|
+     | avc         v
+  |-----|   vma |-----|
+  |  A  |<------| avc |
+  |-----|       |-----|
+     | anon_vma    ^
+     |             |--------------------|
+     v     rb_root |                    |
+  |---------------------|               |
+  | refcount = 2        | (self-parent) |
+  | num_children = 2    |<--------------x----|
+  | num_active_vmas = 1 |               |    |
+  |---------------------|               |    |
+                           |------------|    |
+Process 2                  |                 |
+                           |                 |
+     |-------------|       |                 |
+     | avc         v       v                 |
+  |-----|   vma |-----| |-----|              |
+  |  B  |<------| avc |.| avc |              |
+  |-----|       |-----| |-----|              |
+     | anon_vma    ^                         |
+     |             |                         |
+     v     rb_root |                         |
+  |---------------------|                    |
+  | refcount = 1        |                    |
+  | num_children = 0    |--------------------|
+  | num_active_vmas = 1 | parent
+  |---------------------|
+
+FORK
+
+Process 1
+
+     |-------------|
+     | avc         v
+  |-----|   vma |-----|
+  |  A  |<------| avc |
+  |-----|       |-----|        |--------------------------|
+     | anon_vma    ^           |                          |
+     |             |--------------------|                 |
+     v     rb_root |                    |                 |
+  |---------------------|               |                 |
+  | refcount = 3        | (self-parent) |                 |
+  | num_children = 2    |<--------------x----|            |
+  | num_active_vmas = 1 |               |    |            |
+  |---------------------|               |    |            |
+                           |------------|    |            |
+Process 2                  |                 |            |
+                           |                 |            |
+     |-------------|       |                 |            |
+     | avc         v       v                 |            |
+  |-----|   vma |-----| |-----|              |            |
+  |  B  |<------| avc |.| avc |              |            |
+  |-----|       |-----| |-----|              |            |
+     | anon_vma    ^                         |            |
+     |             |-------------------------x--------|   |
+     v     rb_root |                         |        |   |
+  |---------------------|                    |        |   |
+  | refcount = 1        |<-------------------x----|   |   |
+  | num_children = 1    |--------------------|    |   |   |
+  | num_active_vmas = 1 | parent                  |   |   |
+  |---------------------|                         |   |   |
+                                                  |   |   |
+Process 3                                         |   |   |
+                           |----------------------x---|   |
+     |-------------|       |       |--------------x-------|
+     | avc         v       v       v              |
+  |-----|   vma |-----| |-----| |-----|           |
+  |  C  |<------| avc |.| avc |.| avc |           |
+  |-----|       |-----| |-----| |-----|           |
+     | anon_vma    ^                              |
+     |             |                              |
+     v     rb_root |                              |
+  |---------------------|                         |
+  | refcount = 1        |                         |
+  | num_children = 0    |-------------------------|
+  | num_active_vmas = 1 | parent
+  |---------------------|
+
+UNMAP B
+
+Process 1
+
+     |-------------|
+     | avc         v
+  |-----|   vma |-----|
+  |  A  |<------| avc |
+  |-----|       |-----|        |--------------------------|
+     | anon_vma    ^           |                          |
+     |             |------------                          |
+     v     rb_root |                                      |
+  |---------------------|                                 |
+  | refcount = 3        | (self-parent)                   |
+  | num_children = 2    |<-------------------|            |
+  | num_active_vmas = 1 |                    |            |
+  |---------------------|                    |            |
+                                             |            |
+Process 2                                    |            |
+                                             |            |
+                   |-------------------------x--------|   |
+           rb_root |                         |        |   |
+  |---------------------|                    |        |   |
+  | refcount = 1        |<-------------------x----|   |   | We keep empty
+  | num_children = 1    |--------------------|    |   |   | anon_vma round.
+  | num_active_vmas = 0 | parent                  |   |   |
+  |---------------------|                         |   |   |
+                                                  |   |   |
+Process 3                                         |   |   |
+                           |----------------------x---|   |
+     |-------------|       |       |--------------x-------|
+     | avc         v       v       v              |
+  |-----|   vma |-----| |-----| |-----|           |
+  |  C  |<------| avc |.| avc |.| avc |           |
+  |-----|       |-----| |-----| |-----|           |
+     | anon_vma    ^                              |
+     |             |                              |
+     v     rb_root |                              |
+  |---------------------|                         |
+  | refcount = 1        |                         |
+  | num_children = 0    |-------------------------|
+  | num_active_vmas = 1 | parent
+  |---------------------|
+
+FORK
+
+Process 1
+
+     |-------------|
+     | avc         v
+  |-----|   vma |-----|             |-----------------------------|
+  |  A  |<------| avc |             |                             |
+  |-----|       |-----|        |--------------------------|       |
+     | anon_vma    ^           |                          |       |
+     |             |-----------|                          |       |
+     v     rb_root |                                      |       |
+  |---------------------|                                 |       |
+  | refcount = 3        | (self-parent)                   |       |
+  | num_children = 2    |<-------------------|            |       |
+  | num_active_vmas = 1 |                    |            |       |
+  |---------------------|                    |            |       |
+                                             |            |       |
+Process 2               |--------------------x------------x-------x-------|
+                        |                    |            |       |       |
+                   |-------------------------x--------|   |       |       |
+           rb_root |                         |        |   |       |       |
+  |---------------------|<-------------------x--------x---x-------x---|   |
+  | refcount = 1        |<-------------------x----|   |   |       |   |   |
+  | num_children = 1    |--------------------|    |   |   |       |   |   |
+  | num_active_vmas = 1 | parent                  |   |   |       |   |   |
+  |---------------------|                         |   |   |       |   |   |
+                                                  |   |   |       |   |   |
+Process 3                                         |   |   |       |   |   |
+                           |----------------------x---|   |       |   |   |
+     |-------------|       |       |--------------x-------|       |   |   |
+     | avc         v       v       v              |               |   |   |
+  |-----|   vma |-----| |-----| |-----|           |               |   |   |
+  |  C  |<------| avc |.| avc |.| avc |           |               |   |   |
+  |-----|       |-----| |-----| |-----|           |               |   |   |
+     | anon_vma    ^                              |               |   |   |
+     |             |------------------------------x-----------|   |   |   |
+     v     rb_root |                              |           |   |   |   |
+  |---------------------|                         |           |   |   |   |
+  | refcount = 1        |                         |           |   |   |   |
+  | num_children = 0    |-------------------------|           |   |   |   |
+  | num_active_vmas = 1 | parent                              |   |   |   |
+  |---------------------|                                     |   |   |   |
+                                                              |   |   |   |
+Process 4                                                     |   |   |   |
+                           |----------------------------------|   |   |   |
+     |-------------|       |       |------------------------------|   |   |
+     | avc         v       v       v                                  |   |
+  |-----|   vma |-----| |-----| |-----|                               |   |
+  |  D  |<------| avc |.| avc |.| avc |                               |   |
+  |-----|       |-----| |-----| |-----|                               |   |
+     | anon_vma    ^                                                  |   |
+     |             |--------------------------------------------------x---|
+     |                                                                |
+     |----------------------------------------------------------------|
+
+We reuse the empty anon_vma from VMA B. Note that process 3 is now parented
+to process 4's (and 2's) anon_vma.
 
 Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 ---
- tools/testing/selftests/mm/cow.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ tools/testing/selftests/mm/merge.c | 361 +++++++++++++++++++++++++++++
+ 1 file changed, 361 insertions(+)
 
-diff --git a/tools/testing/selftests/mm/cow.c b/tools/testing/selftests/mm/cow.c
-index dbbcc5eb3dce..c483bfd4269e 100644
---- a/tools/testing/selftests/mm/cow.c
-+++ b/tools/testing/selftests/mm/cow.c
-@@ -845,13 +845,14 @@ enum thp_run {
- 	THP_RUN_SINGLE_PTE,
- 	THP_RUN_SINGLE_PTE_SWAPOUT,
- 	THP_RUN_PARTIAL_MREMAP,
-+	THP_RUN_PARTIAL_MREMAP_RELOCATE_ANON,
- 	THP_RUN_PARTIAL_SHARED,
+diff --git a/tools/testing/selftests/mm/merge.c b/tools/testing/selftests/mm/merge.c
+index b658f2f3a94b..f03ee15cbfc5 100644
+--- a/tools/testing/selftests/mm/merge.c
++++ b/tools/testing/selftests/mm/merge.c
+@@ -4,6 +4,7 @@
+ #include "../kselftest_harness.h"
+ #include <linux/prctl.h>
+ #include <fcntl.h>
++#include <errno.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <unistd.h>
+@@ -15,11 +16,18 @@
+ #include "vm_util.h"
+ #include <linux/mman.h>
+ 
++enum poll_action {
++	POLL_TASK_RUN,
++	POLL_TASK_WAIT,
++	POLL_TASK_EXIT,
++};
++
+ FIXTURE(merge)
+ {
+ 	unsigned int page_size;
+ 	char *carveout;
+ 	struct procmap_fd procmap;
++	volatile enum poll_action *ipc;
  };
  
- static void do_run_with_thp(test_fn fn, enum thp_run thp_run, size_t thpsize)
- {
- 	char *mem, *mmap_mem, *tmp, *mremap_mem = MAP_FAILED;
--	size_t size, mmap_size, mremap_size;
-+	size_t size, mmap_size, mremap_size, mremap_flags;
- 	int ret;
- 
- 	/* For alignment purposes, we need twice the thp size. */
-@@ -927,6 +928,7 @@ static void do_run_with_thp(test_fn fn, enum thp_run thp_run, size_t thpsize)
- 		size = pagesize;
- 		break;
- 	case THP_RUN_PARTIAL_MREMAP:
-+	case THP_RUN_PARTIAL_MREMAP_RELOCATE_ANON:
- 		/*
- 		 * Remap half of the THP. We need some new memory location
- 		 * for that.
-@@ -939,8 +941,13 @@ static void do_run_with_thp(test_fn fn, enum thp_run thp_run, size_t thpsize)
- 			log_test_result(KSFT_FAIL);
- 			goto munmap;
- 		}
--		tmp = mremap(mem + mremap_size, mremap_size, mremap_size,
--			     MREMAP_MAYMOVE | MREMAP_FIXED, mremap_mem);
+ FIXTURE_SETUP(merge)
+@@ -31,6 +39,11 @@ FIXTURE_SETUP(merge)
+ 	ASSERT_NE(self->carveout, MAP_FAILED);
+ 	/* Setup PROCMAP_QUERY interface. */
+ 	ASSERT_EQ(open_self_procmap(&self->procmap), 0);
 +
-+		mremap_flags = MREMAP_MAYMOVE | MREMAP_FIXED;
-+		if (thp_run == THP_RUN_PARTIAL_MREMAP_RELOCATE_ANON)
-+			mremap_flags |= MREMAP_RELOCATE_ANON;
-+
-+		tmp = sys_mremap(mem + mremap_size, mremap_size, mremap_size,
-+				 mremap_flags, mremap_mem);
- 		if (tmp != mremap_mem) {
- 			ksft_perror("mremap() failed");
- 			log_test_result(KSFT_FAIL);
-@@ -1052,6 +1059,13 @@ static void run_with_partial_mremap_thp(test_fn fn, const char *desc, size_t siz
- 	do_run_with_thp(fn, THP_RUN_PARTIAL_MREMAP, size);
++	/* Quick and dirty IPC. */
++	self->ipc = (volatile enum poll_action *)mmap(NULL, self->page_size,
++			PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANON, -1, 0);
++	ASSERT_NE(self->ipc, MAP_FAILED);
  }
  
-+static void run_with_partial_mremap_relocate_anon_thp(test_fn fn, const char *desc, size_t size)
+ FIXTURE_TEARDOWN(merge)
+@@ -42,6 +55,7 @@ FIXTURE_TEARDOWN(merge)
+ 	 * fails (KSM may be disabled for instance).
+ 	 */
+ 	prctl(PR_SET_MEMORY_MERGE, 0, 0, 0, 0);
++	ASSERT_EQ(munmap((void *)self->ipc, self->page_size), 0);
+ }
+ 
+ TEST_F(merge, mprotect_unfaulted_left)
+@@ -1898,4 +1912,351 @@ TEST_F(merge, mremap_relocate_anon_mprotect_faulted_faulted)
+ 	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 10 * page_size);
+ }
+ 
++TEST_F(merge, mremap_relocate_anon_single_fork)
 +{
-+	ksft_print_msg("[RUN] %s ... with partially mremap(MREMAP_RELOCATE_ANON)'ed THP (%zu kB)\n",
-+		desc, size / 1024);
-+	do_run_with_thp(fn, THP_RUN_PARTIAL_MREMAP_RELOCATE_ANON, size);
++	unsigned int page_size = self->page_size;
++	char *carveout = self->carveout;
++	volatile enum poll_action *poll = self->ipc;
++	char *ptr, *ptr2;
++	pid_t pid2;
++	int err;
++
++	/*
++	 * .           .           .
++	 * . |-------| .           .  Map A, fault in and
++	 * . |   A   |-.-----|     .  fork process 1 to
++	 * . |-------| .     |     .  process 2.
++	 * .           .     v     .
++	 * .           . |-------| .
++	 * .           . |   B   | .
++	 * .           . |-------| .
++	 * .           .           .
++	 * . Process 1 . Process 2 .
++	 */
++	ptr = mmap(carveout, 3 * page_size, PROT_READ | PROT_WRITE,
++		   MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr, MAP_FAILED);
++	/* Fault it in. */
++	ptr[0] = 'x';
++
++	pid2 = fork();
++	ASSERT_NE(pid2, -1);
++	/* Parent process. */
++	if (pid2 != 0) {
++		/* mremap() fails due to forked children. */
++		ptr2 = sys_mremap(ptr, page_size, page_size,
++				  MREMAP_MAYMOVE | MREMAP_FIXED | MREMAP_MUST_RELOCATE_ANON,
++				  &carveout[3 * page_size]);
++		err = errno;
++		ASSERT_EQ(ptr2, MAP_FAILED);
++		ASSERT_EQ(err, EFAULT);
++
++		poll[0] = POLL_TASK_EXIT;
++
++		wait(NULL);
++		return;
++	}
++
++	/* This is process 2. */
++
++	/* mremap() fails due to forked parents. */
++	ptr2 = sys_mremap(ptr, page_size, page_size,
++		MREMAP_MAYMOVE | MREMAP_FIXED | MREMAP_MUST_RELOCATE_ANON,
++		&carveout[3 * page_size]);
++	err = errno;
++	ASSERT_EQ(ptr2, MAP_FAILED);
++	ASSERT_EQ(err, EFAULT);
++
++	/* Wait for parent to finish. */
++	while (poll[0] == POLL_TASK_RUN)
++		;
 +}
 +
- static void run_with_partial_shared_thp(test_fn fn, const char *desc, size_t size)
- {
- 	log_test_start("%s ... with partially shared THP (%zu kB)",
-@@ -1247,6 +1261,7 @@ static void run_anon_test_case(struct test_case const *test_case)
- 		run_with_single_pte_of_thp(test_case->fn, test_case->desc, size);
- 		run_with_single_pte_of_thp_swap(test_case->fn, test_case->desc, size);
- 		run_with_partial_mremap_thp(test_case->fn, test_case->desc, size);
-+		run_with_partial_mremap_relocate_anon_thp(test_case->fn, test_case->desc, size);
- 		run_with_partial_shared_thp(test_case->fn, test_case->desc, size);
- 
- 		thp_pop_settings();
-@@ -1270,7 +1285,7 @@ static int tests_per_anon_test_case(void)
- {
- 	int tests = 2 + nr_hugetlbsizes;
- 
--	tests += 6 * nr_thpsizes;
-+	tests += 7 * nr_thpsizes;
- 	if (pmdsize)
- 		tests += 2;
- 	return tests;
++TEST_F(merge, mremap_relocate_anon_fork_twice)
++{
++	unsigned int page_size = self->page_size;
++	char *carveout = self->carveout;
++	volatile enum poll_action *poll = self->ipc;
++	char *ptr, *ptr2;
++	pid_t pid2, pid3;
++	int err;
++
++	/*
++	 * .           .           .
++	 * . |-------| .           .  Map A, fault in and
++	 * . |   A   |-.-----|     .  fork process 1 to
++	 * . |-------| .     |     .  process 2.
++	 * .           .     v     .
++	 * .           . |-------| .
++	 * .           . |   B   | .
++	 * .           . |-------| .
++	 * .           .           .
++	 * . Process 1 . Process 2 .
++	 */
++	ptr = mmap(carveout, 3 * page_size, PROT_READ | PROT_WRITE,
++		   MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr, MAP_FAILED);
++	/* Fault it in. */
++	ptr[0] = 'x';
++	pid2 = fork();
++	ASSERT_NE(pid2, -1);
++	/* If parent process, simply wait. */
++	if (pid2 != 0) {
++		while (true) {
++			if (poll[0] == POLL_TASK_EXIT)
++				break;
++			if (poll[0] == POLL_TASK_WAIT)
++				continue;
++
++			/* mremap() fails due to forked children. */
++			ptr2 = sys_mremap(ptr, page_size, page_size,
++					  MREMAP_MAYMOVE | MREMAP_FIXED |
++					  MREMAP_MUST_RELOCATE_ANON,
++					  &carveout[3 * page_size]);
++			err = errno;
++			ASSERT_EQ(ptr2, MAP_FAILED);
++			ASSERT_EQ(err, EFAULT);
++
++			/* Strictly, should be atomic. */
++			if (poll[0] == POLL_TASK_RUN)
++				poll[0] = POLL_TASK_WAIT;
++		}
++
++		wait(NULL);
++		return;
++	}
++
++	/* This is process 2. */
++
++	/* Wait for parent to finish. */
++	while (poll[0] == POLL_TASK_RUN)
++		;
++
++	/*
++	 * .           .           .           .
++	 * . |-------| .           .           .
++	 * . |   A   | .           .           .
++	 * . |-------| .           .           .
++	 * .           .           .           .
++	 * .           . |-------| .           . Fork process 2 to
++	 * .           . |   B   |-.-----|     . process 3.
++	 * .           . |-------| .     |     .
++	 * .           .           .     v     .
++	 * .           .           . |-------| .
++	 * .           .           . |   C   | .
++	 * .           .           . |-------| .
++	 * .           .           .           .
++	 * . Process 1 . Process 2 . Process 3 .
++	 */
++	pid3 = fork();
++	ASSERT_NE(pid3, -1);
++	/* If parent process, simply wait. */
++	if (pid3 != 0) {
++		/* mremap() fails due to forked children. */
++		ptr2 = sys_mremap(ptr, page_size, page_size,
++				  MREMAP_MAYMOVE | MREMAP_FIXED |
++				  MREMAP_MUST_RELOCATE_ANON,
++				  &carveout[3 * page_size]);
++		err = errno;
++		ASSERT_EQ(ptr2, MAP_FAILED);
++		ASSERT_EQ(err, EFAULT);
++
++		/* We don't retrigger, so just indicate we're done. */
++		poll[1] = POLL_TASK_EXIT;
++
++		wait(NULL);
++		return;
++	}
++
++	/* This is process 3. */
++
++	/* Trigger root mremap(). */
++	poll[0] = POLL_TASK_RUN;
++	/* Wait for parents to finish. */
++
++	while (poll[0] == POLL_TASK_RUN)
++		;
++	while (poll[1] == POLL_TASK_RUN)
++		;
++
++	/* mremap() fails due to forked parents. */
++	ptr2 = sys_mremap(ptr, page_size, page_size,
++		MREMAP_MAYMOVE | MREMAP_FIXED | MREMAP_MUST_RELOCATE_ANON,
++		&carveout[3 * page_size]);
++	err = errno;
++	ASSERT_EQ(ptr2, MAP_FAILED);
++	ASSERT_EQ(err, EFAULT);
++	/* Kill waiting parent. */
++	poll[0] = POLL_TASK_EXIT;
++}
++
++TEST_F(merge, mremap_relocate_anon_3_times_reuse_anon_vma)
++{
++	unsigned int page_size = self->page_size;
++	char *carveout = self->carveout;
++	volatile enum poll_action *poll = self->ipc;
++	char *ptr, *ptr2;
++	pid_t pid2, pid3, pid4;
++	int err;
++
++	/*
++	 * .           .           .
++	 * . |-------| .           .  Map A, fault in and
++	 * . |   A   |-.-----|     .  fork process 1 to
++	 * . |-------| .     |     .  process 2.
++	 * .           .     v     .
++	 * .           . |-------| .
++	 * .           . |   B   | .
++	 * .           . |-------| .
++	 * .           .           .
++	 * . Process 1 . Process 2 .
++	 */
++	ptr = mmap(carveout, 3 * page_size, PROT_READ | PROT_WRITE,
++		   MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr, MAP_FAILED);
++	/* Fault it in. */
++	ptr[0] = 'x';
++	pid2 = fork();
++	ASSERT_NE(pid2, -1);
++	/* If parent process, simply wait. */
++	if (pid2 != 0) {
++		while (true) {
++			if (poll[0] == POLL_TASK_EXIT)
++				break;
++			if (poll[0] == POLL_TASK_WAIT)
++				continue;
++
++			/* mremap() fails due to forked children. */
++			ptr2 = sys_mremap(ptr, page_size, page_size,
++					  MREMAP_MAYMOVE | MREMAP_FIXED |
++					  MREMAP_MUST_RELOCATE_ANON,
++					  &carveout[3 * page_size]);
++			err = errno;
++			ASSERT_EQ(ptr2, MAP_FAILED);
++			ASSERT_EQ(err, EFAULT);
++
++			if (poll[0] == POLL_TASK_RUN)
++				poll[0] = POLL_TASK_WAIT;
++		}
++
++		wait(NULL);
++		return;
++	}
++
++	/* This is process 2. */
++
++	/* Wait for parent to finish. */
++	while (poll[0] == POLL_TASK_RUN)
++		;
++
++	/*
++	 * .           .           .           .
++	 * . |-------| .           .           .
++	 * . |   A   | .           .           .
++	 * . |-------| .           .           .
++	 * .           .           .           .
++	 * .           . |-------| .           . Fork process 2 to
++	 * .           . |   B   |-.-----|     . process 3.
++	 * .           . |-------| .     |     .
++	 * .           .           .     v     .
++	 * .           .           . |-------| .
++	 * .           .           . |   C   | .
++	 * .           .           . |-------| .
++	 * .           .           .           .
++	 * . Process 1 . Process 2 . Process 3 .
++	 */
++	pid3 = fork();
++	ASSERT_NE(pid3, -1);
++	/* If parent process, simply wait. */
++	if (pid3 != 0) {
++		/*
++		 * We only try to mremap once, before unmapping so we can
++		 * trigger reuse of B's anon_vma.
++		 */
++		/* mremap() fails due to forked children. */
++		ptr2 = sys_mremap(ptr, page_size, page_size,
++				  MREMAP_MAYMOVE | MREMAP_FIXED |
++				  MREMAP_MUST_RELOCATE_ANON,
++				  &carveout[3 * page_size]);
++		err = errno;
++		ASSERT_EQ(ptr2, MAP_FAILED);
++		ASSERT_EQ(err, EFAULT);
++
++		/*
++		 * .           .           .           .
++		 * . |-------| .           .           .
++		 * . |   A   | .           .           .
++		 * . |-------| .           .           .
++		 * .           .           .           .
++		 * .           .           .           . Unmap VMA B, but
++		 * .           .           .           . anon_vma is left
++		 * .           .           .           . around.
++		 * .           .           .           .
++		 * .           .           . |-------| .
++		 * .           .           . |   C   | .
++		 * .           .           . |-------| .
++		 * .           .           .           .
++		 * . Process 1 . Process 2 . Process 3 .
++		 */
++		munmap(ptr, 3 * page_size);
++
++		/* We indicate we're done so child waits for */
++		poll[1] = POLL_TASK_EXIT;
++
++		wait(NULL);
++		return;
++	}
++
++	/* This is process 3. */
++
++	/* Trigger root mremap(). */
++	poll[0] = POLL_TASK_RUN;
++	/* Wait for parents to finish. */
++	while (poll[0] == POLL_TASK_RUN)
++		;
++	while (poll[1] == POLL_TASK_RUN)
++		;
++
++	pid4 = fork();
++	ASSERT_NE(pid4, -1);
++
++	if (pid4 != 0) {
++		/* mremap() fails due to forked children. */
++		ptr2 = sys_mremap(ptr, page_size, page_size,
++				  MREMAP_MAYMOVE | MREMAP_FIXED |
++				  MREMAP_MUST_RELOCATE_ANON,
++				  &carveout[3 * page_size]);
++		err = errno;
++		ASSERT_EQ(ptr2, MAP_FAILED);
++		ASSERT_EQ(err, EFAULT);
++
++		/* We don't retrigger, so just indicate we're done. */
++		poll[2] = POLL_TASK_EXIT;
++
++		wait(NULL);
++		return;
++	}
++
++	/* This is process 4. */
++
++	/* Trigger root mremap(). */
++	poll[0] = POLL_TASK_RUN;
++	/* We unmapped VMA B, so nothing to trigger there. */
++	/* Wait for parents to finish. */
++	while (poll[0] == POLL_TASK_RUN)
++		;
++	while (poll[2] == POLL_TASK_RUN)
++		;
++
++	/* mremap() fails due to forked parents. */
++	ptr2 = sys_mremap(ptr, page_size, page_size,
++		MREMAP_MAYMOVE | MREMAP_FIXED | MREMAP_MUST_RELOCATE_ANON,
++		&carveout[3 * page_size]);
++	err = errno;
++	ASSERT_EQ(ptr2, MAP_FAILED);
++	ASSERT_EQ(err, EFAULT);
++	/* Kill waiting parent. */
++	poll[0] = POLL_TASK_EXIT;
++}
++
+ TEST_HARNESS_MAIN
 -- 
 2.49.0
 
