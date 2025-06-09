@@ -1,129 +1,295 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EECD1F4C85;
-	Mon,  9 Jun 2025 12:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F13B60DCF;
+	Mon,  9 Jun 2025 12:54:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749473644; cv=none; b=qDUAta10/CkNMzJL61bi4n6OAPVO+ybI5u2OaF8ED4lFUwBBcHbN3jHnVUddYoYfLZiDQ2XQcpyX6rJ7rE3A5OCoYqTJHspinA3FzQRKEX28AM1K3gJqyWJ6/EZSQb/Y9XqNY554y9PYnYQt7dISgKx4+RYf7cCqkJCUy8Ss2ag=
+	t=1749473693; cv=none; b=WyBPIdJBid/b8ctsgQd45IfQ38n+0Us35dKuubT5p7NI6yyxGgTnjhCH3GvEI6Y6Hoj1adiwyoyRgm0DvcmTdjopl84IjoM9ugRMJAzdflk4FccIoET5hQn07znJWqam6OudQKi5ZzGONmPlfw3e2D/q2wolkrqL7yrBL466cj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749473644; c=relaxed/simple;
-	bh=LsqrPCaLGDlDsOmOjM99nlNpVzIVulusbtzC2DuBADU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=igC5Tr/Ci90nkON/qY+O3FkvRQlgmgR/Ztq8pzZoTK5k9ESXBoRRzFAvMZHDRI/vBYPQ/c7FTShtaIFTCbLG3bsC3/HU7ClTvssDipA1QSFS24WryaZpJsTOEUZQmqT1n1mM5ycKlrODQuLuIZ+HnljMHz7168D/09mO+ZL9LZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R4spZsG9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R4spZsG9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16141C4CEEB;
-	Mon,  9 Jun 2025 12:53:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749473643;
-	bh=LsqrPCaLGDlDsOmOjM99nlNpVzIVulusbtzC2DuBADU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R4spZsG9iao/qhmYKPIIF8aAtXKEbbs/6V453Fp4u+JZ8q/QmjTgTGSt22/8TiyzU
-	 1Iyz9dOF4U1J3nsw4cHGY6MihNjWx5FlJQ5qw2vVbVDqG8L+wBS0yYJIoVYthTEmNA
-	 /ZEM41Riel8ZUEtbiZLmClbHblgNk7Bw35BeW0kJnyc00yLLhWcC4MGTwRTqw0IhY6
-	 YyYWo4PNV+HzO+pHUbKn5x17J9gx1V9aDFafOYQZP70d6+7KPQjhDt7ocwCLWhSB2N
-	 WyhPzWI4669M95YMrti9QDkDg5sGDlrhLg3sK47x9kJADPjNJ3YFJfwSBeu0MGeeP6
-	 +Cnc9duhR5aYg==
-Date: Mon, 9 Jun 2025 14:53:57 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Benno Lossin <lossin@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 6/6] rust: pci: add irq accessors
-Message-ID: <aEbZZTx99Tu1Zsd4@pollux>
-References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
- <20250608-topics-tyr-request_irq-v4-6-81cb81fb8073@collabora.com>
+	s=arc-20240116; t=1749473693; c=relaxed/simple;
+	bh=oWXz3lIwzuU8+p8l5Hj/DkcEeQgbyu9sSB7Bw2e/FgE=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SrgAXC5tpZKv4/CDvcPTPdxdLWLHc3+GM67lUN5ASGmx1zPqwTO8gHnQp0e1QIkY8pNmhaNi7KFiqyBxRB5KWbDbaRnCtbG6v+IqT0T9IJPyIeIs86UyfT/M4+XXPJnOrAiVoRqoXBgrqAC1dW/FNrVrZRQjZ2SDXs3/twPZRLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bGBfh74zzz6L5H8;
+	Mon,  9 Jun 2025 20:53:00 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id D7D701404C5;
+	Mon,  9 Jun 2025 20:54:47 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 9 Jun
+ 2025 14:54:46 +0200
+Date: Mon, 9 Jun 2025 13:54:44 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-fsdevel@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang
+	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, Vishal
+ Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
+ Williams <dan.j.williams@intel.com>, Matthew Wilcox <willy@infradead.org>,
+	Jan Kara <jack@suse.cz>, "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown
+	<len.brown@intel.com>, Pavel Machek <pavel@kernel.org>, Li Ming
+	<ming.li@zohomail.com>, Jeff Johnson <jeff.johnson@oss.qualcomm.com>, Ying
+ Huang <huang.ying.caritas@gmail.com>, Yao Xingtao <yaoxt.fnst@fujitsu.com>,
+	"Peter Zijlstra" <peterz@infradead.org>, Greg KH
+	<gregkh@linuxfoundation.org>, Nathan Fontenot <nathan.fontenot@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>, Robert Richter <rrichter@amd.com>,
+	"Benjamin Cheatham" <benjamin.cheatham@amd.com>, PradeepVineshReddy Kodamati
+	<PradeepVineshReddy.Kodamati@amd.com>, Zhijian Li <lizhijian@fujitsu.com>
+Subject: Re: [PATCH v4 5/7] cxl/region: Introduce SOFT RESERVED resource
+ removal on region teardown
+Message-ID: <20250609135444.0000703f@huawei.com>
+In-Reply-To: <20250603221949.53272-6-Smita.KoralahalliChannabasappa@amd.com>
+References: <20250603221949.53272-1-Smita.KoralahalliChannabasappa@amd.com>
+	<20250603221949.53272-6-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250608-topics-tyr-request_irq-v4-6-81cb81fb8073@collabora.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Sun, Jun 08, 2025 at 07:51:11PM -0300, Daniel Almeida wrote:
-> These accessors can be used to retrieve a irq::Registration or a
-> irq::ThreadedRegistration from a pci device.
+On Tue, 3 Jun 2025 22:19:47 +0000
+Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com> wrote:
+
+> Reworked from a patch by Alison Schofield <alison.schofield@intel.com>
 > 
-> These accessors ensure that only valid IRQ lines can ever be registered.
+> Previously, when CXL regions were created through autodiscovery and their
+> resources overlapped with SOFT RESERVED ranges, the soft reserved resource
+> remained in place after region teardown. This left the HPA range
+> unavailable for reuse even after the region was destroyed.
 > 
-> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
+> Enhance the logic to reliably remove SOFT RESERVED resources associated
+> with a region, regardless of alignment or hierarchy in the iomem tree.
+> 
+> Link: https://lore.kernel.org/linux-cxl/29312c0765224ae76862d59a17748c8188fb95f1.1692638817.git.alison.schofield@intel.com/
+> Co-developed-by: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
 > ---
->  rust/kernel/pci.rs | 35 +++++++++++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
+>  drivers/cxl/acpi.c        |   2 +
+>  drivers/cxl/core/region.c | 151 ++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h         |   5 ++
+>  3 files changed, 158 insertions(+)
 > 
-> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-> index 8435f8132e38129ccc3495e7c4d3237fcaa97ad9..c690fa1c739c937324e902e61e68df238dbd733b 100644
-> --- a/rust/kernel/pci.rs
-> +++ b/rust/kernel/pci.rs
-> @@ -395,6 +395,32 @@ pub fn resource_len(&self, bar: u32) -> Result<bindings::resource_size_t> {
->      }
->  }
->  
-> +macro_rules! gen_irq_accessor {
-> +    ($(#[$meta:meta])* $fn_name:ident, $reg_type:ident, $handler_trait:ident) => {
-> +        $(#[$meta])*
-> +        pub fn $fn_name<T: crate::irq::$handler_trait + 'static>(
-> +            &self,
-> +            index: u32,
-> +            flags: crate::irq::flags::Flags,
-> +            name: &'static crate::str::CStr,
-> +            handler: T,
-> +        ) -> Result<impl PinInit<crate::irq::$reg_type<T>, crate::error::Error> + '_> {
-> +            // SAFETY: `self.as_raw` returns a valid pointer to a `struct pci_dev`.
-> +            let irq = unsafe { crate::bindings::pci_irq_vector(self.as_raw(), index) };
-> +            if irq < 0 {
-> +                return Err(crate::error::Error::from_errno(irq));
-> +            }
-> +            Ok(crate::irq::$reg_type::<T>::register(
-> +                self.as_ref(),
-> +                irq as u32,
-> +                flags,
-> +                name,
-> +                handler,
-> +            ))
-> +        }
-> +    };
-> +}
-
-Given that we only have two invocations below, please implement them in-place. I
-don't think it's worth having the macro indirection.
-
->  impl Device<device::Bound> {
->      /// Mapps an entire PCI-BAR after performing a region-request on it. I/O operation bound checks
->      /// can be performed on compile time for offsets (plus the requested type size) < SIZE.
-> @@ -413,6 +439,15 @@ pub fn iomap_region_sized<const SIZE: usize>(
->      pub fn iomap_region(&self, bar: u32, name: &CStr) -> Result<Devres<Bar>> {
->          self.iomap_region_sized::<0>(bar, name)
->      }
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index 978f63b32b41..1b1388feb36d 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -823,6 +823,8 @@ static void cxl_softreserv_mem_work_fn(struct work_struct *work)
+>  	 * and cxl_mem drivers are loaded.
+>  	 */
+>  	wait_for_device_probe();
 > +
-> +    gen_irq_accessor!(
-> +        /// Returns a [`kernel::irq::Registration`] for the IRQ vector at the given index.
-> +        irq_by_index, Registration, Handler
-> +    );
-> +    gen_irq_accessor!(
-> +        /// Returns a [`kernel::irq::ThreadedRegistration`] for the IRQ vector at the given index.
-> +        threaded_irq_by_index, ThreadedRegistration, ThreadedHandler
-> +    );
+> +	cxl_region_softreserv_update();
 >  }
+>  static DECLARE_WORK(cxl_sr_work, cxl_softreserv_mem_work_fn);
 >  
->  impl Device<device::Core> {
-> 
-> -- 
-> 2.49.0
-> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 109b8a98c4c7..3a5ca44d65f3 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -3443,6 +3443,157 @@ int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_add_to_region, "CXL");
+>  
+> +static int add_soft_reserved(resource_size_t start, resource_size_t len,
+> +			     unsigned long flags)
+> +{
+> +	struct resource *res = kmalloc(sizeof(*res), GFP_KERNEL);
+> +	int rc;
+> +
+> +	if (!res)
+> +		return -ENOMEM;
+> +
+> +	*res = DEFINE_RES_MEM_NAMED(start, len, "Soft Reserved");
+> +
+> +	res->desc = IORES_DESC_SOFT_RESERVED;
+> +	res->flags = flags;
+
+I'm a bit doubtful about using a define that restricts a bunch of the
+elements, then overriding 2 of them immediate after.
+
+DEFINE_RES_NAMED_DESC(start, len, "Soft Reserved", flags | IORESOURCE_MEM,
+		      IORES_DESC_SOFT_RESERVED);
+
+> +	rc = insert_resource(&iomem_resource, res);
+> +	if (rc) {
+> +		kfree(res);
+> +		return rc;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void remove_soft_reserved(struct cxl_region *cxlr, struct resource *soft,
+> +				 resource_size_t start, resource_size_t end)
+> +{
+> +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+> +	resource_size_t new_start, new_end;
+> +	int rc;
+> +
+> +	/* Prevent new usage while removing or adjusting the resource */
+> +	guard(mutex)(&cxlrd->range_lock);
+> +
+> +	/* Aligns at both resource start and end */
+> +	if (soft->start == start && soft->end == end)
+> +		goto remove;
+> +
+
+Might be a clearer flow with else if rather than
+a goto.  
+
+> +	/* Aligns at either resource start or end */
+> +	if (soft->start == start || soft->end == end) {
+> +		if (soft->start == start) {
+> +			new_start = end + 1;
+> +			new_end = soft->end;
+> +		} else {
+> +			new_start = soft->start;
+> +			new_end = start - 1;
+> +		}
+> +
+> +		rc = add_soft_reserved(new_start, new_end - new_start + 1,
+> +				       soft->flags);
+
+This is the remnant of what was there before, but the flags are from
+the bit we are dropping?  That feels odd.  They might well be the same
+but maybe we need to make that explicit?
+
+> +		if (rc)
+> +			dev_warn(&cxlr->dev, "cannot add new soft reserved resource at %pa\n",
+> +				 &new_start);
+> +
+> +		/* Remove the original Soft Reserved resource */
+> +		goto remove;
+> +	}
+> +
+> +	/*
+> +	 * No alignment. Attempt a 3-way split that removes the part of
+> +	 * the resource the region occupied, and then creates new soft
+> +	 * reserved resources for the leading and trailing addr space.
+> +	 */
+> +	new_start = soft->start;
+> +	new_end = soft->end;
+> +
+> +	rc = add_soft_reserved(new_start, start - new_start, soft->flags);
+> +	if (rc)
+> +		dev_warn(&cxlr->dev, "cannot add new soft reserved resource at %pa\n",
+> +			 &new_start);
+> +
+> +	rc = add_soft_reserved(end + 1, new_end - end, soft->flags);
+> +	if (rc)
+> +		dev_warn(&cxlr->dev, "cannot add new soft reserved resource at %pa + 1\n",
+> +			 &end);
+> +
+> +remove:
+> +	rc = remove_resource(soft);
+> +	if (rc)
+> +		dev_warn(&cxlr->dev, "cannot remove soft reserved resource %pr\n",
+> +			 soft);
+> +}
+> +
+> +/*
+> + * normalize_resource
+> + *
+> + * The walk_iomem_res_desc() returns a copy of a resource, not a reference
+> + * to the actual resource in the iomem_resource tree. As a result,
+> + * __release_resource() which relies on pointer equality will fail.
+
+Probably want some statement on why nothing can race with this give
+the resource_lock is not being held.
+
+> + *
+> + * This helper walks the children of the resource's parent to find and
+> + * return the original resource pointer that matches the given resource's
+> + * start and end addresses.
+> + *
+> + * Return: Pointer to the matching original resource in iomem_resource, or
+> + *         NULL if not found or invalid input.
+> + */
+> +static struct resource *normalize_resource(struct resource *res)
+> +{
+> +	if (!res || !res->parent)
+> +		return NULL;
+> +
+> +	for (struct resource *res_iter = res->parent->child;
+> +	     res_iter != NULL; res_iter = res_iter->sibling) {
+
+I'd move the res_iter != NULL to previous line as it is still under 80 chars.
+
+
+> +		if ((res_iter->start == res->start) &&
+> +		    (res_iter->end == res->end))
+> +			return res_iter;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +static int __cxl_region_softreserv_update(struct resource *soft,
+> +					  void *_cxlr)
+> +{
+> +	struct cxl_region *cxlr = _cxlr;
+> +	struct resource *res = cxlr->params.res;
+> +
+> +	/* Skip non-intersecting soft-reserved regions */
+> +	if (soft->end < res->start || soft->start > res->end)
+> +		return 0;
+> +
+> +	soft = normalize_resource(soft);
+> +	if (!soft)
+> +		return -EINVAL;
+> +
+> +	remove_soft_reserved(cxlr, soft, res->start, res->end);
+> +
+> +	return 0;
+> +}
+> +
+> +int cxl_region_softreserv_update(void)
+> +{
+> +	struct device *dev = NULL;
+> +
+> +	while ((dev = bus_find_next_device(&cxl_bus_type, dev))) {
+> +		struct device *put_dev __free(put_device) = dev;
+This free is a little bit outside of the constructor and destructor
+together rules.
+
+I wonder if bus_for_each_dev() is cleaner here or is there a reason
+we have to have released the subsystem lock + grabbed the device
+one before calling __cxl_region_softreserv_update?
+
+> +		struct cxl_region *cxlr;
+> +
+> +		if (!is_cxl_region(dev))
+> +			continue;
+If you stick to bus_find_X   I wonder if we should define helpers for
+
+the match function and use bus_find_device()
+
+> +
+> +		cxlr = to_cxl_region(dev);
+> +
+> +		walk_iomem_res_desc(IORES_DESC_SOFT_RESERVED,
+> +				    IORESOURCE_MEM, 0, -1, cxlr,
+> +				    __cxl_region_softreserv_update);
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_region_softreserv_update, "CXL");
+
+
