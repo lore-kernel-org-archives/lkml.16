@@ -1,126 +1,161 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23CB2522A2;
-	Mon,  9 Jun 2025 10:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8132522A2
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 10:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749464287; cv=none; b=J7vSih2pMJO2XEG6gHeBa3Nm3C/QAF+SvCdfqzpWme5SXR7BT6Rtk9q5DfZ1Z4e0QgS3OnIq1f5R3pmwhJaS4ax976WLbCSPieT3k9LtUJRhxAkt6IN3JmRfCNCvYAUWfAUvKFeLrhU0QgyGrU6UuvG3Kk051ErdnoANWni1spM=
+	t=1749464334; cv=none; b=kO84QECJnTYF35YII1gN/97/nMOl/nnApHDsPFiINnvClhCQ6J+LQfQCLiQFx6hGm63YqAy6KPoSddxUKlr9cYCG2eRPC0sefP4c/adKF9kDhI6gejqYPLvmWwEgPC3XXA4heVPjK1GlLLRnOnX8HTwtj8/+asuPfd+A21fDzbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749464287; c=relaxed/simple;
-	bh=f+5PnMziq+6s9kssIcPM7wytiBpCtOd4FLLaGGt+BEw=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KnmutVKWJkAmEGEz2o1jKPXJlPtoBtfevqLoFYZNRs+cdhL1dRtyGeO1RfociRlgoRTCzFTniICGaMdh/+x3VLBPIqvRTDd2hoikfdTWQ3tCr+zqvA9DBj0n+ehBCP/R6cRPtVB2zYbYGAHDD1BLh7u9Jbl3l3esnfE3JIrWC/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bG79p2Jp4z6L4sF;
-	Mon,  9 Jun 2025 18:16:14 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id E613A1404C5;
-	Mon,  9 Jun 2025 18:18:00 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 9 Jun
- 2025 12:18:00 +0200
-Date: Mon, 9 Jun 2025 11:17:58 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: <gregkh@linuxfoundation.org>, <rafael.j.wysocki@intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>, Ben Cheatham <Benjamin.Cheatham@amd.com>
-Subject: Re: [PATCH 3/3] ACPI: APEI: EINJ: Do not fail einj_init() on
- faux_device_create() failure
-Message-ID: <20250609111758.0000258d@huawei.com>
-In-Reply-To: <20250607033228.1475625-4-dan.j.williams@intel.com>
-References: <20250607033228.1475625-1-dan.j.williams@intel.com>
-	<20250607033228.1475625-4-dan.j.williams@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1749464334; c=relaxed/simple;
+	bh=gqrG3kDXX6amBLmj8ZiEul8WbOQjT0KTZPO0eco16Uw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oyI08g9GnNk9Ga5tR1XNc5jQr5YCmFX7IpJcw/UnqrQdwzW6gQuNs2E7q0o+t7YirL0NzV7VkHFVXyPivIPmGlL5tFOrSFR0V5IRn3lo0x6xfyWelhnXsXrxrAOwzJDLgATMYZsKYt7ChdnbjPhCb4E0DF+0JJBqGQD1DfNs+AY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=11zMFZTr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=+q5k/oef; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=TZJRvWOL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6Xknxy53; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="11zMFZTr";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="+q5k/oef";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="TZJRvWOL";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6Xknxy53"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id DBD8221185;
+	Mon,  9 Jun 2025 10:18:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749464325; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lLu2PYhhLFvmoqjPyHQGzIdkpfrvEfN1IyEqTgHPDIs=;
+	b=11zMFZTroGbF22Zg57HPIzEniGUNzzxFEO+QdSdFJLwBFIiP6BrIQKDv3FmUPDu1wbx1tg
+	pzN2XpUE6OP4tM2t61iso06AJyOY2lU0nez5iCXNYtA8PiPDtlXyV+h15v0wkHaDKKQzbB
+	Z1mQWtlrysEIg7ApZP9JXyuDsOvSYRw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749464325;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lLu2PYhhLFvmoqjPyHQGzIdkpfrvEfN1IyEqTgHPDIs=;
+	b=+q5k/oefSrPJTTw0Jm+a8ikAhhJnqE199XEawSQO0F9ooChMOXSDcGbq1c6+9ds2vx2K5Y
+	rnlbN3II2uDGsXCg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749464324; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lLu2PYhhLFvmoqjPyHQGzIdkpfrvEfN1IyEqTgHPDIs=;
+	b=TZJRvWOLkN69a6/fSj+CRJ/fvUSyuBZ7Qh/OfdRdSH+5278i6oBTOlfiCEp6QHWdfgsGer
+	fVVbPdT2jUKfix2dVX3NqUhUQOEGeVm81/PtNSHNCfrVhKNJvdy9VJkgWRr7vTCQj2uz1X
+	CxFBE8xBc4hxyk6eLZ+YOi0qnBtEgfU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749464324;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lLu2PYhhLFvmoqjPyHQGzIdkpfrvEfN1IyEqTgHPDIs=;
+	b=6Xknxy53gri1TPO7vGTjGnLn5m7Mm/lDvulWPOW+asRzDm3S4xr+AQtXjtm+9pNxFgitQL
+	DplbhbAZRhFHqCDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B476F13A1D;
+	Mon,  9 Jun 2025 10:18:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id pwyPKwS1Rmg4KAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 09 Jun 2025 10:18:44 +0000
+Message-ID: <30533e96-75f9-4568-add8-05a0be484cfe@suse.cz>
+Date: Mon, 9 Jun 2025 12:18:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: add mmap_prepare() compatibility layer for nested
+ file systems
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20250609092413.45435-1-lorenzo.stoakes@oracle.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Content-Language: en-US
+In-Reply-To: <20250609092413.45435-1-lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.992];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_DN_SOME(0.00)[]
+X-Spam-Level: 
 
-On Fri, 6 Jun 2025 20:32:28 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
-
-> CXL has a symbol dependency on einj_core.ko, so if einj_init() fails then
-> cxl_core.ko fails to load. Prior to the faux_device_create() conversion,
-> einj_probe() failures were tracked by the einj_initialized flag without
-> failing einj_init().
+On 6/9/25 11:24 AM, Lorenzo Stoakes wrote:
+> Nested file systems, that is those which invoke call_mmap() within their
+> own f_op->mmap() handlers, may encounter underlying file systems which
+> provide the f_op->mmap_prepare() hook introduced by commit
+> c84bf6dd2b83 ("mm: introduce new .mmap_prepare() file callback").
 > 
-> Revert to that behavior and always succeed einj_init() given there is no
-> way, and no pressing need, to discern faux device-create vs device-probe
-> failures.
+> We have a chicken-and-egg scenario here - until all file systems are
+> converted to using .mmap_prepare(), we cannot convert these nested
+> handlers, as we can't call f_op->mmap from an .mmap_prepare() hook.
 > 
-> This situation arose because CXL knows proper kernel named objects to
-> trigger errors against, but acpi-einj knows how to perform the error
-> injection. The injection mechanism is shared with non-CXL use cases. The
-> result is CXL now has a module dependency on einj-core.ko, and init/probe
-> failures are handled at runtime.
+> So we have to do it the other way round - invoke the .mmap_prepare() hook
+> from an .mmap() one.
 > 
-> Fixes: 6cb9441bfe8d ("ACPI: APEI: EINJ: Transition to the faux device interface")
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: Ben Cheatham <Benjamin.Cheatham@amd.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  drivers/acpi/apei/einj-core.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
+> in order to do so, we need to convert VMA state into a struct vm_area_desc
+> descriptor, invoking the underlying file system's f_op->mmap_prepare()
+> callback passing a pointer to this, and then setting VMA state accordingly
+> and safely.
 > 
-> diff --git a/drivers/acpi/apei/einj-core.c b/drivers/acpi/apei/einj-core.c
-> index fea11a35eea3..9b041415a9d0 100644
-> --- a/drivers/acpi/apei/einj-core.c
-> +++ b/drivers/acpi/apei/einj-core.c
-> @@ -883,19 +883,16 @@ static int __init einj_init(void)
->  	}
->  
->  	einj_dev = faux_device_create("acpi-einj", NULL, &einj_device_ops);
-> -	if (!einj_dev)
-> -		return -ENODEV;
->  
-> -	einj_initialized = true;
-> +	if (einj_dev)
-> +		einj_initialized = true;
->  
->  	return 0;
->  }
->  
->  static void __exit einj_exit(void)
->  {
-> -	if (einj_initialized)
-> -		faux_device_destroy(einj_dev);
-> -
-> +	faux_device_destroy(einj_dev);
+> This patch achieves this via the compat_vma_mmap_prepare() function, which
+> we invoke from call_mmap() if f_op->mmap_prepare() is specified in the
+> passed in file pointer.
+> 
+> We place the fundamental logic into mm/vma.c where VMA manipulation
+> belongs. We also update the VMA userland tests to accommodate the changes.
+> 
+> The compat_vma_mmap_prepare() function and its associated machinery is
+> temporary, and will be removed once the conversion of file systems is
+> complete.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Reported-by: Jann Horn <jannh@google.com>
+> Closes: https://lore.kernel.org/linux-mm/CAG48ez04yOEVx1ekzOChARDDBZzAKwet8PEoPM4Ln3_rk91AzQ@mail.gmail.com/
+> Fixes: c84bf6dd2b83 ("mm: introduce new .mmap_prepare() file callback").
 
-Hi Dan,
+So this is a hotfix for 6.16-rc1 but doesn't need cc: stable.
+Also probably nothing wraps yet the filesystems with .mmap_prepare? But
+good to have this handled within 6.16.
 
-Thi bit is sort of fine though not really related, because
-faux_device_destroy() checks
-
-void faux_device_destroy(struct faux_device *faux_dev)
-{
-	struct device *dev = &faux_dev->dev;
-
-	if (!faux_dev)
-		return;
-
-Though that check is after a dereference of faux_dev
-which doesn't look right to me.  Might be fine because
-of how the kernel is built (I can't remember where we ended
-up on topic of compilers making undefined behavior based
-optimizations).  Still not that nice from a logical point of view!
-
->  }
->  
->  module_init(einj_init);
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
