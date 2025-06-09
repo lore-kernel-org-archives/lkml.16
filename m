@@ -1,61 +1,61 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28FE281532;
-	Mon,  9 Jun 2025 07:53:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5258E28137D;
+	Mon,  9 Jun 2025 07:53:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749455587; cv=none; b=EhqECzZTC5RiVmcb1sR9rKXdow4EK530bsjxZ1pMSwvD9XbNFHP78OawuQZD5uniAL2LbOUvhsfm7MaTolGvAv+MQZ9fz0SVoLpcrkEr6TfscY3BssW8/7JE7ypVrNFrqvzr7JFzXr6Mv6UFMbSt1YPKgOfsZif6dYZBeoIH06w=
+	t=1749455603; cv=none; b=Wu1nGjnd8luOPjgyPkiFBbz4D3ij5VC82WH+O7KTiIMBCdtMHv9PrpreE/nAqxzdqb8a9srshSmKh8DeOV6DH4G6aVUf+mPU/dyWG0Jd0bb1K2C9uXrXlDm2de5pf7s7HvmFvuQHC1bSOZp3xIOozqngAfQrfk8isMOs3V0BEEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749455587; c=relaxed/simple;
-	bh=rNB9DtxfXPHC8cZAMjhkkcYqCorBkbj5Wh4AdMluDrA=;
+	s=arc-20240116; t=1749455603; c=relaxed/simple;
+	bh=7LijH0SPeNUjBldUSejfieceyNximr4tVLZLdK910TQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=bT0HKj+5DlduNQ9dhql3iddrDUmYYUYnOVE0UbA3fY0MH0LEwGatAtDBAEvAsdvao6TQ0T64JrBMFtoug4eirnwYAlWT7XyE6RSDF50AFwF8aZIrQaALtBxY2C4qI4x20m9pQH/VJ+PmuXLuUdRiA2b1XqInXyPnPmxJTYg4Bp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U7Q1IoPs; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=UgmpaqMhbWtxn6JmaohvteLXPxRx9nv0PFgy/gM2tfzHxwjTWQsr861paXvj7RNf6sWtvh/h4VCNcGycQPdl/MKUfb5zUR24Nx7+gtSzHUMr6bY9ANG8eeVcf6Si8m1nzEtF/GBqseduucIpK8QE/SV7LykxoKD4rDryZbNjmDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F2BKJTZb; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U7Q1IoPs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F2BKJTZb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749455587; x=1780991587;
+  t=1749455603; x=1780991603;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=rNB9DtxfXPHC8cZAMjhkkcYqCorBkbj5Wh4AdMluDrA=;
-  b=U7Q1IoPsuLjfEzB7b5ndSwDGZXEl2rms4lFO/cV392cdffDzI+8R8C/8
-   TTM9GvMn7y6tfEW8xEgZoh0c9gMHlFmhKtB1Hr3hCA73RUOww56WOTToZ
-   fa7ZKHkehIPmJ1p0OUOzK5jD+n21t7BMh9jQLSDL7jEyGx0H1I1gFR8cO
-   rBdmAT+F0EgB55BYLmEjtzkiTRaCkn2bR7X4mkiJJhcM4F222yoUSs1FL
-   QqXBf2+D6noxHqS55B0LS01ignfcTyJv1wF+ATsBgGKqpYVtvIUB/dNIQ
-   txApVNsiHEvD2K+x43N78d3gfCxuKO9R2q3OSjKI5tcBgX/qVg8HQMd3U
-   g==;
-X-CSE-ConnectionGUID: /zsvQe4aQcukPcRd10lt9Q==
-X-CSE-MsgGUID: knua+YaYTuetY2n3EqkC4A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="68973393"
+  bh=7LijH0SPeNUjBldUSejfieceyNximr4tVLZLdK910TQ=;
+  b=F2BKJTZbmpuqEgU+CuzTBdRVw3vRLu/pNreVrRTPxe6lCRzPctI9YR2v
+   EATzKa7+iorYmGasEmvwcZB6v6b0XvJ7oUdytn78DYR4G9YnU6wih7lRg
+   anpjPfHg1iFuEvDva9EiWqEQpWr9P5I2I8FmPGI60Q0xLw2C0kB+mmG0D
+   PjkmmmyNPIjGSqOsbFFZidXPJHGvgd/B0XKH+3+gDX6lNYWZVliEbifDq
+   gqRYKLZ4k7lnSTqxIELJqAYU/58c9n88ppCrCkaz+PcZkePDi4wjR207y
+   kYCYVMOPW4tIvtk5CazBZHw+9uDfV+IZYXDVr1H/hQa0i0eNWdvrsG6PG
+   Q==;
+X-CSE-ConnectionGUID: XhjlAaf0TdOI+c1USvIuiQ==
+X-CSE-MsgGUID: GYXUIw9gSCanbAjXxhCYSw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="68973433"
 X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="68973393"
+   d="scan'208";a="68973433"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 00:53:06 -0700
-X-CSE-ConnectionGUID: UQEWEwcWSQqSidu57t+IZQ==
-X-CSE-MsgGUID: YFz6vOsbSOavqrkdDJSdqQ==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 00:53:22 -0700
+X-CSE-ConnectionGUID: 9Gi5XOEeRO61pud+b9myAQ==
+X-CSE-MsgGUID: Jy9aPLFdSjic6eJM+WAapw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="146324906"
+   d="scan'208";a="146325004"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.22])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 00:53:01 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 00:53:17 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
- Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, 
- Peter Zijlstra <peterz@infradead.org>, Greg KH <gregkh@linuxfoundation.org>, 
- Ingo Molnar <mingo@kernel.org>, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-In-Reply-To: <aEKvIGCt6d8Gcx4S@stanley.mountain>
-References: <aEKvIGCt6d8Gcx4S@stanley.mountain>
-Subject: Re: [PATCH] platform/x86/intel: power-domains: Fix error code in
- tpmi_init()
-Message-Id: <174945557711.2685.8614887579678599243.b4-ty@linux.intel.com>
-Date: Mon, 09 Jun 2025 10:52:57 +0300
+To: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, 
+ Carlos Bilbao <carlos.bilbao@kernel.org>, 
+ Hans de Goede <hdegoede@redhat.com>, Jake Hillion <jake@hillion.co.uk>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ sched-ext@meta.com, Blaise Sanouillet <linux@blaise.sanouillet.com>, 
+ Suma Hegde <suma.hegde@amd.com>
+In-Reply-To: <20250605-amd-hsmp-v2-0-a811bc3dd74a@hillion.co.uk>
+References: <20250605-amd-hsmp-v2-0-a811bc3dd74a@hillion.co.uk>
+Subject: Re: [PATCH v2 0/2] x86/platform/amd: better handle scheduling
+ delays in hsmp_send_message
+Message-Id: <174945559319.2685.13353516764058471154.b4-ty@linux.intel.com>
+Date: Mon, 09 Jun 2025 10:53:13 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,11 +66,22 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Fri, 06 Jun 2025 12:04:32 +0300, Dan Carpenter wrote:
+On Thu, 05 Jun 2025 19:09:25 +0100, Jake Hillion wrote:
 
-> Return -ENOMEM instead of success if kcalloc() fails.
+> hsmp_send_message currently relies in 2 places on the assumption that
+> usleep_range will complete in well under 100ms. This is not guaranteed,
+> and is prevalent when running sched_ext schedulers or possible under
+> other high load conditions.
 > 
+> These patches alter the behaviour in two ways:
+> 1. Checks the result of `mbox_status` a final time if the sleep took us
+>    past the timeout. This gives a useful result under test when there
+>    are significant scheduling delays, rather than -ETIMEDOUT.
+> 2. Removes the 100ms limit on awaiting the semaphore. This allows a
+>    second thread to compete even when the other suffers large scheduling
+>    delays.
 > 
+> [...]
 
 
 Thank you for your contribution, it has been applied to my local
@@ -79,8 +90,10 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86/intel: power-domains: Fix error code in tpmi_init()
-      commit: 1d0a61940e22e165e6acc4a9c6fb26edbe69112e
+[1/2] x86/platform/amd: move final timeout check to after final sleep
+      commit: f8afb12a2d7503de6558c23cacd7acbf6e9fe678
+[2/2] x86/platform/amd: replace down_timeout with down_interruptible
+      commit: 784e48a82976ee0b645788750343cd1b28a372f3
 
 --
  i.
