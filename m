@@ -1,55 +1,55 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BBA5252299;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27FD2F37;
 	Mon,  9 Jun 2025 10:23:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749464621; cv=none; b=mI54zAlVzhVdjafQvSX0x8pEoBJh5WpR4wNlSEsi33zkGTexzmKaSrGXvGHkAscNh1grKArQmEMxxKCDwJZW3My0PVkRToUPtqVmpe/6Rgp9iFdO0mDVf1uorJkVnwElyv3BWwm3wUuPD7XMX8NFGLQIf3Qs7WrH+BG6bdd1DLc=
+	t=1749464621; cv=none; b=Dos8VemM3POIUYwVoCe4SsczDiU5VsXRXfy6QMA0zXrClXl88S92TsvbXcnPF/u3eIYO0PsgOv2y5njMeb7hFbFRJEiwx2Hug9Q8PaLOWWybbEQitvY1idRjleWNbprwmXlM8zo15lIkzss7Fkq6AKHsPCyUfwSyCFjs5cBMx7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749464621; c=relaxed/simple;
-	bh=3xjVvWH3Ewn0OW5P95TcqTdOFuhEAnjIunVMbwFren8=;
+	bh=IqIATT8ehLSCHyHPHIK0aeC0vBn26wKL58mOSzv+1aM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lrANaTBW2QuHiLrobwpaMgATYS+IapYfiO7tDzOFHUbzygPayK36J99XKS7OzzT4kO5K+Oyuc3p73kEKh35h0Y4EE87fWR/eGj7cFd7Li3COywJMSEniOa48U54jT6QgKkY8m+hGFhSb6T3436Y81mSS5O2+lQQTxagqyp1CYpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=fODl7cRe; arc=none smtp.client-ip=185.11.138.130
+	 MIME-Version:Content-Type; b=Wrh0mHkfsPSVR5oOroI6RHBeIN8ZcGLJN7bpcHbFdFlEbUkVkuNb0V1JviCnk9ZXuwmXDPEHPQYf+Bo+MLMadzfP3qY2jtq+VbOAa6Esd/s460dbP8MnOtGxRJqa0tYcb0/PNNIj7VyCUFfKdDPCq/kNe5TIJHHkt4ZvS6kZ7mU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=PkGkF+fe; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="fODl7cRe"
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="PkGkF+fe"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
 	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
 	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=xEZECS6vbso0nmjjQa/VPYjFi0sU5YUT4fgKEZQNaBU=; b=fODl7cRehmK4ybPZIIU1U4jMKE
-	dPgLtOuOCi5cqZojh60rej7k5NPL0tStWG7D7HbcTAvBOSPx75B209oeP+3R/C9xiUQbioCLAMZ4V
-	Zl0oKlcj7Ayafdx9aAz7rE52pUr+G7B/8A+A7LF4+rC+HVYz3JgTV8K/wi/YTZSXNZB3NlN+MfFdo
-	UoyDRdX3d9wT/nJCM4E7j++YDXkkFHee2KERGEKMBXReMes3RG7P/JLpXSU3uOCZDXxB1/AjJiODG
-	4G7XcJjTVB5OIdXdh7zSoWpDaczZyMak3YU5F3SnxlfThwJncTfrLnTzJ8NegrrdOOhXUnRX45WDj
-	ai11mSdw==;
+	bh=MUho5YhueRpwOnAS8bp4/Ag/zAqHZPytVl1yhId01gk=; b=PkGkF+fewiq5/dyr93FzNBw2Bb
+	VY70GVmhv2OmZBYisNs/ayTNEhe5evbu2m4uDutCQFwVZEEo6LuQw/XBpHC23HIvCLlWmJevTSNF1
+	7dyPf4yetY/JM4x5EQV364s7XZhVNlOHzX/uWRz77p8UTyALEIXbQvmQIwIFkVEG8WdKrzEEMJFQ7
+	0YoVN+YKMe0ErJZgK3A35yna88uz32a4TiaA+h18TLE2VQIE1n1PphbPbhsaxa/29yu1WJON3sp5+
+	wwQyjHeNOUH/VK0IEgC1/ymA5koHoa80ReGUB8gblVR67KibcHFj3GztxNGMFF6/fdjYayb3zsa92
+	xfoBKT8w==;
 Received: from i53875b1c.versanet.de ([83.135.91.28] helo=phil.fritz.box)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1uOZfB-0006Av-PN; Mon, 09 Jun 2025 12:23:33 +0200
+	id 1uOZfD-0006Av-9L; Mon, 09 Jun 2025 12:23:35 +0200
 From: Heiko Stuebner <heiko@sntech.de>
-To: Andy Yan <andyshrk@163.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Quentin Schulz <foss+kernel@0leil.net>
 Cc: Heiko Stuebner <heiko@sntech.de>,
-	krzk+dt@kernel.org,
-	robh@kernel.org,
-	sebastian.reichel@collabora.com,
+	Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>,
 	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
 	linux-rockchip@lists.infradead.org,
-	conor+dt@kernel.org,
-	jbx6244@gmail.com
-Subject: Re: [PATCH 1/2] arm64: dts: rockchip: Add cd-gpios for sdcard detect on Cool Pi CM5
-Date: Mon,  9 Jun 2025 12:22:57 +0200
-Message-ID: <174946455537.762051.5518711921835874992.b4-ty@sntech.de>
+	linux-kernel@vger.kernel.org,
+	Quentin Schulz <quentin.schulz@cherry.de>
+Subject: Re: [PATCH v3] arm64: dts: rockchip: support Ethernet Switch adapter for RK3588 Jaguar
+Date: Mon,  9 Jun 2025 12:23:00 +0200
+Message-ID: <174946455533.762051.10949954779035634818.b4-ty@sntech.de>
 X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250524064223.5741-1-andyshrk@163.com>
-References: <20250524064223.5741-1-andyshrk@163.com>
+In-Reply-To: <20250604-jaguar-mezz-eth-switch-v3-1-c68123240f9e@cherry.de>
+References: <20250604-jaguar-mezz-eth-switch-v3-1-c68123240f9e@cherry.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,17 +60,25 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Sat, 24 May 2025 14:42:12 +0800, Andy Yan wrote:
-> cd-gpios is used for sdcard detects for sdmmc.
+On Wed, 04 Jun 2025 18:18:08 +0200, Quentin Schulz wrote:
+> This adds support for the Ethernet Switch adapter connected to the
+> mezzanine connector on RK3588 Jaguar.
 > 
+> This adapter has a KSZ9896 Ethernet Switch with 4 1GbE Ethernet
+> connectors, two user controllable LEDs, and an M12 12-pin connector
+> which exposes the following signals:
+>  - RS232/RS485 (max 250Kbps/500Kbps, RX pin1, TX pin2)
+>  - two digital inputs (pin4 routed to GPIO3_C5 on SoC, pin5 to GPIO4_B4)
+>  - two digital outputs (pin7 routed to GPIO3_D3 on SoC, pin8 to
+>    GPIO3_D1)
+>  - two analog inputs (pin10 to channel1 of ADS1015, pin11 to channel2)
 > 
+> [...]
 
 Applied, thanks!
 
-[1/2] arm64: dts: rockchip: Add cd-gpios for sdcard detect on Cool Pi CM5
-      commit: e625e284172d235be5cd906a98c6c91c365bb9b1
-[2/2] arm64: dts: rockchip: Add cd-gpios for sdcard detect on Cool Pi 4B
-      commit: 98570e8cb8b0c0893810f285b4a3b1a3ab81a556
+[1/1] arm64: dts: rockchip: support Ethernet Switch adapter for RK3588 Jaguar
+      commit: 8674f059750571f168db9f43d3c02f1975debcc9
 
 Best regards,
 -- 
