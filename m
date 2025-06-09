@@ -1,263 +1,80 @@
-Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1602641C63;
-	Mon,  9 Jun 2025 09:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE0C20F09C;
+	Mon,  9 Jun 2025 09:06:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749459931; cv=none; b=ljOeonh/nbb8oy8YCSHoavigiK/5zYP9rm/V4XRpM4zs8xO+c1s6SsAF4ovlvF568HF/AUDGiAcCG+O2W4HL1yIz0i7d/ObiDegS5MxlYOGjWayNnZQ4ufJ2K27/VIredaO8AuBeW5CBDyuILd6yT1YX3Tw3ZodLjxC54pE7Gac=
+	t=1749459979; cv=none; b=lptigoo3MfNSixUg3Nj+ZJpcdf449Wj9LaYgbQnBTbhQvl4JIxZbeXe1BdW29Ps1zJ4hmuAa1Bp742SLcpk5vX0AY+6uSJL9qeXZs/aveN9B19MwB+VZrvclvEGMQgvU3lRUlo+cNbHRXyj36PGH9TEuY0WPQOZ05rndl+qHGSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749459931; c=relaxed/simple;
-	bh=T7q42E47QACt8YrNqAAoSZP1nBkvqvv8SPsaWHfyoco=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DNs1PM47a/nsX0Ho7UZvbmiMePnvcsvMr3WvbqJOeNCqdxp6dxu0XEtP3xjE46dnvjV77ri5cwOsqGl2SiZ1Qg4xRVnGZ9J/Cfv3AjId76bM2qHyoWBJDXLMtTHosr5PcdWXW1KWp7rCfQbaDRpZ0wG+TqJExlHZKinJPDU9TbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=Ffoa/t8K; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1749459979; c=relaxed/simple;
+	bh=joBlEjrgr9muiP0UDjGGGTEJ6Vs1HF+Fy4q2Nr/4iJc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EMrPA3JsYVcpGohc5HqAekvusx38Zlxmu1QFVYRaTtAerUoIoR1mquNny2qox3d0GlIwmEMRgjEgfkvGVAihhI7bDRVu1ssVTY9EwGHvOndnlmrPGehDW5LhjXjg0y2GN/BwuGSLsjyg1wZiZ+6soTeWotJAzpcc9RZTvBrsk3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=d2TvmF6n; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Ffoa/t8K"
-Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5597oSii022115;
-	Mon, 9 Jun 2025 02:05:16 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=D3cLz1OC2ofzHYEaItdqF/35l
-	dM0sRiRUqysx1oUpqI=; b=Ffoa/t8KuvEG8idJaz5Gx53EYMRwHondBtuIcOWTy
-	K/1mlShyZ0c0Buix4fza1GnAvtLBiH3lr/7zCtNY4aISi2igqUtA72dHZ/i8mqYE
-	bHr+w8Zx5JDXbNBxBqjTcdaIzOa9Y7Jgz/lFM0c70QnYmPLaCCpaP+Oybhq7nTXd
-	gQ0Avn3fdipaFBIkex5NUxwRZMLQLPzCaI8/jlSOGOU3RziR3kO2vBwLtGTX7xm/
-	p9X8mlgbl8b5rIjgtGWP4v62RE6mebMEhBhLX8DXRw9MjAzoZBR2R/IgfxgAhAwf
-	4dYQRRempbirVpH6jxNGndzQz3ahdS4leVh1R3MFrcqPQ==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 475ujxr40g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Jun 2025 02:05:15 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Mon, 9 Jun 2025 02:05:14 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Mon, 9 Jun 2025 02:05:14 -0700
-Received: from 82bae11342dd (HY-LT91368.marvell.com [10.29.24.116])
-	by maili.marvell.com (Postfix) with SMTP id 81CC13F7077;
-	Mon,  9 Jun 2025 02:05:11 -0700 (PDT)
-Date: Mon, 9 Jun 2025 09:05:09 +0000
-From: Subbaraya Sundeep <sbhatta@marvell.com>
-To: Jun Miao <jun.miao@intel.com>
-CC: <oneukum@suse.com>, <andrew+netdev@lunn.ch>, <davem@davemloft.net>,
-        <edumazet@google.com>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: usb: Convert tasklet API to new bottom half
- workqueue mechanism
-Message-ID: <aEajxQxP_aWhqHHB@82bae11342dd>
-References: <20250609072610.2024729-1-jun.miao@intel.com>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="d2TvmF6n"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=joBlEjrgr9muiP0UDjGGGTEJ6Vs1HF+Fy4q2Nr/4iJc=; b=d2TvmF6njbZP0r8VPzRz1pdgRw
+	D0cGitUZxFqVoVAdpgEyLxt/bO6IhuzyPF1TWutbiciAOvR1zlTJB5b59Df0npsAiZseMTfbPsG5j
+	f3hBHLG5LFVosHfH9fARI9OzCu93O3Wb7VnQow+eoxZa7MFsP3qwy+FQnzg5NI2faW/ibEjapB3ro
+	6qJsxwqPcvAdy6AKnabOX1lRjHyO8/x+gUoWzT+vp3vz7COQwC2tRYN/dCQTxxwWpORh3+JVWfkls
+	K5V0iUGo1JOOPeX3rP9NnQTrEJ7Lmw9cqSQZ0VCKrsprZzag7Rd+nGhz1GqPwYDZXFTvWrzZkWnqg
+	ZbQJZ44A==;
+Received: from i53875b1c.versanet.de ([83.135.91.28] helo=phil.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uOYSI-0005iM-T1; Mon, 09 Jun 2025 11:06:10 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: i@chainsx.cn, Hsun Lai <i@chainsx.cn>
+Cc: andrew@lunn.ch, conor+dt@kernel.org, devicetree@vger.kernel.org,
+ inindev@gmail.com, jonas@kwiboo.se, krzk+dt@kernel.org,
+ krzysztof.kozlowski@linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ quentin.schulz@cherry.de, robh@kernel.org, sfr@canb.auug.org.au
+Subject: Re: [v5,0/2] Add support for Firefly Station-M3/ROC-RK3588S-PC
+Date: Mon, 09 Jun 2025 11:06:10 +0200
+Message-ID: <2607600.Icojqenx9y@phil>
+In-Reply-To: <20250602153500.1831349-1-i@chainsx.cn>
+References:
+ <20250530031046.166202-1-i@chainsx.cn>
+ <20250602153500.1831349-1-i@chainsx.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250609072610.2024729-1-jun.miao@intel.com>
-X-Proofpoint-GUID: 0FVtBqmelOGtw88Wn2twAGmp9RT4ONjM
-X-Proofpoint-ORIG-GUID: 0FVtBqmelOGtw88Wn2twAGmp9RT4ONjM
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA2OSBTYWx0ZWRfX0NCzfoN4bjoO YRl83PWdBOq9r0lucTVmFxWAkaDYT0w558FVOG0iwOvx2/ZsxtPYfy3SpXFFQHf/afZHa2dyIJx A1fVpadzP/fQdowvrGyiFPZio5z8OxJokcDGBUhuKUvyG/U7GyXM/yrRngMzgs/eMvgCeG46wJZ
- 2hlWWv8CQgR/OA0faoZKZQQAJMbzzSg4aVABKXjk0NtnLy3j/SuhTMsI+hPIkiF3VSlJl61Dsf8 3Zl+yj+CxnlI44yOZrLmDTFMiTEqQS32bER+KDdZbYzgxSoRqRvZ06HsXVxeFEJClB3xforrk0M fun/hO/VPXOH15z0hVkhWFFPay9l8fMoTO2TIdY21zPUrgcv8ta+tYFJHq2xoYsAxkg9/yDwMyl
- knrNNtSBhfOzsZ6YBsU1yhSDsZSSb9b93hSvpAe7l23r6wDfkVHRe3VEC5uoWMqfQXlEi+yE
-X-Authority-Analysis: v=2.4 cv=LuKSymdc c=1 sm=1 tr=0 ts=6846a3cb cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=QyXUC8HyAAAA:8 a=X-fdUdr0RTnJSFWCzdYA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-09_03,2025-06-05_01,2025-03-28_01
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Hi,
+Am Montag, 2. Juni 2025, 17:35:00 Mitteleurop=C3=A4ische Sommerzeit schrieb=
+ Hsun Lai:
+> > I tried to replicate on top of master=20
+> > (24de2b9da3e28df323c1e096538ae1e035751adf) but couldn't, so I guess we=
+=20
+> > can simply ignore this warning?
+>=20
+> Yes, the same situation occurs here,
+> and it has already been answered by Heiko St=C3=BCbner(#2):
+> https://patchwork.kernel.org/project/linux-rockchip/cover/20250516012402.=
+580468-1-i@chainsx.cn/
 
-On 2025-06-09 at 07:26:10, Jun Miao (jun.miao@intel.com) wrote:
->  Migrate tasklet APIs to the new bottom half workqueue mechanism. It
->  replaces all occurrences of tasklet usage with the appropriate workqueue
->  APIs throughout the usbnet driver. This transition ensures compatibility
->  with the latest design and enhances performance.
-> 
-> Signed-off-by: Jun Miao <jun.miao@intel.com>
-> ---
->  drivers/net/usb/usbnet.c   | 36 ++++++++++++++++++------------------
->  include/linux/usb/usbnet.h |  2 +-
->  2 files changed, 19 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-> index c04e715a4c2a..566127b4e0ba 100644
-> --- a/drivers/net/usb/usbnet.c
-> +++ b/drivers/net/usb/usbnet.c
-> @@ -461,7 +461,7 @@ static enum skb_state defer_bh(struct usbnet *dev, struct sk_buff *skb,
->  
->  	__skb_queue_tail(&dev->done, skb);
->  	if (dev->done.qlen == 1)
-> -		tasklet_schedule(&dev->bh);
-> +		queue_work(system_bh_wq, &dev->bh_work);
->  	spin_unlock(&dev->done.lock);
->  	spin_unlock_irqrestore(&list->lock, flags);
->  	return old_state;
-> @@ -549,7 +549,7 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
->  		default:
->  			netif_dbg(dev, rx_err, dev->net,
->  				  "rx submit, %d\n", retval);
-> -			tasklet_schedule (&dev->bh);
-> +			queue_work(system_bh_wq, &dev->bh_work);
->  			break;
->  		case 0:
->  			__usbnet_queue_skb(&dev->rxq, skb, rx_start);
-> @@ -709,7 +709,7 @@ void usbnet_resume_rx(struct usbnet *dev)
->  		num++;
->  	}
->  
-> -	tasklet_schedule(&dev->bh);
-> +	queue_work(system_bh_wq, &dev->bh_work);
->  
->  	netif_dbg(dev, rx_status, dev->net,
->  		  "paused rx queue disabled, %d skbs requeued\n", num);
-> @@ -778,7 +778,7 @@ void usbnet_unlink_rx_urbs(struct usbnet *dev)
->  {
->  	if (netif_running(dev->net)) {
->  		(void) unlink_urbs (dev, &dev->rxq);
-> -		tasklet_schedule(&dev->bh);
-> +		queue_work(system_bh_wq, &dev->bh_work);
->  	}
->  }
->  EXPORT_SYMBOL_GPL(usbnet_unlink_rx_urbs);
-> @@ -861,14 +861,14 @@ int usbnet_stop (struct net_device *net)
->  	/* deferred work (timer, softirq, task) must also stop */
->  	dev->flags = 0;
->  	timer_delete_sync(&dev->delay);
-> -	tasklet_kill(&dev->bh);
-> +	disable_work_sync(&dev->bh_work);
->  	cancel_work_sync(&dev->kevent);
->  
->  	/* We have cyclic dependencies. Those calls are needed
->  	 * to break a cycle. We cannot fall into the gaps because
->  	 * we have a flag
->  	 */
-> -	tasklet_kill(&dev->bh);
-> +	disable_work_sync(&dev->bh_work);
->  	timer_delete_sync(&dev->delay);
->  	cancel_work_sync(&dev->kevent);
->  
-> @@ -955,7 +955,7 @@ int usbnet_open (struct net_device *net)
->  	clear_bit(EVENT_RX_KILL, &dev->flags);
->  
->  	// delay posting reads until we're fully open
-> -	tasklet_schedule (&dev->bh);
-> +	queue_work(system_bh_wq, &dev->bh_work);
->  	if (info->manage_power) {
->  		retval = info->manage_power(dev, 1);
->  		if (retval < 0) {
-> @@ -1123,7 +1123,7 @@ static void __handle_link_change(struct usbnet *dev)
->  		 */
->  	} else {
->  		/* submitting URBs for reading packets */
-> -		tasklet_schedule(&dev->bh);
-> +		queue_work(system_bh_wq, &dev->bh_work);
->  	}
->  
->  	/* hard_mtu or rx_urb_size may change during link change */
-> @@ -1198,11 +1198,11 @@ usbnet_deferred_kevent (struct work_struct *work)
->  		} else {
->  			clear_bit (EVENT_RX_HALT, &dev->flags);
->  			if (!usbnet_going_away(dev))
-> -				tasklet_schedule(&dev->bh);
-> +				queue_work(system_bh_wq, &dev->bh_work);
->  		}
->  	}
->  
-> -	/* tasklet could resubmit itself forever if memory is tight */
-> +	/* workqueue could resubmit itself forever if memory is tight */
->  	if (test_bit (EVENT_RX_MEMORY, &dev->flags)) {
->  		struct urb	*urb = NULL;
->  		int resched = 1;
-> @@ -1224,7 +1224,7 @@ usbnet_deferred_kevent (struct work_struct *work)
->  fail_lowmem:
->  			if (resched)
->  				if (!usbnet_going_away(dev))
-> -					tasklet_schedule(&dev->bh);
-> +					queue_work(system_bh_wq, &dev->bh_work);
->  		}
->  	}
->  
-> @@ -1325,7 +1325,7 @@ void usbnet_tx_timeout (struct net_device *net, unsigned int txqueue)
->  	struct usbnet		*dev = netdev_priv(net);
->  
->  	unlink_urbs (dev, &dev->txq);
-> -	tasklet_schedule (&dev->bh);
-> +	queue_work(system_bh_wq, &dev->bh_work);
->  	/* this needs to be handled individually because the generic layer
->  	 * doesn't know what is sufficient and could not restore private
->  	 * information if a remedy of an unconditional reset were used.
-> @@ -1547,7 +1547,7 @@ static inline void usb_free_skb(struct sk_buff *skb)
->  
->  /*-------------------------------------------------------------------------*/
->  
-> -// tasklet (work deferred from completions, in_irq) or timer
-> +// workqueue (work deferred from completions, in_irq) or timer
->  
->  static void usbnet_bh (struct timer_list *t)
->  {
-> @@ -1601,16 +1601,16 @@ static void usbnet_bh (struct timer_list *t)
->  					  "rxqlen %d --> %d\n",
->  					  temp, dev->rxq.qlen);
->  			if (dev->rxq.qlen < RX_QLEN(dev))
-> -				tasklet_schedule (&dev->bh);
-> +				queue_work(system_bh_wq, &dev->bh_work);
-Correct me if am wrong. 
-Just above this code there is - if (rx_alloc_submit(dev, GFP_ATOMIC) == -ENOLINK).
-You can change it to GFP_KERNEL since this is not atomic context now.
+Now with 6.16-rc1 out, this should disappear.
 
-Thanks,
-Sundeep
->  		}
->  		if (dev->txq.qlen < TX_QLEN (dev))
->  			netif_wake_queue (dev->net);
->  	}
->  }
->  
-> -static void usbnet_bh_tasklet(struct tasklet_struct *t)
-> +static void usbnet_bh_workqueue(struct work_struct *work)
->  {
-> -	struct usbnet *dev = from_tasklet(dev, t, bh);
-> +	struct usbnet *dev = from_work(dev, work, bh_work);
->  
->  	usbnet_bh(&dev->delay);
->  }
-> @@ -1742,7 +1742,7 @@ usbnet_probe (struct usb_interface *udev, const struct usb_device_id *prod)
->  	skb_queue_head_init (&dev->txq);
->  	skb_queue_head_init (&dev->done);
->  	skb_queue_head_init(&dev->rxq_pause);
-> -	tasklet_setup(&dev->bh, usbnet_bh_tasklet);
-> +	INIT_WORK (&dev->bh_work, usbnet_bh_workqueue);
->  	INIT_WORK (&dev->kevent, usbnet_deferred_kevent);
->  	init_usb_anchor(&dev->deferred);
->  	timer_setup(&dev->delay, usbnet_bh, 0);
-> @@ -1971,7 +1971,7 @@ int usbnet_resume (struct usb_interface *intf)
->  
->  			if (!(dev->txq.qlen >= TX_QLEN(dev)))
->  				netif_tx_wake_all_queues(dev->net);
-> -			tasklet_schedule (&dev->bh);
-> +			queue_work(system_bh_wq, &dev->bh_work);
->  		}
->  	}
->  
-> diff --git a/include/linux/usb/usbnet.h b/include/linux/usb/usbnet.h
-> index 0b9f1e598e3a..208682f77179 100644
-> --- a/include/linux/usb/usbnet.h
-> +++ b/include/linux/usb/usbnet.h
-> @@ -58,7 +58,7 @@ struct usbnet {
->  	unsigned		interrupt_count;
->  	struct mutex		interrupt_mutex;
->  	struct usb_anchor	deferred;
-> -	struct tasklet_struct	bh;
-> +	struct work_struct	bh_work;
->  
->  	struct work_struct	kevent;
->  	unsigned long		flags;
-> -- 
-> 2.43.0
-> 
+But I'd assume that bot check might have moved the binding out of the
+review queue of the dt-maintainers, so I guess you might try resending
+the series on top of that, because we're missing an Review/Ack on the
+binding.
+
+
+Heiko
+
+
