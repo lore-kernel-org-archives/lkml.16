@@ -1,111 +1,134 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DDB18FDAF;
-	Mon,  9 Jun 2025 14:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19141E505
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 14:50:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749480636; cv=none; b=ZLtfFl4c2XJImlVsTgIj4Dv87nuhU8EgWKmHfPuvPWCTSZOKzoOOk1Dep1uokwPobeF8TWkSqYUg2/AyFEdkw52KzeoPmS5tBnNmF08stGCAP/1C3oxU37ZccgnujMvKZolZWOEk3NJS9yvAMQhpySf4GUjwcp2KWirNYJODs3k=
+	t=1749480655; cv=none; b=UxhxwfW+JCD0b9C4KtxoJEyUMnk/EdhMw/7/rFKOVPRGqjUe+/GPUeuzZpONaRS75Li+DFT8dqcoDY6xWrpTiEI18dJYIg/X1juYX7Zyx2LoUWS8Tz8eD22lAIhcW6wftpftWaYTqvdNBW0i405Wu+WDCRshiPCnPIDeRvhCaQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749480636; c=relaxed/simple;
-	bh=u/oNo+FV0H/X67hr2yBqFfXJbKA29ZKnpCOR5t5vzGs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IG2LePs/MfSkZXXt90fIouSHfcFfWnKW4JMQ7L8Uo+yaaOzHvTOVot0HHIPUSNltSDJsuaSwvEc2WxAO28rkNqW7knIs590g/bShEC8+CFZjZd3Mp3tNd8u8sJ1dBpSr9rd8q+8eCxg2cJgKda04G0/DIizJAyu7+5zgOo2hqgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TmZNU+Od; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749480655; c=relaxed/simple;
+	bh=MLrUcG7/LwNeQq9R3qc88l6FMX43V32zju+rJyP11do=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Oc1JzLzPLeJwptHsl7BrT7rHDAopTDtWogP3vOPFig3AnNBgSUWHc0bvlO7v1EzXJ8v4CFD63qHtAtGCupeR4+E887l9rdgWlSQCOdutCHmzFmoaMs8f63vPGeqnSKKXKQY/cp9qxiZHRA4PXJFqUBQFpgSZeUnPwBI22mW5n6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Vn7l4rV6; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TmZNU+Od"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-234b122f2feso3067065ad.0;
-        Mon, 09 Jun 2025 07:50:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749480634; x=1750085434; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u/oNo+FV0H/X67hr2yBqFfXJbKA29ZKnpCOR5t5vzGs=;
-        b=TmZNU+OdneoIa8loXLcMGOOl4todVX2iEEiscMYTAqtO1kfzYnTJ14yYiIoSfsQIVr
-         YKU5OYX6mAVEcvsLM8PZySB6mZx2K6w+28bxJGHHa6W/uEVEJKvh/ryQJ+jKI7+LcwI7
-         s/48TM31TbMQxslfA5dd4bOilH0MKudmA9bBMIJ7NkOXo9hO4xnoJICivFNC38R36Lkb
-         I1qAyIFZyLpAqlthdJ4n7ykwRo0/CmcNqcLkQcDz1i7XHomDIU12aQaZvxsKg5ZOY19W
-         yl1/vODZzgItkj6F6GHNpANmpxZFlnXQgNUktxbfEpomiwwWvktkKbiJ2DM4rsVWqwdd
-         gozg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Vn7l4rV6"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5599UKLe006963
+	for <linux-kernel@vger.kernel.org>; Mon, 9 Jun 2025 14:50:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=gXXryfwVQKKpIclvmqazUHr2
+	/hWdodYHJK2Hup7V7Y8=; b=Vn7l4rV6d1tRwlfrGew+pDVa/lLUy8xn8yP98UxB
+	N6/weTZN304kA9Cq60R5UER39thPS+g+IxkYFuZf/80Jg0cfnUF8KRroc1/s4pYq
+	WdUIXvU4UdKSzOaRboNGkgTL3B3biFoOSXpq8PZrMhG6jypUOnSYVI+8bLLMMDX5
+	7y5qII6TD+Lujd1hv2uINMblOqrUJmsTefvtcx4BJurdxalUeCZq6VqxmdlJM9qM
+	o26szVsf5mqyg1U1uWjoNa93Up8onE5xYUWb2fdgkUMvSSOmzUfQdD5trTMFTgwZ
+	LdnCkIolm+douUQRGga5ghqNMDPsyUhmM5VjBe7h7xvMXQ==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ce9ph98-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 14:50:52 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d099c1779dso817561585a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 07:50:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749480634; x=1750085434;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u/oNo+FV0H/X67hr2yBqFfXJbKA29ZKnpCOR5t5vzGs=;
-        b=Ldd/yWnwqDDQlDKcbgdyOSiwTOrVEjSYd+t55bKZH0lVH9rG/XLbIyKQBPSvmNjXoz
-         8mVmu2sj/QT20ZeESSzDrRp+tre0q0/QrwwIndgW1eiHA0aqAjgWeBEVSA9xPTRKa0hN
-         G4qRvvWjos70lGI8hjYKbnjZJSeQ1v1Zag+suUIHYUL5GyM73jrl2NixqFj4KVzf0/5U
-         aqDsnkP+kewgxdKSRUMwjmsY9x70+IYGcCnFqnZl4KahQW0uN5nrJW4vJjY3hQ6swyz0
-         vXOqYqmYfEGFdFNDiC9EueAjvNleERaDdXT/PtwqGlzRN1V9G4H42ndinIQrW0UB+Q0X
-         gtGA==
-X-Forwarded-Encrypted: i=1; AJvYcCVeWqToPP7D0ru+IzxXP/7pl91LB2apUH+qRIwPKpm9Np2aNOXVtrLlntNCgUNIbvtK9sYpsi9jFXTU@vger.kernel.org, AJvYcCVsMmiz741PWpJCZanls8KbBsXSBONBtBcl1QoTXo1aFGlO0LNZzc/C+mfMJa3JklnW2M9h2dCVAvNHVeBKEjE=@vger.kernel.org, AJvYcCXdltvLMYmv539PSkfaIFQFjJNPTSpFV8hPdFv5pKmaOQDQf/W+LRxHoBZ4agXLl76vQIUoNlFQlOHOdw8p@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZE+i8JnybtWszSuFW7PKColcg/vbIycGylJQJojioj1d+7aT6
-	dO3byXLCI8+YiPPGAv4Z8g19YiZHEfwFIl3KvZLuWiceiW4sSc+AfCwqqlFjAymdlW/VILdjYMG
-	3z15tXaDpyF1u0M3/de76GbCyRHHPQM4=
-X-Gm-Gg: ASbGncv/Iwsq+HUqOAKBd3RC0mPBUz2DLb2kG2KWetaT4YoihcoKXPgty/Cxkrnc6LZ
-	4ndAreAMWHHwOejlu8yV8CnxHL9+2O12LuelPLAbb9XTGZ4PAo0i3/jnx8SgYfiy3/3jv3PW4Wh
-	J+5lm2m3s6r7IU0TukoI0O2aUcmA1xqGa1
-X-Google-Smtp-Source: AGHT+IHNXyCWorrYd30jE+3a6V+kr7cqQeRJiV2nHX/r7jjF5Ri7IjZz1teLnZcoatAdHO4gb+GY5VkfbNpr+HZ/AZg=
-X-Received: by 2002:a17:903:2452:b0:235:ee04:dd2e with SMTP id
- d9443c01a7336-23604094a22mr69818685ad.10.1749480633948; Mon, 09 Jun 2025
- 07:50:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749480652; x=1750085452;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gXXryfwVQKKpIclvmqazUHr2/hWdodYHJK2Hup7V7Y8=;
+        b=srV+91YkPCTcDWmIbWSlOmJcsr2fnYiTPtbYiNuvGE2vzgsLHa4nzpJxbX0AiLFzej
+         rE62JGTEW8XE9Xi+optl8TQGf1XYjyJ+kQQb6PxaaHpZEY0VIGc4ZxYQ8bpLkfFDR1tt
+         kdNGeBMlT0brV37oll4N2UkqTKD/uzk/8cqQq2GxAMJWiOhgIuMhqyedWkDvkcP5UA5U
+         6QBB5KZ4n3gktLnHE90/Z5YfV8UiNAAr3v6j1P4BOadI0lza171LKvwvR1YwEg8oNA4L
+         YrOnd7W9ksEYu6vA8GaUI73OqP8TAnBy6tyCkbRVw5c07OaYxMQgh73jXrsolfCiI0gx
+         XqvA==
+X-Forwarded-Encrypted: i=1; AJvYcCUx67UMTK/V15MGPGMqOfwZUQzrkUB3uD9xc5hiH8fUZY0L3cENX9ioZsRmu2XW+T/2yDi1z9RUmDqyuGE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhWElZjKL/gr/FBE26NxyhbqYA074Ve9pFQ2PZ/Ht7k6zMQDMa
+	V/FSeAd8aTKbyASqtz0/MtYGqCXv/jVB+vt6mQLpgM6XK94jw9o0f4Kfz5RAHvjWQ+DJqMPbJ0A
+	EUoPxbHymXVjJ99OEaJP0msZHLaEA2KvhBa9SbD0JtJjgyxnHciUiMRfnfbuHvlChVwY=
+X-Gm-Gg: ASbGncsS5FpHCbIb8kkBLLEMuP4LomI0BDKeKhRv9BCZd6DvTysr03xlFXJiQE5o7FQ
+	3JoJKc6O4b2eirOyG9QIDCQQc+4q0OvoHPbwbuVNaD1NtgN2RFYYt7Qb44giV8MaG/rQbUUjmeW
+	kgHBWVQ502LtNzArOccE32gII5D5Twz/Ja394Xf97HtS1WiosLh5h9+cVppnkTTgAV+0C+cyyfh
+	u6j1/osfozDRqVPm2hKrrbdqGauaPMrKlaMcAx4a5KgG+4njtxcT/l4YcjA5IyCC95W7PssELyw
+	Cud7XIls1deSyKOfMeFsJHXex0doS3o1zcjjbnQrKXoCcqBYlEvpCnnSgtyX2jKRM6Jqf5E9KsA
+	=
+X-Received: by 2002:a05:620a:4151:b0:7d2:279d:c18d with SMTP id af79cd13be357-7d2298ec94amr2478840785a.36.1749480651695;
+        Mon, 09 Jun 2025 07:50:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH9KQZ5csfFeRf19Lg6Rga4uNIbAQ4j9v76mKsnJL2pr8UbN8vt6wkRD/Yt3tovojhBPPxXCA==
+X-Received: by 2002:a05:620a:4151:b0:7d2:279d:c18d with SMTP id af79cd13be357-7d2298ec94amr2478835785a.36.1749480651310;
+        Mon, 09 Jun 2025 07:50:51 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553676d7796sm1190964e87.81.2025.06.09.07.50.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 07:50:50 -0700 (PDT)
+Date: Mon, 9 Jun 2025 17:50:49 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Yongxing Mou <quic_yongmou@quicinc.com>
+Cc: Rob Clark <robin.clark@oss.qualcomm.com>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>
+Subject: Re: [PATCH v2 32/38] drm/msm: add support for non-blocking commits
+Message-ID: <rznsg4feyxanhvggxtebilg3ukbcrv3xgi4f2ijadjqaeqfelo@ogib4gythj7d>
+References: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
+ <20250609-msm-dp-mst-v2-32-a54d8902a23d@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606170341.3880941-1-igor.korotin.linux@gmail.com>
- <20250606170817.3881748-1-igor.korotin.linux@gmail.com> <DAGZNG518T0C.1PXOK55IXHZOF@kernel.org>
- <aEVqgUtflBCzZi1X@pollux> <DAH4KX3Y3M3P.3B82LSVWU172Q@kernel.org>
- <aEV43zxZmWvDgKES@pollux> <CAJxaTdNZEdK21mFPu2kTJPa7aQ+PpnkwFVdEP5MCt6w+bD0wXA@mail.gmail.com>
- <CANiq72=rerpj_Ut0x7dDb0O8dEh9SHaF1HVyyfMM83hz--QCJg@mail.gmail.com>
- <CAG7QV91u4rVgAqDjKAofupASSk9q0uRKNtsrHg7Q6KExRMkFog@mail.gmail.com> <CAJxaTdMFp0WAB3BBDPUztVvTtDGUt9=KyHTDpDOgAZ4ZEk2XUw@mail.gmail.com>
-In-Reply-To: <CAJxaTdMFp0WAB3BBDPUztVvTtDGUt9=KyHTDpDOgAZ4ZEk2XUw@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 9 Jun 2025 16:50:21 +0200
-X-Gm-Features: AX0GCFuaAnoglbLmGnvDAPgWWiamaOBF1T0VOHg4mWfINNGaZeAYmj9hQN7iYjI
-Message-ID: <CANiq72=ph_XG0TtkdsNJCUZMiAMYBo11eJaCTLCTpTAFXtcNMA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] rust: driver: Add ACPI id table support to Adapter trait
-To: Igor Korotin <igor.korotin.linux@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Len Brown <lenb@kernel.org>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Alex Hung <alex.hung@amd.com>, Xiang Fei Ding <dingxiangfei2009@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250609-msm-dp-mst-v2-32-a54d8902a23d@quicinc.com>
+X-Proofpoint-GUID: iQhAGM18rOSNbRAaOHtZI4SafZJqsCFr
+X-Authority-Analysis: v=2.4 cv=drjbC0g4 c=1 sm=1 tr=0 ts=6846f4cc cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=JLTXKlIeVVy5508LhJsA:9 a=CjuIK1q_8ugA:10
+ a=PEH46H7Ffwr30OY-TuGO:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: iQhAGM18rOSNbRAaOHtZI4SafZJqsCFr
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDEwOSBTYWx0ZWRfX12NLhb6QBeKl
+ TRr+ErzEP3h3o7DxqJ7VBtas+4nU8StKmKn0zPj0oseTbtZ5qfnap5omC6laVZ9L8CteXnEMmSy
+ UEVZrEwP5neM5x6OHMss8le3OQv1l9Bo2oEfCCUzZCj5IuogpI1y6jrwRzmIqtiGgbHbaf4PyUg
+ m3VcZ0cwEGl+vsf9eJHDAhsy7F7ZZ88Sf8XGZoRPQ3SEbi5ngPJmaB4YgSX152zGuZrFwEOEila
+ E24DZY3nqTzO+Uw1jDbWSqHGcVQ57pItGQW5Jt/1En1YpesOV50dfL2nSwSAaPz0RopDtkvzTWI
+ q9F1IXSWfW6sOQlftIFUQmGy5qLOQOIfAOs0cahqKETaNl0e3OHhMG5pQShAPEf2jZ8/zDYY81l
+ OgHL4Btx6/Y8mgCxYpNh78GnXqBR/tasBpr7sU2hkvSkbc9oV94owmiOxJpJOSWOEYOMukap
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-09_05,2025-06-09_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1015
+ priorityscore=1501 suspectscore=0 bulkscore=0 mlxlogscore=792 adultscore=0
+ phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506090109
 
-On Mon, Jun 9, 2025 at 4:07=E2=80=AFPM Igor Korotin
-<igor.korotin.linux@gmail.com> wrote:
->
-> 1. rename it to `_dev`. This is nasty to my opinion, because it is mislea=
-ding.
+On Mon, Jun 09, 2025 at 08:21:51PM +0800, Yongxing Mou wrote:
+> From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+> 
+> Hook up the mst framework APIs with atomic_commit_setup() and
+> atomic_commit_tail() APIs to handle non-blocking commits.
 
-Yes, please do not change the name that would be use in the "normal/full ca=
-se".
+Were non-blocking commits not supported before this patch?
 
-> 2. add #[alloc(unused_variables)] on top of it. Also not good since it
-> will suppress
-> all other possible unused_variables as well.
+> 
+> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+> ---
+>  drivers/gpu/drm/msm/msm_atomic.c | 3 +++
+>  drivers/gpu/drm/msm/msm_kms.c    | 2 ++
+>  2 files changed, 5 insertions(+)
+> 
 
-This can be done conditionally with `cfg_attr`, but it is not great.
-
-> 3. The third option is `let _ =3D dev;` in `#[cfg(not(CONFIG_OF))]`
-> section. I came to
-> it while I was writing this reply. This looks like the best option of
-> three in my opinion.
-
-Yeah.
-
-Cheers,
-Miguel
+-- 
+With best wishes
+Dmitry
