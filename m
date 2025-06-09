@@ -1,81 +1,86 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295FA24C09E
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 11:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B371E766F
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 11:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749467942; cv=none; b=I1ObFNhwp6rZIOlw5u2UbjGpVBRpLWtBG/LnbamCK1G5uxV6LBk0mI4a8gh8UTY9/urYbeB4rNWtBTv4htDlMBTyPdL7vSMr0QDYG1s3WNbPVEyy0CCvbC/6vgdi22OnvY8fPLsGbBUIOoGkiFprR20yOfflWgODvO+uhEot4RM=
+	t=1749468321; cv=none; b=f7d+tQpoopttRYmkMCK2+ljeO+yiRkivcepoQqFp28djvvin2CLIAzbjFixbQseP++R6eCV57JlRofO+FuYSP2HfXDC/qCWK/NMgyCFsKYnKb9DCyi8kfBfUKbcYa9C/vglIvB+8I/CCRKHHt4fct6FLGnLVySNHm52nSGDqkXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749467942; c=relaxed/simple;
-	bh=7dJNhIAlm6Mfp4Lc5SIAFLEuSWj3N1nwqD7MqG6nlVU=;
+	s=arc-20240116; t=1749468321; c=relaxed/simple;
+	bh=PAtdEJ9v9jfzk9L7TyadJUNVA2PMKdNcs1u9d3LhNWU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=usicYIMAzmBn1GHH9nFkBXqNLyKD7r5fP/4KB638WvzTQGoWq9gEQwKpGqVo2STU0p/gRu+Y8Ms8R/QJgsWmc22tgL+CsBni4001/05zO5FohQez9Wev443jbf3MGlDyKsK2LAgPha6pgabx+L6FNbJtzu0qbamvt5h//cuDKDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cYVgTyLk; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=DYeVxrh0DXLinkYx8tyMycgjBSf4V2Ckr/UM84tfqw3d4IOABXG/zwU2YipXY2d32FsaFKC5CLvfDa/T4/52Hsw68kRoIxar1ymQ2qFB7MVMMS2cMoxC3yayRLoyJR1GD2+PyQZlMWiq9x+KpbKTlBunzuImdtga4eYAUiNqiqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=SHBQQjq0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VoLZ4iyh; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=SHBQQjq0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VoLZ4iyh; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cYVgTyLk"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-742c3d06de3so4720011b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 04:19:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749467940; x=1750072740; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uJTBDYi3mfhW0vSHbVTVLXWBoTdoqifrr26dHjhiXOY=;
-        b=cYVgTyLkAWRFeEv8oS0hly4+o3FYqaf3atkTQSJVuoLGU5D/pCFrwpC1rHakhnj7He
-         y3N1hbU+f2bYWsLZdFdm1f7+Gw3WpRYDpc2g/rnu4q13W0IPkUCMNqTjWIeFPd6jlw6l
-         ztrzh7guz1XuBnZSxhJOY+KZnj02Tc0p6HFHgb2daqXhVpgmKQB7MgII4sp/9lKaapsS
-         uz0Ny9dAWRXYx7sS6TZ8szojUfxi/Upmd4I6/tc7WR8h/9Hf0mQWxGXn2mzxgGczxfSn
-         UkPqXXNgzUkCgWabq+yXBOIeq80v69ccInLyvP9l+CA26CR48bY6ZSX/WSVU33mz9nkC
-         4Pug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749467940; x=1750072740;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uJTBDYi3mfhW0vSHbVTVLXWBoTdoqifrr26dHjhiXOY=;
-        b=VxncQIZ2FWoY6IMhgphPbLWpaSMHQat5ySloqRpHIzsp6Uc+qqvR8W664gKrLBWPbY
-         r1Y1xN4hOauSXOEc37sonBCmFDOHjnmimoGjlp5pIeHN28bJjEkGvP9xV/fnh4xmqa75
-         mQd/2IzfEXylxN8itlDR7LeZJEieS2n4TLuKJNJ+p+46zb3gIytAMwt3MjVVxqgA+Wcl
-         hXGpeftp4ILpO8lkX3CsEaj2x/oUGQbGYnUm4kNkrcBz7RjUsdQp4DrTIKUryoGLKY+a
-         jEyDIxjPgM5FgJ1L+4KxWwwiO9Nsyq5kzecbVM8HG/O8cycYEHyiF75NIEtcGMtppLcl
-         m2PA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPT/FyfpidKlWKuHPuIe3NGTbic5K+jZ70iVPPjAyuF8MRQawhsiKMOOcBW5sedWDnUuFubFQnM583Gfo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxU21Q8znnlL+lBllmXBEWwrOPAnrzhVyN5mkk+n15ljnqvJCyQ
-	EnDBZGxRTCoQjnIVoVYCCbtVtiyuUM6C5+2Ppo1dMOmBGwHVTBWpKotAoXaLgSm1vFY=
-X-Gm-Gg: ASbGncstZ6sxP88ZtTUTnEKQrMl3N0A0pip+Tc7kU+lFEv8D997K/v531DDQUcBCbE+
-	fVm46KsTC5fbViAxfx2c+FpBmVc0OffEDY+2VkdO6Nw6a2zVLgmLl/kl8y/AescQjFqkiEDLnD7
-	RXaoxugTqpWq068RvxEgn7w1uJdzpWjv/T7yKxrV0ex6F2/kD8Xbz24SdjHqJFwc/NLxb34VrYG
-	J3mOg1yQgg5itoP24Jv8KHrqLycOyD3Vru8GzyiluQauafR51Jlgqx8u63XLwFfitA0FA22IrLk
-	wMfiYuTYJyOSHlw/gF6I1IMsHd/sMSBmBva19HUUjyrnO+E5zW5l
-X-Google-Smtp-Source: AGHT+IFhybAqxujM1b9MvWlhlvkWqi5+9H9O5A+kb+hxy81eoKki3xjJHw6zvFwLj8OPRGAC3kwPHQ==
-X-Received: by 2002:a05:6a21:6da8:b0:209:251d:47d2 with SMTP id adf61e73a8af0-21ee689ffd5mr15835949637.11.1749467940462;
-        Mon, 09 Jun 2025 04:19:00 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5f66a96csm5105536a12.47.2025.06.09.04.18.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 04:18:59 -0700 (PDT)
-Date: Mon, 9 Jun 2025 16:48:57 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Boqun Feng <boqun.feng@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>,
-	Yury Norov <yury.norov@gmail.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 1/2] rust: cpu: Introduce CpuId abstraction
-Message-ID: <20250609111857.ijvagblorxtq7d2n@vireshk-i7>
-References: <cover.1749463570.git.viresh.kumar@linaro.org>
- <f10910c7585f5556869ea6f34b64d4136b8d5581.1749463570.git.viresh.kumar@linaro.org>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="SHBQQjq0";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VoLZ4iyh";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="SHBQQjq0";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VoLZ4iyh"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 021A721182;
+	Mon,  9 Jun 2025 11:25:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749468318; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hsBQltkCVe5D2i0wiUV1DVAyAaiF31Q0/ZQK/fFHigE=;
+	b=SHBQQjq0Xd/pKI4LTO6+4uuqxy4pMrq1JxxfGlhBzcvE4WlBFlkUpz+WXuv/fNE8MC4Zku
+	+UrT1+04+4HLjSijs028c/igQ398jYXydf78Wl1KHKXZj8NPTr0O/MUhQd604jIBvO7SZG
+	E4eh2S34IKKWGEZo8IiB0rCDTzKaBPc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749468318;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hsBQltkCVe5D2i0wiUV1DVAyAaiF31Q0/ZQK/fFHigE=;
+	b=VoLZ4iyh6N6pIX+VgRHdtXvf+a08nglTf6SQ4S11geiXHgyExZKl9DAr/gcMkvklvh8Fov
+	twVHak2Trn6e1dCA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=SHBQQjq0;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=VoLZ4iyh
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1749468318; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hsBQltkCVe5D2i0wiUV1DVAyAaiF31Q0/ZQK/fFHigE=;
+	b=SHBQQjq0Xd/pKI4LTO6+4uuqxy4pMrq1JxxfGlhBzcvE4WlBFlkUpz+WXuv/fNE8MC4Zku
+	+UrT1+04+4HLjSijs028c/igQ398jYXydf78Wl1KHKXZj8NPTr0O/MUhQd604jIBvO7SZG
+	E4eh2S34IKKWGEZo8IiB0rCDTzKaBPc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1749468318;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hsBQltkCVe5D2i0wiUV1DVAyAaiF31Q0/ZQK/fFHigE=;
+	b=VoLZ4iyh6N6pIX+VgRHdtXvf+a08nglTf6SQ4S11geiXHgyExZKl9DAr/gcMkvklvh8Fov
+	twVHak2Trn6e1dCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E79A0137FE;
+	Mon,  9 Jun 2025 11:25:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 5pY5OJ3ERmg0OwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 09 Jun 2025 11:25:17 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id A046DA094C; Mon,  9 Jun 2025 13:25:17 +0200 (CEST)
+Date: Mon, 9 Jun 2025 13:25:17 +0200
+From: Jan Kara <jack@suse.cz>
+To: Pranav Tyagi <pranav.tyagi03@gmail.com>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
+	kees@kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH] binfmt_elf: use check_mul_overflow() for size calc
+Message-ID: <j7qo6dmmx2hu34453zfdp6rjrtlsyckjilm6qufe2qyj4dc6ei@su6omrup5rli>
+References: <20250607082844.8779-1-pranav.tyagi03@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,65 +89,87 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f10910c7585f5556869ea6f34b64d4136b8d5581.1749463570.git.viresh.kumar@linaro.org>
+In-Reply-To: <20250607082844.8779-1-pranav.tyagi03@gmail.com>
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 021A721182
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-2.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	ARC_NA(0.00)[];
+	URIBL_BLOCKED(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:dkim,suse.cz:email];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_TO(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	TO_DN_SOME(0.00)[]
+X-Spam-Score: -2.51
+X-Spam-Level: 
 
-On 09-06-25, 16:21, Viresh Kumar wrote:
-> This adds abstraction for representing a CPU identifier.
+On Sat 07-06-25 13:58:44, Pranav Tyagi wrote:
+> Use check_mul_overflow() to safely compute the total size of ELF program
+> headers instead of relying on direct multiplication.
 > 
-> Suggested-by: Boqun Feng <boqun.feng@gmail.com>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Directly multiplying sizeof(struct elf_phdr) with e_phnum risks integer
+> overflow, especially on 32-bit systems or with malformed ELF binaries
+> crafted to trigger wrap-around. If an overflow occurs, kmalloc() could
+> allocate insufficient memory, potentially leading to out-of-bound
+> accesses, memory corruption or security vulnerabilities.
+> 
+> Using check_mul_overflow() ensures the multiplication is performed
+> safely and detects overflows before memory allocation. This change makes
+> the function more robust when handling untrusted or corrupted binaries.
+> 
+> Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+> Link: https://github.com/KSPP/linux/issues/92
+
+Looks good. Feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
 > ---
->  rust/kernel/cpu.rs | 102 +++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 102 insertions(+)
-
-Boqun,
-
-Should I implement CpuId::current() like this ? Will fold this into
-1/2, if it looks okay.
-
-diff --git a/rust/helpers/cpu.c b/rust/helpers/cpu.c
-new file mode 100644
-index 000000000000..61d0387c8cf3
---- /dev/null
-+++ b/rust/helpers/cpu.c
-@@ -0,0 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/smp.h>
-+
-+unsigned int rust_helper_smp_processor_id(void)
-+{
-+       return smp_processor_id();
-+}
-diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-index 0f1b5d115985..16fa9bca5949 100644
---- a/rust/helpers/helpers.c
-+++ b/rust/helpers/helpers.c
-@@ -13,6 +13,7 @@
- #include "build_assert.c"
- #include "build_bug.c"
- #include "clk.c"
-+#include "cpu.c"
- #include "cpufreq.c"
- #include "cpumask.c"
- #include "cred.c"
-diff --git a/rust/kernel/cpu.rs b/rust/kernel/cpu.rs
-index da53f04da495..b093d22ccbd9 100644
---- a/rust/kernel/cpu.rs
-+++ b/rust/kernel/cpu.rs
-@@ -94,6 +94,12 @@ pub fn from_u32(id: u32) -> Option<Self> {
-     pub fn as_u32(&self) -> u32 {
-         self.0
-     }
-+
-+    /// Returns the ID of the CPU this code is currently running on.
-+    pub fn current() -> Self {
-+        // SAFETY: smp_processor_id() always return valid cpu id.
-+        unsafe { Self::from_u32_unchecked(bindings::smp_processor_id()) }
-+    }
- }
-
- impl From<CpuId> for u32 {
-
+>  fs/binfmt_elf.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> index a43363d593e5..774e705798b8 100644
+> --- a/fs/binfmt_elf.c
+> +++ b/fs/binfmt_elf.c
+> @@ -518,7 +518,10 @@ static struct elf_phdr *load_elf_phdrs(const struct elfhdr *elf_ex,
+>  
+>  	/* Sanity check the number of program headers... */
+>  	/* ...and their total size. */
+> -	size = sizeof(struct elf_phdr) * elf_ex->e_phnum;
+> +	
+> +	if (check_mul_overflow(sizeof(struct elf_phdr), elf_ex->e_phnum, &size))
+> +		goto out;
+> +
+>  	if (size == 0 || size > 65536 || size > ELF_MIN_ALIGN)
+>  		goto out;
+>  
+> -- 
+> 2.49.0
+> 
 -- 
-viresh
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
