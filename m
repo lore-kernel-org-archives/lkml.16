@@ -1,91 +1,251 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D7A21B8EC;
-	Mon,  9 Jun 2025 17:06:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20366217654;
+	Mon,  9 Jun 2025 17:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749488799; cv=none; b=GqwCKqeQiKDkRFUA6eA441JzXOwXKZ8ePoVOrBuOi/PLxWpQBbifEZeH1GuEVCgwWEfgB29EoCLCw6jiTFeCV4Ub9nHbDBHL/WTTqB/LZix3sEHpQqWka/77FNQWkkn7X1ewz/zm6gbdQa/5NFzcElyEpGYF8BQDw61xrJOf6NM=
+	t=1749488843; cv=none; b=nxx/g3X1Ytm8/6bopzA78hDPC/paGXlPh3t1YkRPIZEdqj1jm5L4nHZh8wDs+2wQI/kgNVGKlmWP9j1bJ/OWOhawx953OoOxm7erZSNxvyQ3qVn2chPL2YB6csgFHokUSLTTkaQL2+S26QYqLm7GoFf8yZH2Z9KHQWAEULu4p3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749488799; c=relaxed/simple;
-	bh=xj2K0Hn1KyDlFCEgp/1ceXvAVXo0W7st5XQzYhwKR9I=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=CnxxmDJxSwdxJVO982rTo1Ue8+XmFMovcIpQzWt+/PTdDM5DXADKosCDomChdsCXPWC2xRTsECPLQeeVboA/SFU7nMxbu9qATo/kLAeiZEw2B5cpdGJh7SOrYCupxIEnEBXARBt2nJWAk1JBPNMyAotUWm/JsuMfzNZuIXuxlVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hLNzjMer; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749488843; c=relaxed/simple;
+	bh=OYlhw1BjPK/7EbV6p8FJaWqGvxNhb0veN1hYTUnaj4Y=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ggdBWMYy6phxK6kI7dpnxqFRBNUuZMlI9IlI35iP1DbBGGga+Ymw+7L0yUWEvJBUVGQfDfgJr76mhFFZnFaeeobZS62tgwqXYVR1n07JCQhD+VvxZxP0wFyj7DfyOP6qRAQRYosuWPjgfrA/VgWHSFOgKEhPGgyfKyqPvZSHNn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KljyoXn+; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hLNzjMer"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-32a72cb7e4dso41897251fa.0;
-        Mon, 09 Jun 2025 10:06:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749488795; x=1750093595; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1B9jz9bzgcDaYUJYbUm/nwrrVlRYLDHkUIDUm7vm5gA=;
-        b=hLNzjMermV94bnjLDJWzFAkJeDRFiEbkvtoBWR9ReOLFuccxI3nJIJabYAWY7xYHKg
-         iDsw5JoY2BtQpzobdMOycFhhBvcYaLcAahWcc1rEvAJ3LfhvEOlsNFDN+O8hj0bL3lhr
-         HE920a38VZqO0TAvzHrql2lWA3OybBPAlYVBP34ir5iLJz+UFz/nl1Al4xFlOVlc6IEZ
-         STUChNJM/mSAUZaVw0QJ+cvmx9NWAwoPVyLi60RNp1QRsfsTBrmZbgxxUgljbc77KCKN
-         VF/7VrTR1uufdf9NTwTneGWdgIsipNy+O1ScD024x1tnoO9Dr1gW021BgkHZ7bZewhoy
-         K3ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749488795; x=1750093595;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1B9jz9bzgcDaYUJYbUm/nwrrVlRYLDHkUIDUm7vm5gA=;
-        b=b3Xax8+PLimCKAjH1hlgexxHDONMaL5iLZG3k06bGg5gVWSD8UM7X2HVwgqZA8BFEa
-         z/s7G02bjiKzHaAlk/158AWe5mb0c09vBvx8LsE4UwubIweVh0Yd8mPmMjbR3nxfiqhw
-         oEeR5GfEbCPW0mBjXLoMyiAZCMXJykbv5C6AbJUM0VwlPSjYdZ4z2CrHM+zeLyZFqTyU
-         UOOgVesgeAnNYg7mtHSNdUMCIDetxC1OqsdUNfCoGnoBuwG7BmvtIU/22Z8OAfrdiUuZ
-         QgK4m0KjnP7Vb0JrCdwL4c7UiW8fIdW7hUSVVvxQmY+aIerSV2qfCGwAnoAJ2CcLnr34
-         gKMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV90mtvXjiGzsaBNLcs/fjI751r1g+q8zRlbXHUPpOCYzughP68jBPduKSrFRspLbpGX2M3OWlruascxMJXsQ==@vger.kernel.org, AJvYcCVHPmDerc4bCUmd8ffcpDJ4lhwuPjj3CZ/acwLmUgDmmhUqkTJ4c1h/ryBluEhNMnCjFydNJF/CsOmm@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJgHUA4BoSDj3u4M5EDBfTzwnAh6BVfsFin9SRlDDwUE5Q77R7
-	EasSz/LFHsnNWobXFhJfY7Fzzq/Vd3Qh5ppUYp+3PWxdE/wCHNQOdxqd7BFtu0MOq+Ku0+ZyhVR
-	FZ5dKYpyFqyk4nuLkp06xKDQJzQanf90=
-X-Gm-Gg: ASbGnct0t5XWrT/HB/ByrKWVwwx1AKXNi1MVk/4BBWX9y2bpJ9XlrG9BlkAgl0BOQsk
-	tPs29DRpaQKvQXdIHm+f3SfcA64h8NcRCCVSpJ+jCbORfysrIeQrXYSN0WuNrYVGbzCjjTg7nCH
-	8kg1xJJjDeshtphoXUnr/DqhjMqnUKeNGj2DxXqx0PJh0NcVRbY0SW7WXOjqXirJUnkQ8=
-X-Google-Smtp-Source: AGHT+IHs3x7MiIxf+cWKc7abiJCC9IsvRO7Ev/Vbmo9eLh43sdlNK0JojZJXE291FuxIFOvUsBhv2t2laasYz3xT+VM=
-X-Received: by 2002:a05:651c:b12:b0:30b:f469:47ef with SMTP id
- 38308e7fff4ca-32adfd207bbmr39463521fa.23.1749488795292; Mon, 09 Jun 2025
- 10:06:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KljyoXn+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749488842; x=1781024842;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=OYlhw1BjPK/7EbV6p8FJaWqGvxNhb0veN1hYTUnaj4Y=;
+  b=KljyoXn+lzFKlmt4ww3R4sT+o7RNcZTQTAarB1DJPdrWWnBlvqQzCeCl
+   Lc7z4wnjztH4d0QINUdvOv8fqFGCL7hpZVq8S75PDlvFmTZMa037FwXYg
+   qUWl6jwOTNrtSsvJg8YzMGPM/t+/XkkMyfSkWILu0uIMwPjtsjUGc3oAK
+   95MwwyNloptDrkNDYuWAUS8uBtZpWmerm1H46QHaADpuRTHWR+2WUHate
+   j3q2WajSnOlnCAuX8tjGDOwNYQy1PmeU/aXMLn5EysnfqH/bVoL3jhrqu
+   kVFcWrExHqgHPftjc73KUzYoda3pmefp57Nlr59GctgqhBCpR3wcA4SqF
+   w==;
+X-CSE-ConnectionGUID: 6+SHvUyGSymlxJt729tYzw==
+X-CSE-MsgGUID: RACGii1HS+6/YGS8c64fRw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51667951"
+X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
+   d="scan'208";a="51667951"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 10:07:14 -0700
+X-CSE-ConnectionGUID: OXgICkbPTXS3J8IOECVJMQ==
+X-CSE-MsgGUID: dYCtnEJKRuW1WrA2HPYLIQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
+   d="scan'208";a="146924028"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.22])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 10:07:10 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 9 Jun 2025 20:07:06 +0300 (EEST)
+To: Rio Liu <rio@r26.me>
+cc: Bjorn Helgaas <bhelgaas@google.com>, 
+    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+    "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+    "regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
+    "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
+Subject: Re: [REGRESSION] amdgpu fails to load external RX 580 since PCI:
+ Allow relaxed bridge window tail sizing for optional resources
+In-Reply-To: <w3gGcmhWNmeGetzLnhgkjfx0JTEyIOKN5sDu-uShZ_7JWthMgGP6plgDuhDbkYyaA7vtGbdl1WbMTZ5zM80OyJoqUa69krqDpuhqDangkLY=@r26.me>
+Message-ID: <21d41e66-d019-31c7-1e73-fed80cf54965@linux.intel.com>
+References: <o2bL8MtD_40-lf8GlslTw-AZpUPzm8nmfCnJKvS8RQ3NOzOW1uq1dVCEfRpUjJ2i7G2WjfQhk2IWZ7oGp-7G-jXN4qOdtnyOcjRR0PZWK5I=@r26.me> <7a7a3619-902c-06ee-6171-6d8ec2107f97@linux.intel.com>
+ <w3gGcmhWNmeGetzLnhgkjfx0JTEyIOKN5sDu-uShZ_7JWthMgGP6plgDuhDbkYyaA7vtGbdl1WbMTZ5zM80OyJoqUa69krqDpuhqDangkLY=@r26.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Steve French <smfrench@gmail.com>
-Date: Mon, 9 Jun 2025 12:06:23 -0500
-X-Gm-Features: AX0GCFsrRONFJpE2z-GNlrMZuis3d387b0I5W2Mqd7Xzluc394ppvLGirmBiFtE
-Message-ID: <CAH2r5mu5SfBrdc2CFHwzft8=n9koPMk+Jzwpy-oUMx-wCRCesQ@mail.gmail.com>
-Subject: Perf regression in 6.16-rc1 in generic/676 (readdir related)
-To: Christian Brauner <brauner@kernel.org>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
-	NeilBrown <neil@brown.name>
-Cc: LKML <linux-kernel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>, 
-	Bharath S M <bharathsm@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="8323328-169176343-1749488826=:948"
 
-Instead of the usual 10 to 12 minutes to run generic/676 (on all
-kernels up to 6.15), we are now seeing 23-30 minutes to run
-generic/676, much more than twice as slow.   It looks like this is due
-to unnecessary revalidates now being sent to the fs (starting with
-6.16-rc1 kernels) on every file in a directory, and is caused by
-readdir.   Bharath was trying to isolate the commit that caused this,
-but this recently merged series could be related:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-06c567403ae5 Use try_lookup_noperm() instead of d_hash_and_lookup()
-outside of VFS
-fa6fe07d1536 VFS: rename lookup_one_len family to lookup_noperm and
-remove permission check
+--8323328-169176343-1749488826=:948
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Has anyone else noticed this perf regression?
+On Mon, 9 Jun 2025, Rio Liu wrote:
+> On Monday, June 9th, 2025 at AM 5:09, Ilpo J=C3=A4rvinen <ilpo.jarvinen@l=
+inux.intel.com> wrote:
+> > On Mon, 9 Jun 2025, rio@r26.me wrote:
+> >=20
+> > > I have an external Radeon RX580 on my machine connected via Thunderbo=
+lt, and
+> > > since upgrading from 6.14.1 the setup stopped working. Dmesg showed w=
+arning from
+> > > resource sanity check, followed by a stack trace https://pastebin.com=
+/njR55rQW.
+> > > Relevant snippet:
+> > >=20
+> > > [ 12.134907] amdgpu 0000:06:00.0: BAR 2 [mem 0x6000000000-0x60001ffff=
+f 64bit pref]: releasing
+> > > [ 12.134910] [drm:amdgpu_device_resize_fb_bar [amdgpu]] ERROR Problem=
+ resizing BAR0 (-16).
+> > > [ 12.135456] amdgpu 0000:06:00.0: BAR 2 [mem 0x6000000000-0x60001ffff=
+f 64bit pref]: assigned
+> > > [ 12.135524] amdgpu 0000:06:00.0: amdgpu: VRAM: 8192M 0x000000F400000=
+000 - 0x000000F5FFFFFFFF (8192M used)
+> > > [ 12.135527] amdgpu 0000:06:00.0: amdgpu: GART: 256M 0x000000FF000000=
+00 - 0x000000FF0FFFFFFF
+> > > [ 12.135536] resource: resource sanity check: requesting [mem 0x00000=
+00000000000-0xffffffffffffffff], which spans more than PCI Bus 0000:00 [mem=
+ 0x000a0000-0x000bffff window]
+> > > [ 12.135542] ------------[ cut here ]------------
+> > > [ 12.135543] WARNING: CPU: 6 PID: 599 at arch/x86/mm/pat/memtype.c:72=
+1 memtype_reserve_io+0xfc/0x110
+> > > [ 12.135551] Modules linked in: ccm amdgpu(+) snd_hda_codec_realtek .=
+=2E.
+> > > [ 12.135652] CPU: 6 UID: 0 PID: 599 Comm: (udev-worker) Tainted: G S =
+6.15.0-13743-g8630c59e9936 #16 PREEMPT(full) 3b462c924b3ffd8156fc3b77bcc8dd=
+bf7257fa57
+> > > [ 12.135654] Tainted: [S]=3DCPU_OUT_OF_SPEC
+> > > [ 12.135655] Hardware name: COPELION INTERNATIONAL INC. ZX Series/ZX =
+Series, BIOS 1.07.08TCOP3 03/27/2020
+> > > [ 12.135656] RIP: 0010:memtype_reserve_io+0xfc/0x110
+> > > [ 12.135659] Code: aa fb ff ff b8 f0 ff ff ff eb 88 8b 54 24 04 4c 89=
+ ee 48 89 df e8 04 fe ff ff 85 c0 75 db 8b 54 24 04 41 89 16 e9 69 ff ff ff=
+ <0f> 0b e9 4b ff ff ff e8 b8 5c fc 00 0f 1f 84 00 00 00 00 00 90 90
+> > >=20
+> > > Bisecting the stable branch pointed me to the following commit:
+> > >=20
+> > > commit 22df32c984be9e9145978acf011642da042a2af3 (HEAD)
+> > > Author: Ilpo J=C3=A4rvinen ilpo.jarvinen@linux.intel.com
+> > > Date: Mon Dec 16 19:56:11 2024 +0200
+> > >=20
+> > > PCI: Allow relaxed bridge window tail sizing for optional resources
+> > >=20
+> > > [ Upstream commit 67f9085596ee55dd27b540ca6088ba0717ee511c ]
+> > >=20
+> > > I've tested on stable (as of now 8630c59e99363c4b655788fd01134aef9bcd=
+9264), and
+> > > the issue persists. Reverting the offending commit via `git revert -n=
+ 22df32c984be9e9145978acf011642da042a2af3` allowed amdgpu to load again.
+> > > Dmesg: https://pastebin.com/xd76rDsW.
+> > >=20
+> > > Additional information
+> > > - Distribution: Artix
+> > > - Arch: x86_64
+> > > - Kernel config: https://pastebin.com/DWSERJL5
+> > > - eGPU adapter: https://www.adt.link/product/R43SG-TB3.html
+> > > - Booting with pci=3Drealloc,hpbussize=3D0x33,hpmmiosize=3D256M,hpmmi=
+oprefsize=3D1G
+> > >=20
+> > > I'm reporting here as these are the contacts from the commit message.
+> > > Please let me know if there's a more appropriate place for this, as w=
+ell
+> > > as any more information I can provide.
+> >=20
+> >=20
+> > Hi Rio,
+> >=20
+> > Thanks for the report and I'm sorry about causing this issue. Could you
+> > please try if the patch below solves the issue.
+> >=20
+> > --
+> > From b94823a193032b5f87114cff9e8edc5c67e4ef40 Mon Sep 17 00:00:00 2001
+> > From: =3D?UTF-8?q?Ilpo=3D20J=3DC3=3DA4rvinen?=3D ilpo.jarvinen@linux.in=
+tel.com
+> >=20
+> > Date: Mon, 9 Jun 2025 12:05:20 +0300
+> > Subject: [PATCH 1/1] PCI: Relaxed alignment should never increase min_a=
+lign
+> > MIME-Version: 1.0
+> > Content-Type: text/plain; charset=3DUTF-8
+> > Content-Transfer-Encoding: 8bit
+> >=20
+> > When using relaxed tail alignment for the bridge window,
+> > pbus_size_mem() also tries to minimize min_align, which can under
+> > certain scenarios end up increasing min_align from that found by
+> > calculate_mem_align().
+> >=20
+> > Ensure min_align is not increased by the relaxed tail alignment.
+> >=20
+> > Eventually, it would be better to add calculate_relaxed_head_align()
+> > similar to calculate_mem_align() which finds out what alignment can be
+> > used for the head without introducing any gaps into the bridge window
+> > to give flexibility on head address too. But that looks relatively
+> > complex algorithm so it requires much more testing than fixing the
+> > immediate problem causing a regression.
+> >=20
+> > Reported-by: Rio rio@r26.me
+> >=20
+> > Signed-off-by: Ilpo J=C3=A4rvinen ilpo.jarvinen@linux.intel.com
+> >=20
+> > ---
+> > drivers/pci/setup-bus.c | 11 +++++++----
+> > 1 file changed, 7 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> > index 07c3d021a47e..f90d49cd07da 100644
+> > --- a/drivers/pci/setup-bus.c
+> > +++ b/drivers/pci/setup-bus.c
+> > @@ -1169,6 +1169,7 @@ static int pbus_size_mem(struct pci_bus *bus, uns=
+igned long mask,
+> > resource_size_t children_add_size =3D 0;
+> > resource_size_t children_add_align =3D 0;
+> > resource_size_t add_align =3D 0;
+> > + resource_size_t relaxed_align;
+> >=20
+> > if (!b_res)
+> > return -ENOSPC;
+> > @@ -1246,8 +1247,9 @@ static int pbus_size_mem(struct pci_bus *bus, uns=
+igned long mask,
+> > if (bus->self && size0 &&
+> >=20
+> > !pbus_upstream_space_available(bus, mask | IORESOURCE_PREFETCH, type,
+> > size0, min_align)) {
+> > - min_align =3D 1ULL << (max_order + __ffs(SZ_1M));
+> > - min_align =3D max(min_align, win_align);
+> > + relaxed_align =3D 1ULL << (max_order + __ffs(SZ_1M));
+> > + relaxed_align =3D max(relaxed_align, win_align);
+> > + min_align =3D min(min_align, relaxed_align);
+> > size0 =3D calculate_memsize(size, min_size, 0, 0, resource_size(b_res),=
+ win_align);
+> > pci_info(bus->self, "bridge window %pR to %pR requires relaxed alignmen=
+t rules\n",
+> >=20
+> > b_res, &bus->busn_res);
+> >=20
+> > @@ -1261,8 +1263,9 @@ static int pbus_size_mem(struct pci_bus *bus, uns=
+igned long mask,
+> > if (bus->self && size1 &&
+> >=20
+> > !pbus_upstream_space_available(bus, mask | IORESOURCE_PREFETCH, type,
+> > size1, add_align)) {
+> > - min_align =3D 1ULL << (max_order + __ffs(SZ_1M));
+> > - min_align =3D max(min_align, win_align);
+> > + relaxed_align =3D 1ULL << (max_order + __ffs(SZ_1M));
+> > + relaxed_align =3D max(min_align, win_align);
+> > + min_align =3D min(min_align, relaxed_align);
+> > size1 =3D calculate_memsize(size, min_size, add_size, children_add_size=
+,
+> > resource_size(b_res), win_align);
+> > pci_info(bus->self,
+> >=20
+> >=20
+> > base-commit: 3719a04a80caf660f899a462cd8f3973bcfa676e
+> > --
+> > 2.39.5
+>=20
+> Hello Ilpo,
+>=20
+> I've tested the patch and it seems to fix the issue. Thank you!
 
-For the case of cifs.ko mounts, it is easy to repro with generic/676.
-And also could be reproduced with simple "ls" of large directories.
+Great, thanks for testing.
 
--- 
-Thanks,
+If you want, you can give your Tested-by tag so I can include it into the=
+=20
+official submission of the fix.
 
-Steve
+--=20
+ i.
+
+--8323328-169176343-1749488826=:948--
