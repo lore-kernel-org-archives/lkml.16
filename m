@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F0622259C;
-	Mon,  9 Jun 2025 21:00:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B11227BA1;
+	Mon,  9 Jun 2025 21:00:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749502854; cv=none; b=c0NV6S602nx+GUVXEZNSkls5XTkZx7FEIfAgjUtvEyMl/MBknIYIAqgVjZ4syjPKZPFoVKHYdkaEttLzRTqLJWeUHQyT/aTdLfy3YQdiyPRMiF5Gp8v5h1DLPH5z0lU08zp2079NC8PHgbL3AONfNHJzjvlcKCkg/3dEErvAHmc=
+	t=1749502856; cv=none; b=SPKasnt8hoiMhKt9CEJNPt4T4ZRIZERJ6292odi80jmzvK73jrGGRp775xJRR+zW4Qq2OdShlCr9GEa793YfPoxQ/tGo10Ly08cllK359tTBIBiAXD92P/isfCO9tiFLU9ToW0ePkxg5T+VQowVePNcjoOkZbXecq9sG4f3HLEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749502854; c=relaxed/simple;
-	bh=onXfm+HG8EeIacsf9JPvIQnWVREodwC8+l7WQ/tZOlY=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=O8w86epaPbbNFLIEHU+sdzugy9aI337iiNJM5U7Qh7ezg9HTaBcKDtptk5izMwQyOMLZlDegCdtW5xE6y8cPOM5L/SxU01i6HQyeDjLKwgc7zmYrQ+5K3tPQyUQX8IRi4kJIyuXN0iE1KHU9Y1rIhH1GEzCRlrEucAD4Z7EOCfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P9QA/gu0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749502856; c=relaxed/simple;
+	bh=ieOEa6WuF3l6Ed2jnV0bnaUA1/amQpmtX3pZEZDGG5o=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=tnrjtTQAqJ3ZXSI6pkRd0cxAqO2WQoXFj/QZDkq/mPwFVDsEeSLqYVACcXeiWOv/d0hcKL2uzz/u2svCUE9o6q5/SpY//uKvWK+LYZJwBZB6WqnY/KUopDuPHQNpgY35bjRmqjlMckLw+ldZLWcLD1KXcUKiTMEfIlHGepf08Lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=troLZG4Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P9QA/gu0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57120C4CEEB;
-	Mon,  9 Jun 2025 21:00:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="troLZG4Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E5B7C4CEF0;
+	Mon,  9 Jun 2025 21:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749502854;
-	bh=onXfm+HG8EeIacsf9JPvIQnWVREodwC8+l7WQ/tZOlY=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=P9QA/gu0FG0+X+fmbsDzXIaBuw+zTT3NYhPaqqYLmhODf2akCMrf/6WCj1wEpc9wV
-	 kNyCbtLCX2Bf+Y+wuFP6JBbsFXX9Teyf0f5p4Wmjq7MsCM1FY8fy4hfPTf/MGfz6tC
-	 RbqA8B8y31xio/hBOi651/cho+rtnqwBhVjx/L8+DL18m3Dzt6Xq89RxqZ6zIvkRTg
-	 SWWVhZ0igQ9q7wZmkYpEYrjVlqAWBaj+Nj0oGQQ3M9BN5Md4ErYGdn5RzRqP4dukvL
-	 ur6XJlxRilSXTMBmKaq4UotpKP5x85iObLlXyGYsnZNVWzdkIsBkmYt/5cMNGHHVFR
-	 c5Tk9MXWLBnPw==
+	s=k20201202; t=1749502856;
+	bh=ieOEa6WuF3l6Ed2jnV0bnaUA1/amQpmtX3pZEZDGG5o=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=troLZG4YHItx4I8RpCauX4PUCbI+LA6HDaELEgXzOVTraEFedyrYD6O6ML/7BTY5Y
+	 rM0rwDmveydn97QORdf2kcugiHfThnSINsEDLqHEDgEMcywTDLANJXySPUZwfph2zB
+	 +wdQshpyxXeN+Rpwyg59BkQXrqn/2l/N0IdyJCIKJkz7vjAiZUHYml6Ar3G9gxnBnz
+	 JEdTrrIo2XVfxCQGjd4f42xjA66vkUfx8ouSQ/JHVA5F7E7cJE/7v8CB5DKkXvTtEk
+	 +RkYPq/ZtJlYiS8Au/3Z6Yn9mH/V27lNKGYHjrs8h3G177H/cwlc1kdvYTN1xRVtaA
+	 7t2DJ8V/dngsw==
 From: Mark Brown <broonie@kernel.org>
-To: nicolas.frattaroli@collabora.com, lgirdwood@gmail.com, perex@perex.cz, 
- tiwai@suse.com, heiko@sntech.de, linux-rockchip@lists.infradead.org, 
- linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Pei Xiao <xiaopei01@kylinos.cn>
-In-Reply-To: <cover.1749201126.git.xiaopei01@kylinos.cn>
-References: <cover.1749201126.git.xiaopei01@kylinos.cn>
-Subject: Re: [PATCH v2 0/2] Cleanup in rockchip_sai.c
-Message-Id: <174950285209.277844.16538402979333131018.b4-ty@kernel.org>
-Date: Mon, 09 Jun 2025 22:00:52 +0100
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ cy_huang@richtek.com
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Conor Dooley <conor+dt@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Roy Chiu <roy_chiu@richtek.com>, linux-sound@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <cover.1749454717.git.cy_huang@richtek.com>
+References: <cover.1749454717.git.cy_huang@richtek.com>
+Subject: Re: [PATCH v2 0/2] ASoC: Add Richtek RTQ9124 support
+Message-Id: <174950285438.277844.8562649220481873561.b4-ty@kernel.org>
+Date: Mon, 09 Jun 2025 22:00:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,10 +48,18 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Fri, 06 Jun 2025 17:18:20 +0800, Pei Xiao wrote:
-> 1.Simplify the condition logic in
-> 2.Use helper function devm_clk_get_enabled()
+On Mon, 09 Jun 2025 15:47:26 +0800, cy_huang@richtek.com wrote:
+> This patch series adds Richtek RTQ9124 1x30W audio amplifier support.
 > 
+> v2:
+> - Instead to add a dedicated rtq9124 document file, append the
+>   description to the existed rt9123 yaml
+> 
+> ChiYuan Huang (2):
+>   ASoC: dt-bindings: rt9123: Append RTQ9124 description
+>   ASoC: codecs: Add support for Richtek RTQ9124
+> 
+> [...]
 
 Applied to
 
@@ -57,10 +67,10 @@ Applied to
 
 Thanks!
 
-[1/2] ASOC: rockchip: fix capture stream handling in rockchip_sai_xfer_stop
-      commit: 5dc302d00807b8916992dd25a7a22b78d07dcd03
-[2/2] ASOC: rockchip: Use helper function devm_clk_get_enabled()
-      commit: 03b778d1994827ea5cc971dbdfbb457bbb7bfa5d
+[1/2] ASoC: dt-bindings: rt9123: Append RTQ9124 description
+      commit: 5c694e3a83d089df6b00747cf4627735ea14014e
+[2/2] ASoC: codecs: Add support for Richtek RTQ9124
+      commit: 1f5cdb6ab45e1c06ae0953609acbb52f8946b3e8
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
