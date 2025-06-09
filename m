@@ -1,88 +1,76 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2059.outbound.protection.outlook.com [40.107.220.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247632206BC;
-	Mon,  9 Jun 2025 18:41:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749494493; cv=none; b=tGh5g24o4++dZcUK6yh2UJ2bi2VXM83AUmt7/drcwKJDNK8a1z6v7TDSjn/eNsAhq1kCtn3+wWn3jmhp4Md2ijfUYTeGvndSFA7iNtI00iPbGeIRhAoyCC5S8B5S6jObo3p8s3pFe7WBYMk761tRlYasuTyi8Uf6wL3JXMtELjw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749494493; c=relaxed/simple;
-	bh=j8goozVk+DiYlp4GJTvl5ymKQRo3e0oyL/7h8bqvJi0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E7soVtmfD7ZPxxYazVEror2bvQF5LiwEin/zX4iXgkt5x8wtaw3H2/T5S73M6nuIXywiyN6jxY/ICrGs3q8nFb5ali22jYDkQURtxoPIHMjUOQpLsvfkXgR79TZ487NbJu04PL58Fmx+KxdYc46ZS3VA1/scxQVZSfQ0jgXhP84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dKdLeCaN; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9701B4121;
+	Mon,  9 Jun 2025 18:45:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749494744; cv=fail; b=jM1hdkanYzPs7KjbUFVi19/P+O9f9U0aUFG5D1xI9Yhb2pHTUlSFcYYD3Z7bWhqXeF4kbqETRxk5XwGem6Bgcumi8BPahvsx9irQscgwe/jylaL9Jk5uAt0t9hfYuv23cMOfr5/uRBj/Uogj+4fycOK5kFUwSlQTWO9GxaZFRTg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749494744; c=relaxed/simple;
+	bh=qIdMBL36w5V9l0tM5hdYU5Uf/4ZDE9FzzAsLBAoYD6s=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IjBVlLz7TL4JO1SqBaQLKVCbDGdTtvkVuzp4Dgy/5EPY+E2dXL21fhIM+Gpcwh8kffCt2WHJwrtdE0Cxp/hcWnN+mx2DJgeH8Vglv4mERa69le2++q64DPKwnGcEDvVEwq44NWiVdyT5HMn+m8ls4zASFfdLNnik0lCSo43AkZE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Iaws1fOk; arc=fail smtp.client-ip=40.107.220.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dKdLeCaN"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a50fc7ac4dso3018808f8f.0;
-        Mon, 09 Jun 2025 11:41:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749494489; x=1750099289; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eBVA8u7P9K0qf+hyn4RTzfCpu8dbeDyo/DFXP1/igMY=;
-        b=dKdLeCaNGKs4u2XjjTsDwI2AXIosgqzayyrPGR3WrG04H/z7mhW7UA5a8Tv1lY5Uga
-         KR0Tw5ZqkMdY9d23/q5ofRmFEPdhV3wpCwVXMX37sr3THs04aocdUO+LYkPombBKNJJ/
-         6LYj5NOv0v/HHTbVwtweKylvj69YXlhjgsJiKaaW2AK/7kAAtz4ckS+sKcHq2ijkkHvu
-         94LU3G9byBwfLrdB67aDuB+Emykru/+JYDft+IQW82QL3kgRi45wc/MZa4pq4q/ESj5Q
-         Bk/kTfSWZEDDLmD1YhkL4ym3lzPkO28djyRz5rBomMk0sr1a93xlTqWPqJKGX1/2ET4P
-         SO5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749494489; x=1750099289;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eBVA8u7P9K0qf+hyn4RTzfCpu8dbeDyo/DFXP1/igMY=;
-        b=pV+kVJknDWt7GQ8WpOuDGXdYdTnRIxzixge0zWebsNmk+a5NzpvGC+LMCgSiQINDCj
-         Q4YlEcZ3f4j/EIxVime7OeDyd+23nF2btBgsplNtsSCSI8xMDa8t3U0hEmSOxbuIFRgf
-         hKZaz7/pTJzvWPyEKKudSLEQy+GNHfhftxSKfmZZ8AxaOJdTKx/v03DMX1rYKA5YIHaQ
-         YXV3itwBc37JwdqL4i/aHvux7D2erywDJgOLgXgyPxjTbU2HoD91u5qc1GXWEzzNStx3
-         Vs/MIymxAOpzIyzoIMaavfRhmBq+Hu26s8O34NCIvLAAfOFG7+iXhpDqcuoxhJjSBAKS
-         bcmA==
-X-Forwarded-Encrypted: i=1; AJvYcCUosZRoap/xeytKbAsu3zVwcSux0WFfK1Gex8ICTlP0fbueF4UD8kR87szpDe7AVZzkJ9rid7c8TGURiO97@vger.kernel.org, AJvYcCWSTbwwbzEjnC1+jWgT2NquopLNe260opYE4lmPfZ58Gg9OkpkbhHDYis4lLFqLeslUwtchct+3u3h1@vger.kernel.org, AJvYcCWXpBMz2yKNbKLS4ZgEfvT/VESnd+agORUCxje+WRoG4BxJKg9J4+dGdTyttHPQ4RBb2CZNlCcWPMj3@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNVroxAWjBzrlcykNzZpayCcxkeZsgBuAZ1e/DUYQUcZEbwn7i
-	chKg+7Xb9UjMqg/GMgEE5jqPGk3tFpIijGi6J7cKeB2QgLrxImIkx2i6
-X-Gm-Gg: ASbGncu8LMlAt9iDlwhiwLrjtF2HySe1arVLnSgHQXMgkBsxhl+LilMAY6e/ROm9H4u
-	n6eyFS6wlFq7fBF87yY5s4ny3kJ1vWzB88Dld23yf//93Rzs7iS/WBb8WvefQJGF49/9n3oVyCg
-	LuvQQ9/DLrEX9NKMZv9EoNT5ygtgvgGLKagSdyZFYTPd5AyJHUN8VEDKuEWbFpaqVY6ZUOH0UGL
-	z9vWdmudvufmtuM2GkWlOxt8tYS7g67vwc6lkdpfphyDRHT6uF67KIwO3OUFIzAN6mRcr7yxdP6
-	xzxRsiQeSsg4hpFJh1+ZDY2kxNbHuSb47HWaiNHYNKEIAqyvTSNln5qZID7Fydsewda4UfZCfIW
-	trkWFBvku9fZrBW6Beyw=
-X-Google-Smtp-Source: AGHT+IHa/uotTBQXRzJhNiKxf6x007lJmL946HjbCVUwqKj9SP4PvPBTpQK30grFpJTrfnG5QqSIzA==
-X-Received: by 2002:a05:6000:2c10:b0:3a5:2653:7308 with SMTP id ffacd0b85a97d-3a531cf5becmr11040710f8f.57.1749494489223;
-        Mon, 09 Jun 2025 11:41:29 -0700 (PDT)
-Received: from iku.example.org ([2a06:5906:61b:2d00:3c26:913e:81d:9d46])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53244f04dsm10137865f8f.73.2025.06.09.11.41.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 11:41:28 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Chris Brandt <chris.brandt@renesas.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Andy Shevchenko <andy@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 6/6] i2c: riic: Add support for RZ/T2H SoC
-Date: Mon,  9 Jun 2025 19:41:14 +0100
-Message-ID: <20250609184114.282732-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250609184114.282732-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250609184114.282732-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Iaws1fOk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZbYu/hsh0z80cpFzFuZzwCB8GFaRyy6Lw5bNFpBuXRgPNZcSP4RgX2ib9PxvKi7vG7YYW9roVSnsHoJksy26AZmi6IkhioeqnZE443S4wXLg3WWmm125JQeuG6brxj5Cwn09oRm91H9pZMHnkL4gxdKY74L86Fjn7u83x4TuF4+/UYIWy9R7lo9Edq/zL1nxuE5kOu6jDn1M/enTNl6NaoLP6zh/U2LuMnsBZrzf7+Ne8fmUgOMKy2Dx+d0Bw2/VCQO/AkQcaJORF7RNKqhz0mGs2Cr+A+Oq09a+IfT5iricP3d/L/Tyo8/nmj+MCdnvURf2fyytf3GfWNha5M268A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2zGIBT9e6R4IfQzBODrFIRQJZDsNH1UzbyJhEZysgqw=;
+ b=XHLli2aVwFNcOp2NdVKPCGDwV87noQpNBr2Qoyw1B84XyiWRQRJjKQldrw4o21A033xXwOPSyD0aWOW9TBDoRt8eYSapnuypqCtsCY1sJPCcgwfELXdCWOwFTDwoHUgIi0WLJGX4RlCR4N6byLqs6vc8NiqgpHkmx/ura4Q8TQVUEM9DLFR0b3wCqgPa9cuqPtHk64J7SQEEVSLyAJGOnhEBcaT/3gQgVz5MSFgLs4GMLg6Va1r3xQaauRoIRtd4CUPYpfHainGofa6LD21dSR5qkZGY4wdNANevqwdCtcfH9Pi6k52kP1GsMFEaDatvVlYD0AtVf5CG6sAhyUDBNQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=8bytes.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2zGIBT9e6R4IfQzBODrFIRQJZDsNH1UzbyJhEZysgqw=;
+ b=Iaws1fOkJDNTEbutEKHu3IFb81nzf5WGf4XpFVk0z0hleV+4xtxTYnJTY7zNTUmVHAxZ0vSOwjGjXcoq5vN0mC8i7Wrs9WZg56aYqtsyVrJkLF0g3bTP33zBjTfrbySdxPFifr0UrEAtBtrLRA/E0009aCeD9Xx/uV27F5kZGkWV76QmwGa9cvSdcADSH+ZedwmUAc1r7u1DM/BYzkv29a+7bno/SK2H0xjorFec4t38X/778vaecZ1hef9R3+l71QZA11GGaTqEhZ88Qw/oNFc54xL/nezF4n+0wCp2X6ZLif7wmmKIK8fHLtt5ncFvh4SlSRNjz59PnHoR06uvYw==
+Received: from BN8PR04CA0061.namprd04.prod.outlook.com (2603:10b6:408:d4::35)
+ by DS7PR12MB8251.namprd12.prod.outlook.com (2603:10b6:8:e3::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8792.35; Mon, 9 Jun 2025 18:45:38 +0000
+Received: from BL02EPF0001A103.namprd05.prod.outlook.com
+ (2603:10b6:408:d4:cafe::dc) by BN8PR04CA0061.outlook.office365.com
+ (2603:10b6:408:d4::35) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.35 via Frontend Transport; Mon,
+ 9 Jun 2025 18:45:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ BL02EPF0001A103.mail.protection.outlook.com (10.167.241.133) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.15 via Frontend Transport; Mon, 9 Jun 2025 18:45:38 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 9 Jun 2025
+ 11:45:20 -0700
+Received: from drhqmail202.nvidia.com (10.126.190.181) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 9 Jun 2025 11:45:20 -0700
+Received: from Asurada-Nvidia.nvidia.com (10.127.8.14) by mail.nvidia.com
+ (10.126.190.181) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Mon, 9 Jun 2025 11:45:19 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: <jgg@nvidia.com>, <joro@8bytes.org>, <will@kernel.org>,
+	<robin.murphy@arm.com>, <bhelgaas@google.com>
+CC: <iommu@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <patches@lists.linux.dev>,
+	<pjaroszynski@nvidia.com>, <vsethi@nvidia.com>
+Subject: [PATCH RFC v1 0/2] iommu&pci: Disable ATS during FLR resets
+Date: Mon, 9 Jun 2025 11:45:12 -0700
+Message-ID: <cover.1749494161.git.nicolinc@nvidia.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,101 +78,91 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF0001A103:EE_|DS7PR12MB8251:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1711d5f0-fa13-4d70-24f5-08dda785d420
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?K5AnE/XwTMLGV1C6gQxKkE2U0b3ZmxgRImhj0aNmoSMBWJTwClmD2zW8ZthS?=
+ =?us-ascii?Q?4UHJ9S5E1LmzYgqB8s36FrcfxaIuIVViKqbKMeIVjLnzif5HlgsSXue+2LgJ?=
+ =?us-ascii?Q?9i+1zpXS/tm1aDzjuu+Cq6gpURUUEjd4FYwivThZfOxUACgtnN66K+G+Nhh4?=
+ =?us-ascii?Q?0lxiWHP/LNTSgXmPL3OAPM71XhFEVxCwT4BDuA8kNpuSy/6VU37uKTvocLw0?=
+ =?us-ascii?Q?Jn3Wg7xKbV+2e2ohikIQCxz085amLODBunjSihWJWixMYciTG6L+gO2xxhUs?=
+ =?us-ascii?Q?Fp08AVHCCbSTLeyG5v6//4+gOrfYfT8tccfL9ZLWaSas2lD43fSpsTgr/uxF?=
+ =?us-ascii?Q?gl6+uHdI6yXBw9JxCi7pYx+CNueO2qhtfcV3w0A3lepCj+9Kvq0l6kVqTuVt?=
+ =?us-ascii?Q?MDpMY5wJ0V31u+GDJZJGkzufdC6/bpsZ9ztI9Ft8q/gNgHuwvS7A+qw1ZIbl?=
+ =?us-ascii?Q?MqFLAr1IunQ5l6GVX2M+t5MOEMnciBX7Z7I9YVz45l20+Dgk7CtxZQNVkHqk?=
+ =?us-ascii?Q?0vLFSWtC3MJUzTW+QWBbnhq6YY5MfxZFZ1hR/CKSbRiiEpfJ1X6H1cYS23Gj?=
+ =?us-ascii?Q?vqQiQqb+KOXpA98wbLsDKbYtDAHtzh+RqHDrxlwJmAmIdLaXlVCKcyOMRgQK?=
+ =?us-ascii?Q?1H0ugOnwuD3iaTyVMTNpTPhVK0pv5DVe+M9Tx5lPhUY0Hz3/N+LbGIsKBRMZ?=
+ =?us-ascii?Q?GDVebRgzqrMSDCP1OdiXofJ7/9IRHI9BLQbNLPIYEgWqRwjAtohyntZePlrZ?=
+ =?us-ascii?Q?7YacwE8S03FenJnZzuFiQuwaoLiZAwpS4rlICh1ihQmzi9hL74kOUcxRSe7t?=
+ =?us-ascii?Q?7nCipUU1ggUXXoXT6nIwzG7DKudqpcmcKXS9nh8hqCcyYDxphZrRkdJ8my9g?=
+ =?us-ascii?Q?SBX3LyH6Jp4faimSEMDGJ80KSTqIbOH1bC68U8hckPXZAawdbG+dBeN4ixd4?=
+ =?us-ascii?Q?I2zjQGkFx3rJt1kIE0URhYyVIuUBSLmKyIU3E1jOlpFEA6E5P0BJ9u1rjdJ1?=
+ =?us-ascii?Q?WOVRnsMVSi8btnkY+g9A4B869CG4nHfnJ7XKoK+YODXf2KMNszg79BaqbiPf?=
+ =?us-ascii?Q?dIPv5i/JOf3DoOeOGikx4jDiv2ca/9tEFp+xilfUHyuZRs0eHfoG3NXCk6Zr?=
+ =?us-ascii?Q?5x6wDPFLCEDLt+tpYao4obgq/j7zS5ZFiMRM3VjFIEeAc84ik9siNZoKNoQh?=
+ =?us-ascii?Q?Q79SNS39O9yVr1ZXCLB2l0NA84O1Kh0qgNeo3gST+w8DE56/5V9bX1a+y3PW?=
+ =?us-ascii?Q?heDNjJ6v4qTXxWRkNyl3rfDpqAtb6f2cnYkwxD1h38woblHmV/rRlYz/W636?=
+ =?us-ascii?Q?pkNj5yjw5tCHGZXh//ggdcFL1WMzKLWL+jc8X28s25lES8D1+pCoY5LvxAwg?=
+ =?us-ascii?Q?N1yoQ5Vnol4Ev152EuRbdzmTkrIcQkU8Wsr/CGCt3kDsEIhm4cbLN0NrOeF4?=
+ =?us-ascii?Q?arF2rEdKzx2b7jkyZC74naxBR9MeYwGMmMM9SJ+sEr7y5ljJtxMO5GhCZtvL?=
+ =?us-ascii?Q?o4WTW4k1DVPmi8m0MJ+5F+ZmduPP+Vbn2T/PmlshLOUj8yC2gua7NhgA4g?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 18:45:38.5928
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1711d5f0-fa13-4d70-24f5-08dda785d420
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF0001A103.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8251
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Hi all,
 
-Add support for the Renesas RZ/T2H (R9A09G077) SoC, which features a
-different interrupt layout for the RIIC controller. Unlike other SoCs
-with individual error interrupts, RZ/T2H uses a combined error interrupt
-(EEI).
+Per PCIe r6.3, sec 10.3.1 IMPLEMENTATION NOTE, software should disable ATS
+before initiating a Function Level Reset, and then ensure no invalidation
+requests being issued to a device when its ATS capability is disabled.
 
-Introduce a new IRQ descriptor table for RZ/T2H, along with a custom
-ISR (`riic_eei_isr`) to handle STOP and NACK detection from the shared
-interrupt.
+Both pci_enable_ats() and pci_disable_ats() are called by an IOMMU driver,
+but an unsolicited FLR can happen at any time in the PCI layer. This might
+result in a race between them, breaking the rules given by the PCIe Spec.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com> # on RZ/A1
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
----
-v1->v2:
-- Updated the riic_rzt2h_irqs array to match the order of
-  interrupts as mentioned in the DT binding.
-- Updated the interrupt names in the riic_rzt2h_irqs array to
-  match the HW manual.
-- Added Tested-by and Reviewed-by tags.
----
- drivers/i2c/busses/i2c-riic.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+Therefore, there needs to be a sync between IOMMU and PCI subsystems, to
+ensure that ATS will be disabled and never gets re-enabled until the FLR
+finishes. Add a pair of new IOMMU helpers for PCI reset functions to call
+before and after the reset routines. These two helpers will temporally
+attach the device's RID/PASID to IOMMU_DOMAIN_BLOCKED, which should allow
+its IOMMU driver to pause any DMA traffic and disable ATS feature until
+the FLR is done.
 
-diff --git a/drivers/i2c/busses/i2c-riic.c b/drivers/i2c/busses/i2c-riic.c
-index d0b975e45595..9c164a4b9bb9 100644
---- a/drivers/i2c/busses/i2c-riic.c
-+++ b/drivers/i2c/busses/i2c-riic.c
-@@ -79,6 +79,7 @@
- #define ICIER_SPIE	BIT(3)
- 
- #define ICSR2_NACKF	BIT(4)
-+#define ICSR2_STOP	BIT(3)
- 
- #define ICBR_RESERVED	GENMASK(7, 5) /* Should be 1 on writes */
- 
-@@ -326,6 +327,19 @@ static irqreturn_t riic_stop_isr(int irq, void *data)
- 	return IRQ_HANDLED;
- }
- 
-+static irqreturn_t riic_eei_isr(int irq, void *data)
-+{
-+	u8 icsr2 = riic_readb(data, RIIC_ICSR2);
-+
-+	if (icsr2 & ICSR2_NACKF)
-+		return riic_tend_isr(irq, data);
-+
-+	if (icsr2 & ICSR2_STOP)
-+		return riic_stop_isr(irq, data);
-+
-+	return IRQ_NONE;
-+}
-+
- static u32 riic_func(struct i2c_adapter *adap)
- {
- 	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
-@@ -497,6 +511,13 @@ static const struct riic_irq_desc riic_irqs[] = {
- 	{ .res_num = 5, .isr = riic_tend_isr, .name = "riic-nack" },
- };
- 
-+static const struct riic_irq_desc riic_rzt2h_irqs[] = {
-+	{ .res_num = 0, .isr = riic_eei_isr,  .name = "riic-eei" },
-+	{ .res_num = 1, .isr = riic_rdrf_isr, .name = "riic-rxi" },
-+	{ .res_num = 2, .isr = riic_tdre_isr, .name = "riic-txi" },
-+	{ .res_num = 3, .isr = riic_tend_isr, .name = "riic-tei" },
-+};
-+
- static int riic_i2c_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -643,6 +664,12 @@ static const struct riic_of_data riic_rz_v2h_info = {
- 	.fast_mode_plus = true,
- };
- 
-+static const struct riic_of_data riic_rz_t2h_info = {
-+	.regs = riic_rz_v2h_regs,
-+	.irqs = riic_rzt2h_irqs,
-+	.num_irqs = ARRAY_SIZE(riic_rzt2h_irqs),
-+};
-+
- static int riic_i2c_suspend(struct device *dev)
- {
- 	struct riic_dev *riic = dev_get_drvdata(dev);
-@@ -695,6 +722,7 @@ static const struct dev_pm_ops riic_i2c_pm_ops = {
- static const struct of_device_id riic_i2c_dt_ids[] = {
- 	{ .compatible = "renesas,riic-r7s72100", .data =  &riic_rz_a1h_info, },
- 	{ .compatible = "renesas,riic-r9a09g057", .data = &riic_rz_v2h_info },
-+	{ .compatible = "renesas,riic-r9a09g077", .data = &riic_rz_t2h_info },
- 	{ .compatible = "renesas,riic-rz", .data = &riic_rz_a_info },
- 	{ /* Sentinel */ }
- };
+This is on Github:
+https://github.com/nicolinc/iommufd/commits/iommu_dev_reset-rfcv1
+
+Thanks
+Nicolin
+
+Nicolin Chen (2):
+  iommu: Introduce iommu_dev_reset_prepare() and iommu_dev_reset_done()
+  pci: Suspend ATS before doing FLR
+
+ include/linux/iommu.h |  12 +++++
+ drivers/iommu/iommu.c | 106 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/pci/pci.c     |  42 +++++++++++++++--
+ 3 files changed, 156 insertions(+), 4 deletions(-)
+
 -- 
-2.49.0
+2.43.0
 
