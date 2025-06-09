@@ -1,257 +1,509 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7034225C701
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 12:23:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749471824; cv=fail; b=Eh4pDyGdmuSc6O9hoblTOBzKS9PtMYmsTZrWGOwjp7aGh705ofg86YeaeqQTv1dmlOQufRxEbVPnWU2sB3sAqL21UF0vQsAFMsfqVnk7JdxBpO+bEJPTgb4IcEqd1OiOjHqFf9pOEkOJxPjV74yTvJ7MhYXorpYvIyrnYF7U1QQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749471824; c=relaxed/simple;
-	bh=IeJMhFnLohCrFlYva/SivwQ4Ids6mVhpgcW+zG6oZj8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=nTtT1hI/Pyz0Zaz4xFhnBN7Bv/ScQ6CnARrigSzW1JUcx8pzQZWGMWqcFQYA2EO/MtOOhH6NedVNwaGK6IERC9fIIXxDKjs0EtuxtyDKtlF2l7x6+LCWF8OD1C6on0DHODmo8WzRQRfdQp3NggBMoAZRePO5kTmvKY03u+z1WtA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nQqrcCwV; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D102561CC;
+	Mon,  9 Jun 2025 12:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749471827; cv=none; b=AB9QEC9fc1s18j/hB7sdNvJ66+/uThY0fwv3N3XGj9ePzbIktKczwfTtl6SPcvuZssZ/9wjVFYP6UOWUDE4GcYRgHxDYqcnsU+mjXzz2u8DyjJ5L31KJrawVx1IjiAmq2+qs428Gtl0b56Cx5qPik+10MLFzo2eVlKqi133jzR0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749471827; c=relaxed/simple;
+	bh=rDDYw3xR3mmHoje5I9up1SmCL8mXraCda8Sxd10q9W4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=jhMiP7b4Pwg/am6N4DWeWxyNg38XRV0OyMxB8yrej8gvfC3bewROagQTtCI5fsp0+DZY20Qyq1enzObUBDdn51Y6mJqp10FegLMmH6opAS3DHgRvqeBvqTiSCTF01kRtfR0uDBGmDbdTfZxDLslWQOjqwiRUGYqxsbP63rz2RkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IiZBgZCt; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nQqrcCwV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749471823; x=1781007823;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=IeJMhFnLohCrFlYva/SivwQ4Ids6mVhpgcW+zG6oZj8=;
-  b=nQqrcCwVB4n/FLATAIlnMy/Inb78HKmHJJbVpOUf9iL0BSfi2n1Ks0q9
-   TakaE43gjEfqKhxXuG4y9mTUp8ZNjP/Xh1aZ0APxRBhqSqfyb1sDB2GBg
-   GGJleRZp6VlgMFxErNID7a10CjEu9tkfNJVr2Sk0S2sTd3kwSYWjVVK1e
-   erzhVmONPcRFEru28iMZfQtWwTT0Y31VqmKfhZDVwauqeURH4R1mRWhAX
-   uxUc0mYRO9bhL7lh/o6gEmsp3e+1H5LNAXvoxOw4mWTzxQNq8FDwXrU9B
-   s+wVnNNOPSoimxwbptReOH6UQabDf9DpCxrfYfotwKCsyydRWZNlooZRr
-   w==;
-X-CSE-ConnectionGUID: BT7kI9IGRP2tyjtl7zXc5w==
-X-CSE-MsgGUID: Ei6/AIG5Ts+DPNcYQDhXgw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51250739"
-X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="51250739"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 05:23:42 -0700
-X-CSE-ConnectionGUID: DT9V9qOXSji988bjchvtwg==
-X-CSE-MsgGUID: gwMvWSIBQ262dfITPHsxfQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="151494970"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 05:23:42 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IiZBgZCt"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5599VV4a015275;
+	Mon, 9 Jun 2025 12:23:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	YEVK4QOocm7yjop6eFdNjAhnOFXYkdyX1kX6lkapERY=; b=IiZBgZCtoXbeJHOQ
+	MUshoM90Le1PAQHF2FvMxyr583ZRl/d3bWDUeHk5wBOnzYr95x22TCwCY1pbyrfv
+	sbPCPRYrdM0T1iJnPdv8ga/bQc0tdOQW+yelbIahJhyJQZAVCqcsBkFfjS4a/bjU
+	OpBzjLhv5SsijhkG96Hni7PYl9JrK6f36x6pG9aEB7maJMcSvS8avdP2OHcreqVW
+	0Am4yKNC+hQRtcQQC6u90rP/TMKzIDgpOfZgsHWEnTm8wL8bgc8eguhTAo68N0yG
+	KVvDUc1OH+Org+eAmX72MGdpc1at4Rjv2DAt9eyRGlLUo9J57qAUDBFl7a0CCspu
+	VK5B3g==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474d11x5m1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 09 Jun 2025 12:23:36 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 559CNZnN012739
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 9 Jun 2025 12:23:35 GMT
+Received: from cse-cd01-lnx.ap.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 9 Jun 2025 05:23:41 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Mon, 9 Jun 2025 05:23:41 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (40.107.243.64)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 9 Jun 2025 05:23:41 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wLB+8qD5QJu96oD3iOeRyEOKtRxo+iDadFNLy6ognvxRWwZDFDlqFqWhTAKBi3UjqRP5WUHPzDqNLxNt9U2ra5fVdrM5dfaB+ejQu7rnBDIUsEq9R0CYavI/WCdOGLvVju0EXW4MStvFQPT3EgVZwlEVIKqzPmRkBLwe++PbulyjP4k/1krunaEHEBv9O+BUoCBz8MUSCgYYygdchyMK+5Jj5JZmWQrrWR4ORFaCiiIwMB8SE3J1Ia2e9PLKSGYKALDTUUnLxb2Y/ME7EJ6lSYG9cBeGwG2dvvmg9tOgTBpO5COT8W3O3k3HB59XmMJ6EHsJso7XqjPt1VnH1kBlQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IeJMhFnLohCrFlYva/SivwQ4Ids6mVhpgcW+zG6oZj8=;
- b=xFo2WssYtB7cTo+YAZMF4dHBo8kcnz24hSBoh9URAF0ZMppdYkX75guSt9fgY2mqCq8m84JGfnFKqmzxXl48EYSUNBabAnviaV17bp2H0Dm019U1izvsUCSDwdPc7rhCLP+gSXBvb0DoQTsCE390qzaBo3QnXWKXPHFaBBCNwnn8sQZeToxcbzHt/Gx6cBG1ELhs+42rTStc1RbR5opAH88V6brN4Vle28DdiuKPUKO8qcP7ZO2gFigqHMrc61fHl9EZB9IL5BWsGoOD5fX+uKckmvhe3IyMXV747lUXNRNZy4JVO917DzfbA6VGnTl1qmPmL2Nh2/3iHqNxko8bQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from CY5PR11MB6366.namprd11.prod.outlook.com (2603:10b6:930:3a::8)
- by SJ5PPF3F833FA49.namprd11.prod.outlook.com (2603:10b6:a0f:fc02::823) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.35; Mon, 9 Jun
- 2025 12:23:25 +0000
-Received: from CY5PR11MB6366.namprd11.prod.outlook.com
- ([fe80::6826:6928:9e6:d778]) by CY5PR11MB6366.namprd11.prod.outlook.com
- ([fe80::6826:6928:9e6:d778%3]) with mapi id 15.20.8813.020; Mon, 9 Jun 2025
- 12:23:25 +0000
-From: "Usyskin, Alexander" <alexander.usyskin@intel.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Guenter Roeck
-	<linux@roeck-us.net>
-CC: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
-	<vigneshr@ti.com>, "De Marchi, Lucas" <lucas.demarchi@intel.com>,
-	=?utf-8?B?VGhvbWFzIEhlbGxzdHLDtm0=?= <thomas.hellstrom@linux.intel.com>,
-	"Vivi, Rodrigo" <rodrigo.vivi@intel.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Tvrtko Ursulin
-	<tursulin@ursulin.net>, "Poosa, Karthik" <karthik.poosa@intel.com>, "Abliyev,
- Reuven" <reuven.abliyev@intel.com>, "Weil, Oren jer"
-	<oren.jer.weil@intel.com>, "linux-mtd@lists.infradead.org"
-	<linux-mtd@lists.infradead.org>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>, "intel-gfx@lists.freedesktop.org"
-	<intel-gfx@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v6 01/11] mtd: core: always create master device
-Thread-Topic: [PATCH v6 01/11] mtd: core: always create master device
-Thread-Index: AQHbi35N9ptLZMK+/0+KHmcJoUKk0bP5FNKAgABXSdCAANahSoAAWdKAgACSaAOAACUigA==
-Date: Mon, 9 Jun 2025 12:23:25 +0000
-Message-ID: <CY5PR11MB63660CFA966BCA1B44528BB1ED6BA@CY5PR11MB6366.namprd11.prod.outlook.com>
-References: <20250302140921.504304-1-alexander.usyskin@intel.com>
-	<20250302140921.504304-2-alexander.usyskin@intel.com>
-	<9dfb2954-fc3e-464c-a4fd-8c1a4dffa327@roeck-us.net>
-	<CY5PR11MB63666AE267B9F1609213D93CED68A@CY5PR11MB6366.namprd11.prod.outlook.com>
-	<87bjqyja7o.fsf@bootlin.com>
-	<2f3d3ff9-e483-42cc-aaed-f376d46a6701@roeck-us.net>
- <87ikl5xnbc.fsf@bootlin.com>
-In-Reply-To: <87ikl5xnbc.fsf@bootlin.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CY5PR11MB6366:EE_|SJ5PPF3F833FA49:EE_
-x-ms-office365-filtering-correlation-id: da6841e3-c139-433b-ce7d-08dda7506edb
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?eUQwSW9zQWFSK0Q1cWZOc1V1YXkrcmtTb0E1UjFjNGVBT0Yyam56VUVpVFVk?=
- =?utf-8?B?R3NvOE9zOC85czdtNkgzblJSQVhzUjgvMncyTlZwSGRheFRNejR6bURXcmZS?=
- =?utf-8?B?SEtNcEpYT0xVQ1JDZmszaEMrY3pRRVplaHFncVRNZWU3THMzWjRsRjNldmtl?=
- =?utf-8?B?NnJ2UTBmaG41c0JnK1FGUUFPemQ5ejVlN0NEeFdIL3QrcGdRbGtVaWZRYkJ5?=
- =?utf-8?B?bVZQcHJ0WTBOTWdxZ0tRenFHV01DeStYK2NvMkJoN05HeXdTUi9hL3JSWVRI?=
- =?utf-8?B?WkxDVlNvUy9YSWEyRGtEUVdBMWJkSEJwTmxWcGxPbytUWDBRcXNzUEtJekxK?=
- =?utf-8?B?ajlXTjJqaVB5L1FROUZGUzUwakk1ZkdwQjNvOFQwMmRzbzd4bDVka0ZucXBZ?=
- =?utf-8?B?WWJCUGIxVDVuZ281T1pudGhQYXVnN2NrSFFsNVQ3eHBJV01CZVMyQndaZVY3?=
- =?utf-8?B?d3N0ZWZEeTBWaWZaVi82UGxXK3hvM2tjaUZXc3hUeTdTdk1VekcvcFM4dzU0?=
- =?utf-8?B?YmRWSmhDdXlWUkZYOW9FeHozUzBCTVY5dXZobXBZZkR3NlJaQ3Zrb1I4MU1a?=
- =?utf-8?B?UHlFck5KQm1sTFpnR1ZPRmZJaFdralUxRlNHTnV4TDZnSE1RRndCS1VVRlVO?=
- =?utf-8?B?K0RiM0RDVzJzdWhrTHZKODgzWGd1THRRejF3bmdHVXdrQk1uZFFSVGpvcEFm?=
- =?utf-8?B?YTBLTTZJam9nbWw3d3dTTVdIK3dCdlNXRU53ZDRQWnY5SzJ5ZHEyTElVY1Zo?=
- =?utf-8?B?VEp1SHhWbjJJc29LY3dveHltMU1sK2RGVkNBOXBNTEtwbjJ6YTNvT0diOHd0?=
- =?utf-8?B?bGdaenRvRUI3Q0Q4alV4WEluaEtKYXJHdG1EYVgzcC9rWVpaS3NlVFBicHI4?=
- =?utf-8?B?VHp4K3FIRWhEY2FNYkxiaWhleTVKU1BOdGlRZE1pWDdVdEJpK2UzSVhyTzRS?=
- =?utf-8?B?aTB1YlB6Slk4VTRxejVGOSsvWG83dk5kRnRFd09xRmdFQjJCT2FNalV1SVZO?=
- =?utf-8?B?ZXhrK1B6V25rd2dPY2JVMnZsUEcwSloyelo5cTU2cjBaNHdRdTY2bUM1MC9S?=
- =?utf-8?B?VUlFSUZ3MVIxREFpeklDbjFra1FLQm5Ec3JLZVB5TTZyK0dadGRSeVVpRzRS?=
- =?utf-8?B?TUpBa1pVMGVQOXBaV0xiTzVST1hIekdpd0lsNGgzTkpScXgrQlNaUkpUdUJa?=
- =?utf-8?B?NnhmdjhtRmNrbFhkZWtNSHB6NUN4M1QrWnIxU25EWEs0Y2IybjNIYTY3Q0xy?=
- =?utf-8?B?VnExNVZKMDhaOVp4eFd6TGJsMlNMQ0lTcTZTUVpiSG9WZ1l6MVNiQksrdER3?=
- =?utf-8?B?eENOSVVGMTZyRVhjWW5YZXZuOGh0TXdVK3dmRjR5Z05hSWRKVXJIKzlISkpk?=
- =?utf-8?B?ZjAwbDBCQ3VlczdoZ1FkWEc0TFk2V002K0pJRUhEb1VTNTVlWnEwSWhrRWZp?=
- =?utf-8?B?OWIxaVM2L1h5YlBkZHovSlVWNm9xajhjcVNDeVJVZTMrTTlNYlBRRy9WNjh1?=
- =?utf-8?B?RHBaVnhNMVUydVVBbWI2VEpPQ2tOaGwzT1M0MXRUOG9URHVDRkVXdmVSd21P?=
- =?utf-8?B?ZUpLbC9VajA1dWZtZG1DYjVvNGJNcS9VRjNNb3NoU3phOTRQaEd4U0d2NGEr?=
- =?utf-8?B?Qjg1S3Jxd2RTbzZlMHV1dDV5M0QxZFEwd3RoYlhFZGJtdnV3NXdUd05pMm43?=
- =?utf-8?B?WU1VSXovRXpqaTNCRERGWHV6UTlqUDJZQThOeWlsS0NQSXR5WnI3UUp6cHpC?=
- =?utf-8?B?K2JrTDNCeld0R283TUdYNVVNNk1kRXZMYm5tTDhOTndoSExDNklVenRjTkl5?=
- =?utf-8?B?VC85bGtUeDlFWGdaeEZ4M05nQTdJdWZ4anJ0QnBXbThRWVIvTzV2aXUwUEdN?=
- =?utf-8?B?bXVYNmlicjFjakFNMnMxSzVIVkUvSVRtcFRFOStra2NzbDZBcUxaZVk5ZTNl?=
- =?utf-8?B?NCswa2lWQTFBM2tBL0M4ODByTzZwMXp0Ukh2VHJxOFhleFZ2a3Mzb1RVcEc2?=
- =?utf-8?Q?M7KhjwCTYQS8eabXu3BD5ZNV1YO+2Y=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6366.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?b1RzeWdUNjhvL2N3WHJqbnk4QVhzREM5WVBnZXlrcVNjK2d6U0doV0xZQXV6?=
- =?utf-8?B?VVJ2V2pNR0hBSkZ1QmRsWGhHWFB6VGY1d2s3S3Z0VFlJd2Zma1dxd2tkTm0y?=
- =?utf-8?B?NDRDMTcvcnEvb1gwd0cvZXo0TnpzSDdVcm1xb0lqb3RrUTJLeUdkVlYxa0tq?=
- =?utf-8?B?L1Z2RG1PSm1LaElXS1g5Tzg2bU5vOU16d3d0eVJTR3RzWUo4K1EwSUdZS2hB?=
- =?utf-8?B?WVR6OTVlbTFBQ284TmtSWWRDN0svVXNtczVkZTNzZ1lmWG1rZTFkRkQrUDk4?=
- =?utf-8?B?bVowTVJLZGw1SWVTMDZWWnQvRHBPV3VGUlRZbGdEVHJicHI1ZzJHSGxOM2lS?=
- =?utf-8?B?TzhiMFFPQ1dwNFFlQmU4dTR1MmxDeU1LSFRvS0JydCs2KzVhWkRZa0FZMVVp?=
- =?utf-8?B?S1U1clB1bUlLWjY1elQ5QklGYkJjemo4Qzl3WXBlbTlad0NSSnVNK3Njcmo1?=
- =?utf-8?B?S2tOSTN2YkdKV0RqN25EN3NaSkw5ckRoWWFOU1BPZzhkclZpbGdVRnkvRGFR?=
- =?utf-8?B?MytRMHdhNzBQbUNWcklraW04eUpwZUp4VlJyRkMxa1p0MCtzZ3lCaUJzWU1i?=
- =?utf-8?B?WWMvTHkxbzQ5VTJKdXBJMG1wU3g1RXp1c2NJSStNSFlaZWdyR1dTT3B0akZr?=
- =?utf-8?B?TXNOYXFzQ1JodUFrV0tySEtlMStEemtYZkpWRFREdGY1cEJaUEVtYUxpNjEy?=
- =?utf-8?B?RUtJLy92Si9jR3VYbFUzcVNObTRsMEplUC9LVytYL2hLZjcyWHM0dGJyVm5O?=
- =?utf-8?B?bTh3N2ZaVmZXMUhxdGxlV1FpUGlab3JpbExFTW04eHl6cHVkeUQzcWpHbUtM?=
- =?utf-8?B?dnVxYVpWYmZmQTg5YmhZbnRXOEJIUlBXWWV3VE9tSnpwZWlQcnVpTU5zSzlM?=
- =?utf-8?B?OWhkbFk3YmtiR2U1QzA4cTNPc096WWZoUm5ibTV1K0p3Z1FwUUpZa3VPeHBi?=
- =?utf-8?B?YzdmSWxyQ3dVV2czUWtVQXlpT2wwcUY1L0wrQ3p4R0I0WWQrYVpCSVpwdmpS?=
- =?utf-8?B?VzZFZUltWnd2dHVvVFVQRU5rQ3ZTYzBmNFFzUCtPeVdnUUc1M3lObVhNTGxM?=
- =?utf-8?B?eHBaV1djYTdTQmNOcEJ6Rnlld3h5VXloTFlwOXdZWTFmdWFUSjc3bmpVcERQ?=
- =?utf-8?B?L2hlWnY5RUFRZTltZ09LVmp0RWJsOUtCcUllVVR2eWdLTkFqRnZEa1l6dG40?=
- =?utf-8?B?WU9vd0JiWW9QVlVjNUdkUGxMbWlpSXA5Z05rYXZkK3IxUXdRa0FtZVp6bzBx?=
- =?utf-8?B?TGVPYTI4cXNQNjk5YWhWYUdoaHh1dnRFbkdnQUNSUTMvc1ZxK0lkOEI1c0Qx?=
- =?utf-8?B?NGVKS3FEUFRyOTl4akk4SWNkUnZjbEwrS0ZDR0t3SmFhUDRuQ2lQMVN1dHlp?=
- =?utf-8?B?NXI3Szh1a3Z4R1pFamplQ1RVaTlmMkpvbkhqUUxtb0VGbnNRY05sMkY2YUgv?=
- =?utf-8?B?UjJndWRWMmZqLzUwelpSaHlIZCtVVVkvem94K2RuVk5FcFVpMTc5V1krVXlp?=
- =?utf-8?B?OTROVCtlVDA3OFJOTFlMUHBpa0hCc1k3TlJXUmtRVTljYlpSMENQNDJnN1Ur?=
- =?utf-8?B?WFIxalBOM05QeDNaQ1o3dkE2cDNwMnp3T2NmRk1YUWo4eGpVMndwT0FlNWwr?=
- =?utf-8?B?SnI5WXgrUnQ3bE9xd3RpTHp4aDlMczNRUGVoa3cxK2pEQ3lYRnBXdHdmQmJY?=
- =?utf-8?B?NFE3QksvcFRJT3lQUktIbURkV2tWUVRUaVFmUXMzY21tdFdHcmtFZzM3RWNv?=
- =?utf-8?B?T2dBTVZUSUJ6VUpYeGNrZzN1dE9MRnpOUE9FZGZCQlBianB1VGF5UUszZEQv?=
- =?utf-8?B?S3RRN2ZtdDdzM0NjaTZOYVNhckhXUnEwLzNXaWx5Z3lEYk9ZODZtTTJJUEQ4?=
- =?utf-8?B?NHlqNDJlZWVyR0I3Unc0TUptNG5KS2ZJblZZK1B3emRkajZrV0F6c2RYU1I1?=
- =?utf-8?B?bi9mRVU0YkZsdkhBYkhYN3hQK3NDZmtkMit5VXExZU0wTmpENExOQnl2a3lz?=
- =?utf-8?B?ejJFclBIRmtnSjdiSnFOeGdFUUpOK1oxczluMTY1UXRMbENuZ2oveEhUUnpI?=
- =?utf-8?B?Z1lVMTBXMkpjRGRFc0UwTzBWSk12L2hMbVhGWkk1WnlqTlJydlBlclV6czFR?=
- =?utf-8?Q?mXkw8IRKenin/XebKOAQfsp8r?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ 15.2.1544.9; Mon, 9 Jun 2025 05:23:31 -0700
+From: Yongxing Mou <quic_yongmou@quicinc.com>
+Date: Mon, 9 Jun 2025 20:21:31 +0800
+Subject: [PATCH v2 12/38] drm/msm/dp: add support for programming p1/p2/p3
+ register block
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6366.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: da6841e3-c139-433b-ce7d-08dda7506edb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2025 12:23:25.5460
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: m2scWbucWDU4rjrPeJ8sGFSlfWsXH/zZZKZKB/X60Zzbs9eyktuI3dI7nse1PX9mUrWVZEbgdlQImPt6uGYAc/LE2G4IEAz7NhsCX4swSLs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF3F833FA49
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250609-msm-dp-mst-v2-12-a54d8902a23d@quicinc.com>
+References: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
+In-Reply-To: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
+To: Rob Clark <robin.clark@oss.qualcomm.com>,
+        Dmitry Baryshkov
+	<lumag@kernel.org>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        Jessica Zhang
+	<jessica.zhang@oss.qualcomm.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, "Simona
+ Vetter" <simona@ffwll.ch>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        "Yongxing
+ Mou" <quic_yongmou@quicinc.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749471755; l=18782;
+ i=quic_yongmou@quicinc.com; s=20241121; h=from:subject:message-id;
+ bh=JelKB3YsjYzFKjjiKN+VkAcD59iV2UINGqHh6gepbz0=;
+ b=gFq/pTsie4To32twHjyQaXWfZwCQ+NRi3kaV89Ycp6zNoG3Fw17JlNkAfDiEJ35cMpDOSxQSe
+ fl4ht2l9rEPAR6t+pizY1U4rXI/LKVrRnmJ7UpiMPRMz6oc9J8LTT7Z
+X-Developer-Key: i=quic_yongmou@quicinc.com; a=ed25519;
+ pk=zeCnFRUqtOQMeFvdwex2M5o0Yf67UHYfwCyBRQ3kFbU=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: cQ7S_hoZB03CMdtfSzqpNWUV2LdRbSIv
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA5MiBTYWx0ZWRfXwPGlWJfca//E
+ ICw3f866NHh+oAi18d2YVb6qmcZlpXkpDjonVJLsaqes/XINbL8qxQoHHAIsXfp5piilJH/iKpx
+ qG9J+r+ns0V1eofhz2JF36OutFnTrvaImrxQNCd+AFw6lPu2JvqoEbVfuSa+yrmQZ6nMnnUeFp5
+ O4WOBL5zLIvRba7qNvJIsBOUxZhGmf1crkGr/Fglbt6OiKksy1qV77b1GSnIN36Vc0+2oLdVxR5
+ AK5p5TIqPppWMqvzxLqEKt2Ez8THt28XCM8QaNp+pVjRBt78Rk1aZiulFWUsxDWWuZM3x/AVca7
+ DKM0lCz0S03nWfT5CGF3AWkAg1t9IAqRlv0rgQIVnVsRX5vqXndVZUhIQWCZ8ya4/3jqa/8unsq
+ PhOzvTLJBm3Hzg5aI111wTClFloNQEjTNA0/vMmLW1OkPxw0XmxQS7rZcZifB11rRU7k2VBz
+X-Authority-Analysis: v=2.4 cv=GYkXnRXL c=1 sm=1 tr=0 ts=6846d248 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
+ a=1fD0qQqZq30VoMthJ50A:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: cQ7S_hoZB03CMdtfSzqpNWUV2LdRbSIv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-09_05,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 bulkscore=0
+ impostorscore=0 clxscore=1015 malwarescore=0 priorityscore=1501 mlxscore=0
+ adultscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506090092
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIIHY2IDAxLzExXSBtdGQ6IGNvcmU6IGFsd2F5cyBjcmVhdGUg
-bWFzdGVyIGRldmljZQ0KPiANCj4gDQo+ID4+Pj4gU2V2ZXJhbCBvZiBteSBxZW11IGJvb3QgdGVz
-dHMgZmFpbCB0byBib290IGZyb20gbXRkIGRldmljZXMgd2l0aCB0aGlzDQo+IHBhdGNoDQo+ID4+
-Pj4gaW4gdGhlIG1haW5saW5lIGtlcm5lbC4gUmV2ZXJ0aW5nIGl0IGZpeGVzIHRoZSBwcm9ibGVt
-LiBBcyBmYXIgYXMgSSBjYW4NCj4gPj4+PiBzZWUgdGhpcyBhZmZlY3RzIGNvbmZpZ3VyYXRpb25z
-IHdpdGgNCj4gQ09ORklHX01URF9QQVJUSVRJT05FRF9NQVNURVI9eQ0KPiA+Pj4+IHdoZW4NCj4g
-Pj4+PiB0cnlpbmcgdG8gYm9vdCBmcm9tIGFuIG10ZCBwYXJ0aXRpb24gb3RoZXIgdGhhbiBtdGRi
-bG9jazAsIHdpdGggdGhlDQo+ID4+Pj4gbXRkIHBhcnRpdGlvbiBkYXRhIGluIGRldmljZXRyZWUg
-KC4uLi9hc3BlZWQvb3BlbmJtYy1mbGFzaC1sYXlvdXQuZHRzaSkuDQo+ID4+Pj4gSXMgdGhlcmUg
-YSBndWlkYW5jZSBkZXNjcmliaW5nIHRoZSBjaGFuZ2VkIGJlaGF2aW9yLCBieSBhbnkgY2hhbmNl
-LA0KPiA+Pj4+IGFuZCBob3cgdGhlIGJvb3QgY29tbWFuZCBsaW5lIG5vdyBuZWVkcyB0byBsb29r
-IGxpa2Ugd2hlbiB1c2luZyBvbmUNCj4gb2YNCj4gPj4+PiB0aGUgZmxhc2ggcGFydGl0aW9ucyBh
-cyByb290IGZpbGUgc3lzdGVtID8NCj4gPj4+Pg0KPiA+Pj4+IFRoYW5rcywNCj4gPj4+PiBHdWVu
-dGVyDQo+ID4+Pg0KPiA+Pj4gSSd2ZSB0cmllZCB0byBtYWtlIGlzIGFzIHRyYW5zcGFyZW50IGFz
-IHBvc3NpYmxlIGZvciB0aGUgZXhpc3RpbmcgdXNlcnMuDQo+ID4+PiBPbmx5IGNoYW5nZSBpcyB0
-aGF0IG5vdyBldmVyeSBwYXJ0aXRpb24gaGFzIG1hc3RlciB0aGF0IGlzIG5vdCBwYXJ0aXRpb25l
-ZC4NCj4gPj4+IElzIHRoZSBDT05GSUdfTVREX1BBUlRJVElPTkVEX01BU1RFUj1uIGZpeGVkIHRo
-ZSBwcm9ibGVtIGZvciB5b3U/DQo+ID4+IE5vIGNoYW5nZSBpcyBleHBlY3RlZCwgY2FuIHlvdSBw
-bGVhc2UgZGVzY3JpYmUgdGhlIGRldmljZXMgdGhhdCB5b3UNCj4gPj4gb2JzZXJ2ZSB3aXRoIGFu
-ZCB3aXRob3V0IHRoZSBwYXRjaD8gTWF5YmUgdGhlcmUgaXMgc29tZXRoaW5nIHdyb25nIGluDQo+
-ID4+IHRoZSBjb3JlIGxvZ2ljLg0KPiA+Pg0KPiA+DQo+ID4gSSBhbSB0cnlpbmcgdG8gYm9vdCBz
-dXBlcm1pY3JvLXgxMXNwaS1ibWMgaW4gcWVtdSBmcm9tIGZsYXNoIHBhcnRpdGlvbiA2Lg0KPiA+
-IFRoZSBxZW11IGNvbW1hbmQgbGluZSBpcyBzb21ldGhpbmcgbGlrZQ0KPiA+DQo+ID4gICAgIHFl
-bXUtc3lzdGVtLWFybSAtTSBzdXBlcm1pY3JvLXgxMXNwaS1ibWMsZm1jLQ0KPiBtb2RlbD1uMjVx
-MjU2YTEzLHNwaS1tb2RlbD1uMjVxMjU2YTEzIFwNCj4gPiAJLWtlcm5lbCBhcmNoL2FybS9ib290
-L3pJbWFnZSAtbm8tcmVib290IC1zbmFwc2hvdCBcDQo+ID4gCS1hdWRpbyBub25lIFwNCj4gPiAJ
-LWRyaXZlIGZpbGU9L3RtcC9mbGFzaCxmb3JtYXQ9cmF3LGlmPW10ZCxpbmRleD0xIFwNCj4gPiAJ
-LW5pYyB1c2VyIFwNCj4gPiAJLS1hcHBlbmQgInJvb3Q9L2Rldi9tdGRibG9jazYgcm9vdHdhaXQg
-Y29uc29sZT10dHlTNCwxMTUyMDANCj4gZWFybHljb249dWFydDgyNTAsbW1pbzMyLDB4MWU3ODQw
-MDAsMTE1MjAwbjgiIFwNCj4gPiAJLWR0YiBhcmNoL2FybS9ib290L2R0cy9hc3BlZWQvYXNwZWVk
-LWJtYy1zdXBlcm1pY3JvLXgxMXNwaS5kdGINCj4gXA0KPiA+IAktbm9ncmFwaGljIC1tb25pdG9y
-IG51bGwgLXNlcmlhbCBzdGRpbw0KPiA+DQo+ID4gVGhpcyBpcyB3aXRoIGFzcGVlZF9nNV9kZWZj
-b25maWcuIE5vdGUgdGhhdCB0aGUgZmxhc2ggbW9kZWxzIG5lZWQgdG8gYmUNCj4gc3BlY2lmaWVk
-Lg0KPiA+IFRoZSBkZWZhdWx0IGZsYXNoZXMgYXJlIG5vIGxvbmdlciByZWNvZ25pemVkIHdoZW4g
-Ym9vdGluZyBmcm9tIHFlbXUgc2luY2UNCj4gY29tbWl0DQo+ID4gOTQ3Yzg2ZTQ4MWEwICgibXRk
-OiBzcGktbm9yOiBtYWNyb25peDogRHJvcCB0aGUgcmVkdW5kYW50IGZsYXNoIGluZm8NCj4gZmll
-bGRzIikuDQo+ID4NCj4gPiBUaGUgYWJvdmUgb25seSB3b3JrcyB3aXRoIHRoaXMgcGF0Y2ggcmV2
-ZXJ0ZWQgKG9yIHdpdGggdjYuMTUgYW5kIG9sZGVyLCBvZg0KPiBjb3Vyc2UpLg0KPiA+DQo+ID4g
-R3VlbnRlcg0KPiANCj4gQWxleGFuZGVyLCBjYW4geW91IHBsZWFzZSBpbnZlc3RpZ2F0ZT8gV2Ug
-bmVlZCBhIGZpeCBiZWNhdXNlIEd1ZW50ZXINCj4gbWlnaHQgbm90IGJlIHRoZSBvbmx5IGFmZmVj
-dGVyIHVzZXIuIE90aGVyd2lzZSB0aGlzIHBhdGNoIGNhbid0IHN0YW5kLA0KPiB1bmZvcnR1bmF0
-ZWx5Lg0KPiANCj4gVGhhbmtzLA0KPiBNaXF1w6hsDQoNCk1heWJlIHNvbWV0aGluZyBpcyBtb3Zl
-ZCwgYW5kIGl0IGlzIG5vdCAvZGV2L210ZGJsb2NrNiBub3cuDQoNCkd1ZW50ZXIsIGlmIGl0IHdv
-cmtzIHdpdGggQ09ORklHX01URF9QQVJUSVRJT05FRF9NQVNURVI9biwgY2FuDQp5b3UgZHVtcCB0
-aGUgbGlzdCBvZiBkZXZpY2VzIHRoYXQgeW91IGNhbiBzZWU/DQoNCi0gLSANClRoYW5rcywNClNh
-c2hhDQoNCg0K
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+
+QCS8300 support 4 streams MST and SA8775P support 2 x 2 MST. Add
+support for other 3 pixels register block, and introduced
+msm_dp_read_pn/msm_dp_write_pn to minimize repetitive code. All PCLK
+share the same register definitions with different base addresses.
+
+Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
+---
+ drivers/gpu/drm/msm/dp/dp_catalog.c | 128 +++++++++++++++++++++---------------
+ drivers/gpu/drm/msm/dp/dp_catalog.h |  18 +++--
+ drivers/gpu/drm/msm/dp/dp_ctrl.c    |   2 +-
+ drivers/gpu/drm/msm/dp/dp_display.c |   2 +-
+ drivers/gpu/drm/msm/dp/dp_panel.c   |   8 ++-
+ 5 files changed, 93 insertions(+), 65 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/dp/dp_catalog.c b/drivers/gpu/drm/msm/dp/dp_catalog.c
+index 7b7eadb2f83b169d8df27ee93589abe05b38f3ae..d2d975805de93e929cbdadb90609b6bf3e2cf1bf 100644
+--- a/drivers/gpu/drm/msm/dp/dp_catalog.c
++++ b/drivers/gpu/drm/msm/dp/dp_catalog.c
+@@ -60,8 +60,8 @@
+ #define DP_DEFAULT_AUX_SIZE	0x0200
+ #define DP_DEFAULT_LINK_OFFSET	0x0400
+ #define DP_DEFAULT_LINK_SIZE	0x0C00
+-#define DP_DEFAULT_P0_OFFSET	0x1000
+-#define DP_DEFAULT_P0_SIZE	0x0400
++#define DP_DEFAULT_PIXEL_OFFSET	0x1000
++#define DP_DEFAULT_PIXEL_SIZE	0x0400
+ 
+ struct dss_io_region {
+ 	size_t len;
+@@ -72,7 +72,7 @@ struct dss_io_data {
+ 	struct dss_io_region ahb;
+ 	struct dss_io_region aux;
+ 	struct dss_io_region link;
+-	struct dss_io_region p0;
++	struct dss_io_region pixels[DP_STREAM_MAX];
+ };
+ 
+ struct msm_dp_catalog_private {
+@@ -87,11 +87,17 @@ void msm_dp_catalog_snapshot(struct msm_dp_catalog *msm_dp_catalog, struct msm_d
+ 	struct msm_dp_catalog_private *catalog = container_of(msm_dp_catalog,
+ 			struct msm_dp_catalog_private, msm_dp_catalog);
+ 	struct dss_io_data *dss = &catalog->io;
++	char reg_name[6];
++	int i;
+ 
+ 	msm_disp_snapshot_add_block(disp_state, dss->ahb.len, dss->ahb.base, "dp_ahb");
+ 	msm_disp_snapshot_add_block(disp_state, dss->aux.len, dss->aux.base, "dp_aux");
+ 	msm_disp_snapshot_add_block(disp_state, dss->link.len, dss->link.base, "dp_link");
+-	msm_disp_snapshot_add_block(disp_state, dss->p0.len, dss->p0.base, "dp_p0");
++	for (i = DP_STREAM_0; i < DP_STREAM_MAX; i++) {
++		sprintf(reg_name, "dp_p%d", i);
++		msm_disp_snapshot_add_block(disp_state, dss->pixels[i].len,
++			dss->pixels[i].base, reg_name);
++	}
+ }
+ 
+ static inline u32 msm_dp_read_aux(struct msm_dp_catalog_private *catalog, u32 offset)
+@@ -124,24 +130,24 @@ static inline void msm_dp_write_ahb(struct msm_dp_catalog_private *catalog,
+ 	writel(data, catalog->io.ahb.base + offset);
+ }
+ 
+-static inline void msm_dp_write_p0(struct msm_dp_catalog_private *catalog,
+-			       u32 offset, u32 data)
++static inline void msm_dp_write_pn(struct msm_dp_catalog_private *catalog,
++			       enum msm_dp_stream_id stream_id, u32 offset, u32 data)
+ {
+ 	/*
+ 	 * To make sure interface reg writes happens before any other operation,
+ 	 * this function uses writel() instread of writel_relaxed()
+ 	 */
+-	writel(data, catalog->io.p0.base + offset);
++	writel(data, catalog->io.pixels[stream_id].base + offset);
+ }
+ 
+-static inline u32 msm_dp_read_p0(struct msm_dp_catalog_private *catalog,
+-			       u32 offset)
++static inline u32 msm_dp_read_pn(struct msm_dp_catalog_private *catalog,
++			       enum msm_dp_stream_id stream_id, u32 offset)
+ {
+ 	/*
+ 	 * To make sure interface reg writes happens before any other operation,
+ 	 * this function uses writel() instread of writel_relaxed()
+ 	 */
+-	return readl_relaxed(catalog->io.p0.base + offset);
++	return  readl_relaxed(catalog->io.pixels[stream_id].base + offset);
+ }
+ 
+ static inline u32 msm_dp_read_link(struct msm_dp_catalog_private *catalog, u32 offset)
+@@ -430,8 +436,8 @@ void msm_dp_catalog_setup_peripheral_flush(struct msm_dp_catalog *msm_dp_catalog
+ }
+ 
+ void msm_dp_catalog_ctrl_config_msa(struct msm_dp_catalog *msm_dp_catalog,
+-					u32 rate, u32 stream_rate_khz,
+-					bool is_ycbcr_420)
++				    enum msm_dp_stream_id stream_id, u32 rate, u32 stream_rate_khz,
++				    bool is_ycbcr_420)
+ {
+ 	u32 pixel_m, pixel_n;
+ 	u32 mvid, nvid, pixel_div = 0, dispcc_input_rate;
+@@ -486,7 +492,7 @@ void msm_dp_catalog_ctrl_config_msa(struct msm_dp_catalog *msm_dp_catalog,
+ 	drm_dbg_dp(catalog->drm_dev, "mvid=0x%x, nvid=0x%x\n", mvid, nvid);
+ 	msm_dp_write_link(catalog, REG_DP_SOFTWARE_MVID, mvid);
+ 	msm_dp_write_link(catalog, REG_DP_SOFTWARE_NVID, nvid);
+-	msm_dp_write_p0(catalog, MMSS_DP_DSC_DTO, 0x0);
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_DSC_DTO, 0x0);
+ }
+ 
+ int msm_dp_catalog_ctrl_set_pattern_state_bit(struct msm_dp_catalog *msm_dp_catalog,
+@@ -843,8 +849,9 @@ u32 msm_dp_catalog_ctrl_read_phy_pattern(struct msm_dp_catalog *msm_dp_catalog)
+ }
+ 
+ /* panel related catalog functions */
+-int msm_dp_catalog_panel_timing_cfg(struct msm_dp_catalog *msm_dp_catalog, u32 total,
+-				u32 sync_start, u32 width_blanking, u32 msm_dp_active)
++int msm_dp_catalog_panel_timing_cfg(struct msm_dp_catalog *msm_dp_catalog,
++				    enum msm_dp_stream_id stream_id, u32 total, u32 sync_start,
++				    u32 width_blanking, u32 msm_dp_active)
+ {
+ 	struct msm_dp_catalog_private *catalog = container_of(msm_dp_catalog,
+ 				struct msm_dp_catalog_private, msm_dp_catalog);
+@@ -855,7 +862,7 @@ int msm_dp_catalog_panel_timing_cfg(struct msm_dp_catalog *msm_dp_catalog, u32 t
+ 	msm_dp_write_link(catalog, REG_DP_HSYNC_VSYNC_WIDTH_POLARITY, width_blanking);
+ 	msm_dp_write_link(catalog, REG_DP_ACTIVE_HOR_VER, msm_dp_active);
+ 
+-	reg = msm_dp_read_p0(catalog, MMSS_DP_INTF_CONFIG);
++	reg = msm_dp_read_pn(catalog, stream_id, MMSS_DP_INTF_CONFIG);
+ 
+ 	if (msm_dp_catalog->wide_bus_en)
+ 		reg |= DP_INTF_CONFIG_DATABUS_WIDEN;
+@@ -865,7 +872,7 @@ int msm_dp_catalog_panel_timing_cfg(struct msm_dp_catalog *msm_dp_catalog, u32 t
+ 
+ 	DRM_DEBUG_DP("wide_bus_en=%d reg=%#x\n", msm_dp_catalog->wide_bus_en, reg);
+ 
+-	msm_dp_write_p0(catalog, MMSS_DP_INTF_CONFIG, reg);
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_CONFIG, reg);
+ 	return 0;
+ }
+ 
+@@ -963,7 +970,8 @@ void msm_dp_catalog_panel_disable_vsc_sdp(struct msm_dp_catalog *msm_dp_catalog)
+ }
+ 
+ void msm_dp_catalog_panel_tpg_enable(struct msm_dp_catalog *msm_dp_catalog,
+-				struct drm_display_mode *drm_mode)
++				     enum msm_dp_stream_id stream_id,
++				     struct drm_display_mode *drm_mode)
+ {
+ 	struct msm_dp_catalog_private *catalog = container_of(msm_dp_catalog,
+ 				struct msm_dp_catalog_private, msm_dp_catalog);
+@@ -998,45 +1006,46 @@ void msm_dp_catalog_panel_tpg_enable(struct msm_dp_catalog *msm_dp_catalog,
+ 	display_hctl = (hsync_end_x << 16) | hsync_start_x;
+ 
+ 
+-	msm_dp_write_p0(catalog, MMSS_DP_INTF_HSYNC_CTL, hsync_ctl);
+-	msm_dp_write_p0(catalog, MMSS_DP_INTF_VSYNC_PERIOD_F0, vsync_period *
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_HSYNC_CTL, hsync_ctl);
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_VSYNC_PERIOD_F0, vsync_period *
+ 			hsync_period);
+-	msm_dp_write_p0(catalog, MMSS_DP_INTF_VSYNC_PULSE_WIDTH_F0, v_sync_width *
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_VSYNC_PULSE_WIDTH_F0, v_sync_width *
+ 			hsync_period);
+-	msm_dp_write_p0(catalog, MMSS_DP_INTF_VSYNC_PERIOD_F1, 0);
+-	msm_dp_write_p0(catalog, MMSS_DP_INTF_VSYNC_PULSE_WIDTH_F1, 0);
+-	msm_dp_write_p0(catalog, MMSS_DP_INTF_DISPLAY_HCTL, display_hctl);
+-	msm_dp_write_p0(catalog, MMSS_DP_INTF_ACTIVE_HCTL, 0);
+-	msm_dp_write_p0(catalog, MMSS_INTF_DISPLAY_V_START_F0, display_v_start);
+-	msm_dp_write_p0(catalog, MMSS_DP_INTF_DISPLAY_V_END_F0, display_v_end);
+-	msm_dp_write_p0(catalog, MMSS_INTF_DISPLAY_V_START_F1, 0);
+-	msm_dp_write_p0(catalog, MMSS_DP_INTF_DISPLAY_V_END_F1, 0);
+-	msm_dp_write_p0(catalog, MMSS_DP_INTF_ACTIVE_V_START_F0, 0);
+-	msm_dp_write_p0(catalog, MMSS_DP_INTF_ACTIVE_V_END_F0, 0);
+-	msm_dp_write_p0(catalog, MMSS_DP_INTF_ACTIVE_V_START_F1, 0);
+-	msm_dp_write_p0(catalog, MMSS_DP_INTF_ACTIVE_V_END_F1, 0);
+-	msm_dp_write_p0(catalog, MMSS_DP_INTF_POLARITY_CTL, 0);
+-
+-	msm_dp_write_p0(catalog, MMSS_DP_TPG_MAIN_CONTROL,
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_VSYNC_PERIOD_F1, 0);
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_VSYNC_PULSE_WIDTH_F1, 0);
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_DISPLAY_HCTL, display_hctl);
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_ACTIVE_HCTL, 0);
++	msm_dp_write_pn(catalog, stream_id, MMSS_INTF_DISPLAY_V_START_F0, display_v_start);
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_DISPLAY_V_END_F0, display_v_end);
++	msm_dp_write_pn(catalog, stream_id, MMSS_INTF_DISPLAY_V_START_F1, 0);
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_DISPLAY_V_END_F1, 0);
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_ACTIVE_V_START_F0, 0);
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_ACTIVE_V_END_F0, 0);
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_ACTIVE_V_START_F1, 0);
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_ACTIVE_V_END_F1, 0);
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_POLARITY_CTL, 0);
++
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_TPG_MAIN_CONTROL,
+ 				DP_TPG_CHECKERED_RECT_PATTERN);
+-	msm_dp_write_p0(catalog, MMSS_DP_TPG_VIDEO_CONFIG,
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_TPG_VIDEO_CONFIG,
+ 				DP_TPG_VIDEO_CONFIG_BPP_8BIT |
+ 				DP_TPG_VIDEO_CONFIG_RGB);
+-	msm_dp_write_p0(catalog, MMSS_DP_BIST_ENABLE,
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_BIST_ENABLE,
+ 				DP_BIST_ENABLE_DPBIST_EN);
+-	msm_dp_write_p0(catalog, MMSS_DP_TIMING_ENGINE_EN,
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_TIMING_ENGINE_EN,
+ 				DP_TIMING_ENGINE_EN_EN);
+ 	drm_dbg_dp(catalog->drm_dev, "%s: enabled tpg\n", __func__);
+ }
+ 
+-void msm_dp_catalog_panel_tpg_disable(struct msm_dp_catalog *msm_dp_catalog)
++void msm_dp_catalog_panel_tpg_disable(struct msm_dp_catalog *msm_dp_catalog,
++				      enum msm_dp_stream_id stream_id)
+ {
+ 	struct msm_dp_catalog_private *catalog = container_of(msm_dp_catalog,
+ 				struct msm_dp_catalog_private, msm_dp_catalog);
+ 
+-	msm_dp_write_p0(catalog, MMSS_DP_TPG_MAIN_CONTROL, 0x0);
+-	msm_dp_write_p0(catalog, MMSS_DP_BIST_ENABLE, 0x0);
+-	msm_dp_write_p0(catalog, MMSS_DP_TIMING_ENGINE_EN, 0x0);
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_TPG_MAIN_CONTROL, 0x0);
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_BIST_ENABLE, 0x0);
++	msm_dp_write_pn(catalog, stream_id, MMSS_DP_TIMING_ENGINE_EN, 0x0);
+ }
+ 
+ static void __iomem *msm_dp_ioremap(struct platform_device *pdev, int idx, size_t *len)
+@@ -1051,10 +1060,11 @@ static void __iomem *msm_dp_ioremap(struct platform_device *pdev, int idx, size_
+ 	return base;
+ }
+ 
+-static int msm_dp_catalog_get_io(struct msm_dp_catalog_private *catalog)
++static int msm_dp_catalog_get_io(struct msm_dp_catalog_private *catalog, int max_stream)
+ {
+ 	struct platform_device *pdev = to_platform_device(catalog->dev);
+ 	struct dss_io_data *dss = &catalog->io;
++	int i;
+ 
+ 	dss->ahb.base = msm_dp_ioremap(pdev, 0, &dss->ahb.len);
+ 	if (IS_ERR(dss->ahb.base))
+@@ -1070,7 +1080,7 @@ static int msm_dp_catalog_get_io(struct msm_dp_catalog_private *catalog)
+ 		 * lengths based on this single region.
+ 		 */
+ 		if (PTR_ERR(dss->aux.base) == -EINVAL) {
+-			if (dss->ahb.len < DP_DEFAULT_P0_OFFSET + DP_DEFAULT_P0_SIZE) {
++			if (dss->ahb.len < DP_DEFAULT_PIXEL_OFFSET + DP_DEFAULT_PIXEL_SIZE) {
+ 				DRM_ERROR("legacy memory region not large enough\n");
+ 				return -EINVAL;
+ 			}
+@@ -1080,8 +1090,11 @@ static int msm_dp_catalog_get_io(struct msm_dp_catalog_private *catalog)
+ 			dss->aux.len = DP_DEFAULT_AUX_SIZE;
+ 			dss->link.base = dss->ahb.base + DP_DEFAULT_LINK_OFFSET;
+ 			dss->link.len = DP_DEFAULT_LINK_SIZE;
+-			dss->p0.base = dss->ahb.base + DP_DEFAULT_P0_OFFSET;
+-			dss->p0.len = DP_DEFAULT_P0_SIZE;
++			for (i = DP_STREAM_0; i < max_stream; i++) {
++				dss->pixels[i].base =
++					dss->ahb.base + (i + 1) * DP_DEFAULT_PIXEL_OFFSET;
++				dss->pixels[i].len = DP_DEFAULT_PIXEL_SIZE;
++			}
+ 		} else {
+ 			DRM_ERROR("unable to remap aux region: %pe\n", dss->aux.base);
+ 			return PTR_ERR(dss->aux.base);
+@@ -1093,17 +1106,26 @@ static int msm_dp_catalog_get_io(struct msm_dp_catalog_private *catalog)
+ 			return PTR_ERR(dss->link.base);
+ 		}
+ 
+-		dss->p0.base = msm_dp_ioremap(pdev, 3, &dss->p0.len);
+-		if (IS_ERR(dss->p0.base)) {
+-			DRM_ERROR("unable to remap p0 region: %pe\n", dss->p0.base);
+-			return PTR_ERR(dss->p0.base);
++		dss->pixels[0].base = msm_dp_ioremap(pdev, 3, &dss->pixels[0].len);
++		if (IS_ERR(dss->pixels[0].base)) {
++			DRM_ERROR("unable to remap p0 region: %pe\n", dss->pixels[0].base);
++			return PTR_ERR(dss->pixels[0].base);
++		}
++
++		for (i = DP_STREAM_1; i < max_stream; i++) {
++			/* pixels clk reg index start from 3*/
++			dss->pixels[i].base = msm_dp_ioremap(pdev, i + 3, &dss->pixels[i].len);
++
++			if (IS_ERR(dss->pixels[i].base))
++				DRM_DEBUG_DP("unable to remap p%d region: %pe\n", i,
++					      dss->pixels[i].base);
+ 		}
+ 	}
+ 
+ 	return 0;
+ }
+ 
+-struct msm_dp_catalog *msm_dp_catalog_get(struct device *dev)
++struct msm_dp_catalog *msm_dp_catalog_get(struct device *dev, int max_stream)
+ {
+ 	struct msm_dp_catalog_private *catalog;
+ 	int ret;
+@@ -1114,7 +1136,7 @@ struct msm_dp_catalog *msm_dp_catalog_get(struct device *dev)
+ 
+ 	catalog->dev = dev;
+ 
+-	ret = msm_dp_catalog_get_io(catalog);
++	ret = msm_dp_catalog_get_io(catalog, max_stream);
+ 	if (ret)
+ 		return ERR_PTR(ret);
+ 
+diff --git a/drivers/gpu/drm/msm/dp/dp_catalog.h b/drivers/gpu/drm/msm/dp/dp_catalog.h
+index f9e7506afcf4f4d932665462ca316f6c66c662a6..9bfb83873ce8749bec173a2bc2366c429f91354a 100644
+--- a/drivers/gpu/drm/msm/dp/dp_catalog.h
++++ b/drivers/gpu/drm/msm/dp/dp_catalog.h
+@@ -67,8 +67,9 @@ void msm_dp_catalog_ctrl_mainlink_ctrl(struct msm_dp_catalog *msm_dp_catalog, bo
+ void msm_dp_catalog_ctrl_psr_mainlink_enable(struct msm_dp_catalog *msm_dp_catalog, bool enable);
+ void msm_dp_catalog_setup_peripheral_flush(struct msm_dp_catalog *msm_dp_catalog);
+ void msm_dp_catalog_ctrl_config_misc(struct msm_dp_catalog *msm_dp_catalog, u32 cc, u32 tb);
+-void msm_dp_catalog_ctrl_config_msa(struct msm_dp_catalog *msm_dp_catalog, u32 rate,
+-				u32 stream_rate_khz, bool is_ycbcr_420);
++void msm_dp_catalog_ctrl_config_msa(struct msm_dp_catalog *msm_dp_catalog,
++				    enum msm_dp_stream_id stream_id, u32 rate, u32 stream_rate_khz,
++				    bool is_ycbcr_420);
+ int msm_dp_catalog_ctrl_set_pattern_state_bit(struct msm_dp_catalog *msm_dp_catalog, u32 pattern);
+ u32 msm_dp_catalog_hw_revision(const struct msm_dp_catalog *msm_dp_catalog);
+ void msm_dp_catalog_ctrl_reset(struct msm_dp_catalog *msm_dp_catalog);
+@@ -93,15 +94,18 @@ void msm_dp_catalog_ctrl_send_phy_pattern(struct msm_dp_catalog *msm_dp_catalog,
+ u32 msm_dp_catalog_ctrl_read_phy_pattern(struct msm_dp_catalog *msm_dp_catalog);
+ 
+ /* DP Panel APIs */
+-int msm_dp_catalog_panel_timing_cfg(struct msm_dp_catalog *msm_dp_catalog, u32 total,
+-				u32 sync_start, u32 width_blanking, u32 msm_dp_active);
++int msm_dp_catalog_panel_timing_cfg(struct msm_dp_catalog *msm_dp_catalog,
++				    enum msm_dp_stream_id stream_id, u32 total, u32 sync_start,
++				    u32 width_blanking, u32 msm_dp_active);
+ void msm_dp_catalog_panel_enable_vsc_sdp(struct msm_dp_catalog *msm_dp_catalog, struct dp_sdp *vsc_sdp);
+ void msm_dp_catalog_panel_disable_vsc_sdp(struct msm_dp_catalog *msm_dp_catalog);
+ void msm_dp_catalog_panel_tpg_enable(struct msm_dp_catalog *msm_dp_catalog,
+-				struct drm_display_mode *drm_mode);
+-void msm_dp_catalog_panel_tpg_disable(struct msm_dp_catalog *msm_dp_catalog);
++				     enum msm_dp_stream_id stream_id,
++				     struct drm_display_mode *drm_mode);
++void msm_dp_catalog_panel_tpg_disable(struct msm_dp_catalog *msm_dp_catalog,
++				      enum msm_dp_stream_id stream_id);
+ 
+-struct msm_dp_catalog *msm_dp_catalog_get(struct device *dev);
++struct msm_dp_catalog *msm_dp_catalog_get(struct device *dev, int max_stream);
+ 
+ /* DP Audio APIs */
+ void msm_dp_catalog_write_audio_stream(struct msm_dp_catalog *msm_dp_catalog,
+diff --git a/drivers/gpu/drm/msm/dp/dp_ctrl.c b/drivers/gpu/drm/msm/dp/dp_ctrl.c
+index 7db23968c4227557d3cea9bfbf5aa3c3e17a87d8..594dd6fe9381403b8ab085441276d2ce26612efe 100644
+--- a/drivers/gpu/drm/msm/dp/dp_ctrl.c
++++ b/drivers/gpu/drm/msm/dp/dp_ctrl.c
+@@ -2075,7 +2075,7 @@ int msm_dp_ctrl_on_stream(struct msm_dp_ctrl *msm_dp_ctrl, struct msm_dp_panel *
+ 
+ 	msm_dp_ctrl_configure_source_params(ctrl, msm_dp_panel);
+ 
+-	msm_dp_catalog_ctrl_config_msa(ctrl->catalog,
++	msm_dp_catalog_ctrl_config_msa(ctrl->catalog, msm_dp_panel->stream_id,
+ 		ctrl->link->link_params.rate,
+ 		pixel_rate_orig,
+ 		msm_dp_panel->msm_dp_mode.out_fmt_is_yuv_420);
+diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
+index a13e4007858701787562eded7b6fc8f7171e167b..76d07685f5a89109723b68ba9d97c0b0332b18aa 100644
+--- a/drivers/gpu/drm/msm/dp/dp_display.c
++++ b/drivers/gpu/drm/msm/dp/dp_display.c
+@@ -748,7 +748,7 @@ static int msm_dp_init_sub_modules(struct msm_dp_display_private *dp)
+ 		goto error;
+ 	}
+ 
+-	dp->catalog = msm_dp_catalog_get(dev);
++	dp->catalog = msm_dp_catalog_get(dev, dp->max_stream);
+ 	if (IS_ERR(dp->catalog)) {
+ 		rc = PTR_ERR(dp->catalog);
+ 		DRM_ERROR("failed to initialize catalog, rc = %d\n", rc);
+diff --git a/drivers/gpu/drm/msm/dp/dp_panel.c b/drivers/gpu/drm/msm/dp/dp_panel.c
+index d9041e235104a74b3cc50ff2e307eae0c4301ef3..fb9216673f0d39d10af864346ebfa884dbe1f499 100644
+--- a/drivers/gpu/drm/msm/dp/dp_panel.c
++++ b/drivers/gpu/drm/msm/dp/dp_panel.c
+@@ -285,12 +285,13 @@ void msm_dp_panel_tpg_config(struct msm_dp_panel *msm_dp_panel, bool enable)
+ 	}
+ 
+ 	if (!enable) {
+-		msm_dp_catalog_panel_tpg_disable(catalog);
++		msm_dp_catalog_panel_tpg_disable(catalog, msm_dp_panel->stream_id);
+ 		return;
+ 	}
+ 
+ 	drm_dbg_dp(panel->drm_dev, "calling catalog tpg_enable\n");
+-	msm_dp_catalog_panel_tpg_enable(catalog, &panel->msm_dp_panel.msm_dp_mode.drm_mode);
++	msm_dp_catalog_panel_tpg_enable(catalog, msm_dp_panel->stream_id,
++					&msm_dp_panel->msm_dp_mode.drm_mode);
+ }
+ 
+ static int msm_dp_panel_setup_vsc_sdp_yuv_420(struct msm_dp_panel *msm_dp_panel)
+@@ -395,7 +396,8 @@ int msm_dp_panel_timing_cfg(struct msm_dp_panel *msm_dp_panel)
+ 
+ 	msm_dp_active = data;
+ 
+-	msm_dp_catalog_panel_timing_cfg(catalog, total, sync_start, width_blanking, msm_dp_active);
++	msm_dp_catalog_panel_timing_cfg(catalog, msm_dp_panel->stream_id, total, sync_start,
++					width_blanking, msm_dp_active);
+ 
+ 	if (msm_dp_panel->msm_dp_mode.out_fmt_is_yuv_420)
+ 		msm_dp_panel_setup_vsc_sdp_yuv_420(msm_dp_panel);
+
+-- 
+2.34.1
+
