@@ -1,205 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C7042A9D;
-	Mon,  9 Jun 2025 11:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71CF1DE2C9;
+	Mon,  9 Jun 2025 11:51:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749469631; cv=none; b=TRI5jhyaZyUMC6Qj669dgjSvYkdy5koFaHJJVIBtTn0AYjZxEDsfCffpbBBF6PfGileG08IETJ9peAs+ON06lxoeJOCb9JNaryA7/IZ/sbF4JYlueR92EF47hy2S0KN5UmLeOBNVwIMz47TEG8OVJmMTxN8GNBrNTbKaYjWuorU=
+	t=1749469901; cv=none; b=Uja6qYqcEGEARbbb+vpXjLVkIrOAR80JyIyd4u0L1MkGOqnVIaSniPy+N71gts7+G0NOnLVi/4yHzsSIsNHXhSVVOVfszBaVqIZkWxkHHd58W/aPa7xD3FbGQ0Xoz3lRtFFfwxbWVBLFTCBE+LUWQqCXgJxZXsuAb2fbGq8RsZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749469631; c=relaxed/simple;
-	bh=buO5PB98t7ItquVg1z9ulKzig9nWCwyDK2VeW+eHhBg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gwdpet9l7enpc1o8OrbOaFXRlqSTTfd7ObQdhGM9+hEeyWnfIcho3RyimrtiMgOauPW/61ASr63A0iif3qyytchBmcQ3fdtUTuyYanCaJT21EiVCHXu8bV3NxTb/sYgIPAGquOqlqr6ODlZ0DX6lLTx/vIhrF+5zxRcDbSDrIQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TgnwGBvE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749469901; c=relaxed/simple;
+	bh=wRnzep0un26/I6l2B9rLwcxLBqjgLGGglUlDx+xg5MQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=CnCMG+S6xUIKZAxbNuNUVAzW6ZYiGiRKLe2ccKYMNufYX18q5Fe6l2gsvSL64zEK+UoXH0eRU8NLpEfHMYcGXsI4iua4OYQRATr036B0koSpVkje5Vl+GfoJRl6RC4vGmGvaZDTQSoN8ZQvk8Zvh65XlPvZh3atsDB+AohJaqC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MhmnjE03; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TgnwGBvE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00763C4CEEB;
-	Mon,  9 Jun 2025 11:47:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749469629;
-	bh=buO5PB98t7ItquVg1z9ulKzig9nWCwyDK2VeW+eHhBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TgnwGBvEpG0AiZ5eLmLGmU8qfw7a8ViPqusbpmrHUA3lxthvOn7YDXul8VLRfdlCR
-	 mCYaETqOchaq5Jvysz83johT75uPcKPFRnotj4CTGIWhXSIcCb3QXkq2ZP6oytRu/F
-	 JSeiq790YJs91KfuLbKcJ2LUgIyriWjTdVcoj6+b9p2Ogxi7lIsASumdYk5MC6RqwY
-	 mf3lxKYYzZuCjXOBK97c/Tq4dVgNL5aAdsDvmDwzV1drh7uORr7doOkcxlOMCDSEHh
-	 azotAKksoGcsfuVolyhfWMZf8rutJzosm7+3nbzRW3aVAi29WQQhv7ceMyRE1jG5Cu
-	 IdqfdwdBg4qVA==
-Date: Mon, 9 Jun 2025 13:47:03 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Benno Lossin <lossin@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 3/6] rust: irq: add support for non-threaded IRQs and
- handlers
-Message-ID: <aEbJt0YSc3-60OBY@pollux>
-References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
- <20250608-topics-tyr-request_irq-v4-3-81cb81fb8073@collabora.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MhmnjE03"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C045D439F7;
+	Mon,  9 Jun 2025 11:51:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749469889;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=V3C4n3ou7ij5UokZQiLqkdL4RwROiCMcbEbk2tj+ftE=;
+	b=MhmnjE03JZ4ZUzUFi628UWJeHoA4CxpNFhowA8nz0Mq5itorCsof1S5dJ/sPtEIBFbo1Jk
+	Hwy9sKtXMoE+VsshcCvWY4aQi05oMVWEaNGYjo1T0dR8W+EBZw9E4OIz81AGzdwAlM8n75
+	2S+VvR+H07zXSDHTo48yn8Sq4KUIZFSqhQfVvTrnquZZj6UCWEoHoDpFDd6fbQpyznWbrC
+	A4WGlnLqKUz40b7mb/ENkP4GxS/W4M7EmGv0N4rUlnfvOZAh01XVgUGi4BFenPxDeeMxCY
+	MQyOkQ2VCAYBSi5zwXQEJ94eZHPYAx5IUAPY9ZA4FFH6YDYqKg3JUAVp2NpqFQ==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Date: Mon, 09 Jun 2025 13:51:15 +0200
+Subject: [PATCH] pinctrl: cirrus: madera-core: Use
+ devm_pinctrl_register_mappings()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250608-topics-tyr-request_irq-v4-3-81cb81fb8073@collabora.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250609-pinctrl-madera-devm-pinctrl-register-mappings-v1-1-ba2c2822cf6c@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIALLKRmgC/z2NQQqDQAxFryJZNxClCvYqpYs4E8dAnQ6JiCDev
+ UMXXb734f0TXEzF4dGcYLKr6ydXaG8NhIVzEtRYGTrqehpoxKI5bPbGlaMYY5R9/TuTpL6J1bF
+ Ulxx5IKYpTGPb36E2i8msx+/v+bquLx4RDJl/AAAA
+To: Charles Keepax <ckeepax@opensource.cirrus.com>, 
+ Richard Fitzgerald <rf@opensource.cirrus.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Thomas Richard <thomas.richard@bootlin.com>
+X-Mailer: b4 0.14.1
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdelvdehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkvfevofesthejredtredtjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelgffgffejtdeivdeifeeltdffgfeludekudeiueffffejuedvgfejteeuffegtdenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrthgthhgvshesohhpvghnshhouhhrtggvrdgtihhrrhhushdrtghomhdprhgtp
+ hhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdprhgtphhtthhopehrfhesohhpvghnshhouhhrtggvrdgtihhrrhhushdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Sun, Jun 08, 2025 at 07:51:08PM -0300, Daniel Almeida wrote:
-> +/// // This is running in process context.
-> +/// fn register_irq(handler: Handler, dev: &platform::Device<Bound>) -> Result<Arc<Registration<Handler>>> {
-> +///     let registration = dev.irq_by_index(0, flags::SHARED, c_str!("my-device"), handler)?;
-> +///
-> +///     // You can have as many references to the registration as you want, so
-> +///     // multiple parts of the driver can access it.
-> +///     let registration = Arc::pin_init(registration, GFP_KERNEL)?;
-> +///
-> +///     // The handler may be called immediately after the function above
-> +///     // returns, possibly in a different CPU.
-> +///
-> +///     {
-> +///         // The data can be accessed from the process context too.
-> +///         registration.handler().0.fetch_add(1, Ordering::Relaxed);
-> +///     }
+Use devm_pinctrl_register_mappings(), so the mappings are automatically
+unregistered by the core. If pinctrl_enable() failed during the probe,
+pinctrl_mappings were not freed. Now it is done by the core.
 
-Why the extra scope?
+Fixes: 218d72a77b0b ("pinctrl: madera: Add driver for Cirrus Logic Madera codecs")
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
+Compile tested only.
+---
+ drivers/pinctrl/cirrus/pinctrl-madera-core.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-> +///
-> +///     Ok(registration)
-> +/// }
-> +///
-> +/// # Ok::<(), Error>(())
-> +///```
-> +///
-> +/// # Invariants
-> +///
-> +/// * We own an irq handler using `&self` as its private data.
-> +///
-> +#[pin_data]
-> +pub struct Registration<T: Handler + 'static> {
-> +    inner: Devres<RegistrationInner>,
-> +
-> +    #[pin]
-> +    handler: T,
-> +
-> +    /// Pinned because we need address stability so that we can pass a pointer
-> +    /// to the callback.
-> +    #[pin]
-> +    _pin: PhantomPinned,
-> +}
-> +
-> +impl<T: Handler + 'static> Registration<T> {
-> +    /// Registers the IRQ handler with the system for the given IRQ number.
-> +    pub(crate) fn register<'a>(
+diff --git a/drivers/pinctrl/cirrus/pinctrl-madera-core.c b/drivers/pinctrl/cirrus/pinctrl-madera-core.c
+index 73ec5b9beb49..d19ef13224cc 100644
+--- a/drivers/pinctrl/cirrus/pinctrl-madera-core.c
++++ b/drivers/pinctrl/cirrus/pinctrl-madera-core.c
+@@ -1061,8 +1061,9 @@ static int madera_pin_probe(struct platform_device *pdev)
+ 
+ 	/* if the configuration is provided through pdata, apply it */
+ 	if (pdata->gpio_configs) {
+-		ret = pinctrl_register_mappings(pdata->gpio_configs,
+-						pdata->n_gpio_configs);
++		ret = devm_pinctrl_register_mappings(priv->dev,
++						     pdata->gpio_configs,
++						     pdata->n_gpio_configs);
+ 		if (ret)
+ 			return dev_err_probe(priv->dev, ret,
+ 						"Failed to register pdata mappings\n");
+@@ -1081,17 +1082,8 @@ static int madera_pin_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static void madera_pin_remove(struct platform_device *pdev)
+-{
+-	struct madera_pin_private *priv = platform_get_drvdata(pdev);
+-
+-	if (priv->madera->pdata.gpio_configs)
+-		pinctrl_unregister_mappings(priv->madera->pdata.gpio_configs);
+-}
+-
+ static struct platform_driver madera_pin_driver = {
+ 	.probe = madera_pin_probe,
+-	.remove = madera_pin_remove,
+ 	.driver = {
+ 		.name = "madera-pinctrl",
+ 	},
 
-I think we should call this Registration::new() instead. Except for
-MiscDeviceRegistration, which is representing not *only* a registration, all
-other Registration types just use new() and it'd be nice to be consistent.
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250609-pinctrl-madera-devm-pinctrl-register-mappings-a60a0bcb9154
 
-> +        dev: &'a Device<Bound>,
-> +        irq: u32,
-> +        flags: Flags,
-> +        name: &'static CStr,
-> +        handler: T,
-> +    ) -> impl PinInit<Self, Error> + 'a {
-> +        let closure = move |slot: *mut Self| {
-> +            // SAFETY: The slot passed to pin initializer is valid for writing.
-> +            unsafe {
-> +                slot.write(Self {
-> +                    inner: Devres::new(
-> +                        dev,
-> +                        RegistrationInner {
-> +                            irq,
-> +                            cookie: slot.cast(),
-> +                        },
-> +                        GFP_KERNEL,
-> +                    )?,
-> +                    handler,
-> +                    _pin: PhantomPinned,
-> +                })
-> +            };
-> +
-> +            // SAFETY:
-> +            // - The callbacks are valid for use with request_irq.
-> +            // - If this succeeds, the slot is guaranteed to be valid until the
-> +            // destructor of Self runs, which will deregister the callbacks
-> +            // before the memory location becomes invalid.
-> +            let res = to_result(unsafe {
-> +                bindings::request_irq(
-> +                    irq,
-> +                    Some(handle_irq_callback::<T>),
-> +                    flags.into_inner() as usize,
-> +                    name.as_char_ptr(),
-> +                    slot.cast(),
-> +                )
-> +            });
-> +
-> +            if res.is_err() {
-> +                // SAFETY: We are returning an error, so we can destroy the slot.
-> +                unsafe { core::ptr::drop_in_place(&raw mut (*slot).handler) };
-> +            }
-> +
-> +            res
-> +        };
-> +
-> +        // SAFETY:
-> +        // - if this returns Ok, then every field of `slot` is fully
-> +        // initialized.
-> +        // - if this returns an error, then the slot does not need to remain
-> +        // valid.
-> +        unsafe { pin_init_from_closure(closure) }
+Best regards,
+-- 
+Thomas Richard <thomas.richard@bootlin.com>
 
-Can't we use try_pin_init!() instead, move request_irq() into the initializer of
-RegistrationInner and initialize inner last?
-
-> +    }
-> +
-> +    /// Returns a reference to the handler that was registered with the system.
-> +    pub fn handler(&self) -> &T {
-> +        &self.handler
-> +    }
-> +
-> +    /// Wait for pending IRQ handlers on other CPUs.
-> +    ///
-> +    /// This will attempt to access the inner [`Devres`] container.
-> +    pub fn try_synchronize(&self) -> Result {
-> +        let inner = self.inner.try_access().ok_or(ENODEV)?;
-> +        inner.synchronize();
-> +        Ok(())
-> +    }
-> +
-> +    /// Wait for pending IRQ handlers on other CPUs.
-> +    pub fn synchronize(&self, dev: &Device<Bound>) -> Result {
-> +        let inner = self.inner.access(dev)?;
-> +        inner.synchronize();
-> +        Ok(())
-> +    }
-> +}
-> +
-> +/// # Safety
-> +///
-> +/// This function should be only used as the callback in `request_irq`.
-> +unsafe extern "C" fn handle_irq_callback<T: Handler>(
-> +    _irq: i32,
-> +    ptr: *mut core::ffi::c_void,
-> +) -> core::ffi::c_uint {
-> +    // SAFETY: `ptr` is a pointer to Registration<T> set in `Registration::new`
-> +    let data = unsafe { &*(ptr as *const Registration<T>) };
-> +    T::handle_irq(&data.handler).into_inner()
-> +}
-> 
-> -- 
-> 2.49.0
-> 
