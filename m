@@ -1,121 +1,82 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50CA11F4727;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A521C280A52;
 	Mon,  9 Jun 2025 07:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.130.44.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749455276; cv=none; b=IdQT1Qo3UJBqKgxcWqZl5FzmZtIEV7G/UYcSEMHRXSldxFpIKDNKJIO/kAETatvQ7sVktVf0ud7/AdsYEBzxoFeCNxeaNUpSmKaLEcUrgdnzpJ/jdpcIU4PST/EUwmbLVMC/QaUAmV+XILVa36dW2v56D0Fz9QM+swB2ZGUt4Nk=
+	t=1749455279; cv=none; b=Hy3xUwFEgtC6KzZuHnuttaZJyv33ykY7jA1W1MjpnuD43AB/aIh9E2typQvZNibW6iMSqPjic105Eb7jm4u/mwH1ruHkdPD82RwC32cUps6QfRvB/Qf7N21T+FrX6sXjEYvJvmBRvOsRQ/bdUOTk7Sr6ejHsNVpmYc8U+lp9QBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749455276; c=relaxed/simple;
-	bh=yE2+holMnj+pvDkpHX6iTuIHRO70HVZSRuO84atG99Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oxmNyhLejzL+Pd+VeARRIUU3i3+NfZRPA6PdR0Su6bsjDett182YjQnIvZDjY2b4/sxSjT797XXJ3/t8pfraZymbcfok3lwg6iksvXQ7rK52Zo/qwbUb4C5v+jWE02/OCWqKhy/0HGWWEoiigEKUXYSUmW523bRYa/ZQyajd+uQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yf9/6ci4; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749455279; c=relaxed/simple;
+	bh=pHiT/m2BXiIP3lv0/1Ix6x0PspGZOFem/8TU5u3+DCI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WZvGnx3Bdixx5RdeoafLPSPI9KQnlyaEnPeIyN/UGjk83R2FF1UbW1iyeL5grxtifsxT6RxVEv1plLM/t7P+fQT6FrgAxhpk50gsZBnreT0LYD9zzzyQqyWfB+RlvoQ15Lif/NbglL9X4DEo5MHAN/Lb+6IZk0CONsHqM5HGUv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com; spf=pass smtp.mailfrom=richtek.com; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=bpk6Pb86; arc=none smtp.client-ip=220.130.44.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yf9/6ci4"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22c336fcdaaso31997075ad.3;
-        Mon, 09 Jun 2025 00:47:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749455275; x=1750060075; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=kY5E9GhMCxeYg4qZouwVn58CZ9Wsm2ox4St53MlOt1w=;
-        b=Yf9/6ci4REYHJkBhuJumvWAs2POncJJSpxh+jkKwfM66RpQaywhbV6D4ezQyZYrzby
-         VcJzZh+X2pmBZDhrHHzdVFEthMKSe1U5oc4BqKeDk9+OR8cIt4tdFAfPTIho5xgGrFyq
-         x6RSnDdJDq4jbm6JYBzizY9qkcU1jXbtY+h4Y498pHkkJzNXQbF8IJ9XbIN1IlKydDss
-         GA8A0515RotV5QAABjzjG/YbXe5/GP4r9dI7K6Ysw3tYube4tdG2/r42DBgVwxfFCSxD
-         w/+37N8IDqkDOt+ahEjhGZIjKzJFLi2G0H8GK0/prySQi2hUfCQtA5mVtoafKzU2EYRN
-         P1Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749455275; x=1750060075;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kY5E9GhMCxeYg4qZouwVn58CZ9Wsm2ox4St53MlOt1w=;
-        b=BpTdQg9tLJ7KsNxrqr6rP85G0PWosXPBhrwG5TVjuIZXZzPjUPr1jHV096oDQryXQg
-         hJDgourK4U+Y2DY+8p9jbdMcGrg7ESKKU7bMYiGtX6kerg93b0dxEaTzpf2hbrPeeqMr
-         yaOBZvs4/UJ/nJ5hPZM5+zrymu67AnRUQjCBNX+XPh7+ZIEEi6O6Y+haAXhpyrkBgTo5
-         Evart2NB9wAFgsjemIN16ODQsZ1P0tDbwAckiN1XuHeOs8D9ThSi0YtQ8jXUUpjbCNnN
-         z3dHJo3hTU+cDsXB8IrsTNUuWll+5QPeELYAWvgbv1/hy8soF45+ZWyfbcFRjZHLkHzL
-         dYdA==
-X-Forwarded-Encrypted: i=1; AJvYcCU2SB6S52+vGbHu34f9g9xSqctLQur3egQlGlgCSQDOE6NAS1PX/Nu/n9UocKzLrP9HWaKnu9DyOERXBkQ=@vger.kernel.org, AJvYcCV+gGPLXdXPaTW1c6Jay2UGVrIJvD0/XZTy1kElwTREjlxzUG7doRlUzioU+Z1yWxZFjcYuNGn9@vger.kernel.org
-X-Gm-Message-State: AOJu0YzR1p87U8hlJgKXd745GFyx8uh//RD+KRqFvv0FAbhaNWtb7ia0
-	J3SgI62rR6hNLx37R1bNJR8atj8in6aW3TflR+aCi4AI9FWy4QO6ecfSX1aFEQ==
-X-Gm-Gg: ASbGncudy+/P5S+ers193xvO5rwtLUqbk/wjNJ5RE9zri9/6zClejBXTsBe0RLrMile
-	jLPpseVk2ejSHsluEjZwASmd/6XiDNYPwxymCtT+gN+CyWkNoUQobjRAE+4kLxo6UIwF6WFfWKa
-	/MzjmdzYrcEXwM1IuKoM6UqJHvwADkf2IBAhCICr/U8Ee3XlnZpoxtMG63zUX4swjN3Y83mQZMr
-	Fhwd0KbffgaXT2CSbokV0FYAqsnG+jDv/V2zc1Tb0k37CuSeKJ6hIYFZ9epcmdylBMK7SOBXvzW
-	n5vfLFGmCJa3dKjYqz+j2b5FacJNBSmB3uazzu8qxIfjuaxgfYOCEsh1qcQtdWuoMjU=
-X-Google-Smtp-Source: AGHT+IHGla7RcCc5QrwRK5NzP4Mp/GrpGFt+26Z3UKBM8alswk7MzBTuCO4YyLLqcf8HX8uRkw7JGw==
-X-Received: by 2002:a17:903:188:b0:234:8c64:7885 with SMTP id d9443c01a7336-23601dd8ab7mr167350355ad.53.1749455274561;
-        Mon, 09 Jun 2025 00:47:54 -0700 (PDT)
-Received: from vaxr-BM6660-BM6360 ([2001:288:7001:2703:3f10:324:b9a8:3187])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3134b12801esm5117320a91.29.2025.06.09.00.47.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 00:47:53 -0700 (PDT)
-Date: Mon, 9 Jun 2025 15:47:49 +0800
-From: I Hsin Cheng <richard120310@gmail.com>
-To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Yury Norov <yury.norov@gmail.com>, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] uapi: bitops: use UAPI-safe variant of BITS_PER_LONG
- again
-Message-ID: <aEaRpf_sHip9wH3G@vaxr-BM6660-BM6360>
-References: <20250606-uapi-genmask-v1-1-e05cdc2e14c5@linutronix.de>
- <aEL5SIIMxmnrzbDA@yury>
- <20250606162758-f8393c93-0510-4d95-a5f8-caaf065b227a@linutronix.de>
+	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="bpk6Pb86"
+X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
+	s=richtek; t=1749455268;
+	bh=4s1C+hBgY4ybJmSElnyUuaZf7zSmbzvZE+p1okI9Lkk=; l=642;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=bpk6Pb86/SESncyt7tUnmg7616nYzm3gRAM/b1+i7f3xUJMGfMLd57cR9TKYMHaJh
+	 CeiVpeixgo/k4hdTdxmyAmWjeIP47zsSdVtmetGwXhFKN/+NRifPITI1Ama6iILuUp
+	 /Gw3cl9yasggIuMri8MC/hWHXSAXp0bBvoGw6qbA8Ae15YMvS3tvvUXmMtMm80h9xJ
+	 qkgqXjtyd4tUPm9YOZCiVi4sqKEet8o+1i0uzmt4we3AeaVEhwNiO/x7nz4Jt82kGo
+	 6l27jTykDZ9HDBrwa3BT4MJhYwnuM6OcsMaLIVT0YA32N1x1zNIoGnK9+RNMN6f9RC
+	 3xzd1c6DldTvQ==
+Received: from 192.168.10.46
+	by mg.richtek.com with MailGates ESMTPS Server V6.0(2288478:0:AUTH_RELAY)
+	(envelope-from <cy_huang@richtek.com>)
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Mon, 09 Jun 2025 15:47:22 +0800 (CST)
+Received: from ex4.rt.l (192.168.10.47) by ex3.rt.l (192.168.10.46) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 9 Jun
+ 2025 15:47:21 +0800
+Received: from git-send.richtek.com (192.168.10.154) by ex4.rt.l
+ (192.168.10.45) with Microsoft SMTP Server id 15.2.1544.11 via Frontend
+ Transport; Mon, 9 Jun 2025 15:47:21 +0800
+From: <cy_huang@richtek.com>
+To: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>
+CC: Liam Girdwood <lgirdwood@gmail.com>, Conor Dooley <conor+dt@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, "ChiYuan
+ Huang" <cy_huang@richtek.com>, Roy Chiu <roy_chiu@richtek.com>,
+	<linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/2] ASoC: Add Richtek RTQ9124 support
+Date: Mon, 9 Jun 2025 15:47:26 +0800
+Message-ID: <cover.1749454717.git.cy_huang@richtek.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250606162758-f8393c93-0510-4d95-a5f8-caaf065b227a@linutronix.de>
+Content-Type: text/plain
 
-On Fri, Jun 06, 2025 at 04:32:22PM +0200, Thomas Weißschuh wrote:
-> On Fri, Jun 06, 2025 at 10:20:56AM -0400, Yury Norov wrote:
-> > On Fri, Jun 06, 2025 at 10:23:57AM +0200, Thomas Weißschuh wrote:
-> > > Commit 1e7933a575ed ("uapi: Revert "bitops: avoid integer overflow in GENMASK(_ULL)"")
-> > > did not take in account that the usage of BITS_PER_LONG in __GENMASK() was
-> > > changed to __BITS_PER_LONG for UAPI-safety in
-> > > commit 3c7a8e190bc5 ("uapi: introduce uapi-friendly macros for GENMASK").
-> > > BITS_PER_LONG can not be used in UAPI headers as it derives from the kernel
-> > > configuration and not from the current compiler invocation.
-> > > When building compat userspace code or a compat vDSO its value will be
-> > > incorrect.
-> > > 
-> > > Switch back to __BITS_PER_LONG.
-> > > 
-> > > Fixes: 1e7933a575ed ("uapi: Revert "bitops: avoid integer overflow in GENMASK(_ULL)"")
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> > 
-> > Thanks Thomas. I applied it in bitmap-for-next. Is that issue critical
-> > enough for you to send a pull request in -rc2?
-> 
-> I have some patches that depend on it. These will probably end up in linux-next
-> soonish and would then break there.
-> 
-> So having it in -rc2 would be nice.
-> 
-> 
-> Thanks
+From: ChiYuan Huang <cy_huang@richtek.com>
 
-Hi Thomas,
+This patch series adds Richtek RTQ9124 1x30W audio amplifier support.
 
-Thanks for pointing out the problem, may I ask in what config would
-cause "BITS_PER_LONG" to work incorrectly ?
+v2:
+- Instead to add a dedicated rtq9124 document file, append the
+  description to the existed rt9123 yaml
 
-I would love to test the difference between them and see what I can get,
-thanks.
+ChiYuan Huang (2):
+  ASoC: dt-bindings: rt9123: Append RTQ9124 description
+  ASoC: codecs: Add support for Richtek RTQ9124
 
-Best regards,
-I Hsin Cheng
+ .../bindings/sound/richtek,rt9123.yaml        |   9 +-
+ sound/soc/codecs/Kconfig                      |   9 +
+ sound/soc/codecs/Makefile                     |   4 +-
+ sound/soc/codecs/rtq9124.c                    | 543 ++++++++++++++++++
+ 4 files changed, 563 insertions(+), 2 deletions(-)
+ create mode 100644 sound/soc/codecs/rtq9124.c
+
+-- 
+2.34.1
 
