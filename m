@@ -1,187 +1,191 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2074.outbound.protection.outlook.com [40.107.94.74])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75000223702;
-	Mon,  9 Jun 2025 15:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749481238; cv=fail; b=GtxBGBnnLVVmJe1n07LP+XcpygQtvfJ+RPUDtQq5jKH4L/99z745RXkYX32cMGGbN9Ld+xO620NAEXpJIG0vvyTuNJFJ9N+qXJJ5JyfxEL73mc4BmsH+bFoCYmNSbj+jsr2Nra7cxFqBEiOTqzn9Eeb4LwsUq1cvVQhwlo3yTo0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749481238; c=relaxed/simple;
-	bh=800E/gChn2LbRF+wMGwgHb7zNZE9elNQ30Lyaq/OI1s=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qbY0JMXHnJLDqcmd9r+k2aiqaNx3RhzTt/7+ByCLnbYdSRWpW3mLICJvgbzChqXL/AjUulBN3fMKLHE8eJ/UtXRcmR0Gh7TgZ66ptCluVEBzuWaIR3gwaUDQ/A/w/kEEiXYeqQbQjkLUmhiv6naW6IWQscqjkcPtrNpAcTJRFQA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ZVvfLNOy; arc=fail smtp.client-ip=40.107.94.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1528215DBB3;
+	Mon,  9 Jun 2025 15:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749481271; cv=none; b=XRzqPvRtZRHlVd/IQMV50ORJyGRY5ataavvWvGWmyjNLMBTY048ehcSg8ADLkA/hi8OBlUiKODgM2KuS2Lkd6SvIba9fM1wMy8yOtjYRbtupZhPx1En2fjtO4RLEbZ99WzkGU3NSmIZ+8kFP3fPVxKeNn6bgeRsH059TwDE6JVU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749481271; c=relaxed/simple;
+	bh=Kk1C/xz8EqCX3okdo6soLe+p8AKdGz5sR9IyN+hBa/w=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=Yd5j6QQoBU6fx45RUDZ4BzDEfUc0CivM+1lTkcWQ9guIPtShQkzD8tE3R+NImuFZj95oRHME2kfrs6FFEbFHfRRB1qX+A0tE0KeNHqvVzv2jF4co0TGeidboGV7se6g8+BfYB+DTt1VueetO7iKZDRTLk4FD2sahCeCzSMLlEYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=msVG7mix; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ZVvfLNOy"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EilMfarlN6yPP3XbbJvjebfHu/GRchCAEQw5/nKFH3RKvsnU+0o+Ffvqlyw4bjz91D+D5zjNpi4ChPJGJZFqePBjRaK66wBgeGYTrZrxQiy41nF4xFN9vgAgz0j1FQZSN3sxCkUBS5gWKkWATcP1ek5jNlTG9gbEdPPwR8SuPOqU7SZ2T8f2WP8ZA5Y72GSceuFjQM3uavYXUzDoiPuFalNJ2MTZ2vrLGT4XKBtsgXz/k0Ja6XZZs06wiXOgxDKfpkRXJKwzSQmRPVRbd814EBdKctVs0A1/7albRFcKxieXMs3RLZRqkM3MfI7J/D5VxseQyAM+kielh55zBVPlKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fp4OXnxJCwnQ0BwA1z4VvmBiw+0bjL2e+Zv6ncvy3Zk=;
- b=RFbybWJmOT7DHdEnHDQCsPyWPdPZroOFWeAFBewPVa+Ae/sMVz2lis5YEMecZ5Bd+zOafZARgKSJwL/mxb/98lSQDyEShhpkOM6VzqwwOjEZ4tvdB+oKHHFCSOEtC/tAirPgx1rCD/IfYjnxMFt7++XF2PsS1hJTTOcSXuBfRn6+VObTxAR4huhK6HW4zixtodl1EreQJfIjhqbnZru0svZ4PBS3/LVeA2N/ObmUG7qWpRJb4Kx98N2y7TjB7GHnMRPQauOUe10JNtTpTak4EZU21xr1hMqgm5Jcr82nDN18Tci3FMuKZ/zWR+IvVaSAPSQhpMCMFX+2ondGN4SAkQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fp4OXnxJCwnQ0BwA1z4VvmBiw+0bjL2e+Zv6ncvy3Zk=;
- b=ZVvfLNOyfWCetGObsnNaCK6Y3/PRfOFREJDFFzU1MXjhPXKjl8/EhIZXHIhLTs0FK3VeqfG9Bbqj9PAseRjoL4RLV+xe3GfrBGZZExN5mF4EuKiCF3WEhXEKQ9huZdB4LsSu2B9f9cIew2NDDH9dMrb5mk0Ej2sisowd3oltAVJuC0QytT21Qk43lzLhfTnauzK3HeizbK96hSyXtgwCrMke8QxlRGqx6TH6REFvRk6wX3bM/2luqWVp8ZNjReTq944PdPBqGXeKnvvZ1S4wL949wkiHnQ/BAfzAjsX13N800Sq5D6XJzJM5Q36uL+SHe5BzBzZuvf7HaRc/qDp9tg==
-Received: from BN9PR03CA0114.namprd03.prod.outlook.com (2603:10b6:408:fd::29)
- by SA0PR12MB4368.namprd12.prod.outlook.com (2603:10b6:806:9f::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Mon, 9 Jun
- 2025 15:00:31 +0000
-Received: from BN2PEPF000044AA.namprd04.prod.outlook.com
- (2603:10b6:408:fd:cafe::35) by BN9PR03CA0114.outlook.office365.com
- (2603:10b6:408:fd::29) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.29 via Frontend Transport; Mon,
- 9 Jun 2025 15:00:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BN2PEPF000044AA.mail.protection.outlook.com (10.167.243.105) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.15 via Frontend Transport; Mon, 9 Jun 2025 15:00:30 +0000
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 9 Jun 2025
- 08:00:08 -0700
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail202.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 9 Jun
- 2025 08:00:07 -0700
-Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com (10.129.68.8)
- with Microsoft SMTP Server id 15.2.1544.14 via Frontend Transport; Mon, 9 Jun
- 2025 08:00:02 -0700
-From: Mark Bloch <mbloch@nvidia.com>
-To: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew
- Lunn" <andrew+netdev@lunn.ch>
-CC: <saeedm@nvidia.com>, <gal@nvidia.com>, <leonro@nvidia.com>,
-	<tariqt@nvidia.com>, Leon Romanovsky <leon@kernel.org>, Simon Horman
-	<horms@kernel.org>, Richard Cochran <richardcochran@gmail.com>, "Alexei
- Starovoitov" <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
-	"Jesper Dangaard Brouer" <hawk@kernel.org>, John Fastabend
-	<john.fastabend@gmail.com>, <netdev@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<bpf@vger.kernel.org>, Dragos Tatulea <dtatulea@nvidia.com>, Mark Bloch
-	<mbloch@nvidia.com>
-Subject: [PATCH net-next v3 12/12] net/mlx5e: Add TX support for netmems
-Date: Mon, 9 Jun 2025 17:58:33 +0300
-Message-ID: <20250609145833.990793-13-mbloch@nvidia.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250609145833.990793-1-mbloch@nvidia.com>
-References: <20250609145833.990793-1-mbloch@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="msVG7mix"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B92B3C4CEED;
+	Mon,  9 Jun 2025 15:01:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749481270;
+	bh=Kk1C/xz8EqCX3okdo6soLe+p8AKdGz5sR9IyN+hBa/w=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=msVG7mixbRDFg3kELrAl1BkWF63Hy5SVGwoddOgbCq6bIQ0FV2QDtviD3OUpBCfi3
+	 Fj9FS8RZW1NAjwxrtXhDWwn4iYNtHQwqFka8Fdz7YxRUyMm5XDGTKHdfNMA1ewsY3D
+	 plPfViaUM4XY16m/9Nb5WQx5MaDCv+PhGbNIAw1hBLgj736L+O7nUjgTTz4WaJ67QX
+	 U/rw8pF6BVH2iS4CpAMVx/QFnL8dHa22hKwe/u0wEW+z8FpNHbP5tMRu9UNXemFzEs
+	 gC++s7kjVJUFwQx4udCAQ8HWF49XRjvf6Gp9rYVvUutsDzzL7cq4Cwa0+lcbU5ehzL
+	 tAkKzDTRDfjGA==
+Date: Mon, 09 Jun 2025 10:01:09 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000044AA:EE_|SA0PR12MB4368:EE_
-X-MS-Office365-Filtering-Correlation-Id: 343478b3-9961-4ce2-299e-08dda76660cf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|7416014|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?cbMg/jOlADBlxvlM34hm+HK9sB9VFXbydyzOZmoI2od+hMRjqAvdrUEnSI2o?=
- =?us-ascii?Q?eIcZHvIjpwJoRmzV5mB7jj36WbwY3xNO9Glcd6xoAqNH7S54PaEiPz5emF/S?=
- =?us-ascii?Q?nMIZ7O9CszJAcDMbGjb1U3OwfUj2ObpAXQX5B5fZlhhT8B/RUHokC0T3hB/o?=
- =?us-ascii?Q?JB2hV67aOiATG8OYC2tfoB5SOxy21W/bQyCmYFhrtiUgoMmVnSVD/qA+abfI?=
- =?us-ascii?Q?D2fO+erDb5qtSYagA8yn+m477j6EfD2KEIw5c2swVKhjOEKOCIbiJpxeCoch?=
- =?us-ascii?Q?MblxqyBRtLC1N5eJBi1XNvBGydXuslfOzLYkD5nF2/XVnYIX7E8Lf6C5gkht?=
- =?us-ascii?Q?l05hVHmt7decrGuuwJUIVTxqONctLiKkROwzvUa8TbpLMWpRaHXoN4H/F2W2?=
- =?us-ascii?Q?ym7+llCRDR8Pzy0GGWf55Iajlov1M74CqTIBBAmZikhYI2p6/3Ru3fNNOPiM?=
- =?us-ascii?Q?Zq+t9srWGAxCvUcw1+P1cxm6B9QAzNeWBFFA1hkL96014OuFRGsOouKkzA+s?=
- =?us-ascii?Q?U3Cz5CFBryKA5CRElcaqMD1F/UneEbev1Dj0MoY3NDMhgNU83j20irLSnbSD?=
- =?us-ascii?Q?SRMO/ubmSXda5cXIslHXf9XtgiXj31eAKYaLdK2FXDQOLKYLA6O0ngLhpdSv?=
- =?us-ascii?Q?yYCIpYoJjFpT7aaIaLBNnxmmcegxaa2gu2KsyeWF4xWz/HaSiIhT62EJq8wq?=
- =?us-ascii?Q?+iuuccsXIOy8qpQ6Ak4f4gtu0Uu3CDvCNPeQinqUSMI5i4vwAhqOyci2OC8S?=
- =?us-ascii?Q?2Y5fSIvfTvWK1gF6sQo18SnHwZ2o8UBAltA/2yjnssg9GdKwxmqS209vpSzO?=
- =?us-ascii?Q?bn1u+rHeZz/z4i6+QXAp96/aTer3xXRsacl9VPM6fRdWmT43VFH0hDmL2BEd?=
- =?us-ascii?Q?x2/aI19cDTJqlwCYmrNa2TBwA1qDc81mm4BUHl3QNg9/VGRmCJPYkMzJjmW3?=
- =?us-ascii?Q?aCHP7p9KQwN+c4RUQEkmbVQr3KigGZMGPOrlwsWgcvYQ3qofouck+AOiUMgL?=
- =?us-ascii?Q?J3DeDobPid7ZS+KxAVqVN1OCHAorPNsfM3BDYZUdUSJ2gLmv8IQ0pkQEBmAl?=
- =?us-ascii?Q?xXhJ3dYqCMRoOI2P9LNXQx2q3ikKlV1QHUD4WTbhrLgfQgS3cjQutxwm/oqp?=
- =?us-ascii?Q?0IWYAon4nloqw4VCHqid7ufDk0GHbHDhxdAX4hD1NX6xjetvN4harqOR4MQT?=
- =?us-ascii?Q?xCuBlNRlqEACYV1xW7BuNon5rIANxnjh/37x5S1vtPxk0XmN5Ea7vZbQyPkG?=
- =?us-ascii?Q?WpnPAYs1KyEILIWZlXA+InRIwKAkvOmAFwb9qIYFgrQJ0uSQbJhc2Pngdvw4?=
- =?us-ascii?Q?IfXNTVQMhXGaYUz7rVEedyewHr6Tcf4cADzlAZbueVJHOulZ7lt5q6FQQmGa?=
- =?us-ascii?Q?0+U9/zfqRc5v56rcp/Moe7NqJahK85F1iTifqPoCavmkPp/mPtKfIf/LRH3h?=
- =?us-ascii?Q?3UOqI+FDKxJVkTDM4EE9pzKy13NA6CcsUYZwtL3pJog8X0wckBiDfJBBQIYd?=
- =?us-ascii?Q?w/5U9dCTccECnDP96BJl82W7GBLJzTo1sG/W?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 15:00:30.7259
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 343478b3-9961-4ce2-299e-08dda76660cf
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000044AA.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4368
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dmitry.baryshkov@oss.qualcomm.com, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, maud_spierings@hotmail.com, 
+ Nikita Travkin <nikita@trvn.ru>, devicetree@vger.kernel.org
+To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+In-Reply-To: <20250607200229.30538-1-alex.vinarskis@gmail.com>
+References: <20250607200229.30538-1-alex.vinarskis@gmail.com>
+Message-Id: <174948104809.2282509.3764172546278596028.robh@kernel.org>
+Subject: Re: [PATCH v5 0/4] X1E Asus Zenbook A14 support
 
-From: Dragos Tatulea <dtatulea@nvidia.com>
 
-Declare netmem TX support in netdev.
+On Sat, 07 Jun 2025 22:00:44 +0200, Aleksandrs Vinarskis wrote:
+> As requested, 1/4 was merged to linux-next by USB maintainers.
+> Resending 4/4 rebased on top of latest linux-next. 2/4, 3/4 already
+> landed.
+> 
+> 
+> With this in mind, and taking into account that this patch was
+> already reviewed some time ago, any possibility to still add 4/4 to
+> 6.16?
+> 
+> ---
+> 
+> Introduce support for the mentioned laptop.
+> 
+> Particular device exists in two model numbers:
+> * UX3407QA: X1P-42-100 or X1-26-100 (as tested)
+> * UX3407RA: X1E-78-100
+> 
+> Mostly similar to other X1-based laptops. Notable differences are:
+> * Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
+>   and Qualcomm FastConnect 7800 on UX3407RA
+> * USB Type-C retimers are Parade PS8833, appear to behave identical
+>   to Parade PS8830
+> * gpio90 is TZ protected
+> 
+> When comparing device firmware between UX3407QA, UX3407RA, it seems
+> that only ADSP firmware is different, CDSP and GPU firmware appears to
+> be the same. (At least assuming the GPU firmware name in both cases is
+> `qcdxkmsuc8380.mbn`). Since at least some blobs are different betweeen
+> X1E and X1/X1P, define new firmware directory for `qcom/x1p42100`. This
+> also makes it easier for distros to automatically extract firmware from
+> Windows and place all blobs for the model under the same path. If/When
+> firmware blobs make it to linux-firmware, same blobs can be easily
+> symlinked between `qcom/x1e80100` and `qcom/x1p42100`.
+> 
+> NVMe SSD depends on [1]. USB Type-A over USB MP controller  depends on
+> [2], or equivalent proposed solution.
+> 
+> Qualcomm FastConnect 6900 on UX3407QA did not work out of the box, and
+> additionally required both newer firmware and patches to `board-2.bin`.
+> I added a short how-to [3], as it is not exactly trivial.
+> 
+> ACPI dumps can be found on aarch64-laptops' github [4]. HWids on
+> dtbloader's github [5].
+> 
+> [1] https://lore.kernel.org/linux-arm-msm/20250319094544.3980357-1-quic_wenbyao@quicinc.com/
+> [2] https://lore.kernel.org/all/20250318-xps13-fingerprint-v1-1-fbb02d5a34a7@oss.qualcomm.com/
+> [3] https://github.com/alexVinarskis/linux-x1e80100-zenbook-a14?tab=readme-ov-file#wcn688x-wifi
+> [4] https://github.com/aarch64-laptops/build/pull/134/files
+> [5] https://github.com/TravMurav/dtbloader/pull/4/files
+> [6] https://lore.kernel.org/all/20250429-x1e80100-dts-drop-useless-dp-compatible-override-v1-0-058847814d70@linaro.org/
+> [7] https://lore.kernel.org/all/20250524-tb16-dt-v4-5-2c1e6018d3f0@oldschoolsolutions.biz/
+> 
+> Changes to v5:
+> * _Only sending 4/4 as other patches are already applied_
+> * Rebase 4/4 on `next-20250606`
+> * Moved gpu enable from dtsi to respective dts as per discussion in [7]
+> Link to v5: https://lore.kernel.org/all/20250523131605.6624-1-alex.vinarskis@gmail.com/
+> 
+> Changes to v4:
+> * _Only sending 4/4 as other patches are already applied_
+> * Rebase 4/4 on `for-next` of qcom tree, adjust makefile to generate el2 dtbs
+> * Picked Konrad's R-by for 4/4
+> * Droped 'qcom,x1e80100-dp' as per [6]
+> Link to v4: https://lore.kernel.org/all/20250426130203.37659-1-alex.vinarskis@gmail.com/
+> 
+> Changes to v3:
+> * Drop redundant comments
+> * Drop incomplete wcn7850 as it is causing dt errors
+> * Picked a-by
+> Link to v3: https://lore.kernel.org/all/20250416232345.5240-1-alex.vinarskis@gmail.com/
+> 
+> Changes to v2:
+> * Fix/re-add PS8833 as fallback
+> * Add EC's i2c address
+> * Add pwrseq for wcn6855, placeholder for wcn7850 until its tested
+> * Rename x1-zenbook.dtsi to x1-asus-zenbook.dtsi
+> Link to v2: https://lore.kernel.org/all/20250402084646.10098-1-alex.vinarskis@gmail.com/
+> 
+> Changes to v1:
+> * Drop PS8833 variant, fallback to PS8830 as they behave the same
+> * Drop wrong pcie6a_phy compatible revert
+> * Drop redundant comments, fix order of properties in the device-tree
+> * Fix device name bindings, express in model names instead of the soc
+> * Fix GPU firmware name for UX3407QA
+> * Fix model string, enclose variant in parenthesis
+> * Added missing new lines before 'status = "okay";'
+> * Updated cover letter to reflect some of the above changes
+> * Left SPI10 disabled as it is unknown how/what for to use it as of now
+> Link to v1: https://lore.kernel.org/all/20250331215720.19692-1-alex.vinarskis@gmail.com/
+> 
+> Aleksandrs Vinarskis (1):
+>   arm64: dts: qcom: Add support for X1-based Asus Zenbook A14
+> 
+>  arch/arm64/boot/dts/qcom/Makefile             |    4 +
+>  .../boot/dts/qcom/x1-asus-zenbook-a14.dtsi    | 1302 +++++++++++++++++
+>  .../dts/qcom/x1e80100-asus-zenbook-a14.dts    |   37 +
+>  .../dts/qcom/x1p42100-asus-zenbook-a14.dts    |  141 ++
+>  4 files changed, 1484 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/x1-asus-zenbook-a14.dtsi
+>  create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dts
+>  create mode 100644 arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dts
+> 
+> --
+> 2.45.2
+> 
+> 
+> 
 
-As required, use the netmem aware dma unmapping APIs
-for unmapping netmems in tx completion path.
 
-Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
-Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
-Signed-off-by: Mark Bloch <mbloch@nvidia.com>
----
- drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h | 3 ++-
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 2 ++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h b/drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h
-index e837c21d3d21..6501252359b0 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/txrx.h
-@@ -362,7 +362,8 @@ mlx5e_tx_dma_unmap(struct device *pdev, struct mlx5e_sq_dma *dma)
- 		dma_unmap_single(pdev, dma->addr, dma->size, DMA_TO_DEVICE);
- 		break;
- 	case MLX5E_DMA_MAP_PAGE:
--		dma_unmap_page(pdev, dma->addr, dma->size, DMA_TO_DEVICE);
-+		netmem_dma_unmap_page_attrs(pdev, dma->addr, dma->size,
-+					    DMA_TO_DEVICE, 0);
- 		break;
- 	default:
- 		WARN_ONCE(true, "mlx5e_tx_dma_unmap unknown DMA type!\n");
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index 026bd479c6dd..1f2973e82733 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -5740,6 +5740,8 @@ static void mlx5e_build_nic_netdev(struct net_device *netdev)
- 
- 	netdev->priv_flags       |= IFF_UNICAST_FLT;
- 
-+	netdev->netmem_tx = true;
-+
- 	netif_set_tso_max_size(netdev, GSO_MAX_SIZE);
- 	mlx5e_set_xdp_feature(netdev);
- 	mlx5e_set_netdev_dev_addr(netdev);
--- 
-2.34.1
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+This patch series was applied (using b4) to base:
+ Base: attempting to guess base-commit...
+ Base: tags/next-20250606 (exact match)
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250607200229.30538-1-alex.vinarskis@gmail.com:
+
+arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dtb: gpu@3d00000 (qcom,adreno-43050c01): 'zap_shader' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/display/msm/gpu.yaml#
+
+
+
+
 
