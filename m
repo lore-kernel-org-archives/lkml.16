@@ -1,149 +1,124 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8850825B1F0;
-	Mon,  9 Jun 2025 13:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA0B25D20A;
+	Mon,  9 Jun 2025 13:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749476905; cv=none; b=f0mBXNnP/2B3ktjCBnhcp1oG4hoA71ob+qzqEv2fVyNPSmwqGpEqrn9dcIuYuFHqJQJr5r6CRRHMCDJQ+rN1St7WuaB448pHBgvg5RrEKXDgDZAo5uzTOYzY8ojAM0EC7hd8AX60tYIWIW4oVgjrLLNEb8SlwSsYLsQKqVrgLLM=
+	t=1749476908; cv=none; b=c1RIFitbXLyjE04L9tZ0xGMA10C7MHl/tIzbQ3pygCBvp9WO1snOZBT4Jg6dL9D7S1WgTnE+5QbCB0rkDJpnONKaJ9qXUn9fDw7mZg9b1cmLGvyPrkftiXzLS6p9znbE0oCgJInPwVEtxhlLjmX5PxH2zW1cgcuJ+NfDXKCthhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749476905; c=relaxed/simple;
-	bh=BPlwmMomgPvNeJIPYqQeejjwBJJNHh+k3OD1Bfrq4HE=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=ucycg4/mJFU7uUY4ebLWjA3IK5Je+5JjItqLAcOF7GNP86WqiK0QkRp8CQFTRnmiua347Z+ExDLP2D9+uk/Km2AVH1bHUIq2/z3KZfxxDCgMB7G+CRMvjh5RDW0q5KYAIh5W17OMKSjMj/RdcuL6C0wS6j4w3nx3CKzdxRsYoH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=B7wLA6vs; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1749476908; c=relaxed/simple;
+	bh=tToi8tfhAwhbg8M9op98TVL8Co/zc0UThzZIsHoprw0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=uXiLFoyUR5N4ZYHMKNJ8X+ePbRIhIF1YPD+CbwU45/TrfB+sifFhdpOzj36jYCp3CV0MiGoq3QLecSeFNfn4CRXrC5VwD1/VOE95CX5tYv5YejOBm8a+CDGWTQ/oq7as30h0vWUOwt3acj68dCUjR+hES8wzVQ+jACmXwmOM74o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Da2ESV3w; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="B7wLA6vs"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 04AE12117470; Mon,  9 Jun 2025 06:48:23 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 04AE12117470
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749476903;
-	bh=j31y8dX5VzTCMYV6bDl/i9BeZDJRVIOFcCu+6HPbEq4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=B7wLA6vsg1C++tmBXd1Y1ci1y2eSLPmGnImcvGqACPvF+AxvNGe2zLHA/4gDfB1Ir
-	 3dQJTUpa6GZOQgjAa6EN0Tk3dr+u4gZsG2dVLm78teXs+BdFoXlKfveL1rfxO8+18B
-	 Rh24IrBup+Myi4ZvkL/sjp8c1oiP+5HOYKQRbvlo=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: 
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=EF=BF=BD=7EDski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>,
-	Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: [PATCH v5 0/5] Allow dyn MSI-X vector allocation of MANA
-Date: Mon,  9 Jun 2025 06:48:21 -0700
-Message-Id: <1749476901-27251-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Da2ESV3w"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 559D7mBl023584;
+	Mon, 9 Jun 2025 15:48:13 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	ZPw43GyUj1rBJP84OCQo1msrNqbW6/iMIuz9l5cgfso=; b=Da2ESV3wDgMuxbze
+	YdxFyNKei6Y3UtR+PJG4y5K3Yd+ssCiWIV4oJdpHfyEqfZKtsIfIkBEBq0D56dL3
+	H67LkWp+nfFIvh23EQA5ySqQLU0DuVQW60Y4qLOeXYnI+knjmDE6ABAQmMKuLMYu
+	t+yQi0iP5xYnQSUn99W3of3me9+5VbsjNoEKURzRe6jJp+xkB2Sisw11SQqkx+xk
+	i6D3HkEMmsSEz+SBQa0PepRJXpdSQ0s98CCMus/V7SBH7eoKNFX6JXmnIqHH2n0x
+	/hLfMbnNDDct1GVm/MFizuoQPDPIl8lW7ZfdSbRNS7S3/GeWUijljIDsZMo743kD
+	OeuU1A==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474cs2fxvj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 09 Jun 2025 15:48:13 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 29892400CB;
+	Mon,  9 Jun 2025 15:47:23 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 708B7BA62B4;
+	Mon,  9 Jun 2025 15:46:32 +0200 (CEST)
+Received: from localhost (10.130.73.167) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 9 Jun
+ 2025 15:46:32 +0200
+From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+Date: Mon, 9 Jun 2025 15:46:24 +0200
+Subject: [PATCH 4/4] media: i2c: vd55g1: Use first index of mbus codes
+ array as default
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250609-fix_vd55g1-v1-4-594f1134e3fb@foss.st.com>
+References: <20250609-fix_vd55g1-v1-0-594f1134e3fb@foss.st.com>
+In-Reply-To: <20250609-fix_vd55g1-v1-0-594f1134e3fb@foss.st.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Sylvain Petinot
+	<sylvain.petinot@foss.st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin
+ Mugnier <benjamin.mugnier@foss.st.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-09_05,2025-06-09_01,2025-03-28_01
 
-In this patchset we want to enable the MANA driver to be able to
-allocate MSI-X vectors in PCI dynamically.
+Factorize code and prevent future erros in case of media bus codes
+change.
+Rename VD55G1_DEFAULT_MODE to VD55G1_MODE_DEF to mimic other macros
+while at it.
 
-The first patch exports pci_msix_prepare_desc() in PCI to be able to
-correctly prepare descriptors for dynamically added MSI-X vectors.
-
-The second patch adds the support of dynamic vector allocation in
-pci-hyperv PCI controller by enabling the MSI_FLAG_PCI_MSIX_ALLOC_DYN
-flag and using the pci_msix_prepare_desc() exported in first patch.
-
-The third patch adds a detailed description of the irq_setup(), to
-help understand the function design better.
-
-The fourth patch is a preparation patch for mana changes to support
-dynamic IRQ allocation. It contains changes in irq_setup() to allow
-skipping first sibling CPU sets, in case certain IRQs are already
-affinitized to them.
-
-The fifth patch has the changes in MANA driver to be able to allocate
-MSI-X vectors dynamically. If the support does not exist it defaults to
-older behavior.
-
-Since this patchset has patches from PCI and net tree, I am not entirely
-sure what should be the target tree. Any suggestions/recommendations on
-the same are welcomed.
-
+Signed-off-by: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
 ---
- Changes in v5
- * Added Yury as Author of the 3rd patch
- * Fixed base commit information in the cover letter
- * Correctly initialized start_irqs, so that it is cleaned properly
- * rearranged the cpu_lock to minimize the critical section
----
- Change in v4
- * add a patch describing the functionality of irq_setup() through a 
-   comment
- * In irq_setup(), avoid using a label next_cpumask:
- * modify the changes in MANA patch about restructuring the error
-   handling path in mana_gd_setup_dyn_irqs()
- * modify the mana_gd_setup_irqs() to simplify handling around
-   start_irq_index
- * add warning if an invalid gic is returned
- * place the xa_destroy() cleanup in mana_gd_remove
----
- Changes in v3
- * split the 3rd patch into preparation patch around irq_setup() and
-   changes in mana driver to allow dynamic IRQ allocation
- * Add arm64 support for dynamic MSI-X allocation in pci_hyperv
-   controller
----
- Changes in v2
- * split the first patch into two(exporting the preapre_desc
-   func and using the function and flag in pci-hyperv)
- * replace 'pci vectors' by 'MSI-X vectors'
- * Change the cover letter description to align with changes made
----
+ drivers/media/i2c/vd55g1.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-Shradha Gupta (5):
-  PCI/MSI: Export pci_msix_prepare_desc() for dynamic MSI-X allocations
-  PCI: hv: Allow dynamic MSI-X vector allocation
-  net: mana: explain irq_setup() algorithm
-  net: mana: Allow irq_setup() to skip cpus for affinity
-  net: mana: Allocate MSI-X vectors dynamically
+diff --git a/drivers/media/i2c/vd55g1.c b/drivers/media/i2c/vd55g1.c
+index dec6e3e231d54a742bdd08ff2a506c152bb89429..177caa5470cfcf49e0ae2fb568d7872a5608a11f 100644
+--- a/drivers/media/i2c/vd55g1.c
++++ b/drivers/media/i2c/vd55g1.c
+@@ -111,9 +111,9 @@
+ 
+ #define VD55G1_WIDTH					804
+ #define VD55G1_HEIGHT					704
+-#define VD55G1_DEFAULT_MODE				0
++#define VD55G1_MODE_DEF					0
+ #define VD55G1_NB_GPIOS					4
+-#define VD55G1_MEDIA_BUS_FMT_DEF			MEDIA_BUS_FMT_Y8_1X8
++#define VD55G1_MBUS_CODE_DEF				0
+ #define VD55G1_DGAIN_DEF				256
+ #define VD55G1_AGAIN_DEF				19
+ #define VD55G1_EXPO_MAX_TERM				64
+@@ -1260,7 +1260,8 @@ static int vd55g1_set_pad_fmt(struct v4l2_subdev *sd,
+ static int vd55g1_init_state(struct v4l2_subdev *sd,
+ 			     struct v4l2_subdev_state *sd_state)
+ {
+-	unsigned int def_mode = VD55G1_DEFAULT_MODE;
++	unsigned int def_mode = VD55G1_MODE_DEF;
++	unsigned int def_mbus_code = VD55G1_MBUS_CODE_DEF;
+ 	struct vd55g1 *sensor = to_vd55g1(sd);
+ 	struct v4l2_subdev_format fmt = { 0 };
+ 	struct v4l2_subdev_route routes[] = {
+@@ -1278,7 +1279,8 @@ static int vd55g1_init_state(struct v4l2_subdev *sd,
+ 		return ret;
+ 
+ 	vd55g1_update_img_pad_format(sensor, &vd55g1_supported_modes[def_mode],
+-				     VD55G1_MEDIA_BUS_FMT_DEF, &fmt.format);
++				     vd55g1_mbus_codes[def_mbus_code].code,
++				     &fmt.format);
+ 
+ 	return vd55g1_set_pad_fmt(sd, sd_state, &fmt);
+ }
 
- .../net/ethernet/microsoft/mana/gdma_main.c   | 363 ++++++++++++++----
- drivers/pci/controller/pci-hyperv.c           |   3 +-
- drivers/pci/msi/irqdomain.c                   |   5 +-
- include/linux/msi.h                           |   2 +
- include/net/mana/gdma.h                       |   8 +-
- 5 files changed, 295 insertions(+), 86 deletions(-)
-
-
-base-commit: 2c7e4a2663a1ab5a740c59c31991579b6b865a26
 -- 
-2.34.1
+2.25.1
 
