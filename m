@@ -1,89 +1,206 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6FD143ABC;
-	Mon,  9 Jun 2025 10:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F53343ABC;
+	Mon,  9 Jun 2025 10:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749463523; cv=none; b=hVv2ItOj3b1Kc1ljnQ9EmG0kWRH7t+GQS3iVgGGAV7D8I9/Zyv8cUthwMlP8FgeO/RiXyG1nYdLuKlVfDGwMxT6IZtfrgMs7wqpW5RT0NWSf75ntuWTRQl/w6y8Lv2Re+ItjykZ4mmIrGFsIUuiPxYmtbmbwGIdx6wVKd44aQuo=
+	t=1749463565; cv=none; b=HazTTYuKgvpjwRmopUSCkDn7J5sb4lSu1B5IWKEgDbqXwqI0+dqajtvTt5gELHxaXmk/AotbohZdI18cSx2Z9DLdewP776m8khxrbmnLxf2zMTbQK4ae25OLzvtvTZIdgmU/MVpfjparIEO3LAEXV0rM75yijw82P5F5CQfuqK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749463523; c=relaxed/simple;
-	bh=LIaYfTdy4VX2SijSB1fsERZSR/2FSunWOglQaGexf38=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VZ/iIKWS5tue13YnRsOeAfcywbH9hndGxrH+kKTMRyYxvQoc/hWmJfC+VBjY5Yy0ertGtMMoiTwGn+TNofVgxxXgu5YHmxN2Tuld+H3nn+TQh9ItrT1n09vT+wF67YMlYsLtRL0FyrxBvp7A7Kun4HrTjl1IGIjQ1L9m/15XhAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=cL1OvQ+7; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1749463565; c=relaxed/simple;
+	bh=Oxi6CvbtEwJFAIheS0Yjn81hSn8AcxgbUDDVGvBrago=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MEw8QhkLGV32zN48fkYC6PomBEL4g6kb6NsQQVsP4aoXqZJdh0Nh0MJISEsH+oi6BYSFUm6Po5NE+6/EZh+RZ/oA64DYE+fkbKAOJnS44NdX2o/OC9RFqaGXpct7zMzDjsFu1EzRRKNrVJYVw+yx2nL2itCSpXMxmGPvj1E3ujQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=KqiG/a9D; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="cL1OvQ+7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1749463518;
-	bh=LIaYfTdy4VX2SijSB1fsERZSR/2FSunWOglQaGexf38=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cL1OvQ+7LsfOUWE3rHXhvHPEooM2uTSuf9JmQZBP4cMkLtVfP5lxnRYlps6BLkWpy
-	 UZNls2o1oZoFErLIvQnIjlSfRjLhtg+obZx/kPsuFWK/qlxy8IB1b5O7+jkXYhLHew
-	 21zgt0otmTBl/5DHfU9yKpOcmjRhLWdpmAQpNP7w=
-Date: Mon, 9 Jun 2025 12:05:18 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>, 
-	linux-sh@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH 0/3] tools/nolibc: add support for SuperH
-Message-ID: <66678d81-b1ac-48de-be82-1c82ca1c3e31@t-8ch.de>
-References: <20250609-nolibc-sh-v1-0-9dcdb1b66bb5@weissschuh.net>
- <0bd3da32be2d82f8ee6f6a544d9d8f8b48b02cd0.camel@physik.fu-berlin.de>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="KqiG/a9D"
+Received: from isaac-ThinkPad-T16-Gen-2.lan (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 35F967F0;
+	Mon,  9 Jun 2025 12:05:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1749463554;
+	bh=Oxi6CvbtEwJFAIheS0Yjn81hSn8AcxgbUDDVGvBrago=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=KqiG/a9DhTbbfF1wJw6AV7gP30WzcwlHVANqLm2+Qlfq+XKFk83yU83H9YI7P59ed
+	 p++JtIXxXNcw2Emrfgbsn9tM7BDFRWwDp1uzSEb3zx39UVvwTv8BC8Owb0z4k0igdu
+	 i5fHUWFSlAxdjPaXB1l0LwPAOYHqaTS6KD9qA4EU=
+From: Isaac Scott <isaac.scott@ideasonboard.com>
+To: laurent.pinchart@ideasonboard.com
+Cc: kieran.bingham@ideasonboard.com,
+	rmfrfs@gmail.com,
+	martink@posteo.de,
+	kernel@puri.sm,
+	mchehab@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	linux-media@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Isaac Scott <isaac.scott@ideasonboard.com>,
+	Rui Miguel Silva <rui.silva@linaro.org>
+Subject: [PATCH v3 1/2] media: imx-mipi-csis: Refactor interrupt status registers
+Date: Mon,  9 Jun 2025 11:05:43 +0100
+Message-ID: <20250609100544.571821-2-isaac.scott@ideasonboard.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250609100544.571821-1-isaac.scott@ideasonboard.com>
+References: <20250609100544.571821-1-isaac.scott@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <0bd3da32be2d82f8ee6f6a544d9d8f8b48b02cd0.camel@physik.fu-berlin.de>
 
-Hi Adrian,
+The NXP i.MX 8 MP CSI-2 receiver features multiple interrupt and debug
+status sources which span multiple registers. The driver currently
+supports two interrupt source registers, and attributes the
+mipi_csis_event event entries to those registers through a boolean debug
+field that indicate if the event relates to the main interrupt status
+(false) or debug interrupt status (true) register. To make it easier to
+add new event fields, replace the debug bool with a 'status index'
+integer than indicates the index of the corresponding status register.
 
-On 2025-06-09 11:53:25+0200, John Paul Adrian Glaubitz wrote:
-> On Mon, 2025-06-09 at 11:28 +0200, Thomas Weißschuh wrote:
-> > Add support for SuperH/"sh" to nolibc.
-> > Only sh4 is tested for now.
-> > 
-> > This is only tested on QEMU so far.
-> > Additional testing would be very welcome.
-> > 
-> > Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-> > ---
-> > Thomas Weißschuh (3):
-> >       selftests/nolibc: fix EXTRACONFIG variables ordering
-> >       selftests/nolibc: use file driver for QEMU serial
-> >       tools/nolibc: add support for SuperH
-> > 
-> >  tools/include/nolibc/arch-sh.h              | 162 ++++++++++++++++++++++++++++
-> >  tools/include/nolibc/arch.h                 |   2 +
-> >  tools/testing/selftests/nolibc/Makefile     |  15 ++-
-> >  tools/testing/selftests/nolibc/run-tests.sh |   3 +-
-> >  4 files changed, 177 insertions(+), 5 deletions(-)
-> > ---
-> > base-commit: 6275a61db2f0586b8a5d651dfc7b4aacf9d0b2d6
-> > change-id: 20250528-nolibc-sh-8b4e3bb8efcb
-> 
-> I have no experience with the selftest code but I can definitely test
-> on real hardware if you can point me to some instructions on how to
-> run the tests.
+Signed-off-by: Isaac Scott <isaac.scott@ideasonboard.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Rui Miguel Silva <rui.silva@linaro.org>
 
-That would be much appreciated.
-You can compile the selftests like this:
+---
 
-$ cd tools/testing/selftests/nolibc
-$ make [CC= CFLAGS_EXTRA=] nolibc-test
-$ ./nolibc-test
+Changes since v2:
+- Changed enum names to MIPI_CSIS_EVENT_TYPE_MAIN_0 and
+  MIPI_CSIS_EVENT_TYPE_DEBUG
+- Added imx-mipi-csis to commit title
 
-The test executable is fully self-contained, you can also cross-compile
-it and copy it around.
+Changes since v1:
+- Switched from magic numbers to enum.
+---
+ drivers/media/platform/nxp/imx-mipi-csis.c | 74 ++++++++++++----------
+ 1 file changed, 41 insertions(+), 33 deletions(-)
 
+diff --git a/drivers/media/platform/nxp/imx-mipi-csis.c b/drivers/media/platform/nxp/imx-mipi-csis.c
+index d060eadebc7a..72432a8062f5 100644
+--- a/drivers/media/platform/nxp/imx-mipi-csis.c
++++ b/drivers/media/platform/nxp/imx-mipi-csis.c
+@@ -248,8 +248,13 @@
+ #define MIPI_CSI2_DATA_TYPE_RAW14		0x2d
+ #define MIPI_CSI2_DATA_TYPE_USER(x)		(0x30 + (x))
+ 
++enum mipi_csis_event_type {
++	MIPI_CSIS_EVENT_TYPE_MAIN_0 = 0,
++	MIPI_CSIS_EVENT_TYPE_DEBUG = 1,
++};
++
+ struct mipi_csis_event {
+-	bool debug;
++	enum mipi_csis_event_type status_index;
+ 	u32 mask;
+ 	const char * const name;
+ 	unsigned int counter;
+@@ -257,30 +262,30 @@ struct mipi_csis_event {
+ 
+ static const struct mipi_csis_event mipi_csis_events[] = {
+ 	/* Errors */
+-	{ false, MIPI_CSIS_INT_SRC_ERR_SOT_HS,		"SOT Error" },
+-	{ false, MIPI_CSIS_INT_SRC_ERR_LOST_FS,		"Lost Frame Start Error" },
+-	{ false, MIPI_CSIS_INT_SRC_ERR_LOST_FE,		"Lost Frame End Error" },
+-	{ false, MIPI_CSIS_INT_SRC_ERR_OVER,		"FIFO Overflow Error" },
+-	{ false, MIPI_CSIS_INT_SRC_ERR_WRONG_CFG,	"Wrong Configuration Error" },
+-	{ false, MIPI_CSIS_INT_SRC_ERR_ECC,		"ECC Error" },
+-	{ false, MIPI_CSIS_INT_SRC_ERR_CRC,		"CRC Error" },
+-	{ false, MIPI_CSIS_INT_SRC_ERR_UNKNOWN,		"Unknown Error" },
+-	{ true, MIPI_CSIS_DBG_INTR_SRC_DT_NOT_SUPPORT,	"Data Type Not Supported" },
+-	{ true, MIPI_CSIS_DBG_INTR_SRC_DT_IGNORE,	"Data Type Ignored" },
+-	{ true, MIPI_CSIS_DBG_INTR_SRC_ERR_FRAME_SIZE,	"Frame Size Error" },
+-	{ true, MIPI_CSIS_DBG_INTR_SRC_TRUNCATED_FRAME,	"Truncated Frame" },
+-	{ true, MIPI_CSIS_DBG_INTR_SRC_EARLY_FE,	"Early Frame End" },
+-	{ true, MIPI_CSIS_DBG_INTR_SRC_EARLY_FS,	"Early Frame Start" },
++	{ MIPI_CSIS_EVENT_TYPE_MAIN_0, MIPI_CSIS_INT_SRC_ERR_SOT_HS,		"SOT Error"},
++	{ MIPI_CSIS_EVENT_TYPE_MAIN_0, MIPI_CSIS_INT_SRC_ERR_LOST_FS,		"Lost Frame Start Error"},
++	{ MIPI_CSIS_EVENT_TYPE_MAIN_0, MIPI_CSIS_INT_SRC_ERR_LOST_FE,		"Lost Frame End Error"},
++	{ MIPI_CSIS_EVENT_TYPE_MAIN_0, MIPI_CSIS_INT_SRC_ERR_OVER,		"FIFO Overflow Error"},
++	{ MIPI_CSIS_EVENT_TYPE_MAIN_0, MIPI_CSIS_INT_SRC_ERR_WRONG_CFG,		"Wrong Configuration Error"},
++	{ MIPI_CSIS_EVENT_TYPE_MAIN_0, MIPI_CSIS_INT_SRC_ERR_ECC,		"ECC Error"},
++	{ MIPI_CSIS_EVENT_TYPE_MAIN_0, MIPI_CSIS_INT_SRC_ERR_CRC,		"CRC Error"},
++	{ MIPI_CSIS_EVENT_TYPE_MAIN_0, MIPI_CSIS_INT_SRC_ERR_UNKNOWN,		"Unknown Error"},
++	{ MIPI_CSIS_EVENT_TYPE_DEBUG, MIPI_CSIS_DBG_INTR_SRC_DT_NOT_SUPPORT,	"Data Type Not Supported"},
++	{ MIPI_CSIS_EVENT_TYPE_DEBUG, MIPI_CSIS_DBG_INTR_SRC_DT_IGNORE,		"Data Type Ignored"},
++	{ MIPI_CSIS_EVENT_TYPE_DEBUG, MIPI_CSIS_DBG_INTR_SRC_ERR_FRAME_SIZE,	"Frame Size Error"},
++	{ MIPI_CSIS_EVENT_TYPE_DEBUG, MIPI_CSIS_DBG_INTR_SRC_TRUNCATED_FRAME,	"Truncated Frame"},
++	{ MIPI_CSIS_EVENT_TYPE_DEBUG, MIPI_CSIS_DBG_INTR_SRC_EARLY_FE,		"Early Frame End"},
++	{ MIPI_CSIS_EVENT_TYPE_DEBUG, MIPI_CSIS_DBG_INTR_SRC_EARLY_FS,		"Early Frame Start"},
+ 	/* Non-image data receive events */
+-	{ false, MIPI_CSIS_INT_SRC_EVEN_BEFORE,		"Non-image data before even frame" },
+-	{ false, MIPI_CSIS_INT_SRC_EVEN_AFTER,		"Non-image data after even frame" },
+-	{ false, MIPI_CSIS_INT_SRC_ODD_BEFORE,		"Non-image data before odd frame" },
+-	{ false, MIPI_CSIS_INT_SRC_ODD_AFTER,		"Non-image data after odd frame" },
++	{ MIPI_CSIS_EVENT_TYPE_MAIN_0, MIPI_CSIS_INT_SRC_EVEN_BEFORE,		"Non-image data before even frame"},
++	{ MIPI_CSIS_EVENT_TYPE_MAIN_0, MIPI_CSIS_INT_SRC_EVEN_AFTER,		"Non-image data after even frame"},
++	{ MIPI_CSIS_EVENT_TYPE_MAIN_0, MIPI_CSIS_INT_SRC_ODD_BEFORE,		"Non-image data before odd frame"},
++	{ MIPI_CSIS_EVENT_TYPE_MAIN_0, MIPI_CSIS_INT_SRC_ODD_AFTER,		"Non-image data after odd frame"},
+ 	/* Frame start/end */
+-	{ false, MIPI_CSIS_INT_SRC_FRAME_START,		"Frame Start" },
+-	{ false, MIPI_CSIS_INT_SRC_FRAME_END,		"Frame End" },
+-	{ true, MIPI_CSIS_DBG_INTR_SRC_CAM_VSYNC_FALL,	"VSYNC Falling Edge" },
+-	{ true, MIPI_CSIS_DBG_INTR_SRC_CAM_VSYNC_RISE,	"VSYNC Rising Edge" },
++	{ MIPI_CSIS_EVENT_TYPE_MAIN_0, MIPI_CSIS_INT_SRC_FRAME_START,		"Frame Start"},
++	{ MIPI_CSIS_EVENT_TYPE_MAIN_0, MIPI_CSIS_INT_SRC_FRAME_END,		"Frame End"},
++	{ MIPI_CSIS_EVENT_TYPE_DEBUG, MIPI_CSIS_DBG_INTR_SRC_CAM_VSYNC_FALL,	"VSYNC Falling Edge"},
++	{ MIPI_CSIS_EVENT_TYPE_DEBUG, MIPI_CSIS_DBG_INTR_SRC_CAM_VSYNC_RISE,	"VSYNC Rising Edge"},
+ };
+ 
+ #define MIPI_CSIS_NUM_EVENTS ARRAY_SIZE(mipi_csis_events)
+@@ -765,32 +770,35 @@ static irqreturn_t mipi_csis_irq_handler(int irq, void *dev_id)
+ 	struct mipi_csis_device *csis = dev_id;
+ 	unsigned long flags;
+ 	unsigned int i;
+-	u32 status;
+-	u32 dbg_status;
++	u32 status[2];
+ 
+-	status = mipi_csis_read(csis, MIPI_CSIS_INT_SRC);
+-	dbg_status = mipi_csis_read(csis, MIPI_CSIS_DBG_INTR_SRC);
++	status[MIPI_CSIS_EVENT_TYPE_MAIN_0] =
++				mipi_csis_read(csis, MIPI_CSIS_INT_SRC);
++	status[MIPI_CSIS_EVENT_TYPE_DEBUG] =
++				mipi_csis_read(csis, MIPI_CSIS_DBG_INTR_SRC);
+ 
+ 	spin_lock_irqsave(&csis->slock, flags);
+ 
+ 	/* Update the event/error counters */
+-	if ((status & MIPI_CSIS_INT_SRC_ERRORS) || csis->debug.enable) {
++	if ((status[MIPI_CSIS_EVENT_TYPE_MAIN_0] & MIPI_CSIS_INT_SRC_ERRORS) ||
++							csis->debug.enable) {
+ 		for (i = 0; i < MIPI_CSIS_NUM_EVENTS; i++) {
+ 			struct mipi_csis_event *event = &csis->events[i];
+ 
+-			if ((!event->debug && (status & event->mask)) ||
+-			    (event->debug && (dbg_status & event->mask)))
++			if (status[event->status_index] & event->mask)
+ 				event->counter++;
+ 		}
+ 	}
+ 
+-	if (status & MIPI_CSIS_INT_SRC_FRAME_START)
++	if (status[MIPI_CSIS_EVENT_TYPE_MAIN_0] & MIPI_CSIS_INT_SRC_FRAME_START)
+ 		mipi_csis_queue_event_sof(csis);
+ 
+ 	spin_unlock_irqrestore(&csis->slock, flags);
+ 
+-	mipi_csis_write(csis, MIPI_CSIS_INT_SRC, status);
+-	mipi_csis_write(csis, MIPI_CSIS_DBG_INTR_SRC, dbg_status);
++	mipi_csis_write(csis, MIPI_CSIS_INT_SRC,
++			status[MIPI_CSIS_EVENT_TYPE_MAIN_0]);
++	mipi_csis_write(csis, MIPI_CSIS_DBG_INTR_SRC,
++			status[MIPI_CSIS_EVENT_TYPE_DEBUG]);
+ 
+ 	return IRQ_HANDLED;
+ }
+-- 
+2.43.0
 
-Thomas
