@@ -1,157 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F726C133;
-	Mon,  9 Jun 2025 09:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF5531A9B4A;
+	Mon,  9 Jun 2025 09:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749461864; cv=none; b=IS5OSWhUChuSTwIdzMn14QhLnIDgOWnOX8Bp/6ue804+vSi1VObYp1hqTgcxuj/MywzyUCVCu2KLHbymxOBdqjryUTiWR2XzYmtY8X6yYnSq9HZz/MHBaSC4kNbs0raUhjQuvotJ14z/5u587uWgEUDsXEVuISge9Bu2efJyuZ0=
+	t=1749461938; cv=none; b=MHPJ8enjpMTRykhYQelcPotuWbuRmwsm6lrt0l1108UGJ59PjFFrMuF8rU+eiCMRbLIghIOtFcrOP1Tojnt543f8dRenx2Xn0HRMgBEoIpjS1cxeKJu4CHXl9cwtJM2F54CpTk2MvDh2W3h72bjX6INwSf5Q+fuNLmUNugRb1ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749461864; c=relaxed/simple;
-	bh=XwpFufb+SDXSj2ejHO2odwMZAl/fSCLYz1xkpvW9CS4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TxalHECEsmoYGq2phVJYHE907YiINBk25Ogs5Q7hqiHe9lt3uL1JuV7joYU/YP/sFOA9bpEAwLqpCpCTwEx3Kv0Hbb9u+EGWUZGBqCzZ1BLbRS7awtWUf+/4CIf4u97kt/UfGJcMHZKa9KxmKJGtEVhM9r2Qq/13Wxsc1VQLu5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KgOAmjTI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749461938; c=relaxed/simple;
+	bh=zbvV33JMZvTvWDfJU5HDNM9KGa+BZqS9I2y7gEHZzFI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=HxDg6MencqAjjAQ7WrTOLaLYJrtyD7R/RGkSZHA3VsCnIZQyf6W1OvVsUBUJmRqaAtktBaGwOrFxUTLB78+hcpfs5kSvUgudQPCUfYa6FpbzLT4/aFKIZUdR02z3Qc8AjpsAGrV6JC+7KcNJgdH0Wh9ZUD04j8t7I2iKOuZVlxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ev4jiEc/; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KgOAmjTI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19326C4CEEB;
-	Mon,  9 Jun 2025 09:37:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749461864;
-	bh=XwpFufb+SDXSj2ejHO2odwMZAl/fSCLYz1xkpvW9CS4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KgOAmjTIuN6UDbFDyVwRuMVof2MC3ON+k5R3Yqnh40cpJ3nkD2XVrkJntiNv9YmzJ
-	 9kDAMpwInUY/N7A37y/mMxx7gjqxmsJ8Gy7v0grPtUhFZfDg22/GE2y+Dwgb33ZcRy
-	 711dsrI9/RLdx9T3sOcVfCHcUZzO8v2Y2TcuN9jDAUC2Au5pdXJFHXatqJTUpbIxYV
-	 xs13XYTM9GIVsUjZFX2Eou3ZRZX5ILI4HCHLHRoLIHATyLgeP24YGZ8Kc/dqCOnTFy
-	 bXwaccwBvbU8I0ynwq51zYs4e9tgJbHTLRpkQzoDqL1tR7C5V6z82X8/GB8ygw/3ni
-	 YDsRgb8QoCYag==
-Date: Mon, 9 Jun 2025 11:37:38 +0200
-From: Alexey Gladkov <legion@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Petr Pavlu <petr.pavlu@suse.com>, Luis Chamberlain <mcgrof@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org,
-	linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] modules: Add macros to specify modinfo prefix
-Message-ID: <aEarYndP4uo-a0eL@example.org>
-References: <cover.1748335606.git.legion@kernel.org>
- <5cd53f6a4bca5186d3c9c47c070883131826c5eb.1748335606.git.legion@kernel.org>
- <CAK7LNATkXFqKLPcHFg-WDynRrVy3BRs6twvcyo2YJQqZBy9xsQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ev4jiEc/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749461937; x=1780997937;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=zbvV33JMZvTvWDfJU5HDNM9KGa+BZqS9I2y7gEHZzFI=;
+  b=Ev4jiEc/+eLgZJMFvLbH++d4saClr1oHMojBdVbCeh+luG6DTn3/+t1c
+   Q6zcILKaQTY2onrOjQzDPOO/9FtY1wLYaeAoM+Wjoo/IsNPOk+3LmalkJ
+   trgva7LhT4nq+hkaENZYug/W+ZxKyNxfYpT6hZULbmI+EpZoNvF9Vwmgu
+   FYXtHBDnqUX9xVa7FyU38qMDS1o7Ga0Pku+V90kOo2tMegGJ1zJRinZGO
+   fsiWy0zJZRnHLLdX2B/3xkZl/AZO45vdcQZG8QeMOrUn5hvrEGnZPWM4m
+   Fc3CFqefTjQ6+rp+5pqDaZdZKjWf46eO2+hP2ttudlEl7O0bv4MzSZLsA
+   g==;
+X-CSE-ConnectionGUID: uWSDG2F8QG2FtUhdprGLOA==
+X-CSE-MsgGUID: bVUbWsLLT82tNR1GTXxglw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="51237776"
+X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
+   d="scan'208";a="51237776"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 02:38:57 -0700
+X-CSE-ConnectionGUID: ZrfCtFc8TBS7QNAQGIRSzA==
+X-CSE-MsgGUID: jgRA0eSYSkGSZHNDtfIAIQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
+   d="scan'208";a="151457547"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.22])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 02:38:51 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 9 Jun 2025 12:38:47 +0300 (EEST)
+To: Pratap Nirujogi <pratap.nirujogi@amd.com>
+cc: andi.shyti@kernel.org, rdunlap@infradead.org, 
+    Hans de Goede <hdegoede@redhat.com>, sfr@canb.auug.org.au, 
+    linux-next@vger.kernel.org, linux-i2c@vger.kernel.org, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com, 
+    king.li@amd.com, dantony@amd.com
+Subject: Re: [PATCH v3 2/3] i2c: amd-isp: Initialize unique adpater name
+In-Reply-To: <6136cfca-45ca-5832-cf5b-f49e16f6ed5e@linux.intel.com>
+Message-ID: <69495068-fbee-f123-27f2-226eda8684b8@linux.intel.com>
+References: <20250606213446.1145099-1-pratap.nirujogi@amd.com> <20250606213446.1145099-3-pratap.nirujogi@amd.com> <6136cfca-45ca-5832-cf5b-f49e16f6ed5e@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK7LNATkXFqKLPcHFg-WDynRrVy3BRs6twvcyo2YJQqZBy9xsQ@mail.gmail.com>
+Content-Type: multipart/mixed; boundary="8323328-2116048114-1749461927=:948"
 
-On Mon, Jun 02, 2025 at 04:49:24PM +0900, Masahiro Yamada wrote:
-> On Tue, May 27, 2025 at 6:08 PM Alexey Gladkov <legion@kernel.org> wrote:
-> >
-> > The __MODULE_INFO macros always use __MODULE_INFO_PREFIX. The only way
-> > to use a different prefix is to override __MODULE_INFO_PREFIX, which is
-> > not very useful.
-> 
-> Not necessarily.
-> This would be a very special case only used in modpost,
-> and modpost can use MODULE_INFO() instead.
-> 
-> 
->         list_for_each_entry_safe(alias, next, &mod->aliases, node) {
-> -               buf_printf(&buf, "MODULE_ALIAS_MODNAME(\"%s\", \"%s\");\n",
-> +               buf_printf(&buf, "MODULE_INFO(\"%s\".alias, \"%s\");\n",
->                            alias->builtin_modname, alias->str);
->                 list_del(&alias->node);
->                 free(alias->builtin_modname);
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-You can't do that because a character can't contain quotation marks
-and periods.
+--8323328-2116048114-1749461927=:948
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-.vmlinux.export.c:16163:17: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘.’ token
-16163 | MODULE_INFO(ahci.alias, "pci:v*d*sv*sd*bc01sc06i01*");
-      |                 ^
-././include/linux/compiler_types.h:83:23: note: in definition of macro ‘___PASTE’
-   83 | #define ___PASTE(a,b) a##b
-      |                       ^
+On Mon, 9 Jun 2025, Ilpo J=E4rvinen wrote:
 
-The same thing for variant with quotes:
+> On Fri, 6 Jun 2025, Pratap Nirujogi wrote:
 
-.vmlinux.export.c:16163:13: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before string constant
-16163 | MODULE_INFO("ahci".alias, "pci:v*d*sv*sd*bc01sc06i01*");
-      |             ^~~~~~
+You also have a typo in the subject, adpater -> adapter.
 
-But I can do something like this to make it work:
-
-	buf_printf(&buf,
-		   "#undef __MODULE_INFO_PREFIX\n"
-		   "#define __MODULE_INFO_PREFIX\n");
-
-	list_for_each_entry_safe(alias, next, &mod->aliases, node) {
-		buf_printf(&buf, "__MODULE_INFO(%s.alias, unused, \"%s\");\n",
-			   alias->builtin_modname, alias->str);
-
-> 
-> > The new macro will be used in file2alias.c to generate modalias for
-> > builtin modules.
-> >
-> > Signed-off-by: Alexey Gladkov <legion@kernel.org>
-> > Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
+> > Initialize unique name for amdisp i2c adapter, which is used
+> > in the platform driver to detect the matching adapter for
+> > i2c_client creation.
+> >=20
+> > Add definition of amdisp i2c adapter name in a new header file
+> > (include/linux/soc/amd/isp4_misc.h) as it is referred in different
+> > driver modules.
+> >=20
+> > Tested-by: Randy Dunlap <rdunlap@infradead.org>
+> > Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
 > > ---
-> >  include/linux/module.h      | 3 +++
-> >  include/linux/moduleparam.h | 7 +++++--
-> >  2 files changed, 8 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/include/linux/module.h b/include/linux/module.h
-> > index 8050f77c3b64..88048561360f 100644
-> > --- a/include/linux/module.h
-> > +++ b/include/linux/module.h
-> > @@ -170,6 +170,9 @@ struct module_kobject *lookup_or_create_module_kobject(const char *name);
-> >  /* For userspace: you can also call me... */
-> >  #define MODULE_ALIAS(_alias) MODULE_INFO(alias, _alias)
-> >
-> > +#define MODULE_ALIAS_MODNAME(_modname, _alias) \
-> > +       __MODULE_INFO_WITH_PREFIX(_modname ".", alias, alias, _alias)
+> >  drivers/i2c/busses/i2c-designware-amdisp.c |  2 ++
+> >  include/linux/soc/amd/isp4_misc.h          | 12 ++++++++++++
+>=20
+> You forgot to add this new file into MAINTAINERS file.
+>=20
+> >  2 files changed, 14 insertions(+)
+> >  create mode 100644 include/linux/soc/amd/isp4_misc.h
+> >=20
+> > diff --git a/drivers/i2c/busses/i2c-designware-amdisp.c b/drivers/i2c/b=
+usses/i2c-designware-amdisp.c
+> > index ad6f08338124..450793d5f839 100644
+> > --- a/drivers/i2c/busses/i2c-designware-amdisp.c
+> > +++ b/drivers/i2c/busses/i2c-designware-amdisp.c
+> > @@ -8,6 +8,7 @@
+> >  #include <linux/module.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/pm_runtime.h>
+> > +#include <linux/soc/amd/isp4_misc.h>
+> > =20
+> >  #include "i2c-designware-core.h"
+> > =20
+> > @@ -62,6 +63,7 @@ static int amd_isp_dw_i2c_plat_probe(struct platform_=
+device *pdev)
+> > =20
+> >  =09adap =3D &isp_i2c_dev->adapter;
+> >  =09adap->owner =3D THIS_MODULE;
+> > +=09scnprintf(adap->name, sizeof(adap->name), AMDISP_I2C_ADAP_NAME);
+> >  =09ACPI_COMPANION_SET(&adap->dev, ACPI_COMPANION(&pdev->dev));
+> >  =09adap->dev.of_node =3D pdev->dev.of_node;
+> >  =09/* use dynamically allocated adapter id */
+> > diff --git a/include/linux/soc/amd/isp4_misc.h b/include/linux/soc/amd/=
+isp4_misc.h
+> > new file mode 100644
+> > index 000000000000..6738796986a7
+> > --- /dev/null
+> > +++ b/include/linux/soc/amd/isp4_misc.h
+> > @@ -0,0 +1,12 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
 > > +
-> >  /* Soft module dependencies. See man modprobe.d for details.
-> >   * Example: MODULE_SOFTDEP("pre: module-foo module-bar post: module-baz")
-> >   */
-> > diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
-> > index bfb85fd13e1f..3f819fc67c43 100644
-> > --- a/include/linux/moduleparam.h
-> > +++ b/include/linux/moduleparam.h
-> > @@ -20,10 +20,13 @@
-> >  /* Chosen so that structs with an unsigned long line up. */
-> >  #define MAX_PARAM_PREFIX_LEN (64 - sizeof(unsigned long))
-> >
-> > -#define __MODULE_INFO(tag, name, info)                                   \
-> > +#define __MODULE_INFO_WITH_PREFIX(prefix, tag, name, info)               \
-> >         static const char __UNIQUE_ID(name)[]                             \
-> >                 __used __section(".modinfo") __aligned(1)                 \
-> > -               = __MODULE_INFO_PREFIX __stringify(tag) "=" info
-> > +               = prefix __stringify(tag) "=" info
+> > +/*
+> > + * Copyright (C) 2025 Advanced Micro Devices, Inc.
+> > + */
 > > +
-> > +#define __MODULE_INFO(tag, name, info)                                   \
-> > +       __MODULE_INFO_WITH_PREFIX(__MODULE_INFO_PREFIX, tag, name, info)
-> >
-> >  #define __MODULE_PARM_TYPE(name, _type)                                          \
-> >         __MODULE_INFO(parmtype, name##type, #name ":" _type)
-> > --
-> > 2.49.0
-> >
-> 
-> 
-> -- 
-> Best Regards
-> Masahiro Yamada
-> 
+> > +#ifndef __SOC_ISP4_MISC_H
+> > +#define __SOC_ISP4_MISC_H
+> > +
+> > +#define AMDISP_I2C_ADAP_NAME "AMDISP DesignWare I2C adapter"
+> > +
+> > +#endif
+> >=20
+>=20
+>=20
 
--- 
-Rgrds, legion
+--=20
+ i.
 
+--8323328-2116048114-1749461927=:948--
