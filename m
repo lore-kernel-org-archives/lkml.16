@@ -1,90 +1,104 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221D622339;
-	Mon,  9 Jun 2025 04:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C3625C813
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 04:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749441930; cv=none; b=HVjdQLWdG4p7DH0o2rn4ZtUc2z8+kNSulqnm1B49VKNpuSPoUODXtkOy/d/bs8XxxwGMkNyJaSUcDuA1WQAELiHMUWau/55uXoCjQeaSzDxnz0Uv8jiwVOOwpkhDUPM3yzBiqnuQ/Q3Vk/8uxWPa9pZ82vX04IdLShX9gYPNK00=
+	t=1749441956; cv=none; b=XRX982PUi2w2STUIOEo1B8f+LHbYhCc5j4htySMD9mXq4rAeyNq2fr7uif6UnqPZOE5Fx7fPBl8iclYfcQR5TEcp/d5opmWo9XpDe1rq18wOKy44w9KdS+xAnXWgPLc6IPu7jjlcECKu9foQA46FjJshADV1NnDZq08wTdv716E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749441930; c=relaxed/simple;
-	bh=SR1lkzbZ7sW0vxs7n8MlXWnQR+u4npJ+xZrJWtOep24=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cCFMf1b608KVcuyvNfrINL178a5Rma9sd25JLxbdNT8WdVbeflfq2SNWWknkkMRSCcDvXRjMAXdH+hk7HJbNb8KX9Jnvkrt3MzpfoEV7b/OxP/71p/VJaEW3ZmK3xtswbri62DBzjGASYOuX+T0TXOh0G2mcHBvVmx9jEb/s7QU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: f4f5d3d844e611f0b29709d653e92f7d-20250609
-X-CID-CACHE: Type:Local,Time:202506091146+08,HitQuantity:1
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:e53a8877-982c-42b4-b057-1024c2ff2634,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6493067,CLOUDID:9e483725f417c604585cbed8794d6973,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|52,EDM:
-	-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
-	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: f4f5d3d844e611f0b29709d653e92f7d-20250609
-Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
-	(envelope-from <zhangzihuan@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1579250139; Mon, 09 Jun 2025 12:05:19 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id B998BE00891C;
-	Mon,  9 Jun 2025 12:05:18 +0800 (CST)
-X-ns-mid: postfix-68465D7E-5632772
-Received: from [172.25.120.24] (unknown [172.25.120.24])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 94065E008900;
-	Mon,  9 Jun 2025 12:05:15 +0800 (CST)
-Message-ID: <83513599-e007-4d07-ac28-386bc5c7552d@kylinos.cn>
-Date: Mon, 9 Jun 2025 12:05:14 +0800
+	s=arc-20240116; t=1749441956; c=relaxed/simple;
+	bh=L6+1C4CzYabfehH0G4+8SaStDGBeWyrLmUOvSeRJYh4=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=bddQMtqXgObBr/A3iF61AQ/71SZjguaWkcniLZdYuSmpCSsCm4BUCJrZnq2lctxXfvPakwZVYuamTykCcqagvQhGVAR942VXSooBtOmT1/f8qpc3iU0P0o0pJ2B81SggIExZKm1GyNRRt4m1Pb9+kn1si8Ztx6MPX438MxMpY1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=rN3/KtQr; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rN3/KtQr"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250609040550epoutp04186b1cb3a339e98686f4be437c88287c~HRC9lYry-2186521865epoutp04g
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 04:05:50 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250609040550epoutp04186b1cb3a339e98686f4be437c88287c~HRC9lYry-2186521865epoutp04g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1749441950;
+	bh=W0Ty8uQC2ggf7ArBdnQeDtKQVIMY78+qF9VWC+NFGdo=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=rN3/KtQrvZoO5EJWpXFAE+yCgtvoPe7amkm1tf5cMF7fvZ8T0UTH9fjy4usrOHJAh
+	 NpvEbnOX/rv9zDxq2MAyKUMi3Yaxq6RwNNpFqVXAjg7IFwLMnndpieOCpPNZacU381
+	 079KqPrn/a2xLCYM8AuH05zDe665qLdT1Lp6xaPs=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
+	20250609040550epcas5p44ffe74ab72a0659449132c1e2595348c~HRC9FgbNP1796017960epcas5p4L;
+	Mon,  9 Jun 2025 04:05:50 +0000 (GMT)
+Received: from epcas5p4.samsung.com (unknown [182.195.38.175]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4bFyyH4tpDz2SSKY; Mon,  9 Jun
+	2025 04:05:43 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250609040543epcas5p4a339f4920addf5bd274e54778172e78b~HRC2pfZzh2015720157epcas5p4t;
+	Mon,  9 Jun 2025 04:05:43 +0000 (GMT)
+Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250609040540epsmtip23ac06c81db24768155a370ce8cdcaa13~HRC0J7VFH1644916449epsmtip2m;
+	Mon,  9 Jun 2025 04:05:40 +0000 (GMT)
+From: "Alim Akhtar" <alim.akhtar@samsung.com>
+To: "'Raghav Sharma'" <raghav.s@samsung.com>, <krzk@kernel.org>,
+	<s.nawrocki@samsung.com>, <cw00.choi@samsung.com>,
+	<mturquette@baylibre.com>, <sboyd@kernel.org>, <robh@kernel.org>,
+	<conor+dt@kernel.org>, <richardcochran@gmail.com>,
+	<sunyeal.hong@samsung.com>, <shin.son@samsung.com>
+Cc: <linux-samsung-soc@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<chandan.vn@samsung.com>, <karthik.sun@samsung.com>,
+	<dev.tailor@samsung.com>
+In-Reply-To: <20250529112640.1646740-2-raghav.s@samsung.com>
+Subject: RE: [PATCH v3 1/4] dt-bindings: clock: exynosautov920: sort clock
+ definitions
+Date: Mon, 9 Jun 2025 09:35:38 +0530
+Message-ID: <03cd01dbd8f3$c4c18130$4e448390$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] PM: Optionally block user fork during freeze to
- improve performance
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: rafael@kernel.org, len.brown@intel.com, pavel@kernel.org,
- kees@kernel.org, mingo@redhat.com, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
- bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
- akpm@linux-foundation.org, david@redhat.com, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
- mhocko@suse.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org
-References: <20250606062502.19607-1-zhangzihuan@kylinos.cn>
- <20250606082244.GL30486@noisy.programming.kicks-ass.net>
-From: zhangzihuan <zhangzihuan@kylinos.cn>
-In-Reply-To: <20250606082244.GL30486@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIRyuXPQglR2pg1tLiplohNF2WAzQJJNEBAALUq35Ozdl5VAA==
+Content-Language: en-us
+X-CMS-MailID: 20250609040543epcas5p4a339f4920addf5bd274e54778172e78b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250529111708epcas5p232b8bb6b05795b7014d718003daef0cb
+References: <20250529112640.1646740-1-raghav.s@samsung.com>
+	<CGME20250529111708epcas5p232b8bb6b05795b7014d718003daef0cb@epcas5p2.samsung.com>
+	<20250529112640.1646740-2-raghav.s@samsung.com>
 
-Hi Peter,
-Thanks a lot for the feedback!
+Hi Raghav
 
-=E5=9C=A8 2025/6/6 16:22, Peter Zijlstra =E5=86=99=E9=81=93:
-> This isn't blocking fork(), this is failing fork(). Huge difference.
-> Also problematic, because -EBUSY is not a recognised return value of
-> fork(). As such, no existing software will adequately handle it.
-> =C2=A0I completely agree there's a significant difference between faili=
-ng=20
-> and blocking fork().
-The intent was to prevent late-created user tasks from interfering with=20
-the freezing process, but you're right: returning -EBUSY is not valid=20
-for fork(), and existing user-space programs wouldn't expect or handle=20
-that properly.
-As a next step, I'm considering switching to a blocking mechanism=20
-instead =E2=80=94 that is, have user fork() temporarily sleep if it's att=
-empted=20
-during the freeze window. That should avoid breaking user-space=20
-expectations while still helping maintain freeze stability.
-Would that be more acceptable?
-Thanks again for the insight,
-Zihuan Zhang
+> -----Original Message-----
+> From: Raghav Sharma <raghav.s@samsung.com>
+> Sent: Thursday, May 29, 2025 4:57 PM
+> To: krzk@kernel.org; s.nawrocki@samsung.com; cw00.choi@samsung.com;
+> alim.akhtar@samsung.com; mturquette@baylibre.com; sboyd@kernel.org;
+> robh@kernel.org; conor+dt@kernel.org; richardcochran@gmail.com;
+> sunyeal.hong@samsung.com; shin.son@samsung.com
+> Cc: linux-samsung-soc@vger.kernel.org; linux-clk@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org; netdev@vger.kernel.org;
+> chandan.vn@samsung.com; karthik.sun@samsung.com;
+> dev.tailor@samsung.com; Raghav Sharma <raghav.s@samsung.com>
+> Subject: [PATCH v3 1/4] dt-bindings: clock: exynosautov920: sort clock
+> definitions
+> 
+> Sort all the clock compatible strings in alphabetical order
+> 
+> Signed-off-by: Raghav Sharma <raghav.s@samsung.com>
+> ---
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+
