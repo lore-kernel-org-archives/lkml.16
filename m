@@ -1,66 +1,65 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF14255F5C
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 10:16:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3312571A5
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 10:16:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749464218; cv=none; b=OZI05EY9Uol3JpVCVV9B1ArJvKIoMv1bYv/Zzq0RHZ88fxSjmkr2K1XuI/977fgSsczBngklgK1zeBU9a4W+OtzSBZ8b6z0LLZ2AlWFPHUVrW6uk/+a2jYGoqJFLrU3g2/GQRAQ1itLpMpAn2Lx/rKmsTCfddcQxzL5UGqWobc8=
+	t=1749464221; cv=none; b=UINnJ4CNi1KXzIiyilpsMp6Is7aub89aDHTYHivVB7On4Y9pKaxrtBLC3qhevt76xv5o2kWrWljmGviySWRxBUqD8Q3GvMJqalKMN59KuDI0BOnQLWtdfqQTViOTwuziMahxRTaIueKHctbei6DZE1lv5fpHkdAerUiF4c+/O10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749464218; c=relaxed/simple;
-	bh=jGw7Fx+MUhykgg1Jw1wn+sf0jpt7AD3adikXoO+OMYs=;
+	s=arc-20240116; t=1749464221; c=relaxed/simple;
+	bh=jED0HXKoLV0J0CLHOZHMbcajMt401CSBcD2JmL2J/qg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fvX5KCrps7mh5aOzNePhs/R7igSlO8ft6eIyhc8dATcNBzfi0m/V4YrhxrYRP1enKAV++8EAMM8cbSS0AEwfCNdlDGRrxD2KxyAaueMJuekCcq1m5dy3LDNisa2zgCIo3YW0+eBhJpos37TQ9BzK5bv245lsN2AfQijc1w0tKf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=I51kenY/; arc=none smtp.client-ip=209.85.218.53
+	 MIME-Version; b=h998cQ31ITrUFSn2J1crHRGhvmGf4uNZk799O9Pv7/b0P7iywBOQlHn/LzgqyrBRkXzLz52fgupkUp2FCBCoQAoUQ0HhK9ah3H6zS10hRgWze/c0ugSKM8xIr5+T6qC0nQ4FVAaviT/Ozuf1EkYmjNINrVdsPuhmYQzTC6idrbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=hWJSFsCk; arc=none smtp.client-ip=209.85.218.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="I51kenY/"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-addda47ebeaso803376966b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 03:16:56 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="hWJSFsCk"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-adb2bb25105so653272466b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 03:16:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1749464215; x=1750069015; darn=vger.kernel.org;
+        d=amarulasolutions.com; s=google; t=1749464218; x=1750069018; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zXBTGwa6QodfqisVjyA2rE3mDoDUc1ePQOPQP5DHJfM=;
-        b=I51kenY/CSmCrgf8Hyz78WsycQKrT8s0fNrKF0KlNkOLaoF2cQs47XPwGW+J1zkxu+
-         ea5btIYz/dElx+gVHnPkCQsPy0CXbHdT+4KYsZJWYRH7uvGyKaRD1tY/fZW+I9bjj+sk
-         lkQQsT1fO8vJVDejjE06Y1uPZoFUKrCAadetk=
+        bh=h6XPPJ35HRaZVz6Ug23gLy2er04eJl6btcrYbN2tLdw=;
+        b=hWJSFsCk7EyjdmulM4v1saQ9Of4L+Oo3/aw7U8H5bCQBCZ928rbUD5liMBLKqpSM/M
+         XmxXrYyMHOkIwVyS4QGewbJDWdFIhwt5A357OSYXKUw5UV9iWF7OO9I14L83I4cAm3w/
+         9R+mEBuz4LA6wIMWzvntY1nnMb6KOSsxOu4hI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749464215; x=1750069015;
+        d=1e100.net; s=20230601; t=1749464218; x=1750069018;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zXBTGwa6QodfqisVjyA2rE3mDoDUc1ePQOPQP5DHJfM=;
-        b=cY7dVYFOKo1hc/5Ck8FUutR50AmsKLwVaiByyqCogypGpw4sGN42VfTLnNAuCyvqDJ
-         9NwuLXuoyzkLXnZtgSZrU87bD9HVRnbmUcCi3pa1NJwIFC94lCzoRNMyeSypsd1kmSKy
-         K9FPHuGOWfiRPfKVWDomNRo73i2uLbGnX2F5VfzO6zH4d2j38IK0ikO81ErmAFgxmd8r
-         BNoYrVRrrya1+pVMfNksk2Gsudn2+ZBt/qap1Tpd7bI6akq3jN/WcBLD6i+ECBgTjKkd
-         6flvpQCbl+HJXrzQOcxl0+CPpCr6oo4THV7lW2EpX/WXy8jNDm9t80v86VGoalC7hwIk
-         /NJQ==
-X-Gm-Message-State: AOJu0Ywt3ZxgW5aU3w8PL5eBaFF1a5shOxaOKHbP/zlhYuvNDjwwWLHD
-	jePjPfLUDmfR+jF5upZIf2NjtQn0N1t/0IWxCOvqBcFdvGtFocnrwEktiIUCXHqneShAhQtdIOV
-	PWqz4
-X-Gm-Gg: ASbGnct8UWMxCbxBy3cR4MJCCCGu0w0cFkawie3oWeBvgrzp7KeMyoU2itRWzxLE4vz
-	Xj46aaxqpQvLFvSRlzW/Ccrcm+bdfGqJ68bqicTmxAatfWtt/8Qawl52dyzl+rW3tlf2dn3gWAn
-	hdm2vgvfB4bg9BbvtEdWljXp1yuDFqfZGs3QZMd9cgw0MqRtDj6kvy2aByJP/zR+tvqOldDF0Vj
-	SYuu28yNIfMo9gDkqzHOWdtVz1/wf3jC0cJmUf6FJXajBdOaq6p8eusfZ0H7hfVKLFpc1SDNH1v
-	v4sxx6nfjQZ9tCb5HhpTrYxC5TQrp/YfFzVOoGlFMuW2J9hUpsisENU5LIcY+bFXHa9s6UEhrGx
-	6eMDUEAdjJAfuXjN9hYq1XL2tDB8iMaJjghTYPNq5oyThBgJTuwo=
-X-Google-Smtp-Source: AGHT+IFsv4CH8ZnNw93OnVnvf0we0RHH28lvpWqzA40q0Zo/cV8wrkrR4gAF0LPU3oKOK1MNiJMZCw==
-X-Received: by 2002:a17:907:d26:b0:ad4:8ec1:8fc9 with SMTP id a640c23a62f3a-ade1ab08d3fmr1032688766b.42.1749464214552;
-        Mon, 09 Jun 2025 03:16:54 -0700 (PDT)
+        bh=h6XPPJ35HRaZVz6Ug23gLy2er04eJl6btcrYbN2tLdw=;
+        b=I/Wdb7LDK5oIV9qV6qXDsyz7QeaxCTayO3M5CXJOwlXAinMVufJptoI9ICQkkUHPwW
+         eYh5e2o41JH17fz8E2gKWdPJxfYqevVuPYMUktwAYmTaKjoK5GRpr9jnPUSaBRRY9Nz4
+         6EAXP1eGmj6pOdUkpR5VSInW7iEkWp8FcJg9MBED9itmYnYUM+HRRoVGXnM4n3dzBYWc
+         jTxIgQzZi2k0hJ1Nvs2EfgQkOKnO53WLic461UBcxb1DlxduY4Lu4R9IzGZYHVnRtvuG
+         Y9Z4NJbuwsevQzh7ggLt5B03D+NVh9VYWVNNm1vWeCG84ZjNFmA0V01tvD9t0RPaKCTc
+         +rkw==
+X-Gm-Message-State: AOJu0YyFplBsH58xaHnGJEumAMQsQhxR1fwHMq1IEMFhmP0aRibrN4Yv
+	lwqlRRyb+RuKD/q+8FZ0p5GHHghtAD9H05ZNirK/ozDgZM4sZB/ABveW7KDev3UVBWrxEKwr1gH
+	++kmW
+X-Gm-Gg: ASbGncv6MFhGKLP8cjYE+Hw7uK3pooNMT/zoh4VbL2e1xkAiekG8eOX1s6CcVSMD/OI
+	lnKyC2s4nTA+XVZOABOfPs7xecJIiP7CQN4flNhLOYsL/B3/wIZBKltSQIi1ODbDaqNB8hUUxmh
+	rs6qJXkUR4Xfc0L9cJ2H27PwRlbE2Cj4rfNWodCrlNmOiEaqIac4d3AbhOdqRLalSZGzZnfwrq9
+	WB11LtDPFY4XLOJYfK3RD4XjfI0+hQ0AvHGVs8p3Y8Qd7Nf4sWcRriVYezr4dDOLmk42ylQyz7z
+	UipIp1uQeIH9r3YbqWMGprBlF1SvjTPO+frf9BUtl4gk6K1J72Rxf4PJjkp81m14lnYEcFbZanE
+	kNQz16/S29E9kGiTFA6SNnlMzc3JqPAzMCGl9q9g0Fx9+cq2c+zQ=
+X-Google-Smtp-Source: AGHT+IGVi8KdhG9CPiEuF/B5CVAGk2OQwm1sgFbVAY+5v/aepGev6hsU8KQn7gKmRy8mW1JjDfjqgA==
+X-Received: by 2002:a17:907:7249:b0:ad8:8621:924f with SMTP id a640c23a62f3a-ade1abc5d45mr1054581266b.56.1749464217640;
+        Mon, 09 Jun 2025 03:16:57 -0700 (PDT)
 Received: from dario-ThinkPad-T14s-Gen-2i.amarulasolutions.com ([2.196.40.99])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1db55c7esm529257066b.49.2025.06.09.03.16.53
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1db55c7esm529257066b.49.2025.06.09.03.16.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 03:16:54 -0700 (PDT)
+        Mon, 09 Jun 2025 03:16:57 -0700 (PDT)
 From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-amarula@amarulasolutions.com,
 	Matteo Lisi <matteo.lisi@engicam.com>,
 	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-	Peng Fan <peng.fan@nxp.com>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Fabio Estevam <festevam@gmail.com>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -71,9 +70,9 @@ Cc: linux-amarula@amarulasolutions.com,
 	devicetree@vger.kernel.org,
 	imx@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 07/10] ARM: dts: imx6ul: support Engicam MicroGEA RMM board
-Date: Mon,  9 Jun 2025 12:15:40 +0200
-Message-ID: <20250609101637.2322809-8-dario.binacchi@amarulasolutions.com>
+Subject: [PATCH v2 09/10] ARM: dts: imx6ul: support Engicam MicroGEA GTW board
+Date: Mon,  9 Jun 2025 12:15:42 +0200
+Message-ID: <20250609101637.2322809-10-dario.binacchi@amarulasolutions.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250609101637.2322809-1-dario.binacchi@amarulasolutions.com>
 References: <20250609101637.2322809-1-dario.binacchi@amarulasolutions.com>
@@ -85,48 +84,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Support Engicam MicroGEA RMM board with:
+Support Engicam MicroGEA GTW board with:
 
 - 256 Mbytes NAND Flash
 - 512 Mbytes DRAM DDR2
-- CAN
+- Buttons
 - LEDs
 - Micro SD card connector
 - USB 2.0 high-speed/full-speed
 - Ethernet MAC
 
 Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
 
 ---
 
 Changes in v2:
+- Drop an extra blank line
 - Move iomuxc and iomuxc_snvs nodes to the end of the DTS file.
-- Add Reviewed-by tag of Peng Fan
 
  arch/arm/boot/dts/nxp/imx/Makefile            |   1 +
- .../nxp/imx/imx6ull-engicam-microgea-rmm.dts  | 362 ++++++++++++++++++
- 2 files changed, 363 insertions(+)
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-rmm.dts
+ .../nxp/imx/imx6ull-engicam-microgea-gtw.dts  | 163 ++++++++++++++++++
+ 2 files changed, 164 insertions(+)
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-gtw.dts
 
 diff --git a/arch/arm/boot/dts/nxp/imx/Makefile b/arch/arm/boot/dts/nxp/imx/Makefile
-index 57f185198217..32dfd69b8d8b 100644
+index 32dfd69b8d8b..de4142e8f3ce 100644
 --- a/arch/arm/boot/dts/nxp/imx/Makefile
 +++ b/arch/arm/boot/dts/nxp/imx/Makefile
 @@ -357,6 +357,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
  	imx6ull-dhcom-picoitx.dtb \
  	imx6ull-dhcor-maveo-box.dtb \
  	imx6ull-engicam-microgea-bmm.dtb \
-+	imx6ull-engicam-microgea-rmm.dtb \
++	imx6ull-engicam-microgea-gtw.dtb \
+ 	imx6ull-engicam-microgea-rmm.dtb \
  	imx6ull-jozacp.dtb \
  	imx6ull-kontron-bl.dtb \
- 	imx6ull-myir-mys-6ulx-eval.dtb \
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-rmm.dts b/arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-rmm.dts
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-gtw.dts b/arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-gtw.dts
 new file mode 100644
-index 000000000000..294e6bb6c975
+index 000000000000..6ceb0e4156ae
 --- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-rmm.dts
-@@ -0,0 +1,362 @@
++++ b/arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-gtw.dts
+@@ -0,0 +1,163 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2025 Amarula Solutions, Dario Binacchi <dario.binacchi@amarulasolutions.com>
@@ -138,22 +136,9 @@ index 000000000000..294e6bb6c975
 +#include "imx6ull-engicam-microgea.dtsi"
 +
 +/ {
-+	compatible = "engicam,microgea-imx6ull-rmm",
++	compatible = "engicam,microgea-imx6ull-gtw",
 +		     "engicam,microgea-imx6ull", "fsl,imx6ull";
-+	model = "Engicam MicroGEA i.MX6ULL BMM Board";
-+
-+	backlight {
-+		compatible = "pwm-backlight";
-+		brightness-levels = <0 100>;
-+		num-interpolated-steps = <100>;
-+		default-brightness-level = <85>;
-+		pwms = <&pwm8 0 100000 0>;
-+	};
-+
-+	buzzer {
-+		compatible = "pwm-beeper";
-+		pwms = <&pwm4 0 1000000 0>;
-+	};
++	model = "Engicam MicroGEA i.MX6ULL GTW Board";
 +
 +	reg_1v8: regulator-1v8 {
 +		compatible = "regulator-fixed";
@@ -169,152 +154,48 @@ index 000000000000..294e6bb6c975
 +		regulator-max-microvolt = <3300000>;
 +	};
 +
-+	reg_usb1_vbus: regulator-usb1-vbus {
-+		compatible = "regulator-fixed";
++	gpio-keys {
++		compatible = "gpio-keys";
 +		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_reg_usb1>;
-+		regulator-name = "usb1_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio5 0 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
++		pinctrl-0 = <&pinctrl_gpio_keys>;
 +
-+	reg_usb2_vbus: regulator-usb2-vbus {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_reg_usb2>;
-+		regulator-name = "usbotg_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio5 3 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_ext_pwr: regulator-ext-pwr {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_reg_ext_pwr>;
-+		regulator-name = "ext-pwr";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio5 6 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "imx6ull-microgea-rmm-sgtl5000";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&codec_dai>;
-+		simple-audio-card,frame-master = <&codec_dai>;
-+		simple-audio-card,widgets =
-+			"Microphone", "Mic Jack",
-+			"Headphone", "Headphone Jack";
-+		simple-audio-card,routing =
-+			"MIC_IN", "Mic Jack",
-+			"Mic Jack", "Mic Bias",
-+			"Headphone Jack", "HP_OUT";
-+
-+		cpu_dai: simple-audio-card,cpu {
-+			sound-dai = <&sai2>;
-+		};
-+
-+		codec_dai: simple-audio-card,codec {
-+			sound-dai = <&codec>;
++		user-button {
++			label = "User button";
++			gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
++			linux,code = <BTN_MISC>;
++			wakeup-source;
 +		};
 +	};
 +
 +	leds {
 +		compatible = "gpio-leds";
 +		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_leds>;
++		pinctrl-0 = <&pinctrl_leds>, <&pinctrl_pwrled>;
 +
 +		led-0 {
-+			gpios = <&gpio2 10 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+			status = "okay";
++			gpios = <&gpio5 7 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
 +		};
 +
 +		led-1 {
-+			gpios = <&gpio2 11 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+			status = "okay";
++			gpios = <&gpio1 14 GPIO_ACTIVE_HIGH>;
++		};
++
++		led-2 {
++			gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
++		};
++
++		led-3 {
++			gpios = <&gpio1 12 GPIO_ACTIVE_HIGH>;
 +		};
 +	};
-+};
 +
-+&can1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_can>;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	clock-frequency = <100000>;
-+	status = "okay";
-+
-+	touchscreen: touchscreen@38 {
-+		compatible ="edt,edt-ft5306";
-+		reg = <0x38>;
++	usb_hub: usb-hub {
++		compatible = "smsc,usb3503a";
 +		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_touchscreen>;
-+		interrupt-parent = <&gpio2>;
-+		interrupts = <8 IRQ_TYPE_EDGE_FALLING>;
-+		reset-gpios = <&gpio2 14 GPIO_ACTIVE_LOW>;
-+		report-rate-hz = <6>;
-+		/* settings valid only for Hycon touchscreen */
-+		touchscreen-size-x = <1280>;
-+		touchscreen-size-y = <800>;
++		pinctrl-0 = <&pinctrl_usb_hub>;
++		reset-gpios = <&gpio5 6 GPIO_ACTIVE_LOW>;
 +	};
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	clock-frequency = <100000>;
-+	status = "okay";
-+
-+	codec: sgtl5000@a {
-+		compatible = "fsl,sgtl5000";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_mclk>;
-+		reg = <0x0a>;
-+		#sound-dai-cells = <0>;
-+		clocks = <&clks IMX6UL_CLK_CKO>;
-+		assigned-clocks = <&clks IMX6UL_CLK_CKO2_SEL>,
-+				  <&clks IMX6UL_CLK_CKO2_PODF>,
-+				  <&clks IMX6UL_CLK_CKO2>,
-+				  <&clks IMX6UL_CLK_CKO>;
-+		assigned-clock-parents = <&clks IMX6UL_CLK_OSC>,
-+					 <&clks IMX6UL_CLK_CKO2_SEL>,
-+					 <&clks IMX6UL_CLK_CKO2_PODF>,
-+					 <&clks IMX6UL_CLK_CKO2>;
-+		VDDA-supply = <&reg_3v3>;
-+		VDDIO-supply = <&reg_3v3>;
-+		VDDD-supply = <&reg_1v8>;
-+	};
-+};
-+
-+&pwm4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm4>;
-+	status = "okay";
-+};
-+
-+&pwm8 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm8>;
-+	status = "okay";
-+};
-+
-+&sai2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_sai2>;
-+	status = "okay";
 +};
 +
 +&uart1 {
@@ -323,101 +204,46 @@ index 000000000000..294e6bb6c975
 +	status = "okay";
 +};
 +
-+&uart4 {
++&uart2 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4>;
++	pinctrl-0 = <&pinctrl_uart2>;
 +	status = "okay";
 +};
 +
 +&usbotg1 {
-+	dr_mode = "host";
-+	vbus-supply = <&reg_usb1_vbus>;
-+	disable-over-current;
++	dr_mode = "otg";
 +	status = "okay";
 +};
 +
 +&usbotg2 {
 +	dr_mode = "host";
-+	vbus-supply = <&reg_usb2_vbus>;
 +	disable-over-current;
 +	status = "okay";
 +};
 +
 +/* MicroSD */
 +&usdhc1 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-names = "default";
 +	pinctrl-0 = <&pinctrl_usdhc1>;
-+	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
 +	vmmc-supply = <&reg_3v3>;
 +	bus-width = <4>;
-+	keep-power-in-suspend;
 +	non-removable;
-+	wakeup-source;
 +	status = "okay";
 +};
 +
 +&iomuxc {
 +
-+	pinctrl_can: can-grp {
++	pinctrl_gpio_keys: gpio_keysgrp {
 +		fsl,pins = <
-+			MX6UL_PAD_UART3_RTS_B__FLEXCAN1_RX	0x1b020
-+			MX6UL_PAD_UART3_CTS_B__FLEXCAN1_TX	0x1b020
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_CSI_PIXCLK__I2C1_SCL		0x4001b8b0
-+			MX6UL_PAD_CSI_MCLK__I2C1_SDA		0x4001b8b0
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO00__I2C2_SCL		0x4001b8b0
-+			MX6UL_PAD_GPIO1_IO01__I2C2_SDA		0x4001b8b0
++			MX6UL_PAD_JTAG_TDI__GPIO1_IO13		0x0b0b0
 +		>;
 +	};
 +
 +	pinctrl_leds: ledsgrp {
 +		fsl,pins = <
-+			MX6UL_PAD_ENET2_RX_EN__GPIO2_IO10	0x130b0
-+			MX6UL_PAD_ENET2_TX_DATA0__GPIO2_IO11	0x130b0
-+		>;
-+	};
-+
-+	pinctrl_mclk: mclkgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_JTAG_TMS__CCM_CLKO1		0x13009
-+		>;
-+	};
-+
-+	pinctrl_pwm4: pwm4grp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO05__PWM4_OUT		0x110b0
-+		>;
-+	};
-+
-+	pinctrl_pwm8: pwm8grp {
-+		fsl,pins = <
-+			MX6UL_PAD_ENET1_RX_ER__PWM8_OUT		0x110b0
-+		>;
-+	};
-+
-+	pinctrl_sai2: sai2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_JTAG_TCK__SAI2_RX_DATA	0x130b0
-+			MX6UL_PAD_JTAG_TDI__SAI2_TX_BCLK	0x17088
-+			MX6UL_PAD_JTAG_TDO__SAI2_TX_SYNC	0x17088
-+			MX6UL_PAD_JTAG_TRST_B__SAI2_TX_DATA	0x120b0
-+		>;
-+	};
-+
-+	pinctrl_touchscreen: touchgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_ENET2_TX_CLK__GPIO2_IO14	0x17059
-+			MX6UL_PAD_ENET2_RX_DATA0__GPIO2_IO08	0x17059
++			MX6UL_PAD_JTAG_TCK__GPIO1_IO14		0x130b0
++			MX6UL_PAD_JTAG_TRST_B__GPIO1_IO15	0x130b0
++			MX6UL_PAD_JTAG_TDO__GPIO1_IO12		0x130b0
 +		>;
 +	};
 +
@@ -428,10 +254,12 @@ index 000000000000..294e6bb6c975
 +		>;
 +	};
 +
-+	pinctrl_uart4: uart4grp {
++	pinctrl_uart2: uart2grp {
 +		fsl,pins = <
-+			MX6UL_PAD_UART4_TX_DATA__UART4_DCE_TX	0x0b0b0
-+			MX6UL_PAD_UART4_RX_DATA__UART4_DCE_RX	0x0b0b0
++			MX6UL_PAD_UART2_TX_DATA__UART2_DCE_TX	0x1b0b1
++			MX6UL_PAD_UART2_RX_DATA__UART2_DCE_RX	0x1b0b1
++			MX6UL_PAD_UART2_RTS_B__UART2_DCE_RTS	0x1b0b1
++			MX6UL_PAD_UART2_CTS_B__UART2_DCE_CTS	0x1b0b1
 +		>;
 +	};
 +
@@ -445,45 +273,16 @@ index 000000000000..294e6bb6c975
 +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059
 +		>;
 +	};
-+
-+	pinctrl_usdhc1_100mhz: usdhc1-100mhzgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170b9
-+			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100b9
-+			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170b9
-+			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170b9
-+			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170b9
-+			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170b9
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_200mhz: usdhc1-200mhzgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170f9
-+			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100f9
-+			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170f9
-+			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170f9
-+			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170f9
-+			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170f9
-+		>;
-+	};
 +};
 +
 +&iomuxc_snvs {
-+
-+	pinctrl_reg_usb1: regusb1grp {
++	pinctrl_pwrled: ledsgrp {
 +		fsl,pins = <
-+			MX6ULL_PAD_SNVS_TAMPER0__GPIO5_IO00	0x17059
++			MX6ULL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x130b0
 +		>;
 +	};
 +
-+	pinctrl_reg_usb2: regusb2grp {
-+		fsl,pins = <
-+			MX6ULL_PAD_SNVS_TAMPER3__GPIO5_IO03	0x17059
-+		>;
-+	};
-+
-+	pinctrl_reg_ext_pwr: reg-ext-pwrgrp {
++	pinctrl_usb_hub: usb_hubgrp {
 +		fsl,pins = <
 +			MX6ULL_PAD_SNVS_TAMPER6__GPIO5_IO06	0x17059
 +		>;
