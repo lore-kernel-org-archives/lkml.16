@@ -1,140 +1,195 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11020113.outbound.protection.outlook.com [52.101.84.113])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF924C9D;
-	Mon,  9 Jun 2025 07:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.113
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749454348; cv=fail; b=VqhYqZHdySYQVR6UoslEfZWPumXu70DK6SxrpnTtKGJNtGSWPLhx0iUgYnt/nFk7nVQVngb7r6RuMU+1YXk0ZNmUn20COEXMWbEOr2niJfHEHOUqJ+adHOLQAkMUIy7BFifxWjTQLnB7yXZfc4ihau7FjU6lW88XYhd3Wd9X+CE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749454348; c=relaxed/simple;
-	bh=98ubVO00buLighJLOL7yalJzxZrAirS5G8b5YtPop7s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cke39Vs5tDEkU1xgesB6Q4uLLtUzoBbaoWqLtlNLnNVxUqH0/RCWScUeAHuZz90/qXso8NJVc9qr5FukIEGFZTBrWzlyak6YN/TVJDzWFEaW9ayJVBLuG6kkP3yHnPyrPa2EoNzjtMQxx+cNDiglHq7ly+3tDsIBDx6ZysaLx2M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=technica-engineering.de; spf=pass smtp.mailfrom=technica-engineering.de; dkim=pass (1024-bit key) header.d=technica-engineering.de header.i=@technica-engineering.de header.b=rwMwEt/B; arc=fail smtp.client-ip=52.101.84.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=technica-engineering.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=technica-engineering.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=technica-engineering.de header.i=@technica-engineering.de header.b="rwMwEt/B"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Iqhm1NemNAv1IT4FkfnO7kH1+8Pm9qCM8gH+qAugG06duoiwDxFm6rgtSuQoBkCfNipbUogcaFyoZg245Eq37ryYhPtOr0R9DTOH+SoplErcleCWhZR0Fmzwx1cuiJJJnPEOO5TNb19tCQ93a1kNh+4H3E3wgeK4khK42O/YaA82YSykELCrOyvjkwRacTetXkJcjIIFkfwdXDPZgHFWFHx8J9vp5/lpZrsPVrsciPlwSX/Nildo5y9rQt58Wpg0+WJ1Pq7EYtBXzlZM/ocONoUj/jV46oGCKM5Qpv1eEkVrfdOKl7UO39woaQn4XwrVbewvZ9WRUwjcX2PhDQ9wiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dL0s6kQI03T3/CroPCSn4LQzoZbWYB3xWFVH/PgHuT4=;
- b=i8NyJVZxLyJCV5q0+K61tjdkNSAnn1fXlZ7kGf7TseA121w3dm8ejhLp6+QGGlFNU/bxNLSfbua0VJXzMM7pavoP32RCA1/YaNutRcbbHc3sL5ZfGqxf3JcdcWmoDJllEaRL2xM/3KJO94ProYBeumYOTTopU1XmENDDeiT8fDmX+MApENrPVhPHfHJCcPBOGQKXEaiRC625DStlZd5BQVo2waW1ZUbDiFKjmmBxsl+j4Cqc0R6sn9TCFYdw5aVnm10y0Eqyn4BR2A3XXgqqXlk5SmtopKs6hKblI52/NGVC6BNx8/e8dS69imKg51xMtzsL26MOUfmddNR1OhNwtw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 2.136.200.136) smtp.rcpttodomain=davemloft.net
- smtp.mailfrom=technica-engineering.de; dmarc=fail (p=reject sp=reject
- pct=100) action=oreject header.from=technica-engineering.de; dkim=none
- (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=technica-engineering.de; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dL0s6kQI03T3/CroPCSn4LQzoZbWYB3xWFVH/PgHuT4=;
- b=rwMwEt/Bd8wRYs6ukyyJ+a6mZnQck3A32zO/0fHFwCbA7tsBlS/UfobsF61/lprwyredr0xXiCfh0/b961RuyVQbLsZC0dDRI8KfUJ0meI2MaH7+FmUBo6+KDrH2NjD9YIovwoVQBq0Uog3HUclBE8wytdlM6gmM1TKLfz/ZbkM=
-Received: from AM9P250CA0016.EURP250.PROD.OUTLOOK.COM (2603:10a6:20b:21c::21)
- by DBBPR08MB10506.eurprd08.prod.outlook.com (2603:10a6:10:532::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.29; Mon, 9 Jun
- 2025 07:32:22 +0000
-Received: from AM4PEPF00027A61.eurprd04.prod.outlook.com
- (2603:10a6:20b:21c:cafe::b0) by AM9P250CA0016.outlook.office365.com
- (2603:10a6:20b:21c::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.35 via Frontend Transport; Mon,
- 9 Jun 2025 07:32:22 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 2.136.200.136)
- smtp.mailfrom=technica-engineering.de; dkim=none (message not signed)
- header.d=none;dmarc=fail action=oreject header.from=technica-engineering.de;
-Received-SPF: Fail (protection.outlook.com: domain of technica-engineering.de
- does not designate 2.136.200.136 as permitted sender)
- receiver=protection.outlook.com; client-ip=2.136.200.136;
- helo=jump.ad.technica-electronics.es;
-Received: from jump.ad.technica-electronics.es (2.136.200.136) by
- AM4PEPF00027A61.mail.protection.outlook.com (10.167.16.70) with Microsoft
- SMTP Server id 15.20.8835.15 via Frontend Transport; Mon, 9 Jun 2025 07:32:21
- +0000
-Received: from dalek.ad.technica-electronics.es (unknown [10.10.2.101])
-	by jump.ad.technica-electronics.es (Postfix) with ESMTP id 2895E401BF;
-	Mon,  9 Jun 2025 09:32:21 +0200 (CEST)
-From: Carlos Fernandez <carlos.fernandez@technica-engineering.de>
-To:
-Cc: carlos.fernandez@technica-engineering.de,
-	sbhatta@marvell.com,
-	Sabrina Dubroca <sd@queasysnail.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Hannes Frederic Sowa <hannes@stressinduktion.org>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v4] macsec: MACsec SCI assignment for ES = 0
-Date: Mon,  9 Jun 2025 09:31:53 +0200
-Message-ID: <20250609073219.939903-1-carlos.fernandez@technica-engineering.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250609064707.773982-1-carlos.fernandez@technica-engineering.de>
-References: <20250609064707.773982-1-carlos.fernandez@technica-engineering.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF3D1DB551
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 07:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749454413; cv=none; b=GgACeIqtlWKncMroQHGiOKbzVyc2FkvE1Njp/vKjJlRqLo3Zb0VzqSXZPmDK3q8acVN9Xn5cxKalTMlxdDMXqcMjHPdOKj24K2/plaAt1WmtPzf3WNC0ifDnVWIFBfUkAvkskurgiFjtwReM5mE3yPLNyAKtPR6QObXJk24C9K0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749454413; c=relaxed/simple;
+	bh=QaxojkVtlA/Eecw7/nitLhom6Y0NYWMUD+mP43cCj/I=;
+	h=Subject:From:To:CC:References:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=FtfVr2r7siY8efDkmoc1eh1VIYZKcFkTAHSf9gJjDtpAZeEPrmrwgKRpoA8IcrE2PgHN5pWvh38hQmxpvtTlvBWljXTsTzPnUGcoV+Ep1mpWZsNZL3q1/XkoIRTkuK/MsBCvCaYMI73SLGo6VNm2IcmYHiMKRVH+VuA3q0Msouw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bG3563fNrz2Cddg;
+	Mon,  9 Jun 2025 15:11:54 +0800 (CST)
+Received: from kwepemk200017.china.huawei.com (unknown [7.202.194.83])
+	by mail.maildlp.com (Postfix) with ESMTPS id C8ADF140118;
+	Mon,  9 Jun 2025 15:15:44 +0800 (CST)
+Received: from [10.174.178.219] (10.174.178.219) by
+ kwepemk200017.china.huawei.com (7.202.194.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 9 Jun 2025 15:15:44 +0800
+Subject: Re: [patch V2 06/45] genirq/proc: Switch to lock guards
+From: Zenghui Yu <yuzenghui@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+CC: LKML <linux-kernel@vger.kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+References: <20250429065337.117370076@linutronix.de>
+ <20250429065420.373998838@linutronix.de>
+ <873b0e9a-0e71-0eaf-b057-8a118d9ccabf@huawei.com>
+Message-ID: <fbe8512c-ca7d-7a8c-887c-98eba94e1da9@huawei.com>
+Date: Mon, 9 Jun 2025 15:15:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM4PEPF00027A61:EE_|DBBPR08MB10506:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 367cbc03-1d53-4478-58f4-08dda727c582
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?bOqBwwT7RP5PKf7X+VaLxEw+2VBlJ8vYtOGf6ECGJ2Y78ayRMJFE13EgUrOI?=
- =?us-ascii?Q?SQ4X2r9MhAuZRfbBceDV9jF9/GV8EI0EYdZVJYdss7v98/sou6XPX+bLbTHs?=
- =?us-ascii?Q?/BgEVXoLSRIF5JrGXCG1hyt4CXneagizdaZ3IDaGgpeJvOsVxzaBKn9KyRtW?=
- =?us-ascii?Q?o7m+0FZ0dc29LN6+gevxcVvSk/v241TYW3NFcmOhNGBrzYwz/eUNRnqBgTci?=
- =?us-ascii?Q?Dwu15e73ltqmJOHFPUq5a5GUihPOU2hIWS35seBYGxHonsqBlN/HAyntCBBH?=
- =?us-ascii?Q?H6WhbunXiDoJSnPLMPH3Im5WQ+kWmKcFksZ4nlgHpypWewGuNb2HMtBN0BDM?=
- =?us-ascii?Q?wp2vVhdFGX1TmXd88Rn9eoE6qHrwk93IjPKQyQUc7/9dLC8IUHEHm2/HoBwl?=
- =?us-ascii?Q?Q3ZXun7cxuCL0AKXisBiaWZJtQx5s7pPVcMSBx0jRNwQWmmNMtNxhUBfTB15?=
- =?us-ascii?Q?ZpW3a0UUqe8ilXuVxv81Jv/Pb8VtgCCyJutVNKN45qXrT6mc1XblLsaLQMeW?=
- =?us-ascii?Q?/XqTZX9gk+favBDsO4TEeOkYnGy9162xsmwY9G9xVFSg30aOKW+0+SHEHPoL?=
- =?us-ascii?Q?rPMLNHMaTSgTddXyFb530Mv+YvnUrZX/06T5nCc5Ehh1SbgBm/9Q9yMKXaHN?=
- =?us-ascii?Q?pOIYFL485ZjuXy1Pn/fp/9FK8/T4HbU1RUFMIqlIzoF3F2NkPkLvihQUkIsI?=
- =?us-ascii?Q?bl9DGSGPSKMbGtVWD/ZZi/O+J3VdZj19XC7qQ6RuDrTPMfys8QZsqHYZ8Uma?=
- =?us-ascii?Q?G9c/3wx8EDIziDdm1ZQRTvPo3gMVvi2FtXRNcri6xpjgQ+IC1ni5gKbovYaf?=
- =?us-ascii?Q?DSiE/J2jQQcuswoIxOk+b6z53HLdRsh3EcorVNlNK30NjygrBUwHYP0YD2a5?=
- =?us-ascii?Q?0KvK/yiLuZHG3dO6ru/cHnlOcjbfp5aM2J0+MSTJw0jwKb1trk6HczkKX9SR?=
- =?us-ascii?Q?pgac7LIEDcxgMJvTh7ax2fcVzItH/i3+G69mXUUtXrlhXXGFOWxOB5ZspRmr?=
- =?us-ascii?Q?2P5AeDYgFEogKpQcdi6qfAw9SHOOirh7tbl6qA9ANGkZB7eMP1bfEcW4wEO6?=
- =?us-ascii?Q?vKxUoe6KgIoyYEpcf3CMiKxOhq38Ge7bzXAXk6R7MoJcgpa971cZNzqzGfRn?=
- =?us-ascii?Q?H3I2KLYChBMi06wjK6YntbOvSwQzMp7PxnYI5273uw/ps1TxAXfhrguTAx2V?=
- =?us-ascii?Q?HUi4mBsRqwTCIneBSh0jJL9P4Di1495A2Y3PA8Dn1+Dzh5QeESnrmuH8fJVn?=
- =?us-ascii?Q?GIsnEIuutVAttcwvLt1fL49bJgVhLTbu4+LQZDYcz7AzpcnpSp0RSXnVeZbi?=
- =?us-ascii?Q?lhckEYpK9Yb52An++1iQkVadlvGbDKvaVScnLV6g4Dk7OXHYgJH2BBg4uCEA?=
- =?us-ascii?Q?VUD466PcC1CUh1SbxrK5U6ZWO1WpINJrWgM4l5XADyAK9W4goJf4rR9TwyVn?=
- =?us-ascii?Q?ef/oxmvesVANGsqOO6TxOLyDfThBEKjpB6pqzY3BefEDFjgyfYenQqITgQT5?=
- =?us-ascii?Q?NDO+i91ZZdpvW1OblUhdX0pecj0YNSAenJYL?=
-X-Forefront-Antispam-Report:
-	CIP:2.136.200.136;CTRY:ES;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:jump.ad.technica-electronics.es;PTR:136.red-2-136-200.staticip.rima-tde.net;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(7416014)(376014);DIR:OUT;SFP:1102;
-X-OriginatorOrg: technica-engineering.de
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 07:32:21.4558
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 367cbc03-1d53-4478-58f4-08dda727c582
-X-MS-Exchange-CrossTenant-Id: 1f04372a-6892-44e3-8f58-03845e1a70c1
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1f04372a-6892-44e3-8f58-03845e1a70c1;Ip=[2.136.200.136];Helo=[jump.ad.technica-electronics.es]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AM4PEPF00027A61.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB10506
+In-Reply-To: <873b0e9a-0e71-0eaf-b057-8a118d9ccabf@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemk200017.china.huawei.com (7.202.194.83)
 
-Hi Sundeep, 
+On 2025/6/8 20:45, Zenghui Yu wrote:
+> Hi Thomas,
+> 
+> On 2025/4/29 14:54, Thomas Gleixner wrote:
+> > Convert all lock/unlock pairs to guards and tidy up the code.
+> >
+> > No functional change.
+> >
+> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> >
+> > ---
+> >  kernel/irq/proc.c |   65 +++++++++++++++++++-----------------------------------
+> >  1 file changed, 24 insertions(+), 41 deletions(-)
+> >
+> > --- a/kernel/irq/proc.c
+> > +++ b/kernel/irq/proc.c
+> > @@ -81,20 +81,18 @@ static int show_irq_affinity(int type, s
+> >  static int irq_affinity_hint_proc_show(struct seq_file *m, void *v)
+> >  {
+> >  	struct irq_desc *desc = irq_to_desc((long)m->private);
+> > -	unsigned long flags;
+> >  	cpumask_var_t mask;
+> >  
+> >  	if (!zalloc_cpumask_var(&mask, GFP_KERNEL))
+> >  		return -ENOMEM;
+> >  
+> > -	raw_spin_lock_irqsave(&desc->lock, flags);
+> > -	if (desc->affinity_hint)
+> > -		cpumask_copy(mask, desc->affinity_hint);
+> > -	raw_spin_unlock_irqrestore(&desc->lock, flags);
+> > +	scoped_guard(raw_spinlock_irq, &desc->lock) {
+> 
+> Any reason it has been switched to a raw_spinlock_irq?
+> 
+> I've hit some random Oops with the backtrace looks like:
+> 
+>  Call trace:
+>   string+0x110/0x3b8 (P)
+>   vsnprintf+0x2f0/0xac8
+>   seq_printf+0x180/0x220
+>   show_interrupts+0x4e0/0x7e0
+>   seq_read_iter+0x350/0xd80
+>   proc_reg_read_iter+0x194/0x248
+>   vfs_read+0x5b0/0x940
+>   ksys_read+0xf0/0x1e8
+>   __arm64_sys_read+0x74/0xb0
+>   invoke_syscall+0x74/0x270
+>   el0_svc_common.constprop.0+0xb4/0x240
+>   do_el0_svc+0x48/0x68
+>   el0_svc+0x4c/0xe8
+>   el0t_64_sync_handler+0xc8/0xd0
+>   el0t_64_sync+0x1ac/0x1b0
+> 
+> I haven't dig further. But it looks to me that this patch had introduced
+> functional change and I'm planning to give the following diff a go on
+> the same box.
+> 
+> Thanks,
+> Zenghui
+> 
+>>From cfad0937ffb724c2c51c8656c212ccefb09c8990 Mon Sep 17 00:00:00 2001
+> From: Zenghui Yu <yuzenghui@huawei.com>
+> Date: Sun, 8 Jun 2025 19:41:41 +0800
+> Subject: [PATCH] fixup! genirq/proc: Switch to lock guards
+> 
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> ---
+>  kernel/irq/proc.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/irq/proc.c b/kernel/irq/proc.c
+> index 29c2404e743b..5af8bd1f3ab4 100644
+> --- a/kernel/irq/proc.c
+> +++ b/kernel/irq/proc.c
+> @@ -86,7 +86,7 @@ static int irq_affinity_hint_proc_show(struct seq_file
+> *m, void *v)
+>  	if (!zalloc_cpumask_var(&mask, GFP_KERNEL))
+>  		return -ENOMEM;
+> 
+> -	scoped_guard(raw_spinlock_irq, &desc->lock) {
+> +	scoped_guard(raw_spinlock_irqsave, &desc->lock) {
+>  		if (desc->affinity_hint)
+>  			cpumask_copy(mask, desc->affinity_hint);
+>  	}
+> @@ -298,7 +298,7 @@ static bool name_unique(unsigned int irq, struct
+> irqaction *new_action)
+>  	struct irq_desc *desc = irq_to_desc(irq);
+>  	struct irqaction *action;
+> 
+> -	guard(raw_spinlock_irq)(&desc->lock);
+> +	guard(raw_spinlock_irqsave)(&desc->lock);
+>  	for_each_action_of_desc(desc, action) {
+>  		if ((action != new_action) && action->name &&
+>  		    !strcmp(new_action->name, action->name))
+> @@ -489,7 +489,7 @@ int show_interrupts(struct seq_file *p, void *v)
+>  	}
+>  	seq_putc(p, ' ');
+> 
+> -	guard(raw_spinlock_irq)(&desc->lock);
+> +	guard(raw_spinlock_irqsave)(&desc->lock);
+>  	if (desc->irq_data.chip) {
+>  		if (desc->irq_data.chip->irq_print_chip)
+>  			desc->irq_data.chip->irq_print_chip(&desc->irq_data, p);
 
-Thanks for catching the typo. I've corrected it and added your review tag in v5
-https://patchwork.kernel.org/project/netdevbpf/patch/20250609072630.913017-1-carlos.fernandez@technica-engineering.de/
+Plus,
+
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index b0e0a7332993..57facdc30d55 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -964,7 +964,7 @@ __irq_do_set_handler(struct irq_desc *desc,
+irq_flow_handler_t handle,
+ void __irq_set_handler(unsigned int irq, irq_flow_handler_t handle, int
+is_chained,
+ 		       const char *name)
+ {
+-	scoped_irqdesc_get_and_lock(irq, 0)
++	scoped_irqdesc_get_and_buslock(irq, 0)
+ 		__irq_do_set_handler(scoped_irqdesc, handle, is_chained, name);
+ }
+ EXPORT_SYMBOL_GPL(__irq_set_handler);
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index c94837382037..400856abf672 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -659,7 +659,7 @@ void __disable_irq(struct irq_desc *desc)
+
+ static int __disable_irq_nosync(unsigned int irq)
+ {
+-	scoped_irqdesc_get_and_lock(irq, IRQ_GET_DESC_CHECK_GLOBAL) {
++	scoped_irqdesc_get_and_buslock(irq, IRQ_GET_DESC_CHECK_GLOBAL) {
+ 		__disable_irq(scoped_irqdesc);
+ 		return 0;
+ 	}
+@@ -789,7 +789,7 @@ void __enable_irq(struct irq_desc *desc)
+  */
+ void enable_irq(unsigned int irq)
+ {
+-	scoped_irqdesc_get_and_lock(irq, IRQ_GET_DESC_CHECK_GLOBAL) {
++	scoped_irqdesc_get_and_buslock(irq, IRQ_GET_DESC_CHECK_GLOBAL) {
+ 		struct irq_desc *desc = scoped_irqdesc;
+
+ 		if (WARN(!desc->irq_data.chip, "enable_irq before setup/request_irq:
+irq %u\n", irq))
