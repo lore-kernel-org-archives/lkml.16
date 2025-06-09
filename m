@@ -1,103 +1,125 @@
-Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E83256C7D;
-	Mon,  9 Jun 2025 12:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BD2382;
+	Mon,  9 Jun 2025 12:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749470444; cv=none; b=gnSJJX3kcrxHoCqobbk69BKhtcJZL543M4hvNIegMY1EDMT1moRhCbbpKHAYcAoeYTHzROzzrsEi+1U0w6r1HEzpIqzPQa3KuLCnO/jiV/uHNvfQ26TCtjfN+oEYuC39SFn9Zh4/WgTfzA/38xv7d/86gmFrCB5uxkAHhyBjmOA=
+	t=1749470501; cv=none; b=YL4R5CQV8Nn7wqT/KQZISUr15Aa21tIj8FTC5JqpJ5OqTnnkxOcB46UWMoNO3ZlxLC1lUyJ99lOS3YxUEPz4rM1SbB1KcdBFRfLlMq2NV6vQZP/H+mjVX+tzszezcLXDlJ0wDMojn6lrNFeaVanywq32/iI2/uKS+4pe4dyOVE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749470444; c=relaxed/simple;
-	bh=PKWgQGgRJ1guVZn+qEPTzImhKYgLlE0AV9Fupk0kTfI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a+6nmqCJ6OXJ8rc8Q7ZLMIg/u/2tF150FnRafBZOGBYVvCjmqv6TN8qfsFs22B3pUjqSOmCIq1ndXH0+oSX/7JpNY0uFTmhIJhJobfFlWpi8NcVMC47RJnvqHQg8NceqHQy4A+Q5Jh0dxfi9JUMemvo7hIh2DOoT9P0eOyc8YZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=O3dHBVvW; arc=none smtp.client-ip=95.143.211.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
+	s=arc-20240116; t=1749470501; c=relaxed/simple;
+	bh=RBxOTcJhhrzt0ZnnH+TLqSQVWbFPgWTR/L/+mnlC9SE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J7c5Aw58ZFBKKWWGYHVWhhgFTpMSFKVwPaw7ordo6CaOTGb1NJhDN3QfcqrPqUQWbyoWifvIQVGXRIznW0IQGhbdMX21Xp1+36VPc5zbNapEumfQQ8odB621dahiRgplLEGrZnWpmTsk1lUvzm/3szAypOTf0o5bFu1DAz+kuKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LJYKg4lq; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="O3dHBVvW"
-From: Denis Arefev <arefev@swemel.ru>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
-	t=1749470438;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ex2JFBinh8YiWxVMhoLzM47i1TZJvrxnedGrO88QYuw=;
-	b=O3dHBVvWxVuVkPDus4ne+jZDafnHzyyhXuEhkrCCDvWDJSyTO6HOQcZwO6j5bnpbwTg5Mf
-	8dj53My4mXs5xENi2F1oFZdh5dZjZPYhbqEqkoiHeq1T/MR0cCLpLs4hDlPXns0itXESXb
-	VYoM5bxh1eMWPH0VlMZzdLHHCa7EBL8=
-To: stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Marc Zyngier <maz@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Julien Thierry <julien.thierry.kdev@gmail.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.cs.columbia.edu,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Quentin Perret <qperret@google.com>
-Subject: [PATCH 5.10] KVM: arm64: Tear down vGIC on failed vCPU creation
-Date: Mon,  9 Jun 2025 15:00:37 +0300
-Message-ID: <20250609120038.41396-1-arefev@swemel.ru>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LJYKg4lq"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-313862d48e7so180616a91.1;
+        Mon, 09 Jun 2025 05:01:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749470499; x=1750075299; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CJ3pVORQnKMkcdSsnA9ZmKrDQqlQt1ksdLlFD2rYdGU=;
+        b=LJYKg4lqkG+kJFLb1qj1+A6lITAus7jzyy42RFrrnmJPkFzFLJv3xvi5JwGHL67Pbj
+         CZ31j8mQYXqOfcuP1ke6nyIrohbY1AVeDx/IJEHg4qhEglR+5mLX4CHGgus+VfD5kJ6d
+         SLRptSrNDhMWGRGwwY4rQMBbOOgBp6nUGUK8CY69xPc964PWZ1P+t/wSb2gtRYqSMMTC
+         VFjXBiQmNoaTyjrd9HMDmSC6BRGFlWjiNnEdiDnxp+5/ZlMSCRrm7GnjzsCgnq0DArKE
+         s+TLvHMpt9Orauq8/XB+/vmPWkbj8e119FE0xV7lglLBL5K5MfN7wbG3n5VcrHKLapcN
+         9m9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749470499; x=1750075299;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CJ3pVORQnKMkcdSsnA9ZmKrDQqlQt1ksdLlFD2rYdGU=;
+        b=n8xnAidFyGRgE2MdB/JdLQW0KGRECMBKorFjoenVOrs+uGj3nVL5e/STH/xXSzebfZ
+         dOzOQ2IH1OGNbjiSHegO8a2Dpbt34mIe44Y6rmX9/KzD0mxWzAqDpHMjOz0nKR9XnPz2
+         CzMdV5TytdonDHxTR7AUzK8L8csTXYu8Oj+fgBv+sfCFVksE619IFfPw+siCJv9PBbCy
+         HSysbfKhGhdIgy31AXrqIZk8o8XtVgQ5wAEGKA9Ki6wuty95ufK5AiDV+Zm+VVS1+q/g
+         IQuEiz0mXBk4hCAiYy19CSCUs82o8pdsW9p+Oz0olQcFuJz/Vseuddz3i/r2rllEC6Ky
+         2SUA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVv3ydvFx+nuKhU9zTB5gpG2QdZWoUaD+oONyuj8R5jNDQQm4VeRbeS6LhIusM4XWjEXVpdCTOLO0Z9Ro=@vger.kernel.org, AJvYcCUZcX3pdF5QO3vEnBLnYGTjdPr3tk2u59XZB3IG79AemIcmmUKjgySFhRBwT8M5vKo/4hW9lHGHez1e08r+1SI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3aM0ucpQ5tp+eoHwx/Du/SKOzZ00FkeVsh0FCUCB5AzyswZie
+	Q7AxBojiGL0v1gWaQiK+qfHBBKfriireVfbI+EvqliGEUxGd/TOJVPnvRddpp3i3G/kvKzkvQIq
+	hCSG5TYeD0MLlVWco3/xzn5t0TwsRI84=
+X-Gm-Gg: ASbGncvTu+Y1nRL1ye0/NB3hRO9iIyq1GeTZe4WXxfl87jB7kc3gQ4mznrYeGIXVxuX
+	6gOc3XzjgkGspgij+0dXcUVNqFzGBEtZFEXbTkhxGXQllhRPUlAMS3pyZPErwQGtS3Rf91ZymHC
+	I/x5kvNVs++pskmMHzmkQeQ3Fhr9QJvX2pw/y1DDRMBsE=
+X-Google-Smtp-Source: AGHT+IFDiooCewoAVyrc9USV6CJWO5M7EqUq5QVYDljr877OMz/OE3d9DxXhO6iXunBKqXCi59uyl7U8gEm4usO3tYo=
+X-Received: by 2002:a17:90b:3a87:b0:312:db8:dbd3 with SMTP id
+ 98e67ed59e1d1-3134e422457mr5734745a91.6.1749470499127; Mon, 09 Jun 2025
+ 05:01:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1749463570.git.viresh.kumar@linaro.org> <f10910c7585f5556869ea6f34b64d4136b8d5581.1749463570.git.viresh.kumar@linaro.org>
+In-Reply-To: <f10910c7585f5556869ea6f34b64d4136b8d5581.1749463570.git.viresh.kumar@linaro.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 9 Jun 2025 14:01:27 +0200
+X-Gm-Features: AX0GCFvEXDEQo6kuyaEeGMJWPKY1Qd-vTj3E9Kxvzj4d0Y6fTnapDlXdd8jIRm0
+Message-ID: <CANiq72=WpuGELzLbH-fxdOeJy9fiDFwatz6ynERDh=HP2z2MBw@mail.gmail.com>
+Subject: Re: [PATCH V2 1/2] rust: cpu: Introduce CpuId abstraction
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Yury Norov <yury.norov@gmail.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Will Deacon <will@kernel.org>
+On Mon, Jun 9, 2025 at 12:51=E2=80=AFPM Viresh Kumar <viresh.kumar@linaro.o=
+rg> wrote:
+>
+> +/// Represents a CPU identifier as a wrapper around an `u32`.
 
-commit 250f25367b58d8c65a1b060a2dda037eea09a672 upstream.
+[`u32`]
 
-If kvm_arch_vcpu_create() fails to share the vCPU page with the
-hypervisor, we propagate the error back to the ioctl but leave the
-vGIC vCPU data initialised. Note only does this leak the corresponding
-memory when the vCPU is destroyed but it can also lead to use-after-free
-if the redistributor device handling tries to walk into the vCPU.
+> +/// # Invariants
+> +///
+> +/// The CPU ID must always lie within the range `[0, nr_cpu_ids())`.
 
-Add the missing cleanup to kvm_arch_vcpu_create(), ensuring that the
-vGIC vCPU structures are destroyed on error.
+I think we can simplify to "ID lies", i.e. "must always" is not needed
+(but we use it elsewhere form time to time, though we may end up
+cleaning those too).
 
-Cc: <stable@vger.kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Oliver Upton <oliver.upton@linux.dev>
-Cc: Quentin Perret <qperret@google.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20250314133409.9123-1-will@kernel.org
-Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
-[Denis: minor fix to resolve merge conflict.]                                           
-Signed-off-by: Denis Arefev <arefev@swemel.ru>                                    
----
-Backport fix for CVE-2025-37849
-Link: https://nvd.nist.gov/vuln/detail/cve-2025-37849
----
- arch/arm64/kvm/arm.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+> +/// ## Examples
 
-diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-index afe8be2fef88..3adaa3216baf 100644
---- a/arch/arm64/kvm/arm.c
-+++ b/arch/arm64/kvm/arm.c
-@@ -294,7 +294,12 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- 	if (err)
- 		return err;
- 
--	return create_hyp_mappings(vcpu, vcpu + 1, PAGE_HYP);
-+	err = kvm_share_hyp(vcpu, vcpu + 1);
-+	if (err)
-+		kvm_vgic_vcpu_destroy(vcpu);
-+
-+	return err;
-+
- }
- 
- void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
--- 
-2.43.0
+Single `#`.
 
+> +    pub unsafe fn from_i32_unchecked(id: i32) -> Self {
+
+Why do we need the `i32` versions?
+
+Is it just for `bios_limit_callback`? If so, I would just convert there.
+
+From a quick look at the C side, it seems that could be an `u32` -- I
+am not suggesting to change the C side now since we don't want to
+complicate the fix, but perhaps something to consider in the future,
+assuming there is no reason to have a signed integer there (e.g. an
+unsigned integer is used in the policy struct).
+
+Relatedly, why isn't that callback's type `c_int` on the Rust side?
+
+I also opened a "good first issue" for a docs bit:
+https://github.com/Rust-for-Linux/linux/issues/1169. I can open one
+for the C FFI types if you think it should be changed.
+
+Finally, can we add a `debug_assert!()` on the `_unchecked()` variant,
+since it is something we can easily check?
+
+Thanks!
+
+Cheers,
+Miguel
