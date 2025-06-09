@@ -1,151 +1,93 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E0B27F160
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 07:35:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 548773D544;
+	Mon,  9 Jun 2025 07:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749454547; cv=none; b=b0RzvFWgqch126EEMBVyeQvjGpMl5nXFIhHdm/QdF1pqJ7Jpw0B7itpZtee7JmRzLgX0FNdSWVskdpAmijxeUz5KqSCKw3gbZWRRwP24r/i4VkGlab72aX7WSBsHu8x1gooLVKPgifVHfJR5/1uNTZvVKb6QeroP2PvQkMKKIZ0=
+	t=1749454614; cv=none; b=dnD67tTu6bxyas4ckYvoMgWpQ0ORROhCE/Rn418znwlp5UO+XRSBHYssLlHwwprVnYlXt8pptQmc/9rNeOY12P3Ob1FKklYVir6B+gn4Om1Kg798SrlKzEZtVA+/dKP/xoTOIVQCqOJmjzR6YEe96rnz2Cqz2r1NUZ9b1ayEJyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749454547; c=relaxed/simple;
-	bh=6voCWdZWcG4RRH+vYohcvQyoOOny8z1Oe8Y1Z2MemY4=;
+	s=arc-20240116; t=1749454614; c=relaxed/simple;
+	bh=QD50IMlcQ1GH3mNhqbad601Rfmh7cADft1xxz1dg+Ec=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TKLdrHIjvpeEpazmEo2+2edw4C7j2nwAuz0CeKf7u6ko/IcAspj+apDcxBaeFPagBAbNprZrBjojmbKb76VRtoQjsB1HwuSbTCH+uQyUO6Y4H/LcwCKdJ/ORulMUuV9aweXo/9BCmPL1/oMWiCqp3hNhlRozQellBQzIih0VmfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=gSpZqNtm; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=SEOcuftFzE6XVgRudczx+3+ijwmkDk/a3KVn0y2gvaXn9jJsjWszYm+Ig4hZpymsJeul+CJXDfENFL0M3Hqy2P6YVmITyG/3OOxRtmarLBdQr/yIWWVyGcH2ENvBq2h/Ez8Tv2SWPQRgNn21OsYtDPqQKk2grLZl3NNOdZGKzVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rHxXgC+5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="gSpZqNtm"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-450cfb6a794so25938455e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 00:35:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749454544; x=1750059344; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8RuWRqP0d99Xv1WKhTslXLfzi2R4jCLF5zn4rM3x2gk=;
-        b=gSpZqNtmgwPQ232q6nNNnR26rS8Vt0d5cztD3XHkpbQSFh/hr9pkl4EKugNIXqWLLu
-         Fb9/CzzuMgE+wqcTK8nwmS2n/ft6bqZ1ddGR5lzAUvR7JsR3tcObu/LXDLsRaxSFhem+
-         gTskFd3nQn8qbizWxhi/lBGi4wB2tEwE67PeHB56voHO9AYm62Ui8Mi16MKJBo+0idJg
-         xizuYBokQ++Sgxv3XVBViVelRefM4JljaLXWvXAbYsPCzHqr24Hw9B0FGB06NIcMbiFh
-         Eg/ddnB+BaSkpryRtaJ8RDQHIt45+FQ99oqbYV13W3B64Lon36xJPjH6oRZxpYy3nFSf
-         J9RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749454544; x=1750059344;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8RuWRqP0d99Xv1WKhTslXLfzi2R4jCLF5zn4rM3x2gk=;
-        b=pOgVEKDQA5Wzwe+vLOcHbUdcas6+lmSNwXtmJgDcpjm8gmnJchPWbPrSfJwuSLC10r
-         zt55Wplp4uet5TORhfWxa0Fw4MwtmJfBHhHGsqg4WqNpAKuulIrWm5BywGL21yd3Q7So
-         55FJVnZUVLED4xIV+30utaWzO/AFCqzmGVH9mNceyBxxS3cTOBOXEWZ3IRm5649yuAh1
-         HpRyEsW51wV+RufGLdVmLrcGdijjNcJxA5TivAc/zze//CqVjGnDQpFrQ9FSOXxbN2Jv
-         311nqyHrb6r/n4tGy0SauGShIEfVLZBw6CV4iwEKnOVmAEZ0/bsyLlZ5ZIqfuX17ixnn
-         lLsw==
-X-Forwarded-Encrypted: i=1; AJvYcCUEbaF2RFd5E02AZMoQ7fu1xULb46MkBxDGknCaVJq+PTzbVq3OlB/bobl5nGYlFgpx/Fcsm241DEJ2VFg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDXmQDyJ1lYUfTlVKSRIqxAdRLFwI9vQMhp/Ht2vunVHXQXajX
-	rk9+NXG80CgUOGhQzcTVpqCFebUM15cINIKzROWuTQLbS7wvOJ8UteR3Mumi5aqG+Us=
-X-Gm-Gg: ASbGnct1FawiCfMsJ/4L0RSHkDjxO7rczPDhSmrv6hLujsFSI3hNiKF3qNVLFpJmOEj
-	XVp2ImJ193QDImBFidiflN472bfJDaKaMSDsCgF9pX3frycBQTyDCp+AbZqVPs6EhdO1YaGhfr4
-	lk+sDbA6oz+FPIogC+7iG9gze4UTaGdFqJk5/gLcH4h+MpjUTDvBwI3YzvlTDIOesd6tlvOtsRj
-	HzcVhgq9BsAveneZDeT7tdCNVShI6otQNIech3NWfcEvQiP72uHGuoRpjm+iBz+1p6kWVH7Y27f
-	3YR/7x4NVOy5am4QFQsL7OOZhSd6XcuZU+sMPJj1VTnmPfi+G8Mm/RZGyYGCXz1SX3nr6vnDxGM
-	=
-X-Google-Smtp-Source: AGHT+IF6DM1q4q8CPakAyqZNCbPDwJpamBu3whbTRqn03tXemtCu5+RQvYP709FhwnPjbnmjHYqPmA==
-X-Received: by 2002:a05:600c:37cd:b0:442:d9f2:ded8 with SMTP id 5b1f17b1804b1-45201368cfcmr113234485e9.15.1749454543908;
-        Mon, 09 Jun 2025 00:35:43 -0700 (PDT)
-Received: from localhost (109-81-91-146.rct.o2.cz. [109.81.91.146])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-452f8f011c8sm97794095e9.3.2025.06.09.00.35.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 00:35:43 -0700 (PDT)
-Date: Mon, 9 Jun 2025 09:35:42 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Ritesh Harjani <ritesh.list@gmail.com>
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
-	david@redhat.com, shakeel.butt@linux.dev,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, donettom@linux.ibm.com,
-	aboorvad@linux.ibm.com, sj@kernel.org, linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm: fix the inaccurate memory statistics issue for
- users
-Message-ID: <aEaOzpQElnG2I3Tz@tiehlicka>
-References: <f4586b17f66f97c174f7fd1f8647374fdb53de1c.1749119050.git.baolin.wang@linux.alibaba.com>
- <87bjqx4h82.fsf@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rHxXgC+5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95B0EC4CEEB;
+	Mon,  9 Jun 2025 07:36:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749454613;
+	bh=QD50IMlcQ1GH3mNhqbad601Rfmh7cADft1xxz1dg+Ec=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rHxXgC+5F2HM0tZIbnla8noPw3L5U6rSmRemUD4oLRGCnA0FlSX1BgciaLKbluQa/
+	 JXloYkwGODTxdB8CpiugLkZsQZoyt7Vno3NWw7iYubuFD9r3RJBDF4PzfffFNfBYtv
+	 tXgK/NBeOb/9DUo/DIfIhnBHrl0g/wFHoagGAxpKG2xrBLNCp8Ubz8JGw7Irm3M0Kr
+	 68du+HTjWq58+UhOC+j34JWnnu5qpLltYN3DWmIKZ+G/bFqXXz6nh5TSzzn4fX2i/e
+	 QNq0Vx3pt6JibJul37e0GdSISpAsYKpKh7IFElF+TKMT/S4fPcQEuSo7Nmn+Ri4BlL
+	 eqHnrL0MR6txw==
+Received: by pali.im (Postfix)
+	id D14D2C75; Mon,  9 Jun 2025 09:36:50 +0200 (CEST)
+Date: Mon, 9 Jun 2025 09:36:50 +0200
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Steve French <smfrench@gmail.com>
+Cc: Paulo Alcantara <pc@manguebit.org>, Steve French <sfrench@samba.org>,
+	linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cifs: Show reason why autodisabling serverino support
+Message-ID: <20250609073650.kj6lxrykguhb7nuo@pali>
+References: <20250608164453.6699-1-pali@kernel.org>
+ <3d644c3f8acb3dbcef395bd96e7e957c@manguebit.org>
+ <CAH2r5muuanOgjzQ8wgd+QoyrU_ZM4tATrfYYQj=b7MapGLMh5A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87bjqx4h82.fsf@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH2r5muuanOgjzQ8wgd+QoyrU_ZM4tATrfYYQj=b7MapGLMh5A@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 
-On Mon 09-06-25 10:57:41, Ritesh Harjani wrote:
-> Baolin Wang <baolin.wang@linux.alibaba.com> writes:
-> 
-> > On some large machines with a high number of CPUs running a 64K pagesize
-> > kernel, we found that the 'RES' field is always 0 displayed by the top
-> > command for some processes, which will cause a lot of confusion for users.
-> >
-> >     PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
-> >  875525 root      20   0   12480      0      0 R   0.3   0.0   0:00.08 top
-> >       1 root      20   0  172800      0      0 S   0.0   0.0   0:04.52 systemd
-> >
-> > The main reason is that the batch size of the percpu counter is quite large
-> > on these machines, caching a significant percpu value, since converting mm's
-> > rss stats into percpu_counter by commit f1a7941243c1 ("mm: convert mm's rss
-> > stats into percpu_counter"). Intuitively, the batch number should be optimized,
-> > but on some paths, performance may take precedence over statistical accuracy.
-> > Therefore, introducing a new interface to add the percpu statistical count
-> > and display it to users, which can remove the confusion. In addition, this
-> > change is not expected to be on a performance-critical path, so the modification
-> > should be acceptable.
-> >
-> > In addition, the 'mm->rss_stat' is updated by using add_mm_counter() and
-> > dec/inc_mm_counter(), which are all wrappers around percpu_counter_add_batch().
-> > In percpu_counter_add_batch(), there is percpu batch caching to avoid 'fbc->lock'
-> > contention. This patch changes task_mem() and task_statm() to get the accurate
-> > mm counters under the 'fbc->lock', but this should not exacerbate kernel
-> > 'mm->rss_stat' lock contention due to the percpu batch caching of the mm
-> > counters. The following test also confirm the theoretical analysis.
-> >
-> > I run the stress-ng that stresses anon page faults in 32 threads on my 32 cores
-> > machine, while simultaneously running a script that starts 32 threads to
-> > busy-loop pread each stress-ng thread's /proc/pid/status interface. From the
-> > following data, I did not observe any obvious impact of this patch on the
-> > stress-ng tests.
-> >
-> > w/o patch:
-> > stress-ng: info:  [6848]          4,399,219,085,152 CPU Cycles          67.327 B/sec
-> > stress-ng: info:  [6848]          1,616,524,844,832 Instructions          24.740 B/sec (0.367 instr. per cycle)
-> > stress-ng: info:  [6848]          39,529,792 Page Faults Total           0.605 M/sec
-> > stress-ng: info:  [6848]          39,529,792 Page Faults Minor           0.605 M/sec
-> >
-> > w/patch:
-> > stress-ng: info:  [2485]          4,462,440,381,856 CPU Cycles          68.382 B/sec
-> > stress-ng: info:  [2485]          1,615,101,503,296 Instructions          24.750 B/sec (0.362 instr. per cycle)
-> > stress-ng: info:  [2485]          39,439,232 Page Faults Total           0.604 M/sec
-> > stress-ng: info:  [2485]          39,439,232 Page Faults Minor           0.604 M/sec
-> >
-> > Tested-by Donet Tom <donettom@linux.ibm.com>
-> > Reviewed-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
-> > Tested-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
-> > Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
-> > Acked-by: SeongJae Park <sj@kernel.org>
-> > Acked-by: Michal Hocko <mhocko@suse.com>
-> > Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> > ---
-> > Changes from v1:
-> >  - Update the commit message to add some measurements.
-> >  - Add acked tag from Michal. Thanks.
-> >  - Drop the Fixes tag.
-> 
-> Any reason why we dropped the Fixes tag? I see there were a series of
-> discussion on v1 and it got concluded that the fix was correct, then why
-> drop the fixes tag? 
+cifs_autodisable_serverino() is already printing at the VFS level
+information that it is disabling the serverino. It is one time thing as
+once it is disabled, it is not printing it second time. So it does not
+flood logs.
 
-This seems more like an improvement than a bug fix.
--- 
-Michal Hocko
-SUSE Labs
+In this change I have just extended this existing logging to print also reason.
+
+On Sunday 08 June 2025 22:40:21 Steve French wrote:
+> Since this could flood logs (e.g. in some DFS cases), probably better
+> to do these via the usual dynamic trace points (and can document a
+> simple "trace-cmd -e smb3_disable_serverino" script to avoid risk of
+> flooding logs.    cifsFYI is an alternative but the world has moved to
+> the dynamic tracing (eBPF etc.)
+> 
+> On Sun, Jun 8, 2025 at 3:57 PM Paulo Alcantara <pc@manguebit.org> wrote:
+> >
+> > Pali Rohár <pali@kernel.org> writes:
+> >
+> > > Before calling cifs_autodisable_serverino() function, show reason why it
+> > > has to be called.
+> > >
+> > > This change allows to debug issues why cifs.ko decide to turn off server
+> > > inode number support and hence disable support for detection of hardlinks.
+> > >
+> > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > Cc: stable@vger.kernel.org
+> > > ---
+> > >  fs/smb/client/connect.c   | 2 ++
+> > >  fs/smb/client/dfs_cache.c | 2 ++
+> > >  fs/smb/client/inode.c     | 3 +++
+> > >  fs/smb/client/readdir.c   | 3 +++
+> > >  4 files changed, 10 insertions(+)
+> >
+> > NACK.
+> >
+> 
+> 
+> -- 
+> Thanks,
+> 
+> Steve
