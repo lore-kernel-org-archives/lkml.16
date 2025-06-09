@@ -1,158 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB0118DB34;
-	Mon,  9 Jun 2025 18:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0ABB1ACED5
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 18:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749492820; cv=none; b=OMNvwqI10GMxNZA9WaZ1ZL5UWqsP+ucN6UVkqN8ddP2BpiNzS0mqS/FELLVbELotJCkR33RNqjmvWLu8DPen9h25b9sh3SmCjSoXyHEVIDBe7evs0og5SP9cFB22JKNG+o8h+VS8/CSdem2k71ZTmcfvwy5+bDSyjObN7n1ckcc=
+	t=1749492984; cv=none; b=cBz4ufKIMkZXVovzwd8vnqoM4j+6xXtftvtgNHWWzR6f8+ZL10pUysyzrF52TfLkr6IdPHfCseadW8pmVJQpf+NOAUlCq388zvgGEdo2+56BmN3lQZGTWul+pVtUoYgy4x9FTy9RAmx12HpIAdzkVwgTNg/ZpBZFq2wEgdHgUKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749492820; c=relaxed/simple;
-	bh=fPAq5fhqMsM3I+RFFHnBatxDu/Dm68BwDmcqiGwulEs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ufD+XWuByUjiWBhYmmfxhvmPTqroc64qwQZsQjiHHDQTJnljNIzUWdyR43KThqPZXcMyo5YGHUowXCbO2Uq7f2m6WDFpyeNtGx2thcnibbyYJqBjZdfnBTHjt7CzvTdlfmXGwmORgYN5tu8+tO72MY/lIInch7xs1zPIQSvvAgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YtGcmuDZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749492984; c=relaxed/simple;
+	bh=8vWO7A5v+6MgdxNh6sQBELz44kj7FxuJmbGyTiB7w2Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ax79r657/hM0YSnrEz70alFbxE0qGtT7qMSJ45ZsJg+6ao6Cy5Kqbr9j4P4a7jwXnKjLVjW/dISJBK0p0QbAHFSvKcZsOXCy2IQOOXAasJ2+VagTzMqmjLD0t9CHz8SVrt4J5mRopCm8kUseDgIV8JhWy3Po1dZ3qJ+9bQhvVtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y40lXtWW; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YtGcmuDZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B3C6C4CEEB;
-	Mon,  9 Jun 2025 18:13:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749492819;
-	bh=fPAq5fhqMsM3I+RFFHnBatxDu/Dm68BwDmcqiGwulEs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YtGcmuDZGmGOZU+sMWtbTNSeILk2Atjn7n92775i1x94lBZqoq5U+FCpzUSEFLCol
-	 yq5JAOgSms+6yX8jaAVKsndi5XvFnKJKadjMrIgJmhnpY7aWwCf2HwyILPNgVfMfRj
-	 l97kO9j2HUXUfvi7BcVYVbs2BThBEmdJdnUvsLZIJLwSpepimHQBCg57PGI5Y4CWGj
-	 LraoY/8ZhjLeHQ5PudLczl+zXWdqAp6kHKrhDaijETyJ11TSikrOlO9L9c5ur8kFhs
-	 flbTLSZeN3dPN+W1tXGJUTg9UCR+HGx7h94TXdcz63ak/ZDlyMBLZ6djPdJvWzKD5o
-	 TAfRMQoDqFuQg==
-Date: Mon, 9 Jun 2025 20:13:33 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Benno Lossin <lossin@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 4/6] rust: irq: add support for threaded IRQs and
- handlers
-Message-ID: <aEckTQ2F-s1YfUdu@pollux.localdomain>
-References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
- <20250608-topics-tyr-request_irq-v4-4-81cb81fb8073@collabora.com>
- <aEbTOhdfmYmhPiiS@pollux>
- <5B3865E5-E343-4B5D-9BF7-7B9086AA9857@collabora.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y40lXtWW"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-601a67c6e61so1616a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 11:16:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749492981; x=1750097781; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oYkxLjn61b2SghFSVNz+hqS3VSd2oI4dmt4pvSqHM8U=;
+        b=y40lXtWWQY9qBRoNUzJl48Cx36zYDxgbLXl7wnyhDLY44q9fVDxMUau9LoSnHeKKkr
+         4LU8t64Zq7/lGa22ssKrzcv3jEvyoa3EK8mD1uuR7GNG4hl7buYhy0QMlIvOKTTfHGNq
+         nn6Q36MSqoskcg8WRaaLc5d1cRU4CY4xGXwes6qyXSeA+5Uq3w2399Fg8/i8IbvWQ5wD
+         LGoBsMigCGrdcB+x/MZKsIo82zjOxzcaMNsof9i43EMIWeC1j3w+jLWj6FLeJ5zDtpgO
+         4I6aQAHNoY76M6Xq9LVJ0cFz6M6USXxrPxquU3tH2sbOKtR6pkoGfPHgwQaEJnwk0Tjk
+         ItxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749492981; x=1750097781;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oYkxLjn61b2SghFSVNz+hqS3VSd2oI4dmt4pvSqHM8U=;
+        b=YInzXKqfNSvrH/LFDIVdLvE2GDS0OHotx4C2sbbiQkeAx40KFsCj+tgHNRhvHSli9l
+         4DYR3qBq+eNuBE32BTBlTWawPFTVspcByC5SUwJtGXXCEz5EICLIfQmr3cpCBdhg8573
+         0NH1lUbDAFkusHhoPOD6yDprFHVyXnBJ0F9qsAgMfRvuN5xtJrvVWm/jY/99hyx49Tz6
+         1vP82e2xJ+xoGkvXil1sI7sBifHYhTCOrzt16li0EH1BSoBwHAPRPQEAWi0rEvzLAWl0
+         JgJDe86bB7tVdiNE5LCufOL8qVADGkp1799Z9ryKbvqk69/XCxyaEzIOy3dzymXUe28o
+         FtJw==
+X-Forwarded-Encrypted: i=1; AJvYcCVeROfbO3JadsS4vqzqd9YLFwWqWyzpTmX69tJVg2dAN19FR1NkuZ3eXY6cf4aj71ry8jPS/Uw+rE9uiA4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxyymxT26SclYQITxpcKAfaok70lmcdhEuuMZzGqHuZSYiOwaM
+	B9HUO5k1n38tpVb2yjTpJhmnnMljzAzvr0zOJA/qQY7GDs1voGRKXmV8ovAuU99vWfGWukCGTEs
+	CkJ8f2QcLVGOGCEAzkkRoMbMyPxm3LRb8BEw5N3Cr
+X-Gm-Gg: ASbGncvZhL3MfEDabs+PxXI/SDOqOPWEdC5pFzc7vQXdJ6YjEF4WcHqdLQ4EVcn8YnY
+	4s1mo4ObfB+E39AJryjFdGqf8NCLWZ4eL292ec9Tw/yQoiuxxsPyrKUS/WXQPzIc1e5+0O+Tgje
+	dP9tBdhB0zDJ8TkqRDAkUBl9AU2kI//72NvFr2ZLmYv+8=
+X-Google-Smtp-Source: AGHT+IGl1GhUW5I8KeyIhe30RLYNUE0AclIq68sDRcY3/pkUWT0ma5zJRYH9NIn4KxCiDUzu5GNxbNFmNL+XbWxUW78=
+X-Received: by 2002:a50:d756:0:b0:608:203f:196f with SMTP id
+ 4fb4d7f45d1cf-608203f1a64mr4016a12.3.1749492980731; Mon, 09 Jun 2025 11:16:20
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5B3865E5-E343-4B5D-9BF7-7B9086AA9857@collabora.com>
+References: <20211207095230.53437-1-jiangshanlai@gmail.com>
+ <51bb6e75-4f0a-e544-d2e4-ff23c5aa2f49@redhat.com> <4a66adfa-fc10-4668-9986-55f6cf231988@zytor.com>
+ <aEbuSmAf4aAHztwC@google.com>
+In-Reply-To: <aEbuSmAf4aAHztwC@google.com>
+From: Jim Mattson <jmattson@google.com>
+Date: Mon, 9 Jun 2025 11:16:08 -0700
+X-Gm-Features: AX0GCFsJwyV-ZLeMzaw3jddTz_eVE6C2E36fVcqLczw7JomWy3wX466MFUhrcy4
+Message-ID: <CALMp9eSA0u5+_dPA7-M4oZgqt4sv-qez4fMuZ6S5X4rUp=33xQ@mail.gmail.com>
+Subject: Re: [PATCH] KVM: X86: Raise #GP when clearing CR0_PG in 64 bit mode
+To: Sean Christopherson <seanjc@google.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Lai Jiangshan <jiangshanlai@gmail.com>, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Lai Jiangshan <laijs@linux.alibaba.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	Wanpeng Li <wanpengli@tencent.com>, Joerg Roedel <joro@8bytes.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 09, 2025 at 01:24:40PM -0300, Daniel Almeida wrote:
-> > On 9 Jun 2025, at 09:27, Danilo Krummrich <dakr@kernel.org> wrote:
-> >> +#[pin_data]
-> >> +pub struct ThreadedRegistration<T: ThreadedHandler + 'static> {
-> >> +    inner: Devres<RegistrationInner>,
-> >> +
-> >> +    #[pin]
-> >> +    handler: T,
-> >> +
-> >> +    /// Pinned because we need address stability so that we can pass a pointer
-> >> +    /// to the callback.
-> >> +    #[pin]
-> >> +    _pin: PhantomPinned,
-> >> +}
-> > 
-> > Most of the code in this file is a duplicate of the non-threaded registration.
-> > 
-> > I think this would greatly generalize with specialization and an HandlerInternal
-> > trait.
-> > 
-> > Without specialization I think we could use enums to generalize.
-> > 
-> > The most trivial solution would be to define the Handler trait as
-> > 
-> > trait Handler {
-> >   fn handle(&self);
-> >   fn handle_threaded(&self) {};
-> > }
-> > 
-> > but that's pretty dodgy.
-> 
-> A lot of the comments up until now have touched on somehow having threaded and
-> non-threaded versions implemented together. I personally see no problem in
-> having things duplicated here, because I think it's easier to reason about what
-> is going on this way. Alice has expressed a similar view in a previous iteration.
-> 
-> Can you expand a bit more on your suggestion? Perhaps there's a clean way to do
-> it (without macros and etc), but so far I don't see it.
+On Mon, Jun 9, 2025 at 7:23=E2=80=AFAM Sean Christopherson <seanjc@google.c=
+om> wrote:
+>
+> On Fri, Jun 06, 2025, H. Peter Anvin wrote:
+> > On 2021-12-09 09:55, Paolo Bonzini wrote:
+> > > On 12/7/21 10:52, Lai Jiangshan wrote:
+> > > > From: Lai Jiangshan <laijs@linux.alibaba.com>
+> > > >
+> > > > In the SDM:
+> > > > If the logical processor is in 64-bit mode or if CR4.PCIDE =3D 1, a=
+n
+> > > > attempt to clear CR0.PG causes a general-protection exception (#GP)=
+.
+> > > > Software should transition to compatibility mode and clear CR4.PCID=
+E
+> > > > before attempting to disable paging.
+> > > >
+> > > > Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+> > > > ---
+> > > >   arch/x86/kvm/x86.c | 3 ++-
+> > > >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > > > index 00f5b2b82909..78c40ac3b197 100644
+> > > > --- a/arch/x86/kvm/x86.c
+> > > > +++ b/arch/x86/kvm/x86.c
+> > > > @@ -906,7 +906,8 @@ int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned
+> > > > long cr0)
+> > > >           !load_pdptrs(vcpu, kvm_read_cr3(vcpu)))
+> > > >           return 1;
+> > > > -    if (!(cr0 & X86_CR0_PG) && kvm_read_cr4_bits(vcpu, X86_CR4_PCI=
+DE))
+> > > > +    if (!(cr0 & X86_CR0_PG) &&
+> > > > +        (is_64_bit_mode(vcpu) || kvm_read_cr4_bits(vcpu,
+> > > > X86_CR4_PCIDE)))
+> > > >           return 1;
+> > > >       static_call(kvm_x86_set_cr0)(vcpu, cr0);
+> > > >
 
-I think with specialization it'd be trivial to generalize, but this isn't
-stable yet. The enum approach is probably unnecessarily complicated, so I agree
-to leave it as it is.
+Isn't this redundant with the "if (cs_l)" check above?
 
-Maybe a comment that this can be generalized once we get specialization would be
-good?
-
-> >> +impl<T: ThreadedHandler + 'static> ThreadedRegistration<T> {
-> >> +    /// Registers the IRQ handler with the system for the given IRQ number.
-> >> +    pub(crate) fn register<'a>(
-> >> +        dev: &'a Device<Bound>,
-> >> +        irq: u32,
-> >> +        flags: Flags,
-> >> +        name: &'static CStr,
-> >> +        handler: T,
-> >> +    ) -> impl PinInit<Self, Error> + 'a {
-> > 
-> > What happens if `dev`  does not match `irq`? The caller is responsible to only
-> > provide an IRQ number that was obtained from this device.
-> > 
-> > This should be a safety requirement and a type invariant.
-> 
-> This iteration converted register() from pub to pub(crate). The idea was to
-> force drivers to use the accessors. I assumed this was enough to make the API
-> safe, as the few users in the kernel crate (i.e.: so far platform and pci)
-> could be manually checked for correctness.
-> 
-> To summarize my point, there is still the possibility of misusing this from the
-> kernel crate itself, but that is no longer possible from a driver's
-> perspective.
-
-Correct, you made Registration::new() crate private, such that drivers can't
-access it anymore. But that doesn't make the function safe by itself. It's still
-unsafe to be used from platform::Device and pci::Device.
-
-While that's fine, we can't ignore it and still have to add the corresponding
-safety requirements to Registration::new().
-
-I think there is a way to make this interface safe as well -- this is also
-something that Benno would be great to have a look at.
-
-I'm thinking of something like
-
-	/// # Invariant
-	///
-	/// `ìrq` is the number of an interrupt source of `dev`.
-	struct IrqRequest<'a> {
-	   dev: &'a Device<Bound>,
-	   irq: u32,
-	}
-
-and from the caller you could create an instance like this:
-
-	// INVARIANT: [...]
-	let req = IrqRequest { dev, irq };
-
-I'm not sure whether this needs an unsafe constructor though.
+> > > Queued, thanks.
+> > >
+> >
+> > Have you actually checked to see what real CPUs do in this case?
+>
+> I have now, and EMR at least behaves as the SDM describes.  Why do you as=
+k?
+>
+>
+> kvm_intel: Clearing CR0.PG faulted (vector =3D 13)
+>
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index f79604bc0127..f90ad464ab7e 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -8637,6 +8637,23 @@ void vmx_exit(void)
+>         kvm_x86_vendor_exit();
+>  }
+>
+> +static noinline void vmx_disable_paging(void)
+> +{
+> +       unsigned long cr0 =3D native_read_cr0();
+> +       long vector =3D -1;
+> +
+> +       asm volatile("1: mov %1, %%cr0\n\t"
+> +                    "   mov %2, %%cr0\n\t"
+> +                    "2:"
+> +                    _ASM_EXTABLE_FAULT(1b, 2b)
+> +                    : "+a" (vector)
+> +                    : "r" (cr0 & ~X86_CR0_PG), "r" (cr0)
+> +                    : "cc", "memory" );
+> +
+> +       pr_warn("Clearing CR0.PG %s (vector =3D %ld)\n",
+> +               vector < 0 ? "succeeded" : "faulted", vector);
+> +}
+> +
+>  int __init vmx_init(void)
+>  {
+>         int r, cpu;
+> @@ -8644,6 +8661,8 @@ int __init vmx_init(void)
+>         if (!kvm_is_vmx_supported())
+>                 return -EOPNOTSUPP;
+>
+> +       vmx_disable_paging();
+> +
+>         /*
+>          * Note, hv_init_evmcs() touches only VMX knobs, i.e. there's not=
+hing
+>          * to unwind if a later step fails.
+>
