@@ -1,81 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70F322172F
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 20:55:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43EAE207A20;
+	Mon,  9 Jun 2025 20:59:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749502550; cv=none; b=CJ90pAK19mI0oaZrhF0UOR4v3JbO/8DO9nwKG4POdz9ISfxEJBUDcmWmNa7Cy7Tlj6OP3oKznpGoub1GdqjV0QoSA4QPFxKtFRdNk8D2StjGONHiuhdIF9Ni5UtUvTA+U51qVq2cJNcokhgO9jvvgYMTWW6E0pFSsguaGr89fgQ=
+	t=1749502781; cv=none; b=Y9stBw2RPy3+9xEJKTPpJ9xdxF+FVppSpB2KWJnmzpxYwdEC/Sgl0caZifVr+BCHHXr8vdqOogFcoXO3+JMWdBRKuM/atxF17u+DscFYnmEi59GCcaOSh7+RZbjv+On8Cceg7rnYrh5gG4VDBcJFW2mXiEYDCmfATJdY6iqYKP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749502550; c=relaxed/simple;
-	bh=cqTQa8rm+F++IDXEr692KrwmjAEZKagK+bHhQ+bzCU4=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=LVeb1XW2/SHr7nZsOBVbjIVZH8/NiwQVIRLYaq3YzhGml3Dbiudy31oBSTZDu2IoXOvROrmobc4t+feQDmkYLDj96md8B+nC3YvftTiEnq2dv+diJt+KMzU2pNpyTjs5SYiadjTtXTmMSwxwdBE+CjydagUGy1ZENhuBXbm/Sl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u1EBetkk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749502781; c=relaxed/simple;
+	bh=Q8wlcxSfI2C49/3WlyqJcY/1pWE9xD8JeXXXOkS61Eg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IAgIdh4aLCzqjiy0oMZU+BRAUwcmwQh/cPY3pNijndWNlq2hh6cCP90qNzzN0XpRI2r6Z5Aiz6O1F3FGSY7aTms9jLMyAcMRftCr02zF86LoAn+Sh/K1q74ExRThVB2IivvpCU97Fih3BwkaezrgdhAr8SDHcLMsIU+sP2BT/UI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UvJlV8Fk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u1EBetkk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B32DC4CEF0;
-	Mon,  9 Jun 2025 20:55:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UvJlV8Fk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 897AEC4CEEB;
+	Mon,  9 Jun 2025 20:59:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749502550;
-	bh=cqTQa8rm+F++IDXEr692KrwmjAEZKagK+bHhQ+bzCU4=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=u1EBetkk6hR9Qmt5jAU/OlotzWfZAXdel5V1WwcDhfWXEHt3KQrqjj8vgNXTxnVNP
-	 wAa9BFAz7NskMhX7Q0uLI+hBmhEbZovh1maS1jFnKpFOHbID83GbbjB8jzS7k2z0S3
-	 6707+6vAjgriU7A8nTfRBWTWIPTyDalIpd9Y8xjh0cLwVfB4dY6SyIOvQyzCsYIpJx
-	 v2muC4yJfkEh0YxKCczO0ZAYLvin2GFNe3DinFbbrfuI58SRDGmSk2b4ZmS61rkF/k
-	 XW0WsBg8hLAc0dBolf3EjpMkqG8WMuXVcGs4xMDfUJfsrAff0qf7FPsreqy72rI12f
-	 th91gtHZ47qdA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33AE83822D49;
-	Mon,  9 Jun 2025 20:56:22 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1749502780;
+	bh=Q8wlcxSfI2C49/3WlyqJcY/1pWE9xD8JeXXXOkS61Eg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UvJlV8FkqEHOwffmigf9MVhomFOyzEqxs99x41Zi6PcTsgfOcCp/7yI7ZrFQHgjHM
+	 sZ77HvPjPHRMgjGRhKPqfeB6jl2H+x5cEX9Zufj00QY7aiRC6qKfmCsz0+iAkalLd+
+	 oUKf7OKBQ+bfJhct2DK/RPSdhefLG3Arng8x7b9E5migJp8p8Ij+BtaWWk304522Ww
+	 GyIZtLDWA316nC2c2o2kfmtHK0EOCKfH0Z9St6VmTCNIcpC6qtZAda2notHVQndouY
+	 n0iRb/Q6xoT00NoFbfb67cyC6mfOEfUwUJLTS5fcWmD7/eP26e1zJoQdcabI6IyDTN
+	 c46/LMxGH/vpw==
+Date: Mon, 9 Jun 2025 23:59:37 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: sudeep.holla@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+	stuart.yoder@arm.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
+Subject: Re: [PATCH 2/2] tpm: tpm_crb_ffa: maunally register tpm_crb_ffa
+ driver when it's built-in
+Message-ID: <aEdLOb3V3EgBZJof@kernel.org>
+References: <20250606105754.1202649-1-yeoreum.yun@arm.com>
+ <20250606105754.1202649-3-yeoreum.yun@arm.com>
+ <aEMdGXXBSym7cXmK@kernel.org>
+ <aEMvm2MW9bBXf2gM@e129823.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH v3 3/6] f2fs: drop usage of folio_index
-From: patchwork-bot+f2fs@kernel.org
-Message-Id: 
- <174950258074.1531626.9419516015634434009.git-patchwork-notify@kernel.org>
-Date: Mon, 09 Jun 2025 20:56:20 +0000
-References: <20250430181052.55698-4-ryncsn@gmail.com>
-In-Reply-To: <20250430181052.55698-4-ryncsn@gmail.com>
-To: Kairui Song <ryncsn@gmail.com>
-Cc: linux-mm@kvack.org, kasong@tencent.com, nphamcs@gmail.com,
- david@redhat.com, chrisl@kernel.org, hughd@google.com,
- linux-kernel@vger.kernel.org, willy@infradead.org,
- linux-f2fs-devel@lists.sourceforge.net, yosryahmed@google.com,
- hannes@cmpxchg.org, jaegeuk@kernel.org, akpm@linux-foundation.org,
- ying.huang@linux.alibaba.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEMvm2MW9bBXf2gM@e129823.arm.com>
 
-Hello:
-
-This patch was applied to jaegeuk/f2fs.git (dev)
-by Andrew Morton <akpm@linux-foundation.org>:
-
-On Thu,  1 May 2025 02:10:49 +0800 you wrote:
-> From: Kairui Song <kasong@tencent.com>
+On Fri, Jun 06, 2025 at 07:12:43PM +0100, Yeoreum Yun wrote:
+> Hi Jarkko,
 > 
-> folio_index is only needed for mixed usage of page cache and swap
-> cache, for pure page cache usage, the caller can just use
-> folio->index instead.
+> > > To integrate tpm_event_log with IMA subsystem,
+> > > tpm_crb and tpm_crb_ffa driver should be built as built-in
+> > > (CONFIG_TCG_CRB=y && CONFIG_TCG_CRB_FFA=y).
+> > >
+> > > However, this could make failure for ima_init() gets tpm chip when
+> > > each initcall function deployed like:
+> > >
+> > > 0000000000000888 l       .initcall6.init	0000000000000000 crb_acpi_driver_init
+> > > 000000000000088c l       .initcall6.init	0000000000000000 tpm_crb_ffa_driver_init
+> >
+> > The only failure I see is the patch 1/2 which changes init call level,
+> > and leaves kernel Git to a broken state.
+> >
+> > It breaks the famous "zero regressions policy".
+> >
+> > BR, Jarkko
 > 
-> It can't be a swap cache folio here.  Swap mapping may only call into fs
-> through `swap_rw` but f2fs does not use that method for swap.
+> Sorry, would you let me know what is broken more detail?
+> IMHO, by changing the init call level for ffa_init()
+> it's called early than before device_initcall() and it seems not to
+> break anything.
 > 
-> [...]
+> What breaks do you mean?
 
-Here is the summary with links:
-  - [f2fs-dev,v3,3/6] f2fs: drop usage of folio_index
-    https://git.kernel.org/jaegeuk/f2fs/c/fe15ec046431
+Your description in the cover letter and commit messages in unclear
+and convoluted. Please describe exact causalities instead of something
+not defined could cause "failure" (which is also abstract concept).
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+I'll check the next round.
 
+> 
+> Thanks.
+> 
+> --
+> Sincerely,
+> Yeoreum Yun
 
+BR, Jarkko
