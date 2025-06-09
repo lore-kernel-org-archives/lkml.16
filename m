@@ -1,107 +1,119 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B534A25C834;
-	Mon,  9 Jun 2025 14:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 285011547D2;
+	Mon,  9 Jun 2025 14:07:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749477983; cv=none; b=ZmS+IeV1y6MMTIC32PhAE9MqqcLk1uPrX/JAqXZinH7N2EQqGu7QcDYuZpuN/7q59vWjsNIPOh+1uAbcPXGF7c3MIItt7chktsuS9oqZyVJ59FO6neIh4Dl5/wdH46VU3xf/LbNqaA29gBkYnoiyKugDIvNhpmWWwb+B5By6jaE=
+	t=1749478030; cv=none; b=pCsSrU1lhLlkRt0oavDDby0OJwPoAbetxlz0rDA+iYsONp2jNA8Oivbkl+n1BVIClsYUQOBsX2Mp6Aj8rlHM8nKWDpYPMyKxCZDLlE+y6flYebi6vOY8vaQdmFHDDAUBPGwPXv+1CZNPOyPLdRKDeBgmycv96uL0LPtvOwHp/Lw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749477983; c=relaxed/simple;
-	bh=3lOJgnhrpQkPu25jDi+5V6s0BfBYYwj8jM4H4EhVCZQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Fm4+6j/Q2nvdUsKnxRDJEy6+PNSu+CXfdsf/vOsic/yHf3zrAMcD3n7HIahsvBDb0FwqnWeiS/dPDJEcPD0UVrBx9zVHK84PMlZzCPUOGqdvPbQHLFIenxzlILZ2mAd2g9LtLTpKOD1y9LkT7Qfs4S4w9QkoenWXUwhWWhaWyTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GclB97S4; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1749478030; c=relaxed/simple;
+	bh=hKR7+ajhuSlOyH7j2iFRCSEbWtE6DkgGdy/ZRTO5PvI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EA3fsknUovE7Emt+CDkvtsVbDx3Zh3QTz7sMKVw1MyvkyY+r7n2OC4/J7P93aiyoMoTYnHKaXuelaCtloxHNBRNQX9Pjf808kNWjgfT8iJXybsKZ4MXoEUVxgc0Bux3EzUJclT5S0mDOGk4fIu8JVb+3Io0/84ohx2cyjVYxmEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ib7JYYMP; arc=none smtp.client-ip=209.85.160.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GclB97S4"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3DCF143B16;
-	Mon,  9 Jun 2025 14:06:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749477979;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zn7wuquz4DmlIJeSlveu8NxjTLD/+5rvhB4h/bX2BVM=;
-	b=GclB97S4y4Jr4l7SuD1EVFc6EXjzEUhlJx7X6R+GF/Gf9CePGKDtGcO4p5rVnhoB8Nh9i0
-	p87KVyZv63vJmN8GERsQm9Y90cdXF3dtmMICIUvLnkVOs0Bu2wDVbi4AAQw21gbOrRDwwh
-	rr2m64lN9SWQED3zlmDlqO40A+mDLou43L9vLgTEOq0Mh+90GSupKJJaZn2XriJyghVAUo
-	YQeogCebledYjtdxstqiaKDetfc64B8kJhC6jntslj7p84JQg6rEHioDPR2mpUifT0vUhz
-	OvJoBSO3v2cho5lcVdgOPmmM33JT4rdh8xOZXfO0Q3rtVJ20Ja3JPLMxS6CClg==
-Date: Mon, 9 Jun 2025 16:06:16 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Gal Pressman <gal@nvidia.com>
-Cc: patchwork-bot+netdevbpf@kernel.org, andrew@lunn.ch, kuba@kernel.org,
- donald.hunter@gmail.com, davem@davemloft.net, edumazet@google.com,
- pabeni@redhat.com, horms@kernel.org, willemdebruijn.kernel@gmail.com,
- kernelxing@tencent.com, richardcochran@gmail.com,
- thomas.petazzoni@bootlin.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, maxime.chevallier@bootlin.com,
- linux@armlinux.org.uk
-Subject: Re: [PATCH net-next v4] net: Add support for providing the PTP
- hardware source in tsinfo
-Message-ID: <20250609160616.3afc8acd@kmaincent-XPS-13-7390>
-In-Reply-To: <fd48f64f-dec2-489b-a9b9-dc1aa38ca61d@nvidia.com>
-References: <20250519-feature_ptp_source-v4-1-5d10e19a0265@bootlin.com>
-	<174792123749.2878676.12488958833707087703.git-patchwork-notify@kernel.org>
-	<fd48f64f-dec2-489b-a9b9-dc1aa38ca61d@nvidia.com>
-Organization: bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ib7JYYMP"
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2e999729ccbso2861330fac.2;
+        Mon, 09 Jun 2025 07:07:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749478028; x=1750082828; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=afG0/kl8HRSNgTfY07WBqZftxaFWWI+8Ts2aM7Cdogo=;
+        b=Ib7JYYMP7LP9DCiDoDAiyHBwqRieiCYVLr1IQgjGALsgiKl+nyRhGcsgT+wdaWXmJL
+         0ZkJE0nIzquL759fjy75mWHBLHByu3rQlIbMAwjJvbCSJ/s4P9y0oCoqyosLCoz3nv4g
+         e0enKEvELP7bOJTczb9g0eKlanU7c/JcvCPO0ZFT9KyfXk/FRpR2t2iSPoK1QGcox7OL
+         NqR3CCBjqEQ8ClnW4BG9F5nJtyXU1s6RFo1nhGsEFzUxh19a4Be9sGLGtbviFSPtt6Iz
+         doxQod2gtiK1YmGuOxCkXxRbm8Inll5JFkCGd7RO0lLH1Ojtu2j7WNK7P/iNiktGwlWk
+         tKOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749478028; x=1750082828;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=afG0/kl8HRSNgTfY07WBqZftxaFWWI+8Ts2aM7Cdogo=;
+        b=CKNYmP0D/RuaZHeajohGofL7Uf3XRMAG4cMxfaHQvVKQNCRvfzHjz4qsE3XZaQYB6u
+         3Q/FENSrrCTex5fzDQWa/UqtQ8Bdq+0TvxPM+UWSIf715pOSXQ9wXwkSAN5WIyow7jFG
+         /GsOlqfVT1uIzX9hy1kV3DbmNVsJXoDkEGak9SfDNCEJdeP/cR73hr3i9IPo3481PtyQ
+         1OijQCyrAzkuAClSU97/7LwVfdywfq9/yR1y447ojy8Px0R1QGaElJ4QzcthgKFe5CyQ
+         K+Z5wc3NfOsgkx5yvQWgBnw62fmBlbX5VdQlPJA+emTJiZB9FXKVRC+SSNFCiirHFRRw
+         vSqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUxgjWMvqMQ07EQpHCVGDzzL/Y1Vah+wsvoBRDKKcVu7QnefXXzrKO0o/MSHFuZAWtcv9LsWU+t8rlF@vger.kernel.org, AJvYcCVggiApVkXFMp6aD7yAw7RAKNMup56MZzKLyKe7RY3/cKJiMmEPKiB9+ozabxMWDO31zWfYERRveigsUBRnHTk=@vger.kernel.org, AJvYcCWpbm7UJvaGUg1mY2gUF/XRyiLc91i07BcQSVePgA5NRWGOfbvODz8z5gsk1R9nCgn58DM3IW+0BKhxCL9m@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfmppyqqGUiYYwvwUE9U++2UR0CHbPrERa4G8eSdIIhMJ3C3pr
+	VW9tXgivoYedlm6mt6dwsY4g0DfgP+RI0QPikDNdJfX0vtPHzx/kjmhhIvArWK7Ug1vu7UHU8vW
+	qYxHIee9yF68za0ErYRiE+VoVOiBJCiQ=
+X-Gm-Gg: ASbGncumygkjABTfFgROWTy55ihO2VbxHyf44LjL1X7HkA7Zr59j0Iblc3wU0Q5h3qs
+	W5aIbYTTLH+bJ1KYghNn7qw+TKboYqIEtv8kltJduKqlDhFhrnTEvMpKw/8jcNSrQOG6/BCUuv5
+	h3nVfZZ26z1duGENupCf37CXU80NflmhTUKcpoasGF
+X-Google-Smtp-Source: AGHT+IFMIV6U/igIlpB2ppK59kvRoIdscUJqew6GIJircIlEAiWY4uTovmhUmkBLtQPxTPuE4nyg2BFG5tS4OB9pPc8=
+X-Received: by 2002:a05:6870:a7a2:b0:2e9:7e3:933f with SMTP id
+ 586e51a60fabf-2ea00684093mr7039729fac.3.1749478027948; Mon, 09 Jun 2025
+ 07:07:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: 0
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdelfeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecunecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefhudevkeeutddvieffudeltedvgeetteevtedvleethefhuefhgedvueeutdelgeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudekpdhrtghpthhtohepghgrlhesnhhvihguihgrrdgtohhmpdhrtghpthhtohepphgrthgthhifohhrkhdqsghothdonhgvthguvghvsghpfheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeguohhnrghlugdrhhhun
- hhtvghrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomh
-X-GND-Sasl: kory.maincent@bootlin.com
+References: <20250606170341.3880941-1-igor.korotin.linux@gmail.com>
+ <20250606170817.3881748-1-igor.korotin.linux@gmail.com> <DAGZNG518T0C.1PXOK55IXHZOF@kernel.org>
+ <aEVqgUtflBCzZi1X@pollux> <DAH4KX3Y3M3P.3B82LSVWU172Q@kernel.org>
+ <aEV43zxZmWvDgKES@pollux> <CAJxaTdNZEdK21mFPu2kTJPa7aQ+PpnkwFVdEP5MCt6w+bD0wXA@mail.gmail.com>
+ <CANiq72=rerpj_Ut0x7dDb0O8dEh9SHaF1HVyyfMM83hz--QCJg@mail.gmail.com> <CAG7QV91u4rVgAqDjKAofupASSk9q0uRKNtsrHg7Q6KExRMkFog@mail.gmail.com>
+In-Reply-To: <CAG7QV91u4rVgAqDjKAofupASSk9q0uRKNtsrHg7Q6KExRMkFog@mail.gmail.com>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+Date: Mon, 9 Jun 2025 15:06:56 +0100
+X-Gm-Features: AX0GCFvuwUvErfOYrgAzHxM0-sxRU7s6mm5moyKumxFcZp5T9Z7y7tnWeLeM7Kk
+Message-ID: <CAJxaTdMFp0WAB3BBDPUztVvTtDGUt9=KyHTDpDOgAZ4ZEk2XUw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] rust: driver: Add ACPI id table support to Adapter trait
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Len Brown <lenb@kernel.org>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Alex Hung <alex.hung@amd.com>, Xiang Fei Ding <dingxiangfei2009@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Le Mon, 9 Jun 2025 15:18:49 +0300,
-Gal Pressman <gal@nvidia.com> a =C3=A9crit :
+> <igor.korotin.linux@gmail.com> wrote:
+> >
+> > Let me know if this pattern is acceptable. To my opinion it is not much
+> > different from the original 2 functions conditioned by #[cfg] and
+> > requires some nasty changes.
+>
+> In general, the more local a `cfg` can be made, the better, because we
+> can share more, e.g. the docs and signature.
+>
+> But maybe in this case it doesn't work -- what would be the "nasty
+> changes" required?
 
-> On 22/05/2025 16:40, patchwork-bot+netdevbpf@kernel.org wrote:
-> > Hello:
-> >=20
-> > This patch was applied to netdev/net-next.git (main)
-> > by Paolo Abeni <pabeni@redhat.com>:
-> >=20
-> > On Mon, 19 May 2025 10:45:05 +0200 you wrote: =20
-> >> Multi-PTP source support within a network topology has been merged,
-> >> but the hardware timestamp source is not yet exposed to users.
-> >> Currently, users only see the PTP index, which does not indicate
-> >> whether the timestamp comes from a PHY or a MAC.
-> >>
-> >> Add support for reporting the hwtstamp source using a
-> >> hwtstamp-source field, alongside hwtstamp-phyindex, to describe
-> >> the origin of the hardware timestamp.
-> >>
-> >> [...] =20
-> >=20
-> > Here is the summary with links:
-> >   - [net-next,v4] net: Add support for providing the PTP hardware sourc=
-e in
-> > tsinfo https://git.kernel.org/netdev/net-next/c/4ff4d86f6cce
-> >=20
-> > You are awesome, thank you! =20
->=20
-> Netdev maintainers,
->=20
-> Was there a discussion about merging this without a selftest that covers
-> this uapi extension? Is this considered an exception?
+In particular on this example:
+    fn of_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
+        #[cfg(not(CONFIG_OF))] {
+            None
+        }
 
-Not that I know of.
-Indeed I will update tools/testing/selftests/net/hwtstamp_config.c following
-the new uAPI using netlink instead of ioctl.
+        #[cfg(CONFIG_OF))] {
+            // the rest of logic
+        }
+    }
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+The `dev` is marked as unused if `CONFIG_OF` is not set. So we have 3 options:
+1. rename it to `_dev`. This is nasty to my opinion, because it is misleading.
+2. add #[alloc(unused_variables)] on top of it. Also not good since it
+will suppress
+all other possible unused_variables as well.
+3. The third option is `let _ = dev;` in `#[cfg(not(CONFIG_OF))]`
+section. I came to
+it while I was writing this reply. This looks like the best option of
+three in my opinion.
+
+Thanks
+Igor
