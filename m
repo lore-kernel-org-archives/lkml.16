@@ -1,126 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A1018DB34;
-	Mon,  9 Jun 2025 20:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DDC418DB34
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 20:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749502447; cv=none; b=KskIAca3DJAQ378Ed+d3E6QTsEvJrNSmc/Ddzhll0ZZVGKvpX9NZQSMzM+b+Rg0BtsPpVfYwcAKOiGtSTtRQfdwFKFj5FlmPtJFLv1noDKHkPD8TSvNKn47CIbvWGP+fEsKQMunI84CbtuzZ46L6CNOKf+cEJsuOzDiljUfXsp0=
+	t=1749502456; cv=none; b=jfG21yyAzdkDhNArgLajFu0Af26HPaGm9dsSgT2aYNboodTCl7Q0deOF0Ig+3cb3Ucwi3wD61vnAZV5UYZl/Cn07459LgjKrJu58TGg//nUPjrus4pwdo7nQ6W5u2oNcVkeHRnCoDuFnc0hqMjstz+m8tfunnxbm0opBj064BNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749502447; c=relaxed/simple;
-	bh=P+msmKRqtD0R3+trbW8WYXnfkRFUir/DVlfAO/CXGEc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=FyXqvTGeOq00c8tFzV1jdGjkG6IPgI6AT2n5nnNoXn7HHZ1bpmcCIKRgWXSXgH6Xbu1LRkElayUNVfYGUJxNUwj+9ueirCQuk7eUyY+uhAnBa5hZBgLIug2t8h+wCteTK/V31o3ZVcn17isMSq6enr3bfpq00abMA4HoyNaeBL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RklBcIKR; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RklBcIKR"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 23FFFC4CEEB;
-	Mon,  9 Jun 2025 20:54:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749502447;
-	bh=P+msmKRqtD0R3+trbW8WYXnfkRFUir/DVlfAO/CXGEc=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=RklBcIKR9PdrTrFZ06c+8JQKtcmJVc1yT0+PKTkLNYiO12b7QtduICDR9m+16cAkW
-	 rGmtY/knsK9VHe8Nsxf+F8vwAr4IhwXDJlkcKp2fU8FtupyU2WjUwXXlk0TY1i/afb
-	 EXPQUa7p9CftEAj867APl5cYLVsnLSunhZKGanwcdWSz3vdj2yKfjFeLYBgZBnox9R
-	 cM8kdC8fhqY8evQI+ahm96/kMWX8wuNtMEY5P4C5ODcXv324Wh1BzufGMIDLm/E4Fy
-	 KKbVtPeQigy+x0PyTYT3Talrig837+khNl3vs3QO+Y54BjkRLnvYUn/ldy+I2wgoX/
-	 YF76zbtbdrzLw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 116ABC5B552;
-	Mon,  9 Jun 2025 20:54:07 +0000 (UTC)
-From: Jens Glathe via B4 Relay <devnull+jens.glathe.oldschoolsolutions.biz@kernel.org>
-Date: Mon, 09 Jun 2025 22:53:56 +0200
-Subject: [PATCH] dt: arm64: qcom: sc8280xp-blackrock: amend usb0-sbu-mux
- enable gpio
+	s=arc-20240116; t=1749502456; c=relaxed/simple;
+	bh=z/vEGuZc4tu6dkk1EEisYXM72I1LGtWdllhfK+YJQDA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TU9aWpWc4JL+bBJno0hpFnFIF98uViSy40Zlr+JaerVLdzuooWwJI/4AWmLticFSJ/uJm5DsCbNFHWSqK2SIV2Gp4DBR9IIO9cTv8H4qhHTuVo12lBjKjrkrazCjVZ4JKDgwRtrui7ys1jx4pSurcZaQsTnNj+GQiuoRuFMlt74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 1D18BC037A;
+	Mon,  9 Jun 2025 20:54:06 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id F374520016;
+	Mon,  9 Jun 2025 20:54:03 +0000 (UTC)
+Date: Mon, 9 Jun 2025 16:55:32 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Prakash Sangappa <prakash.sangappa@oracle.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>, "kprateek.nayak@amd.com"
+ <kprateek.nayak@amd.com>, "vineethr@linux.ibm.com" <vineethr@linux.ibm.com>
+Subject: Re: [PATCH V5 1/6] Sched: Scheduler time slice extension
+Message-ID: <20250609165532.3265e142@gandalf.local.home>
+In-Reply-To: <20250604192327.sVjt6c4u@linutronix.de>
+References: <20250603233654.1838967-1-prakash.sangappa@oracle.com>
+	<20250603233654.1838967-2-prakash.sangappa@oracle.com>
+	<20250604103106.1465f847@gandalf.local.home>
+	<20250604145433.KCPMF8zm@linutronix.de>
+	<80120491-7F90-4171-9FB8-9FE89B09F728@oracle.com>
+	<20250604192327.sVjt6c4u@linutronix.de>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250609-blackrock-usb0-mux-v1-1-7903c3b071e4@oldschoolsolutions.biz>
-X-B4-Tracking: v=1; b=H4sIAONJR2gC/x3MSQqAMAxA0atI1gZicUCvIi5sjBocaakI4t0tL
- t/i/we8OBUPTfKAk0u9HntElibAc79PgjpEgyFTUEk12rXnxR28YPCWcAs3mqEiZku1zXKI4el
- k1Puftt37fj0IVTVkAAAA
-X-Change-ID: 20250609-blackrock-usb0-mux-2d70ccb09b14
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Aleksandrs Vinarskis <alex.vinarskis@gmail.com>, 
- Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749502444; l=2173;
- i=jens.glathe@oldschoolsolutions.biz; s=20240919;
- h=from:subject:message-id;
- bh=0U1VNm6UEDUZ5+luOdhF4fqviPgQfWkNGEy/dPW1eC4=;
- b=e9Byf0rEru5w6V5DwJCO6BifuGo/PjwSHJviqRtqjj9xTZOSR/IGL6aRyqrFXKqTdZgHCDBps
- 6T/ZEP8N0TyBVghdGNSqevtKq0CuNJykE7Y9SecA+ZBTchfkzNvFIQd
-X-Developer-Key: i=jens.glathe@oldschoolsolutions.biz; a=ed25519;
- pk=JcRJqJc/y8LsxOlPakALD3juGfOKmFBWtO+GfELMJVg=
-X-Endpoint-Received: by B4 Relay for
- jens.glathe@oldschoolsolutions.biz/20240919 with auth_id=216
-X-Original-From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-Reply-To: jens.glathe@oldschoolsolutions.biz
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: F374520016
+X-Stat-Signature: kqk1jkjz7tqp63pm6uzror6grjagneu9
+X-Rspamd-Server: rspamout05
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/s6SW87rW4GNG0b2h+ZU0ge/Lre6pTrR4=
+X-HE-Tag: 1749502443-12506
+X-HE-Meta: U2FsdGVkX1/1zwS4YMzcn2RSHAWExHXCrE55kfPCLTK8IHMy9igBEMmtnefbcKt6tZuv9q8GCEm4+1MOrAvxKuam6TijdyjUrawjScV53XojZGG+PWbH3IgRbXMK2w3PXao35xhhjfpj1lAPuPNxn6CSb1/fWyMzz3W1edjxoKIMdRrgSrtzDRVXksBhdKsmiNbgCggLECIrm0dB6Drx4Kd43fUwyQO6noaqp/pUrOfK5qzQO5L9R2MIcFVn2uSOjO7VD7b7zWftbMK/HBGQGNpbkrcyikGDYAal+Xkq3MmLr1R39pep+4oISRwWmp3NQt5yls2WSRwylkSL/VA5dbOIOWdBhGVmLiss2JWubxVYh3DHfiFQ2A==
 
-From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+On Wed, 4 Jun 2025 21:23:27 +0200
+Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
 
-The usb0 port didn't switch to dp altmode, investigation into DSDT
-UCS0 device resulted into GPIO 100.
+> On 2025-06-04 17:29:44 [+0000], Prakash Sangappa wrote:
+> > Don=E2=80=99t know if there were benefits mentioned when RT tasks are i=
+nvolved.
+> >=20
+> > I had shared some benchmark results in this thread showing benefit of u=
+sing scheduler time extension.
+> > https://lore.kernel.org/all/20241113000126.967713-1-prakash.sangappa@or=
+acle.com/
+> > The workload did not include RT tasks. =20
+>=20
+> I don't question the mechanism/ approach. I just don't want RT tasks
+> delayed.
+>=20
 
-Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
----
-This patch amends the enable gpio for the usb0-sbu-mux to the one
-found in the DSDT file for this box. It shows a list of GPIOs in 
-a certain order, and it has 2 buffers with conflicting values. 
-The one deviating is in the second buffer, at the place where one 
-would expect the GPIO for the select pin of USB0 (by pattern 
-application from USB1). The GPIO previously used is also there, but 
-at the end of the UCS0 buffer structure). Changing it resulted in 
-a working dp altmode functionality on usb0.
+So I applied your patches and fixed up my "extend-sched.c" program to use
+your method. I booted on bare-metal PREEMPT_RT and ran:
 
-This debug effort is a result of work / testing of the 4-lanes patch
-[1] on all available devices. Independent of it, it enables dp 
-altmode on usb0, and with it, also 4 lanes, making it even more useful.
+~# cyclictest --smp -p95 -m -s --system -l 100000  -b 1000
+# /dev/cpu_dma_latency set to 0us
+policy: fifo: loadavg: 0.35 0.75 0.38 1/549 4219         =20
 
-[1]: https://lore.kernel.org/all/20250527-topic-4ln_dp_respin-v3-0-f9a0763ec289@oss.qualcomm.com/
----
- arch/arm64/boot/dts/qcom/sc8280xp-microsoft-blackrock.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+T: 0 ( 4213) P:95 I:1000 C:   5163 Min:      3 Act:    3 Avg:    3 Max:    =
+  12
+T: 1 ( 4214) P:95 I:1500 C:   3444 Min:      3 Act:    4 Avg:    3 Max:    =
+   9
+T: 2 ( 4215) P:95 I:2000 C:   2582 Min:      3 Act:    3 Avg:    3 Max:    =
+   8
+T: 3 ( 4216) P:95 I:2500 C:   2066 Min:      3 Act:    4 Avg:    3 Max:    =
+   9
+T: 4 ( 4217) P:95 I:3000 C:   1721 Min:      3 Act:    4 Avg:    3 Max:    =
+   7
+T: 5 ( 4218) P:95 I:3500 C:   1474 Min:      3 Act:    4 Avg:    4 Max:    =
+  11
+T: 6 ( 4219) P:95 I:4000 C:   1290 Min:      3 Act:    3 Avg:    3 Max:    =
+   9
 
-diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-microsoft-blackrock.dts b/arch/arm64/boot/dts/qcom/sc8280xp-microsoft-blackrock.dts
-index 812251324002b50f3b48845b6c244f692d42b9b2..b8cbef0ebce76acf9d1e841e613646119dc400ff 100644
---- a/arch/arm64/boot/dts/qcom/sc8280xp-microsoft-blackrock.dts
-+++ b/arch/arm64/boot/dts/qcom/sc8280xp-microsoft-blackrock.dts
-@@ -243,7 +243,7 @@ linux,cma {
- 	usb0-sbu-mux {
- 		compatible = "pericom,pi3usb102", "gpio-sbu-mux";
- 
--		enable-gpios = <&tlmm 101 GPIO_ACTIVE_LOW>;
-+		enable-gpios = <&tlmm 100 GPIO_ACTIVE_LOW>;
- 		select-gpios = <&tlmm 164 GPIO_ACTIVE_HIGH>;
- 
- 		pinctrl-0 = <&usb0_sbu_default>;
-@@ -1267,7 +1267,7 @@ tx-pins {
- 
- 	usb0_sbu_default: usb0-sbu-state {
- 		oe-n-pins {
--			pins = "gpio101";
-+			pins = "gpio100";
- 			function = "gpio";
- 			bias-disable;
- 			drive-strength = <16>;
+In another window, I ran the "extend-sched" and cyclictest immediately turn=
+ed into:
 
----
-base-commit: 475c850a7fdd0915b856173186d5922899d65686
-change-id: 20250609-blackrock-usb0-mux-2d70ccb09b14
+T: 0 ( 4372) P:95 I:1000 C:  33235 Min:      3 Act:    4 Avg:    3 Max:    =
+  36
+T: 1 ( 4373) P:95 I:1500 C:  22182 Min:      3 Act:    4 Avg:    3 Max:    =
+  39
+T: 2 ( 4374) P:95 I:2000 C:  16647 Min:      3 Act:    5 Avg:    3 Max:    =
+  35
+T: 3 ( 4375) P:95 I:2500 C:  13321 Min:      3 Act:    5 Avg:    3 Max:    =
+  36
+T: 4 ( 4376) P:95 I:3000 C:  11103 Min:      3 Act:    4 Avg:    3 Max:    =
+  35
+T: 5 ( 4377) P:95 I:3500 C:   9518 Min:      3 Act:    5 Avg:    3 Max:    =
+  36
+T: 6 ( 4378) P:95 I:4000 C:   8330 Min:      3 Act:    5 Avg:    3 Max:    =
+  35
 
-Best regards,
--- 
-Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+It went from 12us to 39us. That's more than triple the max latency.
 
+I noticed that the delay was set to 30, so I switched it to 5 and tried aga=
+in:
 
+~# cat /proc/sys/kernel/sched_preempt_delay_us=20
+30
+~# echo 5 > /proc/sys/kernel/sched_preempt_delay_us=20
+~# cat /proc/sys/kernel/sched_preempt_delay_us=20
+5
+
+T: 0 ( 4296) P:95 I:1000 C:  15324 Min:      3 Act:    3 Avg:    4 Max:    =
+  21
+T: 1 ( 4297) P:95 I:1500 C:  10228 Min:      3 Act:    3 Avg:    4 Max:    =
+  21
+T: 2 ( 4298) P:95 I:2000 C:   7676 Min:      3 Act:    3 Avg:    4 Max:    =
+  21
+T: 3 ( 4299) P:95 I:2500 C:   6143 Min:      3 Act:    3 Avg:    4 Max:    =
+  20
+T: 4 ( 4300) P:95 I:3000 C:   5119 Min:      3 Act:    3 Avg:    4 Max:    =
+  21
+T: 5 ( 4301) P:95 I:3500 C:   4388 Min:      3 Act:    3 Avg:    4 Max:    =
+  20
+T: 6 ( 4302) P:95 I:4000 C:   3840 Min:      3 Act:    3 Avg:    4 Max:    =
+  19
+
+It went from a max of 12us to 21us. That's almost double. And this with jus=
+t 5us.
+
+The point we have with this, is it's NOT NOISE! It's addition to the worse
+case scenario.
+
+If we have 30us as the worst case latency, using this with 5 will make the
+worst case latency 35 (or more as there's some overhead with this).
+
+You cannot say "oh, the system causes 5us latency in general, so we can
+just make it 5us", because this adds on top of it. If the system has 5us
+latency in general and you set the extended scheduler slice to 5us, then
+the system now has a 10us latency in general.
+
+This is why it should be turned off with PREEMPT_RT.
+
+-- Steve
