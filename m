@@ -1,96 +1,128 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406FF25D522;
-	Mon,  9 Jun 2025 13:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54F3B17E0;
+	Mon,  9 Jun 2025 13:48:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749476910; cv=none; b=gJ3yd7aY8UyxV/AhA6x/3JGhxM93PZWY+xlmmdOfkMmLkeC/aQoVqbY3AtqNmZ2PF3wSTqbbeutbWuQNNU2Pua2wGP3/hxZcTUgfc5k90h3zSSN/Y9U2LH51ueOP2kNiPgfycOVBs+d4NZNhQ0pTlZA3sje4XZoNI6J8CP84GzY=
+	t=1749476935; cv=none; b=RUMkLyNpoHL1p0kvkb2v/BIxH3pXHUvG0r5ZAr3gz6TMzeRCSvTvekAWV8lbBGU19bjJj1munPcvhe9l/RXIiNVn67VsD+RMnz7WV8lSXn7o51xpc8bPXCQTy5i23Bk9qhvTbHhxzL3MK5eukUr46XkOtBhPCkza1kTJJEKtmQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749476910; c=relaxed/simple;
-	bh=vgwhyh1CxuZb8UdoAqr32qx6vpDjfmzvPWgirIeTlY4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=WxdwB6+fuXNDWHNlW9J9HunKaZlxGQw/c2IGR/13aYfV/wThqmW/+IoaMq12TMT71Pd1W0c27lKFXlNoCqqs4hDSLX4DA6Oxsqb/52tgth0CA8dyN7w7Kh+sZC9yN8L5WUj7nNm2iWLt4eAnouccAgF72v2cDGuK36WBGHFWwVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=NXM3MyQ2; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1749476935; c=relaxed/simple;
+	bh=I5ooaXHhGsxAXvfEfNpiejmBzdUpWZlIyR/sSJGg0ro=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=q2VUNbEixmUTdSjkoMFm48V9bnovANxIZN/VzE8TuCmBn1/WqNQ9atOJvTqhT0YJhDrxQT4NsBID5Vmm/E8w6A08nxuIhGQdbT6/ck0pGY9q1W2x1Szhjqft0w4qk78Y8JX457DrUj216ZRQXSRTfu4Q3a3IbTpP3ywUro8snYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=cWks0Yn+; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="NXM3MyQ2"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 559BFB76031400;
-	Mon, 9 Jun 2025 15:48:13 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	3AGBe95HF3BnVmh4pOJ7r6vQHap+Ggg/Epoh6G8NlvE=; b=NXM3MyQ2f7VgDrxY
-	OPXJSZj1NtYDYF3j0Ouy/mLHhPKCVBQklu6zWRERuij5JeCUQgyiSt3I8c7hziop
-	DfSUppli4SRGz/sp4fELiLvGzHQBMtGZzzIsqp1pcapHCa1vAkS5dm5g0GV5oHXL
-	UCKYmKbzpOh0oFCNy+EITC7JfkDxPtFIxIZWEGBNrf0Tvn1kWrRQ5yBOwaIG+qLs
-	PfElFiE7BJSzIQy01zbLmnjivQKvo+NSQsS2XKs1XjpiaCIsVQjzqKFag3860XQY
-	nBSIvD2YlQ3I8Z5RHApBPx8i595Qhc92Y8bUrjf4loe7bJl53PDBHUZSsS4BKdt4
-	HfNhPw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474cs2fxvk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Jun 2025 15:48:13 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A6A92400C8;
-	Mon,  9 Jun 2025 15:47:19 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 48A2CBA7F42;
-	Mon,  9 Jun 2025 15:46:31 +0200 (CEST)
-Received: from localhost (10.130.73.167) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 9 Jun
- 2025 15:46:31 +0200
-From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-Date: Mon, 9 Jun 2025 15:46:22 +0200
-Subject: [PATCH 2/4] media: i2c: vd55g1: Fix return code in
- vd55g1_enable_streams error path
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cWks0Yn+"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 0ABCD2117470; Mon,  9 Jun 2025 06:48:54 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0ABCD2117470
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749476934;
+	bh=2xRZ/S0FZQtwNjE0+C3z+h708XSoGhzLcqwESLQi70w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=cWks0Yn+NqaDu+2tkFt2CcQ8/hk2LSCWvpFO/pBQpfUtKliM5EO2xVI6mNJ0Etsr2
+	 k0FoUbnM/USyOnGZCafc9M83VtbFZIRCNbIV0yt65B2IWcuTQE4EfD3PoiFPk6horA
+	 LpSSjk0xJ9XQGMoFWPhPzmclZQla50QFIb7Wfyqo=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Michael Kelley <mhklinux@outlook.com>
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Long Li <longli@microsoft.com>,
+	Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=EF=BF=BD=7EDski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH v5 1/5] PCI/MSI: Export pci_msix_prepare_desc() for dynamic MSI-X allocations
+Date: Mon,  9 Jun 2025 06:48:52 -0700
+Message-Id: <1749476932-27377-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1749476901-27251-1-git-send-email-shradhagupta@linux.microsoft.com>
+References: <1749476901-27251-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250609-fix_vd55g1-v1-2-594f1134e3fb@foss.st.com>
-References: <20250609-fix_vd55g1-v1-0-594f1134e3fb@foss.st.com>
-In-Reply-To: <20250609-fix_vd55g1-v1-0-594f1134e3fb@foss.st.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Sylvain Petinot
-	<sylvain.petinot@foss.st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin
- Mugnier <benjamin.mugnier@foss.st.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-09_05,2025-06-09_01,2025-03-28_01
 
-Signed-off-by: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+For supporting dynamic MSI-X vector allocation by PCI controllers, enabling
+the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN is not enough, msix_prepare_msi_desc()
+to prepare the MSI descriptor is also needed.
+
+Export pci_msix_prepare_desc() to allow PCI controllers to support dynamic
+MSI-X vector allocation.
+
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
 ---
- drivers/media/i2c/vd55g1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/msi/irqdomain.c | 5 +++--
+ include/linux/msi.h         | 2 ++
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/i2c/vd55g1.c b/drivers/media/i2c/vd55g1.c
-index 78dd22d9cab03edf4ff3e5a301f8d045e930c997..336dc3c85ac9e695f22aa524e0df6138dc76e45c 100644
---- a/drivers/media/i2c/vd55g1.c
-+++ b/drivers/media/i2c/vd55g1.c
-@@ -1084,7 +1084,7 @@ static int vd55g1_enable_streams(struct v4l2_subdev *sd,
- 
- err_rpm_put:
- 	pm_runtime_put(sensor->dev);
--	return 0;
-+	return -EINVAL;
+diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
+index d7ba8795d60f..43129aa6d6c7 100644
+--- a/drivers/pci/msi/irqdomain.c
++++ b/drivers/pci/msi/irqdomain.c
+@@ -222,13 +222,14 @@ static void pci_irq_unmask_msix(struct irq_data *data)
+ 	pci_msix_unmask(irq_data_get_msi_desc(data));
  }
  
- static int vd55g1_disable_streams(struct v4l2_subdev *sd,
-
+-static void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
+-				  struct msi_desc *desc)
++void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
++			   struct msi_desc *desc)
+ {
+ 	/* Don't fiddle with preallocated MSI descriptors */
+ 	if (!desc->pci.mask_base)
+ 		msix_prepare_msi_desc(to_pci_dev(desc->dev), desc);
+ }
++EXPORT_SYMBOL_GPL(pci_msix_prepare_desc);
+ 
+ static const struct msi_domain_template pci_msix_template = {
+ 	.chip = {
+diff --git a/include/linux/msi.h b/include/linux/msi.h
+index 6863540f4b71..7f254bde5426 100644
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -706,6 +706,8 @@ struct irq_domain *pci_msi_create_irq_domain(struct fwnode_handle *fwnode,
+ 					     struct irq_domain *parent);
+ u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
+ struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev);
++void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
++			   struct msi_desc *desc);
+ #else /* CONFIG_PCI_MSI */
+ static inline struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev)
+ {
 -- 
-2.25.1
+2.34.1
 
