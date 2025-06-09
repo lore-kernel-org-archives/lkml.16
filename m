@@ -1,117 +1,127 @@
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9004A27FB38
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 07:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B2E280334
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 07:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749452605; cv=none; b=PU6Y3edJhDd90bGLXTQFYSVZuY/la2LIVAZJmMN35iXUKk5GRL6i/fFK92LcoQR3P+WtAnBDMulRoOHtQekFSbOrn/rxH0ZOR7YiH1k/ustBVbUNApto/puLLoAwuoTXZ1OpEinYsbkeowdulw+Hl8xwMYC0wDR3TBbHabdtlmo=
+	t=1749452618; cv=none; b=XLEkSdi8JAj7aOSizQXNQqVaDCb+JEO1I7Ic2paG/hNveMh1cNF1DSAY2ghwVBbVJEeWbe/tv/9rDmdAEyWvhqIm88woOr7jz/cvq/VcaXMqRccuQPoqcqAfCt6QWiXnQRps8wW+slbtj6GkTDykEgQDGoVnSvd5PVe70VF/FNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749452605; c=relaxed/simple;
-	bh=rAIUwE+SteEONfGEH8/2EWu3SKgU8HvraH4SbnWqTn8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AA8gANHDo2i3lppe3biHga6tAOi9UTT84AICn3PI6LQ7Tuzx4OFfdycRXNV5Wwoewk34L5+c0UQArAoLrIDFGfjFGnYn0fk0HYpGhfSMch4Git2fCRngVnGXR/9T3hc/qQe4QA50kKLz8NUfPEUtOZZtZJyhd79+jah401093jY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E2dZUTgm; arc=none smtp.client-ip=209.85.166.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749452618; c=relaxed/simple;
+	bh=XcnfmvlhIF30BE7p6htpDEP/XNEkMJK0HdmXgaozwwg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=knG8qNzWy/06kSHN/gh44Byy1F+vLFrqTwsR3w430hN4jIQgrm9S8qzn+LcLbyBYRB3QuxEvpHT7/dB8EdsAA3TcaKXwLxiQicAuyoDD0uCD9yAvPo8qAS60w6kW1z/yW5KRkrm5mKt0/sLdUcmRcqR9y1UQX9BwNc6qBcs8gmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=mWXhB2gN; arc=none smtp.client-ip=52.119.213.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E2dZUTgm"
-Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-8731c4ba046so356683339f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 00:03:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="mWXhB2gN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749452603; x=1750057403; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zxn0gf5DjkiekmGDoc8f+jiCNw9RjSzuhtY2t6W/Yig=;
-        b=E2dZUTgmYqwPpY0sJYfla/6Y0U06iKq80AB2NfmHG+L7bCv1EiA3hkMDijGSjHy2jk
-         iC+cttcRAmdJ9sEwUFrL7/XQ63nN5JeyQNRomG0Q/djl6wxaIAUETmEiSV7/nNa4UsqZ
-         I4ZJKL4dcFz2cn7gOlXrYcFw1DvPYMMs+ZTlHRbRxA3ao1UmKpcEHAJBNg3eX/IT7cqz
-         I7+gf+pu3pKvxHrfRU3ijWb8GIO8mWPwH9Z3OG2uL2VmV/ErChAIaw9yZw8NhT/SGLH0
-         RdGHriuPPHVmVC+4firN8xaEvkkB7RiX6zE/QlTdhckfCXSnIUlVNFrgPWLqG4cMtE4l
-         93pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749452603; x=1750057403;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zxn0gf5DjkiekmGDoc8f+jiCNw9RjSzuhtY2t6W/Yig=;
-        b=BB/ibidd+aabHsNu43lRcx2Kaa6Bvreh2UscB2XAhuMQFMqfbgXU+f5i9h3Ekz7zo+
-         /DVo+BEtT4wJwpWfBHjyURyJugmEqcMkr9bhcEZAsjRUR6TsoB+oP8LIYfmP8dZxDF5p
-         IUKchdBFbd7Sjl35MnLSd561HuBeh36/rtOZSLMRdpCmu33dbBRtGDTYihTRF4f/RD6X
-         U8fJoGUzS968qu/QAT6hDAd5WDGhIswH2Fpcw+F8bKWjc7dplkq9HhVLZaIw5r1UNsGq
-         lz+xk6FEGjR8Bxtj6fDQ4U9USX0YUIn7wzQvVi+iowwI+955In5JRmYyYN7EBm9n+8UR
-         EbHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWXyfu3JAXMf0vqNVlbNnyC0YogUB3zr+Fcy/2pYG/AdT7zlTFpaJLQpRbJ/+/iWYwNGhd6excK8+CDpLs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlZ05OvWUzFNLULU/os4uTGb9Y9BTwgrbCMu2JZvrCKHSB1BRB
-	Tb1ml5XhsLI9wE4ITYZZt3+WugfewxAdqJQlLaV50WWjQLjJMlest7raqWQchM6e1OeiEbEzkoQ
-	P1gcWXqHC8ODQEsbxWMriObrk0kQgUq5x0x+D1iKe+pllYwYiDAGhB432qow=
-X-Gm-Gg: ASbGncvkqZ69hKN02x8Y62Q4iKOgP1MsS/wtICscC8U3yeem3J4qwv1dgv/Zj34FG2l
-	BTyGsRTn5/3yOw538dC6ZA20+NPbNeG9oPPDOpvFwV17ErjtLe4QVd3SseTeMXTjl+B5zl+Are+
-	hspGob6Jubrli70xRtsRHr2PDJCXGSqNWWshZhwKsnQ+G0C4RgNEFpaICXnqHoK/EvjRDgX0d2m
-	Pj6
-X-Google-Smtp-Source: AGHT+IGe/4/44D/ghxEowOkcRodziGm99URjyJEhwDGnJ1beM5CL7lH4P2Iro03Zrvx61SWSJqecABON5p5OEInqeUs=
-X-Received: by 2002:a17:90b:224c:b0:311:e8cc:4248 with SMTP id
- 98e67ed59e1d1-31347797dc1mr18023465a91.33.1749452591283; Mon, 09 Jun 2025
- 00:03:11 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1749452616; x=1780988616;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=XcnfmvlhIF30BE7p6htpDEP/XNEkMJK0HdmXgaozwwg=;
+  b=mWXhB2gNMowazGfxomp3FnhaJ0tdGwcvMd1ou6it13d6MUnmHBmEBPYG
+   H4Z/Ho73J2KzvHsPP1jn4Rr2SsT+escTaJWauimd3A4mkNOi8QD6fRB/x
+   VmXRjmnWQtiXksZ7i7SoH+Fi6JIHLDy0STIcxDA43I+s2Z4Yp7DFX5D1Z
+   xJz/5cC1MykJe2e1ENEYAoJA9/R7ysd8OVUAN7QqJCZB8xDq+tcSx6K9s
+   677fvl3p3DJjMwBVQgNpZi43QZZp/DzffyCcWsVqISRSY7uAEQZ+F6FIV
+   SMzX7+tiUMNfbemvBgEaF9PRtKu1PqIozPY0tcipVJ2CtcrMNo+wJNAv+
+   A==;
+X-IronPort-AV: E=Sophos;i="6.16,221,1744070400"; 
+   d="scan'208";a="753312924"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 07:03:16 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.7.35:37955]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.41.188:2525] with esmtp (Farcaster)
+ id da5e9136-63b9-4140-819b-9bc25cba9392; Mon, 9 Jun 2025 07:03:14 +0000 (UTC)
+X-Farcaster-Flow-ID: da5e9136-63b9-4140-819b-9bc25cba9392
+Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 9 Jun 2025 07:03:14 +0000
+Received: from [0.0.0.0] (172.19.99.218) by EX19D020UWC004.ant.amazon.com
+ (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Mon, 9 Jun 2025
+ 07:03:12 +0000
+Message-ID: <f609d5a0-99d5-4328-8a18-00f6a9e1a48c@amazon.com>
+Date: Mon, 9 Jun 2025 09:03:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6745a8df.050a0220.1286eb.0015.GAE@google.com> <684650c6.050a0220.d8705.0018.GAE@google.com>
- <esjz6hewatxgaiqdluqf2sdorpybqxcwr4c77y2fozs6plj3yx@bkpt7rrtzdid>
-In-Reply-To: <esjz6hewatxgaiqdluqf2sdorpybqxcwr4c77y2fozs6plj3yx@bkpt7rrtzdid>
-From: Aleksandr Nogikh <nogikh@google.com>
-Date: Mon, 9 Jun 2025 09:02:59 +0200
-X-Gm-Features: AX0GCFu11bVvrlwk_kziMotGT1GDhGmAjiJrfo_A6N8T_GTNzVdIJee0BK1Gteg
-Message-ID: <CANp29Y5Ew-7FCrSmCXngSJ66SeWMMX=bgztUZP99i-tGX=jMbg@mail.gmail.com>
-Subject: Re: [syzbot] [kernfs?] general protection fault in kernfs_dop_revalidate
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: syzbot <syzbot+e37a1730d63d207fe403@syzkaller.appspotmail.com>, 
-	bfoster@redhat.com, gregkh@linuxfoundation.org, 
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, tj@kernel.org, 
-	syzkaller <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] kexec: Enable CMA based contiguous allocation
+From: Alexander Graf <graf@amazon.com>
+To: <kexec@lists.infradead.org>
+CC: <linux-kernel@vger.kernel.org>, Pasha Tatashin
+	<pasha.tatashin@soleen.com>, <nh-open-source@amazon.com>, Baoquan He
+	<bhe@redhat.com>, Zhongkun He <hezhongkun.hzk@bytedance.com>, Andrew Morton
+	<akpm@linux-foundation.org>
+References: <20250521152934.48841-1-graf@amazon.com>
+Content-Language: en-US
+In-Reply-To: <20250521152934.48841-1-graf@amazon.com>
+X-ClientProxiedBy: EX19D040UWB004.ant.amazon.com (10.13.138.91) To
+ EX19D020UWC004.ant.amazon.com (10.13.138.149)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 
-On Mon, Jun 9, 2025 at 5:19=E2=80=AFAM Kent Overstreet
-<kent.overstreet@linux.dev> wrote:
->
-> On Sun, Jun 08, 2025 at 08:11:02PM -0700, syzbot wrote:
-> > syzbot has bisected this issue to:
-> >
-> > commit f7643bc9749f270d487c32dc35b578575bf1adb0
-> > Author: Kent Overstreet <kent.overstreet@linux.dev>
-> > Date:   Wed Apr 17 05:26:02 2024 +0000
-> >
-> >     bcachefs: make btree read errors silent during scan
->
-> syzbot bisections have been looking _very_ unreliable
->
+Ck9uIDIxLjA1LjI1IDE3OjI5LCBBbGV4YW5kZXIgR3JhZiB3cm90ZToKPiBXaGVuIGJvb3Rpbmcg
+YSBuZXcga2VybmVsIHdpdGgga2V4ZWNfZmlsZSwgdGhlIGtlcm5lbCBwaWNrcyBhIHRhcmdldAo+
+IGxvY2F0aW9uIHRoYXQgdGhlIGtlcm5lbCBzaG91bGQgbGl2ZSBhdCwgdGhlbiBhbGxvY2F0ZXMg
+cmFuZG9tIHBhZ2VzLAo+IGNoZWNrcyB3aGV0aGVyIGFueSBvZiB0aG9zZSBwYXRjaGVzIG1hZ2lj
+YWxseSBoYXBwZW5zIHRvIGNvaW5jaWRlIHdpdGgKPiBhIHRhcmdldCBhZGRyZXNzIHJhbmdlIGFu
+ZCBpZiBzbywgdXNlcyB0aGVtIGZvciB0aGF0IHJhbmdlLgo+Cj4gRm9yIGV2ZXJ5IHBhZ2UgYWxs
+b2NhdGVkIHRoaXMgd2F5LCBpdCB0aGVuIGNyZWF0ZXMgYSBwYWdlIGxpc3QgdGhhdCB0aGUKPiBy
+ZWxvY2F0aW9uIGNvZGUgLSBjb2RlIHRoYXQgZXhlY3V0ZXMgd2hpbGUgYWxsIENQVXMgYXJlIG9m
+ZiBhbmQgd2UgYXJlCj4ganVzdCBhYm91dCB0byBqdW1wIGludG8gdGhlIG5ldyBrZXJuZWwgLSBj
+b3BpZXMgdG8gdGhlaXIgZmluYWwgbWVtb3J5Cj4gbG9jYXRpb24uIFdlIGNhbiBub3QgcHV0IHRo
+ZW0gdGhlcmUgYmVmb3JlLCBiZWNhdXNlIGNoYW5jZXMgYXJlIHByZXR0eQo+IGdvb2QgdGhhdCBh
+dCBsZWFzdCBzb21lIHBhZ2UgaW4gdGhlIHRhcmdldCByYW5nZSBpcyBhbHJlYWR5IGluIHVzZSBi
+eQo+IHRoZSBjdXJyZW50bHkgcnVubmluZyBMaW51eCBlbnZpcm9ubWVudC4gQ29weWluZyBpcyBo
+YXBwZW5pbmcgZnJvbSBhCj4gc2luZ2xlIENQVSBhdCBSQU0gcmF0ZSwgd2hpY2ggdGFrZXMgYXJv
+dW5kIDQtNTAgbXMgcGVyIDEwMCBNaUIuCj4KPiBBbGwgb2YgdGhpcyBpcyBpbmVmZmljaWVudCBh
+bmQgZXJyb3IgcHJvbmUuCj4KPiBUbyBzdWNjZXNzZnVsbHkga2V4ZWMsIHdlIG5lZWQgdG8gcXVp
+ZXNjZSBhbGwgZGV2aWNlcyBvZiB0aGUgb3V0Z29pbmcKPiBrZXJuZWwgc28gdGhleSBkb24ndCBz
+Y3JpYmJsZSBvdmVyIHRoZSBuZXcga2VybmVsJ3MgbWVtb3J5LiBXZSBoYXZlIHNlZW4KPiBjYXNl
+cyB3aGVyZSB0aGF0IGRvZXMgbm90IGhhcHBlbiBwcm9wZXJseSAoKmNvdWdoKiBHSUMgKmNvdWdo
+KikgYW5kIGhlbmNlCj4gdGhlIG5ldyBrZXJuZWwgd2FzIGNvcnJ1cHRlZC4gVGhpcyBzdGFydGVk
+IGEgbW9udGggbG9uZyBqb3VybmV5IHRvIHJvb3QKPiBjYXVzZSBmYWlsaW5nIGtleGVjcyB0byBl
+dmVudHVhbGx5IHNlZSBtZW1vcnkgY29ycnVwdGlvbiwgYmVjYXVzZSB0aGUgbmV3Cj4ga2VybmVs
+IHdhcyBjb3JydXB0ZWQgc2V2ZXJlbHkgZW5vdWdoIHRoYXQgaXQgY291bGQgbm90IGVtaXQgb3V0
+cHV0IHRvCj4gdGVsbCB1cyBhYm91dCB0aGUgZmFjdCB0aGF0IGl0IHdhcyBjb3JydXB0ZWQuIEJ5
+IGFsbG9jYXRpbmcgbWVtb3J5IGZvciB0aGUKPiBuZXh0IGtlcm5lbCBmcm9tIGEgbWVtb3J5IHJh
+bmdlIHRoYXQgaXMgZ3VhcmFudGVlZCBzY3JpYmJsaW5nIGZyZWUsIHdlIGNhbgo+IGJvb3QgdGhl
+IG5leHQga2VybmVsIHVwIHRvIGEgcG9pbnQgd2hlcmUgaXQgaXMgYXQgbGVhc3QgYWJsZSB0byBk
+ZXRlY3QKPiBjb3JydXB0aW9uIGFuZCBtYXliZSBldmVuIHN0b3AgaXQgYmVmb3JlIGl0IGJlY29t
+ZXMgc2V2ZXJlLiBUaGlzIGluY3JlYXNlcwo+IHRoZSBjaGFuY2UgZm9yIHN1Y2Nlc3NmdWwga2V4
+ZWNzLgo+Cj4gU2luY2Uga2V4ZWMgZ290IGludHJvZHVjZWQsIExpbnV4IGhhcyBnYWluZWQgdGhl
+IENNQSBmcmFtZXdvcmsgd2hpY2gKPiBjYW4gcGVyZm9ybSBwaHlzaWNhbGx5IGNvbnRpZ3VvdXMg
+bWVtb3J5IG1hcHBpbmdzLCB3aGlsZSBrZWVwaW5nIHRoYXQKPiBtZW1vcnkgYXZhaWxhYmxlIGZv
+ciBtb3ZhYmxlIG1lbW9yeSB3aGVuIGl0IGlzIG5vdCBuZWVkZWQgZm9yIGNvbnRpZ3VvdXMKPiBh
+bGxvY2F0aW9ucy4gVGhlIGRlZmF1bHQgQ01BIGFsbG9jYXRvciBpcyBmb3IgRE1BIGFsbG9jYXRp
+b25zLgo+Cj4gVGhpcyBwYXRjaCBhZGRzIGxvZ2ljIHRvIHRoZSBrZXhlYyBmaWxlIGxvYWRlciB0
+byBhdHRlbXB0IHRvIHBsYWNlIHRoZQo+IHRhcmdldCBwYXlsb2FkIGF0IGEgbG9jYXRpb24gYWxs
+b2NhdGVkIGZyb20gQ01BLiBJZiBzdWNjZXNzZnVsLCBpdCB1c2VzCj4gdGhhdCBtZW1vcnkgcmFu
+Z2UgZGlyZWN0bHkgaW5zdGVhZCBvZiBjcmVhdGluZyBjb3B5IGluc3RydWN0aW9ucyBkdXJpbmcK
+PiB0aGUgaG90IHBoYXNlLiBUbyBlbnN1cmUgdGhhdCB0aGVyZSBpcyBhIHNhZmV0eSBuZXQgaW4g
+Y2FzZSBhbnl0aGluZyBnb2VzCj4gd3Jvbmcgd2l0aCB0aGUgQ01BIGFsbG9jYXRpb24sIGl0IGFs
+c28gYWRkcyBhIGZsYWcgZm9yIHVzZXIgc3BhY2UgdG8gZm9yY2UKPiBkaXNhYmxlIENNQSBhbGxv
+Y2F0aW9ucy4KPgo+IFVzaW5nIENNQSBhbGxvY2F0aW9ucyBoYXMgdHdvIGFkdmFudGFnZXM6Cj4K
+PiAgICAxKSBGYXN0ZXIgYnkgNC01MCBtcyBwZXIgMTAwIE1pQi4gVGhlcmUgaXMgbm8gbW9yZSBu
+ZWVkIHRvIGNvcHkgaW4gdGhlCj4gICAgICAgaG90IHBoYXNlLgo+ICAgIDIpIE1vcmUgcm9idXN0
+LiBFdmVuIGlmIGJ5IGFjY2lkZW50IHNvbWUgcGFnZSBpcyBzdGlsbCBpbiB1c2UgZm9yIERNQSwK
+PiAgICAgICB0aGUgbmV3IGtlcm5lbCBpbWFnZSB3aWxsIGJlIHNhZmUgZnJvbSB0aGF0IGFjY2Vz
+cyBiZWNhdXNlIGl0IHJlc2lkZXMKPiAgICAgICBpbiBhIG1lbW9yeSByZWdpb24gdGhhdCBpcyBj
+b25zaWRlcmVkIGFsbG9jYXRlZCBpbiB0aGUgb2xkIGtlcm5lbCBhbmQKPiAgICAgICBoYXMgYSBj
+aGFuY2UgdG8gcmVpbml0aWFsaXplIHRoYXQgY29tcG9uZW50Lgo+Cj4gU2lnbmVkLW9mZi1ieTog
+QWxleGFuZGVyIEdyYWYgPGdyYWZAYW1hem9uLmNvbT4KCgpQaW5nPyBOb3Qgc2VlaW5nIHRoaXMg
+cGF0Y2ggaW4gTGludXMnIG1hc3RlciB0cmVlIDopCgpBbGV4CgoKCgoKQW1hem9uIFdlYiBTZXJ2
+aWNlcyBEZXZlbG9wbWVudCBDZW50ZXIgR2VybWFueSBHbWJIClRhbWFyYS1EYW56LVN0ci4gMTMK
+MTAyNDMgQmVybGluCkdlc2NoYWVmdHNmdWVocnVuZzogQ2hyaXN0aWFuIFNjaGxhZWdlciwgSm9u
+YXRoYW4gV2Vpc3MKRWluZ2V0cmFnZW4gYW0gQW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcgdW50
+ZXIgSFJCIDI1Nzc2NCBCClNpdHo6IEJlcmxpbgpVc3QtSUQ6IERFIDM2NSA1MzggNTk3Cg==
 
-In the bisection log[1], syzbot has run the reproducer (that mounts a
-bcachefs image) on the original commit 20 times and it has got lots of
-very different crash titles. One of those was actually the original
-crash:
-
-run #1: crashed: general protection fault in kernfs_dop_revalidate
-
-but the others were in quite different subsystems (net, block,
-bcachefs). They look like different manifestations of some memory
-corruption caused by the mount of a corrupted bcachefs image.
-
-I don't see where the bisection could have derailed later during the
-process - on the tested commits, the kernel either crashed 100% of
-repro runs or none of them. So the result very likely is reasonable
-w.r.t. to some bcachefs bug, which has apparently been fixed since
-then. The reproducer no longer works on syzbot and the last "general
-protection fault in kernfs_dop_revalidate" crash was recorded almost
-100 days ago.
-
-[1] https://syzkaller.appspot.com/x/bisect.txt?x=3D17abb20c580000
-
---=20
-Aleksandr
