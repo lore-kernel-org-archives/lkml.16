@@ -1,63 +1,63 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3987922F778;
-	Mon,  9 Jun 2025 23:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE7822FF5E;
+	Mon,  9 Jun 2025 23:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749512516; cv=none; b=iX2nfpEHimuZ7f4q854vu8tT8n71MvDfMQqrx07b8PoaXJRTfjKlhgA1S+lC5cLU49e8xg7P7KjVSm8hISjjs6G6t2V/oeYqEA+mA3+sPQDoAn72M4HyVfuY7uBt6mqYFN8zxpbwtYhsc+KhmVHYFd4W1UZzzPKMuVlQ9ZLw5hQ=
+	t=1749512518; cv=none; b=HKNe8JJRoz4MjYW8Of6nIbE7PzTX3btKICwWLUk1nvASKnsJv82gnnEhMGUXOZvyh1fTMvi5qARBUqBL6NKRtqEGrC0B8xpemsMDD4jrf9+rtkSWLHpkUNCt9T+jpda7SehWxA2zNb6MyyGUiZ44NT40uwRSnJwDUyZRDhxliGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749512516; c=relaxed/simple;
-	bh=qmujCDQlx9R4vpIX4LhEDjpBMWa2asx7kRQoNdgHhZc=;
+	s=arc-20240116; t=1749512518; c=relaxed/simple;
+	bh=lcxMmmgMJHInwGzpCFkRWzyLBb5iGz+frAxW/UIgQ4o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XNsLO+FLrlFpjechpKWba1K1Cm6rwH0x03jxMvLQhOjqEDam5an4jFxxdTsH8W0mlFKDJK1DDAAIrFb4Qac6dYaLThQ0ADO7lqg4f65T6/LMRwdLwXZj52YL4AEv3yCMTl+U3vRN+aJOWSkbAgF/+duzI9duCy8obEC8wdjY/Ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FejmtLCf; arc=none smtp.client-ip=209.85.221.50
+	 MIME-Version; b=RytW8BQq+3fhFwYVdAKsBwPz4HCLYBNT31jzHxWKfrM0K8fgqnzwplVqtwuNybVt9eEh/nkY9SI2Ef5D1RokoM6Y/hHVniZ6Nc82CSN+TMdJwWFIMNYjtNz5620Ai528bMHjHtWguP/nxYBzyVOSrW4tISc/5pQOjhE+W7N9UGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JstRrvkD; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FejmtLCf"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a531fcaa05so1806938f8f.3;
-        Mon, 09 Jun 2025 16:41:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JstRrvkD"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-45310223677so13783165e9.0;
+        Mon, 09 Jun 2025 16:41:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749512514; x=1750117314; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749512515; x=1750117315; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=K3W+usCMR5B4Z7Ti6DZpHujd0vdEi0Zy/kIoGt2GNLY=;
-        b=FejmtLCf1BCVyUwTzAc8kOdu4neIBqHqX5/sGotZCrLBQXcJ2rXN6EyJMZrioJIneg
-         j8Yv/ooityJOed5UuSXyv3rBURarlp+p2+S24hGkWuDT1zh0OchdVk3TWR/xc1rqSTxX
-         tsszn0xQlq7EysWo3cOK9SBCiMdmVPvRXrFheE8jlufCYzMleNdlLxYgGLiBWYBWmttS
-         WepOU7W/6jK24ZCHGANYLkZNYFQx+Hw/AUjPHmdVut9p7irnkFBWZLKkDZ8jv9S9VT4n
-         0t7ty0WbMn9RVvB9yQu99yS7tLaCBY3WqEraFlhkBZCORHacvjqE0LixmknERYk+0teZ
-         rfcQ==
+        bh=qrPhTIZpQpTInVFelKb2k4Az/r9q2Weg3w4rxnkgyCU=;
+        b=JstRrvkD2N/X63T3SHeXhSRDwAQ926OuVtuM9XvRaoAleRV8gsWr0RcLBzhiYB1jB8
+         n5iQrQQAeDumh1LnAtm5QdcE6ogngmjtsNzBFHgQgPVAGOchaaVoZ7u/fpyr1GhRstgC
+         Kc3fLtV1H3HpeDAXFjp3dYceqeTx0SgseCKpS3ixXL8zd2oO5H8eFlG6OqkdoxltPjZw
+         cBWeDQ2GNEJo//fhncULQnH1PD8Qx/VXI7DcvIPPTRMgzH/DUG7ey37D1nnpPx63tM17
+         puR0InPMYcvXsPGb020NpAXRkGKTUKOLUiM+wsggyKHkjYTnULPdl08OD3dPX9TfqnN3
+         qscg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749512514; x=1750117314;
+        d=1e100.net; s=20230601; t=1749512515; x=1750117315;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=K3W+usCMR5B4Z7Ti6DZpHujd0vdEi0Zy/kIoGt2GNLY=;
-        b=my3c/6Rn3yRaUtT7uFr5JCLxSX0W8Z24hpYB//7kB7Ht4kuJUUBgHVuRUWIt2VvLYL
-         dPfCwctMOna8dfYO7swrqLWYL18b0Bb+8XiwBc1Hn6jIV4pxPNj2+2gJW3E0KJO4Fx9I
-         gKNNLREdZDXpPm4mKOn+9t2gWxav/bBiLWRZM/Pt+L7wxiQe2Ctxz9tFkSeZ4dn7tQ5g
-         +J6LAzZo2ZUJ2xyRRZNCi8ncIbyFK6kJJFv68GRduo2DKqNNAObjXt29jw/45F+ci2pp
-         pyCh3QOneIoYyv8BzPTPMNvoXB78y5lmK05hGf3rio1P0euEK3ny8exQ2ZfHtkUiiz45
-         ZEcg==
-X-Forwarded-Encrypted: i=1; AJvYcCVPqz3ucbWVjLw6mv4t+IO3M7CJngdw/FEWCdfaW4eiUT3n7HeJ2NV+1MoUlehoHss6czQKhMP3h/nYdnyf@vger.kernel.org, AJvYcCXUt7U8azfGWduaYSKDpRFMJyQuj5aiZ9IBJteM0p0cjxbrcLSoibAr5az6QtCySY3Xx/+E1oYUlTR1@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1JlA0gmkLbA55iYcvwOPFX9kvsB0jMrRZxgSn3liToo5lUAc/
-	ZOmO8wXRzbgN5Vp/XlX5xBVo7TlIpyA+Cy6zc7xel4pNWLw7Fzwna5M7
-X-Gm-Gg: ASbGncs0Tx++QCIf8rwxcwWm6ZlaptWJ+0T+taCjNR02Mq5F15jeUX1UynnE8q1rxZv
-	SS02eUU2eZ+qW9xZcnFtp7GTPrEV0rO/RMElAJLHNRVlCObJEqXbDIiWd19R59WaUW0cVocM3Ge
-	Z2EKj9H1QxfETezvWJbc9aEFPXqWoUZINgw5Sr6y9dqqrwcKzmnaArxZDf1Uuid3TruL0+QnCfy
-	ulgVfSQuacC+s5zVEJ4Uy3sbJDhaFUkLezrFrBAV7d3Pyte8UF+uLNcQ+EcX4lskqChbz+gLOWO
-	AQ7B6Yhczgu/rICe6g2ViaOlRdLLlaLE4pK3LUenSe90FZ+kYcuulOZj5wohd/T9WQTGO6KiYcM
+        bh=qrPhTIZpQpTInVFelKb2k4Az/r9q2Weg3w4rxnkgyCU=;
+        b=epwlRUDYHjUY4CMHM6szE7L+Qer7xsOdYSPr/1cG1IcOeUdH1r95HZY3TKvSBsV01t
+         ejQCXuic55oqXow2MAjva8mfGqhP+8rxMoc6ZIJsHDdcKITLQ4gCXw3ZZF4egIRSPB2p
+         elkkReZ0bNtb8x25ur1hDX/MJDysRtkB1val1koXwOCclxCrcCUVnXAvjHe7UtejdGqL
+         9qDVlOrsIxHxAM0bL7Fs15LYzjlcbva9RvvveROTF0LPM8EdEUMU0eI/U38UW6DgGAQP
+         dIfP2FQanVM3DPMZaGqgl00apObJiJ6zcHwaTLQND7Ful5/x1B4hxdLMM/c4tFGQ9ZsJ
+         htvA==
+X-Forwarded-Encrypted: i=1; AJvYcCUNQFTCo+uERD01qjBKLx/+pHzDTEHw7gfmkvapxmyg5asrTbW4rz7TQsfl9/0F0vvd7TUv3gDNzcFO56Kb@vger.kernel.org, AJvYcCWd5lm1+Tixh2SeP9Jzd3rSUwofNKnvlc/FxCzhXXSF1aOWGBY5r0JpF2zoo6potXmkRMydnTPYi7Vt@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXjDk7lqSg9E+MHOM3JRqmU2LbNx1Tfg1KvKi1zpeLoKjebzP2
+	1368e4ur/I5xdsM3hVX7EC+O1EhY2QcIiEp++tsqA1c3Nr+SXC/hYNGH
+X-Gm-Gg: ASbGnctN1Vh5MoJoZXrxqTVYpNpJ3al1jWplm3tmPwNy00o7f+xQazMUJcFGfP8lcU2
+	1P9I1tI1b3z6bz1QB6bmlmswq/hA+AxJ3LubETbPFU9c2xAlydpp9nxD/XB+ajzMXQJVLICppNi
+	DXgztQ53FT7jrEY4ojUkCpp6sqAlWxG2NBszMVqKOSFcr0rLxEwBsbXsnLMlg635BYokAHVeOZk
+	X4Juy4ORiUce79V0ZKcSrHjk2jPAVD5nDg5yl8K7pgqTAlcRglI2Q8i2dEvYIkP/EDc5QC35m5j
+	L7qn1StJ8HDy1JDlrhASezl0lGjpV9ftdRZFNTcNCKKyEiOla+ryvElCzc0DrLsevg6kTaM0p70
 	=
-X-Google-Smtp-Source: AGHT+IHG+23gSY7lbz1gITYGdcTpMahA14EmzL8S35xxT7RAijs9v4mF7qIfd+85zAEt9lbZCMJf7Q==
-X-Received: by 2002:a05:6000:18ab:b0:3a4:c9d4:2fb2 with SMTP id ffacd0b85a97d-3a531ce1809mr12878839f8f.46.1749512513652;
-        Mon, 09 Jun 2025 16:41:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH8d+d87qasytIhytWan/WEKNQkCJ5MRSNoOqGEJq+vqhXarvhfJpA5UduVPDcP1PlcvnPGqQ==
+X-Received: by 2002:a5d:5f4b:0:b0:3a3:727d:10e8 with SMTP id ffacd0b85a97d-3a531ce7122mr10392078f8f.50.1749512514738;
+        Mon, 09 Jun 2025 16:41:54 -0700 (PDT)
 Received: from giga-mm.. ([2a02:1210:8608:9200:82ee:73ff:feb8:99e3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53244df34sm10849846f8f.71.2025.06.09.16.41.52
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53244df34sm10849846f8f.71.2025.06.09.16.41.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 16:41:53 -0700 (PDT)
+        Mon, 09 Jun 2025 16:41:54 -0700 (PDT)
 From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
 To: sophgo@lists.linux.dev,
 	soc@lists.linux.dev
@@ -80,10 +80,11 @@ Cc: Alexander Sverdlin <alexander.sverdlin@gmail.com>,
 	devicetree@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v6 5/6] arm64: Add SOPHGO SOC family Kconfig support
-Date: Tue, 10 Jun 2025 01:41:16 +0200
-Message-ID: <20250609234125.722923-6-alexander.sverdlin@gmail.com>
+	linux-arm-kernel@lists.infradead.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v6 6/6] arm64: defconfig: Enable rudimentary Sophgo SG2000 support
+Date: Tue, 10 Jun 2025 01:41:17 +0200
+Message-ID: <20250609234125.722923-7-alexander.sverdlin@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250609234125.722923-1-alexander.sverdlin@gmail.com>
 References: <20250609234125.722923-1-alexander.sverdlin@gmail.com>
@@ -95,31 +96,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-First user will be Aarch64 core within SG2000 SoC.
+Enable ARCH_SOPHGO, pinctrl (built-in, required to boot), ADC as module.
+This defconfig is able to boot from SD card on Milk-V Duo Module 01
+evalboard.
 
-Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
 ---
- arch/arm64/Kconfig.platforms | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/configs/defconfig | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 8b76821f190f..af74bcc3c861 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -307,6 +307,12 @@ config ARCH_INTEL_SOCFPGA
- 	  Stratix 10 (ex. Altera), Stratix10 Software Virtual Platform,
- 	  Agilex and eASIC N5X.
- 
-+config ARCH_SOPHGO
-+	bool "Sophgo SoCs"
-+	select ARCH_HAS_RESET_CONTROLLER
-+	help
-+	  This enables support for Sophgo SoC platform hardware.
-+
- config ARCH_STM32
- 	bool "STMicroelectronics STM32 SoC Family"
- 	select GPIOLIB
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 5bb8f09422a2..84c85a222b3b 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -66,6 +66,7 @@ CONFIG_ARCH_RENESAS=y
+ CONFIG_ARCH_ROCKCHIP=y
+ CONFIG_ARCH_SEATTLE=y
+ CONFIG_ARCH_INTEL_SOCFPGA=y
++CONFIG_ARCH_SOPHGO=y
+ CONFIG_ARCH_STM32=y
+ CONFIG_ARCH_SYNQUACER=y
+ CONFIG_ARCH_TEGRA=y
+@@ -652,6 +653,7 @@ CONFIG_PINCTRL_SM8450_LPASS_LPI=m
+ CONFIG_PINCTRL_SC8280XP_LPASS_LPI=m
+ CONFIG_PINCTRL_SM8550_LPASS_LPI=m
+ CONFIG_PINCTRL_SM8650_LPASS_LPI=m
++CONFIG_PINCTRL_SOPHGO_SG2000=y
+ CONFIG_GPIO_ALTERA=m
+ CONFIG_GPIO_DAVINCI=y
+ CONFIG_GPIO_DWAPB=y
+@@ -1411,6 +1413,7 @@ CONFIG_QCOM_HFPLL=y
+ CONFIG_CLK_GFM_LPASS_SM8250=m
+ CONFIG_CLK_RCAR_USB2_CLOCK_SEL=y
+ CONFIG_CLK_RENESAS_VBATTB=m
++CONFIG_CLK_SOPHGO_CV1800=y
+ CONFIG_HWSPINLOCK=y
+ CONFIG_HWSPINLOCK_QCOM=y
+ CONFIG_TEGRA186_TIMER=y
+@@ -1530,6 +1533,7 @@ CONFIG_QCOM_SPMI_VADC=m
+ CONFIG_QCOM_SPMI_ADC5=m
+ CONFIG_ROCKCHIP_SARADC=m
+ CONFIG_RZG2L_ADC=m
++CONFIG_SOPHGO_CV1800B_ADC=m
+ CONFIG_TI_ADS1015=m
+ CONFIG_TI_AM335X_ADC=m
+ CONFIG_IIO_CROS_EC_SENSORS_CORE=m
 -- 
 2.49.0
 
