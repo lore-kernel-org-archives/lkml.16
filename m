@@ -1,106 +1,147 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE293234
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 08:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40611155342
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 08:12:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749456701; cv=none; b=R7XqujAtSmYUCpLqnU1s2RUED+k3stfKF+rgu2SJ3/ptRS88YPV1LPUsjd1VIDN4m+tXYXog5ia9SzuqQavIgyjyRXQig+k1b19laY2uqSQGB/AYX7EGrfbnlbj4NHsABDy1Yl/6+5pPsdlHvta01k3CvUnTe2tuBAZ6KI+LYd4=
+	t=1749456743; cv=none; b=tFmOpx3JzftbqeRtwlcckPEoqAdlguAHXEj2HoR35NWOy3vWOxecMVzh6oQVQP1LKYfIjC7TGjS2m6zbJt2wZ1s9y0BSXOpbuTdXgYbe9Oht9T0N5FHAwQWFjsCfypmMnMH80Tw/yOEHjFa82u2K1sak57HdMg/0EcjJq45CvqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749456701; c=relaxed/simple;
-	bh=Ky/TxtCfTe0l1Pac0CgEqfbI0HTvBXlStE1ol0qmIEs=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=N9a7Aygy3oQmDslqdoZ+miatTU2VIX5Icx7WQoryEYxI6XXndPqsp0/R5LRCNw8w6Ns5ePLzx8MqnLrHaW0BPRfKVTPrZPKNaOR/S9VqSmHEZHWNN7Z8XcEk28XhcQprxVkn1t9mbNLH3OaQhrRHHk3Qez6UQv2W869qPLjzvSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=V+hMvXor; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1749456743; c=relaxed/simple;
+	bh=L4rAP6SdBVbNSBl3MVYKzpNbkOmsL9wtDH3qpLbcozo=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bg8IhEkcL+YtZ85N8rFYQhLGw9zvPviDjbGisZuRsFErhqAPdDPcPrIxnxX/aDrZZZQqUJxnPFZsMBJgvPmV5hTDa/at+Vbe+EN9GL2AoMA/nOVEuQlaRw2gtpL+LJ/6yNcGVyOPm9UaMyd48+YoIFYUfLxywGxYfxNzZuLE0Vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0BGn7ZFT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=QF2DlXvY; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LqcjU+6W; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=p6+PURz+; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="V+hMvXor"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250609081138epoutp0494d0b08b61b9e5ff58820369253b8934~HUZkfJalQ1102911029epoutp04G
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 08:11:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250609081138epoutp0494d0b08b61b9e5ff58820369253b8934~HUZkfJalQ1102911029epoutp04G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1749456698;
-	bh=cCKDTqb+uAHktuv4ggRzrPoN/1B3zoVL46D/W98jRPs=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=V+hMvXortCjz7/ycaM+ANIn3tvVjKG5syDeDrRzVdJpMospVaW3o2WZueE8JXJ7sq
-	 f6mPhixwNFzfwKMmu85rw/xAHYp8OUVPOFFk5Hvb40QdRTLjdwC7BGsMBqHEf1Ptwm
-	 KiPvilaSl+xr1PqF90uyQj7F/oBj++PulZ4u3iLU=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250609081137epcas5p158d45542b2752659b3c1c338c9cf0ed7~HUZj61i0M2901329013epcas5p1g;
-	Mon,  9 Jun 2025 08:11:37 +0000 (GMT)
-Received: from epcas5p2.samsung.com (unknown [182.195.38.183]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4bG4Pz5pMSz2SSKj; Mon,  9 Jun
-	2025 08:11:35 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250609081134epcas5p1c89e67af7350711fac95686a82981f74~HUZhNrfn72723027230epcas5p1g;
-	Mon,  9 Jun 2025 08:11:34 +0000 (GMT)
-Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250609081132epsmtip18db79fbd3b3f0d3e4080c9fdb9642fec~HUZezQJp_1346413464epsmtip1L;
-	Mon,  9 Jun 2025 08:11:32 +0000 (GMT)
-From: "Alim Akhtar" <alim.akhtar@samsung.com>
-To: "'Raghav Sharma'" <raghav.s@samsung.com>, <krzk@kernel.org>,
-	<s.nawrocki@samsung.com>, <cw00.choi@samsung.com>,
-	<mturquette@baylibre.com>, <sboyd@kernel.org>, <robh@kernel.org>,
-	<conor+dt@kernel.org>, <richardcochran@gmail.com>,
-	<sunyeal.hong@samsung.com>, <shin.son@samsung.com>
-Cc: <linux-samsung-soc@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<chandan.vn@samsung.com>, <karthik.sun@samsung.com>,
-	<dev.tailor@samsung.com>
-In-Reply-To: <20250529112640.1646740-4-raghav.s@samsung.com>
-Subject: RE: [PATCH v3 3/4] clk: samsung: exynosautov920: add block hsi2
- clock support
-Date: Mon, 9 Jun 2025 13:41:30 +0530
-Message-ID: <043f01dbd916$1d8decf0$58a9c6d0$@samsung.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0BGn7ZFT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="QF2DlXvY";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LqcjU+6W";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="p6+PURz+"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6D82E21190;
+	Mon,  9 Jun 2025 08:12:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749456740; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SaHhrqhrGiZ5nN1aA61UZ7LzTdcCfkGG5DBpOnVpU+k=;
+	b=0BGn7ZFTmX9/afoUxuXgYj1U9MYYFmVV6qXbCreUuXC9zfTDIhT1e2svgyEw2ve7Tchjp9
+	hOOUYGnhomCO0ABOjEMFxGsMckwIgUhb0T3We033Ph0ZVIHWEFpnFDC835P8E6Rpk+Ye1+
+	nuWT7rMINws+3gfJAvFTbl7xP+pmOoQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749456740;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SaHhrqhrGiZ5nN1aA61UZ7LzTdcCfkGG5DBpOnVpU+k=;
+	b=QF2DlXvYuaKiVgdZbFpeJH1ofA2S8QRxoH8Wcm18NinWc9YLfgOTF6N7cXQbVJ1Cp2E+cb
+	nDo7/CfJgNU3GPCQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=LqcjU+6W;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=p6+PURz+
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749456739; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SaHhrqhrGiZ5nN1aA61UZ7LzTdcCfkGG5DBpOnVpU+k=;
+	b=LqcjU+6WbIEMwPUO5qSRn46C7xDprgaZmIyMl6RVSeTcAIUa/rznNFcKQdAqq3HWblSTCD
+	0KAOiTUWHSXZNdq9lvn4ns3p5uu6t3EWrfZHyr2VfQd1X1A2kO7asL6T2Px1zxZKxY6TFM
+	HSn99q46FmGoQN1tFcs0KBS3f9VaCEE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749456739;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SaHhrqhrGiZ5nN1aA61UZ7LzTdcCfkGG5DBpOnVpU+k=;
+	b=p6+PURz+n39OA+fcq6ZKHYjmyTjuTNt0rjZ/IrRM7S8kvtevs8xSKEFlqeYJL0wQ+RLvEz
+	zNC57tVm7YVYSUCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3795613A1D;
+	Mon,  9 Jun 2025 08:12:19 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id CtCfC2OXRmhNBQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 09 Jun 2025 08:12:19 +0000
+Date: Mon, 09 Jun 2025 10:12:18 +0200
+Message-ID: <87wm9l72ql.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: edip@medip.dev
+Cc: perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] ALSA: hda/realtek - Add mute LED support for HP Victus 16-s1xxx and HP Victus 15-fa1xxx
+In-Reply-To: <20250609075943.13934-2-edip@medip.dev>
+References: <20250609075943.13934-2-edip@medip.dev>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIRyuXPQglR2pg1tLiplohNF2WAzQKeHRX1Aq1ypKGzZDlhYA==
-Content-Language: en-us
-X-CMS-MailID: 20250609081134epcas5p1c89e67af7350711fac95686a82981f74
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250529111715epcas5p19a63894e2556d2c8005845e01f67c783
-References: <20250529112640.1646740-1-raghav.s@samsung.com>
-	<CGME20250529111715epcas5p19a63894e2556d2c8005845e01f67c783@epcas5p1.samsung.com>
-	<20250529112640.1646740-4-raghav.s@samsung.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[medip.dev:email,suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_NONE(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 6D82E21190
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -3.51
 
-HI Raghav
-
-> -----Original Message-----
-> From: Raghav Sharma <raghav.s@samsung.com>
-> Sent: Thursday, May 29, 2025 4:57 PM
-> To: krzk@kernel.org; s.nawrocki@samsung.com; cw00.choi@samsung.com;
-> alim.akhtar@samsung.com; mturquette@baylibre.com; sboyd@kernel.org;
-> robh@kernel.org; conor+dt@kernel.org; richardcochran@gmail.com;
-> sunyeal.hong@samsung.com; shin.son@samsung.com
-> Cc: linux-samsung-soc@vger.kernel.org; linux-clk@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org; netdev@vger.kernel.org;
-> chandan.vn@samsung.com; karthik.sun@samsung.com;
-> dev.tailor@samsung.com; Raghav Sharma <raghav.s@samsung.com>
-> Subject: [PATCH v3 3/4] clk: samsung: exynosautov920: add block hsi2 clock
-> support
+On Mon, 09 Jun 2025 09:59:44 +0200,
+edip@medip.dev wrote:
 > 
-> Register compatible and cmu_info data to support clocks.
-> CMU_HSI2, this provides clocks for HSI2 block
+> From: Edip Hazuri <edip@medip.dev>
 > 
-> Signed-off-by: Raghav Sharma <raghav.s@samsung.com>
-> ---
+> The mute led on those laptops is using ALC245 but requires a quirk to work
+> This patch enables the existing quirk for the devices.
+> 
+> Tested on my Victus 16-s1011nt Laptop and my friend's Victus 15-fa1xxx. The LED behaviour works as intended.
+> 
+> v2:
+> - add new entries according to (PCI) SSID order
+> - link to v1: https://lore.kernel.org/linux-sound/20250607105051.41162-1-edip@medip.dev/#R
+> 
+> 
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Edip Hazuri <edip@medip.dev>
 
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Applied now.  Thanks.
 
+
+Takashi
