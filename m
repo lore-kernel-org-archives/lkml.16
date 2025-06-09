@@ -1,192 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11020113.outbound.protection.outlook.com [52.101.84.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB0D4C9D;
-	Mon,  9 Jun 2025 07:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749454310; cv=none; b=Wix/ZyzGdqb372ZcUrzIMsVZ+0E6DmLTR4v4uV3dgahvcN27RWD/WQAM92l/7c27wIUg9EBvSFMDKHcyrNiTGETwgw3aV8kVUWXcLsVCcCZAHX61+gmWO+rbZzISgkFkTPWlVJerkuv+EA5qwfTLB/vD4tPqpPskus2ngLLVbuo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749454310; c=relaxed/simple;
-	bh=fb+W7sXAWzNH0PE19jdTc2gtT9i5OfB0Mtxws+pYHGo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=mNwgAkHZUOAzXPvIry/mAL9be9ikqiwb3nxvPoc41g5qbQSdiRqj5LZ4GYfyimnILTbL6f4uLrDR3Wk0noZvu2Rv8b5iI+vJNLXVri6meQuxFt9vHxucX6PD/riq1MfAzpQArtDoVtx+oLYEY3Af4pW6K38lQFs5KZCwVZ7x9fI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nHX0RLkq; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF924C9D;
+	Mon,  9 Jun 2025 07:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.113
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749454348; cv=fail; b=VqhYqZHdySYQVR6UoslEfZWPumXu70DK6SxrpnTtKGJNtGSWPLhx0iUgYnt/nFk7nVQVngb7r6RuMU+1YXk0ZNmUn20COEXMWbEOr2niJfHEHOUqJ+adHOLQAkMUIy7BFifxWjTQLnB7yXZfc4ihau7FjU6lW88XYhd3Wd9X+CE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749454348; c=relaxed/simple;
+	bh=98ubVO00buLighJLOL7yalJzxZrAirS5G8b5YtPop7s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cke39Vs5tDEkU1xgesB6Q4uLLtUzoBbaoWqLtlNLnNVxUqH0/RCWScUeAHuZz90/qXso8NJVc9qr5FukIEGFZTBrWzlyak6YN/TVJDzWFEaW9ayJVBLuG6kkP3yHnPyrPa2EoNzjtMQxx+cNDiglHq7ly+3tDsIBDx6ZysaLx2M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=technica-engineering.de; spf=pass smtp.mailfrom=technica-engineering.de; dkim=pass (1024-bit key) header.d=technica-engineering.de header.i=@technica-engineering.de header.b=rwMwEt/B; arc=fail smtp.client-ip=52.101.84.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=technica-engineering.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=technica-engineering.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nHX0RLkq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749454309; x=1780990309;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=fb+W7sXAWzNH0PE19jdTc2gtT9i5OfB0Mtxws+pYHGo=;
-  b=nHX0RLkqvW+TMfXSv19/4Y/pexFZMtdIe3GdCwKdR7XerRQeKQrxkpPr
-   eEReKjrR+nzdesdTtC8jJ9r+JTfbenf03creSfeInsmmSmuK2IX778roV
-   q5jLpOHqWQI4lI+6GIkCFhwGexm8ECyh0ACz/5BuNz6q43pudwxGE0IFP
-   kblHdZWPI1LLtQV2DmyDrWA8zw/7in5d555G1jafK0PD4V3/rMS5TfkIQ
-   6OmMAZs6Ea5wOhimsmg1F+T/6LMfKgiAnQGqH6KASGLdRLb4RN3OLGdjj
-   JCQ0PpqC3hYwvbdE0mygW1sS/sglarDeZkLTAjxwuUJ80idCnW8h7CCLt
-   Q==;
-X-CSE-ConnectionGUID: XW+cYLo4TES4TCeTz3023g==
-X-CSE-MsgGUID: cdfktCKbSgqpzg/W3iRYtQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="55189205"
-X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="55189205"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 00:31:48 -0700
-X-CSE-ConnectionGUID: 6cneVES+Rq+Ta4vXyE514A==
-X-CSE-MsgGUID: kLB5YLdoQWurUOmAbpFceQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="146342223"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.22])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 00:31:46 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 9 Jun 2025 10:31:42 +0300 (EEST)
-To: Luke Jones <luke@ljones.dev>
-cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] asus-wmi: fixup screenpad brightness
-In-Reply-To: <20250525204214.104030-1-luke@ljones.dev>
-Message-ID: <c9b74180-8e3b-2ed8-bb68-03ca9d8ed074@linux.intel.com>
-References: <20250525204214.104030-1-luke@ljones.dev>
+	dkim=pass (1024-bit key) header.d=technica-engineering.de header.i=@technica-engineering.de header.b="rwMwEt/B"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Iqhm1NemNAv1IT4FkfnO7kH1+8Pm9qCM8gH+qAugG06duoiwDxFm6rgtSuQoBkCfNipbUogcaFyoZg245Eq37ryYhPtOr0R9DTOH+SoplErcleCWhZR0Fmzwx1cuiJJJnPEOO5TNb19tCQ93a1kNh+4H3E3wgeK4khK42O/YaA82YSykELCrOyvjkwRacTetXkJcjIIFkfwdXDPZgHFWFHx8J9vp5/lpZrsPVrsciPlwSX/Nildo5y9rQt58Wpg0+WJ1Pq7EYtBXzlZM/ocONoUj/jV46oGCKM5Qpv1eEkVrfdOKl7UO39woaQn4XwrVbewvZ9WRUwjcX2PhDQ9wiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dL0s6kQI03T3/CroPCSn4LQzoZbWYB3xWFVH/PgHuT4=;
+ b=i8NyJVZxLyJCV5q0+K61tjdkNSAnn1fXlZ7kGf7TseA121w3dm8ejhLp6+QGGlFNU/bxNLSfbua0VJXzMM7pavoP32RCA1/YaNutRcbbHc3sL5ZfGqxf3JcdcWmoDJllEaRL2xM/3KJO94ProYBeumYOTTopU1XmENDDeiT8fDmX+MApENrPVhPHfHJCcPBOGQKXEaiRC625DStlZd5BQVo2waW1ZUbDiFKjmmBxsl+j4Cqc0R6sn9TCFYdw5aVnm10y0Eqyn4BR2A3XXgqqXlk5SmtopKs6hKblI52/NGVC6BNx8/e8dS69imKg51xMtzsL26MOUfmddNR1OhNwtw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 2.136.200.136) smtp.rcpttodomain=davemloft.net
+ smtp.mailfrom=technica-engineering.de; dmarc=fail (p=reject sp=reject
+ pct=100) action=oreject header.from=technica-engineering.de; dkim=none
+ (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=technica-engineering.de; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dL0s6kQI03T3/CroPCSn4LQzoZbWYB3xWFVH/PgHuT4=;
+ b=rwMwEt/Bd8wRYs6ukyyJ+a6mZnQck3A32zO/0fHFwCbA7tsBlS/UfobsF61/lprwyredr0xXiCfh0/b961RuyVQbLsZC0dDRI8KfUJ0meI2MaH7+FmUBo6+KDrH2NjD9YIovwoVQBq0Uog3HUclBE8wytdlM6gmM1TKLfz/ZbkM=
+Received: from AM9P250CA0016.EURP250.PROD.OUTLOOK.COM (2603:10a6:20b:21c::21)
+ by DBBPR08MB10506.eurprd08.prod.outlook.com (2603:10a6:10:532::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.29; Mon, 9 Jun
+ 2025 07:32:22 +0000
+Received: from AM4PEPF00027A61.eurprd04.prod.outlook.com
+ (2603:10a6:20b:21c:cafe::b0) by AM9P250CA0016.outlook.office365.com
+ (2603:10a6:20b:21c::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.35 via Frontend Transport; Mon,
+ 9 Jun 2025 07:32:22 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 2.136.200.136)
+ smtp.mailfrom=technica-engineering.de; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=technica-engineering.de;
+Received-SPF: Fail (protection.outlook.com: domain of technica-engineering.de
+ does not designate 2.136.200.136 as permitted sender)
+ receiver=protection.outlook.com; client-ip=2.136.200.136;
+ helo=jump.ad.technica-electronics.es;
+Received: from jump.ad.technica-electronics.es (2.136.200.136) by
+ AM4PEPF00027A61.mail.protection.outlook.com (10.167.16.70) with Microsoft
+ SMTP Server id 15.20.8835.15 via Frontend Transport; Mon, 9 Jun 2025 07:32:21
+ +0000
+Received: from dalek.ad.technica-electronics.es (unknown [10.10.2.101])
+	by jump.ad.technica-electronics.es (Postfix) with ESMTP id 2895E401BF;
+	Mon,  9 Jun 2025 09:32:21 +0200 (CEST)
+From: Carlos Fernandez <carlos.fernandez@technica-engineering.de>
+To:
+Cc: carlos.fernandez@technica-engineering.de,
+	sbhatta@marvell.com,
+	Sabrina Dubroca <sd@queasysnail.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Hannes Frederic Sowa <hannes@stressinduktion.org>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v4] macsec: MACsec SCI assignment for ES = 0
+Date: Mon,  9 Jun 2025 09:31:53 +0200
+Message-ID: <20250609073219.939903-1-carlos.fernandez@technica-engineering.de>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250609064707.773982-1-carlos.fernandez@technica-engineering.de>
+References: <20250609064707.773982-1-carlos.fernandez@technica-engineering.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM4PEPF00027A61:EE_|DBBPR08MB10506:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 367cbc03-1d53-4478-58f4-08dda727c582
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?bOqBwwT7RP5PKf7X+VaLxEw+2VBlJ8vYtOGf6ECGJ2Y78ayRMJFE13EgUrOI?=
+ =?us-ascii?Q?SQ4X2r9MhAuZRfbBceDV9jF9/GV8EI0EYdZVJYdss7v98/sou6XPX+bLbTHs?=
+ =?us-ascii?Q?/BgEVXoLSRIF5JrGXCG1hyt4CXneagizdaZ3IDaGgpeJvOsVxzaBKn9KyRtW?=
+ =?us-ascii?Q?o7m+0FZ0dc29LN6+gevxcVvSk/v241TYW3NFcmOhNGBrzYwz/eUNRnqBgTci?=
+ =?us-ascii?Q?Dwu15e73ltqmJOHFPUq5a5GUihPOU2hIWS35seBYGxHonsqBlN/HAyntCBBH?=
+ =?us-ascii?Q?H6WhbunXiDoJSnPLMPH3Im5WQ+kWmKcFksZ4nlgHpypWewGuNb2HMtBN0BDM?=
+ =?us-ascii?Q?wp2vVhdFGX1TmXd88Rn9eoE6qHrwk93IjPKQyQUc7/9dLC8IUHEHm2/HoBwl?=
+ =?us-ascii?Q?Q3ZXun7cxuCL0AKXisBiaWZJtQx5s7pPVcMSBx0jRNwQWmmNMtNxhUBfTB15?=
+ =?us-ascii?Q?ZpW3a0UUqe8ilXuVxv81Jv/Pb8VtgCCyJutVNKN45qXrT6mc1XblLsaLQMeW?=
+ =?us-ascii?Q?/XqTZX9gk+favBDsO4TEeOkYnGy9162xsmwY9G9xVFSg30aOKW+0+SHEHPoL?=
+ =?us-ascii?Q?rPMLNHMaTSgTddXyFb530Mv+YvnUrZX/06T5nCc5Ehh1SbgBm/9Q9yMKXaHN?=
+ =?us-ascii?Q?pOIYFL485ZjuXy1Pn/fp/9FK8/T4HbU1RUFMIqlIzoF3F2NkPkLvihQUkIsI?=
+ =?us-ascii?Q?bl9DGSGPSKMbGtVWD/ZZi/O+J3VdZj19XC7qQ6RuDrTPMfys8QZsqHYZ8Uma?=
+ =?us-ascii?Q?G9c/3wx8EDIziDdm1ZQRTvPo3gMVvi2FtXRNcri6xpjgQ+IC1ni5gKbovYaf?=
+ =?us-ascii?Q?DSiE/J2jQQcuswoIxOk+b6z53HLdRsh3EcorVNlNK30NjygrBUwHYP0YD2a5?=
+ =?us-ascii?Q?0KvK/yiLuZHG3dO6ru/cHnlOcjbfp5aM2J0+MSTJw0jwKb1trk6HczkKX9SR?=
+ =?us-ascii?Q?pgac7LIEDcxgMJvTh7ax2fcVzItH/i3+G69mXUUtXrlhXXGFOWxOB5ZspRmr?=
+ =?us-ascii?Q?2P5AeDYgFEogKpQcdi6qfAw9SHOOirh7tbl6qA9ANGkZB7eMP1bfEcW4wEO6?=
+ =?us-ascii?Q?vKxUoe6KgIoyYEpcf3CMiKxOhq38Ge7bzXAXk6R7MoJcgpa971cZNzqzGfRn?=
+ =?us-ascii?Q?H3I2KLYChBMi06wjK6YntbOvSwQzMp7PxnYI5273uw/ps1TxAXfhrguTAx2V?=
+ =?us-ascii?Q?HUi4mBsRqwTCIneBSh0jJL9P4Di1495A2Y3PA8Dn1+Dzh5QeESnrmuH8fJVn?=
+ =?us-ascii?Q?GIsnEIuutVAttcwvLt1fL49bJgVhLTbu4+LQZDYcz7AzpcnpSp0RSXnVeZbi?=
+ =?us-ascii?Q?lhckEYpK9Yb52An++1iQkVadlvGbDKvaVScnLV6g4Dk7OXHYgJH2BBg4uCEA?=
+ =?us-ascii?Q?VUD466PcC1CUh1SbxrK5U6ZWO1WpINJrWgM4l5XADyAK9W4goJf4rR9TwyVn?=
+ =?us-ascii?Q?ef/oxmvesVANGsqOO6TxOLyDfThBEKjpB6pqzY3BefEDFjgyfYenQqITgQT5?=
+ =?us-ascii?Q?NDO+i91ZZdpvW1OblUhdX0pecj0YNSAenJYL?=
+X-Forefront-Antispam-Report:
+	CIP:2.136.200.136;CTRY:ES;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:jump.ad.technica-electronics.es;PTR:136.red-2-136-200.staticip.rima-tde.net;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(7416014)(376014);DIR:OUT;SFP:1102;
+X-OriginatorOrg: technica-engineering.de
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 07:32:21.4558
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 367cbc03-1d53-4478-58f4-08dda727c582
+X-MS-Exchange-CrossTenant-Id: 1f04372a-6892-44e3-8f58-03845e1a70c1
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1f04372a-6892-44e3-8f58-03845e1a70c1;Ip=[2.136.200.136];Helo=[jump.ad.technica-electronics.es]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM4PEPF00027A61.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB10506
 
-On Sun, 25 May 2025, Luke Jones wrote:
+Hi Sundeep, 
 
-> Fix up some inconsistent behaviour involving the screenpad on some
-> ASUS laptops. This fixes:
-> - illogical screen off control (0/1 flipped depending on WMI state)
-> - bad brightness depending on the last screenpad power state
-> - incorrect brightness scaling
-
-Why did you put them all into a single patch? I understand there's some 
-overlap in lines they touch but if they can be separated, it would be 
-much better and I'd likely have much higher confidence on each change.
-
-> Signed-off-by: Luke Jones <luke@ljones.dev>
-> ---
->  drivers/platform/x86/asus-wmi.c | 52 +++++++++++++--------------------
->  1 file changed, 21 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index f52884e90759..cec509171971 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -123,7 +123,6 @@ module_param(fnlock_default, bool, 0444);
->  #define NVIDIA_TEMP_MIN		75
->  #define NVIDIA_TEMP_MAX		87
->  
-> -#define ASUS_SCREENPAD_BRIGHT_MIN 20
->  #define ASUS_SCREENPAD_BRIGHT_MAX 255
->  #define ASUS_SCREENPAD_BRIGHT_DEFAULT 60
->  
-> @@ -4239,43 +4238,37 @@ static int read_screenpad_brightness(struct backlight_device *bd)
->  		return err;
->  	/* The device brightness can only be read if powered, so return stored */
->  	if (err == BACKLIGHT_POWER_OFF)
-> -		return asus->driver->screenpad_brightness - ASUS_SCREENPAD_BRIGHT_MIN;
-> +		return bd->props.brightness;
->  
->  	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_SCREENPAD_LIGHT, &retval);
->  	if (err < 0)
->  		return err;
->  
-> -	return (retval & ASUS_WMI_DSTS_BRIGHTNESS_MASK) - ASUS_SCREENPAD_BRIGHT_MIN;
-> +	return (retval & ASUS_WMI_DSTS_BRIGHTNESS_MASK);
->  }
->  
->  static int update_screenpad_bl_status(struct backlight_device *bd)
->  {
-> -	struct asus_wmi *asus = bl_get_data(bd);
-> -	int power, err = 0;
-> +	int err = 0;
->  	u32 ctrl_param;
->  
-> -	power = read_screenpad_backlight_power(asus);
-> -	if (power < 0)
-> -		return power;
-> -
-> -	if (bd->props.power != power) {
-> -		if (power != BACKLIGHT_POWER_ON) {
-> -			/* Only brightness > 0 can power it back on */
-> -			ctrl_param = asus->driver->screenpad_brightness - ASUS_SCREENPAD_BRIGHT_MIN;
-> -			err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT,
-> -						    ctrl_param, NULL);
-> -		} else {
-> -			err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 0, NULL);
-> -		}
-> -	} else if (power == BACKLIGHT_POWER_ON) {
-> -		/* Only set brightness if powered on or we get invalid/unsync state */
-> -		ctrl_param = bd->props.brightness + ASUS_SCREENPAD_BRIGHT_MIN;
-> +	ctrl_param = bd->props.brightness;
-> +	if (ctrl_param >= 0 && bd->props.power) {
-> +		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 1,
-> +					    NULL);
-> +		if (err < 0)
-> +			return err;
-> +		ctrl_param = bd->props.brightness;
->  		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT, ctrl_param, NULL);
-> +		if (err < 0)
-> +			return err;
->  	}
->  
-> -	/* Ensure brightness is stored to turn back on with */
-> -	if (err == 0)
-> -		asus->driver->screenpad_brightness = bd->props.brightness + ASUS_SCREENPAD_BRIGHT_MIN;
-> +	if (!bd->props.power) {
-> +		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 0, NULL);
-> +		if (err < 0)
-> +			return err;
-> +	}
->  
->  	return err;
->  }
-> @@ -4293,22 +4286,19 @@ static int asus_screenpad_init(struct asus_wmi *asus)
->  	int err, power;
->  	int brightness = 0;
->  
-> -	power = read_screenpad_backlight_power(asus);
-> +	power = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_SCREENPAD_POWER);
->  	if (power < 0)
->  		return power;
->  
-> -	if (power != BACKLIGHT_POWER_OFF) {
-> +	if (power) {
->  		err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_SCREENPAD_LIGHT, &brightness);
->  		if (err < 0)
->  			return err;
->  	}
-> -	/* default to an acceptable min brightness on boot if too low */
-> -	if (brightness < ASUS_SCREENPAD_BRIGHT_MIN)
-> -		brightness = ASUS_SCREENPAD_BRIGHT_DEFAULT;
->  
->  	memset(&props, 0, sizeof(struct backlight_properties));
->  	props.type = BACKLIGHT_RAW; /* ensure this bd is last to be picked */
-> -	props.max_brightness = ASUS_SCREENPAD_BRIGHT_MAX - ASUS_SCREENPAD_BRIGHT_MIN;
-> +	props.max_brightness = ASUS_SCREENPAD_BRIGHT_MAX;
->  	bd = backlight_device_register("asus_screenpad",
->  				       &asus->platform_device->dev, asus,
->  				       &asus_screenpad_bl_ops, &props);
-> @@ -4319,7 +4309,7 @@ static int asus_screenpad_init(struct asus_wmi *asus)
->  
->  	asus->screenpad_backlight_device = bd;
->  	asus->driver->screenpad_brightness = brightness;
-> -	bd->props.brightness = brightness - ASUS_SCREENPAD_BRIGHT_MIN;
-> +	bd->props.brightness = brightness;
->  	bd->props.power = power;
->  	backlight_update_status(bd);
->  
-> 
-
--- 
- i.
-
+Thanks for catching the typo. I've corrected it and added your review tag in v5
+https://patchwork.kernel.org/project/netdevbpf/patch/20250609072630.913017-1-carlos.fernandez@technica-engineering.de/
