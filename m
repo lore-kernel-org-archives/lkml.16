@@ -1,141 +1,119 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 249B33A1B6;
-	Mon,  9 Jun 2025 16:30:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749486645; cv=none; b=AQvkb1GrOKjc0PiDU/D7X8K0rDfNfOz+gOAmhqzPsUgKGyyRaoft89bGGjRguJc4hCfAxJ3kMJoW1PlMHYtohYyuuL77BelKUCQSw57AYRKC2TkqnGhLkDuLB6HI+gR5HFCx/PoReuUGDXCYoizChLxaA6sP5Uuon59oAObyLzM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749486645; c=relaxed/simple;
-	bh=V+MaTXDIBtZO+gC5Vxx97B2/xpKwM81wJPYoo0ifIqk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GUywfSX4MpmaDXTswoKDv4x2DiOtDpAkpS2ca4Ukm23TWoSug9V0O/7LlwVWs1ulFMdD0UTAkuVhBU+tiNEoFxX+DOS0E9fcQL8M+FZP+F1R1jd7+QajxNcfX3KCJgUibUJpOHvpNjDMSQzr05FLT0b6DSXDBvskxHRSE1hLBKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FBtE61Lo; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F483A1B6;
+	Mon,  9 Jun 2025 16:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749486696; cv=pass; b=Utpmz663rusCqZ/htXN5FgynEhnj8WJ4VMctywBMfgowNsSr8CPqcPWbmkMFc9Cl+/d+PMwtHo8dsLPyV1PwRViS4IcTDS8DgpQqU9XypqOrLGIN+Z9QwytgVAM+Xgt+9t05VvtZ8crS1H+PatyVteQHAroEn9C28zhXiDPaSdo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749486696; c=relaxed/simple;
+	bh=RIqUGHWj9G1NHN2LaUPxE8EZCB7QaOCQlXKKlDcIt3w=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=J3Ylp9uof9IgQirNiY+ubhv7udWQmNfk2ffF7m8tR2ZWR/L0FLSL9R66iKfUkdV1E6vFeCdqjjHZZjBQfCjX306SrOe2HDBE7yLSx2lzcN7gO4OPQjo+7YMx2otGX+F1ODCFUrHrMUYWGzSnrElYJFTlacQi27eDKCVDxN9plO4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=IDlwgt3h; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FBtE61Lo"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so3035711f8f.0;
-        Mon, 09 Jun 2025 09:30:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749486642; x=1750091442; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W/0iQvu+cvXD/i+mJVAh6RlBPbjrVmW5Jj0JE1c6SSw=;
-        b=FBtE61LozQfS3ti/jX/6irm1g35OlHQx/ax8sze1K83gnokkrDV/7EWcz8h9270FUb
-         V0GI+9QAWcLkdKethn1ql6uYK+QVjNyWmwfDbfx97qrdpmVKlzE5l0IlUeJCDhJrjBvC
-         oMdqbLZxBL+rWXkNEOmwNy8cCJYGAlv03Z2LrLUiTylgX/snVfJNPtaEgQFSuRWSEOMJ
-         a46uIsyHIj7GPdn6/T1RXL/v9m8cYH9/5pP/qtY/GlFmhW56pV0smgtCXDYmIQLOXLCz
-         nv1r4/gokyN1ytytUjs8pup1K/MoElksihOw+fD9k6ATKfcweftDvu2sbWMONAtCiVKM
-         M6CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749486642; x=1750091442;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W/0iQvu+cvXD/i+mJVAh6RlBPbjrVmW5Jj0JE1c6SSw=;
-        b=fI/ijdh6PvnM0Y5A0CwQ2i2+b4I6nooqx8apIVgXBd9YjL19MbzJrTxz19+YpeEPfZ
-         T65n8JOYv+7d+f9NvkQBrdm0EDzWuDCaa4txQApdhIUTOySd417x3BPLrmomRcUW6QiM
-         +U5Giwn4xdIzDp5EM7fvUYQgLayyEDYjbV+Bix/3OCbzT11LIiZ7g+RzFYZsT1U0bS9K
-         JTtc8VfL25VQXC+o4qjoDrLpzZl8DDdHPOLszE0yzHKlrfj+HNjoSK4VH4sCf0b819r2
-         7A/ESwSVoB6vtgtLgAlH1CakEgFxqNHhX5VF0TToUlAGBOmMth4PKZkd0ZWWTB8B4Aab
-         xDqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVhz24umgmWsfmE0tutuoQEfA7nXuzsD9Wmc1PW5kwFMqqRfIdaOnJ9GdddVQ+1whcssv7+31Sir7ch@vger.kernel.org, AJvYcCX2FOq8jQKOb8npr2BshY57YJUo/x6sOxcZrFEM6jUhoNtW09cYslhmnbJDOWjd8RfRdL78uWMAfajRCPkA858ZCQc=@vger.kernel.org, AJvYcCXCb+Twk6bH7X2hg6qc0XB85lrVqOnuX+ZakH73dXj8baLrAencEEAkdakZHfrPIWO/K0Z9QW2cFTb0@vger.kernel.org, AJvYcCXwrF6s6hInS/0JQHttTeMKV9/wmgSqcQmnXhnZc1hT8ZHo//AIwn99zO7ZrqqFdXEfUJLHBZeSecNWpcI7@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJAHSFAHlCyMYYyYvFDSEyGBoS7xzImbZrynpHhEndT2ujAIgI
-	9zrPDwK+tOft5v+iP6HGy9Pdi6gKdx9yuwAL6/Aw/DNuqsNu7kp9dK0tuM6a0n7TVnbXpqYlYck
-	cLAY2JGnxS0+Ze+IR+RdlGg4LoJ7pLYo=
-X-Gm-Gg: ASbGncvPlBirQBmX0/9n1odfZIALn4Cu0NHP13759yGtbo7ygx1dlaSqzEwjPyxHxRh
-	opH2IRxWaaSPzJEJ0SvoybtUtJTJ1AKTjVo8xwOXoWzVu1Xn4enaJ91mgSbeUKzCMq1YHwOrvw+
-	RSd+aKzUBnJ6dEXn6vQ2sCJhM0cnSikOe1oyTUvilt3e7Gh0xxhHi5Ob8AfJQunL+xK2LAE8oJs
-	TCvZ6B+VWQ+/w==
-X-Google-Smtp-Source: AGHT+IGXAIQdE1nRJZmi3jEWcnBZPUZA+Z97ehAjUaK/t9ksInwV3DWMm5/fBKUnqkXbWGVfdlw5oL/ODL8sC+zRY64=
-X-Received: by 2002:a05:6000:110d:b0:3a4:eee4:f73a with SMTP id
- ffacd0b85a97d-3a551403297mr154077f8f.22.1749486642265; Mon, 09 Jun 2025
- 09:30:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="IDlwgt3h"
+ARC-Seal: i=1; a=rsa-sha256; t=1749486670; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=cD/hGH9ef3n3ol2dV9xcmlS4/oFxjes7q353WZe76/hYXi5wHtSrZOxzjPUOkO4IiL83uhCe31K1S+dKve2egIVc3NSFHvT8yxn8BCy8x45Fau8stPZH/nxRl3RoHB8IA0i6lhxBF8ur0Av3MfxRjo4GFunOkwck7+VIu6e/6Ak=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749486670; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=He8HfUMJPmf3+p3sciXTNekEt/o7neEWLhlyiB54XII=; 
+	b=mqJS4wzwcrqMqKH/F/EadRzfEOrzVHxcZkPV2Tq2xC8Ykbry/bcbuGZpCLjRDi2ihY+DYyTY9/0vArFFpy/TLy6nh/GgGsgpAUJfH/02ko+NCd38AZbYsXNOmhZuEemsuTL1Aafy8AKgbh/oYnDAgF81MsQiYKUtL2g01UanORE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749486670;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=He8HfUMJPmf3+p3sciXTNekEt/o7neEWLhlyiB54XII=;
+	b=IDlwgt3hIzNfsOtPqZQR7fZy6lW5jg9Tx9ezgCpGUyx4NB2b9Sh71f/LW5mWwCIe
+	KbpHUE6/EcN1iNJpnLh9GcIs4HLqqW0RykpmAfA4cZOEg/TJfvw1U8MyQkSL9zLt1Vs
+	Wm2PbV6Iz/Z/gh4CRm4TWTSRrqY7Z9EW7AMSGAXw=
+Received: by mx.zohomail.com with SMTPS id 174948666825955.29392187532949;
+	Mon, 9 Jun 2025 09:31:08 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250530143135.366417-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250530143135.366417-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWeBa2fzSKL1Q9jgr3NgoDuQZsGnZbu42cnEoEJSoiNEQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdWeBa2fzSKL1Q9jgr3NgoDuQZsGnZbu42cnEoEJSoiNEQ@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Mon, 9 Jun 2025 17:30:16 +0100
-X-Gm-Features: AX0GCFv9sC0xEmVpjwgec5NeYMQ8oeaNBeATkzGKmkHKjxLQqVmPDyDvC8comuc
-Message-ID: <CA+V-a8tPAg5BQFJVcLsHOzgp4eLBK2w-OJ+G4gsv4911WLhJzw@mail.gmail.com>
-Subject: Re: [PATCH 4/6] i2c: riic: Pass IRQ desc array as part of OF data
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Chris Brandt <chris.brandt@renesas.com>, Andi Shyti <andi.shyti@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v4] rust: regulator: add a bare minimum regulator
+ abstraction
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <CANiq72kcF-CqUwvCBRt5FjX2Yrj517UYjXHA9Sf7-Xevsy=2Kw@mail.gmail.com>
+Date: Mon, 9 Jun 2025 13:30:52 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <09F9A01B-70CA-421C-9A48-E0FD0A192026@collabora.com>
+References: <20250609-topics-tyr-regulator-v4-1-b4fdcf1385a7@collabora.com>
+ <CANiq72kcF-CqUwvCBRt5FjX2Yrj517UYjXHA9Sf7-Xevsy=2Kw@mail.gmail.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
+X-ZohoMailClient: External
 
-Hi Geert,
+Hi Miguel,
 
-Thank you for the review.
+Sure, thank you!
 
-On Fri, Jun 6, 2025 at 2:26=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68k=
-.org> wrote:
->
-> Hi Prabhakar,
->
-> On Fri, 30 May 2025 at 16:31, Prabhakar <prabhakar.csengg@gmail.com> wrot=
-e:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > In preparation for adding support for Renesas RZ/T2H and RZ/N2H SoCs,
-> > which feature a combined error interrupt instead of individual error
-> > interrupts per condition, update the driver to support configurable IRQ
-> > layouts via OF data.
-> >
-> > Introduce a new `irqs` field and `num_irqs` count in `riic_of_data` to
-> > allow future SoCs to provide a custom IRQ layout. This patch is a
-> > non-functional change for existing SoCs and maintains compatibility wit=
-h
-> > the current `riic_irqs` array.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  drivers/i2c/busses/i2c-riic.c | 22 ++++++++++++++++------
-> >  1 file changed, 16 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/i2c/busses/i2c-riic.c b/drivers/i2c/busses/i2c-rii=
-c.c
-> > index 23375f7fe3ad..4950b790cfe7 100644
-> > --- a/drivers/i2c/busses/i2c-riic.c
-> > +++ b/drivers/i2c/busses/i2c-riic.c
-> > @@ -102,6 +102,8 @@ enum riic_reg_list {
-> >
-> >  struct riic_of_data {
-> >         const u8 *regs;
-> > +       const struct riic_irq_desc *irqs;
-> > +       u8 num_irqs;
-> >         bool fast_mode_plus;
-> >  };
-> >
->
-> > @@ -607,10 +611,14 @@ static const u8 riic_rz_a_regs[RIIC_REG_END] =3D =
-{
-> >  static const struct riic_of_data riic_rz_a_info =3D {
-> >         .regs =3D riic_rz_a_regs,
-> >         .fast_mode_plus =3D true,
-> > +       .irqs =3D riic_irqs,
-> > +       .num_irqs =3D ARRAY_SIZE(riic_irqs),
->
-> Nit: Perhaps initialize the members in the order of declaration?
->
-Ok, I will fix this in the next version (and below too).
+By the way, are you using some lint to generate this?
 
-Cheers,
-Prabhakar
+> On 9 Jun 2025, at 13:23, Miguel Ojeda =
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>=20
+> On Mon, Jun 9, 2025 at 5:34=E2=80=AFPM Daniel Almeida
+> <daniel.almeida@collabora.com> wrote:
+>>=20
+>> Add a bare minimum regulator abstraction to be used by Rust drivers.
+>> This abstraction adds a small subset of the regulator API, which is
+>> thought to be sufficient for the drivers we have now.
+>=20
+> For future versions, or at apply time, please see the attached diff
+> for some documentation fixes (mostly) -- please check with
+> `--ignore-space-change`, since some indentation fixes can hide other
+> changes.
+>=20
+> Most should be self-explanatory, but if there is something that you
+> think should not be done, please let me know of course.
+>=20
+> Thanks!
+>=20
+> Cheers,
+> Miguel
+> <docfixes.diff>
+
+
+Also,
+
+> -/// Enabling a regulator:
+> +/// ## Enabling a regulator
+>  ///
+
+Did you try to render this? I tried it before submitting, but it did not =
+render
+correctly after the first time it was used, i.e.: only the first =
+subsection was
+rendered correctly and the others remained as-is.
+
+=E2=80=94 Daniel=
