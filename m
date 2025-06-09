@@ -1,355 +1,241 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 569F8D528;
-	Mon,  9 Jun 2025 13:32:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08AA12459F2;
+	Mon,  9 Jun 2025 13:32:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749475943; cv=none; b=WgcERqcsqCTEc7E6bW4MOpXbpa8ESAyA4pGnysI9MfN8zNZkngtC1BSjQvYIXJ8zud2Wj7XjVdzRA7xX6vXPf+j3KrDr0jl0AxziU38UsgSqonrd7TaXuye03HvwWdMAB60Eb62n4clrRusQ2asciv3qcWaKHYQf4uz+5v/eU0Y=
+	t=1749475964; cv=none; b=We1lp6g+ELPgI35B1EbikAFjFVL2vtdRsqKKGgailXxCvS6px5si7QmNIZiQ8HRBlh4cGpiX2gFp0MHKKRh6R+7xTPBa+pRRAIrgI6U3LW+TVPxIlCK4iP5XDeHbmz5yev63lP5X68quQTTpvQsOXRbS9ieGW1hpCDSQzSCavEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749475943; c=relaxed/simple;
-	bh=saOkQ/3rx6ZFGPKCS6zsEVobhtu/zh8QlGy2Xu55YeA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=fk76P/R/z4MSy+iIa9xaSPCNSQAQfcY67a4nAKpJ+fU3EY0F6QnMGbI2biRbFAMxba2wTY0bzkfrOk6p7IoyevIyhtVSMfeF3EnY1bGjnLr/5Msl/8nyquFp/8QKEXfCjTkAAyv410zpHnG4RqSTppu4p9S+USbbMW9zx3r4vxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OlSY2SGr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749475964; c=relaxed/simple;
+	bh=5oESMmppMFXd8TEqq9vCkUhwip6ndxkGlsvvYr4th2A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fSosXdrj0JR2LdMzSJUMe8hxD+v40A0SYe+lUgHJl4zsH3r/4j8WA5og1O7Nk8+9T8Hg3Uls1IcWMGkKbkCycpDf0gglKXi/XfjZ77DvCrVI3GscdSNZdgbP85klJYzUlp1HmMrC30rXjht4uvxl3ht4lPxmx9fqsQ0Q4fRbD0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tRfUoG33; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OlSY2SGr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A3DCC4CEEB;
-	Mon,  9 Jun 2025 13:32:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tRfUoG33"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67837C4CEEB;
+	Mon,  9 Jun 2025 13:32:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749475942;
-	bh=saOkQ/3rx6ZFGPKCS6zsEVobhtu/zh8QlGy2Xu55YeA=;
-	h=From:Date:Subject:To:Cc:From;
-	b=OlSY2SGrvEgdjETHVplkoK82hdbxeZt2Z0qtL3sZhblJ4lD97mWgjVH5RTzhB3nfm
-	 wWXUwXqGdxh2wNOZ/dTbTRDRRuAfVFIeolAc8Nf8HEQsSYGS73a/i+vRjh8u99YiyX
-	 hAmc4jO7Uv6hwbdHRXhvAS3mrn1JGbf4xut8TwnWTCem3aw6Iz4+d+ux7vTMwd9Rml
-	 UWyZCIrv8WVdce7KcSq10JpmBa4vkStzFupPr9JeEZ0/aDmTH6re4YBlDQRzJ+Ywe3
-	 U9GoCxG+ZbsKzV1uaViQOLreIR33CH12Hs45NyHR7EBUdEka9DyV65YmTT/qhXsLaY
-	 x5DDBUybnSeng==
-From: Mark Brown <broonie@kernel.org>
-Date: Mon, 09 Jun 2025 14:29:10 +0100
-Subject: [PATCH] kselftest/arm64: Convert tpidr2 test to use kselftest.h
+	s=k20201202; t=1749475962;
+	bh=5oESMmppMFXd8TEqq9vCkUhwip6ndxkGlsvvYr4th2A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tRfUoG33P1n1MtXgaa0Ak+c+kp0bOQO4NiXWFfCOEdzFrbi7qs8ILhDOlM1WYo3k9
+	 LR3xIHFEC5CUC/aB80sxCOGMqCyv8yrDuSYTCaOVU9T34AGocPhjlLojESExTigZAK
+	 fUEqRk2NVC2td4B17Pc1MjZiB8SoROA/8EefFUx8W+kEGWLY96DyVTNM/wh0v4i1aL
+	 tJP0Colwo0Zqczp6NH+x5GZpcXXl0CQeEKsMpyw1fa6CUKztGntjo93KYr1DPn3/uR
+	 gbnIs18jKcLtacWl/d9NO2cCbGEPI1wSa4jTmDZfGdOImE5apd/2s/HSNEei8gKbeL
+	 MBQua5l4d6cjA==
+Date: Mon, 9 Jun 2025 08:32:41 -0500
+From: Rob Herring <robh@kernel.org>
+To: Drew Fustini <drew@pdp7.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, nvdimm@lists.linux.dev,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v3] dt-bindings: pmem: Convert binding to YAML
+Message-ID: <20250609133241.GA1855507-robh@kernel.org>
+References: <20250606184405.359812-4-drew@pdp7.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250609-kselftest-arm64-nolibc-header-v1-1-16ee1c6fbfed@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAKXhRmgC/x3MQQqDMBAF0KvIrDuQhsRAr1K6iPpTh9pYZkQK4
- t0bunybd5BBBUa37iDFLiZrbbheOhrnXJ9gmZrJOx9d9IlfhqVssI2zvvvAdV1kGHlGnqA89NH
- lEFNJJVA7Pooi3/9/f5znD5iyh2FvAAAA
-X-Change-ID: 20250527-kselftest-arm64-nolibc-header-b650a457f7f4
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7946; i=broonie@kernel.org;
- h=from:subject:message-id; bh=saOkQ/3rx6ZFGPKCS6zsEVobhtu/zh8QlGy2Xu55YeA=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoRuJk/IFe0UeZ4Zbvl0mqp/8nsgL1KSj9e2Sgwl8n
- fx0n/iiJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaEbiZAAKCRAk1otyXVSH0IbGB/
- 9f/99sdxXDh6Em94zAfg8m8nqAB9JvEEp0nbL1+GpwGjwCZdy9uRfyKC2lMNobWUlSlRtD1vknZo71
- NmizF1vO0kfQz6mb+PUW2B/JHZhbmbjqjrfVUdrykSCiul2etMf3zsIUVTcYHkDVaAeIPVGtaIDQi1
- e9ZsqwL8FJdsIFLWlnVb+Ny4oCck+QlBFf46ohMBH2NXkJ3o0Gd+4OHGpY2B4686DOZ0xb6b/oiz+X
- 5cxIH1wxRjcFywUzPqe05TyAin1DGqzskRpUb1sLz8nePn2uTDr/IHKJniFZkFSu66JL4HMcJ+YI2z
- zvD0jqrZt0xXwsWaenN6mmqY+Lezm6
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250606184405.359812-4-drew@pdp7.com>
 
-Recent work by Thomas Weißschuh means that it is now possible to use
-kselftest.h with nolibc. Convert the tpidr2 test which is nolibc specific
-to use kselftest.h, making it look more standard and ensuring it gets the
-benefit of any work done on kselftest.h.
+On Fri, Jun 06, 2025 at 11:11:17AM -0700, Drew Fustini wrote:
+> Convert the PMEM device tree binding from text to YAML. This will allow
+> device trees with pmem-region nodes to pass dtbs_check.
+> 
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Acked-by: Oliver O'Halloran <oohall@gmail.com>
+> Signed-off-by: Drew Fustini <drew@pdp7.com>
+> ---
+> Dan/Dave/Vishal: does it make sense for this pmem binding patch to go
+> through the nvdimm tree?
+> 
+> Note: checkpatch complains about "DT binding docs and includes should
+> be a separate patch". Rob told me that this a false positive. I'm hoping
+> that I can fix the false positive at some point if I can remember enough
+> perl :)
+> 
+> v3:
+>  - no functional changes
+>  - add Oliver's Acked-by
+>  - bump version to avoid duplicate message-id mess in v2 and v2 resend:
+>    https://lore.kernel.org/all/20250520021440.24324-1-drew@pdp7.com/
+> 
+> v2 resend:
+>  - actually put v2 in the Subject
+>  - add Conor's Acked-by
+>    - https://lore.kernel.org/all/20250520-refract-fling-d064e11ddbdf@spud/
+> 
+> v2:
+>  - remove the txt file to make the conversion complete
+>  - https://lore.kernel.org/all/20250520021440.24324-1-drew@pdp7.com/
+> 
+> v1:
+>  - https://lore.kernel.org/all/20250518035539.7961-1-drew@pdp7.com/
+> 
+>  .../devicetree/bindings/pmem/pmem-region.txt  | 65 -------------------
+>  .../devicetree/bindings/pmem/pmem-region.yaml | 49 ++++++++++++++
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 50 insertions(+), 66 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pmem/pmem-region.txt
+>  create mode 100644 Documentation/devicetree/bindings/pmem/pmem-region.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.txt b/Documentation/devicetree/bindings/pmem/pmem-region.txt
+> deleted file mode 100644
+> index cd79975e85ec..000000000000
+> --- a/Documentation/devicetree/bindings/pmem/pmem-region.txt
+> +++ /dev/null
+> @@ -1,65 +0,0 @@
+> -Device-tree bindings for persistent memory regions
+> ------------------------------------------------------
+> -
+> -Persistent memory refers to a class of memory devices that are:
+> -
+> -	a) Usable as main system memory (i.e. cacheable), and
+> -	b) Retain their contents across power failure.
+> -
+> -Given b) it is best to think of persistent memory as a kind of memory mapped
+> -storage device. To ensure data integrity the operating system needs to manage
+> -persistent regions separately to the normal memory pool. To aid with that this
+> -binding provides a standardised interface for discovering where persistent
+> -memory regions exist inside the physical address space.
+> -
+> -Bindings for the region nodes:
+> ------------------------------
+> -
+> -Required properties:
+> -	- compatible = "pmem-region"
+> -
+> -	- reg = <base, size>;
+> -		The reg property should specify an address range that is
+> -		translatable to a system physical address range. This address
+> -		range should be mappable as normal system memory would be
+> -		(i.e cacheable).
+> -
+> -		If the reg property contains multiple address ranges
+> -		each address range will be treated as though it was specified
+> -		in a separate device node. Having multiple address ranges in a
+> -		node implies no special relationship between the two ranges.
+> -
+> -Optional properties:
+> -	- Any relevant NUMA associativity properties for the target platform.
+> -
+> -	- volatile; This property indicates that this region is actually
+> -	  backed by non-persistent memory. This lets the OS know that it
+> -	  may skip the cache flushes required to ensure data is made
+> -	  persistent after a write.
+> -
+> -	  If this property is absent then the OS must assume that the region
+> -	  is backed by non-volatile memory.
+> -
+> -Examples:
+> ---------------------
+> -
+> -	/*
+> -	 * This node specifies one 4KB region spanning from
+> -	 * 0x5000 to 0x5fff that is backed by non-volatile memory.
+> -	 */
+> -	pmem@5000 {
+> -		compatible = "pmem-region";
+> -		reg = <0x00005000 0x00001000>;
+> -	};
+> -
+> -	/*
+> -	 * This node specifies two 4KB regions that are backed by
+> -	 * volatile (normal) memory.
+> -	 */
+> -	pmem@6000 {
+> -		compatible = "pmem-region";
+> -		reg = < 0x00006000 0x00001000
+> -			0x00008000 0x00001000 >;
+> -		volatile;
+> -	};
+> -
+> diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.yaml b/Documentation/devicetree/bindings/pmem/pmem-region.yaml
+> new file mode 100644
+> index 000000000000..a4aa4ce3318b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pmem/pmem-region.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pmem-region.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +maintainers:
+> +  - Bjorn Helgaas <bhelgaas@google.com>
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/arm64/abi/Makefile |   2 +-
- tools/testing/selftests/arm64/abi/tpidr2.c | 140 ++++++++---------------------
- 2 files changed, 38 insertions(+), 104 deletions(-)
+Drop Bjorn. He only did typo fixes on this.
 
-diff --git a/tools/testing/selftests/arm64/abi/Makefile b/tools/testing/selftests/arm64/abi/Makefile
-index a6d30c620908..483488f8c2ad 100644
---- a/tools/testing/selftests/arm64/abi/Makefile
-+++ b/tools/testing/selftests/arm64/abi/Makefile
-@@ -12,4 +12,4 @@ $(OUTPUT)/syscall-abi: syscall-abi.c syscall-abi-asm.S
- $(OUTPUT)/tpidr2: tpidr2.c
- 	$(CC) -fno-asynchronous-unwind-tables -fno-ident -s -Os -nostdlib \
- 		-static -include ../../../../include/nolibc/nolibc.h \
--		-ffreestanding -Wall $^ -o $@ -lgcc
-+		-I../.. -ffreestanding -Wall $^ -o $@ -lgcc
-diff --git a/tools/testing/selftests/arm64/abi/tpidr2.c b/tools/testing/selftests/arm64/abi/tpidr2.c
-index eb19dcc37a75..f58a9f89b952 100644
---- a/tools/testing/selftests/arm64/abi/tpidr2.c
-+++ b/tools/testing/selftests/arm64/abi/tpidr2.c
-@@ -3,31 +3,12 @@
- #include <linux/sched.h>
- #include <linux/wait.h>
- 
-+#include "kselftest.h"
-+
- #define SYS_TPIDR2 "S3_3_C13_C0_5"
- 
- #define EXPECTED_TESTS 5
- 
--static void putstr(const char *str)
--{
--	write(1, str, strlen(str));
--}
--
--static void putnum(unsigned int num)
--{
--	char c;
--
--	if (num / 10)
--		putnum(num / 10);
--
--	c = '0' + (num % 10);
--	write(1, &c, 1);
--}
--
--static int tests_run;
--static int tests_passed;
--static int tests_failed;
--static int tests_skipped;
--
- static void set_tpidr2(uint64_t val)
- {
- 	asm volatile (
-@@ -50,20 +31,6 @@ static uint64_t get_tpidr2(void)
- 	return val;
- }
- 
--static void print_summary(void)
--{
--	if (tests_passed + tests_failed + tests_skipped != EXPECTED_TESTS)
--		putstr("# UNEXPECTED TEST COUNT: ");
--
--	putstr("# Totals: pass:");
--	putnum(tests_passed);
--	putstr(" fail:");
--	putnum(tests_failed);
--	putstr(" xfail:0 xpass:0 skip:");
--	putnum(tests_skipped);
--	putstr(" error:0\n");
--}
--
- /* Processes should start with TPIDR2 == 0 */
- static int default_value(void)
- {
-@@ -105,9 +72,8 @@ static int write_fork_read(void)
- 	if (newpid == 0) {
- 		/* In child */
- 		if (get_tpidr2() != oldpid) {
--			putstr("# TPIDR2 changed in child: ");
--			putnum(get_tpidr2());
--			putstr("\n");
-+			ksft_print_msg("TPIDR2 changed in child: %llx\n",
-+				       get_tpidr2());
- 			exit(0);
- 		}
- 
-@@ -115,14 +81,12 @@ static int write_fork_read(void)
- 		if (get_tpidr2() == getpid()) {
- 			exit(1);
- 		} else {
--			putstr("# Failed to set TPIDR2 in child\n");
-+			ksft_print_msg("Failed to set TPIDR2 in child\n");
- 			exit(0);
- 		}
- 	}
- 	if (newpid < 0) {
--		putstr("# fork() failed: -");
--		putnum(-newpid);
--		putstr("\n");
-+		ksft_print_msg("fork() failed: %d\n", newpid);
- 		return 0;
- 	}
- 
-@@ -132,23 +96,22 @@ static int write_fork_read(void)
- 		if (waiting < 0) {
- 			if (errno == EINTR)
- 				continue;
--			putstr("# waitpid() failed: ");
--			putnum(errno);
--			putstr("\n");
-+			ksft_print_msg("waitpid() failed: %d\n", errno);
- 			return 0;
- 		}
- 		if (waiting != newpid) {
--			putstr("# waitpid() returned wrong PID\n");
-+			ksft_print_msg("waitpid() returned wrong PID: %d != %d\n",
-+				       waiting, newpid);
- 			return 0;
- 		}
- 
- 		if (!WIFEXITED(status)) {
--			putstr("# child did not exit\n");
-+			ksft_print_msg("child did not exit\n");
- 			return 0;
- 		}
- 
- 		if (getpid() != get_tpidr2()) {
--			putstr("# TPIDR2 corrupted in parent\n");
-+			ksft_print_msg("TPIDR2 corrupted in parent\n");
- 			return 0;
- 		}
- 
-@@ -188,35 +151,32 @@ static int write_clone_read(void)
- 
- 	stack = malloc(__STACK_SIZE);
- 	if (!stack) {
--		putstr("# malloc() failed\n");
-+		ksft_print_msg("malloc() failed\n");
- 		return 0;
- 	}
- 
- 	ret = sys_clone(CLONE_VM, (unsigned long)stack + __STACK_SIZE,
- 			&parent_tid, 0, &child_tid);
- 	if (ret == -1) {
--		putstr("# clone() failed\n");
--		putnum(errno);
--		putstr("\n");
-+		ksft_print_msg("clone() failed: %d\n", errno);
- 		return 0;
- 	}
- 
- 	if (ret == 0) {
- 		/* In child */
- 		if (get_tpidr2() != 0) {
--			putstr("# TPIDR2 non-zero in child: ");
--			putnum(get_tpidr2());
--			putstr("\n");
-+			ksft_print_msg("TPIDR2 non-zero in child: %llx\n",
-+				       get_tpidr2());
- 			exit(0);
- 		}
- 
- 		if (gettid() == 0)
--			putstr("# Child TID==0\n");
-+			ksft_print_msg("Child TID==0\n");
- 		set_tpidr2(gettid());
- 		if (get_tpidr2() == gettid()) {
- 			exit(1);
- 		} else {
--			putstr("# Failed to set TPIDR2 in child\n");
-+			ksft_print_msg("Failed to set TPIDR2 in child\n");
- 			exit(0);
- 		}
- 	}
-@@ -227,25 +187,22 @@ static int write_clone_read(void)
- 		if (waiting < 0) {
- 			if (errno == EINTR)
- 				continue;
--			putstr("# wait4() failed: ");
--			putnum(errno);
--			putstr("\n");
-+			ksft_print_msg("wait4() failed: %d\n", errno);
- 			return 0;
- 		}
- 		if (waiting != ret) {
--			putstr("# wait4() returned wrong PID ");
--			putnum(waiting);
--			putstr("\n");
-+			ksft_print_msg("wait4() returned wrong PID %d\n",
-+				       waiting);
- 			return 0;
- 		}
- 
- 		if (!WIFEXITED(status)) {
--			putstr("# child did not exit\n");
-+			ksft_print_msg("child did not exit\n");
- 			return 0;
- 		}
- 
- 		if (parent != get_tpidr2()) {
--			putstr("# TPIDR2 corrupted in parent\n");
-+			ksft_print_msg("TPIDR2 corrupted in parent\n");
- 			return 0;
- 		}
- 
-@@ -253,35 +210,14 @@ static int write_clone_read(void)
- 	}
- }
- 
--#define run_test(name)			     \
--	if (name()) {			     \
--		tests_passed++;		     \
--	} else {			     \
--		tests_failed++;		     \
--		putstr("not ");		     \
--	}				     \
--	putstr("ok ");			     \
--	putnum(++tests_run);		     \
--	putstr(" " #name "\n");
--
--#define skip_test(name)			     \
--	tests_skipped++;		     \
--	putstr("ok ");			     \
--	putnum(++tests_run);		     \
--	putstr(" # SKIP " #name "\n");
--
- int main(int argc, char **argv)
- {
- 	int ret;
- 
--	putstr("TAP version 13\n");
--	putstr("1..");
--	putnum(EXPECTED_TESTS);
--	putstr("\n");
-+	ksft_print_header();
-+	ksft_set_plan(5);
- 
--	putstr("# PID: ");
--	putnum(getpid());
--	putstr("\n");
-+	ksft_print_msg("PID: %d\n", getpid());
- 
- 	/*
- 	 * This test is run with nolibc which doesn't support hwcap and
-@@ -290,23 +226,21 @@ int main(int argc, char **argv)
- 	 */
- 	ret = open("/proc/sys/abi/sme_default_vector_length", O_RDONLY, 0);
- 	if (ret >= 0) {
--		run_test(default_value);
--		run_test(write_read);
--		run_test(write_sleep_read);
--		run_test(write_fork_read);
--		run_test(write_clone_read);
-+		ksft_test_result(default_value(), "default_value\n");
-+		ksft_test_result(write_read, "write_read\n");
-+		ksft_test_result(write_sleep_read, "write_sleep_read\n");
-+		ksft_test_result(write_fork_read, "write_fork_read\n");
-+		ksft_test_result(write_clone_read, "write_clone_read\n");
- 
- 	} else {
--		putstr("# SME support not present\n");
-+		ksft_print_msg("SME support not present\n");
- 
--		skip_test(default_value);
--		skip_test(write_read);
--		skip_test(write_sleep_read);
--		skip_test(write_fork_read);
--		skip_test(write_clone_read);
-+		ksft_test_result_skip("default_value\n");
-+		ksft_test_result_skip("write_read\n");
-+		ksft_test_result_skip("write_sleep_read\n");
-+		ksft_test_result_skip("write_fork_read\n");
-+		ksft_test_result_skip("write_clone_read\n");
- 	}
- 
--	print_summary();
--
--	return 0;
-+	ksft_finished();
- }
+> +  - Oliver O'Halloran <oohall@gmail.com>
+> +
+> +title: Persistent Memory Regions
+> +
+> +description: |
+> +  Persistent memory refers to a class of memory devices that are:
+> +
+> +    a) Usable as main system memory (i.e. cacheable), and
+> +    b) Retain their contents across power failure.
+> +
+> +  Given b) it is best to think of persistent memory as a kind of memory mapped
+> +  storage device. To ensure data integrity the operating system needs to manage
+> +  persistent regions separately to the normal memory pool. To aid with that this
+> +  binding provides a standardised interface for discovering where persistent
+> +  memory regions exist inside the physical address space.
+> +
+> +properties:
+> +  compatible:
+> +    const: pmem-region
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  volatile:
+> +    description: |
 
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250527-kselftest-arm64-nolibc-header-b650a457f7f4
+Don't need '|' here.
 
-Best regards,
--- 
-Mark Brown <broonie@kernel.org>
-
+> +      Indicates the region is volatile (non-persistent) and the OS can skip
+> +      cache flushes for writes
+> +    type: boolean
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pmem@5000 {
+> +        compatible = "pmem-region";
+> +        reg = <0x00005000 0x00001000>;
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ee93363ec2cb..eba2b81ec568 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13798,7 +13798,7 @@ M:	Oliver O'Halloran <oohall@gmail.com>
+>  L:	nvdimm@lists.linux.dev
+>  S:	Supported
+>  Q:	https://patchwork.kernel.org/project/linux-nvdimm/list/
+> -F:	Documentation/devicetree/bindings/pmem/pmem-region.txt
+> +F:	Documentation/devicetree/bindings/pmem/pmem-region.yaml
+>  F:	drivers/nvdimm/of_pmem.c
+>  
+>  LIBNVDIMM: NON-VOLATILE MEMORY DEVICE SUBSYSTEM
+> -- 
+> 2.43.0
+> 
