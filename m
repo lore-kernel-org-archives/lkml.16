@@ -1,115 +1,138 @@
-Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C03F1F4191;
-	Mon,  9 Jun 2025 10:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EDD3253F1E
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 10:55:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749466518; cv=none; b=aSziqtir0Mb8bm2IN9RMG7RNH+ZQgd+jnSsz1g31Ys9PzP7tSlRkG8WnXJLR6TIkTFopACdOrxZjw6wkuQ+BoxqmZEoNjeIaQZHpggHi0scgZxBOW8SEULcbUiaP1qnEvwZ1WhzXql6M875KyyD43zpwwvs7IJL3ReFCDvGQYPw=
+	t=1749466526; cv=none; b=iZ5fYOVQNLQXbqylBdmn2Uuw6PE4r7tHdEANAovle6tcSb6T6YE50F29juF4LjCgP7ISlq/kQh59S6owAMDk6JKpsQ9ehAZlESxNsu0UB2sZLLoPrxg7cm9dtCcljxELrYVJWcXcpD34CimCkhxmLbR8+Ep1E+1kR81nyMMdGGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749466518; c=relaxed/simple;
-	bh=tnWO+lQ/sTdHYK94IxXlayYAXVY+emKXiNfprDofk2k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rrWVcX133snwJtkHMf2Wf064C4Ni7kJm73Pd+qcUw0pVSRsPR5iaYLMxpBvrkQx4vbIWxuY5Vf8xH/Au83opVaLTldoETvuuQPQaKwZsIWp+n23AGZ9lu9GP5pY3oWjjECyqaSANOAGNZGLAXVJNJGN4BK105K778MkmtX0BrTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=E9NU+5LZ; arc=none smtp.client-ip=95.143.211.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
+	s=arc-20240116; t=1749466526; c=relaxed/simple;
+	bh=dlE6XysNUMe9+4S4Zsd9/c2vWujiNEHwn1ieYVgiRDI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oCsM0hlXEcTEgIvxggA2ikAnUiw5zkMySS62ZGd4B82NgARpi3m6gYbDMMaXP9wOOEa8YC8SoFmNblfnMRDyR1r8Nda5TzNGT8ieSqmAK62OSSY/Oo8DRxBYdR2H8Gt+SOJ28Fe/8Ay3bSzXcGb0xeQzXWlQyi+OWW1xuuuG6NU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C4RUZIx0; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="E9NU+5LZ"
-From: Denis Arefev <arefev@swemel.ru>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
-	t=1749466513;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Zonziy8bKKs9HmH5q002b/uuhFJHjUBmz9TKkYANDTw=;
-	b=E9NU+5LZrMe54Lz4cEg5CglbA8dU6J9V3aWIVVEgh8v2D3YGF7w92CeeN/ABweRo+Q0Bo9
-	kn/zoUKRKjLeZSMFHVaO62TK77nF9s3DNpRxYKjcdrqF4U5F6Khxjzxw+rINV3Un5hezrw
-	HHwec3Ig0heOjUr7evg/2umOe8trWAM=
-To: stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Dave Taht <dave.taht@bufferbloat.net>,
-	netdev@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4RUZIx0"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7425bd5a83aso3497019b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 03:55:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749466524; x=1750071324; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bSuwxTMiqoGY5WRirh9YqRM6jJaaP8lp+kq+VG0f4Z4=;
+        b=C4RUZIx0j88R2/HpV1NO6Ln3EZJVRpbUbEmHgQyGIejKs9J4IJDN2QZr7U5rkxmCTK
+         RyanQ0WSJFm+IXzTUSfbE53Nk3vhwjAdwVJ1tcA0OLryuer9RidXLbRfRjMwkYyYb/F6
+         4F6yErXCIPrDgCAHeDlLQ+pRry/attDJM4CUg1OUuyWUCqokkL3OcLxy6FYLXGPolQxT
+         7uqvXiJB7kSyNLBfcL4NpbdHR5YBE/fxeGli11+2yfHWo9LMblC5RCRC7oesTIaQ9Juu
+         GBc889XbRasDYpcUKiN7QxKx9XGah2WvSuVatJQUeny+d6zBcwRnE4d+14xit498XmOH
+         0iBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749466524; x=1750071324;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bSuwxTMiqoGY5WRirh9YqRM6jJaaP8lp+kq+VG0f4Z4=;
+        b=JczYR8SKQWnLsVD2SGhKIF8GIyqJy/vb5KPNGHGv39JjbBhI33syCFbTesTpMIcQ5f
+         BAdYiJrBfTb+NUl0R4XRQBTQKbHdhc8qaWwRHh8M7FgTranEu+ixyIX+dcqtfRM1k59h
+         M+UyABTEKa8Mwv1JMGmIoB11/UlVyOgCW8DPneZTQnQLrMAcvR9T3wrhCHUgGK8fB/5F
+         5FUQ/YSAmj3iT0R3uisjbmf/zghgfRVeBcra/yyIJ0KsV5MMQzrquT1wu9tPHxEltH51
+         SnQKVGThy88jrJzcmlBS7q7S2gp6+Y0Oag3rtIYSnoOkyWe3Lf0xKTXPS+t5gaJ/V2WZ
+         juFw==
+X-Forwarded-Encrypted: i=1; AJvYcCW3zfxX+oS8Nhwrd8wJCkvJHK9rnlouPsRU62cYRP9PF0Ska7msohaJVhQTj3T92PcPGb7hRqf5nC3QSJw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyM7p7VyULyyLupx7QU9cwgRHc9WbCjDHoGt4GY0cg2zxHLYLaX
+	QCKWfsEQ13CO219sCOQ/Qp91zVX98fe27GqRvRT4JOBEmnAn5Q8/YAE3
+X-Gm-Gg: ASbGncs1q97Yv4eT3avg813Z6C9W75ZhlGNoRdPJ7MkvrEt4pZ0mBdiG7BB9oYKuAmd
+	QvN2P3teY4Fld8ekt9RM9/iCdbzmyMCTv7HbceHulclANOMoq68WLo0M2LyzPH8D20Y7hFWjidk
+	1I5JyMKAdTJ5/wKmnfmkVk2ZmoLGnyO3AczeJMfyeXdSS3sW1rIPijoZdJdeCA3gLS+URbRpp1b
+	htiVxdByaPiuSwqPsQTmjvI31nkyN6PdOXMGyC72vTxZqXseVoqKI6ZvooTymAyphkiSRqfDqR8
+	Bna82jb6Kr0Z9NgsrDojNzzdX4uC6XieV61EzKqiJ7gXVC3KMRXt2zRpShJfqGTmDinLkGVjmBA
+	n5w703qLa
+X-Google-Smtp-Source: AGHT+IE3/b0kxC3ol+meK8Ae5m7aPYsZcL+giGsuo+6NptvitOm2cWGvDKXxU3iwx1jrjcTh9jBprg==
+X-Received: by 2002:a05:6a21:2d8f:b0:1f3:33bf:6640 with SMTP id adf61e73a8af0-21ee25554a1mr19642640637.18.1749466524305;
+        Mon, 09 Jun 2025 03:55:24 -0700 (PDT)
+Received: from Barrys-MBP.hub ([118.92.145.159])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7483318cc55sm4605114b3a.88.2025.06.09.03.55.18
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 09 Jun 2025 03:55:23 -0700 (PDT)
+From: Barry Song <21cnbao@gmail.com>
+To: lorenzo.stoakes@oracle.com,
+	akpm@linux-foundation.org
+Cc: 21cnbao@gmail.com,
+	Liam.Howlett@oracle.com,
+	anshuman.khandual@arm.com,
+	david@redhat.com,
+	dev.jain@arm.com,
+	jannh@google.com,
 	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	Gerrard Tai <gerrard.tai@starlabs.sg>,
-	Simon Horman <horms@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH 5.10] codel: remove sch->q.qlen check before qdisc_tree_reduce_backlog()
-Date: Mon,  9 Jun 2025 13:55:11 +0300
-Message-ID: <20250609105513.39042-1-arefev@swemel.ru>
+	linux-mm@kvack.org,
+	lokeshgidra@google.com,
+	osalvador@suse.de,
+	ryan.roberts@arm.com,
+	surenb@google.com,
+	v-songbaohua@oppo.com,
+	vbabka@suse.cz,
+	zhengtangquan@oppo.com
+Subject: Re: [PATCH v2] mm: madvise: use walk_page_range_vma() instead of walk_page_range()
+Date: Mon,  9 Jun 2025 22:55:13 +1200
+Message-Id: <20250609105513.10901-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <e61b8931-521f-44b4-a78d-4988ad7c70b5@lucifer.local>
+References: <e61b8931-521f-44b4-a78d-4988ad7c70b5@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+> Yeah dear god I missed this oops!
+>
+> Yeah Barry - could you revert this change for the guard region bits please? So
+> this is intentional as we do not want anything non-mm to have access to
+> install_pte.
 
-commit 342debc12183b51773b3345ba267e9263bdfaaef upstream. 
+All my fault! I wrote a multi-process/thread test to issue lots of madvise  
+calls, but it looks like I missed INSTALL_GUARD.
 
-After making all ->qlen_notify() callbacks idempotent, now it is safe to
-remove the check of qlen!=0 from both fq_codel_dequeue() and
-codel_qdisc_dequeue().
+Thanks, Ryan & Lorenzo! Does Andrew prefer to pick up the fix below, or  
+would it be better to send a new version? He’s handled fixes like this in  
+the past—happy to resend if needed.
 
-Reported-by: Gerrard Tai <gerrard.tai@starlabs.sg>
-Fixes: 4b549a2ef4be ("fq_codel: Fair Queue Codel AQM")
-Fixes: 76e3cc126bb2 ("codel: Controlled Delay AQM")
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Link: https://patch.msgid.link/20250403211636.166257-1-xiyou.wangcong@gmail.com
-Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-[Denis: minor fix to resolve merge conflict.]                                           
-Signed-off-by: Denis Arefev <arefev@swemel.ru>                                    
+From: Barry Song <v-songbaohua@oppo.com>
+Date: Mon, 9 Jun 2025 22:42:13 +1200
+Subject: [PATCH] mm: madvise: revert the walk_page_range_vma change for
+ MADV_GUARD_INSTALL
+
+Fix the broken MADV_GUARD_INSTALL reported by Ryan.
+ # guard-regions.c:719:split_merge:Expected madvise(ptr, 10 * page_size,
+ MADV_GUARD_INSTALL) (-1) == 0 (0)
+
+Reported-by: Ryan Roberts <ryan.roberts@arm.com>
+Closes: https://lore.kernel.org/linux-mm/671f8164-a90b-48d7-9446-359eb9493500@arm.com/
+Signed-off-by: Barry Song <v-songbaohua@oppo.com>
 ---
-Backport fix for CVE-2025-37798
-Link: https://nvd.nist.gov/vuln/detail/CVE-2025-37798
----
- net/sched/sch_codel.c    | 5 +----
- net/sched/sch_fq_codel.c | 6 ++----
- 2 files changed, 3 insertions(+), 8 deletions(-)
+ mm/madvise.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sched/sch_codel.c b/net/sched/sch_codel.c
-index d99c7386e24e..0d4228bfd1a0 100644
---- a/net/sched/sch_codel.c
-+++ b/net/sched/sch_codel.c
-@@ -95,10 +95,7 @@ static struct sk_buff *codel_qdisc_dequeue(struct Qdisc *sch)
- 			    &q->stats, qdisc_pkt_len, codel_get_enqueue_time,
- 			    drop_func, dequeue_func);
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 8382614b71d1..381eedde8f6d 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -1141,7 +1141,7 @@ static long madvise_guard_install(struct vm_area_struct *vma,
+ 		unsigned long nr_pages = 0;
  
--	/* We cant call qdisc_tree_reduce_backlog() if our qlen is 0,
--	 * or HTB crashes. Defer it for next round.
--	 */
--	if (q->stats.drop_count && sch->q.qlen) {
-+	if (q->stats.drop_count) {
- 		qdisc_tree_reduce_backlog(sch, q->stats.drop_count, q->stats.drop_len);
- 		q->stats.drop_count = 0;
- 		q->stats.drop_len = 0;
-diff --git a/net/sched/sch_fq_codel.c b/net/sched/sch_fq_codel.c
-index 60dbc549e991..3c1efe360def 100644
---- a/net/sched/sch_fq_codel.c
-+++ b/net/sched/sch_fq_codel.c
-@@ -314,10 +314,8 @@ static struct sk_buff *fq_codel_dequeue(struct Qdisc *sch)
- 	}
- 	qdisc_bstats_update(sch, skb);
- 	flow->deficit -= qdisc_pkt_len(skb);
--	/* We cant call qdisc_tree_reduce_backlog() if our qlen is 0,
--	 * or HTB crashes. Defer it for next round.
--	 */
--	if (q->cstats.drop_count && sch->q.qlen) {
-+
-+	if (q->cstats.drop_count) {
- 		qdisc_tree_reduce_backlog(sch, q->cstats.drop_count,
- 					  q->cstats.drop_len);
- 		q->cstats.drop_count = 0;
+ 		/* Returns < 0 on error, == 0 if success, > 0 if zap needed. */
+-		err = walk_page_range_vma(vma, start, end,
++		err = walk_page_range_mm(vma->vm_mm, start, end,
+ 					 &guard_install_walk_ops, &nr_pages);
+ 		if (err < 0)
+ 			return err;
 -- 
-2.43.0
+2.39.3 (Apple Git-146)
 
