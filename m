@@ -1,91 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D931B22B588;
-	Mon,  9 Jun 2025 23:26:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FFB22A4CC;
+	Mon,  9 Jun 2025 23:28:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749511610; cv=none; b=rHh5ktba3WWvmZ+dCz05U2n5oxkx8e4GTyQp80yy9XAiUbJWuiVgHhjF1hM/Dw+rZ7PROlw7beB8YPf4gcS7zH2fsG0gLFcecRi0ahbakALv5I8c8i0lyPovWywquYVTRm0yzxRMxXQlrJibtHFt2x+/r9378+48D9XCRRuALTs=
+	t=1749511693; cv=none; b=HxfN2XUi38tjH4uoSmPu8Pde+JUpfYXxcN0BTy0dNwFZ0at59i+7uaexjcJTR+mNsevegjleWZQryDckuzcqZxoRxN9QRJNyO4omCCGjGC//0eDO7Sc3+HYmDszJb8mDyj3t2CebEIIR0n/w2HimDw0Lb0MgGqAEFxHuomZ4jVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749511610; c=relaxed/simple;
-	bh=Aumbtb4AZN063xAleZtZe+qd8XmERe+H3IwO4eAnrHY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GW6mfe2kTkV5YLu+Lw67xxCprsb3nrDpMqyAxVBiiIKXR7f3i+QsIFj7tPaxbzD+ttEvp9MNzDxDO/n6/8Ql7OKQeyen9LIsW8v7jU7Ksw36QF57hmrJYhdyjUOd31xB7wDSuLXcwu5gqHu+rpdx3XBSIowec1U13zU+mkCRs44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VwW1qu/e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749511693; c=relaxed/simple;
+	bh=s81oEcid/OEGvazYHy8C4bU29ApBKyS/u//Zxdr+YSI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bSfMTAvaQO2e8HlLvSIh30HuhR6PLmwwPAYWDdWk6AeKMDNNZBLhFyitvrQ+muGsIO39zaUZLJi99ZJysrsraI/CK95fcBEx6HIdm/vPNG7gLwmNosgmjJlI2teIlJ8mX1XwYuVpg4Bu6F06V2DWRY/Y1JiyA6R3yg87jdXSgBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=snNA452v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VwW1qu/e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 022CFC4CEEB;
-	Mon,  9 Jun 2025 23:26:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="snNA452v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93BB6C4CEEB;
+	Mon,  9 Jun 2025 23:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749511609;
-	bh=Aumbtb4AZN063xAleZtZe+qd8XmERe+H3IwO4eAnrHY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VwW1qu/eq5uzk5bTxz5QL1bi0HpVdDQAKsRuQwOqTG8PWLp3ZZucveTlegecacn55
-	 VQqpi3aGOkB9+vuhpiUIKlHFNqx7tiYDZKV0TV1U7K7fS0XhIycJzHAKbuQ25n0q2f
-	 7luNhqqapqR7queTL/cqauXhS0d8OroHLxDLnxiXHkmgv/qEgPPwSnvFLm0qHECIJg
-	 MW78edWJ327N7FLCnv9tZMrFbWhPIhYkF0+hS9NrWN9fmvmBbQew+GUn5GH0ikc2kN
-	 jRHktvSGIvuY3SC3/SpOs+qrV73ROZDKBE6rNupb2vsPTX2emgRh9DQe5n9XRWPmtY
-	 wkoKslX9zqUpQ==
-Date: Tue, 10 Jun 2025 01:26:46 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Joel Fernandes <joelagnelf@nvidia.com>, linux-kernel@vger.kernel.org,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Xiongfeng Wang <wangxiongfeng2@huawei.com>, rcu@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH 2/2] rcu: Fix lockup when RCU reader used while IRQ
- exiting
-Message-ID: <aEdttj_vcdIEsKxG@pavilion.home>
-References: <20250609180125.2988129-1-joelagnelf@nvidia.com>
- <20250609180125.2988129-2-joelagnelf@nvidia.com>
- <aEc6sroqylvlfx_M@tardis.local>
+	s=k20201202; t=1749511693;
+	bh=s81oEcid/OEGvazYHy8C4bU29ApBKyS/u//Zxdr+YSI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=snNA452vJDcTsUcu6tEaoLgPVCt5nY/vTJEtQEddO3eHDykMbeJw2wQvLi84lceNF
+	 LeyMPxzhW8qOwCBhYaKI9qdpZswIS0yTdwPro/JldTQV/cif9J7s7jqmfnNo5oYXAW
+	 GyH36l/5SQl28xlVrVUQXuLfNldnP2JZb5hwMckmHSqC/p9IYgRc7b1qFReOrOs+/8
+	 4EP2xZu0gtto4+wRinGw+mgt+c4CzX6XvjmMCsVuKIN9aXrlpc+tB0OM3tmtsqA0Z6
+	 8Imiiv4wJ7xsMvgh1bfErer6kopdZAv29VUuiowYmio8vdGm8AfbOSxYLzYhCdQ2YX
+	 rhqAXX1auWhFw==
+Date: Mon, 9 Jun 2025 16:28:11 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Stanislav Fomichev <stfomichev@gmail.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ pabeni@redhat.com, skalluru@marvell.com, manishc@marvell.com,
+ andrew+netdev@lunn.ch, michael.chan@broadcom.com,
+ pavan.chebbi@broadcom.com, ajit.khaparde@broadcom.com,
+ sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
+ anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
+ tariqt@nvidia.com, saeedm@nvidia.com, louis.peens@corigine.com,
+ shshaikh@marvell.com, GR-Linux-NIC-Dev@marvell.com, ecree.xilinx@gmail.com,
+ horms@kernel.org, dsahern@kernel.org, shuah@kernel.org, mheib@redhat.com,
+ ruanjinjie@huawei.com, linux-kernel@vger.kernel.org,
+ intel-wired-lan@lists.osuosl.org, linux-rdma@vger.kernel.org,
+ oss-drivers@corigine.com, linux-net-drivers@amd.com,
+ linux-kselftest@vger.kernel.org, leon@kernel.org
+Subject: Re: [PATCH net-next v2 0/4] udp_tunnel: remove rtnl_lock dependency
+Message-ID: <20250609162811.020322be@kernel.org>
+In-Reply-To: <aEdsBhZ4C--0ohYj@mini-arch>
+References: <20250609162541.1230022-1-stfomichev@gmail.com>
+	<20250609153817.14d7e762@kernel.org>
+	<aEdsBhZ4C--0ohYj@mini-arch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aEc6sroqylvlfx_M@tardis.local>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Le Mon, Jun 09, 2025 at 12:49:06PM -0700, Boqun Feng a écrit :
-> Hi Joel,
-> 
-> On Mon, Jun 09, 2025 at 02:01:24PM -0400, Joel Fernandes wrote:
-> > During rcu_read_unlock_special(), if this happens during irq_exit(), we
-> > can lockup if an IPI is issued. This is because the IPI itself triggers
-> > the irq_exit() path causing a recursive lock up.
+On Mon, 9 Jun 2025 16:19:34 -0700 Stanislav Fomichev wrote:
+> On 06/09, Jakub Kicinski wrote:
+> > On Mon,  9 Jun 2025 09:25:37 -0700 Stanislav Fomichev wrote:  
+> > > Recently bnxt had to grow back a bunch of rtnl dependencies because
+> > > of udp_tunnel's infra. Add separate (global) mutext to protect
+> > > udp_tunnel state.  
 > > 
-> > This is precisely what Xiongfeng found when invoking a BPF program on
-> > the trace_tick_stop() tracepoint As shown in the trace below. Fix by
-> > using context-tracking to tell us if we're still in an IRQ.
-> > context-tracking keeps track of the IRQ until after the tracepoint, so
-> > it cures the issues.
-> > 
+> > Appears to break the selftest, unfortunately:
+> > https://netdev.bots.linux.dev/contest.html?test=udp-tunnel-nic-sh&branch=net-next-2025-06-09--21-00  
 > 
-> This does fix the issue, but do we know when the CPU will eventually
-> report a QS after this fix? I believe we still want to report a QS as
-> early as possible in this case?
+> Argh, should have run it locally first :-(
+> Looks like there is a test that sets up pretty high sleep time (1 sec)
+> and expects entry to not appear during next 'ethtool --show-tunnels' run.
+> 
+> Gonna double check and remove the case if my understanding is correct.
+> Don't think there is much value in keeping the debugfs knob just for the
+> sake of this test? LMK if you disagree; otherwise gonna repost tomorrow.
 
-If !ct_in_irq(), we issue a self-IPI, then preempt_schedule_irq() will
-call into schedule() and report a QS (if preempt/bh is not disabled, otherwise
-this is delayed to preempt_enable() or local_bh_enable() issuing preempt_schedule())
-
-If ct_in_irq(), we are already in an IRQ, then it's the same as above
-eventually.
-
-Thanks.
-
--- 
-Frederic Weisbecker
-SUSE Labs
+Hm, I see you partially deleted the sleep support in patch 3.
+Maybe it's easier to keep it since we now always sleep?
+No strong preference, tho.
