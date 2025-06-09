@@ -1,106 +1,122 @@
-Received: from e3i282.smtp2go.com (e3i282.smtp2go.com [158.120.85.26])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA99D2459D1
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 08:04:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.120.85.26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72FE88BFF;
+	Mon,  9 Jun 2025 08:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749456253; cv=none; b=GcQ1RQczV/TbI8xts8GnCe463enqlr3vAW0nE7AagOCOGpPC2zFlEHiBwtbKR5HkJT+CKiWXmL2PEmj9LK7gZXmbnBz8iA0dxWkeSQYDUhS7a3ll2eTOHqYiy6C771PJlCavwUnzsSV23Cv6RBH/hAvHECPNdlTkn8nLiwKBuEA=
+	t=1749456287; cv=none; b=V8mXLwXVhHHrY6BRUyrZiF7NbwA21sEgLCFr1NG+q0akGaRee7UA7JvqTbT/k3cA85xHnNrw7uD4jsAJnh7Q3VOXMxsKVaX5HrX7/JMJ/cWSoZACL+aXE3DoTcJemD9TvW2QtmcIULJyYd1uov6+cf883sPRAOdry9dZcnEINsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749456253; c=relaxed/simple;
-	bh=7VIXiVnLp6xUMZfeU9BYhxVdq25YMhx1Vl2EPXeFzSQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sZD+kHukKcftkufYGesWq2GSc8qfKAu6bpnD/d1+21WZ+ad9CIqy+R01GCssTTliq1CTCA0S6y2LkWJTqJikKt2rQRs4TZEW0IfsWoiILym0hxOpGTvEj/WvUI6A5tpd1CKWECplu4cNZOs020XVBiLJJTtzVSnJMZd0VL1UewY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=medip.dev; spf=pass smtp.mailfrom=em1255854.medip.dev; dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=pyF1bXyn; dkim=pass (2048-bit key) header.d=medip.dev header.i=@medip.dev header.b=S/5Sq+gx; arc=none smtp.client-ip=158.120.85.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=medip.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1255854.medip.dev
+	s=arc-20240116; t=1749456287; c=relaxed/simple;
+	bh=xEJ73sbL0eQTaJZied7LuvrzyD99mbEk3LrODqHjna8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XzyvuHB+it8nenQkb/uFuUxg3EXMQCLu6vsX+oGly3CJcdbqovjQZYxd3MBBjNF9223wR57e7W96cypmXON/NuhFiOlVmXdu1jc1k0GPaQq3wON4ltSaAkcqRuwYO4IunL7XyxJTJviC3hdhUiLoGv4zisB6kU2QEMiR37DxNHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QNTUnUU3; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="pyF1bXyn";
-	dkim=pass (2048-bit key) header.d=medip.dev header.i=@medip.dev header.b="S/5Sq+gx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smtpservice.net;
- i=@smtpservice.net; q=dns/txt; s=a1-4; t=1749456242; h=feedback-id :
- x-smtpcorp-track : date : message-id : to : subject : from : reply-to
- : sender : list-unsubscribe : list-unsubscribe-post;
- bh=OAD1I4lKD9GurTiefje3GPSgP3drA15uqZbSTFtnYlY=;
- b=pyF1bXyn0nD2/TKm3d72U4PLMotNYyu/4qIqWpy3s1GL/TS7wt3OArBSeax63Wbyu5vNs
- 0+rVPSbFMyTvDkIXDLaNtWfhIj8n2+jIwf60A1Xyvao24evohkMUkjAhhnGJEzkwjjyKhnl
- WFXMz45DoxdSsr8PlBq/Cz/Nf5RW8vHw2ukPrncEGbbJMT0r/eQDchOm45jCbUc1BeMBK+V
- S/OWGoNgUGp90XSBbeIPx7yyBBdm4tHGwAKo9QrxD1vymJwb9dydHhkb36i3ezHAu1l6nzD
- GDip9Zw1RKzIBkO5e6RjjUFqy7kQrEVQiy685TJ/HOvjooItHDi9PAGW8XaA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=medip.dev;
- i=@medip.dev; q=dns/txt; s=s1255854; t=1749456242; h=from : subject :
- to : message-id : date;
- bh=OAD1I4lKD9GurTiefje3GPSgP3drA15uqZbSTFtnYlY=;
- b=S/5Sq+gxzB8SV88a2vfKN8KLrwv/CQg2WWsxX/zGT3QzZrSHUSPallGHYsJRVsivqPg9U
- LObu9G78bCB8frSf3RJZ9Gp+PYUwCRAuhPhN0w1XrtK1Tm04FFO/R1I/I97/RXodPoYWZv9
- TqC0HQEEkKZN829XcZxxleGswJ+PKx9NwhXlmMDGrODG5aSDVxugZbfTHb/9sK6z7BI4ob3
- BYXBE0Rnzf+ei5dxvYZ4kMnnOFwb0KVrTrMAGWfLc4GrlA/430AatsTDa8wscQPHD6stmpo
- F9qYIeN3eiKTZAoSLZlicdVf0apJAb6LIWusB8fbYKBrAxKagwsO3aRXjRMQ==
-Received: from [10.152.250.198] (helo=localhost.localdomain)
-	by smtpcorp.com with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97.1-S2G)
-	(envelope-from <edip@medip.dev>)
-	id 1uOXU0-FnQW0hPmmyb-hAwU;
-	Mon, 09 Jun 2025 08:03:52 +0000
-From: edip@medip.dev
-To: perex@perex.cz,
-	tiwai@suse.com
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Edip Hazuri <edip@medip.dev>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] ALSA: hda/realtek - Add mute LED support for HP Victus 16-s1xxx and HP Victus 15-fa1xxx
-Date: Mon,  9 Jun 2025 10:59:44 +0300
-Message-ID: <20250609075943.13934-2-edip@medip.dev>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QNTUnUU3"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1749456281; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=h7tfqTud6IhH1XCgFxtry8B8MPksGWJrLr6a4xwF/rA=;
+	b=QNTUnUU3FX4Hg+2lVOmGkG1EIANvtKdzbgA/133Yy+OTYwQ6gpS/BMTzyhqgDFzhGOv9HjMJs/xHRYE98TtGmgBOivWpgXkA7/5iDYX1luLkr1xOBr8Cj97cIhfDQ0GSgj5X+1Gq1NCOWhqIdCJHv3rx6W0M3f0InU+G9Gew12Y=
+Received: from 30.74.144.144(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WdNLRJ2_1749456278 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 09 Jun 2025 16:04:39 +0800
+Message-ID: <890b825e-b3b1-4d32-83ec-662495e35023@linux.alibaba.com>
+Date: Mon, 9 Jun 2025 16:04:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Report-Abuse: Please forward a copy of this message, including all headers, to <abuse-report@smtp2go.com>
-Feedback-ID: 1255854m:1255854ay30w_v:1255854sVoHSOn4rB
-X-smtpcorp-track: sQwNTq7w3mzQ.WTbJk_JeEHmK.2nWZlwyMyRs
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mm: fix the inaccurate memory statistics issue for
+ users
+To: Michal Hocko <mhocko@suse.com>, Ritesh Harjani <ritesh.list@gmail.com>
+Cc: akpm@linux-foundation.org, david@redhat.com, shakeel.butt@linux.dev,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ rppt@kernel.org, surenb@google.com, donettom@linux.ibm.com,
+ aboorvad@linux.ibm.com, sj@kernel.org, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <f4586b17f66f97c174f7fd1f8647374fdb53de1c.1749119050.git.baolin.wang@linux.alibaba.com>
+ <87bjqx4h82.fsf@gmail.com> <aEaOzpQElnG2I3Tz@tiehlicka>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <aEaOzpQElnG2I3Tz@tiehlicka>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Edip Hazuri <edip@medip.dev>
-
-The mute led on those laptops is using ALC245 but requires a quirk to work
-This patch enables the existing quirk for the devices.
-
-Tested on my Victus 16-s1011nt Laptop and my friend's Victus 15-fa1xxx. The LED behaviour works as intended.
-
-v2:
-- add new entries according to (PCI) SSID order
-- link to v1: https://lore.kernel.org/linux-sound/20250607105051.41162-1-edip@medip.dev/#R
 
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Edip Hazuri <edip@medip.dev>
----
- sound/pci/hda/patch_realtek.c | 2 ++
- 1 file changed, 2 insertions(+)
+On 2025/6/9 15:35, Michal Hocko wrote:
+> On Mon 09-06-25 10:57:41, Ritesh Harjani wrote:
+>> Baolin Wang <baolin.wang@linux.alibaba.com> writes:
+>>
+>>> On some large machines with a high number of CPUs running a 64K pagesize
+>>> kernel, we found that the 'RES' field is always 0 displayed by the top
+>>> command for some processes, which will cause a lot of confusion for users.
+>>>
+>>>      PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+>>>   875525 root      20   0   12480      0      0 R   0.3   0.0   0:00.08 top
+>>>        1 root      20   0  172800      0      0 S   0.0   0.0   0:04.52 systemd
+>>>
+>>> The main reason is that the batch size of the percpu counter is quite large
+>>> on these machines, caching a significant percpu value, since converting mm's
+>>> rss stats into percpu_counter by commit f1a7941243c1 ("mm: convert mm's rss
+>>> stats into percpu_counter"). Intuitively, the batch number should be optimized,
+>>> but on some paths, performance may take precedence over statistical accuracy.
+>>> Therefore, introducing a new interface to add the percpu statistical count
+>>> and display it to users, which can remove the confusion. In addition, this
+>>> change is not expected to be on a performance-critical path, so the modification
+>>> should be acceptable.
+>>>
+>>> In addition, the 'mm->rss_stat' is updated by using add_mm_counter() and
+>>> dec/inc_mm_counter(), which are all wrappers around percpu_counter_add_batch().
+>>> In percpu_counter_add_batch(), there is percpu batch caching to avoid 'fbc->lock'
+>>> contention. This patch changes task_mem() and task_statm() to get the accurate
+>>> mm counters under the 'fbc->lock', but this should not exacerbate kernel
+>>> 'mm->rss_stat' lock contention due to the percpu batch caching of the mm
+>>> counters. The following test also confirm the theoretical analysis.
+>>>
+>>> I run the stress-ng that stresses anon page faults in 32 threads on my 32 cores
+>>> machine, while simultaneously running a script that starts 32 threads to
+>>> busy-loop pread each stress-ng thread's /proc/pid/status interface. From the
+>>> following data, I did not observe any obvious impact of this patch on the
+>>> stress-ng tests.
+>>>
+>>> w/o patch:
+>>> stress-ng: info:  [6848]          4,399,219,085,152 CPU Cycles          67.327 B/sec
+>>> stress-ng: info:  [6848]          1,616,524,844,832 Instructions          24.740 B/sec (0.367 instr. per cycle)
+>>> stress-ng: info:  [6848]          39,529,792 Page Faults Total           0.605 M/sec
+>>> stress-ng: info:  [6848]          39,529,792 Page Faults Minor           0.605 M/sec
+>>>
+>>> w/patch:
+>>> stress-ng: info:  [2485]          4,462,440,381,856 CPU Cycles          68.382 B/sec
+>>> stress-ng: info:  [2485]          1,615,101,503,296 Instructions          24.750 B/sec (0.362 instr. per cycle)
+>>> stress-ng: info:  [2485]          39,439,232 Page Faults Total           0.604 M/sec
+>>> stress-ng: info:  [2485]          39,439,232 Page Faults Minor           0.604 M/sec
+>>>
+>>> Tested-by Donet Tom <donettom@linux.ibm.com>
+>>> Reviewed-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+>>> Tested-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+>>> Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
+>>> Acked-by: SeongJae Park <sj@kernel.org>
+>>> Acked-by: Michal Hocko <mhocko@suse.com>
+>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>> ---
+>>> Changes from v1:
+>>>   - Update the commit message to add some measurements.
+>>>   - Add acked tag from Michal. Thanks.
+>>>   - Drop the Fixes tag.
+>>
+>> Any reason why we dropped the Fixes tag? I see there were a series of
+>> discussion on v1 and it got concluded that the fix was correct, then why
+>> drop the fixes tag?
+> 
+> This seems more like an improvement than a bug fix.
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index cd0d7ba73..c70bee626 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -10787,6 +10787,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x8b97, "HP", ALC236_FIXUP_HP_MUTE_LED_MICMUTE_VREF),
- 	SND_PCI_QUIRK(0x103c, 0x8bb3, "HP Slim OMEN", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x103c, 0x8bb4, "HP Slim OMEN", ALC287_FIXUP_CS35L41_I2C_2),
-+	SND_PCI_QUIRK(0x103c, 0x8bc8, "HP Victus 15-fa1xxx", ALC245_FIXUP_HP_MUTE_LED_COEFBIT),
- 	SND_PCI_QUIRK(0x103c, 0x8bcd, "HP Omen 16-xd0xxx", ALC245_FIXUP_HP_MUTE_LED_V1_COEFBIT),
- 	SND_PCI_QUIRK(0x103c, 0x8bdd, "HP Envy 17", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x103c, 0x8bde, "HP Envy 17", ALC287_FIXUP_CS35L41_I2C_2),
-@@ -10840,6 +10841,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x8c91, "HP EliteBook 660", ALC236_FIXUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8c96, "HP", ALC236_FIXUP_HP_MUTE_LED_MICMUTE_VREF),
- 	SND_PCI_QUIRK(0x103c, 0x8c97, "HP ZBook", ALC236_FIXUP_HP_MUTE_LED_MICMUTE_VREF),
-+	SND_PCI_QUIRK(0x103c, 0x8c9c, "HP Victus 16-s1xxx (MB 8C9C)", ALC245_FIXUP_HP_MUTE_LED_COEFBIT),
- 	SND_PCI_QUIRK(0x103c, 0x8ca1, "HP ZBook Power", ALC236_FIXUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8ca2, "HP ZBook Power", ALC236_FIXUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8ca4, "HP ZBook Fury", ALC245_FIXUP_CS35L41_SPI_2_HP_GPIO_LED),
--- 
-2.49.0
-
+Yes. I don't have a strong opinion on this, but we (Alibaba) will 
+backport it manually, because some of user-space monitoring tools depend 
+on these statistics.
