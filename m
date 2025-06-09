@@ -1,116 +1,126 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F142571CD
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 10:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23CB2522A2;
+	Mon,  9 Jun 2025 10:18:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749464222; cv=none; b=gS5iR6i8vTYLoTvQMOstjDdDudzMlXeRtnrkFm42l5Ugn/p5hHI6CiZstrScXgfawdoBGAl4Z5qlK/fLbynSlgYtPnxOJbulNZu+6PWAu33JC+ekendpdqQuQvu15G/l0E8QvsuBvmB4Xp6J+cWllLaUP5bEt3TSHk4GwSsqQBE=
+	t=1749464287; cv=none; b=J7vSih2pMJO2XEG6gHeBa3Nm3C/QAF+SvCdfqzpWme5SXR7BT6Rtk9q5DfZ1Z4e0QgS3OnIq1f5R3pmwhJaS4ax976WLbCSPieT3k9LtUJRhxAkt6IN3JmRfCNCvYAUWfAUvKFeLrhU0QgyGrU6UuvG3Kk051ErdnoANWni1spM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749464222; c=relaxed/simple;
-	bh=DOJVEz79hyx4B5UpuGMdFTop/BzR1Uh0haptnlOJ+7w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZOYR5wupzslo5BWRqjl+WN5KrQmj2GSmVvDYP2SQ9akIWGlYD64UitfAuIUHNswtR75ztjYEk0htCQRLA1CJ7ZnJYsi/5qOmeEuFs57RJSontKh1nfEny6JLF86gnQHgwiXIbit18M4+VUuw0Fgqch+GC2s14UVKg3Y5krqicno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=PzBYyc+s; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="PzBYyc+s"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-acb5ec407b1so739991166b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 03:17:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1749464219; x=1750069019; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xtWnccZdwmekAeiqyQYk4mGsFpJfFAArYZd8KxoueRo=;
-        b=PzBYyc+s7kxLNAy/Mg/jfhEE3J2VG4ByUtYeDD/xWelX9EmcHr0nsxMzzCDSoSdjw+
-         csD17h2P2koSIxb+Wknkj0ylQ8brGTbvjZjRkM9tFdteK3qPOVydmZOshx7P7Gtysgbp
-         kxBpZLSPe8m2BPSvQ3agaChmnhww5KDTvmDIs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749464219; x=1750069019;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xtWnccZdwmekAeiqyQYk4mGsFpJfFAArYZd8KxoueRo=;
-        b=Wgwiw24KT1G810RgjY+kymJuxRg6rbPPbPrnxGRM9fNgswhKOKXmnFdNJyuL1e7BtJ
-         O7vnTHh0IFADlIDZwQCxy/57jisE7udkg2naiZQhWFda2qLoSoNO0QCPL0IJ4B8csxqC
-         X+UlOYPyNTrQ86lOfE4tT46ZrAI7p4/6FDRuSybtVYMIj16MP7U4M2XKYnr0IbbT/H1j
-         uqCQH1NhkmCruxkHbGPHqyMu7fJ8mOaW1Kgwl4Bn1tk9r/hSuYVcTzE7uglQ6gNfwwdP
-         hbjcGL8pKIKPr5IMZOmqd3yc6nrhBLh3h7eSXoCH4samn7DYjrtMH+0HuH6EuBI/1xaB
-         J7bg==
-X-Gm-Message-State: AOJu0YwoYX8Ex+T4OvKw4cyEFqu4nZdgozlFNPKvKPiGBjQWHs29wKyv
-	pHx29TWxa8StUes6gC60u3BPZHaDz+c7iifP5UMPlxLqHNey7Y9SxrA/P9f1vzhFPHh8F/97csT
-	PEPBf
-X-Gm-Gg: ASbGncvq9gwaLRBLSeShhg7w82m5izFz6Ybh3doTVRvemzw61twfkMqr/3kaLFW8OvI
-	nfNrlM1NEMy3Kcu0a4jfLQuNj2oeS+XZL9j/0Am2T1Sz2hQs3/WabsmUpboY7q+6s0m+GH0Jn6i
-	63zXhbaFsnD0IaYbi1LmdyGV1UtVTkILSQ0OnRFqql4VOFEKNbQnWi8zHVnTuQyJorfbELvg93c
-	I0Q4rEegdbpDFCifPaVXpWTi5ielDy+OBiV50uu7nvc7n5FGMAkM9aT7h6Yp5Q1PEuyZ6SKFf+m
-	Kq6txcz3StkQV8VgpMQcb+Yp+LRrWAec9Ohcwt8byHzR0MA7j3+v061nIFy/S+6OSata+B9khfV
-	KBX2C9bX5kHQzM0yD409Up0/amAngo/dzILEvL9WulAZ0d7kWb4M=
-X-Google-Smtp-Source: AGHT+IH3gsxVUUgw8pn7niv+7bX9R//knvGpYp8ip0Yy0FzSdBl9gPYD+Rs9VowG2jDeFdePscxQDw==
-X-Received: by 2002:a17:907:d02:b0:ad8:9b5d:2c23 with SMTP id a640c23a62f3a-ade1aa5d45emr1170457766b.10.1749464219247;
-        Mon, 09 Jun 2025 03:16:59 -0700 (PDT)
-Received: from dario-ThinkPad-T14s-Gen-2i.amarulasolutions.com ([2.196.40.99])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1db55c7esm529257066b.49.2025.06.09.03.16.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 03:16:58 -0700 (PDT)
-From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-amarula@amarulasolutions.com,
-	Matteo Lisi <matteo.lisi@engicam.com>,
-	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Andreas Kemnade <andreas@kemnade.info>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>,
-	Eric Biggers <ebiggers@google.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Russell King <linux@armlinux.org.uk>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Stefan Eichenberger <stefan.eichenberger@toradex.com>,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 10/10] ARM: imx_v6_v7_defconfig: select CONFIG_USB_HSIC_USB3503
-Date: Mon,  9 Jun 2025 12:15:43 +0200
-Message-ID: <20250609101637.2322809-11-dario.binacchi@amarulasolutions.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250609101637.2322809-1-dario.binacchi@amarulasolutions.com>
-References: <20250609101637.2322809-1-dario.binacchi@amarulasolutions.com>
+	s=arc-20240116; t=1749464287; c=relaxed/simple;
+	bh=f+5PnMziq+6s9kssIcPM7wytiBpCtOd4FLLaGGt+BEw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KnmutVKWJkAmEGEz2o1jKPXJlPtoBtfevqLoFYZNRs+cdhL1dRtyGeO1RfociRlgoRTCzFTniICGaMdh/+x3VLBPIqvRTDd2hoikfdTWQ3tCr+zqvA9DBj0n+ehBCP/R6cRPtVB2zYbYGAHDD1BLh7u9Jbl3l3esnfE3JIrWC/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bG79p2Jp4z6L4sF;
+	Mon,  9 Jun 2025 18:16:14 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id E613A1404C5;
+	Mon,  9 Jun 2025 18:18:00 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 9 Jun
+ 2025 12:18:00 +0200
+Date: Mon, 9 Jun 2025 11:17:58 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <gregkh@linuxfoundation.org>, <rafael.j.wysocki@intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>, Ben Cheatham <Benjamin.Cheatham@amd.com>
+Subject: Re: [PATCH 3/3] ACPI: APEI: EINJ: Do not fail einj_init() on
+ faux_device_create() failure
+Message-ID: <20250609111758.0000258d@huawei.com>
+In-Reply-To: <20250607033228.1475625-4-dan.j.williams@intel.com>
+References: <20250607033228.1475625-1-dan.j.williams@intel.com>
+	<20250607033228.1475625-4-dan.j.williams@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-The driver is required by the Engicam MicroGEA GTW board.
+On Fri, 6 Jun 2025 20:32:28 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+> CXL has a symbol dependency on einj_core.ko, so if einj_init() fails then
+> cxl_core.ko fails to load. Prior to the faux_device_create() conversion,
+> einj_probe() failures were tracked by the einj_initialized flag without
+> failing einj_init().
+> 
+> Revert to that behavior and always succeed einj_init() given there is no
+> way, and no pressing need, to discern faux device-create vs device-probe
+> failures.
+> 
+> This situation arose because CXL knows proper kernel named objects to
+> trigger errors against, but acpi-einj knows how to perform the error
+> injection. The injection mechanism is shared with non-CXL use cases. The
+> result is CXL now has a module dependency on einj-core.ko, and init/probe
+> failures are handled at runtime.
+> 
+> Fixes: 6cb9441bfe8d ("ACPI: APEI: EINJ: Transition to the faux device interface")
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Ben Cheatham <Benjamin.Cheatham@amd.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  drivers/acpi/apei/einj-core.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/acpi/apei/einj-core.c b/drivers/acpi/apei/einj-core.c
+> index fea11a35eea3..9b041415a9d0 100644
+> --- a/drivers/acpi/apei/einj-core.c
+> +++ b/drivers/acpi/apei/einj-core.c
+> @@ -883,19 +883,16 @@ static int __init einj_init(void)
+>  	}
+>  
+>  	einj_dev = faux_device_create("acpi-einj", NULL, &einj_device_ops);
+> -	if (!einj_dev)
+> -		return -ENODEV;
+>  
+> -	einj_initialized = true;
+> +	if (einj_dev)
+> +		einj_initialized = true;
+>  
+>  	return 0;
+>  }
+>  
+>  static void __exit einj_exit(void)
+>  {
+> -	if (einj_initialized)
+> -		faux_device_destroy(einj_dev);
+> -
+> +	faux_device_destroy(einj_dev);
 
----
+Hi Dan,
 
-(no changes since v1)
+Thi bit is sort of fine though not really related, because
+faux_device_destroy() checks
 
- arch/arm/configs/imx_v6_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+void faux_device_destroy(struct faux_device *faux_dev)
+{
+	struct device *dev = &faux_dev->dev;
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index 917bc8a27794..3181775a214d 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -335,6 +335,7 @@ CONFIG_USB_SERIAL_FTDI_SIO=m
- CONFIG_USB_SERIAL_OPTION=m
- CONFIG_USB_TEST=m
- CONFIG_USB_EHSET_TEST_FIXTURE=m
-+CONFIG_USB_HSIC_USB3503=y
- CONFIG_USB_ONBOARD_DEV=y
- CONFIG_NOP_USB_XCEIV=y
- CONFIG_USB_MXS_PHY=y
--- 
-2.43.0
+	if (!faux_dev)
+		return;
+
+Though that check is after a dereference of faux_dev
+which doesn't look right to me.  Might be fine because
+of how the kernel is built (I can't remember where we ended
+up on topic of compilers making undefined behavior based
+optimizations).  Still not that nice from a logical point of view!
+
+>  }
+>  
+>  module_init(einj_init);
 
