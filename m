@@ -1,167 +1,162 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B178137C2A
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 14:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B1A2459FF
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 14:23:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749478879; cv=none; b=QxjZGBA2flUC1ZE6hey/Klm4McX18Xc6e3MNajbC13krBnhhIfS7Axx3kJVbqp17JH2BjKdbG5qqI9t3r+X85s2Ir+OffuUaDyLz3W0gPAvO4RW+VvohlkCpLpQL0peJsrI9nndDtF5Fatrnds4s9Ru9eSjucNUbyifBAPfVPNs=
+	t=1749478990; cv=none; b=jtWOWO6P20Yk0XHC4sqkDr4HYowZuaxVmINoDvNyOyvoeQCHFZ1DGTNzniBCioKMg72NXWbWfmrL2Z89E+5d6v6+gZpSf1TeodewthumcQZkvjJt23PlwNPFJLrHWd0Dem7UAyeJL5iUgFzuNUD7Q5tLaaHfIJmiAUkr1H750bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749478879; c=relaxed/simple;
-	bh=wNCK673TSNOcz+SGKsVUt9JPBx+XFVGFRTrhCpLO0Lk=;
+	s=arc-20240116; t=1749478990; c=relaxed/simple;
+	bh=Jj+Yt9zXtcRCfSDm7whUQ4ZIZ5JHddO5KlLP+fvfba4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ILmzeViI3OS1eGrkZO6w7aqnfiZ3Ago1XmuOH+j3o4xXMyEK0WRKoxpBxNL3ka6dXf5MHEdmEkC/JwcZP0pzw6N8NolDBrOogP+X0IW7EbP32FmoADhkXWl/171413juVfRdsOwPphXJ503laipzXzV1uVKFH3bjFOYc/qF7gF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xp2jduyh; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=AQGNFcQJtpSdtPe+UMmKjVxBW4G6OCOgRZ5QRgZ+f9dixcuXUAIGz46HvFnDA7InHxKMKoFjUF23Fozl9vmEtlP2eeLVQUl/7kriEdDip1D4ncdZl0GetXz8ZYdewyMTNzI5XH+TmpaciPm0mipUKJwLj1lEySoLevGK5q2Tb8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ix7v20EQ; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xp2jduyh"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-231d13ac4d4so67424415ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 07:21:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ix7v20EQ"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2c38df7ed2so3133858a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 07:23:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749478877; x=1750083677; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LSIEw/2MydfV3kI4WHDS//5IkvGuSP6WLCIhrE/jR14=;
-        b=xp2jduyhZG2gfbxaw4yLcKowZ2UC2RJUYojgGAVf2xwmIrfAmkQlyZj8lU2dHf43ss
-         jo4gncmRkHF0chkH0ftgkob6oStyvq8DllB6ns/kj8l6qAHUi5ZJU751u8t/ep0sAyTa
-         1hep9IOU8Dc/n6F37W8TUqziMxiUeu8YyuJ333dKYbMhM/TYf/GSGpnwJ+xDH1dzLVS9
-         wt19GsaOMicRe/RDN4sbabU4E0iDzQI0W0v9T7Kp46WDIP9AuhVmDMtsRC5OyW+6H+bS
-         JlzDm+Lo103JdWt1htKc6TSWzg615p2l/CgJSMwA4pe4r49txxN7NtKoGrKOP/AJUjjR
-         4yHQ==
+        d=google.com; s=20230601; t=1749478988; x=1750083788; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7lLdTQdrM0ytHOS+CAmb5K/o5KQV3Zi0TqZM7kL4ZL0=;
+        b=Ix7v20EQCfltUmRpI92FuSjgKVl5h/4BCa1w5LbO4E0rgxLmFWkosid6fR3GrVQNMw
+         RS63T+ia7uv8xbcGvqglfCT/B2llC0OodQhdhBRJ/M9w1M7QLg2JJ3HBw/XKZsNVLTkB
+         OpzQ37+0M4mX2jRiCe1COGqXnBjHIUJo/slqYGWZeiX4J4diRJ5TuhiX3YPTGnLApK78
+         Qvl/LA/RlE3lz7o/duivPunW3TtyZebIvHenfFGSdwvjhHifrjRcRXBkyCqDr4bZiZI+
+         BCwYn7DekeGjzLc9DVZRdopPgWtSdFyH6+bluN2AdSWy3tLeLFKmA5yZut4LV7KKu7KO
+         BuMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749478877; x=1750083677;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LSIEw/2MydfV3kI4WHDS//5IkvGuSP6WLCIhrE/jR14=;
-        b=nLH2gM1zFbqLr8c2QWxQVB84Z8a6nJCrvEXGQF7PBgbQBb+ul37NsT+2MC2UkxSMIA
-         FdD8ax3Jry/oTLpjho73fp667B1iz8p2VfxT9KEm3KhQ3jgHkSuzjf2W9gsprRpMwfCS
-         vC774OfYStlyY89n7j+qE+5/bSzzKn7DeNtZSN1m32EKqgWqlwqW6tzdXmc6T8pyE7xH
-         GPUWZkfGkTN5Qp6IG0lPk0JziTS1mSAYxwK4S0Wt2cOpGoNyV/ieJLZ4vHPT7paLjonH
-         PnE6MxP6Hah71hhsfn9VC4Njpu2qcHKJjDaoPWW4j40KkR+Hr7/PjQWIvFmV5fteNAOg
-         M4Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCUBkaUJ6qjIm7tjKzFLdxT1uK78n55/gFJn5rXj3PbnLVnqBj4dHu/T1Ogrfkv+WztGkA8cGRo1II32Ymg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyw5mIrUAIVWluPhnb6r2zOQvUWRAHK235E+P1QOZEiJ0wvJuNI
-	2w2Wjy0jqvL2fSqnbjfbmPUEJH4fkQxMbQoTvG6du+SUBQoQhKZKGYD5uHeCyXxFTBDMSrvPGIn
-	+qxUglw==
-X-Google-Smtp-Source: AGHT+IERysFaxhAHifqxHTi2VcbI8oY5rYOLco6ZrI9WGaP0rXEe5OjT6M/29a/9l0QmkI+VOJHg1ucx2CE=
-X-Received: from plbju5.prod.google.com ([2002:a17:903:4285:b0:234:45eb:5e18])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f544:b0:235:f3e6:467f
- with SMTP id d9443c01a7336-23601cf6bd8mr192715225ad.2.1749478877172; Mon, 09
- Jun 2025 07:21:17 -0700 (PDT)
-Date: Mon, 9 Jun 2025 07:21:16 -0700
-In-Reply-To: <20250609122402.GM19710@nvidia.com>
+        d=1e100.net; s=20230601; t=1749478988; x=1750083788;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7lLdTQdrM0ytHOS+CAmb5K/o5KQV3Zi0TqZM7kL4ZL0=;
+        b=D/STd1u9Er5X55vjpAEqCuIgE0NZgUtza2pvmultPXAGtSo73N+wbO2BuqJGDYtdId
+         DgdBEi3i5NrBJuIkG4rBijFsX1boazxV0K8eJdY34bcyuMDzXFQkAkNtq/MLtukSHO6K
+         Cq+UbAgemqDlzXVxhZ+oVBWUja7rHtmGsM1KuEjpIH20dyCqyE5+1T+4UP7Z29onwNje
+         n4WFuvidAz7WK5H+NP3IbhAQjKG8oL76kM7+bDaDjWsKkeopmJCkXLXXhFnxNoa1KKLd
+         K5pUWW/jHjdy6DnKEq2DS14xT5hFI1XeXCbt35qaAx6xcAAp9RUifMyHpaSmBE7T+n6x
+         wDhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWKOIWasHzy2x7eL9Q+0xnCtkczNh8uOlWqIhT4ljDotLe3YRgqxlDJWSEhjpZprA6xVseDlkE5TZ40EpI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyeo+Zx7z/uy39vZvdX0lWDIpISgCc4gTN30k8zrv0bqySQ49h0
+	77rZ6q2BsBiEz/uNU9jkajwMrxUSEv0Dh8XMqvFZbxh2bXrzj0InzPT8vXDPiFFfk5jZnQgjBwy
+	HZY6SSQ==
+X-Google-Smtp-Source: AGHT+IEXWjGA+7EHOmgVdxQCVZsaeyZ/Yk7vf9FpuYgFPmjBt1Dx/ah2+gxQKH2vNCJYIKyguPOQGlf/Vfs=
+X-Received: from pjuj14.prod.google.com ([2002:a17:90a:d00e:b0:311:485b:d057])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5345:b0:311:ffe8:20e9
+ with SMTP id 98e67ed59e1d1-31347308c79mr21849041a91.17.1749478988192; Mon, 09
+ Jun 2025 07:23:08 -0700 (PDT)
+Date: Mon, 9 Jun 2025 07:23:06 -0700
+In-Reply-To: <4a66adfa-fc10-4668-9986-55f6cf231988@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250524013943.2832-1-ankita@nvidia.com> <20250524013943.2832-2-ankita@nvidia.com>
- <aEMvbIu530nCqwhG@google.com> <20250609122402.GM19710@nvidia.com>
-Message-ID: <aEbm64VUr_GmBFzI@google.com>
-Subject: Re: [PATCH v6 1/5] KVM: arm64: Block cacheable PFNMAP mapping
+References: <20211207095230.53437-1-jiangshanlai@gmail.com>
+ <51bb6e75-4f0a-e544-d2e4-ff23c5aa2f49@redhat.com> <4a66adfa-fc10-4668-9986-55f6cf231988@zytor.com>
+Message-ID: <aEbuSmAf4aAHztwC@google.com>
+Subject: Re: [PATCH] KVM: X86: Raise #GP when clearing CR0_PG in 64 bit mode
 From: Sean Christopherson <seanjc@google.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: ankita@nvidia.com, maz@kernel.org, oliver.upton@linux.dev, 
-	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, 
-	catalin.marinas@arm.com, will@kernel.org, ryan.roberts@arm.com, 
-	shahuang@redhat.com, lpieralisi@kernel.org, david@redhat.com, 
-	aniketa@nvidia.com, cjia@nvidia.com, kwankhede@nvidia.com, kjaju@nvidia.com, 
-	targupta@nvidia.com, vsethi@nvidia.com, acurrid@nvidia.com, 
-	apopple@nvidia.com, jhubbard@nvidia.com, danw@nvidia.com, zhiw@nvidia.com, 
-	mochs@nvidia.com, udhoke@nvidia.com, dnigam@nvidia.com, 
-	alex.williamson@redhat.com, sebastianene@google.com, coltonlewis@google.com, 
-	kevin.tian@intel.com, yi.l.liu@intel.com, ardb@kernel.org, 
-	akpm@linux-foundation.org, gshan@redhat.com, linux-mm@kvack.org, 
-	ddutile@redhat.com, tabba@google.com, qperret@google.com, 
-	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, maobibo@loongson.cn
-Content-Type: text/plain; charset="us-ascii"
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Lai Jiangshan <laijs@linux.alibaba.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	Wanpeng Li <wanpengli@tencent.com>, Jim Mattson <jmattson@google.com>, 
+	Joerg Roedel <joro@8bytes.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 09, 2025, Jason Gunthorpe wrote:
-> On Fri, Jun 06, 2025 at 11:11:56AM -0700, Sean Christopherson wrote:
-> > > @@ -1612,6 +1624,10 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
-> > >  
-> > >  	vfio_allow_any_uc = vma->vm_flags & VM_ALLOW_ANY_UNCACHED;
-> > >  
-> > > +	if ((vma->vm_flags & VM_PFNMAP) &&
-> > > +	    !mapping_type_noncacheable(vma->vm_page_prot))
-> > 
-> > I don't think this is correct, and there's a very real chance this will break
-> > existing setups.  PFNMAP memory isn't strictly device memory, and IIUC, KVM
-> > force DEVICE/NORMAL_NC based on kvm_is_device_pfn(), not based on VM_PFNMAP.
-> 
-> kvm_is_device_pfn() effecitvely means KVM can't use CMOs on that
-> PFN. It doesn't really mean anything more..
+On Fri, Jun 06, 2025, H. Peter Anvin wrote:
+> On 2021-12-09 09:55, Paolo Bonzini wrote:
+> > On 12/7/21 10:52, Lai Jiangshan wrote:
+> > > From: Lai Jiangshan <laijs@linux.alibaba.com>
+> > >=20
+> > > In the SDM:
+> > > If the logical processor is in 64-bit mode or if CR4.PCIDE =3D 1, an
+> > > attempt to clear CR0.PG causes a general-protection exception (#GP).
+> > > Software should transition to compatibility mode and clear CR4.PCIDE
+> > > before attempting to disable paging.
+> > >=20
+> > > Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+> > > ---
+> > > =C2=A0 arch/x86/kvm/x86.c | 3 ++-
+> > > =C2=A0 1 file changed, 2 insertions(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > > index 00f5b2b82909..78c40ac3b197 100644
+> > > --- a/arch/x86/kvm/x86.c
+> > > +++ b/arch/x86/kvm/x86.c
+> > > @@ -906,7 +906,8 @@ int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned
+> > > long cr0)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 !load_pdptrs(v=
+cpu, kvm_read_cr3(vcpu)))
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 1;
+> > > -=C2=A0=C2=A0=C2=A0 if (!(cr0 & X86_CR0_PG) && kvm_read_cr4_bits(vcpu=
+, X86_CR4_PCIDE))
+> > > +=C2=A0=C2=A0=C2=A0 if (!(cr0 & X86_CR0_PG) &&
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (is_64_bit_mode(vcpu) || =
+kvm_read_cr4_bits(vcpu,
+> > > X86_CR4_PCIDE)))
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 1;
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 static_call(kvm_x86_set_cr0)(vcpu, cr0=
+);
+> > >=20
+> >=20
+> > Queued, thanks.
+> >=20
+>=20
+> Have you actually checked to see what real CPUs do in this case?
 
-Ah, kvm_is_device_pfn() isn't actually detecting device memory, it's simply
-detecting memory that isn't in the direct map.
+I have now, and EMR at least behaves as the SDM describes.  Why do you ask?
 
-> PFNMAP says the same thing, or at least from a mm perspective we don't
-> want drivers taking PFNMAP memory and then trying to guess if there
-> are struct pages/KVAs for it. PFNMAP memory is supposed to be fully
-> opaque.
-> 
-> Though that confusion seems to be a separate issue from this patch.
-> 
-> > 	if (kvm_is_device_pfn(pfn)) {
-> > 		/*
-> > 		 * If the page was identified as device early by looking at
-> > 		 * the VMA flags, vma_pagesize is already representing the
-> > 		 * largest quantity we can map.  If instead it was mapped
-> > 		 * via __kvm_faultin_pfn(), vma_pagesize is set to PAGE_SIZE
-> > 		 * and must not be upgraded.
-> > 		 *
-> > 		 * In both cases, we don't let transparent_hugepage_adjust()
-> > 		 * change things at the last minute.
-> > 		 */
-> > 		device = true;
-> 
-> "device" here is sort of a mis-nomer, it is really just trying to
-> setup the S2 so that CMOs are not going go to be done.
-> 
-> Calling it 'disable_cmo' would sure make this code clearer..
-> 
-> > @@ -1639,6 +1653,9 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
-> >                 return -EFAULT;
-> >  
-> >         if (kvm_is_device_pfn(pfn)) {
-> > +               if (is_vma_cacheable)
-> > +                       return -EINVAL;
-> > +
-> 
-> eg
-> 
-> if (!kvm_can_use_cmo_pfn(pfn)) {
->                if (is_vma_cacheable)
->                        return -EINVAL;
-> 
-> >                  * If the page was identified as device early by looking at
-> >                  * the VMA flags, vma_pagesize is already representing the
-> > @@ -1722,6 +1739,11 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
-> >                 prot |= KVM_PGTABLE_PROT_X;
-> >  
-> >         if (device) {
-> > +               if (is_vma_cacheable) {
-> > +                       ret = -EINVAL;
-> > +                       goto out;
-> > +               }
-> 
-> if (disable_cmo) {
->                if (is_vma_cacheable)
->                        return -EINVAL;
-> 
-> Makes alot more sense, right? If KVM can't do CMOs then it should not
-> attempt to use memory mapped into the VMA as cachable.
 
-Yes, for sure.
+kvm_intel: Clearing CR0.PG faulted (vector =3D 13)
 
-> >                 if (vfio_allow_any_uc)
-> >                         prot |= KVM_PGTABLE_PROT_NORMAL_NC;
-> >                 else
-> > 
-> 
-> Regardless, this seems good for this patch at least.
-> 
-> Jason
+
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index f79604bc0127..f90ad464ab7e 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -8637,6 +8637,23 @@ void vmx_exit(void)
+        kvm_x86_vendor_exit();
+ }
+=20
++static noinline void vmx_disable_paging(void)
++{
++       unsigned long cr0 =3D native_read_cr0();
++       long vector =3D -1;
++
++       asm volatile("1: mov %1, %%cr0\n\t"
++                    "   mov %2, %%cr0\n\t"
++                    "2:"
++                    _ASM_EXTABLE_FAULT(1b, 2b)
++                    : "+a" (vector)
++                    : "r" (cr0 & ~X86_CR0_PG), "r" (cr0)
++                    : "cc", "memory" );
++
++       pr_warn("Clearing CR0.PG %s (vector =3D %ld)\n",
++               vector < 0 ? "succeeded" : "faulted", vector);
++}
++
+ int __init vmx_init(void)
+ {
+        int r, cpu;
+@@ -8644,6 +8661,8 @@ int __init vmx_init(void)
+        if (!kvm_is_vmx_supported())
+                return -EOPNOTSUPP;
+=20
++       vmx_disable_paging();
++
+        /*
+         * Note, hv_init_evmcs() touches only VMX knobs, i.e. there's nothi=
+ng
+         * to unwind if a later step fails.
+
