@@ -1,65 +1,72 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90B21FBC91;
-	Mon,  9 Jun 2025 12:12:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D4E255F3C
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 12:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749471150; cv=none; b=mN4I4wSFA1zfyCgi1nJFD9ZmvWgssvlbsklIi30+z/F87Mp/xxpRTTn39vMFg76SH7D2FvK8rSAiLAAo7AbPtdBQruRLwd0R+UCWqOPbM6YsAeUxZcb3mDMKPqPL3E1u6mXW+YMz624lzwXD8hjl5a9i8Riu1SHKu8tW7OfbxXo=
+	t=1749471176; cv=none; b=R1AKd20vPDxyr/ijXnYxdlw5w3WKUSlZF0uAZtQ5tvJY4aNXW8BnpxASehQc4rKEygx3nRUvNfNPRbePIR/UWRNEUTPCl9RdUQpQYm8ubJGamebytBO2NKYLqCoioVGiQVlQsMsQDMIyp3CTxKsZbnPO65hgAVJKKU/i21N6xBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749471150; c=relaxed/simple;
-	bh=TkDVKO5fyPmsNSZNS1lvjQeL87wVD4JhK+2OYMRm1C4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=jqGwnbN7uYE5WkDKn5SMMB79RyT5uzlILJm+Art0MrwzHShtUxuk9DQaFdW3oi/nxwARaKGexkS0+heN0t057rHbmEy4KKNJasdMUNxPZNlcefWCIGtCQgeueADuA6eyop+qzRLmyymzbXYXmm61Twati/6bjAx7bQzqzFomvBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NY52ZD//; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749471176; c=relaxed/simple;
+	bh=SkYNBp2tGs+KkKatm/7UabgqugkSjHvT8/wNzK4u0vE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qWRsNYhZB27U/lFYV8u9hKKrTkntn49Qbrym/7x+Llta4fQgyXONIgs2ESdc+Rs21bCFa5uVKntgE60k56ekmZyf315v5tLbaWmB+nK3MKSbsHEC2JiAYFS4UBu0xMAbt3dMC3x3bUiOjppH61WQChZ1YqjTuxiMcMAgVpCqhqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nx/UDdDg; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NY52ZD//"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a528243636so2422771f8f.3;
-        Mon, 09 Jun 2025 05:12:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749471147; x=1750075947; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Vpun/tULtl0H5e1HVie0xVlPi4zB2Tu7EfAGao3SNJE=;
-        b=NY52ZD//SprPzWycI+lPrxEv4LrH4Attx5ad55Y4q6hdHwbvpanr1JnvjYD9Hvjj/X
-         HoMsvAxcpNEeEAhFdm1PfPSG5kDUJPA69Wt/DjWnu5jaFf+1twvnGMRAjJ13eGE5lcfN
-         W6xCMAMgCpddpN6zEBH40e4TXvMhj+MaGEUsxYqwUIwytEo0q+aIkdThtLqWjTRPpQYE
-         Qky7dRuH7wPDf0XW8y9r9ruoXRMvd2p89h5rIB+yPPBKaYS9bob8cDs2UpwVJl8kIzFA
-         GienTLjvunNAzq2QOHrINnF7gYephFYfYCjWBDRRxbrmcBF6XtJ1zT+bPMxqiBTyNSG3
-         RYyg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nx/UDdDg"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55994uP0007352
+	for <linux-kernel@vger.kernel.org>; Mon, 9 Jun 2025 12:12:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ozx1cNx6vaQiGhztUqHI8rPbCJVrrhmKdjb2oMY9jXM=; b=nx/UDdDgQ4IIJ//p
+	ECPmR5ls+/cK7p0h5ysYtB8+Ah5eFY1k1VKyBkyOGn+cidcMPDMH3BB7lhedvKdI
+	MA4+c7SBa5GRI/ct4Cz9/BT0FoYwFZozhKz3LbKs7uYc6TSiQh5HNhoUybwY7dP9
+	BbMWHZ4ayW3vdaFw8BXUPkpKfCekGssxB+ntEhkvhQg3MsrrmzYNMKb7L2fA3Ra0
+	q1Npl1g+pd/5OP5EgQjgTt0DKKwv5ocajGSh5bS0UVscLA3rKPLfPZwWzOUKE73Q
+	LAFK6Rmf3MDH9EDQMiQ0MjpYhFSv3OouLKcp0IJhLY8ju04G7D2SPiUWhcc/GsFy
+	cKX6ng==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474eqcdqw6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 12:12:48 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7caee988153so722083085a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 05:12:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749471147; x=1750075947;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1749471166; x=1750075966;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vpun/tULtl0H5e1HVie0xVlPi4zB2Tu7EfAGao3SNJE=;
-        b=Vwei1PyaQIPht+++tBkRaaNJ3d/E863zXW9+xS2/m7SHK3EUyp5eohC+NRRPVYY+p2
-         lPlExlT72qe80R8LbXY2bSfkqxagaKoepOOeVAivhnXOWvfyhj7FUbQk9nX/ErSePpG1
-         yTsR1kDbrsV7ObPi6mtwZVDf/oyFCosc4tUzEKlBc3LiwWZLQjW4BLhzOGWBOKBSPWfT
-         e7q8eZ8t/NYNT5GltFMgkRJyZTG7WR1rigsIagjUrYpdJyNdYOBoJKwO5jg2NUVV2GWc
-         Z7sGDmMDoxwm+2L5p/I9Ob+G9UBLMCXsthefTvjyIu/okiQug79QXQ1eVw4o2Bh8NRRy
-         8jJA==
-X-Forwarded-Encrypted: i=1; AJvYcCVa4V+UL/V4tk8k5gQq8F3rbKuR5Xd8zKO1H0y4rLiq4aC8N9KMzdmOjKd0BovUp1HVbaD8vFMy2aj55mxk@vger.kernel.org, AJvYcCXk58O26lvRV9wr9hBMumS6zXjV+/uoUkNWANHq6Swbv1bTALKfM/Ay4hjuDBntYiiVRSUq2nMdKBA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfR70GXR721ET6y1wckggx9Q7886wZVtkHamOflKNu1xCcnsc7
-	I2Rq0Ud/vgw9f/ddJYvDhfMtTw9QQaJv+gmpvqOu0yKPR9UpcDHQbD2h
-X-Gm-Gg: ASbGnct+1SdZ3j3y6HwsIcQsxDcTGj0C6JmY8JbKUnFAqHPhd7uU3vjcg3UMyV0KaPH
-	5B34bKKd6D59PxGpyZ+3wq401NR535+Vmg9Wctyfn3zZFhs/OwYSffVdj1A9jircDPIzzhkmF5O
-	5jkyNst0q6QW5M6khWSGoBUKvp6mLG6X8qAhYg5MiA1KjBhWnQMg1bJc6OFVQQbLcfoKIWWW4s9
-	QYLxLvLWtWVHg7bNdsIbmivBM7dk2Jc7cDrXofMTcpAB6sA721B7ExqIBnv5Q2PTFtMYsp44tKk
-	U1A7gQCBHNcZdORSPOJ5xFFTEhsjHj5uPcCHiVqml/jUHIizljlaG+RzNhaMQVKDe6lvt6gs1Ma
-	hftdxou00E3FUfTOTpCCqMWbM0a/1QQx+9CCro63MfP7ZWnFX0S0OS0oraExXMPU=
-X-Google-Smtp-Source: AGHT+IHj3m1slrOYKA98Ye1v9q7Jap88kFAbrM6JW9r3QccET9QUKTfsYMIkLaJZ5F8pwxecx//m7w==
-X-Received: by 2002:a05:6000:400e:b0:3a1:f564:cd9d with SMTP id ffacd0b85a97d-3a5319b4642mr10525747f8f.36.1749471146782;
-        Mon, 09 Jun 2025 05:12:26 -0700 (PDT)
-Received: from ?IPV6:2a02:6b6f:e750:f900:146f:2c4f:d96e:4241? ([2a02:6b6f:e750:f900:146f:2c4f:d96e:4241])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53229e009sm9712606f8f.16.2025.06.09.05.12.26
+        bh=ozx1cNx6vaQiGhztUqHI8rPbCJVrrhmKdjb2oMY9jXM=;
+        b=VzVwxfi7XgDrepeZGeuG5Q0kKp6AFiCVnhIrwyW6y2hcxwJFCqG3DvI5tZpxkfGj8R
+         6GXYd8XSSP3A8HoOORaMJo6M7Au6qHoXWr4TIW3asw46uzIaCDkYpLFilIzM3GLOfRq9
+         IXkWlKUR8EUIU/wgkQ1yujieH/bvynwteAXTv+nXsisPgeM1D9t+lhqpSpJJt6qLp1RG
+         CK0gPiO+2FtLRZ5O0hfE7gbIslPcBSBGisjV6qw77zKbaDsYHe4RvXMTeBBEE0eqJhRV
+         u+W34uEikN55QimmsqfHk7yylJV5BpsCV2L9mwR0zPzoGrl8L3KXQnNhn3BNIZcDeIEC
+         UQxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXS2lIAW3bbdi4Cqq+oLvSC8t29+P/zYAu3F83mzjeBepTLvdd4DteWpDOdKKH51ors3eFuxYmZ9dXvvCc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwPhj0kmxwKfSOAAyTA+dppB08SHIYJASPi2vamRSSgz7qveoT
+	k5C/v+/ATfXFLY3IPZ5Sn8pjadRcEl8DF2q9VRC2FVUETo29DFwoif8bNkFl7gRXQvi7eEehJ3I
+	ekcV47qpbhffUBIzJjW4Wslh/D7ev8eaPWMJ5IbCqJKn9+5EWeA3Q/etx897RoKVFr2c=
+X-Gm-Gg: ASbGncsYD73EiTXnsO10sZfNAH16Kp/ivaPRl8LECB5bWyDvavLbxonitJuzegS17Kd
+	i4iio5gVQ6MhrOnTbd0PsPAabFvIzTCs2EizVSG35X7+a2/2E8nk8+L0RulrcfhyKXGZCz1TIXV
+	A05E6AgOVH/ny1eaO/xeSA+Iti9+shvQ+BDHiGTxVK0jND5/Y0H/8WP2F+GcW/D4nwobSogSMXe
+	3Ab3VwfX1cJqlK7qpnmZBgHaZHiRug127OdG9yFknEt1XYMTmKpEIOqVR7EAdlZawD1Dpoe8+Mf
+	NwSXkPmFKOTJYpTEQ2duQ++ZGDAv1SvIoP2F0S8doxgQKuRw
+X-Received: by 2002:a05:620a:45a1:b0:7d3:914b:abe6 with SMTP id af79cd13be357-7d3914baf06mr669830385a.23.1749471166663;
+        Mon, 09 Jun 2025 05:12:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGWvU3u5w14J+qlrmR9XemVZPLaY5kePeOwYsaLUltPqBZJ+np6mmxSmQWTrNQY2VReY/jN3A==
+X-Received: by 2002:a05:620a:45a1:b0:7d3:914b:abe6 with SMTP id af79cd13be357-7d3914baf06mr669827185a.23.1749471166299;
+        Mon, 09 Jun 2025 05:12:46 -0700 (PDT)
+Received: from [192.168.68.118] ([5.133.47.210])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4521375bca3sm110438475e9.39.2025.06.09.05.12.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Jun 2025 05:12:26 -0700 (PDT)
-Message-ID: <b8490586-131b-4ce7-8835-aaa5437e3e97@gmail.com>
-Date: Mon, 9 Jun 2025 13:12:25 +0100
+        Mon, 09 Jun 2025 05:12:45 -0700 (PDT)
+Message-ID: <fb03dd8d-8caf-4861-b56a-2c10b070e2dc@oss.qualcomm.com>
+Date: Mon, 9 Jun 2025 13:12:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,197 +74,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] mm: khugepaged: use largest enabled hugepage order for
- min_free_kbytes
-From: Usama Arif <usamaarif642@gmail.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, ziy@nvidia.com
-Cc: Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
- linux-mm@kvack.org, hannes@cmpxchg.org, shakeel.butt@linux.dev,
- riel@surriel.com, baolin.wang@linux.alibaba.com, Liam.Howlett@oracle.com,
- npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, hughd@google.com,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, kernel-team@meta.com
-References: <20250606143700.3256414-1-usamaarif642@gmail.com>
- <063273aa-a852-492a-93da-ba5229f544ca@lucifer.local>
- <8200fd8b-edae-44ab-be47-7dfccab25a24@gmail.com>
+Subject: Re: [PATCH] soundwire: qcom: demote probe registration printk
+To: Johan Hovold <johan+linaro@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+        Sanyog Kale <sanyog.r.kale@intel.com>, linux-arm-msm@vger.kernel.org,
+        linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250523085317.11439-1-johan+linaro@kernel.org>
 Content-Language: en-US
-In-Reply-To: <8200fd8b-edae-44ab-be47-7dfccab25a24@gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
+In-Reply-To: <20250523085317.11439-1-johan+linaro@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA5MSBTYWx0ZWRfX+eno98RWz/xf
+ dndcfNCRGW3qXd0nLoji4By38OOgtFxN4OF5r4Eut59xJVwBfLwGef76vd7oQv6MSDSDtYtT1Wu
+ v5KDo/06bTSaZYv9wsnqKpK/s6rIHllxgFvN+GcW2qmxXJZmerE9l2Y4XjsT1nCuPkA3ERefjxT
+ jWvybVwTbq6cATBe+jVW6hOdskDJ3AJqOiXwfDmiTzGMMtdbVD/DFtQzv/iYH3DjuttMQuZN+dA
+ W/JAGH1aBL5k24f4CSXwH9l6jNdsF+gd/umnEX5A3sB1e1ES/cE/BuzuruRXxfeWqGmexj2rKqf
+ WcfV/7ADALNS/0ozFrNI0A+FMwEtT1j581R+Nlp9z9/DzNuJDkUYBZJx5nek1BQpdrv9io2ZKff
+ AP16RC147W1Gv6YCbKDRBcc23cGCFjvEZnQHsqr+oOflU4MmXR9sqp51e6vFRq9FOTSncYsF
+X-Authority-Analysis: v=2.4 cv=Q7TS452a c=1 sm=1 tr=0 ts=6846cfc0 cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=ZsC4DHZuhs/kKio7QBcDoQ==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=kt4YovZ3MTeTNe02vhkA:9 a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-GUID: xZJ4l3yM_avWBLJtOHGUer6RIy8vvGv9
+X-Proofpoint-ORIG-GUID: xZJ4l3yM_avWBLJtOHGUer6RIy8vvGv9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-09_05,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 phishscore=0 mlxscore=0 spamscore=0 mlxlogscore=999
+ bulkscore=0 clxscore=1015 lowpriorityscore=0 adultscore=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506090091
 
-
-> I dont like it either :)
+On 5/23/25 9:53 AM, Johan Hovold wrote:
+> Driver should generally by quiet on successful probe.
 > 
-
-Pressed "Ctrl+enter" instead of "enter" by mistake which sent the email prematurely :)
-Adding replies to the rest of the comments in this email.
-
-As I mentioned in reply to David now in [1], pageblock_nr_pages is not really
-1 << PAGE_BLOCK_ORDER but is 1 << min(HPAGE_PMD_ORDER, PAGE_BLOCK_ORDER) when
-THP is enabled.
-
-It needs a better name, but I think the right approach is just to change
-pageblock_order as recommended in [2]
- 
-[1] https://lore.kernel.org/all/4adf1f8b-781d-4ab0-b82e-49795ad712cb@gmail.com/
-[2] https://lore.kernel.org/all/c600a6c0-aa59-4896-9e0d-3649a32d1771@gmail.com/
-
-
+> Demote the Qualcomm controller registration info message to debug level
+> to make boot logs a little less noisy:
 > 
->>> +{
->>> +	return (1UL << min(thp_highest_allowable_order(), PAGE_BLOCK_ORDER));
->>> +}
->>> +
->>>  static void set_recommended_min_free_kbytes(void)
->>>  {
->>>  	struct zone *zone;
->>> @@ -2638,12 +2658,16 @@ static void set_recommended_min_free_kbytes(void)
->>
->> You provide a 'patchlet' in
->> https://lore.kernel.org/all/a179fd65-dc3f-4769-9916-3033497188ba@gmail.com/
->>
->> That also does:
->>
->>         /* Ensure 2 pageblocks are free to assist fragmentation avoidance */
->> -       recommended_min = pageblock_nr_pages * nr_zones * 2;
->> +       recommended_min = min_thp_pageblock_nr_pages() * nr_zones * 2;
->>
->> So comment here - this comment is now incorrect, this isn't 2 page blocks,
->> it's 2 of 'sub-pageblock size as if page blocks were dynamically altered by
->> always/madvise THP size'.
->>
->> Again, this whole thing strikes me as we're doing things at the wrong level
->> of abstraction.
->>
->> And you're definitely now not helping avoid pageblock-sized
->> fragmentation. You're accepting that you need less so... why not reduce
->> pageblock size? :)
->>
-
-Yes agreed.
-
->> 	/*
->> 	 * Make sure that on average at least two pageblocks are almost free
->> 	 * of another type, one for a migratetype to fall back to and a
->>
->> ^ remainder of comment
->>
->>>  	 * second to avoid subsequent fallbacks of other types There are 3
->>>  	 * MIGRATE_TYPES we care about.
->>>  	 */
->>> -	recommended_min += pageblock_nr_pages * nr_zones *
->>> +	recommended_min += min_thp_pageblock_nr_pages() * nr_zones *
->>>  			   MIGRATE_PCPTYPES * MIGRATE_PCPTYPES;
->>
->> This just seems wrong now and contradicts the comment - you're setting
->> minimum pages based on migrate PCP types that operate at pageblock order
->> but without reference to the actual number of page block pages?
->>
->> So the comment is just wrong now? 'make sure there are at least two
->> pageblocks', well this isn't what you're doing is it? So why there are we
->> making reference to PCP counts etc.?
->>
->> This seems like we're essentially just tuning these numbers someswhat
->> arbitrarily to reduce them?
->>
->>>
->>> -	/* don't ever allow to reserve more than 5% of the lowmem */
->>> -	recommended_min = min(recommended_min,
->>> -			      (unsigned long) nr_free_buffer_pages() / 20);
->>> +	/*
->>> +	 * Don't ever allow to reserve more than 5% of the lowmem.
->>> +	 * Use a min of 128 pages when all THP orders are set to never.
->>
->> Why? Did you just choose this number out of the blue?
-
-
-Mentioned this in the previous comment.
->>
->> Previously, on x86-64 with thp -> never on everything a pageblock order-9
->> wouldn't this be a much higher value?
->>
->> I mean just putting '128' here is not acceptable. It needs to be justified
->> (even if empirically with data to back it) and defined as a named thing.
->>
->>
->>> +	 */
->>> +	recommended_min = clamp(recommended_min, 128,
->>> +				(unsigned long) nr_free_buffer_pages() / 20);
->>> +
->>>  	recommended_min <<= (PAGE_SHIFT-10);
->>>
->>>  	if (recommended_min > min_free_kbytes) {
->>> diff --git a/mm/shmem.c b/mm/shmem.c
->>> index 0c5fb4ffa03a..8e92678d1175 100644
->>> --- a/mm/shmem.c
->>> +++ b/mm/shmem.c
->>> @@ -136,10 +136,10 @@ struct shmem_options {
->>>  };
->>>
->>>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->>> -static unsigned long huge_shmem_orders_always __read_mostly;
->>> -static unsigned long huge_shmem_orders_madvise __read_mostly;
->>> -static unsigned long huge_shmem_orders_inherit __read_mostly;
->>> -static unsigned long huge_shmem_orders_within_size __read_mostly;
->>> +unsigned long huge_shmem_orders_always __read_mostly;
->>> +unsigned long huge_shmem_orders_madvise __read_mostly;
->>> +unsigned long huge_shmem_orders_inherit __read_mostly;
->>> +unsigned long huge_shmem_orders_within_size __read_mostly;
->>
->> Again, we really shouldn't need to do this.
-
-Agreed, for the RFC, I just did it similar to the anon ones when I got the build error
-trying to use these, but yeah a much better approach would be to just have a
-function in shmem that would return the largest shmem thp allowable order.
-
-
->>
->>>  static bool shmem_orders_configured __initdata;
->>>  #endif
->>>
->>> @@ -516,25 +516,6 @@ static bool shmem_confirm_swap(struct address_space *mapping,
->>>  	return xa_load(&mapping->i_pages, index) == swp_to_radix_entry(swap);
->>>  }
->>>
->>> -/*
->>> - * Definitions for "huge tmpfs": tmpfs mounted with the huge= option
->>> - *
->>> - * SHMEM_HUGE_NEVER:
->>> - *	disables huge pages for the mount;
->>> - * SHMEM_HUGE_ALWAYS:
->>> - *	enables huge pages for the mount;
->>> - * SHMEM_HUGE_WITHIN_SIZE:
->>> - *	only allocate huge pages if the page will be fully within i_size,
->>> - *	also respect madvise() hints;
->>> - * SHMEM_HUGE_ADVISE:
->>> - *	only allocate huge pages if requested with madvise();
->>> - */
->>> -
->>> -#define SHMEM_HUGE_NEVER	0
->>> -#define SHMEM_HUGE_ALWAYS	1
->>> -#define SHMEM_HUGE_WITHIN_SIZE	2
->>> -#define SHMEM_HUGE_ADVISE	3
->>> -
->>
->> Again we really shouldn't need to do this, just provide some function from
->> shmem that gives you what you need.
->>
->>>  /*
->>>   * Special values.
->>>   * Only can be set via /sys/kernel/mm/transparent_hugepage/shmem_enabled:
->>> @@ -551,7 +532,7 @@ static bool shmem_confirm_swap(struct address_space *mapping,
->>>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->>>  /* ifdef here to avoid bloating shmem.o when not necessary */
->>>
->>> -static int shmem_huge __read_mostly = SHMEM_HUGE_NEVER;
->>> +int shmem_huge __read_mostly = SHMEM_HUGE_NEVER;
->>
->> Same comment.
->>
->>>  static int tmpfs_huge __read_mostly = SHMEM_HUGE_NEVER;
->>>
->>>  /**
->>> --
->>> 2.47.1
->>>
+> qcom-soundwire 6ab0000.soundwire: Qualcomm Soundwire controller v2.0.0 Registered
+> qcom-soundwire 6ad0000.soundwire: Qualcomm Soundwire controller v2.0.0 Registered
+> qcom-soundwire 6b10000.soundwire: Qualcomm Soundwire controller v2.0.0 Registered
+> qcom-soundwire 6d30000.soundwire: Qualcomm Soundwire controller v2.0.0 Registered
 > 
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
+
+
+Acked-by: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
+
+--srini
+>  drivers/soundwire/qcom.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
+> index 295a46dc2be7..3265c39e6b51 100644
+> --- a/drivers/soundwire/qcom.c
+> +++ b/drivers/soundwire/qcom.c
+> @@ -1648,9 +1648,9 @@ static int qcom_swrm_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto err_master_add;
+>  
+> -	dev_info(dev, "Qualcomm Soundwire controller v%x.%x.%x Registered\n",
+> -		 (ctrl->version >> 24) & 0xff, (ctrl->version >> 16) & 0xff,
+> -		 ctrl->version & 0xffff);
+> +	dev_dbg(dev, "Qualcomm Soundwire controller v%x.%x.%x registered\n",
+> +		(ctrl->version >> 24) & 0xff, (ctrl->version >> 16) & 0xff,
+> +		ctrl->version & 0xffff);
+>  
+>  	pm_runtime_set_autosuspend_delay(dev, 3000);
+>  	pm_runtime_use_autosuspend(dev);
 
