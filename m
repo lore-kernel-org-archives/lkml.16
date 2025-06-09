@@ -1,41 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235FE1442F4
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 16:29:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86DE420A5C4;
+	Mon,  9 Jun 2025 16:29:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749486555; cv=none; b=D+YR7iRryZm49NWrQAhzrfVI8sTQKAaUkxIRsjJ4ZLky730fQ6mChu44jTNTnXeZLfl7OTwY6lqgMRKUBtXzvDjw/YU2XEz2kM6sjdXE7RG/NXZhke6WHJ9vLjhNVQAdVQzWHN/vNnpDmmasDYUhuFhN+pDO8RuHng5BLOtfmAQ=
+	t=1749486572; cv=none; b=FeClPL6a/3TgQrVk1vLG7AZeQXzIprRAKFLMPiyJXyKOMH0F/+rONHMlfVnuENzJrzGzGA+1RXAWjRWKyQ3CWnmSZaliZgMDhuyOG1kRNLoQDbWDcuMY3FXP9Gz3Wb7U+UvbhiKSeYyNmVk0Ii4ig0JuGFsfTa4I2Av46u8t9NE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749486555; c=relaxed/simple;
-	bh=/WIK+Zu5FCGDxkkG1lsiJBU0oVY383XAcjU5SWOwYcs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uMHa9MNtEuoBoDM9nu6tGOQ6WJZddrGMpNIAG7nTBShM3FYIf2jleMGdF62XxUekct1YRSVnePQjMANNkehE5FpBhbQE6vM1Dbc5pqGXx/wb48idb7HeyNALD3oEISEQRFMQkxMqRoJYrhiu0MJbniqZI+thFgQ0U1PMnmvZkkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EF29yWKH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749486572; c=relaxed/simple;
+	bh=yXciaEyW1Nu3aWIMvqyhWQB7hBKb6HXfNQvi81A7wts=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=nO/cxKSNMZrIvplFk88H97uYbUh+Kdm8w3elVidYcBqPvczUhiqtAcx4uE6b2SaiJrC6TE8fEQlbejVV5q9//HzvrDQKMIkZAe18humVxLdLNsGJNpQqxvAuoCMdmNph8rI+0p3BkqlHN5i2NZ6l9cAcfPggHT3AE8wWaqru5IA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hGXgEiwr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EF29yWKH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BE83C4CEEB;
-	Mon,  9 Jun 2025 16:29:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hGXgEiwr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4BDFC4CEEB;
+	Mon,  9 Jun 2025 16:29:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749486554;
-	bh=/WIK+Zu5FCGDxkkG1lsiJBU0oVY383XAcjU5SWOwYcs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EF29yWKH+jAhy1Po6wgH168ShjzMjameCB+oH1oOGd9v/b3FBDa5RuwyRhXa9bEAk
-	 +diAh2VmtK+VEiXsq/Uhc+f4ndWsHxY/kc9IoBu3wTXuWKpLo+Ax153UgYWrdDd6TS
-	 JVLWF4lV3UZS8qoOlodvMoptpLj5eEen/d3xfZLfaJF+VUNImnrooT9lmfwl2l50mn
-	 PefXjAvyoPLtMRo0Bcn0cCl6cBj93ZGnzYyiPlewzhDHC+YWxXGPqU0eiY+JawHtO1
-	 PMk2rN5UdhioxGYbvMrjGHpTBAen9ffLhDHrztRtsiKSw3E2v9lX3gedxml9vfjMqY
-	 EAo+wbB5sCNEw==
-Date: Mon, 9 Jun 2025 06:29:13 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Andrea Righi <arighi@nvidia.com>
-Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
-	Jonathan Corbet <corbet@lwn.net>, Emily Soto <emilys@nvidia.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched_ext: Documentation: Clarify time slice handling in
- task lifecycle
-Message-ID: <aEcL2Z42Krv0EEYt@slm.duckdns.org>
-References: <20250609162342.18790-1-arighi@nvidia.com>
+	s=k20201202; t=1749486572;
+	bh=yXciaEyW1Nu3aWIMvqyhWQB7hBKb6HXfNQvi81A7wts=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=hGXgEiwrqdKt5fJahWntoVSywnIP0ayMDN+3ECiZopOrsiXt94NGPcAcs5wFA8N4P
+	 weYLfD3CkXXY8NLaoC4nAg4L/pWKR5SDxd6uh8nFsZ+xDk6jBiwZ70s6R2sxZKB4uX
+	 dn81XsF2YiV3rEg3lzg8TBpAWOLrqWMMTIc1HEaZfknZ5X94zZ+EKhMlhMSz37QOPx
+	 5OFU65Qw+WLfFP135yXiWSETBsIQUQg3Kcto+KiFwh4/E0trRmVZycAAuGgspqev43
+	 6zX/XAf0kuScmFiIdOJ6vG3ii6cwhET1tARhqWCBaafXsY20QnhWzJpC4dqe0YIl+z
+	 yHgxHZn+hEHBA==
+Date: Mon, 9 Jun 2025 11:29:30 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	cros-qcom-dts-watchers@chromium.org,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com,
+	quic_mrana@quicinc.com, Sherry Sun <sherry.sun@nxp.com>
+Subject: Re: [PATCH v3 2/2] PCI/portdrv: Add support for PCIe wake interrupt
+Message-ID: <20250609162930.GA749610@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,23 +49,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250609162342.18790-1-arighi@nvidia.com>
+In-Reply-To: <7b91b725-6b47-bf8f-e6e5-e4584f274ec4@oss.qualcomm.com>
 
-On Mon, Jun 09, 2025 at 06:23:42PM +0200, Andrea Righi wrote:
-> It is not always obvious how a task's time slice can be refilled, either
-> explicitly from ops.dispatch() or automatically by the sched_ext core,
-> to skip subsequent ops.enqueue() and ops.dispatch() calls. This
-> typically happens when the task is the only one running on a CPU.
-> 
-> To make this behavior easier to understand, update the task lifecycle
-> diagram to explicitly document how time slice handling works in such
-> cases.
-> 
-> Signed-off-by: Andrea Righi <arighi@nvidia.com>
+On Mon, Jun 09, 2025 at 11:27:49AM +0530, Krishna Chaitanya Chundru wrote:
+> On 6/6/2025 1:56 AM, Bjorn Helgaas wrote:
+> > On Thu, Jun 05, 2025 at 10:54:45AM +0530, Krishna Chaitanya Chundru wrote:
+> > > PCIe wake interrupt is needed for bringing back PCIe device state
+> > > from D3cold to D0.
 
-Applied to sched_ext/for-6.17.
+> > > +	wake = devm_fwnode_gpiod_get(&pdev->dev, of_fwnode_handle(dn),
+> > > +				     "wake", GPIOD_IN, NULL);
+> > 
+> > I guess this finds "wake-gpio" or "wake-gpios", as used in
+> > Documentation/devicetree/bindings/pci/qcom,pcie.yaml,
+> > qcom,pcie-sa8775p.yaml, etc?  Are these names specified in any generic
+> > place, e.g.,
+> > https://github.com/devicetree-org/dt-schema/tree/main/dtschema/schemas/pci?
+> > 
+> I created a patch to add them in common schemas:
+> https://lore.kernel.org/all/20250515090517.3506772-1-krishna.chundru@oss.qualcomm.com/
 
-Thanks.
-
--- 
-tejun
+Thanks.  I think it will help other DT writers if we can include a
+link to the relevant dtschema commit in this commit log.
