@@ -1,184 +1,118 @@
-Received: from vern.gendns.com (vern.gendns.com [98.142.107.122])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59ADC1624CE;
-	Mon,  9 Jun 2025 15:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.142.107.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA5D1A5BA8
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 15:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749481374; cv=none; b=KwYATFUVKrbzCeUow/zoBanfucD90KXxD+vgJd9F4G9Nf5CE2qyVr0gWWCV//EDB0EgGaaWxGpwObn97hmhdCKIMPY9tlQTzzd3xQyLdBe/RMY+++DbmtEyskBUcMF3ni2XjVuX8CnaGvvXb6NlgOhCDk646mwrLj9tpUzj1oCA=
+	t=1749481387; cv=none; b=c2l3oUjahV5lhE8PBRVyCIPyX7W37zpa0yXUOsrbEh3/YOIkVZxB0CotySsziYAbXkio+yyW7HqNu21PTyAFLYjAa9uDXitddLss7dBJPipt2W8nFazj9jcBRa5iiB/3GvrMiBMZq/KnrFLouiD3tDf5R4Q268Cc3ll7+iQpnJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749481374; c=relaxed/simple;
-	bh=lvpaPlNJWBTD2TEU6WFplLK9h/nftYxIuKi3jsY5szw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZvMExKo/Kuu8S+EBcqBvF4z/fawO4b/v0TXO8U4i6MC3Y/0RiH24AeJfQKwb9JqpinF6KdhRXFS7r5BxSc74vS5jFothO9TnTT/9G9QvwuhP230X0fKd03bWheHN3aGm6JSvxCyMaVsQBa9xJb+dB+vjDu1Sm+7mHXeBEFAq78o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com; spf=pass smtp.mailfrom=lechnology.com; dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b=AKhmu5NE; arc=none smtp.client-ip=98.142.107.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lechnology.com
+	s=arc-20240116; t=1749481387; c=relaxed/simple;
+	bh=RXAVys5zSBY8z2t6y8XO5fPsTD7X2RM71zurpDCnhqM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rg3E6aMz6tEq0lTySLHHcap5xgNSjV+r2WesojzF5ZrqcuYvVQtUMNLBe5dFHK1FXRsqEQys5BeFRF2k8j77VH720r1AtvhedFft8tGP08tOvJ08ZgSyn6/BLbtTPMlUlx0GI+oSuCzZmmTpfew2S1iG8uS56iyKFIdgBgRxqaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cISdoLgm; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="AKhmu5NE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=L0O5QwSYDvJOcXXECKxmll7ON/5dbbzzpg68D5pSlyQ=; b=AKhmu5NErKA6uUNTk2lTOSLuFZ
-	FMU/z9Q9zg/jPPk1EVm0jt8n7KEhSmvmaJbKToOC9Zfpha2inqRk/pB5a3XlZj/v0su3XF7Nh/35d
-	jPscLFatIiYBqz63Ia0hrZS0LuUPSOih+guKwycQS+pgLfn0npbwrv3x95q3vaB0Jvonmh1TCg2I8
-	L+L+AMHWqOw41QkN8AHYmcpWswLPC0oz8tBFiGv58IS+i6Q4tp1BUDOCp0HobDZhdF96aNP7u7j0X
-	a7pioKuMAyN8Hl0oB44DniDcMf6N8Z31R0CHHtyA2wtDzwxUdKfGb2VmGhO6Bw30trw1/pf6Rg0K6
-	TE4njDVA==;
-Received: from [2600:8803:e7e4:1d00:c2e7:1c16:22c5:b461] (port=44748)
-	by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <david@lechnology.com>)
-	id 1uOdmW-0000000031a-2mW4;
-	Mon, 09 Jun 2025 10:46:32 -0400
-Message-ID: <04b5b857-4996-4278-8fab-7eb816b1febe@lechnology.com>
-Date: Mon, 9 Jun 2025 09:46:31 -0500
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cISdoLgm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749481384;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JNcpH+bcZai1yfLZlLefAAm7I6glTiPKEZc98aEB9ag=;
+	b=cISdoLgm0LnyIYyvNABpesbp2rMXdNdGKjZC3yA2VIce1fpqOfTpZuvdgvY7e/2YDO1Is0
+	+pfu7nIcSTSzI6XlFXwJfqP25DyEGhbKz+hu4d+zaznOnFjNSpPtaJhb4Tyl95XU0Gu4HU
+	KrJb6dLnKWt1ixyKKqGQgDzzsrNIDR4=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-619-wXElXXVvPBu0BwYoHA3YPw-1; Mon, 09 Jun 2025 11:03:04 -0400
+X-MC-Unique: wXElXXVvPBu0BwYoHA3YPw-1
+X-Mimecast-MFC-AGG-ID: wXElXXVvPBu0BwYoHA3YPw_1749481383
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6fad8b4c92cso118588496d6.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 08:03:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749481383; x=1750086183;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JNcpH+bcZai1yfLZlLefAAm7I6glTiPKEZc98aEB9ag=;
+        b=A1KMacYERxCaV+wVl+QOtLrajxk4Y2ZnqspHxCm/brxmcBTJPG+yeu/YjtXAAoK6tw
+         3vjmExQM16Aebs4ON6KyrNEkH5jIEnv0b9tSTEaOH01oMnDcB4gynoyYY6cRUjHwcgtj
+         zRdgF8HIglAtdgaApnEyGEZQyExHqqSfYBcAooEgMqaaJZx0mKWtjE+soyOjLmNSe5YD
+         zgLjfPWJdWTVi+XkGIsKV4Nb55cvEODAMkjjz8H5Wlnbfq+7ApGIlG9fv3idyuSZ9PS3
+         bHC6JrG5G+0DqieppHqit7yto6hB34VK1MhFcnJAN5gk0yiJvYbP8T/CCa6URaNVbdwK
+         zE0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV7T5hqDBdQbsqxVfGmuwPeSrTbGs0vHh5jr569ydVv7t4T7oqTsgCxSWttiMGVV+XwjoMfsgmZlrfG8N0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7n5/t3EjCfE1zsyk32bUxGFGVG0AR36/F2DcFiwJXKeQ9tZ2G
+	WiC01eTYMbboDNHVzrWpHpiTCxyocLCd9q0rFmTv+YLo3ZIhwjQSXloZc8SSJ3eQpJHhOhiiRR2
+	dRsv3Myh0cIdkzhTlyueR7pJXJRMO4SuFp0vOBX5QM5cPkEsZPYJzu3lO1rVb3ePkLQ==
+X-Gm-Gg: ASbGncv7/qyk+sj95YNu8LRh6qPRin0EpQiFEwaqyxd+lgt0J2xI1ypzlWRnPCYmyuW
+	wfEOoa+5tQdoGnk/IaGrNlKLoiD0h+t8NAAg4ld8EaN6wjw8u5bWW5Xg4UZ+6H/Bf0ix+zRnhq4
+	/ynNVYdQSL+AsIWQzUufy4BPMPe75+PbC46EWjJ2GU+NxCQjOhUP+hkIMSC0XsgxZ6Up6W0UKTx
+	0rWzP287nJEXcFT7PyZmD+uOTZvAGcszTjzHDN7B/tHgL62QANydYj1Y78bRqneTDVU6WmiSEAg
+	soKVdIeqBJHNKg==
+X-Received: by 2002:a05:6214:c68:b0:6fa:ca81:4121 with SMTP id 6a1803df08f44-6fb0905b95fmr182520736d6.44.1749481382018;
+        Mon, 09 Jun 2025 08:03:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG31IbS/tH29+tac1BfQOs8d7QAQpKa2+wtvwN79ZFd1EW+t9uEZUIMv1somHhXHI9x3fa1xA==
+X-Received: by 2002:a05:6214:c68:b0:6fa:ca81:4121 with SMTP id 6a1803df08f44-6fb0905b95fmr182520316d6.44.1749481381607;
+        Mon, 09 Jun 2025 08:03:01 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb09b29fbdsm52483506d6.89.2025.06.09.08.03.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 08:03:01 -0700 (PDT)
+Date: Mon, 9 Jun 2025 11:02:57 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Tal Zussman <tz2294@columbia.edu>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	David Hildenbrand <david@redhat.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] userfaultfd: correctly prevent registering
+ VM_DROPPABLE regions
+Message-ID: <aEb3od8YQTvDQu4q@x1.local>
+References: <20250607-uffd-fixes-v2-0-339dafe9a2fe@columbia.edu>
+ <20250607-uffd-fixes-v2-1-339dafe9a2fe@columbia.edu>
+ <20250607150438.4439e19f74693445212d93df@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: phy: Convert ti,da830-usb-phy to DT schema
-To: "Rob Herring (Arm)" <robh@kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250607212638.744524-1-robh@kernel.org>
-Content-Language: en-US
-From: David Lechner <david@lechnology.com>
-Autocrypt: addr=david@lechnology.com; keydata=
- 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
-In-Reply-To: <20250607212638.744524-1-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250607150438.4439e19f74693445212d93df@linux-foundation.org>
 
-On 6/7/25 4:26 PM, Rob Herring (Arm) wrote:
-> Convert the TI DA830 USB PHY binding to DT schema format. Add "clocks"
-> and "clock-names" which are already in use.
+On Sat, Jun 07, 2025 at 03:04:38PM -0700, Andrew Morton wrote:
+> On Sat, 07 Jun 2025 02:40:00 -0400 Tal Zussman <tz2294@columbia.edu> wrote:
 > 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
+> > vma_can_userfault() masks off non-userfaultfd VM flags from vm_flags.
+> > The vm_flags & VM_DROPPABLE test will then always be false, incorrectly
+> > allowing VM_DROPPABLE regions to be registered with userfaultfd.
+> > 
+> > Additionally, vm_flags is not guaranteed to correspond to the actual
+> > VMA's flags. Fix this test by checking the VMA's flags directly.
+> 
+> Wondering if we should backport this.  afaict we don't know the
+> userspace impact of this because nobody has tried it!
 
-...
+Yes that's fair question.  Per my limited understanding of MAP_DROPPABLE
+(even if as a generic flag), I'd be surprised if someone tries to enable
+userfaultfd on it, being succeeded or not.. or requiring that to properly
+fail on any stable branches.  AFAIU that's the only possible effect we can
+expect from a backport.
 
-> diff --git a/Documentation/devicetree/bindings/phy/ti,da830-usb-phy.yaml b/Documentation/devicetree/bindings/phy/ti,da830-usb-phy.yaml
-> new file mode 100644
-> index 000000000000..e18746f80982
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/ti,da830-usb-phy.yaml
-> @@ -0,0 +1,49 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/ti,da830-usb-phy.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: TI DA8xx/OMAP-L1xx/AM18xx USB PHY
-> +
-> +maintainers:
-> +  - David Lechner <david@lechnology.com>
-> +
-> +description: >
-> +  This device controls the PHY for both the USB 1.1 OHCI and USB 2.0 OTG
-> +  controllers on DA8xx SoCs. Consumers of this device should use index 0 for
-> +  the USB 2.0 phy device and index 1 for the USB 1.1 phy device.
+IMHO for this case we can avoid backporting until anyone requested with an
+explicit use case.
 
-Probably doesn't matter much, but we could move the description
-of the #phy-cells to that property.
+Thanks,
 
-> +
-> +  It also requires a "syscon" node with compatible = "ti,da830-cfgchip", "syscon"
-> +  to access the CFGCHIP2 register.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: ti,da830-usb-phy
-> +
-> +  '#phy-cells':
-> +    const: 1
-> +
-> +  clocks:
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    items:
-> +      - const: usb0_clk48
-> +      - const: usb1_clk48
-> +
-> +required:
-> +  - compatible
-> +  - '#phy-cells'
-
-Probably should make clocks and clock-names required.
-
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    usb-phy {
-> +        compatible = "ti,da830-usb-phy";
-> +        #phy-cells = <1>;
-> +        clocks = <&usb_phy_clk 0>, <&usb_phy_clk 1>;
-> +        clock-names = "usb0_clk48", "usb1_clk48";
-> +    };
+-- 
+Peter Xu
 
