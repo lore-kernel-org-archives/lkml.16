@@ -1,105 +1,179 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2085.outbound.protection.outlook.com [40.107.244.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B4D3398B;
-	Mon,  9 Jun 2025 15:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749484565; cv=none; b=Pzdm5KWZgFukI/rrnDaLxV1vaL3BW60bBWmUVhtseB6QLH82RsqA6EL/rkm5dYZHNcl5HxjF8mclNktyNHhc+u7mEI9aabxHCuo9p3bBWyOevnEAgFmXdR6uBR1eFcOdj9iEmQjoLmZdqdhj6cqHM4ienG1Kl3AV9nmLIl68NZk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749484565; c=relaxed/simple;
-	bh=v/HOs5wYPXahQ/BppAotUsbvMIqbvajKilLGW22iZyA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C8AIXZyK3/y9DNNh6yB9kCo3N5T2hfsfboQL+EqPkqyg7mm82ZjLUHxFm+XGps19oeF4kArdiEyGmKLGDbE4SaRfcMc/mOjkMdkgelk005NewmrEqfRuBOpmhHqgqA8NNFvrOoNRKUWLw3pBA9rMEY9HLlYYISO2QPgR66U2x+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=Zi32pe91; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CBC541C69;
+	Mon,  9 Jun 2025 15:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749484591; cv=fail; b=XjQhY3on3g6lrRd2kizxJALPSYMnOX6eb260Mbu8bl8pweGXaTqFalqiRY8RPyhfkGchltRcjw1y+xA3/rU30OD5+hyCcqL6kuriP5wNA9dc4Pvnp2Dwp8ECMBJl4ZgjmJsUGLVJXHMEp1GwGNPQ3t/rY8ooq0nkX5WcysZFTxo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749484591; c=relaxed/simple;
+	bh=d0sKiADcnlAo14rTobngqe8/8Ak8hig0XhpQPa4hmWw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=o9eOEmQ0dWuJw/gsXidbXV5xawbKvYdl4AiIINJmVMfbaPE7xoOs+eeTSeQVVEvQ0MJ1sgiwHYIffHgzCijC6G1pMdPkQiAvx5MSKxwb8KpYSBlyHznv8BiBJhQvsHCHLTnpGdWBkxRQ9yCrXov/1Fxh+ScpvnoYXRymBNCFVOY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Pigw/33h; arc=fail smtp.client-ip=40.107.244.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Zi32pe91"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55998ewc029069;
-	Mon, 9 Jun 2025 08:55:55 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=c7wxP6T9T+fWiIwiyEdpN+6mV
-	3/fDKk1w5mqHrm9StU=; b=Zi32pe91oTdDj9pWov31QZFZFi74GIDH1O5oveE3M
-	X3RWZqP6wqjDvod05hzTTTtdrSPIRUqj/pouyXkn3pxBMaLKQFkGchkCz1qXbATi
-	HNLIZXXa4dda/G95aVX0kua6jPgWjoIbkdXTWm4yPFJHuVioVD8i594xlilcgE07
-	KbxDEzer8xft5hrMdl0hGA9dyeR5GjIrRhwMXwStB7XyzGmsLzbWZ53yNOmP+740
-	J9NRa6EShWUeESzHjmr5NvEQAQD7jonHY3bPGHTmvqnntp3Vcic0dBE9EDYjeaoz
-	O8V8Gz6BlTSJN1BRvTFuXQ4wt1sZICQ9/2OHYGDqSdV0A==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 475vq80qhv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Jun 2025 08:55:55 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Mon, 9 Jun 2025 08:55:54 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Mon, 9 Jun 2025 08:55:54 -0700
-Received: from 64799e4f873a (unknown [10.28.168.138])
-	by maili.marvell.com (Postfix) with SMTP id 2A91F3F704D;
-	Mon,  9 Jun 2025 08:55:50 -0700 (PDT)
-Date: Mon, 9 Jun 2025 15:55:49 +0000
-From: Subbaraya Sundeep <sbhatta@marvell.com>
-To: Lucas Sanchez Sagrado <lucsansag@gmail.com>
-CC: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
-        <kuba@kernel.org>, <pabeni@redhat.com>, <linux-usb@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] net: usb: r8152: Add device ID for TP-Link UE200
-Message-ID: <aEcEBUBIbLUM3dHn@64799e4f873a>
-References: <20250609145536.26648-1-lucsansag@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Pigw/33h"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OzfbxhM7uMfAT58aknck5ow+Ncs4EXqb3nfhtJztzjRGGcqr5aJ4KluV0wM1tlE9QiGNxvwtUpF8B+rHFc9qEoqrze6PR9Mv4sFsawckUQ3QsQL3Cj1PunfuP1lve5MJ3m/q0H0YOHJ6bI39F+0/DSCWgW2oglqHrQKm7OreudAo+Fx5gZJ+Yf98rMFu+8BsJrXuS6Ts9WMvlY3U6IKEgVW6/31cAA2KOc2iuku/s58lyPZRYjJO5spfbY9akpYllVONWsmoKkjlC33FJWa/wpd3MsQiYsyWfPHs78cmQz309ILFldcDT3pmTCw/HMYHl2cMiHk8H2eiczYHDLufRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GbW30tIl+bf5iuR5TOGQ4uIXPNH0d6FIGodWpWMqEEA=;
+ b=hwr0BjzH1H83GXE+tDy9xXriibsm0eSCmVS5a3Z0k7/vwJtOMlzw+uAVFk5TG1gGCPMlLk2Aoc9yY9ThYAfkZ/DOrd10l+pu/XyAbZF8OSphJOkHISjZo9JZRqidpR4oQp2LAcTf7vQCVsbXfNgd3Wvn3b1APMBylz99lrvtSKMzenYsg5jMLzs2f3NItzYTM0Q0CKp0vdZUjE0gnpmuKuMfB7Y6f0rfKzThmIpO36Q78QLMRs64r+YFboO/n9vmTXyWy80DENXbwEvCXodmcI/U07rOH/LbPt+/PL6DPCFSuLO7qP9LbKETONqQdAnn/iYqVYVYRc5LCHp6CmxvZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GbW30tIl+bf5iuR5TOGQ4uIXPNH0d6FIGodWpWMqEEA=;
+ b=Pigw/33ho33T9nQbFg2Oca+ykTa+uKGl73t3unhUgt1gLsKyonTYPrzEL+rR1nQJuZNS3mKW24Q8HayH7NJeEXIqkPTYX7BuOZEy1vzSBVO6auVthV8B6DcxuxfzDnUoh38zrLY8n8t4eArvVwyRHwRZn1rp3ck8QBS7TjvlXFY=
+Received: from BN9P220CA0014.NAMP220.PROD.OUTLOOK.COM (2603:10b6:408:13e::19)
+ by SA3PR12MB7860.namprd12.prod.outlook.com (2603:10b6:806:307::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Mon, 9 Jun
+ 2025 15:56:28 +0000
+Received: from BL02EPF0001A102.namprd05.prod.outlook.com
+ (2603:10b6:408:13e:cafe::e3) by BN9P220CA0014.outlook.office365.com
+ (2603:10b6:408:13e::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.29 via Frontend Transport; Mon,
+ 9 Jun 2025 15:56:27 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL02EPF0001A102.mail.protection.outlook.com (10.167.241.134) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8835.15 via Frontend Transport; Mon, 9 Jun 2025 15:56:27 +0000
+Received: from maple-stxh-linux-10.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 9 Jun 2025 10:56:15 -0500
+From: Pratap Nirujogi <pratap.nirujogi@amd.com>
+To: <andi.shyti@kernel.org>, <ilpo.jarvinen@linux.intel.com>,
+	<rdunlap@infradead.org>, <hdegoede@redhat.com>, <sfr@canb.auug.org.au>,
+	<linux-next@vger.kernel.org>
+CC: <linux-i2c@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <benjamin.chan@amd.com>, <bin.du@amd.com>,
+	<gjorgji.rosikopulos@amd.com>, <king.li@amd.com>, <dantony@amd.com>, "Pratap
+ Nirujogi" <pratap.nirujogi@amd.com>
+Subject: [PATCH v4 0/3] Fix build issue when CONFIG_MODULES is not set
+Date: Mon, 9 Jun 2025 11:53:54 -0400
+Message-ID: <20250609155601.1477055-1-pratap.nirujogi@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250609145536.26648-1-lucsansag@gmail.com>
-X-Proofpoint-ORIG-GUID: YnLukZZsPclCQ0iSRB4HiC2_56FMn0V9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDExOCBTYWx0ZWRfX3wMz8Kq5K4J7 o4eCWRf5NSxIimD1gXU/0WBMV/seau+8Uj9UfmL2QLRcatUw+YgmSE5sk/hPEcAOhqyDO8sczVv eEzuj2nJgH60DyVoWHH+vVT7dN375hEbf6KD2lXdOpbbqz6kgFJ4aRIX1c7drQjLUZsAvDrsoqt
- TxDu+8c9/EAlw5YCYFyYZNq+GFLgoxhCfxhARjqI2hmWLrNuFctIgVKFYpdpKs6kfR8dLmlgsj3 hbYytFppx2EeQxQNyt6/reBWv/soj9/qgjnEiQAAE5pjlIumXuXIhkStQDpgbX7fiFMWUs2uY6S M3bI9ofU6gzm/ISL92yaYkdDsP8FOEDV7gm4GbtyVBvJpsUGKTdeXCXilUIvWVzIVerpjZTK3vU
- 79fgpmt6CEdQxDFExZ3eebvgbU3XfJoW4CnhIAwOcoRpTNZITOGVyiYqwwZW8zthnYWWOF9T
-X-Authority-Analysis: v=2.4 cv=Rp3FLDmK c=1 sm=1 tr=0 ts=6847040b cx=c_pps a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=pGLkceISAAAA:8 a=M5GUcnROAAAA:8 a=H9Uv-0vqiJoLvD0a3_0A:9 a=CjuIK1q_8ugA:10
- a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-GUID: YnLukZZsPclCQ0iSRB4HiC2_56FMn0V9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-09_06,2025-06-09_01,2025-03-28_01
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF0001A102:EE_|SA3PR12MB7860:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2280706d-40fe-402c-47aa-08dda76e31b4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Ttq0KDSjnTboMFvJX6WcvGkNmtx22WFYLxBuRx2oKj1VY2xSYfwtJqsRTh9n?=
+ =?us-ascii?Q?GTPipNi3ISzRL7hmC4TfmeaczRBT/fSe8YlS7K90V2p3LE/85D4gAFf2rJkO?=
+ =?us-ascii?Q?YcjF8PeREWBmmZnHGp8LvtNsIwrufvG4ic/4yINEpSE0truuHc1gjh9MLCfY?=
+ =?us-ascii?Q?qR4XuCmmipZlIReCpvSZXTgrFZDdfZN7rbyFQ0q381SoFTWUYGOk3uAJqeG/?=
+ =?us-ascii?Q?i33AFbj1ECuVcS5/W1WvGA3ngakSmOa+notKLU6CVL8l+pnmFNePYntNP5j4?=
+ =?us-ascii?Q?ZGmOZv8SNxbKSDKd4spYOEqHhKQRLLAKft+KI7iOQrV058dA5tbBw33sKfao?=
+ =?us-ascii?Q?gzMbWCpjXnlhenTL+zFS+fWpDL4knGjqWqkO1CwqLQP4JJrCKqs/vNcVb2Oq?=
+ =?us-ascii?Q?/O1ZwPoHk6tmUguxzYa5Lf0p2xwKRpl0nJWVCSMZNdeCWIiUT2yiSQt03BwM?=
+ =?us-ascii?Q?bPngpQ98+ddHHPdm72v7mguKz3ucT1zxi9kKmkpIc7ZpZbq1mjrrjCG2naUe?=
+ =?us-ascii?Q?o014EChhdIpVQ+a7AjBTu9fKO5d36gl2dNKCQmhG1RpCA3xizQy5HXN1qN76?=
+ =?us-ascii?Q?7Kc5lTsH+8Jd3jrvjUVaZzgg1uPPH3oEzBoDerz97si0g525J7SzNOS9C0Ub?=
+ =?us-ascii?Q?nwA4HzX2YHqa0aHnc5uXwGrMKpo3YUv1wwJl+ZC9Vxoa/QhZVDmXSMp1844K?=
+ =?us-ascii?Q?fWNzEc4N0idaA+FFhp83E/qH7SFASPvMJnIUYyBTkOruRf3YKkf5ft8O19b5?=
+ =?us-ascii?Q?dbBZyc+znIFL0IQklVsmIaESeU+SB9aGQ370ZXPRft7SSYvw+TeILHqk3cOs?=
+ =?us-ascii?Q?+GuT5FfmO7uC/a98j7HSUYpUf5C+wExtI2Ekm+GGqQ2+tzW+HQyHRwkDdOJa?=
+ =?us-ascii?Q?UQSgaXgjtRNkH/px68dwscxsIfeWUx/jK55bxj28yNFDBrhJWl7dBGyYQELf?=
+ =?us-ascii?Q?4jxaM2JAaML64JWF3vMr1g6FMsgvAEPNr9AzHrYxz3+hpqMPHyI4auIY4HVK?=
+ =?us-ascii?Q?xaRTPt+UCADTS5W/LSj12kBe7D0B+vqfaWy6uzX6a2WAEy428iEZxfgAOZpc?=
+ =?us-ascii?Q?SJhxFQYIfS/0fTVYpxYAgNErZFyuUaHLkZMafCP6kPiyA5hdfbzR3g0bGgCc?=
+ =?us-ascii?Q?Lm/2HXwwEjwbMtDdA7lK7fP2ByUoXC7LCMQixG/SoNdHAK5U06aYY+vvQ2XM?=
+ =?us-ascii?Q?LpQobeU5nJecXP+w+ph1Nzy2lw6Q6NOnNYatCXZ4qSs4bo4OIxIa0M12AxWE?=
+ =?us-ascii?Q?ZzlL0RJrgIEpMAv+KHNsZkWVNZcTp9z6C/V13sdHHYDsOme6yfbNp85FpTe6?=
+ =?us-ascii?Q?B0eRXVtaLLMsPjlXVWj5mFsqIJQOIYDvA7V8VKfiRL8k8sCvwogvTK9QUojd?=
+ =?us-ascii?Q?yyRNPJWNa1SPQNDb8+Z4AarWVg4q8Qe+ASj/DnEB9Z1kWcrmUbJQFglRf3/K?=
+ =?us-ascii?Q?901fOZLoNV/NQwtwGCIwI9Q1V1JVtlUTrIV/4nKuek2eeuMgOZJeyX/tpdhe?=
+ =?us-ascii?Q?pRv6sY84SP9V6V/Mb88UsTNiRKU7WN6K1FV1?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 15:56:27.8168
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2280706d-40fe-402c-47aa-08dda76e31b4
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF0001A102.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7860
 
-On 2025-06-09 at 14:55:36, Lucas Sanchez Sagrado (lucsansag@gmail.com) wrote:
-> The TP-Link UE200 is a RTL8152B based USB 2.0 Fast Ethernet adapter. This 
-> patch adds its device ID. It has been tested on Ubuntu 22.04.5.
-> 
-> Signed-off-by: Lucas Sanchez Sagrado <lucsansag@gmail.com>
+When CONFIG_MODULES is not defined, 'adap->owner->name' used in amd_isp4 platform
+driver will not be valid and is resulting in build failures.
 
-Reviewed-by: Subbaraya Sundeep <sbhatta@marvell.com>
+../drivers/platform/x86/amd/amd_isp4.c: In function 'is_isp_i2c_adapter':
+../drivers/platform/x86/amd/amd_isp4.c:154:35: error: invalid use of undefined type 'struct module'
+  154 |         return !strcmp(adap->owner->name, "i2c_designware_amdisp");
+      |                                   ^~
 
-Thanks,
-Sundeep
+To fix this issue, need to make changes both in platform and i2c driver modules.
 
-> ---
->  drivers/net/usb/r8152.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-> index d6589b24c68d..44cba7acfe7d 100644
-> --- a/drivers/net/usb/r8152.c
-> +++ b/drivers/net/usb/r8152.c
-> @@ -10054,6 +10054,7 @@ static const struct usb_device_id rtl8152_table[] = {
->  	{ USB_DEVICE(VENDOR_ID_LINKSYS, 0x0041) },
->  	{ USB_DEVICE(VENDOR_ID_NVIDIA,  0x09ff) },
->  	{ USB_DEVICE(VENDOR_ID_TPLINK,  0x0601) },
-> +	{ USB_DEVICE(VENDOR_ID_TPLINK,  0x0602) },
->  	{ USB_DEVICE(VENDOR_ID_DLINK,   0xb301) },
->  	{ USB_DEVICE(VENDOR_ID_DELL,    0xb097) },
->  	{ USB_DEVICE(VENDOR_ID_ASUS,    0x1976) },
-> 
-> base-commit: 2c7e4a2663a1ab5a740c59c31991579b6b865a26
-> -- 
-> 2.34.1
-> 
+* In the amd_isp4 x86/platform driver, replace 'adap->owner->name' with 'adap->name', this removes
+the hard dependency on 'struct module'.
+* In i2c amdisp driver, initialize unique name to i2c adapter and also make a change in
+i2c-designware-common to avoid overwriting with generic name when adap->name[] is already set.
+
+---
+
+Changes v3 -> v4:
+
+* Update MAINTAINERS file with the new isp4_misc.h added
+* Fix typo error
+
+Changes v2 -> v3:
+
+* Update commit text for patch 1/3
+
+
+Changes v1 -> v2:
+
+* Replace snprintf with scnprintf
+* Add new isp4 specific misc header file to include the adapter name
+* Remove 'Fixes' and 'Link' tags from i2c patches
+
+---
+
+
+Pratap Nirujogi (3):
+  i2c: designware: Initialize adapter name only when not set
+  i2c: amd-isp: Initialize unique adapter name
+  platform/x86: Use i2c adapter name to fix build errors
+
+ MAINTAINERS                                |  1 +
+ drivers/i2c/busses/i2c-designware-amdisp.c |  2 ++
+ drivers/i2c/busses/i2c-designware-master.c |  5 +++--
+ drivers/platform/x86/amd/amd_isp4.c        |  3 ++-
+ include/linux/soc/amd/isp4_misc.h          | 12 ++++++++++++
+ 5 files changed, 20 insertions(+), 3 deletions(-)
+ create mode 100644 include/linux/soc/amd/isp4_misc.h
+
+-- 
+2.43.0
+
