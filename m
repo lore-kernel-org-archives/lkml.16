@@ -1,116 +1,92 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94458224FA
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 10:19:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D371C5496;
+	Mon,  9 Jun 2025 10:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749464357; cv=none; b=Ckfx7I8tqHkHpvGSy7U9mwxMjyCnEdWnjP6vad5AcQRylLrYaWc2fHFgYZ3y0qVcU1YkNLVvQtSUqhESF01XlOvYmq3ewx1E6McZlHKcsq5NMRxX4TrzCVL6WSy1jvS2uH87uqV/0CngwDjBlj6U4ADvlPzT9tsn3ZdegNfbG/o=
+	t=1749464361; cv=none; b=aVCP1ENASJyBcumMScyFWJ3q92LghIq2alTugKUiLBZiwp6AZOLJpJnQZyZaTFVGew0wLvCVgjhOQhQdwyVLRcWouIFsHHAaFpSmiUGIHOgaVGWW4iy8Y0MdUZFqijdpWkOPQ33jJ3nYExEQn6DMzkrEDE1ugi/iF95aw/k+Jas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749464357; c=relaxed/simple;
-	bh=BylYn8q7LLGpihaul8nEhkkxHdcEIUxw1xX1MbZ7Bk0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=oPTiLmYNJ1+DjpDzPBh/4gWZpkQO1o15TutzK868prGMp37nmKRZ8b8DZSistKbvV5h4nEG88vJwfeVGB+5oubmpA4MbxzbMV10jM65ZWYwStivoH+0M0pPBtdIuZUtfil/nR1xFbEV4eqlO+wwvLqBzFQZn3q8yqZwDWVbQPTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g5PYHr/x; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g5PYHr/x"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-450cb2ddd46so25851625e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 03:19:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749464354; x=1750069154; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=r5mHztYrkrGmqdzQD2l85P8GCoJYxyAbRSWs0LTryIY=;
-        b=g5PYHr/xrTZNRe37cw7Ozawlk5BPv45Upa+BM6VYjLyGM36b8ZKSLvQAx66klREF9/
-         M8b+dWGVtokcAr8HFhpsCpTr9lQwlZDLkBpm84kiSe+b8mMLQPHjfUIGVO4angJbuKhL
-         +StxJy9mlPOQIEKiH7ZNSxnVhTH9oGecviVk1aGYin+GzFV6axvuLwNwRtH3TAlNF1ta
-         vdLxmES3183sG521EC9CBd6GjUE8wKxpjC5W8Xnp5GvJpgLS4UsrX+UdEHYBMs06VBRF
-         14//Wzi6FYHFIHHbXc2fpuBd9S2MNI0I1ZA7DxZAJf3IusG9QTGN3d50pWCmRheXmEF3
-         GKJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749464354; x=1750069154;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r5mHztYrkrGmqdzQD2l85P8GCoJYxyAbRSWs0LTryIY=;
-        b=d1IFDixmLuzXm/VoErnDvU/wfrM0Aq66QwI6Dg5SHotKc0p716sWkskmHG05SDM90X
-         CyZEwE9PXVIkdfaOj43Y6SQYb1aA16zNko0lPLuRO3AA/FKi09gdTBX0mDh/jBJbZpG7
-         QFCvYgHGb0aKc/DWnyyDyd73hx4RpTvnAvXAKYeYvaO4C37bvEUnZ75n8AqEpxhttywg
-         qt4CctSgrv5fKDHBzhry7WpJ47QMUtLPKeeOFXE64UppIasPJ+SIoBr5RgT0L4snxgw1
-         HlF5JrGlsl6U3ctsl0siyS87YWj6DzN6Yoco1eMT9upMHG9X/sHHfduCddPS7gTCpGqM
-         5rUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVq62+z4W1RLihlv6Rwm3J4JeE6SaarIR+8y4xOK0U4lkZEReUh3GMQL7HcegsObrV7gXzIWFLxsPJcZBA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2PvnDcstLtZI9IzFVanED6thDf0ID5UGrl81FnrhVKrAubsVh
-	TV4n6VC/IoEZ26btQfjc8e/kQA6VBJBxFYTtIiLLRwAGKg7n8Shapsc2M3vevAfQ259GQWt94Un
-	AJOIru0E=
-X-Gm-Gg: ASbGncvnLZlBvbpLvT+fNoAu41Exwh3ry0K6km86ykrQZaBrR8ODSsUDiskMvMlbQLT
-	pEJxrhN86oyZ9rzzfgs0/lDMOQG+X6L1KAiZCDftlxMEXub5jw9nNHhamoXFQX0MtMk7ETQggzG
-	kfuyPWj1JoIRBN1FZ8uTtelz6O6MFDwxVYaq611kztrtcwySm3cY6b8Sk9nUzNUasPYJAGf8Iu9
-	36tf6twgXgOmUgphz0uPmkR98YsUuw5Jz9S4YIMt91v5vxgtC9yC7Tagfi5Wp1yPNq1xZcnRJq2
-	Q5dsU7TofTu+hj7uXLitNV5BZlNBO2njfRUeFaSGEAti3ONbZCcfsSvNlzknkLzIIGMcCBwaOPL
-	1AjMTMw==
-X-Google-Smtp-Source: AGHT+IEt0L7eowj9syhu7VRI/x9xDxOk4NVySIoO/3E1zTrZVuto/UX1U8TTcSHn+qx8a5cyBIqbyw==
-X-Received: by 2002:a05:600c:6212:b0:43d:5ec:b2f4 with SMTP id 5b1f17b1804b1-45201350ea1mr143952555e9.10.1749464353901;
-        Mon, 09 Jun 2025 03:19:13 -0700 (PDT)
-Received: from ho-tower-lan.lan ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45213709686sm107272345e9.23.2025.06.09.03.19.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 03:19:13 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Mon, 09 Jun 2025 11:19:05 +0100
-Subject: [PATCH] coresight: trbe: Add ISB after TRBLIMITR write
+	s=arc-20240116; t=1749464361; c=relaxed/simple;
+	bh=fq8K6smQ/CVkRgzVd9QcuGINgKmkXn3+4nwfLv4+DNs=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CqNeYI7kkgPX09pxHyeO9/a4VRf7vFZAOdxTaP1RsJ4qLBAUqHs3Bstd5UR7yucGbokBOWONEHuisVhyTBd4v5+Yhv3ZqN7Tcc1GEjkaEvryRKk+FNPq/yUyCLSILE53JJ6T6JdgynN7wXjI1MtsegfY7x7LyV+n4wvAm5otQVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bG7CG6BJjz6L4sT;
+	Mon,  9 Jun 2025 18:17:30 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 779F714038F;
+	Mon,  9 Jun 2025 18:19:17 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 9 Jun
+ 2025 12:19:17 +0200
+Date: Mon, 9 Jun 2025 11:19:15 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <gregkh@linuxfoundation.org>, <rafael.j.wysocki@intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>
+Subject: Re: [PATCH 2/3] driver core: faux: Quiet probe failures
+Message-ID: <20250609111915.000011a1@huawei.com>
+In-Reply-To: <20250607033228.1475625-3-dan.j.williams@intel.com>
+References: <20250607033228.1475625-1-dan.j.williams@intel.com>
+	<20250607033228.1475625-3-dan.j.williams@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250609-james-cs-trblimitr-isb-v1-1-3a2aa4ee6770@linaro.org>
-X-B4-Tracking: v=1; b=H4sIABi1RmgC/x3Myw5AQAxA0V+RrjUZ4+1XxAJTVLzSikjEv5tYn
- sW9DygJk0IVPCB0sfK+eURhAP3UbiMhO2+wxqYmMyXO7UqKveIp3cIrn4KsHaY2HqxxRZ64DHx
- 8CA18/+O6ed8P4pYsUGgAAAA=
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Mike Leach <mike.leach@linaro.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Marc Zyngier <maz@kernel.org>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.14.0
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-DEN0154 states that hardware will be allowed to ignore writes to TRB*
-registers while the trace buffer is enabled. Add an ISB to ensure that
-it's disabled before clearing the other registers.
+On Fri, 6 Jun 2025 20:32:27 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-This is purely defensive because it's expected that arm_trbe_disable()
-would be called before teardown which has the required ISB.
+> The acpi-einj conversion to faux_device_create() leads to a noisy error
+> message when the error injection facility is disabled. Quiet the error as
+> CXL error injection via ACPI expects the module to stay loaded even if the
+> error injection facility is disabled.
+> 
+> This situation arose because CXL knows proper kernel named objects to
+> trigger errors against, but acpi-einj knows how to perform the error
+> injection. The injection mechanism is shared with non-CXL use cases. The
+> result is CXL now has a module dependency on einj-core.ko, and init/probe
+> failures are handled at runtime.
+> 
+> Fixes: 6cb9441bfe8d ("ACPI: APEI: EINJ: Transition to the faux device interface")
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Danilo Krummrich <dakr@kernel.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Fixes: a2b579c41fe9 ("coresight: trbe: Remove redundant disable call")
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- drivers/hwtracing/coresight/coresight-trbe.c | 1 +
- 1 file changed, 1 insertion(+)
+I guess this is fair enough. 
 
-diff --git a/drivers/hwtracing/coresight/coresight-trbe.c b/drivers/hwtracing/coresight/coresight-trbe.c
-index 8267dd1a2130..10f3fb401edf 100644
---- a/drivers/hwtracing/coresight/coresight-trbe.c
-+++ b/drivers/hwtracing/coresight/coresight-trbe.c
-@@ -257,6 +257,7 @@ static void trbe_drain_and_disable_local(struct trbe_cpudata *cpudata)
- static void trbe_reset_local(struct trbe_cpudata *cpudata)
- {
- 	write_sysreg_s(0, SYS_TRBLIMITR_EL1);
-+	isb();
- 	trbe_drain_buffer();
- 	write_sysreg_s(0, SYS_TRBPTR_EL1);
- 	write_sysreg_s(0, SYS_TRBBASER_EL1);
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250609-james-cs-trblimitr-isb-523f20d874d6
-
-Best regards,
--- 
-James Clark <james.clark@linaro.org>
+> ---
+>  drivers/base/faux.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/base/faux.c b/drivers/base/faux.c
+> index 934da77ca48b..f5fbda0a9a44 100644
+> --- a/drivers/base/faux.c
+> +++ b/drivers/base/faux.c
+> @@ -170,7 +170,7 @@ struct faux_device *faux_device_create_with_groups(const char *name,
+>  	 * successful is almost impossible to determine by the caller.
+>  	 */
+>  	if (!dev->driver) {
+> -		dev_err(dev, "probe did not succeed, tearing down the device\n");
+> +		dev_dbg(dev, "probe did not succeed, tearing down the device\n");
+>  		faux_device_destroy(faux_dev);
+>  		faux_dev = NULL;
+>  	}
 
