@@ -1,104 +1,106 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C3625C813
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 04:05:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F011813AC1;
+	Mon,  9 Jun 2025 04:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749441956; cv=none; b=XRX982PUi2w2STUIOEo1B8f+LHbYhCc5j4htySMD9mXq4rAeyNq2fr7uif6UnqPZOE5Fx7fPBl8iclYfcQR5TEcp/d5opmWo9XpDe1rq18wOKy44w9KdS+xAnXWgPLc6IPu7jjlcECKu9foQA46FjJshADV1NnDZq08wTdv716E=
+	t=1749442356; cv=none; b=UR5BEYeV8LwPf5cy4eWS11TbJ/cYYRg/QB5jiTA2E4K+tvgnB7AuXAKJ7TiJj8anEmgS0sEuN9lg5CcLjJ3StKzAXuW5GZJU4cqNUbH52xoeYt8edO6s3AAYprKRyHM7aP1/VQOq5iMrJ0knLyXDSWn0mm9Bydw5VEc5tHUNdH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749441956; c=relaxed/simple;
-	bh=L6+1C4CzYabfehH0G4+8SaStDGBeWyrLmUOvSeRJYh4=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=bddQMtqXgObBr/A3iF61AQ/71SZjguaWkcniLZdYuSmpCSsCm4BUCJrZnq2lctxXfvPakwZVYuamTykCcqagvQhGVAR942VXSooBtOmT1/f8qpc3iU0P0o0pJ2B81SggIExZKm1GyNRRt4m1Pb9+kn1si8Ztx6MPX438MxMpY1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=rN3/KtQr; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rN3/KtQr"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250609040550epoutp04186b1cb3a339e98686f4be437c88287c~HRC9lYry-2186521865epoutp04g
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 04:05:50 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250609040550epoutp04186b1cb3a339e98686f4be437c88287c~HRC9lYry-2186521865epoutp04g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1749441950;
-	bh=W0Ty8uQC2ggf7ArBdnQeDtKQVIMY78+qF9VWC+NFGdo=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=rN3/KtQrvZoO5EJWpXFAE+yCgtvoPe7amkm1tf5cMF7fvZ8T0UTH9fjy4usrOHJAh
-	 NpvEbnOX/rv9zDxq2MAyKUMi3Yaxq6RwNNpFqVXAjg7IFwLMnndpieOCpPNZacU381
-	 079KqPrn/a2xLCYM8AuH05zDe665qLdT1Lp6xaPs=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250609040550epcas5p44ffe74ab72a0659449132c1e2595348c~HRC9FgbNP1796017960epcas5p4L;
-	Mon,  9 Jun 2025 04:05:50 +0000 (GMT)
-Received: from epcas5p4.samsung.com (unknown [182.195.38.175]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4bFyyH4tpDz2SSKY; Mon,  9 Jun
-	2025 04:05:43 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250609040543epcas5p4a339f4920addf5bd274e54778172e78b~HRC2pfZzh2015720157epcas5p4t;
-	Mon,  9 Jun 2025 04:05:43 +0000 (GMT)
-Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250609040540epsmtip23ac06c81db24768155a370ce8cdcaa13~HRC0J7VFH1644916449epsmtip2m;
-	Mon,  9 Jun 2025 04:05:40 +0000 (GMT)
-From: "Alim Akhtar" <alim.akhtar@samsung.com>
-To: "'Raghav Sharma'" <raghav.s@samsung.com>, <krzk@kernel.org>,
-	<s.nawrocki@samsung.com>, <cw00.choi@samsung.com>,
-	<mturquette@baylibre.com>, <sboyd@kernel.org>, <robh@kernel.org>,
-	<conor+dt@kernel.org>, <richardcochran@gmail.com>,
-	<sunyeal.hong@samsung.com>, <shin.son@samsung.com>
-Cc: <linux-samsung-soc@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<chandan.vn@samsung.com>, <karthik.sun@samsung.com>,
-	<dev.tailor@samsung.com>
-In-Reply-To: <20250529112640.1646740-2-raghav.s@samsung.com>
-Subject: RE: [PATCH v3 1/4] dt-bindings: clock: exynosautov920: sort clock
- definitions
-Date: Mon, 9 Jun 2025 09:35:38 +0530
-Message-ID: <03cd01dbd8f3$c4c18130$4e448390$@samsung.com>
+	s=arc-20240116; t=1749442356; c=relaxed/simple;
+	bh=AirhTziG8+R2vrdEjtsIrRarvIhm+QQe5wcMlTkArBk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bNouyYdQsOD+N0Fvcy0xlb9B2dvR9syWqZ/o4Kh6GLKIa46O1aRgmiSq9FFWzI1BTe2XCQvRIKSidnrvOzLsmI4fvdMg6EZtt/A2oB5skmlIPC16tmOI4Db58baZajRH+TJm88JX4TLDZxW5HFAbPEHPSaSPYoEzmkzFQA5xLHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86AB71515;
+	Sun,  8 Jun 2025 21:12:08 -0700 (PDT)
+Received: from ergosum.cambridge.arm.com (ergosum.cambridge.arm.com [10.1.196.45])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0CEC33F673;
+	Sun,  8 Jun 2025 21:12:25 -0700 (PDT)
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	stable@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	linux-kernel@vger.kernel.org,
+	Dev Jain <dev.jain@arm.com>
+Subject: [PATCH] arm64/ptdump: Ensure memory hotplug is prevented during ptdump_check_wx()
+Date: Mon,  9 Jun 2025 05:12:14 +0100
+Message-Id: <20250609041214.285664-1-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIRyuXPQglR2pg1tLiplohNF2WAzQJJNEBAALUq35Ozdl5VAA==
-Content-Language: en-us
-X-CMS-MailID: 20250609040543epcas5p4a339f4920addf5bd274e54778172e78b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250529111708epcas5p232b8bb6b05795b7014d718003daef0cb
-References: <20250529112640.1646740-1-raghav.s@samsung.com>
-	<CGME20250529111708epcas5p232b8bb6b05795b7014d718003daef0cb@epcas5p2.samsung.com>
-	<20250529112640.1646740-2-raghav.s@samsung.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Raghav
+The arm64 page table dump code can race with concurrent modification of the
+kernel page tables. When a leaf entries are modified concurrently, the dump
+code may log stale or inconsistent information for a VA range, but this is
+otherwise not harmful.
 
-> -----Original Message-----
-> From: Raghav Sharma <raghav.s@samsung.com>
-> Sent: Thursday, May 29, 2025 4:57 PM
-> To: krzk@kernel.org; s.nawrocki@samsung.com; cw00.choi@samsung.com;
-> alim.akhtar@samsung.com; mturquette@baylibre.com; sboyd@kernel.org;
-> robh@kernel.org; conor+dt@kernel.org; richardcochran@gmail.com;
-> sunyeal.hong@samsung.com; shin.son@samsung.com
-> Cc: linux-samsung-soc@vger.kernel.org; linux-clk@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org; netdev@vger.kernel.org;
-> chandan.vn@samsung.com; karthik.sun@samsung.com;
-> dev.tailor@samsung.com; Raghav Sharma <raghav.s@samsung.com>
-> Subject: [PATCH v3 1/4] dt-bindings: clock: exynosautov920: sort clock
-> definitions
-> 
-> Sort all the clock compatible strings in alphabetical order
-> 
-> Signed-off-by: Raghav Sharma <raghav.s@samsung.com>
-> ---
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+When intermediate levels of table are freed, the dump code will continue to
+use memory which has been freed and potentially reallocated for another
+purpose. In such cases, the dump code may dereference bogus addresses,
+leading to a number of potential problems.
+
+This problem was fixed for ptdump_show() earlier via commit 'bf2b59f60ee1
+("arm64/mm: Hold memory hotplug lock while walking for kernel page table
+dump")' but a same was missed for ptdump_check_wx() which faced the race
+condition as well. Let's just take the memory hotplug lock while executing
+ptdump_check_wx().
+
+Cc: stable@vger.kernel.org
+Fixes: bbd6ec605c0f ("arm64/mm: Enable memory hot remove")
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Reported-by: Dev Jain <dev.jain@arm.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+This patch applies on v6.16-rc1
+
+Dev Jain found this via code inspection.
+
+ arch/arm64/mm/ptdump.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/mm/ptdump.c b/arch/arm64/mm/ptdump.c
+index 421a5de806c62..551f80d41e8d2 100644
+--- a/arch/arm64/mm/ptdump.c
++++ b/arch/arm64/mm/ptdump.c
+@@ -328,7 +328,7 @@ static struct ptdump_info kernel_ptdump_info __ro_after_init = {
+ 	.mm		= &init_mm,
+ };
+ 
+-bool ptdump_check_wx(void)
++static bool __ptdump_check_wx(void)
+ {
+ 	struct ptdump_pg_state st = {
+ 		.seq = NULL,
+@@ -367,6 +367,16 @@ bool ptdump_check_wx(void)
+ 	}
+ }
+ 
++bool ptdump_check_wx(void)
++{
++	bool ret;
++
++	get_online_mems();
++	ret = __ptdump_check_wx();
++	put_online_mems();
++	return ret;
++}
++
+ static int __init ptdump_init(void)
+ {
+ 	u64 page_offset = _PAGE_OFFSET(vabits_actual);
+-- 
+2.30.2
 
