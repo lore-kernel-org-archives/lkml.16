@@ -1,38 +1,54 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.14])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A8E280031;
-	Mon,  9 Jun 2025 05:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4DC17BD3;
+	Mon,  9 Jun 2025 05:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749447114; cv=none; b=JHk4q24GWkXasc1/Q8PoDgP53wxoObxcg0Rj3fRd55M48IE/V9XE4npZ/8UksOmKQ9GJn2qO2KBOjgA9Toq9GEIOimmHIrEyQjrMIsmGFx49KB8dmLDuPO7B1KD147G8q4n7DiV1FeiD9c50s4PrwZ+xFtWTPElqCaF6FdTu2fE=
+	t=1749447294; cv=none; b=mZ977pmNzMBUgriYI8/WVnYzOaxFIKNpROQB58ZwDBe6Cg0rHZDil4m/id1cOtZ1g8j0BNcA/NiwKPtpEBnbt0LMxZPIw1+8l6KXyyOhY5Ki1ak9Gh22M4qSqTVaF8LSkogBeJXoRhSinwYcFeWbq0Tei6kAHTcVwM4MVmVWWYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749447114; c=relaxed/simple;
-	bh=xwHgyoHajGhFY1G2n44w1WEmYaier/b42ADmqkITLwU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=YSgn1KJwVo0Rn4WlcGrc/2Q4iDRxFodSUm+XYYQzo694t+qhO/kTWlaZx6+fQaYKTb4Jq4mP5ZBSOPwjU4O1vir/P2f1A3uNZ7FjIJbR0sxmP7pvUjzocbFJjw2Qr9mlpk7nOPQIDOAYKeivV02hfVnfv94FwuFE7wBuyiHIX14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=OP+3WZHn; arc=none smtp.client-ip=1.95.21.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1749447294; c=relaxed/simple;
+	bh=uwxa5npzdokndbCpN5yU7uplXOuCnvLiH5v8BmUtBz0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aLiiCgVoOii1WySFKTB/qOy3/p7HKWn+8VdAJ2q+ie56r63h1BVbtfjTPwvI9RNFFwKPZzXM1caYrvQXeQtOa99jXO+X+3QP685W6sHtUzCIzev169+a8jMzSuZS6aDGcbImGqCV8C6p5V3RArs4ayjXwfA8eD75xZUcgktppMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=Gpi8SoMr; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="OP+3WZHn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=AvQOg1tPoDT2meHewRVvm4BILZo75QenErRGTw3BX5U=;
-	b=OP+3WZHnqjLcnJefGNCXPvOIJyNhaV/AI6aKi6ETAnFOWcnwXt4JmA+G6Vvx4o
-	mJBMvduyWSxhAiH5OqvrzgFfTZgrDT08wtWzEptDF9Plbr4UHoVL7b463733ZhOl
-	CSu0fUEjEu1UulZudSBk1Q8LczQx9oWkDafIoIm331Nwg=
-Received: from dragon (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id Ms8vCgD33+yacUZoxUA_AA--.25782S3;
-	Mon, 09 Jun 2025 13:31:08 +0800 (CST)
-Date: Mon, 9 Jun 2025 13:31:06 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Xu Yang <xu.yang_2@nxp.com>, Peter Chen <peter.chen@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, imx@lists.linux.dev,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: i.MX kernel hangup caused by chipidea USB gadget driver
-Message-ID: <aEZxmlHmjeWcXiF3@dragon>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="Gpi8SoMr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=dkLL/eLFQ+sNI47KAXAvlP2XsLUmCy2MqXXx7+2KD6I=; b=Gpi8SoMrJAabIz21fHEErY778Y
+	1XnDwty0mXeTZmvRbqate1rLoP8K9aaYl4ZgGfTZasMRHyJwzdVFKqx/OSj3D8r5w2xHaR3/v3CDP
+	Wzf84eJ4XASt8QVP65M/0cEtArCvO27ap2Jbx73sjTEEKGOZNbx60WrMMtqNN9glE7LP8LqrMUDsu
+	mIXK9TEJn3RNquJBBfjDjp+aULXXwDebU1Xjub6J3ON8LN/uJSr5lbwRO9xeDmbosyKb1y9SIapdQ
+	COUWwVMFrAohO8ls9FQAeRhy54fPYrls/pxkbo1fdxN8ztPQyGQIki/7WwF/JUsRagCgLCDpoTs4s
+	ze6p+h3g==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uOV9e-00000008Whi-3LPI;
+	Mon, 09 Jun 2025 05:34:42 +0000
+Date: Mon, 9 Jun 2025 06:34:42 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: NeilBrown <neil@brown.name>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Jan Harkes <jaharkes@cs.cmu.edu>,
+	David Howells <dhowells@redhat.com>, Tyler Hicks <code@tyhicks.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Carlos Maiolino <cem@kernel.org>, linux-fsdevel@vger.kernel.org,
+	coda@cs.cmu.edu, codalist@coda.cs.cmu.edu,
+	linux-nfs@vger.kernel.org, netfs@lists.linux.dev,
+	ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] Change vfs_mkdir() to unlock on failure.
+Message-ID: <20250609053442.GC299672@ZenIV>
+References: <>
+ <20250609005009.GB299672@ZenIV>
+ <174944652013.608730.3439111222517126345@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,76 +57,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-CM-TRANSID:Ms8vCgD33+yacUZoxUA_AA--.25782S3
-X-Coremail-Antispam: 1Uf129KBjvJXoW7tr47JF43WrW5AF13WFy7GFg_yoW8Zw47pa
-	13Aw17CrnxJFyxKF4Iy34jkFZ8Aa95JryqgF13X3y8Z3W5Cr9xCr4UKFyfXasFvF95Ca1q
-	yr4UW34xGFy8WF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jTT5QUUUUU=
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiIBwvlGhGcZz+bAAA3W
+In-Reply-To: <174944652013.608730.3439111222517126345@noble.neil.brown.name>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-Hi Xu, Peter,
+On Mon, Jun 09, 2025 at 03:22:00PM +1000, NeilBrown wrote:
+> On Mon, 09 Jun 2025, Al Viro wrote:
+> > On Mon, Jun 09, 2025 at 09:09:37AM +1000, NeilBrown wrote:
+> > > Proposed changes to directory-op locking will lock the dentry rather
+> > > than the whole directory.  So the dentry will need to be unlocked.
+> > 
+> > Please, repost your current proposal _before_ that one goes anywhere.
+> > 
+> 
+> I've posted my proposal for the new API.  This makes the value of the
+> vfs_mkdir() change clear (I hope).
+> 
+> Would you also like me to post the patches which introduce the new
+> locking scheme?
 
-I'm seeing a kernel hangup on imx8mm-evk board.  It happens when:
+Yes, seeing that the rest does not make much sense without that.
 
- - USB gadget is enabled as Ethernet
- - There is data transfer over USB Ethernet
- - Device is going in/out suspend
+I would really like a description of that locking scheme as well,
+TBH, but if you prefer to start with the patches, then so be it.
 
-A simple way to reproduce the issue could be:
-
- 1. Copy a big file (like 500MB) from host PC to device with scp
-
- 2. While the file copy is ongoing, suspend & resume the device like:
-
-    $ echo +3 > /sys/class/rtc/rtc0/wakealarm; echo mem > /sys/power/state
-
- 3. The device will hang up there
-
-I reproduced on the following kernels:
-
- - Mainline kernel
- - NXP kernel lf-6.6.y
- - NXP kernel lf-6.12.y
-
-But NXP kernel lf-6.1.y doesn't have this problem.  I tracked it down to
-Peter's commit [1] on lf-6.1.y, and found that the gadget disconnect &
-connect calls got lost from suspend & resume hooks, when the commit were
-split and pushed upstream.  I confirm that adding the calls back fixes
-the hangup.
-
----8<--------------------
-
-diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-index 8a9b31fd5c89..72329a7eac4d 100644
---- a/drivers/usb/chipidea/udc.c
-+++ b/drivers/usb/chipidea/udc.c
-@@ -2374,6 +2374,9 @@ static void udc_suspend(struct ci_hdrc *ci)
-         */
-        if (hw_read(ci, OP_ENDPTLISTADDR, ~0) == 0)
-                hw_write(ci, OP_ENDPTLISTADDR, ~0, ~0);
-+
-+       if (ci->driver && ci->vbus_active && (ci->gadget.state != USB_STATE_SUSPENDED))
-+               usb_gadget_disconnect(&ci->gadget);
- }
- 
- static void udc_resume(struct ci_hdrc *ci, bool power_lost)
-@@ -2384,6 +2387,9 @@ static void udc_resume(struct ci_hdrc *ci, bool power_lost)
-                                        OTGSC_BSVIS | OTGSC_BSVIE);
-                if (ci->vbus_active)
-                        usb_gadget_vbus_disconnect(&ci->gadget);
-+       } else {
-+               if (ci->driver && ci->vbus_active)
-+                       usb_gadget_connect(&ci->gadget);
-        }
- 
-        /* Restore value 0 if it was set for power lost check */
-
----->8------------------
-
-But it's unclear to me why the hangup happens and how the change above
-fix the problem.  Do you guys have any insight here?
-
-Shawn
-
-[1] https://github.com/reMarkable/linux-imx/commit/0791d25578cb0e46fd93ae7a3c36ff7a424f3547
-
+I can't promise a response tonight - going down in an hour or so
+and I'd like to do enough reordering of #work.mount to be able
+to post the initial variant of at least some of that in the
+morning...
