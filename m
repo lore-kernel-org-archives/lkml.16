@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B376A221262;
-	Mon,  9 Jun 2025 19:13:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76CE2206B2;
+	Mon,  9 Jun 2025 19:14:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749496441; cv=none; b=DsFrxKn98SjL15IiZRPbVaq5j+lHFH4qwl8N46jmJcBi9ZZcB2JyoQkPe9rDul9XVHm9mU+WNpCHPZGzj1jQC42/7r7eVS7H1BlddglRzKFnXha9rj5aB5OMg+WwqPzvbwtriHwhkiYaIt41Bp1MT4XebgmaZgwgtsXIrwiY1NI=
+	t=1749496442; cv=none; b=fKt40I3Rh9kgnUNAQ9Qg6UW6184dW5s2dcC14QwCyyeylYv/y19QG0zNWe//cwQ5tdZqfb6Omtv33igEGU4A2NlbVdV3GHz7z5BKJjebhx2f/GFTyV1xdtdjk+7KZCTAsCG38CwrXjmPY6b3jZy3dPJl0PepgjBib3hfPYVYOuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749496441; c=relaxed/simple;
-	bh=1KtN0Q8dMeZGdFmpkljFfijLNOzTCQGangJAVHHPvZw=;
+	s=arc-20240116; t=1749496442; c=relaxed/simple;
+	bh=taDyQQ0hVqoylp1FoASKqcRdTS2NYvm6e9mKOK0s/aw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KQcZice0w7BY0fjI64faiMIJaIItxW88Wrqwoy9VXWaHU8jkS8fsMDdanrtbKfGdn8icCwQY5L18TBfTlTW/wmxGXHmEBkIfLLqD1Rs7+KbQHJo8NFbqAnysklx5/0DyF9PSbe8rmPtmWvTRE0FjqRnk3af5QxqBeXDRpF+9Jc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q8eb9Qwq; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version; b=VlRXsk4U9soCxcjbe4X/1WAyzZPQvSXe6HI1QKiU87US9X9JiAP9KbdMiJihBfP3o5/pZN8ybs/E+sSmt5C+V1MPrfYGNDk1x2q134ZlHibTwYwsttIS42BaGi24vClLbosxnSLnuxBKkhNMUhpx9hSQlmxLt+9aBPTrZsL3o+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Scvxj3ZH; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q8eb9Qwq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Scvxj3ZH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749496440; x=1781032440;
+  t=1749496441; x=1781032441;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=1KtN0Q8dMeZGdFmpkljFfijLNOzTCQGangJAVHHPvZw=;
-  b=Q8eb9QwqZ/YcAubBOW8MgvbPD44QDbBcrUb54aDgC/ET6DfslFwwET2F
-   KZy2Herac4zAbE/TXYof6FA1DEhSEOsv40Tp31UsOK2wwOrpAm1yepDaY
-   b64Ev2LPxIrcCpBYHw1m5Hlhdpj0PCaecSG0PKU9ecwyIbeF/XETcO+m1
-   Ax0DlGnkKwKhdidoIeOkRPJIEpEkFotRzwEhpORlNZmgaA+elzlr2ddzl
-   S0m2yeWgV/ADlXtOcM+JKKq+dWrkU7KVcdBocK9QVSuhuatxtxheWW2vp
-   gzEHz99MlU+FKhC0JH8qaQrC4rzQpU7uidYU3ESSpCNpOby/9GaIS5rY0
-   g==;
-X-CSE-ConnectionGUID: SkCBoHOkQVeMX7h5oQHtEg==
-X-CSE-MsgGUID: WySUYMJRT2yy/Ap/VY87SA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51681780"
+  bh=taDyQQ0hVqoylp1FoASKqcRdTS2NYvm6e9mKOK0s/aw=;
+  b=Scvxj3ZHgsGGnK/2209KadmoZ8aI5knMWv1CAUVqo7Ob2uUYA3RY6N3n
+   CqQUdTjGE4iDKOdHVPgkw+JGBAMYVNQzvWm30iU4/4pgp7bPOGXKIWiOh
+   GFPvo60tdW1ZFzKnx5boLcLXGmaKazYYAG+43fM80TqtqoRWuRLAIikdd
+   Yk+Y/aiYTTX4ir04vvB6OIzJGoXlQbC94N2WkrvIIQA/UAhTRv0g6h++s
+   Ys7duSOxRjTqcqxX/Muh0mFQqaJ/mJ+4FMltbXiAi10CIAsgPTALXrsKn
+   R+VfwADL+tLopZrc0rShr5BMoxNlkxgYIKGcO7/MINx0y7+glBtfUEhXt
+   w==;
+X-CSE-ConnectionGUID: XyEYEDPaRqmhJZ94fPxjxw==
+X-CSE-MsgGUID: nc1hgbJUSYWXZ2e/UXefiA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51681788"
 X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
-   d="scan'208";a="51681780"
+   d="scan'208";a="51681788"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 12:13:59 -0700
-X-CSE-ConnectionGUID: vP8mJcvNSwqMwssTTfOWiQ==
-X-CSE-MsgGUID: S03nyYFkR2W7J4TU4fWmrw==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 12:14:00 -0700
+X-CSE-ConnectionGUID: Z+V09sNBSQqiAKkg0FkqZg==
+X-CSE-MsgGUID: jHwAvZdhQ9O5TYXQKBTDJA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
-   d="scan'208";a="147174188"
+   d="scan'208";a="147174191"
 Received: from black.fi.intel.com ([10.237.72.28])
   by orviesa007.jf.intel.com with ESMTP; 09 Jun 2025 12:13:56 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 5BD8DA45; Mon, 09 Jun 2025 22:13:49 +0300 (EEST)
+	id 6CD7BA63; Mon, 09 Jun 2025 22:13:49 +0300 (EEST)
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: pbonzini@redhat.com,
 	seanjc@google.com,
@@ -62,9 +62,9 @@ Cc: rick.p.edgecombe@intel.com,
 	linux-coco@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv2 08/12] KVM: TDX: Handle PAMT allocation in fault path
-Date: Mon,  9 Jun 2025 22:13:36 +0300
-Message-ID: <20250609191340.2051741-9-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 10/12] [NOT-FOR-UPSTREAM] x86/virt/tdx: Account PAMT memory and print it in /proc/meminfo
+Date: Mon,  9 Jun 2025 22:13:38 +0300
+Message-ID: <20250609191340.2051741-11-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250609191340.2051741-1-kirill.shutemov@linux.intel.com>
 References: <20250609191340.2051741-1-kirill.shutemov@linux.intel.com>
@@ -76,198 +76,173 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There are two distinct cases when the kernel needs to allocate PAMT
-memory in the fault path: for SEPT page tables in tdx_sept_link_private_spt()
-and for leaf pages in tdx_sept_set_private_spte().
+PAMT memory can add up to substantial portion of system memory.
 
-These code paths run in atomic context. Use a pre-allocated per-VCPU
-pool for memory allocations.
+Account these pages and print them into /proc/meminfo as TDX.
+
+When no TD running PAMT memory consumption suppose to be zero.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- arch/x86/include/asm/tdx.h  |  4 ++++
- arch/x86/kvm/vmx/tdx.c      | 40 ++++++++++++++++++++++++++++++++-----
- arch/x86/virt/vmx/tdx/tdx.c | 21 +++++++++++++------
- virt/kvm/kvm_main.c         |  1 +
- 4 files changed, 55 insertions(+), 11 deletions(-)
 
+---
+
+The patch proved to be extremely useful to catch PAMT memory leaks,
+but putting this counter in /proc/meminfo is probably overkill.
+
+Any suggestion for better way to expose this counter is welcome.
+---
+ arch/x86/include/asm/set_memory.h |  3 +++
+ arch/x86/include/asm/tdx.h        |  3 +++
+ arch/x86/mm/Makefile              |  2 ++
+ arch/x86/mm/meminfo.c             | 11 +++++++++++
+ arch/x86/mm/pat/set_memory.c      |  2 +-
+ arch/x86/virt/vmx/tdx/tdx.c       | 26 ++++++++++++++++++++++++--
+ 6 files changed, 44 insertions(+), 3 deletions(-)
+ create mode 100644 arch/x86/mm/meminfo.c
+
+diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
+index 8d9f1c9aaa4c..66b37bff61e5 100644
+--- a/arch/x86/include/asm/set_memory.h
++++ b/arch/x86/include/asm/set_memory.h
+@@ -90,6 +90,9 @@ int set_direct_map_default_noflush(struct page *page);
+ int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid);
+ bool kernel_page_present(struct page *page);
+ 
++struct seq_file;
++void direct_pages_meminfo(struct seq_file *m);
++
+ extern int kernel_set_to_readonly;
+ 
+ #endif /* _ASM_X86_SET_MEMORY_H */
 diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
-index 47092eb13eb3..39f8dd7e0f06 100644
+index 39f8dd7e0f06..853471e1eda1 100644
 --- a/arch/x86/include/asm/tdx.h
 +++ b/arch/x86/include/asm/tdx.h
-@@ -116,6 +116,10 @@ u32 tdx_get_nr_guest_keyids(void);
- void tdx_guest_keyid_free(unsigned int keyid);
- 
- int tdx_nr_pamt_pages(void);
-+int tdx_pamt_get(struct page *page, enum pg_level level,
-+		 struct page *(alloc)(void *data), void *data);
-+void tdx_pamt_put(struct page *page, enum pg_level level);
+@@ -186,6 +186,8 @@ u64 tdh_mem_page_remove(struct tdx_td *td, u64 gpa, u64 level, u64 *ext_err1, u6
+ u64 tdh_phymem_cache_wb(bool resume);
+ u64 tdh_phymem_page_wbinvd_tdr(struct tdx_td *td);
+ u64 tdh_phymem_page_wbinvd_hkid(u64 hkid, struct page *page);
 +
- struct page *tdx_alloc_page(void);
- void tdx_free_page(struct page *page);
++void tdx_meminfo(struct seq_file *m);
+ #else
+ static inline void tdx_init(void) { }
+ static inline int tdx_cpu_enable(void) { return -ENODEV; }
+@@ -194,6 +196,7 @@ static inline u32 tdx_get_nr_guest_keyids(void) { return 0; }
+ static inline const char *tdx_dump_mce_info(struct mce *m) { return NULL; }
+ static inline const struct tdx_sys_info *tdx_get_sysinfo(void) { return NULL; }
+ static inline int tdx_nr_pamt_pages(void) { return 0; }
++static inline void tdx_meminfo(struct seq_file *m) {}
+ #endif	/* CONFIG_INTEL_TDX_HOST */
  
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index 36c3c9f8a62c..bc9bc393f866 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -1537,11 +1537,26 @@ static int tdx_mem_page_record_premap_cnt(struct kvm *kvm, gfn_t gfn,
- 	return 0;
+ #endif /* !__ASSEMBLER__ */
+diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
+index 32035d5be5a0..311d60801871 100644
+--- a/arch/x86/mm/Makefile
++++ b/arch/x86/mm/Makefile
+@@ -38,6 +38,8 @@ CFLAGS_fault.o := -I $(src)/../include/asm/trace
+ 
+ obj-$(CONFIG_X86_32)		+= pgtable_32.o iomap_32.o
+ 
++obj-$(CONFIG_PROC_FS)		+= meminfo.o
++
+ obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
+ obj-$(CONFIG_PTDUMP)		+= dump_pagetables.o
+ obj-$(CONFIG_PTDUMP_DEBUGFS)	+= debug_pagetables.o
+diff --git a/arch/x86/mm/meminfo.c b/arch/x86/mm/meminfo.c
+new file mode 100644
+index 000000000000..7bdb5df014de
+--- /dev/null
++++ b/arch/x86/mm/meminfo.c
+@@ -0,0 +1,11 @@
++#include <linux/proc_fs.h>
++#include <linux/seq_file.h>
++
++#include <asm/set_memory.h>
++#include <asm/tdx.h>
++
++void arch_report_meminfo(struct seq_file *m)
++{
++	direct_pages_meminfo(m);
++	tdx_meminfo(m);
++}
+diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+index def3d9284254..59432b92e80e 100644
+--- a/arch/x86/mm/pat/set_memory.c
++++ b/arch/x86/mm/pat/set_memory.c
+@@ -118,7 +118,7 @@ static void collapse_page_count(int level)
+ 	direct_pages_count[level - 1] -= PTRS_PER_PTE;
  }
  
-+static struct page *tdx_alloc_pamt_page_atomic(void *data)
-+{
-+	struct kvm_vcpu *vcpu = data;
-+	void *p;
+-void arch_report_meminfo(struct seq_file *m)
++void direct_pages_meminfo(struct seq_file *m)
+ {
+ 	seq_printf(m, "DirectMap4k:    %8lu kB\n",
+ 			direct_pages_count[PG_LEVEL_4K] << 2);
+diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
+index d4b50b6428fa..4dcba7bf4ab9 100644
+--- a/arch/x86/virt/vmx/tdx/tdx.c
++++ b/arch/x86/virt/vmx/tdx/tdx.c
+@@ -51,6 +51,8 @@ static DEFINE_PER_CPU(bool, tdx_lp_initialized);
+ 
+ static struct tdmr_info_list tdx_tdmr_list;
+ 
++static atomic_long_t tdx_pamt_count = ATOMIC_LONG_INIT(0);
 +
-+	p = kvm_mmu_memory_cache_alloc(&vcpu->arch.pamt_page_cache);
-+	return virt_to_page(p);
+ static atomic_t *pamt_refcounts;
+ 
+ static enum tdx_module_status_t tdx_module_status;
+@@ -2010,6 +2012,19 @@ int tdx_nr_pamt_pages(void)
+ }
+ EXPORT_SYMBOL_GPL(tdx_nr_pamt_pages);
+ 
++void tdx_meminfo(struct seq_file *m)
++{
++	unsigned long usage;
++
++	if (!cpu_feature_enabled(X86_FEATURE_TDX_HOST_PLATFORM))
++		return;
++
++	usage = atomic_long_read(&tdx_pamt_count) *
++		tdx_nr_pamt_pages() * PAGE_SIZE / SZ_1K;
++
++	seq_printf(m, "TDX:		%8lu kB\n", usage);
 +}
 +
- int tdx_sept_set_private_spte(struct kvm *kvm, gfn_t gfn,
- 			      enum pg_level level, kvm_pfn_t pfn)
+ static u64 tdh_phymem_pamt_add(unsigned long hpa,
+ 			       struct list_head *pamt_pages)
  {
-+	struct kvm_vcpu *vcpu = kvm_get_running_vcpu();
- 	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
- 	struct page *page = pfn_to_page(pfn);
-+	int ret;
-+
-+	ret = tdx_pamt_get(page, level, tdx_alloc_pamt_page_atomic, vcpu);
-+	if (ret)
-+		return ret;
+@@ -2017,7 +2032,7 @@ static u64 tdh_phymem_pamt_add(unsigned long hpa,
+ 		.rcx = hpa,
+ 	};
+ 	struct page *page;
+-	u64 *p;
++	u64 *p, ret;
  
- 	/* TODO: handle large pages. */
- 	if (KVM_BUG_ON(level != PG_LEVEL_4K, kvm))
-@@ -1562,10 +1577,16 @@ int tdx_sept_set_private_spte(struct kvm *kvm, gfn_t gfn,
- 	 * barrier in tdx_td_finalize().
- 	 */
- 	smp_rmb();
--	if (likely(kvm_tdx->state == TD_STATE_RUNNABLE))
--		return tdx_mem_page_aug(kvm, gfn, level, page);
+ 	WARN_ON_ONCE(!IS_ALIGNED(hpa & PAGE_MASK, PMD_SIZE));
  
--	return tdx_mem_page_record_premap_cnt(kvm, gfn, level, pfn);
-+	if (likely(kvm_tdx->state == TD_STATE_RUNNABLE))
-+		ret = tdx_mem_page_aug(kvm, gfn, level, page);
-+	else
-+		ret = tdx_mem_page_record_premap_cnt(kvm, gfn, level, pfn);
+@@ -2027,7 +2042,12 @@ static u64 tdh_phymem_pamt_add(unsigned long hpa,
+ 		p++;
+ 	}
+ 
+-	return seamcall(TDH_PHYMEM_PAMT_ADD, &args);
++	ret = seamcall(TDH_PHYMEM_PAMT_ADD, &args);
 +
-+	if (ret)
-+		tdx_pamt_put(page, level);
++	if (!ret)
++		atomic_long_inc(&tdx_pamt_count);
 +
 +	return ret;
  }
  
- static int tdx_sept_drop_private_spte(struct kvm *kvm, gfn_t gfn,
-@@ -1622,17 +1643,26 @@ int tdx_sept_link_private_spt(struct kvm *kvm, gfn_t gfn,
- 			      enum pg_level level, void *private_spt)
- {
- 	int tdx_level = pg_level_to_tdx_sept_level(level);
--	gpa_t gpa = gfn_to_gpa(gfn);
-+	struct kvm_vcpu *vcpu = kvm_get_running_vcpu();
- 	struct page *page = virt_to_page(private_spt);
-+	gpa_t gpa = gfn_to_gpa(gfn);
- 	u64 err, entry, level_state;
-+	int ret;
+ static u64 tdh_phymem_pamt_remove(unsigned long hpa,
+@@ -2045,6 +2065,8 @@ static u64 tdh_phymem_pamt_remove(unsigned long hpa,
+ 	if (ret)
+ 		return ret;
+ 
++	atomic_long_dec(&tdx_pamt_count);
 +
-+	ret = tdx_pamt_get(page, PG_LEVEL_4K, tdx_alloc_pamt_page_atomic, vcpu);
-+	if (ret)
-+		return ret;
- 
- 	err = tdh_mem_sept_add(&to_kvm_tdx(kvm)->td, gpa, tdx_level, page, &entry,
- 			       &level_state);
--	if (unlikely(tdx_operand_busy(err)))
-+	if (unlikely(tdx_operand_busy(err))) {
-+		tdx_pamt_put(page, PG_LEVEL_4K);
- 		return -EBUSY;
-+	}
- 
- 	if (KVM_BUG_ON(err, kvm)) {
- 		pr_tdx_error_2(TDH_MEM_SEPT_ADD, err, entry, level_state);
-+		tdx_pamt_put(page, PG_LEVEL_4K);
- 		return -EIO;
- 	}
- 
-diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
-index 4f9eaba4af4a..d4b50b6428fa 100644
---- a/arch/x86/virt/vmx/tdx/tdx.c
-+++ b/arch/x86/virt/vmx/tdx/tdx.c
-@@ -2067,10 +2067,16 @@ static void tdx_free_pamt_pages(struct list_head *pamt_pages)
- 	}
- }
- 
--static int tdx_alloc_pamt_pages(struct list_head *pamt_pages)
-+static int tdx_alloc_pamt_pages(struct list_head *pamt_pages,
-+				 struct page *(alloc)(void *data), void *data)
- {
+ 	p = &args.rdx;
  	for (int i = 0; i < tdx_nr_pamt_pages(); i++) {
--		struct page *page = alloc_page(GFP_KERNEL);
-+		struct page *page;
-+
-+		if (alloc)
-+			page = alloc(data);
-+		else
-+			page = alloc_page(GFP_KERNEL);
- 		if (!page)
- 			goto fail;
- 		list_add(&page->lru, pamt_pages);
-@@ -2115,7 +2121,8 @@ static int tdx_pamt_add(atomic_t *pamt_refcount, unsigned long hpa,
- 	return 0;
- }
- 
--static int tdx_pamt_get(struct page *page, enum pg_level level)
-+int tdx_pamt_get(struct page *page, enum pg_level level,
-+		 struct page *(alloc)(void *data), void *data)
- {
- 	unsigned long hpa = page_to_phys(page);
- 	atomic_t *pamt_refcount;
-@@ -2134,7 +2141,7 @@ static int tdx_pamt_get(struct page *page, enum pg_level level)
- 	if (atomic_inc_not_zero(pamt_refcount))
- 		return 0;
- 
--	if (tdx_alloc_pamt_pages(&pamt_pages))
-+	if (tdx_alloc_pamt_pages(&pamt_pages, alloc, data))
- 		return -ENOMEM;
- 
- 	ret = tdx_pamt_add(pamt_refcount, hpa, &pamt_pages);
-@@ -2143,8 +2150,9 @@ static int tdx_pamt_get(struct page *page, enum pg_level level)
- 
- 	return ret >= 0 ? 0 : ret;
- }
-+EXPORT_SYMBOL_GPL(tdx_pamt_get);
- 
--static void tdx_pamt_put(struct page *page, enum pg_level level)
-+void tdx_pamt_put(struct page *page, enum pg_level level)
- {
- 	unsigned long hpa = page_to_phys(page);
- 	atomic_t *pamt_refcount;
-@@ -2179,6 +2187,7 @@ static void tdx_pamt_put(struct page *page, enum pg_level level)
- 
- 	tdx_free_pamt_pages(&pamt_pages);
- }
-+EXPORT_SYMBOL_GPL(tdx_pamt_put);
- 
- struct page *tdx_alloc_page(void)
- {
-@@ -2188,7 +2197,7 @@ struct page *tdx_alloc_page(void)
- 	if (!page)
- 		return NULL;
- 
--	if (tdx_pamt_get(page, PG_LEVEL_4K)) {
-+	if (tdx_pamt_get(page, PG_LEVEL_4K, NULL, NULL)) {
- 		__free_page(page);
- 		return NULL;
- 	}
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index eec82775c5bf..6add012532a0 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -436,6 +436,7 @@ void *kvm_mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc)
- 	BUG_ON(!p);
- 	return p;
- }
-+EXPORT_SYMBOL_GPL(kvm_mmu_memory_cache_alloc);
- #endif
- 
- static void kvm_vcpu_init(struct kvm_vcpu *vcpu, struct kvm *kvm, unsigned id)
+ 		page = phys_to_page(*p);
 -- 
 2.47.2
 
