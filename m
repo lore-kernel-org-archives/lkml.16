@@ -1,102 +1,93 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED5C19EEC2
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 21:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7530919EEC2;
+	Mon,  9 Jun 2025 21:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749503960; cv=none; b=ENv/SIbEEKQdYwzO1bANhgFEawIbtf4VETqwPXmluDTL6eMf6bBZsyQkuhtSNq8BmDbI8l90Yb2GyA/hwLis2vfz9XjZTm2yKU6IskV9QU+qi91tNEvubWNfV7b9PYr7DLrK/vjuKp3idV7KzlncKAhR/L3hr5NYwWpxKKoQ7XY=
+	t=1749503970; cv=none; b=JI89b26Obor0wgbWSfrhIv7emFHCwy3UuLGjPw7QrEYwbD/X5moYwcoBV7e2nRpG6VMgUU12BmylUjX4X8Aocg2RJhGWjeXWejSv0Tdd3EVXrLbX45J1s/AedI7PZNw5T2WTbaedZkKqZ7ZF1Wqnf1aUIYn+3RRHLaYGwV67Kdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749503960; c=relaxed/simple;
-	bh=KGDhORw1Sk0aFzbe0MQkbln6Vxa92rWD6jne2Jwg/JI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QGvzEtgFqJNgombzEdVbsNCfVf0z7XRZeig/tr4utRJ3t/8TxPyf9o7ccoGdA/Rbs/dHCUvkY+YH758W1qDJOvf9QcVPcEN3wuXnWXIM3t3gfE3jvA0X4AZuKxDj/hMkPTGwjNk3QHuE2i8zouBXhfF5MEVqF6JDHikCydLY3no=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kYbcu0YY; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1749503970; c=relaxed/simple;
+	bh=x64TgVXEOrKhCAA8Q+LNTF2fqNnZxkiVOcb395AX85c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P7smND7qzjiHHc4iJuGXM4facNLO+TWA+NBv9l+xbzH19/eMpC3t2vco45CSv50L1LUJJbAroc6OmfvQZqoMgD0CQkAQ7qqyxDP6Ih7lEjfpFbKR+bnej8v5hoYGkFYXI9YwP+ct0UNV9860HUKk+I6JyUoSWXw5MmJ7BD0BGxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IVlgP6UB; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kYbcu0YY"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a536ecbf6fso1868736f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 14:19:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IVlgP6UB"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-312e747d2d8so4133816a91.0;
+        Mon, 09 Jun 2025 14:19:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749503956; x=1750108756; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZsxXWARtyGqxL06eG4Mi6Q0uTwGfYn0U8UG8GsvPuag=;
-        b=kYbcu0YYPDlQjECz4pgF8fzMFfBU5wY+C6R+eYbN+fM70lBbBQq/cBfvhWDWIdijlG
-         RZmy2lWodsNHSQq0lAT27KbmJpn+JfPZoLqhLult3eRUEfEblwX65rUfvp9Nt2DoMECU
-         OHn/EpsqIpVhY8QLDwG98xahdgpLm90tsG38zJ7mdrFfEL2uvpONXknGVlFHbXDtuTuP
-         mKt7e/6JpxqZnpcbXZqRuZDtZ9zQRU8ycHJmqSiNc6fwKxiqsngmLJNNsqGA9asbJm5A
-         QOunthh18RUIvOiscpDx058oE9U70q+fUCfSOqzpopoxemaB9YScssoq+utIzyABbW9d
-         MTew==
+        d=gmail.com; s=20230601; t=1749503964; x=1750108764; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zI31dEC4mkNsuAEjV8kYLOz0S1P8/9VIxbXknfxECwk=;
+        b=IVlgP6UBu3wVtdKq7/XFFqkfxC+xJgbfntBo80eatKOMw4vrhfU4I4Ipjr3o0r2cFz
+         5o/zulRb88Ojmol4n+Rsf93vBF2teqy6//QUwBTP4dex9ImA6dPAIAlATh77BVugaFuh
+         zmnib7oYUOIxsZxrmf4A42rB4kMtYQP9g3uWL+10YSqYtxLz8sgyE8Sf7zpxq6vzLR/F
+         Ajz2P6qM5F9SxWCJVuuopc7vtWSz5OYwx/X5ZHY7XAltwN0nO7PfrLQgKac9kSHV2VK0
+         IsiHbcAB7vFpu/CinwM9RnrUfe8lktxW0Wimpf0PZZr75F1eCKURQv0QDFJDRhC2T2tf
+         aW0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749503956; x=1750108756;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1749503964; x=1750108764;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZsxXWARtyGqxL06eG4Mi6Q0uTwGfYn0U8UG8GsvPuag=;
-        b=AJaGE2enbbKIlE/DpTfk4CuunpgkktqUCSrdesjIJicip07iS4l5tcb7zY2uKuBafd
-         5sZWxKzVeAa84uUtnXQFZrls1dxOy/8EtN+GSJcu7lDEBaFjSooaZePouZEDki3n/tfF
-         Udx9JmTmrDaEm50gFIdNKGaMbhM1vFaiTP6I4o6QfYOpLHh8KJAIut/bXJ4xsg90NGOZ
-         EdBxt1x+NNsBCj2rl1+iRTQPTD7rQ+CfhUQ/srG+L1OYOPzD4U6+uUV/kMe2atobe3K9
-         iAz8F5EwP7vL9Z+aIgAYtB7oxDFUnaPAL+Ur2VKMQlEFqtLbhBklu/LZWxLEe8q8vwIk
-         YZCA==
-X-Forwarded-Encrypted: i=1; AJvYcCWKCCjtZiEiNrzTJ1Rs4LfOmiu5bXrEiFwx+7+t4jj1fRgH7kFTcsBh9lIn6EIajOB5YLSlrXt6mifBJwM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHslfU/4tibAokaBqBuiwv8kCAbM2DC5yFMiP6znuXbFj94bLC
-	Y4hO0rIhEG0e5Fkj5GTtlwQQ58Q80PdWps1Z63HOtId0e5rIJwLueF2b
-X-Gm-Gg: ASbGncuRB5pmblhmOcLoHji80Toh8ae3qBc2oCRKu8i0Mt1Hbu6hkAALQBbgYXsnXAz
-	OSuRczFNfGUhbv6hGKkhaE9urVST3Ua+YHoXqizkyPSUPwhBj2e5qW0yDX+StzHuuNd81MSD+KY
-	YMqeorwkNd/3KC+b9dWc7xTVCzE8iqzRH0xjlSca6uXpPh9MdzGEGg3AdNyDNNlQ8Lb+Du+Myys
-	HdTsknrDZoGnpoYQltMpmlvhM8N+mcUphL11lEDloDhsaoA/d9DhgLtwLHyT0MTBCjOYjILzQNX
-	twe/7Jix+JbRuFgQg4iMlMFpPam74d5IYDOmTo5ahx7jVcRV1es/YSmwVenegKvukZ2D9t2ZOJn
-	jUtRxMkDVx2VCTePULS+71X4t
-X-Google-Smtp-Source: AGHT+IEi72tx4vc4WYWCw5i85b/P4JuxF0ystxdIrnPVdrl42Pcl5nsPEQmugb9/JOpm4IHdkGjATQ==
-X-Received: by 2002:a05:6000:2203:b0:3a3:7593:818b with SMTP id ffacd0b85a97d-3a552272cccmr147246f8f.21.1749503956099;
-        Mon, 09 Jun 2025 14:19:16 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45209ce1afasm122386435e9.10.2025.06.09.14.19.15
+        bh=zI31dEC4mkNsuAEjV8kYLOz0S1P8/9VIxbXknfxECwk=;
+        b=JkfJ+DvHH5IwlM7BHnBaqWhuYm/KWDGXgFw+jFln3tM8HPiSdFkozjWUElgZAzhhtj
+         F+gk1RmPNBxQAnoog8GQpYUz+z0S3EchdViPMW6f3JLHKsikhKj9+1UdGKs6zmPTXeet
+         tDpmLMJSS4BfLrLuIZs9w2IYBcRLxHVM/HvnRonh0t44YHvj25dvrIb3FHNgaif8Y7AW
+         EtiRiEseUde6oTg/Un+7vbNXlIzBUcFN6Nb2fa+vKeoFz03khZjALj94CVVoYFPAF1qg
+         J1slDoelTvarq3lVmRhUEWIW2xRdrjmqfglhyc6mEvIxXEA72m9Ozy+trhkqU3eOeCPT
+         HvEw==
+X-Forwarded-Encrypted: i=1; AJvYcCUh0MhQQv2mRZzEWYUCc5sdaFmPM0PXt/PPxfJfxnD28rd0DPfFf9WF/kYvTPXkBvNh5XTouGUMgZIqLcuO@vger.kernel.org, AJvYcCVJHHDlGGQc8Mh987GEkB+bRQTfC7t0/AypmfHTvIxCE+DWOf33N2UYla6tNWjrCf9sPquB/LMluNX9jKg=@vger.kernel.org, AJvYcCWszSuYmbvRAtbcqXcrAolv4owzleOFDFlxEPCCQnjhrMNzV6NDJ+OvXrF1sM+bdzVZv4Slj8UAxDY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw26EYRoyrFig9WZWUCo+R4eZgrrzCC/GqTSMNmMxiZm2edwo5k
+	3VzikgACNdm0IMnnAt02N66X+mN0vIfN7jUFVh5TNGYwxPDygsPFyMI1
+X-Gm-Gg: ASbGncvcAqYzd5rb0Ql86X422TXwhhN/EjUaBkxOzC9ppSspXpUT+mwtUGpm0gUKNEN
+	VeEFwWQH0mK779EPvLGG1sbc7tW2a6gw6CTeT/+Sbnc69RY23P3Xt6eP6MFBDJFXBbym1h3eMtF
+	/vMHF2QRfzoBmSv1sOt/vZqKMYRyp//TfW01mcwpWwHOxNUlct/T1EHFXDAmpw2FyJYCo3ukSml
+	sjsjm4SSrSSxSGUysuQTB2wTv/fWeAdPwXcTaIYFB4bQV7aVbdX1/L4cJSdmabcGMHmcJsuNtMN
+	lXdKKZ3l8GwqtL869gnZfwZ1Pcs6ZNTVRhizPgAE7Q7u04ojm47Rsxfka/1LJEVOP7lDxdS0Kcs
+	=
+X-Google-Smtp-Source: AGHT+IHX3Y30IjuDnUdCsu22PBCat70fUKLIyLzs2FeCzPdGY/Kl1l+0mfTzdQYtOCUKo1txIzTTrQ==
+X-Received: by 2002:a17:90b:582e:b0:311:a5ab:3d47 with SMTP id 98e67ed59e1d1-3139dfc339fmr1402796a91.1.1749503963765;
+        Mon, 09 Jun 2025 14:19:23 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3134b5a1d06sm6684888a91.17.2025.06.09.14.19.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 14:19:15 -0700 (PDT)
-Date: Mon, 9 Jun 2025 22:19:14 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: torvalds@linux-foundation.org, mingo@redhat.com, x86@kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] x86: prevent gcc from emitting rep movsq/stosq for
- inlined ops
-Message-ID: <20250609221914.38ad6738@pumpkin>
-In-Reply-To: <20250605164733.737543-1-mjguzik@gmail.com>
-References: <20250605164733.737543-1-mjguzik@gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        Mon, 09 Jun 2025 14:19:23 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 9 Jun 2025 14:19:22 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Eugene Shalygin <eugene.shalygin@gmail.com>
+Cc: Roy Seitz <royseitz@bluewin.ch>, Jean Delvare <jdelvare@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon: (asus-ec-sensors) add support for ROG STRIX
+ Z490-F GAMING
+Message-ID: <c069dbcd-9127-4ae6-9976-edc836c7b3ee@roeck-us.net>
+References: <20250529090222.154696-1-eugene.shalygin@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250529090222.154696-1-eugene.shalygin@gmail.com>
 
-On Thu,  5 Jun 2025 18:47:33 +0200
-Mateusz Guzik <mjguzik@gmail.com> wrote:
-
-> gcc is over eager to use rep movsq/stosq (starts above 40 bytes), which
-> comes with a significant penalty on CPUs without the respective fast
-> short ops bits (FSRM/FSRS).
+On Thu, May 29, 2025 at 11:01:41AM +0200, Eugene Shalygin wrote:
+> From: Roy Seitz <royseitz@bluewin.ch>
 > 
-> Another point is that even uarchs with FSRM don't necessarily have FSRS (Ice
-> Lake and Sapphire Rapids don't).
+> This adds support for the ROG STRIX Z490-F GAMING board.
 > 
-> More importantly, rep movsq is not fast even if FSRM is present.
+> Signed-off-by: Roy Seitz <royseitz@bluewin.ch>
+> Signed-off-by: Eugene Shalygin <eugene.shalygin@gmail.com>
 
-Which architecture is that?
-I got exactly the same timings for 'rep movsb' and 'rep movsq' when
-I did some tests on Intel cpu going back to Ivy bridge.
+Applied.
 
-I do need to redo them though, I've worked out how to time them
-without using mfence/lfence and that should give a reasonable
-estimation of the setup cost.
-(I can measure the data-dependency of a single divide...)
-
-	David
+Thanks,
+Guenter
