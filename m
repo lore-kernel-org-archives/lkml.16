@@ -1,153 +1,263 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2DA1E766F
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 12:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90B21FBC91;
+	Mon,  9 Jun 2025 12:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749471032; cv=none; b=IimPVFFhR8sFsHnrrLATsXRgj53kRT3vLTzGQL4kntBMpSXMyp942L61i67VCCdpQr1c7KqO0etVf4JpTaCKydK+k3fOP+GjWqERQyWX1HbI4D9o2lWM+Ux+41XXDTkqsrOe8wEsrdl4FCsLWilrsU4RrgWrNTgN/ElvX+y6LJ0=
+	t=1749471150; cv=none; b=mN4I4wSFA1zfyCgi1nJFD9ZmvWgssvlbsklIi30+z/F87Mp/xxpRTTn39vMFg76SH7D2FvK8rSAiLAAo7AbPtdBQruRLwd0R+UCWqOPbM6YsAeUxZcb3mDMKPqPL3E1u6mXW+YMz624lzwXD8hjl5a9i8Riu1SHKu8tW7OfbxXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749471032; c=relaxed/simple;
-	bh=TY5zNAutl0m3oIw2/b9oWsgPeIA5NU3jWJazKcUAVDg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l9VaCCljahMyX7zGRuQhf6MEgViPDd7JWgQV37FV9fX/sAE/gbs0UizhCvp8GoNOwqHu4zJ2zT93Kyw0SfiqirDnH0DTpjy4lLv1hhhgE8+aDOMej1sxyRxtF9pLsE4RJIKpKcLq250f7TMMABltYVm5rT+WxHdIl8gwTXGJ7SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=N/IY2dc1; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1749471150; c=relaxed/simple;
+	bh=TkDVKO5fyPmsNSZNS1lvjQeL87wVD4JhK+2OYMRm1C4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=jqGwnbN7uYE5WkDKn5SMMB79RyT5uzlILJm+Art0MrwzHShtUxuk9DQaFdW3oi/nxwARaKGexkS0+heN0t057rHbmEy4KKNJasdMUNxPZNlcefWCIGtCQgeueADuA6eyop+qzRLmyymzbXYXmm61Twati/6bjAx7bQzqzFomvBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NY52ZD//; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="N/IY2dc1"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a4ef2c2ef3so3556118f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 05:10:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NY52ZD//"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a528243636so2422771f8f.3;
+        Mon, 09 Jun 2025 05:12:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749471028; x=1750075828; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=y6N5f/+GPbCJ5uQVBP6ORFTMRuOc+3h+Og7u+CemS5s=;
-        b=N/IY2dc1ViTurbeAvZQpsagRlrQVibf9jc9f7AdpI7JqzQvdLN5TIGiGKpsbT5bKNm
-         FRR4ozflZL9fn7GmapEbLzDCp/EyqDiLppGB9n698xyf89Z6/6NUVMaK2UsVn6GHmhCe
-         8s3CBvcjXVG7MmV2M7nX0NtnFmRDaYd/SqdqBXaXJbuNfqIB/zGp2weHd1SETOLI03tb
-         VlMujLhAP9898YamuNzQ9+Jy+ckjEK68NFCgVOWG/iLfMA31zEEcLusNa35aWq5VWlbH
-         R3crKx/dzLm4/R3eJhjr6REQUrOeEQvF2RfBwsJ39ei2fE7y0JUgzIxbKNFISKX3F5H5
-         uFAQ==
+        d=gmail.com; s=20230601; t=1749471147; x=1750075947; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Vpun/tULtl0H5e1HVie0xVlPi4zB2Tu7EfAGao3SNJE=;
+        b=NY52ZD//SprPzWycI+lPrxEv4LrH4Attx5ad55Y4q6hdHwbvpanr1JnvjYD9Hvjj/X
+         HoMsvAxcpNEeEAhFdm1PfPSG5kDUJPA69Wt/DjWnu5jaFf+1twvnGMRAjJ13eGE5lcfN
+         W6xCMAMgCpddpN6zEBH40e4TXvMhj+MaGEUsxYqwUIwytEo0q+aIkdThtLqWjTRPpQYE
+         Qky7dRuH7wPDf0XW8y9r9ruoXRMvd2p89h5rIB+yPPBKaYS9bob8cDs2UpwVJl8kIzFA
+         GienTLjvunNAzq2QOHrINnF7gYephFYfYCjWBDRRxbrmcBF6XtJ1zT+bPMxqiBTyNSG3
+         RYyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749471028; x=1750075828;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y6N5f/+GPbCJ5uQVBP6ORFTMRuOc+3h+Og7u+CemS5s=;
-        b=j5lh0F0nlRyDnc+50B+sQkAv7HSBXsxnS6Yu5CXiMXFLLsH7w0qf3y5RlVV8ghl/WA
-         1wYuyGhsaRXTNlkv2KXlAfMOMu6w/djUblj/47UPDgW0Qwnn3tNjocAdcIF42WcpiOaB
-         qoJHH3q6BRBFAznbl4IpHVzI9od69srrNdty8i3tjbk3ojZASdFzf6LEDm7+jUSOzRw5
-         KPQC0J60Bwc64x1I4mA6cd3LFhB/Um8WhEpfMytH2Exd9rVcMxssd2ML/HJ7DbuObXmz
-         Tir2ypFbEsiCD5VOkJ8+mVNyX0wUQ7KdE4L73dB7Fqcv/uQQMy9Vj+W96mnsUlyoaYZj
-         VHAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXwIFjI2yxi7z/mlu3nMaI9dNNK/PC1ktN+KzzE0yqTHiBhqcGq2v05xWnI+I8wpbWXapwPEh7l/Hj3CmY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVU2EkHfo3gv/U2idbA/fLxp6V5HSgKmyFNRtS7ETzcI5PSdJM
-	7F56msPY3Vr4B9BcGT6tXld5IPgFvQ4IJ1jOJ60iHOyvowGW4Ysafc4tqJqfVIiqzghEZFTEy2U
-	69VZ9
-X-Gm-Gg: ASbGncs2TMPLjtjGsrTsmDix+oeMPz6hpFjFC8H5C2KSotmTfxeooQhGjp9Vvd/Ute4
-	ShAhsdSROYosOkAS36TidtrYrmWYNkQ5Rxpe6msGwBm0mB/ZPmE/w1hRFtEU/LFeygRWcAfUVgL
-	F7jkuOm0IJpmeqxcw3RTup1pDTp5Bw7Eda17fYU4M5J2j7kiX1t7Nw9R+sXXummInpk+lscduq5
-	hwfK2q0RoxPW87NZAAuDBFU8ObBD64ocuFU6uFDel3xBN6C0xolK9hc7AjkH/JsTAp9cuqNs0uo
-	MjRkqyk2xlibKURP/XEmxAO/rGZOKo67p64Av5zQ113RHGy2yeRvU0ApnP+21Ql9
-X-Google-Smtp-Source: AGHT+IEx4Ye29a424Oycvt0TTSzkDEp16kZB0ZMd8N7KGHi65ZlLyVud1xJwUXJ9t230L/eyg7P9hw==
-X-Received: by 2002:adf:f147:0:b0:3a4:f661:c3e0 with SMTP id ffacd0b85a97d-3a531ce1495mr9228500f8f.45.1749471027883;
-        Mon, 09 Jun 2025 05:10:27 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603078941sm53232035ad.7.2025.06.09.05.10.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 05:10:27 -0700 (PDT)
-Date: Mon, 9 Jun 2025 14:10:17 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: kernel test robot <lkp@intel.com>
-Cc: Raul E Rangel <rrangel@chromium.org>, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: init/main.c:753:(.init.text+0x7a): relocation truncated to fit:
- R_ARC_S25W_PCREL against symbol `__st_r13_to_r16' defined in .text section
- in ../lib/gcc/arc-linux/8.5.0/libgcc.a(_millicodethunk_st.o)
-Message-ID: <aEbPKan7PwHZfZvk@pathway.suse.cz>
-References: <202506080718.Q9VUfXsm-lkp@intel.com>
+        d=1e100.net; s=20230601; t=1749471147; x=1750075947;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vpun/tULtl0H5e1HVie0xVlPi4zB2Tu7EfAGao3SNJE=;
+        b=Vwei1PyaQIPht+++tBkRaaNJ3d/E863zXW9+xS2/m7SHK3EUyp5eohC+NRRPVYY+p2
+         lPlExlT72qe80R8LbXY2bSfkqxagaKoepOOeVAivhnXOWvfyhj7FUbQk9nX/ErSePpG1
+         yTsR1kDbrsV7ObPi6mtwZVDf/oyFCosc4tUzEKlBc3LiwWZLQjW4BLhzOGWBOKBSPWfT
+         e7q8eZ8t/NYNT5GltFMgkRJyZTG7WR1rigsIagjUrYpdJyNdYOBoJKwO5jg2NUVV2GWc
+         Z7sGDmMDoxwm+2L5p/I9Ob+G9UBLMCXsthefTvjyIu/okiQug79QXQ1eVw4o2Bh8NRRy
+         8jJA==
+X-Forwarded-Encrypted: i=1; AJvYcCVa4V+UL/V4tk8k5gQq8F3rbKuR5Xd8zKO1H0y4rLiq4aC8N9KMzdmOjKd0BovUp1HVbaD8vFMy2aj55mxk@vger.kernel.org, AJvYcCXk58O26lvRV9wr9hBMumS6zXjV+/uoUkNWANHq6Swbv1bTALKfM/Ay4hjuDBntYiiVRSUq2nMdKBA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfR70GXR721ET6y1wckggx9Q7886wZVtkHamOflKNu1xCcnsc7
+	I2Rq0Ud/vgw9f/ddJYvDhfMtTw9QQaJv+gmpvqOu0yKPR9UpcDHQbD2h
+X-Gm-Gg: ASbGnct+1SdZ3j3y6HwsIcQsxDcTGj0C6JmY8JbKUnFAqHPhd7uU3vjcg3UMyV0KaPH
+	5B34bKKd6D59PxGpyZ+3wq401NR535+Vmg9Wctyfn3zZFhs/OwYSffVdj1A9jircDPIzzhkmF5O
+	5jkyNst0q6QW5M6khWSGoBUKvp6mLG6X8qAhYg5MiA1KjBhWnQMg1bJc6OFVQQbLcfoKIWWW4s9
+	QYLxLvLWtWVHg7bNdsIbmivBM7dk2Jc7cDrXofMTcpAB6sA721B7ExqIBnv5Q2PTFtMYsp44tKk
+	U1A7gQCBHNcZdORSPOJ5xFFTEhsjHj5uPcCHiVqml/jUHIizljlaG+RzNhaMQVKDe6lvt6gs1Ma
+	hftdxou00E3FUfTOTpCCqMWbM0a/1QQx+9CCro63MfP7ZWnFX0S0OS0oraExXMPU=
+X-Google-Smtp-Source: AGHT+IHj3m1slrOYKA98Ye1v9q7Jap88kFAbrM6JW9r3QccET9QUKTfsYMIkLaJZ5F8pwxecx//m7w==
+X-Received: by 2002:a05:6000:400e:b0:3a1:f564:cd9d with SMTP id ffacd0b85a97d-3a5319b4642mr10525747f8f.36.1749471146782;
+        Mon, 09 Jun 2025 05:12:26 -0700 (PDT)
+Received: from ?IPV6:2a02:6b6f:e750:f900:146f:2c4f:d96e:4241? ([2a02:6b6f:e750:f900:146f:2c4f:d96e:4241])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53229e009sm9712606f8f.16.2025.06.09.05.12.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Jun 2025 05:12:26 -0700 (PDT)
+Message-ID: <b8490586-131b-4ce7-8835-aaa5437e3e97@gmail.com>
+Date: Mon, 9 Jun 2025 13:12:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202506080718.Q9VUfXsm-lkp@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] mm: khugepaged: use largest enabled hugepage order for
+ min_free_kbytes
+From: Usama Arif <usamaarif642@gmail.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, ziy@nvidia.com
+Cc: Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
+ linux-mm@kvack.org, hannes@cmpxchg.org, shakeel.butt@linux.dev,
+ riel@surriel.com, baolin.wang@linux.alibaba.com, Liam.Howlett@oracle.com,
+ npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, hughd@google.com,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, kernel-team@meta.com
+References: <20250606143700.3256414-1-usamaarif642@gmail.com>
+ <063273aa-a852-492a-93da-ba5229f544ca@lucifer.local>
+ <8200fd8b-edae-44ab-be47-7dfccab25a24@gmail.com>
+Content-Language: en-US
+In-Reply-To: <8200fd8b-edae-44ab-be47-7dfccab25a24@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun 2025-06-08 08:01:08, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   8630c59e99363c4b655788fd01134aef9bcd9264
-> commit: 17b655759e83fd5e28931a0ece96fa9c2ab718e7 init: Don't proxy `console=` to earlycon
-> date:   8 months ago
-> config: arc-randconfig-r113-20250607 (https://download.01.org/0day-ci/archive/20250608/202506080718.Q9VUfXsm-lkp@intel.com/config)
-> compiler: arc-linux-gcc (GCC) 8.5.0
-> reproduce: (https://download.01.org/0day-ci/archive/20250608/202506080718.Q9VUfXsm-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202506080718.Q9VUfXsm-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->    init/main.o: in function `do_early_param':
-> >> init/main.c:753:(.init.text+0x7a): relocation truncated to fit: R_ARC_S25W_PCREL against symbol `__st_r13_to_r16' defined in .text section in ../lib/gcc/arc-linux/8.5.0/libgcc.a(_millicodethunk_st.o)
 
-It might help to add -mmodel=medium or -mmodel=large into CFLAGS.
-Something like:
+> I dont like it either :)
+> 
 
-diff --git a/init/Makefile b/init/Makefile
-index d6f75d8907e0..83966686dcd3 100644
---- a/init/Makefile
-+++ b/init/Makefile
-@@ -6,6 +6,10 @@
- ccflags-y := -fno-function-sections -fno-data-sections
+Pressed "Ctrl+enter" instead of "enter" by mistake which sent the email prematurely :)
+Adding replies to the rest of the comments in this email.
+
+As I mentioned in reply to David now in [1], pageblock_nr_pages is not really
+1 << PAGE_BLOCK_ORDER but is 1 << min(HPAGE_PMD_ORDER, PAGE_BLOCK_ORDER) when
+THP is enabled.
+
+It needs a better name, but I think the right approach is just to change
+pageblock_order as recommended in [2]
  
- obj-y                          := main.o version.o mounts.o
-+ifeq ($(CONFIG_ARC),y)
-+CFLAGS_main.o                  := -mmodel=large
-+endif
-+
- ifneq ($(CONFIG_BLK_DEV_INITRD),y)
- obj-y                          += noinitramfs.o
- else
+[1] https://lore.kernel.org/all/4adf1f8b-781d-4ab0-b82e-49795ad712cb@gmail.com/
+[2] https://lore.kernel.org/all/c600a6c0-aa59-4896-9e0d-3649a32d1771@gmail.com/
 
 
-Unfortunately, I can't test the compilation for ARC architecture easily...
-
-Best Regards,
-Petr
-
-
-> vim +753 init/main.c
 > 
-> ^1da177e4c3f41 Linus Torvalds    2005-04-16  749  
-> ^1da177e4c3f41 Linus Torvalds    2005-04-16  750  /* Check for early params. */
-> ecc8617053e0a9 Luis R. Rodriguez 2015-03-30  751  static int __init do_early_param(char *param, char *val,
-> ecc8617053e0a9 Luis R. Rodriguez 2015-03-30  752  				 const char *unused, void *arg)
-> ^1da177e4c3f41 Linus Torvalds    2005-04-16 @753  {
-> 914dcaa84c53f2 Rusty Russell     2010-08-11  754  	const struct obs_kernel_param *p;
-> ^1da177e4c3f41 Linus Torvalds    2005-04-16  755  
-> ^1da177e4c3f41 Linus Torvalds    2005-04-16  756  	for (p = __setup_start; p < __setup_end; p++) {
-> 17b655759e83fd Raul E Rangel     2024-09-11  757  		if (p->early && parameq(param, p->str)) {
-> ^1da177e4c3f41 Linus Torvalds    2005-04-16  758  			if (p->setup_func(val) != 0)
-> ea676e846a8171 Andrew Morton     2013-04-29  759  				pr_warn("Malformed early option '%s'\n", param);
-> ^1da177e4c3f41 Linus Torvalds    2005-04-16  760  		}
-> ^1da177e4c3f41 Linus Torvalds    2005-04-16  761  	}
-> ^1da177e4c3f41 Linus Torvalds    2005-04-16  762  	/* We accept everything at this stage. */
-> ^1da177e4c3f41 Linus Torvalds    2005-04-16  763  	return 0;
-> ^1da177e4c3f41 Linus Torvalds    2005-04-16  764  }
-> ^1da177e4c3f41 Linus Torvalds    2005-04-16  765  
+>>> +{
+>>> +	return (1UL << min(thp_highest_allowable_order(), PAGE_BLOCK_ORDER));
+>>> +}
+>>> +
+>>>  static void set_recommended_min_free_kbytes(void)
+>>>  {
+>>>  	struct zone *zone;
+>>> @@ -2638,12 +2658,16 @@ static void set_recommended_min_free_kbytes(void)
+>>
+>> You provide a 'patchlet' in
+>> https://lore.kernel.org/all/a179fd65-dc3f-4769-9916-3033497188ba@gmail.com/
+>>
+>> That also does:
+>>
+>>         /* Ensure 2 pageblocks are free to assist fragmentation avoidance */
+>> -       recommended_min = pageblock_nr_pages * nr_zones * 2;
+>> +       recommended_min = min_thp_pageblock_nr_pages() * nr_zones * 2;
+>>
+>> So comment here - this comment is now incorrect, this isn't 2 page blocks,
+>> it's 2 of 'sub-pageblock size as if page blocks were dynamically altered by
+>> always/madvise THP size'.
+>>
+>> Again, this whole thing strikes me as we're doing things at the wrong level
+>> of abstraction.
+>>
+>> And you're definitely now not helping avoid pageblock-sized
+>> fragmentation. You're accepting that you need less so... why not reduce
+>> pageblock size? :)
+>>
+
+Yes agreed.
+
+>> 	/*
+>> 	 * Make sure that on average at least two pageblocks are almost free
+>> 	 * of another type, one for a migratetype to fall back to and a
+>>
+>> ^ remainder of comment
+>>
+>>>  	 * second to avoid subsequent fallbacks of other types There are 3
+>>>  	 * MIGRATE_TYPES we care about.
+>>>  	 */
+>>> -	recommended_min += pageblock_nr_pages * nr_zones *
+>>> +	recommended_min += min_thp_pageblock_nr_pages() * nr_zones *
+>>>  			   MIGRATE_PCPTYPES * MIGRATE_PCPTYPES;
+>>
+>> This just seems wrong now and contradicts the comment - you're setting
+>> minimum pages based on migrate PCP types that operate at pageblock order
+>> but without reference to the actual number of page block pages?
+>>
+>> So the comment is just wrong now? 'make sure there are at least two
+>> pageblocks', well this isn't what you're doing is it? So why there are we
+>> making reference to PCP counts etc.?
+>>
+>> This seems like we're essentially just tuning these numbers someswhat
+>> arbitrarily to reduce them?
+>>
+>>>
+>>> -	/* don't ever allow to reserve more than 5% of the lowmem */
+>>> -	recommended_min = min(recommended_min,
+>>> -			      (unsigned long) nr_free_buffer_pages() / 20);
+>>> +	/*
+>>> +	 * Don't ever allow to reserve more than 5% of the lowmem.
+>>> +	 * Use a min of 128 pages when all THP orders are set to never.
+>>
+>> Why? Did you just choose this number out of the blue?
+
+
+Mentioned this in the previous comment.
+>>
+>> Previously, on x86-64 with thp -> never on everything a pageblock order-9
+>> wouldn't this be a much higher value?
+>>
+>> I mean just putting '128' here is not acceptable. It needs to be justified
+>> (even if empirically with data to back it) and defined as a named thing.
+>>
+>>
+>>> +	 */
+>>> +	recommended_min = clamp(recommended_min, 128,
+>>> +				(unsigned long) nr_free_buffer_pages() / 20);
+>>> +
+>>>  	recommended_min <<= (PAGE_SHIFT-10);
+>>>
+>>>  	if (recommended_min > min_free_kbytes) {
+>>> diff --git a/mm/shmem.c b/mm/shmem.c
+>>> index 0c5fb4ffa03a..8e92678d1175 100644
+>>> --- a/mm/shmem.c
+>>> +++ b/mm/shmem.c
+>>> @@ -136,10 +136,10 @@ struct shmem_options {
+>>>  };
+>>>
+>>>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>>> -static unsigned long huge_shmem_orders_always __read_mostly;
+>>> -static unsigned long huge_shmem_orders_madvise __read_mostly;
+>>> -static unsigned long huge_shmem_orders_inherit __read_mostly;
+>>> -static unsigned long huge_shmem_orders_within_size __read_mostly;
+>>> +unsigned long huge_shmem_orders_always __read_mostly;
+>>> +unsigned long huge_shmem_orders_madvise __read_mostly;
+>>> +unsigned long huge_shmem_orders_inherit __read_mostly;
+>>> +unsigned long huge_shmem_orders_within_size __read_mostly;
+>>
+>> Again, we really shouldn't need to do this.
+
+Agreed, for the RFC, I just did it similar to the anon ones when I got the build error
+trying to use these, but yeah a much better approach would be to just have a
+function in shmem that would return the largest shmem thp allowable order.
+
+
+>>
+>>>  static bool shmem_orders_configured __initdata;
+>>>  #endif
+>>>
+>>> @@ -516,25 +516,6 @@ static bool shmem_confirm_swap(struct address_space *mapping,
+>>>  	return xa_load(&mapping->i_pages, index) == swp_to_radix_entry(swap);
+>>>  }
+>>>
+>>> -/*
+>>> - * Definitions for "huge tmpfs": tmpfs mounted with the huge= option
+>>> - *
+>>> - * SHMEM_HUGE_NEVER:
+>>> - *	disables huge pages for the mount;
+>>> - * SHMEM_HUGE_ALWAYS:
+>>> - *	enables huge pages for the mount;
+>>> - * SHMEM_HUGE_WITHIN_SIZE:
+>>> - *	only allocate huge pages if the page will be fully within i_size,
+>>> - *	also respect madvise() hints;
+>>> - * SHMEM_HUGE_ADVISE:
+>>> - *	only allocate huge pages if requested with madvise();
+>>> - */
+>>> -
+>>> -#define SHMEM_HUGE_NEVER	0
+>>> -#define SHMEM_HUGE_ALWAYS	1
+>>> -#define SHMEM_HUGE_WITHIN_SIZE	2
+>>> -#define SHMEM_HUGE_ADVISE	3
+>>> -
+>>
+>> Again we really shouldn't need to do this, just provide some function from
+>> shmem that gives you what you need.
+>>
+>>>  /*
+>>>   * Special values.
+>>>   * Only can be set via /sys/kernel/mm/transparent_hugepage/shmem_enabled:
+>>> @@ -551,7 +532,7 @@ static bool shmem_confirm_swap(struct address_space *mapping,
+>>>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>>>  /* ifdef here to avoid bloating shmem.o when not necessary */
+>>>
+>>> -static int shmem_huge __read_mostly = SHMEM_HUGE_NEVER;
+>>> +int shmem_huge __read_mostly = SHMEM_HUGE_NEVER;
+>>
+>> Same comment.
+>>
+>>>  static int tmpfs_huge __read_mostly = SHMEM_HUGE_NEVER;
+>>>
+>>>  /**
+>>> --
+>>> 2.47.1
+>>>
 > 
-> :::::: The code at line 753 was first introduced by commit
-> :::::: 1da177e4c3f41524e886b7f1b8a0c1fc7321cac2 Linux-2.6.12-rc2
-> 
-> :::::: TO: Linus Torvalds <torvalds@ppc970.osdl.org>
-> :::::: CC: Linus Torvalds <torvalds@ppc970.osdl.org>
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+
