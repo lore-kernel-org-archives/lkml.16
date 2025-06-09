@@ -1,161 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3528E259C87
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 04:32:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61FFA25C813;
+	Mon,  9 Jun 2025 04:32:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749443542; cv=none; b=Ujxj8qvg1l5JzQi3nqWwEml2ppFETNnLxLylLI2WUfi9JBHjhz2p/Zj2GlzvFfmLS+PoH+4dtdgRUZpdZXCkahOwQMgyWSsxgsYI8Izll8oWv8PzTKCiIqZwH9SHmc6e4lfulVRpxcWHQAFtRMnXx8vKsk2amPH+27yd8jOfxNQ=
+	t=1749443561; cv=none; b=Uq77KPx5EKndFHJSRq0MJqF0zdn1F/BQ23TuySHgLtC5U9UnESog4yQ2n7HpAa1F+BFTqatmaeZukEANvX7wK3kCi8iFzPdUCc+JzxMCDzxBfeiOqxUNuR1VZrPzMAxDXtzHal/j+Z+37LfMG71eCf1/ez6P7IpybH2KczFX3FM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749443542; c=relaxed/simple;
-	bh=FdZ5xMRsS8L4kCJzdeb0IexN8j+Z1kdYKkOrW/omX28=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OgbyAyEdSofjqGsHYALXkkWf63X2EyI0z3Rv9DAqK7HZsTCGbr0TOl4wPdlzTrBX+kOkZCQwA9NUHuJUcS1efTMF3xOm2B60gNvVUk1ytAWVTfyehPgTZlBA6kaCNIrbCkXSX1oihG4d7QgbUN/oe4OM67djOsimQfFWfWbrhZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YuriH3Sa; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YuriH3Sa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2BC5C4CEEB
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 04:32:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749443541;
-	bh=FdZ5xMRsS8L4kCJzdeb0IexN8j+Z1kdYKkOrW/omX28=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YuriH3Sa9tYeBYlGTSaE1WkedTEgEJzMqT11baDtYMf31gTEeg3PB122OHBHdJbfd
-	 ZhG+so7etPaoFpdifmKFPn5Tm37WUuUxqOPU3NtfeBqoPXiT2fF6JrwWFnnSPREm2c
-	 im4qIyE385UnrkDLN71QwfNQrj7lEb0btVsNMI76FQZ9/EEyzDVzflj5/stpjsYrR1
-	 YHTqyYIgPwaNjtzqwa1DAgBns2mrIqa+vnYxXwAONuVbzOMiW3R0/nf8jlOwBwXwMC
-	 1DYBNtU3HWys94dIcl9q32i5ZAIg2qYM9c+bE9S8IVyN9Bku9BF5HD/KyilLAqpD5+
-	 D8pny3Sr13J2A==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54b10594812so4272967e87.1
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 21:32:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVaGhcpAjeX/iFkbnNQf3WOtmczB2qSwJH8RwC1yW7Z/wjhkBP+4ZnEBGZL7ZjHn7ejGgYENVQLNAAreXE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yziu5ETutqedsFwN4iDteomd7FkbPtVF0Wxab+uB5lMMesT3NFj
-	YYzk1Re65lamT/TZ7mLEPBNuUyWkCLxA8wsoxqIVdEmr+GkYmJ2loxbuKzvrap4YCjkvJCEbfWR
-	YQJpOtG5xrGpRLr03aq37iZY/8VMumSQ=
-X-Google-Smtp-Source: AGHT+IG/vSoBGoPVnUeGSR5Rgmq9JpmpZbj7EB3bohcDHvEzto0LyLdFDNmCmHJhS0bbAuP7yKY/PQDLMdVpAhRuwqg=
-X-Received: by 2002:a05:6512:118c:b0:54e:9066:9af7 with SMTP id
- 2adb3069b0e04-55366bea7d1mr2670834e87.27.1749443540466; Sun, 08 Jun 2025
- 21:32:20 -0700 (PDT)
+	s=arc-20240116; t=1749443561; c=relaxed/simple;
+	bh=aKhPMhEEXLCTOgFuZlDEMCFOmdcuRJ4fgxKfEQzZvCo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ixapZNmciyDPjHJee1Z/kv0xp8EJgVnPPXSned1Ob2G4pmLHh7HOhVC+73w9L5X9PuFng4QN+YGMWGHG2F+w4N0GyDbLA3jBe9VUps2ROqRz+QVj9DERzaWrKpblI0dTwShcfkzzOXov0oN8lcLZ+Lzg+I8CIfBqvZ+0LaR1TL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-79-684663e3556d
+From: Byungchul Park <byungchul@sk.com>
+To: willy@infradead.org,
+	netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	kernel_team@skhynix.com,
+	kuba@kernel.org,
+	almasrymina@google.com,
+	ilias.apalodimas@linaro.org,
+	harry.yoo@oracle.com,
+	hawk@kernel.org,
+	akpm@linux-foundation.org,
+	davem@davemloft.net,
+	john.fastabend@gmail.com,
+	andrew+netdev@lunn.ch,
+	asml.silence@gmail.com,
+	toke@redhat.com,
+	tariqt@nvidia.com,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	saeedm@nvidia.com,
+	leon@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	david@redhat.com,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	horms@kernel.org,
+	linux-rdma@vger.kernel.org,
+	bpf@vger.kernel.org,
+	vishal.moola@gmail.com
+Subject: [PATCH net-next 5/9] netmem: use _Generic to cover const casting for page_to_netmem()
+Date: Mon,  9 Jun 2025 13:32:21 +0900
+Message-Id: <20250609043225.77229-6-byungchul@sk.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250609043225.77229-1-byungchul@sk.com>
+References: <20250609043225.77229-1-byungchul@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602163302.478765-1-masahiroy@kernel.org> <3cebc3c4-dbaf-41f6-b98d-1d33bea2eeeb@csgroup.eu>
- <CAK7LNAQvRFVOeQhVos1T-R-Uq9ekY9Fo7HS+D=TCZziLo5TpHQ@mail.gmail.com> <8734c9wwvv.fsf@mpe.ellerman.id.au>
-In-Reply-To: <8734c9wwvv.fsf@mpe.ellerman.id.au>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 9 Jun 2025 13:31:43 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARhhw7pg+ymaSdniXwfBbHUoAkOJiwFzuGVRoN01KhHnw@mail.gmail.com>
-X-Gm-Features: AX0GCFtPsQFxjuGHywgztAGrisTJf8QTNS_os0tvyIWPeq0FJaSszxBi_gRlGoE
-Message-ID: <CAK7LNARhhw7pg+ymaSdniXwfBbHUoAkOJiwFzuGVRoN01KhHnw@mail.gmail.com>
-Subject: Re: [PATCH] powerpc: use always-y instead of extra-y in Makefiles
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, linuxppc-dev@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTYRTHe/Y8e/e6nLytqDejxIUZXazE5EAXgi4834r6EgnZ0rc2csvm
+	JRUCSyOT1NDCnDOmos4LLVa6rautkWlGsdLWVZ0XCrpuNZ0GtWVS3378z/93zpfDYvlZcSSr
+	1mYKOq0yTcFIifRTeO3qkZQdqrVnvCIwmNsYaJ3IgaZBmxgMLR0IvgdeS8Dn7GKgvtaPwfCk
+	kMAP8ySG0QceCQw0jhG4dcaKwVP2kIGSwikMp2wmETztKBXDhckGDNb8QQk8u2Fg4F3bLzGM
+	OUoIdOubCQyUboEHxvngf/QRgdNsFYH/XA0DFS4jA8OFAwhc9z0Eqk+WIjDfcYthasLAbImm
+	15tfiqhd/1ZCjZYses20gha7XZhaWs4y1OItl9A3/bcY+vDSFKF2m09ESwo+M/Tb6CtCv9zp
+	Y6j5eh+hvUanhPosS3Zx+6QbU4U0dbagW7P5gFTV29ZD0mvCcnpqLDgfDUmKURjLcwn88/HT
+	ohl2t7qYEDNcLO92B3CI53HreJ+nixQjKYu5z2J+1DD1R5jL7ecn6nx/mHAx/MvOYRRiGbee
+	bx4y/T0Qxbde7QwuYtkwLpEfdGeGYnmw4nhuwtP1OXx31QgJVXDwrvmyPBTjoFnQXo2nt9Sy
+	fOGHmGleyN8zucl5xOn/s/X/bP1/thHhFiRXa7M1SnVaQpwqV6vOiUs5qrGg4IM0nviZZEPe
+	p3sciGORIlx2oHK7Si5WZmfkahyIZ7Finowb2KqSy1KVuXmC7miyLitNyHCgRSxRLJDF+4+n
+	yrnDykzhiCCkC7qZqYgNi8xH5JAnOWrNe/zqyTHvLF/S7vgXllhpnrypu5RG9PujV9U3LFZl
+	aUdvBvTD7afaI6LKvwYGvY1VuKu57Eoc7EXVRTcnx/lAR1/ecntR/3hi58qdm1jzRbX1Lj40
+	dhAlFkfeXvrxsWYTVxdzuPJ7EaooeFw227/t0+L0crsTb1imIBkq5boVWJeh/A2gjatAHAMA
+	AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe8/77pyz1eK0LA8JJouKjLRC44kuCGUeIqL6UhSVww5tqNM2
+	NQ0iTSsSNbNAmzOWpm5OWq2LFyRiiuUFlFmxstzcVCrKLtYyLWrrQn778X9+z//58rBY8Y4s
+	YjXaDFGnVaUoaRmR7dyQv8qXtE29eqhiLRhtjTRYJ7Oh3tMsAWPDPQSfvw0yMNHxkIaaa34M
+	xr4CAl9sUxhGO70MuOvGCLSda8LgvfCIhuKCaQynm80UtFd1SaD/XokELk/VYmjK9TAw0Gqk
+	YajxpwTGHMUEugwWAu6SOOg0LQR/z1sEHbYmCvxFVTRccppo8BW4ETjbvQQq80oQ2O67JDA9
+	aaTjlMIdyzNKaDG8ZASTPVO4bY4UCl1OLNgbztOC/VMZI7x42kYLjyqmidDSPEEJxfnjtPBx
+	9DkR3t9/Qgs1rz5Qgu3OEyL0mjqYXfP2yzYeEVM0WaIuenOiTN3b2E3Sq6TZ3VV2nIuGmUIk
+	ZXkuhndZnXSQaW4573J9w0EO4dbwE96HpBDJWMyNS/hR4zQVHMznDvGT1RO/mXBL+WcPfCjI
+	ci6Wtwyb/5Yu5q03HwSKWFbKreM9roxgrAgojsdm/Eefx3ddGSFBBQfu2q4qgjEObObfrcSl
+	SG6YYRn+W4YZlgnhBhSi0WalqjQpsVH6ZHWOVpMdlZSWakeBJ6g7+f1iM/o8kOBAHIuUc+SJ
+	5fFqhUSVpc9JdSCexcoQOefeolbIj6hyToi6tMO6zBRR70BhLFGGyrfvFRMV3FFVhpgsiumi
+	7t+UYqWLclGnvy/mZHnLyMCZ41/zah0QetNoqdNWn9oST+2JYJLlc2+PlBI/ZIf3tHdaxdb6
+	oll9bQdeL3sznt/CVzDh0Wcpaxml3dHgmb2kRqwePHgjduuFrT57aCVYVkZIM+fX/sy5vuyW
+	V3Wqf315MkqY2rfph0eyYLehdcWxsLwpX5SS6NWqNZFYp1f9AnIt69gAAwAA
+X-CFilter-Loop: Reflected
 
-On Mon, Jun 9, 2025 at 10:02=E2=80=AFAM Michael Ellerman <mpe@ellerman.id.a=
-u> wrote:
->
-> Masahiro Yamada <masahiroy@kernel.org> writes:
-> > On Tue, Jun 3, 2025 at 3:50=E2=80=AFPM Christophe Leroy
-> > <christophe.leroy@csgroup.eu> wrote:
-> >> Le 02/06/2025 =C3=A0 18:32, Masahiro Yamada a =C3=A9crit :
-> >> > The extra-y syntax is planned for deprecation because it is similar
-> >> > to always-y.
-> >> >
-> >> > When building the boot wrapper, always-y and extra-y are equivalent.
-> >> > Use always-y instead.
-> >> >
-> >> > In arch/powerpc/kernel/Makefile, I added ifdef KBUILD_BUILTIN to
-> >> > keep the current behavior: prom_init_check is skipped when building
-> >> > only modular objects.
-> >>
-> >> I don't understand what you mean.
-> >>
-> >> CONFIG_PPC_OF_BOOT_TRAMPOLINE is a bool, it cannot be a module.
-> >>
-> >> prom_init_check is only to check the content of prom_init.o which is
-> >> never a module.
-> >>
-> >> Is always-y to run _after_ prom_init.o is built ?
-> >
-> > The intent of "make ARCH=3Dpowerpc modules"
-> > is to compile objects that are necessary for modules,
-> > that is, all built-in objects are skipped.
-> >
-> > However,
-> > always-$(CONFIG_PPC_OF_BOOT_TRAMPOLINE) +=3D prom_init_check
-> > would generate prom_init_check regardless,
-> > and its prerequisite, prom_init.o as well.
-> >
-> > With CONFIG_MODULES=3Dy and
-> > CONFIG_MODVERSIONS=3Dn,
-> > and without ifdef KBUILD_BUILTIN,
-> >
-> > $ make ARCH=3Dpowerpc CROSS_COMPILE=3Dpowerpc64-linux-gnu-   modules
-> >
-> > would result in this:
-> >
-> >
-> >   CC [M]  arch/powerpc/kvm/book3s_xive_native.o
-> >   CC [M]  arch/powerpc/kvm/book3s_64_vio.o
-> >   LD [M]  arch/powerpc/kvm/kvm.o
-> >   CC [M]  arch/powerpc/kvm/book3s_hv.o
-> >   AS [M]  arch/powerpc/kvm/book3s_hv_interrupts.o
-> >   CC [M]  arch/powerpc/kvm/book3s_64_mmu_hv.o
-> >   CC [M]  arch/powerpc/kvm/book3s_64_mmu_radix.o
-> >   CC [M]  arch/powerpc/kvm/book3s_hv_nested.o
-> >   CC [M]  arch/powerpc/kvm/book3s_hv_tm.o
-> >   LD [M]  arch/powerpc/kvm/kvm-hv.o
-> >   CC [M]  arch/powerpc/kernel/rtas_flash.o
-> >   CC      arch/powerpc/kernel/prom_init.o
-> >   PROMCHK arch/powerpc/kernel/prom_init_check
-> >   CC [M]  kernel/locking/locktorture.o
-> >   CC [M]  kernel/time/test_udelay.o
-> >   CC [M]  kernel/time/time_test.o
-> >   CC [M]  kernel/backtracetest.o
-> >   CC [M]  kernel/torture.o
-> >   CC [M]  kernel/resource_kunit.o
-> >   CC [M]  kernel/sysctl-test.o
-> >   CC [M]  fs/ext4/inode-test.o
-> >   LD [M]  fs/ext4/ext4-inode-test.o
-> >   CC [M]  fs/fat/namei_vfat.o
-> >   LD [M]  fs/fat/vfat.o
-> >   CC [M]  fs/fat/fat_test.o
-> >   CC [M]  fs/nls/nls_ucs2_utils.o
-> >   CC [M]  fs/netfs/buffered_read.o
-> >   CC [M]  fs/netfs/buffered_write.o
-> > ...
-> >
-> >
-> >
-> > You can see these two lines:
-> >
-> >   CC      arch/powerpc/kernel/prom_init.o
-> >   PROMCHK arch/powerpc/kernel/prom_init_check
-> >
-> > are supposed to be skipped when "make modules",
-> > but actually compiled without ifdef.
-> >
-> > So, I added ifdef KBUILD_BUILTIN to preserve
-> > the current behavior.
->
-> OK, that makes sense.
->
-> I don't really ever build just modules, so I wouldn't notice, but some
-> folks probably do.
->
-> Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+The current page_to_netmem() doesn't cover const casting resulting in
+trying to cast const struct page * to const netmem_ref fails.
 
-No rush for this patch.
-Please take it to your ppc tree.
-Thank you.
+To cover the case, change page_to_netmem() to use macro and _Generic.
 
---=20
-Best Regards
-Masahiro Yamada
+Signed-off-by: Byungchul Park <byungchul@sk.com>
+Reviewed-by: Mina Almasry <almasrymina@google.com>
+Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ include/net/netmem.h | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/include/net/netmem.h b/include/net/netmem.h
+index 2687c8051ca5..65bb87835664 100644
+--- a/include/net/netmem.h
++++ b/include/net/netmem.h
+@@ -195,10 +195,9 @@ static inline netmem_ref net_iov_to_netmem(struct net_iov *niov)
+ 	return (__force netmem_ref)((unsigned long)niov | NET_IOV);
+ }
+ 
+-static inline netmem_ref page_to_netmem(struct page *page)
+-{
+-	return (__force netmem_ref)page;
+-}
++#define page_to_netmem(p)	(_Generic((p),			\
++	const struct page * :	(__force const netmem_ref)(p),	\
++	struct page * :		(__force netmem_ref)(p)))
+ 
+ /**
+  * virt_to_netmem - convert virtual memory pointer to a netmem reference
+-- 
+2.17.1
+
