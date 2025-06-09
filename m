@@ -1,93 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B11227BA1;
-	Mon,  9 Jun 2025 21:00:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF575227599;
+	Mon,  9 Jun 2025 21:00:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749502856; cv=none; b=SPKasnt8hoiMhKt9CEJNPt4T4ZRIZERJ6292odi80jmzvK73jrGGRp775xJRR+zW4Qq2OdShlCr9GEa793YfPoxQ/tGo10Ly08cllK359tTBIBiAXD92P/isfCO9tiFLU9ToW0ePkxg5T+VQowVePNcjoOkZbXecq9sG4f3HLEo=
+	t=1749502860; cv=none; b=Qo78I3w5XhUN1zdQzyt0PLzL3ZPZRrTUSjaVYsZLZTQ3eXQyvCQVTYDge8x/adlFxkem4mnkGLD0LRJOIvXI5jx+FvFDyLl3oSTWcRiRydUpfQzZ/LAEnAJj+fninhHznAGrFl4tS49XCNLqI25IFkoCJbSrToEqIVczZAIDJoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749502856; c=relaxed/simple;
-	bh=ieOEa6WuF3l6Ed2jnV0bnaUA1/amQpmtX3pZEZDGG5o=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=tnrjtTQAqJ3ZXSI6pkRd0cxAqO2WQoXFj/QZDkq/mPwFVDsEeSLqYVACcXeiWOv/d0hcKL2uzz/u2svCUE9o6q5/SpY//uKvWK+LYZJwBZB6WqnY/KUopDuPHQNpgY35bjRmqjlMckLw+ldZLWcLD1KXcUKiTMEfIlHGepf08Lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=troLZG4Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749502860; c=relaxed/simple;
+	bh=XzCQb2hs95nRYm8RcK32DtG5sjazppbKMDyZ0t0F2xU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=PkN3CgCrluj37UbNjarAMv87qEVfGxGtdLrsUGP4MMzhMx5qaOPvOzIZ1X1acRwqDSu2lTfi7WOdJXGHbfbc1wgipYNuXMUQyD5OPg2/e3J1OuAO3owTWC+WCMEUlIqA3qwIWP+TyHCfIH1/MNZK3ld30x6LRKp1hNkg8+OwRVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=MBKhHuMk; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="troLZG4Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E5B7C4CEF0;
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="MBKhHuMk"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net A8BDE41AA1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1749502854; bh=Byi6ZbZeSTJ4d0f4c+Txg+G1R737uVa/AC1DuFNbhjQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=MBKhHuMk27quWMUCqecP/2rE811WfvZ88RlmLggZ67jpwR0HL4WAIxKp7uRQ7/iwM
+	 wyoR83XEcQ6mPbBK0KcOb2Meua26eLYs1XOP+KGTaDEOtrjKhu+mg510aOFJByDZwJ
+	 HtAEwskVmRqFe1WLiVLC5Poc4QTa0OHVzTL6hpCk/AIkNHYGWyWd2+P7GhBishdD7T
+	 VBCwPji2GhB1AIULsTADjNtpFeaEIm9gnk6f5uhYuDvZa2q1VW2BBlWxxagCb7jc/W
+	 bjNjvINyD8AFwiLK1bUBPv1qEbycLxyi/iy1eSvgKTaeLv0scXI+1mqbMwbxfrF2GE
+	 GB1caN+/OV3iA==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id A8BDE41AA1;
 	Mon,  9 Jun 2025 21:00:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749502856;
-	bh=ieOEa6WuF3l6Ed2jnV0bnaUA1/amQpmtX3pZEZDGG5o=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=troLZG4YHItx4I8RpCauX4PUCbI+LA6HDaELEgXzOVTraEFedyrYD6O6ML/7BTY5Y
-	 rM0rwDmveydn97QORdf2kcugiHfThnSINsEDLqHEDgEMcywTDLANJXySPUZwfph2zB
-	 +wdQshpyxXeN+Rpwyg59BkQXrqn/2l/N0IdyJCIKJkz7vjAiZUHYml6Ar3G9gxnBnz
-	 JEdTrrIo2XVfxCQGjd4f42xjA66vkUfx8ouSQ/JHVA5F7E7cJE/7v8CB5DKkXvTtEk
-	 +RkYPq/ZtJlYiS8Au/3Z6Yn9mH/V27lNKGYHjrs8h3G177H/cwlc1kdvYTN1xRVtaA
-	 7t2DJ8V/dngsw==
-From: Mark Brown <broonie@kernel.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- cy_huang@richtek.com
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Conor Dooley <conor+dt@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Roy Chiu <roy_chiu@richtek.com>, linux-sound@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <cover.1749454717.git.cy_huang@richtek.com>
-References: <cover.1749454717.git.cy_huang@richtek.com>
-Subject: Re: [PATCH v2 0/2] ASoC: Add Richtek RTQ9124 support
-Message-Id: <174950285438.277844.8562649220481873561.b4-ty@kernel.org>
-Date: Mon, 09 Jun 2025 22:00:54 +0100
+From: Jonathan Corbet <corbet@lwn.net>
+To: Brigham Campbell <me@brighamcampbell.com>, skhan@linuxfoundation.org,
+ linux-kernel-mentees@lists.linux.dev, Madhavan Srinivasan
+ <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas
+ Piggin <npiggin@gmail.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Athira Rajeev <atrajeev@linux.ibm.com>,
+ "open list:LINUX FOR POWERPC (32-BIT AND 64-BIT)"
+ <linuxppc-dev@lists.ozlabs.org>, "open list:DOCUMENTATION"
+ <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Brigham Campbell <me@brighamcampbell.com>, Randy Dunlap
+ <rdunlap@infradead.org>
+Subject: Re: [PATCH v3] docs: powerpc: Add htm.rst to table of contents
+In-Reply-To: <20250528054146.2658537-2-me@brighamcampbell.com>
+References: <20250528054146.2658537-2-me@brighamcampbell.com>
+Date: Mon, 09 Jun 2025 15:00:53 -0600
+Message-ID: <87ldq0aauy.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Type: text/plain
 
-On Mon, 09 Jun 2025 15:47:26 +0800, cy_huang@richtek.com wrote:
-> This patch series adds Richtek RTQ9124 1x30W audio amplifier support.
-> 
-> v2:
-> - Instead to add a dedicated rtq9124 document file, append the
->   description to the existed rt9123 yaml
-> 
-> ChiYuan Huang (2):
->   ASoC: dt-bindings: rt9123: Append RTQ9124 description
->   ASoC: codecs: Add support for Richtek RTQ9124
-> 
-> [...]
+Brigham Campbell <me@brighamcampbell.com> writes:
 
-Applied to
+> Fix the following documentation build error, which was introduced when
+> Documentation/arch/powerpc/htm.rst was added to the repository without
+> any reference to the document.
+>
+> Documentation/arch/powerpc/htm.rst: WARNING: document isn't included in any toctree [toc.not_included]
+>
+> Fixes: ab1456c5aa7a ("powerpc/pseries/htmdump: Add documentation for H_HTM debugfs interface")
+> Acked-by: Randy Dunlap <rdunlap@infradead.org>
+> Tested-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Brigham Campbell <me@brighamcampbell.com>
+> ---
+> Changes in v3:
+>  - Edit commit message to conform better to de facto kernel development style.
+>  - No changes to the diff.
+>
+>  Documentation/arch/powerpc/index.rst | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/arch/powerpc/index.rst b/Documentation/arch/powerpc/index.rst
+> index 0560cbae5fa1..53fc9f89f3e4 100644
+> --- a/Documentation/arch/powerpc/index.rst
+> +++ b/Documentation/arch/powerpc/index.rst
+> @@ -19,6 +19,7 @@ powerpc
+>      elf_hwcaps
+>      elfnote
+>      firmware-assisted-dump
+> +    htm
+>      hvcs
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+Applied, thanks.
 
-Thanks!
-
-[1/2] ASoC: dt-bindings: rt9123: Append RTQ9124 description
-      commit: 5c694e3a83d089df6b00747cf4627735ea14014e
-[2/2] ASoC: codecs: Add support for Richtek RTQ9124
-      commit: 1f5cdb6ab45e1c06ae0953609acbb52f8946b3e8
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+jon
