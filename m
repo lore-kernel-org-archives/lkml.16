@@ -1,162 +1,250 @@
-Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103B71E1A31;
-	Mon,  9 Jun 2025 12:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3390257AF2;
+	Mon,  9 Jun 2025 12:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749472064; cv=none; b=iP1pb59ayY8Ivp7s3Y9dX8OzPufPt1slCBKudwJWoY0vLiVVxcWOyOnr+NMU306c5h5k+3DNpNeK2ZXVDEKOqaXpqS/YMMdzwdmexKr3LjYJt1f0Y4I01QST1OAZsnDeuh03upThGBxqkDLXCzG9s5STcF4VWBZ4pyjjgSFn5g4=
+	t=1749472066; cv=none; b=tOoPdpBrZI+/+Bwr2z+o+3DpKd884cuhfIwC/Fk5fT41402lVfBvpGpVWwCHc0nlDhAwLqmebmVwCkd6bJuDIa0amQxuugW/KbRI3fcTK6s/MrcOMC9xSxYwaWcSDOECkRyTa52NmunccgwKHhE0pjw8CRUxqG+223jBxINq0iI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749472064; c=relaxed/simple;
-	bh=fMxz0jV4QePrXh05PZ8xukpwaPrvRnONxi5a7SuaC2k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lPDP5FNuZ7k9W9dX7Km8C10GFX7j6T332lQwQSR9tcbcHD94IexTrgKW1wNN+i0C7T38ZWTWZgPHPGRGoZA3dZp1kz/BZ/UIsy18TQXQnhsLKZpUFDJ4WB9EiAEL75jHYfbaTLPJzZpEKkPdBYrBrpYs8aN4jFLVJBnd7He1j40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=O0s9GeJS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=b+NZrgsN; arc=none smtp.client-ip=103.168.172.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1749472066; c=relaxed/simple;
+	bh=TF0Lt8AnKHFIOMaW6x2e/lAW4/Cndmz2TrxEid2Il2Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qn0ffQzUKHpGeAfYkmcK5SbuuqpUCD2Itkus2kjV1E+rNRh51DJ+F1Ev5H+L40YP4uub4E5NX/pUiErkqIIWZa2/W3k0x5W0/2dIwDGZA0WlugCc2vU9JfQrCML9uY1x+FLJxdJPnKvN3o4PC0a+GqIyw1c4GBPIeyHHuBk/sT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DEZuzpCB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="O0s9GeJS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="b+NZrgsN"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 1A9FC1140269;
-	Mon,  9 Jun 2025 08:27:41 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Mon, 09 Jun 2025 08:27:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1749472061; x=
-	1749558461; bh=hMq8DTIOhpbuRKjy+CNcjAYhxjMFzlhGiYklMnqStJY=; b=O
-	0s9GeJSyre4tdwKfq0EMA5veJGN7cKbkEQ2DAXR0y4ZHAezW0dj/WRXItvADtyl3
-	XLD0CDUlbmVSFzvjqK1Dle0YWv95ZJ6sZ2aZHKcaT/ADrGSFLTaUP6q9UltTn0VJ
-	UEqZ5LKrxB76TTmyvObA+f2Ci/D53B3U1VkdN2vAJX2In+xJtXSM6y3bZIXFEAHO
-	mSRgCd/8BECzkXqSu0AVq7sLv6gefwjkHsrOxAYKuux406blNPIHZuFQ8tNBG1OF
-	nfiUiSs7jGpotCo1b2OP+CC9wFoxeBSRQ2Z1P/2jrf79eabf1k9HRKZ1nP57pdHM
-	diuFM24IWbTerMFNkyTXg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1749472061; x=1749558461; bh=h
-	Mq8DTIOhpbuRKjy+CNcjAYhxjMFzlhGiYklMnqStJY=; b=b+NZrgsN2f4wM4/6M
-	SwMS8Soty3Q5h2Q1s4EIy9FaKt2umG9KFmdv7d6cajV7nVnab3fBCpFZR7rycPiu
-	hguGyyhDOb6eGCKX4Dnh15BNkufskcZC+Mj3UmwEHiGIo0dcqpTsaSfWBi9evPPI
-	dxZzV6kmUJOfluVtnsMmjPVCZmhydDcx+HQBu5GAHXNQJjJIJaBv+F5LUqhLrPQr
-	5aIVO/E9FAK0d3W9aN8srsBqZ5JPjPUZBr1GQQrdUo6wc95MMk0TPQXzjL2Nfa5V
-	pA/FrgDUCPQG56qY/Ha44gV6P4TXPhYy221plty4UdvQsJC7fW9o7QyMqr8Y8K/Z
-	2f5tQ==
-X-ME-Sender: <xms:PNNGaJ2XwuOUhFomE0DFyEyS6DsC_Gp4kAkksnf4-K-KmGsvUw5TKA>
-    <xme:PNNGaAG4wwDNFVT-2WJiFlk_vQrro3s0Ru9YTl3poM6zMT6PU16CIQm7Zof5xJR35
-    vryn_gaUNaKFc8IqEI>
-X-ME-Received: <xmr:PNNGaJ6W8qBRPW92d4_2iMBJLPzErKDLDUxf4iH90CrDhILJd1VfimAExo4cgKUqAJ1ybxS3TK6FaRiYtio>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdelvdelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucgoteeftdduqddtudculd
-    duhedmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhep
-    ofgrrhhkucfrvggrrhhsohhnuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsg
-    gsrdgtrgeqnecuggftrfgrthhtvghrnhepvedtlefggefgjeettddvgfekhfeugfeutdek
-    feefudeuuddvieeutdeljedvhfdvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghr
-    shhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopedufedpmh
-    houggvpehsmhhtphhouhhtpdhrtghpthhtohepmhhpvggrrhhsohhnqdhlvghnohhvohes
-    shhquhgvsggsrdgtrgdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuh
-    igrdhinhhtvghlrdgtohhmpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdr
-    tghomhdprhgtphhtthhopegtohhrsggvtheslhifnhdrnhgvthdprhgtphhtthhopehikh
-    gvphgrnhhhtgesghhmrghilhdrtghomhdprhgtphhtthhopehhmhhhsehhmhhhrdgvnhhg
-    rdgsrhdprhgtphhtthhopeifpggrrhhmihhnsehgmhigrdguvgdprhgtphhtthhopegrnh
-    gurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghp
-    thhtoheplhhinhhugidqughotgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:PNNGaG2BJ533ri87KMkBYUAknAVQvxww-nT8PyxNtNTC4xjdGANuMw>
-    <xmx:PNNGaMHN2XrDuWPJKYXoU6X7QpmeXjth0qS1rvG0FFbqSvAESwlD9w>
-    <xmx:PNNGaH-daoqYQ7VSqb_4Ul3OHpfyfa_nHIpsRMKs4Hqgqt_N0DCXDQ>
-    <xmx:PNNGaJm6ln6o3kPGFGX0l-nDK7z_35GlGKT7YY2bItEVgpSoqs2Edg>
-    <xmx:PdNGaLdP4-YULsIakq-5GEiWNTUMEiptZAh8TKRFWNNEWHhahs1qFA_4>
-Feedback-ID: ibe194615:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 9 Jun 2025 08:27:40 -0400 (EDT)
-From: Mark Pearson <mpearson-lenovo@squebb.ca>
-To: mpearson-lenovo@squebb.ca
-Cc: ilpo.jarvinen@linux.intel.com,
-	hdegoede@redhat.com,
-	corbet@lwn.net,
-	ikepanhc@gmail.com,
-	hmh@hmh.eng.br,
-	W_Armin@gmx.de,
-	andriy.shevchenko@linux.intel.com,
-	linux-doc@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH v3 2/2] platform/x86: thinklmi: improved DMI handling
-Date: Mon,  9 Jun 2025 08:27:25 -0400
-Message-ID: <20250609122736.3373471-2-mpearson-lenovo@squebb.ca>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250609122736.3373471-1-mpearson-lenovo@squebb.ca>
-References: <mpearson-lenovo@squebb.ca>
- <20250609122736.3373471-1-mpearson-lenovo@squebb.ca>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DEZuzpCB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2F41C4CEEB;
+	Mon,  9 Jun 2025 12:27:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749472065;
+	bh=TF0Lt8AnKHFIOMaW6x2e/lAW4/Cndmz2TrxEid2Il2Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DEZuzpCBafD0g9kI5LVLV4dVO6iVQUURLLUZwqRWGNmODmzdRM8Cjf9mywTsT8edf
+	 bz7Yl9rKwR2Cm4wr7gUG+dTuqQmBmjBLDYlv4yUDFga//1BxFIkNIBefPFmqVn7dl5
+	 FW1xRGuHOe6vfQg7dY6fIfAcpBo5cNbsdY99vOj87QhBCZDqHDd2yH6XdMdjWbbQyk
+	 HErRmDRrPAZfmbykXON4zUOyY2EDBCokY8R1V8JITv5x94/gxeu0Ln8VItC5aWDCzz
+	 gDFknVcavuXjp8TuqvE7T8+sxTlgJiumJ+4TOnuK73Ya/TEXCsUT7wJyXLRau9ruaX
+	 K/Ci5wstAormg==
+Date: Mon, 9 Jun 2025 14:27:38 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Benno Lossin <lossin@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 4/6] rust: irq: add support for threaded IRQs and
+ handlers
+Message-ID: <aEbTOhdfmYmhPiiS@pollux>
+References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
+ <20250608-topics-tyr-request_irq-v4-4-81cb81fb8073@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250608-topics-tyr-request_irq-v4-4-81cb81fb8073@collabora.com>
 
-Fix issues reported by kernel test robot.
- - Require DMI for think-lmi.
- - Check return from getting serial string
+On Sun, Jun 08, 2025 at 07:51:09PM -0300, Daniel Almeida wrote:
+> +/// Callbacks for a threaded IRQ handler.
+> +pub trait ThreadedHandler: Sync {
+> +    /// The actual handler function. As usual, sleeps are not allowed in IRQ
+> +    /// context.
+> +    fn handle_irq(&self) -> ThreadedIrqReturn;
+> +
+> +    /// The threaded handler function. This function is called from the irq
+> +    /// handler thread, which is automatically created by the system.
+> +    fn thread_fn(&self) -> IrqReturn;
+> +}
+> +
+> +impl<T: ?Sized + ThreadedHandler + Send> ThreadedHandler for Arc<T> {
+> +    fn handle_irq(&self) -> ThreadedIrqReturn {
+> +        T::handle_irq(self)
+> +    }
+> +
+> +    fn thread_fn(&self) -> IrqReturn {
+> +        T::thread_fn(self)
+> +    }
+> +}
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202506062319.F0IpDxF6-lkp@intel.com/
+In case you intend to be consistent with the function pointer names in
+request_threaded_irq(), it'd need to be handler() and thread_fn(). But I don't
+think there's a need for that, both aren't really nice for names of trait
+methods.
 
-Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
----
- - New patch added to series.
+What about irq::Handler::handle() and irq::Handler::handle_threaded() for
+instance?
 
- drivers/platform/x86/lenovo/Kconfig     | 1 +
- drivers/platform/x86/lenovo/think-lmi.c | 8 +++++---
- 2 files changed, 6 insertions(+), 3 deletions(-)
+Alternatively, why not just
 
-diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/lenovo/Kconfig
-index a4b565283768..207dd7f88ed0 100644
---- a/drivers/platform/x86/lenovo/Kconfig
-+++ b/drivers/platform/x86/lenovo/Kconfig
-@@ -197,6 +197,7 @@ config THINKPAD_ACPI_HOTKEY_POLL
- config THINKPAD_LMI
- 	tristate "Lenovo WMI-based systems management driver"
- 	depends on ACPI_WMI
-+	depends on DMI
- 	select FW_ATTR_CLASS
- 	help
- 	  This driver allows changing BIOS settings on Lenovo machines whose
-diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platform/x86/lenovo/think-lmi.c
-index 143d9fdedb65..8f70c60f791f 100644
---- a/drivers/platform/x86/lenovo/think-lmi.c
-+++ b/drivers/platform/x86/lenovo/think-lmi.c
-@@ -772,6 +772,7 @@ static ssize_t certificate_store(struct kobject *kobj,
- 	struct tlmi_pwd_setting *setting = to_tlmi_pwd_setting(kobj);
- 	enum cert_install_mode install_mode = TLMI_CERT_INSTALL;
- 	char *auth_str, *new_cert;
-+	const char *serial;
- 	char *signature;
- 	char *guid;
- 	int ret;
-@@ -789,9 +790,10 @@ static ssize_t certificate_store(struct kobject *kobj,
- 			return -EACCES;
- 
- 		/* Format: 'serial#, signature' */
--		auth_str = cert_command(setting,
--					dmi_get_system_info(DMI_PRODUCT_SERIAL),
--					setting->signature);
-+		serial = dmi_get_system_info(DMI_PRODUCT_SERIAL);
-+		if (!serial)
-+			return -EINVAL;
-+		auth_str = cert_command(setting, serial, setting->signature);
- 		if (!auth_str)
- 			return -ENOMEM;
- 
--- 
-2.43.0
+	trait Handler {
+	   fn handle(&self);
+	}
+	
+	trait ThreadedHandler {
+	   fn handle(&self);
+	}
 
+and then we ask for `T: Handler + ThreadedHandler`.
+
+> +
+> +impl<T: ?Sized + ThreadedHandler, A: Allocator> ThreadedHandler for Box<T, A> {
+> +    fn handle_irq(&self) -> ThreadedIrqReturn {
+> +        T::handle_irq(self)
+> +    }
+> +
+> +    fn thread_fn(&self) -> IrqReturn {
+> +        T::thread_fn(self)
+> +    }
+> +}
+> +
+> +/// A registration of a threaded IRQ handler for a given IRQ line.
+> +///
+> +/// Two callbacks are required: one to handle the IRQ, and one to handle any
+> +/// other work in a separate thread.
+> +///
+> +/// The thread handler is only called if the IRQ handler returns `WakeThread`.
+> +///
+> +/// # Examples
+> +///
+> +/// The following is an example of using `ThreadedRegistration`. It uses a
+> +/// [`AtomicU32`](core::sync::AtomicU32) to provide the interior mutability.
+> +///
+> +/// ```
+> +/// use core::sync::atomic::AtomicU32;
+> +/// use core::sync::atomic::Ordering;
+> +///
+> +/// use kernel::prelude::*;
+> +/// use kernel::device::Bound;
+> +/// use kernel::irq::flags;
+> +/// use kernel::irq::ThreadedIrqReturn;
+> +/// use kernel::irq::ThreadedRegistration;
+> +/// use kernel::irq::IrqReturn;
+> +/// use kernel::platform;
+> +/// use kernel::sync::Arc;
+> +/// use kernel::sync::SpinLock;
+> +/// use kernel::alloc::flags::GFP_KERNEL;
+> +/// use kernel::c_str;
+> +///
+> +/// // Declare a struct that will be passed in when the interrupt fires. The u32
+> +/// // merely serves as an example of some internal data.
+> +/// struct Data(AtomicU32);
+> +///
+> +/// // [`handle_irq`] takes &self. This example illustrates interior
+> +/// // mutability can be used when share the data between process context and IRQ
+> +/// // context.
+> +///
+> +/// type Handler = Data;
+> +///
+> +/// impl kernel::irq::request::ThreadedHandler for Handler {
+> +///     // This is executing in IRQ context in some CPU. Other CPUs can still
+> +///     // try to access to data.
+> +///     fn handle_irq(&self) -> ThreadedIrqReturn {
+> +///         self.0.fetch_add(1, Ordering::Relaxed);
+> +///
+> +///         // By returning `WakeThread`, we indicate to the system that the
+> +///         // thread function should be called. Otherwise, return
+> +///         // ThreadedIrqReturn::Handled.
+> +///         ThreadedIrqReturn::WakeThread
+> +///     }
+> +///
+> +///     // This will run (in a separate kthread) if and only if `handle_irq`
+> +///     // returns `WakeThread`.
+> +///     fn thread_fn(&self) -> IrqReturn {
+> +///         self.0.fetch_add(1, Ordering::Relaxed);
+> +///
+> +///         IrqReturn::Handled
+> +///     }
+> +/// }
+> +///
+> +/// // This is running in process context.
+> +/// fn register_threaded_irq(handler: Handler, dev: &platform::Device<Bound>) -> Result<Arc<ThreadedRegistration<Handler>>> {
+> +///     let registration = dev.threaded_irq_by_index(0, flags::SHARED, c_str!("my-device"), handler)?;
+
+This doesn't compile (yet). I think this should be a "raw" example, i.e. the
+function should take an IRQ number.
+
+The example you sketch up here is for platform::Device::threaded_irq_by_index().
+
+> +///
+> +///     // You can have as many references to the registration as you want, so
+> +///     // multiple parts of the driver can access it.
+> +///     let registration = Arc::pin_init(registration, GFP_KERNEL)?;
+> +///
+> +///     // The handler may be called immediately after the function above
+> +///     // returns, possibly in a different CPU.
+> +///
+> +///     {
+> +///         // The data can be accessed from the process context too.
+> +///         registration.handler().0.fetch_add(1, Ordering::Relaxed);
+> +///     }
+
+Why the extra scope?
+
+> +///
+> +///     Ok(registration)
+> +/// }
+> +///
+> +///
+> +/// # Ok::<(), Error>(())
+> +///```
+> +///
+> +/// # Invariants
+> +///
+> +/// * We own an irq handler using `&self` as its private data.
+> +///
+> +#[pin_data]
+> +pub struct ThreadedRegistration<T: ThreadedHandler + 'static> {
+> +    inner: Devres<RegistrationInner>,
+> +
+> +    #[pin]
+> +    handler: T,
+> +
+> +    /// Pinned because we need address stability so that we can pass a pointer
+> +    /// to the callback.
+> +    #[pin]
+> +    _pin: PhantomPinned,
+> +}
+
+Most of the code in this file is a duplicate of the non-threaded registration.
+
+I think this would greatly generalize with specialization and an HandlerInternal
+trait.
+
+Without specialization I think we could use enums to generalize.
+
+The most trivial solution would be to define the Handler trait as
+
+	trait Handler {
+	   fn handle(&self);
+	   fn handle_threaded(&self) {};
+	}
+
+but that's pretty dodgy.
+
+> +impl<T: ThreadedHandler + 'static> ThreadedRegistration<T> {
+> +    /// Registers the IRQ handler with the system for the given IRQ number.
+> +    pub(crate) fn register<'a>(
+> +        dev: &'a Device<Bound>,
+> +        irq: u32,
+> +        flags: Flags,
+> +        name: &'static CStr,
+> +        handler: T,
+> +    ) -> impl PinInit<Self, Error> + 'a {
+
+What happens if `dev`  does not match `irq`? The caller is responsible to only
+provide an IRQ number that was obtained from this device.
+
+This should be a safety requirement and a type invariant.
