@@ -1,50 +1,35 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A37B1DED4C;
-	Mon,  9 Jun 2025 15:08:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248A9194094;
+	Mon,  9 Jun 2025 15:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749481712; cv=none; b=NaKv2M3yprolmWChIkfhWYM8j3jFxBxeCYqfrNI8tVl6w05znQD+3/WJwhHh9erC4rBpOQFc0avDCy1OQSf6qe7uC0Ezs2Ly3FCUJBim9yEipnh87aEUklauY2WyOb8axNZn6yWjk6ITvJ0eceIjgDIH1LniY0jhs2m1780kZYs=
+	t=1749481755; cv=none; b=RybEqH1FW6tVQrUrkeAdLnz3Eadh7ohV7fBOoC7Px6XW+Y2d8huypt43aruFuJ1h4e0b+R2BjP2/S5XkGPhniG9byhwtQMZ+wUBdY9b2lBJcV9ytdc7roUbYQqBzjEhjLs9YIE9e6FUfwlIo+38oyxu/NoTDYb0kHwqms8JC5Ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749481712; c=relaxed/simple;
-	bh=6RlQJGYc3cQByqEQ5UnVltcdkYr558XiHh/+3IPkFFk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=EUHiYu/MdCIw5EL68v7NnWPAzbyu9uSfsd89W2KIj/4OoRHNa5i2RaLTX5XzdiuLaKCbnZjafUSi0E/NV4iRl5vqKN0XafMN2bIzXjSnF75oxwzrjZbPZi1UCrK5YmbQjfqaOGtR/MTXC8FaNkoqLyzIgbFKw10NdMypimW/Do4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=zbUEhb1w; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1749481755; c=relaxed/simple;
+	bh=eClMNWML6Y/hLG8/cwfFv+FCtdOhBVyY4h0efWqdOBY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=c2Tral7ck2MC9Uqd/WP6jFLLHq/R8HP71419rbRLjrM/IuexvN5/hqRgbmjUZefeptB9xOo+ibOH2w0+w2hDYZQE19bgQKrkkyG9+ZtyDpxPNY8GLbK2RnvVX9x15ynb/gqDzhUJY09GB2uDvF58ERFr19rGiqn1A7jROeb21i0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qIuxA6Js; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="zbUEhb1w"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 559Dtxkd009830;
-	Mon, 9 Jun 2025 17:08:13 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=RHEwRJAXNMJDW0r76HBXTU
-	vBrd9il/gic2C2Cm/Al7k=; b=zbUEhb1wGJdOJ/EdOcGNg/EOItH3HgAucyc4iH
-	H/6bHmOMVjo3nWzrkxzox/38KHwSZ+84vdNY809jnf2dK4lDD3UzxWuzjbAyJrcR
-	jQHGkOKT6wRfkj3EDEwcYq97C7wgngpdL+FMcHE2fjRmSW/DOqghihikjknX6e6o
-	jYOEiH7+sQRRK4TDHyZO7gBXxCHRfbclXgOhcr1ENV+uC+pCEqTNkh/M1RDCWUwt
-	hkuPcQsuw3iJwYRhV4yTFELIrzn+Xy90Gw5J2J4q5rPRr0R0wrgtjHn38FS8VL/R
-	ZnObw8yfEN8Q6S8TJlcuQeL7jEEEc62pS/qwG2aEYPIsZeGg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474cs2g878-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Jun 2025 17:08:12 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 01A8B4004B;
-	Mon,  9 Jun 2025 17:06:53 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 18427BCE4C4;
-	Mon,  9 Jun 2025 17:05:05 +0200 (CEST)
-Received: from localhost (10.48.87.62) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 9 Jun
- 2025 17:05:04 +0200
-From: Patrice Chotard <patrice.chotard@foss.st.com>
-Date: Mon, 9 Jun 2025 17:05:04 +0200
-Subject: [PATCH v6] spi: stm32-ospi: Make usage of
- reset_control_acquire/release() API
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qIuxA6Js"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8899C4CEF0;
+	Mon,  9 Jun 2025 15:09:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749481754;
+	bh=eClMNWML6Y/hLG8/cwfFv+FCtdOhBVyY4h0efWqdOBY=;
+	h=From:Subject:Date:To:Cc:From;
+	b=qIuxA6JsKHs5ZsWyGlYTrRi7eNPVuS+mChWpMoal8f0WP6u8MnG9bSdhoO+yTSalI
+	 riE83kJ4zX8GSV/mmMVlrwQy4drZbxWPo3J4Jkd6pKzuBSgQT+SacY2XLpuLqtFWan
+	 AD2fqrlqQe4jA0D7AUh8rSXci1PoVcTsKv4ishssvAlF1LWUlJ7UL8I3kwk9tzgNxk
+	 VyHrOsSE/xmFOHkN+sScStmoJUZ6rUVHhHm+2Vmzzckl0QeKLfDgytFXIN4GT8ozjA
+	 75kEKLV0UDL7RXJhqtQD9bzEQehIbcV7+V7GfmUBynLrHX0wVzqmqMNKSe+ylNr/CA
+	 hqfLW/4pM9FJw==
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH 0/2] kselftest/arm64: Add coverage for the interaction of
+ vfork() and GCS
+Date: Mon, 09 Jun 2025 16:08:55 +0100
+Message-Id: <20250609-arm64-gcs-vfork-exit-v1-0-baad0f085747@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,138 +38,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250609-b4-upstream_ospi_reset_update-v6-1-5b602b567e8a@foss.st.com>
-X-B4-Tracking: v=1; b=H4sIAB/4RmgC/43OsW7DIBDG8VeJmEsEhAPcqe9RVRaBo2FIsDhit
- Yr87sVZmiqDO/5v+H13Y4Q1I7HX3Y1VnDPlculhXnYsnPzlE3mOvZkSCoSWkh81v07UKvrzWGj
- KY0XCNl6n6BtyGExApcFHL1k3poopf93994/ep0yt1O/73KzW63/lWXHBdUSbIEblB/mWCtGe2
- j6UM1vt+fDrgbBb3oFLblEb7+xgwapnTz94Um15unuDU8Ek65zB9OzBo6e3PFj/O0JEAaCCC3+
- 9ZVl+AH+8dva8AQAA
-X-Change-ID: 20250411-b4-upstream_ospi_reset_update-596ce245ada1
-To: Philipp Zabel <p.zabel@pengutronix.de>, Mark Brown <broonie@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Patrice Chotard <patrice.chotard@foss.st.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-09_05,2025-06-09_01,2025-03-28_01
+X-B4-Tracking: v=1; b=H4sIAAj5RmgC/x3MTQqAIBBA4avErBsw0YquEi3ExhqiH8YIIbx70
+ vJbvPdCJGGKMFQvCD0c+TwKmroCv7pjIeS5GLTSVlndo5O9Nbj4iE84ZUNKfKNx3exC11pNBCW
+ 9hAKnfztOOX/Wt8ayZgAAAA==
+X-Change-ID: 20250528-arm64-gcs-vfork-exit-4a7daf7652ee
+To: Willy Tarreau <w@1wt.eu>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Christian Brauner <brauner@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kselftest@vger.kernel.org, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=755; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=eClMNWML6Y/hLG8/cwfFv+FCtdOhBVyY4h0efWqdOBY=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoRvkWgecmvwJzw4HRD4Q2aISRm6dDnAH28UBSuH1d
+ anVzhXCJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaEb5FgAKCRAk1otyXVSH0HVGB/
+ 9C8iwAnAzqpZPAUPfvh8yQpJEFixX6V6KPlCHaUeYfnk7PvXWIwngIZcKjWPtm7lfr8+Ys0Lm2ykVy
+ /ETfy52WPocHwviAyIlUFHMotpMwuZwdTRIfJsaQ2U5yKbSkguMDo/md3poFQ7yOM3bYgnKqmei/86
+ encNkBplGqtIt4yL2fMmJud/nm91/rN/7Uv1suHNliEXvuYtpFyO4R9qTVX9Cz5helbmjPxEPBfWQl
+ +OpU5FdMobCKuAWOVSzE4C+TDDbMjz6zUjgQKBkVrKNnQEjRrUe5uqlib2wib0yAuiKA5ic757BSnf
+ L0L2gnv+vfjluquq8QRkX/4yNwJx4H
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-As ospi reset is consumed by both OMM and OSPI drivers, use the reset
-acquire/release mechanism which ensure exclusive reset usage.
+I had cause to look at the vfork() support for GCS and realised that we
+don't have any direct test coverage, this series does so by adding
+vfork() to nolibc and then using that in basic-gcs to provide some
+simple vfork() coverage.
 
-This avoid to call reset_control_get/put() in OMM driver each time
-we need to reset OSPI children and guarantee the reset line stays
-deasserted.
-
-During resume, OMM driver takes temporarily control of reset.
-
-Fixes: 79b8a705e26c ("spi: stm32: Add OSPI driver")
-Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
-Changes in v6:
-- Add Fixes tag.
-- Rebase on top of v6.16-rc1
-- Link to v5: https://lore.kernel.org/r/20250514-b4-upstream_ospi_reset_update-v5-1-7b5de0552c8c@foss.st.com
+Mark Brown (2):
+      tools/nolibc: Provide vfork()
+      kselftest/arm64: Add a test for vfork() with GCS
 
-Changes in v5:
-  - Add dependency with commit 6b3754009f87 ("reset: Add devm_reset_control_array_get_exclusive_released()")
-    in commit message.
-  - Link to v4: https://lore.kernel.org/r/20250512-b4-upstream_ospi_reset_update-v4-1-982c6f7886ef@foss.st.com
-
-Changes in v4:
-  - Add a comment about reset sharing between OSPI and OMM drivers durig resume.
-  - Link to v3: https://lore.kernel.org/r/20250507-b4-upstream_ospi_reset_update-v3-1-7e46a8797572@foss.st.com
-
-Changes in v3:
-  - Remove previous patch 1/2 as already merged.
-  - Keep the reset control acquired from probe() to remove().
-  - Link to v2: https://lore.kernel.org/r/20250411-b4-upstream_ospi_reset_update-v2-0-4de7f5dd2a91@foss.st.com
-
-Changes in v2:
-  - Rebased on spi/for-next (7a978d8fcf57).
-  - Remove useless check on reset.
-  - Add error handling on reset_control_acquire().
-  - Link to v1: https://lore.kernel.org/all/20250410-b4-upstream_ospi_reset_update-v1-0-74126a8ceb9c@foss.st.com/
----
- drivers/spi/spi-stm32-ospi.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/spi/spi-stm32-ospi.c b/drivers/spi/spi-stm32-ospi.c
-index 7c1fa55fbc4726d2f3c5516245ccd81f59c3c44d..db6b1cfc970f6c80515a39073e2389311796da8f 100644
---- a/drivers/spi/spi-stm32-ospi.c
-+++ b/drivers/spi/spi-stm32-ospi.c
-@@ -804,7 +804,7 @@ static int stm32_ospi_get_resources(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	ospi->rstc = devm_reset_control_array_get_exclusive(dev);
-+	ospi->rstc = devm_reset_control_array_get_exclusive_released(dev);
- 	if (IS_ERR(ospi->rstc))
- 		return dev_err_probe(dev, PTR_ERR(ospi->rstc),
- 				     "Can't get reset\n");
-@@ -936,11 +936,13 @@ static int stm32_ospi_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		goto err_pm_enable;
- 
--	if (ospi->rstc) {
--		reset_control_assert(ospi->rstc);
--		udelay(2);
--		reset_control_deassert(ospi->rstc);
--	}
-+	ret = reset_control_acquire(ospi->rstc);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Can not acquire reset %d\n", ret);
-+
-+	reset_control_assert(ospi->rstc);
-+	udelay(2);
-+	reset_control_deassert(ospi->rstc);
- 
- 	ret = spi_register_controller(ctrl);
- 	if (ret) {
-@@ -987,6 +989,8 @@ static void stm32_ospi_remove(struct platform_device *pdev)
- 	if (ospi->dma_chrx)
- 		dma_release_channel(ospi->dma_chrx);
- 
-+	reset_control_release(ospi->rstc);
-+
- 	pm_runtime_put_sync_suspend(ospi->dev);
- 	pm_runtime_force_suspend(ospi->dev);
- }
-@@ -997,6 +1001,8 @@ static int __maybe_unused stm32_ospi_suspend(struct device *dev)
- 
- 	pinctrl_pm_select_sleep_state(dev);
- 
-+	reset_control_release(ospi->rstc);
-+
- 	return pm_runtime_force_suspend(ospi->dev);
- }
- 
-@@ -1016,6 +1022,12 @@ static int __maybe_unused stm32_ospi_resume(struct device *dev)
- 	if (ret < 0)
- 		return ret;
- 
-+	ret = reset_control_acquire(ospi->rstc);
-+	if (ret) {
-+		dev_err(dev, "Can not acquire reset\n");
-+		return ret;
-+	}
-+
- 	writel_relaxed(ospi->cr_reg, regs_base + OSPI_CR);
- 	writel_relaxed(ospi->dcr_reg, regs_base + OSPI_DCR1);
- 	pm_runtime_mark_last_busy(ospi->dev);
-
+ tools/include/nolibc/sys.h                    | 29 ++++++++++++
+ tools/testing/selftests/arm64/gcs/basic-gcs.c | 63 +++++++++++++++++++++++++++
+ 2 files changed, 92 insertions(+)
 ---
 base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250411-b4-upstream_ospi_reset_update-596ce245ada1
+change-id: 20250528-arm64-gcs-vfork-exit-4a7daf7652ee
 
 Best regards,
 -- 
-Patrice Chotard <patrice.chotard@foss.st.com>
+Mark Brown <broonie@kernel.org>
 
