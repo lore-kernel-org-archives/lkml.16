@@ -1,112 +1,61 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B17F17BD3;
-	Mon,  9 Jun 2025 05:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F2A610D;
+	Mon,  9 Jun 2025 05:51:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749447504; cv=none; b=aSRG5R0TMI0vxCX4zYU0tkDiclV9lWK+1DaX3/HakDTj+Ah1Lhycj+hyd/L9UkWNPxiS4wwbphxE/oBmX6aFGAygQwXHryL2Yc0o45M/ju0l519yZJOk8uz52vrW0HQOJlstTNTVGqo0TXiSK3f6F5TpMxJxQhDfc90sxqjfe4I=
+	t=1749448269; cv=none; b=QDUf6oJndewvFFGNSXpQw4asIe9UlC0Yk2ymxOKx8duCIhWEWvU3Iblhs14EuY+4wQOgOxI9/70SaZvxG/YWKF69IS09/1ynXtuikstwLI3ykBY6gktmrnZrmd9/3wvgofe+DAES3gk1r+bQv0ANDu3T/8yn3DIQ8oVVEkwq2EQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749447504; c=relaxed/simple;
-	bh=E7t4ziTT3wF/689+gwT++HqhjP1/cK2PxAJ+YqFkDgQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PVEHNHCrdA3cQAcOOpCrecLDtHbIA/YMszKo6njruYDOjW/i5qEDsAm4oZ3F2P33s7GV5vOAyoTrD94ItT6dM6i8jk3PLzTMy2TYgD4X0Nj+TmQGH6MCxXWzY+lw7BZaoLHvwNg10Nx87X8c45PtSQ9TpXt5bGpaNv2q/h+IhrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qr+ubNrO; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749448269; c=relaxed/simple;
+	bh=PxjVqm/eXXAF8NTPJtYxzTaZ0/Wdl7H979xMQ53MYnA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cghF6nOPrTGCB9Bl6MQ2oBgT8Aq+et5HJWeJeZfkJhFAMJE1x4rfzNPLo00+fJoDRmVoq0F4hDwgOaX5pLuK7UiP3H80rGOJby3CkDyaeGbrQIRdWBSMq/O8jskCU3fKCRS6dQnn5Bi2+ovyfaLCltMgc1dfkGO74Y4r7QB9FAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Gnj797qV; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qr+ubNrO"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-7304efb4b3bso2431314a34.0;
-        Sun, 08 Jun 2025 22:38:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749447501; x=1750052301; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wECMIUhZX+RAEutiSlsIQW+PxVMgIoUiBXiClAXqQgA=;
-        b=Qr+ubNrOLrFP/PftEWMJN4EUdVxIZB43Mh56iD+7O0/JNt560JAnYzDC+32bmgmvzs
-         n8QDnvlg1Niky+QsMThp5hwXWYai15IOGuEzJKl8M3705Ogu7OOlthHX/DfRgVcl8hRQ
-         RIGfv8srfFQBkSIGIcxmg+wkCNshxEKPD///i+sbMbi3P9XBnNnHlN68Kug1o6didsnG
-         oTQKj7jnzepsPl1FpqVdHqjK9/f83oWqnC0RbUl26l4KN5++se+EqfOP9swyPb/zHO6w
-         p21PAN9kzKzX5CEew6o5tNhElyv6hOV6ccb6EcF8h/f0/uZ9Keb5xeGn+6UZfakHzWnH
-         3eUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749447501; x=1750052301;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wECMIUhZX+RAEutiSlsIQW+PxVMgIoUiBXiClAXqQgA=;
-        b=skES91IqoM+A8l/XQxzD97ERkuRkqM21ZrkBqJDoj5OYpNLqm6Fr4emNdgCSxONhIU
-         TIOZ0pUnG7q8KYYwqQULRq6DQOTJAPmmJyJwE0o9SaORvTTJg7uoXutdrZulzU1J75JY
-         OhOHUQIF2ikM2oOkdfVmyO3M2c5+mUWUSdyGuSauD3RV4yH03M3yf2/YUwm67AZxae4x
-         /PDA1n2O86FTMAxEmifphAuQ7krqcEU133CZNDiZFyzTyBiR+zjZnnr/RU5WJpx90Rw6
-         jCvG6bQofUpjmQGYBFEf2CXbtk9C9K1A2YewmuQYhmaEkAdJs5s1IDc4DgD0by80ekmw
-         4/CA==
-X-Forwarded-Encrypted: i=1; AJvYcCWjtlVbOTfBQia2sz5C09FV/l+eQGiUXCGKTVxU8+g0j9m9D8AR49VHzn18uqFmw0IPz92GNA+lr3cvXBI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywu0khjFwBRO8Z8n/A834BCzHcHFsxv4f6UmQBU3C+rZ1pJucRj
-	6UHtc/n8E0Ip5iHMiepDZxUKhb6uO2rfCQhAAfHseBOIgmmCDEfjzdPCUYlLiwuhCzo=
-X-Gm-Gg: ASbGncsGgJ4wE51plD7fauozJJoRCy4VHOxxXtZMdLLgbuRy1SYLvj0hcjY/Xucy2fN
-	amVGoeHo/R3g7CoUOyRnjp3cvIJaU2Qd+hQ6GTzxswnSCJwbDumY/qt2XvM2I35qX/mCV7XnFG/
-	gzxNGofILvXfauHay0uU+wwY8GJkXX+N9ZfEEi0srpzoNkivL0aN0Ycm4q7Sp0VgidDrgulu2pf
-	OFlODG/t5S8+LgNMJvX1pbY/Ejv3QwLfZUBu7UIJLEv3UL8A/goW3X0rds7tI/4nU0FE942uRkA
-	kd1IDX9yyefr9amn62TNOtk2orDOjvuoJUToCMFtlABJq+dtTBg3uE7QtBt/G4yl
-X-Google-Smtp-Source: AGHT+IHEPMW4QL4R4mIdsXB9cYzCYRxWgcw8Mv10xqxysGpCwOek+8N7wQFeVEF5+DwJeA8kLp1PwA==
-X-Received: by 2002:a17:902:d4cb:b0:234:ba37:87b2 with SMTP id d9443c01a7336-23601cf094amr176200675ad.10.1749447491085;
-        Sun, 08 Jun 2025 22:38:11 -0700 (PDT)
-Received: from pop-os.. ([2401:4900:1c97:ddea:418d:d481:617b:9b03])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5f895274sm4545659a12.68.2025.06.08.22.38.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Jun 2025 22:38:10 -0700 (PDT)
-From: Abhinav Ananthu <abhinav.ogl@gmail.com>
-To: wsa+renesas@sang-engineering.com
-Cc: linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzbot+0a36c1fec090c67a9885@syzkaller.appspotmail.com,
-	Abhinav Ananthu <abhinav.ogl@gmail.com>
-Subject: [PATCH] i2c: core: Fix uninit-value in i2c_smbus_xfer_emulated
-Date: Mon,  9 Jun 2025 11:05:08 +0530
-Message-Id: <20250609053507.10628-1-abhinav.ogl@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gnj797qV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=5+yC4cHoWa3km4DkL5LnggBUHvFkOZKQ6IEpZnGeOp4=; b=Gnj797qVqsixob0/0kEyeX4fwD
+	/5DZOVLNbFOmI4avA085r/63lWaNv8J4PxpQQnMoURKM9Q6kx08cpm/BNs01LK7tOTPbYApGIqEaY
+	gUYH4PGtCeW36+ryEBYl8Gy/0wxRN+HUQzlvxiaqWR3Fb/wrTZwrbBu0E2OObQQ8Ox3cpKcx7PlDd
+	2D4gI4XuL9gI1tG6kJqA2OFMDKm/+4fggznuzCjxmbdw4Mmi0pnXmzcUte0eLDWRnwr4luVf7tj/j
+	V65WUdNsXZ93xmVzQy4VC5VscCElsyqY5/mUNrVlBxvTjyfj7N5WIPfEyKlmI4pglMAHB/jYBKBpK
+	P4RRZPHg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uOVPV-00000003Ty4-1vgV;
+	Mon, 09 Jun 2025 05:51:05 +0000
+Date: Sun, 8 Jun 2025 22:51:05 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>
+Cc: jasowang@redhat.com, Yongji Xie <xieyongji@bytedance.com>,
+	Cindy Lu <lulu@redhat.com>, linux-kernel@vger.kernel.org,
+	Stefano Garzarella <sgarzare@redhat.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	Maxime Coquelin <mcoqueli@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	virtualization@lists.linux.dev,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Laurent Vivier <lvivier@redhat.com>
+Subject: Re: [RFC 0/6] Add multiple address spaces support to VDUSE
+Message-ID: <aEZ2SYAXdqffWoqk@infradead.org>
+References: <20250606115012.1331551-1-eperezma@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250606115012.1331551-1-eperezma@redhat.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-BUG: KMSAN: uninit-value in i2c_smbus_xfer_emulated drivers/i2c/i2c-core-smbus.c:481 [inline]
-BUG: KMSAN: uninit-value in __i2c_smbus_xfer+0x23e7/0x2f60
-
-KMSAN reported an uninitialized value access in i2c_smbus_xfer_emulated at
-drivers/i2c/i2c-core-smbus.c:481, triggered during an SMBus transfer via
-i2cdev_ioctl_smbus. The issue occurs because the local buffers msgbuf0 and
-msgbuf1 are not initialized before use, leading to potential undefined
-behavior when their contents are accessed.
-
-Initialize msgbuf0 and msgbuf1 with zeros using memset to ensure all buffer
-contents are defined before they are used in the SMBus transfer. This
-prevents the uninitialized value access reported by KMSAN.
-
-Reported-by: syzbot+0a36c1fec090c67a9885@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=0a36c1fec090c67a9885
-Fixes: 02ddfb981de8 ("KMSAN : Fix uninit-value in i2c_smbus_xfer_emulated")
-Signed-off-by: Abhinav Ananthu <abhinav.ogl@gmail.com>
----
- drivers/i2c/i2c-core-smbus.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
-index e73afbefe222..a3ee30b72f75 100644
---- a/drivers/i2c/i2c-core-smbus.c
-+++ b/drivers/i2c/i2c-core-smbus.c
-@@ -332,6 +332,8 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
- 	 */
- 	unsigned char msgbuf0[I2C_SMBUS_BLOCK_MAX+3];
- 	unsigned char msgbuf1[I2C_SMBUS_BLOCK_MAX+2];
-+	memset(msgbuf0, 0, sizeof(msgbuf0));
-+	memset(msgbuf1, 0, sizeof(msgbuf1));
- 	int nmsgs = read_write == I2C_SMBUS_READ ? 2 : 1;
- 	u8 partial_pec = 0;
- 	int status;
--- 
-2.34.1
+Before you add new features to vduse, please remove the broken abuse of
+the DMA API first.  Without that no new feature work should go into
+this code.
 
