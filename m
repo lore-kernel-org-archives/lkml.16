@@ -1,46 +1,46 @@
 Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C221425D536;
-	Mon,  9 Jun 2025 14:34:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F171125DB15;
+	Mon,  9 Jun 2025 14:34:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749479648; cv=fail; b=q4VbJSID+mEkAHoV4JDjoITLEcNCpLSrnQFseeVyKZALrY4BbIDgb4pUK1Hr6gONx3OZ6lcaNGq4TbAm+cAXn+AQmseP82NKg34tLzZlaDwdPthQzxj2yI1go48qy68LkPmDVYDPeyWAU6bSj8tPRngRmnEKXkRTGOWfoV5zzyw=
+	t=1749479652; cv=fail; b=Jxxpana4JB1SN4oaJn6VJu76Lihn8t0sMvWfJvYSOq6cKJViICyG/9Gf2KKuUlIOCq7yE4iVLHf/JNOkAHM12BKHyTUihjD35K7m+ovRdoyR6GkaVyYngHdr2tG/Sjm1BZDF1jQFsw9rRm7ahUMSf2wvao5fC1cArliQrPyAgP8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749479648; c=relaxed/simple;
-	bh=n+PXAWK59lk9x/TsxRdigLwhFRD48wSmIhHaBnf3sw0=;
+	s=arc-20240116; t=1749479652; c=relaxed/simple;
+	bh=S+WFiwZc4N6SXTBJWY8d2DlXN0/QKChVu7fZ0y8GtrI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GO9G+QZoJfePgFPE/atNE46BtulJ64b0Wg2I2dlufO/QamQCFi1YspMesBKtUBCvEq9Yxq/t8YITCDtWPCsFNfFjrbw5e86B0sdHM5MHAs8UJjAEYJeATAWD8zp6uPJQyR7EYNN8E7YSQLIrpvsY/jFQyBa357+7eGt3L+HdP9U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=S/bruaT4; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=YuInS9WW; arc=fail smtp.client-ip=67.231.149.25
+	 MIME-Version:Content-Type; b=nWFi8ZDweRjoGqmeCSMKvbWtuz9UhyDzEKFwKe0DOERXXbrdYncfBQukSn4Xqwb7utTpZ1NGd32IdFO2N/cnEdpG9lxPfOMKcwOBfmsdwyj+JQ5LbwAeOKINaUKNc7AsNWE3BGr7Vh2V/rsPDbCB9zbiTXKi7Zd4R2AnfUuB9TE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=mAD3UZxF; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=aNzcEKJH; arc=fail smtp.client-ip=67.231.149.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="S/bruaT4";
-	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="YuInS9WW"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="mAD3UZxF";
+	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="aNzcEKJH"
 Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 559BViW7028543;
-	Mon, 9 Jun 2025 09:33:54 -0500
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 559BRjR5023174;
+	Mon, 9 Jun 2025 09:33:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=adGO1fXjaDbMVjCOB/ZLrk1bCzvSARwDp9Cx/gqVQSA=; b=
-	S/bruaT4H/7rUJK1419R6Iv6ZcHQ2c2y/BKqax/kVuBgcLj1Tbi5ENt/0QFOAyNi
-	IYPw9wXJe9z+KlHFix6Kwzi2Fs0UNreqg51gzl/4JXN9ykpulKO5fPc+8EohD9qR
-	098EJJ00VkjXMD+FllS1acNWw0ccO+wALJthwaBq6H4MAzXYEre4G4Q9BaoLndid
-	0OmfO0T5jHtfZZdJPE5lhJAoyCGHadsWpwHewM+BHhBoGyWoRW4iNc7Q/NwaKiOJ
-	naiDEo0UwFb119AXWKfnawvfucGVnb2soG38deRFypCH97A2BDKdEzTm+urL2RnH
-	6QjTiXfxZdU1/+tbX34aUQ==
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11hn2238.outbound.protection.outlook.com [52.100.171.238])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 47529v1jr2-1
+	PODMain02222019; bh=zV88FLFTRXv0tsXve5zvhby2Z50O1BF9sdyZp2CvPm0=; b=
+	mAD3UZxFvfuMyxw+miARcq2Pe51a+A0QRTi3CIqHOPpLnGKK3YxoAMEcP7tfxGSm
+	fdxjLPs7UHewseJbrrMVqoOWu0hdkvRio2TgCcCaCzibdWfqzgnazLm1pdCEWvYb
+	RZZnX6f8MdMPjsK/DdhIRShSvgTIMNXsvuELVi8WqwWHlFynKArNPIGGRt99bHSw
+	UbvpItjGNc5iRLLgxJ7zhiru/yJQHG3KO1wS1q3GOOcIjFTl71EnH1Hx3zQUEPP4
+	Ozd1LD/tRwcOH6HN+yTPoo+Ca1excx/TSk1NmZnm6etP0lS9KSXVtdmLFdiJmGrR
+	C8HqEglkwqG7hqY9BsEtZg==
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12hn2205.outbound.protection.outlook.com [52.100.165.205])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 47529v1jra-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Jun 2025 09:33:54 -0500 (CDT)
+	Mon, 09 Jun 2025 09:33:59 -0500 (CDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wR5j7OkfHdSo1CZkRqbrBoo8RpAqdFy8XMROjajk3loysWnel9+itsf8Ug+oBkMJxJYHd0W28931BFSzFKhdnl/wGkJSo9l02B26OxILCpQl0mU69K0sz9MjXqs2D1jzT69VziE9K20hq6dc2Tg10E2nqSCW0dqVwlVBsYNMj9Z93WK/nwf8TK4KNT9b+FmWRFZmAB5EkZtxWD2uJCKj1sVeadGfVaeV3oNh8UQmRHqZOsIhnOzwokxsLy3cZaRJNeO9QyPGtEE78Dbr46DfD5H6E1Pya8XGRrAyLqsa5z3jycBtrm2qaahhPgQGXnUGMUwn50nrMX3A/HiSjmImNw==
+ b=ar16aqe/E/ec8jg3sXwdTW3f29O2hGAuFiLUnPMuq0q80NTFLuJ7+UGE+EB2Nd3QGDP1c5IwwXpUONXT71vE7MS6ljTl86G0T4rgmrF9BhA9jqOdGtusXnM1QtSkMIdn5iefZKoEBOexrXsN1ff45L+ev6dbcGrtHPTduNq/swSg3ldOu/oRyZRQCBAYMhmFgAfm1PtEkms/lYEOc53nSFCf6NjJhUa0/elzUSZXw0ykU1h7ZoaHISC0/T5TadkQRFkw5LRfn8r8KAVYN/6fgLjOokKqyxQ64KJ0IbvsgeHaBWj77aoQ1qkR5gdSpuyKs1zPEAK4USkk+Wz1mxJJhg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=adGO1fXjaDbMVjCOB/ZLrk1bCzvSARwDp9Cx/gqVQSA=;
- b=vwdwhA50qetNCLCFfwe02ObpewjnYfJy2buDYYAgelPz0yr2k7tCvVfQmfazpRllIz2q4TOR05HDRAxrH2pgyiOgUasmnsZS61gNvMWzyarOYXpZgi1LKUmV2weVgjZD9rmXuRpdI8+SxD8+2lacMapBABkCkSV2OS3CsG5BdXWBwMKPA+z+gvzyXUdlWrV4zlZqIzr1ERQH527UMbIufkO24Bpktm5y/CgTWqTfbkP3goFq/TRmnZan4q5sW7cZEFO4anf2eKdsR3qfCKjP/xziykkxnO5BvWAbnr6gvRdCK2oHB7nFcamxmm64QUEbFECAPCC3VfVRXF2XY78wDQ==
+ bh=zV88FLFTRXv0tsXve5zvhby2Z50O1BF9sdyZp2CvPm0=;
+ b=mhiCOep/bDmM6rhwfSU7a1NYZz2PqAoc3pS04K/ETq5a86qDjJiMkctooRd7wE11qggiJz40ThSSp/A2oCJlHKi0LmOHq3Df2w10CBr1eZ7XcN03TIAFUP6uYcJ//1ynGAntXxvOqJSKz/GvHpom1R0YsmImeVI/tu+Ur1MMonYzenPcaWxowVjKrSvEnYiOwPbFIpT0rbMRc71Fg/R6zuNnrRTh7zuVCNZhlpBhPt2KNiRN9zAksRPK1OT4BddRY3BeXTt2bFgEjxC5gIIYb2yfZfYdoyvgV5cNbF+P6FQavo+NdggLQps74l0lfva2JkTc6rNgUwj9ibQhKOj/bA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
  84.19.233.75) smtp.rcpttodomain=cirrus.com
  smtp.mailfrom=opensource.cirrus.com; dmarc=fail (p=reject sp=reject pct=100)
@@ -49,18 +49,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=adGO1fXjaDbMVjCOB/ZLrk1bCzvSARwDp9Cx/gqVQSA=;
- b=YuInS9WWJLwAtP4uDCjxsVes29vMh4GVCV7v660FF92pfM4OpG9h4UDLvwRGfcndwr6Y89/9rhYQmzniVIGPn8XtaGfR9osRFpFAezWrnJUZTxNc9mfJzGG9rE/ZP4teE26qyZebHvonrqiVE6B0Dkf2Y6N6XnSD+hE+kgJK+TY=
-Received: from PH8PR20CA0015.namprd20.prod.outlook.com (2603:10b6:510:23c::8)
- by SJ2PR19MB7367.namprd19.prod.outlook.com (2603:10b6:a03:4cc::16) with
+ bh=zV88FLFTRXv0tsXve5zvhby2Z50O1BF9sdyZp2CvPm0=;
+ b=aNzcEKJHIgeeeK1IxfoVBgHl4fAkyLiGK98hEA7fewwA6uCcsgpnLPEMNVNIzPzvZreIfPvRN+UkvQQJSsv1+zqYeI2imoHWWMV5Ffwl2qHlNrK2YKDO1akHR+oSTB8/GiuWXvZsUjOVoa5werG5DNFBjLtqSbZFMRtckQlPSNY=
+Received: from CH2PR18CA0054.namprd18.prod.outlook.com (2603:10b6:610:55::34)
+ by IA0PR19MB8075.namprd19.prod.outlook.com (2603:10b6:208:48b::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.32; Mon, 9 Jun
- 2025 14:33:49 +0000
-Received: from CY4PEPF0000EE3F.namprd03.prod.outlook.com
- (2603:10b6:510:23c:cafe::17) by PH8PR20CA0015.outlook.office365.com
- (2603:10b6:510:23c::8) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.40 via Frontend Transport; Mon,
- 9 Jun 2025 14:33:49 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.14; Mon, 9 Jun
+ 2025 14:33:48 +0000
+Received: from DS3PEPF000099D9.namprd04.prod.outlook.com
+ (2603:10b6:610:55:cafe::f) by CH2PR18CA0054.outlook.office365.com
+ (2603:10b6:610:55::34) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.19 via Frontend Transport; Mon,
+ 9 Jun 2025 14:33:48 +0000
 X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
  smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
  header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
@@ -69,14 +69,14 @@ Received-SPF: Fail (protection.outlook.com: domain of opensource.cirrus.com
  receiver=protection.outlook.com; client-ip=84.19.233.75;
  helo=edirelay1.ad.cirrus.com;
 Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
- CY4PEPF0000EE3F.mail.protection.outlook.com (10.167.242.17) with Microsoft
+ DS3PEPF000099D9.mail.protection.outlook.com (10.167.17.10) with Microsoft
  SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.15
  via Frontend Transport; Mon, 9 Jun 2025 14:33:48 +0000
 Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id B0CCF40654B;
+	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id A4F7A406545;
 	Mon,  9 Jun 2025 14:33:46 +0000 (UTC)
 Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPSA id 92EA782024A;
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPSA id 8549D820259;
 	Mon,  9 Jun 2025 14:33:46 +0000 (UTC)
 From: Charles Keepax <ckeepax@opensource.cirrus.com>
 To: vkoul@kernel.org
@@ -84,9 +84,9 @@ Cc: broonie@kernel.org, lgirdwood@gmail.com, linux-sound@vger.kernel.org,
         patches@opensource.cirrus.com, yung-chuan.liao@linux.intel.com,
         pierre-louis.bossart@linux.dev, peter.ujfalusi@linux.intel.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] ASoC: cs42l43: Remove unnecessary work functions
-Date: Mon,  9 Jun 2025 15:30:41 +0100
-Message-Id: <20250609143041.495049-4-ckeepax@opensource.cirrus.com>
+Subject: [PATCH 2/3] soundwire: Move handle_nested_irq outside of sdw_dev_lock
+Date: Mon,  9 Jun 2025 15:30:40 +0100
+Message-Id: <20250609143041.495049-3-ckeepax@opensource.cirrus.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250609143041.495049-1-ckeepax@opensource.cirrus.com>
 References: <20250609143041.495049-1-ckeepax@opensource.cirrus.com>
@@ -99,290 +99,118 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE3F:EE_|SJ2PR19MB7367:EE_
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099D9:EE_|IA0PR19MB8075:EE_
 Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: f59399f4-28d7-437b-c138-08dda762a595
+X-MS-Office365-Filtering-Correlation-Id: a5428dc9-e127-41ac-f058-08dda762a590
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|34020700016|36860700013|376014|82310400026|61400799027|12100799063;
+	BCL:0;ARA:13230040|61400799027|82310400026|34020700016|36860700013|376014|12100799063;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?1+hC8ywv6U1eTVjmm0CzbbDWl7VelxkduNx/I9PskBx+Co1OXT8D3oI/RZ/l?=
- =?us-ascii?Q?oRKOJQA7pq1BLDaXn9vR4R85xjhEu9H/AgQM8x1ZWcmzXe3+fKTcltVhPwU1?=
- =?us-ascii?Q?eTQzOZgfMmfKLAWDUC3QQuCHJlSCbKm7m7TtmrVsrS91sg5gKPwiYSip9Mh5?=
- =?us-ascii?Q?z8MnDGNPe3F5qSp4h94VDZWEbL5GrM6NYEUvd8jDDw7SzZtHrZ2rG38E0i+Q?=
- =?us-ascii?Q?mWgc7qwZiX+8xqJrKOg7eig0y2c/Ozj/owLpIfGiJb/3ShgC8YhHwVbhH32h?=
- =?us-ascii?Q?y0U+QmEnFfWzWIHWJe+nZQOcWiBtfzyERptV2ImPBcbA83/4FXA1nazr5UD0?=
- =?us-ascii?Q?KdlDKbDPZM11M4kMoC/O8EyYfaZhd6OKjz0nNZVlmJtN/U7BiBZpylDbBQhN?=
- =?us-ascii?Q?hQhZA1YlheXtr15j9hBmql3IC1GiLC61Gj0amRO3HW3+4rF3qEevwcE34UGf?=
- =?us-ascii?Q?D7csycmCGOgapGbuG2zU/ZNxJMwHah5o8UJ0Dgj2gRjdjqsYS9JrDbnR3eWM?=
- =?us-ascii?Q?ia6fCbT4aD9as8F31IH1e+sqm3hfk/Q5V7bDbGxVu4Bol3pKGqRELw9kuAcy?=
- =?us-ascii?Q?JJVNCG18FlIS4cGiX8hYZnKF/9j7rry7j4Bbo6Q7vfojRyf8Jq+uD/xINmbS?=
- =?us-ascii?Q?PCij60Y3jbT1ZaQxJqz/zgyNzp6Ikb/q73tSByfIjfbm6YNfRUVjzCgQaEYP?=
- =?us-ascii?Q?3SDWfL18z73q7GfcIPFYwwCBC+nlYfTbfAPmVuO5HGl5PPcbfItUL8r6UAG+?=
- =?us-ascii?Q?inqyRveyREd8+RktPlpY5r5MJbtLbHLF2YRGBpPrBCHemN687ur54TxiXyKb?=
- =?us-ascii?Q?PGFUzvpHIkOOtFbutPn8/UPfqfFs8Y8izh16wA0xxNq3KtHm3k4S6niXQnOJ?=
- =?us-ascii?Q?ftx451jWWoqRYGNRTyngHVytER5MiDp8IeJNvBbl5F98jI5+Rvx0QBjChcYH?=
- =?us-ascii?Q?cwp31Gt7t/gPic1mI+RtmPaEcdAUlpv7eRwEqU6pRn025Xp5CTmrWY5uInVo?=
- =?us-ascii?Q?R1+6CmtwXcHzBee1rhiAR20EahImH1adtnHHybytZ8YbQ3/rto0Epwfk2C4f?=
- =?us-ascii?Q?2tXk/cqQTjQIakxqnE/qFHF+iuREQiO9fOowgeskGUspz0I1V7fTs8gkIMtW?=
- =?us-ascii?Q?QXW7JoCGCggZgjai5qhf1efATwPpkuxPCx0w8VyGxmAMG2VuSheEq2Kal8UN?=
- =?us-ascii?Q?9iAMjy/HDOTZ4+LMP6rt8x4IQHer3e5JYcuD3IKN4/XlHYFC1Vit4/Ewgnf0?=
- =?us-ascii?Q?wyPn2aZDtxnJyLialvFGJ5lR01hKAhFaBNyF/Xv/NTncSwMkkeWDig3idGoO?=
- =?us-ascii?Q?WeJYfs2IMOngFCag183lLBK9xfwqE6fnztVIp4JgIgzp1eVBeuU95MYMFwJU?=
- =?us-ascii?Q?f4yyevpX0zKuSu4+xsZO5qhEJTYtqP+7jisYRpgdlyBZgUA+ldcUqIPErImM?=
- =?us-ascii?Q?SYL/YeOb8IGzzPBJ/0LSiTw8aD6XKmYIbf/Rg8wgAOZ2+jjo2uY+ZvTr/kr8?=
- =?us-ascii?Q?OMLmhS8yWE9dMtr4DZW4JbRIbowc3C5bY9zU?=
+	=?us-ascii?Q?udFSRtyE2VdYCrkQ1ZNiLipwMlob/5iw4rhYKr7IiIc/gR9K6pcbM0JRBN9A?=
+ =?us-ascii?Q?t8rpWmv6mzInbL62sX2F+XspHvSE3z8g1hKwZIXNRcXzNMnly+hfS/PyWtUI?=
+ =?us-ascii?Q?Y1IJuGm/7fsdgWvZBvJx+ZpasduFmVWRzw4XaKFmD3AUduMt/dI8mFgrGuQ+?=
+ =?us-ascii?Q?vD+VGIDdgVGxnmt3+SzQwvl+7gH+8a0p2fr1dXL6LQnApzvD8lbEGg4ROqPz?=
+ =?us-ascii?Q?T8RTy2GViuDiIhyU40JP1jf1r0/ukDblkasmshSr1V9fRlXs4NhMSlMWzOim?=
+ =?us-ascii?Q?xU9Fmjk/CvCydyjrG4fhnLeKk0TY75x1alga1BngP/+KSWUYTOkDEFMG6BjN?=
+ =?us-ascii?Q?24VdcdswIZ2w6hl2YsaE+sPhO0PFQDBn8C87+UT4J/WPJmi0EgJ7vTP88acX?=
+ =?us-ascii?Q?Q6fgSzwWca8lCRuD+nzG0vnJzrflOnAXUOKrid88op3FyBmOdo6Gd5GLvSwj?=
+ =?us-ascii?Q?VM+p4YFu9BF3jI1zVNH2VHMQetqgS+YT8VPkTaYC+X+MXv49MMojOwWPQatf?=
+ =?us-ascii?Q?hgFKNKoJYP6i77a5rBUm6ABIs+k6f8g2ajcro9e6ubRi15X4np8moYNlCxll?=
+ =?us-ascii?Q?th95S4hMOiZHvg/lQVMbNSWIWHS2YtSNnblQMQyg4cxFNu3NHSFRB+ipEwqw?=
+ =?us-ascii?Q?AvvuyqtAhyUPY3uMkZxSAesEkMTQbur7JAU9ELSWZKfRqJKB/iZVco6NIATB?=
+ =?us-ascii?Q?0akVCzsdv+YW0rZWIAIzgKQ5zC9NJ7sYQChvFz8T318nO5BK3SGceMEFEM7X?=
+ =?us-ascii?Q?o4e5b5uqj0aIZshwZBPpb9/+Z4JX+Jn5/F4resANgd5rdB3qV+uBMEgElM1D?=
+ =?us-ascii?Q?hbTcQs4NLHqDk952pwQThgbrItiv9TAwvH6ax1LpbN9rBEfcxd26Y6q5XPPW?=
+ =?us-ascii?Q?b9eCH9ofs0ju9yNaRglftxcOq72OoxSW7ZqIqvvxLLC5w6Sb2Vfyt48RXIaq?=
+ =?us-ascii?Q?8meYyV/ScBw1hbO32S4QwI+8xzJawVPxXqvUc4nVsu1icbaSHClWnApHxqSs?=
+ =?us-ascii?Q?s2pU2mpBTXQR+L+sHqf8cda84YHG6MrxCRybN59R7dWvEi9B91HQPmOfR2K5?=
+ =?us-ascii?Q?hD/NLrcqzPw+fhg7EiRZeSVo/Hcj88pNKh/2tOQn93L4ccWNJFxMEIA+2qK8?=
+ =?us-ascii?Q?Om8fF7Y4nJDwFfCVc3aNlnI2cUlS8qR0V38h3fRBqhvhpiktB+gMaUADLlYC?=
+ =?us-ascii?Q?O27iaI+EamkLt/JUc1Ekzy7sN6Xgd0LSmkffzPWInLWDrKILk8RzRy/FUv4L?=
+ =?us-ascii?Q?l/d7Bg5cQpxccLWdhhb/ysAFntjyhc/1B5/9OVs6gSYdWvJ7swmf7ZN9criL?=
+ =?us-ascii?Q?QnUZ5Ap/Y2n9v5gNerL/9Bp7ymDiyrWJWDv4hiy8HoonL1QOhIFMwT9udI+4?=
+ =?us-ascii?Q?rb7I53eTAKjJnNqidZHKNTQK/7UebsZrKs1TkATdX6W7MoU3llMLfcbXNe+3?=
+ =?us-ascii?Q?XUoA47vAHKjq4IpFhqFAlWsePl3Ccq0FCwkegZEh05RoXTHEYLdxC93caNcJ?=
+ =?us-ascii?Q?HPiBX5vzZrCCDcqOLqlWoU9f5IpHbtI8ICG8?=
 X-Forefront-Antispam-Report:
-	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(34020700016)(36860700013)(376014)(82310400026)(61400799027)(12100799063);DIR:OUT;SFP:1501;
+	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(61400799027)(82310400026)(34020700016)(36860700013)(376014)(12100799063);DIR:OUT;SFP:1501;
 X-OriginatorOrg: opensource.cirrus.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 14:33:48.0193
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 14:33:48.0173
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f59399f4-28d7-437b-c138-08dda762a595
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5428dc9-e127-41ac-f058-08dda762a590
 X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE3F.namprd03.prod.outlook.com
+	DS3PEPF000099D9.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR19MB7367
-X-Authority-Analysis: v=2.4 cv=Jfq8rVKV c=1 sm=1 tr=0 ts=6846f0d2 cx=c_pps a=ZSix7NxgZyHh8ZndRuIozQ==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=6IFa9wvqVegA:10
- a=RWc_ulEos4gA:10 a=w1d2syhTAAAA:8 a=2Pf8-g1FY_5CeouxD6IA:9 a=jZz-an6Pvt0H8_Yc_ROU:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDEwNiBTYWx0ZWRfX80qO0qYZ9iUb Y8RObxijQzS3eccCDDrh8aPUInJD6fyA8Gr6SuEy/qJ/9r3kVxgKVHdqPsD3MlAn9md3fof6zOI tPmO3AbltgZDfUaKv7bGPD95I9U8jKKy5QLca7I3+S6kBTwKsMY9TQXKzd3rRu7PtAJO/8YgnFJ
- Of+BRSy5hxus3YMcG6Z+Phip2BRtevLyZHo9L359IfkXdrure2CAs0f9DORAuOj8gl5GbscVL+a c2Rq1IqMuE++5A0/dXrBgdXnK/hPof6/AqfN/uHSVeLm8F7t8w9x6mxaRVVSOp3evD2Kdk0NU4/ pvZJhpsLgIrCO/lAYpPcr0FXvwDcOGGBntq/PbwxOJSl9Grjj5e6NAcPTqJq8szcSUdBfyv+cKF
- AZMj8CJyUG5DTDuTthT1rhEKpsjQq4gw99eU0+K/LUN7tGL+q1ObeEQoXtm20iM2/UYPpaXw
-X-Proofpoint-ORIG-GUID: ccH2sS1aEv13T6MQAufDyRXziw4paDy4
-X-Proofpoint-GUID: ccH2sS1aEv13T6MQAufDyRXziw4paDy4
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR19MB8075
+X-Authority-Analysis: v=2.4 cv=Jfq8rVKV c=1 sm=1 tr=0 ts=6846f0d7 cx=c_pps a=g6O1Ap9VmrRh8OHv0Sc4DA==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=6IFa9wvqVegA:10
+ a=s63m1ICgrNkA:10 a=RWc_ulEos4gA:10 a=w1d2syhTAAAA:8 a=w53meyi4tCFG7f2_AfMA:9 a=jZz-an6Pvt0H8_Yc_ROU:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDEwNiBTYWx0ZWRfX5pUA0NWY5zGE F+O1/w4KsXqjPRIvUZf5UbITTlhpEz1x8QmMOQ0gaD2V5GtpKW+oiZ9UTdy/JS+/wwsanTSLtqv PfZczikkvk7/uwCQcEAo3ZYj4GpDSW50N8MiZoKV8FVHFRWAcjIqn+2XEjWsKIXHDMChRzy4sSz
+ vuTFW2hXxjmewQwLI0GA/PKFShmFSuxXGV1Z0sN36VQhOreZ1EshKyQJ90xoLbYigcCnVHDvL8C wvwJdzIBJoN6XEaL/J4C2rnbyJSbXFOCt+DEi/a/4/RwVGp64XqwAYVaizF9DGhFGEUmIvTAAxV GeaM5Pgo4vefkwyjn/16Cr+zUHrPrIGjCyEOUF6pzRsGU0e3f2n03E1/MDRjNMetOurDt2ljfGh
+ yTNZvz+eGo9dvjmrMXTHGJb2ESi8iffwlc8gnn/JRPM/rXTjDTgS59htzCYhW9OXe31ytcrW
+X-Proofpoint-ORIG-GUID: QxUKcMN3amnkeI2L6Fsgc4GG9wKWNCiT
+X-Proofpoint-GUID: QxUKcMN3amnkeI2L6Fsgc4GG9wKWNCiT
 X-Proofpoint-Spam-Reason: safe
 
-Now the SoundWire IRQ lock has been changed in the core, it is no longer
-necessary to use a bunch of work functions to dodge mutex inversions.
+The sdw_dev_lock protects the SoundWire driver callbacks against
+the probed flag, which is used to skip the callbacks if the
+driver gets removed. For more information see commit bd29c00edd0a
+("soundwire: revisit driver bind/unbind and callbacks").
+
+However, this lock is a frequent source of mutex inversions.
+Many audio operations eventually hit the hardware resulting in a
+SoundWire callback, this means that typically the driver has the
+locking order ALSA/ASoC locks -> sdw_dev_lock. Conversely, the IRQ
+comes in directly from the SoundWire hardware, but then will often
+want to access ALSA/ASoC, such as updating something in DAPM or
+an ALSA control. This gives the other lock order sdw_dev_lock ->
+ALSA/ASoC locks.
+
+When the IRQ handling was initially added to SoundWire this was
+through a callback mechanism. As such it required being covered by
+the lock because the callbacks are part of the sdw_driver structure
+and are thus present regardless of if the driver is currently
+probed.
+
+Since then a newer mechanism using the IRQ framework has been
+added, which is currently covered by the same lock but this isn't
+actually required. Handlers for the IRQ framework are registered in
+probe and should by released during remove, thus the IRQ framework
+will have already unbound the IRQ before the slave driver is
+removed. Avoid the aforementioned mutex inversion by moving the
+handle_nested_irq call outside of the sdw_dev_lock.
 
 Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
- sound/soc/codecs/cs42l43-jack.c | 46 +++++++++++++--------------------
- sound/soc/codecs/cs42l43.c      | 24 ++++-------------
- sound/soc/codecs/cs42l43.h      |  5 ----
- 3 files changed, 23 insertions(+), 52 deletions(-)
+ drivers/soundwire/bus.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/codecs/cs42l43-jack.c b/sound/soc/codecs/cs42l43-jack.c
-index 6165ac16c3a95..72a4150709de8 100644
---- a/sound/soc/codecs/cs42l43-jack.c
-+++ b/sound/soc/codecs/cs42l43-jack.c
-@@ -362,14 +362,15 @@ static void cs42l43_stop_button_detect(struct cs42l43_codec *priv)
- 	priv->button_detect_running = false;
- }
+diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
+index 68db4b67a86ff..4fd5cac799c54 100644
+--- a/drivers/soundwire/bus.c
++++ b/drivers/soundwire/bus.c
+@@ -1753,15 +1753,15 @@ static int sdw_handle_slave_alerts(struct sdw_slave *slave)
  
-+#define CS42L43_BUTTON_COMB_US 11000
- #define CS42L43_BUTTON_COMB_MAX 512
- #define CS42L43_BUTTON_ROUT 2210
- 
--void cs42l43_button_press_work(struct work_struct *work)
-+irqreturn_t cs42l43_button_press(int irq, void *data)
- {
--	struct cs42l43_codec *priv = container_of(work, struct cs42l43_codec,
--						  button_press_work.work);
-+	struct cs42l43_codec *priv = data;
- 	struct cs42l43 *cs42l43 = priv->core;
-+	irqreturn_t iret = IRQ_NONE;
- 	unsigned int buttons = 0;
- 	unsigned int val = 0;
- 	int i, ret;
-@@ -377,7 +378,7 @@ void cs42l43_button_press_work(struct work_struct *work)
- 	ret = pm_runtime_resume_and_get(priv->dev);
- 	if (ret) {
- 		dev_err(priv->dev, "Failed to resume for button press: %d\n", ret);
--		return;
-+		return iret;
- 	}
- 
- 	mutex_lock(&priv->jack_lock);
-@@ -387,6 +388,9 @@ void cs42l43_button_press_work(struct work_struct *work)
- 		goto error;
- 	}
- 
-+	// Wait for 2 full cycles of comb filter to ensure good reading
-+	usleep_range(2 * CS42L43_BUTTON_COMB_US, 2 * CS42L43_BUTTON_COMB_US + 50);
+ 		/* Update the Slave driver */
+ 		if (slave_notify) {
++			if (slave->prop.use_domain_irq && slave->irq)
++				handle_nested_irq(slave->irq);
 +
- 	regmap_read(cs42l43->regmap, CS42L43_DETECT_STATUS_1, &val);
+ 			mutex_lock(&slave->sdw_dev_lock);
  
- 	/* Bail if jack removed, the button is irrelevant and likely invalid */
-@@ -420,34 +424,27 @@ void cs42l43_button_press_work(struct work_struct *work)
+ 			if (slave->probed) {
+ 				struct device *dev = &slave->dev;
+ 				struct sdw_driver *drv = drv_to_sdw_driver(dev->driver);
  
- 	snd_soc_jack_report(priv->jack_hp, buttons, CS42L43_JACK_BUTTONS);
- 
-+	iret = IRQ_HANDLED;
-+
- error:
- 	mutex_unlock(&priv->jack_lock);
- 
- 	pm_runtime_mark_last_busy(priv->dev);
- 	pm_runtime_put_autosuspend(priv->dev);
--}
+-				if (slave->prop.use_domain_irq && slave->irq)
+-					handle_nested_irq(slave->irq);
 -
--irqreturn_t cs42l43_button_press(int irq, void *data)
--{
--	struct cs42l43_codec *priv = data;
--
--	// Wait for 2 full cycles of comb filter to ensure good reading
--	queue_delayed_work(system_wq, &priv->button_press_work,
--			   msecs_to_jiffies(20));
- 
--	return IRQ_HANDLED;
-+	return iret;
- }
- 
--void cs42l43_button_release_work(struct work_struct *work)
-+irqreturn_t cs42l43_button_release(int irq, void *data)
- {
--	struct cs42l43_codec *priv = container_of(work, struct cs42l43_codec,
--						  button_release_work);
-+	struct cs42l43_codec *priv = data;
-+	irqreturn_t iret = IRQ_NONE;
- 	int ret;
- 
- 	ret = pm_runtime_resume_and_get(priv->dev);
- 	if (ret) {
- 		dev_err(priv->dev, "Failed to resume for button release: %d\n", ret);
--		return;
-+		return iret;
- 	}
- 
- 	mutex_lock(&priv->jack_lock);
-@@ -456,6 +453,8 @@ void cs42l43_button_release_work(struct work_struct *work)
- 		dev_dbg(priv->dev, "Button release IRQ\n");
- 
- 		snd_soc_jack_report(priv->jack_hp, 0, CS42L43_JACK_BUTTONS);
-+
-+		iret = IRQ_HANDLED;
- 	} else {
- 		dev_dbg(priv->dev, "Spurious button release IRQ\n");
- 	}
-@@ -464,15 +463,8 @@ void cs42l43_button_release_work(struct work_struct *work)
- 
- 	pm_runtime_mark_last_busy(priv->dev);
- 	pm_runtime_put_autosuspend(priv->dev);
--}
- 
--irqreturn_t cs42l43_button_release(int irq, void *data)
--{
--	struct cs42l43_codec *priv = data;
--
--	queue_work(system_wq, &priv->button_release_work);
--
--	return IRQ_HANDLED;
-+	return iret;
- }
- 
- void cs42l43_bias_sense_timeout(struct work_struct *work)
-@@ -787,8 +779,6 @@ irqreturn_t cs42l43_tip_sense(int irq, void *data)
- 
- 	cancel_delayed_work(&priv->bias_sense_timeout);
- 	cancel_delayed_work(&priv->tip_sense_work);
--	cancel_delayed_work(&priv->button_press_work);
--	cancel_work(&priv->button_release_work);
- 
- 	// Ensure delay after suspend is long enough to avoid false detection
- 	if (priv->suspend_jack_debounce)
-diff --git a/sound/soc/codecs/cs42l43.c b/sound/soc/codecs/cs42l43.c
-index ea84ac64c775e..41a0f4529ea1f 100644
---- a/sound/soc/codecs/cs42l43.c
-+++ b/sound/soc/codecs/cs42l43.c
-@@ -167,13 +167,14 @@ static void cs42l43_hp_ilimit_clear_work(struct work_struct *work)
- 	snd_soc_dapm_mutex_unlock(dapm);
- }
- 
--static void cs42l43_hp_ilimit_work(struct work_struct *work)
-+static irqreturn_t cs42l43_hp_ilimit(int irq, void *data)
- {
--	struct cs42l43_codec *priv = container_of(work, struct cs42l43_codec,
--						  hp_ilimit_work);
-+	struct cs42l43_codec *priv = data;
- 	struct snd_soc_dapm_context *dapm = snd_soc_component_get_dapm(priv->component);
- 	struct cs42l43 *cs42l43 = priv->core;
- 
-+	dev_dbg(priv->dev, "headphone ilimit IRQ\n");
-+
- 	snd_soc_dapm_mutex_lock(dapm);
- 
- 	if (priv->hp_ilimit_count < CS42L43_HP_ILIMIT_MAX_COUNT) {
-@@ -183,7 +184,7 @@ static void cs42l43_hp_ilimit_work(struct work_struct *work)
- 
- 		priv->hp_ilimit_count++;
- 		snd_soc_dapm_mutex_unlock(dapm);
--		return;
-+		return IRQ_HANDLED;
- 	}
- 
- 	dev_err(priv->dev, "Disabling headphone for %dmS, due to frequent current limit\n",
-@@ -218,15 +219,6 @@ static void cs42l43_hp_ilimit_work(struct work_struct *work)
- 	priv->hp_ilimited = false;
- 
- 	snd_soc_dapm_mutex_unlock(dapm);
--}
--
--static irqreturn_t cs42l43_hp_ilimit(int irq, void *data)
--{
--	struct cs42l43_codec *priv = data;
--
--	dev_dbg(priv->dev, "headphone ilimit IRQ\n");
--
--	queue_work(system_long_wq, &priv->hp_ilimit_work);
- 
- 	return IRQ_HANDLED;
- }
-@@ -2159,10 +2151,7 @@ static void cs42l43_component_remove(struct snd_soc_component *component)
- 
- 	cancel_delayed_work_sync(&priv->bias_sense_timeout);
- 	cancel_delayed_work_sync(&priv->tip_sense_work);
--	cancel_delayed_work_sync(&priv->button_press_work);
--	cancel_work_sync(&priv->button_release_work);
- 
--	cancel_work_sync(&priv->hp_ilimit_work);
- 	cancel_delayed_work_sync(&priv->hp_ilimit_clear_work);
- 
- 	priv->component = NULL;
-@@ -2314,10 +2303,7 @@ static int cs42l43_codec_probe(struct platform_device *pdev)
- 
- 	INIT_DELAYED_WORK(&priv->tip_sense_work, cs42l43_tip_sense_work);
- 	INIT_DELAYED_WORK(&priv->bias_sense_timeout, cs42l43_bias_sense_timeout);
--	INIT_DELAYED_WORK(&priv->button_press_work, cs42l43_button_press_work);
- 	INIT_DELAYED_WORK(&priv->hp_ilimit_clear_work, cs42l43_hp_ilimit_clear_work);
--	INIT_WORK(&priv->button_release_work, cs42l43_button_release_work);
--	INIT_WORK(&priv->hp_ilimit_work, cs42l43_hp_ilimit_work);
- 
- 	pm_runtime_set_autosuspend_delay(priv->dev, 100);
- 	pm_runtime_use_autosuspend(priv->dev);
-diff --git a/sound/soc/codecs/cs42l43.h b/sound/soc/codecs/cs42l43.h
-index 1cd9d8a71c439..3ea36362b11a4 100644
---- a/sound/soc/codecs/cs42l43.h
-+++ b/sound/soc/codecs/cs42l43.h
-@@ -88,8 +88,6 @@ struct cs42l43_codec {
- 
- 	struct delayed_work tip_sense_work;
- 	struct delayed_work bias_sense_timeout;
--	struct delayed_work button_press_work;
--	struct work_struct button_release_work;
- 	struct completion type_detect;
- 	struct completion load_detect;
- 
-@@ -99,7 +97,6 @@ struct cs42l43_codec {
- 	int jack_override;
- 	bool suspend_jack_debounce;
- 
--	struct work_struct hp_ilimit_work;
- 	struct delayed_work hp_ilimit_clear_work;
- 	bool hp_ilimited;
- 	int hp_ilimit_count;
-@@ -134,8 +131,6 @@ int cs42l43_set_jack(struct snd_soc_component *component,
- 		     struct snd_soc_jack *jack, void *d);
- void cs42l43_bias_sense_timeout(struct work_struct *work);
- void cs42l43_tip_sense_work(struct work_struct *work);
--void cs42l43_button_press_work(struct work_struct *work);
--void cs42l43_button_release_work(struct work_struct *work);
- irqreturn_t cs42l43_bias_detect_clamp(int irq, void *data);
- irqreturn_t cs42l43_button_press(int irq, void *data);
- irqreturn_t cs42l43_button_release(int irq, void *data);
+ 				if (drv->ops && drv->ops->interrupt_callback) {
+ 					slave_intr.sdca_cascade = sdca_cascade;
+ 					slave_intr.control_port = clear;
 -- 
 2.39.5
 
