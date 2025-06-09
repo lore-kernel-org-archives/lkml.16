@@ -1,157 +1,216 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 944F81714B7
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 10:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D1F1553A3
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 10:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749465108; cv=none; b=me7asMyBNu2SJZMSrQq8YGfFCPJL1g/jBfEJomwhu1xNi9b/qQQ4z7pduomFhE1Vr1m7EN7VH19tQh6r68SW95C0VBGyeb21BgAZ9/uMubT+WAs8h18diXrgbRaA7puXp18lduzNSPUueXF3GjhvdhIrcx1IXu0vGxi0t7RmLXU=
+	t=1749465129; cv=none; b=H7oiviR+puHb203yhfFaZQMewjCqwufqG46f/2+1y4+NmVmlz9sTnYbLTLvPbmkQVoAXItuH0p+6rxonN0m6YAPUViQgfL+XG0/LA+I/WqRbzLpCYyII+OGOAlDnNdQg8SHcnpX099+eYLdDc/rYEMzxcwsq2X83u6hHQN2ysKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749465108; c=relaxed/simple;
-	bh=4erjn9BtGTOtEhtxONVIB4Jf/vnltMy0Y4kyJZqUE2c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PuE6k2tIJoGvjo4aSUlFgbSdiE6wZ7GnrsgS5SE+s9bzdqg+9xkb72STak0rsaz2zT8RmHJFfS+39YLyOksX2Q9mYpF4BaModTkAXVkcwJsZlW45heGgIWQwGNccZcEn3CoJ9htubf7aftY+LYMyiv9PT7ce7zg8F6pvf1tuJEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 065B3150C;
-	Mon,  9 Jun 2025 03:31:27 -0700 (PDT)
-Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B872F3F673;
-	Mon,  9 Jun 2025 03:31:42 -0700 (PDT)
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Rik van Riel <riel@surriel.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Harry Yoo <harry.yoo@oracle.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-mm@kvack.org
-Subject: [PATCH v1] mm: Remove arch_flush_tlb_batched_pending() arch helper
-Date: Mon,  9 Jun 2025 11:31:30 +0100
-Message-ID: <20250609103132.447370-1-ryan.roberts@arm.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1749465129; c=relaxed/simple;
+	bh=3HGUM9zngmkRNt6x6zgIJoHW7cOqsWbxlpfiFs5uDuA=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=qM8Yf5EE9ml04qdvYI3X85JPuR6+JIKoYtux8eK1XXeiCVuUN7oMfISxvjw6847xvnzzjvIuz6OBg4q81MqLKMWLsVCGpgf7HbjDBl0oOIDsLt3kC6XeRtjRgAcX3yP/5sYjk0h5xeJb+D8vpK/skF4ndOgZ/LvMrBcmq2N3Mg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech; spf=pass smtp.mailfrom=neon.tech; dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b=r08Zu5xT; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neon.tech
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b="r08Zu5xT"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-60789b450ceso4445955a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 03:32:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=neon.tech; s=google; t=1749465126; x=1750069926; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vOh1kmN1BpJUB3fkO2pyW4zC5QemAdxkKxwT4QLR+CM=;
+        b=r08Zu5xT26H6vX9y6SImYtgs2oVo7h5X94KINn+doN40aOZBNLmx7l4xzlqBWvRyNY
+         0sd6oMJi8ujQAqdEllnCDmlQvYtmv6PI6i684DL0SZ75fnIQhZc++pcd8jZoN+K6BU8F
+         QOJhuLCMwWUiIgq1To07AdY7Nbl7yjYQGibXQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749465126; x=1750069926;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=vOh1kmN1BpJUB3fkO2pyW4zC5QemAdxkKxwT4QLR+CM=;
+        b=sXM21uuCavPGzCUAENeiXlQozVoxeU3vBpFGUq9+9SAO8FS0rs1phG4p88cSXJ8Ioc
+         Jq94gqZWMFiVRSsy+g3gEaOPxePd44pya3+YXrDYNLvUrmH84zLLhMXUhJAuyUUzWj1R
+         JaFRZwnIEivdoJZei4sSdrFbqJb7cPpMk2x2YZ6p8FGSsHAtnCq/rGxIWnldJK6evDWk
+         tElMlgjzS1SDnCTG/2qimbWiEfgrN6DllDSlt23pspjdr7pdLLLu2kJOi+js7fn7AEZj
+         KodXis1amkODbwpkICKKli5pz5gb4mkHTCEcIVTuujPcYe/woaF/jv0lx00Ah0oBMVhE
+         9CWw==
+X-Gm-Message-State: AOJu0YwtHCXmlIwvxfG+uUa9NT4sbRqevBgsYZO7xQ/b1k9Ok8UDRavZ
+	7KVPiCfIu2xHvUIlaKy4mRJGR39F+0aXJDokLU2Qul1QXJXRT1nEBOc24SXnE899FUOSNRLOUpu
+	Zsu4rJTo8eQ==
+X-Gm-Gg: ASbGnctmTXzwfWWMD6as5qVq5YS0qoc9GL2WV5xJhj8nYfqATQUj4oYUPSLtW1CNtD8
+	tPx+GPyV2eeNepRccO3OaSxerMAPtPEBo8bPbtuVlRM9EGC20JdjKds1OhxfXGb9Nk6H0RywLkI
+	ckZo7pCbq81iJv4426KAXtN1rFNO+uJpbRXiIRciVDQxiJ+4JVabxleemtYI0srWxr1QlrR1brQ
+	pyujmDJ69hFAD1yfXFNZ4DTxCMspvabWhi0QuNY5IF1XZVS7kPygqmbXnkq6/L5DebL2jbMx6uB
+	iwAl7lP4ZDvFMg168hCQDpZ75NKMYF1NY/nFe5curFFAATDKySKOIBg=
+X-Google-Smtp-Source: AGHT+IETLIUhGfaSESn8EKtmg8Vs25bOw1qtrO9ao2zSDcQl0Ezv0B68l58mWF6bgDn4au63vE3mbA==
+X-Received: by 2002:a05:6402:2694:b0:607:1ee1:1ea2 with SMTP id 4fb4d7f45d1cf-6077489733amr11327963a12.30.1749465125944;
+        Mon, 09 Jun 2025 03:32:05 -0700 (PDT)
+Received: from [192.168.86.142] ([84.65.228.220])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-607783c0620sm4592766a12.49.2025.06.09.03.32.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Jun 2025 03:32:04 -0700 (PDT)
+Message-ID: <0ce5e150-19e0-457f-bec3-ee031c0be7e7@neon.tech>
+Date: Mon, 9 Jun 2025 11:32:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: linux-kernel@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org
+Cc: Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
+ <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+ "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+ Oleg Vasilev <oleg@neon.tech>, Arthur Petukhovsky <arthur@neon.tech>,
+ Stefan Radig <stefan@neon.tech>, Misha Sakhnov <misha@neon.tech>
+From: Em Sharnoff <sharnoff@neon.tech>
+Subject: [PATCH v2 0/2] x86/mm: Improve alloc handling of phys_*_init()
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Since commit 4b634918384c ("arm64/mm: Close theoretical race where stale
-TLB entry remains valid"), all arches that use tlbbatch for reclaim
-(arm64, riscv, x86) implement arch_flush_tlb_batched_pending() with a
-flush_tlb_mm().
+Hi (again) folks,
 
-So let's simplify by removing the unnecessary abstraction and doing the
-flush_tlb_mm() directly in flush_tlb_batched_pending(). This effectively
-reverts commit db6c1f6f236d ("mm/tlbbatch: introduce
-arch_flush_tlb_batched_pending()").
+See changelog + more context below.
 
-Suggested-by: Will Deacon <will@kernel.org>
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
----
- arch/arm64/include/asm/tlbflush.h | 11 -----------
- arch/riscv/include/asm/tlbflush.h |  1 -
- arch/riscv/mm/tlbflush.c          |  5 -----
- arch/x86/include/asm/tlbflush.h   |  5 -----
- mm/rmap.c                         |  2 +-
- 5 files changed, 1 insertion(+), 23 deletions(-)
+tl;dr:
 
-diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-index aa9efee17277..18a5dc0c9a54 100644
---- a/arch/arm64/include/asm/tlbflush.h
-+++ b/arch/arm64/include/asm/tlbflush.h
-@@ -322,17 +322,6 @@ static inline bool arch_tlbbatch_should_defer(struct mm_struct *mm)
- 	return true;
- }
+* Currently alloc_low_page() uses GFP_ATOMIC after boot, which may fail
+* Those failures aren't currently handled by phys_pud_init() and similar
+  functions.
+* Those failures can happen during memory hotplug
 
--/*
-- * If mprotect/munmap/etc occurs during TLB batched flushing, we need to ensure
-- * all the previously issued TLBIs targeting mm have completed. But since we
-- * can be executing on a remote CPU, a DSB cannot guarantee this like it can
-- * for arch_tlbbatch_flush(). Our only option is to flush the entire mm.
-- */
--static inline void arch_flush_tlb_batched_pending(struct mm_struct *mm)
--{
--	flush_tlb_mm(mm);
--}
--
- /*
-  * To support TLB batched flush for multiple pages unmapping, we only send
-  * the TLBI for each page in arch_tlbbatch_add_pending() and wait for the
-diff --git a/arch/riscv/include/asm/tlbflush.h b/arch/riscv/include/asm/tlbflush.h
-index 1a20dd746a49..eed0abc40514 100644
---- a/arch/riscv/include/asm/tlbflush.h
-+++ b/arch/riscv/include/asm/tlbflush.h
-@@ -63,7 +63,6 @@ void flush_pud_tlb_range(struct vm_area_struct *vma, unsigned long start,
- bool arch_tlbbatch_should_defer(struct mm_struct *mm);
- void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
- 		struct mm_struct *mm, unsigned long start, unsigned long end);
--void arch_flush_tlb_batched_pending(struct mm_struct *mm);
- void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
+So:
 
- extern unsigned long tlb_flush_all_threshold;
-diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
-index e737ba7949b1..8404530ec00f 100644
---- a/arch/riscv/mm/tlbflush.c
-+++ b/arch/riscv/mm/tlbflush.c
-@@ -234,11 +234,6 @@ void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
- 	mmu_notifier_arch_invalidate_secondary_tlbs(mm, start, end);
- }
+1. Add handling for those allocation failures
+2. Use GFP_KERNEL instead of GFP_ATOMIC
 
--void arch_flush_tlb_batched_pending(struct mm_struct *mm)
--{
--	flush_tlb_mm(mm);
--}
--
- void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
- {
- 	__flush_tlb_range(NULL, &batch->cpumask,
-diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index e9b81876ebe4..00daedfefc1b 100644
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -356,11 +356,6 @@ static inline void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *b
- 	mmu_notifier_arch_invalidate_secondary_tlbs(mm, 0, -1UL);
- }
+Previous version here, if you missed it:
+https://lore.kernel.org/all/9f4c0972-a123-4cc3-89f2-ed3490371e65@neon.tech/
 
--static inline void arch_flush_tlb_batched_pending(struct mm_struct *mm)
--{
--	flush_tlb_mm(mm);
--}
--
- extern void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
+=== Changelog ===
 
- static inline bool pte_flags_need_flush(unsigned long oldflags,
-diff --git a/mm/rmap.c b/mm/rmap.c
-index fb63d9256f09..fd160ddaa980 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -746,7 +746,7 @@ void flush_tlb_batched_pending(struct mm_struct *mm)
- 	int flushed = batch >> TLB_FLUSH_BATCH_FLUSHED_SHIFT;
+v2:
+- Switch from special-casing zero values to ERR_PTR()
+- Add patch to move from GFP_ATOMIC -> GFP_KERNEL
+- Move commentary out of the patch message and into this cover letter
 
- 	if (pending != flushed) {
--		arch_flush_tlb_batched_pending(mm);
-+		flush_tlb_mm(mm);
- 		/*
- 		 * If the new TLB flushing is pending during flushing, leave
- 		 * mm->tlb_flush_batched as is, to avoid losing flushing.
---
-2.43.0
+=== Background ===
+
+We recently started observing these null pointer dereferences happening
+in practice (albeit quite rarely), triggered by allocation failures
+during virtio-mem hotplug.
+
+We use virtio-mem quite heavily - adding/removing memory based on
+resource usage of customer workloads across a fleet of VMs - so it's
+somewhat expected that we have occasional allocation failures here, if
+we run out of memory before hotplug takes place.
+
+We started seeing this bug after upgrading from 6.6.64 to 6.12.26, but
+there didn't appear to be relevant changes in the codepaths involved, so
+we figured the upgrade was triggering a latent issue.
+
+The possibility for this issue was also pointed out a while back:
+
+> For alloc_low_pages(), I noticed the callers don’t check for allocation
+> failure. I'm a little surprised that there haven't been reports of the
+> allocation failing, because these operations could result in a lot more
+> pages getting allocated way past boot, and failure causes a NULL
+> pointer dereference.
+
+https://lore.kernel.org/all/5aee7bcdf49b1c6b8ee902dd2abd9220169c694b.camel@intel.com/
+
+For completeness, here's an example stack trace we saw (on 6.12.26):
+
+  BUG: kernel NULL pointer dereference, address: 0000000000000000
+  ....
+  Call Trace:
+   <TASK>
+   phys_pud_init+0xa0/0x390
+   phys_p4d_init+0x93/0x330
+   __kernel_physical_mapping_init+0xa1/0x370
+   kernel_physical_mapping_init+0xf/0x20
+   init_memory_mapping+0x1fa/0x430
+   arch_add_memory+0x2b/0x50
+   add_memory_resource+0xe6/0x260
+   add_memory_driver_managed+0x78/0xc0
+   virtio_mem_add_memory+0x46/0xc0
+   virtio_mem_sbm_plug_and_add_mb+0xa3/0x160
+   virtio_mem_run_wq+0x1035/0x16c0
+   process_one_work+0x17a/0x3c0
+   worker_thread+0x2c5/0x3f0
+   ? _raw_spin_unlock_irqrestore+0x9/0x30
+   ? __pfx_worker_thread+0x10/0x10
+   kthread+0xdc/0x110
+   ? __pfx_kthread+0x10/0x10
+   ret_from_fork+0x35/0x60
+   ? __pfx_kthread+0x10/0x10
+   ret_from_fork_asm+0x1a/0x30
+   </TASK>
+
+and the allocation failure preceding it:
+
+  kworker/0:2: page allocation failure: order:0, mode:0x920(GFP_ATOMIC|__GFP_ZERO), nodemask=(null),cpuset=/,mems_allowed=0
+  ...
+  Call Trace:
+   <TASK>
+   dump_stack_lvl+0x5b/0x70
+   dump_stack+0x10/0x20
+   warn_alloc+0x103/0x180
+   __alloc_pages_slowpath.constprop.0+0x738/0xf30
+   __alloc_pages_noprof+0x1e9/0x340
+   alloc_pages_mpol_noprof+0x47/0x100
+   alloc_pages_noprof+0x4b/0x80
+   get_free_pages_noprof+0xc/0x40
+   alloc_low_pages+0xc2/0x150
+   phys_pud_init+0x82/0x390
+  ...
+
+(everything from phys_pud_init and below was the same)
+
+There's some additional context in a github issue we opened on our side:
+https://github.com/neondatabase/autoscaling/issues/1391
+
+=== Reproducing / Testing ===
+
+I was able to partially reproduce the original issue we saw by
+modifying phys_pud_init() to simulate alloc_low_page() returning null
+after boot, and then doing memory hotplug to trigger the "failure".
+Something roughly like:
+
+  - pmd = alloc_low_page();
+  + if (!after_bootmem)
+  + 	pmd = alloc_low_page();
+  + else
+  + 	pmd = 0;
+
+To test recovery, I also tried simulating just one alloc_low_page()
+failure after boot. This change seemed to handle it at a basic level
+(virito-mem hotplug succeeded with the right amount, after retrying),
+but I didn't dig further.
+
+We also plan to test this in our production environment (where we should
+see the difference after a few days); as of 2025-06-09, we haven't yet
+rolled that out.
+
+
+Em Sharnoff (2):
+  x86/mm: Handle alloc failure in phys_*_init()
+  x86/mm: Use GFP_KERNEL for alloc_low_pages() after boot
+
+ arch/x86/mm/init.c    |  8 +++++--
+ arch/x86/mm/init_64.c | 54 +++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 56 insertions(+), 6 deletions(-)
+
+
+base-commit: 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3
+-- 
+2.39.5
 
