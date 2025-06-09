@@ -1,226 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B8D18633F;
-	Mon,  9 Jun 2025 17:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C2E21B9D3;
+	Mon,  9 Jun 2025 17:07:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749488860; cv=none; b=WqnlBdEjXKhLWhNAfHl9q/fQK8kYArxaTvDlX9v7KRdNRk7K6QJqCkn6bpGjKL8tfe9zBnEGSalUyhM2A9gLWClnfNTmSRV9cNv2tlnWewdfzBwB6UsOpYPHW7oN8MrObOctc3ffy6vRi2TkGCxGal65vBbBfh6j+82nKyJzT8M=
+	t=1749488863; cv=none; b=CjdyzZ6Kmjuz/4XUUPicXWuQCbTzV73drdbrJLKigvBY3I6Lp1y/wBfO0QNOv4CcD71B1cGiiG6k6FDhi4A3bEU0ocu6asdqdzRfKR+ylxlN/PrCn4w/+lRkB3eJttqN+TDTP8zmix4374K0RRMm3xNyh4vUV7rBSqWE1Vj3UgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749488860; c=relaxed/simple;
-	bh=Ch2C2f0dQROPaS1DTJtHEKlSNL+mBdUuhKgHhovymg0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I8P/X6WswUdw36e+GlI7zfZLoh/BaUVM1eB00uohXV2n9OIlcn+OLk1yU1j+uTqXdFtygxWTWCVqZThzJ/vVRLm7cLcHOpukkwScqm+03uoMu25Vq2cGo6vTtFvj0wuhysaztkC5JAIibSfa1V2vg51Ce7Z0CsJM/MYy7mgnu+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vH2M/C69; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749488863; c=relaxed/simple;
+	bh=Dq8MSayO5mzVOULGgwVoSeT6C6CVYRN6SRzVVuf80Vs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XfXDEqtSQUKhdatVPNbasFqW3l7Cn/qfu7DfHSr5jEGP/ZWteuA52w2jO9WKiUFaJ3PXkci2wgbN5dUyvhCExEyCAOX4dYPnIuBye4pHVxH3bqVr37v5ZQ3tB5kB9OOV3vx40QUzXCUUXARTbS9BLK3Cg4RhVBS5EQ/kIezc5fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=geLQ7Lcu; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vH2M/C69"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8588DC4CEEB;
-	Mon,  9 Jun 2025 17:07:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749488859;
-	bh=Ch2C2f0dQROPaS1DTJtHEKlSNL+mBdUuhKgHhovymg0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vH2M/C69bemRwZtTpWGOQO2awZinpECNdTHXCQlGpERQVQ6kmFmQN5+pz02+kDsgd
-	 2HCOFM6A0azkIR5ASADe60WIgHthdjpUQU7NuHzBnOlaiwFHXkTWJjh+FcK/2eM12U
-	 k7QL7Tcsr04MeTTIbr50z4VWJ+TtmMQMZw9a6GBqNo5uQyJ8F4LSimavzvJ33FUeX+
-	 bTGg8dKujmfsNgFDFGfGXSAL+8uggG/EXuu1t15On7wT3/H9qx3sj/d7deeS0MfWFc
-	 cqGW3PyTcIoOWTEOjZcq+FRCIUfQUq4B0D7vRV7cl9GW3oLE2ZzFOjGtuPfgsVJT6c
-	 PZVop9vFKFJmA==
-Date: Mon, 9 Jun 2025 10:07:36 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Brian Gerst <brgerst@gmail.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, 
-	Joe Lawrence <joe.lawrence@redhat.com>, live-patching@vger.kernel.org, Song Liu <song@kernel.org>, 
-	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
-	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
-	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
-	Puranjay Mohan <puranjay@kernel.org>
-Subject: Re: [PATCH v2 45/62] x86/extable: Define ELF section entry size for
- exception tables
-Message-ID: <zsvgiietkr4qwrlnmvsov7xmgqe7khqmgluvr6f6hsqaw3sp4q@drakq47ntmhr>
-References: <cover.1746821544.git.jpoimboe@kernel.org>
- <198cfbd12e54dfce1309828e146b90b1f7b200a5.1746821544.git.jpoimboe@kernel.org>
- <CAMzpN2jbdRJWhAWOKWzYczMjXqadg_braRgaxyA080K9G=xp0g@mail.gmail.com>
- <goiggh4js4t3g54fpcs6gugmp26uoumucszrx3e5cdrqdl7336@qijkbpy747jb>
- <CAMzpN2gmbgts1fFm2x=Ao=X-9g0U000+fPk_i7mMA-f0AQsQYg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="geLQ7Lcu"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-313336f8438so792182a91.0;
+        Mon, 09 Jun 2025 10:07:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749488860; x=1750093660; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q1N0UDdK8lLC+QVYwRwO/3SBz0UncRxF7iQSLzkDX7M=;
+        b=geLQ7LcuO2sus7IM/mGYUl4gLTAU+GaYpx5RDFIFkrWIG+DVgph5+s+ew5ha5HJQM1
+         sDyQypN3wGyZDRYqrEmWxRNFNVC4QS5iAJnYNK9YSrwD7K37hT/Bk0WzdOrBTne0YJlb
+         F2TzOwMYe56eB0T6YRbA4wH7cWQlfFtlRQt3r+m71ED5IhcBoZgU3l9r5EdQ8vEyaE9G
+         o9bFcxbxPXYWPO/Kwn3ONSe/4nLMKiH63mFf5WR2myQpe9gwSIqXkQaSeo6cjPz7kOQn
+         SV7R4N4Wv/owmE7L+Ui2JrVoa8YhNqfyg1EaGbzFZ9tLD9n/bv0bNdVmQBs2T+oq7FGG
+         aiWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749488860; x=1750093660;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q1N0UDdK8lLC+QVYwRwO/3SBz0UncRxF7iQSLzkDX7M=;
+        b=WxZ2fW8vDs40zP8q+TKSYdyE12CKw90+wWl3iiOkTOF3KepNoeRXWOq4pQKSNPkQlb
+         r8YIeOWgWNguU36awRMu9pVdO4l7zwSa8Q+TM9GtKMOrvtBQCixCPYiGh1KXNknVUIiF
+         m5SGFg8nv8H/K7hmgpDOC70FAtm6nhsWYGez/TzUoZIQghle5ItkQm57oP4GEVdducZo
+         y2KUOipG/xf19IhebXLwJf7AkmoayYnzn+R5Nbr3hXfghn02gEfKWQU9JLu0lgzb44ka
+         1YFv1lIrUSygzI0G4WJcmUe045dT2WHB84Gc0myrVV7c3G4noziJUCwsD6WQ/IC3P1hc
+         ac2g==
+X-Forwarded-Encrypted: i=1; AJvYcCXCV5gz1wd1fmmrQ2RHQWkIfm7vmqlzjWkD6xcT7pDr9i8WBya1Gy6u4bNCyQqtlitmjXhE1FMB5weNV29K+d0=@vger.kernel.org, AJvYcCXZtaTNLyC58SpFa4LiktDqx4wcAhdmHkmWbsgUaqiwiJPupjNdhfDKRUIpdZNabazVkbEZcRHPc9R5bAY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9vSs1fA3+Nqi7/g/Dk2kvbNdzVNUM3Qp9TDCD46Ihdq7LYbtS
+	O4a6eZXxwGXi/Kj+rD4Hhz1FBKWYyX0t7aIq/lb5WgYgYzSirt2dxiiHj5qEW7mvr8wMPaDGhpX
+	x22osEM3PMOZiQxjaTElE4j3PDruVdfISyy74oVUCxg==
+X-Gm-Gg: ASbGncs08Pl1lt01sL966E7n+GEoqVmiHaTrF4NKXhb67ZGDWhC/ESwsZmwxNUL1z9f
+	yEQlNl3On0sP8DWw3S2GMpbug958L9PNk5ktq7ekJmS5VX5whzN2F3G8Teaabo7jc5Hu6SclvVP
+	28OJm1KuzuMBZ1ha6SV0XjVZzExfjKAPO+KC5GPfL54Bs=
+X-Google-Smtp-Source: AGHT+IG3VIlZlpjeF3NZRjbSmcCyVMzGm1PFJaoEe/UUkN+nG0qIdp/t1yKZBLZ8w0UWd/DWxh6CT3ktRTBJtAfk5JM=
+X-Received: by 2002:a17:90b:268e:b0:311:e8cc:4250 with SMTP id
+ 98e67ed59e1d1-3134e3e4268mr6262130a91.3.1749488860287; Mon, 09 Jun 2025
+ 10:07:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMzpN2gmbgts1fFm2x=Ao=X-9g0U000+fPk_i7mMA-f0AQsQYg@mail.gmail.com>
+References: <20250609-topics-tyr-regulator-v4-1-b4fdcf1385a7@collabora.com>
+ <CANiq72kcF-CqUwvCBRt5FjX2Yrj517UYjXHA9Sf7-Xevsy=2Kw@mail.gmail.com> <09F9A01B-70CA-421C-9A48-E0FD0A192026@collabora.com>
+In-Reply-To: <09F9A01B-70CA-421C-9A48-E0FD0A192026@collabora.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 9 Jun 2025 19:07:27 +0200
+X-Gm-Features: AX0GCFuJt8-DqTgw_q8FYRdfSv1LGXRu4JVE6Zd2lw2Y71ekmTbWOgzWkA5p0n8
+Message-ID: <CANiq72kNo94Wym-FGoYx=A7OK0N5itZaD8Jm7TbBB2P6s_zTOw@mail.gmail.com>
+Subject: Re: [PATCH v4] rust: regulator: add a bare minimum regulator abstraction
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Boris Brezillon <boris.brezillon@collabora.com>, 
+	Sebastian Reichel <sebastian.reichel@collabora.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 06, 2025 at 09:26:30PM -0400, Brian Gerst wrote:
-> On Fri, Jun 6, 2025 at 3:48 AM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
-> >
-> > On Thu, Jun 05, 2025 at 11:58:23PM -0400, Brian Gerst wrote:
-> > > On Fri, May 9, 2025 at 4:51 PM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
-> > > >
-> > > > In preparation for the objtool klp diff subcommand, define the entry
-> > > > size for the __ex_table section in its ELF header.  This will allow
-> > > > tooling to extract individual entries.
-> > > >
-> > > > Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> > > > ---
-> > > >  arch/x86/include/asm/asm.h | 20 ++++++++++++--------
-> > > >  kernel/extable.c           |  2 ++
-> > > >  2 files changed, 14 insertions(+), 8 deletions(-)
-> > > >
-> > > > diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
-> > > > index f963848024a5..62dff336f206 100644
-> > > > --- a/arch/x86/include/asm/asm.h
-> > > > +++ b/arch/x86/include/asm/asm.h
-> > > > @@ -138,15 +138,17 @@ static __always_inline __pure void *rip_rel_ptr(void *p)
-> > > >
-> > > >  # include <asm/extable_fixup_types.h>
-> > > >
-> > > > +#define EXTABLE_SIZE 12
-> > >
-> > > Put this in asm-offsets.c instead.
-> >
-> > But that's only for .S code right?  This is also needed for inline asm.
-> 
-> <asm/asm-offsets.h> can be used in C code too.  Normally it wouldn't
-> be needed but the inline asm case is a valid use.
+On Mon, Jun 9, 2025 at 6:31=E2=80=AFPM Daniel Almeida
+<daniel.almeida@collabora.com> wrote:
+>
+> By the way, are you using some lint to generate this?
 
-Ah, nice.  This is much better.  Thanks!
+No, just my eyes :)
 
-diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
-index e206e0f96568..eb24d9ba30d7 100644
---- a/arch/x86/include/asm/alternative.h
-+++ b/arch/x86/include/asm/alternative.h
-@@ -16,8 +16,6 @@
- #define ALT_DIRECT_CALL(feature) ((ALT_FLAG_DIRECT_CALL << ALT_FLAGS_SHIFT) | (feature))
- #define ALT_CALL_ALWAYS		ALT_DIRECT_CALL(X86_FEATURE_ALWAYS)
- 
--#define ALTINSTR_SIZE		14
--
- #ifndef __ASSEMBLER__
- 
- #include <linux/stddef.h>
-@@ -200,7 +198,7 @@ static inline int alternatives_text_reserved(void *start, void *end)
- 
- #define ALTINSTR_ENTRY(ft_flags)					      \
- 	".pushsection .altinstructions, \"aM\", @progbits, "		      \
--		      __stringify(ALTINSTR_SIZE) "\n"			      \
-+		      __stringify(ALT_INSTR_SIZE) "\n"			      \
- 	" .long 771b - .\n"				/* label           */ \
- 	" .long 774f - .\n"				/* new instruction */ \
- 	" .4byte " __stringify(ft_flags) "\n"		/* feature + flags */ \
-@@ -363,7 +361,7 @@ void nop_func(void);
- 741:									\
- 	.skip -(((744f-743f)-(741b-740b)) > 0) * ((744f-743f)-(741b-740b)),0x90	;\
- 742:									\
--	.pushsection .altinstructions, "aM", @progbits, ALTINSTR_SIZE ;	\
-+	.pushsection .altinstructions, "aM", @progbits, ALT_INSTR_SIZE ;\
- 	altinstr_entry 740b,743f,flag,742b-740b,744f-743f ;		\
- 	.popsection ;							\
- 	.pushsection .altinstr_replacement,"ax"	;			\
-diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
-index 62dff336f206..eb0b33f02be3 100644
---- a/arch/x86/include/asm/asm.h
-+++ b/arch/x86/include/asm/asm.h
-@@ -138,7 +138,9 @@ static __always_inline __pure void *rip_rel_ptr(void *p)
- 
- # include <asm/extable_fixup_types.h>
- 
--#define EXTABLE_SIZE 12
-+#ifndef COMPILE_OFFSETS
-+#include <asm/asm-offsets.h>
-+#endif
- 
- /* Exception table entry */
- #ifdef __ASSEMBLER__
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index d01ab5fa631f..4888e1c8be6a 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -593,8 +593,6 @@ void __init_or_module noinline apply_alternatives(struct alt_instr *start,
- 	u8 *instr, *replacement;
- 	struct alt_instr *a, *b;
- 
--	BUILD_BUG_ON(ALTINSTR_SIZE != sizeof(struct alt_instr));
--
- 	DPRINTK(ALT, "alt table %px, -> %px", start, end);
- 
- 	/*
-diff --git a/arch/x86/kernel/asm-offsets.c b/arch/x86/kernel/asm-offsets.c
-index 6259b474073b..805da27854ee 100644
---- a/arch/x86/kernel/asm-offsets.c
-+++ b/arch/x86/kernel/asm-offsets.c
-@@ -123,4 +123,8 @@ static void __used common(void)
- 	OFFSET(ARIA_CTX_rounds, aria_ctx, rounds);
- #endif
- 
-+	BLANK();
-+	DEFINE(EXTABLE_SIZE,	 sizeof(struct exception_table_entry));
-+	DEFINE(UNWIND_HINT_SIZE, sizeof(struct unwind_hint));
-+	DEFINE(ALT_INSTR_SIZE,	 sizeof(struct alt_instr));
- }
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 4624d6d916a2..977ee75e047c 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -199,8 +199,6 @@ static struct orc_entry *orc_find(unsigned long ip)
- {
- 	static struct orc_entry *orc;
- 
--	BUILD_BUG_ON(UNWIND_HINT_SIZE != sizeof(struct unwind_hint));
--
- 	if (ip == 0)
- 		return &null_orc_entry;
- 
-diff --git a/arch/x86/mm/extable.c b/arch/x86/mm/extable.c
-index d4aae98b3739..bf8dab18be97 100644
---- a/arch/x86/mm/extable.c
-+++ b/arch/x86/mm/extable.c
-@@ -303,8 +303,6 @@ int fixup_exception(struct pt_regs *regs, int trapnr, unsigned long error_code,
- 	const struct exception_table_entry *e;
- 	int type, reg, imm;
- 
--	BUILD_BUG_ON(EXTABLE_SIZE != sizeof(struct exception_table_entry));
--
- #ifdef CONFIG_PNPBIOS
- 	if (unlikely(SEGMENT_IS_PNP_CODE(regs->cs))) {
- 		extern u32 pnp_bios_fault_eip, pnp_bios_fault_esp;
-diff --git a/include/linux/objtool.h b/include/linux/objtool.h
-index d4137a46ee70..e93f0c28b54b 100644
---- a/include/linux/objtool.h
-+++ b/include/linux/objtool.h
-@@ -8,8 +8,6 @@
- 
- #include <asm/asm.h>
- 
--#define UNWIND_HINT_SIZE 12
--
- #ifndef __ASSEMBLY__
- 
- #define UNWIND_HINT(type, sp_reg, sp_offset, signal)		\
-diff --git a/kernel/bounds.c b/kernel/bounds.c
-index 29b2cd00df2c..02b619eb6106 100644
---- a/kernel/bounds.c
-+++ b/kernel/bounds.c
-@@ -6,6 +6,7 @@
-  */
- 
- #define __GENERATING_BOUNDS_H
-+#define COMPILE_OFFSETS
- /* Include headers that define the enum constants of interest */
- #include <linux/page-flags.h>
- #include <linux/mmzone.h>
-diff --git a/scripts/mod/devicetable-offsets.c b/scripts/mod/devicetable-offsets.c
-index d3d00e85edf7..ef2ffb68f69d 100644
---- a/scripts/mod/devicetable-offsets.c
-+++ b/scripts/mod/devicetable-offsets.c
-@@ -1,4 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
-+#define COMPILE_OFFSETS
- #include <linux/kbuild.h>
- #include <linux/mod_devicetable.h>
- 
+But I try to report upstream things that I think could be automated so
+that eventually we need less time to catch this sort of thing, e.g. I
+was just opening this one inspired by this patch:
 
+    https://github.com/rust-lang/rust-clippy/issues/15023
+
+Plus these other two, which do not happen here, but are related:
+
+    https://github.com/rust-lang/rust-clippy/issues/15024
+    https://github.com/rust-lang/rust-clippy/issues/15025
+
+Some of our suggestions did get implemented in the past by others
+even, so that was great.
+
+> Did you try to render this? I tried it before submitting, but it did not =
+render
+> correctly after the first time it was used, i.e.: only the first subsecti=
+on was
+> rendered correctly and the others remained as-is.
+
+Yeah, I did -- it works fine for me.
+
+I even checked that it generates a higher level HTML `<hN>` tag vs.
+the main one, as expected in Markdown (I checked that because the font
+was fairly similar in size, so it was hard to see).
+
+Do you see something different?
+
+Cheers,
+Miguel
