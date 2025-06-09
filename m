@@ -1,121 +1,161 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF8E215766;
-	Mon,  9 Jun 2025 17:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3EBE215766;
+	Mon,  9 Jun 2025 17:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749490775; cv=none; b=plTu0aNjdchS0adbc8wVh8LvOmZ6iqdoayrZMV+DH+m+tCWjYtuKajJCrY77Gc7ZxeTrx+cJCJuX/gNe08uv0YyuTVeRIcA4mVJU5J55hg6IjP9lJ3sumtFqIMdHkJFw3Ha4+XMAkq3KhNMssUBdX/+sk90cw0MpDwDvkbs1iDE=
+	t=1749490793; cv=none; b=c2w80bz9Jpg5TPyBYyRGFBsC9ZRgxJZMNxFjo3poevE9RXrt2/qyU6lTpo+DN3PbGUgsXgdcgM651mf87+2RAXr+ObY/DczII+wvFo+kNZIoRCI9rakjkPARgH68I6bqYUsjq6xZF5ZNaEV+ZGpATiX89ZnXCpmEaE4Q7K+4ty8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749490775; c=relaxed/simple;
-	bh=o3PREeO4DOrU7ekFiopqC8hOe4/3H9IhP7e2Wtv14rU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sF9Tazj+qj3rdV8Sh/Ag7Za0hJbIJjvKBzJuATdYomMT4RLGRJKv082Vf3Zf1jkYslRkRWQgEfM27jPQoGSRsC7AkqUUh181016exRrr+p9nPZTB80aKoz2VuDPm9JHX+9ILnsW3Y35tONVqk2JODENWEoGbXvLtfoJYSWDa9nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dy59W2SO; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749490793; c=relaxed/simple;
+	bh=4abGnwIone7ePw6F2MTDhlNwDOoT+2r0m9g9eAvFQjM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mu8M8Fc+e986vdX881akn7hHTL6IwmHo89ykGFL/75kwcZbMIl/drMYw3nAeq6SHLizS0QNFImB+HXm1odCUsk1VyhOicE7NmPysDjidnxLB/YDQiNxemfmDDC2SIdnE2P/iaqhFZw10HTl6cE1TNZz0Ruh1Ewfz8L7deePzEHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bs0frPTP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dy59W2SO"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-af6a315b491so3823621a12.1;
-        Mon, 09 Jun 2025 10:39:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749490774; x=1750095574; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mIBPFAGPp8hXcKc/4wwQc/egzYY6bQX2XSKLxjUmpLY=;
-        b=dy59W2SOtAoihFrxYMkHPqTudxgPI0YZ5ToYCUvHlzm4JE5mbuEHFnxyKgrnguGxh8
-         mhkvwIxTpLTAjT3AHlVfCq7n2s29VM2C0WkSe/Lxigb15e3VBjcSDuHwHHEgioi7YIe8
-         OUM9FUFveb32hSxrgBhHCQwGX7x5Xwc3y5MBukctKoRmtVuaPVNs6jAsT7FGUGKCYkJB
-         wbpTzB4ykGHRGjiMk44hlMbZsfmMb8TO1Xsw6Gk0yi0TBrHHICY0sglYu7RH1L/I4ddQ
-         osYeWAh+99N5NNqVS2DS47ZxNmlcFuPEiVYxaDM3m5DEpVWjw+V+9A6yQ+KL8Q8KhTEx
-         rq+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749490774; x=1750095574;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mIBPFAGPp8hXcKc/4wwQc/egzYY6bQX2XSKLxjUmpLY=;
-        b=XgMClZGbmVuabbM+1YxQIKbPT2RXYa/+jPKI4YAWDQZVUqcIpHzsrjeW6X6gy8Due3
-         ELrCemVxZELsGydFGdZLz9Ws3OQF3lmFRw+WYiU4pb8zrS9jhtf9u+F5GzVsTlkYjMgI
-         lFE5URYYXZ8zwwZr3+GxBGeiFa9YrSwjoEUMAyvbvocwALtSvX7hd2GySle+sGbq85UU
-         WKFoFsadEQxKiCc3cyidmWu3jY0o0WYMLmyqHAv7RQTHxrbS8G8IzzDf4d9Z4HkaXXtm
-         mVZccHxWE8d1OGwLAS7zpNnPoPz9E6XjdYt/0iBglD1zVelw6P1icmmv2l0DQYpnft3f
-         teqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXTsGRkONW2Jd+zyIJb9nxwDUCH29MJdJAUETO0AcAqshW/f8+JYRiEdhGxp5G4Bsn2ldYqAAEYAUFu5CB@vger.kernel.org, AJvYcCWy3+YqebpI3kRA/Oxi70hGk4fgjlMQqMnbGtnCSMo7GRHOZNahR1GgoUBW4mmRsOiI67I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHLWjh0rMtPSuF+kv5PnXILbmY6RawD/FaaRaqNnckhSW450fA
-	+cW95V3xAu0Xtt7punVgjpLgdbTG/bT7lXGANcQm58tU4pQPR0UU5Yo=
-X-Gm-Gg: ASbGnctmkBNjc8qhGl4Tn7WFx0izkPDUWGHxlsXqTlXl++PfAdqfbEl05RMGgLjNzOI
-	9wXtrpi13x12SZeKsUg6ghyIPc7tRf9MMng7dr5E3TcaliY0B2LK0EOKIgDh8ez0xgOjRfiLZpF
-	cG1kywlbGatH5cAZHIpwb31+7cO018M8c3mkmfW+Gye4jT9fJ7HFli6tDXzY6RUSGtGlneGavDr
-	RqUrRNbv+78wdNtH9dx7YuYzVy8auLvoxtt1K4vol+5iS6lIAKTNnK2oqCImtctay1P//iKgRBM
-	qxdZguvOFsm0Ex7oJ7LZsqpzIsz8B7gJZQKEirX48U1z4tPdBTr4r/j84uT/wtCT85sTq2s=
-X-Google-Smtp-Source: AGHT+IE9KMa9l69eTnubbzgLEvHrPpwQoVF8z70wRp8ljIOdlocN91B1ZfBA3RHHH+CFtn5cN1pZAw==
-X-Received: by 2002:a05:6a20:160e:b0:20b:9774:ac6c with SMTP id adf61e73a8af0-21ee6853262mr16219357637.5.1749490773373;
-        Mon, 09 Jun 2025 10:39:33 -0700 (PDT)
-Received: from debian.ujwal.com ([223.185.129.95])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0c212fsm6180691b3a.135.2025.06.09.10.39.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 10:39:33 -0700 (PDT)
-From: Ujwal Kundur <ujwal.kundur@gmail.com>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	hawk@kernel.org,
-	john.fastabend@gmail.com,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	aoluo@google.com,
-	jolsa@kernel.org
-Cc: netdev@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ujwal Kundur <ujwal.kundur@gmail.com>
-Subject: [PATCH] bpf: cpumap: report Rx queue index to xdp_rxq_info
-Date: Mon,  9 Jun 2025 23:08:52 +0530
-Message-Id: <20250609173851.778-1-ujwal.kundur@gmail.com>
-X-Mailer: git-send-email 2.20.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bs0frPTP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D174C4CEEB;
+	Mon,  9 Jun 2025 17:39:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749490793;
+	bh=4abGnwIone7ePw6F2MTDhlNwDOoT+2r0m9g9eAvFQjM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=Bs0frPTPUzeZhB7xcJqML+/23l1Ul7E/PDG+1Q/XInOXY7+kxsojg4yN4/y/+mD+U
+	 H4qUTUVk8JnAUF4DNo8sc37HhatzjVAzUfl+mD750DVNwouUjaj1X1BPDAMQbR2HOr
+	 0Z+GtLzlqH4SNdDn1inSP68Siu4fsQs4lmWsqdsQtiEftPu1c3I0MI5FLdkmTPhu6f
+	 vX7dZamIC90ys2XNVKRk1Uy5V0mcy2+3Zn76texuh2+ZSXMyMkwPMFwg5KDXC0wTaJ
+	 EZHvznruqVgLLmKA6tASDKl8on4Tk35ZkXnMk23cX37E71LjryUJxOiV2EeSG9unf5
+	 SzIVw0PcUHiGQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id E5CB8CE0B6C; Mon,  9 Jun 2025 10:39:52 -0700 (PDT)
+Date: Mon, 9 Jun 2025 10:39:52 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] tracing: Use queue_rcu_work() to free filters
+Message-ID: <0ee99715-7877-4d94-9ae5-5b0e23f34aae@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250609131732.04fd303b@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250609131732.04fd303b@gandalf.local.home>
 
-Refer to the Rx queue using a XDP frame's attached netdev and ascertain
-the queue index from it.
+On Mon, Jun 09, 2025 at 01:17:32PM -0400, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> Freeing of filters requires to wait for both an RCU grace period as well as
+> a RCU task trace wait period after they have been detached from their
+> lists. The trace task period can be quite large so the freeing of the
+> filters was moved to use the call_rcu*() routines. The problem with that is
+> that the callback functions of call_rcu*() is done from a soft irq and can
+> cause latencies if the callback takes a bit of time.
+> 
+> The filters are freed per event in a system and the syscalls system
+> contains an event per system call, which can be over 700 events. Freeing 700
+> filters in a bottom half is undesirable.
+> 
+> Instead, move the freeing to use queue_rcu_work() which is done in task
+> context.
+> 
+> Link: https://lore.kernel.org/all/9a2f0cd0-1561-4206-8966-f93ccd25927f@paulmck-laptop/
+> 
+> Fixes: a9d0aab5eb33 ("tracing: Fix regression of filter waiting a long time on RCU synchronization")
+> Suggested-by: "Paul E. McKenney" <paulmck@kernel.org>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Signed-off-by: Ujwal Kundur <ujwal.kundur@gmail.com>
----
- kernel/bpf/cpumap.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Thank you, and looks good to me.
 
-diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
-index 67e8a2fc1a99..8230292deac1 100644
---- a/kernel/bpf/cpumap.c
-+++ b/kernel/bpf/cpumap.c
-@@ -34,6 +34,7 @@
- #include <linux/btf_ids.h>
- 
- #include <linux/netdevice.h>
-+#include <net/netdev_rx_queue.h>
- #include <net/gro.h>
- 
- /* General idea: XDP packets getting XDP redirected to another CPU,
-@@ -196,7 +197,7 @@ static int cpu_map_bpf_prog_run_xdp(struct bpf_cpu_map_entry *rcpu,
- 
- 		rxq.dev = xdpf->dev_rx;
- 		rxq.mem.type = xdpf->mem_type;
--		/* TODO: report queue_index to xdp_rxq_info */
-+		rxq.queue_index = get_netdev_rx_queue_index(xdpf->dev_rx->_rx);
- 
- 		xdp_convert_frame_to_buff(xdpf, &xdp);
- 
--- 
-2.20.1
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
 
+> ---
+> Note, I added a Fixes tag but not a stable tag as this is a nice-to-have
+> but doesn't hit the level of critical fix to backport or add to an rc
+> release. If someone wants to back port it, feel free.
+> 
+>  kernel/trace/trace_events_filter.c | 28 ++++++++++++++++++++--------
+>  1 file changed, 20 insertions(+), 8 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+> index ea8b364b6818..b6fe8167ef01 100644
+> --- a/kernel/trace/trace_events_filter.c
+> +++ b/kernel/trace/trace_events_filter.c
+> @@ -1344,13 +1344,14 @@ struct filter_list {
+>  
+>  struct filter_head {
+>  	struct list_head	list;
+> -	struct rcu_head		rcu;
+> +	union {
+> +		struct rcu_head		rcu;
+> +		struct rcu_work		rwork;
+> +	};
+>  };
+>  
+> -
+> -static void free_filter_list(struct rcu_head *rhp)
+> +static void free_filter_list(struct filter_head *filter_list)
+>  {
+> -	struct filter_head *filter_list = container_of(rhp, struct filter_head, rcu);
+>  	struct filter_list *filter_item, *tmp;
+>  
+>  	list_for_each_entry_safe(filter_item, tmp, &filter_list->list, list) {
+> @@ -1361,9 +1362,20 @@ static void free_filter_list(struct rcu_head *rhp)
+>  	kfree(filter_list);
+>  }
+>  
+> +static void free_filter_list_work(struct work_struct *work)
+> +{
+> +	struct filter_head *filter_list;
+> +
+> +	filter_list = container_of(to_rcu_work(work), struct filter_head, rwork);
+> +	free_filter_list(filter_list);
+> +}
+> +
+>  static void free_filter_list_tasks(struct rcu_head *rhp)
+>  {
+> -	call_rcu(rhp, free_filter_list);
+> +	struct filter_head *filter_list = container_of(rhp, struct filter_head, rcu);
+> +
+> +	INIT_RCU_WORK(&filter_list->rwork, free_filter_list_work);
+> +	queue_rcu_work(system_wq, &filter_list->rwork);
+>  }
+>  
+>  /*
+> @@ -1462,7 +1474,7 @@ static void filter_free_subsystem_filters(struct trace_subsystem_dir *dir,
+>  	tracepoint_synchronize_unregister();
+>  
+>  	if (head)
+> -		free_filter_list(&head->rcu);
+> +		free_filter_list(head);
+>  
+>  	list_for_each_entry(file, &tr->events, list) {
+>  		if (file->system != dir || !file->filter)
+> @@ -2307,7 +2319,7 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+>  	return 0;
+>   fail:
+>  	/* No call succeeded */
+> -	free_filter_list(&filter_list->rcu);
+> +	free_filter_list(filter_list);
+>  	parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
+>  	return -EINVAL;
+>   fail_mem:
+> @@ -2317,7 +2329,7 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+>  	if (!fail)
+>  		delay_free_filter(filter_list);
+>  	else
+> -		free_filter_list(&filter_list->rcu);
+> +		free_filter_list(filter_list);
+>  
+>  	return -ENOMEM;
+>  }
+> -- 
+> 2.47.2
+> 
