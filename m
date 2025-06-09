@@ -1,119 +1,227 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 285011547D2;
-	Mon,  9 Jun 2025 14:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33221547D2;
+	Mon,  9 Jun 2025 14:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749478030; cv=none; b=pCsSrU1lhLlkRt0oavDDby0OJwPoAbetxlz0rDA+iYsONp2jNA8Oivbkl+n1BVIClsYUQOBsX2Mp6Aj8rlHM8nKWDpYPMyKxCZDLlE+y6flYebi6vOY8vaQdmFHDDAUBPGwPXv+1CZNPOyPLdRKDeBgmycv96uL0LPtvOwHp/Lw=
+	t=1749478049; cv=none; b=U4N2OAjI2Y/HbIopfTZ1xH7hHVP3n2EPbb5NzJ6xH6Zpyk6tJMeyI2OHkg1Ts19ecJIxdnAz5fIWArEPfFXAvaPk48YNK/QZZ170QyWyw3UEO/x1xHrjIAs9G+eusIR3uWin7B1NW/xFNo8+3Q6JY3mas/XkAd5SN7Kmpq44R60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749478030; c=relaxed/simple;
-	bh=hKR7+ajhuSlOyH7j2iFRCSEbWtE6DkgGdy/ZRTO5PvI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EA3fsknUovE7Emt+CDkvtsVbDx3Zh3QTz7sMKVw1MyvkyY+r7n2OC4/J7P93aiyoMoTYnHKaXuelaCtloxHNBRNQX9Pjf808kNWjgfT8iJXybsKZ4MXoEUVxgc0Bux3EzUJclT5S0mDOGk4fIu8JVb+3Io0/84ohx2cyjVYxmEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ib7JYYMP; arc=none smtp.client-ip=209.85.160.41
+	s=arc-20240116; t=1749478049; c=relaxed/simple;
+	bh=wAAJY/HrK/nuKtAaod/22OhduwbiOhuK1jiKS/alY2U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LgF+IQxZeV7pzF8CHIqjTE4JOeQsuDpT+U7H/E73KhOutcoMWT3B7mZWVpjcvrI03y3o+n0s37jTTfxOXASmCHHQYQgKKgzWNiwBlitglLb/HCBt9+R5lxt2VTVVnC/RGdoNIwtr72DgoSKXq5kp0TaLDw9HAGvbiUFW/bvmdhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TTjl0zAZ; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ib7JYYMP"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2e999729ccbso2861330fac.2;
-        Mon, 09 Jun 2025 07:07:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TTjl0zAZ"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a50956e5d3so3628336f8f.1;
+        Mon, 09 Jun 2025 07:07:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749478028; x=1750082828; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=afG0/kl8HRSNgTfY07WBqZftxaFWWI+8Ts2aM7Cdogo=;
-        b=Ib7JYYMP7LP9DCiDoDAiyHBwqRieiCYVLr1IQgjGALsgiKl+nyRhGcsgT+wdaWXmJL
-         0ZkJE0nIzquL759fjy75mWHBLHByu3rQlIbMAwjJvbCSJ/s4P9y0oCoqyosLCoz3nv4g
-         e0enKEvELP7bOJTczb9g0eKlanU7c/JcvCPO0ZFT9KyfXk/FRpR2t2iSPoK1QGcox7OL
-         NqR3CCBjqEQ8ClnW4BG9F5nJtyXU1s6RFo1nhGsEFzUxh19a4Be9sGLGtbviFSPtt6Iz
-         doxQod2gtiK1YmGuOxCkXxRbm8Inll5JFkCGd7RO0lLH1Ojtu2j7WNK7P/iNiktGwlWk
-         tKOQ==
+        d=gmail.com; s=20230601; t=1749478046; x=1750082846; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wp465GBd29bhYSADM6T0VGSuzx4l+sqGwpURc4OujX4=;
+        b=TTjl0zAZKkCDAs6YO47kAl569t1b7RnhXlM3cqYZ8NqThu7ysKACbHM54pd4uhgLMs
+         RjiJl6gahVeLgARev80xjSXZYAZUsZczNQl0kGmlZtdLaK8hdio1Haif5ml8fDJfCI08
+         l45/HwvcgO9/KZJ2vnCh8MKDEMPwux5hRqjsDVrVnhGBTuyY3GPhIwZ3V2sZDn3EkdEE
+         uJbZ2xoYgjW/iMZqfPMylkGfiofGv703jfAn5lD9y+t3nxztrH/HzwliVEuiwiAv7rxw
+         /S5G9lqiiJnwvCOANKyH34YudyqfD3e8BYUBEfQp1KDJUbU3+WiBqPSm9t/ql/URzWj5
+         w3VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749478028; x=1750082828;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1749478046; x=1750082846;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=afG0/kl8HRSNgTfY07WBqZftxaFWWI+8Ts2aM7Cdogo=;
-        b=CKNYmP0D/RuaZHeajohGofL7Uf3XRMAG4cMxfaHQvVKQNCRvfzHjz4qsE3XZaQYB6u
-         3Q/FENSrrCTex5fzDQWa/UqtQ8Bdq+0TvxPM+UWSIf715pOSXQ9wXwkSAN5WIyow7jFG
-         /GsOlqfVT1uIzX9hy1kV3DbmNVsJXoDkEGak9SfDNCEJdeP/cR73hr3i9IPo3481PtyQ
-         1OijQCyrAzkuAClSU97/7LwVfdywfq9/yR1y447ojy8Px0R1QGaElJ4QzcthgKFe5CyQ
-         K+Z5wc3NfOsgkx5yvQWgBnw62fmBlbX5VdQlPJA+emTJiZB9FXKVRC+SSNFCiirHFRRw
-         vSqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxgjWMvqMQ07EQpHCVGDzzL/Y1Vah+wsvoBRDKKcVu7QnefXXzrKO0o/MSHFuZAWtcv9LsWU+t8rlF@vger.kernel.org, AJvYcCVggiApVkXFMp6aD7yAw7RAKNMup56MZzKLyKe7RY3/cKJiMmEPKiB9+ozabxMWDO31zWfYERRveigsUBRnHTk=@vger.kernel.org, AJvYcCWpbm7UJvaGUg1mY2gUF/XRyiLc91i07BcQSVePgA5NRWGOfbvODz8z5gsk1R9nCgn58DM3IW+0BKhxCL9m@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfmppyqqGUiYYwvwUE9U++2UR0CHbPrERa4G8eSdIIhMJ3C3pr
-	VW9tXgivoYedlm6mt6dwsY4g0DfgP+RI0QPikDNdJfX0vtPHzx/kjmhhIvArWK7Ug1vu7UHU8vW
-	qYxHIee9yF68za0ErYRiE+VoVOiBJCiQ=
-X-Gm-Gg: ASbGncumygkjABTfFgROWTy55ihO2VbxHyf44LjL1X7HkA7Zr59j0Iblc3wU0Q5h3qs
-	W5aIbYTTLH+bJ1KYghNn7qw+TKboYqIEtv8kltJduKqlDhFhrnTEvMpKw/8jcNSrQOG6/BCUuv5
-	h3nVfZZ26z1duGENupCf37CXU80NflmhTUKcpoasGF
-X-Google-Smtp-Source: AGHT+IFMIV6U/igIlpB2ppK59kvRoIdscUJqew6GIJircIlEAiWY4uTovmhUmkBLtQPxTPuE4nyg2BFG5tS4OB9pPc8=
-X-Received: by 2002:a05:6870:a7a2:b0:2e9:7e3:933f with SMTP id
- 586e51a60fabf-2ea00684093mr7039729fac.3.1749478027948; Mon, 09 Jun 2025
- 07:07:07 -0700 (PDT)
+        bh=wp465GBd29bhYSADM6T0VGSuzx4l+sqGwpURc4OujX4=;
+        b=Qbjqdo3hEdNfPa8kVUbbAEmrcOh8GOFUgG6pJO70RyV2K/Zib1cUnlDnBP12Gsgvk8
+         e89vqbYCuqvz3x5EIg+dR9ctvLS6VF9ThGUMQQ1m/Gj9/pQNojhuN2NE/mNB8Bqpo0uq
+         J5TayiFxCAuPi+ZJtopPRFnh2RKpFauDZtB8f5ffHXL+BWUulP0FRYPbGIEpXLCXpWUv
+         HZ0QcHxYf+DKjwJ2jcRBuHwflHzP3pPH7Zub4fwusNqhrcim9Qhe5Sld+Z1dbac6drBG
+         jyv5lm2woarajvfmkM0aqGB3tUKzt9Kk+/v4F3OWbdYqXSjqJVrwcfw2S40epIvwazJI
+         HuEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUV5jMPznKGVA124rKnbvYl92E50mwfZrOVV5AKHAuAO9tzowhimYaFJY5jSjOm3MBbW0pVaNUtdTZwUng=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/HSy83FTTf0/ZuQSmuvv7wj6zFSYlTseQSTl3mVBHMADrjUDY
+	13wHWhzHgmKmiHj2WnSIDI5QBX6AN+ihcJJ11tl65y49HDm9WwlTw/DNsrs2pYH/
+X-Gm-Gg: ASbGncvbqauxxMh0RbZ990JXy//qf5mLU0WEvNT9/0PtShtxo4sc6jtG/HDKQar/Qf1
+	OHuToKQGC1AFik6MEOFeR+ZDOj4rR2modtgZ2Q1FGqje5QZFlGDOCnAcQJfyoQFWhed6fsEAN2E
+	i319s8rZom/KtsZodDuYh0FkVI3HGPnI80H+mKe1EKq5kbyHVTze2SCcg6e0H1ctSXT9MhJqS3n
+	vQVL7uy7VdXfHkdYkGgyqaoaet+M3+QUqyIpFXbNG9l60GW/RyV/Ic1eu5C8EEDP/a6k7kXPFeo
+	tobG1NgGQ9kXdzYSRIEjZQm246XaOKefoJ5Nw1WDM2keqQHQGIYMazkyljdvYIct8jmyaDJAQjG
+	JINugHlPYZPfYKG02Axa3t2VHrP4spGRYgkQ=
+X-Google-Smtp-Source: AGHT+IG0REgGH1fHd+dkuiR3Fo6WREiMEfAZe6OZVVichjBI/5GBIj0dx+h9EBokmXQjt5fQUEHrXA==
+X-Received: by 2002:a05:6000:401e:b0:3a4:fb33:85ce with SMTP id ffacd0b85a97d-3a531caf7f1mr11598279f8f.46.1749478045626;
+        Mon, 09 Jun 2025 07:07:25 -0700 (PDT)
+Received: from Lord-Beerus.station (net-93-70-53-177.cust.vodafonedsl.it. [93.70.53.177])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53229d9e9sm9803060f8f.13.2025.06.09.07.07.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 07:07:25 -0700 (PDT)
+From: Stefano Radaelli <stefano.radaelli21@gmail.com>
+To: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: andrew@lunn.ch,
+	Stefano Radaelli <stefano.radaelli21@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v1] arm64: dts: freescale: imx8mp-var-som: Add EQoS support with MaxLinear PHY
+Date: Mon,  9 Jun 2025 16:06:42 +0200
+Message-ID: <20250609140643.26270-1-stefano.radaelli21@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606170341.3880941-1-igor.korotin.linux@gmail.com>
- <20250606170817.3881748-1-igor.korotin.linux@gmail.com> <DAGZNG518T0C.1PXOK55IXHZOF@kernel.org>
- <aEVqgUtflBCzZi1X@pollux> <DAH4KX3Y3M3P.3B82LSVWU172Q@kernel.org>
- <aEV43zxZmWvDgKES@pollux> <CAJxaTdNZEdK21mFPu2kTJPa7aQ+PpnkwFVdEP5MCt6w+bD0wXA@mail.gmail.com>
- <CANiq72=rerpj_Ut0x7dDb0O8dEh9SHaF1HVyyfMM83hz--QCJg@mail.gmail.com> <CAG7QV91u4rVgAqDjKAofupASSk9q0uRKNtsrHg7Q6KExRMkFog@mail.gmail.com>
-In-Reply-To: <CAG7QV91u4rVgAqDjKAofupASSk9q0uRKNtsrHg7Q6KExRMkFog@mail.gmail.com>
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-Date: Mon, 9 Jun 2025 15:06:56 +0100
-X-Gm-Features: AX0GCFvuwUvErfOYrgAzHxM0-sxRU7s6mm5moyKumxFcZp5T9Z7y7tnWeLeM7Kk
-Message-ID: <CAJxaTdMFp0WAB3BBDPUztVvTtDGUt9=KyHTDpDOgAZ4ZEk2XUw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] rust: driver: Add ACPI id table support to Adapter trait
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Len Brown <lenb@kernel.org>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Alex Hung <alex.hung@amd.com>, Xiang Fei Ding <dingxiangfei2009@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-> <igor.korotin.linux@gmail.com> wrote:
-> >
-> > Let me know if this pattern is acceptable. To my opinion it is not much
-> > different from the original 2 functions conditioned by #[cfg] and
-> > requires some nasty changes.
->
-> In general, the more local a `cfg` can be made, the better, because we
-> can share more, e.g. the docs and signature.
->
-> But maybe in this case it doesn't work -- what would be the "nasty
-> changes" required?
+Enable the EQoS Ethernet controller on the i.MX8MP VAR-SOM with the
+integrated Maxlinear MXL86110 PHY. The PHY is connected to the EQOS
+MDIO bus at address 4.
 
-In particular on this example:
-    fn of_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
-        #[cfg(not(CONFIG_OF))] {
-            None
-        }
+This patch adds:
+- EQOS controller configuration with RGMII interface.
+- Proper reset timings.
+- PHY power supply regulators.
+- RGMII pinmux configuration for all data, control and clock signals.
+- LED configuration for link status indication via the LED subsystem
+  under /sys/class/leds/, leveraging the support implemented in the.
+  mxl86110 PHY driver (drivers/net/phy/mxl-86110.c).
+  Two LEDs are defined to match the LED configuration on the Variscite
+  VAR-SOM Carrier Boards:
+    * LED@0: Yellow, netdev trigger.
+    * LED@1: Green, netdev trigger.
 
-        #[cfg(CONFIG_OF))] {
-            // the rest of logic
-        }
-    }
+The RGMII TX/RX delays are implemented in SOM via PCB passive
+delays, so no software delay configuration is required.
 
-The `dev` is marked as unused if `CONFIG_OF` is not set. So we have 3 options:
-1. rename it to `_dev`. This is nasty to my opinion, because it is misleading.
-2. add #[alloc(unused_variables)] on top of it. Also not good since it
-will suppress
-all other possible unused_variables as well.
-3. The third option is `let _ = dev;` in `#[cfg(not(CONFIG_OF))]`
-section. I came to
-it while I was writing this reply. This looks like the best option of
-three in my opinion.
+Signed-off-by: Stefano Radaelli <stefano.radaelli21@gmail.com>
+---
+ .../boot/dts/freescale/imx8mp-var-som.dtsi    | 87 +++++++++++++++++++
+ 1 file changed, 87 insertions(+)
 
-Thanks
-Igor
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi
+index b59da91fdd04..3be59692849f 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi
+@@ -55,6 +55,24 @@ reg_usdhc2_vqmmc: regulator-usdhc2-vqmmc {
+ 		states = <3300000 0x0 1800000 0x1>;
+ 		vin-supply = <&ldo5>;
+ 	};
++
++	reg_phy_supply: regulator-phy-supply {
++		compatible = "regulator-fixed";
++		regulator-name = "phy-supply";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-enable-ramp-delay = <20000>;
++		gpio = <&gpio2 20 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		regulator-always-on;
++	};
++
++	reg_phy_vddio: regulator-phy-vddio {
++		compatible = "regulator-fixed";
++		regulator-name = "vddio-1v8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
+ };
+ 
+ &A53_0 {
+@@ -73,6 +91,54 @@ &A53_3 {
+ 	cpu-supply = <&buck2>;
+ };
+ 
++&eqos {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_eqos>;
++	/*
++	 * The required RGMII TX and RX 2ns delays are implemented directly
++	 * in hardware via passive delay elements on the SOM PCB.
++	 * No delay configuration is needed in software via PHY driver.
++	 */
++	phy-mode = "rgmii";
++	phy-handle = <&ethphy0>;
++	status = "okay";
++
++	mdio {
++		compatible = "snps,dwmac-mdio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethphy0: ethernet-phy@4 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			reg = <4>;
++			at803x,eee-disabled;
++			eee-broken-1000t;
++			reset-gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
++			reset-assert-us = <10000>;
++			reset-deassert-us = <100000>;
++			vddio-supply = <&reg_phy_vddio>;
++			leds {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				led@0 {
++					reg = <0>;
++					color = <LED_COLOR_ID_YELLOW>;
++					function = LED_FUNCTION_LAN;
++					linux,default-trigger = "netdev";
++				};
++
++				led@1 {
++					reg = <1>;
++					color = <LED_COLOR_ID_GREEN>;
++					function = LED_FUNCTION_LAN;
++					linux,default-trigger = "netdev";
++				};
++			};
++		};
++	};
++};
++
+ &i2c1 {
+ 	clock-frequency = <400000>;
+ 	pinctrl-names = "default";
+@@ -239,6 +305,27 @@ &wdog1 {
+ 
+ &iomuxc {
+ 
++	pinctrl_eqos: eqosgrp {
++		fsl,pins = <
++			MX8MP_IOMUXC_ENET_MDC__ENET_QOS_MDC				0x2
++			MX8MP_IOMUXC_ENET_MDIO__ENET_QOS_MDIO				0x2
++			MX8MP_IOMUXC_ENET_RD0__ENET_QOS_RGMII_RD0			0x90
++			MX8MP_IOMUXC_ENET_RD1__ENET_QOS_RGMII_RD1			0x90
++			MX8MP_IOMUXC_ENET_RD2__ENET_QOS_RGMII_RD2			0x90
++			MX8MP_IOMUXC_ENET_RD3__ENET_QOS_RGMII_RD3			0x90
++			MX8MP_IOMUXC_ENET_RXC__CCM_ENET_QOS_CLOCK_GENERATE_RX_CLK	0x90
++			MX8MP_IOMUXC_ENET_RX_CTL__ENET_QOS_RGMII_RX_CTL			0x90
++			MX8MP_IOMUXC_ENET_TD0__ENET_QOS_RGMII_TD0			0x16
++			MX8MP_IOMUXC_ENET_TD1__ENET_QOS_RGMII_TD1			0x16
++			MX8MP_IOMUXC_ENET_TD2__ENET_QOS_RGMII_TD2			0x16
++			MX8MP_IOMUXC_ENET_TD3__ENET_QOS_RGMII_TD3			0x16
++			MX8MP_IOMUXC_ENET_TX_CTL__ENET_QOS_RGMII_TX_CTL			0x16
++			MX8MP_IOMUXC_ENET_TXC__CCM_ENET_QOS_CLOCK_GENERATE_TX_CLK	0x16
++			MX8MP_IOMUXC_SD2_WP__GPIO2_IO20					0x10
++			MX8MP_IOMUXC_GPIO1_IO10__GPIO1_IO10				0x150
++		>;
++	};
++
+ 	pinctrl_i2c1: i2c1grp {
+ 		fsl,pins = <
+ 			MX8MP_IOMUXC_SD1_DATA4__I2C1_SCL				0x400001c2
+
+base-commit: e271ed52b344ac02d4581286961d0c40acc54c03
+prerequisite-patch-id: 2335ebcc90360b008c840e7edf7e34a595880edf
+-- 
+2.43.0
+
