@@ -1,60 +1,164 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE20C881E;
-	Mon,  9 Jun 2025 08:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD4718024;
+	Mon,  9 Jun 2025 08:30:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749457836; cv=none; b=r0nIjH81MfUBwKMoI29wbNBJRtJqH+tuGV+Qzw2doDpEZ/4IRZB5OJqCETMezZNChWML1Mw5wXkeA32wrdiSNoke5LpXcNHQap7BzxHbbn7S4y1ZKTvuXrH0tJw5NyFbs/qQGvQKC8ODLmsMdRG0KVobdFylasLag93mFdYINPs=
+	t=1749457845; cv=none; b=QeudpX3drshd/wihWg6ubQ1l+qRoFjQEzFY2bADGdl1A7nmGMqqH82sqCAuFgqeEsGMmP+N9vJM1i2mV4GRDhZ/vOk+Si6OZEN6gMwUMxhMVpyTKP5WK7/nqtV4Bv+RzncJTFJSIoAy0ZNdegCNHu76H71hcO+lWKyvhKjVy61k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749457836; c=relaxed/simple;
-	bh=SVKrDjMhI312EibwMyLlbImdf4HRppB+YPaQtjHFeQ4=;
+	s=arc-20240116; t=1749457845; c=relaxed/simple;
+	bh=ensT7p+N/ywee7KLRyYcOmYZaATuuZJ+u1tIIRo0PZs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i7Le0grNrPp+jpz+RVZQu5pRiGOAwm5dChFaJ5zpwJjuqTD1VRd80zAsIdNE7iey5tiBaNcXdzweXjEsP67Vpb/nbgceVMSPyKOmuh1Z9E8gfc9sVIBzOi7SCjAe772J/q9c7OYmi8meIibGhG5Frjx7L8lFV8erIeGItTnbhqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by pcw.home.local (8.15.2/8.15.2/Submit) id 5598OF44026749;
-	Mon, 9 Jun 2025 10:24:15 +0200
-Date: Mon, 9 Jun 2025 10:24:15 +0200
-From: Willy Tarreau <w@1wt.eu>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests/nolibc: make stackprotector probing more robust
-Message-ID: <20250609082415.GC26391@1wt.eu>
-References: <20250609-nolibc-stackprotector-robust-v1-1-a1cfc92a568a@weissschuh.net>
+	 Content-Type:Content-Disposition:In-Reply-To; b=lx3d/pxYLx5RwHK6adrhB34k8lzmmj1zcwLECrbRGerL4YwAskkuP9+KwzM8+geIPMGpuojW2jZiH3EudI+vvoegXJkYh9Kh0uR7pk/cFtQNyU+y5cLzGhmbpZFd5RRYbv2CBuIYMsfNzv4rafIA4CHQUi6dCOC9i2bnli1vShg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=edm/kAxs; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="edm/kAxs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749457844; x=1780993844;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ensT7p+N/ywee7KLRyYcOmYZaATuuZJ+u1tIIRo0PZs=;
+  b=edm/kAxssvUiFX2AcN+EAlNgiGMoSEqPkcBZtMlOhpUwUXLrUuj7mzzw
+   COAFDJK46yujl/+lQuGZo7lQhVdJRENo0wf5r8lHxQTHi83ACMsmJQTG1
+   JR0psujnKpCBT3TRqoVCFZIZ5p1uaDPt8EdqVF1q4V0RjA+gVAqAMOV4D
+   rPhfLUU7oZRnzX6m/nUwHM0byacBMDnQEKb4a/NVHZCtYDNzzx/hf4Gpw
+   +pJZ7AiWgT7rKZV9p+dJDcTDs/rYQekVeC/Y3EahooJEd4ofKpQznAOYU
+   niSDK5EDgQiiZdrB5Q0pr8DfpbCwNDchmYge14oYb+L/ZMmwRoQS11KRY
+   Q==;
+X-CSE-ConnectionGUID: H0y8W1G6RayvBnUH528R/w==
+X-CSE-MsgGUID: 2CJuj0fVT/+dmO9qPYi/Rw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="76921921"
+X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
+   d="scan'208";a="76921921"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 01:30:43 -0700
+X-CSE-ConnectionGUID: 5Pkjg0zRSoW7rgRyVlx9Gg==
+X-CSE-MsgGUID: h31gkaVcRXapdesgq+80fQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
+   d="scan'208";a="147382809"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 09 Jun 2025 01:30:38 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uOXts-0006t3-0L;
+	Mon, 09 Jun 2025 08:30:36 +0000
+Date: Mon, 9 Jun 2025 16:29:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mario Limonciello <superm1@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Bjorn Helgaas <helgaas@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	amd-gfx@lists.freedesktop.org,
+	"(open list:HIBERNATION (aka Software Suspend, aka swsusp))" <linux-pm@vger.kernel.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	dri-devel@lists.freedesktop.org, linux-scsi@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	AceLan Kao <acelan.kao@canonical.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Denis Benato <benato.denis96@gmail.com>,
+	Merthan =?utf-8?Q?Karaka=C5=9F?= <m3rthn.k@gmail.com>
+Subject: Re: [PATCH v3 2/5] PCI: Put PCIe ports with downstream devices into
+ D3 at hibernate
+Message-ID: <202506091639.HaxwbWtd-lkp@intel.com>
+References: <20250609024619.407257-3-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250609-nolibc-stackprotector-robust-v1-1-a1cfc92a568a@weissschuh.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20250609024619.407257-3-superm1@kernel.org>
 
-Hi Thomas,
+Hi Mario,
 
-On Mon, Jun 09, 2025 at 09:39:16AM +0200, Thomas Weiﬂschuh wrote:
-> nolibc only supports symbol-based stackprotectors, based on the global
-> variable __stack_chk_guard. Support for this differs between
-> architectures and toolchains. Some use the symbol mode by default, some
-> require a flag to enable it and some don't support it at all.
-> 
-> Before the nolibc test Makefile required the availability of
-> "-mstack-protector-guard=global" to enable stackprotectors.
-> While this flag makes sure that the correct mode is available it doesn't
-> work where the correct mode is the only supported one and therefore the
-> flag is not implemented.
-> 
-> Switch to a more dynamic probing mechanism.
-> This correctly enables stack protectors for mips, loongarch and m68k.
-> 
-> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+kernel test robot noticed the following build errors:
 
-Acked-by: Willy Tarreau <w@1wt.eu>
+[auto build test ERROR on rafael-pm/linux-next]
+[also build test ERROR on rafael-pm/bleeding-edge mkp-scsi/for-next jejb-scsi/for-next linus/master v6.16-rc1 next-20250606]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Thanks,
-Willy
+url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/PM-Use-hibernate-flows-for-system-power-off/20250609-105658
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
+patch link:    https://lore.kernel.org/r/20250609024619.407257-3-superm1%40kernel.org
+patch subject: [PATCH v3 2/5] PCI: Put PCIe ports with downstream devices into D3 at hibernate
+config: i386-buildonly-randconfig-003-20250609 (https://download.01.org/0day-ci/archive/20250609/202506091639.HaxwbWtd-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250609/202506091639.HaxwbWtd-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506091639.HaxwbWtd-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/pci/pci-driver.c:1221:7: error: call to undeclared function 'pci_pm_set_prepare_bus_pm'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    1221 |         if (!pci_pm_set_prepare_bus_pm(pci_dev))
+         |              ^
+   1 error generated.
+
+
+vim +/pci_pm_set_prepare_bus_pm +1221 drivers/pci/pci-driver.c
+
+  1195	
+  1196	static int pci_pm_poweroff_noirq(struct device *dev)
+  1197	{
+  1198		struct pci_dev *pci_dev = to_pci_dev(dev);
+  1199		const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+  1200	
+  1201		if (dev_pm_skip_suspend(dev))
+  1202			return 0;
+  1203	
+  1204		if (pci_has_legacy_pm_support(pci_dev))
+  1205			return pci_legacy_suspend_late(dev);
+  1206	
+  1207		if (!pm) {
+  1208			pci_fixup_device(pci_fixup_suspend_late, pci_dev);
+  1209			return 0;
+  1210		}
+  1211	
+  1212		if (pm->poweroff_noirq) {
+  1213			int error;
+  1214	
+  1215			error = pm->poweroff_noirq(dev);
+  1216			suspend_report_result(dev, pm->poweroff_noirq, error);
+  1217			if (error)
+  1218				return error;
+  1219		}
+  1220	
+> 1221		if (!pci_pm_set_prepare_bus_pm(pci_dev))
+  1222			goto Fixup;
+  1223	
+  1224		/*
+  1225		 * The reason for doing this here is the same as for the analogous code
+  1226		 * in pci_pm_suspend_noirq().
+  1227		 */
+  1228		if (pci_dev->class == PCI_CLASS_SERIAL_USB_EHCI)
+  1229			pci_write_config_word(pci_dev, PCI_COMMAND, 0);
+  1230	
+  1231	Fixup:
+  1232		pci_fixup_device(pci_fixup_suspend_late, pci_dev);
+  1233	
+  1234		return 0;
+  1235	}
+  1236	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
