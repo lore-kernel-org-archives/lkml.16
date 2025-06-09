@@ -1,64 +1,67 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2857ADF59
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 15:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DBC31F4CB7
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 15:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749483221; cv=none; b=B9/u4ZRpryFfUuJ+ggSsFhDTu4k53b249xx8xER+lFgVQin9SdLvpEDaU0awzw8eNMiDvybs72WHQW2EfKAG47fM6Y+RCO1MPjTdSlTUf7NrOb1OLFTFDjPqW/NtdqbReLcO1ahQOL5IzVNzFGm6ADOSsTa4tSlkeQoWqYSGqRk=
+	t=1749483221; cv=none; b=PwKSLlDOPVZCwe6hevlYg2dBXR36jIDxM0f9GSbHiPl+/jGrIhJOJuzKjn31O8YOBZfpP7zAzIO/ju9XGEOHBuNX9IqUryKyrYkHTQmCbkbI3Vec5goBQD1XBc1+59/iM7nB4JnWqso2kMPlHV3AVxtbNMoGgXKxFWW2rJXi7eU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749483221; c=relaxed/simple;
-	bh=Ey72OPsSmpUH6hcCG9cbHDrh6u+W0gYAKs5MnbTd5ew=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=pveNGvvleljuG0t4lBZOf0YrwxxlbW9QrpwN7M/OS0GEzCvPl1qykFrWG/rhv72dPkbq360ptSGbTwrOwgfsgsEIhzVLjRDLNtSHbwjKAfHZ3W1tkgHvAjPWPS4YKc0Tg65Lbaf3Or8PZiG95zBDkSvz391x3sTBCMzO+3rLvas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NDO9dFl4; arc=none smtp.client-ip=209.85.128.47
+	bh=4LtVV7NunJznOE+EaQyuaoEsQbLFTKYk/hWx//k49f4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=VJmmPIM+RtDM2lMSImDzf44yQwE0ltSyw5XxShzxTEGeWKN2EnEkvJMNvPrqlz4T3S22IA4rz4HL7Z9f4/JeLAsF1bWRPDdLtYHL3zxSygf1dUEly9m69MBkjvPnWxdXGgj0sCMd1F9pNFTJJSfhMLiZNuNmbfDlnj4qhvdVLJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z5UdW6C8; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NDO9dFl4"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-441d437cfaaso28027075e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 08:33:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z5UdW6C8"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-451d7b50815so38381065e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 08:33:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749483217; x=1750088017; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PvtGT/gXZy9G0z7KUPcczavaKT2KAY8YSEGerfvgk+k=;
-        b=NDO9dFl4z+KZi900V6b+cczdI2ZKvmKWavUCpktm2ILbc+6nvWc3k4uyuU4g0PFGP8
-         DvtK+RFqlT8C7HjVvLo+6Wo3/bpx0NtBzcDPuXl0v9aMFLgRaBwWUlyL/29DjgisTBVP
-         uVWGUDwSvQ2Ftqclg/fzN45pcvAaXHfbpPaxnP3M1BZBWhgG1FfBcEl5kIT0vlexDVFW
-         kCzVV8y6DhmurVmD8WxX2MwtH0FYS000EqPF9gD84b6Z87nLn+RbIIU6VGARzPTHA2fu
-         2yzClwfpFOA/LGk/1X1lAQEfzi9ptMSygVcgvG0j89bmcCPKU7i0JfbgREpZGquskFsx
-         eC3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749483217; x=1750088017;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1749483218; x=1750088018; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=PvtGT/gXZy9G0z7KUPcczavaKT2KAY8YSEGerfvgk+k=;
-        b=Mp45/mzxAcFhqzUwWHgTJzxApkN70WoCFaiS6lxE3YhRfIzn/l9FBF0gDiiaJP1YCD
-         Ev0/j59x/RejuHMru/s+4xih960f1G2Mi+gkZ9Y4Yd8N9FGv9kNUBAb2PAGnatINTskP
-         UU9YvlV9+mBZdF6ACubHJHJdcf1hccUX4ugvhGQVlKspgP2W4Tk9kfab0cZvoJknbo9+
-         D0UPGlNZzSTpFaEnqYemUxr6a6xl8vJASDjGoETXHPkX1cxiApUQyerndziYE9kH6q/1
-         ZbIh5G3R25qJUbVEWLEakbl310vjEW3rGVKVIbbdTRKfbXUy3EmrEJThA3fwtPEI+aK6
-         mTjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUcoS+b3twhUXFRNJm5B2foyXwD6QcVC/bKorGyV4ozKYACOijahq8vEb5B5eJ/jIu+Br46Jbv06y6nr7c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXCvXmPCaxaFM4tcTKFNSFyqhdxkGY2+bUccjrmdO0OQ1S4EqX
-	rzOp0C4c5kWJOdVrelKgYX9YzEiTAnYvLUIjCT7suAbR9C8/9ctWMETiYMgMtxZL+eE=
-X-Gm-Gg: ASbGncsKqLTve+HUAllftRLj1sj3ARWHxZfltJLGtGyCrM0UIwFwup9XvlYiIHNYNXf
-	Z+HLsmtESO8uC+0PgFQ6P9G8UYqbkc6e1FGTQf61MNXwCXN73Dc4IhT7QfsbxsSnJRQcvZhV8p5
-	nd9T9WCXAnFvu3dApSOczYkbjFHwgsayIYXgYNefJv3dm4Xv5Lm7zVI5xiqHI7hW+5U12uHNbo+
-	CrzE83vkOQbhyXYygiKJBQONO0jys8j+LowOlNympmKJUZM0ZiyxZDc4dyRQyEaKQva6gOMwBHE
-	u0ivJsFIiyDhu/HF1BC9aFTY3pkZTqRjWtMeeHmoydHSxQa9viIh+dT2iVRu6Y/oJihlTVQ=
-X-Google-Smtp-Source: AGHT+IGUecRwAIMHRhZ9jzGvMSqw8sw1BbFuESQIxyKOrlJ4Q6pTMh4lszRudkvpP6BGsmhYVVJ00A==
-X-Received: by 2002:a05:600c:8212:b0:450:cd50:3c66 with SMTP id 5b1f17b1804b1-452014b39dfmr121204185e9.29.1749483217347;
-        Mon, 09 Jun 2025 08:33:37 -0700 (PDT)
+        bh=w76Nia4/b18xDXgyG3usj9/ef74AF078cya8aFseaFQ=;
+        b=Z5UdW6C8UTAf0+LTnPgWxJmqTl2Wc7GWYSZ1K7d7r9W+DpNGkMGD8+e+Pfatnxwuw0
+         F/GYES0PUhK9XEDBXOCG7NrMuRgy35k/Vyj51v2WVZlOlzm7Y+X3KUS7CjYcGiBRlKxc
+         pLjUjYS2GAEx2g0CwF/rM0R9M7GoLWk+qQbLvDEMr5jKLx+BEiBWhE2cTvphfXf4bg3p
+         qbGAjUlxc0x0XQKP65sZ4mD5pTEnXHoEM/RH5TLBn3vhZW8nwZHkVqmuU8zGVk1RHH/a
+         MEOUZ8fHa5HEp93BYQHHBr+SKw391YUS9gphwfC4pghSSludhQrbs8j5TqfNZ07cdCGF
+         J37w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749483218; x=1750088018;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=w76Nia4/b18xDXgyG3usj9/ef74AF078cya8aFseaFQ=;
+        b=JyzOQalvYd4zSbqBkmObll/TDqHnruQlRp4ju++BIac1E6sOvJUBv1S+ZX77dXb8hc
+         FdvcqbWBVrwakfrJ+btj55w/eS5Ipr/niUF11FyrR1d/xZuOXlzFnnJ3jWapPg0Pp1q6
+         AWj59cmaMXopxb7ykVKlFfEQHxjQNwC7d7ytkyL5nANoIquurXgITu8ZEadRMq/ZAIKz
+         BnJIWJDR0x9DPQW8ux+3HigOWkK45zO6cDgomgOQ0Z1e9CUzeSF20os3lvSHysuVqPuh
+         iP6npSqZ0dpN7T2EkddhqFWMMGrBdjeIZM5MP3iJmbcz2q5FHL7j9bhHWk9P6leegmXq
+         3kZw==
+X-Forwarded-Encrypted: i=1; AJvYcCWIA9pCFg5sbGnaJsx91qrrZKc3PPAUTyVO62EU/JYzjPtiBIFsL4IJCITduwFnB1SU+KldZIQ9ut+eIgw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyx3xF67Wu5EuK16rrnSIHXDbnxYUQM+HTWd3ONOo0oWGWJ7rTY
+	xZ1V0/dxLYyGTSjGAmFRP4I1r36kwMNvi+sOnNSL5CAr3lM9p13Y1Qxpa1UDLYCjcJWIpcpyMNY
+	jHN+EYnc=
+X-Gm-Gg: ASbGnct2pwdvYsgCMzp5tPSLc+pjbzA0Sm+eTymJs1F6Lk1x/CpZ34sPs4GPBqcVycr
+	Otk4QBRam62Xt27SjkHWAbct+fRZX1ckWIliFAN5yPEeU6D06HYCUoD69M5O9GaoCtw2tQMDiqx
+	V6sOZkmiY7Sk2WutwLDKVJAkhExnJ8rjsnaQtvXbvIIb1LPP4J1kHZTUQGyTMiW139d7fPT4EFu
+	pEFkMnjbJQaYIns0IlpD+egbQMxR0NIIwyx2srqUMec/in04P80R9isoRy73ijd40lScj2dfW1t
+	1Eb1v9tDlbcUJGO2cuDdW1oxL4uWoxv6yS1U4JvJDOVsVz01NDeo09dS+0RH
+X-Google-Smtp-Source: AGHT+IHTutHePoysGpxZsOPgKbbegSZRp1NNHCZCZ3DEAcLjya2vTKpfVY2DnsnGhoEdBoFuhmwPoA==
+X-Received: by 2002:a5d:64ed:0:b0:3a3:6a9a:5ebf with SMTP id ffacd0b85a97d-3a531cabb5cmr10875439f8f.20.1749483218204;
+        Mon, 09 Jun 2025 08:33:38 -0700 (PDT)
 Received: from ho-tower-lan.lan ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452137277basm115728695e9.32.2025.06.09.08.33.36
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452137277basm115728695e9.32.2025.06.09.08.33.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 08:33:36 -0700 (PDT)
+        Mon, 09 Jun 2025 08:33:37 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
-Subject: [PATCH 0/4] spi: spi-fsl-dspi: Target mode improvements
-Date: Mon, 09 Jun 2025 16:32:37 +0100
-Message-Id: <20250609-james-nxp-spi-dma-v1-0-2b831e714be2@linaro.org>
+Date: Mon, 09 Jun 2025 16:32:38 +0100
+Subject: [PATCH 1/4] spi: spi-fsl-dspi: Clear completion counter before
+ initiating transfer
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,44 +70,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJX+RmgC/22NQQ6CMBBFr0Jm7Zi2hgquuIdh0cIUxkhLWkMwh
- LtbSdy5fC/572+QKDIluBUbRFo4cfAZ5KmAbjR+IOQ+MyihSlEqhQ8zUUK/zphmxn4yaOr6Spa
- ss9pC3s2RHK9H895mHjm9QnwfF4v82l+t+lNbJAqUQlekLiQ6p5snexPDOcQB2n3fP+qH+z+zA
- AAA
+Message-Id: <20250609-james-nxp-spi-dma-v1-1-2b831e714be2@linaro.org>
+References: <20250609-james-nxp-spi-dma-v1-0-2b831e714be2@linaro.org>
+In-Reply-To: <20250609-james-nxp-spi-dma-v1-0-2b831e714be2@linaro.org>
 To: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>
 Cc: Vladimir Oltean <vladimir.oltean@nxp.com>, linux-spi@vger.kernel.org, 
  imx@lists.linux.dev, linux-kernel@vger.kernel.org, 
- James Clark <james.clark@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
- Larisa Grigore <larisa.grigore@nxp.com>
+ James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.14.0
 
-Improve usability of target mode by reporting FIFO errors and increasing
-the buffer size when DMA is used. While we're touching DMA stuff also
-switch to non-coherent memory, although this is unrelated to target
-mode.
+In target mode, extra interrupts can be received between the end of a
+transfer and halting the module if the host continues sending more data.
+If the interrupt from this occurs after the reinit_completion() then the
+completion counter is left at a non-zero value. The next unrelated
+transfer initiated by userspace will then complete immediately without
+waiting for the interrupt or writing to the RX buffer.
 
-The first commit is marked as a fix because it can fix intermittent
-issues with existing transfers, rather than the later fixes which
-improve larger than FIFO target mode transfers which would have never
-worked.
+Fix it by resetting the counter before the transfer so that lingering
+values are cleared. This is done after clearing the FIFOs and the
+status register but before the transfer is initiated, so no interrupts
+should be received at this point resulting in other race conditions.
 
+Fixes: 4f5ee75ea171 ("spi: spi-fsl-dspi: Replace interruptible wait queue with a simple completion")
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
-James Clark (3):
-      spi: spi-fsl-dspi: Clear completion counter before initiating transfer
-      spi: spi-fsl-dspi: Use non-coherent memory for DMA
-      spi: spi-fsl-dspi: Report FIFO overflows as errors
+ drivers/spi/spi-fsl-dspi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Larisa Grigore (1):
-      spi: spi-fsl-dspi: Increase DMA buffer size
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 863781ba6c16..386a17871e79 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -983,11 +983,13 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
+ 		if (dspi->devtype_data->trans_mode == DSPI_DMA_MODE) {
+ 			status = dspi_dma_xfer(dspi);
+ 		} else {
++			if (dspi->irq)
++				reinit_completion(&dspi->xfer_done);
++
+ 			dspi_fifo_write(dspi);
+ 
+ 			if (dspi->irq) {
+ 				wait_for_completion(&dspi->xfer_done);
+-				reinit_completion(&dspi->xfer_done);
+ 			} else {
+ 				do {
+ 					status = dspi_poll(dspi);
 
- drivers/spi/spi-fsl-dspi.c | 128 ++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 102 insertions(+), 26 deletions(-)
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250522-james-nxp-spi-dma-a997ebebfb6b
-
-Best regards,
 -- 
-James Clark <james.clark@linaro.org>
+2.34.1
 
