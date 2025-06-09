@@ -1,176 +1,242 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7314E19F41C;
-	Mon,  9 Jun 2025 15:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D331B425C
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 15:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749481624; cv=none; b=fZBpQH835vvzSx8v8wrDKC2pAmjsZ/L1CLXpvvdUT7jKcI+AGrV9TlzzvwXLvuWrN0TxKyUGNH3v58PGe+GpFtKGClUS4e/Xm3sch4+kfS+MA9aPiouhgLDlSygSdAPCfmHoUD0nyK8gOuiTW3LBuH8gPyLbfd8zAvR8ERAUpVQ=
+	t=1749481707; cv=none; b=fas5Vap56YcIbHsJzHk0XmgA4PizAdfu0ohTRo/eGInbBhk1gGaNExqnLY/HtBzahoscARDaTPnDXFYVQJ2ws9GHJJ/x9uW7C0QIU93w9/qlfQHUOrNiF2iql5Bxxfw+bRY5JfdR6/ePqw2jJ6jIlI5rDIiEU5zswGEyAEX2rxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749481624; c=relaxed/simple;
-	bh=LOaEDRQ4kYrwi4Xn/mnj3m+pzhRaACbyXtEqKfL92Yg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c/ETga7oSA/fjsoZvVBkTBQDVf0btQ6qQyYHDQjOAHW9giqjMEilrevaxhIxBhYJCGStuyHXf/RjWNeo+WwMxYNXdfhBXJ3gMQGRArquUK0YvOpnfqqRVBhEa1ih55GF8Jbm8Z+yH6heHrP3sN2DPqX7PxIRLSFiQdep4oLJMks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=MGoQBXIz; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1749481707; c=relaxed/simple;
+	bh=0Xe0eY9ltM9JA/g6k+HjMgjHmlrR1XxJ2AAtueBFYsQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uw2CaOkl/gq5C7CZ8fpKwgPRo6SU+iOds2n+XpkMO5l0z8eo9QjlicvnJ/Or0PaBgM5qU1063ZuJBRZbVjqPMJu2Lt0s8J6SkC25YPb/zo6fvrT+hyxpQB4HXogFjL1Az4S5gigkrb0YzJCLIv5XxUktplFEpBV7+O4ZSzRTMSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=mI8Wwy1W; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="MGoQBXIz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1749481618; x=1750086418; i=w_armin@gmx.de;
-	bh=LOaEDRQ4kYrwi4Xn/mnj3m+pzhRaACbyXtEqKfL92Yg=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=MGoQBXIz5mmdHjbAmMo3uGXNLq5YMACJbK/KBOz+wdVCHJiIKz/RpNZPRIPiC1Ro
-	 KC9OQpjbAafRoZX8ABuB7FFMMfge+xp/hBwPzMW6WANyomZTan7ZrLcPbhNo5k3AA
-	 UdxJNGBHJOP9ZH4SjeABtznE/bu9AKnOT2LBKeKkVdfK2hb979PK0GP7SVh84U4ws
-	 HJNlZl60UVRR89jFR/BpQgmE0CBU15FOfRD4nkhXPbOpOun95Yn+ltA2R7oPPJ1Ww
-	 L5W788GYgsKAYxxE1oAzYrFSG+yjPUravj0AtS7D6fh0CAqKeeeEQvbhzNogXf6iF
-	 2J6vzCbRwDLFfuI+2g==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MtOGU-1ugaNg0OtS-00xMg8; Mon, 09
- Jun 2025 17:06:58 +0200
-Message-ID: <474af450-fe05-46d6-90d6-d5ac3408cf68@gmx.de>
-Date: Mon, 9 Jun 2025 17:06:57 +0200
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="mI8Wwy1W"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e694601f624so3149458276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 08:08:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google; t=1749481704; x=1750086504; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x+smXdzbnTzkipKZ/URNR/f2iTlhGoSY2Qlkjkw+Pk8=;
+        b=mI8Wwy1WMmCoJZDv/R0mEqSJtmkDX6FtEWzxzHBVqWJg+lPN8gctQJGHnK/ygv7XZ8
+         Sn6BTw2E4q/d3S1bGx5mk4s3X7yHP7mBHW0uivTT87LAXKNO4dcXxLebtuDrVfMuWMtp
+         op/VXO16BW50uOXsCYJ8qWsi5+6ZDDeHY3mHU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749481704; x=1750086504;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x+smXdzbnTzkipKZ/URNR/f2iTlhGoSY2Qlkjkw+Pk8=;
+        b=bnVH0hd4QYEgUMaqZPI1YRgh7DPn3QLMLbZ8ntKcOMwCR27AWQUlUj2FBuOlYBw6KU
+         4heJVDBRRFCImtdD9sve2T89kbWR2d0Tu7oP0eLVA+vRCj8QyrtLmBrfZkH2UscgZM2E
+         18+0eSJF4btPfTv6xZE02SimGkp1MxjTIWUhW8YWPBc8i9FzH5CL9y0TTcM2JCjesIQC
+         jS4Zgg6STbMW3y6q3aYs8kDeRMNmTOelPUrXIWMhNiDCcVjAw6yAMB852sf2pjX2K5lY
+         49ImBjbHVuGL0YeLRDQMnSrisC/kbuGCgGe+OhvLC0AZ5Xl0QtOjC9/oG97Rsf/xI5/O
+         sUtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXEFrH3Hn+Mk3mDkVwWA3os0v3DUvtvWLXrx6UIKT6CoU5D5qsVBg6etchDZXqb+ky+yWUFVnLX01ly54A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXYhllg4i8LqQ3KZ5nl+GOwa33don3pqInvVZloTldyA/2l7A0
+	ntX7BldrFa1O4IsvhKWt6YrWD5ypEnU0+DHvahmFjeZxo3fMFFESRT+5E5rXSsak8Nnvp4njkuZ
+	/w++3N8vgT6UfCrgQPzeFSGqOeL+9g/e4g8PXtjHOyg==
+X-Gm-Gg: ASbGncvfVWhCdo86GAO66zoOODQhCSTPPuxF5M85/BaNC8kShAJwUZpk/hMu8sQrwYM
+	5P61lAInBZUUI0CO6w6/Ws+w6teO+5Zd2wQsGkcxu8QNJ4N2EbVJwEyyUaFaQTrgJ7mLP9WElsu
+	+OMkwjISfadDo8yHs3Om9cjeUngKb6Hw==
+X-Google-Smtp-Source: AGHT+IGWeHbdh3O/z4F1SRgYEltcGRfcEHSD7V4hOn6ole1VQ4KjcZtPvIWPOt0TiMXPWHw0tvG0AyUJrHsqEFKBpiA=
+X-Received: by 2002:a05:6902:1546:b0:e7d:8eee:ae8f with SMTP id
+ 3f1490d57ef6-e81a22b0e19mr21079312276.19.1749481704110; Mon, 09 Jun 2025
+ 08:08:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] hwmon: Widespread TOCTOU vulnerabilities in the hwmon
- subsystem
-To: Guenter Roeck <linux@roeck-us.net>, Gui-Dong Han <hanguidong02@gmail.com>
-Cc: vt8231@hiddenengine.co.uk, steve.glendinning@shawell.net,
- jdelvare@suse.com, linux-hwmon@vger.kernel.org,
- linux-kernel@vger.kernel.org, baijiaju1990@gmail.com
-References: <CALbr=LYJ_ehtp53HXEVkSpYoub+XYSTU8Rg=o1xxMJ8=5z8B-g@mail.gmail.com>
- <3f5feb87-330c-4342-88a1-d5076538a86d@roeck-us.net>
- <3401727c-ad93-42df-8130-413eda41ab3a@roeck-us.net>
- <CALbr=LYe3p9GW2Z_RUxKG+w2Q1wfWGRW=dRLoTraS7qJ7imdgw@mail.gmail.com>
- <3f56be7b-d5b4-4753-8649-62ee21d2c6bd@roeck-us.net>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <3f56be7b-d5b4-4753-8649-62ee21d2c6bd@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <20250609101637.2322809-1-dario.binacchi@amarulasolutions.com> <174948105106.2282643.172324663412189128.robh@kernel.org>
+In-Reply-To: <174948105106.2282643.172324663412189128.robh@kernel.org>
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Date: Mon, 9 Jun 2025 17:08:12 +0200
+X-Gm-Features: AX0GCFu7PzsfDvF842eUkzXyordNhd1acsYRKIzmAppp3qtvrKjzob8AA4_bZEY
+Message-ID: <CABGWkvpv-0QjAgz_j3QMJvSO0gpzxY07GpkT0SWL1zEY0Y_ufg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/10] Support Engicam MicroGEA boards
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>, Andreas Kemnade <andreas@kemnade.info>, 
+	Peng Fan <peng.fan@nxp.com>, Russell King <linux@armlinux.org.uk>, 
+	Frieder Schrempf <frieder.schrempf@kontron.de>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Marek Vasut <marex@denx.de>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Stefan Eichenberger <stefan.eichenberger@toradex.com>, 
+	Alexander Stein <alexander.stein@ew.tq-group.com>, Eric Biggers <ebiggers@google.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Fabio Estevam <festevam@denx.de>, 
+	Matteo Lisi <matteo.lisi@engicam.com>, 
+	Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>, 
+	Primoz Fiser <primoz.fiser@norik.com>, Max Merchel <Max.Merchel@ew.tq-group.com>, 
+	Michael Walle <mwalle@kernel.org>, Tim Harvey <tharvey@gateworks.com>, 
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
+	Markus Niebel <Markus.Niebel@tq-group.com>, linux-amarula@amarulasolutions.com, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Francesco Dolcini <francesco.dolcini@toradex.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:xsgQzJV4+yM2+gisrx6ewIahjPqv4GmwxppmExVkL0RmeiYsQhw
- A2QGDrccch6X2QhUCJnqpsT8XzlLCrEWbHcs4cmQ5wl9G9oyB7GirdJcBo8q8KI2rY7aPZk
- sWcXZbT5QWESpBDMND2HBOIeacDyOJ1fuM58YG1GUJAJim9eGpvgdVuXsaYlu1iZiJ63iyJ
- Zgjj5SVSogvfb29tYl7Ew==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:lqURk9qVMWk=;IK90yXlHprrrLWOEcGtOsyZ5KG9
- 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
- PitI=
 
-Am 07.06.25 um 01:22 schrieb Guenter Roeck:
+Hi Rob,
 
-> On 6/6/25 00:03, Gui-Dong Han wrote:
->>> On Thu, Jun 05, 2025 at 07:33:24AM -0700, Guenter Roeck wrote:
->>>>>
->>>>> I would like to discuss these issues further and collaborate on the
->>>>> best way to address them comprehensively.
->>>>>
->>>>
->>>> I'd suggest to start submitting patches, with the goal of minimizing
->>>> the scope of changes. Sometimes that may mean expanding the scope of
->>>> locks, sometimes it may mean converting macros to functions. When
->>>> converting to functions, it doesn't have to be inline functions: I'd
->>>> leave that up to the compiler to decide. None of that code is=20
->>>> performance
->>>> critical.
->>>>
->>> Actualy, that makes me wonder if it would make sense to introduce
->>> subsystem-level locking. We could introduce a lock in struct
->>> hwmon_device_attribute and lock it whenever a show or store function
->>> executes in drivers/hwmon/hwmon.c. That would only help for drivers
->>> using the _with_info API, but it would simplify driver code a lot.
->>> Any thoughts on that ?
->>
->> Hi Guenter,
->>
->> Thanks for your quick and insightful feedback!
->>
->> I agree with your suggestion. Adding a note to
->> Documentation/hwmon/submitting-patches.rst about avoiding calculations
->> in macros is also a great idea to prevent this class of bugs in the
->> future.
->>
->> Regarding your thoughts on subsystem-level locking, it sounds like a
->> promising approach to simplify the drivers using the _with_info API.
->> As you mentioned, some drivers don't use this API, so they would still
->> require manual fixes.
->>
->> For the subsystem-level lock itself, I was wondering if a read-write
->> semaphore might be more appropriate than a standard mutex. This would
->> prevent a single show operation from blocking other concurrent reads.
->> I'm not entirely sure about all the implications, but it might be
->> worth considering to maintain read performance.
->>
+On Mon, Jun 9, 2025 at 5:01=E2=80=AFPM Rob Herring (Arm) <robh@kernel.org> =
+wrote:
 >
-> Various drivers need write locks when reading attributes, so that=20
-> would not
-> work well. We'd need some flag indicating "this driver needs write locks
-> when reading data", and then things become complicated again,=20
-> defeating the
-> benefit.
 >
-> Guenter
+> On Mon, 09 Jun 2025 12:15:33 +0200, Dario Binacchi wrote:
+> > The series adds support for Engicam MicroGEA boards:
+> >
+> > - BMM
+> > - RMM
+> > - GTW
+> >
+> > based on MicroGEA-MX6UL SoM.
+> >
+> > Changes in v2:
+> > - Change local-mac-address to 00 00 00 00 00 00. The actual value will
+> >   be set by the bootloader. The previous one was assigned to Freescale
+> >   Semiconductor.
+> > - Move iomuxc and iomuxc_snvs nodes to the end of the DTS files.
+> > - Drop an extra blank line from the DTS file.
+> >
+> > Dario Binacchi (10):
+> >   dt-bindings: arm: fsl: support Engicam MicroGEA BMM board
+> >   ARM: dts: imx6ul: support Engicam MicroGEA-MX6UL SoM
+> >   ARM: dts: imx6ul: support Engicam MicroGEA BMM board
+> >   ARM: imx_v6_v7_defconfig: cleanup mxs_defconfig
+> >   ARM: imx_v6_v7_defconfig: select CONFIG_INPUT_PWM_BEEPER
+> >   dt-bindings: arm: fsl: support Engicam MicroGEA RMM board
+> >   ARM: dts: imx6ul: support Engicam MicroGEA RMM board
+> >   dt-bindings: arm: fsl: support Engicam MicroGEA GTW board
+> >   ARM: dts: imx6ul: support Engicam MicroGEA GTW board
+> >   ARM: imx_v6_v7_defconfig: select CONFIG_USB_HSIC_USB3503
+> >
+> >  .../devicetree/bindings/arm/fsl.yaml          |   9 +
+> >  arch/arm/boot/dts/nxp/imx/Makefile            |   3 +
+> >  .../nxp/imx/imx6ull-engicam-microgea-bmm.dts  | 305 +++++++++++++++
+> >  .../nxp/imx/imx6ull-engicam-microgea-gtw.dts  | 163 ++++++++
+> >  .../nxp/imx/imx6ull-engicam-microgea-rmm.dts  | 362 ++++++++++++++++++
+> >  .../dts/nxp/imx/imx6ull-engicam-microgea.dtsi |  96 +++++
+> >  arch/arm/configs/imx_v6_v7_defconfig          |  27 +-
+> >  7 files changed, 944 insertions(+), 21 deletions(-)
+> >  create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-=
+bmm.dts
+> >  create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-=
+gtw.dts
+> >  create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-=
+rmm.dts
+> >  create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea.=
+dtsi
+> >
+> > --
+> > 2.43.0
+> >
+> > base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+> > branch: imx6ull-engicam-microgea
+> >
+> >
+>
+>
+> My bot found new DTB warnings on the .dts files added or changed in this
+> series.
+>
+> Some warnings may be from an existing SoC .dtsi.
 
-I agree, different drivers need different locks. From my point of view dri=
-vers using the
-with_info-API can easily implement such a global lock themself by using gu=
-ard(). This also
-allows them to choose the type of lock to use.
+Yes, these warnings are generated by included .dtsi files and also appear i=
+n
+other boards that have already been merged into mainline.
+IMHO I have already addressed and fixed the warnings introduced by my board=
+s
+during the tests executed before submitting the series.
 
-Thanks,
-Armin Wolf
+Thanks and regards,
+Dario
 
+> Or perhaps the warnings
+> are fixed by another series. Ultimately, it is up to the platform
+> maintainer whether these warnings are acceptable or not. No need to reply
+> unless the platform maintainer has comments.
+>
+> If you already ran DT checks and didn't see these error(s), then
+> make sure dt-schema is up to date:
+>
+>   pip3 install dtschema --upgrade
+>
+>
+> This patch series was applied (using b4) to base:
+>  Base: using specified base-commit 19272b37aa4f83ca52bdf9c16d5d81bdd13544=
+94
+>
+> If this is not the correct base, please add 'base-commit' tag
+> (or use b4 which does this automatically)
+>
+> New warnings running 'make CHECK_DTBS=3Dy for arch/arm/boot/dts/nxp/' for=
+ 20250609101637.2322809-1-dario.binacchi@amarulasolutions.com:
+>
+> arch/arm/boot/dts/nxp/imx/imx6ull-colibri-aster.dtb: cpu@0 (arm,cortex-a7=
+): Unevaluated properties are not allowed ('fsl,soc-operating-points', 'soc=
+-supply' were unexpected)
+>         from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+> arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-bmm.dtb: cpu@0 (arm,co=
+rtex-a7): Unevaluated properties are not allowed ('fsl,soc-operating-points=
+', 'soc-supply' were unexpected)
+>         from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+> arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-bmm.dtb: nand-controll=
+er@1806000 (fsl,imx6q-gpmi-nand): Unevaluated properties are not allowed ('=
+nand-ecc-mode', 'nand-ecc-step-size', 'nand-ecc-strength', 'nand-on-flash-b=
+bt' were unexpected)
+>         from schema $id: http://devicetree.org/schemas/mtd/gpmi-nand.yaml=
+#
+> arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-rmm.dtb: cpu@0 (arm,co=
+rtex-a7): Unevaluated properties are not allowed ('fsl,soc-operating-points=
+', 'soc-supply' were unexpected)
+>         from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+> arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-rmm.dtb: nand-controll=
+er@1806000 (fsl,imx6q-gpmi-nand): Unevaluated properties are not allowed ('=
+nand-ecc-mode', 'nand-ecc-step-size', 'nand-ecc-strength', 'nand-on-flash-b=
+bt' were unexpected)
+>         from schema $id: http://devicetree.org/schemas/mtd/gpmi-nand.yaml=
+#
+> arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-gtw.dtb: cpu@0 (arm,co=
+rtex-a7): Unevaluated properties are not allowed ('fsl,soc-operating-points=
+', 'soc-supply' were unexpected)
+>         from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+> arch/arm/boot/dts/nxp/imx/imx6ull-engicam-microgea-gtw.dtb: nand-controll=
+er@1806000 (fsl,imx6q-gpmi-nand): Unevaluated properties are not allowed ('=
+nand-ecc-mode', 'nand-ecc-step-size', 'nand-ecc-strength', 'nand-on-flash-b=
+bt' were unexpected)
+>         from schema $id: http://devicetree.org/schemas/mtd/gpmi-nand.yaml=
+#
+>
+>
+>
+>
+>
+
+
+--=20
+
+Dario Binacchi
+
+Senior Embedded Linux Developer
+
+dario.binacchi@amarulasolutions.com
+
+__________________________________
+
+
+Amarula Solutions SRL
+
+Via Le Canevare 30, 31100 Treviso, Veneto, IT
+
+T. +39 042 243 5310
+info@amarulasolutions.com
+
+www.amarulasolutions.com
