@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2390F1442F4;
-	Mon,  9 Jun 2025 16:17:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EA62192F1;
+	Mon,  9 Jun 2025 16:17:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749485834; cv=none; b=nt7lQoHbb5gmb9Iwnf32ZazPMLlsat/l2RoQCfQ6U6MCeOjkJjVkNkvcBLa2fGxoSfv99atYTIhZ/n9Q4SRwDhoU/ws9eh/Al+l0wPFdlAgs7/VEqfu+E0wy+un2AOr2/+g8Nw/M9b1Qv2aAIt3xOAHol+hC5TQmMpcqYWrHwUg=
+	t=1749485836; cv=none; b=oC/kCxCWIbsRnxl0u1qnddIdBzABtCXcxtrhaLGuVv6mZIzg6St+6UpMbLTvc6lBOmPYBLoN/E4gcAozqmQZW2V5IYJoHENNPnixFPQplrW686y7qmAHiWm90JeLi7YSG0e5ON8tojxmZI5cBg5f6FRTCEWpcP1AGTRhwJ4L8Dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749485834; c=relaxed/simple;
-	bh=1UrG9nhoPoMfpbyA/DogGIHx2IpDgypd6UjQLhfcdjc=;
+	s=arc-20240116; t=1749485836; c=relaxed/simple;
+	bh=tAuxNvbxSwpy1+qI0aq2zcU198vntvJtWfnUZiLo/qo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=mToy5jmG8owIgW2K3Ksbmuzh40lKsGcgQtE+YcM615tI0JQoSe9mExZ/vzwEHjkbh4jCNp7n/I37RoQvsD0UxHTKvuvt8CMdvQ5aePWlYQnhifskkq4FuxhSlivcrLowYZ2yl0mCzaZOrfNsk40WxtINbpsWZLIwDIaN8iOzKgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z6k4nREi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=hTTld7crbLJSD81pQeHHt64wSxYvRadh58rSUqc8jByl2zlV61N4pEdkoZbKNFcQYFKSeO/90tBd6yUn7hbjJ0uUMj3TFO43Xrz1a8Eqvfm42LptEVO9bcdfcm6sQnNy94NoCMPaL7E6/6Pt9cNLcmwctyMnGgUHgM036pPAbms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QMNaY9o5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z6k4nREi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5144BC4CEEB;
-	Mon,  9 Jun 2025 16:17:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QMNaY9o5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 440D1C4CEF0;
+	Mon,  9 Jun 2025 16:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749485833;
-	bh=1UrG9nhoPoMfpbyA/DogGIHx2IpDgypd6UjQLhfcdjc=;
+	s=k20201202; t=1749485836;
+	bh=tAuxNvbxSwpy1+qI0aq2zcU198vntvJtWfnUZiLo/qo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Z6k4nREiCRC4ZeWNxwXdpJXCegUyBF/O+uySGecEWZEbo9k8GwkOx8xeIhsOYARS0
-	 tL1vvVs6QFRnLOel8Ace4RADIFGviyWr1SDa3Cx7ebt60zuFxVa8BYbzSSjvVr6lp7
-	 fWJmI4esDvY0sqhn0jPKV6ZDMJTR55puih7LPqB5NThhJAZpK0j4jcqpoIByOlISJ3
-	 RbjhaDyar2aU9Z4IVEY1TJIjxSS+eiE9OtQq/0KIBM6ArWIxNDGLmPntCGXxCYz4YF
-	 2+TXq7CC55ZUXcPc22wF5wohdXIdzw9PP+AcCCP+R4aVL5YMZe6ZFGUYb/LYqcDCZK
-	 WiyLWVJuwqM0Q==
+	b=QMNaY9o5EUyOvFMXhwX0XQD3mxl2kTyjng83JGxHKUA5qiGPWmijiyc+Qzt/lgyR0
+	 +FhuGSA4xlbjOrUh+JfV5YpkbRu59CPgg16RO6mHbBFMeCqf4ZiD+01Gud6RiLIHsW
+	 58NQoLbpBY8mS9zoHokzdac0jniPM/8igpNZSRsXs3QkSvq/UepjlXQULKy3vXbZTV
+	 tzeNn2bp1ZIKPuD4bgaitYemHrPpWfmS6FvthudLDDT9Qj6Iz6kVIkCtH7jHgkRZ9N
+	 A1GOzN/0UIwlQnF6N3Bl3qzZQ2B09/VsqjKwpwU1CVyXxFqdqcHg7z3LlLy5GyDWWs
+	 2YddJSQCeJZTQ==
 From: Vinod Koul <vkoul@kernel.org>
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: broonie@kernel.org, lgirdwood@gmail.com, linux-sound@vger.kernel.org, 
- patches@opensource.cirrus.com, yung-chuan.liao@linux.intel.com, 
- pierre-louis.bossart@linux.dev, peter.ujfalusi@linux.intel.com, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250609143041.495049-1-ckeepax@opensource.cirrus.com>
-References: <20250609143041.495049-1-ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH 0/3] Update SoundWire IRQ handling
-Message-Id: <174948583095.818152.7190907792484657066.b4-ty@kernel.org>
-Date: Mon, 09 Jun 2025 21:47:10 +0530
+To: Bard Liao <yung-chuan.liao@linux.intel.com>, 
+ Johan Hovold <johan+linaro@kernel.org>
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
+ Sanyog Kale <sanyog.r.kale@intel.com>, linux-arm-msm@vger.kernel.org, 
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250523085317.11439-1-johan+linaro@kernel.org>
+References: <20250523085317.11439-1-johan+linaro@kernel.org>
+Subject: Re: [PATCH] soundwire: qcom: demote probe registration printk
+Message-Id: <174948583390.818152.14215125858704023461.b4-ty@kernel.org>
+Date: Mon, 09 Jun 2025 21:47:13 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,24 +48,23 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Mon, 09 Jun 2025 15:30:38 +0100, Charles Keepax wrote:
-> Fix some difficulties in implementing IRQs for the SoundWire system, by
-> moving the handle_nested_irq outside of the sdw_dev_lock. Also a minor
-> maintainers update.
+On Fri, 23 May 2025 10:53:17 +0200, Johan Hovold wrote:
+> Driver should generally by quiet on successful probe.
 > 
-> Thanks,
-> Charles
+> Demote the Qualcomm controller registration info message to debug level
+> to make boot logs a little less noisy:
+> 
+> qcom-soundwire 6ab0000.soundwire: Qualcomm Soundwire controller v2.0.0 Registered
+> qcom-soundwire 6ad0000.soundwire: Qualcomm Soundwire controller v2.0.0 Registered
+> qcom-soundwire 6b10000.soundwire: Qualcomm Soundwire controller v2.0.0 Registered
+> qcom-soundwire 6d30000.soundwire: Qualcomm Soundwire controller v2.0.0 Registered
 > 
 > [...]
 
 Applied, thanks!
 
-[1/3] MAINTAINERS: Remove Sanyog Kale as reviewer on SoundWire
-      commit: 99d4a6e5c24fc05fc56a33d9d24e89720bfd5665
-[2/3] soundwire: Move handle_nested_irq outside of sdw_dev_lock
-      commit: ccb7bb13c00bcc3178d270da052635c56148bc16
-[3/3] ASoC: cs42l43: Remove unnecessary work functions
-      commit: 0cbce868fffaf115a26d6cb45516627cf13cc3d2
+[1/1] soundwire: qcom: demote probe registration printk
+      commit: 5b8c1f39b5e46505cf9cf7775759a9e9c2bfc2d9
 
 Best regards,
 -- 
