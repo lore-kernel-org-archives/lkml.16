@@ -1,306 +1,150 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E6C27F160
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 04:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1F913957E;
+	Mon,  9 Jun 2025 04:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749443403; cv=none; b=J15t8+p/dqYGmP73d8wXpxQGlU/qe5+ftsHwOgLC7WNyrhyOC0ZiAqV+ISOEHzbim4briqzBiLNlOQLNSxL1tCDVDxJaOcj7Ap5oUynmFBRhcKSol843W1N+PHRsXbTGO8htKyjGkRWp9hFk1aVy0/Mu502GQnpEvpYaqGlmwc8=
+	t=1749443488; cv=none; b=SB/PRcL+Gkadf9BMvrYMXQEXYvtNPgVrJuqPkUdu65JcsXqKK4vFeo5UrcA9KhWKGy92IGyLOxGTGgozu9+ptAUxuJi2rng010u0LJH21bWLG5J59755vdYnXzU2FmbzwM9sJfoW7HIS3G5PIoSwQVGsSo3rnYrJKUIwmhHs9AU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749443403; c=relaxed/simple;
-	bh=RUAu8a8o6viQov+T+0ZK1Z4Oqq/Sk7p4H+rW4de+U2U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nv8FiQnntK365w0vvsID/eM+gMNXSxvtlTW3JAHyA/FX/cqEgKe++4DDcU/ghVeeVga9ZcOpiD+HIcF6gq/eKUWZUKxtr0rOlGTMhsfDzIBVrMfpgsSe+hgJKblGSL/n/eFXdjLgXVGW6hxJSEH+RUhqUmnQ+FOuBoQOZpC+anU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jaOQtIgi; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749443488; c=relaxed/simple;
+	bh=CKlXlMt6NoiAFVTxB2bXnrWWb7c0qqpm5sB/5ymLE2I=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=HfpJnYULZs7bGiNnl8yI4WvISx80CaMxIB0MAMQCd+xaRQ85xd65IcxCQZAAD5UIkdDOUVht7h4XBpVyouzDQB1s/cLfkx3LRoZ21PlMhVoCcYsMkRG6h1qa6i/YAoGp1brz2Bklkkg7xePcNLwaE53hONE7Ckk4wAsN5+BM050=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=UGrEeaVK; arc=none smtp.client-ip=52.119.213.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jaOQtIgi"
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-52b2290e28eso1009076e0c.3
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 21:30:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="UGrEeaVK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749443401; x=1750048201; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=retmcKtILXm+Ch153nL5bk1V574vggL5lmZxDYU9rSc=;
-        b=jaOQtIgiid5ZLE9tACNX/THJp6mjq/RmlVDPA/ZRlggcIwKvynnD2sdViNCMh+xvFu
-         tyDcNkHfrv6DoL9Ic4/83detvL/cV8uZPzr5eXNwESIZLVZuQcm37BSsCNy0XqOzn0S1
-         hhyg14BOAV33LVGrKF8R06niYIzLZuk/mak8FR+jdDWm+LZUKZH80OcovIF7dbFDiBYc
-         RGRgdT2I29dmN7Yg1FqA4+mN7Ax6YWbgel5YMp5C3Iy7cFv3fYfvTda9eFC5beyVpeOt
-         eJ4paFSz8ee7/ol1vmaiHmZo7SdFDNd2SnNnx0qV06oasklNuOgR6LwfbAETffipcBIm
-         0Z6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749443401; x=1750048201;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=retmcKtILXm+Ch153nL5bk1V574vggL5lmZxDYU9rSc=;
-        b=PSNnWuXtSW8GkJtAO4Nvjd3NKhdV4ylC+sgRT+IbTyeMymPmhF8WE3JQSnBcLoK3cl
-         qyjI0mC4mSuLef1vWAr6HrSMQbfnn07qtbk+GM43OSbzH9X2g0FoMAYhaR3eG9BoGiTe
-         xiVo8TJg9mtJDuv3X2yzNfRdJ9K4oGA+075uBOTBnYw3uJzhN8i1AntB896oa4mnvuwf
-         AjdNst+izv5x6mK/gDZ+iiYcn9L+/SN3ezO9up950QphwXRMLBoaLZKkkpO08bz4cJwc
-         YBqMLzx+04YsgoSzwaP82jmzxoibmdljsx0Peonup+Yj3NvmI0xlNv7fIaet31IwFOvx
-         NaVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUqypiycWMwRX2Nb4OpF6DPsbEAiszvipik/s8rz4G47HVJITQOc/ZXdB9CooCkLINuJZ4/h5fbXhjHmb0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyGCN5Ocb8X8gTJFZYSbOkEGJYH94/iHezWuQtledhGhQQKVHF
-	Azrf0rquTN/yPZr/slXQSSNTautRnST1R9DqkbqulhSSpua3qvkkRJIep3hdxY7BwECzbItPKJ7
-	ozulUMGy387BUWKhV5QX1ahDphBjqGgc=
-X-Gm-Gg: ASbGncvx42OyY/9YyGjnw5LvlCRBXGRYMPlpNRzdn6YBJ3eTj2u16UD1rZH0pwbS9yo
-	g315/Cgde9li1qQx6SWmuzCFJ+UnchJaJs6UDUyU85HQS/zJR+byOJhxb9NqGDvtpTDYX5S2YyK
-	C/4kh2wjwdt94Fn3OZyTFYn6ZyCCtfAJFCc5GtKFBkUnc2
-X-Google-Smtp-Source: AGHT+IHxtm87Sj/NjmF3Ha6g397nLkq4FED4+G7i1tl+68+hVe5Q4idxLG6nzb3LEXeOEWQysSzWzNsIGu15BxwAl6Q=
-X-Received: by 2002:a05:6122:32c9:b0:530:81ad:1d79 with SMTP id
- 71dfb90a1353d-530e488e8a2mr9588428e0c.6.1749443400763; Sun, 08 Jun 2025
- 21:30:00 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1749443488; x=1780979488;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=CKlXlMt6NoiAFVTxB2bXnrWWb7c0qqpm5sB/5ymLE2I=;
+  b=UGrEeaVKcQYgXbkERLBvJOplxYSOIO43x8ZMCpsRYg5KJrhWoAh/wUBY
+   5k+QLgrLUnWzBw1fvFJFsCo7ID0yX+QedgSSIsERDDnqB9uRmYwCEKXKg
+   7svMDzyFCg1YgjYRYikT6JDPB6Z+Uja6/dUlEdHMKaPTmrrLK118egUo3
+   NGVNrV1xQOh7BtLtt5VRcXMC2FYve2CClWZ8qQdD65DZlAxnO0C7hRfC+
+   z7G19GPt+WoeaygVWcVmEOZEB5JR6UgPvl6rJtHaadsp5oyn32qfyLMCC
+   79TrzCpbH+wtuxv6kuLg5mQlBjvGxJh1cMaf98kaaIYJtjH117UOZyaHB
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.16,221,1744070400"; 
+   d="scan'208";a="306689532"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 04:31:23 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.21.151:41619]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.39.175:2525] with esmtp (Farcaster)
+ id 4421e3d6-11e0-409f-bc9a-3144297fb406; Mon, 9 Jun 2025 04:31:22 +0000 (UTC)
+X-Farcaster-Flow-ID: 4421e3d6-11e0-409f-bc9a-3144297fb406
+Received: from EX19D004ANA004.ant.amazon.com (10.37.240.146) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 9 Jun 2025 04:31:21 +0000
+Received: from EX19D018EUA004.ant.amazon.com (10.252.50.85) by
+ EX19D004ANA004.ant.amazon.com (10.37.240.146) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 9 Jun 2025 04:31:19 +0000
+Received: from EX19D018EUA004.ant.amazon.com ([fe80::e53:84f8:3456:a97d]) by
+ EX19D018EUA004.ant.amazon.com ([fe80::e53:84f8:3456:a97d%3]) with mapi id
+ 15.02.1544.014; Mon, 9 Jun 2025 04:31:17 +0000
+From: "Farber, Eliav" <farbere@amazon.com>
+To: Kuniyuki Iwashima <kuni1840@gmail.com>
+CC: "davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
+	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>, "Iwashima,
+ Kuniyuki" <kuniyu@amazon.co.jp>, "kuznet@ms2.inr.ac.ru"
+	<kuznet@ms2.inr.ac.ru>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "sashal@kernel.org" <sashal@kernel.org>,
+	"yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>
+Subject: RE: [PATCH] net/ipv4: fix type mismatch in inet_ehash_locks_alloc()
+ causing build failure
+Thread-Topic: [PATCH] net/ipv4: fix type mismatch in inet_ehash_locks_alloc()
+ causing build failure
+Thread-Index: AdvY9wJYSlvxky1DZ0ar7syXPxglhQ==
+Date: Mon, 9 Jun 2025 04:31:17 +0000
+Message-ID: <d5c2130c18b74a57bb23c4f37b901d2c@amazon.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250608192713.95875-1-ryncsn@gmail.com> <CAGsJ_4xSRdjVac_UdUKBk2-5upeHMEEow3_Q-F_VSa8HYj0mtw@mail.gmail.com>
- <CAMgjq7CZD_otTdhKhsUgoMgLiB8+3ipEFNyTkN_zxnbQECiJNw@mail.gmail.com>
-In-Reply-To: <CAMgjq7CZD_otTdhKhsUgoMgLiB8+3ipEFNyTkN_zxnbQECiJNw@mail.gmail.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Mon, 9 Jun 2025 16:29:49 +1200
-X-Gm-Features: AX0GCFtD4GIgaLFa8EXNiuFg--SAoYJ74GK5RhOehvgQd7z2YtKQgLTNXes9H1M
-Message-ID: <CAGsJ_4yGa3+V9NcePuKe3pKO79A1Gd=p+ZZ8SjEwgmfR79KyTA@mail.gmail.com>
-Subject: Re: [PATCH] mm/shmem, swap: fix softlockup with mTHP swapin
-To: Kairui Song <ryncsn@gmail.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Hugh Dickins <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Chris Li <chrisl@kernel.org>, 
-	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Usama Arif <usamaarif642@gmail.com>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 9, 2025 at 2:32=E2=80=AFPM Kairui Song <ryncsn@gmail.com> wrote=
-:
->
-> On Mon, Jun 9, 2025 at 7:58=E2=80=AFAM Barry Song <21cnbao@gmail.com> wro=
-te:
-> >
-> > On Mon, Jun 9, 2025 at 7:27=E2=80=AFAM Kairui Song <ryncsn@gmail.com> w=
-rote:
-> > >
-> > > From: Kairui Song <kasong@tencent.com>
-> > >
-> > > Following softlockup can be easily reproduced on my test machine with=
-:
-> > >
-> > > echo always > /sys/kernel/mm/transparent_hugepage/hugepages-64kB/enab=
-led
-> > > swapon /dev/zram0 # zram0 is a 48G swap device
-> > > mkdir -p /sys/fs/cgroup/memory/test
-> > > echo 1G > /sys/fs/cgroup/test/memory.max
-> > > echo $BASHPID > /sys/fs/cgroup/test/cgroup.procs
-> > > while true; do
-> > >     dd if=3D/dev/zero of=3D/tmp/test.img bs=3D1M count=3D5120
-> > >     cat /tmp/test.img > /dev/null
-> > >     rm /tmp/test.img
-> > > done
-> > >
-> > > Then after a while:
-> > > watchdog: BUG: soft lockup - CPU#0 stuck for 763s! [cat:5787]
-> > > Modules linked in: zram virtiofs
-> > > CPU: 0 UID: 0 PID: 5787 Comm: cat Kdump: loaded Tainted: G           =
-  L      6.15.0.orig-gf3021d9246bc-dirty #118 PREEMPT(voluntary)=C2=B7
-> > > Tainted: [L]=3DSOFTLOCKUP
-> > > Hardware name: Red Hat KVM/RHEL-AV, BIOS 0.0.0 02/06/2015
-> > > RIP: 0010:mpol_shared_policy_lookup+0xd/0x70
-> > > Code: e9 b8 b4 ff ff 31 c0 c3 cc cc cc cc 90 90 90 90 90 90 90 90 90 =
-90 90 90 90 90 90 90 90 66 0f 1f 00 0f 1f 44 00 00 41 54 55 53 <48> 8b 1f 4=
-8 85 db 74 41 4c 8d 67 08 48 89 fb 48 89 f5 4c 89 e7 e8
-> > > RSP: 0018:ffffc90002b1fc28 EFLAGS: 00000202
-> > > RAX: 00000000001c20ca RBX: 0000000000724e1e RCX: 0000000000000001
-> > > RDX: ffff888118e214c8 RSI: 0000000000057d42 RDI: ffff888118e21518
-> > > RBP: 000000000002bec8 R08: 0000000000000001 R09: 0000000000000000
-> > > R10: 0000000000000bf4 R11: 0000000000000000 R12: 0000000000000001
-> > > R13: 00000000001c20ca R14: 00000000001c20ca R15: 0000000000000000
-> > > FS:  00007f03f995c740(0000) GS:ffff88a07ad9a000(0000) knlGS:000000000=
-0000000
-> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > CR2: 00007f03f98f1000 CR3: 0000000144626004 CR4: 0000000000770eb0
-> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > PKRU: 55555554
-> > > Call Trace:
-> > >  <TASK>
-> > >  shmem_alloc_folio+0x31/0xc0
-> > >  shmem_swapin_folio+0x309/0xcf0
-> > >  ? filemap_get_entry+0x117/0x1e0
-> > >  ? xas_load+0xd/0xb0
-> > >  ? filemap_get_entry+0x101/0x1e0
-> > >  shmem_get_folio_gfp+0x2ed/0x5b0
-> > >  shmem_file_read_iter+0x7f/0x2e0
-> > >  vfs_read+0x252/0x330
-> > >  ksys_read+0x68/0xf0
-> > >  do_syscall_64+0x4c/0x1c0
-> > >  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> > > RIP: 0033:0x7f03f9a46991
-> > > Code: 00 48 8b 15 81 14 10 00 f7 d8 64 89 02 b8 ff ff ff ff eb bd e8 =
-20 ad 01 00 f3 0f 1e fa 80 3d 35 97 10 00 00 74 13 31 c0 0f 05 <48> 3d 00 f=
-0 ff ff 77 4f c3 66 0f 1f 44 00 00 55 48 89 e5 48 83 ec
-> > > RSP: 002b:00007fff3c52bd28 EFLAGS: 00000246 ORIG_RAX: 000000000000000=
-0
-> > > RAX: ffffffffffffffda RBX: 0000000000040000 RCX: 00007f03f9a46991
-> > > RDX: 0000000000040000 RSI: 00007f03f98ba000 RDI: 0000000000000003
-> > > RBP: 00007fff3c52bd50 R08: 0000000000000000 R09: 00007f03f9b9a380
-> > > R10: 0000000000000022 R11: 0000000000000246 R12: 0000000000040000
-> > > R13: 00007f03f98ba000 R14: 0000000000000003 R15: 0000000000000000
-> > >  </TASK>
-> > >
-> > > The reason is simple, readahead brought some order 0 folio in swap
-> > > cache, and the swapin mTHP folio being allocated is in confict with i=
-t,
-> > > so swapcache_prepare fails and causes shmem_swap_alloc_folio to retur=
-n
-> > > -EEXIST, and shmem simply retries again and again causing this loop.
-> > >
-> > > Fix it by applying a similar fix for anon mTHP swapin.
-> > >
-> > > The performance change is very slight, time of swapin 10g zero folios
-> > > (test for 12 times):
-> > > Before:  2.49s
-> > > After:   2.52s
-> > >
-> > > Fixes: 1dd44c0af4fa1 ("mm: shmem: skip swapcache for swapin of synchr=
-onous swap device")
-> > > Signed-off-by: Kairui Song <kasong@tencent.com>
-> > >
-> > > ---
-> > >
-> > > I found this issue while doing a performance comparing of mm-new with
-> > > swap table series [1] on top of mm-new. This issue no longer exists
-> > > if the swap table series is applied, because it elimated both
-> > > SWAP_HAS_CACHE and SWP_SYNCHRONOUS_IO swapin completely while improvi=
-ng
-> > > the performance and simplify the code, and the race swapin is solved
-> > > differently by then.
-> > >
-> > > (The zero map fix might still need to stay for a while, but could be
-> > > optimized too later with swap table).
-> > >
-> > > It will be good if the swap table series could get reviewed and merge=
-d
-> > > to avoid more fixes like this. SWAP_HAS_CACHE and SWP_SYNCHRONOUS_IO =
-has
-> > > a history of causing many issues. I'll do a swap table rebase on top =
-of
-> > > this fix, if this one is accepted.
-> > >
-> > > And for a comparision, swap in 10G into shmem:
-> > >
-> > > Before this patch:  2.49s
-> > > After this patch:   2.52s
-> > > After swap table:   2.37s (Removing SWAP_HAS_CACHE and SWP_SYNCHRONOU=
-S_IO,
-> > >                            still not in the best shape but looking go=
-od)
-> > >
-> > > Link: https://lore.kernel.org/linux-mm/20250514201729.48420-1-ryncsn@=
-gmail.com/ [1]
-> > >
-> > >  mm/memory.c | 20 --------------------
-> > >  mm/shmem.c  | 12 +++++++++++-
-> > >  mm/swap.h   | 19 +++++++++++++++++++
-> > >  3 files changed, 30 insertions(+), 21 deletions(-)
-> > >
-> > > diff --git a/mm/memory.c b/mm/memory.c
-> > > index 9ead7ab07e8e..3845ed068d74 100644
-> > > --- a/mm/memory.c
-> > > +++ b/mm/memory.c
-> > > @@ -4313,26 +4313,6 @@ static struct folio *__alloc_swap_folio(struct=
- vm_fault *vmf)
-> > >  }
-> > >
-> > >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> > > -static inline int non_swapcache_batch(swp_entry_t entry, int max_nr)
-> > > -{
-> > > -       struct swap_info_struct *si =3D swp_swap_info(entry);
-> > > -       pgoff_t offset =3D swp_offset(entry);
-> > > -       int i;
-> > > -
-> > > -       /*
-> > > -        * While allocating a large folio and doing swap_read_folio, =
-which is
-> > > -        * the case the being faulted pte doesn't have swapcache. We =
-need to
-> > > -        * ensure all PTEs have no cache as well, otherwise, we might=
- go to
-> > > -        * swap devices while the content is in swapcache.
-> > > -        */
-> > > -       for (i =3D 0; i < max_nr; i++) {
-> > > -               if ((si->swap_map[offset + i] & SWAP_HAS_CACHE))
-> > > -                       return i;
-> > > -       }
-> > > -
-> > > -       return i;
-> > > -}
-> > > -
-> > >  /*
-> > >   * Check if the PTEs within a range are contiguous swap entries
-> > >   * and have consistent swapcache, zeromap.
-> > > diff --git a/mm/shmem.c b/mm/shmem.c
-> > > index 73182e904f9c..484cd3043a78 100644
-> > > --- a/mm/shmem.c
-> > > +++ b/mm/shmem.c
-> > > @@ -1995,6 +1995,14 @@ static struct folio *shmem_swap_alloc_folio(st=
-ruct inode *inode,
-> > >          */
-> > >         if (swapcache_prepare(entry, nr_pages)) {
-> > >                 folio_put(new);
-> > > +
-> > > +               /*
-> > > +                * A smaller folio is in the swap cache, mTHP swapin =
-will always fail
-> > > +                * until it's gone. Return -EINVAL to fallback to ord=
-er 0.
-> > > +                */
-> > > +               if (non_swapcache_batch(entry, nr_pages) !=3D nr_page=
-s)
-> > > +                       return ERR_PTR(-EINVAL);
-> > > +
->
-> Hi Barry,
->
-> > We're doing this before swapcache_prepare() for mTHP swapin. Why does i=
-t
-> > happen after swapcache_prepare() in the shmem case?
->
-> `non_swapcache_batch(entry, nr_pages) !=3D nr_pages` is unlikely, that's
-> the reason why no one noticed this issue so far, so moving it after
-> swapcache_prepare can help avoid overhead caused by it in the common
-> case. swapcache_prepare already implies this check, but
-> swapcache_prepare can fall for multiple reasons, and shmem should and
-> only should fallback to order 0 swapin if it's caused by an existing
-> cache. (currently shmem unconditionally retry)
-
-Maybe it's because people are running it on systems with plenty of memory?
-Once we run it on a system with limited memory, we might see more failures
-allocating large folios and fall back to order-0 more often?
-For example, what if there's a 50% chance of failing to allocate large
-folios?
-
->
-> And non_swapcache_batch might not be the best solution here, it also
-> might have false positives, we can add a full filemap lookup here, but
-> might be overkill for a corner case like this. I still think merge
-> swap cache with swap_map using swap table is the long term solution.
->
-> Maybe I'm premature optimizing it, I can use the easier to review
-> implementation (same way with anon mTHP) and do a quick benchmark, if
-> there is no obvious performance change I'll use that style in V2.
-
-Right, the current approach is a bit hard to follow, since we ultimately
-change the return value from -EEXIST to -EINVAL. It does feel like there=E2=
-=80=99s
-some back-and-forth. But anyway, let=E2=80=99s look at the data=E2=80=94if =
-the current
-approach yields better results, we can refine the code comments to make
-it easier to understand.
-
-Thanks
-Barry
+PiBGcm9tOiBLdW5peXVraSBJd2FzaGltYSA8a3VuaTE4NDBAZ21haWwuY29tPg0KPiBEYXRlOiBT
+dW4sICA4IEp1biAyMDI1IDEzOjExOjUxIC0wNzAwDQo+ID4gRnJvbTogRWxpYXYgRmFyYmVyIDxm
+YXJiZXJlQGFtYXpvbi5jb20+DQo+ID4gRGF0ZTogU3VuLCA4IEp1biAyMDI1IDA2OjA3OjI2ICsw
+MDAwDQo+ID4gPiBGaXggY29tcGlsYXRpb24gd2FybmluZzoNCj4gPiA+DQo+ID4gPiBJbiBmaWxl
+IGluY2x1ZGVkIGZyb20gLi9pbmNsdWRlL2xpbnV4L2tlcm5lbC5oOjE1LA0KPiA+ID4gICAgICAg
+ICAgICAgICAgICBmcm9tIC4vaW5jbHVkZS9saW51eC9saXN0Lmg6OSwNCj4gPiA+ICAgICAgICAg
+ICAgICAgICAgZnJvbSAuL2luY2x1ZGUvbGludXgvbW9kdWxlLmg6MTIsDQo+ID4gPiAgICAgICAg
+ICAgICAgICAgIGZyb20gbmV0L2lwdjQvaW5ldF9oYXNodGFibGVzLmM6MTI6DQo+ID4gPiBuZXQv
+aXB2NC9pbmV0X2hhc2h0YWJsZXMuYzogSW4gZnVuY3Rpb24g4oCYaW5ldF9laGFzaF9sb2Nrc19h
+bGxvY+KAmToNCj4gPiA+IC4vaW5jbHVkZS9saW51eC9taW5tYXguaDoyMDozNTogd2FybmluZzog
+Y29tcGFyaXNvbiBvZiBkaXN0aW5jdCBwb2ludGVyIHR5cGVzIGxhY2tzIGEgY2FzdA0KPiA+ID4g
+ICAgMjAgfCAgICAgICAgICghIShzaXplb2YoKHR5cGVvZih4KSAqKTEgPT0gKHR5cGVvZih5KSAq
+KTEpKSkNCj4gPiA+ICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF5+
+DQo+ID4gPiAuL2luY2x1ZGUvbGludXgvbWlubWF4Lmg6MjY6MTg6IG5vdGU6IGluIGV4cGFuc2lv
+biBvZiBtYWNybyDigJhfX3R5cGVjaGVja+KAmQ0KPiA+ID4gICAgMjYgfCAgICAgICAgICAgICAg
+ICAgKF9fdHlwZWNoZWNrKHgsIHkpICYmIF9fbm9fc2lkZV9lZmZlY3RzKHgsIHkpKQ0KPiA+ID4g
+ICAgICAgfCAgICAgICAgICAgICAgICAgIF5+fn5+fn5+fn5+DQo+ID4gPiAuL2luY2x1ZGUvbGlu
+dXgvbWlubWF4Lmg6MzY6MzE6IG5vdGU6IGluIGV4cGFuc2lvbiBvZiBtYWNybyDigJhfX3NhZmVf
+Y21w4oCZDQo+ID4gPiAgICAzNiB8ICAgICAgICAgX19idWlsdGluX2Nob29zZV9leHByKF9fc2Fm
+ZV9jbXAoeCwgeSksIFwNCj4gPiA+ICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgXn5+fn5+fn5+fg0KPiA+ID4gLi9pbmNsdWRlL2xpbnV4L21pbm1heC5oOjUyOjI1OiBub3Rl
+OiBpbiBleHBhbnNpb24gb2YgbWFjcm8g4oCYX19jYXJlZnVsX2NtcOKAmQ0KPiA+ID4gICAgNTIg
+fCAjZGVmaW5lIG1heCh4LCB5KSAgICAgICBfX2NhcmVmdWxfY21wKHgsIHksID4pDQo+ID4gPiAg
+ICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgIF5+fn5+fn5+fn5+fn4NCj4gPiA+IG5ldC9p
+cHY0L2luZXRfaGFzaHRhYmxlcy5jOjk0NjoxOTogbm90ZTogaW4gZXhwYW5zaW9uIG9mIG1hY3Jv
+IOKAmG1heOKAmQ0KPiA+ID4gICA5NDYgfCAgICAgICAgIG5ibG9ja3MgPSBtYXgobmJsb2Nrcywg
+bnVtX29ubGluZV9ub2RlcygpICogUEFHRV9TSVpFIC8gbG9ja3N6KTsNCj4gPiA+ICAgICAgIHwg
+ICAgICAgICAgICAgICAgICAgXn5+DQo+ID4gPiAgIENDICAgICAgYmxvY2svYmFkYmxvY2tzLm8N
+Cj4gPiA+DQo+ID4gPiBXaGVuIHdhcm5pbmdzIGFyZSB0cmVhdGVkIGFzIGVycm9ycywgdGhpcyBj
+YXVzZXMgdGhlIGJ1aWxkIHRvIGZhaWwuDQo+ID4gPg0KPiA+ID4gVGhlIGlzc3VlIGlzIGEgdHlw
+ZSBtaXNtYXRjaCBiZXR3ZWVuIHRoZSBvcGVyYW5kcyBwYXNzZWQgdG8gdGhlIG1heCgpDQo+ID4g
+PiBtYWNyby4gSGVyZSwgbmJsb2NrcyBpcyBhbiB1bnNpZ25lZCBpbnQsIHdoaWxlIHRoZSBleHBy
+ZXNzaW9uDQo+ID4gPiBudW1fb25saW5lX25vZGVzKCkgKiBQQUdFX1NJWkUgLyBsb2Nrc3ogaXMg
+cHJvbW90ZWQgdG8gdW5zaWduZWQgbG9uZy4NCj4gPiA+DQo+ID4gPiBUaGlzIGhhcHBlbnMgYmVj
+YXVzZToNCj4gPiA+ICAtIG51bV9vbmxpbmVfbm9kZXMoKSByZXR1cm5zIGludA0KPiA+ID4gIC0g
+UEFHRV9TSVpFIGlzIHR5cGljYWxseSBkZWZpbmVkIGFzIGFuIHVuc2lnbmVkIGxvbmcgKGRlcGVu
+ZGluZyBvbiB0aGUNCj4gPiA+ICAgIGFyY2hpdGVjdHVyZSkNCj4gPiA+ICAtIGxvY2tzeiBpcyB1
+bnNpZ25lZCBpbnQNCj4gPiA+DQo+ID4gPiBUaGUgcmVzdWx0aW5nIGFyaXRobWV0aWMgZXhwcmVz
+c2lvbiBpcyBwcm9tb3RlZCB0byB1bnNpZ25lZCBsb25nLg0KPiA+ID4NCj4gPiA+IFRodXMsIHRo
+ZSBtYXgoKSBtYWNybyBjb21wYXJlcyB2YWx1ZXMgb2YgZGlmZmVyZW50IHR5cGVzOiB1bnNpZ25l
+ZCBpbnQNCj4gPiA+IHZzIHVuc2lnbmVkIGxvbmcuDQo+ID4gPg0KPiA+ID4gVGhpcyBpc3N1ZSB3
+YXMgaW50cm9kdWNlZCBpbiBjb21taXQgYjUzZDZlOTUyNWFmICgidGNwOiBicmluZyBiYWNrIE5V
+TUENCj4gPiA+IGRpc3BlcnNpb24gaW4gaW5ldF9laGFzaF9sb2Nrc19hbGxvYygpIikgZHVyaW5n
+IHRoZSB1cGRhdGUgZnJvbSBrZXJuZWwNCj4gPiA+IHY1LjEwLjIzNyB0byB2NS4xMC4yMzguDQo+
+ID4NCj4gPiBQbGVhc2UgdXNlIHRoZSB1cHN0cmVhbSBTSEExLCBmOGVjZTQwNzg2YzkuDQpGaXhl
+ZCBpbiBWMg0KDQo+ID4gPiBJdCBkb2VzIG5vdCBleGlzdCBpbiBuZXdlciBrZXJuZWwgYnJhbmNo
+ZXMgKGUuZy4sIHY1LjE1LjE4NSBhbmQgYWxsIDYueA0KPiA+ID4gYnJhbmNoZXMpLCBiZWNhdXNl
+IHRoZXkgaW5jbHVkZSBjb21taXQgZDUzYjVkODYyYWNkICgibWlubWF4OiBhbGxvdw0KPiA+DQo+
+ID4gU2FtZSBoZXJlLCBkMDNlYmE5OWY1YmYuDQpGaXhlZCBpbiBWMg0KDQo+ID4gQnV0IHdoeSBu
+b3QgYmFja3BvcnQgaXQgdG8gc3RhYmxlIGluc3RlYWQgPw0KPg0KPiBJIGp1c3QgY2hlY2tlZCB0
+aGUgNS4xMC4yMzggdGhyZWFkLg0KPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9zdGFibGUvMjAy
+NTA2MDQxMi1jdXJzb3ItbmF2aWdhdGUtMTI2ZEBncmVna2gvDQo+DQo+IC0tLTg8LS0tDQo+ID4g
+PiBGb3IgYm90aCBvZiB0aGVzZSwgSSdsbCBqdXN0IGxldCB0aGVtIGJlIGFzIHRoZXkgYXJlIG9r
+LCBpdCdzIGp1c3QgdGhlDQo+ID4gPiBtZXNzIG9mIG91ciBtaW4vbWF4IG1hY3JvIHVud2luZGlu
+ZyBjYXVzZXMgdGhlc2UgaXNzdWVzLg0KPiA+ID4NCj4gPiA+IFVubGVzcyB0aGV5IHJlYWxseSBi
+b3RoZXIgc29tZW9uZSwgYW5kIGluIHRoYXQgY2FzZSwgYSBwYXRjaCB0byBhZGQgdGhlDQo+ID4g
+PiBjb3JyZWN0IHR5cGUgdG8gdGhlIGJhY2twb3J0IHRvIG1ha2UgdGhlIG5vaXNlIGdvIGF3YXkg
+d291bGQgYmUgZ3JlYXRseQ0KPiA+ID4gYXBwcmVjaWF0ZWQuDQo+ID4NCj4gPiBZZWFoIHRoYXQn
+cyBhIHJlYXNvbmFibGUgcmVzb2x1dGlvbiwgSSB3aWxsIHRyeSB0byB0cmFjayBkb3duIHRoZSBt
+aXNzaW5nDQo+ID4gcGF0Y2hlcyBmb3IgbWlubWF4Lmggc28gd2UgYXJlIHdhcm5pbmcgZnJlZSBm
+b3IgdGhlIHN0YWJsZSBrZXJuZWxzLg0KPg0KPiBJIHRyaWVkIGluIHRoZSBwYXN0LCBpdCdzIG5v
+bi10cml2aWFsLiAgV2hhdCB3b3VsZCBiZSBlYXNpZXIgaXMgdG8ganVzdA0KPiBwcm9wZXJseSBj
+YXN0IHRoZSB2YXJpYWJsZXMgaW4gdGhlIHBsYWNlcyB3aGVyZSB0aGlzIHdhcm5pbmcgaXMgc2hv
+d2luZw0KPiB1cCB0byBnZXQgcmlkIG9mIHRoYXQgd2FybmluZy4gIFdlJ3ZlIGRvbmUgdGhhdCBp
+biBzb21lIGJhY2twb3J0cyBpbiB0aGUNCj4gcGFzdCBhcyB3ZWxsLg0KPiAtLS04PC0tLQ0KPg0K
+PiBTbyB0aGlzIHNob3VsZCBiZSBmaXhlZCB1cCBpbiB0aGUgYmFja3BvcnQsIGFuZCBJIGd1ZXNz
+IHRoaXMgcGF0Y2gNCj4gdGFyZ2V0ZWQgdGhlIHN0YWJsZSB0cmVlcyA/DQpUaGlzIHBhdGNoIGlz
+IGZvciB2NS4xMC4yMzguIE5ld2VyIGtlcm5lbHMgZG9uJ3QgbmVlZCBpdC4NCg0KPiBJZiBzbywg
+cGxlYXNlIGNsYXJpZnkgdGhhdCBieSBzcGVjaWZ5aW5nIHRoZSBzdGFibGUgdmVyc2lvbiBpbiB0
+aGUNCj4gc3ViamVjdCBhbmQgQ0NpbmcgdGhlIHN0YWJsZSBtYWlubGluZyBsaXN0Og0KPg0KPiAg
+IFN1YmplY3Q6IFtQQVRDSCA1LjEwLnldIHRjcDogLi4uDQo+ICAgQ2M6IHN0YWJsZUB2Z2VyLmtl
+cm5lbC5vcmcsIC4uLg0KRG9uZSBpbiB2Mg0K
