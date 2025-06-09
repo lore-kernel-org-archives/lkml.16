@@ -1,115 +1,114 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D751021FF55;
-	Mon,  9 Jun 2025 19:02:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53161221552
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 19:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749495730; cv=none; b=Zkgq8oTlpOssPnJOSmSuoxoUaOmJmzhc7RHqNqe5IXt3YaClyIJ9o88ep3Sfsm/Fh36Pzy3EMoFAB7r8Drp1O4sTD84FIcjXeV+F9AtEyzd0BstLqX3pucQ1KlCjz11WuRUv/Qr84HJ29fso++Tw+mYHhHQtJBkAIC2/B5TV/no=
+	t=1749495734; cv=none; b=C+HiFgwaunJCtnEs1XvCxU50Pw9ofL+j3HDHuZZOukAzhOlJVGTRIRJoWtZASMlUgxejP16HlYq6dvdxMkJiNBdKWHyL/mjpMFYuZWd8F0dBh5V3X2E2SvMgX2Z6AZpaVWtLTpd7isK1RexVfI4EZbsCxc4LYHIYjQ6HRc5wBsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749495730; c=relaxed/simple;
-	bh=++BxlHXhGOEFxpcEXo1+jaIVKnUzXa+f4K/H8OJ8/Zo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=D9YC159/zFfHyx/RC/4O6QrhgNKs7n4nsH5NRVg1LLwdeoEZUnninHQsXHN68fsYPLQ4VX0j2ITaIfIxO2hD+/uv+alAhsCAry4piqje83WD01b15MbH1IDKIN+H/g+vEESUnh1PoaUES7gFJFUHPHlNt67eyCTw59p6xm/lKXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=aUfHj1xe; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1749495734; c=relaxed/simple;
+	bh=OZTfqoL2OcDtWlZ3pnF9M6AJVam8XHJEZjA+dcwD7is=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Vx7FG8lT6uQaUIuWSvsG7GNznIrofdnubgb3QdwocmMtbCnuW0Pxs42XSCZvBZ6ORCqJeRI1+6wfSgh0hnbSTnvd8zRrpbiOM0dhxnJL3ny+I8bRFC5M0V77jhzvZf8yz2+7T5Qj5m8+zkWnk1Denp7a5NORQ9S95ekTcBEUzgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X7oBkT1W; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="aUfHj1xe"
-Received: from [192.168.1.102] (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3F1FD10D4;
-	Mon,  9 Jun 2025 21:01:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1749495716;
-	bh=++BxlHXhGOEFxpcEXo1+jaIVKnUzXa+f4K/H8OJ8/Zo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=aUfHj1xe2p2Om5r7FKPmeHkQs5P5QDkcCCLKKpISkIrDOf7D1ZuNyUjMv2LfNsZaW
-	 A4i9b+9OvOw6JnAggu4eMNpDDdg0KGOBt25yC308QbmSG6KUD8xns3XTWOqjHJErYj
-	 /up5UALlVPl91eXmVxa42CrEM5Z6x0S7GgjQMvQI=
-From: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
-Date: Mon, 09 Jun 2025 21:01:44 +0200
-Subject: [PATCH 3/3] media: vsp1: Reset FCP for VSPX
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X7oBkT1W"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-47e9fea29easo69111cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 12:02:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749495732; x=1750100532; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GyTDJzBzlJRnsZyjzOICzR9Mkv2ePG1yNOP4xbIItDs=;
+        b=X7oBkT1WAZ6t5q/4NJWCQvuODImPuLGYh//v+/sR4QzfqpA6A5HKNiSnv9vOmDmsAT
+         mbB86uBB5X+edeantLfcpYbrCNeOjoPoYYwa+PzpQrxiF76b5zuDQbbB/aBIY4oxHUvn
+         NONEpNzTFbDpeSSZ4J+TOKuvOoFhxCWTS+MXNFcTwEy7Q2KHSivZZnQ5srqrd8u1CFQ0
+         YkCUwlQANi3PmsOq7UgbosM8TAp36lv0XGGRWrZhHEsfEu6o2BFcGqLTSgS1RuyHKP/E
+         QfpVXxp3t+VLmtyzcVzE+D9j3ifQZHH6PL5oyoWQJ0wh2+ZLObsaUnhQ9A3E5R6QvtKi
+         u+WQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749495732; x=1750100532;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GyTDJzBzlJRnsZyjzOICzR9Mkv2ePG1yNOP4xbIItDs=;
+        b=Ra0R6cdMJx+egp77pcRa6J6eT7FyiMkyWpERGLq9BWgX1euxLwfMTkO2yylFaXbXAo
+         LF5ZskXTVFNW5fUwR6HH/tk2qbMCO3OEzoykTcvFpYSRc4cPvtc9VJLH0dDMS3aZJMRe
+         gfnfE2wg8sC5a1RpgyDhFDIpZFJIbfwqoK+YlQ9Z9ZW+1wp0PD14Ew/gfq5GoG695IlZ
+         N11nOKL9QRFb/J6QIfpJ0g5f22EXSXnSvpt1SWjzRXUCw/inbCmR+m1vkDKYVolOHN7w
+         +WvbwnD4nlDwHfpBNwx2usoksbqZG2Gs5QcaALQwuxm/M6QdQQWwSWuPdlgbb62v5oE3
+         5ZLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWIcOqnkRg+17CHO6WQu6BkrEeRx1WvsHB0VMY33nuG1IUkNzkXIkS71j7T5Xzjj/H8jqz+Gxbz6r1pZuE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwigFq6ebrEL+B/+p9qlk/ZLmN3TyL/AEV5guTdpbX8ubPR3Qat
+	WernS0Xc6nlcKBzaErA1KpZkW2niSwtBl1tEFkzOAROuFLJPqo58GL6VG6EOpln0233BLuiydW1
+	zWouCUookE3It1bigyI4/A7ipUtGUeWlFAI1SYZe+
+X-Gm-Gg: ASbGncvWCsQ1h2TpOZiSGpNrPw7aGbhWWJUWN80DK8OzHIM62n+69cQt630noTOlvA6
+	swkRLHNemFbI7+qVuUVtq5bUgJ1NC4xD1k4S0QiuHWmxZRAk964ZEAOCxk2aaotlq+UDSOmTXOz
+	gtwY1i5XqJDTfQi9WFGRED2eJpu4TeUpYTRFhSFE4BHwzWSMwCSmj3BoV1ZYQ0HmvC6QSuB9Y=
+X-Google-Smtp-Source: AGHT+IHozTXc/tPXsLEr/JHPv0DSquqgQ1lZmBviZQOZhRZVJltPN1/2qyx5gpZIHGjNVpXQyp9x5xXjp/TbbVd7mgI=
+X-Received: by 2002:a05:622a:11c1:b0:494:b4dd:befd with SMTP id
+ d75a77b69052e-4a6ef9d2c13mr8141361cf.8.1749495731878; Mon, 09 Jun 2025
+ 12:02:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250609-vspx-reset-v1-3-9f17277ff1e2@ideasonboard.com>
-References: <20250609-vspx-reset-v1-0-9f17277ff1e2@ideasonboard.com>
-In-Reply-To: <20250609-vspx-reset-v1-0-9f17277ff1e2@ideasonboard.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
- =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1784;
- i=jacopo.mondi+renesas@ideasonboard.com; h=from:subject:message-id;
- bh=++BxlHXhGOEFxpcEXo1+jaIVKnUzXa+f4K/H8OJ8/Zo=;
- b=owEBbQKS/ZANAwAKAXI0Bo8WoVY8AcsmYgBoRy+oZe7ZGnme2/fjNJjZ3R+Vt8Njd5iT1d64j
- PFSBl2wQraJAjMEAAEKAB0WIQS1xD1IgJogio9YOMByNAaPFqFWPAUCaEcvqAAKCRByNAaPFqFW
- PN6WEACYKSg2wNAxMuLBXmjMAhfyXN8CPWeuPhlTABtg52NFkvtfWmJ0XPGXKGNPezYEs9uhC4x
- xnP2d49VltCBiBJLgPcPHL7GmdLilslU58BbSekW1iSYbrdfTQ398LWZvw6fTfMPzp6YpDgCCyg
- lvB/GYq58S3El4/8epIbv51TDlvpZFX7CQB+hIxyGrG+V+FqxMgPT7EV17ZdzezDx5JSEamrDtN
- /Jl8CHyVKMRFuqcGPB5wofo7JV3x4pVL6kCnuaCXs+L6tdk8mWBJVlZNvn1WI1f6VpdBmmFTE4G
- nMHNlJYcWc08Q9r0+InyB8oRzsecWH9Clx2izC8XUHLDypuxFjmCBfHpINP7iI3Y2v5xRtQ3Gpi
- cJiIUAdQjqoUUx/EZLhD2WCaKCSMxiExKh0pieZoxfUQ4zn75ucnpCRa5ujTJHEpdc27hprzwEd
- 8qDaOKiR0mo05OPgB+ADC+zrs4zPBrdH7Ig4+9wtmQNhAno5+Zs6/Lpv19k+C67yOVnbfObXWOv
- pw1Pjn0mi85aurYQOC6vPK/w7kHoggA23/znjM9sL8cwGbQ5CHOVWbhAHuuQjdKyAsuqn/ilcYu
- HMDNnvUzWWHjTz56Yhuny2SkKQ+K7EowD5G7piov90Zro1Wl8KF9W4oN/4wLOc/AJVMKfM7vzJq
- /iIqNTjjCoH3wMQ==
-X-Developer-Key: i=jacopo.mondi+renesas@ideasonboard.com; a=openpgp;
- fpr=72392EDC88144A65C701EA9BA5826A2587AD026B
+References: <20250422181729.2792081-1-salomondush@google.com>
+ <CAPE3x14-Tsm-2ThihT3a=h9a0L9Vi8J4BbiZiTV6=6Ctc1xryg@mail.gmail.com>
+ <18aa42a73584fcf50b07d7a43073e55fb4c3159b.camel@HansenPartnership.com>
+ <CAPE3x16MrkQXFasVaaHBxhH2QvQ4H5cDiE3ae=-nYjuEKV-NBw@mail.gmail.com> <727641384722bbdbbf96176210a7899f1b9795eb.camel@HansenPartnership.com>
+In-Reply-To: <727641384722bbdbbf96176210a7899f1b9795eb.camel@HansenPartnership.com>
+From: Salomon Dushimirimana <salomondush@google.com>
+Date: Mon, 9 Jun 2025 12:02:00 -0700
+X-Gm-Features: AX0GCFuPOmyIxQJPp_J0pnfo1NGjd8wYt6a7sUe9NuQixSiRnlMp6XuzWTCV86o
+Message-ID: <CAPE3x1735+kU2yRb18OroQoaXQddZTx6XjT+0pghBNYcO3h+zw@mail.gmail.com>
+Subject: Re: [PATCH] scsi: Add SCSI error events, sent as kobject uevents by mid-layer
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: "Martin K . Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-According section "62.3.7.1 "Operation Control Setting
-IP set VSPX+FCPVX" of the R-Car Gen4 Hardware Manual, FCPX has to
-be reset when stopping the image processing.
+The team considered the use of SMART tools. While hdd smart data
+has info on data command errors, they are not suitable for non data
+commands that we use internally. We are unable to use tracing due to
+overflow / overrun issues. However we are exploring some other
+alternatives like eBPF that can fit well in our infrastructure.
 
-Softawre reset the FCPX after the vsp1 pipe has stopped.
+Thanks,
+Salomon Dushimirimana
 
-Signed-off-by: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
----
- drivers/media/platform/renesas/vsp1/vsp1_pipe.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/renesas/vsp1/vsp1_pipe.c b/drivers/media/platform/renesas/vsp1/vsp1_pipe.c
-index a6e5e10f3ef275c1b081c3d957e6cf356332afce..c6f2417aabc479384012ab8ab99556029ede1f44 100644
---- a/drivers/media/platform/renesas/vsp1/vsp1_pipe.c
-+++ b/drivers/media/platform/renesas/vsp1/vsp1_pipe.c
-@@ -499,6 +499,7 @@ bool vsp1_pipeline_stopped(struct vsp1_pipeline *pipe)
- int vsp1_pipeline_stop(struct vsp1_pipeline *pipe)
- {
- 	struct vsp1_device *vsp1 = pipe->output->entity.vsp1;
-+	u32 version = vsp1->version & VI6_IP_VERSION_MODEL_MASK;
- 	struct vsp1_entity *entity;
- 	unsigned long flags;
- 	int ret;
-@@ -515,8 +516,7 @@ int vsp1_pipeline_stop(struct vsp1_pipeline *pipe)
- 			spin_unlock_irqrestore(&pipe->irqlock, flags);
- 		}
- 
--		if ((vsp1->version & VI6_IP_VERSION_MODEL_MASK) ==
--		    VI6_IP_VERSION_MODEL_VSPD_GEN3)
-+		if (version == VI6_IP_VERSION_MODEL_VSPD_GEN3)
- 			ret |= rcar_fcp_soft_reset(vsp1->fcp);
- 
- 	} else {
-@@ -529,6 +529,9 @@ int vsp1_pipeline_stop(struct vsp1_pipeline *pipe)
- 		ret = wait_event_timeout(pipe->wq, vsp1_pipeline_stopped(pipe),
- 					 msecs_to_jiffies(500));
- 		ret = ret == 0 ? -ETIMEDOUT : 0;
-+
-+		if (version == VI6_IP_VERSION_MODEL_VSPX_GEN4)
-+			ret |= rcar_fcp_soft_reset(vsp1->fcp);
- 	}
- 
- 	list_for_each_entry(entity, &pipe->entities, list_pipe) {
-
--- 
-2.49.0
-
+On Thu, May 15, 2025 at 1:11=E2=80=AFPM James Bottomley
+<James.Bottomley@hansenpartnership.com> wrote:
+>
+> On Thu, 2025-05-15 at 13:03 -0700, Salomon Dushimirimana wrote:
+> > Hi,
+> >
+> > I agree with the recommended use of ftrace or blktrace for tracing.
+>
+> Great; what made me think of tracing is that your event emits for every
+> error or retry which seemed like quite an overhead.  Conditioning it on
+> a config parameter really isn't useful to distributions, so using the
+> tracepoint system would solve both the quantity and the activation
+> problem.
+>
+> > However, our primary goal for using uevents was not merely for
+> > collecting trace information. We are using uevents as a notification
+> > mechanism for userspace workflows to determine repair workflows (swap
+> > / remove a failing device).
+>
+> If you're collecting stats for predictive failure, how is this proposed
+> active mechanism more effective than the passive one of simply using
+> the existing SMART monitor tools?
+>
+> Regards,
+>
+> James
+>
