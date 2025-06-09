@@ -1,174 +1,152 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C726212E7E;
-	Mon,  9 Jun 2025 12:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E242EEA6;
+	Mon,  9 Jun 2025 12:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749472467; cv=none; b=oUroPPE9BHsE27VrBlHwWyvmpXUqTjto14/XWNxvaPZNxTppgjmbxKxLxqa3NCQrlEbrMa+BN8mZ+s5aDBgzl+1YKVzm6+2kGhi0sPHOMZGo1JdEdZZWI0jl59lvUPumdeMGu89hi4vdEwdbZ1jqB861O0mGIg32HMQ9BmG7wz8=
+	t=1749472498; cv=none; b=DYCRZ4wcCxFOyrH5NBN92H+PUe327KHupu7btLH6EPU/Z00xQmxAV7KXJRssLZPaUJEldzo2LSYLAHXroDcoGDWKMSW+jefyxLUNhbc/DHpKZ3S29NIlV0jvAa0uFgc2wcOVFtaz/asqKXgPNyktE8mcARUCqsAzz3mFQegoyHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749472467; c=relaxed/simple;
-	bh=HDFpx8Cc3xPi5mnpLaZZU6nEkfCGbZwZD/KbTCBU2dE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AmhpYoHBtyOFOQX+nnqg0Yd1hiBU/x9xcl9DUHRetiZ2BTxcqrp9o7p39XKrPdGpAqo72QcYRPqe4V/Cgn2WCknFjfV8Tje8E680xGY/t4aIcstVQvqihJL8hXK0mpMqfpy12cok93QOX4hXYhTymOk7Vg8ShVE/b48mNiwv77c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5D21150C;
-	Mon,  9 Jun 2025 05:34:04 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B7443F673;
-	Mon,  9 Jun 2025 05:34:23 -0700 (PDT)
-Date: Mon, 9 Jun 2025 13:34:15 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: kan.liang@linux.intel.com
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
-	irogers@google.com, mark.rutland@arm.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	eranian@google.com, ctshao@google.com, tmricht@linux.ibm.com,
-	Aishwarya TCV <aishwarya.tcv@arm.com>,
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
-	Vince Weaver <vincent.weaver@maine.edu>
-Subject: Re: [PATCH V4] perf: Fix the throttle error of some clock events
-Message-ID: <20250609123415.GJ8020@e132581.arm.com>
-References: <20250606192546.915765-1-kan.liang@linux.intel.com>
+	s=arc-20240116; t=1749472498; c=relaxed/simple;
+	bh=DZoggPhryHEbiSsWnD1qSMm0Ex6evuXzI89YJOMAkuY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TqJIFmIibu4mXT+SBpiW7k4kbjUP7rHL9ndoH5W/rpKpkmIM2r7hu296Ewz6kZ+n4crkWaRpudHl2CVo7ftc6OOhOnOtHJZ3PlPszVTDWWokPuSMA7qcdk2hJTCjf8mgYA7PWDt96oEEVPPU1t9uAl1hkn3FKRuqOhfNaZYpWkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Do+cNuTF; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Do+cNuTF"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 40311438D1;
+	Mon,  9 Jun 2025 12:34:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749472493;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=/lXrCRhExUtlmqo2B4UhVKucY7yhOD4yivNwZVPNXi0=;
+	b=Do+cNuTFLztXUxWawVnq0GbbINbRvQ9w8gcA6dIyC1LptnU8u1kJiSaykxshCl/I6gKiFq
+	MrSBTAaOtl0YruTddQ83GfG0OT0h6Xn1VHrxFQcFEhtOSvVFj3CtFAorO20n0gocjWoKUX
+	PKZ80AV28WxDuf06HWg3SoDrVd+n9AvSFKU66gjpDkBx+9DIEzDbuA0bUGDtyCu26vJmZK
+	Y70EsroowaIQp7KFkxKCGwdMglB6LakQhtzlCgMnZGE8ML2xUZ4xOz6HyrfFOFa/9ImoDY
+	RTAG4v4GF9w8vBmwufgsOlnGXvtMQLQJB4RhCtx9gPxfjuourKN/QinR5WG39w==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Date: Mon, 09 Jun 2025 14:34:49 +0200
+Subject: [PATCH] platform/x86: lenovo-yoga-tab2-pro-1380-fastcharger: Use
+ devm_pinctrl_register_mappings()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250606192546.915765-1-kan.liang@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250609-lenovo-yoga-tab2-pro-1380-fastcharger-devm-pinctrl-register-mappings-v1-1-fb601f2b80f6@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAOjURmgC/x2OQQqDMBBFryJZdyBGKrVXKV2MZkwHNAkzIVjEu
+ zd0+R583j+NkjCpeXanEaqsnGKD/taZ5YMxELBvbJx1dzvaCTaKqSb4poBQcHaQJUE/PCysqKV
+ tJJCAp7pD5rgU2UAosJZmd8zNBQU3rji4aUZPZFoqC618/G+83tf1Az2CW6SWAAAA
+To: Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Thomas Richard <thomas.richard@bootlin.com>
+X-Mailer: b4 0.14.1
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdelfedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkvfevofesthejredtredtjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelgffgffejtdeivdeifeeltdffgfeludekudeiueffffejuedvgfejteeuffegtdenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepiedprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvg
+ hgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
+X-GND-Sasl: thomas.richard@bootlin.com
 
-Hi Kan,
+Use devm_pinctrl_register_mappings(), so the core automatically unregisters
+the pinctrl mappings. It makes the code easier to read.
 
-On Fri, Jun 06, 2025 at 12:25:46PM -0700, kan.liang@linux.intel.com wrote:
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
+Compile tested only.
+---
+ .../x86/lenovo-yoga-tab2-pro-1380-fastcharger.c    | 33 ++++++++--------------
+ 1 file changed, 11 insertions(+), 22 deletions(-)
 
-[...]
+diff --git a/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c b/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c
+index 25933cd018d1..d4e767822ac7 100644
+--- a/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c
++++ b/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c
+@@ -240,30 +240,25 @@ static int yt2_1380_fc_pdev_probe(struct platform_device *pdev)
+ 	int ret;
+ 
+ 	/* Register pinctrl mappings for setting the UART3 pins mode */
+-	ret = pinctrl_register_mappings(yt2_1380_fc_pinctrl_map,
+-					ARRAY_SIZE(yt2_1380_fc_pinctrl_map));
++	ret = devm_pinctrl_register_mappings(&pdev->dev, yt2_1380_fc_pinctrl_map,
++					     ARRAY_SIZE(yt2_1380_fc_pinctrl_map));
+ 	if (ret)
+ 		return ret;
+ 
+ 	/* And create the serdev to talk to the charger over the UART3 pins */
+ 	ctrl_dev = get_serdev_controller("PNP0501", "1", 0, YT2_1380_FC_SERDEV_CTRL);
+-	if (IS_ERR(ctrl_dev)) {
+-		ret = PTR_ERR(ctrl_dev);
+-		goto out_pinctrl_unregister_mappings;
+-	}
++	if (IS_ERR(ctrl_dev))
++		return PTR_ERR(ctrl_dev);
+ 
+ 	serdev = serdev_device_alloc(to_serdev_controller(ctrl_dev));
+ 	put_device(ctrl_dev);
+-	if (!serdev) {
+-		ret = -ENOMEM;
+-		goto out_pinctrl_unregister_mappings;
+-	}
++	if (!serdev)
++		return -ENOMEM;
+ 
+ 	ret = serdev_device_add(serdev);
+ 	if (ret) {
+-		dev_err_probe(&pdev->dev, ret, "adding serdev\n");
+ 		serdev_device_put(serdev);
+-		goto out_pinctrl_unregister_mappings;
++		return dev_err_probe(&pdev->dev, ret, "adding serdev\n");
+ 	}
+ 
+ 	/*
+@@ -273,20 +268,15 @@ static int yt2_1380_fc_pdev_probe(struct platform_device *pdev)
+ 	ret = device_driver_attach(&yt2_1380_fc_serdev_driver.driver, &serdev->dev);
+ 	if (ret) {
+ 		/* device_driver_attach() maps EPROBE_DEFER to EAGAIN, map it back */
+-		ret = (ret == -EAGAIN) ? -EPROBE_DEFER : ret;
+-		dev_err_probe(&pdev->dev, ret, "attaching serdev driver\n");
+-		goto out_serdev_device_remove;
++		serdev_device_remove(serdev);
++		return dev_err_probe(&pdev->dev,
++				     (ret == -EAGAIN) ? -EPROBE_DEFER : ret,
++				     "attaching serdev driver\n");
+ 	}
+ 
+ 	/* So that yt2_1380_fc_pdev_remove() can remove the serdev */
+ 	platform_set_drvdata(pdev, serdev);
+ 	return 0;
+-
+-out_serdev_device_remove:
+-	serdev_device_remove(serdev);
+-out_pinctrl_unregister_mappings:
+-	pinctrl_unregister_mappings(yt2_1380_fc_pinctrl_map);
+-	return ret;
+ }
+ 
+ static void yt2_1380_fc_pdev_remove(struct platform_device *pdev)
+@@ -294,7 +284,6 @@ static void yt2_1380_fc_pdev_remove(struct platform_device *pdev)
+ 	struct serdev_device *serdev = platform_get_drvdata(pdev);
+ 
+ 	serdev_device_remove(serdev);
+-	pinctrl_unregister_mappings(yt2_1380_fc_pinctrl_map);
+ }
+ 
+ static struct platform_driver yt2_1380_fc_pdev_driver = {
 
-> There may be two ways to fix it.
-> - Introduce a PMU flag to track the case. Avoid the event_stop in
->   perf_event_throttle() if the flag is detected.
->   It has been implemented in the
->   https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
->   The new flag was thought to be an overkill for the issue.
-> - Add a check in the event_stop. Return immediately if the throttle is
->   invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
->   method to stop the timer.
-> 
-> The latter is implemented here.
-> 
-> Move event->hw.interrupts = MAX_INTERRUPTS before the stop(). It makes
-> the order the same as perf_event_unthrottle(). Except the patch, no one
-> checks the hw.interrupts in the stop(). There is no impact from the
-> order change.
-> 
-> When stops in the throttle, the event should not be updated,
-> stop(event, 0).
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250609-lenovo-yoga-tab2-pro-1380-fastcharger-devm-pinctrl-register-mappings-26fa329badee
 
-I am confused for this conclusion. When a CPU or task clock event is
-stopped by throttling, should it also be updated? Otherwise, we will
-lose accouting for the period prior to the throttling.
+Best regards,
+-- 
+Thomas Richard <thomas.richard@bootlin.com>
 
-I saw you exchanged with Alexei for a soft lockup issue, the reply [1]
-shows that skipping event update on throttling does not help to
-resolve the lockup issue.
-
-Could you elaberate why we don't need to update clock events when
-throttling?
-
-Thanks,
-Leo
-
-[1] https://lore.kernel.org/linux-perf-users/CAADnVQKRJKsG08KkEriuBQop0LgDr+c9rkNE6MUh_n3rzZoXVQ@mail.gmail.com/
-
-> But the cpu_clock_event_stop() doesn't handle the flag.
-> In logic, it's wrong. But it didn't bring any problems with the old
-> code, because the stop() was not invoked when handling the throttle.
-> Checking the flag before updating the event.
-> 
-> Reported-by: Leo Yan <leo.yan@arm.com>
-> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
-> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
-> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw/
-> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-> Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com/
-> Reported-by: Vince Weaver <vincent.weaver@maine.edu>
-> Closes: https://lore.kernel.org/lkml/4ce106d0-950c-aadc-0b6a-f0215cd39913@maine.edu/
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
-> 
-> The patch is to fix the issue introduced by
-> 
->   9734e25fbf5a perf: Fix the throttle logic for a group
-> 
-> It is still in the tip.git, I'm not sure if the commit ID is valid. So
-> the Fixes tag is not added.
-> 
-> There are some discussions regarding to a soft lockup issue.
-> That is an existing issue, which are not introduced by the above change.
-> It should be fixed separately.
-> https://lore.kernel.org/lkml/CAADnVQ+Lx0HWEM8xdLC80wco3BTUPAD_2dQ-3oZFiECZMcw2aQ@mail.gmail.com/
-> 
-> Changes since V3:
-> - Check before update in event_stop()
-> - Add Reviewed-by from Ian
-> 
->  kernel/events/core.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index f34c99f8ce8f..cc77f127e11a 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -2656,8 +2656,8 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
->  
->  static void perf_event_throttle(struct perf_event *event)
->  {
-> -	event->pmu->stop(event, 0);
->  	event->hw.interrupts = MAX_INTERRUPTS;
-> +	event->pmu->stop(event, 0);
->  	if (event == event->group_leader)
->  		perf_log_throttle(event, 0);
->  }
-> @@ -11749,7 +11749,12 @@ static void perf_swevent_cancel_hrtimer(struct perf_event *event)
->  {
->  	struct hw_perf_event *hwc = &event->hw;
->  
-> -	if (is_sampling_event(event)) {
-> +	/*
-> +	 * The throttle can be triggered in the hrtimer handler.
-> +	 * The HRTIMER_NORESTART should be used to stop the timer,
-> +	 * rather than hrtimer_cancel(). See perf_swevent_hrtimer()
-> +	 */
-> +	if (is_sampling_event(event) && (hwc->interrupts != MAX_INTERRUPTS)) {
->  		ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
->  		local64_set(&hwc->period_left, ktime_to_ns(remaining));
->  
-> @@ -11804,7 +11809,8 @@ static void cpu_clock_event_start(struct perf_event *event, int flags)
->  static void cpu_clock_event_stop(struct perf_event *event, int flags)
->  {
->  	perf_swevent_cancel_hrtimer(event);
-> -	cpu_clock_event_update(event);
-> +	if (flags & PERF_EF_UPDATE)
-> +		cpu_clock_event_update(event);
->  }
->  
->  static int cpu_clock_event_add(struct perf_event *event, int flags)
-> @@ -11882,7 +11888,8 @@ static void task_clock_event_start(struct perf_event *event, int flags)
->  static void task_clock_event_stop(struct perf_event *event, int flags)
->  {
->  	perf_swevent_cancel_hrtimer(event);
-> -	task_clock_event_update(event, event->ctx->time);
-> +	if (flags & PERF_EF_UPDATE)
-> +		task_clock_event_update(event, event->ctx->time);
->  }
->  
->  static int task_clock_event_add(struct perf_event *event, int flags)
-> -- 
-> 2.38.1
-> 
