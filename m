@@ -1,97 +1,145 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73BC2320B;
-	Mon,  9 Jun 2025 13:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A1613B788;
+	Mon,  9 Jun 2025 13:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749476538; cv=none; b=QzTiIKH/x0cQF1TGoFMwZRWAEAAd/gc2SlT1Esrw71wzi81S/Ax2ntptamLTs8fh5ZVyM355wX6Al8Uj8y6M5izWPBNAKCQA0f4vQ9fRMhEkDdgg0TlgbZfaBVvoz8fDf62+LP3WY1LopBOB7mN2Q518GNij9q/sN53h3fuojxc=
+	t=1749476670; cv=none; b=nZflIgvxg21xMtZFB8sXLFYDviMF3XJ0gHGhiN4fYhkQepYCucbJqSFczaOmqE4kCB5hWhvREfJhnxtWksaYib9+9mhUaktIbZYF0xrAqEhLfzuJ/6lzDqkWjRl/P8P5LhjfbrRvwM8RcJE8xbKoCgxKfUrgpScBiZwTDQRLcoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749476538; c=relaxed/simple;
-	bh=aLHQQvcJ/CzG56n3F/pYuY+17KVjnXrEYITOojxRbmw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m4H3MIatlGEMaL8MKEMWfD4Q2RbP0T5NsU1EiA8D+53aLAeJenPuoEvdSl3Dmp4TwkhZUzjsF9IVIzFtk/jDkctmDS8JaO02N2v70pfA7/gi3AnUOFBFnHHoE/rS2FsYdFHoEgnrTDyfDvdG6dc77cg7rMOcIvc0g0DXGbgbelM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G3aseK6D; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749476670; c=relaxed/simple;
+	bh=5BuPaG5TR3ib8h0lahXBVyhI0uc/Ra4ZLBsfgLQLIkQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z6lBaCZxnkECwoC9p0CfSH4Vw8wM4dVZ7uk2tTQuXUmr3mc7uno0CbDsWq6MhjA5LoFkUjjWrwMPIFV2VjbZwC5ZPFKTXa53ho8RtMkQgDP9YZ+/L3uaJZQIchySBKJ98EGRKovFmOeth0wv3YdOAcmKcQ0W+sPreaqCm9n3psY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Zf1/luDr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G3aseK6D"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b2ef619e80eso299128a12.2;
-        Mon, 09 Jun 2025 06:42:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749476537; x=1750081337; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aLHQQvcJ/CzG56n3F/pYuY+17KVjnXrEYITOojxRbmw=;
-        b=G3aseK6DuXIPoQF4rJ6+cK4Ldu6BGadsay6ryDgM0dUnzCiTAslcNO+GJG0CWsEk//
-         LFDmVGWomb0DszfnVRNRdoZ2+7tZw9+Va3EydGGnJbBJR4eD34kUjD2e9dVLKZpQ2U4C
-         O2QxXeI8mfPY/4M1Q9EdaOaATP6h8h3WJ1sPAoF61WpeMl49tw+QyCXZBg4fFtWF0OpE
-         4Rmvr9yGFUW5Rs7QNsSOFoh7XZLkf29a+hAru2+hKbzoMFll3g41y1Ayc6haYTk7IEnJ
-         +NBvnOXuqZW2g05tHH2Rm+/R3YjdjstOT3Ayl066or/VAo9zqEUUI2wnBVY3FWyrlp3q
-         TVmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749476537; x=1750081337;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aLHQQvcJ/CzG56n3F/pYuY+17KVjnXrEYITOojxRbmw=;
-        b=E2+vOdl++ZZW/EytuejMmrDAB/N+xGr77fAbiT3QeP8U/M8wzV15FIP7HaqCuPBrRo
-         ABbHArDsMhB3It0RriXwF/79TkGRvXzHl0Cziun/9iuxF5kAc8WYi4F+z1UyKQ0ECMQ3
-         en/6P9VadpSSlISXUA6xqD8x3pYqktNWNvclgcN+E/UqlYhwakfOl418PdK3AH8rXBew
-         yIjMjkCt/wUQf01AuqsR3ghnXAuPpqJdSLwqZpKj7DJ9K13GUdw61xh3K7nFIYxBswBu
-         2Z2mZtneGDlJ7WoGFq7AGvAbIrlZEUasQdLEQGvKHZ7LXnN/3cGwPvdKjvNu1WiPzm76
-         KKoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUfBLT096rkQxBKlUZc4NpQRq+SYmt9N67zQ2E0cdQQe/1rRL6/rt1RxAoI8DSzYyPesRXrZVuLsGRqDDss@vger.kernel.org, AJvYcCUqkLRe9Kh/DfyWOKYihM+CYZFSvOjVd36gO3gwQYA6A6GDNdFNJaFe1+Yp89xDVmnmxzowFkmhUeDMwNPNyuQ=@vger.kernel.org, AJvYcCWhtwCZgNNiut7iHDY27bQfKXAgvIcGaKcMT0GIPdBiAkT03W5mIE2u9EB9SX1CRzwO4vOT+vFi+KhA@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz13moNAQsy7iP48hDlLZDxn5JpKvvfad4ESj2i8DO5pgr3Y7z+
-	dREnHoGO77uuP5/ZgBvRr/3iYNwhwu+GA2Du0Ry0SQAVgGGDDjkWdzRFeslWAntqeKTgzP+2w6w
-	rfp3+/U97/ImFFusLsR9xm5CWzecXj7c=
-X-Gm-Gg: ASbGnctVE3TMyGUgarAlErG//P+Xs7yr+1+0ejRed2ccFE3KHMKvaB76K2/wWlJd3eJ
-	xjOLGjkD1MWFg71suGpFFFGrjRfWoqszEirwCblqnlsrl4aTIkDIgGi8i9b5GvX5ppimfEMGUrG
-	eRJaP2gMbbxqAAKNUR3V80sh3w92OFuDjC
-X-Google-Smtp-Source: AGHT+IG8g+8pCae3TmU8EdIiokIy7+Ydfo09f+/gWEH3caQEhmXTDfFAwp608YUZ1yuwI6t7yjmGrSc0B7PuU8J1A4s=
-X-Received: by 2002:a17:90b:3890:b0:2ff:7970:d2b6 with SMTP id
- 98e67ed59e1d1-3134753c519mr6906752a91.5.1749476536634; Mon, 09 Jun 2025
- 06:42:16 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Zf1/luDr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06A99C4CEF2;
+	Mon,  9 Jun 2025 13:44:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1749476669;
+	bh=5BuPaG5TR3ib8h0lahXBVyhI0uc/Ra4ZLBsfgLQLIkQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Zf1/luDrz2L0Gyf0p39lf0hyPc98ionSghj2F7/wzJRtJA/lP9+VeIx/AtSLbnpuP
+	 u+ccMeJumCkrFDcuSLIGwNk8PP/wgmL123ity58fns9iLPbNw28rdNsoOakmpiT+9k
+	 QaHHuNQye61PTjp/00Tmk1mVAGN0wvB8tIujW2sg=
+Date: Mon, 9 Jun 2025 15:44:19 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: yunhui cui <cuiyunhui@bytedance.com>
+Cc: arnd@arndb.de, andriy.shevchenko@linux.intel.com,
+	benjamin.larsson@genexis.eu, heikki.krogerus@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com, jirislaby@kernel.org,
+	jkeeping@inmusicbrands.com, john.ogness@linutronix.de,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	markus.mayer@linaro.org, matt.porter@linaro.org,
+	namcao@linutronix.de, paulmck@kernel.org, pmladek@suse.com,
+	schnelle@linux.ibm.com, sunilvl@ventanamicro.com,
+	tim.kryger@linaro.org, stable@vger.kernel.org
+Subject: Re: [External] Re: [PATCH v8 1/4] serial: 8250: fix panic due to
+ PSLVERR
+Message-ID: <2025060925-curator-stubbed-bfb4@gregkh>
+References: <20250609074348.54899-1-cuiyunhui@bytedance.com>
+ <2025060913-suave-riveter-66d0@gregkh>
+ <CAEEQ3wmaiwd4TZfTa0YrLcKui9fSNJT0fR3j1=H1EK0T3npfyw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606170341.3880941-1-igor.korotin.linux@gmail.com>
- <20250606170817.3881748-1-igor.korotin.linux@gmail.com> <DAGZNG518T0C.1PXOK55IXHZOF@kernel.org>
- <aEVqgUtflBCzZi1X@pollux> <DAH4KX3Y3M3P.3B82LSVWU172Q@kernel.org>
- <aEV43zxZmWvDgKES@pollux> <CAJxaTdNZEdK21mFPu2kTJPa7aQ+PpnkwFVdEP5MCt6w+bD0wXA@mail.gmail.com>
-In-Reply-To: <CAJxaTdNZEdK21mFPu2kTJPa7aQ+PpnkwFVdEP5MCt6w+bD0wXA@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 9 Jun 2025 15:42:02 +0200
-X-Gm-Features: AX0GCFvdQ53hVVkSQ6Wno2xP-Qw2liNpZXY_h_vcL--AQe3WIQ8Lq5R3ZurK1-M
-Message-ID: <CANiq72=rerpj_Ut0x7dDb0O8dEh9SHaF1HVyyfMM83hz--QCJg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] rust: driver: Add ACPI id table support to Adapter trait
-To: Igor Korotin <igor.korotin.linux@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, ojeda@kernel.org, 
-	alex.gaynor@gmail.com, rafael@kernel.org, gregkh@linuxfoundation.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, boqun.feng@gmail.com, gary@garyguo.net, 
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org, 
-	aliceryhl@google.com, tmgross@umich.edu, lenb@kernel.org, wedsonaf@gmail.com, 
-	viresh.kumar@linaro.org, alex.hung@amd.com, dingxiangfei2009@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEEQ3wmaiwd4TZfTa0YrLcKui9fSNJT0fR3j1=H1EK0T3npfyw@mail.gmail.com>
 
-On Mon, Jun 9, 2025 at 3:09=E2=80=AFPM Igor Korotin
-<igor.korotin.linux@gmail.com> wrote:
->
-> Let me know if this pattern is acceptable. To my opinion it is not much
-> different from the original 2 functions conditioned by #[cfg] and
-> requires some nasty changes.
+On Mon, Jun 09, 2025 at 09:18:02PM +0800, yunhui cui wrote:
+> Hi Greg,
+> 
+> On Mon, Jun 9, 2025 at 6:10 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Mon, Jun 09, 2025 at 03:43:45PM +0800, Yunhui Cui wrote:
+> > > When the PSLVERR_RESP_EN parameter is set to 1, the device generates
+> > > an error response if an attempt is made to read an empty RBR (Receive
+> > > Buffer Register) while the FIFO is enabled.
+> > >
+> > > In serial8250_do_startup(), calling serial_port_out(port, UART_LCR,
+> > > UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
+> > > dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
+> > > function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
+> > > Execution proceeds to the serial_port_in(port, UART_RX).
+> > > This satisfies the PSLVERR trigger condition.
+> > >
+> > > When another CPU (e.g., using printk()) is accessing the UART (UART
+> > > is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) ==
+> > > (lcr & ~UART_LCR_SPAR) in dw8250_check_lcr(), causing it to enter
+> > > dw8250_force_idle().
+> > >
+> > > Put serial_port_out(port, UART_LCR, UART_LCR_WLEN8) under the port->lock
+> > > to fix this issue.
+> > >
+> > > Panic backtrace:
+> > > [    0.442336] Oops - unknown exception [#1]
+> > > [    0.442343] epc : dw8250_serial_in32+0x1e/0x4a
+> > > [    0.442351]  ra : serial8250_do_startup+0x2c8/0x88e
+> > > ...
+> > > [    0.442416] console_on_rootfs+0x26/0x70
+> > >
+> > > Fixes: c49436b657d0 ("serial: 8250_dw: Improve unwritable LCR workaround")
+> > > Link: https://lore.kernel.org/all/84cydt5peu.fsf@jogness.linutronix.de/T/
+> > > Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> > > Cc: stable@vger.kernel.org
+> > > ---
+> > >  drivers/tty/serial/8250/8250_port.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> > > index 6d7b8c4667c9c..07fe818dffa34 100644
+> > > --- a/drivers/tty/serial/8250/8250_port.c
+> > > +++ b/drivers/tty/serial/8250/8250_port.c
+> > > @@ -2376,9 +2376,10 @@ int serial8250_do_startup(struct uart_port *port)
+> > >       /*
+> > >        * Now, initialize the UART
+> > >        */
+> > > -     serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
+> > >
+> > >       uart_port_lock_irqsave(port, &flags);
+> > > +     serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
+> > > +
+> > >       if (up->port.flags & UPF_FOURPORT) {
+> > >               if (!up->port.irq)
+> > >                       up->port.mctrl |= TIOCM_OUT1;
+> > > --
+> > > 2.39.5
+> > >
+> > >
+> >
+> > Hi,
+> >
+> > This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+> > a patch that has triggered this response.  He used to manually respond
+> > to these common problems, but in order to save his sanity (he kept
+> > writing the same thing over and over, yet to different people), I was
+> > created.  Hopefully you will not take offence and will fix the problem
+> > in your patch and resubmit it so that it can be accepted into the Linux
+> > kernel tree.
+> >
+> > You are receiving this message because of the following common error(s)
+> > as indicated below:
+> >
+> > - This looks like a new version of a previously submitted patch, but you
+> >   did not list below the --- line any changes from the previous version.
+> >   Please read the section entitled "The canonical patch format" in the
+> >   kernel file, Documentation/process/submitting-patches.rst for what
+> >   needs to be done here to properly describe this.
+> 
+> Can this issue reported by the bot be ignored?
 
-In general, the more local a `cfg` can be made, the better, because we
-can share more, e.g. the docs and signature.
+No, why?  How do we know what changed from previous versions?  Otherwise
+we assume you just ignored previous review comments?
 
-But maybe in this case it doesn't work -- what would be the "nasty
-changes" required?
+This series took at least 8 tries for some reason, might as well
+document it, right?  :)
 
-Cheers,
-Miguel
+thanks,
+
+greg k-h
