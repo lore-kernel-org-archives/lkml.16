@@ -1,63 +1,63 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308DA22F155;
-	Mon,  9 Jun 2025 23:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3987922F778;
+	Mon,  9 Jun 2025 23:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749512515; cv=none; b=Ft0msY70B0y1Hr+mlRhUKiohgsunTjz2Uvo5duQAZ3+CXaIJtXpSRn0u5zcnMNRKaudf/I8xoBjibUAjjT6978XVACOeizHGy+tF2mvZAwJPddwrz8D/z0hLh4P0wXHgeZM+JvnNZTDA0ztz+i5R9/ZwWFotu92tjAFMudY7ZbQ=
+	t=1749512516; cv=none; b=iX2nfpEHimuZ7f4q854vu8tT8n71MvDfMQqrx07b8PoaXJRTfjKlhgA1S+lC5cLU49e8xg7P7KjVSm8hISjjs6G6t2V/oeYqEA+mA3+sPQDoAn72M4HyVfuY7uBt6mqYFN8zxpbwtYhsc+KhmVHYFd4W1UZzzPKMuVlQ9ZLw5hQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749512515; c=relaxed/simple;
-	bh=pwi6o6ww6dSkF8fNqOT9t3Uh8gUsHMUCgpjs0IyKqIw=;
+	s=arc-20240116; t=1749512516; c=relaxed/simple;
+	bh=qmujCDQlx9R4vpIX4LhEDjpBMWa2asx7kRQoNdgHhZc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LXh6TfuQ9q/nSMJwGQYuQEwgN2cJV/a9+xT6eJKKpSWVRnyv33+VUtnbZ6UKfNQ7SFvjE55c1ScBdl6J7QwiAevgSZ2IKsgYXnmYsCWO1FkRvQLMBaoHxQruyYf6IkkKUCQYN8kypFmHwpWcloHifS78Wyqdjsq/sR11I/vSJ6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M6yEJmN+; arc=none smtp.client-ip=209.85.128.47
+	 MIME-Version; b=XNsLO+FLrlFpjechpKWba1K1Cm6rwH0x03jxMvLQhOjqEDam5an4jFxxdTsH8W0mlFKDJK1DDAAIrFb4Qac6dYaLThQ0ADO7lqg4f65T6/LMRwdLwXZj52YL4AEv3yCMTl+U3vRN+aJOWSkbAgF/+duzI9duCy8obEC8wdjY/Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FejmtLCf; arc=none smtp.client-ip=209.85.221.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M6yEJmN+"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-451d7b50815so41848995e9.2;
-        Mon, 09 Jun 2025 16:41:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FejmtLCf"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a531fcaa05so1806938f8f.3;
+        Mon, 09 Jun 2025 16:41:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749512511; x=1750117311; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749512514; x=1750117314; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Jo1dYTSb5N84GQeVh5+0QHCVJJnsbzuqHcvvt9y6zKY=;
-        b=M6yEJmN+qvYyDfEn34hlOO8JMJwa5VM6SvwIL4IkRxVfwIFGByKKyX3Mjzqzi4bNJQ
-         CuO8E1eNZ/yJD8miZa4dxsUG8cB093gPSmybBJEMx3CHi6B9NAQAdtG6XnAflUUuO8vV
-         Ppwyw/jZOXqHflfFx4naQYVXj4mLmBjJSWLW2oajO+bv4tWrPoR0i+ET17BrLjZ2eiQ4
-         ZjovRXSLE16Mp4ls26Wb0XBo/4Y59JfGeB3dTPmhh0hAg+1PYvwnihcGiInCPhQaE+tE
-         3PzSrk2CbjWeQo5ywvb1VcEKA3gDYK2f10d8nw2sogeuBPP3DMeIrHFaxUoNvCnPiIN4
-         T9PA==
+        bh=K3W+usCMR5B4Z7Ti6DZpHujd0vdEi0Zy/kIoGt2GNLY=;
+        b=FejmtLCf1BCVyUwTzAc8kOdu4neIBqHqX5/sGotZCrLBQXcJ2rXN6EyJMZrioJIneg
+         j8Yv/ooityJOed5UuSXyv3rBURarlp+p2+S24hGkWuDT1zh0OchdVk3TWR/xc1rqSTxX
+         tsszn0xQlq7EysWo3cOK9SBCiMdmVPvRXrFheE8jlufCYzMleNdlLxYgGLiBWYBWmttS
+         WepOU7W/6jK24ZCHGANYLkZNYFQx+Hw/AUjPHmdVut9p7irnkFBWZLKkDZ8jv9S9VT4n
+         0t7ty0WbMn9RVvB9yQu99yS7tLaCBY3WqEraFlhkBZCORHacvjqE0LixmknERYk+0teZ
+         rfcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749512511; x=1750117311;
+        d=1e100.net; s=20230601; t=1749512514; x=1750117314;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Jo1dYTSb5N84GQeVh5+0QHCVJJnsbzuqHcvvt9y6zKY=;
-        b=T2iO6YrR1Ipn0ookgJKOwxgFloXoV/6+GDnDg5svq+Xx0iSJYirSDFHdBIAk1T5oyo
-         Dl8XFnvW5KId45BUc1rd927iA+d2ItLtOhqs4wO79F5OJU+n4k/OHzDh3i57g4IJARab
-         bM0XLEy0Gd99Xr2wlgnJSFAon9mGvnR7ee9zHzf8RFRooop/rqQEVTsibIvrEae0xb9L
-         GacsetUOFgLe0lHE3hyBeOe5610QDVobJBC1hiRHY7iYH6FlZL9i350sUNTxQEy0LEav
-         O4xbKVIWKqbD76v5Tihvpcvp1SAfXThjgX+hytuh94ZLUyuF8Lp44LYwtVdO0u493yXh
-         4b5A==
-X-Forwarded-Encrypted: i=1; AJvYcCW+PReGBNmKJ3nePXnwQzyiz2m3Wc78zURhcuAAwtaN8zbGGB4PR8OragkvcRpgTusePrUtme8ItY2M@vger.kernel.org, AJvYcCW3bwK64XIJ4bfqX1WUXaUPr5sslCBlrjDgEkvycXCYCeugC5NteVV0kt2D/cKb92XOxP+pewm3hdYpDVcH@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxau0GOYMNqfnv7HW0tbSSW73DMIVoh000qLmcWKyO3ymvuQylU
-	FPcACumAKahtpj/xbIRknr6sUkYYMetgWCTqEItLI+sq0xB4eYdoPZy6
-X-Gm-Gg: ASbGncuK7dVVkryBY9zcAZX9Lfp4QcZkTJofpizupcldYE8TCsnbhLXaD4Jj+fjqVo5
-	AwdKqKq2QAKt/wretZgKRK3twzYrImSkOKZGPr6d8MhoxTcjtcam8xTfa2bkozUJ/zufl69fqD3
-	CbuTja0Vb7nFoHRFMCNyd19LitmfzpJIVT8A/fMQMUVsM1cHGQ2lAxPL0wHp9p3zfjpdnVFt6HY
-	0m+ReXMn2CiOAfh20+9uHawF+5NyU4lnOduENollAFJwWSOtezcvNnorrAoII+tKOObpjYCz4wQ
-	JFfEMdOsawwcKOYsLFb+MEy0vBgVsyZF3PaTMsdcUVIs4QVARC4ZOaQ5PwRLIx3kW2COBsyZa7Y
+        bh=K3W+usCMR5B4Z7Ti6DZpHujd0vdEi0Zy/kIoGt2GNLY=;
+        b=my3c/6Rn3yRaUtT7uFr5JCLxSX0W8Z24hpYB//7kB7Ht4kuJUUBgHVuRUWIt2VvLYL
+         dPfCwctMOna8dfYO7swrqLWYL18b0Bb+8XiwBc1Hn6jIV4pxPNj2+2gJW3E0KJO4Fx9I
+         gKNNLREdZDXpPm4mKOn+9t2gWxav/bBiLWRZM/Pt+L7wxiQe2Ctxz9tFkSeZ4dn7tQ5g
+         +J6LAzZo2ZUJ2xyRRZNCi8ncIbyFK6kJJFv68GRduo2DKqNNAObjXt29jw/45F+ci2pp
+         pyCh3QOneIoYyv8BzPTPMNvoXB78y5lmK05hGf3rio1P0euEK3ny8exQ2ZfHtkUiiz45
+         ZEcg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPqz3ucbWVjLw6mv4t+IO3M7CJngdw/FEWCdfaW4eiUT3n7HeJ2NV+1MoUlehoHss6czQKhMP3h/nYdnyf@vger.kernel.org, AJvYcCXUt7U8azfGWduaYSKDpRFMJyQuj5aiZ9IBJteM0p0cjxbrcLSoibAr5az6QtCySY3Xx/+E1oYUlTR1@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1JlA0gmkLbA55iYcvwOPFX9kvsB0jMrRZxgSn3liToo5lUAc/
+	ZOmO8wXRzbgN5Vp/XlX5xBVo7TlIpyA+Cy6zc7xel4pNWLw7Fzwna5M7
+X-Gm-Gg: ASbGncs0Tx++QCIf8rwxcwWm6ZlaptWJ+0T+taCjNR02Mq5F15jeUX1UynnE8q1rxZv
+	SS02eUU2eZ+qW9xZcnFtp7GTPrEV0rO/RMElAJLHNRVlCObJEqXbDIiWd19R59WaUW0cVocM3Ge
+	Z2EKj9H1QxfETezvWJbc9aEFPXqWoUZINgw5Sr6y9dqqrwcKzmnaArxZDf1Uuid3TruL0+QnCfy
+	ulgVfSQuacC+s5zVEJ4Uy3sbJDhaFUkLezrFrBAV7d3Pyte8UF+uLNcQ+EcX4lskqChbz+gLOWO
+	AQ7B6Yhczgu/rICe6g2ViaOlRdLLlaLE4pK3LUenSe90FZ+kYcuulOZj5wohd/T9WQTGO6KiYcM
 	=
-X-Google-Smtp-Source: AGHT+IFApIvy4cDz1KO3QF2Y2DufyzGd0D/WiNt6nw0laf5Xpx85PGR9pawpRsdmsQ43gv8vaIkl8g==
-X-Received: by 2002:a05:600c:6205:b0:43d:563:6fef with SMTP id 5b1f17b1804b1-4520140c06dmr126096785e9.21.1749512511504;
-        Mon, 09 Jun 2025 16:41:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHG+23gSY7lbz1gITYGdcTpMahA14EmzL8S35xxT7RAijs9v4mF7qIfd+85zAEt9lbZCMJf7Q==
+X-Received: by 2002:a05:6000:18ab:b0:3a4:c9d4:2fb2 with SMTP id ffacd0b85a97d-3a531ce1809mr12878839f8f.46.1749512513652;
+        Mon, 09 Jun 2025 16:41:53 -0700 (PDT)
 Received: from giga-mm.. ([2a02:1210:8608:9200:82ee:73ff:feb8:99e3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53244df34sm10849846f8f.71.2025.06.09.16.41.50
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53244df34sm10849846f8f.71.2025.06.09.16.41.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 16:41:51 -0700 (PDT)
+        Mon, 09 Jun 2025 16:41:53 -0700 (PDT)
 From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
 To: sophgo@lists.linux.dev,
 	soc@lists.linux.dev
@@ -81,9 +81,9 @@ Cc: Alexander Sverdlin <alexander.sverdlin@gmail.com>,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v6 3/6] arm64: dts: sophgo: Add Duo Module 01
-Date: Tue, 10 Jun 2025 01:41:14 +0200
-Message-ID: <20250609234125.722923-4-alexander.sverdlin@gmail.com>
+Subject: [PATCH v6 5/6] arm64: Add SOPHGO SOC family Kconfig support
+Date: Tue, 10 Jun 2025 01:41:16 +0200
+Message-ID: <20250609234125.722923-6-alexander.sverdlin@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250609234125.722923-1-alexander.sverdlin@gmail.com>
 References: <20250609234125.722923-1-alexander.sverdlin@gmail.com>
@@ -95,107 +95,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Duo Module 01 is a compact module with integrated SG2000,
-WI-FI6/BTDM5.4, and eMMC.
-Add only support for UART and SDHCI.
+First user will be Aarch64 core within SG2000 SoC.
 
+Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
 Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
 ---
- .../sophgo/sg2000-milkv-duo-module-01.dtsi    | 85 +++++++++++++++++++
- 1 file changed, 85 insertions(+)
- create mode 100644 arch/arm64/boot/dts/sophgo/sg2000-milkv-duo-module-01.dtsi
+ arch/arm64/Kconfig.platforms | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/sophgo/sg2000-milkv-duo-module-01.dtsi b/arch/arm64/boot/dts/sophgo/sg2000-milkv-duo-module-01.dtsi
-new file mode 100644
-index 000000000000..bb52cdad990a
---- /dev/null
-+++ b/arch/arm64/boot/dts/sophgo/sg2000-milkv-duo-module-01.dtsi
-@@ -0,0 +1,85 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 8b76821f190f..af74bcc3c861 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -307,6 +307,12 @@ config ARCH_INTEL_SOCFPGA
+ 	  Stratix 10 (ex. Altera), Stratix10 Software Virtual Platform,
+ 	  Agilex and eASIC N5X.
+ 
++config ARCH_SOPHGO
++	bool "Sophgo SoCs"
++	select ARCH_HAS_RESET_CONTROLLER
++	help
++	  This enables support for Sophgo SoC platform hardware.
 +
-+#include <dt-bindings/pinctrl/pinctrl-sg2000.h>
-+#include "sg2000.dtsi"
-+
-+/ {
-+	model = "Milk-V Duo Module 01";
-+	compatible = "milkv,duo-module-01", "sophgo,sg2000";
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+		serial3 = &uart3;
-+		serial4 = &uart4;
-+	};
-+};
-+
-+&osc {
-+	clock-frequency = <25000000>;
-+};
-+
-+&pinctrl {
-+	sdhci0_cfg: sdhci0-cfg {
-+		sdhci0-cd-pins {
-+			pinmux = <PINMUX(PIN_SD0_CD, 0)>;
-+			bias-pull-up;
-+			drive-strength-microamp = <10800>;
-+			power-source = <3300>;
-+		};
-+
-+		sdhci0-clk-pins {
-+			pinmux = <PINMUX(PIN_SD0_CLK, 0)>;
-+			bias-pull-up;
-+			drive-strength-microamp = <16100>;
-+			power-source = <3300>;
-+		};
-+
-+		sdhci0-cmd-pins {
-+			pinmux = <PINMUX(PIN_SD0_CMD, 0)>;
-+			bias-pull-up;
-+			drive-strength-microamp = <10800>;
-+			power-source = <3300>;
-+		};
-+
-+		sdhci0-data-pins {
-+			pinmux = <PINMUX(PIN_SD0_D0, 0)>,
-+				 <PINMUX(PIN_SD0_D1, 0)>,
-+				 <PINMUX(PIN_SD0_D2, 0)>,
-+				 <PINMUX(PIN_SD0_D3, 0)>;
-+			bias-pull-up;
-+			drive-strength-microamp = <10800>;
-+			power-source = <3300>;
-+		};
-+	};
-+
-+	uart0_cfg: uart0-cfg {
-+		uart0-pins {
-+			pinmux = <PINMUX(PIN_UART0_TX, 0)>,
-+				 <PINMUX(PIN_UART0_RX, 0)>;
-+			bias-pull-up;
-+			drive-strength-microamp = <10800>;
-+			power-source = <3300>;
-+		};
-+	};
-+};
-+
-+&emmc {
-+	bus-width = <4>;
-+	no-1-8-v;
-+	cap-mmc-hw-reset;
-+	no-sd;
-+	no-sdio;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+/* Wi-Fi */
-+&sdhci1 {
-+	bus-width = <4>;
-+	cap-sdio-irq;
-+	no-mmc;
-+	no-sd;
-+	non-removable;
-+};
+ config ARCH_STM32
+ 	bool "STMicroelectronics STM32 SoC Family"
+ 	select GPIOLIB
 -- 
 2.49.0
 
