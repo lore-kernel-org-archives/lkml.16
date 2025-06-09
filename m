@@ -1,82 +1,108 @@
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49ECC192B75;
-	Mon,  9 Jun 2025 04:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F589254AFE;
+	Mon,  9 Jun 2025 04:35:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749443630; cv=none; b=uT/wRervtI/tXlPB5pmwM9gQ3f22HLdUI4cWWrASZ7W3BZRmDumA/xSOlxz6IGFzUr2Ssia3wMG1mvsKs/fyS9d3O59ok1O+km37zltqG5PA9/rt99JC+DBn6Ljg0cl8S6Fnd4Td1qfZllKcdPGgef3JPEL9BzTHp5V3qCvd9zY=
+	t=1749443736; cv=none; b=knVOHvctV/sDsYiHkQVmi4J4bKJfIS7HqYTY2n3CyB68bkGRVEZT/N0dF29TlKT/3GmLhnp7e2h6n75Sxayo/slwlhLGK6mPl9mzjT6Gz4qogAzkBfp1ARam3Pf3XgmbQfzMgHUq3l9WLH3LR9S2Ic50IMZ9ZyQJfFS8w/TDXAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749443630; c=relaxed/simple;
-	bh=h7Ihb1Epf9mKshAeBFCCEqXVUjHJ83/heXSibl9WC8s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZhbQY7pF2fHrkRNkin1LZBk8LVBqMYkLQzMctDxTT8Fwhkb74sTuyegmIGFPa5E4d0Wotww5zCl5JzOOtc+O/VOFo1g6UWOgbtYrGaYXj1KJh97GBgGGYca2MlanT2r5t+nmZHFpttWaY6eN5X0N1dIlvzojCvQ13kgeYkBZBAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z5jDqTeT; arc=none smtp.client-ip=209.85.222.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749443736; c=relaxed/simple;
+	bh=AgURGmBZPaSkRmiRoqHFlFPIJprX/0ieU7uX6Ixit90=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uQT6+OKEZkfqxEplIFE8HVlaWXSANjMvf8nRW51a84JdNP2QNYllQ4b/dpxA44PTrWbTY+k/LRb6/EztudAGBeNW+TPl+G48n0dDRJz70AwpcZ/rR4HLzW4CJQSNI0Q640rRkG5a07/l2hCmyU2m85TMxeqp0pMa1Hy/GpczE3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rHP7I9UU; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z5jDqTeT"
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-87ed1c2b487so25725241.3;
-        Sun, 08 Jun 2025 21:33:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749443628; x=1750048428; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=h7Ihb1Epf9mKshAeBFCCEqXVUjHJ83/heXSibl9WC8s=;
-        b=Z5jDqTeTlrwfCy0qmNSrypujvzYo3TlWHvl9DSrz65xMLBXQuqBVg5mHaZ5JkoLZBx
-         Gb0YmCPMEsBjOP+VGAyO78nCnCFIJVWPjQatGi1YE8ijT00tDXdXzO/WxWC6x6v8aEyn
-         IPdPYmUDSRZXcEDNjr7gSiodUnKmequP9+osofxBNJD5QAaLCP915cYOGlttUUixZN8k
-         DDCsRIWr7h9t0UHtZZ4dUD3Km156GBoK/m+aAGLLlAZ6M5fcBzMJrTXqgLN2MUTzd7wE
-         0N8LYfzGpnytgQ5cw/G1Xtj47gm/RUCYh7NazT8hiJFn7/5ATzL+q42Fpu/E4XUhLd7V
-         83aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749443628; x=1750048428;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=h7Ihb1Epf9mKshAeBFCCEqXVUjHJ83/heXSibl9WC8s=;
-        b=O+49IbtY/pPE4f099yRgkR78rYzd4A/AJbFBfQdChckfV0PI5B9musw+IDsocMucz8
-         YxYwWKPUp8nPYdoIT4LxHQQkf48bLFZI4fhasf2A59RjR1Nd922FsxKWW0DWubMLsczB
-         YUJSU/QCRVec116IOnY+PQwWBgLJaG6R5tEHlqHDyxUvcDYKvm/SzETUr2PGOUcJuavC
-         2I/dO9NInTUCRtRHPuQB3qXMl9ejfj0xsIUGultGBoJHCDQUcsl6qlxAirY5lAt2DT4J
-         YsS48kmSTBgw+7ltGg9wjPM4I+7emopZSwsLixiTk0jFzc9ve7DZ9Sfy2oaT8E/4enkd
-         CxOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXe34GhleP3rExJtXdOXXcfir+QykxO1pLl/6JCCLOWvLa6/Rpj40Fc0cEsSvvPAkCInLsINK3YQHdvZoI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZUgT36/HY2XrybZ+IIal4neFjBI7Q+OmXMBcsmKrkVGqbXzex
-	jReSVQaODbEOzDsNrXGbPTwcpSu0XQyNLamRIip4FxPHyIT9j9Fr/QxlVpFAm/QwjNGOkkzPDKl
-	dhdOEgyOmVxJUbi0If8zlm7V4S6yqYgY=
-X-Gm-Gg: ASbGncuCRaDiJ+DWRjgKaw/uw1tbgwT/whTKeHuEZjLPCQY3myLWHjr0lIfU68l3w23
-	i3XV1FNVf32rN+NYylJg8IBY6osrXqVwxpJwejgCbc9Jm4Bu727AcZznn13Kvrhj4GExwpkq/s9
-	L6h3a3hdBLO8uRIfKJPW+bYjaxcnLwry9nrbbT+LJqGfME
-X-Google-Smtp-Source: AGHT+IGtpm+GjWAwqV8qVoEDAmnJRMAo3nk0UIoeXRspYT7fEctsZFNHIWIcj9ybIPdFFPHQ6MVaaX/a/l4nZY7WVIM=
-X-Received: by 2002:a05:6102:15a0:b0:4e2:955a:afea with SMTP id
- ada2fe7eead31-4e776868f61mr2758162137.1.1749443628173; Sun, 08 Jun 2025
- 21:33:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rHP7I9UU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
+	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=oeT73a0Hi9cOPyGYRSLUMdSjrVNXI7sw9Uk+bmyEzn8=; b=rHP7I9UUuAQAw0byw2iIpo1lFJ
+	zvbVPtfIVNEnDvZ9E1i3kI/uUWfH3Lg4IFfJamPPveKy03Ptn8AT5+IuiPsJ7Gyj1eLYvV75kkky/
+	KwEenybj6HmEa1IyjFVizqFwSAnml8QPm1xdo5gomYU6y2sIPE3yqFTe86Dt5WnAL4OmASNCKIv+1
+	NlmPjRydtMGYf+nz6hNKwgJbXio3bde8bWS1ewqdobg5JeCyxqwY3UhWGBuSBlgamJ98mC3IyE4eX
+	gvBIUrrc3DfdJkX6pLBCFDhVX3Fftro4JvRfYYVf73aJ8wi9Jo0li4WYB/42oSfqwWDkVP2Xm571M
+	rMrSru6w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uOUEG-00000003PoK-2Bfw;
+	Mon, 09 Jun 2025 04:35:24 +0000
+Date: Sun, 8 Jun 2025 21:35:24 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc: wangtao <tao.wangtao@honor.com>, Christoph Hellwig <hch@infradead.org>,
+	"sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
+	"kraxel@redhat.com" <kraxel@redhat.com>,
+	"vivek.kasireddy@intel.com" <vivek.kasireddy@intel.com>,
+	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+	"brauner@kernel.org" <brauner@kernel.org>,
+	"hughd@google.com" <hughd@google.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"amir73il@gmail.com" <amir73il@gmail.com>,
+	"benjamin.gaignard@collabora.com" <benjamin.gaignard@collabora.com>,
+	"Brian.Starkey@arm.com" <Brian.Starkey@arm.com>,
+	"jstultz@google.com" <jstultz@google.com>,
+	"tjmercier@google.com" <tjmercier@google.com>,
+	"jack@suse.cz" <jack@suse.cz>,
+	"baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>,
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"wangbintian(BintianWang)" <bintian.wang@honor.com>,
+	yipengxiang <yipengxiang@honor.com>,
+	liulu 00013167 <liulu.liu@honor.com>,
+	hanfeng 00012985 <feng.han@honor.com>
+Subject: Re: [PATCH v4 0/4] Implement dmabuf direct I/O via copy_file_range
+Message-ID: <aEZkjA1L-dP_Qt3U@infradead.org>
+References: <20250603095245.17478-1-tao.wangtao@honor.com>
+ <aD7x_b0hVyvZDUsl@infradead.org>
+ <09c8fb7c-a337-4813-9f44-3a538c4ee8b1@amd.com>
+ <aD72alIxu718uri4@infradead.org>
+ <5d36abace6bf492aadd847f0fabc38be@honor.com>
+ <a766fbf4-6cda-43a5-a1c7-61a3838f93f9@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250330234039.29814-1-christiansantoslima21@gmail.com> <aDdoGfo1kynqWCDm@cassiopeiae>
-In-Reply-To: <aDdoGfo1kynqWCDm@cassiopeiae>
-From: Christian <christiansantoslima21@gmail.com>
-Date: Mon, 9 Jun 2025 01:33:37 -0300
-X-Gm-Features: AX0GCFs0dVdlWIfhndTQYEYg4XEql-HsA2ps-7Otdev-q1VN0yt0nLUX1PRqxmw
-Message-ID: <CABm2a9dEOXS4xAsA9LQXE5Ct36UnWxmhUx7dqJAjwc5yL5ToHg@mail.gmail.com>
-Subject: Re: [PATCH v6] rust: transmute: Add methods for FromBytes trait
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, ~lkcamp/patches@lists.sr.ht, 
-	richard120310@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a766fbf4-6cda-43a5-a1c7-61a3838f93f9@amd.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-> What's the status of the series? Are you still working on this topic
+On Fri, Jun 06, 2025 at 01:20:48PM +0200, Christian König wrote:
+> > dmabuf acts as a driver and shouldn't be handled by VFS, so I made
+> > dmabuf implement copy_file_range callbacks to support direct I/O
+> > zero-copy. I'm open to both approaches. What's the preference of
+> > VFS experts?
+> 
+> That would probably be illegal. Using the sg_table in the DMA-buf
+> implementation turned out to be a mistake.
 
-Hi Danilo, I'm currently working on the alignment issue that was
-mentioned in that email. I'm still working on it, and I'll send a
-patch this week.
+Two thing here that should not be directly conflated.  Using the
+sg_table was a huge mistake, and we should try to move dmabuf to
+switch that to a pure dma_addr_t/len array now that the new DMA API
+supporting that has been merged.  Is there any chance the dma-buf
+maintainers could start to kick this off?  I'm of course happy to
+assist.
+
+But that notwithstanding, dma-buf is THE buffer sharing mechanism in
+the kernel, and we should promote it instead of reinventing it badly.
+And there is a use case for having a fully DMA mapped buffer in the
+block layer and I/O path, especially on systems with an IOMMU.
+So having an iov_iter backed by a dma-buf would be extremely helpful.
+That's mostly lib/iov_iter.c code, not VFS, though.
+
+> The question Christoph raised was rather why is your CPU so slow
+> that walking the page tables has a significant overhead compared to
+> the actual I/O?
+
+Yes, that's really puzzling and should be addressed first.
+
