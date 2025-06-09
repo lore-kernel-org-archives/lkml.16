@@ -1,170 +1,140 @@
-Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9B5A92E;
-	Mon,  9 Jun 2025 08:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.97.38.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD911C6FFA
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 08:17:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749456947; cv=none; b=dpZ7cvxDr522SgLbpHj4He+IobBIFjd9R1N8iU4u2SZfa6Q8iP6jLvy2W6G2XoiAAIY20AKX9nBCogv3UFBxDnwX1EzF7MM5bwuDzmJXSFgqa+nqYimjzyx1ASc4iYNqRZI62TB7u3khfGgCb6FIyoLebqy8+O3f7XL1RSlFWBk=
+	t=1749457075; cv=none; b=rMeDsfFsTzjN237bExIp66vu3FnuqURnmmXVRNIfxjXuoCQVnJy/k3bOp5OhNNYdEBJjab4yW+Z8DXliVAmVyFulY/QOmDiBSQy016zjKCJ6e0DCGtq07oyh8W12z3oe8AgybetC+RCsu+1/XUpXO6WQPHcS5Ah7uVJl7BqSiCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749456947; c=relaxed/simple;
-	bh=tCw+BuHgAhUGJpCWZDApcTvFD9Za8MWexienPul33e8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m6iEJrs93+3nJfY2Qsp34MKLM37gI1ekSzOn8KK3Q3ctKX0nNbG3R5UOy7tVyPDWkCQ4iXTHuFtOtUN57Fhu/Kzmn1ewPYr6p7O3mnO4qW8RvoQmpyYmON1YPokgrkNmiFevOUIWkjv5C3GQfdHnmstN35msVVDGuGR7PYlgBG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org; spf=pass smtp.mailfrom=mess.org; dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b=lz+vGiu3; arc=none smtp.client-ip=88.97.38.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mess.org
+	s=arc-20240116; t=1749457075; c=relaxed/simple;
+	bh=6YHW+DFdIWtllvbQlf3/6rMj2nD7j4IotHgXQvmo/Fc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=PSuMqPPjnOOzZXR+WbZK4Cl2Vp58GmGHq4SBiV+2C6hZaV9DEvCO5XjPkNkcTi5mXaFwjWZGvYdUxTyrWy2MR/m6WM2uyK473NF6M1t6el9NFZJcXEcCTn97sDlVdUDJIfH55WubZMUbMlDlLergbHr6zBYJ0ILWwOYXvMfqbjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FdDdrXDU; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="lz+vGiu3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
-	t=1749456942; bh=tCw+BuHgAhUGJpCWZDApcTvFD9Za8MWexienPul33e8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lz+vGiu3DNVfiDg2R1my90UZB01iKmuVOQq9MPBDN0zdrVPub2YHeib5tj/ndGD2m
-	 aaMgJP5QBDvibpUNN1QxKtLA+veQed9BUv3JE9ZI89AvO81KRVFh+XVRSDHpKSNJow
-	 KRVMdt1uQQZVj3F9M1KhM82EtH46dRWbTg1VtkH5wvTrzhnNxdPjS9WFXTsMeeRlmQ
-	 gni2j9WtApH6em6kU2qG0r62V0aYP2t8zQtnQZ6ttErV/3/bBQaCiqwM1FULao4+Vz
-	 NqRWHbIMCHFLjFcYUuQuC3RuctFUhjeGOSrI9dEDB2Tk7H3WD2L+na7Qxqdo8fxrHU
-	 vmKKZ3qCOp20Q==
-Received: by gofer.mess.org (Postfix, from userid 1000)
-	id D2150100069; Mon,  9 Jun 2025 09:15:42 +0100 (BST)
-Date: Mon, 9 Jun 2025 09:15:42 +0100
-From: Sean Young <sean@mess.org>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] media: rc: ir-spi: reallocate buffer dynamically
-Message-ID: <aEaYLnDejiSXmJgN@gofer.mess.org>
-References: <20250608191536.2181756-1-demonsingur@gmail.com>
- <aEXxs4xsNR7Srdvx@gofer.mess.org>
- <f6730384-92ca-4f3d-8316-996edc2750fa@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FdDdrXDU"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ade58ef47c0so150978166b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 01:17:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749457072; x=1750061872; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=diVPl0lQKW0yQkA4YVUek0ZBF2jN3vlUnkn9DLqfm9E=;
+        b=FdDdrXDUnN2uZ5fKr3VWZSQADIV6Wbf8PeHraG9AvEKKpcol3/dMVIQTIu+CPn7yFq
+         PzaYNJCVEXAwqrO5hGAki92mXAWDT32Ik7HoR0UX24VEUY5a4eAbe+P/h7wMpKN2cZee
+         RF6xp81jK6SVljUyGiO6YjJ1AHghq1IX/53uMVYwE+39i5pR+I43MrF/cmHhPj6V7kii
+         ucTBUz9GFTbC77zNcQNtEUn6J9q8EcToxThQ61adxVQnFspdWY5LVJ+y3McDpUVX7tzp
+         8h9SRypB5KV10F+D4psgV3HIn1rYPXcTZsVGDL5OUvmKMw3ADJxfSU9oQw9Ka5o8Up0V
+         SWLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749457072; x=1750061872;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=diVPl0lQKW0yQkA4YVUek0ZBF2jN3vlUnkn9DLqfm9E=;
+        b=MFzjY10sDHw8S8g5IjNsIBZFbIdwE6TA+55D6BbJ8HQDg6cKvNqdzns1gxDIQKF4gh
+         004z2FMuNy+a8A8W+v9PF0BH0rrllZASqIykEflPeWZKgoO2UlwkBBkH8ZTfEiX0PD5f
+         UH/gz7+TmGfNZCktGFwUTmKk5jbCXxPUbDRAGVaK+RvmGpb2Ppdm0PJ+AmFgZNTJUQbD
+         SEo9PPweOg5DmF6wEiF1JMHnRJwQI9MVNIu1XOKRDQcktuWxIPJ9xUqeTdY4TNVpRINm
+         +6LdGm8/xmH4BrWePgOszwCk4XbOCRs0zmKX/cduP51zpswB+fydqJPC0f88EjM6rXUO
+         artg==
+X-Forwarded-Encrypted: i=1; AJvYcCVeb8PcsH+PMGmZh1vqfhXr/BP6HTHB1TXDD54pQOmbtGPGqR+2j3i/7ZVH2zqI98l1o+K+9InNwbQgN30=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy23ksQWg6+8SF0T299HaVLjUSlJXuZMG3g0tbUaT/Nsc6kIy++
+	lBrJdonWqZm9lX7qSoOXXQD85IyljHV+2KSfHD8Zcw7dgVf+t9wbcjD0VzZQ0MZHwgU=
+X-Gm-Gg: ASbGncubcSg/iC3phrFdeJbFkOKYKFP6t9dwFBibeC1z7Fs/HXuXU1h8I1byYxPsThO
+	tszhMm32iWB04BF608IK+nu0UJ7bCld5rZLnKsDRskx88fkJOPg8mgi/cfmPmp537pUrp0grF5v
+	hhFc6L4G6SSQj6OKAgLz9wem/MqtAF36+KpwGhQx9Zgw+raa9MRKANvmXSnT7Lmq3Qdt69VPMcb
+	gthktVAyk8iYHHWLd4F+U3tJtYq6sMHm34d7jIbzf+1r+OSEy429y1WJTqH2szJpegOhgDovT/+
+	oLnm8QZW7//j/58ZATuoHgiL7Qx3PxfjAHLiAheaCSzbih0pFXH5qc4/6L14eekjUYizl7Gk
+X-Google-Smtp-Source: AGHT+IHlo5foO57lawT0iBE8NHWy/Wh5VTZ1hRUSX/LNop16FvKZAplu9cVdl/qMvDgzI+koFNCPcw==
+X-Received: by 2002:a17:907:cd0d:b0:add:ee2c:7307 with SMTP id a640c23a62f3a-ade075bedd1mr1646702666b.6.1749457071737;
+        Mon, 09 Jun 2025 01:17:51 -0700 (PDT)
+Received: from [192.168.0.251] ([79.115.63.158])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc78f47sm511997066b.153.2025.06.09.01.17.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Jun 2025 01:17:51 -0700 (PDT)
+Message-ID: <a15fd377-1828-4cb5-8c7b-7d26ea2a7733@linaro.org>
+Date: Mon, 9 Jun 2025 09:17:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f6730384-92ca-4f3d-8316-996edc2750fa@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] ARM: dts: microchip: sama5d27_wlsom1: Add
+ nvmem-layout in QSPI for EUI48 MAC Address
+To: Manikandan Muralidharan <manikandan.m@microchip.com>, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, nicolas.ferre@microchip.com,
+ alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
+ pratyush@kernel.org, mwalle@kernel.org, miquel.raynal@bootlin.com,
+ richard@nod.at, vigneshr@ti.com, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mtd@lists.infradead.org
+References: <20250521070336.402202-1-manikandan.m@microchip.com>
+ <20250521070336.402202-4-manikandan.m@microchip.com>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20250521070336.402202-4-manikandan.m@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 09, 2025 at 12:52:56AM +0300, Cosmin Tanislav wrote:
-> On 6/8/25 11:25 PM, Sean Young wrote:
-> > On Sun, Jun 08, 2025 at 10:15:33PM +0300, Cosmin Tanislav wrote:
-> > > Replace the static transmit buffer with a dynamically allocated one,
-> > > allowing the buffer to grow as needed based on the length of the
-> > > message being transmitted.
-> > > 
-> > > Introduce a helper function ir_buf_realloc() to manage the allocation
-> > > and reallocation of the buffer. Use it during probe to preallocate
-> > > a buffer matching the original static buffer, then reallocate it as
-> > > needed, with an overhead to avoid frequent reallocations.
-> > > 
-> > > Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-> > > ---
-> > > V2:
-> > >   * use devm_krealloc_array
-> > > 
-> > >   drivers/media/rc/ir-spi.c | 32 +++++++++++++++++++++++++++++---
-> > >   1 file changed, 29 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/media/rc/ir-spi.c b/drivers/media/rc/ir-spi.c
-> > > index 8fc8e496e6aa..2f931950e107 100644
-> > > --- a/drivers/media/rc/ir-spi.c
-> > > +++ b/drivers/media/rc/ir-spi.c
-> > > @@ -27,7 +27,8 @@ struct ir_spi_data {
-> > >   	u32 freq;
-> > >   	bool negated;
-> > > -	u16 tx_buf[IR_SPI_MAX_BUFSIZE];
-> > > +	u16 *tx_buf;
-> > > +	size_t tx_len;
-> > >   	u16 pulse;
-> > >   	u16 space;
-> > > @@ -36,6 +37,26 @@ struct ir_spi_data {
-> > >   	struct regulator *regulator;
-> > >   };
-> > > +static int ir_buf_realloc(struct ir_spi_data *idata, size_t len)
-> > > +{
-> > > +	u16 *tx_buf;
-> > > +
-> > > +	if (len <= idata->tx_len)
-> > > +		return 0;
-> > > +
-> > > +	len = max(len, idata->tx_len + IR_SPI_MAX_BUFSIZE);
-> > > +
-> > > +	tx_buf = devm_krealloc_array(&idata->spi->dev, idata->tx_buf, len,
-> > > +				     sizeof(*idata->tx_buf), GFP_KERNEL);
-> > > +	if (!tx_buf)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	idata->tx_buf = tx_buf;
-> > > +	idata->tx_len = len;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >   static int ir_spi_tx(struct rc_dev *dev, unsigned int *buffer, unsigned int count)
-> > >   {
-> > >   	int i;
-> > > @@ -52,8 +73,9 @@ static int ir_spi_tx(struct rc_dev *dev, unsigned int *buffer, unsigned int coun
-> > >   		periods = DIV_ROUND_CLOSEST(buffer[i] * idata->freq, 1000000);
-> > > -		if (len + periods >= IR_SPI_MAX_BUFSIZE)
-> > > -			return -EINVAL;
-> > > +		ret = ir_buf_realloc(idata, len + periods);
-> > 
-> > You're reallocating in a loop. That causes a lot of churn.
-> > 
+
+
+On 5/21/25 8:03 AM, Manikandan Muralidharan wrote:
+> Add nvmem-layout in QSPI to read the EUI48 Mac address by the
+> net drivers using the nvmem property.The offset is set to 0x0
+> since the factory programmed address is available in the
+> resource managed space and the size determine if the requested
+> address is of EUI48 (0x6) or EUI-64 (0x8) type.
+> This is useful for cases where U-Boot is skipped and the Ethernet
+> MAC address is needed to be configured by the kernel
 > 
-> I'm allocating in a loop indeed, but I add at least IR_SPI_MAX_BUFSIZE
-> each time the new length exceeds the existing length. This should cut
-> down on the amount of allocations.
-
-Yes, you're right.
-
-> In my testing, controlling various devices around the house using IR,
-> I haven't exceeded two allocations, aka 8192. But having this static
-> size in place prevents bigger transfers from being done.
-
-The name IR_SPI_MAX_BUFSIZE is no longer correct, the buffer can get larger
-than that. It should have a new name.
+> Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
+> ---
+>  .../boot/dts/microchip/at91-sama5d27_wlsom1.dtsi    | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> > > +		if (ret)
-> > > +			return ret;
-> > >   		/*
-> > >   		 * The first value in buffer is a pulse, so that 0, 2, 4, ...
-> > > @@ -153,6 +175,10 @@ static int ir_spi_probe(struct spi_device *spi)
-> > >   	idata->freq = IR_SPI_DEFAULT_FREQUENCY;
-> > > +	ret = ir_buf_realloc(idata, IR_SPI_MAX_BUFSIZE);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > 
-> > By default, you're allocating IR_SPI_MAX_BUFSIZE already at probe time. So
-> > until someone does a transmit, you haven't saved any memory compared to
-> > before. In fact, the text size will be more so things are worse.
-> > 
-> > It might make sense to allocate IR_SPI_MAX_BUFSIZE once for each transmit;
-> > most drivers do an allocation per transmit which is perfectly acceptable.
-> > 
-> 
-> My reasoning was not to save memory, but to allow transfers bigger than
-> IR_SPI_MAX_BUFSIZE, which currently is 4096. Note that that's periods,
-> not number of pulses/spaces.
-> 
-> If you want an allocation per transfer then we should compute the total
-> period size and allocate a big enough buffer to fit all the periods.
-> 
-> Each pulse/space value translates to a different period (depending on
-> the carrier frequency) so we'd have to compute it once ahead of time
-> to allocate the periods buffer, and once again afterwards.
-> 
-> To avoid doing the period finding two times we could reuse the passed in
-> buffer to hold the calculated period, but we'd still be iterating two
-> times over the passed in buffer.
+> diff --git a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
+> index b34c5072425a..be06df1b7d66 100644
+> --- a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
+> +++ b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
+> @@ -210,6 +210,9 @@ &macb0 {
+>  	#size-cells = <0>;
+>  	phy-mode = "rmii";
+>  
+> +	nvmem-cells = <&mac_address_eui48>;
+> +	nvmem-cell-names = "mac-address";
+> +
+>  	ethernet-phy@0 {
+>  		reg = <0x0>;
+>  		interrupt-parent = <&pioA>;
+> @@ -238,6 +241,16 @@ qspi1_flash: flash@0 {
+>  		m25p,fast-read;
+>  		status = "disabled";
+>  
+> +		nvmem-layout {
+> +			compatible = "fixed-layout";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +
+> +			mac_address_eui48: mac-address@0 {
+> +				reg = <0x0 0x6>;
+> +			};
 
-This all makes sense.
+How would this work if in the future the mchp vendor table adds some
+other info that needs to be referenced as nvmem? How do you distinguish
+the info from the table?
+Would it be possible to have some kind of address and size to reference
+the SFDP?
 
-There is no reason to do an allocation in the probe function. We should free
-the buffer after the transmit too.
+> +		};
+> +
+>  		partitions {
+>  			compatible = "fixed-partitions";
+>  			#address-cells = <1>;
 
-
-Sean
