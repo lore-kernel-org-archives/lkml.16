@@ -1,253 +1,213 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F5F925A2CF;
-	Mon,  9 Jun 2025 13:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34D1254AF0;
+	Mon,  9 Jun 2025 13:21:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749475165; cv=none; b=T5f8MQEOf4PJbIq8Iq12Qp8yqIo5Xu15adOwzpisrb2rgVH3laswR5ncSz05kWI9DjvZzb2kfTGwQENArVlOCWCzEil/7f7w9EtPrbUTRgn+E1c+qoh6itFY9/WH3QA97Wqe4eEMMKay/+iBf2im8xuey+IjCyiNau0h+hI+YfE=
+	t=1749475283; cv=none; b=fQGYSkhvW9YugAYTKEkufZqKmWzWL8qCA7bX93pDZnDaw2OKTI5rJYTGm+in96dCKqElmSZRg+xg4o1hduiDoYoj2vvsqijZqfHxrouuUd8199S6AcRp4Tizzb0qv2fy8yxd4LihgQ+Dag2rOnubOwV8Xr78TMTIB451f9ECXig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749475165; c=relaxed/simple;
-	bh=Z2932OZyveK0+Uk61aLzEQ44aEOFqJ0e6p8TWd4Yka0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oPfxYIXmK0jKn3/vuRo9dyBc4JAE1uaoftvkQdsFeWwzql23TOE/0G3kxZ23oRFJWdR7QZ1eMZ83dIAD/OlvMS2WlI+YmNisZJRXWtY9kXORnt3am74l1CnJyEFfYFY6B1QqPei0MeTUVLK2tDEJINwruJWWXMqSjVTXnFebFnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fL4N0VX4; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749475283; c=relaxed/simple;
+	bh=LGL6lMiRoy1C3r6cGW8Ct+d61FuhityEEXU/wWP08ZM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GKsRyiGlyLn5mLko0PMbbIub5T7OelvduoOeq+3SOFhzmy1eFs5p3Z43TWJf0pVjBGqAjAjZj8w408Q5itAIhxKkgdwciwieSez5+fQlEjq2H4KDucycCxiC88xpPkKZAhSibb4LT2FsRoGbTpbHQ7fN/B4oWWBiwLHxoVuPhBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sc4jz1xX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fL4N0VX4"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5599gUfi021017;
-	Mon, 9 Jun 2025 13:19:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=wf+0jqAv8Wsqf1LsxHnd2k+B
-	8yrYVSDIpG3ltaNDxcw=; b=fL4N0VX4fk+AAP2NGA86hPMYC5VAYDReNx/RaEBR
-	6f/4iE8yxhx/eBBQYfN5ogd+3S4MdOO/yn3zimSn6rmzieDejUexGIjiYcYx/gnF
-	Cadu+23eTfDwEBmjGQ4uv1MW4Y8XxwnuBsoaVQUoPcLB4dyYXZw5QKP/NVQnELL5
-	ZqmAVBObEZc7E+B0F5nFc6diHOuPItMaEmRxZ83LCOjLEjiWvs+3xTt2ErHm/v3A
-	1G7oghH+QKu5guza1yvSmV7bCfsRH8Coxr5SxT0FVA2D21fdmVAMvqSSlx5VECSF
-	9iZBpwaDP7130srLEAy7vxBg6ENPnFs4cxhZEbecd/TsiQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ekpnuns-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Jun 2025 13:19:19 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 559DJI58017893
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 9 Jun 2025 13:19:18 GMT
-Received: from hu-wasimn-hyd.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 9 Jun 2025 06:19:11 -0700
-Date: Mon, 9 Jun 2025 18:49:02 +0530
-From: Wasim Nazir <quic_wasimn@quicinc.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@quicinc.com>, <kernel@oss.qualcomm.com>,
-        Pratyush Brahma <quic_pbrahma@quicinc.com>,
-        Prakash Gupta <quic_guptap@quicinc.com>
-Subject: Re: [PATCH v9 2/4] arm64: dts: qcom: iq9: Introduce new memory map
- for qcs9100/qcs9075
-Message-ID: <aEbfRoSbJgKmVYZe@hu-wasimn-hyd.qualcomm.com>
-References: <20250530092850.631831-1-quic_wasimn@quicinc.com>
- <20250530092850.631831-3-quic_wasimn@quicinc.com>
- <ss3xhat6v3s4ivcypw6fqcmblqait56pqhzwuhzyfhevp4kzlr@5e3f5nwb6lhb>
- <aEATe3pi1SsfZVI3@hu-wasimn-hyd.qualcomm.com>
- <q3hzryk4s7jd4kyavcg7s6d3oyzfpnjy4jhpeluvnikiglbeng@r4ydugwidgv7>
- <aEBzNnnyqt/aZ35r@hu-wasimn-hyd.qualcomm.com>
- <aEKnstzguH7f0A92@hu-wasimn-hyd.qualcomm.com>
- <n3et5jemuiin5c5pwi3r5gycnicxdhrwbmxapnsg2arlwabxcv@7b734qnxwaof>
- <aEavSv3VWuMvzyBw@hu-wasimn-hyd.qualcomm.com>
- <84f4dedd-fe3a-452f-93f7-b20e0bda9951@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sc4jz1xX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F35AC4CEEB;
+	Mon,  9 Jun 2025 13:21:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749475282;
+	bh=LGL6lMiRoy1C3r6cGW8Ct+d61FuhityEEXU/wWP08ZM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Sc4jz1xXyP3jz5eQLV049uceTTx03om/OMqT7PN9vxR/wp5lrGX/VvAQI1GZxRpGu
+	 giKaa9j9QsOmIeTFlm71QV9BqE8Dvut67LbWPk3nAIIsSXwcDT63YMpwVR1ZUG++IK
+	 ge4CJIEwbDx5Q8cITBNhSQWnb7x6zs20FfcrYvQKOXjcUENmPxwnrN8K4t9OhVA0MJ
+	 YWYNQEurAMP0D3Vzig45u9nO9cl54wArsGXIWylZkBBWNLPrMDrN4LAwhK8Gq+exE9
+	 OTpgsyGIfoxjmj++EG7fEpGWG0+prYra35kVaniQ65T/gAxDIr+FghqTliSmtMQV1d
+	 dFgzns762DF0Q==
+Message-ID: <33c80551bb7e0ac26ef00fe14aa9550df68ed120.camel@kernel.org>
+Subject: Re: [PATCH 3/5] coda: use iterate_dir() in coda_readdir()
+From: Jeff Layton <jlayton@kernel.org>
+To: Jan Harkes <jaharkes@cs.cmu.edu>, Jan Kara <jack@suse.cz>
+Cc: NeilBrown <neil@brown.name>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner	 <brauner@kernel.org>, Chuck Lever
+ <chuck.lever@oracle.com>, Amir Goldstein	 <amir73il@gmail.com>, David
+ Howells <dhowells@redhat.com>, Tyler Hicks	 <code@tyhicks.com>, Miklos
+ Szeredi <miklos@szeredi.hu>, Carlos Maiolino	 <cem@kernel.org>,
+ linux-fsdevel@vger.kernel.org, coda@cs.cmu.edu, 	linux-nfs@vger.kernel.org,
+ netfs@lists.linux.dev, ecryptfs@vger.kernel.org, 
+	linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Mon, 09 Jun 2025 09:21:20 -0400
+In-Reply-To: <A70CCC08-E8BE-4655-9158-81754F4F6B35@cs.cmu.edu>
+References: <20250608230952.20539-1-neil@brown.name>
+	 <20250608230952.20539-4-neil@brown.name>
+	 <8f2bf3aed5d7bd005adcdeaa51c02c7aa9ca14ba.camel@kernel.org>
+	 <6zirxkpkdrtpcoewopaaotmw4jpjvjmqq4tijudvrpeo4227pi@hyljuie6ngem>
+	 <A70CCC08-E8BE-4655-9158-81754F4F6B35@cs.cmu.edu>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <84f4dedd-fe3a-452f-93f7-b20e0bda9951@oss.qualcomm.com>
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=JcO8rVKV c=1 sm=1 tr=0 ts=6846df57 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=1J-_arqMHHhWf6i7UV4A:9 a=CjuIK1q_8ugA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA5NyBTYWx0ZWRfX8EI3raYXGx+Z
- 9kEvnEffpy7MiMcnpXMQ/5V8V6nTe93JuLbgi7OFQQOZXPh0o8wDMiXYlxXbHzpk/z//MmQ+IIb
- pd83B7vwc0HLHDH+TyhfOHz4R4L4pJMEFCY/Gww8D5rY6aWyLHEXmk2/O51VCUxLkX0QHukUijs
- 3T3heNLgYUwX0VhYNZRbnAVrmZTRrzffquEr1z2IXpNa72rZRRYeAdHp4ncu1pQlZmFCYr5eDkj
- 6qJyMZ6Ofc02zCMwvEiF2ui9QipdfzXw3KNyOf7/3fHjWSqlEQqlmQI2eQqN4RNRb10Blkpt+9x
- pSzxM+aonjHNFxFtGdi9dngjXyaUUNSmps3dzcnA6/1+h9z+7c3YoywqYQHiijMvooE7YqbXE4I
- K9KLJ7YpDrtMoHNZ0bZyrtYddwuBiM7GbMRBEnPzvuwkN0JpGe47PoZhTrQJ+JB/LUYxY7Ml
-X-Proofpoint-GUID: XwIvaZ5hT7WsiD3_MhVqIMQRPDRU5Uuh
-X-Proofpoint-ORIG-GUID: XwIvaZ5hT7WsiD3_MhVqIMQRPDRU5Uuh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-09_05,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=999 bulkscore=0 spamscore=0 impostorscore=0 phishscore=0
- priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1015 malwarescore=0
- suspectscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506090097
 
-On Mon, Jun 09, 2025 at 01:03:02PM +0300, Dmitry Baryshkov wrote:
-> On 09/06/2025 12:54, Wasim Nazir wrote:
-> > On Sat, Jun 07, 2025 at 11:22:39PM +0300, Dmitry Baryshkov wrote:
-> > > On Fri, Jun 06, 2025 at 02:02:50PM +0530, Wasim Nazir wrote:
-> > > > On Wed, Jun 04, 2025 at 09:54:38PM +0530, Wasim Nazir wrote:
-> > > > > On Wed, Jun 04, 2025 at 04:21:46PM +0300, Dmitry Baryshkov wrote:
-> > > > > > On Wed, Jun 04, 2025 at 03:05:55PM +0530, Wasim Nazir wrote:
-> > > > > > > On Mon, Jun 02, 2025 at 10:41:39AM -0500, Bjorn Andersson wrote:
-> > > > > > > > On Fri, May 30, 2025 at 02:58:45PM +0530, Wasim Nazir wrote:
-> > > > > > > > > From: Pratyush Brahma <quic_pbrahma@quicinc.com>
-> > > > > > > > > 
-> > > > > > > > > SA8775P has a memory map which caters to the auto specific requirements.
-> > > > > > > > 
-> > > > > > > > I thought SA8775P was the IoT platform and SA8255P was the automotive
-> > > > > > > > one. Has this changed?
-> > > > > > > 
-> > > > > > > Both SA8775P & SA8255P is for auto but former one is non-SCMI based while
-> > > > > > > the later one is SCMI based chip.
-> > > > > > > 
-> > > > > > > Only IQ9 series of chips (QCS9100 & QCS9075) are for IOT.
-> > > > > > > 
-> > > > > > > > 
-> > > > > > > > > QCS9100 & QCS9075 are its IOT variants (with marketing name as IQ9) which
-> > > > > > > > > inherit the memory map of SA8775P require a slightly different memory
-> > > > > > > > > map as compared to SA8775P auto parts.
-> > > > > > > > > This new memory map is applicable for all the IoT boards which inherit
-> > > > > > > > > the initial SA8775P memory map. This is not applicable for non-IoT
-> > > > > > > > 
-> > > > > > > > Is there are platform out there that actually uses the "initial SA8775P
-> > > > > > > > memory map"?
-> > > > > > > 
-> > > > > > > Yes currently sa8775p-ride and sa8775p-ride-r3 are using initial memory
-> > > > > > > map.
-> > > > > > > 
-> > > > > > > > 
-> > > > > > > > > boards.
-> > > > > > > > > 
-> > > > > > > > > Some new carveouts (viz. gunyah_md and a few pil dtb carveouts) have been
-> > > > > > > > > introduced as part of firmware updates for IoT. The size and base address
-> > > > > > > > > have been updated for video PIL carveout compared to SA8775P since it is
-> > > > > > > > > being brought up for the first time on IoT boards. The base addresses
-> > > > > > > > > of the rest of the PIL carveouts have been updated to accommodate the
-> > > > > > > > > change in size of video since PIL regions are relocatable and their
-> > > > > > > > > functionality is not impacted due to this change. The size of camera
-> > > > > > > > > pil has also been increased without breaking any feature.
-> > > > > > > > > 
-> > > > > > > > > The size of trusted apps carveout has also been reduced since it is
-> > > > > > > > > sufficient to meet IoT requirements. Also, audio_mdf_mem & tz_ffi_mem
-> > > > > > > > > carveout and its corresponding scm reference has been removed as these
-> > > > > > > > > are not required for IoT parts.
-> > > > > > > > > 
-> > > > > > > > > Incorporate these changes in the updated memory map.
-> > > > > > > > > 
-> > > > > > > > > Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
-> > > > > > > > > Signed-off-by: Prakash Gupta <quic_guptap@quicinc.com>
-> > > > > > > > > Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
-> > > > > > > > > ---
-> > > > > > > > >   .../boot/dts/qcom/iq9-reserved-memory.dtsi    | 113 ++++++++++++++++++
-> > > > > > > > >   1 file changed, 113 insertions(+)
-> > > > > > > > >   create mode 100644 arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
-> > > > > > > > > 
-> > > > > > > > > diff --git a/arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi b/arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
-> > > > > > > > > new file mode 100644
-> > > > > > > > > index 000000000000..ff2600eb5e3d
-> > > > > > > > > --- /dev/null
-> > > > > > > > > +++ b/arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
-> > > > > > > > 
-> > > > > > > > The naming convention is <soc>-<something>.dtsi and I don't see any
-> > > > > > > > other uses of the "iq9" naming.
-> > > > > > > 
-> > > > > > > As this new memory map is common for IQ9 series of SoC (QCS9100 &
-> > > > > > > QCS9075), so we have used its common name.
-> > > > > > 
-> > > > > > IQ9 name is not known or visible outside of this commit.
-> > > > > 
-> > > > > Are you referring to add the same in cover-letter?
-> > > > > 
-> > > > > > 
-> > > > > > > Once the DT structure for QCS9100 is refactored, we would update this
-> > > > > > > common file there.
-> > > > > > 
-> > > > > > Can you refactor it first?
-> > > > > 
-> > > > > This refactoring involves changes in all the ride/ride-r3 boards which
-> > > > > are based on sa8775p & qcs9100. Even though we had sent v0[1] but we still
-> > > > > need to conclude on the final structure. Since, ethernet is broken in upstream,
-> > > > > we are working on its fix before sending another series.
-> > > > > 
-> > > > > Hence, we want to proceed for iq9075-evk for now and once qcs9100 is
-> > > > > finalized, we can use the memory-map there.
-> > > > > 
-> > > > > But to avoid this dependency and to proceed with iq9075-evk alone,
-> > > > > I can rename it to qcs9075-reserved-memory.dtsi.
-> > > > > 
-> > > > > Let me know if that works here.
-> > > > > 
-> > > > > [1] https://lore.kernel.org/all/20250507065116.353114-1-quic_wasimn@quicinc.com/
-> > > > 
-> > > > Hi Dmitry,
-> > > > 
-> > > > Shall I proceed with qcs9075-reserved-memory.dtsi or do you have any
-> > > > other suggestion that we should discuss?
-> > > > 
-> > > > Aparently, this series is for qcs9075 only so using exact (not common)
-> > > > name also aligns the naming format.
-> > > 
-> > > Squash it into qcs9075.dtsi.
-> > 
-> > We don't have qcs9075.dtsi.
-> > Is it ok to squash it into qcs9075-som.dtsi ?
-> 
-> Is the memory map specific to SoM or to the SoC?
+On Mon, 2025-06-09 at 09:12 -0400, Jan Harkes wrote:
+> There are definitely still users of Coda at CMU, I don't track who else u=
+ses it, but it cannot be too many for sure.
+>=20
+> At this point it mostly keeps you honest about little locking details in =
+the vfs. There are some tricky details in how the inode mappings are access=
+ed and such. I think that  is helpful for overlay and user filesystems like=
+ fuse, overlayfs, etc. but Coda is quite small so it is easy to reason abou=
+t how it uses these features.
+>=20
+>=20
 
-Understood, will create soc file and add the memory map changes.
+The reason I ask is that it's one of the places that we often have to
+do odd fixups like this when making changes to core VFS APIs. It's also
+not seen any non-collateral changes since 2021. I'm just wondering
+whether it's worth it to keep coda in-tree for so few users.
 
-> 
-> > 
-> > > 
-> > > > 
-> > > > > 
-> > > > > > 
-> > > > > > > 
-> > > > > > > > 
-> > > > > > 
-> > > > > > -- 
-> > > > > > With best wishes
-> > > > > > Dmitry
-> > > > > 
-> > > > > Regards,
-> > > > > Wasim
-> > > > 
-> > > > -- 
-> > > > Regards,
-> > > > Wasim
-> > > 
-> > > -- 
-> > > With best wishes
-> > > Dmitry
-> > 
-> 
-> 
-> -- 
-> With best wishes
-> Dmitry
+IIRC, it's also the only fs in the kernel that changes its
+inode->i_mapping pointer after inode instantiation. If not for coda, we
+could probably replace the i_mapping pointer with some macro wizardry
+and shrink struct inode by 8 bytes.
 
--- 
-Regards,
-Wasim
+
+> On June 9, 2025 9:00:31 AM EDT, Jan Kara <jack@suse.cz> wrote:
+> > On Mon 09-06-25 08:17:15, Jeff Layton wrote:
+> > > On Mon, 2025-06-09 at 09:09 +1000, NeilBrown wrote:
+> > > > The code in coda_readdir() is nearly identical to iterate_dir().
+> > > > Differences are:
+> > > >  - iterate_dir() is killable
+> > > >  - iterate_dir() adds permission checking and accessing notificatio=
+ns
+> > > >=20
+> > > > I believe these are not harmful for coda so it is best to use
+> > > > iterate_dir() directly.  This will allow locking changes without
+> > > > touching the code in coda.
+> > > >=20
+> > > > Signed-off-by: NeilBrown <neil@brown.name>
+> > > > ---
+> > > >  fs/coda/dir.c | 12 ++----------
+> > > >  1 file changed, 2 insertions(+), 10 deletions(-)
+> > > >=20
+> > > > diff --git a/fs/coda/dir.c b/fs/coda/dir.c
+> > > > index ab69d8f0cec2..ca9990017265 100644
+> > > > --- a/fs/coda/dir.c
+> > > > +++ b/fs/coda/dir.c
+> > > > @@ -429,17 +429,9 @@ static int coda_readdir(struct file *coda_file=
+, struct dir_context *ctx)
+> > > >  	cfi =3D coda_ftoc(coda_file);
+> > > >  	host_file =3D cfi->cfi_container;
+> > > > =20
+> > > > -	if (host_file->f_op->iterate_shared) {
+> > > > -		struct inode *host_inode =3D file_inode(host_file);
+> > > > -		ret =3D -ENOENT;
+> > > > -		if (!IS_DEADDIR(host_inode)) {
+> > > > -			inode_lock_shared(host_inode);
+> > > > -			ret =3D host_file->f_op->iterate_shared(host_file, ctx);
+> > > > -			file_accessed(host_file);
+> > > > -			inode_unlock_shared(host_inode);
+> > > > -		}
+> > > > +	ret =3D iterate_dir(host_file, ctx);
+> > > > +	if (ret !=3D -ENOTDIR)
+> > > >  		return ret;
+> > > > -	}
+> > > >  	/* Venus: we must read Venus dirents from a file */
+> > > >  	return coda_venus_readdir(coda_file, ctx);
+> > > >  }
+> > >=20
+> > >=20
+> > > Is it already time for my annual ask of "Who the heck is using coda
+> > > these days?" Anyway, this patch looks fine to me.
+> > >=20
+> > > Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> >=20
+> > Send a patch proposing deprecating it and we might learn that :) Search=
+ing
+> > the web seems to suggest it is indeed pretty close to dead.
+> >=20
+> > 								Honza
+
+--=20
+Jeff Layton <jlayton@kernel.org>
