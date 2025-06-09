@@ -1,50 +1,50 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFAC253F1B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C792E255F3C;
 	Mon,  9 Jun 2025 12:23:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749471798; cv=none; b=LwOUZa2tkZLxkRmgeaY1MXtRdGlJp6vPR3jr9CuH/EmhSVb4z+RiEabDZhEjQEW3e2kOteBaaQbZAvL+2tstdXwXbsUZYPUsPCps7HDFMQzkA5bi4XZY2nRLHWxrbIU0UOongPK0dNzAWe7kpjzD/Z5zej/5WeGoJ+PhQJuSgV8=
+	t=1749471798; cv=none; b=Zotn5LZo84Jn1DEfXh+lSsRDBPL+AyfwJpx7H98sfVXwggzxiN79suvOS/+wV81e05RB+shNPQtPxOQwgmCqleo5K/NAq+tZsNGKgcic0TsH1tXiPFWTaTPjCjuNtiJum5IXbM4+wllXhtvmbMy9I0UUuviTxoR81zBsZ2Egong=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749471798; c=relaxed/simple;
-	bh=owg9FsV5Ll3aVydO1dTlas1KccYx/VGJJjDF/43vTlE=;
+	bh=4I6/L5vs1iyIfzEeYvmfE1qCwTig2Q/jjnN4+24S5V4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=iSk9EB9Y0CSp2wFsO2wNAcHze35QtyOHypN8KLJxB8uSnMLsgzjWHOG92Ol73ajo3BLdvwHm6iPlCW8LG00USFeuT8dQDsrzK8j3lssSCc+55R1YE+A7oy1GQn33zW8xig8LDXfk8wGnUvnerV+VNUJVZff4iVbm8G3a91YytcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dk5hz4V2; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:CC; b=Ly42Xv2i0J7UyCdPsKoqD6IoDjSkFGN1fm/h5m2frKM5QMDII8UtiqDzTBkc0XMwqpiaoTOnuhsc4g/rURTHwB5DqpZi17g1WmYrGseajLM6Y6Y5kvc0cTLUUv6n5tUuj+RVf2txOYKtCUdmESW56a2hDVnEXJWWcdN/oxg5AdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UyrWcnFk; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dk5hz4V2"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5598P02m003426;
-	Mon, 9 Jun 2025 12:23:06 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UyrWcnFk"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5599S2cG013230;
+	Mon, 9 Jun 2025 12:22:55 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	joYVYd272S/tW9QOPZEa4sZ0+tiqutqmNHk0wE/icFQ=; b=dk5hz4V2sHx1YSst
-	nQ5ghstPxeizNDRnVnIH3CesEnlEeMW9JzUMtQcr+1EJuagYTMRj7vvfvtkFK0Mg
-	il11SGYdAZjfGflHBN6fpCqSAD69+/pNzEmp3+MS0i24x0uqMVvSmSj9BBFm7EO0
-	M36ATnE9r59YhG9JF4bjJ6Ao40BtRPk1M/Oi7QLfyddlb58viB8O8FV/kxLf/w9E
-	e61Wso5phqisi/QDPmVkGiSabpThHXMZZ2vUZC0Az4jmD9pAcMLDXFu/8eiWn/xy
-	S5qBXcCe8MUvebmfjrbvyPU2Z60+BR4FVx5miK7DWdz1SecjSVldcF39UyzcnC3G
-	eXBlcg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 475v2y0q3d-1
+	jN4rcY7ob1YYvd800m+XjERPKBHDFxeUK9mvDsw+FMc=; b=UyrWcnFkYBQnOz93
+	OZJeG7dV3nmr4LZPqQkZvEt14wuG4gO/ex8g11eY8PEVIDMCOQwD5foJFk2vHEi6
+	Wv48czCejFD/OTiG1MsX/0zm9Z5gI4k/RwbvY9zRdcJET0RvORSBM7LAXmp0Jo9F
+	HcUMG6h04UTQO8K8BgJKbMpTAIULEWK0XMUi972+iL+mp1dZsbRdcxLvNHCe4mB3
+	2UQOyQqGk1tyEN2LRzLaBQ6emgsdQTJnF+zuCDlZELX3RG0DGJ8/cfxKMuu0OhMd
+	w8iLFjEM31lfNrakiGdLCtw6ALmov2oq53c2/N6UVVjeXA7vznIXWqIDjPyoRvd/
+	I+mDaQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474d11x5j8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Jun 2025 12:23:06 +0000 (GMT)
+	Mon, 09 Jun 2025 12:22:54 +0000 (GMT)
 Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 559CN5JG019500
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 559CMrFR002102
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 9 Jun 2025 12:23:05 GMT
+	Mon, 9 Jun 2025 12:22:53 GMT
 Received: from cse-cd01-lnx.ap.qualcomm.com (10.80.80.8) by
  nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 9 Jun 2025 05:23:01 -0700
+ 15.2.1544.9; Mon, 9 Jun 2025 05:22:50 -0700
 From: Yongxing Mou <quic_yongmou@quicinc.com>
-Date: Mon, 9 Jun 2025 20:21:23 +0800
-Subject: [PATCH v2 04/38] drm/msm/dp: re-arrange dp_display_disable() into
- functional parts
+Date: Mon, 9 Jun 2025 20:21:20 +0800
+Subject: [PATCH v2 01/38] drm/msm/dp: split msm_dp_panel_read_sink_caps()
+ into two parts and drop panel drm_edid
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250609-msm-dp-mst-v2-4-a54d8902a23d@quicinc.com>
+Message-ID: <20250609-msm-dp-mst-v2-1-a54d8902a23d@quicinc.com>
 References: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
 In-Reply-To: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
 To: Rob Clark <robin.clark@oss.qualcomm.com>,
@@ -73,156 +73,255 @@ CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
  Mou" <quic_yongmou@quicinc.com>,
         Abhinav Kumar <quic_abhinavk@quicinc.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749471753; l=4641;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749471752; l=7757;
  i=quic_yongmou@quicinc.com; s=20241121; h=from:subject:message-id;
- bh=b676NrVSTLe/0xU9hvmiOr00aB3AYIYJRYTAc3hYpUM=;
- b=/YC+TDlj8+mpWJ0bNoD5M+V6qiYsSg9HQrYGV3yY8QW37veYPlw4w+3qwthogAO+eKH5d6uu4
- BNhInbIaR03DJj3dew+/FrvCw9MW2KeWqgYUDLvBcosjBIGbjtrP/XA
+ bh=ygoFNMo3xoq5TdCviG51U1xDkpQZuti/woVERBfEbI0=;
+ b=1AhBEGPKeQJDNuRFTREPibYjtn3VbQSiGfOeEHffsKlkdjUDhfh/WJyOJZcUGxGkg8MuBO2xF
+ 1w5uhH1k8YBB5bX7ri9eQLg+iPlnPhIqHEjvhWshbdzmDwtHf+yaViZ
 X-Developer-Key: i=quic_yongmou@quicinc.com; a=ed25519;
  pk=zeCnFRUqtOQMeFvdwex2M5o0Yf67UHYfwCyBRQ3kFbU=
 X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01c.na.qualcomm.com (10.47.97.35)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA5MiBTYWx0ZWRfX9O6rsdXyFYbX
- /eXjIN6TEX0LIDbHnqqji9MSp+nZNj6mb6i6Hq7fa6kVsfzLXmIAGqWOO4y+kbfggnej9tKDoth
- l6fwbwsFjzD9tT6Sy+FhrsafAr96kb8I3QABcg7btSZygEj1JW9NKC0j1NGfOZnpKTrO8Ndlb4T
- CJiIPdT8jOR27QCpnVhD+H0+Xv0al4q7BDsF8J1ttRniGSmRc2G2rrjlFJzcAPteShoTY0JQmdH
- cgUxzp0gGsk/pCI9RwTtImKkOjFZSNa7ttyKghiAFcG2W2g+6E76thuUFaULhb43I/h6VW66e+o
- 921l6/YKj5QP8sWjsBVUNVAYItWNy3BGhwLDJHB/fsRw31MBfy3OcobpKPkXIS173OpI8+teHUu
- LiMYdoP9gj6O8yvZz7YGe5t3LmZ/6T34xsJUMX3YahoHlwavXY/ixOnON6B0+I6P180cj7Kq
-X-Proofpoint-GUID: uJ6vjc7RF9sd0zKo6qEHkti_lgBmfGDJ
-X-Proofpoint-ORIG-GUID: uJ6vjc7RF9sd0zKo6qEHkti_lgBmfGDJ
-X-Authority-Analysis: v=2.4 cv=f+BIBPyM c=1 sm=1 tr=0 ts=6846d22a cx=c_pps
+X-Proofpoint-GUID: a_NFKb14Pod5UooQebPLG5cIdlnQp1Tq
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA5MiBTYWx0ZWRfX6E9SsDCPI4Sy
+ M8gplRwMAVkwqpnCd6OxDcenMs2YL7df/i6BRPfPspLRUKkMA4iBfBi+kVR2PpUIAGYR6w/Cmlb
+ vKPExJubrSb92krlQLb63LjfP6zmi9IVezNWk2lXF3YqarmtFolGhcePrIhPY7zOAgoEnPklV03
+ z9TyVGb54Tlld96dps42Vo+xHGzGAXJsY9nXinDnG2S07KSMlkeuyt+iGUe6BQklsefgBSwK+ge
+ XzmoEoqH2vnJDlMIhDBxFrlNX6pvFKqGOC7BEABvDHUEjysHcuhiL79ZGXtutDimaMP3/sYScu2
+ oiqObWZwweWuvaRqs7lKSUg456E4ki/GO/0rcASTrzVMUOQHJr6uiWuua6SwKmSZZuAwQJiO/Pp
+ y6eFbl5DjCN6EZpjvQEg2vuihGQTIY/RJjGcmPM96+1vSkPya4wYe2bRxwKOjgikErv3Ilmr
+X-Authority-Analysis: v=2.4 cv=GYkXnRXL c=1 sm=1 tr=0 ts=6846d21e cx=c_pps
  a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
  a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=hClVRiXsoM2qTkbQJdEA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+ a=QRlpv4jMYbM0ErC57hgA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: a_NFKb14Pod5UooQebPLG5cIdlnQp1Tq
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-09_05,2025-06-05_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 spamscore=0 mlxlogscore=866 bulkscore=0 impostorscore=0
- lowpriorityscore=0 priorityscore=1501 adultscore=0 phishscore=0 mlxscore=0
- malwarescore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506090092
+ suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=905 bulkscore=0
+ impostorscore=0 clxscore=1015 malwarescore=0 priorityscore=1501 mlxscore=0
+ adultscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506090092
 
 From: Abhinav Kumar <quic_abhinavk@quicinc.com>
 
-dp_display_disable() handles special case of when monitor is
-disconnected from the dongle while the dongle stays connected
-thereby needing a separate function dp_ctrl_off_link_stream()
-for this. However with a slight rework this can still be handled
-by keeping common paths same for regular and special case.
+In preparation of DP MST where link caps are read for the
+immediate downstream device and the edid is read through
+sideband messaging, split the msm_dp_panel_read_sink_caps() into
+two parts which read the link parameters and the edid parts
+respectively. Also drop the panel drm_edid cached as we actually
+don't need it.
 
 Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
 Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
 ---
- drivers/gpu/drm/msm/dp/dp_ctrl.c    | 29 +++++++++++++++--------------
- drivers/gpu/drm/msm/dp/dp_ctrl.h    |  5 ++++-
- drivers/gpu/drm/msm/dp/dp_display.c | 16 +++++++---------
- 3 files changed, 26 insertions(+), 24 deletions(-)
+ drivers/gpu/drm/msm/dp/dp_display.c | 13 +++++----
+ drivers/gpu/drm/msm/dp/dp_panel.c   | 55 ++++++++++++++++++++-----------------
+ drivers/gpu/drm/msm/dp/dp_panel.h   |  6 ++--
+ 3 files changed, 40 insertions(+), 34 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/dp/dp_ctrl.c b/drivers/gpu/drm/msm/dp/dp_ctrl.c
-index 1e13ca81b0155a37a4ed7a2e83c918293d703a37..1ce3cca121d0c56b493e282c76eb9202371564cf 100644
---- a/drivers/gpu/drm/msm/dp/dp_ctrl.c
-+++ b/drivers/gpu/drm/msm/dp/dp_ctrl.c
-@@ -2081,30 +2081,31 @@ int msm_dp_ctrl_on_stream(struct msm_dp_ctrl *msm_dp_ctrl)
- 	return ret;
- }
- 
--void msm_dp_ctrl_off_link_stream(struct msm_dp_ctrl *msm_dp_ctrl)
-+void msm_dp_ctrl_clear_vsc_sdp_pkt(struct msm_dp_ctrl *msm_dp_ctrl)
- {
- 	struct msm_dp_ctrl_private *ctrl;
--	struct phy *phy;
- 
- 	ctrl = container_of(msm_dp_ctrl, struct msm_dp_ctrl_private, msm_dp_ctrl);
--	phy = ctrl->phy;
--
- 	msm_dp_catalog_panel_disable_vsc_sdp(ctrl->catalog);
-+}
- 
--	/* set dongle to D3 (power off) mode */
--	msm_dp_link_psm_config(ctrl->link, &ctrl->panel->link_info, true);
-+void msm_dp_ctrl_psm_config(struct msm_dp_ctrl *msm_dp_ctrl)
-+{
-+	struct msm_dp_ctrl_private *ctrl;
- 
--	msm_dp_catalog_ctrl_mainlink_ctrl(ctrl->catalog, false);
-+	ctrl = container_of(msm_dp_ctrl, struct msm_dp_ctrl_private, msm_dp_ctrl);
- 
--	if (ctrl->stream_clks_on) {
--		clk_disable_unprepare(ctrl->pixel_clk);
--		ctrl->stream_clks_on = false;
--	}
-+	/* set dongle to D3 (power off) mode */
-+	msm_dp_link_psm_config(ctrl->link, &ctrl->panel->link_info, true);
-+}
- 
--	dev_pm_opp_set_rate(ctrl->dev, 0);
--	msm_dp_ctrl_link_clk_disable(&ctrl->msm_dp_ctrl);
-+void msm_dp_ctrl_reinit_phy(struct msm_dp_ctrl *msm_dp_ctrl)
-+{
-+	struct msm_dp_ctrl_private *ctrl;
-+	struct phy *phy;
- 
--	phy_power_off(phy);
-+	ctrl = container_of(msm_dp_ctrl, struct msm_dp_ctrl_private, msm_dp_ctrl);
-+	phy = ctrl->phy;
- 
- 	/* aux channel down, reinit phy */
- 	phy_exit(phy);
-diff --git a/drivers/gpu/drm/msm/dp/dp_ctrl.h b/drivers/gpu/drm/msm/dp/dp_ctrl.h
-index 42745c912adbad7221c78f5cecefa730bfda1e75..edbe5766db74c4e4179141d895f9cb85e514f29b 100644
---- a/drivers/gpu/drm/msm/dp/dp_ctrl.h
-+++ b/drivers/gpu/drm/msm/dp/dp_ctrl.h
-@@ -20,7 +20,6 @@ struct phy;
- int msm_dp_ctrl_on_link(struct msm_dp_ctrl *msm_dp_ctrl);
- int msm_dp_ctrl_on_stream(struct msm_dp_ctrl *msm_dp_ctrl);
- int msm_dp_ctrl_prepare_stream_on(struct msm_dp_ctrl *dp_ctrl, bool force_link_train);
--void msm_dp_ctrl_off_link_stream(struct msm_dp_ctrl *msm_dp_ctrl);
- void msm_dp_ctrl_off_link(struct msm_dp_ctrl *msm_dp_ctrl);
- void msm_dp_ctrl_off(struct msm_dp_ctrl *msm_dp_ctrl);
- void msm_dp_ctrl_push_idle(struct msm_dp_ctrl *msm_dp_ctrl);
-@@ -42,4 +41,8 @@ void msm_dp_ctrl_config_psr(struct msm_dp_ctrl *msm_dp_ctrl);
- int msm_dp_ctrl_core_clk_enable(struct msm_dp_ctrl *msm_dp_ctrl);
- void msm_dp_ctrl_core_clk_disable(struct msm_dp_ctrl *msm_dp_ctrl);
- 
-+void msm_dp_ctrl_clear_vsc_sdp_pkt(struct msm_dp_ctrl *msm_dp_ctrl);
-+void msm_dp_ctrl_psm_config(struct msm_dp_ctrl *msm_dp_ctrl);
-+void msm_dp_ctrl_reinit_phy(struct msm_dp_ctrl *msm_dp_ctrl);
-+
- #endif /* _DP_CTRL_H_ */
 diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
-index 5ac5dcf35b789f2bda052a2c17aae20aa48d8e18..a5ca498cb970d0c6a4095b0b7fc6269c2dc3ad31 100644
+index 6f05a939ce9e648e9601597155999b6f85adfcff..4a9b65647cdef1ed6c3bb851f93df0db8be977af 100644
 --- a/drivers/gpu/drm/msm/dp/dp_display.c
 +++ b/drivers/gpu/drm/msm/dp/dp_display.c
-@@ -925,17 +925,15 @@ static int msm_dp_display_disable(struct msm_dp_display_private *dp)
- 	if (!msm_dp_display->power_on)
- 		return 0;
+@@ -389,7 +389,11 @@ static int msm_dp_display_process_hpd_high(struct msm_dp_display_private *dp)
  
-+	msm_dp_ctrl_clear_vsc_sdp_pkt(dp->ctrl);
+ 	dp->link->lttpr_count = msm_dp_display_lttpr_init(dp, dpcd);
+ 
+-	rc = msm_dp_panel_read_sink_caps(dp->panel, connector);
++	rc = msm_dp_panel_read_link_caps(dp->panel);
++	if (rc)
++		goto end;
 +
-+	/* dongle is still connected but sinks are disconnected */
- 	if (dp->link->sink_count == 0) {
--		/*
--		 * irq_hpd with sink_count = 0
--		 * hdmi unplugged out of dongle
--		 */
--		msm_dp_ctrl_off_link_stream(dp->ctrl);
-+		msm_dp_ctrl_psm_config(dp->ctrl);
-+		msm_dp_ctrl_off(dp->ctrl);
-+		/* re-init the PHY so that we can listen to Dongle disconnect */
-+		msm_dp_ctrl_reinit_phy(dp->ctrl);
- 	} else {
--		/*
--		 * unplugged interrupt
--		 * dongle unplugged out of DUT
--		 */
- 		msm_dp_ctrl_off(dp->ctrl);
- 		msm_dp_display_host_phy_exit(dp);
++	rc = msm_dp_panel_read_edid(dp->panel, connector);
+ 	if (rc)
+ 		goto end;
+ 
+@@ -720,7 +724,6 @@ static int msm_dp_irq_hpd_handle(struct msm_dp_display_private *dp, u32 data)
+ static void msm_dp_display_deinit_sub_modules(struct msm_dp_display_private *dp)
+ {
+ 	msm_dp_audio_put(dp->audio);
+-	msm_dp_panel_put(dp->panel);
+ 	msm_dp_aux_put(dp->aux);
+ }
+ 
+@@ -783,7 +786,7 @@ static int msm_dp_init_sub_modules(struct msm_dp_display_private *dp)
+ 		rc = PTR_ERR(dp->ctrl);
+ 		DRM_ERROR("failed to initialize ctrl, rc = %d\n", rc);
+ 		dp->ctrl = NULL;
+-		goto error_ctrl;
++		goto error_link;
  	}
+ 
+ 	dp->audio = msm_dp_audio_get(dp->msm_dp_display.pdev, dp->catalog);
+@@ -791,13 +794,11 @@ static int msm_dp_init_sub_modules(struct msm_dp_display_private *dp)
+ 		rc = PTR_ERR(dp->audio);
+ 		pr_err("failed to initialize audio, rc = %d\n", rc);
+ 		dp->audio = NULL;
+-		goto error_ctrl;
++		goto error_link;
+ 	}
+ 
+ 	return rc;
+ 
+-error_ctrl:
+-	msm_dp_panel_put(dp->panel);
+ error_link:
+ 	msm_dp_aux_put(dp->aux);
+ error:
+diff --git a/drivers/gpu/drm/msm/dp/dp_panel.c b/drivers/gpu/drm/msm/dp/dp_panel.c
+index 4e8ab75c771b1e3a2d62f75e9993e1062118482b..d9041e235104a74b3cc50ff2e307eae0c4301ef3 100644
+--- a/drivers/gpu/drm/msm/dp/dp_panel.c
++++ b/drivers/gpu/drm/msm/dp/dp_panel.c
+@@ -118,14 +118,13 @@ static u32 msm_dp_panel_get_supported_bpp(struct msm_dp_panel *msm_dp_panel,
+ 	return min_supported_bpp;
+ }
+ 
+-int msm_dp_panel_read_sink_caps(struct msm_dp_panel *msm_dp_panel,
+-	struct drm_connector *connector)
++int msm_dp_panel_read_link_caps(struct msm_dp_panel *msm_dp_panel)
+ {
+ 	int rc, bw_code;
+ 	int count;
+ 	struct msm_dp_panel_private *panel;
+ 
+-	if (!msm_dp_panel || !connector) {
++	if (!msm_dp_panel) {
+ 		DRM_ERROR("invalid input\n");
+ 		return -EINVAL;
+ 	}
+@@ -160,26 +159,29 @@ int msm_dp_panel_read_sink_caps(struct msm_dp_panel *msm_dp_panel,
+ 
+ 	rc = drm_dp_read_downstream_info(panel->aux, msm_dp_panel->dpcd,
+ 					 msm_dp_panel->downstream_ports);
+-	if (rc)
+-		return rc;
++	return rc;
++}
+ 
+-	drm_edid_free(msm_dp_panel->drm_edid);
++int msm_dp_panel_read_edid(struct msm_dp_panel *msm_dp_panel, struct drm_connector *connector)
++{
++	struct msm_dp_panel_private *panel;
++	const struct drm_edid *drm_edid;
++
++	panel = container_of(msm_dp_panel, struct msm_dp_panel_private, msm_dp_panel);
+ 
+-	msm_dp_panel->drm_edid = drm_edid_read_ddc(connector, &panel->aux->ddc);
++	drm_edid = drm_edid_read_ddc(connector, &panel->aux->ddc);
+ 
+-	drm_edid_connector_update(connector, msm_dp_panel->drm_edid);
++	drm_edid_connector_update(connector, drm_edid);
+ 
+-	if (!msm_dp_panel->drm_edid) {
++	if (!drm_edid) {
+ 		DRM_ERROR("panel edid read failed\n");
+ 		/* check edid read fail is due to unplug */
+ 		if (!msm_dp_catalog_link_is_connected(panel->catalog)) {
+-			rc = -ETIMEDOUT;
+-			goto end;
++			return -ETIMEDOUT;
+ 		}
+ 	}
+ 
+-end:
+-	return rc;
++	return 0;
+ }
+ 
+ u32 msm_dp_panel_get_mode_bpp(struct msm_dp_panel *msm_dp_panel,
+@@ -208,15 +210,20 @@ u32 msm_dp_panel_get_mode_bpp(struct msm_dp_panel *msm_dp_panel,
+ int msm_dp_panel_get_modes(struct msm_dp_panel *msm_dp_panel,
+ 	struct drm_connector *connector)
+ {
++	struct msm_dp_panel_private *panel;
++	const struct drm_edid *drm_edid;
++
+ 	if (!msm_dp_panel) {
+ 		DRM_ERROR("invalid input\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	if (msm_dp_panel->drm_edid)
+-		return drm_edid_connector_add_modes(connector);
++	panel = container_of(msm_dp_panel, struct msm_dp_panel_private, msm_dp_panel);
++
++	drm_edid = drm_edid_read_ddc(connector, &panel->aux->ddc);
++	drm_edid_connector_update(connector, drm_edid);
+ 
+-	return 0;
++	return drm_edid_connector_add_modes(connector);
+ }
+ 
+ static u8 msm_dp_panel_get_edid_checksum(const struct edid *edid)
+@@ -229,6 +236,7 @@ static u8 msm_dp_panel_get_edid_checksum(const struct edid *edid)
+ void msm_dp_panel_handle_sink_request(struct msm_dp_panel *msm_dp_panel)
+ {
+ 	struct msm_dp_panel_private *panel;
++	const struct drm_edid *drm_edid;
+ 
+ 	if (!msm_dp_panel) {
+ 		DRM_ERROR("invalid input\n");
+@@ -238,8 +246,13 @@ void msm_dp_panel_handle_sink_request(struct msm_dp_panel *msm_dp_panel)
+ 	panel = container_of(msm_dp_panel, struct msm_dp_panel_private, msm_dp_panel);
+ 
+ 	if (panel->link->sink_request & DP_TEST_LINK_EDID_READ) {
++		drm_edid = drm_edid_read_ddc(msm_dp_panel->connector, &panel->aux->ddc);
++
++		if (!drm_edid)
++			return;
++
+ 		/* FIXME: get rid of drm_edid_raw() */
+-		const struct edid *edid = drm_edid_raw(msm_dp_panel->drm_edid);
++		const struct edid *edid = drm_edid_raw(drm_edid);
+ 		u8 checksum;
+ 
+ 		if (edid)
+@@ -515,11 +528,3 @@ struct msm_dp_panel *msm_dp_panel_get(struct device *dev, struct drm_dp_aux *aux
+ 
+ 	return msm_dp_panel;
+ }
+-
+-void msm_dp_panel_put(struct msm_dp_panel *msm_dp_panel)
+-{
+-	if (!msm_dp_panel)
+-		return;
+-
+-	drm_edid_free(msm_dp_panel->drm_edid);
+-}
+diff --git a/drivers/gpu/drm/msm/dp/dp_panel.h b/drivers/gpu/drm/msm/dp/dp_panel.h
+index 4906f4f09f2451cfed3c1007f38b4db7dfdb1d90..7f139478e1012d5b8f1f745f0de5fc3943745428 100644
+--- a/drivers/gpu/drm/msm/dp/dp_panel.h
++++ b/drivers/gpu/drm/msm/dp/dp_panel.h
+@@ -32,7 +32,6 @@ struct msm_dp_panel {
+ 	u8 downstream_ports[DP_MAX_DOWNSTREAM_PORTS];
+ 
+ 	struct msm_dp_link_info link_info;
+-	const struct drm_edid *drm_edid;
+ 	struct drm_connector *connector;
+ 	struct msm_dp_display_mode msm_dp_mode;
+ 	struct msm_dp_panel_psr psr_cap;
+@@ -51,7 +50,9 @@ int msm_dp_panel_timing_cfg(struct msm_dp_panel *msm_dp_panel);
+ int msm_dp_panel_read_sink_caps(struct msm_dp_panel *msm_dp_panel,
+ 		struct drm_connector *connector);
+ u32 msm_dp_panel_get_mode_bpp(struct msm_dp_panel *msm_dp_panel, u32 mode_max_bpp,
+-			u32 mode_pclk_khz);
++			      u32 mode_pclk_khz);
++int msm_dp_panel_read_link_caps(struct msm_dp_panel *dp_panel);
++int msm_dp_panel_read_edid(struct msm_dp_panel *dp_panel, struct drm_connector *connector);
+ int msm_dp_panel_get_modes(struct msm_dp_panel *msm_dp_panel,
+ 		struct drm_connector *connector);
+ void msm_dp_panel_handle_sink_request(struct msm_dp_panel *msm_dp_panel);
+@@ -86,5 +87,4 @@ static inline bool is_lane_count_valid(u32 lane_count)
+ 
+ struct msm_dp_panel *msm_dp_panel_get(struct device *dev, struct drm_dp_aux *aux,
+ 			      struct msm_dp_link *link, struct msm_dp_catalog *catalog);
+-void msm_dp_panel_put(struct msm_dp_panel *msm_dp_panel);
+ #endif /* _DP_PANEL_H_ */
 
 -- 
 2.34.1
