@@ -1,237 +1,221 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2068.outbound.protection.outlook.com [40.107.244.68])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058692550B3;
-	Mon,  9 Jun 2025 12:13:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749471185; cv=fail; b=tK+QmfjD4aRjO/Pqz4zxPNMi4O97/yg4bghJ7AjkaRF9L5F9VFs6PTz+oU2H7O9D8qney5x1Aahkna9SBOrm9GTIj2136MOSJMxxuNUPs0tLjfO4fkFNW+N7vYVJ0aUyhYKd7/Y9orgZzOp5lFJWhg5UAx4EXNIRjcZomW2R/SA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749471185; c=relaxed/simple;
-	bh=t40cmaha6ipJo0AH+2OyiPNpIjHDl7OZeUBk7v55T6s=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HpjklwE34aUdMWvHC4aFqfnzwbQmhM5TDgA1Zif773Tf+iBK7qSJszuQGnLsvOmdFF6ZcjVfogfRAR5T0/2uGsrSGvw5rVCngQmaDfxcGmUrdwUQj6WikYI6MLn1pjUJUcMo3lyboAlSQakstfk79GewaWaQLZgDzA8pm6gEORk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=QF08ff1h; arc=fail smtp.client-ip=40.107.244.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5AF2550B3;
+	Mon,  9 Jun 2025 12:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749471195; cv=none; b=F9Wng6gHPviIEHYZ4UJoQYcTiigXbQdtpyaE1aQY0YidkCeDNn0Y9cET3eMgUgaS+3xoosQ+1GOflmqSH7bSOstO/iG3yTetou0yZanNa5ooFaMhdQhHIruC74ARPnARNFUgONYNBTsZ9EjvKL1VQ1Wn/1REMMX1WqRuYe8mcns=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749471195; c=relaxed/simple;
+	bh=AyX05glyqV/dgIcnwQlqCx9urPfpuJ1+TEu5urURXBQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=E1sHeFXNSwzFF6JTSBkuVuuzdh5Ni8V5D4Ke8/uvjvSJmKq8sIxlRJV//yUCSZTzNfo2u0ryPwGFGbz9jJIVUQnvMxdUVLPKIFXt/0heP9xP7KPZIyGgvTaKCH/HZCdvt3SJTBt+ST7eLvMbQZXhKXRTqWzIVmV21RYuq5ZWmfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bWgw2b4B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="QF08ff1h"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=L2jyrM0UKNE6WGFXoHtcdOyMkQjIFcOlaqVWeYUsiYt3uokmUZbriRKyYm8moUxZKKReml6NrzvgUWi4trddR27/86bSgHq+lgUk/cYZf5IpPTPLAoQA9BsefAS0AYOmhm8waWvu9eBfBHaCQlE2IwQVzBYL+GxlUVQV7PHnRYMh4A96MIdDRO9170aGVHDbp7Xo719n3mXzWZNxF0jZgXiqyNDLM+i3Gs8eQXmtPWw8ZOiksJa7usxksz9nrvsCBxxwjlSam+z9TqUUQrzqDjOsOlWf0xz/qrFE7Ai23hLrvig0tyd026qXYg23EwqIYiwWhdOxE7XtO7xUfbOB0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vKTHUJzaqJ7iOnzEAz8ylKhwoyebarNEyFVcISo8rRc=;
- b=JhC33clSpLP1iFpwYT7NP3Z3Q4oVY30+BDST/OdcZIBk5swBsqzuTLLXHjF5SpLLVKUPrwFSLGsU/GSkDaiJW4Of75jhyAaCOJcnLil1HuyfvmoMoNiXZOe2vowIcbGkby92gRNvaM309MJZa8fpbHJvvCsCMYWsofSa8HN4DdIBJYTPQY3cTiXP2t1+uRYpUvrTd+8LFxz1+9FU2/BYpcL02+VCBL1zcDWMmWBTqCjwlth7PT99xoAH1s6Vd4GlfGJdcIoLhDmqYX3sEXjSJw4uMwELiPX3Y+VrkYAjXCRabSXv+7cDd2YiEEFK38D2KINKixVNTcVNhkDDHov1DA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vKTHUJzaqJ7iOnzEAz8ylKhwoyebarNEyFVcISo8rRc=;
- b=QF08ff1h6lKGXlhmjNkZ2/qkA0xHVWLsuU5J+N/CT2WqR10qF1s/C0AeUpGC596d+833K1TX3RG/m+9YdfbjSmlnMFsj/73Ze4wHWB+/qVGGHpjki+a+p4Bo1OJ2NkOIyO7SbBikHzGtK8Ud7362KGLuze5ccVBBzTi0VbP57qI=
-Received: from CH0PR03CA0231.namprd03.prod.outlook.com (2603:10b6:610:e7::26)
- by BY5PR12MB4212.namprd12.prod.outlook.com (2603:10b6:a03:202::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.35; Mon, 9 Jun
- 2025 12:13:01 +0000
-Received: from CH3PEPF00000010.namprd04.prod.outlook.com
- (2603:10b6:610:e7:cafe::98) by CH0PR03CA0231.outlook.office365.com
- (2603:10b6:610:e7::26) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.24 via Frontend Transport; Mon,
- 9 Jun 2025 12:13:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- CH3PEPF00000010.mail.protection.outlook.com (10.167.244.41) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8835.15 via Frontend Transport; Mon, 9 Jun 2025 12:13:01 +0000
-Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 9 Jun
- 2025 07:13:01 -0500
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
- (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 9 Jun
- 2025 07:13:00 -0500
-Received: from r9-mach.amd.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Mon, 9 Jun 2025 07:12:57 -0500
-From: Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
-To: <broonie@kernel.org>, <alsa-devel@alsa-project.org>
-CC: <Vijendar.Mukunda@amd.com>, <Basavaraj.Hiregoudar@amd.com>,
-	<Sunil-kumar.Dommati@amd.com>, <syed.sabakareem@amd.com>,
-	<mario.limonciello@amd.com>, <yung-chuan.liao@linux.intel.com>, "Venkata
- Prasad Potturu" <venkataprasad.potturu@amd.com>, Liam Girdwood
-	<lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
-	<tiwai@suse.com>, "open list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER
- MANAGEM..." <linux-sound@vger.kernel.org>, open list
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH] ASoC: amd: acp: Fix pointer assignments for snd_soc_acpi_mach structures
-Date: Mon, 9 Jun 2025 17:42:32 +0530
-Message-ID: <20250609121251.639080-1-venkataprasad.potturu@amd.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bWgw2b4B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED873C4CEED;
+	Mon,  9 Jun 2025 12:13:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749471194;
+	bh=AyX05glyqV/dgIcnwQlqCx9urPfpuJ1+TEu5urURXBQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=bWgw2b4BjVk442hXU8QOGSj6iaFA/kAnV6b+3A1ffZVahgnh8bAF+YoHr8yg5VqDj
+	 Xv1JvrOASRkHOMcrHHMXYvuG7+MdppMlsiJimBuXYZqhXv/sBaxc4lWw+riXPZQ8O0
+	 cgF6DSBsLPwZQk1OILj9uCA3qZWlERgrjPXgSl6OQ9IhtVRMBQh7QWbixCBdt8mJ6S
+	 IXWkZZpzB4nRUju/Zf7GMxvJQAMP7kW65+T8yM12BQZEcGI6DcnJ69AlLP//xBGE3a
+	 Vf58Tb3+i/0tNJH/ZKEUWDkDNoy/MnEPcu2dQR4vfNnhqnNflTRZ3LlP/jVqViYmWI
+	 I0j3xkkOgoCpw==
+Message-ID: <ac0855c4fa222bf68452d8154ea52dcdbb99f39f.camel@kernel.org>
+Subject: Re: [PATCH 1/5] VFS: merge lookup_one_qstr_excl_raw() back into
+ lookup_one_qstr_excl()
+From: Jeff Layton <jlayton@kernel.org>
+To: NeilBrown <neil@brown.name>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner
+	 <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck Lever
+	 <chuck.lever@oracle.com>, Amir Goldstein <amir73il@gmail.com>, Jan Harkes
+	 <jaharkes@cs.cmu.edu>, David Howells <dhowells@redhat.com>, Tyler Hicks
+	 <code@tyhicks.com>, Miklos Szeredi <miklos@szeredi.hu>, Carlos Maiolino
+	 <cem@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, coda@cs.cmu.edu,
+ codalist@coda.cs.cmu.edu, 	linux-nfs@vger.kernel.org,
+ netfs@lists.linux.dev, ecryptfs@vger.kernel.org, 
+	linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Mon, 09 Jun 2025 08:13:11 -0400
+In-Reply-To: <20250608230952.20539-2-neil@brown.name>
+References: <20250608230952.20539-1-neil@brown.name>
+	 <20250608230952.20539-2-neil@brown.name>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PEPF00000010:EE_|BY5PR12MB4212:EE_
-X-MS-Office365-Filtering-Correlation-Id: a000bee0-2270-429a-9f79-08dda74efae8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|1800799024|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?xkx6jexUzzN70C1o37UaJyYWQGP4B1FwDeLyuWNPWx9GS1AyduNUcAgxwy6f?=
- =?us-ascii?Q?hnZmesgduj7IxD2WZ0/bIZ2P18bFBxguStoal77RO51ZabLl+enmv0ukzUAO?=
- =?us-ascii?Q?fFlnwdRRemQcymmZjb77CGONiv2ZY/PB2xp+4LLQjsHgUHEjm/kRQlKMDyCd?=
- =?us-ascii?Q?OITHioB3vPx29q7W6mqJbw84QAAXsUQx1rOelnqvB7W4mO1BlP5VwztCdBH1?=
- =?us-ascii?Q?mjZDhAYg03oZE7FXnRq4+Vn+pBtvOSMMgSQh5BKYcUbE9ffYkvAFpwd7m+9R?=
- =?us-ascii?Q?wbT1D1V66ns0kVrugt/sHqjplwhDuCc8TcO21jOVvGLvLX7cw8zp3Iuehwly?=
- =?us-ascii?Q?oOMfkWBCUTAFN3cjUumu2bWIQBljqNuGWs7wKHixEsSO7dJ4yQmxyv0ZlyRM?=
- =?us-ascii?Q?E2iV9Lp9NVCm6nhILX5nPxakQx9kNOy3dMrLgrXN+iW1Undrqnyv5sFNQ4Ec?=
- =?us-ascii?Q?u5mAnknKu2LB3/cidtX2qwHzBSEsHvjoDqfhBull7hhfUTAq0GMZqyIaY1wq?=
- =?us-ascii?Q?F1Vf1UObsGApu8F6T0lDlT5YIYDx4bAPRbEsn+7ykTaUQR2pi3ZGHd5SQ0Rs?=
- =?us-ascii?Q?U0M21SrSeKGXvQaWd9qSIdFZL8ALwMlCFbZdPpDHp4rJnxK3uS077/T94xU4?=
- =?us-ascii?Q?F6MbFl2pqRSoPpGfrJ+m+HkAafz/64H+Zn1BweEL+wNvO7djTEKzxaBka8Jy?=
- =?us-ascii?Q?w7xdtZskx/w1u3f5zsghCMUx33nASLdXZOQGhPkdou+hKW7Gs1fU6JBlrvy7?=
- =?us-ascii?Q?ZTRhaclM8o47zir37WlJwOCme3nEHrUuxBDqMQUmbCAPgXWH/Ma1sXHh6a9B?=
- =?us-ascii?Q?e9NMTGqJc6/D0tNxpuELRh6xAKa3/ybDdnXcB/v23cRnbvXGjoBtet8ecPSx?=
- =?us-ascii?Q?XcD8890iT38APDcthxtKPCBT3h11Te6ULGd8utQtJw2BWwv3ujZ44SVnf1Pg?=
- =?us-ascii?Q?g9WSn07p7Msk+tkByJ1RxDuiMwMl5lbcg3Z5jfvq3Ss/0hp29ROFRcML/3Bo?=
- =?us-ascii?Q?OQVQKzA2qugsDs+Yi4kIvXNfOZz7P7D/bxHda7nn9wuxJ7+bfgR8WFeP8Nl/?=
- =?us-ascii?Q?2XR/QJhDKdRaUyz0KGkWkTdxXAqx7QBDdI0qUrTKkdKvsWuLYODcPH9Zs3+j?=
- =?us-ascii?Q?tyUE6UF3kZ3EvkMcwarM7L/TU2t3K82dI0Mu2zbqLmwXipPQllydUdWCd4hd?=
- =?us-ascii?Q?jfND8bkNPzNHgjcQfI7BirlxuGVZ0UcyOXClpwDDk0dVupoBHlOM75uExRdN?=
- =?us-ascii?Q?+aB2AWz72wQ2gUnlSFAU6RQYUvRVx6JnDAtWGiU4taoCx2XvJ6Q2FK6icFr4?=
- =?us-ascii?Q?CrmhaPuRXv+cCf+Vczljq1cac56UsBUwZeATJfA698W7cb6z0dSN8KNJAw/o?=
- =?us-ascii?Q?7z76GjITKGWPitNqWiTnWCUDCiTUZfZMwNj87NZBjnpmqQ36QhFuZgnYtWll?=
- =?us-ascii?Q?TG5EAmUvXl1gR5eMNQvrKJcHQBIX2/vhwhbC9ePNR+aT6PKV6zw840+76VK8?=
- =?us-ascii?Q?RVZ0kIEzXQfwlvyW+eQtUmXFbWKj6cylw8/y?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 12:13:01.4723
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a000bee0-2270-429a-9f79-08dda74efae8
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH3PEPF00000010.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4212
 
-This patch modifies the assignment of machine structure pointers in the
-acp_pci_probe function. Previously, the machine pointers were assigned
-using the address-of operator (&), which caused incompatibility issues
-in type assignments.
+On Mon, 2025-06-09 at 09:09 +1000, NeilBrown wrote:
+> The effect of lookup_one_qstr_excl_raw() can be achieved by passing
+> LOOKUP_CREATE() to lookup_one_qstr_excl() - we don't need a separate
+> function.
+>=20
+> Signed-off-by: NeilBrown <neil@brown.name>
+> ---
+>  fs/namei.c | 37 ++++++++++++++-----------------------
+>  1 file changed, 14 insertions(+), 23 deletions(-)
+>=20
+> diff --git a/fs/namei.c b/fs/namei.c
+> index 4bb889fc980b..dc42bfac5c57 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -1665,9 +1665,17 @@ static struct dentry *lookup_dcache(const struct q=
+str *name,
+>  	return dentry;
+>  }
+> =20
+> -static struct dentry *lookup_one_qstr_excl_raw(const struct qstr *name,
+> -					       struct dentry *base,
+> -					       unsigned int flags)
+> +/*
+> + * Parent directory has inode locked exclusive.  This is one
+> + * and only case when ->lookup() gets called on non in-lookup
+> + * dentries - as the matter of fact, this only gets called
+> + * when directory is guaranteed to have no in-lookup children
+> + * at all.
+> + * Will return -ENOENT if name isn't found and LOOKUP_CREATE wasn't pass=
+ed.
+> + * Will return -EEXIST if name is found and LOOKUP_EXCL was passed.
+> + */
+> +struct dentry *lookup_one_qstr_excl(const struct qstr *name,
+> +				    struct dentry *base, unsigned int flags)
+>  {
+>  	struct dentry *dentry;
+>  	struct dentry *old;
+> @@ -1675,7 +1683,7 @@ static struct dentry *lookup_one_qstr_excl_raw(cons=
+t struct qstr *name,
+> =20
+>  	dentry =3D lookup_dcache(name, base, flags);
+>  	if (dentry)
+> -		return dentry;
+> +		goto found;
+> =20
+>  	/* Don't create child dentry for a dead directory. */
+>  	dir =3D base->d_inode;
+> @@ -1691,24 +1699,7 @@ static struct dentry *lookup_one_qstr_excl_raw(con=
+st struct qstr *name,
+>  		dput(dentry);
+>  		dentry =3D old;
+>  	}
+> -	return dentry;
+> -}
+> -
+> -/*
+> - * Parent directory has inode locked exclusive.  This is one
+> - * and only case when ->lookup() gets called on non in-lookup
+> - * dentries - as the matter of fact, this only gets called
+> - * when directory is guaranteed to have no in-lookup children
+> - * at all.
+> - * Will return -ENOENT if name isn't found and LOOKUP_CREATE wasn't pass=
+ed.
+> - * Will return -EEXIST if name is found and LOOKUP_EXCL was passed.
+> - */
+> -struct dentry *lookup_one_qstr_excl(const struct qstr *name,
+> -				    struct dentry *base, unsigned int flags)
+> -{
+> -	struct dentry *dentry;
+> -
+> -	dentry =3D lookup_one_qstr_excl_raw(name, base, flags);
+> +found:
+>  	if (IS_ERR(dentry))
+>  		return dentry;
+>  	if (d_is_negative(dentry) && !(flags & LOOKUP_CREATE)) {
+> @@ -2790,7 +2781,7 @@ struct dentry *kern_path_locked_negative(const char=
+ *name, struct path *path)
+>  	if (unlikely(type !=3D LAST_NORM))
+>  		return ERR_PTR(-EINVAL);
+>  	inode_lock_nested(parent_path.dentry->d_inode, I_MUTEX_PARENT);
+> -	d =3D lookup_one_qstr_excl_raw(&last, parent_path.dentry, 0);
+> +	d =3D lookup_one_qstr_excl(&last, parent_path.dentry, LOOKUP_CREATE);
+>  	if (IS_ERR(d)) {
+>  		inode_unlock(parent_path.dentry->d_inode);
+>  		return d;
 
-Additionally, the declarations of the machine arrays in amd.h have been
-updated to reflect that they are indeed arrays (`[]`). The code is
-further cleaned up by declaring the codec structures in
-amd-acpi-mach.c as static, reflecting their intended usage.
+Nice little cleanup.
 
-error: symbol 'amp_rt1019' was not declared. Should it be static?
-error: symbol 'amp_max' was not declared. Should it be static?
-error: symbol 'snd_soc_acpi_amd_acp_machines' was not declared. Should it be static?
-error: symbol 'snd_soc_acpi_amd_rmb_acp_machines' was not declared. Should it be static?
-error: symbol 'snd_soc_acpi_amd_acp63_acp_machines' was not declared. Should it be static?
-error: symbol 'snd_soc_acpi_amd_acp70_acp_machines' was not declared. Should it be static?
-
-Fixes: 9c2c0ef64009 ("ASoC: amd: acp: Fix snd_soc_acpi_mach id's duplicate symbol error")
-
-Link: https://github.com/thesofproject/linux/issues/5438
-Signed-off-by: Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
----
- sound/soc/amd/acp/acp-pci.c       | 8 ++++----
- sound/soc/amd/acp/amd-acpi-mach.c | 4 ++--
- sound/soc/amd/acp/amd.h           | 8 ++++----
- 3 files changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/sound/soc/amd/acp/acp-pci.c b/sound/soc/amd/acp/acp-pci.c
-index 0b2aa33cc426..2591b1a1c5e0 100644
---- a/sound/soc/amd/acp/acp-pci.c
-+++ b/sound/soc/amd/acp/acp-pci.c
-@@ -137,26 +137,26 @@ static int acp_pci_probe(struct pci_dev *pci, const struct pci_device_id *pci_id
- 		chip->name = "acp_asoc_renoir";
- 		chip->rsrc = &rn_rsrc;
- 		chip->acp_hw_ops_init = acp31_hw_ops_init;
--		chip->machines = &snd_soc_acpi_amd_acp_machines;
-+		chip->machines = snd_soc_acpi_amd_acp_machines;
- 		break;
- 	case 0x6f:
- 		chip->name = "acp_asoc_rembrandt";
- 		chip->rsrc = &rmb_rsrc;
- 		chip->acp_hw_ops_init = acp6x_hw_ops_init;
--		chip->machines = &snd_soc_acpi_amd_rmb_acp_machines;
-+		chip->machines = snd_soc_acpi_amd_rmb_acp_machines;
- 		break;
- 	case 0x63:
- 		chip->name = "acp_asoc_acp63";
- 		chip->rsrc = &acp63_rsrc;
- 		chip->acp_hw_ops_init = acp63_hw_ops_init;
--		chip->machines = &snd_soc_acpi_amd_acp63_acp_machines;
-+		chip->machines = snd_soc_acpi_amd_acp63_acp_machines;
- 		break;
- 	case 0x70:
- 	case 0x71:
- 		chip->name = "acp_asoc_acp70";
- 		chip->rsrc = &acp70_rsrc;
- 		chip->acp_hw_ops_init = acp70_hw_ops_init;
--		chip->machines = &snd_soc_acpi_amd_acp70_acp_machines;
-+		chip->machines = snd_soc_acpi_amd_acp70_acp_machines;
- 		break;
- 	default:
- 		dev_err(dev, "Unsupported device revision:0x%x\n", pci->revision);
-diff --git a/sound/soc/amd/acp/amd-acpi-mach.c b/sound/soc/amd/acp/amd-acpi-mach.c
-index d95047d2ee94..27da2a862f1c 100644
---- a/sound/soc/amd/acp/amd-acpi-mach.c
-+++ b/sound/soc/amd/acp/amd-acpi-mach.c
-@@ -8,12 +8,12 @@
- 
- #include <sound/soc-acpi.h>
- 
--struct snd_soc_acpi_codecs amp_rt1019 = {
-+static struct snd_soc_acpi_codecs amp_rt1019 = {
- 	.num_codecs = 1,
- 	.codecs = {"10EC1019"}
- };
- 
--struct snd_soc_acpi_codecs amp_max = {
-+static struct snd_soc_acpi_codecs amp_max = {
- 	.num_codecs = 1,
- 	.codecs = {"MX98360A"}
- };
-diff --git a/sound/soc/amd/acp/amd.h b/sound/soc/amd/acp/amd.h
-index 863e74fcee43..cb8d97122f95 100644
---- a/sound/soc/amd/acp/amd.h
-+++ b/sound/soc/amd/acp/amd.h
-@@ -243,10 +243,10 @@ extern struct acp_resource rmb_rsrc;
- extern struct acp_resource acp63_rsrc;
- extern struct acp_resource acp70_rsrc;
- 
--extern struct snd_soc_acpi_mach snd_soc_acpi_amd_acp_machines;
--extern struct snd_soc_acpi_mach snd_soc_acpi_amd_rmb_acp_machines;
--extern struct snd_soc_acpi_mach snd_soc_acpi_amd_acp63_acp_machines;
--extern struct snd_soc_acpi_mach snd_soc_acpi_amd_acp70_acp_machines;
-+extern struct snd_soc_acpi_mach snd_soc_acpi_amd_acp_machines[];
-+extern struct snd_soc_acpi_mach snd_soc_acpi_amd_rmb_acp_machines[];
-+extern struct snd_soc_acpi_mach snd_soc_acpi_amd_acp63_acp_machines[];
-+extern struct snd_soc_acpi_mach snd_soc_acpi_amd_acp70_acp_machines[];
- 
- extern const struct snd_soc_dai_ops asoc_acp_cpu_dai_ops;
- extern const struct snd_soc_dai_ops acp_dmic_dai_ops;
--- 
-2.43.0
-
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
