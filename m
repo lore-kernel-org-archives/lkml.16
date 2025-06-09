@@ -1,106 +1,54 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F011813AC1;
-	Mon,  9 Jun 2025 04:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088F95475E;
+	Mon,  9 Jun 2025 04:13:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749442356; cv=none; b=UR5BEYeV8LwPf5cy4eWS11TbJ/cYYRg/QB5jiTA2E4K+tvgnB7AuXAKJ7TiJj8anEmgS0sEuN9lg5CcLjJ3StKzAXuW5GZJU4cqNUbH52xoeYt8edO6s3AAYprKRyHM7aP1/VQOq5iMrJ0knLyXDSWn0mm9Bydw5VEc5tHUNdH4=
+	t=1749442392; cv=none; b=X3xnDFpcti9pdcRykfvasMrCabZC0/yGQrFfOE2Tz3FSRsi+fu8mnpycWgpjl/WV6vSxOo4HY9Hvx2wcNOWnyDFUMT0qWqG2PzPoKAuzUfRCOIbc7ScW4YRO36JDTSPP1xAGeLyji4SiX2HzUueuAVGC5E05CjVRvMm+a2gYxV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749442356; c=relaxed/simple;
-	bh=AirhTziG8+R2vrdEjtsIrRarvIhm+QQe5wcMlTkArBk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bNouyYdQsOD+N0Fvcy0xlb9B2dvR9syWqZ/o4Kh6GLKIa46O1aRgmiSq9FFWzI1BTe2XCQvRIKSidnrvOzLsmI4fvdMg6EZtt/A2oB5skmlIPC16tmOI4Db58baZajRH+TJm88JX4TLDZxW5HFAbPEHPSaSPYoEzmkzFQA5xLHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86AB71515;
-	Sun,  8 Jun 2025 21:12:08 -0700 (PDT)
-Received: from ergosum.cambridge.arm.com (ergosum.cambridge.arm.com [10.1.196.45])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0CEC33F673;
-	Sun,  8 Jun 2025 21:12:25 -0700 (PDT)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-arm-kernel@lists.infradead.org
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	stable@vger.kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	linux-kernel@vger.kernel.org,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH] arm64/ptdump: Ensure memory hotplug is prevented during ptdump_check_wx()
-Date: Mon,  9 Jun 2025 05:12:14 +0100
-Message-Id: <20250609041214.285664-1-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1749442392; c=relaxed/simple;
+	bh=sU43XR4ELjMkvRmWTzngGULXdxWQ6qw6GWH4DnMgaaw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hc/Pj7A6fCvrnCC0LkibNq+FxGg5axddkczHEdW4iCRQhv/UNm71DOyCMT/7JQnyU4M0cflo91FWXAIE85j5uGGdB7UKJFgr1FCaNwEtcxHH4zMz69pRCteEJ8lv2hzD7uayiETpKYu/nWswBw8UgvQffYN1yo+kYJY3HR7RXCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 93F5D68AFE; Mon,  9 Jun 2025 06:13:06 +0200 (CEST)
+Date: Mon, 9 Jun 2025 06:13:06 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Keith Busch <kbusch@kernel.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the block tree
+Message-ID: <20250609041306.GA26287@lst.de>
+References: <20250606075230.6a13c53d@canb.auug.org.au> <aEISwo8LR8hG0zyV@kbusch-mbp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEISwo8LR8hG0zyV@kbusch-mbp>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-The arm64 page table dump code can race with concurrent modification of the
-kernel page tables. When a leaf entries are modified concurrently, the dump
-code may log stale or inconsistent information for a VA range, but this is
-otherwise not harmful.
+On Thu, Jun 05, 2025 at 03:57:22PM -0600, Keith Busch wrote:
+> On Fri, Jun 06, 2025 at 07:52:30AM +1000, Stephen Rothwell wrote:
+> > Commit
+> > 
+> >   10f4a7cd724e ("nvme: fix command limits status code")
+> > 
+> > is missing a Signed-off-by from its author.
+> 
+> FWIW, my Signed-off-by is in the original posting, so it must have
+> accidently been chopped off somewhere on the way.
+> 
+>   https://lore.kernel.org/linux-nvme/20250520202037.2751433-1-kbusch@meta.com/
 
-When intermediate levels of table are freed, the dump code will continue to
-use memory which has been freed and potentially reallocated for another
-purpose. In such cases, the dump code may dereference bogus addresses,
-leading to a number of potential problems.
-
-This problem was fixed for ptdump_show() earlier via commit 'bf2b59f60ee1
-("arm64/mm: Hold memory hotplug lock while walking for kernel page table
-dump")' but a same was missed for ptdump_check_wx() which faced the race
-condition as well. Let's just take the memory hotplug lock while executing
-ptdump_check_wx().
-
-Cc: stable@vger.kernel.org
-Fixes: bbd6ec605c0f ("arm64/mm: Enable memory hot remove")
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Ryan Roberts <ryan.roberts@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Reported-by: Dev Jain <dev.jain@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
-This patch applies on v6.16-rc1
-
-Dev Jain found this via code inspection.
-
- arch/arm64/mm/ptdump.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/mm/ptdump.c b/arch/arm64/mm/ptdump.c
-index 421a5de806c62..551f80d41e8d2 100644
---- a/arch/arm64/mm/ptdump.c
-+++ b/arch/arm64/mm/ptdump.c
-@@ -328,7 +328,7 @@ static struct ptdump_info kernel_ptdump_info __ro_after_init = {
- 	.mm		= &init_mm,
- };
- 
--bool ptdump_check_wx(void)
-+static bool __ptdump_check_wx(void)
- {
- 	struct ptdump_pg_state st = {
- 		.seq = NULL,
-@@ -367,6 +367,16 @@ bool ptdump_check_wx(void)
- 	}
- }
- 
-+bool ptdump_check_wx(void)
-+{
-+	bool ret;
-+
-+	get_online_mems();
-+	ret = __ptdump_check_wx();
-+	put_online_mems();
-+	return ret;
-+}
-+
- static int __init ptdump_init(void)
- {
- 	u64 page_offset = _PAGE_OFFSET(vabits_actual);
--- 
-2.30.2
-
+I guess that was me when editing it to make the commit log more
+detailed, sorry.
