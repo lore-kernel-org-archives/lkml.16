@@ -1,215 +1,292 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2073.outbound.protection.outlook.com [40.107.220.73])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5558D1922DE;
-	Mon,  9 Jun 2025 18:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749494962; cv=fail; b=bGFiDeOgZWrI/gBEn+/91Pu/u+lpVuJ1GGW+fQQudsOztmtlK+tQZmEvBOl7DHHRsqHWmuC6ZH/wgxxABg/qXRZQu7kCKV/PJeq8drBpzEeIADi5rNL3PyPS8hMgsQJL7IS2pmImBFWTTVAJpcD0h5OX8MxEXxgjtSFgiyTgdfo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749494962; c=relaxed/simple;
-	bh=1HuyAk1wutVnbprbcT3pxK3vdXIt42OC5GcYGZ1bKMM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=VQOM4tuIL0u6u5GGbhyXft9/s0ARAvL+pbiY9fdagqE+OrKVP7KlM85N9TYTQttha47zJhEHWWaq4f26iVUEIgT1M7qTvxXdpm19d8Kp2mwxPrvLnrdcBR4e+TO4sueOBcK+YRdk9tHaFj31He9HHEu2PPrQ+alakyJMFk26Kik=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Qv9CR1ul; arc=fail smtp.client-ip=40.107.220.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9AEB21CC79
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 18:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749494989; cv=none; b=kB+1orScKlktAIjl4WJDra7UchhNo28E8B5vnrXtCbSpZmThOOPxevSmdLaHG48ZnqtdJer/Nv3NrqXvP5md8XTQxnqA+pEeTzcQAzcnZQUrkUzfxdl1lv8+/Np9EzYCD83+VwSazqeSfnyrhCErm9EsJSgO9LY8kaXgx7ZObiw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749494989; c=relaxed/simple;
+	bh=ui78fKG/j0BBOrRHqLHpqq5sKokZGqYCCMrjcYPaejI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LWDQQPcz6LEhqbTuYIEKozYzvIrHuyyDnbJbx073nu2Bv1xc92UqE78LrzWL9OQH3q3FBBaRHnwk99VJVCMixuDjtPxf1qa9okjolQowi2jyI4SMo1ntF4IGzMebw5U7Vqt94LT0y92UmyhP/hHG3XDANBJEB7q5wYDYXFAv8MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V/9L7iLM; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Qv9CR1ul"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pOrDv+4salVrEQp0Qfwr7skqs8t8xov+RHFHWriNB5hs7GLI+pjWJplI7dlxFj8j8AgkzKOV9NTfipOYylP6/0oyVlVVeW/KIcOjsyAniAowxEaKl0iQTbq/Myx12yPy54mC/atdUkTbK893jVVeey1Md4FnenAftKyMkwJDLd/IscyMEht38L5U7ukmHGB4a7LrpiKAGtN/ADz+m53I3iOZZuuW/DZ2SbwDpLNnTfsnnLQRg/TWDJNAx4M15Uo+MU+lTZGB+no6logcx53ItaJVLxWiSGpL88IAOBrh3IVkWiHZaQmBCXHpNfgPQWGCYb0iaWqFgbVhvCNuf78eRA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OmfdB+mxXrR+ivPcAftEOtWMA1RzxwkTbPKB8ren2X4=;
- b=bInzWjX/psHIjLaWMi2nHcaOom2W7YhtGaYaR2a2Web2z5Cbil1F4LQOyTp53scRwOsW1UZbU2VRy42jWWCn+KFesVX8IpCs0DcpvYqenUcEhYU04FKRjWhsp3pmFtKf9U8+r7tF5SkVXz1z9nfyXO3/m1fOLsmHixbH4P6fzqXx8CqFh05Dm9IHbhhEKhkaanbAAc+oq+BwoWz+Ay10sinQaUEnKLqFM/ykYKpKJ3cMTJlk931mtirwIwQyBn9ut71J2wyE8dIKFB2hDjYl21ivW2BeAOG6QZ86JfIjyg8PBfdrxSyEWNcVGa06IUUJKElaOT0ePhVv78y9lYfMBA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OmfdB+mxXrR+ivPcAftEOtWMA1RzxwkTbPKB8ren2X4=;
- b=Qv9CR1ulE0Z1P57y81RDoprR0gxGIQfFrh13wN/9hMEGkBkdAPkSL9AqOUC7is3CbwmSWP5YZNvMC71WJd12Qt7/Qp3kwnoq9USTK+AM8Iq/EnJktGDiozmRurQpzBazfG4JEeOxfyurkWK25xH+2D4HlSnyT2UTkn7wWD6KgRg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
- by PH7PR12MB7428.namprd12.prod.outlook.com (2603:10b6:510:203::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.37; Mon, 9 Jun
- 2025 18:49:15 +0000
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87%6]) with mapi id 15.20.8792.038; Mon, 9 Jun 2025
- 18:49:15 +0000
-Message-ID: <2d75a21d-e444-43f2-91a8-35fcebb68799@amd.com>
-Date: Mon, 9 Jun 2025 13:48:56 -0500
-User-Agent: Mozilla Thunderbird
-Reply-To: babu.moger@amd.com
-Subject: Re: [PATCH 0/5] Latest version of initial patches in AET series
-To: Tony Luck <tony.luck@intel.com>
-Cc: Xiaojian.Du@amd.com, akpm@linux-foundation.org,
- alexandre.chartre@oracle.com, andrew.cooper3@citrix.com, ardb@kernel.org,
- bmoger@amd.com, bp@alien8.de, corbet@lwn.net,
- daniel.sneddon@linux.intel.com, dave.hansen@linux.intel.com,
- dave.martin@arm.com, ebiggers@google.com, eranian@google.com,
- fenghuay@nvidia.com, gautham.shenoy@amd.com, gregkh@linuxfoundation.org,
- hpa@zytor.com, james.morse@arm.com, jpoimboe@kernel.org,
- kai.huang@intel.com, kan.liang@linux.intel.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, maciej.wieczor-retman@intel.com,
- mario.limonciello@amd.com, mingo@redhat.com, paulmck@kernel.org,
- pawan.kumar.gupta@linux.intel.com, perry.yuan@amd.com,
- peternewman@google.com, reinette.chatre@intel.com, rostedt@goodmis.org,
- seanjc@google.com, sohil.mehta@intel.com, tglx@linutronix.de,
- thomas.lendacky@amd.com, thuth@redhat.com, x86@kernel.org,
- xiaoyao.li@intel.com, xin3.li@intel.com, xin@zytor.com
-References: <20250609162139.91651-1-tony.luck@intel.com>
-Content-Language: en-US
-From: "Moger, Babu" <babu.moger@amd.com>
-In-Reply-To: <20250609162139.91651-1-tony.luck@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SCXP298CA0172.CHLP298.PROD.OUTLOOK.COM
- (2603:10d6:300:14c::19) To MW3PR12MB4553.namprd12.prod.outlook.com
- (2603:10b6:303:2c::19)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V/9L7iLM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749494986; x=1781030986;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=ui78fKG/j0BBOrRHqLHpqq5sKokZGqYCCMrjcYPaejI=;
+  b=V/9L7iLM3OxycMUdHJ/r838FHoNf+NTCOJFOZfKLHyu0/80xSil/1LZh
+   /mD1XBXUSd+YY+5IvgRFRv3DNINgTuZRrEWOkxyipYsusE9lYcOpaUErj
+   gwaau35vHmBqHl+30H/4BUc2iFM47g0ZBIavLDcN8b1eAvxvaGpRhokpr
+   NQwZl20E+GgOQw1VAXUqNl8lXvLxmQwAw+StgFxYfPTjv5bTbuJs8xy5m
+   oWgUhueCnpXvZqEMe1RNgKEjNOlpIYwiQu7y747TTq+I9yET8LuUvnhOn
+   cFl3GRVQo8nod9CKu6ca17v/VGGcuNIOVt1Ft5yl+3on9PIwZ8k60x3mu
+   A==;
+X-CSE-ConnectionGUID: 1TOQAh5MT22tiLRNMAGmSw==
+X-CSE-MsgGUID: 0u7CWFx6TfioP08VH5iUzQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="69145279"
+X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
+   d="scan'208";a="69145279"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 11:49:45 -0700
+X-CSE-ConnectionGUID: 7ckXQPO2Rmy/E1/meaBz/w==
+X-CSE-MsgGUID: B7ZqAD11S4uaq/hmoJ76/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
+   d="scan'208";a="183775988"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 11:49:44 -0700
+Date: Mon, 9 Jun 2025 11:49:42 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Fenghua Yu <fenghuay@nvidia.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	Chen Yu <yu.c.chen@intel.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH v5 27/29] fs/resctrl: Add file system mechanism for
+ architecture info file
+Message-ID: <aEcsxjWroliWf3G0@agluck-desk3>
+References: <20250521225049.132551-1-tony.luck@intel.com>
+ <20250521225049.132551-28-tony.luck@intel.com>
+ <f25d136c-b1d3-483a-ac77-92464d7fe25c@intel.com>
+ <aEIxzbuFybLBE3xt@agluck-desk3>
+ <9eb9a466-2895-405a-91f7-cda75e75f7ae@intel.com>
+ <aEMlznLgnn6bK9lo@agluck-desk3>
+ <d2be3a4e-1075-459d-9bf7-b6aefcb93820@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|PH7PR12MB7428:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4815cbcd-dca0-438b-3082-08dda7865518
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VU1wd1M2ZWZoUlZSTUNTeHJ4ZjRLbE96QUl6ckRFeUN0Tm15L1UxaDU3T3hN?=
- =?utf-8?B?aEQyeGdMdC8yOExFUmN3ZkJMSlFVQkJjODIyL0xzOUVrSXZzSmthc0hLUTQ1?=
- =?utf-8?B?ZjlnU3VoUU51TnltOEZQWjJCOGt4bktrK3Nyd25YTHUvcEtPN095TnYwMTl1?=
- =?utf-8?B?OFVmR3ZMRlA1M0FudDhrOEZCYnFKVVZaalI5Q2V5MEhCSWg0VGpFQ0JFblMy?=
- =?utf-8?B?bTRqL2I1V0ZYanIyTkdBRm81c1pnK1U4WE5aTDNOSVVGMVF4ZlowNFRKTEx4?=
- =?utf-8?B?eURObjdiUEY5MkF1YTc1aFlBa3hPODZUaWJEamRHL1lBYmNWUCtGMFBqYWNR?=
- =?utf-8?B?ZU8xUzJCT3NQa0txbmE2VmFMT3NSU25WRTdpeURxUENjUC82T1kzOE92eXFU?=
- =?utf-8?B?N1FsTDlCZnUwdnRkYXRieFBvMUFSaCtaMUZLNHpHZFo3c1B6TjAyRVlhQXhV?=
- =?utf-8?B?ZHFrbUNncUtWY2lBYWp2eDh6MjMrWjV5dzZtOWRQc01YMnFrdkxpWjMzaUlP?=
- =?utf-8?B?ZWZ1UmhJNm5Yd2pVd2UxUVgrM0t6cUFKdi9nSjA3WDlkdVdZQXh3c2I0YjhX?=
- =?utf-8?B?TzZLOVF2emVCdm92ajY4Z1ZMY0xBVFYxV1pCL0trR2g4aTVWWTQ0c3BHMWZp?=
- =?utf-8?B?S2x6enhiYk5yaFB4SGwybmJUZnZsbmo4TVlETERFUG4xYmhYZnpOMTQ5S0dL?=
- =?utf-8?B?QWsrMWFZWFBacVJ6eFRwRGhQV0pqRGtmZDREc2xmQnhUd3ZpbzZHNTJmYWZ0?=
- =?utf-8?B?WjZFSFBJd0Z3aUN5dzJ4SnlWRm83S2VaOHkyYmtvc3BnWTVocFFuOWQzK0J0?=
- =?utf-8?B?NmtNWURGb09jcUJMY0tHTFZPRjViNURpd3p5czBGVG9VMW43VW4rdlRTdXZM?=
- =?utf-8?B?ZFA3M2trM2plL3hHWXc2Mlhycm5qTGN2ZldPRXdQc25iaVl6K2JhNHYzZXVw?=
- =?utf-8?B?Wmp3U21mcW84emVhbm90TS9MMmdGQUNtaDB0M2NOMVBvK21jTU9RN2IvOFl2?=
- =?utf-8?B?WVBlSE5zOFc5czNGb3h4SjhmZ3dRR2xMZUpoL2k0ZXE0d0ZvWHEyS3AwN25P?=
- =?utf-8?B?SDlGQVpKUDNraHkxUC9MTVFkMFZzdFRjeG9PY0lpanNhS2NLeGJKRUJEbEZI?=
- =?utf-8?B?TStqM1lOL1RSRmpmZHNBS0czdmNnbzk3L1RWdU1xcW1iT2J0Y3JacjcxYURH?=
- =?utf-8?B?Tk51cGgvYzdoVnpRb0lURFdWNVU3Z1JoSHdiQmdqMmplc2pscXlIRjFIdTdF?=
- =?utf-8?B?UkRIUDBPdVlSdC9OOGR4OXE4ZVVRTmpFdFVqSndRQkdadGpXcEN6bmdOcHYz?=
- =?utf-8?B?bjFtZ3d5aE5uU2xmZ21VRTN4bTdPcVA1SzR2L1p6dmhKNEI0KzcwbGVXT29N?=
- =?utf-8?B?c3l4aDhRMW9qY3ZSRDRRQkJMTVY0WVFNa2xTM0RRbXRjZmZpQ0U3eUIzT1hD?=
- =?utf-8?B?MkVVNFVaT0l6VWFsN0JuNXNqQlRFZm5QelFoRVVqQ2UrZ3Qzbk0zaXFTOWhW?=
- =?utf-8?B?U0JNRUM1cVhmM3dsYmx1NFhtNm9lbjExYk1wdTVCVlMrcUxvZ3pDN3pDTVZU?=
- =?utf-8?B?OEgrTzd1SmEzQTlHd1VDN0lYc08zbDZHTmErT1lVbGhXTDZwZDhVeDc4SVVM?=
- =?utf-8?B?YTJ4MnAveDlGMVdUa2VlSTd1UEwrbGhwNUU1TWprWWRmWUc4Z21NWG5IQkla?=
- =?utf-8?B?anZyalZ2VkNIMVFVK0hwK3NHamY4ZS8veWZUMTJFdjB4K1pNb0poQ3RRNU9Z?=
- =?utf-8?B?bVpvTjRSV0NRd1VIdDZ2c2s4aTQyK0RwaUIzYWVDZXhzbXVGbjF6OU9FSmUv?=
- =?utf-8?B?WkZTdzVIcnFlZnAySUduVzh4aGk2L2dlcjdzekNEcC9tc2kwM3MrbU5kZGdl?=
- =?utf-8?B?YzBGSnJ6Ulp6RWpqTFlYNXhXTVRISWpUUUtkZC9EUHNBOGkvVk95TzNXUXBx?=
- =?utf-8?Q?JaSKYb9M+uI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SzF0Skt5RGNCTTd0TUF3SEZUbGFEUmdwaGZ4cFNZbWZDWmw5WFdKbXFQMVIz?=
- =?utf-8?B?V01GNmw3OWV1d0drbW56VHRQWmFVeUY4UE9lUTRPZ1d5d0YzOUkwUG1xV29D?=
- =?utf-8?B?bHJPdUsrTERhaDlyVkgwWUFmaTluWUFidlBETlRwWjVKVlpocURWOFBocnV0?=
- =?utf-8?B?K1dWU0I4MXNYMDl2MXhuc1JRN2t3UmJDQWFMalVLakhWV21KbzFVYXozNncy?=
- =?utf-8?B?MmQ1Y05SdWVnd3JZOGtndWpPbHZQakgwMmtPQWpLV0VpaFNtRnpSZWlIQURz?=
- =?utf-8?B?UnV1TXRVekFvaENFZXpMN09JaU4xbFZOYzFMWG01clcvMTJ5RFYzaXBWQmJj?=
- =?utf-8?B?T1cxbGVVcW5hM05hR0dPZVFxOXVpREhodWt3enVZdTQzVUpyRWtEeDJYMXZO?=
- =?utf-8?B?NmkxQ2ZXcHF4K0hRaG9jdU5wWDFLZHBxYWkremdHbnNkTzVUay9vRlFpb21C?=
- =?utf-8?B?T2g1cUJpSUs2ZlUzNUlKS2NIK0V3U1FJNEJNOUZMR1dzMDBadUdTOHZISWRG?=
- =?utf-8?B?dk9wY1JiTlYya3I5RWFPeW5zNW56a1EwYUJGZUZlNGRKdGtRbzJCbFVkeWNW?=
- =?utf-8?B?SHBhbXdwM0RBUFcxdVBmRm4rSk5UTkwyek9hWTRlN1I5RlJhTWNRcUgvaWJr?=
- =?utf-8?B?U0VZdVVKeFhJMUdLelcrQnAvT21CWDV1WHlMSExsVGI0OW5OM2hsQjN1eVh1?=
- =?utf-8?B?S0FxR2NOL3FhTFlvcUprTVVKWUxFV0VnS3dEY3YwcGlpV2NNd2l1QS9FUHJs?=
- =?utf-8?B?cDRlM09seklVK3dyeUlIQksvUUNCQnozVnBYYkpEQWFrRC9iNXJhV0FFRVZV?=
- =?utf-8?B?TlhKdkNtQnBDWGxKT2pRTHdhQlJrdWk1OHMyVmczbVM5VUtHcFlRQzc4QnRB?=
- =?utf-8?B?MVpWd1ppYWtLUFhuQndKbnN6dHE2U2NGMlBXYnp2bTRzL2JZZ1dNN3NMa0w4?=
- =?utf-8?B?cm1YZDcxNTl0by9IVGo5dUhwZnUzR29JdTNoMHovYUVISE9aYWpzcE1zSnNt?=
- =?utf-8?B?UjI3UU5YZVhIY05SU1hjWVlpQUY1RXZCeE1veU9hWTRQbTA0R2hmTm9ML3d2?=
- =?utf-8?B?TW1yVXN1THQ3d2xmWHZ0WlRvWFBPOG1iNVNDYytCZjVVR1hEaGFOSVBEYk4v?=
- =?utf-8?B?V3laTFNFMEZEZUd3QXdXREtwT29IRG0zaDZZV3ZEMDFIWWJrMzFNM2s3c3ZE?=
- =?utf-8?B?ZzZIVVM5U2Y4WDVOSnNwbDhobHFNc3I5REhWdWVqNzlTWlFTZjhlWXFFd1RV?=
- =?utf-8?B?anRnMXV4OEZhZ2ZzR0ZNZ1hibkpOMm1XK1ZzaVdPeTRjZ0xNLzJlMGI4QndN?=
- =?utf-8?B?LzhQMUNxcUJuY1E3d0dnWG5XWjh6ZzZDVXZKRS82cW9mOVZmUHRyeE1tSHpl?=
- =?utf-8?B?Ly8wODBKVzR3c3BqeURaRW1oY2lCUXd5aHV3QnR1dVJKT0xuV1VxbGxxdjhy?=
- =?utf-8?B?UVR5cnBhSytsNnluZW0yQmNGbDVOMTF2WW5NZHZRZ0VFUUs3NGtKSGFGdW5D?=
- =?utf-8?B?K3pEZ0IyMGJXV2FOTnNlY0FaT2JVV3J1ai90YzNvQTRTNFkrMCttaGxYeXl6?=
- =?utf-8?B?c0ZGRURaRDB6UzlVazJRZUJ3aGRTQS8vNmQ5U1o5Mms3UTdjbmVad2IrOExW?=
- =?utf-8?B?VWFsc1pMdm9JZGFrSk1NVFY0c0FrZ3pwVXFSWWhFSWlHSnBIRHRIRkZFNUtD?=
- =?utf-8?B?VjdjMXhWMFdOeCtubGFHeVoxMCtCWDdxUlB6aTYxb1F4M2VlaS93NzN3RnpF?=
- =?utf-8?B?RVR2SEFJc3llNXJnbzNXREVmcmRyZVNUUzVobDhTYUpPejVxS2xkNmZKamJI?=
- =?utf-8?B?RWNUdHFOa3ExYmFGL2s5L2xpUTR4YlltNGlGSWVjTDRDZGVQVXhsSDR5ZDFj?=
- =?utf-8?B?cGxFd05iU3Y5d290aGJuYk5OcndacmxDa2tkRXZWdTF1ZVpVcVdyMFA3NExS?=
- =?utf-8?B?TXlWMVRPK0NWMUNtRDJsVDA2eTlocGUzbWFXaTVyTzRzRG9Hak9nUDd3NDBn?=
- =?utf-8?B?WGNOeUVvSnV2VWxkdjZPQktWdHZrNXZyYUl0N1BEWGU4K3NnZzM5NlRRN3Nt?=
- =?utf-8?B?VDIzTzdOWVBwWlNlSEFGOHoxNFdEM2pIZkdBUlRXZWVwekJ5M2xkd2VUVVQv?=
- =?utf-8?Q?XjPY=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4815cbcd-dca0-438b-3082-08dda7865518
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 18:49:15.4752
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hU3qE2uu2ljD/jDsYCCK4IUT+GuisslKE+rVu6O7rYjT2y57d+sjt7ReIGSdoJR+
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7428
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d2be3a4e-1075-459d-9bf7-b6aefcb93820@intel.com>
 
-Hi Tony,
+On Fri, Jun 06, 2025 at 02:14:56PM -0700, Reinette Chatre wrote:
+> Hi Tony,
+> 
+> On 6/6/25 10:30 AM, Luck, Tony wrote:
+> > On Fri, Jun 06, 2025 at 09:26:06AM -0700, Reinette Chatre wrote:
+> >> With /sys/kernel/debug/resctrl potentially mirroring /sys/fs/resctrl to
+> >> support various debugging scenarios there may later be resource level
+> >> debugging for which a "/sys/kernel/debug/resctrl/info/<resource>/<debugfile>" can
+> >> be used. Considering this it looks to me as though one possible boundary could
+> >> be to isolate arch specific debug to, for example, a new directory named
+> >> "/sys/kernel/debug/resctrl/info/arch_debug_name_tbd/". By placing the
+> >> arch debug in a sub-directory named "info" it avoids collision with resource
+> >> group names with naming that also avoids collision with resource names since
+> >> all these names are controlled by resctrl fs. 
+> > 
+> > 
+> > That seems like a good path. PoC patch below. Note that I put the dentry
+> > for the debug info directory into struct rdt_resource. So no call from
+> > architecture to file system code needed to access.
+> 
+> ok, reading between the lines there is now a switch to per-resource
+> requirement, which fits with the use.
+> 
+> > 
+> > Directory layout looks like this:
+> > 
+> > # tree /sys/kernel/debug/resctrl/
+> > /sys/kernel/debug/resctrl/
+> > └── info
+> >     ├── L2
+> >     ├── L3
+> >     ├── MB
+> >     └── SMBA
+> > 
+> 
+> This looks like something that needs to be owned and managed by
+> resctrl fs (more below).
+> 
+> > 6 directories, 0 files
+> > 
+> > -Tony
+> > 
+> > ---
+> > 
+> > diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+> > index 5e28e81b35f6..78dd0f8f7ad8 100644
+> > --- a/include/linux/resctrl.h
+> > +++ b/include/linux/resctrl.h
+> > @@ -281,6 +281,7 @@ enum resctrl_schema_fmt {
+> >   * @mbm_cfg_mask:	Bandwidth sources that can be tracked when bandwidth
+> >   *			monitoring events can be configured.
+> >   * @cdp_capable:	Is the CDP feature available on this resource
+> > + * @arch_debug_info:	Debugfs info directory for architecture use
+> >   */
+> >  struct rdt_resource {
+> >  	int			rid;
+> > @@ -297,6 +298,7 @@ struct rdt_resource {
+> >  	enum resctrl_schema_fmt	schema_fmt;
+> >  	unsigned int		mbm_cfg_mask;
+> >  	bool			cdp_capable;
+> > +	struct dentry		*arch_debug_info;
+> >  };
+> 
+> ok ... but maybe not quite exactly (more below)
 
-On 6/9/25 11:21, Tony Luck wrote:
-> Babu,
-> 
-> Here's my latest version of those four patches (build on top of Qinyun's
-> patch that I believe should go upstream via tip/urgent).
+Would have been useful with the "always create directories" approach.
+As you point out below the name is problematic. Would need separate
+entries for control and monitor resources like RDT_RESOURCE_L3.
 
-Wonderful. Thank you. Will rebase my patches.
+I don't think it is useful in the "only make directories when requested
+by architecture" mode.
 
+> >  
+> >  /*
+> > diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
+> > index ed4fc45da346..48c587201fb6 100644
+> > --- a/fs/resctrl/rdtgroup.c
+> > +++ b/fs/resctrl/rdtgroup.c
+> > @@ -4274,6 +4274,8 @@ void resctrl_offline_cpu(unsigned int cpu)
+> >   */
+> >  int resctrl_init(void)
+> >  {
+> > +	struct dentry *debuginfodir;
+> > +	struct rdt_resource *r;
+> >  	int ret = 0;
+> >  
+> >  	seq_buf_init(&last_cmd_status, last_cmd_status_buf,
+> > @@ -4320,6 +4322,12 @@ int resctrl_init(void)
+> >  	 */
+> >  	debugfs_resctrl = debugfs_create_dir("resctrl", NULL);
+> >  
+> > +	/* Create debug info directories for each resource */
+> > +	debuginfodir = debugfs_create_dir("info", debugfs_resctrl);
+> > +
+> > +	for_each_rdt_resource(r)
+> > +		r->arch_debug_info = debugfs_create_dir(r->name, debuginfodir);
 > 
-> I believe I addressed all the comments[1] in these four patches
+> This ignores (*) several of the boundaries my response aimed to establish. 
 > 
-> [1] https://lore.kernel.org/lkml/20250521225049.132551-1-tony.luck@intel.com/
+> Here are some red flags:
+> - This creates the resource named directory and hands off that pointer to the
+>   arch. As I mentioned the arch should not have control over resctrl's debugfs.
+>   I believe this is the type of information that should be in control of resctrl fs
+>   since, as I mentioned, resctrl fs may need to add debugging that mirrors /sys/fs/resctrl. 
+> - Blindly creating these directories (a) without the resource even existing on the
+>   system, and (b) without being used/requested by the architecture does not create a good
+>   interface in my opinion. User space will see a bunch of empty directories
+>   associated with resources that are not present on the system.
+> - The directories created do not even match /sys/fs/resctrl/info when it comes
+>   to the resources. Note that the directories within /sys/fs/resctrl/info are created
+>   from the schema for control resources and appends _MON to monitor resources. Like
+>   I mentioned in my earlier response there should ideally be space for a future
+>   resctrl fs extension to mirror layout of /sys/fs/resctrl for resctrl fs debug
+>   in debugfs. This solution ignores all of that.
+>   
+> I still think that the architecture should request the debugfs directory from resctrl fs.
+> This avoids resctrl fs needing to create directories/files that are never used and
+> does not present user space with an empty tree. Considering that the new PERF_PKG
+> resource may not come online until resctrl mount this should be something that can be
+> called at any time.
 > 
-> -Tony
+> One possibility, that supports intended use while keeping the door open to support
+> future resctrl fs use of the debugfs, could be  a new resctrl fs function,
+> for example resctrl_create_mon_resource_debugfs(struct rdt_resource *r), that will initialize
+> rdt_resource::arch_debug_info(*) to point to the dentry of newly created
+> /sys/kernel/debug/resctrl/info/<rdt_resource::name>_MON/arch_debug_name_TBD *if*
+> the associated resource is capable of monitoring ... or do you think an architecture
+> may want to add debugging information before a resource is discovered/enabled?
+> If doing this then rdt_resource::arch_debug_info is no longer appropriate since it needs
+> to be specific to the monitoring resource. Perhaps then rdt_resource::arch_mon_debugfs
+> that would eventually live in [1]?
 > 
-> Qinyun Tan (1):
->   x86,fs/resctrl: Remove unappropriate references to cacheinfo in the
->     resctrl subsystem.
+> This is feeling rushed and I am sharing some top of mind ideas. I will give this
+> more thought.
 > 
-> Tony Luck (4):
->   x86,fs/resctrl: Consolidate monitor event descriptions
->   x86,fs/resctrl: Replace architecture event enabled checks
->   x86/resctrl: Remove 'rdt_mon_features' global variable
->   x86,fs/resctrl: Prepare for more monitor events
+> Reinette
 > 
->  include/linux/resctrl.h                | 28 +++++---
->  include/linux/resctrl_types.h          | 15 ++--
->  arch/x86/include/asm/resctrl.h         | 16 -----
->  arch/x86/kernel/cpu/resctrl/internal.h |  9 +--
->  fs/resctrl/internal.h                  | 17 +++--
->  arch/x86/kernel/cpu/resctrl/core.c     | 65 +++++++++--------
->  arch/x86/kernel/cpu/resctrl/monitor.c  | 41 +++++------
->  fs/resctrl/ctrlmondata.c               | 17 +++--
->  fs/resctrl/monitor.c                   | 96 ++++++++++++++------------
->  fs/resctrl/rdtgroup.c                  | 79 +++++++++++----------
->  10 files changed, 204 insertions(+), 179 deletions(-)
+> [1] https://lore.kernel.org/lkml/cb8425c73f57280b0b4f22e089b2912eede42f7a.1747349530.git.babu.moger@amd.com/
 > 
+> (*) I have now asked several times to stop ignoring feedback. This should not even
+>     be necessary in the first place. I do not require you to agree with me and I do not claim
+>     to always be right, please just stop ignoring feedback. The way forward I plan to ignore
+>     messages that ignores feedback.
 
+So here's a second PoC. Takes into account all of the points you make
+above with the following adjustments:
+
+1) Not adding the rdt_resource::arch_mon_debugfs field.  Just returning
+the "struct dentry *" looks to be adequate for existing use case.
+
+Having the pointer in "struct resource" would be useful if some future
+use case needed to access the debugfs locations from calls to
+architecture code that pass in the rdt_resource pointer. Could be
+added if ever needed.
+
+2) I can't envision a need for debugfs entries for resources
+pre-discovery, or when not enabled. So keep things simple for
+now.
+
+3) I think the function name resctrl_debugfs_mon_info_mkdir() is a bit
+more descriptive (it is making a directory and we usually have such
+functions include "mkdir" in the name).
+
+-Tony
+
+---
+
+diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+index 8bec8f766b01..771e69c0c5c1 100644
+--- a/include/linux/resctrl.h
++++ b/include/linux/resctrl.h
+@@ -564,6 +564,12 @@ void resctrl_arch_reset_all_ctrls(struct rdt_resource *r);
+ extern unsigned int resctrl_rmid_realloc_threshold;
+ extern unsigned int resctrl_rmid_realloc_limit;
+ 
++/**
++ * resctrl_debugfs_mon_info_mkdir() - Create a debugfs info directory.
++ * @r:	Resource (must be mon_capable).
++ */
++struct dentry *resctrl_debugfs_mon_info_mkdir(struct rdt_resource *r);
++
+ int resctrl_init(void);
+ void resctrl_exit(void);
+ 
+diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
+index 8d094a3acf2f..0f11b8d0ce0b 100644
+--- a/fs/resctrl/rdtgroup.c
++++ b/fs/resctrl/rdtgroup.c
+@@ -4344,6 +4344,22 @@ int resctrl_init(void)
+ 	return ret;
+ }
+ 
++struct dentry *resctrl_debugfs_mon_info_mkdir(struct rdt_resource *r)
++{
++	static struct dentry *debugfs_resctrl_info;
++	char name[32];
++
++	if (!r->mon_capable)
++		return NULL;
++
++	if (!debugfs_resctrl_info)
++		debugfs_resctrl_info = debugfs_create_dir("info", debugfs_resctrl);
++
++	sprintf(name, "%s_MON", r->name);
++
++	return debugfs_create_dir(name, debugfs_resctrl_info);
++}
++
+ static bool resctrl_online_domains_exist(void)
+ {
+ 	struct rdt_resource *r;
 -- 
-Thanks
-Babu Moger
+2.49.0
+
