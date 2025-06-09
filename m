@@ -1,88 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241CA257AF4;
-	Mon,  9 Jun 2025 13:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243DB25A2A2;
+	Mon,  9 Jun 2025 13:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749476411; cv=none; b=DpefmESRwpHK1uCcTiw8Dz99x9uqjjTV5fOKrPvtrJs1s0Z6sfE/U9n0Cg/7amYdSAH9cY/NUWnKw7bXRpbGRaENf3xmtmai3c4lKL/jbznHMeG3rHqOLxVQ3FwunuPmjOQa+9Z+wljYX7qgP0J4lkFur4CGdJmTY+wZv13480E=
+	t=1749476413; cv=none; b=HLhIB88l1CTSts9MPrPTceYfh32DPh+qRnkCq02nNsj+oHjd9eunw4pRaJIG4qw5ncw+9h7UYSA8OHDM0DMUnp0Az3mPVZAGxB2WPOERXiXHskzHsuC47LVKTMNEn0Q7HdqQioIRwYDFtkASgnC+p1YEXJ2ZzyxBiB57LbiC49U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749476411; c=relaxed/simple;
-	bh=btPt4PnoHqgf6jzLcbEkymMlePrHj9/nbbiIeJEqU2Q=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ILiA7EdY+uGVE+QINctn5/RcgRXE7CLI85FCE4XhRwtA2QBb09F7ePAK5dbjBPImsnSisxklWZZ+2VPLgbbfTrS5ywXdf43MAEsgKrnXB6iiAMCRAS4lfScaGXuDwdAB6k4llgah6QYOXVy/BZN1ttGXMXp62HWbD3VHCqN2IWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CFGu8TNQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749476413; c=relaxed/simple;
+	bh=cY4xKlehVdvlZ3NiQzDRzQlO9jXyfXVG9+zrEpxgDxs=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ETEeHsEtTbojDUKF3GifyKc9TgilQ+mps8SF8ZlgWKhe7092tqIpKyuSZA//WTaHk8cKicY+2KKWVPoV/CXkF6kAG/sd+P5YhWzCSFOdKCeFqbCtR2xVDtPz3vnPpHhxm1LBFlogsnXJItCY9fTLx9L9S7fajnCdykmDybYo1ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Laf5E0Vx; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CFGu8TNQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 405DEC4CEEB;
-	Mon,  9 Jun 2025 13:40:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749476410;
-	bh=btPt4PnoHqgf6jzLcbEkymMlePrHj9/nbbiIeJEqU2Q=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=CFGu8TNQw8k0ASy1ZRiR2LrPsgmHnuSe1JUowx8+7PJZ39l1+fE6DB1ju6C+CT0XI
-	 HrLAKAo3d949GZq0+f1kta9XB6zTMem67HS021gmOdtLpl5hJPrqxFKBccpo8t8DPv
-	 kTWwJWxvdHlNh9VCr0+YwWobQBEFYlYedgo3D9/c81dFYw9c9mDavh8/UZ+U0BSmS4
-	 0cBaBQj3x7Zq2alzyaGg3qXO1MUR9wQOLPA8QHrXXm7Pd4lt1b4RP/eVe694FEskG/
-	 v2+d0vfD+4IKPK7uRs0tnScggG4n/E0k2Xc83f9EE20Wp/41pIMIpqziLe89C4jJm7
-	 pceUD2r2lixEA==
-From: Mark Brown <broonie@kernel.org>
-To: Srinivas Kandagatla <srini@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, linux-sound@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20250523121811.380045-2-krzysztof.kozlowski@linaro.org>
-References: <20250523121811.380045-2-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH] ASoC: codecs: lpass: Drop unused AIF_INVALID first DAI
- identifier
-Message-Id: <174947640900.126747.17690897321632994593.b4-ty@kernel.org>
-Date: Mon, 09 Jun 2025 14:40:09 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Laf5E0Vx"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-53090b347dfso1410532e0c.0;
+        Mon, 09 Jun 2025 06:40:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749476411; x=1750081211; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=cY4xKlehVdvlZ3NiQzDRzQlO9jXyfXVG9+zrEpxgDxs=;
+        b=Laf5E0VxclgjwUI34BI36dDqNDdq7UQOm+xEhbO2mgRNf/JH8biWWxMbti5TOulf8Q
+         GKJ+ewYIW41AAuBo4QkEY6076zTLryGTrt2wEYJ50FwP9UYsDyVcvG+uQXDKNgpkztve
+         7UNc1Omj/1oKSPNU8O3c614TJrMV6mv6F1+l/e7IXXUYcjNGaZdEMFmSfFwXZNf41lJZ
+         MRjMM0ZOcxpElPop3jW+TSwHYBmHg2SRAOZ1TdmTWVjw8UHgF0YtT4BcunLKGvFULkh7
+         FDCCa6a01iQLzBZILcdUbWVYqOu1gutBz4bWpo7g8nAZs5Nd/K0wMXFWrauk4RA9cMDx
+         yYLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749476411; x=1750081211;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cY4xKlehVdvlZ3NiQzDRzQlO9jXyfXVG9+zrEpxgDxs=;
+        b=CqGvGPrSyUY/wieA2qU+G0By/3zdAjUxmUWdmOvUq9Ec520Q8Awcs1eO8scgvL4z1W
+         bu8e1Au5jbzUqCynE6Fp5p14EzjYBQ7mqWR+tUJRuO4GhX+RB7Qb5KuOuuHw49Al1Bnh
+         rq2yft5q+W2bLv0084lPo9ATPskI4RlV6pSp7IX9HNZfUrsBg19FUj9glhVI0c2HGowE
+         n4ZrQSciqcgRlaSHTFW12XdaaYf/Yazod8WjGdUHZ59h7jmaZMYDw/wRFRk7OiFHL7Dk
+         jMPwkqfhcJ7LfLClOJWdZ8I1/yPa2+zBMglN4sdvyZGZpiGRwj1QVxKlwZd+PtT4kMO8
+         RvUw==
+X-Forwarded-Encrypted: i=1; AJvYcCX0yLMDS+u6lBIYA34WFqYX/k/L0ru0/Byk9iUv4zlt3xjD9IneVN9Hxkzn/U4OMlELtIKWs+Cy@vger.kernel.org, AJvYcCXvfeLdxBDag2EwGb+p8xLH8XXJ/b4fmadNTAx5yvH2fshX/61cndgBAJxLFKpcplq5KDJZP+697N74Aqk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb2RVm36PS1YrIlWqQNPLaZ8nR1EGHZFJbWqZLv0nfagyhMRnJ
+	VKUZtVKjpnb7Wm9fDP59sM0gRmcQXIigGSjccxkKc2xZdRg+8BfK45OZu8x4gL/3qKzVJw3fivU
+	4fGoGUlvl1vLOKT2c1PHMKFV9RhPso/E=
+X-Gm-Gg: ASbGnctiI8dw1sYED5gzduQydLcmdrzcsBe4SbacFQHr9TfJZ9kA8KUzN2jehNMBIsS
+	7DlLFe7OIjYUNqsCJSDgOQod44/TW01/N1fOhLQGOerpW99DuXR4Gh9ADntVq58wkhG/OSnTpqF
+	1GJeaUk9y3hpjlX6E+AxqKfdFKXt1/3pV2cP0kO/pXoKeL
+X-Google-Smtp-Source: AGHT+IGY6fU6lJ8V5VjYmrvOBlPolfPyq3XHCfqRqIx9PvrE87W7ON5Flq55XC+vB3tO7sziS7pDRkGERLXIw/X3o/Y=
+X-Received: by 2002:a05:6122:201f:b0:526:2210:5b64 with SMTP id
+ 71dfb90a1353d-530e48b54efmr10496314e0c.9.1749476410937; Mon, 09 Jun 2025
+ 06:40:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+From: Xianying Wang <wangxianying546@gmail.com>
+Date: Mon, 9 Jun 2025 21:39:59 +0800
+X-Gm-Features: AX0GCFvxspkhrn78Sa-QcFbj3ft8P-CqaA5D2axID067xmJTtU7TPXtPy7th6SA
+Message-ID: <CAOU40uC6U3PS3cu7RmK71DPA_jbW_ZY0FBkBjCdjVArCiZO-fA@mail.gmail.com>
+Subject: [BUG] WARNING in sendmsg
+To: davem@davemloft.net
+Cc: edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 23 May 2025 14:18:12 +0200, Krzysztof Kozlowski wrote:
-> All four Qualcomm SoC macro codecs define DAI IDs in an enum starting
-> with AIF_INVALID=0, which is nowhere used in the code thus actual DAI
-> IDs start from 1.  Drivers do not have their own of_xlate_dai_name(),
-> thus snd_soc_get_dlc() expects the DTS to start numbering DAIs from 0,
-> which creates confusing debugging scenario, e.g. DTS should use
-> <&lpass_wsamacro 2> for WSA_MACRO_AIF_VI with dai->id=3.
-> 
-> [...]
+Hi,
 
-Applied to
+I discovered a kernel WARNING described as "WARNING in sendmsg"when
+fuzzing the Linux 6.8 kernel using Syzkaller. This issue occurs in the
+memory allocation path within the sendmsg system call, specifically in
+the __alloc_pages function at mm/page_alloc.c:4545. The warning is
+triggered by a WARN_ON_ONCE assertion in the page allocator during an
+attempt to allocate memory via kmalloc from the socket layer.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+This occurs when invoking sendmsg, which internally attempts to
+allocate memory for socket buffers via sock_kmalloc(net/core/sock.c).
+The allocation triggers a warning due to either an invalid allocation
+context (e.g., atomic context with GFP_KERNEL) or memory pressure
+conditions that violate allocation constraints.
 
-Thanks!
+This may be triggered by an unusual runtime state induced by the
+fuzzing program =E2=80=94 such as mounting a compressed ext4 filesystem via
+loop device, performing ptrace and socket operations, and using
+certain sysctl interfaces. This combination may have placed the system
+in a constrained memory context, causing __alloc_pages to emit a
+warning.
 
-[1/1] ASoC: codecs: lpass: Drop unused AIF_INVALID first DAI identifier
-      commit: bb4a0f497bc19558ba7fe9feac814286fc7ebe85
+I recommend reviewing the use of kmalloc in sock_kmalloc, particularly
+the GFP flags used under socket send operations, and whether the call
+can occur in atomic or memory-constrained contexts. It may be
+necessary to guard such allocations or use GFP_ATOMIC where
+appropriate.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+This can be reproduced on:
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+HEAD commit:
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+e8f897f4afef0031fe618a8e94127a0934896aba
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+report: https://pastebin.com/raw/DJLgSX8N
 
-Thanks,
-Mark
+console output : https://pastebin.com/raw/DLirgK1i
 
+kernel config : https://pastebin.com/raw/aJ9rUnhG
+
+C reproducer : https://pastebin.com/raw/EXf8Gc4A
+
+Let me know if you need more details or testing.
+
+Best regards,
+
+Xianying
