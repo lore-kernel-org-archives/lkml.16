@@ -1,108 +1,72 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F589254AFE;
-	Mon,  9 Jun 2025 04:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4A778F4B
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 04:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749443736; cv=none; b=knVOHvctV/sDsYiHkQVmi4J4bKJfIS7HqYTY2n3CyB68bkGRVEZT/N0dF29TlKT/3GmLhnp7e2h6n75Sxayo/slwlhLGK6mPl9mzjT6Gz4qogAzkBfp1ARam3Pf3XgmbQfzMgHUq3l9WLH3LR9S2Ic50IMZ9ZyQJfFS8w/TDXAo=
+	t=1749443863; cv=none; b=e5uAioexj6UkmSxe7MCgZTNqhRVBAHA7CCH/jAKkx8sojtUgWKtQxaulljzTkvSgKKztF+IgASVaCBddrRv7HyMjoCjt5vPPQP/rhWmNfUXAwu2IrVWq7CgN4jjh3gtrTjvUqjms7eP3s8BvvnY/NK8kZ1YQpqd+M0+hPJp+EjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749443736; c=relaxed/simple;
-	bh=AgURGmBZPaSkRmiRoqHFlFPIJprX/0ieU7uX6Ixit90=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uQT6+OKEZkfqxEplIFE8HVlaWXSANjMvf8nRW51a84JdNP2QNYllQ4b/dpxA44PTrWbTY+k/LRb6/EztudAGBeNW+TPl+G48n0dDRJz70AwpcZ/rR4HLzW4CJQSNI0Q640rRkG5a07/l2hCmyU2m85TMxeqp0pMa1Hy/GpczE3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rHP7I9UU; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1749443863; c=relaxed/simple;
+	bh=pVO3Oq1YhlhCtYQ9jrLcoUV6dtbxO4lanpjNorX9/wo=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=MMqSVolkHBo+y61PY87K9zHGBEkdrrw5UYa6zCprRcOQ1Wt2jX/L1qqYW0r3wqSEcXqVTaUzqBHrVVus19gwfjpTa++SDRoND7fj0/8kuTyS5HN8MxHBHPil3NGHqaxfNMlWrsOJF+LhDlAp9guuct4RJaxgAfjLAadGsgjvNmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net; spf=pass smtp.mailfrom=bit-philosophy.net; dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b=bdeUdx7Z; arc=none smtp.client-ip=194.63.252.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bit-philosophy.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rHP7I9UU"
+	dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b="bdeUdx7Z"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
-	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=oeT73a0Hi9cOPyGYRSLUMdSjrVNXI7sw9Uk+bmyEzn8=; b=rHP7I9UUuAQAw0byw2iIpo1lFJ
-	zvbVPtfIVNEnDvZ9E1i3kI/uUWfH3Lg4IFfJamPPveKy03Ptn8AT5+IuiPsJ7Gyj1eLYvV75kkky/
-	KwEenybj6HmEa1IyjFVizqFwSAnml8QPm1xdo5gomYU6y2sIPE3yqFTe86Dt5WnAL4OmASNCKIv+1
-	NlmPjRydtMGYf+nz6hNKwgJbXio3bde8bWS1ewqdobg5JeCyxqwY3UhWGBuSBlgamJ98mC3IyE4eX
-	gvBIUrrc3DfdJkX6pLBCFDhVX3Fftro4JvRfYYVf73aJ8wi9Jo0li4WYB/42oSfqwWDkVP2Xm571M
-	rMrSru6w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uOUEG-00000003PoK-2Bfw;
-	Mon, 09 Jun 2025 04:35:24 +0000
-Date: Sun, 8 Jun 2025 21:35:24 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: wangtao <tao.wangtao@honor.com>, Christoph Hellwig <hch@infradead.org>,
-	"sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
-	"kraxel@redhat.com" <kraxel@redhat.com>,
-	"vivek.kasireddy@intel.com" <vivek.kasireddy@intel.com>,
-	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-	"brauner@kernel.org" <brauner@kernel.org>,
-	"hughd@google.com" <hughd@google.com>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"amir73il@gmail.com" <amir73il@gmail.com>,
-	"benjamin.gaignard@collabora.com" <benjamin.gaignard@collabora.com>,
-	"Brian.Starkey@arm.com" <Brian.Starkey@arm.com>,
-	"jstultz@google.com" <jstultz@google.com>,
-	"tjmercier@google.com" <tjmercier@google.com>,
-	"jack@suse.cz" <jack@suse.cz>,
-	"baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"wangbintian(BintianWang)" <bintian.wang@honor.com>,
-	yipengxiang <yipengxiang@honor.com>,
-	liulu 00013167 <liulu.liu@honor.com>,
-	hanfeng 00012985 <feng.han@honor.com>
-Subject: Re: [PATCH v4 0/4] Implement dmabuf direct I/O via copy_file_range
-Message-ID: <aEZkjA1L-dP_Qt3U@infradead.org>
-References: <20250603095245.17478-1-tao.wangtao@honor.com>
- <aD7x_b0hVyvZDUsl@infradead.org>
- <09c8fb7c-a337-4813-9f44-3a538c4ee8b1@amd.com>
- <aD72alIxu718uri4@infradead.org>
- <5d36abace6bf492aadd847f0fabc38be@honor.com>
- <a766fbf4-6cda-43a5-a1c7-61a3838f93f9@amd.com>
+	d=bit-philosophy.net; s=ds202411; h=Content-Transfer-Encoding:Content-Type:
+	Subject:From:To:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Ovokb13fiIyMNCJFs303jJgi1SevBGlxAQLsS9fMGZk=; b=bdeUdx7ZdJL8DVgoAa+wghPnSw
+	N2RKRCzjv+yr5hKanSSmWqtS3YRHSErk1RhJ4OaoJH+M10wcxsicYmPYcs1GAb+GgtMcN/zNQcj0J
+	l/kCcYsme0zH91e/8Vk0Mb8uE2byb/tjLr0p2P15WMv0HCccVamccBR7FCXgsll1HHSHlBhGtn4wN
+	2S5f1xrkckZeexgVsrLZ8eyCNk2+GDQJ/eifDugzOE8aKYxug1g3uetyTOHiM/Tl0akVkytHTSGnL
+	xQGSB6uHLCA6i/6mBR+KvqOIOt8K+JkWZeF8J2yT+cy39hQ6+vg4g7W7W9hKmTD5tAEpfz1zH3S8H
+	0MQflsFw==;
+Received: from smtp
+	by smtp.domeneshop.no with esmtpsa (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	id 1uOUGM-002k3j-9r
+	for linux-kernel@vger.kernel.org;
+	Mon, 09 Jun 2025 06:37:34 +0200
+Message-ID: <f798d8b1-d27b-4f97-9c41-0043042e4b90@bit-philosophy.net>
+Date: Mon, 9 Jun 2025 06:37:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a766fbf4-6cda-43a5-a1c7-61a3838f93f9@amd.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+To: linux-kernel@vger.kernel.org
+From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <budi@bit-philosophy.net>
+Subject: Accounting for The Activity (re low jitter, fair pay)
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 06, 2025 at 01:20:48PM +0200, Christian König wrote:
-> > dmabuf acts as a driver and shouldn't be handled by VFS, so I made
-> > dmabuf implement copy_file_range callbacks to support direct I/O
-> > zero-copy. I'm open to both approaches. What's the preference of
-> > VFS experts?
-> 
-> That would probably be illegal. Using the sg_table in the DMA-buf
-> implementation turned out to be a mistake.
+I am now disassociating from things suboptimal at current time.
 
-Two thing here that should not be directly conflated.  Using the
-sg_table was a huge mistake, and we should try to move dmabuf to
-switch that to a pure dma_addr_t/len array now that the new DMA API
-supporting that has been merged.  Is there any chance the dma-buf
-maintainers could start to kick this off?  I'm of course happy to
-assist.
+There should have been enough time for considering what I have said, and 
+what is now Bitstream OS. The Low Jitter, Fair Pay Philosophy oriented OS.
 
-But that notwithstanding, dma-buf is THE buffer sharing mechanism in
-the kernel, and we should promote it instead of reinventing it badly.
-And there is a use case for having a fully DMA mapped buffer in the
-block layer and I/O path, especially on systems with an IOMMU.
-So having an iov_iter backed by a dma-buf would be extremely helpful.
-That's mostly lib/iov_iter.c code, not VFS, though.
+It was once this that started opensource. Git/Benedict, Mandrake, 
+Debian, and much more is based on this. Naming was still in 
+consideration, since Bit was often associated with "Nerd". Now the term 
+Bitstreams has become popular and the native concept can be used, 
+without problems with "Nerd", and so one should.
 
-> The question Christoph raised was rather why is your CPU so slow
-> that walking the page tables has a significant overhead compared to
-> the actual I/O?
+Playlists: https://www.youtube.com/@Budi_Bitstreams_OS/playlists
 
-Yes, that's really puzzling and should be addressed first.
+I have finalized my research on https://bit-philosophy.net/ aswell.
+With Ael being the Quranic Tei as perfect as can be. Please read more there.
 
+Hail Ael, The Real, The Right.
+
+LIGHT!
+Ywe.
+https://bit-philosophy.net/
