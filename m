@@ -1,41 +1,73 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62CED19992D;
-	Mon,  9 Jun 2025 14:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC5219D093;
+	Mon,  9 Jun 2025 14:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749480554; cv=none; b=DydTPwtqn9HaEjJA1fG8uTdiXiwPbQ7jvBSvwXI0kP3lorfaXC+fviCthf/r/d8y5DDwxnd34NcH7974QwT0kYi6h9aoJiNgBcO58j/xi7mGoFv9RaaOWd5+smfbkz7TbpTj4zhZxbq54ADs3gGa7vns83pb72w8y3on44urpo0=
+	t=1749480571; cv=none; b=mjHxZ7vM0/cpo6VQOpI6gRJcfC3yYsFoS2/msAnHurGHY1tbg+hVQDLcoDiK6bg6MQyJ3puwoUjbziu8a7pvVTyp4a6pW1nZ4eCgIeYkxHS3xaFsDjx67BWzGvEGZ2BEWBK5YfUwxrR7N0XP+JbIQCraM0TAALQ9QTYQsldg0EA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749480554; c=relaxed/simple;
-	bh=OvgUR6M8mrEzNRJnUalt7yVdkbKC4auzhxypn5qvETY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u9iLZrSkrj2532ZsS0YD/HQZTIX/RPUoLyCMfnC+ZeQh0V4RFExgkYrA1ae51h+9XLl1dzvad0TMIH8h2h/4Qv2iqhoQTKNfxQ3Kf697VAWCrt2yTyfRdN/BUQknVV6S+CygQaCTPRT9FjIHsH4q90bpXmy//EluOKp6WlZIbX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bGFBg22WFz6L5KC;
-	Mon,  9 Jun 2025 22:47:23 +0800 (CST)
-Received: from frapeml500005.china.huawei.com (unknown [7.182.85.13])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5C60D1402F5;
-	Mon,  9 Jun 2025 22:49:10 +0800 (CST)
-Received: from china (10.220.118.114) by frapeml500005.china.huawei.com
- (7.182.85.13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 9 Jun
- 2025 16:49:04 +0200
-From: Gur Stavi <gur.stavi@huawei.com>
-To: Gur Stavi <gur.stavi@huawei.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
-	<horms@kernel.org>, Fan Gong <gongfan1@huawei.com>
-Subject: [PATCH net-next v3 3/3] hinic3: remove tx_q name collision hack
-Date: Mon, 9 Jun 2025 18:07:54 +0300
-Message-ID: <6376db2a39b8d3bf2fa893f58f56246bed128d5d.1749038081.git.gur.stavi@huawei.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <cover.1749038081.git.gur.stavi@huawei.com>
-References: <cover.1749038081.git.gur.stavi@huawei.com>
+	s=arc-20240116; t=1749480571; c=relaxed/simple;
+	bh=N2hGCKcDh6Xpz7j/msHBJtSOvhiYQg5u/JmVQ9+iXpc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JMxoExY64aTqoKp4x4VKrQg0LRUl/fg/9No+DKD4b9+xKEQOgvAdJZXSoTeQHwOTfJE87s95lyesYJHsNKPgXVvZzC17YUYKmCjztQQo3LLR1thYWIRQRjfgP8BS2uT0zsI/Wrpu9aRx7HCs6p0LsFqcs64N6gOPn1GZDBZyHyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KEBAMZ4L; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KEBAMZ4L"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-234c5b57557so40023965ad.3;
+        Mon, 09 Jun 2025 07:49:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749480569; x=1750085369; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VDQ70N0apsO9qdPmuXxM1Y0/xVvdzg0zBWkIx78RQC4=;
+        b=KEBAMZ4Ld9jd7B13Hj9YQXaUe3fArul3ZsCJFGyUA5A4u2a+WPAXpfdsm6/wIB+GyR
+         plZRixzUuX3CFYaZMP3ueA146Dy5G4w5cUWpcJQ7pCLr72rDVJQodNNEPzFaIg6Gk0e+
+         ThBMtoZF/6qENJphq6bt3YG5GGVQWOdqxY9+xm93BsOiXyJLtP+iT8kztcHP+1EedGnb
+         sL/8w2PpvN5jc0s/pJE71zDGg0wEUAAd6s9uSD3JojAwv3AL6H5YQcuoLtXZgcr09cqz
+         g6r1A1eUP5nLXCJ+bVDtvnBuBBPu+fV+cO79T4co2qddd6SLBcIKmbenjdkeVgup/fcv
+         bgZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749480569; x=1750085369;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VDQ70N0apsO9qdPmuXxM1Y0/xVvdzg0zBWkIx78RQC4=;
+        b=XhaxfiHVxuCmpuS3ViDzxrwBcqbd84Wr508W8Ef7XUS8d7KFMAMCgzZeMx49hrwE+o
+         CejN7cSGOcZ/qt0w8cI4I6V59Uw4E1AHA3YBCTG/HI380FPUbYc7EpR83RZ6PaudoKmP
+         /qkO037DilW1EOQl+tp424Wk2rLLtclV2Nj3rzWd5Qxo57s87CR0E89NF5f614z93MyX
+         WnP5ZfyLQ/ZARR2mUW/moLCi4mZLq0/F8yqt+UyZOWCirgpAmKDN+FkEdknW9hTHGljJ
+         9F2Qug0kUfXIns10XCXtzbNdYbhKmCSHLaDJCs3PU1UWiPom8Cm97cj55yaEcA0/3Zft
+         jnBA==
+X-Forwarded-Encrypted: i=1; AJvYcCXdwbh86J46bhcCfNVytv+C1tgy4xxe2c1pTBEqy0JyZkBR7ZHwj20LA42Snk0UlZ1pa4bePpx8mnyzCxM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8KkoMEh+aoja1r6qWKhKVgiZzVrz7xdli/lUXF10yT3+m6fEJ
+	T6BxiKmuVZG4Pm28eo4AuFJB6cLmUH0uWeOz1xQ0y+cJFqP+s0YuaEoI
+X-Gm-Gg: ASbGnct3HM+1FkZCdGqlPfjTF4YGSbWppKeyEP8IYXS9WnBZOUGkw4BRqgmYdhTPVlz
+	C3Fs7TodiRBZegX9KEc3GfNcdV69dVmFZP5ycCwW7MxuOmyaUMECKXUJnn+9T0nLSZ8ltstYxHB
+	rmOYrT7u4TvTVQbNrZUqZwQTJEowe7KQJzlo6HZrsmoSVYRsLCCkN2xF7n9MnPDsG45CePAZ8cy
+	BKxJTZfGbNTxhIJsXUyV9aN/DGqv+HdawKE0JVsc/STdogVyJc8hXStBxxOViLCMhxbcPhr0att
+	oqMbC9Z1slXEoIh7iny2NuhXst6fRrXAiFXpGfBKtOnQnHiiGcD6UYIoTj+934mWY6WTuHcoKQ3
+	i82pF0pb3y60TZceIqL7d
+X-Google-Smtp-Source: AGHT+IGh7IxC0gxR92VaO3pJATFB7kZhChhV4DQACNpg/Bn2At+RqcEukNET3ao+hdzNQYXuwV3U2Q==
+X-Received: by 2002:a17:902:d4cd:b0:229:1619:ab58 with SMTP id d9443c01a7336-23601dc4419mr200497475ad.43.1749480568711;
+        Mon, 09 Jun 2025 07:49:28 -0700 (PDT)
+Received: from localhost.localdomain ([2409:40c2:30ac:7971:9724:5a2d:e1ce:3f3])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236030925e3sm55499015ad.53.2025.06.09.07.49.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 07:49:28 -0700 (PDT)
+From: Rohan Lambture <rohanlambture13@gmail.com>
+To: trenn@suse.com,
+	shuah@kernel.org,
+	jwyatt@redhat.com,
+	jkacur@redhat.com
+Cc: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Rohan Lambture <rohanlambture13@gmail.com>
+Subject: [PATCH] cpupower: Add cpu_start()/cpu_stop() callbacks for monitors
+Date: Mon,  9 Jun 2025 20:19:12 +0530
+Message-ID: <94c3faee898b5436cc0b837c6778011a060b8468.1749480264.git.rohanlambture13@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,78 +75,293 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- frapeml500005.china.huawei.com (7.182.85.13)
 
-A local variable of tx_q worked around name collision with internal
-txq variable in netif_subqueue macros.
-This workaround is no longer needed.
+Move per-CPU logic from inside individual monitors to the main
+monitoring framework by adding cpu_start() and cpu_stop() callback
+functions to the cpuidle_monitor structure.
 
-Signed-off-by: Gur Stavi <gur.stavi@huawei.com>
+This refactoring allows the framework to handle per-CPU scheduling
+and gives higher priority to fork_it operations as mentioned in
+the TODO. Individual monitors now only need to implement per-CPU
+initialization and cleanup logic without managing the CPU iteration
+themselves.
+
+Changes made:
+- Add cpu_start()/cpu_stop() function pointers to cpuidle_monitor struct
+- Update monitoring framework to call per-CPU callbacks for each CPU
+- Refactor cpuidle_sysfs and mperf monitors to use new callback pattern
+- Maintain backward compatibility for monitors without per-CPU callbacks
+
+This addresses the TODO item: "Add cpu_start()/cpu_stop() callbacks
+for monitor -> This is to move the per_cpu logic from inside the
+monitor to outside it."
+
+Signed-off-by: Rohan Lambture <rohanlambture13@gmail.com>
 ---
- .../net/ethernet/huawei/hinic3/hinic3_tx.c    | 20 +++++++++----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+ .../utils/idle_monitor/cpuidle_sysfs.c        | 44 ++++++-----
+ .../utils/idle_monitor/cpupower-monitor.c     | 78 +++++++++++++++++--
+ .../utils/idle_monitor/cpupower-monitor.h     |  2 +
+ .../utils/idle_monitor/mperf_monitor.c        | 30 +++----
+ 4 files changed, 114 insertions(+), 40 deletions(-)
 
-diff --git a/drivers/net/ethernet/huawei/hinic3/hinic3_tx.c b/drivers/net/ethernet/huawei/hinic3/hinic3_tx.c
-index 7b6f101da313..3f7f73430be4 100644
---- a/drivers/net/ethernet/huawei/hinic3/hinic3_tx.c
-+++ b/drivers/net/ethernet/huawei/hinic3/hinic3_tx.c
-@@ -482,7 +482,6 @@ static netdev_tx_t hinic3_send_one_skb(struct sk_buff *skb,
+diff --git a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
+index 8b42c2f0a5b0..01b1de04e03b 100644
+--- a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
++++ b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
+@@ -43,35 +43,39 @@ static int cpuidle_get_count_percent(unsigned int id, double *percent,
+ 
+ static int cpuidle_start(void)
  {
- 	struct hinic3_sq_wqe_combo wqe_combo = {};
- 	struct hinic3_tx_info *tx_info;
--	struct hinic3_txq *tx_q = txq;
- 	u32 offload, queue_info = 0;
- 	struct hinic3_sq_task task;
- 	u16 wqebb_cnt, num_sge;
-@@ -506,9 +505,9 @@ static netdev_tx_t hinic3_send_one_skb(struct sk_buff *skb,
- 		if (likely(wqebb_cnt > txq->tx_stop_thrs))
- 			txq->tx_stop_thrs = min(wqebb_cnt, txq->tx_start_thrs);
- 
--		netif_subqueue_try_stop(netdev, tx_q->sq->q_id,
--					hinic3_wq_free_wqebbs(&tx_q->sq->wq),
--					tx_q->tx_start_thrs);
-+		netif_subqueue_try_stop(netdev, txq->sq->q_id,
-+					hinic3_wq_free_wqebbs(&txq->sq->wq),
-+					txq->tx_start_thrs);
- 
- 		return NETDEV_TX_BUSY;
- 	}
-@@ -543,10 +542,10 @@ static netdev_tx_t hinic3_send_one_skb(struct sk_buff *skb,
- 	}
- 
- 	netif_subqueue_sent(netdev, txq->sq->q_id, skb->len);
--	netif_subqueue_maybe_stop(netdev, tx_q->sq->q_id,
--				  hinic3_wq_free_wqebbs(&tx_q->sq->wq),
--				  tx_q->tx_stop_thrs,
--				  tx_q->tx_start_thrs);
-+	netif_subqueue_maybe_stop(netdev, txq->sq->q_id,
-+				  hinic3_wq_free_wqebbs(&txq->sq->wq),
-+				  txq->tx_stop_thrs,
-+				  txq->tx_start_thrs);
- 
- 	hinic3_prepare_sq_ctrl(&wqe_combo, queue_info, num_sge, owner);
- 	hinic3_write_db(txq->sq, 0, DB_CFLAG_DP_SQ,
-@@ -630,7 +629,6 @@ bool hinic3_tx_poll(struct hinic3_txq *txq, int budget)
- 	struct net_device *netdev = txq->netdev;
- 	u16 hw_ci, sw_ci, q_id = txq->sq->q_id;
- 	struct hinic3_tx_info *tx_info;
--	struct hinic3_txq *tx_q = txq;
- 	unsigned int bytes_compl = 0;
- 	unsigned int pkts = 0;
- 	u16 wqebb_cnt = 0;
-@@ -662,8 +660,8 @@ bool hinic3_tx_poll(struct hinic3_txq *txq, int budget)
- 	hinic3_wq_put_wqebbs(&txq->sq->wq, wqebb_cnt);
- 
- 	netif_subqueue_completed_wake(netdev, q_id, pkts, bytes_compl,
--				      hinic3_wq_free_wqebbs(&tx_q->sq->wq),
--				      tx_q->tx_start_thrs);
-+				      hinic3_wq_free_wqebbs(&txq->sq->wq),
-+				      txq->tx_start_thrs);
- 
- 	return pkts == HINIC3_TX_POLL_WEIGHT;
+-	int cpu, state;
+ 	clock_gettime(CLOCK_REALTIME, &start_time);
+-	for (cpu = 0; cpu < cpu_count; cpu++) {
+-		for (state = 0; state < cpuidle_sysfs_monitor.hw_states_num;
+-		     state++) {
+-			previous_count[cpu][state] =
+-				cpuidle_state_time(cpu, state);
+-			dprint("CPU %d - State: %d - Val: %llu\n",
+-			       cpu, state, previous_count[cpu][state]);
+-		}
+-	}
+ 	return 0;
  }
+ 
+ static int cpuidle_stop(void)
+ {
+-	int cpu, state;
+ 	struct timespec end_time;
++
+ 	clock_gettime(CLOCK_REALTIME, &end_time);
+ 	timediff = timespec_diff_us(start_time, end_time);
++	return 0;
++}
+ 
+-	for (cpu = 0; cpu < cpu_count; cpu++) {
+-		for (state = 0; state < cpuidle_sysfs_monitor.hw_states_num;
+-		     state++) {
+-			current_count[cpu][state] =
+-				cpuidle_state_time(cpu, state);
+-			dprint("CPU %d - State: %d - Val: %llu\n",
+-			       cpu, state, previous_count[cpu][state]);
+-		}
++static int cpuidle_cpu_start(unsigned int cpu)
++{
++	int state;
++
++	for (state = 0; state < cpuidle_sysfs_monitor.hw_states_num; state++) {
++		previous_count[cpu][state] = cpuidle_state_time(cpu, state);
++		dprint("CPU %d - State: %d - Val: %llu\n",
++		       cpu, state, previous_count[cpu][state]);
++	}
++	return 0;
++}
++
++static int cpuidle_cpu_stop(unsigned int cpu)
++{
++	int state;
++
++	for (state = 0; state < cpuidle_sysfs_monitor.hw_states_num; state++) {
++		current_count[cpu][state] = cpuidle_state_time(cpu, state);
++		dprint("CPU %d - State: %d - Val: %llu\n",
++		       cpu, state, current_count[cpu][state]);
+ 	}
+ 	return 0;
+ }
+@@ -205,6 +209,8 @@ struct cpuidle_monitor cpuidle_sysfs_monitor = {
+ 	.hw_states		= cpuidle_cstates,
+ 	.start			= cpuidle_start,
+ 	.stop			= cpuidle_stop,
++	.cpu_start		= cpuidle_cpu_start,
++	.cpu_stop		= cpuidle_cpu_stop,
+ 	.do_register		= cpuidle_register,
+ 	.unregister		= cpuidle_unregister,
+ 	.flags.needs_root	= 0,
+diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
+index ad493157f826..096e3cf35eb3 100644
+--- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
++++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
+@@ -304,12 +304,29 @@ int fork_it(char **argv)
+ 	unsigned long long timediff;
+ 	pid_t child_pid;
+ 	struct timespec start, end;
++	int cpu;
+ 
+ 	child_pid = fork();
+ 	clock_gettime(CLOCK_REALTIME, &start);
+ 
+-	for (num = 0; num < avail_monitors; num++)
+-		monitors[num]->start();
++	/* Call global start callbacks first */
++	for (num = 0; num < avail_monitors; num++) {
++		if (monitors[num]->start)
++			monitors[num]->start();
++	}
++
++	/* Call per-CPU start callbacks */
++	for (num = 0; num < avail_monitors; num++) {
++		if (monitors[num]->cpu_start) {
++			for (cpu = 0; cpu < cpu_count; cpu++) {
++				if (monitors[num]->flags.per_cpu_schedule) {
++					if (bind_cpu(cpu))
++						continue;
++				}
++				monitors[num]->cpu_start(cpu);
++			}
++		}
++	}
+ 
+ 	if (!child_pid) {
+ 		/* child */
+@@ -332,8 +349,25 @@ int fork_it(char **argv)
+ 		}
+ 	}
+ 	clock_gettime(CLOCK_REALTIME, &end);
+-	for (num = 0; num < avail_monitors; num++)
+-		monitors[num]->stop();
++
++	/* Call per-CPU stop callbacks */
++	for (num = 0; num < avail_monitors; num++) {
++		if (monitors[num]->cpu_stop) {
++			for (cpu = 0; cpu < cpu_count; cpu++) {
++				if (monitors[num]->flags.per_cpu_schedule) {
++					if (bind_cpu(cpu))
++						continue;
++				}
++				monitors[num]->cpu_stop(cpu);
++			}
++		}
++	}
++
++	/* Call global stop callbacks */
++	for (num = 0; num < avail_monitors; num++) {
++		if (monitors[num]->stop)
++			monitors[num]->stop();
++	}
+ 
+ 	timediff = timespec_diff_us(start, end);
+ 	if (WIFEXITED(status))
+@@ -352,10 +386,25 @@ int do_interval_measure(int i)
+ 		for (cpu = 0; cpu < cpu_count; cpu++)
+ 			bind_cpu(cpu);
+ 
++	/* Call global start callbacks first */
+ 	for (num = 0; num < avail_monitors; num++) {
+ 		dprint("HW C-state residency monitor: %s - States: %d\n",
+ 		       monitors[num]->name, monitors[num]->hw_states_num);
+-		monitors[num]->start();
++		if (monitors[num]->start)
++			monitors[num]->start();
++	}
++
++	/* Call per-CPU start callbacks */
++	for (num = 0; num < avail_monitors; num++) {
++		if (monitors[num]->cpu_start) {
++			for (cpu = 0; cpu < cpu_count; cpu++) {
++				if (monitors[num]->flags.per_cpu_schedule) {
++					if (bind_cpu(cpu))
++						continue;
++				}
++				monitors[num]->cpu_start(cpu);
++			}
++		}
+ 	}
+ 
+ 	sleep(i);
+@@ -364,9 +413,24 @@ int do_interval_measure(int i)
+ 		for (cpu = 0; cpu < cpu_count; cpu++)
+ 			bind_cpu(cpu);
+ 
+-	for (num = 0; num < avail_monitors; num++)
+-		monitors[num]->stop();
++	/* Call per-CPU stop callbacks */
++	for (num = 0; num < avail_monitors; num++) {
++		if (monitors[num]->cpu_stop) {
++			for (cpu = 0; cpu < cpu_count; cpu++) {
++				if (monitors[num]->flags.per_cpu_schedule) {
++					if (bind_cpu(cpu))
++						continue;
++				}
++				monitors[num]->cpu_stop(cpu);
++			}
++		}
++	}
+ 
++	/* Call global stop callbacks */
++	for (num = 0; num < avail_monitors; num++) {
++		if (monitors[num]->stop)
++			monitors[num]->stop();
++	}
+ 
+ 	return 0;
+ }
+diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
+index c559d3115330..830ad5ee68d6 100644
+--- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
++++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
+@@ -57,6 +57,8 @@ struct cpuidle_monitor {
+ 	cstate_t *hw_states;
+ 	int (*start) (void);
+ 	int (*stop) (void);
++	int (*cpu_start) (unsigned int cpu);
++	int (*cpu_stop) (unsigned int cpu);
+ 	struct cpuidle_monitor* (*do_register) (void);
+ 	void (*unregister)(void);
+ 	unsigned int overflow_s;
+diff --git a/tools/power/cpupower/utils/idle_monitor/mperf_monitor.c b/tools/power/cpupower/utils/idle_monitor/mperf_monitor.c
+index 73b6b10cbdd2..6340f5d771b6 100644
+--- a/tools/power/cpupower/utils/idle_monitor/mperf_monitor.c
++++ b/tools/power/cpupower/utils/idle_monitor/mperf_monitor.c
+@@ -224,27 +224,27 @@ static int mperf_get_count_freq(unsigned int id, unsigned long long *count,
+ 
+ static int mperf_start(void)
+ {
+-	int cpu;
+-
+-	for (cpu = 0; cpu < cpu_count; cpu++) {
+-		clock_gettime(CLOCK_REALTIME, &time_start[cpu]);
+-		mperf_get_tsc(&tsc_at_measure_start[cpu]);
+-		mperf_init_stats(cpu);
+-	}
+-
+ 	return 0;
+ }
+ 
+ static int mperf_stop(void)
+ {
+-	int cpu;
++	return 0;
++}
+ 
+-	for (cpu = 0; cpu < cpu_count; cpu++) {
+-		mperf_measure_stats(cpu);
+-		mperf_get_tsc(&tsc_at_measure_end[cpu]);
+-		clock_gettime(CLOCK_REALTIME, &time_end[cpu]);
+-	}
++static int mperf_cpu_start(unsigned int cpu)
++{
++	clock_gettime(CLOCK_REALTIME, &time_start[cpu]);
++	mperf_get_tsc(&tsc_at_measure_start[cpu]);
++	mperf_init_stats(cpu);
++	return 0;
++}
+ 
++static int mperf_cpu_stop(unsigned int cpu)
++{
++	mperf_measure_stats(cpu);
++	mperf_get_tsc(&tsc_at_measure_end[cpu]);
++	clock_gettime(CLOCK_REALTIME, &time_end[cpu]);
+ 	return 0;
+ }
+ 
+@@ -373,6 +373,8 @@ struct cpuidle_monitor mperf_monitor = {
+ 	.hw_states		= mperf_cstates,
+ 	.start			= mperf_start,
+ 	.stop			= mperf_stop,
++	.cpu_start		= mperf_cpu_start,
++	.cpu_stop		= mperf_cpu_stop,
+ 	.do_register		= mperf_register,
+ 	.unregister		= mperf_unregister,
+ 	.flags.needs_root	= 1,
 -- 
-2.45.2
+2.49.0
 
