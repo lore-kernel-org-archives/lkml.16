@@ -1,148 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C15642AEE1;
-	Mon,  9 Jun 2025 16:09:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE84021578D;
+	Mon,  9 Jun 2025 16:09:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749485376; cv=none; b=LyV2WWRyT9/2VIkIRerMy8aAsZD9xVyCsES22KeUit+HPsYxUVxH0ebXAGeGYzSVy4/AExovcuY1p0K4jXm7iRMsfj6G3YoBlI1PK4HLVQZbeGKGKX72k3G4LC9i66Px4DxAwFkEvr5CAn02yP3lGFUnzNc4Mu3ege5CloSDw8I=
+	t=1749485399; cv=none; b=ZdoLx5jErG976ke0KLIQltoCS8hPYW8MWNjFztxo4mbIthAs4+mOHHQ1CFxjRwbaPxtNGLhXgm+UtasHm3C2lakx/bgxhaDz/2WOgzoUGYwq7haxXj8StaZNErJT+qKHDmVr33KODEh330hox2ucoVKhlMRP+X0lDmOwF0eyQTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749485376; c=relaxed/simple;
-	bh=TiigtRyHfh+ozHmASsxB2P7lifgezeH21jFNozNtlYw=;
+	s=arc-20240116; t=1749485399; c=relaxed/simple;
+	bh=kmFmCzVsy/gyj97Pr6VaI8EqizWU2cS57ZLTXgVpEss=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ITHbLqlIYDXAqurnstnWCspeAbPmlOHUszYzDABv+ImUbZTi0VXjyBd7sVFitOQUJP1++ivPvlJ2dwdcJrXwANJbJAxFgU7fAL8VysH7W7w/7HGKALQgrLcvEd90gDpmrwDsGw7iRrLouQYBsDvSaGHJLguwCsLY+1AMl6fCsUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n9cQL6df; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qkXfKERzvVZciRrKFO4ma4SvlXVhMwZvaT+4/+gdb3L77ul76DZyYyrNM7NcmGH6wqz36LkWHVBSVg6HRJqpzlNN2Z9VYL5AgfUy2aBOlEpdg3s00DW90Z4C8H8GQrh0FQbgg3/NentuaiDX/DTNBwhzwVLLzW/SH1DP8NL7ZiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oej+R9SF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n9cQL6df"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53497C4CEEB;
-	Mon,  9 Jun 2025 16:09:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oej+R9SF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD1A6C4CEEB;
+	Mon,  9 Jun 2025 16:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749485376;
-	bh=TiigtRyHfh+ozHmASsxB2P7lifgezeH21jFNozNtlYw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=n9cQL6dfGtAM23AKcrGnHK8w57zfe8yZsQa6YUCZ+QKXqJ/pWZzhsTO87/Iy8jwbJ
-	 qDAlomy96cPP+lqLZ1ADXff8ly6bBQrTLsqjxXtZD/3qoQxqozMSoDB8gAqZFo06Hw
-	 qsYpANKXK7S/a1DKqUDJDN2Ug3X3M6mp2fb7BbF/zvZNdYBk/FG+6Ql+rJTYo9j8r8
-	 vPNNzK9quenpjTtXeJG+a/cOxUUdj+5smpPaCp2nS80dgn4PSFvH8GLA/QYQxCNp/I
-	 DfNVMxbzV0jeKkQZtjAKfeWK9u0Qqkt/nV6k1zoP3fbKMKzO2lkLmIfE4mVWEDyrdZ
-	 aFHH/Xm3yLoaw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id ED284CE0B6C; Mon,  9 Jun 2025 09:09:35 -0700 (PDT)
-Date: Mon, 9 Jun 2025 09:09:35 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Andreas Ziegler <ziegler.andreas@siemens.com>,
-	Felix MOESSBAUER <felix.moessbauer@siemens.com>,
-	Julien Flot <julien.flot@siemens.com>
-Subject: Re: [PATCH v2] tracing: Fix regression of filter waiting a long time
- on RCU synchronization
-Message-ID: <7468e7a2-e5f9-498c-a985-a1584969719b@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250606201936.1e3d09a9@batman.local.home>
- <9a2f0cd0-1561-4206-8966-f93ccd25927f@paulmck-laptop>
- <20250609113955.47a2f44c@gandalf.local.home>
+	s=k20201202; t=1749485398;
+	bh=kmFmCzVsy/gyj97Pr6VaI8EqizWU2cS57ZLTXgVpEss=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oej+R9SFWkXPJUvsFtD4/DgLhl32kMK6KHcSRy6d2eX3940/USEvuVl6jPIjTezS5
+	 oAES2mM/uK8dDB3Ebb5MxzMeGTzWKbhZgoHP1qRjpNx7wAa8PrmhzLi3KHbYU1gcYL
+	 ds73qkFepgvRzh4pEo0BR66RzcJQI2vjyuCUyDtBQeKn3s6A3apqCfSD10INhVYRns
+	 SuoYzPK7AJdFbYtEzAVTSydSx0mco46BX4MgD6ccn5L+J2ocSPPzeiXOS1CdRJrd1w
+	 nUbebwwDDlzyT9r/Fi0+6gEgdvuh210uVp4lKwtDvS0Cg1WGMINyHGNaYsRuRcqEUT
+	 EYatDTACot52g==
+Date: Mon, 9 Jun 2025 17:09:53 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Kartik Rajput <kkartik@nvidia.com>
+Cc: akhilrajeev@nvidia.com, andi.shyti@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, thierry.reding@gmail.com,
+	jonathanh@nvidia.com, ldewangan@nvidia.com, digetx@gmail.com,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/5] dt-bindings: i2c: nvidia,tegra20-i2c: Document
+ Tegra264 I2C
+Message-ID: <20250609-sizzle-shush-b2eb1443b3f7@spud>
+References: <20250609093420.3050641-1-kkartik@nvidia.com>
+ <20250609093420.3050641-2-kkartik@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4x5fXavticha1vvc"
+Content-Disposition: inline
+In-Reply-To: <20250609093420.3050641-2-kkartik@nvidia.com>
+
+
+--4x5fXavticha1vvc
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250609113955.47a2f44c@gandalf.local.home>
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 09, 2025 at 11:39:55AM -0400, Steven Rostedt wrote:
-> On Mon, 9 Jun 2025 05:21:19 -0700
-> "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> 
-> > > +static void free_filter_list(struct rcu_head *rhp)
-> > > +{
-> > > +	struct filter_head *filter_list = container_of(rhp, struct filter_head, rcu);
-> > > +	struct filter_list *filter_item, *tmp;
-> > > +
-> > > +	list_for_each_entry_safe(filter_item, tmp, &filter_list->list, list) {
-> > > +		__free_filter(filter_item->filter);
-> > > +		list_del(&filter_item->list);
-> > > +		kfree(filter_item);
-> > > +	}  
-> > 
-> > If the series of synchronize_rcu() calls was taking 99 seconds,
-> > we might well be going through the above loop quite a few times, all
-> > within a bh-disabled region of code.  For example, the calls from both
-> > filter_free_subsystem_filters() and process_system_preds() look like
-> > they can queue a very large number of entries.
-> 
-> The iteration is for each event in a subsystem.
-> 
-> Seeing what that is:
-> 
-> ~# for sys in /sys/kernel/tracing/events/* ; do cnt=`ls -F $sys |grep '/$' | wc -l`; echo $cnt $sys; done | sort -n | tail
-> 24 /sys/kernel/tracing/events/tcp
-> 26 /sys/kernel/tracing/events/xen
-> 28 /sys/kernel/tracing/events/sched
-> 32 /sys/kernel/tracing/events/writeback
-> 33 /sys/kernel/tracing/events/libata
-> 34 /sys/kernel/tracing/events/irq_vectors
-> 55 /sys/kernel/tracing/events/xhci-hcd
-> 92 /sys/kernel/tracing/events/kvm
-> 113 /sys/kernel/tracing/events/ext4
-> 724 /sys/kernel/tracing/events/syscalls
-> 
-> So the most loops that can happen is 724 on the syscalls plus the system
-> filter. And adding in printks to count the loops, I verified that:
-> 
-> [..]
-> [  100.019209] LOOPED 4 times
-> [  100.020033] LOOPED 5 times
-> [  100.020791] LOOPED 8 times
-> [  100.021583] LOOPED 10 times
-> [  100.022239] LOOPED 2 times
-> [  100.110515] LOOPED 725 times
-> [  100.111520] LOOPED 4 times
-> [  100.112889] LOOPED 25 times
-> [  100.114416] LOOPED 6 times
-> [  100.115950] LOOPED 4 times
-> [  100.117557] LOOPED 7 times
-> [..]
-> 
-> (724 event filters and one system event filter = 725 filters).
-> 
-> If you feel that's too big, we could move it to a work queue.
+On Mon, Jun 09, 2025 at 03:04:16PM +0530, Kartik Rajput wrote:
+> iTegra264 has 17 generic I2C controllers, two of which are in always-on
+> partition of the SoC. In addition to the features supported by Tegra194
+> it also supports a SW mutex register to allow sharing the same I2C
+> instance across multiple firmware.
+>=20
+> Document compatible string "nvidia,tegra264-i2c" for Tegra264 I2C.
+>=20
+> Signed-off-by: Kartik Rajput <kkartik@nvidia.com>
 
-That does sound like a bit more than would be good.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-> As more system calls get added, that number will grow. But it is limited to
-> the number of system calls.
-> 
-> All the event systems are way fewer than that.
-> 
-> > 
-> > So...
-> > 
-> > > +	kfree(filter_list);
-> > > +}
-> > > +
-> > > +static void free_filter_list_tasks(struct rcu_head *rhp)
-> > > +{
-> > > +	call_rcu(rhp, free_filter_list);  
-> > 
-> > ...why not use queue_rcu_work() in place of call_rcu() here, thus avoiding
-> > possible response-time issues?
-> > 
-> > Or is there something that I am missing that limits the length of the
-> > list passed to free_filter_list()?
-> 
-> Just the number of events in a system.
-> 
-> I could switch to a work queue but I don't think it needs to go as a fix,
-> do you? That is, it can wait till the next merge window. Or is this going
-> to affect things now?
+> ---
+> v2 -> v3:
+> 	* Add constraints for "nvidia,tegra264-i2c".
+> v1 -> v2:
+> 	* Fixed typos.
+> ---
+>  .../devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml        | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yam=
+l b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
+> index 6b6f6762d122..f0693b872cb6 100644
+> --- a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
+> +++ b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
+> @@ -80,6 +80,12 @@ properties:
+>            support for 64 KiB transactions whereas earlier chips supporte=
+d no
+>            more than 4 KiB per transactions.
+>          const: nvidia,tegra194-i2c
+> +      - description:
+> +          Tegra264 has 17 generic I2C controllers, two of which are in t=
+he AON
+> +          (always-on) partition of the SoC. In addition to the features =
+=66rom
+> +          Tegra194, a SW mutex register is added to support use of the s=
+ame I2C
+> +          instance across multiple firmwares.
+> +        const: nvidia,tegra264-i2c
+> =20
+>    reg:
+>      maxItems: 1
+> @@ -186,6 +192,7 @@ allOf:
+>              contains:
+>                enum:
+>                  - nvidia,tegra194-i2c
+> +                - nvidia,tegra264-i2c
+>      then:
+>        required:
+>          - resets
+> --=20
+> 2.43.0
+>=20
 
-Thank youi, and the next merge window should be fine.
+--4x5fXavticha1vvc
+Content-Type: application/pgp-signature; name="signature.asc"
 
-							Thanx, Paul
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEcHUQAKCRB4tDGHoIJi
+0mdCAP4iLXTNnbOYBpoSgowvw8EqxS5ptJogfQWY80AoHT4X0QEA/nKxuUPaDW0O
+VU5NdknzzO4hkP54Ep+tJSTUt98rPgc=
+=Ba+U
+-----END PGP SIGNATURE-----
+
+--4x5fXavticha1vvc--
