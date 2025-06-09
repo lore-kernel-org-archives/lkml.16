@@ -1,186 +1,360 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2059.outbound.protection.outlook.com [40.107.237.59])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9639E182BD
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 16:23:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5D821579F;
+	Mon,  9 Jun 2025 16:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749486235; cv=fail; b=jr0xHqsBnlz9V2sOfhwczMetwi226Z3qrn4tpOxO9+2emw04kAjomxRGb7NmIXgz1HDeMLaeXrH30i5v8C5uxsauC7oZVrdSm1u5ND0V8h/gSNSfyilbHD+tM7A2X/KHtGMJn3TnHCilRUl9+sN5AQxkrVFM85GB33NdO/gKL0Q=
+	t=1749486318; cv=pass; b=h5uuehR/fjt5yqd7mJoLqCRz8M/bk4dFo6vcDHPObgVs//SFCot5r/Xw0LZaM1z+ZEVq1KWn3XoCjEnn4NCCKn7T1zQTPUWIKPC/PreDQ0rO6j0CbSbsq7aE50qndqgmYQf7zzqjbcVEUgr4fr2i/FH8TIyLSY1nC+uRybGPSnM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749486235; c=relaxed/simple;
-	bh=bOap8wAMjkY7h/oGARQS8BtPhkiH81BvfQk39sT+emI=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=T3l2CnPMk094AT08amPoWOTwNYc9B4jkgrrYJ0DvCSVoMSPk42zfJhQEjyw/Z8/jM5olpvc7LH9MnLh/EHylGycFbGZd08NopvbOtuP/Rijj3uwev1Yw6a/5qzpCrDbp3Nq792i4lmxz0oy7stfRCJOqjYfogWV9QhlzfNSg0Qw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=jHxyue52; arc=fail smtp.client-ip=40.107.237.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1749486318; c=relaxed/simple;
+	bh=BH/AFH2sSVWQsK1efnNK1sKRL1sE/k1CKi5k+6t1RaI=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=aIApu5v2wTjAINK9cYam2bG3FcRNxDyPCckPySZ/xqTbuhs7XQvJ58w7p0JeUsZ5YOutf+gj4UxOoohYYfsQTu7DUSXnXKfwpkn4gf2FuNWzTmpFAJFmbq87FjiJJIVguoAimmyn9v1Firmtb098Zd9lJI1+kcAIwZGq8xk2T0o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=LRhwpuJN; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="jHxyue52"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Yijqfc6uRL0SeIpnU+L2veCNcDRrFZH2m/AvoRBkIOJOvVNz3+sLP/oDiP1kWbp+hdRyvS4yXayqn3p98yucMCaCTEjM1YtBXSryZtokXW4LBAIjrJcOzG6KhpLKHe1wqwJRLBftQU6FOl4QBePfpOWz22FJSyh81CPf3o+7kSY0I9qV1AEZKABRNRbPdiTFPmtkSljwUvsA8IcVttS7NoeDrKkq6m5lDbO+OBeSPwAbYt/VP2LgI5yiBX1AQLLbolmDuuGAdR3b1mllD+YptaqbDsj2W+4pjE9j3OakpOg1h08SN0MjAZRXiYsi3XGdF7qLb5z5BlE3uAuxOvHXHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=U13JxR79iu80OX58oWfWNXFwBMduKW/auX4zDGW7Sno=;
- b=vGnMGBQ+2riJpLdjTK4P6bx0qT4Zcsjm8RDi0/MJKOSH0okdRpJUTi2pzJmAWww0vdHXrN6S8iHkmYu9+xgHdIMxHmi3nXAevhFb33rwGjqkHQBu26d/0YT/MFJt6gMLyxTRwYpEsrcydN0uvQ+8qwtF/265h5Ea46V6QbCkn8YgWDOf8UpHyOuW1mCwTA3X0nFMaoTSZncwcLvcU9vmdNICmpSHueFy9/QiMQZ2w6v99P8433JIBwZy/jF4BUS6N6UNJoD+7aW58PZ3+s+qe3naEgfRpu7NOW0k5FMUhbQiY/eWJqkD/zcI3QzFIBzYFIj/ZvepvO/JqRSULsdC4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U13JxR79iu80OX58oWfWNXFwBMduKW/auX4zDGW7Sno=;
- b=jHxyue529sRDWs9RTFMvvTVhaecgNWyYu4U1Cq45oWNYTLloyS/iVSxg2nH1Iy7hSdQXmYV1gg5WbsPGQeWldvD0o/xEkvV4C5Hv4S1vU7viGSiZk2KjXUu3xIuVvVC3qYHX82NH7UV/RJgW+ZMJDjganKHSy6BbaZzMj4IXbzOfHnt/eTlw3spvdQzVWVIzFSaduvV4k+/boKbQmR4lGnqlKzBaB/OcY+1kKd1/O4BZsN/gi74AS/G70sXa0G/dkBwz1kAy8pIC/Kbv21O5x2Fp1aDL/sllHnLh3x+T2u1i0NtPWKKOuwJzt4O1xVGanFbNYj2E9WS7zVVVzzyW9w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
- by DM4PR12MB8570.namprd12.prod.outlook.com (2603:10b6:8:18b::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.38; Mon, 9 Jun
- 2025 16:23:50 +0000
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::1b59:c8a2:4c00:8a2c]) by LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::1b59:c8a2:4c00:8a2c%5]) with mapi id 15.20.8792.039; Mon, 9 Jun 2025
- 16:23:50 +0000
-From: Andrea Righi <arighi@nvidia.com>
-To: Tejun Heo <tj@kernel.org>,
-	David Vernet <void@manifault.com>,
-	Changwoo Min <changwoo@igalia.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Emily Soto <emilys@nvidia.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] sched_ext: Documentation: Clarify time slice handling in task lifecycle
-Date: Mon,  9 Jun 2025 18:23:42 +0200
-Message-ID: <20250609162342.18790-1-arighi@nvidia.com>
-X-Mailer: git-send-email 2.49.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MI1P293CA0006.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:290:2::16) To LV8PR12MB9620.namprd12.prod.outlook.com
- (2603:10b6:408:2a1::19)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="LRhwpuJN"
+ARC-Seal: i=1; a=rsa-sha256; t=1749486299; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=OAmaJU/UqlK4qLOX2XrvesDQsN7dkouIy4sYze84pYBc9fv4cncUOkvVo/5As1x17esr59GIFElZ36TYmq4Xly0UQhTpkUBVGfXbmUGrWFa9M/Fh3Rhi6q13EUFmlVeF1NW1chYCBLakodOGpK7rGdRxWCgue9qccKLKgIOhzOc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749486299; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=P0MMfzUdGCfaFTyAjkNQ8nuesuK8uFLeUs3/8X2xeqs=; 
+	b=ZXZ+OOw+t+eaKc038SXspzRSB6epVAhHcuXebg6Z0AzXCdSmbShUwPeXpJBe119h++mIsw1OyxwBgBa/Telwc093/DvqTzOfzV3TM43g3um3OnMid2O1XPySZvYkY8EyMoGVzl10qcmlTNl3MKeJopO9/UIehJ62kGcRtlMalU0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749486299;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=P0MMfzUdGCfaFTyAjkNQ8nuesuK8uFLeUs3/8X2xeqs=;
+	b=LRhwpuJNLrdYKbH0QiDNIm2K31CAQ8dcOEMsqpBGyn1CQrnDnC4xagKeeZsN0Niz
+	gDsBOsDRlrlgjB0BoE61LYidzgXnh0pza68AeeFb8t0Yc0wxXO7wt5j4iNC6Qgmg2u6
+	PRLA4KvAkkeNCjwUMtaqEwlUCRYnkVTUHPJBPBbg=
+Received: by mx.zohomail.com with SMTPS id 1749486296923500.60919773970306;
+	Mon, 9 Jun 2025 09:24:56 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|DM4PR12MB8570:EE_
-X-MS-Office365-Filtering-Correlation-Id: 186f9b7b-9f7c-49e1-5652-08dda77204a3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?lQANLnrwwEE4JDB6L1kUQ5WarQneoXdI/srNHx8fpp0UP9CIPisNwwF0yKcW?=
- =?us-ascii?Q?hZWYRzVnGh1De4bbpSLMHi6yLAer4JjViePaCfBUtJSUJG2MLiyOn1x/ZZgf?=
- =?us-ascii?Q?SVJ8pQoBVn3z1bKxSnwSEieF727oFvmvCos94/NcxZn3JacFvyPlKtm/0WkO?=
- =?us-ascii?Q?Fj7l28JwqfRmhwECm+PXIjU1JjybiSbW613+M/l4CEtBPZiXMPuRoBl5S4Fp?=
- =?us-ascii?Q?KARMB2yPITy0rqmh/72KXn6u0HX8n3GW7weyE1/GUxEbi7kjBFyT9fbYf7/K?=
- =?us-ascii?Q?mHel5U2bLCwBqRD8BesqXLxTlyF7mpBDTbuCMl/pPSgx/8ghrmX24LWtF0OU?=
- =?us-ascii?Q?puPeArrunftxX4Vq94cPcMoiozSLXA3+x+9RMSMXqkvgxDOcTClDsUnrnO5a?=
- =?us-ascii?Q?4DGYq1pOJ5eSRS5LLUT9IVzLMoSST80WKneZQT2cP3LPQQQVn9Q4Ihbq5IHq?=
- =?us-ascii?Q?bob0kTEO4ZzqBzPv6gxaW/nJ3KspUZGJi4fMzZrvYB4/xitI+0S8rp0LoljF?=
- =?us-ascii?Q?HEJJfAakwwavn4YFIRbUjjrq4PVz1y08qga9uAdq1nUnlFKQrNyt6qupEpzT?=
- =?us-ascii?Q?VHxOVuV1aN87OTC98dxMyC5dLQ5g8XjHoHutnHkaEs0MSwJ8ms64oFBsb8ZF?=
- =?us-ascii?Q?vig52j+T8fapI5X3V3/m1/6Mil+5r64jG+83Uk4VbIH6Mj2VAMehMYAilQlL?=
- =?us-ascii?Q?bU9B5waUEVlS8GFEC7X0BFUt5yVlunp0lCPcEm3DZtO+oQJhHzK86IUTerR8?=
- =?us-ascii?Q?vwisi214F93QtTlMgsItxKZLfkGrjn8rI3NOgzOyQ3pKmvFDIpPKHdLD7K4w?=
- =?us-ascii?Q?GnyOkoLNXdve0rrNxzoBWikAeYo8hwJiKb17WBjrtv9upplYZ9/bgKv8P1Tx?=
- =?us-ascii?Q?vmCJAz1a1R7OIguRRtt+Kzzw4QRnHRHl5wrpraHHvmzCecj0Fa76olPZfeT7?=
- =?us-ascii?Q?g03tkQkZ6fzdlbg2rnntS5jDKpHkKl0EKcFrugZamJrZ3zl9MWPjWdB0HIZB?=
- =?us-ascii?Q?JlD0t+GsI6KEMDUdGMadzkhNdba1xqESxeYnFncwXhYPnv89ZEWRiw/+9JaZ?=
- =?us-ascii?Q?zaDxgoYAw0B4KYQOLhR3APKJKp5TdE08qpEjO0TBGF8D11cSZIYiRmf08sbs?=
- =?us-ascii?Q?bBfyDf4dVmF1APK61KIeABANYH0QK7Z/JNXppW3zrVf8PCSBr9IKIaI+Z1ZU?=
- =?us-ascii?Q?B00odzo6w70Tmf5vtmEAyYdLlBdGFvXleU3ZqpSIhJxPkuFERVfX+pZijOh4?=
- =?us-ascii?Q?0AKVn7pjl4FhYYCur6ItoopPNnJg7SV9SwGBMDI+3it9xuOMU6A4ZIl/2gyH?=
- =?us-ascii?Q?bYOh9/y98djCflMIfybZUyn68bSBbaU5RE2pEAfWhWOQQeP4NXOkFZphcYCr?=
- =?us-ascii?Q?W80L5V0u/uqLwPRnGffN3WaYk242O3WZq9V1A2C0CLuQpW7yWxhu+3qRG2B1?=
- =?us-ascii?Q?TqcQRvbZuSY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ZVtlhFxewUzYLrzc5mn3pcIYwtjwHBI8owBjX0CfTZ5uJ+RuWnj9LFuGnLpT?=
- =?us-ascii?Q?bJsXseTlVNcMFPRIufqQ4iIgwTlAlGVsJyqWAsivHCQR7QdelAZ4JXvSZ22Y?=
- =?us-ascii?Q?jEFb39yCf9N6lxhC8YkQgNPEr5VZEF9sN/N3EqV84wwZFe7Y7pzCmz7HQBID?=
- =?us-ascii?Q?kFAb0gRp7Zx6XYe4q2PVcDyLajQnamFGMWeK5RcOEOa/rpssU5j00BgZxkTe?=
- =?us-ascii?Q?in7lsJl0uGQza70brbOZ06p/7B/j94FpbCQ/UIB4o5RfpCHQDqvX7ZtFY+Fc?=
- =?us-ascii?Q?KK9rlYQmiiBo3pj/TXHcqLGL2s4kDS3XJW97JxsDM2myEQr3QWXbVQMts1XV?=
- =?us-ascii?Q?L78xb/DGjD9cBbIPRXXU+5jlDkPelDEZ8YiEQd5I/CzHFzyO5WVnkoesVrSV?=
- =?us-ascii?Q?rzoCbxEQJ5ECU5aBxhhrDy2LeO81DiPAAH9RTGhy0tIkNQxOi/NyW2myaQmB?=
- =?us-ascii?Q?6wQ5PIj+AgXraglSGbypJaraUzMkFrPaNLWRtiTwtNcFtP5S9i9GtwnCuwJc?=
- =?us-ascii?Q?4QaQ5jpC5V6oHwQYyewyHqTADXfF24IoU074D8NzSWde1l2ozpz8zXPOCRuB?=
- =?us-ascii?Q?pI8pxQSaZ4pszkms+e8r9Bh63xz+FANkjrFBYbOGvorKaCxcAiTNZJ4rgT62?=
- =?us-ascii?Q?Om7HdptalpqEgFmk1Ks4eOnTt3PXy3cHZlkC5zbh2cjc9FH1ts0BrG06GqJK?=
- =?us-ascii?Q?YEtWhIZsoEAgq+uZniPDyZiOSmDDa189R7P0jCdejPrddiGlfNjjOwoDUCo5?=
- =?us-ascii?Q?cU6Z+QHQtejXmjhh8iLxrrxc3DAsYRGhcH2EnTLlO1tWdmRNCiNXjrC5DRpt?=
- =?us-ascii?Q?qiughZGdR1fIMigsM8fs6LLr9jk0YHovc49GMBP9HzZ5VlwlCRmKbu5FmI4x?=
- =?us-ascii?Q?qURcE6kg+1moy88QWjrr37VAnstrlc14aueXo/hKOI/EJnWd/y2MHp/KpgNN?=
- =?us-ascii?Q?13peozsH7fVRee/q18UqUPieDEOTWxyRP7+LQKEwCAOw6zOWGcQFHYXVRXdV?=
- =?us-ascii?Q?7I71aezLB8AdfUskO1vt9stBT6kST5TMnLPSWk47yNnv2nZFg9qS/Wf3TT+6?=
- =?us-ascii?Q?nmcyFUvhFIUn5NAOC69TWVMaVWCT+H/RE2qyMuQoUYgaaQU4fj3fXFq14blC?=
- =?us-ascii?Q?CNAOf7HQ0NjnQfR/5DWXCTEeYP5yI8wDvyOXLtmyDAtUk8YkgYmZuvM9FJOp?=
- =?us-ascii?Q?FoNsG4S03xdbUsjUJsyb1eMNs/BaLp9qknbnBQtVSJP9g48SZtOIfEirRvjQ?=
- =?us-ascii?Q?BXRwvCjCWbDECknHvmoDy5M3ZtFy9BTt9rBi3bs2AbgJ46b3MD9XPV8Lr1wi?=
- =?us-ascii?Q?GxO+LYoSsbzqOrcFrTFBeumSADZGe0aDuxgQ3E9MnfCKh9JLxGfKGhy/koFZ?=
- =?us-ascii?Q?aq8mfVebW6G+TEzX3+hOg3A9dQiC6H9BU9lpbY7sXnLD1CL9baKVs5fsSOlB?=
- =?us-ascii?Q?M1ROY4Zg/gOm3UyvYy+c+9U02ioD+PyHq8r5NNMb6aOhdq7OO5GB0ndn9aQU?=
- =?us-ascii?Q?VTHrtDgmqcMWCuvjj68sTKhmZOQhOL1aF9DiydEf7cMeZsZg3hNRRep9q7JT?=
- =?us-ascii?Q?0RLHlTqJQx+Nz8u+Li+FqV9rNPI0vygwqC4TSde0?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 186f9b7b-9f7c-49e1-5652-08dda77204a3
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 16:23:50.4518
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iGnzod1ksBXWZAg/F/QXNn0Qo4xTpinlXWvhO4Q7HRE51K6WpZGPOf123VZmRJHKhlqH1Wj/z8x9l4lLXUilVQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8570
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v4 4/6] rust: irq: add support for threaded IRQs and
+ handlers
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <aEbTOhdfmYmhPiiS@pollux>
+Date: Mon, 9 Jun 2025 13:24:40 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Benno Lossin <lossin@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org,
+ linux-pci@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5B3865E5-E343-4B5D-9BF7-7B9086AA9857@collabora.com>
+References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
+ <20250608-topics-tyr-request_irq-v4-4-81cb81fb8073@collabora.com>
+ <aEbTOhdfmYmhPiiS@pollux>
+To: Danilo Krummrich <dakr@kernel.org>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
+X-ZohoMailClient: External
 
-It is not always obvious how a task's time slice can be refilled, either
-explicitly from ops.dispatch() or automatically by the sched_ext core,
-to skip subsequent ops.enqueue() and ops.dispatch() calls. This
-typically happens when the task is the only one running on a CPU.
+Hi Danilo,
 
-To make this behavior easier to understand, update the task lifecycle
-diagram to explicitly document how time slice handling works in such
-cases.
+> On 9 Jun 2025, at 09:27, Danilo Krummrich <dakr@kernel.org> wrote:
+>=20
+> On Sun, Jun 08, 2025 at 07:51:09PM -0300, Daniel Almeida wrote:
+>> +/// Callbacks for a threaded IRQ handler.
+>> +pub trait ThreadedHandler: Sync {
+>> +    /// The actual handler function. As usual, sleeps are not =
+allowed in IRQ
+>> +    /// context.
+>> +    fn handle_irq(&self) -> ThreadedIrqReturn;
+>> +
+>> +    /// The threaded handler function. This function is called from =
+the irq
+>> +    /// handler thread, which is automatically created by the =
+system.
+>> +    fn thread_fn(&self) -> IrqReturn;
+>> +}
+>> +
+>> +impl<T: ?Sized + ThreadedHandler + Send> ThreadedHandler for Arc<T> =
+{
+>> +    fn handle_irq(&self) -> ThreadedIrqReturn {
+>> +        T::handle_irq(self)
+>> +    }
+>> +
+>> +    fn thread_fn(&self) -> IrqReturn {
+>> +        T::thread_fn(self)
+>> +    }
+>> +}
+>=20
+> In case you intend to be consistent with the function pointer names in
+> request_threaded_irq(), it'd need to be handler() and thread_fn(). But =
+I don't
+> think there's a need for that, both aren't really nice for names of =
+trait
+> methods.
+>=20
+> What about irq::Handler::handle() and irq::Handler::handle_threaded() =
+for
+> instance?
+>=20
+> Alternatively, why not just
+>=20
+> trait Handler {
+>   fn handle(&self);
+> }
+>=20
+> trait ThreadedHandler {
+>   fn handle(&self);
+> }
+>=20
+> and then we ask for `T: Handler + ThreadedHandler`.
 
-Signed-off-by: Andrea Righi <arighi@nvidia.com>
----
- Documentation/scheduler/sched-ext.rst | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/scheduler/sched-ext.rst b/Documentation/scheduler/sched-ext.rst
-index a1869c38046ed..404fe6126a769 100644
---- a/Documentation/scheduler/sched-ext.rst
-+++ b/Documentation/scheduler/sched-ext.rst
-@@ -313,16 +313,21 @@ by a sched_ext scheduler:
-         ops.runnable();         /* Task becomes ready to run */
- 
-         while (task is runnable) {
--            if (task is not in a DSQ) {
-+            if (task is not in a DSQ && task->scx.slice == 0) {
-                 ops.enqueue();  /* Task can be added to a DSQ */
- 
--                /* A CPU becomes available */
-+                /* Any usable CPU becomes available */
- 
-                 ops.dispatch(); /* Task is moved to a local DSQ */
-             }
-             ops.running();      /* Task starts running on its assigned CPU */
--            ops.tick();         /* Called every 1/HZ seconds */
-+            while (task->scx.slice > 0 && task is runnable)
-+                ops.tick();     /* Called every 1/HZ seconds */
-             ops.stopping();     /* Task stops running (time slice expires or wait) */
+Sure, I am totally OK with renaming things, but IIRC I've tried  Handler =
 +
-+            /* Task's CPU becomes available */
-+
-+            ops.dispatch();     /* task->scx.slice can be refilled */
-         }
- 
-         ops.quiescent();        /* Task releases its assigned CPU (wait) */
--- 
-2.49.0
+ThreadedHandler in the past and found it to be problematic. I don't =
+recall why,
+though, so maybe it's worth another attempt.
+
+>=20
+>> +
+>> +impl<T: ?Sized + ThreadedHandler, A: Allocator> ThreadedHandler for =
+Box<T, A> {
+>> +    fn handle_irq(&self) -> ThreadedIrqReturn {
+>> +        T::handle_irq(self)
+>> +    }
+>> +
+>> +    fn thread_fn(&self) -> IrqReturn {
+>> +        T::thread_fn(self)
+>> +    }
+>> +}
+>> +
+>> +/// A registration of a threaded IRQ handler for a given IRQ line.
+>> +///
+>> +/// Two callbacks are required: one to handle the IRQ, and one to =
+handle any
+>> +/// other work in a separate thread.
+>> +///
+>> +/// The thread handler is only called if the IRQ handler returns =
+`WakeThread`.
+>> +///
+>> +/// # Examples
+>> +///
+>> +/// The following is an example of using `ThreadedRegistration`. It =
+uses a
+>> +/// [`AtomicU32`](core::sync::AtomicU32) to provide the interior =
+mutability.
+>> +///
+>> +/// ```
+>> +/// use core::sync::atomic::AtomicU32;
+>> +/// use core::sync::atomic::Ordering;
+>> +///
+>> +/// use kernel::prelude::*;
+>> +/// use kernel::device::Bound;
+>> +/// use kernel::irq::flags;
+>> +/// use kernel::irq::ThreadedIrqReturn;
+>> +/// use kernel::irq::ThreadedRegistration;
+>> +/// use kernel::irq::IrqReturn;
+>> +/// use kernel::platform;
+>> +/// use kernel::sync::Arc;
+>> +/// use kernel::sync::SpinLock;
+>> +/// use kernel::alloc::flags::GFP_KERNEL;
+>> +/// use kernel::c_str;
+>> +///
+>> +/// // Declare a struct that will be passed in when the interrupt =
+fires. The u32
+>> +/// // merely serves as an example of some internal data.
+>> +/// struct Data(AtomicU32);
+>> +///
+>> +/// // [`handle_irq`] takes &self. This example illustrates interior
+>> +/// // mutability can be used when share the data between process =
+context and IRQ
+>> +/// // context.
+>> +///
+>> +/// type Handler =3D Data;
+>> +///
+>> +/// impl kernel::irq::request::ThreadedHandler for Handler {
+>> +///     // This is executing in IRQ context in some CPU. Other CPUs =
+can still
+>> +///     // try to access to data.
+>> +///     fn handle_irq(&self) -> ThreadedIrqReturn {
+>> +///         self.0.fetch_add(1, Ordering::Relaxed);
+>> +///
+>> +///         // By returning `WakeThread`, we indicate to the system =
+that the
+>> +///         // thread function should be called. Otherwise, return
+>> +///         // ThreadedIrqReturn::Handled.
+>> +///         ThreadedIrqReturn::WakeThread
+>> +///     }
+>> +///
+>> +///     // This will run (in a separate kthread) if and only if =
+`handle_irq`
+>> +///     // returns `WakeThread`.
+>> +///     fn thread_fn(&self) -> IrqReturn {
+>> +///         self.0.fetch_add(1, Ordering::Relaxed);
+>> +///
+>> +///         IrqReturn::Handled
+>> +///     }
+>> +/// }
+>> +///
+>> +/// // This is running in process context.
+>> +/// fn register_threaded_irq(handler: Handler, dev: =
+&platform::Device<Bound>) -> Result<Arc<ThreadedRegistration<Handler>>> =
+{
+>> +///     let registration =3D dev.threaded_irq_by_index(0, =
+flags::SHARED, c_str!("my-device"), handler)?;
+>=20
+> This doesn't compile (yet). I think this should be a "raw" example, =
+i.e. the
+> function should take an IRQ number.
+>=20
+> The example you sketch up here is for =
+platform::Device::threaded_irq_by_index().
+
+Yes, I originally had an example along the lines of what you mentioned. =
+Except
+that with the changes in register() from pub to pub(crate) they stopped
+compiling.
+
+I am not sure how the doctest to kunit machinery works, but I was =
+expecting
+tests to have access to everything within the module they're defined in, =
+but
+this is apparently not the case.
+
+>=20
+>> +///
+>> +///     // You can have as many references to the registration as =
+you want, so
+>> +///     // multiple parts of the driver can access it.
+>> +///     let registration =3D Arc::pin_init(registration, =
+GFP_KERNEL)?;
+>> +///
+>> +///     // The handler may be called immediately after the function =
+above
+>> +///     // returns, possibly in a different CPU.
+>> +///
+>> +///     {
+>> +///         // The data can be accessed from the process context =
+too.
+>> +///         registration.handler().0.fetch_add(1, =
+Ordering::Relaxed);
+>> +///     }
+>=20
+> Why the extra scope?
+
+There used to be a lock here instead of AtomicU32. This extra scope was =
+there to drop it.
+
+It=E2=80=99s gone now so there=E2=80=99s no reason to have the extra =
+scope indeed.
+
+>=20
+>> +///
+>> +///     Ok(registration)
+>> +/// }
+>> +///
+>> +///
+>> +/// # Ok::<(), Error>(())
+>> +///```
+>> +///
+>> +/// # Invariants
+>> +///
+>> +/// * We own an irq handler using `&self` as its private data.
+>> +///
+>> +#[pin_data]
+>> +pub struct ThreadedRegistration<T: ThreadedHandler + 'static> {
+>> +    inner: Devres<RegistrationInner>,
+>> +
+>> +    #[pin]
+>> +    handler: T,
+>> +
+>> +    /// Pinned because we need address stability so that we can pass =
+a pointer
+>> +    /// to the callback.
+>> +    #[pin]
+>> +    _pin: PhantomPinned,
+>> +}
+>=20
+> Most of the code in this file is a duplicate of the non-threaded =
+registration.
+>=20
+> I think this would greatly generalize with specialization and an =
+HandlerInternal
+> trait.
+>=20
+> Without specialization I think we could use enums to generalize.
+>=20
+> The most trivial solution would be to define the Handler trait as
+>=20
+> trait Handler {
+>   fn handle(&self);
+>   fn handle_threaded(&self) {};
+> }
+>=20
+> but that's pretty dodgy.
+
+A lot of the comments up until now have touched on somehow having =
+threaded and
+non-threaded versions implemented together. I personally see no problem =
+in
+having things duplicated here, because I think it's easier to reason =
+about what
+is going on this way. Alice has expressed a similar view in a previous =
+iteration.
+
+Can you expand a bit more on your suggestion? Perhaps there's a clean =
+way to do
+it (without macros and etc), but so far I don't see it.
+
+>=20
+>> +impl<T: ThreadedHandler + 'static> ThreadedRegistration<T> {
+>> +    /// Registers the IRQ handler with the system for the given IRQ =
+number.
+>> +    pub(crate) fn register<'a>(
+>> +        dev: &'a Device<Bound>,
+>> +        irq: u32,
+>> +        flags: Flags,
+>> +        name: &'static CStr,
+>> +        handler: T,
+>> +    ) -> impl PinInit<Self, Error> + 'a {
+>=20
+> What happens if `dev`  does not match `irq`? The caller is responsible =
+to only
+> provide an IRQ number that was obtained from this device.
+>=20
+> This should be a safety requirement and a type invariant.
+
+This iteration converted register() from pub to pub(crate). The idea was =
+to
+force drivers to use the accessors. I assumed this was enough to make =
+the API
+safe, as the few users in the kernel crate (i.e.: so far platform and =
+pci)
+could be manually checked for correctness.
+
+To summarize my point, there is still the possibility of misusing this =
+from the
+kernel crate itself, but that is no longer possible from a driver's
+perspective.
+
+=E2=80=94 Daniel
 
