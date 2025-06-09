@@ -1,63 +1,76 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F9F2221281
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 21:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C2F21CC5F;
+	Mon,  9 Jun 2025 21:21:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749504068; cv=none; b=phCkumTn0+N8/CyYMNZCODR4PfETZayKQd6EfO6FSwZUDzDURVTHhvJtVFXgomIGl7T1b8XQtYIqzfAmkGJ5BPydx2KaKOWe8fc8UeTov2dQANDrjMh46fAf8GuKJKa2MSfQKOeZkxkVoOwUdNP3DlZ+8ZwYjo5JsgiWtKZesko=
+	t=1749504085; cv=none; b=HM46ZLvpmnCQIdVad1jj1laIQnKlrap8m/ZcSKPYNDOo0iB/u7n05SkqnuV0wi/4ahLuncRnhbm9ts1/mS9H526GqCdnCe8ci3GlxL6/EXczeUwV73v+fAc4znv8SQM9+Z+jvIBbhYPmF9apI2d3Ek70fERbpoCCLiD2m4UldHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749504068; c=relaxed/simple;
-	bh=wWbwNAYP79yY5ooKOUIK/EloFfKxdRk81tpD/qS3JE8=;
+	s=arc-20240116; t=1749504085; c=relaxed/simple;
+	bh=O50h9LEepqZP2XcuHZKqPVqTWPHeh+PrpxgNuZr4SM0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ik/Io22x76KLBmT8hBgI8AKClkKY1CqGRLey5IWqiyRV40EqElcxcZZAAYcjmgztRWtyiaRPfAd3OI3F5N1fOe/51NGyG2XTfyXllnzP1Njg9XdRfSLSi5w7EP3pgOMxZ5691peJng1snRX766Rlc82jjCWhdhzK/UqLcBPT2dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BQZy0g0e; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ri4a2Mr8THhGwY+Ejk4sOsBHhf5D8e4yk5aOvYgcJJ12a7mK69V5JHWjPCUIXeqgCTrlflFpRImUA5PTRRc7Wi4fvvA4xyyaop90yCVrDTQNckv+VA1NQzdGsX7RBYOXp4OvTijNtRW1+d3YmxiPiPtmzA84KA3tCezjPI1qGIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zf3I4Jfl; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BQZy0g0e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749504065;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aOqvn2UvMFTAJZ8bSI/XHl8AOmDk5n8DI4dSJCysvV8=;
-	b=BQZy0g0euid/U3JX8cO0jprBT69W+dmq9hvAtIWHQf5vVBIEQRafSihgQ78MmgAvAiEsuD
-	8C4XVqu9OjkHKCs6YJMY+MVCcSrca8GyDyLl0GKF0xoybP55IR7Q46GIUHGz2kD/Ob6D8p
-	J7EJ+hzj4S7zXhpZNLHKL5qeVeLFjbk=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-325-G1ViSkazOhW_P9GZP4pb3A-1; Mon,
- 09 Jun 2025 17:21:02 -0400
-X-MC-Unique: G1ViSkazOhW_P9GZP4pb3A-1
-X-Mimecast-MFC-AGG-ID: G1ViSkazOhW_P9GZP4pb3A_1749504060
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6E5781956080;
-	Mon,  9 Jun 2025 21:20:59 +0000 (UTC)
-Received: from redhat.com (unknown [10.22.81.60])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2E9E719560AB;
-	Mon,  9 Jun 2025 21:20:56 +0000 (UTC)
-Date: Mon, 9 Jun 2025 17:20:53 -0400
-From: Joe Lawrence <joe.lawrence@redhat.com>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
-	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
-	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
-	Marcos Paulo de Souza <mpdesouza@suse.com>,
-	Weinan Liu <wnliu@google.com>,
-	Fazla Mehrab <a.mehrab@bytedance.com>,
-	Chen Zhongjin <chenzhongjin@huawei.com>,
-	Puranjay Mohan <puranjay@kernel.org>
-Subject: Re: [PATCH v2 59/62] livepatch/klp-build: Introduce klp-build script
- for generating livepatch modules
-Message-ID: <aEdQNbqg2YMBFB8H@redhat.com>
-References: <cover.1746821544.git.jpoimboe@kernel.org>
- <10ccbeb0f4bcd7d0a10cc9b9bd12fdc4894f83ee.1746821544.git.jpoimboe@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zf3I4Jfl"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-235e1d4cba0so38003705ad.2;
+        Mon, 09 Jun 2025 14:21:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749504083; x=1750108883; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6JTw27oqe3wLm58LaA8AEVNRZ1OUXdLMUSm5hkYQcLo=;
+        b=Zf3I4Jfl7/aSkUBj72Bzfq1VdQeZiFx6ufvuWVHMHXYz4QdI3D7PexZJsEXp9uyGFA
+         nXCtUSXosvSNYDFA3lD4tKljGN0mt/kmx1Jebse7QZuMjHgOfWkZ5fKM5kuRw5ztpOS6
+         4NBhRreJrjNDM8MsNuGRDD0z3wLaB34fFGJ/hShcTS4tGCeS7lpjginHVDKRfV8zYlEa
+         jm6N7YbqifBKC6F3/EDI+wgr9KSYQWzw4EgZbnlPvUsJ2dWmcOB/OQmSxtTX9hqciIW6
+         lGMwUZEZ+n37W7byqkQAwpFOgwiOkRHj+mJeMkT8jKEW6Dlia4zG1SqodNs2bMhGwbC3
+         aCAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749504083; x=1750108883;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6JTw27oqe3wLm58LaA8AEVNRZ1OUXdLMUSm5hkYQcLo=;
+        b=bkfNr1e7xJ+4kNUsXQrngqu7X/nUWtbZmiGlC0vguz9wO2xlLhbBUjINVibusV3YAn
+         wKWyrcHD2hOsk26ybMY4ymEPNUCRCPUzEC/XvoivOX/IH5/FdNGgYzhgNQ2jvQ5F4YCY
+         pn8vE+o4vxvrsBMdzYwTxlQSCpLEsIw4LNe2Hz57STAb8B4ai7vM3r/iFUKR+fpS5sW1
+         neLdAIQ5om6mD1bTUDixg5P5tV/PLe16UefX67fH3y8botKUTOuklOBq2VaWNJfiKrz/
+         /y2bnHBL5lPigK4hE453E2xxgbA0LzycQ/BczTnzvq0eqSG0x2vmqAiFPpImjvWBPbWA
+         D6ww==
+X-Forwarded-Encrypted: i=1; AJvYcCUekO3dijcW2GWp4HEKHJzXzgmttD+f3drV6Pf4J0I9YOiyOnJYZDdc/q968g8+kQqnx8K6Io9fsxSXhJFtQoG0Lpc=@vger.kernel.org, AJvYcCVG1dj5umrPKLLzQBHO+UmLHTpI6o/p0LMmucoy5FqmPIMW0Ccw2g9CnkkwzS8xqEFWRg5rC4pSswfb@vger.kernel.org, AJvYcCX2ufCCjTiHUzlCEjpXNeF1g9Tqx22WcZt1YB/JCt7aHrN2nrwAIo3bQt7oXQYtisw+6S0Ie6rb+qfSY+0=@vger.kernel.org, AJvYcCXNjuyFHhDfKTuM+kCf9elCPwqFtE+lKun9uYjk9o5oOE/e2+E5ssIJFBjIWFulIGxK2VvncQ2KnSuSmI/i@vger.kernel.org
+X-Gm-Message-State: AOJu0YwS517J2hfRH3MQBq+o9gfc1WkqwXSpz3ggfcUbn6EtmW00VVSF
+	dWq9M6nWhuJFOr3ggnikVmSe5nZ7DsfqdOaaND9q1ozVneXC1WoI23Gs
+X-Gm-Gg: ASbGnctKXtuFeA+BfWWAmrmNYOoIfTrqXfTPkFHaC8h/hfYii8Yf8jDkXp3wpM8DhvC
+	ypGyd4tcbIjJA/+kIGxGehZ9IqXLkwUaNFschkf0Y7fq2rP8aPSLOZAeEp0a87h6kKQEMtQZJDP
+	7Y3bbeZGXX8kgtoeORXu6OqPHZa+7Xcb6QWjP7ScylpstH9xZ/hq/J5Oq5DCIMi/q+WA3B8nna9
+	xy8lv56isreNx4UdRQBDFK2zFDIaybLDqh+KLZGx5mShyL2mtcrbLdeml1N1ybXzJZCJbZfcuRE
+	oQiE6CXM6VMW64fY1jdG1+hyp4q9uqBxF5NggumitTj+kgD758Dull74OxgMWEUmoMPCqB0zxw8
+	=
+X-Google-Smtp-Source: AGHT+IHyqz8YAHVAeegO+huCcmlZjP0PWjX13aug+4AIIyiVO+2ZxjDg3pQxqBRI6D6kSBJA8ma5Pg==
+X-Received: by 2002:a17:902:dac3:b0:234:cb4a:bc1b with SMTP id d9443c01a7336-23601dd8a74mr212301085ad.49.1749504083046;
+        Mon, 09 Jun 2025 14:21:23 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2360340519fsm58825325ad.156.2025.06.09.14.21.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 14:21:22 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 9 Jun 2025 14:21:21 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Chiang Brian <chiang.brian@inventec.com>
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org,
+	geert+renesas@glider.be, grant.peltier.jg@renesas.com,
+	jdelvare@suse.com, krzk+dt@kernel.org, linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	robh@kernel.org
+Subject: Re: [PATCH v5 2/2] hwmon: (pmbus/isl68137) Add support for RAA229621
+Message-ID: <dc996bde-6cc1-4010-b9eb-e4c2a969ce46@roeck-us.net>
+References: <20250605040134.4012199-1-chiang.brian@inventec.com>
+ <20250605040134.4012199-3-chiang.brian@inventec.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,126 +79,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <10ccbeb0f4bcd7d0a10cc9b9bd12fdc4894f83ee.1746821544.git.jpoimboe@kernel.org>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+In-Reply-To: <20250605040134.4012199-3-chiang.brian@inventec.com>
 
-On Fri, May 09, 2025 at 01:17:23PM -0700, Josh Poimboeuf wrote:
-> +# Build and post-process livepatch module in $KMOD_DIR
-> +build_patch_module() {
-> +	local makefile="$KMOD_DIR/Kbuild"
-> +	local log="$KMOD_DIR/build.log"
-> +	local cflags=()
-> +	local files=()
-> +	local cmd=()
-> +
-> +	rm -rf "$KMOD_DIR"
-> +	mkdir -p "$KMOD_DIR"
-> +
-> +	cp -f "$SRC/scripts/livepatch/init.c" "$KMOD_DIR"
-> +
-> +	echo "obj-m := $NAME.o" > "$makefile"
-> +	echo -n "$NAME-y := init.o" >> "$makefile"
-> +
-> +	find "$DIFF_DIR" -type f -name "*.o" | mapfile -t files
-> +	[[ ${#files[@]} -eq 0 ]] && die "no changes detected"
-> +
-> +	for file in "${files[@]}"; do
-> +		local rel_file="${file#"$DIFF_DIR"/}"
-> +		local kmod_file="$KMOD_DIR/$rel_file"
-> +		local cmd_file
-> +
-> +		mkdir -p "$(dirname "$kmod_file")"
-> +		cp -f "$file" "$kmod_file"
-> +
-> +		# Tell kbuild this is a prebuilt object
-> +		cp -f "$file" "${kmod_file}_shipped"
-> +
-> +		echo -n " $rel_file" >> "$makefile"
-> +
-> +		cmd_file="$ORIG_DIR/$(dirname "$rel_file")/.$(basename "$rel_file").cmd"
-> +		[[ -e "$cmd_file" ]] && cp -f "$cmd_file" "$(dirname "$kmod_file")"
-> +	done
-> +
-> +	echo >> "$makefile"
-> +
-> +	cflags=("-ffunction-sections")
-> +	cflags+=("-fdata-sections")
-> +	[[ $REPLACE -eq 0 ]] && cflags+=("-DKLP_NO_REPLACE")
-> +
-> +	cmd=("make")
-> +	cmd+=("$VERBOSE")
-> +	cmd+=("-j$CPUS")
-> +	cmd+=("--directory=.")
-> +	cmd+=("M=$KMOD_DIR")
-> +	cmd+=("KCFLAGS=${cflags[*]}")
-> +
-> +	# Build a "normal" kernel module with init.c and the diffed objects
-> +	(
-> +		cd "$SRC"
-> +		"${cmd[@]}"							\
-> +			>  >(tee -a "$log")					\
-> +			2> >(tee -a "$log" >&2)
-> +	)
-> +
-> +	# Save off the intermediate binary for debugging
-> +	cp -f "$KMOD_DIR/$NAME.ko" "$KMOD_DIR/$NAME.ko.orig"
-> +
-> +	# Fix (and work around) linker wreckage for klp syms / relocs
-> +	"$SRC/tools/objtool/objtool" klp post-link "$KMOD_DIR/$NAME.ko" || die "objtool klp post-link failed"
-> +
-> +	cp -f "$KMOD_DIR/$NAME.ko" "$OUTFILE"
-> +}
+On Thu, Jun 05, 2025 at 12:01:34PM +0800, Chiang Brian wrote:
+> The RAA229621 is a digital dual output multiphase (X+Y <= 8) PWM controller
+> designed to be compliant with AMD SVI3 specifications, targeting VDDCR_CPU 
+> and VDDCR_SOC rails.
+> 
+> Add support for it to the isl68137 driver.
+> 
+> Signed-off-by: Chiang Brian <chiang.brian@inventec.com>
 
-Hi Josh,
+Applied.
 
-Another small bug feature? report: module symbol namespaces.
-
-If you touch sound/soc/sof/intel/, klp-build will error out with:
-
-  Building patch module: livepatch-unCVE-2024-58012.ko
-  ERROR: modpost: module livepatch-unCVE-2024-58012 uses symbol hda_dai_config from namespace SND_SOC_SOF_INTEL_HDA_COMMON, but does not import it.
-  ERROR: modpost: module livepatch-unCVE-2024-58012 uses symbol hdac_bus_eml_sdw_map_stream_ch from namespace SND_SOC_SOF_HDA_MLINK, but does not import it.
-  make[2]: *** [scripts/Makefile.modpost:145: /home/jolawren/src/centos-stream-10/klp-tmp/kmod/Module.symvers] Error 1
-  make[1]: *** [/home/jolawren/src/centos-stream-10/Makefile:1936: modpost] Error 2
-  make: *** [Makefile:236: __sub-make] Error 2
-
-since the diff objects do not necessarily carry forward the namespace
-import.
-
-There's several options to how to handle it (cross-reference with
-Modules.symvers, copy out the .modinfo sections, include the section in
-the diff .o, etc.) ... my late afternoon hack just snarfed it from the
-original objects with a modinfo hack.  Anyway, you get the idea.
-
--- Joe
-
--->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8--
-
-@@ -687,7 +700,9 @@ build_patch_module() {
- 	cp -f "$SRC/scripts/livepatch/init.c" "$KMOD_DIR"
- 
- 	echo "obj-m := $NAME.o" > "$makefile"
--	echo -n "$NAME-y := init.o" >> "$makefile"
-+
-+	echo "#include <linux/module.h>" >> "$KMOD_DIR/namespaces.c"
-+	echo -n "$NAME-y := init.o namespaces.o" >> "$makefile"
- 
- 	find "$DIFF_DIR" -type f -name "*.o" | mapfile -t files
- 	[[ ${#files[@]} -eq 0 ]] && die "no changes detected"
-@@ -697,6 +712,13 @@ build_patch_module() {
- 		local kmod_file="$KMOD_DIR/$rel_file"
- 		local cmd_file
- 
-+		# Symbol namespace hack
-+		echo ln -s -f "$file" ns-temp.ko
-+		ln -s -f "$ORIG_DIR/$rel_file" ns-temp.ko
-+		for ns in $(modinfo ns-temp.ko -F import_ns); do
-+			echo "MODULE_IMPORT_NS(\"$ns\");" >> "$KMOD_DIR/namespaces.c"
-+		done
-+
- 		mkdir -p "$(dirname "$kmod_file")"
- 		cp -f "$file" "$kmod_file"
- 
---
-Joe
-
+Thanks,
+Guenter
