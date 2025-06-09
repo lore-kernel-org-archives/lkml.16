@@ -1,41 +1,79 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A86C2AD14
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 06:44:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749451500; cv=none; b=ZsqcCmFJbDyJjJ0LoL42LZIXJ+yPMNwARQ+SzcS7ZyqOZNxvmgNP4PgmBwu8BXhVQODN0dMIkgvp+pHQU87tUBNbBWHr2fBXBfrZjZHKCApCR/a5RwM9VPkwLWSMftxTNJo/1GHpQ/hIt7F+pUPwF1bfaPQ2kvB04sHSvrid35E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749451500; c=relaxed/simple;
-	bh=wE2j26rQsWzCV/CI9aX5cBigniSM7EhhkFPbJ9xwQe4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TnM3AbDVK6SklyjbONxlrGX1KhNDl/nFIvhWv37eHYOsa5ksPaXsIsvXH7SkzqC0ASgDmJk7yysdGrChU3TTPVCAPx/Hzc4ghc33znYSmUfw3Ue1/Rf6TXTgfoqdY0oRLMz/hVv2gjt1o7eIOH+W4NfJdrINyLmx5DRM7xpsE0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=afp0TTIs; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11022131.outbound.protection.outlook.com [52.101.71.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089CF4431;
+	Mon,  9 Jun 2025 06:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.131
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749451636; cv=fail; b=mQ20EAeBn5eR2TnNraQGfEkyFVGxsvfMBOqUYrZrnfXdOPWIaR9khT6KxpsoYFTSFbO2uuTC9fN1eZrJEdZayIAgl2yBTuU0uJ11GxbIySg5wxEchFCoXE0Q8N23vv4GWR5iXt9tqR1EAeNW+MvcQ3FYfjei1isgsVUJXyhFaGM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749451636; c=relaxed/simple;
+	bh=nEPZZpgLfMBPqMgEPpiA7hZEwoEhtY16TKz+uoeXWeA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=utBmx3bsvYcVcTMDEf9fsLYZRqtXqeTL/Ttv6Wn6LrVlgvTAe4Pn9LTQ8n9LsiH/jnmYKLRihQBQwAoSc5RjlpzaS2sd9Up/RbjkhwA79XGMkmU28Aas7afY6Q+1dOV6KaWIRBcBum5RfNA9jOi9m8PmNJ4PT0t7YKkvFLxgMCE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=technica-engineering.de; spf=pass smtp.mailfrom=technica-engineering.de; dkim=pass (1024-bit key) header.d=technica-engineering.de header.i=@technica-engineering.de header.b=i58SufY4; arc=fail smtp.client-ip=52.101.71.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=technica-engineering.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=technica-engineering.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="afp0TTIs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Nt
-	vTdpGq4cK/AGPSUfzlsigYkbELU/HQBy1Zz8L3loY=; b=afp0TTIsYo/kz/OwpR
-	bg4Ie2kGRk40jWlHDiARVLTDFc6EqGxLEc6kk6hE+z88S/rmpZDm1e4JHDCzwYxq
-	+KkDW83S2OBGdoZlVFheH3wqmFcOux50xI0nvoWv7cV3+ad78pBcR+e6dIxMljx/
-	Et3MBwZCG59oYK4+FYebo62NQ=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wDnV8S5gkZo60cLHQ--.18568S4;
-	Mon, 09 Jun 2025 14:44:17 +0800 (CST)
-From: David Wang <00107082@163.com>
-To: surenb@google.com
-Cc: tim.c.chen@linux.intel.com,
-	kent.overstreet@linux.dev,
-	akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	David Wang <00107082@163.com>
-Subject: [PATCH v3 2/2] alloc_tag: keep codetag iterator active between read()
-Date: Mon,  9 Jun 2025 14:44:08 +0800
-Message-Id: <20250609064408.112783-1-00107082@163.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <CAJuCfpE670s5=QAbuqCLB3XuOkfL=L44r93cwJdrhHn=bYNd-Q@mail.gmail.com>
-References: <CAJuCfpE670s5=QAbuqCLB3XuOkfL=L44r93cwJdrhHn=bYNd-Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=technica-engineering.de header.i=@technica-engineering.de header.b="i58SufY4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ILp7N2tXCr4tAkr4afC8EP0ltzvEPKgq0SopP8w8rqgcbqqLfwtQ0UPpaqlo9Y01vddTI9QQFN7kSsuI3JyhmJtb6bE0WwYsRGrURCcQ2Y0e6rRzzRWbq1DZodCN0o67vQXMzwoRJuETyJtssYLeb08NcBbn1V2+CrKf3KNhImh5Y2bstnlMAFULxvmv//6/HtDnAGb4z+h3vdR6EqmbBHD0Rv0qSyvGtjBUwq1EzBrpI9XkSXBloEK/zzwJygnevQVRRNKCqCO3kUvDIz08AfQHd6deisO4Z2Z4LME78U00pLPsUTN81GO/OjclS10tmPbxkE2zJB6cGz3csLtF7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=B1ke2S2KXth1TCEjEjafbf2BUbRNsXW5NFSkdvSxcIQ=;
+ b=X2CE/AEmNu2xv68O3tx4RYruPdb2i4dmFbTqqAexHZrKG7tSHPCqVnq8Yul9cUYV6/XaszTBjPMLcStymq68GEpHKKrGA7g8PkLG58zFtF13Jf4dIyFP0xPUZBpzMDtvL1xxvo9QZdAoclweFUWpFWI+UOeLCvHuWHUQJlnFiyT3+uaYsUlOHDouCbW1WG+7l8CQ781DmTZF5Xm1mQ5Onj1m33sAc4Ays1qQc+VSbSUi0eVRKXpLJjJQsDgdC+Co20w8VRlcQx5nXsTybFq1DMZTWScAFwxXaQvkUJySbahQxmfwTmVPhhC8UIbBu20K7bC1DrPH3SAMuoCcG4/g4A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 2.136.200.136) smtp.rcpttodomain=davemloft.net
+ smtp.mailfrom=technica-engineering.de; dmarc=fail (p=reject sp=reject
+ pct=100) action=oreject header.from=technica-engineering.de; dkim=none
+ (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=technica-engineering.de; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B1ke2S2KXth1TCEjEjafbf2BUbRNsXW5NFSkdvSxcIQ=;
+ b=i58SufY4px25041xofO/0aM6PHDggQClbsxQsOLCMGwQdotzeb+2hAUSKPwGz85kQjSsReJ3QXy7Kad0avqSi2ywmtfORjVVWfFv8llZ0G3W2nUBQbZ/dOgUu5xLaEjGd5JGtf/lFs4pvMFGBV3XiPlaJP+ixrmCh8VuymO8h3E=
+Received: from DUZPR01CA0218.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:4b4::21) by PAVPR08MB9089.eurprd08.prod.outlook.com
+ (2603:10a6:102:322::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.21; Mon, 9 Jun
+ 2025 06:47:10 +0000
+Received: from DB1PEPF000509FA.eurprd03.prod.outlook.com
+ (2603:10a6:10:4b4:cafe::2d) by DUZPR01CA0218.outlook.office365.com
+ (2603:10a6:10:4b4::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.35 via Frontend Transport; Mon,
+ 9 Jun 2025 06:47:16 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 2.136.200.136)
+ smtp.mailfrom=technica-engineering.de; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=technica-engineering.de;
+Received-SPF: Fail (protection.outlook.com: domain of technica-engineering.de
+ does not designate 2.136.200.136 as permitted sender)
+ receiver=protection.outlook.com; client-ip=2.136.200.136;
+ helo=jump.ad.technica-electronics.es;
+Received: from jump.ad.technica-electronics.es (2.136.200.136) by
+ DB1PEPF000509FA.mail.protection.outlook.com (10.167.242.36) with Microsoft
+ SMTP Server id 15.20.8835.15 via Frontend Transport; Mon, 9 Jun 2025 06:47:08
+ +0000
+Received: from dalek.ad.technica-electronics.es (unknown [10.10.2.101])
+	by jump.ad.technica-electronics.es (Postfix) with ESMTP id 7713340263;
+	Mon,  9 Jun 2025 08:47:08 +0200 (CEST)
+From: Carlos Fernandez <carlos.fernandez@technica-engineering.de>
+To:
+Cc: carlos.fernandez@technica-engineering.de,
+	horms@kernel.org,
+	Andreu Montiel <Andreu.Montiel@technica-engineering.de>,
+	Sabrina Dubroca <sd@queasysnail.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Hannes Frederic Sowa <hannes@stressinduktion.org>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net v4] macsec: MACsec SCI assignment for ES = 0
+Date: Mon,  9 Jun 2025 08:47:02 +0200
+Message-ID: <20250609064707.773982-1-carlos.fernandez@technica-engineering.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,144 +81,188 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnV8S5gkZo60cLHQ--.18568S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGFWUWw1UXF18ZrWDXF47Jwb_yoWruw1fpa
-	13ua4YkF4rJr1UuF4rJw4IgFW5tw1kta18XF42qr4SvFn0vrs8uF98Jryj9Fy3AFy8Kan0
-	va90k34UJr9rZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0p__-BDUUUUU=
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqBpnqmhGgbUsJgAAsv
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB1PEPF000509FA:EE_|PAVPR08MB9089:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 0a3132bb-68d0-48ab-8893-08dda72174c1
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|7416014|376014|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?stZIB5lbLO//HTMVl3XrT+GR9F9E04WgW/m4HDpg+P28IXCQ9h3ksZ8lWEiw?=
+ =?us-ascii?Q?zmjiAmbGdMfKOFzQs/s5b/GkZArkr3qO1jKoLc3x/osftu7wBNVR9qEYJn1A?=
+ =?us-ascii?Q?PIT+HOlRy+nByGzH1mVEH2xbngc/sw9x+Wumm4jt0is2ONvhQEndOyZJFnx+?=
+ =?us-ascii?Q?q/wmf+P8Uk/2Od1E1I2Gjb9bbgDO/a9i+sQ0ZSQwRP3SkIc1bhSDIHXPPHFB?=
+ =?us-ascii?Q?4qorsVSef4LIlWxe+opiQAT7lSzStwVouNNIcF6gWfPweknLQ0J7CRkxXVCe?=
+ =?us-ascii?Q?tGrCVOZl2jLKLfbfSPPjvZkMXX2isK5j2NfiVXI3vslNXrv9yRaS2lMiMGeT?=
+ =?us-ascii?Q?ZHjbi+t/jiIt0TUJnhrZWiBQnW/ABjBS2Rq5Qlv9ry8fTP06F0NfmlS63yjf?=
+ =?us-ascii?Q?iul6tnmtTx9zQt/1h4ztSdLehqMfEhbNSmUsD4S4AOn2+eDe6pBaEUW/JOyf?=
+ =?us-ascii?Q?2rT46W3lCM0jNbo7JhRRcAlacXHsr620teNUw0pFUrzpJpRh7CfCom1JSzI+?=
+ =?us-ascii?Q?GhW1oEvI4KAR8VeeoLAbI0g+N5+f4DlbwObqhnpnkL1MUN8ujsnGSYZ9dFTy?=
+ =?us-ascii?Q?Y9a9RzHoQ7Y0P24c/PHPTMxlkCPwsyGSLpfDt8qkbWZO417gx8a3sfwxq+Vf?=
+ =?us-ascii?Q?xQS31OfqmZj5ZIfN/yvaVZnOHyUVmc34Rg5IjzpZNemBVDMi25b7eUuTzGpk?=
+ =?us-ascii?Q?rOsYYfHw149BCle6fXOUtr6Z9dQOYWQP/QybRgy/eBHe6at264QCtAqr9IRB?=
+ =?us-ascii?Q?wu8CWW2H/hoxyKXya6BpPijYQbvAveyRj5R9A+mENN5eItxUG6i2GDyifN9U?=
+ =?us-ascii?Q?BkaUU95UFrd/bnZMdnZLlktKyAzEj4mNhShLsJNPob/hA1kstK4yeELa90yI?=
+ =?us-ascii?Q?uxiwBXtguaKBqMkJg3UZPdlPl8g/KhyOhJuG+yurQYWufWedCME68z1/uWw6?=
+ =?us-ascii?Q?m4/lkF+RW/M7JA2iDrIxSnSecUe5R+nptjOXca6QTmmGYrbvNl9cFWfsrbrB?=
+ =?us-ascii?Q?zxDp60Z4ufTKFihLHp3qLKzkB7wYqeWEorQEu74TnbInIs+Ddv0pEIZ/Qhnf?=
+ =?us-ascii?Q?FSw2k5B5KocQIlKGI2u+VcC1o+e7+OhJfayIvvGkEc6NiT4uFPV+f4Eo0Sky?=
+ =?us-ascii?Q?mVnDEW/EnPBX3GAYUhtRhCL4CVeHdPDs9DrUkjyf2tKgaWX0eujr0nvPQUCy?=
+ =?us-ascii?Q?bCzOrhJA/zaf0AI9r3esLd+34JQPNJsykXnN0lWSQd+EBXPfg6oxek888taD?=
+ =?us-ascii?Q?PDHMLMSC/Q6OyW0CXrQMKJd1PwYFnWp7boxPjiotDRXlPW1lpPk1jqTKneGs?=
+ =?us-ascii?Q?DLuUH5CXC99vZksW+PEFOpzzris2a30AG5oB6Or77yZ+0RSEOOilcNZd3Xad?=
+ =?us-ascii?Q?bOHKHUxBMpgPRjQNtKBR7AUZ1evpNFTCry1Aw2mnFp/hcD++YyVUDcl1YynO?=
+ =?us-ascii?Q?dnZ5JnEx5uesaN1cEKKzqMrQSFOpz3jW6s0yUMMyc0d/mNgQYQaNXBEBo75Z?=
+ =?us-ascii?Q?zanKFqvalea3KxtBTlmWTK8Tk3qWQ5q7NwAu?=
+X-Forefront-Antispam-Report:
+	CIP:2.136.200.136;CTRY:ES;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:jump.ad.technica-electronics.es;PTR:136.red-2-136-200.staticip.rima-tde.net;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1102;
+X-OriginatorOrg: technica-engineering.de
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 06:47:08.9794
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a3132bb-68d0-48ab-8893-08dda72174c1
+X-MS-Exchange-CrossTenant-Id: 1f04372a-6892-44e3-8f58-03845e1a70c1
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1f04372a-6892-44e3-8f58-03845e1a70c1;Ip=[2.136.200.136];Helo=[jump.ad.technica-electronics.es]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB1PEPF000509FA.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAVPR08MB9089
 
-When reading /proc/allocinfo, for each read syscall, seq_file would
-invoke start/stop callbacks. In start callback, a memory is alloced
-to store iterator and the iterator would start from beginning to
-walk linearly to current read position.
+According to 802.1AE standard, when ES and SC flags in TCI are zero,
+used SCI should be the current active SC_RX. Current code uses the
+header MAC address. Without this patch, when ES flag is 0 (using a
+bridge or switch), header MAC will not fit the SCI and MACSec frames
+will be discarted.
 
-seq_file read() takes at most 4096 bytes, even if read with a larger
-user space buffer, meaning read out all of /proc/allocinfo, tens of read
-syscalls are needed. For example, a 306036 bytes allocinfo files need
-76 reads:
+In order to test this issue, MACsec link should be stablished between
+two interfaces, setting SC and ES flags to zero and a port identifier
+different than one. For example, using ip macsec tools:
 
- $ sudo cat /proc/allocinfo  | wc
-    3964   16678  306036
- $ sudo strace -T -e read cat /proc/allocinfo
- ...
- read(3, "        4096        1 arch/x86/k"..., 131072) = 4063 <0.000062>
- ...
- read(3, "           0        0 sound/core"..., 131072) = 4021 <0.000150>
- ...
-For those n=3964 lines, each read takes about m=3964/76=52 lines,
-since iterator restart from beginning for each read(),
-it would move forward
-   m  steps on 1st read
- 2*m  steps on 2nd read
- 3*m  steps on 3rd read
- ...
-   n  steps on last read
-As read() along, those linear seek steps make read() calls slower and
-slower.  Adding those up, codetag iterator moves about O(n*n/m) steps,
-making data structure traversal take significant part of the whole reading.
-Profiling when stress reading /proc/allocinfo confirms it:
+ip link add link $ETH0 macsec0 type macsec port 11 send_sci off I
+end_station off
+ip macsec add macsec0 tx sa 0 pn 2 on key 01 $ETH1_KEY
+ip macsec add macsec0 rx port 11 address $ETH1_MAC
+ip macsec add macsec0 rx port 11 address $ETH1_MAC sa 0 pn 2 on key 02
+ip link set dev macsec0 up
 
- vfs_read(99.959% 1677299/1677995)
-     proc_reg_read_iter(99.856% 1674881/1677299)
-         seq_read_iter(99.959% 1674191/1674881)
-             allocinfo_start(75.664% 1266755/1674191)
-                 codetag_next_ct(79.217% 1003487/1266755)  <---
-                 srso_return_thunk(1.264% 16011/1266755)
-                 __kmalloc_cache_noprof(0.102% 1296/1266755)
-                 ...
-             allocinfo_show(21.287% 356378/1674191)
-             allocinfo_next(1.530% 25621/1674191)
-codetag_next_ct() takes major part.
+ip link add link $ETH1 macsec1 type macsec port 11 send_sci off I
+end_station off
+ip macsec add macsec1 tx sa 0 pn 2 on key 01 $ETH0_KEY
+ip macsec add macsec1 rx port 11 address $ETH0_MAC
+ip macsec add macsec1 rx port 11 address $ETH0_MAC sa 0 pn 2 on key 02
+ip link set dev macsec1 up
 
-A private data alloced at open() time can be used to carry iterator
-alive across read() calls, and avoid the memory allocation and
-iterator reset for each read(). This way, only O(1) memory allocation
-and O(n) steps iterating, and `time` shows performance improvement
-from ~7ms to ~4ms.
-Profiling with the change:
 
- vfs_read(99.865% 1581073/1583214)
-     proc_reg_read_iter(99.485% 1572934/1581073)
-         seq_read_iter(99.846% 1570519/1572934)
-             allocinfo_show(87.428% 1373074/1570519)
-                 seq_buf_printf(83.695% 1149196/1373074)
-                 seq_buf_putc(1.917% 26321/1373074)
-                 _find_next_bit(1.531% 21023/1373074)
-                 ...
-                 codetag_to_text(0.490% 6727/1373074)
-                 ...
-             allocinfo_next(6.275% 98543/1570519)
-             ...
-             allocinfo_start(0.369% 5790/1570519)
-             ...
-Now seq_buf_printf() takes major part.
-
-Signed-off-by: David Wang <00107082@163.com>
+Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
+Co-developed-by: Andreu Montiel <Andreu.Montiel@technica-engineering.de>
+Signed-off-by: Andreu Montiel <Andreu.Montiel@technica-engineering.de>
+Signed-off-by: Carlos Fernandez <carlos.fernandez@technica-engineering.de>
 ---
-Changes since v2:
-Rebase to 6.16-rc1, resolve conflicts.
----
- lib/alloc_tag.c | 29 ++++++++++-------------------
- 1 file changed, 10 insertions(+), 19 deletions(-)
+v4: 
+* Added testing info in commit as suggested. 
 
-diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
-index d48b80f3f007..ac7e50b41b6a 100644
---- a/lib/alloc_tag.c
-+++ b/lib/alloc_tag.c
-@@ -45,21 +45,16 @@ struct allocinfo_private {
- static void *allocinfo_start(struct seq_file *m, loff_t *pos)
- {
- 	struct allocinfo_private *priv;
--	struct codetag *ct;
- 	loff_t node = *pos;
+v3: https://patchwork.kernel.org/project/netdevbpf/patch/20250604123407.2795263-1-carlos.fernandez@technica-engineering.de/
+* Wrong drop frame afer macsec_frame_sci
+* Wrong Fixes tag in message 
+
+v2: https://patchwork.kernel.org/project/netdevbpf/patch/20250604113213.2595524-1-carlos.fernandez@technica-engineering.de/
+* Active sci lookup logic in a separate helper.
+* Unnecessary loops avoided. 
+* Check RXSC is exactly one for lower device.
+* Drops frame in case of error.
+
+
+v1: https://patchwork.kernel.org/project/netdevbpf/patch/20250529124455.2761783-1-carlos.fernandez@technica-engineering.de/
+
+
+ drivers/net/macsec.c | 40 ++++++++++++++++++++++++++++++++++------
+ 1 file changed, 34 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index 3d315e30ee47..7edbe76b5455 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -247,15 +247,39 @@ static sci_t make_sci(const u8 *addr, __be16 port)
+ 	return sci;
+ }
  
--	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
--	m->private = priv;
--	if (!priv)
--		return NULL;
--
--	priv->print_header = (node == 0);
-+	priv = (struct allocinfo_private *)m->private;
- 	codetag_lock_module_list(alloc_tag_cttype, true);
--	priv->iter = codetag_get_ct_iter(alloc_tag_cttype);
--	while ((ct = codetag_next_ct(&priv->iter)) != NULL && node)
--		node--;
--
--	return ct ? priv : NULL;
-+	if (node == 0) {
-+		priv->print_header = true;
-+		priv->iter = codetag_get_ct_iter(alloc_tag_cttype);
-+		codetag_next_ct(&priv->iter);
+-static sci_t macsec_frame_sci(struct macsec_eth_header *hdr, bool sci_present)
++static sci_t macsec_active_sci(struct macsec_secy *secy)
+ {
+-	sci_t sci;
++	struct macsec_rx_sc *rx_sc = rcu_dereference_bh(secy->rx_sc);
++
++	/* Case single RX SC */
++	if (rx_sc && !rcu_dereference_bh(rx_sc->next))
++		return (rx_sc->active) ? rx_sc->sci : 0;
++	/* Case no RX SC or multiple */
++	else
++		return 0;
++}
++
++static sci_t macsec_frame_sci(struct macsec_eth_header *hdr, bool sci_present,
++			      struct macsec_rxh_data *rxd)
++{
++	struct macsec_dev *macsec;
++	sci_t sci = 0;
+ 
+-	if (sci_present)
++	/* SC = 1 */
++	if (sci_present) {
+ 		memcpy(&sci, hdr->secure_channel_id,
+ 		       sizeof(hdr->secure_channel_id));
+-	else
++	/* SC = 0; ES = 0 */
++	} else if ((!(hdr->tci_an & (MACSEC_TCI_ES | MACSEC_TCI_SC))) &&
++		   (list_is_singular(&rxd->secys))) {
++		/* Only one SECY should exist on this scenario */
++		macsec = list_first_or_null_rcu(&rxd->secys, struct macsec_dev,
++						secys);
++		if (macsec)
++			return macsec_active_sci(&macsec->secy);
++	} else {
+ 		sci = make_sci(hdr->eth.h_source, MACSEC_PORT_ES);
 +	}
-+	return priv->iter.ct ? priv : NULL;
+ 
+ 	return sci;
  }
+@@ -1109,7 +1133,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
+ 	struct macsec_rxh_data *rxd;
+ 	struct macsec_dev *macsec;
+ 	unsigned int len;
+-	sci_t sci;
++	sci_t sci = 0;
+ 	u32 hdr_pn;
+ 	bool cbit;
+ 	struct pcpu_rx_sc_stats *rxsc_stats;
+@@ -1156,11 +1180,14 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
  
- static void *allocinfo_next(struct seq_file *m, void *arg, loff_t *pos)
-@@ -76,12 +71,7 @@ static void *allocinfo_next(struct seq_file *m, void *arg, loff_t *pos)
+ 	macsec_skb_cb(skb)->has_sci = !!(hdr->tci_an & MACSEC_TCI_SC);
+ 	macsec_skb_cb(skb)->assoc_num = hdr->tci_an & MACSEC_AN_MASK;
+-	sci = macsec_frame_sci(hdr, macsec_skb_cb(skb)->has_sci);
  
- static void allocinfo_stop(struct seq_file *m, void *arg)
- {
--	struct allocinfo_private *priv = (struct allocinfo_private *)m->private;
--
--	if (priv) {
--		codetag_lock_module_list(alloc_tag_cttype, false);
--		kfree(priv);
--	}
-+	codetag_lock_module_list(alloc_tag_cttype, false);
- }
+ 	rcu_read_lock();
+ 	rxd = macsec_data_rcu(skb->dev);
  
- static void print_allocinfo_header(struct seq_buf *buf)
-@@ -811,7 +801,8 @@ static int __init alloc_tag_init(void)
- 		return 0;
- 	}
++	sci = macsec_frame_sci(hdr, macsec_skb_cb(skb)->has_sci, rxd);
++	if (!sci)
++		goto drop_nosc;
++
+ 	list_for_each_entry_rcu(macsec, &rxd->secys, secys) {
+ 		struct macsec_rx_sc *sc = find_rx_sc(&macsec->secy, sci);
  
--	if (!proc_create_seq(ALLOCINFO_FILE_NAME, 0400, NULL, &allocinfo_seq_op)) {
-+	if (!proc_create_seq_private(ALLOCINFO_FILE_NAME, 0400, NULL, &allocinfo_seq_op,
-+				     sizeof(struct allocinfo_private), NULL)) {
- 		pr_err("Failed to create %s file\n", ALLOCINFO_FILE_NAME);
- 		shutdown_mem_profiling(false);
- 		return -ENOMEM;
+@@ -1283,6 +1310,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
+ 	macsec_rxsa_put(rx_sa);
+ drop_nosa:
+ 	macsec_rxsc_put(rx_sc);
++drop_nosc:
+ 	rcu_read_unlock();
+ drop_direct:
+ 	kfree_skb(skb);
 -- 
-2.39.2
+2.43.0
 
