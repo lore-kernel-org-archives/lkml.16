@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1F81DE2C9;
-	Mon,  9 Jun 2025 13:00:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85D60186A;
+	Mon,  9 Jun 2025 13:00:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749474015; cv=none; b=qfly5p7hCp9Tdmn8RCXlXKBOpeSAezKJgci8t0p8PnrN9jcM6MZnvdV3NK38nSB/Q3LheUqcdnNSNWCD0+YLANMK1jYwetZraMrYZwbJVKQLA/poGshu8JA9oFmcpy3pGJVrS3NusEEw4eoUvkIshHkZ3x5/0GJ/STZUP1g/7P0=
+	t=1749474019; cv=none; b=eWxWl7hk1JM5k1P2CrOfIn3qo2hADojkSP/0q25UaLhM9euVjvbtr/iKnvJEyfd+RYMV+yY87nZkJA5UzNAsLgO/wEUNv87SZhI+DlX4Znw9VM6QDD4pQhCKrovW30nPOgCfUoiZGMbZvcKGXznSeyJtKqqvrSL1TXrlb7oYLwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749474015; c=relaxed/simple;
-	bh=uZu4MlTEk19j76jtASaux4LQyGoIlcgCq0Q/BRqX6DY=;
+	s=arc-20240116; t=1749474019; c=relaxed/simple;
+	bh=8xqtjXs2JiUMDJaCgvivPvCqJ3nTNZUBs+MImsIrDcw=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=cgexTDEVyvzFkeljKFzDYTLo9gr2MJMCeMVFyR7Fmw5GCLdYsoDV4/a/yinYfL28yl8YoIvhR6+wc1DdGCDCc4rLBnYEL2KQnS0LTHtm2wnUv4VYebuTPtt49j/9hQJ8Y1Ls/FdoBT+/7DdsKxzbjvQlPCPCKu6j284P8wt0IYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DelpOASf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=tv1jhTZba9VRbAbjJEFbGuuJi9GITkqftlTHalPyLNh9TyHPTF7iPDPE2gQzIBocFkDQRjczXBbYLxPpaMX4NxbyNGO0CO28zbcsExkxGwB/vQZHBFP+q2bEjFffB4nnJ6Of2CJxbyZinq5KoKNIxGsPi3T/TPBXRos2qIAp++M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S/BCq2SV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DelpOASf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8E9AC4CEEB;
-	Mon,  9 Jun 2025 13:00:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/BCq2SV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E42ADC4CEF2;
+	Mon,  9 Jun 2025 13:00:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749474014;
-	bh=uZu4MlTEk19j76jtASaux4LQyGoIlcgCq0Q/BRqX6DY=;
+	s=k20201202; t=1749474016;
+	bh=8xqtjXs2JiUMDJaCgvivPvCqJ3nTNZUBs+MImsIrDcw=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=DelpOASfXsMdTZG3nAtazRd9UmC/qU+c+zqlcgWZeycLhk/Vo/KA49AdGcxLf4jjM
-	 o6hIkWEQY92+w/Yr2kU1OIIXeMhLXaf7HRIZdt4r6JvzEm/ZWfpeTiQ4PJLdOBhZQf
-	 XfiM9Sa95Y35W+k8MSTvYlwDw6MBg5By4/X/VISNV/ovjDFBR+LI+6vXPBRJ5XaQPB
-	 ihkIaopWcyeZSnL1Z1VJktDV27WJLihVSs9F6EZsf4u+OuuiLI/M1ko/lqhsCmqUA1
-	 D9YQ/OnAZO4X76YSpdPdgzSwoj17ITha9AMYp9THSQ4yDq5Loq3+7SCMeAbvAaXKye
-	 fwwJiYnBxsa8A==
+	b=S/BCq2SV32vpt+T++dWPnCy3OvK2x5PIr9fg94vF0+hnAX92zVDQ5RbDHSEXiZG3/
+	 s5CMWCKUxqQLePjmPOPZdsr47VMFX/73cGwM0cj2zEip1hzw9h6I9niKtj2Y+cKfkQ
+	 jb+hxz9LW+WbDumbedxkOCpCXgHAE7vyhAstRHrtvu0sQwKXfk0gHgBVrwEFpweiEx
+	 EnNNiuug54hZbEEKB5YF/gJyuQ0zMs9Gpy3g9qJrsHgKpMIMGTdWA0/6fyHFM3IbI6
+	 jJ/2WudiXklyRr1VoCxciB4jRxzHtCaggzuAZDNlsDQd6JPwrB7emcynkgHixmx9OS
+	 w6t/W442C8aGA==
 From: Mark Brown <broonie@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Robin Gong <yibin.gong@nxp.com>, 
- Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-In-Reply-To: <20250525071823.819342-1-martijn.de.gouw@prodrive-technologies.com>
-References: <20250525071823.819342-1-martijn.de.gouw@prodrive-technologies.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: regulator: add pca9450: Add
- regulator-allowed-modes
-Message-Id: <174947401268.104992.17242457164735385104.b4-ty@kernel.org>
-Date: Mon, 09 Jun 2025 14:00:12 +0100
+To: Liam Girdwood <lgirdwood@gmail.com>, 
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+In-Reply-To: <1446fb1938f3f38115be3e53f5dda3c8bb0ba5a1.1748103005.git.christophe.jaillet@wanadoo.fr>
+References: <1446fb1938f3f38115be3e53f5dda3c8bb0ba5a1.1748103005.git.christophe.jaillet@wanadoo.fr>
+Subject: Re: [PATCH 1/2] regulator: tps6594-regulator: Constify struct
+ tps6594_regulator_irq_type
+Message-Id: <174947401467.104992.10674300768376483889.b4-ty@kernel.org>
+Date: Mon, 09 Jun 2025 14:00:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,12 +46,19 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Sun, 25 May 2025 09:18:20 +0200, Martijn de Gouw wrote:
-> Make the PWM mode on the buck controllers configurable from devicetree.
-> Some boards require forced PWM mode to keep the supply ripple within
-> acceptable limits under light load conditions.
+On Sat, 24 May 2025 18:10:38 +0200, Christophe JAILLET wrote:
+> 'struct tps6594_regulator_irq_type' are not modified in this driver.
 > 
+> Constifying this structure moves some data to a read-only section, so
+> increases overall security.
 > 
+> On a x86_64, with allmodconfig, as an example:
+> Before:
+> ======
+>    text	   data	    bss	    dec	    hex	filename
+>   25645	  14480	     64	  40189	   9cfd	drivers/regulator/tps6594-regulator.o
+> 
+> [...]
 
 Applied to
 
@@ -61,10 +66,10 @@ Applied to
 
 Thanks!
 
-[1/2] dt-bindings: regulator: add pca9450: Add regulator-allowed-modes
-      commit: d7181a2d43cffb19f1e5c19f6d2328f190c87d70
-[2/2] regulator: pca9450: Add support for mode operations
-      commit: 548d770c330cd1027549947a6ea899c56b5bc4e4
+[1/2] regulator: tps6594-regulator: Constify struct tps6594_regulator_irq_type
+      commit: c266209eaef4fef863363557817f7d6a68314321
+[2/2] regulator: tps6594-regulator: Remove a useless static qualifier
+      commit: 9bb3c7df546aac38ea64c736a839ef2c75297631
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
