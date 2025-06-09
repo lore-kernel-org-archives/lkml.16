@@ -1,84 +1,239 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29334881E;
-	Mon,  9 Jun 2025 22:09:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05EE4223DF9
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 22:09:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749506962; cv=none; b=ZThLKI4/lQUA2Bl3pPSfhnNDy5IKm3dW4OACUjGa1rB5QVpLDzWW+3Gw2ChJcbwbR4GQbkirlz/8knonz1SZ6zJKZSjLmrCqFhYhfdP3Laa63WRnMw/r1I6Hgqu1BcOmmX7X2olGfCMcM5f6lvGYWXcl5DGHZpjj+6JVuviqDBQ=
+	t=1749506987; cv=none; b=CmqUbiDiMdUhoBqtTHGQezJ05SSiFqxECXTcki+490mTOFCNEFdmod0LiLNWGYl5mssxGNFpIIFkS0wTLwK/I1/tXFXZv6CkDGra6W9QeG7bDxiYCgYjmK1kVXqQP7cnD4F8NCzxJZphxP2ZzM/LVJiKhmji5ePIgNBRotgjtug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749506962; c=relaxed/simple;
-	bh=8ltAwYFv2cksOlBrVdvRI5IV+hW9IlGKWfgQeMZpWd0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=bY0BAOhoyvJhuYB5wqklk3kiUkJVjRG7iXGKw3yWoY9Te2+pY3Lo1+oUQgFoiYGx44aZ0khqevYUTpj8xNwuFJlKTZQcSSpqJTh2XLmmHQsGCeoAxgjFBV2TMp5C6eeV4BiaA6DK9I4KWBpJp1i1rcqZLORgW1iy0wrTCUX3b+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=TdnPezWJ; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1749506987; c=relaxed/simple;
+	bh=P86jwe07mJu0URyv7CIAAu6JKNG/T38Mc49w5ZxaFR4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hKE0+vXLwUeRy/WwFrDKYzcSvNzL9VN/CpJvKKnN39nPi9uj63vFzwh6S6rfl7wuvJ5muSVTdlQFf3HruiltWGBTlH6sr65sMq6xbb+zYxLXLNPDOMIXoAzH9rAt0wWbjkmv+cID6iqcB1f6NKNEnUHDe4bzw9Z3atvmNF7grQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hxAoL2iJ; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="TdnPezWJ"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 4700041AA1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1749506960; bh=YD2PzxwZONyeRBUM9EwLiCsPafBrl11N8Bu2mIZK0ZA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=TdnPezWJflyz+yXoHSYVsJD/fzIf9wORfxGQRWrLtEi3e430gpYtPHV3t61+kTr0K
-	 1Kyx5ECeUfFNqpNOvJl+uw+UE0LVU73kF8I2S1Ti/cNrbP28eQsOWLgCbdH3h/nBXa
-	 IoydCnzY+Ir+7JVbXDN5m9SxaACRDOE6yjt03Mi2mXNDfOfa8HV3cJj3cbklVunNje
-	 yU5/vOsS+8QNUDRDIbL41sIRcXtqy4AOwDGAC/f0hHa8P/3tEqVF//RVs3g/MNZxkq
-	 Di9Rr2j7a6HH1EA60AGpO5uodufMvnyR9Q/zmF6c41YKZIwH6PmRRLZGrnC0HrXXN6
-	 PqY3Yr0xYA5jA==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 4700041AA1;
-	Mon,  9 Jun 2025 22:09:20 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Swapnil Sapkal <swapnil.sapkal@amd.com>, peterz@infradead.org
-Cc: kprateek.nayak@amd.com, gautham.shenoy@amd.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- swapnil.sapkal@amd.com, Shrikanth Hegde <sshegde@linux.ibm.com>
-Subject: Re: [PATCH] docs/sched: Make the sched-stats documentation consistent
-In-Reply-To: <20250430062559.1188661-1-swapnil.sapkal@amd.com>
-References: <20250430062559.1188661-1-swapnil.sapkal@amd.com>
-Date: Mon, 09 Jun 2025 16:09:19 -0600
-Message-ID: <87ecvs8t4g.fsf@trenco.lwn.net>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hxAoL2iJ"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2353a2bc210so41445535ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 15:09:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1749506980; x=1750111780; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Lo+xuu6/evF7Kj69JUrQ4+v7ESydcrUGBnfBq/70hhU=;
+        b=hxAoL2iJzdzAVbj1WJ3RP6vhQPNqlUTTKahIr1ZC/9qj+AzyHqG+OnBl5NZIFu7gId
+         ZnqaW79Lfct2qKpDQ9X80ECZd4L0XzCqLv89cYaci0Wdarcy6j4+gmm4DEdnh5D479yq
+         esMqG1k0W2XiKCVvBrJwzwGeR3NBGpH83tVy0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749506980; x=1750111780;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Lo+xuu6/evF7Kj69JUrQ4+v7ESydcrUGBnfBq/70hhU=;
+        b=dtcXqubOpOws4GQ2OnkUqXkIpDQu1ZkNOm/6Fyd8eLCHeCkvADl43AE1YKgaqSqH/K
+         qzF4tzS/cFizxorN6K7aC6OrlRbfP3EVNDlQf2nkvbEGjle+aUlI1g23wDKhiK2blAOj
+         RFkHM4RVoexUhvxVeDftwOsy5xI9xfIsERnIXisXd3q6ADPVYADGXfE3kZBuUFB49lEp
+         jcwzxzyYnsZbj/+VgxIh2ip3w+MsSOoLNstH77aGDmQx3hop5f7mMGlaqam5/JUIvf+0
+         3HGtwCVwU021jYXjF3qyanRTvcBHV3krm9xBTt1Ss0cCzdOodFQiOeI9MOBQ1hgHkgUM
+         7dqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVfes+3tirGqoDAR4r/CKkTof1yZS98ph36mLP4oskAZ+tq08gwdXAqoDj5wmFaYsfRqPnw2SqUXaV0d3E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8sGaPot6KuorBL1S92UkRTL3pDNT+3CjTNVnG0hDBrEVB1jd2
+	msMOJnr2e2VK9mzK/rWwtvZVZYY7XwWSdqf3rhhPmeGDehgeTyNwQcv9dhJg1N2jD1ilbGIngL5
+	0p+outw==
+X-Gm-Gg: ASbGnctuxNd+JN5CmRzDwghWt6HCD8NNsQxnBmlPC/VTzEtXmNVfUcMAYZwu8YVV0Mu
+	AY8QjLMu6C7uhv2FoY7CdiuREx/OB6M/sOwPl6VhWyPXdoIQUlz+L8HejOG/+5tSL8nvX2a8nBv
+	GMXanwuIYgAR9b8CmRKUDwXrgNO8LsFsRRq4nMwLbPpFLDqspX+cSU4G/Gmkzt6fU3sEpw8lBGn
+	TdVjJWBd7T5GIAuIVEcXqDFaZYOaHZ8Oij+9MGEyJPdJ/9DH9K1WzA4DQk6Kl+ih/2K/EbVn09V
+	mwzvH8m8+wG+JW2xkOE1TlKOjtZ0ERqrOOYsKtowgD3327LV56QlVvWyQgVIY+hGnaX43Gu9R+V
+	xj1YuzQGomoOjywsIJvzUJsKsoM08xg==
+X-Google-Smtp-Source: AGHT+IElXRHb8AeyvjsE60XnoXTskqkG7mVIdqD6XqTsneIyVbSSuSbPkVCD++/03g/BUgFObgjhQw==
+X-Received: by 2002:a17:903:32cf:b0:235:6f7:b918 with SMTP id d9443c01a7336-23601d225cdmr217494835ad.28.1749506980178;
+        Mon, 09 Jun 2025 15:09:40 -0700 (PDT)
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com. [209.85.214.173])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236030968c9sm59149375ad.87.2025.06.09.15.09.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Jun 2025 15:09:37 -0700 (PDT)
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-234c5b57557so44065905ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 15:09:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUoBq9ygLFlhvCIE8XwslSBzGotyE9RA3EnsT7adveyT+c7mIGaOrAeMNnmgAytyxOkHI5seL9gFLUW0UM=@vger.kernel.org
+X-Received: by 2002:a17:903:1b45:b0:234:c2e7:a103 with SMTP id
+ d9443c01a7336-23601d82e8bmr214458545ad.33.1749506977132; Mon, 09 Jun 2025
+ 15:09:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250529110418.481756-1-j-choudhary@ti.com> <2baf3c31-3edf-4c26-bd44-1d0560134871@ti.com>
+ <CAMuHMdUi7pf1YfKRjMv_7VuKwjR5XekRXfcEzuPScGzHraGjyQ@mail.gmail.com> <84fdbd23-d694-453f-a225-dbac19b34719@ti.com>
+In-Reply-To: <84fdbd23-d694-453f-a225-dbac19b34719@ti.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 9 Jun 2025 15:09:25 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XaR6Pq7E-13zR5PC_u=3SD=sc05_TzxWJR2FS040zESg@mail.gmail.com>
+X-Gm-Features: AX0GCFuY9zmj0FHZgee9_PnbGi-N3ssFASItEBDN5ajNB22ll-m4fMNSbkRbwcE
+Message-ID: <CAD=FV=XaR6Pq7E-13zR5PC_u=3SD=sc05_TzxWJR2FS040zESg@mail.gmail.com>
+Subject: Re: [PATCH v3] drm/bridge: ti-sn65dsi86: Add HPD for DisplayPort
+ connector type
+To: Jayesh Choudhary <j-choudhary@ti.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, andrzej.hajda@intel.com, 
+	neil.armstrong@linaro.org, rfoss@kernel.org, 
+	Laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org, 
+	tomi.valkeinen@ideasonboard.com, max.krummenacher@toradex.com, 
+	jonas@kwiboo.se, jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com, 
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
+	kieran.bingham+renesas@ideasonboard.com, linux-kernel@vger.kernel.org, 
+	max.oss.09@gmail.com, devarsht@ti.com, Rob Herring <robh@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, ernestvanhoecke@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Swapnil Sapkal <swapnil.sapkal@amd.com> writes:
+Hi,
 
-> pull_task(), the original function to move the task from src_rq to the
-> dst_rq during load balancing was renamed to move_tasks() in commit
-> ddcdf6e7d991 ("sched: Rename load-balancing fields")
+On Mon, Jun 2, 2025 at 4:05=E2=80=AFAM Jayesh Choudhary <j-choudhary@ti.com=
+> wrote:
 >
-> As a part of commit 163122b7fcfa ("sched/fair: Remove
-> double_lock_balance() from load_balance()"), move_task() was broken down
-> into detach_tasks() and attach_tasks() pair to avoid holding locks of
-> both src_rq and dst_rq at the same time during load balancing.
+> Hello Geert, Krzysztof,
 >
-> Despite the evolution of pull_task() over the years, the sched-stats
-> documentation remained unchanged. Update the documentation to refer to
-> detach_task() instead of pull_task() which is responsible for removing
-> the task from the src_rq during load balancing.
+> (continuing discussion from both patches on this thread...)
 >
-> commit 1c055a0f5d3b ("sched: Move sched domain name out of
-> CONFIG_SCHED_DEBUG") moves sched domain name out of CONFIG_SCHED_DEBUG.
-> Update the documentation related to that.
+> On 30/05/25 13:25, Geert Uytterhoeven wrote:
+> > Hi Jayesh,
+> >
+> > CC devicetree
+> >
+> > On Fri, 30 May 2025 at 04:54, Jayesh Choudhary <j-choudhary@ti.com> wro=
+te:
+> >> On 29/05/25 16:34, Jayesh Choudhary wrote:
+> >>> By default, HPD was disabled on SN65DSI86 bridge. When the driver was
+> >>> added (commit "a095f15c00e27"), the HPD_DISABLE bit was set in pre-en=
+able
+> >>> call which was moved to other function calls subsequently.
+> >>> Later on, commit "c312b0df3b13" added detect utility for DP mode. But=
+ with
+> >>> HPD_DISABLE bit set, all the HPD events are disabled[0] and the debou=
+nced
+> >>> state always return 1 (always connected state).
+> >>>
+> >>> Set HPD_DISABLE bit conditionally based on "no-hpd" property.
+> >>> Since the HPD_STATE is reflected correctly only after waiting for deb=
+ounce
+> >>> time (~100-400ms) and adding this delay in detect() is not feasible
+> >>> owing to the performace impact (glitches and frame drop), remove runt=
+ime
+> >>> calls in detect() and add hpd_enable()/disable() bridge hooks with ru=
+ntime
+> >>> calls, to detect hpd properly without any delay.
+> >>>
+> >>> [0]: <https://www.ti.com/lit/gpn/SN65DSI86> (Pg. 32)
+> >>>
+> >>> Fixes: c312b0df3b13 ("drm/bridge: ti-sn65dsi86: Implement bridge conn=
+ector operations for DP")
+> >>> Cc: Max Krummenacher <max.krummenacher@toradex.com>
+> >>> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+> >>> ---
+> >>>
+> >>> Changelog v2->v3:
+> >>> - Change conditional based on no-hpd property to address [1]
+> >>> - Remove runtime calls in detect() with appropriate comments
+> >>> - Add hpd_enable() and hpd_disable() in drm_bridge_funcs
+> >>> - Not picking up "Tested-by" tag as there are new changes
+> >>>
+> >>> v2 patch link:
+> >>> <https://lore.kernel.org/all/20250508115433.449102-1-j-choudhary@ti.c=
+om/>
+> >>>
+> >>> [1]: <https://lore.kernel.org/all/mwh35anw57d6nvre3sguetzq3miu4kd43ro=
+kegvul7fk266lys@5h2euthpk7vq/>
+> >
+> > Thanks for your patch!
+> >
+> >>> This would also require dts changes in all the nodes of sn65dsi86
+> >>> to ensure that they have no-hpd property.
+> >>
+> >> DTS patch is posted now:
+> >> <https://lore.kernel.org/all/20250529112423.484232-1-j-choudhary@ti.co=
+m/>
+> >
+> > On all Renesas platforms handled by that patch, the DP bridge's HPD pin
+> > is wired to the HPD pin on the mini-DP connector.  What am I missing?
 >
-> Reviewed-by: K Prateek Nayak <kprateek.nayak@amd.com>
-> Suggested-by: Shrikanth Hegde <sshegde@linux.ibm.com>
-> Signed-off-by: Swapnil Sapkal <swapnil.sapkal@amd.com>
-> ---
->  Documentation/scheduler/sched-stats.rst | 53 +++++++++++++++----------
->  1 file changed, 31 insertions(+), 22 deletions(-)
+> If the bridge's HPD is connected to that of the connector, then I am
+> pretty certain HPD will not work for renesas platform. The detect hook
+> always gives "connected" state in the driver (even if it is unplugged).
+> Do you have different observation on your end?
+> If not, then we do need something like this patch while addressing the
+> backwards-compatibility concerns.
+>
+> During v1 RFC[2], I did observe that renesas also have DisplayPort
+> connector type and might require hpd, but since the support was
+> already there and no issue was raised, I assumed it does not require
+> HPD.
+>
+> [2]:
+> https://lore.kernel.org/all/01b43a16-cffa-457f-a2e1-87dd27869d18@ti.com/
+>
+>
+> >
+> > Regardless, breaking backwards-compatibility with existing DTBs is
+> > definitely a no-go.
 
-It looks like this never got picked up; I've applied it now.
+FWIW, we are in a little bit of a sticky situation here. We were in a
+bit of a bad place from the start because the Linux driver ignored HPD
+from the beginning but we didn't actually document that people should
+be setting the "no-hpd" property until a little bit later. You can see
+some discussion about this in commit 1dbc979172af ("dt-bindings:
+drm/bridge: ti-sn65dsi86: Document no-hpd") where I noted "this is
+somewhat of a backward-incompatible change." ...but, at the time, it
+wasn't really a big deal because there were very few users (the one in
+tree at the time was cheza, which was a dev board used internally at
+Google).
 
-Thanks,
+...so, as of that change in May of 2020, it was documented that eDP
+users were _supposed_ to be setting NO_HPD. I even remember Bjorn
+requesting the "or is otherwise unusable" phrasing because we pretty
+much wanted to set this property on everyone using sn65dsi86 as eDP
+(even if they have HPD hooked up) because the debouncing time is so
+long that it was better to hardcode the max delay instead of reading
+the HPD line. Of course, even though we documented that they were
+supposed to have the "no-hpd" property didn't necessarily mean that
+everyone did. The code has never enforced it. I don't believe it even
+checks the property...
 
-jon
+So if there are dts files out there that don't set the property and
+they were submitted after the bindings change in 2020, _technically_
+they've been wrong the whole time. We're not changing history by
+adding a new requirement so much as fixing broken DTS files. Although
+the Linux driver always allowed them to get away with being broken,
+technically DTS is separate from Linux so if they've been violating
+the bindings then they've been wrong. :-P That being said, they've
+been working and it would be nice to keep them working if we can, but
+one could make an argument that maybe it would be OK to require them
+to change...
+
+
+> Got it.
+> Let me try to figure out a way to fix it without messing it up.
+
+While a bit on the ugly side, it seems like perhaps you could just do this:
+
+1. If enable_comms is called before the bridge probe happens, just go
+ahead and disable HPD.
+
+2. When the bridge probe happens, if you notice that HPD should be
+enabled and comms are on you can just enable HPD then (grabbing the
+comms_mutex while doing it).
+
+3. Any subsequent enable_comms called after the bridge probe happens
+shouldn't disable HPD.
+
+...you'd probably want a comment about the fact that "no-hpd" property
+is unreliable, which is why we can't figure this out in a better way.
+
+
+-Doug
