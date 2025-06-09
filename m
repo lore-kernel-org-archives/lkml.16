@@ -1,167 +1,329 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010025.outbound.protection.outlook.com [52.101.84.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8F68BFF;
-	Mon,  9 Jun 2025 08:28:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.25
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749457718; cv=fail; b=GKgW2UVgtGiQQGYjCMfUhq+JNHLtwvgOwqTu3wGw21Fge1zkVNwGvGdAJ9rMdoJhy97m00BmWawt2J/WDGAq44ZKJHFHmoAJdk/RPhim2qeHexvZGqlm4zkjOGj8YUrQ3+MYu6gbX0N4GXsdX6ZPfnJ2Sc60BFM4WJWYm9idxlA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749457718; c=relaxed/simple;
-	bh=dxH8nkj1Rz+G1cx5NPBEqnafd6wK7A8OWk3Q9AToeXg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=u7GQorXJ1lu5OFYpKNNi3R2Yto1W4PHpVMGId/44t4UMf+qP2JKxm0Ql+5utieEa7Ql0BlGgBPT4xMLUdcK9N4h79++lk3Y0B+11B4cVBE9HQUYeDcbuJmFIrCE8Uzfo6BZ5ptAYIRh8jKktWVxZhfgPoggevKYp5Kaexeafrko=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=cVt9GWpc; arc=fail smtp.client-ip=52.101.84.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 767EA8BFF
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 08:29:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749457775; cv=none; b=cqNiXv8VDCWpNdZ6xWY20f5yxHGv/YzLiBP4KPDUeyW1+1uyvCJ06LETo666nLJRVynhb8RLijKYQ96mRpiycGhjRkYrS8lKrEmxEAkCtz3gk3VmCAKEfaMZLdo34BxiIp+PZXB0PGVl5PaPhhQqAWbSaiNrgTyjhtZEzUcm8+4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749457775; c=relaxed/simple;
+	bh=8VEGYDrKgA+8xe7ZzCdhpbegOZBSBTQFLOEcVjXaQH0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WAZgfJKpoSl4qH5yA6v2JN1xsUZPbAfJSq2zdyNdFJw+sjBok+zhxADbkUA2lmRfLQ83gA9ZKBHi7KBxES8Gj8u7NuGmed8C2uMCLt1BvtHE0LNK3pbowIFdTDTFWADTB4EZkA3k62YEIRNTfV7Rgod6lDHCEgqysoINTViEf6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gj2KMnDl; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="cVt9GWpc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gnsLGX2+j4JT3ulAqgGXbiceO4FXJMJxklpL/yNgg89MCVmXnFJK1Bw555KfEN5juKSaA7y/xjcZNo69RbILYfpGEQUD4Se/pK/DNaBSgKB88qdfilL562x1f0tRmV7ZvCHANCg2515u0Sm9CfA3hfriu2z/BoBsBrodMZg+YS6jmcmCO2zWjpa93Tv6J8g7cKvIplssFG7WG0n6Z7Ozr5TBBlhrzMutGzAVm80bQH2pkL5C9frTLl5KuNbVpWR3NOhnwsWzSv3yIdnTfWWU4JDL32zkFlCOOLR8s3jJXGMcgI8li5YqoxFYCnCOWUPMAAocCOcySyvolZ4lsC58IQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dxH8nkj1Rz+G1cx5NPBEqnafd6wK7A8OWk3Q9AToeXg=;
- b=oZPAuaLw+dKUsGu9nvVNyMKkSfsgsASI7jzUEC9rk4OMFjYW+wL7Zh7xV3jL1Fp8bXumFL/kSgcKo73CjJw+kHKVbY5pAF0djMZdn8t2gsfGgDr2lv10DWgQkV8c8+BEqPzOIPzxTYbwKnQkGK+TBK1rUXe93Lc+Bbai/zcS/0wOvI5ILmcwcW8mVhXU+QunutgPHrTjAJA4ajPE1Oqt4fxsCbk2846IVuWpGtqodZA/OYubODsC14igcyOMTX+QIV+wpIsrk25v+4xwZUbE8dYOi0HoSHlwbg6ZEFFgOCWwzJpgB/eB77JLi1ozoV9GGMdgjg1wMNYekVcjO7pTzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dxH8nkj1Rz+G1cx5NPBEqnafd6wK7A8OWk3Q9AToeXg=;
- b=cVt9GWpc1FL7SAhWp3dfYo3RMM0h5buHYyeR+LHFKJ71NWpL3VSDcUrhJsHOex2vsp5/sPTYNUKfNKloFaKZYIq87axKl96Td6Tocr2F6Fp2IhlXvpa9Mv9c7o/s1KQ29bXT8PtcT/QghCQnp1N0xToFqgS4VG7Hrinbu1zDPSSSJe9n7U5ZQox6x9/mwOHJFRoJo6nDswfxItkPUYeGqvv4Fi1b0iNRo/4gigTi/Pe7R8Lnzo1lWBinoUPiMm4J5NVq5Ren58/rxnTOiwtSqePMNgpC6fQvfJ8yu/4C6gECK+Et9UNtHLzvYnnKkjU8ZubUkK0Dp4lOOGXz47w3oQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by AS8PR04MB8037.eurprd04.prod.outlook.com (2603:10a6:20b:2ac::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.26; Mon, 9 Jun
- 2025 08:28:31 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%3]) with mapi id 15.20.8813.024; Mon, 9 Jun 2025
- 08:28:31 +0000
-Date: Mon, 9 Jun 2025 17:38:37 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Cc: linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>,
-	linux-amarula@amarulasolutions.com,
-	Conor Dooley <conor+dt@kernel.org>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 03/10] ARM: dts: imx6ul: support Engicam MicroGEA BMM
- board
-Message-ID: <20250609093837.GB13113@nxa18884-linux>
-References: <20250607093342.2248695-1-dario.binacchi@amarulasolutions.com>
- <20250607093342.2248695-4-dario.binacchi@amarulasolutions.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250607093342.2248695-4-dario.binacchi@amarulasolutions.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: SI2P153CA0002.APCP153.PROD.OUTLOOK.COM
- (2603:1096:4:140::16) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gj2KMnDl"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-32a9e5b6395so36837291fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 01:29:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749457771; x=1750062571; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CWw2lgsXmxMaD4eb35UhPdG9wFDt4AncfSggE97K1jU=;
+        b=Gj2KMnDljV366osnpO54MKBHiLXczMU15tUbszzzzfBn5mYhLOqsjHTjtNrorpiZZI
+         PgDRVASx2GLDWxqIRw+wuxWPvl6ictnFwtExCQZnQe6EeExzwdIumSbCJ+320iOlxzP0
+         niOF9yKfCCc0H+pQ7gSyveHF87+UX10Wl8pfO9P0wkqTxhl6HrDcGOYhD8Y4UruULbJS
+         Pxau92VWGOO/uw9wc40CKzKw7vHdigGxT2CAL2LDI2vyeEcEgFhSKrPfQewT3ajMnOLt
+         qMmGLX5pB8BtHul3bejrQNV5YxSRxHCWwFrGLnwP2uCG2cU7Qic4z9DDcZh0MTnLYEo4
+         AQug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749457771; x=1750062571;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CWw2lgsXmxMaD4eb35UhPdG9wFDt4AncfSggE97K1jU=;
+        b=BuoMSFjaeBfkO6yjlmsCJ2IPASS+6dIXnvnUnCh7NsMtaxFeRpanmIH6oIuy0QrNgz
+         9Mnz8qTOvoJ6W31LaqdLVdouS8HIIN7B7SMwRISInywRBN66xKNFpOXsra4hQ5gk21iz
+         R3TLCyucaj4v8CbFCIuDHO21J+Gm6HdSvMIdmQponkNqnwrysoMU8NMmqV0N6N+6Tri8
+         RonOOdXaIMNw7mK6njd4KKOcHgWKWiF52jjMHXoUdarLl5CeBkc5twanv31terHnLmTS
+         3eXJNMlCsENXtrXDZEmmJL+KTzsRimmPSGkVJeHE2o1u7RpwTrKeGSaT+qrPdGAa8U3+
+         g0Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlcrZPD/wJJS9AeeHZvDC+xRJ2KbfgRVs8lWzNwstDcj1P/UluR3RHTBLqfsiIqfYABPTgxlj2njulAnU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBhudwB3RqNucaYNArvJJF+XQkuqsjk77/80o6/WlT+GW1E1xi
+	Aa92dBGQktl+2xhpSTikQ1Z8HcuOSuY8uRHJFDZUa8D6GR9AjXprLRn+L+v2X25rHh70PVUF85e
+	cXA71+68r5RhoXGZ0rmWF52DvX6B62Ik=
+X-Gm-Gg: ASbGnctVQwgjPFdcmfNat+He5n3T5RJbtNyTYVY98bPQ+7VcjXw31lErBN/XBOJnhaj
+	P4lvLG0GW3WNbpd4RE2lx8gS7tIYC7EDd1SsZWXDr68Ui6eFXN4KO8emdr3aLFBEBLbIxC/H0dd
+	WH1pe3bJ+fCnKGtZCot+EdgwZY14/47VA=
+X-Google-Smtp-Source: AGHT+IFKfvGazJz6p/PKCBZLIgn2orJyIfwpgXzvEl/sMzcKJLy0+l3HZuOf8aY6JKQHhZoXLp3V9n8jG2tnGB6nOH0=
+X-Received: by 2002:a2e:a36b:0:b0:32a:85d5:849e with SMTP id
+ 38308e7fff4ca-32adfd3eef2mr28313171fa.32.1749457771092; Mon, 09 Jun 2025
+ 01:29:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|AS8PR04MB8037:EE_
-X-MS-Office365-Filtering-Correlation-Id: e4470274-dbf1-4622-9301-08dda72f9dc6
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|7416014|376014|52116014|366016|1800799024|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
- =?us-ascii?Q?FI+glytG8+IkBhc5Jg9D1pA73IyNUYoGR+O1ev/YtT8ecqg7StmVC3ieaqys?=
- =?us-ascii?Q?t3NEwtPm6UvKnBkgVKTnRsBPti6DSdBPOkl9TK3bLKHaUe2VB1525hb9Y+fe?=
- =?us-ascii?Q?33ZQrq5G2C+nsUIb1HaaRBIsXmJaC7EzuxsEbt+Mac+UXuQyzxQ2Hl1w18Ly?=
- =?us-ascii?Q?W3KoUTjstQCWDmh3DP/V1N8imDbbq9g3FH6yDDR4V2BJOjA/N4KQm6W5H7hb?=
- =?us-ascii?Q?+p7H18mQmdn3j0PLJeir8XCNhytpWRvW2wbvFw3eengobgkZvx10MnMpQJy8?=
- =?us-ascii?Q?QI7U60hEPNchbVUb6pbP3lsvXlGqLXEEURx8TWf5lZRAyoUcjsd0b9k/4R09?=
- =?us-ascii?Q?/mDGD3rkoyb5b6DqVFuQVrf9QeVKkJP55DJQ8DFoPjuSab8cyyCl9wtbjboJ?=
- =?us-ascii?Q?cRMmyt3/JjGwC9obmPkGv+Q+L2R4yQpyupZjzME/HCX1sUkEJmSAr4DHhMPQ?=
- =?us-ascii?Q?vmZ1H+eXcmCle27L9CH9PoL8e/xj4UCWpF9nCzR1HZblklI7mcXP0J+fO/Ze?=
- =?us-ascii?Q?Sw88dJDq1Knp9P4Heoc6eytW33UEpLFu9ZEk40Z/JUCSAnWT0JlRevzuQcTC?=
- =?us-ascii?Q?ROeYE+JNIXmrqm+R0FTTUNwrIKkEz0uaXZ6eko8CKWXUq77BWUjCnzXh2JfL?=
- =?us-ascii?Q?O7c/O/JutB4XIS3KUxs/ilToEkkge9754BCZcyVU4qEeJ6dO7NtrWwxtE448?=
- =?us-ascii?Q?1zWu2JjznK3IClijFreP1phJwSQCWzWIHmH4J5CV6XZMgB2B90iYIT4QRGEB?=
- =?us-ascii?Q?cSZR9iDLIUnFWxiT9MuIxleG1sHgRq+vAIMjy+UiTLtchKjpi+Hiwf0JlioK?=
- =?us-ascii?Q?lHdtF0eugUpKlHb2bcRpp5BDm0T/c5+MUd0HWQT8WdxHGf2EEbwF86csqtuy?=
- =?us-ascii?Q?05AKt2GcW/m8fymzSzrBeG95YBSQquz32Rj6Kl8ujND+4S1nPgRM8il7rTXg?=
- =?us-ascii?Q?qamWBtCBWr8+tiQbLbgDQ+5TYDwLMFHdRY15+9jhDVRzclGx01w/uscRwwbS?=
- =?us-ascii?Q?cGu4utOVAgiSO4XiqLifm0JRWkh4oj/L2/UfGYWg8+x5qim2JitcrqQJoNNp?=
- =?us-ascii?Q?b1G1zyNfSwk2tdgO4u6fAYQDgxQtEsjN8OywvaBxwMk0qHl58xTN9UW0P5lH?=
- =?us-ascii?Q?VDwetE3HxZlrA04IsjXTf/nKNaU0+ZBWbVYdNJAFWaCsj+Avl1eo0nF7/6Sx?=
- =?us-ascii?Q?H1hLM6UjFs1FJhNldfK1+hgi4PP0kS9BumlNJCyK3VD9ime1yQQdxd1v776G?=
- =?us-ascii?Q?G6fyY281SheF4EoY9P5PBvOuQnqhIdHf+YrkZE1NVe5KQnKLe6T+pIqjk6VA?=
- =?us-ascii?Q?vJqNY3jsKbSNs+DQhSX6mTPX0qoJS7R3cmGSvZVkR5nN/+0OIvt/1mLK3gBg?=
- =?us-ascii?Q?Yd+eXqrtJSUJgOW+StuDVfQ/UmSDorLuouUioJ/6hUr+1EEQKCiNigoId+zJ?=
- =?us-ascii?Q?M5l5+sCqbLxIoBXe4t6m8H1agOr6CS+JyAc1KADMnhC0y5w55sIX8w=3D=3D?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(366016)(1800799024)(7053199007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?us-ascii?Q?O/5/Unp25/dN5aj4Ec8zR4YWuEafnbivilDoYY9jZA2IPpUrPeQ6BhhJQnbD?=
- =?us-ascii?Q?eK9K7DQPvnkTcw/VcwZETT0WkNwB7tfs/Al5xkl6+XmpahABhgfxU0nnw1TT?=
- =?us-ascii?Q?09EPy7HvMdkzJWbHQXmVqRtba2pT4xDFjYSvuNxfxDnmxzxRt8hvwfFABDuE?=
- =?us-ascii?Q?UwsUGOj6CS3JUpv1eSFzmgXp3Ztj2ULHE9bTMcX/4g9smwjdxWYU4mntkaUr?=
- =?us-ascii?Q?gE1BZQ+XaLJ3YQB5+hlLrdHCZ1l8yC26Po89wipPN25LOLaJWcG6unzIUsPK?=
- =?us-ascii?Q?a9yvuu8Iqgi2ZnyrYeucN+xQfazcBziX6367VbduTtuElGTgNkyuRe20XQ08?=
- =?us-ascii?Q?psIPLxqEm9JCulFbv939kI3oqwMIfHZ8qSxSWZSQZODwAQO03aqayrbBsY8v?=
- =?us-ascii?Q?ACkF+lm0Ry3MJBb52j0+v6Be3I24b1I6sucMKUlUEp3AQmdnGE8Bg4w3PQqk?=
- =?us-ascii?Q?sXE7ksqxIYBk6raOABA7gP1lv+ZUYh3cW4kGkb5nEsWm8wZXjMAHSK3B15u9?=
- =?us-ascii?Q?kO+MCsUhVrGNQ/+OtTY0mV7uqcgmqjxolu00gYu5LiqQJoEZFIa3//WAX2l7?=
- =?us-ascii?Q?jyB3EjHIPmN0NFFfPyC4SOWZZ7+vCWmYckbPTcdrMAUb1QZ/dzUUduofn5ts?=
- =?us-ascii?Q?B9mzVA/Zo9bZ/XJr2KVIg7mVD81Yd+gFwL8bQR9CTBzte6TrJ4HNqVdLQAKd?=
- =?us-ascii?Q?KtzHven+dwZuXmC+xtschHXP7oQalj8jvhKvCN4IInKUxie7VQ1ln2n9I33u?=
- =?us-ascii?Q?hpSVtGlPqoeK8e6Gq43wYTblEL9QL/PXFg1E/6lTpH7Xf3adFUlqeqsRyqWq?=
- =?us-ascii?Q?YsFM9+M8dPYkIHdIsNrXk50+Sj5Emhq4ozbYGn9PygLToPiMIW3jLnjugcRp?=
- =?us-ascii?Q?IYVv2c/DdMUn0tki8kOmtwH2MWJQwvIH9FghVS3XnbUdyi9ietAhMs7sfXO0?=
- =?us-ascii?Q?wrc334HiksZ5hkwhV5hFLeO/Gqfohl57QKv+oc+owM514DSils/EAtSLy015?=
- =?us-ascii?Q?X07XbcjK55S3HqCGHUEi2luQAgL5XPgty5d3WJMmmoquINXVP3V6BRb2ox2C?=
- =?us-ascii?Q?k+P03AYa+HDurY6qIm1D+MJHQBbA38AAeUK9Ii7n0LilH24A56FnT4umQksf?=
- =?us-ascii?Q?HAC5ModkPX4zJCu03tHJWK4t2rWmwwIhBHzuxkGW5VYzp3QYWn6T13lTsTwi?=
- =?us-ascii?Q?DicHzhD0cnTf/JSLaqmN2LEmGAB74beTpfOB/h5zmrprQBxt+/FCXTI2wKPq?=
- =?us-ascii?Q?njRSGJVvEaPHSv3Y2Xzt9EJnDQbAUZpmNHcX9m8PuFoKTbCwomL1yQcnbxrZ?=
- =?us-ascii?Q?ZhKpNQLEeku7TVetvpdDk884D+x9T/U2WYJnITaYFpg4rMX/lm46ZuG0kAD4?=
- =?us-ascii?Q?SAN1psAUuvhpMOFyFxdWtwc+FdmsqXjz3coJPN6uqY1AW53iiYMRgk5VXbeF?=
- =?us-ascii?Q?LOw7lajXdVwIOHhNZ6x1i77RioigyIO8p7RUeXfUFUkAvpNTVOLzyHl6ZOwK?=
- =?us-ascii?Q?pvySVy3/xboNwJckJQrmpacBcqnottLTCGyUwcxFVtjMD6OpHApMj0+HDPTq?=
- =?us-ascii?Q?KI2UFVvTQ/uzQXvrx9/otTWDb0MPhAumNgsCde4o?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e4470274-dbf1-4622-9301-08dda72f9dc6
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 08:28:31.1915
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +UolsIDETRaC2OhmoZLI73mAmVzM7pHNeZODY8O2dCF1U3gTQi+bCsTdk60D+MnM1zwSF2Eldw78D+MRs7bdkA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8037
+References: <20250608192713.95875-1-ryncsn@gmail.com> <CAGsJ_4xSRdjVac_UdUKBk2-5upeHMEEow3_Q-F_VSa8HYj0mtw@mail.gmail.com>
+ <CAMgjq7CZD_otTdhKhsUgoMgLiB8+3ipEFNyTkN_zxnbQECiJNw@mail.gmail.com> <CAGsJ_4yGa3+V9NcePuKe3pKO79A1Gd=p+ZZ8SjEwgmfR79KyTA@mail.gmail.com>
+In-Reply-To: <CAGsJ_4yGa3+V9NcePuKe3pKO79A1Gd=p+ZZ8SjEwgmfR79KyTA@mail.gmail.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Mon, 9 Jun 2025 16:29:13 +0800
+X-Gm-Features: AX0GCFsSXHKlPSjfaTS1EMwAp_oz3_bdO7G1bh9L-s_VSUqwAS8NgWS_qmB9yk8
+Message-ID: <CAMgjq7BqyjON0PgfYePDETfWbs99TO1f3zsFM8DwnQG-JqoOyQ@mail.gmail.com>
+Subject: Re: [PATCH] mm/shmem, swap: fix softlockup with mTHP swapin
+To: Barry Song <21cnbao@gmail.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Hugh Dickins <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Chris Li <chrisl@kernel.org>, 
+	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Usama Arif <usamaarif642@gmail.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 07, 2025 at 11:33:15AM +0200, Dario Binacchi wrote:
->Support Engicam MicroGEA BMM board with:
+On Mon, Jun 9, 2025 at 12:30=E2=80=AFPM Barry Song <21cnbao@gmail.com> wrot=
+e:
 >
->- 256 Mbytes NAND Flash
->- 512 Mbytes DRAM DDR2
->- CAN
->- Micro SD card connector
->- USB 2.0 high-speed/full-speed
->- Ethernet MAC
+> On Mon, Jun 9, 2025 at 2:32=E2=80=AFPM Kairui Song <ryncsn@gmail.com> wro=
+te:
+> >
+> > On Mon, Jun 9, 2025 at 7:58=E2=80=AFAM Barry Song <21cnbao@gmail.com> w=
+rote:
+> > >
+> > > On Mon, Jun 9, 2025 at 7:27=E2=80=AFAM Kairui Song <ryncsn@gmail.com>=
+ wrote:
+> > > >
+> > > > From: Kairui Song <kasong@tencent.com>
+> > > >
+> > > > Following softlockup can be easily reproduced on my test machine wi=
+th:
+> > > >
+> > > > echo always > /sys/kernel/mm/transparent_hugepage/hugepages-64kB/en=
+abled
+> > > > swapon /dev/zram0 # zram0 is a 48G swap device
+> > > > mkdir -p /sys/fs/cgroup/memory/test
+> > > > echo 1G > /sys/fs/cgroup/test/memory.max
+> > > > echo $BASHPID > /sys/fs/cgroup/test/cgroup.procs
+> > > > while true; do
+> > > >     dd if=3D/dev/zero of=3D/tmp/test.img bs=3D1M count=3D5120
+> > > >     cat /tmp/test.img > /dev/null
+> > > >     rm /tmp/test.img
+> > > > done
+> > > >
+> > > > Then after a while:
+> > > > watchdog: BUG: soft lockup - CPU#0 stuck for 763s! [cat:5787]
+> > > > Modules linked in: zram virtiofs
+> > > > CPU: 0 UID: 0 PID: 5787 Comm: cat Kdump: loaded Tainted: G         =
+    L      6.15.0.orig-gf3021d9246bc-dirty #118 PREEMPT(voluntary)=C2=B7
+> > > > Tainted: [L]=3DSOFTLOCKUP
+> > > > Hardware name: Red Hat KVM/RHEL-AV, BIOS 0.0.0 02/06/2015
+> > > > RIP: 0010:mpol_shared_policy_lookup+0xd/0x70
+> > > > Code: e9 b8 b4 ff ff 31 c0 c3 cc cc cc cc 90 90 90 90 90 90 90 90 9=
+0 90 90 90 90 90 90 90 90 66 0f 1f 00 0f 1f 44 00 00 41 54 55 53 <48> 8b 1f=
+ 48 85 db 74 41 4c 8d 67 08 48 89 fb 48 89 f5 4c 89 e7 e8
+> > > > RSP: 0018:ffffc90002b1fc28 EFLAGS: 00000202
+> > > > RAX: 00000000001c20ca RBX: 0000000000724e1e RCX: 0000000000000001
+> > > > RDX: ffff888118e214c8 RSI: 0000000000057d42 RDI: ffff888118e21518
+> > > > RBP: 000000000002bec8 R08: 0000000000000001 R09: 0000000000000000
+> > > > R10: 0000000000000bf4 R11: 0000000000000000 R12: 0000000000000001
+> > > > R13: 00000000001c20ca R14: 00000000001c20ca R15: 0000000000000000
+> > > > FS:  00007f03f995c740(0000) GS:ffff88a07ad9a000(0000) knlGS:0000000=
+000000000
+> > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > CR2: 00007f03f98f1000 CR3: 0000000144626004 CR4: 0000000000770eb0
+> > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > > PKRU: 55555554
+> > > > Call Trace:
+> > > >  <TASK>
+> > > >  shmem_alloc_folio+0x31/0xc0
+> > > >  shmem_swapin_folio+0x309/0xcf0
+> > > >  ? filemap_get_entry+0x117/0x1e0
+> > > >  ? xas_load+0xd/0xb0
+> > > >  ? filemap_get_entry+0x101/0x1e0
+> > > >  shmem_get_folio_gfp+0x2ed/0x5b0
+> > > >  shmem_file_read_iter+0x7f/0x2e0
+> > > >  vfs_read+0x252/0x330
+> > > >  ksys_read+0x68/0xf0
+> > > >  do_syscall_64+0x4c/0x1c0
+> > > >  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> > > > RIP: 0033:0x7f03f9a46991
+> > > > Code: 00 48 8b 15 81 14 10 00 f7 d8 64 89 02 b8 ff ff ff ff eb bd e=
+8 20 ad 01 00 f3 0f 1e fa 80 3d 35 97 10 00 00 74 13 31 c0 0f 05 <48> 3d 00=
+ f0 ff ff 77 4f c3 66 0f 1f 44 00 00 55 48 89 e5 48 83 ec
+> > > > RSP: 002b:00007fff3c52bd28 EFLAGS: 00000246 ORIG_RAX: 0000000000000=
+000
+> > > > RAX: ffffffffffffffda RBX: 0000000000040000 RCX: 00007f03f9a46991
+> > > > RDX: 0000000000040000 RSI: 00007f03f98ba000 RDI: 0000000000000003
+> > > > RBP: 00007fff3c52bd50 R08: 0000000000000000 R09: 00007f03f9b9a380
+> > > > R10: 0000000000000022 R11: 0000000000000246 R12: 0000000000040000
+> > > > R13: 00007f03f98ba000 R14: 0000000000000003 R15: 0000000000000000
+> > > >  </TASK>
+> > > >
+> > > > The reason is simple, readahead brought some order 0 folio in swap
+> > > > cache, and the swapin mTHP folio being allocated is in confict with=
+ it,
+> > > > so swapcache_prepare fails and causes shmem_swap_alloc_folio to ret=
+urn
+> > > > -EEXIST, and shmem simply retries again and again causing this loop=
+.
+> > > >
+> > > > Fix it by applying a similar fix for anon mTHP swapin.
+> > > >
+> > > > The performance change is very slight, time of swapin 10g zero foli=
+os
+> > > > (test for 12 times):
+> > > > Before:  2.49s
+> > > > After:   2.52s
+> > > >
+> > > > Fixes: 1dd44c0af4fa1 ("mm: shmem: skip swapcache for swapin of sync=
+hronous swap device")
+> > > > Signed-off-by: Kairui Song <kasong@tencent.com>
+> > > >
+> > > > ---
+> > > >
+> > > > I found this issue while doing a performance comparing of mm-new wi=
+th
+> > > > swap table series [1] on top of mm-new. This issue no longer exists
+> > > > if the swap table series is applied, because it elimated both
+> > > > SWAP_HAS_CACHE and SWP_SYNCHRONOUS_IO swapin completely while impro=
+ving
+> > > > the performance and simplify the code, and the race swapin is solve=
+d
+> > > > differently by then.
+> > > >
+> > > > (The zero map fix might still need to stay for a while, but could b=
+e
+> > > > optimized too later with swap table).
+> > > >
+> > > > It will be good if the swap table series could get reviewed and mer=
+ged
+> > > > to avoid more fixes like this. SWAP_HAS_CACHE and SWP_SYNCHRONOUS_I=
+O has
+> > > > a history of causing many issues. I'll do a swap table rebase on to=
+p of
+> > > > this fix, if this one is accepted.
+> > > >
+> > > > And for a comparision, swap in 10G into shmem:
+> > > >
+> > > > Before this patch:  2.49s
+> > > > After this patch:   2.52s
+> > > > After swap table:   2.37s (Removing SWAP_HAS_CACHE and SWP_SYNCHRON=
+OUS_IO,
+> > > >                            still not in the best shape but looking =
+good)
+> > > >
+> > > > Link: https://lore.kernel.org/linux-mm/20250514201729.48420-1-ryncs=
+n@gmail.com/ [1]
+> > > >
+> > > >  mm/memory.c | 20 --------------------
+> > > >  mm/shmem.c  | 12 +++++++++++-
+> > > >  mm/swap.h   | 19 +++++++++++++++++++
+> > > >  3 files changed, 30 insertions(+), 21 deletions(-)
+> > > >
+> > > > diff --git a/mm/memory.c b/mm/memory.c
+> > > > index 9ead7ab07e8e..3845ed068d74 100644
+> > > > --- a/mm/memory.c
+> > > > +++ b/mm/memory.c
+> > > > @@ -4313,26 +4313,6 @@ static struct folio *__alloc_swap_folio(stru=
+ct vm_fault *vmf)
+> > > >  }
+> > > >
+> > > >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> > > > -static inline int non_swapcache_batch(swp_entry_t entry, int max_n=
+r)
+> > > > -{
+> > > > -       struct swap_info_struct *si =3D swp_swap_info(entry);
+> > > > -       pgoff_t offset =3D swp_offset(entry);
+> > > > -       int i;
+> > > > -
+> > > > -       /*
+> > > > -        * While allocating a large folio and doing swap_read_folio=
+, which is
+> > > > -        * the case the being faulted pte doesn't have swapcache. W=
+e need to
+> > > > -        * ensure all PTEs have no cache as well, otherwise, we mig=
+ht go to
+> > > > -        * swap devices while the content is in swapcache.
+> > > > -        */
+> > > > -       for (i =3D 0; i < max_nr; i++) {
+> > > > -               if ((si->swap_map[offset + i] & SWAP_HAS_CACHE))
+> > > > -                       return i;
+> > > > -       }
+> > > > -
+> > > > -       return i;
+> > > > -}
+> > > > -
+> > > >  /*
+> > > >   * Check if the PTEs within a range are contiguous swap entries
+> > > >   * and have consistent swapcache, zeromap.
+> > > > diff --git a/mm/shmem.c b/mm/shmem.c
+> > > > index 73182e904f9c..484cd3043a78 100644
+> > > > --- a/mm/shmem.c
+> > > > +++ b/mm/shmem.c
+> > > > @@ -1995,6 +1995,14 @@ static struct folio *shmem_swap_alloc_folio(=
+struct inode *inode,
+> > > >          */
+> > > >         if (swapcache_prepare(entry, nr_pages)) {
+> > > >                 folio_put(new);
+> > > > +
+> > > > +               /*
+> > > > +                * A smaller folio is in the swap cache, mTHP swapi=
+n will always fail
+> > > > +                * until it's gone. Return -EINVAL to fallback to o=
+rder 0.
+> > > > +                */
+> > > > +               if (non_swapcache_batch(entry, nr_pages) !=3D nr_pa=
+ges)
+> > > > +                       return ERR_PTR(-EINVAL);
+> > > > +
+> >
+> > Hi Barry,
+> >
+> > > We're doing this before swapcache_prepare() for mTHP swapin. Why does=
+ it
+> > > happen after swapcache_prepare() in the shmem case?
+> >
+> > `non_swapcache_batch(entry, nr_pages) !=3D nr_pages` is unlikely, that'=
+s
+> > the reason why no one noticed this issue so far, so moving it after
+> > swapcache_prepare can help avoid overhead caused by it in the common
+> > case. swapcache_prepare already implies this check, but
+> > swapcache_prepare can fall for multiple reasons, and shmem should and
+> > only should fallback to order 0 swapin if it's caused by an existing
+> > cache. (currently shmem unconditionally retry)
 >
->Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+> Maybe it's because people are running it on systems with plenty of memory=
+?
+> Once we run it on a system with limited memory, we might see more failure=
+s
+> allocating large folios and fall back to order-0 more often?
+> For example, what if there's a 50% chance of failing to allocate large
+> folios?
 
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
+When under memory pressure the swap cache pages will get reclaimed, so
+it will also be less likely to hit this issue, it has to be in a
+situation where some swapin falls back to order 0 while memory
+pressure is not too high to cause swap cache reclaim. So in most cases
+it's unlikely to run into conflicting small folios, but chance is high
+enough to trigger real issues, the reproducer shell script can trigger
+this within 5 minutes on my machine.
+
+>
+> >
+> > And non_swapcache_batch might not be the best solution here, it also
+> > might have false positives, we can add a full filemap lookup here, but
+> > might be overkill for a corner case like this. I still think merge
+> > swap cache with swap_map using swap table is the long term solution.
+> >
+> > Maybe I'm premature optimizing it, I can use the easier to review
+> > implementation (same way with anon mTHP) and do a quick benchmark, if
+> > there is no obvious performance change I'll use that style in V2.
+>
+> Right, the current approach is a bit hard to follow, since we ultimately
+> change the return value from -EEXIST to -EINVAL. It does feel like there=
+=E2=80=99s
+> some back-and-forth. But anyway, let=E2=80=99s look at the data=E2=80=94i=
+f the current
+> approach yields better results, we can refine the code comments to make
+> it easier to understand.
+
+After more testing the performance change seems trivial, and
+considering checking SWAP_HAS_CACHE before swapcache_prepare could
+help avoid a ci locking in certain workloads, let me use that way in
+V2 later today.
