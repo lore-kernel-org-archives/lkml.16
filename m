@@ -1,178 +1,184 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDA655E69
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 18:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6E427718;
+	Mon,  9 Jun 2025 18:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749493221; cv=none; b=mFGCj3VL25KnJQ7o61PZDIo2i5xBTOGqZ/htt3Ij5bvOD5D13L7/iQHMnFzo9m3m0sSYRLUhyBZvPKukgkQdsfza3trXhFfrU5cAEhituDy1VWt9clj0DyDgZI4wPrJBICkYRekUhNvvl/wjcSxuNqOppcA5X7zW8Fellr4xEu4=
+	t=1749493421; cv=none; b=IeGlqevrglgeadzYjWGAz+2v6278w360Zcg3M5wOH+cmds5hAPFPYakaPTluyM+RRDBvMxoIRlprTN4ILnrq1RHweahUOTIWWsysInoGMF3IpKXjq8gp6wVCupuDVTM3A8FeXH74JBgInsGulf3YI+RremTmW+yJLIk3xMc/ZvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749493221; c=relaxed/simple;
-	bh=hXtDQVtzBt05LQPWiaTJRzc2pDfK+7mriXwEfggveQA=;
+	s=arc-20240116; t=1749493421; c=relaxed/simple;
+	bh=4xVRH7yRkfu3VnlWI3iF65T8q5VomcV67pSWNmihj9c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qy1DT4ODt5jP/IdQ8mgA0Wr4Y6XxEBH96J+1Q1ApWB4f+gXRb2hmuG2mpvVcPSldnuzjxNDQKNXNHi2Zf1TWCpxk5OQU4ytLYCLfJN5O7C4/6VXBlMeLDdx21rainjF5MrTVL7uNpk++FUulkC/+J0TFWYq3i6fae18uLvefTq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B1O2WMIa; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Content-Type; b=Do8bbNx4J5t9LomEQKZkAP1HpMHtVZzmdb4I2IqOzFlnLMFptzQVgtebjtkg1sZ23BnwbJNpi8koh/idhVfHKNDyX2KqQwV9IKLWOh1p//sP7MbLzaJCYniMr0w8gpwCwsksD/qBO3jUO2hnxrnXMUZOvfchGTV6/5/6Y42vnd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=imE8nUPt; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B1O2WMIa"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-601a67c6e61so1677a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 11:20:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="imE8nUPt"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad891bb0957so744313066b.3;
+        Mon, 09 Jun 2025 11:23:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749493218; x=1750098018; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=gmail.com; s=20230601; t=1749493415; x=1750098215; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3blXDd8YInSQ/c19Uv1xImmNssJZC2qn40udTqZrJH8=;
-        b=B1O2WMIapby5lRLQKgUQ4yAugam9O1aL16OSFVqIpBHxzxsX6GTINPFme5ghCrZWOz
-         U7+FWzEmtj7iJydGnZKRSinDPA1BZXz/6uHqTHnKHUHTVK99rIDkN4er/fnE36yBudlY
-         yJ1oil+eQ81BFsr7BQL04QlPSUgz6WlEkAIM1/httl2bSrJJcpkxYYeij4iSOK+y+KOz
-         NqoKunezJ11MvGJPWfgve/jzAgd2LckW5/RPJ5AOesUQz5iPIJ7pc5WCU5cQXuzou/A+
-         VO4Yy5G83U1TwX4NjflYU7lNhAACeizMdWYVambze3c+nVDqMu5BXmD5W+pjOR/iuBuD
-         YdaQ==
+        bh=CW/d3YTjSFycjX6/LB8McvZq17h6mxN+2rNQt6R27Hc=;
+        b=imE8nUPtKAhEBpsofQxGtRQUxtwfVspfpp1NvQ/DHEUOlyyBMrw9yZYtwBV8MlrBt+
+         a54srRvn3/n57GLHNs9Jli0utFB8ejH3MsgNYfazsPOA1zAiwCZwe9PsCJD1J533WNZH
+         Yrna4uNDk687sIM2rxsgzcT/FkOJk6SjZtltliu88uFFchIM1s0+JIwbnidgPqngL6nT
+         9IwBRVe6Y06r4IAxNc9zU2em2NQjNhwusmR2G/pt7byN7gFsc1dRGJNs0U8WisC4zh/0
+         cjdk6CbWgnH2XCDGwD9qYvF74wz8XI9iiGOBLrnvyt6vk2Xl6y4chKJDFgJ/18OQwxIy
+         pnAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749493218; x=1750098018;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1749493415; x=1750098215;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3blXDd8YInSQ/c19Uv1xImmNssJZC2qn40udTqZrJH8=;
-        b=BEl//+8wE8e8cg5kaODglEGmSku5VnooqfKhPb4QVorq7Jh4zfRc/Z3HWpkDOGXrBp
-         D8bLCs2Q1ASSA5EayuJgO9/yuGzZdmpr1LAPHY3QVOfVFLJtEFuf5VntDzNVwgG732GV
-         knhyR7gDUnVXRA+HIj54stWuIlPXw7RwmoP+34Fjt3Q4Gf1Yh1JVQcgA9MmIQRlhxOYz
-         BLABiNzVudmKFVgZxWEXzvVkUF4MR+I01OrxLaJkzPB8K237T52tNDp2MZUlbiMMGRYc
-         +UqcrpAdd+2aC/1CQVfdDJWzOjDpeAnOP8PnSCmSuk0VMOJq08RB0St6/Ukej9eL7p8t
-         DBwg==
-X-Forwarded-Encrypted: i=1; AJvYcCW0UnT71IFzCE9SfgAm+Yacn80t24TwOQyPvhjtn8T9QrgZb7i45M0hH7ze2Wwl9leA6usnW+N6Ulgp3/0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9R4NPpWFIXhRwB285xgtfrDfNPWG4PlZYF4aboaI5/VHdwOjG
-	DFdWxs1J/7jCkMAV96nmvMlB2ucFnNEFO/Q/gNxY89ctbkqlDUttAYYTcswH2lBicYethWiRE1m
-	1cID/cV61qvA/cqeMwXc5X2Uzmv/7yFeRozvJIskC
-X-Gm-Gg: ASbGncvOYLdGRQtlHNQashaGlnt10x4Sv9RfcuVdMr57xmckRaSmsoxCoS/orzWPbb3
-	nRx06ZUUIpS7MJpmvd3DNyoEygcXgPszrLFdk/MATcBkMTIU9yKROfTt85382Xbxlgve03NDOOv
-	hqquwlIqWyuPXYrJdfs2OXd2claOLXjXtiJ+USEyNW1gsvT64PxvLNhg==
-X-Google-Smtp-Source: AGHT+IG9ztMok/aqL/yvVGIqj8nxbavXUaNllC13qZXPpar9TQggxm6DeKT3NAwmq8GRl8lwhJ95MohJ1nUbYJr/WL4=
-X-Received: by 2002:aa7:d286:0:b0:606:b6da:5028 with SMTP id
- 4fb4d7f45d1cf-607aad5dd84mr154060a12.0.1749493218088; Mon, 09 Jun 2025
- 11:20:18 -0700 (PDT)
+        bh=CW/d3YTjSFycjX6/LB8McvZq17h6mxN+2rNQt6R27Hc=;
+        b=Lyubd4V2QC/yU1Q4IJRbA6VgxxBj3f0xlsEprGAKwtK9H1ZD08+QmvSBQvREIsCAHN
+         DDHMyjHBAe0sYtlfqqOt89Lq7WqBk9bkd2QJKr8hX4XY5DBwlGIY8JnW0+hAwB3Hq5XY
+         /8+TI3VaOyi/kxL/9XCvfqBZl4lh1m/8uPG7JCkXK7Fj8fF7Yl3yKpRAup/MztM3y3sU
+         knXvpuPn42Y1ROU0CpmrlNGaSzpcJd/8EBHby8B/o9qynYas4jDXzINRVQYF2OTQ7qrH
+         N5pePMGW3K77p+/MSAptm7KsQl659tZxn7MWnyVxTTaySxuVp1/J22PIasaQ9uiMgw4R
+         UQyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQ+cs4kKrg5LrRwLKKw3A8Y0OY1O9VSbl5xHtv9urViVusu5+oU/m6R5cbn1P8rltQUSxusKj0XUi/gu6P@vger.kernel.org, AJvYcCVyi0O6Xfm82Zv2ABKqk0XEBboIazf0jSTsTv92AQi7YHRylMqZqGFFNf5/7jjJyVESutIJR9nOEgE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLOMEndNA5YNKJ46IbfYrdTEe9/Az3XNRWVjVuLvU/Jdkje0SN
+	Zhd5l+juQkWaaeY3T5GF0svC+I0tb/JRKho0e4FyRSlHOWYd//wZi/6ww91wZQYVp/jWWjMzZ1F
+	G5pdNnBiC2pRT8G7ysXD9zXXHYFOUNNo=
+X-Gm-Gg: ASbGnctbQtsd3MOzssZwdVhvEnYN0dynz38RG/dUC9Zi/z2LagysH6CiXh3Vqjfldzw
+	5lQoRe8V2XGS8N0Wsq7zdkvlS9b19prJCaaCWqVBuAkVQC8aRfslcfe9b65KJpxhSVS/35QJ0xo
+	xMlRLUK71zWQucOraCtsrmWPmt1yRUpNcfFIRo/ar98vuJyM5Wx0zzHQZ4n+onAnUmESR1d03LH
+	oo1zQ==
+X-Google-Smtp-Source: AGHT+IFtV58+b7TdEn169blBTSTg97IoZAMWiVqeKLwKeXRa9wvFaPoz+n0HH+xJYo631uo3xl7Wtx01TrmgPDB7kbo=
+X-Received: by 2002:a17:907:1b16:b0:adb:469d:221f with SMTP id
+ a640c23a62f3a-ade1aa15864mr1341933766b.31.1749493414544; Mon, 09 Jun 2025
+ 11:23:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20211207095230.53437-1-jiangshanlai@gmail.com>
- <51bb6e75-4f0a-e544-d2e4-ff23c5aa2f49@redhat.com> <4a66adfa-fc10-4668-9986-55f6cf231988@zytor.com>
- <aEbuSmAf4aAHztwC@google.com> <CALMp9eSA0u5+_dPA7-M4oZgqt4sv-qez4fMuZ6S5X4rUp=33xQ@mail.gmail.com>
-In-Reply-To: <CALMp9eSA0u5+_dPA7-M4oZgqt4sv-qez4fMuZ6S5X4rUp=33xQ@mail.gmail.com>
-From: Jim Mattson <jmattson@google.com>
-Date: Mon, 9 Jun 2025 11:20:05 -0700
-X-Gm-Features: AX0GCFuZIV6CD7DM3SYh0VfLc_yWYx6NF-Qt3paJZCJhW2qN5kiwzTX3YMaH12Y
-Message-ID: <CALMp9eQOCrUDKoLDokgJ2ZTJQGnhLchdPi=-GWdrOJH6ztEvsQ@mail.gmail.com>
-Subject: Re: [PATCH] KVM: X86: Raise #GP when clearing CR0_PG in 64 bit mode
-To: Sean Christopherson <seanjc@google.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Lai Jiangshan <jiangshanlai@gmail.com>, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Lai Jiangshan <laijs@linux.alibaba.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Wanpeng Li <wanpengli@tencent.com>, Joerg Roedel <joro@8bytes.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+References: <20250601-drm-doc-updates-v4-1-e7c46821e009@gmail.com>
+ <aDz-Pq4eMAYmzqsJ@archie.me> <aEBaJ5zMHfzhpdlz@phenom.ffwll.local>
+In-Reply-To: <aEBaJ5zMHfzhpdlz@phenom.ffwll.local>
+From: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
+Date: Mon, 9 Jun 2025 14:23:24 -0400
+X-Gm-Features: AX0GCFtT5VtTHa-jojzi8kLV9z5EuWYa1-xJcEXWWcyNlt2BE-xhusWO-NpDrzU
+Message-ID: <CAC0Z3JupfeHHrfj7ZeQ3E-1+E9jBrd9SPBn-eJUjEMN6iMB3aw@mail.gmail.com>
+Subject: Re: [PATCH v4] drm: add overview diagram for drm stack
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Jonathan Corbet <corbet@lwn.net>, dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 9, 2025 at 11:16=E2=80=AFAM Jim Mattson <jmattson@google.com> w=
-rote:
->
-> On Mon, Jun 9, 2025 at 7:23=E2=80=AFAM Sean Christopherson <seanjc@google=
-.com> wrote:
-> >
-> > On Fri, Jun 06, 2025, H. Peter Anvin wrote:
-> > > On 2021-12-09 09:55, Paolo Bonzini wrote:
-> > > > On 12/7/21 10:52, Lai Jiangshan wrote:
-> > > > > From: Lai Jiangshan <laijs@linux.alibaba.com>
-> > > > >
-> > > > > In the SDM:
-> > > > > If the logical processor is in 64-bit mode or if CR4.PCIDE =3D 1,=
- an
-> > > > > attempt to clear CR0.PG causes a general-protection exception (#G=
-P).
-> > > > > Software should transition to compatibility mode and clear CR4.PC=
-IDE
-> > > > > before attempting to disable paging.
-> > > > >
-> > > > > Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
-> > > > > ---
-> > > > >   arch/x86/kvm/x86.c | 3 ++-
-> > > > >   1 file changed, 2 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > > > > index 00f5b2b82909..78c40ac3b197 100644
-> > > > > --- a/arch/x86/kvm/x86.c
-> > > > > +++ b/arch/x86/kvm/x86.c
-> > > > > @@ -906,7 +906,8 @@ int kvm_set_cr0(struct kvm_vcpu *vcpu, unsign=
-ed
-> > > > > long cr0)
-> > > > >           !load_pdptrs(vcpu, kvm_read_cr3(vcpu)))
-> > > > >           return 1;
-> > > > > -    if (!(cr0 & X86_CR0_PG) && kvm_read_cr4_bits(vcpu, X86_CR4_P=
-CIDE))
-> > > > > +    if (!(cr0 & X86_CR0_PG) &&
-> > > > > +        (is_64_bit_mode(vcpu) || kvm_read_cr4_bits(vcpu,
-> > > > > X86_CR4_PCIDE)))
-> > > > >           return 1;
-> > > > >       static_call(kvm_x86_set_cr0)(vcpu, cr0);
-> > > > >
->
-> Isn't this redundant with the "if (cs_l)" check above?
+Hi,
 
-Never mind. That's an attempt to set CR0.PG, not to clear it.
+Should I go ahead make the diagram more detailed or just add the links
+in 'Slides and articles' & 'Conference talks'  to the existing
+diagram?
 
-> > > > Queued, thanks.
-> > > >
+Best regards,
+
+On Wed, Jun 4, 2025 at 10:37=E2=80=AFAM Simona Vetter <simona.vetter@ffwll.=
+ch> wrote:
+>
+> On Mon, Jun 02, 2025 at 08:28:30AM +0700, Bagas Sanjaya wrote:
+> > On Sun, Jun 01, 2025 at 06:18:47PM -0400, Abdulrasaq Lawani wrote:
+> > > Add an overview diagram of Linux DRM architecture for
+> > > graphics and compute to introduction.rst
 > > >
-> > > Have you actually checked to see what real CPUs do in this case?
+> > > Signed-off-by: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
+> > > ---
+> > > <snipped>...
+> > > diff --git a/Documentation/gpu/introduction.rst b/Documentation/gpu/i=
+ntroduction.rst
+> > > index 3cd0c8860b949408ed570d3f9384edd5f03df002..a8d3f953a470180b395ec=
+52a45d0f3f4561424e0 100644
+> > > --- a/Documentation/gpu/introduction.rst
+> > > +++ b/Documentation/gpu/introduction.rst
+> > > @@ -14,7 +14,45 @@ including the TTM memory manager, output configura=
+tion and mode setting,
+> > >  and the new vblank internals, in addition to all the regular feature=
+s
+> > >  found in current kernels.
+> > >
+> > > -[Insert diagram of typical DRM stack here]
+> > > +Overview of the Linux DRM Architecture
+> > > +--------------------------------------
+> > > +::
+> > > +
+> > > +        +-----------------------------+
+> > > +        |     User-space Apps         |
+> > > +        | (Games, Browsers, ML, etc.) |
+> > > +        +-----------------------------+
+> > > +                      |
+> > > +                      v
+> > > +        +---------------------------------------+
+> > > +        |    Graphics APIs   |   Compute APIs   |
+> > > +        |  (OpenGL, Vulkan)  |  (OpenCL, CUDA)  |
+> > > +        +---------------------------------------+
+> > > +                |                   |
+> > > +                v                   v
+> > > +        +---------------------+  +-----------------------+
+> > > +        |  User-space Driver  |  |    Compute Runtime    |
+> > > +        |  (Mesa, AMD/NVIDIA) |  |  (OpenCL, CUDA, ROCm) |
+> > > +        +---------------------+  +-----------------------+
+> > > +                |                   |
+> > > +                +--------+----------+
+> > > +                         |
+> > > +                         v
+> > > +                +-----------------------+
+> > > +                |   libdrm (DRM API)    |
+> > > +                +-----------------------+
+> > > +                          |
+> > > +                          v
+> > > +        +-------------------------------------------+
+> > > +        |     Kernel DRM/KMS Driver (i915, amdgpu,  |
+> > > +        |     nouveau, etc.)                        |
+> > > +        +-------------------------------------------+
+> > > +                |                       |
+> > > +                v                       v
+> > > +        +----------------+     +-------------------+
+> > > +        | GPU Display HW |     | GPU Compute Units |
+> > > +        +----------------+     +-------------------+
+> > > +
+>
+> I'm a bit late to the party, apologies. I'm not sure how much use there i=
+s
+> in an extremely simplified diagram like this, least because it's really
+> incomplete and leaves out the entire display and compositor side.
+>
+> My idea was that we'd instead link to the large pile of introductory and
+> overview talks further down in this file, if people want to get an
+> overview over what drm does.
+>
+> If you want I guess you could add some links to the relevant wikipedia
+> pages, I think they also do a fairly decent job of explaining the big
+> picture.
+>
+> Thanks, Sima
+>
+>
+> > >
+> > >  Style Guidelines
+> > >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > >
 > >
-> > I have now, and EMR at least behaves as the SDM describes.  Why do you =
-ask?
+> > The patch LGTM, thanks!
 > >
+> > Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 > >
-> > kvm_intel: Clearing CR0.PG faulted (vector =3D 13)
-> >
-> >
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index f79604bc0127..f90ad464ab7e 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -8637,6 +8637,23 @@ void vmx_exit(void)
-> >         kvm_x86_vendor_exit();
-> >  }
-> >
-> > +static noinline void vmx_disable_paging(void)
-> > +{
-> > +       unsigned long cr0 =3D native_read_cr0();
-> > +       long vector =3D -1;
-> > +
-> > +       asm volatile("1: mov %1, %%cr0\n\t"
-> > +                    "   mov %2, %%cr0\n\t"
-> > +                    "2:"
-> > +                    _ASM_EXTABLE_FAULT(1b, 2b)
-> > +                    : "+a" (vector)
-> > +                    : "r" (cr0 & ~X86_CR0_PG), "r" (cr0)
-> > +                    : "cc", "memory" );
-> > +
-> > +       pr_warn("Clearing CR0.PG %s (vector =3D %ld)\n",
-> > +               vector < 0 ? "succeeded" : "faulted", vector);
-> > +}
-> > +
-> >  int __init vmx_init(void)
-> >  {
-> >         int r, cpu;
-> > @@ -8644,6 +8661,8 @@ int __init vmx_init(void)
-> >         if (!kvm_is_vmx_supported())
-> >                 return -EOPNOTSUPP;
-> >
-> > +       vmx_disable_paging();
-> > +
-> >         /*
-> >          * Note, hv_init_evmcs() touches only VMX knobs, i.e. there's n=
-othing
-> >          * to unwind if a later step fails.
-> >
+> > --
+> > An old man doll... just what I always wanted! - Clara
+>
+>
+>
+> --
+> Simona Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
