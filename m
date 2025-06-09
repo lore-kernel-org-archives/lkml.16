@@ -1,105 +1,172 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA561AA782;
-	Mon,  9 Jun 2025 11:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16ACC2561DD;
+	Mon,  9 Jun 2025 12:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749470391; cv=none; b=Wg2FAlgkRvQHgIfdMjkWadUC70jlOfa/fd76uH8dYMXMkE8nsav+Eoj2r9M0Lvumegxlbm7ExHlvi5pb8AJdbvZdZh6RwvMKnrmXXMJCOUfueiAN/aDe4UcOuwHQJpqzbTT2ROBhM7WwgU+9V+Kh5xiQrpa+IdRhoYByoR+z6sE=
+	t=1749470404; cv=none; b=cM6/oXrZFvXB66lU/5NLksI2XQzjBp5wFNyPrqIW5kyLL/sxIQaD9sZQh9NrJ+Vr4BnyN1Vpoyj4Xtv1d3EaJoBB6oO56ijK/tlyYEM2Tew1FrL/cwtY5Qtzv0a1DOv5VIo35MkfwIRS+kVp7rltj7E/X4FFePZ17uKJ/vFOqk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749470391; c=relaxed/simple;
-	bh=Yz5MIchuzYLxRGYMUKEjb9jL62dWadnio+J9Jkv5fZk=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QV486WWqN4SGmW3yjYs7Xie7A8P2uQIMHgrPLqHJ1OeKjwZ0KuaL3mnx4y/pHaozPZGQysfKwEFhc+NJP8OCUszmmZ4pR3eTrmrhohVPnE3GylkelF8RiiipOpI31DxBqEcT7AksrjPUj4lsal5iW2kMzRkm+O4SS9la4RcmDQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ckzCGdWd; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1749470404; c=relaxed/simple;
+	bh=VNK7VVJAP9oDuurE8SbOZP1RRIA6lunMWbNPz7CoQK0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UCqnySx6Fia2lMssna9NSvTOzTCjZVEPjqQknu+P9GOUa6XPWxzoxO7lTmYQq3nMKCP/kgebsngvz7Tr+FXojxAfkigQCzPze3VYjYnjT3PiHdsnBVqCZvqYrAGrJvK36SfC9VcSseNFGt8g1rGDkls+ISOWyUMF3oxVq0K5Ug8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BGDxMeRS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ckzCGdWd"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 559BxVsV1980964;
-	Mon, 9 Jun 2025 06:59:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1749470371;
-	bh=bNYHfUVgW0j5DR00GYyu8I5eNk46DUSi9eqj7IxksLs=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=ckzCGdWdPEln956o6q0up2acMKeHoUczmeCPh5am/+CkrrkcukIYvppbencGgrIQ0
-	 PW6vHFLux94sx/W+u4HHzHjHOI6TqHOyr657pGUOt0ZkRkRDP9zQImvz2Bnq4DcRAf
-	 Yi1eSNSeyvpuy+/CYUybYwWpYQRrXD2cNVPEn6J8=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 559BxVkx3783095
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Mon, 9 Jun 2025 06:59:31 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 9
- Jun 2025 06:59:30 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 9 Jun 2025 06:59:30 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 559BxUGP1219701;
-	Mon, 9 Jun 2025 06:59:30 -0500
-Date: Mon, 9 Jun 2025 06:59:30 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Hrushikesh Salunke <h-salunke@ti.com>
-CC: <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <s-vadapalli@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <danishanwar@ti.com>, <srk@ti.com>
-Subject: Re: [PATCH] arm64: dts: ti: k3-am642-evm-pcie0-ep: Add boot phase
- tag to "pcie0_ep"
-Message-ID: <20250609115930.w2s6jzg7xii55dlu@speckled>
-References: <20250609085429.2334652-1-h-salunke@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BGDxMeRS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC77EC4CEEB;
+	Mon,  9 Jun 2025 11:59:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749470403;
+	bh=VNK7VVJAP9oDuurE8SbOZP1RRIA6lunMWbNPz7CoQK0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BGDxMeRSJQgWr64RvYpWptgDuS+BnnL2RArQjG8mPIQz/xCBtEL5LNYHhp7XYpy7J
+	 32imV7as7Kp9xPH3K5fSdcbQTPbO4Y3GSCIHI22pDlECEBOXuZyYIUAWrXmmyTT3hd
+	 qo19bfTzFdwIGfFTzhmCdKdRJY9NDJiHUV0C5xBnchSoMYe02XEddCeFLWIg/IOJvq
+	 Y03cIJEzI/Ncqg3WolDtVL48R1vm+1h8PJLnCa1lMuLtkBkNgY3+2XVsGrOJCHy7bj
+	 I+plPPDx4TJpwrbbE1gxc2oDCa9dm9Ee+8b4SxOX/AjOOfT9HyRBd6YAtybrGb8pgE
+	 DD3HtH4RaFopA==
+Date: Mon, 9 Jun 2025 17:29:49 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>, 
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Brian Norris <briannorris@chromium.org>, 
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>, Tony Lindgren <tony@atomide.com>, 
+	JeffyChen <jeffy.chen@rock-chips.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	cros-qcom-dts-watchers@chromium.org, Bjorn Helgaas <bhelgaas@google.com>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com, quic_mrana@quicinc.com, 
+	Sherry Sun <sherry.sun@nxp.com>
+Subject: Re: [PATCH v3 2/2] PCI/portdrv: Add support for PCIe wake interrupt
+Message-ID: <pl262pfxe5mjtxzvr4qcsxwt4cyrdjzncd3ztsqpb6zuc7gi5b@hu6njospevgk>
+References: <20250605202630.GA622231@bhelgaas>
+ <7b91b725-6b47-bf8f-e6e5-e4584f274ec4@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250609085429.2334652-1-h-salunke@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7b91b725-6b47-bf8f-e6e5-e4584f274ec4@oss.qualcomm.com>
 
-On 14:24-20250609, Hrushikesh Salunke wrote:
-> AM64X SoC has one instance of PCIe PCIe0. To support PCIe boot on
-> AM64X SoC PCIe0 instance needs to be in endpoint mode and it needs to
-> be functional at all stages of PCIe boot process. Thus add the
-> "bootph-all" boot phase tag to "pcie0_ep" device tree node.
-> 
-> Signed-off-by: Hrushikesh Salunke <h-salunke@ti.com>
-> ---
-> This patch is based on commit
-> 475c850a7fdd Add linux-next specific files for 20250606
-> 
->  arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso b/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso
-> index 432751774853..268a3183753e 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso
-> +++ b/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso
-> @@ -30,6 +30,7 @@ &cbass_main {
->  	interrupt-parent = <&gic500>;
->  
->  	pcie0_ep: pcie-ep@f102000 {
-> +		bootph-all;
++ Brian, Rafael, Tony, Jeffy (who were part of the previous attempt to add WAKE#
+GPIO/interrupt support:
+https://lore.kernel.org/linux-pci/20171225114742.18920-1-jeffy.chen@rock-chips.com
 
-For new entries being added, please follow
-Documentation/devicetree/bindings/dts-coding-style.rst
-
-for guidance, look at where bootph is being added in more recent patches.
-
->  		compatible = "ti,am64-pcie-ep", "ti,j721e-pcie-ep";
->  		reg = <0x00 0x0f102000 0x00 0x1000>,
->  		      <0x00 0x0f100000 0x00 0x400>,
-> -- 
-> 2.34.1
+On Mon, Jun 09, 2025 at 11:27:49AM +0530, Krishna Chaitanya Chundru wrote:
 > 
+> 
+> On 6/6/2025 1:56 AM, Bjorn Helgaas wrote:
+> > On Thu, Jun 05, 2025 at 10:54:45AM +0530, Krishna Chaitanya Chundru wrote:
+> > > PCIe wake interrupt is needed for bringing back PCIe device state
+> > > from D3cold to D0.
+> > 
+> > Does this refer to the WAKE# signal or Beacon or both?  I guess the
+> > comments in the patch suggest WAKE#.  Is there any spec section we can
+> > cite here?
+> > 
+> we are referring only WAKE# signal, I will add the PCIe spec r6.0, sec
+> 5.3.3.2 in next patch version.
+> > > Implement new functions, of_pci_setup_wake_irq() and
+> > > of_pci_teardown_wake_irq(), to manage wake interrupts for PCI devices
+> > > using the Device Tree.
+> > > 
+> > >  From the port bus driver call these functions to enable wake support
+> > > for bridges.
+> > 
+> > What is the connection to bridges and portdrv?  WAKE# is described in
+> > PCIe r6.0, sec 5.3.3.2, and PCIe CEM r6.0, sec 2.3, but AFAICS neither
+> > restricts it to bridges.
+> > 
+
+You are right. WAKE# is really a PCIe slot/Endpoint property and doesn't
+necessarily belong to a Root Port/Bridge. But the problem is with handling the
+Wake interrupt in the host. For instance, below is the DT representation of the
+PCIe hierarchy:
+
+	PCIe Host Bridge
+		|
+		v
+	PCIe Root Port/Bridge
+		|
+		|
+		v
+PCIe Slot <-------------> PCIe Endpoint
+
+DTs usually define both the WAKE# and PERST# GPIOs ({wake/reset}-gpios property)
+in the PCIe Host Bridge node. But we have decided to move atleast the PERST# to
+the Root Port node since the PERST# lines are per slot and not per host bridge.
+
+Similar interpretation applies to WAKE# as well, but the major difference is
+that it is controlled by the endpoints, not by the host (RC/Host Bridge/Root
+Port). The host only cares about the interrupt that rises from the WAKE# GPIO.
+The PCIe spec, r6.0, Figure 5-4, tells us that the WAKE# is routed to the PM
+controller on the host. In most of the systems that tends to be true as the
+WAKE# is not tied to the PCIe IP itself, but to a GPIO controller in the host.
+
+In this case, the PCI core somehow needs to know the IRQ number corresponding to
+the WAKE# GPIO, so that it can register an IRQ handler for it to wakeup the
+endpoint when an interrupt happens. Previous attempts [1], tried to add a new DT
+property for the interrupts:
+https://lore.kernel.org/linux-pci/20171225114742.18920-2-jeffy.chen@rock-chips.com
+
+But that doesn't seem to fly. So Krishna came with the proposal to reuse the
+WAKE# GPIO defined in the Root Port node (for DTs that have moved the properties
+out of the Host Bridge node) and extract the IRQ number from it using
+gpiod_to_irq() API.
+
+And he used portdrv as the placeholder for the irq setup code, because the WAKE#
+GPIO is going to be defined in the Root Port node irrespective of a PCIe Slot or
+an endpoint is connected to the Root Port. And the portdrv driver is the one
+controlling the Root Port. Though, this placeholder part can be subject to
+discussion.
+
+But from the previous discussions, I could infer that the PCIe Root Port/Bridge
+DT node is going to be the placeholder for the WAKE# GPIOs:
+https://lore.kernel.org/linux-pci/2806186.IK6EZBC0cX@aspire.rjw.lan
+
+It also sounds sensible to me since we do not want to define the wake-gpios
+property in the endpoint node as that would mean that for each device connected,
+a separate DT endpoint node needs to be created just for defining the WAKE#
+GPIO. Also, if there is only a PCIe slot in the board, then the property has to
+be defined in the PCIe Root Port node itself as there is no separate DT node for
+PCIe slot.
+
+> The wake# is used by the endpoints to wake host to bring PCIe device
+> state to D0 again, in direct attach root port wake# will be connected
+> to the root port and in switch cases the wake# will connected to the
+> switch Downstream ports and switch will consolidate wake# from different
+> downstream ports and sends to the root port. The wake# will be used by
+> root port bridges only. portdrv is the driver for root port.
+
+This is not correct. Root Port doesn't have anything to do with the WAKE#
+interrupt. We are just merely trying to reuse the Root Port driver because of
+how the WAKE# GPIO is wired up in the DT. It might not be applicable for ACPI as
+the FW raises GPE for the Wake interrupt and kernel doesn't parse WAKE#, afaik.
+
+> > Unless there's some related functionality in a Root Port, RCEC, or
+> > Switch Port, maybe this code should be elsewhere, like
+> > set_pcie_port_type(), so we could set this up for any PCIe device that
+> > has a WAKE# description?
+> > 
+
+I think it should work if we tie the Wake interrupt to the PCI device instead of
+the Root Port/Bridge in the kernel, even though the DT representation is
+different. In that case, PCI core should parse the Root Port node for each
+device to get the WAKE# GPIO and setup an IRQ handler for it. When the Wake
+interrupt happens, the PCI core should power ON the PCI hierarchy starting from
+the host bridge, till the endpoint (top down approach).
+
+I think we all agree that the WAKE# GPIO should be handled by the PCI core
+instead of the PCI controller or client drivers. We should agree on the best
+possible place though.
+
+- Mani
 
 -- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+மணிவண்ணன் சதாசிவம்
