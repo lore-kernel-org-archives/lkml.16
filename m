@@ -1,161 +1,121 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2055.outbound.protection.outlook.com [40.107.92.55])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2232C21883E;
-	Mon,  9 Jun 2025 15:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749484596; cv=fail; b=dsidtPa9ifdQNhbc38zAmYEusVuz8G4b5XLHHk49a0/RVovdSd1p5ZkdPJTgRUB/ovntTP0t/6Dvh8Q+p3iMOE1cOTIHEkl4tXp5yzuinwjAbhmLaN7CxL7d1PdeC915FzWUGQDFmnpbEuJY4uzNlcVdcxiXoE6v6iZ29NwNYLw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749484596; c=relaxed/simple;
-	bh=vHJR3OR6dhTiWlyQOOOWvfWd3jHT9TFPtLbVanVItNU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EF4Wz8i7KSU6Sd0dKLiBGIYZ/TPzirESB4Q/FI7rZG6oIRd0YWFHOoVnnE+QrxZmenBXZBxqiknicXeaSL6GR4EPgqMpmzbpVN78ZLV4AsFEqLvmm/zylB1nV069LTVyAaaSh286Njh+Fk8sEqmpCSgsOZlgL+wk1GRzLe4/mx4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MJF67aQ+; arc=fail smtp.client-ip=40.107.92.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A907820FABA;
+	Mon,  9 Jun 2025 15:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749484636; cv=none; b=SqCbyta3x/00nVLpdBAG2pv+4l1II3YSCNiwRi6L4O6kboyG+F4qme0yi0NehEyEsISfCVpgRhmftqBSVOpyE9QFjsYcruRlU32Q0LGYwFe9E+KAvPNGSI9QZVe5LbzWxYGbePQTYWMozsUZvo0pD/w/9zOeaNM1hiIPeeVsfzA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749484636; c=relaxed/simple;
+	bh=WVN4Rk8eFlSf26V+gHVby7ROOyqmVgdva3yS0D4ZzAg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tOJsIfElXu+8Q2S2mhXP5gn9wUElVTmrbQ9cct7RfOgtmFHbX61ybcS82fDlUTxDJGJ9fUDSiLA31kZA7OaslyDkIituxz1vdbUoGPGuUMFUfQoEKEih1f+jl/MOQkwMNp4CS5Gi086LsRMQGCokf7oWjZGuziHga+uB/Hg/s50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DutVtiPq; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MJF67aQ+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tuJksJAtEeEUaR8HhRK8osOLAleXfdCxVvdIRji09iZCVwzLoHwZu2s4CUGBDUheXgFil0JikTwoej6ZKCG6lLvuIeuEpp00uZ3mx2NdTco2beqO/J+Pws1jYNjZKmKb6yLNDb/+3FUwq2KspqsZ1xjzU8ptWONRf7fEaMn/1UsH6SNXxeHw2Ib1el7ry0d20WT/NObKNUlrrdMbbgXAUppCAHm8KdNiwkU5tO/poWdkbHdEllyyyu7z7ksb8LrbPxYD7Reyy+TEdFDyu/Fq/3SYZjANbZdPzobfIht17i58/mrlnG0LWCj/6CI/EqsV/APOUe/SYjUhq1YYMSGKyg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PKiNkZWt5Dd66kYiauq8T9FX8HqaRoQyDX3KpEvpAKQ=;
- b=dj4OR51d1f7C7T+135DS1e6kfD7m7uFJWK70S/VLCuqrtQ7XK9bv0W/G1dQmV++1YjuKGFvN1I9278Js9bpX7v1OVKknjc8F8x4nuLys9ojHZY7JDW3bExQ8jowrYSAEzD8DHLFoAILc/esaRGiSc8jbuIc2mOr+Bc7FfaPISKjbwz7n3o7T+c0L5lVx4VNLe6mTFhGrWs3807ia9VEOINH+F4kLjvIwYVdel+1dNEYooEmF7H3/vClCqXNYvku7zqDcKwO3H1a1IQRyn2BAd/lNuyoWs1eR4MTwVwxTrd/7PDIV7d3y1yTRwBLxDw6APCWK/sB+ncWbz0RycRnkFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PKiNkZWt5Dd66kYiauq8T9FX8HqaRoQyDX3KpEvpAKQ=;
- b=MJF67aQ+HgJ8xfqMF+XCBw163K1ZrdLkVyNAOCeQhxzRBbjdCib9KFB0u+HqyLPsmIhs2GEj1wrChdS31Upf1VixSnxypuPAWWUHSRdFStSdPPJg8t+PD3wLQnSk9ibpeQSj50VDdh4ZBpnlpLyuqbenPdPsQQ2s9sNedTtPbNg=
-Received: from BN9P220CA0026.NAMP220.PROD.OUTLOOK.COM (2603:10b6:408:13e::31)
- by IA1PR12MB6435.namprd12.prod.outlook.com (2603:10b6:208:3ad::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.38; Mon, 9 Jun
- 2025 15:56:28 +0000
-Received: from BL02EPF0001A102.namprd05.prod.outlook.com
- (2603:10b6:408:13e:cafe::75) by BN9P220CA0026.outlook.office365.com
- (2603:10b6:408:13e::31) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.25 via Frontend Transport; Mon,
- 9 Jun 2025 15:56:28 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL02EPF0001A102.mail.protection.outlook.com (10.167.241.134) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8835.15 via Frontend Transport; Mon, 9 Jun 2025 15:56:28 +0000
-Received: from maple-stxh-linux-10.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Mon, 9 Jun 2025 10:56:17 -0500
-From: Pratap Nirujogi <pratap.nirujogi@amd.com>
-To: <andi.shyti@kernel.org>, <ilpo.jarvinen@linux.intel.com>,
-	<rdunlap@infradead.org>, <hdegoede@redhat.com>, <sfr@canb.auug.org.au>,
-	<linux-next@vger.kernel.org>
-CC: <linux-i2c@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <benjamin.chan@amd.com>, <bin.du@amd.com>,
-	<gjorgji.rosikopulos@amd.com>, <king.li@amd.com>, <dantony@amd.com>, "Pratap
- Nirujogi" <pratap.nirujogi@amd.com>
-Subject: [PATCH v4 1/3] i2c: designware: Initialize adapter name only when not set
-Date: Mon, 9 Jun 2025 11:53:55 -0400
-Message-ID: <20250609155601.1477055-2-pratap.nirujogi@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250609155601.1477055-1-pratap.nirujogi@amd.com>
-References: <20250609155601.1477055-1-pratap.nirujogi@amd.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DutVtiPq"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 559B6Q2E017406;
+	Mon, 9 Jun 2025 15:57:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=mdHOKqWabxLvDWTcu89UeJRrFDbtbY
+	dwbmCuWQ0Vc6g=; b=DutVtiPqUVTsIL4JJim4pw+Fp+IxFJD5gyucLIbOtK2JxM
+	oQIrv1LxkuKnbhOK+VevYOKuzU5rsotX7MeevcAR6rKwJzH4MLHMfyuWHse61JfZ
+	iXcg3zG+kvDJYXe4f+Bv62ttTlj8O8BvqA1c74LI8DiGSxGeofMOLI5IQuUUBEmU
+	H0oVwp49lDs27iMqr0KBrFe4O1F9Jty7fct4C6zq++vL6F/0i3NEmox7Mfhp/Q9t
+	EX3wZWvtb+UFlFgsY7b/aktpMsyS/1GaVmcBw60llxjVThgC/OQTsr+n88oMiSqh
+	O3M0TsOVHYaTjQsD0MN+r9tPRVNUR9PuxsgbGVzg==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474hgu8kvb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 09 Jun 2025 15:57:03 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 559Ed3nJ014912;
+	Mon, 9 Jun 2025 15:57:03 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4750rnxbun-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 09 Jun 2025 15:57:03 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 559FuxUi35193454
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 9 Jun 2025 15:56:59 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1BA8920043;
+	Mon,  9 Jun 2025 15:56:59 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 933312004B;
+	Mon,  9 Jun 2025 15:56:58 +0000 (GMT)
+Received: from osiris (unknown [9.111.49.56])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon,  9 Jun 2025 15:56:58 +0000 (GMT)
+Date: Mon, 9 Jun 2025 17:56:57 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>, linux-arch@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org
+Subject: Re: [PATCH 16/15] bugs/s390: Use in 'cond_str' to __EMIT_BUG()
+Message-ID: <20250609155657.8183A92-hca@linux.ibm.com>
+References: <20250515124644.2958810-1-mingo@kernel.org>
+ <20250515124644.2958810-11-mingo@kernel.org>
+ <20250520133927.7932C19-hca@linux.ibm.com>
+ <aEabAPB5Y9EbSPkt@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0001A102:EE_|IA1PR12MB6435:EE_
-X-MS-Office365-Filtering-Correlation-Id: bde478e7-b664-4050-194d-08dda76e3229
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?kOh9hTqku8BaS//E6s/Mf+QIRfVgfnPfuQJMvFQCrOe3mZ6D0g7p0DrPpvws?=
- =?us-ascii?Q?SR0Ij3sGtxGsDl8eEv6Z3+oOoxpbWUXhYixmnkpE6ExDxzx67r1f4tc9ZJX6?=
- =?us-ascii?Q?M7uR4qhXLrcBQVcp8gRZuhtowKmBM4msA6MQsTd/Krp7RkFyRu7DY4eWBGH1?=
- =?us-ascii?Q?rOxuX8ju7bphY9gEXo9R8CbB9TABkbt/pquzxRQSm3D2gkHla2qG0xeoufFB?=
- =?us-ascii?Q?/qMWjcbkI0StCYI0YPBvgod6Lh/Wkglr8Mvhu+/AoqEm3GE2q4zRQQYoh9Iv?=
- =?us-ascii?Q?g6c9VhCoHsXW+AXy9grYlH03AHwvr+xVmKrAyS8yEk4ZVCi+xBA37opMnHnc?=
- =?us-ascii?Q?OSk0bfMW6Qz1i7bOU1srE5rU7zmjX8omemuDXmp5DORiFkmWbqoOYnpQDyYI?=
- =?us-ascii?Q?5y42m1TEaxmJOQG4aolR/vEG0MJ0Z5pwQiF5C3b9VbAoQKkdWGqDp111jx/I?=
- =?us-ascii?Q?CjKccYi6WGYqI9KWgd9HSeSWNkAOZladm1G/4UB+QLpOpryFd33suTTFHZzk?=
- =?us-ascii?Q?zJ/DC6WbFEsF1fYMHrpuhpMsme0Ooy1/H+f6WmUV0DZJy1GIhNEcs0te/rW9?=
- =?us-ascii?Q?eOJiVY2DtzXPtKAnNql49LTYHTrvOt+QodzLigwZp0fSSFsFlSn5ZDnmTwsV?=
- =?us-ascii?Q?5eg/OKMe6UpPaG1oY0l5ePCwVyxCi74QlG2wVfLT8ujgWK4Uj1u2GUpvEEdf?=
- =?us-ascii?Q?UwK2DC3cZzB5oq3RrkLy+xyHkcgyLbYFYnOA9ap149RZjJgUc4aA+Rjz6QY5?=
- =?us-ascii?Q?5mN8+Tw/1rZR+v368SkRuIicwhTFPUZqUHYYmZX+NjCVonc/Y61NY4Fvk5jG?=
- =?us-ascii?Q?U3gfvJG7orA0b+6iW4jSQYgRf58rvRe1Ssh2bXODWuY0bhVVhY171ZiJLprw?=
- =?us-ascii?Q?3UR7N7op/aU9Ud3LqOQh5Rg1O2UEHu+huHJGarVw3zPO0VrIY/qGzTXck8DO?=
- =?us-ascii?Q?XVdT1PYGjxc5Q1Q+/Z8AWNlJhZ408AnfTcHJtBlSTWLr2ax4KOVs6Jm9gxAV?=
- =?us-ascii?Q?cQOpGsRiRJ+S2U/GcSYYSRD0fN7h0Ixbw1WxJ5kTDZZek4xEC7LfPXuzLGWq?=
- =?us-ascii?Q?kHGoaiIaNofyQ0X1rd6CIpxbx02afXQ8KFkoydKrt+rYMzYhWU9s7A+LFQc+?=
- =?us-ascii?Q?/74SXac9qc4FKRPYe/SgW9Yr6YmudnsX1HY8UN45ZvDdLPVg3rTqPGIgiCrq?=
- =?us-ascii?Q?t6E2zWSyUZdX6bh5rJQykeazyi+lEljO2DHe6kT/MRkJLvRzGU9ZatIUmkXe?=
- =?us-ascii?Q?qp+TXEClZXC8TZmjhGaEiA5m7+5c67VUBUYrSYf6hVq6Zw/ejkCvdZhrHVZj?=
- =?us-ascii?Q?x37BRSpixGq4q7f2BMfT2gqA0Kp/1K5+4y9czZEljTmWJLpz/cNSBnXDendB?=
- =?us-ascii?Q?a/TvAxPk1wXXlzRR93wlNzi7cJ2nQW0v4PCd1RPDjMgISnq5+wQu+RgD3QBT?=
- =?us-ascii?Q?1aeBUvDM2nYk1k1Eyk+IDFWztaM29U/qz9lGtaSAqXFTpRwAiK+H+6mPK7uG?=
- =?us-ascii?Q?GpvsYUAwDoVUDJAoA6FOY+BybKRhwJxyDqW/?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 15:56:28.5824
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bde478e7-b664-4050-194d-08dda76e3229
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF0001A102.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6435
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEabAPB5Y9EbSPkt@gmail.com>
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=Pfr/hjhd c=1 sm=1 tr=0 ts=6847044f cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=mP1wJ5fc1yCHjsL5jbEA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: pIF64b1PPfd49sEebyRFZmxtT0EY6wZL
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDExNyBTYWx0ZWRfX+AQo1stHFX8g yOWiu/SoaoxK5WIrbD+RLkixeakAugcZMuM9mjN2AuHfPk8tCT/QcVFGJMtcOYH18TduiNUYFyd Q9EkLBj4pejJ07587Hn7ByW7vxGa/kClTI2ldhyQ/A9JMtL8IL8k3bbL1kUflQ+yub6P453TBTk
+ qTSUkEQYM+vZoXxgomd05egRu+8JeCvGRsi90SSiPK1te97sPN7i5nw6DsqtV0XJL8GV+S/q6Gs amqVDabJjesKVwJt8zzqEOD3U8wyXv4CMMi/qgrQMFNiUTEb3SI6C8TArWSrEYsSHLosVN/6WTD zDDJHyB/fCGoypcUyPNeXqnfGakQYrfXn/PA/3j8dYH9RwHsp5GZfxM2Oe2qUwY6EPzB09twi1k
+ pq2KOVOZfnxJsFyaUDdecJr9SCwLJYyBV3vXbRfzodCnOsLQrdC1bS9nMg3yoWArTH9T/nso
+X-Proofpoint-ORIG-GUID: pIF64b1PPfd49sEebyRFZmxtT0EY6wZL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-09_06,2025-06-09_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 impostorscore=0 suspectscore=0 adultscore=0
+ clxscore=1015 phishscore=0 bulkscore=0 malwarescore=0 mlxlogscore=363
+ mlxscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506090117
 
-Check if the adapter name is already set in the driver prior to
-initializing with generic name in i2c_dw_probe_master(). This
-check allows to retain the unique adapter name driver has
-initialized, which platform driver can use to distinguish it
-from other i2c designware adapters.
+On Mon, Jun 09, 2025 at 10:27:44AM +0200, Ingo Molnar wrote:
+> So I'm not sure what happened: I tried to reproduce what I did 
+> originally, but my naive patch ran into assembler build errors when a 
+> WARN_ON() macro tried to use the '%' C operator, such as 
+> fs/crypto/crypto.c:123:
+> 
+>  include/linux/compiler_types.h:497:20: error: invalid 'asm': invalid %-code
+>  arch/s390/include/asm/bug.h:12:2: note: in expansion of macro 'asm_inline'
+>  arch/s390/include/asm/bug.h:50:2: note: in expansion of macro '__EMIT_BUG'
+>  include/asm-generic/bug.h:119:3: note: in expansion of macro '__WARN_FLAGS'
+>  fs/crypto/crypto.c:123:6: note: in expansion of macro 'WARN_ON_ONCE'
+> 
+> Which corresponds to:
+> 
+>         if (WARN_ON_ONCE(len % FSCRYPT_CONTENTS_ALIGNMENT != 0))
+>                 return -EINVAL;
+> 
+> I'm quite sure I never saw these build errors - I saw linker errors 
+> related to the u16 overflow I documented in the changelog. (Note to 
+> self: copy & paste more of the build error context next time around.)
+> 
+> Your version doesn't have that build problem, so I picked it up with 
+> the changelog below and your Signed-off-by. Does that look good to you?
 
-Tested-by: Randy Dunlap <rdunlap@infradead.org
-Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
----
- drivers/i2c/busses/i2c-designware-master.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-designware-master.c b/drivers/i2c/busses/i2c-designware-master.c
-index c5394229b77f..9d7d9e47564a 100644
---- a/drivers/i2c/busses/i2c-designware-master.c
-+++ b/drivers/i2c/busses/i2c-designware-master.c
-@@ -1042,8 +1042,9 @@ int i2c_dw_probe_master(struct dw_i2c_dev *dev)
- 	if (ret)
- 		return ret;
- 
--	snprintf(adap->name, sizeof(adap->name),
--		 "Synopsys DesignWare I2C adapter");
-+	if (!adap->name[0])
-+		scnprintf(adap->name, sizeof(adap->name),
-+			  "Synopsys DesignWare I2C adapter");
- 	adap->retries = 3;
- 	adap->algo = &i2c_dw_algo;
- 	adap->quirks = &i2c_dw_quirks;
--- 
-2.43.0
-
+Yes, fine with me.
