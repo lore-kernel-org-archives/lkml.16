@@ -1,50 +1,50 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D102561CC;
-	Mon,  9 Jun 2025 12:23:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3882E256C93;
+	Mon,  9 Jun 2025 12:24:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749471827; cv=none; b=AB9QEC9fc1s18j/hB7sdNvJ66+/uThY0fwv3N3XGj9ePzbIktKczwfTtl6SPcvuZssZ/9wjVFYP6UOWUDE4GcYRgHxDYqcnsU+mjXzz2u8DyjJ5L31KJrawVx1IjiAmq2+qs428Gtl0b56Cx5qPik+10MLFzo2eVlKqi133jzR0=
+	t=1749471845; cv=none; b=I9zn593zqM3AifUdqh8BEfpdRv+vFlK5YMV0vPO85quVkBQM0kNE13H0QHbHXt09EfjjuvFcwgWwIIcM1pfz7cjgV89JzhXy+rSFf6GeAZGEJx35FfXuOhDTSsccEEup59zUlXO5gF6Xn+TNvs+aEMvijKeI8TxS1gqEMWQyPyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749471827; c=relaxed/simple;
-	bh=rDDYw3xR3mmHoje5I9up1SmCL8mXraCda8Sxd10q9W4=;
+	s=arc-20240116; t=1749471845; c=relaxed/simple;
+	bh=Sd5BjWA5H6nFyQtwSlCDQ5jNVpUQ0A6XAuNFDqO2xzw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=jhMiP7b4Pwg/am6N4DWeWxyNg38XRV0OyMxB8yrej8gvfC3bewROagQTtCI5fsp0+DZY20Qyq1enzObUBDdn51Y6mJqp10FegLMmH6opAS3DHgRvqeBvqTiSCTF01kRtfR0uDBGmDbdTfZxDLslWQOjqwiRUGYqxsbP63rz2RkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IiZBgZCt; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:CC; b=FbIr8p3PwzS9K2pUjbUqU4Ematpt+u/EUqWMLL/zMi1p5D2Ym+e5wkXtJjjbYAL8aSX8usIAOlZnVYrsPU1afFAM/ig8Y8J1o05sYaRHzPfGYliQPICAhEHN3C+qhQqJTUDqMPASeHQLdtTmWzt5hj0Ql5CKj+D9B3N9us/unVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QQC0U7aw; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IiZBgZCt"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5599VV4a015275;
-	Mon, 9 Jun 2025 12:23:37 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QQC0U7aw"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 559B9X48020311;
+	Mon, 9 Jun 2025 12:23:55 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	YEVK4QOocm7yjop6eFdNjAhnOFXYkdyX1kX6lkapERY=; b=IiZBgZCtoXbeJHOQ
-	MUshoM90Le1PAQHF2FvMxyr583ZRl/d3bWDUeHk5wBOnzYr95x22TCwCY1pbyrfv
-	sbPCPRYrdM0T1iJnPdv8ga/bQc0tdOQW+yelbIahJhyJQZAVCqcsBkFfjS4a/bjU
-	OpBzjLhv5SsijhkG96Hni7PYl9JrK6f36x6pG9aEB7maJMcSvS8avdP2OHcreqVW
-	0Am4yKNC+hQRtcQQC6u90rP/TMKzIDgpOfZgsHWEnTm8wL8bgc8eguhTAo68N0yG
-	KVvDUc1OH+Org+eAmX72MGdpc1at4Rjv2DAt9eyRGlLUo9J57qAUDBFl7a0CCspu
-	VK5B3g==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474d11x5m1-1
+	Y2VLSAa33p+BHDOAbtzOwTG5u0HGTWsyBSHz+95aRIE=; b=QQC0U7awKrphMPeO
+	Cl85tROSCw0piXLcNvv1HjtomBpvY+aD3GueH3B1MAGqMhmJEzGt9X1ncDzFkwNE
+	5W8TMJNAyNTBLqms3wal+KkaAZbarIG965G1jW6qGB3hXiPd78ESOLsMMjLAPr72
+	gGGl8141dZlcEIkQN8yZCer/MPkDOkB/r4u5mMmgMhORDQsbLqVX/F/iE1moGps6
+	N4AYOCtS1rW1RfReMdKfWg8kHBfCxjxJpNjCEPIeAJZ0ghmv5GL73eXSMHwzjUzP
+	4UJIpiI8rFuRpU5i+TqiXIbDQ0Kc9DYFwu4rLIv10h2aMaLQ85cBTkY68e1QcxmS
+	pEH7Ig==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 475qctsd4v-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Jun 2025 12:23:36 +0000 (GMT)
+	Mon, 09 Jun 2025 12:23:55 +0000 (GMT)
 Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 559CNZnN012739
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 559CNswS016736
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 9 Jun 2025 12:23:35 GMT
+	Mon, 9 Jun 2025 12:23:54 GMT
 Received: from cse-cd01-lnx.ap.qualcomm.com (10.80.80.8) by
  nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 9 Jun 2025 05:23:31 -0700
+ 15.2.1544.9; Mon, 9 Jun 2025 05:23:50 -0700
 From: Yongxing Mou <quic_yongmou@quicinc.com>
-Date: Mon, 9 Jun 2025 20:21:31 +0800
-Subject: [PATCH v2 12/38] drm/msm/dp: add support for programming p1/p2/p3
- register block
+Date: Mon, 9 Jun 2025 20:21:36 +0800
+Subject: [PATCH v2 17/38] drm/msm/dp: no need to update tu calculation for
+ mst
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250609-msm-dp-mst-v2-12-a54d8902a23d@quicinc.com>
+Message-ID: <20250609-msm-dp-mst-v2-17-a54d8902a23d@quicinc.com>
 References: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
 In-Reply-To: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
 To: Rob Clark <robin.clark@oss.qualcomm.com>,
@@ -73,436 +73,66 @@ CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
  Mou" <quic_yongmou@quicinc.com>,
         Abhinav Kumar <quic_abhinavk@quicinc.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749471755; l=18782;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749471757; l=1022;
  i=quic_yongmou@quicinc.com; s=20241121; h=from:subject:message-id;
- bh=JelKB3YsjYzFKjjiKN+VkAcD59iV2UINGqHh6gepbz0=;
- b=gFq/pTsie4To32twHjyQaXWfZwCQ+NRi3kaV89Ycp6zNoG3Fw17JlNkAfDiEJ35cMpDOSxQSe
- fl4ht2l9rEPAR6t+pizY1U4rXI/LKVrRnmJ7UpiMPRMz6oc9J8LTT7Z
+ bh=N8xoAc6P8kRdZ8a1+edZWJqAu09q42wM1+exFZL9GC4=;
+ b=IHMDQaoJKcVU7lLb1e5EK/kcxh1Xud/lZDVzGYulOtDGx8aQ2PzXRTDYITUsmPctNeo+MNVgB
+ MlagZ19SXzFBGXarOZePZ0Hjg91WktIgxei306Z+xMjrstbCxrSF25X
 X-Developer-Key: i=quic_yongmou@quicinc.com; a=ed25519;
  pk=zeCnFRUqtOQMeFvdwex2M5o0Yf67UHYfwCyBRQ3kFbU=
 X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01c.na.qualcomm.com (10.47.97.35)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: cQ7S_hoZB03CMdtfSzqpNWUV2LdRbSIv
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA5MiBTYWx0ZWRfXwPGlWJfca//E
- ICw3f866NHh+oAi18d2YVb6qmcZlpXkpDjonVJLsaqes/XINbL8qxQoHHAIsXfp5piilJH/iKpx
- qG9J+r+ns0V1eofhz2JF36OutFnTrvaImrxQNCd+AFw6lPu2JvqoEbVfuSa+yrmQZ6nMnnUeFp5
- O4WOBL5zLIvRba7qNvJIsBOUxZhGmf1crkGr/Fglbt6OiKksy1qV77b1GSnIN36Vc0+2oLdVxR5
- AK5p5TIqPppWMqvzxLqEKt2Ez8THt28XCM8QaNp+pVjRBt78Rk1aZiulFWUsxDWWuZM3x/AVca7
- DKM0lCz0S03nWfT5CGF3AWkAg1t9IAqRlv0rgQIVnVsRX5vqXndVZUhIQWCZ8ya4/3jqa/8unsq
- PhOzvTLJBm3Hzg5aI111wTClFloNQEjTNA0/vMmLW1OkPxw0XmxQS7rZcZifB11rRU7k2VBz
-X-Authority-Analysis: v=2.4 cv=GYkXnRXL c=1 sm=1 tr=0 ts=6846d248 cx=c_pps
+X-Proofpoint-GUID: Ne2554JdYdyRoCqAMG4kBy4lD-UOMzD-
+X-Authority-Analysis: v=2.4 cv=Lco86ifi c=1 sm=1 tr=0 ts=6846d25b cx=c_pps
  a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
  a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=1fD0qQqZq30VoMthJ50A:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: cQ7S_hoZB03CMdtfSzqpNWUV2LdRbSIv
+ a=nb1SeSCrlpLBeGjklAIA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA5MyBTYWx0ZWRfX7/KiVBgjuSIr
+ RhsjPIfHjdWLUPQE8M0umA/5m9YAD3lfPwMmJES0rHve7h4+9sEIYqTsB5qD0MT8SMRqxBYZFu8
+ Tk+y8svM2cuDWHX5Z0Aqqq6/qDIxgWn6X9BtfcYNWI17XuRyEesIJQbO6Als0maejdw1hONV3yp
+ IDdO/piQFkL6xi0hZjsscU0y5SB5mnXuLwQQlsObhwY/YX2/GR3r+SJwNRa13MnWNufiwnjSt5a
+ 4Q09ogANxYTB4nVwU2VeIJLloDdPplZUDbkZ4+YMRNHm1rpgsMzYCkGQ74c5nhiVbKkTWcp56Z/
+ 8FoWRRnYaWMWkp4qplLTa/jVUtQ651eyWJ2jp55it2s9epPXRBlpisimxmmUb03FczdgOVU8+kB
+ xvczCHNPKPHuwCH22fz5C6q1vQ/0XoRDIBTAVG/A1ezOL0LY0uOD3Qc0L7khCeYCYK4LlNd1
+X-Proofpoint-ORIG-GUID: Ne2554JdYdyRoCqAMG4kBy4lD-UOMzD-
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-09_05,2025-06-05_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 bulkscore=0
- impostorscore=0 clxscore=1015 malwarescore=0 priorityscore=1501 mlxscore=0
- adultscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506090092
+ malwarescore=0 priorityscore=1501 suspectscore=0 clxscore=1015
+ impostorscore=0 spamscore=0 phishscore=0 mlxlogscore=787 mlxscore=0
+ bulkscore=0 adultscore=0 lowpriorityscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506090093
 
 From: Abhinav Kumar <quic_abhinavk@quicinc.com>
 
-QCS8300 support 4 streams MST and SA8775P support 2 x 2 MST. Add
-support for other 3 pixels register block, and introduced
-msm_dp_read_pn/msm_dp_write_pn to minimize repetitive code. All PCLK
-share the same register definitions with different base addresses.
+DP stream is transmitted in transfer units only for SST
+case there is no need to calculate and program TU parameters
+for MST case. Skip the TU programming for MST cases.
 
 Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
 Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
 ---
- drivers/gpu/drm/msm/dp/dp_catalog.c | 128 +++++++++++++++++++++---------------
- drivers/gpu/drm/msm/dp/dp_catalog.h |  18 +++--
- drivers/gpu/drm/msm/dp/dp_ctrl.c    |   2 +-
- drivers/gpu/drm/msm/dp/dp_display.c |   2 +-
- drivers/gpu/drm/msm/dp/dp_panel.c   |   8 ++-
- 5 files changed, 93 insertions(+), 65 deletions(-)
+ drivers/gpu/drm/msm/dp/dp_ctrl.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/dp/dp_catalog.c b/drivers/gpu/drm/msm/dp/dp_catalog.c
-index 7b7eadb2f83b169d8df27ee93589abe05b38f3ae..d2d975805de93e929cbdadb90609b6bf3e2cf1bf 100644
---- a/drivers/gpu/drm/msm/dp/dp_catalog.c
-+++ b/drivers/gpu/drm/msm/dp/dp_catalog.c
-@@ -60,8 +60,8 @@
- #define DP_DEFAULT_AUX_SIZE	0x0200
- #define DP_DEFAULT_LINK_OFFSET	0x0400
- #define DP_DEFAULT_LINK_SIZE	0x0C00
--#define DP_DEFAULT_P0_OFFSET	0x1000
--#define DP_DEFAULT_P0_SIZE	0x0400
-+#define DP_DEFAULT_PIXEL_OFFSET	0x1000
-+#define DP_DEFAULT_PIXEL_SIZE	0x0400
- 
- struct dss_io_region {
- 	size_t len;
-@@ -72,7 +72,7 @@ struct dss_io_data {
- 	struct dss_io_region ahb;
- 	struct dss_io_region aux;
- 	struct dss_io_region link;
--	struct dss_io_region p0;
-+	struct dss_io_region pixels[DP_STREAM_MAX];
- };
- 
- struct msm_dp_catalog_private {
-@@ -87,11 +87,17 @@ void msm_dp_catalog_snapshot(struct msm_dp_catalog *msm_dp_catalog, struct msm_d
- 	struct msm_dp_catalog_private *catalog = container_of(msm_dp_catalog,
- 			struct msm_dp_catalog_private, msm_dp_catalog);
- 	struct dss_io_data *dss = &catalog->io;
-+	char reg_name[6];
-+	int i;
- 
- 	msm_disp_snapshot_add_block(disp_state, dss->ahb.len, dss->ahb.base, "dp_ahb");
- 	msm_disp_snapshot_add_block(disp_state, dss->aux.len, dss->aux.base, "dp_aux");
- 	msm_disp_snapshot_add_block(disp_state, dss->link.len, dss->link.base, "dp_link");
--	msm_disp_snapshot_add_block(disp_state, dss->p0.len, dss->p0.base, "dp_p0");
-+	for (i = DP_STREAM_0; i < DP_STREAM_MAX; i++) {
-+		sprintf(reg_name, "dp_p%d", i);
-+		msm_disp_snapshot_add_block(disp_state, dss->pixels[i].len,
-+			dss->pixels[i].base, reg_name);
-+	}
- }
- 
- static inline u32 msm_dp_read_aux(struct msm_dp_catalog_private *catalog, u32 offset)
-@@ -124,24 +130,24 @@ static inline void msm_dp_write_ahb(struct msm_dp_catalog_private *catalog,
- 	writel(data, catalog->io.ahb.base + offset);
- }
- 
--static inline void msm_dp_write_p0(struct msm_dp_catalog_private *catalog,
--			       u32 offset, u32 data)
-+static inline void msm_dp_write_pn(struct msm_dp_catalog_private *catalog,
-+			       enum msm_dp_stream_id stream_id, u32 offset, u32 data)
- {
- 	/*
- 	 * To make sure interface reg writes happens before any other operation,
- 	 * this function uses writel() instread of writel_relaxed()
- 	 */
--	writel(data, catalog->io.p0.base + offset);
-+	writel(data, catalog->io.pixels[stream_id].base + offset);
- }
- 
--static inline u32 msm_dp_read_p0(struct msm_dp_catalog_private *catalog,
--			       u32 offset)
-+static inline u32 msm_dp_read_pn(struct msm_dp_catalog_private *catalog,
-+			       enum msm_dp_stream_id stream_id, u32 offset)
- {
- 	/*
- 	 * To make sure interface reg writes happens before any other operation,
- 	 * this function uses writel() instread of writel_relaxed()
- 	 */
--	return readl_relaxed(catalog->io.p0.base + offset);
-+	return  readl_relaxed(catalog->io.pixels[stream_id].base + offset);
- }
- 
- static inline u32 msm_dp_read_link(struct msm_dp_catalog_private *catalog, u32 offset)
-@@ -430,8 +436,8 @@ void msm_dp_catalog_setup_peripheral_flush(struct msm_dp_catalog *msm_dp_catalog
- }
- 
- void msm_dp_catalog_ctrl_config_msa(struct msm_dp_catalog *msm_dp_catalog,
--					u32 rate, u32 stream_rate_khz,
--					bool is_ycbcr_420)
-+				    enum msm_dp_stream_id stream_id, u32 rate, u32 stream_rate_khz,
-+				    bool is_ycbcr_420)
- {
- 	u32 pixel_m, pixel_n;
- 	u32 mvid, nvid, pixel_div = 0, dispcc_input_rate;
-@@ -486,7 +492,7 @@ void msm_dp_catalog_ctrl_config_msa(struct msm_dp_catalog *msm_dp_catalog,
- 	drm_dbg_dp(catalog->drm_dev, "mvid=0x%x, nvid=0x%x\n", mvid, nvid);
- 	msm_dp_write_link(catalog, REG_DP_SOFTWARE_MVID, mvid);
- 	msm_dp_write_link(catalog, REG_DP_SOFTWARE_NVID, nvid);
--	msm_dp_write_p0(catalog, MMSS_DP_DSC_DTO, 0x0);
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_DSC_DTO, 0x0);
- }
- 
- int msm_dp_catalog_ctrl_set_pattern_state_bit(struct msm_dp_catalog *msm_dp_catalog,
-@@ -843,8 +849,9 @@ u32 msm_dp_catalog_ctrl_read_phy_pattern(struct msm_dp_catalog *msm_dp_catalog)
- }
- 
- /* panel related catalog functions */
--int msm_dp_catalog_panel_timing_cfg(struct msm_dp_catalog *msm_dp_catalog, u32 total,
--				u32 sync_start, u32 width_blanking, u32 msm_dp_active)
-+int msm_dp_catalog_panel_timing_cfg(struct msm_dp_catalog *msm_dp_catalog,
-+				    enum msm_dp_stream_id stream_id, u32 total, u32 sync_start,
-+				    u32 width_blanking, u32 msm_dp_active)
- {
- 	struct msm_dp_catalog_private *catalog = container_of(msm_dp_catalog,
- 				struct msm_dp_catalog_private, msm_dp_catalog);
-@@ -855,7 +862,7 @@ int msm_dp_catalog_panel_timing_cfg(struct msm_dp_catalog *msm_dp_catalog, u32 t
- 	msm_dp_write_link(catalog, REG_DP_HSYNC_VSYNC_WIDTH_POLARITY, width_blanking);
- 	msm_dp_write_link(catalog, REG_DP_ACTIVE_HOR_VER, msm_dp_active);
- 
--	reg = msm_dp_read_p0(catalog, MMSS_DP_INTF_CONFIG);
-+	reg = msm_dp_read_pn(catalog, stream_id, MMSS_DP_INTF_CONFIG);
- 
- 	if (msm_dp_catalog->wide_bus_en)
- 		reg |= DP_INTF_CONFIG_DATABUS_WIDEN;
-@@ -865,7 +872,7 @@ int msm_dp_catalog_panel_timing_cfg(struct msm_dp_catalog *msm_dp_catalog, u32 t
- 
- 	DRM_DEBUG_DP("wide_bus_en=%d reg=%#x\n", msm_dp_catalog->wide_bus_en, reg);
- 
--	msm_dp_write_p0(catalog, MMSS_DP_INTF_CONFIG, reg);
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_CONFIG, reg);
- 	return 0;
- }
- 
-@@ -963,7 +970,8 @@ void msm_dp_catalog_panel_disable_vsc_sdp(struct msm_dp_catalog *msm_dp_catalog)
- }
- 
- void msm_dp_catalog_panel_tpg_enable(struct msm_dp_catalog *msm_dp_catalog,
--				struct drm_display_mode *drm_mode)
-+				     enum msm_dp_stream_id stream_id,
-+				     struct drm_display_mode *drm_mode)
- {
- 	struct msm_dp_catalog_private *catalog = container_of(msm_dp_catalog,
- 				struct msm_dp_catalog_private, msm_dp_catalog);
-@@ -998,45 +1006,46 @@ void msm_dp_catalog_panel_tpg_enable(struct msm_dp_catalog *msm_dp_catalog,
- 	display_hctl = (hsync_end_x << 16) | hsync_start_x;
- 
- 
--	msm_dp_write_p0(catalog, MMSS_DP_INTF_HSYNC_CTL, hsync_ctl);
--	msm_dp_write_p0(catalog, MMSS_DP_INTF_VSYNC_PERIOD_F0, vsync_period *
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_HSYNC_CTL, hsync_ctl);
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_VSYNC_PERIOD_F0, vsync_period *
- 			hsync_period);
--	msm_dp_write_p0(catalog, MMSS_DP_INTF_VSYNC_PULSE_WIDTH_F0, v_sync_width *
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_VSYNC_PULSE_WIDTH_F0, v_sync_width *
- 			hsync_period);
--	msm_dp_write_p0(catalog, MMSS_DP_INTF_VSYNC_PERIOD_F1, 0);
--	msm_dp_write_p0(catalog, MMSS_DP_INTF_VSYNC_PULSE_WIDTH_F1, 0);
--	msm_dp_write_p0(catalog, MMSS_DP_INTF_DISPLAY_HCTL, display_hctl);
--	msm_dp_write_p0(catalog, MMSS_DP_INTF_ACTIVE_HCTL, 0);
--	msm_dp_write_p0(catalog, MMSS_INTF_DISPLAY_V_START_F0, display_v_start);
--	msm_dp_write_p0(catalog, MMSS_DP_INTF_DISPLAY_V_END_F0, display_v_end);
--	msm_dp_write_p0(catalog, MMSS_INTF_DISPLAY_V_START_F1, 0);
--	msm_dp_write_p0(catalog, MMSS_DP_INTF_DISPLAY_V_END_F1, 0);
--	msm_dp_write_p0(catalog, MMSS_DP_INTF_ACTIVE_V_START_F0, 0);
--	msm_dp_write_p0(catalog, MMSS_DP_INTF_ACTIVE_V_END_F0, 0);
--	msm_dp_write_p0(catalog, MMSS_DP_INTF_ACTIVE_V_START_F1, 0);
--	msm_dp_write_p0(catalog, MMSS_DP_INTF_ACTIVE_V_END_F1, 0);
--	msm_dp_write_p0(catalog, MMSS_DP_INTF_POLARITY_CTL, 0);
--
--	msm_dp_write_p0(catalog, MMSS_DP_TPG_MAIN_CONTROL,
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_VSYNC_PERIOD_F1, 0);
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_VSYNC_PULSE_WIDTH_F1, 0);
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_DISPLAY_HCTL, display_hctl);
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_ACTIVE_HCTL, 0);
-+	msm_dp_write_pn(catalog, stream_id, MMSS_INTF_DISPLAY_V_START_F0, display_v_start);
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_DISPLAY_V_END_F0, display_v_end);
-+	msm_dp_write_pn(catalog, stream_id, MMSS_INTF_DISPLAY_V_START_F1, 0);
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_DISPLAY_V_END_F1, 0);
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_ACTIVE_V_START_F0, 0);
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_ACTIVE_V_END_F0, 0);
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_ACTIVE_V_START_F1, 0);
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_ACTIVE_V_END_F1, 0);
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_INTF_POLARITY_CTL, 0);
-+
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_TPG_MAIN_CONTROL,
- 				DP_TPG_CHECKERED_RECT_PATTERN);
--	msm_dp_write_p0(catalog, MMSS_DP_TPG_VIDEO_CONFIG,
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_TPG_VIDEO_CONFIG,
- 				DP_TPG_VIDEO_CONFIG_BPP_8BIT |
- 				DP_TPG_VIDEO_CONFIG_RGB);
--	msm_dp_write_p0(catalog, MMSS_DP_BIST_ENABLE,
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_BIST_ENABLE,
- 				DP_BIST_ENABLE_DPBIST_EN);
--	msm_dp_write_p0(catalog, MMSS_DP_TIMING_ENGINE_EN,
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_TIMING_ENGINE_EN,
- 				DP_TIMING_ENGINE_EN_EN);
- 	drm_dbg_dp(catalog->drm_dev, "%s: enabled tpg\n", __func__);
- }
- 
--void msm_dp_catalog_panel_tpg_disable(struct msm_dp_catalog *msm_dp_catalog)
-+void msm_dp_catalog_panel_tpg_disable(struct msm_dp_catalog *msm_dp_catalog,
-+				      enum msm_dp_stream_id stream_id)
- {
- 	struct msm_dp_catalog_private *catalog = container_of(msm_dp_catalog,
- 				struct msm_dp_catalog_private, msm_dp_catalog);
- 
--	msm_dp_write_p0(catalog, MMSS_DP_TPG_MAIN_CONTROL, 0x0);
--	msm_dp_write_p0(catalog, MMSS_DP_BIST_ENABLE, 0x0);
--	msm_dp_write_p0(catalog, MMSS_DP_TIMING_ENGINE_EN, 0x0);
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_TPG_MAIN_CONTROL, 0x0);
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_BIST_ENABLE, 0x0);
-+	msm_dp_write_pn(catalog, stream_id, MMSS_DP_TIMING_ENGINE_EN, 0x0);
- }
- 
- static void __iomem *msm_dp_ioremap(struct platform_device *pdev, int idx, size_t *len)
-@@ -1051,10 +1060,11 @@ static void __iomem *msm_dp_ioremap(struct platform_device *pdev, int idx, size_
- 	return base;
- }
- 
--static int msm_dp_catalog_get_io(struct msm_dp_catalog_private *catalog)
-+static int msm_dp_catalog_get_io(struct msm_dp_catalog_private *catalog, int max_stream)
- {
- 	struct platform_device *pdev = to_platform_device(catalog->dev);
- 	struct dss_io_data *dss = &catalog->io;
-+	int i;
- 
- 	dss->ahb.base = msm_dp_ioremap(pdev, 0, &dss->ahb.len);
- 	if (IS_ERR(dss->ahb.base))
-@@ -1070,7 +1080,7 @@ static int msm_dp_catalog_get_io(struct msm_dp_catalog_private *catalog)
- 		 * lengths based on this single region.
- 		 */
- 		if (PTR_ERR(dss->aux.base) == -EINVAL) {
--			if (dss->ahb.len < DP_DEFAULT_P0_OFFSET + DP_DEFAULT_P0_SIZE) {
-+			if (dss->ahb.len < DP_DEFAULT_PIXEL_OFFSET + DP_DEFAULT_PIXEL_SIZE) {
- 				DRM_ERROR("legacy memory region not large enough\n");
- 				return -EINVAL;
- 			}
-@@ -1080,8 +1090,11 @@ static int msm_dp_catalog_get_io(struct msm_dp_catalog_private *catalog)
- 			dss->aux.len = DP_DEFAULT_AUX_SIZE;
- 			dss->link.base = dss->ahb.base + DP_DEFAULT_LINK_OFFSET;
- 			dss->link.len = DP_DEFAULT_LINK_SIZE;
--			dss->p0.base = dss->ahb.base + DP_DEFAULT_P0_OFFSET;
--			dss->p0.len = DP_DEFAULT_P0_SIZE;
-+			for (i = DP_STREAM_0; i < max_stream; i++) {
-+				dss->pixels[i].base =
-+					dss->ahb.base + (i + 1) * DP_DEFAULT_PIXEL_OFFSET;
-+				dss->pixels[i].len = DP_DEFAULT_PIXEL_SIZE;
-+			}
- 		} else {
- 			DRM_ERROR("unable to remap aux region: %pe\n", dss->aux.base);
- 			return PTR_ERR(dss->aux.base);
-@@ -1093,17 +1106,26 @@ static int msm_dp_catalog_get_io(struct msm_dp_catalog_private *catalog)
- 			return PTR_ERR(dss->link.base);
- 		}
- 
--		dss->p0.base = msm_dp_ioremap(pdev, 3, &dss->p0.len);
--		if (IS_ERR(dss->p0.base)) {
--			DRM_ERROR("unable to remap p0 region: %pe\n", dss->p0.base);
--			return PTR_ERR(dss->p0.base);
-+		dss->pixels[0].base = msm_dp_ioremap(pdev, 3, &dss->pixels[0].len);
-+		if (IS_ERR(dss->pixels[0].base)) {
-+			DRM_ERROR("unable to remap p0 region: %pe\n", dss->pixels[0].base);
-+			return PTR_ERR(dss->pixels[0].base);
-+		}
-+
-+		for (i = DP_STREAM_1; i < max_stream; i++) {
-+			/* pixels clk reg index start from 3*/
-+			dss->pixels[i].base = msm_dp_ioremap(pdev, i + 3, &dss->pixels[i].len);
-+
-+			if (IS_ERR(dss->pixels[i].base))
-+				DRM_DEBUG_DP("unable to remap p%d region: %pe\n", i,
-+					      dss->pixels[i].base);
- 		}
- 	}
- 
- 	return 0;
- }
- 
--struct msm_dp_catalog *msm_dp_catalog_get(struct device *dev)
-+struct msm_dp_catalog *msm_dp_catalog_get(struct device *dev, int max_stream)
- {
- 	struct msm_dp_catalog_private *catalog;
- 	int ret;
-@@ -1114,7 +1136,7 @@ struct msm_dp_catalog *msm_dp_catalog_get(struct device *dev)
- 
- 	catalog->dev = dev;
- 
--	ret = msm_dp_catalog_get_io(catalog);
-+	ret = msm_dp_catalog_get_io(catalog, max_stream);
- 	if (ret)
- 		return ERR_PTR(ret);
- 
-diff --git a/drivers/gpu/drm/msm/dp/dp_catalog.h b/drivers/gpu/drm/msm/dp/dp_catalog.h
-index f9e7506afcf4f4d932665462ca316f6c66c662a6..9bfb83873ce8749bec173a2bc2366c429f91354a 100644
---- a/drivers/gpu/drm/msm/dp/dp_catalog.h
-+++ b/drivers/gpu/drm/msm/dp/dp_catalog.h
-@@ -67,8 +67,9 @@ void msm_dp_catalog_ctrl_mainlink_ctrl(struct msm_dp_catalog *msm_dp_catalog, bo
- void msm_dp_catalog_ctrl_psr_mainlink_enable(struct msm_dp_catalog *msm_dp_catalog, bool enable);
- void msm_dp_catalog_setup_peripheral_flush(struct msm_dp_catalog *msm_dp_catalog);
- void msm_dp_catalog_ctrl_config_misc(struct msm_dp_catalog *msm_dp_catalog, u32 cc, u32 tb);
--void msm_dp_catalog_ctrl_config_msa(struct msm_dp_catalog *msm_dp_catalog, u32 rate,
--				u32 stream_rate_khz, bool is_ycbcr_420);
-+void msm_dp_catalog_ctrl_config_msa(struct msm_dp_catalog *msm_dp_catalog,
-+				    enum msm_dp_stream_id stream_id, u32 rate, u32 stream_rate_khz,
-+				    bool is_ycbcr_420);
- int msm_dp_catalog_ctrl_set_pattern_state_bit(struct msm_dp_catalog *msm_dp_catalog, u32 pattern);
- u32 msm_dp_catalog_hw_revision(const struct msm_dp_catalog *msm_dp_catalog);
- void msm_dp_catalog_ctrl_reset(struct msm_dp_catalog *msm_dp_catalog);
-@@ -93,15 +94,18 @@ void msm_dp_catalog_ctrl_send_phy_pattern(struct msm_dp_catalog *msm_dp_catalog,
- u32 msm_dp_catalog_ctrl_read_phy_pattern(struct msm_dp_catalog *msm_dp_catalog);
- 
- /* DP Panel APIs */
--int msm_dp_catalog_panel_timing_cfg(struct msm_dp_catalog *msm_dp_catalog, u32 total,
--				u32 sync_start, u32 width_blanking, u32 msm_dp_active);
-+int msm_dp_catalog_panel_timing_cfg(struct msm_dp_catalog *msm_dp_catalog,
-+				    enum msm_dp_stream_id stream_id, u32 total, u32 sync_start,
-+				    u32 width_blanking, u32 msm_dp_active);
- void msm_dp_catalog_panel_enable_vsc_sdp(struct msm_dp_catalog *msm_dp_catalog, struct dp_sdp *vsc_sdp);
- void msm_dp_catalog_panel_disable_vsc_sdp(struct msm_dp_catalog *msm_dp_catalog);
- void msm_dp_catalog_panel_tpg_enable(struct msm_dp_catalog *msm_dp_catalog,
--				struct drm_display_mode *drm_mode);
--void msm_dp_catalog_panel_tpg_disable(struct msm_dp_catalog *msm_dp_catalog);
-+				     enum msm_dp_stream_id stream_id,
-+				     struct drm_display_mode *drm_mode);
-+void msm_dp_catalog_panel_tpg_disable(struct msm_dp_catalog *msm_dp_catalog,
-+				      enum msm_dp_stream_id stream_id);
- 
--struct msm_dp_catalog *msm_dp_catalog_get(struct device *dev);
-+struct msm_dp_catalog *msm_dp_catalog_get(struct device *dev, int max_stream);
- 
- /* DP Audio APIs */
- void msm_dp_catalog_write_audio_stream(struct msm_dp_catalog *msm_dp_catalog,
 diff --git a/drivers/gpu/drm/msm/dp/dp_ctrl.c b/drivers/gpu/drm/msm/dp/dp_ctrl.c
-index 7db23968c4227557d3cea9bfbf5aa3c3e17a87d8..594dd6fe9381403b8ab085441276d2ce26612efe 100644
+index 64d9862841a22b8298c6e4eb6e488834e38ddcd0..596a949827a4db7c5ce3e804d31c3db8e048cebe 100644
 --- a/drivers/gpu/drm/msm/dp/dp_ctrl.c
 +++ b/drivers/gpu/drm/msm/dp/dp_ctrl.c
-@@ -2075,7 +2075,7 @@ int msm_dp_ctrl_on_stream(struct msm_dp_ctrl *msm_dp_ctrl, struct msm_dp_panel *
- 
- 	msm_dp_ctrl_configure_source_params(ctrl, msm_dp_panel);
- 
--	msm_dp_catalog_ctrl_config_msa(ctrl->catalog,
-+	msm_dp_catalog_ctrl_config_msa(ctrl->catalog, msm_dp_panel->stream_id,
- 		ctrl->link->link_params.rate,
+@@ -2108,7 +2108,8 @@ int msm_dp_ctrl_on_stream(struct msm_dp_ctrl *msm_dp_ctrl, struct msm_dp_panel *
  		pixel_rate_orig,
  		msm_dp_panel->msm_dp_mode.out_fmt_is_yuv_420);
-diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
-index a13e4007858701787562eded7b6fc8f7171e167b..76d07685f5a89109723b68ba9d97c0b0332b18aa 100644
---- a/drivers/gpu/drm/msm/dp/dp_display.c
-+++ b/drivers/gpu/drm/msm/dp/dp_display.c
-@@ -748,7 +748,7 @@ static int msm_dp_init_sub_modules(struct msm_dp_display_private *dp)
- 		goto error;
- 	}
  
--	dp->catalog = msm_dp_catalog_get(dev);
-+	dp->catalog = msm_dp_catalog_get(dev, dp->max_stream);
- 	if (IS_ERR(dp->catalog)) {
- 		rc = PTR_ERR(dp->catalog);
- 		DRM_ERROR("failed to initialize catalog, rc = %d\n", rc);
-diff --git a/drivers/gpu/drm/msm/dp/dp_panel.c b/drivers/gpu/drm/msm/dp/dp_panel.c
-index d9041e235104a74b3cc50ff2e307eae0c4301ef3..fb9216673f0d39d10af864346ebfa884dbe1f499 100644
---- a/drivers/gpu/drm/msm/dp/dp_panel.c
-+++ b/drivers/gpu/drm/msm/dp/dp_panel.c
-@@ -285,12 +285,13 @@ void msm_dp_panel_tpg_config(struct msm_dp_panel *msm_dp_panel, bool enable)
- 	}
+-	msm_dp_ctrl_setup_tr_unit(ctrl);
++	if (!ctrl->mst_active)
++		msm_dp_ctrl_setup_tr_unit(ctrl);
  
- 	if (!enable) {
--		msm_dp_catalog_panel_tpg_disable(catalog);
-+		msm_dp_catalog_panel_tpg_disable(catalog, msm_dp_panel->stream_id);
- 		return;
- 	}
+ 	msm_dp_catalog_ctrl_state_ctrl(ctrl->catalog, DP_STATE_CTRL_SEND_VIDEO);
  
- 	drm_dbg_dp(panel->drm_dev, "calling catalog tpg_enable\n");
--	msm_dp_catalog_panel_tpg_enable(catalog, &panel->msm_dp_panel.msm_dp_mode.drm_mode);
-+	msm_dp_catalog_panel_tpg_enable(catalog, msm_dp_panel->stream_id,
-+					&msm_dp_panel->msm_dp_mode.drm_mode);
- }
- 
- static int msm_dp_panel_setup_vsc_sdp_yuv_420(struct msm_dp_panel *msm_dp_panel)
-@@ -395,7 +396,8 @@ int msm_dp_panel_timing_cfg(struct msm_dp_panel *msm_dp_panel)
- 
- 	msm_dp_active = data;
- 
--	msm_dp_catalog_panel_timing_cfg(catalog, total, sync_start, width_blanking, msm_dp_active);
-+	msm_dp_catalog_panel_timing_cfg(catalog, msm_dp_panel->stream_id, total, sync_start,
-+					width_blanking, msm_dp_active);
- 
- 	if (msm_dp_panel->msm_dp_mode.out_fmt_is_yuv_420)
- 		msm_dp_panel_setup_vsc_sdp_yuv_420(msm_dp_panel);
 
 -- 
 2.34.1
