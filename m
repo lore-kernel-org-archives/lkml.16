@@ -1,87 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC1925D8E8;
-	Mon,  9 Jun 2025 13:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73BC2320B;
+	Mon,  9 Jun 2025 13:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749476452; cv=none; b=IrcgROtipVro4AbKv0w1LzkFSKndvpf3FJKNXMwsDi1bUgqTzDWN1KgscBs0Mlo+Q2w1Njj1nKd8pkKMnF66IBO76WQDuhd0iavJBwWl22mzUWL1W1QBlH3LgKFjbFKZVk/1JRiMTdx3JhMR9XZE88pKDYpkjjvJ1RTjb9TTsL4=
+	t=1749476538; cv=none; b=QzTiIKH/x0cQF1TGoFMwZRWAEAAd/gc2SlT1Esrw71wzi81S/Ax2ntptamLTs8fh5ZVyM355wX6Al8Uj8y6M5izWPBNAKCQA0f4vQ9fRMhEkDdgg0TlgbZfaBVvoz8fDf62+LP3WY1LopBOB7mN2Q518GNij9q/sN53h3fuojxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749476452; c=relaxed/simple;
-	bh=rXM/olUNBsHBKpnIkVc27Lx2zncWkI8thqeMKGhAr5I=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=QJRff71refMLCKpe1880srMF0HyNE6Cb1Pi7NGpI7h1W8k2k9FinIpW/QRhhRoKve7J4p7hSob/cehBhOXHoEYJhnOwUqCbnSsIO3UJO/6+yNoH7QqGcHCEwsYzkdp+fBm2SIivwEsDoNt8vf60EASHYjEuPl4uPGdlDvnbZhYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oOIO3sKZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749476538; c=relaxed/simple;
+	bh=aLHQQvcJ/CzG56n3F/pYuY+17KVjnXrEYITOojxRbmw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m4H3MIatlGEMaL8MKEMWfD4Q2RbP0T5NsU1EiA8D+53aLAeJenPuoEvdSl3Dmp4TwkhZUzjsF9IVIzFtk/jDkctmDS8JaO02N2v70pfA7/gi3AnUOFBFnHHoE/rS2FsYdFHoEgnrTDyfDvdG6dc77cg7rMOcIvc0g0DXGbgbelM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G3aseK6D; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oOIO3sKZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 539B2C4CEEB;
-	Mon,  9 Jun 2025 13:40:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749476451;
-	bh=rXM/olUNBsHBKpnIkVc27Lx2zncWkI8thqeMKGhAr5I=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=oOIO3sKZ8EDwkvZ19jYrY47LqoxcJowUeozQHjrjcayEFKMmw/ip2H9UdWBBupt/i
-	 GqSqO0qMAX54wpZpDL3OdiP/XSDu+vWnHEbl8nNEQFKg6/tJH/JHzgQ1yEHL72PbCv
-	 0t9IzhKzvCG+FLPBG0L2voBBFrz0cToVlCemwMP5iOYEl/yDk4zVor5P9/ZDnZK9Kl
-	 E0wIVQv1bxutDDKFliLvxW35VVMv6NUUPYUOtwqtqvDcjZJdmNvUyCb3EO1V1yPydN
-	 zT9LsW2ClWIHWxTqVlOhGajLLOuPOpCCAs6Rtnon5FthNWsu9SkIYW4QDgoz9+GKRN
-	 TcRhI9ojmxf+Q==
-From: Mark Brown <broonie@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org, 
- Yinbo Zhu <zhuyinbo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
- Huacai Chen <chenhuacai@kernel.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>
-In-Reply-To: <20250608142939.172108-1-chenhuacai@loongson.cn>
-References: <20250608142939.172108-1-chenhuacai@loongson.cn>
-Subject: Re: [PATCH] spi: loongson: Fix build warnings about export.h
-Message-Id: <174947645007.127013.1393483830894525759.b4-ty@kernel.org>
-Date: Mon, 09 Jun 2025 14:40:50 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G3aseK6D"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b2ef619e80eso299128a12.2;
+        Mon, 09 Jun 2025 06:42:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749476537; x=1750081337; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aLHQQvcJ/CzG56n3F/pYuY+17KVjnXrEYITOojxRbmw=;
+        b=G3aseK6DuXIPoQF4rJ6+cK4Ldu6BGadsay6ryDgM0dUnzCiTAslcNO+GJG0CWsEk//
+         LFDmVGWomb0DszfnVRNRdoZ2+7tZw9+Va3EydGGnJbBJR4eD34kUjD2e9dVLKZpQ2U4C
+         O2QxXeI8mfPY/4M1Q9EdaOaATP6h8h3WJ1sPAoF61WpeMl49tw+QyCXZBg4fFtWF0OpE
+         4Rmvr9yGFUW5Rs7QNsSOFoh7XZLkf29a+hAru2+hKbzoMFll3g41y1Ayc6haYTk7IEnJ
+         +NBvnOXuqZW2g05tHH2Rm+/R3YjdjstOT3Ayl066or/VAo9zqEUUI2wnBVY3FWyrlp3q
+         TVmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749476537; x=1750081337;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aLHQQvcJ/CzG56n3F/pYuY+17KVjnXrEYITOojxRbmw=;
+        b=E2+vOdl++ZZW/EytuejMmrDAB/N+xGr77fAbiT3QeP8U/M8wzV15FIP7HaqCuPBrRo
+         ABbHArDsMhB3It0RriXwF/79TkGRvXzHl0Cziun/9iuxF5kAc8WYi4F+z1UyKQ0ECMQ3
+         en/6P9VadpSSlISXUA6xqD8x3pYqktNWNvclgcN+E/UqlYhwakfOl418PdK3AH8rXBew
+         yIjMjkCt/wUQf01AuqsR3ghnXAuPpqJdSLwqZpKj7DJ9K13GUdw61xh3K7nFIYxBswBu
+         2Z2mZtneGDlJ7WoGFq7AGvAbIrlZEUasQdLEQGvKHZ7LXnN/3cGwPvdKjvNu1WiPzm76
+         KKoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfBLT096rkQxBKlUZc4NpQRq+SYmt9N67zQ2E0cdQQe/1rRL6/rt1RxAoI8DSzYyPesRXrZVuLsGRqDDss@vger.kernel.org, AJvYcCUqkLRe9Kh/DfyWOKYihM+CYZFSvOjVd36gO3gwQYA6A6GDNdFNJaFe1+Yp89xDVmnmxzowFkmhUeDMwNPNyuQ=@vger.kernel.org, AJvYcCWhtwCZgNNiut7iHDY27bQfKXAgvIcGaKcMT0GIPdBiAkT03W5mIE2u9EB9SX1CRzwO4vOT+vFi+KhA@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz13moNAQsy7iP48hDlLZDxn5JpKvvfad4ESj2i8DO5pgr3Y7z+
+	dREnHoGO77uuP5/ZgBvRr/3iYNwhwu+GA2Du0Ry0SQAVgGGDDjkWdzRFeslWAntqeKTgzP+2w6w
+	rfp3+/U97/ImFFusLsR9xm5CWzecXj7c=
+X-Gm-Gg: ASbGnctVE3TMyGUgarAlErG//P+Xs7yr+1+0ejRed2ccFE3KHMKvaB76K2/wWlJd3eJ
+	xjOLGjkD1MWFg71suGpFFFGrjRfWoqszEirwCblqnlsrl4aTIkDIgGi8i9b5GvX5ppimfEMGUrG
+	eRJaP2gMbbxqAAKNUR3V80sh3w92OFuDjC
+X-Google-Smtp-Source: AGHT+IG8g+8pCae3TmU8EdIiokIy7+Ydfo09f+/gWEH3caQEhmXTDfFAwp608YUZ1yuwI6t7yjmGrSc0B7PuU8J1A4s=
+X-Received: by 2002:a17:90b:3890:b0:2ff:7970:d2b6 with SMTP id
+ 98e67ed59e1d1-3134753c519mr6906752a91.5.1749476536634; Mon, 09 Jun 2025
+ 06:42:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+References: <20250606170341.3880941-1-igor.korotin.linux@gmail.com>
+ <20250606170817.3881748-1-igor.korotin.linux@gmail.com> <DAGZNG518T0C.1PXOK55IXHZOF@kernel.org>
+ <aEVqgUtflBCzZi1X@pollux> <DAH4KX3Y3M3P.3B82LSVWU172Q@kernel.org>
+ <aEV43zxZmWvDgKES@pollux> <CAJxaTdNZEdK21mFPu2kTJPa7aQ+PpnkwFVdEP5MCt6w+bD0wXA@mail.gmail.com>
+In-Reply-To: <CAJxaTdNZEdK21mFPu2kTJPa7aQ+PpnkwFVdEP5MCt6w+bD0wXA@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 9 Jun 2025 15:42:02 +0200
+X-Gm-Features: AX0GCFvdQ53hVVkSQ6Wno2xP-Qw2liNpZXY_h_vcL--AQe3WIQ8Lq5R3ZurK1-M
+Message-ID: <CANiq72=rerpj_Ut0x7dDb0O8dEh9SHaF1HVyyfMM83hz--QCJg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] rust: driver: Add ACPI id table support to Adapter trait
+To: Igor Korotin <igor.korotin.linux@gmail.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, ojeda@kernel.org, 
+	alex.gaynor@gmail.com, rafael@kernel.org, gregkh@linuxfoundation.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, boqun.feng@gmail.com, gary@garyguo.net, 
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org, 
+	aliceryhl@google.com, tmgross@umich.edu, lenb@kernel.org, wedsonaf@gmail.com, 
+	viresh.kumar@linaro.org, alex.hung@amd.com, dingxiangfei2009@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 08 Jun 2025 22:29:39 +0800, Huacai Chen wrote:
-> After commit a934a57a42f64a4 ("scripts/misc-check: check missing #include
-> <linux/export.h> when W=1") and 7d95680d64ac8e836c ("scripts/misc-check:
-> check unnecessary #include <linux/export.h> when W=1"), we get some build
-> warnings with W=1:
-> 
-> drivers/spi/spi-loongson-core.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
-> 
-> [...]
+On Mon, Jun 9, 2025 at 3:09=E2=80=AFPM Igor Korotin
+<igor.korotin.linux@gmail.com> wrote:
+>
+> Let me know if this pattern is acceptable. To my opinion it is not much
+> different from the original 2 functions conditioned by #[cfg] and
+> requires some nasty changes.
 
-Applied to
+In general, the more local a `cfg` can be made, the better, because we
+can share more, e.g. the docs and signature.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+But maybe in this case it doesn't work -- what would be the "nasty
+changes" required?
 
-Thanks!
-
-[1/1] spi: loongson: Fix build warnings about export.h
-      commit: 1dd630088332b5b310f3dd7eaacae9f3c4465651
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+Cheers,
+Miguel
