@@ -1,191 +1,129 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D84E1A2872
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 15:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA401DA5F;
+	Mon,  9 Jun 2025 15:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749482594; cv=none; b=IVqMieIx17fN6rgDskbg2Aq5mWkjpi7/MHSq8tMgQcOz3ylaXr+Zak+uwGohoMBFwwzahrid4Zd7IHmYiz4P+WN1JJ3VvlS30yjulWpnepLn2Y60fd+ULENTP0VxI3SiDJJFIy2587L4TzTq6P6QGcfksWYKifTx5rsXXXBKP90=
+	t=1749482630; cv=none; b=FgMI42nNoKJzUWRfuhwCauisHWErLfRLETaYyLSqq/7DlGwY3Z9OSbSqvWjSFA9bLj8JV+ske4h4cVmr1HIyFpUVrzrP3gCv6bXjZ+ZH0keFoxc8oUTxHPf3HZaVHeJgYjTANKbqgrq7L9SpmHaQ34G5TTszL2gp3FK2WHXGaHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749482594; c=relaxed/simple;
-	bh=y4AY4K62fedPencGjJKnWwfhgTpyhRQDI5r8TTyeqzk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uuFXJbFOnOGONhUfA71AEt19zxMqwmaZkUwRPANZr/Io3poSxndoNd1Fh28EEhraJtwFNT0rdyPAAvUMKU9GOZvT29XzmFHlNsiexC08dgTd3zb3FkROOFcOhM+rJensVg8ENoueQPtSacK1bc0gx/ZAXnP7InXN2rO71csFyGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XgXgzR5A; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749482630; c=relaxed/simple;
+	bh=BdUcjRRvSLLWka5U57jJO0G2e7/tVuCHFhZgA60z8WQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kU1+vo9mlIhQjnSrNxKKyyfVe7q4XW3Sypf5rI3h7jEGhPybTBa0FZ8qwdvS0f62VR8MZfaMEBg3z6BddoSNkGcfOpWP59plCEuDLAbPKG5fk031MqCByubgAgWCSqjTEZ+JXPN4RAWwO5IObDeQuhBPvK32WlQQFqVcqZor1tQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=Z4VW/vvC; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XgXgzR5A"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b2c3c689d20so2709750a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 08:23:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749482592; x=1750087392; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4+Mg6PW+/K0QnsP+hIHi7hEEWjzJrekcG6Ta5Fzf3T0=;
-        b=XgXgzR5ANHitIHH0VJjxs3FyAjGiHv+rBlOwj1v8iFspna7K0lqlMO+uaD/t6uJy0t
-         rNuUeoeiSJvpbIapxpWmkDan5gda5AAWG1Ek+LDI1hw00stscPSd1e90s9VKZJFgbx0a
-         wjQxkyUb3gB9xq5L6/C6jchjBFtbqcb8pWT/D+EInouXBpnWQgQNsZMAUVvJbaQ/nV4e
-         JQ/4/GwEokHpWlNxRUuSTvcf1TMaZ6kYq+wNzCBVjyQJrEjqVazUU0Iu9mwJdLjuvTvx
-         QEM/LTa+zUbeMwzQDf7IX0ke11Yfrs+LVeI05iOjN+OEKMJZ+Ods8omu/NMGB+qsXmUV
-         mlZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749482592; x=1750087392;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4+Mg6PW+/K0QnsP+hIHi7hEEWjzJrekcG6Ta5Fzf3T0=;
-        b=mfReynM1MbxPWY2kbrW3FAC3MJUBSgRTo+HcdvLXRnvoznW/up9zOZ3x75TmYqdkAs
-         LU6thQ7D5HBX0j1DehVHd9wjURjUEL2duUpEEE/q5eOyHxPm7xvG0NMZFebelbHUQ0/w
-         gcQUYAzSwg+/7gfEpGKJ47wqfI4bmSpQiACx8bkytp8EDPUALx1g63OevaALJ+2AgQ3b
-         wBbxd66Hdg5qcExucWjeM+gzTqeEFPnle7TaLKgC2tOpxSJQjtBSYtp+5JsJiaFrxJ85
-         BPmJsm34Go5Vuqwn56DIkjTbmSMMakrLffwPDSC5GELOqpVCS5LXilGa7m0Y/mk1LYMB
-         rW7A==
-X-Forwarded-Encrypted: i=1; AJvYcCUxWfZ+koMdVGIWNEJ4CGLdtt7XXKcH04MPPgiwHveIP35UQJ5V0q+zAI8cul+qMbozOci2c+Re4bz3Qoc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjLRKQX1EOJUMDUB26BKOWZfJChfeXruaRO2sVx+md3qGx0m3Q
-	oL2fhJ3pnucgMrzMXiN/as6oBvqwF/KGFRWe6MNVHmUgJD1cFe/dj7VOw1Q75CQLU3k=
-X-Gm-Gg: ASbGnctYpEvXpysqozaI9RsIJoTKZkBoueJwiqk+927cKbtN/BPeHlBXdH/IU7/GuZH
-	pLYwgkXltgnq3Rvys7m/ZEPjgDba9ZqTr0wsNgD4740U/wP84sqS274vdwo/6+kLl9EZVqvmm9F
-	rSpeW1AxsRQtTFnLMP37RUSXnIvASCyiBaCTLLKJljIsLqbGeA9ONesj8lyMWb7mCuQ5Rw2gGCs
-	GZDXGHn4m8uQKuA/L9i5iSlWwt3ZRzhMjaDY1Y5qe8vhjcAgtb6XKFcKFwbTATFZJDQx8BZbjPk
-	9CfHpXOPJfKEaTVJeu1BZpq9bzsdnFqKblH3OoYTcCYqkQ19+6CB+kDQYjdE+4aeudyIQnJ1GTC
-	m
-X-Google-Smtp-Source: AGHT+IEHQs24xS7vzskFJPPr8eh6p9W8ZrujNawhU2iz0AreagkiHluW65S1z22AdhoPCthNzNJd4g==
-X-Received: by 2002:a17:90b:3891:b0:312:26d9:d5b4 with SMTP id 98e67ed59e1d1-3134740b55cmr21132387a91.17.1749482592330;
-        Mon, 09 Jun 2025 08:23:12 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:1329:68ff:ffeb:cd9c])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31349fc374asm5791390a91.29.2025.06.09.08.23.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 08:23:11 -0700 (PDT)
-Date: Mon, 9 Jun 2025 09:23:09 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	op-tee@lists.trustedfirmware.org, devicetree@vger.kernel.org
-Subject: Re: [RESEND PATCH v16 0/6] Introduction of a remoteproc tee to load
- signed firmware
-Message-ID: <aEb8XbhY5dR__GM-@p14s>
-References: <20250603100808.1074812-1-arnaud.pouliquen@foss.st.com>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="Z4VW/vvC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=+I81mYkss4iXVd4qqii/+SHPD2opsMDFxEhS0MTaCiU=; b=Z4VW/vvC7ZkXwX5g
+	ZtTn5VRZoVgaTjx/22DfXa1xQKyC6oFuilWqYVFgubtXN+cRloARdhpibFD4ptewCF/P0aVTnQVMb
+	iGugiQmA8lzVL/onD14CiPqwLFkSPWKbUo2DBMDwIv04xNUcPeoFmFbpLpFSvKGw/y6bsFafhEl9+
+	muzYccoDuWLX6kXRJkGO62Aot2N6lAJ5mR4FX1Lq4UaWVfK6EtDmgBm5Z1Jtpk5rBNAv/pYiT1NGw
+	jg0fF4WE9bPWutuIXQVAC65cTKfUSSoG2FUeYpKXNNHzXs3qisR2ldNElv0Qlj/EmccM46SPaK2Bb
+	0paOPIHA+FYVM6NM9g==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1uOeLT-008QN5-0J;
+	Mon, 09 Jun 2025 15:23:31 +0000
+From: linux@treblig.org
+To: bharat@chelsio.com
+Cc: andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH net-next] cxgb3/l2t: Remove unused t3_l2t_send_event
+Date: Mon,  9 Jun 2025 16:23:30 +0100
+Message-ID: <20250609152330.24027-1-linux@treblig.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250603100808.1074812-1-arnaud.pouliquen@foss.st.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 03, 2025 at 12:08:02PM +0200, Arnaud Pouliquen wrote:
-> Hello Bjorn and Mathieu,
-> 
-> I am resending this series after waiting for over two months for Bjorn's
-> feedback, despite a prior reminder.
-> 
-> Please could you coordinate between yourselves to determine who will continue
-> reviewing this series? It would be greatly appreciated if the review could
-> proceed within a more reasonable timeframe.
-> 
-> Thanks in advance and best regards,
-> Arnaud
-> 
-> 
-> Main updates from version V15[1]:
-> - Removed the rproc_ops:load_fw() operation introduced in the previous version.
-> - Returned to managing the remoteproc firmware loading in rproc_tee_parse_fw to
->   load and authenticate the firmware before getting the resource table.
-> - Added spinlock and dev_link mechanisms in remoteproc TEE to better manage
->   bind/unbind.
->
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Have all pending issues been resolved or is there still questions about some
-aspects of the design?
+The last use of t3_l2t_send_event() was removed in 2019 by
+commit 30e0f6cf5acb ("RDMA/iw_cxgb3: Remove the iw_cxgb3 module from
+kernel")
+
+Remove it.
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+ drivers/net/ethernet/chelsio/cxgb3/l2t.c | 37 ------------------------
+ drivers/net/ethernet/chelsio/cxgb3/l2t.h |  1 -
+ 2 files changed, 38 deletions(-)
+
+diff --git a/drivers/net/ethernet/chelsio/cxgb3/l2t.c b/drivers/net/ethernet/chelsio/cxgb3/l2t.c
+index 9749d1239f58..5d5f3380ecca 100644
+--- a/drivers/net/ethernet/chelsio/cxgb3/l2t.c
++++ b/drivers/net/ethernet/chelsio/cxgb3/l2t.c
+@@ -176,43 +176,6 @@ int t3_l2t_send_slow(struct t3cdev *dev, struct sk_buff *skb,
  
-> More details are available in each patch commit message.
-> 
-> [1] https://lore.kernel.org/linux-remoteproc/20241128084219.2159197-7-arnaud.pouliquen@foss.st.com/T/
-> 
-> Tested-on: commit 0ff41df1cb26 ("Linux 6.15")
-> 
-> Description of the feature:
-> --------------------------
-> This series proposes the implementation of a remoteproc tee driver to
-> communicate with a TEE trusted application responsible for authenticating
-> and loading the remoteproc firmware image in an Arm secure context.
-> 
-> 1) Principle:
-> 
-> The remoteproc tee driver provides services to communicate with the OP-TEE
-> trusted application running on the Trusted Execution Context (TEE).
-> The trusted application in TEE manages the remote processor lifecycle:
-> 
-> - authenticating and loading firmware images,
-> - isolating and securing the remote processor memories,
-> - supporting multi-firmware (e.g., TF-M + Zephyr on a Cortex-M33),
-> - managing the start and stop of the firmware by the TEE.
-> 
-> 2) Format of the signed image:
-> 
-> Refer to:
-> https://github.com/OP-TEE/optee_os/blob/master/ta/remoteproc/src/remoteproc_core.c#L18-L57
-> 
-> 3) OP-TEE trusted application API:
-> 
-> Refer to:
-> https://github.com/OP-TEE/optee_os/blob/master/ta/remoteproc/include/ta_remoteproc.h
-> 
-> 4) OP-TEE signature script
-> 
-> Refer to:
-> https://github.com/OP-TEE/optee_os/blob/master/scripts/sign_rproc_fw.py
-> 
-> Example of usage:
-> sign_rproc_fw.py --in <fw1.elf> --in <fw2.elf> --out <signed_fw.sign> --key ${OP-TEE_PATH}/keys/default.pem
-> 
-> 
-> 5) Impact on User space Application
-> 
-> No sysfs impact. The user only needs to provide the signed firmware image
-> instead of the ELF image.
-> 
-> 
-> For more information about the implementation, a presentation is available here
-> (note that the format of the signed image has evolved between the presentation
-> and the integration in OP-TEE).
-> 
-> https://resources.linaro.org/en/resource/6c5bGvZwUAjX56fvxthxds
-> 
-> Arnaud Pouliquen (6):
->   remoteproc: core: Introduce rproc_pa_to_va helper
->   remoteproc: Add TEE support
->   remoteproc: Introduce release_fw optional operation
->   dt-bindings: remoteproc: Add compatibility for TEE support
->   remoteproc: stm32: Create sub-functions to request shutdown and
->     release
->   remoteproc: stm32: Add support of an OP-TEE TA to load the firmware
-> 
->  .../bindings/remoteproc/st,stm32-rproc.yaml   |  58 +-
->  drivers/remoteproc/Kconfig                    |  10 +
->  drivers/remoteproc/Makefile                   |   1 +
->  drivers/remoteproc/remoteproc_core.c          |  52 ++
->  drivers/remoteproc/remoteproc_internal.h      |   6 +
->  drivers/remoteproc/remoteproc_tee.c           | 619 ++++++++++++++++++
->  drivers/remoteproc/stm32_rproc.c              | 139 +++-
->  include/linux/remoteproc.h                    |   4 +
->  include/linux/remoteproc_tee.h                |  90 +++
->  9 files changed, 935 insertions(+), 44 deletions(-)
->  create mode 100644 drivers/remoteproc/remoteproc_tee.c
->  create mode 100644 include/linux/remoteproc_tee.h
-> 
-> 
-> base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
-> -- 
-> 2.25.1
-> 
+ EXPORT_SYMBOL(t3_l2t_send_slow);
+ 
+-void t3_l2t_send_event(struct t3cdev *dev, struct l2t_entry *e)
+-{
+-again:
+-	switch (e->state) {
+-	case L2T_STATE_STALE:	/* entry is stale, kick off revalidation */
+-		neigh_event_send(e->neigh, NULL);
+-		spin_lock_bh(&e->lock);
+-		if (e->state == L2T_STATE_STALE) {
+-			e->state = L2T_STATE_VALID;
+-		}
+-		spin_unlock_bh(&e->lock);
+-		return;
+-	case L2T_STATE_VALID:	/* fast-path, send the packet on */
+-		return;
+-	case L2T_STATE_RESOLVING:
+-		spin_lock_bh(&e->lock);
+-		if (e->state != L2T_STATE_RESOLVING) {
+-			/* ARP already completed */
+-			spin_unlock_bh(&e->lock);
+-			goto again;
+-		}
+-		spin_unlock_bh(&e->lock);
+-
+-		/*
+-		 * Only the first packet added to the arpq should kick off
+-		 * resolution.  However, because the alloc_skb below can fail,
+-		 * we allow each packet added to the arpq to retry resolution
+-		 * as a way of recovering from transient memory exhaustion.
+-		 * A better way would be to use a work request to retry L2T
+-		 * entries when there's no memory.
+-		 */
+-		neigh_event_send(e->neigh, NULL);
+-	}
+-}
+-
+-EXPORT_SYMBOL(t3_l2t_send_event);
+-
+ /*
+  * Allocate a free L2T entry.  Must be called with l2t_data.lock held.
+  */
+diff --git a/drivers/net/ethernet/chelsio/cxgb3/l2t.h b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
+index 646ca0bc25bd..33558f177497 100644
+--- a/drivers/net/ethernet/chelsio/cxgb3/l2t.h
++++ b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
+@@ -113,7 +113,6 @@ struct l2t_entry *t3_l2t_get(struct t3cdev *cdev, struct dst_entry *dst,
+ 			     struct net_device *dev, const void *daddr);
+ int t3_l2t_send_slow(struct t3cdev *dev, struct sk_buff *skb,
+ 		     struct l2t_entry *e);
+-void t3_l2t_send_event(struct t3cdev *dev, struct l2t_entry *e);
+ struct l2t_data *t3_init_l2t(unsigned int l2t_capacity);
+ 
+ int cxgb3_ofld_send(struct t3cdev *dev, struct sk_buff *skb);
+-- 
+2.49.0
+
