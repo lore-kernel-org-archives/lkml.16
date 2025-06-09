@@ -1,76 +1,119 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3239D610D
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 06:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A153610D;
+	Mon,  9 Jun 2025 06:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749450874; cv=none; b=C4XWnAsXCCETWsWThJLH3U0KTVY/c1De3W43WtZ8CzYPamhPjAQOYogVMogc1DK+9RRTBeQtOkRqFeXmUaGXYxEeD7ireJxkLi/vRvi3TKcCorc+qegLGhP8AQ9vXKz5FS7H+Ik8ogTr0fmw17NkRi2LG/bYIJ1DKDXGAsF4lg4=
+	t=1749450935; cv=none; b=BaxZpHp6CjDID3OTjsUwqPVaablDO1as4w/oTnIsLEabViMTLrXM3/c18EqfcP5GfEeeUn+4jL/KrVAxRdU8XCgPIiwPzmpd2cAjbLiqYjHD0nOifnxikSPzkkgA05zo6FdBtY8g1mBpZ4IJz973Ed4KKgXCRMzVq0tJCn2IMXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749450874; c=relaxed/simple;
-	bh=XtZywwT74fhBJ7HGACmE0m1DYA+0813djtpZI39+90g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nf2h105B+klUmlY/4nIJ/9XuplSisAostgGg5ZYj0LT8awFkzmwzEaPafmuXwlWBeuKaDZflJ7ek7gUmWaSw/jYJA9L1KL7F0AtYVHH5R5uXUEoOU8D3yJqSO1pxLU+LLAsYObcj5zqbLrLMTsm0lwKWxYILSPgEnYnZjnI4tBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QVYirElk; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1749450935; c=relaxed/simple;
+	bh=eLeuTaQZ+mEjmhuaoA3ei0mbiUMW1mObJTYwjfYNIWE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y1/4lAj4OemardP8eww4YYFcVqmQacZzvZ1cGr5MpMmcIcPx9L/nGdFNKQ8xxV7zyPeTYywMzIdcSEVNnqxJRNmGIVn640MrewVKbfwxZ1By94LA/6QH0pzBCP1g8m6VFmQW1kJz0R8cHWCMFnNP/B3gSL/ezpFM/5GTI8OraKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BR7ywKbf; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QVYirElk"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1749450863; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=bEbolKbxdXCTdkf5HWqUnpJFb7LwWG+f6HB8rKtQLSw=;
-	b=QVYirElk7DdZ9lLGmy6186cfmXAhDQq0v+4xHYkuZcLZ3eoGlNPMM7hVxngZp2/VWwcfswJv141cwbSLUberOv80BG8T6OrJ8MbJCY1KPKUblV9ELlxEg+CTEusbTre3PBlNBF+gl1fh3xNKBs+6z7mpV/cg2AQj5fhJ3QsoZ84=
-Received: from 30.74.144.144(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WdLx-iu_1749450862 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 09 Jun 2025 14:34:22 +0800
-Message-ID: <aa6aa559-431e-43c0-bd24-828e6558bac3@linux.alibaba.com>
-Date: Mon, 9 Jun 2025 14:34:22 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BR7ywKbf"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-60700a745e5so5029772a12.3;
+        Sun, 08 Jun 2025 23:35:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749450932; x=1750055732; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=D5QjZTzRsvth07TwPIj9Bqpfw7PuFxeIFc4P3or3VHQ=;
+        b=BR7ywKbfoT9gBA/ruItom26URDTalhJdJ0xsXsxpOCbthmkenCDDHgxwhXfgzzjnHn
+         UVUeWkxSKHvWNjW6mOQhbwp+wCTjr/ziKLo/5/IaJN8enJJHqy+/6lzd5FFcSIMLErbD
+         SAzyydYxbM8NghiLNU/8uNaqxclH7LcNkl3A/ldUPUtVbTl5zYQdfzoujZPHBA0BnCwM
+         Bb15mJ3xHruJ7c+zAw5HP8nSLydSt+r7UnIyvDq/jleJz/CGCUUePF0or6fdElRRxyzS
+         LX8VL0TJx7vRJY5+38waXPmj4ej4bHlfbU+82t/T2+SaSe9t4sPVXEzAUTao7Q8tLfJ6
+         nbPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749450932; x=1750055732;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=D5QjZTzRsvth07TwPIj9Bqpfw7PuFxeIFc4P3or3VHQ=;
+        b=NaRBMH/pR3Y+mh5aXc/tBICDErbOSIRQI0sqiTtHSe5PHUf7nreMrXz3CaHUh37z58
+         cY2/wkZrnm3PN9Zx+1fEHmDg3ePFNkZXEB7rMWJqv2iuBoB/1l8nettaul5tbQE3RvBM
+         k9qxT95u9DqhadDVVS4J4mxAOSqF0Gg1/jIi0TVQb1TikIZV7z4NNYeMBGpkAW9YN3U8
+         m/+wGmhut8uDr99qms4qGLFJriX4sOYNTq4bRKmfMnaYihoyUIUUX9cZPqlAqBV7vzZ+
+         S5Je+hfppi85vRlRZbDbK0SNU5rELztpQfNApSJyc3ZvOKZeuqMcLmnOiReMWDqA7/id
+         RlBg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/NcJRzLLSIiOVYHJhUBWHwI7fyxzPq/OuLeqcfTksLrTuRmszsRyVIMw68NmCi0Bt87tv4tBEUdMNvlA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzJ2RXdpisjDUMLduZF2I3xECWj7KrUlll0YDC+8BkoKTurDUN
+	uKiKrqsPCQlYHOLSpbi91kkitBIp1VXAStwb7H9wJ7iN1QUvhg7GizIVey5fvQ==
+X-Gm-Gg: ASbGncutCXK9dOKHVcLbIIW6qRqn1ic+ZIL2OE84X4pXgibRxdmMS2gbtpqdDYl38Dx
+	+ue3minrpiRnokMHcHfjEvSpl4hc6+uy/z3+MAvYuFyw/OJHChecQ5PuN4bY3gsYc/7XIkH6CKZ
+	TgGr1T/7kWyfD4a6iPOOLWVvFXkljcckqOBo9U7NHLv6KRIRnpIHB7uBG3TMeXYuwXTgdpF/2Ik
+	6CC18yuylT4mwG91+hJEXxrBFbGNnRIO7BYENd0YgQAU8jQ+3OoNdlao5pkl/rdDkPGN/b2d6bP
+	nk9aGqqdBXQwHHNw+58wbV1D+P4YdUi+d9JAB7mOVrOlfyBnAr5Idw==
+X-Google-Smtp-Source: AGHT+IGXZra7Xr70TDC239IEydaDWpezL0pc8rf8jjOV14kiuQEftAI3djMfCzXCg27Br/+QvUSdyA==
+X-Received: by 2002:a05:6402:1e92:b0:607:2417:6d04 with SMTP id 4fb4d7f45d1cf-6077351442cmr10350880a12.14.1749450932025;
+        Sun, 08 Jun 2025 23:35:32 -0700 (PDT)
+Received: from fedora.. ([193.77.86.199])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-607783c0620sm4394270a12.49.2025.06.08.23.35.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Jun 2025 23:35:31 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+	Len Brown <lenb@kernel.org>
+Subject: [PATCH] intel_idle: Update arguments of mwait_idle_with_hints()
+Date: Mon,  9 Jun 2025 08:35:01 +0200
+Message-ID: <20250609063528.48715-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] mm: shmem: disallow hugepages if the system-wide
- shmem THP sysfs settings are disabled
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, hughd@google.com, david@redhat.com,
- Liam.Howlett@oracle.com, npache@redhat.com, ryan.roberts@arm.com,
- dev.jain@arm.com, ziy@nvidia.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <cover.1749109709.git.baolin.wang@linux.alibaba.com>
- <39d7617a6142c6091f233357171c5793e0992d36.1749109709.git.baolin.wang@linux.alibaba.com>
- <b6ae32e5-60e0-44dd-a1e8-37c162d04ed3@lucifer.local>
- <b455db10-f129-4603-a087-43a1b52ff09c@lucifer.local>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <b455db10-f129-4603-a087-43a1b52ff09c@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+Commit a17b37a3f416 ("x86/idle: Change arguments of mwait_idle_with_hints() to u32")
+changed the type of arguments of mwait_idle_with_hints() from unsigned
+long to u32. Change the type of variables in the call to
+mwait_idle_with_hints() to unsigned int to follow the change.
 
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+Cc: Len Brown <lenb@kernel.org>
+---
+ drivers/idle/intel_idle.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-On 2025/6/7 20:17, Lorenzo Stoakes wrote:
-> On Sat, Jun 07, 2025 at 01:14:41PM +0100, Lorenzo Stoakes wrote:
->> On Thu, Jun 05, 2025 at 04:00:59PM +0800, Baolin Wang wrote:
-> [snip]
->>>
->>> Another rule for madvise, referring to David's suggestion: “allowing for collapsing
->>> in a VM without VM_HUGEPAGE in the "madvise" mode would be fine".
->>
->> Hm I'm not sure if this is enforced is it? I may have missed something here
->> however.
-> 
-> Oh right actually I think it is implicitly - if TVA_ENFORCE_SYSFS is not
-> specified in tva_flags, then we don't bother applying an madvise filter at all
-> anyway, and we account for that in our 'enabled' check in
-> thp_vma_allowable_orders().
-> 
-> But I don't think this patch changes anything, I actually _think_ we can just
-> drop this one.
+diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
+index 8ccb483204fa..f3ab1d6e3276 100644
+--- a/drivers/idle/intel_idle.c
++++ b/drivers/idle/intel_idle.c
+@@ -152,8 +152,8 @@ static __always_inline int __intel_idle(struct cpuidle_device *dev,
+ 					int index, bool irqoff)
+ {
+ 	struct cpuidle_state *state = &drv->states[index];
+-	unsigned long eax = flg2MWAIT(state->flags);
+-	unsigned long ecx = 1*irqoff; /* break on interrupt flag */
++	unsigned int eax = flg2MWAIT(state->flags);
++	unsigned int ecx = 1*irqoff; /* break on interrupt flag */
+ 
+ 	mwait_idle_with_hints(eax, ecx);
+ 
+@@ -226,9 +226,9 @@ static __cpuidle int intel_idle_xstate(struct cpuidle_device *dev,
+ static __cpuidle int intel_idle_s2idle(struct cpuidle_device *dev,
+ 				       struct cpuidle_driver *drv, int index)
+ {
+-	unsigned long ecx = 1; /* break on interrupt flag */
+ 	struct cpuidle_state *state = &drv->states[index];
+-	unsigned long eax = flg2MWAIT(state->flags);
++	unsigned int eax = flg2MWAIT(state->flags);
++	unsigned int ecx = 1; /* break on interrupt flag */
+ 
+ 	if (state->flags & CPUIDLE_FLAG_INIT_XSTATE)
+ 		fpu_idle_fpregs();
+-- 
+2.49.0
 
-See my previous replies. Shmem mTHP sysfs settings are different from 
-Anonymous pages.
-
-Thanks for reviewing.
