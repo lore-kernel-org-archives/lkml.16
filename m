@@ -1,229 +1,164 @@
-Received: from out199-2.us.a.mail.aliyun.com (out199-2.us.a.mail.aliyun.com [47.90.199.2])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E048AC2EF
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 06:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FFD1266EFA
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 06:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749449434; cv=none; b=Pq9MW7F5EiDjalGrF7CaeiFVh0BA/IdJ9Vv4m000kKtvYqkfaWIpiwRfQ0Xu8nrL1SvBSPmBKKqOOoqVX3Phy6ErQ5cYXKmjQCdmj79Wd9FYTOU4TXMNoNkX5G0IwhTgucU2G/T1r+RwEEe0PaUF6xStvATb9806fHw4wODaoSo=
+	t=1749449462; cv=none; b=ORXsWBytXa2FVDL/IKWIc2UT6wthrm1dxCCnZed6CxevNsltAUaOccmdAJUJ9HQmC6vhEFMLoF3Q+oaGWs9mkUthKu+o2YFs/vJXtnmgdYVLm4oa4QFxIenaHGx4s8Iz5KdBUM9K1Uxf9yxC+E8Zehp7HbEUJ+LrjwoZAocYpIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749449434; c=relaxed/simple;
-	bh=lJ/COlLocBhWR8/l7kysvDnBZUqClcnO1lkk2qm/vS0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LZdfxOFz/LcUaismiZvAEXv2FIykt6KlNlgPOBdsaIYSyb88igqiw8s1xtkYt/rDmlhq9TJzvcKZMA9yVVKApapWGzmvquZSBMqyRky/niHPY9vQ1cTPFehjbbMcGwGwBNmgFdvrYmSn/V69WXJ0Z+HBAx54zxMsBOJfQHxQ+KQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=E0q0ZyWA; arc=none smtp.client-ip=47.90.199.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1749449462; c=relaxed/simple;
+	bh=6B//4am4kf0/sPk4mJgCJJwvxYd2J+xNJ7hXmBZcR0k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Sp8y917ojeFd38fYuJ4XokmIbw9aYdtQE3xP9pyg22PcKPtzr64sKBJr+l3vjMdrnwCx3Cvr8oFA9b8omaoZHhBYa8kQXmry0uCoMsutn5/YjbUsXgh/audUDd4KVDJnDvIwBducaWpui33oQmRkqqfP97SYcX7znAHsTeaQC+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NwP97CWY; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="E0q0ZyWA"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1749449414; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=oADAYTc5JVpZjMlpqCH2kSIiqG6Xq9PQGyijVjW42Gw=;
-	b=E0q0ZyWAAd64KQcbJeiuRASniI7TdXD0cqMYQs0pb742+MBYHP4bE5W9l1f1BtwJaSYd9bAvru7QvxbrCZDersxYUzrrYmuGJTUfs8XQgPS5EuBdQoywcM/euYGGQDBVuyczBVYOgwWFeuyU4gI8Jowm6Xjye9az5XV32Mnes1k=
-Received: from 30.74.144.144(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WdL9ZvM_1749449413 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 09 Jun 2025 14:10:13 +0800
-Message-ID: <a30660e1-f366-4b0c-846e-986067931c7c@linux.alibaba.com>
-Date: Mon, 9 Jun 2025 14:10:12 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NwP97CWY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749449459;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8fAHnSUgbK0T/Jvj5lZ7rfRDImFhPiFzgFqOeLLWznI=;
+	b=NwP97CWYXVxlEIETOV0qPtvl7p1Jkf96AEsk5cDgmkxUIfKWmLUUU/v3BgiFZmxskJ4DVn
+	6Q0zJ7/kQ5mbyAfjZNay9R4bcXZUZq2iokBc5EvLLCog/URfswP2BpIywmBmZCUwow8iEB
+	UYTOAc6w6EOaVVFbDnrpmx1qRNJ7UU0=
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
+ [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-324-hpKgFyZEMF2I80vcnW9IbQ-1; Mon, 09 Jun 2025 02:10:56 -0400
+X-MC-Unique: hpKgFyZEMF2I80vcnW9IbQ-1
+X-Mimecast-MFC-AGG-ID: hpKgFyZEMF2I80vcnW9IbQ_1749449455
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-b2c3e576201so3796283a12.0
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 23:10:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749449455; x=1750054255;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8fAHnSUgbK0T/Jvj5lZ7rfRDImFhPiFzgFqOeLLWznI=;
+        b=AnXAw7ffijgaLLcBniXbtSw3JalRYZp+MRAS2lHsul6f1R9l0wFy2Pc3eU+w+Z5ow2
+         aEW2wvpmOWBaCvp43hmWfu851L4i1UpSrVCPzRw1WeRHYnnGytG1c/lm7UTQ1RBXu0ax
+         epnyP4pjeSmsrRDvxrc203wIw6Z5X/kzJv3gEeZtZD2MQQVnNaJo4y3IOIutVCyDTFaX
+         waHSH14IqkScd5ZNn3CkydIexuqwV7hoQ0li7qvnB58s4M36R3xjBfvT1vD1bIWFFwfO
+         ro1zymOHFb8cDjfRIxesrZ6ZsbWbJxvt9uO/ZwvDFS0RS6eNuyeK4jEPU11kl7nYlaiO
+         HO5A==
+X-Forwarded-Encrypted: i=1; AJvYcCVLIdBK4LfaJIPxxb8z1DorgubBY8eRPbr/E+yM4TSXaINN3wxpKaPNVQkprLMe1E9rqRQ63Esu8a0WBdU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdEvSJ/sU788arKffu7TeiV4KwdCZ31EOkCGVlCoL/f4TjaYoL
+	cidLKYip5o2jcpm2zi0532EF9ngYPOYBuzluSdcVuNNWfjErJZy2rtHjtgm7Z0K+TigeeL24wKy
+	u7VoivaCmAGMvTBogJsqIATsU7+T2DF71kDWbgCmy7Ls4DMLs/7qHjfAflS1EeFRgvj7vMLP5r2
+	52q5ullSy96dAMBEpDcbZvLB074/AgDIEa+knJ5xdW
+X-Gm-Gg: ASbGncu+UeeXAmj4M375LeYcJ6o+2LVPp8Pu5jU6NoaLgpbAaCUGye67eBqQ9Bli7O3
+	jss7N4DK8v7BqGCRI4EBkNqT2r1bqwBOsBhit5LCZlDpY0p7dXX5NG89hmE/byfQs0P0=
+X-Received: by 2002:a17:90b:2802:b0:310:8d4a:4a97 with SMTP id 98e67ed59e1d1-313666b18d2mr10246574a91.15.1749449455520;
+        Sun, 08 Jun 2025 23:10:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE6/2UHn7/Uo8w2el5l2Rn8LGz769MNneYKHjrmdgTaipoeImVc5NlpqZY+cvQ12Vc/NyTuf6CIGXI035ffYfA=
+X-Received: by 2002:a17:90b:2802:b0:310:8d4a:4a97 with SMTP id
+ 98e67ed59e1d1-313666b18d2mr10246553a91.15.1749449455207; Sun, 08 Jun 2025
+ 23:10:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] mm: huge_memory: disallow hugepages if the
- system-wide THP sysfs settings are disabled
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, hughd@google.com, david@redhat.com,
- Liam.Howlett@oracle.com, npache@redhat.com, ryan.roberts@arm.com,
- dev.jain@arm.com, ziy@nvidia.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <cover.1749109709.git.baolin.wang@linux.alibaba.com>
- <8eefb0809c598fadaa4a022634fba5689a4f3257.1749109709.git.baolin.wang@linux.alibaba.com>
- <998a069c-9be5-4a10-888c-ba8269eaa333@lucifer.local>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <998a069c-9be5-4a10-888c-ba8269eaa333@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250606115012.1331551-1-eperezma@redhat.com> <20250606115012.1331551-2-eperezma@redhat.com>
+ <CACGkMEsw2taXgW11na2CFK6W03c=x=wMn3iwNZPypgPkeSU06Q@mail.gmail.com> <CACGkMEvinV7Zd+xddnxcerFbw_c+RZypkeD5HaN8=g6+peZvMQ@mail.gmail.com>
+In-Reply-To: <CACGkMEvinV7Zd+xddnxcerFbw_c+RZypkeD5HaN8=g6+peZvMQ@mail.gmail.com>
+From: Eugenio Perez Martin <eperezma@redhat.com>
+Date: Mon, 9 Jun 2025 08:10:19 +0200
+X-Gm-Features: AX0GCFunBg0u2F00zqo-pilSrjGR2wWnYVAnlGyKdS6mvzmpjVUJMCnjdbab8LA
+Message-ID: <CAJaqyWeetDsdoDzVrN-n0+jr97MBPeHdTxeM3ttmNUeLK702VA@mail.gmail.com>
+Subject: Re: [RFC 1/6] vduse: add v1 API definition
+To: Jason Wang <jasowang@redhat.com>
+Cc: Yongji Xie <xieyongji@bytedance.com>, Cindy Lu <lulu@redhat.com>, 
+	linux-kernel@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, Maxime Coquelin <mcoqueli@redhat.com>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, virtualization@lists.linux.dev, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Laurent Vivier <lvivier@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Jun 9, 2025 at 3:50=E2=80=AFAM Jason Wang <jasowang@redhat.com> wro=
+te:
+>
+> On Mon, Jun 9, 2025 at 9:41=E2=80=AFAM Jason Wang <jasowang@redhat.com> w=
+rote:
+> >
+> > On Fri, Jun 6, 2025 at 7:50=E2=80=AFPM Eugenio P=C3=A9rez <eperezma@red=
+hat.com> wrote:
+> > >
+> > > This allows to define all functions checking the API version set by t=
+he
+> > > userland device.
+> > >
+> > > Signed-off-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
+> >
+> > It might be worth clarifying how it works.
+> >
+> > For example,
+> >
+> > 1) would VDUSE behave differently or if it's just some new ioctls
 
+I'd like to test more in-depth, but a device can just bump the version
+ID and then implement the replies to the vduse messages. No need to
+implement new ioctls. If the VDUSE device sets 0 in either number of
+ASID or vq groups, the kernel assumes 1.
 
-On 2025/6/7 19:55, Lorenzo Stoakes wrote:
-> Not related to your patch at all, but man this whole thing (thp allowed orders)
-> needs significant improvement, it seems always perversely complicated for a
-> relatively simple operation.
-> 
-> Overall I LOVE what you're doing here, but I feel we can clarify things a
-> little while we're at it to make it clear exactly what we're doing.
-> 
-> This is a very important change so forgive my fiddling about here but I'm
-> hoping we can take the opportunity to make things a little simpler!
-> 
-> On Thu, Jun 05, 2025 at 04:00:58PM +0800, Baolin Wang wrote:
->> The MADV_COLLAPSE will ignore the system-wide Anon THP sysfs settings, which
->> means that even though we have disabled the Anon THP configuration, MADV_COLLAPSE
->> will still attempt to collapse into a Anon THP. This violates the rule we have
->> agreed upon: never means never.
->>
->> Another rule for madvise, referring to David's suggestion: “allowing for collapsing
->> in a VM without VM_HUGEPAGE in the "madvise" mode would be fine".
-> 
-> I'm generally not sure it's worth talking only about MADV_COLLAPSE here when
-> you're changing what THP is permitted across the board, I may have missed some
-> discussion and forgive me if so, but what is special about MADV_COLLAPSE's use
-> of thp_vma_allowable_orders() that makes it ignore 'never's moreso than other
-> users?
+But you have a very good point here, I think it is wise to evaluate
+the shortcut of these messages in the VDUSE kernel module. If a VDUSE
+device only has one vq group and one ASID, it can always return group
+0 and asid 0 for everything, and fail every try to ser asid !=3D 0. This
+way, the update is transparent for the VDUSE device, and future
+devices do not need to implement the reply of these. What do you
+think?
 
-We found that MADV_COLLAPSE ignores the THP configuration, meaning that 
-even when THP is set to 'never', MADV_COLLAPSE can still collapse into 
-THPs (and mTHPs in the future). This is because when MADV_COLLAPSE calls 
-thp_vma_allowable_orders(), it does not set the TVA_ENFORCE_SYSFS flag, 
-which means it ignores the system-wide Anon THP sysfs settings.
+> > 2) If VDUSE behave differently, do we need a ioctl to set the API
+> > version for backward compatibility?
+>
+> Speak too fast, there's a VDUSE_SET_API_VERSION actually.
+>
+> I think we need to think if it complicates the migration compatibility or=
+ not.
+>
 
-So this patch set is aimed to fix the THP policy for MADV_COLLAPSE.
+Do you mean migration as "increase the VDUSE version number", not "VM
+live migration from vduse version 0 to vduse version 1", isn't it? The
+second should not have any problem but I haven't tested it.
 
->> To address this issue, should check whether the Anon THP configuration is disabled
->> in thp_vma_allowable_orders(), even when the TVA_ENFORCE_SYSFS flag is set.
->>
->> In summary, the current strategy is:
->>
->> 1. If always & orders == 0, and madvise & orders == 0, and hugepage_global_enabled() == false
->> (global THP settings are not enabled), it means mTHP of that orders are prohibited
->> from being used, then madvise_collapse() is forbidden for that orders.
->>
->> 2. If always & orders == 0, and madvise & orders == 0, and hugepage_global_enabled() == true
->> (global THP settings are enabled), and inherit & orders == 0, it means mTHP of that
->> orders are still prohibited from being used, thus madvise_collapse() is not allowed
->> for that orders.
-> 
-> OK so it's already confusing that the global settings only impact 'inherit'
-> settings below, so they're not really global at all, but rather perhaps should
-> be called 'inherited'.
-> 
-> Maybe I need to submit a patch to rename thp_inherited_enabled(), or perhaps
-> that'd just add to the confusion :P
-> 
-> OK this is also not your fault just general commentary.
-> 
-> Anyway, I feel points 1 and 2 can more succinctly be summed up as below,
-> also there's no need to refer to the code, it's actually clearer I think to
-> refer to the underlying logic:
-> 
-> 	If no hugepage modes are enabled for the desired orders, nor can we
-> 	enable them by inheriting from a 'global' enabled setting - then it
-> 	must be the case that all desired orders either specify or inherit
-> 	'NEVER' - and we must abort.
-
-OK. Thanks for helping me make it simpler:)
-
->>
->> Reviewed-by: Zi Yan <ziy@nvidia.com>
->> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->> ---
->>   include/linux/huge_mm.h | 23 +++++++++++++++++++----
->>   1 file changed, 19 insertions(+), 4 deletions(-)
->>
->> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
->> index 2f190c90192d..199ddc9f04a1 100644
->> --- a/include/linux/huge_mm.h
->> +++ b/include/linux/huge_mm.h
->> @@ -287,20 +287,35 @@ unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
->>   				       unsigned long orders)
->>   {
->>   	/* Optimization to check if required orders are enabled early. */
->> -	if ((tva_flags & TVA_ENFORCE_SYSFS) && vma_is_anonymous(vma)) {
->> -		unsigned long mask = READ_ONCE(huge_anon_orders_always);
->> +	if (vma_is_anonymous(vma)) {
->> +		unsigned long always = READ_ONCE(huge_anon_orders_always);
->> +		unsigned long madvise = READ_ONCE(huge_anon_orders_madvise);
->> +		unsigned long inherit = READ_ONCE(huge_anon_orders_inherit);
->> +		unsigned long mask = always | madvise;
->> +
->> +		/*
->> +		 * If the system-wide THP/mTHP sysfs settings are disabled,
->> +		 * then we should never allow hugepages.
->> +		 */
->> +		if (!(mask & orders) && !(hugepage_global_enabled() && (inherit & orders)))
->> +			return 0;
->> +
->> +		if (!(tva_flags & TVA_ENFORCE_SYSFS))
->> +			goto skip;
->>
->> +		mask = always;
->>   		if (vm_flags & VM_HUGEPAGE)
->> -			mask |= READ_ONCE(huge_anon_orders_madvise);
->> +			mask |= madvise;
->>   		if (hugepage_global_always() ||
->>   		    ((vm_flags & VM_HUGEPAGE) && hugepage_global_enabled()))
->> -			mask |= READ_ONCE(huge_anon_orders_inherit);
->> +			mask |= inherit;
->>
->>   		orders &= mask;
->>   		if (!orders)
->>   			return 0;
->>   	}
->>
->> +skip:
->>   	return __thp_vma_allowable_orders(vma, vm_flags, tva_flags, orders);
->>   }
-> 
-> I feel this is compressing a lot of logic in a way that took me several
-> readings to understand (hey I might not be the smartest cookie in the jar,
-> but we need to account for all levels of kernel developer ;)
-> 
-> I feel like we can make things a lot clearer here by separating out with a
-> helper function (means we can drop some indentation too), and also take
-> advantage of the fact that, if orders == 0, __thp_vma_allowable_orders()
-> exits with 0 early so no need for us to do so ourselves:
-
-Sure. Looks good to me. Thanks.
-
-> /* Strictly mask requested anonymous orders according to sysfs settings. */
-> static inline unsigned long __thp_mask_anon_orders(unsigned long vm_flags,
-> 		unsigned long tva_flags, unsigned long orders)
-> {
-> 	unsigned long always = READ_ONCE(huge_anon_orders_always);
-> 	unsigned long madvise = READ_ONCE(huge_anon_orders_madvise);
-> 	unsigned long inherit = READ_ONCE(huge_anon_orders_inherit);;
-> 	bool inherit_enabled = hugepage_global_enabled();
-> 	bool has_madvise =  vm_flags & VM_HUGEPAGE;
-> 	unsigned long mask = always | madvise;
-> 
-> 	mask = always | madvise;
-> 	if (inherit_enabled)
-> 		mask |= inherit;
-> 
-> 	/* All set to/inherit NEVER - never means never globally, abort. */
-> 	if (!(mask & orders))
-> 		return 0;
-> 
-> 	/* Otherwise, we only enforce sysfs settings if asked. */
-> 	if (!(tva_flags & TVA_ENFORCE_SYSFS))
-> 		return orders;
-> 
-> 	mask = always;
-> 	if (has_madvise)
-> 		mask |= madvise;
-> 	if (hugepage_global_always() || (has_madvise && inherit_enabled))
-> 		mask |= inherit;
-> 
-> 	return orders & mask;
-> }
-> 
-> ...
-> 
-> static inline
-> unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
-> 				       unsigned long vm_flags,
-> 				       unsigned long tva_flags,
-> 				       unsigned long orders)
-> {
-> 	if (vma_is_anonymous(vma))
-> 		orders = __thp_mask_anon_orders(vm_flags, tva_flags, orders);
-> 
-> 	return __thp_vma_allowable_orders(vma, vm_flags, tva_flags, orders);
-> }
-
+> > 3) If it means a brunch of new ioctls, could userspace just probe the
+> > new ioctls instead?
+> >
+> > Thanks
+>
+> Thanks
+>
+> >
+> > > ---
+> > >  include/uapi/linux/vduse.h | 4 ++++
+> > >  1 file changed, 4 insertions(+)
+> > >
+> > > diff --git a/include/uapi/linux/vduse.h b/include/uapi/linux/vduse.h
+> > > index 68a627d04afa..9a56d0416bfe 100644
+> > > --- a/include/uapi/linux/vduse.h
+> > > +++ b/include/uapi/linux/vduse.h
+> > > @@ -10,6 +10,10 @@
+> > >
+> > >  #define VDUSE_API_VERSION      0
+> > >
+> > > +/* VQ groups and ASID support */
+> > > +
+> > > +#define VDUSE_API_VERSION_1    1
+> > > +
+> > >  /*
+> > >   * Get the version of VDUSE API that kernel supported (VDUSE_API_VER=
+SION).
+> > >   * This is used for future extension.
+> > > --
+> > > 2.49.0
+> > >
+>
 
