@@ -1,494 +1,234 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2046.outbound.protection.outlook.com [40.107.93.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BCA256C89;
-	Mon,  9 Jun 2025 12:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749471846; cv=none; b=EFzvzz3A7wjkket3VqRXogCJaaz6TQFD6ll+Jq+MoASrT/aVi0ED3Oym2zm7SGAX7fIGDYxIQO6Ygc/XzCal+IBgX6zYfcQeEH6mzcUhjCd0abeYkTAPGeJGWLi1XrCbVC24fuCCvOiC3VFTmekMkIK7kR9FC91cSOM+ukf89Ok=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749471846; c=relaxed/simple;
-	bh=YyOdfjR+mo8FFl+lDB6jODrHf7EZgoZQZrvRXDPltIM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=RxC2nKv6YCagErvrpHJKKWj3TGmRt0dMuh3+mXGyD2bOIZFK1FV9oXY9c3twYLzwalv+bZNQSMWcr/tZ9fPxibj5nlfCLqAX8Gt7hpObtchSy240MsSjY4hmsYU4qPUCwS4glX0G8A/ZE6vkQxryLjmoINavD1sVhlqr9KKkbFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BaWO/RMj; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B5D25C6F4
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 12:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749471848; cv=fail; b=jirc61Mevb0y6+6wmeWNzklQdmD+msRSKQfLHx9m7wsleETuxfT6HGrwq6nepMlsCXj0UJzowHRRbx4n3lPzqFdTF9emPQwXzk5WK0Nzp8+XhG6fEfhZOQBDzQMPUtz7qm88z3n52YzqSVGFKM9KU3a6LLN5PV1FUL2285qlXHw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749471848; c=relaxed/simple;
+	bh=ebF6FSXo5Qe5T2Cepn0csZMlG2+30aB65SBaT9quNmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ZWkQo9n4A/VMTZHog+z6AjOdnGI5FoFWCHhZRrvjuhqxpZufkIHGFtlWFyuU2bx6v8N6qDgqLF0s2vfrycpOPTVfZr4A3bV6b7XbtuXh1T/h06fGrCGZxeHsFSgU+jFkjize5+piurgtX37imGtSr9HqgSfgHFlE3h9D9PsDPDs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=VjBuTEEV; arc=fail smtp.client-ip=40.107.93.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BaWO/RMj"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5599R2fr001080;
-	Mon, 9 Jun 2025 12:23:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	NATlPxPRpB8HoWD9L5MbLr5mHFmdYvIVKRX+kqjRISY=; b=BaWO/RMj5ygGFxp+
-	sCEsRrdvM3WXZx1o02Fj3WFEQd2glm1x5qEp7K+4kpVc9PwkN7BQcnD5C3YUPxIm
-	MqdtI8KRqHPt7ija6LanY/8w+wvdYuuhyU1y2hq6gNmfAylm5aj53qYxP8uc17pP
-	scqmPlYQZfQ1XASW4LxYc755kCjnkaBZFUcjDtSOan8XUv3KHBdvXHluIzXfasjV
-	GymBiOprhmIWgxpK61K0wXp98kztg9tAFRti6cl6zn+Sz22306KVFlf8wynH9XNt
-	3K9r/q8xql6g43lgtokATYvZ5tSnuH0QX8YFB4QkBVRa1sSWWymkcmrOfjKKv2sf
-	4/rGaA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474dgxpaf0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Jun 2025 12:23:54 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 559CNhQO020702
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 9 Jun 2025 12:23:43 GMT
-Received: from cse-cd01-lnx.ap.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 9 Jun 2025 05:23:39 -0700
-From: Yongxing Mou <quic_yongmou@quicinc.com>
-Date: Mon, 9 Jun 2025 20:21:33 +0800
-Subject: [PATCH v2 14/38] drm/msm/dp: Add catalog support for 3rd/4th
- stream MST
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="VjBuTEEV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IEvhf5Fx7zRPhtQvlWd/pBHHx/BvRgN5r6R5ozwJ8qZ7tk4ffAL7jS/0H0krwRDEDRF037Bo7FNxjs5bJmnRgXXMlhwCUz0VbQwsfzfxw6XrjqDf0h2DYa9sXqLgVrDPIAcGE9gzUkJlokFAC+8nmaSWBLxTaRPCM8r6mgTFqvArtjrXpmiR+kOTvY/CuitfzS72YOOp5Gr0QFLGe4QLPk7PrNIiCxp1NQU/o/90JINQfyuVbjJ+TDQNL7x6hyFrNC47/nJ+p2USgK+v/coUXW0Zszc+KbC0P9ZcYwt1cgw43QHiI9P3/MsFjKR/VzAnQDJTdFd0Yc7ork/OI48eTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DjH2OSgESsqnUXB0H7Llg+i/6McMDnu1NDXmqgRHGs8=;
+ b=i3jogQZaZGACJ6QaMTG6KnlqtEMQqqOuzguYuENTlmIFQWUmn7lfXE6kNOIGJIcgmxFzdP9eyOd5EY1m5wYMevOa+bmowZihjDr4P+39Tv8K74uTLmJxz6Uuf10Xi4Z4IQH0JbMzAKCc3v3xB6/HxLxa5igQDhF5xv0eECsifYSTz7RBayBWM4d0SSH5o6MuRu1kezeAlC2KdZ0J7NV3C6cUfexxaSeYBTevZKWxPAWDvYA4W2pzWcTLK0XB/rM8OYEDm1Rfahj1qdN4ebarfz4DP0K69fenFsr6lSATEXP9rH3NUE88BIsHIn2+UYZvR8nOvWesa2albfZMRT6avw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DjH2OSgESsqnUXB0H7Llg+i/6McMDnu1NDXmqgRHGs8=;
+ b=VjBuTEEV/DAueUWYA0xbHUI3hlmh95+mKd1wvQaug1MBWSLuE9c0rEEcCqOOCldzyj90vcCLukL2w5aqiUpgAGLVroQoIJnhNjx469RVlxSSNroUbQOfPVUGvuckkUas7kSbX44qLEiab7lScKlziMROYMIv1OvLssL2as2RUJKBC4yVtjmr8jLtG7Tj/ThGYKhoTzMjiH4wAS7HyHYThEwCIhgMOBBbOGSuWfcQcc+R+uXRW/AZ+LDxGrywA9vBlC5Np69f1saWmNmQYnU3LZ7qKShjN0VYpuMTCBhqxvNJ0tNCU/MhYJUZmU4adEPXDjSiCrCmz0oOq4wDldYlUg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by BN3PR12MB9593.namprd12.prod.outlook.com (2603:10b6:408:2cb::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Mon, 9 Jun
+ 2025 12:24:04 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8792.038; Mon, 9 Jun 2025
+ 12:24:04 +0000
+Date: Mon, 9 Jun 2025 09:24:02 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: ankita@nvidia.com, maz@kernel.org, oliver.upton@linux.dev,
+	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
+	catalin.marinas@arm.com, will@kernel.org, ryan.roberts@arm.com,
+	shahuang@redhat.com, lpieralisi@kernel.org, david@redhat.com,
+	aniketa@nvidia.com, cjia@nvidia.com, kwankhede@nvidia.com,
+	kjaju@nvidia.com, targupta@nvidia.com, vsethi@nvidia.com,
+	acurrid@nvidia.com, apopple@nvidia.com, jhubbard@nvidia.com,
+	danw@nvidia.com, zhiw@nvidia.com, mochs@nvidia.com,
+	udhoke@nvidia.com, dnigam@nvidia.com, alex.williamson@redhat.com,
+	sebastianene@google.com, coltonlewis@google.com,
+	kevin.tian@intel.com, yi.l.liu@intel.com, ardb@kernel.org,
+	akpm@linux-foundation.org, gshan@redhat.com, linux-mm@kvack.org,
+	ddutile@redhat.com, tabba@google.com, qperret@google.com,
+	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, maobibo@loongson.cn
+Subject: Re: [PATCH v6 1/5] KVM: arm64: Block cacheable PFNMAP mapping
+Message-ID: <20250609122402.GM19710@nvidia.com>
+References: <20250524013943.2832-1-ankita@nvidia.com>
+ <20250524013943.2832-2-ankita@nvidia.com>
+ <aEMvbIu530nCqwhG@google.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEMvbIu530nCqwhG@google.com>
+X-ClientProxiedBy: YT3PR01CA0014.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:86::16) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250609-msm-dp-mst-v2-14-a54d8902a23d@quicinc.com>
-References: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
-In-Reply-To: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
-To: Rob Clark <robin.clark@oss.qualcomm.com>,
-        Dmitry Baryshkov
-	<lumag@kernel.org>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        Jessica Zhang
-	<jessica.zhang@oss.qualcomm.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, "Simona
- Vetter" <simona@ffwll.ch>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        "Yongxing
- Mou" <quic_yongmou@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749471756; l=16804;
- i=quic_yongmou@quicinc.com; s=20241121; h=from:subject:message-id;
- bh=YyOdfjR+mo8FFl+lDB6jODrHf7EZgoZQZrvRXDPltIM=;
- b=XKYUrEA7DJZmPURgNerxRHB4nfVF1TFvjmgPWJ4xPj0wPAIjfKrH5AwWYauwb69OmxjObuB0U
- nvCDT2EZp6gBZO3PqAjOGH2y53ULmpu7aH62YwEpZPpjUIFIrtuccuc
-X-Developer-Key: i=quic_yongmou@quicinc.com; a=ed25519;
- pk=zeCnFRUqtOQMeFvdwex2M5o0Yf67UHYfwCyBRQ3kFbU=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: YH_LwvlOoPsJxUmuaSDUNdG-R0yY1Zcc
-X-Authority-Analysis: v=2.4 cv=HMbDFptv c=1 sm=1 tr=0 ts=6846d25a cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=9qUns-RCWyWEfIQEW78A:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: YH_LwvlOoPsJxUmuaSDUNdG-R0yY1Zcc
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA5MyBTYWx0ZWRfX/993mZowCikz
- TJ0Je0t6+oyF20/jhuZ44nuMNzUZ5I54NhmL93H8sqhGwbbVBeo2UVYcBaPBbwzuNPSkVgkveaK
- l6BDDlEHM3wEeHCvbphOrrHcB2q4nQ3Qr9agJP+XZIsJoPKZjKrR/LK85hIjfTzMV8FxMOReMsA
- Cx1QVIRKF3a6q+fDwJJLCQm3SS+amIro19M5UhKGdyGszJ6DXPQ55C+58hLXga34AFMogzzAbi5
- A3D0tQLloRlTBa6GHwYkmeEz2JrOv+ARrJB9BI0bpCMm+JH7pFh9fkSKrxzFz7r/Gl9zbecpA5l
- a1qCbX7XkfwPm1hXQcl8YULFWTIEkOpGosA/nkwrWY/JMiO8qxXz3Qmd5KCYh38yLiYmsiPih0g
- 67HCj3HClUMrbSVEQ8Sh5UEjbFkUqgXZs9g+ijhtk7Q3kOQYDEAgoZSb78chLFbN0AU7bjHq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-09_05,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 mlxlogscore=999 priorityscore=1501 impostorscore=0
- suspectscore=0 malwarescore=0 phishscore=0 spamscore=0 lowpriorityscore=0
- adultscore=0 mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506090093
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|BN3PR12MB9593:EE_
+X-MS-Office365-Filtering-Correlation-Id: 21feaaac-b51d-472a-8ba4-08dda7508589
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?dvT3JWCpZfw7lkyYiLISeymiVVDDEqzpsrEGetf8rPoy8ZxKbxOBx6sh8EC2?=
+ =?us-ascii?Q?tVjiPGDO4oKJGIzx8N5l0mw9L2VVTazothk7n9zeI8TS3GmDDecl94Csk5gz?=
+ =?us-ascii?Q?tmZdvTRgCt1NuN9aeGEndYTRLlBQhkmcp8MULxQe8wvue531u4eEk0JYkMg4?=
+ =?us-ascii?Q?ftt1w9GPtZGTlCJjwrn7s2FAIfPio6B3CJiHluLK61PXMlJnbj1ZVVohdBE/?=
+ =?us-ascii?Q?jmOem5Qf2e2cIaT0HvVyvmbgTfRNgx/jGD/6CA2ngXUAk+NXnh/ONPrxNAPS?=
+ =?us-ascii?Q?tC6Wb+NegjhhGsEnjAS+U9n+hJTv5n6fCY3/63KPIVx3W7rNpJHAmXpEltFI?=
+ =?us-ascii?Q?3lhpp1bjYGJ7GuthRz4a0mC2Dcw6eWDk3SjaMzNemH5fZ8kOy8MXscb2u0Kc?=
+ =?us-ascii?Q?67ty8NtmxGxE/zJpRLHS7z3Am6h4N52aI4urDwDjOIxHkxzK4wwKYoiVsjuj?=
+ =?us-ascii?Q?qkevfvuxUw3+SF4//t4Gatc1nikClA+ZpKshGAzfGeoLqQ+XQHajQmtFc+C+?=
+ =?us-ascii?Q?HYk4nDlwAeuLCX0rJEhntEPG0ZMmtNGfpKHTeU5I1yto7FZXTXrquDkehGGz?=
+ =?us-ascii?Q?JiWbReUrhn5M7twGSRh1PMM5rBEcc8GlG1VGmzkbV5S181aO/x4VWaUCSfbg?=
+ =?us-ascii?Q?aqKJ/vEkCXN3zRapMRZH3ExxOZfHLKJ+dKu39Dtf2TU5gAJPcvDbHdYqw0Yu?=
+ =?us-ascii?Q?cAdJrkLwN0ULvcJc0kfEUIwcMhCSGgXTf4j60MXl6nBWEUPph8nE3bJ3wlUG?=
+ =?us-ascii?Q?KJkQPCxX16F3jNjZ+Ldg8M0a8zYv15sbG56nsFHzjGrbbLAcoIP/ODdXdfKK?=
+ =?us-ascii?Q?PdMEvAgpUR05o2D8U6isjTac9ab22c5Me80PZWeNuT8+wfvh0ROL7O6qiLNC?=
+ =?us-ascii?Q?Ufmz1aMrpYCkXdKShLVvE/05udvcNYBJKQuHa5WooVGD/VOe5o7uQPVAXy2+?=
+ =?us-ascii?Q?hkucCg2h+E9HPvn+5q1u13MPkoGdPF7x5fGZRLf//Ral7IwqiZTMhgVSVhpf?=
+ =?us-ascii?Q?TbirR3muwWGxOi+FwRQrH1ez6T+wmwx+q3AdvDOwCOsYgYxfjomwcee0LtpG?=
+ =?us-ascii?Q?ODsAMjlGtRLkz0rCgfLKvYN1T4M/qp/BiQfIL4qoQ1v8EQkRpsP2sji3ISSg?=
+ =?us-ascii?Q?vzWnT1j3/eRhDPPlCb39Mqw0JBh50+qKcdhUOYLPdXpt7uU/bGSG2t6bVWvn?=
+ =?us-ascii?Q?XC0R08xg4Ryodfe8P95cVLBjEJBwxmdZUocQtF05TMeW10408CbovYszQbP1?=
+ =?us-ascii?Q?y0GHXyZLG20w+EvGq8t8FeIyKkTy9rxEWHIxGJ7hjISBYCg97HHjxDJt2hW4?=
+ =?us-ascii?Q?4yVNkmqnkJ5mH/PsblFZN5MOpw2zPLQPeVwrViNcW0LCNm+ZxO/MNnkuhouu?=
+ =?us-ascii?Q?rB8F0OH44TdFylk1Y14LfIMUaJmVFLs/N1bcXcAHGMgSRFWrGNGEAQQVS1o2?=
+ =?us-ascii?Q?HW3mtCgkSi8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?8JPHjGhqk/IwZzcQMPdCVywpMv73UQh33R6taZ2nBw94rZ4ZdTAyA3rvWhSb?=
+ =?us-ascii?Q?3X5c/nfC3vZ3n0taN/XmvbquIn5E8RdfpK4bLUpCwsiafMms974g00jYQMlF?=
+ =?us-ascii?Q?ZhY/iI/mxQyw7Qg0qJnTfeWzoqOgMqlUMG98Je5h2yoqwltoU3Rm9vd+TI/r?=
+ =?us-ascii?Q?ARzDQGahjjtQk/Cb1GCI/jNtNxU34GyzNR5pwNjZBMLNUV321K3tE6eFksz7?=
+ =?us-ascii?Q?lKQsfuDA0u5tbx5m80TYdb4PuWRBdDTKZGqE1F6y0vrDFZHh8Tp801b//aFb?=
+ =?us-ascii?Q?FC+D9p1pP4HVokQap7IyafR1kNb+BFwAiDsGm7JuKV9FAKdVFlP9u5AdXfgz?=
+ =?us-ascii?Q?pZO6r9BDdsNS0pEoBaz1umjgX4Hgwj9M+p3FJwh0tEjxFcKkRiRmfAlbmlnn?=
+ =?us-ascii?Q?PBaURbaX2nIIuuwyhu4XGPeE4W3TLrD9h8cNNyikr+64p87gYt18ALXnGj/r?=
+ =?us-ascii?Q?HicbACUtU6gqpWxGYPAAxxe+0oVaNJWvErPI5+zjrh4YqPcZmD+v2+hrmiCg?=
+ =?us-ascii?Q?MqBPP0WYObCw9yC6dAYuKW0ewBv2lxb0f98Ck8knEinZG4T0S9FuoFO+3Z6A?=
+ =?us-ascii?Q?FsZYCPeLWNdsX9Myt3IgirCiHgy2uqCRXDNe2LHP5W1dW+i4oa95z6DwB/oy?=
+ =?us-ascii?Q?YjxHtin+ofB2PyaiGn2xK/Y8qAz3xF5pdh/LDe+K8AZAVPn3eUv2I9sNrS70?=
+ =?us-ascii?Q?rAjeBPeQaOydZkSl0HTUAS0OhhGRZlmH0kSlzyWFFaVUk4xyrNywtICE7pXk?=
+ =?us-ascii?Q?zBbMo+P1sqFp3dkjMbj44QSKPgLrQjm1raA/GIoyoSy3sJ1iJmQEJ2Sx9owW?=
+ =?us-ascii?Q?jHii8fnWsZ+g+312W3i2cLPnV/O6UL3/fIxFyoO2VewHQLMoKy3aBQlCp6qa?=
+ =?us-ascii?Q?mXKa9+ilc/qUg15EM58XxmcCQU90sb149WQF9J6M7FxqokMot9L31aXdrfvv?=
+ =?us-ascii?Q?8Tax0Au144XELI4WxYq6gjqdYrO1LNrWxkRvOLEyOyBNadYqsS+QjbErp9Pf?=
+ =?us-ascii?Q?HjwjPcdWQyZe2E0o1qBdP8UWART5TsLHUfSaffZoMg2EHh2n1DcHIhlVYsYQ?=
+ =?us-ascii?Q?UDCCgCUVvcyVONo59xm6DjZIMNWG34f8ngBCg/krdHoknQuLX7FDyGkz7XyD?=
+ =?us-ascii?Q?GWqoCpoDWjCprIfa7mpPjYxBsU+xD6CMygOqESkgS4vyO1Ij0yQM68GjTng/?=
+ =?us-ascii?Q?sTqAVEjGXgu5+mFmL9/ETKfpzFB2vtGx/T2re0FWO6mOABPNIp/5MrTUL1b+?=
+ =?us-ascii?Q?/TN6/gdcdV54qdwBo5xwpcfB+bx9b1xP+7FiwlXsPx4CdIgOn/QdtvOWnM4h?=
+ =?us-ascii?Q?AU2x/I6aq/Sn9qyBli0qQcMNfg71nglwjV4fykVF2rrntX0TVraD7pPj2bmR?=
+ =?us-ascii?Q?h9pKL1fw7HEnJ9cAd5+voVZ6LFtIM4WiN+HOGFceympRWmgN0/ucL8E3Xpv3?=
+ =?us-ascii?Q?WS13wQEUJrnFKkZK3JgqYln6ul9I6ik9jQrvI6JU8UMSOx0nkm0rGQuPYb3n?=
+ =?us-ascii?Q?dwOZ0zxA4GJN3jZK5jCx9Ji/WyYupAGjoUiiSiV51a9pEWKBS1uXPBqwM8/z?=
+ =?us-ascii?Q?n6yrxvN7ovFHk0h5IEU=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 21feaaac-b51d-472a-8ba4-08dda7508589
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 12:24:04.0224
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Eemd32IaHMSKg9bRyJtivsj+9tyOhouP8t4HtSD2ZlJEPyQJ0MhpnVvIAxEQtBkG
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN3PR12MB9593
 
-To support the 4 streams MST, the link clocks for stream 3/4
-are controlled by MST_2_LCLK and MST_3_LCLK. They share the same
-definition but have different base addresses. Add corresponding
-catalog support to be able to proggram this block.
+On Fri, Jun 06, 2025 at 11:11:56AM -0700, Sean Christopherson wrote:
+> > @@ -1612,6 +1624,10 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+> >  
+> >  	vfio_allow_any_uc = vma->vm_flags & VM_ALLOW_ANY_UNCACHED;
+> >  
+> > +	if ((vma->vm_flags & VM_PFNMAP) &&
+> > +	    !mapping_type_noncacheable(vma->vm_page_prot))
+> 
+> I don't think this is correct, and there's a very real chance this will break
+> existing setups.  PFNMAP memory isn't strictly device memory, and IIUC, KVM
+> force DEVICE/NORMAL_NC based on kvm_is_device_pfn(), not based on VM_PFNMAP.
 
-Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
----
- drivers/gpu/drm/msm/dp/dp_catalog.c | 182 ++++++++++++++++++++++++++++++------
- drivers/gpu/drm/msm/dp/dp_reg.h     |  14 +++
- 2 files changed, 169 insertions(+), 27 deletions(-)
+kvm_is_device_pfn() effecitvely means KVM can't use CMOs on that
+PFN. It doesn't really mean anything more..
 
-diff --git a/drivers/gpu/drm/msm/dp/dp_catalog.c b/drivers/gpu/drm/msm/dp/dp_catalog.c
-index 0f23f69765f63a25650ed6612f1b83338483a142..07d06cd36eea5ea1dd90daf01422b8ecdffb13fe 100644
---- a/drivers/gpu/drm/msm/dp/dp_catalog.c
-+++ b/drivers/gpu/drm/msm/dp/dp_catalog.c
-@@ -72,6 +72,8 @@ struct dss_io_data {
- 	struct dss_io_region ahb;
- 	struct dss_io_region aux;
- 	struct dss_io_region link;
-+	struct dss_io_region mst2_link;
-+	struct dss_io_region mst3_link;
- 	struct dss_io_region pixels[DP_STREAM_MAX];
- };
- 
-@@ -93,6 +95,10 @@ void msm_dp_catalog_snapshot(struct msm_dp_catalog *msm_dp_catalog, struct msm_d
- 	msm_disp_snapshot_add_block(disp_state, dss->ahb.len, dss->ahb.base, "dp_ahb");
- 	msm_disp_snapshot_add_block(disp_state, dss->aux.len, dss->aux.base, "dp_aux");
- 	msm_disp_snapshot_add_block(disp_state, dss->link.len, dss->link.base, "dp_link");
-+	msm_disp_snapshot_add_block(disp_state, dss->mst2_link.len, dss->mst2_link.base,
-+				    "dp_mst2_link");
-+	msm_disp_snapshot_add_block(disp_state, dss->mst3_link.len, dss->mst3_link.base,
-+				    "dp_mst3_link");
- 	for (i = DP_STREAM_0; i < DP_STREAM_MAX; i++) {
- 		sprintf(reg_name, "dp_p%d", i);
- 		msm_disp_snapshot_add_block(disp_state, dss->pixels[i].len,
-@@ -165,6 +171,36 @@ static inline void msm_dp_write_link(struct msm_dp_catalog_private *catalog,
- 	writel(data, catalog->io.link.base + offset);
- }
- 
-+static inline u32 msm_dp_read_mst_link(struct msm_dp_catalog_private *catalog,
-+				       enum msm_dp_stream_id stream_id, u32 offset)
-+{
-+	u32 ret = 0;
-+
-+	if (stream_id == DP_STREAM_2)
-+		ret = readl_relaxed(catalog->io.mst2_link.base + offset);
-+	else if (stream_id == DP_STREAM_3)
-+		ret = readl_relaxed(catalog->io.mst3_link.base + offset);
-+	else
-+		DRM_ERROR("invalid stream id");
-+
-+	return ret;
-+}
-+
-+static inline void msm_dp_write_mst_link(struct msm_dp_catalog_private *catalog,
-+					 enum msm_dp_stream_id stream_id, u32 offset, u32 data)
-+{
-+	/*
-+	 * To make sure link reg writes happens before any other operation,
-+	 * this function uses writel() instread of writel_relaxed()
-+	 */
-+	if (stream_id == DP_STREAM_2)
-+		writel(data, catalog->io.mst2_link.base + offset);
-+	else if (stream_id == DP_STREAM_3)
-+		writel(data, catalog->io.mst3_link.base + offset);
-+	else
-+		DRM_ERROR("invalid stream id");
-+}
-+
- /* aux related catalog functions */
- u32 msm_dp_catalog_aux_read_data(struct msm_dp_catalog *msm_dp_catalog)
- {
-@@ -329,7 +365,10 @@ void msm_dp_catalog_ctrl_config_ctrl(struct msm_dp_catalog *msm_dp_catalog,
- 	if (stream_id == DP_STREAM_1)
- 		reg_offset = REG_DP1_CONFIGURATION_CTRL - REG_DP_CONFIGURATION_CTRL;
- 
--	msm_dp_write_link(catalog, REG_DP_CONFIGURATION_CTRL + reg_offset, cfg);
-+	if (stream_id > DP_STREAM_1)
-+		msm_dp_write_mst_link(catalog, stream_id, REG_DP_MST_LINK_CONFIGURATION_CTRL, cfg);
-+	else
-+		msm_dp_write_link(catalog, REG_DP_CONFIGURATION_CTRL + reg_offset, cfg);
- 
- 	drm_dbg_dp(catalog->drm_dev, "stream_id:%d DP_CONFIGURATION_CTRL=0x%x\n",
- 		stream_id, cfg);
-@@ -416,7 +455,10 @@ void msm_dp_catalog_ctrl_config_misc(struct msm_dp_catalog *msm_dp_catalog,
- 	if (stream_id == DP_STREAM_1)
- 		reg_offset = REG_DP1_MISC1_MISC0 - REG_DP_MISC1_MISC0;
- 
--	misc_val = msm_dp_read_link(catalog, REG_DP_MISC1_MISC0 + reg_offset);
-+	if (stream_id > DP_STREAM_1)
-+		misc_val = msm_dp_read_mst_link(catalog, stream_id, REG_DP_MST_LINK_MISC1_MISC0);
-+	else
-+		misc_val = msm_dp_read_link(catalog, REG_DP_MISC1_MISC0 + reg_offset);
- 
- 	/* clear bpp bits */
- 	misc_val &= ~(0x07 << DP_MISC0_TEST_BITS_DEPTH_SHIFT);
-@@ -426,7 +468,11 @@ void msm_dp_catalog_ctrl_config_misc(struct msm_dp_catalog *msm_dp_catalog,
- 	misc_val |= DP_MISC0_SYNCHRONOUS_CLK;
- 
- 	drm_dbg_dp(catalog->drm_dev, "misc settings = 0x%x\n", misc_val);
--	msm_dp_write_link(catalog, REG_DP_MISC1_MISC0 + reg_offset, misc_val);
-+
-+	if (stream_id > DP_STREAM_1)
-+		msm_dp_write_mst_link(catalog, stream_id, REG_DP_MST_LINK_MISC1_MISC0, misc_val);
-+	else
-+		msm_dp_write_link(catalog, REG_DP_MISC1_MISC0 + reg_offset, misc_val);
- }
- 
- void msm_dp_catalog_setup_peripheral_flush(struct msm_dp_catalog *msm_dp_catalog)
-@@ -506,9 +552,15 @@ void msm_dp_catalog_ctrl_config_msa(struct msm_dp_catalog *msm_dp_catalog,
- 	if (link_rate_hbr3 == rate)
- 		nvid *= 3;
- 
--	drm_dbg_dp(catalog->drm_dev, "mvid=0x%x, nvid=0x%x\n", mvid, nvid);
--	msm_dp_write_link(catalog, REG_DP_SOFTWARE_MVID + mvid_reg_off, mvid);
--	msm_dp_write_link(catalog, REG_DP_SOFTWARE_NVID + nvid_reg_off, nvid);
-+	drm_dbg_dp(catalog->drm_dev, "stream_id:%d mvid=0x%x, nvid=0x%x\n", stream_id, mvid, nvid);
-+	if (stream_id > DP_STREAM_1) {
-+		msm_dp_write_mst_link(catalog, stream_id, REG_MST_LINK_SOFTWARE_MVID, mvid);
-+		msm_dp_write_mst_link(catalog, stream_id, REG_MST_LINK_SOFTWARE_NVID, nvid);
-+	} else {
-+		msm_dp_write_link(catalog, REG_DP_SOFTWARE_MVID + mvid_reg_off, mvid);
-+		msm_dp_write_link(catalog, REG_DP_SOFTWARE_NVID + nvid_reg_off, nvid);
-+	}
-+
- 	msm_dp_write_pn(catalog, stream_id, MMSS_DP_DSC_DTO, 0x0);
- }
- 
-@@ -878,10 +930,21 @@ int msm_dp_catalog_panel_timing_cfg(struct msm_dp_catalog *msm_dp_catalog,
- 	if (stream_id == DP_STREAM_1)
- 		offset = REG_DP1_TOTAL_HOR_VER - REG_DP_TOTAL_HOR_VER;
- 
--	msm_dp_write_link(catalog, REG_DP_TOTAL_HOR_VER + offset, total);
--	msm_dp_write_link(catalog, REG_DP_START_HOR_VER_FROM_SYNC + offset, sync_start);
--	msm_dp_write_link(catalog, REG_DP_HSYNC_VSYNC_WIDTH_POLARITY + offset, width_blanking);
--	msm_dp_write_link(catalog, REG_DP_ACTIVE_HOR_VER + offset, msm_dp_active);
-+	if (stream_id > DP_STREAM_1) {
-+		msm_dp_write_mst_link(catalog, stream_id, REG_DP_MST_LINK_TOTAL_HOR_VER, total);
-+		msm_dp_write_mst_link(catalog, stream_id, REG_DP_MST_LINK_START_HOR_VER_FROM_SYNC,
-+				      sync_start);
-+		msm_dp_write_mst_link(catalog, stream_id,
-+				      REG_DP_MST_LINK_HSYNC_VSYNC_WIDTH_POLARITY, width_blanking);
-+		msm_dp_write_mst_link(catalog, stream_id, REG_DP_MST_LINK_ACTIVE_HOR_VER,
-+				      msm_dp_active);
-+	} else {
-+		msm_dp_write_link(catalog, REG_DP_TOTAL_HOR_VER + offset, total);
-+		msm_dp_write_link(catalog, REG_DP_START_HOR_VER_FROM_SYNC + offset, sync_start);
-+		msm_dp_write_link(catalog, REG_DP_HSYNC_VSYNC_WIDTH_POLARITY + offset,
-+				  width_blanking);
-+		msm_dp_write_link(catalog, REG_DP_ACTIVE_HOR_VER + offset, msm_dp_active);
-+	}
- 
- 	reg = msm_dp_read_pn(catalog, stream_id, MMSS_DP_INTF_CONFIG);
- 
-@@ -914,13 +977,24 @@ static void msm_dp_catalog_panel_send_vsc_sdp(struct msm_dp_catalog *msm_dp_cata
- 
- 	msm_dp_utils_pack_sdp_header(&vsc_sdp->sdp_header, header);
- 
--	msm_dp_write_link(catalog, MMSS_DP_GENERIC0_0 + msm_dp_generic_offset, header[0]);
--	msm_dp_write_link(catalog, MMSS_DP_GENERIC0_1 + msm_dp_generic_offset, header[1]);
-+	if (stream_id > DP_STREAM_1) {
-+		msm_dp_write_mst_link(catalog, stream_id, MMSS_DP_MST_LINK_GENERIC0_0, header[0]);
-+		msm_dp_write_mst_link(catalog, stream_id, MMSS_DP_MST_LINK_GENERIC0_1, header[1]);
-+	} else {
-+		msm_dp_write_link(catalog, MMSS_DP_GENERIC0_0 + msm_dp_generic_offset, header[0]);
-+		msm_dp_write_link(catalog, MMSS_DP_GENERIC0_1 + msm_dp_generic_offset, header[1]);
-+	}
- 
- 	for (i = 0; i < sizeof(vsc_sdp->db); i += 4) {
- 		val = ((vsc_sdp->db[i]) | (vsc_sdp->db[i + 1] << 8) | (vsc_sdp->db[i + 2] << 16) |
- 		       (vsc_sdp->db[i + 3] << 24));
--		msm_dp_write_link(catalog, MMSS_DP_GENERIC0_2 + i + msm_dp_generic_offset, val);
-+
-+		if (stream_id > DP_STREAM_1)
-+			msm_dp_write_mst_link(catalog, stream_id, MMSS_DP_MST_LINK_GENERIC0_2 + i,
-+					      val);
-+		else
-+			msm_dp_write_link(catalog, MMSS_DP_GENERIC0_2 + i + msm_dp_generic_offset,
-+					  val);
- 	}
- }
- 
-@@ -938,8 +1012,13 @@ static void msm_dp_catalog_panel_update_sdp(struct msm_dp_catalog *msm_dp_catalo
- 
- 	hw_revision = msm_dp_catalog_hw_revision(msm_dp_catalog);
- 	if (hw_revision < DP_HW_VERSION_1_2 && hw_revision >= DP_HW_VERSION_1_0) {
--		msm_dp_write_link(catalog, MMSS_DP_SDP_CFG3 + sdp_cfg3_offset, 0x01);
--		msm_dp_write_link(catalog, MMSS_DP_SDP_CFG3 + sdp_cfg3_offset, 0x00);
-+		if (stream_id > DP_STREAM_1) {
-+			msm_dp_write_mst_link(catalog, stream_id, MMSS_DP_MST_LINK_SDP_CFG3, 0x01);
-+			msm_dp_write_mst_link(catalog, stream_id, MMSS_DP_MST_LINK_SDP_CFG3, 0x00);
-+		} else {
-+			msm_dp_write_link(catalog, MMSS_DP_SDP_CFG3 + sdp_cfg3_offset, 0x01);
-+			msm_dp_write_link(catalog, MMSS_DP_SDP_CFG3 + sdp_cfg3_offset, 0x00);
-+		}
- 	}
- }
- 
-@@ -960,15 +1039,27 @@ void msm_dp_catalog_panel_enable_vsc_sdp(struct msm_dp_catalog *msm_dp_catalog,
- 		sdp_cfg2_offset = MMSS_DP1_SDP_CFG2 - MMSS_DP_SDP_CFG2;
- 	}
- 
--	cfg = msm_dp_read_link(catalog, MMSS_DP_SDP_CFG + sdp_cfg_offset);
--	cfg2 = msm_dp_read_link(catalog, MMSS_DP_SDP_CFG2 + sdp_cfg2_offset);
--	misc = msm_dp_read_link(catalog, REG_DP_MISC1_MISC0 + misc_reg_offset);
-+	if (stream_id > DP_STREAM_1) {
-+		cfg = msm_dp_read_mst_link(catalog, stream_id, MMSS_DP_MST_LINK_SDP_CFG);
-+		cfg2 = msm_dp_read_mst_link(catalog, stream_id, MMSS_DP_MST_LINK_SDP_CFG2);
-+		misc = msm_dp_read_mst_link(catalog, stream_id, REG_DP_MST_LINK_MISC1_MISC0);
-+	} else {
-+		cfg = msm_dp_read_link(catalog, MMSS_DP_SDP_CFG + sdp_cfg_offset);
-+		cfg2 = msm_dp_read_link(catalog, MMSS_DP_SDP_CFG2 + sdp_cfg2_offset);
-+		misc = msm_dp_read_link(catalog, REG_DP_MISC1_MISC0 + misc_reg_offset);
-+	}
- 
- 	cfg |= GEN0_SDP_EN;
--	msm_dp_write_link(catalog, MMSS_DP_SDP_CFG + sdp_cfg_offset, cfg);
-+	if (stream_id > DP_STREAM_1)
-+		msm_dp_write_mst_link(catalog, stream_id, MMSS_DP_MST_LINK_SDP_CFG, cfg);
-+	else
-+		msm_dp_write_link(catalog, MMSS_DP_SDP_CFG + sdp_cfg_offset, cfg);
- 
- 	cfg2 |= GENERIC0_SDPSIZE_VALID;
--	msm_dp_write_link(catalog, MMSS_DP_SDP_CFG2 + sdp_cfg2_offset, cfg2);
-+	if (stream_id > DP_STREAM_1)
-+		msm_dp_write_mst_link(catalog, stream_id, MMSS_DP_MST_LINK_SDP_CFG2, cfg2);
-+	else
-+		msm_dp_write_link(catalog, MMSS_DP_SDP_CFG2 + sdp_cfg2_offset, cfg2);
- 
- 	msm_dp_catalog_panel_send_vsc_sdp(msm_dp_catalog, stream_id, vsc_sdp);
- 
-@@ -979,7 +1070,10 @@ void msm_dp_catalog_panel_enable_vsc_sdp(struct msm_dp_catalog *msm_dp_catalog,
- 
- 	pr_debug("misc settings = 0x%x\n", misc);
- 
--	msm_dp_write_link(catalog, REG_DP_MISC1_MISC0 + misc_reg_offset, misc);
-+	if (stream_id > DP_STREAM_1)
-+		msm_dp_write_mst_link(catalog, stream_id, REG_DP_MST_LINK_MISC1_MISC0, misc);
-+	else
-+		msm_dp_write_link(catalog, REG_DP_MISC1_MISC0 + misc_reg_offset, misc);
- 
- 	msm_dp_catalog_panel_update_sdp(msm_dp_catalog, stream_id);
- }
-@@ -989,18 +1083,39 @@ void msm_dp_catalog_panel_disable_vsc_sdp(struct msm_dp_catalog *msm_dp_catalog,
- {
- 	struct msm_dp_catalog_private *catalog;
- 	u32 cfg, cfg2, misc;
-+	u32 misc_reg_offset = 0;
-+	u32 sdp_cfg_offset = 0;
-+	u32 sdp_cfg2_offset = 0;
- 
- 	catalog = container_of(msm_dp_catalog, struct msm_dp_catalog_private, msm_dp_catalog);
- 
--	cfg = msm_dp_read_link(catalog, MMSS_DP_SDP_CFG);
--	cfg2 = msm_dp_read_link(catalog, MMSS_DP_SDP_CFG2);
--	misc = msm_dp_read_link(catalog, REG_DP_MISC1_MISC0);
-+	if (stream_id == DP_STREAM_1) {
-+		misc_reg_offset = REG_DP1_MISC1_MISC0 - REG_DP_MISC1_MISC0;
-+		sdp_cfg_offset = MMSS_DP1_SDP_CFG - MMSS_DP_SDP_CFG;
-+		sdp_cfg2_offset = MMSS_DP1_SDP_CFG2 - MMSS_DP_SDP_CFG2;
-+	}
-+
-+	if (stream_id > DP_STREAM_1) {
-+		cfg = msm_dp_read_mst_link(catalog, stream_id, MMSS_DP_MST_LINK_SDP_CFG);
-+		cfg2 = msm_dp_read_mst_link(catalog, stream_id, MMSS_DP_MST_LINK_SDP_CFG2);
-+		misc = msm_dp_read_mst_link(catalog, stream_id, REG_DP_MST_LINK_MISC1_MISC0);
-+	} else {
-+		cfg = msm_dp_read_link(catalog, MMSS_DP_SDP_CFG + sdp_cfg_offset);
-+		cfg2 = msm_dp_read_link(catalog, MMSS_DP_SDP_CFG2 + sdp_cfg2_offset);
-+		misc = msm_dp_read_link(catalog, REG_DP_MISC1_MISC0 + misc_reg_offset);
-+	}
- 
- 	cfg &= ~GEN0_SDP_EN;
--	msm_dp_write_link(catalog, MMSS_DP_SDP_CFG, cfg);
-+	if (stream_id > DP_STREAM_1)
-+		msm_dp_write_mst_link(catalog, stream_id, MMSS_DP_MST_LINK_SDP_CFG, cfg);
-+	else
-+		msm_dp_write_link(catalog, MMSS_DP_SDP_CFG + sdp_cfg_offset, cfg);
- 
- 	cfg2 &= ~GENERIC0_SDPSIZE_VALID;
--	msm_dp_write_link(catalog, MMSS_DP_SDP_CFG2, cfg2);
-+	if (stream_id > DP_STREAM_1)
-+		msm_dp_write_mst_link(catalog, stream_id, MMSS_DP_MST_LINK_SDP_CFG2, cfg2);
-+	else
-+		msm_dp_write_link(catalog, MMSS_DP_SDP_CFG2 + sdp_cfg2_offset, cfg2);
- 
- 	/* switch back to MSA */
- 	misc &= ~DP_MISC1_VSC_SDP;
-@@ -1008,7 +1123,10 @@ void msm_dp_catalog_panel_disable_vsc_sdp(struct msm_dp_catalog *msm_dp_catalog,
- 	drm_dbg_dp(catalog->drm_dev, "vsc sdp enable=0\n");
- 
- 	pr_debug("misc settings = 0x%x\n", misc);
--	msm_dp_write_link(catalog, REG_DP_MISC1_MISC0, misc);
-+	if (stream_id > DP_STREAM_1)
-+		msm_dp_write_mst_link(catalog, stream_id, REG_DP_MST_LINK_MISC1_MISC0, misc);
-+	else
-+		msm_dp_write_link(catalog, REG_DP_MISC1_MISC0 + misc_reg_offset, misc);
- 
- 	msm_dp_catalog_panel_update_sdp(msm_dp_catalog, stream_id);
- }
-@@ -1164,6 +1282,16 @@ static int msm_dp_catalog_get_io(struct msm_dp_catalog_private *catalog, int max
- 				DRM_DEBUG_DP("unable to remap p%d region: %pe\n", i,
- 					      dss->pixels[i].base);
- 		}
-+
-+		dss->mst2_link.base = msm_dp_ioremap(pdev, 7, &dss->mst2_link.len);
-+		if (IS_ERR(dss->mst2_link.base))
-+			DRM_DEBUG_DP("unable to remap mst2_link region: %pe\n",
-+				     dss->mst2_link.base);
-+
-+		dss->mst3_link.base = msm_dp_ioremap(pdev, 8, &dss->mst3_link.len);
-+		if (IS_ERR(dss->mst3_link.base))
-+			DRM_DEBUG_DP("unable to remap mst3_link region: %pe\n",
-+				     dss->mst3_link.base);
- 	}
- 
- 	return 0;
-diff --git a/drivers/gpu/drm/msm/dp/dp_reg.h b/drivers/gpu/drm/msm/dp/dp_reg.h
-index 623a58163f7028dcaac2f4d4416ee091db9f5024..06b3d570336347e38fba8cd0dfb44d25046e5950 100644
---- a/drivers/gpu/drm/msm/dp/dp_reg.h
-+++ b/drivers/gpu/drm/msm/dp/dp_reg.h
-@@ -123,6 +123,7 @@
- 
- #define REG_DP_CONFIGURATION_CTRL		(0x00000008)
- #define REG_DP1_CONFIGURATION_CTRL		(0x00000400)
-+#define REG_DP_MST_LINK_CONFIGURATION_CTRL	(0x00000034)
- #define DP_CONFIGURATION_CTRL_SYNC_ASYNC_CLK	(0x00000001)
- #define DP_CONFIGURATION_CTRL_STATIC_DYNAMIC_CN (0x00000002)
- #define DP_CONFIGURATION_CTRL_P_INTERLACED	(0x00000004)
-@@ -140,15 +141,22 @@
- 
- #define REG_DP_SOFTWARE_MVID			(0x00000010)
- #define REG_DP1_SOFTWARE_MVID			(0x00000414)
-+#define REG_MST_LINK_SOFTWARE_MVID		(0x00000040)
- #define REG_DP_SOFTWARE_NVID			(0x00000018)
- #define REG_DP1_SOFTWARE_NVID			(0x00000418)
-+#define REG_MST_LINK_SOFTWARE_NVID		(0x00000044)
- #define REG_DP_TOTAL_HOR_VER			(0x0000001C)
- #define REG_DP1_TOTAL_HOR_VER			(0x0000041C)
-+#define REG_DP_MST_LINK_TOTAL_HOR_VER		(0x00000048)
- #define REG_DP_START_HOR_VER_FROM_SYNC		(0x00000020)
-+#define REG_DP_MST_LINK_START_HOR_VER_FROM_SYNC	(0x0000004C)
- #define REG_DP_HSYNC_VSYNC_WIDTH_POLARITY	(0x00000024)
-+#define REG_DP_MST_LINK_HSYNC_VSYNC_WIDTH_POLARITY	(0x00000050)
- #define REG_DP_ACTIVE_HOR_VER			(0x00000028)
-+#define REG_DP_MST_LINK_ACTIVE_HOR_VER		(0x00000054)
- #define REG_DP_MISC1_MISC0			(0x0000002C)
- #define REG_DP1_MISC1_MISC0			(0x0000042C)
-+#define REG_DP_MST_LINK_MISC1_MISC0		(0x00000058)
- 
- #define DP_MISC0_SYNCHRONOUS_CLK		(0x00000001)
- #define DP_MISC0_COLORIMETRY_CFG_SHIFT		(0x00000001)
-@@ -217,9 +225,11 @@
- 
- #define MMSS_DP_SDP_CFG				(0x00000228)
- #define MMSS_DP1_SDP_CFG			(0x000004E0)
-+#define MMSS_DP_MST_LINK_SDP_CFG		(0x0000010c)
- #define GEN0_SDP_EN				(0x00020000)
- #define MMSS_DP_SDP_CFG2			(0x0000022C)
- #define MMSS_DP1_SDP_CFG2			(0x000004E4)
-+#define MMSS_DP_MST_LINK_SDP_CFG2		(0x0000011c)
- 
- #define MMSS_DP_AUDIO_TIMESTAMP_0		(0x00000230)
- #define MMSS_DP_AUDIO_TIMESTAMP_1		(0x00000234)
-@@ -230,6 +240,7 @@
- 
- #define MMSS_DP_SDP_CFG3			(0x0000024c)
- #define MMSS_DP1_SDP_CFG3			(0x000004E8)
-+#define MMSS_DP_MST_LINK_SDP_CFG3		(0x00000114)
- 
- #define UPDATE_SDP				(0x00000001)
- 
-@@ -281,6 +292,9 @@
- #define MMSS_DP_GENERIC1_9			(0x0000034C)
- 
- #define MMSS_DP1_GENERIC0_0			(0x00000490)
-+#define MMSS_DP_MST_LINK_GENERIC0_0		(0x000000BC)
-+#define MMSS_DP_MST_LINK_GENERIC0_1		(0x000000C0)
-+#define MMSS_DP_MST_LINK_GENERIC0_2		(0x000000C4)
- 
- #define MMSS_DP_VSCEXT_0			(0x000002D0)
- #define MMSS_DP_VSCEXT_1			(0x000002D4)
+PFNMAP says the same thing, or at least from a mm perspective we don't
+want drivers taking PFNMAP memory and then trying to guess if there
+are struct pages/KVAs for it. PFNMAP memory is supposed to be fully
+opaque.
 
--- 
-2.34.1
+Though that confusion seems to be a separate issue from this patch.
 
+> 	if (kvm_is_device_pfn(pfn)) {
+> 		/*
+> 		 * If the page was identified as device early by looking at
+> 		 * the VMA flags, vma_pagesize is already representing the
+> 		 * largest quantity we can map.  If instead it was mapped
+> 		 * via __kvm_faultin_pfn(), vma_pagesize is set to PAGE_SIZE
+> 		 * and must not be upgraded.
+> 		 *
+> 		 * In both cases, we don't let transparent_hugepage_adjust()
+> 		 * change things at the last minute.
+> 		 */
+> 		device = true;
+
+"device" here is sort of a mis-nomer, it is really just trying to
+setup the S2 so that CMOs are not going go to be done.
+
+Calling it 'disable_cmo' would sure make this code clearer..
+
+> @@ -1639,6 +1653,9 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>                 return -EFAULT;
+>  
+>         if (kvm_is_device_pfn(pfn)) {
+> +               if (is_vma_cacheable)
+> +                       return -EINVAL;
+> +
+
+eg
+
+if (!kvm_can_use_cmo_pfn(pfn)) {
+               if (is_vma_cacheable)
+                       return -EINVAL;
+
+>                  * If the page was identified as device early by looking at
+>                  * the VMA flags, vma_pagesize is already representing the
+> @@ -1722,6 +1739,11 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>                 prot |= KVM_PGTABLE_PROT_X;
+>  
+>         if (device) {
+> +               if (is_vma_cacheable) {
+> +                       ret = -EINVAL;
+> +                       goto out;
+> +               }
+
+if (disable_cmo) {
+               if (is_vma_cacheable)
+                       return -EINVAL;
+
+Makes alot more sense, right? If KVM can't do CMOs then it should not
+attempt to use memory mapped into the VMA as cachable.
+
+>                 if (vfio_allow_any_uc)
+>                         prot |= KVM_PGTABLE_PROT_NORMAL_NC;
+>                 else
+> 
+
+Regardless, this seems good for this patch at least.
+
+Jason
