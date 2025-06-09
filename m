@@ -1,98 +1,156 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D73D9204F9C
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 09:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7427F22A802;
+	Mon,  9 Jun 2025 09:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749462621; cv=none; b=LcMV88P7iQM4dW4TUChFr7aGd8nzgwfPNGDYvHeXgIC/duES4Cx6P0Sx4QLRjKXDbPKjyh2I55ut+NVFg+mInESJh6GEA3GmwQK08y9BV6AeAIG7Xbls9yLBSCd3L4vBORgMVQ2XOfFm2QadygE44fJgjBB7vZiW7zqISYe1OJY=
+	t=1749462673; cv=none; b=lgxZ1lK+kxT37kKjl6X/A5JlG2GTyNTa0RZES77eTcozjlfU5Jvqdjg3OUSsjmxAW7M2rUQV5vms/laCYn9LnW0md9+2sZ4oUHpG1oYQOm3uFdwAAeh5JRcnMuu+qxq+92BMND/2uZ39TTZl1ZrEAEoiLo9yJUiWP9AWLpQY1a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749462621; c=relaxed/simple;
-	bh=FWGBvYAMVcHEvCmJwnyaFb3mVy8uSeOvKuPGtiaYSWk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=qWtDbYLB8rUwpVflrFzKO3Bq5jzARTdsnhw4FRYvIqOEz7YxlbO5PEj5S2aiQ+BbEzBIzf+NMW7LvwlW0XAe63svUreerSJF9vZUF+rkGgsIK/tyfc3e7NsOpdRBnCkOuiDMowEt2EYZmT2ra3a7QU7aroqUX7jgW8N24wKaJFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fb5QSuC3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TMmLSqt/; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749462673; c=relaxed/simple;
+	bh=8HjtCRzmPU9oDI03LQRauWInLwTTqBwt/d7idD7nu0g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=DuutuB2lH8ENWbMxUZbj3NJQaKnpT6eoGlXGker/PUH8m7Ju30/uCTY7ZCAksT2M5wszazwX/TTW9wMFOwNijaXEDu9fEY0A1ZT064awt1ZX8sEJNVWJY+06EktGc1oOqgWqRvyd5bWsC+1X3aup6eQFzTBEWoL62XTO3skqThk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mBh9Ckty; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fb5QSuC3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TMmLSqt/"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749462617;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mBh9Ckty"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2E68E439F4;
+	Mon,  9 Jun 2025 09:51:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749462669;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mbz04pOM3NYmx/zT2wl8ZoqNB/eXgeWPDviW1H791pM=;
-	b=fb5QSuC3krZuYmrsc9ISCrgUEYqmdJqTR3jLEuwH/gKWpzffVZ5PEg9GDLWBZEjtQDiPiv
-	U3OsHe8h0sDlDE60V8ZikpAs5RE40RFT2F2x3zp8aSi5jK+Ki7LxW8PyPRkloPM0ztqHQ1
-	+xJNe93K7cfa+sAk3KpXEX8093ET4SXGGYnhiEfQZ7IxV37XXzIdUPn96IyXLbkx+5ir9K
-	fMZnHjjNRLeOe8Rq3BtmEK7nhT0qJgDQBfIIWX0XpQNHU0/uVDqKLN2HZwwUD+NZuJtKfh
-	9C4x08WCnEW1RKcZZzlOMVEr+WmSWs6nTlEMW3lumwJSOwS0kHAT29XA/jmiMA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749462617;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mbz04pOM3NYmx/zT2wl8ZoqNB/eXgeWPDviW1H791pM=;
-	b=TMmLSqt/78pSMqdwBAy2SNly0YOaD7tYq38EIXaW0gV2h2OsZS2jalFbPGL47BGStjO1Wp
-	K23lXmvTZj5ilIAw==
-To: Zenghui Yu <yuzenghui@huawei.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [patch V2 06/45] genirq/proc: Switch to lock guards
-In-Reply-To: <873b0e9a-0e71-0eaf-b057-8a118d9ccabf@huawei.com>
-References: <20250429065337.117370076@linutronix.de>
- <20250429065420.373998838@linutronix.de>
- <873b0e9a-0e71-0eaf-b057-8a118d9ccabf@huawei.com>
-Date: Mon, 09 Jun 2025 11:50:16 +0200
-Message-ID: <878qm1p7l3.ffs@tglx>
+	bh=VMjp1dRGcXDJQ44pKMzil4By3YRk8eex4ZUKlBuDEJ0=;
+	b=mBh9CktyKvZNUmwTJyzOBZxfm7nDOG3VNePuGRgAVhNHOEUMuGVf6z0bSMYUeWf4D+iuGb
+	7vvjm/C37aIwBOUGxseKvHJ54trPkvgUSls2t7NAq4lI1h21zdjk4K1seT1q+rj6OOriHk
+	BedT0bv6CXRsZl5mUSJH4pj0IYhfWzpJcZCP3M9rGJxGd51zDjwUlnJB2NVIeSiOqTdozT
+	XBZs7YVSqVTv4k5hSS30GzCgd/Q+/7L5Q1+MrqRkIGzc3zFBCtCuI+q9LFu757ZlgFJmvo
+	7+gJwtVFCKn991CIfUw5hDg+vx1zl1eGXd9eiMJ+AIfKja7qw7eUR1vjS9Ufzg==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Date: Mon, 09 Jun 2025 11:51:00 +0200
+Subject: [PATCH v7 02/10] gpio: aggregator: move GPIO forwarder allocation
+ in a dedicated function
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250609-aaeon-up-board-pinctrl-support-v7-2-1ab73ec0cb98@bootlin.com>
+References: <20250609-aaeon-up-board-pinctrl-support-v7-0-1ab73ec0cb98@bootlin.com>
+In-Reply-To: <20250609-aaeon-up-board-pinctrl-support-v7-0-1ab73ec0cb98@bootlin.com>
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+ linux-hardening@vger.kernel.org, 
+ Thomas Richard <thomas.richard@bootlin.com>
+X-Mailer: b4 0.14.1
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdeludegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeektdehvdeiteehtdelteffheduveelgeelvdetgedvueejgefhhfekgefgfeduveenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopeffrghnihgvlhgvvehlvghrihesrggrvghonhdrvghupdhrtghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtt
+ hhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepifgrrhihhggrnhhgsegrrggvohhnrdgtohhmrdhtfidprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrgh
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Sun, Jun 08 2025 at 20:45, Zenghui Yu wrote:
-> On 2025/4/29 14:54, Thomas Gleixner wrote:
->> -	raw_spin_lock_irqsave(&desc->lock, flags);
->> -	if (desc->affinity_hint)
->> -		cpumask_copy(mask, desc->affinity_hint);
->> -	raw_spin_unlock_irqrestore(&desc->lock, flags);
->> +	scoped_guard(raw_spinlock_irq, &desc->lock) {
->
-> Any reason it has been switched to a raw_spinlock_irq?
+Move the GPIO forwarder allocation and static initialization in a dedicated
+function.
 
-Yes. This code is always thread context and can never be invoked with
-interrupts disabled. So there is zero reason to use irqsave().
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
+ drivers/gpio/gpio-aggregator.c | 50 +++++++++++++++++++++++++++---------------
+ 1 file changed, 32 insertions(+), 18 deletions(-)
 
-> I've hit some random Oops with the backtrace looks like:
->
->  Call trace:
->   string+0x110/0x3b8 (P)
->   vsnprintf+0x2f0/0xac8
->   seq_printf+0x180/0x220
->   show_interrupts+0x4e0/0x7e0
->   seq_read_iter+0x350/0xd80
->   proc_reg_read_iter+0x194/0x248
->   vfs_read+0x5b0/0x940
->   ksys_read+0xf0/0x1e8
->   __arm64_sys_read+0x74/0xb0
->   invoke_syscall+0x74/0x270
->   el0_svc_common.constprop.0+0xb4/0x240
->   do_el0_svc+0x48/0x68
->   el0_svc+0x4c/0xe8
->   el0t_64_sync_handler+0xc8/0xd0
->   el0t_64_sync+0x1ac/0x1b0
->
-> I haven't dig further. But it looks to me that this patch had introduced
-> functional change and I'm planning to give the following diff a go on
-> the same box.
+diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
+index 6f941db02c04..f79bb4e12b20 100644
+--- a/drivers/gpio/gpio-aggregator.c
++++ b/drivers/gpio/gpio-aggregator.c
+@@ -475,6 +475,35 @@ static int gpiochip_fwd_setup_delay_line(struct device *dev, struct gpio_chip *c
+ }
+ #endif	/* !CONFIG_OF_GPIO */
+ 
++static struct gpiochip_fwd *
++devm_gpiochip_fwd_alloc(struct device *dev, unsigned int ngpios)
++{
++	struct gpiochip_fwd *fwd;
++	struct gpio_chip *chip;
++
++	fwd = devm_kzalloc(dev, struct_size(fwd, tmp, fwd_tmp_size(ngpios)), GFP_KERNEL);
++	if (!fwd)
++		return ERR_PTR(-ENOMEM);
++
++	chip = &fwd->chip;
++
++	chip->label = dev_name(dev);
++	chip->parent = dev;
++	chip->owner = THIS_MODULE;
++	chip->get_direction = gpio_fwd_get_direction;
++	chip->direction_input = gpio_fwd_direction_input;
++	chip->direction_output = gpio_fwd_direction_output;
++	chip->get = gpio_fwd_get;
++	chip->get_multiple = gpio_fwd_get_multiple_locked;
++	chip->set_rv = gpio_fwd_set;
++	chip->set_multiple_rv = gpio_fwd_set_multiple_locked;
++	chip->to_irq = gpio_fwd_to_irq;
++	chip->base = -1;
++	chip->ngpio = ngpios;
++
++	return fwd;
++}
++
+ /**
+  * gpiochip_fwd_create() - Create a new GPIO forwarder
+  * @dev: Parent device pointer
+@@ -495,16 +524,14 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
+ 						struct gpio_desc *descs[],
+ 						unsigned long features)
+ {
+-	const char *label = dev_name(dev);
+ 	struct gpiochip_fwd *fwd;
+ 	struct gpio_chip *chip;
+ 	unsigned int i;
+ 	int error;
+ 
+-	fwd = devm_kzalloc(dev, struct_size(fwd, tmp, fwd_tmp_size(ngpios)),
+-			   GFP_KERNEL);
+-	if (!fwd)
+-		return ERR_PTR(-ENOMEM);
++	fwd = devm_gpiochip_fwd_alloc(dev, ngpios);
++	if (IS_ERR(fwd))
++		return fwd;
+ 
+ 	chip = &fwd->chip;
+ 
+@@ -526,19 +553,6 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
+ 			chip->set_config = gpio_fwd_set_config;
+ 	}
+ 
+-	chip->label = label;
+-	chip->parent = dev;
+-	chip->owner = THIS_MODULE;
+-	chip->get_direction = gpio_fwd_get_direction;
+-	chip->direction_input = gpio_fwd_direction_input;
+-	chip->direction_output = gpio_fwd_direction_output;
+-	chip->get = gpio_fwd_get;
+-	chip->get_multiple = gpio_fwd_get_multiple_locked;
+-	chip->set_rv = gpio_fwd_set;
+-	chip->set_multiple_rv = gpio_fwd_set_multiple_locked;
+-	chip->to_irq = gpio_fwd_to_irq;
+-	chip->base = -1;
+-	chip->ngpio = ngpios;
+ 	fwd->descs = descs;
+ 
+ 	if (chip->can_sleep)
 
-That won't help at all because the actual crash is within show_interrupts()....
+-- 
+2.39.5
 
-Thanks,
-
-        tglx
