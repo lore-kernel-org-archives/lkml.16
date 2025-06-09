@@ -1,73 +1,74 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F0C22A4D2
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 23:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F136322FAC3;
+	Mon,  9 Jun 2025 23:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749513492; cv=none; b=i9WwncCONoOD/atOVnfpVq3iN4XPfHlcYDGwlBZ9+PGnbEZs9WHndtqkbxJnHsTsvJjsrhYAkDS1js0SxreSTV+hYJVpskGz/l+YUJHNWxAift55g2cJOAj0FF/UHgJwUFpBCZAa6cnlgdTn19fXLiOu4QgTMXG+BrjgDfwbEhc=
+	t=1749513581; cv=none; b=c9oByJgzo6B4Lgk7xJ2MxEbjLOl/YL2sS44ufeZtLWje1MPPyZGxGikcsAZk9LB760OyevwKoCT7TIc6xus8ZygQteO1oPDrp6jdJ4uOABzudwM4dbDBVNgXvzR5XTaNtTunF9rRf6ab9PdT+8e0IZ2x19ZUmXWMlcdzAAlnwc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749513492; c=relaxed/simple;
-	bh=cbBh1zVKvfjfctvLvbB0XKIiXdy+Tsa/8NhalwQs3bY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MBoqtk1TRs+6mvhnzxcQKUMwVzW9Lak+GGrUupjEYKXyWKq0JPHS6DFnFnV15fkXdwBC2OjXQPONfJhIyfZyVkpwosR1h8iJ3EL5PF1E32du8QIu8YEncvo76MZIQWR+xAgYH7FgkAwoYn0Sj/e2h3RDGkeD25hGtIE1VCAu6oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FaRqaVB0; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1749513581; c=relaxed/simple;
+	bh=RaJ4JP9T2aU4aHG/dNUa0jFBPbZWiqCld3IAmeNk0ZE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t/qq1muHda5LtPYYa3aW53ZLgJyyyFXhf38rnGMOo0ekfbk2xeLQnQ/z0QEB6Sv6b1vfdbtMQi8kFOoAlW26HcQWwvdsKx5Ax8UAdp82dg/7kcP4YQ3ESFOFU9EziwpwvvPqPCh9irJIrL/cx+6zoQuo1/sqvaHUwqs1OVGtwK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9sTfWQM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FaRqaVB0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=M78WlfTsRJDI01z81Wgqs93ccJdpkpL8Qcrubgn+k7I=; b=FaRqaVB0sURNJ3a5DHp2irGjP7
-	gUlKDQLfOU59GF7nHwIEVIGwvEQaY1Dj++96yK64IAovN7S56JQkDWVlEtSYDkN7hnYaW1OoV0jLo
-	ql1wTIHXbRw1bOoKQaBSrxL1ZsF6xX0vOvwpMDc2YxFfH60Z9FarAEgokEkccbWiqkydNQC6BsT8t
-	OHEFlgSzKe4cyt+BQzBEwY0gRvOhWJAIakkfNVL1CkW08L75V6LhYRqZJRD3E7V6ZK3UzohWcs3eq
-	9RJJXGHHkrKJgtRxUfWxya2wzlyYpYBi+msV69f1VJ3rG5q87YvLJ4Z9SuItHE9jhmPD/tfzwlzbA
-	F6lI34Pg==;
-Received: from [50.53.25.54] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uOmNV-00000005Trr-2jQZ;
-	Mon, 09 Jun 2025 23:58:09 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Nicolas Pitre <npitre@baylibre.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH] vt: fix kernel-doc warnings in ucs_get_fallback()
-Date: Mon,  9 Jun 2025 16:58:08 -0700
-Message-ID: <20250609235808.60698-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9sTfWQM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A192C4CEEB;
+	Mon,  9 Jun 2025 23:59:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749513580;
+	bh=RaJ4JP9T2aU4aHG/dNUa0jFBPbZWiqCld3IAmeNk0ZE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q9sTfWQMwyVwQmY6VmUr8/dw4bKcX1WG1SOo8HOdUMKr2+yfAiCV4JCZjNFNDvZDb
+	 D9+RXyfyBuRh7E56kgIHlfYzYATTk/aKtvMrDOMn8KhPaaeZlMiKDMexv6TibIEkqW
+	 WD6/wQcZCv3K9jQqFVM3rSh+nAfBu0jfTXHxzJMyzmoqSiFkOG9OhdVEzVjhxQtxtb
+	 XJxAycVLLYJtyK/G99wgUquJZsA5p43JCTlSaRFaNosiTrjqTM+RzGBvpklpcl7R+7
+	 /5k2bGjMeDhpo1kbL4k7DR878gOA5eSgamnJ3+8K4+l0mMpaHUUmnwvP89IEF1UoI7
+	 5Q0kDzGocKZ2A==
+Date: Mon, 9 Jun 2025 16:59:37 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, live-patching@vger.kernel.org, 
+	Song Liu <song@kernel.org>, laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
+	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
+	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 59/62] livepatch/klp-build: Introduce klp-build script
+ for generating livepatch modules
+Message-ID: <7uriarhovgf3fp7tiidwklopqqk34ybk6fnhu6kncwtjgz2ni6@2z7m42t4oerw>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <10ccbeb0f4bcd7d0a10cc9b9bd12fdc4894f83ee.1746821544.git.jpoimboe@kernel.org>
+ <aEdQNbqg2YMBFB8H@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aEdQNbqg2YMBFB8H@redhat.com>
 
-Use the correct function parameter name in ucs_get_fallback() to prevent
-kernel-doc warnings:
+On Mon, Jun 09, 2025 at 05:20:53PM -0400, Joe Lawrence wrote:
+> If you touch sound/soc/sof/intel/, klp-build will error out with:
+> 
+>   Building patch module: livepatch-unCVE-2024-58012.ko
+>   ERROR: modpost: module livepatch-unCVE-2024-58012 uses symbol hda_dai_config from namespace SND_SOC_SOF_INTEL_HDA_COMMON, but does not import it.
+>   ERROR: modpost: module livepatch-unCVE-2024-58012 uses symbol hdac_bus_eml_sdw_map_stream_ch from namespace SND_SOC_SOF_HDA_MLINK, but does not import it.
+>   make[2]: *** [scripts/Makefile.modpost:145: /home/jolawren/src/centos-stream-10/klp-tmp/kmod/Module.symvers] Error 1
+>   make[1]: *** [/home/jolawren/src/centos-stream-10/Makefile:1936: modpost] Error 2
+>   make: *** [Makefile:236: __sub-make] Error 2
+> 
+> since the diff objects do not necessarily carry forward the namespace
+> import.
 
-Warning: drivers/tty/vt/ucs.c:218 function parameter 'cp' not described in 'ucs_get_fallback'
-Warning: drivers/tty/vt/ucs.c:218 Excess function parameter 'base' description in 'ucs_get_fallback'
+Nice, thanks for finding that.  I completely forgot about export
+namespaces.
 
-Fixes: fe26933cf1e1 ("vt: add ucs_get_fallback()")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Nicolas Pitre <npitre@baylibre.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/tty/vt/ucs.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Can you send me the patch for testing?  Is this the default centos10
+config?
 
---- lnx-616-rc1.orig/drivers/tty/vt/ucs.c
-+++ lnx-616-rc1/drivers/tty/vt/ucs.c
-@@ -206,7 +206,7 @@ static int ucs_page_entry_cmp(const void
- 
- /**
-  * ucs_get_fallback() - Get a substitution for the provided Unicode character
-- * @base: Base Unicode code point (UCS-4)
-+ * @cp: Base Unicode code point (UCS-4)
-  *
-  * Get a simpler fallback character for the provided Unicode character.
-  * This is used for terminal display when corresponding glyph is unavailable.
+-- 
+Josh
