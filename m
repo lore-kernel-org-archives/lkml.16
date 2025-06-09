@@ -1,231 +1,382 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F3D1FF5F9;
-	Mon,  9 Jun 2025 16:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A061F1FF5F9
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 16:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749485469; cv=none; b=mpX+u+IbmEVkj6GvG2/EuJjCCkoqWhXNMcDol2mYgyKGc8nkjbniQY7KWaosj0DcbBoThZr7djrLy+/GMHsT3yj4cnD536+91k6hY6nmhgmdhuurxRIVojRk2NbUvJjGQuKjfben3Zevx+dW/6ClF7J3V0onmbpZgDwch506PVc=
+	t=1749485486; cv=none; b=jKE3aiBgGhT0YNs2a4ZARv8KupOfdCB+byIwx0qormqUtMV/FlMwIt1BlKLyrxrUtaDwjZ+iJV9ABzmEp68X4Y6C0DOdSFL76w+iNvhFp9yiLzqdxXdb5AfLZURWJ5+5QjWwNndZ1cLhUL3Fc6hvh7NyJpF0T0Rs/MbXAnkGotM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749485469; c=relaxed/simple;
-	bh=wiyfyKZkAvjiIH0sQ6CKhOpwqQ5AbUsck26jxZvg1i0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iVuo1nUtl0Bs3zPVqaZH8kuEqGddYNW1Ehmmsnjukhea5YHuh1Nmx+fpWym3uqHM9v080/wvFOxCkkSsD+d4+ffB29ZTGWJ6DlY/1cA+10bj3UUJZQWJrVnk434l5BwNVV853HG/6xLAg3Vg0dcEkAgKADalNoxyPmLyzjWU8gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fHy3Evux; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fHy3Evux"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-450cf2291bbso16536685e9.0;
-        Mon, 09 Jun 2025 09:11:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749485466; x=1750090266; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TzSqzq1VrgA990PGl630TsjWDpOUagJtIkeks6UeTe4=;
-        b=fHy3Evuxlscp3e+u7wd78nhRFt8XSiEjJlhwNx+glY0T6dHNZmXvNPdfy1xFWA5jdL
-         lajsVrFTbc6QmzRxcjg8XnF69/RY6LAS8c2fjWYYzx/0cJC1wlfQDI+ajXZtsleooB+6
-         rfrU+rM/XfH7/H53QWXfAT2D9+XcDE9/QKy9JCsvLsX3zWPahpS2hM0pyZXTZqazw0bO
-         Md2g7UPHX32SaSEFKpLDg1+xR+9uTtZJbqvzVQ0Px/rTQGcIwNvrE2fjtQC92SIFPhfW
-         5Sd1OwwEj4ECv8k4SVvJoBFaP1VlNp4GRdNYPoNGJtmogEq/3GIKzKtibwYRu8xvEVYw
-         EQxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749485466; x=1750090266;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TzSqzq1VrgA990PGl630TsjWDpOUagJtIkeks6UeTe4=;
-        b=ZoXV3D5eBbrCesn1swZZsN2gReDEvQAt8DOQ4DLyK36oKSE1kK/+sE/1Y4kAb0TiEg
-         HViWTb8+10sQikprUbKqypho0k98tfB0SSvBmWWxsDE+QvDe6fszvfSqCEckafWoMP2P
-         XCRsse0ji3OwHhu8/qhTR9gvr0DsUvHyBDa5+WW25fc/xdU8qNqC/+OUssV3YUTMkHYl
-         +MpecZlqAAsl9cWOFSvVy0fnNJf6gqJGD3veNC5xMRVlt0AqriyQk7D7ocmmHX4gCMed
-         xgMYItZ4KqHoU72RvQkHZ9TUMno3+fYhZQe6uhCm5RIOoNrokZ9YWS3LOFWW8gHQWfYh
-         yD5g==
-X-Forwarded-Encrypted: i=1; AJvYcCW8xeFGx0nwFPgzTNYoG6r3LJiYHlHyLBUrrxUTtF9cIK2tRHMcIxn6rqfA1dnTk4XFm3uigvVJ0DhGpfg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiD59BI3t+YAWcgtpHeq7yVhwqutOPGCxRyDizz3VlinJspc1F
-	w7X3sdMUWv/l7kRf585rItXFtDWbze0rcHZlLKqGkSFFkCQoHfRbiBf9fKR4+wBx
-X-Gm-Gg: ASbGncvD1gSkix+ucO2mIU6TWm16hpduk57ULEX9G6npkwuF6HX6wvIxxdEUjNYWqED
-	9bn4BEkjPX+axjQ3FmcK613Xg/eMkHLSO0lgrLOzsZtEyuv+sPJiMK0YmUnGlTsvj8OMGUxZ81a
-	5dVxcWONK/c/Yey5AKlD7F5oFomO7ZhEhqSPJk4uHqlNVS5fc8SAJCvovCvbOcF1d2WPD0cAYbu
-	6xAEJZfsRD//OGr9snG6/g2UDCSF+KEt6L6n0PiLI1bY5SrKOSLL6oYcxy+AnkHomai1wsMI2ZL
-	zXmxc8YP93dUP6+tvxuLSbNlKZ1h7RbN82aTHcfzMXfN3RsLeDx+iwFgAdxYH13Avu1oPK9G5DG
-	DGxqhSVOSAmuMjm3SyXoP3GIwMZUaUOi+7xLqMspyv85RuQ==
-X-Google-Smtp-Source: AGHT+IHtIAm+CgeogJ80QF3mkNurNdrFEg3E5GnfvWjyLoDvXRNtPRfHKHTN4qOmq57RWOY/L62rDQ==
-X-Received: by 2002:a05:600c:4e09:b0:442:c993:6f94 with SMTP id 5b1f17b1804b1-452013510famr130923885e9.12.1749485465033;
-        Mon, 09 Jun 2025 09:11:05 -0700 (PDT)
-Received: from Lord-Beerus.station (net-93-70-53-177.cust.vodafonedsl.it. [93.70.53.177])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45209bc6d3esm115098115e9.6.2025.06.09.09.11.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 09:11:04 -0700 (PDT)
-From: Stefano Radaelli <stefano.radaelli21@gmail.com>
-To: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: andrew@lunn.ch,
-	Stefano Radaelli <stefano.radaelli21@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2] arm64: dts: freescale: imx8mp-var-som: Add EQoS support with MaxLinear PHY
-Date: Mon,  9 Jun 2025 18:09:48 +0200
-Message-ID: <20250609160949.35654-1-stefano.radaelli21@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1749485486; c=relaxed/simple;
+	bh=1Xvz10O/mcbvXvFnPkO/VaAORoV65ssrjFimyHyPz5g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iel993oeL7BVRIhr2I+zyZFIlH44zJj3zrY2nkw/XZGuVpDNogV1kr1KQwyuP560yogWDA9RDOqUgk9DNPDSDnxh9I5Bz/cBzrgc4KCfoJ84EtAM3v8R6B0Am03UtN5zxYBC3luPHuOpwvWbjbaLyvP9b6ZtwSRlSyoRQEn1jMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ECB9C14BF;
+	Mon,  9 Jun 2025 09:11:04 -0700 (PDT)
+Received: from [10.57.48.120] (unknown [10.57.48.120])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6D5123F673;
+	Mon,  9 Jun 2025 09:11:22 -0700 (PDT)
+Message-ID: <e18507cb-bcbf-4cdd-8364-9bce0ea016d5@arm.com>
+Date: Mon, 9 Jun 2025 17:11:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/9] coresight: Appropriately disable programming
+ clocks
+Content-Language: en-GB
+To: Leo Yan <leo.yan@arm.com>, Mike Leach <mike.leach@linaro.org>,
+ James Clark <james.clark@linaro.org>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250609-arm_cs_fix_clock_v3_public-v3-0-423b3f1f241d@arm.com>
+ <20250609-arm_cs_fix_clock_v3_public-v3-4-423b3f1f241d@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20250609-arm_cs_fix_clock_v3_public-v3-4-423b3f1f241d@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Enable the EQoS Ethernet controller on the i.MX8MP VAR-SOM with the
-integrated Maxlinear MXL86110 PHY. The PHY is connected to the EQOS
-MDIO bus at address 4.
+On 09/06/2025 17:00, Leo Yan wrote:
+> Some CoreSight components have programming clocks (pclk) and are enabled
+> using clk_get() and clk_prepare_enable().  However, in many cases, these
+> clocks are not disabled when modules exit and only released by clk_put().
+> 
+> To fix the issue, this commit refactors coresight_get_enable_apb_pclk()
+> by replacing clk_get() and clk_prepare_enable() with
+> devm_clk_get_enabled() for enabling APB clock.  Callers are updated
+> to reuse the returned error value.
+> 
+> With the change, programming clocks are managed as resources in driver
+> model layer, allowing clock cleanup to be handled automatically.  As a
+> result, manual cleanup operations are no longer needed and are removed
+> from the Coresight drivers.
+> 
+> Fixes: 73d779a03a76 ("coresight: etm4x: Change etm4_platform_driver driver for MMIO devices")
 
-This patch adds:
-- EQOS controller configuration with RGMII interface.
-- Proper reset timings.
-- PHY power supply regulators.
-- RGMII pinmux configuration for all data, control and clock signals.
-- LED configuration for link status indication via the LED subsystem
-  under /sys/class/leds/, leveraging the support implemented in the.
-  mxl86110 PHY driver (drivers/net/phy/mxl-86110.c).
-  Two LEDs are defined to match the LED configuration on the Variscite
-  VAR-SOM Carrier Boards:
-    * LED@0: Yellow, netdev trigger.
-    * LED@1: Green, netdev trigger.
+This looks suspicious. This patch covers a lot of components, but the
+above commit is only affecting ETMv4 ?
 
-The RGMII TX/RX delays are implemented in SOM via PCB passive
-delays, so no software delay configuration is required.
+The patch as such looks good to me.
 
-Signed-off-by: Stefano Radaelli <stefano.radaelli21@gmail.com>
----
-v2:
-  - Removed 'eee' properties.
+Suzuki
 
-v1: https://lore.kernel.org/imx/20250609140643.26270-1-stefano.radaelli21@gmail.com/
 
- .../boot/dts/freescale/imx8mp-var-som.dtsi    | 86 +++++++++++++++++++
- 1 file changed, 86 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi
-index b59da91fdd04..29f080904482 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi
-@@ -55,6 +55,24 @@ reg_usdhc2_vqmmc: regulator-usdhc2-vqmmc {
- 		states = <3300000 0x0 1800000 0x1>;
- 		vin-supply = <&ldo5>;
- 	};
-+
-+	reg_phy_supply: regulator-phy-supply {
-+		compatible = "regulator-fixed";
-+		regulator-name = "phy-supply";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-enable-ramp-delay = <20000>;
-+		gpio = <&gpio2 20 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	reg_phy_vddio: regulator-phy-vddio {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vddio-1v8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
- };
- 
- &A53_0 {
-@@ -73,6 +91,53 @@ &A53_3 {
- 	cpu-supply = <&buck2>;
- };
- 
-+&eqos {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_eqos>;
-+	/*
-+	 * The required RGMII TX and RX 2ns delays are implemented directly
-+	 * in hardware via passive delay elements on the SOM PCB.
-+	 * No delay configuration is needed in software via PHY driver.
-+	 */
-+	phy-mode = "rgmii";
-+	phy-handle = <&ethphy0>;
-+	status = "okay";
-+
-+	mdio {
-+		compatible = "snps,dwmac-mdio";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy0: ethernet-phy@4 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <4>;
-+			reset-gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
-+			reset-assert-us = <10000>;
-+			reset-deassert-us = <100000>;
-+			vddio-supply = <&reg_phy_vddio>;
-+
-+			leds {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				led@0 {
-+					reg = <0>;
-+					color = <LED_COLOR_ID_YELLOW>;
-+					function = LED_FUNCTION_LAN;
-+					linux,default-trigger = "netdev";
-+				};
-+
-+				led@1 {
-+					reg = <1>;
-+					color = <LED_COLOR_ID_GREEN>;
-+					function = LED_FUNCTION_LAN;
-+					linux,default-trigger = "netdev";
-+				};
-+			};
-+		};
-+	};
-+};
-+
- &i2c1 {
- 	clock-frequency = <400000>;
- 	pinctrl-names = "default";
-@@ -239,6 +304,27 @@ &wdog1 {
- 
- &iomuxc {
- 
-+	pinctrl_eqos: eqosgrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_ENET_MDC__ENET_QOS_MDC				0x2
-+			MX8MP_IOMUXC_ENET_MDIO__ENET_QOS_MDIO				0x2
-+			MX8MP_IOMUXC_ENET_RD0__ENET_QOS_RGMII_RD0			0x90
-+			MX8MP_IOMUXC_ENET_RD1__ENET_QOS_RGMII_RD1			0x90
-+			MX8MP_IOMUXC_ENET_RD2__ENET_QOS_RGMII_RD2			0x90
-+			MX8MP_IOMUXC_ENET_RD3__ENET_QOS_RGMII_RD3			0x90
-+			MX8MP_IOMUXC_ENET_RXC__CCM_ENET_QOS_CLOCK_GENERATE_RX_CLK	0x90
-+			MX8MP_IOMUXC_ENET_RX_CTL__ENET_QOS_RGMII_RX_CTL			0x90
-+			MX8MP_IOMUXC_ENET_TD0__ENET_QOS_RGMII_TD0			0x16
-+			MX8MP_IOMUXC_ENET_TD1__ENET_QOS_RGMII_TD1			0x16
-+			MX8MP_IOMUXC_ENET_TD2__ENET_QOS_RGMII_TD2			0x16
-+			MX8MP_IOMUXC_ENET_TD3__ENET_QOS_RGMII_TD3			0x16
-+			MX8MP_IOMUXC_ENET_TX_CTL__ENET_QOS_RGMII_TX_CTL			0x16
-+			MX8MP_IOMUXC_ENET_TXC__CCM_ENET_QOS_CLOCK_GENERATE_TX_CLK	0x16
-+			MX8MP_IOMUXC_SD2_WP__GPIO2_IO20					0x10
-+			MX8MP_IOMUXC_GPIO1_IO10__GPIO1_IO10				0x150
-+		>;
-+	};
-+
- 	pinctrl_i2c1: i2c1grp {
- 		fsl,pins = <
- 			MX8MP_IOMUXC_SD1_DATA4__I2C1_SCL				0x400001c2
-
-base-commit: e271ed52b344ac02d4581286961d0c40acc54c03
-prerequisite-patch-id: 2335ebcc90360b008c840e7edf7e34a595880edf
--- 
-2.43.0
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>   drivers/hwtracing/coresight/coresight-catu.c       |  9 ++-------
+>   drivers/hwtracing/coresight/coresight-cpu-debug.c  |  6 +-----
+>   drivers/hwtracing/coresight/coresight-ctcu-core.c  | 10 ++--------
+>   drivers/hwtracing/coresight/coresight-etm4x-core.c |  9 ++-------
+>   drivers/hwtracing/coresight/coresight-funnel.c     |  6 +-----
+>   drivers/hwtracing/coresight/coresight-replicator.c |  6 +-----
+>   drivers/hwtracing/coresight/coresight-stm.c        |  4 +---
+>   drivers/hwtracing/coresight/coresight-tmc-core.c   |  4 +---
+>   drivers/hwtracing/coresight/coresight-tpiu.c       |  4 +---
+>   include/linux/coresight.h                          | 16 +++-------------
+>   10 files changed, 15 insertions(+), 59 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/hwtracing/coresight/coresight-catu.c
+> index af2a55f0c907c392d092a50612b23c115a1b0f5f..4c345ff2cff141ea63c2220393e5fdd00c449ca6 100644
+> --- a/drivers/hwtracing/coresight/coresight-catu.c
+> +++ b/drivers/hwtracing/coresight/coresight-catu.c
+> @@ -636,7 +636,7 @@ static int catu_platform_probe(struct platform_device *pdev)
+>   
+>   	drvdata->pclk = coresight_get_enable_apb_pclk(&pdev->dev);
+>   	if (IS_ERR(drvdata->pclk))
+> -		return -ENODEV;
+> +		return PTR_ERR(drvdata->pclk);
+>   
+>   	pm_runtime_get_noresume(&pdev->dev);
+>   	pm_runtime_set_active(&pdev->dev);
+> @@ -645,11 +645,8 @@ static int catu_platform_probe(struct platform_device *pdev)
+>   	dev_set_drvdata(&pdev->dev, drvdata);
+>   	ret = __catu_probe(&pdev->dev, res);
+>   	pm_runtime_put(&pdev->dev);
+> -	if (ret) {
+> +	if (ret)
+>   		pm_runtime_disable(&pdev->dev);
+> -		if (!IS_ERR_OR_NULL(drvdata->pclk))
+> -			clk_put(drvdata->pclk);
+> -	}
+>   
+>   	return ret;
+>   }
+> @@ -663,8 +660,6 @@ static void catu_platform_remove(struct platform_device *pdev)
+>   
+>   	__catu_remove(&pdev->dev);
+>   	pm_runtime_disable(&pdev->dev);
+> -	if (!IS_ERR_OR_NULL(drvdata->pclk))
+> -		clk_put(drvdata->pclk);
+>   }
+>   
+>   #ifdef CONFIG_PM
+> diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+> index a871d997330b09bdb741f35c59108b0b3252cc54..e39dfb886688e111eee95d4294f37fa85baccd14 100644
+> --- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
+> +++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+> @@ -699,7 +699,7 @@ static int debug_platform_probe(struct platform_device *pdev)
+>   
+>   	drvdata->pclk = coresight_get_enable_apb_pclk(&pdev->dev);
+>   	if (IS_ERR(drvdata->pclk))
+> -		return -ENODEV;
+> +		return PTR_ERR(drvdata->pclk);
+>   
+>   	dev_set_drvdata(&pdev->dev, drvdata);
+>   	pm_runtime_get_noresume(&pdev->dev);
+> @@ -710,8 +710,6 @@ static int debug_platform_probe(struct platform_device *pdev)
+>   	if (ret) {
+>   		pm_runtime_put_noidle(&pdev->dev);
+>   		pm_runtime_disable(&pdev->dev);
+> -		if (!IS_ERR_OR_NULL(drvdata->pclk))
+> -			clk_put(drvdata->pclk);
+>   	}
+>   	return ret;
+>   }
+> @@ -725,8 +723,6 @@ static void debug_platform_remove(struct platform_device *pdev)
+>   
+>   	__debug_remove(&pdev->dev);
+>   	pm_runtime_disable(&pdev->dev);
+> -	if (!IS_ERR_OR_NULL(drvdata->pclk))
+> -		clk_put(drvdata->pclk);
+>   }
+>   
+>   #ifdef CONFIG_ACPI
+> diff --git a/drivers/hwtracing/coresight/coresight-ctcu-core.c b/drivers/hwtracing/coresight/coresight-ctcu-core.c
+> index c6bafc96db963310b5e77a095953c83a172cfc7c..de279efe340581ceabfb9e1cd1e7fe4b5e4f826e 100644
+> --- a/drivers/hwtracing/coresight/coresight-ctcu-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-ctcu-core.c
+> @@ -209,7 +209,7 @@ static int ctcu_probe(struct platform_device *pdev)
+>   
+>   	drvdata->apb_clk = coresight_get_enable_apb_pclk(dev);
+>   	if (IS_ERR(drvdata->apb_clk))
+> -		return -ENODEV;
+> +		return PTR_ERR(drvdata->apb_clk);
+>   
+>   	cfgs = of_device_get_match_data(dev);
+>   	if (cfgs) {
+> @@ -233,12 +233,8 @@ static int ctcu_probe(struct platform_device *pdev)
+>   	desc.access = CSDEV_ACCESS_IOMEM(base);
+>   
+>   	drvdata->csdev = coresight_register(&desc);
+> -	if (IS_ERR(drvdata->csdev)) {
+> -		if (!IS_ERR_OR_NULL(drvdata->apb_clk))
+> -			clk_put(drvdata->apb_clk);
+> -
+> +	if (IS_ERR(drvdata->csdev))
+>   		return PTR_ERR(drvdata->csdev);
+> -	}
+>   
+>   	return 0;
+>   }
+> @@ -275,8 +271,6 @@ static void ctcu_platform_remove(struct platform_device *pdev)
+>   
+>   	ctcu_remove(pdev);
+>   	pm_runtime_disable(&pdev->dev);
+> -	if (!IS_ERR_OR_NULL(drvdata->apb_clk))
+> -		clk_put(drvdata->apb_clk);
+>   }
+>   
+>   #ifdef CONFIG_PM
+> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> index 205121c14d72ec2f6a193dccb94b7cfd5c314e26..1915da95b93d953a61778a71b4880c87b91fe17a 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> @@ -2303,14 +2303,12 @@ static int etm4_probe_platform_dev(struct platform_device *pdev)
+>   
+>   	drvdata->pclk = coresight_get_enable_apb_pclk(&pdev->dev);
+>   	if (IS_ERR(drvdata->pclk))
+> -		return -ENODEV;
+> +		return PTR_ERR(drvdata->pclk);
+>   
+>   	if (res) {
+>   		drvdata->base = devm_ioremap_resource(&pdev->dev, res);
+> -		if (IS_ERR(drvdata->base)) {
+> -			clk_put(drvdata->pclk);
+> +		if (IS_ERR(drvdata->base))
+>   			return PTR_ERR(drvdata->base);
+> -		}
+>   	}
+>   
+>   	dev_set_drvdata(&pdev->dev, drvdata);
+> @@ -2417,9 +2415,6 @@ static void etm4_remove_platform_dev(struct platform_device *pdev)
+>   	if (drvdata)
+>   		etm4_remove_dev(drvdata);
+>   	pm_runtime_disable(&pdev->dev);
+> -
+> -	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
+> -		clk_put(drvdata->pclk);
+>   }
+>   
+>   static const struct amba_id etm4_ids[] = {
+> diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
+> index b1922dbe9292b02c91ca5730998e59ecdb08fdc7..36fc4e991458c112521c4261d73f3e58e9a3f995 100644
+> --- a/drivers/hwtracing/coresight/coresight-funnel.c
+> +++ b/drivers/hwtracing/coresight/coresight-funnel.c
+> @@ -240,7 +240,7 @@ static int funnel_probe(struct device *dev, struct resource *res)
+>   
+>   	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
+>   	if (IS_ERR(drvdata->pclk))
+> -		return -ENODEV;
+> +		return PTR_ERR(drvdata->pclk);
+>   
+>   	/*
+>   	 * Map the device base for dynamic-funnel, which has been
+> @@ -284,8 +284,6 @@ static int funnel_probe(struct device *dev, struct resource *res)
+>   out_disable_clk:
+>   	if (ret && !IS_ERR_OR_NULL(drvdata->atclk))
+>   		clk_disable_unprepare(drvdata->atclk);
+> -	if (ret && !IS_ERR_OR_NULL(drvdata->pclk))
+> -		clk_disable_unprepare(drvdata->pclk);
+>   	return ret;
+>   }
+>   
+> @@ -355,8 +353,6 @@ static void funnel_platform_remove(struct platform_device *pdev)
+>   
+>   	funnel_remove(&pdev->dev);
+>   	pm_runtime_disable(&pdev->dev);
+> -	if (!IS_ERR_OR_NULL(drvdata->pclk))
+> -		clk_put(drvdata->pclk);
+>   }
+>   
+>   static const struct of_device_id funnel_match[] = {
+> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
+> index 06efd2b01a0f71620eac71166567d14655b58403..6dd24eb10a94b0eb28f4f27afab845227e22b96c 100644
+> --- a/drivers/hwtracing/coresight/coresight-replicator.c
+> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
+> @@ -247,7 +247,7 @@ static int replicator_probe(struct device *dev, struct resource *res)
+>   
+>   	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
+>   	if (IS_ERR(drvdata->pclk))
+> -		return -ENODEV;
+> +		return PTR_ERR(drvdata->pclk);
+>   
+>   	/*
+>   	 * Map the device base for dynamic-replicator, which has been
+> @@ -296,8 +296,6 @@ static int replicator_probe(struct device *dev, struct resource *res)
+>   out_disable_clk:
+>   	if (ret && !IS_ERR_OR_NULL(drvdata->atclk))
+>   		clk_disable_unprepare(drvdata->atclk);
+> -	if (ret && !IS_ERR_OR_NULL(drvdata->pclk))
+> -		clk_disable_unprepare(drvdata->pclk);
+>   	return ret;
+>   }
+>   
+> @@ -335,8 +333,6 @@ static void replicator_platform_remove(struct platform_device *pdev)
+>   
+>   	replicator_remove(&pdev->dev);
+>   	pm_runtime_disable(&pdev->dev);
+> -	if (!IS_ERR_OR_NULL(drvdata->pclk))
+> -		clk_put(drvdata->pclk);
+>   }
+>   
+>   #ifdef CONFIG_PM
+> diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
+> index e45c6c7204b4491e0f879bc7d5d445aa1d3118be..88ee453b2815444a550a2b932b28367eb93336b8 100644
+> --- a/drivers/hwtracing/coresight/coresight-stm.c
+> +++ b/drivers/hwtracing/coresight/coresight-stm.c
+> @@ -851,7 +851,7 @@ static int __stm_probe(struct device *dev, struct resource *res)
+>   
+>   	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
+>   	if (IS_ERR(drvdata->pclk))
+> -		return -ENODEV;
+> +		return PTR_ERR(drvdata->pclk);
+>   	dev_set_drvdata(dev, drvdata);
+>   
+>   	base = devm_ioremap_resource(dev, res);
+> @@ -1033,8 +1033,6 @@ static void stm_platform_remove(struct platform_device *pdev)
+>   
+>   	__stm_remove(&pdev->dev);
+>   	pm_runtime_disable(&pdev->dev);
+> -	if (!IS_ERR_OR_NULL(drvdata->pclk))
+> -		clk_put(drvdata->pclk);
+>   }
+>   
+>   #ifdef CONFIG_ACPI
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-core.c b/drivers/hwtracing/coresight/coresight-tmc-core.c
+> index 0b5e7635a084d226619e69189a2ecbaff754ec43..e867198b03e82892da7312c9dc1c69676602c598 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-core.c
+> @@ -991,7 +991,7 @@ static int tmc_platform_probe(struct platform_device *pdev)
+>   
+>   	drvdata->pclk = coresight_get_enable_apb_pclk(&pdev->dev);
+>   	if (IS_ERR(drvdata->pclk))
+> -		return -ENODEV;
+> +		return PTR_ERR(drvdata->pclk);
+>   
+>   	dev_set_drvdata(&pdev->dev, drvdata);
+>   	pm_runtime_get_noresume(&pdev->dev);
+> @@ -1015,8 +1015,6 @@ static void tmc_platform_remove(struct platform_device *pdev)
+>   
+>   	__tmc_remove(&pdev->dev);
+>   	pm_runtime_disable(&pdev->dev);
+> -	if (!IS_ERR_OR_NULL(drvdata->pclk))
+> -		clk_put(drvdata->pclk);
+>   }
+>   
+>   #ifdef CONFIG_PM
+> diff --git a/drivers/hwtracing/coresight/coresight-tpiu.c b/drivers/hwtracing/coresight/coresight-tpiu.c
+> index 3e01592884280819c16398cbb5e09cbaee5d3efb..b2559c6fac6d2f02e0038e583cd324d7165c5aee 100644
+> --- a/drivers/hwtracing/coresight/coresight-tpiu.c
+> +++ b/drivers/hwtracing/coresight/coresight-tpiu.c
+> @@ -153,7 +153,7 @@ static int __tpiu_probe(struct device *dev, struct resource *res)
+>   
+>   	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
+>   	if (IS_ERR(drvdata->pclk))
+> -		return -ENODEV;
+> +		return PTR_ERR(drvdata->pclk);
+>   	dev_set_drvdata(dev, drvdata);
+>   
+>   	/* Validity for the resource is already checked by the AMBA core */
+> @@ -293,8 +293,6 @@ static void tpiu_platform_remove(struct platform_device *pdev)
+>   
+>   	__tpiu_remove(&pdev->dev);
+>   	pm_runtime_disable(&pdev->dev);
+> -	if (!IS_ERR_OR_NULL(drvdata->pclk))
+> -		clk_put(drvdata->pclk);
+>   }
+>   
+>   #ifdef CONFIG_ACPI
+> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+> index 4ac65c68bbf44b98db22c3dad2d83a224ce5278e..dd2b4cc7a2b70cf060a3207548fe80e3824c489f 100644
+> --- a/include/linux/coresight.h
+> +++ b/include/linux/coresight.h
+> @@ -480,26 +480,16 @@ static inline bool is_coresight_device(void __iomem *base)
+>    * Returns:
+>    *
+>    * clk   - Clock is found and enabled
+> - * NULL  - clock is not found
+>    * ERROR - Clock is found but failed to enable
+>    */
+>   static inline struct clk *coresight_get_enable_apb_pclk(struct device *dev)
+>   {
+>   	struct clk *pclk;
+> -	int ret;
+>   
+> -	pclk = clk_get(dev, "apb_pclk");
+> -	if (IS_ERR(pclk)) {
+> -		pclk = clk_get(dev, "apb");
+> -		if (IS_ERR(pclk))
+> -			return NULL;
+> -	}
+> +	pclk = devm_clk_get_enabled(dev, "apb_pclk");
+> +	if (IS_ERR(pclk))
+> +		pclk = devm_clk_get_enabled(dev, "apb");
+>   
+> -	ret = clk_prepare_enable(pclk);
+> -	if (ret) {
+> -		clk_put(pclk);
+> -		return ERR_PTR(ret);
+> -	}
+>   	return pclk;
+>   }
+>   
+> 
 
