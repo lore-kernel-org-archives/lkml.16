@@ -1,131 +1,144 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77D6027FD7D;
-	Mon,  9 Jun 2025 04:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23EBD19309E;
+	Mon,  9 Jun 2025 04:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749443565; cv=none; b=NZf9J0H8LIKnChYB0zWAvANRSIc7PJoGhfWa/vEjEvDXyCwPnZuU1CMhEg7y0IQUhOHXaHTxnZPaE1JCwNk+QbmsrP64bp3qsx88LO3DY6d+/V/l955/6ewvxQjKpf8VfucbJgluLTWhctCk/VqXnMaIK3kiP4zVq7OSJ7eQgRA=
+	t=1749443595; cv=none; b=fKwHljEa/gZPcuK5/XP8jI5gyhwsJx/ymuqRMwCNJeARVbh1cpb6JJZg8aJ4EX7SpxlLFamWUO/Pv2C1vGNSch17FdQAOPdlXvpWRqC1YtXj9KIOu+9tboODKM2viT3gjyer568/xs0Ou0vG9sUPCeM6mfrSRTx7TRgT7saents=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749443565; c=relaxed/simple;
-	bh=hvhefW5aoQ5VsS9tMRkwS2v29al0s6YzPpQyZayU4RU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mw9TVb1Dj9J+Ijdk9C6Kt6J2APkvjjoFt59BjzGJBbEE1wNppupoocH2qPH5SQ0rS5zI15EWQtPN5fou5m5T5xa7698qJo1xRqPlyrMrtvPeccgNS43BW/pyKF7oalB7foEsLca13B7wkH0znfGMNahiu78HyadjZQ4CP74JdmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-8f-684663e4e1a1
-From: Byungchul Park <byungchul@sk.com>
-To: willy@infradead.org,
-	netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	kernel_team@skhynix.com,
-	kuba@kernel.org,
-	almasrymina@google.com,
-	ilias.apalodimas@linaro.org,
-	harry.yoo@oracle.com,
-	hawk@kernel.org,
-	akpm@linux-foundation.org,
-	davem@davemloft.net,
-	john.fastabend@gmail.com,
-	andrew+netdev@lunn.ch,
-	asml.silence@gmail.com,
-	toke@redhat.com,
-	tariqt@nvidia.com,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	saeedm@nvidia.com,
-	leon@kernel.org,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	david@redhat.com,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	horms@kernel.org,
-	linux-rdma@vger.kernel.org,
-	bpf@vger.kernel.org,
-	vishal.moola@gmail.com
-Subject: [PATCH net-next 7/9] page_pool: make page_pool_get_dma_addr() just wrap page_pool_get_dma_addr_netmem()
-Date: Mon,  9 Jun 2025 13:32:23 +0900
-Message-Id: <20250609043225.77229-8-byungchul@sk.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250609043225.77229-1-byungchul@sk.com>
-References: <20250609043225.77229-1-byungchul@sk.com>
+	s=arc-20240116; t=1749443595; c=relaxed/simple;
+	bh=7+bSEDdkuLIICSf100hVTfZ2IMYgPaUemWV4CuSRMwY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I2j6r1+SUqdEIcwcAgHKQXMSBoqeGt1plpwgeSHBJwnaJQsf+fmGTp/GyRlGkUwq0MxGtMyJL0+wFySkLS3i9AjAIS8bTvoNVyIFW8q+CJtFxWIQQiCpVF5MA6qRM3fQOp7vjklI1j46H3uYLbA64z3FbDgpGz9et8MTPk0vGaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=NI1fzrF7; arc=none smtp.client-ip=52.119.213.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="NI1fzrF7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1749443595; x=1780979595;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=K1IXsGeOjEMrDiz6/avTqx4a+iEDZuQrzJNH3kyvoUo=;
+  b=NI1fzrF753ZGmjB8gZiWxdHuXcuaonGlved08f0dvwD8n+tAEXKAJgAY
+   eeCwFL+har4LxLOPCifFcaAxL6hUPf2GfNKC9KxToiI9RrgIVm3dP9rnq
+   k0fHDhZuYsS9Am4TiWm/NC1TgytGt3pHsesAp6RdUyNox+Oc8GnCfpDaC
+   jE0Dr/7qyTrfjAPpKPtHLUFa43tU5/7ZtGRsYX411oDVwZ6bXTjk3o3AQ
+   yun51rAnZNUKqrmkc84B+rDPZmdptnbOWCxC3OdXmtNlFushI/MOwFoPZ
+   q/3U+K+dDaInbfLo9WeU7h3P5oi7HWClKA6MeYxITa2g9FZ7/QJ9TOUUh
+   A==;
+X-IronPort-AV: E=Sophos;i="6.16,221,1744070400"; 
+   d="scan'208";a="306689927"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 04:33:14 +0000
+Received: from EX19MTAEUA001.ant.amazon.com [10.0.17.79:63521]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.32.98:2525] with esmtp (Farcaster)
+ id 267c9614-9b46-44a6-817f-8e49af2d718e; Mon, 9 Jun 2025 04:33:12 +0000 (UTC)
+X-Farcaster-Flow-ID: 267c9614-9b46-44a6-817f-8e49af2d718e
+Received: from EX19D018EUA004.ant.amazon.com (10.252.50.85) by
+ EX19MTAEUA001.ant.amazon.com (10.252.50.50) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 9 Jun 2025 04:33:12 +0000
+Received: from dev-dsk-farbere-1a-46ecabed.eu-west-1.amazon.com
+ (172.19.116.181) by EX19D018EUA004.ant.amazon.com (10.252.50.85) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Mon, 9 Jun 2025
+ 04:33:09 +0000
+From: Eliav Farber <farbere@amazon.com>
+To: <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>, <yoshfuji@linux-ipv6.org>,
+	<kuba@kernel.org>, <kuniyu@amazon.com>, <sashal@kernel.org>,
+	<edumazet@google.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <stable@vger.kernel.org>, <farbere@amazon.com>
+Subject: [PATCH v2 5.10.y] net/ipv4: fix type mismatch in inet_ehash_locks_alloc() causing build failure
+Date: Mon, 9 Jun 2025 04:32:59 +0000
+Message-ID: <20250609043259.10772-1-farbere@amazon.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRzGefe+57Ll4rSsjgZdRiEI2gWLPxFRRPUWUVEfIoNy6cGtptm8
-	NKXI0rK8FRVUa9akMlNzOs1pSeSSvFWK19lN8fZBUklN0kW1g0R9e3j+v+d5vvx5rLnC+POG
-	6DjJFK0zalkVUY345AYNhG/Xr7Y1zgWrvYiFwh9meNxbyYC1oALB5PRHDiZq61h4kDuFwdqc
-	SuC7fQbD4Js+DnryhghUpzkx9F2tZyEr1YPhQmW+Aloqshm4OfMIgzO5l4O251YWvhT9ZmDI
-	lUWgwfKEQE/2ZnhjWwhTTV8R1NqdCpjKzGHhRquNhf7UHgStr/sI3D2fjcD+0s2A54eV3byc
-	lj/pVtAqy2eO2hzxtCw/kKa7WzF1FFxhqWP8Okc/dVaztP62h9CqygkFzUoZZem3wQ+Ejr3s
-	YKm9vIPQt7Zajk44luwTQlUbIySjIUEyrdoUptKPO88rYrJV5pJiD5eMPvPpSMmLQoh433mP
-	/NXvJws4WbNCgOh2T2NZ+wprxIm+Oi+j4rEwyoiDVo8iHfH8fCFGTHunkBkirBTb29IYWauF
-	dWKWc5Sb7VwqFpa8wjKuFNaLve442dZ4EVd7Pp7F54kNdwaIjGDvrP2eRraxN5ny7C6WV0Uh
-	hxdThl+j2Uo/sSbfTa4hwfJf3PIvbvkvbkO4AGkM0QlROoMxJFifGG0wB4efjHIg74Pknf15
-	uBKNtxxwIYFHWh912K1teg2jS4hNjHIhkcdaX7XQs1WvUUfoEpMk08mjpnijFOtCi3miXaRe
-	O3U6QiNE6uKkE5IUI5n+XhW80j8Z3SjdW/7+nafx5/EQ40MavJcLUm5nzLbqVbt9XvjQp8N1
-	gSOhuw7m2torqvs3pJLSwi9dATssK3/FnNmys/NiV1Gmue3yns7u+29vNh0baj41mtFUc+lB
-	2UzkghU5GfyRuDG//oyuOb2HPp74RhqX96/IVCadQ0FlxRsq2pep59r3Yy2J1evWBGJTrO4P
-	nGIdbhwDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA03Se0hTcRQHcH73d1+OBrdldTFCmkUgZQlZhyyRQrv4x+q/IIkcemmjTdc2
-	xQXia2SaWmlhzVkr05xKEyunUhLT1PXGaayHzuaDoFiZJuqCckjkf1/O+Zxz/jksln0jI1h1
-	plHUZyo1clpCShTxxTsn05NVu6tKEVgdrTS0LOTCvfFOCqzNHQjmFj8yMNs3QEP97XkM1jdm
-	En45ljBM9fsZ8DVOk/C4xInBf2mQhgpzEENRZxMBvXVuCt52VFJwdakBg7NgnAFPt5WGsdY/
-	FEy7KkhwW+wk+CoTod+2AeZffEPQ53ASMF9eR0P1kI2GCbMPwVCvn4TawkoEjh4vBcEFK50o
-	Fx7a3xNCl2WUEWzt2cKDpmihzDuEhfbmUlpo/1nFCJ/ePaaFwetBUujqnCWEiuIALcxMfSCF
-	7z0jtFD/5QchOB6OkMJLWx9zbO0JyYEMUaPOEfW7EtIkqp/OQkJXKcltux9kCtAoW4bCWJ7b
-	w7+ea2ZCmea2817vIg7lcC6Wn/UPkGVIwmIuQPFT1iBRhlh2HafjS14RIUNy2/hhTwkVylIu
-	jq9wBpiVnZF8S9tTHOJh3F5+3GsMlWXLxDXchFf4Wt59Y5IMEbx81nFTFirj5cniR7X4MpJa
-	VinLf2VZpWwIN6NwdWaOVqnWxMUYzqhMmercmPQsbTta/oHGvN9XOtGc54gLcSySr5Gm1SSp
-	ZJQyx2DSuhDPYnm4lPMdVsmkGUrTOVGfdUqfrRENLrSJJeUbpSnHxTQZd1ppFM+Iok7U/+sS
-	bFhEARr8rKHajFPl9vMs52Gepfrc6+92mU1VyVtORm6WLETVHLugSTTRnuiWFFSdMFPNPlpo
-	0rpKz87UHhSL8u6cbKiD/h/xin2K0qPa9PoorQ7Nu2/lZ2jzklJb7dfM0d3EweD+LPbrE+WO
-	sQj/UmAiPF+R5rW/ed7TUb314qGXctKgUsZGY71B+RdVujwW/wIAAA==
-X-CFilter-Loop: Reflected
+X-ClientProxiedBy: EX19D042UWA001.ant.amazon.com (10.13.139.92) To
+ EX19D018EUA004.ant.amazon.com (10.252.50.85)
 
-The page pool members in struct page cannot be removed unless it's not
-allowed to access any of them via struct page.
+Fix compilation warning:
 
-Do not access 'page->dma_addr' directly in page_pool_get_dma_addr() but
-just wrap page_pool_get_dma_addr_netmem() safely.
+In file included from ./include/linux/kernel.h:15,
+                 from ./include/linux/list.h:9,
+                 from ./include/linux/module.h:12,
+                 from net/ipv4/inet_hashtables.c:12:
+net/ipv4/inet_hashtables.c: In function ‘inet_ehash_locks_alloc’:
+./include/linux/minmax.h:20:35: warning: comparison of distinct pointer types lacks a cast
+   20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+      |                                   ^~
+./include/linux/minmax.h:26:18: note: in expansion of macro ‘__typecheck’
+   26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
+      |                  ^~~~~~~~~~~
+./include/linux/minmax.h:36:31: note: in expansion of macro ‘__safe_cmp’
+   36 |         __builtin_choose_expr(__safe_cmp(x, y), \
+      |                               ^~~~~~~~~~
+./include/linux/minmax.h:52:25: note: in expansion of macro ‘__careful_cmp’
+   52 | #define max(x, y)       __careful_cmp(x, y, >)
+      |                         ^~~~~~~~~~~~~
+net/ipv4/inet_hashtables.c:946:19: note: in expansion of macro ‘max’
+  946 |         nblocks = max(nblocks, num_online_nodes() * PAGE_SIZE / locksz);
+      |                   ^~~
+  CC      block/badblocks.o
 
-Signed-off-by: Byungchul Park <byungchul@sk.com>
-Reviewed-by: Mina Almasry <almasrymina@google.com>
-Reviewed-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
+When warnings are treated as errors, this causes the build to fail.
+
+The issue is a type mismatch between the operands passed to the max()
+macro. Here, nblocks is an unsigned int, while the expression
+num_online_nodes() * PAGE_SIZE / locksz is promoted to unsigned long.
+
+This happens because:
+ - num_online_nodes() returns int
+ - PAGE_SIZE is typically defined as an unsigned long (depending on the
+   architecture)
+ - locksz is unsigned int
+
+The resulting arithmetic expression is promoted to unsigned long.
+
+Thus, the max() macro compares values of different types: unsigned int
+vs unsigned long.
+
+This issue was introduced in commit f8ece40786c9 ("tcp: bring back NUMA
+dispersion in inet_ehash_locks_alloc()") during the update from kernel
+v5.10.237 to v5.10.238.
+
+It does not exist in newer kernel branches (e.g., v5.15.185 and all 6.x
+branches), because they include commit d03eba99f5bf ("minmax: allow
+min()/max()/clamp() if the arguments have the same signedness.")
+
+Fix the issue by using max_t(unsigned int, ...) to explicitly cast both
+operands to the same type, avoiding the type mismatch and ensuring
+correctness.
+
+Fixes: f8ece40786c9 ("tcp: bring back NUMA dispersion in inet_ehash_locks_alloc()")
+Signed-off-by: Eliav Farber <farbere@amazon.com>
 ---
- include/net/page_pool/helpers.h | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+V1 -> V2: Use upstream commit SHA1 in reference
+ net/ipv4/inet_hashtables.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/page_pool/helpers.h b/include/net/page_pool/helpers.h
-index 93f2c31baf9b..387913b6c8bf 100644
---- a/include/net/page_pool/helpers.h
-+++ b/include/net/page_pool/helpers.h
-@@ -437,12 +437,7 @@ static inline dma_addr_t page_pool_get_dma_addr_netmem(netmem_ref netmem)
-  */
- static inline dma_addr_t page_pool_get_dma_addr(const struct page *page)
- {
--	dma_addr_t ret = page->dma_addr;
--
--	if (PAGE_POOL_32BIT_ARCH_WITH_64BIT_DMA)
--		ret <<= PAGE_SHIFT;
--
--	return ret;
-+	return page_pool_get_dma_addr_netmem(page_to_netmem(page));
- }
+diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
+index fea74ab2a4be..ac2d185c04ef 100644
+--- a/net/ipv4/inet_hashtables.c
++++ b/net/ipv4/inet_hashtables.c
+@@ -943,7 +943,7 @@ int inet_ehash_locks_alloc(struct inet_hashinfo *hashinfo)
+ 	nblocks = max(2U * L1_CACHE_BYTES / locksz, 1U) * num_possible_cpus();
  
- static inline void __page_pool_dma_sync_for_cpu(const struct page_pool *pool,
+ 	/* At least one page per NUMA node. */
+-	nblocks = max(nblocks, num_online_nodes() * PAGE_SIZE / locksz);
++	nblocks = max_t(unsigned int, nblocks, num_online_nodes() * PAGE_SIZE / locksz);
+ 
+ 	nblocks = roundup_pow_of_two(nblocks);
+ 
 -- 
-2.17.1
+2.47.1
 
