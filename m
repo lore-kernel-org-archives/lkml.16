@@ -1,55 +1,83 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A344226D09
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 22:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56FC2253F8;
+	Mon,  9 Jun 2025 22:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749509794; cv=none; b=QfpFi7iwVrAINfBOonuJbKb/P8O9EI5flDIw3DINuME/6fzrV/4oC/prwZpvhae5pDhIHCgr5fKlUCghd5dCf2l807wOmWrveSVft/H3mcYvdKskOR+GbguggUFkOKdH1i6NKHEJXZxtoZgDPCFjihLi6CICn91suJ/a3SuvTM0=
+	t=1749509809; cv=none; b=J8C8EjCK9kaSX2WFjt2JevAKJyD/4i7bHvLuihBVYA3qLV2vg8kNqSK2h/uRME+tMpzYiKfWUt/6wsKYa/hYsH9bWxrtOqUTie1BFmG1NmgCEbHppycKPco0USQCVdpTgTDeub4O4YXz+OdoZqRZA9XzzkYPj0XRMBrd4js+J38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749509794; c=relaxed/simple;
-	bh=oXikNS+kgN+2w3qPcZgZY0QITtEf/BerEbAt8eoZsE0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h6P9O68W8gRgi8Mi8siULnOy0TB24tmy4cgtw5PJ7HXObH6g7AiZdRH4HCawB2hgMjqLcGIcRo8xMV7kt0/JRp+gDZr83bfDhQghrqolKyF0TLhcxboVDKFv2lCGYLBdkn7apuyQuGe8G6JnEkIFat2l12lwxxSxvgHyXfgbp2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UexM/xxs; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749509809; c=relaxed/simple;
+	bh=BiC/S8e6d+YwQP6yo8wySn738EE3DodC/sCtScKa7Yo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lDLGjWq7ar5FB7zxcFXBKwYrYFPnBEeA4Q3vwoY0akS49Rqf6ckVkRd2B4zoAfciKLq2+9Twiv2mRNBCUrqoWfth//VZS/WJFuQH5fgB15UxkMlfRoHgnlEFO0qOeLhOY3RERoq+GZHnJZpdN3AtjIzv9UiNpwZ0xzqcaPQlNlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P9WrNzjB; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UexM/xxs"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749509791;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ffjH9W3JevRTfPRrE/1Jq8fYf5w4/j5rXWB6dZVk6cA=;
-	b=UexM/xxstuk7PO7WmNao3E6L5a2hvVZU3noOUdaCSK3vBl6w4LkpusCz4PyJwsMfLacYe6
-	c8w4nELwZor22Ckt10ptR/Q3VtHD9SZHcunTB+jqRx0Z6SEcQh8guT7Xn8VIJbglgM6A6/
-	fZhsbNRWvYFQuIOtue0oDlEmeuuDChI=
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Tejun Heo <tj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	bpf@vger.kernel.org,
-	linux-mm@kvack.org,
-	cgroups@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P9WrNzjB"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a52874d593so4664571f8f.0;
+        Mon, 09 Jun 2025 15:56:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749509806; x=1750114606; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y2tg4REnvOCyUc7MwuvLcq48UH8TgGrD41gWMRdQ3RA=;
+        b=P9WrNzjBksKVwYTcbJ8gEUBQlagr6UOhPETGnlxJaY386tueVOdo+Vh7DeeWoUCpE8
+         dvW8Z4lTuh1wel5bsX8+CSM0ol0n3fYfT6Bj+nh+uYTkapGLo8vCYOv262x2UH6Qsrd/
+         gjVsTt2nAlc3HksaeGyCCxhA7VRN6MHdpKn0PiPQMHUiMuom3MGISlC/tfmJvo3sH+kp
+         xXWiWhNqrel/wRHV/NeX9lTxE7DvEIFul/nHvnNaCAviSb5CXWDG4q4iHdu1XDOBS6Ev
+         i7pSZX4Jl6T5wHqF4Togch53waZyvABuknWm7O9NpTflwI/fsf9S/dP3MU6vP4nHOps/
+         Cozg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749509806; x=1750114606;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Y2tg4REnvOCyUc7MwuvLcq48UH8TgGrD41gWMRdQ3RA=;
+        b=EFZRHllOYnSKmipA5nQv8SDYnJkat4OeKS4NPKPISJx99/F5Nu7DL1Y2nzDQ/4oO+h
+         KnT5XSnNAg2d8hMYb3W/9eamiw76Yt8yR2EX3I1OqqR8xoI1HfpsWRmK73u9GdgF7yW4
+         t5ywC1Ka7DWaoMGbkEqjV3ck7wWwBmvKfVDpoh7xdZi4F4Qkj4rJDYtOK/k7yEMX1jiu
+         cgWO2GOgM5CkD0yahNNiY1O62nLabATGZFZXURd2NEWcDEbsdzAtI+W2uekn94fKNkpl
+         FpFLCssFhC6gsHg0BDoPh1gL1QEoWg2RpucwI6V3yRPkD1MogcxC9qHyz8yGNH9bo60w
+         Jbmw==
+X-Forwarded-Encrypted: i=1; AJvYcCWHy7FekUQz7yeZGaYb08Rkj7NNt1wuPPP8AN2DhdKHq1nwTDsxNMVe0ul2ii+pDPkj+ZO6/4IwloPfOYM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxH7ZrQG8DgomYVQ0YkZKYHTrCMLI7nZbrCx4JFuBGUZZTaP8dZ
+	tO3Y72+tmLsfeqAtmi24xcWqQ4h1CvDfCTuQRxhzpL8IaPRRHRM4323t
+X-Gm-Gg: ASbGncvJn8C5yXyAaMPXOUOiCQmoBCAXoaU2l+aLEEfbfyldriEcFKRFCqmDtN9SdD/
+	YVxi9ibb7+BlRm0c3sJF4YEizwnp/BlAwj3jvpZkBcfRhLBZGxtiS6pU0hM+f9CQ55UD/NZLMsv
+	h2+KqNyhVKGEcOddnhCyokfQ0yN2sG7nk5dR+H1BsMWXDZoY4DeQ56jLGLqvF/GCms9uD1qy2og
+	Z08xRu9KSzwl39057triEkyrH1hEsQOgQFwxfVzJXUu5zKZadk0xqsqaYeiacIcS66gXSiavYHD
+	+1WXrmjvTFkQBZDcaD5sIq8rgMVL/PkNKobfBpmp6IPagT0993T7ktC/vFx/LaeP7BJO4wcOTU4
+	VLcA0TyQHx9rdWaJWDtc=
+X-Google-Smtp-Source: AGHT+IFJahUPqFeA1/CIDgdsJOEop2L5elXHggdcexotI4Nd98oxIGFQEFOWFLGL7BQt6JPOSKk2sA==
+X-Received: by 2002:a05:6000:40c7:b0:3a0:a0d1:1131 with SMTP id ffacd0b85a97d-3a5318823c7mr12577315f8f.7.1749509805894;
+        Mon, 09 Jun 2025 15:56:45 -0700 (PDT)
+Received: from iku.example.org ([2a06:5906:61b:2d00:3c26:913e:81d:9d46])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5324364c9sm10824574f8f.51.2025.06.09.15.56.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 15:56:45 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Biju Das <biju.das.jz@bp.renesas.com>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	dri-devel@lists.freedesktop.org
+Cc: linux-renesas-soc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: [PATCH 3/3] memcg: cgroup: call memcg_rstat_updated irrespective of in_nmi()
-Date: Mon,  9 Jun 2025 15:56:11 -0700
-Message-ID: <20250609225611.3967338-4-shakeel.butt@linux.dev>
-In-Reply-To: <20250609225611.3967338-1-shakeel.butt@linux.dev>
-References: <20250609225611.3967338-1-shakeel.butt@linux.dev>
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v7 0/9] drm: renesas: rz-du: mipi_dsi: Prepare driver to support RZ/V2H(P) SoC
+Date: Mon,  9 Jun 2025 23:56:21 +0100
+Message-ID: <20250609225630.502888-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,51 +85,103 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-css_rstat_updated() is nmi safe, so there is no need to avoid it in
-in_nmi(), so remove the check.
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
----
- mm/memcontrol.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Hi All,
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 902da8a9c643..d122bfe33e98 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -573,9 +573,7 @@ static inline void memcg_rstat_updated(struct mem_cgroup *memcg, int val,
- 	if (!val)
- 		return;
- 
--	/* TODO: add to cgroup update tree once it is nmi-safe. */
--	if (!in_nmi())
--		css_rstat_updated(&memcg->css, cpu);
-+	css_rstat_updated(&memcg->css, cpu);
- 	statc_pcpu = memcg->vmstats_percpu;
- 	for (; statc_pcpu; statc_pcpu = statc->parent_pcpu) {
- 		statc = this_cpu_ptr(statc_pcpu);
-@@ -2530,7 +2528,8 @@ static inline void account_slab_nmi_safe(struct mem_cgroup *memcg,
- 	} else {
- 		struct mem_cgroup_per_node *pn = memcg->nodeinfo[pgdat->node_id];
- 
--		/* TODO: add to cgroup update tree once it is nmi-safe. */
-+		/* preemption is disabled in_nmi(). */
-+		css_rstat_updated(&memcg->css, smp_processor_id());
- 		if (idx == NR_SLAB_RECLAIMABLE_B)
- 			atomic_add(nr, &pn->slab_reclaimable);
- 		else
-@@ -2753,7 +2752,8 @@ static inline void account_kmem_nmi_safe(struct mem_cgroup *memcg, int val)
- 	if (likely(!in_nmi())) {
- 		mod_memcg_state(memcg, MEMCG_KMEM, val);
- 	} else {
--		/* TODO: add to cgroup update tree once it is nmi-safe. */
-+		/* preemption is disabled in_nmi(). */
-+		css_rstat_updated(&memcg->css, smp_processor_id());
- 		atomic_add(val, &memcg->kmem_stat);
- 	}
- }
+This patch series prepares the MIPI DSI driver to support the Renesas
+RZ/V2H(P) SoC. These patches were originally part of series [0], but I have
+split them into two parts to make them easier to review and merge.
+
+v6->v7:
+- Rebased the changes on drm-misc/next
+- Dropped DU patches as they are already applied
+- Fixed revie comments from Laurent
+- Dropped patch 12/12 from v6 "drm: renesas: rz-du: mipi_dsi: Add
+  support for LPCLK clock handling" as suggested by Laurent
+
+v5->v6:
+- Added reviewed tag from Biju and Laurent
+- Updated commit messages
+- Dropped parentheses around the calculation
+- Added min_dclk above max_dclk in rzg2l_mipi_dsi_hw_info
+- Renamed dphy_late_init to dphy_startup_late_init
+
+v4->v5:
+- Split up the series
+- Added Reviewed-by tag from Biju
+- Dropped feature flags for reset and LPCLK
+- Patch 07/12 is new.
+
+v3->v4:
+- Corrected parameter name in rzv2h_dsi_get_pll_parameters_values()
+  description freq_millihz
+- Used MILLI instead of KILO
+- Made use of mul_u32_u32() for multiplication
+- In rzv2h_dphy_find_ulpsexit() made the array static const.
+
+v2->v3:
+- Update the commit message for patch 1/15 to clarify the purpose
+  of `renesas-rzv2h-dsi.h` header
+- Used mul_u32_u32() in rzv2h_cpg_plldsi_div_determine_rate()
+- Replaced *_mhz to *_millihz for clarity
+- Updated u64->u32 for fvco limits
+- Initialized the members in declaration order for
+  RZV2H_CPG_PLL_DSI_LIMITS() macro
+- Used clk_div_mask() in rzv2h_cpg_plldsi_div_recalc_rate()
+- Replaced `unsigned long long` with u64
+- Dropped rzv2h_cpg_plldsi_clk_recalc_rate() and reused
+  rzv2h_cpg_pll_clk_recalc_rate() instead
+- In rzv2h_cpg_plldsi_div_set_rate() followed the same style
+  of RMW-operation as done in the other functions
+- Renamed rzv2h_cpg_plldsi_set_rate() to rzv2h_cpg_pll_set_rate()
+- Dropped rzv2h_cpg_plldsi_clk_register() and reused
+  rzv2h_cpg_pll_clk_register() instead
+- Added a guard in renesas-rzv2h-dsi.h header
+- Reverted CSDIV0_DIVCTL2() to use DDIV_PACK()
+- Renamed plleth_lpclk_div4 -> cdiv4_plleth_lpclk
+- Renamed plleth_lpclk -> plleth_lpclk_gear
+- Collected reviewed tag from Krzysztof for patch 3/15
+- Dropped !dsi->info check in rzg2l_mipi_dsi_probe() as it
+  is not needed.
+- Simplified V2H DSI timings array to save space
+- Switched to use fsleep() instead of udelay()
+
+v1->v2:
+- Rebased the changes on top of v6.15-rc1
+- Kept the sort order for schema validation
+- Added  `port@1: false` for RZ/V2H(P) SoC
+- Added enum for RZ/V2H as suggested by Krzysztof as the list
+  will grow in the future (while adding RZ/G3E SoC).
+- Added Reviewed-by tag from Biju and Krzysztof.
+- Replaced individual flags as reset flag
+- Dropped unused macros
+- Added missing LPCLK flag to rzvv2h info
+- Dropped FCP and VSP documentation patch and sent them separately
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (9):
+  drm: renesas: rz-du: mipi_dsi: Add min check for VCLK range
+  drm: renesas: rz-du: mipi_dsi: Simplify HSFREQ calculation
+  drm: renesas: rz-du: mipi_dsi: Use VCLK for HSFREQ calculation
+  drm: renesas: rz-du: mipi_dsi: Add OF data support
+  drm: renesas: rz-du: mipi_dsi: Make "rst" reset control optional for
+    RZ/V2H(P)
+  drm: renesas: rz-du: mipi_dsi: Use mHz for D-PHY frequency
+    calculations
+  drm: renesas: rz-du: mipi_dsi: Add feature flag for 16BPP support
+  drm: renesas: rz-du: mipi_dsi: Add dphy_late_init() callback for
+    RZ/V2H(P)
+  drm: renesas: rz-du: mipi_dsi: Add function pointers for configuring
+    VCLK and mode validation
+
+ .../gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c    | 151 +++++++++++++-----
+ .../drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h   |   2 -
+ 2 files changed, 114 insertions(+), 39 deletions(-)
+
 -- 
-2.47.1
+2.49.0
 
