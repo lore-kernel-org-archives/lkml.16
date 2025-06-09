@@ -1,229 +1,222 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9500C3597B;
-	Mon,  9 Jun 2025 17:31:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B2328F1
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 17:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749490286; cv=none; b=dhcK/nqs8d21I6O5bI9mpK31IvDyUeVWraBuo0CuaugsVOlZ2tdF2gj5osk8w+tPMP3HHotMqiWtl6dV4n2OqsIhCIZrbkzFb30xFM+YkLzoxxtnKp+D9Z0jrB0bK3BylVkhodBb038d04olUYUIjMsCuDsuK45cvv0Qhzca9C0=
+	t=1749490371; cv=none; b=nRoNVpPhwK4euOGeYrhtB6J5AKo2hMpkybYQepaiW+kkb/alqBecevUcUunULSfXIfDX163S6GAdngjv2Tzy9ohSGqIQObTepCk0s+QF3+nkrRsVCBXDnPMaiggxYZx5F6ZlSntWWzpZbnKRsZsnxZbGXl79wcS6oBGThoyok5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749490286; c=relaxed/simple;
-	bh=8LBJLyj0kgr4c05PRceO/pKC3cvZqpYuU4UKLWl6TZA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kPkX9lp0PBDRv0isXnwsBibJ0WRw9ojgcDG4LbiGv9QcXE69hKmdgMK+HqaNjYnoKXvZhA1Atz3DnR/9YK38qJn9G0bgVXwUEq6X/q5XoV7PMerTSWpLt9WTjxZU+IEo23IG+9E8NstXHGUsoRO4FlEQCG0I220My1NqD+5VQY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PgvxpeAp; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749490371; c=relaxed/simple;
+	bh=iPUN+2MWcAibV/IGuTagW72ERAA5MSRFKTTrVNl4eyA=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=oZcZ9pfPCCOKTdTnsowdPBgod9KQCDhs4bpPifPjvXV7DRfuk5ZEhhvazCr1WrdlkVgxsLAQ0utO7WZHNwt2DXd4r3R+ih13G4gTOUMUWudkQ++IFMRh7LhgQL+NkmnBprNONQnqJFZEayOR2obQ3Xyta9PXrEDdNdjpMW5FMhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wxCSKI9O; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PgvxpeAp"
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-53082f1ac34so1348428e0c.3;
-        Mon, 09 Jun 2025 10:31:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wxCSKI9O"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a361b8a664so3828137f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 10:32:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749490283; x=1750095083; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=v0Qu66z7kDW3js03KQPZ0HZb8QpcE1+x1gXTQ8PQnaU=;
-        b=PgvxpeApqp67C7bN8eeiv94rxHScde6hMQvz2XZYeFIacPXfNtOVFGCLuZ5XjebKUa
-         M52u4JkMTyY9uRlZlJjmAac0RgYLxxF3JO4UxlGipguvcSlmucYLW/iE5zGthQVBz/bZ
-         F6U/td8CXYbHW2bsBhEO1pHHEDngcJUMANKCrl8wjuCGoxfw0Q3Hirwcce09siI8wBHm
-         WtEDxAQarK5Fg45wcQ5ARI6aYqULgQI72dN0hlAM2HaZ0Wkl1WLVAhmJezjj+4pzvoB6
-         1KJ31ZoFxRSiklelF40rR6mFG0gyJSPUrysDy8b92CATCgNRFjxMHNHVyBOl5mAZQlEf
-         z0Kg==
+        d=linaro.org; s=google; t=1749490368; x=1750095168; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4BbCIdJzZyZ85FWpyBI56Lx/NGpTnhQVTUu7xBDJfi0=;
+        b=wxCSKI9OWouKZa+dGDlDOw6yNKg1tBq3W/Z+NMYHDCuZPL7HwjWqGs9JK6K5rUhk65
+         ymMzXKWNkL8tZx2XM0ZLcHpR+UMRPaI//rXnfq2BPSSVCiJV7xV3sqy0uYHdWJSfvtQ0
+         YWOTAu3khLv4LWPyAE8J6boz1YSkYbnnwzx7xSJz/VXvl6bIobyBbxolTFpfpDvPzG8J
+         vhAnlkC/S/R8lCKRGLv9iXwSqQboCy7eHXDE0uPdqmb+MGXr4ow01CKhWxaMqE0NmXfH
+         +6hD4MocnpL9FjD/UOaQBLlnCgdcPAaM3KUF73IRWVarE86hPU7bP7jpgocc3rWkbveY
+         LM4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749490283; x=1750095083;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v0Qu66z7kDW3js03KQPZ0HZb8QpcE1+x1gXTQ8PQnaU=;
-        b=SY9sPR206OFCQVeNhOA9ytiZhWNpgeCCf4hazBE97umfWYlIEZorSQVuibwY2/wy99
-         GjlTKrUtQS0Qajhaa4K4aHqOC3EV1iu4J37dXCfaLBq6lfDmGN4Ih1gsmf1KDZNV2F0G
-         I3xoNgOZzhyXcnNFZ3ZZW4sqQDhxsluzx514x/dJb4kULNS+0aH0cNHzdr7sz7APKkNJ
-         e/izk8lbEJoyabCOTa6qQq7mkSNKoGrB91kbq7h0UuzP3lh5Qyc5c57rNElGLBKn7klN
-         fxw+/o45KByx1j7oqpERItRhH7dSWaI31hPZQEaAw8f63vjyoPSSdJhFLaMC+osxHhux
-         BM5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUPu0EeGPrgJ4b0Mc+BWLoJDvLiiDDtf7omj9CDJ4HwHxQbRuurVQ/6Ih0IVXrwd3AAd+urjEGq8JU=@vger.kernel.org, AJvYcCVlv+Se5w+1AQpyiqvsz2c91rEh9BqARbd1B6hJTyE9lyLZjKpaPV5ZTIDbLynmEFCv+sn3sXJTZjLLLZc=@vger.kernel.org, AJvYcCX/uTjYHuM91aegToey7JgsripJCJiqG14BZX/vi1la56ozMq9rKTrAQBSKKN6akxhAyhCPeoaEYw4Ea0Zkln4OGw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKD5ljoIQnrnHj0EeA7Bk5MSVI7h3cqX/VLZuyF5aRPkvl7Dge
-	0X892W/ya8eQTu6DvdNwWlXaIZVlFFf+0TTQFzfIvJQ0D/sNYqTA+zan
-X-Gm-Gg: ASbGncsuGDX+t8yLYGcngynCVa1GFiOOPahL7vXwDw/iBjQIoG6wp728JxgbvrpCliQ
-	c8iTSaYTOuxR6RzeX0kL1F+FMOLW+FXdFrZ9VlseTmbjjxhW/hNDjNpusK1adaKCN3/dl5fbqr+
-	5D+pwHwPu7M+BgtTSBpppNM1eJh7ak5bMwx1AFyY+Y6SEx1ZiVKQRUFh3dh5d4WSoC+c1N13mZL
-	MXTbxzID7n40nT6sdIvOsjEQ+U1/BWZANX1bVwEkSE+tI294Xs95oea1LoEl/D7X/uRTkhQZ98c
-	A2SD/v8cm7bOA9jZFx9lMRTyp4atHRQzlsvCVaKuGz/pvug8QQ==
-X-Google-Smtp-Source: AGHT+IGzoebj1QMPet5l8I9qWvt9vrbw2pGLKm4WGcWKCZt5wa18t6jdZYC5Lc1lX0z+RxP/znejvw==
-X-Received: by 2002:a05:6122:8d1:b0:52b:789:2d0 with SMTP id 71dfb90a1353d-530e47ed0a2mr11738050e0c.5.1749490282233;
-        Mon, 09 Jun 2025 10:31:22 -0700 (PDT)
-Received: from hiago-nb ([67.159.246.222])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53113abd74bsm32564e0c.17.2025.06.09.10.31.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 10:31:21 -0700 (PDT)
-Date: Mon, 9 Jun 2025 14:31:15 -0300
-From: Hiago De Franco <hiagofranco@gmail.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-	"linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Hiago De Franco <hiago.franco@toradex.com>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	"Iuliana Prodan (OSS)" <iuliana.prodan@oss.nxp.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v4 3/3] remoteproc: imx_rproc: detect and attach to
- pre-booted remote cores
-Message-ID: <20250609173115.qecc2noswkcgr3hm@hiago-nb>
-References: <20250602131906.25751-1-hiagofranco@gmail.com>
- <20250602131906.25751-4-hiagofranco@gmail.com>
- <PAXPR04MB84594F9ABDF0728D9A71FAFE886CA@PAXPR04MB8459.eurprd04.prod.outlook.com>
+        d=1e100.net; s=20230601; t=1749490368; x=1750095168;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=4BbCIdJzZyZ85FWpyBI56Lx/NGpTnhQVTUu7xBDJfi0=;
+        b=C3YMa+5VQ5AjnfeRn2XYwneuQp6mc/B0l1puYZHkdfiOqKkv3r2umRZDpp7SrCAkrZ
+         O5fA4g6RLMo3rCK6Gv62UFozLyt7+uYgsjidAt0khbozTAG74klBOFy4qY1JhvB1DFCJ
+         PHuU+x0nE+M9q1opdQkdjLkbHwLoh21ylnl3ANOkPHSR+aHLEgcA0fcMPdu+Z9/vRqvI
+         +2HqZLXkB7Ib6fjfhp+5e++rDEJ1eBqXmTaBkJAe4Fmjs1CPG57rq67Su3ebe0g7F5Q+
+         Z6mrLKwoJhEcbe0i1YMmZF7uKuLDhvdOsGKhqEPwlHp/GkRf+lXrIAilkd7FFhw+ehIu
+         aB5g==
+X-Forwarded-Encrypted: i=1; AJvYcCVMQMNSpXkMGoIkFa4hixjlEN2llm5usTqnzBfoPGBWSvxJyzFZLc5q3hsE3v1x/uh/uVoeSHtdwydWomw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtBllzLTnev0opvquDEoqGhRm/XAeiv5oMA8UrEX1nBCWaG/WT
+	zsOcblFwM3S0u6r3qIlgoswHgTkAVoFaPirvSp8Q8NPYQAKzH6JzdEJsct1X6cPSXyw=
+X-Gm-Gg: ASbGncvLmYzygah7b9uwxaz2k1YQM8iEi8yHwLvwsyAOLYZLQ/qqsJCgZuSJC1cWd97
+	3D4eE+8Tj6vJIfXjUj2KKzrTvNLI8q7zsngmfrqqn2RCFzp8q1lnvm8dMmMZ16e5b1J5zkJmT+W
+	pIPILOUoKR1FP0WKn1FrwCzMo9eqAzumNoyFf+VeeFQaVwKMqdElLqoFcMU/U24MG15V43kfFzk
+	Xln9nvlGwtWWfM73nuR77zda5WvaL9Y6vWWFmgl6gp/KrePCml4yAKtUsmlGYCxUb7ifrhNHtOn
+	C4P6DlolXOur6TPDUwEk0u5cET5yzuFIFBOYfjIXUVjieONUIq4rpUtGFxgOTBUKBPCKvYpfzXS
+	y3rot63y5AbXUWPYiisrnbq6UxTkRJG/+w1Cqg+k=
+X-Google-Smtp-Source: AGHT+IFlc0NG2n981cyFCrz4MgVSGR17PfNowtJ5i79S8sXK9Fb6iKZwzfBlNb9fkVYZvsAslQTPhw==
+X-Received: by 2002:a05:6000:2dc7:b0:3a5:243c:6042 with SMTP id ffacd0b85a97d-3a53188d3eemr11058980f8f.2.1749490367903;
+        Mon, 09 Jun 2025 10:32:47 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:d049:de0c:efef:b94d? ([2a01:e0a:3d9:2080:d049:de0c:efef:b94d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532461211sm9876669f8f.86.2025.06.09.10.32.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Jun 2025 10:32:47 -0700 (PDT)
+Message-ID: <d05fa933-51b4-41c7-b590-77e94955f45e@linaro.org>
+Date: Mon, 9 Jun 2025 19:32:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PAXPR04MB84594F9ABDF0728D9A71FAFE886CA@PAXPR04MB8459.eurprd04.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v5 20/30] drm/msm/dpu: get rid of DPU_MDP_AUDIO_SELECT
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Vinod Koul <vkoul@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+References: <20250522-dpu-drop-features-v5-0-3b2085a07884@oss.qualcomm.com>
+ <20250522-dpu-drop-features-v5-20-3b2085a07884@oss.qualcomm.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250522-dpu-drop-features-v5-20-3b2085a07884@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 04, 2025 at 03:19:52AM +0000, Peng Fan wrote:
-> > Subject: [PATCH v4 3/3] remoteproc: imx_rproc: detect and attach to
-> > pre-booted remote cores
-> > 
-> > From: Hiago De Franco <hiago.franco@toradex.com>
-> > 
-> > When the remote core is started before Linux boots (e.g., by the
-> > bootloader), the driver currently is not able to attach because it only
-> > checks for cores running in different partitions. If the core was kicked
-> > by the bootloader, it is in the same partition as Linux and it is already
-> > up and running.
-> > 
-> > This adds power mode verification through dev_pm_genpd_is_on(),
-> > enabling the driver to detect when the remote core is already running
-> > and properly attach to it if all the power domain devices are on.
-> > 
-> > To accomplish this, we need to avoid passing any attach_data or flags
-> > to dev_pm_domain_attach_list(), letting the platform device become a
-> > consumer of the power domain provider. With that the current power
-> > state of the genpds will not change, allowing the detection of the
-> > remote core power state.
-> > 
-> > We enable and sync the device runtime PM during probe to make sure
-> > the power domains are correctly managed when the core is controlled
-> > by the kernel.
-> > 
-> > Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
-> > ---
-> > v4: Changed to use the new dev_pm_genpd_is_on() function instead,
-> > as suggested by Ulf. This will now get the power status of the two
-> > remote cores power domains to decided if imx_rpoc needs to attach or
-> > not. In order to do that, pm_runtime_enable() and
-> > pm_runtime_get_sync() were introduced and pd_data was removed.
-> > v3: Unchanged.
-> > v2: Dropped unecessary include. Removed the imx_rproc_is_on
-> > function, as suggested.
-> > v1:
-> > ---
-> >  drivers/remoteproc/imx_rproc.c | 29 ++++++++++++++++++++++++-----
-> >  1 file changed, 24 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/remoteproc/imx_rproc.c
-> > b/drivers/remoteproc/imx_rproc.c index
-> > 627e57a88db2..6f9680142704 100644
-> > --- a/drivers/remoteproc/imx_rproc.c
-> > +++ b/drivers/remoteproc/imx_rproc.c
-> > @@ -18,6 +18,7 @@
-> >  #include <linux/of_reserved_mem.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/pm_domain.h>
-> > +#include <linux/pm_runtime.h>
-> >  #include <linux/reboot.h>
-> >  #include <linux/regmap.h>
-> >  #include <linux/remoteproc.h>
-> > @@ -890,10 +891,8 @@ static int imx_rproc_partition_notify(struct
-> > notifier_block *nb,  static int imx_rproc_attach_pd(struct imx_rproc
-> > *priv)  {
-> >  	struct device *dev = priv->dev;
-> > -	int ret;
-> > -	struct dev_pm_domain_attach_data pd_data = {
-> > -		.pd_flags = PD_FLAG_DEV_LINK_ON,
-> > -	};
-> > +	int ret, i;
-> > +	bool detached = true;
-> > 
-> >  	/*
-> >  	 * If there is only one power-domain entry, the platform driver
-> > framework @@ -902,7 +901,22 @@ static int
-> > imx_rproc_attach_pd(struct imx_rproc *priv)
-> >  	if (dev->pm_domain)
-> >  		return 0;
-> > 
-> > -	ret = dev_pm_domain_attach_list(dev, &pd_data, &priv-
-> > >pd_list);
-> > +	ret = dev_pm_domain_attach_list(dev, NULL, &priv->pd_list);
-> > +	/*
-> > +	 * If all the power domain devices are already turned on, the
-> > remote
-> > +	 * core is already up when the kernel booted (e.g. kicked by
-> > the
-> > +	 * bootloader). In this case attach to it.
-> > +	 */
-> > +	for (i = 0; i < ret; i++) {
-> > +		if (!dev_pm_genpd_is_on(priv->pd_list->pd_devs[i])) {
-> > +			detached = false;
-> > +			break;
-> > +		}
-> > +	}
-> > +
-> > +	if (detached)
-> > +		priv->rproc->state = RPROC_DETACHED;
-> > +
-> >  	return ret < 0 ? ret : 0;
-> >  }
-> > 
-> > @@ -1146,6 +1160,11 @@ static int imx_rproc_probe(struct
-> > platform_device *pdev)
-> >  		}
-> >  	}
-> > 
-> > +	if (dcfg->method == IMX_RPROC_SCU_API) {
-> > +		pm_runtime_enable(dev);
-> > +		pm_runtime_get_sync(dev);
+On 22/05/2025 21:03, Dmitry Baryshkov wrote:
+> From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > 
-> Need put and disable in imx_rproc_remove.
+> Continue migration to the MDSS-revision based checks and replace
+> DPU_MDP_AUDIO_SELECT feature bit with the core_major_ver == 4 ||
+> core_major_ver == 5 check.
 > 
-> BTW: Has this patchset tested with M4 in a separate partition,
-> saying M4 image packed in flash.bin?
-
-Sorry for the delay.
-
-I tested it now and there must be something missing on my U-Boot:
-
-Disable imx8x-cm4 rsrc 278 not owned
-Disable imx8x-cm4 rsrc 297 not owned
-
-It removes my nodes from the DT before starting the kernel, so I cannot
-attach. Do you know what should I do in this case?
-
-But apart from that, at least the imx-rproc does not crash or anything.
-
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
+>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h  | 1 -
+>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_1_sdm670.h  | 1 -
+>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h  | 1 -
+>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h | 1 -
+>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h  | 1 -
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h          | 1 -
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c              | 3 ++-
+>   7 files changed, 2 insertions(+), 7 deletions(-)
 > 
-> Regards,
-> Peng
-> > +	}
-> > +
-> >  	ret = rproc_add(rproc);
-> >  	if (ret) {
-> >  		dev_err(dev, "rproc_add failed\n");
-> > --
-> > 2.39.5
-> > 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h
+> index 3e66feb3e18dcc1d9ed5403a42989d97f84a8edc..72a7257b4d7ba5bfe89ec76bac19550e023a2b50 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h
+> @@ -23,7 +23,6 @@ static const struct dpu_caps sdm845_dpu_caps = {
+>   static const struct dpu_mdp_cfg sdm845_mdp = {
+>   	.name = "top_0",
+>   	.base = 0x0, .len = 0x45c,
+> -	.features = BIT(DPU_MDP_AUDIO_SELECT),
+>   	.clk_ctrls = {
+>   		[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
+>   		[DPU_CLK_CTRL_VIG1] = { .reg_off = 0x2b4, .bit_off = 0 },
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_1_sdm670.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_1_sdm670.h
+> index 3a60432a758a942eb1541f143018bd466b2bdf20..ce169a610e195cbb6f0fee1362bcaaf05df777cb 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_1_sdm670.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_1_sdm670.h
+> @@ -11,7 +11,6 @@
+>   static const struct dpu_mdp_cfg sdm670_mdp = {
+>   	.name = "top_0",
+>   	.base = 0x0, .len = 0x45c,
+> -	.features = BIT(DPU_MDP_AUDIO_SELECT),
+>   	.clk_ctrls = {
+>   		[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
+>   		[DPU_CLK_CTRL_VIG1] = { .reg_off = 0x2b4, .bit_off = 0 },
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h
+> index e07c2cc4188bb12e2253068ca8666ce9364c69c1..23a3a458dd5c260399a42e5f4d4361b3c4e82c4f 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h
+> @@ -23,7 +23,6 @@ static const struct dpu_caps sm8150_dpu_caps = {
+>   static const struct dpu_mdp_cfg sm8150_mdp = {
+>   	.name = "top_0",
+>   	.base = 0x0, .len = 0x45c,
+> -	.features = BIT(DPU_MDP_AUDIO_SELECT),
+>   	.clk_ctrls = {
+>   		[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
+>   		[DPU_CLK_CTRL_VIG1] = { .reg_off = 0x2b4, .bit_off = 0 },
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
+> index b350dba28caed77e542d6a41ceac191a93e165a7..75f8f69123a4a6afe8234a9de21ce68b23c11605 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
+> @@ -23,7 +23,6 @@ static const struct dpu_caps sc8180x_dpu_caps = {
+>   static const struct dpu_mdp_cfg sc8180x_mdp = {
+>   	.name = "top_0",
+>   	.base = 0x0, .len = 0x45c,
+> -	.features = BIT(DPU_MDP_AUDIO_SELECT),
+>   	.clk_ctrls = {
+>   		[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
+>   		[DPU_CLK_CTRL_VIG1] = { .reg_off = 0x2b4, .bit_off = 0 },
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h
+> index 27c71a8a1f31921e5e1f4b6b15e0efc25fb63537..6b895eca2fac53505f7a1d857d30bb8a5d23d4c8 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h
+> @@ -23,7 +23,6 @@ static const struct dpu_caps sm7150_dpu_caps = {
+>   static const struct dpu_mdp_cfg sm7150_mdp = {
+>   	.name = "top_0",
+>   	.base = 0x0, .len = 0x45c,
+> -	.features = BIT(DPU_MDP_AUDIO_SELECT),
+>   	.clk_ctrls = {
+>   		[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
+>   		[DPU_CLK_CTRL_VIG1] = { .reg_off = 0x2b4, .bit_off = 0 },
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+> index d3a7f46488a21e81a24a9af5071a9a7f5f48cdac..9ba9e273f81ab1966db1865b4ce28f8c18f750b8 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+> @@ -38,7 +38,6 @@
+>   enum {
+>   	DPU_MDP_PANIC_PER_PIPE = 0x1,
+>   	DPU_MDP_10BIT_SUPPORT,
+> -	DPU_MDP_AUDIO_SELECT,
+>   	DPU_MDP_MAX
+>   };
+>   
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c
+> index c49a67da86b0d46d12c32466981be7f00519974c..5c811f0142d5e2a012d7e9b3a918818f22ec11cf 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c
+> @@ -280,7 +280,8 @@ static void _setup_mdp_ops(struct dpu_hw_mdp_ops *ops,
+>   	if (mdss_rev->core_major_ver >= 5)
+>   		ops->dp_phy_intf_sel = dpu_hw_dp_phy_intf_sel;
+>   
+> -	if (cap & BIT(DPU_MDP_AUDIO_SELECT))
+> +	if (mdss_rev->core_major_ver == 4 ||
+> +	    mdss_rev->core_major_ver == 5)
+>   		ops->intf_audio_select = dpu_hw_intf_audio_select;
+>   }
+>   
 > 
 
-Best Regards,
-Hiago.
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
