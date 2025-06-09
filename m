@@ -1,127 +1,150 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D49FC2EF
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 06:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C641A7AE3;
+	Mon,  9 Jun 2025 06:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749449559; cv=none; b=BZiFbVckd5jAO5yLWytg4mxzq7X0BeYRmw7/Ob0KTi0SNu1+KOb6g/ib5Y5kpRzwWz9kqzkesBpX7NZKQLM33IQgVy3gUnnoLrAhLfEBjgdhaa+Ci129jStalpWitHGnB9fN21g7c05gQTxd1uEBwaB/tJep0QWJgAVu1tAmXKU=
+	t=1749450226; cv=none; b=bMbevv++F9K037wFwwG5xuj9moa3yRmJ/mNFVQzWPgMoWN2+9tuuKBEDCsHddXMg+BoqHJLoClpP1+6OWXfXuLKZsVkw3/fQJisvgMbIcYlmw+jpGsSUEQ8aNkgmuAFZyeFDE+1VNiDoNsOJb8R2Onr6+XBeBMGfXFDbzYzElCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749449559; c=relaxed/simple;
-	bh=hC7sYjRTRprvhqWeyddKYr1R75JwHa16GRXz1WGFPCA=;
+	s=arc-20240116; t=1749450226; c=relaxed/simple;
+	bh=XvsNeIKAvfYxeWu94vpzujuaP/jIFZurJxIpc+BHVpI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MVjjZM3861NK1SRAya7+QU2vJ2BLQedlzDLrwAY7G6Snp8nv/ekKcIiYqVmau0G8WivJi7EllW1q8pmsM9bBTHp27ZtdjsipImLYVu8CWG1iazAVkeAGst1bDUzZgGH4nTDa18bXBSCjfD/lJ+/gnQGnUUf9BRUyBqIUMp5mIpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=HkI0tmDf; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	 To:Cc:Content-Type; b=KvlrUc0a1+Cmj1vWXjQCjppfd4A6LDzLeu9Gtb1P6zKMFWnOlB4Qwwy+hN6c9bitqHQffQS8nJuJNR2R3fdl7ahmDm/UvIz9O48Q5QDS6kDzAHax4ZRSceRfMLa1xwHgYlJXKyEi3RcuU3sumpkvB1GaKOo7L9lPMk5erwxhb/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u06q4XRJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="HkI0tmDf"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5532f9ac219so4629321e87.1
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 23:12:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1749449555; x=1750054355; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QrTT2Ug0zbdaKyRxl6jBbSEjhgl8N2Elyqr8mo3YZs8=;
-        b=HkI0tmDf1zaAwVk2tV5DEWzZwI0X8AHf6QTikEWF+Im4kHdBPc0S7MghSGPMR8xoZF
-         62OQb+BcXlLmIMgPqGyNczQPs+BBLbWqJagIeECqHHYLiSKir7rCD/eg6vcAL3JoGRXw
-         cWhlupyCD31F5fNgfsTorQOdKg3nA9TkDfDht6YfaYVP8OYkMQmy8uaHoxONMQuMTZvf
-         X9ypvYIF4TuizkElbgOKINgqv8aNoYfcTRqgkCHzsvKknEuSGqfp641F9E09Lt+FHRzf
-         2DPKPcqU44NOaX/eyg+dLZiX+9+U2MDKiudcdxG4T8RRsfWdR8P6LYhWe/FXvSohtqCQ
-         q33Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749449555; x=1750054355;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QrTT2Ug0zbdaKyRxl6jBbSEjhgl8N2Elyqr8mo3YZs8=;
-        b=ZFIlMq8nPSTgAUu/KjY8JRO85wQbvU+aR2b8KvKEqW3njEY1uQgkPJ/+B2wxBnNcaO
-         UHmby2/qAoXw5Fgbf2F11C0YAVDz2YFPAhuKEzMuPlHvJLVGKSRzBEdGyxVWCH7qiRQA
-         JxD6smDQ8iTR6ZQ795dPeTRSUsOHn0jjbB4M5LYig4Uc7pmwbgShOs7I5vhckHdt4RHF
-         Zs0+rqvPYnY1uiDC7sux7aRRxAaBA4+EsiZ7pX+j+rbpTT99GGKunICK/f/yevj/UIV1
-         z2uVw6+y/PkNKyhceU6UPFYeS7iJZih3lQ3u34b2YeH24AQvF4XSB6YW6XiBTPic6IYd
-         eNyg==
-X-Forwarded-Encrypted: i=1; AJvYcCWWe3WMqsp/7I/6ekjfJokCpp+aBr7C1ymhscO/nW+bmCI6RXZAUV58a1qnswu2l97/Xm8SB7bg1cYqa5E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yww30SMG3weAZSP0JUukOTTo5iHC+18vMpVH6oT73eqUa7Cy6yJ
-	EryaxKEQH5cpVghgWXMRkATymRn2aKH+JI4YESoLMdR14P36Joc8s5LQ0+nSUZRDGMwdNU0kcqR
-	xMlddcnAtsqZ9PYiRsf5tTjw9t4bifxruycrnAdLoCA==
-X-Gm-Gg: ASbGnctcZkFq32oQw+2yFXvDKXZocVQt2N7MwAiO/mNsVSD+H5t6eZkynksmpbaI76M
-	kudTrxDxHaJtl6VKmMOQyGInA+nI931jsHj+gN1CDlOhBENCSQFhKb7bzk7knAPdnwDBaQ7dt/H
-	y8Uqo9Mgd3sHNS62f/Z79u+1znZmPqpUFgxg==
-X-Google-Smtp-Source: AGHT+IEECTtnbfpfpm1PCJ+0qNEPhUm+SPgQTf/zlmkXsjTkZrawcTxrDJFp5prLSUOiP9b4jKSeL0mzxrsjJjV1G9g=
-X-Received: by 2002:a05:6512:3e14:b0:553:2633:8a64 with SMTP id
- 2adb3069b0e04-55366bee0a6mr3224048e87.23.1749449555474; Sun, 08 Jun 2025
- 23:12:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u06q4XRJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33EE4C4CEEB;
+	Mon,  9 Jun 2025 06:23:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749450224;
+	bh=XvsNeIKAvfYxeWu94vpzujuaP/jIFZurJxIpc+BHVpI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=u06q4XRJsHiDSTpvSWKH2Z/pNiXWEcSmbPCXaa439I67fDtvI1Lu+hOcNanh8d2Te
+	 Vapusw1KEUaelaQBwKBQnURlQrhBoXtAJvC1oq0JccikGONLOHZKco6sEGS++gUpj0
+	 FfCPVQyrXrLjSVbEVSuxXCP7XhKV0cNBUGa++/QY1Is6lMWrGnA/q8wulLJrBfdLmv
+	 t91KB0QxgT5gxAjvAY2smUWLcoRsD8TU75ZEnHlJjGsOD6pfM42IJWLe/LahNSc+3C
+	 fB6jQpKo7Z9aClERVeLDNXZuTk3e6sAYfSekwc6dyaQCoN9IjKn8q9cTubf4AgudXA
+	 p3UYxbFglHIXw==
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6f8b2682d61so54550356d6.0;
+        Sun, 08 Jun 2025 23:23:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVSrSavIDfN8TLsPFAaU5spdJHOknUK+WDl80p76J8THNW8WXgpQ0+s9Szuy393/0OcMNRttLdCUSyveqrRrA==@vger.kernel.org, AJvYcCWnCpMdRPiQNOZsvaLy0uFb/lnqYJEd4ReJG8kTvqdPQubZvdimJoRBJKqsfrKfknKJeV5fHf6MPqaWUec0mZkAnY4VFiKZ@vger.kernel.org, AJvYcCX7qCrI0zYJZoZhwvYTdVyQL/+F8raYyPgUldMQpk/25uV+sNnoIQHv/6eDDxL218uonLw=@vger.kernel.org, AJvYcCXKtn7z5WeRl+Uk+bBEaews8YGeNbPqX8sB3riWoFjNWG4Fr9sBkprwN0a1lRlxK1NlJukowUGOQr5k977u@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOZbaXzf4cm7e/kGDVSikTPTKA8+Qh4MY8Z/B+GuC5bhp4qmOW
+	tLfu3pzSuEGGXTRSaxrbkpOaQd0lKWbVsYRkrKu/y2VL8jtK5cFBIAK/5v5Z282aiYsshpYCNQs
+	waC14hOOIm9O1/RHg/gV3Xl7PHNDG1k4=
+X-Google-Smtp-Source: AGHT+IFZKIPiFOniWwO3JrSqHR8EFdDF+J9SLDjDaY4aBJDBvQcgJT8acvrljCKcpwaPOgLoEBVL6sspTmqVKcaeq4w=
+X-Received: by 2002:ad4:5c42:0:b0:6f8:c773:26e with SMTP id
+ 6a1803df08f44-6fb10b73db7mr130561536d6.18.1749450223383; Sun, 08 Jun 2025
+ 23:23:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250525084710.1665648-1-apatel@ventanamicro.com>
- <20250525084710.1665648-5-apatel@ventanamicro.com> <aDV8E0TF_cYuoQ4A@smile.fi.intel.com>
-In-Reply-To: <aDV8E0TF_cYuoQ4A@smile.fi.intel.com>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Mon, 9 Jun 2025 11:42:23 +0530
-X-Gm-Features: AX0GCFvPnCJfNRo5uBNaPo8NZXrvaeCQeQ6i_dUaHiR22KPdWkZ9co7wy5KHhiQ
-Message-ID: <CAK9=C2XJ7+homTqdiYvYRv6J+4-gEM3jLmi3EpMDn=wZjkMOqA@mail.gmail.com>
-Subject: Re: [PATCH v4 04/23] RISC-V: Add defines for the SBI message proxy extension
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
-	Atish Patra <atish.patra@linux.dev>, Andrew Jones <ajones@ventanamicro.com>, 
-	Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250606213015.255134-1-song@kernel.org> <dbc7ee0f1f483b7bc2ec9757672a38d99015e9ae.1749402769@maowtm.org>
+In-Reply-To: <dbc7ee0f1f483b7bc2ec9757672a38d99015e9ae.1749402769@maowtm.org>
+From: Song Liu <song@kernel.org>
+Date: Sun, 8 Jun 2025 23:23:30 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7n_+u-M7bnUwX4Go0D+jj7oZZVopE1Bj5S_nHM1+8PZg@mail.gmail.com>
+X-Gm-Features: AX0GCFst8MCLxlAk4KkSJ6q3kT2d11EjKvEwczcwJRDGZGVDyszvu-NNmnxwdA8
+Message-ID: <CAPhsuW7n_+u-M7bnUwX4Go0D+jj7oZZVopE1Bj5S_nHM1+8PZg@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 0/5] bpf path iterator
+To: Tingmao Wang <m@maowtm.org>
+Cc: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, amir73il@gmail.com, 
+	andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net, 
+	eddyz87@gmail.com, gnoack@google.com, jack@suse.cz, jlayton@kernel.org, 
+	josef@toxicpanda.com, kernel-team@meta.com, kpsingh@kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, martin.lau@linux.dev, 
+	mattbobrowski@google.com, repnop@google.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 27, 2025 at 2:17=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Sun, Jun 8, 2025 at 10:34=E2=80=AFAM Tingmao Wang <m@maowtm.org> wrote:
+[...]
+> Hi Song, Christian, Al and others,
 >
-> On Sun, May 25, 2025 at 02:16:51PM +0530, Anup Patel wrote:
-> > Add defines for the new SBI message proxy extension which is part
-> > of the SBI v3.0 specification.
+> Previously I proposed in [1] to add ability to do a reference-less parent
+> walk for Landlock.  However, as Christian pointed out and I do agree in
+> hindsight, it is not a good idea to do things like this in non-VFS code.
 >
-> ...
+> However, I still think this is valuable to consider given the performance
+> improvement, and after some discussion with Micka=C3=ABl, I would like to
+> propose extending Song's helper to support such usage.  While I recognize
+> that this patch series is already in its v3, and I do not want to delay i=
+t
+> by too much, putting this proposal out now is still better than after thi=
+s
+> has merged, so that we may consider signature changes.
 >
-> > +/** RPMI message protocol specific MPXY attributes */
+> I've created a proof-of-concept and did some brief testing.  The
+> performance improvement attained here is the same as in [1] (with a "git
+> status" workload, median landlock overhead 35% -> 28%, median time in
+> landlock decreases by 26.6%).
 >
-> If you do a kernel-doc, do it properly.
+> If this idea is accepted, I'm happy to work on it further, split out this
+> patch, update the comments and do more testing etc, potentially in
+> collaboration with Song.
+>
+> An alternative to this is perhaps to add a new helper
+> path_walk_parent_rcu, also living in namei.c, that will be used directly
+> by Landlock.  I'm happy to do it either way, but with some experimentatio=
+n
+> I personally think that the code in this patch is still clean enough, and
+> can avoid some duplication.
+>
+> Patch title: path_walk_parent: support reference-less walk
+>
+> A later commit will update the BPF path iterator to use this.
+>
+> Signed-off-by: Tingmao Wang <m@maowtm.org>
+[...]
+>
+> -bool path_walk_parent(struct path *path, const struct path *root);
+> +struct parent_iterator {
+> +       struct path path;
+> +       struct path root;
+> +       bool rcu;
+> +       /* expected seq of path->dentry */
+> +       unsigned next_seq;
+> +       unsigned m_seq, r_seq;
 
-Okay, I will update.
+Most of parent_iterator is not really used by reference walk.
+So it is probably just separate the two APIs?
 
->
-> > +enum sbi_mpxy_rpmi_attribute_id {
-> > +     SBI_MPXY_RPMI_ATTR_SERVICEGROUP_ID =3D SBI_MPXY_ATTR_MSGPROTO_ATT=
-R_START,
-> > +     SBI_MPXY_RPMI_ATTR_SERVICEGROUP_VERSION,
->
-> > +     SBI_MPXY_RPMI_ATTR_MAX_ID,
->
-> Remove trailing comma for the terminator.
+Also, is it ok to make m_seq and r_seq available out of fs/?
 
-Okay, I will update.
+> +};
+> +
+> +#define PATH_WALK_PARENT_UPDATED               0
+> +#define PATH_WALK_PARENT_ALREADY_ROOT  -1
+> +#define PATH_WALK_PARENT_RETRY                 -2
+> +
+> +void path_walk_parent_start(struct parent_iterator *pit,
+> +                           const struct path *path, const struct path *r=
+oot,
+> +                           bool ref_less);
+> +int path_walk_parent(struct parent_iterator *pit, struct path *next_pare=
+nt);
+> +int path_walk_parent_end(struct parent_iterator *pit);
 
->
-> > +};
-> > +
-> > +/* Encoding of MSG_PROT_VER attribute */
-> > +#define SBI_MPXY_MSG_PROT_VER_MAJOR(__ver)   (((__ver) >> 16) & 0xffff=
-)
-> > +#define SBI_MPXY_MSG_PROT_VER_MINOR(__ver)   ((__ver) & 0xffff)
->
-> This can utilise GENAMSK() or even upper_16_bits()/lower_16_bits().
+I think it is better to make this rcu walk a separate set of APIs.
+IOW, we will have:
 
-Okay, I will update.
+int path_walk_parent(struct path *path, struct path *root);
 
-Regards,
-Anup
+and
+
+void path_walk_parent_rcu_start(struct parent_iterator *pit,
+                           const struct path *path, const struct path *root=
+);
+int path_walk_parent_rcu_next(struct parent_iterator *pit, struct path
+*next_parent);
+int path_walk_parent_rcu_end(struct parent_iterator *pit);
+
+Thanks,
+Song
+
+[...]
