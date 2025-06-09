@@ -1,66 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B357921B19D;
-	Mon,  9 Jun 2025 16:17:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF4021579F;
+	Mon,  9 Jun 2025 16:17:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749485841; cv=none; b=Z8LamcGgjF1N+L+bvnfbcz234csMqdF9wl+ugoUDdV+HdbOJXZ/HELRjflVPGOLS3bOh7bhdYgjJtlurf0bKabyCtO2x1SjfFVazQrxkep2fQweLTTV5fuwqLNkMKm1j+/KjRJSi87FnxSX+KF1wOrdpcej0OAd32DoWp58uAGM=
+	t=1749485875; cv=none; b=Ra5oBBNqNLjJ/X7LJddXhIP2yhfyZHR3/iyrcuSs8qamJ5CVX6FWDhaDOCayoGEDls0xjoHI+uUvhy/Z/NqhppKZPSjXxPmGf3do65Y551zoapf+9YOhgfUJpJ+W7WzjIdQdZxxN/YQeP3bz77hRQJdnahffLA2y6fnwPsfr7LM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749485841; c=relaxed/simple;
-	bh=n9Ait3IABmnTtRgTkIGp+AGKmxwXSE/eVvWWzvDAXVs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=OmIxCd5hPVGmjUM2EdMRa51py0nN2CwT8hnrp766wPWKGVTZIaj9JDPk8otn8Yk6AcWSNz7SBJAQFxeqVQNoll57XnFXDiey63swvjHklxHx4Lkr7+P2YNaqUIJp6OU2R2wUf7Kfmo1qR9xpsNQXZCjlmsiJLTnj0ad1ar+FNqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A6eWtTO/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749485875; c=relaxed/simple;
+	bh=VU0ezmyeQJzFia/lWEe/vXWrCvKWaOlWYTkg8Kfuy9U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QNtrr3s+uezYsMtfK3sjo6JxbWlXcQQnetPmZ8eFWu1Af9aCAUOqe8lTGMj8AhsrA74+ZbqoVjsK7I3FhLYk9rZhpcUQrBht2NeTkjFgp/PCFrfdZvQ5w0X6IZ/M+mrECg5YBoH+AecCcRDsCdk1661ZEg8OYwvoXznKzsbl8hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rlAIOFGc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A6eWtTO/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3E07C4CEEB;
-	Mon,  9 Jun 2025 16:17:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rlAIOFGc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58F85C4CEEB;
+	Mon,  9 Jun 2025 16:17:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749485841;
-	bh=n9Ait3IABmnTtRgTkIGp+AGKmxwXSE/eVvWWzvDAXVs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=A6eWtTO/ZYN5guMKGuB7Lum0KCQdFqj4/t2gyiYXZUc+5m1JtbZwG1zgAfmH+ylXr
-	 JSV2pFjnpHcdy3EyUL7SBSMbb1KJw76ITiKVuJXEQBelrfCy8/vEamX0whx7jR7GNG
-	 i6BpEf6dAtZ2imYfTDKXR3YyLZkn+BjdkkqDATucq7FnNCgZ6z2fZNrgsNUbrpQ7JW
-	 SL5H4ci6vt5W4UmcV60DQN57i+CkfmDB8xkEPGZ0kIGTtL4WSwnaoBYwnZlgwuBfGJ
-	 JR2+nxl+ZiX/asp1AK7dMWilySF3gE0vSzFd1CqqRv6/j6SlC0yAE1omc/u22b9uoF
-	 JCMvFDMmrdf2A==
-From: Vinod Koul <vkoul@kernel.org>
-To: linux-sound@vger.kernel.org, 
- Bard Liao <yung-chuan.liao@linux.intel.com>
-Cc: vinod.koul@linaro.org, linux-kernel@vger.kernel.org, 
- pierre-louis.bossart@linux.dev, bard.liao@intel.com
-In-Reply-To: <20250429122337.142551-1-yung-chuan.liao@linux.intel.com>
-References: <20250429122337.142551-1-yung-chuan.liao@linux.intel.com>
-Subject: Re: [PATCH] soundwire: update Intel BPT message length limitation
-Message-Id: <174948583955.818152.17551473337996284774.b4-ty@kernel.org>
-Date: Mon, 09 Jun 2025 21:47:19 +0530
+	s=k20201202; t=1749485875;
+	bh=VU0ezmyeQJzFia/lWEe/vXWrCvKWaOlWYTkg8Kfuy9U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rlAIOFGcbDC+m0wddJJr+b3+9hmh2x082s8zs/caxZPjEEPbXWrcsNF4PIm13ubwu
+	 bwoawW+9It7BSEVHTx8LJKONYvTQna6C09uW3FytqWrNPUucMyIK6FwUC90YbZCZDm
+	 6YORhIaKCKpDVjYQvNjJXI663IlhaOiFwaa8Mm4yoHagnwnXBlnWHDMYqZyDbDbqZY
+	 Pg2HMquPvSsUSTr7bJHZthfJVGW4fgCbA0Gw/E7L8vpeVxUViHjz9YF6mgCMxMK4Mq
+	 rrRLyR6OHckA1E0DpqE6PR5OKfv42YOVqxh81WJIDk+O3A4dTtDzclkgXOm2MJzSQL
+	 6znZHVTDn8Ccw==
+Date: Mon, 9 Jun 2025 17:17:50 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Ben Zong-You Xie <ben717@andestech.com>
+Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	alex@ghiti.fr, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, tglx@linutronix.de, daniel.lezcano@linaro.org,
+	prabhakar.mahadev-lad.rj@bp.renesas.com, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	tim609@andestech.com
+Subject: Re: [PATCH v5 0/8] add Voyager board support
+Message-ID: <20250609-twiddling-clamp-eaa0dd2b1cad@spud>
+References: <20250602060747.689824-1-ben717@andestech.com>
+ <20250606-booth-icky-b416c1827a43@spud>
+ <aEbOLztcBsKs84pn@atctrx.andestech.com>
+ <20250609-donut-oozy-4dcc8b8a292d@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="KEnw/+reIV1mgEnt"
+Content-Disposition: inline
+In-Reply-To: <20250609-donut-oozy-4dcc8b8a292d@spud>
 
 
-On Tue, 29 Apr 2025 20:23:37 +0800, Bard Liao wrote:
-> The limitation of "must be multiples of 32 bytes" does not fit the
-> requirement of current Intel platforms. Update it to meet the
-> requirement.
-> 
-> 
+--KEnw/+reIV1mgEnt
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks!
+On Mon, Jun 09, 2025 at 05:16:54PM +0100, Conor Dooley wrote:
+> On Mon, Jun 09, 2025 at 08:06:07PM +0800, Ben Zong-You Xie wrote:
+> > On Fri, Jun 06, 2025 at 05:00:06PM +0100, Conor Dooley wrote:
+> > > [EXTERNAL MAIL]
+> >=20
+> > > Date: Fri, 6 Jun 2025 17:00:06 +0100
+> > > From: Conor Dooley <conor@kernel.org>
+> > > To: Ben Zong-You Xie <ben717@andestech.com>
+> > > Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.e=
+du,
+> > >  alex@ghiti.fr, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.=
+org,
+> > >  tglx@linutronix.de, daniel.lezcano@linaro.org,
+> > >  prabhakar.mahadev-lad.rj@bp.renesas.com, devicetree@vger.kernel.org,
+> > >  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+> > >  tim609@andestech.com
+> > > Subject: Re: [PATCH v5 0/8] add Voyager board support
+> > >=20
+> > > On Mon, Jun 02, 2025 at 02:07:39PM +0800, Ben Zong-You Xie wrote:
+> > > > The Voyager is a 9.6=E2=80=9D x 9.6=E2=80=9D Micro ATX form factor =
+development board
+> > > > including Andes QiLai SoC. This patch series adds minimal device tr=
+ee
+> > > > files for the QiLai SoC and the Voyager board [1].
+> > > >=20
+> > > > Now only support basic uart drivers to boot up into a basic console=
+=2E Other
+> > > > features will be added later.
+> > > >=20
+> > > > [1] https://www.andestech.com/en/products-solutions/andeshape-platf=
+orms/qilai-chip/
+> > >=20
+> > > Ball is in your court now, after rc1 make a tree and get it in
+> > > linux-next, and then send a pr to soc@kernel.org with this new conten=
+t.
+> > > Perhaps the defconfig should go separately, I can take that one if you
+> > > want.
+> > >=20
+> > > Cheers,
+> > > Conor.
+> >=20
+> > Hi Conor,
+> >=20
+> > Thanks for your guidance on these patches. I will send a PR to
+> > soc@kernel.org as you suggested.
+> >=20
+> > For the defconfig patch, I'm happy for you to handle it. Just let me
+> > know if there's anything specific you'd like me to include.
+>=20
+> Okay, I picked it up on the basis that you'll send this all to Arnd for
+> 6.17
 
-[1/1] soundwire: update Intel BPT message length limitation
-      commit: 393350c1691f1cbf3a0436f2a12c2b4347c4e953
+Sorry, I think that was really poorly worded. I picked it up on the
+basis that you're going to send the other patches in the series to Arnd
+for 6.17.
 
-Best regards,
--- 
-~Vinod
+--KEnw/+reIV1mgEnt
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEcJLgAKCRB4tDGHoIJi
+0h0gAQDoR2UYOM0WmjHCTYmKE7o6YujCEbz5BvotuMzHNQnVwAEA0Tu9ckL5FowB
+Pxmih3qNPbs68Scaha+XM10tTZOe2A8=
+=xlgg
+-----END PGP SIGNATURE-----
+
+--KEnw/+reIV1mgEnt--
