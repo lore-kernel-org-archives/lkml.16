@@ -1,212 +1,201 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A3A49625
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 11:01:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3AFA17A2EF
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 11:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749466864; cv=none; b=LjtKbujOJKtvB8Cy/Qm6RHdYidnxf5HhiT5cMKMZPg2kb+CEvUUcBujDnEYjlfzlp7rwuxvAZOzC2wezFoeubi5nKbBTWkx7Yf1WKlCSljl7vI5eC6lmi+FSJO5xs+GE3XEGB7whIK3EBgkb1wyqkqafK8w7RhsmdRH8ZabxriI=
+	t=1749466896; cv=none; b=ntHnCeFR0UDIrluXrGuWf9Oc5SVU0Vuz63F0OTj2xwzG2/cljoKsyPeIISkjQDyF4mpPTsxPKhcP+pXwANyB5MGV3lpfhXPKib3Fbp2kYiALTWztCccHJ1XX0gmw4jTOtLun8q2tcA6zt6alxWYzZ+fNsR5zcEpyyDHkXWtCX28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749466864; c=relaxed/simple;
-	bh=rqS3Bm58vNRFabYVeSdoNkgNOF0B+PGk8fRjtMoS0ts=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S7Z5131NxyxHEigSVV6S32k9z5+leP5cSIxGGG/vEqks0DRoUvV68RSwG7ONW+lWWoKsIeN/1srelI4HkYL06PAfNKzrx9LzqvWZQ3/KyV/a1qa9QR5Vo47XblDIhdOzS0pwOv81mJOzrhfHns2dDLzjbU1jcL0zfP/nCJ5wGE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GgAQO5Gd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RaUrq8tV; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GgAQO5Gd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RaUrq8tV; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GgAQO5Gd";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RaUrq8tV";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GgAQO5Gd";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RaUrq8tV"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 867DC1F443;
-	Mon,  9 Jun 2025 11:01:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749466860; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AYDkissmsxsA6CZ2/OeDcVyhcRKbhFLuEAjl5FIP/C4=;
-	b=GgAQO5GddygkhIYveM6lNCArjjp734Wcs5dP1KYd4BQpFd6dSur5NCnJeg4FG11IZKW+89
-	segwXyPdglI1cCwzQzEVBCI5q4IdafGmjyIwfwY9kWEs8IuHCMNNieaq1uunWtiUwDdJLu
-	GToNpjkqp9kCHunIBchT5qHCXCbCBpE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749466860;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AYDkissmsxsA6CZ2/OeDcVyhcRKbhFLuEAjl5FIP/C4=;
-	b=RaUrq8tVarcHGkyzfrDfRtWMcIqJKoEs2FwkoTA87VIXWERbocthvYqqw7KITAKjnjXNKI
-	cHB97qUoci3xLKDQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749466860; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AYDkissmsxsA6CZ2/OeDcVyhcRKbhFLuEAjl5FIP/C4=;
-	b=GgAQO5GddygkhIYveM6lNCArjjp734Wcs5dP1KYd4BQpFd6dSur5NCnJeg4FG11IZKW+89
-	segwXyPdglI1cCwzQzEVBCI5q4IdafGmjyIwfwY9kWEs8IuHCMNNieaq1uunWtiUwDdJLu
-	GToNpjkqp9kCHunIBchT5qHCXCbCBpE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749466860;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AYDkissmsxsA6CZ2/OeDcVyhcRKbhFLuEAjl5FIP/C4=;
-	b=RaUrq8tVarcHGkyzfrDfRtWMcIqJKoEs2FwkoTA87VIXWERbocthvYqqw7KITAKjnjXNKI
-	cHB97qUoci3xLKDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 42B18137FE;
-	Mon,  9 Jun 2025 11:01:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ne9+Duy+RmgmNAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 09 Jun 2025 11:01:00 +0000
-Date: Mon, 09 Jun 2025 13:00:59 +0200
-Message-ID: <87frg96uxg.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Takashi Iwai <tiwai@suse.de>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-sound@vger.kernel.org,
-	Herve Codina <herve.codina@bootlin.com>,
-	Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2] ALSA: pcm: Convert multiple {get/put}_user to user_access_begin/user_access_end()
-In-Reply-To: <6fbbb13e-aedd-47ad-a58b-cc00e9ea138c@csgroup.eu>
-References: <d2609397eafc2b55ec1f44a3f30ccec00e0c7f6e.1749455639.git.christophe.leroy@csgroup.eu>
-	<87zfeh72sz.wl-tiwai@suse.de>
-	<6fbbb13e-aedd-47ad-a58b-cc00e9ea138c@csgroup.eu>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	s=arc-20240116; t=1749466896; c=relaxed/simple;
+	bh=sW/tuZS+zOkPGXhMcIMsU9CmOXZjhK5Sr/PFTnT/LY8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lLDHWgUV8CV4MlHMTnza0ePM2MlK8qbGMYtxLeoveI9JlAQu6hgGUuc1Mh1/Yz6YAhEDXsdlhwWzYWJBnqfjkPqZ1jGhJEpE1la3xRlpEJTAEudHIAm1kwIkc02pnY8kg8nxS1rJdf2QgMMZNn3R6Q9sf6fyo9VQMI5Ykon7ZsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F02C2150C;
+	Mon,  9 Jun 2025 04:01:13 -0700 (PDT)
+Received: from [10.1.39.162] (XHFQ2J9959.cambridge.arm.com [10.1.39.162])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C82543F59E;
+	Mon,  9 Jun 2025 04:01:29 -0700 (PDT)
+Message-ID: <b86971db-c326-46df-9553-d89cf5609a75@arm.com>
+Date: Mon, 9 Jun 2025 12:01:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -3.30
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
-X-Spam-Level: 
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] mm: Remove arch_flush_tlb_batched_pending() arch
+ helper
+Content-Language: en-GB
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ David Hildenbrand <david@redhat.com>, Rik van Riel <riel@surriel.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Harry Yoo <harry.yoo@oracle.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-mm@kvack.org
+References: <20250609103132.447370-1-ryan.roberts@arm.com>
+ <48375ad8-7461-446e-9002-8d326fba137b@lucifer.local>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <48375ad8-7461-446e-9002-8d326fba137b@lucifer.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 09 Jun 2025 12:02:00 +0200,
-Christophe Leroy wrote:
+On 09/06/2025 11:45, Lorenzo Stoakes wrote:
+> On Mon, Jun 09, 2025 at 11:31:30AM +0100, Ryan Roberts wrote:
+>> Since commit 4b634918384c ("arm64/mm: Close theoretical race where stale
+>> TLB entry remains valid"), all arches that use tlbbatch for reclaim
+>> (arm64, riscv, x86) implement arch_flush_tlb_batched_pending() with a
+>> flush_tlb_mm().
+>>
+>> So let's simplify by removing the unnecessary abstraction and doing the
+>> flush_tlb_mm() directly in flush_tlb_batched_pending(). This effectively
+>> reverts commit db6c1f6f236d ("mm/tlbbatch: introduce
+>> arch_flush_tlb_batched_pending()").
+>>
+>> Suggested-by: Will Deacon <will@kernel.org>
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 > 
+> Thanks, love to see an arch_*() helper go :)
 > 
-> 
-> Le 09/06/2025 à 10:10, Takashi Iwai a écrit :
-> > On Mon, 09 Jun 2025 10:00:38 +0200,
-> > Christophe Leroy wrote:
-> >> 
-> >> With user access protection (Called SMAP on x86 or KUAP on powerpc)
-> >> each and every call to get_user() or put_user() performs heavy
-> >> operations to unlock and lock kernel access to userspace.
-> >> 
-> >> To avoid that, perform user accesses by blocks using
-> >> user_access_begin/user_access_end() and unsafe_get_user()/
-> >> unsafe_put_user() and alike.
-> >> 
-> >> As an exemple, before the patch the 9 calls to put_user() at the
-> >> end of snd_pcm_ioctl_sync_ptr_compat() imply the following set of
-> >> instructions about 9 times (access_ok - enable user - write - disable
-> >> user):
-> >>      0.00 :   c057f858:       3d 20 7f ff     lis     r9,32767
-> >>      0.29 :   c057f85c:       39 5e 00 14     addi    r10,r30,20
-> >>      0.77 :   c057f860:       61 29 ff fc     ori     r9,r9,65532
-> >>      0.32 :   c057f864:       7c 0a 48 40     cmplw   r10,r9
-> >>      0.36 :   c057f868:       41 a1 fb 58     bgt     c057f3c0 <snd_pcm_ioctl+0xbb0>
-> >>      0.30 :   c057f86c:       3d 20 dc 00     lis     r9,-9216
-> >>      1.95 :   c057f870:       7d 3a c3 a6     mtspr   794,r9
-> >>      0.33 :   c057f874:       92 8a 00 00     stw     r20,0(r10)
-> >>      0.27 :   c057f878:       3d 20 de 00     lis     r9,-8704
-> >>      0.28 :   c057f87c:       7d 3a c3 a6     mtspr   794,r9
-> >> ...
-> >> 
-> >> A perf profile shows that in total the 9 put_user() represent 36% of
-> >> the time spent in snd_pcm_ioctl() and about 80 instructions.
-> >> 
-> >> With this patch everything is done in 13 instructions and represent
-> >> only 15% of the time spent in snd_pcm_ioctl():
-> >> 
-> >>      0.57 :   c057f5dc:       3d 20 dc 00     lis     r9,-9216
-> >>      0.98 :   c057f5e0:       7d 3a c3 a6     mtspr   794,r9
-> >>      0.16 :   c057f5e4:       92 7f 00 04     stw     r19,4(r31)
-> >>      0.63 :   c057f5e8:       93 df 00 0c     stw     r30,12(r31)
-> >>      0.16 :   c057f5ec:       93 9f 00 10     stw     r28,16(r31)
-> >>      4.95 :   c057f5f0:       92 9f 00 14     stw     r20,20(r31)
-> >>      0.19 :   c057f5f4:       92 5f 00 18     stw     r18,24(r31)
-> >>      0.49 :   c057f5f8:       92 bf 00 1c     stw     r21,28(r31)
-> >>      0.27 :   c057f5fc:       93 7f 00 20     stw     r27,32(r31)
-> >>      5.88 :   c057f600:       93 36 00 00     stw     r25,0(r22)
-> >>      0.11 :   c057f604:       93 17 00 00     stw     r24,0(r23)
-> >>      0.00 :   c057f608:       3d 20 de 00     lis     r9,-8704
-> >>      0.79 :   c057f60c:       7d 3a c3 a6     mtspr   794,r9
-> >> 
-> >> Note that here the access_ok() in user_write_access_begin() is skipped
-> >> because the exact same verification has already been performed at the
-> >> beginning of the fonction with the call to user_read_access_begin().
-> >> 
-> >> A couple more can be converted as well but require
-> >> unsafe_copy_from_user() which is not defined on x86 and arm64, so
-> >> those are left aside for the time being and will be handled in a
-> >> separate patch.
-> >> 
-> >> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> >> ---
-> >> v2: Split out the two hunks using copy_from_user() as unsafe_copy_from_user() is not implemented on x86 and arm64 yet.
-> > 
-> > Thanks for the patch.
-> > 
-> > The idea looks interesting, but the implementations with
-> > unsafe_get_user() leads to very ugly goto lines, and that's too bad;
-> > it makes the code flow much more difficult to follow.
-> > 
-> > I guess that, in most cases this patch tries to cover, we just use
-> > another temporary variable for compat struct, copy fields locally,
-> > then run copy_to_user() in a shot instead.
-> 
-> Thanks for looking.
-> 
-> I'll give it a try but I think going through a local intermediate will
-> be less performant than direct copy with unsafe_get/put_user().
+> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-Yes, but the code readability is often more important than minor
-optimizations unless it's in a hot path.
+Thanks!
 
+> 
+> Couple points below.
+> 
+>> ---
+>>  arch/arm64/include/asm/tlbflush.h | 11 -----------
+>>  arch/riscv/include/asm/tlbflush.h |  1 -
+>>  arch/riscv/mm/tlbflush.c          |  5 -----
+>>  arch/x86/include/asm/tlbflush.h   |  5 -----
+>>  mm/rmap.c                         |  2 +-
+>>  5 files changed, 1 insertion(+), 23 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+>> index aa9efee17277..18a5dc0c9a54 100644
+>> --- a/arch/arm64/include/asm/tlbflush.h
+>> +++ b/arch/arm64/include/asm/tlbflush.h
+>> @@ -322,17 +322,6 @@ static inline bool arch_tlbbatch_should_defer(struct mm_struct *mm)
+>>  	return true;
+>>  }
+>>
+>> -/*
+>> - * If mprotect/munmap/etc occurs during TLB batched flushing, we need to ensure
+>> - * all the previously issued TLBIs targeting mm have completed. But since we
+>> - * can be executing on a remote CPU, a DSB cannot guarantee this like it can
+>> - * for arch_tlbbatch_flush(). Our only option is to flush the entire mm.
+>> - */
+> 
+> Hm are we losing information here? I guess it's hard to know whewre to put
+> this though.
 
-thanks,
+The generic version of this comment exists above flush_tlb_batched_pending() in
+rmap.c.
 
-Takashi
+For the arm64-specific description of why we need to flush the whole mm, that's
+captured in Commit 4b634918384c ("arm64/mm: Close theoretical race where stale
+TLB entry remains valid"), although I accept that may not be the first place
+someone looks.
+
+I don't think we should be defining arch_ helpers just to provide a hook for
+some arch-specific comments though.
+
+> 
+>> -static inline void arch_flush_tlb_batched_pending(struct mm_struct *mm)
+>> -{
+>> -	flush_tlb_mm(mm);
+>> -}
+>> -
+>>  /*
+>>   * To support TLB batched flush for multiple pages unmapping, we only send
+>>   * the TLBI for each page in arch_tlbbatch_add_pending() and wait for the
+>> diff --git a/arch/riscv/include/asm/tlbflush.h b/arch/riscv/include/asm/tlbflush.h
+>> index 1a20dd746a49..eed0abc40514 100644
+>> --- a/arch/riscv/include/asm/tlbflush.h
+>> +++ b/arch/riscv/include/asm/tlbflush.h
+>> @@ -63,7 +63,6 @@ void flush_pud_tlb_range(struct vm_area_struct *vma, unsigned long start,
+>>  bool arch_tlbbatch_should_defer(struct mm_struct *mm);
+>>  void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
+>>  		struct mm_struct *mm, unsigned long start, unsigned long end);
+>> -void arch_flush_tlb_batched_pending(struct mm_struct *mm);
+>>  void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
+>>
+>>  extern unsigned long tlb_flush_all_threshold;
+>> diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
+>> index e737ba7949b1..8404530ec00f 100644
+>> --- a/arch/riscv/mm/tlbflush.c
+>> +++ b/arch/riscv/mm/tlbflush.c
+>> @@ -234,11 +234,6 @@ void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
+>>  	mmu_notifier_arch_invalidate_secondary_tlbs(mm, start, end);
+>>  }
+>>
+>> -void arch_flush_tlb_batched_pending(struct mm_struct *mm)
+>> -{
+>> -	flush_tlb_mm(mm);
+>> -}
+>> -
+>>  void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
+>>  {
+>>  	__flush_tlb_range(NULL, &batch->cpumask,
+>> diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+>> index e9b81876ebe4..00daedfefc1b 100644
+>> --- a/arch/x86/include/asm/tlbflush.h
+>> +++ b/arch/x86/include/asm/tlbflush.h
+>> @@ -356,11 +356,6 @@ static inline void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *b
+>>  	mmu_notifier_arch_invalidate_secondary_tlbs(mm, 0, -1UL);
+>>  }
+>>
+>> -static inline void arch_flush_tlb_batched_pending(struct mm_struct *mm)
+>> -{
+>> -	flush_tlb_mm(mm);
+>> -}
+>> -
+>>  extern void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
+>>
+>>  static inline bool pte_flags_need_flush(unsigned long oldflags,
+>> diff --git a/mm/rmap.c b/mm/rmap.c
+>> index fb63d9256f09..fd160ddaa980 100644
+>> --- a/mm/rmap.c
+>> +++ b/mm/rmap.c
+>> @@ -746,7 +746,7 @@ void flush_tlb_batched_pending(struct mm_struct *mm)
+>>  	int flushed = batch >> TLB_FLUSH_BATCH_FLUSHED_SHIFT;
+>>
+>>  	if (pending != flushed) {
+>> -		arch_flush_tlb_batched_pending(mm);
+>> +		flush_tlb_mm(mm);
+> 
+> I see that CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH is only implemented in
+> riscv (if !nommu), x86, arm64, and therefore we are only going to invoke
+> this for those arches which previously did the same anyway, so this is
+> safe.
+
+It's also the way it used to be done before arm64 joined the party and thought
+it could optimize by just issuing a DSB. I since discoved that the DSB approach
+is buggy so arm64 has now fallen back to flush_tlb_mm() so the reason for the
+original introduction of arch_flush_tlb_batched_pending() has gone.
+
+Thanks,
+Ryan
+
+> 
+> Kinda wish we could avoid this ugly #ifdef #else #endif pattern here in
+> mm/rmap.c but probably necessary in this case.
+> 
+>>  		/*
+>>  		 * If the new TLB flushing is pending during flushing, leave
+>>  		 * mm->tlb_flush_batched as is, to avoid losing flushing.
+>> --
+>> 2.43.0
+>>
+
