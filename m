@@ -1,102 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18E1155342;
-	Mon,  9 Jun 2025 07:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E595E280CD1;
+	Mon,  9 Jun 2025 07:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749455539; cv=none; b=LGHhgJIN44ntERxMrM6WZXSyHFcLbYbGI+e4nUKP+XL7rQOg7DDtD9i63VzhWQyBaJsUhn9t5lyhFhnuCz9J36g6NmCBrWp2KwtQTO+JJNAYa3T0iC1MrBTXyt9bg3r+8OQfvH5rfBPIsSZbX9yoZQEGSCnJ1mH8mfcysyM4FeQ=
+	t=1749455562; cv=none; b=G2biuE4cw9A4wkAYja2BKQKVJ6RtbJstvpv1Q6cIX2SfPwJyU9lyBJdO2g+UgNs773DQhlOUqFOR4BMHqT6u8vHZJgW+H5iQzStPg+NEYc4z9xo5LUekJ4uEFIGVzqDSQlMWaFOZeO56eHpny3wNWL5iae06jWHyJWYENMyuOnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749455539; c=relaxed/simple;
-	bh=BTR/+BDfpyqb4CQUH6yv9SYEkc+AI0IUKUwHqaIgIGc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jnhBgk+CJHLIHBrVys04Xm+ynOf+S49xrXQz0MBCDwfX1hoHbVkGKZgpcBVjPXteqqzMtkjttGQu/cAVkSa2G8+zohwkQ+ojN0kZgGto1KCKHK0gO5lYpibdHYhvpW3jgl6gbKmEw8QPrFftxLHzxRNrbBMPiDAgOXsE2doiB2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZHVe0TfS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749455562; c=relaxed/simple;
+	bh=IkiQA8mG2slR0j3r0Z++BM4voJUMrcSuWqIfqOH2mg4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=skb/IZkd7soGLz0ZGxC38101aBTclvZFf4QHXBHPgu4y5mwZFA33KyvSlovjyduN18rSTeiDG/zJ7Ys6KAbQe2RUBK1WhUfrRU3Fc/gltix5Or87ZwGiuseRcP1jJ7F200QilpXlXGWU5OnJpQml+nvIzLVDCQFXzT9DyBy3Kuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kLxVIuEj; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZHVe0TfS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51D55C4CEEF;
-	Mon,  9 Jun 2025 07:52:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749455538;
-	bh=BTR/+BDfpyqb4CQUH6yv9SYEkc+AI0IUKUwHqaIgIGc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZHVe0TfSTdBDOdv/NXfI90O+E7DsN3VJgpmW8qxET7Ad+1aD7J7NGHgAllTwb3LX8
-	 k+MBzDzhQ8vv+1EM+jYm1/o2QYHYDO8jRf7u4VF1NLUae8+RpE/4Nt2oMdcaEuAYLk
-	 sYG1CmMpwpTxsVhLH5rorlvHjdNygejTLWCsTEBu7O3sbNodmjmqQLaVrNzfZxaDNj
-	 wbiu0FZnYV0M1aOG6Wue8HbSAfnSwcIvBma34Ilr2VBWQeHLZ4mLLhJcfor5g+yx4k
-	 pYRixcOsTmB8j2hTFcT7VQy+r4pEP1C8d10ZODDP/Xm012dLR5pTrontxxvq+DDi1n
-	 yyvzFIjQXBL8Q==
-Date: Mon, 9 Jun 2025 09:52:15 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>, linux-arch@vger.kernel.org
-Subject: Re: [PATCH 00/15] Implement CONFIG_DEBUG_BUGVERBOSE_DETAILED=y, to
- improve WARN_ON_ONCE() output by adding the condition string
-Message-ID: <aEaSr7XkRT9icKZ7@gmail.com>
-References: <20250515124644.2958810-1-mingo@kernel.org>
- <20250522213944.5ba1eabc@pumpkin>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kLxVIuEj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749455561; x=1780991561;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=IkiQA8mG2slR0j3r0Z++BM4voJUMrcSuWqIfqOH2mg4=;
+  b=kLxVIuEj4YwYZ49otSNuSYM2KdAt/paguicvgH3iNVjMvKkt5lh4HYCB
+   1ao8mzQ0jlQ4n0/j8reAEsFTH3sI9uj1Ez9drAVihszzFhPDuVe4bRsrM
+   KcJtmqNp+Eq1dgEeCMdvn5x68HaBpJVDqGCdaW9EHPfcXZXgbnMTfFqF6
+   S4ppl0Rbb9yc7WY+PO1r+j8zHHEXQHI8qgBXUzo5ngS04SBFH6BsR09eo
+   vX5g9LymVyv5HC3wn6mRY1AhsuBX0jtX9tOHl7NiYyuy5F16s2Ru6megU
+   8vF13rqFWQ8NFTv/dCOMezyiDmv+WzkehezTUWup/VMR62K37UzFlMfjn
+   Q==;
+X-CSE-ConnectionGUID: CAAF4zfmTN6G7IRpXeYn3w==
+X-CSE-MsgGUID: it3ICS7DTueJuwOgo/x4vQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="51669300"
+X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
+   d="scan'208";a="51669300"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 00:52:40 -0700
+X-CSE-ConnectionGUID: NAXS59B8S1yeA/+TWC0mPA==
+X-CSE-MsgGUID: thVK/7QqSWuKSD7zQw6TWw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
+   d="scan'208";a="147374750"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.22])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 00:52:37 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Ike Panhc <ikepanhc@gmail.com>, Hans de Goede <hdegoede@redhat.com>, 
+ Rong Zhang <i@rong.moe>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, Eric Long <i@hack3r.moe>
+In-Reply-To: <20250525201833.37939-1-i@rong.moe>
+References: <20250525201833.37939-1-i@rong.moe>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: use usleep_range() for
+ EC polling
+Message-Id: <174945555231.2685.11066907868495600271.b4-ty@linux.intel.com>
+Date: Mon, 09 Jun 2025 10:52:32 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250522213944.5ba1eabc@pumpkin>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
+On Mon, 26 May 2025 04:18:07 +0800, Rong Zhang wrote:
 
-* David Laight <david.laight.linux@gmail.com> wrote:
-
-> On Thu, 15 May 2025 14:46:29 +0200
-> Ingo Molnar <mingo@kernel.org> wrote:
+> It was reported that ideapad-laptop sometimes causes some recent (since
+> 2024) Lenovo ThinkBook models shut down when:
+>  - suspending/resuming
+>  - closing/opening the lid
+>  - (dis)connecting a charger
+>  - reading/writing some sysfs properties, e.g., fan_mode, touchpad
+>  - pressing down some Fn keys, e.g., Brightness Up/Down (Fn+F5/F6)
+>  - (seldom) loading the kmod
 > 
-> > Changes in -v2:
-> > 
-> >  - Incorporated review feedback:
-> > 
-> >     - Make the expanded strings conditional on the new
-> >       CONFIG_DEBUG_BUGVERBOSE_DETAILED=y switch, to address concerns
-> >       about the +100K kernel size increase, disabled by default.
-> > 
-> >     - Expanded the Cc: fields
-> > 
-> >  - Rebased to v6.15-rc6
-> > 
-> > This tree can also be found at:
-> > 
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git WIP.core/bugs
-> > 
-> > Thanks,
-> > 
-> > 	Ingo
-> > 
-> > =========================>  
-> > Original -v1 announcement:
-> > 
-> > This series improves the current WARN_ON_ONCE() output, if
-> > the new CONFIG_DEBUG_BUGVERBOSE_DETAILED=y option is enabled,
-> > from:
-> > 
-> >   WARN_ON_ONCE(idx < 0 && ptr);
-> >   ...
-> > 
-> >   WARNING: CPU: 0 PID: 0 at kernel/sched/core.c:8511 sched_init+0x20/0x410
-> 
-> What happens if the condition contains #defines?
-> Does it output what is in the source file, or the (bloated) expanded text?
-> For instance:
-> 	WARN_ON_ONCE(min(foo, bar) < baz);
-> doesn't really want to show the expansion of min().
+> [...]
 
-I'm using the '#' 'stringizing' CPP token to stringify the expression, 
-which doesn't expand macros but turns macro arguments into string 
-literals:
 
-	WARNING: [ptr == 0 && (min(0,1) < 1)] kernel/sched/core.c:8509 at sched_init+0x20/0x410, CPU#0: swapper/0
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
 
-Thanks,
+The list of commits applied:
+[1/1] platform/x86: ideapad-laptop: use usleep_range() for EC polling
+      commit: 5808c34216954cd832bd4b8bc52dfa287049122b
 
-	Ingo
+--
+ i.
+
