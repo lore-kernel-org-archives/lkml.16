@@ -1,111 +1,210 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B9A220F5C;
-	Mon,  9 Jun 2025 20:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5685010E3;
+	Mon,  9 Jun 2025 20:47:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749501909; cv=none; b=UYckLEFi3dfDAEVfU/Q6RAOQeZ4PUz9HgJTTrru1xFBwMKuOgnFrqcH7x9Z8Zom01FYKX0uwheGVaWCSgJr2ZDo9/oYOQDGNqyrWBwh8GDiybPcnsOwCI27vWKNDPddaUgJpcdCnnsd/pzsiT8OWPGVlbpbONadF0RcWRw2H0SM=
+	t=1749502047; cv=none; b=PRpkUUzBrerVRDj6jOFCVNAe/f7MBcaXdZOSUwS8YZUuIEl/nSopJ3EFjPsZ7oYIL3d88PnuZG+d8Y4ecgwRQD5JmTCIrcg6TSs2gDfveuB6tdo2j1rsv8QaUCIkCA/ajswmyKW9fdQKWWID9eRV6Pj1YHVGN2pWCsCH3A99h4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749501909; c=relaxed/simple;
-	bh=jPj7Sjc0AlG78SlEVxbzLFkY+icJgot4jPJU8v9Hg64=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M0yLLSg5h0RoJ5I/o/OHmr6NNKVJhX8/Q1kdBAVNu8cbnGTByVzwGLt2Ku0uqTdGVXxDrhmu2FLucysZdM8VEp/0Bn9tcUo6cxCsFi5t/FccYIAVsY2Ysok9wBh606pI4J4nPaZdMeuyaa+E5YvT+RHDM6NhPNmj6EunOlmlhxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=O9dUXnOD; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1749502047; c=relaxed/simple;
+	bh=efwRt9AsjY6DCceMMyJwt6Pe2f2DQsUY58BN5JsAsLI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=sLxr7+Ygl8cs0T2hqDfVGTjtusztJ8Hr4/VBC/Q9vfCXrbUsYIG+7/Lqbe+kWHxRfio9sd3WEzGhOvnfpk1ExM4PXeK0/+AtKeMjkPGSSzgCaoyjiwLpM1DH9ZQdP7OIB7xHeZOMY98KvEdyjiDrYlLTp+ruQIn96Bbl5rQ+npk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dvJ80d6K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="O9dUXnOD"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B88CA44400;
-	Mon,  9 Jun 2025 20:45:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749501905;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SR2d9reP8TqJ3UfMOktGuMwu95S3n7zGli3lgi0UUmg=;
-	b=O9dUXnOD9YyA/wh8TMe9VcmiIPn+5MMmKcqUtv7n/HXwVsZBlk8SEbbuTTSsBHNVEpfTtQ
-	xPvkA94UOJJF6p6nYPgYx1gA7Ljdv7dZF1EuGP84P8VWRcQ2HHPpUQovBHzlBxY+NUI7jZ
-	S2+BVfM0x79jDSSnmEiHQJejDJBS2DU7VUBe+wJyYMCJ1lEkhN5xDkSLZwx5bbTHnYHCSi
-	Og85IJQ/z4rlELNony9HQr16gr726jcdlG6Rqat8y+fkfbFVP4ynbMPmQyzRphxRc0jTbh
-	L0wXVdAB0ebiFjq+SI3QQJetH5fkAO7u/A3EfNir102f4FvaUp2RoRDVFxeIKQ==
-Date: Mon, 9 Jun 2025 22:45:02 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, Andreas
- Kemnade <andreas@kemnade.info>, Kevin Hilman <khilman@baylibre.com>, Roger
- Quadros <rogerq@kernel.org>, Russell King <linux@armlinux.org.uk>, Bajjuri
- Praneeth <praneeth@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
- <broonie@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 4/5] arm: dts: omap: Add support for BeagleBone Green
- Eco board
-Message-ID: <20250609224502.1fce742c@kmaincent-XPS-13-7390>
-In-Reply-To: <20250609-helpful-immodest-0f195cdbcbf2@spud>
-References: <20250609-bbg-v2-0-5278026b7498@bootlin.com>
-	<20250609-bbg-v2-4-5278026b7498@bootlin.com>
-	<20250609-helpful-immodest-0f195cdbcbf2@spud>
-Organization: bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dvJ80d6K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 959B3C4CEEF;
+	Mon,  9 Jun 2025 20:47:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749502046;
+	bh=efwRt9AsjY6DCceMMyJwt6Pe2f2DQsUY58BN5JsAsLI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=dvJ80d6KkiJd9yaU/MEiSsorsnNPpEQGf4a/vsu0IvoRS1MUuU3I+9BVHNsNABTP8
+	 ctw1pPA1y4J2NAB3HJFohUI2L2gfwbvuIc+JadAOzGEjErTdE2K6Rgj5Z1eRcVPKw0
+	 HZGzi8NqNM4wJHDcLz+NVyIuBLqW2SAnCk+CHILFesW7YvCbOAl0HS2pKqLIe25XXb
+	 wIfSpDFnitCb0L1/DP+L5k1QumDzNibCqPdU8HiWt53elfrOOnuGnflP8Cx6bnpRRN
+	 ThZzNKphtrdsPnn3mrtsnQFm2UOauOGgqas4KMG9CpC9m5s8c6+dh1NT7/54AxehPB
+	 D+1Vs4+OyDi7g==
+Date: Mon, 9 Jun 2025 10:47:25 -1000
+From: Tejun Heo <tj@kernel.org>
+To: "David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>
+Cc: Eric Dumazet <edumazet@google.com>, David Ahern <dsahern@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jason Xing <kerneljasonxing@gmail.com>
+Subject: [PATCH RESEND net-next] net: tcp: tsq: Convert from tasklet to BH
+ workqueue
+Message-ID: <aEdIXQkxiORwc5v4@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdeljeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudelmeekheekjeemjedutddtmeelhegvvgemrggvugdvmeeitgeksgemudgsfegsnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkeehkeejmeejuddttdemleehvggvmegrvgguvdemiegtkegsmedusgefsgdphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudelpdhrtghpthhtoheptghonhhorheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhonhihsegrthhomhhiuggvrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvl
- hdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprggrrhhordhkohhskhhinhgvnhesihhkihdrfhhipdhrtghpthhtoheprghnughrvggrsheskhgvmhhnrgguvgdrihhnfhhopdhrtghpthhtohepkhhhihhlmhgrnhessggrhihlihgsrhgvrdgtohhm
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Le Mon, 9 Jun 2025 18:04:01 +0100,
-Conor Dooley <conor@kernel.org> a =C3=A9crit :
+The only generic interface to execute asynchronously in the BH context is
+tasklet; however, it's marked deprecated and has some design flaws. To
+replace tasklets, BH workqueue support was recently added. A BH workqueue
+behaves similarly to regular workqueues except that the queued work items
+are executed in the BH context.
 
-> On Mon, Jun 09, 2025 at 05:43:54PM +0200, Kory Maincent wrote:
-> > SeeedStudio BeagleBone Green Eco (BBGE) is a clone of the BeagleBone Gr=
-een
-> > (BBG). It has minor differences from the BBG, such as a different PMIC,
-> > a different Ethernet PHY, and a larger eMMC.
-> >=20
-> > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> > ---
-> >=20
-> > Changes in v2:
-> > - Used generic pmic node name.
-> > - Add regulator prefix to fixed regulator node name.
-> > - Add the compatible to omap.yaml binding
-> > ---
-> >  Documentation/devicetree/bindings/arm/ti/omap.yaml |   1 +
-> >  arch/arm/boot/dts/ti/omap/Makefile                 |   1 +
-> >  arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dts | 170
-> > +++++++++++++++++++++ 3 files changed, 172 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/arm/ti/omap.yaml
-> > b/Documentation/devicetree/bindings/arm/ti/omap.yaml index
-> > c43fa4f4af81..774c13157caa 100644 ---
-> > a/Documentation/devicetree/bindings/arm/ti/omap.yaml +++
-> > b/Documentation/devicetree/bindings/arm/ti/omap.yaml @@ -145,6 +145,7 @@
-> > properties:
-> >        - description: TI bone green variants based on TI AM335
-> >          items:
-> >            - enum:
-> > +              - ti,am335x-bone-green-eco
-> >                - ti,am335x-bone-green-wireless
-> >            - const: ti,am335x-bone-green
-> >            - const: ti,am335x-bone =20
->=20
-> Why is this hunk here?
+This patch converts TCP Small Queues implementation from tasklet to BH
+workqueue.
 
-Do you mean that the binding change should be in another patch?
+Semantically, this is an equivalent conversion and there shouldn't be any
+user-visible behavior changes. While workqueue's queueing and execution
+paths are a bit heavier than tasklet's, unless the work item is being queued
+every packet, the difference hopefully shouldn't matter.
 
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+My experience with the networking stack is very limited and this patch
+definitely needs attention from someone who actually understands networking.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: "David S. Miller" <davem@davemloft.net> (maintainer:NETWORKING [IPv4/IPv6])
+Cc: David Ahern <dsahern@kernel.org>
+Cc: Jakub Kicinski <kuba@kernel.org> (maintainer:NETWORKING [GENERAL])
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org (open list:NETWORKING [TCP])
+---
+ include/net/tcp.h     |  2 +-
+ net/ipv4/tcp.c        |  2 +-
+ net/ipv4/tcp_output.c | 36 ++++++++++++++++++------------------
+ 3 files changed, 20 insertions(+), 20 deletions(-)
+
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index dd78a1181031..89f3702be47a 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -324,7 +324,7 @@ extern struct proto tcp_prot;
+ #define TCP_DEC_STATS(net, field)	SNMP_DEC_STATS((net)->mib.tcp_statistics, field)
+ #define TCP_ADD_STATS(net, field, val)	SNMP_ADD_STATS((net)->mib.tcp_statistics, field, val)
+ 
+-void tcp_tasklet_init(void);
++void tcp_tsq_work_init(void);
+ 
+ int tcp_v4_err(struct sk_buff *skb, u32);
+ 
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 1baa484d2190..d085ee5642fe 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -4772,6 +4772,6 @@ void __init tcp_init(void)
+ 	tcp_v4_init();
+ 	tcp_metrics_init();
+ 	BUG_ON(tcp_register_congestion_control(&tcp_reno) != 0);
+-	tcp_tasklet_init();
++	tcp_tsq_work_init();
+ 	mptcp_init();
+ }
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index e3167ad96567..d11be6eebb6e 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -1049,15 +1049,15 @@ static unsigned int tcp_established_options(struct sock *sk, struct sk_buff *skb
+  * needs to be reallocated in a driver.
+  * The invariant being skb->truesize subtracted from sk->sk_wmem_alloc
+  *
+- * Since transmit from skb destructor is forbidden, we use a tasklet
++ * Since transmit from skb destructor is forbidden, we use a BH work item
+  * to process all sockets that eventually need to send more skbs.
+- * We use one tasklet per cpu, with its own queue of sockets.
++ * We use one work item per cpu, with its own queue of sockets.
+  */
+-struct tsq_tasklet {
+-	struct tasklet_struct	tasklet;
++struct tsq_work {
++	struct work_struct	work;
+ 	struct list_head	head; /* queue of tcp sockets */
+ };
+-static DEFINE_PER_CPU(struct tsq_tasklet, tsq_tasklet);
++static DEFINE_PER_CPU(struct tsq_work, tsq_work);
+ 
+ static void tcp_tsq_write(struct sock *sk)
+ {
+@@ -1087,14 +1087,14 @@ static void tcp_tsq_handler(struct sock *sk)
+ 	bh_unlock_sock(sk);
+ }
+ /*
+- * One tasklet per cpu tries to send more skbs.
+- * We run in tasklet context but need to disable irqs when
++ * One work item per cpu tries to send more skbs.
++ * We run in BH context but need to disable irqs when
+  * transferring tsq->head because tcp_wfree() might
+  * interrupt us (non NAPI drivers)
+  */
+-static void tcp_tasklet_func(struct tasklet_struct *t)
++static void tcp_tsq_workfn(struct work_struct *work)
+ {
+-	struct tsq_tasklet *tsq = from_tasklet(tsq,  t, tasklet);
++	struct tsq_work *tsq = container_of(work, struct tsq_work, work);
+ 	LIST_HEAD(list);
+ 	unsigned long flags;
+ 	struct list_head *q, *n;
+@@ -1164,15 +1164,15 @@ void tcp_release_cb(struct sock *sk)
+ }
+ EXPORT_SYMBOL(tcp_release_cb);
+ 
+-void __init tcp_tasklet_init(void)
++void __init tcp_tsq_work_init(void)
+ {
+ 	int i;
+ 
+ 	for_each_possible_cpu(i) {
+-		struct tsq_tasklet *tsq = &per_cpu(tsq_tasklet, i);
++		struct tsq_work *tsq = &per_cpu(tsq_work, i);
+ 
+ 		INIT_LIST_HEAD(&tsq->head);
+-		tasklet_setup(&tsq->tasklet, tcp_tasklet_func);
++		INIT_WORK(&tsq->work, tcp_tsq_workfn);
+ 	}
+ }
+ 
+@@ -1186,11 +1186,11 @@ void tcp_wfree(struct sk_buff *skb)
+ 	struct sock *sk = skb->sk;
+ 	struct tcp_sock *tp = tcp_sk(sk);
+ 	unsigned long flags, nval, oval;
+-	struct tsq_tasklet *tsq;
++	struct tsq_work *tsq;
+ 	bool empty;
+ 
+ 	/* Keep one reference on sk_wmem_alloc.
+-	 * Will be released by sk_free() from here or tcp_tasklet_func()
++	 * Will be released by sk_free() from here or tcp_tsq_workfn()
+ 	 */
+ 	WARN_ON(refcount_sub_and_test(skb->truesize - 1, &sk->sk_wmem_alloc));
+ 
+@@ -1212,13 +1212,13 @@ void tcp_wfree(struct sk_buff *skb)
+ 		nval = (oval & ~TSQF_THROTTLED) | TSQF_QUEUED;
+ 	} while (!try_cmpxchg(&sk->sk_tsq_flags, &oval, nval));
+ 
+-	/* queue this socket to tasklet queue */
++	/* queue this socket to BH workqueue */
+ 	local_irq_save(flags);
+-	tsq = this_cpu_ptr(&tsq_tasklet);
++	tsq = this_cpu_ptr(&tsq_work);
+ 	empty = list_empty(&tsq->head);
+ 	list_add(&tp->tsq_node, &tsq->head);
+ 	if (empty)
+-		tasklet_schedule(&tsq->tasklet);
++		queue_work(system_bh_wq, &tsq->work);
+ 	local_irq_restore(flags);
+ 	return;
+ out:
+@@ -2623,7 +2623,7 @@ static bool tcp_small_queue_check(struct sock *sk, const struct sk_buff *skb,
+ 	if (refcount_read(&sk->sk_wmem_alloc) > limit) {
+ 		/* Always send skb if rtx queue is empty or has one skb.
+ 		 * No need to wait for TX completion to call us back,
+-		 * after softirq/tasklet schedule.
++		 * after softirq schedule.
+ 		 * This helps when TX completions are delayed too much.
+ 		 */
+ 		if (tcp_rtx_queue_empty_or_single_skb(sk))
+-- 
+2.43.0
+
