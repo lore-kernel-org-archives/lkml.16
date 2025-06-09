@@ -1,249 +1,291 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC854A3C;
-	Mon,  9 Jun 2025 11:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C74170830
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 11:35:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749468870; cv=none; b=WUbbduowlDtKTSosjKN0zSDCjMx35oU8SrCeuTuAZMBKKffUAkH49mfAhZ5xruVwmFsUKT97cUw3aQZ7LbfFSa+qJOcq+oOKnRxcC88qJlfg8Kr5qJdj6BV2G5ucKev4jUX8PTmEjnshpgwJwcL/FqSeOqnx3tUBhAfQvrjKKFI=
+	t=1749468946; cv=none; b=C476gHPNuTUlbOiQlxmIKf686QGuXME7oDO0DYeQfMoIDaVYvBC757+LiwBdahIXzbKMUg1thca4fni+dZxZLVHT14LGXmKsZrkyGNKuKdRuX0KyMFU9juNU7a0XED4pi2y3tLUjEtQgTFJ45+4JJZs9Bvg3kno6R9a+ti1iGwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749468870; c=relaxed/simple;
-	bh=0IJBW8K+peopy2wk5BcVvEo1rjg8kgaWPUDz78nBcp4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oa6rBrk8RMsCmNHpC5HWi8X2V2ofGCh4P/bc0zoZRjUQCUMnMUrsl8EkV3UDXQTOCpP74e+wwD1ptWAu2ZWB4NxbhVDxmFCchNyg4pTjS03niJvLC093m7EhdlaE8v511257BNRyIvw44GhdrAM+OFwoa4GnNwtgCvvSBATuJGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pd+r8CfH; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749468946; c=relaxed/simple;
+	bh=1VAjJAYh1LVaQgA/g/otMLDmvQ+m1/2lSxQ0AYYCq0E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QPg+odFgUVVPxFEbP8Up54K1drTHLdBsgiCyo42taDtsYPEPDUIs53DH/CuqSeS+FppI2Kgu1oI2wwNAo4x4JExTUoEFH2pgjLCTiMtw0G8Tbfi/Uv/+yae99tv+wLtdAe07KfSC5efFHkLV+ul5el4Ne0DEjwzk/QSN4LujOsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fWecfaQF; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=p8ai50Dv; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fWecfaQF; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=p8ai50Dv; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pd+r8CfH"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4508287895dso32100405e9.1;
-        Mon, 09 Jun 2025 04:34:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749468867; x=1750073667; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=y+ipcKqABSb+lKkWdrUxsmQBri1lQ1CzkeGIMLOQuDs=;
-        b=Pd+r8CfHN1I9JElEZi1+aFr0AxFmLl94PZSzyxhf8tNz+jUFiNJNF8ywe+dc6U6f++
-         e8R4vXQ9N6ECzCoTGLm/+BedP8lYdy3PA65+WN2fgetwJizUoSREf2saUz3B9EHJ/ukQ
-         1Wfv2SFQSyR/W2MkFj/m9ZP23bUFf/7zoXMebnDIHw77wRHj8qMby4dg8+LgYyWx7M3q
-         Ccoijd2WoioMWcPvZN3em1r6jfrZbdPCx6OmKI4J682171+bwOlBkSFWUcCMIcXz+Rtz
-         3PHM5p6Nnwc9nMNF2bBT0XcjWTJK6nGcFkEcNg2xVWZKeZ+azBoSM3yvERXCDd9isdtR
-         47rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749468867; x=1750073667;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y+ipcKqABSb+lKkWdrUxsmQBri1lQ1CzkeGIMLOQuDs=;
-        b=IDfb5/sWBVkOqpDCkzRlChSKdtY0ZUtWLUFDVDT9kP8HrZ8nc8l1MEHH1ETl6ryYUH
-         ZzowQbLP96W7DlKHyiSc0qr3DgnAY00USa/fvBI1/ivtMsW9h57uKWPkgntwdDrnP9Ho
-         qWNDrIwyrYt6hGpC4e8RMnBtyq8zp3KD9C8k6lq/nKS7VDmIKlnT2+FVGBugKXGfeIIH
-         njh8bWtK+0ONWqkPy48t0FFW1oR8YIDgzoyUSBrFYP660T/OLVl/SUFeaXXq9iljqTB3
-         PFIZGFpalAx5st6wKimdzuRfWAEZhkwFTbzaklrrbnkZALcdM1ZsBAAxtuRiz5rbC3ze
-         HE5g==
-X-Forwarded-Encrypted: i=1; AJvYcCUs9lJpqvBG1KLIADRmGNgG9MPdUcYOU1ZmJcAveur/vtTS/B1CbAUZpX5sNA0q9MKU1kFmRbXvu9VtSErB@vger.kernel.org, AJvYcCVXUXCeZFB5yBtD0bG+pcjkgRjnsAqLxM3f70JXPr6WBRM2qk2OZcI9/jqPcOCBqqkYiBjjjLF4nX8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdGCfOp4B7zw4qlRjvPm6XYr3nHtas34Ls9hy7FDw5gaS/k7SL
-	hdpevg5I2Uul9ds1FDlRMAn/RvYyJfnklesSwY6ItYuIw40PAoyqeN7mzwUbcg==
-X-Gm-Gg: ASbGncsqTLMQ6VaOZfAO87aglWppkzr6R8sqlJh0fsVe0KCgBtiLKXFmsKGd9pMbqY/
-	V+NtQRhfXWGHUXSoc5aXwxP+0cRPaLlqqKlVrqzO21mtSVkfux8wRiVS0Zzqu1zhwtmW7IN0q/2
-	LTvn4yjUbdgFzfXZWksj4fZI7nXas6x7vvVuzlzxPRhJda5813ti9iEyFavpnCgiSCBhFErKPIw
-	W6IWzeJyZUXchUV5ue4Acn2VU79byNWHBLj7A5yJZ14xscKyUTNieKo3qnNI+yw7hsho+0h7Vjo
-	3BlBlsGXL1GONEv1xKNGzoCp1+MEkQGu20VUlmjbBQA4td6yEJsuo85YCmeMRmq/l3sarLsFg5M
-	nXr9Qwh7tcn1Po61KamuncPV/N8k0qG+wTlFf0wRgitjz8hs+DhFA
-X-Google-Smtp-Source: AGHT+IHTYTxaJmzwLMVIsTAJwEV4y9pfUGpoQtN410+8NUHonS9MSn/rjc7YIQvaHPllT/zGNuwLeA==
-X-Received: by 2002:a5d:5f96:0:b0:3a4:d685:3de7 with SMTP id ffacd0b85a97d-3a526dcdd91mr13416592f8f.8.1749468866721;
-        Mon, 09 Jun 2025 04:34:26 -0700 (PDT)
-Received: from ?IPV6:2a02:6b6f:e750:f900:146f:2c4f:d96e:4241? ([2a02:6b6f:e750:f900:146f:2c4f:d96e:4241])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532464e3csm9469713f8f.99.2025.06.09.04.34.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Jun 2025 04:34:26 -0700 (PDT)
-Message-ID: <4adf1f8b-781d-4ab0-b82e-49795ad712cb@gmail.com>
-Date: Mon, 9 Jun 2025 12:34:25 +0100
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fWecfaQF";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="p8ai50Dv";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fWecfaQF";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="p8ai50Dv"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id BD5612118A;
+	Mon,  9 Jun 2025 11:35:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749468942; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0aX4K0ZmJrkWwew/LvkVL8sEQCpqlT0saO3jfYDTfg8=;
+	b=fWecfaQF8O4I+bO0Z2K29v2Q3dmludqUkhUXQbdertpNCuNyrN7F6en1xXm2e72cvBNEfb
+	woQPYSUD3aydiLcKKEOW6QCjrWqnIlJQeB6b+C9+mnPxJ9J/qSQNYpcfEhWJ8mXQMYdC51
+	ZtwX4h2ZdCQjlYOq3+4vmbZQi4fwApA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749468942;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0aX4K0ZmJrkWwew/LvkVL8sEQCpqlT0saO3jfYDTfg8=;
+	b=p8ai50Dv4WmcZF1f/x9s+Y0iZV3ABINLUBWPRhIiKrzHHVQFo/DZxVn9CADDCrMBft2NmK
+	XZHXUxDWM3HQjeAw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749468942; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0aX4K0ZmJrkWwew/LvkVL8sEQCpqlT0saO3jfYDTfg8=;
+	b=fWecfaQF8O4I+bO0Z2K29v2Q3dmludqUkhUXQbdertpNCuNyrN7F6en1xXm2e72cvBNEfb
+	woQPYSUD3aydiLcKKEOW6QCjrWqnIlJQeB6b+C9+mnPxJ9J/qSQNYpcfEhWJ8mXQMYdC51
+	ZtwX4h2ZdCQjlYOq3+4vmbZQi4fwApA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749468942;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0aX4K0ZmJrkWwew/LvkVL8sEQCpqlT0saO3jfYDTfg8=;
+	b=p8ai50Dv4WmcZF1f/x9s+Y0iZV3ABINLUBWPRhIiKrzHHVQFo/DZxVn9CADDCrMBft2NmK
+	XZHXUxDWM3HQjeAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 090A2137FE;
+	Mon,  9 Jun 2025 11:35:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id IyGQOg3HRmgFPgAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Mon, 09 Jun 2025 11:35:41 +0000
+Date: Mon, 9 Jun 2025 12:35:40 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] mm: add mmap_prepare() compatibility layer for nested
+ file systems
+Message-ID: <lus7wfr2fcycylium7ljykdbywinsfmaow45xhiduiitajzclj@s5pzxkvyd6fd>
+References: <20250609092413.45435-1-lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] mm: khugepaged: use largest enabled hugepage order for
- min_free_kbytes
-To: David Hildenbrand <david@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-Cc: hannes@cmpxchg.org, shakeel.butt@linux.dev, riel@surriel.com,
- ziy@nvidia.com, baolin.wang@linux.alibaba.com, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, npache@redhat.com, ryan.roberts@arm.com,
- dev.jain@arm.com, hughd@google.com, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, kernel-team@meta.com,
- Matthew Wilcox <willy@infradead.org>
-References: <20250606143700.3256414-1-usamaarif642@gmail.com>
- <4c1d5033-0c90-4672-84a1-15978ced245d@redhat.com>
-Content-Language: en-US
-From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <4c1d5033-0c90-4672-84a1-15978ced245d@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250609092413.45435-1-lorenzo.stoakes@oracle.com>
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
 
-
-
-On 06/06/2025 18:37, David Hildenbrand wrote:
-> On 06.06.25 16:37, Usama Arif wrote:
->> On arm64 machines with 64K PAGE_SIZE, the min_free_kbytes and hence the
->> watermarks are evaluated to extremely high values, for e.g. a server with
->> 480G of memory, only 2M mTHP hugepage size set to madvise, with the rest
->> of the sizes set to never, the min, low and high watermarks evaluate to
->> 11.2G, 14G and 16.8G respectively.
->> In contrast for 4K PAGE_SIZE of the same machine, with only 2M THP hugepage
->> size set to madvise, the min, low and high watermarks evaluate to 86M, 566M
->> and 1G respectively.
->> This is because set_recommended_min_free_kbytes is designed for PMD
->> hugepages (pageblock_order = min(HPAGE_PMD_ORDER, PAGE_BLOCK_ORDER)).
->> Such high watermark values can cause performance and latency issues in
->> memory bound applications on arm servers that use 64K PAGE_SIZE, eventhough
->> most of them would never actually use a 512M PMD THP.
->>
->> Instead of using HPAGE_PMD_ORDER for pageblock_order use the highest large
->> folio order enabled in set_recommended_min_free_kbytes.
->> With this patch, when only 2M THP hugepage size is set to madvise for the
->> same machine with 64K page size, with the rest of the sizes set to never,
->> the min, low and high watermarks evaluate to 2.08G, 2.6G and 3.1G
->> respectively. When 512M THP hugepage size is set to madvise for the same
->> machine with 64K page size, the min, low and high watermarks evaluate to
->> 11.2G, 14G and 16.8G respectively, the same as without this patch.
->>
->> An alternative solution would be to change PAGE_BLOCK_ORDER by changing
->> ARCH_FORCE_MAX_ORDER to a lower value for ARM64_64K_PAGES. However, this
->> is not dynamic with hugepage size, will need different kernel builds for
->> different hugepage sizes and most users won't know that this needs to be
->> done as it can be difficult to detmermine that the performance and latency
->> issues are coming from the high watermark values.
->>
->> All watermark numbers are for zones of nodes that had the highest number
->> of pages, i.e. the value for min size for 4K is obtained using:
->> cat /proc/zoneinfo  | grep -i min | awk '{print $2}' | sort -n  | tail -n 1 | awk '{print $1 * 4096 / 1024 / 1024}';
->> and for 64K using:
->> cat /proc/zoneinfo  | grep -i min | awk '{print $2}' | sort -n  | tail -n 1 | awk '{print $1 * 65536 / 1024 / 1024}';
->>
->> An arbirtary min of 128 pages is used for when no hugepage sizes are set
->> enabled.
->>
->> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
->> ---
->>   include/linux/huge_mm.h | 25 +++++++++++++++++++++++++
->>   mm/khugepaged.c         | 32 ++++++++++++++++++++++++++++----
->>   mm/shmem.c              | 29 +++++------------------------
->>   3 files changed, 58 insertions(+), 28 deletions(-)
->>
->> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
->> index 2f190c90192d..fb4e51ef0acb 100644
->> --- a/include/linux/huge_mm.h
->> +++ b/include/linux/huge_mm.h
->> @@ -170,6 +170,25 @@ static inline void count_mthp_stat(int order, enum mthp_stat_item item)
->>   }
->>   #endif
->>   +/*
->> + * Definitions for "huge tmpfs": tmpfs mounted with the huge= option
->> + *
->> + * SHMEM_HUGE_NEVER:
->> + *    disables huge pages for the mount;
->> + * SHMEM_HUGE_ALWAYS:
->> + *    enables huge pages for the mount;
->> + * SHMEM_HUGE_WITHIN_SIZE:
->> + *    only allocate huge pages if the page will be fully within i_size,
->> + *    also respect madvise() hints;
->> + * SHMEM_HUGE_ADVISE:
->> + *    only allocate huge pages if requested with madvise();
->> + */
->> +
->> + #define SHMEM_HUGE_NEVER    0
->> + #define SHMEM_HUGE_ALWAYS    1
->> + #define SHMEM_HUGE_WITHIN_SIZE    2
->> + #define SHMEM_HUGE_ADVISE    3
->> +
->>   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->>     extern unsigned long transparent_hugepage_flags;
->> @@ -177,6 +196,12 @@ extern unsigned long huge_anon_orders_always;
->>   extern unsigned long huge_anon_orders_madvise;
->>   extern unsigned long huge_anon_orders_inherit;
->>   +extern int shmem_huge __read_mostly;
->> +extern unsigned long huge_shmem_orders_always;
->> +extern unsigned long huge_shmem_orders_madvise;
->> +extern unsigned long huge_shmem_orders_inherit;
->> +extern unsigned long huge_shmem_orders_within_size;
+On Mon, Jun 09, 2025 at 10:24:13AM +0100, Lorenzo Stoakes wrote:
+> Nested file systems, that is those which invoke call_mmap() within their
+> own f_op->mmap() handlers, may encounter underlying file systems which
+> provide the f_op->mmap_prepare() hook introduced by commit
+> c84bf6dd2b83 ("mm: introduce new .mmap_prepare() file callback").
 > 
-> Do really all of these have to be exported?
+> We have a chicken-and-egg scenario here - until all file systems are
+> converted to using .mmap_prepare(), we cannot convert these nested
+> handlers, as we can't call f_op->mmap from an .mmap_prepare() hook.
 > 
-
-Hi David,
-
-Thanks for the review!
-
-For the RFC, I just did it similar to the anon ones when I got the build error
-trying to use these, but yeah a much better approach would be to just have a
-function in shmem that would return the largest shmem thp allowable order.
-
->> +
->>   static inline bool hugepage_global_enabled(void)
->>   {
->>       return transparent_hugepage_flags &
->> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->> index 15203ea7d007..e64cba74eb2a 100644
->> --- a/mm/khugepaged.c
->> +++ b/mm/khugepaged.c
->> @@ -2607,6 +2607,26 @@ static int khugepaged(void *none)
->>       return 0;
->>   }
->>   +static int thp_highest_allowable_order(void)
+> So we have to do it the other way round - invoke the .mmap_prepare() hook
+> from an .mmap() one.
 > 
-> Did you mean "largest" ?
-
-Yes
-
+> in order to do so, we need to convert VMA state into a struct vm_area_desc
+> descriptor, invoking the underlying file system's f_op->mmap_prepare()
+> callback passing a pointer to this, and then setting VMA state accordingly
+> and safely.
 > 
->> +{
->> +    unsigned long orders = READ_ONCE(huge_anon_orders_always)
->> +                   | READ_ONCE(huge_anon_orders_madvise)
->> +                   | READ_ONCE(huge_shmem_orders_always)
->> +                   | READ_ONCE(huge_shmem_orders_madvise)
->> +                   | READ_ONCE(huge_shmem_orders_within_size);
->> +    if (hugepage_global_enabled())
->> +        orders |= READ_ONCE(huge_anon_orders_inherit);
->> +    if (shmem_huge != SHMEM_HUGE_NEVER)
->> +        orders |= READ_ONCE(huge_shmem_orders_inherit);
->> +
->> +    return orders == 0 ? 0 : fls(orders) - 1;
->> +}
+> This patch achieves this via the compat_vma_mmap_prepare() function, which
+> we invoke from call_mmap() if f_op->mmap_prepare() is specified in the
+> passed in file pointer.
 > 
-> But how does this interact with large folios / THPs in the page cache?
+> We place the fundamental logic into mm/vma.c where VMA manipulation
+> belongs. We also update the VMA userland tests to accommodate the changes.
 > 
+> The compat_vma_mmap_prepare() function and its associated machinery is
+> temporary, and will be removed once the conversion of file systems is
+> complete.
+>
 
-Yes this will be a problem.
+Thanks, this is annoying but looks mostly cromulent!
 
-From what I see, there doesn't seem to be a max order for pagecache, only
-mapping_set_folio_min_order for the min.
-Does this mean that pagecache can fault in 128M, 256M, 512M large folios?
-
-I think this could increase the OOM rate significantly when ARM64 servers
-are used with filesystems that support large folios..
-
-Should there be an upper limit for pagecache? If so, it would either be a new
-sysfs entry (which I dont like :( ) or just try and reuse the existing entries
-with something like thp_highest_allowable_order?
- 
-
->> +
->> +static unsigned long min_thp_pageblock_nr_pages(void)
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Reported-by: Jann Horn <jannh@google.com>
+> Closes: https://lore.kernel.org/linux-mm/CAG48ez04yOEVx1ekzOChARDDBZzAKwet8PEoPM4Ln3_rk91AzQ@mail.gmail.com/
+> Fixes: c84bf6dd2b83 ("mm: introduce new .mmap_prepare() file callback").
+> ---
+>  include/linux/fs.h               |  6 +++--
+>  mm/mmap.c                        | 39 +++++++++++++++++++++++++++
+>  mm/vma.c                         | 46 +++++++++++++++++++++++++++++++-
+>  mm/vma.h                         |  4 +++
+>  tools/testing/vma/vma_internal.h | 16 +++++++++++
+>  5 files changed, 108 insertions(+), 3 deletions(-)
 > 
-> Reading the function name, I have no idea what this function is supposed to do.
-> 
-> 
-Yeah sorry about that. I knew even before sending the RFC that this was a bad name :(
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 05abdabe9db7..8fe41a2b7527 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2274,10 +2274,12 @@ static inline bool file_has_valid_mmap_hooks(struct file *file)
+>  	return true;
+>  }
+>  
+> +int compat_vma_mmap_prepare(struct file *file, struct vm_area_struct *vma);
+> +
+>  static inline int call_mmap(struct file *file, struct vm_area_struct *vma)
+>  {
+> -	if (WARN_ON_ONCE(file->f_op->mmap_prepare))
+> -		return -EINVAL;
+> +	if (file->f_op->mmap_prepare)
+> +		return compat_vma_mmap_prepare(file, vma);
+>  
+>  	return file->f_op->mmap(file, vma);
+>  }
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index 09c563c95112..0755cb5d89d1 100644
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -1891,3 +1891,42 @@ __latent_entropy int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+>  	vm_unacct_memory(charge);
+>  	goto loop_out;
+>  }
+> +
+> +/**
+> + * compat_vma_mmap_prepare() - Apply the file's .mmap_prepare() hook to an
+> + * existing VMA
+> + * @file: The file which possesss an f_op->mmap_prepare() hook
+> + * @vma; The VMA to apply the .mmap_prepare() hook to.
+> + *
+> + * Ordinarily, .mmap_prepare() is invoked directly upon mmap(). However, certain
+> + * 'wrapper' file systems invoke a nested mmap hook of an underlying file.
+> + *
+> + * Until all filesystems are converted to use .mmap_prepare(), we must be
+> + * conservative and continue to invoke these 'wrapper' filesystems using the
+> + * deprecated .mmap() hook.
+> + *
+> + * However we have a problem if the underlying file system possesses an
+> + * .mmap_prepare() hook, as we are in a different context when we invoke the
+> + * .mmap() hook, already having a VMA to deal with.
+> + *
+> + * compat_vma_mmap_prepare() is a compatibility function that takes VMA state,
+> + * establishes a struct vm_area_desc descriptor, passes to the underlying
+> + * .mmap_prepare() hook and applies any changes performed by it.
+> + *
+> + * Once the conversion of filesystems is complete this function will no longer
+> + * be required and will be removed.
+> + *
+> + * Returns: 0 on success or error.
+> + */
+> +int compat_vma_mmap_prepare(struct file *file, struct vm_area_struct *vma)
+> +{
+> +	struct vm_area_desc desc;
+> +	int err;
+> +
+> +	err = file->f_op->mmap_prepare(vma_to_desc(vma, &desc));
+> +	if (err)
+> +		return err;
+> +	set_vma_from_desc(vma, &desc);
+> +
+> +	return 0;
+> +}
+> diff --git a/mm/vma.c b/mm/vma.c
+> index 01b1d26d87b4..d771750f8f76 100644
+> --- a/mm/vma.c
+> +++ b/mm/vma.c
+> @@ -3153,7 +3153,6 @@ int __vm_munmap(unsigned long start, size_t len, bool unlock)
+>  	return ret;
+>  }
+>  
+> -
+>  /* Insert vm structure into process list sorted by address
+>   * and into the inode's i_mmap tree.  If vm_file is non-NULL
+>   * then i_mmap_rwsem is taken here.
+> @@ -3195,3 +3194,48 @@ int insert_vm_struct(struct mm_struct *mm, struct vm_area_struct *vma)
+>  
+>  	return 0;
+>  }
+> +
+> +/*
+> + * Temporary helper functions for file systems which wrap an invocation of
+> + * f_op->mmap() but which might have an underlying file system which implements
+> + * f_op->mmap_prepare().
+> + */
+> +
+> +struct vm_area_desc *vma_to_desc(struct vm_area_struct *vma,
+> +		struct vm_area_desc *desc)
+> +{
+> +	desc->mm = vma->vm_mm;
+> +	desc->start = vma->vm_start;
+> +	desc->end = vma->vm_end;
+> +
+> +	desc->pgoff = vma->vm_pgoff;
+> +	desc->file = vma->vm_file;
+> +	desc->vm_flags = vma->vm_flags;
+> +	desc->page_prot = vma->vm_page_prot;
+> +
+> +	desc->vm_ops = NULL;
+> +	desc->private_data = NULL;
+> +
+> +	return desc;
+> +}
+> +
+> +void set_vma_from_desc(struct vm_area_struct *vma, struct vm_area_desc *desc)
+> +{
+> +	/*
+> +	 * Since we're invoking .mmap_prepare() despite having a partially
+> +	 * established VMA, we must take care to handle setting fields
+> +	 * correctly.
+> +	 */
+> +
+> +	/* Mutable fields. Populated with initial state. */
+> +	vma->vm_pgoff = desc->pgoff;
+> +	if (vma->vm_file != desc->file)
+> +		vma_set_file(vma, desc->file);
+> +	if (vma->vm_flags != desc->vm_flags)
+> +		vm_flags_set(vma, desc->vm_flags);
 
-I think an issue is that pageblock_nr_pages is not really 1 << PAGE_BLOCK_ORDER but is
-1 << min(HPAGE_PMD_ORDER, PAGE_BLOCK_ORDER) when THP is enabled.
+I think we don't need vm_flags_set in this case, since the VMA isn't exposed yet.
+__vm_flags_mod should work just fine. Of course this isn't a big deal, but I would
+like it if we reduced vm_flags_set to core mm and conceptually attached things.
 
-I wanted to highlight with the name that it will use the minimum of the max THP order that
-is enabled and PAGE_BLOCK_ORDER when calculating the number of pages..
+In any case, with or without that addressed:
 
+Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 
+-- 
+Pedro
