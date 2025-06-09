@@ -1,162 +1,170 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B717F221296
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 20:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D614221DAA
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 20:08:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749499708; cv=none; b=LHa4nRUJBStcpX2tqYUlE1x3qO47hJ8QADi986vt5cyNYwim/rhiu2yLdUSSy/lJjB5LMVbuqrdFaZAkX2+LvkWm3gYeIHEpJZG4ti74REw7+PmO3zyX7lcoPFlVjSNl7w7YJEcMK8ZCJZ1MzSLRtu293tqsnNLpmXcyfpfp7CE=
+	t=1749499710; cv=none; b=sPMNfiVLfWc+WD74rMFOy4VmIBPGWUZnQxF+wMQHAWXbvIT+vYMmPwJd44idJ3p5hTMaWEGU/rbBiImYS9cz/heIqbtNhTO3Wkh9kKAu7/cNLOa5xtweYO/9tCezdhs41DnqI74/yg+LBKJSBCWpjEsy956/xgFI9X51fhIlA+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749499708; c=relaxed/simple;
-	bh=5col7cyjORVDpBjeMZhgvIznfmZtb6RKuoV4CGQF4zE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N7aTacsVWfobacKqdONEBf82ucBU9YAxvXzbfGRFI6VjdJ93intJx/uBaM5mqzLCnHvi0cvv60PaHiBoQpvPbtACxzpg6BiP97B7THA3ZTI0MRaGcq45cZkh8cUWuOVs7jnAwXUAKMl32r3akkif4XgqgWY6TzgsifuroCafqpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=I6/RN80N; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	s=arc-20240116; t=1749499710; c=relaxed/simple;
+	bh=umiaGrTQFN8YrJ2B1vEBadeKNw103ZzdSr4SlLfT4W4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hiQMVD1kan/xH1me5q1Khk/o/T2HJqLFWL8EwXriqUu7bx4Ny49j1U5MNt8cvu4wRCQdESHZY4OjtU7MFCDrol5bvKBqv535geU/ZqkdEfJ35Td0oqlzevtN4gyo4IpX6JW8QOaSbYWEOKSqwI7pI6oMzb/OAzzC4RX+FYLUg/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=dGIjGiG0; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="I6/RN80N"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c5b8d13f73so513064685a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 13:08:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="dGIjGiG0"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4a5840ec53dso58294331cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 13:08:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1749499705; x=1750104505; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hXZOtes7v+x/7Gb9DsK5r+A9Wyuu/k4Jt+Vsyyna0xw=;
-        b=I6/RN80NIGi8CPVRwC/5D9jheBPErZlMPpVvB2vdY8O/tsYYwfnGgr++ikeHNBitKt
-         RAwH0ywScSF/zto3WXoo7zjqKbWdWyfE/7v3O4TFpC8gzHG5SqW1mjZwlN3Esv2BSOcr
-         oB1TppqaDrRrFvFfwaMKsjs2lvzfwJqPqfE31cu93drnwRiA2sB5IZAfK/KkSFxVVsBy
-         rHfaJrWMEas5ios2FMxi+RvrqiG1tD3wFt3P/VLVprzS/RlmLYG9HX9kKHLs5Zj/WzEl
-         Y4l8/bqO3OW/Pa94gkuCcIkCYcAfnzw3WexjVpDfJUycbVYCCAu+OCHgDHjhRsrgDyXK
-         mhkw==
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1749499707; x=1750104507; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q1DFQw67oYiMjYNfjgsljBrJ/qGcx57WY9wqDizp8tM=;
+        b=dGIjGiG0U0z4315u00YwvUODrl/HyieERjmfiCzrdxZez9SZcN5owWqVyH/U9YMGpq
+         JILObxDsiejysMXjsWEEPFVX9e9sm7BcsOiDyzyEjtyZlu2AnrcQUgZW8IMgVb9qnaxi
+         CjFYUTShqzgALmKjNxWhLWqGWFE7m56rYY84v9inWpbHBEUxvOrAAgMFb5LIj6Sga1g8
+         9AC8m7gozN340sY4RWOvI82L0UfQLNpFE48YIc75zyArfxBd4rXEoy2UZLtxNWsW4g5Z
+         AyWLcS3dXwF2VOceybAOgZP+DfZs9tuNmMFCbUGunfWj+qRuhr+NfMoHfA0inxq4lnd/
+         ZvIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749499706; x=1750104506;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hXZOtes7v+x/7Gb9DsK5r+A9Wyuu/k4Jt+Vsyyna0xw=;
-        b=LrZCJDalf6tBmiZlzlbOxJhxcqUAbGfgYA68gpUw/VpK3X/twziprHccKDqDik/B8d
-         WZGQPvfEcAryEi5w4pRAXlsLb9giU71uSbx93SOREY5taLaw+K/FmMhnP5+CyEjYRyJQ
-         gLCe/ESVNCfKWkwBk+wKf9/epK3RNC+h1lJjAVwCelUuwo2o5CxoWbKBOHbvnfCVv4qu
-         3+vjvY/1TRy1KtbjjRYSWXtqQJ3u9UXaWXyi3Eu9PalJ0Bf71PsBFTBeSmTEA/SCVpMu
-         nQoXMiVGGzAZtcdrw5NZT0SbnaphMrTebGJ8snQ2Z+JTLXe1Q7bI98n74d2G3aSHsfcO
-         yqKw==
-X-Forwarded-Encrypted: i=1; AJvYcCWg+h2aU1dVGWOg5wtIg6xgGPcaKj1R0kMO3paLgR37Otufvqzv+fTpTSPmNnE4xKw+FBB7fNOWheFiMVI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQ/Q5XgddCNofebv4+2ueviv/RCwf2L6SL5BnidDvuanRZJZXF
-	kW2Aq4ka2EZ/81sCeB3RqOTZom0AUv7rI9UF2sLd/NAtquj6OM1o6okeUtBaonopxH0=
-X-Gm-Gg: ASbGncsGOC3awJhdYIBcXi0b3mKUQ6FgdmnV2PQaHOJvvxInxLMjPLrLxAqmbUhwoEe
-	qdG3ql2HHS4uDoQJPKB/OsE+zN2UdTnnltsCp0rf89TDkAt2oVrKzhQ6KVZEQWMTwViAq16ZQoy
-	76swaNyDmh2UOiYG8Y5NU/01gH82oNihrhB+J98yChX7U0UG/kJ+Ophj7D6/HvGKVeufLRPmZKr
-	Dr/dT59tR0aqI944yMlwA58ozoHlrPwQfaKX3cyQOUUu7LvX2sckCB49Xtp3A8Rab9rjbSJIE+N
-	zbDai0yOqmslUK7Guf/8/ylmgoqChF0dP5I9i151iKe99Fz3ewVHFkPoxiZwzCnP6rtXe7Ia14v
-	x3ACZrw+d1B7AGuuacA+8
-X-Google-Smtp-Source: AGHT+IGQOWA/DdgNdcF0vOFp4bfRniwjEhSufXRdrgu6ZhEZb9CO/nMVcj463R4KXqdEUZZrqIYgZw==
-X-Received: by 2002:a05:620a:28d0:b0:7c3:d7ef:f7f5 with SMTP id af79cd13be357-7d2298b164fmr2068749685a.18.1749499705469;
-        Mon, 09 Jun 2025 13:08:25 -0700 (PDT)
-Received: from presto.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb09b2a021sm55869336d6.83.2025.06.09.13.08.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 13:08:25 -0700 (PDT)
-From: Alex Elder <elder@riscstar.com>
-To: mturquette@baylibre.com,
-	sboyd@kernel.org
-Cc: dlan@gentoo.org,
-	heylenay@4d2.org,
-	inochiama@outlook.com,
-	elder@riscstar.com,
-	linux-clk@vger.kernel.org,
-	spacemit@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Guodong Xu <guodong@riscstar.com>
-Subject: [PATCH] clk: spacemit: mark K1 pll1_d8 as critical
-Date: Mon,  9 Jun 2025 15:08:21 -0500
-Message-ID: <20250609200822.468482-1-elder@riscstar.com>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1749499707; x=1750104507;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=q1DFQw67oYiMjYNfjgsljBrJ/qGcx57WY9wqDizp8tM=;
+        b=jruXM2AE0BQepg+5Hxv9xG079gFHum4XePw2qHxRmVeVrFqQHSah57ZivzxDb8Fpbi
+         jVWmIoF4PHMwoRLj077bjFyfdLLXG18VhEIDYAjviwDQdN2jA1djqGpn5wsDUnCfxPGQ
+         fD2Uo4kZjBO5FOfzW1KcGoapWxXC36OCqrOzss9izJx+yBxWZHEYaaMxFoERDfbGPpbE
+         XwK3ZFC/xvUABE8iw56HHPFojcG9AD/G1j5EsIRekAIrg4AabJ2sO4vkqZPWJJsPL9md
+         jB8sFwBUIyZdBwZkfYAX6UAW+t8PehqL4xpdbVG+xEXzvQ0dOBQAcAXDzWLScxeqI4Fk
+         FNFg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+ylyFAgudtcSSr+0O1N8gh902/o9z2zqWpAHRnbpOGegMObHvRTVKRAhLwD9SL5Pqbapp/v0hFQZfPOU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqJleX73Rhf6eYODScGl57nR+tXfSmsfrIQbsWWFavy7sRaBhL
+	nYzGaBmkfrrr5danAHPgTgu/zGJZNJNyTpwW02RcGFZvtL5XwNmhjhnFiQy9t/ne8Iyh9l7lgvi
+	crrRZ0njOW/zMMnYNdFuHnKgg65NZUuK5M3l9XTIpGBFCzyL/RduW3FI=
+X-Gm-Gg: ASbGncsF445BroMNy6T4egA3cQaSiFftDZsOALIh369VRV3sJ1WndsnxL5+jgM+4EE2
+	MMHuuw8/nnHaVYfnVUmAbqmnfsOXoNkz39nwrXfBctTixuQqRxMKfIMDR8BvVy+Vyp9j4JTFdwH
+	E4GMFeXncv5zUVx9bU9l1aUcYVIzEcBlkKxR4WhUhD
+X-Google-Smtp-Source: AGHT+IHwZ8xxwy1rbJ2XYzDgbb0cvWkJy5FW984f0Zrhq4kdp7mC5bx3gPRzk5/yaIfN5T8ydPXCdjKttoq3lg7ewfM=
+X-Received: by 2002:a05:622a:4d94:b0:48c:54ad:c409 with SMTP id
+ d75a77b69052e-4a5b9e00aacmr196256071cf.10.1749499706847; Mon, 09 Jun 2025
+ 13:08:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250605171143.76963-1-pratyush@kernel.org> <aEKhF3HcrvG77Ogb@kernel.org>
+ <mafs0jz5osutx.fsf@kernel.org> <aEc30BoLE9HRxiZm@kernel.org>
+In-Reply-To: <aEc30BoLE9HRxiZm@kernel.org>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Mon, 9 Jun 2025 16:07:50 -0400
+X-Gm-Features: AX0GCFtEuDZaSUxyvgIQvzavhtS0Upun00DQmQthsZKvdGuGbBntdnwQlmoxuqE
+Message-ID: <CA+CK2bAAbZjS2Og79xxLcDtNf-eM0up-8fwhd4fg_dp0j_TahA@mail.gmail.com>
+Subject: Re: [PATCH] kho: initialize tail pages for higher order folios properly
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
+	Changyuan Lyu <changyuanl@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The pll1_d8 clock is enabled by the boot loader, and is ultimately a
-parent for numerous clocks, including those used by APB and AXI buses.
-Guodong Xu discovered that this clock got disabled while responding to
-getting -EPROBE_DEFER when requesting a reset controller.
+On Mon, Jun 9, 2025 at 3:36=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wrot=
+e:
+>
+> Hi Pratyush,
+>
+> On Fri, Jun 06, 2025 at 06:23:06PM +0200, Pratyush Yadav wrote:
+> > Hi Mike,
+> >
+> > On Fri, Jun 06 2025, Mike Rapoport wrote:
+> >
+> > > On Thu, Jun 05, 2025 at 07:11:41PM +0200, Pratyush Yadav wrote:
+> > >> From: Pratyush Yadav <ptyadav@amazon.de>
+> > >>
+> > >> --- a/kernel/kexec_handover.c
+> > >> +++ b/kernel/kexec_handover.c
+> > >> @@ -157,11 +157,21 @@ static int __kho_preserve_order(struct kho_mem=
+_track *track, unsigned long pfn,
+> > >>  }
+> > >>
+> > >>  /* almost as free_reserved_page(), just don't free the page */
+> > >> -static void kho_restore_page(struct page *page)
+> > >> +static void kho_restore_page(struct page *page, unsigned int order)
+> > >>  {
+> > >> -  ClearPageReserved(page);
+> > >
+> > > So now we don't clear PG_Reserved even on order-0 pages? ;-)
+> >
+> > We don't need to. As I mentioned in the commit message as well,
+> > PG_Reserved is never set for KHO pages since they are reserved with
+> > MEMBLOCK_RSRV_NOINIT, so memmap_init_reserved_pages() skips over them.
+>
+> You are right, I missed it.
+>
+> > That said, while reading through some of the code, I noticed another
+> > bug: because KHO reserves the preserved pages as NOINIT, with
+> > CONFIG_DEFERRED_STRUCT_PAGE_INIT =3D=3D n, all the pages get initialize=
+d
+> > when memmap_init_range() is called from setup_arch (paging_init() on
+> > x86). This happens before kho_memory_init(), so the KHO-preserved pages
+> > are not marked as reserved to memblock yet.
+> >
+> > With deferred page init, some pages might not get initialized early, an=
+d
+> > get initialized after kho_memory_init(), by which time the KHO-preserve=
+d
+> > pages are marked as reserved. So, deferred_init_maxorder() will skip
+> > over those pages and leave them uninitialized.
+> >
+> > So we need to either also call init_deferred_page(), or remove the
+> > memblock_reserved_mark_noinit() call in deserialize_bitmap(). And TBH, =
+I
+> > am not sure why KHO pages even need to be marked noinit in the first
+> > place. Probably the only benefit would be if a large chunk of memory is
+> > KHO-preserved, the pages can be initialized later on-demand, reducing
+> > bootup time a bit.
+>
+> One benefit is performance indeed, because in not deferred case the
+> initialization of reserved pages in memmap_init_reserved_pages() is reall=
+y
+> excessive.
+>
+> But more importantly, if we remove memblock_reserved_mark_noinit(), with
+> CONFIG_DEFERRED_STRUCT_PAGE_INIT we'd loose page->private because the
+> struct page will be cleared after kho_mem_deserialize().
+>
+> > What do you think? Should we drop noinit or call init_deferred_page()?
+> > FWIW, my preference is to drop noinit, since init_deferred_page() is
+> > __meminit and we would have to make sure it doesn't go away after boot.
+>
+> We can't drop noinit and calling init_deferred_page() after boot just won=
+'t
+> work because it uses memblock to find the page's node and memblock is gon=
+e
+> after init.
+>
+> The simplest short-term solution is to disable KHO when
+> CONFIG_DEFERRED_STRUCT_PAGE_INIT is set and then find an efficient way to
+> make it all work together.
 
-The needed clock (CLK_DMA, along with its parents) had already been
-enabled.  To respond to the probe deferral return, the CLK_DMA clock
-was disabled, and this led to parent clocks also reducing their enable
-count.  When the enable count for pll1_d8 was decremented it became 0,
-which caused it to be disabled.  This led to a system hang.
+This is what I've done in LUOv3 WIP:
+https://github.com/soleen/linux/commit/3059f38ac0a39a397873759fb429bd5d1f8e=
+a681
 
-Marking that clock critical resolves this by preventing it from being
-disabled.
+We will need to teah KHO to work with deferred struct page init. I
+suspect, we could init preserved struct pages and then skip over them
+during deferred init.
 
-Define a new macro CCU_FACTOR_GATE_DEFINE() to allow clock flags to
-be supplied for a CCU_FACTOR_GATE clock.
+Pasha
 
-Fixes: 1b72c59db0add ("clk: spacemit: Add clock support for SpacemiT K1 SoC")
-Signed-off-by: Alex Elder <elder@riscstar.com>
-Tested-by: Guodong Xu <guodong@riscstar.com>
----
-v2: Reworded the description to provide better detail
-
- drivers/clk/spacemit/ccu-k1.c  |  3 ++-
- drivers/clk/spacemit/ccu_mix.h | 21 +++++++++++++--------
- 2 files changed, 15 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/clk/spacemit/ccu-k1.c b/drivers/clk/spacemit/ccu-k1.c
-index cdde37a052353..df65009a07bb1 100644
---- a/drivers/clk/spacemit/ccu-k1.c
-+++ b/drivers/clk/spacemit/ccu-k1.c
-@@ -170,7 +170,8 @@ CCU_FACTOR_GATE_DEFINE(pll1_d4, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(3), 4,
- CCU_FACTOR_GATE_DEFINE(pll1_d5, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(4), 5, 1);
- CCU_FACTOR_GATE_DEFINE(pll1_d6, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(5), 6, 1);
- CCU_FACTOR_GATE_DEFINE(pll1_d7, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(6), 7, 1);
--CCU_FACTOR_GATE_DEFINE(pll1_d8, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(7), 8, 1);
-+CCU_FACTOR_GATE_FLAGS_DEFINE(pll1_d8, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(7), 8, 1,
-+		CLK_IS_CRITICAL);
- CCU_FACTOR_GATE_DEFINE(pll1_d11_223p4, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(15), 11, 1);
- CCU_FACTOR_GATE_DEFINE(pll1_d13_189, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(16), 13, 1);
- CCU_FACTOR_GATE_DEFINE(pll1_d23_106p8, CCU_PARENT_HW(pll1), APBS_PLL1_SWCR2, BIT(20), 23, 1);
-diff --git a/drivers/clk/spacemit/ccu_mix.h b/drivers/clk/spacemit/ccu_mix.h
-index 51d19f5d6aacb..668c8139339e1 100644
---- a/drivers/clk/spacemit/ccu_mix.h
-+++ b/drivers/clk/spacemit/ccu_mix.h
-@@ -101,16 +101,21 @@ static struct ccu_mix _name = {							\
- 	}									\
- }
- 
-+#define CCU_FACTOR_GATE_FLAGS_DEFINE(_name, _parent, _reg_ctrl, _mask_gate, _div,	\
-+			       _mul, _flags)					\
-+struct ccu_mix _name = {							\
-+	.gate	= CCU_GATE_INIT(_mask_gate),					\
-+	.factor	= CCU_FACTOR_INIT(_div, _mul),					\
-+	.common = {								\
-+		.reg_ctrl	= _reg_ctrl,					\
-+		CCU_MIX_INITHW(_name, _parent, spacemit_ccu_factor_gate_ops, _flags)	\
-+	}									\
-+}
-+
- #define CCU_FACTOR_GATE_DEFINE(_name, _parent, _reg_ctrl, _mask_gate, _div,	\
- 			       _mul)						\
--static struct ccu_mix _name = {							\
--	.gate	= CCU_GATE_INIT(_mask_gate),					\
--	.factor	= CCU_FACTOR_INIT(_div, _mul),					\
--	.common = {								\
--		.reg_ctrl	= _reg_ctrl,					\
--		CCU_MIX_INITHW(_name, _parent, spacemit_ccu_factor_gate_ops, 0)	\
--	}									\
--}
-+	CCU_FACTOR_GATE_FLAGS_DEFINE(_name, _parent, _reg_ctrl, _mask_gate, _div,	\
-+			       _mul, 0)
- 
- #define CCU_MUX_GATE_DEFINE(_name, _parents, _reg_ctrl, _shift, _width,		\
- 			    _mask_gate, _flags)					\
-
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
--- 
-2.45.2
-
+>
+> --
+> Sincerely yours,
+> Mike.
