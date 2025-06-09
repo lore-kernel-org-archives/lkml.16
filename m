@@ -1,94 +1,111 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D70E1C8604;
-	Mon,  9 Jun 2025 11:05:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43E5F1FC7E7;
+	Mon,  9 Jun 2025 11:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749467152; cv=none; b=NFlvBycFAsiAQYXYY5ezqEmhq+tVcG5CZLXP+LkCMyElm8ygNtCWUsAWDqJB1IKm0Aw+kPUwUy8449dy+qjXB1yp31xqweuHYcx3xu51Xhe5gO5DHk0viguD8O/GZpNZiXRF1j0ldOZOF2Ga+CoxDYToMGJPuNKxKZnpJeNHSO4=
+	t=1749467434; cv=none; b=n5s38ar5e08jexyFclHQqErc9XpWihilgcwb37d9u6xra3rYrr3VYNqjrDEulZM4CtJwkNrsoIirr+4QhYqSciZ1fKAvY+c6sBU0pBFLdm7mwAQIJqdm0Hbkw5vZLfEOLrZNVXDOoYaNQrncYe/JLLT8OP6Qo9NmAiLq3Abf62E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749467152; c=relaxed/simple;
-	bh=GAw/vyy6tmYVRUj5Ewz5RGBDb3kVxsqpj8DAUb1n9II=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=L2Es/CJwEQfdXVCUnqv5CABIt5sKQ3WNjXXViKXOvUJSoST5SumJv+y1tCb5T4FVzFT+fYhb5BTp5/NDvvt0t/1CnXIgxqqwSY7ce3+PG/BizqV8AeBS9RSnjqHPreelPNoiiQihTqkh8GVRIhQijJUFbkzO5bRMvgSKoiT+fuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=kdBSCz2f; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="kdBSCz2f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1749467148;
-	bh=GAw/vyy6tmYVRUj5Ewz5RGBDb3kVxsqpj8DAUb1n9II=;
-	h=From:Date:Subject:To:Cc:From;
-	b=kdBSCz2fwmBYsttja+tL2e9qVtdVahZD+SelUCfLiRlM7nEA6th7Jdb4VW/bOICqi
-	 rjBrRu1UhLqiZ36aT+65gqHRRcAKFWdvLxftJXKzOrNmXY5naeDOg+2Ed0eqdZE/bg
-	 bJ0vtoHTspnWpGe+Fhz4cXKEcYc8ASpTaAcyZ10g=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Mon, 09 Jun 2025 13:05:44 +0200
-Subject: [PATCH] drivers: hv: Constify 'struct bin_attribute'
+	s=arc-20240116; t=1749467434; c=relaxed/simple;
+	bh=OtuITT+i8YfVsB92HRFIK/5RvmgL0pQolfsZtD3LzPY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cwSvEj0Og7eJUVT16kSmt/Fn0kgiOfMW6HrVhRkMnuobDPocQ6XQTDLchbg3/MkitcIl27Z4am7DJCUfELKMJAD8LTe2jOTbyh+jFSWYao47EoTkWYjLtCJVUhkd4mHxeMSoltzMyu78ySqYYdTi/pzNTzCj4p9hsC45k/hyzZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 83909113E;
+	Mon,  9 Jun 2025 04:10:13 -0700 (PDT)
+Received: from [10.1.39.162] (XHFQ2J9959.cambridge.arm.com [10.1.39.162])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5AB223F59E;
+	Mon,  9 Jun 2025 04:10:31 -0700 (PDT)
+Message-ID: <5f6085d9-0ceb-489c-89a6-3666be994549@arm.com>
+Date: Mon, 9 Jun 2025 12:10:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250609-sysfs-const-bin_attr-hv-v1-1-bfed20083800@weissschuh.net>
-X-B4-Tracking: v=1; b=H4sIAAfARmgC/x3MQQqAIBBA0avErBswxcCuEhFlY83GwpEoorsnL
- d/i/weEEpNAVz2Q6GThPRY0dQV+m+JKyEsxaKWtapVDuSUI+j1KxpnjOOWccDuxMdY7smY22kK
- pj0SBr//cD+/7ARn8imRpAAAA
-X-Change-ID: 20250609-sysfs-const-bin_attr-hv-135c9e53b325
-To: "K. Y. Srinivasan" <kys@microsoft.com>, 
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
- Dexuan Cui <decui@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749467147; l=1324;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=GAw/vyy6tmYVRUj5Ewz5RGBDb3kVxsqpj8DAUb1n9II=;
- b=h9Q8P+QzMrI3N1HXb16zz2VzCoPQcbReCSM6BR3HF8IaaOFbKiwokI8NnKt46ihgMTWk+ZKVu
- ySGjS4bwSNsBwq5JhPtyxhOOfxUF2TthDHUvawBvxFPpN/R/EfsYh48
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64/ptdump: Ensure memory hotplug is prevented during
+ ptdump_check_wx()
+Content-Language: en-GB
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ linux-arm-kernel@lists.infradead.org
+Cc: stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+ Dev Jain <dev.jain@arm.com>
+References: <20250609041214.285664-1-anshuman.khandual@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250609041214.285664-1-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The sysfs core now allows instances of 'struct bin_attribute' to be
-moved into read-only memory. Make use of that to protect them against
-accidental or malicious modifications.
+On 09/06/2025 05:12, Anshuman Khandual wrote:
+> The arm64 page table dump code can race with concurrent modification of the
+> kernel page tables. When a leaf entries are modified concurrently, the dump
+> code may log stale or inconsistent information for a VA range, but this is
+> otherwise not harmful.
+> 
+> When intermediate levels of table are freed, the dump code will continue to
+> use memory which has been freed and potentially reallocated for another
+> purpose. In such cases, the dump code may dereference bogus addresses,
+> leading to a number of potential problems.
+> 
+> This problem was fixed for ptdump_show() earlier via commit 'bf2b59f60ee1
+> ("arm64/mm: Hold memory hotplug lock while walking for kernel page table
+> dump")' but a same was missed for ptdump_check_wx() which faced the race
+> condition as well. Let's just take the memory hotplug lock while executing
+> ptdump_check_wx().
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: bbd6ec605c0f ("arm64/mm: Enable memory hot remove")
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Ryan Roberts <ryan.roberts@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Reported-by: Dev Jain <dev.jain@arm.com>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
----
- drivers/hv/vmbus_drv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
 
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 33b524b4eb5ef89d0111442a34d39874f02f0b70..38d2775dbe8730fd223d21188519b5f2b72e0804 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1845,7 +1845,7 @@ static int hv_mmap_ring_buffer_wrapper(struct file *filp, struct kobject *kobj,
- 	return channel->mmap_ring_buffer(channel, vma);
- }
- 
--static struct bin_attribute chan_attr_ring_buffer = {
-+static const struct bin_attribute chan_attr_ring_buffer = {
- 	.attr = {
- 		.name = "ring",
- 		.mode = 0600,
-@@ -1871,7 +1871,7 @@ static struct attribute *vmbus_chan_attrs[] = {
- 	NULL
- };
- 
--static const struct bin_attribute *vmbus_chan_bin_attrs[] = {
-+static const struct bin_attribute *const vmbus_chan_bin_attrs[] = {
- 	&chan_attr_ring_buffer,
- 	NULL
- };
-
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250609-sysfs-const-bin_attr-hv-135c9e53b325
-
-Best regards,
--- 
-Thomas Weißschuh <linux@weissschuh.net>
+> ---
+> This patch applies on v6.16-rc1
+> 
+> Dev Jain found this via code inspection.
+> 
+>  arch/arm64/mm/ptdump.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/mm/ptdump.c b/arch/arm64/mm/ptdump.c
+> index 421a5de806c62..551f80d41e8d2 100644
+> --- a/arch/arm64/mm/ptdump.c
+> +++ b/arch/arm64/mm/ptdump.c
+> @@ -328,7 +328,7 @@ static struct ptdump_info kernel_ptdump_info __ro_after_init = {
+>  	.mm		= &init_mm,
+>  };
+>  
+> -bool ptdump_check_wx(void)
+> +static bool __ptdump_check_wx(void)
+>  {
+>  	struct ptdump_pg_state st = {
+>  		.seq = NULL,
+> @@ -367,6 +367,16 @@ bool ptdump_check_wx(void)
+>  	}
+>  }
+>  
+> +bool ptdump_check_wx(void)
+> +{
+> +	bool ret;
+> +
+> +	get_online_mems();
+> +	ret = __ptdump_check_wx();
+> +	put_online_mems();
+> +	return ret;
+> +}
+> +
+>  static int __init ptdump_init(void)
+>  {
+>  	u64 page_offset = _PAGE_OFFSET(vabits_actual);
 
