@@ -1,147 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E0D1CF7AF;
-	Mon,  9 Jun 2025 20:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B9A220F5C;
+	Mon,  9 Jun 2025 20:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749501758; cv=none; b=qz7zyWIoMx/pvd9t7FdF+IwXJaaH0c7HrF3PONG1svgdwlgTNfk/zWzUjddhA6/YOd37Y60X5/PKnzqvWN3bJm8Gb+GtWWgNv1nj0LEH0CmfgGiklsODe0zxZoHstg5XT2XnsxMaLrVgiPw7/oENmZjoPke3bY18we3g3sOKzWQ=
+	t=1749501909; cv=none; b=UYckLEFi3dfDAEVfU/Q6RAOQeZ4PUz9HgJTTrru1xFBwMKuOgnFrqcH7x9Z8Zom01FYKX0uwheGVaWCSgJr2ZDo9/oYOQDGNqyrWBwh8GDiybPcnsOwCI27vWKNDPddaUgJpcdCnnsd/pzsiT8OWPGVlbpbONadF0RcWRw2H0SM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749501758; c=relaxed/simple;
-	bh=kz8Qmi1W6iqKFfqAlzvTIDu8B6BAVAfGpkByPREk0u0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ATuL6Qc2M8vi/3fHMOOC9NSojfJE7SAsgf9HSm+JMQI7+y3yfTSaPByBxIQEXxtBZw/kHvHlYj2n0Zv20kZZUTDNYEI0ujv8UiAEcbxQBzrOCD+7zYZJUVfCoBt1/F1ACGwYRaYlhAtEsoNS445JPxeg/Sd1hzMoCgHPqk76KTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EN2TfaSG; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749501909; c=relaxed/simple;
+	bh=jPj7Sjc0AlG78SlEVxbzLFkY+icJgot4jPJU8v9Hg64=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=M0yLLSg5h0RoJ5I/o/OHmr6NNKVJhX8/Q1kdBAVNu8cbnGTByVzwGLt2Ku0uqTdGVXxDrhmu2FLucysZdM8VEp/0Bn9tcUo6cxCsFi5t/FccYIAVsY2Ysok9wBh606pI4J4nPaZdMeuyaa+E5YvT+RHDM6NhPNmj6EunOlmlhxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=O9dUXnOD; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EN2TfaSG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749501756; x=1781037756;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=kz8Qmi1W6iqKFfqAlzvTIDu8B6BAVAfGpkByPREk0u0=;
-  b=EN2TfaSGAeKkaFO8D0/HwDEFmeyLpNrc3+ZRYhA2iv0l80/QSRxBlJSk
-   aFnnrGT3m0b3ZMyUOSYeSuyIWrtmHTDQ3oPyDbJgTi7LYp6DheF8+l2wd
-   dAxj9iW5pNNkFT5T05KXiOYsKwe6uk+XKQg2CkXJO0MX2HkV8eDtYLwBY
-   h/95DDf3BVyB5mbNISWHeivO7zR8JLZA3axF35+F0PZhQYe77hGr2U5hS
-   h21IEC0+10FpejaUl/bM3WjSHlDDY+0Rgr/aiphvhuLFnCxNezGpNDI4H
-   O5LkPbx7wE7ksAYJHfiIeTmtC5g6RDqolG9lWGsrgAJCDD0O0lJfZbCbP
-   g==;
-X-CSE-ConnectionGUID: HKQLNwloQWSRF2ZxelDfoQ==
-X-CSE-MsgGUID: 36XHIFanTIyiIP5G5435ow==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="69039733"
-X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
-   d="scan'208";a="69039733"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 13:42:35 -0700
-X-CSE-ConnectionGUID: P7K+iHnQS8OWVmyC4a23UA==
-X-CSE-MsgGUID: 8T4zM3IYQFSJ492ZFomJ/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
-   d="scan'208";a="151498838"
-Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.111.99]) ([10.125.111.99])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 13:42:33 -0700
-Message-ID: <b5ac9dcf-60e9-465a-a864-58ff48dcae61@intel.com>
-Date: Mon, 9 Jun 2025 13:42:30 -0700
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="O9dUXnOD"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B88CA44400;
+	Mon,  9 Jun 2025 20:45:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749501905;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SR2d9reP8TqJ3UfMOktGuMwu95S3n7zGli3lgi0UUmg=;
+	b=O9dUXnOD9YyA/wh8TMe9VcmiIPn+5MMmKcqUtv7n/HXwVsZBlk8SEbbuTTSsBHNVEpfTtQ
+	xPvkA94UOJJF6p6nYPgYx1gA7Ljdv7dZF1EuGP84P8VWRcQ2HHPpUQovBHzlBxY+NUI7jZ
+	S2+BVfM0x79jDSSnmEiHQJejDJBS2DU7VUBe+wJyYMCJ1lEkhN5xDkSLZwx5bbTHnYHCSi
+	Og85IJQ/z4rlELNony9HQr16gr726jcdlG6Rqat8y+fkfbFVP4ynbMPmQyzRphxRc0jTbh
+	L0wXVdAB0ebiFjq+SI3QQJetH5fkAO7u/A3EfNir102f4FvaUp2RoRDVFxeIKQ==
+Date: Mon, 9 Jun 2025 22:45:02 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, Andreas
+ Kemnade <andreas@kemnade.info>, Kevin Hilman <khilman@baylibre.com>, Roger
+ Quadros <rogerq@kernel.org>, Russell King <linux@armlinux.org.uk>, Bajjuri
+ Praneeth <praneeth@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
+ <broonie@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 4/5] arm: dts: omap: Add support for BeagleBone Green
+ Eco board
+Message-ID: <20250609224502.1fce742c@kmaincent-XPS-13-7390>
+In-Reply-To: <20250609-helpful-immodest-0f195cdbcbf2@spud>
+References: <20250609-bbg-v2-0-5278026b7498@bootlin.com>
+	<20250609-bbg-v2-4-5278026b7498@bootlin.com>
+	<20250609-helpful-immodest-0f195cdbcbf2@spud>
+Organization: bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] Documentation: cxl: fix typos and improve clarity in
- memory-devices.rst
-To: Alok Tiwari <alok.a.tiwari@oracle.com>, gourry@gourry.net,
- rdunlap@infradead.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, corbet@lwn.net, linux-cxl@vger.kernel.org,
- linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, darren.kenny@oracle.com
-References: <20250609171130.2375901-1-alok.a.tiwari@oracle.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250609171130.2375901-1-alok.a.tiwari@oracle.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdeljeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudelmeekheekjeemjedutddtmeelhegvvgemrggvugdvmeeitgeksgemudgsfegsnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkeehkeejmeejuddttdemleehvggvmegrvgguvdemiegtkegsmedusgefsgdphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudelpdhrtghpthhtoheptghonhhorheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhonhihsegrthhomhhiuggvrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvl
+ hdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprggrrhhordhkohhskhhinhgvnhesihhkihdrfhhipdhrtghpthhtoheprghnughrvggrsheskhgvmhhnrgguvgdrihhnfhhopdhrtghpthhtohepkhhhihhlmhgrnhessggrhihlihgsrhgvrdgtohhm
+X-GND-Sasl: kory.maincent@bootlin.com
 
+Le Mon, 9 Jun 2025 18:04:01 +0100,
+Conor Dooley <conor@kernel.org> a =C3=A9crit :
 
+> On Mon, Jun 09, 2025 at 05:43:54PM +0200, Kory Maincent wrote:
+> > SeeedStudio BeagleBone Green Eco (BBGE) is a clone of the BeagleBone Gr=
+een
+> > (BBG). It has minor differences from the BBG, such as a different PMIC,
+> > a different Ethernet PHY, and a larger eMMC.
+> >=20
+> > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> > ---
+> >=20
+> > Changes in v2:
+> > - Used generic pmic node name.
+> > - Add regulator prefix to fixed regulator node name.
+> > - Add the compatible to omap.yaml binding
+> > ---
+> >  Documentation/devicetree/bindings/arm/ti/omap.yaml |   1 +
+> >  arch/arm/boot/dts/ti/omap/Makefile                 |   1 +
+> >  arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dts | 170
+> > +++++++++++++++++++++ 3 files changed, 172 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/arm/ti/omap.yaml
+> > b/Documentation/devicetree/bindings/arm/ti/omap.yaml index
+> > c43fa4f4af81..774c13157caa 100644 ---
+> > a/Documentation/devicetree/bindings/arm/ti/omap.yaml +++
+> > b/Documentation/devicetree/bindings/arm/ti/omap.yaml @@ -145,6 +145,7 @@
+> > properties:
+> >        - description: TI bone green variants based on TI AM335
+> >          items:
+> >            - enum:
+> > +              - ti,am335x-bone-green-eco
+> >                - ti,am335x-bone-green-wireless
+> >            - const: ti,am335x-bone-green
+> >            - const: ti,am335x-bone =20
+>=20
+> Why is this hunk here?
 
-On 6/9/25 10:10 AM, Alok Tiwari wrote:
-> This patch corrects several typographical issues and improves phrasing
-> in memory-devices.rst:
-> 
-> - Fixes duplicate word ("1 one") and adjusts phrasing for clarity.
-> - Adds missing hyphen in "on-device".
-> - Corrects "a give memory device" to "a given memory device".
-> - fix singular/plural "decoder resource" -> "decoder resources".
-> - Clarifies "spans to Host Bridges" -> "spans two Host Bridges".
-> - change "at a" -> "a"
-> 
-> These changes improve readability and accuracy of the documentation.
-> 
-> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
-> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> Reviewed-by: Jonathan Cameron<jonathan.cameron@huawei.com>
+Do you mean that the binding change should be in another patch?
 
-Applied to cxl/next
-
-> ---
-> v2->v3
-> rebase to v6.16-rc1
-> added Reviewed-by: Jonathan Cameron
-> v1->v2
-> added Reviewed-by Randy Dunlap and Gregory Price
-> change "at a" -> "a
-> ---
->  Documentation/driver-api/cxl/theory-of-operation.rst | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/driver-api/cxl/theory-of-operation.rst b/Documentation/driver-api/cxl/theory-of-operation.rst
-> index 40793dad3630..257f513e320c 100644
-> --- a/Documentation/driver-api/cxl/theory-of-operation.rst
-> +++ b/Documentation/driver-api/cxl/theory-of-operation.rst
-> @@ -29,8 +29,8 @@ Platform firmware enumerates a menu of interleave options at the "CXL root port"
->  (Linux term for the top of the CXL decode topology). From there, PCIe topology
->  dictates which endpoints can participate in which Host Bridge decode regimes.
->  Each PCIe Switch in the path between the root and an endpoint introduces a point
-> -at which the interleave can be split. For example platform firmware may say at a
-> -given range only decodes to 1 one Host Bridge, but that Host Bridge may in turn
-> +at which the interleave can be split. For example, platform firmware may say a
-> +given range only decodes to one Host Bridge, but that Host Bridge may in turn
->  interleave cycles across multiple Root Ports. An intervening Switch between a
->  port and an endpoint may interleave cycles across multiple Downstream Switch
->  Ports, etc.
-> @@ -187,7 +187,7 @@ decodes them to "ports", "ports" decode to "endpoints", and "endpoints"
->  represent the decode from SPA (System Physical Address) to DPA (Device Physical
->  Address).
->  
-> -Continuing the RAID analogy, disks have both topology metadata and on device
-> +Continuing the RAID analogy, disks have both topology metadata and on-device
->  metadata that determine RAID set assembly. CXL Port topology and CXL Port link
->  status is metadata for CXL.mem set assembly. The CXL Port topology is enumerated
->  by the arrival of a CXL.mem device. I.e. unless and until the PCIe core attaches
-> @@ -197,7 +197,7 @@ the Linux PCI core to tear down switch-level CXL resources because the endpoint
->  ->remove() event cleans up the port data that was established to support that
->  Memory Expander.
->  
-> -The port metadata and potential decode schemes that a give memory device may
-> +The port metadata and potential decode schemes that a given memory device may
->  participate can be determined via a command like::
->  
->      # cxl list -BDMu -d root -m mem3
-> @@ -249,8 +249,8 @@ participate can be determined via a command like::
->  ...which queries the CXL topology to ask "given CXL Memory Expander with a kernel
->  device name of 'mem3' which platform level decode ranges may this device
->  participate". A given expander can participate in multiple CXL.mem interleave
-> -sets simultaneously depending on how many decoder resource it has. In this
-> -example mem3 can participate in one or more of a PMEM interleave that spans to
-> +sets simultaneously depending on how many decoder resources it has. In this
-> +example mem3 can participate in one or more of a PMEM interleave that spans two
->  Host Bridges, a PMEM interleave that targets a single Host Bridge, a Volatile
->  memory interleave that spans 2 Host Bridges, and a Volatile memory interleave
->  that only targets a single Host Bridge.
-
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
