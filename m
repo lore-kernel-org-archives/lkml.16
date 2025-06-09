@@ -1,134 +1,184 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from vern.gendns.com (vern.gendns.com [98.142.107.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9155A1624CE
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 15:01:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59ADC1624CE;
+	Mon,  9 Jun 2025 15:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.142.107.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749481300; cv=none; b=lWFXFqLXltqy9cKVyOKM4a0Ig468t8f1y8HSOlHhJwfexthBT9dKNUixQkHqbMxkPOV4SZa9y153oE3Ar6NBNDgEA7N0zsskRP8p1iWlXSo1ZD53OYB6NmRH1gazXo0BVyn/vSI5iNrveStHC/Gz0DupT6iCiAY1dOJizPnuwYo=
+	t=1749481374; cv=none; b=KwYATFUVKrbzCeUow/zoBanfucD90KXxD+vgJd9F4G9Nf5CE2qyVr0gWWCV//EDB0EgGaaWxGpwObn97hmhdCKIMPY9tlQTzzd3xQyLdBe/RMY+++DbmtEyskBUcMF3ni2XjVuX8CnaGvvXb6NlgOhCDk646mwrLj9tpUzj1oCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749481300; c=relaxed/simple;
-	bh=nDTdaX68kkk0ETbUzMRtOvX7XWAta9uFpsel/G+Mdtw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bLiH+n+rAd6APps170WueQ6j4+1DHxqBhIHHXIRSeZIH3In2qZDqnsz7cXH9CDUZCUb9Jb1oGg5E3ewbdaQceyqqjl8S1kqk32MRAKwSzU/Me1DlGuByVvgFQ41IlSR78lKkziIZ48C/CMnCheCGYBvZC4yS/swi+3sBlbwjRA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lvYQepXI; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749481374; c=relaxed/simple;
+	bh=lvpaPlNJWBTD2TEU6WFplLK9h/nftYxIuKi3jsY5szw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZvMExKo/Kuu8S+EBcqBvF4z/fawO4b/v0TXO8U4i6MC3Y/0RiH24AeJfQKwb9JqpinF6KdhRXFS7r5BxSc74vS5jFothO9TnTT/9G9QvwuhP230X0fKd03bWheHN3aGm6JSvxCyMaVsQBa9xJb+dB+vjDu1Sm+7mHXeBEFAq78o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com; spf=pass smtp.mailfrom=lechnology.com; dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b=AKhmu5NE; arc=none smtp.client-ip=98.142.107.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lechnology.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lvYQepXI"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 559ADqfR012672
-	for <linux-kernel@vger.kernel.org>; Mon, 9 Jun 2025 15:01:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=eeZOilRRCfOoW7ivyBUSV/3B
-	oCRgS1D3Yx7wgvq5hHw=; b=lvYQepXI4nKWo2BFshP/lyWx27i3MIHxl5bxwxfq
-	REhRIDK6coQmM/cQT9WPUnEZhgiMF9KnoyM9CQiF4p7lX2QlNwm/ys9HgZXpmUPy
-	Ibc/uJU0BJUlFSIBQ/G0URsv83Q+IdbrCvWbNmkF1Rhw9CKRgZ0N3e/Bpluz7P/1
-	G/tMK4v8CtKr3qkMvJiShjbuClv6cRtYVa4QJupiv48Yiolh2wMgQt+U3GNPznEa
-	V6qSeMvSZGtD/31/B/pt+gDkBZZB63eR8daTXFhA3YJpMaXv+zXgwcSRyIA/eONV
-	iZXCYuDg2PjvVpKunDpKjlRRkgv/ajflrz10sirbfr47oA==
-Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com [209.85.161.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ccv6am0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 15:01:37 +0000 (GMT)
-Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-6044db45c83so3201981eaf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 08:01:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749481296; x=1750086096;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eeZOilRRCfOoW7ivyBUSV/3BoCRgS1D3Yx7wgvq5hHw=;
-        b=UtIDyOeu2urdVTEUo++VbQibz2SJufbTWyplXIEsX4ZwVwwd6JD1nFHU9Yv77JtdXs
-         5i3YPtyDaLMI/QPjB0lI4OekxY99fU8kAiSP7v47s4Q/VP27dDMHOWHIoo+57a/9/0i/
-         ykCtmn0UlNOFqFzjFYRsxfTqCx4wTmBOinQiAJTdROmpuJLErEUw4QsyRldkAirrGFQX
-         nJP4SXBVZqnkh2IsekHEQsxRHgfvIF71lzQYY2E3N+wU5wmE+7fWUCuVVfh0UyWOmFha
-         3WyAV+14rQ/sEI43PNkT8fMmzkx1/wYhK4XpQNrU/fMOaZpsJozCSCqKOqo2G3fIo1f6
-         lA6g==
-X-Forwarded-Encrypted: i=1; AJvYcCXV3FeK0wURl599a1CWfqOU4L24ggxYiR6Rox9BoaM+S+SdhFyjnvYR+gDpCRKGRKMhSTMBg4qle4RaGCk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyUh1wuxfPGlauDceoN8mvjB83YispA0xu816lhtDwu1E9QAq8
-	BCYARk7lm5oM2YHpdp0uis9AbVX798IFDD7iFx24PuwjA8U/sNOd6CNRW18AfVXruXu4OcIaNbe
-	h/ZOGSPaivpQLCAqoIkUQUztlrKJ9aChPPvvudz9D5dFi0wPkDdKpH16qz4ccDB7n+D0=
-X-Gm-Gg: ASbGncsYHCmHMO7BMkDI3KGvNY89AeS13Vys3F5GfyWwOaYzIhxBcv08KgSGxKJLCWJ
-	HlkeNPN2EOBjwnXFT9XPxIfMk8C/JNzRLjXJWE2j0dyPjjBpTjPwFYZhTZAfE2W4rmNjvHBbl4a
-	/jnzOoFvkwvJI3GlpCpus5k8QnaxY+ZIDayBlgX0G+x66srs29v0P2K/hciTUA4A8HuX2sDNdW1
-	Hkskm/8nIKkrJ8oWjZXKQWiWfFcRtt3rZ2NeZO9dHH1bH7XAoOEh91qsuNxo6dtBcfc8GjHz+MS
-	ylRFL+IC4d/UlwfQWDWQo5mJgLaotlAvMXULUOtjqPUKv9OZj3K4sw4EIg3efHMhCznmFX/Vlg8
-	=
-X-Received: by 2002:a05:6820:3102:b0:60b:9d5b:e94b with SMTP id 006d021491bc7-60f3cf05b30mr7498261eaf.4.1749481296089;
-        Mon, 09 Jun 2025 08:01:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE1Fi8e/8Pp5oI9faNSYkOSpVjhnJdV9bwjYCbtPXM4Szgyw5KA89jfNLN1bkno5QUfOc4AOg==
-X-Received: by 2002:a05:6820:3102:b0:60b:9d5b:e94b with SMTP id 006d021491bc7-60f3cf05b30mr7498206eaf.4.1749481295529;
-        Mon, 09 Jun 2025 08:01:35 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553677385desm1186686e87.251.2025.06.09.08.01.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 08:01:33 -0700 (PDT)
-Date: Mon, 9 Jun 2025 18:01:32 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Yongxing Mou <quic_yongmou@quicinc.com>
-Cc: Rob Clark <robin.clark@oss.qualcomm.com>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>
-Subject: Re: [PATCH v2 30/38] drm/msm/dp: add HPD callback for dp MST
-Message-ID: <arfmbusro2nh7axnyqn26v4rjwfmop4q4oxu45ad76jubijnbn@3twddambhtum>
-References: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
- <20250609-msm-dp-mst-v2-30-a54d8902a23d@quicinc.com>
+	dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="AKhmu5NE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=L0O5QwSYDvJOcXXECKxmll7ON/5dbbzzpg68D5pSlyQ=; b=AKhmu5NErKA6uUNTk2lTOSLuFZ
+	FMU/z9Q9zg/jPPk1EVm0jt8n7KEhSmvmaJbKToOC9Zfpha2inqRk/pB5a3XlZj/v0su3XF7Nh/35d
+	jPscLFatIiYBqz63Ia0hrZS0LuUPSOih+guKwycQS+pgLfn0npbwrv3x95q3vaB0Jvonmh1TCg2I8
+	L+L+AMHWqOw41QkN8AHYmcpWswLPC0oz8tBFiGv58IS+i6Q4tp1BUDOCp0HobDZhdF96aNP7u7j0X
+	a7pioKuMAyN8Hl0oB44DniDcMf6N8Z31R0CHHtyA2wtDzwxUdKfGb2VmGhO6Bw30trw1/pf6Rg0K6
+	TE4njDVA==;
+Received: from [2600:8803:e7e4:1d00:c2e7:1c16:22c5:b461] (port=44748)
+	by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <david@lechnology.com>)
+	id 1uOdmW-0000000031a-2mW4;
+	Mon, 09 Jun 2025 10:46:32 -0400
+Message-ID: <04b5b857-4996-4278-8fab-7eb816b1febe@lechnology.com>
+Date: Mon, 9 Jun 2025 09:46:31 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250609-msm-dp-mst-v2-30-a54d8902a23d@quicinc.com>
-X-Proofpoint-ORIG-GUID: m4Bs4pHxLqqldrUqz2BNEQNe1arl_xr1
-X-Authority-Analysis: v=2.4 cv=TsLmhCXh c=1 sm=1 tr=0 ts=6846f751 cx=c_pps
- a=V4L7fE8DliODT/OoDI2WOg==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=kZwT76mLgBx3J5xcvQgA:9 a=CjuIK1q_8ugA:10
- a=WZGXeFmKUf7gPmL3hEjn:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: m4Bs4pHxLqqldrUqz2BNEQNe1arl_xr1
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDExMSBTYWx0ZWRfX/697Bu9NY9dv
- Ez49EhWnogELPX9rcPFKXBMQTf2fXEzHy4wQldd8WR3yjlMEsvMgLupYN53hCOxg8cHnh8wPbXg
- n7lR1e0ZhL9DwN7MzL8bKZ42uBwjiWjnuQDhTH5A2ZyZis0TuAre4NcZIdyOzOZSURU3cU4gV+W
- Fcbjg/r6I1c85N6x1hbX4L35Nx99mdRttlbkiknhu8G872wRpGF+lqLuAxIwalR1qLW/PJ6urI2
- WrmEox8mfiYdmSsaKRougr2dKtI6enIEeXZ3+RtcwTCGK+X2tJkawev1yo5EcWg87jOl7fFvwGC
- w8GYqxyWKbtE850SfvXP3BTPM7g6IxNGrcyxt2dzV8JpxWYPf7inoMVE7XAkFN/fE0MFQq0to27
- QcwWCtE/AAR/nvXr2htMEWGdxxc+2W3lFIOj0MLIk40+gwtU3nPHrllBeN2Gk3LW5yhSe1D3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-09_05,2025-06-09_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=717 impostorscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 clxscore=1015 mlxscore=0
- malwarescore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506090111
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: phy: Convert ti,da830-usb-phy to DT schema
+To: "Rob Herring (Arm)" <robh@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250607212638.744524-1-robh@kernel.org>
+Content-Language: en-US
+From: David Lechner <david@lechnology.com>
+Autocrypt: addr=david@lechnology.com; keydata=
+ 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
+In-Reply-To: <20250607212638.744524-1-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Mon, Jun 09, 2025 at 08:21:49PM +0800, Yongxing Mou wrote:
-> From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+On 6/7/25 4:26 PM, Rob Herring (Arm) wrote:
+> Convert the TI DA830 USB PHY binding to DT schema format. Add "clocks"
+> and "clock-names" which are already in use.
 > 
-> Add HPD callback for the MST module which shall be invoked from the
-> dp_display's HPD handler to perform MST specific operations in case
-> of HPD. In MST case, route the HPD messages to MST module.
-> 
-> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
-
-Missing SoB
-
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 > ---
->  drivers/gpu/drm/msm/dp/dp_display.c | 20 ++++++++++++++------
->  drivers/gpu/drm/msm/dp/dp_mst_drm.c | 34 ++++++++++++++++++++++++++++++++++
->  drivers/gpu/drm/msm/dp/dp_mst_drm.h |  2 ++
 
--- 
-With best wishes
-Dmitry
+...
+
+> diff --git a/Documentation/devicetree/bindings/phy/ti,da830-usb-phy.yaml b/Documentation/devicetree/bindings/phy/ti,da830-usb-phy.yaml
+> new file mode 100644
+> index 000000000000..e18746f80982
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/ti,da830-usb-phy.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/ti,da830-usb-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI DA8xx/OMAP-L1xx/AM18xx USB PHY
+> +
+> +maintainers:
+> +  - David Lechner <david@lechnology.com>
+> +
+> +description: >
+> +  This device controls the PHY for both the USB 1.1 OHCI and USB 2.0 OTG
+> +  controllers on DA8xx SoCs. Consumers of this device should use index 0 for
+> +  the USB 2.0 phy device and index 1 for the USB 1.1 phy device.
+
+Probably doesn't matter much, but we could move the description
+of the #phy-cells to that property.
+
+> +
+> +  It also requires a "syscon" node with compatible = "ti,da830-cfgchip", "syscon"
+> +  to access the CFGCHIP2 register.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: ti,da830-usb-phy
+> +
+> +  '#phy-cells':
+> +    const: 1
+> +
+> +  clocks:
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    items:
+> +      - const: usb0_clk48
+> +      - const: usb1_clk48
+> +
+> +required:
+> +  - compatible
+> +  - '#phy-cells'
+
+Probably should make clocks and clock-names required.
+
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    usb-phy {
+> +        compatible = "ti,da830-usb-phy";
+> +        #phy-cells = <1>;
+> +        clocks = <&usb_phy_clk 0>, <&usb_phy_clk 1>;
+> +        clock-names = "usb0_clk48", "usb1_clk48";
+> +    };
+
