@@ -1,105 +1,149 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0A625A62B
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 14:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB5D259CBB
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 14:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749479012; cv=none; b=ION/K6hlY1nDHVwu+4szBnlsPqRJwSon3tHPVetfA3RqnHt2tueDq6XirE8CgX+sXjEekhipPIOfBNv9XPSbc/mx955QWLKISeJCHIlsjC0Ts9WefxRESKxTLRcW8jjjg7llm0M5jTyPy1/xCMfTShdNCs1dGghLMh4CsmryBLw=
+	t=1749479126; cv=none; b=l6am7ybUDkbaklM3nMJuSRez9G2ixjytdrMtjyS532ZT+jdBVF3vMn/he1sID/ynQFIF7RYjwHu5UNaF9sv+JcH+W1EYngyuNQRgV8Gw8oe87/MB6SPSvVjeyAPdeOAElQsis4RRAy/DaBNDlsDbhY6AdQopqR2TAz42tAqW3DY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749479012; c=relaxed/simple;
-	bh=8EcgqC560eYHVLzzIVnGqJOfxiE1usTuKVMr5c5j3O8=;
+	s=arc-20240116; t=1749479126; c=relaxed/simple;
+	bh=RMxwU4uMw3X/ihqmtoM44ZozrFhIFNNLFQWT28zbLhA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jB9PQdID4bSgXBCqrfVNQcuKwYgV4dhu8DCpSb3uqMdqX9Kl/MACr4s2kT2IP3R6PxTiC8/1gKtSxZNoDlTVvfOMnCfCtQJas4A6+i7l84uoE+tU2HcyfmksDV4dp9nwgiKS+Q0nbEFaKCHOR55Wx856KaMD7+/qgYxFqswNKps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MpNQqY+0; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=GHHI9e6vSY2DcUqhBzjC69uhx1SNk84y/jYH6KoD+XYkh1bcjDKvaJTNs/cqX/H4RlyPQjCCbpEhd31iDVxsF++X84obBilYwF0IvmgFHeFlsyASvOkpw7bRwQHsQD8K8c0BOkah70750FaH8lTPX9GKszsRv82b1x2EflGM+lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j6Lwfr5N; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MpNQqY+0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749479009;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Bu95bqt5fllwDHdUjFRYtS/5XzWEF81181iRUHtLAbM=;
-	b=MpNQqY+0wnVLVxZVdPnhHJ9TxvvheI1eYL9P6t++aSow+kkSibsVtqEXYLJPvLArn6/C8M
-	1YM/9TOQqGFmyItg9/cIqw+PwYAT7L3rBzbcdW1csMchjRKT/SqGw/csJllXSpEIIYIOOY
-	lyGHdFcnxmpVId64AWYfvoQg6R0zkh8=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-610-rS85Egf-OIq4TMzuW1hTrw-1; Mon, 09 Jun 2025 10:23:28 -0400
-X-MC-Unique: rS85Egf-OIq4TMzuW1hTrw-1
-X-Mimecast-MFC-AGG-ID: rS85Egf-OIq4TMzuW1hTrw_1749479008
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-601df3b434cso4965070a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 07:23:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j6Lwfr5N"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e81a7d90824so2361984276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 07:25:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749479123; x=1750083923; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JG77WgKR93x/LtBVjZqNlrO3c6x5SGKIjmb1nd9PqZU=;
+        b=j6Lwfr5NFTdWmemEYQWY0nTCpZPhhYfyqxHkoZ2ddojw0GEL3gMx3xCkZIn2vwRTlL
+         E6UXbY7IQ/0g4IVgIGnbNaZ/gxm5oRBIDIYRYQEhbMxt+Thn0NrWjMN3F0ovVkhJe4GG
+         yw05st3McYHu6ZY6iGC2hLTkcMyBUmzErotaPyalagrRGwnstr1Qcn/NSpLeDYIvT4Gf
+         2j+wGXmMvzaY35esVGr6wpUQw5+rBR2PgaQVfz45c4IXSYM5htldPfVCpNMtizfyv++c
+         Zpz0JazrTG4aBvTbIoknXFHkNu/ggZR25cIT8M3rGxD5mrdUvcc4bKW0X8l3S8ZC84Xt
+         T24g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749479007; x=1750083807;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Bu95bqt5fllwDHdUjFRYtS/5XzWEF81181iRUHtLAbM=;
-        b=NeB/rKpIjhJhfApy6pqCa6W5JG7t/6CWlDYCrOp35Z9zIDuXFF4YwZ1F++/ubnmxJZ
-         kG1h37h/12mq/qGRG83gzV4oRchfNwAQfJekHm4CizMbgFGiB4+Me5o4GZQuypkqxfFL
-         IBZPEhk8FE/GzrRyM7aBuml46TF2JZuU9ENSGtNegO7IEuNTF0TeW5CAuuui7jc1ypKJ
-         uC4U4GJYZ1h9CFakfjHbFHLoO6W7A4vhqbrTd+FPUl0rQp9zkcdBgfgaQ5/zoQpYVDmI
-         pFJnbbeF/3/XCnJUZzACZM4undQLbjclEhzKWE2u7ctj4IWx5ZNzAi6COPsLQJPtzOXv
-         zyIQ==
-X-Gm-Message-State: AOJu0YyQq57mLMifw3DRDiFMx8SenunRfIfP3XPGbMML6GCKxMe1sTgi
-	tmznI8i5ueQYk8dWYkd74HTNNB5x7srhu/MvkQGq9u8eKjDDV6R9jH2+kZEefVquDX9KmvQjKIL
-	HH1r3zmrQlZ6XBW0ERUB+/z7Gri/Ce6C9138xDeuRaXh6/KRs+4G4avcoDAGxUt7aUI85kQhnmc
-	a4pioZ/UZstpCWQ0EBY1Q/sxcao0BGAU5Wj3fl/6XohhshS37n
-X-Gm-Gg: ASbGncs12pG9FCyD5sKp9y1ioxuksTj+U32nmcFM5F3Dj+geT8YC863ayOS0ffcT3bM
-	enCQDdoR2SPd8duYn6SsLi040Otxd54YJvO4WEP6Zv6wbJodYWVILajZ63kqroVaFol4fDMDPd1
-	t0YdwounD1j+RuqPW1KRj+J6A5MrRLWn4F6Sw=
-X-Received: by 2002:a17:907:7250:b0:ad8:959c:c567 with SMTP id a640c23a62f3a-ade75fc357dmr5540166b.10.1749479007499;
-        Mon, 09 Jun 2025 07:23:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFdFm50ZqTrtiAaeCZxzMTOJGmQspyn0ugpdOkFaeB92pob/RBEpCC1LY+p1SzFJRFwG9ViOjpKT8qUbWccq3U=
-X-Received: by 2002:a17:907:7250:b0:ad8:959c:c567 with SMTP id
- a640c23a62f3a-ade75fc357dmr5538366b.10.1749479007066; Mon, 09 Jun 2025
- 07:23:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749479123; x=1750083923;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JG77WgKR93x/LtBVjZqNlrO3c6x5SGKIjmb1nd9PqZU=;
+        b=u5n95kze0ENJOlbTRBqxOc6pYunCdwmzbKmSHkjHk3iS19b5I1bhB5Pn3in17aYl7f
+         fowlewFP8Ix0fx0AmX74zU+sJe2m6dtrvweq0oDGKB+69OIumRtxn5lWZKPUSQVT+ItA
+         Q4z0fdzSyghGGZv4Z/unAvJ39tIu/dlnURVjdh9JRNoFkr8uN+vEm3ZTagk5Jy4yD1c0
+         kOsmxfgu2X6r5WoT5al8u8K0Z7EzqxJPHFIFkEUUVCd9LQoQpDUjzdxjzz1lUXS9lNsr
+         Djwa2dlbaXDlB1jOQ3eQmPzijHqzpLKsZOybluwg22dTfpWieKA0L6QFeG09RIdJrkhu
+         VU/A==
+X-Forwarded-Encrypted: i=1; AJvYcCU6ZKeLAaFCjhCxr5vZk/hGoakWhCYJONOc5Z89sRVJbpI5WO3MtLFUPgqShcBzGzFRx8G+eAPmNB891gs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFz8tkXnytHfWR17Eag3GhEPx7xQcOsp0YI90m1ZRWf+cJt+ZH
+	gL5a6fzHEm/WRd1Xf+ZX5fIZA862/kU/gR8ZlfD+nLdd3ebac9S13odxXeFjyS4hd/JEmEA5QR5
+	cDQv1tIQBWbE5bD4d9d4pASc1qcYEHSmPaw4qMP/LUQ==
+X-Gm-Gg: ASbGncvi/nUR7yEHQBukvG6IyxeAF1pzHPoNIg+wXxiFwrEOPc0UIOA2sCvIZSksfE1
+	XY5ByCZw2MVJaYXcVhGH0fnPUqdOMoAWx0CMnJgtKtkAKKrXf02qyV9SZ86lfEg52ri2tXK2D9e
+	Z6WEs/g5nmrNbyphE9AZyQxPsCZvEkX+U551LBHAyoBOLP
+X-Google-Smtp-Source: AGHT+IHLNEnuAme9eHASfWL8QqGkVGxEwvncLnTk7Ne6+v13yqzaemTTYFnukN2K2Zr05hKAsZjb76xfzqBgFfZg0J4=
+X-Received: by 2002:a05:6902:690c:b0:e81:d3db:9e53 with SMTP id
+ 3f1490d57ef6-e81d3db9eb3mr5064016276.32.1749479123336; Mon, 09 Jun 2025
+ 07:25:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530200305.85319-2-jsavitz@redhat.com>
-In-Reply-To: <20250530200305.85319-2-jsavitz@redhat.com>
-From: Joel Savitz <jsavitz@redhat.com>
-Date: Mon, 9 Jun 2025 10:23:11 -0400
-X-Gm-Features: AX0GCFstG9gKn9d8F0xmlxeWHmxs0iVZJEdQNQ8-CUXHyj5wlOfl7zEH5cLtapA
-Message-ID: <CAL1p7m53yJ-dpg6L2QVQM7bshWYXAxOJjrVGdTG8cDMEhNogyA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] kernel/nsproxy: Minor nsproxy code simplification
-To: linux-kernel@vger.kernel.org
-Cc: Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>
+References: <20250521033134.112671-1-ziniu.wang_1@nxp.com>
+In-Reply-To: <20250521033134.112671-1-ziniu.wang_1@nxp.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Mon, 9 Jun 2025 16:24:47 +0200
+X-Gm-Features: AX0GCFsxQzRzF0fm7fx2jH_zKPRXvTdReaWYtTKHfDZG8Ytl7CNAKn6UVwNB5jk
+Message-ID: <CAPDyKFogKcwssmQXSDQ+WFBP5iPMOHaK9RSAmRtn89MUnTJb=w@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-esdhc-imx: do not change pinctrl state in
+ suspend if function irq is wakeup source
+To: ziniu.wang_1@nxp.com
+Cc: haibo.chen@nxp.com, adrian.hunter@intel.com, linux-mmc@vger.kernel.org, 
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
+	festevam@gmail.com, imx@lists.linux.dev, s32@nxp.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Frank Li <frank.li@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 30, 2025 at 4:03=E2=80=AFPM Joel Savitz <jsavitz@redhat.com> wr=
-ote:
++ Frank
+
+On Wed, 21 May 2025 at 05:30, <ziniu.wang_1@nxp.com> wrote:
 >
-> The first patch removes an unnecessary guard by the same logic as
-> commit 5caa2d89b7f1 ("kernel/nsproxy: remove unnecessary guards").
+> From: Haibo Chen <haibo.chen@nxp.com>
 >
-> The second patch fixes the total ordering of resource acquisition
-> in validate_nsset().
+> pinctrl sleep state may config the pin mux to certain function to save
+> power in system PM. But if usdhc is setting as wakeup source, like
+> the card interrupt(SDIO) or card insert interrupt, it depends on the
+> related pin mux configured to usdhc function pad.
+> e.g. To support card interrupt(SDIO interrupt), it need the pin is
+> config as usdhc DATA[1] function pin.
 >
-> The third patch implements usage of the cleanup helper added by commit
-> d057c108155a ("nsproxy: add a cleanup helper for nsproxy").
+> Find the issue on imx93-11x11-evk board, SDIO WiFi in band interrupt
+> can't wakeup system because the pinctrl sleep state config the DATA[1]
+> pin as GPIO function.
 >
-> Joel Savitz (3):
->   kernel/nsproxy: remove unnecessary guard in validate_nsset()
->   kernel/nsproxy: fix put_*() call ordering in validate_nsset()
->   kernel/nsproxy: utilize cleanup helper for nsproxy references
+> For this case, do not change the pinctrl state in suspend.
 >
->  kernel/nsproxy.c | 12 +++---------
->  1 file changed, 3 insertions(+), 9 deletions(-)
+> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+> Signed-off-by: Luke Wang <ziniu.wang_1@nxp.com>
+
+I have followed the discussion and I agree that there is room for
+additional improvements (such as adding a new pinctrl state).
+
+In any case, I still think $subject patch is the first step to take,
+to fix the current problems. So, applied for next, thanks!
+
+Note that, we may want this for stable kernels too, but perhaps easier
+to manage that by manual backports as this depends on commit
+676a83855614 ("mmc: host: sdhci-esdhc-imx: refactor the system PM
+logic") too.
+
+Kind regards
+Uffe
+
+
+> ---
+>  drivers/mmc/host/sdhci-esdhc-imx.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
 >
+> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
+> index 5f1c45b2bd5d..f206b562a6e3 100644
+> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
+> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+> @@ -2057,12 +2057,20 @@ static int sdhci_esdhc_suspend(struct device *dev)
+>                 ret = sdhci_enable_irq_wakeups(host);
+>                 if (!ret)
+>                         dev_warn(dev, "Failed to enable irq wakeup\n");
+> +       } else {
+> +               /*
+> +                * For the device which works as wakeup source, no need
+> +                * to change the pinctrl to sleep state.
+> +                * e.g. For SDIO device, the interrupt share with data pin,
+> +                * but the pinctrl sleep state may config the data pin to
+> +                * other function like GPIO function to save power in PM,
+> +                * which finally block the SDIO wakeup function.
+> +                */
+> +               ret = pinctrl_pm_select_sleep_state(dev);
+> +               if (ret)
+> +                       return ret;
+>         }
+>
+> -       ret = pinctrl_pm_select_sleep_state(dev);
+> -       if (ret)
+> -               return ret;
+> -
+>         ret = mmc_gpio_set_cd_wake(host->mmc, true);
+>
+>         /*
 > --
-> 2.45.2
+> 2.34.1
 >
-
-ping
-
