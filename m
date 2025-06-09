@@ -1,96 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE6621CFEC;
-	Mon,  9 Jun 2025 18:58:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E121621CC49
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 18:59:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749495518; cv=none; b=OTLfLGv2JKqDBEcTqtdec4FNeCRdb9BWNEXlDOXBXTcYSUZi1STW9xe1ITm8fGq0k8y34ap19wnXd6nj2f+d+D9hX5nXMFA2MDUMhVyF1zk6xPgkYibFgIJiBD9dveZTqc1AlhSVGwK1/2K9Vg+VtiDBaLv5VnHfZfGuZ/5l9iY=
+	t=1749495559; cv=none; b=H7TtSIt+p/nqeHt8cto7RGNP7XQDToFWj96bngrGaMxTd3xLAwow0aFRry1mJUVm1F8F9FuqMI14qjw+GvA0jKkAzwB9Bg9g0tdVkHgErtRit6ssqrSEvOG4A+lhoH0X71L3KfbEfQxbOpEe3gdMZ6puuNL3+GSkPaew0lnUyEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749495518; c=relaxed/simple;
-	bh=jjPWTfrAHKJowj5Z+4zZD4280cfX8ICtIyTBCFXvyXA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R7lP4Sfj6DxIrfjY8EEsLAdod5uJZIHCDlCmD2RctwnHwkiz8FRlh1MmP0IG2oTf9W5O6l0IvHnupaw3wa7HR/QyfBhyXUOWkmsz5PbAEqWc+e84oZLBrx9m3V4lFzvouh5qtx6nsZwui5PZCYOd4izSI8K6wsek9oYUPyh6MyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pg3C94eU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749495559; c=relaxed/simple;
+	bh=TPPS1G6clxLaYVI+XLmUhfs6Dnqyo8ZtAR4qA+vEDAA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UGBrhNoxLbfrQXGmRyljWoUTfogn4gA5SrQN9NW2RQT775ejO94rUy8N2OekLb0LFbSqq3W6UhjkbpCFmIavfZK/19tAxZI961y1dtoDuLfiH1bcwSq3CIjNqxka+cgxA0b/J5ah7U2rr/kGbOeMiO/owzLEkLvWKxKmXYJtLPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MFZSHste; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pg3C94eU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06926C4CEEB;
-	Mon,  9 Jun 2025 18:58:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MFZSHste"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35B22C4CEEB;
+	Mon,  9 Jun 2025 18:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749495518;
-	bh=jjPWTfrAHKJowj5Z+4zZD4280cfX8ICtIyTBCFXvyXA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pg3C94eUpCb2nkxFPVcQnF8o5van3SJL0Bs2RSjymovqZwi0GmCzmn4m68CHPBYNL
-	 DxBUubPRtEwqI+RLvqoMs3GNGjY1NwA5dSwUzl+ZSFwQJhl87F76XegePDGKsDpzEj
-	 7v2frVfOcMcRaf6gXFwICqb/x6N8omJsyuQro1F7bkjtjayx3FQHJt7XrfUhboaJnk
-	 YTpt4ImQc7rs8WWAPYZpuwYLmENPACxZ/Tt05F1Rin5LoUYx0YdWUKdS+R2whrqxAD
-	 7OsB2isfcuDT96fNNXlTtabNGMJBrpLtWW7gvPPApL4xlq+sG2acM3vV4U+vtEhtY8
-	 0vyXWORB90R9w==
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-72c173211feso1420640a34.1;
-        Mon, 09 Jun 2025 11:58:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWkHhoOYiJw4d4etx9hxDQuAUA7r1g3ew3byLZ5Xf/sgYKsa5lB+GEH11dO36WefNkDEdSnGCDJ/X5g@vger.kernel.org, AJvYcCXWG8xJB0N0HBLb4JH9PaN33j1qNetQrvfTuMlQUvr6c39YQfeDELSeVwCUNI0Kqg9tT7+0mPZMrYWQQT1M@vger.kernel.org, AJvYcCXw19YE+bOFwWKh5PPhEs3ZHPj1CoTg3wb+9gf/mmWn74Upkl8sm39Pk19GVzW+BrhAGDsrZZgnuPIl@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGXHiAEIJ5y+mayRWOYKYTKP+ZG1xdugReGpqOplhG+K0GCoOs
-	n+dZC/aksVKvqL5zjpimK88k0lUf6saoU1L4/3xMHG9kDC70Z3n1dgL00N9G9zGUfCVXTZmTFWG
-	FxLX5fPVeQDzlWr7KNzn2UXZkvBTTZUE=
-X-Google-Smtp-Source: AGHT+IE/Kf/rglv+zULIsd/Hx9i9RCS+ZxIkARQeY4xSLesj5blmdcfud4/343OwkYCSbD3QuWbq3rTHSxaVmc5WZ3M=
-X-Received: by 2002:a05:6870:1786:b0:2c2:2f08:5e5b with SMTP id
- 586e51a60fabf-2ea00877847mr8655527fac.13.1749495517352; Mon, 09 Jun 2025
- 11:58:37 -0700 (PDT)
+	s=k20201202; t=1749495558;
+	bh=TPPS1G6clxLaYVI+XLmUhfs6Dnqyo8ZtAR4qA+vEDAA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MFZSHste9jXUrJg5JqPmtWc1Us0KDhHciB2q1KOFDuiav6GPbytb3nWqyEciO7zyY
+	 DFbcDUzn3iVWjKa357VJkIih460/WS/n+VK7f3hICahMRT21awSnt1djiuc425raGb
+	 i3Hs3O7PyjlNKYZnOr8u32Cz5jwtX1HRzX0dwa9H78qJI8z8EzmK9wlVhP6GSt6K4w
+	 vBhPCwGjE0j4H/gMtiv8iL3OSToYZkqKs71D35mwIi8LYe+FVpZ+1WhxxaZY1/tFhG
+	 PiQjFOKLYShhn0kpgigMZr32n6F6dHca02SOxHiIxGGLlEsNAYu5ARqX2dlrglUrXP
+	 fywMzaEwud+3g==
+Date: Mon, 9 Jun 2025 08:59:17 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Marco Crivellari <marco.crivellari@suse.com>
+Cc: linux-kernel@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH v2 0/4] Workqueue: rename system workqueue and add
+ WQ_PERCPU
+Message-ID: <aEcvBadg_rT2_roQ@slm.duckdns.org>
+References: <20250609103535.780069-1-marco.crivellari@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250607033228.1475625-1-dan.j.williams@intel.com> <2af31ff8-eee0-4868-8f97-2a390910f9ed@intel.com>
-In-Reply-To: <2af31ff8-eee0-4868-8f97-2a390910f9ed@intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 9 Jun 2025 20:58:26 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0j5+iB97rTqtOoFB0zpHzNOOHGOQVz51ZU--=4AcUPf-Q@mail.gmail.com>
-X-Gm-Features: AX0GCFtM4Z_9kTNBgzU_uqk4-HS_OYG_CSCBhIivKu7nnPX-kKHvYc24bYkuhmo
-Message-ID: <CAJZ5v0j5+iB97rTqtOoFB0zpHzNOOHGOQVz51ZU--=4AcUPf-Q@mail.gmail.com>
-Subject: Re: [PATCH 0/3] CXL: ACPI: faux: Fix cxl_core.ko module load regression
-To: Dave Jiang <dave.jiang@intel.com>, gregkh@linuxfoundation.org
-Cc: Dan Williams <dan.j.williams@intel.com>, rafael.j.wysocki@intel.com, 
-	linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Ben Cheatham <Benjamin.Cheatham@amd.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250609103535.780069-1-marco.crivellari@suse.com>
 
-On Mon, Jun 9, 2025 at 5:04=E2=80=AFPM Dave Jiang <dave.jiang@intel.com> wr=
-ote:
->
->
->
-> On 6/6/25 8:32 PM, Dan Williams wrote:
-> > git bisect flags:
-> >
-> > 6cb9441bfe8d ("ACPI: APEI: EINJ: Transition to the faux device interfac=
-e")
-> >
-> > ...as the reason basic CXL unit tests are failing on latest mainline. I=
-n
-> > addition to the fix to einj-core.c, this also needs some updates to
-> > faux_device to make it behave more like platform_driver_probe(). Detail=
-s
-> > in the individual patches.
-> >
-> > Dan Williams (3):
-> >   driver core: faux: Suppress bind attributes
-> >   driver core: faux: Quiet probe failures
-> >   ACPI: APEI: EINJ: Do not fail einj_init() on faux_device_create()
-> >     failure
->
-> LGTM
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->
-> >
-> >  drivers/acpi/apei/einj-core.c | 9 +++------
-> >  drivers/base/faux.c           | 3 ++-
-> >  2 files changed, 5 insertions(+), 7 deletions(-)
+Hello, Marco.
 
-Greg, I think it's better if I route this through the ACPI tree as the
-issue being fixed was introduced through it.
+On Mon, Jun 09, 2025 at 12:35:31PM +0200, Marco Crivellari wrote:
+> === Introduced Changes by this patchset ===
+> 
+> 1)  [P 1-2] system workqueue rename:
+> 
+> 		system_wq is a per-CPU workqueue, but his name is not clear.
+> 		system_unbound_wq is to be used when locality is not required.
+> 
+> 		Because of that, system_wq has been renamed in system_percpu_wq,
+> 		while system_unbound_wq is now system_dfl_wq.
+> 
+> 		The old wq are still around, but if used in queue_work(), a pr_warn_once()
+> 		will be printed and the wq used is automatically assigned to the new
+> 		default (system_dfl_wq or system_percpu_wq).
+> 
+> 2)  [P 3] Introduction of WQ_PERCPU.
+> 
+> 		This patch adds the new WQ_PERCPU flag to explicitly require to be per-cpu.
+> 
+> 		Every alloc_workqueue() caller should use one among WQ_PERCPU or
+> 		WQ_UNBOUND. This is actually enforced warning if both or none of them
+> 		are present at the same time.
+> 
+> 		WQ_UNBOUND will be removed in a next release cycle.
+> 
+> 		Because of that, this patch also adds to every alloc_workqueue() caller
+> 		that require it, the new WQ_PERCPU flag.
+> 
+> 3)  [P 4] WQ_PERCPU documented in workqueue.rst
+> 
+> 		Added a short section about WQ_PERCPU and a Note under WQ_UNBOUND
+> 		mentioning that it will be removed in the future.
 
-Any concerns regarding this?
+Thanks for working on this and the changes generally make sense to me.
+However, I think we should try a bit harder to reduce friction with the
+affected subsystems. It's a bit unfortunate that we're already at rc1. It
+would have been better if the new flags and wq were introduced before rc1.
+Oh well, we can manage. How about something like this?
+
+- Separate out patches to add the new flag and wq. Don't add the warnings
+  yet. I'll commit these patches to a separate wq branch.
+
+- Split out patches by subsystems. I know this is tedious but think it'd
+  still be worth doing. It doesn't have to be completely granular. e.g. We
+  know that network changes go through a single tree, so all network changes
+  can be in a single patch. Each patch can explain the workqueue changes and
+  that the patch can be either routed through the subysstem which would
+  require pulling from the above wq branch, or, as the default option, we'd
+  be happy to route the patch through the workqueue tree. I can create a
+  separate branch to collect the conversion patches that can go through wq
+  tree.
+
+- After the next rc1 drops, I can apply the patches to add warnings to the
+  -fixes branch and then send them to Linus.
+
+This is a bit more work but would likely produce less friction without
+delaying the timeline significantly.
+
+Thanks.
+
+-- 
+tejun
