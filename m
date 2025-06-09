@@ -1,118 +1,129 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3E52F3E;
-	Mon,  9 Jun 2025 02:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDCB2F3E
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 02:59:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749437937; cv=none; b=D8T+xKfz3NMsryg066lQxC0EIrcerdAKe7Xo2Xs8+nm+Y1TMzmtHKdQdOV2NMHCc0cKPtIcJLnMg72RiiaN6EYZo+yvLNjHTA2NCdAjsKKmjBTIon7SELHH5OLQKONAmS39Z21/WA5k6AnVzlssV+C2p5PSAtJj0InFJIFvzxuY=
+	t=1749437977; cv=none; b=FnbDs5Fim4nIpxCcpfgF0725pUHnoq1l8/T/LB0a8eitlMeh1Jtu3sMcVl8kPxamQbYNM/D+/CXiZsJlVPsBYRht6UBDW4ryRVoXTF3vlNG9GjBMDuPDP2/Y8xWiYcbICsCqOiiNsGlNkfui+31HLuEF6Z/DRY36sGn65NRzxjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749437937; c=relaxed/simple;
-	bh=v6UPCPtnveux8OgvSGb3WrSCb85Ye2wB2jPPXUMjN2U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VqE+vVM9OgcDndgN0JEdgnKguYs1e5Bdgk5jG1waRNvFEVEegUsdnymAI/bWPqoKBZ899PSJWoZ54M+UVns1C1xEqKnaG+fG8BxBfrib14cjiJe3b53ZVjK7pUawOoFVsOO1bBEvJUdiVzzzXiVNlc06/utoiyNYlxTAo42vIoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=egEALj+8; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1749437977; c=relaxed/simple;
+	bh=UQElxAqGxBmUymstBZ/Dk/1nzyfCRHDk4FZj9475Mnk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cvSIF5FEgOGZfMpGv581C4PR1ZyIq4ydNPf8u2B932RsDZ/t/0HtZVC5o6Cjm+Vdek8HfqhYVlDsTLGKrbJFzRCeQ+8Ji/XmjELTCvk3LasgYjTozCic+RHSNg6MPODBhMGOoBiS3krQik/Wtvki3O5X0N+qFq4wcnv2HpCKeD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tWyQrXWg; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="egEALj+8"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so45303555e9.1;
-        Sun, 08 Jun 2025 19:58:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1749437934; x=1750042734; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yp/jvaoC1WcWLG/0zffbhCmf3ZGbY/LJEvB/9n/Tguo=;
-        b=egEALj+881kHtypXzGYV5nGIZYmC68tTrjwCZt1OFqGKpHmFjVIZrqUvgb3fIBM3YZ
-         igq+2xjebyx+t2q6uOzoy7mPhfb2Oj6ugKRL/n+AS8JA8FjjfV6svwMsY4Cuty2YoG0N
-         cFOI0q7CypDuNwcQMlw6UCfqT4dQBeH/7Og38/dtquN9RrVJgbkh0YNrR5R+U6PSK+Zh
-         CsxvSZ1BF4m35/fTV+nLtYYSJlS+JGWAGHa5a0+OS9Ah5mEoeOBgy+PX5ro1EiwGn5v9
-         lAcNObcmnUPvKvvHsioxwfSwU0w9Hv2jZ6RNUKBwfPHozYAyM8b0OcyX19ZEAU5MV+p5
-         ofjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749437934; x=1750042734;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yp/jvaoC1WcWLG/0zffbhCmf3ZGbY/LJEvB/9n/Tguo=;
-        b=N/gW7wizGMiQeyxevT/eUkh/PTEa5ZjUU//MJi2JlRNU0S5t32yI9deuLGihiV+12M
-         514QaNmeNE+MbFj0JQxKPRh6qENzd/N5JGejDkacK6Zot/yqKHnZw0jCX9dZ88nrxYct
-         qUajSQMwKKfEOVh/VJmkEh0YbkEV1vVMAyvDM0m578zqRXuWkYgqoxVHOlVjR1BYVf9y
-         ip/bB6eMjbjMzI3N/ewgUJrvToINJ9K1vZwsjRzkYJuyv/Q3zqbJ2JPuiYVedmENB0v7
-         4SuP3yqGFrco8lFqU3Y9ASf8l8Od/0K0ei0pq5ZvPSMdnA+1I2njmMqrJo0b0avri6Kr
-         lHCg==
-X-Forwarded-Encrypted: i=1; AJvYcCU1t9f8LYf8gFeOjrvygw8Df7QfljIwbD5OQg6U6nn8NJTr0z/yemQSsmyZ0yx7NH6WMLS/NIgW0Ks=@vger.kernel.org, AJvYcCXa/ROd2OaOd9MlLIMlu69PC7zVcXYfJ56Ivtq5oHcB1rctLZPNzOS66xrF6vwwJiJqlw0YDlB3ZohuzxM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2UANiOK53zCMhNEWCLXNRbRIjM76DhHaUEKaX/OWCenvm96tS
-	TVP6q+GaR+PNOSSvmld9WhLoRwmYotqqb8u0qm7580LDiZVdrsiKJXg=
-X-Gm-Gg: ASbGncuFWDnUPDzj2TT9xU/H3Rc3X62CsApALJmg4xfxk+X4DJJZzMIqV7situsDsia
-	OZFP2STvf0TTh8IlYpNujqERwwY3N8VR4TWK0z5Ba39N+cNZuprGjFE2SGEif+FH+55u2OD3t8Y
-	8Mvp/WjQgQOJiP+eseT3P1wAQpBK3wi0L9VNHRXuSU0ZRRBEn/qHDn2KOsBp2ZPfcjKgHj4E5za
-	vfWDnXkegN1Bij+tlGslhGFKc2OwEL1WLGZVRswlVU3MitcR5/dZq6CsIYlgpftONpdfs+Cypag
-	/o2A4nN8mP4rGaUbjrpl98/DpOtUEtvNC4RHXq7S7ze6+LSB2pJWgGFNpqyyeWqww3roAzXXOQQ
-	SaTA+F9LkM44Pjo4LrZVj+zSWxBymeIlZb9N71MDi
-X-Google-Smtp-Source: AGHT+IHJ8KSXj9LxiY1LnTRyYnJpUKrLchoAIrcl740HZvDckReCDsal+HTSzlwlhwqmv6fGLJftIA==
-X-Received: by 2002:a05:600c:3b2a:b0:450:cea0:1781 with SMTP id 5b1f17b1804b1-4520137c0c8mr120167995e9.16.1749437933510;
-        Sun, 08 Jun 2025 19:58:53 -0700 (PDT)
-Received: from [192.168.1.3] (p5b2ac190.dip0.t-ipconnect.de. [91.42.193.144])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452730c66a1sm95375935e9.27.2025.06.08.19.58.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Jun 2025 19:58:52 -0700 (PDT)
-Message-ID: <b765500b-cfde-45a8-8f7e-eead57db7dcf@googlemail.com>
-Date: Mon, 9 Jun 2025 04:58:51 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tWyQrXWg"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749437960;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=K0E0j2BlPBhEZVL7ok/0anTaOlpOqXA2NyI5PTiVfMY=;
+	b=tWyQrXWguA+ancsJD83ufgUvjOSaZJM8GQUgWmiCpxfkAPoFtrldct233g2dm09zrZEWqr
+	dTNiLK6Hqupx/HlzQhgZvBbgoe2MQE3DSHV0Jf4aGbJ13/0POOQD7Rn/4GT76imbEQWGvr
+	IC6o3BtFXr5ZDS6pz2xprufyGVjLKvo=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: bpf@vger.kernel.org
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Jakub Sitnicki <jakub@cloudflare.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v2] bpf, sockmap: Fix psock incorrectly pointing to sk
+Date: Mon,  9 Jun 2025 10:59:08 +0800
+Message-ID: <20250609025908.79331-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: Build error in 6.16-rc1 in drivers/mfd/88pm860x-core.c
-To: Mario Limonciello <superm1@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- haojian.zhuang@marvell.com, mario.limonciello@amd.com,
- Thomas Gleixner <tglx@linutronix.de>, jirislaby@kernel.org,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Lee Jones <lee@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <fbea65b5-2015-44db-a7d9-b53cba9833b3@googlemail.com>
- <f656b948-aa3a-4811-b51f-64effa2001fc@kernel.org>
-Content-Language: de-DE
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <f656b948-aa3a-4811-b51f-64effa2001fc@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Am 09.06.2025 um 04:31 schrieb Mario Limonciello:
+We observed an issue from the latest selftest: sockmap_redir where
+sk_psock(psock->sk) != psock in the backlog. The root cause is the special
+behavior in sockmap_redir - it frequently performs map_update() and
+map_delete() on the same socket. During map_update(), we create a new
+psock and during map_delete(), we eventually free the psock via rcu_work
+in sk_psock_drop(). However, pending workqueues might still exist and not
+be processed yet. If users immediately perform another map_update(), a new
+psock will be allocated for the same sk, resulting in two psocks pointing
+to the same sk.
 
-> 
-> On 6/8/25 8:58 PM, Peter Schneider wrote:
->>
->> I'm not a Kernel developer nor a C programmer, I only have superficial knowledge of C 
->> (but I love to test and to tinker), so I don't quite understand this warning/error 
->> message. Becauses some lines below, the node variable is used as a paramter to the 
->> of_fwnode_handle macro (from include/linux/of.h):
->>
->>          irq_domain_create_legacy(of_fwnode_handle(node), nr_irqs, chip-  >irq_base, 0,
->>                                   &pm860x_irq_domain_ops, chip);
->>
->> Does that not count as variable usage to the compiler? 
-> It's not because there is a macro when CONFIG_OF is not defined that assigns it as NULL.  
-> So to the compiler there is no variable use.
+When the pending workqueue is later triggered, it uses the old psock to
+access sk for I/O operations, which is incorrect.
 
-Ah, thanks for the explanation! I didn't quite see and grasp the nested #ifdefs depending 
-on CONFIG_OF and the alternate macro definition for of_fwnode_handle when CONFIG_OF is not 
-set. Now as I do, it makes perfect sense.
+Timing Diagram:
 
-Beste Grüße,
-Peter Schneider
+cpu0                        cpu1
 
+map_update(sk):
+    sk->psock = psock1
+    psock1->sk = sk
+map_delete(sk):
+   rcu_work_free(psock1)
+
+map_update(sk):
+    sk->psock = psock2
+    psock2->sk = sk
+                            workqueue:
+                                wakeup with psock1, but the sk of psock1
+                                doesn't belong to psock1
+rcu_handler:
+    clean psock1
+    free(psock1)
+
+Previously, we used reference counting to address the concurrency issue
+between backlog and sock_map_close(). This logic remains necessary as it
+prevents the sk from being freed while processing the backlog. But this
+patch prevents pending backlogs from using a psock after it has been
+stopped.
+
+Note: We cannot call cancel_delayed_work_sync() in map_delete() since this
+might be invoked in BPF context by BPF helper, and the function may sleep.
+
+Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
+Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+
+---
+V1->V2: Use existing flag instead of adding new one.
+https://lore.kernel.org/bpf/20250605142448.3llri3w7wbclfxwc@gmail.com/
+
+Thanks to Michal Luczaj for providing the sockmap_redir test case, which
+indeed covers almost all sockmap forwarding paths.
+---
+ net/core/skmsg.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+index 34c51eb1a14f..83c78379932e 100644
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -656,6 +656,13 @@ static void sk_psock_backlog(struct work_struct *work)
+ 	bool ingress;
+ 	int ret;
+ 
++	/* If sk is quickly removed from the map and then added back, the old
++	 * psock should not be scheduled, because there are now two psocks
++	 * pointing to the same sk.
++	 */
++	if (!sk_psock_test_state(psock, SK_PSOCK_TX_ENABLED))
++		return;
++
+ 	/* Increment the psock refcnt to synchronize with close(fd) path in
+ 	 * sock_map_close(), ensuring we wait for backlog thread completion
+ 	 * before sk_socket freed. If refcnt increment fails, it indicates
 -- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
+2.47.1
 
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
