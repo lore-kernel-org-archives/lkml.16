@@ -1,175 +1,198 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011025.outbound.protection.outlook.com [52.101.65.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F5513B58B
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 08:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749458123; cv=none; b=F/1Cgx4Pf/ckymUEUNJO9jAU8GlgT3zfWAwkgkOGysy8o9TsWQ0U7Gl3tUskfHvgd2pi+/sZcn1p9QdNGLiuojLcHwDJSNkXqmW7KIBjjw5u9O0Tw5G8kCU6hBgL6fEJzjhD7Go/RWYPGQVALOrsdbkLz5wHizN1DYHvLly53rE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749458123; c=relaxed/simple;
-	bh=jnqIPgvRATxnHw8EUp2b9+O3+XSfTcQ7H972nxHNt0g=;
-	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ayiTkgPu4nU8iR1Zgl9+Wo0UWULrLVWwStKVhV7LnE/8oyrhtIm812MsLNCZKv52ejJQ11rsUawZRt9IqXZGB70ey6ni+0cang2cLmz6IJj3jbjnh2own/Suz6UJ3vhCa/aJTj81Cwziixx7SRAiBHUrq7s3B/p5JDC4YeyJmc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bG4rQ4GPbzRk5X;
-	Mon,  9 Jun 2025 16:31:02 +0800 (CST)
-Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id DC5201402DA;
-	Mon,  9 Jun 2025 16:35:14 +0800 (CST)
-Received: from kwepemq500010.china.huawei.com (7.202.194.235) by
- dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 9 Jun 2025 16:35:10 +0800
-Received: from [10.173.125.236] (10.173.125.236) by
- kwepemq500010.china.huawei.com (7.202.194.235) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 9 Jun 2025 16:35:09 +0800
-Subject: Re: [syzbot] [mm?] kernel BUG in try_to_unmap_one (2)
-To: Jinjiang Tu <tujinjiang@huawei.com>, David Hildenbrand <david@redhat.com>
-References: <68412d57.050a0220.2461cf.000e.GAE@google.com>
- <4fc2c008-2384-4d94-b1bf-f0a076585a4a@redhat.com>
- <fda7a3e3-1711-4f1b-a0bb-6a4369aa80ab@redhat.com>
- <b9a43f6d-1865-4074-b91c-a5bd7e10f2a9@redhat.com>
- <d1e1896b-8685-fd7c-d17d-f4328939b96f@huawei.com>
- <02fd89c3-d0f9-412c-8f31-d343803c0982@redhat.com>
- <3c56a8ba-235b-3fe9-d988-dd750bc0feaa@huawei.com>
-CC: syzbot <syzbot+3b220254df55d8ca8a61@syzkaller.appspotmail.com>,
-	<Liam.Howlett@oracle.com>, <akpm@linux-foundation.org>,
-	<harry.yoo@oracle.com>, <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<lorenzo.stoakes@oracle.com>, <riel@surriel.com>,
-	<syzkaller-bugs@googlegroups.com>, <vbabka@suse.cz>, Jens Axboe
-	<axboe@kernel.dk>, Catalin Marinas <catalin.marinas@arm.com>
-From: Miaohe Lin <linmiaohe@huawei.com>
-Message-ID: <0eb768f1-03fc-7cfd-6e1b-594f76a830b3@huawei.com>
-Date: Mon, 9 Jun 2025 16:35:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B9219A288;
+	Mon,  9 Jun 2025 08:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.25
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749458121; cv=fail; b=Xom8uoWLrNrb5OhDo08/FvHf1g4a8Mal9blbgDeokRMe4YpxDUXbju3PF4B5ry3ZlY5tH51q3VWqlAMf88sV8uuG59rP9OucuvoNp0MsSHU49S5PNAKEc/WZqDOZG/cFBfN9yjcXw/XmFoamdj1otfRMXEIQ7pwnLiw1eKKTYNQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749458121; c=relaxed/simple;
+	bh=JldvpaA7pqQidKlo5RwQA/Qsd4GnASZ0ykJXE7gXRjI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=YBJF79B0RSH8iyUbF3vBCgCD8ZBFEubgP/MGRCSk5f14LNmBtrMuYSdoBV2JmmCgq9FzIT+gE12TIQy3oKr8gWO9ppHFQlx2PqFNBYojApyW64lzDykGlF2W2YZb6BDZ0nKyUTAZoiz3yDmjAmCtpIkSUQQxyhgWXZ6qS0Yu850=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=ea1S910Z; arc=fail smtp.client-ip=52.101.65.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="ea1S910Z"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eMX6spDi2NAt4Q9+hu6S7cDe30LlQNBMHCMaNK2Q36QiooLv953PQwLiBejMIBUwQ3Jdc/0MUE0AGK+4JV9a8RjNQbMmhruwmCY6P4TMat/MjZC5yHrsq2nilaug7uWlKKaFGl3xoDPE63LPylW4GdRphzjWjrLgkJQDKwFX07I0kdaMPUMHJMuzU6pkhYape/KT9eGKmq7HaJSjkqztcPylxzlNpbBTj7zSOx/fyKsLFRBzygntED0xfZEdtR5lyz4uxpjrr50DRUCAysUr3j9ngBu1MYTQdWSFWMqNE2pwnz7x3UK48EngvUFMWT9g3uwuVXEk/plxHyBJrCxDEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QGfvFy0D9IfXPJK/4QyeA3R4uPNen6cy3IzyX7iaMqg=;
+ b=iQ7n+z97uaKNgVdzUJ4Qb0zA9BPnCjCK79VoPzfodLEeAUXZuIYHKFlu1aI0xs5uNfe+nllAHlKVtGFH8ur7+8wKoRuv1kyHzcbZGtXM2Nu5gD39VJcCQkVb3Bn5a3U3LCU39PHW1zIAjnTlgmOxmannNTEfYlsJOI3Zg/d8DVrhzd/NE0p4UwcSooYbjl7jzH4GAKyfIY0APJ9qyfrrt3WjZyD+KFgVn2yeUNgDsTmiGloBBLdqt6wvMJVtKYbAbAGjROAqYyZ6VMciWWTEmrxJQL3Z8FIsjsildAOM1mXIuJwr7rZAjEzzF+tVMl6xvZtV4U1warU2Q8xd5hkqzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QGfvFy0D9IfXPJK/4QyeA3R4uPNen6cy3IzyX7iaMqg=;
+ b=ea1S910ZUKP0zOGRLCz9NUzPqVUIzITHxgUWC2q3dbKbnipGvn0JNDCUR11CwZaeLz3KRqPNIfK5U2n0FeUkaS12ThpWfYSGKwiT/Q9g8yOBnBkt1K+Cy/y4yqRjdedy+UexloxsqYglhTT+Gc8JX5V42qy+QYLbJUWmeeNSkFKI3ceupTyesp4JhWwev6GIWOmqjdIuM0wtbmc/Y/1+gBXpzQ82jcalPERpD1pv27jbR2DU2bmsSLgVrSjw9rMrCO4H4SD57TwLK/0DC1cqo+pLmgDnZGc8EgkJwhYm5fviOdK/8LfjAyiZUqf7qAI3XVx5D/rJW/GlBA/OAnuV0A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by AM0PR04MB7140.eurprd04.prod.outlook.com (2603:10a6:208:192::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.27; Mon, 9 Jun
+ 2025 08:35:16 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%3]) with mapi id 15.20.8813.024; Mon, 9 Jun 2025
+ 08:35:16 +0000
+Date: Mon, 9 Jun 2025 17:45:18 +0800
+From: Peng Fan <peng.fan@oss.nxp.com>
+To: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Cc: linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>,
+	linux-amarula@amarulasolutions.com,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>,
+	Eric Biggers <ebiggers@google.com>,
+	Fabio Estevam <festevam@denx.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Marek Vasut <marex@denx.de>,
+	Markus Niebel <Markus.Niebel@tq-group.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Max Merchel <Max.Merchel@ew.tq-group.com>,
+	Michael Walle <mwalle@kernel.org>, Peng Fan <peng.fan@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Primoz Fiser <primoz.fiser@norik.com>,
+	Rob Herring <robh@kernel.org>, Russell King <linux@armlinux.org.uk>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Stefan Eichenberger <stefan.eichenberger@toradex.com>,
+	Tim Harvey <tharvey@gateworks.com>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 00/10] Support Engicam MicroGEA boards
+Message-ID: <20250609094518.GE13113@nxa18884-linux>
+References: <20250607093342.2248695-1-dario.binacchi@amarulasolutions.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250607093342.2248695-1-dario.binacchi@amarulasolutions.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: SG2PR02CA0096.apcprd02.prod.outlook.com
+ (2603:1096:4:90::36) To PAXPR04MB8459.eurprd04.prod.outlook.com
+ (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <3c56a8ba-235b-3fe9-d988-dd750bc0feaa@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemq500010.china.huawei.com (7.202.194.235)
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|AM0PR04MB7140:EE_
+X-MS-Office365-Filtering-Correlation-Id: 286350f3-77ad-4c1e-829d-08dda7308f55
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|1800799024|52116014|376014|7416014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+ =?us-ascii?Q?5VorisrbZtN2UV0PL9dysGCw9eUd6r390wI9GZUsU8ZNsnyrMyqEF4QtUVVO?=
+ =?us-ascii?Q?hEfQwu2LxUTeKuiYnIvuHNGq7y86/i6nAsfX0ys9ua/j6TXQ4UX0UGSoK2U+?=
+ =?us-ascii?Q?FRfCUHMHk1zrY907+cpnGIzmWB8cisCbdMmv8RmLhsLqTLZIzPxLfgy1lrSv?=
+ =?us-ascii?Q?q2Ct2G8xkJV8foy5vD58hX4zZc+wh3rCzFZZ6orA+UqqooQSZQIt/rqypCe1?=
+ =?us-ascii?Q?nsIzZimMcXfkR0mDPIDvZqzXnWyXWuRVIvwDVxUuqeU4YHfnk3KENQuvfFT5?=
+ =?us-ascii?Q?km1Yu77p0JKzOmGmig91shg8knIuXFDFmCi9ezDs6K16ZdKNUcoD2XgkwX3/?=
+ =?us-ascii?Q?2/KiYqvuwWGzMfjBEKpsGxB24WonZd060Ux5N1zhm9kq7SWhFDMawKOomJn7?=
+ =?us-ascii?Q?XOwosMrmUsJVJkU10yYqqD0Q8uUQMJQrGYjCkkbk8ATlVvIWQMCkNbvMZTdO?=
+ =?us-ascii?Q?EBFv72ccr6UAch3HAP1LAN3v+eUOBNXofjDHMsTI6LM4EhR/CR+xRTf0zpgJ?=
+ =?us-ascii?Q?uFdUghKZZL3FRAPqpy6F/AA+Ec1RCnl/5e+Ovqnmj60FOnAM4wzXdrZXG6+3?=
+ =?us-ascii?Q?7JVwsfZt/epmxkVrsb1YD871Nv3awfQlvdeDL8KKP3L9Xb67+GmUDxCCNJ4U?=
+ =?us-ascii?Q?QPBuQgvsp0LQLDQzjjAGo8BSfm8IjMwQT7dhhsBEq2FlXdke3JsdGqAO26Hk?=
+ =?us-ascii?Q?Jxsewo9si/V6guvjfgFV50XX4O2nHrRFxp3YxTAkyJtVYSlaqu/RazVHN7eV?=
+ =?us-ascii?Q?1jUenEac3sA7tQVd9mFCQe+3Z++LFEnf6H5wAVJgri0hC7ZVMtVyzjxiyV51?=
+ =?us-ascii?Q?37ie9+acKwXS2xjJQQdKTgOyNwPrCmUV/V3jKq2luidFQA4O3WLFgAxvwxTP?=
+ =?us-ascii?Q?gZEjzaLekDHqs0OwmSgcoCbkfnA1ylFVXJEfFlh8cEJek1wlrrPeKqmP1Qys?=
+ =?us-ascii?Q?Us98GtP9/Ic3IWTfU0vUzDLrhIPP7kEReLaRZC6Ew/0sWvqY6u3cJcALQJay?=
+ =?us-ascii?Q?Gf5MGw4AxvmNpyc4ZKWjhkiSQypru1fULOxO5SZZQ+n3hmLwKYyGePWR1uSL?=
+ =?us-ascii?Q?s0fKe/T5gubcRAg0Jtg0IivGNAnAiyBOAsk5iQG6AE755V6xMbeKtYZFijLq?=
+ =?us-ascii?Q?UrzOjSQN0yTHV7STxSJ0aoZMU0OwXD0C823wmi3s1k05Wss4s9posHAh6HFZ?=
+ =?us-ascii?Q?022EJLlZ2r/L72eJsizrNxMZqzoNAdvTVGe+QF51UkAFk5D6KaQYoykpZZbL?=
+ =?us-ascii?Q?ETlZ7wuV5NUF1oEicVy1whNzwkJBRUpWS5TKgB6btf1f/rnmDIPQOw3zVH76?=
+ =?us-ascii?Q?eeM7Y6XBva4fsVxmWBfURg5Mtz2+wAtUs+YlEUeJKlgoDm3/j5DtrFsnOqBC?=
+ =?us-ascii?Q?8XfWQifRimxZ64Qey5RH+RT5nudGrxPJJtEsWYyI48FQ+o3fJwPDX3voxpMI?=
+ =?us-ascii?Q?u3kcoKYhAkkOX7Suk9ICEAJissj9T/Hlez8o5+Aak9zl2nL3VaN1/g=3D=3D?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(376014)(7416014)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?us-ascii?Q?11OCwhQr2IqcUtxZQDDu1czhXSVN3zgnuPC9nC7gXvM7Uh88YaIyOIWjBg2R?=
+ =?us-ascii?Q?qNyzONpWvi0xJCT4bPxmGjr1PIzb3vy7p3cUixczJzSYYkKP2XwKGOW7gIzy?=
+ =?us-ascii?Q?aiR9YUUDlICHVvfcQmECU232JWTT65wrlKi6E7/uEi+IM8pB8fLXkvQMEqDP?=
+ =?us-ascii?Q?C/qcWyg5wJdscN7WjhGN0Xo+PiAnRAvRNPpxDP8Tr697QXwCuZ3IcpXLaxNv?=
+ =?us-ascii?Q?XUq8+AEKDOlOGgBtrKsrTztqAxc9Do25mODYhlj2MHymZjARiudFUPqvUb2s?=
+ =?us-ascii?Q?FLqa2VoX0o6pvJcAZkTYCM2oZyiZhrFreHiQR80LmW/DWpzhfmQDJ8oV1v4F?=
+ =?us-ascii?Q?vHFRCqb143bIFuzHFbawXdb9JN2mtw1i+v0M3EEMJPUuGzMLpEhlOBKB/0eO?=
+ =?us-ascii?Q?3P8LTdybgRB6pzH/VIqN23FU2QVcwckVapiaRXY4QodLCKda8ZW6atlu/wvu?=
+ =?us-ascii?Q?3b+yC0TI3C2GC20NxPh2L3pdHso0Pm4LBnsOdZ8k9BjOneF02/an2yblp0tE?=
+ =?us-ascii?Q?pc9yCKM0n0Jad3fbyOgOImY+HhAH6olIL4G+gef5LZAwjctQBs/G1F7z2l17?=
+ =?us-ascii?Q?cf4gznwmyHekQy9N02FTtg4a+QYg2wEHKYtn5SUOHXjkqALSK8q0cFcznRcT?=
+ =?us-ascii?Q?bUO5jiandifWzPxlMUretUTL2Ok3sz7HLK6Xu9I9qXBvVbnjOFs/g3Iwlkxb?=
+ =?us-ascii?Q?mGv3ZZPnXZQ0Fb8lAxW+Cr5Ni3eBOPg6pHpb2c5iKh1ETubE+ocufLKiW/2d?=
+ =?us-ascii?Q?3fCdPIUI/XXMf+G2RtseFSgPBbZyhtzWP+9ddlkhN7ldVsSPAA5tUCY7Zhk1?=
+ =?us-ascii?Q?aEQJwu5PkJzBT2uktAB4lRslosdqBn3NQ6ceywuOIRCTpX+FFIvNlk5ZLRRx?=
+ =?us-ascii?Q?/68S54yFftlNtZeQ6Iw+RpT+/zT3Qhn7etei7z1xJi4T0pifqvbPCLJFXCyl?=
+ =?us-ascii?Q?IuUexzMMXV+IWOS/j/MxUxWYqEj/R3GXfJqecJWWAFIGXU4J+k3P2yrJ1q+J?=
+ =?us-ascii?Q?u4uktKgn4w2nP5WNnPqVcKee1G5iq/vB83GtYEhf5zYAfX7xTerekRUSKfLn?=
+ =?us-ascii?Q?sivyHQ+efX0Y3VU9cMF/nNQJnJqH6CrZ84mBK4yvd+k/zy5lEmy1bUdMreGY?=
+ =?us-ascii?Q?sYys5H1Z81WAPKeqw5E3Ia+JZ+BaHonxQQ0oISYOIRjyr00CU+f4E5DQuzv1?=
+ =?us-ascii?Q?phYDxNYu9UXpY7kNjh798DAbijYhe6Dx4z14VxmW6KfngezHm55BnmL6RUmo?=
+ =?us-ascii?Q?+BCTXcO/pG4ifBmmj9LVZfIxRfr0l2NhIr2S0w3XngMLWbBIvOv8SpRuYL6d?=
+ =?us-ascii?Q?Y3jsVkBVN4ChSCRuAZ8tviL0q85wRLo9/FEqzEBI74mirj2AWlbZCf8QmHb1?=
+ =?us-ascii?Q?Mdqyt86+8wdzejWBBtpn2DOnAk/gvsOw4AIcgv+8XJls0u/2qirpg39MMnrm?=
+ =?us-ascii?Q?ZF0xaNb1+b848xISVQ+Ju9ZQSs1YRJtaNQcLsPzeGV5haUQ8qqlYTxOS6JKW?=
+ =?us-ascii?Q?NZqhQ75QtRV3LHGnngxpV3l/S3CvXK3V80Hdn3UA95ISLa/8pPOk9GqREKKw?=
+ =?us-ascii?Q?FQFPHqIYaj8bV/Cx30rylI/Ngt6WMG+CmVXlNqn7?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 286350f3-77ad-4c1e-829d-08dda7308f55
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 08:35:16.4482
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aLgqwccZfumYb+PoUfDI2S6LFuRzKLqXsXavwPQUL1ir0eyMPKe7ARDBZQFOKIeFLQx2PmFvN5wzbrFU6EWv0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB7140
 
-On 2025/6/7 9:29, Jinjiang Tu wrote:
-> 
-> 在 2025/6/6 15:56, David Hildenbrand 写道:
->> On 05.06.25 09:18, Jinjiang Tu wrote:
->>>
->>> 在 2025/6/5 14:37, David Hildenbrand 写道:
->>>> On 05.06.25 08:27, David Hildenbrand wrote:
->>>>> On 05.06.25 08:11, David Hildenbrand wrote:
->>>>>> On 05.06.25 07:38, syzbot wrote:
->>>>>>> Hello,
->>>>>>>
->>>>>>> syzbot found the following issue on:
->>>>>>>
->>>>>>> HEAD commit:    d7fa1af5b33e Merge branch 'for-next/core' into
->>>>>>> for-kernelci
->>>>>>
->>>>>> Hmmm, another very odd page-table mapping related problem on that tree
->>>>>> found on arm64 only:
->>>>>
->>>>> In this particular reproducer we seem to be having MADV_HUGEPAGE and
->>>>> io_uring_setup() be racing with MADV_HWPOISON, MADV_PAGEOUT and
->>>>> io_uring_register(IORING_REGISTER_BUFFERS).
->>>>>
->>>>> I assume the issue is related to MADV_HWPOISON, MADV_PAGEOUT and
->>>>> io_uring_register racing, only. I suspect MADV_HWPOISON is trying to
->>>>> split a THP, while MADV_PAGEOUT tries paging it out.
->>>>>
->>>>> IORING_REGISTER_BUFFERS ends up in
->>>>> io_sqe_buffers_register->io_sqe_buffer_register where we GUP-fast and
->>>>> try coalescing buffers.
->>>>>
->>>>> And something about THPs is not particularly happy :)
->>>>>
->>>>
->>>> Not sure if realted to io_uring.
->>>>
->>>> unmap_poisoned_folio() calls try_to_unmap() without TTU_SPLIT_HUGE_PMD.
->>>>
->>>> When called from memory_failure(), we make sure to never call it on a
->>>> large folio: WARN_ON(folio_test_large(folio));
->>>>
->>>> However, from shrink_folio_list() we might call unmap_poisoned_folio()
->>>> on a large folio, which doesn't work if it is still PMD-mapped. Maybe
->>>> passing TTU_SPLIT_HUGE_PMD would fix it.
->>>>
->>> TTU_SPLIT_HUGE_PMD only converts the PMD-mapped THP to PTE-mapped THP, and may trigger the below WARN_ON_ONCE in try_to_unmap_one.
->>>
->>>     if (PageHWPoison(subpage) && (flags & TTU_HWPOISON)) {
->>>         ...
->>>     } else if (likely(pte_present(pteval)) && pte_unused(pteval) &&
->>>         !userfaultfd_armed(vma)) {
->>>          ....
->>>     } else if (folio_test_anon(folio)) {
->>>         swp_entry_t entry = page_swap_entry(subpage);
->>>         pte_t swp_pte;
->>>         /*
->>>          * Store the swap location in the pte.
->>>          * See handle_pte_fault() ...
->>>         */
->>>         if (unlikely(folio_test_swapbacked(folio) !=
->>>             folio_test_swapcache(folio))) {
->>>             WARN_ON_ONCE(1);          // here. if the subpage isn't hwposioned, and we hasn't call add_to_swap() for the THP
->>>             goto walk_abort;
->>>          }
->>
->> This makes me wonder if we should start splitting up try_to_unmap(), to handle the individual cases more cleanly at some point ...
->>
->> Maybe for now something like:
->>
->> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
->> index b91a33fb6c694..995486a3ff4d2 100644
->> --- a/mm/memory-failure.c
->> +++ b/mm/memory-failure.c
->> @@ -1566,6 +1566,14 @@ int unmap_poisoned_folio(struct folio *folio, unsigned long pfn, bool must_kill)
->>         enum ttu_flags ttu = TTU_IGNORE_MLOCK | TTU_SYNC | TTU_HWPOISON;
->>         struct address_space *mapping;
->>
->> +       /*
->> +        * try_to_unmap() cannot deal with some subpages of an anon folio
->> +        * not being hwpoisoned: we cannot unmap them without swap.
->> +        */
->> +       if (folio_test_large(folio) && !folio_test_hugetlb(folio) &&
->> +           folio_test_anon(folio) && !folio_test_swapcache(folio))
->> +               return -EBUSY;
->> +
-> 
-> If the THP is in swapcache, we also have to split PMD-mapped to PTE-mapped first.
-> 
->> if (folio_test_swapcache(folio)) {
->>                 pr_err("%#lx: keeping poisoned page in swap cache\n", pfn);
->>                 ttu &= ~TTU_HWPOISON;
->>
->>
->>
->>>
->>> If we want to unmap in shrink_folio_list, we have to try_to_split_thp_page() like memory_failure(). But it't too complicated, maybe just skip the
->>> hwpoisoned folio is enough? If the folio is accessed again, memory_failure will be trigerred again and kill the accessing process since the folio
->>> has be hwpoisoned.
->>
->>
->> Maybe we should try splitting in there? But staring at shrink_folio_list(), not that easy.
->>
->> We could return -E2BIG and let the caller try splitting, to then retry.
-> 
-> Since UCE is rare in real world, and could race with any subsystem, which is more race. Taking too much time to handle UCE in other subsystem is
-> meaningless and complicated. Just skipping is enough. memory_failure() will handle it if the UCE is trigerred again.
+On Sat, Jun 07, 2025 at 11:33:12AM +0200, Dario Binacchi wrote:
+>The series adds support for Engicam MicroGEA boards:
+>
+>- BMM
+>- RMM
+>- GTW
+>
+>based on MicroGEA-MX6UL SoM.
+>
+>
+>Dario Binacchi (10):
+>  dt-bindings: arm: fsl: support Engicam MicroGEA BMM board
+>  ARM: dts: imx6ul: support Engicam MicroGEA-MX6UL SoM
+>  ARM: dts: imx6ul: support Engicam MicroGEA BMM board
+>  ARM: imx_v6_v7_defconfig: cleanup mxs_defconfig
+>  ARM: imx_v6_v7_defconfig: select CONFIG_INPUT_PWM_BEEPER
+>  dt-bindings: arm: fsl: support Engicam MicroGEA RMM board
+>  ARM: dts: imx6ul: support Engicam MicroGEA RMM board
+>  dt-bindings: arm: fsl: support Engicam MicroGEA GTW board
+>  ARM: dts: imx6ul: support Engicam MicroGEA GTW board
+>  ARM: imx_v6_v7_defconfig: select CONFIG_USB_HSIC_USB3503
+>
 
-IMHO, unmap_poisoned_folio() is designed for basic pages only, not for large folios. And above race should be really rare in real world,
-so it might be better to ignore large folios in unmap_poisoned_folio() and memory_failure will handle all of these when UCE is re-triggered.
+For the dts files, I replied with a few with my R-b, but I just realize that
+need put iomuxc at end of the dts file, so please address those, then
+you could keep my R-b.
 
-Thanks both.
-.
+Regards,
+Peng
