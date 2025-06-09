@@ -1,69 +1,90 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2AF1F0E56
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 10:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB132AD14;
+	Mon,  9 Jun 2025 10:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749463407; cv=none; b=qsPDQ0Zltah4BmHN4d/vnVNzKTYbD8RGmPJNGv7RQZ+bUt1ZMwxHU9MZc0njBbvSRTesd6v+CWz5ADJgnB+s+chiPsN7GM8UnTxqiKkEKquYoS1sqW4ZR4+r0LKWZSIcnae+dUBp2H/AjmYl/3mHXuqPAf8NXV4oOt3MqvPyDRQ=
+	t=1749463454; cv=none; b=jmTF9c24+/6q9eEDvV4etX4W5Yt4C6IfRfMiJi87Q/WcTJ6//XOJ9rg3PapvoxuJxfeRBD35FmpHsuD36SWjNZgNzM9deWlKNBicoJVuXgHHijFQZ2K0Pcfhjkt4GnVrizbxwkwKKgJlFu+hyPUSKejq95j8WOb4LJFD8WKnZxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749463407; c=relaxed/simple;
-	bh=desfduKNg3sg6TB3xPcUffmacwQK3Fc5yx0gBRClbKw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=msMEWzets+G5JtX4tSrA6cUMnsFNsqg0qANfKIsjJcFcdI4NApKlgbVxW+D1q+wXsZa8FO0mbc1+l4C4Rti39jCj2K3mtJeH4MjVy7H/qJYQgvosKUoaP7o/KpAJKwJmrq3QniKq/H49h6jz3HrBwXmRT6hkBWsN8smv/d0i5P4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cS42gDNJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mpDVb483; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749463454; c=relaxed/simple;
+	bh=DcfWQ8WuvoWVvzXXacl9MwOIK9utEJa2GkFgOn13qmc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=gHt5AmHDllgptwckwB4E0HbYQWBf14npaOR8TbkbN0AmlmGuLEpovgodTmqpoVcI+Grttqd9akaA5SjLeU7yzjWNZ6FXfc0MKG+BBi2G5u9z4lSkqoU1XJsAulKUpddy3wFBE0KYu8U75E0sXMofSq9EbwKqBXSrq1DQLzM/8dU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZXRwmf8t; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cS42gDNJ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mpDVb483"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749463404;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8KZcf0Xro3qub4YuwQhlCHEW/+sZDUOUBNBIUagep/s=;
-	b=cS42gDNJrcZbE1s4BuPgeiUhAY98pWHgtkhWkkmksAbH6CH974NdQPvVcCWxIIBHVOnXW0
-	s5MGr7Ui0lqE8+qt6Dpv+uYns5kBuep/dMOqpSxarG6yiHXz14pZKfvWIVpYcYe3Ip1EIl
-	73xY4K/Bo8FPrvsNHHQELn2Q02NYt5L2JgLoVFSrWYAFrK0CMIwH7/HmYIw0LToyaKZMRh
-	zmPcpR/zsqD2276QfQcxLtm6vFE2Li3a+yDh3PVjs4/2S9LnulOe8RhIEfJRoNZG2mhYIZ
-	T8ay6nc1RK5/k+/xfp1I7JkL5jB2W1gXVsDkBzgZsNjOAgZxX0mlYXPV2VwXVQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749463404;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8KZcf0Xro3qub4YuwQhlCHEW/+sZDUOUBNBIUagep/s=;
-	b=mpDVb483FDQjvVQAKkAPxaU4UsNYpmdZu44N7RQFYLZpMpt1RmVe+hlEzHVZS9WOSC6xQN
-	wTLyF1be9hsMHRAg==
-To: Yury Norov <yury.norov@gmail.com>, linux-kernel@vger.kernel.org, John
- Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
-Subject: Re: [PATCH 1/2] clocksource: Fix opencoded cpumask_any_but() in
- clocksource_verify_choose_cpus()
-In-Reply-To: <20250607141106.563924-2-yury.norov@gmail.com>
-References: <20250607141106.563924-1-yury.norov@gmail.com>
- <20250607141106.563924-2-yury.norov@gmail.com>
-Date: Mon, 09 Jun 2025 12:03:23 +0200
-Message-ID: <8734c9p6z8.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZXRwmf8t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749463453; x=1780999453;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=DcfWQ8WuvoWVvzXXacl9MwOIK9utEJa2GkFgOn13qmc=;
+  b=ZXRwmf8tduV+DhnM0T2TWz9KBoYjZGb0QxHtrZCGygFqg7cub8RuKUPF
+   xNzD0k+5upcvZemZnFMsOhhdELo6lF+5SxD4bElMJ7SemlqYOWnpfi9Zo
+   uS06xGMTooOTQ+aZVwX4UYPGvhuWVsOOkt8VahTgK3LLdn7NCBhSDIaZI
+   WegqS+7VPyTfkv7uEI8Z7K5cKUndCJ0o01o4Qw4PTR4UWG34eK09IxV5z
+   dovkYTvqd+/8k9zJzClsDfKJbP5m/NEYFQvHob0Y6UdoaoJh0D7xqgYlN
+   VdEVPv3z22itd2vLjHEeZ4VO3yCW6T3cgZRgCN4NB9ck8JLBANGe6MQax
+   A==;
+X-CSE-ConnectionGUID: NGThPRKlT9G/zPstLYhOlg==
+X-CSE-MsgGUID: TlTE/X8pQYyRJsYESXK0yw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="51529367"
+X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
+   d="scan'208";a="51529367"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 03:04:12 -0700
+X-CSE-ConnectionGUID: OuM8fpN9Q8qe0hKoJeYK3w==
+X-CSE-MsgGUID: Nio30dmvTSSI4WPEY3434A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
+   d="scan'208";a="177406069"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.22])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 03:04:09 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, 
+ Kurt Borja <kuurtb@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250528-awcc-labels-v1-1-6aa39d8e4c3d@gmail.com>
+References: <20250528-awcc-labels-v1-1-6aa39d8e4c3d@gmail.com>
+Subject: Re: [PATCH] platform/x86: alienware-wmi-wmax: Add appropriate
+ labels to fans
+Message-Id: <174946344463.3675.6845474867091457192.b4-ty@linux.intel.com>
+Date: Mon, 09 Jun 2025 13:04:04 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Sat, Jun 07 2025 at 10:11, Yury Norov wrote:
+On Wed, 28 May 2025 07:47:22 -0300, Kurt Borja wrote:
 
-Why are you so obsessed to slap 'Fix' on every subject line?
+> Add known fan type IDs and match them to an appropriate label in
+> awcc_hwmon_read_string().
+> 
+> Additionally, add the AWCC_TEMP_SENSOR_FRONT type, which was inferred
+> from it's related fan type in supported systems.
+> 
+> 
+> [...]
 
-This fixes absolutely nothing at all.
 
-All it does is to replace a open coded sequence by appropriate
-function. So describe the changes accurately.
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-Thanks,
+The list of commits applied:
+[1/1] platform/x86: alienware-wmi-wmax: Add appropriate labels to fans
+      commit: 844d8e4c7f9a3eeb681493f12c55de0392510fe3
 
-        tglx
+--
+ i.
+
