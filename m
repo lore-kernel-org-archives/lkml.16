@@ -1,170 +1,479 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2079.outbound.protection.outlook.com [40.107.244.79])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6665F7FD;
-	Mon,  9 Jun 2025 12:21:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749471676; cv=fail; b=bxN98qGlI47DY2iDUsdzQK5dMpLd+puJjewiW1e/3Zj+GLkJQVYt22dc5VXqTKdUqQEZol4+ZndGQJmW0N3wXJPwxglX5FmGRaCr46prHWtqxQ6JRqiO+yk25gkNv8eYl7SXCxDYbNhpfECltdRm1LvG6R0XBarWw28nbaz72GM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749471676; c=relaxed/simple;
-	bh=AvkYcloWMSnNO+GXlJeZASS8aPlGiVr/y/GLqswHrBg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tDZtIX3ib+9YCxOdaSqD6RpN9vLHEXTba5BcqyPedagFquBYrwBOeO3pHfWFlqW7/QtDfvlI6Dw0PxIHN+w8sFPGaK0ELC0nTcb/E/70b7gHfoMNu4WEBUktkxwrxhbhCJSVeGvD256DSFrCv4djgMSW40XComDSTj1R64pCL6I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FfqKaodg; arc=fail smtp.client-ip=40.107.244.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF142571A2;
+	Mon,  9 Jun 2025 12:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749471680; cv=none; b=rJBVQb0fNhLJkdVHKdJOTHqXmd29Yn2mIpiID4CVmPLo9YWGGXaNslR4wEj3CApclo5v2JdS7ZlDGR5pDJ6uOs+qxHUL9J+CJmk8Ym+sJFYPyeYiHmj9/2hw+XMv50gY5ZaH94bEc8OWUoiR2GBWsBfbyZR0rY/sXp7i/tfMl18=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749471680; c=relaxed/simple;
+	bh=AZB1OZFZxYUvXl5ut3W63UUUIRkqlcSAxhLmulnAKoM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V7wYYbAr/J/U3LzIEiZplUpDPDebDm73vniZWv/R9KGMJk6BZM4UTd92d/NEnDiPBvkfP+wE6RZGf32kx3jn1mfaPrfbJQGhuEGqRXqt1PMwlpcTypwhLHobsAD7mOFJm6ltipDEiboS1PXFkvncDYh5CuNAPT7lwWC6fAT9Uww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n2vNb/nk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FfqKaodg"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=beI1RJocirv/hfuKOlpVTQFTKX8ieyIRnSRna4Hz9MpvJAJ/W9ivSeKWxLjTZckAYLyQ5TTw3U67mU215yARF0sQkN8PIaAd8Crwnw1YoaYnV5ualH5PJAgcErcSxTADg9Qyv5Loo1bLe6ipv7L5pO97eIt9/ZIcErvN4KZvZdD/Yt6As1uOes7pcy7sNtvnDiSX6k1S+iu2T7/WXthXR13DMtDTcyn8oVhMo7Lsp8v1ah56BVelbGW/GHKtXmLJmc0Zt5IRdq98YluFB865uMJ7LVfIPYv8QcHf2rYJZ2gz8Awz8NSZbmnzQkr3CV9TtcT6VlNK1jU4ndOsY+iBxg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7z1iDID1a6Qs4yJ3gZd6GcK43HtJ7WanN8DBoFodzkM=;
- b=KFzxg8nLnW+k2cI8F5wrmEWysy7KH2MNuEqb0yTJI74w9YTbbrd6IE3KJyAfcx1n0Cb1wXTj1hd72GlsnVxnJTVYjfuoM1btoSXS7TMF8r0QzJimGwtZ1jxHlSaqs1BPATxR0ERxbO8xoteKobReEDuCc6Nz33JuGqgPZKJwdWGCBNJzVv6n6qQcstSuaBAzpD3Y1qHZxnbU5V4q5MwuOeDypMUOVk4IR6QZ4gouizGbLOtjMAEvc3ENCEK/CFUVJWdhRneZRDtHTJc9+P/EPYfRAZfVzdFB/RaidFbpUga8R32nTdrHFEHawt2qyd7BVQLH1buN4y4AIE+p6aRYgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7z1iDID1a6Qs4yJ3gZd6GcK43HtJ7WanN8DBoFodzkM=;
- b=FfqKaodg4ryrq4RD58J8Kzw0rBB+UbXd1CTFbp/97rt5XV68vJeVYNDXaRMCFzvKQqwSPlIOu67dNfQD9QmSEaa5Fp9s1o3NFCpdR1/9tqddHAra8Dlo6x5Aa29WTArUdcKqKlj6fBlln7Yzf/S6IG0jkNmnJTnT/XjKYxkovUw=
-Received: from BY5PR03CA0012.namprd03.prod.outlook.com (2603:10b6:a03:1e0::22)
- by DS0PR12MB8219.namprd12.prod.outlook.com (2603:10b6:8:de::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.38; Mon, 9 Jun
- 2025 12:21:13 +0000
-Received: from MWH0EPF000971E4.namprd02.prod.outlook.com
- (2603:10b6:a03:1e0:cafe::aa) by BY5PR03CA0012.outlook.office365.com
- (2603:10b6:a03:1e0::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.32 via Frontend Transport; Mon,
- 9 Jun 2025 12:21:12 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MWH0EPF000971E4.mail.protection.outlook.com (10.167.243.72) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8835.15 via Frontend Transport; Mon, 9 Jun 2025 12:21:12 +0000
-Received: from BLR-L1-SARUNKOD.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 9 Jun
- 2025 07:21:07 -0500
-From: Sairaj Kodilkar <sarunkod@amd.com>
-To: <seanjc@google.com>
-CC: <baolu.lu@linux.intel.com>, <dmatlack@google.com>, <dwmw2@infradead.org>,
-	<francescolavra.fl@gmail.com>, <iommu@lists.linux.dev>,
-	<joao.m.martins@oracle.com>, <joro@8bytes.org>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <mlevitsk@redhat.com>, <pbonzini@redhat.com>,
-	<sarunkod@amd.com>, <vasant.hegde@amd.com>
-Subject: Re:[PATCH v2 00/59] KVM: iommu: Overhaul device posted IRQs support
-Date: Mon, 9 Jun 2025 17:50:50 +0530
-Message-ID: <20250609122050.28499-1-sarunkod@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250523010004.3240643-1-seanjc@google.com>
-References: <20250523010004.3240643-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n2vNb/nk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 939FDC4CEED;
+	Mon,  9 Jun 2025 12:21:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749471679;
+	bh=AZB1OZFZxYUvXl5ut3W63UUUIRkqlcSAxhLmulnAKoM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=n2vNb/nk04ZSPMsH7o3sbJKuhVIW9On/l4qzD38hEAdyjrCuOav38far+SkoGHgKh
+	 sDM8PVBJncURRkSL4IcNYPaAZGfdobbP8WGV7FbwUoetMxNAaHlDaVkm6LzwCeY+VO
+	 gEr3IR7gxwHqIyyvKugkUP1MNNfxj7JlEwKj8jg1D3SI35lro0Kafll61g0o4C86Wk
+	 QVj4N5crPDC6vQiXu9UQPXt8ANN8I/f1webzIUWsR+trKsrADHIMPc60igCy8kpVv3
+	 9RuNH31Xu9k3bt4+aJ+ThHJbx9fYXCPUSX52KHktWFiujWgYV7CbEvRsIl2yAsUPer
+	 hCmBlqKG+L6bg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 3085ACE0B6C; Mon,  9 Jun 2025 05:21:19 -0700 (PDT)
+Date: Mon, 9 Jun 2025 05:21:19 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Andreas Ziegler <ziegler.andreas@siemens.com>,
+	Felix MOESSBAUER <felix.moessbauer@siemens.com>,
+	Julien Flot <julien.flot@siemens.com>
+Subject: Re: [PATCH v2] tracing: Fix regression of filter waiting a long time
+ on RCU synchronization
+Message-ID: <9a2f0cd0-1561-4206-8966-f93ccd25927f@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250606201936.1e3d09a9@batman.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E4:EE_|DS0PR12MB8219:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4f93b16f-abe3-4415-5971-08dda7501f6b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?PyTcCbqcjwIhyEVMoDa48GkO9JnuH9pRvl1Rzthd523UNkObXy1TNignEd7T?=
- =?us-ascii?Q?DFzfrsQ1BIXVYpTBTW74kVZfJiq1URggin0mKk++Gab4W7WzE/NYoPdKDMbT?=
- =?us-ascii?Q?pp9F3dnj16tFzGtX3d0efC2IXPANk7PI7gclYImiJD30D9Y6si7X81hO+9h6?=
- =?us-ascii?Q?43Z9mQsPQaKe4+RjUPKR1Iiwt5qn09Kfm29N0Z35NBti4UdlsbPU09pqNZ5E?=
- =?us-ascii?Q?ROIFP+eftGO7J1RKwMe4JhukCYXj5N4YtLRFHfcsVVDLATIanJG09CqOz+He?=
- =?us-ascii?Q?OufQBSXck9J6JBTrC0IikMfAfAsQDvDlYaBpqdUmjrC/ni6K5NDSb8i8uYEh?=
- =?us-ascii?Q?lmpqw5mauX7Eo8ynyu5zdd0tCiQ7dW4AaEvN66huMTBj8wIYE5QKY65SZMVE?=
- =?us-ascii?Q?ojoI9RFuRA/KdA6bPTyPlQ7ymsKL+FJfa5oArQT3vBm9OxDj237A/J6aj1HU?=
- =?us-ascii?Q?LuQX35SmUamF5RyeI5Y2RrBxlObLEnLcU1PVcYbt49ZluDvfpS65Ek0MIWvC?=
- =?us-ascii?Q?zV4iW0PeIYLZUrcOJYyBDaqpt8POpFwFGUljNxkZBc9ptZ06C60Tmapq8KQE?=
- =?us-ascii?Q?Iy8oWb1Y+ywbNqux3qqkEptN7MqlRauEoSMhOIUNUCdKIJh0rocFlBpUdZ03?=
- =?us-ascii?Q?BYHu662pHekdU/RZQFV/HjHQhjw1uPhwHZ4EfBq+oVRXIcxRx2O7Nwir2eag?=
- =?us-ascii?Q?D+NkZjaCnI/0Kh60tKtxmaGJZgF3fbeGhkho63bsWep0UFKDAAoWjOy3wi4Z?=
- =?us-ascii?Q?N/uUDTbiNsSF0oyRcS5O/BmwbVuSNIAoA+/eU7ELjEbD91J+YoPrxS1T1B/S?=
- =?us-ascii?Q?qRC5jLNMd//vRDy3mIS7KQ6ayzU1vKMKd9lgdYgnZNiGPcl65FCG4GJVfuUg?=
- =?us-ascii?Q?NGa9bLuFdy+GodSMN24raIM5JcuGdacke6YtuyOJ4tYteP+eiLyC7Jm+1K9U?=
- =?us-ascii?Q?h5sGOe1NU0rgK5PXyvBZN6ZW9C0bAG9BMQIOeGvk1QRapr794eNAcYJzncfi?=
- =?us-ascii?Q?zBD0RJ8bBG8ncLxMBZJxAtemqINNVy4msuGJYRRM0Ai695RzgmQkalGgJ3Z3?=
- =?us-ascii?Q?0jXkHID3MZKhSe1+7aZGLfDy6TdVJBBP8Bn0Ys1MQTkjaiE6EHZGV0jToEAB?=
- =?us-ascii?Q?Ab8yMSgXwDlF1R6kF66sunbkIIhybmeTKHOTnpir5n9bQmiAlugwEQ/FZ8lJ?=
- =?us-ascii?Q?9U7L5hFe0aQwNK6YZkrimUvtwgPWieluNqXnFzICd5SdKbgiHPui89QCxxcC?=
- =?us-ascii?Q?hLeietiSfIxoFYWSPziCHJwPG7PSop/4p2YuGTzC5LAB6mrakUydAGyYkJHp?=
- =?us-ascii?Q?S8P5qmeEu0DUE3qeoIj7WuvWf97c++lWFEjHt/GbewCq4lqyIJ9tVqYifpNP?=
- =?us-ascii?Q?bQ32eHnCAoBtRyyatFPX5ky8VKLPiGt0cFdNEaFoUQdeCEtvwU5ecMy5XKqn?=
- =?us-ascii?Q?P+o0WW08d0HKE3KGHr92NZxOBtBBL3iwML0uXw4FTHfmnaAgk97/NHN+Vq1r?=
- =?us-ascii?Q?wPYHHrXmA5O+FDhBawm7ED8g346UUZ3z1cDY?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(7416014)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 12:21:12.1372
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f93b16f-abe3-4415-5971-08dda7501f6b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000971E4.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8219
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250606201936.1e3d09a9@batman.local.home>
 
-Hi Sean,
+On Fri, Jun 06, 2025 at 08:20:20PM -0400, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> When faultable trace events were added, a trace event may no longer use
+> normal RCU to synchronize but instead used synchronize_rcu_tasks_trace().
+> This synchronization takes a much longer time to synchronize.
+> 
+> The filter logic would free the filters by calling
+> tracepoint_synchronize_unregister() after it unhooked the filter strings
+> and before freeing them. With this function now calling
+> synchronize_rcu_tasks_trace() this increased the time to free a filter
+> tremendously. On a PREEMPT_RT system, it was even more noticeable.
+> 
+>  # time trace-cmd record -p function sleep 1
+>  [..]
+>  real	2m29.052s
+>  user	0m0.244s
+>  sys	0m20.136s
+> 
+> As trace-cmd would clear out all the filters before recording, it could
+> take up to 2 minutes to do a recording of "sleep 1".
+> 
+> To find out where the issues was:
+> 
+>  ~# trace-cmd sqlhist -e -n sched_stack  select start.prev_state as state, end.next_comm as comm, TIMESTAMP_DELTA_USECS as delta,  start.STACKTRACE as stack from sched_switch as start join sched_switch as end on start.prev_pid = end.next_pid
+> 
+> Which will produce the following commands (and -e will also execute them):
+> 
+>  echo 's:sched_stack s64 state; char comm[16]; u64 delta; unsigned long stack[];' >> /sys/kernel/tracing/dynamic_events
+>  echo 'hist:keys=prev_pid:__arg_18057_2=prev_state,__arg_18057_4=common_timestamp.usecs,__arg_18057_7=common_stacktrace' >> /sys/kernel/tracing/events/sched/sched_switch/trigger
+>  echo 'hist:keys=next_pid:__state_18057_1=$__arg_18057_2,__comm_18057_3=next_comm,__delta_18057_5=common_timestamp.usecs-$__arg_18057_4,__stack_18057_6=$__arg_18057_7:onmatch(sched.sched_switch).trace(sched_stack,$__state_18057_1,$__comm_18057_3,$__delta_18057_5,$__stack_18057_6)' >> /sys/kernel/tracing/events/sched/sched_switch/trigger
+> 
+> The above creates a synthetic event that creates a stack trace when a task
+> schedules out and records it with the time it scheduled back in. Basically
+> the time a task is off the CPU. It also records the state of the task when
+> it left the CPU (running, blocked, sleeping, etc). It also saves the comm
+> of the task as "comm" (needed for the next command).
+> 
+> ~# echo 'hist:keys=state,stack.stacktrace:vals=delta:sort=state,delta if comm == "trace-cmd" &&  state & 3' > /sys/kernel/tracing/events/synthetic/sched_stack/trigger
+> 
+> The above creates a histogram with buckets per state, per stack, and the
+> value of the total time it was off the CPU for that stack trace. It filters
+> on tasks with "comm == trace-cmd" and only the sleeping and blocked states
+> (1 - sleeping, 2 - blocked).
+> 
+> ~# trace-cmd record -p function sleep 1
+> 
+> ~# cat /sys/kernel/tracing/events/synthetic/sched_stack/hist | tail -18
+> { state:          2, stack.stacktrace         __schedule+0x1545/0x3700
+>          schedule+0xe2/0x390
+>          schedule_timeout+0x175/0x200
+>          wait_for_completion_state+0x294/0x440
+>          __wait_rcu_gp+0x247/0x4f0
+>          synchronize_rcu_tasks_generic+0x151/0x230
+>          apply_subsystem_event_filter+0xa2b/0x1300
+>          subsystem_filter_write+0x67/0xc0
+>          vfs_write+0x1e2/0xeb0
+>          ksys_write+0xff/0x1d0
+>          do_syscall_64+0x7b/0x420
+>          entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> } hitcount:        237  delta:   99756288  <<--------------- Delta is 99 seconds!
+> 
+> Totals:
+>     Hits: 525
+>     Entries: 21
+>     Dropped: 0
+> 
+> This shows that this particular trace waited for 99 seconds on
+> synchronize_rcu_tasks() in apply_subsystem_event_filter().
+> 
+> In fact, there's a lot of places in the filter code that spends a lot of
+> time waiting for synchronize_rcu_tasks_trace() in order to free the
+> filters.
+> 
+> Add helper functions that will use call_rcu*() variants to asynchronously
+> free the filters. This brings the timings back to normal:
+> 
+>  # time trace-cmd record -p function sleep 1
+>  [..]
+>  real	0m14.681s
+>  user	0m0.335s
+>  sys	0m28.616s
+> 
+> And the histogram also shows this:
+> 
+> ~# cat /sys/kernel/tracing/events/synthetic/sched_stack/hist | tail -21
+> { state:          2, stack.stacktrace         __schedule+0x1545/0x3700
+>          schedule+0xe2/0x390
+>          schedule_timeout+0x175/0x200
+>          wait_for_completion_state+0x294/0x440
+>          __wait_rcu_gp+0x247/0x4f0
+>          synchronize_rcu_normal+0x3db/0x5c0
+>          tracing_reset_online_cpus+0x8f/0x1e0
+>          tracing_open+0x335/0x440
+>          do_dentry_open+0x4c6/0x17a0
+>          vfs_open+0x82/0x360
+>          path_openat+0x1a36/0x2990
+>          do_filp_open+0x1c5/0x420
+>          do_sys_openat2+0xed/0x180
+>          __x64_sys_openat+0x108/0x1d0
+>          do_syscall_64+0x7b/0x420
+> } hitcount:          2  delta:      77044
+> 
+> Totals:
+>     Hits: 55
+>     Entries: 28
+>     Dropped: 0
+> 
+> Where the total waiting time of synchronize_rcu_tasks_trace() is 77
+> milliseconds.
 
-Sorry for the delay in testing. All sanity tests are OK. I reran the performance 
-test on the V2 and noticed that V2 has significantly more GALOG entries than V1
-for all three cases. I also noticed that the Guest Nvme interrupt rate has
-dropped for the 192 VCPUS.
+Nice!!!
 
-I haven't figured out what is causing this. I will continue my investigation
-further.
+One concern below.
 
-                          VCPUS = 32, Jobs per NVME = 8
-==============================================================================================
-                                         V2                         V1          Percent change
-----------------------------------------------------------------------------------------------
-Guest Nvme interrupts               124,260,796                 124,559,110             -0.20%
-IOPS (in kilo)                            4,790                       4,796             -0.01%
-GALOG entries                              8117                         169              4702%
-----------------------------------------------------------------------------------------------
+> Cc: stable@vger.kernel.org
+> Reported-by: "Flot, Julien" <julien.flot@siemens.com>
+> Tested-by: Julien Flot <julien.flot@siemens.com>
+> Fixes: a363d27cdbc2 ("tracing: Allow system call tracepoints to handle page faults")
+> Closes: https://lore.kernel.org/all/240017f656631c7dd4017aa93d91f41f653788ea.camel@siemens.com/
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+> Changes since v1: https://lore.kernel.org/20250605161701.35f7989a@gandalf.local.home
+> 
+> - Fix accessing file->filter as it is tagged as __rcu.
+>   https://lore.kernel.org/all/202506070406.BQGH3VyM-lkp@intel.com/
+> 
+>  kernel/trace/trace_events_filter.c | 186 +++++++++++++++++++++--------
+>  1 file changed, 138 insertions(+), 48 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+> index 2048560264bb..711520081741 100644
+> --- a/kernel/trace/trace_events_filter.c
+> +++ b/kernel/trace/trace_events_filter.c
+> @@ -1335,22 +1335,139 @@ static void filter_free_subsystem_preds(struct trace_subsystem_dir *dir,
+>  	}
+>  }
+>  
+> +struct filter_list {
+> +	struct list_head	list;
+> +	struct event_filter	*filter;
+> +};
+> +
+> +struct filter_head {
+> +	struct list_head	list;
+> +	struct rcu_head		rcu;
+> +};
+> +
+> +
+> +static void free_filter_list(struct rcu_head *rhp)
+> +{
+> +	struct filter_head *filter_list = container_of(rhp, struct filter_head, rcu);
+> +	struct filter_list *filter_item, *tmp;
+> +
+> +	list_for_each_entry_safe(filter_item, tmp, &filter_list->list, list) {
+> +		__free_filter(filter_item->filter);
+> +		list_del(&filter_item->list);
+> +		kfree(filter_item);
+> +	}
 
+If the series of synchronize_rcu() calls was taking 99 seconds,
+we might well be going through the above loop quite a few times, all
+within a bh-disabled region of code.  For example, the calls from both
+filter_free_subsystem_filters() and process_system_preds() look like
+they can queue a very large number of entries.
 
-                          VCPUS = 64, Jobs per NVME = 16
-==============================================================================================
-                                         V2                         V1          Percent change
-----------------------------------------------------------------------------------------------
-Guest Nvme interrupts              102,394,358                   99,800,056             2.00% 
-IOPS (in kilo)                           4,796                        4,798            -0.04% 
-GALOG entries                           19,057                       11,923            59.83%
-----------------------------------------------------------------------------------------------
+So...
 
+> +	kfree(filter_list);
+> +}
+> +
+> +static void free_filter_list_tasks(struct rcu_head *rhp)
+> +{
+> +	call_rcu(rhp, free_filter_list);
 
-                         VCPUS = 192, Jobs per NVME = 48
-==============================================================================================
-                                         V2                         V1          Percent change
-----------------------------------------------------------------------------------------------
-Guest Nvme interrupts               68,363,232                  78,066,512             -12.42%
-IOPS (in kilo)                           4,751                       4,749              -0.04%
-GALOG entries                           62,768                      56,215              11.66%
-----------------------------------------------------------------------------------------------
+...why not use queue_rcu_work() in place of call_rcu() here, thus avoiding
+possible response-time issues?
 
-Thanks
-Sairaj
+Or is there something that I am missing that limits the length of the
+list passed to free_filter_list()?
+
+							Thanx, Paul
+
+> +}
+> +
+> +/*
+> + * The tracepoint_synchronize_unregister() is a double rcu call.
+> + * It calls synchronize_rcu_tasks_trace() followed by synchronize_rcu().
+> + * Instead of waiting for it, simply call these via the call_rcu*()
+> + * variants.
+> + */
+> +static void delay_free_filter(struct filter_head *head)
+> +{
+> +	call_rcu_tasks_trace(&head->rcu, free_filter_list_tasks);
+> +}
+> +
+> +static void try_delay_free_filter(struct event_filter *filter)
+> +{
+> +	struct filter_head *head;
+> +	struct filter_list *item;
+> +
+> +	head = kmalloc(sizeof(*head), GFP_KERNEL);
+> +	if (!head)
+> +		goto free_now;
+> +
+> +	INIT_LIST_HEAD(&head->list);
+> +
+> +	item = kmalloc(sizeof(*item), GFP_KERNEL);
+> +	if (!item) {
+> +		kfree(head);
+> +		goto free_now;
+> +	}
+> +
+> +	item->filter = filter;
+> +	list_add_tail(&item->list, &head->list);
+> +	delay_free_filter(head);
+> +	return;
+> +
+> + free_now:
+> +	/* Make sure the filter is not being used */
+> +	tracepoint_synchronize_unregister();
+> +	__free_filter(filter);
+> +}
+> +
+>  static inline void __free_subsystem_filter(struct trace_event_file *file)
+>  {
+>  	__free_filter(file->filter);
+>  	file->filter = NULL;
+>  }
+>  
+> +static inline void event_set_filter(struct trace_event_file *file,
+> +				    struct event_filter *filter)
+> +{
+> +	rcu_assign_pointer(file->filter, filter);
+> +}
+> +
+> +static inline void event_clear_filter(struct trace_event_file *file)
+> +{
+> +	RCU_INIT_POINTER(file->filter, NULL);
+> +}
+> +
+>  static void filter_free_subsystem_filters(struct trace_subsystem_dir *dir,
+> -					  struct trace_array *tr)
+> +					  struct trace_array *tr,
+> +					  struct event_filter *filter)
+>  {
+>  	struct trace_event_file *file;
+> +	struct filter_head *head;
+> +	struct filter_list *item;
+> +
+> +	head = kmalloc(sizeof(*head), GFP_KERNEL);
+> +	if (!head)
+> +		goto free_now;
+> +
+> +	INIT_LIST_HEAD(&head->list);
+> +
+> +	item = kmalloc(sizeof(*item), GFP_KERNEL);
+> +	if (!item) {
+> +		kfree(head);
+> +		goto free_now;
+> +	}
+> +
+> +	item->filter = filter;
+> +	list_add_tail(&item->list, &head->list);
+>  
+>  	list_for_each_entry(file, &tr->events, list) {
+>  		if (file->system != dir)
+>  			continue;
+> -		__free_subsystem_filter(file);
+> +		item = kmalloc(sizeof(*item), GFP_KERNEL);
+> +		if (!item)
+> +			goto free_now;
+> +		item->filter = event_filter(file);
+> +		list_add_tail(&item->list, &head->list);
+> +		event_clear_filter(file);
+>  	}
+> +
+> +	delay_free_filter(head);
+> +	return;
+> + free_now:
+> +	tracepoint_synchronize_unregister();
+> +
+> +	if (head)
+> +		free_filter_list(&head->rcu);
+> +
+> +	list_for_each_entry(file, &tr->events, list) {
+> +		if (file->system != dir || !file->filter)
+> +			continue;
+> +		__free_filter(file->filter);
+> +	}
+> +	__free_filter(filter);
+>  }
+>  
+>  int filter_assign_type(const char *type)
+> @@ -2120,22 +2237,6 @@ static inline void event_set_filtered_flag(struct trace_event_file *file)
+>  		trace_buffered_event_enable();
+>  }
+>  
+> -static inline void event_set_filter(struct trace_event_file *file,
+> -				    struct event_filter *filter)
+> -{
+> -	rcu_assign_pointer(file->filter, filter);
+> -}
+> -
+> -static inline void event_clear_filter(struct trace_event_file *file)
+> -{
+> -	RCU_INIT_POINTER(file->filter, NULL);
+> -}
+> -
+> -struct filter_list {
+> -	struct list_head	list;
+> -	struct event_filter	*filter;
+> -};
+> -
+>  static int process_system_preds(struct trace_subsystem_dir *dir,
+>  				struct trace_array *tr,
+>  				struct filter_parse_error *pe,
+> @@ -2144,11 +2245,16 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+>  	struct trace_event_file *file;
+>  	struct filter_list *filter_item;
+>  	struct event_filter *filter = NULL;
+> -	struct filter_list *tmp;
+> -	LIST_HEAD(filter_list);
+> +	struct filter_head *filter_list;
+>  	bool fail = true;
+>  	int err;
+>  
+> +	filter_list = kmalloc(sizeof(*filter_list), GFP_KERNEL);
+> +	if (!filter_list)
+> +		return -ENOMEM;
+> +
+> +	INIT_LIST_HEAD(&filter_list->list);
+> +
+>  	list_for_each_entry(file, &tr->events, list) {
+>  
+>  		if (file->system != dir)
+> @@ -2175,7 +2281,7 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+>  		if (!filter_item)
+>  			goto fail_mem;
+>  
+> -		list_add_tail(&filter_item->list, &filter_list);
+> +		list_add_tail(&filter_item->list, &filter_list->list);
+>  		/*
+>  		 * Regardless of if this returned an error, we still
+>  		 * replace the filter for the call.
+> @@ -2195,31 +2301,22 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+>  	 * Do a synchronize_rcu() and to ensure all calls are
+>  	 * done with them before we free them.
+>  	 */
+> -	tracepoint_synchronize_unregister();
+> -	list_for_each_entry_safe(filter_item, tmp, &filter_list, list) {
+> -		__free_filter(filter_item->filter);
+> -		list_del(&filter_item->list);
+> -		kfree(filter_item);
+> -	}
+> +	delay_free_filter(filter_list);
+>  	return 0;
+>   fail:
+>  	/* No call succeeded */
+> -	list_for_each_entry_safe(filter_item, tmp, &filter_list, list) {
+> -		list_del(&filter_item->list);
+> -		kfree(filter_item);
+> -	}
+> +	free_filter_list(&filter_list->rcu);
+>  	parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
+>  	return -EINVAL;
+>   fail_mem:
+>  	__free_filter(filter);
+> +
+>  	/* If any call succeeded, we still need to sync */
+>  	if (!fail)
+> -		tracepoint_synchronize_unregister();
+> -	list_for_each_entry_safe(filter_item, tmp, &filter_list, list) {
+> -		__free_filter(filter_item->filter);
+> -		list_del(&filter_item->list);
+> -		kfree(filter_item);
+> -	}
+> +		delay_free_filter(filter_list);
+> +	else
+> +		free_filter_list(&filter_list->rcu);
+> +
+>  	return -ENOMEM;
+>  }
+>  
+> @@ -2361,9 +2458,7 @@ int apply_event_filter(struct trace_event_file *file, char *filter_string)
+>  
+>  		event_clear_filter(file);
+>  
+> -		/* Make sure the filter is not being used */
+> -		tracepoint_synchronize_unregister();
+> -		__free_filter(filter);
+> +		try_delay_free_filter(filter);
+>  
+>  		return 0;
+>  	}
+> @@ -2387,11 +2482,8 @@ int apply_event_filter(struct trace_event_file *file, char *filter_string)
+>  
+>  		event_set_filter(file, filter);
+>  
+> -		if (tmp) {
+> -			/* Make sure the call is done with the filter */
+> -			tracepoint_synchronize_unregister();
+> -			__free_filter(tmp);
+> -		}
+> +		if (tmp)
+> +			try_delay_free_filter(tmp);
+>  	}
+>  
+>  	return err;
+> @@ -2417,9 +2509,7 @@ int apply_subsystem_event_filter(struct trace_subsystem_dir *dir,
+>  		filter = system->filter;
+>  		system->filter = NULL;
+>  		/* Ensure all filters are no longer used */
+> -		tracepoint_synchronize_unregister();
+> -		filter_free_subsystem_filters(dir, tr);
+> -		__free_filter(filter);
+> +		filter_free_subsystem_filters(dir, tr, filter);
+>  		return 0;
+>  	}
+>  
+> -- 
+> 2.47.2
+> 
