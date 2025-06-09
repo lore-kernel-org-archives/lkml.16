@@ -1,70 +1,70 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D75258CED
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 13:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BE778F4B
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 13:28:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749475720; cv=fail; b=o6d1qd/ccnf2dx1MTxrjDntU5BOBahD8dRd9c4sLpb/ouQxV20b7gje7whs17Vzfw9a6Kkf/A+uxOwLF/GGP7bkwwm+x1saPw2qAwf0N/KE+vvr2F334vs+VuPVzh7c24Afd1iQF5hT2j239pBy1yQ8tkBPa517t1xxHYd2xVEI=
+	t=1749475720; cv=fail; b=oQR8f9St9x/wbUM1O9v6DenxL7Jr2fG3U3qcPCcAJ08mz6WFe6jb24fAnlu4rkasDgqWJ3i41n+cKherWIWeNjvPs0JGg5K7Fwodp9aXX9o4QLfpSwDKNgnHvZk3idceTUGc8ZaPUU1mkbRvlRU0evDFvMjYzNoEqLyRUKzqqPU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749475720; c=relaxed/simple;
-	bh=pPI1vmYeUYrc5+YozPFLzNI5agegrnsYCWVDOXPURqo=;
+	bh=pA6uCqNdmvz42Nym/glDOjpKrVg1N4rQSbF2iDP5TRo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=a/EKBi/DHJAkmg9SR7dqpd4vSOkRowCz44rxw5XwQg6mZturtNS7hqI7GzlwzqJPqMl6Pu1qhQXuKV7rJmJt2+G34KTuztXtc2JYaYU7HLDbC1wcRokFr4ip2uDvm1qmmm9eGL1uO9S7/LZUNDSPsO1oiAgL575x9qu6ghKic7o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=lLdaOQpQ; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=K4eSEkBA; arc=fail smtp.client-ip=205.220.165.32
+	 Content-Type:MIME-Version; b=IftVNeA+oR+WZIL3P07FeYXKyJgkNQVgeXrE+Edb7zHPIvlJvOaDA7s7rnb6e18GxkdIoy/TNQRC+SOR2ivhUW5B6jnkjIQYme+TjtKBkuzmkm+5vumTJKQ1ovyAlWkWVAn2MGc9rMDPuKMmvcJ2gWR167kK/QlwhsKShOhgKuQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=m3rHWhsp; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=d7dJdyvs; arc=fail smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lLdaOQpQ";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="K4eSEkBA"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5593fkpN008071;
-	Mon, 9 Jun 2025 13:27:19 GMT
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="m3rHWhsp";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="d7dJdyvs"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5593ilJm017209;
+	Mon, 9 Jun 2025 13:27:16 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=55AlPUUE8TEbDwrhF3KgcH9bxqg16uTOTWsEfqmFR6s=; b=
-	lLdaOQpQOM/nm5ULvaoth5rslVFvnLREebdTv8UhfQOJ28PmApENuuRG1PxaI830
-	y9ceM6t7Vkq8Kt+M764cDt+8X3MsDicsdMPY5mI82ym2c/zX3qU+4keKkPjkD429
-	K/ncPLNxeHVVW+02ixRJm+pJZjhVEtLC4rbnEu11U/1RSdXzKosJRvdYkmosGC1X
-	fFp73+z3ewloZR6SofZL4EblVVJ8OgKIg42mjtcXYCqUDoh49K70Yao1V7T1NAzx
-	FbtidjFgqNzGuw51gORUmGHyrMASzl7zbgWWW1OEnk8WaIhdLIp22WrnllxOlnJD
-	oN4feAs/KI80MZel8cEmdw==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 474c14a4k1-1
+	corp-2025-04-25; bh=/t1Tj0yddP0fohLbotYs4lt9YOpNJsFpLPdcWZxKMy4=; b=
+	m3rHWhsp4hyY5OwMk1tA8Zw/e3YZdlo0Pgm4QiZJcXWtfmKxrh3M9wbbbYMsQgjy
+	ZQ1S8PPnCS0ZgfhH5WlZAAXv+ZH5U5CJAx3SPBPHwsBwewffrUVqGBiuhAbVCnxU
+	feoUvBklwvMwPJCsGt36j7ja6KYQMwv2ZwcuM7AGlZ7Kts7XLl8eUTjn4jRWt1m4
+	cwcY599S2Aqr2Wt3Jf/ebRCjUIa3L3SO9/W9C6TekVFpl8l6IUUZb3Vpqi7JyloH
+	92zkvU7zVd38tux8QWYCKFFighlx7nA/MBdPJWHRrM0GsIMYtRpXYP3U+kFfZGBH
+	5yJJZ5tXQsZS2FjsN498zQ==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 474c74t55u-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 09 Jun 2025 13:27:18 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 559C49LQ020697;
-	Mon, 9 Jun 2025 13:27:17 GMT
-Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04on2072.outbound.protection.outlook.com [40.107.102.72])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 474bv85t3a-1
+	Mon, 09 Jun 2025 13:27:16 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 559BlXav032088;
+	Mon, 9 Jun 2025 13:27:15 GMT
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04on2061.outbound.protection.outlook.com [40.107.102.61])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 474bv7ehyc-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 09 Jun 2025 13:27:17 +0000
+	Mon, 09 Jun 2025 13:27:14 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wKWQZTXpuGezv5bj9p024O4Rrrp+nUUtDIdGqeOSr1RU3sFd+fVSz0rFtq/aFORlgj/XnRhpAIXw5vbhjx028kgvxRrZD1b7EBEoCfMqqR/33/D2KYjUwkpxTkUKwAbK2Vbn011naSAsalt4MPmJBV7g/zkmLR144IyB7Q8d+GzK8m4oFXO/Xr5vmis95QeHF6otAepYYMCOTo2FZ3yrJwGSkVqj+q/zOJ/qak/AHO5RTHO66EyZN7EDkeOO8FIIwRTGkiipzkGgF0OUgWMZVh8xE1mWBJ6WDXte0nhTjmab3IcyWF/yZ2GPGbuWNFoh6q9gfOLpd66NV1yWku7i6Q==
+ b=bwwlaQLigAp3ld0+dIYO3mzHCEP8OpW002GWvDcM/WN6F1G2ArfafUVpBbdASdUpew93Nce+2qn41w0uEFimxirE2EEPYAswQUg6uC358tf5sIvaIG76f8jDfa9gBdpgA36TmwhnQkaOFqy3gqZsiK+jKjC6heIHpxi2rO0Ov4TF4CUUqSWXJgpYTAL/8ZdFsVqTEuT1VOeGXtKzfBltF4i+klXN0XKOEL7Ja6GW493esyA8QvCcz2f7DY/AeaanuXCNwpsqVLnDsQbJHlbQDEi4coOKxmRqiyF5Jok8ROnbIy/XbTg0KZWmXFVrUmDrS87T/ofuhSUf8DQ220jy5g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=55AlPUUE8TEbDwrhF3KgcH9bxqg16uTOTWsEfqmFR6s=;
- b=Yx+EJyqHt1Vru+j8jGWsC/YVTa5/ymoux5LjGoK8Yn865DI+JAYZva+MtxNwfc/sfYfX28B8X2QK84OgD2a42EHjHt9kmigCkw7QN8LeaA+rOHL4tvqsXw2dJgow6bcoD1ztbRLVc8YmhBkyZs+3oadgRmB8P9+10Fq7Gh83Y0XpqrE60Pf7LxZTjL8XkNPZzVavYUDwAHad93vL5lCaZJcl35UA8kA6qagHv1Qj5Jfk8HiEq9B68dAZgyV/JO8EUnfvBB+YZ/04F7BI2medi0pGVkKlSHwIMW93Peq0Q+a4xmBOVuQf+ONOERxFFfkcXw9fKFTVN/gKl4z7hBIo0Q==
+ bh=/t1Tj0yddP0fohLbotYs4lt9YOpNJsFpLPdcWZxKMy4=;
+ b=E0hhw2APgl4HJW0P4HnOyHyC8WjwV/tPtS0/yWBd2smXeCV8xHYQLndp0HGsGZQ2FLfcQnKd5vbU86T/obt6MR+DF9oPTIPOeV8IB9WYVpLYvutPAOPXvBLcNn18EUt9tEznJLhVvF1m8li5VgOySwcfZO7V5QsTV7lYnverKF3TwO4IrrGg2lyS2IbYGCwmTpRGh+cOVSBaR1uayWNhz409i/VQkKWxt4RsVoBNYIZWKO/5TznWKKCje3Rfw+ewOW01Afs7QkgBIWbh8xv3i42bmDCe6nOTYVC5MxQySobmS7ylXxrwA+/XS6LaV1gRuEIp7tb4fABhXCrSJL8a9Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=55AlPUUE8TEbDwrhF3KgcH9bxqg16uTOTWsEfqmFR6s=;
- b=K4eSEkBA6eOLPrvNGGt3ZmjyV9MTwb/H6TzKDAEL3dBo2trznLNOpqtOY0JpZ8LF2VABiOADHR8PCnaNjMtHB8ebXGtajwiYwVepDP8duk62a2xCmPpKP4BzAbVEzTN/9jJXQicqjjMv0AAFYyWq3ahCKflMky00hY0VAgTV2p0=
+ bh=/t1Tj0yddP0fohLbotYs4lt9YOpNJsFpLPdcWZxKMy4=;
+ b=d7dJdyvs5XiyN3e/Xn3pzvUYAxRgbQgqBnvdwLgKhc9Orqf+Q0jpfQMuJ5KbBc0uZOsN2ehyTliC9Au+zbaVTM1OxHjPas+zsjOjKlqNrlxMSg7hoOg602xB7vixH6RdwTbuJBXPFh/QdABKyrgHHxvXNnHpoU/PXrUX0TruyLc=
 Received: from BL4PR10MB8229.namprd10.prod.outlook.com (2603:10b6:208:4e6::14)
  by DM3PR10MB7947.namprd10.prod.outlook.com (2603:10b6:0:40::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Mon, 9 Jun
- 2025 13:27:14 +0000
+ 2025 13:27:12 +0000
 Received: from BL4PR10MB8229.namprd10.prod.outlook.com
  ([fe80::552b:16d2:af:c582]) by BL4PR10MB8229.namprd10.prod.outlook.com
  ([fe80::552b:16d2:af:c582%4]) with mapi id 15.20.8813.024; Mon, 9 Jun 2025
- 13:27:14 +0000
+ 13:27:12 +0000
 From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
@@ -78,16 +78,16 @@ Cc: Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
         Dev Jain <dev.jain@arm.com>, Jakub Matena <matenajakub@gmail.com>,
         Wei Yang <richard.weiyang@gmail.com>, Barry Song <baohua@kernel.org>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 08/11] tools/testing/selftests: expand mremap() tests for MREMAP_RELOCATE_ANON
-Date: Mon,  9 Jun 2025 14:26:42 +0100
-Message-ID: <25ed4f20f8874db9a496539aa9793013d22de06d.1749473726.git.lorenzo.stoakes@oracle.com>
+Subject: [PATCH 07/11] tools/testing/selftests: add MREMAP_RELOCATE_ANON merge test cases
+Date: Mon,  9 Jun 2025 14:26:41 +0100
+Message-ID: <96242c962cd2da54b15d97aac8761bedb285459c.1749473726.git.lorenzo.stoakes@oracle.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1749473726.git.lorenzo.stoakes@oracle.com>
 References: <cover.1749473726.git.lorenzo.stoakes@oracle.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: LO0P123CA0015.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:354::12) To BL4PR10MB8229.namprd10.prod.outlook.com
+X-ClientProxiedBy: LO0P265CA0012.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:355::13) To BL4PR10MB8229.namprd10.prod.outlook.com
  (2603:10b6:208:4e6::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -97,600 +97,854 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: BL4PR10MB8229:EE_|DM3PR10MB7947:EE_
-X-MS-Office365-Filtering-Correlation-Id: 12ccfbda-b6ef-47a6-4a91-08dda7595933
+X-MS-Office365-Filtering-Correlation-Id: 0d9666cd-cba9-4ee7-ff4c-08dda75957b6
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?o6vlSI90d+pI3eg+6UDBNdq8g0BwoeQlOms2IGn6JyHdIvSEfq1DlJJgqa1k?=
- =?us-ascii?Q?LkrrhW94G8kK3eLA/8EhgwCc4zl2lHCdMV4QzaG0ulQAhuBypx8Y572efkeX?=
- =?us-ascii?Q?O63gUnv5IZbA2TWMbASYpAHMHYqsHAalTnEBoEff01gHA9rq0joTRpcgm4U0?=
- =?us-ascii?Q?Zkv7IKm/TwlpYccQeVy5BxPB6fjr3aF6ZiVcFTW+HGa8AMsbC5P5iOomHemt?=
- =?us-ascii?Q?h7X4okPsIJNcnDlfeMO9lbxFwvVrLIFP1hpv/e2f1OOkQ2idvhoDk/ei4R5J?=
- =?us-ascii?Q?tUIa2uWYcjwbZ+Wr/2mTY8KeM728V64vzzb2K3af5BuxhgxpVQTDVm3DpAJu?=
- =?us-ascii?Q?/fxYbDonT6R1V0/aiew+FKgALjSVu6dZRPFu3oJ1BVmDjTBxlsewS23LarPd?=
- =?us-ascii?Q?3T6uJoFgmgjmqtTbAI+yB+F/FFM1Moqa7P3ZXrVxzJJ0h5Gjeqkv4Yd8Qq/Y?=
- =?us-ascii?Q?7m3R3ITfiSpLZ3F5a5J4s0jcRs9+5HI4Z5Ndv4eKEDd7MX5hdoCQaxkrW2uy?=
- =?us-ascii?Q?fnnyU56EVKfgVz3wrlCHrPER9pQp4pdRV5fi46bgKl6uVCXJcBBi1MyXRqPl?=
- =?us-ascii?Q?VFsLdFQolTfk09a3NY4wLVK3vapwEKAXZTSi/P352nddfrJZmGg8XXCPjS9T?=
- =?us-ascii?Q?Ho5JwY8SwgIZLB1PQRiE18W0Lx4PQT8yvxPsq1sjBL74EFkSFxxB9+qMCh/o?=
- =?us-ascii?Q?g1Ez00XjHV+kFTlzq+6DJKeTqgyWE0ngE/IMlYUr90gt23DO4iBmyyS95bFu?=
- =?us-ascii?Q?W4ne6tEPTfP8G1RV3PRvKD4WE7Rk1n36s9w//IqqzLu2Ar3+bxnDeiikKPjB?=
- =?us-ascii?Q?YK7HzblpaC2NgXXY43jowhkrdZXQg48UYYcSi/RVSVGS2zkUY+KGClWm6KEF?=
- =?us-ascii?Q?ZcBNzFS/kTZjzt7r8poxqg87lxoBzwL1fyd305/t7UW+1HqfPd6dn2uFQJDE?=
- =?us-ascii?Q?Ymi3AuymgZX9uXoBkpJAMZSo2S0A4uHbAOl9rDpLcmgNq33919BCF014rUGW?=
- =?us-ascii?Q?vc8ZuOrFSXPznhD8F2Z9sLr5Fh9jNmAejSLip+AVDg/BneHnfGeux1NBVHY/?=
- =?us-ascii?Q?4AyEtiFpCaSPGvtoJ9mbGBcjiTsnEJ44UkkVQUmNgp88vzgnYeSYHi79cju/?=
- =?us-ascii?Q?yBw9b/jPQISuw0HDPzzbzhz7FBntdlhgET5EsJ9zP7rEg34nAlR0rCRrai7n?=
- =?us-ascii?Q?KjvueD536OxEP2PaCyBWc77DESW16SYLQJjXvUSd0UV47V5XPpG6YGpFJnFi?=
- =?us-ascii?Q?cxZ5gxMnPmb3gJNtsuEo/fee6rDiSlnPaf8DbOpQkLuJqyoBgg6g7GTVvfEm?=
- =?us-ascii?Q?h1vaC/nQ0fW+vSPXqWGq2ma7Kyuu+Fv3FSQarXI8AVJ8RSdv00HDse2xDqVi?=
- =?us-ascii?Q?M1NMWhPTxUcQjrnqiFxQWouE68EeJrnrS2CeK88sTrXZskvA+FXrZNZ6XODl?=
- =?us-ascii?Q?7xN0CEwyS30=3D?=
+	=?us-ascii?Q?NWigGtCCKqUPeWzoVe5NwRx2avpnhV1GCOYBd7W+I1qvN7se8betiRWXm+l8?=
+ =?us-ascii?Q?5Ru+HU3J77L9kc7pgaY3wiI+ybFSAyWwKKtp+UJYoksffJQ/xAa0/LECCw6t?=
+ =?us-ascii?Q?GS+/ozZ4YW/KeqDjnJH+ccfVK2R8v+HJjIctVY1lRhqF+obhnfrTfS/rsIMv?=
+ =?us-ascii?Q?Wdmj502g8BSQgO7EMSf3lb6WOBXoCr/6Pb34rSi/cWWTzH+Q/8iQTGKC2rLI?=
+ =?us-ascii?Q?7dZnfvjJSoHkp3TiRziwVRUiGK31NI/6Vj3HlusPWpQPpHB97v00R/qUakWq?=
+ =?us-ascii?Q?oqepH6KiwhQ9A4yXTVrHe6BTmKQske0bUEebywDEKSrR83QN0A+oIGGN7qnQ?=
+ =?us-ascii?Q?ld0x2yA/ejWbFbh6cyPaPcgzS6S8OR5H/QnsoF/XHo+Ssj9BHhgm4MuQaOPC?=
+ =?us-ascii?Q?TB61A/MUATH99z4Fwpn8WufniNBgtjno21U8u0b5LN3UqA0iAf9DJdRqAHlX?=
+ =?us-ascii?Q?vM9Y7LUr6tHc3PFtvJXu4QD5wnzHeD9MmaGowO4MAvrTtPKJHQt0l2rAKqTB?=
+ =?us-ascii?Q?YksCm4ymZ+VcMvM6FnXeEZ15eCLs0kxlhHntdl1xcLOe7JbdlBa7j9i0UNA8?=
+ =?us-ascii?Q?FWX2WMWCOvWc10B/ipMQLPALmrW8+V8NyC7vW1r6KS+4ac0j5Hqy1JHK1d/p?=
+ =?us-ascii?Q?QoRif7dQSkcgR59w6+cqyO7dvhmC5EWaEeK1J7KVVVYpwnMkHjcDoXF87qwx?=
+ =?us-ascii?Q?EimAK3hGUYPRB1Jmf5/evIrLunDYv+tL9OmaVpLb5EiC0qu6PO6YChV83jM7?=
+ =?us-ascii?Q?VvQjnhTmacqXAJKBYTutqGoRgPoRzHW0pDhz5f+RjC+0hfJqR1whlXwcLGFW?=
+ =?us-ascii?Q?MfIwhdxhWL7CziKEvKnumDxip0FtTKERn6aOjeudftQvVKrIXp94cAQnMwKd?=
+ =?us-ascii?Q?10emOyLei78JOuJI5ROsWadpi390qhwbMOVdYxH6qqGlZcjk+ZllVU6e3QEs?=
+ =?us-ascii?Q?ojpBeYJsLGJDGzTx0ckfK1o+7HXjxbB9VRlFtEdwmQBIJ9S4LfH31+1y0IU/?=
+ =?us-ascii?Q?p5o0mrpnhKSUz1WMNSD05pYE5vTgteHGmEl4/A4sQx1gMR1CgGCk6g8fibpL?=
+ =?us-ascii?Q?gmmSkYEgLEOte0rzinvWwUu1fV6rry/KgjX9X9MkGm4wKQl0CC/n/rWayZ1E?=
+ =?us-ascii?Q?xzAf007BOD3KBDsk2cvjJEHpBoHUTjSrAwwA2JbcBgRxz1GhJvjgKbXXJJAO?=
+ =?us-ascii?Q?6bK8+u+6QwbSsOeVbLocngOy2pctXZvcIqTvLrr7npdwZcV1TGQgLWG7JIxX?=
+ =?us-ascii?Q?kaI5ClPEDntdIpiJi6oO7KsrSCCwiLRZfFEsh0zRqRJZxHoLGnQnLXk7Xt06?=
+ =?us-ascii?Q?xZ7jJU3hPGTdoJpHaucI7I9bRlQBlbKw9QxYHm+1BmtkqfOeHRLppDJ4ztl2?=
+ =?us-ascii?Q?ZUXilZyTCsqCYYJOF8u7+h/660raX/3oxDtvrFT0myhqB/N7ffwuenNwzSBl?=
+ =?us-ascii?Q?VqMtGNyVH6g=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL4PR10MB8229.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?5CtxvD52+0ZfEb9aGJl1ulbSmF290ZfwfiTpISkXXtrcFZXqk+96LbQjjEme?=
- =?us-ascii?Q?8xRERi4rBZCk14Pzl3/vJXs6iY/X4zbCUhUbQq9yhn9ky8qbAwcuJjX6O9JU?=
- =?us-ascii?Q?ebE6qmhofVubeEwEypToN+CzB1pmnn4g6NvfVCSiIqayXcyUdjXTOCOLSKVa?=
- =?us-ascii?Q?bnIfSC/03QIuB8LUCXhOvM6bwnEJ8xTr1/0CFkKp+8l/VQg2XAbImemeeJCX?=
- =?us-ascii?Q?bWoCHKMDUfq5ehyvH9UYziOoDJJIWgeeDMTpwM/OzpcuPbNJPB5jtXOjspag?=
- =?us-ascii?Q?erpa3MjgKA80u7FnypN1pVRLSt/7OLaL5v4AogSDHIK2wOfFESGGE+v+AkDO?=
- =?us-ascii?Q?Fh8EhCZka9JCX7ksbJREkm4W92p3jYD/eA7h+UbmoJm6fSnx4+sFzWaKJqXp?=
- =?us-ascii?Q?s7BeZEbyEmtalVRHHTUjNC5pktJZN1QRZGRhR4a0Ah8JSxxzETDKTHuCcE8W?=
- =?us-ascii?Q?sko9LIU1otDfuc9a+SR5SJR2vn7PKVAqKdcbC/B9LjToD7LnHo8YUlczifNI?=
- =?us-ascii?Q?B7im0YwaYtVME/BtudhqReJUM+Pjakx5LT0LN+NJ+6zZOVCsbSGxBFLvs3ys?=
- =?us-ascii?Q?yfK3inCcC89QuIMHDcL2x4/9qrGAL0JDWhUvUSO6dUynOF1mCy7pbkgtuys5?=
- =?us-ascii?Q?Srw5fLtnsz0lfBhjR3fY0rDclMW7rgD9PiYfmx7ba6fidmm1HxkXsy8dfwgz?=
- =?us-ascii?Q?o6mWJRXIC7t+qq0Edz6lr2zfPWsiAvmE10bHZjsHZ/tT3URGrEY5VmE6iaS2?=
- =?us-ascii?Q?FAfP2WHEe00kJzx3slnjM1CFLOYvjEY/uZxGmZUgSSr/2aMgxdszD4yKoqKx?=
- =?us-ascii?Q?qSl/FuchxuL5kUenAG3A0LUPwKQ/sDlsP7C+mRr9a1OyWV10YIray5ArQZ94?=
- =?us-ascii?Q?TFMMmIQpQVxsJYaKDgYq8o8cgzMax2Lhsn5R24AKRCu90ni9Mn2nVF3bbdwP?=
- =?us-ascii?Q?AbmFUAA4ZrpQ68/uwX1V9sbRAe0KibVqw1EL4vCmoaTZMdoFxi/udJw/o5tC?=
- =?us-ascii?Q?/cHoBEbJNyVRqvIhQsv0wzIXahyD/9gpE8032WCx7os3chhkX6blyVE1vqnh?=
- =?us-ascii?Q?X3AfN/R8FdyDq7Gwtk5+j0PUA2H6d6eLdUi24ktW1XYYnsJ6dc07bsIZwzAY?=
- =?us-ascii?Q?Oinj8zm4ASNhmyCgBTF86vi1VJsA/91PD3uzhOdVdO1JOtXYKXuSvHfwYm1x?=
- =?us-ascii?Q?jJ87Nk4fZ8k6GYI/mFmp2WvuilOpRJMxXPTbEfdUgCTyM40PBfetqnTImFbf?=
- =?us-ascii?Q?jetGOvyB1fTwfKUaGu1P0s77tTxxQim5tphSfrN3w/HceTrMI6k3ndtXK1FU?=
- =?us-ascii?Q?QyC/KtY+c8cFHPy7nzH+5i6rTfgVY4jmzMC2zPDWQ2S71NnLHaEGFIvpuau3?=
- =?us-ascii?Q?puGI6mQoq7PiDmOTXP86AvqfI4SIi+T5qdK7FrMU0CIbfTTSB5Mc9h0v0qMJ?=
- =?us-ascii?Q?jMME+Fj75FZNhgG9ObarHiilCns7OBdgbQ8+dBSPZ+xuZqpryJcAaITVMQGh?=
- =?us-ascii?Q?w4s1izWIL6AgZ06StDBv7hlcPl10xtXFwuSi2cOLUpxTnk7qVctWHFAkTHlM?=
- =?us-ascii?Q?++4Z3InyczGIlNsjIJeTHZt7u7AZaJOUoJiHFaTwHwlLl8vWmhckHRnRCm7I?=
- =?us-ascii?Q?Yw=3D=3D?=
+	=?us-ascii?Q?jzAVGwzOk8WuGjM+ZppghmxVxaQPC7w8DhETGE4nVN1yXg2dccv+Xlr+x2g6?=
+ =?us-ascii?Q?PmJGlH9DI0NTrT0NlwoTsnPRXEjumPCh0nJI2s7zIE9J0sx3AxiBMUcgfg9K?=
+ =?us-ascii?Q?T2TW5pu7L7ZIcuWAPxSunO2LS22HbYvnfLYcNdnhRpLbEExRfp4C7u++ewAf?=
+ =?us-ascii?Q?d8EWtvsgzRg35S+u2/on7TbdeWlqIDnfNAO7kRhWgjA2eU1Ax72pOlL0QCoo?=
+ =?us-ascii?Q?/c9DjIIVMo0+VfT/QP9w9+BkNphsddqegqwi2WeWjbC1sMlHzUCq8GNCMGkK?=
+ =?us-ascii?Q?S5l3ARPAQK7FQgb0G8JFHwBSONliPPsarPuXpZB2Lb8bogWEMTj45mdFXyLZ?=
+ =?us-ascii?Q?cmcJIHOo8l8sh5wSMF/NTMLRzBTqo1ei3Xm/PTL+sR0SnEjSkhGS126dcHn+?=
+ =?us-ascii?Q?xnQn2NVHfAkSRyoOd8k2VdGM97YBHBRvoMDKhnAlr7M3DO8NrcG7G5TiA6yp?=
+ =?us-ascii?Q?gHuHQwH7hhi+p2FB3Gzm2Dm/+9o34f+2K2WiCwxhVuLpzJgNoEh/j7wxII5a?=
+ =?us-ascii?Q?1aX1bIgMSAw0L7IN2AqtuzplQeRbfuwX08lx3OMF2Ip8vx52pvgYT4uACZHY?=
+ =?us-ascii?Q?C3tVUAIPD2q21u35keEUcmYfOZBSDLszthQsG9K8696PEXHRpKMpTjK9Xg/j?=
+ =?us-ascii?Q?LRorYiJuovumhLjar87Sw9szYVfhpHtgQOv3b+JL8aXy05w24C9Tssprnz3d?=
+ =?us-ascii?Q?QJW1HCkkLBRa2DgT6MRjj6dTjTOYuQABk8zTdoTESm19yUJHZ/JqYcs7hobu?=
+ =?us-ascii?Q?7pJ/BkJlNAodqDtuRogDziitdvoF66SMeO1UPwpvb9W30idY2Arso1z6lwqO?=
+ =?us-ascii?Q?vR7iaOI3AlsiODdsh22SDOuHPjMc/q9Cz5OXW+XwYaan1lkeIBHQbqiES/qB?=
+ =?us-ascii?Q?w5XItEE/OBb2IQxFys28fDwXzBVuvrNcz4kiDD4pq8qvN6Sbs+gDPr1ywPvN?=
+ =?us-ascii?Q?A+lfX610DpYlzLXIh9BcgTBbFk3i2h/9yfSZdcKVKogC/Z51a0Xt4V+gq1FF?=
+ =?us-ascii?Q?cYjyzO2Yu9z6DxnMy01x6JzmtaUTmuUYWPYTmDtOzkIwtiG+rfm3y0wNmlj0?=
+ =?us-ascii?Q?7+XPT5cEaiyAgHjDZHCMmXaSyb2AvIStQgF+H11qeHGBpe/piAIhxUYI+Bbx?=
+ =?us-ascii?Q?OkqKZuTXhj5HCWQ23XZYggw7zCvPR9t6P0/8MZsHGF3vEju75o2o0KhyKaSD?=
+ =?us-ascii?Q?gglBIwKofTQc+cz3Tq5xa/z0USl1g146ZluYkd4iT4ykKEKEb4mqlCkkvhDE?=
+ =?us-ascii?Q?6tIaGf738z7fOmg1JrCK7iY5pb6lKqvpvilQMpxYUMk+pknR+6OCuTTfeGwA?=
+ =?us-ascii?Q?OLBJ0COBG4jBWmqKhaj69dGoVVdmL6xy+FtJbpUrKFFl3cX5Xceyf22g4R2S?=
+ =?us-ascii?Q?u8WqRb1ON9BYlfjtH/698xto/fV5lYMRkFDxPpbl5ycsAZ8kg0mMiX/FC3wM?=
+ =?us-ascii?Q?ExlvBJPeWCBa08xgmCR4prt6cjW3SxZQdQy++sXmHiSZuxySlhENINH4eJmo?=
+ =?us-ascii?Q?YtNnoUrJ4n54UsGEphlQr+QLY2MyaNabwHi9Bo0QtgHTtXNS3cez3pYkGCtJ?=
+ =?us-ascii?Q?mIzNhR5zPNMZhPiSeqlCabZltBTXDLBIfxTWD4afwSc0dYfAJ3sa9TZERsPi?=
+ =?us-ascii?Q?eA=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	WYVP/KfHXdOG6AvWbsPAGbnkB8uaERfCPrNdT76+PyQs0xvocD2cxxUofKB5JreIOjtK1ipL+Cjj/ouGQWarivC3J80CX+zGhEhw/jtVPCn0zQqdgAk/ktpFOVN2XtetkNOpw1wXvZ6hR5es19enI7J2QfEDdWPlMLWjvymQiJlZYHPYGkPFpSrwo9Zx9Km6eqAamlLBFpD0TDlEBqsMZ6iXeVwXWWrYGGztG+x8GkJ8bhPP9mwnKww4NTHAfWqbcbcbeQFuMIQtE2NfbKa/GfqiGKnLvu7ZiiA2T2SiawDacUSKpAvZqKp0sYv97eycfutwuU3SA9iWwX0Ax69Xla7PFLukz++t9j2IhgXgFqjtvkEjLanCPyyD1BRggRaNkpdT9GDNUyMm0vJyHVOyzkKz1s53x/gQRtRmjyfttde11MOphxk0ezV0nR1VIvIfkaPUVMBKJ8yl88o25vyuJYOzPu8voAHjzuSnfaViSXxeXjJe8xViRbEHd2XcJhrsIXaK0Her9d4ipnEYdBiROyX1fTBMZhuIGNQFrc/sJrRbioJSG0VIHgyrBvKBeM6qpKEC5jhmblWcRC0xiURo2kpoAMYDFBcBSqIdGp4nBuI=
+	62Dj3bj29BqiXIFb8n/S/DBGugdlSZoCQwRvt7MAWfGkJ+T6HYYjUppOtSkWs/U2qRS3IMoz32EhCIkNepcPrXMrTFMYU2Gk02laBVdZArCFEfPGEzrg4fSNNCdwD+jfpkgZf0+zGRZ7lBu+EymakgPgT3B9e+KtNKv0iCxkLH2l1bUPkRlrA+qutZvmFcQPd4MFKLwiCtJnzt4wVmNEGbXQtKqifWBeEY4Kuv2kGY0g61uCPX82w/IuydqayAnkuGMQpzReLWm5i5nWMtHc+TST96ytAJGWTHlRKtZJ+uUZrZ84kQPEtm8P4OTDbbUdugiKYbiMZC5FuEu2W3GbgyKeD5hJYAqsNB6B5vgJPMCHC64ftm5XIABzRstcjX54tudANjctCIKp6IUkq/4kJuAUkO+Z2JpIsvdG/zjggbYtCNd9m85fP/IyEqrNXmX6wt/rtMfzAyBbPpEM1x4mbURW/bnAit2AwbboYZWDZ8BPGz2lVKu+H3fjpf998m/nZZY77RHlDiNRXay58WVL52+noZW0Xr8vKGt1q+MbXt51uOH3RPEs8uZIf0NfQYXO+22JFJycQwy4GpJtkKpxsxxrQn7rL5G+DOCdtoebE2I=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12ccfbda-b6ef-47a6-4a91-08dda7595933
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d9666cd-cba9-4ee7-ff4c-08dda75957b6
 X-MS-Exchange-CrossTenant-AuthSource: BL4PR10MB8229.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 13:27:14.8280
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 13:27:12.3466
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WyKV01d7yP7nh1lCkpDvJaXBJ9qu10TgTv4r+cM/2Fl/PR5k8lAjNDcz/oDzBbSiFN/1GNmiaz8e4Vd/qjTcy4ZI8OtKieSsTTMhlQMi6Oc=
+X-MS-Exchange-CrossTenant-UserPrincipalName: jn0gojGovvQto3wdV5NCf9yyAy556GRspv0csWM9JdVf19WublUcK29Qhqfez+nK/EZikzvD3M5VTs83lpn4tEC4fmMPBNP2rLWeUVswUNk=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR10MB7947
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-09_05,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- malwarescore=0 suspectscore=0 spamscore=0 phishscore=0 adultscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 suspectscore=0
+ phishscore=0 malwarescore=0 mlxlogscore=999 spamscore=0 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
  definitions=main-2506090098
-X-Proofpoint-GUID: fg6FNAgMsoysaAqM7bIn7XN3hDHL5gBK
-X-Authority-Analysis: v=2.4 cv=GcEXnRXL c=1 sm=1 tr=0 ts=6846e137 b=1 cx=c_pps a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=R-bQzvCybzszNUzdUgsA:9 cc=ntf awl=host:13206
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA5OCBTYWx0ZWRfX8sCqmTr6bXvo ZQNd5+ZoNeQ4JHggt6rkdQHmPvgsSEEaqI1mTb8OML/PUFIbR0uEffy+4C1LLQxgoEhJe1k8xPZ uZPavtb6orJMRB0Ie7DaOBdOTvKxrlhiYqAxgwHDtOnntDZKRZUdgbagaE3Ai7uoU4qK8w9M8Bu
- fbVSpciTszVw6V9Li0UygThDyoXaypMhWlASpXjQjPAC8Est0VaWASDsp3KoHXJPV8Y5iN56w76 xv6apPBIxYV4Mrvq2Sp8v65RWM6i683qGpAq1anLHfYbhYJFFyoHpy16oZTLSTQIC6oBL8lNF2W BSzxp0dbkjNQuNf16rRih0lxYqYvAmWM47pp4VorkTyiNlQOVw7+Youhh5Eu+FcYoLViwQJ3ykB
- dTYgrXspRmzwmZkG3hS7br5tf6HDuBIJ8MIN2iMMJhUuQ34RZoK8Jd/elgZTT1zN0GfBDUdW
-X-Proofpoint-ORIG-GUID: fg6FNAgMsoysaAqM7bIn7XN3hDHL5gBK
+X-Authority-Analysis: v=2.4 cv=LIpmQIW9 c=1 sm=1 tr=0 ts=6846e134 cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=7Hmlt5ibIiRAvCtG0RYA:9
+X-Proofpoint-ORIG-GUID: TuxpM16V07nD7OP6UatLu0AzagreJl9A
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA5OCBTYWx0ZWRfXxN2UTTnvJ+rN HC+5ffH96ctcqjWQqG+30RPV6L932+vAAUriXNa+zK1hlkYTKXDv3np4vhf70xv6+vAdikCr+Sg M/lTbVsyORygthNYMl6C2WhL6mkZMrXh37kT+RbouyUP+wwRBx1UU7sPr+oc4ONKWjGo/e3Hv3k
+ bNHgrRUkwPma6SInCMo4IpNGWPEBf1aL6Zaceua8vS7HG2RJqlTPy9s0qx5cgZk4Sv/ylyqiDkG o7EoiJ9H29L9avYHvnWXHW0DrKznuzO2P7XHEBmQCvsifKpg5Rgcs90PIin203FxnRsptWATNm1 NKmQYJJQQcSzctOxK/BwMKTOprKHPUetWQnS75/+ekzAdLjqOHym0zeov4H1zvhjq7+w7UD4d2X
+ FerhUzfa40whUY4vyYxBwHYpgTvOjU9sB9rdIzWwMJNtnUBVLJPtKy9wqqdH4q/cWMySpy1C
+X-Proofpoint-GUID: TuxpM16V07nD7OP6UatLu0AzagreJl9A
 
-Adjust every relevant test (that is, one that moves memory) to also perform
-the same test using MREMAP_MUST_RELOCATE_ANON to assert that it is behaving
-as expected.
+Add test cases to the mm self test asserting that the merge cases which the
+newly introduced MREMAP[_MUST]_RELOCATE_ANON results in merges occurring as
+expected, which otherwise without it would not succeed.
 
-In order to avoid glibc not being up-to-date, also move to using the
-mremap() system call direct, and import the linux/mman.h header, which will
-use the tool linux header wrappers, to get the latest mremap defines.
+This extends the newly introduced VMA merge self tests for these cases and
+exhaustively attempts each merge case, asserting expected behaviour.
 
-Also take careful precaution in the instance where we might unexpectedly
-fail the 'mremap move within range' test due to large folios mapped outside
-of the range we are relocating.
+We use the MREMAP_MUST_RELOCATE_ANON variant to ensure that, should the
+anon relocate fail, we observe an error, as quietly demoting the move to
+non-relocate anon would cause unusual test failures.
 
-In these instances, if we test with MREMAP_MUST_RELOCATE_ANON, we ensure
-the folios in question are not huge. If testing with MREMAP_RELOCATE_ANON
-we do not - this asserts that this correctly falls back to non-relocate
-anon behaviour.
-
-In cases where MREMAP_MUST_RELOCATE_ANON is used, we attempt to immediately
-trigger reclaim to also assert that the rmap state is uncorrupted.
+We carefully document each case to make clear what we are testing.
 
 Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 ---
- tools/testing/selftests/mm/mremap_test.c | 262 +++++++++++++++--------
- 1 file changed, 168 insertions(+), 94 deletions(-)
+ tools/testing/selftests/mm/merge.c | 730 +++++++++++++++++++++++++++++
+ 1 file changed, 730 insertions(+)
 
-diff --git a/tools/testing/selftests/mm/mremap_test.c b/tools/testing/selftests/mm/mremap_test.c
-index bb84476a177f..5d6ff0d1da7d 100644
---- a/tools/testing/selftests/mm/mremap_test.c
-+++ b/tools/testing/selftests/mm/mremap_test.c
-@@ -8,11 +8,13 @@
- #include <stdlib.h>
- #include <stdio.h>
- #include <string.h>
-+#include <linux/mman.h>
- #include <sys/mman.h>
- #include <time.h>
- #include <stdbool.h>
- 
- #include "../kselftest.h"
-+#include "vm_util.h"
- 
- #define EXPECT_SUCCESS 0
- #define EXPECT_FAILURE 1
-@@ -34,6 +36,7 @@ struct config {
- 	unsigned long long dest_alignment;
- 	unsigned long long region_size;
- 	int overlapping;
-+	bool use_relocate_anon;
- 	unsigned int dest_preamble_size;
- };
- 
-@@ -60,7 +63,8 @@ enum {
- #define PTE page_size
- 
- #define MAKE_TEST(source_align, destination_align, size,	\
--		  overlaps, should_fail, test_name)		\
-+		  overlaps, use_relocate_anon, should_fail,	\
-+		  test_name)					\
- (struct test){							\
- 	.name = test_name,					\
- 	.config = {						\
-@@ -68,6 +72,7 @@ enum {
- 		.dest_alignment = destination_align,		\
- 		.region_size = size,				\
- 		.overlapping = overlaps,			\
-+		.use_relocate_anon = use_relocate_anon,		\
- 	},							\
- 	.expect_failure = should_fail				\
+diff --git a/tools/testing/selftests/mm/merge.c b/tools/testing/selftests/mm/merge.c
+index b5c183403fe7..b658f2f3a94b 100644
+--- a/tools/testing/selftests/mm/merge.c
++++ b/tools/testing/selftests/mm/merge.c
+@@ -1168,4 +1168,734 @@ TEST_F(merge, mremap_correct_placed_faulted)
+ 	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 15 * page_size);
  }
-@@ -184,6 +189,12 @@ static void *get_source_mapping(struct config c)
- 	unsigned long long addr = 0ULL;
- 	void *src_addr = NULL;
- 	unsigned long long mmap_min_addr;
-+	int mmap_flags = MAP_FIXED_NOREPLACE | MAP_ANONYMOUS;
-+
-+	if (c.use_relocate_anon)
-+		mmap_flags |= MAP_PRIVATE;
-+	else
-+		mmap_flags |= MAP_SHARED;
  
- 	mmap_min_addr = get_mmap_min_addr();
- 	/*
-@@ -198,8 +209,7 @@ static void *get_source_mapping(struct config c)
- 		goto retry;
- 
- 	src_addr = mmap((void *) addr, c.region_size, PROT_READ | PROT_WRITE,
--					MAP_FIXED_NOREPLACE | MAP_ANONYMOUS | MAP_SHARED,
--					-1, 0);
-+					mmap_flags, -1, 0);
- 	if (src_addr == MAP_FAILED) {
- 		if (errno == EPERM || errno == EEXIST)
- 			goto retry;
-@@ -251,7 +261,7 @@ static void mremap_expand_merge(FILE *maps_fp, unsigned long page_size)
- 	}
- 
- 	munmap(start + page_size, page_size);
--	remap = mremap(start, page_size, 2 * page_size, 0);
-+	remap = sys_mremap(start, page_size, 2 * page_size, 0, 0);
- 	if (remap == MAP_FAILED) {
- 		ksft_print_msg("mremap failed: %s\n", strerror(errno));
- 		munmap(start, page_size);
-@@ -292,7 +302,8 @@ static void mremap_expand_merge_offset(FILE *maps_fp, unsigned long page_size)
- 
- 	/* Unmap final page to ensure we have space to expand. */
- 	munmap(start + 2 * page_size, page_size);
--	remap = mremap(start + page_size, page_size, 2 * page_size, 0);
-+
-+	remap = sys_mremap(start + page_size, page_size, 2 * page_size, 0, 0);
- 	if (remap == MAP_FAILED) {
- 		ksft_print_msg("mremap failed: %s\n", strerror(errno));
- 		munmap(start, 2 * page_size);
-@@ -324,20 +335,35 @@ static void mremap_expand_merge_offset(FILE *maps_fp, unsigned long page_size)
-  *
-  * |DDDDddddSSSSssss|
-  */
--static void mremap_move_within_range(unsigned int pattern_seed, char *rand_addr)
-+static void mremap_move_within_range(unsigned int pattern_seed, char *rand_addr,
-+				     char *test_suffix, int extra_flags)
- {
- 	char *test_name = "mremap mremap move within range";
- 	void *src, *dest;
- 	unsigned int i, success = 1;
--
- 	size_t size = SIZE_MB(20);
- 	void *ptr = mmap(NULL, size, PROT_READ | PROT_WRITE,
- 			 MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-+	int mremap_flags = MREMAP_MAYMOVE | MREMAP_FIXED;
-+
- 	if (ptr == MAP_FAILED) {
- 		perror("mmap");
- 		success = 0;
- 		goto out;
- 	}
++TEST_F(merge, mremap_relocate_anon_faulted_after_unfaulted)
++{
++	unsigned int page_size = self->page_size;
++	char *carveout = self->carveout;
++	struct procmap_fd *procmap = &self->procmap;
++	char *ptr, *ptr2;
 +
 +	/*
-+	 * If THP is enabled, we may end up spanning a range which has large
-+	 * folios not enclosed within the mapping, which will disallow the
-+	 * relocate.
++	 * Map two distinct areas:
 +	 *
-+	 * In this case, disallow huge pages in the range.
++	 * |-----------|  |-----------|
++	 * | unfaulted |  | unfaulted |
++	 * |-----------|  |-----------|
++	 *      ptr            ptr2
 +	 */
-+	if (extra_flags & MREMAP_MUST_RELOCATE_ANON)
-+		madvise(ptr, size, MADV_NOHUGEPAGE);
++	ptr = mmap(&carveout[page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		   MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr, MAP_FAILED);
++	ptr2 = mmap(&carveout[7 * page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		    MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr2, MAP_FAILED);
 +
-+	mremap_flags |= extra_flags;
++	/*
++	 * Offset ptr2 further away. Note we don't have to use
++	 * MREMAP_RELOCATE_ANON yet.
++	 */
++	ptr2 = sys_mremap(ptr2, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED, ptr2 + page_size * 1000);
++	ASSERT_NE(ptr2, MAP_FAILED);
 +
- 	memset(ptr, 0, size);
- 
- 	src = ptr + SIZE_MB(6);
-@@ -348,8 +374,8 @@ static void mremap_move_within_range(unsigned int pattern_seed, char *rand_addr)
- 
- 	dest = src - SIZE_MB(2);
- 
--	void *new_ptr = mremap(src + SIZE_MB(1), SIZE_MB(1), SIZE_MB(1),
--						   MREMAP_MAYMOVE | MREMAP_FIXED, dest + SIZE_MB(1));
-+	void *new_ptr = sys_mremap(src + SIZE_MB(1), SIZE_MB(1), SIZE_MB(1),
-+				   mremap_flags, dest + SIZE_MB(1));
- 	if (new_ptr == MAP_FAILED) {
- 		perror("mremap");
- 		success = 0;
-@@ -375,9 +401,9 @@ static void mremap_move_within_range(unsigned int pattern_seed, char *rand_addr)
- 		perror("munmap");
- 
- 	if (success)
--		ksft_test_result_pass("%s\n", test_name);
-+		ksft_test_result_pass("%s%s\n", test_name, test_suffix);
- 	else
--		ksft_test_result_fail("%s\n", test_name);
-+		ksft_test_result_fail("%s%s\n", test_name, test_suffix);
- }
- 
- /* Returns the time taken for the remap on success else returns -1. */
-@@ -390,6 +416,10 @@ static long long remap_region(struct config c, unsigned int threshold_mb,
- 	long long  start_ns, end_ns, align_mask, ret, offset;
- 	unsigned long long threshold;
- 	unsigned long num_chunks;
-+	int mremap_flags = MREMAP_MAYMOVE | MREMAP_FIXED;
++	/*
++	 * Fault ptr2 in:
++	 *                \
++	 * |-----------|  /  |-----------|
++	 * | unfaulted |  \  |  faulted  |
++	 * |-----------|  /  |-----------|
++	 *      ptr       \       ptr2
++	 */
++	ptr2[0] = 'x';
 +
-+	if (c.use_relocate_anon)
-+		mremap_flags |= MREMAP_MUST_RELOCATE_ANON;
- 
- 	if (threshold_mb == VALIDATION_NO_THRESHOLD)
- 		threshold = c.region_size;
-@@ -431,10 +461,15 @@ static long long remap_region(struct config c, unsigned int threshold_mb,
- 	}
- 
- 	if (c.dest_preamble_size) {
-+		int mmap_flags = MAP_FIXED_NOREPLACE | MAP_ANONYMOUS;
++	/*
++	 * Move ptr2 after ptr, using MREMAP_MUST_RELOCATE_ANON:
++	 *
++	 * |-----------|-----------|
++	 * | unfaulted |  faulted  |
++	 * |-----------|-----------|
++	 *      ptr         ptr2
++	 *
++	 * It should merge:
++	 *
++	 * |-----------------------|
++	 * |        faulted        |
++	 * |-----------------------|
++	 */
++	ptr2 = sys_mremap(ptr2, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED | MREMAP_MUST_RELOCATE_ANON,
++			  &ptr[5 * page_size]);
++	ASSERT_NE(ptr2, MAP_FAILED);
 +
-+		if (c.use_relocate_anon)
-+			mmap_flags |= MAP_PRIVATE;
-+		else
-+			mmap_flags |= MAP_SHARED;
++	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
++	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
++	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 10 * page_size);
++}
 +
- 		dest_preamble_addr = mmap((void *) addr - c.dest_preamble_size, c.dest_preamble_size,
--					  PROT_READ | PROT_WRITE,
--					  MAP_FIXED_NOREPLACE | MAP_ANONYMOUS | MAP_SHARED,
--							-1, 0);
-+					  PROT_READ | PROT_WRITE, mmap_flags, -1, 0);
- 		if (dest_preamble_addr == MAP_FAILED) {
- 			ksft_print_msg("Failed to map dest preamble region: %s\n",
- 					strerror(errno));
-@@ -447,8 +482,8 @@ static long long remap_region(struct config c, unsigned int threshold_mb,
- 	}
- 
- 	clock_gettime(CLOCK_MONOTONIC, &t_start);
--	dest_addr = mremap(src_addr, c.region_size, c.region_size,
--					  MREMAP_MAYMOVE|MREMAP_FIXED, (char *) addr);
-+	dest_addr = sys_mremap(src_addr, c.region_size, c.region_size,
-+			       mremap_flags, (char *) addr);
- 	clock_gettime(CLOCK_MONOTONIC, &t_end);
- 
- 	if (dest_addr == MAP_FAILED) {
-@@ -549,6 +584,10 @@ static long long remap_region(struct config c, unsigned int threshold_mb,
-  * subsequent tests. So we clean up mappings after each test.
-  */
- clean_up_dest:
-+	/* Trigger reclaim to assert that adjusted rmap state is valid. */
-+	if (c.use_relocate_anon)
-+		madvise(dest_addr, c.region_size, MADV_PAGEOUT);
++TEST_F(merge, mremap_relocate_anon_faulted_before_unfaulted)
++{
++	unsigned int page_size = self->page_size;
++	char *carveout = self->carveout;
++	struct procmap_fd *procmap = &self->procmap;
++	char *ptr, *ptr2;
 +
- 	munmap(dest_addr, c.region_size);
- clean_up_dest_preamble:
- 	if (c.dest_preamble_size && dest_preamble_addr)
-@@ -565,16 +604,19 @@ static long long remap_region(struct config c, unsigned int threshold_mb,
-  * down address landed on a mapping that maybe does not exist.
-  */
- static void mremap_move_1mb_from_start(unsigned int pattern_seed,
--				       char *rand_addr)
-+				       char *rand_addr, char *test_suffix,
-+				       int extra_flags)
- {
- 	char *test_name = "mremap move 1mb from start at 1MB+256KB aligned src";
- 	void *src = NULL, *dest = NULL;
- 	unsigned int i, success = 1;
--
-+	int mremap_flags = MREMAP_MAYMOVE | MREMAP_FIXED;
- 	/* Config to reuse get_source_mapping() to do an aligned mmap. */
- 	struct config c = {
- 		.src_alignment = SIZE_MB(1) + SIZE_KB(256),
--		.region_size = SIZE_MB(6)
-+		.region_size = SIZE_MB(6),
-+		.use_relocate_anon = extra_flags & (MREMAP_RELOCATE_ANON |
-+						    MREMAP_MUST_RELOCATE_ANON),
- 	};
- 
- 	src = get_source_mapping(c);
-@@ -583,6 +625,12 @@ static void mremap_move_1mb_from_start(unsigned int pattern_seed,
- 		goto out;
- 	}
- 
-+	/* See comment in mremap_move_within_range(). */
-+	if (extra_flags & MREMAP_MUST_RELOCATE_ANON)
-+		madvise(src, c.region_size, MADV_NOHUGEPAGE);
++	/*
++	 * Map two distinct areas:
++	 *
++	 * |-----------|  |-----------|
++	 * | unfaulted |  | unfaulted |
++	 * |-----------|  |-----------|
++	 *      ptr            ptr2
++	 */
++	ptr = mmap(&carveout[6 * page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		   MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr, MAP_FAILED);
++	ptr2 = mmap(&carveout[12 * page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		    MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr2, MAP_FAILED);
 +
-+	mremap_flags |= extra_flags;
++	/*
++	 * Offset ptr2 further away. Note we don't have to use
++	 * MREMAP_RELOCATE_ANON yet.
++	 */
++	ptr2 = sys_mremap(ptr2, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED, ptr2 + page_size * 1000);
++	ASSERT_NE(ptr2, MAP_FAILED);
 +
- 	c.src_alignment = SIZE_MB(1) + SIZE_KB(256);
- 	dest = get_source_mapping(c);
- 	if (!dest) {
-@@ -599,8 +647,8 @@ static void mremap_move_1mb_from_start(unsigned int pattern_seed,
- 	 */
- 	munmap(dest, SIZE_MB(1));
- 
--	void *new_ptr = mremap(src + SIZE_MB(1), SIZE_MB(1), SIZE_MB(1),
--						   MREMAP_MAYMOVE | MREMAP_FIXED, dest + SIZE_MB(1));
-+	void *new_ptr = sys_mremap(src + SIZE_MB(1), SIZE_MB(1), SIZE_MB(1),
-+				   mremap_flags, dest + SIZE_MB(1));
- 	if (new_ptr == MAP_FAILED) {
- 		perror("mremap");
- 		success = 0;
-@@ -629,9 +677,10 @@ static void mremap_move_1mb_from_start(unsigned int pattern_seed,
- 		perror("munmap dest");
- 
- 	if (success)
--		ksft_test_result_pass("%s\n", test_name);
-+		ksft_test_result_pass("%s%s\n", test_name, test_suffix);
++	/*
++	 * Fault ptr2 in:
++	 *                \
++	 * |-----------|  /  |-----------|
++	 * | unfaulted |  \  |  faulted  |
++	 * |-----------|  /  |-----------|
++	 *      ptr       \       ptr2
++	 */
++	ptr2[0] = 'x';
 +
- 	else
--		ksft_test_result_fail("%s\n", test_name);
-+		ksft_test_result_fail("%s%s\n", test_name, test_suffix);
- }
- 
- static void run_mremap_test_case(struct test test_case, int *failures,
-@@ -640,13 +689,17 @@ static void run_mremap_test_case(struct test test_case, int *failures,
- {
- 	long long remap_time = remap_region(test_case.config, threshold_mb,
- 					    rand_addr);
-+	char *relocate_anon_suffix = " [MREMAP_MUST_RELOCATE_ANON]";
-+	struct config *c = &test_case.config;
- 
- 	if (remap_time < 0) {
- 		if (test_case.expect_failure)
--			ksft_test_result_xfail("%s\n\tExpected mremap failure\n",
--					      test_case.name);
-+			ksft_test_result_xfail("%s%s\n\tExpected mremap failure\n",
-+					       test_case.name,
-+					       c->use_relocate_anon ? relocate_anon_suffix : "");
- 		else {
--			ksft_test_result_fail("%s\n", test_case.name);
-+			ksft_test_result_fail("%s%s\n", test_case.name,
-+					      c->use_relocate_anon ? relocate_anon_suffix : "");
- 			*failures += 1;
- 		}
- 	} else {
-@@ -656,10 +709,13 @@ static void run_mremap_test_case(struct test test_case, int *failures,
- 		 */
- 		if (threshold_mb == VALIDATION_NO_THRESHOLD ||
- 		    test_case.config.region_size <= threshold_mb * _1MB)
--			ksft_test_result_pass("%s\n\tmremap time: %12lldns\n",
--					      test_case.name, remap_time);
-+			ksft_test_result_pass("%s%s\n\tmremap time: %12lldns\n",
-+					      test_case.name,
-+					      c->use_relocate_anon ? relocate_anon_suffix : "",
-+					      remap_time);
- 		else
--			ksft_test_result_pass("%s\n", test_case.name);
-+			ksft_test_result_pass("%s%s\n", test_case.name,
-+					      c->use_relocate_anon ? relocate_anon_suffix : "");
- 	}
- }
- 
-@@ -703,8 +759,8 @@ static int parse_args(int argc, char **argv, unsigned int *threshold_mb,
- 	return 0;
- }
- 
--#define MAX_TEST 15
--#define MAX_PERF_TEST 3
-+#define MAX_TEST 30
-+#define MAX_PERF_TEST 6
- int main(int argc, char **argv)
- {
- 	int failures = 0;
-@@ -721,12 +777,15 @@ int main(int argc, char **argv)
- 	char *rand_addr;
- 	size_t rand_size;
- 	int num_expand_tests = 2;
--	int num_misc_tests = 2;
-+	int num_misc_tests = 6;
- 	struct test test_cases[MAX_TEST] = {};
- 	struct test perf_test_cases[MAX_PERF_TEST];
- 	int page_size;
- 	time_t t;
- 	FILE *maps_fp;
-+	bool use_relocate_anon = false;
-+	struct test *test_case = test_cases;
-+	struct test *perf_test_case = perf_test_cases;
- 
- 	pattern_seed = (unsigned int) time(&t);
- 
-@@ -763,66 +822,71 @@ int main(int argc, char **argv)
- 
- 	page_size = sysconf(_SC_PAGESIZE);
- 
--	/* Expected mremap failures */
--	test_cases[0] =	MAKE_TEST(page_size, page_size, page_size,
--				  OVERLAPPING, EXPECT_FAILURE,
--				  "mremap - Source and Destination Regions Overlapping");
--
--	test_cases[1] = MAKE_TEST(page_size, page_size/4, page_size,
--				  NON_OVERLAPPING, EXPECT_FAILURE,
--				  "mremap - Destination Address Misaligned (1KB-aligned)");
--	test_cases[2] = MAKE_TEST(page_size/4, page_size, page_size,
--				  NON_OVERLAPPING, EXPECT_FAILURE,
--				  "mremap - Source Address Misaligned (1KB-aligned)");
--
--	/* Src addr PTE aligned */
--	test_cases[3] = MAKE_TEST(PTE, PTE, PTE * 2,
--				  NON_OVERLAPPING, EXPECT_SUCCESS,
--				  "8KB mremap - Source PTE-aligned, Destination PTE-aligned");
--
--	/* Src addr 1MB aligned */
--	test_cases[4] = MAKE_TEST(_1MB, PTE, _2MB, NON_OVERLAPPING, EXPECT_SUCCESS,
--				  "2MB mremap - Source 1MB-aligned, Destination PTE-aligned");
--	test_cases[5] = MAKE_TEST(_1MB, _1MB, _2MB, NON_OVERLAPPING, EXPECT_SUCCESS,
--				  "2MB mremap - Source 1MB-aligned, Destination 1MB-aligned");
--
--	/* Src addr PMD aligned */
--	test_cases[6] = MAKE_TEST(PMD, PTE, _4MB, NON_OVERLAPPING, EXPECT_SUCCESS,
--				  "4MB mremap - Source PMD-aligned, Destination PTE-aligned");
--	test_cases[7] =	MAKE_TEST(PMD, _1MB, _4MB, NON_OVERLAPPING, EXPECT_SUCCESS,
--				  "4MB mremap - Source PMD-aligned, Destination 1MB-aligned");
--	test_cases[8] = MAKE_TEST(PMD, PMD, _4MB, NON_OVERLAPPING, EXPECT_SUCCESS,
--				  "4MB mremap - Source PMD-aligned, Destination PMD-aligned");
--
--	/* Src addr PUD aligned */
--	test_cases[9] = MAKE_TEST(PUD, PTE, _2GB, NON_OVERLAPPING, EXPECT_SUCCESS,
--				  "2GB mremap - Source PUD-aligned, Destination PTE-aligned");
--	test_cases[10] = MAKE_TEST(PUD, _1MB, _2GB, NON_OVERLAPPING, EXPECT_SUCCESS,
--				   "2GB mremap - Source PUD-aligned, Destination 1MB-aligned");
--	test_cases[11] = MAKE_TEST(PUD, PMD, _2GB, NON_OVERLAPPING, EXPECT_SUCCESS,
--				   "2GB mremap - Source PUD-aligned, Destination PMD-aligned");
--	test_cases[12] = MAKE_TEST(PUD, PUD, _2GB, NON_OVERLAPPING, EXPECT_SUCCESS,
--				   "2GB mremap - Source PUD-aligned, Destination PUD-aligned");
--
--	/* Src and Dest addr 1MB aligned. 5MB mremap. */
--	test_cases[13] = MAKE_TEST(_1MB, _1MB, _5MB, NON_OVERLAPPING, EXPECT_SUCCESS,
--				  "5MB mremap - Source 1MB-aligned, Destination 1MB-aligned");
--
--	/* Src and Dest addr 1MB aligned. 5MB mremap. */
--	test_cases[14] = MAKE_TEST(_1MB, _1MB, _5MB, NON_OVERLAPPING, EXPECT_SUCCESS,
--				  "5MB mremap - Source 1MB-aligned, Dest 1MB-aligned with 40MB Preamble");
--	test_cases[14].config.dest_preamble_size = 10 * _4MB;
--
--	perf_test_cases[0] =  MAKE_TEST(page_size, page_size, _1GB, NON_OVERLAPPING, EXPECT_SUCCESS,
--					"1GB mremap - Source PTE-aligned, Destination PTE-aligned");
--	/*
--	 * mremap 1GB region - Page table level aligned time
--	 * comparison.
--	 */
--	perf_test_cases[1] = MAKE_TEST(PMD, PMD, _1GB, NON_OVERLAPPING, EXPECT_SUCCESS,
--				       "1GB mremap - Source PMD-aligned, Destination PMD-aligned");
--	perf_test_cases[2] = MAKE_TEST(PUD, PUD, _1GB, NON_OVERLAPPING, EXPECT_SUCCESS,
--				       "1GB mremap - Source PUD-aligned, Destination PUD-aligned");
-+	do {
-+		/* Expected mremap failures */
-+		*test_case++ =	MAKE_TEST(page_size, page_size, page_size,
-+					  OVERLAPPING, use_relocate_anon, EXPECT_FAILURE,
-+					  "mremap - Source and Destination Regions Overlapping");
++	/*
++	 * Move ptr2 before ptr, using MREMAP_MUST_RELOCATE_ANON:
++	 *
++	 * |-----------|-----------|
++	 * |  faulted  | unfaulted |
++	 * |-----------|-----------|
++	 *      ptr2        ptr
++	 *
++	 * It should merge:
++	 *
++	 * |-----------------------|
++	 * |        faulted        |
++	 * |-----------------------|
++	 */
++	ptr2 = sys_mremap(ptr2, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED | MREMAP_MUST_RELOCATE_ANON,
++			  &carveout[page_size]);
++	ASSERT_NE(ptr2, MAP_FAILED);
 +
-+		*test_case++ =	MAKE_TEST(page_size, page_size/4, page_size,
-+					  NON_OVERLAPPING, use_relocate_anon, EXPECT_FAILURE,
-+					  "mremap - Destination Address Misaligned (1KB-aligned)");
-+		*test_case++ =	MAKE_TEST(page_size/4, page_size, page_size,
-+					  NON_OVERLAPPING, use_relocate_anon, EXPECT_FAILURE,
-+					  "mremap - Source Address Misaligned (1KB-aligned)");
++	ASSERT_TRUE(find_vma_procmap(procmap, ptr2));
++	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr2);
++	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr2 + 10 * page_size);
++}
 +
-+		/* Src addr PTE aligned */
-+		*test_case++ =	MAKE_TEST(PTE, PTE, PTE * 2,
-+					  NON_OVERLAPPING, use_relocate_anon, EXPECT_SUCCESS,
-+					  "8KB mremap - Source PTE-aligned, Destination PTE-aligned");
++TEST_F(merge, mremap_relocate_anon_faulted_between_unfaulted)
++{
++	unsigned int page_size = self->page_size;
++	char *carveout = self->carveout;
++	struct procmap_fd *procmap = &self->procmap;
++	char *ptr, *ptr2, *ptr3;
 +
-+		/* Src addr 1MB aligned */
-+		*test_case++ =	MAKE_TEST(_1MB, PTE, _2MB, NON_OVERLAPPING, use_relocate_anon, EXPECT_SUCCESS,
-+					  "2MB mremap - Source 1MB-aligned, Destination PTE-aligned");
-+		*test_case++ =	MAKE_TEST(_1MB, _1MB, _2MB, NON_OVERLAPPING, use_relocate_anon, EXPECT_SUCCESS,
-+					  "2MB mremap - Source 1MB-aligned, Destination 1MB-aligned");
++	/*
++	 * Map three distinct areas:
++	 *
++	 * |-----------|  |-----------|  |-----------|
++	 * | unfaulted |  | unfaulted |  | unfaulted |
++	 * |-----------|  |-----------|  |-----------|
++	 *      ptr            ptr2           ptr3
++	 */
++	ptr = mmap(&carveout[page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		   MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr, MAP_FAILED);
++	ptr2 = mmap(&carveout[7 * page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		    MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr2, MAP_FAILED);
++	ptr3 = mmap(&carveout[14 * page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		    MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr3, MAP_FAILED);
 +
-+		/* Src addr PMD aligned */
-+		*test_case++ =	MAKE_TEST(PMD, PTE, _4MB, NON_OVERLAPPING, use_relocate_anon, EXPECT_SUCCESS,
-+					  "4MB mremap - Source PMD-aligned, Destination PTE-aligned");
-+		*test_case++ =	MAKE_TEST(PMD, _1MB, _4MB, NON_OVERLAPPING, use_relocate_anon, EXPECT_SUCCESS,
-+					  "4MB mremap - Source PMD-aligned, Destination 1MB-aligned");
-+		*test_case++ =	MAKE_TEST(PMD, PMD, _4MB, NON_OVERLAPPING, use_relocate_anon, EXPECT_SUCCESS,
-+					  "4MB mremap - Source PMD-aligned, Destination PMD-aligned");
++	/*
++	 * Offset ptr2 further away, and move ptr3 into position:
++	 *                                        \
++	 * |-----------|           |-----------|  /  |-----------|
++	 * | unfaulted |           | unfaulted |  \  | unfaulted |
++	 * |-----------|           |-----------|  /  |-----------|
++	 *      ptr                    ptr3       \      ptr2
++	 */
++	ptr2 = sys_mremap(ptr2, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED, ptr2 + page_size * 1000);
++	ASSERT_NE(ptr2, MAP_FAILED);
++	ptr3 = sys_mremap(ptr3, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED, ptr3 + page_size * 2000);
++	ASSERT_NE(ptr3, MAP_FAILED);
++	ptr3 = sys_mremap(ptr3, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED, &ptr[10 * page_size]);
++	ASSERT_NE(ptr3, MAP_FAILED);
 +
-+		/* Src addr PUD aligned */
-+		*test_case++ =	MAKE_TEST(PUD, PTE, _2GB, NON_OVERLAPPING, use_relocate_anon, EXPECT_SUCCESS,
-+					  "2GB mremap - Source PUD-aligned, Destination PTE-aligned");
-+		*test_case++ =	MAKE_TEST(PUD, _1MB, _2GB, NON_OVERLAPPING, use_relocate_anon, EXPECT_SUCCESS,
-+					   "2GB mremap - Source PUD-aligned, Destination 1MB-aligned");
-+		*test_case++ =	MAKE_TEST(PUD, PMD, _2GB, NON_OVERLAPPING, use_relocate_anon, EXPECT_SUCCESS,
-+					   "2GB mremap - Source PUD-aligned, Destination PMD-aligned");
-+		*test_case++ =	MAKE_TEST(PUD, PUD, _2GB, NON_OVERLAPPING, use_relocate_anon, EXPECT_SUCCESS,
-+					   "2GB mremap - Source PUD-aligned, Destination PUD-aligned");
++	/*
++	 * Fault in ptr2:
++	 *                                        \
++	 * |-----------|           |-----------|  /  |-----------|
++	 * | unfaulted |           | unfaulted |  \  |  faulted  |
++	 * |-----------|           |-----------|  /  |-----------|
++	 *      ptr                    ptr3       \      ptr2
++	 */
++	ptr2[0] = 'x';
 +
-+		/* Src and Dest addr 1MB aligned. 5MB mremap. */
-+		*test_case++ =	MAKE_TEST(_1MB, _1MB, _5MB, NON_OVERLAPPING, use_relocate_anon, EXPECT_SUCCESS,
-+					   "5MB mremap - Source 1MB-aligned, Destination 1MB-aligned");
++	/*
++	 * Move ptr2 between ptr, ptr3, using MREMAP_MUST_RELOCATE_ANON:
++	 *
++	 * |-----------|-----------|-----------|
++	 * | unfaulted |  faulted  | unfaulted |
++	 * |-----------|-----------|-----------|
++	 *
++	 * It should merge:
++	 *
++	 * |-----------------------------------|
++	 * |              faulted              |
++	 * |-----------------------------------|
++	 */
++	ptr2 = sys_mremap(ptr2, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED | MREMAP_MUST_RELOCATE_ANON,
++			  &ptr[5 * page_size]);
++	ASSERT_NE(ptr2, MAP_FAILED);
 +
-+		/* Src and Dest addr 1MB aligned. 5MB mremap. */
-+		*test_case =	MAKE_TEST(_1MB, _1MB, _5MB, NON_OVERLAPPING, use_relocate_anon, EXPECT_SUCCESS,
-+					   "5MB mremap - Source 1MB-aligned, Dest 1MB-aligned with 40MB Preamble");
-+		test_case++->config.dest_preamble_size = 10 * _4MB;
++	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
++	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
++	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 15 * page_size);
++}
 +
-+		*perf_test_case++ =	 MAKE_TEST(page_size, page_size, _1GB, NON_OVERLAPPING,
-+						   use_relocate_anon, EXPECT_SUCCESS,
-+						"1GB mremap - Source PTE-aligned, Destination PTE-aligned");
-+		/*
-+		 * mremap 1GB region - Page table level aligned time
-+		 * comparison.
-+		 */
-+		*perf_test_case++ =	MAKE_TEST(PMD, PMD, _1GB, NON_OVERLAPPING, use_relocate_anon, EXPECT_SUCCESS,
-+					       "1GB mremap - Source PMD-aligned, Destination PMD-aligned");
-+		*perf_test_case++ =	MAKE_TEST(PUD, PUD, _1GB, NON_OVERLAPPING, use_relocate_anon, EXPECT_SUCCESS,
-+					       "1GB mremap - Source PUD-aligned, Destination PUD-aligned");
++TEST_F(merge, mremap_relocate_anon_faulted_after_faulted)
++{
++	unsigned int page_size = self->page_size;
++	char *carveout = self->carveout;
++	struct procmap_fd *procmap = &self->procmap;
++	char *ptr, *ptr2;
 +
-+		use_relocate_anon = !use_relocate_anon;
-+	} while (use_relocate_anon);
- 
- 	run_perf_tests =  (threshold_mb == VALIDATION_NO_THRESHOLD) ||
- 				(threshold_mb * _1MB >= _1GB);
-@@ -846,8 +910,18 @@ int main(int argc, char **argv)
- 
- 	fclose(maps_fp);
- 
--	mremap_move_within_range(pattern_seed, rand_addr);
--	mremap_move_1mb_from_start(pattern_seed, rand_addr);
-+	mremap_move_within_range(pattern_seed, rand_addr,
-+				 "", 0);
-+	mremap_move_within_range(pattern_seed, rand_addr,
-+				 "[MREMAP_RELOCATE_ANON]", MREMAP_RELOCATE_ANON);
-+	mremap_move_within_range(pattern_seed, rand_addr,
-+				 "[MREMAP_MUST_RELOCATE_ANON]", MREMAP_MUST_RELOCATE_ANON);
-+	mremap_move_1mb_from_start(pattern_seed, rand_addr,
-+				   "", 0);
-+	mremap_move_1mb_from_start(pattern_seed, rand_addr,
-+				   "[MREMAP_RELOCATE_ANON]", MREMAP_RELOCATE_ANON);
-+	mremap_move_1mb_from_start(pattern_seed, rand_addr,
-+				   "[MREMAP_MUST_RELOCATE_ANON]", MREMAP_MUST_RELOCATE_ANON);
- 
- 	if (run_perf_tests) {
- 		ksft_print_msg("\n%s\n",
++	/*
++	 * Map two distinct areas:
++	 *
++	 * |-----------|  |-----------|
++	 * | unfaulted |  | unfaulted |
++	 * |-----------|  |-----------|
++	 *      ptr            ptr2
++	 */
++	ptr = mmap(&carveout[page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		   MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr, MAP_FAILED);
++	ptr2 = mmap(&carveout[7 * page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		    MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr2, MAP_FAILED);
++
++	/*
++	 * Offset ptr2 further away. Note we don't have to use
++	 * MREMAP_RELOCATE_ANON yet.
++	 */
++	ptr2 = sys_mremap(ptr2, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED, ptr2 + page_size * 1000);
++	ASSERT_NE(ptr2, MAP_FAILED);
++
++	/*
++	 * Fault ptr and ptr2 in:
++	 *                \
++	 * |-----------|  /  |-----------|
++	 * |  faulted  |  \  |  faulted  |
++	 * |-----------|  /  |-----------|
++	 *      ptr       \       ptr2
++	 */
++	ptr[0] = 'x';
++	ptr2[0] = 'x';
++
++	/*
++	 * Move ptr2 after ptr, using MREMAP_MUST_RELOCATE_ANON:
++	 *
++	 * |-----------|-----------|
++	 * |  faulted  |  faulted  |
++	 * |-----------|-----------|
++	 *      ptr         ptr2
++	 *
++	 * It should merge:
++	 *
++	 * |-----------------------|
++	 * |        faulted        |
++	 * |-----------------------|
++	 */
++	ptr2 = sys_mremap(ptr2, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED | MREMAP_MUST_RELOCATE_ANON,
++			  &ptr[5 * page_size]);
++	ASSERT_NE(ptr2, MAP_FAILED);
++
++	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
++	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
++	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 10 * page_size);
++}
++
++TEST_F(merge, mremap_relocate_anon_faulted_before_faulted)
++{
++	unsigned int page_size = self->page_size;
++	char *carveout = self->carveout;
++	struct procmap_fd *procmap = &self->procmap;
++	char *ptr, *ptr2;
++
++	/*
++	 * Map two distinct areas:
++	 *
++	 * |-----------|  |-----------|
++	 * | unfaulted |  | unfaulted |
++	 * |-----------|  |-----------|
++	 *      ptr            ptr2
++	 */
++	ptr = mmap(&carveout[6 * page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		   MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr, MAP_FAILED);
++	ptr2 = mmap(&carveout[12 * page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		    MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr2, MAP_FAILED);
++
++	/*
++	 * Offset ptr2 further away. Note we don't have to use
++	 * MREMAP_RELOCATE_ANON yet.
++	 */
++	ptr2 = sys_mremap(ptr2, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED, ptr2 + page_size * 1000);
++	ASSERT_NE(ptr2, MAP_FAILED);
++
++	/*
++	 * Fault ptr, ptr2 in:
++	 *                \
++	 * |-----------|  /  |-----------|
++	 * |  faulted  |  \  |  faulted  |
++	 * |-----------|  /  |-----------|
++	 *      ptr       \       ptr2
++	 */
++	ptr[0] = 'x';
++	ptr2[0] = 'x';
++
++	/*
++	 * Move ptr2 before ptr, using MREMAP_MUST_RELOCATE_ANON:
++	 *
++	 * |-----------|-----------|
++	 * |  faulted  |  faulted  |
++	 * |-----------|-----------|
++	 *      ptr2        ptr
++	 *
++	 * It should merge:
++	 *
++	 * |-----------------------|
++	 * |        faulted        |
++	 * |-----------------------|
++	 */
++	ptr2 = sys_mremap(ptr2, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED | MREMAP_MUST_RELOCATE_ANON,
++			  &carveout[page_size]);
++	ASSERT_NE(ptr2, MAP_FAILED);
++
++	ASSERT_TRUE(find_vma_procmap(procmap, ptr2));
++	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr2);
++	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr2 + 10 * page_size);
++}
++
++TEST_F(merge, mremap_relocate_anon_faulted_between_faulted_unfaulted)
++{
++	unsigned int page_size = self->page_size;
++	char *carveout = self->carveout;
++	struct procmap_fd *procmap = &self->procmap;
++	char *ptr, *ptr2, *ptr3;
++
++	/*
++	 * Map three distinct areas:
++	 *
++	 * |-----------|  |-----------|  |-----------|
++	 * | unfaulted |  | unfaulted |  | unfaulted |
++	 * |-----------|  |-----------|  |-----------|
++	 *      ptr            ptr2           ptr3
++	 */
++	ptr = mmap(&carveout[page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		   MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr, MAP_FAILED);
++	ptr2 = mmap(&carveout[7 * page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		    MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr2, MAP_FAILED);
++	ptr3 = mmap(&carveout[14 * page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		    MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr3, MAP_FAILED);
++
++	/*
++	 * Offset ptr2 further away, and move ptr3 into position:
++	 *                                        \
++	 * |-----------|           |-----------|  /  |-----------|
++	 * | unfaulted |           | unfaulted |  \  | unfaulted |
++	 * |-----------|           |-----------|  /  |-----------|
++	 *      ptr                    ptr3       \      ptr2
++	 */
++	ptr2 = sys_mremap(ptr2, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED, ptr2 + page_size * 1000);
++	ASSERT_NE(ptr2, MAP_FAILED);
++	ptr3 = sys_mremap(ptr3, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED, ptr3 + page_size * 2000);
++	ASSERT_NE(ptr3, MAP_FAILED);
++	ptr3 = sys_mremap(ptr3, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED, &ptr[10 * page_size]);
++	ASSERT_NE(ptr3, MAP_FAILED);
++
++	/*
++	 * Fault in ptr, ptr2:
++	 *                                        \
++	 * |-----------|           |-----------|  /  |-----------|
++	 * |  faulted  |           | unfaulted |  \  |  faulted  |
++	 * |-----------|           |-----------|  /  |-----------|
++	 *      ptr                    ptr3       \      ptr2
++	 */
++	ptr[0] = 'x';
++	ptr2[0] = 'x';
++
++	/*
++	 * Move ptr2 between ptr, ptr3, using MREMAP_MUST_RELOCATE_ANON:
++	 *
++	 * |-----------|-----------|-----------|
++	 * |  faulted  |  faulted  | unfaulted |
++	 * |-----------|-----------|-----------|
++	 *
++	 * It should merge:
++	 *
++	 * |-----------------------------------|
++	 * |              faulted              |
++	 * |-----------------------------------|
++	 */
++	ptr2 = sys_mremap(ptr2, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED | MREMAP_MUST_RELOCATE_ANON,
++			  &ptr[5 * page_size]);
++	ASSERT_NE(ptr2, MAP_FAILED);
++
++	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
++	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
++	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 15 * page_size);
++}
++
++TEST_F(merge, mremap_relocate_anon_faulted_between_unfaulted_faulted)
++{
++	unsigned int page_size = self->page_size;
++	char *carveout = self->carveout;
++	struct procmap_fd *procmap = &self->procmap;
++	char *ptr, *ptr2, *ptr3;
++
++	/*
++	 * Map three distinct areas:
++	 *
++	 * |-----------|  |-----------|  |-----------|
++	 * | unfaulted |  | unfaulted |  | unfaulted |
++	 * |-----------|  |-----------|  |-----------|
++	 *      ptr            ptr2           ptr3
++	 */
++	ptr = mmap(&carveout[page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		   MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr, MAP_FAILED);
++	ptr2 = mmap(&carveout[7 * page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		    MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr2, MAP_FAILED);
++	ptr3 = mmap(&carveout[14 * page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		    MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr3, MAP_FAILED);
++
++	/*
++	 * Offset ptr2 further away, and move ptr3 into position:
++	 *                                        \
++	 * |-----------|           |-----------|  /  |-----------|
++	 * | unfaulted |           | unfaulted |  \  | unfaulted |
++	 * |-----------|           |-----------|  /  |-----------|
++	 *      ptr                    ptr3       \      ptr2
++	 */
++	ptr2 = sys_mremap(ptr2, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED, ptr2 + page_size * 1000);
++	ASSERT_NE(ptr2, MAP_FAILED);
++	ptr3 = sys_mremap(ptr3, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED, ptr3 + page_size * 2000);
++	ASSERT_NE(ptr3, MAP_FAILED);
++	ptr3 = sys_mremap(ptr3, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED, &ptr[10 * page_size]);
++	ASSERT_NE(ptr3, MAP_FAILED);
++
++	/*
++	 * Fault in ptr2, ptr3:
++	 *                                        \
++	 * |-----------|           |-----------|  /  |-----------|
++	 * | unfaulted |           |  faulted  |  \  |  faulted  |
++	 * |-----------|           |-----------|  /  |-----------|
++	 *      ptr                    ptr3       \      ptr2
++	 */
++	ptr2[0] = 'x';
++	ptr3[0] = 'x';
++
++	/*
++	 * Move ptr2 between ptr, ptr3, using MREMAP_MUST_RELOCATE_ANON:
++	 *
++	 * |-----------|-----------|-----------|
++	 * | unfaulted |  faulted  |  faulted  |
++	 * |-----------|-----------|-----------|
++	 *
++	 * It should merge:
++	 *
++	 * |-----------------------------------|
++	 * |              faulted              |
++	 * |-----------------------------------|
++	 */
++	ptr2 = sys_mremap(ptr2, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED | MREMAP_MUST_RELOCATE_ANON,
++			  &ptr[5 * page_size]);
++	ASSERT_NE(ptr2, MAP_FAILED);
++
++	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
++	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
++	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 15 * page_size);
++}
++
++TEST_F(merge, mremap_relocate_anon_faulted_between_faulted)
++{
++	unsigned int page_size = self->page_size;
++	char *carveout = self->carveout;
++	struct procmap_fd *procmap = &self->procmap;
++	char *ptr, *ptr2, *ptr3;
++
++	/*
++	 * Map three distinct areas:
++	 *
++	 * |-----------|  |-----------|  |-----------|
++	 * | unfaulted |  | unfaulted |  | unfaulted |
++	 * |-----------|  |-----------|  |-----------|
++	 *      ptr            ptr2           ptr3
++	 */
++	ptr = mmap(&carveout[page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		   MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr, MAP_FAILED);
++	ptr2 = mmap(&carveout[7 * page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		    MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr2, MAP_FAILED);
++	ptr3 = mmap(&carveout[14 * page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		    MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr3, MAP_FAILED);
++
++	/*
++	 * Offset ptr2 further away, and move ptr3 into position:
++	 *                                        \
++	 * |-----------|           |-----------|  /  |-----------|
++	 * | unfaulted |           | unfaulted |  \  | unfaulted |
++	 * |-----------|           |-----------|  /  |-----------|
++	 *      ptr                    ptr3       \      ptr2
++	 */
++	ptr2 = sys_mremap(ptr2, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED, ptr2 + page_size * 1000);
++	ASSERT_NE(ptr2, MAP_FAILED);
++	ptr3 = sys_mremap(ptr3, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED, ptr3 + page_size * 2000);
++	ASSERT_NE(ptr3, MAP_FAILED);
++	ptr3 = sys_mremap(ptr3, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED, &ptr[10 * page_size]);
++	ASSERT_NE(ptr3, MAP_FAILED);
++
++	/*
++	 * Fault in ptr, ptr2, ptr3:
++	 *                                        \
++	 * |-----------|           |-----------|  /  |-----------|
++	 * |  faulted  |           |  faulted  |  \  |  faulted  |
++	 * |-----------|           |-----------|  /  |-----------|
++	 *      ptr                    ptr3       \      ptr2
++	 */
++	ptr[0] = 'x';
++	ptr2[0] = 'x';
++	ptr3[0] = 'x';
++
++	/*
++	 * Move ptr2 between ptr, ptr3, using MREMAP_MUST_RELOCATE_ANON:
++	 *
++	 * |-----------|-----------|-----------|
++	 * |  faulted  |  faulted  |  faulted  |
++	 * |-----------|-----------|-----------|
++	 *
++	 * It should merge, but only the latter two VMAs:
++	 *
++	 * |-----------|-----------------------|
++	 * |  faulted  |        faulted        |
++	 * |-----------|-----------------------|
++	 */
++	ptr2 = sys_mremap(ptr2, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED | MREMAP_MUST_RELOCATE_ANON,
++			  &ptr[5 * page_size]);
++	ASSERT_NE(ptr2, MAP_FAILED);
++
++	ASSERT_TRUE(find_vma_procmap(procmap, ptr2));
++	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr2);
++	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr2 + 10 * page_size);
++}
++
++TEST_F(merge, mremap_relocate_anon_faulted_between_correctly_placed_faulted)
++{
++	unsigned int page_size = self->page_size;
++	char *carveout = self->carveout;
++	struct procmap_fd *procmap = &self->procmap;
++	char *ptr, *ptr2;
++
++	/*
++	 * Map one larger area:
++	 *
++	 * |-----------------------------------|
++	 * |            unfaulted              |
++	 * |-----------------------------------|
++	 */
++	ptr = mmap(&carveout[page_size], 15 * page_size, PROT_READ | PROT_WRITE,
++		   MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr, MAP_FAILED);
++
++	/*
++	 * Fault in ptr:
++	 *
++	 * |-----------------------------------|
++	 * |              faulted              |
++	 * |-----------------------------------|
++	 */
++	ptr[0] = 'x';
++
++	/*
++	 * Unmap middle:
++	 *
++	 * |-----------|           |-----------|
++	 * |  faulted  |           |  faulted  |
++	 * |-----------|           |-----------|
++	 *
++	 * Now the faulted areas are compatible with each other (anon_vma the
++	 * same, vma->vm_pgoff equal to virtual page offset).
++	 */
++	ASSERT_EQ(munmap(&ptr[5 * page_size], 5 * page_size), 0);
++
++	/*
++	 * Map a new area, ptr2:
++	 *                                        \
++	 * |-----------|           |-----------|  /  |-----------|
++	 * |  faulted  |           |  faulted  |  \  | unfaulted |
++	 * |-----------|           |-----------|  /  |-----------|
++	 *      ptr                               \       ptr2
++	 */
++	ptr2 = mmap(&carveout[20 * page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		    MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr2, MAP_FAILED);
++
++	/*
++	 * Fault it in:
++	 *                                        \
++	 * |-----------|           |-----------|  /  |-----------|
++	 * |  faulted  |           |  faulted  |  \  |  faulted  |
++	 * |-----------|           |-----------|  /  |-----------|
++	 *      ptr                               \       ptr2
++	 */
++	ptr2[0] = 'x';
++
++	/*
++	 * Finally, move ptr2 into place, using MREMAP_MUST_RELOCATE_ANON:
++	 *
++	 * |-----------|-----------|-----------|
++	 * |  faulted  |  faulted  |  faulted  |
++	 * |-----------|-----------|-----------|
++	 *      ptr        ptr2         ptr3
++	 *
++	 * It should merge:
++	 *
++	 * |-----------------------------------|
++	 * |              faulted              |
++	 * |-----------------------------------|
++	 */
++	ptr2 = sys_mremap(ptr2, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED | MREMAP_MUST_RELOCATE_ANON,
++			  &ptr[5 * page_size]);
++	ASSERT_NE(ptr2, MAP_FAILED);
++
++	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
++	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
++	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 15 * page_size);
++}
++
++TEST_F(merge, mremap_relocate_anon_mprotect_faulted_faulted)
++{
++	unsigned int page_size = self->page_size;
++	char *carveout = self->carveout;
++	struct procmap_fd *procmap = &self->procmap;
++	char *ptr, *ptr2;
++
++
++	/*
++	 * Map two distinct areas:
++	 *
++	 * |-----------|  |-----------|
++	 * | unfaulted |  | unfaulted |
++	 * |-----------|  |-----------|
++	 *      ptr            ptr2
++	 */
++	ptr = mmap(&carveout[page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		   MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr, MAP_FAILED);
++	ptr2 = mmap(&carveout[12 * page_size], 5 * page_size, PROT_READ | PROT_WRITE,
++		    MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
++	ASSERT_NE(ptr2, MAP_FAILED);
++
++	/*
++	 * Fault in ptr, ptr2, mprotect() ptr2 read-only:
++	 *
++	 *      RW              RO
++	 * |-----------|  |-----------|
++	 * |  faulted  |  |  faulted  |
++	 * |-----------|  |-----------|
++	 *      ptr            ptr2
++	 */
++	ptr[0] = 'x';
++	ptr2[0] = 'x';
++	ASSERT_EQ(mprotect(ptr2, 5 * page_size, PROT_READ), 0);
++
++	/*
++	 * Move ptr2 next to ptr:
++	 *
++	 *      RW          RO
++	 * |-----------|-----------|
++	 * |  faulted  |  faulted  |
++	 * |-----------|-----------|
++	 *      ptr        ptr2
++	 */
++	ptr2 = sys_mremap(ptr2, 5 * page_size, 5 * page_size,
++			  MREMAP_MAYMOVE | MREMAP_FIXED | MREMAP_MUST_RELOCATE_ANON,
++			  &ptr[5 * page_size]);
++	ASSERT_NE(ptr2, MAP_FAILED);
++
++	/* No merge should happen. */
++	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
++	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
++	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 5 * page_size);
++
++	/*
++	 * Now mremap ptr2 RW:
++	 *
++	 *      RW          RW
++	 * |-----------|-----------|
++	 * |  faulted  |  faulted  |
++	 * |-----------|-----------|
++	 *      ptr        ptr2
++	 *
++	 * This should result in a merge:
++	 *
++	 *            RW
++	 * |-----------------------|
++	 * |        faulted        |
++	 * |-----------------------|
++	 *            ptr
++	 */
++	ASSERT_EQ(mprotect(ptr2, 5 * page_size, PROT_READ | PROT_WRITE), 0);
++
++	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
++	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
++	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 10 * page_size);
++}
++
+ TEST_HARNESS_MAIN
 -- 
 2.49.0
 
