@@ -1,235 +1,133 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2B32505AF;
-	Mon,  9 Jun 2025 10:06:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA80743ABC;
+	Mon,  9 Jun 2025 10:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749463567; cv=none; b=d9xr1wISctzYambqvYkd+3erossDLDJt9cMJDQeycGPLovGcvW8pdxioabdDZ4ydA9ZAWiQ7aoV91CSpHSaH2ezkJPh6UExvnxYHXqkzoFxlKy9hk9e5IjM4D1dFiqJqOxVQe+VjyvylidPaO7QRz4MssDniX507BMoQXC0TRsw=
+	t=1749463790; cv=none; b=ZzaITpoOVbaSSZyDBtkuXcQ6WEK4/0Qt4isaCENerMA61asZQEtxVzxnhI66diEnw1aWRHjan8cY+DPuoXmGa//o4nr1tSJbp/pvnYWuxEIGNsxpCbdSil48C1B+BAt8TctDTQ4VULF1W0EU9GNXrh/2e0JvUQ99xt/3eIJ41OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749463567; c=relaxed/simple;
-	bh=nUXwW/kfcyPoabPPGhNF/JzaC/ZMwZ23lGvL1p04f+g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TCUtGpdHX0TjIEyCyEgralvKgBw3V8e8VrinnHFI2ryfTMbXYPysF2Y4tQtrqViRb1ZFaUHS9EHbun0puG03bjM1MXkDnf+pt2ahavWYh3vdemiKTfR2W58ha3Yv8DI8I8GtQIUR2rCcoxte3rh7DwRp3K07dvy4HNWgMxRzfUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=bx7Zpgq9; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1749463790; c=relaxed/simple;
+	bh=nafC/TkzgkJkaGKtZqf+sDQG6HfLYyz2kXki9H3xdGk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YxM6cCaCw7/E3vaoelWn5xoTVN7CgLudzJqn8qH0CIfgVmyYhbeGeTiKJliQLn3ASrTgbCiVdk9t0iSWcsrENBfKuDRhIWnxYoMIDfXJ1msupTqC0BPbQsWfsIE/WTUfhFk/58+B6znL520WH1exb11m0NvyxWEMcS+Al2IXGM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pGywsSwc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bx7Zpgq9"
-Received: from isaac-ThinkPad-T16-Gen-2.lan (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6DCA9D77;
-	Mon,  9 Jun 2025 12:05:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1749463555;
-	bh=nUXwW/kfcyPoabPPGhNF/JzaC/ZMwZ23lGvL1p04f+g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bx7Zpgq9nLqrpD8n6KV0AaTMF0pjoRUQ/pUw6F/obRckISldifmMdvKXnfoZo4VNC
-	 upH3+JjDtuKvlwBKtVORfh9PQ2SHeGlcTyIGfGOuvpfOCZcBAn0RS9RvjfHbFxE8ox
-	 fluXwEllCLnQYhfHm23m2R6xa+VPZJuqwiRucbD0=
-From: Isaac Scott <isaac.scott@ideasonboard.com>
-To: laurent.pinchart@ideasonboard.com
-Cc: kieran.bingham@ideasonboard.com,
-	rmfrfs@gmail.com,
-	martink@posteo.de,
-	kernel@puri.sm,
-	mchehab@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	linux-media@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Isaac Scott <isaac.scott@ideasonboard.com>,
-	Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v3 2/2] media: imx-mipi-csis: Add user line interrupt to imx-mipi-csis driver
-Date: Mon,  9 Jun 2025 11:05:44 +0100
-Message-ID: <20250609100544.571821-3-isaac.scott@ideasonboard.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250609100544.571821-1-isaac.scott@ideasonboard.com>
-References: <20250609100544.571821-1-isaac.scott@ideasonboard.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pGywsSwc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 555AAC4CEEB;
+	Mon,  9 Jun 2025 10:09:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1749463789;
+	bh=nafC/TkzgkJkaGKtZqf+sDQG6HfLYyz2kXki9H3xdGk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pGywsSwcsoGuAXizzilNnBIdXVQ3lFnhE6uOAqYkF04qcfGFljU4SM7Fa6pKGfk21
+	 TWPaA/xqUWtr615PHQ2ho6fAXSNp8heqgtJBajmB6ZkWSQvj7krcbXUM+b6AAT0kr+
+	 BsZ7L6FW4fULEmeJF0V4ASW5u3Ep5sWh1GGCGe5g=
+Date: Mon, 9 Jun 2025 12:09:37 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Yunhui Cui <cuiyunhui@bytedance.com>
+Cc: arnd@arndb.de, andriy.shevchenko@linux.intel.com,
+	benjamin.larsson@genexis.eu, heikki.krogerus@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com, jirislaby@kernel.org,
+	jkeeping@inmusicbrands.com, john.ogness@linutronix.de,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	markus.mayer@linaro.org, matt.porter@linaro.org,
+	namcao@linutronix.de, paulmck@kernel.org, pmladek@suse.com,
+	schnelle@linux.ibm.com, sunilvl@ventanamicro.com,
+	tim.kryger@linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH v8 1/4] serial: 8250: fix panic due to PSLVERR
+Message-ID: <2025060913-suave-riveter-66d0@gregkh>
+References: <20250609074348.54899-1-cuiyunhui@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250609074348.54899-1-cuiyunhui@bytedance.com>
 
-The NXP i.MX 8M Plus features an interrupt that triggers after the MIPI
-CSI receiver counts a user-configurable number of lines. This is useful
-for debugging, as it allows users to check if the amount of lines per
-frame equals what they are expecting.
+On Mon, Jun 09, 2025 at 03:43:45PM +0800, Yunhui Cui wrote:
+> When the PSLVERR_RESP_EN parameter is set to 1, the device generates
+> an error response if an attempt is made to read an empty RBR (Receive
+> Buffer Register) while the FIFO is enabled.
+> 
+> In serial8250_do_startup(), calling serial_port_out(port, UART_LCR,
+> UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
+> dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
+> function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
+> Execution proceeds to the serial_port_in(port, UART_RX).
+> This satisfies the PSLVERR trigger condition.
+> 
+> When another CPU (e.g., using printk()) is accessing the UART (UART
+> is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) ==
+> (lcr & ~UART_LCR_SPAR) in dw8250_check_lcr(), causing it to enter
+> dw8250_force_idle().
+> 
+> Put serial_port_out(port, UART_LCR, UART_LCR_WLEN8) under the port->lock
+> to fix this issue.
+> 
+> Panic backtrace:
+> [    0.442336] Oops - unknown exception [#1]
+> [    0.442343] epc : dw8250_serial_in32+0x1e/0x4a
+> [    0.442351]  ra : serial8250_do_startup+0x2c8/0x88e
+> ...
+> [    0.442416] console_on_rootfs+0x26/0x70
+> 
+> Fixes: c49436b657d0 ("serial: 8250_dw: Improve unwritable LCR workaround")
+> Link: https://lore.kernel.org/all/84cydt5peu.fsf@jogness.linutronix.de/T/
+> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> Cc: stable@vger.kernel.org
+> ---
+>  drivers/tty/serial/8250/8250_port.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> index 6d7b8c4667c9c..07fe818dffa34 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -2376,9 +2376,10 @@ int serial8250_do_startup(struct uart_port *port)
+>  	/*
+>  	 * Now, initialize the UART
+>  	 */
+> -	serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
+>  
+>  	uart_port_lock_irqsave(port, &flags);
+> +	serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
+> +
+>  	if (up->port.flags & UPF_FOURPORT) {
+>  		if (!up->port.irq)
+>  			up->port.mctrl |= TIOCM_OUT1;
+> -- 
+> 2.39.5
+> 
+> 
 
-Add support for this interrupt in the driver, and an entry into debugfs
-to allow the user to configure whether the interrupt is enabled, as well
-as the number of lines after which to trigger the interrupt.
+Hi,
 
-This debugfs control can be altered while a stream is in progress, with
-0 disabling the interrupt and >0 setting a new desired line count.
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-Signed-off-by: Isaac Scott <isaac.scott@ideasonboard.com>
-Reviewed-by: Rui Miguel Silva <rui.silva@linaro.org>
+You are receiving this message because of the following common error(s)
+as indicated below:
 
----
+- This looks like a new version of a previously submitted patch, but you
+  did not list below the --- line any changes from the previous version.
+  Please read the section entitled "The canonical patch format" in the
+  kernel file, Documentation/process/submitting-patches.rst for what
+  needs to be done here to properly describe this.
 
-Changes since v2:
-- The interrupt is no longer enabled by default when debug is on
-- Renamed enum from USER to MIPI_CSIS_EVENT_TYPE_MAIN_1
-- Removed redundant if statement in set_params()
-- Added imx-mipi-csis to commit title
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
 
-Changes since v1:
-- Moved from magic number to enum in status_index
-- Clear INT_MSK_1 in enable_interrupts() when on == false
-- use local variable in set_params() as in the interrupt handler
-- move interrupt handling code outside of spinlock
----
- drivers/media/platform/nxp/imx-mipi-csis.c | 39 +++++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
+thanks,
 
-diff --git a/drivers/media/platform/nxp/imx-mipi-csis.c b/drivers/media/platform/nxp/imx-mipi-csis.c
-index 72432a8062f5..795a9d499de4 100644
---- a/drivers/media/platform/nxp/imx-mipi-csis.c
-+++ b/drivers/media/platform/nxp/imx-mipi-csis.c
-@@ -88,6 +88,10 @@
- #define MIPI_CSIS_INT_MSK_ERR_CRC		BIT(1)
- #define MIPI_CSIS_INT_MSK_ERR_UNKNOWN		BIT(0)
- 
-+/* CSIS Interrupt mask 1 */
-+#define MIPI_CSIS_INT_MSK_1			0x18
-+#define MIPI_CSIS_INT_MSK_1_LINE_END		BIT(0)
-+
- /* CSIS Interrupt source */
- #define MIPI_CSIS_INT_SRC			0x14
- #define MIPI_CSIS_INT_SRC_EVEN_BEFORE		BIT(31)
-@@ -109,6 +113,10 @@
- #define MIPI_CSIS_INT_SRC_ERR_UNKNOWN		BIT(0)
- #define MIPI_CSIS_INT_SRC_ERRORS		0xfffff
- 
-+/* CSIS Interrupt source 1 */
-+#define MIPI_CSIS_INT_SRC_1			0x1c
-+#define MIPI_CSIS_INT_SRC_1_LINE_END		BIT(0)
-+
- /* D-PHY status control */
- #define MIPI_CSIS_DPHY_STATUS			0x20
- #define MIPI_CSIS_DPHY_STATUS_ULPS_DAT		BIT(8)
-@@ -221,6 +229,7 @@
- #define MIPI_CSIS_DBG_INTR_SRC_CAM_VSYNC_RISE	BIT(0)
- 
- #define MIPI_CSIS_FRAME_COUNTER_CH(n)		(0x0100 + (n) * 4)
-+#define MIPI_CSIS_LINE_INTERRUPT_RATIO(n)	(0x0110 + (n) * 4)
- 
- /* Non-image packet data buffers */
- #define MIPI_CSIS_PKTDATA_ODD			0x2000
-@@ -251,6 +260,7 @@
- enum mipi_csis_event_type {
- 	MIPI_CSIS_EVENT_TYPE_MAIN_0 = 0,
- 	MIPI_CSIS_EVENT_TYPE_DEBUG = 1,
-+	MIPI_CSIS_EVENT_TYPE_MAIN_1 = 2,
- };
- 
- struct mipi_csis_event {
-@@ -286,6 +296,8 @@ static const struct mipi_csis_event mipi_csis_events[] = {
- 	{ MIPI_CSIS_EVENT_TYPE_MAIN_0, MIPI_CSIS_INT_SRC_FRAME_END,		"Frame End"},
- 	{ MIPI_CSIS_EVENT_TYPE_DEBUG, MIPI_CSIS_DBG_INTR_SRC_CAM_VSYNC_FALL,	"VSYNC Falling Edge"},
- 	{ MIPI_CSIS_EVENT_TYPE_DEBUG, MIPI_CSIS_DBG_INTR_SRC_CAM_VSYNC_RISE,	"VSYNC Rising Edge"},
-+	/* User Line interrupt */
-+	{ MIPI_CSIS_EVENT_TYPE_MAIN_1, MIPI_CSIS_INT_SRC_1_LINE_END,		"Line End"}
- };
- 
- #define MIPI_CSIS_NUM_EVENTS ARRAY_SIZE(mipi_csis_events)
-@@ -338,11 +350,14 @@ struct mipi_csis_device {
- 
- 	spinlock_t slock;	/* Protect events */
- 	struct mipi_csis_event events[MIPI_CSIS_NUM_EVENTS];
-+
- 	struct dentry *debugfs_root;
- 	struct {
- 		bool enable;
- 		u32 hs_settle;
- 		u32 clk_settle;
-+		u32 int_line;
-+		u32 last_int_line;
- 	} debug;
- };
- 
-@@ -655,6 +670,7 @@ static void mipi_csis_set_params(struct mipi_csis_device *csis,
- 				 const struct csis_pix_format *csis_fmt)
- {
- 	int lanes = csis->bus.num_data_lanes;
-+	u32 int_lines;
- 	u32 val;
- 
- 	val = mipi_csis_read(csis, MIPI_CSIS_CMN_CTRL);
-@@ -691,6 +707,12 @@ static void mipi_csis_set_params(struct mipi_csis_device *csis,
- 			MIPI_CSIS_DPHY_BCTRL_L_B_DPHYCTRL(20000000));
- 	mipi_csis_write(csis, MIPI_CSIS_DPHY_BCTRL_H, 0);
- 
-+	int_lines = READ_ONCE(csis->debug.int_line);
-+	mipi_csis_write(csis, MIPI_CSIS_LINE_INTERRUPT_RATIO(0),
-+			max(int_lines, 1U) - 1);
-+
-+	csis->debug.last_int_line = int_lines;
-+
- 	/* Update the shadow register. */
- 	val = mipi_csis_read(csis, MIPI_CSIS_CMN_CTRL);
- 	mipi_csis_write(csis, MIPI_CSIS_CMN_CTRL,
-@@ -770,12 +792,15 @@ static irqreturn_t mipi_csis_irq_handler(int irq, void *dev_id)
- 	struct mipi_csis_device *csis = dev_id;
- 	unsigned long flags;
- 	unsigned int i;
--	u32 status[2];
-+	u32 int_lines;
-+	u32 status[3];
- 
- 	status[MIPI_CSIS_EVENT_TYPE_MAIN_0] =
- 				mipi_csis_read(csis, MIPI_CSIS_INT_SRC);
- 	status[MIPI_CSIS_EVENT_TYPE_DEBUG] =
- 				mipi_csis_read(csis, MIPI_CSIS_DBG_INTR_SRC);
-+	status[MIPI_CSIS_EVENT_TYPE_MAIN_1] =
-+				mipi_csis_read(csis, MIPI_CSIS_INT_SRC_1);
- 
- 	spin_lock_irqsave(&csis->slock, flags);
- 
-@@ -795,10 +820,19 @@ static irqreturn_t mipi_csis_irq_handler(int irq, void *dev_id)
- 
- 	spin_unlock_irqrestore(&csis->slock, flags);
- 
-+	int_lines = READ_ONCE(csis->debug.int_line);
-+	if (int_lines != csis->debug.last_int_line) {
-+		mipi_csis_write(csis, MIPI_CSIS_LINE_INTERRUPT_RATIO(0),
-+				max(int_lines, 1U) - 1);
-+		csis->debug.last_int_line = int_lines;
-+	}
-+
- 	mipi_csis_write(csis, MIPI_CSIS_INT_SRC,
- 			status[MIPI_CSIS_EVENT_TYPE_MAIN_0]);
- 	mipi_csis_write(csis, MIPI_CSIS_DBG_INTR_SRC,
- 			status[MIPI_CSIS_EVENT_TYPE_DEBUG]);
-+	mipi_csis_write(csis, MIPI_CSIS_INT_SRC_1,
-+			status[MIPI_CSIS_EVENT_TYPE_MAIN_1]);
- 
- 	return IRQ_HANDLED;
- }
-@@ -938,6 +972,7 @@ static void mipi_csis_debugfs_init(struct mipi_csis_device *csis)
- {
- 	csis->debug.hs_settle = UINT_MAX;
- 	csis->debug.clk_settle = UINT_MAX;
-+	csis->debug.int_line = 0;
- 
- 	csis->debugfs_root = debugfs_create_dir(dev_name(csis->dev), NULL);
- 
-@@ -949,6 +984,8 @@ static void mipi_csis_debugfs_init(struct mipi_csis_device *csis)
- 			   &csis->debug.clk_settle);
- 	debugfs_create_u32("ths_settle", 0600, csis->debugfs_root,
- 			   &csis->debug.hs_settle);
-+	debugfs_create_u32("int_line_0", 0600, csis->debugfs_root,
-+			   &csis->debug.int_line);
- }
- 
- static void mipi_csis_debugfs_exit(struct mipi_csis_device *csis)
--- 
-2.43.0
-
+greg k-h's patch email bot
