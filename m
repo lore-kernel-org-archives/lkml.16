@@ -1,153 +1,247 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14672820A8
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 07:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234DE4C8E;
+	Mon,  9 Jun 2025 07:24:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749453728; cv=none; b=S4j0anQaZ0mHEy1ihfx93OpSIMUf8tAdKw06Ilw+c+4A3gbWCPthBamqNG5sWUcBwI3mgw6DzhwbcETOmlywrumyYAA0Min3e0Pa4NWtCyBnGkIXC6iN6Gi4GxxpyPj+ruMcJobKlMyEO74Rtzo4tIwSm3PWtTEQJEGEKBu2XeQ=
+	t=1749453871; cv=none; b=IT7/auGEnIBUC0xxNue6cL1xGAi1Q6aKMbzKCwixAdU2CYH7o1vHMbeBzvzVpOvExil4ejyboDtAWNKrjWK+7VNGPRuVHEbaobyGIrZ9iL3OnT10w5cVdrRW+oKS+2zMUcuGgjdTK9kWJ7wtoM/9nYxp3LJ/fRBBuEUR2Q8QYMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749453728; c=relaxed/simple;
-	bh=T6K+sYSly0OGharzJEMeoqNrKJdrAwobGIRkXo+z5JY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qW8dFdrgh3D/C1ilx1FDegN8F3weq4BnmGZezZkf5Sy66xH8jyQINdzmGfS0A6WvzJZJ0gWyx1Rq+YQ1r8Cp2YGRmSU/jVpIURky2iVCUPia897uEFVQgd4mdA22PX8dOVQmEb3Kl5su0xmwOoeUdwyhAEZwAzOnKr5UYW8PAao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=SZmGlgSN; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1749453871; c=relaxed/simple;
+	bh=3ljawuBOat+sFkbFb7aaplfWBLhlV0i7hxNBCDQ4eQ8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=W+fuzKe7PwOcCt2WJuOr+1ueiuYgXB0M3Vw5DaKohhAWLvHq7QH0wTFsthKH7lVz09L8Tuv6p0ycB7VEFmRAxhgX4EUHYaEmG9tvJ+9xjh3AHC5YWXHuWnwm19k69V+SeBP8/DrohF3So5JsrF5Wuh7nVHVCltd1qjeNlziplvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fBf36a/7; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="SZmGlgSN"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3121aed2435so4280473a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 00:22:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1749453726; x=1750058526; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tlZBYyVcyDUOvgy5ixpGTAUg8PQpkLuJBFcAyQwuqwA=;
-        b=SZmGlgSNmXc/SfgDU3U8UERZmXeHdFAV1NHapQLBe60wfBZ06h4EyKfK0HtTwnPnx7
-         Xyq3bRxbddjaYgu6+6h4M5hFaQkQKOoYiR6kE8wrl6LBdVtTs4QX4Z2RuNBn53mNfpOA
-         RoQ13vz21ucd5oWzx2m6XxZi9IwFHiqc+iff8wcKnYII/6tYL+mMKcSYYvnSkVRRwsDL
-         2i3oQuy+FA8uPpCvXwvSm9TaQ5N0AhLN7TWMPPhFSpDpsA519fmhLKKIb00G09SGSO5+
-         yKUPPWu4HMckpNKprl6KwRw0drP/fghZeWLpFqDbwORIj4XNah3hXGwEWopY8QhOs1gC
-         j0OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749453726; x=1750058526;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tlZBYyVcyDUOvgy5ixpGTAUg8PQpkLuJBFcAyQwuqwA=;
-        b=NYiAet/jeUcfUhXZ65ttuO5n9XUVvO9UklfwWpzA7RNCINaJIPS0NZ9iO4I0M6akGo
-         O+jkGVeAjekcDJ14Tel0Q8Kx0fQ4JA8tNTOfbb1DI54Y+ZZO13zIYCsSVYQxCEoNBFgv
-         02or/Svt2/vJOFuFEA4ZwxQx/rGYqjD+NrbOWgdZbP9aYm3ufV5HqFO/hj/VNMDuZXjw
-         3olHqHd3oEHVMyjxgDIpP7YBGZeDWSufb81DYaZqCwfeX8WIF0ajJlvTi+GhpiTLsAdv
-         GmvXHptCWdsEPQ2TDzVcM8wqcffmI4+v96vEosfbLBzMuj28kTrFletxh0gcJveZTEwq
-         pezg==
-X-Gm-Message-State: AOJu0YyzxOwAuA9JhCZQ9HbrV5fTrHYdmBg979/q4r2wADOFE1NiI8tH
-	SjYIhwxcXXLm/flnGdH5ppiwt7hOGkv6Cq1QJQbsZdVYtTmUmYp8QGJaI+NhdUrCB7E=
-X-Gm-Gg: ASbGncuLTw3a2wD4GlSfXfnLbE/6yloRkEd+GnpIiqoUvPw4TUTQ4b6mcTH4R1YrrcF
-	oXa+hiJz9RqSFg114h3Dp0NEYbs6zz2uhMiUVjRG9G5WSa3vXmq29DhvCSR5/65z2wC1UlpgE+D
-	Rs2VLktACFubugDkm0TDC0POjUSmNEMaXUvkcUvKkkzh40ROd+fCXRQbo1MEdOMmKhs4JukgreR
-	I+KYCG1SlMrYhcNJ+qb6HocXd58reK+KVTydNnrvtwEgt2Mk5TWjAe/j+inpZ6JZulCPr+inkSm
-	8y1TELT6J5nieMVGvOaFm0sF3G4hMYdZZ1C9BECTbbfgqn8ASOge7JaS/zIT6JgTsX/44lFn99E
-	/CbTybxKB2TSaiV+9dA4=
-X-Google-Smtp-Source: AGHT+IEh4LPffN8yuJEsvHfJQbaYgOAOjlnHV104Z4hZYSIoE1PS8agIZzSxAbwcbd3A792x5GiqXA==
-X-Received: by 2002:a17:90b:58cb:b0:311:f692:6831 with SMTP id 98e67ed59e1d1-3134707730bmr16002660a91.32.1749453725873;
-        Mon, 09 Jun 2025 00:22:05 -0700 (PDT)
-Received: from [10.254.237.177] ([139.177.225.248])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31349f44bccsm5041596a91.22.2025.06.09.00.22.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Jun 2025 00:22:05 -0700 (PDT)
-Message-ID: <ade4bd69-7f76-4e3a-b81d-ebb7c9653e4a@bytedance.com>
-Date: Mon, 9 Jun 2025 15:21:56 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fBf36a/7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749453870; x=1780989870;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=3ljawuBOat+sFkbFb7aaplfWBLhlV0i7hxNBCDQ4eQ8=;
+  b=fBf36a/7dGZgk/4H/ATO7vrypbSw6teb1cNdZmNl2NP3C8t6NGm5PG0t
+   xCXp2rsEBZeO39iRnHeEBCkcV4MgIAG4XRiDAdTIPs2LRPMrcF4pARaSt
+   rwU4isQ6r3P6piGcfwNmTr4ou0JMQ7A8hrInqgmG3etwzdejGMqBA35pM
+   OJeqEKAPnTCRSjyKpRfHVBDr2bALBo6YgfZYrJbMIo6DCPY60arC/zWUf
+   Ps5fyne8bLVMxk8Nq1I+7Q5jkuP+rBBqAHYbf3WmDRRH7xsL+UlQudQgw
+   mPhoB79qyiPw30nQ6lsZy+pAs47xKitc1Kdd55rLvGZsUrFj5wg2aG/Fm
+   A==;
+X-CSE-ConnectionGUID: rtTzrC5/Rb+ym3u6/Sknsw==
+X-CSE-MsgGUID: QdiWsfk9ToG4dA/HAs6yGg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="51660392"
+X-IronPort-AV: E=Sophos;i="6.16,221,1744095600"; 
+   d="scan'208";a="51660392"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 00:24:29 -0700
+X-CSE-ConnectionGUID: ORBvnORDQMeAIq6jHUjitA==
+X-CSE-MsgGUID: +bwyh8opQFy0M5HH2CIVsA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,221,1744095600"; 
+   d="scan'208";a="146957257"
+Received: from ubuntu.bj.intel.com ([10.238.156.109])
+  by fmviesa010.fm.intel.com with ESMTP; 09 Jun 2025 00:24:26 -0700
+From: Jun Miao <jun.miao@intel.com>
+To: oneukum@suse.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org
+Cc: netdev@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jun.miao@intel.com
+Subject: [PATCH] net: usb: Convert tasklet API to new bottom half workqueue mechanism
+Date: Mon,  9 Jun 2025 15:26:10 +0800
+Message-Id: <20250609072610.2024729-1-jun.miao@intel.com>
+X-Mailer: git-send-email 2.32.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] mm: use per_vma lock for MADV_DONTNEED
-To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
- linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- David Hildenbrand <david@redhat.com>, Vlastimil Babka <vbabka@suse.cz>,
- Jann Horn <jannh@google.com>, Suren Baghdasaryan <surenb@google.com>,
- Lokesh Gidra <lokeshgidra@google.com>,
- Tangquan Zheng <zhengtangquan@oppo.com>
-References: <20250607220150.2980-1-21cnbao@gmail.com>
-From: Qi Zheng <zhengqi.arch@bytedance.com>
-In-Reply-To: <20250607220150.2980-1-21cnbao@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+ Migrate tasklet APIs to the new bottom half workqueue mechanism. It
+ replaces all occurrences of tasklet usage with the appropriate workqueue
+ APIs throughout the usbnet driver. This transition ensures compatibility
+ with the latest design and enhances performance.
 
+Signed-off-by: Jun Miao <jun.miao@intel.com>
+---
+ drivers/net/usb/usbnet.c   | 36 ++++++++++++++++++------------------
+ include/linux/usb/usbnet.h |  2 +-
+ 2 files changed, 19 insertions(+), 19 deletions(-)
 
-On 6/8/25 6:01 AM, Barry Song wrote:
-> From: Barry Song <v-songbaohua@oppo.com>
-> 
-> Certain madvise operations, especially MADV_DONTNEED, occur far more
-> frequently than other madvise options, particularly in native and Java
-> heaps for dynamic memory management.
-> 
-> Currently, the mmap_lock is always held during these operations, even when
-> unnecessary. This causes lock contention and can lead to severe priority
-> inversion, where low-priority threads—such as Android's HeapTaskDaemon—
-> hold the lock and block higher-priority threads.
-> 
-> This patch enables the use of per-VMA locks when the advised range lies
-> entirely within a single VMA, avoiding the need for full VMA traversal. In
-> practice, userspace heaps rarely issue MADV_DONTNEED across multiple VMAs.
-> 
-> Tangquan’s testing shows that over 99.5% of memory reclaimed by Android
-> benefits from this per-VMA lock optimization. After extended runtime,
-> 217,735 madvise calls from HeapTaskDaemon used the per-VMA path, while
-> only 1,231 fell back to mmap_lock.
-> 
-> To simplify handling, the implementation falls back to the standard
-> mmap_lock if userfaultfd is enabled on the VMA, avoiding the complexity of
-> userfaultfd_remove().
-> 
-> Many thanks to Lorenzo's work[1] on:
-> "Refactor the madvise() code to retain state about the locking mode
-> utilised for traversing VMAs.
-> 
-> Then use this mechanism to permit VMA locking to be done later in the
-> madvise() logic and also to allow altering of the locking mode to permit
-> falling back to an mmap read lock if required."
-> 
-> One important point, as pointed out by Jann[2], is that
-> untagged_addr_remote() requires holding mmap_lock. This is because
-> address tagging on x86 and RISC-V is quite complex.
-> 
-> Until untagged_addr_remote() becomes atomic—which seems unlikely in
-> the near future—we cannot support per-VMA locks for remote processes.
-> So for now, only local processes are supported.
-> 
-> Link: https://lore.kernel.org/all/0b96ce61-a52c-4036-b5b6-5c50783db51f@lucifer.local/ [1]
-> Link: https://lore.kernel.org/all/CAG48ez11zi-1jicHUZtLhyoNPGGVB+ROeAJCUw48bsjk4bbEkA@mail.gmail.com/ [2]
-> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Jann Horn <jannh@google.com>
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Cc: Lokesh Gidra <lokeshgidra@google.com>
-> Cc: Tangquan Zheng <zhengtangquan@oppo.com>
-> Cc: Qi Zheng <zhengqi.arch@bytedance.com>
-> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-> ---
->   -v4:
->   * collect Lorenzo's RB;
->   * use visit() for per-vma path
-> 
->   mm/madvise.c | 195 ++++++++++++++++++++++++++++++++++++++-------------
->   1 file changed, 147 insertions(+), 48 deletions(-)
-> 
-
-Acked-by: Qi Zheng <zhengqi.arch@bytedance.com>
-
-Thanks.
-
+diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
+index c04e715a4c2a..566127b4e0ba 100644
+--- a/drivers/net/usb/usbnet.c
++++ b/drivers/net/usb/usbnet.c
+@@ -461,7 +461,7 @@ static enum skb_state defer_bh(struct usbnet *dev, struct sk_buff *skb,
+ 
+ 	__skb_queue_tail(&dev->done, skb);
+ 	if (dev->done.qlen == 1)
+-		tasklet_schedule(&dev->bh);
++		queue_work(system_bh_wq, &dev->bh_work);
+ 	spin_unlock(&dev->done.lock);
+ 	spin_unlock_irqrestore(&list->lock, flags);
+ 	return old_state;
+@@ -549,7 +549,7 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
+ 		default:
+ 			netif_dbg(dev, rx_err, dev->net,
+ 				  "rx submit, %d\n", retval);
+-			tasklet_schedule (&dev->bh);
++			queue_work(system_bh_wq, &dev->bh_work);
+ 			break;
+ 		case 0:
+ 			__usbnet_queue_skb(&dev->rxq, skb, rx_start);
+@@ -709,7 +709,7 @@ void usbnet_resume_rx(struct usbnet *dev)
+ 		num++;
+ 	}
+ 
+-	tasklet_schedule(&dev->bh);
++	queue_work(system_bh_wq, &dev->bh_work);
+ 
+ 	netif_dbg(dev, rx_status, dev->net,
+ 		  "paused rx queue disabled, %d skbs requeued\n", num);
+@@ -778,7 +778,7 @@ void usbnet_unlink_rx_urbs(struct usbnet *dev)
+ {
+ 	if (netif_running(dev->net)) {
+ 		(void) unlink_urbs (dev, &dev->rxq);
+-		tasklet_schedule(&dev->bh);
++		queue_work(system_bh_wq, &dev->bh_work);
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(usbnet_unlink_rx_urbs);
+@@ -861,14 +861,14 @@ int usbnet_stop (struct net_device *net)
+ 	/* deferred work (timer, softirq, task) must also stop */
+ 	dev->flags = 0;
+ 	timer_delete_sync(&dev->delay);
+-	tasklet_kill(&dev->bh);
++	disable_work_sync(&dev->bh_work);
+ 	cancel_work_sync(&dev->kevent);
+ 
+ 	/* We have cyclic dependencies. Those calls are needed
+ 	 * to break a cycle. We cannot fall into the gaps because
+ 	 * we have a flag
+ 	 */
+-	tasklet_kill(&dev->bh);
++	disable_work_sync(&dev->bh_work);
+ 	timer_delete_sync(&dev->delay);
+ 	cancel_work_sync(&dev->kevent);
+ 
+@@ -955,7 +955,7 @@ int usbnet_open (struct net_device *net)
+ 	clear_bit(EVENT_RX_KILL, &dev->flags);
+ 
+ 	// delay posting reads until we're fully open
+-	tasklet_schedule (&dev->bh);
++	queue_work(system_bh_wq, &dev->bh_work);
+ 	if (info->manage_power) {
+ 		retval = info->manage_power(dev, 1);
+ 		if (retval < 0) {
+@@ -1123,7 +1123,7 @@ static void __handle_link_change(struct usbnet *dev)
+ 		 */
+ 	} else {
+ 		/* submitting URBs for reading packets */
+-		tasklet_schedule(&dev->bh);
++		queue_work(system_bh_wq, &dev->bh_work);
+ 	}
+ 
+ 	/* hard_mtu or rx_urb_size may change during link change */
+@@ -1198,11 +1198,11 @@ usbnet_deferred_kevent (struct work_struct *work)
+ 		} else {
+ 			clear_bit (EVENT_RX_HALT, &dev->flags);
+ 			if (!usbnet_going_away(dev))
+-				tasklet_schedule(&dev->bh);
++				queue_work(system_bh_wq, &dev->bh_work);
+ 		}
+ 	}
+ 
+-	/* tasklet could resubmit itself forever if memory is tight */
++	/* workqueue could resubmit itself forever if memory is tight */
+ 	if (test_bit (EVENT_RX_MEMORY, &dev->flags)) {
+ 		struct urb	*urb = NULL;
+ 		int resched = 1;
+@@ -1224,7 +1224,7 @@ usbnet_deferred_kevent (struct work_struct *work)
+ fail_lowmem:
+ 			if (resched)
+ 				if (!usbnet_going_away(dev))
+-					tasklet_schedule(&dev->bh);
++					queue_work(system_bh_wq, &dev->bh_work);
+ 		}
+ 	}
+ 
+@@ -1325,7 +1325,7 @@ void usbnet_tx_timeout (struct net_device *net, unsigned int txqueue)
+ 	struct usbnet		*dev = netdev_priv(net);
+ 
+ 	unlink_urbs (dev, &dev->txq);
+-	tasklet_schedule (&dev->bh);
++	queue_work(system_bh_wq, &dev->bh_work);
+ 	/* this needs to be handled individually because the generic layer
+ 	 * doesn't know what is sufficient and could not restore private
+ 	 * information if a remedy of an unconditional reset were used.
+@@ -1547,7 +1547,7 @@ static inline void usb_free_skb(struct sk_buff *skb)
+ 
+ /*-------------------------------------------------------------------------*/
+ 
+-// tasklet (work deferred from completions, in_irq) or timer
++// workqueue (work deferred from completions, in_irq) or timer
+ 
+ static void usbnet_bh (struct timer_list *t)
+ {
+@@ -1601,16 +1601,16 @@ static void usbnet_bh (struct timer_list *t)
+ 					  "rxqlen %d --> %d\n",
+ 					  temp, dev->rxq.qlen);
+ 			if (dev->rxq.qlen < RX_QLEN(dev))
+-				tasklet_schedule (&dev->bh);
++				queue_work(system_bh_wq, &dev->bh_work);
+ 		}
+ 		if (dev->txq.qlen < TX_QLEN (dev))
+ 			netif_wake_queue (dev->net);
+ 	}
+ }
+ 
+-static void usbnet_bh_tasklet(struct tasklet_struct *t)
++static void usbnet_bh_workqueue(struct work_struct *work)
+ {
+-	struct usbnet *dev = from_tasklet(dev, t, bh);
++	struct usbnet *dev = from_work(dev, work, bh_work);
+ 
+ 	usbnet_bh(&dev->delay);
+ }
+@@ -1742,7 +1742,7 @@ usbnet_probe (struct usb_interface *udev, const struct usb_device_id *prod)
+ 	skb_queue_head_init (&dev->txq);
+ 	skb_queue_head_init (&dev->done);
+ 	skb_queue_head_init(&dev->rxq_pause);
+-	tasklet_setup(&dev->bh, usbnet_bh_tasklet);
++	INIT_WORK (&dev->bh_work, usbnet_bh_workqueue);
+ 	INIT_WORK (&dev->kevent, usbnet_deferred_kevent);
+ 	init_usb_anchor(&dev->deferred);
+ 	timer_setup(&dev->delay, usbnet_bh, 0);
+@@ -1971,7 +1971,7 @@ int usbnet_resume (struct usb_interface *intf)
+ 
+ 			if (!(dev->txq.qlen >= TX_QLEN(dev)))
+ 				netif_tx_wake_all_queues(dev->net);
+-			tasklet_schedule (&dev->bh);
++			queue_work(system_bh_wq, &dev->bh_work);
+ 		}
+ 	}
+ 
+diff --git a/include/linux/usb/usbnet.h b/include/linux/usb/usbnet.h
+index 0b9f1e598e3a..208682f77179 100644
+--- a/include/linux/usb/usbnet.h
++++ b/include/linux/usb/usbnet.h
+@@ -58,7 +58,7 @@ struct usbnet {
+ 	unsigned		interrupt_count;
+ 	struct mutex		interrupt_mutex;
+ 	struct usb_anchor	deferred;
+-	struct tasklet_struct	bh;
++	struct work_struct	bh_work;
+ 
+ 	struct work_struct	kevent;
+ 	unsigned long		flags;
+-- 
+2.43.0
 
