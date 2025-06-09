@@ -1,95 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A08292AD14;
-	Mon,  9 Jun 2025 10:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6FD143ABC;
+	Mon,  9 Jun 2025 10:05:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749463471; cv=none; b=KSOcPvd5loJGNnM+XeU4x0tZH00OLjmZWxRqyhrq5ZuQh5ZBwXSo/UNte0IJ4E2UHrAIwqAtZK/2Wef3e1yqxP5mu2zgMU2VEfFd7bC6pC7zNbrv7G8uXhE6i+Sic/Jy0eVrB6ZkMeQ+S7xDWKLHGEO2MddPOyg+1drxdC0/U1Q=
+	t=1749463523; cv=none; b=hVv2ItOj3b1Kc1ljnQ9EmG0kWRH7t+GQS3iVgGGAV7D8I9/Zyv8cUthwMlP8FgeO/RiXyG1nYdLuKlVfDGwMxT6IZtfrgMs7wqpW5RT0NWSf75ntuWTRQl/w6y8Lv2Re+ItjykZ4mmIrGFsIUuiPxYmtbmbwGIdx6wVKd44aQuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749463471; c=relaxed/simple;
-	bh=xA/k0GHRhOpNaqNOgCivX4AoaTF5llgmSIHoIT01l+k=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=eWTf6S+bAR5kK/rr6wyWWqljOq1joK3lcyKEI8eUjhRE2GxadyOiQibjj/lBDGmc4RlEdZhomMPWXyKxkV4UhXL9AqqD/w0HeDoaDyTmZkhbsDbLv2ivisrbWq+rGBX16t3I8yRYyw1lWGuT4eQSIpoRytQgxf/ivME6o9Z6M+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TxkkWr+w; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749463523; c=relaxed/simple;
+	bh=LIaYfTdy4VX2SijSB1fsERZSR/2FSunWOglQaGexf38=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VZ/iIKWS5tue13YnRsOeAfcywbH9hndGxrH+kKTMRyYxvQoc/hWmJfC+VBjY5Yy0ertGtMMoiTwGn+TNofVgxxXgu5YHmxN2Tuld+H3nn+TQh9ItrT1n09vT+wF67YMlYsLtRL0FyrxBvp7A7Kun4HrTjl1IGIjQ1L9m/15XhAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=cL1OvQ+7; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TxkkWr+w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749463470; x=1780999470;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=xA/k0GHRhOpNaqNOgCivX4AoaTF5llgmSIHoIT01l+k=;
-  b=TxkkWr+wMMNn3XKi2A3dKfg3SXGI+ffkNpp4ka7+UsG4MwL/rXTDtuEP
-   w7ovVwmyIbkm6UZDiJBKusof89RDPDtRikm0SIgmqGoA+w9NR3fprjUhq
-   lQj0VDirZu1Nyxja9XqSCj9IIofmOzKapU4gLGo3gLc9cZt4hZ6ywW6o7
-   Aep6whIXXSGMHcV8v4WmBZ0y1ihN1wxb69cfC2QlnvKQ5N3H7Fl3NWt6F
-   bQnPgMdII4oUfLIO86ycq2udbXSFc0slsPEkeLZBFoXoJc2DXr4SCEwFy
-   ccSeoyeheQj5R/OvjJ7zgPdt8dWaevA0yKXtUU0rjtaFTaTNcGI406I+q
-   A==;
-X-CSE-ConnectionGUID: KB7nY+AyTzWwonHUiQ8CXg==
-X-CSE-MsgGUID: 1gdD2LCwSUmz197SgvNHcQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11458"; a="51529387"
-X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="51529387"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 03:04:29 -0700
-X-CSE-ConnectionGUID: oLSyDNZrTruMIeefQI/Jxw==
-X-CSE-MsgGUID: qcpKczmYTsSk3aW3cymMzA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="177406123"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.22])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 03:04:24 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
- hdegoede@redhat.com, linux@treblig.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
- dave.hansen@linux.intel.com, x86@kernel.org, 
- platform-driver-x86@vger.kernel.org, hpa@zytor.com, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250608012512.377134-1-linux@treblig.org>
-References: <20250608012512.377134-1-linux@treblig.org>
-Subject: Re: [PATCH 0/3] platform/x86: intel_telemetry: Remove deadcode
-Message-Id: <174946345966.3675.2007813244363355783.b4-ty@linux.intel.com>
-Date: Mon, 09 Jun 2025 13:04:19 +0300
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="cL1OvQ+7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1749463518;
+	bh=LIaYfTdy4VX2SijSB1fsERZSR/2FSunWOglQaGexf38=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cL1OvQ+7LsfOUWE3rHXhvHPEooM2uTSuf9JmQZBP4cMkLtVfP5lxnRYlps6BLkWpy
+	 UZNls2o1oZoFErLIvQnIjlSfRjLhtg+obZx/kPsuFWK/qlxy8IB1b5O7+jkXYhLHew
+	 21zgt0otmTBl/5DHfU9yKpOcmjRhLWdpmAQpNP7w=
+Date: Mon, 9 Jun 2025 12:05:18 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Rich Felker <dalias@libc.org>, Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>, 
+	linux-sh@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH 0/3] tools/nolibc: add support for SuperH
+Message-ID: <66678d81-b1ac-48de-be82-1c82ca1c3e31@t-8ch.de>
+References: <20250609-nolibc-sh-v1-0-9dcdb1b66bb5@weissschuh.net>
+ <0bd3da32be2d82f8ee6f6a544d9d8f8b48b02cd0.camel@physik.fu-berlin.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0bd3da32be2d82f8ee6f6a544d9d8f8b48b02cd0.camel@physik.fu-berlin.de>
 
-On Sun, 08 Jun 2025 02:25:09 +0100, linux@treblig.org wrote:
+Hi Adrian,
 
-> Many of the entries in the Telemetry core driver are not called
-> anywhere, and haven't been since they were originally added in 2016.
+On 2025-06-09 11:53:25+0200, John Paul Adrian Glaubitz wrote:
+> On Mon, 2025-06-09 at 11:28 +0200, Thomas Weißschuh wrote:
+> > Add support for SuperH/"sh" to nolibc.
+> > Only sh4 is tested for now.
+> > 
+> > This is only tested on QEMU so far.
+> > Additional testing would be very welcome.
+> > 
+> > Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> > ---
+> > Thomas Weißschuh (3):
+> >       selftests/nolibc: fix EXTRACONFIG variables ordering
+> >       selftests/nolibc: use file driver for QEMU serial
+> >       tools/nolibc: add support for SuperH
+> > 
+> >  tools/include/nolibc/arch-sh.h              | 162 ++++++++++++++++++++++++++++
+> >  tools/include/nolibc/arch.h                 |   2 +
+> >  tools/testing/selftests/nolibc/Makefile     |  15 ++-
+> >  tools/testing/selftests/nolibc/run-tests.sh |   3 +-
+> >  4 files changed, 177 insertions(+), 5 deletions(-)
+> > ---
+> > base-commit: 6275a61db2f0586b8a5d651dfc7b4aacf9d0b2d6
+> > change-id: 20250528-nolibc-sh-8b4e3bb8efcb
 > 
-> Remove them.
-> 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> 
-> [...]
+> I have no experience with the selftest code but I can definitely test
+> on real hardware if you can point me to some instructions on how to
+> run the tests.
+
+That would be much appreciated.
+You can compile the selftests like this:
+
+$ cd tools/testing/selftests/nolibc
+$ make [CC= CFLAGS_EXTRA=] nolibc-test
+$ ./nolibc-test
+
+The test executable is fully self-contained, you can also cross-compile
+it and copy it around.
 
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
-
-The list of commits applied:
-[1/3] platform/x86: intel_telemetry: Remove unused telemetry_*_events
-      commit: 22428723a27e6ee03dffd86ba62501bffe5b4c78
-[2/3] platform/x86: intel_telemetry: Remove unused [gs]et_sampling_period
-      commit: 2ad029bde3d4dd7787483f646384a93a95922cf8
-[3/3] platform/x86: intel_telemetry: Remove unused telemetry_raw_read_events
-      commit: 458957b8e3d552701cdb55ffacc38627d2039fe8
-
---
- i.
-
+Thomas
