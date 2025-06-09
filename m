@@ -1,67 +1,74 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBEB21C9F2
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 17:34:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7616021B191
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 17:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749490458; cv=none; b=BZOj2HTiMOvMG/6mZ47Fniz7gHC48STgJuiAMFe9vvdFuWd97knv5fuPf2Wr2THdF72hIwZpesR9IJEQ/tptLMTxsXKqbYIkfgQgDTicN2ZdJcIiMZmEAetBI64ewRBPOE0ZtpLkNMpGFim5deqSvU/4/uVLE0fp9QybNWkS4Hg=
+	t=1749490672; cv=none; b=PbdqPUIq2cjJBsAt8UnX7PQNcM3mgRdh6Wy/737Bk8xVVWlpt7ymp0Dapnm+p3YPy7MT+ttc5dnEjV1OYmC7MKxgFWwJ314hl4o5zKVuCYHKvKd3chRkC17eEknC2PKOmE3ttaSjH6ZSR4SuMaT+NWyVYsO/Sof+oFCkng2ngUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749490458; c=relaxed/simple;
-	bh=cI/XyzNZz4jR3deqzWHJHcJsVaGiftu7JJEkZOUtes8=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=oej5YiOvgYJcjSLvhXVJx2r9ejNSPsECLT0bWAOYfan1bKIRR48Uk8H1MxjTRbyriO4bkyX8DgSZbn1LwE9gtYtOWlpQthxwbKKxEPUmPtTCxFUufzg3skwRj4qWULWLqtoHDfXZMW93V7l+d7/e3kQab3xuyRdLA1xbrHRxiuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NAJsnOR2; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749490672; c=relaxed/simple;
+	bh=NLe94yPt4q2EEiFA0+JfFwaP7sn2Zq/pZsMRfkjjFbw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Iq1ePzbTByXMCwrF8l5S1P21P4t7N3vsS5Wds2xFCYUJg/b+hwP1SBtchOHf+XC/LJJUABy8NtgrqIyk543ZLyBjr/5Q6aZiL4B+OVFfqGGCtRm2ECufKK5AGQYoqIY2LVFBDUdcsKKMKWKmxASvYZOg0KWafV7n/bE6lLi/nQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=e65QfGjf; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NAJsnOR2"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a4e742dc97so3624159f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 10:34:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749490454; x=1750095254; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9BmRKlj/RMDP5IzXSFzdO4da8XFCR2YzozS+rvgK1WE=;
-        b=NAJsnOR2SeBEknsf2iRpaaLs0SJT/7uJ3bMCEXVtIE3S5O63gwMapFUMEX8yTolM3w
-         XbxEZcmW8iig0YzuXfSqmCLdKBljMjjwup4B5BWIH4Nmdjo3o/y+ew/jaSdqqXD9rJ78
-         OW4uaYam7lBG+8SUw7LDfWUJ33i1wuTDODO25bfXpVjgjVh/rk/jyzUaStEDKy/o0mPm
-         wJHPGYS1rV685Xu0UuOhFqcjs+gqerHFLrZh+sIxI0eBovpCquW0h6V1kLHKUS6kdclv
-         P5yS2dhah4meoqvOvDsvKrVHJlackGNCve+kYiEEuC/SobiXX0wjnLkObBTzKuL44Lql
-         B/fA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="e65QfGjf"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5599DeRW004343
+	for <linux-kernel@vger.kernel.org>; Mon, 9 Jun 2025 17:37:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	0mD1/0CoskR/YlijKuKFXQSB2LX4lWU/ihQ9C+M2R1A=; b=e65QfGjfmnEbu4p3
+	UihaUlZiORk3Gozu9dLSaMSP9mF34+aiX4WazCx72GGLHI/OpvsWfbzMTiyI8CJ7
+	mLLawg5hHG4k6Y9ElBnt/LhzrUX3PFK6kg0ClvFNa2HHuhvKvyZdKST+ve7kkN5C
+	t5fxlPVuJXdK3KSDbmG2Agn7iX++l5ruXwifbVXyKLSFpyHuvOhjHdqTUSuYTTRb
+	0Vd5vWEbDBJHOr9XFJxjsL1END05UxhmjxlBVCA+w5wE6Wb5C6RRhAni4d15POmL
+	wnqBFAOEkKtRCz23tHkxlX7dA320UncHJ7y//sisuXdb/j/lF4azs/8Ky3nkMHkv
+	VhFB8A==
+Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com [209.85.161.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474eqcem0d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 17:37:48 +0000 (GMT)
+Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-610e04456ceso113344eaf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 10:37:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749490454; x=1750095254;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9BmRKlj/RMDP5IzXSFzdO4da8XFCR2YzozS+rvgK1WE=;
-        b=GSqYV7y2DKxZapcR7/4UB0b68kn3C5QjmCVOPbgjg51l0uMdvg4Wlrz074nQ6LJjbq
-         KNIQLnyl4V93hzWN2dmhiT36Hv3iKLUnLhC1Ft3KKJps+ds1xpfvNUk1oZNcj9LHWIAN
-         wG5mmdEef6GmaezW6jbJMJFxXTpHx6FIEP60ERDDWnoNeUtDT5Z17IU02jt/bqhewIgX
-         XK/an5NUvJXmsVOvuHXES3/HsMth7FnaOqUkoAYkojyFOSVMtwUXM/tNzIiAh5KwkYvQ
-         VTH+huU2aMWeWprgNatAeHCqtdViYX/mYI5hjEufKOsa/86PpZf4eogWWtbP+hCuehFr
-         mLhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUhagaEFc276A3IMeHxqwW3yxbshrVs354LQEj6qGbzTuhX1YrsdwaKSddukjfkg+y1zgD2Jr9886mWwhQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoUzYL48Q5w+hpsM9LEJD/v4fT3hCDZa/rWu8i/UzFOob/uDW4
-	nxlzXFIR+sAwoUq40Qgij0HEEFY6q+w+64GZ2UPfg0AyfI6RCFnf5PYCZ5YR2UfTLI8=
-X-Gm-Gg: ASbGncvFVNJ3y4CCn/S1G/Zytn0Ju90LUjvEa30Fm1BPzrlwE6BxmN1H6H7dQ8lSPze
-	p4cioLRtsKGu4RXb706kJPqoiDFrUQ32ABRZYtQgPg+HCt6D5TpDTIv1OOrv/JBTlNKq1ZNYAfL
-	x4cMHi1R45YwKVEbSm3AC/nBC2GTShwEYx0/ntt9exDBuexbOKgxKpEVV1TED4F0tDGyg+XHMB0
-	PPcdF1cGmu7Uu4SVvjbkgc7su68dj9/KRxTVrYjwre2Ns3rW0h0bKn2YWX/wS+rg9Nr3NanaO93
-	NIuVu6Lfb0oA6D38F2JPEEnAUtdVlWwr6OZq3tHlLHmbAMAZATovXtmoG3XHq1EP5//xmdxMJRK
-	WzZhpMlktqRIo17b+xtlxjtpybcBa
-X-Google-Smtp-Source: AGHT+IGkaYk2ZR7eBVSuTYhU38XKPy8+5RJ/cs78kF616gKs+MS4l8QgLXSnlOu4Zk+j1JmLSxgFAw==
-X-Received: by 2002:a5d:64c6:0:b0:3a4:eb7a:2ccb with SMTP id ffacd0b85a97d-3a551417255mr318548f8f.16.1749490454350;
-        Mon, 09 Jun 2025 10:34:14 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:d049:de0c:efef:b94d? ([2a01:e0a:3d9:2080:d049:de0c:efef:b94d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452730d162asm113789415e9.39.2025.06.09.10.34.11
+        d=1e100.net; s=20230601; t=1749490666; x=1750095466;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0mD1/0CoskR/YlijKuKFXQSB2LX4lWU/ihQ9C+M2R1A=;
+        b=HUyduUvgcM+Je4UQPOxv6zwNuhyo6CpebYjmsKoVZv5wpAAZY06W8BTJMyJ9GvOgf9
+         yVA246ZwLkJ8yLlfKFP5F1kaYsXTVPCKCvF+KWFAbwzc5wJdGvBIvqtnKIi3/Ix7FCtF
+         VN3kclGG4bP8KfiigZMneF/Q76/8pixGigehidxjIQQhtdSzIsmexjkOQ6IwUjiGRUkt
+         cTLPMPoNIly2J874GNazo0XofGq9ddCH09NFpgQDMrMh2BQV8rbjCdHCsqWt3epJqH81
+         ujk52pq7p5uL8w7rpwzeNsNcjA+cFPYnuVdZAfvavQW3aads8ZpMiYplZwK403C/Ysiz
+         AczA==
+X-Forwarded-Encrypted: i=1; AJvYcCVjl0YuXC4RBPjD03gw3u7yUrbb7cI0alg0A4o7llH2EQgsPJ6XIgZXOWFtOzM7oFo69HyvkTBTmFjZKfw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqTca9abbqThvWMhEX+jPAIU4Z3K3t3+sdjfed9xQOa1CwwQZj
+	8uza2PP0aAmNa3Cf7PQBFGqVNrMRHGxpVT3vYv8PSjBZSGZSlt2uFfAeRy3wm0DxtMVpMZ81Af+
+	dwtcq3GCjnwwnl9JTnVNnYzG7jaA0PDlJvGUq48tXroD36f4dnE7Zh2nsFajw1nyIXjRAmQvTIi
+	g=
+X-Gm-Gg: ASbGnctdMDJVZeJAOIc+G+W3MhJ/a2GTgU4QHCjVauc8FMqSLGaxBGPvSxAS9jF4LBv
+	8kd3nWgW/NU+keBJDNcyf0tgMY5vtRQnnidDASPy/Qq+mPSG62HvDuL2oqR3ZGRY8W1DVdJF83+
+	wvhJ+HzAKmptEHLzXtX/0cIPqgm1SogNccN173TDrM1YoPEmOtBfNEodMe6hBpfKm+AZtdH3Vfq
+	rwI18+WxKYkmAZWzy2JFbGzLAkYzryOogwSUPpY3+WmOkF4EWNd8nSjApiTKSyWL8zvXg24YnRB
+	JHCyxRt0r5mwlCACUM3KmECL1WNEGdgbfqO8syPnUY6PEMd6LkQZLXHmAk9Nca4F++ga0Qk32/m
+	SVqtS+s/OjTqt7gY0WdHtJMdA
+X-Received: by 2002:a05:6871:5521:b0:2d8:957a:5166 with SMTP id 586e51a60fabf-2ea768aa3c9mr283282fac.4.1749490666422;
+        Mon, 09 Jun 2025 10:37:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEDybc/cT1a1uzm8usYYLOngzIkeYWJ3oezh6aMZj11iyv41ICeZDa+085dK1+g2POh2T0oFw==
+X-Received: by 2002:a05:6214:1c8b:b0:6fa:9ca0:c67e with SMTP id 6a1803df08f44-6fb238dc2e9mr7311616d6.5.1749490654418;
+        Mon, 09 Jun 2025 10:37:34 -0700 (PDT)
+Received: from ?IPV6:2001:14ba:a0c3:3a00::4c9? (2001-14ba-a0c3-3a00--4c9.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::4c9])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32ae1b347afsm11373071fa.34.2025.06.09.10.37.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Jun 2025 10:34:12 -0700 (PDT)
-Message-ID: <04556296-bcda-436f-b462-6b1718dafd00@linaro.org>
-Date: Mon, 9 Jun 2025 19:34:11 +0200
+        Mon, 09 Jun 2025 10:37:32 -0700 (PDT)
+Message-ID: <951f781a-d823-4240-a1c8-b9ea85ba64e0@oss.qualcomm.com>
+Date: Mon, 9 Jun 2025 20:37:31 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,74 +76,145 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH] drm/meson: use vclk_freq instead of pixel_freq in debug
- print
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250606221031.3419353-1-martin.blumenstingl@googlemail.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250606221031.3419353-1-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 3/3] drm/msm/adreno: Check for recognized GPU before bind
+To: Rob Clark <robin.clark@oss.qualcomm.com>, dri-devel@lists.freedesktop.org
+Cc: linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20250609170438.20793-1-robin.clark@oss.qualcomm.com>
+ <20250609170438.20793-4-robin.clark@oss.qualcomm.com>
+Content-Language: en-US
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+In-Reply-To: <20250609170438.20793-4-robin.clark@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDEzMiBTYWx0ZWRfXyJW/RiEpzOO3
+ v2rE7p6MKUBhuVSn6uS5xuUeDWPHJu9O0t0XXc1qmMXWXICHtMurZWHq++gYExUoSybJUnCqvEl
+ urLmqa8bBMjqt3XWzrceb8Tf4aqSgk1g8h0kDtDZDclQLcQjtzIU/OAd8JH+GCruF866GMQfAhD
+ Yl4ew78WpblkINKgroXyELnjJIKwkQf+FGLKcki7TO8oJ1cjUWegFP1+wadScZM8IHaS4QbLjFg
+ S6RkPXqUlyXxMiP3V1JJjwZUNJTbNBppmsSObixBJZvOjBoH3Zqr5DMbPz464JFKGV5AvhJ7M3y
+ 4ooxdCpl7FelMDVHiC9SDm64CA2cUjzRleZgdigkNkWwJQhmv7RcsrrbjotkI7wscwMFlmNyx+B
+ 0m3y4QaxRJPlEu9401XNQgMos2ooQ+OIJh2q24Px+uiaIHWXmqdMasWaN5eqWxlI6LvEZMub
+X-Authority-Analysis: v=2.4 cv=Q7TS452a c=1 sm=1 tr=0 ts=68471bec cx=c_pps
+ a=V4L7fE8DliODT/OoDI2WOg==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=4MAclHcQAAAA:8 a=ciEtJq1xeetoClZ_GcsA:9
+ a=QEXdDO2ut3YA:10 a=WZGXeFmKUf7gPmL3hEjn:22 a=6vtlOZhwcO7ZS_iRoh4Z:22
+X-Proofpoint-GUID: sBwGJblCCOJf0WZyQ_sL5SuZeoLnNr1h
+X-Proofpoint-ORIG-GUID: sBwGJblCCOJf0WZyQ_sL5SuZeoLnNr1h
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-09_07,2025-06-09_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 phishscore=0 mlxscore=0 spamscore=0 mlxlogscore=999
+ bulkscore=0 clxscore=1015 lowpriorityscore=0 adultscore=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506090132
 
-On 07/06/2025 00:10, Martin Blumenstingl wrote:
-> meson_vclk_vic_supported_freq() has a debug print which includes the
-> pixel freq. However, within the whole function the pixel freq is
-> irrelevant, other than checking the end of the params array. Switch to
-> printing the vclk_freq which is being compared / matched against the
-> inputs to the function to avoid confusion when analyzing error reports
-> from users.
+On 09/06/2025 20:04, Rob Clark wrote:
+> If we have a newer dtb than kernel, we could end up in a situation where
+> the GPU device is present in the dtb, but not in the drivers device
+> table.  We don't want this to prevent the display from probing.  So
+> check that we recognize the GPU before adding the GPU component.
 > 
-> Fixes: e5fab2ec9ca4 ("drm/meson: vclk: add support for YUV420 setup")
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
 > ---
->   drivers/gpu/drm/meson/meson_vclk.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
+>   drivers/gpu/drm/msm/adreno/adreno_device.c | 29 ++++++++++++++++++----
+>   drivers/gpu/drm/msm/msm_drv.c              |  2 +-
+>   drivers/gpu/drm/msm/msm_gpu.h              |  1 +
+>   3 files changed, 26 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/meson/meson_vclk.c b/drivers/gpu/drm/meson/meson_vclk.c
-> index 3325580d885d..c4123bb958e4 100644
-> --- a/drivers/gpu/drm/meson/meson_vclk.c
-> +++ b/drivers/gpu/drm/meson/meson_vclk.c
-> @@ -790,9 +790,9 @@ meson_vclk_vic_supported_freq(struct meson_drm *priv,
->   	}
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
+> index 504174dbe6d6..002aaf365322 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
+> @@ -178,6 +178,26 @@ static int find_chipid(struct device_node *node, uint32_t *chipid)
+>   	return 0;
+>   }
 >   
->   	for (i = 0 ; params[i].pixel_freq ; ++i) {
-> -		DRM_DEBUG_DRIVER("i = %d pixel_freq = %lluHz alt = %lluHz\n",
-> -				 i, params[i].pixel_freq,
-> -				 PIXEL_FREQ_1000_1001(params[i].pixel_freq));
-> +		DRM_DEBUG_DRIVER("i = %d vclk_freq = %lluHz alt = %lluHz\n",
-> +				 i, params[i].vclk_freq,
-> +				 PIXEL_FREQ_1000_1001(params[i].vclk_freq));
->   		DRM_DEBUG_DRIVER("i = %d phy_freq = %lluHz alt = %lluHz\n",
->   				 i, params[i].phy_freq,
->   				 PHY_FREQ_1000_1001(params[i].phy_freq));
+> +bool adreno_has_gpu(struct device_node *node)
+> +{
+> +	const struct adreno_info *info;
+> +	uint32_t chip_id;
+> +	int ret;
+> +
+> +	ret = find_chipid(node, &chip_id);
+> +	if (ret)
+> +		return false;
+> +
+> +	info = adreno_info(chip_id);
+> +	if (!info) {
+> +		pr_warn("%s: Unknown GPU revision: %"ADRENO_CHIPID_FMT"\n",
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Please use %pOFf instead of %s (and node instead of node->full_name).
+
+Other than that, LGTM.
+
+> +			node->full_name, ADRENO_CHIPID_ARGS(chip_id));
+> +		return false;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+>   static int adreno_bind(struct device *dev, struct device *master, void *data)
+>   {
+>   	static struct adreno_platform_config config = {};
+> @@ -188,18 +208,17 @@ static int adreno_bind(struct device *dev, struct device *master, void *data)
+>   	int ret;
+>   
+>   	ret = find_chipid(dev->of_node, &config.chip_id);
+> -	if (ret)
+> +	/* We shouldn't have gotten this far if we can't parse the chip_id */
+> +	if (WARN_ON(ret))
+>   		return ret;
+>   
+>   	dev->platform_data = &config;
+>   	priv->gpu_pdev = to_platform_device(dev);
+>   
+>   	info = adreno_info(config.chip_id);
+> -	if (!info) {
+> -		dev_warn(drm->dev, "Unknown GPU revision: %"ADRENO_CHIPID_FMT"\n",
+> -			ADRENO_CHIPID_ARGS(config.chip_id));
+> +	/* We shouldn't have gotten this far if we don't recognize the GPU: */
+> +	if (!WARN_ON(info))
+>   		return -ENXIO;
+> -	}
+>   
+>   	config.info = info;
+>   
+> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+> index 87ee9839ca4a..40eb04bab35e 100644
+> --- a/drivers/gpu/drm/msm/msm_drv.c
+> +++ b/drivers/gpu/drm/msm/msm_drv.c
+> @@ -956,7 +956,7 @@ static int add_gpu_components(struct device *dev,
+>   	if (!np)
+>   		return 0;
+>   
+> -	if (of_device_is_available(np))
+> +	if (of_device_is_available(np) && adreno_has_gpu(np))
+>   		drm_of_component_match_add(dev, matchptr, component_compare_of, np);
+>   
+>   	of_node_put(np);
+> diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+> index 5508885d865f..56bd1a646b83 100644
+> --- a/drivers/gpu/drm/msm/msm_gpu.h
+> +++ b/drivers/gpu/drm/msm/msm_gpu.h
+> @@ -729,6 +729,7 @@ msm_gpu_create_private_vm(struct msm_gpu *gpu, struct task_struct *task,
+>   void msm_gpu_cleanup(struct msm_gpu *gpu);
+>   
+>   struct msm_gpu *adreno_load_gpu(struct drm_device *dev);
+> +bool adreno_has_gpu(struct device_node *node);
+>   void __init adreno_register(void);
+>   void __exit adreno_unregister(void);
+>   
+
+
+-- 
+With best wishes
+Dmitry
