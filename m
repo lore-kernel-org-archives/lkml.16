@@ -1,100 +1,104 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58DC91F03FB
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 09:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE2A1F03FB;
+	Mon,  9 Jun 2025 09:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749462773; cv=none; b=NpC0hrDsTi7Oip3u6MY/4+oYXDxHX6+nE6B96MnkXl6roOnX/AwToDz8E72l5E1tfh5v1tcVGc0qEqnFcTb04F5onYTGTxIyYlkXyK1r4vrBgd5p8WacE55s2ZQ0fWiFGishrCgV3JXMP4uGUEJHvUNpWBrkC+TClHE3J5QJzA8=
+	t=1749462819; cv=none; b=p45yr9NGhQSSJeflq+x/K1MvQq5UPs4Da9gWpBNiYMDE4izYZkMA36dN8HhsLXdWeytnPYoA6cSdsPp4zAKS/YY0SRdOiGTOJggdQNLrOd43Pn/iabUyiYq7L2dk8qddfiV3EOWbUTPzlnOvVjA2Dih5jZi3f/KCO2a8hqlWiLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749462773; c=relaxed/simple;
-	bh=MyDSu8h7UNUxASMvAbNUQpgT9QMP03PWqitds3hqjPw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FlQxt+rqV9V+az4/u/5/BUHCHsxjJs852M7NuWR2AvyQKgn5InC//iZ4daKJhHgrOf2nK4R4YIXYgi9b6BV70W9tMDmLFF24X3hLhuRhrJWUGlFglWHWrgm8EYIN9K8/0Dy7a/bIxJ78dr/NRjdlGH00uCmd1reOodjp6bI1TME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CD91F150C;
-	Mon,  9 Jun 2025 02:52:32 -0700 (PDT)
-Received: from [10.1.39.162] (XHFQ2J9959.cambridge.arm.com [10.1.39.162])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 72CC83F673;
-	Mon,  9 Jun 2025 02:52:49 -0700 (PDT)
-Message-ID: <671f8164-a90b-48d7-9446-359eb9493500@arm.com>
-Date: Mon, 9 Jun 2025 10:52:47 +0100
+	s=arc-20240116; t=1749462819; c=relaxed/simple;
+	bh=AWzWNSUFgRaySVq7Pm1vA4G7nz/RO3QGro1rjeIzf2w=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Z1MUs1liBI9K4tPAkkcoH2CR2zkUwRF3xMRedVZth89UvKu8u5TMg/fwOxOdqJ7exRYB7yP3NYWnpeN1E4tw19FGj+csmn3hxChwub0va22E58lbpauFuoNanjJNIAOZm0lK0kVcjkkkei7DFDzWzM6K/6s0Taxh1yKQdDqMHKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=fxhSPA8t; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="fxhSPA8t"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=M/A30/CRAS/dzq7un5vICURXhBPHhgBx4UVc1K27aP0=; t=1749462815; x=1750067615; 
+	b=fxhSPA8tNpaLzKsdkEvduoUici/c5ldz1RFJlt0rAaUw2YwyVBQyAKbHvPWI4Yn2xZcJzGhx8j+
+	xniWGLKSmoqVxtpTIRYe4JrCUxpkCTc4e/xf1mKQQPmQc4648u71CYdhg2Gy6vB/9wvxK8blCUKMr
+	e4GVOnAIAmZt9T6QFUmbVPb/s0KidMZVXZU3gBOdR7H2OVCrGu3pNFLi6DjRI7oT04/9QTxKnHfyz
+	CcUVJaJFFOPefvu86mlSzfJzT01bm8+1/FvMHzYMu/lOAHN7tW5RTLaE+yqoDykGM4XOeyzvuYtJO
+	IT3WtLXral7W76f8JxfzV6Dukp/BHveoVPsg==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.98)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1uOZC2-00000000pE4-13Xz; Mon, 09 Jun 2025 11:53:26 +0200
+Received: from p57bd96d0.dip0.t-ipconnect.de ([87.189.150.208] helo=[192.168.178.61])
+          by inpost2.zedat.fu-berlin.de (Exim 4.98)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1uOZC2-000000018oh-04yS; Mon, 09 Jun 2025 11:53:26 +0200
+Message-ID: <0bd3da32be2d82f8ee6f6a544d9d8f8b48b02cd0.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH 0/3] tools/nolibc: add support for SuperH
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>, Yoshinori
+ Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Willy
+ Tarreau <w@1wt.eu>,  Shuah Khan <shuah@kernel.org>
+Cc: linux-sh@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Mon, 09 Jun 2025 11:53:25 +0200
+In-Reply-To: <20250609-nolibc-sh-v1-0-9dcdb1b66bb5@weissschuh.net>
+References: <20250609-nolibc-sh-v1-0-9dcdb1b66bb5@weissschuh.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm: madvise: use walk_page_range_vma() instead of
- walk_page_range()
-Content-Language: en-GB
-To: Barry Song <21cnbao@gmail.com>, linux-mm@kvack.org
-Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
- Barry Song <v-songbaohua@oppo.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- David Hildenbrand <david@redhat.com>, Oscar Salvador <osalvador@suse.de>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Suren Baghdasaryan <surenb@google.com>, Lokesh Gidra
- <lokeshgidra@google.com>, Dev Jain <dev.jain@arm.com>,
- Tangquan Zheng <zhengtangquan@oppo.com>
-References: <20250605083144.43046-1-21cnbao@gmail.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250605083144.43046-1-21cnbao@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-On 05/06/2025 09:31, Barry Song wrote:
-> From: Barry Song <v-songbaohua@oppo.com>
-> 
-> We've already found the VMA within madvise_walk_vmas() before calling
-> specific madvise behavior functions like madvise_free_single_vma().
-> So calling walk_page_range() and doing find_vma() again seems
-> unnecessary. It also prevents potential optimizations in those madvise
-> callbacks, particularly the use of dedicated per-VMA locking.
+Hi Thomas,
 
-FYI it looks like this patch breaks all the guard-region mm selftests with:
+On Mon, 2025-06-09 at 11:28 +0200, Thomas Wei=C3=9Fschuh wrote:
+> Add support for SuperH/"sh" to nolibc.
+> Only sh4 is tested for now.
+>=20
+> This is only tested on QEMU so far.
+> Additional testing would be very welcome.
+>=20
+> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+> ---
+> Thomas Wei=C3=9Fschuh (3):
+>       selftests/nolibc: fix EXTRACONFIG variables ordering
+>       selftests/nolibc: use file driver for QEMU serial
+>       tools/nolibc: add support for SuperH
+>=20
+>  tools/include/nolibc/arch-sh.h              | 162 ++++++++++++++++++++++=
+++++++
+>  tools/include/nolibc/arch.h                 |   2 +
+>  tools/testing/selftests/nolibc/Makefile     |  15 ++-
+>  tools/testing/selftests/nolibc/run-tests.sh |   3 +-
+>  4 files changed, 177 insertions(+), 5 deletions(-)
+> ---
+> base-commit: 6275a61db2f0586b8a5d651dfc7b4aacf9d0b2d6
+> change-id: 20250528-nolibc-sh-8b4e3bb8efcb
 
-# guard-regions.c:719:split_merge:Expected madvise(ptr, 10 * page_size,
-MADV_GUARD_INSTALL) (-1) == 0 (0)
+I have no experience with the selftest code but I can definitely test
+on real hardware if you can point me to some instructions on how to
+run the tests.
 
-Am I the only one that runs these things? :)
+CC Geert.
 
-[...]
+Adrian
 
->  mm/madvise.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-
-[...]
-
-> @@ -1160,7 +1160,7 @@ static long madvise_guard_install(struct vm_area_struct *vma,
->  		unsigned long nr_pages = 0;
->  
->  		/* Returns < 0 on error, == 0 if success, > 0 if zap needed. */
-> -		err = walk_page_range_mm(vma->vm_mm, start, end,
-> +		err = walk_page_range_vma(vma, start, end,
->  					 &guard_install_walk_ops, &nr_pages);
-
-IIRC walk_page_range_mm() is an internal API that allows the install_pte()
-callback, and the other (public) APIs explicitly disallow it, so presumably
-walk_page_range_vma() is now returning an error due to install_pte != NULL?
-
-Thanks,
-Ryan
-
->  		if (err < 0)
->  			return err;
-> @@ -1244,7 +1244,7 @@ static long madvise_guard_remove(struct vm_area_struct *vma,
->  	if (!is_valid_guard_vma(vma, /* allow_locked = */true))
->  		return -EINVAL;
->  
-> -	return walk_page_range(vma->vm_mm, start, end,
-> +	return walk_page_range_vma(vma, start, end,
->  			       &guard_remove_walk_ops, NULL);
->  }
->  
-
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
