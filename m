@@ -1,40 +1,81 @@
-Received: from mail-24421.protonmail.ch (mail-24421.protonmail.ch [109.224.244.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819902459C8
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 02:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126031096F
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 02:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749436460; cv=none; b=GuZifhjUYg+fi89WfuxATwVqpfMZmjUq3L/5zG3+M1sE3b/dvI0mfzlvLakxxoA56cPnfy+nmXdMPq2E0LFY75Q1N2QU9ypSRE2t3YuLNcbTW8vy+aU3py33lCZxKWf8tvOiBuny4DYSOD7b+Wy6NHiE0drmuNVLS/zcTPRhvsw=
+	t=1749436621; cv=none; b=nmN+7eMLdRqb4rE7VRclDAMYkAkpG3v20BNJmvXgStDH0PfPvYp7geOXq0wP7ltHh8Q2IeiKct3Bxmmm2EBfEWFmPiNZElu7tFwGovdlT6yIjtO+wxC+u8GQX1xXijclE+SVvWqpLIPX0a4fJirAxSFD5GQNjHipYPbdpztV7uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749436460; c=relaxed/simple;
-	bh=cF91nALyo98uqnpCdLscnnoeoPwnYEha9V/7Ylv8reU=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=bqwqbeGOqFuNKOSob+Ae99GrZuwCNSlABjqj6d1QOqDkVjJuv0UAb+xViR+t86fvhRAnPRZ0ZeFEjcnY8EGtX4CxYIRp9FY1XyhNdpcj9sY6sd7yTOfoSWhQOyu/WgsDR6hBmY2WBpt4Xjlr5xhik2BQNw4NDgfY1FadRINS4q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=r26.me; spf=pass smtp.mailfrom=r26.me; dkim=pass (2048-bit key) header.d=r26.me header.i=@r26.me header.b=mGPh25wP; arc=none smtp.client-ip=109.224.244.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=r26.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=r26.me
+	s=arc-20240116; t=1749436621; c=relaxed/simple;
+	bh=R0h5h1bEyC5dQGpMZ5Unuo2nd8qE7BzdDg7UDtUnXbU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t2jwTeFCHoSBnTUpBjwbU+t14lsQ+ALeJVz5A9uXa6Ww4sTUJcq3Zv0gj3xlAbE8iB3TZWf+YaMKZdNALHzO+GFWuZfxb8o7fpSQ9dTrDRy6uGVPj05g4Qd62fZiZF0igZY1xLY4nYYgaGuQW6y60kQnRYU0g+9QCyQOPS4oTPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JkFKDKAf; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=r26.me header.i=@r26.me header.b="mGPh25wP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r26.me;
-	s=protonmail3; t=1749436448; x=1749695648;
-	bh=E4/0V+ScOCL1YWcOZGl7HNDKRjUxzVbzYhoKPTQdams=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=mGPh25wPJfJTplQIWmRv7Nv/GcvxOl5TKzK7dyZXG1+6qY4bot6UP9/vsa1+qA8K/
-	 xAGRD/ATtBExc2HLBbbkXMOW7V7ESd9jtTjiV7mZLSnLglbXUXC3D5XW5VUCLaHz1h
-	 89cY798xsjTf5lQS/sbEEBbCgb2HMFb8SLoFsJ63+NCAWCjeNkub8o8ekvfKaK8umK
-	 7bm/fF686Cc95ThQrAPw/1I6hYzKuCM32PXVl5IjZVmfuqUqMNcNR+iNm6TycERDUs
-	 WLtnNkv1fQ0e03vfnuAlqhvaQewjr2vMs3QhvDXHLWw04+NUdkXZ0RvweXSEjBJY9v
-	 DamKbrP+eAHIg==
-Date: Mon, 09 Jun 2025 02:34:02 +0000
-To: =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-From: rio@r26.me
-Cc: Bjorn Helgaas <bhelgaas@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
-Subject: [REGRESSION] amdgpu fails to load external RX 580 since PCI: Allow relaxed bridge window tail sizing for optional resources
-Message-ID: <o2bL8MtD_40-lf8GlslTw-AZpUPzm8nmfCnJKvS8RQ3NOzOW1uq1dVCEfRpUjJ2i7G2WjfQhk2IWZ7oGp-7G-jXN4qOdtnyOcjRR0PZWK5I=@r26.me>
-Feedback-ID: 77429777:user:proton
-X-Pm-Message-ID: a555cdadbafdaf62f831901f8970a7dd72bc3e2f
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JkFKDKAf"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-23508d30142so50924095ad.0
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 19:36:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749436619; x=1750041419; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KGBdjbD+r7EhriDTReRo/vjOU6dpa3NoNVdQ1TG/O+k=;
+        b=JkFKDKAfcvsYH97B5t60GWa5kkKSbLe5ugQwFfR4eYHLAPTpo7WVKCUR8+MWtZ308U
+         Aryf8NgfoRlNojduD+Iwuiwd1DA2U2O8u2oskJZbhMoUVIlMSHoVbHYvmJ0bThwdWnww
+         jdsITV75bW7KY/Sky8mIU7/aMw5WUyqqQ0BnUp1ztFjkK9ffkGzYE6Dda4RqEIxigPYT
+         ziEVMqIIJrRTWvBvvgHP5qa10BANa0PqtCqSRlHUEdAiAL95VJ6xPQhjUP+YrZvim0Wn
+         LBipMm8BMPvDNXBRnRp70x+G4z3l94inteC5fJ9lOczkurC4vEN/UJBhqXni5lEKf+y1
+         m7mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749436619; x=1750041419;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KGBdjbD+r7EhriDTReRo/vjOU6dpa3NoNVdQ1TG/O+k=;
+        b=nS7mYJU3XCsMHjTh1bwbjoat6zs9UxLqJRrR0H/MrWX4M9rVpMRfPBTmNOs/JF0NrR
+         vBfwvjUZY5YwIVXOAcZ5KbFrf6yrWhAzK0jRduE3ehOvEMXbiaK/qT5+kY2YoKjjK6Gr
+         8ad8OiVc4kYpLTqghMEgqPPJM+03Z6KrakkTTur/BvF5p0s75jRP0YI//e5MPDVPc3hG
+         ZkA9SzTPJAgSCpKQDJEZIJurFEPFgMZ41RxpWiqfmkDOWG8vXComg2kO/Gp0z1wiY6uM
+         qYCbjRk3qYygWd9XrSoXyEPkWwybH7AgUyaDtL/bdJvFHN2KTXSn5NBTuh7DBTnmDIYg
+         sAHg==
+X-Forwarded-Encrypted: i=1; AJvYcCX3yBI7LkFP0xmT+HDiYdpSEWz6h+EEGyVgitXje8OwojytP/ASz9Apocxb3L3f8HQfvQajde8qmO9F+Hk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz20Tn5AmF5NkVNrbQEZhK4TVNPcKIENVdDCUsPHJnEb+3w93tL
+	gkCN9hPq9fV6QLDgumT5s7lk4vp/rJ+GSXouBRBb3a7mrkep4/XSibbMzCz8VPZE8C0=
+X-Gm-Gg: ASbGnct6dW7L2nPSLCS0LUEZR3o8BGIFDFX6fTsrXZPUss3sPhTtVtbnJdoWvzpdVCS
+	6e+k7AJjI7JppDt2fln8j2jdH5Lf8p+AILuJnXF5/6Q6TpKr0/W8NDZxIEIn/SBjps9H2+aF3dZ
+	xraEEYcI50qp7RqR5MAaJqsWoingA726qD4ChTNAc4P2PfI1gaIcw6DWZI6aIDb6wAx5HxBA0fW
+	aaiUPoAr6JmnPEoBVyJQeLSJtDAMqaJhB+4ni23kHKjKENjrQtSgbT0PnKJbC8uQA/HouG+hxZ5
+	9odH1BioaeHYBz2NVNrknz8DzEOujQ5aXDCuPn5O+jTlZegRE8s6
+X-Google-Smtp-Source: AGHT+IHq1EECm8UAEXoryyssCckiuT1lwiE3kyJ+2cywlbEqvKx4+f1qsF2+KmgK+wPvK5sev7n0AQ==
+X-Received: by 2002:a17:902:c952:b0:234:f580:9ed with SMTP id d9443c01a7336-23601cfa542mr151014935ad.21.1749436619359;
+        Sun, 08 Jun 2025 19:36:59 -0700 (PDT)
+Received: from localhost ([122.172.81.72])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603078941sm45015165ad.7.2025.06.08.19.36.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Jun 2025 19:36:58 -0700 (PDT)
+Date: Mon, 9 Jun 2025 08:06:56 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH] rust: cpumask: Validate CPU number in set() and clear()
+Message-ID: <20250609023656.efvgl7efmfxhloxv@vireshk-i7>
+References: <8b5fc7889a7aacbd9f1f7412c99f02c736bde190.1749183428.git.viresh.kumar@linaro.org>
+ <CANiq72nxs4BTFQQcJLgrbgHDzQLbhAA3=qsycdKu=oxc2V=yqw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,74 +83,27 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72nxs4BTFQQcJLgrbgHDzQLbhAA3=qsycdKu=oxc2V=yqw@mail.gmail.com>
 
-Hello,
+On 06-06-25, 12:11, Miguel Ojeda wrote:
+> On Fri, Jun 6, 2025 at 6:17 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > Reported-by: Miguel Ojeda <ojeda@kernel.org>
+> > Closes: https://lore.kernel.org/all/87qzzy3ric.fsf@kernel.org/
+> 
+> The URL is wrong, please point to the original report:
+> 
+>     https://lore.kernel.org/rust-for-linux/CANiq72k3ozKkLMinTLQwvkyg9K=BeRxs1oYZSKhJHY-veEyZdg@mail.gmail.com/
 
-I have an external Radeon RX580 on my machine connected via Thunderbolt, an=
-d
-since upgrading from 6.14.1 the setup stopped working. Dmesg showed warning=
- from
-resource sanity check, followed by a stack trace https://pastebin.com/njR55=
-rQW.
-Relevant snippet:
+I am sure I went to your original email and tried to mention that here, looks
+like I copied the same link here for both (facepalm).
 
-[   12.134907] amdgpu 0000:06:00.0: BAR 2 [mem 0x6000000000-0x60001fffff 64=
-bit pref]: releasing
-[   12.134910] [drm:amdgpu_device_resize_fb_bar [amdgpu]] *ERROR* Problem r=
-esizing BAR0 (-16).
-[   12.135456] amdgpu 0000:06:00.0: BAR 2 [mem 0x6000000000-0x60001fffff 64=
-bit pref]: assigned
-[   12.135524] amdgpu 0000:06:00.0: amdgpu: VRAM: 8192M 0x000000F400000000 =
-- 0x000000F5FFFFFFFF (8192M used)
-[   12.135527] amdgpu 0000:06:00.0: amdgpu: GART: 256M 0x000000FF00000000 -=
- 0x000000FF0FFFFFFF
-[   12.135536] resource: resource sanity check: requesting [mem 0x000000000=
-0000000-0xffffffffffffffff], which spans more than PCI Bus 0000:00 [mem 0x0=
-00a0000-0x000bffff window]
-[   12.135542] ------------[ cut here ]------------
-[   12.135543] WARNING: CPU: 6 PID: 599 at arch/x86/mm/pat/memtype.c:721 me=
-mtype_reserve_io+0xfc/0x110
-[   12.135551] Modules linked in: ccm amdgpu(+) snd_hda_codec_realtek ...
-[   12.135652] CPU: 6 UID: 0 PID: 599 Comm: (udev-worker) Tainted: G S     =
-             6.15.0-13743-g8630c59e9936 #16 PREEMPT(full)  3b462c924b3ffd81=
-56fc3b77bcc8ddbf7257fa57
-[   12.135654] Tainted: [S]=3DCPU_OUT_OF_SPEC
-[   12.135655] Hardware name: COPELION INTERNATIONAL INC. ZX Series/ZX Seri=
-es, BIOS 1.07.08TCOP3 03/27/2020
-[   12.135656] RIP: 0010:memtype_reserve_io+0xfc/0x110
-[   12.135659] Code: aa fb ff ff b8 f0 ff ff ff eb 88 8b 54 24 04 4c 89 ee =
-48 89 df e8 04 fe ff ff 85 c0 75 db 8b 54 24 04 41 89 16 e9 69 ff ff ff <0f=
-> 0b e9 4b ff ff ff e8 b8 5c fc 00 0f 1f 84 00 00 00 00 00 90 90
+> I would also suggest adding Inspired-by or Debugged-by or Suggested-by
+> or similar for Boqun, since he figured out the root issue.
 
-Bisecting the stable branch pointed me to the following commit:
+Sure.
 
-commit 22df32c984be9e9145978acf011642da042a2af3 (HEAD)
-Author: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-Date:   Mon Dec 16 19:56:11 2024 +0200
-
-    PCI: Allow relaxed bridge window tail sizing for optional resources
-   =20
-    [ Upstream commit 67f9085596ee55dd27b540ca6088ba0717ee511c ]
-
-I've tested on stable (as of now 8630c59e99363c4b655788fd01134aef9bcd9264),=
- and
-the issue persists. Reverting the offending commit via `git revert -n
-22df32c984be9e9145978acf011642da042a2af3` allowed amdgpu to load again.
-Dmesg: https://pastebin.com/xd76rDsW.
-
-Additional information
-   - Distribution: Artix
-   - Arch: x86_64
-   - Kernel config: https://pastebin.com/DWSERJL5
-   - eGPU adapter: https://www.adt.link/product/R43SG-TB3.html
-   - Booting with pci=3Drealloc,hpbussize=3D0x33,hpmmiosize=3D256M,hpmmiopr=
-efsize=3D1G
-
-I'm reporting here as these are the contacts from the commit message. Pleas=
-e let me know if there's a more appropriate place for this, as well as any =
-more information I can provide.
-
-Thanks,
-Rio
-
+-- 
+viresh
