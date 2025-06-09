@@ -1,122 +1,76 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68E2248F5B
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 03:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C06622A811
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 03:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749438556; cv=none; b=X0oqZa2pgKpPzUQadTR3t1G6dnA3YX1vIlcYr1NbWG64JAptmFKKO/jt71FDTx5oFoUkZymN79BVDpv7xp0/7oYDh+fOsY8mJKxtvpwbidoyuLhcRBWg7WxLd9CLooekhvByRzroj3lrlG9b4DYaRiOEIGIt8ymfgyVa3QeAAJA=
+	t=1749438664; cv=none; b=dSQVyvtNmnlul8Kk7jgBO9/wRYbKplyKIz8n4q3HKg25pEY/oOQojPyjJ4IpUvwrOEzif1mSE1wsC1CN68ZN9UPUnr7booU2Je3aiKPGfQLA+kKsKqk78r7P4h2VTx8nhZKcfLu1kQzIzKZpouIVG21rubAbVhA1+kEyb+l7teA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749438556; c=relaxed/simple;
-	bh=+aCBd2ghwW/klUL9zxXGFrDo3NyzpBmQuv2HbBfHcbw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lr1n3K5+QDCaEwKeT6xJ+BrbW+Fy+Spsp3VgarUD3kizjbQPOIfXJhfxLTdpPQKTt6iFM4ImbRfYTzIDMwDBCMBAnC7DUtHzm1YrjCPQ0a20upIzM0+qDQb0u9QK/A6bJMXvLHS1R7jTtLbL/xUO4aHA4VuF6KoYGE4vXBWX+CA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=iIs9s9nS; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iIs9s9nS"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-231e8553248so38018425ad.1
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 20:09:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749438554; x=1750043354; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D7CXEUIqwkwbaC9WL4kfbAYO9r9qnWAQ32Tn1bWOs0k=;
-        b=iIs9s9nS4Eya2LU6cU9CgPrVN7L97Ys7O2xg+SJJPoySvOIkSVVuWeTLsdXTt7sAqi
-         DLXA3shE1t9BYZDCDYZY7lz+JfJ3yBLZmeyTpwH9LluEJTeaAZIaZKBmrTorUZ2eJCm3
-         CteWo6POVViKTNuTZBoXxMTh4fWO+pK6kdKM0=
+	s=arc-20240116; t=1749438664; c=relaxed/simple;
+	bh=XqX8W0WXjmvJmcTYPtm3CDkoRO35HGBnjqGMJwyZerM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=SZdXywH9jQMrgG43xy0fYSk6zzjsLaikce/mI+9ixrmFHIUVoWW+QxkUe2bxC+TVYYY47bSAB3g07gYi1HR51AjXqCu0F0H0saiUmyszVuhqwqf9QDksd2gzDDhlscr/W5U+RejpA0o+oBDSD0WoLlaNtp92GJJbyxMM+l3FvTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-869e9667f58so696339239f.3
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Jun 2025 20:11:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749438554; x=1750043354;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D7CXEUIqwkwbaC9WL4kfbAYO9r9qnWAQ32Tn1bWOs0k=;
-        b=mqB9HWpJhoSVV3Lbc7SVVfaeLynlpydWaXFfNUcZuTV1XSjl9SNg9igYjKrFvKs6MG
-         09uJwWxjbEQc87KCLsQyqh6u7sSTJPrfDFqbup/kik0gjzf7JN2kE8j1m3VqUhLdLseu
-         ChmUpWcoMzyV0mwsXtn8RNe0A9V3xLuxeifWI0qFbpKvPQ7bNqbMOuNM5F6VcfPwrGlT
-         CT4vHnjlcphQHbGyBcTHXwArhfcNB+KvSCqq8x9SkxY8IID6wIACBwcaCLYr0xjtlV3m
-         ItshfoDT7T1LxhgtwOuvlHpXHjFbyYBCVPnuV4VvPAbzjPyMbUF71nS2G3NIkAX7QN1V
-         55gw==
-X-Forwarded-Encrypted: i=1; AJvYcCU77No2NI2QkhGH1KlztKMriH/iJmmJbRxKbLkfDjEJpnioj41kMb+qpdEBSYN6bJkrddnzTZeLCmVVD9Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFoh5tAQ4sNwLqIX+gfYYnPikoQoZhg9kzF9IkL8LwgPeMVd34
-	NbtVnSdPOVMbMLBlZ3BZ9Gn8HSzN3rxi2VFinhr/vdxxxoUUHtTyJ43p1u3Cdb09PA==
-X-Gm-Gg: ASbGnctkIo+JlbbERJ5qAIPVKcge+lzdGfuomlTXdSf/BChW4YsyiepL7xpdhGcvWN0
-	2QBA3hjGvdTyuUlwhkA13RoyV+Uq19C8NmLdlLlTwCo2emp83HfQ+IX7n2AUTEp3/dHBad5tBvJ
-	NtBM7b/dGrtH79fdMf/tQEsgIaqwoEhIz89v9rXWAvfdzmdUSd9LQF0YRMqDqOSK+cAQh1+YSCK
-	58RJRGBNbWWmuKpUk1ti0/PQevzMRs528bOvFqygb461bpPeLGC4AvEnrxhy4tyvb1B54ySF1Ns
-	+Lbk2PRn9h4dp06OxbAfLlo8Z+4070upKVYLYtTIPMctgJP6HvIOBE1f80mYi56Sx55QDHhd8NG
-	DtaUztncisc9X
-X-Google-Smtp-Source: AGHT+IF9SqoM0enwHHeEeJDm6HNEPI1J9jfQ2jOvh5ECV8YfsU6gawfWVryQ79XsWdg7P2+sC2CUgA==
-X-Received: by 2002:a17:902:d48d:b0:234:a139:120d with SMTP id d9443c01a7336-23601cf1e13mr147061665ad.7.1749438554311;
-        Sun, 08 Jun 2025 20:09:14 -0700 (PDT)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:eb64:2cdb:5573:f6f1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603410716sm44649645ad.199.2025.06.08.20.09.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Jun 2025 20:09:13 -0700 (PDT)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Miklos Szeredi <miklos@szeredi.hu>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Tomasz Figa <tfiga@chromium.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH 2/2] fuse: use freezable wait in fuse_get_req()
-Date: Mon,  9 Jun 2025 12:07:39 +0900
-Message-ID: <20250609030759.3576335-4-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-In-Reply-To: <20250609030759.3576335-1-senozhatsky@chromium.org>
-References: <20250609030759.3576335-1-senozhatsky@chromium.org>
+        d=1e100.net; s=20230601; t=1749438662; x=1750043462;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wo7UpV8gmOqqjSSyDcx4sdLxk2Thz6qXIr6g3frrVp8=;
+        b=u1O0U/s/pG6GCD838T0tQkve4ORhILs4xRLWEfb0UKm9Cqu6UOz4RdiEFb49toq9U2
+         BPgz2Chre/TBDRNLwJlRJZknbU51bIXS+jhL3qYG+1B+oh/OneqnH626+UcPL/lzBU8Y
+         qVrj/QOZERPe/K9lCUErLFRzLc5gh8x6ucJSFHtqFA8efCfFxfdytoEY1v9jFsZF3BZn
+         JOHUHRL40iqfjiR/bRXNmzwi8iZ6vmCuRVNdBLyb6i2WYa6fZ44B2Hm9CdMzuuuayRNi
+         NKozXbjKsfyh2EFtalueiMKHJxos3bLjYk8IM8nf2CvRFki5utw1+a1SiilKM3IZTqme
+         nCuA==
+X-Forwarded-Encrypted: i=1; AJvYcCXx55/Ewees06qFRCGssyCPCOHjPZSAHZe+VK+BpFIcTHLib0Mv/xwisNj+ef998iU4MU6tHbFyzR0qkHw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG6oiY2FBQzp3Y/412OVCsAkOJqVM0o3qjrYX7m8hhkHt6hees
+	cunHL9V2hD9wlzfRkjz6goHliRGDcsqOZKIhAggVH6eg7FuIX7WEwMAqijBG3AjjWMquVdSq/pp
+	BH41/L+JPmQYhU6qMKakNmjNKyjzlCeb5w2GDrJANhgswCIHmQBPrSZhP2wI=
+X-Google-Smtp-Source: AGHT+IEpUfLTrGAb9S5XjnQfzSLe9AUGAJcv3mfxO7vTH7UhO3BuyGZJcFzIEYx7ZuJlkvXzjBZ3b7JZGRRDDZiZx0cs0Ss6h8uI
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:188a:b0:3dd:b7da:5256 with SMTP id
+ e9e14a558f8ab-3ddce48b1efmr123961825ab.19.1749438662672; Sun, 08 Jun 2025
+ 20:11:02 -0700 (PDT)
+Date: Sun, 08 Jun 2025 20:11:02 -0700
+In-Reply-To: <6745a8df.050a0220.1286eb.0015.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <684650c6.050a0220.d8705.0018.GAE@google.com>
+Subject: Re: [syzbot] [kernfs?] general protection fault in kernfs_dop_revalidate
+From: syzbot <syzbot+e37a1730d63d207fe403@syzkaller.appspotmail.com>
+To: bfoster@redhat.com, gregkh@linuxfoundation.org, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, tj@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Use freezable wait in fuse_get_req() so that it won't block
-the system from entering suspend in some situations:
+syzbot has bisected this issue to:
 
- Freezing user space processes failed after 20.009 seconds
- Call trace:
-  __switch_to+0xcc/0x168
-  schedule+0x57c/0x1138
-  fuse_get_req+0xd0/0x2b0
-  fuse_simple_request+0x120/0x620
-  fuse_getxattr+0xe4/0x158
-  fuse_xattr_get+0x2c/0x48
-  __vfs_getxattr+0x160/0x1d8
-  get_vfs_caps_from_disk+0x74/0x1a8
-  __audit_inode+0x244/0x4d8
-  user_path_at_empty+0x2e0/0x390
-  __arm64_sys_faccessat+0xdc/0x260
+commit f7643bc9749f270d487c32dc35b578575bf1adb0
+Author: Kent Overstreet <kent.overstreet@linux.dev>
+Date:   Wed Apr 17 05:26:02 2024 +0000
 
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- fs/fuse/dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+    bcachefs: make btree read errors silent during scan
 
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index e80cd8f2c049..3792ca26c42f 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -207,7 +207,7 @@ static struct fuse_req *fuse_get_req(struct mnt_idmap *idmap,
- 
- 	if (fuse_block_alloc(fc, for_background)) {
- 		err = -EINTR;
--		if (wait_event_killable_exclusive(fc->blocked_waitq,
-+		if (wait_event_freezable_killable_exclusive(fc->blocked_waitq,
- 				!fuse_block_alloc(fc, for_background)))
- 			goto out;
- 	}
--- 
-2.50.0.rc1.591.g9c95f17f64-goog
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17abb20c580000
+start commit:   28eb75e178d3 Merge tag 'drm-next-2024-11-21' of https://gi..
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=146bb20c580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=106bb20c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=402159daa216c89d
+dashboard link: https://syzkaller.appspot.com/bug?extid=e37a1730d63d207fe403
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=163706e8580000
 
+Reported-by: syzbot+e37a1730d63d207fe403@syzkaller.appspotmail.com
+Fixes: f7643bc9749f ("bcachefs: make btree read errors silent during scan")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
