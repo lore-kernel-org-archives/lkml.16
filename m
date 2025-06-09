@@ -1,180 +1,164 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5018E1F8AC5
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 08:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C61202F8F
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 08:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749459354; cv=none; b=jl2sUQ2CbAHuAHoZEpk/IVObXPQ6NuZBY48+WP1umcM+68xBM98GrCRs2ntJBEHn9cvDz8KEaFVzeY4L9CaZ/I1ZiQdYoN4LwRazRZeiBW4M0betDyfku/5uKcNfy3t3iU8EtNtWkW64/gngObc9NSLUWL5tpDCZwA5iKt/JPEs=
+	t=1749459488; cv=none; b=cvBftIz7bB8IfuvoRGiv7GQkx5mFpw5VSFTLJNpHDwQGyvsHc1myYsSSW4fKegfhtaZhGzGUHT0NmiVN9HKUrK/AgQgs7Ptox94KH+/ScypodZKbhOW3Rd056sY34ccQ+W49PUIJR+5jczZgtMIiu0x2Vvr52wGoiv3DU+k1gFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749459354; c=relaxed/simple;
-	bh=aUc3V74DsYY/wg9EW9IlXVkzvYiyhMat0xQ5xqEpj8w=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=LUVyKHfQ6ljWokAHg4eqWE/0Z4r3bHRz7Nr3q4zzD2PUpUoXPSLeK3GQU84APZC9ffRPB8kY6X6qRS2+/SJI/0KhvKItnczWIxGBYLLV5V9S0XUP3ydX0uTJzHdCk65FZ4hImtSaFx1tQaGPMXRuLpIEZJ6ErcmBR5jWUPI3GLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=gx7p5hts; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=YraVW2OW; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OKSd75Vr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ebUw0FwS; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1749459488; c=relaxed/simple;
+	bh=tObexuNu5puy0S/zrHD6bJ96PlTpeqIfPPG17mA0siE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=en1nLGI7TO3ogIH6baki/746aGf51r0+ukW9SoTeOrHeJGDmvmJloDLgV7uzLHk5aaWF5lrLsIG9sPjTlBxwAtvZGbmC1dPi3XCbvPomVm8qCMjLSKo6aWT5jwSkdit0PAh+uqze+iTy1Xv3JKhBzhTq59LF+qozYEmcHxi9GpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cKsRQe6d; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="gx7p5hts";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="YraVW2OW";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OKSd75Vr";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ebUw0FwS"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 714C91F38F;
-	Mon,  9 Jun 2025 08:55:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749459351; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cKsRQe6d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749459486;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=POPSOPzrV5qDs0CuEEXX+nlfWZQ+0FpSQoAuUPO/QYY=;
-	b=gx7p5htsrl2nXhWao3a9HIpG+6OXhe4qWUv5PPCJ+cfxVC95Iy5wMBqOFLYPW2ZUsQLarF
-	eDNpe+laaVC84sD2hMb0ESUKVKQe5tuorHbmvtqIJaEADDJVoa3oo+YQBfZ5fFohiMPNRM
-	eazJxhGelgoDPpIC3Ubcwf4T5nGzWBs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749459351;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=POPSOPzrV5qDs0CuEEXX+nlfWZQ+0FpSQoAuUPO/QYY=;
-	b=YraVW2OWrUg0QckwZh5RlASWqKJJm4MxA8pLGmlUkCyh2z7nDmKVrzN0yYkHbZdR7B6TP0
-	+JD0zVUIQ/2rJLCA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=OKSd75Vr;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=ebUw0FwS
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749459350; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=POPSOPzrV5qDs0CuEEXX+nlfWZQ+0FpSQoAuUPO/QYY=;
-	b=OKSd75Vr1EACIUTiRUGWQOchoYdNyKRTKqtzCp2HcXbzJoTE4mK+4J2fKhGmyvlzlr8D8l
-	Dis2590aE99+eE4agLcnb5qyRezQMaNkx8XOhmOB7bSxbHnBL7r+qfiI0ry2HyHB54WmG5
-	rVEvbHd53JDROz0Y1Sz52tdtdslxUi8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749459350;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=POPSOPzrV5qDs0CuEEXX+nlfWZQ+0FpSQoAuUPO/QYY=;
-	b=ebUw0FwS4iKYML+FLtQgrXiREdgnnFjVJHyp81w6fRfYBpDg1h2blt8+3CtINUHoPME0V9
-	LRT1J3oFHmCC63Cg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 48CF8137FE;
-	Mon,  9 Jun 2025 08:55:50 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id TC1jEZahRmioEQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 09 Jun 2025 08:55:50 +0000
-Message-ID: <06d9981e-4a4a-4b99-9418-9dec0a3420e8@suse.cz>
-Date: Mon, 9 Jun 2025 10:56:46 +0200
+	bh=EAX9gR6Ry+BCiLbmBNWFHsPfQj/lBkDp4XOdgquTNsY=;
+	b=cKsRQe6dUTDzZ/u7ywx5Hh+KHOVIw4dLuQUWZkZXaJkI7I4nggKjmF+i2W/Aq8TPbHAA/J
+	87Q25IWnG06oCMKbXQK3JqP0pNvUkIXXXjncduR8aXvUSaWLrzgsWHs/YRqj9THmOqha+C
+	4qua3RKkow0D6VoTV0sVEBT1ML61GRU=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-627-yCHtWgj3PX-LPK5bBwDUXQ-1; Mon, 09 Jun 2025 04:58:04 -0400
+X-MC-Unique: yCHtWgj3PX-LPK5bBwDUXQ-1
+X-Mimecast-MFC-AGG-ID: yCHtWgj3PX-LPK5bBwDUXQ_1749459483
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f8fd1847so1388758f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 01:58:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749459483; x=1750064283;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EAX9gR6Ry+BCiLbmBNWFHsPfQj/lBkDp4XOdgquTNsY=;
+        b=RrYrorPxlS+TZkmDYjgA6EAi8aROGSz129RQhYt1lUNEPsYB7SdqWp3QHWuEK7daqW
+         U9DTEmzRL8giYOX0Ua3hFHjfoYXqgLPbl3TusYwJ1J4R8N7B4j5rkpyLO2ITvmV+R/js
+         keR/iwj4VMbcluNw0y7reZEE9uOLvFWq5WiXulJbVlDvfWN2JiRiWwLaT9BHyAetEN+z
+         FhJWjkuSDhLo0S/rSqO8zC5YghXS4pBwTYmo25UzH9XS35YClU4hCtJr2VYvsi/uNWe6
+         pBYZpR0pVqzOD5hFR/wOJBouH5xxXqCAmKjgYuB7fzfjn4Jim5QqpO+yJE8ZMzspqCWA
+         sQOA==
+X-Forwarded-Encrypted: i=1; AJvYcCWTNgdO3Ryfu4mSCmvzYldDXeuq8z1KxvUmP6mMlPMVhU0Ygr2uqASoitCItcRA4u9rFNONti53yXjsegU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0xx9DmzQTTCAu3FnHEmwH77HIGqOakPRBzmux1yNdxcjEglUS
+	KITLfr5GxUnIHlvMsUZKtCuHj31Cc61N7KGiWpstif5Mg2MlY/t/Cbun1Q1IFyeMeSfnieeSqla
+	jCU3OwJhRw9qX0eXGh+F0q8wkq3BKDy0eDTceRnUxaBKSH+SET6QgqpTRjdoGomPENQ==
+X-Gm-Gg: ASbGnct+JkRiNqf5ZQJgQSb5xLiLVKkLtzNmijUQKXL/QuFgGGRU9l2EBpaix4APDfR
+	6PZHRjq3LJjYXo81ITPryYlDPMdn3r84UUOpWVHmRuJ0rN4Trtw7N+rjoCE1kUZ4obNUClSe/Vm
+	lta9hnmecEuMHdzIAOIc0ja78wP/03WImzuUgYRawZdO6Otz7kGoUNmgYTVl7QSssuCddrI52hI
+	4MOKuTEavnGwvm2tBSobxZiejnv+bWQz07Kf9NMSj8Vbs31gC440AapjUrYpaS6hmiXxytWc+js
+	2SVRLCZYsgGAwu3hpQ==
+X-Received: by 2002:a05:6000:420a:b0:3a4:fc37:70e4 with SMTP id ffacd0b85a97d-3a531cf5be1mr8000739f8f.58.1749459483396;
+        Mon, 09 Jun 2025 01:58:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEGKstU+gvDYJRoCuhWj9Uy3B0R5FuTJdpuAKJpWIzyKGQze6gxwv3jbQl0SI7KqRYCXE0l/g==
+X-Received: by 2002:a05:6000:420a:b0:3a4:fc37:70e4 with SMTP id ffacd0b85a97d-3a531cf5be1mr8000722f8f.58.1749459483016;
+        Mon, 09 Jun 2025 01:58:03 -0700 (PDT)
+Received: from fedora (g3.ign.cz. [91.219.240.17])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323be604sm8881091f8f.42.2025.06.09.01.58.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 01:58:02 -0700 (PDT)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: James Bottomley <James.Bottomley@HansenPartnership.com>, Eric Snowberg
+ <eric.snowberg@oracle.com>, Peter Jones <pjones@redhat.com>
+Cc: "linux-security-module@vger.kernel.org"
+ <linux-security-module@vger.kernel.org>, "linux-integrity@vger.kernel.org"
+ <linux-integrity@vger.kernel.org>, "linux-modules@vger.kernel.org"
+ <linux-modules@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org"
+ <linux-doc@vger.kernel.org>, "keyrings@vger.kernel.org"
+ <keyrings@vger.kernel.org>, David Howells <dhowells@redhat.com>, David
+ Woodhouse <dwmw2@infradead.org>, Jonathan Corbet <corbet@lwn.net>, Luis
+ Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami
+ Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>,
+ Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu
+ <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge
+ E. Hallyn" <serge@hallyn.com>, Robert Holmes <robeholmes@gmail.com>,
+ Jeremy Cline <jcline@redhat.com>, Coiby Xu <coxu@redhat.com>, Gerd
+ Hoffmann <kraxel@redhat.com>
+Subject: Re: [PATCH RFC 0/1] module: Optionally use .platform keyring for
+ signatures verification
+In-Reply-To: <a9bb8b0cfd1af85443ff8ee615b3be0fc705ce02.camel@HansenPartnership.com>
+References: <20250602132535.897944-1-vkuznets@redhat.com>
+ <0FD18D05-6114-4A25-BD77-C32C1D706CC3@oracle.com>
+ <f0b37bc55ed3c02569c74f0fbdb6afa8efd329e2.camel@HansenPartnership.com>
+ <87zfemoc76.fsf@redhat.com>
+ <e4e838d03b3619df5523d429e0cd8160a8aef9f8.camel@HansenPartnership.com>
+ <87tt4unw1w.fsf@redhat.com>
+ <a9bb8b0cfd1af85443ff8ee615b3be0fc705ce02.camel@HansenPartnership.com>
+Date: Mon, 09 Jun 2025 10:58:01 +0200
+Message-ID: <87ldq1nvfq.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm: fix the inaccurate memory statistics issue for
- users
-From: Vlastimil Babka <vbabka@suse.cz>
-To: "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, Michal Hocko <mhocko@suse.com>
-Cc: akpm@linux-foundation.org, david@redhat.com, shakeel.butt@linux.dev,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, rppt@kernel.org,
- surenb@google.com, donettom@linux.ibm.com, aboorvad@linux.ibm.com,
- sj@kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <f4586b17f66f97c174f7fd1f8647374fdb53de1c.1749119050.git.baolin.wang@linux.alibaba.com>
- <87bjqx4h82.fsf@gmail.com> <aEaOzpQElnG2I3Tz@tiehlicka>
- <890b825e-b3b1-4d32-83ec-662495e35023@linux.alibaba.com>
- <87a56h48ow.fsf@gmail.com> <4c113d58-c858-4ef8-a7f1-bae05c293edf@suse.cz>
-Content-Language: en-US
-In-Reply-To: <4c113d58-c858-4ef8-a7f1-bae05c293edf@suse.cz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 714C91F38F
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com,linux.alibaba.com,suse.com];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:dkim,suse.cz:mid,alibaba.com:email]
-X-Spam-Score: -3.01
-X-Spam-Level: 
+Content-Type: text/plain
 
-On 6/9/25 10:52 AM, Vlastimil Babka wrote:
-> On 6/9/25 10:31 AM, Ritesh Harjani (IBM) wrote:
->> Baolin Wang <baolin.wang@linux.alibaba.com> writes:
->>
->>> On 2025/6/9 15:35, Michal Hocko wrote:
->>>> On Mon 09-06-25 10:57:41, Ritesh Harjani wrote:
->>>>>
->>>>> Any reason why we dropped the Fixes tag? I see there were a series of
->>>>> discussion on v1 and it got concluded that the fix was correct, then why
->>>>> drop the fixes tag?
->>>>
->>>> This seems more like an improvement than a bug fix.
->>>
->>> Yes. I don't have a strong opinion on this, but we (Alibaba) will 
->>> backport it manually,
->>>
->>> because some of user-space monitoring tools depend 
->>> on these statistics.
->>
->> That sounds like a regression then, isn't it?
-> 
-> Hm if counters were accurate before f1a7941243c1 and not afterwards, and
-> this is making them accurate again, and some userspace depends on it,
-> then Fixes: and stable is probably warranted then. If this was just a
-> perf improvement, then not. But AFAIU f1a7941243c1 was the perf
-> improvement...
+James Bottomley <James.Bottomley@HansenPartnership.com> writes:
 
-Dang, should have re-read the commit log of f1a7941243c1 first. It seems
-like the error margin due to batching existed also before f1a7941243c1.
+> On Thu, 2025-06-05 at 15:43 +0200, Vitaly Kuznetsov wrote:
+>> James Bottomley <James.Bottomley@HansenPartnership.com> writes:
+>> 
+>> > On Thu, 2025-06-05 at 09:54 +0200, Vitaly Kuznetsov wrote:
+>> 
+>> So far, I got two 'runtime' ideas:
+>> - Observe MokListTrustedRT and distrust .platform when it is
+>> non-empty. This can, of course, be combine with a Kconfig for those,
+>> who do not want it at all.
+>
+> Well, not sure about that specific variable.  It seems to be set but
+> not used by shim (however it is used in the kernel to decide whether to
+> import the MoK list), so how would someone with a current distrusted db
+> get it set?  But there's also MokIgnoreDB (which is actually a RT
+> import of MokDBState) which is used to prevent importing the db certs
+> into the platform keyring in the first place.
+>
+> I think the reason this is so fragmented is because we didn't really
+> co-ordinate with shim when all the variables and switches were added. 
+> Perhaps we should document all the variables and expectations before
+> deciding on a mechanism? 
 
-" This patch converts the rss_stats into percpu_counter to convert the
-error  margin from (nr_threads * 64) to approximately (nr_cpus ^ 2)."
+I was hoping Peter (pjones@) can help us here) Generally, I agree that
+as these variables originate in shim, we should describe them there and
+not try to give them some potentially undesired meaning in kernel.
 
-so if on some systems this means worse margin than before, the above
-"if" chain of thought might still hold.
+>
+> The one thing we can guarantee is if the cloud use case is booting
+> without shim (is it?) then none of the RT variables will get created,
+> so checking any (or a set) of them would work.
 
-> 
->> -ritesh
-> 
+Personally, I always advocate for injecting shim in the boot chain at
+least when distro kernels are used: shim provides SBAT revocation
+mechanism which is likely going to be used when a new secureboot related
+vulnerability is discovered. SBAT was used for UKIs only but a mechanism
+for embedding it into the Linux kernel itself is coming (already merged
+for 'zboot' arches, pending for x86). If, however, someone is signing
+his own kernels and can use 'dbx' or even revoke the cert in case of a
+problem, then I guess shim can be avoided.
+
+>> and/or
+>> - Sysctl toggle. Keep things as they are by default but make
+>> .platform trusted (either for modules or for everything) when
+>> switched 'on'. This can (optionally) by combined with a previous idea
+>> and have e.g. an 'auto' state for the toggle which follows
+>> MokListTrustedRT.
+>
+> I'm less keen on user specifiable runtime because the security policy
+> of the system using a lockdown to make root less privileged than ring 0
+> can't allow a malicious root to weaken it.  However, let's see if we
+> can get a proposal that would mitigate that concern.
+>
+> Ideally, if we can get to something that works for everyone at runtime,
+> we can remove the current Kconfig explosion which is definitely adding
+> to the confusion (as shown in the Debian bug reports).
+
+-- 
+Vitaly
 
