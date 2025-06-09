@@ -1,39 +1,38 @@
 Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC3A2144A2;
-	Mon,  9 Jun 2025 15:45:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25AE4218AD4;
+	Mon,  9 Jun 2025 15:45:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749483932; cv=none; b=NChT3at3Htd/BTBfwAdx6yIbJ54dJpHpZ0xAAhRftz+CWRf1zz42nF5mru/Co9QJxn/8Zr7RRjPM5hHs8hGhh7nd3awovoZtzTGCURMMCvzM1+73aW2brV7C7I3g08a1cI8fREb+0BgBsCteBushLPyIeu2iujmpwTy2fRnf7Dk=
+	t=1749483934; cv=none; b=QwgmAN4zK2jkrfQ0kVmK9hi+jNJ0OR+h+kNFrv8BlHVvi3QiDHzWugcPUf1KoHXQqyq+d+VD6n7fUs90ElmGQz0vNn1nHphr5Ef/D6/UBLILR8Ha/CX72gJJO5AZhZuLfhjXmGmwpSV141Tc9EPJpWrk7NgCxm41F5kN6pLSBRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749483932; c=relaxed/simple;
-	bh=sg5hFcA5AJD67pL+3h9mhGYook12TaG/km05mOqEqTQ=;
+	s=arc-20240116; t=1749483934; c=relaxed/simple;
+	bh=xdCDFsY7fHfgyuBIW40huzR//1ytnbFa21uQW+dNB+4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jjKnErZJBNC6DGeEviYcAaab4zuixw8W42i3hWxXSrhJk15nDjsorW0HrAVwC6c4Qrsghr8JLwKM6fliAlm5fYb8UQbno+0zeP+ALEvR4KLtgiS84cJsoPrXrxPXO3f1GEeYwYsX5UW5eZk8Zi/2cvjXI38BxdzYzdQUaImO61M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UoMb7V90; arc=none smtp.client-ip=217.70.183.195
+	 In-Reply-To:To:Cc; b=FcBTvdIn4Rs0HikvZBgv7gc5Q4aP6RloyWNvS4yK/mqkyoI35T+U7hrxYpTCp71cKrPwxCLjAGb36b7U/QOdvkBbeqPq1FpJ3NpuDvIS54HCkYDDGsUcDLSdueL0lGPL5xl6BmXsBcOjyxO+SmxjUkzu0Eb49Cu9YmCTYZczMCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FRjW8vF5; arc=none smtp.client-ip=217.70.183.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UoMb7V90"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0CF7220594;
-	Mon,  9 Jun 2025 15:45:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FRjW8vF5"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A3CC220597;
+	Mon,  9 Jun 2025 15:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749483928;
+	t=1749483930;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=06HUies5V7PRfoIqtd4meQuakxr9viCcxBP1N+2s1sA=;
-	b=UoMb7V90JShTczupXgSLtQVmxGlNn48FWlFY1dFphcg69udmG/2Pq3VxGa5LJLbUeMP4k1
-	nEwHF1/Gjtdqu9HYNTYiHrJiKgbOg/Ab2qH2il7mtRUFWv8mYSIWE3l/WTzt5Qbh5RcFKH
-	j/dLtEuy96ZHsq3k+Gfm45T7Tp75VE+GkD0raQ9Crlerv0yQEFtn+w7E9SBH3iWiTc56eD
-	PDQnsCxh7GdrYA9wv/rBLaq9RkWCnTK1V8Ys7gkf8Hn4N/EqIYmm3ml3vgBGQjeVsb0iQy
-	2UjDO6U9hSOchED4GuxwGEWlSQIe+A9PRsVXguMdaea1Bch6HoVuxH6Msy4/yg==
+	bh=v1FemFSObCbEVYAn/hTqf4EyYMN6hadEZQLG7F20BzM=;
+	b=FRjW8vF5AcIIzbCC7XRcdDpcJFUJm6p8SmaGyUDwjPoKk8ljtvfddcvcziEQ3xzOz8wfVf
+	UuEJ3vqldWRWuKmFU4h8NQZ+la6Csift1rnodqlVEnEfluKM9IQ5ooAmDL9LPDlQNv4ml8
+	+NXMb1vb8RTEmPy4RmKJQ/T6Gz9Gs8HUDr+HV1w/26OO06DRyxc+ic/15YdVc4kEEvJlFk
+	NyfSh+JkJGRZxembU5VoCXv7eaj7sXXzs5x32JZHZxjEuMAd8av8/IhFAFoEykc4n+oWGp
+	Fje5zvLMA54TYuTF3laVhGXqN/W48f76HuxsVGM3WBKMkNJbcHakvndiEzHBJQ==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Mon, 09 Jun 2025 17:43:53 +0200
-Subject: [PATCH v2 3/5] arm: dts: omap: am335x-bone-common: Rename tps to
- generic pmic node
+Date: Mon, 09 Jun 2025 17:43:55 +0200
+Subject: [PATCH v2 5/5] arm: omap2plus_defconfig: Enable TPS65219 regulator
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250609-bbg-v2-3-5278026b7498@bootlin.com>
+Message-Id: <20250609-bbg-v2-5-5278026b7498@bootlin.com>
 References: <20250609-bbg-v2-0-5278026b7498@bootlin.com>
 In-Reply-To: <20250609-bbg-v2-0-5278026b7498@bootlin.com>
 To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>, 
@@ -63,30 +62,43 @@ X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdelgeelucetufdoteggodetrfd
  ehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhonhihsegrthhomhhiuggvrdgtohhmpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhg
 X-GND-Sasl: kory.maincent@bootlin.com
 
-Rename tps@24 to the generic pmic@24 node name.
+Enable the TPS65219 regulator in the defconfig, as the TPS65214
+variant is used by the newly introduced BeagleBoard Green Eco board.
 
+Reviewed-by: Andreas Kemnade <andreas@kemnade.info>
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
+ arch/arm/configs/omap2plus_defconfig | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Change in v2:
-- New patch.
----
- arch/arm/boot/dts/ti/omap/am335x-bone-common.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/ti/omap/am335x-bone-common.dtsi b/arch/arm/boot/dts/ti/omap/am335x-bone-common.dtsi
-index c400b7b70d0d..ad1e60a9b6fd 100644
---- a/arch/arm/boot/dts/ti/omap/am335x-bone-common.dtsi
-+++ b/arch/arm/boot/dts/ti/omap/am335x-bone-common.dtsi
-@@ -212,7 +212,7 @@ &i2c0 {
- 	status = "okay";
- 	clock-frequency = <400000>;
- 
--	tps: tps@24 {
-+	tps: pmic@24 {
- 		reg = <0x24>;
- 	};
- 
+diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+index 9f9780c8e62a..2ad669f7b202 100644
+--- a/arch/arm/configs/omap2plus_defconfig
++++ b/arch/arm/configs/omap2plus_defconfig
+@@ -385,6 +385,7 @@ CONFIG_TOUCHSCREEN_TSC2007=m
+ CONFIG_INPUT_MISC=y
+ CONFIG_INPUT_CPCAP_PWRBUTTON=m
+ CONFIG_INPUT_TPS65218_PWRBUTTON=m
++CONFIG_INPUT_TPS65219_PWRBUTTON=m
+ CONFIG_INPUT_TWL4030_PWRBUTTON=m
+ CONFIG_INPUT_UINPUT=m
+ CONFIG_INPUT_PALMAS_PWRBUTTON=m
+@@ -454,6 +455,7 @@ CONFIG_MFD_TPS65217=y
+ CONFIG_MFD_TI_LP873X=y
+ CONFIG_MFD_TI_LP87565=y
+ CONFIG_MFD_TPS65218=y
++CONFIG_MFD_TPS65219=y
+ CONFIG_MFD_TPS65910=y
+ CONFIG_TWL6040_CORE=y
+ CONFIG_REGULATOR_CPCAP=y
+@@ -470,6 +472,7 @@ CONFIG_REGULATOR_TPS65023=y
+ CONFIG_REGULATOR_TPS6507X=y
+ CONFIG_REGULATOR_TPS65217=y
+ CONFIG_REGULATOR_TPS65218=y
++CONFIG_REGULATOR_TPS65219=y
+ CONFIG_REGULATOR_TPS65910=y
+ CONFIG_REGULATOR_TWL4030=y
+ CONFIG_RC_CORE=m
 
 -- 
 2.43.0
