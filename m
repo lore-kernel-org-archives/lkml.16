@@ -1,125 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013010.outbound.protection.outlook.com [40.107.159.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE84021578D;
-	Mon,  9 Jun 2025 16:09:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749485399; cv=none; b=ZdoLx5jErG976ke0KLIQltoCS8hPYW8MWNjFztxo4mbIthAs4+mOHHQ1CFxjRwbaPxtNGLhXgm+UtasHm3C2lakx/bgxhaDz/2WOgzoUGYwq7haxXj8StaZNErJT+qKHDmVr33KODEh330hox2ucoVKhlMRP+X0lDmOwF0eyQTs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749485399; c=relaxed/simple;
-	bh=kmFmCzVsy/gyj97Pr6VaI8EqizWU2cS57ZLTXgVpEss=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qkXfKERzvVZciRrKFO4ma4SvlXVhMwZvaT+4/+gdb3L77ul76DZyYyrNM7NcmGH6wqz36LkWHVBSVg6HRJqpzlNN2Z9VYL5AgfUy2aBOlEpdg3s00DW90Z4C8H8GQrh0FQbgg3/NentuaiDX/DTNBwhzwVLLzW/SH1DP8NL7ZiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oej+R9SF; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D48F17F4F6;
+	Mon,  9 Jun 2025 16:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749485440; cv=fail; b=EN8LhmNcm2ZmSuinv5aKw7I8B1xdHOZmX0WpShDQZvAxlMZps5hfOov2aadp6GNuxmHo17eNIDix3ro/X7gyJvfi7XXdemLdIaLPnw1bzPgr3bLRS3KI5fJD9wUPxZhkoMIuBDkThPNcg9b3H5luVJmPj+/VJVkAPH4KDLMehmA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749485440; c=relaxed/simple;
+	bh=+kB/YeY5ft9A1q+Nh81X9pwPeJU+BG/vz2C7+kz0B8w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=fbTbdLsU0Ol4b+EmUe+kJHq1+k/9TapXUFi8f6CAGiLndBA7Qa5wSoieKcTUFeolV8bEtO/D4fd7HxPgZ63u8loP2rKE4HV8QLEYkHP41Wq6aJ8QzyWJ7qR75Zh2Iu5MdhfqUw26qxs7ip3ZwsqQBy2t/ZEiB2WQvz9qyS06u+A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=H75AC5Jo; arc=fail smtp.client-ip=40.107.159.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oej+R9SF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD1A6C4CEEB;
-	Mon,  9 Jun 2025 16:09:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749485398;
-	bh=kmFmCzVsy/gyj97Pr6VaI8EqizWU2cS57ZLTXgVpEss=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oej+R9SFWkXPJUvsFtD4/DgLhl32kMK6KHcSRy6d2eX3940/USEvuVl6jPIjTezS5
-	 oAES2mM/uK8dDB3Ebb5MxzMeGTzWKbhZgoHP1qRjpNx7wAa8PrmhzLi3KHbYU1gcYL
-	 ds73qkFepgvRzh4pEo0BR66RzcJQI2vjyuCUyDtBQeKn3s6A3apqCfSD10INhVYRns
-	 SuoYzPK7AJdFbYtEzAVTSydSx0mco46BX4MgD6ccn5L+J2ocSPPzeiXOS1CdRJrd1w
-	 nUbebwwDDlzyT9r/Fi0+6gEgdvuh210uVp4lKwtDvS0Cg1WGMINyHGNaYsRuRcqEUT
-	 EYatDTACot52g==
-Date: Mon, 9 Jun 2025 17:09:53 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Kartik Rajput <kkartik@nvidia.com>
-Cc: akhilrajeev@nvidia.com, andi.shyti@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, thierry.reding@gmail.com,
-	jonathanh@nvidia.com, ldewangan@nvidia.com, digetx@gmail.com,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/5] dt-bindings: i2c: nvidia,tegra20-i2c: Document
- Tegra264 I2C
-Message-ID: <20250609-sizzle-shush-b2eb1443b3f7@spud>
-References: <20250609093420.3050641-1-kkartik@nvidia.com>
- <20250609093420.3050641-2-kkartik@nvidia.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="H75AC5Jo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ymXOYdSqFNIHdj69/KKRwzA8vDLzzXVSrg41hXjpGwPo0wVH5NSYgGnai3ND1Xd1ZWSz1onixMfzAfx5bakakS4PzzZDMSOv8F+77Bb5U1ABa/JC8P0u7kuOmdiQs0MYLma2Lkr3UTDz+x4GSADhFUo5Z8GLbMrSTzgOyMb0ETQIkbk4EqErPHe8SWmnbOqzSKjR6/tOgfS55lFEmbOYpgecS/4OnfB9Ur99aeHiHJ9t2UlPCv5H7WYpPru6zFVAVEuJM6kcoCeYE/bVexOg0XbTF7eBZLMz8nLTStGz+zHq0+822p7E1DE6RZujzB7yitEaPaiH6uLPeqGHj73cJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tFe5dS30+WBpiSNCqiQrb4vdTA7W9SS/h4EoebVqB7g=;
+ b=Or0xhRCWbt32CqzwWYePWe1287IqX39KygaOrpElYlXifmqr/72oyzt/c1svZ8Zrwywqv3alKgmp1RDxVoH3TYJ6FK+gWkXseD7tBV+irHaKj7ylNNsAmfuyAB5OTDpwHH2z9Hxdv8KqGpEyFfgZYKIPBBd0sNRRv34eN93sYI/EAuONGAvKUgobdur1VC8GavtILXi9eW8UKASdwQUK1wfvmoj4WCdz22dzwPT7yOHPMMpTBOEOSxRqizzLmLzcCpN9SagdmeLyGkMZWVjEJulNaOwo++KWt5Jr72LK4lWuBqBqAp06NHWl0yQxgUZmZOEt40x2PjnlNteoKpG2PA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tFe5dS30+WBpiSNCqiQrb4vdTA7W9SS/h4EoebVqB7g=;
+ b=H75AC5JoTmd4cg+Z5NEbTYcwUVICAOli05XGxIW+EFWjNjsb0u62Ocra1q9RvszV1u++oq2a+fsGJxBwN3L5ORL5HpVTdPRPQ8ONql83ZF3rsCe1GRDLIVHpvPCuGdl1VgCIw0WjspHZxRlaGeux19fH2ZV/E3s/+cHQIg4D9yh0nGO/0IkciDQZEb9jeVkXlIeIm8VIyC678f8piS5j6WS9TPQuzNuhH6jPDJ3x2Fooq6favJi4Ae7pffDRpjHM0bIDW7q3tp0FE3aiPM/m6VrgWrtKk4E65fqGALpNEj0yWLRPz2wts8GEUpkkb7yd5sH+Omw2iOFpnHSmVRJ8Cg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DBBPR04MB7545.eurprd04.prod.outlook.com (2603:10a6:10:200::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.24; Mon, 9 Jun
+ 2025 16:10:32 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8813.024; Mon, 9 Jun 2025
+ 16:10:32 +0000
+Date: Mon, 9 Jun 2025 12:10:25 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: soc: fsl,ls1028a-reset: Drop extra "/" in
+ $id
+Message-ID: <aEcHcZucl4745yd1@lizhi-Precision-Tower-5810>
+References: <20250607212813.747203-1-robh@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250607212813.747203-1-robh@kernel.org>
+X-ClientProxiedBy: BY5PR04CA0023.namprd04.prod.outlook.com
+ (2603:10b6:a03:1d0::33) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4x5fXavticha1vvc"
-Content-Disposition: inline
-In-Reply-To: <20250609093420.3050641-2-kkartik@nvidia.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBBPR04MB7545:EE_
+X-MS-Office365-Filtering-Correlation-Id: 37aa2f7c-04d0-4a42-26cc-08dda770292f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|38350700014|13003099007|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?dD/MBkX4ATTLmxp61CwyyNY2JsDUZD+Q+zdrs7pymmjE6PCEx8CI4QmCATa7?=
+ =?us-ascii?Q?oKs6jsDJYgnMpvCgo4i3m70roUqdTSwMm85TDd9gNLU8+EwcUafcEIC3bAqV?=
+ =?us-ascii?Q?AYvou3b8FqIZlE+qLxBDS0IVVl6/t26N1Zw/5hCUIRcfqreAHLC4ah22QLjZ?=
+ =?us-ascii?Q?RHTFw09zmQiiUfz+wRebJckFC2Uw12Lp2OQD+Z7FWOjNm9NIEUHoO05hUXdu?=
+ =?us-ascii?Q?JxYYcLM94AIR2iQGmAMmDIIv1Lg3CT2+7L77e6AgScReRU05TFj3DalsLsGm?=
+ =?us-ascii?Q?f2uKEyLHJbhhTLBf33CXnaTVahIsjcZb8HVF5poS7G8NKOG+flT+EV50oy/Y?=
+ =?us-ascii?Q?a83KybpnZ6adwOW9onoKUmBM71dhZgdkgLDvwLbIsPzksnfKWHRuTuGpc/Hf?=
+ =?us-ascii?Q?9P2yB8EST9j8jhjYfIHiyB6LW2rdzHYHISlNVHDWbCxHGnsg01OQQAKOQpX0?=
+ =?us-ascii?Q?PbsfTIlaOAc8vvQlbSnxuF/+0cKeL1F8/D+aAQqAhkWCpMQlSEViAyIX4hOI?=
+ =?us-ascii?Q?QIb1Uq3KfV0aDuPaHgQ+N4fGsxQhg2erXyVSLeoZefB6GDuquIVslVo841gD?=
+ =?us-ascii?Q?Ee/SP5i3NxHUQb3Q0rqSeQ7jgx99pdETCTZwjDRabwFmXjWN3kLNz3NLB+fP?=
+ =?us-ascii?Q?4cT3pMEXqVoWGGlPy2h6yKbUfvYCD4ugJpfZq2P6QBQe6ISJg0uPqkqH3kow?=
+ =?us-ascii?Q?aPkGRGcVfU2znGQn9h8hrHGK4ghv44pMBIj/HYThoH/p8kpzyYw3NXB5WtMq?=
+ =?us-ascii?Q?3eAxO+jNYQKRRPP4ntSfDIHzUycXbdxPyi2ihTYwMXpZjwQcTJtGj3hHEevS?=
+ =?us-ascii?Q?sJ7N8wccBGgKiKFo6loeOq+nZYrtt9U0pjYqzIoh5NZCogo3/47PALSMSADx?=
+ =?us-ascii?Q?8TkPpZ0SBlq9BLvqtmjguVG0jYfeLBX9Tb8TVjR7JlWEpDsMRflSOYjRayyN?=
+ =?us-ascii?Q?ZCRKMUvy2Z7MwDpFo6QE4lWuZRwVdg8j0j9sBB2CSkJz55SeyLLhXVM/JT5O?=
+ =?us-ascii?Q?SLF2epR0Anba5Yo/LJ+S15c7ow10Nsv/AKCiiGMM64Fe4AdSNOAZPnDfE9d2?=
+ =?us-ascii?Q?yHbCn1l3bllkjU1xnaLExEXQKEgZbH921gMRauWDJX1+CXqHFNKraNEX/22i?=
+ =?us-ascii?Q?6k7gHEZYcyeQmP8VhBf2yA4SwREABFVwE0V1XHkixklCRImcOpK2+s557o5P?=
+ =?us-ascii?Q?Ued+yIWQ0ZwjJi5GN6+fm6wyWRoseqM4EXtSbNU0MVDD59633ETmSJ7P5Hx1?=
+ =?us-ascii?Q?BMvwiGhG7/0VI1ciTqgfISGeCsuLzORGAbHdohQ6STisQUonVC+EKXUXF4bg?=
+ =?us-ascii?Q?BdLyXvJc8nJv8j/wFrPbyFCChnEhHNtMvy0oZphyUa9gJcqjWQMyEue6WaFI?=
+ =?us-ascii?Q?kGyn0e51QKmTBBM0YWd0yy3P0WXY+J+xezESe6B5CGe+xqEgWUdTm3+TltAV?=
+ =?us-ascii?Q?GxJAKtk6SFyufOgPWnXlLXWdW1g6nLLu?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(38350700014)(13003099007)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?FOI18SU8y3Z3vBTMGDgm4F5wJwbQa9mDj7fhQWwW0NcGx9kEV72pl80gHB25?=
+ =?us-ascii?Q?pey5rZlOQfHiBNeyiq3vkOPNT2sEPTR+HlEPbiSyI3xtLbfM/HiwSXWUhwEg?=
+ =?us-ascii?Q?3fKZxNyIwHbKJMXVBKIPE2FT6ehqtbNU9atCklsnfPiZqO8jywtqmCq3K09e?=
+ =?us-ascii?Q?3O61Aze23sJocNf71AUW6H4mdejSCvU45Crs9I4Sl0NaByOiLHR4EHGxxjQD?=
+ =?us-ascii?Q?S+Yt8Z7CiixS8Qy/frt4r1KporCZYp67gRIB0tnSxvLqYEjW1zetqbWmbZMF?=
+ =?us-ascii?Q?gMuNxwrUDBdGNK1K/9Y9i+Q26yerAJlGMrbnwipqBYQ4VIqN3A+1j347VewH?=
+ =?us-ascii?Q?qp7U01NcD8thlRmw/Haw1JXE2lOvQOJJbTvltzPoVI5oFpY70CE2vmMc98hV?=
+ =?us-ascii?Q?VL0IK5u1P2XdK7C2TVOBl/m6EHAaPTxsThrQr+5Wg9HFTJWALW/c4JvjIZwm?=
+ =?us-ascii?Q?XYepGLSN0QPoiEIRFbS3hS+xPqtkUUJhnXMYQ0W05g69jDsfGRK4ifZ8DVQN?=
+ =?us-ascii?Q?Ne+0vQDPvOh79k9isEKXZ0uC2nTHIgjgDTPZLMfjQM6m8bP+Ml/hc5dRqd/a?=
+ =?us-ascii?Q?BjxmAbhCojC+PAsQX4XGOEBSR78Vim7UCZO3jt2My2ea2Lka7r6l3q+9HOFR?=
+ =?us-ascii?Q?thRkp6Jvx+qdujvdE5SELnQha2+cEIyybzWdf1l5wsECJuxxzfLhwunLpDhO?=
+ =?us-ascii?Q?koMGWxm72t8XlxC0PCdWntp/ZN6IFrOXFqS9xcW/q/ZSB9R74EK1ySBCmDCx?=
+ =?us-ascii?Q?hccMot3TJtmcfz/YnwGHSdIDq4PfFgzsFf8BA+9xBxCbam662zsoqKm4NY9p?=
+ =?us-ascii?Q?lZ9DjwgkPrPZ5udJ4OXwdqLwgt9smrLSrSMLf0F+CUoHWxYjPSV8KcyOygVt?=
+ =?us-ascii?Q?6k5bzp551JNGWN/iVD/kb5EjMg8pvfSQTMjwj0Bsm+HARAq/9KBJ5YoaNSMn?=
+ =?us-ascii?Q?FVosUZn0MwAypOZKRuFXpNQBydqFVBsA/787Fxme3zuli9lgGHrI1Tr96ap+?=
+ =?us-ascii?Q?OZpCh/JJgLZTquaVCuPYcN8P8n79AY06PrYCAwbSBI+LEXRpR26cpC4GVE1t?=
+ =?us-ascii?Q?2pleaiOnZAtdnFdj+7aF8X59cHW+BDjcmEaFAY9mmZkruMitsuBdY4SkBRfz?=
+ =?us-ascii?Q?v5fTXVSXJRiyplAHtTJAPDBA5dBh4yhWk3IbWXTfSKVGy23Rfw/bRlY4PmiX?=
+ =?us-ascii?Q?eqyLLmdd1FupWw7rK0SzYhj7HSm9WuZd2iB/K1UJVY6dUuWsbeQm+4/2RhKX?=
+ =?us-ascii?Q?XMGlhWLS5ltBgpcqg1vFPFfi7aPes2at3k27S3FL+Ta1xRWb7zC+OEHhN04U?=
+ =?us-ascii?Q?xWdfu5mTR1wYpkmeGJXg6y0o+OPvx35J6a2JvqFeAGJ7lge3t3DB9e++9Ygd?=
+ =?us-ascii?Q?OYuw2LvPbj/EePYDSklPqAFK6Wj/rtveotP59oMHZH3PwQqTG6Ymk6ZP6pf9?=
+ =?us-ascii?Q?PakoquhGfIK1sA8Ey0r2wLttzGNyWn6tksvDNu9VvP1UAmliS1Xlhfgcxccy?=
+ =?us-ascii?Q?AcV1xmO08QqtmTX1ql7dzSbDVYN5OyXCT6rf+w7BaC8NKA7fFpaMb2X34A97?=
+ =?us-ascii?Q?XJTyDL2sZMSAQAlwUtsOrT2OPijHUxYmW3G0olE+?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 37aa2f7c-04d0-4a42-26cc-08dda770292f
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 16:10:32.6960
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ixthnq0q/HZBI1/Qwl6Me0/7WaJLvdlHstcVXeSwk8vR1A9f/Wzdi7rvWZsw2sNx27QzQwachvHZLLkuTrMFpg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7545
 
+On Sat, Jun 07, 2025 at 04:28:13PM -0500, Rob Herring (Arm) wrote:
+> The $id value has a double "//". Drop it.
+>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
---4x5fXavticha1vvc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jun 09, 2025 at 03:04:16PM +0530, Kartik Rajput wrote:
-> iTegra264 has 17 generic I2C controllers, two of which are in always-on
-> partition of the SoC. In addition to the features supported by Tegra194
-> it also supports a SW mutex register to allow sharing the same I2C
-> instance across multiple firmware.
->=20
-> Document compatible string "nvidia,tegra264-i2c" for Tegra264 I2C.
->=20
-> Signed-off-by: Kartik Rajput <kkartik@nvidia.com>
-
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
 > ---
-> v2 -> v3:
-> 	* Add constraints for "nvidia,tegra264-i2c".
-> v1 -> v2:
-> 	* Fixed typos.
-> ---
->  .../devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml        | 7 +++++++
->  1 file changed, 7 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yam=
-l b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
-> index 6b6f6762d122..f0693b872cb6 100644
-> --- a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
-> +++ b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
-> @@ -80,6 +80,12 @@ properties:
->            support for 64 KiB transactions whereas earlier chips supporte=
-d no
->            more than 4 KiB per transactions.
->          const: nvidia,tegra194-i2c
-> +      - description:
-> +          Tegra264 has 17 generic I2C controllers, two of which are in t=
-he AON
-> +          (always-on) partition of the SoC. In addition to the features =
-=66rom
-> +          Tegra194, a SW mutex register is added to support use of the s=
-ame I2C
-> +          instance across multiple firmwares.
-> +        const: nvidia,tegra264-i2c
-> =20
->    reg:
->      maxItems: 1
-> @@ -186,6 +192,7 @@ allOf:
->              contains:
->                enum:
->                  - nvidia,tegra194-i2c
-> +                - nvidia,tegra264-i2c
->      then:
->        required:
->          - resets
-> --=20
-> 2.43.0
->=20
-
---4x5fXavticha1vvc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEcHUQAKCRB4tDGHoIJi
-0mdCAP4iLXTNnbOYBpoSgowvw8EqxS5ptJogfQWY80AoHT4X0QEA/nKxuUPaDW0O
-VU5NdknzzO4hkP54Ep+tJSTUt98rPgc=
-=Ba+U
------END PGP SIGNATURE-----
-
---4x5fXavticha1vvc--
+>  .../devicetree/bindings/soc/fsl/fsl,ls1028a-reset.yaml          | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/soc/fsl/fsl,ls1028a-reset.yaml b/Documentation/devicetree/bindings/soc/fsl/fsl,ls1028a-reset.yaml
+> index 234089b5954d..b43df10c5ef4 100644
+> --- a/Documentation/devicetree/bindings/soc/fsl/fsl,ls1028a-reset.yaml
+> +++ b/Documentation/devicetree/bindings/soc/fsl/fsl,ls1028a-reset.yaml
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>  %YAML 1.2
+>  ---
+> -$id: http://devicetree.org/schemas//soc/fsl/fsl,ls1028a-reset.yaml#
+> +$id: http://devicetree.org/schemas/soc/fsl/fsl,ls1028a-reset.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>
+>  title: Freescale Layerscape Reset Registers Module
+> --
+> 2.47.2
+>
