@@ -1,65 +1,66 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-qv1-f73.google.com (mail-qv1-f73.google.com [209.85.219.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1FF218593
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 19:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9B921FF32
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 19:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749497921; cv=none; b=uJGl+PHgMBfdvg8JgO3wIu2v18adQ4jb6TYidBkf7MqvBNOrk3N3gHZdIYlv0GVJtP7qE8G9aZnXxIeK4GfaF5BwScXeBYhuzQ0c++oTpQycy8Yz8+MlRYC4RcufM4VA/enyc42pae/hflSLSUWCIKnQqatG5R8Ojk3xqBRKHJ0=
+	t=1749497925; cv=none; b=XG3lVuJyq2pzvsNIgtgUzJyY+ZYLs22c40UAhoDV3EFwARnDGMBRsAGPbpQIrFUUENZYIqDBZTgbaILNKOgDyYkDbdvhTr8ZAS6sjvV36m5ZFlpbGlDUGetZM62SLzi+NpLeR1f4+8D8q7IJkHp6d8dqJzJ89xAxzoShXToSrZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749497921; c=relaxed/simple;
-	bh=VKcEyzECt4iZovnPPAuxXmLCJFZvXlGSJaQhIh6CKak=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=icf06pmMxajaq/YV6gFCToCeLxrDCoBFDKADs6okfkZg23q9vYJ7ZjG4HNrZOvt/tzyda8ZfIxEoGQzOPpmP0tYGFI//UQLf2bCwqvIJ8qHhWl7OPRW0W69xv5Z1QHU+1ek9EK1Mcy5i0Cvvk0+axHTn1vJaCrxZ65VmMRkowMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RMGjt2+l; arc=none smtp.client-ip=209.85.128.201
+	s=arc-20240116; t=1749497925; c=relaxed/simple;
+	bh=2Rv9p6tNaMgQnX7ROTD/t3VPANSO2JnMTzpQk6fahbU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=igkhw/4a5zdfTJ1L0kEQgFjB1uAn8yGhw2xuUU/C36vo0uMb+BfewVjObrCZ+bMiFk+OsUGvT1BudHGM8x+Os3pqCIEWENZPiBd5zF7h84azG+NTdQfRrj/l+YpI0xsS2vxnHzajqe5vJ2vXtPb7Y5TdC0GLmVTkGqINWsSKmOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ro8j07Hh; arc=none smtp.client-ip=209.85.219.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RMGjt2+l"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-70e649662deso60726987b3.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 12:38:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ro8j07Hh"
+Received: by mail-qv1-f73.google.com with SMTP id 6a1803df08f44-6fae0df0b35so77688016d6.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 12:38:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749497919; x=1750102719; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rGtRr+3vWRTCO5PlCK7IEBLI5K5jti8nKZqk08FZqZQ=;
-        b=RMGjt2+lK5bi7RcdUOTGKf1I0tfayIJ1rOpxqNhgUTCDeE891ozNacP68Lx7SyXF/f
-         Tp9TFbDcDU4LCBHJp1dm6nR/r7E9eGyLaPUD4sfHsF+ZqnTK4M8JS05UtBCmcZrPDyBB
-         EJd9fnJAE7MxPWiCWizKU+ZFLQab4f/C0aU6tMJC3ldc8mx2gdvqwlNKn4iev728Nzex
-         PvyEWDfflOrkWPx9WBEQ22yOI2XAG79caotjEOfWU0NF2cvhok4xl3UBXZfeqyBhmj0+
-         Oe8UNIbRqXOYeugX1Jpz7A/BsQEAsXFU58qwPSch/5UFlghH/peve9F8JSFpc6iaiS0+
-         jm7Q==
+        d=google.com; s=20230601; t=1749497922; x=1750102722; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9PNHkUJ9ZGq1uRh4C8x9DUhH6un0NctvGdYHnDp4NNo=;
+        b=Ro8j07HhMtNvQ4GPdxb9dRV/g+EK53JfYHTx1L8cPtZcOF7AIZ7edhT6pVqlxw/fRe
+         4PsX3HJ+1SFUCyc5PFPSvkQ1haJXtghVRNeGC3z35nb299ZOq/kqWdE6/O+sc1/CyBG8
+         3Uw+JrVyIQ4Rgs/KGxusNrytHJjkLDGudiKBHePJBMIB7RbqPDgIG4WGdJb2RrYD2AnC
+         FOXgiTPRf+6w1c22SByqsOuzdfl0aykaK4LYTMrcvwt1bHJp9FyZ13Vbhmyyae90eHXj
+         P7ZNeCdJG/9DNiOr9Nz5+Nsy9GSASN1mtnLOivLG1PfyT/0IE6yQBgcbgV2whINizdEG
+         Xw4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749497919; x=1750102719;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rGtRr+3vWRTCO5PlCK7IEBLI5K5jti8nKZqk08FZqZQ=;
-        b=pXwoUGCJVOSxPObj1a8JKQA0zsFoiHfID1EuffB86IvbM7XjQSq98XQAvkRfJrdGB9
-         9evg6Aeg6A3gckefzQ8JIVHafXq9s7tDzoRlbyZKmsmomsUFA2+tMMcrsPGPGFyDGTb4
-         3su9k/TVZXcglldlB6cS3tKn5zJGfaDBCOvPlhhS+UsALdYTuHMMuV5WlgKOdpfMn5xL
-         cyg0wrTcyUZoTBOIQLGzPEHVnl4URL7fMQ1a5buet5/5Mu+Ry1Xi/kDECH4DXF1NqU2N
-         qlMqFogImadtDdIPLBbgXJWD91oLTAIP5bf7L24AKfvYLN0/VmScJ5Kv6e20QmKwebia
-         MLkA==
-X-Forwarded-Encrypted: i=1; AJvYcCUv2Yt4XsHlZcNQwpAP/JntvLEus0kEE8YoXkfHce1qiZfFF4jfHf8OdGrAsdnoYoE/5vEMll7W7MxTAeM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdxXIvc1o3BJn47NQuJr2+e2Nj5ereP89+NHtsFSBESihwkKKt
-	OPZdPvOycbRvocuM6S+eSq1Z1izOsAgtIqSsBbWjKXSvXeYOHtWsGJr79YBdHfci7KFr7L5I78G
-	TsYvm+J659A==
-X-Google-Smtp-Source: AGHT+IEmEylFYLh4//kAXgMNkaJXKL8LQ9wzJ3rMWQ5viWLq4DTh3AxdGwK2553szQ8CZlpcr8Kjoabgfk5e
-X-Received: from ywbhj3.prod.google.com ([2002:a05:690c:6183:b0:708:c88e:6c9])
- (user=zecheng job=prod-delivery.src-stubby-dispatcher) by 2002:a05:690c:48c9:b0:708:c18d:e6ac
- with SMTP id 00721157ae682-710f76863e1mr205996447b3.18.1749497918813; Mon, 09
- Jun 2025 12:38:38 -0700 (PDT)
-Date: Mon,  9 Jun 2025 19:38:30 +0000
+        d=1e100.net; s=20230601; t=1749497922; x=1750102722;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9PNHkUJ9ZGq1uRh4C8x9DUhH6un0NctvGdYHnDp4NNo=;
+        b=gVwNxSxMr4Bam4b7hNdEVliCaQ00i1cIQnDY3g4OGRO5tBwA4RZFxg/6R/5gslHGDD
+         3vKytz8gH9y2ViUl5IYSt/AQnnBGviCX9uWpQZLLwXuvIdUI+3gMw5G6TlDaFWWa2fMF
+         ndzTy9xE7Egw/P0+UNDBU1tfBGo3UP/KFv2hw69a2f8ZexrADOZ0upG4LWvpgYNguGn6
+         jIXZRZc3eZBCPyrkyGQ35zyM4r5mhLkU71SLKcCFXjWu9aVAm7O9ZDsq7LnWSbgiPfHx
+         ERt1zeuYNpai2xU3gBHrhEWkyx9XScZvb4bUJWV1Hvl+OGkTiRaclDpDxn/b1HIUyzCR
+         dicQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUHuo/nFZT+Vt4kNssXUzRFgc9MUME7CbpMgb3IM6DzXs8CrCr/udYDcU5AQ2ZPmZBOaNjHxWNDxApZQDc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyW8CPYDqdxY83Ihpvt3TRcH3ALkXI69lwtidPdwYYo0x/3pW8L
+	+8ZysiMpSyqLMdj8iCckkDlAQFDcq/BnWd0VQZ6QRAzVOFLwaCraP/dAyuhMVugxqHCQjYaLYSV
+	gVtRxaldh/A==
+X-Google-Smtp-Source: AGHT+IGwtLwTR9bWi9Hwt6GDozWcxWkI/YF7qOX7xhVb8YMMVmF6tMkKyLLE8BSiOPQrxcmodNBY/RjOll1f
+X-Received: from qvbqp11.prod.google.com ([2002:a05:6214:598b:b0:6fa:c619:8ba1])
+ (user=zecheng job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6214:d02:b0:6fa:cdc9:8aff
+ with SMTP id 6a1803df08f44-6fb08f612c7mr259085596d6.25.1749497922301; Mon, 09
+ Jun 2025 12:38:42 -0700 (PDT)
+Date: Mon,  9 Jun 2025 19:38:31 +0000
+In-Reply-To: <20250609193834.2556866-1-zecheng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250609193834.2556866-1-zecheng@google.com>
 X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
-Message-ID: <20250609193834.2556866-1-zecheng@google.com>
-Subject: [RFC PATCH v2 0/3] sched/fair: Optimize cfs_rq and sched_entity
- allocation for better data locality
+Message-ID: <20250609193834.2556866-2-zecheng@google.com>
+Subject: [RFC PATCH v2 1/3] sched/fair: Co-locate cfs_rq and sched_entity
 From: Zecheng Li <zecheng@google.com>
 To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>
@@ -69,118 +70,105 @@ Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis
 	Blake Jones <blakejones@google.com>, Josh Don <joshdon@google.com>, linux-kernel@vger.kernel.org, 
 	Zecheng Li <zecheng@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Accessing cfs_rq and sched_entity instances incurs many cache misses.
-This series of patches aims to reduce these cache misses. A struct
-cfs_rq instance is per CPU and per task_group. Each task_group instance
-(and the root runqueue) holds cfs_rq instances per CPU. Additionally,
-there are corresponding struct sched_entity instances for each cfs_rq
-instance (except the root). Currently, both cfs_rq and sched_entity
-instances are allocated in NUMA-local memory using kzalloc_node, and
-tg->cfs_rq and tg->se are arrays of pointers.
+Improve data locality and reduce pointer chasing by allocating struct
+cfs_rq and struct sched_entity together for non-root task groups. This
+is achieved by introducing a new combined struct cfs_rq_with_se, that
+holds both objects in contiguous memory.
 
-Original memory layout:
+This patch:
 
-	tg->cfs_rq =3D kcalloc(nr_cpu_ids, sizeof(cfs_rq), GFP_KERNEL);
-	tg->se =3D kcalloc(nr_cpu_ids, sizeof(se), GFP_KERNEL);
+- Defines the new struct cfs_rq_with_se.
 
-	+----+       +-----------------+
-	| tg | ----> | cfs_rq pointers |
-	+----+       +-----------------+
-	                |     |     |
-	                v     v     v
-	            cfs_rq cfs_rq cfs_rq
+- Modifies alloc_fair_sched_group() and free_fair_sched_group() to
+allocate and free the new struct as a single unit.
 
-	+----+       +--------------------+
-	| tg | ----> | sched_entity ptrs  |
-	+----+       +--------------------+
-	                |     |     |
-	                v     v     v
-	                se    se    se
+- Modifies the per-CPU pointers in task_group->se and task_group->cfs_rq
+to point to the members in the new combined structure.
 
-Layout after Optimization:
+Signed-off-by: Zecheng Li <zecheng@google.com>
+---
+ kernel/sched/fair.c  | 23 ++++++++++-------------
+ kernel/sched/sched.h |  8 ++++++++
+ 2 files changed, 18 insertions(+), 13 deletions(-)
 
-	+--------+      | CPU 0  |	| CPU 1  |	| CPU 2  |
-	|   tg   |      | percpu |	| percpu |	| percpu |
-	|        |         ...             ...             ...
-	| percpu |  ->  | cfs_rq |	| cfs_rq |	| cfs_rq |
-	| offset |      |   se   |	|   se   |	|   se   |
-	+--------+      +--------+	+--------+	+--------+
-
-The optimization includes two parts:
-
-1) Co-allocate cfs_rq and sched_entity for non-root task groups.
-
-- This benefits loading the sched_entity for the parent runqueue.
-Currently it incurs pointer chasing, i.e., cfs_rq->tg->se[cpu]. After
-co-locating, the sched_entity fields can be loaded with simple offset
-computations from cfs_rq.
-
-2) Allocate the combined cfs_rq/se struct using percpu allocator.
-
-- Accesses to cfs_rq instances in hot paths are mostly iterating through
-multiple task_groups for the same CPU. Therefore, the new percpu layout
-can reuse the base pointer, and they are more likely to reside in the
-CPU cache than the per-task_group pointer arrays.
-
-- This optimization also reduces the memory needed for the array of
-pointers.
-
-To measure the impact of the patch series, we construct a tree structure
-hierarchy of cgroups, with =E2=80=9Cwidth=E2=80=9D and =E2=80=9Cdepth=E2=80=
-=9D parameters controlling
-the number of children per node and the depth of the tree. Each leaf
-cgroup runs a schbench workload and gets an 80% quota of the total CPU
-quota divided by number of leaf cgroups (in other words, the target CPU
-load is set to 80%) to exercise the throttling functions. Bandwidth
-control period is set to 10ms. We run the benchmark on Intel and AMD
-machines; each machine has hundreds of threads.
-
-Tests were conducted on Kernel 6.15.
-
-| Kernel LLC Misses | depth 3 width 10    | depth 5 width 4     |
-+-------------------+---------------------+---------------------+
-| AMD-orig          | [2218.98, 2241.89]M | [2599.80, 2645.16]M |
-| AMD-opt           | [1957.62, 1981.55]M | [2380.47, 2431.86]M |
-| Change            | -11.69%             | -8.248%             |
-| Intel-orig        | [1580.53, 1604.90]M | [2125.37, 2208.68]M |
-| Intel-opt         | [1066.94, 1100.19]M | [1543.77, 1570.83]M |
-| Change            | -31.96%             | -28.13%             |
-
-There's also a 25% improvement on kernel IPC on the AMD system. On
-Intel, the improvement is 3% despite a greater LLC miss reduction.
-
-Other workloads without CPU share limits, while also running in a cgroup
-hierarchy with O(1000) instances, show no obvious regression:
-
-sysbench, hackbench - lower is better; ebizzy - higher is better.
-
-workload  | base                  | opt                   | metric
-----------+-----------------------+-----------------------+------------
-sysbench  | 63.55, [63.04, 64.05] | 64.36, [62.97, 65.75] | avg latency
-hackbench | 36.95, [35.45, 38.45] | 37.12, [35.81, 38.44] | time
-ebizzy    | 610.7, [569.8, 651.6] | 613.5, [592.1, 635.0] | record/s
-
-v2 updates:
-
-- Allocate cfs_rq and sched_entity together for non-root task group
-instead of embedding sched_entity into cfs_rq to avoid increasing the
-size of struct rq.
-
-Zecheng Li (3):
-  sched/fair: Co-locate cfs_rq and sched_entity
-  sched/fair: Remove task_group->se pointer array
-  sched/fair: Allocate the combined cfs_rq/se struct per-cpu
-
- kernel/sched/core.c  | 40 +++++++-------------
- kernel/sched/debug.c |  2 +-
- kernel/sched/fair.c  | 87 ++++++++++++++++----------------------------
- kernel/sched/sched.h | 48 ++++++++++++++++++++----
- 4 files changed, 87 insertions(+), 90 deletions(-)
-
-
-base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
---=20
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 0fb9bf995a47..cd090ceec633 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -13341,10 +13341,11 @@ void free_fair_sched_group(struct task_group *tg)
+ 	int i;
+ 
+ 	for_each_possible_cpu(i) {
+-		if (tg->cfs_rq)
+-			kfree(tg->cfs_rq[i]);
+-		if (tg->se)
+-			kfree(tg->se[i]);
++		if (tg->cfs_rq && tg->cfs_rq[i]) {
++			struct cfs_rq_with_se *combined =
++				container_of(tg->cfs_rq[i], struct cfs_rq_with_se, cfs_rq);
++			kfree(combined);
++		}
+ 	}
+ 
+ 	kfree(tg->cfs_rq);
+@@ -13353,6 +13354,7 @@ void free_fair_sched_group(struct task_group *tg)
+ 
+ int alloc_fair_sched_group(struct task_group *tg, struct task_group *parent)
+ {
++	struct cfs_rq_with_se *combined;
+ 	struct sched_entity *se;
+ 	struct cfs_rq *cfs_rq;
+ 	int i;
+@@ -13369,16 +13371,13 @@ int alloc_fair_sched_group(struct task_group *tg, struct task_group *parent)
+ 	init_cfs_bandwidth(tg_cfs_bandwidth(tg), tg_cfs_bandwidth(parent));
+ 
+ 	for_each_possible_cpu(i) {
+-		cfs_rq = kzalloc_node(sizeof(struct cfs_rq),
++		combined = kzalloc_node(sizeof(struct cfs_rq_with_se),
+ 				      GFP_KERNEL, cpu_to_node(i));
+-		if (!cfs_rq)
++		if (!combined)
+ 			goto err;
+ 
+-		se = kzalloc_node(sizeof(struct sched_entity_stats),
+-				  GFP_KERNEL, cpu_to_node(i));
+-		if (!se)
+-			goto err_free_rq;
+-
++		cfs_rq = &combined->cfs_rq;
++		se = &combined->se;
+ 		init_cfs_rq(cfs_rq);
+ 		init_tg_cfs_entry(tg, cfs_rq, se, i, parent->se[i]);
+ 		init_entity_runnable_average(se);
+@@ -13386,8 +13385,6 @@ int alloc_fair_sched_group(struct task_group *tg, struct task_group *parent)
+ 
+ 	return 1;
+ 
+-err_free_rq:
+-	kfree(cfs_rq);
+ err:
+ 	return 0;
+ }
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 47972f34ea70..af23917194fb 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -740,6 +740,14 @@ struct cfs_rq {
+ #endif /* CONFIG_FAIR_GROUP_SCHED */
+ };
+ 
++#ifdef CONFIG_FAIR_GROUP_SCHED
++struct cfs_rq_with_se {
++	struct cfs_rq 		cfs_rq;
++	/* cfs_rq's sched_entity on parent runqueue */
++	struct sched_entity 	se  ____cacheline_aligned;
++};
++#endif
++
+ #ifdef CONFIG_SCHED_CLASS_EXT
+ /* scx_rq->flags, protected by the rq lock */
+ enum scx_rq_flags {
+-- 
 2.50.0.rc0.604.gd4ff7b7c86-goog
 
