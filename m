@@ -1,197 +1,194 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2057.outbound.protection.outlook.com [40.107.244.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711238633F
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 17:13:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749489234; cv=none; b=gMnCyyBcvMBBaERCHBsvUUtNT0N1bO7+zoWIe658OjksU7JHXuJ2zvSGYD1PgW0YfsP8FUACyodNlKkxsly0ieViXuFzFzYPQ8G25UZyCkfHD1tyCmU2UJEYVixsci4MUC5sW2CRGZEuh2dqj/FgodgNpAu6i0kU3sItadB5Qw0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749489234; c=relaxed/simple;
-	bh=Kql8orYFF8or/bhIp0BlTb1WLbFL6PW6494eV1SEhHw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kT4IZSe2v9etio2tvDesfyq8fs49QCx6qALfLXo43ZSW2ro3M54B4tP78UdOPIi0l12t96z+uSpJfzxOKW91CXFcZo2AGFCZMSUf7QailBa8wh7Als8tnHQK3Ou59/P8XMV6S8w81xzAtK3ix710zgxTMl+50MRwlZAADKr2rWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gkgXQYmv; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325C221B9D6
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 17:14:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749489243; cv=fail; b=Jitw+BO849dy1RTagwSrwFFzwfoGjeW1kVC72Szu042vukc1rvCWeMMkO0XQRwTjkwyJ/x6EwQCyUpUfNt0fxKIVq8U1u5W+qRcOi/yfllrFyL8na/+aySeA+5wuZsSXUMB1We7noUOZNeoqu+awuGnwzeN5uDST8zEO3XfV0s4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749489243; c=relaxed/simple;
+	bh=pLIqQymyBLXykF8rThO0A7FsOOhlpxORjt8yKIbL74g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UflvtaLPxidfTWpZDFaDIrQlvPFWCyPzWcJ81v4XY/HfNXfV/K9+waIQEDovVtCAibuW+lplfNY1KzpIlxeY6XG8NymBF2g7TN8vEet/nYvgtjLOXGebiJF2ktPYsIYtI+ZcSjzaMFxjobM9AC9+B49IdOXkeE4GPONcYXVf2bo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=aAAK230f; arc=fail smtp.client-ip=40.107.244.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gkgXQYmv"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-747d59045a0so3129875b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 10:13:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749489232; x=1750094032; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=NvhVPXS+eQ/jyt1KVo/KteILDY5VYpwnN9IW8up8lqg=;
-        b=gkgXQYmvRNKAjrY3XKmaeTSiCGAwMFnhSUAOOjWia1MAuy0YCtf7KaZxpljCFOKvnW
-         c2gxupAeckFlc0FRxaR6MOXN5uGoNPSgGpWbFEiSfOIp+/1qVLnf4KYrNsErK7gm1RSg
-         qxz1beA+M4Qv3TbBhw1G5mzCA9q04SEUtr4As=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749489232; x=1750094032;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NvhVPXS+eQ/jyt1KVo/KteILDY5VYpwnN9IW8up8lqg=;
-        b=Xp/UOe2Kkin/G8L2xxMqD9a1C/+q5Yok8nKmp4F7CcvFx7n7gfxlORoaisHeWdr6t2
-         rLy+zNGNRdnrWWkQqexhY+YJ02DQQ+p8RnJlXJzr6chyvD1JAz2YvJtm/czyoZ096ag5
-         bnpCSqEHE1mFjN3iiSyDIeJDJ2BWU2YZJL2KxYn9BPDLNTzcgkca89Je4Yfm1646hzB/
-         kY7gXzqaaQYgXgXDEGEoBnqb4x2Hk88p6MpjBCnoV1QEVCZSPEZF5QhH0gK/i7j/17bd
-         GeBjc/Zm3pNOLtojXj5um0IsWuB1KIyG514KJvwPWozBSgTdWjNdewKw2qq6twfNurCD
-         2c4A==
-X-Forwarded-Encrypted: i=1; AJvYcCWZD9go/4S+7Kc+M2pynvoExfqFKbNQ7tiq5m0+HRSVzS6X/QHCdtUYHbMNPE7An4ud8wkqgk8cLgF+5KY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5FhRHw1M1c/5gZH7Pw8/P3o/Mze/nJja50ywvqIf3UFIoiFlv
-	97WRGGAQfZw9/ejGB9SK5KzDtbGPKJK0aNwSwDY1zQhXXzim58fTbzbNo5gZ0itMtA==
-X-Gm-Gg: ASbGnctXu3zzYDWTkE1t9fXtW+vUPsSYx5bs6xinwHuLUJ+tCmngj8P4MPcFWr8hv1D
-	LvYGsNguOQZ2B+RDP0hAyFjLQ8R7CgYR1g5e+jVTwEy1BeH0gKOC3jOc1+GegOfiES9bSZoT3VI
-	AiUfXSr4MAbTXTPI/lKI0rrooHEUCS6+e/XPBtRCFV6nQ9XddqgTs4EwjvKQbUAPhEc7w97JkYg
-	eQGrYfsCyD8jtEeltQaqTEP/ya2HZt5fQqaL6WC4Ef1OGC0d10mzXffHs18zXH1xpE2iclbRB96
-	xt6LjDpAdjB78lSXL6Izh8SbgJ3RXtwZyIurKo1v5MuFd1yTuTMzGhrX/3lQbAQxa/ibdjd/dLm
-	4jrDLzk6NMneVqYLcjKtfW/5e
-X-Google-Smtp-Source: AGHT+IEilSlodZrFAuTQkVSTAzRUtUsgxzHGx/8bjJjjbScjM1YKZmwcrJGnCtUSgG+V86QY+FySfA==
-X-Received: by 2002:a05:6a00:4390:b0:740:a52f:a126 with SMTP id d2e1a72fcca58-74827e8060dmr16684056b3a.9.1749489231660;
-        Mon, 09 Jun 2025 10:13:51 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e14:7:4467:836f:8c18:b854])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7482b0836d4sm5955153b3a.85.2025.06.09.10.13.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Jun 2025 10:13:50 -0700 (PDT)
-Date: Mon, 9 Jun 2025 10:13:48 -0700
-From: Brian Norris <briannorris@chromium.org>
-To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Tsai Sung-Fu <danielsftsai@google.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v2 1/2] genirq: Retain depth for managed IRQs across CPU
- hotplug
-Message-ID: <aEcWTM3Y1roOf4Ph@google.com>
-References: <20250514201353.3481400-1-briannorris@chromium.org>
- <20250514201353.3481400-2-briannorris@chromium.org>
- <24ec4adc-7c80-49e9-93ee-19908a97ab84@gmail.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="aAAK230f"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OzLEMq4g5UqbzndcpcxDF19NB0wApeID2tMnmbDAuxJOHNBQ5nhPlTfy634BHZCTvXwo8V6D89zBtaBtAnFFcQs4pxvFPKkDUq0VkubpKKz2F80as5XDwwElKQvXG7tP00rYsfMVzp9MH/LscvOTjz0h0qiR4upkuz38wCuaS1QzT0R+T3uWAPdUb1Bo353HufMRiS1wI+H6CySegalnQZCb3s/kgmiS2yWyHDsfUDnUfgNykfBcxhmdWduML4p1FFRrVnFeu4jwAB2WrU462KEHeLjGW8BIRgRbui9DKfp+PrkbqOdtkNYohFxCe7cxrLD9XXw3vC5M/69eO869yQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uxlPOBa1//M+NZrPDf8z0eSnrNudRx2kGs7Bya9Bb5s=;
+ b=MRhPDzFnEYnqGk8tXWUT4HNZCf4DypYLXf43qdQWTfWuqXNE9CB+31LOTSeDCj5s7+fIg3t8tw1SgNzhkWNyr5sT/sMximOskQzg+rF0Sagfss3A91Okolu+RbTEpISSJGIdQ6FXkU6zdFZZ7BqHZzPU/mTO5NX+Fw42QmrznzEFv8j8I+eDQevaaUr5z4ftpg1p7R2HTCCA0S2sTTOJGHpc8zYj70/ICSQb3CdiinI1uwrYuoUnyLLzGRb7tkDj/wZzBi/osW6NQq3qgrgGmYnUD4SQZ+wqU0S7boHrq9s65tLQkiHcOtAJJdb6qZ2Vp9UdQlBu4YzXWUZ1o8P6pQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uxlPOBa1//M+NZrPDf8z0eSnrNudRx2kGs7Bya9Bb5s=;
+ b=aAAK230fCAgsJHm1VhuPDOe8QZiwCGsjZ4YDgoH3/FeYx83UlwL5tYOx/jAVUNu3kJ4p+RsMkWUapYhPq0DL2qPvBsMtCYIu26zgB6MfD2DqNx2uAnCUfIxz6P7C3sNT1qTgqS1VpiBMtAwDXfF+KARY7+2TeUSd0oxv9P5VG/QshR8qbRExr/ecERPyQM0szwj6YsKlc8kkq3i8diKS/T+38+tpvimbuPX3GXgz22klrGe4df8rF4c9RIfcjHPAitaYL4Wl3zTulhglN/nkqgPyL1bNe2UA0WwM1CbWb3URafd+jN5ocwnMw4/azQcDavsvOnGbH6R844e6x5ZH+w==
+Received: from BN9PR03CA0845.namprd03.prod.outlook.com (2603:10b6:408:13d::10)
+ by DM4PR12MB6302.namprd12.prod.outlook.com (2603:10b6:8:a4::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Mon, 9 Jun
+ 2025 17:13:59 +0000
+Received: from MN1PEPF0000F0E2.namprd04.prod.outlook.com
+ (2603:10b6:408:13d:cafe::14) by BN9PR03CA0845.outlook.office365.com
+ (2603:10b6:408:13d::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.23 via Frontend Transport; Mon,
+ 9 Jun 2025 17:13:58 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ MN1PEPF0000F0E2.mail.protection.outlook.com (10.167.242.40) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.15 via Frontend Transport; Mon, 9 Jun 2025 17:13:57 +0000
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 9 Jun 2025
+ 10:13:40 -0700
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail204.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 9 Jun
+ 2025 10:13:39 -0700
+Received: from Asurada-Nvidia.nvidia.com (10.127.8.14) by mail.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Mon, 9 Jun 2025 10:13:38 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: <jgg@nvidia.com>, <kevin.tian@intel.com>
+CC: <will@kernel.org>, <robin.murphy@arm.com>, <joro@8bytes.org>,
+	<ddutile@redhat.com>, <yi.l.liu@intel.com>, <peterz@infradead.org>,
+	<jsnitsel@redhat.com>, <praan@google.com>,
+	<linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <patches@lists.linux.dev>,
+	<baolu.lu@linux.intel.com>
+Subject: [PATCH v1 00/12] iommufd: Repare for IOMMUFD_OBJ_HW_QUEUE
+Date: Mon, 9 Jun 2025 10:13:23 -0700
+Message-ID: <cover.1749488870.git.nicolinc@nvidia.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <24ec4adc-7c80-49e9-93ee-19908a97ab84@gmail.com>
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN1PEPF0000F0E2:EE_|DM4PR12MB6302:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5d28b695-c017-49e8-6588-08dda779055a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?vaEHVK4Shqhxvzg7VFsM24gnpJccI16qYrq3rVZFHYqSvOr4KLjm75Qa9KzR?=
+ =?us-ascii?Q?huqnJ/+rQmKn7nV1qCWUq+jn3HS2l9l7YSHJldR2shMnJqJSz2uq9nND7WW1?=
+ =?us-ascii?Q?iicdJEabiJHhyQpxTJNQ+5fMJoItzJ0T3wEcVarLr7gpQA1drYluB42yxo8B?=
+ =?us-ascii?Q?OE3EXp5p0puldRhbGhJsPd2U7li3kOvrUnamUqE4yeKNTJcxkVuEDCOK2XWY?=
+ =?us-ascii?Q?MlX3bW/RUvQ+aMC/oWdp+6W0Qzg8v2EdpupNyP2cltBR4/FG/chuQNflV+Po?=
+ =?us-ascii?Q?rsy88HRXtN3qCormKtYqUu1Ts/CT07BxMG9taCWd7RJxzhE1iQYNlqfVtjih?=
+ =?us-ascii?Q?MxGnivMzN+3lqwQ/wPqh013iP90HZJgvSRMYMnbEznI4YwNI0+X8MAMgaU37?=
+ =?us-ascii?Q?iTWQpuUIgvHltoXA4Qbadz2s1Mddy0mkX9uxpQak/6IEWLfvP+s1YzmsV8HC?=
+ =?us-ascii?Q?GvT1yxOXPy1WGILJBqDe5NUVWvg5O2k4Txd+TolIcndPGMKSwnST8iGuvhIJ?=
+ =?us-ascii?Q?oDcxVqZ6Tsmsv+Yg0PrvB0WRKxqh+Wva2MjGOxqu5/YkUi/i6aoPgVzqknOs?=
+ =?us-ascii?Q?p+B8owc5dHHFpevbd+BJDHYg8IAjTLygHp/wsQkClnUUsozuI3NqLlglz+ne?=
+ =?us-ascii?Q?j8FFw9MBb5sEsC9YRO16qBzzeVevMNKKiT50puOns+H15ekPRpPU8Ma8CtX5?=
+ =?us-ascii?Q?rjOmnlc3CbP62idVbR1nccags8G8LwfbsCtuaB4T5hcP1B3u9nFMJOCH7oaP?=
+ =?us-ascii?Q?G5ddHobJhoKftHPlIi9eUoD4oGqlweaycRRTpzm0FQksW5PAyOPDnhXuYoyJ?=
+ =?us-ascii?Q?wfUgeNvwfko32Kb/OE4AZAx6yQ3h+VUxiXusN0cBBLK4b2NbIRxREYGeli+1?=
+ =?us-ascii?Q?j39gJTGJSMDivm2+NBw0vVKsZypFMusVboLRG0fNbJVXNof8ZEr8KUYUuEgw?=
+ =?us-ascii?Q?tczzmmRqvz8hFM0Eo6iLKD4e7uS5n++ArF13SXo59xgj9zpZuYiD+zwSKdJg?=
+ =?us-ascii?Q?gFdN/IL/tb3ww09aDfOnWRawwsrCbEl/m8FsdBYjGqXDa4oskiy+3NUveHuj?=
+ =?us-ascii?Q?uw62sd6GP6xD2+Bq2yoihFfMhUHoeRLcR1HUXb75DcpS7RjUHqHdvwrTM3lL?=
+ =?us-ascii?Q?QAw9P61mSWPObLvaUwXjr8xAS0k9YWF26KslVv58CPlJ+jcbgNRg3ucbezj7?=
+ =?us-ascii?Q?CSzFKrS27JgFPoUQdQMl4RZ+0LTFVq9vn7wqvIS5+aIGKDhgcCSTLvOrqmzI?=
+ =?us-ascii?Q?jb+5+uz8+1PtnYYh3ZgzzzkOCZL9OJ7KnVI4ykbHcm8gDOm4hgF6IN+w6bYL?=
+ =?us-ascii?Q?5SioEVVDCI50D+gcCLfrdsl5C/oedOYaPJCGvBjNlBxVtqz3m8OepcglcCUK?=
+ =?us-ascii?Q?nZbU6NsGeLMMfeFoG24UsYgMTHr+wweK3roJIku0wDhVyjudjnW/ZBZ3wrow?=
+ =?us-ascii?Q?gj68cfQoPLKL7C7Vpr+4F68UdligvTJN3LMz2VsJdQiQWMhcZu8PHBNGWnP4?=
+ =?us-ascii?Q?SITynIY/5PMJoH3Wc1YExXKn8GWagnlxfBZm62sA2oxnbsDSEaZN2yh8gw?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 17:13:57.7053
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d28b695-c017-49e8-6588-08dda779055a
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MN1PEPF0000F0E2.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6302
 
-Hi Alex,
+The new HW Queue object will require more interactions with IOMMU drivers,
+with a few more for-driver APIs. This will complicate the driver-allocated
+structure design like the viommu_alloc op: since the core structure is not
+initialized during the driver allocation stage, a new for-driver API can't
+reference any member in the core vIOMMU structure.
 
-On Fri, Jun 06, 2025 at 02:21:54PM +0200, Aleksandrs Vinarskis wrote:
-> On 5/14/25 22:13, Brian Norris wrote:
-> > Affinity-managed IRQs may be shut down and restarted during CPU
-> > hotunplug/plug, and the IRQ may be left in an unexpected state.
-> > Specifically:
+Make a preparatory series doing:
+ - Cosmetic fixes and clean ups
+ - Replace viommu_alloc design with get_viommu_size + viommu_init
+ - Add a new iommufd_object_alloc_ucmd
 
-[...]
+Some of the patches are included from:
+[PATCH v5 00/29] iommufd: Add vIOMMU infrastructure (Part-4 HW QUEUE)
+https://lore.kernel.org/all/cover.1747537752.git.nicolinc@nvidia.com/
 
-> It appears that this commit introduces a critical bug observed on at least
-> some Qualcomm Snapdragon X1E/X1P laptops, rendering the suspend function
-> unusable.
-> 
-> With this change in place, after successful suspend the device either:
-> 1. Cannot wake up at all. Screen stays black, even though PM has existed
-> suspend (observed by external LEDs controlled by PM)
-> 
-> 2. Wakes up eventually after minutes (instead of seconds) with SSD related
-> errors in dmesg. System still exhibits errors eg. UI icons are not properly
-> loaded, WiFi does not (always) connect.
+This is on Github:
+https://github.com/nicolinc/iommufd/commits/iommufd_hw_queue-prep-v1
 
-I'm sorry to hear this has caused regressions. I don't yet know why your
-particular problems have occurred, but I did notice last week that there
-were some issues with the patch in question. I wrote a patch which I'll
-append, and have started (but not completely finished) testing it.
-Perhaps you could try it out and let me know how it goes?
+Thanks
+Nicolin
 
-> Is it possible to have this addressed/patched up/reverted before 6.16-rc1
-> goes live and introduces the regression?
-> It also appears this series was selected for backporting to 6.6, 6.12, 6.14,
-> 6.15:  perhaps this should be postponed/aborted until better solution is
-> found?
+Nicolin Chen (12):
+  iommufd: Apply obvious cosmetic fixes
+  iommufd: Drop unused ictx in struct iommufd_vdevice
+  iommufd: Use enum iommu_viommu_type for type in struct iommufd_viommu
+  iommufd: Use enum iommu_veventq_type for type in struct
+    iommufd_veventq
+  iommu: Introduce get_viommu_size and viommu_init ops
+  iommufd/selftest: Implement mock_get_viommu_size and mock_viommu_init
+  iommu/arm-smmu-v3: Implement arm_smmu_get_viommu_size and
+    arm_vsmmu_init
+  iommufd/viommu: Replace ops->viommu_alloc with ops->viommu_init
+  iommu: Deprecate viommu_alloc op
+  iommufd: Move _iommufd_object_alloc out of driver.c
+  iommufd: Introduce iommufd_object_alloc_ucmd helper
+  iommufd: Apply the new iommufd_object_alloc_ucmd helper
 
-Regarding stable backports: yes, please. It looks like Johan requested
-holding this back on stable here:
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h   | 11 ++--
+ drivers/iommu/iommufd/io_pagetable.h          |  2 +-
+ drivers/iommu/iommufd/iommufd_private.h       | 33 +++++++---
+ include/linux/iommu.h                         | 26 ++++----
+ include/linux/iommufd.h                       | 39 +++---------
+ .../arm/arm-smmu-v3/arm-smmu-v3-iommufd.c     | 47 +++++++-------
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   |  3 +-
+ drivers/iommu/iommufd/device.c                |  3 +-
+ drivers/iommu/iommufd/driver.c                | 33 ----------
+ drivers/iommu/iommufd/eventq.c                | 14 ++---
+ drivers/iommu/iommufd/hw_pagetable.c          |  6 +-
+ drivers/iommu/iommufd/io_pagetable.c          |  3 +-
+ drivers/iommu/iommufd/iova_bitmap.c           |  1 -
+ drivers/iommu/iommufd/main.c                  | 62 +++++++++++++++++--
+ drivers/iommu/iommufd/pages.c                 |  9 ++-
+ drivers/iommu/iommufd/selftest.c              | 57 ++++++++---------
+ drivers/iommu/iommufd/viommu.c                | 46 +++++++++-----
+ 17 files changed, 212 insertions(+), 183 deletions(-)
 
-https://lore.kernel.org/all/aELf3QmuEJOlR7Dv@hovoldconsulting.com/
-
-Hopefully we can figure out a mainline solution promptly enough, but
-revert is also OK if it comes down to it.
-
-Below is a patch I'm working with so far. I can submit it as a separate
-patch if that helps you.
-
-Brian
-
----
-
-Subject: [PATCH] genirq: Rebalance managed interrupts across multi-CPU hotplug
-
-Commit 788019eb559f ("genirq: Retain disable depth for managed
-interrupts across CPU hotplug") intended to only decrement the disable
-depth once per managed shutdown, but instead it decrements for each CPU
-hotplug in the affinity mask, until its depth reaches a point where it
-finally gets re-started.
-
-For example, consider:
-
-1. Interrupt is affine to CPU {M,N}
-2. disable_irq() -> depth is 1
-3. CPU M goes offline -> interrupt migrates to CPU N / depth is still 1
-4. CPU N goes offline -> irq_shutdown() / depth is 2
-5. CPU N goes online
-    -> irq_restore_affinity_of_irq()
-       -> irqd_is_managed_and_shutdown()==true
-          -> irq_startup_managed() -> depth is 1
-6. CPU M goes online
-    -> irq_restore_affinity_of_irq()
-       -> irqd_is_managed_and_shutdown()==true
-          -> irq_startup_managed() -> depth is 0
-          *** BUG: driver expects the interrupt is still disabled ***
-             -> irq_startup() -> irqd_clr_managed_shutdown()
-7. enable_irq() -> depth underflow / unbalanced enable_irq() warning
-
-We should clear the managed-shutdown flag at step 6, so that further
-hotplugs don't cause further imbalance.
-
-Fixes: commit 788019eb559f ("genirq: Retain disable depth for managed interrupts across CPU hotplug")
-Signed-off-by: Brian Norris <briannorris@chromium.org>
----
- kernel/irq/chip.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index b0e0a7332993..1af5fe14f3e0 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -175,8 +175,6 @@ __irq_startup_managed(struct irq_desc *desc, const struct cpumask *aff,
- 	if (!irqd_affinity_is_managed(d))
- 		return IRQ_STARTUP_NORMAL;
- 
--	irqd_clr_managed_shutdown(d);
--
- 	if (!cpumask_intersects(aff, cpu_online_mask)) {
- 		/*
- 		 * Catch code which fiddles with enable_irq() on a managed
-@@ -205,12 +203,15 @@ __irq_startup_managed(struct irq_desc *desc, const struct cpumask *aff,
- 
- void irq_startup_managed(struct irq_desc *desc)
- {
-+	struct irq_data *d = irq_desc_get_irq_data(desc);
-+
- 	/*
- 	 * Only start it up when the disable depth is 1, so that a disable,
- 	 * hotunplug, hotplug sequence does not end up enabling it during
- 	 * hotplug unconditionally.
- 	 */
- 	desc->depth--;
-+	irqd_clr_managed_shutdown(d);
- 	if (!desc->depth)
- 		irq_startup(desc, IRQ_RESEND, IRQ_START_COND);
- }
 -- 
-2.50.0.rc0.642.g800a2b2222-goog
+2.43.0
 
