@@ -1,179 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639063D544;
-	Mon,  9 Jun 2025 21:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD8F27FD;
+	Mon,  9 Jun 2025 21:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749502980; cv=none; b=lFf7z1WfLvEpC/cnK3oUL/mWRD6szJ9jrwrCtFNVU8xuYQfPy6XI0eQHQZChYqSJY4jeFHkpsHtwcepus1TaYPiO0KYzGPSmmlVZ1awvi/sTHd57+zb8vsQveJ6Fgy12mhofd0TNsjZBU/7/jG018RjBMaKJ8BfcVxzZm8DjCt8=
+	t=1749503305; cv=none; b=Utkr/iAfHhic/h1162aD91VBWOaZ+kRbNTwJ1gX8Er8N5LF5jjJSWP2Wc1ukrJj1dnMgqxO84THs68UNivu67wri370guzsw4PutpQmLq+A4JQL8rtKx1YNXNFMbRbsvaxuLsgaSr/hg5I5BdEp2ah5GLdVYOzGJ9mh+4CVKroc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749502980; c=relaxed/simple;
-	bh=RZLEtyFeskXKCxRKdITJbRi3Nefd865yDaYrHZ9TSMg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R14gYHXfj4VDFdpjo8g9Ekgygep1+P53isBI6X4SdoC/Twt+ACQJYCujhQ2JVLJK9cF/xD1GBcLuSUgEOULuu84SJXsJqRDR4tmGc+phebYnb0e8QWDc29SfY5pbw3u0saKwiouSsFhze+rv9VQ/SQUO8HA5tlwh9VBtwvfatDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gTQZNdNb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749503305; c=relaxed/simple;
+	bh=zuDTL7cB69EL+PgchjhF1SUAyQ94xhf+ydp3hPzb0kE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rNDG1tu6W1wSVJ9ZFjnDvVx61P7mB02Ig6gJ+xcVAOmnq9BFRAHRv6o0LkgyE10NQ0ugNoap723YkHX0u3AViU/AeQzygmES7uQI+kfdgRVO7QVdl9XM7MkgvONZb2N00W5SMjEsn9LULijztOrFOw5+UQcp2q9H4TPNR1zGAeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YWLCtCgo; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gTQZNdNb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E3D6C4CEEB;
-	Mon,  9 Jun 2025 21:02:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749502979;
-	bh=RZLEtyFeskXKCxRKdITJbRi3Nefd865yDaYrHZ9TSMg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gTQZNdNb46CQSq31S+wVo1cKtEhV+Czr/d8j5ri/DnQGEaDrrM2HC8C1/lO9sBwM8
-	 fepBZ5BNCoTfAHvzV1emSG/dudXhBLsp9yU10uHNhe5J4e6RS6gmHImXbMDHshSVED
-	 h34Ld4QlLtLs03UsNQ65RUkkVSUOASlFdVJpZbOE9lSJrSRXVJDVMXAOKhReJqmFi0
-	 tPm4R9KIdcZFoQey2u+ALlDAaFdqbzpDrSkNf04DfXrpAbyBENEWywagyJupyy1Lev
-	 FBE8P5qRawXrFSSbaw8A/oqMgT428eFuFM4ZgVEzs3e7CeenJy3PQLYKQGDSNar3iJ
-	 bb8/pXxoQEegA==
-Date: Tue, 10 Jun 2025 00:02:56 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Prachotan Bathi <prachotan.bathi@arm.com>
-Cc: Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Stuart Yoder <stuart.yoder@arm.com>,
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] tpm_ffa_crb: handle tpm busy return code
-Message-ID: <aEdMAELNiu1rQYRa@kernel.org>
-References: <20250609141600.3601340-1-prachotan.bathi@arm.com>
- <20250609141600.3601340-2-prachotan.bathi@arm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWLCtCgo"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ade30256175so602144066b.1;
+        Mon, 09 Jun 2025 14:08:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749503302; x=1750108102; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=K/+E654N6VLDLEVmc+jj3F2mGdbgofFxddmyLbhAauw=;
+        b=YWLCtCgozOEGwd2SO5xUw6jlJIdYncbd/ThwylTe7xEcpDeS4JUXJIemNHZw32cjFB
+         WYIPHeWGRukAieewujubFql/DzwMTKK834bniJij2Vksq22KB3Z8PF4F8gz18DXsMfNS
+         qjwolZFTagEFmfdP4ZVHcB3rfIMCvapS0+aRzYp76ohqdvhSAKZZY5UDMVLao/crzP+N
+         +eopL8a7oVAilP3G+mB0fK0yEYENMKESLDaPPstzG1OyDYjZGyeqDZHXH2+30rsxKf3I
+         T9qXn8EjBhqtwz/IANhPJN+sutZm0x4nOGQgWACbR7fR/PcovQMmeAEgy/EAu/rhn+IL
+         DgDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749503302; x=1750108102;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K/+E654N6VLDLEVmc+jj3F2mGdbgofFxddmyLbhAauw=;
+        b=ssOM1M/gZEWjCV2Exhabi9tps0IjsPnjBEEggng71ga+huTg3EMsyXq4KMtml0uZDY
+         t+VI+gCH4n77HyotIAAi/GQ6seeqBBdiaZSsfxe/To0gMccjqtWZy6ErHlPZsWVQsuGG
+         jns81ypMivsc36ArNUnEO2XAdO9fhPR3KhkjHcvsjLP5IWUHWNPpaGqmC0qGHMdSExMZ
+         /D18P8r/gM8TGN8tybjeUd0viKiE0dBNAOK8DpWOVjm4UaRQNfrQRbHsioJESWYfJEr8
+         PtIN5YmjAjB+hxNC5MiO9b1YgkRtjSa+wv3xeU99h8dbpDlSDrtrKLpN837ZRtPeyeIe
+         CzWA==
+X-Forwarded-Encrypted: i=1; AJvYcCXVsdRT8Jjkx47mDjZV7Xf1it/MaRt6z06vrNivc7q0456VjcU00hdrPkJX2BpUg7sQHVGeFC5/@vger.kernel.org, AJvYcCXxmi4wYcC/MQexaBS+rCQoIOZtny/uWDZspL4OjHRJxDVeTAnT+oVscBS/o8rW1JtP57NvgF5Htd5dUoI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ9CeDZ51BOw/+5AK3DHMZuqhklrxvxVR/cXsw2mYycyEIol7K
+	41Vtrw8lbvNXERfWsFKLVzJ4ZK5SwXyPgVcIokavnwspuLhEsHQHO5qnNSNci2pJ
+X-Gm-Gg: ASbGncstcF8bn2Tv6eyBVo32o99OeGNFg74bNgwUY74UVnsx83w1o5AkL/3e70z8v1C
+	vXyXwFLZ+Cd4pmG/glsGhqjEzfMtRFhLUx96LABSr/v6th7oCvbNTZ4+WZNZUUclCjcZpompeLi
+	pjanx0jvLTS2IKiWqwaHAXWE5UaCuOX0HD3GPyrHNl2ba5vj91df8sbEPUXm0V46QNE2lSkn50i
+	TIIuJsNk/1xBah1J9481Vd+GEfkgJAmvkkcrrf0JwOi+F8kz3eGKO3w/zQ57XYaua1LwhnFqrUm
+	XH9G7YkAnLmoTuhbBqHBLWyLZXt8MW7t9BSuerZ0UeMnsD+jnXCNoQNs3m5ZkRwLFIZHAp57
+X-Google-Smtp-Source: AGHT+IHww2Hb3N2NjaqINV7+U/1Ul6vltTjx2k8COiF/gro5XFioDzd+0yMzKwRSito0syJsOt/tOQ==
+X-Received: by 2002:a17:906:ee8e:b0:ad5:7732:6759 with SMTP id a640c23a62f3a-ade1aa471bcmr1379707466b.53.1749503301975;
+        Mon, 09 Jun 2025 14:08:21 -0700 (PDT)
+Received: from debian-vm.localnet ([2a01:4b00:d20c:cddd:20c:29ff:fe56:c86])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc1c57fsm609733366b.100.2025.06.09.14.08.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 14:08:21 -0700 (PDT)
+From: Zak Kemble <zakkemble@gmail.com>
+To: Doug Berger <opendmb@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Zak Kemble <zakkemble@gmail.com>
+Subject: [PATCH v1 0/2] net: bcmgenet: add support for GRO software interrupt coalescing
+Date: Mon,  9 Jun 2025 22:08:07 +0100
+Message-Id: <20250609210809.1006-1-zakkemble@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250609141600.3601340-2-prachotan.bathi@arm.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 09, 2025 at 09:16:00AM -0500, Prachotan Bathi wrote:
-> Platforms supporting direct message request v2 can
-> support SPs that support multiple services.
-> If the TPM service is sharing the SP with another service,
-> it could get an error code of BUSY if the other service is
-> in process.
-> This patch adds a parameterized variable (default 2000ms)
->  that indicates the maximum time to keep retrying for.
+Reposting as requested here https://lore.kernel.org/all/20250531224853.1339-1-zakkemble@gmail.com
 
-Patch is not a patch once it is in a Git repository. Instead:
-"Add a ...".
+Hey, these patches enable support for software IRQ coalescing and GRO
+aggregation and applies conservative defaults which can help improve
+system and network performance by reducing the number of hardware
+interrupts and improving GRO aggregation ratio.
 
-> 
-> Signed-off-by: Prachotan Bathi <prachotan.bathi@arm.com>
-> ---
->  drivers/char/tpm/tpm_crb_ffa.c | 74 +++++++++++++++++++++++-----------
->  1 file changed, 50 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
-> index 4ead61f01299..e47e110bac9e 100644
-> --- a/drivers/char/tpm/tpm_crb_ffa.c
-> +++ b/drivers/char/tpm/tpm_crb_ffa.c
-> @@ -10,6 +10,8 @@
->  #define pr_fmt(fmt) "CRB_FFA: " fmt
->  
->  #include <linux/arm_ffa.h>
-> +#include <linux/delay.h>
-> +#include <linux/moduleparam.h>
->  #include "tpm_crb_ffa.h"
->  
->  /* TPM service function status codes */
-> @@ -178,6 +180,17 @@ int tpm_crb_ffa_init(void)
->  }
->  EXPORT_SYMBOL_GPL(tpm_crb_ffa_init);
->  
-> +static unsigned int busy_timeout = 2000;
-> +/**
-> + * busy_timeout - Maximum time to retry before giving up on busy
-> + *
-> + * This parameter defines the maximum time in milliseconds to retry
-> + * sending a message to the TPM service before giving up.
-> + */
-> +module_param(busy_timeout, uint, 0644);
-> +MODULE_PARM_DESC(busy_timeout,
-> +		 "Maximum time to retry before giving up on busy");
-> +
->  static int __tpm_crb_ffa_send_recieve(unsigned long func_id,
->  				      unsigned long a0,
->  				      unsigned long a1,
-> @@ -191,34 +204,47 @@ static int __tpm_crb_ffa_send_recieve(unsigned long func_id,
->  
->  	msg_ops = tpm_crb_ffa->ffa_dev->ops->msg_ops;
->  
-> -	if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
-> -		memset(&tpm_crb_ffa->direct_msg_data2, 0x00,
-> -		       sizeof(struct ffa_send_direct_data2));
-> +	ktime_t start;
-> +	ktime_t stop;
-> +
-> +	start = ktime_get();
-> +	stop = ktime_add(start, ms_to_ktime(busy_timeout));
-> +
-> +	do {
-> +		if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
-> +			memset(&tpm_crb_ffa->direct_msg_data2, 0x00,
-> +			       sizeof(struct ffa_send_direct_data2));
->  
-> -		tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
-> -		tpm_crb_ffa->direct_msg_data2.data[1] = a0;
-> -		tpm_crb_ffa->direct_msg_data2.data[2] = a1;
-> -		tpm_crb_ffa->direct_msg_data2.data[3] = a2;
-> +			tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
-> +			tpm_crb_ffa->direct_msg_data2.data[1] = a0;
-> +			tpm_crb_ffa->direct_msg_data2.data[2] = a1;
-> +			tpm_crb_ffa->direct_msg_data2.data[3] = a2;
->  
-> -		ret = msg_ops->sync_send_receive2(tpm_crb_ffa->ffa_dev,
-> +			ret = msg_ops->sync_send_receive2(tpm_crb_ffa->ffa_dev,
->  				&tpm_crb_ffa->direct_msg_data2);
-> -		if (!ret)
-> -			ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data2.data[0]);
-> -	} else {
-> -		memset(&tpm_crb_ffa->direct_msg_data, 0x00,
-> -		       sizeof(struct ffa_send_direct_data));
-> -
-> -		tpm_crb_ffa->direct_msg_data.data1 = func_id;
-> -		tpm_crb_ffa->direct_msg_data.data2 = a0;
-> -		tpm_crb_ffa->direct_msg_data.data3 = a1;
-> -		tpm_crb_ffa->direct_msg_data.data4 = a2;
-> -
-> -		ret = msg_ops->sync_send_receive(tpm_crb_ffa->ffa_dev,
-> -				&tpm_crb_ffa->direct_msg_data);
-> -		if (!ret)
-> -			ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data.data1);
-> -	}
-> +			if (!ret)
-> +				ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data2.data[0]);
-> +		} else {
-> +			memset(&tpm_crb_ffa->direct_msg_data, 0x00,
-> +			       sizeof(struct ffa_send_direct_data));
->  
-> +			tpm_crb_ffa->direct_msg_data.data1 = func_id;
-> +			tpm_crb_ffa->direct_msg_data.data2 = a0;
-> +			tpm_crb_ffa->direct_msg_data.data3 = a1;
-> +			tpm_crb_ffa->direct_msg_data.data4 = a2;
-> +
-> +			ret = msg_ops->sync_send_receive(tpm_crb_ffa->ffa_dev,
-> +				&tpm_crb_ffa->direct_msg_data);
-> +			if (!ret)
-> +				ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data.data1);
-> +		}
-> +		if (ret == -EBUSY)
-> +			pr_err("TPM says busy, trying again, value, ret: %d\n",
-> +			       ret);
-> +		else
-> +			break;
-> +		usleep_range(50, 100);
-> +	} while (ktime_before(ktime_get(), stop));
+Zak Kemble (2):
+  net: bcmgenet: use napi_complete_done return value
+  net: bcmgenet: enable GRO software interrupt coalescing by default
 
-I'd describe the code change also in more detail i.e. what is this loop
-about.
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
->  
->  	return ret;
->  }
-> -- 
-> 2.43.0
-> 
-> 
+-- 
+2.39.5
 
-BR, Jarkko
