@@ -1,142 +1,253 @@
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11021142.outbound.protection.outlook.com [52.101.70.142])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5ED12CDAE;
-	Mon,  9 Jun 2025 06:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.142
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749452049; cv=fail; b=fK7pDkfw3m3hjqtBU3j3agdQEVMtjBrHsmiYRhbT18+qs9GnvdrNvch78lhsCpWI7wj/7f0vJNcqWxDIGOsRbw8axzWJ+1kBDjcMhS7DbPHETBcYfZvTw1FwmzviDK34+9Di4RSkpsQritTqm5tKiiVlirBxwvnPaSkBmNoRFRU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749452049; c=relaxed/simple;
-	bh=tOaCHDCy1vu4xA8i0q3iFGhCb+1KhT/9GyA88zNnhqs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iey+dejOF44Q+0yHlbH2v5uwmlXMgdVhy3f5CWV/J6v3uWBgttKqkkadqSczSYGqCQJ98xeO2c96dAZOroPXBVoFv0BC8vOIB8qKmBKKk07XzSUtioJORJlg8oX/CE9X2ScomZ6c4+03XPE6ERKAJrxNT+fZVigr0h7Ml2JW15Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=technica-engineering.de; spf=pass smtp.mailfrom=technica-engineering.de; dkim=pass (1024-bit key) header.d=technica-engineering.de header.i=@technica-engineering.de header.b=i4aUDZeQ; arc=fail smtp.client-ip=52.101.70.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=technica-engineering.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=technica-engineering.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09BE02571C9;
+	Mon,  9 Jun 2025 06:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749452091; cv=none; b=IVkCzmUYW2I7vg+nxgCfR3CRkU+gFsqN4FYXqEaByRjXpY0Q5D9ezCyEGpYDbXrJyujTHCaADRIAxARpOFOSS4GZ0G+GWtoHFfVTLim17TRts08KJZcaOAXuycreNFqiCJgHyHvIlUTlsOuibwxT7KI3K5Ik3t/xQNavDhZ/kUs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749452091; c=relaxed/simple;
+	bh=Cojg2dVDnqNr9CCklLCLNK1Qh8o4I3bWRCdX/RP+HVk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=oFCWiRxzPlg84f4BThXs64LyRo6FK9lViEX/PVJQRMkTuTdeynctiIApjbAYZhGdTyLHKdXBEExZ4CgU9IZXJfj90c9u2sglrcM62zvXw++M/udbDuA9Ljk1jiw25FUPaS12oAPOOZYzWFnWTmTCbat04AeiG5SbT7csGnQR4/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Svf2AohE; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=technica-engineering.de header.i=@technica-engineering.de header.b="i4aUDZeQ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vOtoPR2EX0/ufbhti5sMMIrLRCyJzeICJCuWtqESH6zm4G6syahnA7i4WwWo4IFXmgLLCzhSoNzoDgLpfW2Ga/M7wMqGYsFt+aFW0FmTrpSSz0cY7Ed0QiuVu/OLNqRMnxTE/0VUIPU6gQ1N6Vmr2/nwXIQ30fxsE/6g08FwQpHEP06OMoOnIcmnCWu+PkgwfvduMfTZJZh/L9zgYQ420tJPKaLuPmuJDEqGgaltSXAY0thCvZX+BqJUH6sv2HR9jMfUqxZNb8FXmL3UW2FSg0mGzzTxmQAs2CMEUsB0lpfVPVttABdl4wbUlMN7i3Ui8ysL8FU9Z10g3GmU03vyYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wESoGR7BnMdcxxaqeIs6T6NKZZ9DCT2YK2CrU/6uRfc=;
- b=sVbawAM5R+HbFIm+lcq+pxueP6TD3e94lEQ+oCs2Bbr6j6Qo94K4FkbagRz9tgZzh3uGkIMu8go84WhkC357WQ73hnNLUS78FB4ZfKTEl5jAYL68zfvDDiTTQJdgH8diizv8xwuh9xZFvdkJyU3x+DxWitRWe1qn3TRHYoA3qA13fRnk3K1J7k+BBEJLlBcnGQh/DdLzqzzOaV1IsJbM0k/yT4xhFkLtwzksWNb+O5GLheCjjGGsWUuNvrLUYjXuT8SAu7A5ZtPRMXGtwA91aTDvXvC+ElwJW/KNO/ZhDR4dGgYwZLnzf7ZHfk1c3pmM3ZEMjYJC1UH1xUhBgeuPrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 2.136.200.136) smtp.rcpttodomain=davemloft.net
- smtp.mailfrom=technica-engineering.de; dmarc=fail (p=reject sp=reject
- pct=100) action=oreject header.from=technica-engineering.de; dkim=none
- (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=technica-engineering.de; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wESoGR7BnMdcxxaqeIs6T6NKZZ9DCT2YK2CrU/6uRfc=;
- b=i4aUDZeQParjfX75b4rESnG/U4uly8EoxQfQOk1x1FrpAqUpoBGO4gOh7vRQcy/X1jnI/rUUKa62qOCzgbwpaNiisIKYN+cRsd9Un91fWmgcUOcJfs6XLnialuVZPQTJ2WSiDZ7Qm9bRjByBdmVP6yGBHJEdK6gDQ16eUVfR3iI=
-Received: from AM0PR02CA0007.eurprd02.prod.outlook.com (2603:10a6:208:3e::20)
- by AS8PR08MB9220.eurprd08.prod.outlook.com (2603:10a6:20b:5a3::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.34; Mon, 9 Jun
- 2025 06:54:04 +0000
-Received: from AM4PEPF00027A61.eurprd04.prod.outlook.com
- (2603:10a6:208:3e:cafe::75) by AM0PR02CA0007.outlook.office365.com
- (2603:10a6:208:3e::20) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.29 via Frontend Transport; Mon,
- 9 Jun 2025 06:54:04 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 2.136.200.136)
- smtp.mailfrom=technica-engineering.de; dkim=none (message not signed)
- header.d=none;dmarc=fail action=oreject header.from=technica-engineering.de;
-Received-SPF: Fail (protection.outlook.com: domain of technica-engineering.de
- does not designate 2.136.200.136 as permitted sender)
- receiver=protection.outlook.com; client-ip=2.136.200.136;
- helo=jump.ad.technica-electronics.es;
-Received: from jump.ad.technica-electronics.es (2.136.200.136) by
- AM4PEPF00027A61.mail.protection.outlook.com (10.167.16.70) with Microsoft
- SMTP Server id 15.20.8835.15 via Frontend Transport; Mon, 9 Jun 2025 06:54:03
- +0000
-Received: from dalek.ad.technica-electronics.es (unknown [10.10.2.101])
-	by jump.ad.technica-electronics.es (Postfix) with ESMTP id C1F6040220;
-	Mon,  9 Jun 2025 08:54:02 +0200 (CEST)
-From: Carlos Fernandez <carlos.fernandez@technica-engineering.de>
-To:
-Cc: carlos.fernandez@technica-engineering.de,
-	horms@kernel.org,
-	Sabrina Dubroca <sd@queasysnail.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Hannes Frederic Sowa <hannes@stressinduktion.org>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v3] macsec: MACsec SCI assignment for ES = 0
-Date: Mon,  9 Jun 2025 08:53:54 +0200
-Message-ID: <20250609065401.795982-1-carlos.fernandez@technica-engineering.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250604123407.2795263-1-carlos.fernandez@technica-engineering.de>
-References: <20250604123407.2795263-1-carlos.fernandez@technica-engineering.de>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Svf2AohE"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 558MiJtn012900;
+	Mon, 9 Jun 2025 06:54:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	vEGNZ/5kUzBKvjZOAMTeXKujI1gUanQOm2fMPSMWPWY=; b=Svf2AohEB9EfTN01
+	kjkj2JNT44fm+pnAH9ymphjQmqW+TVl/KVZi0O/N8AFffMQjdEajpibU1hc/GpE0
+	B8jl6/g8fWgJUSKJYJGoVe1hZRyCy2mBh51v7dfsnX+gu0NxCD+d5p82AY7EVWPH
+	NElumsw43qEm7yPqJyItnSqqliuud/v4BOXKnMlWO8J4pPcWdaGHjmPCfe9dV4EE
+	fWi3o2hvsdmmQznFVeLtwcCjiy0t/uy4yfcCXMa6vN9sfDV9pN5xtm8DZwVOsxAs
+	nHG6O6K4vrDO1skCzeRQZ0EUYg8TfBYbfUuxM610v7wHIbckDWJsDLMjItktz+T0
+	NVlHXg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ce9n7a1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 09 Jun 2025 06:54:37 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5596saTs003345
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 9 Jun 2025 06:54:36 GMT
+Received: from [10.239.133.114] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 8 Jun 2025
+ 23:54:32 -0700
+Message-ID: <8a25a320-6700-4fd0-aa08-38fe1e8c4623@quicinc.com>
+Date: Mon, 9 Jun 2025 14:54:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 1/2] dt-bindings: arm: Add device Trace Network On Chip
+ definition
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+	<mike.leach@linaro.org>,
+        James Clark <james.clark@linaro.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>
+CC: <kernel@oss.qualcomm.com>, <linux-arm-msm@vger.kernel.org>,
+        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski@linaro.org>
+References: <20250606-trace-noc-v8-0-833f94712c57@quicinc.com>
+ <20250606-trace-noc-v8-1-833f94712c57@quicinc.com>
+ <11ea6009-72d2-4306-a068-a828d4af429d@arm.com>
+Content-Language: en-US
+From: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+In-Reply-To: <11ea6009-72d2-4306-a068-a828d4af429d@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM4PEPF00027A61:EE_|AS8PR08MB9220:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 90944177-5f34-4072-5b12-08dda7226b9a
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?k9BTIRH6XakuD2SFAuitw6b36UyLe7q7HVg9ufsO/dMqX8UmboZDSHHoAh66?=
- =?us-ascii?Q?zHfujt5pnEmpBMUpDN0yokiqL693UFgc4afiPXd0ZCULTXTG5fn9BvogEKQ+?=
- =?us-ascii?Q?2sZY4jDOQh1zd3e1Xlec0/g22YKsSLS0qf/EXkskb1apifppzUnz+2MVeCkw?=
- =?us-ascii?Q?MUtPRTkGJeNtILZJLPKxkOLwqqJ/7Czjuu0p4gVjtCwji1+mwZDqt5Z59yBU?=
- =?us-ascii?Q?lsQ/g4RpxmRExVvXNccYw7cQhD05ABdx82p8IBdP9OCLmeELxsKw9i5deGEG?=
- =?us-ascii?Q?iOv6Pl6UE9hYJU7rss5dpcOIgrpts3dUP5CkY+Q+G2W9eyp2RDsWBfYsf/h6?=
- =?us-ascii?Q?Xu55sO3W7uZ5HnB/pOqgBR3+fL4HuEIxt1s4+LQVzVadWDESodzIvMkTU/e1?=
- =?us-ascii?Q?y1sgrL9sqezYFsIsovx+iYxBQM6C9G5ZrUpS9HGoiiF17sgVqerb8adI4TZR?=
- =?us-ascii?Q?Arewnzkw20Q+smGQbqVjqFFf/XDFFQmQVWrXpf9RyP0DCdtgiK9wU4mFymk8?=
- =?us-ascii?Q?jzJYLaRagn6aUY740xWaUXVklYZEV99GyCcx2i6udTrMwAWBbDTSVSG8fCpq?=
- =?us-ascii?Q?/3Q9/51fSsR5zuqlC4WuAIvzcyeGi0Dc7yxRcxNPjZNrnxrMGdEiZSOAv3tx?=
- =?us-ascii?Q?Gt0SZve2WxxZurThikHAexuZzGhoUImZaVpPjmzzqmzuniZh0ppRVvz6AgAP?=
- =?us-ascii?Q?j4Gnt9HJtO4dBTFHLn8yN/XAqrQDd/UGhvH8CP9ElE/3Yfe7M8sslam9v2om?=
- =?us-ascii?Q?wA/BgGuJm9HY2XwRooGyFM5RawJ6u4fF1wBSIL3E2nuH6ZtczGXM8/WEek6X?=
- =?us-ascii?Q?HH0RX7hkXv3lIDJIxQPfyF+wrXxPvQMGdvvaA+iUU/sgDEKtOYjkD1lBXXPj?=
- =?us-ascii?Q?c8UO0NpYDOlUDFwdKE8MzuXjUUbSBtp7z1ab5LLHpMJr1evSSE965vyTgNMq?=
- =?us-ascii?Q?+RRjQJmZz+SzTlW2PSL7M1wN+fI49bgzwThMHM8dyZRZrPRrI1rJKlooLZlA?=
- =?us-ascii?Q?Q1hasKAlxmXYMTpa06k0E6+rEdfN21ReZAOWWM3lwsrYsQndmUFyPnCsgWX/?=
- =?us-ascii?Q?93WKX2y+TyTw6piEWJlFlqogu/IZ2VaRRNtpWYzPBawR1dtLz4xqlk0BfKxy?=
- =?us-ascii?Q?AfmSlBSdQUMfRCiZA5+T5LNUlNtjA+goLeQ1jo+UDLer8+KynUz0fHxmd+UM?=
- =?us-ascii?Q?ijwBiXMAhyIj3Sm1GrC47HqOYXuCvMhEjUl2MZ86ZPeJDneIkRIKonKwYW2M?=
- =?us-ascii?Q?cBu/09byDP6ze2mn07IRLgIsa6ZHmroEeJfB7Z2fQFJT19GQgv+URPinafKx?=
- =?us-ascii?Q?QR2c0J6QsQgbd3XE5xnlSzxDP7eHCpTR26Rp2UVyNDIzunQfuoyYkMVWtnhK?=
- =?us-ascii?Q?UcNo84Njj4uPwP5En4qyo8D4r7d8cxoZmil6102jDfmkLBvkaSrjnBn4gxUY?=
- =?us-ascii?Q?twVmE2o+M1+aSJtaAoBO1Trrw/9VVcNta8UQQy+qtAZdRiQQS2domktJ3Mlz?=
- =?us-ascii?Q?ZKSvTK6MeEKJeIh00w+pXvccLS0O/OT+TbO3?=
-X-Forefront-Antispam-Report:
-	CIP:2.136.200.136;CTRY:ES;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:jump.ad.technica-electronics.es;PTR:136.red-2-136-200.staticip.rima-tde.net;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(7416014)(376014);DIR:OUT;SFP:1102;
-X-OriginatorOrg: technica-engineering.de
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 06:54:03.1256
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90944177-5f34-4072-5b12-08dda7226b9a
-X-MS-Exchange-CrossTenant-Id: 1f04372a-6892-44e3-8f58-03845e1a70c1
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1f04372a-6892-44e3-8f58-03845e1a70c1;Ip=[2.136.200.136];Helo=[jump.ad.technica-electronics.es]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AM4PEPF00027A61.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB9220
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: eeuU-mup0ycxy3L90y4Ta8SmAlLinmWu
+X-Authority-Analysis: v=2.4 cv=drjbC0g4 c=1 sm=1 tr=0 ts=6846852d cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=gEfo2CItAAAA:8
+ a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=x9t6tEnLmRZl-dXiHhQA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=sptkURWiP4Gy88Gu7hUp:22 a=cvBusfyB2V15izCimMoJ:22
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: eeuU-mup0ycxy3L90y4Ta8SmAlLinmWu
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA1MiBTYWx0ZWRfX1GhIvPT7uXIq
+ K3amFUW68uOF7V8XTtlpN24kO6/3pp25cu+O5a07FTAmf20CepMtNFBPaYa+Ym7JaSCHYTBpvhZ
+ LIi3OD5xdmNEolltpWvOd9RUvtnhAa2tOtywrO4zFRDbwpTzQuEIOFyNnmY/j6hJRqL0gLsfAo/
+ qlcyCSfQOL6NUEalut5FA8voRQ/c4TurfIub8nVj9Hffj2oQvkZXmhpXUdv99D7raWmC8+zWfOz
+ XhirkEEfhs8KrWupDcdNRCW/yn4mApFAk1EbEj2V1O+9lT3gp7WYCJB/X5LIxHPRMtbA7hvW7z3
+ KdSEyjWqyKFueubJiKlVgcSY5ba5ueuQeLYFGfhe4VJmnGmMXoXa+gAFpywhNipSUMLo2MikGht
+ cxjAjf/iX3+irzyqa7b2tKkyCTQJ5rjm2JVBG1hfvYi+50TZwJq5j42QFSzEjpYSZ0OQTMw1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-09_02,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1015
+ priorityscore=1501 suspectscore=0 bulkscore=0 mlxlogscore=999 adultscore=0
+ phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506090052
 
-Hi Simon, 
 
-I've added the test explanation in a new v4 of the patch.
-https://patchwork.kernel.org/project/netdevbpf/patch/20250609064707.773982-1-carlos.fernandez@technica-engineering.de/
 
-Thanks, 
+On 6/6/2025 5:32 PM, Suzuki K Poulose wrote:
+> On 06/06/2025 10:18, Yuanfang Zhang wrote:
+>> Add a new coresight-tnoc.yaml file to describe the bindings required to
+>> define Trace Network On Chip (TNOC) in device trees. TNOC is an
+>> integration hierarchy which is a hardware component that integrates the
+>> functionalities of TPDA and funnels. It collects trace form subsystems
+>> and transfers to coresight sink.
+>>
+>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+>> ---
+>>   .../bindings/arm/qcom,coresight-tnoc.yaml          | 111 +++++++++++++++++++++
+>>   1 file changed, 111 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/qcom,coresight-tnoc.yaml b/Documentation/devicetree/bindings/arm/qcom,coresight-tnoc.yaml
+>> new file mode 100644
+>> index 0000000000000000000000000000000000000000..d07c6f2d7b949f69f9d8dd8de8664382eb39fac1
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/qcom,coresight-tnoc.yaml
+>> @@ -0,0 +1,111 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/arm/qcom,coresight-tnoc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm Trace Network On Chip - TNOC
+>> +
+>> +maintainers:
+>> +  - Yuanfang Zhang <quic_yuanfang@quicinc.com>
+>> +
+>> +description: >
+>> +  The Trace Network On Chip (TNOC) is an integration hierarchy hardware
+>> +  component that integrates the functionalities of TPDA and funnels.
+>> +
+>> +  It sits in the different subsystem of SOC and aggregates the trace and
+>> +  transports it to Aggregation TNOC or to coresight trace sink eventually.
+>> +  TNOC embeds bridges for all the interfaces APB, ATB, TPDA and NTS (Narrow
+>> +  Time Stamp).
+>> +
+>> +  TNOC can take inputs from different trace sources i.e. ATB, TPDM.
+> 
+> This looks like the generic description of TNOC. But please could you
+> also mention this binding is only for Aggregator TNOC ? Or make the
+> binding as such explicit ?
+> 
+> - qcom,coresight-aggregator-tnoc
+> 
+> Suzuki
+> 
+sure, will update in next patch.
+> 
+>> +
+>> +# Need a custom select here or 'arm,primecell' will match on lots of nodes
+>> +select:
+>> +  properties:
+>> +    compatible:
+>> +      contains:
+>> +        enum:
+>> +          - qcom,coresight-tnoc
+>> +  required:
+>> +    - compatible
+>> +
+>> +properties:
+>> +  $nodename:
+>> +    pattern: "^tn(@[0-9a-f]+)$"
+>> +
+>> +  compatible:
+>> +    items:
+>> +      - const: qcom,coresight-tnoc
+>> +      - const: arm,primecell
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: apb_pclk
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: APB register access clock
+>> +
+>> +  in-ports:
+>> +    $ref: /schemas/graph.yaml#/properties/ports
+>> +
+>> +    patternProperties:
+>> +      '^port(@[0-9a-f]{1,2})?$':
+>> +        description: Input connections from CoreSight Trace Bus
+>> +        $ref: /schemas/graph.yaml#/properties/port
+>> +
+>> +  out-ports:
+>> +    $ref: /schemas/graph.yaml#/properties/ports
+>> +    additionalProperties: false
+>> +
+>> +    properties:
+>> +      port:
+>> +        description:
+>> +          Output connection to CoreSight Trace Bus
+>> +        $ref: /schemas/graph.yaml#/properties/port
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - clock-names
+>> +  - in-ports
+>> +  - out-ports
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    tn@109ab000  {
+>> +      compatible = "qcom,coresight-tnoc", "arm,primecell";
+>> +      reg = <0x109ab000 0x4200>;
+>> +
+>> +      clocks = <&aoss_qmp>;
+>> +      clock-names = "apb_pclk";
+>> +
+>> +      in-ports {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +
+>> +        port@0 {
+>> +          reg = <0>;
+>> +
+>> +          tn_ag_in_tpdm_gcc: endpoint {
+>> +            remote-endpoint = <&tpdm_gcc_out_tn_ag>;
+>> +          };
+>> +        };
+>> +      };
+>> +
+>> +      out-ports {
+>> +        port {
+>> +          tn_ag_out_funnel_in1: endpoint {
+>> +            remote-endpoint = <&funnel_in1_in_tn_ag>;
+>> +          };
+>> +        };
+>> +      };
+>> +    };
+>> +...
+>>
+> 
+
