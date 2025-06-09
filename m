@@ -1,120 +1,106 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625F622A4CC;
-	Mon,  9 Jun 2025 23:19:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6531522A4D2;
+	Mon,  9 Jun 2025 23:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749511153; cv=none; b=fSVryxdjH3WxBjWpVXDi2b5hDeUJHRwQcmwpZ3c2xLActbIMXGvc043qR67KGsk3hhixbLSNLXCMyCC1iAR5YaOcsrpwGT8IVBktYoh/LedOOW+ql9LDB5pQ4GLsn0bjlxJxcfL3GAEIXApnFGLmPNVa9XLfmM+hUL/g9D50w6E=
+	t=1749511179; cv=none; b=fA46qJrAF63shap1rR52vNfb6QUfN593EZWeEPdjapLznH8eO6PSadu7+Uz96aaUjiwmO/tbjDLnrZBxtzsCSiALw/x//KyjhVcJuXZeNW0iGZJqRjNKmpFfVFLjTC4a/KOR1TaX0OF96zOqx7ufXEGtl4ihLvculz1XAqfzfZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749511153; c=relaxed/simple;
-	bh=XjeOFD7NHyYj2QssHfU8SMCjk6DVR57iKzCi5SGOLxk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l/Q/geHGsICHhSvs1OKhLFizpQKLnraYol4gDUNcQTtQ+bkW28ze06gIkB6lF42tPrJtO9opq1uhBwmLVMPffCwTcZC1ByU2xvL6IO+JilZe/lOoVLN9aAVqlK2RWb9uGV4kZf74tPpzQzzn/U6q6IeQ6jAML41TQ6puqHU8GWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ORVXOuJu; arc=none smtp.client-ip=209.85.221.51
+	s=arc-20240116; t=1749511179; c=relaxed/simple;
+	bh=6CFXk/D4tnr1yc6KzyuxGLm3bBJFXFB4G4mdk5f9TfI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JC6B33+5euKs8yTy1BBg8iL6PcLdY4HEKBX1H3fZa8X+eTeWs3EDpSidR7O8vQRSLr3+fmW+oFvcids2IapOSPETMvIWw/aHfL1k9wocBgOTKu72D4RDdk8o+VOm7pZxNhRDWUooBkhMtQfpjafuA7boXhp64dqocqkF4qxka7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jmat6F0E; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ORVXOuJu"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a528243636so2854515f8f.3;
-        Mon, 09 Jun 2025 16:19:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jmat6F0E"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-234b9dfb842so42696175ad.1;
+        Mon, 09 Jun 2025 16:19:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749511149; x=1750115949; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9vSVjvUP5pzFqCNMAgN8V1P/hYKkRfbNHW13r/UQoJM=;
-        b=ORVXOuJud8nYIalI2tHvgR5dFABDwxvFKwCyLL06aK5QZt3+C3NIWl7Ka+6rib9m22
-         Epaqh2889wqHXkn8uRrz8sA3kKyGP5mEkgV2cKYoUXHl2V9ezQVu7G5pUw0+yoOrqaRD
-         hXp8N5pGPjpZwEfN8W4v0IJSZWItEBcsBvL0gmdctleYY81PTpg7ko4xoIdt3I8s3ash
-         rN/2FGsvuODwBXWe+rfcfavTO8AQUHU9IBKhWcpkcx4XkcaFM3JIjLpmhZ2gl/xhq3ZU
-         Mu+FN+0/170i0pt9CbEwAIReIxtyci++Xv2HA377kipn72qZXEYiR0baLL2hL2yBIxeV
-         WwZA==
+        d=gmail.com; s=20230601; t=1749511175; x=1750115975; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WuMn2eerhCidgiefO3mm6DZg/epTXqNO4m++hNzNzoE=;
+        b=jmat6F0ET7VBh1CUDPK1OH4r6FDErpWnfHzDvUYnFO1aL3WN8bCRXT9Varbwm0DiXq
+         PL5PohCCjMODuqU8dhRFtIjVEwnU7p3nSfflSeDPGyU0XmskBVugQwaqEOtUzF4q2IPs
+         PBhTtmIcjrLxa2jbDgxv4slFarBoRQvxfFVonkZuJb9PxsZ6f+EBOd5/UmchVrI7//Sq
+         oaqDERNmcpLpxtgU/EekK6v5+93CwQ7KEmnKX3/7lYPEBXfCSiGGn/6OodyiubuP7QQs
+         Juu4EZJM5TWPTd3fy0pFTccCG4cLPoXeEQjqOBEPsPW2qrV1vSoVQfs2eD1JWdZBw6hu
+         Fiow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749511149; x=1750115949;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9vSVjvUP5pzFqCNMAgN8V1P/hYKkRfbNHW13r/UQoJM=;
-        b=jEALl2ZTzzxj9xoeGKPnD/3MzqfwHvY3AxAoAZUBdhMkT2k6wULiNWci5AECvoV3vq
-         Vb0ngbc7QGMQp8FjvkXxuNJmnL+cNndk1z/1+dmFNMYKiRSUJD2KRWetMwdGROnakwZc
-         IqIT9sObMA2lCssiVpoRR/VU2XKCRdcxeCqjajAs7wVBm2IfGNY0dgNI7uzjCIHqQ6+A
-         HIJEdGc/xCwLmndI/pG+58AIjcLy/hHIhy3eQJrCJlYqov+j96PtTrY+Fz0eKBVnBN6e
-         lHTtTSU47OA1tankTGQjNJLVY/lOwrGyMVU46n6LrrzjKedU18Ar5FfomvKeDkueCQZS
-         R0TQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV0AmXh3Ln4qu7Zl0El9ehqY+WK0RTPcdZ6J5EvCpefcgYRpi4n4LUI4S4b2nOGxEcLRLevY6qLkG0U@vger.kernel.org, AJvYcCVEbc6t8Q35V5Z/FVMIJeL1ZjgIsUf+Sljnszfjg9U5IqyztqR1iXqbB0stdbRLxWVrc/GxZdDjXtI8TBEy@vger.kernel.org, AJvYcCVn1cTwQTWUXSTwFvFn45FCFz2cnAx5LvcUJboXSYbiI0t38EzP8IOnkeYOBW5h89j85dvUM3vczM/R7VZCx1T2eRs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6Suix7oeRcxoFj+tvCLzTJg1+qXR0XKwGVRF/GK5JvpIaxjBD
-	1PYSIlGCUBNHKsSgYKJDOqNvWux1ktyIzBI/cJIgk/7RVuAMWC/7Ceu7
-X-Gm-Gg: ASbGncvKxRC+oDdHjEM7Tguhdt3Y5cQ/Z8DzmditrY/TNh2xxuD007rdxKqCFTFcgLQ
-	vQIJuoOtAxyx4KBoxBT+wkFEkpzccVWvmimXrmxysnJu7+UMjVtZop3qi98vVfvJOtQOcBC3FzF
-	l6gpYEDY1sSLYrD7xbSeEP+mzh2ZFTHmjOuKFBxDV2yP+Ryr2tBNsMKH1c6GML1VTDo8Qt5W1oC
-	nop2a4t/MMTGRTIEU4tdXHQKb6Ef83FDiej9RoC3IWTpcY0LrG8Z1qmX9L/tUjpd8Wq3DD4JcqZ
-	kmKfSAP1uMLVH2ha4k2kDo1SQp4riXthD2euO0xxWU4Y51+lQHwsrLRKzL2fUFOcga1Q70+Y3Sm
-	kJ+F1NIMnCV00Yau435hH
-X-Google-Smtp-Source: AGHT+IHR0S6UKeu38kBall8nzPHP5mE6KK0m4w1kvD2JToJoXXZea95MeWR/Gq7+9AsDTW1rcc9hvg==
-X-Received: by 2002:a05:6000:2482:b0:3a5:2848:2e78 with SMTP id ffacd0b85a97d-3a53188e2f2mr11635785f8f.28.1749511149486;
-        Mon, 09 Jun 2025 16:19:09 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:3c26:913e:81d:9d46])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53244f0cbsm10546543f8f.81.2025.06.09.16.19.08
+        d=1e100.net; s=20230601; t=1749511175; x=1750115975;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WuMn2eerhCidgiefO3mm6DZg/epTXqNO4m++hNzNzoE=;
+        b=J/ABf1ZkJDtR448AoaaIs4K6vU9FdK4WBP2roUDFIoykq0GK+zMiG/yjdZz7CR+XfX
+         dAjNSvkSV85tL2bBybi7zE0T5vKSJabysS3Xs8b2/ZbqEAN54NjmC12reswGOgGsCv+m
+         /RfloduwuzHPUUQt6IOD5XNtjY4ajUWS26TSjw6gPH90DGcJFrzdw05HMCMh15ImadAU
+         2GI024WnjRM2j5aUH1rLqXswQ8S6R3bW2xttbiPqNcQnQCgu7gnY1TC44jcUq0FSsseb
+         fZRgVk9JGLLznzJgY2eSMViZlSxJ2nUS9UFpkQy5pALQoUKTjGACnzAluQBmIKlEAw79
+         E/EA==
+X-Forwarded-Encrypted: i=1; AJvYcCUWH6edEfPG7tuJUghErMo01lRG05SgacgDlHDen2Xq7m1FRekrSRPHwqbKeJVI8Wv/pdEC/c1/Ezc8KVzBnbBU@vger.kernel.org, AJvYcCV4oZxdb0ABCJFMFoJ6DUNLz0KTMuvRl03XnhCSfHwC7QYrv6sdcJxCZuS7EaNkdImsI7cvqSGZcvCMWA==@vger.kernel.org, AJvYcCVaXnzSCq1NWY9V3jASoimySse9BOnElS9nDDO+Wssq2qYdCZ/N9yH/Kbx3fUSyHlRhJu5qg3m68ltUOCY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw815ZonRIPF774nIDkft7BGRqrUcFnYYxXiafd3Fz9BkhUpPBp
+	5hQhtH5Lmv2e7qvgToCke9xVrqumXr5H6qBnSf+SzwBoqekSKDcOk2I=
+X-Gm-Gg: ASbGncuci/ak43ecATG/m4cXA0m5fsBEXP1q7DOLglmJqbgdWA1UUn6L6XaW8BDAOJB
+	eZF/dI1Byjaa7DMU+J5xrS87O5s5c4ApxDZUuxZ7f3TQLznl2efHhmwNZpy7plWrt/p/p00GoCM
+	9sW1U0cq9xYIuKgVS3kC0UbFhIc9c/StkLKBpiFutEJekeSmViOLKeCwqTbv+u1vTZBA7N2VX/e
+	BU1TNnEaQVC4t8Pkz64vDmgnrXes/JRSZXX7O3iIo5feRmd0M1IUWolsdWVbipjMMukB5MtQQlB
+	G/fKoa0soYGuC8l0PyFxbKdbz1QA/dB8XHTOYcujjlP9rPeek/PItQM29mVMytvAEJe+Zj9QmfT
+	hvQkwGNIcq8RslwIgNT0A90MgpEC7mLiUgQ==
+X-Google-Smtp-Source: AGHT+IEV8CpYnlOB2YnfAeL9gQJAXPfboUO10GUHaeUTiTj5LkmkPPvpLnBpPyH1TV/VU7MOCFUvRA==
+X-Received: by 2002:a17:902:d2c6:b0:235:efbb:9539 with SMTP id d9443c01a7336-23601cfebb3mr204848925ad.17.1749511175460;
+        Mon, 09 Jun 2025 16:19:35 -0700 (PDT)
+Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-23603405fcdsm59911355ad.159.2025.06.09.16.19.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 16:19:09 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Biju Das <biju.das.jz@bp.renesas.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] dt-bindings: display: renesas,rzg2l-du: Add support for RZ/V2N SoC
-Date: Tue, 10 Jun 2025 00:19:05 +0100
-Message-ID: <20250609231905.511904-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
+        Mon, 09 Jun 2025 16:19:35 -0700 (PDT)
+Date: Mon, 9 Jun 2025 16:19:34 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+	pabeni@redhat.com, skalluru@marvell.com, manishc@marvell.com,
+	andrew+netdev@lunn.ch, michael.chan@broadcom.com,
+	pavan.chebbi@broadcom.com, ajit.khaparde@broadcom.com,
+	sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
+	anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
+	tariqt@nvidia.com, saeedm@nvidia.com, louis.peens@corigine.com,
+	shshaikh@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+	ecree.xilinx@gmail.com, horms@kernel.org, dsahern@kernel.org,
+	shuah@kernel.org, mheib@redhat.com, ruanjinjie@huawei.com,
+	linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+	linux-rdma@vger.kernel.org, oss-drivers@corigine.com,
+	linux-net-drivers@amd.com, linux-kselftest@vger.kernel.org,
+	leon@kernel.org
+Subject: Re: [PATCH net-next v2 0/4] udp_tunnel: remove rtnl_lock dependency
+Message-ID: <aEdsBhZ4C--0ohYj@mini-arch>
+References: <20250609162541.1230022-1-stfomichev@gmail.com>
+ <20250609153817.14d7e762@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250609153817.14d7e762@kernel.org>
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 06/09, Jakub Kicinski wrote:
+> On Mon,  9 Jun 2025 09:25:37 -0700 Stanislav Fomichev wrote:
+> > Recently bnxt had to grow back a bunch of rtnl dependencies because
+> > of udp_tunnel's infra. Add separate (global) mutext to protect
+> > udp_tunnel state.
+> 
+> Appears to break the selftest, unfortunately:
+> https://netdev.bots.linux.dev/contest.html?test=udp-tunnel-nic-sh&branch=net-next-2025-06-09--21-00
 
-Document support for the DU IP found on the Renesas RZ/V2N (R9A09G056) SoC.
-The DU IP is functionally identical to that on the RZ/V2H(P) SoC, so no
-driver changes are needed. The existing `renesas,r9a09g057-du` compatible
-will be used as a fallback for the RZ/V2N SoC.
+Argh, should have run it locally first :-(
+Looks like there is a test that sets up pretty high sleep time (1 sec)
+and expects entry to not appear during next 'ethtool --show-tunnels' run.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- .../devicetree/bindings/display/renesas,rzg2l-du.yaml          | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/renesas,rzg2l-du.yaml b/Documentation/devicetree/bindings/display/renesas,rzg2l-du.yaml
-index 1e32d14b6edb..2cc66dcef870 100644
---- a/Documentation/devicetree/bindings/display/renesas,rzg2l-du.yaml
-+++ b/Documentation/devicetree/bindings/display/renesas,rzg2l-du.yaml
-@@ -25,6 +25,9 @@ properties:
-           - enum:
-               - renesas,r9a07g054-du    # RZ/V2L
-           - const: renesas,r9a07g044-du # RZ/G2L fallback
-+      - items:
-+          - const: renesas,r9a09g056-du # RZ/V2N
-+          - const: renesas,r9a09g057-du # RZ/V2H(P) fallback
- 
-   reg:
-     maxItems: 1
--- 
-2.49.0
-
+Gonna double check and remove the case if my understanding is correct.
+Don't think there is much value in keeping the debugfs knob just for the
+sake of this test? LMK if you disagree; otherwise gonna repost tomorrow.
