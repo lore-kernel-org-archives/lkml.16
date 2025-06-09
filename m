@@ -1,138 +1,95 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C85D1FDE22;
-	Mon,  9 Jun 2025 15:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66362CA5A;
+	Mon,  9 Jun 2025 15:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749483522; cv=none; b=kDJEfsGceGFnX0tCiygUskdnczStpiPDCUVTfHWjJwwkezpQ8TWBAG7UfwEkjalyohzt8FBczLnbKFVDSdrQoodyFn1+/cppYcjJ2KRVmMLAbomItCqEmVliAbpzfWjIAIh/EeKS5PN/u4O1IXlw0LFk9AFY5EfsTMi9V8ur0rA=
+	t=1749483601; cv=none; b=cQzzZAUaKcD7JWxyNfLL1ubq2BcR3pnvz7P+pVd+LGP9DJVuCdF5PvBAMAWvClShCpmegMVpseaEq++BZGWFVG7DI+NAuL3MqY0Uh3p0DGw7FuI9MhfEDZ462XGdA8QQmp7HjaeTnid9ZK5kdIJVp4GWtuV139AWMCAFA5H+GkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749483522; c=relaxed/simple;
-	bh=vjumWbI1nLmJofNVoMmsXIpj4QnYwD0P0T1Q8ZvROOw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YT9G0rMXR4ZoQL/7XMk/w69R1dinppkYQCEXeShRzFIk4UcO24A99r7x65H4aH5JmDfAx8JgTUY2zmOATT8NJBgLgnPg8Gqjesueed0pQWDH57Jg5Wz/7FMZkHHBQreD7UQjkzVwpE/jfDQ1ZddBYLKYRrwAe4D8Oyzgt97iJQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id D7EF4120695;
-	Mon,  9 Jun 2025 15:38:29 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id C0B8918;
-	Mon,  9 Jun 2025 15:38:27 +0000 (UTC)
-Date: Mon, 9 Jun 2025 11:39:55 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jan Kiszka <jan.kiszka@siemens.com>, Andreas Ziegler
- <ziegler.andreas@siemens.com>, Felix MOESSBAUER
- <felix.moessbauer@siemens.com>, Julien Flot <julien.flot@siemens.com>
-Subject: Re: [PATCH v2] tracing: Fix regression of filter waiting a long
- time on RCU synchronization
-Message-ID: <20250609113955.47a2f44c@gandalf.local.home>
-In-Reply-To: <9a2f0cd0-1561-4206-8966-f93ccd25927f@paulmck-laptop>
-References: <20250606201936.1e3d09a9@batman.local.home>
-	<9a2f0cd0-1561-4206-8966-f93ccd25927f@paulmck-laptop>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749483601; c=relaxed/simple;
+	bh=79i4R9SAD/alYf7WTzRlygyu10EANW52xvy2M/Do+QY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=DizJUtAilF553o4vYi7+ZDmi+roeo0g+yrukiSLQP35GhsJqaqkVWNla6f6Yy2I/+Ap92y1vX/RCZlArBzHXYONA2oD7nPreygWRziNMuCvjrmGCjkFU0xRynorlX1uEou5blDQf/2pFLV4GRfkhrU+SUaDXadU5XYiM0iu1gjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jkd8Z7hy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jkd8Z7hy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77850C4CEEF;
+	Mon,  9 Jun 2025 15:39:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749483600;
+	bh=79i4R9SAD/alYf7WTzRlygyu10EANW52xvy2M/Do+QY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=jkd8Z7hy9VcKFGVF/k3GMiuZNhA8hpfqrTKYXXW9Je8G7+feslv2lSkbwsZS8sFn5
+	 QHkWbADZUD9XV/luyZa1vbkWCt1YTgW7akHYZKWDy1u9qBHveFledA9n37B2QONLhc
+	 ZktHqXIL8WQg79ILLwbsqsTpd6QbQQChORr4D2Z059wold8li4fSPKbQ43s6UTBLk5
+	 upjF0NTuViNfBiXpLY8YpDs6hSLQJduk5+MecH8Rn1R99xoBKCITYInJG2v8E0UW5V
+	 wy4Iuom04TDjcvXLP3bV1uWBwQmfeOkoAp2zASX1+v/QVpagpQSE8hmgbp72YIZWE5
+	 LwbWi+g1AK2wg==
+From: Mark Brown <broonie@kernel.org>
+To: alsa-devel@alsa-project.org, 
+ Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
+Cc: Vijendar.Mukunda@amd.com, Basavaraj.Hiregoudar@amd.com, 
+ Sunil-kumar.Dommati@amd.com, syed.sabakareem@amd.com, 
+ mario.limonciello@amd.com, yung-chuan.liao@linux.intel.com, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, 
+ "open list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." <linux-sound@vger.kernel.org>, 
+ open list <linux-kernel@vger.kernel.org>
+In-Reply-To: <20250609121251.639080-1-venkataprasad.potturu@amd.com>
+References: <20250609121251.639080-1-venkataprasad.potturu@amd.com>
+Subject: Re: [PATCH] ASoC: amd: acp: Fix pointer assignments for
+ snd_soc_acpi_mach structures
+Message-Id: <174948359821.187608.7932953931685705829.b4-ty@kernel.org>
+Date: Mon, 09 Jun 2025 16:39:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: C0B8918
-X-Stat-Signature: k77cudh6kkko738ufnaaa5w1gbb47hnq
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19olcQrNIITw9reBrW2zFmvrSR4FMpmzqA=
-X-HE-Tag: 1749483507-534997
-X-HE-Meta: U2FsdGVkX18WltvNoZqDQyslFZ+ayUtqvpED8YUCRFGbu+nDsw5JPVdzsfCqzaF7wGi8JigYzLF5hlblisjz2TfNLGSOvDCq9C5SDtG37DXSPQuo0crEtWnLAIZhV4n4rqP7Q5BhpOz4K2T/jMMqmFARqAS1RpLY334H39hGuEHkFltKL8qmpQRvatdXEPG59hW9etCcpH9yImlWGwhNrM7tQDsM535YPzcSlkktDTUg3NF3nEXjEWnTmEFWEhnDpSXrlxdJ0UL6i1wOXGz89uaGxaNoUdjdjlExjSTEawbqbEosqDxudpK22WXlFaLxYd9HzaG2BR2wdXdP+eNgEVkFsR2FJL/v
+X-Mailer: b4 0.15-dev-c25d1
 
-On Mon, 9 Jun 2025 05:21:19 -0700
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
-
-> > +static void free_filter_list(struct rcu_head *rhp)
-> > +{
-> > +	struct filter_head *filter_list = container_of(rhp, struct filter_head, rcu);
-> > +	struct filter_list *filter_item, *tmp;
-> > +
-> > +	list_for_each_entry_safe(filter_item, tmp, &filter_list->list, list) {
-> > +		__free_filter(filter_item->filter);
-> > +		list_del(&filter_item->list);
-> > +		kfree(filter_item);
-> > +	}  
+On Mon, 09 Jun 2025 17:42:32 +0530, Venkata Prasad Potturu wrote:
+> This patch modifies the assignment of machine structure pointers in the
+> acp_pci_probe function. Previously, the machine pointers were assigned
+> using the address-of operator (&), which caused incompatibility issues
+> in type assignments.
 > 
-> If the series of synchronize_rcu() calls was taking 99 seconds,
-> we might well be going through the above loop quite a few times, all
-> within a bh-disabled region of code.  For example, the calls from both
-> filter_free_subsystem_filters() and process_system_preds() look like
-> they can queue a very large number of entries.
-
-The iteration is for each event in a subsystem.
-
-Seeing what that is:
-
-~# for sys in /sys/kernel/tracing/events/* ; do cnt=`ls -F $sys |grep '/$' | wc -l`; echo $cnt $sys; done | sort -n | tail
-24 /sys/kernel/tracing/events/tcp
-26 /sys/kernel/tracing/events/xen
-28 /sys/kernel/tracing/events/sched
-32 /sys/kernel/tracing/events/writeback
-33 /sys/kernel/tracing/events/libata
-34 /sys/kernel/tracing/events/irq_vectors
-55 /sys/kernel/tracing/events/xhci-hcd
-92 /sys/kernel/tracing/events/kvm
-113 /sys/kernel/tracing/events/ext4
-724 /sys/kernel/tracing/events/syscalls
-
-So the most loops that can happen is 724 on the syscalls plus the system
-filter. And adding in printks to count the loops, I verified that:
-
-[..]
-[  100.019209] LOOPED 4 times
-[  100.020033] LOOPED 5 times
-[  100.020791] LOOPED 8 times
-[  100.021583] LOOPED 10 times
-[  100.022239] LOOPED 2 times
-[  100.110515] LOOPED 725 times
-[  100.111520] LOOPED 4 times
-[  100.112889] LOOPED 25 times
-[  100.114416] LOOPED 6 times
-[  100.115950] LOOPED 4 times
-[  100.117557] LOOPED 7 times
-[..]
-
-(724 event filters and one system event filter = 725 filters).
-
-If you feel that's too big, we could move it to a work queue.
-
-As more system calls get added, that number will grow. But it is limited to
-the number of system calls.
-
-All the event systems are way fewer than that.
-
+> Additionally, the declarations of the machine arrays in amd.h have been
+> updated to reflect that they are indeed arrays (`[]`). The code is
+> further cleaned up by declaring the codec structures in
+> amd-acpi-mach.c as static, reflecting their intended usage.
 > 
-> So...
-> 
-> > +	kfree(filter_list);
-> > +}
-> > +
-> > +static void free_filter_list_tasks(struct rcu_head *rhp)
-> > +{
-> > +	call_rcu(rhp, free_filter_list);  
-> 
-> ...why not use queue_rcu_work() in place of call_rcu() here, thus avoiding
-> possible response-time issues?
-> 
-> Or is there something that I am missing that limits the length of the
-> list passed to free_filter_list()?
+> [...]
 
-Just the number of events in a system.
+Applied to
 
-I could switch to a work queue but I don't think it needs to go as a fix,
-do you? That is, it can wait till the next merge window. Or is this going
-to affect things now?
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
--- Steve
+Thanks!
+
+[1/1] ASoC: amd: acp: Fix pointer assignments for snd_soc_acpi_mach structures
+      commit: 0779c0ad2a7cc0ae1865860c9bc8732613cc56b1
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
