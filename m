@@ -1,106 +1,141 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D680625D1E1
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 13:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23A1A1EE7D5;
+	Mon,  9 Jun 2025 13:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749476968; cv=none; b=t+gO31ZJZfqaL7zMXNkPJDoWzKSoqYAWb1WtrYXw+SQbMNEZdbyVDVAmmeGkIW8H0X60wUhz6UxT0PuAUIQpeHDYfphHPmNKFnIpKxtzQ6e8w219Jyf795nsll3qOAfb7Q+tku7x/IJxtUnf5M4ZNVI+n4AmYwS/u05e6GBzvzo=
+	t=1749476981; cv=none; b=bUyQUltPmzZH2AGDXalq3tO1UotIi/F8ZvVlrU+D06rqtq2qKPG+jLogqwGRiHOjJ+4tptNG4n5IYRpJg3Ix0Z5uX6K3YYIPg8Me5gL+yXuIzpKevai2PEUfk1QRvVKMNkSb/I7OYtvrMjgDRBfr++eS+ATPahLMq8G3Umzhxh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749476968; c=relaxed/simple;
-	bh=iNoS61OEsbcdQlABb8O+pgwQJJ1cN1tEonuvj6R1tk8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dlItv1rufRe911CKox2dDQo0l+cGfIX7Dl5dSg3oOYlDwK7ygCKFN06VmAHNT1J8ZfhvuoXhX47C4dAyB5vH5rTAzKuloXhhyltGettEHYT2+ofHsbNNtbqTbz23XFxpKdUHSh+d5lviGcwZwE7veu7ePDIeQbG8ULn96srpzRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=erZy9GDe; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749476981; c=relaxed/simple;
+	bh=YSp+OCRS4Er/rKV59ecBvAywmM/mat0WmmI7fzDrWgI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=utbuax+mGIbvRGhR+m4AyUxay2aOhs9CeKxl4Hbv2QqfKC42emSzBI2Syswq7WxL3wPcumKA4w6jI9euySKD8n3tEbXjTUKgKP9zP7AVvSPLfGjH277cBJZeSpc4FXYGAFRodfgZ54hmBYEGTnwpfTF6IsKxi995gaPyJv2Tl6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bvNwdHhh; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="erZy9GDe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749476965;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DhBsIpSQu/NKsYwFg9wGKiohX1VuHWd2Yx6z4NZMEoY=;
-	b=erZy9GDeCJI2uccg4epH35f4yVHa9Jq8wpbk5jE+VsUZIH24JhtIOCGh/DgOJHRlXF6h3L
-	dhOvMWQStuIwBn/av2Vd2mfBHbmvNaj/W77Aum6r8KTqAFlZ8SZLrhbinpET8LX97Okegh
-	zOHFfMATYJt27xnGOYDP0PwUsk22mOk=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-542-vn1MlWajNxSzx8MNAREzTg-1; Mon,
- 09 Jun 2025 09:49:22 -0400
-X-MC-Unique: vn1MlWajNxSzx8MNAREzTg-1
-X-Mimecast-MFC-AGG-ID: vn1MlWajNxSzx8MNAREzTg_1749476955
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C72D3188EA6A;
-	Mon,  9 Jun 2025 13:49:08 +0000 (UTC)
-Received: from localhost (unknown [10.2.16.92])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 283EB19560B0;
-	Mon,  9 Jun 2025 13:49:06 +0000 (UTC)
-Date: Mon, 9 Jun 2025 09:49:05 -0400
-From: Stefan Hajnoczi <stefanha@redhat.com>
-To: Alok Tiwari <alok.a.tiwari@oracle.com>
-Cc: mst@redhat.com, jasowang@redhat.com, michael.christie@oracle.com,
-	pbonzini@redhat.com, eperezma@redhat.com,
-	virtualization@lists.linux.dev, kvm@vger.kernel.org,
-	darren.kenny@oracle.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vhost-scsi: Fix check for inline_sg_cnt exceeding
- preallocated limit
-Message-ID: <20250609134905.GC29452@fedora>
-References: <20250607194103.1770451-1-alok.a.tiwari@oracle.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bvNwdHhh"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id C436A2117474; Mon,  9 Jun 2025 06:49:39 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C436A2117474
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749476979;
+	bh=Hxqph0KHOimiusBQXR//CugMtz83aYE3KaxyzEF/pPQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=bvNwdHhhJymoSpzuJJDkQIY/gr12I+iNDEDbpRR1dfL1MHj2GTkk/br6Gw0tTROis
+	 9eSqKL760hLEunCDNBeDtNAWf4etntCDt5U24+y8EEG41rtx+KZVUCi92NIO1JT1QH
+	 zUVLve/cqqBZOpr7xqk0U570pgYqCGVBmLlBYYvY=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Dexuan Cui <decui@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Michael Kelley <mhklinux@outlook.com>
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=EF=BF=BD=7EDski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH v5 4/5] net: mana: Allow irq_setup() to skip cpus for affinity
+Date: Mon,  9 Jun 2025 06:49:38 -0700
+Message-Id: <1749476978-27698-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1749476901-27251-1-git-send-email-shradhagupta@linux.microsoft.com>
+References: <1749476901-27251-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fKc30he2vAi3wglk"
-Content-Disposition: inline
-In-Reply-To: <20250607194103.1770451-1-alok.a.tiwari@oracle.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
+In order to prepare the MANA driver to allocate the MSI-X IRQs
+dynamically, we need to enhance irq_setup() to allow skipping
+affinitizing IRQs to the first CPU sibling group.
 
---fKc30he2vAi3wglk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This would be for cases when the number of IRQs is less than or equal
+to the number of online CPUs. In such cases for dynamically added IRQs
+the first CPU sibling group would already be affinitized with HWC IRQ.
 
-On Sat, Jun 07, 2025 at 12:40:29PM -0700, Alok Tiwari wrote:
-> The condition comparing ret to VHOST_SCSI_PREALLOC_SGLS was incorrect,
-> as ret holds the result of kstrtouint() (typically 0 on success),
-> not the parsed value. Update the check to use cnt, which contains the
-> actual user-provided value.
->=20
-> prevents silently accepting values exceeding the maximum inline_sg_cnt.
->=20
-> Fixes: bca939d5bcd0 ("vhost-scsi: Dynamically allocate scatterlists")
-> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
-> ---
->  drivers/vhost/scsi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Reviewed-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+---
+ Changes in v4
+ * fix commit description
+ * avoided using next_cpumask: label in the irq_setup()
+---
+ drivers/net/ethernet/microsoft/mana/gdma_main.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-
---fKc30he2vAi3wglk
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmhG5lEACgkQnKSrs4Gr
-c8h7EggAwgrah7g9s99SLzlFTYoWemYYpP3EqdHUzutA0bJbSpZTG7mLOsKvxs3M
-s0ZoQzikIgYVgHtIZwZSlrv1kq1DQnL61WlDWESMWCfB6oX7W7BjAKu+nDt56tP0
-p3qv2O/wsiMLQie8ES2criSD2tswseSmEMhCiBV8UWs+FA1IOXAG1BKyLhcGLqpo
-aFp/YsYRUBRFTty4WlRxzkN2+10V86DjUYEnpDjZn1FedfLtDL4OQ4MczJR6u3U2
-+cSQ2dJv/l2LHcVghYxrQJKDCEKUQoNzx20+UDd1Xg8/mt4FDO96G3G90mozLaZX
-rhn64IwB/wBz8DaLJJIrr7CM04c3Jw==
-=pLmm
------END PGP SIGNATURE-----
-
---fKc30he2vAi3wglk--
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index 6c4e143972a1..6e468c0f2c40 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -1329,7 +1329,8 @@ void mana_gd_free_res_map(struct gdma_resource *r)
+  * do the same thing.
+  */
+ 
+-static int irq_setup(unsigned int *irqs, unsigned int len, int node)
++static int irq_setup(unsigned int *irqs, unsigned int len, int node,
++		     bool skip_first_cpu)
+ {
+ 	const struct cpumask *next, *prev = cpu_none_mask;
+ 	cpumask_var_t cpus __free(free_cpumask_var);
+@@ -1344,11 +1345,18 @@ static int irq_setup(unsigned int *irqs, unsigned int len, int node)
+ 		while (weight > 0) {
+ 			cpumask_andnot(cpus, next, prev);
+ 			for_each_cpu(cpu, cpus) {
++				cpumask_andnot(cpus, cpus, topology_sibling_cpumask(cpu));
++				--weight;
++
++				if (unlikely(skip_first_cpu)) {
++					skip_first_cpu = false;
++					continue;
++				}
++
+ 				if (len-- == 0)
+ 					goto done;
++
+ 				irq_set_affinity_and_hint(*irqs++, topology_sibling_cpumask(cpu));
+-				cpumask_andnot(cpus, cpus, topology_sibling_cpumask(cpu));
+-				--weight;
+ 			}
+ 		}
+ 		prev = next;
+@@ -1444,7 +1452,7 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
+ 		}
+ 	}
+ 
+-	err = irq_setup(irqs, (nvec - start_irq_index), gc->numa_node);
++	err = irq_setup(irqs, nvec - start_irq_index, gc->numa_node, false);
+ 	if (err)
+ 		goto free_irq;
+ 
+-- 
+2.34.1
 
