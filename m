@@ -1,161 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3EBE215766;
-	Mon,  9 Jun 2025 17:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12CA1182BD;
+	Mon,  9 Jun 2025 17:40:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749490793; cv=none; b=c2w80bz9Jpg5TPyBYyRGFBsC9ZRgxJZMNxFjo3poevE9RXrt2/qyU6lTpo+DN3PbGUgsXgdcgM651mf87+2RAXr+ObY/DczII+wvFo+kNZIoRCI9rakjkPARgH68I6bqYUsjq6xZF5ZNaEV+ZGpATiX89ZnXCpmEaE4Q7K+4ty8=
+	t=1749490811; cv=none; b=OEGlLvjEnUufYH3TVdC1cumHN/eefGbGjoDRaA9UUeojguJ5sV+Javfv/507mlzUEECfUImFFLVZJ7wE9qzDR9mrDOSPEOWIsnOYgxG9BQmvebzxr13TjydZpnmeoDILI8CMlwLCCbh5+jsYY4FHQ4t+dOj5ztNBvwLc/nPvqpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749490793; c=relaxed/simple;
-	bh=4abGnwIone7ePw6F2MTDhlNwDOoT+2r0m9g9eAvFQjM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mu8M8Fc+e986vdX881akn7hHTL6IwmHo89ykGFL/75kwcZbMIl/drMYw3nAeq6SHLizS0QNFImB+HXm1odCUsk1VyhOicE7NmPysDjidnxLB/YDQiNxemfmDDC2SIdnE2P/iaqhFZw10HTl6cE1TNZz0Ruh1Ewfz8L7deePzEHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bs0frPTP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749490811; c=relaxed/simple;
+	bh=RxlvcvUd9Kh+rPPMV9GEjRZKiwwXVXr3gSSrU32QWTs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Vb4q0r0saeuEySHFRIdW32+DaXDUcEYGpV/WC/sNnWn+ND24XSy75v4YuiB5Wni3ySpSGE1+q72U0Bz40J5nIzjnKtMNB7p4gZ20APOJYzXj4I50Rl9vJ/xtaoblIHJxXUR8wE6VhCn1T5qFmf58cGuJOGc6Ons9gvvWYvoteb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AwKvVOIM; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bs0frPTP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D174C4CEEB;
-	Mon,  9 Jun 2025 17:39:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749490793;
-	bh=4abGnwIone7ePw6F2MTDhlNwDOoT+2r0m9g9eAvFQjM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=Bs0frPTPUzeZhB7xcJqML+/23l1Ul7E/PDG+1Q/XInOXY7+kxsojg4yN4/y/+mD+U
-	 H4qUTUVk8JnAUF4DNo8sc37HhatzjVAzUfl+mD750DVNwouUjaj1X1BPDAMQbR2HOr
-	 0Z+GtLzlqH4SNdDn1inSP68Siu4fsQs4lmWsqdsQtiEftPu1c3I0MI5FLdkmTPhu6f
-	 vX7dZamIC90ys2XNVKRk1Uy5V0mcy2+3Zn76texuh2+ZSXMyMkwPMFwg5KDXC0wTaJ
-	 EZHvznruqVgLLmKA6tASDKl8on4Tk35ZkXnMk23cX37E71LjryUJxOiV2EeSG9unf5
-	 SzIVw0PcUHiGQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id E5CB8CE0B6C; Mon,  9 Jun 2025 10:39:52 -0700 (PDT)
-Date: Mon, 9 Jun 2025 10:39:52 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] tracing: Use queue_rcu_work() to free filters
-Message-ID: <0ee99715-7877-4d94-9ae5-5b0e23f34aae@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250609131732.04fd303b@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AwKvVOIM"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-234a45e69c8so5694885ad.2;
+        Mon, 09 Jun 2025 10:40:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749490809; x=1750095609; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xGeznkUaKCcPLr7t1/y1lEo9GbVM0sYWdQrm6riBKNU=;
+        b=AwKvVOIMB+p58egfsR7URozn9MEzBQUp5giLg3CfppXxKAMIJDRfsiKcD36pGo1m6J
+         XwGIiuM2SF8grzpNOX46umGuOyJ91gyWunOTMoQxOEEdZcX3tv6eEZnYccelqtr27ilp
+         NWdo4m1/zH6USUTGZ+F/5J3PjRagnbgXGvgBHDhWgSLst8ZiTyhJU0pHv7PjJcd9kEKr
+         wk/XdCMm0pQbRM1EJY9rsHSpERgFaUXA8VEZJw8egO1fW4z1AwQr6vG55NQzU1g+PqjD
+         wE/dnybWAWEPRBewKZMMlOuKOONMZEcJCNWsb8Fk1VJSTZHsMLYcBqFAY9TejycT7/+3
+         ezhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749490809; x=1750095609;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xGeznkUaKCcPLr7t1/y1lEo9GbVM0sYWdQrm6riBKNU=;
+        b=hzHAf4aItQnrkNYWJoSLXCcY+/yztz36NhQEpj9DaUhYKx30HXTFfCUel84pLO00LS
+         fy3muaoQjeVuNc3U0CXq9HIMHxqhEq7Gi+ae6SqwQkku0ExjtEEWHGgodppZzMiC8GLF
+         VG5GyVsDJYVijx82hnVXHd8YaPGErVEp6k9wE5WRoCBE6FJP5Ndk6L0xMtLdAn1gVveq
+         6PI1lABMyt1JgsO3eGuzXhetMzK52w6AGVX5tSMhyLH3/O/mWbqFe/jVT3TC/p5oMjL1
+         kmEh4+elfYQhBzG05qPOtrM3HBlhfqUeV7+/iAb4JsmG45sBSH97sTzLuWLTtLj8SsDw
+         BR3A==
+X-Forwarded-Encrypted: i=1; AJvYcCVDcsW2DiUfwE/lkVdgJ6LXNrarjOx7PQY8MjucV4GF64Nj5BvYUF8W8VILIBTU6hyeJgzTgUqGhGLqg4Q=@vger.kernel.org, AJvYcCVaAtQxjgP2hScO4RU8v6O/D6XwhOelhD7m45MAWgSUecwbei8tZgAcAFixHlmgIWFN6R1JRcSWnqOncGukxbA=@vger.kernel.org, AJvYcCXUnDqhxEC75lq8cZ2432CZJkszOLbE2wF98Ib67bsgpFMxZiG5LlID0TaVWXN9ENNdG0kKC608hHg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhDGqLOOiqlocweev3DrvAHopilljmNwQBNaR1WNgMznhIkX+F
+	lDaSznOY6o8J2GndJqjSrj2aBQ7sEa4D5EMKkJ3N9lgtV5fjwxzV6P/W6uijrZ7f+YcfcRXMdmt
+	jh05aa53Yia8NbRVEUsUc8KKXmczMpR8=
+X-Gm-Gg: ASbGncvUaIVzFsSq0Ez4nWKHxZPAFDPtkSPFxZeaWB47yvPU6CtrvmvARfSG9t1pf9Q
+	O3mwZXXPNTA9zIEzL6CnZe0fRwijd+xh1/3aYZU2eksBGxYOYpe7AcYpbrPMSBM5XJyNluQcHXK
+	srwjVWIzXXXTo+9RZaIuX3fbGUYbwHH7KMhHAPpjYTEWw=
+X-Google-Smtp-Source: AGHT+IFThlC3n9covTxeLg3gK9Kv9OvvHHRuR1HhvfFCCaCGVX93rTuPcJWuuY6ebE2DHabcjVjjFluviWfrbtz9GnY=
+X-Received: by 2002:a17:903:2348:b0:235:ed02:2866 with SMTP id
+ d9443c01a7336-23601d2278emr67580725ad.4.1749490809234; Mon, 09 Jun 2025
+ 10:40:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250609131732.04fd303b@gandalf.local.home>
+References: <20250609122200.179307-1-trintaeoitogc@gmail.com>
+In-Reply-To: <20250609122200.179307-1-trintaeoitogc@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 9 Jun 2025 19:39:57 +0200
+X-Gm-Features: AX0GCFt_1gEBX3323QkaeUgTuypBv0Rlai8JsNNbMvX6Wk8PlfCLW1weXoSbCmI
+Message-ID: <CANiq72==Xybm956Ete95e3YH7MTresNd3szxLg7GdzvhW1O+jg@mail.gmail.com>
+Subject: Re: [PATCH] rust: module: remove deprecated author key
+To: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>
+Cc: rafael@kernel.org, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
+	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, mcgrof@kernel.org, 
+	russ.weight@linux.dev, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	lossin@kernel.org, aliceryhl@google.com, tmgross@umich.edu, leitao@debian.org, 
+	david.m.ertman@intel.com, ira.weiny@intel.com, leon@kernel.org, 
+	fujita.tomonori@gmail.com, tamird@gmail.com, igor.korotin.linux@gmail.com, 
+	anisse@astier.eu, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 09, 2025 at 01:17:32PM -0400, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> Freeing of filters requires to wait for both an RCU grace period as well as
-> a RCU task trace wait period after they have been detached from their
-> lists. The trace task period can be quite large so the freeing of the
-> filters was moved to use the call_rcu*() routines. The problem with that is
-> that the callback functions of call_rcu*() is done from a soft irq and can
-> cause latencies if the callback takes a bit of time.
-> 
-> The filters are freed per event in a system and the syscalls system
-> contains an event per system call, which can be over 700 events. Freeing 700
-> filters in a bottom half is undesirable.
-> 
-> Instead, move the freeing to use queue_rcu_work() which is done in task
-> context.
-> 
-> Link: https://lore.kernel.org/all/9a2f0cd0-1561-4206-8966-f93ccd25927f@paulmck-laptop/
-> 
-> Fixes: a9d0aab5eb33 ("tracing: Fix regression of filter waiting a long time on RCU synchronization")
-> Suggested-by: "Paul E. McKenney" <paulmck@kernel.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+On Mon, Jun 9, 2025 at 2:22=E2=80=AFPM Guilherme Giacomo Simoes
+<trintaeoitogc@gmail.com> wrote:
+>
+> Now that all in-tree modules have migrated to `authors`, remove:
 
-Thank you, and looks good to me.
+Nit: I would have said "most modules", since we have new/remaining
+ones (no need for a new version for this).
 
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+I think this patch is OK -- we could wait to do this more cycles, but
+if we are doing it, then probably the sooner we do it, the simpler.
 
-> ---
-> Note, I added a Fixes tag but not a stable tag as this is a nice-to-have
-> but doesn't hit the level of critical fix to backport or add to an rc
-> release. If someone wants to back port it, feel free.
-> 
->  kernel/trace/trace_events_filter.c | 28 ++++++++++++++++++++--------
->  1 file changed, 20 insertions(+), 8 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-> index ea8b364b6818..b6fe8167ef01 100644
-> --- a/kernel/trace/trace_events_filter.c
-> +++ b/kernel/trace/trace_events_filter.c
-> @@ -1344,13 +1344,14 @@ struct filter_list {
->  
->  struct filter_head {
->  	struct list_head	list;
-> -	struct rcu_head		rcu;
-> +	union {
-> +		struct rcu_head		rcu;
-> +		struct rcu_work		rwork;
-> +	};
->  };
->  
-> -
-> -static void free_filter_list(struct rcu_head *rhp)
-> +static void free_filter_list(struct filter_head *filter_list)
->  {
-> -	struct filter_head *filter_list = container_of(rhp, struct filter_head, rcu);
->  	struct filter_list *filter_item, *tmp;
->  
->  	list_for_each_entry_safe(filter_item, tmp, &filter_list->list, list) {
-> @@ -1361,9 +1362,20 @@ static void free_filter_list(struct rcu_head *rhp)
->  	kfree(filter_list);
->  }
->  
-> +static void free_filter_list_work(struct work_struct *work)
-> +{
-> +	struct filter_head *filter_list;
-> +
-> +	filter_list = container_of(to_rcu_work(work), struct filter_head, rwork);
-> +	free_filter_list(filter_list);
-> +}
-> +
->  static void free_filter_list_tasks(struct rcu_head *rhp)
->  {
-> -	call_rcu(rhp, free_filter_list);
-> +	struct filter_head *filter_list = container_of(rhp, struct filter_head, rcu);
-> +
-> +	INIT_RCU_WORK(&filter_list->rwork, free_filter_list_work);
-> +	queue_rcu_work(system_wq, &filter_list->rwork);
->  }
->  
->  /*
-> @@ -1462,7 +1474,7 @@ static void filter_free_subsystem_filters(struct trace_subsystem_dir *dir,
->  	tracepoint_synchronize_unregister();
->  
->  	if (head)
-> -		free_filter_list(&head->rcu);
-> +		free_filter_list(head);
->  
->  	list_for_each_entry(file, &tr->events, list) {
->  		if (file->system != dir || !file->filter)
-> @@ -2307,7 +2319,7 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
->  	return 0;
->   fail:
->  	/* No call succeeded */
-> -	free_filter_list(&filter_list->rcu);
-> +	free_filter_list(filter_list);
->  	parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
->  	return -EINVAL;
->   fail_mem:
-> @@ -2317,7 +2329,7 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
->  	if (!fail)
->  		delay_free_filter(filter_list);
->  	else
-> -		free_filter_list(&filter_list->rcu);
-> +		free_filter_list(filter_list);
->  
->  	return -ENOMEM;
->  }
-> -- 
-> 2.47.2
-> 
+>  drivers/cpufreq/rcpufreq_dt.rs        | 2 +-
+>  drivers/gpu/drm/nova/nova.rs          | 2 +-
+>  drivers/gpu/nova-core/nova_core.rs    | 2 +-
+>  rust/kernel/firmware.rs               | 2 +-
+>  samples/rust/rust_configfs.rs         | 2 +-
+>  samples/rust/rust_driver_auxiliary.rs | 2 +-
+
+Andreas, Danilo, Greg, Viresh: if nobody is against it, I will apply
+it this cycle. Acked-by's for your bits appreciated, of course.
+
+Thanks!
+
+Cheers,
+Miguel
