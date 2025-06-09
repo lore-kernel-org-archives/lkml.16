@@ -1,85 +1,91 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE15421B8EC;
-	Mon,  9 Jun 2025 17:06:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D7A21B8EC;
+	Mon,  9 Jun 2025 17:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749488789; cv=none; b=tfjNArmO5bKjHkw2+nXjsoPLRIuIjqf/6SjBnj77owwk9NLvRl9SI7EJ1dsp8W5ydCebUscSOux97M/TaN+OPriNWV/UZiCTdGHWqKFeYXHs+YsFL6ATAavR6CYp13bmd5Iz1TBJKgARiUTbXu2aBe+eUgUPIMH/mtNLgU6a2YY=
+	t=1749488799; cv=none; b=GqwCKqeQiKDkRFUA6eA441JzXOwXKZ8ePoVOrBuOi/PLxWpQBbifEZeH1GuEVCgwWEfgB29EoCLCw6jiTFeCV4Ub9nHbDBHL/WTTqB/LZix3sEHpQqWka/77FNQWkkn7X1ewz/zm6gbdQa/5NFzcElyEpGYF8BQDw61xrJOf6NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749488789; c=relaxed/simple;
-	bh=6425sUT3qp/eMwl8bhbaV0GvgGK38CKKWgsI+gxrBHU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aggoHyCBBMni/ICVSdFUFzZ4Oe0tGVHuvZoGfsCWH3IUOlRUjA2yf9nxC248cffPHoaB0JoioIesL64hA/qLq1vqloR/oxkvFEr6IAkniF8doxx32buOIzjMruPIp6boElRCKVrYzRSvPLTR9eS03RKMO9EBT350Rzi5MHbb62M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bGJF06vHqz6L5NZ;
-	Tue, 10 Jun 2025 01:04:36 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5F42E140276;
-	Tue, 10 Jun 2025 01:06:24 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 9 Jun
- 2025 19:06:23 +0200
-Date: Mon, 9 Jun 2025 18:06:22 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Li Ming <ming.li@zohomail.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <shiju.jose@huawei.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/2] cxl/edac: Fix the min_scrub_cycle of a region
- miscalculation
-Message-ID: <20250609180622.000033cc@huawei.com>
-In-Reply-To: <20250603104314.25569-1-ming.li@zohomail.com>
-References: <20250603104314.25569-1-ming.li@zohomail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1749488799; c=relaxed/simple;
+	bh=xj2K0Hn1KyDlFCEgp/1ceXvAVXo0W7st5XQzYhwKR9I=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=CnxxmDJxSwdxJVO982rTo1Ue8+XmFMovcIpQzWt+/PTdDM5DXADKosCDomChdsCXPWC2xRTsECPLQeeVboA/SFU7nMxbu9qATo/kLAeiZEw2B5cpdGJh7SOrYCupxIEnEBXARBt2nJWAk1JBPNMyAotUWm/JsuMfzNZuIXuxlVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hLNzjMer; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hLNzjMer"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-32a72cb7e4dso41897251fa.0;
+        Mon, 09 Jun 2025 10:06:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749488795; x=1750093595; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=1B9jz9bzgcDaYUJYbUm/nwrrVlRYLDHkUIDUm7vm5gA=;
+        b=hLNzjMermV94bnjLDJWzFAkJeDRFiEbkvtoBWR9ReOLFuccxI3nJIJabYAWY7xYHKg
+         iDsw5JoY2BtQpzobdMOycFhhBvcYaLcAahWcc1rEvAJ3LfhvEOlsNFDN+O8hj0bL3lhr
+         HE920a38VZqO0TAvzHrql2lWA3OybBPAlYVBP34ir5iLJz+UFz/nl1Al4xFlOVlc6IEZ
+         STUChNJM/mSAUZaVw0QJ+cvmx9NWAwoPVyLi60RNp1QRsfsTBrmZbgxxUgljbc77KCKN
+         VF/7VrTR1uufdf9NTwTneGWdgIsipNy+O1ScD024x1tnoO9Dr1gW021BgkHZ7bZewhoy
+         K3ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749488795; x=1750093595;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1B9jz9bzgcDaYUJYbUm/nwrrVlRYLDHkUIDUm7vm5gA=;
+        b=b3Xax8+PLimCKAjH1hlgexxHDONMaL5iLZG3k06bGg5gVWSD8UM7X2HVwgqZA8BFEa
+         z/s7G02bjiKzHaAlk/158AWe5mb0c09vBvx8LsE4UwubIweVh0Yd8mPmMjbR3nxfiqhw
+         oEeR5GfEbCPW0mBjXLoMyiAZCMXJykbv5C6AbJUM0VwlPSjYdZ4z2CrHM+zeLyZFqTyU
+         UOOgVesgeAnNYg7mtHSNdUMCIDetxC1OqsdUNfCoGnoBuwG7BmvtIU/22Z8OAfrdiUuZ
+         QgK4m0KjnP7Vb0JrCdwL4c7UiW8fIdW7hUSVVvxQmY+aIerSV2qfCGwAnoAJ2CcLnr34
+         gKMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV90mtvXjiGzsaBNLcs/fjI751r1g+q8zRlbXHUPpOCYzughP68jBPduKSrFRspLbpGX2M3OWlruascxMJXsQ==@vger.kernel.org, AJvYcCVHPmDerc4bCUmd8ffcpDJ4lhwuPjj3CZ/acwLmUgDmmhUqkTJ4c1h/ryBluEhNMnCjFydNJF/CsOmm@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJgHUA4BoSDj3u4M5EDBfTzwnAh6BVfsFin9SRlDDwUE5Q77R7
+	EasSz/LFHsnNWobXFhJfY7Fzzq/Vd3Qh5ppUYp+3PWxdE/wCHNQOdxqd7BFtu0MOq+Ku0+ZyhVR
+	FZ5dKYpyFqyk4nuLkp06xKDQJzQanf90=
+X-Gm-Gg: ASbGnct0t5XWrT/HB/ByrKWVwwx1AKXNi1MVk/4BBWX9y2bpJ9XlrG9BlkAgl0BOQsk
+	tPs29DRpaQKvQXdIHm+f3SfcA64h8NcRCCVSpJ+jCbORfysrIeQrXYSN0WuNrYVGbzCjjTg7nCH
+	8kg1xJJjDeshtphoXUnr/DqhjMqnUKeNGj2DxXqx0PJh0NcVRbY0SW7WXOjqXirJUnkQ8=
+X-Google-Smtp-Source: AGHT+IHs3x7MiIxf+cWKc7abiJCC9IsvRO7Ev/Vbmo9eLh43sdlNK0JojZJXE291FuxIFOvUsBhv2t2laasYz3xT+VM=
+X-Received: by 2002:a05:651c:b12:b0:30b:f469:47ef with SMTP id
+ 38308e7fff4ca-32adfd207bbmr39463521fa.23.1749488795292; Mon, 09 Jun 2025
+ 10:06:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- frapeml500008.china.huawei.com (7.182.85.71)
+From: Steve French <smfrench@gmail.com>
+Date: Mon, 9 Jun 2025 12:06:23 -0500
+X-Gm-Features: AX0GCFsrRONFJpE2z-GNlrMZuis3d387b0I5W2Mqd7Xzluc394ppvLGirmBiFtE
+Message-ID: <CAH2r5mu5SfBrdc2CFHwzft8=n9koPMk+Jzwpy-oUMx-wCRCesQ@mail.gmail.com>
+Subject: Perf regression in 6.16-rc1 in generic/676 (readdir related)
+To: Christian Brauner <brauner@kernel.org>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
+	NeilBrown <neil@brown.name>
+Cc: LKML <linux-kernel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>, 
+	Bharath S M <bharathsm@microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue,  3 Jun 2025 18:43:13 +0800
-Li Ming <ming.li@zohomail.com> wrote:
+Instead of the usual 10 to 12 minutes to run generic/676 (on all
+kernels up to 6.15), we are now seeing 23-30 minutes to run
+generic/676, much more than twice as slow.   It looks like this is due
+to unnecessary revalidates now being sent to the fs (starting with
+6.16-rc1 kernels) on every file in a directory, and is caused by
+readdir.   Bharath was trying to isolate the commit that caused this,
+but this recently merged series could be related:
 
-> When trying to update the scrub_cycle value of a cxl region, which means
-> updating the scrub_cycle value of each memdev under a cxl region. cxl
-> driver needs to guarantee the new scrub_cycle value is greater than the
-> min_scrub_cycle value of a memdev, otherwise the updating operation will
-> fail(Per Table 8-223 in CXL r3.2 section 8.2.10.9.11.1).
-> 
-> Current implementation logic of getting the min_scrub_cycle value of a
-> cxl region is that getting the min_scrub_cycle value of each memdevs
-> under the cxl region, then using the minimum min_scrub_cycle value as
-> the region's min_scrub_cycle. Checking if the new scrub_cycle value is
-> greater than this value. If yes, updating the new scrub_cycle value to
-> each memdevs. The issue is that the new scrub_cycle value is possibly
-> greater than the minimum min_scrub_cycle value of all memdevs but less
-> than the maximum min_scrub_cycle value of all memdevs if memdevs have
-> a different min_scrub_cycle value. The updating operation will always
-> fail on these memdevs which have a greater min_scrub_cycle than the new
-> scrub_cycle.
-> 
-> The correct implementation logic is to get the maximum value of these
-> memdevs' min_scrub_cycle, check if the new scrub_cycle value is greater
-> than the value. If yes, the new scrub_cycle value is fit for the region.
-> 
-> The change also impacts the result of
-> cxl_patrol_scrub_get_min_scrub_cycle(), the interface returned the
-> minimum min_scrub_cycle value among all memdevs under the region before
-> the change. The interface will return the maximum min_scrub_cycle value
-> among all memdevs under the region with the change.
-> 
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+06c567403ae5 Use try_lookup_noperm() instead of d_hash_and_lookup()
+outside of VFS
+fa6fe07d1536 VFS: rename lookup_one_len family to lookup_noperm and
+remove permission check
 
-Thanks for fixing this up.
+Has anyone else noticed this perf regression?
+
+For the case of cifs.ko mounts, it is easy to repro with generic/676.
+And also could be reproduced with simple "ls" of large directories.
+
+-- 
+Thanks,
+
+Steve
