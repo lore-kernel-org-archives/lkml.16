@@ -1,352 +1,247 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF550254AF0
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 10:51:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76BA4253F1E
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 10:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749466289; cv=none; b=hYFfYxDPHJQ9thux0NycbJt5xM91/3jRDzLsElkm0fsb3Om6QbcwHEjMX61/mJgUQP7Js9hqCFqFwcUPwCQFcaDH3UDpr9JZE63vOTW6Zel2c4qC3wSC059rMwImv/StgIf6pwCAg+NXcNn50AuS+Zxp41pRqTeVZJBVxx+cFQE=
+	t=1749466302; cv=none; b=InPQb3mUosSca256FaOzNbnpyq2RjNQanbjS+iFE1NYgUXc0DBleel40k0lz7ar1FOK88Ut2+bGjOtF79kis6PzoDkUTnuSXjKdaStUKKPAQ/xSQGExtiaVMcXS0qkBaaTEt9WSdI7I2rslasSdDcCkkEtKKkrfLjD7UZl54RAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749466289; c=relaxed/simple;
-	bh=vAskjpcH6vhWvyjCt+ZEhpMlamDmGUA5e29hvqCXjn8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jTSBMrJaDictEgybDu2t9qxHftO5QBKHuGfAf0xICDU0X1XhQ3bM0BtVwViNvEyYVllswtvT5cEiOtld5oxyn+1nC+CS/oFNQCkuKX9VYLxON0PT6fENAa078R1bHqi3/GJhZFR8hzFoJA2DLulo+NlLpGqj9VrHD+ve8VEJdTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HM1pz/Jq; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749466302; c=relaxed/simple;
+	bh=rFIAQDFx/eu1NmFhsrsbLmcPgKmZywYDhyHzqhNfrLQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fjQCt0JxdWAgkObtV+ZRgEmwRCn9ilyqPzc2gkewbrrJL7oT9uSKzsjmAhlorRX30mk9LNqivufNjj49eJMM1cVPAy3yy410jLR4ktae/vLdo4JsO8CMsqE3ccHnQqeVSA/dmwGuKq8qPUQJ3zAnx1go1cWuXwfPuS40Ti/fO+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MmNM79F5; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HM1pz/Jq"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b2f1032e1c4so3852468a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 03:51:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749466287; x=1750071087; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IuJVGUTIF3T1jhhXzS1OPftMs4dFph12eMR9dmfddLo=;
-        b=HM1pz/JqFD34hUkNs9KAfv8Wp5AaueM238vC3jBBLhJzireguYxP0LyQJyc0AWzSmM
-         8iC8xQ6gixr21Nb+hci6ua2qFrVfGKoCaQcSr5+4FKpCj6CgS2jCRV5oq/3L538LFmxY
-         PkT5QYd/RYYvM/kCGU4DF9tw7umzwZUxiyRFWEHNHxg5/LmJfsDcRQnr6dQq3sDud5gS
-         tyhoH0721SnbegN6oSBQ0+HjrlhQ6X3DjdtqqzYVj6Z87TvX5MS4F8Eg9xGSTcUoQqBB
-         gC0y0G87V+xf2aIx4twvjW2ILV4x0jyJU0fJofRPVoqHtQJJyXkWY9CrRuwZdJXMeJ00
-         abng==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MmNM79F5"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5599UUAC032491
+	for <linux-kernel@vger.kernel.org>; Mon, 9 Jun 2025 10:51:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=VhUteTfXsocNRs+IopB/b3
+	CazovW+anusy46N1ig4I4=; b=MmNM79F5vXiV9wy2/idzS3EvXZ/ms76SWlloWk
+	d5oHC2717UXQ4r1VoNqeyI3VlbOjRYwM69M/rJMZPbDObF8aLZYEUg5FjD1dwCFi
+	/4awyr/9NNbeYa29X7m9rDMiBuAOVOA2indGk0volUd0AS01alO56AMKs5IIa7Ch
+	ooqNooSAvi9dD5QFunYF4AG4ECAgBm0hawS3vpRoeqXW/ZNNx8N2JjOHKUani7yw
+	I/lqHHnK9e88PsOpymltgbVASLKyyvqRMbpXCqEKzsK//Gajw/aGXrgIW1ofFobQ
+	jzmeRmgfJ5nd+v759tv3b34ke6yp2IZLmLoGIdBrNihCqp6g==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 475g75t1b4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 10:51:39 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2358ddcb1e3so64508225ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 03:51:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749466287; x=1750071087;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IuJVGUTIF3T1jhhXzS1OPftMs4dFph12eMR9dmfddLo=;
-        b=h4Unlay2NFiBY445nxz//Vh16i+mMS9ST04wW3jaBbSgAUwgemNpsu6wPIk+AuSC9N
-         oc+wmsLt708YJs0B6jPA+vT6HHoU6Wps28mrlWAPym8y+D4Lg0/LtdHlnzlma0Mt0slj
-         o7/ziTL2oBMgUK9YyA8Es7dwAZAEy2UI4+oWqcFN2F772Td7k2VEzake+3uMwLrzq53o
-         57b6cp1qQqN4I52lqzkI44wl1iFyHt9VG0gkfF+gWU6CyPVmeTjXDky93lX7xI3bOgsB
-         MbMj136Wd8ziHUmNUBQjUUmScitYqz8lutBtvzqFdGnc1j0bRi7IIwVOgFfFtVIOXRU6
-         p8mw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXZyXTVQRiXgpN+u4HS7eG4Jn1SxuLoJEE0Jb9OO1lDn27axmjthkdGK+egRx2Psb7Xpvc1g0Ohgrav8c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKSbaq4gB/4gfMzdGidQIcmkdcGJD2wwe5i0veT01bbc7tjyOS
-	SfNpMaVr4jQo6rJSvDEp0Ml5eb5VI3jmiAz0RMNwHydAfwAg3Lq1nSWGjex30ybsKnU=
-X-Gm-Gg: ASbGncsos9tm25tYGCj/tB/0lsMaR0MhtYizfMduzGigwm5jxWIZ6L4A0avDooBRtep
-	emLXJFRuTVQqZer+Mh+yu+RhSl8SofnGy5WxBZbmEGXqNQxlbZW04EX97ekS8ed+Xyaqd2iCk+k
-	BbY4zfh7gMdsf8xe9zZ+bZrGx/EnM46khzuswWtv9OOCv8Z51D9iAekiPD9cVkKmqav/3UYGTrd
-	qaxMW5wEhbGOtR9tRWYt7OaFGaRrDKB5Jj8UQL1mj38l5P7JtkKmc8LUNgbsBFO1jCdKv0tHA32
-	91GH5NJzgNIpcdzZ18d+ywI+hyJ3inPiVt1cTV8FGyLdapJHa2uWGkHP7Xy9q+U=
-X-Google-Smtp-Source: AGHT+IFtddb8Pk9oUlMiGk2PgHCrKtzyED4YhZOR2BDPpcARAojukNT+Ds8TpBuI/KoJwfjdjeGaCQ==
-X-Received: by 2002:a17:90b:58d0:b0:311:df4b:4b94 with SMTP id 98e67ed59e1d1-313472c4cf2mr22335820a91.4.1749466287046;
-        Mon, 09 Jun 2025 03:51:27 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31349f352b0sm5434927a91.18.2025.06.09.03.51.26
+        d=1e100.net; s=20230601; t=1749466298; x=1750071098;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VhUteTfXsocNRs+IopB/b3CazovW+anusy46N1ig4I4=;
+        b=eBFaIA0W0g/mtRhyL/ctAA+rX9fhvRLyOhNOvcacvzpdTaI8AGIdjZri+t7fSPilJj
+         N9pStBPJL5M+oIc+11e5eSKqLWlx2KZ7WCo5F3D84sqRjp2BggEFfCyO6MCh0FvL6qNn
+         NFcVXu6c/zefu6KvD8RDhEDDfP5I2toVHceYj/CShb5ffLfji9C10HY+M1tIQH6TZ+wV
+         xl4AbM3TxdcS2Dzp2dvactK4BkOprnmSYu/AkfrUlY1SjUw1stZPTC/ZdyDr76BRqLZH
+         QDYf/gs2xzHWt/mkx5uvNpz0ZFjSpQQXCeM1kTbIerEv8EhyhuKuPyzu96GB/y0i3Btn
+         mm3w==
+X-Forwarded-Encrypted: i=1; AJvYcCXQCF6Gh4g9NpbwFbVjaRj9IGHnAOWi7qJDRfTHqFaijk0tnJn3iGTKv2sikV0y7PqQ+f8WU89Vc9iJinU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwL698DrpTfMPaCvlxp8SOPhylTp7P4NfDQoh+0+ZzYnRYqlTRE
+	m1UXsiFjhXYS7rjB6EwCN497EBTPbDYqexcT1u3u1LSeHAbKi87jaPNh0iARjScVJz9wmLr63te
+	b5IS19E1xtzittSUnJp2GRJxXafBik36ULWya2ndmemI+KHtydIrdKtiTnRGqDSOpA8A=
+X-Gm-Gg: ASbGncuw0dwKl6FC4XNyWPR/fPPWRcuCKr2B3UrBxCJFp/jEMttOgG2vIssFZVAOq9t
+	7bI3eep0WZOcOurrQ8cmosRzKC/pe0SuIJetolBAewRloBmE+ThbrGzqMWbDic0b1+Qr/3fy5pe
+	TVnLxoKOntZHez7Bblh10RCeOrnlJ99+nYSVPzI/WKa/xSkRnOQyHA/U/7gpdCNxdElazEZUH0F
+	Xn2zqh3KyR3go010nS7La/0OKkYdDZ9aOIIvj4IQvAi2n7FjztQzOkw/0EFXBZRyuw9rg3neWTm
+	MvJczHL4aVpMKMeumb+2ofkNld58E5fu6+eYJog/sr4SbIyqA2dUiiz9hg==
+X-Received: by 2002:a17:902:dac6:b0:235:eefe:68f4 with SMTP id d9443c01a7336-23601d136femr181529385ad.29.1749466297811;
+        Mon, 09 Jun 2025 03:51:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFm+FtLDaA6kNuRa0Yr3ML7VmNAJgTPlNgcbPHQTB/P+a/aBP+VmVd3vj1/TEZYxUdP0IgxXQ==
+X-Received: by 2002:a17:902:dac6:b0:235:eefe:68f4 with SMTP id d9443c01a7336-23601d136femr181529045ad.29.1749466297386;
+        Mon, 09 Jun 2025 03:51:37 -0700 (PDT)
+Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603092f44sm51836465ad.63.2025.06.09.03.51.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 03:51:26 -0700 (PDT)
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Boqun Feng <boqun.feng@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>,
-	rust-for-linux@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH V2 2/2] rust: Use CpuId in place of raw CPU numbers
-Date: Mon,  9 Jun 2025 16:21:06 +0530
-Message-Id: <8d9bcd481f58eaf8aabc15408971264a5b18172e.1749463570.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
-In-Reply-To: <cover.1749463570.git.viresh.kumar@linaro.org>
-References: <cover.1749463570.git.viresh.kumar@linaro.org>
+        Mon, 09 Jun 2025 03:51:36 -0700 (PDT)
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Subject: [PATCH v4 00/11] bus: mhi: host: Add support for mhi bus bw
+Date: Mon, 09 Jun 2025 16:21:21 +0530
+Message-Id: <20250609-mhi_bw_up-v4-0-3faa8fe92b05@qti.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAKm8RmgC/3XNzQ6CMAzA8VcxOzuybnyIJ9/DGLLCkCXCkAlqC
+ O9u4QIHvDT5N82vI/Oms8az82FknRmst66hCI8Hlle6uRtuC2omhYyEhITXlc3wnfUtLxUoEes
+ oVoCM7tvOlPazWNcbdWX9y3XfhR5g3u4pA3DBU9QFmFBigXBx3gfPXj9yV9cBDTZjg1wB+rsFJ
+ AGnOM21Illg+QdQKxBBugUUAUrnRaghQcRoB5im6QeSLrsXKwEAAA==
+X-Change-ID: 20250217-mhi_bw_up-f31306a5631b
+To: Bjorn Helgaas <bhelgaas@google.com>,
+        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
+        linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
+        qiang.yu@oss.qualcomm.com, quic_vbadigan@quicinc.com,
+        quic_vpernami@quicinc.com, quic_mrana@quicinc.com,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+        Miaoqing Pan <quic_miaoqing@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749466291; l=5603;
+ i=krichai@qti.qualcomm.com; s=20230907; h=from:subject:message-id;
+ bh=rFIAQDFx/eu1NmFhsrsbLmcPgKmZywYDhyHzqhNfrLQ=;
+ b=r6QucqB8z7wv1BaaOVcAgK2+rQjPvMf+dR+w28WUfwzwB3Ew05qNSBB9OLHe1B8m45MVCPquB
+ mbkAZCL2tzMBx0A2yJgzpJ3FI/gSh5s5lUnSWXmF/m76ANL4hPWpKFK
+X-Developer-Key: i=krichai@qti.qualcomm.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-Proofpoint-GUID: Gg8fzpT85KvKZ4jY8S-mcGkkyZuGaV3C
+X-Proofpoint-ORIG-GUID: Gg8fzpT85KvKZ4jY8S-mcGkkyZuGaV3C
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA4MiBTYWx0ZWRfXx4j03T/NMfvF
+ sd45q6yRDzxiek/0YZH8TfAc8MSUwM7MnrhUVJRsEWdBxheL0UxgvFfHK/0VMV0cIxlbKw06OIB
+ dSAxk9CjFH9dW+zzAxuDUDZu51naxUonKNeJa2gz8KCgZuagfH7CBHorQ6CRkIFFe5kCC3hWNel
+ JxPr639mP/R5I/YlaAi9mpiAsyrwdD6XNy41dehHLIXhJfk18vqjlSeI6HEmkFiQDY8l8EIPI00
+ XPZ7i9aCIDPQLKpCAmQzBUBWXoNsJYEdvWmzTnuCNmxIl1v7BeQ0eBPJbfv9Sj4XWvQABeH6N8a
+ jbj1kxScsyLO94fF0jqlZM55rztX8qeWQzEIASQqVr8qMriVckKOXzJgoX3/+xPI2VeuBMlILPI
+ LGu3YojGrC99GLJ1Arp/Kob3EAc00bI0kmzg8iZbfrMQ4J78mDltJ+R9kqq8I36ANoJf+eN3
+X-Authority-Analysis: v=2.4 cv=TeqWtQQh c=1 sm=1 tr=0 ts=6846bcbb cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=a1UGM4vktcZ-V-6vu5QA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=324X-CrmTo6CU4MGRt3R:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-09_04,2025-06-05_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 priorityscore=1501 suspectscore=0 impostorscore=0
+ spamscore=0 malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0 clxscore=1015
+ phishscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506090082
 
-Use the newly defined `CpuId` abstraction instead of raw CPU numbers.
+As per MHI spec sec 14, MHI supports bandwidth scaling to reduce power
+consumption. MHI bandwidth scaling is advertised in devices that contain
+the bandwidth scaling capability registers. If enabled, the device
+aggregates bandwidth requirements and sends them to the host in the form
+of an event. After the host performs the bandwidth switch, it sends an
+acknowledgment by ringing a doorbell.
 
-This also fixes a doctest failure for configurations where `nr_cpu_ids <
-4`.
+if the host supports bandwidth scaling events, then it must set
+BW_CFG.ENABLED bit, set BW_CFG.DB_CHAN_ID to the channel ID to the
+doorbell that will be used by the host to communicate the bandwidth
+scaling status and BW_CFG.ER_INDEX to the index for the event ring
+to which the device should send bandwidth scaling request in the
+bandwidth scaling capability register.
 
-The C `cpumask_{set|clear}_cpu()` APIs emit a warning when given an
-invalid CPU number — but only if `CONFIG_DEBUG_PER_CPU_MAPS=y` is set.
+As part of mmio init check if the bw scale capability is present or not,
+if present advertise host supports bw scale by setting all the required
+fields.
 
-Meanwhile, `cpumask_weight()` only considers CPUs up to `nr_cpu_ids`,
-which can cause inconsistencies: a CPU number greater than `nr_cpu_ids`
-may be set in the mask, yet the weight calculation won't reflect it.
+MHI layer will only forward the bw scaling request to the controller
+driver, it is responsibility of the controller driver to do actual bw
+scaling and then pass status to the MHI. MHI will response back to the
+device based up on the status of the bw scale received.
 
-This leads to doctest failures when `nr_cpu_ids < 4`, as the test tries
-to set CPUs 2 and 3:
+Add a new get_misc_doorbell() to get doorbell for misc capabilities to
+use the doorbell with mhi events like MHI BW scale etc.
 
-  rust_doctest_kernel_cpumask_rs_0.location: rust/kernel/cpumask.rs:180
-  rust_doctest_kernel_cpumask_rs_0: ASSERTION FAILED at rust/kernel/cpumask.rs:190
+Use workqueue & mutex for the bw scale events as the pci_set_target_speed()
+which will called by the mhi controller driver can sleep.
 
-Fixes: 8961b8cb3099 ("rust: cpumask: Add initial abstractions")
-Reported-by: Miguel Ojeda <ojeda@kernel.org>
-Closes: https://lore.kernel.org/rust-for-linux/CANiq72k3ozKkLMinTLQwvkyg9K=BeRxs1oYZSKhJHY-veEyZdg@mail.gmail.com/
-Reported-by: Andreas Hindborg <a.hindborg@kernel.org>
-Closes: https://lore.kernel.org/all/87qzzy3ric.fsf@kernel.org/
-Suggested-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+If the driver want to move higher data rate/speed then the current data
+rate/speed then the controller driver may need to change certain votes
+so that link may come up in requested data rate/speed like QCOM PCIe
+controllers need to change their RPMh (Resource Power Manager-hardened)
+state. And also once link retraining is done controller drivers needs
+to adjust their votes based on the final data rate/speed.
+
+Some controllers also may need to update their bandwidth voting like
+ICC bw votings etc.
+
+So, add pre_link_speed_change() & post_link_speed_change() op to call before & after
+the link re-train. There is no explicit locking mechanisms as these are
+called by a single client endpoint driver
+
+In case of PCIe switch, if there is a request to change target speed for a
+downstream port then no need to call these function ops as these are
+outside the scope of the controller drivers.
+
+Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 ---
- drivers/cpufreq/rcpufreq_dt.rs |  4 +--
- rust/kernel/cpu.rs             |  4 +--
- rust/kernel/cpufreq.rs         | 27 ++++++++++++------
- rust/kernel/cpumask.rs         | 51 ++++++++++++++++++++++++----------
- 4 files changed, 59 insertions(+), 27 deletions(-)
+Changes in v4:
+- Remove leftover type case, change the function names to pre/post_link_speed_change(Ilpo Järvinen)
+- Add check's for capability read and convert le32 to cpu (Jeffrey Hugo)
+- Add macros for GENMASK & BIT() (Ilpo Järvinen)
+- Link to v3: https://lore.kernel.org/r/20250519-mhi_bw_up-v3-0-3acd4a17bbb5@oss.qualcomm.com
 
-diff --git a/drivers/cpufreq/rcpufreq_dt.rs b/drivers/cpufreq/rcpufreq_dt.rs
-index 94ed81644fe1..43c87d0259b6 100644
---- a/drivers/cpufreq/rcpufreq_dt.rs
-+++ b/drivers/cpufreq/rcpufreq_dt.rs
-@@ -26,9 +26,9 @@ fn find_supply_name_exact(dev: &Device, name: &str) -> Option<CString> {
- }
- 
- /// Finds supply name for the CPU from DT.
--fn find_supply_names(dev: &Device, cpu: u32) -> Option<KVec<CString>> {
-+fn find_supply_names(dev: &Device, cpu: cpu::CpuId) -> Option<KVec<CString>> {
-     // Try "cpu0" for older DTs, fallback to "cpu".
--    let name = (cpu == 0)
-+    let name = (cpu.as_u32() == 0)
-         .then(|| find_supply_name_exact(dev, "cpu0"))
-         .flatten()
-         .or_else(|| find_supply_name_exact(dev, "cpu"))?;
-diff --git a/rust/kernel/cpu.rs b/rust/kernel/cpu.rs
-index 0b545dbf5c83..da53f04da495 100644
---- a/rust/kernel/cpu.rs
-+++ b/rust/kernel/cpu.rs
-@@ -119,9 +119,9 @@ fn from(id: CpuId) -> Self {
- /// Callers must ensure that the CPU device is not used after it has been unregistered.
- /// This can be achieved, for example, by registering a CPU hotplug notifier and removing
- /// any references to the CPU device within the notifier's callback.
--pub unsafe fn from_cpu(cpu: u32) -> Result<&'static Device> {
-+pub unsafe fn from_cpu(cpu: CpuId) -> Result<&'static Device> {
-     // SAFETY: It is safe to call `get_cpu_device()` for any CPU.
--    let ptr = unsafe { bindings::get_cpu_device(cpu) };
-+    let ptr = unsafe { bindings::get_cpu_device(cpu.into()) };
-     if ptr.is_null() {
-         return Err(ENODEV);
-     }
-diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
-index b0a9c6182aec..1cb9c6c8cd4b 100644
---- a/rust/kernel/cpufreq.rs
-+++ b/rust/kernel/cpufreq.rs
-@@ -10,6 +10,7 @@
- 
- use crate::{
-     clk::Hertz,
-+    cpu::CpuId,
-     cpumask,
-     device::{Bound, Device},
-     devres::Devres,
-@@ -465,8 +466,9 @@ fn as_mut_ref(&mut self) -> &mut bindings::cpufreq_policy {
- 
-     /// Returns the primary CPU for the [`Policy`].
-     #[inline]
--    pub fn cpu(&self) -> u32 {
--        self.as_ref().cpu
-+    pub fn cpu(&self) -> CpuId {
-+        // SAFETY: The C API guarantees that `cpu` refers to a valid CPU number.
-+        unsafe { CpuId::from_u32_unchecked(self.as_ref().cpu) }
-     }
- 
-     /// Returns the minimum frequency for the [`Policy`].
-@@ -525,7 +527,7 @@ pub fn generic_suspend(&mut self) -> Result {
-     #[inline]
-     pub fn generic_get(&self) -> Result<u32> {
-         // SAFETY: By the type invariant, the pointer stored in `self` is valid.
--        Ok(unsafe { bindings::cpufreq_generic_get(self.cpu()) })
-+        Ok(unsafe { bindings::cpufreq_generic_get(self.cpu().into()) })
-     }
- 
-     /// Provides a wrapper to the register with energy model using the OPP core.
-@@ -678,9 +680,9 @@ fn clear_data<T: ForeignOwnable>(&mut self) -> Option<T> {
- struct PolicyCpu<'a>(&'a mut Policy);
- 
- impl<'a> PolicyCpu<'a> {
--    fn from_cpu(cpu: u32) -> Result<Self> {
-+    fn from_cpu(cpu: CpuId) -> Result<Self> {
-         // SAFETY: It is safe to call `cpufreq_cpu_get` for any valid CPU.
--        let ptr = from_err_ptr(unsafe { bindings::cpufreq_cpu_get(cpu) })?;
-+        let ptr = from_err_ptr(unsafe { bindings::cpufreq_cpu_get(cpu.into()) })?;
- 
-         Ok(Self(
-             // SAFETY: The `ptr` is guaranteed to be valid and remains valid for the lifetime of
-@@ -1218,7 +1220,10 @@ extern "C" fn adjust_perf_callback(
-         target_perf: usize,
-         capacity: usize,
-     ) {
--        if let Ok(mut policy) = PolicyCpu::from_cpu(cpu) {
-+        // SAFETY: The C API guarantees that `cpu` refers to a valid CPU number.
-+        let cpu_id = unsafe { CpuId::from_u32_unchecked(cpu) };
-+
-+        if let Ok(mut policy) = PolicyCpu::from_cpu(cpu_id) {
-             T::adjust_perf(&mut policy, min_perf, target_perf, capacity);
-         }
-     }
-@@ -1263,7 +1268,10 @@ extern "C" fn target_intermediate_callback(
- 
-     /// Driver's `get` callback.
-     extern "C" fn get_callback(cpu: u32) -> kernel::ffi::c_uint {
--        PolicyCpu::from_cpu(cpu).map_or(0, |mut policy| T::get(&mut policy).map_or(0, |f| f))
-+        // SAFETY: The C API guarantees that `cpu` refers to a valid CPU number.
-+        let cpu_id = unsafe { CpuId::from_u32_unchecked(cpu) };
-+
-+        PolicyCpu::from_cpu(cpu_id).map_or(0, |mut policy| T::get(&mut policy).map_or(0, |f| f))
-     }
- 
-     /// Driver's `update_limit` callback.
-@@ -1278,8 +1286,11 @@ extern "C" fn update_limits_callback(ptr: *mut bindings::cpufreq_policy) {
-     ///
-     /// SAFETY: Called from C. Inputs must be valid pointers.
-     extern "C" fn bios_limit_callback(cpu: i32, limit: *mut u32) -> kernel::ffi::c_int {
-+        // SAFETY: The C API guarantees that `cpu` refers to a valid CPU number.
-+        let cpu_id = unsafe { CpuId::from_i32_unchecked(cpu) };
-+
-         from_result(|| {
--            let mut policy = PolicyCpu::from_cpu(cpu as u32)?;
-+            let mut policy = PolicyCpu::from_cpu(cpu_id)?;
- 
-             // SAFETY: `limit` is guaranteed by the C code to be valid.
-             T::bios_limit(&mut policy, &mut (unsafe { *limit })).map(|()| 0)
-diff --git a/rust/kernel/cpumask.rs b/rust/kernel/cpumask.rs
-index c90bfac9346a..11ddd43edcb5 100644
---- a/rust/kernel/cpumask.rs
-+++ b/rust/kernel/cpumask.rs
-@@ -6,6 +6,7 @@
- 
- use crate::{
-     alloc::{AllocError, Flags},
-+    cpu::CpuId,
-     prelude::*,
-     types::Opaque,
- };
-@@ -35,9 +36,10 @@
- ///
- /// ```
- /// use kernel::bindings;
-+/// use kernel::cpu::CpuId;
- /// use kernel::cpumask::Cpumask;
- ///
--/// fn set_clear_cpu(ptr: *mut bindings::cpumask, set_cpu: u32, clear_cpu: i32) {
-+/// fn set_clear_cpu(ptr: *mut bindings::cpumask, set_cpu: CpuId, clear_cpu: CpuId) {
- ///     // SAFETY: The `ptr` is valid for writing and remains valid for the lifetime of the
- ///     // returned reference.
- ///     let mask = unsafe { Cpumask::as_mut_ref(ptr) };
-@@ -90,9 +92,9 @@ pub fn as_raw(&self) -> *mut bindings::cpumask {
-     /// This mismatches kernel naming convention and corresponds to the C
-     /// function `__cpumask_set_cpu()`.
-     #[inline]
--    pub fn set(&mut self, cpu: u32) {
-+    pub fn set(&mut self, cpu: CpuId) {
-         // SAFETY: By the type invariant, `self.as_raw` is a valid argument to `__cpumask_set_cpu`.
--        unsafe { bindings::__cpumask_set_cpu(cpu, self.as_raw()) };
-+        unsafe { bindings::__cpumask_set_cpu(cpu.into(), self.as_raw()) };
-     }
- 
-     /// Clear `cpu` in the cpumask.
-@@ -101,19 +103,19 @@ pub fn set(&mut self, cpu: u32) {
-     /// This mismatches kernel naming convention and corresponds to the C
-     /// function `__cpumask_clear_cpu()`.
-     #[inline]
--    pub fn clear(&mut self, cpu: i32) {
-+    pub fn clear(&mut self, cpu: CpuId) {
-         // SAFETY: By the type invariant, `self.as_raw` is a valid argument to
-         // `__cpumask_clear_cpu`.
--        unsafe { bindings::__cpumask_clear_cpu(cpu, self.as_raw()) };
-+        unsafe { bindings::__cpumask_clear_cpu(cpu.into(), self.as_raw()) };
-     }
- 
-     /// Test `cpu` in the cpumask.
-     ///
-     /// Equivalent to the kernel's `cpumask_test_cpu` API.
-     #[inline]
--    pub fn test(&self, cpu: i32) -> bool {
-+    pub fn test(&self, cpu: CpuId) -> bool {
-         // SAFETY: By the type invariant, `self.as_raw` is a valid argument to `cpumask_test_cpu`.
--        unsafe { bindings::cpumask_test_cpu(cpu, self.as_raw()) }
-+        unsafe { bindings::cpumask_test_cpu(cpu.into(), self.as_raw()) }
-     }
- 
-     /// Set all CPUs in the cpumask.
-@@ -178,21 +180,40 @@ pub fn copy(&self, dstp: &mut Self) {
- /// The following example demonstrates how to create and update a [`CpumaskVar`].
- ///
- /// ```
-+/// use kernel::cpu::CpuId;
- /// use kernel::cpumask::CpumaskVar;
- ///
- /// let mut mask = CpumaskVar::new_zero(GFP_KERNEL).unwrap();
- ///
- /// assert!(mask.empty());
--/// mask.set(2);
--/// assert!(mask.test(2));
--/// mask.set(3);
--/// assert!(mask.test(3));
--/// assert_eq!(mask.weight(), 2);
-+/// let mut count = 0;
-+///
-+/// let cpu2 = CpuId::from_u32(2);
-+/// if let Some(cpu) = cpu2 {
-+///     mask.set(cpu);
-+///     assert!(mask.test(cpu));
-+///     count += 1;
-+/// }
-+///
-+/// let cpu3 = CpuId::from_u32(3);
-+/// if let Some(cpu) = cpu3 {
-+///     mask.set(cpu);
-+///     assert!(mask.test(cpu));
-+///     count += 1;
-+/// }
-+///
-+/// assert_eq!(mask.weight(), count);
- ///
- /// let mask2 = CpumaskVar::try_clone(&mask).unwrap();
--/// assert!(mask2.test(2));
--/// assert!(mask2.test(3));
--/// assert_eq!(mask2.weight(), 2);
-+///
-+/// if let Some(cpu) = cpu2 {
-+///     assert!(mask2.test(cpu));
-+/// }
-+///
-+/// if let Some(cpu) = cpu3 {
-+///     assert!(mask2.test(cpu));
-+/// }
-+/// assert_eq!(mask2.weight(), count);
- /// ```
- pub struct CpumaskVar {
-     #[cfg(CONFIG_CPUMASK_OFFSTACK)]
+Changes in v3:
+- Move update speed logic to pwrctrl driver (Mani)
+- Move pre_bus_bw & post_bus_bw to bridge as these are bridge driver specific ops,
+it feels to me we need to add these in the host bridge driver similar to recently
+added one reset_slot.
+- Remove dwc level wrapper (Mani)
+- Enable ASPM only if they are enabled already (Mani)
+- Change the name of mhi_get_capability_offset to mhi_find_capability() (Bjorn)
+- Fix comments in the code, subjects etc (Mani & Bjorn)
+- Link to v2: https://lore.kernel.org/r/20250313-mhi_bw_up-v2-0-869ca32170bf@oss.qualcomm.com
+
+Changes in v2:
+- Update the comments.
+- Split the icc bw patch as sepertate one (Bjorn)
+- update the aspm disablement comment (Bjorn)
+- Use FIELD_GET & FIELD_PREP instead of hard macros and couple of nits
+  suggested by (Ilpo Järvinen)
+- Create a new function to change lnkcntrl2speed to enum pci_bus_speed (Jeff)
+- Link to v1: https://lore.kernel.org/r/20250217-mhi_bw_up-v1-0-9bad1e42bdb1@oss.qualcomm.com
+
+---
+Krishna Chaitanya Chundru (9):
+      PCI: Update current bus speed as part of pci_pwrctrl_notify()
+      PCI/bwctrl: Add support to scale bandwidth before & after link re-training
+      bus: mhi: host: Add support for Bandwidth scale
+      PCI/ASPM: Return enabled ASPM states as part of pcie_aspm_enabled()
+      PCI/ASPM: Clear aspm_disable as part of __pci_enable_link_state()
+      PCI: qcom: Extract core logic from qcom_pcie_icc_opp_update()
+      PCI: qcom: Add support for PCIe pre/post_link_speed_change()
+      PCI: Export pci_set_target_speed()
+      PCI: Add function to convert lnkctl2speed to pci_bus_speed
+
+Miaoqing Pan (1):
+      wifi: ath11k: Add support for MHI bandwidth scaling
+
+Vivek Pernamitta (1):
+      bus: mhi: host: Add support to read MHI capabilities
+
+ drivers/bus/mhi/common.h               |  26 +++++++
+ drivers/bus/mhi/host/init.c            |  97 +++++++++++++++++++++++++-
+ drivers/bus/mhi/host/internal.h        |   7 +-
+ drivers/bus/mhi/host/main.c            |  98 +++++++++++++++++++++++++-
+ drivers/bus/mhi/host/pm.c              |  10 ++-
+ drivers/net/wireless/ath/ath11k/mhi.c  |  41 +++++++++++
+ drivers/pci/controller/dwc/pcie-qcom.c | 124 ++++++++++++++++++++++++++-------
+ drivers/pci/pci.c                      |  12 ++++
+ drivers/pci/pcie/aspm.c                |   5 +-
+ drivers/pci/pcie/bwctrl.c              |  16 +++++
+ drivers/pci/pwrctrl/core.c             |   5 ++
+ include/linux/mhi.h                    |  13 ++++
+ include/linux/pci.h                    |  23 +++++-
+ 13 files changed, 442 insertions(+), 35 deletions(-)
+---
+base-commit: d178209b7c211256ee736ec7c920acb81ddcea48
+change-id: 20250217-mhi_bw_up-f31306a5631b
+
+Best regards,
 -- 
-2.31.1.272.g89b43f80a514
+krishnachaitanya-linux <krichai@qti.qualcomm.com>
 
