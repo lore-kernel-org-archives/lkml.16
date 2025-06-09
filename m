@@ -1,66 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50B41FC11F;
-	Mon,  9 Jun 2025 23:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A2AD226D09;
+	Mon,  9 Jun 2025 23:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749510441; cv=none; b=kH456rE+8DZ6ksZVZ1A1pN6MUrLL0Dpm2gAhwAppVcnLcjK75M0spnqkcxzTSZkJuBruItz9Rk6ETbBEvYlytRb23RU7XLXjknCesv7xtiSwFzLcWbJhaNsP3YPVvpjks7QX2zAuZWAe4N1WcSloaoQ0xMAFDpOD0BuHMzZ7IfQ=
+	t=1749510597; cv=none; b=AizPRPhifN2kJ+ptVjR9j8HhHUdiiCqKJBw/9+3Fiao4AaAhGHSrcu2M4atB2BE20jvkcdtyJvIu0O6r6WULxkUJ7JAto/H7xHG6OF/131lQv9kOLetfwKLSyRBOBqDvYRxKO7eNwseVyOGUbFIhPP9PWIWOuG29xDpdJ7nWt1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749510441; c=relaxed/simple;
-	bh=3Tb0w0kU1Sgu0xE1w4h+IAmi/4DPbA/kezkuaf2xGTw=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=sVnAd5j+4POVC0lWq4CLzQbn3IW7LbGiN/8Q6Z5WUNXVZ0/w5W3vL5pCu502ibj0iC8kjrpG951o6fbgiDSCHD2Ry8Pp0ABet3diNr05FfmpKRcRJQGBqjr5gAFpP6TQeEb/I7MyqRU44QroNAGta84TLBvjGA/mXHymWoDb+bA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Wh9RSJH1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749510597; c=relaxed/simple;
+	bh=TJHn+xrGIoG5X5uuAIOvVOsYlBHH6Fh+hKmZRMoOHF4=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=r8BXqIXPKCKmJXS4r0lDtgT7sQLgnlITPK7o4uGJKkqdeDnvsp+GUagx8ggD/rcmdcZswO5AGrz/+dZZ+1gdQv8mdYa6lC//rAJb7VQ1bHnhCG9/kYeW5eQ2Z9wlRXjgacLDinMkIl91LHb9kZg7PH1VmWzG35bGsa+8Ji8Q8aI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b=ZH1AqCgd; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Wh9RSJH1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF294C4CEED;
-	Mon,  9 Jun 2025 23:07:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1749510440;
-	bh=3Tb0w0kU1Sgu0xE1w4h+IAmi/4DPbA/kezkuaf2xGTw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Wh9RSJH1Mb2yvxBO8AT/fFg8dvi45imU0TNhRAs3DvBJrp916m1Y+JTzSKnucdNwO
-	 j9cJrMfDdNZ/1vGH7eH8lFkwV8jxBM5WJL63/w8bkjR9Rl60Q1xr9UE3M2cJcBizTI
-	 I3FO4F5sXzdfQ7SA2Az8zlTUfnoXKEGCX95fqtsc=
-Date: Mon, 9 Jun 2025 16:07:19 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Shivank Garg <shivankg@amd.com>
-Cc: <shuah@kernel.org>, <linux-mm@kvack.org>,
- <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] selftests/mm: Increase timeout from 180 to 900 seconds
-Message-Id: <20250609160719.9c07424afaf33651f64522aa@linux-foundation.org>
-In-Reply-To: <20250609120606.73145-2-shivankg@amd.com>
-References: <20250609120606.73145-2-shivankg@amd.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="ZH1AqCgd"
+Received: by linux.microsoft.com (Postfix, from userid 1202)
+	id BF4582117585; Mon,  9 Jun 2025 16:09:55 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BF4582117585
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+	s=default; t=1749510595;
+	bh=o4TJdFyGSavIpC6NVIXpJYvJt9fYZsYcucpFDPtb1k0=;
+	h=From:To:Cc:Subject:Date:Reply-To:From;
+	b=ZH1AqCgdgKQQpNUXcLrN9QnH6K6JjugB2TUsOFvP53brqkxVV1jcxJbadsbAxvbfW
+	 l/zGRCD+hts4sDWr+hs/WbdqpHSIpT4kJ9HrSaSzrXyo0pmL7fw9pJJfoLspD6LhRd
+	 UPDogOP8n1N4ao8PhmyaZtpmrWt2gn0ZD1NPtomc=
+From: longli@linuxonhyperv.com
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Erick Archer <erick.archer@outlook.com>,
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Cc: Long Li <longli@microsoft.com>
+Subject: [PATCH net-next] net: mana: Record doorbell physical address in PF mode
+Date: Mon,  9 Jun 2025 16:09:40 -0700
+Message-Id: <1749510580-21011-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: longli@microsoft.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Mon, 9 Jun 2025 12:06:07 +0000 Shivank Garg <shivankg@amd.com> wrote:
+From: Long Li <longli@microsoft.com>
 
-> The mm selftests are timing out with the current 180-second limit.
-> Testing shows that run_vmtests.sh takes approximately 11 minutes
-> (664 seconds) to complete.
-> 
-> Increase the timeout to 900 seconds (15 minutes) to provide sufficient
-> buffer for the tests to complete successfully.
-> 
-> ...
->
-> --- a/tools/testing/selftests/mm/settings
-> +++ b/tools/testing/selftests/mm/settings
-> @@ -1 +1 @@
-> -timeout=180
-> +timeout=900
+MANA supports RDMA in PF mode. The driver should record the doorbell
+physical address when in PF mode.
 
-Gee, that's a bit crude, isn't it.  I have a laptop which will need 90000 ;)
+Signed-off-by: Long Li <longli@microsoft.com>
+---
+ drivers/net/ethernet/microsoft/mana/gdma_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-I guess it's better than it was before.  Some sort of smarter monitor
-of ongoing activity can be bothered about later.
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index 3504507477c6..52cf7112762c 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -31,6 +31,9 @@ static void mana_gd_init_pf_regs(struct pci_dev *pdev)
+ 	gc->db_page_base = gc->bar0_va +
+ 				mana_gd_r64(gc, GDMA_PF_REG_DB_PAGE_OFF);
+ 
++	gc->phys_db_page_base = gc->bar0_pa +
++				mana_gd_r64(gc, GDMA_PF_REG_DB_PAGE_OFF);
++
+ 	sriov_base_off = mana_gd_r64(gc, GDMA_SRIOV_REG_CFG_BASE_OFF);
+ 
+ 	sriov_base_va = gc->bar0_va + sriov_base_off;
+-- 
+2.25.1
 
