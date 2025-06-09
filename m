@@ -1,108 +1,107 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A47F1DC9B1;
-	Mon,  9 Jun 2025 08:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787A81386B4;
+	Mon,  9 Jun 2025 08:44:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749458369; cv=none; b=iRXjHOGAcLkM9PoDwRQaFOQDTTpIia1mCZTJsyMmQqjwIJwpW0KygMOKjuOLaV7k0LpEgOoeM2V0hU5Mgw0aQHjCWBujUJrhlA2UmfVSASg2uF646P13YvixXP+U9RZoyo/A8OuJiCtwy77uGl2tIs3+btbV1z/jmODjg2Hc4xM=
+	t=1749458686; cv=none; b=ax8pJjRMcBE3+pQA13y6cKAZ5KR8qAb2n/HvDHxsYs8isjMboni3UX+00hztC1nMxgeNepVU5AyMe8nz3S6lf30fCZm/kMLv0Di62bVb1vx0+1vGKNCkMlASHIXX/+UrWGAvjDgbUkP0/frWv4z0KnsgC2Y/KNi+7Wz6NguxjaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749458369; c=relaxed/simple;
-	bh=/UsCaKNq9xr/ZV75tgrXJEv56dnt1bMUFHh4Hlcfoik=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=MJcoLizfGjGtmPTQo69sAV45hxMU+BhuC1h7aBRtmQviJYSk0atl//suWDdXISFGm5HPtX2yiyaZmEhkUFJ1Rl19PNlCVhPO2FZr9BAapnKMqQ16jBAUc2UQjErd1PaO0yOKc0WvPPxzYt+o2uQ2t9GeGckONEpg0GiUcdjkLUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ihj191Ke; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749458686; c=relaxed/simple;
+	bh=wp40Vudve8zgArYeg3zEvVtbWz1jKw8+l2M/WqgdZwo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=R67PTR6617zbGdATvhHXF9c2Bhz8IfprdA1JD6brKaA9lQzppKpNBieE4/lP/GrPvSphXkzq76pkMrqQopJY7vsoCUcnFlTm1Ka3PPQuUt0Wn7S5AFY71WqLKyh7w6MVqMsBzJ3P2PQEEvg+8Jw9pbrbcD25QdJhQ+gGluKmvf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ZKywxUl2; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ihj191Ke"
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-87ec4ec218fso436552241.3;
-        Mon, 09 Jun 2025 01:39:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749458367; x=1750063167; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/UsCaKNq9xr/ZV75tgrXJEv56dnt1bMUFHh4Hlcfoik=;
-        b=ihj191KeFm6w6aj+FE0LSBPosSmetHHB3MKrgzRZZN2hwWZUvlHtWfxUgW/afOXkHl
-         pifeMvbMlaN/7dET7zCa2DZncAQ82cYLUwdeRR0YfzcUlZLpP1HNgWOvfAaeVl3S+5pj
-         JQrE3imU3LjFGCKVEVzzvsARruGWb8jrdX8uSdXtX8wsAAS9kaqAJP1Ehu9ESF9FIl5L
-         wGlVq1G2bsVidH5uplZpHX88V9xitKeB9VkXdf/cSXj0jBjqwNKzkuroCjAS7y6u6qpi
-         dsuLe4CuY1YvDeTaqcW3wirHu/Q32V/xznv/ECEFrRQSKdoUmKdLJBvCXwBOrf97ER1k
-         b1Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749458367; x=1750063167;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/UsCaKNq9xr/ZV75tgrXJEv56dnt1bMUFHh4Hlcfoik=;
-        b=YCeP1oJquv1gYfC0yNM6JpdqaSh/Z5n8O0cGpwNrIdKfHB59RKfInJjjxYSUNek14y
-         6XbFlWLPt7M5VUbJVPmM1cuGurhEPUz9XjQ0LwuqeNS9yHKxWNgrDNEsufYQeTRlaPKk
-         J+/IiofuCpxc7sr6NGDkaKxYo6AYjsG0aMhH2AFVmiLRelGMoH4WtIgsuy7VacBnUmce
-         0etBRIDD60y1QlFf1kTos9+jmptR2ijfHfanx2AKeE6S4+klo8RUaLEtdDVrmKbikQvA
-         kJJMU2b8I+U3YEO9siiE6w4Y2Pkg8/ySqtVAYxAezD+Q232RTKtU1BYM85LvOb/f6c4t
-         CwKg==
-X-Forwarded-Encrypted: i=1; AJvYcCVhlNIhQ7ttsXuI0Lm//fPc7QDCohs6hD8td498rwNirB0BBuMRn2xi7Vh5uiyqNLnam0VEmqKjYqxw2+bO@vger.kernel.org, AJvYcCXV8uhS96NWxglWV7Y/NNB2c16x/J4FBPvdS18r8hFSxj78PG59WZmcC0ABinZKWJ2lFrrHVJooopdtlh67@vger.kernel.org
-X-Gm-Message-State: AOJu0YywEZL/cTjlwkyqPQXLrWI9J9EZ+hztPyIsTHDiOBN1i/j94c+Q
-	XxzTvHrnY1Z44S2JKC5FjIdPXIuW/MNkmH/tYQ5pjY6gNfTZFPoxWXDxec4BKOisqZepSvHDdXr
-	8Sc3rMMvYi98psTbIrFeY0ykPOTk/pgI=
-X-Gm-Gg: ASbGncu7Pw1khCi+IU+XDr0qlh9ogk++cyJihnM4BvO41hA7PbUVXet67CP/6njrBRa
-	4nYKNbSbRx7IIIBEix5foWbxTJ66IevwJZjZ5l0CPI5MCi5nocIODeovpUE1FzkeAQfz+waXEcw
-	A0JKBu/EuQa0tXmt+h0BlTLY0SzZCGe394wnXpIx1nd/oC
-X-Google-Smtp-Source: AGHT+IHZ+RmLpJDZTbVTVwoTCs1bK4jc+HO9jPbYukLPZZYG9zdYTxniq9Niz2zidvAHAcEe3SUAHquojh2Mu26SuA4=
-X-Received: by 2002:a05:6102:1624:b0:4e5:97e3:a97 with SMTP id
- ada2fe7eead31-4e77290bbcemr8896811137.15.1749458366852; Mon, 09 Jun 2025
- 01:39:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ZKywxUl2"
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 5598etjW2083203
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Mon, 9 Jun 2025 01:40:58 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 5598etjW2083203
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1749458459;
+	bh=XeEjxj+5U43nnzoPolYaMN1k+UVx9E4Wu9VYzadiJnM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZKywxUl2pkWaBaLMnCCvoJMtgIC/t/fWf+lc18NaGN1iHX13Jobig1Ibs9nYSJcg8
+	 NVCk9F/2uCulnkkAxhHMlZTGpFLZNrnofXVtuB/qJCUQ2898jrj8vrPMQ80lDW0Zgu
+	 ndWbVIwDaw6eI361C/rqS04j6ptscoqCs0o1X/6tHtTczX62qy7UlQCecT8Dj8r4y1
+	 qbsl1p/Nq5vuCdDVamaZUZ6ViuCjDLreW8Wqbu8IdCusO+jym8UxS6TqEEIWRzlFAk
+	 MGDz3qSQxVw896KAgeF1QrCLQIL7zLqercdYbnKpLOGOnCPCASp9yz8cofv82z5c4C
+	 YurmKJfzB3q3A==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        shuah@kernel.org, andrew.cooper3@citrix.com, sohil.mehta@intel.com,
+        stable@vger.kernel.org
+Subject: [PATCH v6 0/2] x86/fred: Prevent immediate repeat of single step trap on return from SIGTRAP handler
+Date: Mon,  9 Jun 2025 01:40:52 -0700
+Message-ID: <20250609084054.2083189-1-xin@zytor.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Xianying Wang <wangxianying546@gmail.com>
-Date: Mon, 9 Jun 2025 16:39:15 +0800
-X-Gm-Features: AX0GCFtNYI-b3kfkcuPR5qDCZr7Uh9Bc8u-dvALgXtAxekpV1d89-_tR1kKiX9A
-Message-ID: <CAOU40uAjmLO9f0LOGqPdVd5wpiFK6QaT+UwiNvRoBXhVnKcDbw@mail.gmail.com>
-Subject: [BUG] WARNING in bdev_getblk
-To: viro@zeniv.linux.org.uk
-Cc: brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi,
+IDT event delivery has a debug hole in which it does not generate #DB
+upon returning to userspace before the first userspace instruction is
+executed if the Trap Flag (TF) is set.
 
-I encountered a kernel WARNING in the function bdev_getblk() when
-fuzzing the Linux 6.12 kernel using Syzkaller. The crash occurs during
-a block buffer allocation path, where __alloc_pages_noprof() fails
-under memory pressure, and triggers a WARNING due to an internal
-allocation failure.
+FRED closes this hole by introducing a software event flag, i.e., bit
+17 of the augmented SS: if the bit is set and ERETU would result in
+RFLAGS.TF = 1, a single-step trap will be pending upon completion of
+ERETU.
 
-Root Cause:
+However I overlooked properly setting and clearing the bit in different
+situations.  Thus when FRED is enabled, if the Trap Flag (TF) is set
+without an external debugger attached, it can lead to an infinite loop
+in the SIGTRAP handler.  To avoid this, the software event flag in the
+augmented SS must be cleared, ensuring that no single-step trap remains
+pending when ERETU completes.
 
-Code Path: The failure originates from the function bdev_getblk() in
-fs/buffer.c, which attempts to allocate a new buffer via
-grow_buffers() =E2=86=92 grow_dev_folio() =E2=86=92 __filemap_get_folio().
-Memory Allocation Failure: Under specific memory pressure and
-vm.zone_reclaim_mode settings, the internal call to alloc_pages() in
-__alloc_pages_noprof() fails, resulting in the observed warning.
+This patch set combines the fix [1] and its corresponding selftest [2]
+(requested by Dave Hansen) into one patch set.
 
-I recommend reviewing the block buffer allocation path in
-bdev_getblk(), particularly how it handles allocation failures under
-memory pressure.
+[1] https://lore.kernel.org/lkml/20250523050153.3308237-1-xin@zytor.com/
+[2] https://lore.kernel.org/lkml/20250530230707.2528916-1-xin@zytor.com/
 
-This can be reproduced on:
 
-HEAD commit:
+This patch set is based on tip/x86/urgent branch.
 
-commit adc218676eef25575469234709c2d87185ca223a
 
-report: https://pastebin.com/raw/wqAeZJxF
+Link to v5 of this patch set:
+https://lore.kernel.org/lkml/20250606174528.1004756-1-xin@zytor.com/
 
-console output : https://pastebin.com/raw/aLaVQpzR
 
-kernel config : https://pastebin.com/x48ijkN8
+Changes in v6:
+*) Replace a "sub $128, %rsp" with "add $-128, %rsp" (hpa).
+*) Declared loop_count_on_same_ip inside sigtrap() (Sohil).
+*) s/sigtrap/SIGTRAP (Sohil).
+*) Add TB from Sohil to the first patch.
 
-C reproducer : https://pastebin.com/raw/whJgYnHk
 
-Best regards,
+Xin Li (Intel) (2):
+  x86/fred/signal: Prevent immediate repeat of single step trap on
+    return from SIGTRAP handler
+  selftests/x86: Add a test to detect infinite SIGTRAP handler loop
 
-Xianying
+ arch/x86/include/asm/sighandling.h         |  22 +++++
+ arch/x86/kernel/signal_32.c                |   4 +
+ arch/x86/kernel/signal_64.c                |   4 +
+ tools/testing/selftests/x86/Makefile       |   2 +-
+ tools/testing/selftests/x86/sigtrap_loop.c | 101 +++++++++++++++++++++
+ 5 files changed, 132 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/x86/sigtrap_loop.c
+
+
+base-commit: dd2922dcfaa3296846265e113309e5f7f138839f
+-- 
+2.49.0
+
