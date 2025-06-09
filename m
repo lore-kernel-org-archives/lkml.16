@@ -1,139 +1,109 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21090265CDE;
-	Mon,  9 Jun 2025 12:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC17F25A35E;
+	Mon,  9 Jun 2025 12:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749471924; cv=none; b=Rea0fs4pHRE3GflFZ5IKIQAwhZRxP67dJGw/CY/kjw2+7AnItRVkVSyjatrtrLuYMDMk+XICoToqLULLU6Ljp1knCVsTxqaWouuP+B1QTv3qPwi1BW7+OM0Cp/j1rRM33gp6UdXccc6+TNNM6lfAC06Ah08w3DZ52XGKkIcIVcg=
+	t=1749471940; cv=none; b=gx9WUxjcuiwGn2vJRoz/TRNA4ckXvfpEzQ1OSpYHK27Q4LijDANpfov2+RBGJJ3bjWVPOsaP6ZPf0gWWxkFpojmLMb7wLgEzZkMqzjfbl4sRprlIvETFcQfYbFRg2LQKzwXniWpnQp5l91D4nlfJ8JRzfkhnvcnesvZf5z0PsSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749471924; c=relaxed/simple;
-	bh=Q1WNKF0a8xaJ38B3avtHB3P2sjCax+Cgv0PQTqcGPds=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=MOSiZxof/i38baDt9v67jHjuCH3E+vH79fNwnuQbVRf65F2Uw286h80+7Fb9lvDZJPmt69zPtmpPDQgFOjMsgIomrod3SX/0JeR2J4ur+njKAhLO3Cm1PDAC29TMTj2a1FhuPNLGW2aGnApRC0RqzziuIYR7Eehm+kRmgCnJ1RA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=j7E3WAVA; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749471940; c=relaxed/simple;
+	bh=l0eq9z+bwI2/6pPSlEWgKnX9533DmDLPCwHP+/s/+eA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=REzXLS85K23NKHgE3q8dhHNknnc7Ucw3vIUeVFgqiFPbgw6ICJboyj55PtTwRpJKekUysvDcs926r03m0ZISTRQklCmqWYlDOH+2//I7bDj5SNa6MCjKuuACSgaxq7IiwNbIor9qg6ZCD/HsIM2OW04uGncwo6sFrnCRQtAbomc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g14+ZF8l; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="j7E3WAVA"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55993tbs031949;
-	Mon, 9 Jun 2025 12:25:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	vXeFn+D102T3ulUO61dxyo0RH4duqBu7n593qCJenQY=; b=j7E3WAVAxDiJJXfl
-	BYMu28osSeEwDwESnUlDf8kI8xmmGTDgAe4wjBN2TS72MmIJpfFPSXY85/9pM7kg
-	FZj8IFSrwV08sj0+gL3P0rcMj3axN4OC4bV3q5aTPyUm1jOd57/otl//0njGKV24
-	BmsUkLeLps9rleZUUK8XgD/wvoPEYLNlbYYy9o1VVr8uptt65wGW03oTWZdBi47G
-	riwxZpfBUnMd9lZtBsqH8IYK4R0VG3G2ElGkF3ADRhZl4uAH2MbAVtWaZxwmAovj
-	/MoeW5gWxZvVOxdhZcE9pAvz2UUx0+ypm/6IHDk6NrjpPSzMZkERGvOFDdXmKctK
-	QIceDg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474eqcdrx1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Jun 2025 12:25:13 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 559CPCV1015627
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 9 Jun 2025 12:25:12 GMT
-Received: from cse-cd01-lnx.ap.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 9 Jun 2025 05:25:09 -0700
-From: Yongxing Mou <quic_yongmou@quicinc.com>
-Date: Mon, 9 Jun 2025 20:21:57 +0800
-Subject: [PATCH v2 38/38] drm/msm/dp: Add MST stream support for SA8775P DP
- controller 0 and 1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g14+ZF8l"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-607b59b447bso3293357a12.1;
+        Mon, 09 Jun 2025 05:25:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749471937; x=1750076737; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Lm8+J8LO9pTzE/AcmxF5BhTmx/0SQO6Kz6Y+OF2wnic=;
+        b=g14+ZF8lnpQiTJ/o/BNDAtjyYyZal468gXyaLyRppI+mObyIX2S+g1TaDiJrMR5xTa
+         wFqpAE0UWq1MSou9vuGJywCSz0m1S4HDhSjlHIfhshWWCnDmRsegacv6Ifx4/1TALpLN
+         FUMVTsgrSSRNz7kajqxow4GIbToAjAF4gHL6LHfwcpbb0gQDhjTy0r/+Aor1n1iLTjAI
+         SvMeu0/wiZSe1UTBYr3oheyiVVUviCe58wRUkSA01cOXXdOHLlAu71yZLFfN5SAEMj0i
+         gRFk++wkEQpUo3EPm4pJrCq0IrnsFug6P4USL4/VOdL7kvACoRNM3Uswy80Coo+NwhrY
+         V7vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749471937; x=1750076737;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Lm8+J8LO9pTzE/AcmxF5BhTmx/0SQO6Kz6Y+OF2wnic=;
+        b=m0ZEjGtSFZa4ntQDyudQjSGmLDyHaLz++1zZ3bluNVgHkbljqFxeTnBPW1sbuyerDG
+         C1Y72F+8zVAd6LJNVPlBHIrISGHbB+xnxAhwtb9aWiw6tprFTNARiprJLgJy/+mYzBl4
+         yOPT7FpGLL6MIEJqvbJzoD2AyLWT6R7D3XAJqLIhHI9Wgz7ay3RTP9fDZ+m5MhoYK0Ab
+         jKqJJsxS8OB4VnpLZDd9TS8VscqTOhragVPWVfqzzxx5yOPRep1ExyqEr19+MiaTJ75s
+         umo342wGmQPLJuApUyvyE+wxbdR1xsPxYZr5K1hoVwBRzMp1JlFy1lDrb0SFLCxvZTC4
+         BS9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXOCFWIerusLodEXyEMAqmaDpPFdViulXwm+1THyNEG0cdeowvs0/lC4EBw8yx8WiKOhRwjaV4Kprptp8GI@vger.kernel.org, AJvYcCXuTXUFHPGdCmquylitkAKqfncUAji4cPMYMYJwNuQAzm/zHhsp9Dit8ZHwKpd3cRABXjv7wot116BQDg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywry+8g0Rql5GmcednJzqPgUf7pPteKeX7vQsxlF0SCFvt1xmR8
+	skfIW229w0FvEwXcxaQ22riYXIDnDvrgQMm8BN6KFbOMkukLChn0YirX
+X-Gm-Gg: ASbGncuRMiBKx/7KLvt2smx2UKF21dTkQtPM2TzMDx8YCNkVeEOal4zDuCBk5MCbneR
+	tBuxz2cf9WFpJZ8P+8WKs3wT1VTnKY54faGX9zjd27dWHy8nbEUtmV59Cpj9VK/Td4kF2KwcZ45
+	5jp9p6KIYhazDMCM4I2/LlHXaBx203r1wXQ/3iPUcXqQVaGv909c09Z8LwBRx1uBU2dflMZ/vUz
+	TSj6lln3RNYFfyvS1YjcfDekhgz3VMQS8R2zourPjzfs8KZSHE35Y1O2EBFVD9/ezNPAJupmDpS
+	Ap6pWG/QKGgzhKrYj1eo3Vttx9y+3ao/gSM2TfKuX2oUzn/rsPpiFmpO7Vc0iKKqgJ+7uJAASEC
+	s3Ij4yQ2XUpV0
+X-Google-Smtp-Source: AGHT+IFYv4rUYkaPQ9Vg+6CHFrzjuBMHZ3ntWNeCEBbU9TrLLDM5BfrvME31JEIqv1Zdo0LxsEGSlQ==
+X-Received: by 2002:a05:6402:5256:b0:602:1b8b:2902 with SMTP id 4fb4d7f45d1cf-607743a5bc0mr11884785a12.15.1749471937031;
+        Mon, 09 Jun 2025 05:25:37 -0700 (PDT)
+Received: from [192.168.32.20] (public-gprs400974.centertel.pl. [37.47.197.143])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60804dfb96fsm675481a12.65.2025.06.09.05.25.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Jun 2025 05:25:36 -0700 (PDT)
+Message-ID: <7a6083df-9060-4d07-8293-304a3f5f6cdd@gmail.com>
+Date: Mon, 9 Jun 2025 14:25:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] HID: playstation: DS4: Add BT poll interval adjustment
+To: Roderick Colenbrander <thunderbird2k@gmail.com>
+Cc: Roderick Colenbrander <roderick.colenbrander@sony.com>,
+ Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+References: <20250508210148.799578-1-titanv3585@gmail.com>
+ <20250508214305.836406-1-titanv3585@gmail.com>
+ <CAEc3jaCEENSMbWFcQyjWLP+4UPv3_2inARZLJsmXYF7zVbhkug@mail.gmail.com>
+Content-Language: en-US
+From: Vadym Tytan <titanv3585@gmail.com>
+In-Reply-To: <CAEc3jaCEENSMbWFcQyjWLP+4UPv3_2inARZLJsmXYF7zVbhkug@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250609-msm-dp-mst-v2-38-a54d8902a23d@quicinc.com>
-References: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
-In-Reply-To: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
-To: Rob Clark <robin.clark@oss.qualcomm.com>,
-        Dmitry Baryshkov
-	<lumag@kernel.org>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        Jessica Zhang
-	<jessica.zhang@oss.qualcomm.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, "Simona
- Vetter" <simona@ffwll.ch>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        "Yongxing
- Mou" <quic_yongmou@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749471766; l=1356;
- i=quic_yongmou@quicinc.com; s=20241121; h=from:subject:message-id;
- bh=Q1WNKF0a8xaJ38B3avtHB3P2sjCax+Cgv0PQTqcGPds=;
- b=L2fWxjBVk8HhImBlhhEaU7oOR40NV8zennU2pmSzsN5lc5IiXgT2mr3IdlW8O2yUgmpDY1fWC
- Mr0T8+4AKBqCTYaqBpjF/El8cBVYpNdBdUR1CnrvbesaAFbQwilL04q
-X-Developer-Key: i=quic_yongmou@quicinc.com; a=ed25519;
- pk=zeCnFRUqtOQMeFvdwex2M5o0Yf67UHYfwCyBRQ3kFbU=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA5MyBTYWx0ZWRfXyyJA9zc0LIMM
- 8JV38O308nZJ55901LBbNQQBoKERAqFJ+XiMYEQ53I7Q/9JsVg/7HK9f3e4AJrrzawslrJQ7M4J
- LAmcKfz9Laf+7i2syB2C5W7Z9OOcjRPkBYKjLXuSoyXsA8YOmZP57An20zWoZJ37HeYHnjVIvP3
- e+0zidj+6mBWopfTfE84mJI5KTMkNjjZRbDeV4ZIwNIflETBnRZAvCs04Heu/2ntRPaiQ5T66dy
- h3EEFnHL/b2PS+2UG3WSnnx531ZrCmsIo2nbNwXizshu/kSE1eZA6hhaJg3cbNTuchDr02JLevi
- CVFi+Y7RCocJ5fKZVjLW85yb/s5Xe0ZEr3+Jm9NhsQtaaZec4F1rfqij6Mk6ktJ5kt1fipAWoqi
- 38mdHWG0AZC+oGS306mted0y6udivODbVg6Ot5Jw5MZ34E9Ury1RW/LWu7FRyu3b6WyDmZRf
-X-Authority-Analysis: v=2.4 cv=Q7TS452a c=1 sm=1 tr=0 ts=6846d2a9 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=qZBeK32WA6mflFYdqoAA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: Q3M8DP2xG_LiEcNNFmCNy46YybZereCC
-X-Proofpoint-ORIG-GUID: Q3M8DP2xG_LiEcNNFmCNy46YybZereCC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-09_05,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 phishscore=0 mlxscore=0 spamscore=0 mlxlogscore=999
- bulkscore=0 clxscore=1015 lowpriorityscore=0 adultscore=0 impostorscore=0
- priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506090093
 
-This change enables support for Multi-Stream Transport (MST), allowing
-each controller to handle up to two DisplayPort streams. As all
-necessary code for MST support was already implemented in the previous
-series of patches.
+> Do you have a strong use case or reason to add it back?
 
-Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
----
- drivers/gpu/drm/msm/dp/dp_display.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+I wouldn't say *strong* per se, but if something:
+- Can be adjustable
+   - I think if hardware is capable of such thing it's better to have 
+adjustment of it available to user.
+   - It's better to have an option then no option at all, let the user 
+decide.
+- Doesn't break the hardware nor software
+   - When decreasing polling interval
+     - Battery impact is just faster discharging, it doesn't "breaks" it
+     - Bluetooth stack won't break, it could be just "overwhelmed"
+   - When increasing polling interval
+     - No negative impact at all (if we wouldn't count the user who can 
+set polling interval to like 63, and have choppy controls, that's why 
+defaults exists)
+- Have benefits
+   - PI can be decreased for smoother controls in cost of battery life
+   - PI can be also increased to save battery in cost of smooth controls
+- Doesn't impact anything nor anybody on defaults.
 
-diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
-index 75f2fd7c75eae81e5c843f8ae2d1ce12ad0cad7e..16196dcc9ff4ac6a35b6bcd8d433b08f7d18fe5b 100644
---- a/drivers/gpu/drm/msm/dp/dp_display.c
-+++ b/drivers/gpu/drm/msm/dp/dp_display.c
-@@ -127,8 +127,10 @@ struct msm_dp_desc {
- };
- 
- static const struct msm_dp_desc msm_dp_desc_sa8775p[] = {
--	{ .io_start = 0x0af54000, .id = MSM_DP_CONTROLLER_0, .wide_bus_supported = true },
--	{ .io_start = 0x0af5c000, .id = MSM_DP_CONTROLLER_1, .wide_bus_supported = true },
-+	{ .io_start = 0x0af54000, .id = MSM_DP_CONTROLLER_0, .wide_bus_supported = true,
-+	  .mst_streams = 2},
-+	{ .io_start = 0x0af5c000, .id = MSM_DP_CONTROLLER_1, .wide_bus_supported = true,
-+	  .mst_streams = 2},
- 	{ .io_start = 0x22154000, .id = MSM_DP_CONTROLLER_2, .wide_bus_supported = true },
- 	{ .io_start = 0x2215c000, .id = MSM_DP_CONTROLLER_3, .wide_bus_supported = true },
- 	{}
+> The not adjustable referred to USB, which is not adjustable. So keep
+> that one the way it is.
 
--- 
-2.34.1
+Oh, OK, I understood this in another way, but that make sense too.
 
