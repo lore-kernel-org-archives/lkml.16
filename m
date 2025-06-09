@@ -1,49 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F89525A352;
-	Mon,  9 Jun 2025 13:40:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD93E259CA4;
+	Mon,  9 Jun 2025 13:40:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749476416; cv=none; b=l4tgi90gWy6f0X7akoEH3779olHHwhGd8cAg+fFL8XSeAKuyfCJpGiEfL52NoYoxUeNksVCY4noo96+K5OnczeFyuvFpqeCB8LmWZn5IGv/TBa7M7hEp8+57vyGwGJ5Whbm2orr8xHU8f78s0x0e6u88K5syFQJm1gcM7moFL3g=
+	t=1749476419; cv=none; b=Kp1J2RmPyfwdRg5QA0uMHZgKHI/9n/7ipsOZSeGiuJXm6wxP16nNx5dGt7bL9n1+5PtvylPiRgYXIOei6WHShnqKYsV134spm26YirMmhhHf2FaSlo+ar1LvuVpq3NOg9LzewZ6qKYHqka9qcLj1z63aJdHcJSa6HpKnU6ip3Jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749476416; c=relaxed/simple;
-	bh=X9XD4EFOdykRcFhrxrtSRa7vv6d3l9lZP9aiuTUFF+M=;
+	s=arc-20240116; t=1749476419; c=relaxed/simple;
+	bh=0TzGiYjBWdHj28TJ9b9/bP0pDAFT/RI/G0zZcNo2UZY=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=oH39N1S/B3FCgaLzVXV1ahHfnYybuoHHtd3lOmQWpZFriBfFioQkQPVtKXwmkskB/D/OqwHo8mMjZPbCbJsLxmPLl9cOP++PbGow0PpxAPfM/LuR51NOtwKqO014YH/9KO2l9uh9omf9LjiWT8jjCiwv3uaz1sr1EDKtBPbM810=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IBm62lse; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=jCiK7fI2RBizFmfMhfgW1d2OPOZAwI1vx6lYGapiyT3eGrXwNml5VFPbVWuVQbMPzoataSmVl2TKQLRG8kqSsZjTPQ26dSdJAROLRaD4wJiZyo+MghqND2kXaPz6oO1aSCt+lTpnbNdBeaGp4HlpmrlRx2n4vkc67OH4aC0cmMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cBWHnyet; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IBm62lse"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F713C4CEEB;
-	Mon,  9 Jun 2025 13:40:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cBWHnyet"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C94C7C4CEEB;
+	Mon,  9 Jun 2025 13:40:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749476414;
-	bh=X9XD4EFOdykRcFhrxrtSRa7vv6d3l9lZP9aiuTUFF+M=;
+	s=k20201202; t=1749476419;
+	bh=0TzGiYjBWdHj28TJ9b9/bP0pDAFT/RI/G0zZcNo2UZY=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=IBm62lseXrAlWxrhAiW5V4GsDw9OWbep6hi0qSwy7hMU8L0y9sFm2mNVPJSqfNIu2
-	 FmRSnRVZ2JKvG+eYRI9yB6GgxbjEY/Jiq4dhVpkgC/JskwlexcfDS8Lt+2uT36Rjgl
-	 3nLHq7xZQWdwK1Cj6cttY1TF2xXjbdsmHOikKKrycR2VogzQZXI7D246l9ulu073VT
-	 tM5hnn//H22CIl/VuPYpoMpQMI2u2hww13RV8z1KRqIuzkaYTP/TGnCayiQea9eKeX
-	 Zu3Fr51dmUIafNMl4/YOLMd4/n0tDikElp5el1fB3qqSV5roL6LV+qFVSIdq9RieAN
-	 hXDK6kKbaApgA==
+	b=cBWHnyetInB5iDpyq8xXZCqzb7Sx+8zILwQciYvw/O7l53nhhmbcAGC82GsS6ZDPh
+	 tY08MqzOH9WPf3eN/DW0osymBz2itA3Wc3FIFQkH0pe0Jr2I3LAsw5reRHfpiGyAGk
+	 NkG6ZwMmegmTPR78luHKA9408k4pr1MprOtxDtNTVy9rWmmvsKQBiZvj4/HwtJsng8
+	 +p1KG1G4RxdDBBidK7ll6oKQTn6apDX6ymDrtFvqLbd5R39BjCI/KCzxJO6Vo2LBZ7
+	 69vABdM0VnBa4DvHvH7TH9MX3+7QAhKPMrzWheVB1tdpwvk5ZeM+HxYlFZRX+/iu94
+	 +SyDWK9xhNfNw==
 From: Mark Brown <broonie@kernel.org>
-To: David Rhodes <david.rhodes@cirrus.com>, 
- Richard Fitzgerald <rf@opensource.cirrus.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, 
- Stuart Henderson <stuarth@opensource.cirrus.com>, 
- Piotr Stankiewicz <piotrs@opensource.cirrus.com>, 
- Qi Zhou <qi.zhou@cirrus.com>, linux-sound@vger.kernel.org, 
- patches@opensource.cirrus.com, linux-kernel@vger.kernel.org, 
- Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-Cc: dan.carpenter@linaro.org, kernel-janitors@vger.kernel.org, 
- error27@gmail.com
-In-Reply-To: <20250603214813.197346-1-harshit.m.mogalapalli@oracle.com>
-References: <20250603214813.197346-1-harshit.m.mogalapalli@oracle.com>
-Subject: Re: [PATCH] ASoC: cs48l32: Fix a signedness bug in
- cs48l32_hw_params()
-Message-Id: <174947641193.126747.915802797193162530.b4-ty@kernel.org>
-Date: Mon, 09 Jun 2025 14:40:11 +0100
+To: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, linux-sound@vger.kernel.org, 
+ devicetree@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Frank Li <Frank.Li@nxp.com>
+Cc: imx@lists.linux.dev
+In-Reply-To: <20250528165755.692264-1-Frank.Li@nxp.com>
+References: <20250528165755.692264-1-Frank.Li@nxp.com>
+Subject: Re: [PATCH v2 1/1] ASoC: dt-bindings: covert
+ mxs-audio-sgtl5000.txt to yaml format
+Message-Id: <174947641655.126747.14644137581591164597.b4-ty@kernel.org>
+Date: Mon, 09 Jun 2025 14:40:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,13 +53,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Tue, 03 Jun 2025 14:48:13 -0700, Harshit Mogalapalli wrote:
-> There is a type promotion that can happen when freq(u32) variable is
-> comapared with sclk_target(integer), when sclk_target is a negative
-> value it promotes to a large postive integer which might not be a
-> problem in this particular case as the condition evaluates to false
-> when that happens, but bail out early when sclk_target has negative
-> error codes.
+On Wed, 28 May 2025 12:57:54 -0400, Frank Li wrote:
+> Convert mxs-audio-sgtl5000.txt to yaml format.
+> 
+> Additional changes:
+> - Add compatible string:
+>     bluegiga,apx4devkit-sgtl5000
+>     denx,m28evk-sgtl5000
+>     fsl,imx28-mbmx28lc-sgtl500
+> - Remove audio-routing from required list.
 > 
 > [...]
 
@@ -70,8 +71,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: cs48l32: Fix a signedness bug in cs48l32_hw_params()
-      commit: 22188b9df60dde48eaba276da22062aaf8e12dfe
+[1/1] ASoC: dt-bindings: covert mxs-audio-sgtl5000.txt to yaml format
+      commit: db1a7a6f28b84c5ccd84a800cd4827b5599c95b9
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
