@@ -1,144 +1,82 @@
-Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23EBD19309E;
-	Mon,  9 Jun 2025 04:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49ECC192B75;
+	Mon,  9 Jun 2025 04:33:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749443595; cv=none; b=fKwHljEa/gZPcuK5/XP8jI5gyhwsJx/ymuqRMwCNJeARVbh1cpb6JJZg8aJ4EX7SpxlLFamWUO/Pv2C1vGNSch17FdQAOPdlXvpWRqC1YtXj9KIOu+9tboODKM2viT3gjyer568/xs0Ou0vG9sUPCeM6mfrSRTx7TRgT7saents=
+	t=1749443630; cv=none; b=uT/wRervtI/tXlPB5pmwM9gQ3f22HLdUI4cWWrASZ7W3BZRmDumA/xSOlxz6IGFzUr2Ssia3wMG1mvsKs/fyS9d3O59ok1O+km37zltqG5PA9/rt99JC+DBn6Ljg0cl8S6Fnd4Td1qfZllKcdPGgef3JPEL9BzTHp5V3qCvd9zY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749443595; c=relaxed/simple;
-	bh=7+bSEDdkuLIICSf100hVTfZ2IMYgPaUemWV4CuSRMwY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I2j6r1+SUqdEIcwcAgHKQXMSBoqeGt1plpwgeSHBJwnaJQsf+fmGTp/GyRlGkUwq0MxGtMyJL0+wFySkLS3i9AjAIS8bTvoNVyIFW8q+CJtFxWIQQiCpVF5MA6qRM3fQOp7vjklI1j46H3uYLbA64z3FbDgpGz9et8MTPk0vGaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=NI1fzrF7; arc=none smtp.client-ip=52.119.213.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1749443630; c=relaxed/simple;
+	bh=h7Ihb1Epf9mKshAeBFCCEqXVUjHJ83/heXSibl9WC8s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZhbQY7pF2fHrkRNkin1LZBk8LVBqMYkLQzMctDxTT8Fwhkb74sTuyegmIGFPa5E4d0Wotww5zCl5JzOOtc+O/VOFo1g6UWOgbtYrGaYXj1KJh97GBgGGYca2MlanT2r5t+nmZHFpttWaY6eN5X0N1dIlvzojCvQ13kgeYkBZBAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z5jDqTeT; arc=none smtp.client-ip=209.85.222.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="NI1fzrF7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z5jDqTeT"
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-87ed1c2b487so25725241.3;
+        Sun, 08 Jun 2025 21:33:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1749443595; x=1780979595;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=K1IXsGeOjEMrDiz6/avTqx4a+iEDZuQrzJNH3kyvoUo=;
-  b=NI1fzrF753ZGmjB8gZiWxdHuXcuaonGlved08f0dvwD8n+tAEXKAJgAY
-   eeCwFL+har4LxLOPCifFcaAxL6hUPf2GfNKC9KxToiI9RrgIVm3dP9rnq
-   k0fHDhZuYsS9Am4TiWm/NC1TgytGt3pHsesAp6RdUyNox+Oc8GnCfpDaC
-   jE0Dr/7qyTrfjAPpKPtHLUFa43tU5/7ZtGRsYX411oDVwZ6bXTjk3o3AQ
-   yun51rAnZNUKqrmkc84B+rDPZmdptnbOWCxC3OdXmtNlFushI/MOwFoPZ
-   q/3U+K+dDaInbfLo9WeU7h3P5oi7HWClKA6MeYxITa2g9FZ7/QJ9TOUUh
-   A==;
-X-IronPort-AV: E=Sophos;i="6.16,221,1744070400"; 
-   d="scan'208";a="306689927"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 04:33:14 +0000
-Received: from EX19MTAEUA001.ant.amazon.com [10.0.17.79:63521]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.32.98:2525] with esmtp (Farcaster)
- id 267c9614-9b46-44a6-817f-8e49af2d718e; Mon, 9 Jun 2025 04:33:12 +0000 (UTC)
-X-Farcaster-Flow-ID: 267c9614-9b46-44a6-817f-8e49af2d718e
-Received: from EX19D018EUA004.ant.amazon.com (10.252.50.85) by
- EX19MTAEUA001.ant.amazon.com (10.252.50.50) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 9 Jun 2025 04:33:12 +0000
-Received: from dev-dsk-farbere-1a-46ecabed.eu-west-1.amazon.com
- (172.19.116.181) by EX19D018EUA004.ant.amazon.com (10.252.50.85) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Mon, 9 Jun 2025
- 04:33:09 +0000
-From: Eliav Farber <farbere@amazon.com>
-To: <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>, <yoshfuji@linux-ipv6.org>,
-	<kuba@kernel.org>, <kuniyu@amazon.com>, <sashal@kernel.org>,
-	<edumazet@google.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <stable@vger.kernel.org>, <farbere@amazon.com>
-Subject: [PATCH v2 5.10.y] net/ipv4: fix type mismatch in inet_ehash_locks_alloc() causing build failure
-Date: Mon, 9 Jun 2025 04:32:59 +0000
-Message-ID: <20250609043259.10772-1-farbere@amazon.com>
-X-Mailer: git-send-email 2.47.1
+        d=gmail.com; s=20230601; t=1749443628; x=1750048428; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=h7Ihb1Epf9mKshAeBFCCEqXVUjHJ83/heXSibl9WC8s=;
+        b=Z5jDqTeTlrwfCy0qmNSrypujvzYo3TlWHvl9DSrz65xMLBXQuqBVg5mHaZ5JkoLZBx
+         Gb0YmCPMEsBjOP+VGAyO78nCnCFIJVWPjQatGi1YE8ijT00tDXdXzO/WxWC6x6v8aEyn
+         IPdPYmUDSRZXcEDNjr7gSiodUnKmequP9+osofxBNJD5QAaLCP915cYOGlttUUixZN8k
+         DDCsRIWr7h9t0UHtZZ4dUD3Km156GBoK/m+aAGLLlAZ6M5fcBzMJrTXqgLN2MUTzd7wE
+         0N8LYfzGpnytgQ5cw/G1Xtj47gm/RUCYh7NazT8hiJFn7/5ATzL+q42Fpu/E4XUhLd7V
+         83aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749443628; x=1750048428;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=h7Ihb1Epf9mKshAeBFCCEqXVUjHJ83/heXSibl9WC8s=;
+        b=O+49IbtY/pPE4f099yRgkR78rYzd4A/AJbFBfQdChckfV0PI5B9musw+IDsocMucz8
+         YxYwWKPUp8nPYdoIT4LxHQQkf48bLFZI4fhasf2A59RjR1Nd922FsxKWW0DWubMLsczB
+         YUJSU/QCRVec116IOnY+PQwWBgLJaG6R5tEHlqHDyxUvcDYKvm/SzETUr2PGOUcJuavC
+         2I/dO9NInTUCRtRHPuQB3qXMl9ejfj0xsIUGultGBoJHCDQUcsl6qlxAirY5lAt2DT4J
+         YsS48kmSTBgw+7ltGg9wjPM4I+7emopZSwsLixiTk0jFzc9ve7DZ9Sfy2oaT8E/4enkd
+         CxOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXe34GhleP3rExJtXdOXXcfir+QykxO1pLl/6JCCLOWvLa6/Rpj40Fc0cEsSvvPAkCInLsINK3YQHdvZoI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZUgT36/HY2XrybZ+IIal4neFjBI7Q+OmXMBcsmKrkVGqbXzex
+	jReSVQaODbEOzDsNrXGbPTwcpSu0XQyNLamRIip4FxPHyIT9j9Fr/QxlVpFAm/QwjNGOkkzPDKl
+	dhdOEgyOmVxJUbi0If8zlm7V4S6yqYgY=
+X-Gm-Gg: ASbGncuCRaDiJ+DWRjgKaw/uw1tbgwT/whTKeHuEZjLPCQY3myLWHjr0lIfU68l3w23
+	i3XV1FNVf32rN+NYylJg8IBY6osrXqVwxpJwejgCbc9Jm4Bu727AcZznn13Kvrhj4GExwpkq/s9
+	L6h3a3hdBLO8uRIfKJPW+bYjaxcnLwry9nrbbT+LJqGfME
+X-Google-Smtp-Source: AGHT+IGtpm+GjWAwqV8qVoEDAmnJRMAo3nk0UIoeXRspYT7fEctsZFNHIWIcj9ybIPdFFPHQ6MVaaX/a/l4nZY7WVIM=
+X-Received: by 2002:a05:6102:15a0:b0:4e2:955a:afea with SMTP id
+ ada2fe7eead31-4e776868f61mr2758162137.1.1749443628173; Sun, 08 Jun 2025
+ 21:33:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250330234039.29814-1-christiansantoslima21@gmail.com> <aDdoGfo1kynqWCDm@cassiopeiae>
+In-Reply-To: <aDdoGfo1kynqWCDm@cassiopeiae>
+From: Christian <christiansantoslima21@gmail.com>
+Date: Mon, 9 Jun 2025 01:33:37 -0300
+X-Gm-Features: AX0GCFs0dVdlWIfhndTQYEYg4XEql-HsA2ps-7Otdev-q1VN0yt0nLUX1PRqxmw
+Message-ID: <CABm2a9dEOXS4xAsA9LQXE5Ct36UnWxmhUx7dqJAjwc5yL5ToHg@mail.gmail.com>
+Subject: Re: [PATCH v6] rust: transmute: Add methods for FromBytes trait
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, ~lkcamp/patches@lists.sr.ht, 
+	richard120310@gmail.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EX19D042UWA001.ant.amazon.com (10.13.139.92) To
- EX19D018EUA004.ant.amazon.com (10.252.50.85)
 
-Fix compilation warning:
+> What's the status of the series? Are you still working on this topic
 
-In file included from ./include/linux/kernel.h:15,
-                 from ./include/linux/list.h:9,
-                 from ./include/linux/module.h:12,
-                 from net/ipv4/inet_hashtables.c:12:
-net/ipv4/inet_hashtables.c: In function ‘inet_ehash_locks_alloc’:
-./include/linux/minmax.h:20:35: warning: comparison of distinct pointer types lacks a cast
-   20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
-      |                                   ^~
-./include/linux/minmax.h:26:18: note: in expansion of macro ‘__typecheck’
-   26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
-      |                  ^~~~~~~~~~~
-./include/linux/minmax.h:36:31: note: in expansion of macro ‘__safe_cmp’
-   36 |         __builtin_choose_expr(__safe_cmp(x, y), \
-      |                               ^~~~~~~~~~
-./include/linux/minmax.h:52:25: note: in expansion of macro ‘__careful_cmp’
-   52 | #define max(x, y)       __careful_cmp(x, y, >)
-      |                         ^~~~~~~~~~~~~
-net/ipv4/inet_hashtables.c:946:19: note: in expansion of macro ‘max’
-  946 |         nblocks = max(nblocks, num_online_nodes() * PAGE_SIZE / locksz);
-      |                   ^~~
-  CC      block/badblocks.o
-
-When warnings are treated as errors, this causes the build to fail.
-
-The issue is a type mismatch between the operands passed to the max()
-macro. Here, nblocks is an unsigned int, while the expression
-num_online_nodes() * PAGE_SIZE / locksz is promoted to unsigned long.
-
-This happens because:
- - num_online_nodes() returns int
- - PAGE_SIZE is typically defined as an unsigned long (depending on the
-   architecture)
- - locksz is unsigned int
-
-The resulting arithmetic expression is promoted to unsigned long.
-
-Thus, the max() macro compares values of different types: unsigned int
-vs unsigned long.
-
-This issue was introduced in commit f8ece40786c9 ("tcp: bring back NUMA
-dispersion in inet_ehash_locks_alloc()") during the update from kernel
-v5.10.237 to v5.10.238.
-
-It does not exist in newer kernel branches (e.g., v5.15.185 and all 6.x
-branches), because they include commit d03eba99f5bf ("minmax: allow
-min()/max()/clamp() if the arguments have the same signedness.")
-
-Fix the issue by using max_t(unsigned int, ...) to explicitly cast both
-operands to the same type, avoiding the type mismatch and ensuring
-correctness.
-
-Fixes: f8ece40786c9 ("tcp: bring back NUMA dispersion in inet_ehash_locks_alloc()")
-Signed-off-by: Eliav Farber <farbere@amazon.com>
----
-V1 -> V2: Use upstream commit SHA1 in reference
- net/ipv4/inet_hashtables.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
-index fea74ab2a4be..ac2d185c04ef 100644
---- a/net/ipv4/inet_hashtables.c
-+++ b/net/ipv4/inet_hashtables.c
-@@ -943,7 +943,7 @@ int inet_ehash_locks_alloc(struct inet_hashinfo *hashinfo)
- 	nblocks = max(2U * L1_CACHE_BYTES / locksz, 1U) * num_possible_cpus();
- 
- 	/* At least one page per NUMA node. */
--	nblocks = max(nblocks, num_online_nodes() * PAGE_SIZE / locksz);
-+	nblocks = max_t(unsigned int, nblocks, num_online_nodes() * PAGE_SIZE / locksz);
- 
- 	nblocks = roundup_pow_of_two(nblocks);
- 
--- 
-2.47.1
-
+Hi Danilo, I'm currently working on the alignment issue that was
+mentioned in that email. I'm still working on it, and I'll send a
+patch this week.
