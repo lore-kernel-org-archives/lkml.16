@@ -1,184 +1,130 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6E427718;
-	Mon,  9 Jun 2025 18:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4CD18DB1E
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 18:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749493421; cv=none; b=IeGlqevrglgeadzYjWGAz+2v6278w360Zcg3M5wOH+cmds5hAPFPYakaPTluyM+RRDBvMxoIRlprTN4ILnrq1RHweahUOTIWWsysInoGMF3IpKXjq8gp6wVCupuDVTM3A8FeXH74JBgInsGulf3YI+RremTmW+yJLIk3xMc/ZvM=
+	t=1749493486; cv=none; b=Ho0CVPPMcqAWBsa4zZnmQPqU0bSclstZyXP/Si+/OH1neETAV0/K7RWCWsDZd+W8ahkABwpfjlnFfmQ7mUoiFjyT2UzW4moyVQzxTVrSk/JZOgbwboYA2pB4IqKJ7qH5gDra1FlDbIWGz+xnjdNnsDXBNNofEhieTzvyZVHezY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749493421; c=relaxed/simple;
-	bh=4xVRH7yRkfu3VnlWI3iF65T8q5VomcV67pSWNmihj9c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=Do8bbNx4J5t9LomEQKZkAP1HpMHtVZzmdb4I2IqOzFlnLMFptzQVgtebjtkg1sZ23BnwbJNpi8koh/idhVfHKNDyX2KqQwV9IKLWOh1p//sP7MbLzaJCYniMr0w8gpwCwsksD/qBO3jUO2hnxrnXMUZOvfchGTV6/5/6Y42vnd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=imE8nUPt; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749493486; c=relaxed/simple;
+	bh=d6cdoCj31eUk5F3VCUY2T8KQ/6Vk+ixc0GLCsL0N170=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gxHTx8sJUKx9564FvQ9bXUxrogS3G0HsOT9SnB/wA4oF5OHUMj+N/PZmmKqpRzP/r9ZDLT1O6V3tRsZLtJVDhudUMEZN0puPeLhVHt8WBwPwuea/hPUmvHPRTFfvXfEkK0BOJZ/PG9KXgX3FdAYbiqZCywIPmvopJf5CcvNYfa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=m4EfG6uN; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="imE8nUPt"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad891bb0957so744313066b.3;
-        Mon, 09 Jun 2025 11:23:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749493415; x=1750098215; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CW/d3YTjSFycjX6/LB8McvZq17h6mxN+2rNQt6R27Hc=;
-        b=imE8nUPtKAhEBpsofQxGtRQUxtwfVspfpp1NvQ/DHEUOlyyBMrw9yZYtwBV8MlrBt+
-         a54srRvn3/n57GLHNs9Jli0utFB8ejH3MsgNYfazsPOA1zAiwCZwe9PsCJD1J533WNZH
-         Yrna4uNDk687sIM2rxsgzcT/FkOJk6SjZtltliu88uFFchIM1s0+JIwbnidgPqngL6nT
-         9IwBRVe6Y06r4IAxNc9zU2em2NQjNhwusmR2G/pt7byN7gFsc1dRGJNs0U8WisC4zh/0
-         cjdk6CbWgnH2XCDGwD9qYvF74wz8XI9iiGOBLrnvyt6vk2Xl6y4chKJDFgJ/18OQwxIy
-         pnAw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="m4EfG6uN"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 559G4uYe026905
+	for <linux-kernel@vger.kernel.org>; Mon, 9 Jun 2025 18:24:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=T6/1awyVf7eqR9AU36g9BD93UGKtinLFAqS
+	HdRSlSds=; b=m4EfG6uNLOS3in7c9iB3D9yYaSBHOYE1bNwECfdGZ9rDht/MgGa
+	BubiCZDzL3eHEL3wp40+CVWshA+T6MPwauhU1o89c2Aav+SmAb+vV7v2QjGi0kQq
+	hbZF2muokddtS+Yt+YBQCymPWgUKnt5Q1YQ+3cvEufdgUSG+xwIBkfbroo7UGZQE
+	AsJFQGIqNAaHl7GvgibvzHhnv3hPXPUhd4VZKoDDqDOMyAZWt5MgfiYuSbu7+jyy
+	jXB0TUgxxPZoZaA7cAmfUbcMmTYaa5R1IV17OxOgdWADH35bL0glScLXihZP744+
+	dS7aNzzfmsxgXSBqjk0L5/AR1geg9r0s/zQ==
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4762tg0ahe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 18:24:44 +0000 (GMT)
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-b2fa1a84565so1227115a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 11:24:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749493415; x=1750098215;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CW/d3YTjSFycjX6/LB8McvZq17h6mxN+2rNQt6R27Hc=;
-        b=Lyubd4V2QC/yU1Q4IJRbA6VgxxBj3f0xlsEprGAKwtK9H1ZD08+QmvSBQvREIsCAHN
-         DDHMyjHBAe0sYtlfqqOt89Lq7WqBk9bkd2QJKr8hX4XY5DBwlGIY8JnW0+hAwB3Hq5XY
-         /8+TI3VaOyi/kxL/9XCvfqBZl4lh1m/8uPG7JCkXK7Fj8fF7Yl3yKpRAup/MztM3y3sU
-         knXvpuPn42Y1ROU0CpmrlNGaSzpcJd/8EBHby8B/o9qynYas4jDXzINRVQYF2OTQ7qrH
-         N5pePMGW3K77p+/MSAptm7KsQl659tZxn7MWnyVxTTaySxuVp1/J22PIasaQ9uiMgw4R
-         UQyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQ+cs4kKrg5LrRwLKKw3A8Y0OY1O9VSbl5xHtv9urViVusu5+oU/m6R5cbn1P8rltQUSxusKj0XUi/gu6P@vger.kernel.org, AJvYcCVyi0O6Xfm82Zv2ABKqk0XEBboIazf0jSTsTv92AQi7YHRylMqZqGFFNf5/7jjJyVESutIJR9nOEgE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLOMEndNA5YNKJ46IbfYrdTEe9/Az3XNRWVjVuLvU/Jdkje0SN
-	Zhd5l+juQkWaaeY3T5GF0svC+I0tb/JRKho0e4FyRSlHOWYd//wZi/6ww91wZQYVp/jWWjMzZ1F
-	G5pdNnBiC2pRT8G7ysXD9zXXHYFOUNNo=
-X-Gm-Gg: ASbGnctbQtsd3MOzssZwdVhvEnYN0dynz38RG/dUC9Zi/z2LagysH6CiXh3Vqjfldzw
-	5lQoRe8V2XGS8N0Wsq7zdkvlS9b19prJCaaCWqVBuAkVQC8aRfslcfe9b65KJpxhSVS/35QJ0xo
-	xMlRLUK71zWQucOraCtsrmWPmt1yRUpNcfFIRo/ar98vuJyM5Wx0zzHQZ4n+onAnUmESR1d03LH
-	oo1zQ==
-X-Google-Smtp-Source: AGHT+IFtV58+b7TdEn169blBTSTg97IoZAMWiVqeKLwKeXRa9wvFaPoz+n0HH+xJYo631uo3xl7Wtx01TrmgPDB7kbo=
-X-Received: by 2002:a17:907:1b16:b0:adb:469d:221f with SMTP id
- a640c23a62f3a-ade1aa15864mr1341933766b.31.1749493414544; Mon, 09 Jun 2025
- 11:23:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749493483; x=1750098283;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=T6/1awyVf7eqR9AU36g9BD93UGKtinLFAqSHdRSlSds=;
+        b=kggir4/W/YEZ/p2jervyG5UzT4nfNUTJ8CVMIntgKQzQoKks+osJc/O7Q4t5RIroPP
+         yYyWaU3G67+LtHHwF1+1Q8Nebfnt7ZlIAN1nzQ0hlcHjsM3SmqHUbZ38/xLTEOEnqa3I
+         wTPO1LT8yNXqKtF4HIzQ7g9Y8Ovfb7JT+KFVSiW1hIqdmRKmbDAawV9MrxKvvBZP6rnF
+         2fL9Eu296Eyq2urVqZ2/6Ki+YHSUba51BRHhpajvCD0P0aw2t0rGSUIgxqgU2LFP+gF7
+         DTZ002CFqQZTN3ZzwtDo4FdGaA1gB3eIQPimzY/p92gxjZmihtUL9ET1ND7r3TybCsoM
+         8eZg==
+X-Forwarded-Encrypted: i=1; AJvYcCWbj1VxzuKQR3o+Sh4uyBHEeW/bMv9EGe94IlsAFH+SVjm6tGqdCcHAHX1pSfudY26WeFSDJL4p7TkJXcY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtPk4m9DzpWQw00uVHH+1bDZ2aB7ZOk5YgJMhTWUCGRZTQIvfP
+	zTg5K17Pv0eBrQrW/HLiMbU6vUdVz7MP31Iu7TNQypREKdxgot8GgHGxeAJgsXpWHSIUsKvclDG
+	tu5Il48eNettzMhz41Jb+WmQ7oDRG7wasCOQ3g3tYoiT6yuGpjyVACVsFvu1EQyZ85hE=
+X-Gm-Gg: ASbGncu8EEUtiqchAxnPAtmrtXO1F5lkdP7HN7dCSpxuSIBM9LYbdKi6JyKA+9Je9Dy
+	7XTPmFonhlW0hQ6IIEnhZHnmmXcpsS9l+vsOjIyDxfI8wQ0BbnRj2zMb3YCNXNFmMw+rvShj98d
+	hNW0Fi/ACRP7G9pLA0GpB72FHm5wZdJR7AAR91jVUkBWdkMqFgqYF3MahS7x/caSDqMPW3qGXt/
+	jVJgYBb4YcfuajQ9b9WsHiT88PqmfwFvqS8/GcAKKW3S7HCGya65tMO72G6uDfnW+6I4OQFB4lz
+	3zOHhbuFPiClkix9a8JCLQ==
+X-Received: by 2002:a17:90a:dfcb:b0:311:a314:c2dc with SMTP id 98e67ed59e1d1-313472eb25cmr23479191a91.14.1749493482778;
+        Mon, 09 Jun 2025 11:24:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGAvo/tjXFuiSwnF2ZVZMq2U5wnwRopkRd0199rUIbodRRW1lfymiGSTQN+R3i5xVj07EsO2g==
+X-Received: by 2002:a17:90a:dfcb:b0:311:a314:c2dc with SMTP id 98e67ed59e1d1-313472eb25cmr23479155a91.14.1749493482379;
+        Mon, 09 Jun 2025 11:24:42 -0700 (PDT)
+Received: from localhost ([2601:1c0:5000:d5c:5b3e:de60:4fda:e7b1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603092640sm57210175ad.54.2025.06.09.11.24.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 11:24:42 -0700 (PDT)
+From: Rob Clark <robin.clark@oss.qualcomm.com>
+To: dri-devel@lists.freedesktop.org
+Cc: linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Rob Clark <robin.clark@oss.qualcomm.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        David Airlie <airlied@gmail.com>, Dmitry Baryshkov <lumag@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        linux-kernel@vger.kernel.org (open list),
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Simona Vetter <simona@ffwll.ch>
+Subject: [PATCH v2 0/3] drm/msm: Better unknown GPU handling
+Date: Mon,  9 Jun 2025 11:24:34 -0700
+Message-ID: <20250609182439.28432-1-robin.clark@oss.qualcomm.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250601-drm-doc-updates-v4-1-e7c46821e009@gmail.com>
- <aDz-Pq4eMAYmzqsJ@archie.me> <aEBaJ5zMHfzhpdlz@phenom.ffwll.local>
-In-Reply-To: <aEBaJ5zMHfzhpdlz@phenom.ffwll.local>
-From: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
-Date: Mon, 9 Jun 2025 14:23:24 -0400
-X-Gm-Features: AX0GCFtT5VtTHa-jojzi8kLV9z5EuWYa1-xJcEXWWcyNlt2BE-xhusWO-NpDrzU
-Message-ID: <CAC0Z3JupfeHHrfj7ZeQ3E-1+E9jBrd9SPBn-eJUjEMN6iMB3aw@mail.gmail.com>
-Subject: Re: [PATCH v4] drm: add overview diagram for drm stack
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Jonathan Corbet <corbet@lwn.net>, dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=OqZPyz/t c=1 sm=1 tr=0 ts=684726ec cx=c_pps
+ a=Oh5Dbbf/trHjhBongsHeRQ==:117 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10
+ a=JEju956KdHHbcqjs2oUA:9 a=_Vgx9l1VpLgwpw_dHYaR:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDE0MCBTYWx0ZWRfX9sttk+JLVzoN
+ XHC1GcYvJfoGvpqV6qmPH3Gwm8qq87dO8kw92P8gbgiF+9ktuV3021oGXDa1YRABMT6uvMFnAov
+ PDDQ6CDofJ9HqExAJMnUTXG/f7jXjoZ8cl+6nPiND6vKHa9tGYktKJlEV5bDn3o1qAPVoIt6q83
+ p1cmMuS9FGd7aCyCKE1+cOOij9xK3EERgFigxpRXH8jwQowaG4J1aOOUYd5b5IqgfccmPf5aq2W
+ i211n6arFGTJi73Ift8CIriQu9Tb8UR3XIvJllDgdvh3DcRUfaGsmnAORy6vilRQIpkhtRcHrVE
+ fCnJJgU3qJN9C7CXHFrDHKWLxE6wWpGNKCVznACv1xyoLgdcBKF8P44N7TL8+2uWQg1HZmCIWmS
+ Q+tPkYSSSSidK7srRheYZjNMKbkJ8GJ/Ls0TRDBk5RmIduR5nryVUPFStsKaVhJM+p9UYeAi
+X-Proofpoint-ORIG-GUID: -6okooTlTrDU2ZcD8lOG2vcI9qRIQcX8
+X-Proofpoint-GUID: -6okooTlTrDU2ZcD8lOG2vcI9qRIQcX8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-09_07,2025-06-09_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0 clxscore=1015
+ phishscore=0 bulkscore=0 mlxlogscore=705 suspectscore=0 spamscore=0
+ priorityscore=1501 impostorscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506090140
 
-Hi,
+Detect earlier if the GPU is supported, and skip binding the GPU
+sub-component if not.  This way the rest of the driver can still
+probe and get working display if the only thing unsupported is
+the GPU.
 
-Should I go ahead make the diagram more detailed or just add the links
-in 'Slides and articles' & 'Conference talks'  to the existing
-diagram?
+v2: use %pOF [Dmitry]
 
-Best regards,
+Rob Clark (3):
+  drm/msm: Rename add_components_mdp()
+  drm/msm/adreno: Pass device_node to find_chipid()
+  drm/msm/adreno: Check for recognized GPU before bind
 
-On Wed, Jun 4, 2025 at 10:37=E2=80=AFAM Simona Vetter <simona.vetter@ffwll.=
-ch> wrote:
->
-> On Mon, Jun 02, 2025 at 08:28:30AM +0700, Bagas Sanjaya wrote:
-> > On Sun, Jun 01, 2025 at 06:18:47PM -0400, Abdulrasaq Lawani wrote:
-> > > Add an overview diagram of Linux DRM architecture for
-> > > graphics and compute to introduction.rst
-> > >
-> > > Signed-off-by: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
-> > > ---
-> > > <snipped>...
-> > > diff --git a/Documentation/gpu/introduction.rst b/Documentation/gpu/i=
-ntroduction.rst
-> > > index 3cd0c8860b949408ed570d3f9384edd5f03df002..a8d3f953a470180b395ec=
-52a45d0f3f4561424e0 100644
-> > > --- a/Documentation/gpu/introduction.rst
-> > > +++ b/Documentation/gpu/introduction.rst
-> > > @@ -14,7 +14,45 @@ including the TTM memory manager, output configura=
-tion and mode setting,
-> > >  and the new vblank internals, in addition to all the regular feature=
-s
-> > >  found in current kernels.
-> > >
-> > > -[Insert diagram of typical DRM stack here]
-> > > +Overview of the Linux DRM Architecture
-> > > +--------------------------------------
-> > > +::
-> > > +
-> > > +        +-----------------------------+
-> > > +        |     User-space Apps         |
-> > > +        | (Games, Browsers, ML, etc.) |
-> > > +        +-----------------------------+
-> > > +                      |
-> > > +                      v
-> > > +        +---------------------------------------+
-> > > +        |    Graphics APIs   |   Compute APIs   |
-> > > +        |  (OpenGL, Vulkan)  |  (OpenCL, CUDA)  |
-> > > +        +---------------------------------------+
-> > > +                |                   |
-> > > +                v                   v
-> > > +        +---------------------+  +-----------------------+
-> > > +        |  User-space Driver  |  |    Compute Runtime    |
-> > > +        |  (Mesa, AMD/NVIDIA) |  |  (OpenCL, CUDA, ROCm) |
-> > > +        +---------------------+  +-----------------------+
-> > > +                |                   |
-> > > +                +--------+----------+
-> > > +                         |
-> > > +                         v
-> > > +                +-----------------------+
-> > > +                |   libdrm (DRM API)    |
-> > > +                +-----------------------+
-> > > +                          |
-> > > +                          v
-> > > +        +-------------------------------------------+
-> > > +        |     Kernel DRM/KMS Driver (i915, amdgpu,  |
-> > > +        |     nouveau, etc.)                        |
-> > > +        +-------------------------------------------+
-> > > +                |                       |
-> > > +                v                       v
-> > > +        +----------------+     +-------------------+
-> > > +        | GPU Display HW |     | GPU Compute Units |
-> > > +        +----------------+     +-------------------+
-> > > +
->
-> I'm a bit late to the party, apologies. I'm not sure how much use there i=
-s
-> in an extremely simplified diagram like this, least because it's really
-> incomplete and leaves out the entire display and compositor side.
->
-> My idea was that we'd instead link to the large pile of introductory and
-> overview talks further down in this file, if people want to get an
-> overview over what drm does.
->
-> If you want I guess you could add some links to the relevant wikipedia
-> pages, I think they also do a fairly decent job of explaining the big
-> picture.
->
-> Thanks, Sima
->
->
-> > >
-> > >  Style Guidelines
-> > >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > >
-> >
-> > The patch LGTM, thanks!
-> >
-> > Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-> >
-> > --
-> > An old man doll... just what I always wanted! - Clara
->
->
->
-> --
-> Simona Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+ drivers/gpu/drm/msm/adreno/adreno_device.c | 39 ++++++++++++++++------
+ drivers/gpu/drm/msm/msm_drv.c              |  6 ++--
+ drivers/gpu/drm/msm/msm_gpu.h              |  1 +
+ 3 files changed, 33 insertions(+), 13 deletions(-)
+
+-- 
+2.49.0
+
