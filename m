@@ -1,115 +1,215 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A1E18DB1E;
-	Mon,  9 Jun 2025 18:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E944C1B425C;
+	Mon,  9 Jun 2025 18:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749493849; cv=none; b=BF27SNzEZnIfXJGXrxbCU7Fhey/G1hGnxiNp4sjpG6ZUd70gSneT4VggxXRsi9FP+eIy5Am5nA8+XUnXImr+QtavS6zjXKaDwpmPQDhMB5BGE+wnEZu6iGwCHm+gFcMk/vbhQo3uxV/VJtwsNaHPxnMZBHZw7QD8525jiFeU9dw=
+	t=1749493859; cv=none; b=G/UB1lVUOllJSvErCjKuIKT7v7PRKyyH6Q09mtNmzTjJ6BOJJ7EM9zEmqvYSpnVgrOEmOpKubXsN1m2H593Yz89k6dKsQekKr0W/NPRHm2lYbvF/pr66o2Aq17Cg/wdPeDB/MHAPxJUxxfi/bVj3mRuQkxKWvZfndN6BBnkzmu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749493849; c=relaxed/simple;
-	bh=kSqp7xdGiH9obmGvICN2dilw+ZNLNFHGLUyAcwrnVF0=;
+	s=arc-20240116; t=1749493859; c=relaxed/simple;
+	bh=7tBlI7YVFVyuUKinZrmWKCzdcD887YRbuUwOHfvc4Nk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PuOlL4V7q5kswNYJgvJvFR3qiM6f39ZMLuvMnsZna50RxeYKXyezfyx3IWqRY3bQBIaH0qDVfjkHlpx7RWrRHwztcEpBtZ/c7LpZCnEInC/3NsqDkFVcc4CiQ3DyVuORmaWx4LFFRL/IpF704HhoAau8XIiQWtZPLSt+F+Vi5KI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fsYlizaZ; arc=none smtp.client-ip=209.85.216.46
+	 To:Cc:Content-Type; b=unpsZDJJ/YxCJ4gqqGsV8LtNF70v2iMdaKIAxzv5hgSrgATPD2XO44NbNTSkgglDQLrDhs4QIFPiwrwLHgX78NgouFv9ZmGOGn6lzDADLM2FxIda9JOiaC3tFlgyH6BiZPtWouz5DcFIeVjnpQoA87IWLm6QHqBpUXcUxt34YCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eOp6gVni; arc=none smtp.client-ip=209.85.219.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fsYlizaZ"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-313336f8438so805215a91.0;
-        Mon, 09 Jun 2025 11:30:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eOp6gVni"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e75668006b9so4403981276.3;
+        Mon, 09 Jun 2025 11:30:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749493848; x=1750098648; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749493857; x=1750098657; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kSqp7xdGiH9obmGvICN2dilw+ZNLNFHGLUyAcwrnVF0=;
-        b=fsYlizaZDKrzAvLdj4HlwGTbr6wCCOimehzPDdZjs4Sks4tErI4Gh6y2cdmqu6g0Ya
-         4l2JKlwczlRh7D5Vkq04mpIi3jTb3IwcHR5nJTsmqTsTHyZD02fq6kCNwiQ5jsnWwuII
-         J15rprIGoVCu4EakUzFAZWjxEp1LGmHL0d9CJ/BQtXdMG0gcjNc0Oaq6qjtfaJ1/wrx2
-         Mig+Qand+jZPkM2vZW/dTrKEC3NYA7G9wTZWOetC1EXc8EnXwTSIiGeGGn7RIhuawghO
-         esdisoCmsD7VM/OHcTUmE3eYwF7SeWFfO4pKiOs/kt3ZghUYQWqqIgk3MpKhLAOvkbO1
-         lMQA==
+        bh=PGYZ3sF+/+CwXAOGiCqNoQMLv8bi21odrNnq7b87B2E=;
+        b=eOp6gVnicQljzhpgE9E8kvioUNrmNB4nSb1zczExuIYGfaX9aClx/a9uXIw+4/XVOS
+         jQw1la7GCz3YoQduZmYaWOcMRr6nqPTrcJZzTrzsaajYztQB8gHF/mPqUAiOhvtS8cve
+         KovffAe/QsUOsQoZgB7uMRtgHNI/WqHOsBLIy4X/n88ASAjDO65Rsp6OigROjnO+pQ73
+         xTUcccTZh6meluPk6Yzu6X4zpnP5wZiHtv5eUD44bBch6XF1wXQPXXS3u7AbqqlOy5FI
+         FkiRs2dH5fqw0RJRNaNyrCwlVOTXzGmmd0BUgAnLnp0DfJUJipo/FX7bGTXBpHPI9obc
+         sK0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749493848; x=1750098648;
+        d=1e100.net; s=20230601; t=1749493857; x=1750098657;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kSqp7xdGiH9obmGvICN2dilw+ZNLNFHGLUyAcwrnVF0=;
-        b=PFgcIUQJx//xf+dKhDNdBgFmbPhaJ5P+Tl6o9omw14I7azz7du22wtk5XIeOhX8xw7
-         l3eZAe5Zz66lcuf8QxhTxo3ErYO/Flf6VdLCpO9P91nfJa6BYsVPkR8gvAYxDvBlQelc
-         tDBNo+VUNdZQBQLwZXvxqKXvftLWXI8DkbNbCLgpGBZxVkL9mtUNcFCTu+fMlQK2lVCJ
-         mTnnFQMUy7WzzoLH/PP2nS1KweE2vho984FYG8iWx9jQIwfHNUiLH9TdZG1Q9qj5uABT
-         ghjjfutB8mNEoILft45HxjSOGnqpuaDlz7ypMotN0sM1JJ95CtXBG8qihRqhJwGJudyp
-         LraQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUt+TnoJH24yjDhNr3o6wrmpPHwC1idmKLSabnlRmHjL0f0+ASC1slHRKbq02LN5epNXNOjacxV4LPb@vger.kernel.org, AJvYcCV38lOykGhgL7Tq4+/1HJ+BcDMvl937HAXlkQwsDePe3b20nqE4jJFqeix3Zi/th41S71SXjBh+ALWnqik=@vger.kernel.org, AJvYcCWjEtwBU1wgTAIM+hyA7NThRhwpms8KHkIQeC/w/CrXGHNF1Z0RNYw/clZooxLX7XkcCh9UpIkS/tqQuQY6kqQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/VTcfbAV4N0JFAdDAXyt2HAosCqfWDgR0OZObsfuaKZmglUH4
-	0vvCPP/aX/8wzisMQno7FbbaZ9G9nxXr+Wq75oDFoQcL5uzB/AzqUtE4rd0PtC8GkzL3VwWEsqL
-	Oo4YkptryTfEXFeD0jqfCRSCEPw8PUThpbUsesAQ=
-X-Gm-Gg: ASbGncvHP44f7DrX7p92u0D7l8cRV51u6fri2nV0DVothl5CzA2WhZJRqWUk2Qiaze/
-	C2nI3kuvu2R/ZRglcgHK7uJmqb6MiwwWzJjRYlA7EhdbnQJTADHICb6BzfjQnj01GjMQChdcsMM
-	sl0IJrCDyAspJLLXY43OuGxYNreWxpdoSkI34U0cKyKF4=
-X-Google-Smtp-Source: AGHT+IG8O6dJD6YenGjKBAaB7Xp6ElZJ/t3q7SEEUy4RXr1SdRmbG0mytNXzQLPWJwZViCVdjJo9ZmcDn7+rjM8guew=
-X-Received: by 2002:a17:90b:268e:b0:311:e8cc:4250 with SMTP id
- 98e67ed59e1d1-3134e3e4268mr6383005a91.3.1749493847851; Mon, 09 Jun 2025
- 11:30:47 -0700 (PDT)
+        bh=PGYZ3sF+/+CwXAOGiCqNoQMLv8bi21odrNnq7b87B2E=;
+        b=w4ZM3vOZLv/ACk5f+UTutzT+prfrFrCApmSYZaJhnPe11OFJXNIcipUfJxSEbhBm39
+         Ts9UF5HzfisXZLPVvNWgAec40BjWIqut4YjqZD4eOuE9qkkN3cc3rzdJxHhmWFNW67aR
+         y6KA5uJ5YBq9PjjvItRrIY6XER9kXnp+0ZDFcTwQFXhUB483CRJnoqviUUsAYK/SQ/Pl
+         BvyqSGSJ+6Wd6j2p6JDBvhh+dLdStvbfzOatJ/0DOU2zpEFoJcxaD2ucixDfB7Hp2Bl9
+         SXyukCzN8RNxUDBGxWewXZjByGhp6/IiYyzGO3BDX1Q9eFOdFJQXKW3aFlhHhCbzK44p
+         aAJw==
+X-Forwarded-Encrypted: i=1; AJvYcCV6WYaRZ3trnemHjLswtCms0SQu6lOrpyyMJmod9G5JSnCdscHh+yapmqKRxZEvJVupG3HPhJoqVaHTBwWRYPlWFw==@vger.kernel.org, AJvYcCVKxlBIKx3F+1cy8vne+mflOCk4nwCBtZBNdRiAY4Y0118B55pI3Q7pBGB2Ml0wTIotAcAdedCtOUrrRTzL@vger.kernel.org, AJvYcCVSdj486DHY00KEPOtMk3Z5tnnG0IFhY1mMHGnlaOmv4SSV6Rxc+iacxmR38D8DnVZypqc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yze7ef9uts3Gy1S+e//B4kdfr3At9S3mlqG9A3cvMxngubvfJW+
+	zAQKIjF+y+L6zLsWJWiHBagVhZNvvyYl8SdclDF6B9cppWuBdgxrsoaY204bng8hVnfzdp/yGqV
+	oRD0teQyU67/cmLBWMTTCwPL318gjnKQ=
+X-Gm-Gg: ASbGnctSpvvCHqZX2HKM3rY3N70+tFJxh23yAwMAdGPxjZStgUPW3hZHyUZRf2FGRb8
+	Rq5mC/5SkImatyfvZMgjo6bvv5tsqayNtcKp/lFna3s0jUsTpfC5KS0BpN44qkzeLQO6+td40ab
+	4jRd7nzLJiQQLVGeQHBShsa5Q8vegTJug=
+X-Google-Smtp-Source: AGHT+IHZNPBaLqoSkmJRi+qhvMGn4J2k5pOMYMdn5ZAzJX0wuEZmdbS6DKIMGfaHBlCa8AoBKH6kts41DFLPm/ggWUU=
+X-Received: by 2002:a05:6902:2607:b0:e7f:7d27:7e63 with SMTP id
+ 3f1490d57ef6-e81a209d9c9mr19664871276.5.1749493856740; Mon, 09 Jun 2025
+ 11:30:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
- <20250608-topics-tyr-request_irq-v4-4-81cb81fb8073@collabora.com>
- <aEbTOhdfmYmhPiiS@pollux> <5B3865E5-E343-4B5D-9BF7-7B9086AA9857@collabora.com>
- <aEckTQ2F-s1YfUdu@pollux.localdomain>
-In-Reply-To: <aEckTQ2F-s1YfUdu@pollux.localdomain>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 9 Jun 2025 20:30:35 +0200
-X-Gm-Features: AX0GCFskVq8r2u558pBKMmbRLwweW4kkEdVpW6cWfF4ZluivSv1U_fzfgaAvmts
-Message-ID: <CANiq72keAJxDQHHa5gAoFyV1rXpdf_r_vY1R5bFyRC4ph3BRUA@mail.gmail.com>
-Subject: Re: [PATCH v4 4/6] rust: irq: add support for threaded IRQs and handlers
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Benno Lossin <lossin@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-pci@vger.kernel.org
+References: <20250529065537.529937-1-howardchu95@gmail.com>
+ <aDpBTLoeOJ3NAw_-@google.com> <CAH0uvojGoLX6mpK9wA1cw-EO-y_fUmdndAU8eZ1pa70Lc_rvvw@mail.gmail.com>
+ <20250602181743.1c3dabea@gandalf.local.home> <aEAfHYLEyc7xGy7E@krava> <CAADnVQJBG=nHRCJBcxXuEjpNp8iy1CD+Hg=g571uOTr61b8Peg@mail.gmail.com>
+In-Reply-To: <CAADnVQJBG=nHRCJBcxXuEjpNp8iy1CD+Hg=g571uOTr61b8Peg@mail.gmail.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Mon, 9 Jun 2025 11:30:45 -0700
+X-Gm-Features: AX0GCFsFx22FRhR0Z-TdFdhHqdZnRO9-4l1VfHBKRMDjx4WpDRKiuR7IANj9fEg
+Message-ID: <CAH0uvohAoi=h1=ANpUwYM3RYoiwYLyUdNqrA354qut2ba4RkTg@mail.gmail.com>
+Subject: Re: [RFC PATCH v1] perf trace: Mitigate failures in parallel perf
+ trace instances
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Song Liu <song@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 9, 2025 at 8:13=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> w=
-rote:
+Hi Alexei,
+
+On Fri, Jun 6, 2025 at 11:27=E2=80=AFAM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
 >
-> On Mon, Jun 09, 2025 at 01:24:40PM -0300, Daniel Almeida wrote:
+> On Wed, Jun 4, 2025 at 3:25=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wro=
+te:
 > >
-> > This iteration converted register() from pub to pub(crate). The idea wa=
-s to
-> > force drivers to use the accessors. I assumed this was enough to make t=
-he API
-> > safe, as the few users in the kernel crate (i.e.: so far platform and p=
-ci)
-> > could be manually checked for correctness.
+> > On Mon, Jun 02, 2025 at 06:17:43PM -0400, Steven Rostedt wrote:
+> > > On Fri, 30 May 2025 17:00:38 -0700
+> > > Howard Chu <howardchu95@gmail.com> wrote:
+> > >
+> > > > Hello Namhyung,
+> > > >
+> > > > On Fri, May 30, 2025 at 4:37=E2=80=AFPM Namhyung Kim <namhyung@kern=
+el.org> wrote:
+> > > > >
+> > > > > Hello,
+> > > > >
+> > > > > (Adding tracing folks)
+> > > >
+> > > > (That's so convenient wow)
+> > >
+> > > Shouldn't the BPF folks be more relevant. I don't see any of the trac=
+ing
+> > > code involved here.
+> > >
+> > > >
+> > > > >
+> > > > > On Wed, May 28, 2025 at 11:55:36PM -0700, Howard Chu wrote:
+> > > > > > perf trace utilizes the tracepoint utility, the only filter in =
+perf
+> > > > > > trace is a filter on syscall type. For example, if perf traces =
+only
+> > > > > > openat, then it filters all the other syscalls, such as readlin=
+kat,
+> > > > > > readv, etc.
+> > > > > >
+> > > > > > This filtering is flawed. Consider this case: two perf trace
+> > > > > > instances are running at the same time, trace instance A tracin=
+g
+> > > > > > readlinkat, trace instance B tracing openat. When an openat sys=
+call
+> > > > > > enters, it triggers both BPF programs (sys_enter) in both perf =
+trace
+> > > > > > instances, these kernel functions will be executed:
+> > > > > >
+> > > > > > perf_syscall_enter
+> > > > > >   perf_call_bpf_enter
+> > > > > >     trace_call_bpf
+> > >
+> > > This is in bpf_trace.c (BPF related, not tracing related).
+> > >
+> > > -- Steve
+> > >
+> > >
+> > > > > >       bpf_prog_run_array
+> > > > > >
+> > > > > > In bpf_prog_run_array:
+> > > > > > ~~~
+> > > > > > while ((prog =3D READ_ONCE(item->prog))) {
+> > > > > >       run_ctx.bpf_cookie =3D item->bpf_cookie;
+> > > > > >       ret &=3D run_prog(prog, ctx);
+> > > > > >       item++;
+> > > > > > }
+> > > > > > ~~~
+> > > > > >
+> > > > > > I'm not a BPF expert, but by tinkering I found that if one of t=
+he BPF
+> > > > > > programs returns 0, there will be no tracepoint sample. That is=
+,
+> > > > > >
+> > > > > > (Is there a sample?) =3D ProgRetA & ProgRetB & ProgRetC
+> > > > > >
+> > > > > > Where ProgRetA is the return value of one of the BPF programs i=
+n the BPF
+> > > > > > program array.
+> > > > > >
+> > > > > > Go back to the case, when two perf trace instances are tracing =
+two
+> > > > > > different syscalls, again, A is tracing readlinkat, B is tracin=
+g openat,
+> > > > > > when an openat syscall enters, it triggers the sys_enter progra=
+m in
+> > > > > > instance A, call it ProgA, and the sys_enter program in instanc=
+e B,
+> > > > > > ProgB, now ProgA will return 0 because ProgA cares about readli=
+nkat only,
+> > > > > > even though ProgB returns 1; (Is there a sample?) =3D ProgRetA =
+(0) &
+> > > > > > ProgRetB (1) =3D 0. So there won't be a tracepoint sample in B'=
+s output,
+> > > > > > when there really should be one.
+> > > > >
+> > > > > Sounds like a bug.  I think it should run bpf programs attached t=
+o the
+> > > > > current perf_event only.  Isn't it the case for tracepoint + perf=
+ + bpf?
+> > > >
+> > > > I really can't answer that question.
 > >
-> > To summarize my point, there is still the possibility of misusing this =
-from the
-> > kernel crate itself, but that is no longer possible from a driver's
-> > perspective.
+> > bpf programs for tracepoint are executed before the perf event specific
+> > check/trigger in perf_trace_run_bpf_submit
+> >
+> > bpf programs array is part of struct trace_event_call so it's global pe=
+r
+> > tracepoint, not per perf event
 >
-> Correct, you made Registration::new() crate private, such that drivers ca=
-n't
-> access it anymore. But that doesn't make the function safe by itself. It'=
-s still
-> unsafe to be used from platform::Device and pci::Device.
+> right.
+> looks like perf is attaching two different progs to the same sys_enter
+> tracepoint and one of them returns 0.
+> That's expected behavior.
+> The rule is all-yes-is-yes, any-no-is-no.
+> We apply this logic to majority (if not all) bpf prog return values.
+>
+> > IIRC perf trace needs the perf event sample and the bpf program is ther=
+e
+> > to do the filter and some other related stuff?
+> >
+> > if that's the case I wonder we could switch bpf_prog_run_array logic
+> > to be permissive like below, and perhaps make that as tracepoint specif=
+ic
+> > change, because bpf_prog_run_array is used in other place
+>
+> No. That might break somebody and we don't want to deviate from the rule.
 
-Yeah.
+Makes sense. Thanks.
 
-Even if a function is fully private (i.e. not even `pub(crate)`), then
-it should still be marked as unsafe if it is so.
-
-Cheers,
-Miguel
+Thanks,
+Howard
