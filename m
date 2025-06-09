@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718221DE2C9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A8B256C61;
 	Mon,  9 Jun 2025 11:44:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749469491; cv=none; b=O10NLH98IuG0wE4WGrGIWjweaq8Eqfz+f9yWXbKKhSCAD/bOkjAHwRmZHbAlTFcbRwdiTt3fGj0bynDb1hvMHGGHjkaf688b7jVvpN+w1EhJE2yR8U2zjzA0QnMLaTRjXrmR+seYNlC7SQnsow7A6ay/unw/VeDyZPnRy/iQjAI=
+	t=1749469491; cv=none; b=jEDCTknZ6EnxV9IyRn6XwX0QlO5efsWC+4HPENE86VlIL8T3oJ63eW+uV4uVBr+EoFhswQaiCBWA7n5w/UAd/sDkJ14+jrA/s1PBAo3Y4rfzbShpw4gr6M1dii7PmxrV1YVYRp3GvhBbBCUWS84UzWYgCRy6tZ1o4bqGv5jZGB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749469491; c=relaxed/simple;
-	bh=8Y2htiPy5meWxzHXQzhyzo1AQtbeIgcyev3Yn6FKh6Q=;
+	bh=WzM5y2OoQkwywYk7ze1eYenAU+huZ1+9rx3teZ27zKM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JpQ85tZf1QPoiwBrr0ka/LvUsT/PfDc2x20skq2XwPAxy0HfibiYsA/1pAZp1a/EFEr/R7ZyncZJqrdlqha6OgnZaOs+xv16CeIdva22JK17haUmXqAbUGjYlKrLkKBXVvpXzI06Rzv5cpWVGZiX0DUn3xUsBCnQdeWrAYKpa1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EHL5Cmxt; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Iy1lEugjoCeyZHAWO1AINKEaH9tuo5/1jIlSdpZY0tYKYofdO6AeUyjhFtt9SytLeWsRHnKRSkRNgM8zbOVhoW6RcodqDyrCHV1ZT9CGPNKdpP0oiBRfofO4Do9NQDexWIYV3HmZ/OIXYPTl4Hgf4KYooLipu0de2MDjNUznx9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cok8Ntyh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EHL5Cmxt"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DF4B3C4CEF0;
-	Mon,  9 Jun 2025 11:44:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cok8Ntyh"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 187CAC4AF0C;
+	Mon,  9 Jun 2025 11:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1749469491;
-	bh=8Y2htiPy5meWxzHXQzhyzo1AQtbeIgcyev3Yn6FKh6Q=;
+	bh=WzM5y2OoQkwywYk7ze1eYenAU+huZ1+9rx3teZ27zKM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=EHL5CmxtaHj9eaBIvpAan7U9VI9QpRemElus2TExsBOzUgvhWb8aPS4l8jsUHFp/g
-	 ySW+s64kUFfXY51xpTuEjKukh9fEc7wjDEJ5mupTokNA0BxJ0F5YUs+x2CTmvOeI8x
-	 jMP7kLFA3KEkELk0Y9ykS/cmbQQB/lizDvKwBgAVk2vFUTW3n5xbFtI38QRAe6Mkrs
-	 CtpD2zRbIGQ90OOrpdqFDTmrsqHglwBsHrr7lNoDehw/XfsfuhYY+3DoPFKBDGAHtU
-	 3bOtZqA1dTQ7gawZL1oTzuRl/SQ/0/VK9wKTfkFMYFfg1t5xvqtbEgmH3amRge/aDl
-	 W2/erjSN+0s0A==
+	b=Cok8NtyhE2GnLb485W2zUWhwPBCwZ6+MBCncZHCH+bZWSXxOvNwBnj1cOcRZMEf4c
+	 rBWhxgbT+QJBYHkFOAk97hWXh2gFuVMqWHqL2QAtDQ4CmujXPg1Qpvsq7ZDpMr2chv
+	 K3W8CLIfVyBjbN8qatzLalenY1qQZR1JSkFeuCoPKcxkB1r1+Nd0TW30mhyehI5YFY
+	 j//yOJFfpSQa7EWHsiXrWrCsxQCnrqeF8wKmCGQHqL5OLaqpVnitUASSMew8GYgGWv
+	 72sWx3Fsq/PMAqnXKDBrm6WNdPRkfEgbyhUZ+DAnHD/5W7lxabQfyI8JLDScK3HPqC
+	 sf1Bl7Vw14L5A==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC450C5B552;
-	Mon,  9 Jun 2025 11:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E55C61CE8;
+	Mon,  9 Jun 2025 11:44:51 +0000 (UTC)
 From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Date: Mon, 09 Jun 2025 15:44:34 +0400
-Subject: [PATCH v4 1/5] clk: qcom: gcc-ipq5018: fix GE PHY reset
+Date: Mon, 09 Jun 2025 15:44:37 +0400
+Subject: [PATCH v4 4/5] arm64: dts: qcom: ipq5018: Add MDIO buses
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250609-ipq5018-ge-phy-v4-1-1d3a125282c3@outlook.com>
+Message-Id: <20250609-ipq5018-ge-phy-v4-4-1d3a125282c3@outlook.com>
 References: <20250609-ipq5018-ge-phy-v4-0-1d3a125282c3@outlook.com>
 In-Reply-To: <20250609-ipq5018-ge-phy-v4-0-1d3a125282c3@outlook.com>
 To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
@@ -59,11 +59,11 @@ Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
  linux-clk@vger.kernel.org, George Moussalem <george.moussalem@outlook.com>, 
  Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749469488; l=1220;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749469488; l=1519;
  i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=y65n0Od6u+x9wP3HKotpTyPdgu84le/dyFb7G8W0t/E=;
- b=iqyq5gPzQjTMnelCKjEogpgJFAIR28CmKlbLhc57efrm41jxWqqcHutcDxschjx2rqzA16f0F
- GJaFZU+8idmCcpfvyvrRD9Cbj6EK0VXPXh7bShEtPSeO55gEI4+QDOV
+ bh=jA4BQsaw0tlEf36IZrwvZtR6C1am2pcwyAdrevsj4Hk=;
+ b=vImvIeQwzSwUc+rbiclCTz4Ys4pHteCBdtldlzs5ipJTlIiIvTGmq3hTylA091FSc8v6+PRoO
+ Ry38DIV1pZ6Auh20FpJlRjcB5C7M6aG1AmrR1nGPa409Zs17X5QzWTN
 X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
  pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
 X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
@@ -73,32 +73,54 @@ Reply-To: george.moussalem@outlook.com
 
 From: George Moussalem <george.moussalem@outlook.com>
 
-The MISC reset is supposed to trigger a resets across the MDC, DSP, and
-RX & TX clocks of the IPQ5018 internal GE PHY. So let's set the bitmask
-of the reset definition accordingly in the GCC as per the downstream
-driver.
+IPQ5018 contains two mdio buses of which one bus is used to control the
+SoC's internal GE PHY, while the other bus is connected to external PHYs
+or switches.
 
-Link: https://git.codelinaro.org/clo/qsdk/oss/kernel/linux-ipq-5.4/-/commit/00743c3e82fa87cba4460e7a2ba32f473a9ce932
+There's already support for IPQ5018 in the mdio-ipq4019 driver, so let's
+simply add the mdio nodes for them.
 
 Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 Signed-off-by: George Moussalem <george.moussalem@outlook.com>
 ---
- drivers/clk/qcom/gcc-ipq5018.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/ipq5018.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/drivers/clk/qcom/gcc-ipq5018.c b/drivers/clk/qcom/gcc-ipq5018.c
-index 70f5dcb96700f55da1fb19fc893d22350a7e63bf..6eb86c034fda18c38dcd9726f0903841252381da 100644
---- a/drivers/clk/qcom/gcc-ipq5018.c
-+++ b/drivers/clk/qcom/gcc-ipq5018.c
-@@ -3660,7 +3660,7 @@ static const struct qcom_reset_map gcc_ipq5018_resets[] = {
- 	[GCC_WCSS_AXI_S_ARES] = { 0x59008, 6 },
- 	[GCC_WCSS_Q6_BCR] = { 0x18004, 0 },
- 	[GCC_WCSSAON_RESET] = { 0x59010, 0},
--	[GCC_GEPHY_MISC_ARES] = { 0x56004, 0 },
-+	[GCC_GEPHY_MISC_ARES] = { 0x56004, .bitmask = GENMASK(3, 0) },
- };
+diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+index 130360014c5e14c778e348d37e601f60325b0b14..03ebc3e305b267c98a034c41ce47a39269afce75 100644
+--- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+@@ -182,6 +182,30 @@ pcie0_phy: phy@86000 {
+ 			status = "disabled";
+ 		};
  
- static const struct of_device_id gcc_ipq5018_match_table[] = {
++		mdio0: mdio@88000 {
++			compatible = "qcom,ipq5018-mdio";
++			reg = <0x00088000 0x64>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			clocks = <&gcc GCC_MDIO0_AHB_CLK>;
++			clock-names = "gcc_mdio_ahb_clk";
++
++			status = "disabled";
++		};
++
++		mdio1: mdio@90000 {
++			compatible = "qcom,ipq5018-mdio";
++			reg = <0x00090000 0x64>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			clocks = <&gcc GCC_MDIO1_AHB_CLK>;
++			clock-names = "gcc_mdio_ahb_clk";
++
++			status = "disabled";
++		};
++
+ 		tlmm: pinctrl@1000000 {
+ 			compatible = "qcom,ipq5018-tlmm";
+ 			reg = <0x01000000 0x300000>;
 
 -- 
 2.49.0
