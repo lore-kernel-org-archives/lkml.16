@@ -1,96 +1,139 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D93155342;
-	Mon,  9 Jun 2025 07:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B443E155342;
+	Mon,  9 Jun 2025 07:40:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749454767; cv=none; b=LDNr3uZcqQQDqLmecDTXf6Zcj0+DW4AYEd7G3B/ykBRS+pfXznCzQLFaOck2u50bctsFqavnVhyPCWxBzKCUWxjojRhgL7CyxlaLu7WKSxx2fXU8Y67UDRg7Hyi0+hvSW3slJfO0gXOyqae6S0U9hHSKybvdfjZdrm9OBD27gRU=
+	t=1749454845; cv=none; b=EG2cbr2UTdPN6PFh5WCtezTOKUc2gS3SuccV1ECncSUJZ4It4amoYj8zJYa0AAhK+kKCkzGFiybibvln39LVDY9BdJDceNO3o/2ZUoOlSwBgM+HqYoa+DkvCrBeQ/fEOzz7y/LVLrRTrx/1MgvRGcnS7H4J7Ciq04AHiOx+t6zI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749454767; c=relaxed/simple;
-	bh=H7hDZq77HAh1Y55r0jDQ6rp5vMmxTjQKStTpiBMCdPc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tKO1c2ap2mdENq5BTUQYIL+EqajSKwxP7KJ+t+mXKRBIis5zBQZD4rgGOLECck+ql1FWE8+ThwJQL0Uxv9yMYqkO8oSvHonjgs6FjcMucnFeiAx5q4A7AViYKwJjdzZoS04ABj22gD92ylO6iGyvUzButhE7hMvKVKJXfUhL4JA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=nqV36Ytf; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1749454845; c=relaxed/simple;
+	bh=209nlqUCXw1v1f3VX0uAONXnvWEHs95NYNmSYw3A208=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hGqR0101xDAVE57UVjw+KYMrg3J/KU++28lIGogjp5NCOSkuxFZswbpF/WiIp6XSU7vuWkmhHNIyDnRi5Mwc+zjr8wvxhi8soPvi/YPQuQbcpe0V7awKXtmGP5ftmie2O+Ol6oA4w+EHeRzTxhgVibhv6sU5KctM4HbGwf7L4xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gY73dLvT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="nqV36Ytf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1749454762;
-	bh=H7hDZq77HAh1Y55r0jDQ6rp5vMmxTjQKStTpiBMCdPc=;
-	h=From:Date:Subject:To:Cc:From;
-	b=nqV36Ytf4vYzOiVhWKmmuhvEV47uDitWQakTjpPOVUgmIjyrNqw8ZQ+97J7ryDtMz
-	 SJXD0Rv9nlpmMwV5XUYY3cJnFGU8glpYmQQrBmcSr1IZR1emyURq95rnpvOyL3pAvQ
-	 0TMrQSAlZO2PEOALcHfxo0Na5AssuQULgDlUYC5E=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Mon, 09 Jun 2025 09:39:16 +0200
-Subject: [PATCH] selftests/nolibc: make stackprotector probing more robust
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gY73dLvT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D454C4CEEB;
+	Mon,  9 Jun 2025 07:40:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749454845;
+	bh=209nlqUCXw1v1f3VX0uAONXnvWEHs95NYNmSYw3A208=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gY73dLvTuG20cJBz/uTBYeNpVArZbVpympdOLaTXmTkeunUr3SogtkPrwip9348ep
+	 GlTKa/1aKhnLBecgL6YOHGiyn6aWWyzDNjIomZXEgN5BhgUj0hO1mpCxdKv9aobqz4
+	 RnoBw1oQVRZdaapyQ1FXeBDESYqX3Q0OfYu1fpREr/8jdQi513Lp7mLf63c+XEToKH
+	 LYD8l/KcwV19regOTXQOVdkfp/yPLBBpzHKzu/sXfWel7SlgoHtargDiNocTs3CBSM
+	 6lBah99e7LOsXVUIFQVjuP75ksUm9JxSa89Qa+QLFdgswE9W8Py551smm+rsV6wroC
+	 3VMj1AV9M7FpQ==
+Date: Mon, 9 Jun 2025 09:40:40 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org, x86@kernel.org,
+	linux-arch@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 00/12] lib/crc: improve how arch-optimized code is
+ integrated
+Message-ID: <aEaP-A21IB4ufbZT@gmail.com>
+References: <20250607200454.73587-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250609-nolibc-stackprotector-robust-v1-1-a1cfc92a568a@weissschuh.net>
-X-B4-Tracking: v=1; b=H4sIAKOPRmgC/x3MwQqDMAwA0F+RnBeolSLuV8YONYsaNhpJujEQ/
- 31lx3d5BzibsMO1O8D4Iy5aGvpLB7TlsjLKoxliiCmkIWDRl8yEXjM9d9PKVNXQdH57xXGkaUk
- pD1PsoRW78SLff3+7n+cPlhqsF24AAAA=
-X-Change-ID: 20250530-nolibc-stackprotector-robust-77c9f55a3921
-To: Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749454762; l=2141;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=H7hDZq77HAh1Y55r0jDQ6rp5vMmxTjQKStTpiBMCdPc=;
- b=q5L+PaMurUR4F/A+zymz8S43QNVgEvP0TFCeq3erVVR/uzBgpqgBj2X5l0O+Lmb+mLkGP9te0
- 0N/VgFJuZIgCWwlhJGWQGmtjbgCy9tLuKvwsR9PzhIbtlGsMVIKRE8i
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250607200454.73587-1-ebiggers@kernel.org>
 
-nolibc only supports symbol-based stackprotectors, based on the global
-variable __stack_chk_guard. Support for this differs between
-architectures and toolchains. Some use the symbol mode by default, some
-require a flag to enable it and some don't support it at all.
 
-Before the nolibc test Makefile required the availability of
-"-mstack-protector-guard=global" to enable stackprotectors.
-While this flag makes sure that the correct mode is available it doesn't
-work where the correct mode is the only supported one and therefore the
-flag is not implemented.
+* Eric Biggers <ebiggers@kernel.org> wrote:
 
-Switch to a more dynamic probing mechanism.
-This correctly enables stack protectors for mips, loongarch and m68k.
+> This series is also available at:
+> 
+>     git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git lib-crc-arch-v2
+> 
+> This series improves how lib/crc supports arch-optimized code.  First,
+> instead of the arch-optimized CRC code being in arch/$(SRCARCH)/lib/, it
+> will now be in lib/crc/$(SRCARCH)/.  Second, the API functions (e.g.
+> crc32c()), arch-optimized functions (e.g. crc32c_arch()), and generic
+> functions (e.g. crc32c_base()) will now be part of a single module for
+> each CRC type, allowing better inlining and dead code elimination.  The
+> second change is made possible by the first.
+> 
+> As an example, consider CONFIG_CRC32=m on x86.  We'll now have just
+> crc32.ko instead of both crc32-x86.ko and crc32.ko.  The two modules
+> were already coupled together and always both got loaded together via
+> direct symbol dependency, so the separation provided no benefit.
+> 
+> Note: later I'd like to apply the same design to lib/crypto/ too, where
+> often the API functions are out-of-line so this will work even better.
+> In those cases, for each algorithm we currently have 3 modules all
+> coupled together, e.g. libsha256.ko, libsha256-generic.ko, and
+> sha256-x86.ko.  We should have just one, inline things properly, and
+> rely on the compiler's dead code elimination to decide the inclusion of
+> the generic code instead of manually setting it via kconfig.
+> 
+> Having arch-specific code outside arch/ was somewhat controversial when
+> Zinc proposed it back in 2018.  But I don't think the concerns are
+> warranted.  It's better from a technical perspective, as it enables the
+> improvements mentioned above.  This model is already successfully used
+> in other places in the kernel such as lib/raid6/.  The community of each
+> architecture still remains free to work on the code, even if it's not in
+> arch/.  At the time there was also a desire to put the library code in
+> the same files as the old-school crypto API, but that was a mistake; now
+> that the library is separate, that's no longer a constraint either.
+> 
+> Changed in v2:
+>    - Fixed build warning on architectures without any optimized CRC code
+>    - Fixed build warning in sparc/crc32.h by removing pr_fmt
+>    - Moved fallback definitions of crc32*_arch back into arch files
+>    - Remove ARCH_HAS_CRC* symbols at end of series instead of beginning,
+>      so that they're not removed until they're no longer being selected
+>    - Slightly improved some commit messages
+>    - Rebased onto other pending lib/crc changes
+> 
+> Eric Biggers (12):
+>   lib/crc: move files into lib/crc/
+>   lib/crc: prepare for arch-optimized code in subdirs of lib/crc/
+>   lib/crc/arm: migrate arm-optimized CRC code into lib/crc/
+>   lib/crc/arm64: migrate arm64-optimized CRC code into lib/crc/
+>   lib/crc/loongarch: migrate loongarch-optimized CRC code into lib/crc/
+>   lib/crc/mips: migrate mips-optimized CRC code into lib/crc/
+>   lib/crc/powerpc: migrate powerpc-optimized CRC code into lib/crc/
+>   lib/crc/riscv: migrate riscv-optimized CRC code into lib/crc/
+>   lib/crc/s390: migrate s390-optimized CRC code into lib/crc/
+>   lib/crc/sparc: migrate sparc-optimized CRC code into lib/crc/
+>   lib/crc/x86: migrate x86-optimized CRC code into lib/crc/
+>   lib/crc: remove ARCH_HAS_* kconfig symbols
 
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
----
- tools/testing/selftests/nolibc/Makefile | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+For the movement of the x86 bits:
 
-diff --git a/tools/testing/selftests/nolibc/Makefile b/tools/testing/selftests/nolibc/Makefile
-index 94176ffe46463548cc9bc787933b6cefa83d6502..853f3a846d4c0fb187922d3063ec3d1a9a30ae46 100644
---- a/tools/testing/selftests/nolibc/Makefile
-+++ b/tools/testing/selftests/nolibc/Makefile
-@@ -195,7 +195,10 @@ CFLAGS_sparc32 = $(call cc-option,-m32)
- ifeq ($(origin XARCH),command line)
- CFLAGS_XARCH = $(CFLAGS_$(XARCH))
- endif
--CFLAGS_STACKPROTECTOR ?= $(call cc-option,-mstack-protector-guard=global $(call cc-option,-fstack-protector-all))
-+_CFLAGS_STACKPROTECTOR = $(call cc-option,-fstack-protector-all) $(call cc-option,-mstack-protector-guard=global)
-+CFLAGS_STACKPROTECTOR ?= $(call try-run, \
-+	echo 'void foo(void) {}' | $(CC) -x c - -o - -S $(_CFLAGS_STACKPROTECTOR) | grep -q __stack_chk_guard, \
-+	$(_CFLAGS_STACKPROTECTOR))
- CFLAGS_SANITIZER ?= $(call cc-option,-fsanitize=undefined -fsanitize-trap=all)
- CFLAGS  ?= -Os -fno-ident -fno-asynchronous-unwind-tables -std=c89 -W -Wall -Wextra \
- 		$(call cc-option,-fno-stack-protector) $(call cc-option,-Wmissing-prototypes) \
+  Acked-by: Ingo Molnar <mingo@kernel.org>
 
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250530-nolibc-stackprotector-robust-77c9f55a3921
+>  rename {arch/s390/lib => lib/crc/s390}/crc32be-vx.c (100%)
+>  rename {arch/s390/lib => lib/crc/s390}/crc32le-vx.c (100%)
+>  rename arch/sparc/lib/crc32.c => lib/crc/sparc/crc32.h (60%)
+>  rename {arch/sparc/lib => lib/crc/sparc}/crc32c_asm.S (100%)
+>  create mode 100644 lib/crc/tests/Makefile
+>  rename lib/{ => crc}/tests/crc_kunit.c (100%)
+>  rename {arch/x86/lib => lib/crc/x86}/crc-pclmul-consts.h (100%)
+>  rename {arch/x86/lib => lib/crc/x86}/crc-pclmul-template.S (100%)
+>  rename {arch/x86/lib => lib/crc/x86}/crc-pclmul-template.h (100%)
+>  rename arch/x86/lib/crc-t10dif.c => lib/crc/x86/crc-t10dif.h (56%)
+>  rename {arch/x86/lib => lib/crc/x86}/crc16-msb-pclmul.S (100%)
+>  rename {arch/x86/lib => lib/crc/x86}/crc32-pclmul.S (100%)
 
-Best regards,
--- 
-Thomas Weißschuh <linux@weissschuh.net>
+One small namespace suggestion: wouldn't it be better to move the arch 
+support code to lib/crc/arch/, instead of lib/crc/? That way any 
+generic code will stand out better and architecture directories don't 
+crowd out what is supposed to be generic code.
 
+Thanks,
+
+	Ingo
