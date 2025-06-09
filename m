@@ -1,110 +1,179 @@
-Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05AC8226545
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 23:04:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB365226193
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 23:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749510284; cv=none; b=IdfNkr2dpokBFhQ2+cwhch2qYZqgoRXod3gwLaHrs5Ta5vLgBv3popIJTvghuMC4aIeYiJaupSZPMGa6SU1BKX3qCcAtvj7MTEkSiDJSMFCQ2UjPLt4jrdYy5PEjCXbDr3XE8inL/S5igZ08+ZaR9RFQ3VXY5FsYcxBb2w9nKHQ=
+	t=1749510303; cv=none; b=E6IxdasGJ1sgjh9CYaWinXjps2WLF7KO1wWZ0LnG/NsBJ5zv/byClc3uasioeiTpEkNwrkjk6P7g/OrtV/o2e8jdvvFmVLnrxdrjXlDqPrPRRsrSDOCzzDNQQamCl65dBAknhqYDsPKHZvIprwSnXiSYyISdFO0aJGbKGJ5FNtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749510284; c=relaxed/simple;
-	bh=mm9ObijEefmfg8v3eCEzUJlAljhd8U87/Nzt9GDpk3Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BTFHF92GU9xo/oWjTKK1aRuWCdQthJi5TdLHL6xgdzhkT6EV1jv8+GwEzK7udRyMFMa5YWsAC4EGZ+dv6df1RBlB+ZCs2oJ8gkEw+pUxCIh2dJ/TrI7R8Z81ijeIVqPZuzSiDGsEoxaxSvJzXETwlwyIgFIUDIhy60p4jQoYUuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=n5X+yCJ5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hO1X/2Hf; arc=none smtp.client-ip=202.12.124.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+	s=arc-20240116; t=1749510303; c=relaxed/simple;
+	bh=8JQVGbTAqQUabzFe20anuyHGA4gpZl+ONkN6GLx8ymI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lKOc54G6hVFGatR04sW014PfucOksz2++ygsNvxRIhilyqr+k42/UB6fX7xbd0fk4fTt6+sZOAtupUJbDbEj+4X1iK6Qg0sa5Ph+0CBF7U+/6o+7NhVxN8axGlGbrDznS9N2hrsZN6RIWg3N1lmDY6u5LI3ogCUg/N47/xcPo1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DvQ3VvWy; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="n5X+yCJ5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hO1X/2Hf"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfout.stl.internal (Postfix) with ESMTP id D1B781140344;
-	Mon,  9 Jun 2025 19:04:39 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-11.internal (MEProxy); Mon, 09 Jun 2025 19:04:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1749510279; x=
-	1749596679; bh=k0uJ+LCSai8jTgkwXDZp2XvJHcOSKF00RO3GVFcycTA=; b=n
-	5X+yCJ52eeJtMf/hCgnWlXaoI7n5kKwg70aGZEagDIfhiP15Cj4uCZkOVQK42Lcb
-	h8YuzfM+ktKtpntaz65jqMzMk/130Te558EBoxIDT3nkSJEtrDWohJ4fU0VzKi4T
-	IJRh78UoVvmHxAsjGPD8wHmuLvMg6tMNabIjprdourxZmBplxrUFYiySZTDIAto+
-	iDdlXir+dY6c4cyVgD45ocwUeokavtOQZ3kge9ECeOT8jsZ6/DLc9Z2mdQnsRpY2
-	X/VX634FxVrJcrG3XluA9KnqFaj8Dc6S7tx5D48RC1MEvYlFJi7IK+svCcnW6atP
-	Ha5FLoQeifOXwzOYUDDUw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1749510279; x=1749596679; bh=k0uJ+LCSai8jTgkwXDZp2XvJHcOSKF00RO3
-	GVFcycTA=; b=hO1X/2HfUOL+PLc/2VnGN0SKAqTbgO9BYlKm8tpdear8J3wvkqv
-	AP8rcUKK1ze+VbHi+sYdmSrWCJsIUTmWN/tmv6zPzy+pLI2qC8GO98KUoTcY3xhX
-	saCL9oIv9JhHuggAH8lJfMSb19Orf7SHhmDQFNnbJfhoHWCuYTwviNhmWqGVWC9O
-	BP7qrkveTuIeIEioxSgrGAFZhvSe4G2pK4oukGXgU8zUGyQOS2Mxr+QpH/cHjbrr
-	KvQ81keg2t3R4dhARF/ILbyLFAliOukbMZY383Rqp8ns0R+99ZJB74o5hDMTIGm9
-	hqmgiSjg3AyVnIkfu7HHPjWiwjGpzrqSY1w==
-X-ME-Sender: <xms:h2hHaFYkXBpfNyYob6XZ94yxJh_9DY5a5nLxK2uIF7Nrk2PB5xnM2Q>
-    <xme:h2hHaMbYHl1YXyCbWflM0NdAaKwS1lEEbtWHw3JvxDnn11tTMdpJGAKkR9yJk2pkL
-    YFOUzx3xXg9iwFViw0>
-X-ME-Received: <xmr:h2hHaH-IzN7-tPU5u2uiKs73eea2RF_15yC_enDT7aLBfIRnHF7YLImKkh6_F0h7SWxucUb1MN8rqEbIICr7pbEKWSwWEpnoSUOU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdelleefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvve
-    fukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefvrghkrghshhhiucfurghkrghm
-    ohhtohcuoehoqdhtrghkrghshhhisehsrghkrghmohgttghhihdrjhhpqeenucggtffrrg
-    htthgvrhhnpeehhffhteetgfekvdeiueffveevueeftdelhfejieeitedvleeftdfgfeeu
-    udekueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    hoqdhtrghkrghshhhisehsrghkrghmohgttghhihdrjhhppdhnsggprhgtphhtthhopedv
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigudefleegqdguvghvvg
-    hlsehlihhsthhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtoheplhhinhhu
-    gidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:h2hHaDqkr9szpPxNztVJZN-9CdDodlr131oRbqQSO9G9d-RAcj35AA>
-    <xmx:h2hHaArNEEWyf2v9kvVK0mQ2e_03Tl1c9zRCNJpVJnCj5m_xEp-c5A>
-    <xmx:h2hHaJTlfLKzmvH5_jyDNWoRuXqn_S6_99WXKy2Acn3dJtvt6pC59g>
-    <xmx:h2hHaIpJfqS6qNwNmPkIdPb2mj9CM7pWUh0dhT22iK4BEQ2hoyjj-A>
-    <xmx:h2hHaOZqo1_LuTNQ_UrdAXbl6yNoTo5IRO128fUGw8kJ1Vvj1Zjzv3w3>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 9 Jun 2025 19:04:38 -0400 (EDT)
-Date: Tue, 10 Jun 2025 08:04:35 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: linux1394-devel@lists.sourceforge.net
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] firewire: ohci: correct code comments about bus_reset
- tasklet
-Message-ID: <20250609230435.GA229165@workstation.local>
-Mail-Followup-To: linux1394-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-References: <20250608233808.202355-1-o-takashi@sakamocchi.jp>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DvQ3VvWy"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-70e6bddc30aso38832247b3.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 16:05:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749510301; x=1750115101; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q7+cVr8dsExjTk3ijrllXSzAu8Gblm5oL77kdyoH2ZE=;
+        b=DvQ3VvWyq3FvzVm8BNKbZvXYbIOhxV8vmBzMEqQ9oKXdIKRumc0brDSk/kf+NRmTC+
+         2Ix0nE+oI2oCeQfSsZrBCTrnQVTj/UyRNhGLkkw22bh6mxO3LPLYg+lBWwnWOBr26rze
+         h00OuudIbD300dhvJpSQorDzKDm2Ebo5s3DeUSsU8H/knMwurQw53gOqc4LqbF84mL5H
+         G0iwBD6kEJ3mNnlw8MCO0QJJH/5BX78cCAZN9QDs6sRq7EEGCjewotddFFzgL2qNPBsl
+         NPU4j8bCBsjUhjFuSXCTwMk/QC1ZcYWwjXIpWqc2HScukEtzqpvywj9Dp+vvJO+cPlUj
+         lCBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749510301; x=1750115101;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=q7+cVr8dsExjTk3ijrllXSzAu8Gblm5oL77kdyoH2ZE=;
+        b=rLTTyiMIZDLNbvqsDWYClN0SmSZJH2LYGDhUiX8XZhYkBM38j+gP1KJQl3DSa7kB/n
+         8HC10GRjm7T0k4on87jEvOsejuwLsG+FZvy7+bzOuTcu+a4cYtmYZ3ETdiWFktDExMBu
+         1+7FBmLbX4N4MH4u6Fo++Cf01PfFARKCArv/YWqns6IW5W0WYE/IFno782WjQ7TLV4Jq
+         JMo3Gl0pVvnty2cyIu0HmUZasm9OphayS1h2A4qmCXhIlBQbYrFepZu7Azy+jiptvF2C
+         xzFhgNdSrNrOAAffkzWNza9mPS5uNRihtWqblGlQWCCTqgAx3p8j8sPxFZEECikv3ysy
+         /KTw==
+X-Forwarded-Encrypted: i=1; AJvYcCVCp3I4meC+r39rZYzzmdZeVRgkheEb5ue6V5w3Wo1vn5tvG8NJvazG9FIzlS5OUaUoFY4cDLQQ15xlwAI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPak7+lmCz6AHFruBisrDklJdSvLv8PHE4QnBfip1EFo384Kif
+	QbPJPafxaA9p/s9zzykiXH31Eke8BcFeTP7kzn6hNKkKtB1cHVE3DzSoXW4Tk61n/0zDPolWtpl
+	JM+v8/4SWH8TNe93U80OllC8HFldXaZtXfHH2OFA+
+X-Gm-Gg: ASbGncun4+3AUcKKCLvfmFzagzWiX1mu79hyusykp+WL5ISC2+xMHxe08Rm2hI0f4Up
+	P7JjZkoRiMhQzxN78133Dg9lob6+GdVS/2bAVCWgLG6NG2ohv9NBJIkBCCo8Nz3okcNwuxxvjAJ
+	fOa/iRc6e8fgHePJB/ERDgiN22LU9p2TQiijrhqARVH9YcquBpD3Rqwv4aXPXuToXPU/l7dQl0t
+	g==
+X-Google-Smtp-Source: AGHT+IHDN7yYiqZfvU9YYp0Xn0iNVyQLG2U2NkvCT1T2HFwTM8W1uiwWGtxc6CrVQKMfQxc4kQw9Dq00AIFK5/ldCts=
+X-Received: by 2002:a05:690c:360e:b0:70d:f3bb:a731 with SMTP id
+ 00721157ae682-710f76949a7mr201808267b3.9.1749510300215; Mon, 09 Jun 2025
+ 16:05:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250608233808.202355-1-o-takashi@sakamocchi.jp>
+References: <aDdILHOu9g-m5hSm@google.com> <20250528201756.36271-1-jthoughton@google.com>
+ <aDebZD1Kmmg15zs7@google.com>
+In-Reply-To: <aDebZD1Kmmg15zs7@google.com>
+From: James Houghton <jthoughton@google.com>
+Date: Mon, 9 Jun 2025 16:04:24 -0700
+X-Gm-Features: AX0GCFsscOLeJsC5afeLhStDd6O3F0bHoTP2OBA-juWmkL4Q85V0QPpPjCgJ_5E
+Message-ID: <CADrL8HWwWN6tgV5ws8HMmeONmmhx_xS5ZSHgV7E6Cg=NDrqCTQ@mail.gmail.com>
+Subject: Re: [PATCH v2 06/13] KVM: arm64: Add support for KVM_MEM_USERFAULT
+To: Sean Christopherson <seanjc@google.com>
+Cc: amoorthy@google.com, corbet@lwn.net, dmatlack@google.com, 
+	kalyazin@amazon.com, kvm@vger.kernel.org, kvmarm@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
+	pbonzini@redhat.com, peterx@redhat.com, pgonda@google.com, 
+	wei.w.wang@intel.com, yan.y.zhao@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Wed, May 28, 2025 at 4:25=E2=80=AFPM Sean Christopherson <seanjc@google.=
+com> wrote:
+>
+> On Wed, May 28, 2025, James Houghton wrote:
+> > On Wed, May 28, 2025 at 1:30=E2=80=AFPM Sean Christopherson <seanjc@goo=
+gle.com> wrote:
+> > diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+> > index c5d21bcfa3ed4..f1db3f7742b28 100644
+> > --- a/arch/arm64/kvm/mmu.c
+> > +++ b/arch/arm64/kvm/mmu.c
+> > @@ -2127,15 +2131,23 @@ void kvm_arch_commit_memory_region(struct kvm *=
+kvm,
+> >                                  const struct kvm_memory_slot *new,
+> >                                  enum kvm_mr_change change)
+> >  {
+> > -     bool log_dirty_pages =3D new && new->flags & KVM_MEM_LOG_DIRTY_PA=
+GES;
+> > +     u32 old_flags =3D old ? old->flags : 0;
+> > +     u32 new_flags =3D new ? new->flags : 0;
+> > +
+> > +     /*
+> > +      * If only changing flags, nothing to do if not toggling
+> > +      * dirty logging.
+> > +      */
+> > +     if (change =3D=3D KVM_MR_FLAGS_ONLY &&
+> > +         !((old_flags ^ new_flags) & KVM_MEM_LOG_DIRTY_PAGES))
+> > +             return;
+> >
+> >       /*
+> >        * At this point memslot has been committed and there is an
+> >        * allocated dirty_bitmap[], dirty pages will be tracked while th=
+e
+> >        * memory slot is write protected.
+> >        */
+> > -     if (log_dirty_pages) {
+> > -
+> > +     if (new_flags & KVM_MEM_LOG_DIRTY_PAGES) {
+> >               if (change =3D=3D KVM_MR_DELETE)
+> >                       return;
+> >
+> >
+> > So we need to bail out early if we are enabling KVM_MEM_USERFAULT but
+> > KVM_MEM_LOG_DIRTY_PAGES is already enabled, otherwise we'll be
+> > write-protecting a bunch of PTEs that we don't need or want to WP.
+> >
+> > When *disabling* KVM_MEM_USERFAULT, we definitely don't want to WP
+> > things, as we aren't going to get the unmap afterwards anyway.
+> >
+> > So the check we started with handles this:
+> > > > > > +       u32 old_flags =3D old ? old->flags : 0;
+> > > > > > +       u32 new_flags =3D new ? new->flags : 0;
+> > > > > > +
+> > > > > > +       /* Nothing to do if not toggling dirty logging. */
+> > > > > > +       if (!((old_flags ^ new_flags) & KVM_MEM_LOG_DIRTY_PAGES=
+))
+> > > > > > +               return;
+> >
+> > So why also check for `change =3D=3D KVM_MR_FLAGS_ONLY` as well? Everyt=
+hing I just
+> > said doesn't really apply when the memslot is being created, moved, or
+> > destroyed. Otherwise, consider the case where we never enable dirty log=
+ging:
+> >
+> >  - Memslot deletion would be totally broken; we'll see that
+> >    KVM_MEM_LOG_DIRTY_PAGES is not getting toggled and then bail out, sk=
+ipping
+> >    some freeing.
+>
+> No, because @new and thus new_flags will be 0.  If dirty logging wasn't e=
+nabled,
+> then there's nothing to be done.
+>
+> >  - Memslot creation would be broken in a similar way; we'll skip a bunc=
+h of
+> >    setup work.
+>
+> No, because @old and thus old_flags will be 0.  If dirty logging isn't be=
+ing
+> enabled, then there's nothing to be done.
+>
+> >  - For memslot moving, the only case that we could possibly be leaving
+> >    KVM_MEM_LOG_DIRTY_PAGES set without the change being KVM_MR_FLAGS_ON=
+LY,
+> >    I think we still need to do the split and WP stuff.
+>
+> No, because KVM invokes kvm_arch_flush_shadow_memslot() on the memslot an=
+d marks
+> it invalid prior to installing the new, moved memslot.  See kvm_invalidat=
+e_memslot().
+>
+> So I'm still not seeing what's buggy.
 
-On Mon, Jun 09, 2025 at 08:38:06AM +0900, Takashi Sakamoto wrote:
-> The tasklet for bus reset event has been replaced with work item, while
-> some code comments still address to the tasklet.
-> 
-> This commit corrects them.
-> 
-> Fixes: 2d7a36e23300 ("firewire: ohci: Move code from the bus reset tasklet into a workqueue")
-> Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-> ---
->  drivers/firewire/ohci.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+Sorry, I didn't see your reply, Sean. :(
 
-Applied to for-next branch.
+You're right, I was confusing the KVM_MEM_USERFAULT and
+KVM_MEM_LOG_DIRTY_PAGES. I'll undo the little change I said I was
+going to make.
 
-
-Regards
-
-Takashi Sakamoto
+Thank you!
