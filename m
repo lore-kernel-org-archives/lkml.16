@@ -1,366 +1,263 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4138424EF8B
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 13:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D57C148;
+	Mon,  9 Jun 2025 13:01:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749474060; cv=none; b=R+D6WK532vkNthEbeQ5GuLCg463AWOsMOib2F3kacHKUYb4XSnLsyUYF9wiXyRj09V2n27lGxGllYtcZjSks940hnZkdGjD7miHC5YW/eL8EXjt386kIk3Nmsw1B3/3hKHjb7YbZv9VazJMiLuLJ3D2mHMU5aJ986uSJMXcwWEU=
+	t=1749474076; cv=none; b=mUF3NbDsecsmb0EqbLVSPUNsDqKul2MVBnYdJJ6ZpagVxf7f8ZK1V5o64oXB5mmtfynieqBgrcy5J9iXNCkcQaGjSgdGDCLAx7QmLIvgfD5aPbr8CSNqVlXtMPVxSwE9L7Xv6Tw2vlG0HD7qMXoLQ4jW2n8lbyKRR/uZZN6Hr0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749474060; c=relaxed/simple;
-	bh=+URPo4JGBj7DndEyMo5gm2wIJ46h7HcTeGl1dr40vvI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IUsj/9zdg1MyItWUC9svuwwbMakLkqZ0ZgqTDvbjWgTaX3XxIjuiv1oQquo7Y2PyBI7Z1We5irR9KO3n9K9mN1B7GWpiUcvI0wtIEHpUI6aRcGMC04Vfh1UVDQVIsfLzV2BG5Pj2+DqutOIqrn/Wrt1j2um5nK2A57dJbknSaOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=POgJ9GQt; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749474076; c=relaxed/simple;
+	bh=dBgWK/WtMBY8eHbXtU5/oIqL9LmSp63eIAxK880ghxc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=abupx6WUIFNQK3JbNLI9u503u0AmXbU2xAy9103GaooDkyVmNKTVsr028ycyD6453n4hVl8YlhbCmgckMIMqvFoXVz/+nflywsUo2YO9fQFl4+46ysV18JCk2za0EAsIyZibWLKPmJN0ttoOtCny3jq4i6HusgicRTeMpJTbzXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DQ0STp+Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="POgJ9GQt"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-4067b7d7e52so1013198b6e.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 06:00:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749474057; x=1750078857; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mYtTd8X3ioZoP4ZqCiRHyNkyAopif3v2teL9bFi+ppk=;
-        b=POgJ9GQtiCyJg1MeCIdhKRsxIJQUedNqxfcn+K8n9tUOgoV5bfDj1GjFUE7RSKIAi2
-         0PnK3CGURLMXrOHvSi8TA+q1i+TuK9JgtBiwq9XTsk65ggABs/z9CrBPn4nsWLd8LTcQ
-         nEPXUF5Co/51VGXMqxFGBqE7FEGwlMK6geDB/DXh/zVkA4pf8uBOKqQ2ArfvxYFyheTZ
-         gSHSmZkzxiKeXPgYUoMXjLdp225PEC44bqgPk6HsPYA3TXfogO8Vrc96wrREG3LLv9Dy
-         Xa8re29o6cb6Z2R4g6IdJ+w4n+8wXStw5x55v74RhhNG+z4BOmiWydi8xxm5L7zRdHuJ
-         AtfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749474057; x=1750078857;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mYtTd8X3ioZoP4ZqCiRHyNkyAopif3v2teL9bFi+ppk=;
-        b=wGGn5lIJmcso66u2DD03WpefwUNBnnSBc2s5PfnKRPf1tJAJzUK0/jlT4E+xMv2o8P
-         4GNFAXfVByn+TJPz72sknAzfkSNc6OELcLXRmmpNm6mfqyu/3WXtUxIKoVu9Sreyzr/D
-         Lo1NJJ2ZkqpDa0JzxgBr6gmraBNcp/nWdRiEVms3eGLuSg35Vvvsr1oJpjHGepxmeara
-         I0zlL75WR84YSafmAj2bDedFPTbLkvL2ZnJ1DUiWidmSbQ1ka7fzSrGlrNWRcJIyUILf
-         3byUI5VjkdNUVjVhoubfvBxNbLHTR5IozEMexgDrlmgXX7Zh+pXu1rLOLOpNYIWbSabX
-         A/aA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0YPGAH3wl1CgP51/Ap/tTcJhqHlhCcwe63fFiJBQW0mA9c33a5bdccf6yUoMtKoszBIfSxqgOLkNK+fU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXuCQRx5WYRSDI2PQ7wUoANy/wQIg5nH+9s9kazEz8P1pzVIhO
-	TJ/K4aJoP1r0/f2YWusbyHt1yQ7+8ksmAC2VeKjR/J23bMvANpeIaqMmA0bF534c7cBLTByQf1f
-	iDBlTr8gfFyUi3+1FMW5mwmsBvCN+Q8uxQeMLyrOFvA==
-X-Gm-Gg: ASbGnctypnaZ0NHBvsPDVI7mnBgzyotcZZfH6SfOcuedWnrTCYdzflxwzfuKHm0ixoW
-	xuSCSdQeTxC37g+i/HzVRmmmcuV51eEL/hTcpow7S4bNAHE+z/o4QKvKS9eHZEW6pYBtTiDLIyh
-	ILb/6gGwrOGww1sJYT3ayXEK8np2rD/h4J64BiQB3f5s69
-X-Google-Smtp-Source: AGHT+IEx5dBBYalreZpgcAi7SiMqb9bdO3lo6yhdnudOtUBVFZ+AX4nRBzDMZ/8OpWtkY6MrxyYR2ncP1ceSLRn0V4Q=
-X-Received: by 2002:a05:6808:5086:b0:409:f8e:727f with SMTP id
- 5614622812f47-4090f8e7a1cmr6634453b6e.3.1749474057017; Mon, 09 Jun 2025
- 06:00:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DQ0STp+Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16F4EC4CEEB;
+	Mon,  9 Jun 2025 13:01:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749474075;
+	bh=dBgWK/WtMBY8eHbXtU5/oIqL9LmSp63eIAxK880ghxc=;
+	h=From:Subject:Date:To:Cc:From;
+	b=DQ0STp+QR0WOTLnIeuMS8KnU5+J5ZzAmgpLD+jvzXarpEEmNe5LleurtJDPrYBBD0
+	 E6N/0Z9bnhfN5AcZmQ6pL91p7F6qUag+ooOY5ZtSes8YkZPVhH+aZt5n/FtIQ1GTD+
+	 NdBws6fyJlK7hzZu+PPrjffqckrrtyImyX4efzR5d5V+0Ppu8qIHg5QKnC9wmGbzZD
+	 40ZqYYf1tWkdAn1/Q6jmtPr6tjg1u4K4Mcn/1vwlB1ZY/n1Rb4n9lcb5hMmZj4/z3A
+	 9igNNllXyRC1YsxL85YZb9jDsa7UFyRKDU4mc+Pp30YODClACHhF4nI6MdFKQuwgvm
+	 FVZbhXfL9caEA==
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH RFT v17 0/8] fork: Support shadow stacks in clone3()
+Date: Mon, 09 Jun 2025 13:54:01 +0100
+Message-Id: <20250609-clone3-shadow-stack-v17-0-8840ed97ff6f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250605-fix-use-after-free-v1-1-a70d23bff248@oss.qualcomm.com>
-In-Reply-To: <20250605-fix-use-after-free-v1-1-a70d23bff248@oss.qualcomm.com>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Mon, 9 Jun 2025 15:00:45 +0200
-X-Gm-Features: AX0GCFs0onTtmhC4kVNMBNJ2gfnQX-I7Oo5EtaFJz3aIdTdjQHDdvJiA4KNJJYM
-Message-ID: <CAHUa44EyGXswbYLgdrfH_cMSyadgVUAJDGAMdsPXQVN7V7Nhsw@mail.gmail.com>
-Subject: Re: [PATCH] tee: optee: prevent use-after-free when the client exits
- before the supplicant
-To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-Cc: Sumit Garg <sumit.garg@kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, 
-	op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGrZRmgC/3XTy26dMBCA4VeJWJfIM+NrVl31Aaruoix8GeegR
+ IcKItoqOu8eQ9VAZbzEiA88/nnvZp4GnruHu/du4mWYh/FaLsB8uevixV+fuR9SWehQIIEA18f
+ X8crUzxefxl/9/ObjSw8qSZEwZEW6K0/+nDgPvzf2sfv+7Uf3VBYvw/w2Tn+2Vy2w3fqLIp2iC
+ /SiT1abJELxk/j6wtOVX+/H6XkDF9wRAHmOYEGCBspWWwClKoQOCIpzhAriTbCciNHHWCHyiNh
+ zRBbEBrQ5s8za6ApR/xApUDRmogpCiFE75SzLUCF6R3RrsLogjtkYSwFycBVidsQQnCNmnYlTh
+ MwhB0gVYnfEisZMbEGEj5lM9BlkPVh3QBrxLW7djsZkZHZOalkhIA4KNvYDYv0WzdY4E5yUdSn
+ wGa0EIVSDWatFrz2GpJNWUDN4YFrThbVbA5Y42MAMpmZoZ5q5wFquo2Cdt+AV16cEn+mqUp1uM
+ Fu7QgVFPhs6KQbUzsjWacNWb/YoVdRMgWtGHxhofc3aL+YcXfTkwPz/E9xutw+dNcji1gQAAA=
+ =
+X-Change-ID: 20231019-clone3-shadow-stack-15d40d2bf536
+To: "Rick P. Edgecombe" <rick.p.edgecombe@intel.com>, 
+ Deepak Gupta <debug@rivosinc.com>, Szabolcs Nagy <Szabolcs.Nagy@arm.com>, 
+ "H.J. Lu" <hjl.tools@gmail.com>, Florian Weimer <fweimer@redhat.com>, 
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+ Vincent Guittot <vincent.guittot@linaro.org>, 
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, 
+ Christian Brauner <brauner@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, jannh@google.com, bsegall@google.com, 
+ Yury Khrustalev <yury.khrustalev@arm.com>, 
+ Wilco Dijkstra <wilco.dijkstra@arm.com>, linux-kselftest@vger.kernel.org, 
+ linux-api@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
+ Kees Cook <kees@kernel.org>, Kees Cook <kees@kernel.org>, 
+ Shuah Khan <skhan@linuxfoundation.org>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8641; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=dBgWK/WtMBY8eHbXtU5/oIqL9LmSp63eIAxK880ghxc=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoRtsOm2OHhAF6XfEhjpWY7taLaBAUOik5oIkhCJqH
+ r102eXCJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaEbbDgAKCRAk1otyXVSH0DMNB/
+ 9HoBiPYeEFZf0PNOxX+OzimgbVKBy8qimHZZwgJECYAk3dd6uNbWGVbkDnoGbDHjLmCutIEK7rSWsB
+ eWLI035l6tMrvXFr4VSd+c+/b3dNT7apoypUIQaGidjm7aP/4KAtfvIjhbRu6C3paPaFMm/sevLsAn
+ kHa0KWWR4HSwyFPkJ6sBz3h5EosjF46bNHon2QntC9v3pyOPVCyFf0EVIYOTu20Ivg7h9FAU043rkn
+ Cg/0EH2YarVoBkJuRPrv45iEwWIVqml3qdC83Bg2QaKtBX+x2csuUNQ45iIzk2J+D3ee/bj/v+KgA7
+ re6fGSuxHc9muIEKZMQ6JCzQdTq808
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-Hi Amir,
+The kernel has recently added support for shadow stacks, currently
+x86 only using their CET feature but both arm64 and RISC-V have
+equivalent features (GCS and Zicfiss respectively), I am actively
+working on GCS[1].  With shadow stacks the hardware maintains an
+additional stack containing only the return addresses for branch
+instructions which is not generally writeable by userspace and ensures
+that any returns are to the recorded addresses.  This provides some
+protection against ROP attacks and making it easier to collect call
+stacks.  These shadow stacks are allocated in the address space of the
+userspace process.
 
-On Fri, Jun 6, 2025 at 4:01=E2=80=AFAM Amirreza Zarrabi
-<amirreza.zarrabi@oss.qualcomm.com> wrote:
->
-> Commit 70b0d6b0a199 ("tee: optee: Fix supplicant wait loop") made the
-> client wait as killable so it can be interrupted during shutdown or
-> after a supplicant crash. This changes the original lifetime expectations=
-:
-> the client task can now terminate while the supplicant is still processin=
-g
-> its request.
->
-> If the client exits first it removes the request from its queue and
-> kfree()s it, while the request ID remains in supp->idr. A subsequent
-> lookup on the supplicant path then dereferences freed memory, leading to
-> a use-after-free.
->
-> Serialise access to the request with supp->mutex:
->
->   * Hold supp->mutex in optee_supp_recv() and optee_supp_send() while
->     looking up and touching the request.
->   * Let optee_supp_thrd_req() notice that the client has terminated and
->     signal optee_supp_send() accordingly.
->
-> With these changes the request cannot be freed while the supplicant still
-> has a reference, eliminating the race.
->
-> Fixes: 70b0d6b0a199 ("tee: optee: Fix supplicant wait loop")
-> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-> ---
->  drivers/tee/optee/supp.c | 114 ++++++++++++++++++++++++++++++++---------=
-------
->  1 file changed, 77 insertions(+), 37 deletions(-)
->
-> diff --git a/drivers/tee/optee/supp.c b/drivers/tee/optee/supp.c
-> index d0f397c90242..62c9c75f48a6 100644
-> --- a/drivers/tee/optee/supp.c
-> +++ b/drivers/tee/optee/supp.c
-> @@ -9,6 +9,7 @@
->
->  struct optee_supp_req {
->         struct list_head link;
-> +       int id;
->
->         bool in_queue;
->         u32 func;
-> @@ -19,6 +20,9 @@ struct optee_supp_req {
->         struct completion c;
->  };
->
-> +/* It is temporary request used for invalid pending request in supp->idr=
-. */
-> +static struct optee_supp_req invalid_req;
+Our API for shadow stacks does not currently offer userspace any
+flexiblity for managing the allocation of shadow stacks for newly
+created threads, instead the kernel allocates a new shadow stack with
+the same size as the normal stack whenever a thread is created with the
+feature enabled.  The stacks allocated in this way are freed by the
+kernel when the thread exits or shadow stacks are disabled for the
+thread.  This lack of flexibility and control isn't ideal, in the vast
+majority of cases the shadow stack will be over allocated and the
+implicit allocation and deallocation is not consistent with other
+interfaces.  As far as I can tell the interface is done in this manner
+mainly because the shadow stack patches were in development since before
+clone3() was implemented.
 
-Prefer avoiding global variables where possible.
+Since clone3() is readily extensible let's add support for specifying a
+shadow stack when creating a new thread or process, keeping the current
+implicit allocation behaviour if one is not specified either with
+clone3() or through the use of clone().  The user must provide a shadow
+stack pointer, this must point to memory mapped for use as a shadow
+stackby map_shadow_stack() with an architecture specified shadow stack
+token at the top of the stack.
 
-> +
->  void optee_supp_init(struct optee_supp *supp)
->  {
->         memset(supp, 0, sizeof(*supp));
-> @@ -102,6 +106,7 @@ u32 optee_supp_thrd_req(struct tee_context *ctx, u32 =
-func, size_t num_params,
->         mutex_lock(&supp->mutex);
->         list_add_tail(&req->link, &supp->reqs);
->         req->in_queue =3D true;
-> +       req->id =3D -1;
->         mutex_unlock(&supp->mutex);
->
->         /* Tell an eventual waiter there's a new request */
-> @@ -117,21 +122,40 @@ u32 optee_supp_thrd_req(struct tee_context *ctx, u3=
-2 func, size_t num_params,
->         if (wait_for_completion_killable(&req->c)) {
->                 mutex_lock(&supp->mutex);
->                 if (req->in_queue) {
-> +                       /* Supplicant has not seen this request yet. */
->                         list_del(&req->link);
->                         req->in_queue =3D false;
-> +
-> +                       ret =3D TEEC_ERROR_COMMUNICATION;
-> +               } else if (req->id  =3D=3D -1) {
-> +                       /*
-> +                        * Supplicant has processed this request. Ignore =
-the
-> +                        * kill signal for now and submit the result.
-> +                        */
-> +                       ret =3D req->ret;
-> +               } else {
-> +                       /*
-> +                        * Supplicant is in the middle of processing this
-> +                        * request. Replace req with invalid_req so that =
-the ID
-> +                        * remains busy, causing optee_supp_send() to fai=
-l on
-> +                        * the next call to supp_pop_req() with this ID.
-> +                        */
-> +                       idr_replace(&supp->idr, &invalid_req, req->id);
-> +                       ret =3D TEEC_ERROR_COMMUNICATION;
->                 }
-> +
-> +               kfree(req);
->                 mutex_unlock(&supp->mutex);
-> -               req->ret =3D TEEC_ERROR_COMMUNICATION;
-> +       } else {
-> +               ret =3D req->ret;
-> +               kfree(req);
->         }
->
-> -       ret =3D req->ret;
-> -       kfree(req);
-> -
->         return ret;
->  }
->
->  static struct optee_supp_req  *supp_pop_entry(struct optee_supp *supp,
-> -                                             int num_params, int *id)
-> +                                             int num_params)
->  {
->         struct optee_supp_req *req;
->
-> @@ -153,8 +177,8 @@ static struct optee_supp_req  *supp_pop_entry(struct =
-optee_supp *supp,
->                 return ERR_PTR(-EINVAL);
->         }
->
-> -       *id =3D idr_alloc(&supp->idr, req, 1, 0, GFP_KERNEL);
-> -       if (*id < 0)
-> +       req->id =3D idr_alloc(&supp->idr, req, 1, 0, GFP_KERNEL);
-> +       if (req->id < 0)
->                 return ERR_PTR(-ENOMEM);
->
->         list_del(&req->link);
-> @@ -214,7 +238,6 @@ int optee_supp_recv(struct tee_context *ctx, u32 *fun=
-c, u32 *num_params,
->         struct optee *optee =3D tee_get_drvdata(teedev);
->         struct optee_supp *supp =3D &optee->supp;
->         struct optee_supp_req *req =3D NULL;
-> -       int id;
->         size_t num_meta;
->         int rc;
->
-> @@ -223,16 +246,45 @@ int optee_supp_recv(struct tee_context *ctx, u32 *f=
-unc, u32 *num_params,
->                 return rc;
->
->         while (true) {
-> -               mutex_lock(&supp->mutex);
-> -               req =3D supp_pop_entry(supp, *num_params - num_meta, &id)=
-;
-> -               mutex_unlock(&supp->mutex);
-> +               scoped_guard(mutex, &supp->mutex) {
-> +                       req =3D supp_pop_entry(supp, *num_params - num_me=
-ta);
-> +                       if (!req)
-> +                               goto wait_for_request;
->
-> -               if (req) {
->                         if (IS_ERR(req))
->                                 return PTR_ERR(req);
-> -                       break;
-> +
-> +                       /*
-> +                        * Popped a request: process it while holding the=
- lock,
-> +                        * so that optee_supp_thrd_req() doesn't pull the
-> +                        * request out from under us.
-> +                        */
-> +
-> +                       if (num_meta) {
-> +                               /*
-> +                                * tee-supplicant support meta parameters=
- ->
-> +                                * requests can be processed asynchronous=
-ly.
-> +                                */
-> +                               param->attr =3D
-> +                                       TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_I=
-NOUT |
-> +                                       TEE_IOCTL_PARAM_ATTR_META;
-> +                               param->u.value.a =3D req->id;
-> +                               param->u.value.b =3D 0;
-> +                               param->u.value.c =3D 0;
-> +                       } else {
-> +                               supp->req_id =3D req->id;
-> +                       }
-> +
-> +                       *func =3D req->func;
-> +                       *num_params =3D req->num_params + num_meta;
-> +                       memcpy(param + num_meta, req->param,
-> +                              sizeof(struct tee_param) * req->num_params=
-);
+Yuri Khrustalev has raised questions from the libc side regarding
+discoverability of extended clone3() structure sizes[2], this seems like
+a general issue with clone3().  There was a suggestion to add a hwcap on
+arm64 which isn't ideal but is doable there, though architecture
+specific mechanisms would also be needed for x86 (and RISC-V if it's
+support gets merged before this does).
 
-This is the point at which this function must break out of the loop
-and return the request, or it will be lost.
+Please note that the x86 portions of this code are build tested only, I
+don't appear to have a system that can run CET available to me.
 
-Cheers,
-Jens
+[1] https://lore.kernel.org/linux-arm-kernel/20241001-arm64-gcs-v13-0-222b78d87eee@kernel.org/T/#mc58f97f27461749ccf400ebabf6f9f937116a86b
+[2] https://lore.kernel.org/r/aCs65ccRQtJBnZ_5@arm.com
 
->                 }
->
-> +               /* Check for the next request in the queue. */
-> +               continue;
-> +
-> +wait_for_request:
->                 /*
->                  * If we didn't get a request we'll block in
->                  * wait_for_completion() to avoid needless spinning.
-> @@ -245,27 +297,6 @@ int optee_supp_recv(struct tee_context *ctx, u32 *fu=
-nc, u32 *num_params,
->                         return -ERESTARTSYS;
->         }
->
-> -       if (num_meta) {
-> -               /*
-> -                * tee-supplicant support meta parameters -> requsts can =
-be
-> -                * processed asynchronously.
-> -                */
-> -               param->attr =3D TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INOUT |
-> -                             TEE_IOCTL_PARAM_ATTR_META;
-> -               param->u.value.a =3D id;
-> -               param->u.value.b =3D 0;
-> -               param->u.value.c =3D 0;
-> -       } else {
-> -               mutex_lock(&supp->mutex);
-> -               supp->req_id =3D id;
-> -               mutex_unlock(&supp->mutex);
-> -       }
-> -
-> -       *func =3D req->func;
-> -       *num_params =3D req->num_params + num_meta;
-> -       memcpy(param + num_meta, req->param,
-> -              sizeof(struct tee_param) * req->num_params);
-> -
->         return 0;
->  }
->
-> @@ -297,12 +328,21 @@ static struct optee_supp_req *supp_pop_req(struct o=
-ptee_supp *supp,
->         if (!req)
->                 return ERR_PTR(-ENOENT);
->
-> +       /* optee_supp_thrd_req() already returned to optee. */
-> +       if (req =3D=3D &invalid_req) {
-> +               req =3D ERR_PTR(-ENOENT);
-> +               goto failed_req;
-> +       }
-> +
->         if ((num_params - nm) !=3D req->num_params)
->                 return ERR_PTR(-EINVAL);
->
-> +       req->id =3D -1;
-> +       *num_meta =3D nm;
-> +failed_req:
->         idr_remove(&supp->idr, id);
->         supp->req_id =3D -1;
-> -       *num_meta =3D nm;
-> +
->
->         return req;
->  }
-> @@ -328,9 +368,8 @@ int optee_supp_send(struct tee_context *ctx, u32 ret,=
- u32 num_params,
->
->         mutex_lock(&supp->mutex);
->         req =3D supp_pop_req(supp, num_params, param, &num_meta);
-> -       mutex_unlock(&supp->mutex);
-> -
->         if (IS_ERR(req)) {
-> +               mutex_unlock(&supp->mutex);
->                 /* Something is wrong, let supplicant restart. */
->                 return PTR_ERR(req);
->         }
-> @@ -358,6 +397,7 @@ int optee_supp_send(struct tee_context *ctx, u32 ret,=
- u32 num_params,
->
->         /* Let the requesting thread continue */
->         complete(&req->c);
-> +       mutex_unlock(&supp->mutex);
->
->         return 0;
->  }
->
-> ---
-> base-commit: 3be1a7a31fbda82f3604b6c31e4f390110de1b46
-> change-id: 20250604-fix-use-after-free-8ff1b5d5d774
->
-> Best regards,
-> --
-> Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
->
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+Changes in v17:
+- Rebase onto v6.16-rc1.
+- Link to v16: https://lore.kernel.org/r/20250416-clone3-shadow-stack-v16-0-2ffc9ca3917b@kernel.org
+
+Changes in v16:
+- Rebase onto v6.15-rc2.
+- Roll in fixes from x86 testing from Rick Edgecombe.
+- Rework so that the argument is shadow_stack_token.
+- Link to v15: https://lore.kernel.org/r/20250408-clone3-shadow-stack-v15-0-3fa245c6e3be@kernel.org
+
+Changes in v15:
+- Rebase onto v6.15-rc1.
+- Link to v14: https://lore.kernel.org/r/20250206-clone3-shadow-stack-v14-0-805b53af73b9@kernel.org
+
+Changes in v14:
+- Rebase onto v6.14-rc1.
+- Link to v13: https://lore.kernel.org/r/20241203-clone3-shadow-stack-v13-0-93b89a81a5ed@kernel.org
+
+Changes in v13:
+- Rebase onto v6.13-rc1.
+- Link to v12: https://lore.kernel.org/r/20241031-clone3-shadow-stack-v12-0-7183eb8bee17@kernel.org
+
+Changes in v12:
+- Add the regular prctl() to the userspace API document since arm64
+  support is queued in -next.
+- Link to v11: https://lore.kernel.org/r/20241005-clone3-shadow-stack-v11-0-2a6a2bd6d651@kernel.org
+
+Changes in v11:
+- Rebase onto arm64 for-next/gcs, which is based on v6.12-rc1, and
+  integrate arm64 support.
+- Rework the interface to specify a shadow stack pointer rather than a
+  base and size like we do for the regular stack.
+- Link to v10: https://lore.kernel.org/r/20240821-clone3-shadow-stack-v10-0-06e8797b9445@kernel.org
+
+Changes in v10:
+- Integrate fixes & improvements for the x86 implementation from Rick
+  Edgecombe.
+- Require that the shadow stack be VM_WRITE.
+- Require that the shadow stack base and size be sizeof(void *) aligned.
+- Clean up trailing newline.
+- Link to v9: https://lore.kernel.org/r/20240819-clone3-shadow-stack-v9-0-962d74f99464@kernel.org
+
+Changes in v9:
+- Pull token validation earlier and report problems with an error return
+  to parent rather than signal delivery to the child.
+- Verify that the top of the supplied shadow stack is VM_SHADOW_STACK.
+- Rework token validation to only do the page mapping once.
+- Drop no longer needed support for testing for signals in selftest.
+- Fix typo in comments.
+- Link to v8: https://lore.kernel.org/r/20240808-clone3-shadow-stack-v8-0-0acf37caf14c@kernel.org
+
+Changes in v8:
+- Fix token verification with user specified shadow stack.
+- Don't track user managed shadow stacks for child processes.
+- Link to v7: https://lore.kernel.org/r/20240731-clone3-shadow-stack-v7-0-a9532eebfb1d@kernel.org
+
+Changes in v7:
+- Rebase onto v6.11-rc1.
+- Typo fixes.
+- Link to v6: https://lore.kernel.org/r/20240623-clone3-shadow-stack-v6-0-9ee7783b1fb9@kernel.org
+
+Changes in v6:
+- Rebase onto v6.10-rc3.
+- Ensure we don't try to free the parent shadow stack in error paths of
+  x86 arch code.
+- Spelling fixes in userspace API document.
+- Additional cleanups and improvements to the clone3() tests to support
+  the shadow stack tests.
+- Link to v5: https://lore.kernel.org/r/20240203-clone3-shadow-stack-v5-0-322c69598e4b@kernel.org
+
+Changes in v5:
+- Rebase onto v6.8-rc2.
+- Rework ABI to have the user allocate the shadow stack memory with
+  map_shadow_stack() and a token.
+- Force inlining of the x86 shadow stack enablement.
+- Move shadow stack enablement out into a shared header for reuse by
+  other tests.
+- Link to v4: https://lore.kernel.org/r/20231128-clone3-shadow-stack-v4-0-8b28ffe4f676@kernel.org
+
+Changes in v4:
+- Formatting changes.
+- Use a define for minimum shadow stack size and move some basic
+  validation to fork.c.
+- Link to v3: https://lore.kernel.org/r/20231120-clone3-shadow-stack-v3-0-a7b8ed3e2acc@kernel.org
+
+Changes in v3:
+- Rebase onto v6.7-rc2.
+- Remove stale shadow_stack in internal kargs.
+- If a shadow stack is specified unconditionally use it regardless of
+  CLONE_ parameters.
+- Force enable shadow stacks in the selftest.
+- Update changelogs for RISC-V feature rename.
+- Link to v2: https://lore.kernel.org/r/20231114-clone3-shadow-stack-v2-0-b613f8681155@kernel.org
+
+Changes in v2:
+- Rebase onto v6.7-rc1.
+- Remove ability to provide preallocated shadow stack, just specify the
+  desired size.
+- Link to v1: https://lore.kernel.org/r/20231023-clone3-shadow-stack-v1-0-d867d0b5d4d0@kernel.org
+
+---
+Mark Brown (8):
+      arm64/gcs: Return a success value from gcs_alloc_thread_stack()
+      Documentation: userspace-api: Add shadow stack API documentation
+      selftests: Provide helper header for shadow stack testing
+      fork: Add shadow stack support to clone3()
+      selftests/clone3: Remove redundant flushes of output streams
+      selftests/clone3: Factor more of main loop into test_clone3()
+      selftests/clone3: Allow tests to flag if -E2BIG is a valid error code
+      selftests/clone3: Test shadow stack support
+
+ Documentation/userspace-api/index.rst             |   1 +
+ Documentation/userspace-api/shadow_stack.rst      |  44 +++++
+ arch/arm64/include/asm/gcs.h                      |   8 +-
+ arch/arm64/kernel/process.c                       |   8 +-
+ arch/arm64/mm/gcs.c                               |  61 +++++-
+ arch/x86/include/asm/shstk.h                      |  11 +-
+ arch/x86/kernel/process.c                         |   2 +-
+ arch/x86/kernel/shstk.c                           |  57 +++++-
+ include/asm-generic/cacheflush.h                  |  11 ++
+ include/linux/sched/task.h                        |  17 ++
+ include/uapi/linux/sched.h                        |   9 +-
+ kernel/fork.c                                     |  96 +++++++--
+ tools/testing/selftests/clone3/clone3.c           | 226 ++++++++++++++++++----
+ tools/testing/selftests/clone3/clone3_selftests.h |  65 ++++++-
+ tools/testing/selftests/ksft_shstk.h              |  98 ++++++++++
+ 15 files changed, 633 insertions(+), 81 deletions(-)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20231019-clone3-shadow-stack-15d40d2bf536
+
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
+
