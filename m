@@ -1,93 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA0DC226D09;
-	Mon,  9 Jun 2025 23:21:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3110207DF7;
+	Mon,  9 Jun 2025 23:22:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749511275; cv=none; b=utPb1pat3H4Subdcxu7jhMeXEv4TKIGgRgP/gYQAbE3yWPkiYj3j9oMvrraFGUkqQkmhDAlz1mP5OWD2PcxQO462XxjX35/j0E+s//cwJuX7L3Oit86VWwV2XTL/aUZuQgNeJr+8qqfr4nq7LePMBSxJEecI2PwDz5jb1x131IU=
+	t=1749511348; cv=none; b=RAeBZ/dSVuc2hHafk8+QJmyAljMenssy8Y/0stghC1c0et/PaemrYYgWExeCrX1grqbEnWEPlEu6wDRVgzVJ+Yc1s7Bwupicucu2hf9d0hQm1dZUMfOb9pq4ABVQ8ZPnGQjpuUAyIcKG2zpnENcIRY3wTFDHM9EwPE+XG5LYFak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749511275; c=relaxed/simple;
-	bh=t/0TK/aXnW9B9Zvjni3rqnbmiMIAuNBhtmaoYddFqfc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ds9gOPQAspst+Bf8g+tq6OD3jVjNKXECnLw0jWkmirXaP9rjWBmqGot612bKnr159cInDFNgnhSFaFHgtQ9rvC+wiZe4EB0Kr20DZX5mO0D92tgD5TQu7AVngSsp+7fQu48SALy8GnT5623U/8uVao3gtLf3LvZ3llbrDcISFPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZHt8cyTQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749511348; c=relaxed/simple;
+	bh=2pZxcvn9dwYkFHGMysoejb290t6liiYtHhqJiwoIRTM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Nz+3252wGAaEeuCLcPBXeFw+aYtaCWgx7PfRdCN5eJknaNYkjq6xkV81eTbTx++k08pqeRiBs44o5pfBx+b2/luklGrBot1w30EW+IKlBwlTX1NgHzvIgeHSrSL1GA/iinJ9C1NvZNAujDuIKZlb5vgfltpr3LH84X913WB5ieo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FMENuWgd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZHt8cyTQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C21BC4CEEB;
-	Mon,  9 Jun 2025 23:21:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FMENuWgd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE114C4CEEB;
+	Mon,  9 Jun 2025 23:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749511274;
-	bh=t/0TK/aXnW9B9Zvjni3rqnbmiMIAuNBhtmaoYddFqfc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZHt8cyTQOHGMTxo94G8J/zdicSC8ewUocWIhP83xkkYfwrL40uRY58PTBkoeEgvaq
-	 5fr/H2g1hnDAZshICdgEiHF9Km3gwwkfJAC/l0MTOl/4199UOlgHrW4h9j/WZQKvGX
-	 uT3UwEN7e0j4v72so8flDqhWntky1Trx0xgQAK6Ej2HKEZwXwZHBHPefr5K9e7FwIl
-	 ZdrHE5l922XdKUaXfXpY91ag1MfpYFtZCDo13H5qElA1ibohl7lwKfhvcTKoy7KK/Q
-	 nM+yEmB0SaFeKWA2kXU0FTQ/fyb0k0E5cBjZGTJR0s+QyFTT+f0z+yCRY2oSXmIlJ1
-	 sxnkQO7sFHbTg==
-Date: Mon, 9 Jun 2025 16:21:11 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Joe Lawrence <joe.lawrence@redhat.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, live-patching@vger.kernel.org, 
-	Song Liu <song@kernel.org>, laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
-	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
-	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
-	Puranjay Mohan <puranjay@kernel.org>
-Subject: Re: [PATCH v2 52/62] objtool/klp: Introduce klp diff subcommand for
- diffing object files
-Message-ID: <2oublab5wrfzneispi4sqb6feiw2abc3mzxozmx53btuvseljh@3qsmyluomyir>
-References: <cover.1746821544.git.jpoimboe@kernel.org>
- <f6ffe58daf771670a6732fd0f741ca83b19ee253.1746821544.git.jpoimboe@kernel.org>
- <aEcos4fig5KVDQSp@redhat.com>
+	s=k20201202; t=1749511348;
+	bh=2pZxcvn9dwYkFHGMysoejb290t6liiYtHhqJiwoIRTM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FMENuWgdVh5N9AGnA4Cay0jv2l4LoCTgQ2WK8s8FqufjyvvLPMcg8qeiQOTcaQo6y
+	 MVXoTRrdjjYX4V6lfGBwTUXE89Yp2EgW9bmHMogmwvUNrf6VWBJPyf1LWpTlOptb58
+	 jOshZF/xQnZ7d3G+CKejlA2NCV+xxzCwosNMuYqdtoy4ER5i/6v5WVyfSdKmiSgYYi
+	 dtbHIGyaoabEOP53ZmDHC61khVerdrVRIoL7GPxTsxmABBlzQAdl6tQwWYJ3mtvX7G
+	 NW5go0rXT7cNtXCvU/ei5OcqaAK2HehATJ0ljHmASmnzkF/UhHJ5J+js0AtYOWsQG2
+	 ei7HxGNRaOyeA==
+Date: Mon, 9 Jun 2025 16:22:26 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Dragos Tatulea <dtatulea@nvidia.com>
+Cc: Mark Bloch <mbloch@nvidia.com>, "David S. Miller" <davem@davemloft.net>,
+ Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, Andrew
+ Lunn <andrew+netdev@lunn.ch>, saeedm@nvidia.com, gal@nvidia.com,
+ leonro@nvidia.com, tariqt@nvidia.com, Leon Romanovsky <leon@kernel.org>,
+ Simon Horman <horms@kernel.org>, Richard Cochran
+ <richardcochran@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>, netdev@vger.kernel.org,
+ linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, Cosmin Ratiu <cratiu@nvidia.com>
+Subject: Re: [PATCH net-next v3 07/12] net/mlx5e: SHAMPO: Headers page pool
+ stats
+Message-ID: <20250609162226.2da77646@kernel.org>
+In-Reply-To: <ga65ehnqozlkoh5hjuujdv5m5yetmena7qpt22evtqgwq7tzdw@c26wfwrc3hkx>
+References: <20250609145833.990793-1-mbloch@nvidia.com>
+	<20250609145833.990793-8-mbloch@nvidia.com>
+	<20250609082152.29244fca@kernel.org>
+	<ga65ehnqozlkoh5hjuujdv5m5yetmena7qpt22evtqgwq7tzdw@c26wfwrc3hkx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aEcos4fig5KVDQSp@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 09, 2025 at 02:32:19PM -0400, Joe Lawrence wrote:
-> On Fri, May 09, 2025 at 01:17:16PM -0700, Josh Poimboeuf wrote:
-> > +static int validate_ffunction_fdata_sections(struct elf *elf)
-> > +{
-> > +	struct symbol *sym;
-> > +	bool found_text = false, found_data = false;
-> > +
-> > +	for_each_sym(elf, sym) {
-> > +		char sec_name[SEC_NAME_LEN];
-> > +
-> > +		if (!found_text && is_func_sym(sym)) {
-> > +			snprintf(sec_name, SEC_NAME_LEN, ".text.%s", sym->name);
-> > +			if (!strcmp(sym->sec->name, sec_name))
-> > +				found_text = true;
-> > +		}
-> > +
-> > +		if (!found_data && is_object_sym(sym)) {
-> > +			snprintf(sec_name, SEC_NAME_LEN, ".data.%s", sym->name);
-> > +			if (!strcmp(sym->sec->name, sec_name))
-> > +				found_data = true;
-> 
-> Hi Josh,
-> 
-> Should we check for other data section prefixes here, like:
-> 
-> 			else {
-> 				snprintf(sec_name, SEC_NAME_LEN, ".rodata.%s", sym->name);
-> 				if (!strcmp(sym->sec->name, sec_name))
-> 					found_data = true;
-> 			}
+On Mon, 9 Jun 2025 15:31:00 +0000 Dragos Tatulea wrote:
+> On Mon, Jun 09, 2025 at 08:21:52AM -0700, Jakub Kicinski wrote:
+> > On Mon, 9 Jun 2025 17:58:28 +0300 Mark Bloch wrote:  
+> > > Expose the stats of the new headers page pool.  
+> > 
+> > Y'all asked for clarifications on this patch 2 weeks after v2 was
+> > posted and then reposted v3 before I could answer. This patch must go.  
+> Ack. Sorry about the too short window of response. Patch will be dropped
+> in v4.
 
-Indeed.  And also .bss.*.
-
-> At the same time, while we're here, what about other .text.* section
-> prefixes?
-
-AFAIK, .text.* is the only one.
-
--- 
-Josh
+Thanks! FWIW the rest indeed LGTM.
