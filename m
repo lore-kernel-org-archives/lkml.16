@@ -1,175 +1,121 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B371E766F
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 11:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D7444A3C;
+	Mon,  9 Jun 2025 11:32:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749468321; cv=none; b=f7d+tQpoopttRYmkMCK2+ljeO+yiRkivcepoQqFp28djvvin2CLIAzbjFixbQseP++R6eCV57JlRofO+FuYSP2HfXDC/qCWK/NMgyCFsKYnKb9DCyi8kfBfUKbcYa9C/vglIvB+8I/CCRKHHt4fct6FLGnLVySNHm52nSGDqkXs=
+	t=1749468735; cv=none; b=ezs52TM9xDb/gaVdObzpNxB9oEu0tBNpAIWkS9HJCjwLZBtTo8WDKiQemgsavGaoVbHnECaqCw4HvNeHn46U8y0pv0nz+XsnwueytwvEAf0c1r/uoTe/KbjB8O/ihMD60YXlxYoHSrw/9DNjbneLsWxU6iEsVH9Sb6BeHriWHM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749468321; c=relaxed/simple;
-	bh=PAtdEJ9v9jfzk9L7TyadJUNVA2PMKdNcs1u9d3LhNWU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DYeVxrh0DXLinkYx8tyMycgjBSf4V2Ckr/UM84tfqw3d4IOABXG/zwU2YipXY2d32FsaFKC5CLvfDa/T4/52Hsw68kRoIxar1ymQ2qFB7MVMMS2cMoxC3yayRLoyJR1GD2+PyQZlMWiq9x+KpbKTlBunzuImdtga4eYAUiNqiqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=SHBQQjq0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VoLZ4iyh; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=SHBQQjq0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VoLZ4iyh; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="SHBQQjq0";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VoLZ4iyh";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="SHBQQjq0";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VoLZ4iyh"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 021A721182;
-	Mon,  9 Jun 2025 11:25:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749468318; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hsBQltkCVe5D2i0wiUV1DVAyAaiF31Q0/ZQK/fFHigE=;
-	b=SHBQQjq0Xd/pKI4LTO6+4uuqxy4pMrq1JxxfGlhBzcvE4WlBFlkUpz+WXuv/fNE8MC4Zku
-	+UrT1+04+4HLjSijs028c/igQ398jYXydf78Wl1KHKXZj8NPTr0O/MUhQd604jIBvO7SZG
-	E4eh2S34IKKWGEZo8IiB0rCDTzKaBPc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749468318;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hsBQltkCVe5D2i0wiUV1DVAyAaiF31Q0/ZQK/fFHigE=;
-	b=VoLZ4iyh6N6pIX+VgRHdtXvf+a08nglTf6SQ4S11geiXHgyExZKl9DAr/gcMkvklvh8Fov
-	twVHak2Trn6e1dCA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=SHBQQjq0;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=VoLZ4iyh
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749468318; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hsBQltkCVe5D2i0wiUV1DVAyAaiF31Q0/ZQK/fFHigE=;
-	b=SHBQQjq0Xd/pKI4LTO6+4uuqxy4pMrq1JxxfGlhBzcvE4WlBFlkUpz+WXuv/fNE8MC4Zku
-	+UrT1+04+4HLjSijs028c/igQ398jYXydf78Wl1KHKXZj8NPTr0O/MUhQd604jIBvO7SZG
-	E4eh2S34IKKWGEZo8IiB0rCDTzKaBPc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749468318;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hsBQltkCVe5D2i0wiUV1DVAyAaiF31Q0/ZQK/fFHigE=;
-	b=VoLZ4iyh6N6pIX+VgRHdtXvf+a08nglTf6SQ4S11geiXHgyExZKl9DAr/gcMkvklvh8Fov
-	twVHak2Trn6e1dCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E79A0137FE;
-	Mon,  9 Jun 2025 11:25:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 5pY5OJ3ERmg0OwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 09 Jun 2025 11:25:17 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id A046DA094C; Mon,  9 Jun 2025 13:25:17 +0200 (CEST)
-Date: Mon, 9 Jun 2025 13:25:17 +0200
-From: Jan Kara <jack@suse.cz>
-To: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
-	kees@kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH] binfmt_elf: use check_mul_overflow() for size calc
-Message-ID: <j7qo6dmmx2hu34453zfdp6rjrtlsyckjilm6qufe2qyj4dc6ei@su6omrup5rli>
-References: <20250607082844.8779-1-pranav.tyagi03@gmail.com>
+	s=arc-20240116; t=1749468735; c=relaxed/simple;
+	bh=mRDJbWLmmCHETsb5PuNct2QeQlKbO5aeeo2ZTshg8B0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TBRIVGm0IJSKLz5meT6KQ5JWM3uDObzvnw6vKpaZlIljG0fkClLH/YT2g1yFN+m+qDxDtJ2quSy+ThWkA9lNwInusCulgBJZLpgevBDl1lBQyYfompLYxlNoFDIT71DyC99/Ib6p7xapU5WfXuXq7E+c+ftRQs0ygbzjFi/oFw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn; spf=pass smtp.mailfrom=chainsx.cn; arc=none smtp.client-ip=18.169.211.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chainsx.cn
+X-QQ-mid: zesmtpgz1t1749468649t03990109
+X-QQ-Originating-IP: DgbvBjSokVTQG43IbUieazUxITiBXvTzFEVmAUCGFIk=
+Received: from chainsx-ubuntu-server.lan ( [182.245.65.180])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 09 Jun 2025 19:30:47 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 9665082274307116488
+EX-QQ-RecipientCnt: 16
+From: Hsun Lai <i@chainsx.cn>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: i@chainsx.cn,
+	heiko@sntech.de,
+	andrew@lunn.ch,
+	inindev@gmail.com,
+	quentin.schulz@cherry.de,
+	jonas@kwiboo.se,
+	sfr@canb.auug.org.au,
+	nicolas.frattaroli@collabora.com,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	krzysztof.kozlowski@linaro.org,
+	linux-rockchip@lists.infradead.org
+Subject: [RESEND PATCH v5 0/2] Add support for Firefly Station-M3/ROC-RK3588S-PC
+Date: Mon,  9 Jun 2025 19:30:42 +0800
+Message-Id: <20250609113044.8846-1-i@chainsx.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250607082844.8779-1-pranav.tyagi03@gmail.com>
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 021A721182
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-2.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	ARC_NA(0.00)[];
-	URIBL_BLOCKED(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:dkim,suse.cz:email];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_TO(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	TO_DN_SOME(0.00)[]
-X-Spam-Score: -2.51
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:chainsx.cn:qybglogicsvrsz:qybglogicsvrsz3a-0
+X-QQ-XMAILINFO: MjlOSqg8Riw0yiHnc7w/miRMh0pW4B5/XCjNIs6r0zyd6XZwtH/XQn3c
+	CDfYXtiUiEdlCpE8HXNfMGKVah4VLoosN+3xUsKZKOaK3sYXscneRKNClatFbxe4jF3iPRM
+	TdfrtB9HDneMnNFb/roBi4i+LgZL3DEgU0OB5Ugxa3Vw6OPtpetVlz/8ba19KVv2U/rsdcs
+	UF7FV+g5+TbuvXjplfDBWBYrH0zkWdYgsVFrfeDXzuksi/4HPaH3PNGHgnn51N0AGx/BwPJ
+	+X22OuGLAHg2lAwI19L/B+sV7zq2BBP7zXg0hGphvALug/3hNR8tVtqnoBmJfAykxiUnniU
+	qVzHjlHZ5FtJ/6DP2AYpw4KeSjphHWsobN4LnHzGkAjD2aZ7XVTX6yXrECulGXivgV29WZo
+	36da4I+ZAF012AsbTMQICDVp19hcr+sfirnf93qJYw+Q14XzObhEYwl4lbqt5aCm+J4jpaL
+	Dp9Ei9j96LXokNGWPspYB9koUZhmG1aNXRz9JFfPwkG71A1o6d919BFRQ9gjulnq7ugI4sl
+	HaWkGRhMgHOkK0/B/gW0YZXYhEQkuiKfueA3PQZq9cinss4XSH4MiYYZPZAhGYJypTOydDQ
+	WPt7vHJ0RBhHzoPMD8J+aFWEGbs4hGc4gI3kCOQpAjRDx/e3cRVBpr3YW4c6zrScOLa9Cvo
+	QB9DOwn0NAtEECzpmrLgz173J1oTa/DrC2fJCggKyFWnj9AEKZ9P+w3AQk+YSYH1rCkBP4c
+	VAdbPjIMR++Wn3Clrg+yTe5J31gYkeq90s9FhOLAGEbYT3F2MYTCZV0qGYDl0m8f25P9O0q
+	tG7xJOXc7b138GL0X0017Fupz7N/C0RAkQ2OoigRQmVT1YpYjnaJls8MGDuhr2JuzVXiPA5
+	B6EdS43Hut88qq6oIv8DweRTKPu8cIoa2EtYKhSnNKKN1ArI4tKM+jbU9Hau2mr75zRZPkE
+	DFHwv7LBFAi6Ay3DzLTyE5Xu2PLU3kaHIrQiQjVJHAxMRLgMNdapI0OBW5Urxlta5IP8=
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
-On Sat 07-06-25 13:58:44, Pranav Tyagi wrote:
-> Use check_mul_overflow() to safely compute the total size of ELF program
-> headers instead of relying on direct multiplication.
-> 
-> Directly multiplying sizeof(struct elf_phdr) with e_phnum risks integer
-> overflow, especially on 32-bit systems or with malformed ELF binaries
-> crafted to trigger wrap-around. If an overflow occurs, kmalloc() could
-> allocate insufficient memory, potentially leading to out-of-bound
-> accesses, memory corruption or security vulnerabilities.
-> 
-> Using check_mul_overflow() ensures the multiplication is performed
-> safely and detects overflows before memory allocation. This change makes
-> the function more robust when handling untrusted or corrupted binaries.
-> 
-> Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
-> Link: https://github.com/KSPP/linux/issues/92
+This series add support for Firefly Station-M3/ROC-RK3588S-PC.
 
-Looks good. Feel free to add:
+Info of device can be found at:
+https://wiki.t-firefly.com/en/Station-M3/index.html
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Changes in v5:
+- Make led-1 off by default (Chukun Pan, v4)
+- Add color settings for led (Chukun Pan, v4)
+- Remove vcc5v0_usbdcin
+- Put enable/gpio before regulator (Chukun Pan, v4)
+- Remove always-on and boot-on from vcc5v0_host (Chukun Pan, v4)
+- Update the name of vbus_typec (Chukun Pan, v4)
+- Remove always-on and boot-on from vbus5v0_typec (Chukun Pan, v4)
+- Put pinctrl-names before pinctrl-0 (Chukun Pan, v4)
+- Remove usb_con node
+- Remove extra blank lines (Chukun Pan, v4)
+- Add phy-supply for u2phy3_host (Chukun Pan, v4)
 
-								Honza
+Changes in v4:
+- Update the name of the regulator
+- Remove the i2s5_8ch node
 
-> ---
->  fs/binfmt_elf.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> index a43363d593e5..774e705798b8 100644
-> --- a/fs/binfmt_elf.c
-> +++ b/fs/binfmt_elf.c
-> @@ -518,7 +518,10 @@ static struct elf_phdr *load_elf_phdrs(const struct elfhdr *elf_ex,
->  
->  	/* Sanity check the number of program headers... */
->  	/* ...and their total size. */
-> -	size = sizeof(struct elf_phdr) * elf_ex->e_phnum;
-> +	
-> +	if (check_mul_overflow(sizeof(struct elf_phdr), elf_ex->e_phnum, &size))
-> +		goto out;
-> +
->  	if (size == 0 || size > 65536 || size > ELF_MIN_ALIGN)
->  		goto out;
->  
-> -- 
-> 2.49.0
-> 
+Changes in v3:
+- Update the name of leds
+- Add more cpu nodes
+- Update mdio compatible
+- Fix the order in the node
+- Add the default serial port(uart2)
+- Patch 1: Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
+
+Changes in v2:
+- Fix rgmii delays
+
+Changes in v1:
+- Add support for Firefly ROC-RK3588S-PC
+
+Hsun Lai (2):
+  dt-bindings: arm: rockchip: Add Firefly ROC-RK3588S-PC
+  arm64: dts: rockchip: add DTs for Firefly ROC-RK3588S-PC
+
+ .../devicetree/bindings/arm/rockchip.yaml     |   5 +
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ .../boot/dts/rockchip/rk3588s-roc-pc.dts      | 838 ++++++++++++++++++
+ 3 files changed, 844 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dts
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.34.1
+
