@@ -1,243 +1,121 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A8C12E7E;
-	Mon,  9 Jun 2025 12:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0061E98FB;
+	Mon,  9 Jun 2025 12:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749471748; cv=none; b=njdeXtuVaxRbycSqa/xMLawnpqjyZJqYwgj8htPDH+5K2VtF76qN+FCJX63jFmIjh9hDfM0FgNtZ91uWLSY0RZLSXFgLnQsvll/jdBwIfJZrrWdZAwHrveRixRHEQ8FvEGS2U9jwdYezo33PAvDAp33KjaB103zJHZZXCoLy+ZI=
+	t=1749471767; cv=none; b=nVF3PFJRcaQVNpyO4jkpM3KQZc2BOFf6CxApvIdGdQmeI0jWlg9m4ytgMuD484u+rJM2YVAz4GSJvDdZdtQ6mnmTBKsiV7LBZckL37wQX69wZRkvSDffFY4DmiehRjj3wGmpaI6k1VA/5/Y4ppVXff4zHcBlSpp3gAMrDPGkpgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749471748; c=relaxed/simple;
-	bh=FhUb+ZXql8dArcka8IrDv/E1OATdkq2BGb4ry+i1JHI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NCK2Z2uknNQqkTNykPhhiKeTq0NXJDG4K5Dog0fLTqyqGDMAxH9BU9D7yNnG1BHNOIvDXyg7KQaIxPlJZ86U/XMSnmTYtC2EJ8/1Hc/OWboiTw8554GiQhPnQPT5DMjAv3fLd/rbaR4UXeBHVNN5RFCv3/Z2ofnyGw9zi1bZM18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SAz8l2W/; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749471767; c=relaxed/simple;
+	bh=6l8ZTjY0d0DnRF5BA8fJMCrXwBY8OOHKBBbx8rUjqyc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=A7fHjBpyHlk3FfU+d7dKThH6hi9B0WZ69ZemQTIMuTKM5x3BuVvTH8+ZSh+pTU7aJJjO+s1Bea22wkh7bLvz8fWJrQm/+NcudtIrafe7R8OSYyRcL4hnbk/rmWgReB6xxCkp7YnfIpWBpOi5naZIMGjr0NVfKr9cz6pK+ckZjgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ljoFAD+3; arc=none smtp.client-ip=217.70.178.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SAz8l2W/"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-742c73f82dfso3290758b3a.2;
-        Mon, 09 Jun 2025 05:22:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749471747; x=1750076547; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YBch+ffur1O0Rgja7qluq4MVSQH3W827o3L8nkl80n0=;
-        b=SAz8l2W/P47BMU9FJxDsE51sBska+Ba/5HFbVW3fqGXTur4aoCl20ZpSoxNakGkIXb
-         +V8vb2A/phyHCFqQLt8Deqjun5s7VNEyVLlbrF8IHVpN9ZHqW7KVVcpElZgYBM+CDFqB
-         1dinPfqoJlqE2RGmOiHxUPFuc+JLeH37KaLPwaJt2MwMvQhMoHpAW0cnyAM4ZqiopL/o
-         VFtsVQc+cS5d8o2+SqzwqxuAJJmROs9YpOjPU+rQ+VO0mBY9WF4bCnzM8uCASVniH4Qz
-         lFcuGB2z5ti6+b7AwKeK/mcOmnFj6D0vNXky9aiydKJUYOtiVFTcvuNJi1pRvVRMKpMv
-         NUDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749471747; x=1750076547;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YBch+ffur1O0Rgja7qluq4MVSQH3W827o3L8nkl80n0=;
-        b=CPzimJW8/oT3J76d+WQTsPJj0/PMUVfUjzmiq4FgEmOlyHhjASuwyIy6xQPjIRk/ub
-         ifVPeooAizcumzckhrDIq8IhvFlcxzniuZyY6jgdcOf2UEGGcW9ZHWzsJQQASwWGhqOn
-         h96pcItcXxBoSzCt4ek/MhXw3mt0/du/kgBwbeY+SNA3YdN92DbEyCxigfZx7RDT56YM
-         sLZqVyroAl9iHy2TpjObFxbvngOElEUzlIhTVwskzKNGSWwGqs9H21NUbGCrD9I/N6Kz
-         hh+yQ7FBQBAB/SZ0PeTPvQpbKX8bmCiTFqLGFB9itOi/CbJbEY9/Dmk1xXXAuwLPFOAZ
-         2pPg==
-X-Forwarded-Encrypted: i=1; AJvYcCX2qEYFtXaF12HmpqmZswq10Galj21tL7Dqwp2LYX98u9CBMnI58wVvBN0/endXk7ArAGk5kJieHCyoaPw=@vger.kernel.org, AJvYcCX7Tk2jn5RnJPC+NhGijemn+D3AszblPBzdybUgoNRD3Veo81N0chHTCLxvCAg+GUP7ClwnJAv9FdVrIyejsIc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuufwIrNJl1xZbXv5TD+tN7PS7gucYQ32F0+cwin9HaMe4rppd
-	S37aZJ3feOX+X/0NVZLycMLQkXtQtJz3rfgs3DZa8k1jzipnxq18nrIo
-X-Gm-Gg: ASbGncsKWPLaT7gM+3jDhXKXQox29OCd212csZKYJYcrSbwd9uITrrSHJiei5VLIZxi
-	arBI++m0bk5HjehuBnTu7m57kSzXaZDbgg9C6dGh+M0HIn1JU8xKvRZGNCXtdAe4H+8+B8KCjAF
-	KrpO/6CAfWFvPPZ2Qh2IHaMOI46WSV1a4KoQb91tuugOvb8GQHU+mF9Co1GBHjs7I4ne0jJI71K
-	6rP52YgOUY2kk0UefqkiFmTeSntYIFZXvirWn4phkWVTMxH/61YKu5INju9kIoEojiPwzE0tk88
-	YiPDJ3JxYqeho6miA83ZmDVw+qdhbf9a1jBfWwVpZmnknocT+lYJSoa2Ffwvznyl4kKjaSj8
-X-Google-Smtp-Source: AGHT+IFN/6jpjwnUWAnmieziowXquVGyIPIEOCFl8zdXOz/2r+NiQoJ5BLmsN49W1/EDBbcGUv3y0g==
-X-Received: by 2002:a05:6a21:6e41:b0:21f:62e7:cd08 with SMTP id adf61e73a8af0-21f62e7ce8dmr5864666637.8.1749471746484;
-        Mon, 09 Jun 2025 05:22:26 -0700 (PDT)
-Received: from pop-os.. ([201.49.69.163])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5f7827c0sm5170285a12.62.2025.06.09.05.22.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 05:22:26 -0700 (PDT)
-From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-To: rafael@kernel.org,
-	viresh.kumar@linaro.org,
-	dakr@kernel.org,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	mcgrof@kernel.org,
-	russ.weight@linux.dev,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	lossin@kernel.org,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	leitao@debian.org,
-	gregkh@linuxfoundation.org,
-	david.m.ertman@intel.com,
-	ira.weiny@intel.com,
-	leon@kernel.org,
-	fujita.tomonori@gmail.com,
-	tamird@gmail.com,
-	igor.korotin.linux@gmail.com,
-	walmeida@microsoft.com,
-	anisse@astier.eu
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	nouveau@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	rust-for-linux@vger.kernel.org,
-	trintaeoitogc@gmail.com
-Subject: [PATCH] rust: module: remove deprecated author key
-Date: Mon,  9 Jun 2025 09:22:00 -0300
-Message-Id: <20250609122200.179307-1-trintaeoitogc@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ljoFAD+3"
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::229])
+	by mslow3.mail.gandi.net (Postfix) with ESMTP id 95E9E58052E;
+	Mon,  9 Jun 2025 12:02:51 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A901243280;
+	Mon,  9 Jun 2025 12:02:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749470564;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hfNgM/UwK9Bgs6Z72i34/JIUtkeJLfZjGuO9+tnxnH0=;
+	b=ljoFAD+30tSZSx407+2w+YNK1fKSnD3cdTADkIFdznx6Rt/JlyhivF0fVhvp2IPAfRttnx
+	4XMFp8fcOrGTdM/valSvUkptmZH4+/E2gWu6M10YK2vX7bQztIc+WLyMJjhBMe/mMH8FwC
+	BcyNvFdPsVHWLxxArDn+0i5sVArRnHEfsr3Sm23MyzqZoTBme1lzWFHSSQsZd5YY4Owr6a
+	rZ4nlIJ1ye7QGZ4cEonhqEZvyVzZ/OiSCkLu6xJdgzSLwdI3wH1u0KlQbnTC39B/lasPAP
+	CHLZ/MpJy/VFzNgHfqV/3+T1Z4pBc9FBIqErUz5FBSawySGjltulFdGgXedaeQ==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Date: Mon, 09 Jun 2025 14:02:34 +0200
+Subject: [PATCH v3] arm64: dts: imx8qm: add system controller watchdog
+ support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250609-imx8qm-watchdog-v3-1-5c22618606c8@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAFnNRmgC/2XNQQ6CMBCF4auQrq1ppwXBlfcwLkpbYBKh2pKKI
+ dzdghsNy/8l881MgvVoAzlnM/E2YkA3pBCHjOhODa2laFITYJAzYIJiP5XPnr7UqDvjWlqXohB
+ CQinBknT18LbBaROvt9QdhtH59/Yg8nX9WpKddlbklFFgGnhV87wxcKmdG+84HLXryapF+BG43
+ AuQBCkrKHJVGSXtv7AsywcuBI9e8gAAAA==
+To: Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Dong Aisheng <aisheng.dong@nxp.com>, 
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, 
+ Oliver Graute <oliver.graute@kococonnector.com>, 
+ Frank Li <Frank.Li@nxp.com>, Thomas Richard <thomas.richard@bootlin.com>
+X-Mailer: b4 0.14.1
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdelvdejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkvfevofesthejredtredtjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiveefueeiveffvedvfeetvdfhkeeuudefkeeuffefgfekudelheeiffduveeikeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemuggtkedumegrrggutdemfhgutggrmegttgdurgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemuggtkedumegrrggutdemfhgutggrmegttgdurgdphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduledprhgtphhtthhopefhrhgrnhhkrdfnihesnhigphdrtghomhdprhgtphhtthhopehimhigsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnv
+ ghlrdhorhhgpdhrtghpthhtoheplhhinhhugiesrhhovggtkhdquhhsrdhnvghtpdhrtghpthhtohepfihimheslhhinhhugidqfigrthgthhguohhgrdhorhhgpdhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: thomas.richard@bootlin.com
 
-Commit 38559da6afb2 ("rust: module: introduce `authors` key") introduced
-a new `authors` key to support multiple module authors, while keeping
-the old `author` key for backward compatibility.
+Add system controller watchdog support for i.MX8QM.
 
-Now that all in-tree modules have migrated to `authors`, remove:
-1. The deprecated `author` key support from the module macro
-2. Legacy `author` entries from remaining modules
-
-Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+Acked-by: Oliver Graute <oliver.graute@kococonnector.com>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 ---
- drivers/cpufreq/rcpufreq_dt.rs        | 2 +-
- drivers/gpu/drm/nova/nova.rs          | 2 +-
- drivers/gpu/nova-core/nova_core.rs    | 2 +-
- rust/kernel/firmware.rs               | 2 +-
- rust/macros/module.rs                 | 6 ------
- samples/rust/rust_configfs.rs         | 2 +-
- samples/rust/rust_driver_auxiliary.rs | 2 +-
- 7 files changed, 6 insertions(+), 12 deletions(-)
+Third version of this series. I just rebased it on v6.16-rc1, dropped the
+binding patch (already applied upstream) and took RB/AB tags for the
+devicetree patch.
+---
+Changes in v3:
+- all: rebase on v6.16-rc1
+- bindings: remove patch
+- devicetree: take "Acked-by: Oliver Graute <oliver.graute@kococonnector.com>"
+- devicetree: take "Reviewed-by: Frank Li <Frank.Li@nxp.com>"
+- Link to v2: https://lore.kernel.org/r/20250414-imx8qm-watchdog-v2-0-449265a9da4e@bootlin.com
 
-diff --git a/drivers/cpufreq/rcpufreq_dt.rs b/drivers/cpufreq/rcpufreq_dt.rs
-index 94ed81644fe1..bdf4b844de42 100644
---- a/drivers/cpufreq/rcpufreq_dt.rs
-+++ b/drivers/cpufreq/rcpufreq_dt.rs
-@@ -220,7 +220,7 @@ fn probe(
- module_platform_driver! {
-     type: CPUFreqDTDriver,
-     name: "cpufreq-dt",
--    author: "Viresh Kumar <viresh.kumar@linaro.org>",
-+    authors: ["Viresh Kumar <viresh.kumar@linaro.org>"],
-     description: "Generic CPUFreq DT driver",
-     license: "GPL v2",
- }
-diff --git a/drivers/gpu/drm/nova/nova.rs b/drivers/gpu/drm/nova/nova.rs
-index 902876aa14d1..64fd670e99e1 100644
---- a/drivers/gpu/drm/nova/nova.rs
-+++ b/drivers/gpu/drm/nova/nova.rs
-@@ -12,7 +12,7 @@
- kernel::module_auxiliary_driver! {
-     type: NovaDriver,
-     name: "Nova",
--    author: "Danilo Krummrich",
-+    authors: ["Danilo Krummrich"],
-     description: "Nova GPU driver",
-     license: "GPL v2",
- }
-diff --git a/drivers/gpu/nova-core/nova_core.rs b/drivers/gpu/nova-core/nova_core.rs
-index 618632f0abcc..f405d7a99c28 100644
---- a/drivers/gpu/nova-core/nova_core.rs
-+++ b/drivers/gpu/nova-core/nova_core.rs
-@@ -13,7 +13,7 @@
- kernel::module_pci_driver! {
-     type: driver::NovaCore,
-     name: "NovaCore",
--    author: "Danilo Krummrich",
-+    authors: ["Danilo Krummrich"],
-     description: "Nova Core GPU driver",
-     license: "GPL v2",
-     firmware: [],
-diff --git a/rust/kernel/firmware.rs b/rust/kernel/firmware.rs
-index 2494c96e105f..ed2fc20cba9b 100644
---- a/rust/kernel/firmware.rs
-+++ b/rust/kernel/firmware.rs
-@@ -181,7 +181,7 @@ unsafe impl Sync for Firmware {}
- /// module! {
- ///    type: MyModule,
- ///    name: "module_firmware_test",
--///    author: "Rust for Linux",
-+///    authors: ["Rust for Linux"],
- ///    description: "module_firmware! test module",
- ///    license: "GPL",
- /// }
-diff --git a/rust/macros/module.rs b/rust/macros/module.rs
-index 2ddd2eeb2852..5dd276a2e5cb 100644
---- a/rust/macros/module.rs
-+++ b/rust/macros/module.rs
-@@ -94,7 +94,6 @@ struct ModuleInfo {
-     type_: String,
-     license: String,
-     name: String,
--    author: Option<String>,
-     authors: Option<Vec<String>>,
-     description: Option<String>,
-     alias: Option<Vec<String>>,
-@@ -108,7 +107,6 @@ fn parse(it: &mut token_stream::IntoIter) -> Self {
-         const EXPECTED_KEYS: &[&str] = &[
-             "type",
-             "name",
--            "author",
-             "authors",
-             "description",
-             "license",
-@@ -134,7 +132,6 @@ fn parse(it: &mut token_stream::IntoIter) -> Self {
-             match key.as_str() {
-                 "type" => info.type_ = expect_ident(it),
-                 "name" => info.name = expect_string_ascii(it),
--                "author" => info.author = Some(expect_string(it)),
-                 "authors" => info.authors = Some(expect_string_array(it)),
-                 "description" => info.description = Some(expect_string(it)),
-                 "license" => info.license = expect_string_ascii(it),
-@@ -179,9 +176,6 @@ pub(crate) fn module(ts: TokenStream) -> TokenStream {
-     // Rust does not allow hyphens in identifiers, use underscore instead.
-     let ident = info.name.replace('-', "_");
-     let mut modinfo = ModInfoBuilder::new(ident.as_ref());
--    if let Some(author) = info.author {
--        modinfo.emit("author", &author);
--    }
-     if let Some(authors) = info.authors {
-         for author in authors {
-             modinfo.emit("author", &author);
-diff --git a/samples/rust/rust_configfs.rs b/samples/rust/rust_configfs.rs
-index 60ddbe62cda3..af04bfa35cb2 100644
---- a/samples/rust/rust_configfs.rs
-+++ b/samples/rust/rust_configfs.rs
-@@ -14,7 +14,7 @@
- module! {
-     type: RustConfigfs,
-     name: "rust_configfs",
--    author: "Rust for Linux Contributors",
-+    authors: ["Rust for Linux Contributors"],
-     description: "Rust configfs sample",
-     license: "GPL",
- }
-diff --git a/samples/rust/rust_driver_auxiliary.rs b/samples/rust/rust_driver_auxiliary.rs
-index 3e15e6d002bb..abf3d55ed249 100644
---- a/samples/rust/rust_driver_auxiliary.rs
-+++ b/samples/rust/rust_driver_auxiliary.rs
-@@ -114,7 +114,7 @@ fn init(module: &'static kernel::ThisModule) -> impl PinInit<Self, Error> {
- module! {
-     type: SampleModule,
-     name: "rust_driver_auxiliary",
--    author: "Danilo Krummrich",
-+    authors: ["Danilo Krummrich"],
-     description: "Rust auxiliary driver",
-     license: "GPL v2",
- }
+Changes in v2:
+- bindings: take "Acked-by: Rob Herring (Arm) <robh@kernel.org>"
+- bindings: take "Reviewed-by: Frank Li <Frank.Li@nxp.com>"
+- devicetree: move the watchdog node just after thermal-sensor
+- Link to v1: https://lore.kernel.org/r/20250407-imx8qm-watchdog-v1-0-20c219b15fd2@bootlin.com
+---
+ arch/arm64/boot/dts/freescale/imx8qm.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8qm.dtsi b/arch/arm64/boot/dts/freescale/imx8qm.dtsi
+index 6fa31bc9ece8..11527050ac8b 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qm.dtsi
+@@ -356,6 +356,11 @@ tsens: thermal-sensor {
+ 			compatible = "fsl,imx8qxp-sc-thermal", "fsl,imx-sc-thermal";
+ 			#thermal-sensor-cells = <1>;
+ 		};
++
++		watchdog {
++			compatible = "fsl,imx8qm-sc-wdt", "fsl,imx-sc-wdt";
++			timeout-sec = <60>;
++		};
+ 	};
+ 
+ 	thermal-zones {
+
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250203-imx8qm-watchdog-b8363342842e
+
+Best regards,
 -- 
-2.34.1
+Thomas Richard <thomas.richard@bootlin.com>
 
