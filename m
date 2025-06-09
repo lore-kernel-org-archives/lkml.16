@@ -1,111 +1,70 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43E5F1FC7E7;
-	Mon,  9 Jun 2025 11:10:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 273901FC7E7
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 11:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749467434; cv=none; b=n5s38ar5e08jexyFclHQqErc9XpWihilgcwb37d9u6xra3rYrr3VYNqjrDEulZM4CtJwkNrsoIirr+4QhYqSciZ1fKAvY+c6sBU0pBFLdm7mwAQIJqdm0Hbkw5vZLfEOLrZNVXDOoYaNQrncYe/JLLT8OP6Qo9NmAiLq3Abf62E=
+	t=1749467474; cv=none; b=cqXiPCdTSEhqh5QOPulLfHFi9oQkE+XVlnAIn2k9e8M5bdVt64+MWfSlLieHaJ2dn2EnXZmkvBXQ/sqdAOgkms51DhU3m96OCwddAAztoaQ29GJpoUwzs/wqRneOzSEZ80yugOrTui3A/R2p0YivYzn9tDqz2A9oleyfR8RcQZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749467434; c=relaxed/simple;
-	bh=OtuITT+i8YfVsB92HRFIK/5RvmgL0pQolfsZtD3LzPY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cwSvEj0Og7eJUVT16kSmt/Fn0kgiOfMW6HrVhRkMnuobDPocQ6XQTDLchbg3/MkitcIl27Z4am7DJCUfELKMJAD8LTe2jOTbyh+jFSWYao47EoTkWYjLtCJVUhkd4mHxeMSoltzMyu78ySqYYdTi/pzNTzCj4p9hsC45k/hyzZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 83909113E;
-	Mon,  9 Jun 2025 04:10:13 -0700 (PDT)
-Received: from [10.1.39.162] (XHFQ2J9959.cambridge.arm.com [10.1.39.162])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5AB223F59E;
-	Mon,  9 Jun 2025 04:10:31 -0700 (PDT)
-Message-ID: <5f6085d9-0ceb-489c-89a6-3666be994549@arm.com>
-Date: Mon, 9 Jun 2025 12:10:29 +0100
+	s=arc-20240116; t=1749467474; c=relaxed/simple;
+	bh=h/Fek+Jt9+onEH5ybbgN0/MvP1anuVt+6vxPd5hAs8Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Lcvl5xsgc1Vblr4OOrsEyRjH32YdnaI9EVdsMuFl0t0Iwe90Fy94FkRDcW1sk0S5p5ZlwP5KmPwALXMYfREb6lavAQxW+Ypyw34rDzq5cwnYG91ZKinXOageRUrEv5y0KfWA0CUWn2wfuQCl/JNsm9WRdiDnAEKTccLW+WyEDAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=vWlm0hfF; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="vWlm0hfF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=Uaq+qcvYWlUE8XUYIRED91MXduBw3WkGvbeOZQWHwe8=; b=vWlm0hfFQvAZ4ds/uEeDbjWaat
+	XR5U49qIIRZite3bg3zaaf0uCZZoFqFcwYAMTBM9+Oz0PsW382lkpfkC8EAiP21l++yLJEm/dtrRx
+	nVePX3Why4KYJjymVanLD0iZL2r2qd3E4kIq550f0GknFw/5CsR0i3K9I8q4AhpljwyPHLR9ClxIR
+	tzCCztkq0Yoanoqz3P/y/gRk3aj9Yn/nFv1WBEZ8mi4N7DxRMddGT0/frR+LZqWFOUMwt/v1ENOie
+	GQ6EUmb91u9o78EWJSQlvbVqJV0u6ULGpKGuVxQk11NzN7fOPpZ+upbyUV7K3E2nUTVxxNC8WksLo
+	9SXMvMdg==;
+Received: from i53875b1c.versanet.de ([83.135.91.28] helo=phil.fritz.box)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uOaPC-0006VT-VV; Mon, 09 Jun 2025 13:11:07 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: kever.yang@rock-chips.com,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: rockchip: convert rk3562 to their dt-binding constants
+Date: Mon,  9 Jun 2025 13:11:02 +0200
+Message-ID: <174946744892.771907.16719729052078630169.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250510161531.2086706-1-heiko@sntech.de>
+References: <20250510161531.2086706-1-heiko@sntech.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64/ptdump: Ensure memory hotplug is prevented during
- ptdump_check_wx()
-Content-Language: en-GB
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- linux-arm-kernel@lists.infradead.org
-Cc: stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
- Dev Jain <dev.jain@arm.com>
-References: <20250609041214.285664-1-anshuman.khandual@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250609041214.285664-1-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 09/06/2025 05:12, Anshuman Khandual wrote:
-> The arm64 page table dump code can race with concurrent modification of the
-> kernel page tables. When a leaf entries are modified concurrently, the dump
-> code may log stale or inconsistent information for a VA range, but this is
-> otherwise not harmful.
-> 
-> When intermediate levels of table are freed, the dump code will continue to
-> use memory which has been freed and potentially reallocated for another
-> purpose. In such cases, the dump code may dereference bogus addresses,
-> leading to a number of potential problems.
-> 
-> This problem was fixed for ptdump_show() earlier via commit 'bf2b59f60ee1
-> ("arm64/mm: Hold memory hotplug lock while walking for kernel page table
-> dump")' but a same was missed for ptdump_check_wx() which faced the race
-> condition as well. Let's just take the memory hotplug lock while executing
-> ptdump_check_wx().
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: bbd6ec605c0f ("arm64/mm: Enable memory hot remove")
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Ryan Roberts <ryan.roberts@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Reported-by: Dev Jain <dev.jain@arm.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
-Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+On Sat, 10 May 2025 18:15:31 +0200, Heiko Stuebner wrote:
+> Now that the binding head has been merged, convert the power-domain ids
+> back to these constants for easier handling.
+> 
+> 
 
-> ---
-> This patch applies on v6.16-rc1
-> 
-> Dev Jain found this via code inspection.
-> 
->  arch/arm64/mm/ptdump.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/mm/ptdump.c b/arch/arm64/mm/ptdump.c
-> index 421a5de806c62..551f80d41e8d2 100644
-> --- a/arch/arm64/mm/ptdump.c
-> +++ b/arch/arm64/mm/ptdump.c
-> @@ -328,7 +328,7 @@ static struct ptdump_info kernel_ptdump_info __ro_after_init = {
->  	.mm		= &init_mm,
->  };
->  
-> -bool ptdump_check_wx(void)
-> +static bool __ptdump_check_wx(void)
->  {
->  	struct ptdump_pg_state st = {
->  		.seq = NULL,
-> @@ -367,6 +367,16 @@ bool ptdump_check_wx(void)
->  	}
->  }
->  
-> +bool ptdump_check_wx(void)
-> +{
-> +	bool ret;
-> +
-> +	get_online_mems();
-> +	ret = __ptdump_check_wx();
-> +	put_online_mems();
-> +	return ret;
-> +}
-> +
->  static int __init ptdump_init(void)
->  {
->  	u64 page_offset = _PAGE_OFFSET(vabits_actual);
+Applied, thanks!
 
+[1/1] arm64: dts: rockchip: convert rk3562 to their dt-binding constants
+      commit: 208e7e76fbc77775b760edeeb528318992c60595
+
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
