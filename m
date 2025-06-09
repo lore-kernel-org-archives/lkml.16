@@ -1,152 +1,224 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485A820125F;
-	Mon,  9 Jun 2025 16:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA36C21772D;
+	Mon,  9 Jun 2025 16:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749485118; cv=none; b=urB+wI3agBoQGFkYHtwMmcPrz+JdRjUCR0G7J/dYy3C6Bh4THTTfNuH47+tn8cAGEUGrXZr9x43CEZ5Tj2OsuGTezkf9N5nS1eyD2LxzTBPwW2BEBFX5bUX4h/yaH20B1pPX+xEfEe1WatanJtPHJjlRZV3HkVUEl9E0TEYAlz4=
+	t=1749485140; cv=none; b=N4LNQx1Rg355JfANKUBsM+BapNNC/7ldqjPupeGYNXGO0JOBBCqwv4usUepVKV0b6ATzgJ4XiGkr4AUWs1vFRYTRBsxu6Rn1rFy9IyUxoUR+9ZEcr5qWrEH8sh6gsxZnxsvsl70hkz7kgdlZwgLRiX2spozPdxwvn2wj8hGAHJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749485118; c=relaxed/simple;
-	bh=utDUVMOkzXdVkyrfJC2/3sY336KJeXgCz1ZGWZEglxE=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p/lJXeXbV4ZOQpUj/X0EbICoauKqM9H097piSgbRgzIGYmOUidmkhdUz/OtvMGSrBlDXLsquXbDl/N5sID7Z1MMAgaEs5PYdRmVbBAauIP5w1tNenCDuisqgAt8MWFWcX3Sb+mMCAiwL1nSVwbD6FWH+WSsoDjJgglpbWTBF9nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bGGqb0y8Mz6L5mv;
-	Tue, 10 Jun 2025 00:00:59 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 860BD140276;
-	Tue, 10 Jun 2025 00:05:11 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 9 Jun
- 2025 18:05:10 +0200
-Date: Mon, 9 Jun 2025 17:05:09 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-CC: Dan Williams <dan.j.williams@intel.com>, <rafael.j.wysocki@intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>, Ben Cheatham <Benjamin.Cheatham@amd.com>
-Subject: Re: [PATCH 3/3] ACPI: APEI: EINJ: Do not fail einj_init() on
- faux_device_create() failure
-Message-ID: <20250609170509.00003625@huawei.com>
-In-Reply-To: <2025060954-district-breeder-2c3e@gregkh>
-References: <20250607033228.1475625-1-dan.j.williams@intel.com>
-	<20250607033228.1475625-4-dan.j.williams@intel.com>
-	<20250609111758.0000258d@huawei.com>
-	<2025060954-district-breeder-2c3e@gregkh>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1749485140; c=relaxed/simple;
+	bh=EbXs/sTXohTOmm5TviWh0AY2Db3a+7Ly6XibFjFL/uw=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=L5PD8mKNZSRrJOvhQLprqX42h6s0zd9dYHZPArzhUGpgwkLJTscNKdTnhIp85sAQ4Q4fBoK6r54FWEP8xsHvPHOj2BjuPISAVDmS9DyW9Nqmqpf4Q5SZGsa9dpIlqnEeaMs585nLKxrne7TGcK5lmzohGYOjm/lkPs/hnXkuE1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LoDOPAmZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AoXuzGaO; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LoDOPAmZ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AoXuzGaO"
+Date: Mon, 09 Jun 2025 16:05:34 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749485135;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=tEEOXCCi+Lv4AkHLOs5bdAb1O3Dv/w8kQoflgn+qaMg=;
+	b=LoDOPAmZYpW6VAuBKNNTWydycSdx1aD3hlyIm0LSfHVE1jOjNJ3LAOPquwXTbwQYDAinAB
+	nTnFBybszbs/9xdN7U00lq3Ey9qJLHOrox4fbujgj/Ofh9QEKgB2hcKwQdsHGpQVn2iGzs
+	5zL5tZ0zjoYMhJi+9QkhGydGVYrqLkmHbG8l/S4OgVcjIHHcj/2Fs2w/6IF9jtMgffcL5C
+	pzFUcp+UuKEPpLGz0xTg/nm6cwFEZHxUdLz4pUngterItu08Ncvakb0c5jvLjsWI/f7eaV
+	a+KB0fCQMqK8OqcOe1V+OChMhym2tHNa214vi8kMK/8Vb+56CG9DhU2YaiwEpg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749485135;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=tEEOXCCi+Lv4AkHLOs5bdAb1O3Dv/w8kQoflgn+qaMg=;
+	b=AoXuzGaORYPmwMsKNIoUGGCH9o1yJhK51101CDZgFg8tWsEhqObNkW7PZn1CNhG9MEadcI
+	a2q5HKLls8Ze63BA==
+From: "tip-bot2 for Xin Li (Intel)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] selftests/x86: Add a test to detect infinite
+ SIGTRAP handler loop
+Cc: "Xin Li (Intel)" <xin@zytor.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Sohil Mehta <sohil.mehta@intel.com>, stable@vger.kernel.org, x86@kernel.org,
+ linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Message-ID: <174948513461.406.11127170666315270934.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 9 Jun 2025 12:42:53 +0200
-Greg KH <gregkh@linuxfoundation.org> wrote:
+The following commit has been merged into the x86/urgent branch of tip:
 
-> On Mon, Jun 09, 2025 at 11:17:58AM +0100, Jonathan Cameron wrote:
-> > On Fri, 6 Jun 2025 20:32:28 -0700
-> > Dan Williams <dan.j.williams@intel.com> wrote:
-> >   
-> > > CXL has a symbol dependency on einj_core.ko, so if einj_init() fails then
-> > > cxl_core.ko fails to load. Prior to the faux_device_create() conversion,
-> > > einj_probe() failures were tracked by the einj_initialized flag without
-> > > failing einj_init().
-> > > 
-> > > Revert to that behavior and always succeed einj_init() given there is no
-> > > way, and no pressing need, to discern faux device-create vs device-probe
-> > > failures.
-> > > 
-> > > This situation arose because CXL knows proper kernel named objects to
-> > > trigger errors against, but acpi-einj knows how to perform the error
-> > > injection. The injection mechanism is shared with non-CXL use cases. The
-> > > result is CXL now has a module dependency on einj-core.ko, and init/probe
-> > > failures are handled at runtime.
-> > > 
-> > > Fixes: 6cb9441bfe8d ("ACPI: APEI: EINJ: Transition to the faux device interface")
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > > Cc: Sudeep Holla <sudeep.holla@arm.com>
-> > > Cc: Ben Cheatham <Benjamin.Cheatham@amd.com>
-> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > ---
-> > >  drivers/acpi/apei/einj-core.c | 9 +++------
-> > >  1 file changed, 3 insertions(+), 6 deletions(-)
-> > > 
-> > > diff --git a/drivers/acpi/apei/einj-core.c b/drivers/acpi/apei/einj-core.c
-> > > index fea11a35eea3..9b041415a9d0 100644
-> > > --- a/drivers/acpi/apei/einj-core.c
-> > > +++ b/drivers/acpi/apei/einj-core.c
-> > > @@ -883,19 +883,16 @@ static int __init einj_init(void)
-> > >  	}
-> > >  
-> > >  	einj_dev = faux_device_create("acpi-einj", NULL, &einj_device_ops);
-> > > -	if (!einj_dev)
-> > > -		return -ENODEV;
-> > >  
-> > > -	einj_initialized = true;
-> > > +	if (einj_dev)
-> > > +		einj_initialized = true;
-> > >  
-> > >  	return 0;
-> > >  }
-> > >  
-> > >  static void __exit einj_exit(void)
-> > >  {
-> > > -	if (einj_initialized)
-> > > -		faux_device_destroy(einj_dev);
-> > > -
-> > > +	faux_device_destroy(einj_dev);  
-> > 
-> > Hi Dan,
-> > 
-> > Thi bit is sort of fine though not really related, because
-> > faux_device_destroy() checks
-> > 
-> > void faux_device_destroy(struct faux_device *faux_dev)
-> > {
-> > 	struct device *dev = &faux_dev->dev;
-> > 
-> > 	if (!faux_dev)
-> > 		return;
-> > 
-> > Though that check is after a dereference of faux_dev
-> > which doesn't look right to me.  Might be fine because
-> > of how the kernel is built (I can't remember where we ended
-> > up on topic of compilers making undefined behavior based
-> > optimizations).  Still not that nice from a logical point of view!  
-> 
-> I think this is fine as we just put "0 + offset of dev" into dev, and
-> didn't do anything with that (i.e. no actual read of that memory
-> location happened).  The compiler shouldn't be doing anything that could
-> happen after the return before we check for a valid pointer here, right?
+Commit-ID:     f287822688eeb44ae1cf6ac45701d965efc33218
+Gitweb:        https://git.kernel.org/tip/f287822688eeb44ae1cf6ac45701d965efc=
+33218
+Author:        Xin Li (Intel) <xin@zytor.com>
+AuthorDate:    Mon, 09 Jun 2025 01:40:54 -07:00
+Committer:     Dave Hansen <dave.hansen@linux.intel.com>
+CommitterDate: Mon, 09 Jun 2025 08:52:06 -07:00
 
-Hmm. I did some digging. Seems that was debated 10 years ago without
-a huge amount of clarity on the answer beyond all sane people telling
-compiler folk not to use this in optimizations :)
+selftests/x86: Add a test to detect infinite SIGTRAP handler loop
 
-Comes down to whether any dereference of NULL is UB whether or not
-the compiler can just do a simple offset calculation.
+When FRED is enabled, if the Trap Flag (TF) is set without an external
+debugger attached, it can lead to an infinite loop in the SIGTRAP
+handler.  To avoid this, the software event flag in the augmented SS
+must be cleared, ensuring that no single-step trap remains pending when
+ERETU completes.
 
-Anyhow, whilst fine, it's still a little ugly to my eyes :(
+This test checks for that specific scenario=E2=80=94verifying whether the ker=
+nel
+correctly prevents an infinite SIGTRAP loop in this edge case when FRED
+is enabled.
 
-Jonathan
+The test should _always_ pass with IDT event delivery, thus no need to
+disable the test even when FRED is not enabled.
 
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Tested-by: Sohil Mehta <sohil.mehta@intel.com>
+Cc:stable@vger.kernel.org
+Link: https://lore.kernel.org/all/20250609084054.2083189-3-xin%40zytor.com
+---
+ tools/testing/selftests/x86/Makefile       |   2 +-
+ tools/testing/selftests/x86/sigtrap_loop.c | 101 ++++++++++++++++++++-
+ 2 files changed, 102 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/x86/sigtrap_loop.c
 
-
-> 
-> thanks,
-> 
-> greg k-h
-> 
-
+diff --git a/tools/testing/selftests/x86/Makefile b/tools/testing/selftests/x=
+86/Makefile
+index f703fcf..8314887 100644
+--- a/tools/testing/selftests/x86/Makefile
++++ b/tools/testing/selftests/x86/Makefile
+@@ -12,7 +12,7 @@ CAN_BUILD_WITH_NOPIE :=3D $(shell ./check_cc.sh "$(CC)" tri=
+vial_program.c -no-pie)
+=20
+ TARGETS_C_BOTHBITS :=3D single_step_syscall sysret_ss_attrs syscall_nt test_=
+mremap_vdso \
+ 			check_initial_reg_state sigreturn iopl ioperm \
+-			test_vsyscall mov_ss_trap \
++			test_vsyscall mov_ss_trap sigtrap_loop \
+ 			syscall_arg_fault fsgsbase_restore sigaltstack
+ TARGETS_C_BOTHBITS +=3D nx_stack
+ TARGETS_C_32BIT_ONLY :=3D entry_from_vm86 test_syscall_vdso unwind_vdso \
+diff --git a/tools/testing/selftests/x86/sigtrap_loop.c b/tools/testing/selft=
+ests/x86/sigtrap_loop.c
+new file mode 100644
+index 0000000..9d06547
+--- /dev/null
++++ b/tools/testing/selftests/x86/sigtrap_loop.c
+@@ -0,0 +1,101 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2025 Intel Corporation
++ */
++#define _GNU_SOURCE
++
++#include <err.h>
++#include <signal.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/ucontext.h>
++
++#ifdef __x86_64__
++# define REG_IP REG_RIP
++#else
++# define REG_IP REG_EIP
++#endif
++
++static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *), i=
+nt flags)
++{
++	struct sigaction sa;
++
++	memset(&sa, 0, sizeof(sa));
++	sa.sa_sigaction =3D handler;
++	sa.sa_flags =3D SA_SIGINFO | flags;
++	sigemptyset(&sa.sa_mask);
++
++	if (sigaction(sig, &sa, 0))
++		err(1, "sigaction");
++
++	return;
++}
++
++static void sigtrap(int sig, siginfo_t *info, void *ctx_void)
++{
++	ucontext_t *ctx =3D (ucontext_t *)ctx_void;
++	static unsigned int loop_count_on_same_ip;
++	static unsigned long last_trap_ip;
++
++	if (last_trap_ip =3D=3D ctx->uc_mcontext.gregs[REG_IP]) {
++		printf("\tTrapped at %016lx\n", last_trap_ip);
++
++		/*
++		 * If the same IP is hit more than 10 times in a row, it is
++		 * _considered_ an infinite loop.
++		 */
++		if (++loop_count_on_same_ip > 10) {
++			printf("[FAIL]\tDetected SIGTRAP infinite loop\n");
++			exit(1);
++		}
++
++		return;
++	}
++
++	loop_count_on_same_ip =3D 0;
++	last_trap_ip =3D ctx->uc_mcontext.gregs[REG_IP];
++	printf("\tTrapped at %016lx\n", last_trap_ip);
++}
++
++int main(int argc, char *argv[])
++{
++	sethandler(SIGTRAP, sigtrap, 0);
++
++	/*
++	 * Set the Trap Flag (TF) to single-step the test code, therefore to
++	 * trigger a SIGTRAP signal after each instruction until the TF is
++	 * cleared.
++	 *
++	 * Because the arithmetic flags are not significant here, the TF is
++	 * set by pushing 0x302 onto the stack and then popping it into the
++	 * flags register.
++	 *
++	 * Four instructions in the following asm code are executed with the
++	 * TF set, thus the SIGTRAP handler is expected to run four times.
++	 */
++	printf("[RUN]\tSIGTRAP infinite loop detection\n");
++	asm volatile(
++#ifdef __x86_64__
++		/*
++		 * Avoid clobbering the redzone
++		 *
++		 * Equivalent to "sub $128, %rsp", however -128 can be encoded
++		 * in a single byte immediate while 128 uses 4 bytes.
++		 */
++		"add $-128, %rsp\n\t"
++#endif
++		"push $0x302\n\t"
++		"popf\n\t"
++		"nop\n\t"
++		"nop\n\t"
++		"push $0x202\n\t"
++		"popf\n\t"
++#ifdef __x86_64__
++		"sub $-128, %rsp\n\t"
++#endif
++	);
++
++	printf("[OK]\tNo SIGTRAP infinite loop detected\n");
++	return 0;
++}
