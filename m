@@ -1,220 +1,168 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CFAF25229E;
-	Mon,  9 Jun 2025 09:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1084202F6D;
+	Mon,  9 Jun 2025 09:47:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749462404; cv=none; b=F6LFEAsDhSf+yA8VNqW5PUf8ZFsm3FjBT9hD4DTTWkPcWSnoFmGpTpFDWJkpBR4pIASzw3AcAZ3Nm5hTR96t8cCJlZPSwaQtGnUI4xcx8mHJhAcmkqS3OC+U/2azx4vd35oUEHirRrQBMf9jqVq7RyXkJMl1Uh9s3jW7SPigFeQ=
+	t=1749462453; cv=none; b=CzP7VdOoLl/NbnCdoqVhZ+Frp+EMgZOq5jjSmw3pXrdnp+S2yv6Cvn56OlFtJitTm+v18Vkg0oCOlXBvZf2jsxg34XkS+DskTiw388Yvn04hdbrMab3lCVDgxbngSQyJdbJ4Pif2LgTbAbdBhOQ4caLOU0FZLZ3SksNSuzvUqDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749462404; c=relaxed/simple;
-	bh=rK5iNrQXNmGjsm3EwSsVPBRLrssPEdm7gAva0cMhNJ0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QzfHpWM6er838GxLLa9Xat6epnLafhyc5dm21kp7rzk/byzpGT9/jowtZehC7L4SZdYAxs2XnAL4SCpVSTUz4Ade9W5Bjk16eDNzSRA2PNrxnjQddVBcTl4uEdTDwSO2ELZTswXbNHf6pSjiPpnhF7AWx5MATqWXx0yTjp91siE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-605b9488c28so6607157a12.2;
-        Mon, 09 Jun 2025 02:46:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749462400; x=1750067200;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fGkA44rePRDCbPLT2KhTInQAdoee0hKuzwt/FTEhp5s=;
-        b=LosZ68w8mLPJc5XBOYytpNHqwbYDpxg4nBpCSHW5KECZg81bWum6LrI2qIRf/HzYyr
-         n6YodP8BvK6c4ELkZptpexCijscNyjSpZc4Gacz4C217a1fFmOuhpMcQLqVrBpvMlTHW
-         kVLZ9Tc4Oq6RBDEVRFnv+04FON0/JRgCchSmrFQfLOyXk1XGkTFkwS14/Xbk8iHFNF5v
-         SySzwkZkBMcFZoVJA3Cxw6HYy4kmnGwBYyPTRs9K8FBzRhpISBIybjpnUZM0VqxVRwEe
-         9Y30z/dkKxKi00zVctGVBPvxedaMHaSDHuaoxxEdTKDnZ1cdEKp6mvCNDF4IRkl5qpDk
-         Q7qg==
-X-Forwarded-Encrypted: i=1; AJvYcCUEyTqeifxy1Vf+AaX2NGqZeTb6+zmF8oT//Wd/zvx7dtvwNDmWF+xUQHHKUXK/aEDSlxwlZIoIOfWMRNLcHEJX@vger.kernel.org, AJvYcCXosf52KVPDqm4mIDosNSUd6YK6KlFDqRxM8yMMKqOTvhVmdbam9b016EjW9/60gKxZS5l5vxeP6wV4M+I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJ2EPplhgoDvhOjh4R358Zsljb+siMAouH/Hp+O6ttyvIuU6Ov
-	CCjxP9OE5ZQm90BgYKNkmgdGoU94Yv2Xvii8j9IX14ncRyuJ2OW9+t6ErpJi0Q==
-X-Gm-Gg: ASbGncvfcxCPwWNZwqSjt0MMx/Fniyanahw+rBls31tsMH7rtrjDXpKOQ+qKsXsSOSx
-	+lvodguw2h8rjzobQ7pqPjfX5g7C7lN250lhvaj08zm1VyD2G8rY/OH/mADYPPWauNcrU4xat3t
-	aO10NfJTHcEUk8NlAKyMuvo81sFbqfNaa0bsQ9UzvzJ+1ZykJsG5p+0TXsG/9e4Pb7F8bBdsBAE
-	HiQDXj7uq5I+jJXBGrzXlttg9ie9psaylVg6evCymGY5gHwIV3hgvaS4TCOHbBNCJdA8+FakW+3
-	X6hbEvfne13AMKC204u2k9pZ88roqlsOBlDNFFHKHx4j26oGujsM
-X-Google-Smtp-Source: AGHT+IHyJ16iuYdiFip6UzogqzRlHrpf7OsB+MxsamQLuEK8zCIB0j6nguuIZMadwangwG+iG7AqEQ==
-X-Received: by 2002:a05:6402:270e:b0:5ff:ef06:1c52 with SMTP id 4fb4d7f45d1cf-6077351188amr11563906a12.3.1749462399961;
-        Mon, 09 Jun 2025 02:46:39 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:7::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-607fbbdaadbsm827266a12.51.2025.06.09.02.46.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 02:46:39 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Mon, 09 Jun 2025 02:46:29 -0700
-Subject: [PATCH net-next v3 4/4] selftests: netconsole: Add support for
- basic netconsole target format
+	s=arc-20240116; t=1749462453; c=relaxed/simple;
+	bh=1S9Nm6f5O7m3vI4hvRuferiAQBF4taD3Nf0gweHpbdU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WbxlGi65mYRXPfkt50lpqa/rqfkIZBblBjMeNqJ1usE20a5kmTDyoubH9ZxU0a9XFi4C2WrLsAa3PLyC+oTTJwC4YVDtb1MtNCa+7/k0w8zH5GMBaBbGi9JupYz8yVGiXEdyGwC0nFh1o/Vg/NR2RrNVS2KqgPWdBm0G9Nzy6wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hvwRkiU7; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hvwRkiU7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A536C4CEEB;
+	Mon,  9 Jun 2025 09:47:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749462453;
+	bh=1S9Nm6f5O7m3vI4hvRuferiAQBF4taD3Nf0gweHpbdU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=hvwRkiU7h8ctg2xeY2aHY8qarL7QCRjdKDyKh3YyX0kfU0ngw0WWHBRiVfyxrRrvr
+	 r+/JpfqOjCh+h0WRt6zmeR6n9/wnRxoB6NK8yO5ZrGU4MjilF3x6CcXGz/RtHfzhs7
+	 9G1L0iWfzNoWQ7XcWWa3iQmrOHJ1Qk8ClE++87ZwtFGLA3JS3ehfjwMont8BQ1CM4a
+	 d481YcTWJrtJkiE1A8XB80L/McR+q2JucMSXwecG+OHcTj24X4gF5J6HI1866WSe2k
+	 uEaopo6XsNgr2NL3j++7zBNXxfetlIOdK2d4QL48hBd+5dTr0osTsNw9YhRNgdamJo
+	 nGbsstIkBZR+g==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 02F00CE0B6C; Mon,  9 Jun 2025 02:47:33 -0700 (PDT)
+Date: Mon, 9 Jun 2025 02:47:32 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>,
+	syzbot <syzbot+80e5d6f453f14a53383a@syzkaller.appspotmail.com>,
+	akpm@linux-foundation.org, josh@joshtriplett.org,
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, rcu@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [rcu?] [bcachefs?] BUG: unable to handle kernel NULL
+ pointer dereference in rcu_core (3)
+Message-ID: <e3187e7a-cac2-46c4-9c56-3a649e122353@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <67a2b20a.050a0220.50516.0003.GAE@google.com>
+ <9694d40a-072e-47c2-a950-3b258bbe04f5@paulmck-laptop>
+ <jzknqese5idob37wxgclq7ptxnsd66qbqkxtjpjormymsrwv2j@xjum5exljlh6>
+ <aEXVKNVLI3VQInSc@pc636>
+ <602bb1be-f4a4-4194-803f-856e95711870@paulmck-laptop>
+ <aEac1veMLffwOdv8@pc636>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250609-netcons_ext-v3-4-5336fa670326@debian.org>
-References: <20250609-netcons_ext-v3-0-5336fa670326@debian.org>
-In-Reply-To: <20250609-netcons_ext-v3-0-5336fa670326@debian.org>
-To: Breno Leitao <leitao@debian.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
- Shuah Khan <shuah@kernel.org>, horms@kernel.org
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- gustavold@gmail.com, Usama Arif <usamaarif642@gmail.com>, 
- linux-kselftest@vger.kernel.org, kernel-team@meta.com
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4779; i=leitao@debian.org;
- h=from:subject:message-id; bh=rK5iNrQXNmGjsm3EwSsVPBRLrssPEdm7gAva0cMhNJ0=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBoRq14ythnWisF6ATN52SMsd+pOSHdCeZoMYPH1
- UBvuRIpEneJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaEateAAKCRA1o5Of/Hh3
- baw6D/0epElbEzK78YUu8xheHZbjvP0gaaVm1Q30exRMruW5/uaGOZTMCCcwnrK7CXBLiGu5Zeo
- axKd7MHGTg5zdzqLF7pNqI0+ibrr8HqY6UG1xLcJxHDtBkXrLT+pTf/ahmEKG+zQhLaH3E4Ts1P
- /qju2DNIHfxC2o2QqtTmB7+yXHVOC2Mgtp2f46bLds0DoBd3DPnsRmo3denJdEL87a0MoieiyAo
- FPkWbIOUDngYSmkNT9AonbB8ucB2DA6fBui0FTi+QfK/2lF9E20rdNFpxNJg8Rm271sYLK3BhZg
- JFxMNjQTBnfmAufsP1svPsa6zttNpO6dTIAPnkJh2KpP7lrfd8AjlTklK3wnGmy7Bm/HhJdqhX/
- Z0VJQ/gP6nnM9ARTUvWtC7VYCdh/GbHcReTKyggjsU1gi5BPmrzdrlmx52nPWCS7DrJx+vDDUSs
- ttX71QmtLt1NV3ApcEaCKuiLykLlZ4BqQ7Dbjh7QgeIIymS53+1HdnypIrj38YV1wk8t6vIZ72E
- vV9V/i90ncEnFwBJmGSWcq+Kl8v6JosfH0MBpXFFx0eMzVCC3U00JJvlrawFtrGQS5pEmmWYgWY
- Agp5rPcTBy+7p97zu025tt0QUjPdvFo2eHRGQgkA+l30QBnf2GCiOs55yf9WeTa1DNOqxMMKp/H
- Vj3hwYX3RihMU1Q==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEac1veMLffwOdv8@pc636>
 
-Extend the netconsole selftest to validate both basic and extended
-target formats. The basic format is a simpler variant that doesn't
-support userdata or release functionality.
+On Mon, Jun 09, 2025 at 10:35:34AM +0200, Uladzislau Rezki wrote:
+> On Sun, Jun 08, 2025 at 05:25:05PM -0700, Paul E. McKenney wrote:
+> > On Sun, Jun 08, 2025 at 08:23:36PM +0200, Uladzislau Rezki wrote:
+> > > On Sun, Jun 08, 2025 at 11:26:28AM -0400, Kent Overstreet wrote:
+> > > > On Wed, Feb 05, 2025 at 06:56:19AM -0800, Paul E. McKenney wrote:
+> > > > > On Tue, Feb 04, 2025 at 04:34:18PM -0800, syzbot wrote:
+> > > > > > Hello,
+> > > > > > 
+> > > > > > syzbot found the following issue on:
+> > > > > > 
+> > > > > > HEAD commit:    0de63bb7d919 Merge tag 'pull-fix' of git://git.kernel.org/..
+> > > > > > git tree:       upstream
+> > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=10faf5f8580000
+> > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=1909f2f0d8e641ce
+> > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=80e5d6f453f14a53383a
+> > > > > > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b69d18580000
+> > > > > > 
+> > > > > > Downloadable assets:
+> > > > > > disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-0de63bb7.raw.xz
+> > > > > > vmlinux: https://storage.googleapis.com/syzbot-assets/1142009a30a7/vmlinux-0de63bb7.xz
+> > > > > > kernel image: https://storage.googleapis.com/syzbot-assets/5d9e46a8998d/bzImage-0de63bb7.xz
+> > > > > > mounted in repro: https://storage.googleapis.com/syzbot-assets/526692501242/mount_0.gz
+> > > > > > 
+> > > > > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > > > > > Reported-by: syzbot+80e5d6f453f14a53383a@syzkaller.appspotmail.com
+> > > > > > 
+> > > > > >  slab radix_tree_node start ffff88803bf382c0 pointer offset 24 size 576
+> > > > > > BUG: kernel NULL pointer dereference, address: 0000000000000000
+> > > > > > #PF: supervisor instruction fetch in kernel mode
+> > > > > > #PF: error_code(0x0010) - not-present page
+> > > > > > PGD 0 P4D 0 
+> > > > > > Oops: Oops: 0010 [#1] PREEMPT SMP KASAN NOPTI
+> > > > > > CPU: 0 UID: 0 PID: 5705 Comm: syz-executor Not tainted 6.14.0-rc1-syzkaller-00020-g0de63bb7d919 #0
+> > > > > > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+> > > > > > RIP: 0010:0x0
+> > > > > > Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+> > > > > > RSP: 0018:ffffc90000007bd8 EFLAGS: 00010246
+> > > > > > RAX: dffffc0000000000 RBX: 1ffff110077e705c RCX: 23438dd059a4b100
+> > > > > > RDX: 0000000000000100 RSI: 0000000000000000 RDI: ffff88803bf382d8
+> > > > > > RBP: ffffc90000007e10 R08: ffffffff819f146c R09: 1ffff11003f8519a
+> > > > > > R10: dffffc0000000000 R11: 0000000000000000 R12: ffffffff81a6d507
+> > > > > > R13: ffff88803bf382e0 R14: 0000000000000000 R15: ffff88803bf382d8
+> > > > > > FS:  0000555567992500(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
+> > > > > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > > > CR2: ffffffffffffffd6 CR3: 000000004da38000 CR4: 0000000000352ef0
+> > > > > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > > > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > > > > Call Trace:
+> > > > > >  <IRQ>
+> > > > > >  rcu_do_batch kernel/rcu/tree.c:2546 [inline]
+> > > > > 
+> > > > > The usual way that this happens is that someone clobbers the rcu_head
+> > > > > structure of something that has been passed to call_rcu().  The most
+> > > > > popular way of clobbering this structure is to pass the same something to
+> > > > > call_rcu() twice in a row, but other creative arrangements are possible.
+> > > > > 
+> > > > > Building your kernel with CONFIG_DEBUG_OBJECTS_RCU_HEAD=y can usually
+> > > > > spot invoking call_rcu() twice in a row.
+> > > > 
+> > > > I don't think it's that - syzbot's .config already has that enabled.
+> > > > KASAN, too.
+> > > > 
+> > > > And the only place we do call_rcu() is from rcu_pending.c, where we've
+> > > > got a rearming rcu callback - but we track whether it's outstanding, and
+> > > > we do all relevant operations with a lock held.
+> > > > 
+> > > > And we only use rcu_pending.c with SRCU, not regular RCU.
+> > > > 
+> > > > We do use kfree_rcu() in a few places (all boring, I expect), but that
+> > > > doesn't (generally?) use the rcu callback list.
+> > > >
+> > > Right, kvfree_rcu() does not intersect with regular callbacks, it has
+> > > its own path. 
+> > > 
+> > > It looks like the problem is here:
+> > > 
+> > > <snip>
+> > >   f = rhp->func;
+> > >   debug_rcu_head_callback(rhp);
+> > >   WRITE_ONCE(rhp->func, (rcu_callback_t)0L);
+> > >   f(rhp);
+> > > <snip>
+> > > 
+> > > we do not check if callback, "f", is a NULL. If it is, the kernel bug
+> > > is triggered right away. For example:
+> > > 
+> > > call_rcu(&rh, NULL);
+> > > 
+> > > @Paul, do you think it makes sense to narrow callers which apparently
+> > > pass NULL as a callback? To me it seems the case of this bug. But we
+> > > do not know the source.
+> > > 
+> > > It would give at least a stack-trace of caller which passes a NULL.
+> > 
+> > Adding a check for NULL func passed to __call_rcu_common(), you mean?
+> > 
+> Yes. Currently there is no any check. So passing a NULL just triggers
+> kernel panic.
+> 
+> >
+> > That wouldn't hurt, and would either (as you say) catch the culprit
+> > or show that the problem is elsewhere.
+> > 
+> I can add it then and send out the patch if no objections.
 
-The test now validates that netconsole works correctly in both
-configurations, improving test coverage for different netconsole
-deployment scenarios.
+No objections from me!
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- .../selftests/drivers/net/lib/sh/lib_netcons.sh    | 26 ++++++++++--
- .../testing/selftests/drivers/net/netcons_basic.sh | 48 ++++++++++++++--------
- 2 files changed, 52 insertions(+), 22 deletions(-)
-
-diff --git a/tools/testing/selftests/drivers/net/lib/sh/lib_netcons.sh b/tools/testing/selftests/drivers/net/lib/sh/lib_netcons.sh
-index 2d5dd3297693c..71a5a8b1712c0 100644
---- a/tools/testing/selftests/drivers/net/lib/sh/lib_netcons.sh
-+++ b/tools/testing/selftests/drivers/net/lib/sh/lib_netcons.sh
-@@ -95,6 +95,8 @@ function set_network() {
- }
- 
- function create_dynamic_target() {
-+	local FORMAT=${1:-"extended"}
-+
- 	DSTMAC=$(ip netns exec "${NAMESPACE}" \
- 		 ip link show "${DSTIF}" | awk '/ether/ {print $2}')
- 
-@@ -106,6 +108,16 @@ function create_dynamic_target() {
- 	echo "${DSTMAC}" > "${NETCONS_PATH}"/remote_mac
- 	echo "${SRCIF}" > "${NETCONS_PATH}"/dev_name
- 
-+	if [ "${FORMAT}" == "basic" ]
-+	then
-+		# Basic target does not support release
-+		echo 0 > "${NETCONS_PATH}"/release
-+		echo 0 > "${NETCONS_PATH}"/extended
-+	elif [ "${FORMAT}" == "extended" ]
-+	then
-+		echo 1 > "${NETCONS_PATH}"/extended
-+	fi
-+
- 	echo 1 > "${NETCONS_PATH}"/enabled
- }
- 
-@@ -159,6 +171,7 @@ function listen_port_and_save_to() {
- 
- function validate_result() {
- 	local TMPFILENAME="$1"
-+	local FORMAT=${2:-"extended"}
- 
- 	# TMPFILENAME will contain something like:
- 	# 6.11.1-0_fbk0_rc13_509_g30d75cea12f7,13,1822,115075213798,-;netconsole selftest: netcons_gtJHM
-@@ -176,10 +189,15 @@ function validate_result() {
- 		exit "${ksft_fail}"
- 	fi
- 
--	if ! grep -q "${USERDATA_KEY}=${USERDATA_VALUE}" "${TMPFILENAME}"; then
--		echo "FAIL: ${USERDATA_KEY}=${USERDATA_VALUE} not found in ${TMPFILENAME}" >&2
--		cat "${TMPFILENAME}" >&2
--		exit "${ksft_fail}"
-+	# userdata is not supported on basic format target,
-+	# thus, do not validate it.
-+	if [ "${FORMAT}" != "basic" ];
-+	then
-+		if ! grep -q "${USERDATA_KEY}=${USERDATA_VALUE}" "${TMPFILENAME}"; then
-+			echo "FAIL: ${USERDATA_KEY}=${USERDATA_VALUE} not found in ${TMPFILENAME}" >&2
-+			cat "${TMPFILENAME}" >&2
-+			exit "${ksft_fail}"
-+		fi
- 	fi
- 
- 	# Delete the file once it is validated, otherwise keep it
-diff --git a/tools/testing/selftests/drivers/net/netcons_basic.sh b/tools/testing/selftests/drivers/net/netcons_basic.sh
-index d2f0685d24ba3..40a6ac6191b8b 100755
---- a/tools/testing/selftests/drivers/net/netcons_basic.sh
-+++ b/tools/testing/selftests/drivers/net/netcons_basic.sh
-@@ -32,23 +32,35 @@ check_for_dependencies
- echo "6 5" > /proc/sys/kernel/printk
- # Remove the namespace, interfaces and netconsole target on exit
- trap cleanup EXIT
--# Create one namespace and two interfaces
--set_network
--# Create a dynamic target for netconsole
--create_dynamic_target
--# Set userdata "key" with the "value" value
--set_user_data
--# Listed for netconsole port inside the namespace and destination interface
--listen_port_and_save_to "${OUTPUT_FILE}" &
--# Wait for socat to start and listen to the port.
--wait_local_port_listen "${NAMESPACE}" "${PORT}" udp
--# Send the message
--echo "${MSG}: ${TARGET}" > /dev/kmsg
--# Wait until socat saves the file to disk
--busywait "${BUSYWAIT_TIMEOUT}" test -s "${OUTPUT_FILE}"
--
--# Make sure the message was received in the dst part
--# and exit
--validate_result "${OUTPUT_FILE}"
- 
-+# Run the test twice, with different format modes
-+for FORMAT in "basic" "extended"
-+do
-+	echo "Running with target mode: ${FORMAT}"
-+	# Create one namespace and two interfaces
-+	set_network
-+	# Create a dynamic target for netconsole
-+	create_dynamic_target "${FORMAT}"
-+	# Only set userdata for extended format
-+	if [ "$FORMAT" == "extended" ]
-+	then
-+		# Set userdata "key" with the "value" value
-+		set_user_data
-+	fi
-+	# Listed for netconsole port inside the namespace and destination interface
-+	listen_port_and_save_to "${OUTPUT_FILE}" &
-+	# Wait for socat to start and listen to the port.
-+	wait_local_port_listen "${NAMESPACE}" "${PORT}" udp
-+	# Send the message
-+	echo "${MSG}: ${TARGET}" > /dev/kmsg
-+	# Wait until socat saves the file to disk
-+	busywait "${BUSYWAIT_TIMEOUT}" test -s "${OUTPUT_FILE}"
-+
-+	# Make sure the message was received in the dst part
-+	# and exit
-+	validate_result "${OUTPUT_FILE}" "${FORMAT}"
-+	cleanup
-+done
-+
-+trap - EXIT
- exit "${ksft_pass}"
-
--- 
-2.47.1
-
+						Thanx, Paul
