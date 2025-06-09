@@ -1,117 +1,87 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD462F37;
-	Mon,  9 Jun 2025 00:38:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C331911185;
+	Mon,  9 Jun 2025 00:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749429486; cv=none; b=rr6/diFYN9gpSpoM6MMr3ycPhp/p/bBOuiwtsR2idYc8EuGrE1grykDx025WietohIw4vCSjdbNoNOZfFfH8zGCTnfXfB920pZDUz1r4ug3O2Veuw/EBct6gnsljia7yEzcstanM6IgEOaD5ATGTuDD40aUK9Do3O75oNXTQcqg=
+	t=1749429557; cv=none; b=Vtu3FNH/iJeE2lZ/YYVjYGp1SoNlLViN4G/PqYu/9y8o0aBjKGXi7eAxJIEsUHub5HdX0bM9wW31YS5OjICAWsvrLns0Ej+qCup5OmX3JAKvFVTOxdHPTHIcs45IXlYsRP+tdOcOTtPHAI2KJNaI5wT7hMsWeY4xVY6NldZtRZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749429486; c=relaxed/simple;
-	bh=VNImrDurwZK0+nYH5ILKXX5q7TG/MFOjxrqpLuoNmTI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZXRaZRfFyFWx7iKPU4n5nNJxOHRCQPyd3BQeRFkhJpI2+3YTrMil70Iz7/F6bE0m6q4q7ChPUxzTyhyNxnMKDWfoMnPYERSmUeea0ZABW3sXWNygmsZpzUpEjZrGtIg0uJDUAEP7EDG4v5jX0JpHKMKNQs5kIOua3sGLpkdyYUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=pwuXG8b7; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1749429557; c=relaxed/simple;
+	bh=JVn2p/DOukt6MdIMXqYFhWzO3ZLA2yCp1Wi2vYVnstU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=olKQDn29Dhg/8r38OmXk220wrb4L9M1I5AOevMi/odN2Ev6paH2QZ5EbtnGaSADIQy4DrTEv9q+UhE+Hv9OlmILIsq8nPOdjL2+a1CW8iv8y3CY3TJDkVHzAEBmGfqxymlvZP2FJSP0B3cL7lan0dxX7cc4E8KLErru8hzRNQrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tQDX7zkK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="pwuXG8b7"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 33C923D5;
-	Mon,  9 Jun 2025 02:37:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1749429477;
-	bh=VNImrDurwZK0+nYH5ILKXX5q7TG/MFOjxrqpLuoNmTI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pwuXG8b7/mU1AjzKo96JkUt8kxMaGNh6RAw5ecbjkKIdCngiaVh+4DHxUN0JixM8w
-	 Xv2trPT3CrltYX6iZyzNIAxh89GroguvRpnrAV1/qqERIBzk+AI3Yi+rFyJkpmv8Wq
-	 VkGfv4ATvf4/93cY30rB5LsY7Z8TjOlDGg3rR/Ls=
-Date: Mon, 9 Jun 2025 03:37:51 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>,
-	Naushir Patuck <naush@raspberrypi.com>, linux-media@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: bcm2835-unicam: Remove RGB24 support
-Message-ID: <20250609003751.GD14545@pendragon.ideasonboard.com>
-References: <20250606-rpi-unicam-rgb-bgr-fix-v1-1-9930b963f3eb@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tQDX7zkK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47E78C4CEEE;
+	Mon,  9 Jun 2025 00:39:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749429556;
+	bh=JVn2p/DOukt6MdIMXqYFhWzO3ZLA2yCp1Wi2vYVnstU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tQDX7zkKhmq30JMPReVhM3QEmttw76a44yZgVue2m3L3937ogxZgYWDSQufNhzw1I
+	 fWZxMVCIRkZ1kb4dOxT8aUOFnqk2u8QonuCuAkfi8lpdioUYaajV1kLDUKYvH92PXo
+	 eY1gFfZh6wYzGnBs/haf8vGSa6+CL/bYFwJ5d8pulPoV6Yzq8a2hzgbe0REpZHdh2b
+	 aL1idE+3Cd2CMJ7p4XcpeJwtj5AehzBHo9nmueAN6KrHVcA10gmxgWFKDyLsW8PI90
+	 X/LGMBINQCl7zjX4w8fAx+HbSL+Hq6rkzCru8VDo7N3X5JF26Wt0rVFZUQ7ZnPx+99
+	 ubcUP1gR45L/w==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5532e0ad84aso4062309e87.2;
+        Sun, 08 Jun 2025 17:39:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWEqNIViFNAT6f1iU1ib9BFlE9S0lWjfVQ9Cr69QCP99XUFufkVYmPMm1l5aWFSA8aT4smIUyKsrD2d7GM=@vger.kernel.org, AJvYcCXFljV7T9E4U0DGXa2MtztH9oDKcuFdFXpcYSs+WqbUInzB0SNfuX2D/K+lRrMxeawj0s+ue9VeMur2C6I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7w1EnZg7VTFmytrTNJMeLkie7DL4McoRUwzAvbMFxGyXm/hlL
+	APqydRjla+ZuPDIfAUM9ri6wbCNO7PesQ+Yda0rKMs4NUMo6+rSU90IPRWbx9Jf+Km/gKanEkiJ
+	BZIDEXgLrR14IzX1tpVXpMyOcj5tyHTA=
+X-Google-Smtp-Source: AGHT+IGqVARft2TYYa+6T9yYG/WuZGNFqU+b6fS5l1/WPY/oHwSWtDlykGIeEjkIK+DWT1ClbDqcxkWe66OyJ4e50q0=
+X-Received: by 2002:a05:6512:3e0f:b0:553:267e:914e with SMTP id
+ 2adb3069b0e04-55366bd0e82mr2971642e87.1.1749429555011; Sun, 08 Jun 2025
+ 17:39:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250606-rpi-unicam-rgb-bgr-fix-v1-1-9930b963f3eb@kernel.org>
+References: <20250608142737.168829-1-chenhuacai@loongson.cn>
+In-Reply-To: <20250608142737.168829-1-chenhuacai@loongson.cn>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Mon, 9 Jun 2025 09:38:38 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAREbns8J8QV0SHSvgu21tcUPoxNmGaig9yueOmSOt5_oQ@mail.gmail.com>
+X-Gm-Features: AX0GCFtaA6qH1gDKXaSx7uF6m4SsiJMJhIU62CV9PNl0D0e6ozT7rt0W875uef8
+Message-ID: <CAK7LNAREbns8J8QV0SHSvgu21tcUPoxNmGaig9yueOmSOt5_oQ@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: loongson: Fix build warnings about export.h
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: linux-kbuild@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, 
+	Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, linux-sound@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Maxime,
-
-Thank you for the patch.
-
-On Fri, Jun 06, 2025 at 04:53:03PM +0200, Maxime Ripard wrote:
-> The RGB24 V4L2 format is defined as a pixel format with 8 bits per
-> components, with the components being in the red, green, and blue order
-> from left to right.
-> 
-> The RGB MIPI-CSI2 is defined in the specification (Section 11.3.1,
-> RGB888) with blue coming first, then green, then red. So the opposite of
-> what V4L2 means by RGB.
-> 
-> Since the hardware cannot reorder the components, this means that when
-> selecting the RGB24 format, you get inverted red and blue components
-> compared to what you'd expect.
-> 
-> The driver already supports BGR24, so we can simply remove the RGB24
-> format from the driver.
-
-The only reason I could think of to explain why the driver exposes
-V4L2_PIX_FMT_RGB24 is to support CSI-2 sources that transfer RGB888 data
-with a non-standard order. I don't know what hardware would do that.
-Dave, Naush, do you recall why this pixel format is supported by the
-unicam driver ?
-
-> Fixes: 392cd78d495f ("media: bcm2835-unicam: Add support for CCP2/CSI2 camera interface")
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+On Sun, Jun 8, 2025 at 11:27=E2=80=AFPM Huacai Chen <chenhuacai@loongson.cn=
+> wrote:
+>
+> After commit a934a57a42f64a4 ("scripts/misc-check: check missing #include
+> <linux/export.h> when W=3D1") and 7d95680d64ac8e836c ("scripts/misc-check=
+:
+> check unnecessary #include <linux/export.h> when W=3D1"), we get some bui=
+ld
+> warnings with W=3D1:
+>
+> sound/soc/loongson/loongson_i2s.c: warning: EXPORT_SYMBOL() is used, but =
+#include <linux/export.h> is missing
+>
+> So fix these build warnings for ASoC/Loongson.
+>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 > ---
->  drivers/media/platform/broadcom/bcm2835-unicam.c | 5 -----
->  1 file changed, 5 deletions(-)
-> 
-> diff --git a/drivers/media/platform/broadcom/bcm2835-unicam.c b/drivers/media/platform/broadcom/bcm2835-unicam.c
-> index f10064107d543caf867249d0566a0f42d6d8c4c6..1f549019efd53c9aae83193e74f1a3601ebf274d 100644
-> --- a/drivers/media/platform/broadcom/bcm2835-unicam.c
-> +++ b/drivers/media/platform/broadcom/bcm2835-unicam.c
-> @@ -338,15 +338,10 @@ static const struct unicam_format_info unicam_image_formats[] = {
->  	/* RGB Formats */
->  		.fourcc		= V4L2_PIX_FMT_RGB565, /* gggbbbbb rrrrrggg */
->  		.code		= MEDIA_BUS_FMT_RGB565_1X16,
->  		.depth		= 16,
->  		.csi_dt		= MIPI_CSI2_DT_RGB565,
-> -	}, {
-> -		.fourcc		= V4L2_PIX_FMT_RGB24, /* rgb */
-> -		.code		= MEDIA_BUS_FMT_RGB888_1X24,
-> -		.depth		= 24,
-> -		.csi_dt		= MIPI_CSI2_DT_RGB888,
->  	}, {
->  		.fourcc		= V4L2_PIX_FMT_BGR24, /* bgr */
->  		.code		= MEDIA_BUS_FMT_BGR888_1X24,
->  		.depth		= 24,
->  		.csi_dt		= MIPI_CSI2_DT_RGB888,
-> 
-> ---
-> base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
-> change-id: 20250606-rpi-unicam-rgb-bgr-fix-d1b6f46a75ad
 
--- 
-Regards,
 
-Laurent Pinchart
+Thank you for your contribution.
+
+Reviewed-by: Masahiro Yamada <masahiroy@kernel.org>
+
+--=20
+Best Regards
+Masahiro Yamada
