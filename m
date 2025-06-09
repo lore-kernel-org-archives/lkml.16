@@ -1,434 +1,210 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-b6-smtp.messagingengine.com (flow-b6-smtp.messagingengine.com [202.12.124.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628C88BFF;
-	Mon,  9 Jun 2025 08:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E383B28030D;
+	Mon,  9 Jun 2025 08:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749456347; cv=none; b=k21A0idgsAibP+2ozqDFD50qM3UF3N9LqulxoipaCR0DtJu0aDKKQfVzyHB3Ceb+k/IsKF0w+lsTP/EKfOQl7Vc3d20mEfZs8Xl9teMdEgX8ZgknPuiEZiIIOdNreiWopLZ72Hh5Iew1fbUbpP0nniREo8r8BHlwm5jFgQS/uaU=
+	t=1749456524; cv=none; b=A+57WBkxsjvcUpoVRUVFeDoVbSS8iOH39U/gMHw9dLXy838L5gJmjLg1z2CWpXBG7K5nOyLb6hZlx18UXIlosHwbsGMuLt8jfJVn9R3F+f9Xx9AdS+/8dF128Dc2TDHR4kSlHVLysNdz4pLCUUUZfS/S375YelDEoAdiKdrTK0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749456347; c=relaxed/simple;
-	bh=qBueEC1npTtSkmELi7i3Sm8KHkbtYZnM410acM1mAOk=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tv7a8cccX2B1NeKQYSLXT+I/8VvRnzzyEz9Me37bJi16bRh28WpCF7uPnQnrXQUaXV42hMhWhOALZCqOQsJp39gnVKOR77lVm+4PS+0rs3eXnREnNe8/05vKPka7ZL78N87eq6FKjjP36XlXKCr1VRXr/5OYmKy1P1z3OBpTwGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BgjjuUsp; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749456524; c=relaxed/simple;
+	bh=Kq3FV9iptETXrme4JGWRHJSwuOei6uZwyUiHPKjDJlc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rv2qoBzLtY5thf7jmPlOcQW+VGbwioOyhGWMXmyRQHCC8UNGpjYQLEPUmg8VIb7kgLNwG+kcE7C196aVPZD6eT9ELFM+2ica7dYgtvmTVkg5FNZ4N09T2yC38l+sCfMw0lXEO/e03Q1Zaxpkk+IAig+dfUyKrMkE2/be8QRULOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org; spf=pass smtp.mailfrom=maowtm.org; dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b=FgvQOX0S; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=BfGuOVVq; arc=none smtp.client-ip=202.12.124.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maowtm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BgjjuUsp"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a4f72cba73so3434246f8f.1;
-        Mon, 09 Jun 2025 01:05:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749456344; x=1750061144; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r4pmFUtt6uVLHg5W7x8YNczKB/YrG77/k0XSv5YhRDg=;
-        b=BgjjuUspxxV+P6qWT+MWOPRKjfH05cUdyThxUE0ollYUMAU4K5Ivegq6oxb0yVwd48
-         S5M/ZvETisrCgEuotqnajQ4bjnnuCiXvTXsFAYoHEFYK7T4mkHl1W+rzw2XIygyrepS7
-         7T9WnfEwf9XEn6K9/5O4N0YLAeNvgucnzqV4edetgcy8MBYH3psxsWDLYC/VoSwuyQ8n
-         XNGUGZkdGWpcSE7AQeRZ8+0VpD7g+rn2I5UQncN+b7tG2SMbPA/4tck+UCRiBFOroUa3
-         QCyEDz+JhCwnDiJy4f0xbg4uqMRKasFpovacOc6z3Gg9vAOaKMshx7PnXN5VH00EQbVw
-         OpmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749456344; x=1750061144;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=r4pmFUtt6uVLHg5W7x8YNczKB/YrG77/k0XSv5YhRDg=;
-        b=vZjM7pv1A3COzpFsiQ8DUpokE7XB8Aa9HXCzUybIOdsXLtqybKWSKdd3UI1W9oC5QB
-         3dbindTuXYRtjUwiFEJOx4prHe0GKWPp17AtfciGO2JnQvGjram7jFhbI5f9RZVifnTz
-         LccCXmi0/wXZBRyeQZXwFj6UM2uarfNTBsPHRG0znfRdXfcBL0utedWPKU3JzdH48m2h
-         NSV/ZrgAdFzC2kiBkptjUhV3vu+aDYwT6e+BbAf4vRtjIaoZe467cQpEddz0fCxG2Geq
-         pFkdX2yT3WB5dMnXKPl8Rdohru3l7dWEyi2xB1vaTgKishhN7La6eIV5f9ORD6FAuOEH
-         mWQw==
-X-Forwarded-Encrypted: i=1; AJvYcCUNMiLORBL6Cy99u/8N7NGGy0GXZKKIRpQXd6AkiLKJ+ddi65vmAZmGSv3BZzOwE+9/eupZ3uQDnWa9@vger.kernel.org, AJvYcCVduFjl9WOtVgu4cfkfu/xnjTss8Qyv4FhuKOefE6sOPKXK8XoCQTNSXkUrcT3T49pHOvl6UKdobEEF@vger.kernel.org, AJvYcCW6UeFdFv7+V9ZuOBBeasfH+8vGYY1AxlIo7x2DqU2M4dUkKU6YirqHQXB4kPCWXG3bKN+gMjcLIBGJuCwD@vger.kernel.org
-X-Gm-Message-State: AOJu0YytdyJKHEyNm3mgFtg1X7c0eXzzNCubf++ujwj32fucGPWMCUEY
-	df+Amyw5orAdjGQe0sIRptFQgNZC/oUQL7vwocKKZyTI7DGLoLRMIO/d
-X-Gm-Gg: ASbGnctVZWy+6M/1RS/kGVaa/RFZLWOFlXCVeKgN5p8jhACArF0i+JbUBneJyGUdiqN
-	te+g2jAUWpkrWdW/lYvzKp+2TcWoy1pkJx2bPOVZGxhVVb5BKkrRRe4w52gVdnpCyoI1XhIpJj9
-	4c8hvo85WKnD/4xfpwf0C/Bbn77FwfsIjA0eu8GB3uaYlY6uHayeTVSfSZ+/qLKYqeR5Evjmenu
-	eYjSCuiYFogMnF6fYZ3NVi1cstrn4HDATBOcGXNJKcVWQP8u/T8vhptJBNpjzOyCdsMXjXE0hte
-	msju7SD8tcM0OpIfR9EbhN8ijxHkAuIV0sz73ozHzpxyUWWAaXQqjz5HyfGjXKkoqcOGYQ==
-X-Google-Smtp-Source: AGHT+IFJe1aAG/zR94PMwun2u1CVvSTjTfcD2GhSf5CGaS/aanunWwMpiCYGfPHjpJfuCjV0E4XjfA==
-X-Received: by 2002:a05:6000:2304:b0:3a4:f6f2:65e9 with SMTP id ffacd0b85a97d-3a531434393mr9663520f8f.19.1749456343376;
-        Mon, 09 Jun 2025 01:05:43 -0700 (PDT)
-Received: from [192.168.1.187] ([161.230.67.253])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323b6612sm8761209f8f.41.2025.06.09.01.05.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 01:05:42 -0700 (PDT)
-Message-ID: <930768920f83bf720f660f65050ef61d16610766.camel@gmail.com>
-Subject: Re: [PATCH v7 5/5] iio: adc: ad7405: add ad7405 driver
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>, Lars-Peter Clausen	
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron	 <jic23@kernel.org>, David Lechner
- <dlechner@baylibre.com>, Nuno =?ISO-8859-1?Q?S=E1?=	 <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Rob Herring	 <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley	
- <conor+dt@kernel.org>, Sergiu Cuciurean <sergiu.cuciurean@analog.com>, 
- Dragos Bogdan <dragos.bogdan@analog.com>, Antoniu Miclaus
- <antoniu.miclaus@analog.com>, Olivier Moysan	 <olivier.moysan@foss.st.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>,  Matti Vaittinen
- <mazziesaccount@gmail.com>, Angelo Dureghello <adureghello@baylibre.com>,
- Guillaume Stols	 <gstols@baylibre.com>, Tobias Sperling
- <tobias.sperling@softing.com>,  Marcelo Schmitt
- <marcelo.schmitt@analog.com>, Trevor Gamblin <tgamblin@baylibre.com>,
- Alisa-Dariana Roman	 <alisadariana@gmail.com>, Ramona Alexandra Nechita
- <ramona.nechita@analog.com>,  Herve Codina <herve.codina@bootlin.com>,
- AngeloGioacchino Del Regno	 <angelogioacchino.delregno@collabora.com>,
- Thomas Bonnefille	 <thomas.bonnefille@bootlin.com>, =?ISO-8859-1?Q?Jo=E3o?=
- Paulo =?ISO-8859-1?Q?Gon=E7alves?=	 <joao.goncalves@toradex.com>,
- linux-iio@vger.kernel.org, 	devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Date: Mon, 09 Jun 2025 09:05:48 +0100
-In-Reply-To: <20250605150948.3091827-6-pop.ioan-daniel@analog.com>
-References: <20250605150948.3091827-1-pop.ioan-daniel@analog.com>
-	 <20250605150948.3091827-6-pop.ioan-daniel@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b="FgvQOX0S";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BfGuOVVq"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailflow.stl.internal (Postfix) with ESMTP id 272B41D406F0;
+	Mon,  9 Jun 2025 04:08:40 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Mon, 09 Jun 2025 04:08:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maowtm.org; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1749456519;
+	 x=1749463719; bh=7ENdChkKgKNI9Bj63mK2Sh0VQmIZu8fz9OgqfYcb2LE=; b=
+	FgvQOX0SXVeFhGEyWSP5j/YhoCwZoylqorpQ+trljlK9ymL5XMFLXgN3gNMRsqfa
+	MUwfQlcakRj3TmUSZktJeNQ4mqGqlZ9HX1T1+IGPTpfWbImefK0g6gYDVC1WLar4
+	a7OaaZ8xq36W10U2iiMZX5nx5IFCJ0W3WbQT3IREWaXIBpgTyrdf5i4nKArzWeEd
+	Ww/zLmgwTVbx6fgsDwhIY8gGlCRQywlh7muSLG+jPe9695ELwehyH1kkkFNzok2c
+	Kr+BJ75LLO2SWV9DtsAa2Tik5QFDhNbuWoKBUxqi6Yc/8SsdJrmgPxc2RrEKA7I9
+	zrMoTlqzMDC24lyrEiFfpA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749456519; x=
+	1749463719; bh=7ENdChkKgKNI9Bj63mK2Sh0VQmIZu8fz9OgqfYcb2LE=; b=B
+	fGuOVVqmMW0cvVH6oAv3lPT/F+loL+yDqVv03f+DZj8hnrVjgfAw91EKNGhhFSB8
+	GiQ4AMpsPPCDa3nbJ2NfLZ0LmmrG4hw1sZgpdO6xnSCWMzUot+qDwatlgYmN/jBy
+	QDJ4pXsUSLppAfcwui+/YusPrqHtjBzvyKAXKwDrzrPPRHBnDZHtYPXUlGrY536z
+	nZrnf32FDiqq+zYPYPI5GAwv0mpnWYun22wEDzCPosw1SiIqphoO1SiJMgBxDmKS
+	H0zOUWgE+271kU17xe1koUXY8jmYIwLmdrEXs8qMsv54sgkAOoVFmYLR1ZYLcBE5
+	TZHwJRZj9AenSXKXBv7mg==
+X-ME-Sender: <xms:h5ZGaHUS6VkH2iVFTc8E9kgPNk6C5JxWgWYBKDIzmOemixR6lBu41A>
+    <xme:h5ZGaPkVpHDW6Sz2oepgtrp9oAuZh81ZTOd51x9ys9TXYZSRBEy9NyIl9PFfmxoTh
+    yu0h9H3fV29pS7xxWc>
+X-ME-Received: <xmr:h5ZGaDZph4h706P4Fsg2T5fwZmgOlApvz1EbpIudP20oRTttSgoR2urkV5ZATBNQUSS6Bkeag-OTucPZ7reDILpx>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdeltdefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdej
+    necuhfhrohhmpefvihhnghhmrghoucghrghnghcuoehmsehmrghofihtmhdrohhrgheqne
+    cuggftrfgrthhtvghrnhepudekvefhgeevvdevieehvddvgefhgeelgfdugeeftedvkeei
+    gfeltdehgeeghffgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepmhesmhgrohifthhmrdhorhhgpdhnsggprhgtphhtthhopedvvddpmhhouggv
+    pehsmhhtphhouhhtpdhrtghpthhtohepshhonhhgsehkvghrnhgvlhdrohhrghdprhgtph
+    htthhopehmihgtseguihhgihhkohgurdhnvghtpdhrtghpthhtohepvhhirhhoseiivghn
+    ihhvrdhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopegsrhgruhhnvghrsehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopegrmhhirhejfehilhesghhmrghilhdrtghomhdprhgt
+    phhtthhopegrnhgurhhiiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghstheskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtohepsghpfhesvhhgvghrrdhkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopegurghnihgvlhesihhoghgvrghrsghogidrnhgvth
+X-ME-Proxy: <xmx:h5ZGaCW82eBbK-bukAY6jCQSwAe7sOEJjKUwvl2BC9HptXBn5LkdsQ>
+    <xmx:h5ZGaBkeHiBoV9cfPqYq-gBJCAdujZTgLkmdnYb21ibcgkBSCWZU6g>
+    <xmx:h5ZGaPfiz6miyOnVHhlODwDyw7VWcEHhfnknfpyElHRNkvLrgBBIsg>
+    <xmx:h5ZGaLEev_OE9OmfucnS7s_c0m3BPrP5H5Z7qDFkjWyuDILIWY451A>
+    <xmx:h5ZGaOWHKxUII7DII2q6ALhcOQWfvPSiGlAIlPAuWLYccusj2sj6TsL->
+Feedback-ID: i580e4893:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 9 Jun 2025 04:08:36 -0400 (EDT)
+Message-ID: <97cdb6c5-0b46-4442-b19f-9980e33450c0@maowtm.org>
+Date: Mon, 9 Jun 2025 09:08:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 bpf-next 0/5] bpf path iterator
+To: Song Liu <song@kernel.org>
+Cc: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
+ amir73il@gmail.com, andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
+ daniel@iogearbox.net, eddyz87@gmail.com, gnoack@google.com, jack@suse.cz,
+ jlayton@kernel.org, josef@toxicpanda.com, kernel-team@meta.com,
+ kpsingh@kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ martin.lau@linux.dev, mattbobrowski@google.com, repnop@google.com
+References: <20250606213015.255134-1-song@kernel.org>
+ <dbc7ee0f1f483b7bc2ec9757672a38d99015e9ae.1749402769@maowtm.org>
+ <CAPhsuW7n_+u-M7bnUwX4Go0D+jj7oZZVopE1Bj5S_nHM1+8PZg@mail.gmail.com>
+Content-Language: en-US
+From: Tingmao Wang <m@maowtm.org>
+In-Reply-To: <CAPhsuW7n_+u-M7bnUwX4Go0D+jj7oZZVopE1Bj5S_nHM1+8PZg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2025-06-05 at 18:09 +0300, Pop Ioan Daniel wrote:
-> Add support for the AD7405/ADUM770x, a high performance isolated ADC,
-> 1-channel, 16-bit with a second-order =CE=A3-=CE=94 modulator that conver=
-ts an
-> analog input signal into a high speed, single-bit data stream.
->=20
-> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-> ---
+On 6/9/25 07:23, Song Liu wrote:
+> On Sun, Jun 8, 2025 at 10:34 AM Tingmao Wang <m@maowtm.org> wrote:
+> [...]
+>> Hi Song, Christian, Al and others,
+>>
+>> Previously I proposed in [1] to add ability to do a reference-less parent
+>> walk for Landlock.  However, as Christian pointed out and I do agree in
+>> hindsight, it is not a good idea to do things like this in non-VFS code.
+>>
+>> However, I still think this is valuable to consider given the performance
+>> improvement, and after some discussion with Mickaël, I would like to
+>> propose extending Song's helper to support such usage.  While I recognize
+>> that this patch series is already in its v3, and I do not want to delay it
+>> by too much, putting this proposal out now is still better than after this
+>> has merged, so that we may consider signature changes.
+>>
+>> I've created a proof-of-concept and did some brief testing.  The
+>> performance improvement attained here is the same as in [1] (with a "git
+>> status" workload, median landlock overhead 35% -> 28%, median time in
+>> landlock decreases by 26.6%).
+>>
+>> If this idea is accepted, I'm happy to work on it further, split out this
+>> patch, update the comments and do more testing etc, potentially in
+>> collaboration with Song.
+>>
+>> An alternative to this is perhaps to add a new helper
+>> path_walk_parent_rcu, also living in namei.c, that will be used directly
+>> by Landlock.  I'm happy to do it either way, but with some experimentation
+>> I personally think that the code in this patch is still clean enough, and
+>> can avoid some duplication.
+>>
+>> Patch title: path_walk_parent: support reference-less walk
+>>
+>> A later commit will update the BPF path iterator to use this.
+>>
+>> Signed-off-by: Tingmao Wang <m@maowtm.org>
+> [...]
+>>
+>> -bool path_walk_parent(struct path *path, const struct path *root);
+>> +struct parent_iterator {
+>> +       struct path path;
+>> +       struct path root;
+>> +       bool rcu;
+>> +       /* expected seq of path->dentry */
+>> +       unsigned next_seq;
+>> +       unsigned m_seq, r_seq;
+> 
+> Most of parent_iterator is not really used by reference walk.
+> So it is probably just separate the two APIs?
 
-Looks good. Just one thing that I guess Jonathan can tweak. With it,
+I don't mind either way, but I feel like it might be nice to just have one
+style of APIs (i.e. an iterator with start / end / next vs just one
+function), even though this is not totally necessary for the ref-taking
+walk.  After all, the BPF use case is iterator-based.  This also means
+that the code at the user's side (mostly thinking of Landlock here) is
+slightly simpler.
 
-Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+But I've not experimented with the other way.  I'm open to both, and I'm
+happy to send a patch later for a separate API (in that case that would
+not depend on this and I might just start a new series).
 
-> changes in v7:
-> =C2=A0- replace kernel.h with math64.h that define DIV_ROUND_CLOSEST_ULL(=
-)
-> =C2=A0- restructure ad7405_set_dec_rate function
-> =C2=A0- fix indentation
-> =C2=A0drivers/iio/adc/Kconfig=C2=A0 |=C2=A0 10 ++
-> =C2=A0drivers/iio/adc/Makefile |=C2=A0=C2=A0 1 +
-> =C2=A0drivers/iio/adc/ad7405.c | 259 ++++++++++++++++++++++++++++++++++++=
-+++
-> =C2=A03 files changed, 270 insertions(+)
-> =C2=A0create mode 100644 drivers/iio/adc/ad7405.c
->=20
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index ad06cf556785..43af2070e27f 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -251,6 +251,16 @@ config AD7380
-> =C2=A0	=C2=A0 To compile this driver as a module, choose M here: the modu=
-le will
-> be
-> =C2=A0	=C2=A0 called ad7380.
-> =C2=A0
-> +config AD7405
-> +	tristate "Analog Device AD7405 ADC Driver"
-> +	depends on IIO_BACKEND
-> +	help
-> +	=C2=A0 Say yes here to build support for Analog Devices AD7405, ADUM770=
-1,
-> +	=C2=A0 ADUM7702, ADUM7703 analog to digital converters (ADC).
-> +
-> +	=C2=A0 To compile this driver as a module, choose M here: the module wi=
-ll
-> be
-> +	=C2=A0 called ad7405.
-> +
-> =C2=A0config AD7476
-> =C2=A0	tristate "Analog Devices AD7476 1-channel ADCs driver and other
-> similar devices from AD and TI"
-> =C2=A0	depends on SPI
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index 07d4b832c42e..8115f30b7862 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -26,6 +26,7 @@ obj-$(CONFIG_AD7291) +=3D ad7291.o
-> =C2=A0obj-$(CONFIG_AD7292) +=3D ad7292.o
-> =C2=A0obj-$(CONFIG_AD7298) +=3D ad7298.o
-> =C2=A0obj-$(CONFIG_AD7380) +=3D ad7380.o
-> +obj-$(CONFIG_AD7405) +=3D ad7405.o
-> =C2=A0obj-$(CONFIG_AD7476) +=3D ad7476.o
-> =C2=A0obj-$(CONFIG_AD7606_IFACE_PARALLEL) +=3D ad7606_par.o
-> =C2=A0obj-$(CONFIG_AD7606_IFACE_SPI) +=3D ad7606_spi.o
-> diff --git a/drivers/iio/adc/ad7405.c b/drivers/iio/adc/ad7405.c
-> new file mode 100644
-> index 000000000000..c07b90fbd429
-> --- /dev/null
-> +++ b/drivers/iio/adc/ad7405.c
-> @@ -0,0 +1,259 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Analog Devices AD7405 driver
-> + *
-> + * Copyright 2025 Analog Devices Inc.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/math64.h>
-> +#include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/util_macros.h>
-> +
-> +#include <linux/iio/backend.h>
-> +#include <linux/iio/iio.h>
-> +
-> +static const unsigned int ad7405_dec_rates_range[] =3D {
-> +	32, 1, 4096,
-> +};
-> +
-> +struct ad7405_chip_info {
-> +	const char *name;
-> +	struct iio_chan_spec channel;
-> +	const unsigned int full_scale_mv;
-> +};
-> +
-> +struct ad7405_state {
-> +	struct iio_backend *back;
-> +	const struct ad7405_chip_info *info;
-> +	unsigned int ref_frequency;
-> +	unsigned int dec_rate;
-> +};
-> +
-> +static int ad7405_set_dec_rate(struct iio_dev *indio_dev,
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct iio_chan_spec *chan=
-,
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int dec_rate)
-> +{
-> +	struct ad7405_state *st =3D iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	if (dec_rate > 4096 || dec_rate < 32)
-> +		return -EINVAL;
-> +
-> +	if (!iio_device_claim_direct(indio_dev))
-> +		return -EBUSY;
-> +
-> +	ret =3D iio_backend_oversampling_ratio_set(st->back, chan->scan_index,
-> dec_rate);
-> +	iio_device_release_direct(indio_dev);
-> +
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	st->dec_rate =3D dec_rate;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ad7405_read_raw(struct iio_dev *indio_dev,
-> +			=C2=A0=C2=A0 const struct iio_chan_spec *chan, int *val,
-> +			=C2=A0=C2=A0 int *val2, long info)
-> +{
-> +	struct ad7405_state *st =3D iio_priv(indio_dev);
-> +
-> +	switch (info) {
-> +	case IIO_CHAN_INFO_SCALE:
-> +		*val =3D st->info->full_scale_mv;
-> +		*val2 =3D st->info->channel.scan_type.realbits - 1;
-> +		return IIO_VAL_FRACTIONAL_LOG2;
-> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-> +		*val =3D st->dec_rate;
-> +		return IIO_VAL_INT;
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		*val =3D DIV_ROUND_CLOSEST_ULL(st->ref_frequency, st-
-> >dec_rate);
-> +		return IIO_VAL_INT;
-> +	case IIO_CHAN_INFO_OFFSET:
-> +		*val =3D -(1 << (st->info->channel.scan_type.realbits - 1));
-> +		return IIO_VAL_INT;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int ad7405_write_raw(struct iio_dev *indio_dev,
-> +			=C2=A0=C2=A0=C2=A0 struct iio_chan_spec const *chan, int val,
-> +			=C2=A0=C2=A0=C2=A0 int val2, long info)
-> +{
-> +	switch (info) {
-> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-> +		if (val < 0)
-> +			return -EINVAL;
-> +		return ad7405_set_dec_rate(indio_dev, chan, val);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int ad7405_read_avail(struct iio_dev *indio_dev,
-> +			=C2=A0=C2=A0=C2=A0=C2=A0 struct iio_chan_spec const *chan,
-> +			=C2=A0=C2=A0=C2=A0=C2=A0 const int **vals, int *type, int *length,
-> +			=C2=A0=C2=A0=C2=A0=C2=A0 long info)
-> +{
-> +	switch (info) {
-> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-> +		*vals =3D ad7405_dec_rates_range;
-> +		*type =3D IIO_VAL_INT;
-> +		return IIO_AVAIL_RANGE;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static const struct iio_info ad7405_iio_info =3D {
-> +	.read_raw =3D &ad7405_read_raw,
-> +	.write_raw =3D &ad7405_write_raw,
-> +	.read_avail =3D &ad7405_read_avail,
-> +};
-> +
-> +#define AD7405_IIO_CHANNEL {					\
-> +	.type =3D IIO_VOLTAGE,					\
-> +	.info_mask_shared_by_type =3D BIT(IIO_CHAN_INFO_SCALE) |	\
-> +			BIT(IIO_CHAN_INFO_OFFSET),		\
-> +	.info_mask_shared_by_all =3D IIO_CHAN_INFO_SAMP_FREQ |	\
-> +			BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),	\
-> +	.info_mask_shared_by_all_available =3D			\
-> +			BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),	\
-> +	.indexed =3D 1,						\
-> +	.channel =3D 0,						\
-> +	.channel2 =3D 1,						\
-> +	.differential =3D 1,					\
-> +	.scan_index =3D 0,					\
-> +	.scan_type =3D {						\
-> +		.sign =3D 'u',					\
-> +		.realbits =3D 16,					\
-> +		.storagebits =3D 16,				\
-> +	},							\
-> +}
-> +
-> +static const struct ad7405_chip_info ad7405_chip_info =3D {
-> +	.name =3D "ad7405",
-> +	.full_scale_mv =3D 320,
-> +	.channel =3D AD7405_IIO_CHANNEL,
-> +};
-> +
-> +static const struct ad7405_chip_info adum7701_chip_info =3D {
-> +	.name =3D "adum7701",
-> +	.full_scale_mv =3D 320,
-> +	.channel =3D AD7405_IIO_CHANNEL,
-> +};
-> +
-> +static const struct ad7405_chip_info adum7702_chip_info =3D {
-> +	.name =3D "adum7702",
-> +	.full_scale_mv =3D 64,
-> +	.channel =3D AD7405_IIO_CHANNEL,
-> +};
-> +
-> +static const struct ad7405_chip_info adum7703_chip_info =3D {
-> +	.name =3D "adum7703",
-> +	.full_scale_mv =3D 320,
-> +	.channel =3D AD7405_IIO_CHANNEL,
-> +};
-> +
-> +static const char * const ad7405_power_supplies[] =3D {
-> +	"vdd1",	"vdd2",
-> +};
-> +
-> +static int ad7405_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +	struct iio_dev *indio_dev;
-> +	struct ad7405_state *st;
-> +	struct clk *clk;
-> +	int ret;
-> +
-> +	indio_dev =3D devm_iio_device_alloc(dev, sizeof(*st));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	st =3D iio_priv(indio_dev);
-> +
-> +	st->info =3D device_get_match_data(dev);
-> +	if (!st->info)
-> +		return dev_err_probe(dev, -EINVAL, "no chip info\n");
-> +
-> +	ret =3D devm_regulator_bulk_get_enable(dev,
-> ARRAY_SIZE(ad7405_power_supplies),
-> +					=C2=A0=C2=A0=C2=A0=C2=A0 ad7405_power_supplies);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to get and enable
-> supplies");
-> +
-> +	clk =3D devm_clk_get_enabled(dev, NULL);
-> +	if (IS_ERR(clk))
-> +		return PTR_ERR(clk);
-> +
-> +	st->ref_frequency =3D clk_get_rate(clk);
-> +	if (!st->ref_frequency)
-> +		return -EINVAL;
-> +
-> +	indio_dev->name =3D st->info->name;
-> +	indio_dev->channels =3D &st->info->channel;
-> +	indio_dev->num_channels =3D 1;
-> +	indio_dev->info =3D &ad7405_iio_info;
-> +
-> +	st->back =3D devm_iio_backend_get(dev, NULL);
-> +	if (IS_ERR(st->back))
-> +		return dev_err_probe(dev, PTR_ERR(st->back),
-> +				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to get IIO backend");
-> +
-> +	ret =3D iio_backend_chan_enable(st->back, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D devm_iio_backend_request_buffer(dev, st->back, indio_dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D devm_iio_backend_enable(dev, st->back);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * Set 256 decimation rate. The default value in the AXI_ADC register
-> +	 * is 0, so we set the register with a decimation rate value that is
-> +	 * functional for all parts.
-> +	 */
-> +	ret =3D ad7405_set_dec_rate(indio_dev, &indio_dev->channels[0], 256);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_iio_device_register(dev, indio_dev);
-> +}
-> +
-> +static const struct of_device_id ad7405_of_match[] =3D {
-> +	{ .compatible =3D "adi,ad7405", .data =3D &ad7405_chip_info, },
-> +	{ .compatible =3D "adi,adum7701", .data =3D &adum7701_chip_info, },
-> +	{ .compatible =3D "adi,adum7702", .data =3D &adum7702_chip_info, },
-> +	{ .compatible =3D "adi,adum7703", .data =3D &adum7703_chip_info, },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, ad7405_of_match);
-> +
-> +static struct platform_driver ad7405_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "ad7405",
-> +		.owner =3D THIS_MODULE,
+Would like to hear what VFS folks thinks of this first tho, and whether
+there's any preference in one or two APIs.
 
-Drop the above.
+> 
+> Also, is it ok to make m_seq and r_seq available out of fs/?
 
-> +		.of_match_table =3D ad7405_of_match,
-> +	},
-> +	.probe =3D ad7405_probe,
-> +};
-> +module_platform_driver(ad7405_driver);
-> +
-> +MODULE_AUTHOR("Dragos Bogdan <dragos.bogdan@analog.com>");
-> +MODULE_AUTHOR("Pop Ioan Daniel <pop.ioan-daniel@analog.com>");
-> +MODULE_DESCRIPTION("Analog Devices AD7405 driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_IMPORT_NS("IIO_BACKEND");
+The struct is not intended to be used directly by code outside.  Not sure
+what is the standard way to do this but we can make it private by e.g.
+putting the seq values in another struct, if needed.  Alternatively I
+think we can hide the entire struct behind an opaque pointer by doing the
+allocation ourselves.
+
+> 
+>> +};
+>> +
+>> +#define PATH_WALK_PARENT_UPDATED               0
+>> +#define PATH_WALK_PARENT_ALREADY_ROOT  -1
+>> +#define PATH_WALK_PARENT_RETRY                 -2
+>> +
+>> +void path_walk_parent_start(struct parent_iterator *pit,
+>> +                           const struct path *path, const struct path *root,
+>> +                           bool ref_less);
+>> +int path_walk_parent(struct parent_iterator *pit, struct path *next_parent);
+>> +int path_walk_parent_end(struct parent_iterator *pit);
+> 
+> I think it is better to make this rcu walk a separate set of APIs.
+> IOW, we will have:
+> 
+> int path_walk_parent(struct path *path, struct path *root);
+> 
+> and
+> 
+> void path_walk_parent_rcu_start(struct parent_iterator *pit,
+>                            const struct path *path, const struct path *root);
+> int path_walk_parent_rcu_next(struct parent_iterator *pit, struct path
+> *next_parent);
+> int path_walk_parent_rcu_end(struct parent_iterator *pit);
+
+(replied above)
+
+> 
+> Thanks,
+> Song
+> 
+> [...]
+
