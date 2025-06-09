@@ -1,90 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D08B2F4A;
-	Mon,  9 Jun 2025 19:33:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAA82F4A;
+	Mon,  9 Jun 2025 19:34:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749497632; cv=none; b=S25783NuQr4i1mGI3lYyeL8NqdklZ4o5obQNcHmI1878Tt2CfGe7PCXeb+SslBn8uR+q5o5UzmSbB33xV9IsvJY7OQrseHVE9knCFTF+5cROEBsRoCciKVdEQvvL0epmAZ438EIDN49t0U+9DR2g0AWjPh6GFCtUNTOBaS+LeNc=
+	t=1749497640; cv=none; b=hdU3fKuGpM4eLJ95fSkWZAl8IGqksk9GGYwFR3w9xWTyKxHy6feg0F9te1Pm6BhDYyTKjozTYTvDjPzaVjQntrH36kLl6+RSe7a9d+PHNGVSHID8EamNZrV1q10yVsmutb5XpWxLh0i/QPsdrEHQWRHKm9IiPjedY+1l30iMjP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749497632; c=relaxed/simple;
-	bh=TP4hyTs8h8YAb40w69Vr1lWI5iqkgDHn/WQE3QL865I=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=YNptEZLmUPUgzRPecKlzFlNFi+T4CdUT9Q13sdT3m/Uuw9DfcnCwmw3pcVsuDHZV8eqEeqHLD9X6WYvpWCBBdo8DSRZ1dz9XmlM+rEgOoZ8kvMTs/5oElguFPisAZgEz2RzzRegvGPOLA48gXwTm7RqEToT7wRuBZP2QphnI5B0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=On4WlChj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749497640; c=relaxed/simple;
+	bh=0jArhGSz3UMEtySAtlHbYE5pxnqUAOSkObNt8gqJUmQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=POqN3PV9F+BTgUOoopAV2DZXAxQS+JjnopVKofCeHRJIi3YfZ2WGVaIUIZiqi42K8xVaAijCvPzmGt7HY3kq/KZ2r8ranuI7YiarStFzmVLCGWFbHxmRWQ+SIm40phb09KzI75QSkefWypWtaL8coR2uq5gT59khPP1/u3TuAT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oWk0zO2A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="On4WlChj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C951EC4CEF2;
-	Mon,  9 Jun 2025 19:33:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oWk0zO2A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E807C4CEEB;
+	Mon,  9 Jun 2025 19:33:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749497632;
-	bh=TP4hyTs8h8YAb40w69Vr1lWI5iqkgDHn/WQE3QL865I=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=On4WlChjQCtAwoelwqwcdRxT8v1VCfv9hDzz+aUVbE0NAnnPCdMwnRJZrHJAAsA87
-	 9eICV9OPwQfMAKTi4FOITRspcsHnxzgdF/G4ysHnizfG59bTOcRM2to7g9eSP72FpM
-	 0HoZwUL1uSkO4UUO2Nj+yqyp5Lz/irfY/Fyed2DioexiTtcS2R2q/4Lyet4ACuM2hv
-	 C6Hx3fENqlFhOFbTX13N9nn/n3wbfWavsssxaitxiIZ40NRQY6UQG+dTlKUy7piqil
-	 72Mv/sNZS2ylZ2657IXoYVXYrFs+1gduKYkaC7EBnuW1bQK4AnMx62fIg2uBma+8E5
-	 PXUpxiUAgpwfg==
-From: Mark Brown <broonie@kernel.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Patrice Chotard <patrice.chotard@foss.st.com>
-Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20250609-b4-upstream_ospi_reset_update-v6-1-5b602b567e8a@foss.st.com>
-References: <20250609-b4-upstream_ospi_reset_update-v6-1-5b602b567e8a@foss.st.com>
-Subject: Re: [PATCH v6] spi: stm32-ospi: Make usage of
- reset_control_acquire/release() API
-Message-Id: <174949763058.256775.10348789503749491026.b4-ty@kernel.org>
-Date: Mon, 09 Jun 2025 20:33:50 +0100
+	s=k20201202; t=1749497640;
+	bh=0jArhGSz3UMEtySAtlHbYE5pxnqUAOSkObNt8gqJUmQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=oWk0zO2A/E5mkOyjsJrGSXoEVjj7lQELngE4VTdtxHfnd1D9IIxqbmRCZE0CCQ0lB
+	 pZx6mXFrD+xWoNYyOyvEcuHCvDDybsUw7lrmlP9ItzWP35jd2hd4cqMnmPi8KpdJaz
+	 HG00rp0hH5/N8goHNuGxIN28Zn4EszcN01xQqfKi3dXM+rgRgLaJg040nKMMWwC16/
+	 VYsFmy1JbySlXU/zfOKtPILSew2VuwjjrDCn4e6e2JHXV/nySoLnUmfUTVTqwiDjne
+	 19SaoPXa5f6wptD93yqQkS4plcXR16klSqbC5rSxrHF25JJQYTjCtMcfBmbZq4NuJG
+	 2N+SMb423lTlQ==
+Date: Mon, 9 Jun 2025 12:33:58 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: bpf@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>, John
+ Fastabend <john.fastabend@gmail.com>, Boris Pismenny <borisp@nvidia.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+ <horms@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman
+ <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>, Alexei Starovoitov
+ <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song
+ <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Stanislav
+ Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa
+ <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>, Ihor Solodrai
+ <isolodrai@meta.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH bpf-next v2 1/2] bpf,ktls: Fix data corruption when
+ using bpf_msg_pop_data() in ktls
+Message-ID: <20250609123358.4e024e62@kernel.org>
+In-Reply-To: <20250609020910.397930-2-jiayuan.chen@linux.dev>
+References: <20250609020910.397930-1-jiayuan.chen@linux.dev>
+	<20250609020910.397930-2-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
 
-On Mon, 09 Jun 2025 17:05:04 +0200, Patrice Chotard wrote:
-> As ospi reset is consumed by both OMM and OSPI drivers, use the reset
-> acquire/release mechanism which ensure exclusive reset usage.
+On Mon,  9 Jun 2025 10:08:52 +0800 Jiayuan Chen wrote:
+> When sending plaintext data, we initially calculated the corresponding
+> ciphertext length. However, if we later reduced the plaintext data length
+> via socket policy, we failed to recalculate the ciphertext length.
 > 
-> This avoid to call reset_control_get/put() in OMM driver each time
-> we need to reset OSPI children and guarantee the reset line stays
-> deasserted.
+> This results in transmitting buffers containing uninitialized data during
+> ciphertext transmission.
 > 
-> [...]
+> This causes uninitialized bytes to be appended after a complete
+> "Application Data" packet, leading to errors on the receiving end when
+> parsing TLS record.
 
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-
-Thanks!
-
-[1/1] spi: stm32-ospi: Make usage of reset_control_acquire/release() API
-      commit: cf2c3eceb757e3f28e6f1034f9bc178e1535f5cc
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+Acked-by: Jakub Kicinski <kuba@kernel.org>
