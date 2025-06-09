@@ -1,120 +1,98 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011A321D3DF;
-	Mon,  9 Jun 2025 23:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F751E9B31;
+	Mon,  9 Jun 2025 23:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749512152; cv=none; b=bHUfPd9LudC/2J7Bbg2wgSiBz3ci4EM8tJZEsU58Y7olaDMSyyUwv5p7KxL+M5IMuhWMbisoVfiAe0C2phqpy793+4yxo/duzA/9XgPQsQE657Tph9r5ntZjUQ1mENgS7hEg+r/h/6qc5Ls8ThcWM25nKS10AQoVbECtDY8K+FM=
+	t=1749512273; cv=none; b=G6p6lQKWdKhkh8CELG34dkDB/8QFIpBzknFt1+00O1eY5ru1K0mYYqrFbTkLUkIQKSw45s+9nNh0JLYfyrzVHmmmom8dx/gvNKFoSIL1gvsOR0Yt2ASB+7fCWNH0LakQ5U/iRZZhp2Hk/MOSkiVUT4dfLWzabL20i4Ik76qnSV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749512152; c=relaxed/simple;
-	bh=w/GL+mj8bQYIANGl3yIcT+DA7Bds2Z69Os710eHh57M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pQsGnUGBgcwdWbwjhovd/JqGIZY2DL5l/zW6gAjDbJACwqLjsnWw1obgD2TGnejhBpJR65/eB8tpPVeopp3j5IsYklTdmOpJ4Jx1D0vHFmGsVOwRmzZMq+0Yj9BRxFht6bQSUBtux/FUyHK/qPf04NdJClyVNuulYkwaRDkwLuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AvUFdhwg; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749512273; c=relaxed/simple;
+	bh=iYdPXbBfs0hWf5hFWSgk+TtoM4uOR6tLUwht/xnkfIQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=i2E7EheIHydJcihBY/RKpuoo3UYIrQE8Wkx8ZQjub0/CVm20TQO4cVJSba6RIJOvcREnv+bVIhrb/oZgTgjQG8cyhFE3fVUJyfSt21O3+8NlHaivffdwqv77Om52Z7IulgZfypOtoQurlV94X0VCh57baDQV6mXDiFJV3HnaKsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G48M2sLK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AvUFdhwg"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6f8a70fe146so93316126d6.0;
-        Mon, 09 Jun 2025 16:35:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749512150; x=1750116950; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r4VuZtE4rUm5jy4wnNJLez49lBHWyhH0Dn/21RvXZ9s=;
-        b=AvUFdhwgh56BA1Yi4vPJlktwiRF4nV8DMdTfxelxlUpTWOeelr2hktwF9j6YkX+c63
-         zy2cDNuR1BKjpawl5bj79rIh9GAEee6rluE2BjGqAZi7snWuLrBy/5yLDi6Tz+XJzqIZ
-         SX3xJtDCcFG3IDEAXp/oFQuoNZodToZO0m9rq2lWUJrIH9IdI/8lSLQrxX6/tpiUql5P
-         pQKAYn/lcWFbhx0DK1sYOGP67pg37pf1cu/THjgf0NCRyES4tVpHOM4LrcZuv93suJZK
-         vblGyggLI++/YKUZCF4oulcM/s3AhRc7oUhgNadzLYaXtCKAHWBFG8DSzUhu+2SWPXLF
-         maIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749512150; x=1750116950;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r4VuZtE4rUm5jy4wnNJLez49lBHWyhH0Dn/21RvXZ9s=;
-        b=SrIoLgBS4yKBqmTP6Z/E6lBHt3euZG0u8lP9zjt1K9m9XOxFWKrh0b3zo1T7I1qpaF
-         PhuOB1zcQye0jHjnAsRtqvYGtCZ6w2Rs/4Oy4/z4uiMUTUlpVa4Bos/m9rYCqHXUDRVy
-         vyv+kB4oCMQYsYqvmhIKIxzH7oHJmDyhQU++MTlJ5z/Xd0hHy8wV4DGb2HT/jEEx74IY
-         99xVg2iXYbxhgMkx58psk+N9kp/+gBJZDqUkTettebBbhL7gIXbwmK0rzXQZX6GxE/rD
-         z+39gPEchCoMOOeaDyf2fkw4zK2lAQ9A4RON/e5XlLo4Cz1dfJchn5zbvJ9SZUWaBip4
-         32gg==
-X-Forwarded-Encrypted: i=1; AJvYcCUfdRjOwYVmfuIP1VbSKgiWxdf2mBlS/kb025PYVECibAqqi0GurNHm0PNPbmKxWOYsgibIXHl1ogJAJpOB@vger.kernel.org, AJvYcCUo9SnkOY8QtK6k/NqmWtQr2AO4ltvnVqmzcc1w/gTBVIv4MsiOT72Bwyl8SRVwWIb599lGcy9V00cR/oA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWXtdyX1JewdKkIJBREHfGfxp9+AW195NVSAT722U83M4aucjM
-	EWSpra5yfwTHBXgc4knQF+WKXVOVTyhHBYpCvyDsVxtBouCJQBRqDT2f
-X-Gm-Gg: ASbGncvRFjg5we5JYhFwe23oL57NoqNNzF45sF/8oJkVJoSX1/Xx4GpYhdi6J253ALO
-	SDF9pkhsdzbd2N2FbjAQHXtQrakMzduJyr5083CA6m3ynSdJTYJHkm7SgieYqwVcCmW1PpnIRS8
-	V+O6f4p8hErFg15OX9DWv1cGmBYTMBN3A8XTQMd3HVxkWcJGr9yXdP0CMufS4GkiDvgIzsyKtty
-	xhrHzo91BwxeLEajkyDFK6V77q6fEbzuO7OlTwBmQ3+14QP2z7CIPVDbhw33HSa74ZqIUZAehc9
-	1d4vWQvH/sKQpf6xQGzNx/HaTk/gz2A3mA37WOeloF5O1IsQwVZyBl/Mq3qJOd+8vPfU30E63QO
-	UM6E10+MoKPZkYt4ht8vIXrKFnw==
-X-Google-Smtp-Source: AGHT+IFz3oc1IO+Bv2N+B84/4uhowwz5+aJ3yZ6Ch3vSOOb2rKvZtBlRDFcAsM21zApr0U+brrdJQQ==
-X-Received: by 2002:a05:6214:c2f:b0:6f4:cdca:2a6e with SMTP id 6a1803df08f44-6fb0906fda5mr253760046d6.45.1749512149883;
-        Mon, 09 Jun 2025 16:35:49 -0700 (PDT)
-Received: from node.. (dhcp-24-53-249-184.cable.user.start.ca. [24.53.249.184])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d2518ee8dbsm605781085a.18.2025.06.09.16.35.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 16:35:49 -0700 (PDT)
-From: shanmukh.iyer@gmail.com
-To: hugo@hugovil.com
-Cc: gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	shanmukh.iyer@gmail.com,
-	trivial@kernel.org
-Subject: [PATCH v2] drivers/tty/moxa.c: Fix spelling mistake in comment
-Date: Mon,  9 Jun 2025 19:34:52 -0400
-Message-Id: <20250609233452.164722-1-shanmukh.iyer@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250609083906.2612e881444ee04360715aed@hugovil.com>
-References: <20250609083906.2612e881444ee04360715aed@hugovil.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G48M2sLK"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A0FA9C4CEEB;
+	Mon,  9 Jun 2025 23:37:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749512272;
+	bh=iYdPXbBfs0hWf5hFWSgk+TtoM4uOR6tLUwht/xnkfIQ=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=G48M2sLKyGRvdihwcbHyCkFXuhYm/N3cDWTk/Zhk8YP9Cjh5jtHnUs91yYvC5hb/R
+	 DxaGaciIEjj8REh3uRq5Ur3+Ize4ZA8+lPF2cyiAQ171jaAbO72Y8vSicVhS6PF9Gs
+	 akbG1ZRPmywcMmsVVi/wk6xindAcF0gsAFIdnbAnHGKVS2rKEQcqDsR7b9FxPJKKOn
+	 z3OhnptJySO27ECr+o50wfvwg6xV1Ar6aWgY9/732t7RfHZ4cGcQl/4fLAA2T4T5rd
+	 Smml/7LXlhAbm/r01Od8E3xGWBJ/B1g7hVcfBgAJsoXgCAGpujV2v0H6trnBNjDSq8
+	 E3rO+IM3snQ3g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E501C5B552;
+	Mon,  9 Jun 2025 23:37:52 +0000 (UTC)
+From: Daniel Palmer via B4 Relay <devnull+daniel.palmer.sony.com@kernel.org>
+Date: Tue, 10 Jun 2025 08:37:38 +0900
+Subject: [PATCH] doc: Remove misleading reference to brd in dax.rst
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250610-fixdasrstbrd20250610-v1-1-4abe3b7f381a@sony.com>
+X-B4-Tracking: v=1; b=H4sIAEFwR2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDM0MD3bTMipTE4qLikqSiFLiggblJikVqiqmZkXGKElBrQVEqUB3Y2Oj
+ Y2loAn/ifM2YAAAA=
+To: Jonathan Corbet <corbet@lwn.net>, 
+ Dan Williams <dan.j.williams@intel.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Daniel Palmer <daniel.palmer@sony.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749512271; l=1013;
+ i=daniel.palmer@sony.com; s=20250610; h=from:subject:message-id;
+ bh=bneb9TzHhD7XIfcboMGGWopLiATbX15rmlqAcruoZnw=;
+ b=LmEVIPJtVyUCpQuvYeq1sHgZr+XqcOro4z/qlbTF3O5uDLfJPq2SbLBt4AoXhKgV3OOt8qI2N
+ 5NMPTIdcnuXBPOlk9JMHouKtL5vWPg8623aHGOV9ETf0yTI/N042nIo
+X-Developer-Key: i=daniel.palmer@sony.com; a=ed25519;
+ pk=dbwvNAF3zvjUZOTEPBh6uYWrBnOi7OPuXkoDcmmS8aY=
+X-Endpoint-Received: by B4 Relay for daniel.palmer@sony.com/20250610 with
+ auth_id=430
+X-Original-From: Daniel Palmer <daniel.palmer@sony.com>
+Reply-To: daniel.palmer@sony.com
 
-From: Shanmukh Iyer <shanmukh.iyer@gmail.com>
+From: Daniel Palmer <daniel.palmer@sony.com>
 
-Corrected some spelling and grammar in the comments, such as:
-- Units (baud -> baud rate)
-- Sentence flow
-- typos
+brd hasn't supported DAX for a long time but dax.rst
+still suggests it as an example of how to write a DAX
+supporting block driver.
 
-This is part of my first patch to get familiar with
-the kernel's patch contribution workflow.
+Remove the reference, confuse less people.
 
-Signed-off-by: Shanmukh Iyer <shanmukh.iyer@gmail.com>
+Fixes: 7a862fbbdec6 ("brd: remove dax support")
+Signed-off-by: Daniel Palmer <daniel.palmer@sony.com>
 ---
- drivers/tty/moxa.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ Documentation/filesystems/dax.rst | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/tty/moxa.c b/drivers/tty/moxa.c
-index 329b30fac8fc..bf86f24e5655 100644
---- a/drivers/tty/moxa.c
-+++ b/drivers/tty/moxa.c
-@@ -1627,10 +1627,11 @@ static void MoxaPortFlushData(struct moxa_port *port, int mode)
-  *           long baud          : baud rate (50 - 115200)
-  *
-  *           return:    0       : this port is invalid or baud < 50
-- *                      50 - 115200 : the real baud rate set to the port, if
-- *                                    the argument baud is large than maximun
-- *                                    available baud rate, the real setting
-- *                                    baud rate will be the maximun baud rate.
-+ *                      50 - 115200 : the real baud rate is set to the port, if
-+ *                                    the argument baud rate is larger than 
-+ *                                    the maximum available baud rate, the 
-+ *                                    real setting baud rate will be the 
-+ *                                    maximum baud rate.
-  *
-  *
-  *      Function 12:    Configure the port.
+diff --git a/Documentation/filesystems/dax.rst b/Documentation/filesystems/dax.rst
+index 08dd5e254cc5..5b283f3d1eb1 100644
+--- a/Documentation/filesystems/dax.rst
++++ b/Documentation/filesystems/dax.rst
+@@ -206,7 +206,6 @@ stall the CPU for an extended period, you should also not attempt to
+ implement direct_access.
+ 
+ These block devices may be used for inspiration:
+-- brd: RAM backed block device driver
+ - pmem: NVDIMM persistent memory driver
+ 
+ 
+
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250610-fixdasrstbrd20250610-074d8ed5623d
+
+Best regards,
 -- 
-2.34.1
+Daniel Palmer <daniel.palmer@sony.com>
+
 
