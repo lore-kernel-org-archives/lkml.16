@@ -1,74 +1,64 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787994C8E
-	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 07:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14672820A8
+	for <linux-kernel@vger.kernel.org>; Mon,  9 Jun 2025 07:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749453453; cv=none; b=mySPhpwLsWb7EQu9WeAVfrMA1VGP/rSVuLPN9mBxBxv5Li9ZuEVgUv5X+U0HlWw+mfvXMc8Okxh+4sudRGy8Nbo6SoMBZ18fqGCuq4yD+4vwEfJxMC3aQcXYUkwYQVQCXZUswoQLsljYalr1EPIflk7YZzyB2UkHH+RZcz4+3q8=
+	t=1749453728; cv=none; b=S4j0anQaZ0mHEy1ihfx93OpSIMUf8tAdKw06Ilw+c+4A3gbWCPthBamqNG5sWUcBwI3mgw6DzhwbcETOmlywrumyYAA0Min3e0Pa4NWtCyBnGkIXC6iN6Gi4GxxpyPj+ruMcJobKlMyEO74Rtzo4tIwSm3PWtTEQJEGEKBu2XeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749453453; c=relaxed/simple;
-	bh=dnOOCHxE/dICMo1ItkE+yCkFIQkdWx5eFZ5lfhxhpo0=;
+	s=arc-20240116; t=1749453728; c=relaxed/simple;
+	bh=T6K+sYSly0OGharzJEMeoqNrKJdrAwobGIRkXo+z5JY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RGIUKqXtWgPXHDbsaXq1m9ltm12uNROgh1TtBFl4QkxAFNP8pP7G6bIWvfW2CAuiG+ED1viaBBCLzwwfYizr9738NgyI8o4msrp9am/k50QNH6wTgEObsj+jIxCcBFfMlpGo+wZxfuaMcg+JrQmq5d43k4GqcWGaGx1eFS8GO8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RKc3w8VC; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=qW8dFdrgh3D/C1ilx1FDegN8F3weq4BnmGZezZkf5Sy66xH8jyQINdzmGfS0A6WvzJZJ0gWyx1Rq+YQ1r8Cp2YGRmSU/jVpIURky2iVCUPia897uEFVQgd4mdA22PX8dOVQmEb3Kl5su0xmwOoeUdwyhAEZwAzOnKr5UYW8PAao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=SZmGlgSN; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="RKc3w8VC"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5590FrHY003643
-	for <linux-kernel@vger.kernel.org>; Mon, 9 Jun 2025 07:17:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ykt1m8wMBYY0GbBmpdFucNObSEG06qB6oOFyulI3RIQ=; b=RKc3w8VCApEr4HRZ
-	h6eKGZSki85kIXwn45ia71nSMmmjQMWHUkgeWEwJ5dG+giLPXXeONpaEGC/eXRhT
-	/m+IM5BcBHRvSnXdcDxA9ofAmQLV7Qe5HjDURXWkf90s3AC4/cJi7CxnrTUOSRM0
-	msnaxK58N/RkpeWX19Yju7p3EFafHp/vK5HjxZnLRFj/+SShAqJ+t9ji9rd6sUCF
-	VDbNgDOx53rrHl3uxtSmmAJczueEuVTEDXlVPF/5tiVeFvP+IgSO3fdJb1vXdAcP
-	x5l6naKx2FFQpxq6e51VNULHB1uv7NqT7err8Q66vgKrMV2CwuRJl7XXHGtLfddj
-	DI2XYQ==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474dn64v8w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 07:17:31 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5d608e703so813460085a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 00:17:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="SZmGlgSN"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3121aed2435so4280473a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 00:22:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1749453726; x=1750058526; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tlZBYyVcyDUOvgy5ixpGTAUg8PQpkLuJBFcAyQwuqwA=;
+        b=SZmGlgSNmXc/SfgDU3U8UERZmXeHdFAV1NHapQLBe60wfBZ06h4EyKfK0HtTwnPnx7
+         Xyq3bRxbddjaYgu6+6h4M5hFaQkQKOoYiR6kE8wrl6LBdVtTs4QX4Z2RuNBn53mNfpOA
+         RoQ13vz21ucd5oWzx2m6XxZi9IwFHiqc+iff8wcKnYII/6tYL+mMKcSYYvnSkVRRwsDL
+         2i3oQuy+FA8uPpCvXwvSm9TaQ5N0AhLN7TWMPPhFSpDpsA519fmhLKKIb00G09SGSO5+
+         yKUPPWu4HMckpNKprl6KwRw0drP/fghZeWLpFqDbwORIj4XNah3hXGwEWopY8QhOs1gC
+         j0OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749453449; x=1750058249;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ykt1m8wMBYY0GbBmpdFucNObSEG06qB6oOFyulI3RIQ=;
-        b=WbELMnKUENZhs4hlwINujONiKg5WMIDGxBZY/nsOW6p6Qj+E3h2H3Kg+rwOn70NSq9
-         Oxpne46Q3KE5SBm80LQBFux0L2U4W1DXkGtQbmhvlRrcGq29h7b4ydv/SpUA3xgwW5qv
-         9n7AvxwD2yCcPiHbSHdNW/VSM480wQ34/xpf3QFMUx0YaHRRKOzYRNX2zZ14kb2UZt3S
-         f3IWL2jWixYJH4GCXwse7837wmXTWILQ7DfuC6VZAJ9oq/826Jrk9YKS+cBvFOI0PHy9
-         Xv/KPEYrFSEQfgngFOoQV6zcc753lsDp7FUyDE0/Vj8HZycZehO41qa/vtRKiNQgTmVY
-         qRYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWSP+wn07aPegf0j+ItLSOId05+CmMqY3g9Z1rmD7xnfSvZdIcl9XPqnoNled7wpFG3QmVHSWkYqWrLM3c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7Kh8r9/0vIo3wDD6SR75A/wP6XkhZcsmc+trQosfdxMZQA4rw
-	+6zagQVPx6hWGY5pPjh4b88ImI90q0SDVurd1D2JNRN92Ht4jYq49/W8tbX2Z22Y0QYRSagQYbb
-	dkIK/9PdknipZ7MMNPn/LXU19vg9rh7b+y0utybcYNqOwHGTzfpFTSpuDAQ07S1M7PPVWHcVJhB
-	k=
-X-Gm-Gg: ASbGncv8/aUVeNLR7vfY23ZcvRw2HAywj8UuBRfGKlbH7+wa9fK1ovpGdIfIDM0sciC
-	4oQNTXeECWdzgXX8XzAoUZ6p2x1tC8B/UaEb87RGdqqkIT+/pOVqTap5HVMiNtd2KLlhZqbds6Z
-	exzqZdWkniYwOmPJTDfWp5bz4/rn6Vo1o1e5QU3RZ0KQKZ65GIs9jwBYAajCWGZDQxnpdWesd/Z
-	YYknDjxamYZcoSokVOsUfWE7b4JRKShAazSLnPMrDgjOjhOqkKDT4cHnMq3ABNbsXjZJ+TKRQBq
-	Wj9CC2vrur3Tx2FBCmBebeCokSE5kXD6nc7nQ0nQLFgM7o/RKnhXHNEL+95T3lo2EZ2PiXsa/Cb
-	TjPTTD4qjgIqUCQ==
-X-Received: by 2002:a05:622a:5c87:b0:476:9474:9b73 with SMTP id d75a77b69052e-4a5b9da89c4mr226514071cf.42.1749453438423;
-        Mon, 09 Jun 2025 00:17:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHdkd6CyJurG1kbBol7Erd8qyoJpOICpwacKz5TVDzmXLohtAPsAPvsf/9GyQC+BvRxwRlLJQ==
-X-Received: by 2002:a05:620a:1787:b0:7c5:47c6:b886 with SMTP id af79cd13be357-7d2298ec4bbmr1913052985a.43.1749453422860;
-        Mon, 09 Jun 2025 00:17:02 -0700 (PDT)
-Received: from ?IPV6:2001:14ba:a0c3:3a00::4c9? (2001-14ba-a0c3-3a00--4c9.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::4c9])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32ae1b34742sm9904481fa.32.2025.06.09.00.17.01
+        d=1e100.net; s=20230601; t=1749453726; x=1750058526;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tlZBYyVcyDUOvgy5ixpGTAUg8PQpkLuJBFcAyQwuqwA=;
+        b=NYiAet/jeUcfUhXZ65ttuO5n9XUVvO9UklfwWpzA7RNCINaJIPS0NZ9iO4I0M6akGo
+         O+jkGVeAjekcDJ14Tel0Q8Kx0fQ4JA8tNTOfbb1DI54Y+ZZO13zIYCsSVYQxCEoNBFgv
+         02or/Svt2/vJOFuFEA4ZwxQx/rGYqjD+NrbOWgdZbP9aYm3ufV5HqFO/hj/VNMDuZXjw
+         3olHqHd3oEHVMyjxgDIpP7YBGZeDWSufb81DYaZqCwfeX8WIF0ajJlvTi+GhpiTLsAdv
+         GmvXHptCWdsEPQ2TDzVcM8wqcffmI4+v96vEosfbLBzMuj28kTrFletxh0gcJveZTEwq
+         pezg==
+X-Gm-Message-State: AOJu0YyzxOwAuA9JhCZQ9HbrV5fTrHYdmBg979/q4r2wADOFE1NiI8tH
+	SjYIhwxcXXLm/flnGdH5ppiwt7hOGkv6Cq1QJQbsZdVYtTmUmYp8QGJaI+NhdUrCB7E=
+X-Gm-Gg: ASbGncuLTw3a2wD4GlSfXfnLbE/6yloRkEd+GnpIiqoUvPw4TUTQ4b6mcTH4R1YrrcF
+	oXa+hiJz9RqSFg114h3Dp0NEYbs6zz2uhMiUVjRG9G5WSa3vXmq29DhvCSR5/65z2wC1UlpgE+D
+	Rs2VLktACFubugDkm0TDC0POjUSmNEMaXUvkcUvKkkzh40ROd+fCXRQbo1MEdOMmKhs4JukgreR
+	I+KYCG1SlMrYhcNJ+qb6HocXd58reK+KVTydNnrvtwEgt2Mk5TWjAe/j+inpZ6JZulCPr+inkSm
+	8y1TELT6J5nieMVGvOaFm0sF3G4hMYdZZ1C9BECTbbfgqn8ASOge7JaS/zIT6JgTsX/44lFn99E
+	/CbTybxKB2TSaiV+9dA4=
+X-Google-Smtp-Source: AGHT+IEh4LPffN8yuJEsvHfJQbaYgOAOjlnHV104Z4hZYSIoE1PS8agIZzSxAbwcbd3A792x5GiqXA==
+X-Received: by 2002:a17:90b:58cb:b0:311:f692:6831 with SMTP id 98e67ed59e1d1-3134707730bmr16002660a91.32.1749453725873;
+        Mon, 09 Jun 2025 00:22:05 -0700 (PDT)
+Received: from [10.254.237.177] ([139.177.225.248])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31349f44bccsm5041596a91.22.2025.06.09.00.22.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Jun 2025 00:17:01 -0700 (PDT)
-Message-ID: <b938b358-301a-4842-bdf6-93ec3c459d41@oss.qualcomm.com>
-Date: Mon, 9 Jun 2025 10:17:00 +0300
+        Mon, 09 Jun 2025 00:22:05 -0700 (PDT)
+Message-ID: <ade4bd69-7f76-4e3a-b81d-ebb7c9653e4a@bytedance.com>
+Date: Mon, 9 Jun 2025 15:21:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,107 +66,88 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/8] power: supply: qcom_battmgr: Add charge control
- support
-To: Fenglin Wu <fenglin.wu@oss.qualcomm.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: =?UTF-8?Q?Gy=C3=B6rgy_Kurucz?= <me@kuruczgy.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>,
-        David Collins <david.collins@oss.qualcomm.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, kernel@oss.qualcomm.com,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org
-References: <20250530-qcom_battmgr_update-v2-0-9e377193a656@oss.qualcomm.com>
- <20250530-qcom_battmgr_update-v2-5-9e377193a656@oss.qualcomm.com>
- <f2e0f1da-c626-4cf0-8158-8a5805138871@kuruczgy.com>
- <8bb3a056-c00f-4ae0-a790-d742d31f229a@oss.qualcomm.com>
- <5knsdgk7o5zifkvzlrqiplmhztnsyhlxnqiuikqf4l7wkx2qvh@s3vzkiezw2bc>
- <219a46d0-446c-4eed-8809-4f2400de0ef9@oss.qualcomm.com>
- <cf3479b4-5f02-4d19-8164-306214966248@oss.qualcomm.com>
-Content-Language: en-US
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-In-Reply-To: <cf3479b4-5f02-4d19-8164-306214966248@oss.qualcomm.com>
+Subject: Re: [PATCH v4] mm: use per_vma lock for MADV_DONTNEED
+To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
+ linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ David Hildenbrand <david@redhat.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Jann Horn <jannh@google.com>, Suren Baghdasaryan <surenb@google.com>,
+ Lokesh Gidra <lokeshgidra@google.com>,
+ Tangquan Zheng <zhengtangquan@oppo.com>
+References: <20250607220150.2980-1-21cnbao@gmail.com>
+From: Qi Zheng <zhengqi.arch@bytedance.com>
+In-Reply-To: <20250607220150.2980-1-21cnbao@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjA5MDA1NiBTYWx0ZWRfX+K4zoHjUs3GW
- SLdbRX2l3DDsTweyP2YxMN+HOM+ShyEmHGfIG/ltEkiQjUak7eBOCiRN2DGIfFAhF/ck/veLxc1
- 83auMEyBQ7xYZg2lRQ1jkGFBDPzSWxu4TV0bXn8HkVtYSo7lBj6MSQxJgGiOgEOf1lJNAFM97Ji
- F153GPtFYdl9lx3FqHyaqf99tCohpFEvhasPSCMSFGXwCJwe9NUtqO0t9WFJyAVpctiTd6fv4il
- HjtO/PfTa9RBtxk8dCte4ZtsI0sV/rNblVcHanjb72R6TAWOTHMDNkqFHYvM/JlSnDTL9BeezF3
- t6E6+eH50uWznKFj7cztc0AKMRhLXutggj2/gvt6hjyYZwl5CiQy8I/79R7+qRCdVk5exXDgeB3
- E9sVbuACqIblGBNfoA6MdNK67JK/C/lQudEKLXF9souYaHPKDW0Xic4FIvS5VimBj4jVNhD7
-X-Proofpoint-GUID: vOc9l2EHnTbeCNzMy8lmv9aYauq-oJqG
-X-Authority-Analysis: v=2.4 cv=FaQ3xI+6 c=1 sm=1 tr=0 ts=68468a8b cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=6IFa9wvqVegA:10 a=NtchbJF2b19TUD_QsiUA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-ORIG-GUID: vOc9l2EHnTbeCNzMy8lmv9aYauq-oJqG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-09_03,2025-06-05_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0 adultscore=0
- mlxlogscore=978 mlxscore=0 spamscore=0 suspectscore=0 malwarescore=0
- priorityscore=1501 clxscore=1015 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506090056
 
-On 09/06/2025 05:39, Fenglin Wu wrote:
-> 
-> On 6/7/2025 5:46 PM, Konrad Dybcio wrote:
->> On 6/3/25 12:37 PM, Dmitry Baryshkov wrote:
->>> On Tue, Jun 03, 2025 at 01:48:11PM +0800, Fenglin Wu wrote:
->>>> On 5/31/2025 6:36 PM, György Kurucz wrote:
->>>>>> Add charge control support for SM8550 and X1E80100.
->>>>> Thank you for this, tested on my Lenovo Yoga Slim 7x, the limiting 
->>>>> works
->>>>> well, I finally don't have to worry about leaving my laptop plugged in
->>>>> for too long.
->>>>>
->>>>> One small thing I noticed is that after setting the sysfs values and
->>>>> rebooting, they report 0 again. The limiting appears to stay in effect
->>>>> though, so it seems that the firmware does keep the values, but Linux
->>>>> does not read them back. Indeed, looking at the code, it seems that
->>>>> actually reading back the values is only implemented for the SM8550.
->>>> Right.
->>>>
->>>> Based on offline information, X1E80100 doesn't support reading back 
->>>> those
->>>> threshold values in battery management firmware, so I can only use the
->>>> cached values for sysfs read.
->>> Which limits usablity of the attribute, it is now impossible to identify
->>> whether it is enabled or disabled. Is there a chance of fixing that for
->>> the X1E80100 platform?
->> Is there a chance we store that value in SDAM and can read it back?
->>
->> Konrad
-> 
-> The thresholds are stored in PMIC SDAM registers by ADSP after receiving 
-> the set requests, and ADSP reads them back during initialization. This 
-> is why ADSP retains them upon device reboot.
-> 
-> I spoke with the battery management firmware team, and they have no 
-> plans to update the battery management firmware for X1E80100 further. 
-> Consequently, they cannot provide any interfaces to read these 
-> thresholds through PMIC Glink.
-> 
-> Reading them from the existing SDAM registers requires adding "nvmem- 
-> cells" DT properties to specify the SDAM registers. However, the 
-> "pmic_glink.power-supply" device is an auxiliary device created by the 
-> pmic_glink driver and does not have an associated DT node. Is there any 
-> method to create a DT node and add DT properties for an auxiliary device?
 
-Auxiliary-bus devices don't have their OF nodes. Instead they use the 
-main device's of node thanks to the call to device_set_of_node_from_dev().
 
--- 
-With best wishes
-Dmitry
+On 6/8/25 6:01 AM, Barry Song wrote:
+> From: Barry Song <v-songbaohua@oppo.com>
+> 
+> Certain madvise operations, especially MADV_DONTNEED, occur far more
+> frequently than other madvise options, particularly in native and Java
+> heaps for dynamic memory management.
+> 
+> Currently, the mmap_lock is always held during these operations, even when
+> unnecessary. This causes lock contention and can lead to severe priority
+> inversion, where low-priority threads—such as Android's HeapTaskDaemon—
+> hold the lock and block higher-priority threads.
+> 
+> This patch enables the use of per-VMA locks when the advised range lies
+> entirely within a single VMA, avoiding the need for full VMA traversal. In
+> practice, userspace heaps rarely issue MADV_DONTNEED across multiple VMAs.
+> 
+> Tangquan’s testing shows that over 99.5% of memory reclaimed by Android
+> benefits from this per-VMA lock optimization. After extended runtime,
+> 217,735 madvise calls from HeapTaskDaemon used the per-VMA path, while
+> only 1,231 fell back to mmap_lock.
+> 
+> To simplify handling, the implementation falls back to the standard
+> mmap_lock if userfaultfd is enabled on the VMA, avoiding the complexity of
+> userfaultfd_remove().
+> 
+> Many thanks to Lorenzo's work[1] on:
+> "Refactor the madvise() code to retain state about the locking mode
+> utilised for traversing VMAs.
+> 
+> Then use this mechanism to permit VMA locking to be done later in the
+> madvise() logic and also to allow altering of the locking mode to permit
+> falling back to an mmap read lock if required."
+> 
+> One important point, as pointed out by Jann[2], is that
+> untagged_addr_remote() requires holding mmap_lock. This is because
+> address tagging on x86 and RISC-V is quite complex.
+> 
+> Until untagged_addr_remote() becomes atomic—which seems unlikely in
+> the near future—we cannot support per-VMA locks for remote processes.
+> So for now, only local processes are supported.
+> 
+> Link: https://lore.kernel.org/all/0b96ce61-a52c-4036-b5b6-5c50783db51f@lucifer.local/ [1]
+> Link: https://lore.kernel.org/all/CAG48ez11zi-1jicHUZtLhyoNPGGVB+ROeAJCUw48bsjk4bbEkA@mail.gmail.com/ [2]
+> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Jann Horn <jannh@google.com>
+> Cc: Suren Baghdasaryan <surenb@google.com>
+> Cc: Lokesh Gidra <lokeshgidra@google.com>
+> Cc: Tangquan Zheng <zhengtangquan@oppo.com>
+> Cc: Qi Zheng <zhengqi.arch@bytedance.com>
+> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+> ---
+>   -v4:
+>   * collect Lorenzo's RB;
+>   * use visit() for per-vma path
+> 
+>   mm/madvise.c | 195 ++++++++++++++++++++++++++++++++++++++-------------
+>   1 file changed, 147 insertions(+), 48 deletions(-)
+> 
+
+Acked-by: Qi Zheng <zhengqi.arch@bytedance.com>
+
+Thanks.
+
+
