@@ -1,80 +1,103 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE0C20F09C;
-	Mon,  9 Jun 2025 09:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D3FE1D5CF2;
+	Mon,  9 Jun 2025 09:07:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749459979; cv=none; b=lptigoo3MfNSixUg3Nj+ZJpcdf449Wj9LaYgbQnBTbhQvl4JIxZbeXe1BdW29Ps1zJ4hmuAa1Bp742SLcpk5vX0AY+6uSJL9qeXZs/aveN9B19MwB+VZrvclvEGMQgvU3lRUlo+cNbHRXyj36PGH9TEuY0WPQOZ05rndl+qHGSE=
+	t=1749460052; cv=none; b=ng6PQgvKoy/6FcgmX0n7kqC6YA2ntKymGonTYzLfhJtSKAyjWbwG/EghDTQNbpHJx8xuTwqgPsy03+zuMgGDKtuy+yj2HoPj9BmEnPaGzhbX4XCsVGwX3b1ujBnjbrBXQygHCntCxuCmatr2oqg0oyK4ixneH8w36l/Y+8yq5ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749459979; c=relaxed/simple;
-	bh=joBlEjrgr9muiP0UDjGGGTEJ6Vs1HF+Fy4q2Nr/4iJc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EMrPA3JsYVcpGohc5HqAekvusx38Zlxmu1QFVYRaTtAerUoIoR1mquNny2qox3d0GlIwmEMRgjEgfkvGVAihhI7bDRVu1ssVTY9EwGHvOndnlmrPGehDW5LhjXjg0y2GN/BwuGSLsjyg1wZiZ+6soTeWotJAzpcc9RZTvBrsk3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=d2TvmF6n; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1749460052; c=relaxed/simple;
+	bh=erCWTv1iBu+zhino5X8lqV0NnPCfncKslxTm/LttBO4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=b/AWWINMStwszDojSMLrwb6N2dn3zKnW6Bw0tiGq43HCnC0NOOLXDWNo0kXJDcwAuiTP1w2uzhgldSDEG81c1bC8w43opADlHEtai0F2mv/FFiLfez2mep6tJlQFZH6XzY7BYlevOQ8r4VWHoKGwqes4lN+7E//xU9CsNIBYXZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mqb8fdfU; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="d2TvmF6n"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=joBlEjrgr9muiP0UDjGGGTEJ6Vs1HF+Fy4q2Nr/4iJc=; b=d2TvmF6njbZP0r8VPzRz1pdgRw
-	D0cGitUZxFqVoVAdpgEyLxt/bO6IhuzyPF1TWutbiciAOvR1zlTJB5b59Df0npsAiZseMTfbPsG5j
-	f3hBHLG5LFVosHfH9fARI9OzCu93O3Wb7VnQow+eoxZa7MFsP3qwy+FQnzg5NI2faW/ibEjapB3ro
-	6qJsxwqPcvAdy6AKnabOX1lRjHyO8/x+gUoWzT+vp3vz7COQwC2tRYN/dCQTxxwWpORh3+JVWfkls
-	K5V0iUGo1JOOPeX3rP9NnQTrEJ7Lmw9cqSQZ0VCKrsprZzag7Rd+nGhz1GqPwYDZXFTvWrzZkWnqg
-	ZbQJZ44A==;
-Received: from i53875b1c.versanet.de ([83.135.91.28] helo=phil.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uOYSI-0005iM-T1; Mon, 09 Jun 2025 11:06:10 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: i@chainsx.cn, Hsun Lai <i@chainsx.cn>
-Cc: andrew@lunn.ch, conor+dt@kernel.org, devicetree@vger.kernel.org,
- inindev@gmail.com, jonas@kwiboo.se, krzk+dt@kernel.org,
- krzysztof.kozlowski@linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
- quentin.schulz@cherry.de, robh@kernel.org, sfr@canb.auug.org.au
-Subject: Re: [v5,0/2] Add support for Firefly Station-M3/ROC-RK3588S-PC
-Date: Mon, 09 Jun 2025 11:06:10 +0200
-Message-ID: <2607600.Icojqenx9y@phil>
-In-Reply-To: <20250602153500.1831349-1-i@chainsx.cn>
-References:
- <20250530031046.166202-1-i@chainsx.cn>
- <20250602153500.1831349-1-i@chainsx.cn>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mqb8fdfU"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A8E3B4326B;
+	Mon,  9 Jun 2025 09:07:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749460048;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=erCWTv1iBu+zhino5X8lqV0NnPCfncKslxTm/LttBO4=;
+	b=mqb8fdfUAPmh1nGlznkXqcy65DTSqmBNVTK2jEWW+sZy/L4Mwn72e1BDiJ6cNad6U5dhco
+	u2tGJQquy5bw3+kHVVdCbRKfHfSnzViq+cQDLYETVOvMuFONiHdKYsOexHM9Wtq5TlUA27
+	Wq6EQAHizzOUgD/5vnR/JKaEAE9T6g0f+lVPjJLQmVUJ7c33S2FZ74WRNQJywTAYKrGQVk
+	fSKxOTK0HsojuD7X2IAULVVy80JhHB4I6IhrxTD2EO/Jy5eiufVse+maoLpEn6h5EHezDB
+	jnD8xN55kzjPhIwMon0UA42cRqfRK4brNShFTyzymTAVg6aNocx8YOUgeY/CTQ==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Alexey Charkov <alchark@gmail.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,  Rob Herring <robh@kernel.org>,
+  Mark Brown <broonie@kernel.org>,  Krzysztof Kozlowski
+ <krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,  Tudor Ambarus
+ <tudor.ambarus@linaro.org>,  Pratyush Yadav <pratyush@kernel.org>,
+  Michael Walle <mwalle@kernel.org>,  Richard Weinberger <richard@nod.at>,
+  Vignesh Raghavendra <vigneshr@ti.com>,  linux-spi@vger.kernel.org,
+  devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-mtd@lists.infradead.org,  linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/3] dt-bindings: spi: Add VIA/WonderMedia serial flash
+ controller
+In-Reply-To: <CABjd4YxRMfi3ZFQxhB__6U4Rm3KQ7bm6J=wQLWAkpb++61ddEg@mail.gmail.com>
+	(Alexey Charkov's message of "Fri, 6 Jun 2025 13:06:22 +0400")
+References: <20250510-wmt-sflash-v1-0-02a1ac6adf12@gmail.com>
+	<20250510-wmt-sflash-v1-1-02a1ac6adf12@gmail.com>
+	<20250514204159.GA2988411-robh@kernel.org>
+	<CABjd4Yz3w75PtkRk_edzD5yf6b2xPuf20gopbm8ygddgCBfpkw@mail.gmail.com>
+	<2b520ae5-eb0d-40eb-ba73-cc18759f33b9@kernel.org>
+	<CABjd4YxRMfi3ZFQxhB__6U4Rm3KQ7bm6J=wQLWAkpb++61ddEg@mail.gmail.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Mon, 09 Jun 2025 11:07:27 +0200
+Message-ID: <87y0u1z3jk.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdeltdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffgefhjedtfeeigeduudekudejkedtiefhleelueeiueevheekvdeludehiedvfeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduiedprhgtphhtthhopegrlhgthhgrrhhksehgmhgrihhlrdgtohhmpdhrtghpthhtohepkhhriihksehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdpr
+ hgtphhtthhopehtuhguohhrrdgrmhgsrghruhhssehlihhnrghrohdrohhrghdprhgtphhtthhopehprhgrthihuhhshheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-Am Montag, 2. Juni 2025, 17:35:00 Mitteleurop=C3=A4ische Sommerzeit schrieb=
- Hsun Lai:
-> > I tried to replicate on top of master=20
-> > (24de2b9da3e28df323c1e096538ae1e035751adf) but couldn't, so I guess we=
-=20
-> > can simply ignore this warning?
->=20
-> Yes, the same situation occurs here,
-> and it has already been answered by Heiko St=C3=BCbner(#2):
-> https://patchwork.kernel.org/project/linux-rockchip/cover/20250516012402.=
-580468-1-i@chainsx.cn/
+Hi Alexey,
 
-Now with 6.16-rc1 out, this should disappear.
+>> > Happy to reference the spi-controller.yaml binding if so.
+>>
+>> SPI NOR flashes are still child devices of an SPI controller. You can
+>> look at other examples - aren't they all using spi-controller? Why this
+>> would be different? Unless you found some cases that are different, but
+>> then which ones?
+>
+> No strong opinions here, and no expectation of any special treatment
+> :) Just wanted to consult on what's most appropriate.
+>
+> My (subjective and perhaps unfounded) expectation when seeing
+> something advertise itself as an SPI controller was that it would be a
+> general purpose SPI master, to which one can e.g. connect an SPI
+> driven LCD screen and get it to work with generic Linux SPI
+> infrastructure - which would not be possible with this single-purpose
+> NOR-only flash controller. Given that I don't know how flexible or
+> restrictive other examples are in terms of driving arbitrary SPI
+> devices, I thought it's better to just ask.
+>
+> What I'm getting from this exchange here is that I'd better use the
+> spi-controller binding and respective node names regardless of the
+> fact that this controller cannot drive arbitrary SPI devices beyond
+> NOR flash (which, as I'm getting, is irrelevant after all).
 
-But I'd assume that bot check might have moved the binding out of the
-review queue of the dt-maintainers, so I guess you might try resending
-the series on top of that, because we're missing an Review/Ack on the
-binding.
+Just for information, there are several SPI controllers which are
+optimized for flash handling (not only NOR, though) and for that we have
+a spi-mem layer which allows to reference a set of SPI memory "only"
+callbacks. On the description side though, these controllers are like
+all other SPI controllers, so the same controller bindings may apply.
 
-
-Heiko
-
-
+Thanks,
+Miqu=C3=A8l
