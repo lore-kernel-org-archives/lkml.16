@@ -1,31 +1,31 @@
 Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA4A2459E5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2FEF246797;
 	Tue, 10 Jun 2025 18:35:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749580556; cv=none; b=Qn1OeJynJEDiy5Yl/cf3uGIf95lAt10L1VhnwzTASTxasbdpWOSc4cwwuEe3MOgeBr2i3DypMI5SdRsKigZJhko7rnu6xCL4RuVkv+lSwiTCUi0DbG6RUapHoIs6gH1/DwMqtLwMmIS9mUiYXELrndQezA7uqKcbdqlKZiMJZJE=
+	t=1749580556; cv=none; b=uOx9EaZex5m+eFj3iVOoDDLEhXXk+HB19LQZW9kfALfJ8yeyRZKJH6n9zKe9qCrvFBtE/er+CDiSnGjByOrXle/FbN6NlMpfMPjgotHLzZ7oR+lX9i07DMvYFdha8pbqwc1VVLffxgoFe+2angptvd3WkkckVmKkbk+fNv+qe1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749580556; c=relaxed/simple;
-	bh=6CL6EBCe6hQQbrc8yKgPqExIyIbxxxaXl+gAADiR3bs=;
+	bh=twyQ1Ck2pvyyVyptKKyyPqS4vLJkM4xooW1eE+dWMmU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HtRlafTxlFlJ/36euDoo3XnHJ76Zn0Mx7arDql/B+VS73WsR4sJgZCtCV2Ce1mUynkrVK+JqFV6r8p6P24w74Esm5VgOB3ZwalLLC6OPxOpA71vO1pRbhOqYAsRbKEmZbsEa9WXLMB71BRw3xlP2dUPUp1ytWIcGB6xcoGOcSbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=eoCZxRd0; arc=none smtp.client-ip=128.199.32.197
+	 In-Reply-To:To:Cc; b=E1dmuEQmq2sTGFC30RN0tDFUeo4GJmg/tRxuxb93xooP6izSkf1XH4bBIhVvHb4eUwr2XGGp3c4YfKpggE8gI6t+07yFxGEtwHlH6I+/er/AS1kg1IUSYuHNgexydO4oVhTmFWMOR8sjegLnhSB4ePtcckxeWtGkkaka8MlTuFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=5/diACix; arc=none smtp.client-ip=128.199.32.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="eoCZxRd0"
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="5/diACix"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1749580552; bh=6CL6EBCe6hQQbrc8yKgPqExIyIbxxxaXl+gAADiR3bs=;
+	t=1749580553; bh=twyQ1Ck2pvyyVyptKKyyPqS4vLJkM4xooW1eE+dWMmU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=eoCZxRd0A7nElkXGQdtJlTomNMkQ3EZsiRwHWGs2r2avwFVEszUILl0uInJGgVw8e
-	 hCABvZ3Rngs2QdIJN6hTbJ9wx7yX9K1W6QwlkmVSNlcYM67sP0dq0o/y7uslcml4iX
-	 vIH607tYhRJ62V94Eq6Xhv7Gw7zBABHzrwXJ/UZY=
+	b=5/diACix5rEpKE0/mah+wWuZYoLW9Q5EzdXuOxQZvVKYNAPsKSpHeGzUXz2P6+yr4
+	 lhr00b7E4I5gF1Z2Evvfcs971+ysE2wbtSKGnWftha8y6TlGbmykwKC2p3Ao4sGbF0
+	 88PA2qGy9p6jalzSrnHVi55uiiOQhcCM+GgxzavQ=
 From: Luca Weiss <luca@lucaweiss.eu>
-Date: Tue, 10 Jun 2025 20:34:53 +0200
-Subject: [PATCH v2 2/4] ARM: dts: qcom: msm8974-sony-xperia-rhine: Move
- camera buttons to amami & honami
+Date: Tue, 10 Jun 2025 20:34:55 +0200
+Subject: [PATCH v2 4/4] ARM: dts: qcom: Add initial support for Sony Xperia
+ Z Ultra (togari)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,7 +34,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250610-togari-v2-2-10e7b53b87c1@lucaweiss.eu>
+Message-Id: <20250610-togari-v2-4-10e7b53b87c1@lucaweiss.eu>
 References: <20250610-togari-v2-0-10e7b53b87c1@lucaweiss.eu>
 In-Reply-To: <20250610-togari-v2-0-10e7b53b87c1@lucaweiss.eu>
 To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
@@ -47,115 +47,86 @@ Cc: Kevin Widjaja <kevin.widjaja21@gmail.com>,
  linux-kernel@vger.kernel.org, Luca Weiss <luca@lucaweiss.eu>, 
  Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3378; i=luca@lucaweiss.eu;
- h=from:subject:message-id; bh=iVl3UueI2T38LKspxtaDL3hoDYy9Wa1gzTEtqLhQpMg=;
- b=owEBbQKS/ZANAwAKAXLYQ7idTddWAcsmYgBoSHsFAzvs1gEXBXmp9oyRHdGEi06LwNx+QemLe
- kXK3mIJ/JmJAjMEAAEKAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCaEh7BQAKCRBy2EO4nU3X
- VhFmEACpkAzeLQ1cGJkUf1bO1MdRijuOC58NZElA6kFWP0dcmHopfCr/WAPfvhAS0qsu9R1iMv0
- QQivvrka7QaerWlCawWzjpktnf1NkLX1IWB94cu0yaqftmu0vGyGql4WzYcoZglgWfVKiMExqpl
- DiuuRqi44kmVeonM1upnncwGSQyJVe5l/IbX/6noWpfZ5tGjnJlZKumaKtxSGFQ4+63dLzgLdmk
- 1UZO5yF2xqLjqeQcobMEwVWoCBGtrvzuwLsCscXf9P5TstrxmA3m/mVlwiCTcrLkX2TksLBzmg9
- bawc8591kmmHMjBiCx/1svprotoLFrwLkNv23JQiovZW0Wy+KomM+7KF5qNN4i4PkQhpud5RYq/
- i+7MRcapRV9S1aWz5DVyL4oWt/djP/1Rplg9XavDpn9AUAQdSDJubuGuFWXFAJCruQQl0Gaxp2Q
- qKFr31kZbzsBZwPeUIPGeTcsaEmf8AoV4Qw+6aRRtceBk4fQ0tKzUmelM6QCFwgcyoHYwkvV/qd
- VI1Lp+bpATSo3y1FlvxCnvszSktolT0HqaCb5OP++Qeajjp9+BeoGF0/oe5l6BQqXwfls0DEYo+
- kC/jOYQKn7NDKC6KGxC1V6qsZo2d2Qq3qmd9paakdLkpHNvifstfx8pyCyQFQPOaggi0JM5MgI5
- zDIaykTL8iMXnMQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2604; i=luca@lucaweiss.eu;
+ h=from:subject:message-id; bh=BZaA/IhwpGD0dVjtQKfZc3IZ16GBCMIFbqjS7QQEkJ4=;
+ b=owEBbQKS/ZANAwAKAXLYQ7idTddWAcsmYgBoSHsH8065XTNz+dpdUTRTVTX0tlM9YTv9oiCS9
+ MOH+iZCrvCJAjMEAAEKAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCaEh7BwAKCRBy2EO4nU3X
+ Vvw8EACgxYS9+1bsmWWFNSFFbm0QFyJFRecUosYnMJzgW7aDxEXFg+SH8s2v8myFaBHVo19zxk7
+ ddgR+XPaqBDT/hqdSrGrQosdVY9dRFjsp0gP53Uj7L2LyULW8tl2cykDwSXF4uzrC17m1nJDbMD
+ Lxr1usOLquiu6pJPphFlssYhXVMOkuU2kBxGh/yBynEslDVn2Ttt87fCAFjsPSMOhmSsAfWjGAV
+ Mqd8huBsmjLiEB4zxnH/zjfo8DXKAQYyFgsToPopnNvF0nRENpLnGMfOdx4V1Xzx6pMnOAPK/u/
+ VqF7QmEZwTPCONA3+TGi98IMfm/LQ3JhAS+GMOcxHZhqJWYmxFKESFdMuPXwf7YZNh6dJFUgTy3
+ qvwW9uQHqxhyZmTg6FzVSQKqzIh0N3h9wqdcJvsrSw2rwHO/SMbK0akC7+Pz36NZsz+/oP93kj9
+ c9w4a2Zl7Ax+/kTtjb+rKwDL5ojyWdh9gGBnhl4o3Zo7zC9yD1uuXYjOYsmIkMBSywPpRGPT5u2
+ KIjJO5Tfge21VuiaPJo609nzAaVYOgC7dm5MTG+6Cf+dQF3mvWnRKr95v6Wi4xeds3aKEhzeELd
+ wnspfkoU5RheN3dE4536hIbpzin+aQVuefDLVwuQAFO1pWtRo4pRmtcZOp5WMjj0aSToxs2QebW
+ qmU4+o6bghtiZQA==
 X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
  fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
 From: Kevin Widjaja <kevin.widjaja21@gmail.com>
 
-An upcoming board in the sony-xperia-rhine family (sony-togari) does not
-have dedicated camera buttons, so move those from common rhine dtsi to
-amami and honami dts files.
+Add the dts for the Z Ultra. This is currently almost the same as Z1
+Compact (amami) and Z1 (honami) as they share almost the same hardware.
+
+Only USB Networking and volume button are confirmed working.
 
 Signed-off-by: Kevin Widjaja <kevin.widjaja21@gmail.com>
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
 ---
- .../dts/qcom/qcom-msm8974-sony-xperia-rhine-amami.dts    | 16 ++++++++++++++++
- .../dts/qcom/qcom-msm8974-sony-xperia-rhine-honami.dts   | 16 ++++++++++++++++
- .../boot/dts/qcom/qcom-msm8974-sony-xperia-rhine.dtsi    | 14 --------------
- 3 files changed, 32 insertions(+), 14 deletions(-)
+ arch/arm/boot/dts/qcom/Makefile                          |  1 +
+ .../dts/qcom/qcom-msm8974-sony-xperia-rhine-togari.dts   | 16 ++++++++++++++++
+ .../boot/dts/qcom/qcom-msm8974-sony-xperia-rhine.dtsi    |  2 +-
+ 3 files changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine-amami.dts b/arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine-amami.dts
-index 9f2ab5c122d0b89e0ce343bec4d47ce238ade4f4..472a45408add20ccb685c4f3255e1b895e722ab1 100644
---- a/arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine-amami.dts
-+++ b/arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine-amami.dts
-@@ -5,6 +5,22 @@ / {
- 	model = "Sony Xperia Z1 Compact";
- 	compatible = "sony,xperia-amami", "qcom,msm8974";
- 	chassis-type = "handset";
+diff --git a/arch/arm/boot/dts/qcom/Makefile b/arch/arm/boot/dts/qcom/Makefile
+index 0c1d116f6e84f76994aa8c8286350bdcd1657a42..e875b5d25e8421fe16c94a1526ff401638ff01ab 100644
+--- a/arch/arm/boot/dts/qcom/Makefile
++++ b/arch/arm/boot/dts/qcom/Makefile
+@@ -47,6 +47,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+ 	qcom-msm8974-samsung-hlte.dtb \
+ 	qcom-msm8974-sony-xperia-rhine-amami.dtb \
+ 	qcom-msm8974-sony-xperia-rhine-honami.dtb \
++	qcom-msm8974-sony-xperia-rhine-togari.dtb \
+ 	qcom-msm8974pro-fairphone-fp2.dtb \
+ 	qcom-msm8974pro-htc-m8.dtb \
+ 	qcom-msm8974pro-oneplus-bacon.dtb \
+diff --git a/arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine-togari.dts b/arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine-togari.dts
+new file mode 100644
+index 0000000000000000000000000000000000000000..f60f7304d35e1e534bb350078dae900ec54700d4
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine-togari.dts
+@@ -0,0 +1,16 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "qcom-msm8974-sony-xperia-rhine.dtsi"
 +
-+	gpio-keys {
-+		key-camera-snapshot {
-+			label = "camera_snapshot";
-+			gpios = <&pm8941_gpios 3 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <1>;
-+			linux,code = <KEY_CAMERA>;
-+		};
++/* Togari uses a different touchscreen compared to other rhine devices */
++/delete-node/ &touchscreen;
 +
-+		key-camera-focus {
-+			label = "camera_focus";
-+			gpios = <&pm8941_gpios 4 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <1>;
-+			linux,code = <KEY_CAMERA_FOCUS>;
-+		};
-+	};
- };
- 
- &smbb {
-diff --git a/arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine-honami.dts b/arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine-honami.dts
-index 9028f17e5c4a76e3d381eec0356591ab245b4569..c3d69641fc1da971dc34885e66c6cb05bc727ddd 100644
---- a/arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine-honami.dts
-+++ b/arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine-honami.dts
-@@ -5,4 +5,20 @@ / {
- 	model = "Sony Xperia Z1";
- 	compatible = "sony,xperia-honami", "qcom,msm8974";
- 	chassis-type = "handset";
++/ {
++	model = "Sony Xperia Z Ultra";
++	compatible = "sony,xperia-togari", "qcom,msm8974";
++	chassis-type = "handset";
++};
 +
-+	gpio-keys {
-+		key-camera-snapshot {
-+			label = "camera_snapshot";
-+			gpios = <&pm8941_gpios 3 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <1>;
-+			linux,code = <KEY_CAMERA>;
-+		};
-+
-+		key-camera-focus {
-+			label = "camera_focus";
-+			gpios = <&pm8941_gpios 4 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <1>;
-+			linux,code = <KEY_CAMERA_FOCUS>;
-+		};
-+	};
- };
++&pm8941_l23 {
++	regulator-min-microvolt = <2600000>;
++	regulator-max-microvolt = <2600000>;
++};
 diff --git a/arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine.dtsi
-index 1dc9fa7f3ca00a13f4a33989cbdfc715176e3307..bf539e741ec060de67e7cb656a597abbc16650fe 100644
+index bf539e741ec060de67e7cb656a597abbc16650fe..f973ff65733242a243a850b99821967ccc582567 100644
 --- a/arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine.dtsi
 +++ b/arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine.dtsi
-@@ -28,20 +28,6 @@ key-volume-down {
- 			linux,code = <KEY_VOLUMEDOWN>;
- 		};
+@@ -84,7 +84,7 @@ &blsp1_i2c2 {
+ 	status = "okay";
+ 	clock-frequency = <355000>;
  
--		key-camera-snapshot {
--			label = "camera_snapshot";
--			gpios = <&pm8941_gpios 3 GPIO_ACTIVE_LOW>;
--			linux,input-type = <1>;
--			linux,code = <KEY_CAMERA>;
--		};
--
--		key-camera-focus {
--			label = "camera_focus";
--			gpios = <&pm8941_gpios 4 GPIO_ACTIVE_LOW>;
--			linux,input-type = <1>;
--			linux,code = <KEY_CAMERA_FOCUS>;
--		};
--
- 		key-volume-up {
- 			label = "volume_up";
- 			gpios = <&pm8941_gpios 5 GPIO_ACTIVE_LOW>;
+-	synaptics@2c {
++	touchscreen: synaptics@2c {
+ 		compatible = "syna,rmi4-i2c";
+ 		reg = <0x2c>;
+ 
 
 -- 
 2.49.0
