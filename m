@@ -1,156 +1,149 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A7F28C2BF
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D725428B4FD
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749594313; cv=none; b=raAw4E7lyP1SzYxFTx86l9MCuKqhEh16WGpiwKt1Bf8givfRFKcvaXA3eyc/mAZh9CnrZMCecFU8Q15FjFfU4QEWrKF5shRjTcotZro+Av19mVmd+8v0lnCjXnbzoerYqMWGsmkG/GmZe+3xUGe3N4pM4XcZGiGdka0vBd1/99s=
+	t=1749594338; cv=none; b=AyyUrTMasbRipqlUKzPM2nkij3ts0RxuDi3PZBAfj+xDE51Q0y8mfqn95T4b99CbXrCOLWEKcMw2gtnanTDK+S9Y+KXmSEStjDTW+7u9D+BKL53FNQmTFm3Rkv3X7dlLECsMnhyw6jyUXkVUaFTY6xjwJ5xruApsKJ3W3+tf42E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749594313; c=relaxed/simple;
-	bh=bjEQw4isrba+nP1ZYwzcYPZbVaYkMsqnYrte+EEhbmE=;
+	s=arc-20240116; t=1749594338; c=relaxed/simple;
+	bh=ZblPVCW6RisPNEnVqYsXRlK3rux83HEJD1kpftoB4OQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U4r4B0zKGwksIK+nU6ZqapFy8nMTxy+Y6iQKmpzZTDKfLTETYV/yBMSC4f65H78j0XkYHo8P0tApPtltraryTQwy064nWhLVAtDafsdQIIatecdGLxUboiRnm4J6g1yXF1bVDry+5M1jd1Z+88MjroVsoVeLBWTUxriYvDISD08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JJ7r/8ny; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=QL2l08Ntl4H3crzZWGRUE2W1rwOheYNcYiseuf6g4r8N5GqeHMAztXv95n70Uuz0hnbiWMPNovTlxNyUh5fCnNQe5/k22xGeurmGfBN3uBRZuE0Aax/PvR0kerhyEQjRgOJDAb/c60wZBl7hiFh+zWG9+1LMec3V/WQshPZuDPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RrEE2rKO; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JJ7r/8ny"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749594308;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jeldsOfLIW+0Hr4bYxPOhI4qHvZBHHNPgSq/+bzEbT4=;
-	b=JJ7r/8nylq9p8XUPBIJoCglrzm6WhcrlLknWRuBFgxYtjwd79OegBviDQd/Lkt32xP6F5k
-	uoPLlsLhVh8aVEoXgg78c8/GwWykxs4rAaEFhMciRGAAbNoiyzOTj85BNJqkrcfl5FF6X0
-	w7ZWFklfpYdZarPspeiXybSvyxCwTCU=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-389-_u8LXALKN3KK5mMnLagL0w-1; Tue, 10 Jun 2025 18:25:07 -0400
-X-MC-Unique: _u8LXALKN3KK5mMnLagL0w-1
-X-Mimecast-MFC-AGG-ID: _u8LXALKN3KK5mMnLagL0w_1749594307
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4a589edc51aso142034591cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:25:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="RrEE2rKO"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55AIPxKA003170
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:25:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=NIZerdv5856btQLeZiz5wtEr
+	Wi3yo26TMxxYpxr5HC4=; b=RrEE2rKOCsDtipjqNu3tng1rbnolbgehv7+H0EAY
+	FEZ3H6HJXAhgS62zP8ebfAMARG5HvgV9pM3dCS4KYpPB+BbADg18KKaiF23MAviK
+	aWKYFISZQw1nOkOu4S98mILVhI3YL8NvaIbMq+tSvVxm6RH7+mPzzhFd8kcdEiEx
+	CbWXr38/2kLY4ZqvMTtkyibG1i6PTw5lI3XtrE4ZMWb9yKLIWvaiLhoFiQIHGo/w
+	E+U3k3aU54O3uGviqpsf8HqDgVh5HwDx9qqUoI8DI1zZ2HEvyU02MNC4Z6GZ2G6f
+	vwbOSUWzItq5h2m9uqp/dgqun15+RhvbHDPEduLyoYWF4w==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 475v2y5tk2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:25:36 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5f876bfe0so1063683785a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:25:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749594307; x=1750199107;
+        d=1e100.net; s=20230601; t=1749594335; x=1750199135;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jeldsOfLIW+0Hr4bYxPOhI4qHvZBHHNPgSq/+bzEbT4=;
-        b=wygXpFlaPUJ8VcBsEogjodn1xGCzzUCd4GKvhAg4Zvdd2BqkoNt77BuWmqYcbOREI9
-         +ncw93CXzCKxv/6tl6/MCV2QwjXiWxcS470lxEuR7kyjXw7KQ6OOECAmw6vXpdW4sy9P
-         rDc0qTWogeuG/KU4ePZnnJxQMLYfOVFv8QVFqB/3TQjtjvDHwsOLKlQG9NETLY9fUxQk
-         zwSCFRMVjvaSOzLVm+Tocq84PZ814yZKJNiUwQn/cloOdW66VcjdEGvRHeQzAPUQFM2q
-         xICI5yD2voCQcXgxjcP5ike39n1/WESGCal7NAaI4+ViQTkBJdgFCrSpSDlrMrB3vAPN
-         79MA==
-X-Forwarded-Encrypted: i=1; AJvYcCUsCIHDr8TZyELZ8mauuJlUEsCbZRRRQmdxbzIP0hxQ/0FiXJzOS/haXcYfRYhv9QRI+ILSPk8Sxp0KB6w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5xg+E53Y61P41CPpyPyIyzJ8Rv7h0UpqaFNtXWNZLX58h7a62
-	QqQiwvpxmTva55spqpD0MjYJJEOO/MvOiCC7aNfN3Pa8Fx/Q+pTQf/t2peydxdIBrurRBIHWcS1
-	34vqs545GrJoLkI0nic0DD+s4AWyOMD3gDD+GsAbYgh+GnA9SYkWiwK9K1vcOWkB+6Q==
-X-Gm-Gg: ASbGncsxormthFRpNZYJj+Ankx94saKYINSCwp6CYtjsXqaHr3xCHZkms3xMvP0WjS9
-	ktr66OtTKKTvqFLV0c4hls3eL0XLtba8/hlFPfgOp06tVtcptLrAB8ekFfhujuO2ODPMzdX6xGP
-	nyONyxBNe9xwOQ4EQqdWXJlSD6iS1O+mjnD9Uvli8OXf4rO8Ko2YoBDAJFg7nxAJyfshf86LWcf
-	63Nj8ny3vziuIWC4ZMOtLCDc+01jagW2cCEvxvNtBJc+KLenkGI3pdD74Ohgv+0CQ6ydi9tRDXD
-	Vv8d0vzLbkEt2A==
-X-Received: by 2002:a05:622a:17cb:b0:477:ea0:1b27 with SMTP id d75a77b69052e-4a713c2b203mr19488701cf.26.1749594306770;
-        Tue, 10 Jun 2025 15:25:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEh6veUjTr0aDX8Dk7lxqv8igglcGEC5XvjmK9Q5HpFTvrfcPRBsYoFnhvHMTj0/FgKtwRQ1A==
-X-Received: by 2002:a05:622a:17cb:b0:477:ea0:1b27 with SMTP id d75a77b69052e-4a713c2b203mr19488271cf.26.1749594306427;
-        Tue, 10 Jun 2025 15:25:06 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a619866975sm78374471cf.68.2025.06.10.15.25.04
+        bh=NIZerdv5856btQLeZiz5wtErWi3yo26TMxxYpxr5HC4=;
+        b=mgCjIsbwiQHGSCnfbCV6HfPUkHGDOa3FN9PcZ0av2fZRAxajPBXGyxPd1Zp/r3b1Gm
+         mSBHpWrHu7kcjLfwAO7GVxZ+AgyovA3G/Zayf3Wl0FMYb1oVHL/ZSLD3Tya8Wkn+99Qv
+         jBH6Zks98lyPLkz2Y6tLbDqxEYQyTeuT/FyJEn9jBS+CH6H261zbk7LecubU7dRVIBvX
+         XKESsITMBv0j3h0JjBZUh0REU6e3ONueza+AKkqzzkjqkozuPNe/DIVE1pPIcZxuKtaE
+         2N9xH/mkds9Dg/WSEIPRWmyaBvsrxv59UtfBvhegFUEUmbKHGs+836WnqTnohtEvqfJa
+         mHSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWIz30xKAPRyI8QMscjsGzfCVzvLliHpcqhe1mLf+FcR730gAhka+3gQ4tqzaFItYdiO8OLk1oXmqIKPUw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8gLYnjjPNA+esNflvHDZAthySuElPxwMSo2vZHXXhbnovNCGe
+	4T4rFpyjZy9SNyafARXYXm/tD6KmWIKEAOimqFAEIPERg7amQc4+Ja83FxDXS2x7fIx/Fl0nt0M
+	qOS79BQqCGfKCDH6h4l02uG7XBWLElXTS11m4upTOQCBeHel0auYkexesMSZdITIOPE0=
+X-Gm-Gg: ASbGncsiOOTaMKbLjxWE4oi1gDkqWFGRbWeMYc8hi5qeMg9fc/8KfRs/GUFaMz1fR83
+	XDK2fM730q4YHRtLjDQIplpzP9WcRk8VeQj0O5m2cUsv35jwlb+kOBoMzyT6oJjWoFKqLvXtonI
+	ILG80AUjtMoZY/n2mxbDjU6y0eg48NYaEmCGXoFn2U0BS+8QQznr/qHkt9WoG1YuDqXX8WbLOsW
+	aOrLF7txebMhN+BPJc7270EgwtLvuM8xB59suL3PKiF9eZM4cQEcVvRgK2k6UrsptRXoOQsVRge
+	vlUwla9L7k61Qer7QsdN/WmPohk/k+dr156k9MDW+1plGNAUNDjiWll+83odKA88ja00RfClvDG
+	YGGB1YqrDEtltGCHMbWUe7yTyH07XKCVMrSk=
+X-Received: by 2002:a05:620a:1a85:b0:7d0:97b1:bfa with SMTP id af79cd13be357-7d3a8806306mr191677685a.8.1749594334745;
+        Tue, 10 Jun 2025 15:25:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEvqgKPApzu3rPogEhB0z1OsbrjkQcClCu9eRwx2CiVtQGPtd7+Q1xiMRbqpX3rcwtgL9CA7w==
+X-Received: by 2002:a05:620a:1a85:b0:7d0:97b1:bfa with SMTP id af79cd13be357-7d3a8806306mr191671485a.8.1749594334288;
+        Tue, 10 Jun 2025 15:25:34 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5536772a80csm1706310e87.162.2025.06.10.15.25.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 15:25:05 -0700 (PDT)
-Date: Tue, 10 Jun 2025 18:25:02 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Nikita Kalyazin <kalyazin@amazon.com>
-Cc: akpm@linux-foundation.org, pbonzini@redhat.com, shuah@kernel.org,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, muchun.song@linux.dev,
-	hughd@google.com, kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, jack@suse.cz,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
-	jannh@google.com, ryan.roberts@arm.com, david@redhat.com,
-	jthoughton@google.com, graf@amazon.de, jgowans@amazon.com,
-	roypat@amazon.co.uk, derekmn@amazon.com, nsaenz@amazon.es,
-	xmarcalx@amazon.com
-Subject: Re: [PATCH v3 4/6] KVM: guest_memfd: add support for userfaultfd
- minor
-Message-ID: <aEiwvi-oqfTiyP3s@x1.local>
-References: <20250404154352.23078-1-kalyazin@amazon.com>
- <20250404154352.23078-5-kalyazin@amazon.com>
+        Tue, 10 Jun 2025 15:25:33 -0700 (PDT)
+Date: Wed, 11 Jun 2025 01:25:31 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Krishna Manikandan <quic_mkrishn@quicinc.com>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Kuogee Hsieh <quic_khsieh@quicinc.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Clark <robin.clark@oss.qualcomm.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Abel Vesa <abel.vesa@linaro.org>,
+        Srinivas Kandagatla <srini@kernel.org>
+Subject: Re: [PATCH v6 13/17] drm/msm/dpu: Consistently use u32 instead of
+ uint32_t
+Message-ID: <gvxglu5n6esoortifeyeapjlkwks4adxktshj4mcc2iyigq5fj@ztsuritnshkf>
+References: <20250610-b4-sm8750-display-v6-0-ee633e3ddbff@linaro.org>
+ <20250610-b4-sm8750-display-v6-13-ee633e3ddbff@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250404154352.23078-5-kalyazin@amazon.com>
+In-Reply-To: <20250610-b4-sm8750-display-v6-13-ee633e3ddbff@linaro.org>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDE4NSBTYWx0ZWRfX4HYbkmD0YzVo
+ xgsovNTv2mpinIrlqneahSvuP9Hyd0KXjX48Pt53L4PuMJJXCD8mKwgYhGy1p4XvE3QWFrsaoxn
+ gWc0Mg4B9+VwTWegA8Sk9OdB88TknyvwQexDqMTTlW9mD4ToVzhlmBNY2QB1NO4IxAqpA+34k/0
+ +qU3lX8/uqHTrxrwEv6VrN7yvJRsC+9HwpHhdH4HE0WPB+CvPfgWwFXp22DZlqYv2S8mbh9ZJTJ
+ corb7e02MQRGx5ZPs7TorCaYo+SJW2GUmmXQ3OY6avtx8UcS1rwNivldqP/ZlNVjhZn0/RMNZZ0
+ +BD2FDKKkNcYoj1b9PKhcuFGmX0JaONmU3Tk0DMTw4CI+0/LVqlN9rAo9FzBqt/YuN/uXC4acyx
+ PzQsb6ATc8KloAshs1NXeQnyWpBTCLL130m6L2RvKLpW40a8wqbpkR+K+/zznxlKePRGVNUE
+X-Proofpoint-GUID: _jSVObRfK2x94AGhh0D1MGWoFAOiAhtC
+X-Proofpoint-ORIG-GUID: _jSVObRfK2x94AGhh0D1MGWoFAOiAhtC
+X-Authority-Analysis: v=2.4 cv=f+BIBPyM c=1 sm=1 tr=0 ts=6848b0e0 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=Sbni8NmfYZyP3K5nzVUA:9
+ a=CjuIK1q_8ugA:10 a=NFOGd7dJGGMPyQGDc5-O:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_10,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 spamscore=0 mlxlogscore=810 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 priorityscore=1501 adultscore=0 phishscore=0 mlxscore=0
+ malwarescore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506100185
 
-On Fri, Apr 04, 2025 at 03:43:50PM +0000, Nikita Kalyazin wrote:
-> Add support for sending a pagefault event if userfaultfd is registered.
-> Only page minor event is currently supported.
+On Tue, Jun 10, 2025 at 04:05:51PM +0200, Krzysztof Kozlowski wrote:
+> Linux coding style asks to use kernel types like u32 instead of uint32_t
+> and code already has it in other places, so unify the remaining pieces.
 > 
-> Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
->  virt/kvm/guest_memfd.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
 > 
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index fbf89e643add..096d89e7282d 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -4,6 +4,9 @@
->  #include <linux/kvm_host.h>
->  #include <linux/pagemap.h>
->  #include <linux/anon_inodes.h>
-> +#ifdef CONFIG_KVM_PRIVATE_MEM
-> +#include <linux/userfaultfd_k.h>
-> +#endif /* CONFIG_KVM_PRIVATE_MEM */
->  
->  #include "kvm_mm.h"
->  
-> @@ -380,6 +383,13 @@ static vm_fault_t kvm_gmem_fault(struct vm_fault *vmf)
->  		kvm_gmem_mark_prepared(folio);
->  	}
->  
-> +	if (userfaultfd_minor(vmf->vma) &&
-> +	    !(vmf->flags & FAULT_FLAG_USERFAULT_CONTINUE)) {
-> +		folio_unlock(folio);
-> +		filemap_invalidate_unlock_shared(inode->i_mapping);
-> +		return handle_userfault(vmf, VM_UFFD_MINOR);
-> +	}
-> +
-
-Hmm, does guest-memfd (when with your current approach) at least needs to
-define the new can_userfault() hook?
-
-Meanwhile, we have some hard-coded lines so far, like:
-
-mfill_atomic():
-	if (!vma_is_shmem(dst_vma) &&
-	    uffd_flags_mode_is(flags, MFILL_ATOMIC_CONTINUE))
-		goto out_unlock;
-
-I thought it would fail guest-memfd already on a CONTINUE request, and it
-doesn't seem to be touched yet in this series.
-
-I'm not yet sure how the test worked out without hitting things like it.
-Highly likely I missed something.  Some explanations would be welcomed.. 
-
-Thanks,
-
->  	vmf->page = folio_file_page(folio, vmf->pgoff);
->  
->  out_folio:
-> -- 
-> 2.47.1
+> Changes in v6:
+> 1. New patch
+> ---
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
 > 
+
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+
 
 -- 
-Peter Xu
-
+With best wishes
+Dmitry
