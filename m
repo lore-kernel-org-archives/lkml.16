@@ -1,235 +1,360 @@
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1322248AB;
-	Tue, 10 Jun 2025 23:34:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD112D5414
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 23:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749598490; cv=none; b=WKOq1khTUIZvIsch9BmHR7YNCfQIinhoAkA++VFUJg7plkRiyBRuzw/QQrVElED0ZGTxBBo02YrFe6ZQ2IF5SVLXWJ8gLGcGpQBn2Gglhx3/8v9oO+4nejCOBlReZ/91Y+tULf/KzATGvw4TvUfA+GnO9Ih2JJ4OKXlHb0HWgSY=
+	t=1749598601; cv=none; b=cOi0BSMUNXYB3fvSUIcSykBbZP0w9xKSYkkaSP8xe6o7dwd5+5IBjDw8Ut2KbIb822rAcUmu4ur3Lm4N5X+RERu0oxa6mLgwME+FRJV3wxb6glLJWTtj1gPCytE+HQJYz12xWaPye+93nVLKFrvq0jBJ3eoCQ1ZZalnAzW7Vs1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749598490; c=relaxed/simple;
-	bh=nAjYQX+TSMsZ9bA78ZfRAkX5IYz9wrbImSKD6ErItyQ=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=pBQyxuUh8kbj+uERSQL5RNuklCgRmT0aPUWPdqIF0xod3g8zwUJogulwtshYX41ceKEINOAn7LoRifPWDzjV0NFqhxfoP3EABle4B0eRZ/SkgyePXNMONe6aAbd64VmP+IVnoBFJD8k2T1qahZeGiyXQt7YvDe47vWvj+4floZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uP8UH-007smc-Po;
-	Tue, 10 Jun 2025 23:34:37 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1749598601; c=relaxed/simple;
+	bh=a9mHbrJOiLHj5NsYMvttJmJI0NUURDRVikwiQPz8Cus=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fQ6qonTV2ej/zrVWZB7PNB1S02CpabO8Rx1RaIo/flKLyp3ca4tUgSuRJuQEz54eg7ztv0npavAol2wCLrxmpPPfaRFw5GxLpum6rSk5iLWPEAXUPMILFERPCOW7n9uUwYb2ZNjJGA0DNJpbLM4frfzsinq+VniQKZP2rPpHQhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tfNYDMO7; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tfNYDMO7"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749598587;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r8RdlCinf2+TlX4dL62XH9+5xu9xSdaTA7tP0qW17CU=;
+	b=tfNYDMO7Au3DTDerxjE0DGvNgY2OqXdcMVgnOQRqTXw9fXo84yvLvCA+DQrgu/1mgMY49P
+	AloQrvAIeqAJVRzRHJqN0KqMCq+q47mn4yAeP4w5nE6U6j1xHayiqE5ZE4OQEbIpGxEpth
+	Ko22Xk0VPSTDvSugTlfI42g/jJi184c=
+From: Sean Anderson <sean.anderson@linux.dev>
+To: netdev@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>
+Cc: linux-kernel@vger.kernel.org,
+	Daniel Golle <daniel@makrotopia.org>,
+	Simon Horman <horms@kernel.org>,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Lei Wei <quic_leiwei@quicinc.com>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	Vineeth Karumanchi <vineeth.karumanchi@amd.com>,
+	Sean Anderson <sean.anderson@linux.dev>,
+	Claudiu Beznea <claudiu.beznea@microchip.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: [net-next PATCH v6 08/10] net: macb: Move most of mac_config to mac_prepare
+Date: Tue, 10 Jun 2025 19:35:47 -0400
+Message-Id: <20250610233547.3588356-1-sean.anderson@linux.dev>
+In-Reply-To: <20250610233134.3588011-1-sean.anderson@linux.dev>
+References: <20250610233134.3588011-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: "Song Liu" <song@kernel.org>, Jan Kara <jack@suse.cz>
-Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
- kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
- daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk,
- brauner@kernel.org, jack@suse.cz, kpsingh@kernel.org,
- mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com,
- jlayton@kernel.org, josef@toxicpanda.com, mic@digikod.net, gnoack@google.com,
- m@maowtm.org, "Song Liu" <song@kernel.org>
-Subject: Re: [PATCH v3 bpf-next 1/5] namei: Introduce new helper function
- path_walk_parent()
-In-reply-to: <20250606213015.255134-2-song@kernel.org>
-References: <20250606213015.255134-1-song@kernel.org>,
- <20250606213015.255134-2-song@kernel.org>
-Date: Wed, 11 Jun 2025 09:34:36 +1000
-Message-id: <174959847640.608730.1496017556661353963@noble.neil.brown.name>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Sat, 07 Jun 2025, Song Liu wrote:
-> This helper walks an input path to its parent. Logic are added to handle
-> walking across mount tree.
->=20
-> This will be used by landlock, and BPF LSM.
->=20
-> Signed-off-by: Song Liu <song@kernel.org>
-> ---
->  fs/namei.c            | 51 +++++++++++++++++++++++++++++++++++++++++++
->  include/linux/namei.h |  2 ++
->  2 files changed, 53 insertions(+)
->=20
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 4bb889fc980b..f02183e9c073 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -1424,6 +1424,57 @@ static bool choose_mountpoint(struct mount *m, const=
- struct path *root,
->  	return found;
->  }
-> =20
-> +/**
-> + * path_walk_parent - Walk to the parent of path
-> + * @path: input and output path.
-> + * @root: root of the path walk, do not go beyond this root. If @root is
-> + *        zero'ed, walk all the way to real root.
-> + *
-> + * Given a path, find the parent path. Replace @path with the parent path.
-> + * If we were already at the real root or a disconnected root, @path is
-> + * not changed.
-> + *
-> + * The logic of path_walk_parent() is similar to follow_dotdot(), except
-> + * that path_walk_parent() will continue walking for !path_connected case.
-> + * This effectively means we are walking from disconnected bind mount to
-> + * the original mount. If this behavior is not desired, the caller can add
-> + * a check like:
-> + *
-> + *   if (path_walk_parent(&path) && !path_connected(path.mnt, path.dentry)
-> + *           // continue walking
-> + *   else
-> + *           // stop walking
-> + *
-> + * Returns:
-> + *  true  - if @path is updated to its parent.
-> + *  false - if @path is already the root (real root or @root).
-> + */
-> +bool path_walk_parent(struct path *path, const struct path *root)
-> +{
-> +	struct dentry *parent;
-> +
-> +	if (path_equal(path, root))
-> +		return false;
-> +
-> +	if (unlikely(path->dentry =3D=3D path->mnt->mnt_root)) {
-> +		struct path p;
-> +
-> +		if (!choose_mountpoint(real_mount(path->mnt), root, &p))
-> +			return false;
-> +		path_put(path);
-> +		*path =3D p;
-> +	}
-> +
-> +	if (unlikely(IS_ROOT(path->dentry)))
-> +		return false;
-> +
-> +	parent =3D dget_parent(path->dentry);
-> +	dput(path->dentry);
-> +	path->dentry =3D parent;
-> +	return true;
-> +}
-> +EXPORT_SYMBOL_GPL(path_walk_parent);
+mac_prepare is called every time the interface is changed, so we can do
+all of our configuration there, instead of in mac_config. This will be
+useful for the next patch where we will set the PCS bit based on whether
+we are using our internal PCS. No functional change intended.
 
-The above looks a lot like follow_dotdot().  This is good because it
-means that it is likely correct.  But it is bad because it means there
-are two copies of essentially the same code - making maintenance harder.
+Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+---
 
-I think it would be good to split the part that you want out of
-follow_dotdot() and use that.  Something like the following.
+Changes in v6:
+- Fix use of spin_lock instead of spin_unlock
 
-You might need a small wrapper in landlock which would, for example,
-pass LOOKUP_BENEATH and replace path->dentry with the parent on success.
+Changes in v2:
+- Fix docs for macb_pcs_config_an
+- Include change to macb_pcs_get_state which was previously in the next
+  patch
 
-NeilBrown
+ drivers/net/ethernet/cadence/macb_main.c | 209 ++++++++++++++---------
+ 1 file changed, 132 insertions(+), 77 deletions(-)
 
-diff --git a/fs/namei.c b/fs/namei.c
-index 4bb889fc980b..b81d07b4417b 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -2048,36 +2048,65 @@ static struct dentry *follow_dotdot_rcu(struct nameid=
-ata *nd)
- 	return nd->path.dentry;
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index d1f1ae5ea161..78433d8f3746 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -549,19 +549,91 @@ static void macb_set_tx_clk(struct macb *bp, int speed)
+ 		netdev_err(bp->dev, "adjusting tx_clk failed.\n");
  }
-=20
--static struct dentry *follow_dotdot(struct nameidata *nd)
-+/**
-+ * path_walk_parent - Find the parent of the given struct path
-+ * @path  - The struct path to start from
-+ * @root  - A struct path which serves as a boundary not to be crosses
-+ * @flags - Some LOOKUP_ flags
-+ *
-+ * Find and return the dentry for the parent of the given path (mount/dentry=
-).
-+ * If the given path is the root of a mounted tree, it is first updated to
-+ * the mount point on which that tree is mounted.
-+ *
-+ * If %LOOKUP_NO_XDEV is given, then *after* the path is updated to a new mo=
-unt,
-+ * the error EXDEV is returned.
-+ * If no parent can be found, either because the tree is not mounted or beca=
-use
-+ * the @path matches the @root, then @path->dentry is returned unless @flags
-+ * contains %LOOKUP_BENEATH, in which case -EXDEV is returned.
-+ *
-+ * Returns: either an ERR_PTR() or the chosen parent which will have had the
-+ * refcount incremented.
-+ */
-+struct dentry *path_walk_parent(struct path *path, struct path *root, int fl=
-ags)
- {
- 	struct dentry *parent;
-=20
--	if (path_equal(&nd->path, &nd->root))
-+	if (path_equal(path, root))
- 		goto in_root;
--	if (unlikely(nd->path.dentry =3D=3D nd->path.mnt->mnt_root)) {
--		struct path path;
-+	if (unlikely(path->dentry =3D=3D path->mnt->mnt_root)) {
-+		struct path new_path;
-=20
--		if (!choose_mountpoint(real_mount(nd->path.mnt),
--				       &nd->root, &path))
-+		if (!choose_mountpoint(real_mount(path->mnt),
-+				       root, &new_path))
- 			goto in_root;
--		path_put(&nd->path);
--		nd->path =3D path;
--		nd->inode =3D path.dentry->d_inode;
--		if (unlikely(nd->flags & LOOKUP_NO_XDEV))
-+		path_put(path);
-+		*path =3D new_path;
-+		if (unlikely(flags & LOOKUP_NO_XDEV))
- 			return ERR_PTR(-EXDEV);
- 	}
- 	/* rare case of legitimate dget_parent()... */
--	parent =3D dget_parent(nd->path.dentry);
-+	parent =3D dget_parent(path->dentry);
-+	return parent;
-+
-+in_root:
-+	if (unlikely(flags & LOOKUP_BENEATH))
-+		return ERR_PTR(-EXDEV);
-+	return dget(path->dentry);
-+}
-+EXPORT_SYMBOL(path_walk_parent);
-+
-+static struct dentry *follow_dotdot(struct nameidata *nd)
-+{
-+	struct dentry *parent =3D path_walk_parent(&nd->path, &nd->root, nd->flags);
-+
-+	if (IS_ERR(parent))
-+		return parent;
- 	if (unlikely(!path_connected(nd->path.mnt, parent))) {
- 		dput(parent);
- 		return ERR_PTR(-ENOENT);
- 	}
-+	nd->inode =3D nd->path.dentry->d_inode;
- 	return parent;
+ 
+-static void macb_usx_pcs_link_up(struct phylink_pcs *pcs, unsigned int neg_mode,
+-				 phy_interface_t interface, int speed,
+-				 int duplex)
+-{
+-	struct macb *bp = container_of(pcs, struct macb, phylink_usx_pcs);
+-	u32 config;
 -
--in_root:
--	if (unlikely(nd->flags & LOOKUP_BENEATH))
--		return ERR_PTR(-EXDEV);
--	return dget(nd->path.dentry);
+-	config = gem_readl(bp, USX_CONTROL);
+-	config = GEM_BFINS(SERDES_RATE, MACB_SERDES_RATE_10G, config);
+-	config = GEM_BFINS(USX_CTRL_SPEED, HS_SPEED_10000M, config);
+-	config &= ~(GEM_BIT(TX_SCR_BYPASS) | GEM_BIT(RX_SCR_BYPASS));
+-	config |= GEM_BIT(TX_EN);
+-	gem_writel(bp, USX_CONTROL, config);
++static void macb_pcs_get_state(struct phylink_pcs *pcs, unsigned int neg_mode,
++			       struct phylink_link_state *state)
++{
++	struct macb *bp = container_of(pcs, struct macb, phylink_sgmii_pcs);
++
++	phylink_mii_c22_pcs_decode_state(state, neg_mode, gem_readl(bp, PCSSTS),
++					 gem_readl(bp, PCSANLPBASE));
++}
++
++/**
++ * macb_pcs_config_an() - Configure autonegotiation settings for PCSs
++ * @bp: The macb to operate on
++ * @neg_mode: The autonegotiation mode
++ * @interface: The interface to use
++ * @advertising: The advertisement mask
++ *
++ * This provides common configuration for PCS autonegotiation.
++ *
++ * Context: Call with @bp->lock held.
++ * Return: 1 if any registers were changed; 0 otherwise
++ */
++static int macb_pcs_config_an(struct macb *bp, unsigned int neg_mode,
++			      phy_interface_t interface,
++			      const unsigned long *advertising)
++{
++	bool changed = false;
++	int old, new;
++
++	old = gem_readl(bp, PCSANADV);
++	new = phylink_mii_c22_pcs_encode_advertisement(interface, advertising);
++	if (new != -EINVAL && old != new) {
++		changed = true;
++		gem_writel(bp, PCSANADV, new);
++	}
++
++	old = new = gem_readl(bp, PCSCNTRL);
++	if (neg_mode == PHYLINK_PCS_NEG_INBAND_ENABLED)
++		new |= BMCR_ANENABLE;
++	else
++		new &= ~BMCR_ANENABLE;
++	if (old != new) {
++		changed = true;
++		gem_writel(bp, PCSCNTRL, new);
++	}
++	return changed;
++}
++
++static int macb_pcs_config(struct phylink_pcs *pcs, unsigned int mode,
++			   phy_interface_t interface,
++			   const unsigned long *advertising,
++			   bool permit_pause_to_mac)
++{
++	struct macb *bp = container_of(pcs, struct macb, phylink_sgmii_pcs);
++	bool changed = false;
++	unsigned long flags;
++	u32 old, new;
++
++	spin_lock_irqsave(&bp->lock, flags);
++	old = new = gem_readl(bp, NCFGR);
++	new |= GEM_BIT(SGMIIEN);
++	if (old != new) {
++		changed = true;
++		gem_writel(bp, NCFGR, new);
++	}
++
++	if (macb_pcs_config_an(bp, mode, interface, advertising))
++		changed = true;
++
++	spin_unlock_irqrestore(&bp->lock, flags);
++	return changed;
++}
++
++static void macb_pcs_an_restart(struct phylink_pcs *pcs)
++{
++	struct macb *bp = container_of(pcs, struct macb, phylink_sgmii_pcs);
++	u32 bmcr;
++	unsigned long flags;
++
++	spin_lock_irqsave(&bp->lock, flags);
++
++	bmcr = gem_readl(bp, PCSCNTRL);
++	bmcr |= BMCR_ANENABLE;
++	gem_writel(bp, PCSCNTRL, bmcr);
++
++	spin_unlock_irqrestore(&bp->lock, flags);
  }
-=20
- static const char *handle_dots(struct nameidata *nd, int type)
-diff --git a/include/linux/namei.h b/include/linux/namei.h
-index 5d085428e471..4cc15a58d900 100644
---- a/include/linux/namei.h
-+++ b/include/linux/namei.h
-@@ -80,6 +80,7 @@ struct dentry *lookup_one_unlocked(struct mnt_idmap *idmap,
- struct dentry *lookup_one_positive_unlocked(struct mnt_idmap *idmap,
- 					    struct qstr *name,
- 					    struct dentry *base);
-+struct dentry *path_walk_parent(struct path *path, struct path *root, int fl=
-ags);
-=20
- extern int follow_down_one(struct path *);
- extern int follow_down(struct path *path, unsigned int flags);
+ 
+ static void macb_usx_pcs_get_state(struct phylink_pcs *pcs,
+@@ -589,45 +661,60 @@ static int macb_usx_pcs_config(struct phylink_pcs *pcs,
+ 			       bool permit_pause_to_mac)
+ {
+ 	struct macb *bp = container_of(pcs, struct macb, phylink_usx_pcs);
++	unsigned long flags;
++	bool changed;
++	u16 old, new;
+ 
+-	gem_writel(bp, USX_CONTROL, gem_readl(bp, USX_CONTROL) |
+-		   GEM_BIT(SIGNAL_OK));
++	spin_lock_irqsave(&bp->lock, flags);
++	if (macb_pcs_config_an(bp, neg_mode, interface, advertising))
++		changed = true;
+ 
+-	return 0;
+-}
++	old = new = gem_readl(bp, USX_CONTROL);
++	new |= GEM_BIT(SIGNAL_OK);
++	if (old != new) {
++		changed = true;
++		gem_writel(bp, USX_CONTROL, new);
++	}
+ 
+-static void macb_pcs_get_state(struct phylink_pcs *pcs, unsigned int neg_mode,
+-			       struct phylink_link_state *state)
+-{
+-	state->link = 0;
+-}
++	old = new = gem_readl(bp, USX_CONTROL);
++	new = GEM_BFINS(SERDES_RATE, MACB_SERDES_RATE_10G, new);
++	new = GEM_BFINS(USX_CTRL_SPEED, HS_SPEED_10000M, new);
++	new &= ~(GEM_BIT(TX_SCR_BYPASS) | GEM_BIT(RX_SCR_BYPASS));
++	new |= GEM_BIT(TX_EN);
++	if (old != new) {
++		changed = true;
++		gem_writel(bp, USX_CONTROL, new);
++	}
+ 
+-static void macb_pcs_an_restart(struct phylink_pcs *pcs)
+-{
+-	/* Not supported */
+-}
+-
+-static int macb_pcs_config(struct phylink_pcs *pcs,
+-			   unsigned int neg_mode,
+-			   phy_interface_t interface,
+-			   const unsigned long *advertising,
+-			   bool permit_pause_to_mac)
+-{
+-	return 0;
++	spin_unlock_irqrestore(&bp->lock, flags);
++	return changed;
+ }
+ 
+ static const struct phylink_pcs_ops macb_phylink_usx_pcs_ops = {
+ 	.pcs_get_state = macb_usx_pcs_get_state,
+ 	.pcs_config = macb_usx_pcs_config,
+-	.pcs_link_up = macb_usx_pcs_link_up,
+ };
+ 
+ static const struct phylink_pcs_ops macb_phylink_pcs_ops = {
+ 	.pcs_get_state = macb_pcs_get_state,
+-	.pcs_an_restart = macb_pcs_an_restart,
+ 	.pcs_config = macb_pcs_config,
++	.pcs_an_restart = macb_pcs_an_restart,
+ };
+ 
++static struct phylink_pcs *macb_mac_select_pcs(struct phylink_config *config,
++					       phy_interface_t interface)
++{
++	struct net_device *ndev = to_net_dev(config->dev);
++	struct macb *bp = netdev_priv(ndev);
++
++	if (interface == PHY_INTERFACE_MODE_10GBASER)
++		return &bp->phylink_usx_pcs;
++	else if (interface == PHY_INTERFACE_MODE_SGMII)
++		return &bp->phylink_sgmii_pcs;
++	else
++		return NULL;
++}
++
+ static void macb_mac_config(struct phylink_config *config, unsigned int mode,
+ 			    const struct phylink_link_state *state)
+ {
+@@ -646,18 +733,14 @@ static void macb_mac_config(struct phylink_config *config, unsigned int mode,
+ 		if (state->interface == PHY_INTERFACE_MODE_RMII)
+ 			ctrl |= MACB_BIT(RM9200_RMII);
+ 	} else if (macb_is_gem(bp)) {
+-		ctrl &= ~(GEM_BIT(SGMIIEN) | GEM_BIT(PCSSEL));
+-		ncr &= ~GEM_BIT(ENABLE_HS_MAC);
+-
+-		if (state->interface == PHY_INTERFACE_MODE_SGMII) {
+-			ctrl |= GEM_BIT(SGMIIEN) | GEM_BIT(PCSSEL);
+-		} else if (state->interface == PHY_INTERFACE_MODE_10GBASER) {
++		if (macb_mac_select_pcs(config, state->interface))
+ 			ctrl |= GEM_BIT(PCSSEL);
+-			ncr |= GEM_BIT(ENABLE_HS_MAC);
+-		} else if (bp->caps & MACB_CAPS_MIIONRGMII &&
+-			   bp->phy_interface == PHY_INTERFACE_MODE_MII) {
++		else
++			ctrl &= ~GEM_BIT(PCSSEL);
++
++		if (bp->caps & MACB_CAPS_MIIONRGMII &&
++		    bp->phy_interface == PHY_INTERFACE_MODE_MII)
+ 			ncr |= MACB_BIT(MIIONRGMII);
+-		}
+ 	}
+ 
+ 	/* Apply the new configuration, if any */
+@@ -667,22 +750,6 @@ static void macb_mac_config(struct phylink_config *config, unsigned int mode,
+ 	if (old_ncr ^ ncr)
+ 		macb_or_gem_writel(bp, NCR, ncr);
+ 
+-	/* Disable AN for SGMII fixed link configuration, enable otherwise.
+-	 * Must be written after PCSSEL is set in NCFGR,
+-	 * otherwise writes will not take effect.
+-	 */
+-	if (macb_is_gem(bp) && state->interface == PHY_INTERFACE_MODE_SGMII) {
+-		u32 pcsctrl, old_pcsctrl;
+-
+-		old_pcsctrl = gem_readl(bp, PCSCNTRL);
+-		if (mode == MLO_AN_FIXED)
+-			pcsctrl = old_pcsctrl & ~GEM_BIT(PCSAUTONEG);
+-		else
+-			pcsctrl = old_pcsctrl | GEM_BIT(PCSAUTONEG);
+-		if (old_pcsctrl != pcsctrl)
+-			gem_writel(bp, PCSCNTRL, pcsctrl);
+-	}
+-
+ 	spin_unlock_irqrestore(&bp->lock, flags);
+ }
+ 
+@@ -735,10 +802,12 @@ static void macb_mac_link_up(struct phylink_config *config,
+ 	if (!(bp->caps & MACB_CAPS_MACB_IS_EMAC)) {
+ 		ctrl &= ~MACB_BIT(PAE);
+ 		if (macb_is_gem(bp)) {
+-			ctrl &= ~GEM_BIT(GBE);
++			ctrl &= ~(GEM_BIT(GBE) | GEM_BIT(ENABLE_HS_MAC));
+ 
+ 			if (speed == SPEED_1000)
+ 				ctrl |= GEM_BIT(GBE);
++			else if (speed == SPEED_10000)
++				ctrl |= GEM_BIT(ENABLE_HS_MAC);
+ 		}
+ 
+ 		if (rx_pause)
+@@ -776,20 +845,6 @@ static void macb_mac_link_up(struct phylink_config *config,
+ 	netif_tx_wake_all_queues(ndev);
+ }
+ 
+-static struct phylink_pcs *macb_mac_select_pcs(struct phylink_config *config,
+-					       phy_interface_t interface)
+-{
+-	struct net_device *ndev = to_net_dev(config->dev);
+-	struct macb *bp = netdev_priv(ndev);
+-
+-	if (interface == PHY_INTERFACE_MODE_10GBASER)
+-		return &bp->phylink_usx_pcs;
+-	else if (interface == PHY_INTERFACE_MODE_SGMII)
+-		return &bp->phylink_sgmii_pcs;
+-	else
+-		return NULL;
+-}
+-
+ static const struct phylink_mac_ops macb_phylink_ops = {
+ 	.mac_select_pcs = macb_mac_select_pcs,
+ 	.mac_config = macb_mac_config,
+-- 
+2.35.1.1320.gc452695387.dirty
+
