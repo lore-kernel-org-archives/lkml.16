@@ -1,147 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D8F24336D;
-	Tue, 10 Jun 2025 02:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED6B235079
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 02:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749521629; cv=none; b=XeT8+WV+IkrnLdtg+yRwxA/sUR8JYfafJL5/msF/Aune4fr/pLQE+HHu7Y5WbqZN8hxTYVuWjmeRurBpCTof+rsXQzrOB+3Zr3D9Az1wdYJ952Wjqu0xfJ0MTPxLNTP+nqwrCgQEYfRUB17L3+POHHtoP9Sy51F8fzsxCA+GC2A=
+	t=1749521682; cv=none; b=re324NhooGo0YGBWf146NXaeqrTO9ASzkaDlUsy43qNx/Iy3KX8bxQzVgk1uXRBAaYtExvh2XochYIztuBER0Zc0C0WGUmLSsqDCDehmL5V+a3oQoYEn9dCoWMIutsPM9jJVj7yXzN/g5cpUoep88v/xdSiCljdtfY3RGDTE9Kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749521629; c=relaxed/simple;
-	bh=FchX01MFxp5Y1PBJ6clFSa6v4H4hbzOl1iwsa5RQRm4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PSlnie7rwwCIE8jzoxdVtAbppfDB9J2u78q6tPGZMZe5yUn/2f477g60EWlN4OfIhGrv2LWk7tQVOPrIeNaH1rYNgXsBECn9ebs5A+tLHtjpgwsvxF5jWFrMn5gC2NmN1yEcwVVDKUe9qPOmQDA4pEMGni5Dxo2GkAWlkgAx558=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gqrGUIBc; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749521682; c=relaxed/simple;
+	bh=i4WO5k+tv6XVybLAEBiXR7nxpnWSF5or35FkR1kg+dQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eboMHIJChdZzp3jZ7y+xulm0C9vBJzJyxzTF0zN5a0jRAKMSjHwbtC+T8nBDbaWcHBvdZ6EaqEg0MIMd0B2TJTTnudA0HE15/1PtizJ3opT6xM5O0MRUqpVR6J8dBn6RDJxwhza0vG1DH66/Vx35QHpSpa5h4evZuqPllF1sdmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CiGjgIwm; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gqrGUIBc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749521627; x=1781057627;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=FchX01MFxp5Y1PBJ6clFSa6v4H4hbzOl1iwsa5RQRm4=;
-  b=gqrGUIBcTH07CTOdt8SUM5iWtrphWa3ism96jUsv6ZF3+O/J+p6zp4nX
-   RUSbzmvqe7DMx/AQ6CZa8VSUdKKuFOiK05NvTjSc5CN9IF/6Uwh73xfwC
-   nFH25RNr1V2OKee4SDzQoZWY40uGsY8EOnWX76LOSlks45eEWtlTjToVq
-   fo4baENtDrZAADv4lDHbVACh/K4HupOi2PCZm206gQob/RSR9A1bqLCLc
-   PcemrnkdtCo4iwEsQ8WAqmRHHweiRugb9BGqCrBU9gIowFMvV3XlebdGd
-   zfIrOVeyEqNQRST6fGO4pN+owsYpDloLUocsTQPMeadEYewnDRCyTUNTt
-   w==;
-X-CSE-ConnectionGUID: y99Ej/XDRsGWVyDCRv8GtQ==
-X-CSE-MsgGUID: dJ4JecCXThO3AJuOWHRkig==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="50841203"
-X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
-   d="scan'208";a="50841203"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 19:13:45 -0700
-X-CSE-ConnectionGUID: zdOaYM4UTKu3aD2g8wXQLQ==
-X-CSE-MsgGUID: 0dsI/uksSh6+OV4Z3gmCDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
-   d="scan'208";a="147253818"
-Received: from litbin-desktop.sh.intel.com ([10.239.156.93])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 19:13:42 -0700
-From: Binbin Wu <binbin.wu@linux.intel.com>
-To: pbonzini@redhat.com,
-	seanjc@google.com,
-	kvm@vger.kernel.org
-Cc: rick.p.edgecombe@intel.com,
-	kai.huang@intel.com,
-	adrian.hunter@intel.com,
-	reinette.chatre@intel.com,
-	xiaoyao.li@intel.com,
-	tony.lindgren@intel.com,
-	isaku.yamahata@intel.com,
-	yan.y.zhao@intel.com,
-	mikko.ylinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	kirill.shutemov@intel.com,
-	jiewen.yao@intel.com,
-	binbin.wu@linux.intel.com
-Subject: [RFC PATCH 4/4] KVM: TDX: Check KVM exit on KVM_HC_MAP_GPA_RANGE when TD finalize
-Date: Tue, 10 Jun 2025 10:14:22 +0800
-Message-ID: <20250610021422.1214715-5-binbin.wu@linux.intel.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250610021422.1214715-1-binbin.wu@linux.intel.com>
-References: <20250610021422.1214715-1-binbin.wu@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CiGjgIwm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749521679;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yIBFirwBqY4Xd+zzI6/WHXTGuPu27/Hd5spfFYevmu8=;
+	b=CiGjgIwm09MT6s49q0ulQhN2fLu+D1XqR0Sd4Npzk7gtJAcbqF2mibKZi+3IKq/Dv9ctHD
+	Ccdy2cylBq/HdU/oxnfO7WJgJEJ6o/OoHlWSQmMJwFSJW6r2MWJAAyOmYEbkTcuML/sqD3
+	4O3g43y79SEG2HZMZLWG6bOqZboIv/0=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-582-pn5Rfi7gMh2Ub6S08L-Kig-1; Mon,
+ 09 Jun 2025 22:14:35 -0400
+X-MC-Unique: pn5Rfi7gMh2Ub6S08L-Kig-1
+X-Mimecast-MFC-AGG-ID: pn5Rfi7gMh2Ub6S08L-Kig_1749521673
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 81710195608D;
+	Tue, 10 Jun 2025 02:14:33 +0000 (UTC)
+Received: from redhat.com (unknown [10.22.81.60])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9C05118003FC;
+	Tue, 10 Jun 2025 02:14:30 +0000 (UTC)
+Date: Mon, 9 Jun 2025 22:14:27 -0400
+From: Joe Lawrence <joe.lawrence@redhat.com>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
+	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
+	Marcos Paulo de Souza <mpdesouza@suse.com>,
+	Weinan Liu <wnliu@google.com>,
+	Fazla Mehrab <a.mehrab@bytedance.com>,
+	Chen Zhongjin <chenzhongjin@huawei.com>,
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 59/62] livepatch/klp-build: Introduce klp-build script
+ for generating livepatch modules
+Message-ID: <aEeVA2dwZPCi8wIe@redhat.com>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <10ccbeb0f4bcd7d0a10cc9b9bd12fdc4894f83ee.1746821544.git.jpoimboe@kernel.org>
+ <aEdQNbqg2YMBFB8H@redhat.com>
+ <7uriarhovgf3fp7tiidwklopqqk34ybk6fnhu6kncwtjgz2ni6@2z7m42t4oerw>
+ <aEeTAa9qwCSdK9AD@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEeTAa9qwCSdK9AD@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Check userspace has enabled KVM exit on KVM_HC_MAP_GPA_RANGE during
-KVM_TDX_FINALIZE_VM.
+On Mon, Jun 09, 2025 at 10:05:53PM -0400, Joe Lawrence wrote:
+> +		# Copy symbol namespace
+> +		readelf -p .modinfo "$ORIG_DIR/$rel_file" | \
+> +			gawk -F= '/\<import_ns=/ {print $2}' | mapfile -t namespaces
 
-TDVMCALL_MAP_GPA is one of the GHCI base TDVMCALLs, so it must be
-implemented by VMM to support TDX guests. KVM converts TDVMCALL_MAP_GPA
-to KVM_HC_MAP_GPA_RANGE, which requires userspace to enable
-KVM_CAP_EXIT_HYPERCALL with KVM_HC_MAP_GPA_RANGE bit set. Check it when
-userspace requests KVM_TDX_FINALIZE_VM, so that there is no need to check
-it during TDX guests running.
+Errr, that is $PATCHED_DIR/$rel_file if we want to pick up the updated
+list of namespaces in case the .patch had amended it.
 
-Signed-off-by: Binbin Wu <binbin.wu@linux.intel.com>
----
- Documentation/virt/kvm/x86/intel-tdx.rst |  3 +++
- arch/x86/kvm/vmx/tdx.c                   | 20 +++++++++-----------
- 2 files changed, 12 insertions(+), 11 deletions(-)
-
-diff --git a/Documentation/virt/kvm/x86/intel-tdx.rst b/Documentation/virt/kvm/x86/intel-tdx.rst
-index 69c64453e9ca..41e38c38b034 100644
---- a/Documentation/virt/kvm/x86/intel-tdx.rst
-+++ b/Documentation/virt/kvm/x86/intel-tdx.rst
-@@ -246,6 +246,9 @@ control flow is as follows:
-    * Prepare content of initial guest memory.
-    * KVM_TDX_INIT_MEM_REGION: Add initial guest memory.
-    * KVM_TDX_FINALIZE_VM: Finalize the measurement of the TDX guest.
-+     Note: To support TDVMCALL_MAP_GPA, userspace must opt-in
-+     KVM_CAP_EXIT_HYPERCALL with KVM_HC_MAP_GPA_RANGE before calling
-+     KVM_TDX_FINALIZE_VM.
- 
- #. Run VCPU
- 
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index a3cd68f44a9c..7fc6e6b9c131 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -1209,17 +1209,6 @@ static int tdx_map_gpa(struct kvm_vcpu *vcpu)
- 	u64 size = tdx->vp_enter_args.r13;
- 	u64 ret;
- 
--	/*
--	 * Converting TDVMCALL_MAP_GPA to KVM_HC_MAP_GPA_RANGE requires
--	 * userspace to enable KVM_CAP_EXIT_HYPERCALL with KVM_HC_MAP_GPA_RANGE
--	 * bit set.  If not, the error code is not defined in GHCI for TDX, use
--	 * TDVMCALL_STATUS_INVALID_OPERAND for this case.
--	 */
--	if (!user_exit_on_hypercall(vcpu->kvm, KVM_HC_MAP_GPA_RANGE)) {
--		ret = TDVMCALL_STATUS_INVALID_OPERAND;
--		goto error;
--	}
--
- 	if (gpa + size <= gpa || !kvm_vcpu_is_legal_gpa(vcpu, gpa) ||
- 	    !kvm_vcpu_is_legal_gpa(vcpu, gpa + size - 1) ||
- 	    (vt_is_tdx_private_gpa(vcpu->kvm, gpa) !=
-@@ -2821,6 +2810,15 @@ static int tdx_td_finalize(struct kvm *kvm, struct kvm_tdx_cmd *cmd)
- {
- 	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
- 
-+	/*
-+	 * TDVMCALL_MAP_GPA is one of the GHCI base TDVMCALLs, so it must be
-+	 * implemented by VMM to support TDX guests. KVM converts
-+	 * TDVMCALL_MAP_GPA to KVM_HC_MAP_GPA_RANGE, which requires userspace to
-+	 * enable KVM_CAP_EXIT_HYPERCALL with KVM_HC_MAP_GPA_RANGE bit set.
-+	 */
-+	if (!user_exit_on_hypercall(kvm, KVM_HC_MAP_GPA_RANGE))
-+		return -EINVAL;
-+
- 	guard(mutex)(&kvm->slots_lock);
- 
- 	if (!is_hkid_assigned(kvm_tdx) || kvm_tdx->state == TD_STATE_RUNNABLE)
--- 
-2.46.0
+--
+Joe
 
