@@ -1,98 +1,149 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC1A235BE5;
-	Tue, 10 Jun 2025 16:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1B6C235BE5;
+	Tue, 10 Jun 2025 16:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749572802; cv=none; b=eLzo/tw/WpJuYgkOUuIQ012H/Vn12U/7KJmZ+ZKqe3bt8fhn9XrndQ72HnsE3Bqq89QMsQ6uIsacz67yd8G/WVabi7cmuMrwMmNKLEFPnqF+7PWaDk3IQXaUUywFprUQfIiwv5bquJGNShpoDVbPP3A+kSxIB0AtIEhNy/8n0pU=
+	t=1749572810; cv=none; b=Uza69B87UQQdaUYXwQYxFCAcWhKiLHhXzny9NN7yDAPM9nQac2Z/PKnF4434C0MTLMGD3oCYArDo1h60YMuFIWxWXLC1z7eDsgysLCKr9sOYBwIRuP1OJDv3lucAp7pPrqjSczCDqEfmfhcbp2QIbHGwH9cRccpaHTjdVLgA/HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749572802; c=relaxed/simple;
-	bh=AfFdkGVaf25Yp8u5asLPt3erUUDF3wGXqaZaCp3COnM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YcCemeFegGi/1/wA+b7U+Ed+l3zvtzyZ0JT7z62h/snB4YPqpZAHTOAugzq6VQI9ML+WcXvBCvLGcbzWDAZtfG05vTdSBGCnTh+9ot9Xyue30cr0UH+bYGaz+wBmVlB7GR6mP5iaqwNs2blibW7WQfPUMTwkUBjuAzHXZKUbf60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hjqq1Sfu; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1749572810; c=relaxed/simple;
+	bh=mC9k0fdVG15ew46QW8+Slf9PIBIcE34tXUWoO9ub0rY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JTsrCyrZ+gI/2bztqd4qr6tVA+zouulmRK8OaAla46SbqOsCbzqYrV+Llk9tcafSfPCwh75m9kjHbxr03jNTSsW/jyFypLXj+ng+A1zrec4HmhROJ0O0FFqU9fyg8qKqDaY4bVyoqrjOKVKxEJKGWPsUGArAy6aZKXcrioBU7Lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=nrtC2IEY; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hjqq1Sfu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=aZS0PHXMGrZsbS++29v/OH/QUiFXlNb84S4FGKau4VY=; b=hjqq1SfuKB3WqCGlM2fdFVECKO
-	uew6eTYGRKiuBhCJt4oP8uy0sq5H68Fg88CU0zip740GuXzpJCl+MKpV+qQw2q+ENpByLzn91O4Pu
-	RUMmtAL/TVQJBX/MOo+qVKgac5BR30SJFN0KnnJ7LvSTJWVVrURX6ZYZ8RLJnYekuLOblk9S81GmQ
-	rNnY8Iwu4lLy6VugEIIyUyc8rWhgUzLzw+VPL0bP8sePIBkfUUlGoWpYztP7B9epR+I6IFdGKK/oh
-	TPpR58IqzFzU2a6JW+0AgHIZcNZY9wcnLjaX6F9pkTcFI9dxLqjjWQlvLMthSOKgud7fAX2wQoWRP
-	pmMukF7Q==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uP1nz-00000009cfG-2gFU;
-	Tue, 10 Jun 2025 16:26:31 +0000
-Date: Tue, 10 Jun 2025 17:26:31 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Usama Arif <usamaarif642@gmail.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Brauner <brauner@kernel.org>,
-	SeongJae Park <sj@kernel.org>, Mike Rapoport <rppt@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Barry Song <21cnbao@gmail.com>, linux-mm@kvack.org,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org, Pedro Falcato <pfalcato@suse.de>
-Subject: Re: [DISCUSSION] proposed mctl() API
-Message-ID: <aEhct_dQxGAazoiY@casper.infradead.org>
-References: <85778a76-7dc8-4ea8-8827-acb45f74ee05@lucifer.local>
- <e166592f-aeb3-4573-bb73-270a2eb90be3@gmail.com>
- <d7ccb47b-7124-45e9-ace0-b0fa49f881ef@lucifer.local>
- <f8db6b39-f11a-4378-8976-4169f4674e85@gmail.com>
- <fcaa7ce6-3f03-4e3d-aa9f-1b1b53ed88f5@lucifer.local>
- <2fd7f80c-2b13-4478-900a-d65547586db3@gmail.com>
- <aEhTYkzsTsaBua40@casper.infradead.org>
- <8c762435-f5d8-4366-84de-308c8280ff3d@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nrtC2IEY"
+Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 3F5062027DFC;
+	Tue, 10 Jun 2025 09:26:48 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3F5062027DFC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749572808;
+	bh=fZsOQ9xkdUCNfFEMQvxKs+b33M0TwuoWd4G5YXW58m4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=nrtC2IEY1KeGmulZSt4zgXDh0kKtjcT7SvNywOcN+nsUpn8S1DuWEFOW5ZuflmXWE
+	 gcdSe+9KEIGk+2C0UesKrWYzEwnz9OojeOn5FpWX0Xlynj0qhzn0jlt/nKDCO/jt0q
+	 JcfiFCOtgin5EIVI3kM67IjP3kmEBKhfwoKkYhfk=
+From: Roman Kisel <romank@linux.microsoft.com>
+To: mhklinux@outlook.com
+Cc: arnd@arndb.de,
+	arnd@kernel.org,
+	decui@microsoft.com,
+	haiyangz@microsoft.com,
+	kys@microsoft.com,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	nunodasneves@linux.microsoft.com,
+	romank@linux.microsoft.com,
+	ssengar@linux.microsoft.com,
+	wei.liu@kernel.org
+Subject: RE: [PATCH] hv: add CONFIG_EFI dependency
+Date: Tue, 10 Jun 2025 09:26:46 -0700
+Message-ID: <20250610162646.15865-1-romank@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <SN6PR02MB4157CE643DEB6CE4B0AEFC00D46AA@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <SN6PR02MB4157CE643DEB6CE4B0AEFC00D46AA@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8c762435-f5d8-4366-84de-308c8280ff3d@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 10, 2025 at 05:00:47PM +0100, Usama Arif wrote:
-> On 10/06/2025 16:46, Matthew Wilcox wrote:
-> > On Tue, Jun 10, 2025 at 04:30:43PM +0100, Usama Arif wrote:
-> >> If we have 2 workloads on the same server, For e.g. one is database where THPs 
-> >> just dont do well, but the other one is AI where THPs do really well. How
-> >> will the kernel monitor that the database workload is performing worse
-> >> and the AI one isnt?
-> > 
-> > It can monitor the allocation/access patterns and see who's getting
-> > the benefit.  The two workloads are in competition for memory, and
-> > we can tell which pages are hot and which cold.
-> > 
-> > And I don't believe it's a binary anyway.  I bet there are some
-> > allocations where the database benefits from having THPs (I mean, I know
-> > a database which invented the entire hugetlbfs subsystem so it could
-> > use PMD entries and avoid one layer of TLB misses!)
-> > 
-> 
-> Sure, but this is just an example. Workload owners are not going to spend time
-> trying to see how each allocation works and if its hot, they put it in hugetlbfs.
+> On Tue, Jun 10, 2025, at 17:33, Roman Kisel wrote:
+>>> Selecting SYSFB causes a link failure on arm64 kernels with EFI disabled:
+>>>
+>>> ld.lld-21: error: undefined symbol: screen_info
+>>>>>> referenced by sysfb.c
+>>>>>>               drivers/firmware/sysfb.o:(sysfb_parent_dev) in archive vmlinux.a
+>>>>>> referenced by sysfb.c
+>>>
+>>> The problem is that sysfb works on the global 'screen_info' structure, which
+>>> is provided by the firmware interface, either the generic EFI code or the
+>>> x86 BIOS startup.
+>>>
+>>> Assuming that HV always boots Linux using UEFI, the dependency also makes
+>>> logical sense, since otherwise it is impossible to boot a guest.
+>>>
+>>
+>> Hyper-V as of recent can boot off DeviceTree with the direct kernel
+>> boot, no UEFI
+>> is required (examples would be OpenVMM and the OpenHCL paravisor on
+>> arm64).
+>
+> I was aware of hyperv no longer needing ACPI, but devicetree and UEFI
+> are orthogonal concepts, and I had expected that even the devicetree
+> based version would still get booted using a tiny UEFI implementation
+> even if the kernel doesn't need that. Do you know what type of bootloader
+> is actually used in the examples you mentioned? Does the hypervisor
+> just start the kernel at the native entry point without a bootloader
+> in this case?
 
-No, they're not.  It should be automatic.  There are many deficiencies
-in the kernel; this is one of them.
+The kernel is started at the native entry point in "Image", and the address of
+the DeviceTree blob is passed in X0.
 
-> Ofcourse hugetlbfs has its own drawbacks of reserving pages.
+There is a "virtual baremetal" bootloader [1] that prepares DeviceTree for the
+kernel, sets some CPU registers and jumps to the Image's entry point yet that's
+totally headless except for the optional serial output. No ACPI or UEFI is involved
+at all.
 
-Drawback or advantage?  It's a feature.  You're being very strange about
-this.  First you want to reserve THPs for some workloads only, then when
-given a way to do that you complain that ... you have to reserve hugetlb
-pages.  You can't possibly mean both of these things sincerely.
+>
+>> Being no expert in Kconfig unfortunately... If another solution is possible to
+>> find given the timing constraints (link errors can't wait iiuc) that would be
+>> great :)
+>>
+>> Could something like "select EFI if SYSFB" work?
+>
+> You probably mean the reverse here:
+>
+>       select SYSFB if EFI && !HYPERV_VTL_MODE
+>
 
+Right :)
+
+> I think that should work, as long as the change from the 96959283a58d
+> ("Drivers: hv: Always select CONFIG_SYSFB for Hyper-V guests") patch
+> is not required in the cases where the guest has no bootloader.
+>
+
+That would be awesome!! I can't see the pro's and con's to arrive at the perfect
+solution quickly enough and am mostly driven by the sense that unconditional
+EFI seems superfluous. Again, I do understand that the build is broken, and
+something that fixes it fast should be the best solution.
+
+> Possibly this would also work
+>
+>      select SYSFB if X86 && !HYPERV_VTL_MODE
+>
+> in case only the x86 host requires the sysfb hack, but arm can
+> rely on PCI device probing instead.
+>
+> Or perhaps this version
+>
+> --- a/drivers/hv/Kconfig
+> +++ b/drivers/hv/Kconfig
+> @@ -19,6 +19,7 @@ config HYPERV_VTL_MODE
+>         bool "Enable Linux to boot in VTL context"
+>         depends on (X86_64 || ARM64) && HYPERV
+>         depends on SMP
+> +       depends on !EFI
+>         default n
+>         help
+>           Virtual Secure Mode (VSM) is a set of hypervisor capabilities and
+>
+> if the VTL mode is never used with a boot loader in the guest.
+
+The VTL mode uses the direct kernel boot and a DeviceTree blob, doesn't
+need ACPI and UEFI.
+
+[1]
+https://github.com/microsoft/openvmm/tree/main/openhcl/openhcl_boot
+
+>
+>      Arnd
+
+--
+Thank you,
+Roman
