@@ -1,99 +1,185 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C77782B9BF;
-	Tue, 10 Jun 2025 17:16:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00EFD244665
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749575775; cv=none; b=VCpCgAvLzeNaWsQgDMUPAPlwSoD2vD6Q3WL2LhoEfbQwpBjj6WTXC1jbxFa3+iapXMof7qeTrKHc0c0PNoS+c/CzVr/FZ+kyJX2b27Rygb18uCi7lhoqd2oaNxAiwmK/zbp1vWcWMKbRLxN0U8/CCDV9UF2b63ZjkkptGPxsgEI=
+	t=1749575827; cv=none; b=BeOjGN7cCCubP1mUJ/QkxwfYhe5sjpcc3UlreAvPHdkOYyu6AwJ14cUnO3iuIgs6DAzaBxAEHwSZ5vntE7j9GGekFH8KHeCME1Xpxt8vY97k3XP5Y0yGshQv7YMT2jOUOCLtLVYPcjQF8Ao46tmR+Fk2XSugPBxC54yr976AFEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749575775; c=relaxed/simple;
-	bh=55+RaM6BdEkpfdOTQyijX7TveBZCvrjRknaE/fwutoA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PfXxpfn9F4Atr9Jb6xYTELt3Qc6x2GcQtFndPP4tMRcNmAA13NymwxXpqM3B09EE07sICQXRDrr6IG0mJOyibiGXQOOqEzatpSzCDzVPHx1CCnVBrn33lXXaKt7oKtu0ehFLkLKRf28X1T5PfDE5pu8u/YCK6RCZF8QLpXAPIqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c2zKLg5K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749575827; c=relaxed/simple;
+	bh=7qWvqWj2EPLfEU+9olEuqM3aOuZT6KWZE0lgk7JeiA8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jDxT8SId7lqCgO6rd0JZXF0uhKrmGrf5Ms56lG8SggldRTU4cUmdjOdTauhNHb303WgBByh+pTBEACIIWEC1IYdDNSqovWI2z7QZXXZtLtG2ereHRxt5hZJeg4jm6355tvXexftnLohJvVBOUfvsPZK5wsQ5TpPdtHsggq9eMEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=liGWDznj; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c2zKLg5K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30406C4CEED;
-	Tue, 10 Jun 2025 17:16:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749575775;
-	bh=55+RaM6BdEkpfdOTQyijX7TveBZCvrjRknaE/fwutoA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c2zKLg5KKQ1hBezRVOupzHaNocG57d803thXInhwPM+26e+OgK+eZ4iZa0c9XGK78
-	 xMquwBHKK22kE672T/pEyEtq4Xpt1z8ldkt1+eIUfrMzR6Ev65F9sEwh0QAds4EGyv
-	 muXQuxmEHRTA1EjJco8KdUDQOrtG+hzuYQorPGJMOmsznKDZBYOpnKtzsrkydyCVlX
-	 r04Uw1P5b07DHiQbKnHnN7gx8u0HsB1drqTR+P2KdnlgZqUoxpcSUgGfQ0JYFz/aP5
-	 qTa/ygvxEkhIb+knrCk6S53TB0zQrHvASD+DDVr4siexj/ZF8T6u6Fgjk8qBTxd6t9
-	 t2QvhkRD82JpA==
-Date: Tue, 10 Jun 2025 20:16:09 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests/mm: Check for YAMA ptrace_scope configuraiton
- before modifying it
-Message-ID: <aEhoWVH0Ka6jB8QR@kernel.org>
-References: <20250610-selftest-mm-enable-yama-v1-1-0097b6713116@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="liGWDznj"
+Message-ID: <32cb1c74-4a15-491b-90b0-6c2fdf07dbb9@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749575821;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+6TLYW+X+ICRdTEemlhyxVV2i9XawqfMflRijJ5ErnI=;
+	b=liGWDznjsQnZfLpkxO80cgofTbJIluw5YkqYn3LOMjUkDS6Cc/lgdz5QYubeluHK1gfl1w
+	OYvcnObecHhkbw6WXGUTf1sW+AbmjjUyD0utX3oi2mwJhcRnnu6RTDzQkumwVHtGgwaEC1
+	QuaXoip0XSi1hYKg1Z89iFSZyX+h47w=
+Date: Tue, 10 Jun 2025 10:16:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250610-selftest-mm-enable-yama-v1-1-0097b6713116@kernel.org>
+Subject: Re: [PATCH v2 2/2] selftests/bpf: Convert test_sysctl to prog_tests
+Content-Language: en-GB
+To: Jerome Marchand <jmarchan@redhat.com>, bpf@vger.kernel.org
+Cc: Martin KaFai Lau <martin.lau@linux.dev>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+ Eduard Zingerman <eddyz87@gmail.com>
+References: <20250527165412.533335-1-jmarchan@redhat.com>
+ <20250610091933.717824-1-jmarchan@redhat.com>
+ <20250610091933.717824-3-jmarchan@redhat.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yonghong Song <yonghong.song@linux.dev>
+In-Reply-To: <20250610091933.717824-3-jmarchan@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Jun 10, 2025 at 03:07:44PM +0100, Mark Brown wrote:
-> When running the memfd_secret test run_vmtests.sh unconditionally tries
-> to confgiure the YAMA LSM's ptrace_scope configuration, leading to an error
-> if YAMA is not in the running kernel:
-> 
-> # ./run_vmtests.sh: line 432: /proc/sys/kernel/yama/ptrace_scope: No such file or directory
-> # # ----------------------
-> # # running ./memfd_secret
-> # # ----------------------
-> 
-> Check that this file is present before trying to write to it.
-> 
-> The indentation here is a bit odd, and it doesn't seem great that we
-> configure but don't restore ptrace_scope.
-> 
-> Signed-off-by: Mark Brown <broonie@kernel.org>
 
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
+On 6/10/25 2:19 AM, Jerome Marchand wrote:
+> Convert test_sysctl test to prog_tests with minimal change to the
+> tests themselves.
+>
+> Signed-off-by: Jerome Marchand <jmarchan@redhat.com>
 > ---
->  tools/testing/selftests/mm/run_vmtests.sh | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
-> index dddd1dd8af14..33fc7fafa8f9 100755
-> --- a/tools/testing/selftests/mm/run_vmtests.sh
-> +++ b/tools/testing/selftests/mm/run_vmtests.sh
-> @@ -429,7 +429,9 @@ CATEGORY="vma_merge" run_test ./merge
->  
->  if [ -x ./memfd_secret ]
->  then
-> -(echo 0 > /proc/sys/kernel/yama/ptrace_scope 2>&1) | tap_prefix
-> +if [ -f /proc/sys/kernel/yama/ptrace_scope ]; then
-> +	(echo 0 > /proc/sys/kernel/yama/ptrace_scope 2>&1) | tap_prefix
-> +fi
->  CATEGORY="memfd_secret" run_test ./memfd_secret
->  fi
->  
-> 
-> ---
-> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-> change-id: 20250605-selftest-mm-enable-yama-1541c2d2ddcd
-> 
-> Best regards,
-> -- 
-> Mark Brown <broonie@kernel.org>
-> 
+>   tools/testing/selftests/bpf/.gitignore        |  1 -
+>   tools/testing/selftests/bpf/Makefile          |  5 ++-
+>   .../bpf/{ => prog_tests}/test_sysctl.c        | 32 ++++---------------
+>   3 files changed, 9 insertions(+), 29 deletions(-)
+>   rename tools/testing/selftests/bpf/{ => prog_tests}/test_sysctl.c (98%)
+>
+> diff --git a/tools/testing/selftests/bpf/.gitignore b/tools/testing/selftests/bpf/.gitignore
+> index e2a2c46c008b1..3d8378972d26c 100644
+> --- a/tools/testing/selftests/bpf/.gitignore
+> +++ b/tools/testing/selftests/bpf/.gitignore
+> @@ -21,7 +21,6 @@ test_lirc_mode2_user
+>   flow_dissector_load
+>   test_tcpnotify_user
+>   test_libbpf
+> -test_sysctl
+>   xdping
+>   test_cpp
+>   *.d
+> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+> index 66bb50356be08..53dc08d905bd1 100644
+> --- a/tools/testing/selftests/bpf/Makefile
+> +++ b/tools/testing/selftests/bpf/Makefile
+> @@ -70,7 +70,7 @@ endif
+>   # Order correspond to 'make run_tests' order
+>   TEST_GEN_PROGS = test_verifier test_tag test_maps test_lru_map test_progs \
+>   	test_sockmap \
+> -	test_tcpnotify_user test_sysctl \
+> +	test_tcpnotify_user \
+>   	test_progs-no_alu32
+>   TEST_INST_SUBDIRS := no_alu32
+>   
+> @@ -215,7 +215,7 @@ ifeq ($(VMLINUX_BTF),)
+>   $(error Cannot find a vmlinux for VMLINUX_BTF at any of "$(VMLINUX_BTF_PATHS)")
+>   endif
+>   
+> -# Define simple and short `make test_progs`, `make test_sysctl`, etc targets
+> +# Define simple and short `make test_progs`, `make test_maps`, etc targets
+>   # to build individual tests.
+>   # NOTE: Semicolon at the end is critical to override lib.mk's default static
+>   # rule for binaries.
+> @@ -324,7 +324,6 @@ NETWORK_HELPERS := $(OUTPUT)/network_helpers.o
+>   $(OUTPUT)/test_sockmap: $(CGROUP_HELPERS) $(TESTING_HELPERS)
+>   $(OUTPUT)/test_tcpnotify_user: $(CGROUP_HELPERS) $(TESTING_HELPERS) $(TRACE_HELPERS)
+>   $(OUTPUT)/test_sock_fields: $(CGROUP_HELPERS) $(TESTING_HELPERS)
+> -$(OUTPUT)/test_sysctl: $(CGROUP_HELPERS) $(TESTING_HELPERS)
+>   $(OUTPUT)/test_tag: $(TESTING_HELPERS)
+>   $(OUTPUT)/test_lirc_mode2_user: $(TESTING_HELPERS)
+>   $(OUTPUT)/xdping: $(TESTING_HELPERS)
+> diff --git a/tools/testing/selftests/bpf/test_sysctl.c b/tools/testing/selftests/bpf/prog_tests/test_sysctl.c
+> similarity index 98%
+> rename from tools/testing/selftests/bpf/test_sysctl.c
+> rename to tools/testing/selftests/bpf/prog_tests/test_sysctl.c
+> index bcdbd27f22f08..049671361f8fa 100644
+> --- a/tools/testing/selftests/bpf/test_sysctl.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/test_sysctl.c
+> @@ -1,22 +1,8 @@
+>   // SPDX-License-Identifier: GPL-2.0
+>   // Copyright (c) 2019 Facebook
+>   
+> -#include <fcntl.h>
+> -#include <stdint.h>
+> -#include <stdio.h>
+> -#include <stdlib.h>
+> -#include <string.h>
+> -#include <unistd.h>
+> -
+> -#include <linux/filter.h>
+> -
+> -#include <bpf/bpf.h>
+> -#include <bpf/libbpf.h>
+> -
+> -#include <bpf/bpf_endian.h>
+> -#include "bpf_util.h"
+> +#include "test_progs.h"
+>   #include "cgroup_helpers.h"
+> -#include "testing_helpers.h"
+>   
+>   #define CG_PATH			"/foo"
+>   #define MAX_INSNS		512
+> @@ -1608,26 +1594,22 @@ static int run_tests(int cgfd)
+>   	return fails ? -1 : 0;
+>   }
+>   
+> -int main(int argc, char **argv)
+> +void test_sysctl(void)
+>   {
+>   	int cgfd = -1;
 
--- 
-Sincerely yours,
-Mike.
+-1 is not needed.
+
+> -	int err = 0;
+>   
+>   	cgfd = cgroup_setup_and_join(CG_PATH);
+> -	if (cgfd < 0)
+> -		goto err;
+> +	if (CHECK_FAIL(cgfd < 0))
+
+Use ASSERT* macros. For example, if (!ASSERT_OK_FD(cgfd, "create cgroup"))
+
+> +		goto out;
+>   
+>   	/* Use libbpf 1.0 API mode */
+>   	libbpf_set_strict_mode(LIBBPF_STRICT_ALL);
+
+This is not needed.
+
+>   
+> -	if (run_tests(cgfd))
+> -		goto err;
+> +	if (CHECK_FAIL(run_tests(cgfd)))
+
+if (!ASSERT_OK(run_tests(cgfd), "run_tests"))
+
+> +		goto out;
+>   
+> -	goto out;
+> -err:
+> -	err = -1;
+>   out:
+>   	close(cgfd);
+>   	cleanup_cgroup_environment();
+> -	return err;
+> +	return;
+>   }
