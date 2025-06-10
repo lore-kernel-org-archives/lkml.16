@@ -1,94 +1,445 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6F327E7F4;
-	Tue, 10 Jun 2025 09:01:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD0128A1FA
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749546121; cv=none; b=FFDaqG57YpPvNvUl2f+CrT8I9FfgAE8dG00KbduQoLDHTz+ItLKdc4GEL5YShfWIF+te10PoIIuTV7YS902InNasAL0dL3r7pZ5lLjaERZjbRxYJenNr3yUv+sNrplWsxEGXefgLRxggRW72hsP8JSazY3kg9Y5ttOB+OTGy5yU=
+	t=1749546190; cv=none; b=feLejo3xSGT2rmzqk7b2BYw3FaWJroivreqLqCFZ5Ry8s8Mc2NDCR+b3Dpm0kuBhU1opg5FJGtiQuPwGiSOQydUh8x3IReWVldJSEgFu4DvcE1iE4OXJEQirx7hh1Vkv98vF0TddbG9QmkzRC/uAo+xgMRPHXVLB9F3Z1CH0tkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749546121; c=relaxed/simple;
-	bh=94LOGFtv9fju+jJlRWljh0ww2426M0bNiXZiK221vdM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GEALa1NBnQ4zCzof3kKrflQ8goDAm2UK7BY8Ef5lJqTYHLfdtEKna3X1ss6sisyow8ry8WzdE5RGaKWvGWhjwka7M6Fou+iUU+mMelrzfn60zuzV0KJtkXpb/LyJVP+aK4S/ZC2/9m4Lf8OYVtr5iexnYPwwY4XYmdbppFddGGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AMmFVw7e; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749546190; c=relaxed/simple;
+	bh=KtBis59073/5z5OHotS5cslDoKZ1kf3mjXDdahsqRQE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TG+BVkJkygFfMtcHAHXO8LciFN1uhAiScBCnPDePUNLLk8BRzCRbXUdjEwXi78nEg1Z81PD2zOlI4xSbdrZlnr4lH2ZStVnZoH+eQObYTtTn4scOVL9ff+7Edhz0I1k/oTkJOY9kGr1N1wmnL/DwVPpjkX4Cl+rTfbReRhuCNCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eH5IX/2i; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AMmFVw7e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749546119; x=1781082119;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=94LOGFtv9fju+jJlRWljh0ww2426M0bNiXZiK221vdM=;
-  b=AMmFVw7e5RJevt8/f/I8vGG2UsluK7AxyJ97kfd9aUs0WIO9CPcZ/nwI
-   J2fSyq8CRJnyynpKm+gGVbCJ3ezYpCDTGyAwjBIw/mGArmPmsq8b8FqSG
-   LC7E+SLjDWxX5heG/BX8e1In9PcaR1hRLGgRiNDPFXFPLjQQ19tiyBsPg
-   nAD0qWeV7oakpAkiZVB0oX4ZYcPisA8O1mlnFbc0DizwJnzYA0uUuzmxZ
-   MhM+DSOP+k9oviSuACHHbvBXyuYJYUr/JBZRcHqSWigZdKVJbgZd2Yhm2
-   sUXJA7d90AeyuZxli9DuexfSJuyMrCfKzlaLGbBWOBrPF7iK0UBdiLIcM
-   w==;
-X-CSE-ConnectionGUID: gwvIBT9ZTam3Pj+TQgHeqQ==
-X-CSE-MsgGUID: yRJqsgLJR7GH5w5MMVeHIQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51791400"
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="51791400"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 02:01:58 -0700
-X-CSE-ConnectionGUID: Jh9SwRskQLmYX/BBDCtvrw==
-X-CSE-MsgGUID: 3ML7GBduSDqHL0fwWoXSwQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="152026984"
-Received: from lfiedoro-mobl.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.169])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 02:01:57 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id D636C11FBA0;
-	Tue, 10 Jun 2025 12:01:53 +0300 (EEST)
-Date: Tue, 10 Jun 2025 09:01:53 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-Cc: Sylvain Petinot <sylvain.petinot@foss.st.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] media: i2c: vd55g1: Fix RATE macros not being
- expressed in bps
-Message-ID: <aEf0gdJ0hA2dNQoH@kekkonen.localdomain>
-References: <20250609-fix_vd55g1-v1-0-594f1134e3fb@foss.st.com>
- <20250609-fix_vd55g1-v1-1-594f1134e3fb@foss.st.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eH5IX/2i"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-742c27df0daso4672017b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 02:03:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749546187; x=1750150987; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RDkZg8wwQgKCEjohuDCo8M/vn8OTWHGeVyS9YUxQ+pE=;
+        b=eH5IX/2ibEqdJTMCoI3F/vBAxj1mpFoOPHOYyLyHe4ujyneTjQIX30IWe/Bz9A5Svw
+         B7gYN1Dofb+DO/IQ//tkYSKstuxqqNhnuCIBkS1qyWqLV6ls50OuBx+GIF/ozP6BPicl
+         1M6CBOVuVQWHZ2DL++o3ksVqUJbWDETHCmXjZh16yHCLmOojuumN17rlpvxKOoSmD7cn
+         +xZJhj16C6ZE/W0BjzeVRCIA0gsask4+9esLEMm6KmT7oIuTZekCj9uT7wc2baEuM5W0
+         3dPDIZJs6MUoshINizcZXUGyTISF4/XNIwL8c0YUgWiSyH0E/k5ztBDu2uQ86skit9u7
+         xT0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749546187; x=1750150987;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RDkZg8wwQgKCEjohuDCo8M/vn8OTWHGeVyS9YUxQ+pE=;
+        b=SULuiXc68jVpqP5wn7b9bpgbSpjVjsthaHz4ggPSOpg5GNAweNw/qb0Q0+gN7sOhOo
+         Si0Zn+478l19bZWo4Orz28diy6LpCLPr913JpKbDyomDuEkSNdfhe+39b85k7A67vSOS
+         jWAjv+UyQkQgR3PkQi2g3+UCZlsMgd1zGmc75xy3EWjy4CQNS8FLPvD5CXgSAPHjDf/j
+         BRtEZQ31Z8VccJ8Utwjy5pJr1lwOGDaBfjlBo02vJNaF2WEWLJLu4LwbHb/6lRPGsCeJ
+         P/ZFDbdk+S4YYu7asIjd6XSLj9LSqbscs7GamQJQosbvRe/Ah9qzmyOIbmtE4wx1Tbxn
+         i2ow==
+X-Forwarded-Encrypted: i=1; AJvYcCXFxBYYLE56auUZ4dJSK+l2CH7zSUdwN9iQrWhyzl09KTtUzeFkTMsMQ3Rd18gZJHsEzJeyLUsLd+5VtJ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuugOqVTtvWZcgV2FhAQVohp+f18JQdWye+jytSLtRHuP5kaW5
+	bH9xhIjwO3QSjl+Ee6fFX7Of/DaaZRO7/cqnx43HShdciVDU9y6Rb7sJyKygADTxnwc=
+X-Gm-Gg: ASbGnct6BsscFlR2Hr5AaIiT/zW2O0duOGuRZtj4pCyF+HfjxalBH80Eeyg5nJv83Na
+	ozoB8dQKA1tDFqXmCTVoLkSVqUDRY1tHmWmFdk2Yp51KyCV9pqCBIbucjKK3C0fPc5c+JQQ5T6A
+	AlWH2JlDM7BLA9RYmHs+zFgyfY7VtZtX7RPWHj01Vp9Jc04Fne+Mjvwmt5AdJ6mgKTKgy+N614i
+	bMJ57hyBLBwQhgUm9/3CX6B2Ywj42nCLbj38T5O5bl2BSJdjcos0KpxArcx169G3PO/BMkWQH1E
+	sYJhOyCOr9S/zNkCVoYpozlIdGsmpeOROe0Oo2sBcvHRDEtfx6rFjE2QhiJY7vE=
+X-Google-Smtp-Source: AGHT+IEF8ZswbaGt+kAMfjFAaTlcBZCsys6y+j5D6JZRyGaqI7g2gr4LecQHz7V2Fe9yn0I80HERYQ==
+X-Received: by 2002:a05:6a00:13a0:b0:748:3964:6177 with SMTP id d2e1a72fcca58-7486188bd4cmr3005131b3a.19.1749546186475;
+        Tue, 10 Jun 2025 02:03:06 -0700 (PDT)
+Received: from localhost ([122.172.81.72])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0c5f73sm6946755b3a.126.2025.06.10.02.03.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 02:03:05 -0700 (PDT)
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Andreas Hindborg <a.hindborg@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Breno Leitao <leitao@debian.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Yury Norov <yury.norov@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
+	Nishanth Menon <nm@ti.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>,
+	linux-block@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH V2] rust: Use consistent "# Examples" heading style in rustdoc
+Date: Tue, 10 Jun 2025 14:33:00 +0530
+Message-Id: <ddd5ce0ac20c99a72a4f1e4322d3de3911056922.1749545815.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250609-fix_vd55g1-v1-1-594f1134e3fb@foss.st.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 09, 2025 at 03:46:21PM +0200, Benjamin Mugnier wrote:
-> Signed-off-by: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-> ---
->  drivers/media/i2c/vd55g1.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/vd55g1.c b/drivers/media/i2c/vd55g1.c
-> index 25e2fc88a0367bf6a28bb22d209323ace99299f2..78dd22d9cab03edf4ff3e5a301f8d045e930c997 100644
-> --- a/drivers/media/i2c/vd55g1.c
-> +++ b/drivers/media/i2c/vd55g1.c
-> @@ -129,8 +129,8 @@
->  #define VD55G1_FWPATCH_REVISION_MINOR			9
->  #define VD55G1_XCLK_FREQ_MIN				(6 * HZ_PER_MHZ)
->  #define VD55G1_XCLK_FREQ_MAX				(27 * HZ_PER_MHZ)
-> -#define VD55G1_MIPI_RATE_MIN				(250 * HZ_PER_MHZ)
-> -#define VD55G1_MIPI_RATE_MAX				(1200 * HZ_PER_MHZ)
-> +#define VD55G1_MIPI_RATE_MIN				(250 * MEGA)
-> +#define VD55G1_MIPI_RATE_MAX				(1200 * MEGA)
+Use a consistent `# Examples` heading in rustdoc across the codebase.
 
-As the meaning of Hz is just /s, I don't think the use of HZ_PER_MHZ was
-wrong in any way above.
+Some modules previously used `## Examples` (even when they should be
+available as top-level headers), while others used `# Example`, which
+deviates from the preferred `# Examples` style.
 
+Suggested-by: Miguel Ojeda <ojeda@kernel.org>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Acked-by: Benno Lossin <lossin@kernel.org>
+---
+V1->V2:
+- Don't change the header level for the example in workqueue.rs.
+- Update the commit log accordingly.
+- Add Ack from Benno.
+
+ rust/kernel/block/mq.rs  |  2 +-
+ rust/kernel/clk.rs       |  6 +++---
+ rust/kernel/configfs.rs  |  2 +-
+ rust/kernel/cpufreq.rs   |  8 ++++----
+ rust/kernel/cpumask.rs   |  4 ++--
+ rust/kernel/devres.rs    |  4 ++--
+ rust/kernel/firmware.rs  |  4 ++--
+ rust/kernel/opp.rs       | 16 ++++++++--------
+ rust/kernel/pci.rs       |  4 ++--
+ rust/kernel/platform.rs  |  2 +-
+ rust/kernel/sync.rs      |  2 +-
+ rust/kernel/workqueue.rs |  2 +-
+ rust/pin-init/src/lib.rs |  2 +-
+ 13 files changed, 29 insertions(+), 29 deletions(-)
+
+diff --git a/rust/kernel/block/mq.rs b/rust/kernel/block/mq.rs
+index fb0f393c1cea..831445d37181 100644
+--- a/rust/kernel/block/mq.rs
++++ b/rust/kernel/block/mq.rs
+@@ -53,7 +53,7 @@
+ //! [`GenDiskBuilder`]: gen_disk::GenDiskBuilder
+ //! [`GenDiskBuilder::build`]: gen_disk::GenDiskBuilder::build
+ //!
+-//! # Example
++//! # Examples
+ //!
+ //! ```rust
+ //! use kernel::{
+diff --git a/rust/kernel/clk.rs b/rust/kernel/clk.rs
+index 6041c6d07527..34a19bc99990 100644
+--- a/rust/kernel/clk.rs
++++ b/rust/kernel/clk.rs
+@@ -12,7 +12,7 @@
+ ///
+ /// Represents a frequency in hertz, wrapping a [`c_ulong`] value.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// ```
+ /// use kernel::clk::Hertz;
+@@ -95,7 +95,7 @@ mod common_clk {
+     /// Instances of this type are reference-counted. Calling [`Clk::get`] ensures that the
+     /// allocation remains valid for the lifetime of the [`Clk`].
+     ///
+-    /// ## Examples
++    /// # Examples
+     ///
+     /// The following example demonstrates how to obtain and configure a clock for a device.
+     ///
+@@ -266,7 +266,7 @@ fn drop(&mut self) {
+     /// Instances of this type are reference-counted. Calling [`OptionalClk::get`] ensures that the
+     /// allocation remains valid for the lifetime of the [`OptionalClk`].
+     ///
+-    /// ## Examples
++    /// # Examples
+     ///
+     /// The following example demonstrates how to obtain and configure an optional clock for a
+     /// device. The code functions correctly whether or not the clock is available.
+diff --git a/rust/kernel/configfs.rs b/rust/kernel/configfs.rs
+index 34d0bea4f9a5..92cc39a2f7ca 100644
+--- a/rust/kernel/configfs.rs
++++ b/rust/kernel/configfs.rs
+@@ -17,7 +17,7 @@
+ //!
+ //! C header: [`include/linux/configfs.h`](srctree/include/linux/configfs.h)
+ //!
+-//! # Example
++//! # Examples
+ //!
+ //! ```ignore
+ //! use kernel::alloc::flags;
+diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
+index b0a9c6182aec..944814b1bd60 100644
+--- a/rust/kernel/cpufreq.rs
++++ b/rust/kernel/cpufreq.rs
+@@ -201,7 +201,7 @@ fn from(index: TableIndex) -> Self {
+ /// The callers must ensure that the `struct cpufreq_frequency_table` is valid for access and
+ /// remains valid for the lifetime of the returned reference.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to read a frequency value from [`Table`].
+ ///
+@@ -317,7 +317,7 @@ fn deref(&self) -> &Self::Target {
+ ///
+ /// This is used by the CPU frequency drivers to build a frequency table dynamically.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to create a CPU frequency table.
+ ///
+@@ -394,7 +394,7 @@ pub fn to_table(mut self) -> Result<TableBox> {
+ /// The callers must ensure that the `struct cpufreq_policy` is valid for access and remains valid
+ /// for the lifetime of the returned reference.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to create a CPU frequency table.
+ ///
+@@ -832,7 +832,7 @@ fn register_em(_policy: &mut Policy) {
+ 
+ /// CPU frequency driver Registration.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to register a cpufreq driver.
+ ///
+diff --git a/rust/kernel/cpumask.rs b/rust/kernel/cpumask.rs
+index c90bfac9346a..0f2dd11d8e6a 100644
+--- a/rust/kernel/cpumask.rs
++++ b/rust/kernel/cpumask.rs
+@@ -29,7 +29,7 @@
+ /// The callers must ensure that the `struct cpumask` is valid for access and
+ /// remains valid for the lifetime of the returned reference.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to update a [`Cpumask`].
+ ///
+@@ -173,7 +173,7 @@ pub fn copy(&self, dstp: &mut Self) {
+ /// The callers must ensure that the `struct cpumask_var_t` is valid for access and remains valid
+ /// for the lifetime of [`CpumaskVar`].
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to create and update a [`CpumaskVar`].
+ ///
+diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+index 0f79a2ec9474..3644c604d4a7 100644
+--- a/rust/kernel/devres.rs
++++ b/rust/kernel/devres.rs
+@@ -42,7 +42,7 @@ struct DevresInner<T> {
+ /// [`Devres`] users should make sure to simply free the corresponding backing resource in `T`'s
+ /// [`Drop`] implementation.
+ ///
+-/// # Example
++/// # Examples
+ ///
+ /// ```no_run
+ /// # use kernel::{bindings, c_str, device::{Bound, Device}, devres::Devres, io::{Io, IoRaw}};
+@@ -192,7 +192,7 @@ pub fn new_foreign_owned(dev: &Device<Bound>, data: T, flags: Flags) -> Result {
+     /// An error is returned if `dev` does not match the same [`Device`] this [`Devres`] instance
+     /// has been created with.
+     ///
+-    /// # Example
++    /// # Examples
+     ///
+     /// ```no_run
+     /// # #![cfg(CONFIG_PCI)]
+diff --git a/rust/kernel/firmware.rs b/rust/kernel/firmware.rs
+index 2494c96e105f..e209b5af297c 100644
+--- a/rust/kernel/firmware.rs
++++ b/rust/kernel/firmware.rs
+@@ -139,7 +139,7 @@ unsafe impl Sync for Firmware {}
+ /// Typically, such contracts would be enforced by a trait, however traits do not (yet) support
+ /// const functions.
+ ///
+-/// # Example
++/// # Examples
+ ///
+ /// ```
+ /// # mod module_firmware_test {
+@@ -261,7 +261,7 @@ const fn push_internal(mut self, bytes: &[u8]) -> Self {
+     /// Append path components to the [`ModInfoBuilder`] instance. Paths need to be separated
+     /// with [`ModInfoBuilder::new_entry`].
+     ///
+-    /// # Example
++    /// # Examples
+     ///
+     /// ```
+     /// use kernel::firmware::ModInfoBuilder;
+diff --git a/rust/kernel/opp.rs b/rust/kernel/opp.rs
+index a566fc3e7dcb..5f404c4181ad 100644
+--- a/rust/kernel/opp.rs
++++ b/rust/kernel/opp.rs
+@@ -103,7 +103,7 @@ fn to_c_str_array(names: &[CString]) -> Result<KVec<*const u8>> {
+ ///
+ /// Represents voltage in microvolts, wrapping a [`c_ulong`] value.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// ```
+ /// use kernel::opp::MicroVolt;
+@@ -128,7 +128,7 @@ fn from(volt: MicroVolt) -> Self {
+ ///
+ /// Represents power in microwatts, wrapping a [`c_ulong`] value.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// ```
+ /// use kernel::opp::MicroWatt;
+@@ -153,7 +153,7 @@ fn from(power: MicroWatt) -> Self {
+ ///
+ /// The associated [`OPP`] is automatically removed when the [`Token`] is dropped.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to create an [`OPP`] dynamically.
+ ///
+@@ -202,7 +202,7 @@ fn drop(&mut self) {
+ /// Rust abstraction for the C `struct dev_pm_opp_data`, used to define operating performance
+ /// points (OPPs) dynamically.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to create an [`OPP`] with [`Data`].
+ ///
+@@ -254,7 +254,7 @@ fn freq(&self) -> Hertz {
+ 
+ /// [`OPP`] search options.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// Defines how to search for an [`OPP`] in a [`Table`] relative to a frequency.
+ ///
+@@ -326,7 +326,7 @@ fn drop(&mut self) {
+ ///
+ /// Rust abstraction for the C `struct dev_pm_opp_config`.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to set OPP property-name configuration for a [`Device`].
+ ///
+@@ -569,7 +569,7 @@ extern "C" fn config_regulators(
+ ///
+ /// Instances of this type are reference-counted.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to get OPP [`Table`] for a [`Cpumask`] and set its
+ /// frequency.
+@@ -1011,7 +1011,7 @@ fn drop(&mut self) {
+ ///
+ /// A reference to the [`OPP`], &[`OPP`], isn't refcounted by the Rust code.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to get [`OPP`] corresponding to a frequency value and
+ /// configure the device with it.
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index 8435f8132e38..2c2ed347c72a 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -100,7 +100,7 @@ extern "C" fn remove_callback(pdev: *mut bindings::pci_dev) {
+ 
+ /// Declares a kernel module that exposes a single PCI driver.
+ ///
+-/// # Example
++/// # Examples
+ ///
+ ///```ignore
+ /// kernel::module_pci_driver! {
+@@ -194,7 +194,7 @@ macro_rules! pci_device_table {
+ 
+ /// The PCI driver trait.
+ ///
+-/// # Example
++/// # Examples
+ ///
+ ///```
+ /// # use kernel::{bindings, device::Core, pci};
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index 5b21fa517e55..f8c0d79445fa 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -120,7 +120,7 @@ macro_rules! module_platform_driver {
+ ///
+ /// Drivers must implement this trait in order to get a platform driver registered.
+ ///
+-/// # Example
++/// # Examples
+ ///
+ ///```
+ /// # use kernel::{bindings, c_str, device::Core, of, platform};
+diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
+index 36a719015583..a38ea4419758 100644
+--- a/rust/kernel/sync.rs
++++ b/rust/kernel/sync.rs
+@@ -39,7 +39,7 @@ impl LockClassKey {
+     /// Initializes a dynamically allocated lock class key. In the common case of using a
+     /// statically allocated lock class key, the static_lock_class! macro should be used instead.
+     ///
+-    /// # Example
++    /// # Examples
+     /// ```
+     /// # use kernel::c_str;
+     /// # use kernel::alloc::KBox;
+diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
+index d092112d843f..1a8dcd4b4ce1 100644
+--- a/rust/kernel/workqueue.rs
++++ b/rust/kernel/workqueue.rs
+@@ -26,7 +26,7 @@
+ //!  * The [`WorkItemPointer`] trait is implemented for the pointer type that points at a something
+ //!    that implements [`WorkItem`].
+ //!
+-//! ## Example
++//! ## Examples
+ //!
+ //! This example defines a struct that holds an integer and can be scheduled on the workqueue. When
+ //! the struct is executed, it will print the integer. Since there is only one `work_struct` field,
+diff --git a/rust/pin-init/src/lib.rs b/rust/pin-init/src/lib.rs
+index 9ab34036e6bc..c5f395b44ec8 100644
+--- a/rust/pin-init/src/lib.rs
++++ b/rust/pin-init/src/lib.rs
+@@ -953,7 +953,7 @@ macro_rules! try_init {
+ /// Asserts that a field on a struct using `#[pin_data]` is marked with `#[pin]` ie. that it is
+ /// structurally pinned.
+ ///
+-/// # Example
++/// # Examples
+ ///
+ /// This will succeed:
+ /// ```
 -- 
-Sakari Ailus
+2.31.1.272.g89b43f80a514
+
