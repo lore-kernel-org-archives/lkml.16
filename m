@@ -1,91 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8989E2D3A8D;
-	Tue, 10 Jun 2025 12:50:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D29B295DB2;
+	Tue, 10 Jun 2025 12:50:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749559817; cv=none; b=itUfc+ObRA+92A14R07rAPfowzBax8PsNRP71WlB6RChhiiJah14QvP3OI2frHc4jAOQUYmW4+VNsCLK+pCYz5r2txvDd5Wc+gYoGmiV0Oam9j25Rwo5MMm1xvd/largAbeWr7Pi4FPzxHmg+4PMcIOMywFVpBBtiRQiBMa2jLo=
+	t=1749559861; cv=none; b=uFponuQxzbV2OIujUEFuQYHzctPOPlc2KjW110ekVgz/HkTQ9WCbfdgo6aHCOIv+PoQtQ+PUJnp/8xuIx19yRb3wddWlCnC59+0K4/KTdxP65VBQUCVGKQ1mfIlHc+hnq17NyYzde6S/003oY/u3esU8NG7oUPXawaEiFus1l14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749559817; c=relaxed/simple;
-	bh=7QpkMQMXtn6bcXn+GLCixu8zGcxbjjq8un/lPEBMnVI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=A0bnHLyUB+WHOVNc718lhIeCJI7SSrtn94UrqwO94kbIDuTXlKG3BzxDc+z+EJKAXbhpcGAfZ1WgRzhSMu1z0DS/sU2D1PoDDrM/5ttOchx7nHueNWy5IMDLCkaXQ/b7865IfVLoT4GkvTUnjiCr32u77nK9UCS1LP5ZHGSHd1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F7GQc7RQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749559861; c=relaxed/simple;
+	bh=4uAmNwzlF6gH9SKi7JLCPMR8x1PShZgHQjyth9xnt3I=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PcRGkJ6JmtrK6bTfD0EC7Hc92+D7g7lnfRIN9P7w6TP59/lTTxX6/oXzha+SAAAL99eqKYl6B+9nkbKWaBYfApCDI61ovLxOQWIoeZ3O9mGP0VyN8d//MbrlTxCkS1wJktwdCbS7DJfzgze8EnkwpluUZhQWybsX879+HmxbUsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=CNz98/qQ; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F7GQc7RQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35285C4CEF1;
-	Tue, 10 Jun 2025 12:50:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749559817;
-	bh=7QpkMQMXtn6bcXn+GLCixu8zGcxbjjq8un/lPEBMnVI=;
-	h=From:Date:Subject:To:Cc:From;
-	b=F7GQc7RQ+F0IJCdqY94Kv4ovWFYpciWBNBN3n3ToM1BxxreW8XTNXdwe+ckHm8Xww
-	 T7IJkYouR8gd+16bN9SOt+mFg/BBfT4RiDAhEeJrtuCeRc7/QUiourBnp4xWvFn4mj
-	 QE0VQ1vxJq9lezeoj3KXQEC4HzFlX1vK6wFKOX4Z6nIpURA5lILlEYUc1WN/r08hn8
-	 6d4ha6j40uuJhkS7zG0Z+7s77vuR+Cyd33mjYGPIV2Hs1Vfq8pnvtngi6IVPcxXIVu
-	 ZJ54mptB0ckWWz9y9wvnbFmXxlFB0kLmjqkBcwNlcZQEsULOX8+CtPH/FQ+vUaEJqV
-	 /WzEIkVzWTOvg==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Tue, 10 Jun 2025 14:50:03 +0200
-Subject: [PATCH] drm/msm/dpu: Fill in min_prefill_lines for SC8180X
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="CNz98/qQ"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55ACLDZr012939;
+	Tue, 10 Jun 2025 14:50:43 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=pJAee28q72qTBjZcGP6IMl
+	+e1YIXch0GS+MmyHTBJTg=; b=CNz98/qQnnuBxhV5Kdj2cMdL+uycW/qV2Hms1h
+	eorEmBev9WP7jPcbcFDXsPIYPve9s14fQhgGE/jHulo6KeZxnr6fVArNtcNxetxQ
+	9AqGhP+WUFAn6ut7ZvoxaHSufPT/Sf9ENU7o8m6yw7YXG++o8QnAzGcGxCTX/jLq
+	69n74N/QxcBN0R7YZzEsd7n6duxGw42+4U7pQ5+KdsCYXn+HLVMTN52NJMa+kf+c
+	xT6fUGTqb5ZV8VIvZ+3KVDA66d6Iww+iJjyEEVrnrzZUXM4YiWLZ6gy2IRD2C6/O
+	PA/EPcnZTOqzJw+iNFpDu5Bo/TDkZzB0TenMNeaT9cNbDkpQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474aumd9u5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 14:50:43 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 64BEB40044;
+	Tue, 10 Jun 2025 14:49:39 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7854AB35DBD;
+	Tue, 10 Jun 2025 14:48:59 +0200 (CEST)
+Received: from localhost (10.48.86.132) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
+ 2025 14:48:59 +0200
+From: Antonio Borneo <antonio.borneo@foss.st.com>
+To: Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Andy Shevchenko
+	<andy@kernel.org>,
+        David Lechner <dlechner@baylibre.com>,
+        Fabrice Gasnier
+	<fabrice.gasnier@foss.st.com>,
+        Gatien Chevallier
+	<gatien.chevallier@foss.st.com>,
+        Jonathan Cameron <jic23@kernel.org>, Lee
+ Jones <lee@kernel.org>,
+        <linux-iio@vger.kernel.org>,
+        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+        Olivier Moysan
+	<olivier.moysan@foss.st.com>
+CC: Antonio Borneo <antonio.borneo@foss.st.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>
+Subject: [PATCH 0/5] STM32: Fix build warnings about export.h
+Date: Tue, 10 Jun 2025 14:48:50 +0200
+Message-ID: <20250610124855.269158-1-antonio.borneo@foss.st.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250610-topic-dpu_8180_mpl-v1-1-f480cd22f11c@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAPopSGgC/x3M3QpAQBBA4VfRXNuatdHyKpIwgyk/2y5S8u42l
- 9/FOQ8E9sIBquQBz5cE2bcInSYwzN02sRKKhgyzHAuN6tidDIrc2VptsV3dokpjjLXcIxFBDJ3
- nUe5/Wjfv+wEw8pW8ZAAAAA==
-X-Change-ID: 20250610-topic-dpu_8180_mpl-933388eb0ddd
-To: Rob Clark <robin.clark@oss.qualcomm.com>, 
- Dmitry Baryshkov <lumag@kernel.org>, 
- Abhinav Kumar <abhinav.kumar@linux.dev>, 
- Jessica Zhang <jessica.zhang@oss.qualcomm.com>, Sean Paul <sean@poorly.run>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749559812; l=1066;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=iE/yOryfr8u/J14k5vdj37MOoWRLYDlk7LCl9lLaqKE=;
- b=/3ym+TuMMf6qgrZEIiGeqXTPB8s739mqTCyW2nxcn3cXJjZHUCFEee6La/zDxv7RuGt7gJz63
- 8iBtDMZZ6PEADjErF4GBzqzz8j7nVQW1dwSyHNPfIOEMYE/ncI4qhkn
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SAFCAS1NODE2.st.com (10.75.90.13) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_05,2025-06-10_01,2025-03-28_01
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+This series fixes, for the SoC's STM32, the new warnings that
+appear from v6.16-rc1 about mismatch between the include of
+linux/export.h and the use of EXPORT_SYMBOL().
 
-Based on the downstream release, predictably same value as for SM8150.
+Antonio Borneo (5):
+  bus: stm32_firewall: Fix build warnings about export.h
+  iio: adc: stm32-dfsdm: Fix build warnings about export.h
+  iio: trigger: stm32-timer: Fix build warnings about export.h
+  iio: trigger: stm32-lptimer: Fix build warnings about export.h
+  mfd: stm32-timers: Fix build warnings about export.h
 
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/bus/stm32_firewall.c                | 1 +
+ drivers/iio/adc/stm32-dfsdm-adc.c           | 1 +
+ drivers/iio/adc/stm32-dfsdm-core.c          | 1 +
+ drivers/iio/trigger/stm32-lptimer-trigger.c | 1 +
+ drivers/iio/trigger/stm32-timer-trigger.c   | 1 +
+ drivers/mfd/stm32-timers.c                  | 1 +
+ 6 files changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
-index d6f8b1030c68a428a144428b422b63b960c2fdba..6c04f41f9bacc3be2d2259d3b3e2099934f473f7 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
-@@ -383,6 +383,7 @@ static const struct dpu_perf_cfg sc8180x_perf_data = {
- 	.min_core_ib = 2400000,
- 	.min_llcc_ib = 800000,
- 	.min_dram_ib = 800000,
-+	.min_prefill_lines = 24,
- 	.danger_lut_tbl = {0xf, 0xffff, 0x0},
- 	.safe_lut_tbl = {0xfff0, 0xf000, 0xffff},
- 	.qos_lut_tbl = {
 
----
-base-commit: b27cc623e01be9de1580eaa913508b237a7a9673
-change-id: 20250610-topic-dpu_8180_mpl-933388eb0ddd
-
-Best regards,
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
 -- 
-Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+2.34.1
 
