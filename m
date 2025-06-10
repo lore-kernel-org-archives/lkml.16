@@ -1,105 +1,116 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 976832417D9;
-	Tue, 10 Jun 2025 17:34:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CB6C1F4CB7
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749576898; cv=none; b=N4zIAqvfXE3oJHQ6kwhmYzznyisXLCCTR1uxCTJfjiHw41fZcJ3DvFf8eaEp/JqO8HFJGSOF6lwR0s7Cqj46gDVA+FCNkTLi3ZgG8BhhttiIUEISm1BmRo22oYny3/YUcS0M7y1Lc70FcqV8RcOwtCLCs61gx3EbP+M1V6PncB4=
+	t=1749576954; cv=none; b=MBgm2SoVVpxRPZuqfjcgQESPZbd+xwe77ZXIKcppgLpTsSjwUUt1aLY3uA5Pdvv/eo59bzj8NnyF8qgGIBLvN+k67wfIYenvqCvqHKdw1j31fqScYxLdEzOYO+fNcQK7+kaeiDRHa8kb9o1O8O8xnHeLZ2rCyBObj60xs0rFH98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749576898; c=relaxed/simple;
-	bh=xN/2rqPfGxSMoZKx3wHgJjAtv2TwdbNnTpb/Vgb1fV8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MCfn6QjVIf0cOSNvR3oH+NdOvbSihzsQ+i/egu2V9FSFyS/zCxGZXkf6L2gjARhny5Q9AIlsJv49n7UOwc9tT5Ix3VtwkA/42USak4TrWzFcaZdcrJRtMiU/KXP5AUxFAv4LRpxgAsiWqRFsm1seBbeWWNP/lohHgTT6QgMzT0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dDSOAgYU; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749576954; c=relaxed/simple;
+	bh=YWMs+H1R1avtUz7Zxo5I8qnCe4kbf3dkkem3H/EZHXQ=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=LBvpTJLZeS+sQOixM6MM0f//1RpreKkBDebvSypJ3FmtfDRrEHChOqGbOQ/8QD0B23LjYrxJi7el/NANoKpeHtEbSkZ1MspCTRaIw5h/9UHL7KAoECYJE8hP1K5GTl4QTB2NBPCgrej+9r0emFO1C48So1mVg8xJP4GkoqnEjG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=flmXs/dX; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dDSOAgYU"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-55324062ea8so7437567e87.3;
-        Tue, 10 Jun 2025 10:34:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749576895; x=1750181695; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p+yX5lUpmefac6IS4VlNlP6XUmszyq2kkQqjyOpGbSM=;
-        b=dDSOAgYU30hsESWNzObIhMHwtOzTxD1O1faQlsquEjsACtfGmEKMkbqSQ27AUms5C4
-         rvYY2/f4fK+ukqJnn62hUs5/m5WAYH0SrirfetCkfOtnBhldu+V2KNyLonn95McVfS9V
-         q+civD9+p2FsqHkeNIXDI4fcsIrKA2Mj3OnedqWEHkPkRC2OURbwh8pQnERQjruEbgOn
-         fvdTK97bxBPowLIttzBphYsRHxCBxHQtyy5i1DRxG5bfy/I6jZXpFfeu1GIyQtBvK4VG
-         UNaS+JA6C2/4WCZtsyGu1vpTH1JqDbglutCdMLoI7o6dXXgXmGlkILbbQUN1W+4AMo1w
-         gVRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749576895; x=1750181695;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p+yX5lUpmefac6IS4VlNlP6XUmszyq2kkQqjyOpGbSM=;
-        b=BslEygMttJCllfFgSI4y0leChZ98WWqZfAmF8/CToc7NInhzUHaATDh68KQh5DNFNo
-         OJ91r0YC23ey/DFpuRHo1wFe91pU/GNgBGVEgZB0JKvPcd5NZmpSNuL2IvgppMRDvgUt
-         uBjBWlu4M4C/71Fy2DeKeXSht7sj5cPrlnaoessmLZEdU+bsCQuO5/dQSmvbtdB0jv4y
-         bZHuRvQnEf1QU4YzLBh74uYdvI4FU/ljJ7aiTRHq51NpDGDd9ElOMnkFYnZjsV6A1d3y
-         zg4hsejhhcQrLnpHp4NkEmJp/GE6RXTtVHEHLM/nHUGH30V7VpzItNMlVSPS8n4CaVvN
-         +Xog==
-X-Forwarded-Encrypted: i=1; AJvYcCUOHW0PWZOY6+8KBOUGTwCWFMtFFBHtzzuRULCteZtqJXyhxzoaMi0GorUew00ObJftX3nV+9LbBUNNsA4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUQqlEeagcNKWjIOd1c3Ww159HFo87x08VmLqCk4mkRX4JmQKI
-	xzavrnfg7uJD5QY2fqGNhmu6uiKWkKR+hrtuOz4v49SO/6+swVQ0030r
-X-Gm-Gg: ASbGncutH0OdXyKsuO2A9n4tXsr0tT9VS+jflwZ3/MVyRfAKNYPK5Dcxl03p35k/6TB
-	4oWqK15KqidgE0ttL3Fxu5OD6DOg/Fw/N4XNJR3jwdlgLMqaxH6FUCp2QoBO/bJnezVbKkuZvnt
-	aDsF+I1MsEPs+agnFG9MAeghR2PdrLhD4/qi9XhaLRkC+x4IfClQuQrNRU4VLldIpA+YQoiOl9U
-	AaYkNDWWEC6G2Kdti+12vW98ueIpGag/61hF7sEof+3JvEwh7lxERBxJKtAX0tPBOlRL6jfKcLb
-	ept8eIHWMqAXxqeKZwpJQDdrWvTEjhD9Y8heAyZNGueCsMwlTpUxATskug==
-X-Google-Smtp-Source: AGHT+IFyqqFVjAvoPkpv4bcqgRQaW5Hy0QwPfsuKcX19JbSicIIasRNNnKLJtTDhRphfT9J9zpt2fw==
-X-Received: by 2002:a05:6512:6c4:b0:553:2868:6358 with SMTP id 2adb3069b0e04-5539c2194aemr150205e87.35.1749576894427;
-        Tue, 10 Jun 2025 10:34:54 -0700 (PDT)
-Received: from pc638.lan ([2001:9b1:d5a0:a500:2d8:61ff:fec9:d743])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55367731754sm1624829e87.200.2025.06.10.10.34.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 10:34:53 -0700 (PDT)
-From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To: "Paul E . McKenney" <paulmck@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>
-Cc: RCU <rcu@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
-Subject: [PATCH 3/3] Documentation/kernel-parameters: Update rcu_normal_wake_from_gp doc
-Date: Tue, 10 Jun 2025 19:34:50 +0200
-Message-Id: <20250610173450.107293-3-urezki@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250610173450.107293-1-urezki@gmail.com>
-References: <20250610173450.107293-1-urezki@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="flmXs/dX"
+Received: from [100.65.129.218] (unknown [20.236.11.29])
+	by linux.microsoft.com (Postfix) with ESMTPSA id AEA0B2078629;
+	Tue, 10 Jun 2025 10:35:52 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AEA0B2078629
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749576952;
+	bh=umcZeKbZ0X54bScCEOCTXGAU3+QgdJ62r0B59TeumYk=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=flmXs/dXHK/B+qHt9LU9IhLoj3HuHe0sBJ/1ZbNarOMnqmasmi4QVMbJMA501IsBe
+	 GAwrz/bY9lYDN9HWZbrW0IAehElO8J+hWCDKUk34bWlkErk6FnklvC7bdpMI7iz/Cc
+	 F2allUsgFGgTI1sMgi7uThujt4wfIMzd8Rrbr8/k=
+Message-ID: <588d5a4b-72cf-4d2c-8eee-c4240ae067b5@linux.microsoft.com>
+Date: Tue, 10 Jun 2025 10:35:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Cc: eahariha@linux.microsoft.com, Julia Lawall <Julia.Lawall@inria.fr>,
+ Nicolas Palix <nicolas.palix@imag.fr>,
+ Andrew Morton <akpm@linux-foundation.org>, cocci@inria.fr,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] coccinelle: misc: secs_to_jiffies script: Create dummy
+ report
+To: Ricardo Ribalda <ribalda@chromium.org>
+References: <20250129-secs_to_jiffles-v1-1-35a5e16b9f03@chromium.org>
+ <aeacb653-efb8-42ed-a7ed-3e7be31b8f9d@linux.microsoft.com>
+ <CANiDSCviy5SjOwEcEM8_1gtvQzFUS3d=S6vFdvZzVqbif7NKfA@mail.gmail.com>
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+Content-Language: en-US
+In-Reply-To: <CANiDSCviy5SjOwEcEM8_1gtvQzFUS3d=S6vFdvZzVqbif7NKfA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Update the documentation about rcu_normal_wake_from_gp parameter.
+On 6/10/2025 6:09 AM, Ricardo Ribalda wrote:
+> Hi
+> 
+> On Wed, 29 Jan 2025 at 18:38, Easwar Hariharan
+> <eahariha@linux.microsoft.com> wrote:
+>>
+>> On 1/29/2025 12:06 AM, Ricardo Ribalda wrote:
+>>> When running cocci in report mode, eg:
+>>> $make coccicheck M="$dir" MODE=report
+>>>
+>>> It returns this error:
+>>> virtual rule report not supported
+>>> coccicheck failed
+>>> make: *** [Makefile:251: __sub-make] Error 2
+>>>
+>>> Create a dummy rule to avoid this error and run the other cocci scripts.
+>>>
+>>> Fixes: 551dbd1ec7ff ("coccinelle: misc: add secs_to_jiffies script")
+>>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+>>> ---
+>>>  scripts/coccinelle/misc/secs_to_jiffies.cocci | 6 ++++++
+>>>  1 file changed, 6 insertions(+)
+>>>
+>>> diff --git a/scripts/coccinelle/misc/secs_to_jiffies.cocci b/scripts/coccinelle/misc/secs_to_jiffies.cocci
+>>> index 8bbb2884ea5d..2d85dca16418 100644
+>>> --- a/scripts/coccinelle/misc/secs_to_jiffies.cocci
+>>> +++ b/scripts/coccinelle/misc/secs_to_jiffies.cocci
+>>> @@ -10,6 +10,7 @@
+>>>  //
+>>>
+>>>  virtual patch
+>>> +virtual report
+>>>
+>>>  @depends on patch@ constant C; @@
+>>>
+>>> @@ -20,3 +21,8 @@ virtual patch
+>>>
+>>>  - msecs_to_jiffies(C * MSEC_PER_SEC)
+>>>  + secs_to_jiffies(C)
+>>> +
+>>> +// Dummy rule for report mode that would otherwise be empty and make spatch
+>>> +// fail ("No rules apply.")
+>>> +@script:python depends on report@
+>>> +@@
+>>>
+>>
+>> Sorry about that, and thanks for the patch!
+>>
+>> FWIW,
+>>
+>> Reviewed-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+> 
+> I just checked on 6.16rc1 and it is still failing.
+> 
+> Could we land this while Mark's series is under review?
+> 
+> Thanks!
+> 
 
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
----
- Documentation/admin-guide/kernel-parameters.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Can you provide a pointer to Mark's series? I actually just implemented a proper report and context mode
+which I'm glad to send out.
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index f1f2c0874da9..a2c47bdf75cf 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5485,7 +5485,7 @@
- 			echo 1 > /sys/module/rcutree/parameters/rcu_normal_wake_from_gp
- 			or pass a boot parameter "rcutree.rcu_normal_wake_from_gp=1"
- 
--			Default is 0.
-+			Default is 1 if num_possible_cpus() <= 16 otherwise 0.
- 
- 	rcuscale.gp_async= [KNL]
- 			Measure performance of asynchronous
--- 
-2.39.5
-
+Thanks,
+Easwar (he/him)
