@@ -1,67 +1,67 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614ED2BEC31
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 14:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72822C033E
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 14:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749564381; cv=none; b=izBLL8dtHc+2iMh3k6N/wipbTAcwGKj7i+6S6ERQAVMx5NZc8CQR9gC8oNUG7aTCOQYvP+mwC1h3YQKEg1tYHaHqtHiFbAJ60ixzsV9ZYhJGt+KJr/pU92gtucd1BArIuH0/7ViCh1ZmwBQnPisyHTkvxkWizzXRNXV4d9vqjlE=
+	t=1749564385; cv=none; b=iCF18EmsccNolouwkFWXVRfbxd66S3FXdEZGAi8bv83a6Z3C/8ESAJzBvhitaAxkgxE8LZnfdtUbVPwssrPLMaaj42kAyNTx6MGPrKBKVveHyxy4UyHaDqDXBZ0r+F39HQTUSF68f3/e/wrlDmFVdCulO5JR0b1hoTDgxXs8hxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749564381; c=relaxed/simple;
-	bh=XU5572AbRAlL2dnAZKnz9YY70ssdWL7hBDylOur/otU=;
+	s=arc-20240116; t=1749564385; c=relaxed/simple;
+	bh=hOZPlM1KyWeQGK+fAet9Nxs5Wt17jNDUM1Ff6e36WS0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FbomNIEbfxrImC4o5CwEOp7F/rRyPQXV3fMot60czmx00Qb49dGk/eQIS8dchE1fJ+hchvzAQAuegSDWg4ZELt+L2Kzd/jh/sUT0X/FGlT4isLd4bw69XIzludKFKUi5Va03fOHjABG2pCXxN1vruMfmPALMJLEYd/0MCsKKuFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Hj/szyH0; arc=none smtp.client-ip=209.85.221.41
+	 In-Reply-To:To:Cc; b=GwiTXSR3rikxBMP3l4jBpyR1y8TwzTX+F0IkqtuW3vLOzFZUjci+GzOi77HCIrRsMiowYZZH5maZvH61oxwUFtVDOWhmLIi3XS5OYVNcBU+Pfql9P99Ze4lNTFjTVFe8GHNckaUNkh6qPTfYSS29LEMdbD6bf+ZdjWbnOU7TnuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M2KtoO9t; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hj/szyH0"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4eed70f24so443595f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:06:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M2KtoO9t"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-45306976410so630725e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:06:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749564378; x=1750169178; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1749564382; x=1750169182; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=LYwgiUzq75NuT9nEk3WuZ2BIh7wkvlMFp5zrsAIKP/U=;
-        b=Hj/szyH08Mko4l2Y1CXmH+64L1Yv7JvPx1OrOzV3GWsZM64jS+I08uyiQleZdYLmCE
-         QAbzt1+vsBrrAbr9arVSQppl4FQ+wwNSz4meNEn8iUJ/aYr8eGIzFkeo0/U/454j/RMW
-         MxgHqraVrxwLQeEQWvZCh17NWI7d2atjnvEngEBgKKbaGpW3l+4dtGY0iCv5K8uGdZNk
-         DvrPIu2xN747nw1EHJiJYmEvMPwnemgaFDkAILczrpBz5YT8kaC4DQ0+mRXW4sbW/aMw
-         dsSf9vhTgRMrmSsnmMWV1LEVua/AJRTWBTbIBkXlKjc853FFwkx4ua6hWItNYyls8fDu
-         dQ7g==
+        bh=c08nNQiRjpMuZiP/f1jVDn68latr5bwhdLQgcHIbV2Q=;
+        b=M2KtoO9t0tnmiOKPKbKIwiL/wOTAYzLD7/5ictVkbGj6PVVqXgD0bkb3QQPBbtGj5a
+         fkzN/UWJJjE+C5/MDdrBkWSaRJw094HFiayM/Sy9M5Q5l3PQqnyjMx/AYBlqig3TVThG
+         2X+Am8JaOYtpxW/gG3TsgemAaVI/n/raMgQv7YdQoLKdT0S1NelesWZOBe9dcVt9LFSh
+         Vg4m4qNnTfGpI6uZuJrA1W6pCmVcZj7/Gt++uvdXBtZrSnjpsbc0GgZvbFOxqmL/GWAB
+         qbHnw1BaIsCoHHWkafHeVlPEZtQH8gSG+QVWgnD/isp9ZKxbmJExEca2xGsIemAT3n69
+         GcSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749564378; x=1750169178;
+        d=1e100.net; s=20230601; t=1749564382; x=1750169182;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LYwgiUzq75NuT9nEk3WuZ2BIh7wkvlMFp5zrsAIKP/U=;
-        b=j+KKhgx4zfczWQpwPu07b85hFYk4V1X+C2X/Werb1AbB7lNIaAzl22pivf5ZwVG4Ri
-         SPF4/F19MKZsu4kobcBfy2BklJI9ywKVHeBbYB6ufUv2Si6+WjIZfx9UVy1yLrT5Zq/7
-         /zfwF7r/eEhqr/TK1Q4EFDAmWH6lko5dlO6M7ZOK4gRN0bUBoWRv/q6fyIbmlmLOSXxl
-         rlznV9IpYkHMugp9ytO+zRA5YBZlRkjeewy094SGT7ykA20nHqeLqALw2SBzfgKnZLu4
-         nr6gSTeFOpZMKosf88L83k2VIQkEwn749eNkTxP1RbBDTHbYRZ8sTj3E6LU4Gr0K8IlI
-         S/Sg==
-X-Forwarded-Encrypted: i=1; AJvYcCVpn7ewy3VA9JKp0F0s4Qn0yVpDyNnoaZogwcjU2Mqaqb3KclgQYUQgzx5R3A6/TPsbVDo4epM+gyXly00=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+J2vEvfELi9aT1Zxpy4cWZAWJDDJ8n+4twJGm12cDORmhN3GQ
-	fxGsNv5GmAkrAt1krtMox3AWpa5fxvcVRmh31E1UPUpTHbTe6+7IgOuigc8neNsrWgs=
-X-Gm-Gg: ASbGncumMVwQfyiSH2mB+jXQLrFD6QtvyXeSWbGZWZlL8chgdiec07evVsnWXuNdQGO
-	KaEcaC7ZxuCWtu+GUag58f7w87/669BO7mfuCvQ3FLLbBAq2fk0Wloqv4GgqjwO78hqA2th/fsm
-	HxrkMRFVSpqMPm+gdfnjQlKNPv4O2Gi4rfREc3lrWyDgC3hcEqf+3/wWSAlRGhMxoBXIysUxL46
-	EEccsgPxwoWLDtzeNI0Hp3N0uDIe89zLgkdIcfXjLNvC6sgDzgVtDskuItrSaJa7tnK4lLc+BA1
-	H4HBBP9ilh5Ntznu+NE9M+YXYIzTo7N6nhR6i/CcxT09h9X7iURGUXbkt6Jo8nS2UNHm3CklODk
-	RF9tZ/w==
-X-Google-Smtp-Source: AGHT+IH25gKgo8d1gYAXhu9lWH0BmA+6Au/NMRgukcCSeLR32XCsUqrr/CCJpz5l/lsXeticymgVQw==
-X-Received: by 2002:a05:6000:144a:b0:3a3:6e85:a550 with SMTP id ffacd0b85a97d-3a533143e5dmr4792126f8f.5.1749564377666;
-        Tue, 10 Jun 2025 07:06:17 -0700 (PDT)
+        bh=c08nNQiRjpMuZiP/f1jVDn68latr5bwhdLQgcHIbV2Q=;
+        b=n71gm1vJAenGkFdiiguNQBAnFQJvKfxksha6cS8Qp4wB3OORWn9ytEPTErPIdMRnDq
+         T60wf4sSnEYsr93IA4qWuLoYnVndEWEewfX0X9nPRfbRMGjX4dEpy5qzX230jUmEuuqr
+         wONVWLDlDSmPVjXeQdb1AwPD17AoQKdo1c1gN7InGs43DIjGWGAz7oWeWcg2hwSQCkiP
+         GlY2T/nSH+0P07UDSzS8tOId0NTdQeKYolk7pvIxngzzQ4Zm/AxaaigvFABHtk01SVKr
+         JmYZrsttegRtvJWcB47kOjjoYLnMahqvj6Iu3438BADnGEs2D9aP0Tq310cCnxFKO5+X
+         eoJA==
+X-Forwarded-Encrypted: i=1; AJvYcCVHEc/Y5dEW6SeM5YcdzAIx4tSotVRsBQhgBYPOAC1VskGQSQ1EOcrFSBgkhNIKvaQWxITyXHAyG6KWel8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyY3UwYSyzNoUKADR+GNig9TZZavrXqAcg6MJXwxdSEj5LCCZ9E
+	uOh8bpOyiEQfuUQw5Hyw7I4fk4BACrxsHFzv5kR8nR983omzb4jVvl9byvz2MwDfmLM=
+X-Gm-Gg: ASbGncu0lyw6W4VU98AtaDISWHfLn7zzzcJ0KUibi6ePB3UFuJf5t+piMmuYi1VK5i+
+	gMg9VwEo5tBNyk9ejPJMttI5Y3efe8fMOFAaUrZ/IN3DBib3tbT3qQZ8XDa7Tr+hIEu7h4/1PFs
+	NWtfioy3tJ+DnF4049LQuOgDrH+xeUEmFOZVbSOLGBE0uL+cvnZVGU0q7Wd9Jr5ooQSmjGBkdWN
+	nW2CURNWoBX76aRitN4fomcTrBxP1ff/ERe7si90jNZNVdFnLYxfqP5JFlhynvb4I9jAmtYJ0+2
+	nrCq8hKWe0Y/uJ1AtjGrlVfPRxdi2dgfjGBbcc0C4Pm3wdiMoWp49QSCicmM+RgbWtrNYrb5Yxu
+	B97VEzg==
+X-Google-Smtp-Source: AGHT+IHDxukPheSrxBOvxKpZYaa8h9T+95Gg5jKYThUcUHQbgCqlc/EbIO/Sp6kjBnRf7HNWZ6eJEQ==
+X-Received: by 2002:a05:600c:c04b:20b0:441:c5ee:cdb4 with SMTP id 5b1f17b1804b1-452a470122cmr33063215e9.4.1749564381956;
+        Tue, 10 Jun 2025 07:06:21 -0700 (PDT)
 Received: from [192.168.1.29] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53244df06sm12734469f8f.69.2025.06.10.07.06.15
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53244df06sm12734469f8f.69.2025.06.10.07.06.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 07:06:17 -0700 (PDT)
+        Tue, 10 Jun 2025 07:06:21 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Tue, 10 Jun 2025 16:05:42 +0200
-Subject: [PATCH v6 04/17] dt-bindings: display/msm: qcom,sm8650-dpu: Add
- SM8750
+Date: Tue, 10 Jun 2025 16:05:44 +0200
+Subject: [PATCH v6 06/17] drm/msm/dsi/phy: Toggle back buffer resync after
+ preparing PLL
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250610-b4-sm8750-display-v6-4-ee633e3ddbff@linaro.org>
+Message-Id: <20250610-b4-sm8750-display-v6-6-ee633e3ddbff@linaro.org>
 References: <20250610-b4-sm8750-display-v6-0-ee633e3ddbff@linaro.org>
 In-Reply-To: <20250610-b4-sm8750-display-v6-0-ee633e3ddbff@linaro.org>
 To: Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
@@ -92,47 +92,62 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
  linux-clk@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>, 
  Srinivas Kandagatla <srini@kernel.org>, 
- Rob Clark <robin.clark@oss.qualcomm.com>
+ Rob Clark <robin.clark@oss.qualcomm.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=943;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1275;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=XU5572AbRAlL2dnAZKnz9YY70ssdWL7hBDylOur/otU=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoSDvC2lB3lIxtbsNFzyWORfZgsGtzg3s+vk35z
- /dPmTfPLbuJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaEg7wgAKCRDBN2bmhouD
- 134XD/0d1lSSjv1+CB5AgL0VUzorFocmxjRuPcFE2sJHZWxqDzRNRynQD6x9VAr0Shl9tFORtxC
- 8DkQQ2uR4ZjnjhvnhSAa/ki40J03d/MdQWr6HeJwlAaCVKGO3B6dqzJRtaIMHwO2JtVVfqbN1BM
- wXb1lZhR/6McXk51ULNzCqwhSU9tl6gERabgsEPNT7LI9SkhRQ+/a+MutB3gNFY3GuS3qFccz2Z
- DvPmibAcl1AO4QRoEsNdKLW23BFqfHhpRsGiRnNC0JHbrp4tOZo7MmAkxXyNilN+kDNRwjyHurD
- K216/cd9UAvqhzDo6FK/0rq1EjL3IvPNsVhCrrLSX7QbS2IC8gqTdkVlnfFY0KL6giNbJ3/qL1V
- VY0UMPgEDQ+uVNdz+cUtP2YYJbmL3DeaXKvxXB3Pjwd8krdc6dTmyfoOEcErTIwSBaCPwqeI/Ob
- Y69EuoyarJ1KY8eRVyRpIcgceGRW63D/Dg8eEtyrWgEH3K2hgQYPaP4Arcr7PniTIiFvEc/A9jE
- 9Jj0bugI1whaH/BsqGp6Kia8VdabiQ/Is2hkHxmzpsAczNAvrXE+Bu07GQ1A/SWUTUDrwaEWp6W
- 8NaUYft0uDbjzb6ISM8zwKArfCc82KutxoiV8Xf2Vgvq9L0bVcxR9w68Hc8YbkO80ZIwwnThDPN
- 6iDFXdGLfdUJKkA==
+ bh=hOZPlM1KyWeQGK+fAet9Nxs5Wt17jNDUM1Ff6e36WS0=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoSDvEFaGVfcvc7I+WsKnLa00SN5QPTkSzfiWGJ
+ PahrGboSN2JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaEg7xAAKCRDBN2bmhouD
+ 1/FCD/996DPQkeSTgHdKYXZwdFyt3uizbqcoRQhLkEEg860tSjn7Kte3DUkvlR7EWtxQc1vwNij
+ h6zflWghpo2l50dYyFTsw/N7CR6NRHryv3B7+nv+2r33l7WcaoFYkGM4FsAkCJKMPl6bGpRNQvA
+ 9jYFY0BIHeuFg8AXYSEvLhDdZ8R+Zdx37F7ax1PugZeMApDCjDLkq9ba2ok7D7AoApGrHVyuZce
+ kRFTFCEytra1l3KwEc4Mn+XdmielljNWWsKSC6JX9ReyWvrwewEpGU7twwfCxB7LwVqmnbhzP/Y
+ OpmQ2JKetVRFnfrvaNuaTttsyTjub1lLnKUP5t23B8qKg2BrTwdsdVbvD8j6L0ykRwn9BMAaOAu
+ z9dNv2P7/vnLpPNE1JmD8TbtHsmK15kV34zypREhkFVycSF8QAeMOA1Mr2SY5MXginxjTNRkS3H
+ DHBBUWus08o+ao5tXURP0ryJuFyaWOJ+omsvAmjClWK2RIWoZLvhOAoPHumWwrZ7c/FLW3Fm3XN
+ 7CIJpoOxTfq/cRbfsadOyaALh7+jFh5l6qhA5aFXQionaHY2c+4Nxh680d/6/sTx/hEyXCmoXD6
+ wl5tCEHIljBGjnYYUs2fMNCaFMtpUQeNbctmXaAWguGng2Fehbc2OAm4mwDti2rpffedGvjZJix
+ lW03btC9avV5Gvg==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Add DPU for Qualcomm SM8750 SoC which has several differences, new
-blocks and changes in registers, making it incompatible with SM8650.
+According to Hardware Programming Guide for DSI PHY, the retime buffer
+resync should be done after PLL clock users (byte_clk and intf_byte_clk)
+are enabled.  Downstream also does it as part of configuring the PLL.
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Driver was only turning off the resync FIFO buffer, but never bringing it
+on again.
+
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- Documentation/devicetree/bindings/display/msm/qcom,sm8650-dpu.yaml | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/display/msm/qcom,sm8650-dpu.yaml b/Documentation/devicetree/bindings/display/msm/qcom,sm8650-dpu.yaml
-index 01cf79bd754b491349c52c5aef49ba06e835d0bf..0a46120dd8680371ed031f7773859716f49c3aa1 100644
---- a/Documentation/devicetree/bindings/display/msm/qcom,sm8650-dpu.yaml
-+++ b/Documentation/devicetree/bindings/display/msm/qcom,sm8650-dpu.yaml
-@@ -16,6 +16,7 @@ properties:
-     enum:
-       - qcom,sa8775p-dpu
-       - qcom,sm8650-dpu
-+      - qcom,sm8750-dpu
-       - qcom,x1e80100-dpu
+Changes in v6:
+1. Fix typo in commit msg
+
+Changes in v5:
+1. New patch
+---
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+index c19890358b7479c85c793aa7470904127c2d0206..f0ff6c9fbc2e6d28c96c08114c0f417708d70b10 100644
+--- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
++++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+@@ -467,6 +467,10 @@ static int dsi_pll_7nm_vco_prepare(struct clk_hw *hw)
+ 	if (pll_7nm->slave)
+ 		dsi_pll_enable_global_clk(pll_7nm->slave);
  
-   reg:
++	writel(0x1, pll_7nm->phy->base + REG_DSI_7nm_PHY_CMN_RBUF_CTRL);
++	if (pll_7nm->slave)
++		writel(0x1, pll_7nm->slave->phy->base + REG_DSI_7nm_PHY_CMN_RBUF_CTRL);
++
+ error:
+ 	return rc;
+ }
 
 -- 
 2.45.2
