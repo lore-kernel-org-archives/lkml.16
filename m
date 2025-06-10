@@ -1,234 +1,143 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C8F72D191E;
-	Tue, 10 Jun 2025 12:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221512957B2
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:49:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749559724; cv=none; b=M6N7B6zpTkMbKNovLDo5BLVZKLY5/tWbj9KkdCFeqCpu0mKx4YpTkJXvTt2VegL1MW+IyES2l8Uv4nxbUZExtLOz9UcgBVDQI5rSY5/+aNeSf8ZkEpQANwGC+CBoVwQbt87mN9y6PUEOUpbQuoSA5ishDNjWgPdRm4e04iZFHto=
+	t=1749559754; cv=none; b=YgzCfyjWUDbnmPYPkWDdlWhXarwbUyNXNI2MRwfqVre7ZY7UJf02lzPx4gNATv/fQ7NNXgXEryhM6HLzyCJc6tVm3ais4NG8Ua08Y+NTI924MMuraPvq87jmtwb/t4TSEBMdsGsoydyB/Xj9MGPDtIpke4J+4aE+151PMdtxXVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749559724; c=relaxed/simple;
-	bh=H38PEnqYX1zBonTD6z/k7CR//vjPX5WNAMviV5TZQV0=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=IsMqyZTM2w1ol1Duj4abfs1g0PWDFK1fDKq9CsT3V0XkQ19uS2LyVR9dXAkqDqVySXvSeOld7Br0CPMf0FG0L+Yjnk+cMFBGdPSeBrQozIb4mcMWP9R2G2FBtSw5pBs3nYeS/YUSRDtAn5bQa8NJelVepMQgN7hwqp/sVpap3RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=CFuxgRQB; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1749559754; c=relaxed/simple;
+	bh=8pGLEakmr5aQtq0MNQDWSHLHa7dbD9TZs7Ms+ip8HFY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Lxu6imm6MFGHPjTXSvRYiRisMkIsG3qnp1lwCSXz/CHZLsBKVI7D/1997PZnAuiBOb8fsg593G8iBfPmrRknUH9F38kiYKC2cz5Th+NWeGD3ZjUFSvZgxcrJ6ABR1YDUmDoKnSfvy8hg10HhgUJjCohDWZU7Yh88YGAfFwrbYx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Bhm5/DLv; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CFuxgRQB"
-Received: by linux.microsoft.com (Postfix, from userid 1186)
-	id 55BB52113A7A; Tue, 10 Jun 2025 05:48:37 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 55BB52113A7A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749559717;
-	bh=GvhzL3BwnlGLWPOctudhuUlIMzOARt1SSLltYeve8Kc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=CFuxgRQB6utcdgeMX4BoS6VFwWNMevdGHK/73JPyPcHLGs9Ng128Rz+KOM7w/nj/o
-	 rVIr1v5t/deSvsqrQqkyGnBqFwVvczCf+g9RVd9Zi674HkvOaru46Jr4KQy/eKu2Kv
-	 fQCCUTbOZafyGJ3ToAZRhbxVnzMBT5kzh1b8+qWI=
-From: Konstantin Taranov <kotaranov@linux.microsoft.com>
-To: kotaranov@microsoft.com,
-	shirazsaleem@microsoft.com,
-	longli@microsoft.com,
-	jgg@ziepe.ca,
-	leon@kernel.org
-Cc: linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH rdma-next 1/1] RDMA/mana_ib: Add device statistics support
-Date: Tue, 10 Jun 2025 05:48:37 -0700
-Message-Id: <1749559717-3424-1-git-send-email-kotaranov@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bhm5/DLv"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-32a73a2594fso4368651fa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:49:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749559751; x=1750164551; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SMSrvswUbazeYbvuGhFOqonwWDg71HMAispluXuK8zE=;
+        b=Bhm5/DLvjaW7Lzd2TrS1xdXkF4QN/1Kj5tZuUxkAr48g7SwiTdS+236ISfos/7uzUT
+         K4nsyz6XH2RXYlDoqvQazhA7kytzjNDRQWUZNOwC1mxcANVeCVs5MgeVvfTC4apAhgPP
+         YLUgAT/K+IOeuhOBvq0Z18IlzfBZEt+Nxl+2yhpIYKYocs6ElD7plIjPKt10xZ8QREDY
+         AZYafGM4N9tR6xRBZWDo9FtRYsrF4RU0kMfd+jF0ogJA14hEWYPj/kOssvG3G6BdWQ7q
+         iEDa/qLT61X33uQb6BguiUlYh3zbkH6FGov0oxVd8HNdVnvYc7ljcJYJAoOPrPfz0QUY
+         eQ2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749559751; x=1750164551;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SMSrvswUbazeYbvuGhFOqonwWDg71HMAispluXuK8zE=;
+        b=krCybUhYj5jT9oQvZ6kAXlIuYY82/Dc3kbg1nT/1TLn4WE6ahbpsK/50cumQbr4vda
+         fQ/fptwxGuXW0//hwhqNqGC+FVcXPUuHmjU0g6YQsWTkz3y8Gi1eJurxMlZ1s/WQPAq7
+         UQlzKOh3/brp4jIiWJSo1eQ74Xb8lfR5SaXkCZQO0tE1IDP6oKTch06cdEa7Cfb0NooQ
+         T/xhX1ihowlsbXxmxrl9Qd2B2mmJKe7CLk/llXhYBkztnDO3vluc3yIsn+tkxB+Rr7dw
+         OVtZCMueIaUYkW3rhZUnn4Ob80RCDZTPiMScUb2K+kjMW4vTj6kkNzWzmwcCsoYvslQW
+         /7Ow==
+X-Forwarded-Encrypted: i=1; AJvYcCWK41TW1o6kFBT96RqmOR+tn7jgvQWUWVd+ExBwURGwOT24zr2r424NSjWhgZUjEMASVqrVQsfoTZJaqGs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxpbdqs9Z0MF4wsu0c+1jyITtxg57NKmDVLXrYeP7uqENiE+s9d
+	CU8rfCEFDLfrv5oHuEoe30KKm6wv07hvN0bEiy7BKlkRBhw2aiGCLseYqykBarYOn98=
+X-Gm-Gg: ASbGnctfe4a+LBzPCDDUuwefQ395kBWcgeiTp1K5AuSNOXNWKZDQ4M3zxiIpqEseKU+
+	1ImcikDw6kdBLuTfTzXox2PNmrs4tK+7dfvu0twEqZQ1KTUlMi5WKMeOZUo8f1WpxAfHVTl3isu
+	P4zzWoSlf6vU2EQqXfhMcgZILgru2DXX/o6t5Ajkbv7+4K0CMekKAr8zEEFKEk3V6WHMZXxYlJ7
+	RVdEsSssH1p8fvqC20JqUxvZlSYq09wRI4LlutenvmEiFLxnf0IE94CvH9+oJ5UxLcHiQKbt/Ji
+	oNp9dEG9/V4tpzirt7wvAi0beApHDrH+G8egQHjTJWHfmpe3TtFi4oEIe+mMbx3E8ywUm9HR0mP
+	AK8/k6k4mRQV+q8zodY2RS8N42ARyCXOsHvBEQeh8
+X-Google-Smtp-Source: AGHT+IHY1q8YmyvtVFQkg3FZFwHokHT/o2o35vML8BOoO8vhLwLta089+v0mypfDQ7uA7zZsqXirAw==
+X-Received: by 2002:a05:651c:2107:b0:32a:85f9:5c0b with SMTP id 38308e7fff4ca-32ae3359b7bmr15305731fa.10.1749559751259;
+        Tue, 10 Jun 2025 05:49:11 -0700 (PDT)
+Received: from [192.168.1.4] (88-112-131-206.elisa-laajakaista.fi. [88.112.131.206])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32ae1b0d1e2sm14474271fa.19.2025.06.10.05.49.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 05:49:10 -0700 (PDT)
+Message-ID: <739bad1b-f26d-44a6-9cc1-eee28023474f@linaro.org>
+Date: Tue, 10 Jun 2025 15:49:09 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND] arm64: dts: qcom: sm8550: Add support for camss
+Content-Language: ru-RU
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Wenmeng Liu <quic_wenmliu@quicinc.com>, rfoss@kernel.org,
+ todor.too@gmail.com, andersson@kernel.org, konradybcio@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ quic_depengs@quicinc.com
+References: <20250516072707.388332-1-quic_wenmliu@quicinc.com>
+ <0367d5bd-a42e-4b6c-b841-ba20190b3127@linaro.org>
+ <dc4720a8-2f15-44aa-9a52-8440c7518328@linaro.org>
+From: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+In-Reply-To: <dc4720a8-2f15-44aa-9a52-8440c7518328@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: Shiraz Saleem <shirazsaleem@microsoft.com>
+On 6/10/25 12:50, Bryan O'Donoghue wrote:
+> On 10/06/2025 10:48, Vladimir Zapolskiy wrote:
+>> Hello Wenmeng.
+>>
+>> On 5/16/25 10:27, Wenmeng Liu wrote:
+>>> Add support for the camera subsystem on the SM8550 Qualcomm SoC. This
+>>> includes bringing up the CSIPHY, CSID, VFE/RDI interfaces.
+>>>
+>>> SM8550 provides
+>>> - 3 x VFE, 3 RDI per VFE
+>>> - 2 x VFE Lite, 4 RDI per VFE
+>>> - 3 x CSID
+>>> - 2 x CSID Lite
+>>> - 8 x CSI PHY
+>>>
+>>> Co-developed-by: Depeng Shao <quic_depengs@quicinc.com>
+>>> Signed-off-by: Depeng Shao <quic_depengs@quicinc.com>
+>>> Signed-off-by: Wenmeng Liu <quic_wenmliu@quicinc.com>
+>>> ---
+>>>    arch/arm64/boot/dts/qcom/sm8550.dtsi | 210 +++++++++++++++++++++++++++
+>>>    1 file changed, 210 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/
+>>> dts/qcom/sm8550.dtsi
+>>> index e9bb077aa9f0..722521496a2d 100644
+>>> --- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
+>>> +++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+>>> @@ -3326,6 +3326,216 @@ cci2_i2c1: i2c-bus@1 {
+>>>                };
+>>>            };
+>>> +        isp: isp@acb7000 {
+>>> +            compatible = "qcom,sm8550-camss";
+>>> +
+>>
+>> This is the first time, when 'isp' label is used instead of 'camss', it
+>> might
+>> be I missed the context, is there any particular reason to do such a
+>> change?
+>>
+>> If the label name is changed to the regular 'camss', then
+>>
+>> Reviewed-by: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+>>
+>> -- 
+>> Best wishes,
+>> Vladimir
+> 
+> List feedback from DT people is isp@ is the correct prefix.
+> 
 
-Add support for mana device level statistics.
+My bad, but I don't understand this comment, it seems irrelevant...
 
-Co-developed-by: Solom Tamawy <solom.tamawy@microsoft.com>
-Signed-off-by: Solom Tamawy <solom.tamawy@microsoft.com>
-Signed-off-by: Shiraz Saleem <shirazsaleem@microsoft.com>
-Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
----
- drivers/infiniband/hw/mana/counters.c | 60 ++++++++++++++++++++++++++-
- drivers/infiniband/hw/mana/counters.h | 10 +++++
- drivers/infiniband/hw/mana/device.c   |  6 +++
- drivers/infiniband/hw/mana/mana_ib.h  | 19 +++++++++
- 4 files changed, 93 insertions(+), 2 deletions(-)
+The expressed concern is about the novel label name.
 
-diff --git a/drivers/infiniband/hw/mana/counters.c b/drivers/infiniband/hw/mana/counters.c
-index e533ce2..6a81365 100644
---- a/drivers/infiniband/hw/mana/counters.c
-+++ b/drivers/infiniband/hw/mana/counters.c
-@@ -34,6 +34,22 @@ static const struct rdma_stat_desc mana_ib_port_stats_desc[] = {
- 	[MANA_IB_CURRENT_RATE].name = "current_rate",
- };
- 
-+static const struct rdma_stat_desc mana_ib_device_stats_desc[] = {
-+	[MANA_IB_SENT_CNPS].name = "sent_cnps",
-+	[MANA_IB_RECEIVED_ECNS].name = "received_ecns",
-+	[MANA_IB_RECEIVED_CNP_COUNT].name = "received_cnp_count",
-+	[MANA_IB_QP_CONGESTED_EVENTS].name = "qp_congested_events",
-+	[MANA_IB_QP_RECOVERED_EVENTS].name = "qp_recovered_events",
-+	[MANA_IB_DEV_RATE_INC_EVENTS].name = "rate_inc_events",
-+};
-+
-+struct rdma_hw_stats *mana_ib_alloc_hw_device_stats(struct ib_device *ibdev)
-+{
-+	return rdma_alloc_hw_stats_struct(mana_ib_device_stats_desc,
-+					  ARRAY_SIZE(mana_ib_device_stats_desc),
-+					  RDMA_HW_STATS_DEFAULT_LIFESPAN);
-+}
-+
- struct rdma_hw_stats *mana_ib_alloc_hw_port_stats(struct ib_device *ibdev,
- 						  u32 port_num)
- {
-@@ -42,8 +58,39 @@ struct rdma_hw_stats *mana_ib_alloc_hw_port_stats(struct ib_device *ibdev,
- 					  RDMA_HW_STATS_DEFAULT_LIFESPAN);
- }
- 
--int mana_ib_get_hw_stats(struct ib_device *ibdev, struct rdma_hw_stats *stats,
--			 u32 port_num, int index)
-+static int mana_ib_get_hw_device_stats(struct ib_device *ibdev, struct rdma_hw_stats *stats)
-+{
-+	struct mana_ib_dev *mdev = container_of(ibdev, struct mana_ib_dev,
-+						ib_dev);
-+	struct mana_rnic_query_device_cntrs_resp resp = {};
-+	struct mana_rnic_query_device_cntrs_req req = {};
-+	int err;
-+
-+	mana_gd_init_req_hdr(&req.hdr, MANA_IB_QUERY_DEVICE_COUNTERS,
-+			     sizeof(req), sizeof(resp));
-+	req.hdr.dev_id = mdev->gdma_dev->dev_id;
-+	req.adapter = mdev->adapter_handle;
-+
-+	err = mana_gd_send_request(mdev_to_gc(mdev), sizeof(req), &req,
-+				   sizeof(resp), &resp);
-+	if (err) {
-+		ibdev_err(&mdev->ib_dev, "Failed to query device counters err %d",
-+			  err);
-+		return err;
-+	}
-+
-+	stats->value[MANA_IB_SENT_CNPS] = resp.sent_cnps;
-+	stats->value[MANA_IB_RECEIVED_ECNS] = resp.received_ecns;
-+	stats->value[MANA_IB_RECEIVED_CNP_COUNT] = resp.received_cnp_count;
-+	stats->value[MANA_IB_QP_CONGESTED_EVENTS] = resp.qp_congested_events;
-+	stats->value[MANA_IB_QP_RECOVERED_EVENTS] = resp.qp_recovered_events;
-+	stats->value[MANA_IB_DEV_RATE_INC_EVENTS] = resp.rate_inc_events;
-+
-+	return ARRAY_SIZE(mana_ib_device_stats_desc);
-+}
-+
-+static int mana_ib_get_hw_port_stats(struct ib_device *ibdev, struct rdma_hw_stats *stats,
-+				     u32 port_num)
- {
- 	struct mana_ib_dev *mdev = container_of(ibdev, struct mana_ib_dev,
- 						ib_dev);
-@@ -103,3 +150,12 @@ int mana_ib_get_hw_stats(struct ib_device *ibdev, struct rdma_hw_stats *stats,
- 
- 	return ARRAY_SIZE(mana_ib_port_stats_desc);
- }
-+
-+int mana_ib_get_hw_stats(struct ib_device *ibdev, struct rdma_hw_stats *stats,
-+			 u32 port_num, int index)
-+{
-+	if (!port_num)
-+		return mana_ib_get_hw_device_stats(ibdev, stats);
-+	else
-+		return mana_ib_get_hw_port_stats(ibdev, stats, port_num);
-+}
-diff --git a/drivers/infiniband/hw/mana/counters.h b/drivers/infiniband/hw/mana/counters.h
-index 7ff92d2..987a6fe 100644
---- a/drivers/infiniband/hw/mana/counters.h
-+++ b/drivers/infiniband/hw/mana/counters.h
-@@ -37,8 +37,18 @@ enum mana_ib_port_counters {
- 	MANA_IB_CURRENT_RATE,
- };
- 
-+enum mana_ib_device_counters {
-+	MANA_IB_SENT_CNPS,
-+	MANA_IB_RECEIVED_ECNS,
-+	MANA_IB_RECEIVED_CNP_COUNT,
-+	MANA_IB_QP_CONGESTED_EVENTS,
-+	MANA_IB_QP_RECOVERED_EVENTS,
-+	MANA_IB_DEV_RATE_INC_EVENTS,
-+};
-+
- struct rdma_hw_stats *mana_ib_alloc_hw_port_stats(struct ib_device *ibdev,
- 						  u32 port_num);
-+struct rdma_hw_stats *mana_ib_alloc_hw_device_stats(struct ib_device *ibdev);
- int mana_ib_get_hw_stats(struct ib_device *ibdev, struct rdma_hw_stats *stats,
- 			 u32 port_num, int index);
- #endif /* _COUNTERS_H_ */
-diff --git a/drivers/infiniband/hw/mana/device.c b/drivers/infiniband/hw/mana/device.c
-index 165c0a1..65d0af7 100644
---- a/drivers/infiniband/hw/mana/device.c
-+++ b/drivers/infiniband/hw/mana/device.c
-@@ -65,6 +65,10 @@ static const struct ib_device_ops mana_ib_stats_ops = {
- 	.get_hw_stats = mana_ib_get_hw_stats,
- };
- 
-+static const struct ib_device_ops mana_ib_device_stats_ops = {
-+	.alloc_hw_device_stats = mana_ib_alloc_hw_device_stats,
-+};
-+
- static int mana_ib_netdev_event(struct notifier_block *this,
- 				unsigned long event, void *ptr)
- {
-@@ -153,6 +157,8 @@ static int mana_ib_probe(struct auxiliary_device *adev,
- 		}
- 
- 		ib_set_device_ops(&dev->ib_dev, &mana_ib_stats_ops);
-+		if (dev->adapter_caps.feature_flags & MANA_IB_FEATURE_DEV_COUNTERS_SUPPORT)
-+			ib_set_device_ops(&dev->ib_dev, &mana_ib_device_stats_ops);
- 
- 		ret = mana_ib_create_eqs(dev);
- 		if (ret) {
-diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
-index 42bebd6..eddd0a8 100644
---- a/drivers/infiniband/hw/mana/mana_ib.h
-+++ b/drivers/infiniband/hw/mana/mana_ib.h
-@@ -210,6 +210,7 @@ enum mana_ib_command_code {
- 	MANA_IB_DESTROY_RC_QP   = 0x3000b,
- 	MANA_IB_SET_QP_STATE	= 0x3000d,
- 	MANA_IB_QUERY_VF_COUNTERS = 0x30022,
-+	MANA_IB_QUERY_DEVICE_COUNTERS = 0x30023,
- };
- 
- struct mana_ib_query_adapter_caps_req {
-@@ -218,6 +219,7 @@ struct mana_ib_query_adapter_caps_req {
- 
- enum mana_ib_adapter_features {
- 	MANA_IB_FEATURE_CLIENT_ERROR_CQE_SUPPORT = BIT(4),
-+	MANA_IB_FEATURE_DEV_COUNTERS_SUPPORT = BIT(5),
- };
- 
- struct mana_ib_query_adapter_caps_resp {
-@@ -516,6 +518,23 @@ struct mana_rnic_query_vf_cntrs_resp {
- 	u64 current_rate;
- }; /* HW Data */
- 
-+struct mana_rnic_query_device_cntrs_req {
-+	struct gdma_req_hdr hdr;
-+	mana_handle_t adapter;
-+}; /* HW Data */
-+
-+struct mana_rnic_query_device_cntrs_resp {
-+	struct gdma_resp_hdr hdr;
-+	u32 sent_cnps;
-+	u32 received_ecns;
-+	u32 reserved1;
-+	u32 received_cnp_count;
-+	u32 qp_congested_events;
-+	u32 qp_recovered_events;
-+	u32 rate_inc_events;
-+	u32 reserved2;
-+}; /* HW Data */
-+
- static inline struct gdma_context *mdev_to_gc(struct mana_ib_dev *mdev)
- {
- 	return mdev->gdma_dev->gdma_context;
--- 
-2.43.0
-
+--
+Best wishes,
+Vladimir
