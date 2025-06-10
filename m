@@ -1,65 +1,41 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.kapsi.fi (mail-auth.kapsi.fi [91.232.154.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64EA2280327
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1858828AB00;
+	Tue, 10 Jun 2025 09:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.232.154.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749549202; cv=none; b=B3OTmz7L/tztFZ1PdqbKMRw31FA5MJzPNR1TEoxJF+JysZhjdmvZTkF+10hWvImv2b0lOzHuPhRprhzdidpJ0kQXZ0c7CBHduOORccXJLNch6agyOrP62tm1P+SsjoyClRGl5WW9IpjB9cDfCdNjd08CrblbvPaPKOAaZlDkAUY=
+	t=1749549260; cv=none; b=Gfig0leRu0HK/TZY1lbwpqhZHxSXIFdGpjl4MtBFkbRwMySiBEEy5lmuu7H5KTGD6cI5H5mONPqYRO1uWcSWgP9KgjpGy5Yh7E1EHQzJedsDUZtvg86616SKG/gcTsfvdVOK2BD+o5Ow74HoB75sWqArtIa5cdnjcfYp3Osn/Vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749549202; c=relaxed/simple;
-	bh=lf/Q0CP0+3JGF8skn4vJN8mCuS9rEjV0RqPQBwzodGc=;
+	s=arc-20240116; t=1749549260; c=relaxed/simple;
+	bh=XCqdeeBVjDsG2cgGR7fEbP6+CKA2yyz25qBLvHr8tM0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cQmyathWlMhDpmkZptI1Na68YGzMUQq8guZc08ONB5U1FJY5bjd39EJx2WEsCy6FyQyXbe++rti46bMsOgQuuLiiMWzHvbrRJnG9qXYwYKPwA6reTnboNOtEgGgOOfIjohbEMtLPVnZ+vOmwZ0prPW/kYY74zq/hHTuMozvvrvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Pkud2SEv; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 In-Reply-To:Content-Type; b=WmYLp3ZZZtGlAfxwUhmUhDw0+qcH1kLCi9DLA/PyE1Ry4AixTsQlB5ZtOS0ZpuyiPO/Ys82OKfSwrWb/XQGCjODQE3KGQJa2tBlXIhUDNGoCnjEaMTvEGoumBsEMagXTg1KaozMPzRINNClaaGPYRBEKg4c3x69V28r36I7F2xY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kapsi.fi; spf=pass smtp.mailfrom=kapsi.fi; dkim=pass (2048-bit key) header.d=kapsi.fi header.i=@kapsi.fi header.b=IUldsBmV; arc=none smtp.client-ip=91.232.154.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kapsi.fi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kapsi.fi
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Pkud2SEv"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so65889585e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 02:53:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749549198; x=1750153998; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9IEkGDFBIs7IrBtufGEQ1UvIq45B77cgWp5iZKKgIpk=;
-        b=Pkud2SEv4d5Zd8qEFxIsJJyS650FzgonHEnjoeteyOCLnwMNXSRVlxKjWX785MUMpd
-         ISwCy07c2Xyt+xs2SKBEEBUXnSVsPFYI7QMzwMvP1hoDyWgDIDTSTXsgvj2vHiKkzleE
-         6NYiFsKvp8XmTcSDh8RII1yggx0PS0yJ9tSlfOI1dmHE6UhO7VCYQ5yB72CJZZmQ/BFx
-         dwi7ZZOtTRTNU5P8XdKAXRDPJvJEb8vnlPmLoTvj2TXv07o2BA+i/q1VQ2fvYVid3loJ
-         exsJETJ1B+e6wctTjXtPfHGUv6Gm9NiTOe97p8WaLIBFxBvaGaQgABKn+nRHz71tgGdf
-         N2GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749549198; x=1750153998;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9IEkGDFBIs7IrBtufGEQ1UvIq45B77cgWp5iZKKgIpk=;
-        b=t7iJZWKZBIzu6WBr/onqW7Wf4P6+HrK/k4Z/XEY+uLgoaTOsV4HPvk5Is44e5rdTu/
-         PDDqmJHBDM79YvltfEpGlBeOlmB5dq3BdmOAGUYTy9tiJdBGdt+/AWfp3imS71wc6HgP
-         37JOhseyDTqSR0oA6qH2QF+rOX2+4GoeN7l2gUTg3hyuDfVRLp3QUY4DsUQWKC22/bOF
-         mzGhMxtPuI04k3dt7aoS67rJdcHqFgAaBtQ+ctkAujibtGvC/0RSX34bDRyiKl6cCJvk
-         HQxPFvp0T5A2P69hZDg2YXsCffgYXCAAhPzNKv++NI6gri2oM4iHylXSWmHd9xr2zrJB
-         r46A==
-X-Forwarded-Encrypted: i=1; AJvYcCV6zNw7nKtKbl4Mu0TP1xWOqfjZT0fQ8akbp4zBY12sYqw/DxjGxckDZ1cJmwV+1N9RL5HVUrx/615VN28=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxt6Ku4cLIU81WzgG0FgISr5WFCe25To0v6lkzb9aXhKcn22E5f
-	z6c9tdud5nneWc1nEtpBfE3er5GBBz93AP28UywbzC0iCMqcjp91keEPALIgDkxbgnk=
-X-Gm-Gg: ASbGncuzamMYywvto5xrShirJWxA+MuWuWrZAAG4EdaIuZH359BueomjRVGOnfyCQvy
-	PJA93UjUCc8DAh/8ugb6Yigs9mPBYXA5/fXySZGUlkTb4keJUsy3kKmnQjGlq9GUL3dmopXtwk3
-	NUrwjEo/M0oXdSB7XKqY+wNWwfc15fTZNsqDlGi4pBYcNlfPhVOPGH5l173JltblPs6qFN4G0W3
-	grRLBj618PBifziVe8/lnAJ2yp6M2yj2gyDKyLVeQCW9Jfh85raGL87+eZiiirW3+8E8f9AdWU8
-	jcs8Z5yTGjrj63Gk4l6SFPYPbQFhe1tuhNpHsawpNAINkOv0MMjWwtbJWUzwLI/tMnJBiCF+mGe
-	AbHOKJRFdqopHl14cVblxdrB6Whyr
-X-Google-Smtp-Source: AGHT+IF43HoF+ckI+JNZf8sM8mBLEsIZIzrQldZAYBnhq+ZWk+6w2oq6oTjq3frqJQUO14CjjL46AQ==
-X-Received: by 2002:a05:6000:40c7:b0:3a4:f430:2547 with SMTP id ffacd0b85a97d-3a55226cd6amr1466032f8f.6.1749549197729;
-        Tue, 10 Jun 2025 02:53:17 -0700 (PDT)
-Received: from ?IPV6:2001:a61:1316:3301:be75:b4b4:7520:e2e4? ([2001:a61:1316:3301:be75:b4b4:7520:e2e4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532131df6sm11612214f8f.0.2025.06.10.02.53.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 02:53:17 -0700 (PDT)
-Message-ID: <dc4e3500-b5fb-4aa1-b74c-c37708146c3c@suse.com>
-Date: Tue, 10 Jun 2025 11:53:15 +0200
+	dkim=pass (2048-bit key) header.d=kapsi.fi header.i=@kapsi.fi header.b="IUldsBmV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
+	s=20161220; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=KurdznyGmdBaXGxy5k6+GHKIMOxog06BdRN2PVDz908=; b=IUldsBmVmrfNnn14VfmuIq0X5q
+	yX+6JPYiM8PCpsjC8I9Yhpohy2h6fxGZOyPyaBnNvTW7UQ/sbez/dxsXEcHnza9CcSiTUejGiVT9P
+	9nsECCK9YYeZNU8TCBG1cb0EWI623bxRNQrkLZUG90XaV+o9ZqpBJjTLuZ2Cp4arUXP27byu+/KxM
+	PPScdYwO9Mrw21v7T/uabcBbahFE3wIbaSBG7+3oXJVXrXlNT32D2b+AYo5CIGUv7Gq4kIVVMdtz9
+	xJl3X/nbh2+a/5Q9r8NAxxqUDFC/AKYkdExOGtlCsvW+fzGGPKSPmoIu9a0JabAqEnotV9hxPQYWw
+	eaY1vH9Q==;
+Received: from [2404:7a80:b960:1a00:5eaa:b33c:a197:a90f]
+	by mail.kapsi.fi with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <cyndis@kapsi.fi>)
+	id 1uOvfo-008jtg-1l;
+	Tue, 10 Jun 2025 12:53:40 +0300
+Message-ID: <621a9459-f2dd-4b19-a083-0e62f1a42f50@kapsi.fi>
+Date: Tue, 10 Jun 2025 18:52:22 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,37 +43,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: usb: Convert tasklet API to new bottom half
- workqueue mechanism
-To: "Miao, Jun" <jun.miao@intel.com>, Subbaraya Sundeep <sbhatta@marvell.com>
-Cc: "oneukum@suse.com" <oneukum@suse.com>,
- "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
- "davem@davemloft.net" <davem@davemloft.net>,
- "edumazet@google.com" <edumazet@google.com>,
- "kuba@kernel.org" <kuba@kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250609072610.2024729-1-jun.miao@intel.com>
- <aEajxQxP_aWhqHHB@82bae11342dd>
- <PH7PR11MB84552A6D3723B68D5B83E4BE9A6BA@PH7PR11MB8455.namprd11.prod.outlook.com>
+Subject: Re: [PATCH 0/3] NVIDIA Tegra210 NVJPG support
+To: Thierry Reding <thierry.reding@gmail.com>,
+ Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+Cc: Mikko Perttunen <mperttunen@nvidia.com>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Jonathan Hunter <jonathanh@nvidia.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250606-diogo-nvjpg-v1-0-5f2c36feeb39@tecnico.ulisboa.pt>
+ <mz5sytol6aw7ouwiimmrd7lqhtvq6nj7pqpxq4ie6em6nwvvkh@2cux3no33gre>
 Content-Language: en-US
-From: Oliver Neukum <oneukum@suse.com>
-In-Reply-To: <PH7PR11MB84552A6D3723B68D5B83E4BE9A6BA@PH7PR11MB8455.namprd11.prod.outlook.com>
+From: Mikko Perttunen <cyndis@kapsi.fi>
+In-Reply-To: <mz5sytol6aw7ouwiimmrd7lqhtvq6nj7pqpxq4ie6em6nwvvkh@2cux3no33gre>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2404:7a80:b960:1a00:5eaa:b33c:a197:a90f
+X-SA-Exim-Mail-From: cyndis@kapsi.fi
+X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
 
-On 09.06.25 11:53, Miao, Jun wrote:
-
->> You can change it to GFP_KERNEL since this is not atomic context now.
+On 6/10/25 6:05 PM, Thierry Reding wrote:
+> On Fri, Jun 06, 2025 at 11:45:33AM +0100, Diogo Ivo wrote:
+>> Hello,
 >>
+>> This series adds support for the NVJPG hardware accelerator found in the
+>> Tegra210 SoC.
+>>
+>> The kernel driver is essentially a copy of the NVDEC driver as both
+>> engines are Falcon-based.
+>>
+>> For the userspace part I have written a Mesa Gallium backend [1] that,
+>> while still very much experimental, works in decoding images with VA-API.
+>>
+>> I have been using ffmpeg to call VA-API with the following command:
+>>
+>> ffmpeg -v verbose -hwaccel vaapi -hwaccel_device /dev/dri/renderD129 -i <input.jpg> -pix_fmt bgra -f fbdev /dev/fb0
+>>
+>> which decodes <input.jpg> and shows the result in the framebuffer.
+>>
+>> The firmware for the engine can be obtained from a Linux for Tegra
+>> distribution.
 > 
-> Thanks,  the usbnet_bh() function only be called by usbnet_bh_workqueue which is sleepable.
+> By the way, have you tried running this on anything newer than Tegra210?
+> Given your progress on this, we can probably start thinking about
+> submitting the binaries to linux-firmware.
 
-Yes, but it can be waited on in usbnet_stop(), which in turn can
-be called for a device reset. Hence this must be GFP_NOIO, not
-GFP_KERNEL.
+FWIW, the impression I have is that NVJPG is basically unchanged all the 
+way to Tegra234. So if we add stream ID support and the firmwares, it'll 
+probably just work. Tegra234 has the quirk that it has two instances of 
+NVJPG -- these have to be distinguished by their different class IDs. 
+But we should go ahead with the T210 support first.
 
-	Regards
-		Oliver
+> 
+>> Due to the way the Gallium implementation works for Tegra
+>> the GPU also needs to be enabled.
+> 
+> I wonder if maybe we can get rid of this requirement. While it's
+> certainly nice to have the GPU enabled, there may be cases where using
+> only the other engines may be advantageous. Originally when I had worked
+> on VIC, I was looking at how it could be used for compositing without
+> getting the GPU involved. That's something that Android devices tend(ed)
+> to do because of the power savings that come with it.
+> 
+> Anyway, not a big deal, depending on the GPU for now is fine.
+> 
+> Thierry
 
