@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD4728C854;
-	Tue, 10 Jun 2025 09:44:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD68728C5BA;
+	Tue, 10 Jun 2025 09:44:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749548651; cv=none; b=S8eVN/iDGb3dczY/Wn+X+954g6Czo/JKQ5QPUtFZQmZerPMUELgIPk30Ae93uJUMDx8gUdEeyg0C2R/YCeoDlKx4GumHt0EdK53A/+3EJlFLR7QyuHIcwbdNFD+uKsN3pFMCnZbSkOOMuYv6fttzPjMQry4bE1JmEydUYjDkOFk=
+	t=1749548650; cv=none; b=sKWmnz/RkWLvXdlOY4IIuFSstrTTe1Oq15pAPQn7s20Tk1YYF3NfN9d+yGTEdsgMpjbSQR6l8n/oTCt3J2z94cpozGyO72LtFnyvnvT1Z1mi7zaWT+DAwspNT+nzo8iSyWeNOYYAQ+iBgZ+/ykxuwfBTrYbwu/XE+tiZ4AAf1YQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749548651; c=relaxed/simple;
-	bh=cEuC1K6EixvT7LIqzostezihyqTyIiuOuIIvnOetarY=;
+	s=arc-20240116; t=1749548650; c=relaxed/simple;
+	bh=s8ZWdsmHLMjKkv/5Q476EBG36LNlXoX3RmFADAMcJyA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NzJ1BFhUsdKz1kLW8McKvfeteLg3CJ/DCtNJfXexhaheSIvpjK51iz69rkU3AUs0U6D34oiaDzVYRoedeyeoKb2i6NcQe46+5zrQtwJXatVJkJeHtKlKixAy98LUdllLntd/7bOHBxXWGxSWHXFf1dYeSZObIq0KpK9VNbMVpws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0PJFak8P; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uq0xrIfi; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=VpArHQpusPJxg/3WUQQvDTOp4fmzRI3AamrJ+WP9spRgPjMwy6x/mYWQDRFd2yvZC4d5PsK2TsgjZ60a6WXKVe9VzOpum1Do/IMQafN5VR6+U+mECt08UphxT+WL/9Tu6Wg7kOVOGoA0DC4IOXXTZ0UOir4uHFNQhgtVSRPoNfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AUS0W1hx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hOKF+Aks; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0PJFak8P";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uq0xrIfi"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AUS0W1hx";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hOKF+Aks"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1749548646;
@@ -24,30 +24,30 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=E1zjEvnHAs9+4kxJDT5IMCDwy1KwGNinhNkC2jPV/5U=;
-	b=0PJFak8PuUaj7FvazYuvLN6qWARKwqsdtyXN64FZ1VYqLpMAhsmDOCQQBxY51tXSTzzPn5
-	5v5NPAuOGALEBYjVmffZRF9bzPV+URosAuCmyYqSt991NgbagZZZc99f5WOxFqT8n/9LnO
-	k+1PAfMFR2YohisvBcTFpxERnVuSHqZVxReZDZEXV2D50XkDbpsiU9xlgchz+8Fs19T4w0
-	5zAkCvPOa+c/kRiWBq/5XW1h+GtA9Jz5QMBsXgcWSwZ3jw2m2aU7BBr+jSvbnscHKPEdjj
-	SdzAPP5w2nE4zFVo6DeBIhS4lhLC7ZQ4RhqUe9u7GgLE0aI1F4FGetsSRWzsIA==
+	bh=+s48zo7u9LNRuZLjU7xJh4TnJkP+/xvXW9UyiZF5i0Y=;
+	b=AUS0W1hxe6O9R5oFpK6IX2GXQ78FljKRnW6Hhslyy4/7JNTsCWfmm+fFDIYVr8jI+Hzvad
+	kjL9lA/IMzri9OG4a8KLk3u5+Kjgl220iPzO+o0yle9xvn2vh+eBKyJ1ix4sj8uEqmpZ8R
+	g9+AggQIuxIe4Ud6fPaU2V+QgwMDbRuA13FF2N1UHzNokacfJ0IK8KiSSTQcdbrbM2eDQu
+	x2NaNXZdzN5Kw2eUayieg0beFfmbzgH2z+ncKA/pOMn9oe2kNywjN93mc092ZSM3ndz7yv
+	BWhkEaYTpEf6rOyEzYSkzjllDnL7U+h3uzV00b2bhqE7RWolfH39IVAfoFtVoA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1749548646;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=E1zjEvnHAs9+4kxJDT5IMCDwy1KwGNinhNkC2jPV/5U=;
-	b=uq0xrIfiadXDmdMQWRPhbeBvcb21gFDUnap2p3a+6jTSGAOIfQ4aE9N2yprqrC5rr/1xdx
-	jmz/dN3Tl6sQOCAA==
+	bh=+s48zo7u9LNRuZLjU7xJh4TnJkP+/xvXW9UyiZF5i0Y=;
+	b=hOKF+AksuAK3vtA9N2saJAw189f6xWn3J5DL9BZgKteSUjcq1A4ASWofrSnfcr/4/BKHqV
+	nEE20HPJv1bI2lCw==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: john.ogness@linutronix.de,
 	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v10 18/19] rv: Add documentation for rtapp monitor
-Date: Tue, 10 Jun 2025 11:43:43 +0200
-Message-Id: <18984a62a214d18793b04cce98a4498a4813ff85.1749547399.git.namcao@linutronix.de>
+Subject: [PATCH v10 16/19] rv: Add rtapp_pagefault monitor
+Date: Tue, 10 Jun 2025 11:43:41 +0200
+Message-Id: <9abb399b0d941cb034211b2201fb1a90d976f4ec.1749547399.git.namcao@linutronix.de>
 In-Reply-To: <cover.1749547399.git.namcao@linutronix.de>
 References: <cover.1749547399.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,195 +58,291 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Add documentation describing the rtapp monitor.
+Userspace real-time applications may have design flaws that they raise
+page faults in real-time threads, and thus have unexpected latencies.
+
+Add an linear temporal logic monitor to detect this scenario.
 
 Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- Documentation/trace/rv/index.rst         |   1 +
- Documentation/trace/rv/monitor_rtapp.rst | 116 +++++++++++++++++++++++
- 2 files changed, 117 insertions(+)
- create mode 100644 Documentation/trace/rv/monitor_rtapp.rst
+ kernel/trace/rv/Kconfig                       |  1 +
+ kernel/trace/rv/Makefile                      |  1 +
+ kernel/trace/rv/monitors/pagefault/Kconfig    | 20 +++++
+ .../trace/rv/monitors/pagefault/pagefault.c   | 87 +++++++++++++++++++
+ .../trace/rv/monitors/pagefault/pagefault.h   | 57 ++++++++++++
+ .../rv/monitors/pagefault/pagefault_trace.h   | 14 +++
+ kernel/trace/rv/rv_trace.h                    |  1 +
+ tools/verification/models/rtapp/pagefault.ltl |  1 +
+ 8 files changed, 182 insertions(+)
+ create mode 100644 kernel/trace/rv/monitors/pagefault/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/pagefault/pagefault.c
+ create mode 100644 kernel/trace/rv/monitors/pagefault/pagefault.h
+ create mode 100644 kernel/trace/rv/monitors/pagefault/pagefault_trace.h
+ create mode 100644 tools/verification/models/rtapp/pagefault.ltl
 
-diff --git a/Documentation/trace/rv/index.rst b/Documentation/trace/rv/inde=
-x.rst
-index 2a27f6bc94294..a2812ac5cfeb6 100644
---- a/Documentation/trace/rv/index.rst
-+++ b/Documentation/trace/rv/index.rst
-@@ -14,3 +14,4 @@ Runtime Verification
-    monitor_wip.rst
-    monitor_wwnr.rst
-    monitor_sched.rst
-+   monitor_rtapp.rst
-diff --git a/Documentation/trace/rv/monitor_rtapp.rst b/Documentation/trace=
-/rv/monitor_rtapp.rst
+diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
+index 5c407d2916614..6f86d8501e87e 100644
+--- a/kernel/trace/rv/Kconfig
++++ b/kernel/trace/rv/Kconfig
+@@ -42,6 +42,7 @@ source "kernel/trace/rv/monitors/scpd/Kconfig"
+ source "kernel/trace/rv/monitors/snep/Kconfig"
+ source "kernel/trace/rv/monitors/sncid/Kconfig"
+ source "kernel/trace/rv/monitors/rtapp/Kconfig"
++source "kernel/trace/rv/monitors/pagefault/Kconfig"
+ # Add new monitors here
+=20
+ config RV_REACTORS
+diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
+index 9b28c24199955..353ecf939d0e9 100644
+--- a/kernel/trace/rv/Makefile
++++ b/kernel/trace/rv/Makefile
+@@ -13,6 +13,7 @@ obj-$(CONFIG_RV_MON_SCPD) +=3D monitors/scpd/scpd.o
+ obj-$(CONFIG_RV_MON_SNEP) +=3D monitors/snep/snep.o
+ obj-$(CONFIG_RV_MON_SNCID) +=3D monitors/sncid/sncid.o
+ obj-$(CONFIG_RV_MON_RTAPP) +=3D monitors/rtapp/rtapp.o
++obj-$(CONFIG_RV_MON_PAGEFAULT) +=3D monitors/pagefault/pagefault.o
+ # Add new monitors here
+ obj-$(CONFIG_RV_REACTORS) +=3D rv_reactors.o
+ obj-$(CONFIG_RV_REACT_PRINTK) +=3D reactor_printk.o
+diff --git a/kernel/trace/rv/monitors/pagefault/Kconfig b/kernel/trace/rv/m=
+onitors/pagefault/Kconfig
 new file mode 100644
-index 0000000000000..fb0ca0bf33a16
+index 0000000000000..5e16625f16537
 --- /dev/null
-+++ b/Documentation/trace/rv/monitor_rtapp.rst
-@@ -0,0 +1,116 @@
-+Real-time application monitors
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
++++ b/kernel/trace/rv/monitors/pagefault/Kconfig
+@@ -0,0 +1,20 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++config RV_MON_PAGEFAULT
++	depends on RV
++	select RV_LTL_MONITOR
++	depends on RV_MON_RTAPP
++	depends on X86 || RISCV
++	default y
++	select LTL_MON_EVENTS_ID
++	bool "pagefault monitor"
++	help
++	  Monitor that real-time tasks do not raise page faults, causing
++	  undesirable latency.
 +
-+- Name: rtapp
-+- Type: container for multiple monitors
-+- Author: Nam Cao <namcao@linutronix.de>
++	  If you are developing a real-time system and not entirely sure whether
++	  the applications are designed correctly for real-time, you want to say
++	  Y here.
 +
-+Description
-+-----------
++	  This monitor does not affect execution speed while it is not running,
++	  therefore it is safe to enable this in production kernel.
+diff --git a/kernel/trace/rv/monitors/pagefault/pagefault.c b/kernel/trace/=
+rv/monitors/pagefault/pagefault.c
+new file mode 100644
+index 0000000000000..80f6d7ecf5cfb
+--- /dev/null
++++ b/kernel/trace/rv/monitors/pagefault/pagefault.c
+@@ -0,0 +1,87 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/ftrace.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/rv.h>
++#include <linux/sched/deadline.h>
++#include <linux/sched/rt.h>
++#include <linux/tracepoint.h>
++#include <rv/instrumentation.h>
 +
-+Real-time applications may have design flaws such that they experience une=
-xpected latency and fail
-+to meet their time requirements. Often, these flaws follow a few patterns:
++#define MODULE_NAME "pagefault"
 +
-+  - Page faults: A real-time thread may access memory that does not have a=
- mapped physical backing
-+    or must first be copied (such as for copy-on-write). Thus a page fault=
- is raised and the kernel
-+    must first perform the expensive action. This causes significant delay=
-s to the real-time thread
-+  - Priority inversion: A real-time thread blocks waiting for a lower-prio=
-rity thread. This causes
-+    the real-time thread to effectively take on the scheduling priority of=
- the lower-priority
-+    thread. For example, the real-time thread needs to access a shared res=
-ource that is protected by
-+    a non-pi-mutex, but the mutex is currently owned by a non-real-time th=
-read.
++#include <rv_trace.h>
++#include <trace/events/exceptions.h>
++#include <monitors/rtapp/rtapp.h>
 +
-+The `rtapp` monitor detects these patterns. It aids developers to identify=
- reasons for unexpected
-+latency with real-time applications. It is a container of multiple sub-mon=
-itors described in the
-+following sections.
++#include "pagefault.h"
++#include <rv/ltl_monitor.h>
 +
-+Monitor pagefault
-++++++++++++++++++
++static void ltl_atoms_fetch(struct task_struct *task, struct ltl_monitor *=
+mon)
++{
++	/*
++	 * This includes "actual" real-time tasks and also PI-boosted tasks. A ta=
+sk being PI-boosted
++	 * means it is blocking an "actual" real-task, therefore it should also o=
+bey the monitor's
++	 * rule, otherwise the "actual" real-task may be delayed.
++	 */
++	ltl_atom_set(mon, LTL_RT, rt_or_dl_task(task));
++}
 +
-+The `pagefault` monitor reports real-time tasks raising page faults. Its s=
-pecification is::
++static void ltl_atoms_init(struct task_struct *task, struct ltl_monitor *m=
+on, bool task_creation)
++{
++	if (task_creation)
++		ltl_atom_set(mon, LTL_PAGEFAULT, false);
++}
 +
-+  RULE =3D always (RT imply not PAGEFAULT)
++static void handle_page_fault(void *data, unsigned long address, struct pt=
+_regs *regs,
++			      unsigned long error_code)
++{
++	ltl_atom_pulse(current, LTL_PAGEFAULT, true);
++}
 +
-+To fix warnings reported by this monitor, `mlockall()` or `mlock()` can be=
- used to ensure physical
-+backing for memory.
++static int enable_pagefault(void)
++{
++	int retval;
 +
-+This monitor may have false negatives because the pages used by the real-t=
-ime threads may just
-+happen to be directly available during testing. To minimize this, the syst=
-em can be put under memory
-+pressure (e.g. invoking the OOM killer using a program that does `ptr =3D =
-malloc(SIZE_OF_RAM);
-+memset(ptr, 0, SIZE_OF_RAM);`) so that the kernel executes aggressive stra=
-tegies to recycle as much
-+physical memory as possible.
++	retval =3D ltl_monitor_init();
++	if (retval)
++		return retval;
 +
-+Monitor sleep
-++++++++++++++
++	rv_attach_trace_probe("rtapp_pagefault", page_fault_kernel, handle_page_f=
+ault);
++	rv_attach_trace_probe("rtapp_pagefault", page_fault_user, handle_page_fau=
+lt);
 +
-+The `sleep` monitor reports real-time threads sleeping in a manner that ma=
-y cause undesirable
-+latency. Real-time applications should only put a real-time thread to slee=
-p for one of the following
-+reasons:
++	return 0;
++}
 +
-+  - Cyclic work: real-time thread sleeps waiting for the next cycle. For t=
-his case, only the
-+    `clock_nanosleep` syscall should be used with `TIMER_ABSTIME` (to avoi=
-d time drift) and
-+    `CLOCK_MONOTONIC` (to avoid the clock being changed). No other method =
-is safe for real-time. For
-+    example, threads waiting for timerfd can be woken by softirq which pro=
-vides no real-time
-+    guarantee.
-+  - Real-time thread waiting for something to happen (e.g. another thread =
-releasing shared
-+    resources, or a completion signal from another thread). In this case, =
-only futexes
-+    (FUTEX_LOCK_PI, FUTEX_LOCK_PI2 or one of FUTEX_WAIT_*) should be used.=
-  Applications usually do
-+    not use futexes directly, but use PI mutexes and PI condition variable=
-s which are built on top
-+    of futexes. Be aware that the C library might not implement conditiona=
-l variables as safe for
-+    real-time. As an alternative, the librtpi library exists to provide a =
-conditional variable
-+    implementation that is correct for real-time applications in Linux.
++static void disable_pagefault(void)
++{
++	rv_detach_trace_probe("rtapp_pagefault", page_fault_kernel, handle_page_f=
+ault);
++	rv_detach_trace_probe("rtapp_pagefault", page_fault_user, handle_page_fau=
+lt);
 +
-+Beside the reason for sleeping, the eventual waker should also be real-tim=
-e-safe. Namely, one of:
++	ltl_monitor_destroy();
++}
 +
-+  - An equal-or-higher-priority thread
-+  - Hard interrupt handler
-+  - Non-maskable interrupt handler
++static struct rv_monitor rv_pagefault =3D {
++	.name =3D "pagefault",
++	.description =3D "Monitor that RT tasks do not raise page faults",
++	.enable =3D enable_pagefault,
++	.disable =3D disable_pagefault,
++};
 +
-+This monitor's warning usually means one of the following:
++static int __init register_pagefault(void)
++{
++	return rv_register_monitor(&rv_pagefault, &rv_rtapp);
++}
 +
-+  - Real-time thread is blocked by a non-real-time thread (e.g. due to con=
-tention on a mutex without
-+    priority inheritance). This is priority inversion.
-+  - Time-critical work waits for something which is not safe for real-time=
- (e.g. timerfd).
-+  - The work executed by the real-time thread does not need to run at real=
--time priority at all.
-+    This is not a problem for the real-time thread itself, but it is poten=
-tially taking the CPU away
-+    from other important real-time work.
++static void __exit unregister_pagefault(void)
++{
++	rv_unregister_monitor(&rv_pagefault);
++}
 +
-+Application developers may purposely choose to have their real-time applic=
-ation sleep in a way that
-+is not safe for real-time. It is debatable whether that is a problem. Appl=
-ication developers must
-+analyze the warnings to make a proper assessment.
++module_init(register_pagefault);
++module_exit(unregister_pagefault);
 +
-+The monitor's specification is::
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Nam Cao <namcao@linutronix.de>");
++MODULE_DESCRIPTION("pagefault: Monitor that RT tasks do not raise page fau=
+lts");
+diff --git a/kernel/trace/rv/monitors/pagefault/pagefault.h b/kernel/trace/=
+rv/monitors/pagefault/pagefault.h
+new file mode 100644
+index 0000000000000..94c0fe4fdaa54
+--- /dev/null
++++ b/kernel/trace/rv/monitors/pagefault/pagefault.h
+@@ -0,0 +1,57 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +
-+  RULE =3D always ((RT and SLEEP) imply (RT_FRIENDLY_SLEEP or ALLOWLIST))
++#include <linux/rv.h>
 +
-+  RT_FRIENDLY_SLEEP =3D (RT_VALID_SLEEP_REASON or KERNEL_THREAD)
-+                  and ((not WAKE) until RT_FRIENDLY_WAKE)
++#define MONITOR_NAME pagefault
 +
-+  RT_VALID_SLEEP_REASON =3D FUTEX_WAIT
-+                       or RT_FRIENDLY_NANOSLEEP
++enum ltl_atom {
++	LTL_PAGEFAULT,
++	LTL_RT,
++	LTL_NUM_ATOM
++};
++static_assert(LTL_NUM_ATOM <=3D RV_MAX_LTL_ATOM);
 +
-+  RT_FRIENDLY_NANOSLEEP =3D CLOCK_NANOSLEEP
-+                      and NANOSLEEP_TIMER_ABSTIME
-+                      and NANOSLEEP_CLOCK_MONOTONIC
++static const char *ltl_atom_str(enum ltl_atom atom)
++{
++	static const char *const names[] =3D {
++		"pa",
++		"rt",
++	};
 +
-+  RT_FRIENDLY_WAKE =3D WOKEN_BY_EQUAL_OR_HIGHER_PRIO
-+                  or WOKEN_BY_HARDIRQ
-+                  or WOKEN_BY_NMI
-+                  or KTHREAD_SHOULD_STOP
++	return names[atom];
++}
 +
-+  ALLOWLIST =3D BLOCK_ON_RT_MUTEX
-+           or FUTEX_LOCK_PI
-+           or TASK_IS_RCU
-+           or TASK_IS_MIGRATION
++enum ltl_buchi_state {
++	S0,
++	RV_NUM_BA_STATES
++};
++static_assert(RV_NUM_BA_STATES <=3D RV_MAX_BA_STATES);
 +
-+Beside the scenarios described above, this specification also handle some =
-special cases:
++static void ltl_start(struct task_struct *task, struct ltl_monitor *mon)
++{
++	bool pagefault =3D test_bit(LTL_PAGEFAULT, mon->atoms);
++	bool val3 =3D !pagefault;
++	bool rt =3D test_bit(LTL_RT, mon->atoms);
++	bool val1 =3D !rt;
++	bool val4 =3D val1 || val3;
 +
-+  - `KERNEL_THREAD`: kernel tasks do not have any pattern that can be reco=
-gnized as valid real-time
-+    sleeping reasons. Therefore sleeping reason is not checked for kernel =
-tasks.
-+  - `KTHREAD_SHOULD_STOP`: a non-real-time thread may stop a real-time ker=
-nel thread by waking it
-+    and waiting for it to exit (`kthread_stop()`). This wakeup is safe for=
- real-time.
-+  - `ALLOWLIST`: to handle known false positives with the kernel.
-+  - `BLOCK_ON_RT_MUTEX` is included in the allowlist due to its implementa=
-tion. In the release path
-+    of rt_mutex, a boosted task is de-boosted before waking the rt_mutex's=
- waiter. Consequently, the
-+    monitor may see a real-time-unsafe wakeup (e.g. non-real-time task wak=
-ing real-time task). This
-+    is actually real-time-safe because preemption is disabled for the dura=
-tion.
-+  - `FUTEX_LOCK_PI` is included in the allowlist for the same reason as `B=
-LOCK_ON_RT_MUTEX`.
++	if (val4)
++		__set_bit(S0, mon->states);
++}
++
++static void
++ltl_possible_next_states(struct ltl_monitor *mon, unsigned int state, unsi=
+gned long *next)
++{
++	bool pagefault =3D test_bit(LTL_PAGEFAULT, mon->atoms);
++	bool val3 =3D !pagefault;
++	bool rt =3D test_bit(LTL_RT, mon->atoms);
++	bool val1 =3D !rt;
++	bool val4 =3D val1 || val3;
++
++	switch (state) {
++	case S0:
++		if (val4)
++			__set_bit(S0, next);
++		break;
++	}
++}
+diff --git a/kernel/trace/rv/monitors/pagefault/pagefault_trace.h b/kernel/=
+trace/rv/monitors/pagefault/pagefault_trace.h
+new file mode 100644
+index 0000000000000..fe1f82597b1ac
+--- /dev/null
++++ b/kernel/trace/rv/monitors/pagefault/pagefault_trace.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/*
++ * Snippet to be included in rv_trace.h
++ */
++
++#ifdef CONFIG_RV_MON_PAGEFAULT
++DEFINE_EVENT(event_ltl_monitor_id, event_pagefault,
++	     TP_PROTO(struct task_struct *task, char *states, char *atoms, char *=
+next),
++	     TP_ARGS(task, states, atoms, next));
++DEFINE_EVENT(error_ltl_monitor_id, error_pagefault,
++	     TP_PROTO(struct task_struct *task),
++	     TP_ARGS(task));
++#endif /* CONFIG_RV_MON_PAGEFAULT */
+diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
+index 27698c5791a04..5c101c82da235 100644
+--- a/kernel/trace/rv/rv_trace.h
++++ b/kernel/trace/rv/rv_trace.h
+@@ -172,6 +172,7 @@ DECLARE_EVENT_CLASS(error_ltl_monitor_id,
+=20
+ 	TP_printk("%s[%d]: violation detected", __get_str(comm), __entry->pid)
+ );
++#include <monitors/pagefault/pagefault_trace.h>
+ // Add new monitors based on CONFIG_LTL_MON_EVENTS_ID here
+ #endif /* CONFIG_LTL_MON_EVENTS_ID */
+ #endif /* _TRACE_RV_H */
+diff --git a/tools/verification/models/rtapp/pagefault.ltl b/tools/verifica=
+tion/models/rtapp/pagefault.ltl
+new file mode 100644
+index 0000000000000..d7ce621027336
+--- /dev/null
++++ b/tools/verification/models/rtapp/pagefault.ltl
+@@ -0,0 +1 @@
++RULE =3D always (RT imply not PAGEFAULT)
 --=20
 2.39.5
 
