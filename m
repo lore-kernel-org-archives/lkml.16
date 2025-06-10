@@ -1,291 +1,142 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1831A5BB2;
-	Tue, 10 Jun 2025 11:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1125F223DC4;
+	Tue, 10 Jun 2025 11:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749554265; cv=none; b=TSSuYsfgbK7qIA7pKQ41mbZxKO/iMUK37OJTEKCwe3kTN40gFk4o8Pd4sFkw/nRTl/lUDUiZZ/3c4Hy3p29dUTrQTD5Xjkoux+tC1FeMozJc/Tj+KIkM1yblkNDzPs7+86cHieNz9zC+FR3o7OpSci+fA+767X8DZmsWuq+nJQU=
+	t=1749554393; cv=none; b=s/4oKYwKtIdmiEuOqOLayOR2WZ/u2eCu6uv/1wbjP2UiMVsrDS9g3ocuCSIpKT2W1Q4ArDy8YamIMQ1s1NS/xKgDRJOH089gvfdR+5/hGo0BdyOUyRS7vMSl/R0XnT7vFDYYgUBDk8uPDlND+DWX4olTmT01cH7w6yvgwI0kK28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749554265; c=relaxed/simple;
-	bh=BiLNb+ymlxK5xBNq79TAjl8GuWj0orzj8EMKrnpSafI=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=VZH6KYMeAbcxCpPEfFDtiuP+Hs9Ll9v+9s7AS4ccXhXi1q6KFuMeTAkmuqtINfTLZn2QtWMb/yUlZ9T1nLxFRkbZLyh5H3Lvqqfkt7cGyThz28Tasr7D3MiFubNDxyhqHR5WUS6KDd5ZPE+Pzy1NO5TdBY6u6iT6MU0rL/lU33Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=har32Mju; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749554393; c=relaxed/simple;
+	bh=zHtajvWuHMuQcRL0ZxwAkuBW7Mrsb1my4mnRp+x/CrU=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=MjjE6w1oQmlPL8aU+6GgAMvuEDGf8pl3sgGuFn/9toBgdSjE9rIa71nSB05VrK9zkpnIm9OhoKNsBlBkR8nUr7Z0hMAIydcvQbyvpo0L9l1F8f+uemqsxWBLaiRTN/A8gdjZ2LLDeJ9C1IX8uw+N5pQ5jXH9XDyhxVfaliSxeJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=WHFBo0aA; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="har32Mju"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-236192f8770so17229195ad.0;
-        Tue, 10 Jun 2025 04:17:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749554263; x=1750159063; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vSMpqaqQSKTKeXR3v6vlDSkMoFFFsaz4CspAPT1bNR0=;
-        b=har32MjuogtffBeJVS6ZmIW+aSsYCO6JosBF1el6Ljv+XbPIGPlIrJ1kN8wPEuC2Sd
-         IUGcjhFEm583m8wqd2+uTvyuwJe6usN4Bhw8Rmmw8BMYqZ2yJtWevXHhm/FBwfOm3K6l
-         AvGidPi14WiBmKm8jiuyxfcQJsHoDgT23aUITPZ7ZCSP9OrcJeo4Oeiu4z0NubCaq+IJ
-         Z9IYHHfiptw5WrEBbnyzd93vsMBv0cnRmoWu0vrXrhlU6dtFxSYlHrk2WL/6QhTGuXHj
-         AM432JAUhxnv9St15tjDL8QbLBxaUrq89BuCA65Qzzb7Jl47PncWVwbMf2i5NLhZTqDF
-         SLMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749554263; x=1750159063;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vSMpqaqQSKTKeXR3v6vlDSkMoFFFsaz4CspAPT1bNR0=;
-        b=rqTuYFHH5gEaQE5wcasfgxmM0y2FAnWHhiF+ZPW5cbxQ44PSStgXnHSeH8v3qOV9Cc
-         1lSPsFU1LOs0Zi29Qvk/zq3pujDu6Qeb9EjrrXRLep9iMx7hBysR8+iw7tDJmnGnf4pL
-         IRvlMUIAFBnK5D4Z1mt19rQBvet+f1WpDFo2c15fO+v6mKwzoZexLLYzZLsJGu25T25W
-         DZUKDP54abEnMFRHDPVvpa1WpEZbHEpbysXc2iEE94IiUOVR5uvNsqNh4fohMn9N61e3
-         jG2d35vKlY2yxqyyXjBLoeUUr+noclC2Q/rFPYi+FFm/lC1XGb3zrU8JYDtX9OoRu3v4
-         j6OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXIowUniI+XhM62mWmy+Q20Fg7HO4KusFbiHU6KOvlCEUkPVZcYnzL7KW1Hola7vLDQdEBP2Rm1Vuk8Slk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcuqUcSXOa8m8Z9Kj0mwM0G7VoPvRcVQCoQGB/rOeNePW8Jh0t
-	vCfe4C83OniOnHO+vveSIhyngXme2uyLsnMhH7/qgCzpcEYHAxTtU/cn
-X-Gm-Gg: ASbGncuTHOwv6sNLpvew+qgvIFAVGmm1Z2/jkCSM/gezaw8zMUpGaxKRoO4UVI9r+xp
-	pOq6CB6tTKOEPvi1VRbL5MMOAZdXYVTISfDo/zBABBOXvYROkiiuM363Wo4GXyWK0GNWsMl7kqJ
-	mxwwQBCq8dNPoSkCYBBYGFkySLLCbu2kqdQftSlRMsofwdsFED5lKG3b7CyAcpKHzLLlwI+rOf2
-	C1WT9GZ8udpcs68a03y4JiZfcZtktCfNTm9LGOXvRjFndQtWFPQPak4zkl+iWvFBRxGl8iZxgbP
-	yXI9rHn7hdj8ieuYtBi4nAfgwry+u9dWyghmQnuHp7KHqj/77j8urfCqBbZtvO3GT1u50TAz/JB
-	kcuQ2MCE=
-X-Google-Smtp-Source: AGHT+IHeQaiZJcuMI7UTdSc4MBhKsNfgT3sNZPNCGdEh0zYYFEf3DwwxVQ9rzB8yO/kXDnXPthO5bA==
-X-Received: by 2002:a17:902:ccd0:b0:236:15b7:62e3 with SMTP id d9443c01a7336-23635bb9896mr44866805ad.9.1749554262425;
-        Tue, 10 Jun 2025 04:17:42 -0700 (PDT)
-Received: from ubuntu.localdomain ([39.86.156.14])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2360351423bsm69024335ad.250.2025.06.10.04.17.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 04:17:42 -0700 (PDT)
-From: Penglei Jiang <superman.xpt@gmail.com>
-To: axboe@kernel.dk
-Cc: io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzbot+531502bbbe51d2f769f4@syzkaller.appspotmail.com,
-	Penglei Jiang <superman.xpt@gmail.com>
-Subject: [PATCH] io_uring: fix use-after-free of sq->thread in __io_uring_show_fdinfo()
-Date: Tue, 10 Jun 2025 04:17:21 -0700
-Message-Id: <20250610111721.37036-1-superman.xpt@gmail.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="WHFBo0aA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1749554389; x=1750159189; i=markus.elfring@web.de;
+	bh=u9QxE558lvkkOQYH+uV3e94Awe9mUZUM75xTUQBPSOw=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=WHFBo0aAupmhdc+VW0v5urjjbet5sJreXOLvIO6FtLImFCTVhKLa0gAAEyfIaRtm
+	 TXpNFjHCs0vQHrNNWTdMAkBxGg0d9dmCpAg2LBa4qPZ30w74nA9EO615Xo8v3lDGR
+	 3MEv1tCOO6dtjufgdApctforqGaNL1A8ZapKQ1gSbr1fOeC7ntro4X67LoZ1nPvfU
+	 K5CaNvSB9VWrk/zqSzVggdMjvGKJkufuaJ9fHZ/gJ5h8ezlYiz0MFaAJCgthqODiN
+	 EXzQQrlLAXM2BwL/cmbyPejiVWJa7kciVS69q49aLYi7byzwkJDDxDkS/w7m1arkG
+	 QKGp1zigOGkEMMdSLQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.69.183]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MYu16-1uKdSO06ca-00O7lO; Tue, 10
+ Jun 2025 13:13:16 +0200
+Message-ID: <c578f363-8614-4295-b178-2800764565fa@web.de>
+Date: Tue, 10 Jun 2025 13:13:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+ James Bottomley <James.Bottomley@HansenPartnership.com>,
+ James Smart <james.smart@broadcom.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Ram Vegesna <ram.vegesna@broadcom.com>
+Content-Language: en-GB, de-DE
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] scsi: elx: efct: Delete an unnecessary check before kfree()
+ in efct_hw_rx_post()
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:lvRqpHAmTyoVWba8qwp05HhtQEyy/6t64x7cWsWoxFcI3BKofFQ
+ D5rXXuZKALg9XVKBVHj3XptS9B+zNxGvR3uf8OasIBzje6d0IuO8rD4P1GKKoF9ti97ptRS
+ Bgb+bu32YdMuxzUWIKmj5qnXS+pDK06Qpn9cKq9V/Nbf0DBdxteS8udctUNRLY64l7b0fFe
+ P8lniUnPnrthuSP5JoBtA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:wrUusPyP7W8=;Ws/SCprNPZqV1+FwFn9JTy1ReqQ
+ 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
 
-[BUG]
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Tue, 10 Jun 2025 13:03:50 +0200
 
-[   84.375406] ==================================================================
-[   84.378543] BUG: KASAN: slab-use-after-free in getrusage+0x1109/0x1a60
-[   84.381058] Read of size 8 at addr ffff88810de2d2c8 by task a.out/304
-[   84.382977] 
-[   84.383767] CPU: 0 UID: 0 PID: 304 Comm: a.out Not tainted 6.16.0-rc1 #1 PREEMPT(voluntary) 
-[   84.383788] Hardware name: QEMU Ubuntu 24.04 PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-[   84.383819] Call Trace:
-[   84.383841]  <TASK>
-[   84.383842]  dump_stack_lvl+0x53/0x70
-[   84.383957]  print_report+0xd0/0x670
-[   84.384008]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
-[   84.384057]  ? getrusage+0x1109/0x1a60
-[   84.384060]  kasan_report+0xce/0x100
-[   84.384063]  ? getrusage+0x1109/0x1a60
-[   84.384066]  getrusage+0x1109/0x1a60
-[   84.384070]  ? __pfx_getrusage+0x10/0x10
-[   84.384073]  __io_uring_show_fdinfo+0x9fe/0x1790
-[   84.384117]  ? ksys_read+0xf7/0x1c0
-[   84.384133]  ? do_syscall_64+0xa4/0x260
-[   84.384144]  ? vsnprintf+0x591/0x1100
-[   84.384155]  ? __pfx___io_uring_show_fdinfo+0x10/0x10
-[   84.384157]  ? __pfx_vsnprintf+0x10/0x10
-[   84.384175]  ? mutex_trylock+0xcf/0x130
-[   84.384185]  ? __pfx_mutex_trylock+0x10/0x10
-[   84.384198]  ? __pfx_show_fd_locks+0x10/0x10
-[   84.384219]  ? io_uring_show_fdinfo+0x57/0x80
-[   84.384222]  io_uring_show_fdinfo+0x57/0x80
-[   84.384224]  seq_show+0x38c/0x690
-[   84.384257]  seq_read_iter+0x3f7/0x1180
-[   84.384279]  ? inode_set_ctime_current+0x160/0x4b0
-[   84.384296]  seq_read+0x271/0x3e0
-[   84.384298]  ? __pfx_seq_read+0x10/0x10
-[   84.384300]  ? __pfx__raw_spin_lock+0x10/0x10
-[   84.384303]  ? __mark_inode_dirty+0x402/0x810
-[   84.384313]  ? selinux_file_permission+0x368/0x500
-[   84.384385]  ? file_update_time+0x10f/0x160
-[   84.384388]  vfs_read+0x177/0xa40
-[   84.384393]  ? __pfx___handle_mm_fault+0x10/0x10
-[   84.384440]  ? __pfx_vfs_read+0x10/0x10
-[   84.384443]  ? mutex_lock+0x81/0xe0
-[   84.384446]  ? __pfx_mutex_lock+0x10/0x10
-[   84.384449]  ? fdget_pos+0x24d/0x4b0
-[   84.384452]  ksys_read+0xf7/0x1c0
-[   84.384455]  ? __pfx_ksys_read+0x10/0x10
-[   84.384458]  ? do_user_addr_fault+0x43b/0x9c0
-[   84.384486]  do_syscall_64+0xa4/0x260
-[   84.384489]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-[   84.384528] RIP: 0033:0x7f0f74170fc9
-[   84.384560] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 8
-[   84.384563] RSP: 002b:00007fffece049e8 EFLAGS: 00000206 ORIG_RAX: 0000000000000000
-[   84.384588] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f0f74170fc9
-[   84.384611] RDX: 0000000000001000 RSI: 00007fffece049f0 RDI: 0000000000000004
-[   84.384613] RBP: 00007fffece05ad0 R08: 0000000000000000 R09: 00007fffece04d90
-[   84.384615] R10: 0000000000000000 R11: 0000000000000206 R12: 00005651720a1100
-[   84.384617] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-[   84.384619]  </TASK>
-[   84.384620] 
-[   84.461314] Allocated by task 298:
-[   84.462019]  kasan_save_stack+0x33/0x60
-[   84.462598]  kasan_save_track+0x14/0x30
-[   84.463213]  __kasan_slab_alloc+0x6e/0x70
-[   84.463853]  kmem_cache_alloc_node_noprof+0xe8/0x330
-[   84.465483]  copy_process+0x376/0x5e00
-[   84.466798]  create_io_thread+0xab/0xf0
-[   84.468355]  io_sq_offload_create+0x9ed/0xf20
-[   84.470323]  io_uring_setup+0x12b0/0x1cc0
-[   84.471830]  do_syscall_64+0xa4/0x260
-[   84.473255]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-[   84.474952] 
-[   84.475758] Freed by task 22:
-[   84.476878]  kasan_save_stack+0x33/0x60
-[   84.478400]  kasan_save_track+0x14/0x30
-[   84.479709]  kasan_save_free_info+0x3b/0x60
-[   84.480777]  __kasan_slab_free+0x37/0x50
-[   84.481299]  kmem_cache_free+0xc4/0x360
-[   84.481945]  rcu_core+0x5ff/0x19f0
-[   84.483038]  handle_softirqs+0x18c/0x530
-[   84.485407]  run_ksoftirqd+0x20/0x30
-[   84.487146]  smpboot_thread_fn+0x287/0x6c0
-[   84.488552]  kthread+0x30d/0x630
-[   84.489856]  ret_from_fork+0xef/0x1a0
-[   84.491239]  ret_from_fork_asm+0x1a/0x30
-[   84.492366] 
-[   84.493099] Last potentially related work creation:
-[   84.495175]  kasan_save_stack+0x33/0x60
-[   84.496416]  kasan_record_aux_stack+0x8c/0xa0
-[   84.498060]  __call_rcu_common.constprop.0+0x68/0x940
-[   84.499326]  __schedule+0xff2/0x2930
-[   84.499970]  __cond_resched+0x4c/0x80
-[   84.501305]  mutex_lock+0x5c/0xe0
-[   84.502374]  io_uring_del_tctx_node+0xe1/0x2b0
-[   84.504251]  io_uring_clean_tctx+0xb7/0x160
-[   84.505377]  io_uring_cancel_generic+0x34e/0x760
-[   84.507126]  do_exit+0x240/0x2350
-[   84.508667]  do_group_exit+0xab/0x220
-[   84.509927]  __x64_sys_exit_group+0x39/0x40
-[   84.511223]  x64_sys_call+0x1243/0x1840
-[   84.512795]  do_syscall_64+0xa4/0x260
-[   84.514044]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-[   84.515792] 
-[   84.516374] The buggy address belongs to the object at ffff88810de2cb00
-[   84.516374]  which belongs to the cache task_struct of size 3712
-[   84.521449] The buggy address is located 1992 bytes inside of
-[   84.521449]  freed 3712-byte region [ffff88810de2cb00, ffff88810de2d980)
-[   84.524996] 
-[   84.525514] The buggy address belongs to the physical page:
-[   84.527383] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x10de28
-[   84.530907] head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-[   84.533573] flags: 0x200000000000040(head|node=0|zone=2)
-[   84.535366] page_type: f5(slab)
-[   84.536410] raw: 0200000000000040 ffff8881001acdc0 dead000000000122 0000000000000000
-[   84.538807] raw: 0000000000000000 0000000000080008 00000000f5000000 0000000000000000
-[   84.542033] head: 0200000000000040 ffff8881001acdc0 dead000000000122 0000000000000000
-[   84.545121] head: 0000000000000000 0000000000080008 00000000f5000000 0000000000000000
-[   84.547663] head: 0200000000000003 ffffea0004378a01 00000000ffffffff 00000000ffffffff
-[   84.549959] head: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-[   84.552180] page dumped because: kasan: bad access detected
-[   84.554098] 
-[   84.554798] Memory state around the buggy address:
-[   84.556798]  ffff88810de2d180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[   84.559258]  ffff88810de2d200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[   84.562112] >ffff88810de2d280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[   84.564710]                                               ^
-[   84.567076]  ffff88810de2d300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[   84.569900]  ffff88810de2d380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[   84.573018] ==================================================================
+It can be known that the function =E2=80=9Ckfree=E2=80=9D performs a null =
+pointer check
+for its input parameter.
+It is therefore not needed to repeat such a check before its call.
 
-[CAUSE]
+Thus remove a redundant pointer check.
 
-The task_struct pointed to by sq->thread is released while it is being
-used in the function __io_uring_show_fdinfo(), because holding the lock
-ctx->uring_lock does not prevent the release of sq->thread.
+The source code was transformed by using the Coccinelle software.
 
-[FIX]
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/scsi/elx/efct/efct_hw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The fix is to increase the reference count of the task_struct pointed
-to by sq->thread and to use RCU to ensure that it is not released while
-being used.
-
-
-Reported-by: syzbot+531502bbbe51d2f769f4@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/682b06a5.a70a0220.3849cf.00b3.GAE@google.com
-Fixes: a0d45c3f596b ("io_uring/fdinfo: remove need for sqpoll lock for thread/pid retrieval")
-Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
----
- io_uring/fdinfo.c | 8 ++++++--
- io_uring/sqpoll.c | 9 ++++-----
- 2 files changed, 10 insertions(+), 7 deletions(-)
-
-diff --git a/io_uring/fdinfo.c b/io_uring/fdinfo.c
-index e9355276ab5d..2911352bbae1 100644
---- a/io_uring/fdinfo.c
-+++ b/io_uring/fdinfo.c
-@@ -141,19 +141,23 @@ static void __io_uring_show_fdinfo(struct io_ring_ctx *ctx, struct seq_file *m)
- 
- 	if (ctx->flags & IORING_SETUP_SQPOLL) {
- 		struct io_sq_data *sq = ctx->sq_data;
-+		struct task_struct *tsk;
- 
-+		rcu_read_lock();
-+		tsk = rcu_dereference(sq->thread);
- 		/*
- 		 * sq->thread might be NULL if we raced with the sqpoll
- 		 * thread termination.
- 		 */
--		if (sq->thread) {
-+		if (tsk) {
- 			sq_pid = sq->task_pid;
- 			sq_cpu = sq->sq_cpu;
--			getrusage(sq->thread, RUSAGE_SELF, &sq_usage);
-+			getrusage(tsk, RUSAGE_SELF, &sq_usage);
- 			sq_total_time = (sq_usage.ru_stime.tv_sec * 1000000
- 					 + sq_usage.ru_stime.tv_usec);
- 			sq_work_time = sq->work_time;
- 		}
-+		rcu_read_unlock();
+diff --git a/drivers/scsi/elx/efct/efct_hw.c b/drivers/scsi/elx/efct/efct_=
+hw.c
+index 5a5525054d71..4ba1b12576c2 100644
+=2D-- a/drivers/scsi/elx/efct/efct_hw.c
++++ b/drivers/scsi/elx/efct/efct_hw.c
+@@ -1314,7 +1314,7 @@ efct_hw_rx_post(struct efct_hw *hw)
+ 			break;
  	}
- 
- 	seq_printf(m, "SqThread:\t%d\n", sq_pid);
-diff --git a/io_uring/sqpoll.c b/io_uring/sqpoll.c
-index 03c699493b5a..0625a421626f 100644
---- a/io_uring/sqpoll.c
-+++ b/io_uring/sqpoll.c
-@@ -270,7 +270,8 @@ static int io_sq_thread(void *data)
- 	/* offload context creation failed, just exit */
- 	if (!current->io_uring) {
- 		mutex_lock(&sqd->lock);
--		sqd->thread = NULL;
-+		rcu_assign_pointer(sqd->thread, NULL);
-+		put_task_struct(current);
- 		mutex_unlock(&sqd->lock);
- 		goto err_out;
- 	}
-@@ -379,7 +380,8 @@ static int io_sq_thread(void *data)
- 		io_sq_tw(&retry_list, UINT_MAX);
- 
- 	io_uring_cancel_generic(true, sqd);
--	sqd->thread = NULL;
-+	rcu_assign_pointer(sqd->thread, NULL);
-+	put_task_struct(current);
- 	list_for_each_entry(ctx, &sqd->ctx_list, sqd_list)
- 		atomic_or(IORING_SQ_NEED_WAKEUP, &ctx->rings->sq_flags);
- 	io_run_task_work();
-@@ -495,9 +497,6 @@ __cold int io_sq_offload_create(struct io_ring_ctx *ctx,
- 		ret = -EINVAL;
- 		goto err;
- 	}
--
--	if (task_to_put)
--		put_task_struct(task_to_put);
- 	return 0;
- err_sqpoll:
- 	complete(&ctx->sq_data->exited);
--- 
-2.17.1
+=20
+-	if (rc && hw->seq_pool)
++	if (rc)
+ 		kfree(hw->seq_pool);
+=20
+ 	return rc;
+=2D-=20
+2.49.0
 
