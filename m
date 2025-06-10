@@ -1,199 +1,92 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2068.outbound.protection.outlook.com [40.107.94.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3E424466A;
-	Tue, 10 Jun 2025 17:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749578111; cv=fail; b=qPjRPXP+0vRhfp1ODTmasfTHToCy6oay9TlrjCDkXI8RPri8xDbrPxZ8clpyeZbqVC/aS8K7f2/bCvrXu+n80+DTF7/8TPh9lDnwWVpWBtnNEbq58WDxkS2SlABsODJcjv17TZ6cC23Iyw219xzalEDPWzf//uK1rfer6rOh2UU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749578111; c=relaxed/simple;
-	bh=yATbhCd/ZLkM6lpAY6V+PqxDgpjHS0hF9R4N99dTfGw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=khHqRz4iduLBG3vCne2g+eiNn9Z4d2Q6lB6rojg17aqAbqrIpF+3MSMScrxCzE1xd770WDOm/xRNodPgnRjlPHz3Z94qFwwp/gryMgU2DyKrj2Vh5u/d/8PtHjyjraJ+TD0AQpRxjn3HU6UlYVRC+3pYhemaWXqqMgNqi9n74OI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2mACMpod; arc=fail smtp.client-ip=40.107.94.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CB8245027;
+	Tue, 10 Jun 2025 17:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749578118; cv=none; b=nkdfuYUrrerNubv9JrLWViL0jcGv+Kmk5Id4/MfZJHGQinNNZwZJKvm/eq7mL0lh8JCBviA5pUnMBwYR2wFBnm5LIA1G5CYzAjnfr0XxOOdCkiJqSfG7N3U+lXVb1c9vCM5F2gHGoY0EFzFc3UDqjAQT9DtsAHHBL2uZh8KD5Yc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749578118; c=relaxed/simple;
+	bh=qDMlj5Xw4H0umu922A8fBL2sbekOqw18yJyz9IeZPP4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=usAgzfK/8jlRwvjUe7CR62OMslJhmHS5AC/jtcUveRuta0SL0dUeM3g+cb2GmlDt81FWkIaBxUBn6IKHZmZTHfcnxXlUG/MF+G0QmUL2IaQQCvxZwyaOsIidANH9SgIrIzQs3+FetH9jEOiEllASOUxmuHo0fdJWg7HN18jSRWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZoWifYh/; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2mACMpod"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GU883FEJCsGr46hQVSkBolBcd8wWqg78qOPseTySllQz5VNteSkGkrd3nsQSUfcztzw/vn+tn+xcmhcg3t6ykEMpiOrutIR1UK2JhDdjRddTM1d7yLAunU4HXb9NOybC6RcDjfX4McAA7GExs8Up/aD0DrJtA553dVdXMA9/7gegaT2wOOdvUvk+HC02+QJ74cykoPSiXxM8bQzTCMNgP/8mD5r41QI07LQZgohu4bWXDFz5tOL4Ra01FRxa3RWLY8hHvVUSLfjVKYB90hVQfKcZ1Md4z4FOZRcD1OhRn51Emh05UxxBTIkX3CeBa16gg562Q56BIvbt9X8nBpIHtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VoSLRdJoJNmyByas8PvisEHRTSqbX1CxmP84uyARPF8=;
- b=BAh5Hhl/8xqsgwxDIML7Q8YdAWDrhDOdypHT3epkHab9xHyuMORuu/dENP5SlfDcPci3iGdAiq/sFbw+RMeskT/suwqlW5ySxIOGlFZIim6IfqHJEplxn8IEN0GJ8yh8XzMVBir/i0L7pcNBSgQxN6mEc8OIhaASUcJJUrH3O4OV04ndOAXcvCtOYsQ7ZpQQ7tKmihWH6MgUnvtgLvrfuqy9wv98IXuxjSEqhH8u1yynu3rY0l3NTdLb1O+rPuE9UeaXGnqpEQKPT/Xney6KWBCgLRyhRBoXjmy6QBQ9Eo04x0lf27PJLLi/enzKHo1rWEPKS+Z9AOtbh6ZW1+GWhA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VoSLRdJoJNmyByas8PvisEHRTSqbX1CxmP84uyARPF8=;
- b=2mACMpodv3I4sRdNG2ktgJGn+kAopa0ntEoDg+QjetTYV5AkxXgDBXXvWEwM1qNyGo9R2BpgIPncfer3WUT+77kkkNnEmF4o1T8QiFXFKc6U8Ecuscoy0pESVr8HYQ8NH3PA+MN1Nn7bktYtuLvHSLYBiy5WZL5ji7boiqnCLZ4=
-Received: from BN9PR03CA0303.namprd03.prod.outlook.com (2603:10b6:408:112::8)
- by DM6PR12MB4108.namprd12.prod.outlook.com (2603:10b6:5:220::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Tue, 10 Jun
- 2025 17:55:05 +0000
-Received: from BN1PEPF0000468B.namprd05.prod.outlook.com
- (2603:10b6:408:112:cafe::d0) by BN9PR03CA0303.outlook.office365.com
- (2603:10b6:408:112::8) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.35 via Frontend Transport; Tue,
- 10 Jun 2025 17:55:04 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN1PEPF0000468B.mail.protection.outlook.com (10.167.243.136) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8835.15 via Frontend Transport; Tue, 10 Jun 2025 17:55:04 +0000
-Received: from BLR-L-NUPADHYA.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
- 2025 12:54:57 -0500
-From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <bp@alien8.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>, <nikunj@amd.com>,
-	<Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
-	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
-	<hpa@zytor.com>, <peterz@infradead.org>, <seanjc@google.com>,
-	<pbonzini@redhat.com>, <kvm@vger.kernel.org>,
-	<kirill.shutemov@linux.intel.com>, <huibo.wang@amd.com>,
-	<naveen.rao@amd.com>, <francescolavra.fl@gmail.com>, <tiala@microsoft.com>
-Subject: [RFC PATCH v7 01/37] KVM: lapic: Remove __apic_test_and_{set|clear}_vector()
-Date: Tue, 10 Jun 2025 23:23:48 +0530
-Message-ID: <20250610175424.209796-2-Neeraj.Upadhyay@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250610175424.209796-1-Neeraj.Upadhyay@amd.com>
-References: <20250610175424.209796-1-Neeraj.Upadhyay@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZoWifYh/"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-74264d1832eso6652290b3a.0;
+        Tue, 10 Jun 2025 10:55:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749578116; x=1750182916; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qDMlj5Xw4H0umu922A8fBL2sbekOqw18yJyz9IeZPP4=;
+        b=ZoWifYh/S7gTYpJB1awh80lAKTV6mWRjbrY/TZTAtbnju+Oib7U+CeLuz5xAhZp0ep
+         h4xa0UXJLUlgN/0VARp05RqRNe7EBNw0EY76Zczk1TnIW63OZO/lrXyJ/L6JLNCHxcQW
+         JQLnjSKXBkTF9EabTT67XCfr8uu8YRiiYJOI7pm+HzoaSMDRq93NvDHTw6YF2gXbFI6S
+         apFO6BqTz1KDnOuEOLfvzrrTWDtZ/SUT4N8a4QyeinV1PiLhV8uDnUU0f2PJAMkqpVLi
+         82uKGopJwJkL5i0eyQn7dgmfWwhWprAUzD+VesGE6hUUZA7y4ftM1pvA2ZE9KywMylL0
+         0NnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749578116; x=1750182916;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qDMlj5Xw4H0umu922A8fBL2sbekOqw18yJyz9IeZPP4=;
+        b=Sbokp7rKm68gMaG/iaW7859ahChR07DX94bGax45SeOomJnnGgVyWtpmZiZ2N++yid
+         /HpSjuD0NSsr5HGhqfsfZiBKuWU0KhPqRoW0kx8j5J7cFs/nsryzdNYNCRIf0QIUIJrf
+         PP1AwdpQLzVBB85xMHgjKr9DYZwsSlGoOYDSOXQcWH+lj8iX2hZ+FWXnBVqEYtNB1VWa
+         ZZ4pqqCRBK+UhOQcDhGQW0pPlXREhY1ZBzGiEPaY44NiJdOwmjFxqjaXwL5rH9YB0HmY
+         bYjWOWQUp04wHQDOoxpRAJLSuzWO+RiKLUHhE7Mnml7Twn0u0y69MHD9iTrl1HlPgMJG
+         xPsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUlujOJOD301CSb9H5YdGDwwN4/uyclWu4z67aaCyX1VfqXq+jAbiCMX/Lm4QnbgzkxdmOfjquQG20QWw==@vger.kernel.org, AJvYcCVje0J2pF7xxJi7sOsPTtOWqr6JudbC2fcLtIVRxsSjLCQVC8qJA0509WFQWD0jDEX3D+C913k77Xbsw022@vger.kernel.org, AJvYcCWp9eGtEAYHjanCJtw8mXvkL7BfYdfHDXNJdyEAXPSDQX0sXK7BfW/c4Bjh3uy9nHaS3JCUkBgroz+w@vger.kernel.org, AJvYcCXa90V7zcjQjnJVUmriIBiqHTlBaP+teuJS0mtzVTj5RmPFOBvCf5vHHhXz/TRZ5NDsP8fknBQwE6fI@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxC6/QJU3u587c7PM7Z8UCcPq1FQHheoV3+rWCae/EE8eX0DbO
+	VwyFU5PlOAQK/ZzXmSMJCdt3V86UyiAyPB1utskeHR3ySpcv4u9ZDTRFMmGAcg==
+X-Gm-Gg: ASbGncuIL3IiWop+kuHqWBIs2zcbHKywNF/8oLrLUQTn/DnBFHOEvPP8Nk1FpDlgEWM
+	u7ArLvl35Po/cl8gjSZgq/7EIAHHFyoEQV9kZGdxZ/Ehq6tsmQELYeEEg0xVRQpG1F/yKVbOD4S
+	xSQyOuXwXHhw6mPNtAMRUn0Pt10FQkC9vgO2nQeAp2l1uyIClvjVXRkQW0KfK+3eMVDvW3rbm6+
+	EsupXbK8FhyLgPgHxHmiJt91HaWlgM7pozSBTkFZhwRaCaduWVcd+7NoXkwLx0oex851CRg/CAz
+	J6mMScQu9BogtmkDbemv3IBuIOHIuWLRlnH/VP9ZFsFGnH4ElyzNtxkc8UL6jn7MznxbYGAM
+X-Google-Smtp-Source: AGHT+IH4M22F32APFBMSyxLZm9HztQBxbVHDL1fBimHA12si69nFzdQCqAyTKoXcuIQbMRRAbOwE1Q==
+X-Received: by 2002:a05:6a00:2e07:b0:746:3200:5f8 with SMTP id d2e1a72fcca58-7486ce55a9amr541548b3a.22.1749578115873;
+        Tue, 10 Jun 2025 10:55:15 -0700 (PDT)
+Received: from DESKTOP-P76LG1N.lan ([42.113.163.91])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482af3aba1sm7725343b3a.33.2025.06.10.10.55.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 10:55:15 -0700 (PDT)
+From: Nam Tran <trannamatk@gmail.com>
+To: lee@kernel.org
+Cc: pavel@kernel.org,
+	krzk+dt@kernel.org,
+	robh@kernel.org,
+	conor+dt@kernel.org,
+	corbet@lwn.net,
+	linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v9 0/4] leds: add new LED driver for TI LP5812
+Date: Wed, 11 Jun 2025 00:55:11 +0700
+Message-Id: <20250610175511.186473-1-trannamatk@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250610174319.183375-1-trannamatk@gmail.com>
+References: <20250610174319.183375-1-trannamatk@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF0000468B:EE_|DM6PR12MB4108:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9792f7f9-187f-48cb-4363-08dda847ee0a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?4iMSk5sW8La7hNelfK+0LWsp1f8NsdfF/BtYXrgL+VwK15WV9XaXr7Mle2om?=
- =?us-ascii?Q?5CmsJ35MLxXR8+6HB+bhITQTlyTz39ng9OGW5MxeAO9enRWn+dt6/P7/4euD?=
- =?us-ascii?Q?o7VR/49EMGg/DqVl2ZzyadFqqQhUY6ayQumscSq74Zf/GhACWMWD1gp1Gqhn?=
- =?us-ascii?Q?GzxInPipr200n+5GBWO20xH73cgOCzBTJvKgx/bne747AlOdEdziO6Pva3Hs?=
- =?us-ascii?Q?GU4twfFCYXBddv2qJIkzkX8ZSG65iJS2GYKZUI7rQCAdMjP6v7wNjyq/Yc6O?=
- =?us-ascii?Q?BscdJ2ddsOTjOFE47MevKaDEIIh7ny1Ate1/iKB0x1y10vO0b5FXjnACrUv4?=
- =?us-ascii?Q?N93KU1aN3MRyjKo6nBI9MzT1y/kqkcQ2yQ6/dieF3etV2d/WKOdyALUEghNw?=
- =?us-ascii?Q?cVI8KZO7CN3vKdDgFgF62nbutcntYz/fuixvHZBiz3cE9KLEZs+CftKsMqxn?=
- =?us-ascii?Q?HBk4Z2cUI4FUgHZKst0Ha7H9VquQXpmdR/RlIgxfvpC6zaoLMPYfv260gNNb?=
- =?us-ascii?Q?5jz+idd7jwmPiLcqyFPfo11wtfVTCUipcuKQ5slcKbvVlOiDGpLIJg1D6GOY?=
- =?us-ascii?Q?zu06y5Af1aZA5aCGyCkoKPMMU5zG6ojVpjmMvund4R+UWgeU22XpxTds1AnX?=
- =?us-ascii?Q?t2IIJ2U0XXrLHjEBSduARHgTNoTwZRtM4pEn9zoLBORYFtgEXaYNw/qfCRNc?=
- =?us-ascii?Q?nk1YxW0sPq/J5cjKRj2ch8p8BoiGvbG/ot4M5BXheeXoZQxWoHRY6xFtsLxI?=
- =?us-ascii?Q?YcaRWyZCQQ4WUPl2Yet4jGwyV3Ibv9IgRXpdgi2LLp32ayVMfkiHRqbXa+3n?=
- =?us-ascii?Q?OqPWT80QnUDpRCB6scapMrveWr/lpuImta1w/um80P5xoL7HPhzfs41a5w6u?=
- =?us-ascii?Q?a+MDD3Rk7cmoLGC0Qbw/NpBR6aMQ4t3Lltj5iBOV7TiW3yKSNVBODKuuACKY?=
- =?us-ascii?Q?6MzdwzUbRIT7fe8OssIQ1x6eBKt2C6FeVy4fmrmJghi53ZLt4HrdS7ryoLpV?=
- =?us-ascii?Q?FszNbKfxeC+JAAf3XxkrJTGLfoAMBXsi7hTl323zuS0eSr0dAgoSUDJamKQL?=
- =?us-ascii?Q?7me8UB9QvVYMuE5nT2OsBv4JT5y/EOLgr6dJRIsXcnJqnk3Y5yhD6+Jp7q4i?=
- =?us-ascii?Q?kB2bwnQRlvFhAKVHl2WvWng1zbeUmWZ6TCSQk83nMsOqsZ0r9Hle7vF+IrFo?=
- =?us-ascii?Q?Xc1aGogwJyO3UpfwkXXQLxVvb1xtNVOZMCU94aZXD0nUsplx1Dz+Yhkhkq6E?=
- =?us-ascii?Q?qYbYsEvi13YDEzMCEpqPTkRU2f2vHhlIgZqCVBOkMcRJHLQ1eqnAphYzb7IW?=
- =?us-ascii?Q?CQwKz5H+JSy9rlY86uOU1MR5O335FpWxU6e0j06KLCwGDMwBaQ5d3EtTHFiS?=
- =?us-ascii?Q?UAW/eh19oIeXrfPeJuYWzpoW49br8k2rVuwtVicLI8EL7HamSx1jMq+nrybk?=
- =?us-ascii?Q?KW2XtxgmJykwSDVMV8HymUactUG8j11f21sJrL4zQLbelpShr8Pi/TOtkHEZ?=
- =?us-ascii?Q?DDjokitSJjguwugUV2YmYDh+6jpE+ousTp7m?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 17:55:04.5844
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9792f7f9-187f-48cb-4363-08dda847ee0a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF0000468B.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4108
 
-Remove __apic_test_and_set_vector() and __apic_test_and_clear_vector(),
-because the _only_ register that's safe to modify with a non-atomic
-operation is ISR, because KVM isn't running the vCPU, i.e. hardware can't
-service an IRQ or process an EOI for the relevant (virtual) APIC.
+Please disregard the mistakenly sent patch named "[PATCH v5] test"
+— it was sent in error and is not part of this series.
 
-No functional change intended.
+Apologies for the noise.
 
-Suggested-by: Sean Christopherson <seanjc@google.com>
-[Neeraj: Add "inline" for apic_vector_to_isr()]
-Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
----
-Changes since v6:
-
- - New change.
-
- arch/x86/kvm/lapic.c | 19 +++++++------------
- 1 file changed, 7 insertions(+), 12 deletions(-)
-
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 73418dc0ebb2..11e57f351ce5 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -125,16 +125,6 @@ bool kvm_apic_pending_eoi(struct kvm_vcpu *vcpu, int vector)
- 		apic_test_vector(vector, apic->regs + APIC_IRR);
- }
- 
--static inline int __apic_test_and_set_vector(int vec, void *bitmap)
--{
--	return __test_and_set_bit(VEC_POS(vec), (bitmap) + REG_POS(vec));
--}
--
--static inline int __apic_test_and_clear_vector(int vec, void *bitmap)
--{
--	return __test_and_clear_bit(VEC_POS(vec), (bitmap) + REG_POS(vec));
--}
--
- __read_mostly DEFINE_STATIC_KEY_FALSE(kvm_has_noapic_vcpu);
- EXPORT_SYMBOL_GPL(kvm_has_noapic_vcpu);
- 
-@@ -744,9 +734,14 @@ void kvm_apic_clear_irr(struct kvm_vcpu *vcpu, int vec)
- }
- EXPORT_SYMBOL_GPL(kvm_apic_clear_irr);
- 
-+static inline void *apic_vector_to_isr(int vec, struct kvm_lapic *apic)
-+{
-+	return apic->regs + APIC_ISR + REG_POS(vec);
-+}
-+
- static inline void apic_set_isr(int vec, struct kvm_lapic *apic)
- {
--	if (__apic_test_and_set_vector(vec, apic->regs + APIC_ISR))
-+	if (__test_and_set_bit(VEC_POS(vec), apic_vector_to_isr(vec, apic)))
- 		return;
- 
- 	/*
-@@ -789,7 +784,7 @@ static inline int apic_find_highest_isr(struct kvm_lapic *apic)
- 
- static inline void apic_clear_isr(int vec, struct kvm_lapic *apic)
- {
--	if (!__apic_test_and_clear_vector(vec, apic->regs + APIC_ISR))
-+	if (!__test_and_clear_bit(VEC_POS(vec), apic_vector_to_isr(vec, apic)))
- 		return;
- 
- 	/*
--- 
-2.34.1
-
+--
+Nam Tran
