@@ -1,101 +1,139 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0FD295DAE
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C06B28DF32
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749558937; cv=none; b=FTyPkESeLSldIrMF4gCtqKY3R6SnZAzPdld1OSdLlJruTaLZexgpfoYHFSVeHwoKMmdXz4kq9dow4oW470nuoLepYjUxpjAvv0iuqNYz1Arxt7jBRklH5E/jr5iabOKcYwOZszVimnVVLur8/6qUdopZc00bhALTmfQMAlEJ6x0=
+	t=1749558950; cv=none; b=A8wE+kF1NAzBW3kHhzc9TAYAKsmG85ERCnJKgukiGFrCeM6mmLHQvxIachAxk4vaDHxNu3anLJGrxsy3OK9XLDTNmvkvIf8cInf62cvT5pXNX6+mG8RXnaHeEQ87oKRF/MjQgkeKNWeqa43iaNcKBYnBDfvffFL5L9Ipk7XTQeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749558937; c=relaxed/simple;
-	bh=PYVfr4MzdRcAc8GZZqfTO+4NnznKF5DM0Ha6GQ9ktrM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
-	 References; b=LTC3L2drQuv4bnf/JJ3dCCrmHNIUZV1eogLj5Qh8CxO01JaM/Uer7+fvvXcWRx8VFfm033lwt3ekhyq/pRf8iY+5qej6r+czUMBONo9AYZyjK0pJ8y9JH+0VipMSRJeg9nrupEX7Z9P0p3AG/etRKtDFWPiSe+upFQE9ZegY3k8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=qutaXPGd; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1749558950; c=relaxed/simple;
+	bh=XaC8k08wKuFc5cu7hL0wG4+KmvUx78eFAt9+qSWr15M=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jdXqgpf2I4RHO345Bd/rxSq7C7resAKiqF1pj/cQQU/jHJB5TfyrMavhpayLTmZnYZo5l0d0Rd7A5nkOFbtQ3fMio7yDMtO14zQ7j9spNX9Xt/5EooXT2Tf4CIGWaygXepxFTO4cRrR5RaH5zYez0TSQJEpf/vlVPy+OEzU4lmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Rt14wuuV; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qutaXPGd"
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250610123533epoutp040103177d44688a74147ae8b11034e874~HrpSmp9Y-1280212802epoutp04n
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:35:33 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250610123533epoutp040103177d44688a74147ae8b11034e874~HrpSmp9Y-1280212802epoutp04n
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1749558933;
-	bh=XzsliogzO86/Q79QWe6n/Aszt7NA4JFz1tCGiPbDBOk=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=qutaXPGdEHqt/GgmGj/NiCrs6ycjXHH3yTzImA5qHwYpq03q2s2fPNPsxMSzVqN+1
-	 ZPVVkP9TQ6SVuWKaFkcHfvYWG1dzJSq+1dYmFoZcGSMTY+F+fdgbKW9ThSjv91YyTy
-	 iz4QD4sj7RQbwNkdt37euhxJ0CNyTiuQWBjPB+50=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas1p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250610123533epcas1p38e8c00cb62be58b704f0dd07a719af9a~HrpSNuU9T1866818668epcas1p3F;
-	Tue, 10 Jun 2025 12:35:33 +0000 (GMT)
-Received: from epcas1p4.samsung.com (unknown [182.195.36.227]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4bGpD46smCz2SSKb; Tue, 10 Jun
-	2025 12:35:32 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250610123532epcas1p24565e694897b17a36ad04752b7dd8678~HrpRU5_y70203502035epcas1p2d;
-	Tue, 10 Jun 2025 12:35:32 +0000 (GMT)
-Received: from yjjuny-lee03.tn.corp.samsungelectronics.net (unknown
-	[10.252.68.99]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250610123532epsmtip17249719ac46a1ab5f28e8a496739d0ba~HrpRP3Jll0052400524epsmtip1V;
-	Tue, 10 Jun 2025 12:35:32 +0000 (GMT)
-From: Youngjun Lee <yjjuny.lee@samsung.com>
-To: ribalda@chromium.org
-Cc: laurent.pinchart@ideasonboard.com, hdegoede@redhat.com,
-	mchehab@kernel.org, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Youngjun Lee <yjjuny.lee@samsung.com>
-Subject: [PATCH 2/2] usb: uvc: Fix 1-byte out-of-bounds read in
- uvc_parse_format()
-Date: Tue, 10 Jun 2025 21:35:26 +0900
-Message-ID: <20250610123526.37316-1-yjjuny.lee@samsung.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Rt14wuuV"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a548a73ff2so2079167f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:35:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749558946; x=1750163746; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OoV+QiSos0TvqbtzN622Wepav+RyMGf3Ca7AzlVUBmE=;
+        b=Rt14wuuVOx7KzZkG89HmdSDGVg46PIRSFbAZfQ0vwxlF6R4aQJauzEZK1mPupGGffS
+         YjibrrHUOePpBkrYwJakojAyE9QAZ7iQZPqq16IydBy9V2T9BuzrNz+VnF8/EAghyqEH
+         Jhi1gEqhoC4UaKubOksw0jNY7ubZoEZJ0/8F+Ip3akW4Nvgwx+xq4tUzbEtosTuV7GwY
+         FfbxS7u5Xx5ONqY+QpNP6ZsfZa37rXYoelkGmS4VbNYPD+4048V/D3Pcycuk3bEx1Rw0
+         05q60xNT3L/BdHmrDW+fsWbyPVms06fcBZzU+HIHlpd1QYSDtiEKP4qPVVUuHacZucNp
+         zhJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749558946; x=1750163746;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OoV+QiSos0TvqbtzN622Wepav+RyMGf3Ca7AzlVUBmE=;
+        b=FsaPInp4KL9ZvE4L0PcD71VL822b0/euiVGM51I5VPsb++SE+tPg2yyktgKW1TxAW2
+         TDRMfEVJ8mKd3q02+ko6FWXLsgK7fEWV4E2OI4tbzkmnnq0uKUs3z8DI9sOKucOOcgAi
+         bnGjF/k/sDFS7x0Jc/1OJDpvxYvs7XQzgjwyZ8RvwYiv9mjBOl7czupCc0qYxcMtmgv9
+         gwWvCQntEqX6NK3c91cOWXSwNpVDt2+fDdBoEnSEiMiajwdB8AHWiK97M3KA+xI2SF+K
+         RrgZO8y2jtpC8JgtabOJqrpkjUTMkOvjnaIP29qs7BUboxx1BqdNrNF/goUZ2PNChNIS
+         cC2A==
+X-Forwarded-Encrypted: i=1; AJvYcCWWabwbFSMOv4fVcuVoN4J6eI0KiP5f7atUrKpSfSVRra+gLaubcDU3/WqbPza8/QdxK7IURGVAfowotsY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3Q1SpyqA4I117hpYq7tybXEE1Gw+fs4PECdzZk2wrKqBXdew6
+	OSG/S79iVnlcHFiOQRn7rfmcfp67jYVaiHtTBKLikH2q4f5EVsplsyOMnOQ1fUb1quk=
+X-Gm-Gg: ASbGncvhX5fn2744XkWJmXk/j3kJ6wnIiR2NHFsEMzmhzaxRtrUBqXH9wTNQWqUvW3M
+	U8xUP4bs1N9I6xIbZuf1GtF5GD8IicjzSParUy/9srcmqBJwKKex9aRiXLUxpAy1gfKUnNS7gIl
+	8Z02HBXw32EzuvTphpQQ/jIwd6c4kV7wLr+g/h/MOCPcQwpUjoTib4c2KtuEuF4qMrL7jy6+HTG
+	4KXF49xvKgUjCrx1d2qduC+iJ6CfjRH3VtwJ7rHxv/f+f6Ey58jdsl67wA5RLT2Pe5ag6WLFwzJ
+	sJiCK00umR2Hxx7+gUtGVkwpjwdDiLmg0cNcj1kU0pzmRvse6uWkew==
+X-Google-Smtp-Source: AGHT+IHyzowAa0FHq/zfDL+blwKiEmXcXgh3Jrov3Hpokl1FWHbRPFr2MHWcU4cplAuWB++u3cF7fA==
+X-Received: by 2002:a05:6000:40df:b0:3a5:243c:6042 with SMTP id ffacd0b85a97d-3a55226cffbmr2048191f8f.2.1749558945951;
+        Tue, 10 Jun 2025 05:35:45 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:4d:e52b:812d:eb7c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45307b4788fsm91008455e9.21.2025.06.10.05.35.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 05:35:43 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 0/7] media: use new GPIO line value setter callbacks
+Date: Tue, 10 Jun 2025 14:35:34 +0200
+Message-Id: <20250610-gpiochip-set-rv-media-v1-0-c088006a152c@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250610123532epcas1p24565e694897b17a36ad04752b7dd8678
-X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-cpgsPolicy: CPGSC10-711,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250610123532epcas1p24565e694897b17a36ad04752b7dd8678
-References: <CGME20250610123532epcas1p24565e694897b17a36ad04752b7dd8678@epcas1p2.samsung.com>
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJcmSGgC/x3MQQqAIBBA0avErBtQw6iuEi0kR51FJhoRhHdPW
+ r7F/y8UykwFlu6FTDcXPmOD7DvYg4mekG0zKKG00EqhT3zugRMWujDfeJBlgzRIYfQsp2F00Nq
+ UyfHzf9et1g88ALqgZwAAAA==
+X-Change-ID: 20250522-gpiochip-set-rv-media-e310a591836f
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Bluecherry Maintainers <maintainers@bluecherrydvr.com>, 
+ Andrey Utkin <andrey_utkin@fastmail.com>, 
+ Ismael Luceno <ismael@iodev.co.uk>, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+ Julien Massot <julien.massot@collabora.com>, 
+ Jacopo Mondi <jacopo+renesas@jmondi.org>, 
+ Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
+ Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
+ =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1563;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=XaC8k08wKuFc5cu7hL0wG4+KmvUx78eFAt9+qSWr15M=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoSCacaLCWCUkE3ZTdI5lxLU+QwSnfr/b+UlY2V
+ oDGQ5GGWrGJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaEgmnAAKCRARpy6gFHHX
+ cjKcD/9avb5mQZSOcedwlswOS5ItaCs+WD2JFekxWWMdY4rW8ZZCT9Lv2Kbnn9qfggVZLlNLfPT
+ SzZKVLPnobqL3E4luG+W6PZSRfv2CoIvDS3AAr9GaqGfEbnRfb6MoQKPnb2OsSzumEXY2eVut8V
+ qv6rOPTt5l04Hxftw5/A9dGLhIxekPEBJGi+VUPAYhs1QDetTJdlsIPE04ND1FRFitkfWZIpdQM
+ chWdabY6Qw7HA0SC3Czm+LsU812bnFckizTkI4LmRIO282AtSZ+DK+GicsVMStOClqXp3BgF2pe
+ ijEZE+rDJpAPjSYOnaXUW32vbieN4ldfU4izh615CqETJqgsFMET4S5McHNMq+O01UaIjTO1rfl
+ 1iOuoxdjZzxb7eNoxc1HWI/uBEIMRI/P4HlNNH/+sZ4UTpVFfC8sW9wFKhuYcObKx+RP5ihYoT6
+ vLcacCKgucrMvbStackXeQN23qVhPzsINeKmCBjoPTEEo4WpRMB4c5nFVYb7TryhJBDwxhfe8cv
+ y0IB++XSmC0e/JRYMAm6hHUUuH9uxdYsT4eyAXXJ4TJ4xxwUvUDKtGoDLZqgxn0Nkvl83wataRI
+ J6WFMXcfXJuj1KTruof42g9huZls85Wcuqp7iL2PtE6K74GFv94uOEfsPc2pQYGAmukFs+1vwC/
+ k86DhjG9pRx94sA==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-The buffer length check before calling uvc_parse_format() only ensured
-that the buffer has at least 3 bytes (buflen > 2), buf the function
-accesses buffer[3], requiring at least 4 bytes.
+Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
+values") added new line setter callbacks to struct gpio_chip. They allow
+to indicate failures to callers. We're in the process of converting all
+GPIO controllers to using them before removing the old ones. This series
+converts all GPIO chips implemented under drivers/media/.
 
-This can lead to an out-of-bounds read if the buffer has exactly 3 bytes.
-
-Fix it by checking that the buffer has at least 4 bytes in
-uvc_parse_format().
-
-Signed-off-by: Youngjun Lee <yjjuny.lee@samsung.com>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/media/usb/uvc/uvc_driver.c | 3 +++
- 1 file changed, 3 insertions(+)
+Bartosz Golaszewski (7):
+      media: dvb-frontends/cxd2820r: use new GPIO line value setter callbacks
+      media: solo6x10: remove unneeded GPIO direction setters
+      media: solo6x10: use new GPIO line value setter callbacks
+      media: i2c: ds90ub953: use new GPIO line value setter callbacks
+      media: i2c: ds90ub913: use new GPIO line value setter callbacks
+      media: i2c: max96717: use new GPIO line value setter callbacks
+      media: i2c: max9286: use new GPIO line value setter callbacks
 
-diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-index da24a655ab68..1100469a83a2 100644
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -344,6 +344,9 @@ static int uvc_parse_format(struct uvc_device *dev,
- 	u8 ftype;
- 	int ret;
- 
-+	if (buflen < 4)
-+		return -EINVAL;
-+
- 	format->type = buffer[2];
- 	format->index = buffer[3];
- 	format->frames = frames;
+ drivers/media/dvb-frontends/cxd2820r_core.c |  6 +++---
+ drivers/media/i2c/ds90ub913.c               |  6 +++---
+ drivers/media/i2c/ds90ub953.c               | 11 +++++------
+ drivers/media/i2c/max9286.c                 |  8 ++++----
+ drivers/media/i2c/max96717.c                | 10 +++++-----
+ drivers/media/pci/solo6x10/solo6x10-gpio.c  | 20 ++++----------------
+ 6 files changed, 24 insertions(+), 37 deletions(-)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250522-gpiochip-set-rv-media-e310a591836f
+
+Best regards,
 -- 
-2.43.0
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
