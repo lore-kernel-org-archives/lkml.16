@@ -1,115 +1,160 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14359204680;
-	Tue, 10 Jun 2025 16:07:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CEF912CDAE
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 16:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749571674; cv=none; b=jc6YVCLO3NRXOxr/EYvsKiZxGHIw6RIxtGCJVRzD5dyVXyv2/y1tbs9IwVOHeOSzkAlyshg9Ewrzf5TZillRxdHkqC4yepi7Zo48E1zxUk0nmoQTcd3H0QmAy8o2Wt0sHPQveHnIHEK6L3jHxBWkjy2Mnf5eExScUpuxbwjr+yk=
+	t=1749571687; cv=none; b=dPC0qhYY3gyFT3HzNI2Qe6O5yfBzUyzjn09+XQRIuEkMispkYGBKRT6v7YZmKjvO0jCTOhopv9KTR0DfvNOUGI8zGjk30K7Tjtuu2xxNqONcBrErsM7hLKcHPh4N7NMhOFY8BHJ1HZ46Y7WvrN8x+YFy5hBPxLwhm+HpUtddSOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749571674; c=relaxed/simple;
-	bh=W1BITlzur69yftGlPfm6ex930CZl9IBW3CAWbDhhnEo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XkW40XxfP+FtW2sHAlBmbnnQeprCGvbpRR/HR+Ssf6mGP8iBQcqX47VuRWuM0wfkaiB1N0hUboWELokgknotbdQYRUv0RkQ9WM5GVOhXS7FW/OGbAsACBM6R/Osb9VeoW7PUVnZZ6mHT58YkDJPppCM+mVTf5H+rCJmNl0vFtY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XOrwjONn; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOrwjONn"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-234d3103237so7027925ad.0;
-        Tue, 10 Jun 2025 09:07:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749571672; x=1750176472; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W1BITlzur69yftGlPfm6ex930CZl9IBW3CAWbDhhnEo=;
-        b=XOrwjONnbrWHAulz4fzMmIqi/sv/GbSLVYLd/dlMGQtUqW4ymPnnRYCMO8OWLDC+iT
-         mDXCR2toyk7b7PI5sE2Aj+EnuGRv3PdsIkIPXpUc8deAMURhryUMKTEcq6g9DVd8v+mv
-         hZ11UNbc1XCwlp47flEPjyJgQyptG6ozFT1fYcI+wisp37O6d2wwOqQ6D+5Cm4maRCcm
-         O90LO7eb/tI3mhxAyC8vQp41ylQ4ToCPZ4Ads3Nc7KxpdmmLZ7wQRuFf6wMpDcsC3Cig
-         kgsHiRnA7xXE05V+4awVqI0N0jN/0PLDyCHEKujY6L1z/XgrMKHCrJPzFDjQpE6jphKe
-         aIcQ==
+	s=arc-20240116; t=1749571687; c=relaxed/simple;
+	bh=+zhwJJ9FdWL4/QCGNEb60Q5UhXjxkv80Id90K0Oqhs8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=fp0nJ6rxOv7d/eDDV1e/eFG+C1SBTFsyrU8hEP4rkwoc9m4xOmvhFFLzyf+t1fLdsVzmnfcvggv1vhmuAtyiMxVBXzrCPTAYXXpEAQwhiHPQzXmJ0MrQyvwsRYmHnuhQPJ5ZV6OnbY0Prws9pECwiMbr2eGbcwcKCy3fL8EOAgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddd01c6f9bso40940295ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:08:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749571672; x=1750176472;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W1BITlzur69yftGlPfm6ex930CZl9IBW3CAWbDhhnEo=;
-        b=uIecb1XyJNpH+WUADx8DQl3Pi72RGdK6za7XqoHO9ugBVmqZ3pXlEhEJieGCZI3x/n
-         3Vm7bOtjSlIRdqi8NlkeaJkgcwsKyCG/1KKfYKkxYU7TJCyjUM8j1KY64Xi7O2Kdo65g
-         ufSBB6jNrZ9b4wHEecpvhSCpTZRLu+v4cBBuhB1Sfc6M5DJH9hEEXISGy2I/8ejPDmkj
-         xMqPr/a3Wf/VGiN9xx5re9Y1GOiInf47CZdJIQgUcus/0Xo4t+6uzDWsmY2y4ZsGC3bd
-         Bxn/8IjE6jLrCMlu1iQZr7hGUSfAMj+2k71ryj2ZM6nBIAZYVnxiZJFs4pufnaiAWi0c
-         i/ew==
-X-Forwarded-Encrypted: i=1; AJvYcCUywly4tTQqR7LpjXl0zMvF7CRkE+Q8d/gjdthgav+ko67dE1wMcfLOwCxuSmkFir6usB968ZbaW1+PZmYr@vger.kernel.org, AJvYcCVkjX9l3RJBkR0n3fG72QybfCIuUqcAsgMsjho0aMAf2VZB5VCoJ08mdUPJxxrWKoDx8hSOeSIk0nPVO2TP@vger.kernel.org, AJvYcCVwx5dxnACFHHg7yysJA7LyFMYtRn+2L9OpijTuvW/27Bs/CWz5unAn1yrfuWy8BMhWdKbqeXfS3cZl@vger.kernel.org, AJvYcCW6Kwmqya5l4yj8QigGNzSLVTtu/ukjGo0E5r8Yz6OIOWSFAY8lnHQVp4NU4wW44kiAHQIqXmP3rSEj@vger.kernel.org, AJvYcCWDIGFGL0njzfxbuSM2NNUyVXtWTZDSuoERxVQzyt4JhSxh8Ha+dhHo/X++PLrjwbIrCim7ytST@vger.kernel.org, AJvYcCX8wh7J3eV1pVTgs9ne2JQD6vKBoV5HGGkbL0ujrh9Gi9BZ96xvO0CqVsAoniZ+bcJPtHAKCgHdQsHEWgeLwe4=@vger.kernel.org, AJvYcCXE5bOZNlDOkKzSL+ZL5FX1XjL4QuEDG3wvm0wrunNihv19nHoy7j4thZwOG4LMfat39+vI7+VkM+09enAI0iY/@vger.kernel.org, AJvYcCXvPktjcXsfhPOh3L6PXAQ6v0nE2DDueSXtUcE7g295/BPEhEYy+iKoJEjoCOwde1hlsqRSAzedewf/sfU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxN9DHF3QC/5a8kXkCkdPQnUWbAQXWrQ2D06kFwz+x+28gdtvns
-	kHnb+gJebS+C8N4WkNkExc3oQy0XZd/kiuMOlhHjzxugngQeXpjbJW9yyDdQNj8YrW9yfKmdcFw
-	XizoTZknseMdxKRN2SbYh8xyFck1MEsA=
-X-Gm-Gg: ASbGncsCLH8vBHQCWgD/wZrTP3W1cesZK7xczQ4o9vL+WF0/TovVA9VHnyRHS+FUvkP
-	qQgxy14f2VJpX2aonOLpQDhSz8Tj14B4EBFEZGpfnbazGPjx4O0e2xeLDUN94IvKrr9UkoyMqaQ
-	IyLX4lrx9Vwoq/F5vXAg9KJOGP62aMcW0Eqo79sbvPz0k=
-X-Google-Smtp-Source: AGHT+IEkveDPapEYWYF5Lme4xzYT3aU2PAb3RMnK2FhgBqYClnpHcHMaaMDanexVO7MdhtPZZBHJv9udTG6GaKIHKaY=
-X-Received: by 2002:a17:903:1a67:b0:234:bfe3:c4a3 with SMTP id
- d9443c01a7336-23603fce7aemr92246085ad.0.1749571672166; Tue, 10 Jun 2025
- 09:07:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749571684; x=1750176484;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6/m6ZY0KVLRGLOlyr0nZ5BNEJnDq2r1k8LmzdatenJ8=;
+        b=MsJyt6ol1j03zTTjppmBJ6Q7iI53c4HdAUxq+Ca1NPdgbu2Q3LTJ2eeasPri+WIw7c
+         EXHsYKRkOinfJSdzH8FcMJIqHvKLHWiqJzrFC670/TPlldHPAVBxw2uvFzQmP9f3Iso2
+         KODpRIZWQiFH/qBTIcaHAqQdIDlHLGwyFYVZ3T69KOkP782nlUmnlztpKBWEGvHhWAvs
+         LN/h4aNantz5jgsylXJ2x9YF4YphPBdb6+qw0MEj4Cu7gIFQFYaWY1sv6UsxrSaV/5rh
+         X5RpABLOickMtTLZeX1uAB8OD5OUyOjMsj7u0uCNMbATr4gKV3M9CEmT+tXK2703Z7AA
+         53GA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNVI2EJNGfkAjm285IUvGByv72xWYvbn0cXxlKX+O9y1ueYjiZuFB3K8yXEpOxkbPEiTclAgfalj3C4CY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxJ7jJO9UGkP2PXdK0f+zsQT5sn5aseEEQZUJ6sV0l6R64N24b
+	+xJ4kCQBcgv5296K5Fd2WekK+x7KJtrqAQmk9uWvzPjbYMH94k+NwjI31ZVd4z5SaQPzlbev7lD
+	2cGR4I7iUCIUyB+6V3k0VUkIoCH+9TOmYKaEe5tQn9DFgAzyVGnhk+lweC2Y=
+X-Google-Smtp-Source: AGHT+IGHM2NsfMd/xBuMAeVpZ5pzqG4HbxRtvaVEg+gM1unbVp+Mtx5s/n+hiTuHBurvTxQacl8rs11wGiHN6qg3bGcUhTBX4u0k
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418-ptr-as-ptr-v10-0-3d63d27907aa@gmail.com>
- <20250418-ptr-as-ptr-v10-4-3d63d27907aa@gmail.com> <CANiq72kWtEsXDuoXpbTNRLiZ=c==Ne=v4igxCWMwWFj0LOC-Yw@mail.gmail.com>
- <CAJ-ks9ny_VNvKM-w04kkk4Yw=UpYEt82TyFZZuXEFK=DxfwcgQ@mail.gmail.com>
-In-Reply-To: <CAJ-ks9ny_VNvKM-w04kkk4Yw=UpYEt82TyFZZuXEFK=DxfwcgQ@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 10 Jun 2025 18:07:38 +0200
-X-Gm-Features: AX0GCFt25dqMhp8iaQDA-26WJJC7gjowsiCCK-_ghe8BM57dzBLtofxE1fBcZ34
-Message-ID: <CANiq72k6MkVGtdgkSuy392T_xxO-5kTJuN7kh41N=UBc0SeFLw@mail.gmail.com>
-Subject: Re: [PATCH v10 4/6] rust: enable `clippy::as_underscore` lint
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
-	linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
+X-Received: by 2002:a05:6e02:1688:b0:3dd:e6b2:1078 with SMTP id
+ e9e14a558f8ab-3ddec8a1f15mr46880385ab.6.1749571684452; Tue, 10 Jun 2025
+ 09:08:04 -0700 (PDT)
+Date: Tue, 10 Jun 2025 09:08:04 -0700
+In-Reply-To: <20250610154730.1113-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68485864.050a0220.33aa0e.035d.GAE@google.com>
+Subject: Re: [syzbot] [kernel?] INFO: task hung in futex_hash_allocate
+From: syzbot <syzbot+d6156c54e546fe8502c0@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 10, 2025 at 4:14=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> Yeah, I think these are good calls - I'll fix it in v11. When would
-> you like me to send it?
+Hello,
 
-Since -rc1 is out, please feel free to send it already if you can. It
-would be nice to see if we can apply it all soon in the cycle, but we
-will see if everyone is OK with the changes in their files.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+INFO: task hung in futex_hash_allocate
 
-Worst case, we can apply as much as possible, and leave the actual
-lint enablement for a final round, like we did in other cases for
-things like this.
+INFO: task syz.0.81:6865 blocked for more than 143 seconds.
+      Not tainted 6.16.0-rc1-syzkaller-gf09079bd04a9-dirty #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz.0.81        state:D stack:29288 pid:6865  tgid:6864  ppid:6537   task_flags:0x400040 flags:0x00004004
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5396 [inline]
+ __schedule+0x116a/0x5de0 kernel/sched/core.c:6785
+ __schedule_loop kernel/sched/core.c:6863 [inline]
+ schedule+0xe7/0x3a0 kernel/sched/core.c:6878
+ futex_hash_allocate+0xd16/0xf10 kernel/futex/core.c:1619
+ futex_hash_prctl+0x1f4/0x650 kernel/futex/core.c:1759
+ __do_sys_prctl+0x171f/0x24c0 kernel/sys.c:2825
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x490 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f06a038e929
+RSP: 002b:00007f06a12b6038 EFLAGS: 00000246 ORIG_RAX: 000000000000009d
+RAX: ffffffffffffffda RBX: 00007f06a05b5fa0 RCX: 00007f06a038e929
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 000000000000004e
+RBP: 00007f06a0410b39 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000001 R14: 00007f06a05b5fa0 R15: 00007ffc811c5c98
+ </TASK>
 
-Thanks!
+Showing all locks held in the system:
+3 locks held by kworker/u8:1/13:
+1 lock held by rcu_preempt/16:
+ #0: ffff8880b853bdd8 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x29/0x130 kernel/sched/core.c:606
+1 lock held by khungtaskd/31:
+ #0: ffffffff8e3c46c0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
+ #0: ffffffff8e3c46c0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
+ #0: ffffffff8e3c46c0 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x36/0x1c0 kernel/locking/lockdep.c:6770
+2 locks held by kworker/u8:8/3529:
+1 lock held by klogd/5195:
+2 locks held by getty/5596:
+ #0: ffff8880361ca0a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x24/0x80 drivers/tty/tty_ldisc.c:243
+ #1: ffffc9000332b2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x41b/0x14f0 drivers/tty/n_tty.c:2222
 
-Cheers,
-Miguel
+=============================================
+
+NMI backtrace for cpu 0
+CPU: 0 UID: 0 PID: 31 Comm: khungtaskd Not tainted 6.16.0-rc1-syzkaller-gf09079bd04a9-dirty #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ nmi_cpu_backtrace+0x27b/0x390 lib/nmi_backtrace.c:113
+ nmi_trigger_cpumask_backtrace+0x29c/0x300 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:158 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:307 [inline]
+ watchdog+0xf70/0x12c0 kernel/hung_task.c:470
+ kthread+0x3c2/0x780 kernel/kthread.c:464
+ ret_from_fork+0x5d4/0x6f0 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Sending NMI from CPU 0 to CPUs 1:
+NMI backtrace for cpu 1
+CPU: 1 UID: 0 PID: 36 Comm: kworker/u8:2 Not tainted 6.16.0-rc1-syzkaller-gf09079bd04a9-dirty #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Workqueue: bat_events batadv_nc_worker
+RIP: 0010:__lock_release kernel/locking/lockdep.c:5567 [inline]
+RIP: 0010:lock_release+0x10b/0x2f0 kernel/locking/lockdep.c:5892
+Code: 8d ff ff 48 85 c0 0f 84 47 01 00 00 8b 50 24 85 d2 0f 85 ae 01 00 00 66 83 78 22 1f 76 0c 66 83 68 22 20 66 83 78 22 1f 77 3c <8b> 54 24 0c 41 89 96 e8 0a 00 00 48 8b 00 49 89 86 e0 0a 00 00 41
+RSP: 0018:ffffc90000ac7ae0 EFLAGS: 00000093
+RAX: ffff888143ad2940 RBX: ffffffff8e3c46c0 RCX: ffffc90000ac7aec
+RDX: 0000000000000000 RSI: ffffffff8e3c46c0 RDI: ffff888143ad2940
+RBP: 00000000000000df R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000001 R12: ffffffff8b492035
+R13: 0000000000000206 R14: ffff888143ad1e00 R15: 0000000000000003
+FS:  0000000000000000(0000) GS:ffff888124a62000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f4c3ce51f98 CR3: 000000007572e000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ rcu_lock_release include/linux/rcupdate.h:341 [inline]
+ rcu_read_unlock include/linux/rcupdate.h:871 [inline]
+ batadv_nc_purge_orig_hash net/batman-adv/network-coding.c:412 [inline]
+ batadv_nc_worker+0x89a/0x1030 net/batman-adv/network-coding.c:719
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3321 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3402
+ kthread+0x3c2/0x780 kernel/kthread.c:464
+ ret_from_fork+0x5d4/0x6f0 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+
+Tested on:
+
+commit:         f09079bd Merge tag 'powerpc-6.16-2' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15cb4d70580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c4c8362784bb7796
+dashboard link: https://syzkaller.appspot.com/bug?extid=d6156c54e546fe8502c0
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=12534d70580000
+
