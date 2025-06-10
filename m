@@ -1,162 +1,96 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D9323504C;
-	Tue, 10 Jun 2025 17:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9AD4230BF5;
+	Tue, 10 Jun 2025 17:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749574976; cv=none; b=HhJL3eFDCrnTuyqCgrVApaEAemjNw+crBc8kHszTZ0L5dfnV1UuYYBUpSL4pykenKpqMgxbcfBCaPa6mqSFiWRM2DKswqi38/OofZi82sm2QcNRSPQgWU+rkT7SADMIu+pWNVo28jG5ym+Trrv5+S7zrEQU+kcyijYkNylvKIz4=
+	t=1749575046; cv=none; b=WoicnQNqHb5tfThhBN9JXzMy8Z1Y1/+ZdlPPkGwaOhJSpccrpjmhyMqmfOIyhpl4Qkq+ljBHI6h7vLJMZSdyiQLrNq2J1kYxsK8Ku7g2AYtarDIQcf6NvKDYuZZktNPKseZ6XrGOIGLSag5L6+aW8ii2swLZrerGdIaYzHx3chA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749574976; c=relaxed/simple;
-	bh=9W7HsRXyelERoAPYEnmWpZVNSSibgcPUxsvcR8XNGUo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=USqQWAuWbuA45XMFKh3PeJ7VGRcfOxSg93DFMqQuEV4DfsXOLMO/NokwAtVGevKlk/nu9cYubhfPrYPSWKanuMJhIw50J27CfCvEGM/qrC4ZqX7epR5BP4gUduwIKVkqveYl24JIaDeI+YjA26HCGqKd7FCDr/3XxhGgUdSvcqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kTTNpxAN; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749575046; c=relaxed/simple;
+	bh=nEJHW4wNPzS2N/9ze+d/67j7fjzeMqQ+h8hJFz8lGgk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=i4eCV+TWH67Sy/OFrxizgRWht+y8kkWI4ptBcRzhMs6LKzEewTeszRWG7odI04ao8+uTQwz7/mgrlrow5Rxcha5c30U4lsPB3QctUJZJQ1Vwm+nvlUZ3vWM0nvm8KwC9sfCSKH6GmjEdD6ZXFS1fN5PlQXUiTdwoyTSc/yi3x58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=12yg+hg6; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kTTNpxAN"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-adb4e36904bso1118728366b.1;
-        Tue, 10 Jun 2025 10:02:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749574972; x=1750179772; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xZ7WoPO17MArlU44RnHfwxsqfSq5i/WMEMR9bfmcvug=;
-        b=kTTNpxANPdd29aiJpOplSQWZvnuT+foV6HpdjTAMEd7IsMUoYKsQpZU9GrVrwY1Pci
-         +Tp0Kx889pCNcTfEC05legtC/QRVuGKXzUxG8NVhcvfudTMDPkhUw0fQ1hn26OH3Ol60
-         Km63CXGDJ/r40QPHD47kB3P5aEi4dfFaftpLryuflaDHP+wBIj9RdLpgG3ZU7rkNXoB+
-         b/WKdzu8YPqb9r7RMJUQFERSYAHHFyZ9j5iHpnGhNPKdVtmfCBMtdTWuIxvGuu+cWSyk
-         sT5cmD6/nKDNJz3CQqqY0mwfEr+LwUf7nfRzjhG32bZVMDYNMSmaUGY9P5ZXmPbqpqZr
-         CrEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749574972; x=1750179772;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xZ7WoPO17MArlU44RnHfwxsqfSq5i/WMEMR9bfmcvug=;
-        b=nThhwTlI1KXEDUetlhocbomPhl/clfQQ0EELsd2BYjLoffRjl4CpNBxP1MBMlg1yma
-         VIEUb9LOlILOIDkjecYFxQ4J7TJmyBfHIrPg6Vr6anejFuCACxwEENl0zYacX0Q+n/MI
-         4BaaVIWd9J86C0FUXpiemReLFfey2K39gGuqNVdaN9wTGfMDJgO0mqlzo4EjOpNlgzGw
-         QmhOH1S81okw55EmZBTg1rfBsTI376Uh7oqAXPSjA43hpwATs16yqgeYiRX/VI/k54eG
-         Rf7WZnG7ankNLM/QgBJj55N+kDfLYWW05DBgfVgRAB9BArCzWGtan78x1Nh/Ax110kqJ
-         ZP9g==
-X-Forwarded-Encrypted: i=1; AJvYcCV9UUI2dle9b2bUSWyA1p6hlKb2GSksfImmWOTL2WJfiegl9CPXivYIBYSbP16zGvbIlc2pWDhLolb2e7Sy@vger.kernel.org, AJvYcCVJJEA6iKeg8F8h74q2g3EMkUNdamitF7OIGmrT4KdKuNy0JyK6V/UoHwbh39ehIt8fN5OJHWclw48=@vger.kernel.org, AJvYcCXIdkrplaIzLe3/2FiMncIUwNko/6disvK/bbKtX4Pb1Q8qWI0lyTKC+peV7sJ7MryXTlqwtyiJ87tuXQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzn0Fu0HGMgnPVdTQsEDY6OmcIWf+d0oidz1QFT6avnQqJRcW0v
-	M8T0jjOaFQmgqlqVNvCz0cbGx/W/qmCSq3TQkkNFL4ZPM+LIPhdUVkyv
-X-Gm-Gg: ASbGncvH5UZS424XESp7S7P/XYl0J2rD3n39a1NtwRSBWQAhq1VeWjtKk4oVxgeq+YM
-	LlYAqXArxuM61ry2FmaVyk1XwmMdmgOAbL6ywRI2DGBgg22edKd68l1e3k73f/z5Ip6t+oIr8TY
-	kE5qBDN1px2tq2iZHV6abXJOb+qKNUJpU6kcHQvTuHCFz+0zQadMmHNSv3mbNHOdJ248RHivlsm
-	GtoVxSytjWG/0sHd1+KwJ9wYhXdUeXyg82KUmtmIBY4mbqZMJ/nd9QmnRGWWIi2PIn1+2e/2McJ
-	4drV0DRZG9XR2ym2bL+cFmjhgD+9vU6QKwqJr89bQ2SIdOU2q6SuqOoA95XxnWdB1gfRyHbGzs3
-	nhUyzi0eRUP/0xLMUTUS787tcOj11yOh2jDF/3Q==
-X-Google-Smtp-Source: AGHT+IGXatHfg7cfSKlwjSqN0VephWQcR8xEcFOo9noPah4i9dvsdkIaoWCAYpVPNB6w/FfreH5j2A==
-X-Received: by 2002:a17:907:803:b0:ad9:db54:ba47 with SMTP id a640c23a62f3a-ade898381femr13304766b.43.1749574972049;
-        Tue, 10 Jun 2025 10:02:52 -0700 (PDT)
-Received: from ?IPV6:2a03:83e0:1126:4:c2f:a34:6718:ee1d? ([2620:10d:c092:500::7:b9b7])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade2ea143a6sm682025566b.53.2025.06.10.10.02.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 10:02:51 -0700 (PDT)
-Message-ID: <8e0882d6-2c1b-4097-a7da-471c77a759a7@gmail.com>
-Date: Tue, 10 Jun 2025 18:02:50 +0100
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="12yg+hg6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
+	t=1749575042; bh=nEJHW4wNPzS2N/9ze+d/67j7fjzeMqQ+h8hJFz8lGgk=;
+	h=From:Subject:Date:To:Cc;
+	b=12yg+hg6iP3lOx0fluDHlgUw9vADP2tweia/3DIkhtaMwh86gJgAiVqO/yAvFDgbf
+	 bFvTIXna2gzt5Ao6Bwk3bSFmwFMolLLhiPZLweXx5LWQb3iYdBFfPQurYo8E/+Wgsp
+	 EolK+u+i40/bnIeq0YH923ZxQvp41yOX+74TMjKo=
+From: Luca Weiss <luca@lucaweiss.eu>
+Subject: [PATCH v2 0/3] Add devicetree aliases for mmc on multiple MSM8974
+ devices
+Date: Tue, 10 Jun 2025 19:03:48 +0200
+Message-Id: <20250610-msm8974-mmc-alias-v2-0-1d8808478fba@lucaweiss.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [DISCUSSION] proposed mctl() API
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- David Hildenbrand <david@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Shakeel Butt <shakeel.butt@linux.dev>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Arnd Bergmann <arnd@arndb.de>, Christian Brauner <brauner@kernel.org>,
- SeongJae Park <sj@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Barry Song <21cnbao@gmail.com>,
- linux-mm@kvack.org, linux-arch@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
- Pedro Falcato <pfalcato@suse.de>
-References: <85778a76-7dc8-4ea8-8827-acb45f74ee05@lucifer.local>
- <e166592f-aeb3-4573-bb73-270a2eb90be3@gmail.com>
- <d7ccb47b-7124-45e9-ace0-b0fa49f881ef@lucifer.local>
- <f8db6b39-f11a-4378-8976-4169f4674e85@gmail.com>
- <fcaa7ce6-3f03-4e3d-aa9f-1b1b53ed88f5@lucifer.local>
- <2fd7f80c-2b13-4478-900a-d65547586db3@gmail.com>
- <aEhTYkzsTsaBua40@casper.infradead.org>
- <8c762435-f5d8-4366-84de-308c8280ff3d@gmail.com>
- <aEhct_dQxGAazoiY@casper.infradead.org>
-Content-Language: en-US
-From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <aEhct_dQxGAazoiY@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHRlSGgC/32NQQ6CMBBFr0K6dgxTEKgr72FYjGWUSaiYjqCGc
+ HcrB3D5XvLfX4xyFFZzzBYTeRaV8Z7A7jLje7rfGKRLbGxuD3mJDoKGxtUlhOCBBiGFxhUdurr
+ zFZJJu0fkq7y35rlN3Is+x/jZLmb82X+1GSGHxhJhgdaWl+o0TJ5eLKp7nky7rusXREb+6bUAA
+ AA=
+X-Change-ID: 20250419-msm8974-mmc-alias-893d197dc61a
+To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Luca Weiss <luca@lucaweiss.eu>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1103; i=luca@lucaweiss.eu;
+ h=from:subject:message-id; bh=nEJHW4wNPzS2N/9ze+d/67j7fjzeMqQ+h8hJFz8lGgk=;
+ b=owEBbQKS/ZANAwAKAXLYQ7idTddWAcsmYgBoSGV7ISSA0IyU2p2m9XUCPIZLuDzvVsnnkVo7f
+ e9N5klOUGKJAjMEAAEKAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCaEhlewAKCRBy2EO4nU3X
+ Vj/EEADapAMGKuq7m3ob85I3BsTXxzWJEOEepHDOGhBUZPAwbIcS4ebUENsy/5kQSJ1zwpQMkN9
+ 1udZKH+jV4eqW7UVx4z7OXTY0XoPul0BJnZJt9PJUN2b6C5qoJcodPgVG+w9ngoTQu/ushYCoPW
+ SAjkU1VGgy95MusPQvFVmAophThCK5Qu+7tOvYrRHR7CBEVbpCMY3sS50dK2dlAjjTjS2V1IZC6
+ 1fdyhmrByDvQ1yHfyB2dFBfdABzLkcJydLViiobE0x+YFkb91xvwTH3haHHRAG1IT7P0nAlNFcW
+ DXeITubPH7xud+HvezBIy/r3zTkQt2pFmapd6InnRcRqBdWAW+Tfp5Icaz7N59lGszXvOaHQrpD
+ 2XrKFsZ0iFIjzDWq0b1eSRxxth93gJOuiTousJQbgOpZEm+5Iy/jFyZQfdQ6q9+DezmUYzYWp/v
+ QNzok4qe8tbh9kvqghBNZx47SPjoYSGupcQVYMwgueYYhd9RZnrsVnLTxqGCTEUDregvDSpgg33
+ EEGpP7VSFUCYz2o2ntCjpql3j94H+SsTN4kH/etXmtAHLW3rcsXBbk1LZVVOU78qHt5eaydm0kI
+ eeaReIiK2Q+1YZ3M5v39BVoqrAguu3NY3UI4HMmMRHEumgFp2pfCFEqmjg0MOVQa9N0RR2OTS68
+ HETEBVAKvHfj+fA==
+X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
+ fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
+Add an alias for the internal storage so it always becomes mmcblk0 and
+- where applicable - SD card becomes mmcblk1.
 
+This avoids issues with internal storage becoming mmcblk1 unexpectedly
+and aligns this board with other boards that use MMC storage.
 
-On 10/06/2025 17:26, Matthew Wilcox wrote:
-> On Tue, Jun 10, 2025 at 05:00:47PM +0100, Usama Arif wrote:
->> On 10/06/2025 16:46, Matthew Wilcox wrote:
->>> On Tue, Jun 10, 2025 at 04:30:43PM +0100, Usama Arif wrote:
->>>> If we have 2 workloads on the same server, For e.g. one is database where THPs 
->>>> just dont do well, but the other one is AI where THPs do really well. How
->>>> will the kernel monitor that the database workload is performing worse
->>>> and the AI one isnt?
->>>
->>> It can monitor the allocation/access patterns and see who's getting
->>> the benefit.  The two workloads are in competition for memory, and
->>> we can tell which pages are hot and which cold.
->>>
->>> And I don't believe it's a binary anyway.  I bet there are some
->>> allocations where the database benefits from having THPs (I mean, I know
->>> a database which invented the entire hugetlbfs subsystem so it could
->>> use PMD entries and avoid one layer of TLB misses!)
->>>
->>
->> Sure, but this is just an example. Workload owners are not going to spend time
->> trying to see how each allocation works and if its hot, they put it in hugetlbfs.
-> 
-> No, they're not.  It should be automatic.  There are many deficiencies
-> in the kernel; this is one of them.
-> 
->> Ofcourse hugetlbfs has its own drawbacks of reserving pages.
-> 
-> Drawback or advantage?  It's a feature.  You're being very strange about
-> this.  First you want to reserve THPs for some workloads only, then when
-> given a way to do that you complain that ... you have to reserve hugetlb
-> pages.  You can't possibly mean both of these things sincerely.
-> 
+Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+---
+Changes in v2:
+- Expand on commit messages (Bjorn)
+- Link to v1: https://lore.kernel.org/r/20250419-msm8974-mmc-alias-v1-0-82aa131224b6@lucaweiss.eu
 
-Let me try and explain my view better:
+---
+Luca Weiss (3):
+      ARM: dts: qcom: msm8974-oneplus-bacon: Add alias for mmc0
+      ARM: dts: qcom: msm8974-hammerhead: Add alias for mmc0
+      ARM: dts: qcom: msm8974-sony-xperia-rhine: Add alias for mmc0 & mmc1
 
-hugetlb requires 2 things, reserving hugepages and passing MAP_HUGETLB at mmap time i.e.
-not "transparent". (I know the meaning of transparent even in THP is a bit messed up :))
+ arch/arm/boot/dts/qcom/qcom-msm8974-lge-nexus5-hammerhead.dts | 1 +
+ arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine.dtsi    | 2 ++
+ arch/arm/boot/dts/qcom/qcom-msm8974pro-oneplus-bacon.dts      | 1 +
+ 3 files changed, 4 insertions(+)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250419-msm8974-mmc-alias-893d197dc61a
 
-There are some workload owners that will happily test (and have the resources to do
-so) to see what is the best point to use hugetlb. They can go in their code and change
-mmap and make the necessary changes to disrupt workload orchestration so that hugetlb
-is reserved. This is a small minority.
-
-An extremely large majority of workload owners will not be willing to do this (and don't
-have the resources to do so as well).
-For them, we have THPs to do it "transparently". If you just give a knob to switch
-THP=always on/off for *just their workload* without affecting others on the same server,
-they will be happy to try it and other workloads that are running on the same server
-in controlled cgroups wont care and won't be affected. i.e.:
-
-- if the machine policy (/sys/kernel/mm/transparent_hugepage/enabled) is madvise, workloads can
-  opt-in getting THPs by just having this call (the PR_DEFAULT_MADV_HUGEPAGE version) in systemd.
-
-- if the machine policy is always, and they dont benefit, they can opt-out of getting THPs
-  by having this call (the PR_DEFAULT_MADV_NOHUGEPAGE) version in systemd *without* disrupting
-  the other workloads that are running on the same server that do.
-
-Doing above is very simple. This is how KSM is done as well. It doesnt require doing any changes
-to mmap, i.e. is "transparent" (after the prctl/mctl call :)) and doesn't require reserving anything
-for hugetlb before the application starts.
-
+Best regards,
+-- 
+Luca Weiss <luca@lucaweiss.eu>
 
