@@ -1,301 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB4428EA45;
-	Tue, 10 Jun 2025 12:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3092122DA05;
+	Tue, 10 Jun 2025 12:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749558207; cv=none; b=tqjgcKJgXMbVBjEfH/lyXvDoUJkXcjYoAZjWo5egV/8X8uAU0nGuZsQqbquR9LyBCBPzfrATdoMD0BIgB8g3CWT9Kn92ZHQHOP8H8sBj7MriKG8VXv3dS5PDPxNuSS7lgcomz+Mi9uVrrZYKMtFbbAvLAu7mBh5vhKfNHTPc7aE=
+	t=1749558280; cv=none; b=iq+OYJKNUB51iaqzWA4a+wYrq9j3j6v5ERcz/iC27zundn7M/XxGrT0qV0ZEjyuLr1tXjzqgyJ9NwHBFY+UFpETs5DgMncXyft7YTO8FeQrOFrnZ+QFbx3wTWhiswXTiZP5tjYBtuhJF1kaGHLEUjX5K+amGwJBsxCXWWV3gP4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749558207; c=relaxed/simple;
-	bh=oc//4EYy1ffqYnSH/0jpWmK1cIoIKuNwXMQerwUzNjQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j2U/vlCYcyWkqbSSgGNC3C/BT+XZOD0QYQNMLAhnEHmfuQyY4t+ZQqCJXsvHxu7lzpS9KxoMnf3JCl7OVy5m2eUr9hTyiLwSu25jA+12fL7YAEZI6PepUbIUEZhk9w56dkPE3gdJ2dly4zKIxW2EnkMEG0Z20x/NpbUtgbEa6eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s4augsdW; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s4augsdW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5A8FC4CEF1;
-	Tue, 10 Jun 2025 12:23:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749558207;
-	bh=oc//4EYy1ffqYnSH/0jpWmK1cIoIKuNwXMQerwUzNjQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=s4augsdWAzQGzGe5ecGB3QeaSvaCP6tGpt8U/v5vLjwmzThp1+OGVjnRBmvsmSqEN
-	 d/LIbVnFCnuxy1hOopR79rvNVEiuQBFviXZLAhz6h5sVbDgmbsdBqdAJdXsJDB6C0r
-	 VySvsGyhnwGnP06404JRXfQG9k4yhiarAhVmDx/Rurn9fEGII66kXUemxxolChqlpm
-	 W7eSN5OHY4V0k/nBXLKmwqWyl2nXdDY997AnO5yYl60LwLNhUflwOBVZlxU9/N9nY8
-	 6VDf96/oZufcNXUfsKXPWbeBZOS+zYSzSBYUhiqHCWiLCE91LIQbAxnImUDBuywjPN
-	 v9rbVfGygNUlQ==
-Date: Tue, 10 Jun 2025 14:23:24 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Xiongfeng Wang <wangxiongfeng2@huawei.com>, rcu@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH 2/2] rcu: Fix lockup when RCU reader used while IRQ
- exiting
-Message-ID: <aEgjvGkYB0RoQFvg@localhost.localdomain>
-References: <20250609180125.2988129-1-joelagnelf@nvidia.com>
- <20250609180125.2988129-2-joelagnelf@nvidia.com>
+	s=arc-20240116; t=1749558280; c=relaxed/simple;
+	bh=HP0ZM6ER8CFrE75ylSyz9paF9gHU76JoXOZUEHKlVyg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NUn4crOUjI0JMq+C7DU/aGsfm5LujQSXkeyU407OkhSPOXmrQT8P5A0+mn9ViVVQzXEyBxW3t2p7+DtGi81TYviQlWDiF46Ozj43Jjhc/OBueAf1c7IG/dUSnY3ZzmS3U53UoEc/11mJJSGhUpgUAMKlhvktWkZqhwpf5RMvDO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bGntB6ydsz10WmL;
+	Tue, 10 Jun 2025 20:20:02 +0800 (CST)
+Received: from kwepemk200016.china.huawei.com (unknown [7.202.194.82])
+	by mail.maildlp.com (Postfix) with ESMTPS id 97C5C180482;
+	Tue, 10 Jun 2025 20:24:33 +0800 (CST)
+Received: from huawei.com (10.67.174.78) by kwepemk200016.china.huawei.com
+ (7.202.194.82) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 10 Jun
+ 2025 20:24:33 +0800
+From: Yi Yang <yiyang13@huawei.com>
+To: <corey@minyard.net>
+CC: <openipmi-developer@lists.sourceforge.net>,
+	<linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+	<lujialin4@huawei.com>
+Subject: [PATCH] ipmi: fix underflow in ipmi_create_user()
+Date: Tue, 10 Jun 2025 12:15:23 +0000
+Message-ID: <20250610121523.252149-1-yiyang13@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250609180125.2988129-2-joelagnelf@nvidia.com>
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemk200016.china.huawei.com (7.202.194.82)
 
-Le Mon, Jun 09, 2025 at 02:01:24PM -0400, Joel Fernandes a écrit :
-> During rcu_read_unlock_special(), if this happens during irq_exit(), we
-> can lockup if an IPI is issued. This is because the IPI itself triggers
-> the irq_exit() path causing a recursive lock up.
-> 
-> This is precisely what Xiongfeng found when invoking a BPF program on
-> the trace_tick_stop() tracepoint As shown in the trace below. Fix by
-> using context-tracking to tell us if we're still in an IRQ.
-> context-tracking keeps track of the IRQ until after the tracepoint, so
-> it cures the issues.
-> 
-> irq_exit()
->   __irq_exit_rcu()
->     /* in_hardirq() returns false after this */
->     preempt_count_sub(HARDIRQ_OFFSET)
->     tick_irq_exit()
->       tick_nohz_irq_exit()
-> 	    tick_nohz_stop_sched_tick()
-> 	      trace_tick_stop()  /* a bpf prog is hooked on this trace point */
-> 		   __bpf_trace_tick_stop()
-> 		      bpf_trace_run2()
-> 			    rcu_read_unlock_special()
->                               /* will send a IPI to itself */
-> 			      irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
-> 
-> A simple reproducer can also be obtained by doing the following in
-> tick_irq_exit(). It will hang on boot without the patch:
-> 
->   static inline void tick_irq_exit(void)
->   {
->  +	rcu_read_lock();
->  +	WRITE_ONCE(current->rcu_read_unlock_special.b.need_qs, true);
->  +	rcu_read_unlock();
->  +
-> 
-> While at it, add some comments to this code.
-> 
-> Reported-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> Closes: https://lore.kernel.org/all/9acd5f9f-6732-7701-6880-4b51190aa070@huawei.com/
-> Tested-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+Syzkaller reported this bug:
+==================================================================
+BUG: KASAN: global-out-of-bounds in instrument_atomic_read_write include/linux/instrumented.h:96 [inline]
+BUG: KASAN: global-out-of-bounds in atomic_dec include/linux/atomic/atomic-instrumented.h:592 [inline]
+BUG: KASAN: global-out-of-bounds in ipmi_create_user.part.0+0x5e5/0x790 drivers/char/ipmi/ipmi_msghandler.c:1291
+Write of size 4 at addr ffffffff8fc6a438 by task syz.5.1074/5888
 
-Acked-by: Frederic Weisbecker <frederic@kernel.org>
+CPU: 0 PID: 5888 Comm: syz.5.1074 Not tainted 6.6.0+ #60
+......
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x72/0xa0 lib/dump_stack.c:106
+ print_address_description.constprop.0+0x6b/0x3d0 mm/kasan/report.c:364
+ print_report+0xba/0x280 mm/kasan/report.c:475
+ kasan_report+0xa9/0xe0 mm/kasan/report.c:588
+ check_region_inline mm/kasan/generic.c:181 [inline]
+ kasan_check_range+0x100/0x1c0 mm/kasan/generic.c:187
+ instrument_atomic_read_write include/linux/instrumented.h:96 [inline]
+ atomic_dec include/linux/atomic/atomic-instrumented.h:592 [inline]
+ ipmi_create_user.part.0+0x5e5/0x790 drivers/char/ipmi/ipmi_msghandler.c:1291
+ ipmi_create_user+0x56/0x80 drivers/char/ipmi/ipmi_msghandler.c:1236
+ ipmi_open+0xac/0x2b0 drivers/char/ipmi/ipmi_devintf.c:97
+ chrdev_open+0x276/0x700 fs/char_dev.c:414
+ do_dentry_open+0x6a7/0x1410 fs/open.c:929
+ vfs_open+0xd1/0x440 fs/open.c:1060
+ do_open+0x957/0x10d0 fs/namei.c:3671
+ path_openat+0x258/0x770 fs/namei.c:3830
+ do_filp_open+0x1c7/0x410 fs/namei.c:3857
+ do_sys_openat2+0x5bd/0x6a0 fs/open.c:1428
+ do_sys_open fs/open.c:1443 [inline]
+ __do_sys_openat fs/open.c:1459 [inline]
+ __se_sys_openat fs/open.c:1454 [inline]
+ __x64_sys_openat+0x17a/0x210 fs/open.c:1454
+ do_syscall_x64 arch/x86/entry/common.c:51 [inline]
+ do_syscall_64+0x59/0x110 arch/x86/entry/common.c:81
+ entry_SYSCALL_64_after_hwframe+0x78/0xe2
+RIP: 0033:0x54d2cd
+Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f4751920048 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 0000000000796080 RCX: 000000000054d2cd
+RDX: 0000000000000000 RSI: 0000000020004280 RDI: ffffffffffffff9c
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 000000000000001e R11: 0000000000000246 R12: 000000000079608c
+R13: 0000000000000000 R14: 0000000000796080 R15: 00007f4751900000
+ </TASK>
 
-Just a few remarks:
+The buggy address belongs to the variable:
+ ipmi_interfaces+0x38/0x40
 
-> ---
->  kernel/rcu/tree_plugin.h | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> index 3c0bbbbb686f..53d8b3415776 100644
-> --- a/kernel/rcu/tree_plugin.h
-> +++ b/kernel/rcu/tree_plugin.h
-> @@ -653,6 +653,9 @@ static void rcu_read_unlock_special(struct task_struct *t)
->  		struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
->  		struct rcu_node *rnp = rdp->mynode;
->  
-> +		// In cases where the RCU-reader is boosted, we'd attempt deboost sooner than
-> +		// later to prevent inducing latency to other RT tasks. Also, expedited GPs
-> +		// should not be delayed too much. Track both these needs in expboost.
->  		expboost = (t->rcu_blocked_node && READ_ONCE(t->rcu_blocked_node->exp_tasks)) ||
->  			   (rdp->grpmask & READ_ONCE(rnp->expmask)) ||
->  			   (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) &&
-> @@ -670,10 +673,15 @@ static void rcu_read_unlock_special(struct task_struct *t)
->  			// Also if no expediting and no possible deboosting,
->  			// slow is OK.  Plus nohz_full CPUs eventually get
->  			// tick enabled.
-> +			//
-> +			// Also prevent doing this if context-tracking thinks
-> +			// we're handling an IRQ (including when we're exiting
-> +			// one -- required to prevent self-IPI deadloops).
->  			set_tsk_need_resched(current);
->  			set_preempt_need_resched();
->  			if (IS_ENABLED(CONFIG_IRQ_WORK) && irqs_were_disabled &&
-> -			    expboost && !rdp->defer_qs_iw_pending && cpu_online(rdp->cpu)) {
-> +			    expboost && !rdp->defer_qs_iw_pending && cpu_online(rdp->cpu) &&
-> +			    !ct_in_irq()) {
->  				// Get scheduler to re-evaluate and call hooks.
->  				// If !IRQ_WORK, FQS scan will eventually IPI.
->  				if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) &&
-> --
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x45a6a
+flags: 0x3fffff00004000(reserved|node=0|zone=1|lastcpupid=0x1fffff)
+raw: 003fffff00004000 ffffea0001169a88 ffffea0001169a88 0000000000000000
+raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
 
-Looking at the irq work handling here:
+Memory state around the buggy address:
+ ffffffff8fc6a300: 00 00 00 00 f9 f9 f9 f9 00 00 00 00 f9 f9 f9 f9
+ ffffffff8fc6a380: 00 00 f9 f9 f9 f9 f9 f9 00 00 00 00 f9 f9 f9 f9
+>ffffffff8fc6a400: 00 00 f9 f9 f9 f9 f9 f9 00 00 00 00 f9 f9 f9 f9
+                                        ^
+ ffffffff8fc6a480: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffffffff8fc6a500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 f9 f9
+==================================================================
 
-* What is the point of ->defer_qs_iw_pending ? If the irq work is already
-  queued, it won't be requeued because the irq work code already prevent from
-  that.
+In the ipmi_create_user() function, the intf->nr_users variable has an
+underflow issue. Specifically, on the exception path (goto out_kfree;)
+before atomic_add_return(), calling atomic_dec() when intf->nr_users has
+not been incremented will result in an underflow.
 
-* CONFIG_PREEMPT_RT && !CONFIG_RCU_STRICT_GRACE_PERIOD would queue a lazy irq
-  work but still raise a hardirq to wake up softirq to handle it. It's pointless
-  because there is nothing to execute in softirq, all we care about is the
-  hardirq.
-  Also since the work is empty it might as well be executed in hard irq, that
-  shouldn't induce more latency in RT.
+The relevant code has been completely rewritten in the next tree and has
+been fixed with commit 9e91f8a6c868 ("ipmi:msghandler: Remove srcu for the
+ipmi_interfaces list"). However, the issue still exists in the 5.19+
+stable branches and needs to be fixed on those branches.
 
-* Empty hard irq work raised to trigger something on irq exit also exist
-  elsewhere (see nohz_full_kick_func()). Would it make sense to have that
-  implemented in irq_work.c instead and trigger that through a simple
-  irq_work_kick()?
+Cc: stable@vger.kernel.org # 5.19+
+Fixes: 8e76741c3d8b ("ipmi: Add a limit on the number of users that may use IPMI")
+Signed-off-by: Yi Yang <yiyang13@huawei.com>
+---
+ drivers/char/ipmi/ipmi_msghandler.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-And then this would look like (only built-tested):
-
-diff --git a/include/linux/irq_work.h b/include/linux/irq_work.h
-index 136f2980cba3..4149ed516524 100644
---- a/include/linux/irq_work.h
-+++ b/include/linux/irq_work.h
-@@ -57,6 +57,9 @@ static inline bool irq_work_is_hard(struct irq_work *work)
- bool irq_work_queue(struct irq_work *work);
- bool irq_work_queue_on(struct irq_work *work, int cpu);
+diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+index 186f1fee7534..0293fad2f4f2 100644
+--- a/drivers/char/ipmi/ipmi_msghandler.c
++++ b/drivers/char/ipmi/ipmi_msghandler.c
+@@ -1246,18 +1246,18 @@ int ipmi_create_user(unsigned int          if_num,
+  found:
+ 	if (atomic_add_return(1, &intf->nr_users) > max_users) {
+ 		rv = -EBUSY;
+-		goto out_kfree;
++		goto out_dec;
+ 	}
  
-+bool irq_work_kick(void);
-+bool irq_work_kick_on(int cpu);
-+
- void irq_work_tick(void);
- void irq_work_sync(struct irq_work *work);
+ 	INIT_WORK(&new_user->remove_work, free_user_work);
  
-diff --git a/kernel/irq_work.c b/kernel/irq_work.c
-index 73f7e1fd4ab4..383a3e9050d9 100644
---- a/kernel/irq_work.c
-+++ b/kernel/irq_work.c
-@@ -181,6 +181,22 @@ bool irq_work_queue_on(struct irq_work *work, int cpu)
- #endif /* CONFIG_SMP */
- }
+ 	rv = init_srcu_struct(&new_user->release_barrier);
+ 	if (rv)
+-		goto out_kfree;
++		goto out_dec;
  
-+static void kick_func(struct irq_work *work)
-+{
-+}
-+
-+static DEFINE_PER_CPU(struct irq_work, kick_work) = IRQ_WORK_INIT_HARD(kick_func);
-+
-+bool irq_work_kick(void)
-+{
-+	return irq_work_queue(this_cpu_ptr(&kick_work));
-+}
-+
-+bool irq_work_kick_on(int cpu)
-+{
-+	return irq_work_queue_on(per_cpu_ptr(&kick_work, cpu), cpu);
-+}
-+
- bool irq_work_needs_cpu(void)
- {
- 	struct llist_head *raised, *lazy;
-diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-index a9a811d9d7a3..b33888071e41 100644
---- a/kernel/rcu/tree.h
-+++ b/kernel/rcu/tree.h
-@@ -191,7 +191,6 @@ struct rcu_data {
- 					/*  during and after the last grace */
- 					/* period it is aware of. */
- 	struct irq_work defer_qs_iw;	/* Obtain later scheduler attention. */
--	bool defer_qs_iw_pending;	/* Scheduler attention pending? */
- 	struct work_struct strict_work;	/* Schedule readers for strict GPs. */
+ 	if (!try_module_get(intf->owner)) {
+ 		rv = -ENODEV;
+-		goto out_kfree;
++		goto out_dec;
+ 	}
  
- 	/* 2) batch handling */
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 3c0bbbbb686f..0c7b7c220b46 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -619,17 +619,6 @@ notrace void rcu_preempt_deferred_qs(struct task_struct *t)
- 	rcu_preempt_deferred_qs_irqrestore(t, flags);
- }
+ 	/* Note that each existing user holds a refcount to the interface. */
+@@ -1281,8 +1281,9 @@ int ipmi_create_user(unsigned int          if_num,
+ 	*user = new_user;
+ 	return 0;
  
--/*
-- * Minimal handler to give the scheduler a chance to re-evaluate.
-- */
--static void rcu_preempt_deferred_qs_handler(struct irq_work *iwp)
--{
--	struct rcu_data *rdp;
--
--	rdp = container_of(iwp, struct rcu_data, defer_qs_iw);
--	rdp->defer_qs_iw_pending = false;
--}
--
- /*
-  * Handle special cases during rcu_read_unlock(), such as needing to
-  * notify RCU core processing or task having blocked during the RCU
-@@ -673,18 +662,10 @@ static void rcu_read_unlock_special(struct task_struct *t)
- 			set_tsk_need_resched(current);
- 			set_preempt_need_resched();
- 			if (IS_ENABLED(CONFIG_IRQ_WORK) && irqs_were_disabled &&
--			    expboost && !rdp->defer_qs_iw_pending && cpu_online(rdp->cpu)) {
-+			    expboost && cpu_online(rdp->cpu)) {
- 				// Get scheduler to re-evaluate and call hooks.
- 				// If !IRQ_WORK, FQS scan will eventually IPI.
--				if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) &&
--				    IS_ENABLED(CONFIG_PREEMPT_RT))
--					rdp->defer_qs_iw = IRQ_WORK_INIT_HARD(
--								rcu_preempt_deferred_qs_handler);
--				else
--					init_irq_work(&rdp->defer_qs_iw,
--						      rcu_preempt_deferred_qs_handler);
--				rdp->defer_qs_iw_pending = true;
--				irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
-+				irq_work_kick();
- 			}
- 		}
- 		local_irq_restore(flags);
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index c527b421c865..84170656334d 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -377,14 +377,6 @@ static bool can_stop_full_tick(int cpu, struct tick_sched *ts)
- 	return true;
- }
- 
--static void nohz_full_kick_func(struct irq_work *work)
--{
--	/* Empty, the tick restart happens on tick_nohz_irq_exit() */
--}
--
--static DEFINE_PER_CPU(struct irq_work, nohz_full_kick_work) =
--	IRQ_WORK_INIT_HARD(nohz_full_kick_func);
--
- /*
-  * Kick this CPU if it's full dynticks in order to force it to
-  * re-evaluate its dependency on the tick and restart it if necessary.
-@@ -396,7 +388,7 @@ static void tick_nohz_full_kick(void)
- 	if (!tick_nohz_full_cpu(smp_processor_id()))
- 		return;
- 
--	irq_work_queue(this_cpu_ptr(&nohz_full_kick_work));
-+	irq_work_kick();
- }
- 
- /*
-@@ -408,7 +400,7 @@ void tick_nohz_full_kick_cpu(int cpu)
- 	if (!tick_nohz_full_cpu(cpu))
- 		return;
- 
--	irq_work_queue_on(&per_cpu(nohz_full_kick_work, cpu), cpu);
-+	irq_work_kick_on(cpu);
- }
- 
- static void tick_nohz_kick_task(struct task_struct *tsk)
-
-  
-  
+-out_kfree:
++out_dec:
+ 	atomic_dec(&intf->nr_users);
++out_kfree:
+ 	srcu_read_unlock(&ipmi_interfaces_srcu, index);
+ 	vfree(new_user);
+ 	return rv;
 -- 
-Frederic Weisbecker
-SUSE Labs
+2.25.1
+
