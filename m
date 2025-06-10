@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9987824888F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1888A248F63;
 	Tue, 10 Jun 2025 18:39:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749580741; cv=none; b=a3r5Wpwt+kit8RGh6xux0lexFQj84MePG9Nz3SvFMMjIYVsxk1XAyrJKuuPi3C/xfGgkZwNHH6H8jpefp0x2+SE4LDWl7oJGhjcDZypkNs/eUcOmIeV34BIBK2yQmZESHzrlpCrBhyVACUK955Z1B4d0+ISZmD8ufoL+guuazsQ=
+	t=1749580742; cv=none; b=lT39nW1i1f9AREesMKrXWLoPZs3lBd5PpBqFiIvOxS8JIMc09H7nleErTnHuphK55E9jVI5NLQVJFACCdl/893hZ4rOTn89skYu7qu5R45zyL4pp4zXn2RmibsXIhKa01G+txqFMB5ZRTa/0n+jVPBUWU6thJKIJ94IGHB9C/Xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749580741; c=relaxed/simple;
-	bh=mUTIbVpokht7OiAGSsRDnNAvm4YPRzCcgweU/XfLtVs=;
+	s=arc-20240116; t=1749580742; c=relaxed/simple;
+	bh=wuxiZLoYC/AdfEaqPEMocOUJMEC63L49Uwa4SCkPFF8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=O7BruGruCOiBBegAjfj0NvaCHwZmtoYX2sjjzfHOgta9C+WwNaZT1Z8/LFcT+FEI15ZoL3wJvsOGP30QNc8h+V5nRja3ieceD8IHdQruPKwhZQ5iaR8t/UN4vC+1kE6IxmRebhBmHmqV/W7fiZGuQIUk1eSZo1m0EAjGgUIMm1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A46Kb8S0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=EsobyBtH5EiyIdip1tc3HEErqrUaEGSbnrq8igjx6/lqkYtewp9GngKfmZFgLDgTyHaUnNDpbD9oW/8gYNVKaZTKYnoTBBhrrmd+P6x4pw3s2EYrQSCect822e7jWgzDj4Jfys9jkkHiP5AeboXY9VVMQDA/MGNHBnUw0khLJyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p0kW5d5L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A46Kb8S0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDBC5C4CEED;
-	Tue, 10 Jun 2025 18:39:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0kW5d5L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AD4BC4CEF4;
+	Tue, 10 Jun 2025 18:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1749580741;
-	bh=mUTIbVpokht7OiAGSsRDnNAvm4YPRzCcgweU/XfLtVs=;
+	bh=wuxiZLoYC/AdfEaqPEMocOUJMEC63L49Uwa4SCkPFF8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=A46Kb8S0JpJY9oF1sOWceU6sIEntQajmZf5+saymSR+emESDIOcJVb87/jOgIlD+W
-	 FWtoN9g4l1ONsf/8+5fL2/LPT0l0U5u2w+IE823NoRgY+hafoqB/Sj5JwXVVTF73ni
-	 6ahGtWcQOXuqLMnO14hjJH3H4tbOytT6jFkOl/6uSZk0WtQOjqEiBgWU7vORdBs93M
-	 OfHbDM2XfpE5/254D+VEKKiw1zoPI2nmOkXd0z+7F3mHBYwXgH53BSJYeVn8vLtttx
-	 q0qvLHOUPA2nDlUUnTmoPocdVRhAWEFmBDmhFTg5xVz4qx24L9WRWe4G+0+thKuSRK
-	 IE0p8RsLXsXWA==
+	b=p0kW5d5LD9/rjbqqgAqruhCUisM4chEzud94zxOEtZ//hF6wRXvlCwC1iIPO4567A
+	 CnLg9yqr1APHLegOZZW52+YeYuVX/WJQ4Vm9C7Vo21oxdYJRLMgsGwECm+19agmVie
+	 0zg6USeND++yh9wq3QZdPjlMZrWgLoyyHpo4iyiuT2wd7NAtC+84DyR6Wbs7JQNa0v
+	 U8kprqrxEzxhYuJGKVAIamGRwi3dk6i/DtH8l8hk+4BUlk1cLRo2t8SX76+VoUEYvJ
+	 AB8cx6ABuu9qzQdeKnB+PrYYiUeONdmEn2vn0vLgI80dXr4nG0D5bGrW4oCc2aNJOX
+	 skrtGDntZg3Ng==
 From: Namhyung Kim <namhyung@kernel.org>
 To: acme@kernel.org, Howard Chu <howardchu95@gmail.com>
 Cc: mingo@redhat.com, mark.rutland@arm.com, 
  alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
  adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250601173252.717780-1-howardchu95@gmail.com>
-References: <20250601173252.717780-1-howardchu95@gmail.com>
-Subject: Re: [PATCH v2] perf doc trace: Remove --map-dump documentation
-Message-Id: <174958074079.4039944.10522397903792984025.b4-ty@kernel.org>
-Date: Tue, 10 Jun 2025 11:39:00 -0700
+In-Reply-To: <20250528191148.89118-1-howardchu95@gmail.com>
+References: <20250528191148.89118-1-howardchu95@gmail.com>
+Subject: Re: [PATCH v3 0/6] perf test trace: Reduce test failures and make
+ error messages verbose
+Message-Id: <174958074126.4039944.17488945500661997155.b4-ty@kernel.org>
+Date: Tue, 10 Jun 2025 11:39:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,13 +48,22 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Sun, 01 Jun 2025 10:32:52 -0700, Howard Chu wrote:
-> The --map-dump option was removed in 5e6da6be3082 ("perf trace: Migrate
-> BPF augmentation to use a skeleton"), this patch removes its remaining
-> documentation.
+On Wed, 28 May 2025 12:11:42 -0700, Howard Chu wrote:
+> Currently, BTF tests fail constantly, this series fixes two major reasons
+> why they fail, and makes the error messages acquired when using '-vv'
+> more verbose, so when they fail, one can easily diagnose the problem.
 > 
-> Change in v2:
-> - Correct the commit log format
+> Before:
+>     $ sudo /tmp/perf test enum -vv
+>     107: perf trace enum augmentation tests:
+>     107: perf trace enum augmentation tests                              : Running
+>     --- start ---
+>     test child forked, pid 783533
+>     Checking if vmlinux exists
+>     Tracing syscall landlock_add_rule
+>     Tracing non-syscall tracepoint syscall
+>     ---- end(-1) ----
+>     107: perf trace enum augmentation tests                              : FAILED!
 > 
 > [...]
 Applied to perf-tools-next, thanks!
