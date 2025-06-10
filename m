@@ -1,128 +1,95 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71D921883F
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 04:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE9C21C18E
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 04:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749531226; cv=none; b=Rgb79W5gSrbVwtJfR1Bllov6aN3KXEXpxBpqZ0rJxYNFJjtk8gbvHtxY4hkErT4uMscsZ2j9XjvHqB9Ghky0fDQPwzxUV1dGm2B8vXNaoESxl6cgiTcQP/C7JAMRFNKm8Oa7ZE6AhR6sgNWNKmj6i8z++qLv0ppeQZcKVNxx9p0=
+	t=1749531368; cv=none; b=s30uHGW0seHrkjh0aq4gVdNiF7t3jJVpOR/4xDQ1hIWT2v9UIKN4OhUm0MBiOH1NHBE6Xglw/+1VXEJfRVcYY6DIk1L1j21g7Zt8WvtPEF4Ou60t0cLVkwpJ67X0JSCeHY70XUcEgh/W3Gc7/tMimOP9NMqu7xztVHa3aQ9JW+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749531226; c=relaxed/simple;
-	bh=BAIK4gLfSCOCgE6FOu9d61iFaIsT75YShx3NjXBV3TM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GaxQcjZZ0OSE/u5X4/O64dngk0hryBc5m6F5drcw1IhXFUO+50IACIpPOyvtjNbOXjT64tB0MBIxUqCnvH4rb3lDgKDlVcPN6UkhGCoyp0LeDThB9EbYpRKPVcVGOpL3m3Cpzz4rX5sMg+vrC2oLBrpk+lHqsr+fqmKTK7P8LK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JueVux5l; arc=none smtp.client-ip=209.85.214.176
+	s=arc-20240116; t=1749531368; c=relaxed/simple;
+	bh=ACrPjCNMNkwFDXJy7gnBW2xPAwHaQ0JnySCEiCWvtMk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FfHkXiWLR7rjoDD/aVlh4bk916P6/ecKTm7r384AjZTBpxERShn2H5anp5hisrwAZSnHwe/4uaKN+70e+mRE2ODcbvReZJi5dhSg4KTU1cJTo0BhJDfbsKN1D5iIfyOgf2paByanQQ9HvX1rhU2EPFpbsduuT8AglrpmXgaB5Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Aj8Rjr//; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JueVux5l"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2363497cc4dso6972515ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 21:53:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Aj8Rjr//"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-74264d1832eso5778040b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 21:56:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749531224; x=1750136024; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dCrHt0jmkPdPRc1pbvWWh9+e8CniQlzw0sMkjj1a23k=;
-        b=JueVux5lWHsfERhYfE6OH4IwyIeQ1WOvgszMpryvfInNyN4rM+FBGef0IArq23XrKP
-         9ek6bnCd3cYLoPyMvwQp69dQ7j4mNv1KDwTBNmtlFlCXgUvdQkx/0qPrNlF5d33KkOrv
-         G/6dioFOFfDNU9HA9BETJsijMkmTO8VUALmW8=
+        d=chromium.org; s=google; t=1749531366; x=1750136166; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qki4u1ARte4A1FCY+DBjuYiE3kbSTbsi4JExJG2FT2E=;
+        b=Aj8Rjr//ohdp+oCP2hGvLID7LSE5WbbWWiZOQ/2ylF5AGNgr8QYAqCJe7DpZQvFpBH
+         U2RLw3grYXnvy196Z/kg/LdKMWa/gdYcyLENoACUiWYFMIAbYhaLdJXv1yugT+K5m4SG
+         tB6mUklR/pc//90QoDmKKuUoylbOgjlDKzJ/E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749531224; x=1750136024;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dCrHt0jmkPdPRc1pbvWWh9+e8CniQlzw0sMkjj1a23k=;
-        b=t9h/AMCir9ipDbwHQ/8bfULtl09Dj261+P+o0SpIwzmqLJQ1qDbTLuN3zo9Tk+lZm+
-         zGb3rOZH1xiV1haSTUmxIhh7jX00r/UIWYm1A54fKdtlv2mCuZYcYpk5MFxBIwSkyXl+
-         R5lCsPRMmCxklLsoYJIMRw5dk2+4Ay7YrGhSLsTq9yPNAMKUfpMt4yLZ1Bp0MHyxqE/S
-         Bq+T3W+aTSEl+aafluekQ/er1Ao1dfYF4LLYUC/uo4qEjNv/1Mi5AMxvbeIq0cRv5aVt
-         iU+6evGih2Zw9azoaet0NI94Tcx+rQD1VFC4AySnWIpDKdy4YisL5/jHkMWMWWdqA53P
-         VFhA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPAPsEerKYpS/lBOAh6YTVxbgKEwoex2DQ7m64o3o6PBoBsV/5oD4/4PiDB4jIn3djkTHoA1CU/I03dJc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPBvCmIPAzHIlUNx7SDDVpnqYSn2b2F8kcITiiB55Z597fqhVw
-	RbH/5tQowHhNX0NoToniG3w1WvAAsUt2oRwje7XosHrUUtBJY3CHtgE+0htWQPX2fQ==
-X-Gm-Gg: ASbGncsCb3tIZ4b6gI6Z2A8cr1iqePK+Xl7UYkA6ZMWyU/TAMfjuMYc5yooQEP2JepZ
-	N3TatbbxvQ2tkqnWy13oqdCvgxWkCjB+SUxCyN+1RyANn7gXOdeJNT+yH/IXM361z3nts695g+t
-	H/Aa2+Q4EelGWuilipFLu9hhtDqZNbNy0G9Xv7EwLCCX7XDh3BBpLvZxB+MIbznZx9YR4TdG3sQ
-	jupIV9CuNgLN9x3As5yC3uc5sNk9jjyb2wcfyshRq/c3ZynGldMOwSZ4BpcaYU3101O59UFet3b
-	jP09O7jS6oyDfQdqCZRNBdUsxbFCSm6RCB2pdck+fDWgzE/j+e/+LH6MH+CzJ15cqREwrrbWp4p
-	R9Qw1U0+ty6fC
-X-Google-Smtp-Source: AGHT+IFuIpfgmRzYGxIkmcslCdrgVmuNEuyiU+CgCGp4XHTI0jidjTL/fhHH4/qIj2axhRU65+QaZA==
-X-Received: by 2002:a17:903:3ac8:b0:234:a033:b711 with SMTP id d9443c01a7336-23601dc017emr192516525ad.50.1749531223792;
-        Mon, 09 Jun 2025 21:53:43 -0700 (PDT)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:ca42:1883:8c66:702e])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23611fde09fsm47634705ad.187.2025.06.09.21.53.41
+        d=1e100.net; s=20230601; t=1749531366; x=1750136166;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qki4u1ARte4A1FCY+DBjuYiE3kbSTbsi4JExJG2FT2E=;
+        b=SXTTNm3XbobTOTP+O+VC6GSxrff5X6Z/+4iaz3v/uu/Ao8mjOKIpz42oFhwBaj/Rda
+         FkBYI+6UVZXIKO2WYV1c5Ugahtu1kRJ+J26uixhbQaIojP76lBCd+zN+tBI7SaG+HuNL
+         ulUbwl4ImFJuptY5tb+7KgWiORG2H8Ax81sM187bdfD4FEU6nxT+x4T2EeEUDkf/of1T
+         hieEfFVJpoKnjPc1IByEv42Tv8wyYFeOLzHg3YPWLAGqQgV7t0+u7/E21Le/Wmi6EMPO
+         x++p0QLvBlQ9+fiE9lYJRthmpXc4+U3oh8WG3vMtjpfpgJIugGdKQdy2bM78ofq+gWx1
+         aLBg==
+X-Forwarded-Encrypted: i=1; AJvYcCU1d1MpbjdRjR1LPdWCRpJ9evfZn5nuChMed3WbjDsyd0OGOEHcb5+oOdy+1hEi0+I3SxR7ehyZkNPVxxI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx57oEn9ojHt8lMywwP4vXCbnGTD9DXWWhju1QPSdmsMJfIx6SC
+	jCXVeXCl529bhtCYP9BTEt4sPPBJLU58ujxFgrU93oHybpuZGPMTvY0OcT23VsLF3Q==
+X-Gm-Gg: ASbGncuo+2XbY9D6jRP27AU6JOF+upAm4TRJ0lEkhwRV791ubhZimiEtl1/ZVJ8Vmer
+	bs9Uorl/szj7zWYGtVRwAR+T3gpOBTj53uEa+9oClztpr5j4ugKZwoVFbaGDX6l2qyjWy3CaCJo
+	mBOisx6Uhpm1RQBh6/99EyL30Ve8nsTPK1J+IFuSHrfeQHUWkH6bGyb3hF5TyKcYOHWYfqbF4b7
+	LQtl0xRdAF0A6Y8L0q8eLcioFXF9ri5EjTXfHcxJPc2wCLzGr15puuy0EeB15rGTyk+AZU1IJM7
+	DJ9tU91gU8aaU3owKwuiAKxZawMpVRSkChD3et2dfbOuYntufisbXa+QRa3acJ6QiA==
+X-Google-Smtp-Source: AGHT+IFSDAss5UN+FP5CfZ0KjyYXiBlN9b2UJ6xKVd1D/6YzHaiPhv0TdnCukpQpMXZECc9dafUTWQ==
+X-Received: by 2002:a05:6a21:a616:b0:21f:5532:1e53 with SMTP id adf61e73a8af0-21f55321f30mr8226224637.33.1749531366270;
+        Mon, 09 Jun 2025 21:56:06 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:ca42:1883:8c66:702e])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0847b9sm6815101b3a.104.2025.06.09.21.56.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 21:53:43 -0700 (PDT)
+        Mon, 09 Jun 2025 21:56:05 -0700 (PDT)
+Date: Tue, 10 Jun 2025 13:56:01 +0900
 From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Miklos Szeredi <miklos@szeredi.hu>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Tomasz Figa <tfiga@chromium.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCHv2 2/2] fuse: use freezable wait in fuse_get_req()
-Date: Tue, 10 Jun 2025 13:52:29 +0900
-Message-ID: <20250610045321.4030262-2-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-In-Reply-To: <20250610045321.4030262-1-senozhatsky@chromium.org>
-References: <20250610045321.4030262-1-senozhatsky@chromium.org>
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: fuse: suspend blockers
+Message-ID: <chiicm5lwiok5ni6evrohkjvmt3upy5ikm7vdxz5ukops464kg@vf7hr2mprg3i>
+References: <jofz5aw5pd2ver3mkwjeljyqsy4htsg6peaezmax4vw4lhvyjp@jphornopqgmr>
+ <CAJfpegtNB22Dpi=wX8nBDx=A9SeYZKpZGniJHBBxJBHB3o0nHQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpegtNB22Dpi=wX8nBDx=A9SeYZKpZGniJHBBxJBHB3o0nHQ@mail.gmail.com>
 
-Use freezable wait in fuse_get_req() so that it won't block
-the system from entering suspend:
+On (25/06/06 10:26), Miklos Szeredi wrote:
+> > @@ -241,7 +241,7 @@ static struct fuse_req *fuse_get_req(struct fuse_conn *fc, bool for_background)
+> >
+> >         if (fuse_block_alloc(fc, for_background)) {
+> >                 err = -EINTR;
+> > -               if (wait_event_killable_exclusive(fc->blocked_waitq,
+> > +               if (wait_event_freezable_killable_exclusive(fc->blocked_waitq,
+> >                                 !fuse_block_alloc(fc, for_background)))
+> >                         goto out;
+> >         }
+> 
+> This looks fine.  We can turn each wait into a freezable one inside
+> fuse.  But that still would leave core locks (inode lock, rename lock,
+> page lock, etc) unfreezable.  Turning those into freezable isn't
+> realistic...
+> 
+> But a partial solution might still be better than no solution.
 
- Freezing user space processes failed after 20.009 seconds
- Call trace:
-  __switch_to+0xcc/0x168
-  schedule+0x57c/0x1138
-  fuse_get_req+0xd0/0x2b0
-  fuse_simple_request+0x120/0x620
-  fuse_getxattr+0xe4/0x158
-  fuse_xattr_get+0x2c/0x48
-  __vfs_getxattr+0x160/0x1d8
-  get_vfs_caps_from_disk+0x74/0x1a8
-  __audit_inode+0x244/0x4d8
-  user_path_at_empty+0x2e0/0x390
-  __arm64_sys_faccessat+0xdc/0x260
+Thanks Miklos, I sent out a simple patch set [1]
 
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
----
-
-v2: use wait_event_state_exclusive()
-
- fs/fuse/dev.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index e80cd8f2c049..a0fd319ab216 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -207,8 +207,9 @@ static struct fuse_req *fuse_get_req(struct mnt_idmap *idmap,
- 
- 	if (fuse_block_alloc(fc, for_background)) {
- 		err = -EINTR;
--		if (wait_event_killable_exclusive(fc->blocked_waitq,
--				!fuse_block_alloc(fc, for_background)))
-+		if (wait_event_state_exclusive(fc->blocked_waitq,
-+				!fuse_block_alloc(fc, for_background),
-+				(TASK_KILLABLE | TASK_FREEZABLE)))
- 			goto out;
- 	}
- 	/* Matches smp_wmb() in fuse_set_initialized() */
--- 
-2.50.0.rc1.591.g9c95f17f64-goog
-
+[1] https://lore.kernel.org/linux-kernel/20250610045321.4030262-1-senozhatsky@chromium.org
