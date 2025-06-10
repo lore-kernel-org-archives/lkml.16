@@ -1,260 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A8C2192F2;
-	Tue, 10 Jun 2025 14:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB99921ADBA;
+	Tue, 10 Jun 2025 14:53:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749567173; cv=none; b=bfMx4G37CM4BdH4YMLu7Rbg+eNj1aypOLGNdZNo2bVrgAE/y6v4zLUAWXk/+DDg1nBGJ1eHdUz9yEfLQpP8rWgpOdUI1fePGwL65crHd7WzN5IK4YjjjVaqwH8gutOXHU0XnD6o3FjwPAeM547t4vqOlKnW+4wF3FMCZpNsG9SI=
+	t=1749567224; cv=none; b=bFSBT4k+ckV21wli3YVurURRMh01HNUdbNucADEG+pUFigvYUrnVC03WYikPfdzaQmtEWOtvCz2/LOCmkEk545BQ83d4zVx4c78EQulY0PyV1dArYeM0zY3ayGf739d6xQPLnyWpRFqXrXGSLExmiVgN/TaIuNATBDGEDBPzn7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749567173; c=relaxed/simple;
-	bh=AZ7LHXSTXqFwK4mhI9ePGhYALuIIQ6ybKIs/Tl45lZo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=izAwwkuUrMoZF4lFd0XjhSvxGTiZcp1q6RVvDewLvca/8E1H47ZImkYWtK3o0AsmlqkRsERPViOaTwDfsFQZCYJZ/CbbNYJKRt+G9qIrfiKlsnb4UQD/jdV9+HrqX4U7BDHe4o03esZh3tgFhf9UedjT0PKqtm875EKwv1ofGq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PkbvhepM; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749567224; c=relaxed/simple;
+	bh=D8oBuhkz5TcYD7TDo/ChhAEaqGOauhMGzMwHg078OFo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PR7K4+nxZKjEpVvTXaGNXpyfhxfBor4OttVRmzMdOV+7MTRxU10hYDfmGGbudEe5oVX2rqCnRbztNus7eE8yYQuXN2nG80ssewFww6kSkVrKmvupsYqivIt5wlTA0numcCVGtMIMS6ijZx+sSwa4nt6TlCpdO+uZ85rzYNQRCMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T+qh8jev; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PkbvhepM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749567170; x=1781103170;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=AZ7LHXSTXqFwK4mhI9ePGhYALuIIQ6ybKIs/Tl45lZo=;
-  b=PkbvhepMSGIPuq8AnqSa1tYluvRg4/WfN9OvwC4w8Mf+fmpf+PXIPFr5
-   MyO5Qg2IwYUhcXfTvLVT0E+Wcuzr0wf8KYurEx4LOVjJwqXSgu5llz1Q/
-   Dd6J8CB8TKVwbbutVuRKR01+OYeHExyni7s7u18iyVBZ6mX8oEh8n3ZT9
-   bu9BQiC03sybUeHB9atSULfpaEJ6XRkhIz22u7AjPSPubuOEpdOL970WX
-   Wv+lM1XKvHVpr/1t9aagjnqxTX0CAseyBT3W6LdXFwv0L7IzrjauZ8YOb
-   wTWb/duBfwRGprI+IKZ3atpyR1ehYjgyZL8rZ9dqQSd1hWKfwCBmOOmhu
-   Q==;
-X-CSE-ConnectionGUID: 5h9dmtn0T7quHZ0rakvIPw==
-X-CSE-MsgGUID: bnPFGeXPSDyd1WJPNoMGdw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51768052"
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="51768052"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 07:52:22 -0700
-X-CSE-ConnectionGUID: pLu9gEhtRC+f6wJlv07aeA==
-X-CSE-MsgGUID: BHnPbfXVSgaDaQjKzAsurQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="177803366"
-Received: from ubuntu.bj.intel.com ([10.238.156.109])
-  by orviesa002.jf.intel.com with ESMTP; 10 Jun 2025 07:52:19 -0700
-From: Jun Miao <jun.miao@intel.com>
-To: oneukum@suse.com,
-	sbhatta@marvell.com,
-	kuba@kernel.org,
-	netdev@vger.kernel.org
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jun.miao@intel.com
-Subject: [PATCH V2] net: usb: Convert tasklet API to new bottom half workqueue mechanism
-Date: Tue, 10 Jun 2025 22:54:03 +0800
-Message-Id: <20250610145403.2289375-1-jun.miao@intel.com>
-X-Mailer: git-send-email 2.32.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T+qh8jev"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1C5CC4CEED;
+	Tue, 10 Jun 2025 14:53:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749567223;
+	bh=D8oBuhkz5TcYD7TDo/ChhAEaqGOauhMGzMwHg078OFo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=T+qh8jevVpXz6Ho7YmvXD8xON+9O31WEPh0rRdKrnR/ms5r6JwO2sYroEODP9pyZ5
+	 giR/XOWDXaDqgWOIIxCFhNQThnLbSojmKfDA+i4SXCG8EYgtTFLK1TCk7SqP0Mk7l4
+	 4dPhtDlYsm81rJ+KjBgsmUc/1q/SWPyT9UhlUW3Cyg2QziB+RtLZyxGFZ97+JGP//5
+	 EAA5RS9FxQOM8mikEXbTkF142n6K7HIm2pf0amkVuu637/KmiKZkWFTY7Wq2dgu08P
+	 M6QJwn8JWSZ06MiRMSPMQu9c/PFdId0iRsyw9M/R7bvG1TAjC/7zH8sRzdbYaat1Sz
+	 m5/wSeyeebkQg==
+Message-ID: <30a7f1a6-1e04-4fc5-9bea-e2b5956b28b7@kernel.org>
+Date: Tue, 10 Jun 2025 16:53:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/5] i2c: piix4: Depends on X86
+To: Mario Limonciello <superm1@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Borislav Petkov <bp@alien8.de>, Jean Delvare <jdelvare@suse.com>,
+ Andi Shyti <andi.shyti@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
+ "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>,
+ Ingo Molnar <mingo@kernel.org>, linux-mips@vger.kernel.org,
+ loongarch@lists.linux.dev
+References: <20250422234830.2840784-1-superm1@kernel.org>
+ <20250422234830.2840784-3-superm1@kernel.org>
+ <CAMuHMdVPQLjOox5sMp34Z5MTwKv2WOpHa=MpZr8hWG22fQKcjw@mail.gmail.com>
+ <CAAhV-H70LXsDYMA7wz4x828rEFoJsNX0=m8F73Ge9=yfpzBpZQ@mail.gmail.com>
+ <24febda9-6360-459f-82d3-6fba9ed9be83@kernel.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <24febda9-6360-459f-82d3-6fba9ed9be83@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Migrate tasklet APIs to the new bottom half workqueue mechanism. It
-replaces all occurrences of tasklet usage with the appropriate workqueue
-APIs throughout the usbnet driver. This transition ensures compatibility
-with the latest design and enhances performance.
+Hi,
 
-As suggested by Oliver and Sundeep, the usbnet_bh() function only be
-called by usbnet_bh_workqueue(). It can be waited on in usbnet_stop(), which
-in turn can be called for a device reset. Hence this must be GFP_NOIO
-instead of GFP_ATOMIC in the rx_alloc_submit().
+On 10-Jun-25 16:12, Mario Limonciello wrote:
+> On 6/10/2025 2:24 AM, Huacai Chen wrote:
+>> On Tue, Jun 10, 2025 at 5:16 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>>>
+>>> Hi Mario,
+>>>
+>>> CC mips, loongarch
+>>>
+>>> On Wed, 23 Apr 2025 at 01:49, Mario Limonciello <superm1@kernel.org> wrote:
+>>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>>
+>>>> PIIX4 and compatible controllers are only for X86. As some headers are
+>>>> being moved into x86 specific headers PIIX4 won't compile on non-x86.
+>>>>
+>>>> Suggested-by: Ingo Molnar <mingo@kernel.org>
+>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>>
+>>> Thanks for your patch, which is now commit 7e173eb82ae97175
+>>> ("i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86")
+>>> in v6.16-rc1.
+>>>
+>>>> --- a/drivers/i2c/busses/Kconfig
+>>>> +++ b/drivers/i2c/busses/Kconfig
+>>>> @@ -200,7 +200,7 @@ config I2C_ISMT
+>>>>
+>>>>   config I2C_PIIX4
+>>>>          tristate "Intel PIIX4 and compatible (ATI/AMD/Serverworks/Broadcom/SMSC)"
+>>>> -       depends on PCI && HAS_IOPORT
+>>>> +       depends on PCI && HAS_IOPORT && X86
+>>>
+>>> Are you sure this south-bridge is not used on non-x86 platforms?
+>>> It is enabled in several non-x86 defconfigs:
+>>>
+>>>      arch/loongarch/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=y
+>>>      arch/mips/configs/ip27_defconfig:CONFIG_I2C_PIIX4=m
+>>>      arch/mips/configs/loongson2k_defconfig:CONFIG_I2C_PIIX4=y
+>>>      arch/mips/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=y
+>>>
+>>> The loongarch and loongson entries are probably bogus, but I wouldn't
+>>> be surprised if the SGI Onyx and Origin do use Intel south-bridges.
+>> Loongson can use AMD SB700/SB800 south bridges, which have I2C_PIIX4.
+> 
+> Well we could revert this patch, but it's going to be a compile failure because of 624b0d5696a89b138408d385899dd35372db324b and other patches that go on top of that.
+> 
+> My current leaning is we make a dummy fch.h header for these archs with #defines for 0.
 
-Suggested-by: Subbaraya Sundeep <sbhatta@marvell.com>
-Suggested-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Jun Miao <jun.miao@intel.com>
----
- drivers/net/usb/usbnet.c   | 38 +++++++++++++++++++-------------------
- include/linux/usb/usbnet.h |  2 +-
- 2 files changed, 20 insertions(+), 20 deletions(-)
+Move "fch.h" to include/linux/platform/x86/ so that it is available on all arches
+and if necessary ifdef out anything x86 specific in the C-code referencing it ?
 
-diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-index c04e715a4c2a..c2750fd5eb59 100644
---- a/drivers/net/usb/usbnet.c
-+++ b/drivers/net/usb/usbnet.c
-@@ -461,7 +461,7 @@ static enum skb_state defer_bh(struct usbnet *dev, struct sk_buff *skb,
- 
- 	__skb_queue_tail(&dev->done, skb);
- 	if (dev->done.qlen == 1)
--		tasklet_schedule(&dev->bh);
-+		queue_work(system_bh_wq, &dev->bh_work);
- 	spin_unlock(&dev->done.lock);
- 	spin_unlock_irqrestore(&list->lock, flags);
- 	return old_state;
-@@ -549,7 +549,7 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
- 		default:
- 			netif_dbg(dev, rx_err, dev->net,
- 				  "rx submit, %d\n", retval);
--			tasklet_schedule (&dev->bh);
-+			queue_work(system_bh_wq, &dev->bh_work);
- 			break;
- 		case 0:
- 			__usbnet_queue_skb(&dev->rxq, skb, rx_start);
-@@ -709,7 +709,7 @@ void usbnet_resume_rx(struct usbnet *dev)
- 		num++;
- 	}
- 
--	tasklet_schedule(&dev->bh);
-+	queue_work(system_bh_wq, &dev->bh_work);
- 
- 	netif_dbg(dev, rx_status, dev->net,
- 		  "paused rx queue disabled, %d skbs requeued\n", num);
-@@ -778,7 +778,7 @@ void usbnet_unlink_rx_urbs(struct usbnet *dev)
- {
- 	if (netif_running(dev->net)) {
- 		(void) unlink_urbs (dev, &dev->rxq);
--		tasklet_schedule(&dev->bh);
-+		queue_work(system_bh_wq, &dev->bh_work);
- 	}
- }
- EXPORT_SYMBOL_GPL(usbnet_unlink_rx_urbs);
-@@ -861,14 +861,14 @@ int usbnet_stop (struct net_device *net)
- 	/* deferred work (timer, softirq, task) must also stop */
- 	dev->flags = 0;
- 	timer_delete_sync(&dev->delay);
--	tasklet_kill(&dev->bh);
-+	disable_work_sync(&dev->bh_work);
- 	cancel_work_sync(&dev->kevent);
- 
- 	/* We have cyclic dependencies. Those calls are needed
- 	 * to break a cycle. We cannot fall into the gaps because
- 	 * we have a flag
- 	 */
--	tasklet_kill(&dev->bh);
-+	disable_work_sync(&dev->bh_work);
- 	timer_delete_sync(&dev->delay);
- 	cancel_work_sync(&dev->kevent);
- 
-@@ -955,7 +955,7 @@ int usbnet_open (struct net_device *net)
- 	clear_bit(EVENT_RX_KILL, &dev->flags);
- 
- 	// delay posting reads until we're fully open
--	tasklet_schedule (&dev->bh);
-+	queue_work(system_bh_wq, &dev->bh_work);
- 	if (info->manage_power) {
- 		retval = info->manage_power(dev, 1);
- 		if (retval < 0) {
-@@ -1123,7 +1123,7 @@ static void __handle_link_change(struct usbnet *dev)
- 		 */
- 	} else {
- 		/* submitting URBs for reading packets */
--		tasklet_schedule(&dev->bh);
-+		queue_work(system_bh_wq, &dev->bh_work);
- 	}
- 
- 	/* hard_mtu or rx_urb_size may change during link change */
-@@ -1198,11 +1198,11 @@ usbnet_deferred_kevent (struct work_struct *work)
- 		} else {
- 			clear_bit (EVENT_RX_HALT, &dev->flags);
- 			if (!usbnet_going_away(dev))
--				tasklet_schedule(&dev->bh);
-+				queue_work(system_bh_wq, &dev->bh_work);
- 		}
- 	}
- 
--	/* tasklet could resubmit itself forever if memory is tight */
-+	/* workqueue could resubmit itself forever if memory is tight */
- 	if (test_bit (EVENT_RX_MEMORY, &dev->flags)) {
- 		struct urb	*urb = NULL;
- 		int resched = 1;
-@@ -1224,7 +1224,7 @@ usbnet_deferred_kevent (struct work_struct *work)
- fail_lowmem:
- 			if (resched)
- 				if (!usbnet_going_away(dev))
--					tasklet_schedule(&dev->bh);
-+					queue_work(system_bh_wq, &dev->bh_work);
- 		}
- 	}
- 
-@@ -1325,7 +1325,7 @@ void usbnet_tx_timeout (struct net_device *net, unsigned int txqueue)
- 	struct usbnet		*dev = netdev_priv(net);
- 
- 	unlink_urbs (dev, &dev->txq);
--	tasklet_schedule (&dev->bh);
-+	queue_work(system_bh_wq, &dev->bh_work);
- 	/* this needs to be handled individually because the generic layer
- 	 * doesn't know what is sufficient and could not restore private
- 	 * information if a remedy of an unconditional reset were used.
-@@ -1547,7 +1547,7 @@ static inline void usb_free_skb(struct sk_buff *skb)
- 
- /*-------------------------------------------------------------------------*/
- 
--// tasklet (work deferred from completions, in_irq) or timer
-+// workqueue (work deferred from completions, in_irq) or timer
- 
- static void usbnet_bh (struct timer_list *t)
- {
-@@ -1594,23 +1594,23 @@ static void usbnet_bh (struct timer_list *t)
- 		int	temp = dev->rxq.qlen;
- 
- 		if (temp < RX_QLEN(dev)) {
--			if (rx_alloc_submit(dev, GFP_ATOMIC) == -ENOLINK)
-+			if (rx_alloc_submit(dev, GFP_NOIO) == -ENOLINK)
- 				return;
- 			if (temp != dev->rxq.qlen)
- 				netif_dbg(dev, link, dev->net,
- 					  "rxqlen %d --> %d\n",
- 					  temp, dev->rxq.qlen);
- 			if (dev->rxq.qlen < RX_QLEN(dev))
--				tasklet_schedule (&dev->bh);
-+				queue_work(system_bh_wq, &dev->bh_work);
- 		}
- 		if (dev->txq.qlen < TX_QLEN (dev))
- 			netif_wake_queue (dev->net);
- 	}
- }
- 
--static void usbnet_bh_tasklet(struct tasklet_struct *t)
-+static void usbnet_bh_workqueue(struct work_struct *work)
- {
--	struct usbnet *dev = from_tasklet(dev, t, bh);
-+	struct usbnet *dev = from_work(dev, work, bh_work);
- 
- 	usbnet_bh(&dev->delay);
- }
-@@ -1742,7 +1742,7 @@ usbnet_probe (struct usb_interface *udev, const struct usb_device_id *prod)
- 	skb_queue_head_init (&dev->txq);
- 	skb_queue_head_init (&dev->done);
- 	skb_queue_head_init(&dev->rxq_pause);
--	tasklet_setup(&dev->bh, usbnet_bh_tasklet);
-+	INIT_WORK (&dev->bh_work, usbnet_bh_workqueue);
- 	INIT_WORK (&dev->kevent, usbnet_deferred_kevent);
- 	init_usb_anchor(&dev->deferred);
- 	timer_setup(&dev->delay, usbnet_bh, 0);
-@@ -1971,7 +1971,7 @@ int usbnet_resume (struct usb_interface *intf)
- 
- 			if (!(dev->txq.qlen >= TX_QLEN(dev)))
- 				netif_tx_wake_all_queues(dev->net);
--			tasklet_schedule (&dev->bh);
-+			queue_work(system_bh_wq, &dev->bh_work);
- 		}
- 	}
- 
-diff --git a/include/linux/usb/usbnet.h b/include/linux/usb/usbnet.h
-index 0b9f1e598e3a..208682f77179 100644
---- a/include/linux/usb/usbnet.h
-+++ b/include/linux/usb/usbnet.h
-@@ -58,7 +58,7 @@ struct usbnet {
- 	unsigned		interrupt_count;
- 	struct mutex		interrupt_mutex;
- 	struct usb_anchor	deferred;
--	struct tasklet_struct	bh;
-+	struct work_struct	bh_work;
- 
- 	struct work_struct	kevent;
- 	unsigned long		flags;
--- 
-2.32.0
+Regards,
+
+Hans
+
 
