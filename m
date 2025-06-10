@@ -1,285 +1,223 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE2D28C03B
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:02:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8092828D84F
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:02:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749553331; cv=none; b=sEpZQZcTdZDLad/FLmkNbu+CeDDnsSY52IWVfRtqseRULYnTtEHWon6cW1A8JI7v49NYWOlMzGVMv+yob+7XKOZx1Wa5u+zDsko84Tij4oJTYIXRP8+7PPTxHj6e+ggHcwXkoF72IODUfeJfmMOUMRoe2uJyea034CwHCdAyY3M=
+	t=1749553348; cv=none; b=u1BCEGCh0a1WidadbVXEdV/6O4z3UyPaoQvFjBR/GOVEzXYa/nK0O3ybjDZbbwkqQaDXDsYPf+Wt5IwCw8htgOHo+3KarvWeTUpd9+eWGnEOmGU9YfOAdNwiES1dG2TYEqZwEWFZmcQ1n8h+tc69WIzfjlrCyBy0Dj1pWmzwNjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749553331; c=relaxed/simple;
-	bh=pnumnEgMONqC2sB0h2/3e/8Px5yvws2pdjGq64D49Tg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mPkICVaoNxsJ7Jk0a8JPX+dpsC/pFkXdpSjVb2Oic8MOwMUtaQs7InBWY0FmWxOHU7BgJpqHg3J9vzUcQsiE7cXRdUEkjbRurt2jXUcaUj1qTDcZlY1VaMBC26mBuk9wyBOHF+Wn9cy5Tivdp8Qe6XQ672/q/156eWpVZy6JYMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=F3tgKEga; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=W3t0OotR; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749553348; c=relaxed/simple;
+	bh=2R1vu4aVCqgtXeiOoyKqrKRKnpic9CpFTKg5DEYY5+g=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=JbwLpwgTrE6ZNiwT3me+/vw+UPQz1FYsXVVWDaVCACkfZDoYiUPhTIqu+MGGEqdKY2Mrmfi2DVBF7JI3AcGC6Z1kH3c/UVbmLiGa5qP8hRAQt3RqSh6lxb3GhgDOtu7fCnDf7FZQjJjc1elf6cniGk9MQ5boHxeLmktPKeptaMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=IApPMQAX; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F3tgKEga";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W3t0OotR"
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749553327;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9L1epFIrxpVQ8bZI5Xv86SU+O2nArDBf9rMp846oO1Q=;
-	b=F3tgKEgaax6gQgaRFpSuoJ6/4d6z000z83SHZ0rQ8xymuOfaGtlsyqqsTo1jDlpqTI7PwC
-	fwxx2CHBlV2OeVKCuLfpSvjbzoj8qzEDIUfZW06whQlr9ioGH25I/vzRUlIdG+7+bv4ZxN
-	0BhVRydfKa0syOa6aeGv1CJooDGy8fhSqH79I0S+yxUwOqzvvs0Q9Tmm2D2UHt2Mq/znNv
-	kX0eyBTKAPgIokXFYaHjXRr6jDhlxuiQncyLx9qpIuxPvxkJIt2TPGpv8LN8TEc83JK1un
-	zi6bviLs2gJGqrGktE8nLDG/ByMs9Gk4J4Rk10oLSruxMtI+Zc8Q6kFHGLqNxw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749553327;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9L1epFIrxpVQ8bZI5Xv86SU+O2nArDBf9rMp846oO1Q=;
-	b=W3t0OotR82kgiAotMTuKlEw1d3Fh45tbtus2VlC4eIq14DZ4qOkwDKKTo6gt4UKmtikbkJ
-	X38ycAO1TOuGLrDQ==
-To: linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Cc: tglx@linutronix.de,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v2 1/1] local_lock: Move this_cpu_ptr() notation from internal to main header.
-Date: Tue, 10 Jun 2025 13:02:04 +0200
-Message-ID: <20250610110205.1111719-2-bigeasy@linutronix.de>
-In-Reply-To: <20250610110205.1111719-1-bigeasy@linutronix.de>
-References: <20250610110205.1111719-1-bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="IApPMQAX"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1749553342;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DpzD/PxmS/TTLQGkgUz0aLIpp8nnuttkc/75uUPV/Qk=;
+	b=IApPMQAX1J7x/q2VSUj1ayMhPvyZ2BlNwr4o8hs0RIBE8e7/9sKFE4xX3UA/l9iSKOZr67
+	OF+woXeeHpF2VtI2BfZR5X2xHOJzwU2qayGLUvQzmFz+sdsdPYHIubyMJN4gYo69/at43M
+	nypxp5mGH6oyCXMAhhv5rO2jz3pr3vnbzmnp1YBodofoBpPXtaxJ7JJPVS2Mr9YEz+9zjR
+	JW+iuHpN9sOuZLvd9iRolHPOI3bk8rU7CLIqe+T/dwYaEbvAOT8eQIEeZe6x5PEgBfBpcE
+	r+zEMeSFlpi0RuZSR38U668nK4+Ez8/W0MG07rUhh1l4PEC1FuTDOs6rMGeNEA==
+Content-Type: multipart/signed;
+ boundary=a2fd228ad8616b05fb37f016492705069e4812029ccc04877beb3c403ab6;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Tue, 10 Jun 2025 13:02:11 +0200
+Message-Id: <DAISW8MXEU0G.3AMRSKNYQUJY8@cknow.org>
+Cc: "Piotr Zalewski" <pZ010001011111@proton.me>, <hjc@rock-chips.com>,
+ <heiko@sntech.de>, <andy.yan@rock-chips.com>,
+ <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+ <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>, "Dang Huynh"
+ <danct12@riseup.net>, <dri-devel@lists.freedesktop.org>,
+ <linux-arm-kernel@lists.infradead.org>,
+ <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH drm-misc-next] rockchip/drm: vop2: don't check
+ color_mgmt_changed in atomic_enable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "Andy Yan" <andyshrk@163.com>
+References: <20241206192013.342692-3-pZ010001011111@proton.me>
+ <DAEVDSTMWI1E.J454VZN0R9MA@cknow.org>
+ <mArHDRo5bhIAjG8sDOR-kM7DsVdbXxxcC8hfuEEPfUWIdMwNnSUy8ZFoLis66DFSuIEq8TrnAxUGkyo5IUTGw3AG4k3vuVVz0fsoI27BAms=@proton.me> <DAH3S8O66J47.3NT18EJCXWKL9@cknow.org> <47773829.1fce.1974f732545.Coremail.andyshrk@163.com> <DAH60H3HYG7M.3NFXBJ7576RH1@cknow.org> <3161fa6a.93d0.19753f8c5e0.Coremail.andyshrk@163.com> <DAI0A1Y753FJ.B0NMT8L5VPEH@cknow.org> <4b380a57.8ab2.197591815a8.Coremail.andyshrk@163.com>
+In-Reply-To: <4b380a57.8ab2.197591815a8.Coremail.andyshrk@163.com>
+X-Migadu-Flow: FLOW_OUT
+
+--a2fd228ad8616b05fb37f016492705069e4812029ccc04877beb3c403ab6
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-The local_lock.h is the main entry for the local_lock_t type and
-provides wrappers around internal functions prefixed with __ in
-local_lock_internal.h.
+Hi Andy,
 
-Move the this_cpu_ptr() dereference of the variable from the internal to
-the main header. Since it is all macro implemented, this_cpu_ptr() will
-still happen within the preempt/ IRQ disabled section.
-This will free the internal implementation (__) to be used on
-local_lock_t types which are local variables and must not be accessed
-via this_cpu_ptr().
+On Tue Jun 10, 2025 at 11:07 AM CEST, Andy Yan wrote:
+> At 2025-06-09 20:36:41, "Diederik de Haas" <didi.debian@cknow.org> wrote:
+>>On Mon Jun 9, 2025 at 11:15 AM CEST, Andy Yan wrote:
+>>> At 2025-06-08 20:53:37, "Diederik de Haas" <didi.debian@cknow.org> wrot=
+e:
+>>>>On Sun Jun 8, 2025 at 2:10 PM CEST, Andy Yan wrote:
+>>>>> At 2025-06-08 19:08:50, "Diederik de Haas" <didi.debian@cknow.org> wr=
+ote:
+>>>>>>On Sat Jun 7, 2025 at 5:32 PM CEST, Piotr Zalewski wrote:
+>>>>>>> On Thursday, June 5th, 2025 at 10:13 PM, Diederik de Haas <didi.deb=
+ian@cknow.org> wrote:
+>>>>>>>> Since kernel 6.14-rc1 I have the problem that visual output is no =
+longer
+>>>>>>>> shown on my PineTab2 and a `git bisect` pointed to this patch/comm=
+it
+>>>>>
+>>>>> I have conducted tests on both rk3566-box-demo (with drm set to y)
+>>>>> and rk3568-lubancat-2 (with drm set to m), but I was unable to
+>>>>> reproduce this issue. Could you two please share your kernel
+>>>>> defconfig and the corresponding kernel startup logs?
+>>>>> Additionally, both of my two boards tested with HDMI output. What
+>>>>> kind of display interface does your board use for output?
+>>>>
+>>>>I wasn't able to reproduce this issue on my PINE64 Quartz-B (rk3566)=20
+>>>>with HDMI output either, but the problem is present on a PineTab2 [1]
+>>>>(also rk3566) which uses a MIPI DSI connection to the display panel.
+>>>>
+>>>>Kernel config:
+>>>>https://paste.sr.ht/~diederik/aa747ed170aa01cc759fbe1ffd9cebe8c887b10b
+>>>>
+>>>>dmesg kernel 6.14-rc1:
+>>>>https://paste.sr.ht/~diederik/733fbf8bb7f6aee8b68cf5a652157d445462c24a
+>>>>
+>>>>dmesg kernel 6.14-rc1 with Piotr's patch:
+>>>>https://paste.sr.ht/~diederik/db1af672cfb611acbfbdf35adb6f170e5c38febc
+>>>>
+>>>>Both dmesg outputs contain a suspend-resume cycle.
+>>>>I'm using a USB Wi-Fi adapter for the wireless connection.
+>>>>
+>>>>[1] https://wiki.pine64.org/wiki/PineTab2
+>>>>
+>>>>Happy to provide more info and/or do some tests.
+>>>
+>>> Can you apply the patch in the attachment, reproduce this issue(without=
+ Piotr's patch),=20
+>>> and then provide me with a copy of the kernel log?
+>>
+>>Same test as above, but added ``dmesg | grep "vop2_"`` at the end as well
+>>
+>>dmesg kernel 6.14-rc1 with Andy's print_lut_0609_1710 patch:
+>>https://paste.sr.ht/~diederik/ac356ee8b0f7e772c7310293d99d95644f59a4ee
+>
+>
+> root@pt2-scmi:~# dmesg | grep "vop2_"
+> [    4.996281] rockchip-drm display-subsystem: bound fe040000.vop (ops vo=
+p2_crtc_atomic_try_set_gamma.part.0 [rockchipdrm])
+> [    5.005207] rockchip-drm display-subsystem: bound fe0a0000.hdmi (ops v=
+op2_crtc_atomic_try_set_gamma.part.0 [rockchipdrm])
+> [    5.006798] rockchip-drm display-subsystem: bound fe060000.dsi (ops vo=
+p2_crtc_atomic_try_set_gamma.part.0 [rockchipdrm])
+> [    5.021204] vop2_crtc_atomic_try_set_gamma  gamma_lut: 000000000000000=
+0
+> [    5.021219] vop2_vp_dsp_lut_disable dsp_ctrl: 0x0000000f
+>
+> It seems that dsp_ctrl: 0x0000000f , this value is not what we expected.
+>
+> The expected is 0x00010000.
+>
+> Could you please do an experiment for me? When there is no display on you=
+r screen,=20
+> execute the following command and see if the screen can resume displaying=
+:
+>
+> ./data/io  -w -4 0xfe040d00 0x10000; io -w -4 0xfe040000 0x28002=20
+>
+> I have placed the io tool in the attachment.
+>
+> You can use command like bellow to read back to confirm if what you write=
+ has taken effect:
+> io -r -4 -l 0x100  0xfe040d00=20
+>
+> you may need to make CONFIG_DEVMEM=3Dy so that you can write the register=
+ by io command.
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- include/linux/local_lock.h          | 20 +++++++++----------
- include/linux/local_lock_internal.h | 30 ++++++++++++++---------------
- 2 files changed, 25 insertions(+), 25 deletions(-)
+I renamed it as ``andy-io`` and performed the test:
 
-diff --git a/include/linux/local_lock.h b/include/linux/local_lock.h
-index 16a2ee4f8310b..2ba8464195244 100644
---- a/include/linux/local_lock.h
-+++ b/include/linux/local_lock.h
-@@ -13,13 +13,13 @@
-  * local_lock - Acquire a per CPU local lock
-  * @lock:	The lock variable
-  */
--#define local_lock(lock)		__local_lock(lock)
-+#define local_lock(lock)		__local_lock(this_cpu_ptr(lock))
-=20
- /**
-  * local_lock_irq - Acquire a per CPU local lock and disable interrupts
-  * @lock:	The lock variable
-  */
--#define local_lock_irq(lock)		__local_lock_irq(lock)
-+#define local_lock_irq(lock)		__local_lock_irq(this_cpu_ptr(lock))
-=20
- /**
-  * local_lock_irqsave - Acquire a per CPU local lock, save and disable
-@@ -28,19 +28,19 @@
-  * @flags:	Storage for interrupt flags
-  */
- #define local_lock_irqsave(lock, flags)				\
--	__local_lock_irqsave(lock, flags)
-+	__local_lock_irqsave(this_cpu_ptr(lock), flags)
-=20
- /**
-  * local_unlock - Release a per CPU local lock
-  * @lock:	The lock variable
-  */
--#define local_unlock(lock)		__local_unlock(lock)
-+#define local_unlock(lock)		__local_unlock(this_cpu_ptr(lock))
-=20
- /**
-  * local_unlock_irq - Release a per CPU local lock and enable interrupts
-  * @lock:	The lock variable
-  */
--#define local_unlock_irq(lock)		__local_unlock_irq(lock)
-+#define local_unlock_irq(lock)		__local_unlock_irq(this_cpu_ptr(lock))
-=20
- /**
-  * local_unlock_irqrestore - Release a per CPU local lock and restore
-@@ -49,7 +49,7 @@
-  * @flags:      Interrupt flags to restore
-  */
- #define local_unlock_irqrestore(lock, flags)			\
--	__local_unlock_irqrestore(lock, flags)
-+	__local_unlock_irqrestore(this_cpu_ptr(lock), flags)
-=20
- /**
-  * local_lock_init - Runtime initialize a lock instance
-@@ -64,7 +64,7 @@
-  * locking constrains it will _always_ fail to acquire the lock in NMI or
-  * HARDIRQ context on PREEMPT_RT.
-  */
--#define local_trylock(lock)		__local_trylock(lock)
-+#define local_trylock(lock)		__local_trylock(this_cpu_ptr(lock))
-=20
- /**
-  * local_trylock_irqsave - Try to acquire a per CPU local lock, save and d=
-isable
-@@ -77,7 +77,7 @@
-  * HARDIRQ context on PREEMPT_RT.
-  */
- #define local_trylock_irqsave(lock, flags)			\
--	__local_trylock_irqsave(lock, flags)
-+	__local_trylock_irqsave(this_cpu_ptr(lock), flags)
-=20
- DEFINE_GUARD(local_lock, local_lock_t __percpu*,
- 	     local_lock(_T),
-@@ -91,10 +91,10 @@ DEFINE_LOCK_GUARD_1(local_lock_irqsave, local_lock_t __=
-percpu,
- 		    unsigned long flags)
-=20
- #define local_lock_nested_bh(_lock)				\
--	__local_lock_nested_bh(_lock)
-+	__local_lock_nested_bh(this_cpu_ptr(_lock))
-=20
- #define local_unlock_nested_bh(_lock)				\
--	__local_unlock_nested_bh(_lock)
-+	__local_unlock_nested_bh(this_cpu_ptr(_lock))
-=20
- DEFINE_GUARD(local_lock_nested_bh, local_lock_t __percpu*,
- 	     local_lock_nested_bh(_T),
-diff --git a/include/linux/local_lock_internal.h b/include/linux/local_lock=
-_internal.h
-index 8d5ac16a9b179..b4d7b24882835 100644
---- a/include/linux/local_lock_internal.h
-+++ b/include/linux/local_lock_internal.h
-@@ -99,14 +99,14 @@ do {								\
- 		local_trylock_t *tl;					\
- 		local_lock_t *l;					\
- 									\
--		l =3D (local_lock_t *)this_cpu_ptr(lock);			\
-+		l =3D (local_lock_t *)(lock);			\
- 		tl =3D (local_trylock_t *)l;				\
- 		_Generic((lock),					\
--			__percpu local_trylock_t *: ({			\
-+			local_trylock_t *: ({			\
- 				lockdep_assert(tl->acquired =3D=3D 0);	\
- 				WRITE_ONCE(tl->acquired, 1);		\
- 			}),						\
--			__percpu local_lock_t *: (void)0);		\
-+			local_lock_t *: (void)0);		\
- 		local_lock_acquire(l);					\
- 	} while (0)
-=20
-@@ -133,7 +133,7 @@ do {								\
- 		local_trylock_t *tl;				\
- 								\
- 		preempt_disable();				\
--		tl =3D this_cpu_ptr(lock);			\
-+		tl =3D (lock);					\
- 		if (READ_ONCE(tl->acquired)) {			\
- 			preempt_enable();			\
- 			tl =3D NULL;				\
-@@ -150,7 +150,7 @@ do {								\
- 		local_trylock_t *tl;				\
- 								\
- 		local_irq_save(flags);				\
--		tl =3D this_cpu_ptr(lock);			\
-+		tl =3D (lock);					\
- 		if (READ_ONCE(tl->acquired)) {			\
- 			local_irq_restore(flags);		\
- 			tl =3D NULL;				\
-@@ -167,15 +167,15 @@ do {								\
- 		local_trylock_t *tl;					\
- 		local_lock_t *l;					\
- 									\
--		l =3D (local_lock_t *)this_cpu_ptr(lock);			\
-+		l =3D (local_lock_t *)(lock);				\
- 		tl =3D (local_trylock_t *)l;				\
- 		local_lock_release(l);					\
- 		_Generic((lock),					\
--			__percpu local_trylock_t *: ({			\
-+			local_trylock_t *: ({			\
- 				lockdep_assert(tl->acquired =3D=3D 1);	\
- 				WRITE_ONCE(tl->acquired, 0);		\
- 			}),						\
--			__percpu local_lock_t *: (void)0);		\
-+			local_lock_t *: (void)0);		\
- 	} while (0)
-=20
- #define __local_unlock(lock)					\
-@@ -199,11 +199,11 @@ do {								\
- #define __local_lock_nested_bh(lock)				\
- 	do {							\
- 		lockdep_assert_in_softirq();			\
--		local_lock_acquire(this_cpu_ptr(lock));	\
-+		local_lock_acquire((lock));			\
- 	} while (0)
-=20
- #define __local_unlock_nested_bh(lock)				\
--	local_lock_release(this_cpu_ptr(lock))
-+	local_lock_release((lock))
-=20
- #else /* !CONFIG_PREEMPT_RT */
-=20
-@@ -227,7 +227,7 @@ typedef spinlock_t local_trylock_t;
- #define __local_lock(__lock)					\
- 	do {							\
- 		migrate_disable();				\
--		spin_lock(this_cpu_ptr((__lock)));		\
-+		spin_lock((__lock));				\
- 	} while (0)
-=20
- #define __local_lock_irq(lock)			__local_lock(lock)
-@@ -241,7 +241,7 @@ typedef spinlock_t local_trylock_t;
-=20
- #define __local_unlock(__lock)					\
- 	do {							\
--		spin_unlock(this_cpu_ptr((__lock)));		\
-+		spin_unlock((__lock));				\
- 		migrate_enable();				\
- 	} while (0)
-=20
-@@ -252,12 +252,12 @@ typedef spinlock_t local_trylock_t;
- #define __local_lock_nested_bh(lock)				\
- do {								\
- 	lockdep_assert_in_softirq_func();			\
--	spin_lock(this_cpu_ptr(lock));				\
-+	spin_lock((lock));					\
- } while (0)
-=20
- #define __local_unlock_nested_bh(lock)				\
- do {								\
--	spin_unlock(this_cpu_ptr((lock)));			\
-+	spin_unlock((lock));					\
- } while (0)
-=20
- #define __local_trylock(lock)					\
-@@ -268,7 +268,7 @@ do {								\
- 			__locked =3D 0;				\
- 		} else {					\
- 			migrate_disable();			\
--			__locked =3D spin_trylock(this_cpu_ptr((lock)));	\
-+			__locked =3D spin_trylock((lock));	\
- 			if (!__locked)				\
- 				migrate_enable();		\
- 		}						\
---=20
-2.49.0
+```sh
+root@pt2-scmi:~# echo 'just (re-)booted into my PineTab2; screen is blank'
+just (re-)booted into my PineTab2; screen is blank
+root@pt2-scmi:~# uname -a
+Linux pt2-scmi 6.14.0-rc1-00001-gfbe17d9b77b0 #18 SMP Mon Jun  9 13:17:28 C=
+EST 2025 aarch64 GNU/Linux
+root@pt2-scmi:~# ./andy-io -r -4 -l 0x100 0xfe040d00
+mmap() failed: Operation not permitted
+root@pt2-scmi:~# grep CONFIG_DEVMEM /boot/config-6.14.0-rc1-00001-gfbe17d9b=
+77b0
+CONFIG_DEVMEM=3Dy
+root@pt2-scmi:~# ./andy-io -w -4 0xfe040d00 0x10000
+mmap() failed: Operation not permitted
+root@pt2-scmi:~# ./andy-io -w -4 0xfe040000 0x28002
+mmap() failed: Operation not permitted
+```
 
+I guess this is not what you expected and I don't know why it happens.
+
+Cheers,
+  Diederik
+
+> [   73.750524] vop2_crtc_atomic_try_set_gamma  gamma_lut: 000000000000000=
+0
+> [   73.750542] vop2_vp_dsp_lut_disable dsp_ctrl: 0x00010000
+>>>>>>> patched vop2_vp_dsp_lut_disable function so that dsp_ctrl is set on=
+ly if=20
+>>>>>>> GAMMA LUT EN bit is set. I checked that this also does not break th=
+e gamma=20
+>>>>>>> lut functionality with emphasis on out-of/into suspend behavior.
+>>>>>>>
+>>>>>>> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers=
+/gpu/drm/rockchip/rockchip_drm_vop2.c
+>>>>>>> index d0f5fea15e21..7ddf311b38c6 100644
+>>>>>>> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+>>>>>>> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+>>>>>>> @@ -897,6 +897,9 @@ static void vop2_vp_dsp_lut_disable(struct vop2=
+_video_port *vp)
+>>>>>>>  {
+>>>>>>>  	u32 dsp_ctrl =3D vop2_vp_read(vp, RK3568_VP_DSP_CTRL);
+>>>>>>> =20
+>>>>>>> +	if ((dsp_ctrl & RK3568_VP_DSP_CTRL__DSP_LUT_EN) =3D=3D 0)
+>>>>>>> +		return;
+>>>>>>> +
+>>>>>>>  	dsp_ctrl &=3D ~RK3568_VP_DSP_CTRL__DSP_LUT_EN;
+>>>>>>>  	vop2_vp_write(vp, RK3568_VP_DSP_CTRL, dsp_ctrl);
+>>>>>>>  }
+>>>>>>
+>>>>>>I built a kernel with 6.14-rc1 + this patch and can confirm the scree=
+n
+>>>>>>has output again :-)
+>>>>>>
+>>>>>>> I will wait with sending a patch because maybe Andy has something t=
+o add=20
+>>>>>>> to this.
+>>>>>>
+>>>>>>Sounds like a plan. It could be that this issue surfaced an underlayi=
+ng
+>>>>>>issue and if so, fixing that would be even better.
+
+
+--a2fd228ad8616b05fb37f016492705069e4812029ccc04877beb3c403ab6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaEgQtgAKCRDXblvOeH7b
+bgCaAQCewNGurxHRr3jS3eEoPIWei9XCwBRy9BEv6a3QzGD+pAEAheo+MJVHidjB
+pJTB5xZ0vFxj8HUWu+5MHzEn5NUnJAE=
+=N8Ux
+-----END PGP SIGNATURE-----
+
+--a2fd228ad8616b05fb37f016492705069e4812029ccc04877beb3c403ab6--
