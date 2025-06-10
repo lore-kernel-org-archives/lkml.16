@@ -1,90 +1,67 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACC123183E
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 19:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55581264A60;
+	Tue, 10 Jun 2025 19:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749584561; cv=none; b=of/LBH5NCNGM37puvi209IdwVgyfKJU6at4RPUnxgNI6N7bm4K46fXZDb/7PYemVK29mKMCsQ84by3iN/EvxL8jh2giUOyxMqa4hR7ssLe68KksnQJpZmLSCeKzZN2nzzuZ/Ssyi6wf7r88F/rABfty4xPsHexv2P9wby7iiVNo=
+	t=1749584643; cv=none; b=WSmcR/phIMXxiuVVxYfoWF2qfDm5cupeuyqU69gr6f5P0GSBTbE5bDrnJXst5aZhRyl2He359tRma8rHV5Wt7/q0M7oG88Nqx7Akbs89q4SJmeLgNhaFg/+NgvSH06P+t/NdGizsxs3Qa3ft4qouzn/r5fdHuoc4byf9dlsrVL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749584561; c=relaxed/simple;
-	bh=BNhw0XBfXHMOeaPgTMY/f9mkfBnPLyvADW3B1BmbS2Q=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=hfjGUO5d5FSFfdne82rkwvb6jsoukoGKbL6ViSDA0uoKsQoPCF97kXcXcXZTK9JneL5qCGmvn0YVjFrAVcA96n/dbfQHdecCBTV1TocXL7iqy3kIReGqGLkLMVzJbFwIZRyFWAR7TYHCFUzkuel1uEHSYB4YYvGPuWehXRxZplY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dtdgQTeR; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1749584643; c=relaxed/simple;
+	bh=12a+d4zltJNXEBdqU5/DPXEo5WDoOhzF8MOtZadBGVs=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=NSFOAQwNqWeSGXBeDbYP6L83l1nY4SFUTdLvj4OGPEO40WGeGu+WGo6/vrS4WK3AVTmigYGkslDwJVU3TYcLMgfuHUaHxTqrZsTBFKKIeBi+a+ew2Q9Me2IuNYIMWxgImMQolN7FjDs9fsVCBF8yESSXuRwqoje00UcEn3vIeRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u0Q4RBGW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dtdgQTeR"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2fb347b3e4so1183208a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:42:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749584559; x=1750189359; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yKLltdt/WLKHq128Ze0+XQKxN6okQr6D2NCcuRhNDJo=;
-        b=dtdgQTeRpOkeqnNZxz9YfX/UBVwMGybwHCsds6BD/CrRfbg3FPd3iJeCaqgiOWI9Qn
-         wK7VGv2BPcdKeCjznQsOl54JETp6OM7XVsVSgFuC2ntxm6aC+VAZkw1aJT3yhuvWH1kG
-         njAikuu5GyaSHSxdwUT/GKD5aPuDt1pvA6NQAGHz1jTRqT6VPE6F397q9v84NWEnh3GE
-         2sUIptXQ79IzUFbmRCyOsw5C932BfzKi+lrW4KF5ktgYjuszgIpbJlwSju2Fw4PLjCH2
-         ViumX2pudRvAxBWk2IC/eokLXO8by36xH+HUK67rtFDwxrTxGdfSPerX0/nDQzwF7xGo
-         kpXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749584559; x=1750189359;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yKLltdt/WLKHq128Ze0+XQKxN6okQr6D2NCcuRhNDJo=;
-        b=krh/FHwQZqmPmwtpVMd/DixGHSEk36myC6c7eSvAx/jrOpED8hrj6S+mmFqS8DDTpr
-         XINl5Qch6FgD17SNmMSPN4H3XSDiZEN4IfRwcwhDPfBaLAxo8dOoc8TNa76jCZ/vqiTp
-         qUEu6PMxl/3On9ZCYY8tAmttmQ6rzqbNvcVDZm8eIsHG0cXeSK1brO+ISEr0MrnTs+rO
-         VlXq7W/QS1SSDfXOiwUpKkpSjAgVaBca9T3M3c7NMEkpSsx38AOOa0hgaHJbBKGHSBMD
-         1G1Ml89ALfzN+QuODZa7qiCZqFCOhcW3qvzBr4JTP+zDyhsSE3pWYe1Cyd3Y0TwpXmMx
-         9abw==
-X-Forwarded-Encrypted: i=1; AJvYcCWArW/6OrAV44QgHa+fkvT2oa8LbRP0Bz5WQucn40vaJHcWynocrkcvS5OK/I8/xjM3MTXRWOaeuaHYZBQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGSQvxyszGoxv4fD95p3qXQycPTLvcBoUdAV9r/7vAFb70iTzq
-	kfO2w5aoX8K2dbeHc8eCXZQ7VqwyXSqV79V9mNpi2uahnowvczy4kVw/SJdLvyoX7/S5oP1HkAS
-	/M0efvg==
-X-Google-Smtp-Source: AGHT+IF3lN1xqZpfLKDStwxaRuGouawxqx2dgLEoer8Pvy8mBY//DiSnV53VrdVqUjSCJXEwMfILIQyL95s=
-X-Received: from pjbpx1.prod.google.com ([2002:a17:90b:2701:b0:311:a879:981f])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5291:b0:311:c5d9:2c79
- with SMTP id 98e67ed59e1d1-313af23dc38mr871005a91.21.1749584559644; Tue, 10
- Jun 2025 12:42:39 -0700 (PDT)
-Date: Tue, 10 Jun 2025 12:42:15 -0700
-In-Reply-To: <20250424052201.7194-1-dapeng1.mi@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u0Q4RBGW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D8B9C4CEED;
+	Tue, 10 Jun 2025 19:44:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749584642;
+	bh=12a+d4zltJNXEBdqU5/DPXEo5WDoOhzF8MOtZadBGVs=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=u0Q4RBGWOiXdJFjsftPl+kTFowDC98kbRfxEP1shNFkmPvXI+hgbq4r745MixQTNd
+	 5uxRZjrd+4tz3UrXQs5cvzZDJxH6HvHv8oaka02eknPt9SxeasIhmWgyMDVSqULUoB
+	 QKANzMIpSavYiZTjS3nUUQnfTuSnm4Ka1VV9ETsSBVIlxoAa+z20zGvOSCREegRSgT
+	 mlC6yoGbrJsF7p/LK9ifwsNP0DvcldjH3xHbDoTXuLYD28Pzrj0JgSz1bQK+NhJfCC
+	 8xCIcEAkv5SCdrkPIcJFFcHpnJkFfSfuS4OGc8vmEU4iu2dABjng2a7kSM3BMnCVY/
+	 EnUM9xBpXtFbQ==
+Date: Tue, 10 Jun 2025 21:44:00 +0200 (CEST)
+From: Jiri Kosina <jikos@kernel.org>
+To: Zihuan Zhang <zhangzihuan@kylinos.cn>
+cc: bentiss@kernel.org, linux-input@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] HID: debug: Use the __set_current_state()
+In-Reply-To: <20250509022554.27001-1-zhangzihuan@kylinos.cn>
+Message-ID: <n405o2oq-s9p1-5o80-n2rn-8n7n9n8362po@xreary.bet>
+References: <20250509022554.27001-1-zhangzihuan@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250424052201.7194-1-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
-Message-ID: <174958165124.102860.1466726781633621770.b4-ty@google.com>
-Subject: Re: [PATCH] x86/pmu_pebs: Initalize and enable PMU interrupt (PMI_VECTOR)
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Jim Mattson <jmattson@google.com>, Mingwei Zhang <mizhang@google.com>, 
-	Zide Chen <zide.chen@intel.com>, Das Sandipan <Sandipan.Das@amd.com>, 
-	Shukla Manali <Manali.Shukla@amd.com>, Dapeng Mi <dapeng1.mi@intel.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 24 Apr 2025 05:22:01 +0000, Dapeng Mi wrote:
-> PMU interrupt is not correctly initialized and enabled in pmu_pebs test.
-> It leads to the APIC_LVTPC mask bit is never cleared after first PMI and
-> all subsequential PEBS PMIs are suppressed.
-> 
-> Although it doesn't impact pmu_pebs test results since current pmu_pebs
-> test checks PEBS records by polling instead of PMI driving, it's still an
-> incorrect behavior and could cause some unexpected false positives.
-> 
-> [...]
+On Fri, 9 May 2025, Zihuan Zhang wrote:
 
-Applied to kvm-x86 next, thanks!
+> When detecting an invalid list->hdev, the process needs to manually set
+> its state to TASK_RUNNING and exit. In the original code,
+> set_current_state() (which includes a memory barrier) is used here, but
+> it is immediately followed by a mutex_unlock() call. Since
+> mutex_unlock() internally includes a memory barrier, this ensures that
+> all modifications within the critical section (including the process
+> state) are visible to other CPUs. Therefore, replacing it with
+> __set_current_state() (without an implicit barrier) avoids redundant
+> memory barriers.
 
-[1/1] x86/pmu_pebs: Initalize and enable PMU interrupt (PMI_VECTOR)
-      https://github.com/kvm-x86/kvm-unit-tests/commit/389dfda487f9
+Good catch.
 
---
-https://github.com/kvm-x86/kvm-unit-tests/tree/next
+Now queued in hid.git#for-6.17/core.
+
+Thanks,
+
+-- 
+Jiri Kosina
+SUSE Labs
+
