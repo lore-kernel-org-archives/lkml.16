@@ -1,72 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f67.google.com (mail-ej1-f67.google.com [209.85.218.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D8F1F874F
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE2D27A93B
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:26:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749540369; cv=none; b=anzOfkFrTGYP1uHQOQwwnaf6sdK5lPI9lzloSsXTRGESO+r1v2z3biyE7CAvQ/EPVyVafnFweu5gTVMditDWoLilBjwZB3vZL56plUPxVVreC6r7GCS/c+F+4Lkoco9h17VKMqsd7T4XuS+iLW2uyOVo0nAJEKEKW178sB8YkVc=
+	t=1749540392; cv=none; b=YWsZKY3BBC6Iekqgz8BIiORT5ikVC4kgFJE1tVclgKF5aqMrNrVSZHhDU2Vc62fY2ibIusHm7SCA96z9xOn+bDTeKZBHYy0PDUPkcmnLxjDQjjjiqD5dRUFgXIwGhGwK+DauHIA5k72vlHp9NB7Qie5eemHZoBDwdxQESyewxyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749540369; c=relaxed/simple;
-	bh=qAQmpXa7ID5KZypB9crWnfvGj8xLJhiVhcDIpgBWJx0=;
+	s=arc-20240116; t=1749540392; c=relaxed/simple;
+	bh=T+CjI/BtZil+fcwt4iAfiqj+VeXBzHaVbluTjLSffJ8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ENryqjnG5ATRYV3x1rzjLN9JkOEttrjVVG5f+sMISuX3qMgiU2xnb8omU4k0F5sk3Q0CA8hS9xUD2fAWUHzxvf4IEOO4iBf/+uJBoU1GnczVPiHzwon+nFK158zSHsOE4ydDxI++o/cWdEZzI6XErlTS+YwAJlTcLXIhzD+B4lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f1ihQrvg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=GPcKn1IN1MJO+EhnfWFHpzN+mlczc0QzvMtw10NkZRPUdI8ERc0LD0OXD9JEP/z9OFgJTNhDirqAUnUi3BOPV5uHz06QyCExwsZm9UXDpX3l+XeRq+2LRNHhJ+xRmW9M6eV2kbi6NVLxF7WPoxtOyYvibslzIJx86MOMrxr9qxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=monstr.eu; spf=none smtp.mailfrom=monstr.eu; dkim=pass (2048-bit key) header.d=monstr-eu.20230601.gappssmtp.com header.i=@monstr-eu.20230601.gappssmtp.com header.b=0XyqZRGa; arc=none smtp.client-ip=209.85.218.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=monstr.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=monstr.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f1ihQrvg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749540366;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xiAped60M2xbB9Ds3ypGGB21HDmKyveMU93vjR1lu6k=;
-	b=f1ihQrvgjxFBHE1OnZ6w9Xp3PpAqxotTGoQ4jhbWHiPRQ0Dm7Dpz+524Y1lc4Jupe0LHvj
-	Em8iIXIZniSN7KmXR3G3Q+f61Kim3I5gcyPI6gxlkjAVJjVkYLq1NlYWcfEof3Y14ykFEe
-	ZQdWEcMyj3TcOdfb+oOQp5Dh8YB8AgY=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-660-sRhCm8qjMNG5oqrXdqKMtA-1; Tue, 10 Jun 2025 03:26:05 -0400
-X-MC-Unique: sRhCm8qjMNG5oqrXdqKMtA-1
-X-Mimecast-MFC-AGG-ID: sRhCm8qjMNG5oqrXdqKMtA_1749540364
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f6ba526eso2987079f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 00:26:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=monstr-eu.20230601.gappssmtp.com header.i=@monstr-eu.20230601.gappssmtp.com header.b="0XyqZRGa"
+Received: by mail-ej1-f67.google.com with SMTP id a640c23a62f3a-ade326e366dso534193366b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 00:26:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20230601.gappssmtp.com; s=20230601; t=1749540386; x=1750145186; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cVjK0599UkeAIvQVZ6e3BYBbqIwF7FaraC94wRTpRos=;
+        b=0XyqZRGa7+IncYk+xGRPqMfh6Kg+EOsdAYV7bJ67RkUYPDXaW2LdqGCJGOSabA5PbI
+         fo7Kwh6elYZ2LY6sZwc2fyV9EF5/bZL/YRYkXK74iuPej9h3QEsO7/ueo2tJLba8puGU
+         Hx9C0x3FvhR2o/5LrYiTwSskd9yyUkNqDdSWk46HpQVBqLTunhxA8sFiKLI9xn6d+E/s
+         dEZ7SyNEHQYJWkWF3nM+UNwGiOvfgN6e8rqiefHQYwnYPDsD2jyE3iJssyaE2rehu1d+
+         uRvL+b1f1T3qPK2tA1DKHFryfXyHY1MgFxfaB1gArR0MMkbTibpASJjvrrZQUBdfqW9L
+         r4jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749540364; x=1750145164;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=xiAped60M2xbB9Ds3ypGGB21HDmKyveMU93vjR1lu6k=;
-        b=o6Ac+6mXN6BDpF1ttPc6nSsNHagzv9on+hjrdumNg5TW3cNo2JHtWQrSgqvMonqOwv
-         wZmi0jh/z8Q98M+utBhRsO6lsYiU8Yi3Esnf8y7BYdQHK2YrywVE+kSVHJwasBuU+ID1
-         K/5hHyZWfdT49WIX1JuUif5svVVUEVOLzqNxQ+dOugFr7+xv101P58Ql7q2rRbVzoz6J
-         2nJ/0LMty2mFYwf4CSDn4NugrgdOGtdCnT22413D5B/68g1kJGF5Kss1hTaSO/v7Ky3V
-         0mSIjWFvutPGrHC9lFhnAqw3gpcMIn91p8Nl+yeCF/NDxp6xQ3Wb0cpSYgwR/MCyhpuw
-         h8tg==
-X-Forwarded-Encrypted: i=1; AJvYcCWuSMAgrzvuqrcATsuWJn4aj9+IE5pw1w0Omuj7Y3UWUsSpyjUQoxFqwBo0+v834WtxTTxAmQKuEPc+3FE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2hxX79VfI234ojHISoWeIP2eqC0gVJTEQuCGbx1ETazSGo4+m
-	H0htaD1l+mAYPz2Q7L5fbtFfISfCOrhE3XiE6CwF/CUgooCGEPtf6H2J2k1CnZZRM0eutojmzbK
-	bz4phVEfe1u2MtJ7jrJZG2PlRg2XF7GsgZM8epQkptWm79dC9UnAnIWB7jdYZm5eYYQ==
-X-Gm-Gg: ASbGncvepYiscuKNdiHFCcDbsHmAMEkNx91ZgTu43Pneyq+B/q1CnOEj01IUoaDWu8/
-	eeBs7n99dfaY8zIx/OnYyygBiRo2d8FhgdgYrRknfZe74f2tg/LsVUGvTQKq5aSO5WVcxIl/c1N
-	9T1n2TCPRMxBu7Nhx6lqQbIeUuI2K/keAd8BnH/GZQiuQ0utdBKPNnaevUHsH6NfwAwmwZgujTT
-	yJ8GeDW+hnlZhRwja13fugCAmcvb3xYxZ07VyDifR9d8m4ya0Y39YLD6Xl/pHVGaQtzfB1+hs4j
-	lpzEqsIrYgVJdYN//j8klM/aC3iToPoFZ5JwvTE3XRbiRkm5YHDUrZ8=
-X-Received: by 2002:a05:6000:2909:b0:3a4:c713:7d8 with SMTP id ffacd0b85a97d-3a53188d936mr11898025f8f.16.1749540364055;
-        Tue, 10 Jun 2025 00:26:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEGPrGcSB1/kH23tXQfTNaDTb9v4VAmSWZs9ZoyqIAu4kBrqCqQpO83zPHsUYOqTjovGhmHyA==
-X-Received: by 2002:a05:6000:2909:b0:3a4:c713:7d8 with SMTP id ffacd0b85a97d-3a53188d936mr11898001f8f.16.1749540363630;
-        Tue, 10 Jun 2025 00:26:03 -0700 (PDT)
-Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452730c66a1sm128378465e9.27.2025.06.10.00.26.02
+        d=1e100.net; s=20230601; t=1749540386; x=1750145186;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cVjK0599UkeAIvQVZ6e3BYBbqIwF7FaraC94wRTpRos=;
+        b=nS1eG86AIigBs4UtZf7oKQLHTCElhblHqCRZ+ZrYPjh11GP1Z456OUEjdJvGopr7zQ
+         wSc/yHcLZIfNqcjTbc2MJmJwM30RhWqf21Vl0AuXeGAa9kL5xuIC8J6n0RZQnAi1Jsz1
+         ipPpj5/RHvcWouLNGfzNow7iv+WaFUH5HUWvI4HuE0VLbK1llW+xhtOFEw+/n4Pa5f16
+         /CpgD+kG8uXlQJMmWJTKi2T7ogD5ezhzOn9tGcyvoMmlBcJ65zEBOPUJYXt7kXm6Ylw2
+         8mnEcMJGMnRdP2nB772K7UmZC2/A3UlvxXrVBVD88rgF2O7k8UR52hQ1KSOiU+GpvhO2
+         BNNw==
+X-Forwarded-Encrypted: i=1; AJvYcCX8Fg5UGPrfiq7C+IOyIHAYPgXTTeldGDG/f+XBZYpd/w87TDKxwpnmv8TPmrwlrLg61bWdTLXEzGv8CDg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQPsBH9uP2SQ9ktYFJv75nGnxboqnixFn1jEX3PqmlRwJOf/K1
+	70r0GwaQ1PnkawiqkZZ0ogAob9wMlYtPSMmKIUGwSgSJ04xc+TJ7hN9VsX0/q3YEng==
+X-Gm-Gg: ASbGnct1jMVK1MF1ph6xhaVwVEFUpUX2km8P9OJica8xakVREqt9D1N0th1k16CkaVB
+	D/7/6uAzv1PRI40Ut2VT7XZXYNgS7i/LpqduGbEnwZVS5prjSP5XBac80hQBOMOlpPP01Je+sBx
+	UGjeTw7JJBfg49EsdQVi8zvT/7Qr9al+mVv+YPl1iVhmrdOIl0dbcUhZT1GpdatnUTu71ROvigD
+	mEuJiiLa0JlvV5uUdKaBOcoGcj5m6v52iF4NBT2z/FgYhh/P1iV20JvU3ectR7c8L5m3L685m7G
+	ExOnWzqQGrK4AiJde6uO3kq5gOOaqy82LOb2n8jImbWMVd+wyD59mpsYz5CfnLFsu43QD/Xc90p
+	B21T1qXZFCAYo
+X-Google-Smtp-Source: AGHT+IEBvQxRMDVoP2AITAODVdA+VN6fP/bXnF8ZVcuQpzrtSJTxLVJCPNRwSZsc99F+/j1teDbelw==
+X-Received: by 2002:a17:907:c27:b0:ade:8a6:b877 with SMTP id a640c23a62f3a-ade1a916cd9mr1427519866b.5.1749540385452;
+        Tue, 10 Jun 2025 00:26:25 -0700 (PDT)
+Received: from [192.168.0.105] (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc7c724sm680989366b.175.2025.06.10.00.26.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 00:26:02 -0700 (PDT)
-Message-ID: <b1c61317-a17d-4ca0-88d4-d22e6b536de6@redhat.com>
-Date: Tue, 10 Jun 2025 09:26:01 +0200
+        Tue, 10 Jun 2025 00:26:25 -0700 (PDT)
+Message-ID: <546019cd-32db-4374-b73c-4cb37943a6cb@monstr.eu>
+Date: Tue, 10 Jun 2025 09:26:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,146 +67,495 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] userfaultfd: remove (VM_)BUG_ON()s
-To: Tal Zussman <tz2294@columbia.edu>,
- Andrew Morton <akpm@linux-foundation.org>, Peter Xu <peterx@redhat.com>,
- "Jason A. Donenfeld" <Jason@zx2c4.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Andrea Arcangeli <aarcange@redhat.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org
-References: <20250607-uffd-fixes-v2-0-339dafe9a2fe@columbia.edu>
- <20250607-uffd-fixes-v2-2-339dafe9a2fe@columbia.edu>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH 18/41] microblaze: Replace __ASSEMBLY__ with __ASSEMBLER__
+ in non-uapi headers
+To: Thomas Huth <thuth@redhat.com>, linux-kernel@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org
+References: <20250314071013.1575167-1-thuth@redhat.com>
+ <20250314071013.1575167-19-thuth@redhat.com>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250607-uffd-fixes-v2-2-339dafe9a2fe@columbia.edu>
+From: Michal Simek <monstr@monstr.eu>
+In-Reply-To: <20250314071013.1575167-19-thuth@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 07.06.25 08:40, Tal Zussman wrote:
-> BUG_ON() is deprecated [1]. Convert all the BUG_ON()s and VM_BUG_ON()s
-> to use VM_WARN_ON_ONCE().
+
+
+On 3/14/25 08:09, Thomas Huth wrote:
+> While the GCC and Clang compilers already define __ASSEMBLER__
+> automatically when compiling assembly code, __ASSEMBLY__ is a
+> macro that only gets defined by the Makefiles in the kernel.
+> This can be very confusing when switching between userspace
+> and kernelspace coding, or when dealing with uapi headers that
+> rather should use __ASSEMBLER__ instead. So let's standardize on
+> the __ASSEMBLER__ macro that is provided by the compilers now.
 > 
-> While at it, also convert the WARN_ON_ONCE()s in move_pages() to use
-> VM_WARN_ON_ONCE(), as the relevant conditions are already checked in
-> validate_range() in move_pages()'s caller.
+> This is a completely mechanical patch (done with a simple "sed -i"
+> statement).
 > 
-> [1] https://www.kernel.org/doc/html/v6.15/process/coding-style.html#use-warn-rather-than-bug
-> 
-> Signed-off-by: Tal Zussman <tz2294@columbia.edu>
+> Cc: Michal Simek <monstr@monstr.eu>
+> Signed-off-by: Thomas Huth <thuth@redhat.com>
 > ---
-
-
-[...]
-
->   	if (ctx->features & UFFD_FEATURE_SIGBUS)
->   		goto out;
-> @@ -411,12 +411,11 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
->   		 * to be sure not to return SIGBUS erroneously on
->   		 * nowait invocations.
->   		 */
-> -		BUG_ON(vmf->flags & FAULT_FLAG_RETRY_NOWAIT);
-> +		VM_WARN_ON_ONCE(vmf->flags & FAULT_FLAG_RETRY_NOWAIT);
->   #ifdef CONFIG_DEBUG_VM
->   		if (printk_ratelimit()) {
-> -			printk(KERN_WARNING
-> -			       "FAULT_FLAG_ALLOW_RETRY missing %x\n",
-> -			       vmf->flags);
-> +			pr_warn("FAULT_FLAG_ALLOW_RETRY missing %x\n",
-> +				vmf->flags);
-
-You didn't cover that in the patch description.
-
-I do wonder if we really still want the dump_stack() here and could 
-simplify to
-
-	pr_warn_ratelimited().
-
-But I recall that the stack was helpful at least once for me (well, I 
-was able to reproduce and could have figured it out differently.).
-
-[...]
-
->   	err = uffd_move_lock(mm, dst_start, src_start, &dst_vma, &src_vma);
->   	if (err)
-> @@ -1867,9 +1865,9 @@ ssize_t move_pages(struct userfaultfd_ctx *ctx, unsigned long dst_start,
->   	up_read(&ctx->map_changing_lock);
->   	uffd_move_unlock(dst_vma, src_vma);
->   out:
-> -	VM_WARN_ON(moved < 0);
-> -	VM_WARN_ON(err > 0);
-> -	VM_WARN_ON(!moved && !err);
-> +	VM_WARN_ON_ONCE(moved < 0);
-> +	VM_WARN_ON_ONCE(err > 0);
-> +	VM_WARN_ON_ONCE(!moved && !err);
->   	return moved ? moved : err;
-
-
-Here you convert VM_WARN_ON to VM_WARN_ON_ONCE without stating it in the 
-description (including the why).
-
-> @@ -1956,9 +1954,9 @@ int userfaultfd_register_range(struct userfaultfd_ctx *ctx,
->   	for_each_vma_range(vmi, vma, end) {
->   		cond_resched();
+>   arch/microblaze/include/asm/asm-compat.h       |  2 +-
+>   arch/microblaze/include/asm/current.h          |  4 ++--
+>   arch/microblaze/include/asm/entry.h            |  4 ++--
+>   arch/microblaze/include/asm/exceptions.h       |  4 ++--
+>   arch/microblaze/include/asm/fixmap.h           |  4 ++--
+>   arch/microblaze/include/asm/ftrace.h           |  2 +-
+>   arch/microblaze/include/asm/kgdb.h             |  4 ++--
+>   arch/microblaze/include/asm/mmu.h              |  4 ++--
+>   arch/microblaze/include/asm/page.h             |  8 ++++----
+>   arch/microblaze/include/asm/pgtable.h          | 18 +++++++++---------
+>   arch/microblaze/include/asm/processor.h        |  8 ++++----
+>   arch/microblaze/include/asm/ptrace.h           |  4 ++--
+>   arch/microblaze/include/asm/sections.h         |  4 ++--
+>   arch/microblaze/include/asm/setup.h            |  4 ++--
+>   arch/microblaze/include/asm/thread_info.h      |  4 ++--
+>   arch/microblaze/include/asm/unistd.h           |  4 ++--
+>   .../microblaze/include/asm/xilinx_mb_manager.h |  4 ++--
+>   17 files changed, 43 insertions(+), 43 deletions(-)
+> 
+> diff --git a/arch/microblaze/include/asm/asm-compat.h b/arch/microblaze/include/asm/asm-compat.h
+> index c05259ce2d2c2..9f04614762319 100644
+> --- a/arch/microblaze/include/asm/asm-compat.h
+> +++ b/arch/microblaze/include/asm/asm-compat.h
+> @@ -4,7 +4,7 @@
 >   
-> -		BUG_ON(!vma_can_userfault(vma, vm_flags, wp_async));
-> -		BUG_ON(vma->vm_userfaultfd_ctx.ctx &&
-> -		       vma->vm_userfaultfd_ctx.ctx != ctx);
-> +		VM_WARN_ON_ONCE(!vma_can_userfault(vma, vm_flags, wp_async));
-> +		VM_WARN_ON_ONCE(vma->vm_userfaultfd_ctx.ctx &&
-> +				vma->vm_userfaultfd_ctx.ctx != ctx);
->   		WARN_ON(!(vma->vm_flags & VM_MAYWRITE));
+>   #include <asm/types.h>
+>   
+> -#ifdef __ASSEMBLY__
+> +#ifdef __ASSEMBLER__
+>   #  define stringify_in_c(...)	__VA_ARGS__
+>   #  define ASM_CONST(x)		x
+>   #else
+> diff --git a/arch/microblaze/include/asm/current.h b/arch/microblaze/include/asm/current.h
+> index a4bb45be30e69..099e69f32bf97 100644
+> --- a/arch/microblaze/include/asm/current.h
+> +++ b/arch/microblaze/include/asm/current.h
+> @@ -14,13 +14,13 @@
+>    * but check asm/microblaze/kernel/entry.S to be sure.
+>    */
+>   #define CURRENT_TASK	r31
+> -# ifndef __ASSEMBLY__
+> +# ifndef __ASSEMBLER__
+>   /*
+>    * Dedicate r31 to keeping the current task pointer
+>    */
+>   register struct task_struct *current asm("r31");
+>   
+>   # define get_current()	current
+> -# endif /* __ASSEMBLY__ */
+> +# endif /* __ASSEMBLER__ */
+>   
+>   #endif /* _ASM_MICROBLAZE_CURRENT_H */
+> diff --git a/arch/microblaze/include/asm/entry.h b/arch/microblaze/include/asm/entry.h
+> index 6c42bed411662..9efadf12397ca 100644
+> --- a/arch/microblaze/include/asm/entry.h
+> +++ b/arch/microblaze/include/asm/entry.h
+> @@ -21,7 +21,7 @@
+>   
+>   #define PER_CPU(var) var
+>   
+> -# ifndef __ASSEMBLY__
+> +# ifndef __ASSEMBLER__
+>   DECLARE_PER_CPU(unsigned int, KSP); /* Saved kernel stack pointer */
+>   DECLARE_PER_CPU(unsigned int, KM); /* Kernel/user mode */
+>   DECLARE_PER_CPU(unsigned int, ENTRY_SP); /* Saved SP on kernel entry */
+> @@ -29,6 +29,6 @@ DECLARE_PER_CPU(unsigned int, R11_SAVE); /* Temp variable for entry */
+>   DECLARE_PER_CPU(unsigned int, CURRENT_SAVE); /* Saved current pointer */
+>   
+>   extern asmlinkage void do_notify_resume(struct pt_regs *regs, int in_syscall);
+> -# endif /* __ASSEMBLY__ */
+> +# endif /* __ASSEMBLER__ */
+>   
+>   #endif /* _ASM_MICROBLAZE_ENTRY_H */
+> diff --git a/arch/microblaze/include/asm/exceptions.h b/arch/microblaze/include/asm/exceptions.h
+> index 967f175173e14..c4591e4f7175b 100644
+> --- a/arch/microblaze/include/asm/exceptions.h
+> +++ b/arch/microblaze/include/asm/exceptions.h
+> @@ -11,7 +11,7 @@
+>   #define _ASM_MICROBLAZE_EXCEPTIONS_H
+>   
+>   #ifdef __KERNEL__
+> -#ifndef __ASSEMBLY__
+> +#ifndef __ASSEMBLER__
+>   
+>   /* Macros to enable and disable HW exceptions in the MSR */
+>   /* Define MSR enable bit for HW exceptions */
+> @@ -64,6 +64,6 @@ void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig);
+>   void die(const char *str, struct pt_regs *fp, long err);
+>   void _exception(int signr, struct pt_regs *regs, int code, unsigned long addr);
+>   
+> -#endif /*__ASSEMBLY__ */
+> +#endif /*__ASSEMBLER__ */
+>   #endif /* __KERNEL__ */
+>   #endif /* _ASM_MICROBLAZE_EXCEPTIONS_H */
+> diff --git a/arch/microblaze/include/asm/fixmap.h b/arch/microblaze/include/asm/fixmap.h
+> index e6e9288bff761..f9797849e4d43 100644
+> --- a/arch/microblaze/include/asm/fixmap.h
+> +++ b/arch/microblaze/include/asm/fixmap.h
+> @@ -15,7 +15,7 @@
+>   #ifndef _ASM_FIXMAP_H
+>   #define _ASM_FIXMAP_H
+>   
+> -#ifndef __ASSEMBLY__
+> +#ifndef __ASSEMBLER__
+>   #include <linux/kernel.h>
+>   #include <asm/page.h>
+>   #ifdef CONFIG_HIGHMEM
+> @@ -62,5 +62,5 @@ extern void __set_fixmap(enum fixed_addresses idx,
+>   
+>   #include <asm-generic/fixmap.h>
+>   
+> -#endif /* !__ASSEMBLY__ */
+> +#endif /* !__ASSEMBLER__ */
+>   #endif
+> diff --git a/arch/microblaze/include/asm/ftrace.h b/arch/microblaze/include/asm/ftrace.h
+> index 4ca38b92a3a20..27c1bafb669c3 100644
+> --- a/arch/microblaze/include/asm/ftrace.h
+> +++ b/arch/microblaze/include/asm/ftrace.h
+> @@ -7,7 +7,7 @@
+>   #define MCOUNT_ADDR		((unsigned long)(_mcount))
+>   #define MCOUNT_INSN_SIZE	8 /* sizeof mcount call */
+>   
+> -#ifndef __ASSEMBLY__
+> +#ifndef __ASSEMBLER__
+>   extern void _mcount(void);
+>   extern void ftrace_call_graph(void);
+>   void prepare_ftrace_return(unsigned long *parent, unsigned long self_addr);
+> diff --git a/arch/microblaze/include/asm/kgdb.h b/arch/microblaze/include/asm/kgdb.h
+> index 8dc5ebb07fd5a..321c3c8bfcf27 100644
+> --- a/arch/microblaze/include/asm/kgdb.h
+> +++ b/arch/microblaze/include/asm/kgdb.h
+> @@ -3,7 +3,7 @@
+>   #ifndef __MICROBLAZE_KGDB_H__
+>   #define __MICROBLAZE_KGDB_H__
+>   
+> -#ifndef __ASSEMBLY__
+> +#ifndef __ASSEMBLER__
+>   
+>   #define CACHE_FLUSH_IS_SAFE	1
+>   #define BUFMAX			2048
+> @@ -27,6 +27,6 @@ static inline void arch_kgdb_breakpoint(void)
+>   struct pt_regs;
+>   asmlinkage void microblaze_kgdb_break(struct pt_regs *regs);
+>   
+> -#endif /* __ASSEMBLY__ */
+> +#endif /* __ASSEMBLER__ */
+>   #endif /* __MICROBLAZE_KGDB_H__ */
+>   #endif /* __KERNEL__ */
+> diff --git a/arch/microblaze/include/asm/mmu.h b/arch/microblaze/include/asm/mmu.h
+> index b928a87c00766..7262dc4da3385 100644
+> --- a/arch/microblaze/include/asm/mmu.h
+> +++ b/arch/microblaze/include/asm/mmu.h
+> @@ -9,7 +9,7 @@
+>   #define _ASM_MICROBLAZE_MMU_H
+>   
+>   #  ifdef __KERNEL__
+> -#   ifndef __ASSEMBLY__
+> +#   ifndef __ASSEMBLER__
+>   
+>   /* Default "unsigned long" context */
+>   typedef unsigned long mm_context_t;
+> @@ -56,7 +56,7 @@ extern void _tlbia(void);		/* invalidate all TLB entries */
+>    * mapping has to increase tlb_skip size.
+>    */
+>   extern u32 tlb_skip;
+> -#   endif /* __ASSEMBLY__ */
+> +#   endif /* __ASSEMBLER__ */
+>   
+>   /*
+>    * The MicroBlaze processor has a TLB architecture identical to PPC-40x. The
+> diff --git a/arch/microblaze/include/asm/page.h b/arch/microblaze/include/asm/page.h
+> index 90fc9c81debda..90ac9f34b4b49 100644
+> --- a/arch/microblaze/include/asm/page.h
+> +++ b/arch/microblaze/include/asm/page.h
+> @@ -25,7 +25,7 @@
+>   
+>   #define PTE_SHIFT	(PAGE_SHIFT - 2)	/* 1024 ptes per page */
+>   
+> -#ifndef __ASSEMBLY__
+> +#ifndef __ASSEMBLER__
+>   
+>   /*
+>    * PAGE_OFFSET -- the first address of the first page of memory. With MMU
+> @@ -100,7 +100,7 @@ extern int page_is_ram(unsigned long pfn);
+>   #  define page_to_virt(page)   __va(page_to_pfn(page) << PAGE_SHIFT)
+>   
+>   #  define ARCH_PFN_OFFSET	(memory_start >> PAGE_SHIFT)
+> -# endif /* __ASSEMBLY__ */
+> +# endif /* __ASSEMBLER__ */
+>   
+>   /* Convert between virtual and physical address for MMU. */
+>   /* Handle MicroBlaze processor with virtual memory. */
+> @@ -113,7 +113,7 @@ extern int page_is_ram(unsigned long pfn);
+>   #define tovirt(rd, rs) \
+>   	addik rd, rs, (CONFIG_KERNEL_START - CONFIG_KERNEL_BASE_ADDR)
+>   
+> -#ifndef __ASSEMBLY__
+> +#ifndef __ASSEMBLER__
+>   
+>   # define __pa(x)	__virt_to_phys((unsigned long)(x))
+>   # define __va(x)	((void *)__phys_to_virt((unsigned long)(x)))
+> @@ -130,7 +130,7 @@ static inline const void *pfn_to_virt(unsigned long pfn)
+>   
+>   #define	virt_addr_valid(vaddr)	(pfn_valid(virt_to_pfn(vaddr)))
+>   
+> -#endif /* __ASSEMBLY__ */
+> +#endif /* __ASSEMBLER__ */
+>   
+>   #define TOPHYS(addr)  __virt_to_phys(addr)
+>   
+> diff --git a/arch/microblaze/include/asm/pgtable.h b/arch/microblaze/include/asm/pgtable.h
+> index e4ea2ec3642f0..eadc73d22dda6 100644
+> --- a/arch/microblaze/include/asm/pgtable.h
+> +++ b/arch/microblaze/include/asm/pgtable.h
+> @@ -10,14 +10,14 @@
+>   
+>   #include <asm/setup.h>
+>   
+> -#ifndef __ASSEMBLY__
+> +#ifndef __ASSEMBLER__
+>   extern int mem_init_done;
+>   #endif
+>   
+>   #include <asm-generic/pgtable-nopmd.h>
+>   
+>   #ifdef __KERNEL__
+> -#ifndef __ASSEMBLY__
+> +#ifndef __ASSEMBLER__
+>   
+>   #include <linux/sched.h>
+>   #include <linux/threads.h>
+> @@ -39,7 +39,7 @@ extern pte_t *va_to_pte(unsigned long address);
+>   #define VMALLOC_START	(CONFIG_KERNEL_START + CONFIG_LOWMEM_SIZE)
+>   #define VMALLOC_END	ioremap_bot
+>   
+> -#endif /* __ASSEMBLY__ */
+> +#endif /* __ASSEMBLER__ */
+>   
+>   /*
+>    * Macro to mark a page protection value as "uncacheable".
+> @@ -208,7 +208,7 @@ extern pte_t *va_to_pte(unsigned long address);
+>    * Also, write permissions imply read permissions.
+>    */
+>   
+> -#ifndef __ASSEMBLY__
+> +#ifndef __ASSEMBLER__
+>   /*
+>    * ZERO_PAGE is a global shared page that is always zero: used
+>    * for zero-mapped memory areas etc..
+> @@ -216,7 +216,7 @@ extern pte_t *va_to_pte(unsigned long address);
+>   extern unsigned long empty_zero_page[1024];
+>   #define ZERO_PAGE(vaddr) (virt_to_page(empty_zero_page))
+>   
+> -#endif /* __ASSEMBLY__ */
+> +#endif /* __ASSEMBLER__ */
+>   
+>   #define pte_none(pte)		((pte_val(pte) & ~_PTE_NONE_MASK) == 0)
+>   #define pte_present(pte)	(pte_val(pte) & _PAGE_PRESENT)
+> @@ -237,7 +237,7 @@ extern unsigned long empty_zero_page[1024];
+>   #define pfn_pte(pfn, prot) \
+>   	__pte(((pte_basic_t)(pfn) << PFN_PTE_SHIFT) | pgprot_val(prot))
+>   
+> -#ifndef __ASSEMBLY__
+> +#ifndef __ASSEMBLER__
+>   /*
+>    * The following only work if pte_present() is true.
+>    * Undefined behaviour if not..
+> @@ -444,13 +444,13 @@ extern int mem_init_done;
+>   
+>   asmlinkage void __init mmu_init(void);
+>   
+> -#endif /* __ASSEMBLY__ */
+> +#endif /* __ASSEMBLER__ */
+>   #endif /* __KERNEL__ */
+>   
+> -#ifndef __ASSEMBLY__
+> +#ifndef __ASSEMBLER__
+>   extern unsigned long ioremap_bot, ioremap_base;
+>   
+>   void setup_memory(void);
+> -#endif /* __ASSEMBLY__ */
+> +#endif /* __ASSEMBLER__ */
+>   
+>   #endif /* _ASM_MICROBLAZE_PGTABLE_H */
+> diff --git a/arch/microblaze/include/asm/processor.h b/arch/microblaze/include/asm/processor.h
+> index 4e193c7550dfa..d59bdfffca7cc 100644
+> --- a/arch/microblaze/include/asm/processor.h
+> +++ b/arch/microblaze/include/asm/processor.h
+> @@ -14,7 +14,7 @@
+>   #include <asm/entry.h>
+>   #include <asm/current.h>
+>   
+> -# ifndef __ASSEMBLY__
+> +# ifndef __ASSEMBLER__
+>   /* from kernel/cpu/mb.c */
+>   extern const struct seq_operations cpuinfo_op;
+>   
+> @@ -29,7 +29,7 @@ void start_thread(struct pt_regs *regs, unsigned long pc, unsigned long usp);
+>   extern void ret_from_fork(void);
+>   extern void ret_from_kernel_thread(void);
+>   
+> -# endif /* __ASSEMBLY__ */
+> +# endif /* __ASSEMBLER__ */
+>   
+>   /*
+>    * This is used to define STACK_TOP, and with MMU it must be below
+> @@ -45,7 +45,7 @@ extern void ret_from_kernel_thread(void);
+>   
+>   # define THREAD_KSP	0
+>   
+> -#  ifndef __ASSEMBLY__
+> +#  ifndef __ASSEMBLER__
+>   
+>   /* If you change this, you must change the associated assembly-languages
+>    * constants defined below, THREAD_*.
+> @@ -88,5 +88,5 @@ unsigned long __get_wchan(struct task_struct *p);
+>   extern struct dentry *of_debugfs_root;
+>   #endif
+>   
+> -#  endif /* __ASSEMBLY__ */
+> +#  endif /* __ASSEMBLER__ */
+>   #endif /* _ASM_MICROBLAZE_PROCESSOR_H */
+> diff --git a/arch/microblaze/include/asm/ptrace.h b/arch/microblaze/include/asm/ptrace.h
+> index bfcb89df5e26f..17982292a64fd 100644
+> --- a/arch/microblaze/include/asm/ptrace.h
+> +++ b/arch/microblaze/include/asm/ptrace.h
+> @@ -7,7 +7,7 @@
+>   
+>   #include <uapi/asm/ptrace.h>
+>   
+> -#ifndef __ASSEMBLY__
+> +#ifndef __ASSEMBLER__
+>   #define kernel_mode(regs)		((regs)->pt_mode)
+>   #define user_mode(regs)			(!kernel_mode(regs))
+>   
+> @@ -20,5 +20,5 @@ static inline long regs_return_value(struct pt_regs *regs)
+>   	return regs->r3;
+>   }
+>   
+> -#endif /* __ASSEMBLY__ */
+> +#endif /* __ASSEMBLER__ */
+>   #endif /* _ASM_MICROBLAZE_PTRACE_H */
+> diff --git a/arch/microblaze/include/asm/sections.h b/arch/microblaze/include/asm/sections.h
+> index a9311ad84a67f..f5008f5e7a5c1 100644
+> --- a/arch/microblaze/include/asm/sections.h
+> +++ b/arch/microblaze/include/asm/sections.h
+> @@ -10,11 +10,11 @@
+>   
+>   #include <asm-generic/sections.h>
+>   
+> -# ifndef __ASSEMBLY__
+> +# ifndef __ASSEMBLER__
+>   extern char _ssbss[], _esbss[];
+>   extern unsigned long __ivt_start[], __ivt_end[];
+>   
+>   extern u32 _fdt_start[], _fdt_end[];
+>   
+> -# endif /* !__ASSEMBLY__ */
+> +# endif /* !__ASSEMBLER__ */
+>   #endif /* _ASM_MICROBLAZE_SECTIONS_H */
+> diff --git a/arch/microblaze/include/asm/setup.h b/arch/microblaze/include/asm/setup.h
+> index bf2600f759593..837ed0bbae4b5 100644
+> --- a/arch/microblaze/include/asm/setup.h
+> +++ b/arch/microblaze/include/asm/setup.h
+> @@ -9,7 +9,7 @@
+>   
+>   #include <uapi/asm/setup.h>
+>   
+> -# ifndef __ASSEMBLY__
+> +# ifndef __ASSEMBLER__
+>   extern char cmd_line[COMMAND_LINE_SIZE];
+>   
+>   extern char *klimit;
+> @@ -25,5 +25,5 @@ void machine_shutdown(void);
+>   void machine_halt(void);
+>   void machine_power_off(void);
+>   
+> -# endif /* __ASSEMBLY__ */
+> +# endif /* __ASSEMBLER__ */
+>   #endif /* _ASM_MICROBLAZE_SETUP_H */
+> diff --git a/arch/microblaze/include/asm/thread_info.h b/arch/microblaze/include/asm/thread_info.h
+> index a0ddd2a36fb94..0153f7c2717c9 100644
+> --- a/arch/microblaze/include/asm/thread_info.h
+> +++ b/arch/microblaze/include/asm/thread_info.h
+> @@ -13,7 +13,7 @@
+>   #define THREAD_SIZE		(1 << THREAD_SHIFT)
+>   #define THREAD_SIZE_ORDER	1
+>   
+> -#ifndef __ASSEMBLY__
+> +#ifndef __ASSEMBLER__
+>   # include <linux/types.h>
+>   # include <asm/processor.h>
+>   
+> @@ -86,7 +86,7 @@ static inline struct thread_info *current_thread_info(void)
+>   }
+>   
+>   /* thread information allocation */
+> -#endif /* __ASSEMBLY__ */
+> +#endif /* __ASSEMBLER__ */
+>   
+>   /*
+>    * thread information flags
+> diff --git a/arch/microblaze/include/asm/unistd.h b/arch/microblaze/include/asm/unistd.h
+> index cfe3f888b432b..fedda9908aa94 100644
+> --- a/arch/microblaze/include/asm/unistd.h
+> +++ b/arch/microblaze/include/asm/unistd.h
+> @@ -8,7 +8,7 @@
+>   
+>   #include <uapi/asm/unistd.h>
+>   
+> -#ifndef __ASSEMBLY__
+> +#ifndef __ASSEMBLER__
+>   
+>   /* #define __ARCH_WANT_OLD_READDIR */
+>   /* #define __ARCH_WANT_OLD_STAT */
+> @@ -33,6 +33,6 @@
+>   #define __ARCH_WANT_SYS_VFORK
+>   #define __ARCH_WANT_SYS_FORK
+>   
+> -#endif /* __ASSEMBLY__ */
+> +#endif /* __ASSEMBLER__ */
+>   
+>   #endif /* _ASM_MICROBLAZE_UNISTD_H */
+> diff --git a/arch/microblaze/include/asm/xilinx_mb_manager.h b/arch/microblaze/include/asm/xilinx_mb_manager.h
+> index 7b6995722b0c0..121a3224882b2 100644
+> --- a/arch/microblaze/include/asm/xilinx_mb_manager.h
+> +++ b/arch/microblaze/include/asm/xilinx_mb_manager.h
+> @@ -5,7 +5,7 @@
+>   #ifndef _XILINX_MB_MANAGER_H
+>   #define _XILINX_MB_MANAGER_H
+>   
+> -# ifndef __ASSEMBLY__
+> +# ifndef __ASSEMBLER__
+>   
+>   #include <linux/of_address.h>
+>   
+> @@ -21,7 +21,7 @@ void xmb_manager_register(uintptr_t phys_baseaddr, u32 cr_val,
+>   			  void *priv, void (*reset_callback)(void *data));
+>   asmlinkage void xmb_inject_err(void);
+>   
+> -# endif /* __ASSEMBLY__ */
+> +# endif /* __ASSEMBLER__ */
+>   
+>   /* Error injection offset */
+>   #define XMB_INJECT_ERR_OFFSET	0x200
 
-Which raises the question, why this here should still be a WARN
+$ git grep ASSEMBLY arch/microblaze/
+arch/microblaze/include/uapi/asm/ptrace.h:13:#ifndef __ASSEMBLY__
+arch/microblaze/include/uapi/asm/ptrace.h:71:#endif /* __ASSEMBLY__ */
+
+This should be fixed too.
+
+Thanks,
+Michal
 
 -- 
-Cheers,
-
-David / dhildenb
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP/Versal ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal/Versal NET SoCs
+TF-A maintainer - Xilinx ZynqMP/Versal/Versal NET SoCs
 
