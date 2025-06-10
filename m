@@ -1,182 +1,123 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70CBA22D79B;
-	Tue, 10 Jun 2025 13:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D768923ABBE
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:50:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749563407; cv=none; b=s5dZdke+T6fpnYdpJkZjTAgpICY5MbtSgWTX7bWjbX2Axw1onVd7oXoSEdTCmS108ZqRNlvzb7MLfWP9exNyJv3lqH5gjfRIGSvZm83FPPjWDB3/NLLQhHr9h7yUeKnii/EMp0OGO0NCTUdf8U2gMUiVAkUzSt3SFlP4ONAXGaQ=
+	t=1749563460; cv=none; b=EcJgIrIvoI0p99NG1N/RPQYkY+m2PbVZvsCJmDJc1IJqzFZOjoHwFmcbgQEAFpYQY/btW3/CteN2S+U6faEBXBPRx7NCWRmRyuqk5CKoxXpCmahzlt6QQztm3UcUUi5od8s9+JzYtgu4nmqPAl448aoNsLxTMrP+p+/DSs0ZIUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749563407; c=relaxed/simple;
-	bh=cFS1tOlMfe5z5p3FOgfnjKTkm2/a0u/NE69ljuZXwc0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q42gAmTUKoLCu+ZqKUjDes3qhHiHSoRSyx8x6dmTTtcH6hDmdmHd3RYVby0OG6NozCA/wPVEFQu7hqR68bt/DJbrlng2le0MXti+5xkZpUYPR9GZDbzw0RAuSFXMJORoOx+raXXZl7O/GfeRf6lARc9RYObvEMswbsA2mZtPtVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38B5114BF;
-	Tue, 10 Jun 2025 06:49:45 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A27E13F59E;
-	Tue, 10 Jun 2025 06:50:02 -0700 (PDT)
-Date: Tue, 10 Jun 2025 14:49:59 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Dhruva Gole <d-gole@ti.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, <arm-scmi@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <vigneshr@ti.com>,
-	<khilman@baylibre.com>
-Subject: Re: [RFC PATCH] pmdomain: arm: scmi_pm_domain: Do lazy init as part
- of probe
-Message-ID: <20250610-quixotic-successful-alligator-eeaa18@sudeepholla>
-References: <20250530103527.2244951-1-d-gole@ti.com>
- <20250530-honest-chital-of-growth-db31e1@sudeepholla>
- <20250610114314.dpfedrbok2pmfgxu@lcpd911>
+	s=arc-20240116; t=1749563460; c=relaxed/simple;
+	bh=h4S4qXsxNClFRPavFrSL5VPIFTv8rXbohKWGXFSTiEI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=bWqrAQvf5Wpz7c910LAp9mQrwajWMQrseMvRkCdJGX7BHHJm87TI/KE6LRL+D5HRURf1MQkAMEpwl+C7DyfIBHAJj7Wc3zODs0jIwdrzQ1NhIpGExDe5C7opqXI94YoKnLpIlfv5ubBwcixsJGKyJjbKvj7tlfBue7I8K23rVWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C0Yn2Zwu; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C0Yn2Zwu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749563457;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8AZiv2BWFM4GhtysbZzbwwVGm/Lo1Gm6qrn3+2ylp4E=;
+	b=C0Yn2ZwulvUaDHql3SezRUSKmbP82HvHe8XZ9k5ZU/WD1kxbPyxVdOc6qoItg9h/9lgHOk
+	/CUGk6KxH/vaU65oEgR4kPSFP7eNzciDTBbViB2ZXAXzXqhEUyOSPOKriLJiUfUZcsGVk7
+	k42gFAozzvvDuBUBWRbMWVKZIipoXZ4=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-657-N0VTtoR_NdexmYwreD0ycA-1; Tue, 10 Jun 2025 09:50:56 -0400
+X-MC-Unique: N0VTtoR_NdexmYwreD0ycA-1
+X-Mimecast-MFC-AGG-ID: N0VTtoR_NdexmYwreD0ycA_1749563455
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f55ea44dso2519413f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:50:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749563455; x=1750168255;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8AZiv2BWFM4GhtysbZzbwwVGm/Lo1Gm6qrn3+2ylp4E=;
+        b=EoM/KR6SNZ/CnuqV9SXXDEA8YURW0Q4rLvUd+RZwDzvn626hEncVCRl8VNgGzcwZCo
+         vaoHzxjoPR99XHYGwLs+HPfB6Vkvs+hpsvwDx7SZviuWAUk1mcMLEKvkJPyZznYMWHKI
+         A18vQ5RL+Bzd0SieFGPp7SpcKUuenK9tDwavQ+nBX0IJNt5/3JrZduYRC1zho/E4vj3M
+         CemLNuWwi1UL6zpnooHQ+YEiW45rKA9rD3dwuMmHk6rhS9G2UiEZIRwyn54DEPMju8kJ
+         7ciKpzKijpKI50ZG0YVfkueYJJcpAQcsXX8S4TRtbFuAzbQ0OJ9D0wezrJOoLUro7/CI
+         JmPA==
+X-Forwarded-Encrypted: i=1; AJvYcCXpAHCoqn7hK1lNkMkjXI57lISVqfuE2UHjsSiEaYN2y+AIY7OzIhxOa/0+3nZw5Y8mDo/4Ev13uBvhESk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2M/nBaMCqzAz9NOnloVSB6F1+yXX3eEPFh/03vo47wi42qmai
+	6CP1cnVrMdejeDaNjPFDX+v69SOjlFkvdjRJQHeMsur/pNqppa5VmUpEHzrv2DEfAbPKd5A1GDo
+	SLga1bgxZXXGM5bq97pgIwOcVwA/o9vlh6PgydbSNszqzMoXM2J8rUdL06gjVWnrx7A==
+X-Gm-Gg: ASbGncuPqq4mBEdNIPNj45Dd794/Vql0GeW+RjfJfff//k4eS02fXnAUE9+Mg5nwPzK
+	dm/qODxnoPg61qNjuVeryt0/VYNCw+CrzdyvSm7c2O38Y3Ubyapp/jJ+CNgjrYZb3q5PgASYmo7
+	CI2hF6R+1L5auuzM/vA1v8mv9qaSQHw8qSn4DlLEhSGxyRVbZN2qb40NZHqa0dkcnQrbMQLOsV6
+	2Idfsnuj97JkHbhLzeyEr1DUoDV0iwyJeenQeEle31uL/nfIov1LieUjUMPNxLEE+8M+Wrx7o9e
+	ODinmNHOUy2/ct6RJKpw6fK5BGlf5aldAKFhnen8zKblOKYaRm4OVw5+nycUHsEaIPZRm2k=
+X-Received: by 2002:a05:6000:2389:b0:3a4:f786:4fa1 with SMTP id ffacd0b85a97d-3a5316841c4mr14614325f8f.2.1749563455528;
+        Tue, 10 Jun 2025 06:50:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHJKrB4JYjJGiymCLMDjzBOek1jTekdNGl4zWkT4PdFepViV8CQdeLU5rPmaZjMcFcjiosmIg==
+X-Received: by 2002:a05:6000:2389:b0:3a4:f786:4fa1 with SMTP id ffacd0b85a97d-3a5316841c4mr14614288f8f.2.1749563455083;
+        Tue, 10 Jun 2025 06:50:55 -0700 (PDT)
+Received: from rh (p200300f6af1bce00e6fe5f11c0a7f4a1.dip0.t-ipconnect.de. [2003:f6:af1b:ce00:e6fe:5f11:c0a7:f4a1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452fba4621csm131448645e9.13.2025.06.10.06.50.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 06:50:54 -0700 (PDT)
+Date: Tue, 10 Jun 2025 15:50:53 +0200 (CEST)
+From: Sebastian Ott <sebott@redhat.com>
+To: Miguel Luis <miguel.luis@oracle.com>
+cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+    Colton Lewis <coltonlewis@google.com>, 
+    Ricardo Koller <ricarkol@google.com>, Joey Gouly <joey.gouly@arm.com>, 
+    Suzuki K Poulose <suzuki.poulose@arm.com>, 
+    Zenghui Yu <yuzenghui@huawei.com>, Shuah Khan <shuah@kernel.org>, 
+    "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+    "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, 
+    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+    "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH v3 0/4] KVM: arm64: selftests: arch_timer_edge_cases
+ fixes
+In-Reply-To: <B77F70F2-EECA-4E10-9F00-972F6AE27831@oracle.com>
+Message-ID: <8f15a5d6-0f73-194a-8fa2-b7ba8cc8c5b2@redhat.com>
+References: <20250605103613.14544-1-sebott@redhat.com> <B77F70F2-EECA-4E10-9F00-972F6AE27831@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250610114314.dpfedrbok2pmfgxu@lcpd911>
+Content-Type: multipart/mixed; boundary="-1463806286-426200590-1749563454=:18875"
 
-On Tue, Jun 10, 2025 at 05:13:14PM +0530, Dhruva Gole wrote:
-> Hi,
-> 
-> On May 30, 2025 at 17:31:08 +0100, Sudeep Holla wrote:
-> > On Fri, May 30, 2025 at 04:05:27PM +0530, Dhruva Gole wrote:
-> > > Optimize the SCMI power domain driver to only initialize domains that are
-> > > actually referenced in the device tree. Previously, the driver would
-> > > initialize all possible domains up to the maximum ID, which could lead to
-> > > unnecessary firmware calls and longer probe times.
-> > > 
-> > > Key changes:
-> > > - Scan device tree to identify which power domains are actually referenced
-> > 
-> > How do this work with runtime DT overlays ?
-> 
-> Thanks for bringing this up, I hadn't considered runtime DT overlays for
-> this particular patch.
-> Off the top of my mind, we can initialize all at probe, but only query state
-> for referenced ones.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+---1463806286-426200590-1749563454=:18875
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+
+Hej Miguel,
+
+On Mon, 9 Jun 2025, Miguel Luis wrote:
+>> On 5 Jun 2025, at 10:36, Sebastian Ott <sebott@redhat.com> wrote:
+>>
+>> Some small fixes for arch_timer_edge_cases that I stumbled upon
+>> while debugging failures for this selftest on ampere-one.
+>>
 >
+> I’ve tested this test under three circumstances:
+>
+> 1) Original (!HAS_EL2 && !HAS_EL2_E2H0)
+>
+> 2) HAS_EL2 && HAS_EL2_E2H0
+>
+> 3) HAS_EL2 && !HAS_EL2_E2H0
+>
+> Tests 1) and 2) returned in approx. the same amount of real time (about 12s) although 3) doesn’t
+> seem to return at all.
 
-Good to know.
+I've never really looked at nested stuff, I'll try to set smth up and see
+if I can reproduce that..
 
-> > 
-> > > - Use bitmap to track needed domains instead of initializing all
-> > > - Only perform state queries and initialization for referenced domains
-> > > - Maintain proper array sizing for power domain framework compatibility
-> > > - Keep full provider structure to support late binding
-> > > 
-> > > This optimization reduces probe time and unnecessary firmware interactions
-> > > by only initializing power domains that are actually used in the system.
-> > 
-> > Why is this very specific to power domains only ? This must apply for other
-> > domains like perf or clock or reset ?
-> 
-> Yes, it should. Starting out with just power domains for now though. I
-> haven't looked at other places like perf and clock yet.
-> 
+Thanks,
+Sebastian
+---1463806286-426200590-1749563454=:18875--
 
-Good that we are aligned in terms of understanding the general depth of
-the issue.
-
-> > 
-> > > For example, in a system with 100 possible domains but only 3 referenced
-> > > in the device tree, we now only initialize those 3 domains instead of
-> > > all 100.
-> > > 
-> > 
-> > Well, how much of these PD will get used in the final products ? I can
-> > understand the need to use just 3 in devel platforms. Just trying to see
-> > how realistic is the scenario ? Is there any other optimisation possible
-> > from the firmware ? Does getting the state of a PD takes so much time
-> > on the platform in question ?
-> 
-> Well, it's not only about how much time it takes on any particular platform
-> to query the state of a PD. Even if say it takes 10us to query it, it will
-> add a whole 1ms to the probe time. This mean 1ms more of boot time, and
-> perhaps boot time experts can chime in here but every optimisation
-> possible matters!
-> ARM systems are usually very strict on boot time requirements.
-> 
-
-Understood, but where we consider this as micro optimisation or not is
-another topic all together IMO.
-
-> Even if we somehow optimise the firmware, to me it seems like kernel is
-> wasting time querrying for something that it doesn't need at that moment.
-> 
-
-Well agreed, but for overlays this may not be trivial. More fundamental
-questions below.
-
-> Just replying here to your next reply on the thread:
-> > And I missed another point. Someone will soon complain Linux no longer
-> > turns off unused power domains. So I am inclined against this optimisation.
-> > We need to consider all the above point before .
-> 
-> I agree on some points like the runtime overlay. However I am not sure
-> why Linux should be the one to turn OFF power domains that it's
-> _unaware_ of. "unused" would probably be a wrong assumption to make.
-
-I have to disagree here. If the firmware is making the kernel aware of
-N power domains, then just not using it in DT and labeling the kernel
-is unaware of those PDs is simply and completely wrong. Why did the firmware
-make this(Linux) agent aware of those PDs then ?
-
-IMO, it is just *unused*.
-
-> There maybe other entities that would be using power domains that
-> are not in the device tree. (For eg. an RTOS running on the same system
-> accessing a PD that is controlled by the SCP firmware but not mentioned in the
-> device tree.)
-> 
-
-Well I assume those RTOS or entities are different agents in terms of
-SCP/SCMI and they can have their own view of PDs
-
-> While one may argue that's why firmware should be the one to keep ref
-> counts to avoid resource conflicts, one could also argue that firmwares
-> could be the one to turn off unused power domains.
-> 
-
-Yes firmware has the final say, but it can't track what resources Linux is
-using and what needs to stay on or off especially if no request from OS
-has come. There was an issue that if bootloaders turn on PD and Linux avoids
-making explicitly request to the firmware as it finds it ON, then firmware
-will leave it on even if Linux is not using it. So, yes it is Linux
-responsibility to turn of any unused PDs. We are not going to debate on
-that as there are platforms that are already relying on this feature.
-
-> Why should the kernel touch something that it hasn't been told about
-> explicitly in the DT? Isn't the whole point of DT to be the literal
-> hardware descriptor for the kernel?
-
-Well, I understand and kind of agree. But why does the firmware inform
-Linux about PDs that are never used by the Linux and always used by
-some other agent like RTOS. That is the main point here and nothing
-related to DT. We rely or trust the information from the firmware to
-be more dynamic compared to DT. So DT is second class citizen in this
-context. It only provides info that firmware can't provide not the other
-way around. That's the whole point of moving towards this firmware
-interfaces that are more dynamic and runtime aware than the DT which are
-static.
-
-> So if something doesn't exist in the DT, kernel shouldn't have other
-> places telling it does - in this context power domains.
-> 
-
-Firmware is discoverable, we only add information that are hard to discover
-like domain IDs assigned to the device and so on in the DT. But information
-from the firmware must be always more accurate than DT. So if the firmware
-says there are 100 PDs for Linux agent but 50 of them are exclusively used
-for some other agent, then something wrong with the firmware here.
-
--- 
-Regards,
-Sudeep
