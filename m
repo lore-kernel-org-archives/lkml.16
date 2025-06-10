@@ -1,273 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966A61E9905;
-	Tue, 10 Jun 2025 16:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295E7236424
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749574799; cv=none; b=DtN05hXmYsR+KPzMPi/EZOrH55Y+g611VFaNhpoPk7IQL9AJghAg/n630EP+GmiYi1PuAa+S0XcBgwZz4ryM9vtzFOYhWHcOYn9VLf2R0IcmvaydAhZN5nNzl0HPrunNytN8fT1LhYCri0vItbrRAJpvDa+xSYj3ajtuUY8EL3I=
+	t=1749574825; cv=none; b=Ux4XlRB9zb/5w3mDNxFR5GQb7lZ93Xe/9CiftFo7xwQRR1hvTO/Mf8Mv37BoXYm+/XnB+blzdRXngleP5cxZH+xJ8cUr/IfCFbJ5P1pFXI3NqoX45nMYsJMNBb0enhY4Y4+uhj6aY/+1HTsVIQ05y9puWvvtBFuB4cWKg4Hglt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749574799; c=relaxed/simple;
-	bh=OSpF9ZkhqKynpdtZ8deCD/HZpMg3Ub5prYUVfVoF9i0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=rvgQilT6CsVei+6SeWvgM0czcfnlFBPE8wXyWQTL+RmQNIEyW8Ky5cIRFFI4v3ZADZy/QzZDGf+1JgygejwvpazEdbPYSr2lypqx5xOhw9RHkCFHXtcE+PlR0Ue8W5ycciwZgu6Dgwh3iH4whx1ZVFOD9/biUbd+mbGHyHOXJDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IcxEiXWT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749574825; c=relaxed/simple;
+	bh=9hsZLaU75BjpRptkuBvMUF48vhmBMkkHos8UoQfVNSU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Bqhyl3l4UR+UnTTrRAOu2LTFVFREHYGiIPOsQhdyFg1iUasllbwiZCXScrUd67irGAEOyUN++hGnxgSj6TZwTfGBy+T5YqZx2rOHAf7gBIUP9daFiaUbfj8lS1Iro1+xV8Zi0fFoNCfAcF9EiUDAjFgFSJq03JB1ePpGwdiiku0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GDdzoc8u; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IcxEiXWT"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6EBFFC4CEF0;
-	Tue, 10 Jun 2025 16:59:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749574799;
-	bh=OSpF9ZkhqKynpdtZ8deCD/HZpMg3Ub5prYUVfVoF9i0=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=IcxEiXWTbBe+diAxSlYq/9NiLJ/Xc+CAqWk5Q4886K+KV1C+lAGrKi/SY3dnJHvcy
-	 aWii7B1iFB2m80qwibIrimCftGSrmLYMwwvK3fkfJEbNnj0UK3w8SKVDt0Z9B84c8J
-	 SndEH5EiOUqcM0M620gQUwJLq+LlC5mGionupeyZnUk0dIxA/KU9ZfLafub0cWgO/x
-	 V1oxZvC9lHBkL3MUi9WUpCqMwKmz92wTkaO8sRbXB6cX61IJvxSfvYhCd5QXcD0Wsj
-	 EAqBlRzjBn6vFCPM1SW44oHYcfs8EepBYR7fz8xJ6LTvbHQkpNBJED+ifjfLz/7oK9
-	 2K/xZxlIUOPlg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF7DC5B552;
-	Tue, 10 Jun 2025 16:59:59 +0000 (UTC)
-From: Jens Glathe via B4 Relay <devnull+jens.glathe.oldschoolsolutions.biz@kernel.org>
-Date: Tue, 10 Jun 2025 18:59:56 +0200
-Subject: [PATCH v2] arm64: dts: qcom: x1e80100-lenovo-yoga-slim7x: add
- Bluetooth support
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GDdzoc8u"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-70a57a8ffc3so56276377b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:00:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1749574823; x=1750179623; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1CpWx/dhcYFHrMuRqfMn/uLf3NBOzEdKJ7PHmZdNdWs=;
+        b=GDdzoc8uhjLl6JwBSuN5YC3n9rQuDV6eetXL8fboZoAwwNU8v6RbI8tzjTHQbsgz6p
+         Rpw+wubCKLyybh34zofSSdocA27Qp1n2m8EfLx//uNaAHLmU1WY4+ebDVCy0pyfDmBvV
+         nCxhqrYpCjsABgRaKCq8vS4Tvw/FJFikPEEI4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749574823; x=1750179623;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1CpWx/dhcYFHrMuRqfMn/uLf3NBOzEdKJ7PHmZdNdWs=;
+        b=jatlpgly44gd5mKcW+Shbk/rWe9ujiVAhZiPiNLvfE8jW0LcGWJU3gzvcIxbxgbMCm
+         dZLQZN31hS9xAiTXcruhB7iScQgVX7COF69dtaEO39NCr1Dl/uVm40vL/bvUJIZZX/XE
+         zkt6e1nHWIbcldg3hU+enA4djfyZfzU5PkO/vwB3NxMPualQRs1OmTooGhNrjkcdkBEv
+         g2XDCr02IWEEGhzNK+/AONSXA6pE7nYKlSgWQU4wVQlhePgBFbI686Oom8YKSZZ/ojPQ
+         woc9Hg2G8DaNBEFIxGL7J9hK077LO3SJ1G2PurhWBaltw2ayqTf5Wt9N+9zhGFWRJLMD
+         9EZw==
+X-Forwarded-Encrypted: i=1; AJvYcCXi61QaE13A+0NPuos7Lq5zvX9971hbZIU8KpYMctNRUVn821F3TZgAjzzJ6fGsDPOlRD+TFWiYN0b1X0s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLd8w2y6JLNwOxBqgKYEk6nzM8g2bS4pLzGVdGfhRGYQ1yNgfH
+	dprd68ORYDJ3CJYoQ+ZdjK8lNqlJyTHZsyZF6SZ0sKUHxNWhpw9BP3xm1U0N2BDBBgBu8L1S4ha
+	S38d9LtO25WIQ7T4I54vrcj7OGg02kRmE7myrpKMx
+X-Gm-Gg: ASbGncuSiPgCDWqQsCCKkQgNOB2rlTDf4ySdwG7XSd5ZXiJmudPD4Z7itm4qaCNrXq3
+	CyjfKjdY2nLQeHHtZqlTNOZydK2l2WvIFtJwuOCZnbmkY6ycbE6ig2tbEWXU+cMhEN+NQJBiKnS
+	JS/c17ikQQ0s81wBQ6rrKWoF2LceFiTshWIdtlqgSMjY6EY8UmEqCf3Q==
+X-Google-Smtp-Source: AGHT+IE00ce8xDusfDQD3NtC4YowjQLIoj1ZSjHEA05wiN/p3V0Le4pgsgSFjs0cflbETy+V51Wu5cNchYcgN7AsnTw=
+X-Received: by 2002:a05:690c:4906:b0:70c:d322:872c with SMTP id
+ 00721157ae682-711409e4d32mr2975947b3.1.1749574821564; Tue, 10 Jun 2025
+ 10:00:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250610-slim7x-bt-v2-1-0dcd9d6576e9@oldschoolsolutions.biz>
-X-B4-Tracking: v=1; b=H4sIAItkSGgC/22OQQ6CMBBFr0JmbQ3TaAFX3sOwANrKJJWaTm1Q0
- rtbWbt8Lz8vfwM2gQzDpdogmERMfikgDxVM87DcjSBdGGQtz/VJKsGOHs0qxiiUrhFlIzvUCGX
- /DMbSurdufeGZOPrw3tMJf/ZfJaFAoVVrO4WDbVt19U7zNHvv2LtXLH/4ONIH+pzzF7vGQOCvA
- AAA
-X-Change-ID: 20250426-slim7x-bt-6d01127291d1
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Anthony Ruhier <aruhier@mailbox.org>, 
- Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749574798; l=5316;
- i=jens.glathe@oldschoolsolutions.biz; s=20240919;
- h=from:subject:message-id;
- bh=MEFwA6FS4gwwcixWXBosonpMOiLeohbMEMi1CPsp0QM=;
- b=y7xcS6Txh6A6Wq8tfLtmGxLh8ddheXK1OTYAIHAoACNEzrgozpG0iogF4XrC7XPFyeghRuBHa
- /xcbaTKA0JGBKjWsm3n+fJpHSe4JpctCmKcRx+ssdEj2t85uKxpbbLM
-X-Developer-Key: i=jens.glathe@oldschoolsolutions.biz; a=ed25519;
- pk=JcRJqJc/y8LsxOlPakALD3juGfOKmFBWtO+GfELMJVg=
-X-Endpoint-Received: by B4 Relay for
- jens.glathe@oldschoolsolutions.biz/20240919 with auth_id=216
-X-Original-From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-Reply-To: jens.glathe@oldschoolsolutions.biz
+References: <20250610153748.1858519-1-tmichalec@google.com>
+In-Reply-To: <20250610153748.1858519-1-tmichalec@google.com>
+From: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date: Tue, 10 Jun 2025 10:00:10 -0700
+X-Gm-Features: AX0GCFuwttqkyiSf7Z-Y9KrGw93dCiqxmCXC4gASs51y4epRMY_H18lbkfSbcSA
+Message-ID: <CANFp7mXZXSJLYTO+2rkn+W6ki_hnzBPJ6s8MwtFFeyPqLbzQ1g@mail.gmail.com>
+Subject: Re: [PATCH] platform/chrome: cros_ec_typec: Defer probe on missing EC parent
+To: Tomasz Michalec <tmichalec@google.com>
+Cc: Benson Leung <bleung@chromium.org>, Jameson Thies <jthies@google.com>, 
+	Andrei Kuchynski <akuchynski@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
+	Guenter Roeck <groeck@chromium.org>, Konrad Adamczyk <konrada@google.com>, 
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	chromeos-krk-upstreaming@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+On Tue, Jun 10, 2025 at 8:39=E2=80=AFAM Tomasz Michalec <tmichalec@google.c=
+om> wrote:
+>
+> If cros_typec_probe is called before EC device is registered,
+> cros_typec_probe will fail. It may happen when cros-ec-typec.ko is
+> loaded before EC bus layer module (e.g. cros_ec_lpcs.ko,
+> cros_ec_spi.ko).
+>
+> Return -EPROBE_DEFER when cros_typec_probe doesn't get EC device, so
+> the probe function can be called again after EC device is registered.
+>
+> Signed-off-by: Tomasz Michalec <tmichalec@google.com>
+> ---
+>  drivers/platform/chrome/cros_ec_typec.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/c=
+hrome/cros_ec_typec.c
+> index 7678e3d05fd3..f437b594055c 100644
+> --- a/drivers/platform/chrome/cros_ec_typec.c
+> +++ b/drivers/platform/chrome/cros_ec_typec.c
+> @@ -1272,8 +1272,8 @@ static int cros_typec_probe(struct platform_device =
+*pdev)
+>
+>         typec->ec =3D dev_get_drvdata(pdev->dev.parent);
+>         if (!typec->ec) {
+> -               dev_err(dev, "couldn't find parent EC device\n");
+> -               return -ENODEV;
+> +               dev_warn(dev, "couldn't find parent EC device\n");
+> +               return -EPROBE_DEFER;
+>         }
+>
+>         platform_set_drvdata(pdev, typec);
+> --
+> 2.50.0.rc0.604.gd4ff7b7c86-goog
+>
 
-To enable Bluetooth pwrseq appears to be required for the WCN7850.
-Add the nodes from QCP.
-Add uart14 for the BT interface.
-
-Tested-by: Anthony Ruhier <aruhier@mailbox.org>
-Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
----
-This patch adds the Bluetooth support for the WCN7850 card on this laptop.
-Since WCN7850 is supposed to need pwrseq, also added this from the QCP.
-
-This is also part of my tree [1] for the Yoga Slim 7X.
-definition for the pwrseq and regulators.
-
-[1] https://github.com/jglathe/linux_ms_dev_kit/blob/jg/ubuntu-qcom-x1e-6.15.0-jg-6/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts 
----
-Changes in v2:
-- rebased to next-20250610
-- added tested-by from Anthony Ruhier
-- Link to v1: https://lore.kernel.org/r/20250426-slim7x-bt-v1-1-d68f961af886@oldschoolsolutions.biz
----
- .../boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts  | 137 +++++++++++++++++++++
- 1 file changed, 137 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts b/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
-index dad0f11e8e8583df6fd8aeec5be2af86739d85fb..720a514611248bb3d6d9518c2920a11631888e5d 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
-+++ b/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
-@@ -18,6 +18,7 @@ / {
- 
- 	aliases {
- 		serial0 = &uart21;
-+		serial1 = &uart14;
- 	};
- 
- 	chosen {
-@@ -404,6 +405,101 @@ vph_pwr: regulator-vph-pwr {
- 		regulator-always-on;
- 		regulator-boot-on;
- 	};
-+
-+	vreg_wcn_0p95: regulator-wcn-0p95 {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "VREG_WCN_0P95";
-+		regulator-min-microvolt = <950000>;
-+		regulator-max-microvolt = <950000>;
-+
-+		vin-supply = <&vreg_wcn_3p3>;
-+	};
-+
-+	vreg_wcn_1p9: regulator-wcn-1p9 {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "VREG_WCN_1P9";
-+		regulator-min-microvolt = <1900000>;
-+		regulator-max-microvolt = <1900000>;
-+
-+		vin-supply = <&vreg_wcn_3p3>;
-+	};
-+
-+	vreg_wcn_3p3: regulator-wcn-3p3 {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "VREG_WCN_3P3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpio = <&tlmm 214 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+
-+		pinctrl-0 = <&wcn_sw_en>;
-+		pinctrl-names = "default";
-+
-+		regulator-boot-on;
-+	};
-+
-+	wcn7850-pmu {
-+		compatible = "qcom,wcn7850-pmu";
-+
-+		vdd-supply = <&vreg_wcn_0p95>;
-+		vddio-supply = <&vreg_l15b_1p8>;
-+		vddaon-supply = <&vreg_wcn_0p95>;
-+		vdddig-supply = <&vreg_wcn_0p95>;
-+		vddrfa1p2-supply = <&vreg_wcn_1p9>;
-+		vddrfa1p8-supply = <&vreg_wcn_1p9>;
-+
-+		wlan-enable-gpios = <&tlmm 117 GPIO_ACTIVE_HIGH>;
-+		bt-enable-gpios = <&tlmm 116 GPIO_ACTIVE_HIGH>;
-+
-+		pinctrl-0 = <&wcn_wlan_bt_en>;
-+		pinctrl-names = "default";
-+
-+		regulators {
-+			vreg_pmu_rfa_cmn: ldo0 {
-+				regulator-name = "vreg_pmu_rfa_cmn";
-+			};
-+
-+			vreg_pmu_aon_0p59: ldo1 {
-+				regulator-name = "vreg_pmu_aon_0p59";
-+			};
-+
-+			vreg_pmu_wlcx_0p8: ldo2 {
-+				regulator-name = "vreg_pmu_wlcx_0p8";
-+			};
-+
-+			vreg_pmu_wlmx_0p85: ldo3 {
-+				regulator-name = "vreg_pmu_wlmx_0p85";
-+			};
-+
-+			vreg_pmu_btcmx_0p85: ldo4 {
-+				regulator-name = "vreg_pmu_btcmx_0p85";
-+			};
-+
-+			vreg_pmu_rfa_0p8: ldo5 {
-+				regulator-name = "vreg_pmu_rfa_0p8";
-+			};
-+
-+			vreg_pmu_rfa_1p2: ldo6 {
-+				regulator-name = "vreg_pmu_rfa_1p2";
-+			};
-+
-+			vreg_pmu_rfa_1p8: ldo7 {
-+				regulator-name = "vreg_pmu_rfa_1p8";
-+			};
-+
-+			vreg_pmu_pcie_0p9: ldo8 {
-+				regulator-name = "vreg_pmu_pcie_0p9";
-+			};
-+
-+			vreg_pmu_pcie_1p8: ldo9 {
-+				regulator-name = "vreg_pmu_pcie_1p8";
-+			};
-+		};
-+	};
- };
- 
- &apps_rsc {
-@@ -1045,6 +1141,16 @@ &pcie4_port0 {
- 	wifi@0 {
- 		compatible = "pci17cb,1107";
- 		reg = <0x10000 0x0 0x0 0x0 0x0>;
-+
-+		vddaon-supply = <&vreg_pmu_aon_0p59>;
-+		vddwlcx-supply = <&vreg_pmu_wlcx_0p8>;
-+		vddwlmx-supply = <&vreg_pmu_wlmx_0p85>;
-+		vddrfacmn-supply = <&vreg_pmu_rfa_cmn>;
-+		vddrfa0p8-supply = <&vreg_pmu_rfa_0p8>;
-+		vddrfa1p2-supply = <&vreg_pmu_rfa_1p2>;
-+		vddrfa1p8-supply = <&vreg_pmu_rfa_1p8>;
-+		vddpcie0p9-supply = <&vreg_pmu_pcie_0p9>;
-+		vddpcie1p8-supply = <&vreg_pmu_pcie_1p8>;
- 	};
- };
- 
-@@ -1403,6 +1509,37 @@ usb2_pwr_3p3_reg_en: usb2-pwr-3p3-reg-en-state {
- 		drive-strength = <2>;
- 		bias-disable;
- 	};
-+
-+	wcn_sw_en: wcn-sw-en-state {
-+		pins = "gpio214";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
-+	wcn_wlan_bt_en: wcn-wlan-bt-en-state {
-+		pins = "gpio116", "gpio117";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+};
-+
-+&uart14 {
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "qcom,wcn7850-bt";
-+		max-speed = <3200000>;
-+
-+		vddaon-supply = <&vreg_pmu_aon_0p59>;
-+		vddwlcx-supply = <&vreg_pmu_wlcx_0p8>;
-+		vddwlmx-supply = <&vreg_pmu_wlmx_0p85>;
-+		vddrfacmn-supply = <&vreg_pmu_rfa_cmn>;
-+		vddrfa0p8-supply = <&vreg_pmu_rfa_0p8>;
-+		vddrfa1p2-supply = <&vreg_pmu_rfa_1p2>;
-+		vddrfa1p8-supply = <&vreg_pmu_rfa_1p8>;
-+	};
- };
- 
- &uart21 {
-
----
-base-commit: b27cc623e01be9de1580eaa913508b237a7a9673
-change-id: 20250426-slim7x-bt-6d01127291d1
-
-Best regards,
--- 
-Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-
-
+Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
