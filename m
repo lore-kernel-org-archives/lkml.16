@@ -1,217 +1,237 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2082.outbound.protection.outlook.com [40.107.237.82])
+Received: from mail-4317.protonmail.ch (mail-4317.protonmail.ch [185.70.43.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F811DE2A8;
-	Tue, 10 Jun 2025 18:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749580052; cv=fail; b=SsacfLOd+TBCOADcR4UQpm0fcSWdhhaefBIj+OGhOSrnbczuwZAkvCA8cpqThIjKEAfR6kVIJj/cKiRAqFL06gBz6ebpQab2qcZjSP6/Mf9P4nf6NvdeZS2vyeeC/3fCHZUSf2qfEVmvEVmJxs9IDl9+V9Ecn1J5oWUlbRGUMBc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749580052; c=relaxed/simple;
-	bh=ITwBHtZGZUGq8qZK9BvRlPNPzoCmVJs5wFRNjZ9tuFY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=tPFtxzn9j7TKm20F9ZxwouX9I9wV4EURsqSepAzk7PMhITm842izPT0Qc5yWsks1f739zaUAX+r7C32fjzITRbDZC0gq2OLAwomidRE3ISEnFqknUmhXISS3xzAv9AIo4HvVzcg158XSJytpzR0EgQFdlnG8CyIYsLwlFgZxyaw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=D7T2wscp; arc=fail smtp.client-ip=40.107.237.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65AA31487D1
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 18:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749580291; cv=none; b=kna9o0jeRPswuL2gAPwr/Al7NRPvSCfpKBbwactTGnGytW6lmUXlki0sbMVCGukhx7azTZJ59F5KEKGUtU2Y3UM5fL0smYBFEVs8jk8gijE6HzMVc0Q1jf3oQ3VB4m2n3C6Qg1DFmvjSORxMmr8NdDegqkNnFQpYR2kW9oDp9jc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749580291; c=relaxed/simple;
+	bh=E8XqcwdsNNWpw6uZ9YmZxqybI06IKcJfrKYJybCfHm8=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DuFnKrDtyuhC4DnjGM3/YXMm1lAvxD9uFLAZpnLzlQsQ0poAHxl/A3VvRXtwU0Mq3LVVBSsclw1jjjezv6ntu/tzgQ+mRF1qS1lfJEVD6/cDBLW/QPKjdbcToN1rIQGM5s1nV19IxzPp84jLlKtQOom1V5Up7ysffRoD/Q7jLng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gianis.ca; spf=pass smtp.mailfrom=gianis.ca; dkim=pass (2048-bit key) header.d=gianis.ca header.i=@gianis.ca header.b=VxTa8r74; arc=none smtp.client-ip=185.70.43.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gianis.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gianis.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="D7T2wscp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cTBmlxlYROEq84KHws41MEM7myyCD8Vs7d84un13QvWJ5HAyT7NArZwz//1oExWUTgCV0dB6FZIJqCOGJ+wVjzdcAv3iQ5FzBc30+elCIk4MNsWPIJz+DTfQajT6QFSH8B9NTPoYHlZuEiTDo8RGPIQFZccMN27vEDbmABelz1pKJOdzgwOFy9Umno8CkQ7idzbXxQ40yVjNR+xsgWX9g+i+kQ04HZnbe7vyfllTo6cm+8MIlAKCH9ofGEsEVAm6ttzbeC+K/5iHYh8lNAff0wTQRJSsrlYRDt0c25ZQmfcIVlhAVlhG30CGtszQWL1li0hirshw6AGkLqdXn7f4fA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qHutlkLDpJOQn+VVLBHZNnJSJ/AEMeBUHcHnKJYvtIA=;
- b=o8MfFuPS+2DNZ5Lum0WjoyGd5jaeS/ePqtxcwCTtqzZ4uZKCJUKFcUqpejdawheNLSeISUNmcL+dzGfC+FuJe1oBMwTV329ifbLCtrt6lcIEDnqQnT+HHBVguI/ytLGU7YoGpezfMnASW5Gdb35HMoX7QqVD1MuI7NcXhJLCEyppf/al/BLOvPdpxKS4IuHf6n/B6FzqJr9/epm15PNYOHRtBbUMX9NIT8ZVxN2j+jvzMO1Jcri+ky9oG4e566GHF9ehKimDWGfnTq36lEnfOxcTY5aUOszndATbIgGfYnofiK4Y/1SanF7rvi08KiyZBYGCvio56HN7RuvWRaxntQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qHutlkLDpJOQn+VVLBHZNnJSJ/AEMeBUHcHnKJYvtIA=;
- b=D7T2wscpCEKuPRrt9pSblUXDkhiOW3DWE2VLCkKAuyHvRjDaQyOnYpV/fpw8QfTRkbHWWlD+DN//TUGtmuKAOaMGOcJkdRMZ2j3v6BrXXdw9x3YUdAQ7kpZ1LryN/nQ5onayWILmrdyImHhwgigaFupHsI73uDk228rwe023/ac=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH2PR12MB4956.namprd12.prod.outlook.com (2603:10b6:610:69::11)
- by MW4PR12MB5604.namprd12.prod.outlook.com (2603:10b6:303:18d::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.39; Tue, 10 Jun
- 2025 18:27:27 +0000
-Received: from CH2PR12MB4956.namprd12.prod.outlook.com
- ([fe80::fa2c:c4d3:e069:248d]) by CH2PR12MB4956.namprd12.prod.outlook.com
- ([fe80::fa2c:c4d3:e069:248d%4]) with mapi id 15.20.8792.039; Tue, 10 Jun 2025
- 18:27:27 +0000
-Message-ID: <8cf807c4-de59-4280-b7c6-e01ca0749ebf@amd.com>
-Date: Tue, 10 Jun 2025 13:27:24 -0500
-User-Agent: Mozilla Thunderbird
-Reply-To: tanmay.shah@amd.com
-Subject: Re: [PATCH] remoteproc: xlnx: allow single core use in split mode
-To: Peng Fan <peng.fan@nxp.com>, "andersson@kernel.org"
- <andersson@kernel.org>,
- "mathieu.poirier@linaro.org" <mathieu.poirier@linaro.org>
-Cc: "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250609224612.2428151-1-tanmay.shah@amd.com>
- <PAXPR04MB8459348088DB7A4FF4253DDA886AA@PAXPR04MB8459.eurprd04.prod.outlook.com>
-Content-Language: en-US
-From: Tanmay Shah <tanmay.shah@amd.com>
-In-Reply-To: <PAXPR04MB8459348088DB7A4FF4253DDA886AA@PAXPR04MB8459.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BN9PR03CA0805.namprd03.prod.outlook.com
- (2603:10b6:408:13f::30) To CH2PR12MB4956.namprd12.prod.outlook.com
- (2603:10b6:610:69::11)
+	dkim=pass (2048-bit key) header.d=gianis.ca header.i=@gianis.ca header.b="VxTa8r74"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gianis.ca;
+	s=protonmail; t=1749580284; x=1749839484;
+	bh=AjYACY9r2SnXHCSGXldKUiuZBnOjF586F6MufeOrzL4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=VxTa8r74l2B+RhlcVjKr6A5ByP0zTLBnBHzaSC+AEd8utDgPFh65fL8fiuzWFAoeJ
+	 BI0K+e6NlsDlq1NpCgZfAC3lbr7k+7yKNcC3FAu00vA6BbJTvjbjwzXIUXMVDKouPv
+	 NvJX0eKVddAr5rNNtBBhBARne9KYxvRoqUXY2erpqiIO7YYDfHL8L2mTX6rMSzjUdA
+	 CHm5M7pnflhyPXkjRmH/DbMmPMXYFKRfRDT0QfnwoZoMVNUZ7VAK1r9INLydKMlS4f
+	 nsX4yc226TC7WBw+dICjpg2URLHV/Nzn0Pmeb3H/cYGVYT4iM/OORgfwFUX8kJrrZO
+	 ReBFjWyY+T2Hw==
+Date: Tue, 10 Jun 2025 18:31:17 +0000
+To: Chris Hyser <chris.hyser@oracle.com>
+From: Dhaval Giani <dhaval@gianis.ca>
+Cc: Peter Zijlstra <peterz@infradead.org>, Mel Gorman <mgorman@techsingularity.net>, longman@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched/numa: Add ability to override task's numa_preferred_nid.
+Message-ID: <aEh57Evd4WmrrvJx@fedora>
+In-Reply-To: <20250415013625.3922497-1-chris.hyser@oracle.com>
+References: <20250415013625.3922497-1-chris.hyser@oracle.com>
+Feedback-ID: 128275035:user:proton
+X-Pm-Message-ID: 90d4a2606a44807fb094d3a81946aa08cbd9fbad
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB4956:EE_|MW4PR12MB5604:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5298d9d6-5851-47e7-b86a-08dda84c73d1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VTFTYnBwOU9IeTgwZnJ3QVJHc1g3bXliWGZmbVpmZktHa3lzSitGaDl1QjJr?=
- =?utf-8?B?WDFGM0lwRHBJMkVoRG1zTS9HUTBzTmxqS2h3Tlo4dUxscktGdytuaFJ1bCtC?=
- =?utf-8?B?ZUJLVG5vOWlVRnBJRlhUajFLdUNKNms1ejNhV1RSdXcrNHJHQTlsNXdtQTJR?=
- =?utf-8?B?Y05iTTVvOVN5amNLbFRrUUhEQXpDUzd1YXB5N25YUjNOck03VVNjVUQzUU1M?=
- =?utf-8?B?THNlRWJsWDVid1FRRklQeTZONjJ1Sk5tTG9hNXBKOWQ2bzluUUtRQUYwOUhC?=
- =?utf-8?B?bDNid1JWak9ONE82VWZkL3BSRWNqVm0wc25GbTY4Ly9ZRERRcDZ5L0JET0Rt?=
- =?utf-8?B?RENLVWRrQ0VLVWlVMjlWcW41c20ybUZ2M2hkYW03M3FMeExHR3psNnljaU51?=
- =?utf-8?B?QTAxbko5Vy9ZU3M1SGxPWHY1OVo1TjdmMDFBY3dVQXQzSmtpdTltdjJpVlU2?=
- =?utf-8?B?MDkrM0VmV2dzaERlREZBVHpZcDFXa3E4cEluM3ZtY2ZqZEdYTUJpUVZxZ3Q3?=
- =?utf-8?B?ZCtoSllwRndJaHEyVkpsd0dWTUF0aGxWWHJqMnFtd25PdGVRMmxvU2J6U21Y?=
- =?utf-8?B?dFlTYldRREMyejhYNlUzS0dNaTFvSXVnSHdKYlJ4UmEvbmtHOURWTXJHZ2NP?=
- =?utf-8?B?VzdRaEJtUThVdlBocWYxVk15cjlKemliMTZqZTAwb1kxRS9ieXV4aVVNT0Rw?=
- =?utf-8?B?MEQrSTJlSy9LVlk2MzhKVHdZU1kwbGR3dFJSSzVaczVRU0t4TTVpc2V4Z2Iv?=
- =?utf-8?B?VEpkKzFQVlpET0VOUTk4V1ZHYjM4TW9oOTV5eGR1Y0hKeVhBMDhacmR2UENj?=
- =?utf-8?B?VzBzYkt2aEl1Qi9PNDFRMkRDL3B3MmVYc1lzc2VaVVlDcWRUNVZpbndhVW9n?=
- =?utf-8?B?aVF0enRaVFE4eE1DbEtmdnR3dmRNc1ViUW9hZEM0TDJKdXZNQ2hJR3ExNldZ?=
- =?utf-8?B?Tzl5VTFxcHNBZ09lem1yRDFpckFvRnlrcStRb2N1R2RwK25CdEptcFBENDJX?=
- =?utf-8?B?YmpwcWRXdzFQWjFXSkYvUWR2Yk13ZkhRN2UyWHFiVzJ6WTkvekhCTGw1WWF5?=
- =?utf-8?B?WnRJdnJnUmxadVkxZUdzSURPTlUvWXF6OXluYmluL2ZjSEFyRTZaSFZLRktY?=
- =?utf-8?B?V09NL2I1MWRzblYvNWM4SmJZZ05yRHVXcUtxN1gvVTVvdGtPWG1MYlBlcXEz?=
- =?utf-8?B?a0JRWU5oSDJRM21ieFZGWHRXQnNnMy9uc1RQYldqZHZXYW1qdmpnSDU0TWI2?=
- =?utf-8?B?YjNrZG5rUXpGbUFTNWNHQk9jSTAyaU13WFBTOFdsVDQ0UlJLaTVoN2lJTjVo?=
- =?utf-8?B?dmljam51UFlqMTk1Vk5vQzByTVVqY2JNWG9EdU5neXlGRVJQMnpGS3BtaGtr?=
- =?utf-8?B?RHFFMzdrS3UwbmpSVzJkUEhISUZJa1FtbEtOaDd5d2lOUksxWFFQa1dXZFc2?=
- =?utf-8?B?MGU2UVAycng3Y2w5MG9rczNyQkhubDVGU0hGbjRYNFRjZXlEVE1QY3hGUDNx?=
- =?utf-8?B?ejdSV3N6OTladmo1eFVhdEtOdnJLUFFSelI3a2xKSU1Ec0FFVkFsT0o4Kzhn?=
- =?utf-8?B?VWxpOXdnZERndkxGWjFvVUovUDV3SFRHZUIrakM3ZTcwQ3BDZFNXL0JtRU5P?=
- =?utf-8?B?K3NBTHFtMTlxdW8xektiWjNnNkFVcFo3QUMrcUEyRm8yVms5dU9lT2lleStG?=
- =?utf-8?B?UjkrOGpCWUM2UlZoVWxvcDN6VkE1Z09iYTV5c2ZmakxiZ0ttVHhTY3E5TUpX?=
- =?utf-8?B?RWdxMFBPWFhpcm9VR3RkVVp1Uk9HRTlOMThKWFBLYWVHNXdzelpQMmlnQ2gr?=
- =?utf-8?B?YVlOOTBpbGlXemx1aWtiekpIU2RvbnBSTjROMkZ2M1JpeUR5NllCSmZYM0k5?=
- =?utf-8?B?U0R5V21maXM3bnEzV3kybHpyaEhmeU1VcVZIa1NBMmEvOEZWbnhaNmQra3dW?=
- =?utf-8?Q?2BPxYbWdSNc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB4956.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WHRkZjdCWk1LOFBOSTYvT2lEVnRVSEpxaXE4N01nWThOTTN3ajRQMllyMVU5?=
- =?utf-8?B?UFNRNFU1ak5BU1ducU1aN3V5OXZPWXV4L285dFZFRmNpNHNySStiNW81MXpy?=
- =?utf-8?B?Tlh3ZU91eC82OWhqL093OUJaaFBLT1BET082UjdaaCs2Um92WWV0Qm84ZkZG?=
- =?utf-8?B?bFFjNVVqVDVsRDZMdXNTKzVXeVRrZXFnOG15VUpNdWdTNVVzcmtvVmZrR3JG?=
- =?utf-8?B?bnJtU0RmOVN0QmkxZmpoWUN6WllIM3lNTzJMeTFnR3JSeFlXdWk1b0RBTWty?=
- =?utf-8?B?RlFzNGV3NWczYjNvdElkNFZjRzY5eHZxdkJ6d1g1U2Jibzk1c0t5OFN0Smdw?=
- =?utf-8?B?NjVGRTVHOGcwY2RtTmszaGRLQkkvblpMTUJIM01rc0lyU1pYeEpuOUQ2QkJV?=
- =?utf-8?B?SWh4RzNpcjBtRVlNZ1djRHJyK2thTzRHcTNaZ3ZzaEFSZEREL2ZzM1FRQURP?=
- =?utf-8?B?Q3FoMWZvRXFNK3dINEVnOVUrSWx2UXhJcms0TlIxWTFndUFBaEFqODhpMGNV?=
- =?utf-8?B?anE3bm52a3Bac09RaFJ5VDk5VzdIQ1VjbWVDQTZvclBUY2FwZktKSkJTaUV3?=
- =?utf-8?B?VVBRWnhHRGRDdEllOXV0T2ZNNlFGd2hzZmU2RFlVNGtORVBmNE9iWXR3NjBG?=
- =?utf-8?B?RkVTR3lIbGlEeFl1MnA4RXU5djcyN3FDM1NFa1Z2bFZtUHVpQ0d1Syt1b0wr?=
- =?utf-8?B?RHhQcXpabWpncCtzZk5vUFdDOTREZlZSb1RiQ3BFVmZNemoxMVNqS2RJL2xo?=
- =?utf-8?B?dStYQWxwTDBTaUtlNmxVbHZKemJlZExsMkFJNDJTTDhCWUpyblZic3RnTFoz?=
- =?utf-8?B?Uk9CQTFsbVFvQUh0THhoVGhOd1Z4NE02M2M1ZC9vd2g1Um93elpYVnNMdlM3?=
- =?utf-8?B?dUFWY2NXMytZVXBmZXUzUU05Sm1TNVRJSTNBWEZnQUhFaTFoVk5GcHdUcUo1?=
- =?utf-8?B?eXRtYjV2cDhJZ3Y0UWtYZUQ1SGRlMXlYR3FHdVFnRlhiTUJHZDJBaEVUUFpS?=
- =?utf-8?B?VS94Rk5PL1pTcFpack1IUmJnT1V5dlpXd2ZTZ053TkNmS2E1cEtEM3R4Kysy?=
- =?utf-8?B?UzI4VG9tRlliVERLZzl0VzRJcG02OEs0M2QycUNFTjRJMjlJWHRaZCtvN1BX?=
- =?utf-8?B?Qjc3MFhFNDl3TXdGb2EzNzBSYzFlVVZQS2RLQ0t5N1pXVE1LQjdFZ2ZYVzJW?=
- =?utf-8?B?bFRsa2hRMVVNUEJNN2RZTlgxTGNNSjhRd096UTRoQzFDZmFjSjlkbjhxc3RF?=
- =?utf-8?B?TGMxYjl3aXQ5V2JXYWU1TFQ3Qkxob1J2WVJVSGdsdXR0M2FWY1RiMnl4aFhJ?=
- =?utf-8?B?SFRwQ1BhNnlCVGtyR0dWKzhyYWtra1pRclV5UUp2ZFU3aURtRUpteTRyU1Vu?=
- =?utf-8?B?STNaR0I3YmhCSUJ0c1VkMFZDOXNzVFZUN1BKMTgvdHNrQWk5RDlFVEhCbVFC?=
- =?utf-8?B?QURra0czRmMvandnUzZoRUFSbHVtS01MUHhQK3cyMDJERjRGeTh1Z2pZdHR6?=
- =?utf-8?B?MU9tZGVLSTE1MkJYcTNwdzVGYjc5dTUwSkJNR2NCUGhicVdmNWE5dVhIYWxN?=
- =?utf-8?B?QVhzc1RoclJGL3dSNVExbk9lUmk3dEFlbXpLZ1JDOFB1YkE2MnJzVUN3Sm45?=
- =?utf-8?B?Z1QyYmtnaTJ3eGtNWmhpVFcySFpnWng1VGhFMThtZ2R5UWplL29jakgrYkJk?=
- =?utf-8?B?OHE1WFN5UG41VkdFNStGT1hRMWpiZVhoK3ZqSDA0Y3Z1MHQvYWhDR3lkaDVv?=
- =?utf-8?B?eHNNZmg0amZHdkVrNTNaVEVHRi9KZVJ3MTR5UTdJQk1QOWF4QnpMMVJrS2Y4?=
- =?utf-8?B?SFJaVkhYTFdrYlZvT3E0V1dsZVQzRHFvNGJRTU12Zk03LzNpVVMvVDBBSTF6?=
- =?utf-8?B?MVh2clZMTVVDODdJVWRLTTZ5WDdhbERPQWt4anVOVGhwUzBVQmZGbVp6U2hT?=
- =?utf-8?B?VzFpVlBhaE84dHpJbVFONFczYzByeTJ4RHJHTEhlZ1ozcVU2Z1hlbjVWSU01?=
- =?utf-8?B?OFlNbVJJTkpKQ1p4djRiMnZWWjU4alEyUWVXQXArRkI5OGJoR0dlVnJFcFJB?=
- =?utf-8?B?TlBvZjRuUjkybDd1eStETWYwcW42emgybFplS0tIaWxuK3g3c0t3cnVyVzJp?=
- =?utf-8?Q?45WRs5Q5dYkH3xeseskL+YA++?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5298d9d6-5851-47e7-b86a-08dda84c73d1
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB4956.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 18:27:27.2635
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8vBuRgWTSIj3PrdPf+chDS6FRu+7ISTU0tWz5dykCVjj1a/FTjmVxs6yCqOUn0vt
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB5604
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Apr 14, 2025 at 09:35:51PM -0400, Chris Hyser wrote:
+> From: chris hyser <chris.hyser@oracle.com>
+>=20
+> This patch allows directly setting and subsequent overriding of a task's
+> "Preferred Node Affinity" by setting the task's numa_preferred_nid and
+> relying on the existing NUMA balancing infrastructure.
+>=20
+> NUMA balancing introduced the notion of tracking and using a task's
+> preferred memory node for both migrating/consolidating the physical pages
+> accessed by a task and to assist the scheduler in making NUMA aware
+> placement and load balancing decisions.
+>=20
+> The existing mechanism for determining this, Auto NUMA Balancing, relies
+> on periodic removal of virtual mappings for blocks of a task's address
+> space. The resulting faults can indicate a preference for an accessed
+> node.
+>=20
+> This has two issues that this patch seeks to overcome:
+>=20
+> - there is a trade-off between faulting overhead and the ability to detec=
+t
+>   dynamic access patterns. In cases where the task or user understand the
+>   NUMA sensitivities, this patch can enable the benefits of setting a
+>   preferred node used either in conjunction with Auto NUMA Balancing's
+>   default parameters or adjusting the NUMA balance parameters to reduce t=
+he
+>   faulting rate (potentially to 0).
+>=20
+> - memory pinned to nodes or to physical addresses such as RDMA cannot be
+>   migrated and have thus far been excluded from the scanning. Not taking
+>   those faults however can prevent Auto NUMA Balancing from reliably
+>   detecting a node preference with the scheduler load balancer then
+>   possibly operating with incorrect NUMA information.
+>=20
+> The following results were from TPCC runs on an Oracle Database. The syst=
+em
+> was a 2-node Intel machine with a database running on each node with loca=
+l
+> memory allocations. No tasks or memory were pinned.
+>=20
+> There are four scenarios of interest:
+>=20
+> - Auto NUMA Balancing OFF.
+>     base value
+>=20
+> - Auto NUMA Balancing ON.
+>     1.2% - ANB ON better than ANB OFF.
+>=20
+> - Use the prctl(), ANB ON, parameters set to prevent faulting.
+>     2.4% - prctl() better then ANB OFF.
+>     1.2% - prctl() better than ANB ON.
+>=20
+> - Use the prctl(), ANB parameters normal.
+>     3.1% - prctl() and ANB ON better than ANB OFF.
+>     1.9% - prctl() and ANB ON better than just ANB ON.
+>     0.7% - prctl() and ANB ON better than prctl() and ANB ON/faulting off
+>=20
+> In benchmarks pinning large regions of heavily accessed memory, the
+> advantages of the prctl() over Auto NUMA Balancing alone is significantly
+> higher.
+>=20
+> Signed-off-by: Chris Hyser <chris.hyser@oracle.com>
+> ---
+>  include/linux/sched.h |  1 +
+>  init/init_task.c      |  1 +
+>  kernel/sched/core.c   |  5 ++++-
+>  kernel/sched/debug.c  |  1 +
+>  kernel/sched/fair.c   | 15 +++++++++++++--
+>  5 files changed, 20 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index f96ac1982893..373046c82b35 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1350,6 +1350,7 @@ struct task_struct {
+>  =09short=09=09=09=09pref_node_fork;
+>  #endif
+>  #ifdef CONFIG_NUMA_BALANCING
+> +=09int=09=09=09=09numa_preferred_nid_force;
+>  =09int=09=09=09=09numa_scan_seq;
+>  =09unsigned int=09=09=09numa_scan_period;
+>  =09unsigned int=09=09=09numa_scan_period_max;
+> diff --git a/init/init_task.c b/init/init_task.c
+> index e557f622bd90..1921a87326db 100644
+> --- a/init/init_task.c
+> +++ b/init/init_task.c
+> @@ -184,6 +184,7 @@ struct task_struct init_task __aligned(L1_CACHE_BYTES=
+) =3D {
+>  =09.vtime.state=09=3D VTIME_SYS,
+>  #endif
+>  #ifdef CONFIG_NUMA_BALANCING
+> +=09.numa_preferred_nid_force =3D NUMA_NO_NODE,
+>  =09.numa_preferred_nid =3D NUMA_NO_NODE,
+>  =09.numa_group=09=3D NULL,
+>  =09.numa_faults=09=3D NULL,
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 79692f85643f..7d1532f35d15 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -7980,7 +7980,10 @@ void sched_setnuma(struct task_struct *p, int nid)
+>  =09if (running)
+>  =09=09put_prev_task(rq, p);
+>=20
+> -=09p->numa_preferred_nid =3D nid;
+> +=09if (p->numa_preferred_nid_force !=3D NUMA_NO_NODE)
+> +=09=09p->numa_preferred_nid =3D p->numa_preferred_nid_force;
+> +=09else
+> +=09=09p->numa_preferred_nid =3D nid;
+>=20
+>  =09if (queued)
+>  =09=09enqueue_task(rq, p, ENQUEUE_RESTORE | ENQUEUE_NOCLOCK);
+> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+> index 56ae54e0ce6a..4cba21f5d24d 100644
+> --- a/kernel/sched/debug.c
+> +++ b/kernel/sched/debug.c
+> @@ -1154,6 +1154,7 @@ static void sched_show_numa(struct task_struct *p, =
+struct seq_file *m)
+>  =09=09P(mm->numa_scan_seq);
+>=20
+>  =09P(numa_pages_migrated);
+> +=09P(numa_preferred_nid_force);
+>  =09P(numa_preferred_nid);
+>  =09P(total_numa_faults);
+>  =09SEQ_printf(m, "current_node=3D%d, numa_group_id=3D%d\n",
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 0c19459c8042..79d3d0840fb2 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -2642,9 +2642,15 @@ static void numa_migrate_preferred(struct task_str=
+uct *p)
+>  =09unsigned long interval =3D HZ;
+>=20
+>  =09/* This task has no NUMA fault statistics yet */
+> -=09if (unlikely(p->numa_preferred_nid =3D=3D NUMA_NO_NODE || !p->numa_fa=
+ults))
+> +=09if (unlikely(p->numa_preferred_nid =3D=3D NUMA_NO_NODE))
+>  =09=09return;
+>=20
+> +=09/* Execute rest of function if forced PNID */
 
-Hello,
+This comment had me confused, expecially since you check for
+NUMA_NO_NODE and exit right after. Move it to after please.
 
-Thanks for your reviews.
+> +=09if (p->numa_preferred_nid_force =3D=3D NUMA_NO_NODE) {
+> +=09=09if (unlikely(!p->numa_faults))
+> +=09=09=09return;
+> +=09}
+> +
 
-On 6/9/25 8:10 PM, Peng Fan wrote:
->> Subject: [PATCH] remoteproc: xlnx: allow single core use in split mode
->>
->> It's a valid use case to have only one core enabled in cluster in split
->> mode. Remove exact core count expecatation from the driver.
->>
->> Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
->> ---
->>   drivers/remoteproc/xlnx_r5_remoteproc.c | 3 ---
->>   1 file changed, 3 deletions(-)
->>
->> diff --git a/drivers/remoteproc/xlnx_r5_remoteproc.c
->> b/drivers/remoteproc/xlnx_r5_remoteproc.c
->> index 1af89782e116..f314dd5bdb26 100644
->> --- a/drivers/remoteproc/xlnx_r5_remoteproc.c
->> +++ b/drivers/remoteproc/xlnx_r5_remoteproc.c
->> @@ -1339,9 +1339,6 @@ static int zynqmp_r5_cluster_init(struct
->> zynqmp_r5_cluster *cluster)
->>   	if (core_count == 0) {
-> 
-> "if ((count == 0 || (count > 2))"
-> should be used to here.
-> 
+I am in two minds with this one here -> Why the unlikely for
+p->numa_faults, and can we just make it one single if function?
 
-That's a fair ask. I will fix it.
+>  =09/* Periodically retry migrating the task to the preferred node */
+>  =09interval =3D min(interval, msecs_to_jiffies(p->numa_scan_period) / 16=
+);
+>  =09p->numa_migrate_retry =3D jiffies + interval;
+> @@ -3578,6 +3584,7 @@ void init_numa_balancing(unsigned long clone_flags,=
+ struct task_struct *p)
+>=20
+>  =09/* New address space, reset the preferred nid */
+>  =09if (!(clone_flags & CLONE_VM)) {
+> +=09=09p->numa_preferred_nid_force =3D NUMA_NO_NODE;
+>  =09=09p->numa_preferred_nid =3D NUMA_NO_NODE;
+>  =09=09return;
+>  =09}
+> @@ -9301,7 +9308,11 @@ static long migrate_degrades_locality(struct task_=
+struct *p, struct lb_env *env)
+>  =09if (!static_branch_likely(&sched_numa_balancing))
+>  =09=09return 0;
+>=20
+> -=09if (!p->numa_faults || !(env->sd->flags & SD_NUMA))
+> +=09/* Execute rest of function if forced PNID */
 
->>   		dev_err(dev, "Invalid number of r5 cores %d",
->> core_count);
->>   		return -EINVAL;
->> -	} else if (cluster_mode == SPLIT_MODE && core_count != 2) {
->> -		dev_err(dev, "Invalid number of r5 cores for split
->> mode\n");
->> -		return -EINVAL;
-> 
-> 
-> Then it is safe to drop this code piece, otherwise if hacked devicetree
-> being used with 3 r5 cores included, things will go wrong.
-> 
-> Regards,
-> Peng
->>   	} else if (cluster_mode == LOCKSTEP_MODE && core_count ==
->> 2) {
->>   		dev_warn(dev, "Only r5 core0 will be used\n");
->>   		core_count = 1;
->>
->> base-commit: dc8417021bcd01914a416bf8bab811a6c5e7d99a
->> --
->> 2.34.1
->>
-> 
+Same here.
+
+> +=09if (p->numa_preferred_nid_force =3D=3D NUMA_NO_NODE && !p->numa_fault=
+s)
+> +=09=09return 0;
+> +
+> +=09if (!(env->sd->flags & SD_NUMA))
+>  =09=09return 0;
+>=20
+>  =09src_nid =3D cpu_to_node(env->src_cpu);
+> --
+> 2.43.5
+>=20
+>=20
 
