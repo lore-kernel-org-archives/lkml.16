@@ -1,216 +1,124 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F00E238140
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:12:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749568369; cv=pass; b=b5JdPaQLzFbn30d0t+KW0RocGNuytn7ymVXLsGbQNklemCUOmLGE9YtUwSn4TGVmPX9G5QcIb3hgZx3YiwajtSuV+L4JS4FdDyMUArBjl3Z6UGUBduOVpthU3DxhPybx+lt3QiV6BinZ9ugqYFmgA+L5xkKeYuwm0SahiZpiGdM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749568369; c=relaxed/simple;
-	bh=RObeAnUxmmJ01K9o42YmjiyUi1CMIn4IGNFtKgby1Io=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=k1iIXid4hpMDwJCc6vjyOTWhJI1pHlIl25amV5c96wvtbywQ5N1rjZ7W+wQN8BIixE4Rc+S+ntlMMMN9pM0YRmGTvtsMr536dPAgLICuBFxzSKX3OfV/TEymiZZJ3gZbZmeFfH4lqFNR5lh318+MYsCRHkZ3gh1DNVQmvtA8WOs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=nAl6X/za; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12AA0231820;
+	Tue, 10 Jun 2025 15:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749568529; cv=none; b=plMKb55JhuAzlfZTvmn41ozTd0o2yhdIAQYlfW7UlQLbzShirS1fGDuwEIpV0oGB+wwvPnNZUzGqY8Pz504n8YzVHHN9HD29FHm0L2vy/ayoWtOwgF3pZh3huPA17p8To4FtUsD3rA3cZs2djb5pwndt95eIWcJ2HHTpgI/YIo4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749568529; c=relaxed/simple;
+	bh=AxJkQsibdaksU42884Z6x6WQyQHXWY2r1ANS6fr93Z4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VR80ixxrnNejO3AYYXDM4taZjD6goZhPFk+yu0vKM0WNDZjwGWsap4gUKO6xrwfv/12KyGK59fsiWuZKBI9AsMIA1yAzC7TdCoUG1Jb8GqfDUYA1YfzU2PwyFQT4UenZxqMdXqejz7N/3Vpnvffp1W91TeQ1U9Vq+6epK+dSAVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SYPFTZuB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="nAl6X/za"
-ARC-Seal: i=1; a=rsa-sha256; t=1749568342; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=lCbZI7UBgJt54koe2Rq5okU5l0MeLTMvIno0I2vYNjup0YEMRAHe9kD67oDj23m/qSytKCjYznor3Zdtek2WMy+4oOnp2xZ7yvFS3ZBzpysJXCibf8l1zXIPAyO01N7zxxpSHvpZj+fXscChN2i+iJpZHn60aQf/kZyvc6WeVxI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749568342; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=RObeAnUxmmJ01K9o42YmjiyUi1CMIn4IGNFtKgby1Io=; 
-	b=D7kC1Z35kbYEIViyolj7MBt6/T2yD8Mni07ggahhJOb93r5PF7mJDuxtgZUgLWyXtKE7uviU/8n8qqQaZg0LFx8lufwItPi0jrb4iskgb8Pie27taahynFIKnjHqZiehWXAONnQX6FfzviU7jVYpRT4P+0NlkXXLATPnu7tVB30=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749568342;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=RObeAnUxmmJ01K9o42YmjiyUi1CMIn4IGNFtKgby1Io=;
-	b=nAl6X/zawJyZZlJxqZ1doq6xFz/U9LKT4fKjQT5908u8kcuqPESdOt4UN3JMTJ/j
-	21acluBVfKy9yF5X1X9F1/c/opss47erXdABGi9oT1qFNYbfMDVc4yzkS2H4zOnC3lV
-	S4blfCho0fjCbLVMsD0/WkW3kfnPWlQD9af2G+0yhEte3PGXcD7ogbGj2MTE+yb3mP0
-	gg1hoi2isr41chiduRtXB1Y/Y87TeATnMemQaa+OrEmv2WBBimYZpIgmY/n9m+u0wS8
-	ZAxkcYI3s+w9aVS6zctwLiQ5wlqotocvAyyQtJTs1/qPOu/Tfm6Bc4NrxmcOuv2irhN
-	dQhfhOEGnQ==
-Received: by mx.zohomail.com with SMTPS id 174956833931367.03345445489344;
-	Tue, 10 Jun 2025 08:12:19 -0700 (PDT)
-Message-ID: <0ab12bdb2af26e6a328615611833dc575d691acf.camel@icenowy.me>
-Subject: Re: [PATCH] drm/mediatek: only announce AFBC if really supported
-From: Icenowy Zheng <uwu@icenowy.me>
-To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, Philipp Zabel
- <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Justin Green <greenjustin@chromium.org>
-Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Date: Tue, 10 Jun 2025 23:12:11 +0800
-In-Reply-To: <20250531121140.387661-1-uwu@icenowy.me>
-References: <20250531121140.387661-1-uwu@icenowy.me>
-Organization: Anthon Open-Source Community
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.44.4 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SYPFTZuB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1895C4CEED;
+	Tue, 10 Jun 2025 15:15:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749568528;
+	bh=AxJkQsibdaksU42884Z6x6WQyQHXWY2r1ANS6fr93Z4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SYPFTZuB3+wiMQZvX2Gaa3oYXJUT0klmCkiTwWo0kSdBYRrlvt1Hc0+RkZ9Bk4RX9
+	 mhu5ldHrtNzMp5cBcl2CURy9KtksyQ9owBgl+mnPkV1OiFpDH9wqINQwioXZqll/bX
+	 68x/9DXUKWpRrt9z10sj0lMIUsGUyI3e8cau81UC44Ag/oOdC16HhSrrGt13xqXf3Q
+	 PQ1n2oLJhPll0B3vVWMdJd4ld96ZyPPVvz3tJ8PheXzIibQSwki2qUiiWiz0ggb/E7
+	 fnmj623DSP5eBlfwr7zw1wP+SkE6UYLs5ymgo6yb/nAQyCuOcsq2xMMNsohftX4Uaf
+	 BfohatvfOWQTA==
+Date: Tue, 10 Jun 2025 17:15:21 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Igor Korotin <igor.korotin.linux@gmail.com>
+Cc: ojeda@kernel.org, alex.gaynor@gmail.com, rafael@kernel.org,
+	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org,
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, lenb@kernel.org, wedsonaf@gmail.com,
+	viresh.kumar@linaro.org, alex.hung@amd.com,
+	dingxiangfei2009@gmail.com
+Subject: Re: [PATCH v4 3/5] rust: driver: Consolidate `Adapter` methods using
+ `#[cfg]`
+Message-ID: <aEhMCVJG3c7zVbyU@cassiopeiae>
+References: <20250610145234.235005-1-igor.korotin.linux@gmail.com>
+ <20250610150538.238007-1-igor.korotin.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
-X-ZohoMail-Owner: <0ab12bdb2af26e6a328615611833dc575d691acf.camel@icenowy.me>+zmo_0_
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250610150538.238007-1-igor.korotin.linux@gmail.com>
 
-5ZyoIDIwMjUtMDUtMzHmmJ/mnJ/lha3nmoQgMjA6MTEgKzA4MDDvvIxJY2Vub3d5IFpoZW5n5YaZ
-6YGT77yaCj4gQ3VycmVudGx5IGV2ZW4gdGhlIFNvQydzIE9WTCBkb2VzIG5vdCBkZWNsYXJlIHRo
-ZSBzdXBwb3J0IG9mIEFGQkMsCj4gQUZCQwo+IGlzIHN0aWxsIGFubm91bmNlZCB0byB0aGUgdXNl
-cnNwYWNlIHdpdGhpbiB0aGUgSU5fRk9STUFUUyBibG9iLCB3aGljaAo+IGJyZWFrcyBtb2Rlcm4g
-V2F5bGFuZCBjb21wb3NpdG9ycyBsaWtlIEtXaW4gV2F5bGFuZCBhbmQgb3RoZXJzLgo+IAo+IEdh
-dGUgcGFzc2luZyBtb2RpZmllcnMgdG8gZHJtX3VuaXZlcnNhbF9wbGFuZV9pbml0KCkgYmVoaW5k
-IHF1ZXJ5aW5nCj4gdGhlCj4gZHJpdmVyIG9mIHRoZSBoYXJkd2FyZSBibG9jayBmb3IgQUZCQyBz
-dXBwb3J0Lgo+IAo+IEZpeGVzOiBjNDEwZmE5YjA3YzMgKCJkcm0vbWVkaWF0ZWs6IEFkZCBBRkJD
-IHN1cHBvcnQgdG8gTWVkaWF0ZWsgRFJNCj4gZHJpdmVyIikKPiBTaWduZWQtb2ZmLWJ5OiBJY2Vu
-b3d5IFpoZW5nIDx1d3VAaWNlbm93eS5tZT4KPiAtLS0KClBpbmcuCgpUaGlzIHBhdGNoIGF0IGxl
-YXN0IGZpeGVzIHJ1bm5pbmcgcmVndWxhciBXYXlsYW5kIGRlc2t0b3BzIG9uCnBvc3RtYXJrZXRP
-UyAoSSBwb3N0ZWQgdGhpcyBwYXRjaCB0aGVyZSkuCgo+IFBhdGNoIHRlc3RlZCBvbiBNVDgxODMs
-IG9uIHdoaWNoIEtXaW4gV2F5bGFuZCA1LjI3LjEyIGlzIGZpeGVkLgo+IAo+IEluIGFkZGl0aW9u
-LCBJIHRyaWVkIHRvIGZha2Ugc3VwcG9ydHNfYWZiYyBpbiBtdDgxODNfb3ZsX2RyaXZlcl9kYXRh
-Cj4gYW5kCj4gbXQ4MTgzX292bF8ybF9kcml2ZXJfZGF0YSwgdGhlbiBLV2luIFdheWxhbmQgZ2V0
-cyBicm9rZW4gYWdhaW4gYW5kCj4gbW9kZXRlc3QgYWxzbyBzaG93cyB0aGUgQUZCQyBtb2RpZmll
-ciBpbiBJTl9GT1JNQVRTLgo+IAo+IMKgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19jcnRj
-LmPCoMKgwqDCoCB8IDMgKystCj4gwqBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RkcF9j
-b21wLmMgfCAxICsKPiDCoGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGRwX2NvbXAuaCB8
-IDkgKysrKysrKysrCj4gwqBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfZHJ2Lmgg
-fCAxICsKPiDCoGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyB8IDcgKysr
-KysrKwo+IMKgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19wbGFuZS5jwqDCoMKgIHwgNyAr
-KysrKy0tCj4gwqBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX3BsYW5lLmjCoMKgwqAgfCAz
-ICsrLQo+IMKgNyBmaWxlcyBjaGFuZ2VkLCAyNyBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygt
-KQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2NydGMuYwo+
-IGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19jcnRjLmMKPiBpbmRleCA4ZjZmYmE0MjE3
-ZWNlLi41MzM1OWMyNDY1YjY1IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
-ay9tdGtfY3J0Yy5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19jcnRjLmMK
-PiBAQCAtOTMwLDcgKzkzMCw4IEBAIHN0YXRpYyBpbnQgbXRrX2NydGNfaW5pdF9jb21wX3BsYW5l
-cyhzdHJ1Y3QKPiBkcm1fZGV2aWNlICpkcm1fZGV2LAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBtdGtfZGRwX2NvbXBfc3Vw
-cG9ydGVkX3JvdGF0aW9ucyhjb21wCj4gKSwKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbXRrX2RkcF9jb21wX2dldF9ibGVu
-ZF9tb2Rlcyhjb21wKSwKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbXRrX2RkcF9jb21wX2dldF9mb3JtYXRzKGNvbXApLAo+
-IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoG10a19kZHBfY29tcF9nZXRfbnVtX2Zvcm1hdHMoY29tcCksCj4gaSk7Cj4gK8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-bXRrX2RkcF9jb21wX2dldF9udW1fZm9ybWF0cyhjb21wKSwKPiArwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBtdGtfZGRwX2NvbXBf
-aXNfYWZiY19zdXBwb3J0ZWQoY29tcCksCj4gaSk7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqBpZiAocmV0KQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoHJldHVybiByZXQ7Cj4gwqAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kZHBfY29tcC5jCj4gYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X2RkcF9jb21wLmMKPiBpbmRleCBlZGM2NDE3NjM5ZTY0Li5hYzY2MjBlMTAyNjJlIDEwMDY0NAo+
-IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGRwX2NvbXAuYwo+ICsrKyBiL2Ry
-aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGRwX2NvbXAuYwo+IEBAIC0zNjYsNiArMzY2LDcg
-QEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfZGRwX2NvbXBfZnVuY3MgZGRwX292bCA9Cj4gewo+
-IMKgwqDCoMKgwqDCoMKgwqAuZ2V0X2JsZW5kX21vZGVzID0gbXRrX292bF9nZXRfYmxlbmRfbW9k
-ZXMsCj4gwqDCoMKgwqDCoMKgwqDCoC5nZXRfZm9ybWF0cyA9IG10a19vdmxfZ2V0X2Zvcm1hdHMs
-Cj4gwqDCoMKgwqDCoMKgwqDCoC5nZXRfbnVtX2Zvcm1hdHMgPSBtdGtfb3ZsX2dldF9udW1fZm9y
-bWF0cywKPiArwqDCoMKgwqDCoMKgwqAuaXNfYWZiY19zdXBwb3J0ZWQgPSBtdGtfb3ZsX2lzX2Fm
-YmNfc3VwcG9ydGVkLAo+IMKgfTsKPiDCoAo+IMKgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfZGRw
-X2NvbXBfZnVuY3MgZGRwX3Bvc3RtYXNrID0gewo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2RkcF9jb21wLmgKPiBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
-dGtfZGRwX2NvbXAuaAo+IGluZGV4IDM5NzIwYjI3ZjRlOWUuLjcyODliM2RjZjIyZjIgMTAwNjQ0
-Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kZHBfY29tcC5oCj4gKysrIGIv
-ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kZHBfY29tcC5oCj4gQEAgLTgzLDYgKzgzLDcg
-QEAgc3RydWN0IG10a19kZHBfY29tcF9mdW5jcyB7Cj4gwqDCoMKgwqDCoMKgwqDCoHUzMiAoKmdl
-dF9ibGVuZF9tb2Rlcykoc3RydWN0IGRldmljZSAqZGV2KTsKPiDCoMKgwqDCoMKgwqDCoMKgY29u
-c3QgdTMyICooKmdldF9mb3JtYXRzKShzdHJ1Y3QgZGV2aWNlICpkZXYpOwo+IMKgwqDCoMKgwqDC
-oMKgwqBzaXplX3QgKCpnZXRfbnVtX2Zvcm1hdHMpKHN0cnVjdCBkZXZpY2UgKmRldik7Cj4gK8Kg
-wqDCoMKgwqDCoMKgYm9vbCAoKmlzX2FmYmNfc3VwcG9ydGVkKShzdHJ1Y3QgZGV2aWNlICpkZXYp
-Owo+IMKgwqDCoMKgwqDCoMKgwqB2b2lkICgqY29ubmVjdCkoc3RydWN0IGRldmljZSAqZGV2LCBz
-dHJ1Y3QgZGV2aWNlICptbXN5c19kZXYsCj4gdW5zaWduZWQgaW50IG5leHQpOwo+IMKgwqDCoMKg
-wqDCoMKgwqB2b2lkICgqZGlzY29ubmVjdCkoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2
-aWNlCj4gKm1tc3lzX2RldiwgdW5zaWduZWQgaW50IG5leHQpOwo+IMKgwqDCoMKgwqDCoMKgwqB2
-b2lkICgqYWRkKShzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBtdGtfbXV0ZXggKm11dGV4KTsK
-PiBAQCAtMjk0LDYgKzI5NSwxNCBAQCBzaXplX3QgbXRrX2RkcF9jb21wX2dldF9udW1fZm9ybWF0
-cyhzdHJ1Y3QKPiBtdGtfZGRwX2NvbXAgKmNvbXApCj4gwqDCoMKgwqDCoMKgwqDCoHJldHVybiAw
-Owo+IMKgfQo+IMKgCj4gK3N0YXRpYyBpbmxpbmUgYm9vbCBtdGtfZGRwX2NvbXBfaXNfYWZiY19z
-dXBwb3J0ZWQoc3RydWN0Cj4gbXRrX2RkcF9jb21wICpjb21wKQo+ICt7Cj4gK8KgwqDCoMKgwqDC
-oMKgaWYgKGNvbXAtPmZ1bmNzICYmIGNvbXAtPmZ1bmNzLT5pc19hZmJjX3N1cHBvcnRlZCkKPiAr
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIGNvbXAtPmZ1bmNzLT5pc19hZmJj
-X3N1cHBvcnRlZChjb21wLT5kZXYpOwo+ICsKPiArwqDCoMKgwqDCoMKgwqByZXR1cm4gZmFsc2U7
-Cj4gK30KPiArCj4gwqBzdGF0aWMgaW5saW5lIGJvb2wgbXRrX2RkcF9jb21wX2FkZChzdHJ1Y3Qg
-bXRrX2RkcF9jb21wICpjb21wLAo+IHN0cnVjdCBtdGtfbXV0ZXggKm11dGV4KQo+IMKgewo+IMKg
-wqDCoMKgwqDCoMKgwqBpZiAoY29tcC0+ZnVuY3MgJiYgY29tcC0+ZnVuY3MtPmFkZCkgewo+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfZHJ2LmgKPiBiL2Ry
-aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9kcnYuaAo+IGluZGV4IDA0MjE3YTM2OTM5
-Y2QuLjY3OWQ0MTNiZjEwYmUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
-L210a19kaXNwX2Rydi5oCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNw
-X2Rydi5oCj4gQEAgLTEwNiw2ICsxMDYsNyBAQCB2b2lkIG10a19vdmxfZGlzYWJsZV92Ymxhbmso
-c3RydWN0IGRldmljZSAqZGV2KTsKPiDCoHUzMiBtdGtfb3ZsX2dldF9ibGVuZF9tb2RlcyhzdHJ1
-Y3QgZGV2aWNlICpkZXYpOwo+IMKgY29uc3QgdTMyICptdGtfb3ZsX2dldF9mb3JtYXRzKHN0cnVj
-dCBkZXZpY2UgKmRldik7Cj4gwqBzaXplX3QgbXRrX292bF9nZXRfbnVtX2Zvcm1hdHMoc3RydWN0
-IGRldmljZSAqZGV2KTsKPiArYm9vbCBtdGtfb3ZsX2lzX2FmYmNfc3VwcG9ydGVkKHN0cnVjdCBk
-ZXZpY2UgKmRldik7Cj4gwqAKPiDCoHZvaWQgbXRrX292bF9hZGFwdG9yX2FkZF9jb21wKHN0cnVj
-dCBkZXZpY2UgKmRldiwgc3RydWN0IG10a19tdXRleAo+ICptdXRleCk7Cj4gwqB2b2lkIG10a19v
-dmxfYWRhcHRvcl9yZW1vdmVfY29tcChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdAo+IG10a19t
-dXRleCAqbXV0ZXgpOwo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X2Rpc3Bfb3ZsLmMKPiBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYwo+
-IGluZGV4IGQwNTgxYzRlM2M5OTkuLmUwMjM2MzUzZDQ5OTcgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX292bC5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kaXNwX292bC5jCj4gQEAgLTIzNiw2ICsyMzYsMTMgQEAgc2l6ZV90IG10
-a19vdmxfZ2V0X251bV9mb3JtYXRzKHN0cnVjdCBkZXZpY2UKPiAqZGV2KQo+IMKgwqDCoMKgwqDC
-oMKgwqByZXR1cm4gb3ZsLT5kYXRhLT5udW1fZm9ybWF0czsKPiDCoH0KPiDCoAo+ICtib29sIG10
-a19vdmxfaXNfYWZiY19zdXBwb3J0ZWQoc3RydWN0IGRldmljZSAqZGV2KQo+ICt7Cj4gK8KgwqDC
-oMKgwqDCoMKgc3RydWN0IG10a19kaXNwX292bCAqb3ZsID0gZGV2X2dldF9kcnZkYXRhKGRldik7
-Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoHJldHVybiBvdmwtPmRhdGEtPnN1cHBvcnRzX2FmYmM7Cj4g
-K30KPiArCj4gwqBpbnQgbXRrX292bF9jbGtfZW5hYmxlKHN0cnVjdCBkZXZpY2UgKmRldikKPiDC
-oHsKPiDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IG10a19kaXNwX292bCAqb3ZsID0gZGV2X2dldF9k
-cnZkYXRhKGRldik7Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
-cGxhbmUuYwo+IGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19wbGFuZS5jCj4gaW5kZXgg
-NjU1MTA2YmJiNzZkMy4uZTA4Yjc3MWJjMjVlOSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX3BsYW5lLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
-bXRrX3BsYW5lLmMKPiBAQCAtMzIxLDcgKzMyMSw4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJt
-X3BsYW5lX2hlbHBlcl9mdW5jcwo+IG10a19wbGFuZV9oZWxwZXJfZnVuY3MgPSB7Cj4gwqBpbnQg
-bXRrX3BsYW5lX2luaXQoc3RydWN0IGRybV9kZXZpY2UgKmRldiwgc3RydWN0IGRybV9wbGFuZSAq
-cGxhbmUsCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHVuc2lnbmVkIGxv
-bmcgcG9zc2libGVfY3J0Y3MsIGVudW0gZHJtX3BsYW5lX3R5cGUKPiB0eXBlLAo+IMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB1bnNpZ25lZCBpbnQgc3VwcG9ydGVkX3JvdGF0
-aW9ucywgY29uc3QgdTMyCj4gYmxlbmRfbW9kZXMsCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgY29uc3QgdTMyICpmb3JtYXRzLCBzaXplX3QgbnVtX2Zvcm1hdHMsIHVuc2ln
-bmVkCj4gaW50IHBsYW5lX2lkeCkKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCBjb25zdCB1MzIgKmZvcm1hdHMsIHNpemVfdCBudW1fZm9ybWF0cywKPiArwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBib29sIHN1cHBvcnRzX2FmYmMsIHVuc2lnbmVkIGludCBw
-bGFuZV9pZHgpCj4gwqB7Cj4gwqDCoMKgwqDCoMKgwqDCoGludCBlcnI7Cj4gwqAKPiBAQCAtMzMy
-LDcgKzMzMyw5IEBAIGludCBtdGtfcGxhbmVfaW5pdChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LCBz
-dHJ1Y3QKPiBkcm1fcGxhbmUgKnBsYW5lLAo+IMKgCj4gwqDCoMKgwqDCoMKgwqDCoGVyciA9IGRy
-bV91bml2ZXJzYWxfcGxhbmVfaW5pdChkZXYsIHBsYW5lLCBwb3NzaWJsZV9jcnRjcywKPiDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgICZtdGtfcGxhbmVfZnVuY3MsIGZvcm1hdHMsCj4gLcKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIG51bV9mb3JtYXRzLCBtb2RpZmllcnMsIHR5cGUsCj4gTlVMTCk7Cj4gK8KgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIG51bV9mb3JtYXRzLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzdXBwb3J0c19hZmJj
-ID8gbW9kaWZpZXJzIDoKPiBOVUxMLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB0eXBlLCBOVUxMKTsK
-PiDCoMKgwqDCoMKgwqDCoMKgaWYgKGVycikgewo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgRFJNX0VSUk9SKCJmYWlsZWQgdG8gaW5pdGlhbGl6ZSBwbGFuZVxuIik7Cj4gwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gZXJyOwo+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX3BsYW5lLmgKPiBiL2RyaXZlcnMvZ3B1L2RybS9tZWRp
-YXRlay9tdGtfcGxhbmUuaAo+IGluZGV4IDNiMTNiODk5ODljN2UuLjk1YzVmYTUyOTVkOGEgMTAw
-NjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19wbGFuZS5oCj4gKysrIGIv
-ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19wbGFuZS5oCj4gQEAgLTQ5LDUgKzQ5LDYgQEAg
-dG9fbXRrX3BsYW5lX3N0YXRlKHN0cnVjdCBkcm1fcGxhbmVfc3RhdGUgKnN0YXRlKQo+IMKgaW50
-IG10a19wbGFuZV9pbml0KHN0cnVjdCBkcm1fZGV2aWNlICpkZXYsIHN0cnVjdCBkcm1fcGxhbmUg
-KnBsYW5lLAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB1bnNpZ25lZCBs
-b25nIHBvc3NpYmxlX2NydGNzLCBlbnVtIGRybV9wbGFuZV90eXBlCj4gdHlwZSwKPiDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdW5zaWduZWQgaW50IHN1cHBvcnRlZF9yb3Rh
-dGlvbnMsIGNvbnN0IHUzMgo+IGJsZW5kX21vZGVzLAo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIGNvbnN0IHUzMiAqZm9ybWF0cywgc2l6ZV90IG51bV9mb3JtYXRzLCB1bnNp
-Z25lZAo+IGludCBwbGFuZV9pZHgpOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIGNvbnN0IHUzMiAqZm9ybWF0cywgc2l6ZV90IG51bV9mb3JtYXRzLAo+ICvCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJvb2wgc3VwcG9ydHNfYWZiYywgdW5zaWduZWQgaW50
-IHBsYW5lX2lkeCk7Cj4gwqAjZW5kaWYKCg==
+On Tue, Jun 10, 2025 at 04:05:38PM +0100, Igor Korotin wrote:
+> Refactor the `acpi_id_info` and `of_id_info` methods in the `Adapter` trait
+> to reduce duplication. Previously, each method had two versions selected
+> via `#[cfg(...)]` and `#[cfg(not(...))]`. This change merges them into a
+> single method per case by using `#[cfg]` blocks within the method bodies.
+> 
+> Suggested-by: Benno Lossin <lossin@kernel.org>
+> Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
+> ---
+>  rust/kernel/driver.rs | 76 +++++++++++++++++++++----------------------
+>  1 file changed, 38 insertions(+), 38 deletions(-)
+> 
+> diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
+> index 638f1d270af8..805f61bd4a50 100644
+> --- a/rust/kernel/driver.rs
+> +++ b/rust/kernel/driver.rs
+> @@ -147,30 +147,30 @@ pub trait Adapter {
+>      /// Returns the driver's private data from the matching entry in the [`acpi::IdTable`], if any.
+>      ///
+>      /// If this returns `None`, it means there is no match with an entry in the [`acpi::IdTable`].
+> -    #[cfg(CONFIG_ACPI)]
+>      fn acpi_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
+> -        let table = Self::acpi_id_table()?;
+> +        #[cfg(not(CONFIG_ACPI))] {
+> +            let _ = dev;
+> +            return None;
+> +        }
+>  
+> -        // SAFETY:
+> -        // - `table` has static lifetime, hence it's valid for read,
+> -        // - `dev` is guaranteed to be valid while it's alive, and so is `pdev.as_ref().as_raw()`.
+> -        let raw_id = unsafe { bindings::acpi_match_device(table.as_ptr(), dev.as_raw()) };
+> +        #[cfg(CONFIG_ACPI)] {
+> +            let table = Self::acpi_id_table()?;
+>  
+> -        if raw_id.is_null() {
+> -            None
+> -        } else {
+> -            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
+> -            // does not add additional invariants, so it's safe to transmute.
+> -            let id = unsafe { &*raw_id.cast::<acpi::DeviceId>() };
+> +            // SAFETY:
+> +            // - `table` has static lifetime, hence it's valid for read,
+> +            // - `dev` is guaranteed to be valid while it's alive, and so is `pdev.as_ref().as_raw()`.
+> +            let raw_id = unsafe { bindings::acpi_match_device(table.as_ptr(), dev.as_raw()) };
+>  
+> -            Some(table.info(<acpi::DeviceId as crate::device_id::RawDeviceId>::index(id)))
+> -        }
+> -    }
+> +            if raw_id.is_null() {
+> +                None
+> +            } else {
+> +                // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
+> +                // does not add additional invariants, so it's safe to transmute.
+> +                let id = unsafe { &*raw_id.cast::<acpi::DeviceId>() };
+>  
+> -    #[cfg(not(CONFIG_ACPI))]
+> -    #[allow(missing_docs)]
+> -    fn acpi_id_info(_dev: &device::Device) -> Option<&'static Self::IdInfo> {
+> -        None
+> +                Some(table.info(<acpi::DeviceId as crate::device_id::RawDeviceId>::index(id)))
+> +            }
+> +        }
+>      }
 
+It seems there has been a misunderstanding, the idea was to refactor
+Adapter::of_id_info() in one patch and introduce Adapter::acpi_id_info() in a
+subsequent patch already being the suggested implementation by Benno.
+
+We try to avoid introducing code, just to change it again in a subsequent patch.
