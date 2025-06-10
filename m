@@ -1,134 +1,193 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2062.outbound.protection.outlook.com [40.107.223.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344551E835D
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 23:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749599170; cv=none; b=arXfZJtW8bht/UpZcoADUC/fcl/3hHpKVj21uYhUeP8s249GcoOfQ/Qbvgm6JFBX36zHzWZqoirdGNW4LhxVd3El+ughRl1Y9N6tyd78GV392hwlKLqoQ/pE2YcY5xJRwG37JH9NDrlMOZn4Ce6d6WG7FWTcQl5Gc8od7BxFbWE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749599170; c=relaxed/simple;
-	bh=Sq9m/8Zsgt38t4Fi+k3gyM7dtBAL71nB569xEbVDFBU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F2JLDQvB63MHmZK4z6GVZ1A4MO7Bumvfnl41xv/6mTDtklOQhO6mw4f9amDH9C2tdAZ6VIwhKd9KnaFJ+hhgqINhmnOM1U1oExxthKBeYGA4+QVKr/05ZJ9iCoBz1whVWDKSBSTuRqhZH8I9Tz2a7fwvADed3bFIKTwLIxfK3q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gGEvCUCh; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F491E835D;
+	Tue, 10 Jun 2025 23:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749599223; cv=fail; b=jRtNsml5DfHHB3oXVpzyy5aal6t3ojZ0ILsw9GE3OKAoVVQ4pI/VU7QLp7OZwTgiu4Mxr3f3oFPvPmhSHR6r5WeKchNBVFELiFjgA2vaWRkyb3tPJOy7Fd4j2Pj1yqNkS2gkDZJiSIQVg5QKs9bRH1AMd3gadxLLPRYip29ksPM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749599223; c=relaxed/simple;
+	bh=RLWPpS6Yb6RG7giFPvAVmMXOelNWhh7dUVefA8kfmXk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=GjOlVXtbhuENRv1/yABxTsbYBR/UOFkj/znLb6bqODC/ufe9MmY24CzIlGS9uxgyGw5g8917c+xmapRIDE7+OYwAnDUk4AxT3cmhVqS5nI/DKuXubGzNKT9zSCknGuWj1gRyFYKppfp0rBNse7ZGxL5ztndZtFPk0EoAWhwBWfo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=JcilSOcL; arc=fail smtp.client-ip=40.107.223.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gGEvCUCh"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-70f147b5a52so37197247b3.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 16:46:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749599168; x=1750203968; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GaNAWIk693eyh1JuJXCjO7d9zppcw7IioMGsGW5QOeQ=;
-        b=gGEvCUChLK0BWG9b5yQyzH/1zzkMqOHbYUR/1SpsCdwialbFYIkZxMH/51qy0Fa+zk
-         nV0MRFtdzS7e2+IqRi0NgmeAWt4X9Wr9HOYZJSq7diKcbWse54VT02RHEg6Jbvjpii1N
-         l8KrjE7x3hXG5MKzbCpyK9oUs5KSg5eo3Qu323UhQUSmCttyxGI1MPdZYLnmLlxKxygv
-         XSOzasAz1UzRuZVvocfub9NLvvwuBwQnA8b0EId6Xuy7qP36mTgvnE1j7mImddotceFW
-         DMqqh7S9LGNaFwMXtzcrpN1CQuX2LagjZDtKhekRuCQrugiwKWgq6Kh1A6TJRcnlhjpb
-         /Mhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749599168; x=1750203968;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GaNAWIk693eyh1JuJXCjO7d9zppcw7IioMGsGW5QOeQ=;
-        b=GuJXWeUcPPM+5YSei8Mo80VKNjxBUU5PdYfQ4fDRl/VwBAwiIZKVVOUTV3n2+HjIFb
-         oI7N9RE5oseDvNQMc2ue0Gc073Q0G2DupLUtVsJqySMN04v8EEwCUV3WDUhT2tM38EXD
-         /poY4y+9JBmS7/3ZMUvpEKWveXyMhfkcMhZH2TKYkYvjh/AtbbZH+K2FR+FqKiY1kW4F
-         lPq2+0Wz8oLflkLpSWFeKsHPq9svHugaNl+cZVqauTX8FJ0wmzcOtUkTqK/dHgzy3Un5
-         rMeuGR5BoQaSyhOfX+lkR2VrM/8KOVEoyCJ9hqsVtvost0/xkoS93LxIk1zn9LSk7NpV
-         gtsw==
-X-Forwarded-Encrypted: i=1; AJvYcCVvVvQ+y+XHfLhnJgMbx+3R3au9WhmPaR9XycruF662/ab2JywzPv5haMWFC7vsAtpK5I7M03Fa8ZRxN3g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWxQD+uEtxgskLAay0vqL6LSb4HynKzUqPzC2/dpJ/AIhEOLlb
-	l6+/z6xncnVLgBjn7xXKXdDlq9D4D2uvMOPu9Bu7UlEwkpamvDEeK8fhVPBK25p3Fj5fBgh3HQY
-	8M7ATVG2Qnltk4L5pm1iRiu5dJLsbIWY=
-X-Gm-Gg: ASbGncsa6eNJKGHbKeu2qF0gnIYqgHro7W2u/z0HOAd2KK322CYpDstu467ekyJ+QOM
-	sd1d+QLPoWIHrR6axsM7AsXrtBPyzzf2jfTaJYpFVsM6A11V4UtuBhnL3uta+hGeFvgCgifRJOu
-	oOHS8/+f7sjOO0y+O0L0LDCww/8Ov5/QGkT3W7z1fbwJJfPfidSbQvG4xtGk2+wl7RxLRF/YSrg
-	h1k
-X-Google-Smtp-Source: AGHT+IFlSiYMoXYwvXdw9GGBE1bbuzMyf8oy1xePq+HOQZmDZKnqRN3l+kSWFJuqu+jAvb7ulZL6geoVRsj/h6dDz2Q=
-X-Received: by 2002:a05:690c:f8f:b0:70e:2cf0:f66a with SMTP id
- 00721157ae682-711423b49ecmr12929537b3.6.1749599168119; Tue, 10 Jun 2025
- 16:46:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="JcilSOcL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JGueSFsyYJxdCUomhwWIeA3iz88Mf3VVpYL7eZBKV0FnnjCiJFPoxCZv11FXvmodwm5aRRY6A0P/Pse1LEud2kiwg8V9dBXFY1wE7xC+Z80pzTDN03VNScbjY/T3BzR7cKyt/aUH6GhRGe6vgVZYyBWrSfekMDhvQjp0F+x01t3fFqJCvLiHfjCMax3v7dQP6eJv8dpkhKE02w1AS0TeFWiubU0KCszwB030pE/20CmYNvxyu185eu4Z3xnpRkXanqXXBwaOQZjAT2EFiFTt2M2Jmtc+HDWcUHDwjwkWNsH3tFH30ml4a5LucWP1uo/hIHmEYnTIDiFMKr1nnAzxaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7uHtrNdVXuNCWCbMXj5mIBrxlziasw4jzxJY41lj0M0=;
+ b=XYOYlyFvBcr5/BZyNTA2YGTm8l4PkEPa/m1wOEEVo2ka6tuyzWeCFvjr31npdgdsBsbQ17wZWDqZoZUvCAWo0hJ3jqTkFvsYeZ99YHMi3EfFw/f5I57H6wBDhfQwxYIazqNvvNieB1vvr2MggjD/n93siPx1e06FCgiA+39Njyb0iPlun5sTAu131jvGP8zKYwkdIIvjm8IF5GMhygNi2IqG9zEGlT5ihH/MRB40wrbysyCSgIvWwv/X79/oiXQdnQOMOmy6B9QrFQjT1t0WT4zBs+UdwCLCRjNH2Se8bss13HNw/ENtwx3XlyUMtv33oMcNp9G0u+tTeqqpSW5Brg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7uHtrNdVXuNCWCbMXj5mIBrxlziasw4jzxJY41lj0M0=;
+ b=JcilSOcLxaJJnh0h3HpbKCWRn57lgEe6g7rDPFDfLN5BRnEP3JoblwpbvlEj/vXu0BqvZcEc/x+VjpVscPPymz/HoystjSuMJo+UISwBJY+8SQdCcGQ49q2BFFuLTrXI5QWJZaDI5Be/Q1niXt9+3jR3VNXd20vcTQPo5cnCh2F/AeLXwNWVre7XHFYpFdFfu2+YbGKwjT+JnsmvOfpEry6a8uvbBYBk5r5Nj/sOI7SXRxaIwUyx3P1CLb0DyDivNNLtvu99nQXKAb2VkpQQERPS+70jPoV+K2vG6Qf2QSXue8SZBZGgxUN0zPLIouqQMOgHmNA3vhwgnRihdqZ3OQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by MN0PR12MB6221.namprd12.prod.outlook.com (2603:10b6:208:3c3::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.38; Tue, 10 Jun
+ 2025 23:46:59 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8792.038; Tue, 10 Jun 2025
+ 23:46:59 +0000
+Date: Tue, 10 Jun 2025 20:46:57 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+	Shuah Khan <shuah@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>, Willy Tarreau <w@1wt.eu>,
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Kees Cook <kees@kernel.org>, Andy Lutomirski <luto@amacapital.net>,
+	Will Drewry <wad@chromium.org>, Mark Brown <broonie@kernel.org>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v4 09/14] selftests: harness: Move teardown conditional
+ into test metadata
+Message-ID: <20250610234657.GO543171@nvidia.com>
+References: <20250505-nolibc-kselftest-harness-v4-0-ee4dd5257135@linutronix.de>
+ <20250505-nolibc-kselftest-harness-v4-9-ee4dd5257135@linutronix.de>
+ <aEfVYQaid5uOHB+Y@nvidia.com>
+ <20250610130817-253d2b2d-030a-4eda-91fc-3edb58a4f549@linutronix.de>
+ <20250610120902.GB543171@nvidia.com>
+ <aEh+DNmbZrqg6rHR@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aEh+DNmbZrqg6rHR@nvidia.com>
+X-ClientProxiedBy: YT1PR01CA0123.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:2c::32) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602143216.2621881-1-karunika.choo@arm.com> <20250602143216.2621881-8-karunika.choo@arm.com>
-In-Reply-To: <20250602143216.2621881-8-karunika.choo@arm.com>
-From: Chia-I Wu <olvaffe@gmail.com>
-Date: Tue, 10 Jun 2025 16:45:57 -0700
-X-Gm-Features: AX0GCFtOjUISdCzo6v7j81cqhd-VkhsJOGhuoIsrxLi-HBnY11WkKZSrMnkt8pY
-Message-ID: <CAPaKu7TFYuDNns1wwkb9RdZqgurQhAGMMOrOOUsg35umqLNL8w@mail.gmail.com>
-Subject: Re: [PATCH v4 7/7] drm/panthor: Add support for Mali-Gx20 and
- Mali-Gx25 GPUs
-To: Karunika Choo <karunika.choo@arm.com>
-Cc: dri-devel@lists.freedesktop.org, nd@arm.com, 
-	Boris Brezillon <boris.brezillon@collabora.com>, Steven Price <steven.price@arm.com>, 
-	Liviu Dudau <liviu.dudau@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|MN0PR12MB6221:EE_
+X-MS-Office365-Filtering-Correlation-Id: 49f5388f-96ed-415a-ee3a-08dda8791716
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bXkvVVNLc0NrUmpCZnRGb2s4RW9YaS9CMkZnMmZKN1pDWXJVQWlON0duL0Y2?=
+ =?utf-8?B?alg5Mys5VFFBbkZEbk5CNy8wYnlZcWl6N1UwQlEraVZQSm9qTmtvTnh2YnRI?=
+ =?utf-8?B?VklnTG40RVc2QWI4cDRjcjhMMUx2SDVHZ21wVDVkZUl5UkNFcEJhZjhKbzJz?=
+ =?utf-8?B?b2FaRFFvZGdpQjJuSUd3akdBczNuZFhKY2FRYm05aU43THZTbkkvbEl4M1FZ?=
+ =?utf-8?B?U2ZLK3Z5emlxUThsaVNqSkc5QVRBcFZOMldsc1RMYkxlcVZtdzJLRjdDTGlt?=
+ =?utf-8?B?SUVJRTBrcVlmanBvT2ZFSFlWOFJadXJ6cmVGVTBZSUIvL0VrOXk0L0ZCREp6?=
+ =?utf-8?B?c2xpOTUxVnM1U2g2MFYrZUZGYWY1VVVrZU9RTm1LYlo3cFJGRlNaTisxQzJG?=
+ =?utf-8?B?VHBNb1FtbEY0SlE2QlV2cnFPZkNNSUtiWHdaOHlJRnVlckJGSnhjY3dkUmN5?=
+ =?utf-8?B?NGg2SENaTFVQVHNsVzd1Z2t2Y1lMd3RKcHF0QWVHdGZ4dVBNblZPUzRSc09K?=
+ =?utf-8?B?ekpoWXk1YlpLVFhzeVhjV3NSWk9SYnJsRXM5aWNzNk9vWEZyeUI5amR4UlNR?=
+ =?utf-8?B?NHRnUEhMSzJRcDNtRjFUaG4rNjBYTnFPcnk0M2JkcXdSR2k4UVBOMnp4ajRP?=
+ =?utf-8?B?aTdoeXNlKyswaktyakJVSm9US1I5ZFR5UTFESng1S1Z5MlZCY3Fjek02QzJX?=
+ =?utf-8?B?cWt4NVVrQks5Nk9xdVR5ejR5YUdFL1MrSkdKUm5hWVV5QU4xSTlnOUl5c3N6?=
+ =?utf-8?B?ZmZmcllHS1dFNUtXWTZSSVlQbERkYWhEZVlxZjlwbGJkSmpoYnNsWWNNUzhr?=
+ =?utf-8?B?L0h6S2wzTWwvbnl3c2lxSEo0dlc5WXZwSzdJQVhsRlhSM0NLdHFXQ3hxNVlF?=
+ =?utf-8?B?Ym1LeldVUXpKVkx3Y3dMaEhLY1lFYlJrVzlod05lcERSTGFJODdWV0pSMkxl?=
+ =?utf-8?B?MnFvQ1JYSUJuaFZkWkNVM1VSbmdVek9rSGI1aWR3cElORURVSlNuVjRkZ1JL?=
+ =?utf-8?B?OWdRekF4MTRmd3Rzei80bU10UlhibUwxbHVLek10eFZIMGR1SmNJckVMdkt2?=
+ =?utf-8?B?NXJPVXc1UjdQbVAzckU0LzNURVRDcFpyQzhwUzFPKzFIVDAvZUQvVldjdXdO?=
+ =?utf-8?B?UjZqbmpBWldyM1czcUxPdEpNNnRBbGNPc2pPQi93c1hXS0tmbGdWcGVtd2xE?=
+ =?utf-8?B?Qi8wWVU4ZEZqUlA1ckpJV3hNU3p5ci9pOTFLL1VXeE1rTXJuWXVGMWJVZXJE?=
+ =?utf-8?B?cnhORGMxWGRBUmNFKzBNTklybXhCanBJMmdnSVlYL2dYcU4vdWV4WXp6Wmpp?=
+ =?utf-8?B?NmsxTlpxYUszSkVRWVVScUN6a3R5TzN2SVhQZTNBU0hWZVNqTUdhSHdXbEFT?=
+ =?utf-8?B?WkJiaFgxTEdKZEpQWEJVL2FsVHIxNzN5TkFqTVFvR3hzd2IrZUk2T3FldjM5?=
+ =?utf-8?B?SFVWdEI3ZEVYMUpRNnp3Mm8xOGRwNVZPVjJoSnBDK1o1U3dzbVVTYkVlUXh5?=
+ =?utf-8?B?Y2IxaERRTVNRTDQxajhPZE9tUlBxUUtLTWtla1hiNnREZFo5K1drcVJQWS9S?=
+ =?utf-8?B?SVJxaks2YStSa01hL2Y0eDYvKzNDQ1hrN2IrWXkyVVFSSSs3MGxtTnEyWHVN?=
+ =?utf-8?B?QTA1MkFpVW1way9SL3ZBMnkwTzJFR2haNUFZTTFvdjlRMXphb2crVWVqRUhl?=
+ =?utf-8?B?TW4vY28xSHI2SU9PeExrZlBrN3BHNHNENUVzdWNXNmNTcHpnUk5iVE40WUxx?=
+ =?utf-8?B?ZG9Mbm5DeG0xMS91SmxOTDJRSzBQWlk0Vm5UbXNIdzVtMzIzd1lERnFVclVx?=
+ =?utf-8?B?bWhYVndqSUNmT2pEd0syakVSdU9tZWRwaFhqb1JuZkRrWFNEVFZzaGtPVmti?=
+ =?utf-8?B?bU9sUFJIOFV5YTZCeC9DbUVFakZDNVE4RlV6bklWMDNETUE9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?S0FRU2JqSkdaQUFFdkViWjFvK3dIYlJ3VVNTSElCOC8yRVlPZWpXdnpwc002?=
+ =?utf-8?B?bTlBNVY5Y0l3elA0OHFqWExsK2dRRC92ZVEwSHBuU0QxaEg0RXcwT1FoMVZo?=
+ =?utf-8?B?QnNLYTdUcjVwSCtLS24wOXRpSHh4STExTVFNc1VpTkNQOXZOMU9tTU1rU1I2?=
+ =?utf-8?B?Q0dQMWh3ekdKd3R0UWFLV1NrUldKZURUNU1kUlltdEh6Y0JYVHgrRnpPbC96?=
+ =?utf-8?B?QlA0cUtJS3JmR1lKdTBOUUpRYUJQN0ZubXdzTFdwZEJMaEFPOXNqMk1rS1M5?=
+ =?utf-8?B?UXF5QXNzTDlTdnA1RDUzYWJhZ01NeExmR242cVNGajBURVVTTXRyR3dLWHRz?=
+ =?utf-8?B?cDVITU9RZ2tsSnBxQnd5RWpUcXh6L1dsRWVZeStwNmFBa280TjJkeERSV2c4?=
+ =?utf-8?B?SkUyRS9lMTU3RTl0eGJnUWtDRlhDQm0zR0J6ci9uaUU2STYyRy9kUGg2cnQ1?=
+ =?utf-8?B?Kys1NUFJT1M3cEc0cVpTZHcvUTREcHdIU0RqMENMbm9JRjhObmlFWnBVUkRq?=
+ =?utf-8?B?TzFFQjBMTlpDd0lsNWZNcDFWcEdZRkV5M2RTelBqMk9VVjBaeElWRDE4U2Nt?=
+ =?utf-8?B?OWY2OWh4YzFLT3ZvS3hvdEVIc3VVam1jN3lQTURCYnhQYjJhRUpucVB3d09k?=
+ =?utf-8?B?SENWQmpqVXNYdkpMcHEyVDNIeW02eVhJMkdMWFdWQk4zRm9IVm91VjYxdE8y?=
+ =?utf-8?B?QS9GdTZyYVArU2l3NHVFTkpnNTlGd3MwcWdwK2k4cFdPTk5HeVBBemhJOGZq?=
+ =?utf-8?B?eWVYZXpPNHMyK0tSUlJlL1AwSFIvUUZpSHNBaG9pT2RvTlJrOGRwWmpCL3F1?=
+ =?utf-8?B?TjBwTUtPWWxxYitHZ2ZlSytHWlFBLzFEOHlWbVAvUWFRRDlyTlBvb1RNYzNy?=
+ =?utf-8?B?d0ZxVGk1eEU1RTlGdW8rZlJsZUVRWmdFYXYxN0lPTjU5RHh1RFlBM0ZiNnQv?=
+ =?utf-8?B?MVhyMGRqbnVqTjZxRnZQbXkzVU4waytTUDk5cno4MDdxL1JydzJsRlpCSDVP?=
+ =?utf-8?B?c2RHQlBJdiszbzhQOWxuS1ZtbUNoVmpCNFFqWHZuYk1xckVjUVRBYlRkcHVI?=
+ =?utf-8?B?K2VSY0ZjWWhHUTVyRGY3cWxnalZxd3UybW9tOThxTGk4Q1Q2Q0ZlYlBXeWZB?=
+ =?utf-8?B?Qkx0MXlyRitObWs5dS83TStPMnMrVFYyNTlwMHlNbWxsb1FpOHM1Uy9wQ0RJ?=
+ =?utf-8?B?Vzg0QlV1eFNRZjBTV0lhdFdjMC9CTkNjWTZ5Z3BJZUVLempBTlg3dzFybS94?=
+ =?utf-8?B?aGxVdk14OElmN2h5MDBvbmpaZDJ1NURVWW5BRTZSMGJJSGEzeXprMGE3SGRU?=
+ =?utf-8?B?TEYyaFB5V2VSWTJSc3dieFdXdExCZVdwVlB2YmE3ZmMzTDFzaFZPckhjWjFo?=
+ =?utf-8?B?RjArOGplclpzQzJrMU1ZbkhGT3ZTOVdQUzNVUEFSckJkejE5bjZYRy9WSW10?=
+ =?utf-8?B?WEtpQVBIMG16NzJrNmYzMlBQb1dMdy9EcG5mWWpNMExwbzFmL1FOS2gyc053?=
+ =?utf-8?B?aWJlNnZpYm52N2VGZHMyUnhhMXB2NFNla1MvcXB3MmU1WENIcUM1RDA4Rys5?=
+ =?utf-8?B?ZUhoNnQ0VDN0dHNqWWR4WkRxWkNTeHlscmJNR1F0Nm96Wk1OVlpxNzV6OHNW?=
+ =?utf-8?B?WndaVUtUQlBydnFZaTN1SkorT1ZVbkRPWUdVaWpIZ2txcDVUNGp5WXYxR29w?=
+ =?utf-8?B?Q1NvL1FvMnVDWlFJTUx6cm81cExDbVhGUHMwU0tEZkxRTlVkOHRKUGVxNmNn?=
+ =?utf-8?B?S2QyKyszOGI1ck5VbTFWVldBWmZnVTRTb09aRFEzcEd4SzQveUZsRjY2MkVu?=
+ =?utf-8?B?ek0yR0dQdmlzdWxOblhyYWtJb0sxZkpKMVpDU2hwYk1YNDVMaTF5Zy9idGVU?=
+ =?utf-8?B?V2x6cmtOcG5RT3BVSkF4SVJPYVdvNXcrMExEczdvN0djcE9ldkhjcWZXSjNq?=
+ =?utf-8?B?N04yRlNPSWFWTldZMkhGYXEwZEozaVBvcndSaGwrK0N2MHZEckhwVGRNNkd4?=
+ =?utf-8?B?Z0gxbnFCOWtqNWNBcmFaWVRBQzRIRW1kV2YyWmt5aHlpVSs1SUpmSkt0RmNi?=
+ =?utf-8?B?c2VRRzJCeVlVUkUvZ3p5QVBFYkVJQnNDVThEN0NQVmYybndtZUVHejhkZXJ0?=
+ =?utf-8?Q?pwz1ppS4Gta0QIiFUQlAWcZHt?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49f5388f-96ed-415a-ee3a-08dda8791716
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 23:46:58.9944
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NVw7WEzwVkx4XViqEAHeD5TLGs5ZIveLOIrorPz4gTnj0UEftl/vkZhqEXpabaRb
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6221
 
-On Mon, Jun 2, 2025 at 7:34=E2=80=AFAM Karunika Choo <karunika.choo@arm.com=
-> wrote:
->
-> Mali-Gx20 and Mali-Gx25 deprecates the use of FLUSH_MEM and FLUSH_PT
-> MMU_AS commands in favour of cache maintenance via
-> GPU_COMMAND's FLUSH_CACHES and FLUSH_PA_RANGE.
->
-> They also introduce the following registers:
-> - GPU_COMMAND_ARG0~1
-> - SHADER_PWRFEATURES
-> - AMBA_FEATURES
-> - AMBA_ENABLE
->
-> This patch enables FLUSH_CACHES for both families of GPUs via the
-> PANTHOR_HW_FEATURE_GPU_CTRL_CACHE_FLUSH bit until FLUSH_PA_RANGE support
-> is added. It also adds the aforementioned register definitions and
-> firmware binary support for arch 12.8 and 13.8.
-<snipped>
-> diff --git a/drivers/gpu/drm/panthor/panthor_regs.h b/drivers/gpu/drm/pan=
-thor/panthor_regs.h
-> index 4eaa2b612756..8e01440f8743 100644
-> --- a/drivers/gpu/drm/panthor/panthor_regs.h
-> +++ b/drivers/gpu/drm/panthor/panthor_regs.h
-> @@ -89,6 +89,8 @@
->
->  #define GPU_DOORBELL_FEATURES                          0xC0
->
-> +#define GPU_COMMAND_ARG(n)                             (0xD0 + ((n) * 8)=
-)
-> +
->  #define GPU_SHADER_PRESENT                             0x100
->  #define GPU_TILER_PRESENT                              0x110
->  #define GPU_L2_PRESENT                                 0x120
-> @@ -98,6 +100,8 @@
->  #define L2_READY                                       0x160
->
->  #define SHADER_PWRON                                   0x180
-> +#define SHADER_PWRFEATURES                             0x188
-> +#define   SHADER_PWRFEATURES_RAY_TRACING_UNIT          BIT(0)
->  #define TILER_PWRON                                    0x190
->  #define L2_PWRON                                       0x1A0
->
-> @@ -125,6 +129,13 @@
->  #define   GPU_COHERENCY_ACE                            1
->  #define   GPU_COHERENCY_NONE                           31
->
-> +#define AMBA_FEATURES                                  0x300
-> +#define   AMBA_FEATURES_ACE_LITE                       BIT(0)
-> +#define   AMBA_FEATURES_ACE                            BIT(1)
-> +#define   AMBA_FEATURES_SHAREABLE_CACHE_SUPPORT                BIT(5)
-> +
-> +#define AMBA_ENABLE                                    0x304
-We still use GPU_COHERENCY_FEATURES / GPU_COHERENCY_PROTOCOL even on
-v12 and v13.  I suppose they are compatible with AMBA_FEATURES /
-AMBA_ENABLE to some degree?  We should unify them.
+On Tue, Jun 10, 2025 at 11:48:44AM -0700, Nicolin Chen wrote:
+> On Tue, Jun 10, 2025 at 09:09:02AM -0300, Jason Gunthorpe wrote:
+> > On Tue, Jun 10, 2025 at 01:38:22PM +0200, Thomas Weißschuh wrote:
+> > > > ------------------------------------------------------------------
+> > > > #  RUN           iommufd_dirty_tracking.domain_dirty128M_huge.enforce_dirty ...
+> > > > # enforce_dirty: Test terminated unexpectedly by signal 11
+> > 
+> > Sig 11 is weird..
+> 
+> > > On another note, the selftest should use the kselftest_harness' ASSERT_*()
+> > > macros instead of plain assert().
+> > 
+> > IIRC the kselftest stuff explodes if you try to use it's assert
+> > functions within a fixture setup/teardown context.
+> > 
+> > I also wasn't able to reproduce this (x86 ubuntu 24 LTS OS) Maybe
+> > it is ARM specific, I think Nicolin is running on ARM..
+> 
+> Yes. And I was running with 64KB page size. I just quickly retried
+> with 4KB page size (matching x86), and all failed tests pass now.
+
+That's a weird thing to be sensitive too. Can you get a backtrace from
+the crash, what function/line is crashing?
+
+Jason
