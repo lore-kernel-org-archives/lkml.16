@@ -1,216 +1,119 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC3528B3EF
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:09:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333CB28B3EF;
+	Tue, 10 Jun 2025 11:09:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749553743; cv=none; b=g83XsNJL7pMbURL/wlIA7u+qk+9hpW4RNmUBWqwiLkIy8Zcin4obbYlu9tYLaWYT3mTukhLjjj1ZzG8uHahdkNDIA0xEZiGT0I8AUs0gPuxzD+8jnfYot2YCUJwWEn+kL6LKBu9g6Tj5pB2OP2MtsmaRI+c01API0LrqwQ1mg3c=
+	t=1749553751; cv=none; b=mFzty24JTIy4zzgNhBOxkrJL+QdqFyD0Vj+AgrWwPTKjHlgpMPK+jmvuUlN4D9HbXfG2WxU17GE/GL4zDpVkPg5QNR/mCnScePbC76sgswkUNh69+Z1K1JMxbozJfKSGDCNqmpYMkBFZkUMwa6vDTw4Pil0ILPmNvaz7dECKb9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749553743; c=relaxed/simple;
-	bh=OuxlYYpKRxD7usymkX2lfps+kKcWWYmdxYcWmu919Dg=;
+	s=arc-20240116; t=1749553751; c=relaxed/simple;
+	bh=dzzDigNbQWvFnbgIjdwltehjUydpRvZcm8J0CiyGL6A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IyyrY/Jo74WjZVvm/YBjjFPXxfjKcFRM2BFdt5BUTCh5lSHasKIQEZLTdmQm3HfzYbJTZTx9Ge1M62HG7/AwWXtEDP5UfSJLPkO0YeD5VkrBCpf8BNybse2rBdAoQ9AEqxN+j0/pKB5XrEcgaA+LXCawc13C7vHbY6MjOynReYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=TTvxENWB; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=FdemSVzB1qpNwHHjLG/lkdyPyye4+3O57/xB7ZEccz1EE+bk6AahAoHky32T7vZ6qjVLkZh881AQDelSQinPfIUKZHIUZK+FQ+UX+yABXM/WoadMcqBMkKUob73QagummsLLqwOe3Ie7zJzqwCciuGvtWoKaNBIx7LI+zjSkH0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y2Yq/7sQ; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="TTvxENWB"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A9U8ob031343
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:09:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=RRO1LVjJx/5BoAejkQrBHrD0
-	HlTmpBzY0jUVoVo8gL4=; b=TTvxENWBt4wSO+/DbmHuJHde6djttEoNq+xx3FA5
-	P+QbNGaCN9hZJcQDdYuUXMJohNAZ/M3yKraGfltPGp4Wa1tW5vCL4CtXFTWS86gP
-	gG9vr58ZON6PNO55ym34wl2uQrGNQEkTfZ8XTqmHYmUtWX3UHYauflMsR5ItbTDF
-	TYeO3p99IozZkHWlC9WUwXRG1o4cw8iFGfWpsDjo/C5ivuLD8K30Th0+y/NPI6yj
-	a/gbq0c3TWWwX6qfvqjlzzKZsIlOFH4ggZ5WeOTPqdfR37rjD9bK1YSsSjU03iR+
-	GgpKE0PS0tAREJevLQshnrIiReVSboWdF4Lhnwql9nzHuQ==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ekprwmm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:09:01 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5d608e6f5so1341192385a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 04:09:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y2Yq/7sQ"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-45300c82c1cso9377665e9.3;
+        Tue, 10 Jun 2025 04:09:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749553748; x=1750158548; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dzzDigNbQWvFnbgIjdwltehjUydpRvZcm8J0CiyGL6A=;
+        b=Y2Yq/7sQnRs8P0rdsctJE3bOCJ1IBA2XExaiU2e7ANYBKp5Dq5zzdTHlK9j/SNUiYt
+         Pi85J6w8somcrCIMQrlEHkHckJ5SFQI8ieldpNytbtVRJGEoWV8fMLHEwamna9QShY1J
+         ybGV/Sqh7ELtH58v+YTsFwGkA+xGxwOW79xzcV25kAMrddl54RPjcLGAH9FdJNN0UBy9
+         i9BVfHKQgd/251fC6jmflAd1mxcbB4uspHPATlrMm6XpkHZGzgQxX52NaBWcoS9qlW4C
+         yCkKJfU0GatFs3WwtohOtzcN2yy53DFA8/krlQglbm0Ij+5VOPtCEeCuk7kRyqLTZmUv
+         UylQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749553740; x=1750158540;
+        d=1e100.net; s=20230601; t=1749553748; x=1750158548;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RRO1LVjJx/5BoAejkQrBHrD0HlTmpBzY0jUVoVo8gL4=;
-        b=JQ2V1ud59ep9N2dDb/H17Lf2icv1FJyEDuEwOkUvEzUX6XBxOGXHO3TjAunmXNKXYS
-         /bbPabliZzVKNBorelZJ/h3domjvLGIlhwYkYptyTZBl4kgnb1gH7/LzN/tp6lyNZQ+2
-         HNhIsOHjaI4CHJLlHkMxyYWCaoar8Ivd8wM1huU93zN7tMFT1MSP5nZW0jse0qPBL3qc
-         TD80kA/0Lw8h91J82IAXkXTyj/6ZUG1RdSi1FtSt2daY0TFMZDpREC5c7Ju5815T9g8L
-         pY42UYbX+EDbaim88cnjzsq40rQc1dLrlKWkq1OUYCJn3jmxHDB0uoLjonCeOpZeNqx/
-         nCDg==
-X-Forwarded-Encrypted: i=1; AJvYcCVVKMiFyMn0lKYRX80VWrHgjQO7KWAvjBk95MGHlqUkv9Plt/tCTupFMppqyJubNKVL7QFZ10mhSE2Qw1U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlwNaNELWUXU+xXizJBPniXeaI4LZF0dfw8vNhH0C34nAa12mb
-	sszLwFBHM8v53Ll/WnAbWl8u6yqnQqIqVoaEdr7mX/sTitfRuTtCK4CM/11Ujn2/SPvM/wpXXqH
-	WWwXpj0sTS195WhM0toLKJ8Wwvltx1Akt7hjL3fULtRDAOrqOnW8YXiQ/LH66xGWfNu0=
-X-Gm-Gg: ASbGncu2d9tUGSjGVoiGJJnINBnNYcrVehVLswv27Y0oy1N6hkVA/SwD4DUcsE+MORe
-	hzCWlR2JXQePI8Yzf5NQRTSYH7MxyDnRmvlNd6hb6d80z5Eyy08TuAOFa13a6A4X8CmJFk2idOJ
-	QncqzCNBEBQSjgKwvrc405aYk8BvqC/Df2dLU88AEHogDzeEOMwvim20S4pgWz2nKJpNcD/0nd+
-	tDinFc1TfQjo57b6evFv1LcyDvt7IGoyFHiK2POYcetq0BEeDtnyze3f4IBtRM9VefJepAD1YSl
-	jRn50p+gCn7V31YpDRB87QFMp+MvtYjm5pllZ0a6Ilf/QIF9Z+sL61jEwFk6LYgJ+w/ydER8hid
-	h2mNOCEHEu9wougaBsAGxDJDp12H94yUGBfY=
-X-Received: by 2002:a05:620a:1a03:b0:7d0:a243:d5c5 with SMTP id af79cd13be357-7d229863013mr2388359985a.5.1749553740403;
-        Tue, 10 Jun 2025 04:09:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFf2S/Xw7rHK+GuKet0+88mZ8uKvvupXT9KiOLqZgjzbbHszn9+Ms80XTWb/7xwX2+AEhOHdg==
-X-Received: by 2002:a05:620a:1a03:b0:7d0:a243:d5c5 with SMTP id af79cd13be357-7d229863013mr2388357385a.5.1749553740038;
-        Tue, 10 Jun 2025 04:09:00 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55367733280sm1516525e87.240.2025.06.10.04.08.57
+        bh=dzzDigNbQWvFnbgIjdwltehjUydpRvZcm8J0CiyGL6A=;
+        b=BW3XlvnLQQkbLQzuB8D+I57IzHgbpSu9JUzzZfL6W2R6ViV04ys6rnHrBXV/6TP2AM
+         Si3IWI7kGeM7Ss4503mjTxnj/3YdmhRu4kFMmCJ9L4wGmM1CiG3+rp7BzP30Jf4RVKEl
+         4qIfohD8qZZUv0YtoJXL2MIeRzf96XyphL0QE/LzScuUFIqV3UZgECC/cWQ6vvEYC7zj
+         Ha2FZKIQweHVsm7kOx730ow8oXC2v3lC0CQ/IksTe+Ah1sdwzEDhjI8jAqQKaZvInEIq
+         VN3TpNmdj51nCeqDk5iMD9E4bUcjJ4/MsvO+YRjR77jNd0BcJ2Z6oNahHEfTqSg53sNf
+         ubGA==
+X-Forwarded-Encrypted: i=1; AJvYcCV79Mm75Kk2AkQ1Nbo6PNTEOA8onfJJI/qhXWLKXCTSdTfXIXP3QFZBHII0Sl1s588vCvFqFX/NSDNqCXmQ@vger.kernel.org, AJvYcCWhPUy4CdUdz5XJT0PqSX2sLunErWEsnyGVvGYF1d1RmbxHivrrXkNvYbBeR7m7P3DzdvS9eOZKZIN1ttg=@vger.kernel.org, AJvYcCWkDTM3yxLHqvYx1EU9a4zXRNA2P/ggCnLfRQsAFeuxD8xHQizH5e20Ghnv54nuUdQ413JzJ9CZqHY=@vger.kernel.org, AJvYcCXeC3Ib2M9QZZmpKwGxk0m+15LQ+sDK6NoxCu2zxLCUbxowmUMEu9q7kviGZBD6dZQUHoHiXycdW18=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZ1LLFhirbVQTuV4r9RJMtzaJ1vB49u2D3RfmG4jj8PVChBYyk
+	R7lh5sKRNmxWGZ46dOYRB4A7kQvXpfznfh12Hn3uArA8i7JykhwJDnlc
+X-Gm-Gg: ASbGncslmIDDmbxSMyYJx/6XHdeD2I/0BsIN0YDXdaUcPYHy6nal3TdNNtONRKxSBot
+	blkqtJCmcymVn1hXatWekAGIOxl14Fp6YTDGPdW90vj39T1S/3+8NbhdZ1CxLe0iy8ZSGey9+T7
+	q4+ILPoNH0gkPoWbUcqvDv8rJG/Dlz6yyGoYvopVevK4k6AnJWcoS9VTqQyo+h9GuWy1UMqjrSx
+	zyqlTT9EDd1Fv+BlFMRra4a33RNv1jQEOqcBZzG812fvYiTM7R656BWSZsMc+hLGuxYn8YI92CR
+	q/kWTK4qGtAei1T+w+OfO416SK42RzM4hiP1+s/JMU3LCtg2KD8PBUOrzgB1udABoNN1++E4LVm
+	ax5T44S/2c6MGaO2LIHCGsbzbRGlDXI8PWPa/1Y66Dkn4oLGM
+X-Google-Smtp-Source: AGHT+IG68oUn/KlqqErVvFmv6p1audzggHo+5krqXAROPFaPY2NiSSWkghrcrZfQLAO3t9T1pwRiwA==
+X-Received: by 2002:a05:600c:8718:b0:450:d07e:ee14 with SMTP id 5b1f17b1804b1-452013ada08mr171855775e9.17.1749553748299;
+        Tue, 10 Jun 2025 04:09:08 -0700 (PDT)
+Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5324364f1sm12316562f8f.58.2025.06.10.04.09.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 04:08:59 -0700 (PDT)
-Date: Tue, 10 Jun 2025 14:08:56 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: sm8450-qrd: Flatten usb
- controller node
-Message-ID: <20250610110856.g5lv3p6engqwc6jk@umbar.lan>
-References: <20250610091805.2997546-1-krishna.kurapati@oss.qualcomm.com>
- <20250610091805.2997546-3-krishna.kurapati@oss.qualcomm.com>
+        Tue, 10 Jun 2025 04:09:06 -0700 (PDT)
+Date: Tue, 10 Jun 2025 13:09:05 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>, 
+	Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] drivers: cpufreq: add Tegra 4 support
+Message-ID: <svbpvo5cpwonxae46wre7ar2w4yf5j2xbfkb4hek6xgnue3jpl@5v57pp4iz7uv>
+References: <20250321095556.91425-1-clamor95@gmail.com>
+ <20250321095556.91425-2-clamor95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="lc2bghryyziuu5ih"
 Content-Disposition: inline
-In-Reply-To: <20250610091805.2997546-3-krishna.kurapati@oss.qualcomm.com>
-X-Authority-Analysis: v=2.4 cv=JcO8rVKV c=1 sm=1 tr=0 ts=6848124d cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=07EEn82W8vC_Pu74Ip0A:9 a=CjuIK1q_8ugA:10
- a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDA4NiBTYWx0ZWRfX4VENRyXXbOYi
- vBSaNUrkDWTQkg6J7EsFevCFTmenyIUDGj62yyy50KVxTnif2GZnGlL6XIsBr7mRscy9pK4Exfj
- VDuqneW8OrcaXuhDUt/c+NN38jG31YOWA7p3xrRqr3jYBAYeGNCwUYe4NAKx7kplZ1kl7It3K/c
- az9gHKyeoIsv3+D0gLe2/NkZoVc5L2nolT8n9s+Cdu1yrmxUC1PoODOkO3QB2sVlztqkvRscNj8
- BCqhgjgSDfTResxnJ0A9/B81+51riNqaZb7PfVKVU8NYjM6WB/yhgh22eTeZQXE1VSYc6fn7UHA
- Y+wODa7Y0sXLLtJ4EYiXc5z6b2lfWd+rlJEF4QWH/9/DUALSQzXDkQXsJ4CEFikgbIsb4nLfmpT
- hSqcMRgoqkOVWl+FtEHyf10BpPcHUPOUzrtPkLTElcbwl4dkNtaorhix0AKU489XkwLneSzj
-X-Proofpoint-GUID: JxdQt5esaUBoRRNWXD3RbeCbVvnFVuu5
-X-Proofpoint-ORIG-GUID: JxdQt5esaUBoRRNWXD3RbeCbVvnFVuu5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_04,2025-06-09_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=706 bulkscore=0 spamscore=0 impostorscore=0 phishscore=0
- priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1015 malwarescore=0
- suspectscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506100086
+In-Reply-To: <20250321095556.91425-2-clamor95@gmail.com>
 
-On Tue, Jun 10, 2025 at 02:48:05PM +0530, Krishna Kurapati wrote:
-> Flatten usb controller node and update to using latest bindings
-> and flattened driver approach.
-> 
-> Signed-off-by: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
-> ---
->  arch/arm64/boot/dts/qcom/sm8450-qrd.dts | 60 +++++++++++++++++++++++--
->  1 file changed, 57 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8450-qrd.dts b/arch/arm64/boot/dts/qcom/sm8450-qrd.dts
-> index 0580408485eb..bd6cb895b65b 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8450-qrd.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm8450-qrd.dts
-> @@ -500,19 +500,73 @@ &ufs_mem_phy {
->  	vdda-pll-supply = <&vreg_l6b_1p2>;
->  };
->  
-> +/delete-node/ &usb_1_dwc3;
-> +
->  &usb_1 {
-> -	status = "okay";
-> -};
-> +	compatible = "qcom,sm8450-dwc3", "qcom,snps-dwc3";
-> +	reg = <0x0 0x0a600000 0x0 0x10000>;
 
-All these properties should go to the sm8450.dtsi rather than rewriting
-them in the board file.
+--lc2bghryyziuu5ih
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH v1 1/3] drivers: cpufreq: add Tegra 4 support
+MIME-Version: 1.0
 
-> +
-> +	/delete-property/ ranges;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	interrupts-extended = <&intc GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>,
-> +			      <&intc GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>,
-> +			      <&intc GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
-> +			      <&pdc 14 IRQ_TYPE_LEVEL_HIGH>,
-> +			      <&pdc 15 IRQ_TYPE_EDGE_BOTH>,
-> +			      <&pdc 17 IRQ_TYPE_EDGE_BOTH>;
-> +	interrupt-names = "dwc_usb3",
-> +			  "pwr_event",
-> +			  "hs_phy_irq",
-> +			  "dp_hs_phy_irq",
-> +			  "dm_hs_phy_irq",
-> +			  "ss_phy_irq";
-> +
-> +	iommus = <&apps_smmu 0x0 0x0>;
-> +
-> +	maximum-speed = "super-speed-plus";
-> +
-> +	phys = <&usb_1_hsphy>, <&usb_1_qmpphy QMP_USB43DP_USB3_PHY>;
-> +	phy-names = "usb2-phy", "usb3-phy";
-> +
-> +	snps,dis_u2_susphy_quirk;
-> +	snps,dis_enblslpm_quirk;
-> +	snps,dis-u1-entry-quirk;
-> +	snps,dis-u2-entry-quirk;
->  
-> -&usb_1_dwc3 {
->  	dr_mode = "otg";
->  	usb-role-switch;
-> +	wakeup-source;
-> +
-> +	status = "okay";
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@0 {
-> +			reg = <0>;
-> +			usb_1_dwc3_hs: endpoint {
-> +			};
-> +		};
-> +
-> +		port@1 {
-> +			reg = <1>;
-> +			usb_1_dwc3_ss: endpoint {
-> +			};
-> +		};
-> +	};
->  };
->  
->  &usb_1_dwc3_hs {
->  	remote-endpoint = <&pmic_glink_hs_in>;
->  };
->  
-> +&usb_1_dwc3_ss {
-> +	remote-endpoint = <&usb_1_qmpphy_usb_ss_in>;
+On Fri, Mar 21, 2025 at 11:55:54AM +0200, Svyatoslav Ryhel wrote:
+> Tegra 4 is fully compatible with existing Tegra K1 cpufreq driver.
 
-This is a part of the SoC routing, so it should go to sm8450.dtsi too.
+It might be confusing to refer to this as both Tegra 4 and Tegra114. I
+think it'd be better to stick with just Tegra114. Otherwise:
 
-> +};
-> +
->  &usb_1_hsphy {
->  	status = "okay";
->  
-> -- 
-> 2.34.1
-> 
+Reviewed-by: Thierry Reding <treding@nvidia.com>
 
--- 
-With best wishes
-Dmitry
+--lc2bghryyziuu5ih
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmhIElAACgkQ3SOs138+
+s6Fk7g/6AjRUWbg6q1l0nhejjkpwMeIxmpQSymJfQ98bwI0lntbIDB26QfmZZFfR
+8rIjlsf53Uu6LWe0KOxxOot4X9uIauE5EZsAb9y3ESBzxC+0k6PYXb2wpLFwyIDo
+lQ7jlr6lPvjf9RMdO/hrdbcZr6UI6A3jfXJ2BpoiLOSuDSjqHGMzLJX3M+3WovdL
+WFjhVLaosl7gq8eF40ozOz5PZpb5WxhtcqhJbKWhZc5SEpbd/SHNWf6teBRDqiBB
+Km7V8NqYUBvWpN7SoJj+X+JI13tokegEDiHIgEX3AIQ9ldy9SeExkPKQe1j7ak2H
+PqDs7iMd1g7e1AKZBAkbcn2IxM+guFwnIOzfXU89iWNs2lQG8LQuqlbFVtd4bbY+
+2lUyM/vRoghKPpXpGB7TdRkZwa6WeiOZu4TYI6sNXx3vCgPo8Zne37hoGeoaquCM
+8N/8oS3ZxVKtGWQPXIYspoM5JdN9X8lEldHmp5duWk2YsMpnpEu2qENBLt3YEK6l
+xLnLxGuX71x1dMAigYe7hayAvSo5B/iAszYFKPS0o0FMQZMxAwxJb2ZrhhpmaF5R
+x4Xcrvub1yXS+L3r88x9zoo9xTlPcVDHOZtpnfK6AG2dbEixauPN/U6h9acuD7/W
+FzTLT/GCrGjoq5VYBE6Fh+fT8BlXGRFPegB4nH0/ZfCYLyFp990=
+=Hh0/
+-----END PGP SIGNATURE-----
+
+--lc2bghryyziuu5ih--
