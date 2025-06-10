@@ -1,60 +1,60 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B802798F3
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31898278E53
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:34:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749537286; cv=none; b=TJE0QNpvo7vfR34mx98Hlwd9Iq8Mubag08ZUu/AoLiD6BvT0TOgYpMIyawdoNN/FjYlQHXYMhDOD0IqhlaKz/uYZiYRJayHCLoIZkaQ8EYy7EHqQn06DjuSyHXr7m/dmlwcnp/FFi/9ZRQnxFDKxNI56K9HLv6+B93L8Z17yOJg=
+	t=1749537288; cv=none; b=hz4d7QXBRHz2cLy9+YulpxqMwpY2Hn/nR+gfgKMXHac+BUi8TmKNDfdBs0ZG7Euj+9auwHr3YPbsqndDAO83ktQkXy1tzrAxkdIS+/xxIEyZ3SGv+1a9aZd4SOCwiwhnqsJVmu4jdcoHjDOly8seegYRCFBoxwQNUYpPMqJA3Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749537286; c=relaxed/simple;
-	bh=9NPxdq24w65wZ7p9o+7CY4r0pgpVwQsdYz2QlyiKI3A=;
+	s=arc-20240116; t=1749537288; c=relaxed/simple;
+	bh=i26MHPsWyMpA/vIVdZLIh+KpoJG4cIY5pq43DPT70/M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FjZdBbN/fq/0GsOrYRKkZ3xETOVEwMwWzJAXD+4HxeEqIW5hdh7MTBQiNEczaHLk0VnhyASr3aCq+7ARYgn4TbtqMDOEQFKWSBNOxfD+kHpi3gYAGR1o1kV4e1ZJT9aPQoLv1oAKPwP70sh24NWGY+0ONrbMkvi15C6MKMUU6F8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HU2AjjJq; arc=none smtp.client-ip=209.85.214.180
+	 MIME-Version; b=tjE3tK7tFnHkaUv25apSjXI+u99+nLmzPRp9jzf+SjNSBEvM+7atAQ43qeCcU9kzkPJJWuq7ULkQw6VHWHwhxC20k+VADoypVX/azNcuFWk3p4uXABrXPWVVahkA4PdgEHHMW2vDWi/BqJJF7LI3mlLqSgv87E8SVSkCij9EG7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=e5o37NNI; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HU2AjjJq"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2353a2bc210so43841405ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 23:34:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e5o37NNI"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-234c5b57557so46725795ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 23:34:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749537284; x=1750142084; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1749537286; x=1750142086; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VrqULORtZRtLvohScS0bW/tHKk9lrlbI86cMujlReXw=;
-        b=HU2AjjJq259kV8gkmsDzm2uoi6SYGIZUifWGpUq4bNcxvblLk4Rd2LW23DjSfAWAlV
-         Mg51y0mvzVMr2g/WHNtmkN1rkw5WMkIy6L174JFShbFaFJ88Ea2I5FXWE1F5+nya3gVZ
-         0W29oDMbUB1oWhey/DZh5JXKPne3UUkZ8h3Co=
+        bh=9s3bFxA/iUmk6qSfJ/+0ju+9AuK7egSHjY2rer4xcAU=;
+        b=e5o37NNICsXR46EMRSX65qg7lZBkvSeUstYBUw/Y2pgQEWWXTZbg/FuQZVfuKbJF33
+         oFUwIBXi5+vKfmRofosvsE3IBLddaNfnSB6TnnujvWuKVGOVjtHUyeJkLypzYRRa4N4w
+         TVrOz95cn0vlRDKXzUesUWWu61EpzbEWAkqfo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749537284; x=1750142084;
+        d=1e100.net; s=20230601; t=1749537286; x=1750142086;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VrqULORtZRtLvohScS0bW/tHKk9lrlbI86cMujlReXw=;
-        b=RyYur7WbVoIX334UjJF4s7jy/B03WC1AoYXQo489888pDt35bk5M4DOFnLNBT91Sxe
-         gO2wtOqqHDuTEI5cjlA4UqHpiDO2sTjWpsfGJ/CuWCXlR5/b8GEtY+v/8Gf0Hkg9p246
-         2i4AUgUiRkbW+WUYXMr+8cTdLLyekVKUk1aSisMUI4MLBSNZ/s8Gg9mXDeEYC/m7kSFn
-         tZRMJgaGscj1tx/UBwTm7h9rGm6LRbWTZi+wEcsZCAekfvIFPn/Dn+grq6+uFQVLaT6M
-         Uxzh4eYwp0I0q0/ZELZ2mVPh5eIfcQn+XOngeXfFp9kDORTD0Temub9wecPUDJGX+LVb
-         wA8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVeWiJ+ehRgaWti7JrGnj3ELpDPOn7AFVxgPtNydgv6bdcO9rm+WuL8KbN0b3aAon1i90Cmy4h5LUX9gQw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSevIAo/bwCPPd2r2DWcunY+4bAonBKIjeydFYtXGhe9IEymsf
-	kgb/r27FyiDQVoySwSIfk2gfRDUsC/jh/jAJJgXigxlj20KgjbBoFNE5Le99uQXYnA==
-X-Gm-Gg: ASbGncsjFqXLFhgbCkXThkgp3pQJe6jpEPLfTalFWH1QQIiGaPA+BKGF2bYfIN5efZ7
-	jma8VH9wxUyDZrcp9LnDwxHuCrBO4mOig2DsX4zRL+JxMLzFTCtkox0VCcON4WgNZRUxHi/MTps
-	Ij2t1MEIHQyxyU8uwy9a+VkfAK1dwZP/d/TYAw25c3y7FfoAIMK+MAIxWRfyr8Y5tVKeD5fgKzz
-	y4PZQBAM5sdSgkqeOJ4locw7h0/qTOvzbMfP+Jw3R9K8+Z+0Ujo3CxP072v9ZMyg66hsVJMNgdb
-	fo7VCLgY3nVWLbP0XQiQSP30dp7GvxrfeGPt+AK4yf6EHqYy8nOt5tqbhfxjE82sLWacPgjEyAj
-	xJijD
-X-Google-Smtp-Source: AGHT+IEGQxJJmcWYpWGuVmdUnkC75qaMfHhC2ZYRcVR0LV2sYNBvIZJpm3D00eRQqElG+uElS5rHKg==
-X-Received: by 2002:a17:903:230d:b0:235:e1d6:f98b with SMTP id d9443c01a7336-23601d03dddmr221983295ad.22.1749537283922;
-        Mon, 09 Jun 2025 23:34:43 -0700 (PDT)
+        bh=9s3bFxA/iUmk6qSfJ/+0ju+9AuK7egSHjY2rer4xcAU=;
+        b=ij6xZxOv9ZnekV6kaAwi7SU3B085ekWFFzoyrxhghUCxodu+dusXmHTlwkpCAP+G5W
+         ZBiYdtCz1OnmKljGjKybmqueVvPDSGqGCaWCSRiLcDeV9Qtn/PYiJUwRhQ28eJswRbOp
+         LRrFD7j5AOIV4iOyraJpjaFzADM9zbNDVimjI7s7gYSRDcONOFNc3kaE/v+7+2+XCeVJ
+         0rE33B4iquG7rybcO0MD0t0a0+lQV5ssgRT30ir+Lk2frKSmg5pNZtbvovIuHrxzbX8K
+         9aj+WJyGmZzjoBREC7oEbdnBziag9prC8kzP9+o39zRX9vxTB1Q++vSwUqkFuD+rEcfE
+         SUoA==
+X-Forwarded-Encrypted: i=1; AJvYcCWzWstHI+zaC8Xmlz22sk7qlizkzO35chPzlI/rz46Vdwcf4ErmS+1Ck4Ue5NOBd6Gf8W6HQKNJV4Krbb4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9eazySw9NFvsCjEv4C+oFCRL+Tv5/MbeEeJUCiCFpsaqY08W9
+	W68RqFsEqxl7kHjzPFoArSNPmml0sikI4xCPgg5RlRK1iWR7ohPCtQnF6QhswuFZ4A==
+X-Gm-Gg: ASbGncs5K9Cnp5fNkx0p9RymSH+xAPhWSDKkqKC8/8ZhmaPv6UGAzaC7Uo0TyVAxVxH
+	pyHtc0DL80BeVTsPo3Wt2S1aaAQlv7RlJEF0oW4upCL5zrMqU6QapyrdvELLrFQEDvoG+kEUJIi
+	4iDwSCZ3ToTYzYnx1SclDM697Mq+/67fMWXmeEHS7yOHMkWCURfZHIR+wXZ5hGjBgg2HvFJwbZ8
+	h6Zam0EXdiuzsw2wXYxUFsR3a8yjmfMlW+Z1Qg0OoqqjHQ1J56TxeWYXe8pYm1tNRzs06yKnQo9
+	qWeL+nI0sFv36LYX7M6urNA2hNLZi7r5zijj6Ttik5jUrcjV9SkZw/lya0kQwLhp0abHHZy3bKs
+	PJyFI8QArPo2VEHI=
+X-Google-Smtp-Source: AGHT+IFSfenrPgpYS8YpG+M5+osrGMDb3jGStM+tUH+0iHwn7+BobeG4OBWi4Cm0UHiMF1nHBAIopg==
+X-Received: by 2002:a17:902:d58b:b0:235:eca0:12d4 with SMTP id d9443c01a7336-23601dcd1f1mr210895915ad.53.1749537286555;
+        Mon, 09 Jun 2025 23:34:46 -0700 (PDT)
 Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:2826:ada4:efac:14e8])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603092ee2sm64596765ad.82.2025.06.09.23.34.41
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603092ee2sm64596765ad.82.2025.06.09.23.34.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 23:34:43 -0700 (PDT)
+        Mon, 09 Jun 2025 23:34:46 -0700 (PDT)
 From: Chen-Yu Tsai <wenst@chromium.org>
 To: Srinivas Kandagatla <srini@kernel.org>,
 	Rob Herring <robh@kernel.org>,
@@ -68,11 +68,10 @@ Cc: Chen-Yu Tsai <wenst@chromium.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org,
 	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Johnson Wang <johnson.wang@mediatek.com>
-Subject: [PATCH v2 1/2] dt-bindings: nvmem: mediatek: efuse: split MT8186/MT8188 from base version
-Date: Tue, 10 Jun 2025 14:34:29 +0800
-Message-ID: <20250610063431.2955757-2-wenst@chromium.org>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] arm64: dts: mediatek: mt8188: Change efuse fallback compatible to mt8186
+Date: Tue, 10 Jun 2025 14:34:30 +0800
+Message-ID: <20250610063431.2955757-3-wenst@chromium.org>
 X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
 In-Reply-To: <20250610063431.2955757-1-wenst@chromium.org>
 References: <20250610063431.2955757-1-wenst@chromium.org>
@@ -84,62 +83,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On MT8186 and MT8188 one of the NVMEM cells contains the GPU speed bin
-value. In combination with the GPU OPP bindings, on these two platforms
-there is an implied scheme of converting the cell value to what the GPU
-OPP "opp-supported-hw" property matches. This does not apply to the base
-mediatek,efuse hardware, nor does it apply to any of the other platforms
-that do not have the GPU speed bin cell. The platform maintainer argues
-that this makes the compatibles incompatible with the base
-"mediatek,efuse" compatible, as shown in the link given.
+The efuse block in the MT8188 contains the GPU speed bin cell, and like
+the MT8186 one, has the same conversion scheme to work with the GPU OPP
+binding. This was reflected in a corresponding change to the efuse DT
+binding.
 
-Deprecate the MT8186/MT8188 + "mediatek,efuse" combination, and add
-new entries with MT8186 being the base model and MT8188 falling back
-to MT8186.
+Change the fallback compatible of the MT8188's efuse block from the
+generic one to the MT8186 one. This also makes GPU DVFS work properly.
 
-Link: https://lore.kernel.org/all/11028242-afe4-474a-9d76-cd1bd9208987@collabora.com/
-Fixes: ff1df1886f43 ("dt-bindings: nvmem: mediatek: efuse: Add support for MT8188")
-Cc: Johnson Wang <johnson.wang@mediatek.com>
+Fixes: d39aacd1021a ("arm64: dts: mediatek: mt8188: add lvts definitions")
+Fixes: 50e7592cb696 ("arm64: dts: mediatek: mt8188: Add GPU speed bin NVMEM cells")
 Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
 ---
- .../bindings/nvmem/mediatek,efuse.yaml          | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt8188.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/nvmem/mediatek,efuse.yaml b/Documentation/devicetree/bindings/nvmem/mediatek,efuse.yaml
-index 32b8c1eb4e80..4dc0d42df3e6 100644
---- a/Documentation/devicetree/bindings/nvmem/mediatek,efuse.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/mediatek,efuse.yaml
-@@ -24,6 +24,21 @@ properties:
+diff --git a/arch/arm64/boot/dts/mediatek/mt8188.dtsi b/arch/arm64/boot/dts/mediatek/mt8188.dtsi
+index 202478407727..90c388f1890f 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8188.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8188.dtsi
+@@ -2183,7 +2183,7 @@ imp_iic_wrap_en: clock-controller@11ec2000 {
+ 		};
  
-   compatible:
-     oneOf:
-+      - items:
-+          - const: mediatek,mt8188-efuse
-+          - const: mediatek,mt8186-efuse
-+      - const: mediatek,mt8186-efuse
-+
-+      - items:
-+          - enum:
-+              - mediatek,mt8186-efuse
-+              - mediatek,mt8188-efuse
-+          - const: mediatek,efuse
-+        deprecated: true
-+        description: Some compatibles also imply a decoding scheme for the
-+          "gpu-speedbin" cell, and thus are not backward compatible to the
-+          generic "mediatek,efuse" compatible.
-+
-       - items:
-           - enum:
-               - mediatek,mt7622-efuse
-@@ -33,8 +48,6 @@ properties:
-               - mediatek,mt7988-efuse
-               - mediatek,mt8173-efuse
-               - mediatek,mt8183-efuse
--              - mediatek,mt8186-efuse
--              - mediatek,mt8188-efuse
-               - mediatek,mt8192-efuse
-               - mediatek,mt8195-efuse
-               - mediatek,mt8516-efuse
+ 		efuse: efuse@11f20000 {
+-			compatible = "mediatek,mt8188-efuse", "mediatek,efuse";
++			compatible = "mediatek,mt8188-efuse", "mediatek,mt8186-efuse";
+ 			reg = <0 0x11f20000 0 0x1000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
 -- 
 2.50.0.rc0.604.gd4ff7b7c86-goog
 
