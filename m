@@ -1,156 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3A328134E;
-	Tue, 10 Jun 2025 08:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DC4286433
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:38:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749544687; cv=none; b=k8SiALqhRWRdQsvPOpk6TTeEq6J6pj/9TlMZvxBbDZXUB2G10BT/FQsSmPBG2yVTPLYswcUXxs3AlrrIv0GuYvp+CHeOIHQ7T8k2TG0yl0s+ybqmyQAwwkW8dNSuxOisVBC+0Vnl5adA2JcDIzT32wzollH1KyHwiCNDtQu2FIc=
+	t=1749544693; cv=none; b=VaTXldWz0ku7f2Txdobv0xEGrqUez2Yfr3xjqfFcAE3ULN9KNfuRflYfH7QeDjP339U8bTchMEoh4xFBVBpjO980RWe7T75wEc3reNedps1oI2nOCU3lhqX7iDnNlbVQJY1PaTqvxJCfadOHTDcsnwAZJlpuOY0IKs+tswffUWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749544687; c=relaxed/simple;
-	bh=YW0aYGk44OBGXMXwnXBPhhKQgB+lh/nINEBWmVaTupA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Y4GXQHOSGznNYnrZdTuEfZq9xiVngpzfA+W8aPXq33d6YXgI6KgPspie3qyh7q5emhjXoPczzBjzvLti7QjQUs3z3YsjxTvugkSIATj9/U1Opb3DLs/3liGsiJGn95llhD4ijDhXEna/6UGQISgtnQ9+ECw8s4N2pZw59OtcwKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SFIXccSH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749544693; c=relaxed/simple;
+	bh=9uSj8nECHdGEcQVH+g+bWqSf1bY6OlgEhrntxwaC7vw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oruq4sUairtxZSwT+VRUW5T6aDa9T592I3eOEp0gs4rmY/PfjOyfXlQo//3uyO4KpRPYiq7k8lvNE54Wus+dB0ntxfl8qpCODvKsFnm6qAhgHEb5DOPIJXMoIsQiqB+OSCKH+UHd5wb3qfdcLAX6oYWTGUMzdIzD0VTOdljThls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=a8IAz6yb; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SFIXccSH"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CC05AC4CEF5;
-	Tue, 10 Jun 2025 08:38:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749544686;
-	bh=YW0aYGk44OBGXMXwnXBPhhKQgB+lh/nINEBWmVaTupA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=SFIXccSH7RpfZmy9fQXhsOmQBdyuLthpHn6jExJY9Y1yEoAH2urzKGdKmfBJYuCWD
-	 tu9u9xA13wbutNtOZeMkLEuQGnv4tJV/66W/xrh4kKsf83hpdJHkeyvh7GHj3Mr1Zx
-	 JbnOwOvrQIUxiZ+CCmsXG6u+YC7WvhPiZngCOU3sbJ5bfxHyguGksgRdSlXEIsmvxs
-	 otnW4wl5s6x8TgIAx8IS2FIdrs5ozlBAqRbMPgfKeg/Ajy02Z7iiH8OxsPwdEomaoQ
-	 /FujURbqWrgMOgAbi+92jay6DbWEuFuwaVtsUN9LY5YrTWBf1YouiOKkQGi63ZZY+H
-	 /b19VGlmAX2+w==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CDEC71132;
-	Tue, 10 Jun 2025 08:38:06 +0000 (UTC)
-From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Date: Tue, 10 Jun 2025 12:37:59 +0400
-Subject: [PATCH v5 5/5] arm64: dts: qcom: ipq5018: Add GE PHY to internal
- mdio bus
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="a8IAz6yb"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749544688;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=q5HeugkHcjUwf4mk/XUNlpjUL6kKhDq/9U6Y9Vd4dl4=;
+	b=a8IAz6ybvG8uIiSxJDIUclktJubKEE4rGGhYGbGGM5R9No+9Cr1bGMQzp7hn39Zb32ck1f
+	iwDxenlzf+k7MxolScB0OCodyDaTXE0kMqUt9ZjQ1kp9fgtv/bbJK1OAwkSw1xxftuN827
+	J3TUNEiyxSG4SiIp6Xw2lAdpIwP5lGg=
+From: Ye Liu <ye.liu@linux.dev>
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Ye Liu <liuye@kylinos.cn>
+Subject: [PATCH v2] mm/memfd: Clarify error handling labels in memfd_create()
+Date: Tue, 10 Jun 2025 16:37:30 +0800
+Message-Id: <20250610083730.527619-1-ye.liu@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250610-ipq5018-ge-phy-v5-5-daa9694bdbd1@outlook.com>
-References: <20250610-ipq5018-ge-phy-v5-0-daa9694bdbd1@outlook.com>
-In-Reply-To: <20250610-ipq5018-ge-phy-v5-0-daa9694bdbd1@outlook.com>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-clk@vger.kernel.org, George Moussalem <george.moussalem@outlook.com>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749544683; l=2285;
- i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=hFpy0osU/0n+A52muRC0D3Drst6JCZAX5hmtJZDrLks=;
- b=un9tciC84pDmPnVnCf6Uie9NGEQ6Hd5vibaYUdIvTGuG8+/rnLmHQVbnV/UwXhl3YMHXPCqml
- K7G9SC7SM27BTOaRCX1l9VJrPxs4PqCQ1UOA5HOIdXpOK582Tm1ZjcU
-X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
- pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
-X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
- with auth_id=364
-X-Original-From: George Moussalem <george.moussalem@outlook.com>
-Reply-To: george.moussalem@outlook.com
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-From: George Moussalem <george.moussalem@outlook.com>
+From: Ye Liu <liuye@kylinos.cn>
 
-The IPQ5018 SoC contains an internal GE PHY, always at phy address 7.
-As such, let's add the GE PHY node to the SoC dtsi.
+err_name --> err_free_name (fd failure case)
+err_fd --> err_free_fd (file failure case)
 
-The LDO controller found in the SoC must be enabled to provide constant
-low voltages to the PHY. The mdio-ipq4019 driver already has support
-for this, so adding the appropriate TCSR register offset.
+Signed-off-by: Ye Liu <liuye@kylinos.cn>
 
-In addition, the GE PHY outputs both the RX and TX clocks to the GCC
-which gate controls them and routes them back to the PHY itself.
-So let's create two DT fixed clocks and register them in the GCC node.
-
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+Changes in v2:
+- Rename Subject.
+- Use "err_free_name" and "err_free_fd".
+- Link to v1:https://lore.kernel.org/all/20250609031858.73415-1-ye.liu@linux.dev/
 ---
- arch/arm64/boot/dts/qcom/ipq5018.dtsi | 26 +++++++++++++++++++++++---
- 1 file changed, 23 insertions(+), 3 deletions(-)
+ mm/memfd.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-index 03ebc3e305b267c98a034c41ce47a39269afce75..d47ad62b01991fafa51e7082bd1fcf6670d9b0bc 100644
---- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-@@ -16,6 +16,18 @@ / {
- 	#size-cells = <2>;
+diff --git a/mm/memfd.c b/mm/memfd.c
+index ab367e61553d..4fc98abe6627 100644
+--- a/mm/memfd.c
++++ b/mm/memfd.c
+@@ -475,22 +475,22 @@ SYSCALL_DEFINE2(memfd_create,
+ 	fd = get_unused_fd_flags((flags & MFD_CLOEXEC) ? O_CLOEXEC : 0);
+ 	if (fd < 0) {
+ 		error = fd;
+-		goto err_name;
++		goto err_free_name;
+ 	}
  
- 	clocks {
-+		gephy_rx_clk: gephy-rx-clk {
-+			compatible = "fixed-clock";
-+			clock-frequency = <125000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		gephy_tx_clk: gephy-tx-clk {
-+			compatible = "fixed-clock";
-+			clock-frequency = <125000000>;
-+			#clock-cells = <0>;
-+		};
-+
- 		sleep_clk: sleep-clk {
- 			compatible = "fixed-clock";
- 			#clock-cells = <0>;
-@@ -184,7 +196,8 @@ pcie0_phy: phy@86000 {
+ 	file = alloc_file(name, flags);
+ 	if (IS_ERR(file)) {
+ 		error = PTR_ERR(file);
+-		goto err_fd;
++		goto err_free_fd;
+ 	}
  
- 		mdio0: mdio@88000 {
- 			compatible = "qcom,ipq5018-mdio";
--			reg = <0x00088000 0x64>;
-+			reg = <0x00088000 0x64>,
-+			      <0x019475c4 0x4>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+ 	fd_install(fd, file);
+ 	kfree(name);
+ 	return fd;
  
-@@ -192,6 +205,13 @@ mdio0: mdio@88000 {
- 			clock-names = "gcc_mdio_ahb_clk";
- 
- 			status = "disabled";
-+
-+			ge_phy: ethernet-phy@7 {
-+				compatible = "ethernet-phy-id004d.d0c0";
-+				reg = <7>;
-+
-+				resets = <&gcc GCC_GEPHY_MISC_ARES>;
-+			};
- 		};
- 
- 		mdio1: mdio@90000 {
-@@ -232,8 +252,8 @@ gcc: clock-controller@1800000 {
- 				 <&pcie0_phy>,
- 				 <&pcie1_phy>,
- 				 <0>,
--				 <0>,
--				 <0>,
-+				 <&gephy_rx_clk>,
-+				 <&gephy_tx_clk>,
- 				 <0>,
- 				 <0>;
- 			#clock-cells = <1>;
-
+-err_fd:
++err_free_fd:
+ 	put_unused_fd(fd);
+-err_name:
++err_free_name:
+ 	kfree(name);
+ 	return error;
+ }
 -- 
-2.49.0
-
+2.25.1
 
