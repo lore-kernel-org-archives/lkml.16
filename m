@@ -1,108 +1,148 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D54D11712
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 03:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7613184F;
+	Tue, 10 Jun 2025 04:02:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749527779; cv=none; b=s3Is6wdH3264wyqont/kWN8cT/f8IVWDQLkNyzuSTtWX6mFiApuBWQclpPNmToqyU9bxpLXUNPdni/THTKpqzZXcDySXlt+y7691KbMM4NnKKiXMdT1dzYTqAmaWpY3wEzgPCE1TFG6qzR1SRtHuBpxuNe5ZP/amlfX9xq8xVC4=
+	t=1749528125; cv=none; b=hTE7HxVP5ve5FPESRq2qXbOV1SolLwuMl+lGluWsi/mlj1IlvUdYEfizadHgj4h3BwGYk4X6ohf1Hq85n6MssVXLlxwkmrwte+wH8oEotQSGm+FcGrI8juFTLqx1i5qUVPvWGaIU7YOz6WlkevDboWqWImzrLp9ijNZNO6K06s0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749527779; c=relaxed/simple;
-	bh=mk//4e0lexN75t3KGWtP4llZR5wKNTTSc4upny09zi0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nLU6CWDRliSb8HTGebuOfPVjaSTOsIvZwxQpbYXNGH1UopacNpoJvhAr67ppJHKX5qCbdCTB6mCa/JRAkqgyIPVQyWPEw6cYAiZdvAilb2j2eIY/o4WgGzuZa4h9ledTR20hiBLOMegLG5woHd7x1/QAEWvDmiurAGsG1RsB2N4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=k9b1QOc4; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1749528125; c=relaxed/simple;
+	bh=RSDBnhgSDB3LEzKcIyjb9Xjl1Cja0E622WzxOwPUV3A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Yog2MtKJeS41+Pgy71w7NSV0WqQoAPx6kLaMtnikRoB9oai4E5+/r09IFULBVhgs58cXQivv0OU2HSK3OQoBt5xDRe2Z3lJQ/ctmS+/MqoAYjh5mr7PfLUNmzAJIBnun6iFWvvtl37yDpfBPuIrt8XTBvErfIsn1bIplLCBNUBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fBEwjnz0; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="k9b1QOc4"
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 26F69446F8
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 03:56:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1749527774;
-	bh=6f8UfXSCXcF/uODMP4YgdLJixKlcv1NebpTVVogDgYY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-	b=k9b1QOc42excHI6+rhvTa/2iAYz9AHYPhEEco9VAP8JHjEp8Uz6RTJei4VJuqr+c/
-	 zub4r5WSPLso/zKCJ36V8Xo7c0oEsj1Y7TkcD/cbFc7NPUVHbhRxA3zcglOCEBqTDY
-	 /Kn/lhWF9bVt3nuwDO7vl2jMGPLPKqrEE7Hj+69/1CxNGPzuT+WPXlH6WpfoTkx6M6
-	 muki1yHVzyTvQooDL62Q+n/Ro+zSYpsrfvUG3vH1JTx/3d2BciC6WD/2MA5e7D4kOo
-	 5dWkmo2/W9U3raPKU/2e7+BqCiulP6RpktkEKefuV/gKeLd+ttHuLlG60JvqPYZUQu
-	 1hND2VMjzoFpA==
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-747dd44048cso4044827b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 20:56:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fBEwjnz0"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6fb01566184so40977796d6.1;
+        Mon, 09 Jun 2025 21:02:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749528122; x=1750132922; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XMrwRXbr8WIzpkfgacXKxR5z6ZnKHPCXT4UGv3T6iIM=;
+        b=fBEwjnz0+h1vTMCIc7DoFM3MhgLMxGYUuUyTjXVuHkwBqUt0C+EW7e7f0qBny4VTDT
+         Txgnjx+uCk8ttxhuVq18z30mo/yy5w1wb33Gm17CSsJIUVcI05TQrPs1XB2chQlGHQ+H
+         cua32XG+QMEJGjSfgipWMVB2ThiuPE0XyL7MLxYZgwOUgaWkVoQdRu886JYw6JnTryNV
+         R4G9hoRHUWPv9mO9mllcFE9N472s854rtUGNkh40FeYtnyaOmbB6fpsL9eRobqsyT8iz
+         Y0EfxO3vn/JXCGDz/O3GCka52Hw/lR5D/DizhpBxeX8jaBRy1RpisXA26iX0EiJffqgx
+         /XYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749527772; x=1750132572;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6f8UfXSCXcF/uODMP4YgdLJixKlcv1NebpTVVogDgYY=;
-        b=vktCDo9gUJDZvVwAVcfowGBsjZAlplBjX2xQxPy1hz5ZoGI6U5a4JAUmjT789sSrKl
-         FNg85XzaO1ZbhP85rEhSIEkkcwASQ8da2sl5SLy0WcyLWHCl/IRHS7NAlQuAssprQYvJ
-         6sJjyCrTPqm01brRltKPZjkwr4+5Kb5bb/6qqQByuzFeqipnJHF/j3d7gtobsDwHQDIC
-         /bsixMT27xSIzx37yi36pk1RaNs9avSxfpoJp/ARcQ2by4FjktgnU4FJFhhIDNQ8NTgX
-         M3BNeo9dh7Rf0JPH/fe7W2YNNMNbtiA2mznLinA94CaN+2pzCfoePOwRHquOiNbbzLNo
-         29ZA==
-X-Forwarded-Encrypted: i=1; AJvYcCWYtRxcBiaiHOjKmsQmomlxU7Yxi2u86C0vC2sVVImrLNG4WSOL2wYwZ9tdIaTdCzcFtMMdsIWSqkl2G00=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzefmXxPAUpPFt3TDuSYi3bjMdCJat2KuSiiENo6RCce6xR1813
-	0gGfECq1b7lIO//rKC2msvEcA4HYfusOOykmlRB67qAVWiAdGp2z7RxJ7/6XldCRZ5UxVvtRjxU
-	W2s4Yy/gpC656nIME7YkhkiiL+ugjviw6SNFSZILVA3dwGic14e9VIivpm5Nom+dalT/6cggo56
-	psNgYvhnxgk23FeFQl
-X-Gm-Gg: ASbGncvBukgxghW4B0Xfsjk2c7gea0dwxD1Px6YRxLieimYH+sHVxfJIhSTKBkBnjZe
-	+ULiu2UvgQ9JV71PcsXRcOcpWqHmEaTlP7RrUiS3vPTAoBX0X5CjQn8ZDeAr111Qgl2pEgms+zI
-	MVMhNfRP79IV54eIsY9Kn7fChsaGoPsMtjvpMDt3schC7PbCSwPb1inOmkhloKmgFncQnw/2gCe
-	IXeLMaLgVYyGTUaipNLLUS89UGCJbKEiSKXAcfgYrUKPG1GZkyNVR6VgmvJcYTLDQQOdDRK+q3U
-	j6Rc5i5Xzdnj7miRHhTceyshUH7pYjcgYVzsLZ4mCi4VSsqC9Wtz9FpPYjkP7AYsMw==
-X-Received: by 2002:a05:6a20:6a1c:b0:20d:df67:4921 with SMTP id adf61e73a8af0-21ee250ce37mr22866999637.4.1749527772376;
-        Mon, 09 Jun 2025 20:56:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHbdZpn/RR12NhB5LgcOMPREv1z+WRxpq5szK6Ofm1MM4coyBQSPQd9Wv8KNZFI5ZUjhjd4AQ==
-X-Received: by 2002:a05:6a20:6a1c:b0:20d:df67:4921 with SMTP id adf61e73a8af0-21ee250ce37mr22866980637.4.1749527772030;
-        Mon, 09 Jun 2025 20:56:12 -0700 (PDT)
-Received: from u-XPS-9320.. (118-163-61-247.hinet-ip.hinet.net. [118.163.61.247])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0c23f6sm6468279b3a.119.2025.06.09.20.56.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 20:56:11 -0700 (PDT)
-From: Chris Chiu <chris.chiu@canonical.com>
-To: tiwai@suse.com,
-	kailang@realtek.com
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chris Chiu <chris.chiu@canonical.com>
-Subject: [PATCH] ALSA: hda/realtek: Fix built-in mic on ASUS VivoBook X513EA
-Date: Tue, 10 Jun 2025 11:56:07 +0800
-Message-Id: <20250610035607.690771-1-chris.chiu@canonical.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1749528122; x=1750132922;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XMrwRXbr8WIzpkfgacXKxR5z6ZnKHPCXT4UGv3T6iIM=;
+        b=rTn4gQvnjmVpKJSsjp3ZsgUaCGFdg7fT0xQQBfaBucZwJvHtsTZRJLsTolwb6VGEHk
+         3zFUvRX6LTJJlj8s+IZvFAFe9DJtjgLhFt9LOpHgdhtK9RAdoozQD7S1yDHPwWyzkUp+
+         GhO/2fPdHC9rzsOPyDs8ftzGW39/Dq/+QhgAnHeu9GxYY3evZJyHtkewjV/Roy7+c41E
+         SYS1x9vn7Acsfu8lzdL+0Cg7nU9SQ0xwgvjnhLJQqIdEl4P6VvN+iMQtAjuxh4RVT5IA
+         F809+j0zI8ds18aB7rFNqVvfBnVW08Qpas8lC7vy6l4Jrb4/t19sjBEhXzbJGc2keZ8Z
+         jvoA==
+X-Forwarded-Encrypted: i=1; AJvYcCX6CHh/qwoPWJGE1bct2P0mYkpolx/hBjx1YTzHHoRTTl6G2Xi/gbJsQEDLaNAYXPrMtcau3bwFzBTDtw==@vger.kernel.org, AJvYcCXF3GEn9zVVrJjimHz4wERGuyJG43KZFT/UAAuCZa2j1YWwDaBtLYKT+0wzjafTScr2DXgc5GjFW9GAGxIS@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0mHrm3gQRNujNu1iUetMhnbZprB+FX/oG8qSEBTDNfwcrWtU6
+	KUsYwdg6oGSjfMeQjUvj6z+5sLveaEJKrmW3+06SjEea63J2WCGY/yEhPlR/LIgDtPNbFT7zH7B
+	U9HhBnrwqw6fIbhdhDeXGIs6rTeG7yUo=
+X-Gm-Gg: ASbGncupXkwXodXuMYmgbMKPmjITWKbPhhODN8LY1zsugudSDq8IddQA0Oqko6bHAr4
+	mgLlmtdu4L7+BLjGV7rEKQ58MXX2ve3VpdnAIW/gfYHORcqFzpxiVqyaB/qTZIrjTkfNExQzf63
+	poObCtS0VKUXVvwGSawap1Vj/MaDRTT4O25hjnxv5CVBk0
+X-Google-Smtp-Source: AGHT+IFkKUcxq9K3TvsZ0FSQ6z9aFHs7y3N1fYKBL8L9OYe5J71fBhdpiu/K3rvtcGkhcagNiThED5dyJXBGR1/IwYc=
+X-Received: by 2002:a05:6214:4107:b0:6fa:9e00:d458 with SMTP id
+ 6a1803df08f44-6fb08fe1a53mr252519166d6.45.1749528122425; Mon, 09 Jun 2025
+ 21:02:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250526-dualsense-hid-jack-v1-0-a65fee4a60cc@collabora.com>
+In-Reply-To: <20250526-dualsense-hid-jack-v1-0-a65fee4a60cc@collabora.com>
+From: Roderick Colenbrander <thunderbird2k@gmail.com>
+Date: Mon, 9 Jun 2025 21:01:51 -0700
+X-Gm-Features: AX0GCFspEeIQPAzdoMKf0rD0zb01CbCBMtp5pWRm7hsy4HbFty56yWyoLKvtEco
+Message-ID: <CAEc3jaCoVgP=0v73ZTeAhd0wb2LpGqguEedY6haNLi_HNA_Mng@mail.gmail.com>
+Subject: Re: [PATCH 00/11] HID: playstation: Add support for audio jack
+ handling on DualSense
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Cc: Roderick Colenbrander <roderick.colenbrander@sony.com>, Jiri Kosina <jikos@kernel.org>, 
+	Benjamin Tissoires <bentiss@kernel.org>, Henrik Rydberg <rydberg@bitmath.org>, kernel@collabora.com, 
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The built-in mic of ASUS VivoBook X513EA is broken recently by the
-fix of the pin sort. The fixup ALC256_FIXUP_ASUS_MIC_NO_PRESENCE
-is working for addressing the regression, too.
+Hi Cristian,
 
-Signed-off-by: Chris Chiu <chris.chiu@canonical.com>
----
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+Thanks for sharing your patches around audio. I need to have a closer
+look at some of those and how the console also behaves (we try to keep
+things in-sync'ish when possible). I need to double check the
+datasheets as well.
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 20ab1fb2195f..055fddb93982 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -10894,6 +10894,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x8e60, "HP Trekker ", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x103c, 0x8e61, "HP Trekker ", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x103c, 0x8e62, "HP Trekker ", ALC287_FIXUP_CS35L41_I2C_2),
-+	SND_PCI_QUIRK(0x1043, 0x1032, "ASUS VivoBook X513EA", ALC256_FIXUP_ASUS_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x103f, "ASUS TX300", ALC282_FIXUP_ASUS_TX300),
- 	SND_PCI_QUIRK(0x1043, 0x1054, "ASUS G614FH/FM/FP", ALC287_FIXUP_CS35L41_I2C_2),
--- 
-2.34.1
+The series does contain some other patches around style and stuff.
+Some of them for me are entering that slippery slope of what to
+change. There are some different styles in use around the kernel (e.g.
+uint32_t etcetera is fine). But then if you use super strict mode on
+checkpatch half the kernel almost needs to be touched. I'm a bit
+skeptical on those kind of patches.
 
+Thanks,
+Roderick
+
+On Mon, May 26, 2025 at 5:52=E2=80=AFAM Cristian Ciocaltea
+<cristian.ciocaltea@collabora.com> wrote:
+>
+> The Sony DualSense wireless controller (PS5) provides an internal mono
+> speaker, in addition to the 3.5mm jack socket for headphone output and
+> headset microphone input.  However, the default audio output path is set
+> to headphones, regardless of whether they are actually inserted or not.
+>
+> This patch series aims to improve the audio support by implementing the
+> following changes:
+>
+> * Detect when the plugged state of the audio jack changes and toggle
+>   audio output between headphones and internal speaker, as required.
+>   The latter is achieved by essentially routing the right channel of the
+>   audio source to the mono speaker.
+>
+> * Adjust the speaker volume since its default level is too low and,
+>   therefore, cannot generate any audible sound.
+>
+> * Register a dedicated input device for the audio jack and use it to
+>   report all headphone and headset mic insert events.
+>
+> It's worth noting the latter is necessary since the controller complies
+> with v1.0 of the USB Audio Class spec (UAC1) and, therefore, cannot
+> advertise any jack detection capability.  However, this feature can be
+> implemented in the generic USB audio driver via quirks, i.e. by
+> configuring an input handler to receive hotplug events from the HID
+> driver.
+>
+> Unrelated to the above, also provide a few driver cleanup patches, e.g.
+> make use of bitfields macros, simplify locking, fix coding style.
+>
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> ---
+> Cristian Ciocaltea (11):
+>       HID: playstation: Make use of bitfield macros
+>       HID: playstation: Add spaces around arithmetic operators
+>       HID: playstation: Simplify locking with guard() and scoped_guard()
+>       HID: playstation: Replace uint{32,16,8}_t with u{32,16,8}
+>       HID: playstation: Correct spelling in comment sections
+>       HID: playstation: Fix all alignment and line length issues
+>       HID: playstation: Document spinlock_t usage
+>       HID: playstation: Prefer kzalloc(sizeof(*buf)...)
+>       HID: playstation: Rename DualSense input report status field
+>       HID: playstation: Support DualSense audio jack hotplug detection
+>       HID: playstation: Support DualSense audio jack event reporting
+>
+>  drivers/hid/hid-playstation.c | 885 ++++++++++++++++++++++++------------=
+------
+>  1 file changed, 500 insertions(+), 385 deletions(-)
+> ---
+> base-commit: 7bac2c97af4078d7a627500c9bcdd5b033f97718
+> change-id: 20250522-dualsense-hid-jack-d3cb65b75da1
+>
+>
