@@ -1,121 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1CE280019;
-	Tue, 10 Jun 2025 08:02:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A817B22172F
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749542527; cv=none; b=lT+dPF4z1Q7eO6XdPrcv41XXAnTW9SIWwSUHJnUV0uxvMiH6X9AlMiR9vCimbRG/Z2Z+VVSwxSrBgRZ4uaKiIJHE/uSDTGIrVmUBMWUKYtvHELZCkaUEZiNiocXbxPy1RfilrzJi3KncWUACYmbeVv4uIvGvBO3FUqQngszUrQs=
+	t=1749542558; cv=none; b=TBNUt8lpJf21h63gyzlLEHeUsSMFYqSbfb9jHnB/ma+HG7GSKC0GC/jFCI15/LnI06pZlg0mCIIcMNOcN9sOEh3uyklLTFCHy9ze3miY/fpFeeSlpTrg+hWhM+kXwLPd/CEpalwMvdIL2qnDJmmtAcgg5e6fajMvgE2LukkZVAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749542527; c=relaxed/simple;
-	bh=xiwdfocDnhNk8+jp+dddzKGmdistBsJXvyXJKP03pFg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=e8klHj1NrAEi6rGrhTWTBkZKzTj+xZpAKAvnLAqWCaaqk7oC8r88AaBj0HLFnstYjV+g8iJKBgEEqtHEdLw+W8RLgMUl1/cJyxKQjHJ68bwOeAMOwzD85jFOPGeh5Chvzb0SUPG0o3TeONNR73JONbimYTufrDDlkd1taSioE+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b3PXOUiD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b3PXOUiD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E0C3C4CEEF;
-	Tue, 10 Jun 2025 08:02:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749542526;
-	bh=xiwdfocDnhNk8+jp+dddzKGmdistBsJXvyXJKP03pFg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=b3PXOUiD+h2CQXqRgSTB74zUpSn2jOGTJRyvtQufig8mDwNco+gXL1B18x7rHaRTN
-	 7a8TOPZs8VQZp3hpzBZmwPcIOfT0Jl9KbRqVXp2wvy+ePN0ldxAx3/biS4f5vLGJlb
-	 4Ipqh4gRVXVBQ49b4nAqpyIL4Rb5nxSGODZG0P47c8w4i8dx1JbTO9qaiNI4Dg2DPX
-	 Ozbpzboj6ZxdFnf5PpV77nufEUBKVhCnKyIjWNnlMOzvoqReYUfWuhYGYKS3kJUeED
-	 nEh5bWHABVTJPj0WqlEDJuc1FjZPkXBskI15yymF/dueQkjjo6HQHZE7EYVyo04uqp
-	 3AHQwlqNM3s0w==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>
-Cc: <alex.gaynor@gmail.com>,  <ojeda@kernel.org>,  <aliceryhl@google.com>,
-  <anna-maria@linutronix.de>,  <bjorn3_gh@protonmail.com>,
-  <boqun.feng@gmail.com>,  <dakr@kernel.org>,  <frederic@kernel.org>,
-  <gary@garyguo.net>,  <jstultz@google.com>,
-  <linux-kernel@vger.kernel.org>,  <lossin@kernel.org>,
-  <lyude@redhat.com>,  <rust-for-linux@vger.kernel.org>,
-  <sboyd@kernel.org>,  <tglx@linutronix.de>,  <tmgross@umich.edu>
-Subject: Re: [PATCH v3 3/3] rust: time: Add ktime_get() to ClockSource trait
-In-Reply-To: <20250609010415.3302835-4-fujita.tomonori@gmail.com> (FUJITA
-	Tomonori's message of "Mon, 09 Jun 2025 10:04:13 +0900")
-References: <20250609010415.3302835-1-fujita.tomonori@gmail.com>
-	<-OrPPXscT_4STsX2CDg5ki77Lz68HLwGbucr-EZuMsTXhLnEdyuDfskI5daZYIwNuMJN_CBXX-gW_RLrw_H-aA==@protonmail.internalid>
-	<20250609010415.3302835-4-fujita.tomonori@gmail.com>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Tue, 10 Jun 2025 10:01:57 +0200
-Message-ID: <874iwo3tze.fsf@kernel.org>
+	s=arc-20240116; t=1749542558; c=relaxed/simple;
+	bh=LVepFmuGXDN992D6LP/vclUeGcHQTg9ntUJwv/nErzY=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Vd7WpOefJxMyR0jix9CnR/K+PtXcqYsJ+0bnK29cw0vE/mQnZcfKo4OUrKZyLS7QuKTGHsZ1vPR8Ow7JOschEjqAsO764mCgwL7ydttJrOjQYsXxQMcH89hLCytK8WW0FQFduw0zgp8T/Ju7Y0lGsp/oTJj4IRMdkYHgIDkWCYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ddbb34fc1cso60877225ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 01:02:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749542556; x=1750147356;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Xj4vPv26zWkt7bkqTDYqd3v62tzLpe/KtfS3M8qESeI=;
+        b=Vc2qmChX0htWN8WBak88K7SYuxxsFTKYqnSkyJKmnS4Jdn4P1ErcfzdZD6TJnPVP0f
+         7VbyZMhNuUlnrfoCf/amIL2b+tlO2DvxMt+KeStl90FaFLrNUQOWmjeVjm+D3s0Gq5Op
+         vddx2IHbHRTfSgzc3hm0m/sYdQa9yyC9SCPgk2R2HLVwYsY9Jby4uGPODev1Fwl3Kkek
+         BkL7c5TLBOoVkjOXV+xuGARil5bGE7iru/PuhPB37LCJmu194u6JiDGcNkcu9yJHgc5C
+         lydsH0ZtBQQIspZPP7MfnE/vbP5ySqzjEHPbnuy0f+xhTqriGDzv3GWGwT6nxzd0adEL
+         lWWw==
+X-Forwarded-Encrypted: i=1; AJvYcCWhRZMZTB7C8KAPnqxG1f1qHSsXZlA75wObMFckjk/6oAhnfRnnyaX12AD7AcLYCLznekcSkfI8F08ykfA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMWTMogrDvkTEKlskdjJnxqputE8uRcfui3Bl89HQiHoFjJLO4
+	plv/N+pI4sYXKHrw/LeVacqefo3p+YaCjZQ4KYOk6fdkqfuO5+c5yV53yFfZgKH4H5ZNvhou8EJ
+	j9M+zQ5IL6dsU2YernpZ5za9KCLXuKVXhEA3nfdgUk5i6mRUM6hHsHw7tqYE=
+X-Google-Smtp-Source: AGHT+IFPMDQqinEcAbhz/4hz3Vv8ZYqqoKZwFKb0qmCPXZC4SCu39RyWQe81dTOL8FjFx7GvtHfHoeVqDsmS84zYwXC8uFk9RGkd
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Received: by 2002:a05:6e02:1fc4:b0:3dd:b556:18c5 with SMTP id
+ e9e14a558f8ab-3ddede0282dmr16105525ab.21.1749542555716; Tue, 10 Jun 2025
+ 01:02:35 -0700 (PDT)
+Date: Tue, 10 Jun 2025 01:02:35 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6847e69b.a70a0220.27c366.005e.GAE@google.com>
+Subject: [syzbot] [netfilter?] WARNING: refcount bug in nf_nat_masq_schedule
+From: syzbot <syzbot+e178f373ec62758ea18b@syzkaller.appspotmail.com>
+To: coreteam@netfilter.org, davem@davemloft.net, edumazet@google.com, 
+	horms@kernel.org, kadlec@netfilter.org, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	netfilter-devel@vger.kernel.org, pabeni@redhat.com, pablo@netfilter.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-"FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
+Hello,
 
-> Introduce the ktime_get() associated function to the ClockSource
-> trait, allowing each clock source to specify how it retrieves the
-> current time. This enables Instant::now() to be implemented
-> generically using the type-level ClockSource abstraction.
->
-> This change enhances the type safety and extensibility of timekeeping
-> by statically associating time retrieval mechanisms with their
-> respective clock types. It also reduces the reliance on hardcoded
-> clock logic within Instant.
->
-> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
-> ---
->  rust/helpers/helpers.c |  1 +
->  rust/helpers/time.c    | 18 ++++++++++++++++++
->  rust/kernel/time.rs    | 32 ++++++++++++++++++++++++++++----
->  3 files changed, 47 insertions(+), 4 deletions(-)
->  create mode 100644 rust/helpers/time.c
->
-> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-> index 0f1b5d115985..0613a849e05c 100644
-> --- a/rust/helpers/helpers.c
-> +++ b/rust/helpers/helpers.c
-> @@ -39,6 +39,7 @@
->  #include "spinlock.c"
->  #include "sync.c"
->  #include "task.c"
-> +#include "time.c"
->  #include "uaccess.c"
->  #include "vmalloc.c"
->  #include "wait.c"
-> diff --git a/rust/helpers/time.c b/rust/helpers/time.c
-> new file mode 100644
-> index 000000000000..9c296e93a560
-> --- /dev/null
-> +++ b/rust/helpers/time.c
-> @@ -0,0 +1,18 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/timekeeping.h>
-> +
-> +ktime_t rust_helper_ktime_get_real(void)
-> +{
-> +	return ktime_get_with_offset(TK_OFFS_REAL);
-> +}
-> +
-> +ktime_t rust_helper_ktime_get_boottime(void)
-> +{
-> +	return ktime_get_with_offset(TK_OFFS_BOOT);
-> +}
-> +
-> +ktime_t rust_helper_ktime_get_clocktai(void)
-> +{
-> +	return ktime_get_with_offset(TK_OFFS_TAI);
-> +}
+syzbot found the following issue on:
 
-This just caught my eye. I think policy is to make helpers as much 1:1 as
-possible. We should not inject arguments here. Instead, we should have
-just one function that passes the argument along.
+HEAD commit:    c89756bcf406 Merge tag 'pm-6.16-rc1' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13abfdf4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d2e9181801c1d2a6
+dashboard link: https://syzkaller.appspot.com/bug?extid=e178f373ec62758ea18b
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-c89756bc.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/e43d06e5b003/vmlinux-c89756bc.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/ae5bc446518d/bzImage-c89756bc.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+e178f373ec62758ea18b@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+refcount_t: saturated; leaking memory.
+WARNING: CPU: 0 PID: 1150 at lib/refcount.c:19 refcount_warn_saturate+0x10d/0x210 lib/refcount.c:19
+Modules linked in:
+CPU: 0 UID: 0 PID: 1150 Comm: kworker/u32:8 Not tainted 6.15.0-syzkaller-03478-gc89756bcf406 #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: netns cleanup_net
+RIP: 0010:refcount_warn_saturate+0x10d/0x210 lib/refcount.c:19
+Code: cb 97 0b 31 ff 89 de e8 21 75 e4 fc 84 db 75 a3 e8 38 7a e4 fc c6 05 c5 cb 97 0b 01 90 48 c7 c7 e0 bc f4 8b e8 34 b3 a3 fc 90 <0f> 0b 90 90 eb 83 e8 18 7a e4 fc 0f b6 1d a2 cb 97 0b 31 ff 89 de
+RSP: 0018:ffffc9000667f4f8 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff817aa8e8
+RDX: ffff888029688000 RSI: ffffffff817aa8f5 RDI: 0000000000000001
+RBP: ffff888024f5016c R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000001 R12: ffff888024f5016c
+R13: ffff888024f50000 R14: 1ffff92000ccfea6 R15: ffffc9000667f5f0
+FS:  0000000000000000(0000) GS:ffff8880d69a1000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000110c2a109a CR3: 00000000481e5000 CR4: 0000000000352ef0
+DR0: 000000000000006d DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __refcount_add_not_zero include/linux/refcount.h:187 [inline]
+ __refcount_inc_not_zero include/linux/refcount.h:317 [inline]
+ refcount_inc_not_zero include/linux/refcount.h:335 [inline]
+ maybe_get_net include/net/net_namespace.h:279 [inline]
+ nf_nat_masq_schedule.part.0+0x4ef/0x5f0 net/netfilter/nf_nat_masquerade.c:111
+ nf_nat_masq_schedule net/netfilter/nf_nat_masquerade.c:108 [inline]
+ masq_inet6_event+0x205/0x250 net/netfilter/nf_nat_masquerade.c:295
+ notifier_call_chain+0xbc/0x410 kernel/notifier.c:85
+ atomic_notifier_call_chain+0x71/0x1c0 kernel/notifier.c:223
+ addrconf_ifdown.isra.0+0xe98/0x1a90 net/ipv6/addrconf.c:3982
+ addrconf_notify+0x220/0x19e0 net/ipv6/addrconf.c:3780
+ notifier_call_chain+0xbc/0x410 kernel/notifier.c:85
+ call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:2176
+ call_netdevice_notifiers_extack net/core/dev.c:2214 [inline]
+ call_netdevice_notifiers net/core/dev.c:2228 [inline]
+ dev_close_many+0x319/0x630 net/core/dev.c:1731
+ unregister_netdevice_many_notify+0x578/0x26f0 net/core/dev.c:11942
+ cleanup_net+0x596/0xb30 net/core/net_namespace.c:649
+ process_one_work+0x9cf/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c5/0x780 kernel/kthread.c:464
+ ret_from_fork+0x5d4/0x6f0 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
 
 
-Best regards,
-Andreas Hindborg
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
