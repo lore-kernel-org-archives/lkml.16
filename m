@@ -1,88 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494762620C1;
-	Tue, 10 Jun 2025 11:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F873228CBC;
+	Tue, 10 Jun 2025 11:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749554791; cv=none; b=X/UZZgMKfcOb6x2sUmf+1koUtGtrI8xpcbRsmA2fYSSE9IrWhpfud6qD1DTvwO4jA8Zoj/cXUBXc1C+1mVM3yVPebgZgcsHkKlm2pO/4b6WrEX/83dQUiY+4vL12XYJhtP4etTnD//OiU7ef1nLVdeoUjINBAzWMUV3b59MinVk=
+	t=1749554828; cv=none; b=EGaB0vKB0UmVCS0PEN7CYAkTLn8/Cvm2QhoSwOL2aqfVZh4Lr5sWHwAWP8US5ZaHvZUAFWZUuA+AK4LI+KTlYevz+pGXQOu5tefXjQL4NjbzN9WddeAzDaRmFA6fmQ6bwwIYxUxktltqHkoAeHpDSsTShUVAsmtuCGp3UxxAjMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749554791; c=relaxed/simple;
-	bh=1UaJKy00uTnH0vfVFPPYpWj5YFV75jKiG3h/gNhHPPc=;
-	h=From:To:Cc:Subject:In-Reply-To:Message-ID:References:Date:
-	 MIME-Version:Content-Type; b=DcOcS3gvlUHcX9jBlXVCnblTUu8apCnzy4YxnwMHc/FzDpivaVKtCG7E9BVcLVI+W4tNG06PKwCSJb2PpWMc6O7uwPr+4+SdYDlDjhxbJHj3hkZVlUfXUporuQ7RsHFmWDgrVqQK0GfqXH/vd0TVuAKCMUmIa9OAetOu4IC/Od4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tKuyHpFi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749554828; c=relaxed/simple;
+	bh=TL6JbSJqsHs7gNgHzQU9wqaEfdVLuclimzl3c35Zfp0=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=lAU6MHATFa85qb+Shy3RKadHSp1bFt6AF7ELoSE3vd4ZYP2lPdlszmK3bGdo5PQklbQpas6dyHk264xOLugYH7EgzKfNygsmcJV6OCfAl1N2KfGBUhmUSFuIW3X6y+euijCT1p/n9R7nhhv/Rmnr8fmQ64OU2Jqdv3xGkZj7Cq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=zrTiJGlO; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Chk2bphT; arc=none smtp.client-ip=202.12.124.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tKuyHpFi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E5ADC4CEED;
-	Tue, 10 Jun 2025 11:26:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749554791;
-	bh=1UaJKy00uTnH0vfVFPPYpWj5YFV75jKiG3h/gNhHPPc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=tKuyHpFimq7Tq8OiE0bJ0CTAcbkXgEYKg4ggQNligSj9Egg6F6jCstXT+BdQ7JHW6
-	 BZDA69+DT2rvtQoWTlz4xNXANpWy9/Yug0DkW9XZtX/KQdtxB7Ikm9IhxBVQFE06x9
-	 fIDWf/dakfn2FXxsJAZk9SYcEAfj4zeJY577HmqXx7nHz0V9zra+pGPgm9a/3PhjRy
-	 1f3Vunxyhnp/8qO8yOz41exJsCEy4HrZfDpckwMQbeDaAAlZg8XoinXlgJo9mjKJLX
-	 hJky92eV2KH9JLcM1dRBvyM1BVW1fFCRSCVb3CLXrxLCLV3J/2p+RjUuaSmt3Ux9GJ
-	 b17yZrxWHIJSg==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>
-Cc: <alex.gaynor@gmail.com>,  <ojeda@kernel.org>,  <aliceryhl@google.com>,
-  <anna-maria@linutronix.de>,  <bjorn3_gh@protonmail.com>,
-  <boqun.feng@gmail.com>,  <dakr@kernel.org>,  <frederic@kernel.org>,
-  <gary@garyguo.net>,  <jstultz@google.com>,
-  <linux-kernel@vger.kernel.org>,  <lossin@kernel.org>,
-  <lyude@redhat.com>,  <rust-for-linux@vger.kernel.org>,
-  <sboyd@kernel.org>,  <tglx@linutronix.de>,  <tmgross@umich.edu>
-Subject: Re: [PATCH v2 1/5] rust: time: Rename Delta's methods from as_* to
- into_*
-In-Reply-To: <20250609102418.3345792-2-fujita.tomonori@gmail.com> (FUJITA
-	Tomonori's message of "Mon, 09 Jun 2025 19:24:14 +0900")
-Message-ID: <87zfef27to.fsf@kernel.org>
-References: <20250609102418.3345792-1-fujita.tomonori@gmail.com>
-	<wW2ulKgZ93y6nAY0hWxPjtxmCytCkNDF68V0jk2_ZXEYyu5TELZWfbw9OTt-Ea94d_XpvQjBcixeskA2ZuhG-A==@protonmail.internalid>
-	<20250609102418.3345792-2-fujita.tomonori@gmail.com>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Tue, 10 Jun 2025 13:24:48 +0200
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="zrTiJGlO";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Chk2bphT"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 7D5042540103;
+	Tue, 10 Jun 2025 07:27:05 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Tue, 10 Jun 2025 07:27:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1749554825;
+	 x=1749641225; bh=yuDbo2GW1JzHKoT1DngI1u1qLCDPh52Z9n938BLR8Hs=; b=
+	zrTiJGlO2ci1+axaxZsPc6PQHD6SYH//C+2Tv6G0ywd44/0TdMrweZwcZpWJitur
+	Qjes3FI9doHEhtyYBwIwPUviaQqab5d/DSTbfRoiuUfe6/ptf+Wa/G7OFpMYCQO8
+	90qmHDUFbEe+ojrSJFZ7VLLuZdASCiD0ZGuKdqcJEU4o28iKgiNQzQkJjQMvcVvF
+	qbf4vimYA7zuEimcCNqp7GDHC6NqW5RPBMp/4ZKXPDOnPHvIoxHeAZ/5Kr1O/FA9
+	PEtYAhD6VU5kUbHxhYNNUTVT4+RgpYdPgKgQtluQZXl3OpEEMeV/48N572b/4NOp
+	Pm4f7vHDqxVdBpz0b/a6VQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749554825; x=
+	1749641225; bh=yuDbo2GW1JzHKoT1DngI1u1qLCDPh52Z9n938BLR8Hs=; b=C
+	hk2bphTu8ab2tZ58nmZfBQFDPJIhl2sFEYbmP29EiqVXRuB8lN5n4zxlFYKNhlmn
+	Yd1RBo7ojwAnVkNTKL2LExaxFQeIHn8SgG0Xqest6WYvtX7L8gV/zkjDNhIXvBQC
+	JtEhPOWb4WUyl0/rx5+ihImFl2f/p7ramCQYWQvD7I94S8UDciHYhbXxIPRanKOk
+	WxJvZm2SQHKLWEAa8Aze1aCXktWqIihpGsqi8vbM4TstNaEru43dzB/Vpxx8i1DG
+	3SKqQnezCSWl8it+3BsntNr1rRPeCLaC2Q42gC8+zMYIGYx0v64cKQMmTyK3Wo7r
+	e2bjJp3Y0VSLThydZJz2A==
+X-ME-Sender: <xms:iBZIaJMMINykXGFrF7dbfsE92sE7A9algJW8pV1S6xq0q7Wxpg5QhA>
+    <xme:iBZIaL-Ia97AHVOGJvKIYkr2yFDuLqajMQLupbCmVtyz6Hm3H4TRq2WLvZhm5uNaB
+    qkCjkdCbd3wgntyONQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddutdeijecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
+    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeel
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehrihihrghnughhihhmrghnudegse
+    hgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnugihsehkvghrnhgvlhdrohhrghdprhgt
+    phhtthhopegrrhhnugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhse
+    hlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepughrihdquggvvhgv
+    lheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopehlihhnuh
+    igqdhsthgrghhinhhgsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohepthii
+    ihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopehlihhnuhigqdhfsgguvg
+    hvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhn
+    vghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:iRZIaIQrGfpPzIu76UcAcu7BdyFSd2LhEjxJJ5TZFLkuBs2jW283wQ>
+    <xmx:iRZIaFuLY_Q52LZFl8G703CuiH8dMr0WXsK5N4Gl1rh9y2cXMSPj4A>
+    <xmx:iRZIaBfcvRtZvgg3dAZHK2MpCQF0wg0As6zYEpSyqyqAOKTwfHAgqA>
+    <xmx:iRZIaB38rbuiwMRMP411ha8C5PurhFFJbXnW9bjb1fGD6BNlcNo10g>
+    <xmx:iRZIaCLwED6Q6-yoN7h0d8YP6-cJC6M3qCrDJ1RkEaQ7c7AZb6ree3dI>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id D99F7700061; Tue, 10 Jun 2025 07:27:04 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-ThreadId: T6da4eef3dd4d532c
+Date: Tue, 10 Jun 2025 13:26:43 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Arnd Bergmann" <arnd@kernel.org>, "Andy Shevchenko" <andy@kernel.org>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Cc: "Riyan Dhiman" <riyandhiman14@gmail.com>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org,
+ linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Message-Id: <39920a53-0458-484c-bb6d-9d4bfaa38472@app.fastmail.com>
+In-Reply-To: <20250610112357.3306246-1-arnd@kernel.org>
+References: <20250610112357.3306246-1-arnd@kernel.org>
+Subject: Re: [PATCH] [v2] staging: fbtft: reduce stack usage
 Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-"FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
+On Tue, Jun 10, 2025, at 13:23, Arnd Bergmann wrote:
 
-> Rename Delta's methods that take self from as_* to into_* to align
-> with Rust naming conventions.
->
-> Using `self` is more common Rust practice for small values that can be
-> freely copied [1].
->
-> Clippy warns against using as_* names for trait methods that take self
-> as follows:
->
-> warning: methods called as_* usually take self by reference or self by mutable reference
-> --> ~/linux/rust/kernel/time/hrtimer.rs:421:17
-> |
-> 421 |     fn as_nanos(self) -> i64;
->
-> Rename the `Delta` struct's methods from as_nanos(), as_micros_ceil(),
-> and as_millis() to into_nanos(), into_micros_ceil(), and
-> into_millis(), respectively to maintain consistency with the other
-> function names.
->
-> Link: https://lore.kernel.org/lkml/aD1fgizC4FPT07vt@google.com/ [1]
-> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+>  {
+>  	struct device *dev = par->info->device;
+> -	int buf[64], count, index, i, j, ret;
+> +	u32 buf[64], count, index, i, j, ret;
+>  	u32 *values;
+>  	u32 val;
+> 
 
+I was too quick to update this one, please ignore v2 and
+wait for v3 after I've tested it some more with the (hopefully)
+correct version:
 
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+@@ -842,7 +864,8 @@ EXPORT_SYMBOL(fbtft_unregister_framebuffer);
+ static int fbtft_init_display_from_property(struct fbtft_par *par)
+ {
+        struct device *dev = par->info->device;
+-       int buf[64], count, index, i, j, ret;
++       int count, index, i, j, ret;
++       u32 buf[64];
+        u32 *values;
+        u32 val;
 
 
-Best regards,
-Andreas Hindborg
-
-
-
+     Arnd
