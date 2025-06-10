@@ -1,142 +1,142 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73AD2248873;
-	Tue, 10 Jun 2025 15:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C84324887A;
+	Tue, 10 Jun 2025 15:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749568722; cv=none; b=bzKpo3UuDPRFdzlsfiEECbt9ZujFWIAijEh1H3frhjRCBq2J3sRZ+/qOiVl9dGydp95wDpiHSxkeQpGSVA369M2gmcXJfr3M+JY3WPEeW7J5WAx6ENKbmvCWB/x1cJu2zOqO2xee6CDOuISRQ2qKMaITKe0+JCvGVi1VOoaeRYc=
+	t=1749568723; cv=none; b=FaP0ux71tEjCP698tfR9fslxWseZCFMLsX6rM7b+g1Ft8zDy0HlwZ3FXtG2FH9DUNQgE8hhEdVWrJvz1GaQjCV/UeBcXG6sBIyRmrKh7Y3jEqKhmYutgp9l6CStIjKHLxuX6cpwYS9TjYE1GqNnD//sklcSaIJjjPwMfsggTYXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749568722; c=relaxed/simple;
-	bh=9MWyVnOGtCTb6f3l99b+ZT3EK3ZbCVffW6Ctmx3iUqo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IYr/krA9UpF8/RMj9uSS+AAmTGbHQClGYwO5mLTRAzeNp3XyvipVivLaYu+QrMuy3ChRqcuAMtsPFxhYJRkwBCCwN3YKpa0te/inkdamKCYFW/BMqIMJEuRZQOtzS/ks/NS6nEEMG6YqNSbBHhnkRNvQXBlJIj3eh6egoG5MqkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+	s=arc-20240116; t=1749568723; c=relaxed/simple;
+	bh=gOnIpi7jKT6E0yFvnngAH2TDUzwDY8Q0gWw1+BeaW+c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C3JNBkcZSMacdusBHamfZjGyRvQDFUF8Rgt1z3Bbxdi8rvIpLZ2OpH52hcOeS2h+qI49B/6mLgCHuuMV9WyKvZSpSbaomYKZdlUMHjo33NJJZbhZt4WogQKva4DhnMb/XecFFW9LPc+wCl02T1oObqhzKTsZZDlZ//C6nAVLK4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GRlSM1rU; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-606fdbd20afso11005910a12.1;
-        Tue, 10 Jun 2025 08:18:40 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GRlSM1rU"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-313a188174fso677605a91.1;
+        Tue, 10 Jun 2025 08:18:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749568720; x=1750173520; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Hbx+bHktyO4/4VPvenmlBdgvye7zZKBy6tNsedw1riY=;
+        b=GRlSM1rU3T53yAj33gXUbvE+HTYNND41ip1lf5mieUylJLXzuAnMcfDErS4szgS4gf
+         QxRKt/av8bGxn0Qv14Mq2bQwB2OQ6aPWswa2dgsTQ+cnPGhGS8mPB0SSWV/yQHC/ibnR
+         n+UJMSN9TV5tqoJPCiNgi5tzm9S254lJwMhP8Ub/CBxu2zY4uYewlZ267JDqoP4xL673
+         1GQw2ACxXlxUhyQrL5OdVyt5fE+1cd137KgREZX3PeMpFOLfhOYjvLxceRBS+Y80UdyC
+         xg3iyqjMDsT8eze/vsxJ6kML9ZjWpt7F8p8sb80xEujVnx2KMJL2inodANT4BBvZSA4e
+         XzfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749568718; x=1750173518;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KBPQhHa8Mre4rsIn6yFSq4q69O1rqX0rwLacF4V2/d0=;
-        b=o4fQohhoxi81zBO7I2YwJ2/CTdn4/zGPWs9x9abIzYD0XhDBjVoEnHgcxB1cRWJv8U
-         uoNIDhbDVUxyS45FUVXUOqY+YRcEwqNRnAa5xKfxwrJC6GL4ZiH2ic5ckJyWl4LhEFsE
-         jtOsUcZLO96kDTHNLYFM0It3Bl3QHsuqz2SCszmeswuHy1D8qAJQ8ZheRg+4MSs4LmR3
-         xlH/awmhqReuR0jyE7C0IPdnYKllryUKcqim5AQ5NTFwoJpfjop7AhdtSGA1Q+qD4QQl
-         4lzzxWt6Jze+Z6iylBaxbw4sStBb9IInFsdN8vtPP8HQj3NmrMPZs2DAI9F+ffSoG3wY
-         H6wg==
-X-Forwarded-Encrypted: i=1; AJvYcCVEXc7nnzWyXydrYq/PN0cbX9NpNyziacMI3XlQomW5Wa6LAMeyUhNzMTc+XQzsUSdElwquFKfR9olfrkg7FLRG@vger.kernel.org, AJvYcCXCp1aQOXQ4qdie4dmScPi7uDv6d4saQa4xpAEto32Y60dvL0uUswTQaNbC73xe3MvsW7oAMmQExSw3tsg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFr41Oon4qKLgmJEFOF8J5vZCOKuT08GyAB0+uXIao5WY1DIpV
-	vjiJ8G8VaygetbbcMHKn2jUXdcgsYYBrP9UPMIczqmuyfn565M9KkUWtnXB37w==
-X-Gm-Gg: ASbGnctKQ0mZQ2/0gxmAeBDJZhcRTs15izER2tsGTziexoqhxx5BpPq9xFLLL0DVTD7
-	vW+wHWmYQMJybwciLxdyT6744NIcvaTwKYQUsEdIUpGDJ15oO78FB9VVaRsCW71Mdr4kb7HM0AT
-	6hBP3529/k7PD3k/WQH3xZhBRb6JzQn9zKJA6TWBGq7rej1LLW7eUqBnqDopttN81Y/1meNKAwr
-	/3ZIIvcLOJ2osiS7l8s9BXupRSRLIJxtl2P47xrICXjky/G9kWp3VRwLVqU4SCaA+Imqmf/6dPr
-	7MFMZYiHUlmicEhn+ltOTc6VQXGvxs+81MfuiKs+GJ/eCoUOrDwo12T4LOhBYZo=
-X-Google-Smtp-Source: AGHT+IFi7m7IPJloJyOQs2CLtH3z718IwouGyQ1nOAQKQdL2sR29+mTuDOLtp+cEiVwjfgC4aIc2sQ==
-X-Received: by 2002:a17:907:9483:b0:ad8:8689:2cc9 with SMTP id a640c23a62f3a-ade1ab325f3mr1861228366b.56.1749568706707;
-        Tue, 10 Jun 2025 08:18:26 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:2::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1d755281sm748188666b.18.2025.06.10.08.18.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 08:18:26 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Tue, 10 Jun 2025 08:18:14 -0700
-Subject: [PATCH net-next 2/7] netpoll: expose netpoll logging macros in
- public header
+        d=1e100.net; s=20230601; t=1749568720; x=1750173520;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hbx+bHktyO4/4VPvenmlBdgvye7zZKBy6tNsedw1riY=;
+        b=pIx7BCtnG8WGtJ5jUo84qWj/uCdGE3r6KmKcqt7AGxaaKgMx+Yp4cqhWlQu09rlZBs
+         6TvtU1nYrjH+XqOxOSFQpWwAMjCCKJlGvzBbYxeYx6D/cGRye/HODpBA9Qat5aw2BBc0
+         Ael2jsK7q2r4ujN9MGs5c5+aD8MMmDEHREFW6EGkFsha/L9HB24Szt5mR8jHzvUbDUyf
+         8pO4DdHqUzaHppg8xxgbar7qu8Exwk9ryU5rA20S757ZufOx4vyiiXmNvNF+tRq3mSdr
+         zKM59LTBM8CD6kkU/eqhgBYrb3hz7RUH4s5UZsyE5m0Q4bnch4ZCtJW9L1qgzl9ViRck
+         ju1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUrc7qQiQbnTplaGwXj+qClCX/TKSAPgeVavoRInAlM7LVkmmTF3hFhPRAzYYOPksjFgSY=@vger.kernel.org, AJvYcCVgagnqlbefL1di3C5AXsvYw/XiL6RE5ytKP1HSXmBk1wIKAcIeQVxt18/xqGpCdYjcRkcIOYGC@vger.kernel.org, AJvYcCXWK/uNDQFF1mwPLVjzk9IZ/C9ByE1mgCGyDwDSbDdw8ce1eonxEP2SRIYhqgFkrRZPfy+b20Vx0f+jtnwV@vger.kernel.org, AJvYcCXX3BnByirBk65o1uNxQMQASCGiQiPmJ68Oqh8ZstSK0Giz1jjIKqvesqJWP55utIPkuwclAsc/@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxf1v42WAYGtUJ7wKLGdEw1rOtgONGgrkQMOvOUN7GGXBfmrwZk
+	utXx48lRi6jdPjyvhdpbagzcz4US9At8JeK9QeOMb8bo63tFR5VR1rQE
+X-Gm-Gg: ASbGncsCREQzADC60kIiCWmqPBdHecW2iqeLG5PD37hNwzuhHpT8iLYkCYd/kwg0i1K
+	q2/mfN8/40iEc4fxNRUWtznGV4XRf6w0EJH4HWA3QY4CUXuXE99Zc725TR96Oo45MN6ReUqKFHA
+	nJOaJmkMZnnICP0gdo6vsaJaSVCZ5erc54oIXx5c8z3GJ7/5fQI9Quqs1uy/j307pUAJHPW6jWR
+	c9zeKT5RMugEM/rd+rvyYqQPa2I+F32UX11ZJcaSDMbIObvd+VDaVXzezFdtFhmt2s9Q8UbWT+p
+	4T1oU4ev6CoggXIMJ7aQi4SY79PF/k73qNWIE9o7wOPiVA9xp+CW1ZuYa7RKkh/BLH9AXW9NKwf
+	a+36c1c9LeeffMlUy75XuO5prcPEkylr4wRdh6HXF
+X-Google-Smtp-Source: AGHT+IFaLkJBXLMB5kRAXzQ6BTbGig21zU55qmOvpJ9RWPtjwP3TLdPuITWrEAgEHQ56jpCpm82CNQ==
+X-Received: by 2002:a17:90a:dfd0:b0:30e:9b31:9495 with SMTP id 98e67ed59e1d1-3139e039a1dmr4917189a91.9.1749568720457;
+        Tue, 10 Jun 2025 08:18:40 -0700 (PDT)
+Received: from ?IPV6:2001:ee0:4f0e:fb30:6df1:5935:37b2:fe6a? ([2001:ee0:4f0e:fb30:6df1:5935:37b2:fe6a])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31349f17bd2sm7467484a91.5.2025.06.10.08.18.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 08:18:40 -0700 (PDT)
+Message-ID: <e2de0cd8-6ee2-4dab-9d41-cfe5e85d796d@gmail.com>
+Date: Tue, 10 Jun 2025 22:18:32 +0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] virtio-net: drop the multi-buffer XDP packet in
+ zerocopy
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org, stable@vger.kernel.org
+References: <20250603150613.83802-1-minhquangbui99@gmail.com>
+ <dd087fdf-5d6c-4015-bed3-29760002f859@redhat.com>
+ <f6d7610b-abfe-415d-adf8-08ce791e4e72@gmail.com>
+ <20250605074810.2b3b2637@kernel.org>
+ <f073b150-b2e9-43db-aa61-87eee4755a2f@gmail.com>
+ <20250609095824.414cffa1@kernel.org>
+Content-Language: en-US
+From: Bui Quang Minh <minhquangbui99@gmail.com>
+In-Reply-To: <20250609095824.414cffa1@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250610-rework-v1-2-7cfde283f246@debian.org>
-References: <20250610-rework-v1-0-7cfde283f246@debian.org>
-In-Reply-To: <20250610-rework-v1-0-7cfde283f246@debian.org>
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, Breno Leitao <leitao@debian.org>, 
- kernel-team@meta.com
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1901; i=leitao@debian.org;
- h=from:subject:message-id; bh=9MWyVnOGtCTb6f3l99b+ZT3EK3ZbCVffW6Ctmx3iUqo=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBoSEy+qpFULA29lNETIGCTd3h76nekk19u06qRZ
- p69G+PbiFmJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaEhMvgAKCRA1o5Of/Hh3
- balGEACgWZ7XicJeIucyZxRxslAdwKCNmnMKL8WHVsa29IBDIMNUsvjVYHEyZZHwqy2nqSTVj+Y
- fpdH2/XD9KCmHW2FoZzCTxzAghZUg0eMFbIvAp6NxMu6e6SYVfUi5G2pT5SuSvKpjwyPgzj9oRW
- CbPVOY5G24wd1gjAJXqTpJT1aOj8nnrE7jOeWFuGbJvbkiYJmaRqsoPCwNTWSQv8UvjAzQiIigQ
- AjzD1KEdfDAh5wm9q7LeFUP/Il9N1NL44HL4xhVFQuvWx+R/Na7SsDTsTddd4Y3eF97CTrmwvEo
- 5tYIvG2A5+Ji7DJlFmssX74bNKPKfKDmfosMsuxPl61aewnEA1ziq6+kxdWzYkhMn2SuWBU5uTj
- CRjcnwLPov3lCDQ0yvBiuO26/KtXR+lXsULrQHyg+DNfTnOqq4AM4LveqgWdBoNozoJLIoeov7W
- t0+r4SENytg+oLA4lneYvk5HGkDC87PkWAedvGfzyd78K9wR1xum6/sj3a3fGv/8SVCLDyg4bjy
- 8dJoYcRndWLy0LgLuJ0I1FPxRKgYwfvbEZ2qjVLn+YC0GNb/lVRFoDjkvIfjrJ1ogv8rxL8dTQr
- 5/SX/Todrm1UMp7k7uyf8BrCUU4S8Jr46dcsvK8XkGV4dG7uGRCnc804q9GuTGhyt2nlUtwT3i6
- lBfwOsOrjT7LIGQ==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
-Move np_info(), np_err(), and np_notice() macros from internal
-implementation to the public netpoll header file to make them
-available for use by netpoll consumers.
+On 6/9/25 23:58, Jakub Kicinski wrote:
+> On Fri, 6 Jun 2025 22:48:53 +0700 Bui Quang Minh wrote:
+>>>> But currently, if a multi-buffer packet arrives, it will not go through
+>>>> XDP program so it doesn't increase the stats but still goes to network
+>>>> stack. So I think it's not a correct behavior.
+>>> Sounds fair, but at a glance the normal XDP path seems to be trying to
+>>> linearize the frame. Can we not try to flatten the frame here?
+>>> If it's simply to long for the chunk size that's a frame length error,
+>>> right?
+>> Here we are in the zerocopy path, so the buffers for the frame to fill
+>> in are allocated from XDP socket's umem. And if the frame spans across
+>> multiple buffers then the total frame size is larger than the chunk
+>> size.
+> Is that always the case? Can the multi-buf not be due to header-data
+> split of the incoming frame? (I'm not familiar with the virtio spec)
 
-These logging macros provide consistent formatting for netpoll-related
-messages by automatically prefixing log output with the netpoll instance
-name.
+Ah, maybe I cause some confusion :) zerocopy here means zerocopy if the 
+frame is redirected to XDP socket. In this zerocopy mode, XDP socket 
+will provide buffers to virtio-net, the frame from vhost will be placed 
+in those buffers. If the bind XDP program in virtio-net returns 
+XDP_REDIRECT to that XDP socket, then the frame is zerocopy. In case 
+XDP_PASS is returned, the frame's data is copied to newly created skb 
+and the frame's buffer is returned to XDP socket. AFAIK, virtio-net has 
+not supported header-data split yet.
 
-The goal is to use the exact same format that is being displayed today,
-instead of creating something netconsole-specific.
+>> Furthermore, we are in the zerocopy so we cannot linearize by
+>> allocating a large enough buffer to cover the whole frame then copy the
+>> frame data to it. That's not zerocopy anymore. Also, XDP socket zerocopy
+>> receive has assumption that the packet it receives must from the umem
+>> pool. AFAIK, the generic XDP path is for copy mode only.
+> Generic XDP == do_xdp_generic(), here I think you mean the normal XDP
+> patch in the virtio driver? If so then no, XDP is very much not
+> expected to copy each frame before processing.
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- include/linux/netpoll.h | 7 +++++++
- net/core/netpoll.c      | 7 -------
- 2 files changed, 7 insertions(+), 7 deletions(-)
+Yes, I mean generic XDP = do_xdp_generic(). I mean that we can linearize 
+the frame if needed (like in netif_skb_check_for_xdp()) in copy mode for 
+XDP socket but not in zerocopy mode.
 
-diff --git a/include/linux/netpoll.h b/include/linux/netpoll.h
-index a637e51152544..72086b8a3decd 100644
---- a/include/linux/netpoll.h
-+++ b/include/linux/netpoll.h
-@@ -42,6 +42,13 @@ struct netpoll {
- 	struct work_struct refill_wq;
- };
- 
-+#define np_info(np, fmt, ...)				\
-+	pr_info("%s: " fmt, np->name, ##__VA_ARGS__)
-+#define np_err(np, fmt, ...)				\
-+	pr_err("%s: " fmt, np->name, ##__VA_ARGS__)
-+#define np_notice(np, fmt, ...)				\
-+	pr_notice("%s: " fmt, np->name, ##__VA_ARGS__)
-+
- struct netpoll_info {
- 	refcount_t refcnt;
- 
-diff --git a/net/core/netpoll.c b/net/core/netpoll.c
-index a69c2773841a5..9e86026225a36 100644
---- a/net/core/netpoll.c
-+++ b/net/core/netpoll.c
-@@ -58,13 +58,6 @@ static void zap_completion_queue(void);
- static unsigned int carrier_timeout = 4;
- module_param(carrier_timeout, uint, 0644);
- 
--#define np_info(np, fmt, ...)				\
--	pr_info("%s: " fmt, np->name, ##__VA_ARGS__)
--#define np_err(np, fmt, ...)				\
--	pr_err("%s: " fmt, np->name, ##__VA_ARGS__)
--#define np_notice(np, fmt, ...)				\
--	pr_notice("%s: " fmt, np->name, ##__VA_ARGS__)
--
- static netdev_tx_t netpoll_start_xmit(struct sk_buff *skb,
- 				      struct net_device *dev,
- 				      struct netdev_queue *txq)
+>
+> This is only slightly related to you patch but while we talk about
+> multi-buf - in the netdev CI the test which sends ping while XDP
+> multi-buf program is attached is really flaky :(
+> https://netdev.bots.linux.dev/contest.html?executor=vmksft-drv-hw&test=ping-py.ping-test-xdp-native-mb&ld-cases=1
 
--- 
-2.47.1
+metal-drv-hw means the NETIF is the real NIC, right?
+
+Thanks,
+Quang Minh.
 
