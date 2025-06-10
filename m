@@ -1,115 +1,105 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10171C68F
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 14:47:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFEE3126BF7
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 14:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749566825; cv=none; b=afTq6xvhgXEQwo0x9Iagt3L5eZ/fmCcDpxMuAv/rXFzPO6orCOXZV8MwKlvGCnT4aMY4FqAt/HEDL+9Zm1T/cerZfnqlpupE5w4GxDP3kFrmWQYRjcWSE1juBiSRShVSiGRtuead5KqsT8G5mll52yj9r7/TR8E+3kjSdSHqWy4=
+	t=1749566836; cv=none; b=ayfRCSAZWjEg/fqE6GIr/RpyPIfFfRVLBBzFlxG1Y1jGi1IsPZeQnf4NHt7vSq3/ldb5K3/3gJrfeZoU8QFVMaky7tZWtR5WtPhNKue7oCOSW3EUTFCdEj8FGs6tRYXPVQS0OmmKwDdSXlXpxT5JmD/PBjz6xXsaxJ/Rb23hz0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749566825; c=relaxed/simple;
-	bh=xAlLtJkXo4Y/YNF1MM435Yvj13/vO14DPdpgooURdvQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=d1OsJshXBzJdyOiQSc7EQ2oEDGo5+jQevwxe7bVmOEWnki6ct+RFrBFDdHSh4sPKxnc7Ieo71gMZwzt3rRDAlYk1F452Cwu8ao3AO/kgNc8k3Uym4EKuh01wEmCsO4gM/NuI3MrY+90LFVp5EdC6mwUCDb7Suckpq2epI+Ux4rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=owJSGvDl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jnEoz6GG; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749566836; c=relaxed/simple;
+	bh=FZPSJSobV+2clQAW57HhDQJrYIdKkViaMqsz2twW9aI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tNaZ4by19X2/edcEVkpNBNi7YtWiVs06tFiZ0uDsZMJXnX7C3vUiZdQ0tcg7YawNCshi6q5IqCfACcWNU1X6kOmZx3g8JolwjYsf45kefnqB9VPKzf8wOqdaThvX5b/O+GkFdxd4fVVZ7t6CClLyoYTMACvwBNfRJ6mQ2ldeM04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4nqarmpq; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="owJSGvDl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jnEoz6GG"
-Date: Tue, 10 Jun 2025 16:47:00 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749566821;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=pn/oudRSy/X3jpBbrIygJ68BkqGDbpW4wCm8X9XGM4U=;
-	b=owJSGvDl/f0+qrQb2WPQnf+J16JW7OoBFHOd8J0YZFJ91F0RJQE07SUwFwXYy7ZZT8HqsV
-	+QzDOa1+3ydEwD0q75ctxV+FfQfG1AG2FO1+KcY61wfzhomqNjK/l9Eza0cttNaY6lmglT
-	2lfuPk6Nm6XJy+erF9MoXcBvarVERftvyfRB4pGq+6Iy6q9F3Sfjb1lBCmJpZJlGyumelM
-	EgRH0xj7wVQ28nxH1tk5ySH9ySiJv6tjdsNaZMcwOMnPtoS6Y4AtWXb9PK5GX3B6qHEXMw
-	nk7EFxDpqDP1MHSw4hujqgh4fqazAPvZ2ViCGzFCDx255GcUYRuBPvuyBl26aQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749566821;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=pn/oudRSy/X3jpBbrIygJ68BkqGDbpW4wCm8X9XGM4U=;
-	b=jnEoz6GG4frureVGHw/dMohafxMy5+uVJmYa1m/yVfbGk01QupKE2d7qCTw1+bt1zqoc/p
-	gkUiLCzkqi6DKCAg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: linux-kernel@vger.kernel.org
-Cc: Ben Segall <bsegall@google.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleinxer <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH v2] sched: Remove a preempt-disable section in
- rt_mutex_setprio()
-Message-ID: <20250610144700.uBK6RS95@linutronix.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4nqarmpq"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4a58ba6c945so92329891cf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:47:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749566833; x=1750171633; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FZPSJSobV+2clQAW57HhDQJrYIdKkViaMqsz2twW9aI=;
+        b=4nqarmpqlfmEFcgvVlKfyJBwAvhS1jQOf0ADiF8hdvhuUXw1zuC0do2is2lxemU4C5
+         7zxtavahwOXXcUAQexwSnw0GOri3DAKvEO11KxKuSkpF6/LexULqTaJYMyfAbbo7VNVl
+         D3BJGRXhaYIi08YJ2ltxIaHGnFFXuqBbY8hxQZZfqlkoGyXaaAgotVxUR4i42Fvfj/LB
+         mW2oFKem7+tUnh53PAsLWPEgsstQom4Z8KSD90hHADRUD8DrPo5sLBjY1AEK3J5UcNB1
+         3X07sQks/Q4UdaDUktlwJC4wvWshRU1C7xV6Y3BjBguVhK4S1Uq+eTQC1B8hzAdyROTS
+         /t6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749566833; x=1750171633;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FZPSJSobV+2clQAW57HhDQJrYIdKkViaMqsz2twW9aI=;
+        b=h79oy4oNKD1oBHTsGtm528zEeqcb24cbTNMtzJZqc4aj7e5UWJiAoHKbOK31O2R1BX
+         OChA4/XhnThElITVmK9GyG0inLLRJcUfiD4QQO/hiAqISBu8f5LrUcwOrWPdCveQkTCB
+         BhNVQvonHyF1DogV5i6tstjaBM83x7EfrMncW4h3+YOQ7LB4Q2fZgK0lL+FwiUuR6Pz2
+         OnN7JNPIaV0TtVMv+bnPZJfgnLgWKVEi+3gsnHu+ICBRx0L/5pL+0U+8/9dC4OiF/dLk
+         qLsdWJnH26T7mVHa1HkXBEzsmx4Ji8drqHYaK1E3zkopnmeulrxAaIESim1Hqjzgelle
+         I7Rg==
+X-Forwarded-Encrypted: i=1; AJvYcCXYUGgeZRpCKuWmFPixfxOuErdnu4nnjl5Dow3TsaRXIrp9STDrYfcvqmPxFqXBbptET/58abQVWX9B8Nw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywhc6T4TvuZqbLJizq98lSDnjnCjwNwa0eUv/xrCS1180DEtk4m
+	ZuzUN3j8VHUUE8GT44WYW3auMTBunYkCsBZQB4wIFWShn1GB+ApZ2GeV8IWM98GSbhQ+L3hZEel
+	XfgDzgHr32dVcJYLGgRNT43tsy9o9CuH6YGcCV/71
+X-Gm-Gg: ASbGncvJvWATjMCFx7h10dMV46tbPxEnW3MxbpAqSQUZj5Kfo7JnwbhAN+DUwrt3pDP
+	scY+GkvL/AQfsASXHOCC+BABG4BMWP5ps2jMpdahBqeFsen4wMLn2aeUHS0kg4dim5jVvWNiilU
+	6sYdksHOG8KliQ/uty894Wrl2HI3qHFKgC8JDFF/83pmA=
+X-Google-Smtp-Source: AGHT+IHXh/T7TQqCEkwyyhG2DFteUT8YXPJnsgh6HCzHALaXsQIqBwNAJeluGWjNRQa7dqIuBvp0KPGecicwp689F7M=
+X-Received: by 2002:a05:622a:114d:b0:4a2:719b:1238 with SMTP id
+ d75a77b69052e-4a5b9a268f6mr308357231cf.12.1749566833287; Tue, 10 Jun 2025
+ 07:47:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <aEdIXQkxiORwc5v4@slm.duckdns.org>
+In-Reply-To: <aEdIXQkxiORwc5v4@slm.duckdns.org>
+From: Eric Dumazet <edumazet@google.com>
+Date: Tue, 10 Jun 2025 07:47:02 -0700
+X-Gm-Features: AX0GCFssQls_Gaij5ZeXP9fy9SKSORmaR_2shcb4agLN0_oDN8ItFdCW3VPHcfA
+Message-ID: <CANn89iLan0LsN2X9RA-PkaQk+6EQJiFL0eCqQ5VsCCyU2r5gFg@mail.gmail.com>
+Subject: Re: [PATCH RESEND net-next] net: tcp: tsq: Convert from tasklet to BH workqueue
+To: Tejun Heo <tj@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+	David Ahern <dsahern@kernel.org>, Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Jason Xing <kerneljasonxing@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-rt_mutex_setprio() has only one caller: rt_mutex_adjust_prio(). It
-expects that task_struct::pi_lock and rt_mutex_base::wait_lock are held.
-Both locks are raw_spinlock_t and are acquired with disabled interrupts.
+On Mon, Jun 9, 2025 at 1:47=E2=80=AFPM Tejun Heo <tj@kernel.org> wrote:
+>
+> The only generic interface to execute asynchronously in the BH context is
+> tasklet; however, it's marked deprecated and has some design flaws. To
+> replace tasklets, BH workqueue support was recently added. A BH workqueue
+> behaves similarly to regular workqueues except that the queued work items
+> are executed in the BH context.
+>
+> This patch converts TCP Small Queues implementation from tasklet to BH
+> workqueue.
+>
+> Semantically, this is an equivalent conversion and there shouldn't be any
+> user-visible behavior changes. While workqueue's queueing and execution
+> paths are a bit heavier than tasklet's, unless the work item is being que=
+ued
+> every packet, the difference hopefully shouldn't matter.
 
-Nevertheless rt_mutex_setprio() disables preemption while invoking
-__balance_callbacks() and raw_spin_rq_unlock(). Even if one of the
-balance callbacks unlocks the rq then it must not enable interrupts
-because rt_mutex_base::wait_lock is still locked.
-Therefore interrupts should remain disabled and disabling preemption is
-not needed.
+On a 100Gbit NIC and 32 TX queues, I see about 170,000 calls to
+tcp_tsq_workfn() when the link is saturated.
 
-Commit 4c9a4bc89a9cc ("sched: Allow balance callbacks for check_class_chang=
-ed()")
-adds a preempt-disable section to rt_mutex_setprio() and
-__sched_setscheduler(). In __sched_setscheduler() the preemption is
-disabled before rq is unlocked and interrupts enabled but I don't see
-why it makes a difference in rt_mutex_setprio().
+Note that a tasklet could only be raised on the local cpu.
+Switching to a work queue allows us to start the work on the cpu who
+did the last xmit, thus reducing the load on the cpu servicing the NIC
+irqs,
+a bit like RFS does on the receive path.
 
-Remove the preempt_disable() section from rt_mutex_setprio().
+I am tempted to say yes to your patch, hopefully we will not regress
+if highprio user threads are competing with this work queue.
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
-
-v1=E2=80=A6v2: https://lore.kernel.org/all/20250513142954.ZM5QSQNc@linutron=
-ix.de/
-  - Repost without RFC
-
- kernel/sched/core.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index dce50fa57471d..362d8ab888748 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7292,14 +7292,10 @@ void rt_mutex_setprio(struct task_struct *p, struct=
- task_struct *pi_task)
-=20
- 	check_class_changed(rq, p, prev_class, oldprio);
- out_unlock:
--	/* Avoid rq from going away on us: */
--	preempt_disable();
-=20
- 	rq_unpin_lock(rq, &rf);
- 	__balance_callbacks(rq);
- 	raw_spin_rq_unlock(rq);
--
--	preempt_enable();
- }
- #endif
-=20
---=20
-2.49.0
-
+Reviewed-by: Eric Dumazet <edumazet@google.com>
