@@ -1,43 +1,43 @@
 Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65BB2DCBF8
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:53:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 516562D4B71
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:53:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749560024; cv=none; b=cDeTmd3nGjObgDRbkyBoZEubOAIKLsrbPtiUf+Jaar/Zia2jbOfqftlfy0pjgaql0HZiau+DwD8M7PHUGNmnOt7rD82xWBCgRzv5lkRVsdz9D1vS29i8cYxyR9Fc48Fv112AoPP/B/9v7q43yWaJJL7opRbyRm7Lww7Kpv1yjxg=
+	t=1749560021; cv=none; b=uhiqW8+OpFPvhKyqiJUm5AxFvv3wIfbVeemMzhKDnNqDIJBExwssxt6gnmYoufPPSORg93YkjxYWJKfx14JD6dRh5eKwcM6mhtEkGL9I/IJp7aVj31ZCIsJ32zghSP+w8eNQEjyCLq3+7cqHpKcOBrN2qNzFLRklEAztKUGiUMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749560024; c=relaxed/simple;
-	bh=N+2CmuFEvaFrCFvEiZxIZGe87T5yZ+GUUMGzk60ZImg=;
+	s=arc-20240116; t=1749560021; c=relaxed/simple;
+	bh=VF5q+wBp9kye6JQLhwc0n05CcCw9LlKgrG19B7rxH5Y=;
 	h=From:Date:Subject:MIME-Version:Message-Id:In-Reply-To:To:Cc:
-	 Content-Type:References; b=kpkB+9kkDB95lIjtItsEqNrjEqlCAeW+iPRD+zPUZGyq6DAXg1QlO6Oxz28q+OtYgjldK3mT2jAXYgL8IdIq6XEKmcjkWhaSbpdwIfhbINOnnsAqhMWf6KblyLTEcJqOKm/5lm8m2iPTwd+IPwdAqkHMT+NBVizR1vnVusNWQDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=cIxLsqOl; arc=none smtp.client-ip=210.118.77.11
+	 Content-Type:References; b=uJw5LLDUI0nBtqhqqUWKuboI5D8sTt6Tz53SAtdX3F7GJfiIf+23WhBGnGrFMlQS7Mqrk5s00ZAZQjf9bd80tTSwXfliKTH0iT2Su5HvkDQdyQuTFMYajQSjISQlVxDRqQCflqZnmBbuHcvW/WeP+tqMun/irn+3MMZpzBmcOXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=O7f2QURT; arc=none smtp.client-ip=210.118.77.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cIxLsqOl"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250610125339euoutp01a142348eb0bb1207b8a59badca923ec8~Hr5F1HN_S0936409364euoutp01k
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:53:39 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250610125339euoutp01a142348eb0bb1207b8a59badca923ec8~Hr5F1HN_S0936409364euoutp01k
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="O7f2QURT"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250610125334euoutp01a8c6e733dff1d49fdbac711cf032d393~Hr5A3ZVhl1190611906euoutp01X
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:53:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250610125334euoutp01a8c6e733dff1d49fdbac711cf032d393~Hr5A3ZVhl1190611906euoutp01X
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1749560019;
-	bh=ZbpbiGCkq+bc/Hnq9ouJryKcDkGL17+XHPFX3q85en0=;
+	s=mail20170921; t=1749560014;
+	bh=XnU++sOJANJB3QM+54tjoJboUyue4aR10yImzgN9Ir0=;
 	h=From:Date:Subject:In-Reply-To:To:Cc:References:From;
-	b=cIxLsqOlqL5smjQJhKfE0p2NtQhIqk3inVujlXCUMuuhc0FiluKcwfumEnVHq86I9
-	 nCB43Po5eSGrmAcUZfDQ+dGL23bpz0ki0WtDNvwCLfm+Prhwrgp32hZxjX8OzppdED
-	 uo8TVd1UG4nKIKt+CiXYEE2M0AzZWCHeiPj4IYcY=
+	b=O7f2QURTPGaH/+zJRRJBq6EnMgQyJqep+z4jwzQnCufOvHJVCASyfYb7TLCwLAWoP
+	 XGLgGNweTFUsG6tF/qM2zGg8kRlfK8Og8Ivl0lc0Pc4zwR9x3NShbd8k6IcRcC3Uzt
+	 nAfbMmbmjrJ9co98lXBtDW+FbbatBqnjE5G49xFM=
 Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250610125338eucas1p2cc606517da2482af0a1cfdfb4b51b1c3~Hr5FQ-k451180711807eucas1p23;
-	Tue, 10 Jun 2025 12:53:38 +0000 (GMT)
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250610125333eucas1p16126b64a0f447a5e9a5ad553d9d7d79d~Hr5ALMeiU0875208752eucas1p16;
+	Tue, 10 Jun 2025 12:53:33 +0000 (GMT)
 Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
 	[106.210.136.40]) by eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250610125337eusmtip1d2797a7d750959ffd87abb5b2651733e~Hr5EFEfLP0363103631eusmtip1R;
-	Tue, 10 Jun 2025 12:53:37 +0000 (GMT)
+	20250610125332eusmtip1870d7d868d8f899ab0bd39780d123beb~Hr4_9rhV10363103631eusmtip1P;
+	Tue, 10 Jun 2025 12:53:32 +0000 (GMT)
 From: Michal Wilczynski <m.wilczynski@samsung.com>
-Date: Tue, 10 Jun 2025 14:52:54 +0200
-Subject: [PATCH v2 6/7] riscv: dts: thead: Add PVT node
+Date: Tue, 10 Jun 2025 14:52:50 +0200
+Subject: [PATCH v2 2/7] pwm: Add Rust driver for T-HEAD TH1520 SoC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250610-rust-next-pwm-working-fan-for-sending-v2-6-753e2955f110@samsung.com>
+Message-Id: <20250610-rust-next-pwm-working-fan-for-sending-v2-2-753e2955f110@samsung.com>
 In-Reply-To: <20250610-rust-next-pwm-working-fan-for-sending-v2-0-753e2955f110@samsung.com>
 To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,  Miguel Ojeda
 	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,  Boqun Feng
@@ -65,44 +65,376 @@ Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
 	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org, 
 	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
 X-Mailer: b4 0.15-dev
-X-CMS-MailID: 20250610125338eucas1p2cc606517da2482af0a1cfdfb4b51b1c3
+X-CMS-MailID: 20250610125333eucas1p16126b64a0f447a5e9a5ad553d9d7d79d
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250610125338eucas1p2cc606517da2482af0a1cfdfb4b51b1c3
+X-RootMTR: 20250610125333eucas1p16126b64a0f447a5e9a5ad553d9d7d79d
 X-EPHeader: CA
-X-CMS-RootMailID: 20250610125338eucas1p2cc606517da2482af0a1cfdfb4b51b1c3
+X-CMS-RootMailID: 20250610125333eucas1p16126b64a0f447a5e9a5ad553d9d7d79d
 References: <20250610-rust-next-pwm-working-fan-for-sending-v2-0-753e2955f110@samsung.com>
-	<CGME20250610125338eucas1p2cc606517da2482af0a1cfdfb4b51b1c3@eucas1p2.samsung.com>
+	<CGME20250610125333eucas1p16126b64a0f447a5e9a5ad553d9d7d79d@eucas1p1.samsung.com>
 
-Add PVT DT node for thermal sensor.
+Introduce a PWM driver for the T-HEAD TH1520 SoC, written in Rust and
+utilizing the safe PWM abstractions from the preceding commit.
+
+The driver implements the pwm::PwmOps trait using the modern waveform
+API (round_waveform_tohw, write_waveform, etc.) to support configuration
+of period, duty cycle, and polarity for the TH1520's PWM channels.
+
+Resource management is handled using idiomatic Rust patterns. The PWM
+chip object is allocated via pwm::Chip::new and its registration with
+the PWM core is managed by the pwm::Registration RAII guard. This
+ensures pwmchip_remove is always called when the driver unbinds,
+preventing resource leaks. Device managed resources are used for the
+MMIO region, and the clock lifecycle is correctly managed in the
+driver's private data Drop implementation.
+
+The driver's core logic is written entirely in safe Rust, with no unsafe
+blocks.
 
 Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
 ---
- arch/riscv/boot/dts/thead/th1520.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ MAINTAINERS               |   1 +
+ drivers/pwm/Kconfig       |  10 ++
+ drivers/pwm/Makefile      |   1 +
+ drivers/pwm/pwm_th1520.rs | 287 ++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 299 insertions(+)
 
-diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
-index 26996422e1efe5d2dde68819c2cec1c3fa782a23..bef30780034e06b07aa29b27b0225ea891a4b531 100644
---- a/arch/riscv/boot/dts/thead/th1520.dtsi
-+++ b/arch/riscv/boot/dts/thead/th1520.dtsi
-@@ -669,6 +669,17 @@ padctrl_aosys: pinctrl@fffff4a000 {
- 			thead,pad-group = <1>;
- 		};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5589c0d2253bcb04e78d7b89ef6ef0ed41121d77..966ce515c8bfefdff1975bb716a267435ec0feae 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -21319,6 +21319,7 @@ F:	drivers/mailbox/mailbox-th1520.c
+ F:	drivers/net/ethernet/stmicro/stmmac/dwmac-thead.c
+ F:	drivers/pinctrl/pinctrl-th1520.c
+ F:	drivers/pmdomain/thead/
++F:	drivers/pwm/pwm_th1520.rs
+ F:	drivers/reset/reset-th1520.c
+ F:	include/dt-bindings/clock/thead,th1520-clk-ap.h
+ F:	include/dt-bindings/power/thead,th1520-power.h
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 03c5a100a03e2acdccf8a46b9c70b736b630bd3a..be05658a568cb9156ef623caf54ff1aaba898d01 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -719,6 +719,16 @@ config PWM_TEGRA
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-tegra.
  
-+		pvt: pvt@fffff4e000 {
-+			compatible = "moortec,mr75203";
-+			reg = <0xff 0xfff4e000 0x0 0x80>,
-+			      <0xff 0xfff4e080 0x0 0x100>,
-+			      <0xff 0xfff4e180 0x0 0x680>,
-+			      <0xff 0xfff4e800 0x0 0x600>;
-+			reg-names = "common", "ts", "pd", "vm";
-+			clocks = <&aonsys_clk>;
-+			#thermal-sensor-cells = <1>;
-+		};
++config PWM_TH1520_RUST
++	tristate "TH1520 PWM support (Rust)"
++	depends on RUST_PWM_ABSTRACTIONS
++	help
++	  This option enables the driver for the PWM controller found on the
++	  T-HEAD TH1520 SoC. This driver is written in Rust.
 +
- 		gpio@fffff52000 {
- 			compatible = "snps,dw-apb-gpio";
- 			reg = <0xff 0xfff52000 0x0 0x1000>;
++	  To compile this driver as a module, choose M here; the module
++	  will be called pwm-th1520. If you are unsure, say N.
++
+ config PWM_TIECAP
+ 	tristate "ECAP PWM support"
+ 	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index 96160f4257fcb0e0951581af0090615c0edf5260..d41b1940df903ba2036d8e3ed93efcd66834b7ab 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -73,3 +73,4 @@ obj-$(CONFIG_PWM_TWL_LED)	+= pwm-twl-led.o
+ obj-$(CONFIG_PWM_VISCONTI)	+= pwm-visconti.o
+ obj-$(CONFIG_PWM_VT8500)	+= pwm-vt8500.o
+ obj-$(CONFIG_PWM_XILINX)	+= pwm-xilinx.o
++obj-$(CONFIG_PWM_TH1520_RUST)	+= pwm_th1520.o
+diff --git a/drivers/pwm/pwm_th1520.rs b/drivers/pwm/pwm_th1520.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..9e43474f5123b51c49035d71219303a606c20a5a
+--- /dev/null
++++ b/drivers/pwm/pwm_th1520.rs
+@@ -0,0 +1,287 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2025 Samsung Electronics Co., Ltd.
++// Author: Michal Wilczynski <m.wilczynski@samsung.com>
++
++//! Rust T-HEAD TH1520 PWM driver
++
++use core::ops::Deref;
++use kernel::{
++    c_str,
++    clk::Clk,
++    device::{Bound, Core, Device},
++    devres,
++    error::{code::*, Result},
++    io::mem::IoMem,
++    math::KernelMathExt,
++    of, platform,
++    prelude::*,
++    pwm, time,
++};
++
++const MAX_PWM_NUM: u32 = 6;
++
++// Register offsets
++const fn th1520_pwm_chn_base(n: u32) -> usize {
++    (n * 0x20) as usize
++}
++const fn th1520_pwm_ctrl(n: u32) -> usize {
++    th1520_pwm_chn_base(n)
++}
++const fn th1520_pwm_per(n: u32) -> usize {
++    th1520_pwm_chn_base(n) + 0x08
++}
++const fn th1520_pwm_fp(n: u32) -> usize {
++    th1520_pwm_chn_base(n) + 0x0c
++}
++
++// Control register bits
++const PWM_START: u32 = 1 << 0;
++const PWM_CFG_UPDATE: u32 = 1 << 2;
++const PWM_CONTINUOUS_MODE: u32 = 1 << 5;
++const PWM_FPOUT: u32 = 1 << 8;
++
++const TH1520_PWM_REG_SIZE: usize = 0xB0;
++
++/// Hardware-specific waveform representation for TH1520.
++#[derive(Copy, Clone, Debug, Default)]
++struct Th1520WfHw {
++    period_cycles: u32,
++    duty_cycles: u32,
++    ctrl_val: u32,
++    enabled: bool,
++}
++
++/// The driver's private data struct. It holds all necessary devres-managed resources.
++struct Th1520PwmDriverData {
++    iomem: devres::Devres<IoMem<TH1520_PWM_REG_SIZE>>,
++    clk: Clk,
++}
++
++impl pwm::PwmOps for Th1520PwmDriverData {
++    type WfHw = Th1520WfHw;
++
++    fn get_state(
++        chip: &mut pwm::Chip,
++        pwm: &mut pwm::Device,
++        state: &mut pwm::State,
++        parent_dev: &Device<Bound>,
++    ) -> Result {
++        let data: &Self = chip.drvdata().ok_or(EINVAL)?;
++        let hwpwm = pwm.hwpwm();
++        let iomem_guard = data.iomem.access(parent_dev)?;
++        let iomap = iomem_guard.deref();
++        let ctrl = iomap.read32(th1520_pwm_ctrl(hwpwm));
++        let period_cycles = iomap.read32(th1520_pwm_per(hwpwm));
++        let duty_cycles = iomap.read32(th1520_pwm_fp(hwpwm));
++
++        state.set_enabled(duty_cycles != 0);
++
++        let rate_hz = data.clk.rate().as_hz();
++        let period_ns = (period_cycles as u64)
++            .mul_div(time::NSEC_PER_SEC as u64, rate_hz as u64)
++            .unwrap_or(0);
++        state.set_period(period_ns);
++
++        let duty_ns = (duty_cycles as u64)
++            .mul_div(time::NSEC_PER_SEC as u64, rate_hz as u64)
++            .unwrap_or(0);
++        state.set_duty_cycle(duty_ns);
++
++        if (ctrl & PWM_FPOUT) != 0 {
++            state.set_polarity(pwm::Polarity::Normal);
++        } else {
++            state.set_polarity(pwm::Polarity::Inversed);
++        }
++
++        Ok(())
++    }
++
++    fn round_waveform_tohw(
++        chip: &mut pwm::Chip,
++        pwm: &mut pwm::Device,
++        wf: &pwm::Waveform,
++    ) -> Result<(i32, Self::WfHw)> {
++        let data: &Self = chip.drvdata().ok_or(EINVAL)?;
++        let hwpwm = pwm.hwpwm();
++
++        if wf.duty_offset_ns != 0 {
++            dev_err!(chip.device(), "PWM-{}: Duty offset not supported\n", hwpwm);
++            return Err(ENOTSUPP);
++        }
++
++        if wf.period_length_ns == 0 {
++            return Ok((
++                0,
++                Th1520WfHw {
++                    enabled: false,
++                    ..Default::default()
++                },
++            ));
++        }
++
++        let rate_hz = data.clk.rate().as_hz();
++
++        let period_cycles = wf
++            .period_length_ns
++            .mul_div(rate_hz as u64, time::NSEC_PER_SEC as u64)
++            .ok_or(EINVAL)?;
++        if period_cycles > u32::MAX as u64 {
++            dev_err!(
++                chip.device(),
++                "PWM-{}: Calculated period {} cycles is out of range\n",
++                hwpwm,
++                period_cycles
++            );
++            return Err(EINVAL);
++        }
++
++        let duty_cycles = wf
++            .duty_length_ns
++            .mul_div(rate_hz as u64, time::NSEC_PER_SEC as u64)
++            .ok_or(EINVAL)?;
++        if duty_cycles > period_cycles {
++            dev_err!(
++                chip.device(),
++                "PWM-{}: Duty {}ns > period {}ns\n",
++                hwpwm,
++                wf.duty_length_ns,
++                wf.period_length_ns
++            );
++            return Err(EINVAL);
++        }
++
++        let mut ctrl_val = PWM_CONTINUOUS_MODE;
++        if pwm.state().polarity() == pwm::Polarity::Normal {
++            ctrl_val |= PWM_FPOUT;
++        }
++
++        let wfhw = Th1520WfHw {
++            period_cycles: period_cycles as u32,
++            duty_cycles: duty_cycles as u32,
++            ctrl_val,
++            enabled: true,
++        };
++
++        dev_dbg!(
++            chip.device(),
++            "wfhw -- Period: {}, Duty: {}, Ctrl: 0x{:x}\n",
++            wfhw.period_cycles,
++            wfhw.duty_cycles,
++            wfhw.ctrl_val
++        );
++        Ok((0, wfhw))
++    }
++
++    fn write_waveform(
++        chip: &mut pwm::Chip,
++        pwm: &mut pwm::Device,
++        wfhw: &Self::WfHw,
++        parent_dev: &Device<Bound>,
++    ) -> Result {
++        let data: &Self = chip.drvdata().ok_or(EINVAL)?;
++        let hwpwm = pwm.hwpwm();
++        let iomem_guard = data.iomem.access(parent_dev)?;
++        let iomap = iomem_guard.deref();
++        let was_enabled = pwm.state().enabled();
++
++        if !wfhw.enabled {
++            if was_enabled {
++                let mut ctrl = iomap.read32(th1520_pwm_ctrl(hwpwm));
++
++                ctrl &= !PWM_CFG_UPDATE;
++
++                iomap.write32(ctrl, th1520_pwm_ctrl(hwpwm));
++                iomap.write32(0, th1520_pwm_fp(hwpwm));
++                iomap.write32(ctrl | PWM_CFG_UPDATE, th1520_pwm_ctrl(hwpwm));
++            }
++            return Ok(());
++        }
++
++        let ctrl = wfhw.ctrl_val & !PWM_CFG_UPDATE;
++
++        iomap.write32(ctrl, th1520_pwm_ctrl(hwpwm));
++        iomap.write32(wfhw.period_cycles, th1520_pwm_per(hwpwm));
++        iomap.write32(wfhw.duty_cycles, th1520_pwm_fp(hwpwm));
++        iomap.write32(wfhw.ctrl_val | PWM_CFG_UPDATE, th1520_pwm_ctrl(hwpwm));
++
++        if !was_enabled {
++            iomap.write32(wfhw.ctrl_val | PWM_START, th1520_pwm_ctrl(hwpwm));
++        }
++
++        Ok(())
++    }
++}
++
++impl Drop for Th1520PwmDriverData {
++    fn drop(&mut self) {
++        self.clk.disable_unprepare();
++    }
++}
++
++static TH1520_PWM_OPS: pwm::PwmOpsVTable = pwm::create_pwm_ops::<Th1520PwmDriverData>();
++
++struct Th1520PwmPlatformDriver {
++    _registration: pwm::Registration,
++}
++
++kernel::of_device_table!(
++    OF_TABLE,
++    MODULE_OF_TABLE,
++    <Th1520PwmPlatformDriver as platform::Driver>::IdInfo,
++    [(of::DeviceId::new(c_str!("thead,th1520-pwm")), ())]
++);
++
++impl platform::Driver for Th1520PwmPlatformDriver {
++    type IdInfo = ();
++    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
++
++    fn probe(
++        pdev: &platform::Device<Core>,
++        _id_info: Option<&Self::IdInfo>,
++    ) -> Result<Pin<KBox<Self>>> {
++        let dev = pdev.as_ref();
++        let resource = pdev.resource(0).ok_or(ENODEV)?;
++        let iomem = pdev.ioremap_resource_sized::<TH1520_PWM_REG_SIZE>(resource)?;
++        let clk = Clk::get(pdev.as_ref(), None)?;
++
++        clk.prepare_enable()?;
++
++        let rate_hz = clk.rate().as_hz();
++        if rate_hz == 0 {
++            dev_err!(dev, "Clock rate is zero\n");
++            return Err(EINVAL);
++        }
++
++        if rate_hz > time::NSEC_PER_SEC as usize {
++            dev_err!(
++                dev,
++                "Clock rate {} Hz is too high, not supported.\n",
++                rate_hz
++            );
++            return Err(ERANGE);
++        }
++
++        let chip = pwm::Chip::new(dev, MAX_PWM_NUM, 0)?;
++
++        let drvdata = KBox::new(Th1520PwmDriverData { iomem, clk }, GFP_KERNEL)?;
++        chip.set_drvdata(drvdata);
++
++        let registration = pwm::Registration::new(chip, &TH1520_PWM_OPS)?;
++
++        Ok(KBox::new(
++            Th1520PwmPlatformDriver {
++                _registration: registration,
++            },
++            GFP_KERNEL,
++        )?
++        .into())
++    }
++}
++
++kernel::module_platform_driver! {
++    type: Th1520PwmPlatformDriver,
++    name: "pwm-th1520",
++    author: "Michal Wilczynski <m.wilczynski@samsung.com>",
++    description: "T-HEAD TH1520 PWM driver",
++    license: "GPL v2",
++}
 
 -- 
 2.34.1
