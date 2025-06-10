@@ -1,154 +1,145 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B7F21C19F
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9896F289E3A;
+	Tue, 10 Jun 2025 22:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749593830; cv=none; b=ienZnwQNzbR5YOXHWi8dJ+gTZzyspo/vPbOqNnyGoLrrINzFbOwBnKIvKIiHVYLqTps4CbUkzFE+KRUQ2rIiAdOU4SuUdx1GjDZPnT++rDuvh7pSWizDRuxialKIpSES0OfBYcZFTkFISBOpZ2ikU0Nb7JTBGeI8le34hLhBwSk=
+	t=1749594121; cv=none; b=KfZqOd1lSCf2qkAKMmU5+vHKzQjjekYWrSxhOnqHaLE4rAgaVzLFtF5sgch+jNL4PwsVLytFep6gyIfBsS7/FkTkniD7QIGL2RM8mUxXfGjrt0t82AZdTH1iQmuXp/2TI2ItZaz3mkulX2VX2Z9yw8ZPNEUuX8XSj+FGzvPHCxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749593830; c=relaxed/simple;
-	bh=7TfUR8R2IrpRs1f5np0P2PSPG9JH0doPxboC0XmNhik=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JpvLgKFG5G1g9e/L2Ews/g3wvnfegVzXEzuj9fKIyT0K4xbVDXXHyx/z6ksX4gFqSGGbDsR4KTNEtLDRUIfQUBUb3HNWIyZaOtArP4rD7i6V2TCPhN2yd/5zIhUoTK7kzE6Ip19rwTM/lVH66iYu1HkeITy4edcVw1LLMwrN5ZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AlVtTujI; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749594121; c=relaxed/simple;
+	bh=+553V+xoY2utUtdrJC+CzdmLwVcBCLqqGFmM93WOhLY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XlmA43bGbzR2ACHVDgmvEPDR3GStlvIY9w9xq4V2Hsfl/84hat4CjmI6T0/bWQRe2/MmtrvyyrtqysNyzJ5NHPo8mvExA5zSEb0Mv8HQDauT6kJChr3xQ0re/s/Pq9O3wTlzXHBKq3dBsEIhbpdxq94Rz4HJzeHQsISW7ca30iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S1+h5nnS; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AlVtTujI"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a50fc819f2so4860786f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:17:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S1+h5nnS"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6084dfb4cd5so266950a12.0;
+        Tue, 10 Jun 2025 15:21:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749593826; x=1750198626; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DIt2WsPysp6xDtdH49fFBClr+UXdYRyo8pVXPNJ74C0=;
-        b=AlVtTujIl4s2x1TJUtdWI+Nc4y3lKISil4BGa4q50EP0cuwOOk+NFS9hEt+Chdezk6
-         ozYCX8q048nj02uxRcDGafRs5bZ6xxErghsoS4XW7mmGrBQZNjeC6T7LkM68WWPBbfog
-         0JmvDx7RhuYAfoJy9FBecQBt2L3zQXsyG2RtXm3Fdh/wZH6m/ceVEnS+bjWyU+xZpB0F
-         Lto1ejC4VBenDjmlaYQIbEh4crXYxTx/t1sN09Rw1EWCsTURFCM5ba/1Yrz9j0ofo6B7
-         qZZ+Vlym9w62N+U7/FtIrlTKdpXKA48ZSlnwz9hPwV88grY3GMtEXZytHfQQyIgHUcVi
-         2hDw==
+        d=gmail.com; s=20230601; t=1749594118; x=1750198918; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LsWM7R9N9mCXSlQ8uRE3uxK724s10V+ald6NFxfWTt8=;
+        b=S1+h5nnSB6odCG3lHDUXFSvNAImw9PwKZ9wHpZIjPHTRpW2J4yKf8xHovcYxI8JBhs
+         EdC4vZ5ld1ReJWUx1GCiB2p+9ARgQ+N3dsXkUvwL9DvnSw7bGfZgqSFfjJ32lVzIuH0T
+         oCx1dlrKLaYTn2rARUGRY1vfQLw9gn1NbEZxVefJEpAKhZ7vKoP8BVOoDfP3OhRxxOJe
+         vL8kdvfDKeJCS/H1LnwrZREtCSbSBiOfBByP4vRQSKCiMCcM+pvwPMoCikIrkA3fxn0H
+         4mTBEsDXhRsRhkSIFPmaYzJo+NVQtEVy2Q9BY4ECYfg0wwOvXYnSrTXKjrtdR7m1p1Gr
+         VTXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749593826; x=1750198626;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DIt2WsPysp6xDtdH49fFBClr+UXdYRyo8pVXPNJ74C0=;
-        b=v5MrumDKypi1eYhhB+sxoB2W9E0SBvwG42na5Wr7jF7DvQtgpqcU6/c1cDWAN2KRAe
-         7D33GvQ6nJOB2g/JmeHJ/PI8xlPNO8kAa1bHsjWqezgEXOqSknshgOdro7JAiv6riNBr
-         tXunlByrwYGLq4RJN1AKXqyuoMhyPdrBuzNZU2sWZjopxf7HkhOuGZvzgw3tlY6zov3b
-         r9Tj6RstdWEWs8hwyUm2Zir1vQD9Vtk3A1WwAsriZXdM00O6310AVvWKbuAGRSpuA+z+
-         Cx8F7tLNWVIlgTfEnxTdIrCN+5vLy9626Ftn+vH+gQKv8PvnONcWk85VMXr+wqywbTdy
-         b4ig==
-X-Forwarded-Encrypted: i=1; AJvYcCUtYqJFFcuuV1j78huG+P22Z7tmJnCey/3AziCLAxghQDkJtfpb7Rf6bHnfg2KycLvz5PM3PZLs2XWPnRc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdnsMTxVpLfTYoOZAkwt6Mo5tCOUzwTDXpQJjZ6KxR3czuZP45
-	4G0jQnJe9fYGDVkfUD1XTEv9CY7qYpbWLBmoh7QCVHm4FetW/iZYTqHDW+G4gBl5nlk=
-X-Gm-Gg: ASbGncuY+YIsZ+hhsRKp4Zu2kt9C2dkbEu2WlNfEp32oXtIy0P4xbsO6Mlxwv5ukD36
-	Y6PG4AFM2YkyFY991xbXWN2576Bt6OpuMwBgROhAuTCtNnb29QOogStWHN40zsMZy0fIvM7S7yZ
-	1+pz6TYYtqAaV1j4G8J2iN85uQLeDT3QYoOeImTJlbuLQFcS635f1YVGV3FBKfGsqhcxTbw6s4y
-	ee2MPJnaBQG28yjYqdc6J4AKlUJ6VsNtYyl45cPw7kCisgnzXvpig7mAfqM5hXFLMVrLM8Lh3aC
-	ucWs/mZaS2Ar0vOM+jxcs3W8nIMWUO8rmJTxPMvUaA99pbqSBgS58TlIEDCVG6Aqm0awQF0yYE4
-	a1Hd66CtPQtfu1b4VOo5wrk1J3zI=
-X-Google-Smtp-Source: AGHT+IERnljNf31VprhAEokS9VT8ilK90CxWqw6sUIOgCUXrKGJiaOEei3ELCJOxQ0LlxD+btzZ1Ww==
-X-Received: by 2002:a05:6000:2285:b0:3a4:d6ed:8e07 with SMTP id ffacd0b85a97d-3a558a27717mr467480f8f.32.1749593826029;
-        Tue, 10 Jun 2025 15:17:06 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532464f20sm13422204f8f.98.2025.06.10.15.17.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 15:17:05 -0700 (PDT)
-Message-ID: <10f07a65-0549-443d-889b-d36b3515a237@linaro.org>
-Date: Tue, 10 Jun 2025 23:17:04 +0100
+        d=1e100.net; s=20230601; t=1749594118; x=1750198918;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LsWM7R9N9mCXSlQ8uRE3uxK724s10V+ald6NFxfWTt8=;
+        b=YNjWZ55f883yG5qxLunRV6qTX2RipiKCTSCx8/FLw536eBQM5NfSaHD9ArjWSOpSLJ
+         CkXzcAn5jXIh5vE5f1W+YajA4Tj9sANg4By8l2PVpiWfe8E3rFQtWFQKJ+YozNbetO/2
+         vn1unif3e0tj+gkayT6IgPdNAiC/BUmUkVGwr5LPDzf2EHsQlufwOTpbl0UwIVPobreh
+         4P2+qTE9kRV2w+Ssg04D/+7qnRsMJjl0QJCco2kGs8/PIBEPid0k4fAlIcnhAR+N671h
+         OCrvly/mw5I/zOxzcYH20TiQs5mVp6T2BdrSu/iUw6rjAEpxrzXxDXx8pRTUDlVI3tVn
+         u02g==
+X-Forwarded-Encrypted: i=1; AJvYcCUvi6WxxHARXK8dWR5hp8zxYI5l6U9vA3gq06C/HihoOGCwGBwQbogOZVtx7QdSriMSThLNaTqDHsGCG9/3@vger.kernel.org, AJvYcCVO/lQbRKoplHPyNOLuW7NlrlY/L7yk6eFoKCwHTATSfwXnlzYnpiiLPATYRhfM62HxhoA8stHEb0I3UA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0aEFQI4h4eCShTA8JNzrikksjdd0Bj3HjttzoaxGM6cm4MOYw
+	9V0w/GnObOvI75w8vMacgajfN5ynp/Ux/mnkEvRewqIeFtXkPRCqZvldJAiBMQarqYk3LzLNjV8
+	rM+HztociaCRwjCZbUc9SihovOV0TmPc=
+X-Gm-Gg: ASbGncvvw6jViq+4/C58TWIjPZ+7IQoaq7SXWEScN34Fzz9rhxPyhGQZqzM+yw6OrhA
+	fet98y9KZiHYvrQu4+EjeF83RTTgdE5ayJlxLf5saCHRhIChiamXo3SQxpUhIN5bSShQ4uxdyJb
+	FMBNPlDrJnuqQeHiBnzYg+16jv11xRCImJBpCuFwOoSTnIUbNqmK5D3eNTX3hQjH+UDjXgxxbae
+	1FM
+X-Google-Smtp-Source: AGHT+IG/XyKTAwGibTRqiHQ80CFFUAnjYB6aSemo76CEMJrU/vKOsBRveiisA9z6MjPmp/LTCfWAXZT9yI8NYsxmjmE=
+X-Received: by 2002:a17:907:86ab:b0:ad8:91e4:a92b with SMTP id
+ a640c23a62f3a-ade89a8063cmr87430266b.30.1749594117601; Tue, 10 Jun 2025
+ 15:21:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND] arm64: dts: qcom: sm8550: Add support for camss
-To: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Wenmeng Liu <quic_wenmliu@quicinc.com>, rfoss@kernel.org,
- todor.too@gmail.com, andersson@kernel.org, konradybcio@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- quic_depengs@quicinc.com
-References: <20250516072707.388332-1-quic_wenmliu@quicinc.com>
- <0367d5bd-a42e-4b6c-b841-ba20190b3127@linaro.org>
- <dc4720a8-2f15-44aa-9a52-8440c7518328@linaro.org>
- <739bad1b-f26d-44a6-9cc1-eee28023474f@linaro.org>
- <dc82457e-de2b-43ec-a50c-08f7d8bdeff1@linaro.org>
- <1883d9d7-26d4-40b1-9848-ae0477cf95c7@linaro.org>
- <6bbd526c-3193-40c7-91be-e629949dca8a@oss.qualcomm.com>
- <b4a7aed0-a05e-4d1b-965f-78e0c5e0709b@linaro.org>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <b4a7aed0-a05e-4d1b-965f-78e0c5e0709b@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <aCrx1iRQ-9tXiyJp@x1.ze-it.at> <p4917005-n9n1-0577-q49n-o9639pos5o44@xreary.bet>
+In-Reply-To: <p4917005-n9n1-0577-q49n-o9639pos5o44@xreary.bet>
+From: Ping Cheng <pinglinux@gmail.com>
+Date: Tue, 10 Jun 2025 15:21:45 -0700
+X-Gm-Features: AX0GCFsgA2-aXLRhJmZcRk8weoROzVMe8LB0jEUBribSAZZ-z_7aW3To_hULe9Y
+Message-ID: <CAF8JNhKjXH+zD6-b=ym+Y8SPwPEUdUu+r8k25FBefYg+aEi6JQ@mail.gmail.com>
+Subject: Re: [PATCH] HID: wacom: fix crash in wacom_aes_battery_handler()
+To: Jiri Kosina <jikos@kernel.org>, stable@kernel.org
+Cc: Thomas Zeitlhofer <thomas.zeitlhofer+lkml@ze-it.at>, 
+	Jason Gerecke <jason.gerecke@wacom.com>, Benjamin Tissoires <bentiss@kernel.org>, 
+	Josh Dickens <joshua.dickens@wacom.com>, Tatsunosuke Tobita <tatsunosuke.wacom@gmail.com>, 
+	Aaron Skomra <aaron.skomra@wacom.com>, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/06/2025 22:13, Vladimir Zapolskiy wrote:
-> Hi Konrad.
-> 
-> On 6/11/25 00:04, Konrad Dybcio wrote:
->> On 6/10/25 11:02 PM, Vladimir Zapolskiy wrote:
->>> On 6/10/25 22:02, Bryan O'Donoghue wrote:
->>>> On 10/06/2025 13:49, Vladimir Zapolskiy wrote:
->>>>>>
->>>>>> List feedback from DT people is isp@ is the correct prefix.
->>>>>>
->>>>>
->>>>> My bad, but I don't understand this comment, it seems irrelevant...
->>>>>
->>>>> The expressed concern is about the novel label name.
->>>>
->>>> I mean to say the feedback from Krzysztof was that we should use isp@
->>>> not camss@ and I agree.
->>>>
->>>
->>> Let me repeat it thrice, it's okay...
->>>
->>> I don't object against the properly selected device tree node name 
->>> "isp",
->>> here I object against a never used and very questionable label name 
->>> "isp".
->>>
->>> Please feel free to ask more questions, if you still find it confusing.
->>>
->>> Again, I may missed a discussion about the need to get and use a novel
->>> label name, then please share a link to it, it'll be very much 
->>> appreciated.
->>
->> To hopefully help out:
->>
->> label: node-name@unit-address {
->>     property = value;
->> };
->>
-> 
-> Thank you, here is a link to the wanted section of the dt specification
-> for Bryan's comprehension:
-> 
-> * https://github.com/devicetree-org/devicetree-specification/blob/main/ 
-> source/chapter6-source-language.rst.
-> 
-> If for whatever reason a proposed "isp" label is preferred, then
-> since a label rename is not an ABI change, it would make sense to
-> do a massive change of renaming all camss labels. Otherwise there will
-> be an outstanding incorrespondence/confusion of the label names in
-> board .dts files, and that's bad.
-> 
-> -- 
-> Best wishes,
-> Vladimir
+On Tue, Jun 10, 2025 at 12:21=E2=80=AFPM Jiri Kosina <jikos@kernel.org> wro=
+te:
+>
+> On Mon, 19 May 2025, Thomas Zeitlhofer wrote:
+>
+> > Commit fd2a9b29dc9c ("HID: wacom: Remove AES power_supply after extende=
+d
+> > inactivity") introduced wacom_aes_battery_handler() which is scheduled
+> > as a delayed work (aes_battery_work).
+> >
+> > In wacom_remove(), aes_battery_work is not canceled. Consequently, if
+> > the device is removed while aes_battery_work is still pending, then har=
+d
+> > crashes or "Oops: general protection fault..." are experienced when
+> > wacom_aes_battery_handler() is finally called. E.g., this happens with
+> > built-in USB devices after resume from hibernate when aes_battery_work
+> > was still pending at the time of hibernation.
+> >
+> > So, take care to cancel aes_battery_work in wacom_remove().
+> >
+> > Fixes: fd2a9b29dc9c ("HID: wacom: Remove AES power_supply after extende=
+d inactivity")
+> > Signed-off-by: Thomas Zeitlhofer <thomas.zeitlhofer+lkml@ze-it.at>
 
-Ah the label, I thought you meant node.
+Acked-by: Ping Cheng <ping.cheng@wacom.com>
 
-camss: isp@value
+Thank you, Thomas, for the patch. Your support is greatly appreciated!
 
-Yes
----
-bod
+> This looks good to me, and I am planning to push it to Linus through
+> for-6.16/upstream-fixes.
+>
+> Jason, Ping, any chance you could give your Ack to this one before I do
+> so, please?
+
+The patch looks reasonable to me, too. My Acked-by is added above.
+
+Thank you, both of you!
+Ping
+
+>
+> Thanks.
+>
+> > ---
+> >  drivers/hid/wacom_sys.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/hid/wacom_sys.c b/drivers/hid/wacom_sys.c
+> > index eaf099b2efdb..e74c1a4c5b61 100644
+> > --- a/drivers/hid/wacom_sys.c
+> > +++ b/drivers/hid/wacom_sys.c
+> > @@ -2901,6 +2901,7 @@ static void wacom_remove(struct hid_device *hdev)
+> >       hid_hw_stop(hdev);
+> >
+> >       cancel_delayed_work_sync(&wacom->init_work);
+> > +     cancel_delayed_work_sync(&wacom->aes_battery_work);
+> >       cancel_work_sync(&wacom->wireless_work);
+> >       cancel_work_sync(&wacom->battery_work);
+> >       cancel_work_sync(&wacom->remote_work);
+> > --
+> > 2.39.5
+> >
+>
+> --
+> Jiri Kosina
+> SUSE Labs
+>
+>
