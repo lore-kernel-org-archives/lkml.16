@@ -1,622 +1,300 @@
-Received: from server.couthit.com (server.couthit.com [162.240.164.96])
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011069.outbound.protection.outlook.com [52.101.70.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCAC293B51;
-	Tue, 10 Jun 2025 12:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.164.96
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749558827; cv=none; b=Y7gRlN+GbuM7K+ve+E2WJfhIGZSL57+X5lgEiw60hjVbDCFPZ8Ij2vbJYxDXffSMTqoFL7D/4u/svPatQd2ZBx1zEv1NJqXnaHz1lX2tg1y33ef/8pSxmxvYaibRZQAWxmdcrjOqin5guUf+lVN894TwSlbX8hLQJDPI5em+XsE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749558827; c=relaxed/simple;
-	bh=8VgRT0XQg+TCNT+PtrhuqOD+Sx/mv/6iZs5JfwvGAI8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZzHYvB75eAmAmt2iy82ukCfos1TQHI2UJYmHbSorEuTRjTFQOuQ8TWbW9NgMeKpSIjSeLzdhixAO1lslgz+ecFfHNWO2N+hPtj3484I0XOkKOCrwukw6J5OybHAFgxoCuhPwEgrCBQ849YFftIPqtCHBJHEv8F4A4NzbURSblG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=IsJ0LR+O; arc=none smtp.client-ip=162.240.164.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=couthit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B4C29ACF4
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.69
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749558835; cv=fail; b=rlZH92oz0NZ1UP4EH/clJuAMQ51RvPDoxDZGz2SXUUzwpzQ8NTOzmomjnzCgDlzSOiglkC9KAgKSi+lJqR1xiyDJ4eAQQsxy8AAgch2AcauRYdnCRwV77z//cL+2mMkOlnlH+Mfjx0uRX007TfEUuPGKj5rVpwztqs9kZadDNrE=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749558835; c=relaxed/simple;
+	bh=gVb/nQCH013FUumxRhCMjwY/T6FJWTUr2N9ORNy8k4g=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=WJczuxbDg/jUrh0gYTEKMiBfJ7zdCrX7SEdBaQJn/ejakxiKVrDmynD4Yv5fiJLtQGmlFuAskptnUBFukkUzRwmiVn4fsb79rnXX7oyO+XiJXn3nAGhBjrF6GeiHbfSqWmW/P3XU+reBUsgtZPOzApxRtgFymIK24a5tS3lt5nU=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=EdE8qI2c; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=EdE8qI2c; arc=fail smtp.client-ip=52.101.70.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="IsJ0LR+O"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
-	; s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=pPk//+67/mg5j0CnEHrV6KthkD8K1AISFcua3MTEzgY=; b=IsJ0LR+OUNUWpmIffKcUhcTSSo
-	gfrDQ9+sa/n1qlVxFEihVyG3NqgpyDeOGMqGxXlzmT/5sus3lsvt2CKLTNS4m3j36QmlH/4aEQ5cC
-	vhtcF5HkrtTWaztyJGWT6B7ZSNPSZ0mP+NzqSCVMDgqt7rEYFjH4tyH94A0XtnQMX4tspRHaizV2+
-	qaZxu8E5uxr9youYRkCiHPtLpIZ+BTQHegdKJ0FEdERp9POB+zp3ttsh5FwR+1lLsh+XJnWhtwD37
-	DacjU6hrU/1yxVTfYLtstCnxzRdhpR862NiMvkuNe4AL4A4nOA78gzeP/vnRZcBh1yGkGaR3RuHHs
-	6QR4bwKg==;
-Received: from [122.175.9.182] (port=61880 helo=cypher.couthit.local)
-	by server.couthit.com with esmtpa (Exim 4.98.1)
-	(envelope-from <parvathi@couthit.com>)
-	id 1uOyAd-0000000AVk1-272D;
-	Tue, 10 Jun 2025 08:33:40 -0400
-From: Parvathi Pudi <parvathi@couthit.com>
-To: danishanwar@ti.com,
-	rogerq@kernel.org,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	ssantosh@kernel.org,
-	richardcochran@gmail.com,
-	s.hauer@pengutronix.de,
-	m-karicheri2@ti.com,
-	glaroque@baylibre.com,
-	afd@ti.com,
-	saikrishnag@marvell.com,
-	m-malladi@ti.com,
-	jacob.e.keller@intel.com,
-	diogo.ivo@siemens.com,
-	javier.carrasco.cruz@gmail.com,
-	horms@kernel.org,
-	s-anna@ti.com,
-	basharath@couthit.com,
-	parvathi@couthit.com
-Cc: linux-arm-kernel@lists.infradead.org,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	pratheesh@ti.com,
-	prajith@ti.com,
-	vigneshr@ti.com,
-	praneeth@ti.com,
-	srk@ti.com,
-	rogerq@ti.com,
-	krishna@couthit.com,
-	pmohan@couthit.com,
-	mohan@couthit.com
-Subject: [PATCH net-next v8 05/11] net: ti: prueth: Adds ethtool support for ICSSM PRUETH Driver
-Date: Tue, 10 Jun 2025 18:02:39 +0530
-Message-Id: <20250610123245.3063659-6-parvathi@couthit.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250610105721.3063503-1-parvathi@couthit.com>
-References: <20250610105721.3063503-1-parvathi@couthit.com>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="EdE8qI2c";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="EdE8qI2c"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=EjFwGbxS8U76TC/DFKyJQMcDAoX+0JQaeA0QiiSY6n6o0XZFbkEzLBZcW/5uK48S34ioINcNkv44W0HquOgukztgR+g6BfaPyy+FP77801qq/QJWDts19O45pGAmOCIRagMxrd5NaRHyltkLH8U2RDxNFcgrSj4NFrfsDxqVvI+qKK6vEcgJJ8RQWwd5cV/9t8fN7V/b/WYN4XLjYK82QEdACxl3cvCj8UquSKD/jSpzfpY/FZa5anFz8pTLXig1k5GnhK49EM17dQlXj/H+kLiKD2Hkytf5zhGs1ZEQJfACe9Nr7X9sTcDoCh96ks283UYr4Ymk38wXH5wnVV/GUQ==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BtWU+9RZZhoClSVbQuuKDn1MhHCMC4cUKDFsEeBcEzc=;
+ b=NQM/2RJQJLluoOQ1jzVtTGlpCOlm/dyAFU8D6NnNwaz3UiiouCkwxrsqFcx+SH0YQnkF7t9kwxJtw6ve8ZeC0EjI7x1hjFEM4RdE3dQm4yjL1Xia2EOFBxwdW3HyIorSs+XUQGbn0PxtrIxhJ2F8vkxkrOYMRNckHH/Qj3DsGAKSPuG1l8FvHe+th/hrc1CVb27bJrzfHoYb/hizdCdIev0Mo6mS+uSAAjM0bPZCUnwucJXySXtxvRS6H4+uWUgC+AqEZ8wPlOB5v6D5a4aTx+JLa1v/uPiB9WU+3wg+IBaNiJCxDhDae7fP1YDT16Jti99UdCa5vSe76H4ieQF+Qg==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=oracle.com smtp.mailfrom=arm.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
+ (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BtWU+9RZZhoClSVbQuuKDn1MhHCMC4cUKDFsEeBcEzc=;
+ b=EdE8qI2cHyA9BxaEK7asj3PBkIN0zAKaJEhhOvWh19Fu3D8Ywsf3fkdc7Ngj4KDdHAY4dJyB7Mknyp5LDXgG/4DRi85j1M3expD8dC2CZbdyNe8u3lklo1J4SUpVIYf84tPP4tuZ2R1mIBVaauJNo25b0kGjH/9+9mnix35KEOw=
+Received: from DB8PR04CA0004.eurprd04.prod.outlook.com (2603:10a6:10:110::14)
+ by DU0PR08MB9822.eurprd08.prod.outlook.com (2603:10a6:10:445::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.26; Tue, 10 Jun
+ 2025 12:33:48 +0000
+Received: from DU2PEPF00028D03.eurprd03.prod.outlook.com
+ (2603:10a6:10:110:cafe::6c) by DB8PR04CA0004.outlook.office365.com
+ (2603:10a6:10:110::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.34 via Frontend Transport; Tue,
+ 10 Jun 2025 12:33:48 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ DU2PEPF00028D03.mail.protection.outlook.com (10.167.242.187) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.15
+ via Frontend Transport; Tue, 10 Jun 2025 12:33:48 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vH8PGyQSeo/IpAMnCEFPe7+OOz0hM4NU39GptL45R5NOE2XbuPE6m7ZTUVejWxY473ZgOf1pLufPz7QMRD9C71JU1LNXI+5AAAM+HMmzJuwicpprmlrd6NRVnxNvM/2FHErgglwy97hpo/TtrWegy1rp3q7j1E6O7vdXdE6uv2yV3q10RaAnxOsOMYyJkcnRNv3Fx6D/DVZymktWQeOwzzIv1+UmMtM3VhdrNcrR4kBGlsKdNSd1z6stprYNU1S6L9u1ZMNn/EvtfQ/ATASA/L8ZVIbbiVUjRv/hh1q3ENfXlGQy0u2lZSERK3cIf/6U9KnKExcn87K1Ra9AZQRlOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BtWU+9RZZhoClSVbQuuKDn1MhHCMC4cUKDFsEeBcEzc=;
+ b=GImIjoJXYPLs/j+RiCNlOFtuzKBSUfHFLQqaUA/O8NiUELOEXEYjXoSPkLJRVhxDiGJCoMnb5ickQhkIDNCjBn9sfDsrc3X1DzxIP9qb1dvpX8JVGe4tnvFh4UVJND2SnY4sK24yV8PmoGe3wWD6xHw8U0VxyoCdZJ0eFhTF1Fyy20NRXMe1KvTEfeX1JpQC5mhpPX01wYJAhSauRKEaoU2iZp97dt1lFa0vp/tf7dtMYSwrmIspYU82cl7Ocs8M1GDVFm2KcxWwGDdpxjIjQ3Quq53IZBa1f/1QCNZAc6+IOlcG6N9YtV0Rq8EY4YRojMAs+Ej+u7TqBfICiRiA3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BtWU+9RZZhoClSVbQuuKDn1MhHCMC4cUKDFsEeBcEzc=;
+ b=EdE8qI2cHyA9BxaEK7asj3PBkIN0zAKaJEhhOvWh19Fu3D8Ywsf3fkdc7Ngj4KDdHAY4dJyB7Mknyp5LDXgG/4DRi85j1M3expD8dC2CZbdyNe8u3lklo1J4SUpVIYf84tPP4tuZ2R1mIBVaauJNo25b0kGjH/9+9mnix35KEOw=
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+Received: from AM9PR08MB7120.eurprd08.prod.outlook.com (2603:10a6:20b:3dc::22)
+ by DB9PR08MB9538.eurprd08.prod.outlook.com (2603:10a6:10:452::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.31; Tue, 10 Jun
+ 2025 12:33:16 +0000
+Received: from AM9PR08MB7120.eurprd08.prod.outlook.com
+ ([fe80::2933:29aa:2693:d12e]) by AM9PR08MB7120.eurprd08.prod.outlook.com
+ ([fe80::2933:29aa:2693:d12e%2]) with mapi id 15.20.8813.024; Tue, 10 Jun 2025
+ 12:33:16 +0000
+Message-ID: <c05975a5-9a4d-4b23-9768-18b9534333b6@arm.com>
+Date: Tue, 10 Jun 2025 18:03:09 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/2] Optimize mremap() for large folios
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, david@redhat.com, peterx@redhat.com,
+ ryan.roberts@arm.com, mingo@kernel.org, libang.li@antgroup.com,
+ maobibo@loongson.cn, zhengqi.arch@bytedance.com, baohua@kernel.org,
+ anshuman.khandual@arm.com, willy@infradead.org, ioworker0@gmail.com,
+ yang@os.amperecomputing.com, baolin.wang@linux.alibaba.com, ziy@nvidia.com,
+ hughd@google.com
+References: <20250610035043.75448-1-dev.jain@arm.com>
+ <7cf96262-85b4-4a7f-9ca3-de627ee13a0d@lucifer.local>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <7cf96262-85b4-4a7f-9ca3-de627ee13a0d@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA0PR01CA0058.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:ac::16) To AM9PR08MB7120.eurprd08.prod.outlook.com
+ (2603:10a6:20b:3dc::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.couthit.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - couthit.com
-X-Get-Message-Sender-Via: server.couthit.com: authenticated_id: parvathi@couthit.com
-X-Authenticated-Sender: server.couthit.com: parvathi@couthit.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+X-MS-TrafficTypeDiagnostic:
+	AM9PR08MB7120:EE_|DB9PR08MB9538:EE_|DU2PEPF00028D03:EE_|DU0PR08MB9822:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7d4d5ee6-fbf6-4324-93be-08dda81b0c77
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?utf-8?B?YnNJWmtVRVNxbGgwTHgxakkzaE92K2ZQN0dIcnBaaFNhN01zYk1jdUpOT2ZU?=
+ =?utf-8?B?M1BzZ2VVbTNPQ0tOK1JRTzJiNkxoZWRnRm9TYzJ2eTZXR2lWWlo3UzlaUHBn?=
+ =?utf-8?B?NzExZFdEWlNmSHNnV3pMejFLM09CZFRULzZNa0ZHdHZHVndXQUFNTFhmSFFM?=
+ =?utf-8?B?LzBLUGEzUC9QMGxjZS80WTFtaTd1NHN2Z0ZpRUVEelRhUFhtd1kxTGFEWXlx?=
+ =?utf-8?B?YjBIUWxCYlVFRHBlOVlpa0tnQllMMThLWEpTdEhaSURza2NBRysrTEtBYWRR?=
+ =?utf-8?B?TGxNN3ZYVyt6bkhFT1NJZGsyVzhFbkZ1VjhRZVBNMnAydDQ1TE00Y00rSzFm?=
+ =?utf-8?B?VStKK1hUN2xjSzVETUc1WFBWc3BkOXpjN3VoNFdqOHE2ZnV3YTFiYVBtTUZ6?=
+ =?utf-8?B?aEFteW1FRnloRVNadzJ1K0llQkxuUG9iejArOGY4T1dvYVBRYVJKMWcxS0ZK?=
+ =?utf-8?B?VkNvWTBRUmN2MHVvUWhXTHQ4V25qZ09zMjh4bVE3NGNvd0ZzZ1B6azltME01?=
+ =?utf-8?B?Zmh1aG80UFZuZjVCb0VmN1FFNEhBVGV0SkFCeVFXU2pKZ0lXVy8zbDRJczAv?=
+ =?utf-8?B?ek54RS85Nmc1bmRpK2w4RzRzazdpMHJEL2xlb1UvdWgrcjZ3bVo0R0VKaHpr?=
+ =?utf-8?B?cGdLS2VnRndiaC9KcnV3R2RXZk1XeHhwRGRJOStpR0MyRU9qOUVScVMvWFpv?=
+ =?utf-8?B?bEdHNTZTZjNEUE01bms1a0xqYVlib3BadW14bG9ZdGd4d0ZKenRTbmJaelJm?=
+ =?utf-8?B?MnJpTFdwb0Njby8zdE52NVdZanRrNVNhMWNla2NyNWJXbUx3ZHEyL3VYQk9Y?=
+ =?utf-8?B?aXlraUREdGJnTXluRnVITUMvMDNLeTZWWmFONmxoS2c4dU1nbTJabnd0Qlhz?=
+ =?utf-8?B?S0YvNllLWlEzME1GRjN0aHV4d216SEJqL2IrMCtCTGpQMFFYT0puK2VrbGph?=
+ =?utf-8?B?ZDYxT3h5MDUzTWxOU0VSSkc0b3JQUGdYK2h0eWYvc0dDRVRYQUIyTExKV3dD?=
+ =?utf-8?B?SHROWlFad01hd3hncCtGSGh6VUdUQkIxcytsOEw1QWh4cWZ1YXI2UTROeXNt?=
+ =?utf-8?B?NVR1dHNyaktyczZkdVlxNGlqdWZvbmdXRFhJUzBZb3A5Y1FwamIzaVBlRE85?=
+ =?utf-8?B?MFFETmUxakdPMUpEM3E2cDhJQ0d0UVk0RGo1QjdEOEh1L1hibUhaQkVxQ2Fz?=
+ =?utf-8?B?MXc5SnZQbnEwaUdkZ3d2QndFUmdFN3BTeitMTnNkVXFHOTRDeGdWalRLeU1v?=
+ =?utf-8?B?WDFkUGVoZWpNL0R5UEZXVVZ2VVpwUFU3bnZzejA0c3crV0ZpUnY4UFQwSTFr?=
+ =?utf-8?B?Z25DMTV4RDk1ajJub1FqY0M2QWNKeHV5UEo2c3U3ditPR3ZQS1JYODlsTTBk?=
+ =?utf-8?B?VU5SaCtOUHdkMUlXTkNRcnpURjBIVlBkSTh1VXpDT09lNjBaUGZrSTJQZUMx?=
+ =?utf-8?B?a3RHNXJDQ0RORXdYTjRVQTZkTTVYSXFTcHZyUExqUVNrTzlIM2lvMkNyTVNE?=
+ =?utf-8?B?MkM5TlFwVU5IWjV3R3A3ZS85U25ZZ2phdXB4Qys3R0xoUHlJcXlUSW1GZFlV?=
+ =?utf-8?B?aElSOVE4Y2tyZUIyTHZkS3lScm01Mm9BOGpseGxIRndwSGFkMnRhaXArUlQr?=
+ =?utf-8?B?VmhkcFNtamltYjdDYlJTQVh0VVdoQzNtVEZiMG4zQitVc1ZOaTFlNDFETVg5?=
+ =?utf-8?B?WXVyUVc1WmszZllGUGhtaDVyblg1bk8xNlZ4Q2FIRUJXMEUzMDhkZ1hQM1Jp?=
+ =?utf-8?B?TXpodyszRFhRWVlnTFFGMW93NnU4empJcnl5eFBqd21TSkdVZkRHWGEvclF2?=
+ =?utf-8?B?M2NFZjBqeElaRlZub3FxSTRTOWlXbHh5UWc5UEJjeUFpRXcycmNPaGlBUHlX?=
+ =?utf-8?B?cmNRenN2azRmZ2ovMEc0Sk05ZnpwUE9HbXhZQXhZQWp6U2hGbTBmU0s0bGph?=
+ =?utf-8?Q?QzPs3992U9g=3D?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR08MB7120.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR08MB9538
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ DU2PEPF00028D03.eurprd03.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	6828751f-7834-4bb3-c88f-08dda81af903
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|14060799003|36860700013|376014|7416014|35042699022;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SEdTSVB4TmhIME5XQkFUQ1hsaFFwY3ZFQlZOcHZuc2JUa0VZNktSd1Q3bS8r?=
+ =?utf-8?B?SlkzNHp4eFJCdFZEemtuZTFFRXdYbFNkQnpSdGNFdHU3OFJQajJyamtRVTVi?=
+ =?utf-8?B?VzI4clFCZnRTa0tUdStRYUIxWG1nS0pxRDlNVi9LWHB5R3dYWXluSU5HV2ZX?=
+ =?utf-8?B?VUJXZkRaYkswdDdsdWlJWDF1MFVoVmhNS2lHeVM3VnJ5OUNEb3Zxc0w2UGJL?=
+ =?utf-8?B?MHpPdlV0Y3czbmE4K09YK2o5QTVpMUdaeXF6SklIM3oreTIrMFZNNzdDbjUz?=
+ =?utf-8?B?T0F0TGZHTzQwRXF1eDlsQit1V0JLZXpzd3VyU0FPM1dzZDIyaUEvV0tiQXZ5?=
+ =?utf-8?B?dDVacDNCaDFEOWVaVzNNQnMyZmtYUlNuTmxKdUxJbEZkZlJQZERKeGFDY3dV?=
+ =?utf-8?B?QjF3dHlTeGxaeGI1amIxVlA2Z0x2SUZJQnRGYmFGcUs3K1ZHdWl2eUhzWGVp?=
+ =?utf-8?B?SkR1TmtwdGRZZzlObzE3SlJYcmk1ZVNkQ0FHSCsrcHVqQUhtQ1BGbG1JaVN5?=
+ =?utf-8?B?SGt2QjliY0JBMGpzNnpVa1R5emFMb2pxSlFJMkJxZ3lVNG5DVk5CQkN6MGhZ?=
+ =?utf-8?B?OWd4QjVQSk9DaXBEY3BRYzZwa1Rrc1V4TnV0eVhDV3lwMEM1d3pMMXcwRXh5?=
+ =?utf-8?B?UFlBVytzanVzTmxiQ0RaL09nZnNDMndMWlNZdGJFbzJvRFFJN3BYb3YyU01i?=
+ =?utf-8?B?OWxuTVI5MVJDMUJKQkFZdXMyNklvUVllbVdhaTN4Y2d1QkI2djFiUkRURkJE?=
+ =?utf-8?B?OTM3clh6YWxXVmJXZ0xsdXRGcVJ4ZDFaWTBiOWZIcDErUm5PcWtlQnVDQ2p3?=
+ =?utf-8?B?REg5ZUFiVXBabHZQK1ozczZlVTBRTTRIa3FLcnFxeHFESVZ4cG0xaDJ0NGRF?=
+ =?utf-8?B?WFJjbUZ2SFNmbUNmQysvemJ2ZzVoVnhlakoxS09kbER1ZWVmRjJNTFdlVWNo?=
+ =?utf-8?B?MzZrcUQzeGptT0xROVpJTTVFdmZiaUVmamQ4U2pCZlN0K3RuRW1WSWtRd2dl?=
+ =?utf-8?B?WXlCa0NBRDdmNmZuemlwVzdPRmMzMmNjSW1HejkzeERlbzVYaytOaTNhakJ0?=
+ =?utf-8?B?aDgyOHNDblVIOFdLdXhBOTlOdHJGZzEyUnJPU2NvWStVTFFuKzJyMVhxZ3RD?=
+ =?utf-8?B?SnZ5bzIwWWtWU3UzaFhiemY0MmRHRlVtUU9VWlF1aG42K0UvVmZhWkFSOEY0?=
+ =?utf-8?B?SHY4M0FiR2I1eTZYSWx2dmpDQzFLaGpoTzYxQ1dqekVFZFRZMnA5Rm8xNEt2?=
+ =?utf-8?B?VWlhaTl1blFBSkE5dGVzS2x0YVF4MXJLWGVLV05LVDljbzVkVXZxdHBzclZO?=
+ =?utf-8?B?ZlJFeUNpeFBRZHdrUlNwQ0h4Y29IV2VVUVk4ZlFBaTd5N2dJTlVPRGF2ZnJt?=
+ =?utf-8?B?UVZoRmFvVnQ4UzUrcDBlVHJuZUFYVnN0NFR5YVQreEZ1M3FHREY0Q1U5Nmx0?=
+ =?utf-8?B?QzJtdGdQZENoNzBnZzN1VXNEQi9HZ21wYUZEeVIzcHVIQ0Y2UFJmVUpHQmxq?=
+ =?utf-8?B?TzB1YzVDMFRDMlQxQjhycE9BOG9GeS9GYjV6eWRmdCtzdmhCTHpYbVdDV2Rw?=
+ =?utf-8?B?UWk5STk1cFpyYkpZKzQ3OXFNeG83S2Vmb20wZ2F0MHhYclJOTyszcFZHUVdz?=
+ =?utf-8?B?NVlwd21tYkE1NndvbzJJMk9yWitKRDZ1aVdXY0FnamcrU0FkTUlyYWVUSXNT?=
+ =?utf-8?B?VDk4S1R6LzdFVHpyeXJyTjByQVl3ZnV4VFl2cGtHQ3Q0UTd0WVVyODdJOFJN?=
+ =?utf-8?B?NTR0c2F1R0dVa3RINDNRM3Qram5wWlJBWjErQ1pDaUtsUCt3b1pUbzFCYW9r?=
+ =?utf-8?B?VXowamxwMGZ2Z1hFZkRpRXRuakF2anJnUDBtOUhvaEpPenhTNFZqMmpDUGpJ?=
+ =?utf-8?B?eUxYYUlieTJzdmE3TzBzZm1Ua2U3VVhZd0lFT3NBUlRwY2FOWkNYcE5JK0Fi?=
+ =?utf-8?B?OE8vUXo5M1NGVzFGb1VaTVFFSW9TTjNGdjFnQWkxVWt6clRyOWx4WHV5Q1ZB?=
+ =?utf-8?B?VUltSzA5d0tCS1Q0dEdLcXJ2RnFkNlBWdjMvVmtibGpyTnlOb0czVERtakRM?=
+ =?utf-8?Q?ZT4UCC?=
+X-Forefront-Antispam-Report:
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(14060799003)(36860700013)(376014)(7416014)(35042699022);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 12:33:48.2234
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d4d5ee6-fbf6-4324-93be-08dda81b0c77
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DU2PEPF00028D03.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB9822
 
-From: Roger Quadros <rogerq@ti.com>
 
-Changes for enabling ethtool support for the newly added PRU Ethernet
-interfaces. Extends the support for statistics collection from PRU internal
-memory and displays it in the user space. Along with statistics,
-enable/disable of features, configuring link speed etc.are now supported.
+On 10/06/25 5:41 pm, Lorenzo Stoakes wrote:
+> On Tue, Jun 10, 2025 at 09:20:41AM +0530, Dev Jain wrote:
+>> Currently move_ptes() iterates through ptes one by one. If the underlying
+>> folio mapped by the ptes is large, we can process those ptes in a batch
+>> using folio_pte_batch(), thus clearing and setting the PTEs in one go.
+>> For arm64 specifically, this results in a 16x reduction in the number of
+>> ptep_get() calls (since on a contig block, ptep_get() on arm64 will iterate
+>> through all 16 entries to collect a/d bits), and we also elide extra TLBIs
+>> through get_and_clear_full_ptes, replacing ptep_get_and_clear.
+> Thanks this is good!
+>
+>> Mapping 1M of memory with 64K folios, memsetting it, remapping it to
+>> src + 1M, and munmapping it 10,000 times, the average execution time
+>> reduces from 1.9 to 1.2 seconds, giving a 37% performance optimization,
+>> on Apple M3 (arm64). No regression is observed for small folios.
+> Hmm, I thought people were struggling to get M3 to work with Asahi? :) or is
+> this in a mac-based vm? I've not paid attention to recent developments.
 
-The firmware running on PRU maintains statistics in internal data memory.
-When requested ethtool collects all the statistics for the specified
-interface and displays it in the user space.
+I meant a Linux VM on Mac.
 
-Makefile is updated to include ethtool support into PRUETH driver.
-
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Andrew F. Davis <afd@ti.com>
-Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
-Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
----
- drivers/net/ethernet/ti/Makefile              |   2 +-
- drivers/net/ethernet/ti/icssm/icssm_ethtool.c | 237 ++++++++++++++++++
- drivers/net/ethernet/ti/icssm/icssm_prueth.c  |  34 +++
- drivers/net/ethernet/ti/icssm/icssm_prueth.h  | 133 ++++++++++
- 4 files changed, 405 insertions(+), 1 deletion(-)
- create mode 100644 drivers/net/ethernet/ti/icssm/icssm_ethtool.c
-
-diff --git a/drivers/net/ethernet/ti/Makefile b/drivers/net/ethernet/ti/Makefile
-index 93c0a4d0e33a..f21dd11118ab 100644
---- a/drivers/net/ethernet/ti/Makefile
-+++ b/drivers/net/ethernet/ti/Makefile
-@@ -4,7 +4,7 @@
- #
- 
- obj-$(CONFIG_TI_PRUETH) += icssm-prueth.o
--icssm-prueth-y := icssm/icssm_prueth.o
-+icssm-prueth-y := icssm/icssm_prueth.o icssm/icssm_ethtool.o
- 
- obj-$(CONFIG_TI_CPSW) += cpsw-common.o
- obj-$(CONFIG_TI_DAVINCI_EMAC) += cpsw-common.o
-diff --git a/drivers/net/ethernet/ti/icssm/icssm_ethtool.c b/drivers/net/ethernet/ti/icssm/icssm_ethtool.c
-new file mode 100644
-index 000000000000..6faa46ba6364
---- /dev/null
-+++ b/drivers/net/ethernet/ti/icssm/icssm_ethtool.c
-@@ -0,0 +1,237 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Texas Instruments ICSSM Ethernet Driver
-+ *
-+ * Copyright (C) 2018-2022 Texas Instruments Incorporated - https://www.ti.com/
-+ *
-+ */
-+
-+#include <linux/if_bridge.h>
-+#include <linux/if_vlan.h>
-+#include "icssm_prueth.h"
-+
-+/* set PRU firmware statistics */
-+void icssm_emac_set_stats(struct prueth_emac *emac,
-+			  struct port_statistics *pstats)
-+{
-+	void __iomem *dram;
-+
-+	dram = emac->prueth->mem[emac->dram].va;
-+	memcpy_toio(dram + STATISTICS_OFFSET, pstats, STAT_SIZE);
-+}
-+
-+/* get statistics maintained by the PRU firmware into @pstats */
-+void icssm_emac_get_stats(struct prueth_emac *emac,
-+			  struct port_statistics *pstats)
-+{
-+	void __iomem *dram;
-+
-+	dram = emac->prueth->mem[emac->dram].va;
-+	memcpy_fromio(pstats, dram + STATISTICS_OFFSET, STAT_SIZE);
-+}
-+
-+/**
-+ * icssm_emac_get_drvinfo - Get EMAC driver information
-+ * @ndev: The network adapter
-+ * @info: ethtool info structure containing name and version
-+ *
-+ * Returns EMAC driver information (name and version)
-+ */
-+static void icssm_emac_get_drvinfo(struct net_device *ndev,
-+				   struct ethtool_drvinfo *info)
-+{
-+	struct prueth_emac *emac = netdev_priv(ndev);
-+	struct prueth *prueth = emac->prueth;
-+
-+	strscpy(info->driver, dev_driver_string(prueth->dev),
-+		sizeof(info->driver));
-+}
-+
-+#define PRUETH_STAT_OFFSET(m, stats_type)       \
-+{                                               \
-+	#m,                                     \
-+	offsetof(struct port_statistics, m),    \
-+	stats_type                              \
-+}
-+
-+struct icssm_prueth_stats {
-+	char string[ETH_GSTRING_LEN];
-+	u32 offset;
-+	bool standard_stats;
-+};
-+
-+static const struct icssm_prueth_stats prueth_ethtool_stats[] = {
-+	PRUETH_STAT_OFFSET(tx_bcast, false),
-+	PRUETH_STAT_OFFSET(tx_mcast, false),
-+	PRUETH_STAT_OFFSET(tx_ucast, false),
-+	PRUETH_STAT_OFFSET(tx_octets, true),
-+	PRUETH_STAT_OFFSET(rx_bcast, false),
-+	PRUETH_STAT_OFFSET(rx_mcast, false),
-+	PRUETH_STAT_OFFSET(rx_ucast, false),
-+	PRUETH_STAT_OFFSET(rx_octets, true),
-+
-+	PRUETH_STAT_OFFSET(tx64byte, true),
-+	PRUETH_STAT_OFFSET(tx65_127byte, true),
-+	PRUETH_STAT_OFFSET(tx128_255byte, true),
-+	PRUETH_STAT_OFFSET(tx256_511byte, true),
-+	PRUETH_STAT_OFFSET(tx512_1023byte, true),
-+	PRUETH_STAT_OFFSET(tx1024byte, true),
-+	PRUETH_STAT_OFFSET(rx64byte, true),
-+	PRUETH_STAT_OFFSET(rx65_127byte, true),
-+	PRUETH_STAT_OFFSET(rx128_255byte, true),
-+	PRUETH_STAT_OFFSET(rx256_511byte, true),
-+	PRUETH_STAT_OFFSET(rx512_1023byte, true),
-+	PRUETH_STAT_OFFSET(rx1024byte, true),
-+
-+	PRUETH_STAT_OFFSET(late_coll, true),
-+	PRUETH_STAT_OFFSET(single_coll, true),
-+	PRUETH_STAT_OFFSET(multi_coll, true),
-+	PRUETH_STAT_OFFSET(excess_coll, true),
-+
-+	PRUETH_STAT_OFFSET(rx_misalignment_frames, false),
-+	PRUETH_STAT_OFFSET(stormprev_counter_bc, false),
-+	PRUETH_STAT_OFFSET(stormprev_counter_mc, false),
-+	PRUETH_STAT_OFFSET(stormprev_counter_uc, false),
-+	PRUETH_STAT_OFFSET(mac_rxerror, false),
-+	PRUETH_STAT_OFFSET(sfd_error, false),
-+	PRUETH_STAT_OFFSET(def_tx, true),
-+	PRUETH_STAT_OFFSET(mac_txerror, false),
-+	PRUETH_STAT_OFFSET(rx_oversized_frames, false),
-+	PRUETH_STAT_OFFSET(rx_undersized_frames, false),
-+	PRUETH_STAT_OFFSET(rx_crc_frames, true),
-+	PRUETH_STAT_OFFSET(dropped_packets, false),
-+
-+	PRUETH_STAT_OFFSET(tx_hwq_overflow, false),
-+	PRUETH_STAT_OFFSET(tx_hwq_underflow, false),
-+	PRUETH_STAT_OFFSET(vlan_dropped, true),
-+	PRUETH_STAT_OFFSET(multicast_dropped, true),
-+};
-+
-+void icssm_emac_update_hardware_stats(struct prueth_emac *emac)
-+{
-+	void __iomem *dram, *stat_base;
-+	int i;
-+
-+	dram = emac->prueth->mem[emac->dram].va;
-+	stat_base = dram + STATISTICS_OFFSET;
-+
-+	for (i = 0; i < ARRAY_SIZE(prueth_ethtool_stats); i++)
-+		emac->emac_stats[i] = ioread32(stat_base + i * sizeof(u32));
-+}
-+
-+static int icssm_emac_get_sset_count(struct net_device *ndev, int stringset)
-+{
-+	switch (stringset) {
-+	case ETH_SS_STATS:
-+		return ICSSM_NUM_STANDARD_STATS;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static void icssm_emac_get_strings(struct net_device *ndev, u32 stringset,
-+				   u8 *data)
-+{
-+	u8 *p = data;
-+	int i;
-+
-+	switch (stringset) {
-+	case ETH_SS_STATS:
-+		for (i = 0; i < ARRAY_SIZE(prueth_ethtool_stats); i++) {
-+			if (!prueth_ethtool_stats[i].standard_stats)
-+				ethtool_puts(&p,
-+					     prueth_ethtool_stats[i].string);
-+		}
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
-+static void icssm_emac_get_ethtool_stats(struct net_device *ndev,
-+					 struct ethtool_stats *stats, u64 *data)
-+{
-+	struct prueth_emac *emac = netdev_priv(ndev);
-+	int i;
-+
-+	icssm_emac_update_hardware_stats(emac);
-+
-+	for (i = 0; i < ARRAY_SIZE(prueth_ethtool_stats); i++) {
-+		if (!prueth_ethtool_stats[i].standard_stats)
-+			*(data++) = emac->emac_stats[i];
-+	}
-+}
-+
-+static void icssm_emac_get_regs(struct net_device *ndev,
-+				struct ethtool_regs *regs, void *p)
-+{
-+	struct prueth_emac *emac = netdev_priv(ndev);
-+	struct prueth *prueth = emac->prueth;
-+
-+	regs->version = PRUETH_REG_DUMP_GET_VER(prueth);
-+}
-+
-+static const struct ethtool_rmon_hist_range icssm_emac_rmon_ranges[] = {
-+	{    0,   64},
-+	{   65,  127},
-+	{  128,  255},
-+	{  256,  511},
-+	{  512,  1023},
-+	{ 1024,  EMAC_MAX_PKTLEN},
-+	{}
-+};
-+
-+static void
-+icssm_emac_get_rmon_stats(struct net_device *ndev,
-+			  struct ethtool_rmon_stats *rmon_stats,
-+			  const struct ethtool_rmon_hist_range **ranges)
-+{
-+	struct prueth_emac *emac = netdev_priv(ndev);
-+	struct port_statistics pstats;
-+
-+	*ranges = icssm_emac_rmon_ranges;
-+	icssm_emac_get_stats(emac, &pstats);
-+
-+	rmon_stats->undersize_pkts = pstats.rx_undersized_frames;
-+	rmon_stats->oversize_pkts = pstats.rx_oversized_frames;
-+
-+	rmon_stats->hist[0] = pstats.tx64byte;
-+	rmon_stats->hist[1] = pstats.tx65_127byte;
-+	rmon_stats->hist[2] = pstats.tx128_255byte;
-+	rmon_stats->hist[3] = pstats.tx256_511byte;
-+	rmon_stats->hist[4] = pstats.tx512_1023byte;
-+
-+	rmon_stats->hist_tx[0] = pstats.rx64byte;
-+	rmon_stats->hist_tx[1] = pstats.rx65_127byte;
-+	rmon_stats->hist_tx[2] = pstats.rx128_255byte;
-+	rmon_stats->hist_tx[3] = pstats.rx256_511byte;
-+	rmon_stats->hist_tx[4] = pstats.rx1024byte;
-+}
-+
-+static void
-+icssm_emac_get_eth_mac_stats(struct net_device *ndev,
-+			     struct ethtool_eth_mac_stats *mac_stats)
-+{
-+	struct prueth_emac *emac = netdev_priv(ndev);
-+	struct port_statistics pstats;
-+
-+	icssm_emac_get_stats(emac, &pstats);
-+
-+	mac_stats->LateCollisions = pstats.late_coll;
-+	mac_stats->SingleCollisionFrames = pstats.single_coll;
-+	mac_stats->MultipleCollisionFrames = pstats.multi_coll;
-+}
-+
-+/* Ethtool support for EMAC adapter */
-+const struct ethtool_ops emac_ethtool_ops = {
-+	.get_drvinfo = icssm_emac_get_drvinfo,
-+	.get_link_ksettings = phy_ethtool_get_link_ksettings,
-+	.set_link_ksettings = phy_ethtool_set_link_ksettings,
-+	.get_link = ethtool_op_get_link,
-+	.get_sset_count = icssm_emac_get_sset_count,
-+	.get_strings = icssm_emac_get_strings,
-+	.get_ethtool_stats = icssm_emac_get_ethtool_stats,
-+	.get_regs = icssm_emac_get_regs,
-+	.get_rmon_stats = icssm_emac_get_rmon_stats,
-+	.get_eth_mac_stats = icssm_emac_get_eth_mac_stats,
-+};
-+EXPORT_SYMBOL_GPL(emac_ethtool_ops);
-diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.c b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
-index 532d9e7fdd38..2b10538c616e 100644
---- a/drivers/net/ethernet/ti/icssm/icssm_prueth.c
-+++ b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
-@@ -920,6 +920,8 @@ static int icssm_emac_ndo_open(struct net_device *ndev)
- 
- 	icssm_prueth_emac_config(emac);
- 
-+	icssm_emac_set_stats(emac, &emac->stats);
-+
- 	ret = icssm_emac_set_boot_pru(emac, ndev);
- 	if (ret)
- 		return ret;
-@@ -975,6 +977,8 @@ static int icssm_emac_ndo_stop(struct net_device *ndev)
- 	/* stop the PRU */
- 	rproc_shutdown(emac->pru);
- 
-+	icssm_emac_get_stats(emac, &emac->stats);
-+
- 	/* free rx interrupts */
- 	free_irq(emac->rx_irq, ndev);
- 
-@@ -1068,10 +1072,39 @@ static enum netdev_tx icssm_emac_ndo_start_xmit(struct sk_buff *skb,
- 	return ret;
- }
- 
-+/**
-+ * icssm_emac_ndo_get_stats64 - EMAC get statistics function
-+ * @ndev: The EMAC network adapter
-+ * @stats: rtnl_link_stats structure
-+ *
-+ * Called when system wants to get statistics from the device.
-+ *
-+ */
-+static void icssm_emac_ndo_get_stats64(struct net_device *ndev,
-+				       struct rtnl_link_stats64 *stats)
-+{
-+	struct prueth_emac *emac = netdev_priv(ndev);
-+	struct port_statistics pstats;
-+
-+	icssm_emac_get_stats(emac, &pstats);
-+
-+	stats->rx_packets = ndev->stats.rx_packets;
-+	stats->rx_bytes = ndev->stats.rx_bytes;
-+	stats->tx_packets = ndev->stats.tx_packets;
-+	stats->tx_bytes = ndev->stats.tx_bytes;
-+	stats->tx_errors = ndev->stats.tx_errors;
-+	stats->tx_dropped = ndev->stats.tx_dropped;
-+	stats->multicast = pstats.rx_mcast;
-+
-+	stats->rx_over_errors = ndev->stats.rx_over_errors;
-+	stats->rx_length_errors = ndev->stats.rx_length_errors;
-+}
-+
- static const struct net_device_ops emac_netdev_ops = {
- 	.ndo_open = icssm_emac_ndo_open,
- 	.ndo_stop = icssm_emac_ndo_stop,
- 	.ndo_start_xmit = icssm_emac_ndo_start_xmit,
-+	.ndo_get_stats64 = icssm_emac_ndo_get_stats64,
- };
- 
- /* get emac_port corresponding to eth_node name */
-@@ -1200,6 +1233,7 @@ static int icssm_prueth_netdev_init(struct prueth *prueth,
- 	phy_remove_link_mode(emac->phydev, ETHTOOL_LINK_MODE_Asym_Pause_BIT);
- 
- 	ndev->netdev_ops = &emac_netdev_ops;
-+	ndev->ethtool_ops = &emac_ethtool_ops;
- 
- 	netif_napi_add(ndev, &emac->napi, icssm_emac_napi_poll);
- 
-diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.h b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
-index 0dde5c8e4fb4..c44edf47bce3 100644
---- a/drivers/net/ethernet/ti/icssm/icssm_prueth.h
-+++ b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
-@@ -27,6 +27,12 @@
- #define EMAC_MAX_FRM_SUPPORT (ETH_HLEN + VLAN_HLEN + ETH_DATA_LEN + \
- 			      ICSSM_LRE_TAG_SIZE)
- 
-+#define PRUETH_REG_DUMP_VER		1
-+
-+/* Encoding: 32-16: Reserved, 16-8: Reg dump version, 8-0: Ethertype */
-+#define PRUETH_REG_DUMP_GET_VER(x)	((PRUETH_REG_DUMP_VER << 8) | \
-+					 ((x)->eth_type))
-+
- /* PRU Ethernet Type - Ethernet functionality (protocol
-  * implemented) provided by the PRU firmware being loaded.
-  */
-@@ -108,6 +114,124 @@ struct prueth_packet_info {
- 	bool timestamp;
- };
- 
-+#define ICSSM_NUM_STANDARD_STATS       18
-+#define ICSSM_NUM_STATS      40
-+
-+/**
-+ * struct port_statistics - Statistics structure for capturing statistics
-+ *			    on PRUs
-+ * @tx_bcast: Number of broadcast packets sent
-+ * @tx_mcast:Number of multicast packets sent
-+ * @tx_ucast:Number of unicast packets sent
-+ *
-+ * @tx_octets:Number of undersized frames rcvd
-+ *
-+ * @rx_bcast:Number of broadcast packets rcvd
-+ * @rx_mcast:Number of multicast packets rcvd
-+ * @rx_ucast:Number of unicast packets rcvd
-+ *
-+ * @rx_octets:Number of Rx packets
-+ *
-+ * @tx64byte:Number of 64 byte packets sent
-+ * @tx65_127byte:Number of 65-127 byte packets sent
-+ * @tx128_255byte:Number of 128-255 byte packets sent
-+ * @tx256_511byte:Number of 256-511 byte packets sent
-+ * @tx512_1023byte:Number of 512-1023 byte packets sent
-+ * @tx1024byte:Number of 1024 and larger size packets sent
-+ *
-+ * @rx64byte:Number of 64 byte packets rcvd
-+ * @rx65_127byte:Number of 65-127 byte packets rcvd
-+ * @rx128_255byte:Number of 128-255 byte packets rcvd
-+ * @rx256_511byte:Number of 256-511 byte packets rcvd
-+ * @rx512_1023byte:Number of 512-1023 byte packets rcvd
-+ * @rx1024byte:Number of 1024 and larger size packets rcvd
-+ *
-+ * @late_coll:Number of late collisions(Half Duplex)
-+ * @single_coll:Number of single collisions (Half Duplex)
-+ * @multi_coll:Number of multiple collisions (Half Duplex)
-+ * @excess_coll:Number of excess collisions(Half Duplex)
-+ *
-+ * @rx_misalignment_frames:Number of non multiple of 8 byte frames rcvd
-+ * @stormprev_counter_bc: Storm prevention count for broadcast frames
-+ * @stormprev_counter_mc: Storm prevention count for multicast frames
-+ * @stormprev_counter_uc: Storm prevention count for unicast frames
-+ * @mac_rxerror:Number of MAC receive errors
-+ * @sfd_error:Number of invalid SFD
-+ * @def_tx:Number of transmissions deferred
-+ * @mac_txerror:Number of MAC transmit errors
-+ * @rx_oversized_frames:Number of oversized frames rcvd
-+ * @rx_undersized_frames:Number of undersized frames rcvd
-+ * @rx_crc_frames:Number of CRC error frames rcvd
-+ * @dropped_packets:Number of packets dropped due to link down on opposite port
-+ *
-+ * @tx_hwq_overflow:Hardware Tx Queue (on PRU) over flow count
-+ * @tx_hwq_underflow:Hardware Tx Queue (on PRU) under flow count
-+ *
-+ * @cs_error: Number of carrier sense errors
-+ * @sqe_test_error: Number of MAC receive errors
-+ *
-+ * Above fields are aligned so that it's consistent
-+ * with the memory layout in PRU DRAM, this is to facilitate easy
-+ * memcpy. Don't change the order of the fields.
-+ *
-+ * @vlan_dropped: Number of VLAN tagged packets dropped
-+ * @multicast_dropped: Number of multicast packets dropped
-+ */
-+struct port_statistics {
-+	u32 tx_bcast;
-+	u32 tx_mcast;
-+	u32 tx_ucast;
-+
-+	u32 tx_octets;
-+
-+	u32 rx_bcast;
-+	u32 rx_mcast;
-+	u32 rx_ucast;
-+
-+	u32 rx_octets;
-+
-+	u32 tx64byte;
-+	u32 tx65_127byte;
-+	u32 tx128_255byte;
-+	u32 tx256_511byte;
-+	u32 tx512_1023byte;
-+	u32 tx1024byte;
-+
-+	u32 rx64byte;
-+	u32 rx65_127byte;
-+	u32 rx128_255byte;
-+	u32 rx256_511byte;
-+	u32 rx512_1023byte;
-+	u32 rx1024byte;
-+
-+	u32 late_coll;
-+	u32 single_coll;
-+	u32 multi_coll;
-+	u32 excess_coll;
-+
-+	u32 rx_misalignment_frames;
-+	u32 stormprev_counter_bc;
-+	u32 stormprev_counter_mc;
-+	u32 stormprev_counter_uc;
-+	u32 mac_rxerror;
-+	u32 sfd_error;
-+	u32 def_tx;
-+	u32 mac_txerror;
-+	u32 rx_oversized_frames;
-+	u32 rx_undersized_frames;
-+	u32 rx_crc_frames;
-+	u32 dropped_packets;
-+
-+	u32 tx_hwq_overflow;
-+	u32 tx_hwq_underflow;
-+
-+	u32 cs_error;
-+	u32 sqe_test_error;
-+
-+	u32 vlan_dropped;
-+	u32 multicast_dropped;
-+} __packed;
-+
- /* In switch mode there are 3 real ports i.e. 3 mac addrs.
-  * however Linux sees only the host side port. The other 2 ports
-  * are the switch ports.
-@@ -204,6 +328,8 @@ struct prueth_emac {
- 	struct phy_device *phydev;
- 	struct prueth_queue_desc __iomem *rx_queue_descs;
- 	struct prueth_queue_desc __iomem *tx_queue_descs;
-+	struct port_statistics stats; /* stats holder when i/f is down */
-+	u32 emac_stats[ICSSM_NUM_STATS];
- 
- 	int link;
- 	int speed;
-@@ -242,6 +368,8 @@ struct prueth {
- 	u8 emac_configured;
- };
- 
-+extern const struct ethtool_ops emac_ethtool_ops;
-+
- void icssm_parse_packet_info(struct prueth *prueth, u32 buffer_descriptor,
- 			     struct prueth_packet_info *pkt_info);
- int icssm_emac_rx_packet(struct prueth_emac *emac, u16 *bd_rd_ptr,
-@@ -255,4 +383,9 @@ static inline void icssm_emac_finish_napi(struct prueth_emac *emac,
- 	enable_irq(irq);
- }
- 
-+void icssm_emac_update_hardware_stats(struct prueth_emac *emac);
-+void icssm_emac_set_stats(struct prueth_emac *emac,
-+			  struct port_statistics *pstats);
-+void icssm_emac_get_stats(struct prueth_emac *emac,
-+			  struct port_statistics *pstats);
- #endif /* __NET_TI_PRUETH_H */
--- 
-2.34.1
-
+>
+>> The patchset is based on mm-unstable (6ebffe676fcf).
+>>
+>> Test program for reference:
+>>
+>> #define _GNU_SOURCE
+>> #include <stdio.h>
+>> #include <stdlib.h>
+>> #include <unistd.h>
+>> #include <sys/mman.h>
+>> #include <string.h>
+>> #include <errno.h>
+>>
+>> #define SIZE (1UL << 20) // 1M
+>>
+>> int main(void) {
+>>      void *new_addr, *addr;
+>>
+>>      for (int i = 0; i < 10000; ++i) {
+>>          addr = mmap((void *)(1UL << 30), SIZE, PROT_READ | PROT_WRITE,
+>>                      MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+>>          if (addr == MAP_FAILED) {
+>>                  perror("mmap");
+>>                  return 1;
+>>          }
+>>          memset(addr, 0xAA, SIZE);
+>>
+>>          new_addr = mremap(addr, SIZE, SIZE, MREMAP_MAYMOVE | MREMAP_FIXED, addr + SIZE);
+>>          if (new_addr != (addr + SIZE)) {
+>>                  perror("mremap");
+>>                  return 1;
+>>          }
+>>          munmap(new_addr, SIZE);
+>>      }
+>>
+>> }
+>>
+> Thanks for including! Very useful.
+>
+>> v3->v4:
+>>   - Remove comment above mremap_folio_pte_batch, improve patch description
+>>     differentiating between folio splitting and pagetable splitting
+>> v2->v3:
+>>   - Refactor mremap_folio_pte_batch, drop maybe_contiguous_pte_pfns, fix
+>>     indentation (Lorenzo), fix cover letter description (512K -> 1M)
+> It's nitty but these seem to be getting more and more abbreviated :) not a
+> massive big deal however ;)
+>
+>> v1->v2:
+>>   - Expand patch descriptions, move pte declarations to a new line,
+>>     reduce indentation in patch 2 by introducing mremap_folio_pte_batch(),
+>>     fix loop iteration (Lorenzo)
+>>   - Merge patch 2 and 3 (Anshuman, Lorenzo)
+>>   - Fix maybe_contiguous_pte_pfns (Willy)
+>>
+>> Dev Jain (2):
+>>    mm: Call pointers to ptes as ptep
+>>    mm: Optimize mremap() by PTE batching
+>>
+>>   mm/mremap.c | 58 ++++++++++++++++++++++++++++++++++++++---------------
+>>   1 file changed, 42 insertions(+), 16 deletions(-)
+>>
+>> --
+>> 2.30.2
+>>
