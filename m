@@ -1,86 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65BCA23A9AE;
-	Tue, 10 Jun 2025 15:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804AF230BF5;
+	Tue, 10 Jun 2025 15:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749569084; cv=none; b=lYTyYawFOecvxSP19wPTA81ZxLpniB2UI7AtyeURo6xjkKut1qQ+L4HMCzhHGNM4R027FTfJISlSPUyYSqwCd0YrPDnl83qoMKbBFahcfbs0rcibL5NU5kPxrS3bvoFmSo/g+lVIVcPcmxz42+wGIDOPuU5BWjdpUAXATuW2Lkg=
+	t=1749569096; cv=none; b=XfQ4VYeL5MeKUPOtoPSpWWQ3ZXRVoY1+NixSU2B302SNJKm0i2w4brI3sx39thyAWfjEymDoJfIOZA7VViGQYV69CuGBXY5L+K4lQSkeHHfjaToIqukNqIHsBwnFCVrRgvLLapPSYGf6LeixNog7YaXlGkhhES8gyhBGVh7VwDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749569084; c=relaxed/simple;
-	bh=LTaUdWa9/Ws1bfWS3f2J0x9VpEljc2bZmkr9lvYn3qo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G0y3PkqAGdBJcY/IUarBvOSE/1hlOpyvVNk9KhFPSM58q9STKmwEdTsRglxvL9R8cvWkIo3aGtU1qVvBryvGltvjmraqGc8VMNL7FcuWVddb+odm2zxrBSf0mebpnrrDU5DJ0/jiQ73how2APeG/b0+QttSR9qll6onT3GgQEJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YpJYthXt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749569096; c=relaxed/simple;
+	bh=djeR04w/75lWxkApA8z7LUOUKkq030Zmb0bpaqVQ+Yc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WLeRVP9i4H4NAtddH/1kcOXQphFlsR3rLXIJnMxs0S1iKPYiUfm+FSKFVN8B8sFlOsWkg+nuvOlUuvAmxa+rK7cFj2+dC7N5LjW6X6UH6D/n7+X7r07KeOlQihYbaJN/VCi53MWT9eCtpuG4+ybYcVRAp9arZnpVMMrsS1GiM/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=yxXbp0Mw; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YpJYthXt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 311B0C4CEED;
-	Tue, 10 Jun 2025 15:24:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749569082;
-	bh=LTaUdWa9/Ws1bfWS3f2J0x9VpEljc2bZmkr9lvYn3qo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YpJYthXtVG9kvBG5B9lObJbk+ddZzH4DDhKTM1YLN5DfbzpWPJ7t1Cbj6HRnhBuqA
-	 b+JD4y3kpb/cB3+g+AdJeQV59d5osCNBI47a0sgtCdqib16JsrF844E0+/Szd6K0Vj
-	 mFt7aHSVdrP+C/xDOixe6qydqpFGMYaRtStS+WN51HQlrkHg9Uz10pduObBgOZk6mf
-	 tQldXviqXpuXk9Eb54GPL+pgbAbyohYs8XPAslhmcl1HffggDiPViXXc9F8WvYZYOU
-	 JhpTH2f+6Yq+7wiPGIigy1rv65jXESftV8PidqfDuhcyUPhcwBWfBSLCyaKjLRUnyC
-	 WNhA5NkEVMDgg==
-Date: Tue, 10 Jun 2025 16:24:38 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 1/8] dt-bindings: soc: Add Renesas RZ/N2H (R9A09G087) SoC
-Message-ID: <20250610-eats-degrading-06101283cb8a@spud>
-References: <20250609203656.333138-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250609203656.333138-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="yxXbp0Mw"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55ACLF7D010719;
+	Tue, 10 Jun 2025 17:24:41 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	PV6mynfuvv42D/ePAoYQa09aeqeL9wkOTzavUKrfpmo=; b=yxXbp0MwRqkezWKJ
+	ghM1nwfNNx/HR2jk1frQY0dGqtCYxDMUHc9yWPAVyTnMIZYEcjLEyPIO0JSkvslw
+	aX1bFJLXMisqBYo59e3qAhC8Uvbo3XvBGGLp7iuanIOprPfdf9MrnS5tGtllLm1t
+	+Zzvq5SKzdRn92qVaBLqx5PStMIipZ/iW3sAh4yuTlz/weKLo8uQiK13jsN5RUx1
+	SbHSWHFrcuPq9DA4pcccp2z8UvVP5h712Oy/T9JxtFP3MYslpUzycwhIOyBBWaCE
+	f+b+9RzUhe5hcO4yx4e90g7KAKiX4vzh9SpWRC5W/Eh0iwkQcW3SdHK1dhIPN+xd
+	nGFexQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474y053dsf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 17:24:41 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9D6634004B;
+	Tue, 10 Jun 2025 17:23:38 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EF1CFB79BAE;
+	Tue, 10 Jun 2025 17:23:13 +0200 (CEST)
+Received: from localhost (10.48.86.132) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
+ 2025 17:23:13 +0200
+From: Antonio Borneo <antonio.borneo@foss.st.com>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: Antonio Borneo <antonio.borneo@foss.st.com>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+Subject: [RESEND PATCH v2 2/5] dt-bindings: pinctrl: stm32: Add RSVD mux function
+Date: Tue, 10 Jun 2025 17:23:06 +0200
+Message-ID: <20250610152309.299438-3-antonio.borneo@foss.st.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250610152309.299438-1-antonio.borneo@foss.st.com>
+References: <20250610152309.299438-1-antonio.borneo@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Kp+zzp+3OSyUTruj"
-Content-Disposition: inline
-In-Reply-To: <20250609203656.333138-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SAFCAS1NODE2.st.com (10.75.90.13) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_07,2025-06-10_01,2025-03-28_01
 
+From: Fabien Dessenne <fabien.dessenne@foss.st.com>
 
---Kp+zzp+3OSyUTruj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Document the RSVD (Reserved) mux function, used to reserve pins
+for a coprocessor not running Linux.
 
-On Mon, Jun 09, 2025 at 09:36:49PM +0100, Prabhakar wrote:
-> From: Paul Barker <paul.barker.ct@bp.renesas.com>
->=20
-> Add RZ/N2H (R9A09G087), its variants, and the rzn2h-evk evaluation board
-> in documentation.
->=20
-> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Signed-off-by: Fabien Dessenne <fabien.dessenne@foss.st.com>
+Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml     | 8 ++++++++
+ include/dt-bindings/pinctrl/stm32-pinfunc.h               | 1 +
+ 2 files changed, 9 insertions(+)
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+index a28d77748095a..5d17d6487ae9c 100644
+--- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+@@ -160,9 +160,13 @@ patternProperties:
+               * ...
+               * 16 : Alternate Function 15
+               * 17 : Analog
++              * 18 : Reserved
+               To simplify the usage, macro is available to generate "pinmux" field.
+               This macro is available here:
+                 - include/dt-bindings/pinctrl/stm32-pinfunc.h
++              Setting the pinmux's function to the Reserved (RSVD) value is used to inform
++              the driver that it shall not apply the mux setting. This can be used to
++              reserve some pins, for example to a co-processor not running Linux.
+               Some examples of using macro:
+                /* GPIO A9 set as alternate function 2 */
+                ... {
+@@ -176,6 +180,10 @@ patternProperties:
+                ... {
+                           pinmux = <STM32_PINMUX('A', 9, ANALOG)>;
+                };
++               /* GPIO A9 reserved for co-processor */
++               ... {
++                          pinmux = <STM32_PINMUX('A', 9, RSVD)>;
++               };
+ 
+           bias-disable:
+             type: boolean
+diff --git a/include/dt-bindings/pinctrl/stm32-pinfunc.h b/include/dt-bindings/pinctrl/stm32-pinfunc.h
+index 28ad0235086a6..af3fd388329a0 100644
+--- a/include/dt-bindings/pinctrl/stm32-pinfunc.h
++++ b/include/dt-bindings/pinctrl/stm32-pinfunc.h
+@@ -26,6 +26,7 @@
+ #define AF14	0xf
+ #define AF15	0x10
+ #define ANALOG	0x11
++#define RSVD	0x12
+ 
+ /* define Pins number*/
+ #define PIN_NO(port, line)	(((port) - 'A') * 0x10 + (line))
+-- 
+2.34.1
 
---Kp+zzp+3OSyUTruj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEhONQAKCRB4tDGHoIJi
-0njgAPsG9DbL5Qbyz7w0b9PxKX6dJpbdBOp6idHVjwk+cZzM0gD/cDyhMd7JO1hq
-gmYBzeXcxhSD4nOWCatEpk+++S3jJA0=
-=NqWq
------END PGP SIGNATURE-----
-
---Kp+zzp+3OSyUTruj--
