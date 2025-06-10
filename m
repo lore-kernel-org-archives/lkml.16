@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73673230BF5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735BC22A4CC;
 	Tue, 10 Jun 2025 15:37:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749569837; cv=none; b=ehHEVHxZ6QM+adWIYFGNi7F9OqUrJQo7/mfdphnCCDK3UnPyC4U6G1wLuwl5aaJlr+lUjFGsJB09i6KF+9pXSMC7peG0ZKt+ncPUzhBE1zZSJVrP5wAp/+qT3rWGrOownbKjMjLTJtI7t0mLqLBI7OJqcvDXLg8f2uAu/4ETwOQ=
+	t=1749569837; cv=none; b=BHzdpW37g7SBkx/L336CAIVhtfiKNaSD1nfm04FDY8r0kTp+ipi4P4t1WVz6V1eLmta9ZIQIoUr8teIIMrpFDlUp5ENVyTDM3S6w0+HtVLMTLIGcz/6gnOnYXTHTaNUhfQMpFixsmUECy/ibyrw8CK2QgW7+/2iZe417hCTtMFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749569837; c=relaxed/simple;
-	bh=BaMCopdFsyf97DgXqkRC4ITODJy4XrlKF7Fhset0d1w=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=A+AsLeCNG3i0JnpEIf/1TtS88pSxb1i4DyZtp9TXo0wEiW0YX4NJnnPwWNIwsag3D2bM667udfXfuw58cTX1rdJUaM8xVM4NqKO1bXPZU8AjmbzlqEh+aGCBKWnkq0ghtA/btWZWbiKLDVu3F9BNmqOtXvFuSJ7Qy4GQ2ATJQrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ovvHo31L; arc=none smtp.client-ip=10.30.226.201
+	bh=XwlLH1QUOe+A5tsmgS1qll2CFxcQanHYxJ/Jad8QRIs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=gVEZ4RePAWOrjCMmfSkYyZrvhm15yHfC37EUiUJ2/7VvbQxQQXtVyIBSw7zC3XPUgq5/8glUrScQqv23oG984tOWurC4nAyrRydp6LVgSJSQCGsQHCS08zuCLboypSE4cY6yDvAC708pXTmntRolIw7pSgvHSs9d0+uwwIZ3Cv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sFl7AD4F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ovvHo31L"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0C094C4CEF0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sFl7AD4F"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 19EC1C4CEF2;
 	Tue, 10 Jun 2025 15:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1749569837;
-	bh=BaMCopdFsyf97DgXqkRC4ITODJy4XrlKF7Fhset0d1w=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=ovvHo31LihN3bqay3oxdNAZg8ziXGuJMFzBf/bDoJchcVuTQEBhFh0STNaRk1YMTz
-	 BKChWJsjYzZ9da9D9wjke+9cVy7LuzEb9CZh8zp9htnrJBh/YjSMpW7OiqFmhZQdIL
-	 0A30zqDIb3oJUgHuk9Sa+b4rUW7eWL7q6X+i3aPltNsu/ditrWKFJCMogt8+ZbDdyx
-	 vSioFA6JPCIwrdosvm6OdaRb8GF+trwD2b1mMTZQPp8qihJIlOmjVfZXZ7JPLfN2Uk
-	 oBGaRdsF5pYVZ3/4UHX2ZeB3b5T9FCqb6TgX4uC5hEmbVvYv2weSdcqikOFjywoMxd
-	 Cpi/xnpk3+x2A==
+	bh=XwlLH1QUOe+A5tsmgS1qll2CFxcQanHYxJ/Jad8QRIs=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=sFl7AD4F2xcpb+Qx1sAp5spGn/zzLHKiyxofy7Q6QhGVq+b5HGviyaDi9xROwY9PW
+	 r96diYbgSZ+P2CWBgltqncutpQDIBjzUrOFIByCeL8iRoRF5vvoQ+IrI9OoLu133Br
+	 B+W1R6XH0n2Wk3whNLPcXlHmY/OELIMhouGtZqITcx21b9jRuHKCg4AHYbbx4k01PX
+	 jQIUrl8yddJUKbQ1yDRQugJOuUVxfNIt221HqqY0+svTbDVylUk8Fy9F9BYmolsGZS
+	 z5KsHOvZiIiT8goxDjf7MigiBUhAGWS55R/Pis1zmuNJK/Hsn96C6Cs/DrprvPDLFY
+	 wshCCh/ARfg5A==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCA9C5B552;
-	Tue, 10 Jun 2025 15:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 081F2C678DA;
+	Tue, 10 Jun 2025 15:37:17 +0000 (UTC)
 From: Mahesh Rao via B4 Relay <devnull+mahesh.rao.altera.com@kernel.org>
-Subject: [PATCH v4 0/5] stratix10: Add framework for asynchronous
- communication with SDM
-Date: Tue, 10 Jun 2025 23:37:07 +0800
-Message-Id: <20250610-sip_svc_upstream-v4-0-bcd9d6089071@altera.com>
+Date: Tue, 10 Jun 2025 23:37:08 +0800
+Subject: [PATCH v4 1/5] firmware: stratix10-svc: Add mutex lock and unlock
+ in stratix10 memory allocation/free
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,23 +41,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIACNRSGgC/23PQW7DIBAF0KtYrEs0gHGwV71HVVkYxglSHbtAU
- KLIdy/BqtIqWf6R5v2ZGwnoHQbSVTfiMbng5lMO9VtFzFGfDkidzZlw4BKYYDS4pQ/J9OclRI9
- 6orhXVpl2qIWQJK8tHkd3KeTH55Y9fp+zHLfhA+6qjYWWhtmMy0H3v/zkgqHDYOw47DUAV10Sd
- 33QAamZp8nFrkrNjklyLzm6EGd/LW8kVloKXXP+fHFiFCgoBbJlLYyCveuviF7vslu0xB+CZK8
- EnoVRozS1NJmxT4L4I/DmhSCy0GhQupbALYp/wrquP8yoZ62aAQAA
-X-Change-ID: 20250131-sip_svc_upstream-e78d8c9b4335
+Message-Id: <20250610-sip_svc_upstream-v4-1-bcd9d6089071@altera.com>
+References: <20250610-sip_svc_upstream-v4-0-bcd9d6089071@altera.com>
+In-Reply-To: <20250610-sip_svc_upstream-v4-0-bcd9d6089071@altera.com>
 To: Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Mahesh Rao <mahesh.rao@altera.com>
 Cc: Matthew Gerlach <matthew.gerlach@altera.com>, 
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749569835; l=3196;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749569835; l=3733;
  i=mahesh.rao@altera.com; s=20250107; h=from:subject:message-id;
- bh=BaMCopdFsyf97DgXqkRC4ITODJy4XrlKF7Fhset0d1w=;
- b=Dg/uJSgebPZk7zffIlpCTxoQsG5cXKLK/GheSOMKIUb21q96Avuu9QQCzZGYCgaLJm9h2nnhQ
- iyZFxStkiDaA2s/gNv2nN+6pR8tFZCR4s6g37iIB8VBfjf0NQy2vkX9
+ bh=JbJ8Yi/w4WDy3naiPJdrXbTKxhOxbl947N92woONhKs=;
+ b=Q7JykyCKYiPF03hQoXxDPiFnZSt96QdYW3SG+RuusP4xALSwoGM93yYxlAhDPYWwYgi2maxZO
+ jQINmYU2tAUAF7Q9SbIf/kjCKs9tsLV0l5Z5A9RAYjA2qU7ee11MgJU
 X-Developer-Key: i=mahesh.rao@altera.com; a=ed25519;
  pk=tQiFUzoKxHrQLDtWeEeaeTeJTl/UfclUHWZy1fjSiyg=
 X-Endpoint-Received: by B4 Relay for mahesh.rao@altera.com/20250107 with
@@ -65,79 +62,127 @@ X-Endpoint-Received: by B4 Relay for mahesh.rao@altera.com/20250107 with
 X-Original-From: Mahesh Rao <mahesh.rao@altera.com>
 Reply-To: mahesh.rao@altera.com
 
-The patch set includes the following changes:
+From: Mahesh Rao <mahesh.rao@altera.com>
 
-- Add protection for querying memory objects in
-  multi-threaded flow.
-- Add support to generate and maintain message id
-  and client id for asynchronous communication with SDM.
-- Add framework to communicate with Secure Device
-  Manager(SDM) asynchronously by sending a request
-  and polling for response.
-- Add commands for performing Remote System Update
-  (RSU) operations asynchronously.
-- Migrate RSU driver to use the asynchronous
-  communication framework.
+This commit adds a mutex lock to protect the
+stratix10_svc_allocate_memory and
+stratix10_svc_free_memory functions to ensure
+thread safety when allocating and freeing memory.
+This prevents potential race conditions and ensures
+synchronization.
 
+Signed-off-by: Mahesh Rao <mahesh.rao@altera.com>
+Reviewed-by: Matthew Gerlach <matthew.gerlach@altera.com>
 ---
-Changes in v4:
-- Added description for svc_mem_lock mutex.
-- Wrapped commit message and comments in source
-  code to kernel coding style as per coding style.
-- Added minor code fixes.
-- Moved variables to the top of the function
-- Removed HWMON support from in the patch-set, this
-  will be sent in a separate patch-set.
-- Added support for RSU commands to asynchronously
-  communicate with SDM.
-- Migrated RSU driver to use the supported 
-  asynchronous commands.
+ drivers/firmware/stratix10-svc.c | 30 +++++++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
 
-- Link to v3: https://lore.kernel.org/r/20250526-sip_svc_upstream-v3-0-6a08a4502de3@altera.com
+diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
+index e3f990d888d71829f0ab22b8a59aa7af0316bea0..955468555738b2031dfcf6dc4db7dbf11ccc482c 100644
+--- a/drivers/firmware/stratix10-svc.c
++++ b/drivers/firmware/stratix10-svc.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+  * Copyright (C) 2017-2018, Intel Corporation
++ * Copyright (C) 2025, Altera Corporation
+  */
+ 
+ #include <linux/completion.h>
+@@ -171,6 +172,10 @@ struct stratix10_svc_chan {
+ 
+ static LIST_HEAD(svc_ctrl);
+ static LIST_HEAD(svc_data_mem);
++/* svc_mem_lock protects access to the svc_data_mem list for
++ * concurrent multi-client operations
++ */
++static DEFINE_MUTEX(svc_mem_lock);
+ 
+ /**
+  * svc_pa_to_va() - translate physical address to virtual address
+@@ -182,14 +187,17 @@ static LIST_HEAD(svc_data_mem);
+ static void *svc_pa_to_va(unsigned long addr)
+ {
+ 	struct stratix10_svc_data_mem *pmem;
++	void *ret = NULL;
+ 
+ 	pr_debug("claim back P-addr=0x%016x\n", (unsigned int)addr);
++	mutex_lock(&svc_mem_lock);
+ 	list_for_each_entry(pmem, &svc_data_mem, node)
+-		if (pmem->paddr == addr)
+-			return pmem->vaddr;
+-
+-	/* physical address is not found */
+-	return NULL;
++		if (pmem->paddr == addr) {
++			/* physical address is found */
++			ret = pmem->vaddr;
++		}
++	mutex_unlock(&svc_mem_lock);
++	return ret;
+ }
+ 
+ /**
+@@ -990,6 +998,7 @@ int stratix10_svc_send(struct stratix10_svc_chan *chan, void *msg)
+ 			p_data->flag = ct->flags;
+ 		}
+ 	} else {
++		mutex_lock(&svc_mem_lock);
+ 		list_for_each_entry(p_mem, &svc_data_mem, node)
+ 			if (p_mem->vaddr == p_msg->payload) {
+ 				p_data->paddr = p_mem->paddr;
+@@ -1006,6 +1015,7 @@ int stratix10_svc_send(struct stratix10_svc_chan *chan, void *msg)
+ 					break;
+ 				}
+ 		}
++		mutex_unlock(&svc_mem_lock);
+ 	}
+ 
+ 	p_data->command = p_msg->command;
+@@ -1072,9 +1082,12 @@ void *stratix10_svc_allocate_memory(struct stratix10_svc_chan *chan,
+ 	if (!pmem)
+ 		return ERR_PTR(-ENOMEM);
+ 
++	mutex_lock(&svc_mem_lock);
+ 	va = gen_pool_alloc(genpool, s);
+-	if (!va)
++	if (!va) {
++		mutex_unlock(&svc_mem_lock);
+ 		return ERR_PTR(-ENOMEM);
++	}
+ 
+ 	memset((void *)va, 0, s);
+ 	pa = gen_pool_virt_to_phys(genpool, va);
+@@ -1086,6 +1099,7 @@ void *stratix10_svc_allocate_memory(struct stratix10_svc_chan *chan,
+ 	pr_debug("%s: va=%p, pa=0x%016x\n", __func__,
+ 		 pmem->vaddr, (unsigned int)pmem->paddr);
+ 
++	mutex_unlock(&svc_mem_lock);
+ 	return (void *)va;
+ }
+ EXPORT_SYMBOL_GPL(stratix10_svc_allocate_memory);
+@@ -1100,6 +1114,7 @@ EXPORT_SYMBOL_GPL(stratix10_svc_allocate_memory);
+ void stratix10_svc_free_memory(struct stratix10_svc_chan *chan, void *kaddr)
+ {
+ 	struct stratix10_svc_data_mem *pmem;
++	mutex_lock(&svc_mem_lock);
+ 
+ 	list_for_each_entry(pmem, &svc_data_mem, node)
+ 		if (pmem->vaddr == kaddr) {
+@@ -1107,9 +1122,10 @@ void stratix10_svc_free_memory(struct stratix10_svc_chan *chan, void *kaddr)
+ 				       (unsigned long)kaddr, pmem->size);
+ 			pmem->vaddr = NULL;
+ 			list_del(&pmem->node);
++			mutex_unlock(&svc_mem_lock);
+ 			return;
+ 		}
+-
++	mutex_unlock(&svc_mem_lock);
+ 	list_del(&svc_data_mem);
+ }
+ EXPORT_SYMBOL_GPL(stratix10_svc_free_memory);
 
-Changes in v3:
-- Changed "Stratix 10" to "Stratix10" in the commit
-  message and in source code.
-- Simplified stratix10_svc_add_async_client() by removing
-  redundant code for async common channel initialization.
-- Fixed resource cleanup on negative path in
-  stratix10_svc_remove_async_client() and stratix10_svc_async_init().
-- Removed optional interrupt handler support, will send the patches
-  in a separate patch-set.
-
-- Link to v2: https://lore.kernel.org/r/20250512-sip_svc_upstream-v2-0-fae5c45c059d@altera.com
-
-Changes in v2:
-- Added Reviewed by tag from Rob Herring for dt-binding
-  patch.
-- Resending the patch-set as there is no response from
-  the maintainers for the previous patch submission.
-
-- Link to v1: https://lore.kernel.org/r/20250422-sip_svc_upstream-v1-0-088059190f31@altera.com
-
----
-Mahesh Rao (5):
-      firmware: stratix10-svc: Add mutex lock and unlock in stratix10 memory allocation/free
-      firmware: stratix10-svc: Implement ID pool management for asynchronous operations
-      firmware: stratix10-svc: Add initial support for asynchronous communication with Stratix10 service channel
-      firmware: stratix10-svc: Add support for RSU commands in asynchronous framework
-      firmware: stratix10-rsu: Migrate RSU driver to use stratix10 asynchronous framework.
-
- drivers/firmware/stratix10-rsu.c                   | 272 +++---
- drivers/firmware/stratix10-svc.c                   | 934 ++++++++++++++++++++-
- include/linux/firmware/intel/stratix10-smc.h       |  76 ++
- .../linux/firmware/intel/stratix10-svc-client.h    |  92 ++
- 4 files changed, 1234 insertions(+), 140 deletions(-)
----
-base-commit: 0a4b866d08c6adaea2f4592d31edac6deeb4dcbd
-change-id: 20250131-sip_svc_upstream-e78d8c9b4335
-prerequisite-change-id: 20250109-socfpga_sip_svc_misc-bbcdfb7a0028:v3
-prerequisite-patch-id: 6a4223bd2c01a0fd20925e597c906dc64e11ec2f
-prerequisite-patch-id: 33ca4dbe8b8e18d3e51145c6bcaae55170878b22
-prerequisite-patch-id: a02bca91874f4405191e60704574a0c99f37d184
-
-Best regards,
 -- 
-Mahesh Rao <mahesh.rao@altera.com>
+2.35.3
 
 
