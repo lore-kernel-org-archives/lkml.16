@@ -1,117 +1,72 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5384C12D758;
-	Tue, 10 Jun 2025 21:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749589634; cv=pass; b=ZA02oyGH6TFej5aXSoLWhUXrX3EppkR7Z5Fhg0xhadSgNFiXxdf3CwrrWWJ5GnC8hOM4Z/T5pDnUdhpYmLzys9JUlqMbiMyQmGpq1t8Yn+xSDEpFtr9rF8stxQlos2oC+72CML+UT4DxvobL2tJOOw/Zs7WUrbEPn2fejrzA4G0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749589634; c=relaxed/simple;
-	bh=AC7I0fLcRle5LXTlRX8hM4Pm54CmEKFUklwUmoEHnVw=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=MI6vubqC6JByYMlRy8NrxV1rMfKLn7pcUDFh28askfZ54Cc1wFc/PB+DGRlN7NClGKmRwQVvpJ+VFF475SEtRwHivtpPn5blobi4Re5GyMwc2RGsyC0GJmg5qkKXPYgASeV5PCyjQWT0T1UMM+nU39tHI1j5aEMgttiuGzmp1aU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=MsBZ2Xbd; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA86912D758;
+	Tue, 10 Jun 2025 21:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749589647; cv=none; b=Ed4F9hGkZwU3nBh7bt90E0e33MDkBQbdDN4WwZamaFqHk9n9JHZgch2ARKhcQSUWhoGJezEMHMzzGp4n+nnHkEUiwDMxIdYgBrrEifliOwgtvMch7vG1X89hoLwaVhpghwmyDMw6CNcj8dODPdGBMsWvDi0uzOTYS6hX1dnPvPU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749589647; c=relaxed/simple;
+	bh=te1FdrXugcXRYIBb9LoL9C21gyeVfuv4ldM2Dn6btwM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F6ZMDLf+sDCHdGrtOz1fAkAiL7Zoe4Bbs6Du78r/U6/Ol9bycKeQttWVCzXlM7voTLTNLxIlk9XnPbOCdhtlmxyNAMkAPy8yvRBFa/7kyErznyAb2YBgz+DN44XTR8GjruBVox2qymg4C+a0x+HdemT9EC2XhIORJpEdDKEbgo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KbpklLoS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="MsBZ2Xbd"
-ARC-Seal: i=1; a=rsa-sha256; t=1749589598; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=QnwiR8PxwjupnwxJy8gFtigPyvLnjBWKq1Je9QzZFqiwHKlOk0M23Zjv1UtVcJDdJv8nDnWeldo22/qCSWF6e75MWpRbmm3GaqeR9AqiBNAjX+9iyQv3SNHOz4UR2PBk6cPHwXuYqHWTMrfyi7RPNi/IssimDHPbJgemSEXKvoo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749589598; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Zoi7i2LrLRe56/s2vnkgJeF3ZP5eOJb/bXYYDs/zeCk=; 
-	b=J9hs0rSJcuSajR2eDuaduV4z/bPdWeszm0MoCSLTQOZVOirKnOaZSCxTW7HSFe1fn4k8ocnzGYtSWcfu7kEBKE/U0oKoCuw2eXQ6QHW0LwlHHxuBSnQIaP1lIhIvNPpgz1jY3NbsXvEYEPuSDJNRp6ik5w37srzjPvm0ptvVjNo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749589598;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=Zoi7i2LrLRe56/s2vnkgJeF3ZP5eOJb/bXYYDs/zeCk=;
-	b=MsBZ2XbdGmRFxY3Qi1/E4tNJbd0q54nZyZubKr5jKN52PdBZeyPl5h5G/IVIK0Yw
-	E1k/KC5y122BK1LPWEQfc4H5tRBK3K1waEH01/VDm8dc5US50NH0Pe2SA7Ti5gpw5rz
-	u9JKMQBYy6FnGBhxvd1s+/SvHMm9ZOlt31w8CrGY=
-Received: by mx.zohomail.com with SMTPS id 1749589596973203.10184682890394;
-	Tue, 10 Jun 2025 14:06:36 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KbpklLoS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98E0FC4CEED;
+	Tue, 10 Jun 2025 21:07:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749589646;
+	bh=te1FdrXugcXRYIBb9LoL9C21gyeVfuv4ldM2Dn6btwM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KbpklLoSTfodJA5IhC/nO8yMbqDmJmNT5/5PyH0f4cDgkQ0QXXHiTBsrVgaZW4LGf
+	 t9igAKwH0C3GglINz0EnseKzRBY1j5P8YvQAi4aJZZHP7tFbUd2RAE2zztgqyoDmpz
+	 gO32U0NpYnk4icx2pxPqh8o597YTzTuQqU/lCffP/Z4WFiwSVBvPOzWlS0i15O9+/R
+	 e7elXqzIRl5VCt6pwz9ccvGWYaWOFoglylnHNossHOJNq04Z5TKRnuy1+K5opXu0gs
+	 G4LHWHTMN8kHcRpXvVFPcRWUpOqo4p5cbRN7HYocsjoDy+CDg118vHw6X4FeZkEs2U
+	 QXQiZeXEuKl/Q==
+Date: Tue, 10 Jun 2025 14:07:24 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Breno Leitao <leitao@debian.org>, Linux Doc Mailing List
+ <linux-doc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Akira
+ Yokosawa <akiyks@gmail.com>, "David S. Miller" <davem@davemloft.net>,
+ Ignacio Encinas Rubio <ignacio@iencinas.com>, Marco Elver
+ <elver@google.com>, Shuah Khan <skhan@linuxfoundation.org>, Donald Hunter
+ <donald.hunter@gmail.com>, Eric Dumazet <edumazet@google.com>, Jan Stancek
+ <jstancek@redhat.com>, Paolo Abeni <pabeni@redhat.com>, Ruben Wauters
+ <rubenru09@aol.com>, joel@joelfernandes.org,
+ linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
+ lkmm@lists.linux.dev, netdev@vger.kernel.org, peterz@infradead.org,
+ stern@rowland.harvard.edu
+Subject: Re: [PATCH 4/4] docs: netlink: store generated .rst files at
+ Documentation/output
+Message-ID: <20250610140724.5f183759@kernel.org>
+In-Reply-To: <20250610225911.09677024@foz.lan>
+References: <cover.1749551140.git.mchehab+huawei@kernel.org>
+	<5183ad8aacc1a56e2dce9cc125b62905b93e83ca.1749551140.git.mchehab+huawei@kernel.org>
+	<aEhSu56ePZ/QPHUW@gmail.com>
+	<20250610225911.09677024@foz.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v2 2/2] rust: drm: Add GPUVM abstraction
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <aAgHGuzCZzh7YPz2@cassiopeiae>
-Date: Tue, 10 Jun 2025 18:06:20 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Alyssa Rosenzweig <alyssa@rosenzweig.io>,
- Lyude Paul <lyude@redhat.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org,
- dri-devel@lists.freedesktop.org,
- Asahi Lina <lina@asahilina.net>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <45E62F9A-39BB-4026-93FA-E27060498DB4@collabora.com>
-References: <20250422-gpuvm-v2-0-44d4fc25e411@collabora.com>
- <20250422-gpuvm-v2-2-44d4fc25e411@collabora.com>
- <aAgHGuzCZzh7YPz2@cassiopeiae>
-To: Danilo Krummrich <dakr@kernel.org>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Danilo,
+On Tue, 10 Jun 2025 22:59:11 +0200 Mauro Carvalho Chehab wrote:
+> > The question is, are we OK with the templates that need to be created
+> > for netlink specs?!   
+> 
+> If there's no other way, one might have a tool for maintainers to use
+> to update templates, but yeah, having one template per each yaml
+> is not ideal. I think we need to investigate it better and seek for
+> some alternatives to avoid it.
 
-[=E2=80=A6]
-
->=20
->> +
->> +impl<T: DriverGpuVm> OpMap<T> {
->> +    /// Returns the base address of the new mapping.
->> +    #[inline]
->> +    pub fn addr(&self) -> u64 {
->> +        self.0.va.addr
->> +    }
->> +
->> +    /// Returns the range of the new mapping.
->> +    #[inline]
->> +    pub fn range(&self) -> u64 {
->> +        self.0.va.range
->> +    }
->> +
->> +    /// Returns the offset within the GEM object.
->> +    #[inline]
->> +    pub fn offset(&self) -> u64 {
->> +        self.0.gem.offset
->> +    }
->> +
->> +    /// Returns the GEM object to map.
->> +    #[inline]
->> +    pub fn object(&self) -> &<T::Driver as drv::Driver>::Object {
->=20
-> You can use drm::Driver instead, which reads much better.
-
-Can you expand a bit on this?
-
-
-=E2=80=94 Daniel=
+FWIW we have tools/net/ynl/ynl-regen.sh, it regenerates the C code 
+we have committed in the tree (uAPI headers mostly).
+We could add it there. Which is not to distract from your main
+point that not having the templates would be ideal.
