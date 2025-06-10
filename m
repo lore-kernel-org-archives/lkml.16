@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3827C27F161;
-	Tue, 10 Jun 2025 08:38:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD6527FB35;
+	Tue, 10 Jun 2025 08:38:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749544687; cv=none; b=N5F3YGEX/kcIWlYetetFyooO9Q2QXGDsPSaxs1TFT6pk4VEyLlD7+fr3egSSeZK5fcBOBS3VAhdtS6imRcXa0fkXAUqE3kW+O5pFvF5GvgdN1ygxagOOMrx2weK31Z5DGr5VT9KrmklzMQebvQToaY3cUIjnc2kaw+QdNKSvPOQ=
+	t=1749544687; cv=none; b=XvdsrHBtBSkpV0I7GtICxUSCw+UNWZHWHYgxQzflH/s5E0L6BQfAeOeq5Yaqzc2PuqCnaOskmXKsJG80f8/BuEMv7cHIpar9wJcsmUoIvvs2bj7MstN4HUuXtYZp5fs+f7FDzx0lzKlN06a72gorIeZsLC89ZxhiuY9fnjk+mnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749544687; c=relaxed/simple;
-	bh=WzM5y2OoQkwywYk7ze1eYenAU+huZ1+9rx3teZ27zKM=;
+	bh=w9+uhG8mukFv3LUxt/Camybk60EdgO3KKFcvGpshaz8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AeM2x6naDnHA4/iitIwJH9MaqFlqG9N9JHMaOZP2bWFupGSlARqhhLmD59dSHqm4sK2d9zutnMuKGAmRn0brIqkgGklYkpj2F/U65cVaYeEpqi7YfjHIyz4XwCbVKkbqEBDqjTjThRAUkMQvI5AVkwlDn6kuFVcD46CTWW/T4Xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XjoAbiSm; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=FHv5AsYqM0zl+SYBGWohRhyypwGtDhuosMw7jnRte/JSgb8Bhjn1cmDP3mDmRPy27jsFxLdiuYcCFE+MWX5fngfGX9NeH6Jzp31BOKebiDWiJzj2GI9YtTEJfVs5YeL6qmVemoM5WfYF745u4PzyO4BImNql0EV4KQQo18bBXqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q6XOO5JL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XjoAbiSm"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B975CC4CEF8;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6XOO5JL"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A21C0C4CEF0;
 	Tue, 10 Jun 2025 08:38:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1749544686;
-	bh=WzM5y2OoQkwywYk7ze1eYenAU+huZ1+9rx3teZ27zKM=;
+	bh=w9+uhG8mukFv3LUxt/Camybk60EdgO3KKFcvGpshaz8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=XjoAbiSmg1Po7tpwTGAmWWtYTbiZ0LXLYE1v/BL3GqwqJmZ9KsjXUOmRb79WY7Byc
-	 QJv6vjNMQBGzp6R3FCyrZkQIjjTigQ5kf5W/FmAoY8w4a2oNuZtetTE7kt0ZmJdNvJ
-	 8eVwqhfil2j3gklSOVDJj7+Di3LwkGEEaFBsv12rUL76LDhF35tZsiO7C5m6K8Dmjr
-	 SlSWrmMZ5uHdZhUJdku7U9qol75pL5nFncpfRItKd4NUehTEZKalH3NhCGWG3ht6iZ
-	 KsQVsCCGWpqLhUu87P5wnDqSRz7LcyJeJdkHnnlt2rLmIJHvIsr62gzWI7VJoc3qsL
-	 veOzGQtctxOfA==
+	b=Q6XOO5JLgAc5J7fGCjxS636vtasYi3TaxN6Z1oXeWMjw32pEirFdljFUVHY9BjD9J
+	 XU2GtiCFIiVuAH8H6BSWYo2IonyRLETqd8aUj9i8yKkeSlh8Mzg8w+EPxA09sEEH3S
+	 E9uQ5ufyB76wvMBlNB+8biWEi2XZjRxVb923sOS4bpI5oC5CkvYCbkb60HATvSmLP1
+	 epy2eyf2TXxEm3CF8b0odB2KhzXHN/pLZhLdc97iFKaW18JtlAvXLLPUhpYgalltWz
+	 L9/W1beybLTEsc2ih+8HyHhtlDqOW5YZQSiCYtTaKmkBDBhyYkxn20HCXkB7Z2/LaC
+	 krlMOvdNZ1Ymg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1350C5B552;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9249AC5B543;
 	Tue, 10 Jun 2025 08:38:06 +0000 (UTC)
 From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Date: Tue, 10 Jun 2025 12:37:58 +0400
-Subject: [PATCH v5 4/5] arm64: dts: qcom: ipq5018: Add MDIO buses
+Date: Tue, 10 Jun 2025 12:37:56 +0400
+Subject: [PATCH v5 2/5] dt-bindings: net: qca,ar803x: Add IPQ5018 Internal
+ GE PHY support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250610-ipq5018-ge-phy-v5-4-daa9694bdbd1@outlook.com>
+Message-Id: <20250610-ipq5018-ge-phy-v5-2-daa9694bdbd1@outlook.com>
 References: <20250610-ipq5018-ge-phy-v5-0-daa9694bdbd1@outlook.com>
 In-Reply-To: <20250610-ipq5018-ge-phy-v5-0-daa9694bdbd1@outlook.com>
 To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
@@ -56,14 +57,13 @@ To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
  Stephen Boyd <sboyd@kernel.org>
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-clk@vger.kernel.org, George Moussalem <george.moussalem@outlook.com>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+ linux-clk@vger.kernel.org, George Moussalem <george.moussalem@outlook.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749544683; l=1519;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749544683; l=2960;
  i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=jA4BQsaw0tlEf36IZrwvZtR6C1am2pcwyAdrevsj4Hk=;
- b=hSdTUjtHpj86cr4Uswl07p/eGEBxIRuMBAke+RvCCCJbKkJroLYukxiZGqC+81GFvdhl/6/cy
- QmPPrAlvwkPCk1J1YNDgekzSGJVfB+izSE0U42LnirA4BF3JajsjhEj
+ bh=MSreklj9uhNRgsWlk9VY//Ue1TwD7d3ZsG5R6DaH9lo=;
+ b=9IY8hBnqBK66IfR9ksjn9U/xrjA039Q0Su+/dBpWDHfG6NYfIGjc6/C+NfvBtBumkrpq7/rBm
+ GofmxHJ+vHsDXR51n31vDlKGIGWv7KzOwUx+UvR9osDICyLpngYcYvk
 X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
  pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
 X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
@@ -73,54 +73,89 @@ Reply-To: george.moussalem@outlook.com
 
 From: George Moussalem <george.moussalem@outlook.com>
 
-IPQ5018 contains two mdio buses of which one bus is used to control the
-SoC's internal GE PHY, while the other bus is connected to external PHYs
-or switches.
+Document the IPQ5018 Internal Gigabit Ethernet PHY found in the IPQ5018
+SoC. Its output pins provide an MDI interface to either an external
+switch in a PHY to PHY link scenario or is directly attached to an RJ45
+connector.
 
-There's already support for IPQ5018 in the mdio-ipq4019 driver, so let's
-simply add the mdio nodes for them.
+The PHY supports 10/100/1000 mbps link modes, CDT, auto-negotiation and
+802.3az EEE.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+For operation, the LDO controller found in the IPQ5018 SoC for which
+there is provision in the mdio-4019 driver.
+
+Two common archictures across IPQ5018 boards are:
+1. IPQ5018 PHY --> MDI --> RJ45 connector
+2. IPQ5018 PHY --> MDI --> External PHY
+In a phy to phy architecture, the DAC needs to be configured to
+accommodate for the short cable length. As such, add an optional boolean
+property so the driver sets preset DAC register values accordingly.
+
 Signed-off-by: George Moussalem <george.moussalem@outlook.com>
 ---
- arch/arm64/boot/dts/qcom/ipq5018.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ .../devicetree/bindings/net/qca,ar803x.yaml        | 43 ++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-index 130360014c5e14c778e348d37e601f60325b0b14..03ebc3e305b267c98a034c41ce47a39269afce75 100644
---- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-@@ -182,6 +182,30 @@ pcie0_phy: phy@86000 {
- 			status = "disabled";
- 		};
+diff --git a/Documentation/devicetree/bindings/net/qca,ar803x.yaml b/Documentation/devicetree/bindings/net/qca,ar803x.yaml
+index 3acd09f0da863137f8a05e435a1fd28a536c2acd..7ae5110e7aa2cc97498a0ec46b67d8ed8440f3f2 100644
+--- a/Documentation/devicetree/bindings/net/qca,ar803x.yaml
++++ b/Documentation/devicetree/bindings/net/qca,ar803x.yaml
+@@ -16,8 +16,37 @@ description: |
  
-+		mdio0: mdio@88000 {
-+			compatible = "qcom,ipq5018-mdio";
-+			reg = <0x00088000 0x64>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
+ allOf:
+   - $ref: ethernet-phy.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - ethernet-phy-id004d.d0c0
 +
-+			clocks = <&gcc GCC_MDIO0_AHB_CLK>;
-+			clock-names = "gcc_mdio_ahb_clk";
++    then:
++      properties:
++        reg:
++          const: 7  # This PHY is always at MDIO address 7 in the IPQ5018 SoC
 +
-+			status = "disabled";
-+		};
++        resets:
++          items:
++            - description:
++                GE PHY MISC reset which triggers a reset across MDC, DSP, RX, and TX lines.
 +
-+		mdio1: mdio@90000 {
-+			compatible = "qcom,ipq5018-mdio";
-+			reg = <0x00090000 0x64>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
++        qcom,dac-preset-short-cable:
++          description:
++            Set if this phy is connected to another phy to adjust the values for
++            MDAC and EDAC to adjust amplitude, bias current settings, and error
++            detection and correction algorithm to accommodate for short cable length.
++            If not set, DAC values are not modified and it is assumed the MDI output pins
++            of this PHY are directly connected to an RJ45 connector.
++          type: boolean
+ 
+ properties:
++  compatible:
++    enum:
++      - ethernet-phy-id004d.d0c0
 +
-+			clocks = <&gcc GCC_MDIO1_AHB_CLK>;
-+			clock-names = "gcc_mdio_ahb_clk";
+   qca,clk-out-frequency:
+     description: Clock output frequency in Hertz.
+     $ref: /schemas/types.yaml#/definitions/uint32
+@@ -132,3 +161,17 @@ examples:
+             };
+         };
+     };
++  - |
++    #include <dt-bindings/reset/qcom,gcc-ipq5018.h>
 +
-+			status = "disabled";
-+		};
++    mdio {
++        #address-cells = <1>;
++        #size-cells = <0>;
 +
- 		tlmm: pinctrl@1000000 {
- 			compatible = "qcom,ipq5018-tlmm";
- 			reg = <0x01000000 0x300000>;
++        ge_phy: ethernet-phy@7 {
++            compatible = "ethernet-phy-id004d.d0c0";
++            reg = <7>;
++
++            resets = <&gcc GCC_GEPHY_MISC_ARES>;
++        };
++    };
 
 -- 
 2.49.0
