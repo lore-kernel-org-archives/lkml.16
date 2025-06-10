@@ -1,111 +1,193 @@
-Received: from mo4-p00-ob.smtp.rzone.de (mo4-p00-ob.smtp.rzone.de [81.169.146.217])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9619328A40F
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:03:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.217
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749546237; cv=pass; b=glihon4cuJ9oCjzfjaA1DYfbPgwlqxHdDYLpSgX5Sz/sLyRHNRhPbV0sAvWbspMHhmB/fBjUO6bUoJDcqY2JyTntotV2Hsvezs/zFuANaIty/fDJFHlNpn+crPofVsgAk3c/BJ2yKN5YA3+jnDAsNUVrqaF85lSNIlpxbiEeWpo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749546237; c=relaxed/simple;
-	bh=dvigRrY2r7wmZxhQKy6gCcIQgsgLiBgTgd83McTAlUA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QKq2Q17aPaflSedBMkPRg9CPpauBuTKnQGIaES1nDp/BvCw1LgfqGf1D+7qOH87daO2PZtf1rfT5IMY/gQso/IfmTjHdYBDpYnzXhxnf94jspLbs93CiUxHu7UmsZKjqus2ZuqU/Z8SGk8Cj+Kx4KGLuMZeo9T7sk+UMzNywpq0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=outer-limits.org; spf=none smtp.mailfrom=outer-limits.org; dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=PW27VKLC; dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=oAzmOsZ+; arc=pass smtp.client-ip=81.169.146.217
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=outer-limits.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=outer-limits.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FCE1EE033;
+	Tue, 10 Jun 2025 09:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749546260; cv=none; b=uEhG3TEvMadqABGnZQAOTIyt5aHaWk9obEgp0LGuxzjoMOVKQkx8bKG7KIo7mO4JJouiv/GG3c7JQSIhdtjublgtqHmym3Dnh0dX6NNsB3iZ0t6i5e3SDrx+FKCtl+Qe1AjepG5M8XTOQzMvNz511BK9UDZVwoNxzgq4Qi4R0i8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749546260; c=relaxed/simple;
+	bh=c7eXqn3OR8hXh/I05OT0JGgKzgXMbXPO7tWOiXvXpQo=;
+	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
+	 In-Reply-To:References; b=cnkL+pe9fzF833e3VyR5DzBmj7PX/z9buD4rt1T1Z+ITtgHeSxMFtYotQ5U3xTVzDpX4Ng3KRA+X4hbz5LhIz3AVkOYeEtJP8FrQru3H1Ql369oPfl69uM2PO7Hm9i3bZGV8y4lIgP0PfrdwumAjfcDxc93hUQy4MMv/TbOPw0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=IJ5Ea6W7; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="PW27VKLC";
-	dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="oAzmOsZ+"
-ARC-Seal: i=1; a=rsa-sha256; t=1749546227; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=bS/USD083zTRf7ENi9gnqo3jVbIkJPh+vDt9nrOFn3c4FRRK3d7GlL8CjVETPwTLVl
-    TMagt1JKHr8KnnAaw2cnPrFz95yaHXK+LC2uTsAOfXkR+5td4lvqEu3nIn2PkQHyFhbj
-    XKWSW8B8Czc3UW2/vI/s+zmfjAC/ez5ywcR5sfTBvlaJ0Q51HIOe7t+i1o2sbnOvqDxQ
-    v3F8TsgdZCM73aDvdYmN9ELg3qH8mPU5C+OClMbqWdKmu1EbIA2wNlm79ed1USKcJgZE
-    aRf7nKmmTjcUiLDNK876WFw7lcHFK5BvgcyAuHJWzOPsu96awsORLID7uFFC54EK6ZHZ
-    u8jA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1749546227;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=mKfggktGiIfSFyfGm6oYDAp/T2BtN/kZh5wQ9bTBSUo=;
-    b=RIMOhWME1JeIrQg3yJvY4vZCGvS5AmGT+FX0iCE43nQ5N213bm8LorpEOzoh4ze+oW
-    eUkm6kq7tJjj44q0LX2oMyBCF3k4+24OuPu4JtmamhppE/MfEUd87Qlw0448z5KPRl9l
-    lmgrqL3Cq3UrvtX98e7CoTx9/bwjSIeEi6tfuIRg8jZB7XRFfxSZoAKAym8heekeJw1U
-    erhRamVw/EdbZP2C4jgcl/wh/FUvDtukVmT7EA/AK5OYlBfnoQY1ReYvfkDKoP4sVJ7h
-    +ndgBV70eZ8nQf+TttE4jgbh/Eicsvf/hOEn1R8Q2yfNuBmQZTsoisiWhi2jBCsCGumg
-    aKyw==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo00
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1749546227;
-    s=strato-dkim-0002; d=outer-limits.org;
-    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=mKfggktGiIfSFyfGm6oYDAp/T2BtN/kZh5wQ9bTBSUo=;
-    b=PW27VKLCY2EKGZhkfMA8pXmK6jLrmG7t5KejGeMd6xO8mNBqbXL5GedJ2pzXSI9eWy
-    erlmYMow4KZxtgxXaCSxIS5wo+Biexlk/864DKzn1QCboiuSnxuptOAooX3eQagpvrvu
-    4EN0P01S2Um19ZDg/xdT7+KiHYZGK/ZdOlsFZ/ZtBjjs2oL9H6ngaP7y0GUeW2tapcuc
-    Fs+ZAGPkA3IeYWjbZsbgGJ96Z3eFQjBBX2VtnCeiSYy+R6K4XlBnyjQ89VZmXnMCRzGo
-    A3nKV1QME1xo8/8SWJS1MWucuyvJNpzCKqjKrUPm96sMeHJtiEQt6Q9TsSMgNiesVz7C
-    RBwQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1749546227;
-    s=strato-dkim-0003; d=outer-limits.org;
-    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=mKfggktGiIfSFyfGm6oYDAp/T2BtN/kZh5wQ9bTBSUo=;
-    b=oAzmOsZ+Fa55t6G52ntKmIvYD5AKmPY8fvu2ooqn/sprUUG+EBLUTpbckz/S7KFYan
-    Oy/82pGTouzlTeQ8u+BQ==
-X-RZG-AUTH: ":JnkIfEGmW/AMJS6HttH4FbRVwc4dHlPLCp4e/IoHo8zEMMHAgwTfqBEHcVJSv9P5mRTGd2ImeA=="
-Received: from [192.168.37.162]
-    by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id J2b11015A93kApt
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Tue, 10 Jun 2025 11:03:46 +0200 (CEST)
-Message-ID: <5d380c93-f179-4599-8f1c-a28cd85250e3@outer-limits.org>
-Date: Tue, 10 Jun 2025 11:03:46 +0200
+	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="IJ5Ea6W7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
+	s=s31663417; t=1749546239; x=1750151039; i=frank-w@public-files.de;
+	bh=x9isndutnG7FzSCz38wRWR3/GK7vlaPRNBGI74YSN5E=;
+	h=X-UI-Sender-Class:MIME-Version:Message-ID:From:To:Cc:Subject:
+	 Content-Type:Date:In-Reply-To:References:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=IJ5Ea6W7y6sTzEDB05dbUDocNZCqcni0Hii/uaCZIuM0Zg/7l8U89wwEXWC0u7PI
+	 fYgLeMT7BIOvyx1mbGJVu/s033MIr4CbHo+0uRS8hAsXSFrNEXiblFuJBONebx1i/
+	 kCqAI2G0WQCKQtIfRH6QtbdeRTaMLSRjJM6ss5Ihb/PIQelp+XlC5V9TuSbifXu40
+	 2CGrvxqkxKmgI2MvYE10hzuN3ucSkVkCjwZC6Xal71MdGyY3+CwYaCLf9YLqdOa7M
+	 tSXyPJ1LdBjiVd3iRL6o9wBZtLlYtTM3nOAp9mdaiQ4DjFv+TenKPtDN9pnG7AbJD
+	 PK7vX4n1uYJPspO/fg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [100.70.254.165] ([100.70.254.165]) by
+ trinity-msg-rest-gmx-gmx-live-5d9b465786-6phds (via HTTP); Tue, 10 Jun 2025
+ 09:03:59 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Remove unaligned/packed_struct.h header
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>, "Jason A . Donenfeld" <Jason@zx2c4.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>, linux-kernel@vger.kernel.org
-References: <20250603132414.3676142-1-julian@outer-limits.org>
- <20250603142914.GA299672@ZenIV>
-Content-Language: en-US
-From: Julian Vetter <julian@outer-limits.org>
-In-Reply-To: <20250603142914.GA299672@ZenIV>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Message-ID: <trinity-b9ab960d-38f8-4524-b645-fc0832ce72ec-1749546239525@trinity-msg-rest-gmx-gmx-live-5d9b465786-6phds>
+From: Frank Wunderlich <frank-w@public-files.de>
+To: andrew@lunn.ch, linux@fw-web.de
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+ cw00.choi@samsung.com, djakov@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, olteanv@gmail.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, matthias.bgg@gmail.com,
+ angelogioacchino.delregno@collabora.com, jia-wei.chang@mediatek.com,
+ johnson.wang@mediatek.com, arinc.unal@arinc9.com, Landen.Chao@mediatek.com,
+ dqfext@gmail.com, sean.wang@mediatek.com, daniel@makrotopia.org,
+ lorenzo@kernel.org, nbd@nbd.name, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+Subject: Aw: Re: [PATCH v3 12/13] arm64: dts: mediatek: mt7988a-bpi-r4: add
+ sfp cages and link to gmac
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 10 Jun 2025 09:03:59 +0000
+In-Reply-To: <934b1515-2da1-4479-848e-cd2475ebe98d@lunn.ch>
+References: <20250608211452.72920-1-linux@fw-web.de>
+ <20250608211452.72920-13-linux@fw-web.de>
+ <934b1515-2da1-4479-848e-cd2475ebe98d@lunn.ch>
+X-UI-CLIENT-META-MAIL-DROP: W10=
+X-Provags-ID: V03:K1:P+w5LatxuczWjuU5VjC2cu3RusygmzTEcHnWEMF+vMd+V144Nuq0nbegfrwU1/70t+IO5
+ ZZCfjP1mt0nBNkGjj7f83sEa1HX3LswwVcLmtn0EkewzcBQy+5sk93/FE8OFJGz2cjArfnRlYVfB
+ 3XMrQQsXoPxZtNXsZP8bmZLVhtzLablHfLA6+NXenDy0XEURhrtBRk+vVZ+h17JVyrBl/eHW2FY2
+ uaWJKp0HW8d7z76dXGwZ1/AAP+8bL2oTm6hnK6iomw2WSiz0PVS0NPZKi4ROB6MkXRYd1FGSV6CI
+ oFPPiTF5PBKHUC5CAEdu/94Ju1rZzvA0FeA3Gu9s0Qj3j8HbE5+i4yztEMvFIiZFnY=
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:TLvXeFIDP6E=;qZFVm6ncGdxJPw6owUfJx41Igss
+ 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
+ AmzvamVKyQ==
+Content-Transfer-Encoding: quoted-printable
 
-On 6/3/25 16:29, Al Viro wrote:
-> On Tue, Jun 03, 2025 at 03:24:14PM +0200, Julian Vetter wrote:
->> The functions in this header are deprecated and are not used anymore.
->> So, remove the header entirely.
+Hi Andrew
+
+> Gesendet: Sonntag, 8. Juni 2025 um 23:31
+> Von: "Andrew Lunn" <andrew@lunn.ch>
+> Betreff: Re: [PATCH v3 12/13] arm64: dts: mediatek: mt7988a-bpi-r4: add =
+sfp cages and link to gmac
 >
+> > +&gmac1 {
+> > +	phy-mode =3D "internal";
+> > +	phy-connection-type =3D "internal";
+>=20
+> ethernet-controller.yaml says:
+>=20
+>   phy-connection-type:
+>     description:
+>       Specifies interface type between the Ethernet device and a physica=
+l
+>       layer (PHY) device.
+>     enum:
+>       # There is not a standard bus between the MAC and the PHY,
+>       # something proprietary is being used to embed the PHY in the
+>       # MAC.
+>       - internal
+>       - mii
+>       - gmii
+>   ...
+>=20
+>   phy-mode:
+>     $ref: "#/properties/phy-connection-type"
+>=20
+>=20
+> so phy-mode and phy-connection-type are the same thing.
 
-Yes, sorry. I messed it up. For now the patch can be ignored. I will 
-re-send it once, all appearances of '__get_unaligned_cpu32' are removed. 
-I have already send according patches for the 2 remaining files that 
-still use it, namely 'include/linux/jhash.h' and 
-'tools/include/linux/jhash.h'.
+phy-connection-type seems not needed, tested without it and 2.5G phy works=
+ without this property in the 2g5 dts.
 
-Sorry again.
+> > +	/* SFP2 cage (LAN) */
+> > +	sfp2: sfp2 {
+> > +		compatible =3D "sff,sfp";
+> > +		i2c-bus =3D <&i2c_sfp2>;
+> > +		los-gpios =3D <&pio 2 GPIO_ACTIVE_HIGH>;
+> > +		mod-def0-gpios =3D <&pio 83 GPIO_ACTIVE_LOW>;
+> > +		tx-disable-gpios =3D <&pio 0 GPIO_ACTIVE_HIGH>;
+> > +		tx-fault-gpios =3D <&pio 1 GPIO_ACTIVE_HIGH>;
+> > +		rate-select0-gpios =3D <&pio 3 GPIO_ACTIVE_LOW>;
+> > +		maximum-power-milliwatt =3D <3000>;
+>=20
+> sff,sfp.yaml says:
+>=20
+>   maximum-power-milliwatt:
+>     minimum: 1000
+>     default: 1000
+>     description:
+>       Maximum module power consumption Specifies the maximum power consu=
+mption
+>       allowable by a module in the slot, in milli-Watts. Presently, modu=
+les can
+>       be up to 1W, 1.5W or 2W.
+>=20
+> I've no idea what will happen when the SFP core sees 3000. Is the
+> comment out of date?
 
-> ; git grep -n __get_unaligned_cpu32
-> include/linux/jhash.h:80:               a += __get_unaligned_cpu32(k);
-> include/linux/jhash.h:81:               b += __get_unaligned_cpu32(k + 4);
-> include/linux/jhash.h:82:               c += __get_unaligned_cpu32(k + 8);
-> include/linux/unaligned/packed_struct.h:16:static inline u32 __get_unaligned_cpu32(const void *p)
-> tools/include/linux/jhash.h:80:         a += __get_unaligned_cpu32(k);
-> tools/include/linux/jhash.h:81:         b += __get_unaligned_cpu32(k + 4);
-> tools/include/linux/jhash.h:82:         c += __get_unaligned_cpu32(k + 8);
-> tools/include/linux/unaligned/packed_struct.h:17:static inline u32 __get_unaligned_cpu32(const void *p)
+at least sfp-core has no issue with the setting
+
+root@bpi-r4-phy-8G:~# dmesg | grep sfp
+[    1.269437] sfp sfp1: Host maximum power 3.0W
+[    1.613749] sfp sfp1: module CISCO-FINISAR    FTLX8571D3BCL-C2 rev A   =
+ sn S2209167650      dc 220916 =20
+
+imho some modules require more than 2W (some gpon/xpon and 10G copper ethe=
+rnet).
+
+> 	Andrew
+>=20
+
+regards Frank
