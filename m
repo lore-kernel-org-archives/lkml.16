@@ -1,102 +1,160 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA44C28B412
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C682F28B40D;
+	Tue, 10 Jun 2025 09:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749548473; cv=none; b=a2dvAY+ly0dYWiXxR/92E/WrEDIFmHjFDLgfYKDkeBiGbNvPwmAscCoGXuk2wqXIhO1Vb8G5GQQ/lt3GP8XtXxeaJsBBn02wcm49xHrn9RlnhEWgiGooicYC8wuAK/fO7NfQckCVt+jcrWjD//4i3iG8SSDya/Q5Ce0mjUfi2vk=
+	t=1749548517; cv=none; b=j9LB+Tvun1frp7SKjV42hnM8/6vD64nxRxOWP8TyVVU4qgiuIePILHKNOR7H/xRyxUqVvpoZwVwGQ7RO4k96YZMHFdJKwUYonP8B4uMpGT6cXgE3o8hKovFdIzH7IUtR4kd4uXsxWz43zSlLhHiljoA2GtY1kEGleCSf661xjVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749548473; c=relaxed/simple;
-	bh=Z2f2UZlbBPoJMBwShyzGoWaBgzCjaqrFUvLkxcX0eQw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RBgjFTVtJTnCwa0HFefJnY37mIb2t/zPc4BKj+W88YnKIIl8B3gMyPeAzOmmp+jUFOcKEuETuNIOVAXIrHNg4pyl7dBqwWy3bvhLwo9Ed3RPS/Dg6KcxV4zZWuJHZPj4N1SGXyAULqvee4Ws+aVbKAQlmGwDNET7qlemzcEJtEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=yQUbzN7E; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1749548517; c=relaxed/simple;
+	bh=DXEDcE1cizNF5Juxgkb8zD05SX5O2gAwfPXNpFKbu6w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EM3WgqD/cAv6tzN/WiaLPKxhT4rK3NUU0SHLg2elmBCp3CCzAZrhNWjVLhSnyVwA6lj7jLluH57kMNIsHVq/Fx9qlQcT3XZGAV7uYJ2GL/fnTVdIB7U7/R3k2ak3pmdjG+DhDQuwr8p8mFU5xj18Apkb86LPZdtaV/XHk6P8MQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nlWZl4Br; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="yQUbzN7E"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a522224582so3188741f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 02:41:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749548470; x=1750153270; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=spfc0NEE2EV/P2qWj1dghBYkiy9zNZTnQ8paYjIjC1Y=;
-        b=yQUbzN7EuECAP3ZEJUcUtcifpc8qYgcZdh4UsoHT3q0uZZU7MuZb5Pk+o8sCRvLjQk
-         UzR83YD1u4u9apkgBrb8Oxc90fD1vAjanGkgxceMJXkW7nreLcrSGnsNkAwY7Da+bxXC
-         88tvPE31PfMMAtcOkHH7rSsY9GbFnqphIq8zD4JSNIBy1zhbYESQ3X1aehc60e/gVHfO
-         xvg9j1pEZcfC9dTYvRbTLLp4Q4VaqOqE41qEFxQnZVq1eZ+aZ2xxQm2EJ8302kKcGgKh
-         qCCLI7nanSWcAWNZ5P3kx9GgZtELxpthkX8xU3LWMMaWUxjY8aPnsftJXbS137sXRhWf
-         xf2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749548470; x=1750153270;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=spfc0NEE2EV/P2qWj1dghBYkiy9zNZTnQ8paYjIjC1Y=;
-        b=UNwum4lRjvRvtNnLPBjtSSy+1IsVq5aVkT9TYelNKFUUC4qy1ao+PZXvPmQ1tBiPS4
-         8MUFiuGPLKvFezGZHta67AZLBbvci+2njiRO9bsv3q+W6w46f/tEitGLZvNb/oGztEXo
-         adCvF6vb/kNnSms48GHUosgVUXAqVKPrSS3XeTfbPSs/fW4pSmBNypsh96TxkonmqB7K
-         I314aRcBPdTy97pmsadlN//DDrMWXM87oBK6OLV+dRsPamA3JKs+P7rJ8SXDBTWRZPPD
-         FzVrEFXM1EC2JwySSPS9DBN/tq4ILyWbYxVB4xq8n/M/osQ4IpV06zbYnBO/LoKZmGSu
-         nr/A==
-X-Forwarded-Encrypted: i=1; AJvYcCUdf5cLCtS2BRCWcXxkISY4LerwDu4mU+hkkrFAPXRJzWt2S/0WMHP76ccO+zyqyDyaEPgrjvaKMQpxdCY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyy3rSDMvb9rDQndZnAcr3FzIMIQVw8InjnazgvdgxufUCZRReE
-	bOTmV9Fu9f2OOwiO5vVHbzDQagvbomb+9aT61XjwkOzhWOJG25+l4XUIgdPDG49D0xE=
-X-Gm-Gg: ASbGncvAYkyxLgACUot1N5CshJSA30Y+FktqaxCy1+31XlwsIF40qoe7/JDH81unwHq
-	Ba8oN73CWN/KXLq9rWIDOR/iKlh9ET5/gfA41QeQB09SDzpOEFNgD01v3LvhoNzgEI9+3Vjdor4
-	LNgOJplWmXkqPbMkDhT/l+wbT9tM1IXVn6jUVUShKimVru+PcaFl/WighKtyRokUN3eWpqpRx8m
-	PHxcAKn7gj92Bz+kIHh31QwceuPCG1/cAQPZaUrTQdcFefAAw0jNWGN+MsMUaKgRr+yO7A6G4kc
-	6uSRaUUbXI84/z6aGpY0Y+I/t3XIed45VwzzIxOxxZlcCqU0fuf4K9NtvblfDGTLZr36unE=
-X-Google-Smtp-Source: AGHT+IGY1m9lVwTiwOUbkDhjFcZNVF350pSblyG1IIU2HN/L7frRN8DyOvl42PjKSzjlJ4R646WDAw==
-X-Received: by 2002:a5d:588a:0:b0:3a5:2ed2:118e with SMTP id ffacd0b85a97d-3a53188a883mr13196109f8f.9.1749548470024;
-        Tue, 10 Jun 2025 02:41:10 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:4d:e52b:812d:eb7c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53243688asm12101378f8f.57.2025.06.10.02.41.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 02:41:09 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: TODO: add a task for removing MMIO-specific fields from gpio_chip
-Date: Tue, 10 Jun 2025 11:41:08 +0200
-Message-ID: <174954846672.40051.9274185826688444001.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250527111353.71540-1-brgl@bgdev.pl>
-References: <20250527111353.71540-1-brgl@bgdev.pl>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nlWZl4Br"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749548516; x=1781084516;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DXEDcE1cizNF5Juxgkb8zD05SX5O2gAwfPXNpFKbu6w=;
+  b=nlWZl4BrPhV6HHo4hbbdoY7k36Lo9h5kkACbxehxBlTPrOdmnm6zAQRG
+   YmGI8IL9gYwNuDgQN7eAg6eBcs4yUw2ea+ahYLy4qHPyazcQrNO8B4bWQ
+   j46klgbhlTz1oOFvMm7CqfI9jyRsaeDhd1OSomC7wZhCxGrind3n5h6lW
+   FLD1OFPQb5O0pLstwZVfLmRVyI6CsEo6I6DdCRgl6wDqab34FWhDHyP4Z
+   TTMm35+2xoYn/oxAZdCAOz2R7eMrGHFSdsyy2Wo2tgKhhQyifwnbuHxLZ
+   SoZ/QEfoU16xDzltp7SEw8kEzHH77ibPvbmW1ebwbrc29zXif6mcUhnit
+   w==;
+X-CSE-ConnectionGUID: 5zPHrkEMQvGqACQk5UoqCQ==
+X-CSE-MsgGUID: HMdOY8d+R+mE7FjG/8bmjA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51791955"
+X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
+   d="scan'208";a="51791955"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 02:41:56 -0700
+X-CSE-ConnectionGUID: bHdyWezEQcW1Wc3KpZn66w==
+X-CSE-MsgGUID: WEckVTlOSBiJr2ZS8WDFLQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
+   d="scan'208";a="169958265"
+Received: from lfiedoro-mobl.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.169])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 02:41:54 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 248F611FBA0;
+	Tue, 10 Jun 2025 12:41:51 +0300 (EEST)
+Date: Tue, 10 Jun 2025 09:41:51 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+Cc: Sylvain Petinot <sylvain.petinot@foss.st.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] media: i2c: vd55g1: Use first index of mbus codes
+ array as default
+Message-ID: <aEf938EjRMODfJYq@kekkonen.localdomain>
+References: <20250609-fix_vd55g1-v1-0-594f1134e3fb@foss.st.com>
+ <20250609-fix_vd55g1-v1-4-594f1134e3fb@foss.st.com>
+ <aEf1KIRuP_DdSqJO@kekkonen.localdomain>
+ <396b3ee1-d737-49dd-a804-e07027c19fd9@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <396b3ee1-d737-49dd-a804-e07027c19fd9@foss.st.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi Benjamin,
 
-
-On Tue, 27 May 2025 13:13:53 +0200, Bartosz Golaszewski wrote:
-> Currently for CONFIG_GPIO_GENERIC=y each struct gpio_chip object
-> contains the fields relevant only for gpio-mmio users. It's not an
-> insignificant number either as it's several pointers and integers.
+On Tue, Jun 10, 2025 at 11:31:11AM +0200, Benjamin Mugnier wrote:
+> On 6/10/25 11:04, Sakari Ailus wrote:
+> > Hi Benjamin,
+> > 
+> > On Mon, Jun 09, 2025 at 03:46:24PM +0200, Benjamin Mugnier wrote:
+> >> Factorize code and prevent future erros in case of media bus codes
+> >> change.
+> >> Rename VD55G1_DEFAULT_MODE to VD55G1_MODE_DEF to mimic other macros
+> >> while at it.
+> >>
+> >> Signed-off-by: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+> >> ---
+> >>  drivers/media/i2c/vd55g1.c | 10 ++++++----
+> >>  1 file changed, 6 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/drivers/media/i2c/vd55g1.c b/drivers/media/i2c/vd55g1.c
+> >> index dec6e3e231d54a742bdd08ff2a506c152bb89429..177caa5470cfcf49e0ae2fb568d7872a5608a11f 100644
+> >> --- a/drivers/media/i2c/vd55g1.c
+> >> +++ b/drivers/media/i2c/vd55g1.c
+> >> @@ -111,9 +111,9 @@
+> >>  
+> >>  #define VD55G1_WIDTH					804
+> >>  #define VD55G1_HEIGHT					704
+> >> -#define VD55G1_DEFAULT_MODE				0
+> >> +#define VD55G1_MODE_DEF					0
+> >>  #define VD55G1_NB_GPIOS					4
+> >> -#define VD55G1_MEDIA_BUS_FMT_DEF			MEDIA_BUS_FMT_Y8_1X8
+> >> +#define VD55G1_MBUS_CODE_DEF				0
+> >>  #define VD55G1_DGAIN_DEF				256
+> >>  #define VD55G1_AGAIN_DEF				19
+> >>  #define VD55G1_EXPO_MAX_TERM				64
+> >> @@ -1260,7 +1260,8 @@ static int vd55g1_set_pad_fmt(struct v4l2_subdev *sd,
+> >>  static int vd55g1_init_state(struct v4l2_subdev *sd,
+> >>  			     struct v4l2_subdev_state *sd_state)
+> >>  {
+> >> -	unsigned int def_mode = VD55G1_DEFAULT_MODE;
+> >> +	unsigned int def_mode = VD55G1_MODE_DEF;
+> >> +	unsigned int def_mbus_code = VD55G1_MBUS_CODE_DEF;
+> > 
+> > Why the local variables?
+> > 
+> >>  	struct vd55g1 *sensor = to_vd55g1(sd);
+> >>  	struct v4l2_subdev_format fmt = { 0 };
+> >>  	struct v4l2_subdev_route routes[] = {
+> >> @@ -1278,7 +1279,8 @@ static int vd55g1_init_state(struct v4l2_subdev *sd,
+> >>  		return ret;
+> >>  
+> >>  	vd55g1_update_img_pad_format(sensor, &vd55g1_supported_modes[def_mode],
+> >> -				     VD55G1_MEDIA_BUS_FMT_DEF, &fmt.format);
+> >> +				     vd55g1_mbus_codes[def_mbus_code].code,
+> >> +				     &fmt.format);
+> > 
+> > I'd remove def_mode, too, and just use VD55G1_DEFAULT_MODE. The 80
+> > characters per line is preferred but I think in this case using local
+> > variables just to use them once doens't make the code easier to read.
+> > 
 > 
-> It makes sense to remove these fields from struct gpio_chip into a
-> dedicated structure but this is not trivial due to how the bgpio_init()
-> function is implemented.
+> You guessed correctly, local variables are here to avoid overflowing the
+> 80 characters per line.
+> If I put VD55G1_DEFAULT_MODE directly then checkpatch will fail. As I
+> understand this is a hard requirement ?
+
+It's not a hard requirement in media-ci, no. In some cases it's justified
+to have longer lines than that (see V4L2 IOCTL definitions, for instance),
+I don't mind if it happens above. You could also make the function name
+shorter, it's pretty long. Up to you.
+
 > 
+> I could do something like :
+> 
+> const struct vd55g1_mode *mode =
+> 	&vd55g1_supported_modes[VD55G1_MODE_DEF];
+> const struct vd55g1_fmt_desc *mbus_code =
+> 	&vd55g1_mbus_codes[VD55G1_MBUS_CODE_DEF];
 > [...]
+> vd55g1_update_img_pad_format(sensor, mode, mbus_code->code,
+> 			     &fmt.format);
+> 
+> Which IMO improves readability, what do you think ?
 
-Applied, thanks!
+I'd just do this without local variables.
 
-[1/1] gpio: TODO: add a task for removing MMIO-specific fields from gpio_chip
-      https://git.kernel.org/brgl/linux/c/97a7ea2b8f4a9aec1f43435658343e046c2a4983
-
-Best regards,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Regards,
+
+Sakari Ailus
