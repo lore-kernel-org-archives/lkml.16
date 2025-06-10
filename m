@@ -1,76 +1,234 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D990924502D;
-	Tue, 10 Jun 2025 18:42:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D29ED24633C;
+	Tue, 10 Jun 2025 18:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749580932; cv=none; b=gcJSPZXP7OC/RPshJ/UP7Rbln17fRZcxsUmyFE7fwabKnB1+OfFqzADUZDYlOKmxca0jNxkYOPTLqLUt85diTXm1oXPxKNRCk7VP5wpl2DRDKTHFlguYG7B4oUaIHOjEiq3a1NcUC0itZkFCtpSXHDtTJT9USu4vOqGt1244yf0=
+	t=1749580971; cv=none; b=SCZ+NgyzZQjGdLhEgLHSqwfbA2urP4roMH23b/8R9IWfS8qbJpvKS0kQh584yTw0niCeqQ8gglbKPxbXRylcucm6yzw5ywTyR/WvXVWnxgJdLYagl85wpw3UdgAbhNCGCM/UgyEPPNxDbti/EOW9SvFv/eWGggVSM0KMXHEvUxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749580932; c=relaxed/simple;
-	bh=SRK4oOAbH+Nd5/QGu3c6zwgfCNvKDJBW3daJbzcjYAw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qehHO6ZmIyfFSE6c9SUPFB/DZLq118MR0T8xf3f/S9ZLojBvzSJanVxs5lKF/yATq7Kj2WGvxWollj47bYagnEFDSu/G4EfxxyEGMcF2LlkVfCnk5DA7JxAirCKmGI3GdWYslw4i+x4IFKjpUXA9WNULuw2pFV1v1K2fYB0TF10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o9un6jmU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749580971; c=relaxed/simple;
+	bh=NCJFu44V4QJ1vQws4N4CiyJCUCgBz5teMTE2RAaiTbI=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=lDnUwFMCyafi+HqLAY2j519EIeqv5e5JhzYc1mXfQN+RZlIPpdXdI67uHa5nEF/81aQxyw2qVFVScKlVEWp7G3EyivHUduaxKAuFYbOA/SeVU+9WdsM5mDKj1rWszeJxkE/iAY9s2do/x68A7hH/+A/xTpXfvRbZx63S45WMVBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=VLEP+8CS; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o9un6jmU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32F1FC4CEED;
-	Tue, 10 Jun 2025 18:42:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749580930;
-	bh=SRK4oOAbH+Nd5/QGu3c6zwgfCNvKDJBW3daJbzcjYAw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o9un6jmUVybuavuWZsqHzWayBJ3FcxCqA/hi/it91vvatbcTVsqU18NLTfa+CiK3L
-	 PksVxD1tuZT4Pflv/QVvET2D6AL5JFSI7ec/C4YJ1nKI/yr6z8ZxtjZ+F37WRs6SAX
-	 dNZBaMOKRNiC6G5CvkQsY71T+t3HDQnqyf/ZAK4c04702mihq/dBczA6Z5piWRl/GN
-	 EadwfB/f/yI+C90ZkuI/xeDFht7mtiWWh1OsPUOyW3FP2P0LNU0MHhgCFCNUSpdput
-	 mJsRnZXObHkqIDb9G9RGcD7hzgy7O7rOoZtlAW1AoXRiqpf93d0zJF1R4bRD0jWE5p
-	 sR6dJUHGfUKYw==
-Date: Tue, 10 Jun 2025 11:41:46 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] crypto: Annotate crypto strings with nonstring
-Message-ID: <20250610184146.GA1649@sol>
-References: <20250529173113.work.760-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VLEP+8CS"
+Received: by linux.microsoft.com (Postfix, from userid 1006)
+	id 5CF3221175A7; Tue, 10 Jun 2025 11:42:49 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5CF3221175A7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749580969;
+	bh=DNW0VMHKju0KL6eZOtEkJKOmowbimuF1cYD5YEwI4CM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VLEP+8CSJIVWyaqTUKLBnHMspiqpNZdYPzR+Bezu2SzPzv54VOvWoY1HtDYKMJnjo
+	 iWFbk86N1h8suQsKEZ0LEDrGxmhTV8Pw21XA+cKMQMxmaUjI9AjvE75tLe8TA4LoZU
+	 WV7amKuRonFMoZI6rUU9X1hoo670Kw/MMqQ5zKPg=
+From: Haiyang Zhang <haiyangz@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: haiyangz@microsoft.com,
+	decui@microsoft.com,
+	stephen@networkplumber.org,
+	kys@microsoft.com,
+	paulros@microsoft.com,
+	olaf@aepfle.de,
+	vkuznets@redhat.com,
+	davem@davemloft.net,
+	wei.liu@kernel.org,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	leon@kernel.org,
+	longli@microsoft.com,
+	ssengar@linux.microsoft.com,
+	linux-rdma@vger.kernel.org,
+	daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	bpf@vger.kernel.org,
+	ast@kernel.org,
+	hawk@kernel.org,
+	tglx@linutronix.de,
+	shradhagupta@linux.microsoft.com,
+	andrew+netdev@lunn.ch,
+	kotaranov@microsoft.com,
+	horms@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next,v7] net: mana: Add handler for hardware servicing events
+Date: Tue, 10 Jun 2025 11:42:22 -0700
+Message-Id: <1749580942-17671-1-git-send-email-haiyangz@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250529173113.work.760-kees@kernel.org>
 
-On Thu, May 29, 2025 at 10:31:17AM -0700, Kees Cook wrote:
-> Annotate various keys, ivs, and other byte arrays with __nonstring so
-> that static initializers will not complain about truncating the trailing
-> NUL byte under GCC 15 with -Wunterminated-string-initialization enabled.
-> Silences many warnings like:
-> 
-> ../lib/crypto/aesgcm.c:642:27: warning: initializer-string for array of 'unsigned char' truncates NUL terminator but destination lacks 'nonstring' attribute (13 chars into 12 available) [-Wunterminated-string-initialization]
->   642 |                 .iv     = "\xca\xfe\xba\xbe\xfa\xce\xdb\xad"
->       |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: Eric Biggers <ebiggers@google.com>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: <linux-crypto@vger.kernel.org>
-> ---
->  lib/crypto/aescfb.c |  8 ++++----
->  lib/crypto/aesgcm.c | 46 ++++++++++++++++++++++-----------------------
->  2 files changed, 27 insertions(+), 27 deletions(-)
+From: Haiyang Zhang <haiyangz@microsoft.com>
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/log/?h=libcrypto-fixes
+To collaborate with hardware servicing events, upon receiving the special
+EQE notification from the HW channel, remove the devices on this bus.
+Then, after a waiting period based on the device specs, rescan the parent
+bus to recover the devices.
 
-Thanks!
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+---
+v7:
+rebased.
 
-- Eric
+v6:
+Not acquiring module refcnt as suggested by Paolo Abeni.
+
+v5:
+Get refcnt of the pdev struct to avoid removal before running the work
+as suggested by Jakub Kicinski.
+
+v4:
+Renamed EQE type 135 to GDMA_EQE_HWC_RESET_REQUEST, since there can
+be multiple cases of this reset request.
+
+v3:
+Updated for checkpatch warnings as suggested by Simon Horman.
+
+v2:
+Added dev_dbg for service type as suggested by Shradha Gupta.
+Added driver cap bit.
+---
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 67 +++++++++++++++++++
+ include/net/mana/gdma.h                       | 10 ++-
+ 2 files changed, 75 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index 3504507477c6..c75184519fe4 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -352,11 +352,58 @@ void mana_gd_ring_cq(struct gdma_queue *cq, u8 arm_bit)
+ }
+ EXPORT_SYMBOL_NS(mana_gd_ring_cq, "NET_MANA");
+ 
++#define MANA_SERVICE_PERIOD 10
++
++struct mana_serv_work {
++	struct work_struct serv_work;
++	struct pci_dev *pdev;
++};
++
++static void mana_serv_func(struct work_struct *w)
++{
++	struct mana_serv_work *mns_wk;
++	struct pci_bus *bus, *parent;
++	struct pci_dev *pdev;
++
++	mns_wk = container_of(w, struct mana_serv_work, serv_work);
++	pdev = mns_wk->pdev;
++
++	pci_lock_rescan_remove();
++
++	if (!pdev)
++		goto out;
++
++	bus = pdev->bus;
++	if (!bus) {
++		dev_err(&pdev->dev, "MANA service: no bus\n");
++		goto out;
++	}
++
++	parent = bus->parent;
++	if (!parent) {
++		dev_err(&pdev->dev, "MANA service: no parent bus\n");
++		goto out;
++	}
++
++	pci_stop_and_remove_bus_device(bus->self);
++
++	msleep(MANA_SERVICE_PERIOD * 1000);
++
++	pci_rescan_bus(parent);
++
++out:
++	pci_unlock_rescan_remove();
++
++	pci_dev_put(pdev);
++	kfree(mns_wk);
++}
++
+ static void mana_gd_process_eqe(struct gdma_queue *eq)
+ {
+ 	u32 head = eq->head % (eq->queue_size / GDMA_EQE_SIZE);
+ 	struct gdma_context *gc = eq->gdma_dev->gdma_context;
+ 	struct gdma_eqe *eq_eqe_ptr = eq->queue_mem_ptr;
++	struct mana_serv_work *mns_wk;
+ 	union gdma_eqe_info eqe_info;
+ 	enum gdma_eqe_type type;
+ 	struct gdma_event event;
+@@ -401,6 +448,26 @@ static void mana_gd_process_eqe(struct gdma_queue *eq)
+ 		eq->eq.callback(eq->eq.context, eq, &event);
+ 		break;
+ 
++	case GDMA_EQE_HWC_FPGA_RECONFIG:
++		dev_info(gc->dev, "Recv MANA service type:%d\n", type);
++
++		if (gc->in_service) {
++			dev_info(gc->dev, "Already in service\n");
++			break;
++		}
++
++		mns_wk = kzalloc(sizeof(*mns_wk), GFP_ATOMIC);
++		if (!mns_wk)
++			break;
++
++		dev_info(gc->dev, "Start MANA service type:%d\n", type);
++		gc->in_service = true;
++		mns_wk->pdev = to_pci_dev(gc->dev);
++		pci_dev_get(mns_wk->pdev);
++		INIT_WORK(&mns_wk->serv_work, mana_serv_func);
++		schedule_work(&mns_wk->serv_work);
++		break;
++
+ 	default:
+ 		break;
+ 	}
+diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+index 3ce56a816425..bfae59202669 100644
+--- a/include/net/mana/gdma.h
++++ b/include/net/mana/gdma.h
+@@ -58,7 +58,7 @@ enum gdma_eqe_type {
+ 	GDMA_EQE_HWC_INIT_EQ_ID_DB	= 129,
+ 	GDMA_EQE_HWC_INIT_DATA		= 130,
+ 	GDMA_EQE_HWC_INIT_DONE		= 131,
+-	GDMA_EQE_HWC_SOC_RECONFIG	= 132,
++	GDMA_EQE_HWC_FPGA_RECONFIG	= 132,
+ 	GDMA_EQE_HWC_SOC_RECONFIG_DATA	= 133,
+ 	GDMA_EQE_HWC_SOC_SERVICE	= 134,
+ 	GDMA_EQE_RNIC_QP_FATAL		= 176,
+@@ -403,6 +403,8 @@ struct gdma_context {
+ 	u32			test_event_eq_id;
+ 
+ 	bool			is_pf;
++	bool			in_service;
++
+ 	phys_addr_t		bar0_pa;
+ 	void __iomem		*bar0_va;
+ 	void __iomem		*shm_base;
+@@ -578,12 +580,16 @@ enum {
+ /* Driver can handle holes (zeros) in the device list */
+ #define GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP BIT(11)
+ 
++/* Driver can self reset on FPGA Reconfig EQE notification */
++#define GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE BIT(17)
++
+ #define GDMA_DRV_CAP_FLAGS1 \
+ 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
+ 	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
+ 	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG | \
+ 	 GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT | \
+-	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP)
++	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP | \
++	 GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE)
+ 
+ #define GDMA_DRV_CAP_FLAGS2 0
+ 
+-- 
+2.34.1
+
