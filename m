@@ -1,109 +1,146 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFCDA1DB54C
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 19:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3182B2652A4;
+	Tue, 10 Jun 2025 19:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749585492; cv=none; b=YEDl8wcV6RYnFBstpKxiwxgqqOPtVQTXIATGyGvCyhiRLEQVyi44Ac69oErnzQ5DRqCUBwFHxr90tgdlzRNqg33iYjPLkvFziQzmWypkoYXsYmC5vgKyPRgWGlJkStQcE8lVdAF581Cw93nKkPqU98PphkJxIErNVTGE1evJZmI=
+	t=1749585501; cv=none; b=eordKPgfzGm2J2aLoztHVFVxdTLSh8iX7jyzDc75mxeXON/SMTiMVtPXraNX0J+08oWsXE6GZE7TLbB68NydTnlvDahcakCRvCZLbvfuPI9XtFVuvW/r0R2DclY9JvMf7dfHvYd0b8dI5Th5heq5zQh6axfyhzwXgGcb6qoXlKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749585492; c=relaxed/simple;
-	bh=ihCwGGEoD8fC9INm24omOseCfGg9QYvO2mr/2vHKcko=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NNpTXhQUrWls/sL1TdrBQ63CK3ujKQcp45+2KZass6hARRncoI8UDWbc0BcxSPLiKFQXN9KrbNToEz3qEbH27gNPk9G9rKvDb/FjVf4rbETn1emncbyvdTcTxe/ZMeOJGx7GNoZ6K+fRguwMAfiUL/mZeAymkdcWPDqHd5yQ/WE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f1Ry2YCX; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1749585501; c=relaxed/simple;
+	bh=7e/EGtYeLe3KYmuJolZr95z5krcUt1zgBSfn2PjSeDI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=it0dyRdJkngdAyr0uAaSBb+W1NH2t1ALwmG/FH0Ngj0RNJDeI++WJG0WxK+KvXiU8wNQh4agtx2g2MtjuIU0waqzdJUZXwYjB9QesTDEUKH9eeY49C+fH70hVMEmO9M4PrnvVEAjVs97NS4x+lu3/FisWzJvzT18tkB/zKjl+qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sPHJbBUP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f1Ry2YCX"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-23507382e64so56480215ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:58:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749585490; x=1750190290; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=M0BRtyPs7ssFwm4bCrsdLDOjneVtqSl9fylp57SlbsM=;
-        b=f1Ry2YCXmY1okvCrnpv8yeIFvmhvrlRzRmQGD2pYLX8iGPyKo3oSeXlyVUAayUDUN2
-         Kls2BXjYJgzzswfHrIgDvvz/dMVLRx6XdG9t5hfGJrpT+oQ45q9SEPQo2rOfszqtYN+7
-         23R9YJ2vCBcMAUB0W9meKzRQ75LsNIM97YxjF6LwVRUxkU/mZjIhFzDyAXgangDQzGgY
-         2nHnG+h3qtwDWvFPM8xDSGfs7dLBQl7nDmm4H8xSa1u1H0q41S+PWbSfG4ixKTlGW8Me
-         5SpiVCUJylAXhUu7YvDD5o9WDpCSJyAA0XrsH4qWvNzX5tyxtDVz37dJqNNqcKKb2o3o
-         3B7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749585490; x=1750190290;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M0BRtyPs7ssFwm4bCrsdLDOjneVtqSl9fylp57SlbsM=;
-        b=PqvV7RX9tnCsBmiv2jHN+gOLbmYH6eBcdWqVWa9n7YiTU1Vb5Snlpt2hZaNcwfs0Hb
-         PqVaGqXCPg6aOVMieztac+z36IeXa84jF16KJrBLnfI26EByFlLf84WlJeE8Gtoz7Asr
-         aZMlC4P97on3E3qzXBgsLR45dcDo+HVh1AkKm4MjN1FuJmXP5nxdAW8ym8VHZF/8NkuE
-         ULVbiFnQP6PyfzUMgjlvEowKbfFeJitoti+UMKDHN4c8CSf4d34I9+zWlPgBDlVv5z2a
-         8ZYUJM6hmvQYIOw3F3+0Qf4el9t5ifOpMHT/IlaQFNEiMmYqZ47lmoafuAvNvcLo0hPC
-         ud3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVrYVO7x4V18gtscIwWKarScM2KjKbBox795D2XF78AXk/JKkAOyyKInUb8iF1TT2n9tv/X0cgy7cEUV2k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYlXLhijh8XUhEXHWeHMjjF/7D1aUXWNbRG3s0orjKc9GI5vuF
-	0ww3/xHAmXBviHcVrNqEbttm6PNXkksWRQZK6kkh117LlsGN7k64G9cG5r8kpjz2u2zIb8tQj2q
-	MQySPgA==
-X-Google-Smtp-Source: AGHT+IHBrxHjWELJiauo4ekTKB6wyweoRO4KZWVQLjKaZT+cFCFEpa+zRq1kr/t1K2Tn2pFBq9SqItjfBU0=
-X-Received: from pgcz18.prod.google.com ([2002:a63:7e12:0:b0:b2c:2139:ff4])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:3c4f:b0:234:ef42:5d69
- with SMTP id d9443c01a7336-23641a99d41mr6706265ad.13.1749585490160; Tue, 10
- Jun 2025 12:58:10 -0700 (PDT)
-Date: Tue, 10 Jun 2025 12:58:08 -0700
-In-Reply-To: <936ccea77b474fbad1bde799ee92139356f91c5f.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sPHJbBUP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24815C4CEED;
+	Tue, 10 Jun 2025 19:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749585499;
+	bh=7e/EGtYeLe3KYmuJolZr95z5krcUt1zgBSfn2PjSeDI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=sPHJbBUPB8JKR5dDmXdoaSIqn5CVNSPvuULL2uP+8ErRHbWWgbKf3n4iHSGZbObg9
+	 W+UO1ksOYSbfLAHCFa0tP2OF6G4XGkhzLY3bGy2U6S+Yf8rXs/ZImP8QAj90x7+Wyz
+	 Gmc7TQgl7dm/DhnDSUMrqU/M9/Jl3KejBmC7sVSAlODPh8C4NwLcaJTyWcevPEvyP9
+	 v1jcE0BbY6Ploik3mum20vWRGC2igiZXX3fym0EHSqASkl5g06j79ftrbquF8wlE2C
+	 lziaPQaRdZ8lazYQqSIDkXTF4RbxKCzIm18vw126fZCf5JwunXrUrHwvPZfx6BjMMG
+	 4SMXJYJOAyB4w==
+Date: Tue, 10 Jun 2025 21:58:16 +0200 (CEST)
+From: Jiri Kosina <jikos@kernel.org>
+To: Armin Wolf <W_Armin@gmx.de>
+cc: j@jannau.net, Arnd Bergmann <arnd@arndb.de>, 
+    Benjamin Tissoires <bentiss@kernel.org>, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+    linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, 
+    linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2] HID: lenovo: Remove CONFIG_ACPI dependency
+In-Reply-To: <4262d612-f929-4d62-baf3-c334ff46d30f@gmx.de>
+Message-ID: <p3ps345p-6173-040r-4298-rn34697932p0@xreary.bet>
+References: <20250519-hid_lenovo_acpi_dependency-v2-1-124760ddd6f7@jannau.net> <4262d612-f929-4d62-baf3-c334ff46d30f@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250610021422.1214715-1-binbin.wu@linux.intel.com>
- <20250610021422.1214715-5-binbin.wu@linux.intel.com> <936ccea77b474fbad1bde799ee92139356f91c5f.camel@intel.com>
-Message-ID: <aEh0oGeh96n9OvCT@google.com>
-Subject: Re: [RFC PATCH 4/4] KVM: TDX: Check KVM exit on KVM_HC_MAP_GPA_RANGE
- when TD finalize
-From: Sean Christopherson <seanjc@google.com>
-To: Rick P Edgecombe <rick.p.edgecombe@intel.com>
-Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, 
-	"mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
-	Jiewen Yao <jiewen.yao@intel.com>, Xiaoyao Li <xiaoyao.li@intel.com>, 
-	Tony Lindgren <tony.lindgren@intel.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Reinette Chatre <reinette.chatre@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yan Y Zhao <yan.y.zhao@intel.com>, 
-	Isaku Yamahata <isaku.yamahata@intel.com>, Kirill Shutemov <kirill.shutemov@intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, Jun 10, 2025, Rick P Edgecombe wrote:
-> On Tue, 2025-06-10 at 10:14 +0800, Binbin Wu wrote:
-> > Check userspace has enabled KVM exit on KVM_HC_MAP_GPA_RANGE during
-> > KVM_TDX_FINALIZE_VM.
-> > 
-> > TDVMCALL_MAP_GPA is one of the GHCI base TDVMCALLs, so it must be
-> > implemented by VMM to support TDX guests. KVM converts TDVMCALL_MAP_GPA
-> > to KVM_HC_MAP_GPA_RANGE, which requires userspace to enable
-> > KVM_CAP_EXIT_HYPERCALL with KVM_HC_MAP_GPA_RANGE bit set. Check it when
-> > userspace requests KVM_TDX_FINALIZE_VM, so that there is no need to check
-> > it during TDX guests running.
-> > 
-> > Signed-off-by: Binbin Wu <binbin.wu@linux.intel.com>
-> 
-> Do we need this change? It seems reasonable, but I don't think we need KVM to
-> ensure that userspace creates a TD that meets the GHCI spec.
+On Tue, 20 May 2025, Armin Wolf wrote:
 
-+1.  We do need to be careful about unintentionally creating ABI, but generally
-speaking KVM shouldn't police userspace.
+> > The hid-lenovo driver supports external Bluetooth and USB devices which
+> > can be used with non-ACPI systems/kernels. Call platform_profile_cycle()
+> > only if CONFIG_ACPI_PLATFORM_PROFILE is enabled and select
+> > CONFIG_ACPI_PLATFORM_PROFILE only if ACPI is enabled.
+> > This should not affect functionality since only the detachable keyboard
+> > of a x86 tablet with a custom connector has an hotkey for cycling
+> > through power profiles.
+> >
+> > Fixes: 52572cde8b4a4 ("HID: lenovo: select CONFIG_ACPI_PLATFORM_PROFILE")
+> > Signed-off-by: Janne Grunau <j@jannau.net>
+> > ---
+> > hid-lenovo supports external generic USB and Bluetooth devices and
+> > should be buildable and usable on non-ACPI kernels and systems. Commit
+> > 84c9d2a968c82 ("HID: lenovo: Support for ThinkPad-X12-TAB-1/2 Kbd Fn
+> > keys") added a hot key to cycle through power profiles using ACPI's
+> > platform_profile. This resulted in adding a dependency on ACPI and
+> > selecting CONFIG_ACPI_PLATFORM_PROFILE to fix build an link errors in
+> > commit 52572cde8b4a ("HID: lenovo: select
+> > CONFIG_ACPI_PLATFORM_PROFILE"). This is undesirable for HID drivers
+> > supporting generic USB and Bluetooth devices. So instead call
+> > platform_profile_cycle() only CONFIG_ACPI_PLATFORM_PROFILE is enabled
+> > and select the latter only if ACPI is enabled.
+> >
+> > Supercedes with Armin Wolf's "ACPI: platform_profile: Add support for
+> > non-ACPI platforms" [1] the earlier removel in "HID: lenovo: Unbreak
+> > USB/BT keyboards on non-ACPI platforms" [2].
+> >
+> > [1]:
+> > https://lore.kernel.org/linux-acpi/20250518185111.3560-1-W_Armin@gmx.de/
+> > [2]:
+> > https://lore.kernel.org/linux-input/20250512-hid_lenovo_unbreak_non_acpi-v1-1-e9e37ecbfbfe@jannau.net/
+> > ---
+> > Changes in v2:
+> > - drop stub platform_profile_cycle()
+> > - call platform_profile_cycle() conditioanlly
+> > - drop 'depends on ACPI || !ACPI'
+> > - Link to v1:
+> > https://lore.kernel.org/r/20250518-hid_lenovo_acpi_dependency-v1-0-afdb93b5d1a6@jannau.net
+> > ---
+> >   drivers/hid/Kconfig      | 3 +--
+> >   drivers/hid/hid-lenovo.c | 6 ++++--
+> >   2 files changed, 5 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+> > index
+> > a503252702b7b43c332a12b14bc8b23b83e9f028..1656bb1504f750d73011d3f008e27b4436a58678
+> > 100644
+> > --- a/drivers/hid/Kconfig
+> > +++ b/drivers/hid/Kconfig
+> > @@ -595,8 +595,7 @@ config HID_LED
+> >   
+> >   config HID_LENOVO
+> >   	tristate "Lenovo / Thinkpad devices"
+> > -	depends on ACPI
+> > -	select ACPI_PLATFORM_PROFILE
+> > +	select ACPI_PLATFORM_PROFILE if ACPI
+> >    select NEW_LEDS
+> >    select LEDS_CLASS
+> >    help
+> > diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
+> > index
+> > af29ba840522f99bc2f426d4753f70d442cef3af..73c6a26638a22ad1c8368112e8ab185232a9df12
+> > 100644
+> > --- a/drivers/hid/hid-lenovo.c
+> > +++ b/drivers/hid/hid-lenovo.c
+> > @@ -728,9 +728,11 @@ static int lenovo_raw_event_TP_X12_tab(struct
+> > hid_device *hdev, u32 raw_data)
+> >      if (hdev->product == USB_DEVICE_ID_LENOVO_X12_TAB) {
+> >       report_key_event(input, KEY_RFKILL);
+> >       return 1;
+> > +			} else if (IS_ENABLED(CONFIG_ACPI_PLATFORM_PROFILE)) {
+> > +				platform_profile_cycle();
+> > +				return 1;
+> >      }
+> 
+> Please turn the "if else" into a single "if":
+> 
+> 	if (IS_ENABLED(CONFIG_ACPI_PLATFORM_PROFILE)) {
+> 		platform_profile_cycle();
+> 		return 1;
+> 	}
+> 
+> 	return 0;
+> 
+>  With this being done:
+> 
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
-> So I'm not sure about the justification.
-> 
-> It seems like the reasoning could be just to shrink the possible configurations
-> KVM has to think about, and that we only have the option to do this now before
-> the ABI becomes harder to change.
-> 
-> Did you need any QEMU changes as a result of this patch?
-> 
-> Wait, actually I think the patch is wrong, because KVM_CAP_EXIT_HYPERCALL could
-> be called again after KVM_TDX_FINALIZE_VM. In which case userspace could get an
-> exit unexpectedly. So should we drop this patch?
+Makes sense; Janne, are you planning to send updated patch, please?
 
-Yes, drop it.
+Thanks,
+
+-- 
+Jiri Kosina
+SUSE Labs
+
