@@ -1,182 +1,179 @@
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F46A2116F5;
-	Tue, 10 Jun 2025 16:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DACC1F0984
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 16:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749572112; cv=none; b=dCW/yL5NnMEtVZJWhbkQqbCMZrmcsrlQFv7YAn/PfHGcEB5m3psOzhBW+zYrXv35FkjGv3/m6neNsqsOIgcJe/wQrwIKIoa7en/WZlIWp1o4Fno8kmgSD6tA3flT+Nmvu8p4F1lX/xGDFDJHP8ilaKOXNU+mSA7O3iqBfr76gB8=
+	t=1749572131; cv=none; b=XeGe1EZaPdkCfIEK3f6oPiBz0ikk1u6YVKVuKjfcEFzpMCbsocGOzFyYw4kOrQIugifC07UH6gn++WJNVcc8dV/ZH4RtS0ry46Na8MNgRxRh0s840kCpgn+m2jFCfAYo9Elb+axuOeQXRcdD4XAMP5ybgvGIHyB9LnB+IdKh27I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749572112; c=relaxed/simple;
-	bh=EnE3iCmdmPCrC78MsYphV4x/iTw7Ie5czyJvF6gMHXE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J6o76vvusAZ3kOsCysC0jhRc652HR+ZKGgYhEGVAD5zLpYew/OnwH/qHXWmhqY9yNGvs5O2HnMgcxCNO5mbbsTxyf7kyk2G0h8fPKgQjVo+a6pp6FvL/IoJoZpLFYjJ0IcldeN42dcBCtqtQkrFURhWprpoKjPimwWRra/fImD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R7ezQRyy; arc=none smtp.client-ip=209.85.161.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1749572131; c=relaxed/simple;
+	bh=1co5tVLP/u/Jmc8gRcL0YoUwLrdb5cdKzfJRPDUKtnA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MnPVM37pcxDMsItrTdTgyMHTIBr9ORGQMO7BuPwhwrgp0VpeafNiHZ1rNX/37VNympG4sxICuVbtUygHKZgEJxMP49QZBsX4pHSVs/QZOas+spvU9wGW1tq7aT8MrJMAc76xeTpQBg6XqDVbTlSxlS/cs4iyvfD+TUZ4YoScbnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dmIxjD/R; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7ezQRyy"
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-60ef6bf2336so4224520eaf.0;
-        Tue, 10 Jun 2025 09:15:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dmIxjD/R"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-742c3d06de3so6488222b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:15:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749572110; x=1750176910; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ta7maDhtSE3i5q5bUhjou/IV8ubkgGzHQ0R4B2/Mhjw=;
-        b=R7ezQRyyljMuLNX4La5zJmvGyoYGXZnrQ+kH4k6qDDoPmJWiYvqXBjTBlenuRZdvZ5
-         pj8IyB3B1e/hWFp9bYluF2KY/qQAaBXrY+8PrsWvBB9P4r0Y78W/lYTx11USq5qVkTFK
-         Mk7BOwpieeODC1BbBC/g904hqfGPBNZ5mZNvG3DVHbF6NzkU5j3yog1RVVWqi+x9Du/x
-         xrhff6G5NtISlk27B1ic7UDjZ65X6jYhDhR9WdhZpRhVE0ppGkvvQSA0CotCzV0cluii
-         caZ7iNaTjnsuteegnbVKo2tCrHogn+Og7BclP1SyIJdfdPhIuLI36MYN+XuC0cKO1HNG
-         FXiQ==
+        d=gmail.com; s=20230601; t=1749572129; x=1750176929; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=SGmRJAWB9RdYxrzDZGLu8XN2tBT3An3sj/2b1cUQNXg=;
+        b=dmIxjD/RZeynB15Kdf6l4uRzeHgleZWHk4MdZYef9dESJYkbl7ShSuF1Zru1HdmF1N
+         tlbSX9LJknXJ8yNq2e9/JN37FVqxaHatrSQ+hVEOGBqOTvM3L6UrWQW6rbOo7xQRe91U
+         NKKp5+2GG4hIwl28osqqopkpxgV4IzNRRZOWPSU/zAOPUHN0gVOfmj9e9m97o194PEQN
+         jrGMWYSFDLdg5UEbHKXdDTfNGM9ISUmeYADJeocNZg/qnTRhWW/9H0Ovb7FvuE7mnUeX
+         P2PYIaFR+hqCiGMU1BDYXlwxhtSGiy8CpOddmjcR2qPW5UQhv7nm2OKy+MMlFtMrpF5K
+         77hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749572110; x=1750176910;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ta7maDhtSE3i5q5bUhjou/IV8ubkgGzHQ0R4B2/Mhjw=;
-        b=OV1FLg7tFCOmQtg4cHAutKFyhEajNDMyBbv1jIj3G0hJ55qNYHLY1l4ZcwOrqNXFNQ
-         1F2RsLX+RQNvxiTdtSmeHaTax9al2xRKKotUeUL73VXYaPlkJ6cs/he5yi3eBFPXKUDK
-         aUikcLQb9cFGNVhYG3aF1a+PR7MVziKQnRTvDMH0mtFxdaP/GAvpIqak94k5hPH9y1OL
-         gphMO7KvtbL9b3p3dKdo8LqY+sAjOuBJfUGEIxItpn6ayHkvZnX/fVRY7Thb/RsU5UA0
-         Zpv8BReJN0rFaG1vtq7xI/++Izv7V0+8IXCVQxF/9MHK2viVdbRupSfZkdB0CzKo8BpU
-         l9Nw==
-X-Forwarded-Encrypted: i=1; AJvYcCVnAxcnu29P0sQvOt0BOGQZAA/eOeYjonol6HxTvwb5DbtWz3sG+M4ew7gyheDnZOzLkd/KEDU42kJEeZwj@vger.kernel.org, AJvYcCWABCWEJhu7b5GF+8v+SMDSn0Ol30ZJ/XjSlLKrsCbvTyj6U+FOpP0xymLb8gOpysfX6KhXoO9uapA1@vger.kernel.org, AJvYcCWjm1Mb3Jnhh057M9yIs2RSdA4Pxi94AnjlWipKG5YCmcLKi5ET7LD24FLRv0HvnPbKxsA7NEMBiFXSTG6+hKU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyip+Pqg6ROZQX2IZdUrMg/fYGxvtqnuk7LqpQI03M+9JO4/1wZ
-	mMOMuInyHZBC31P8s1amjnbDM81nRUHoYE8D2e3EaPsVsU2PbxGZX7j04JW9BTdIkkYtfPR8jU1
-	wvOM/OLCmnKlsdpt4XgZOZQgjMMX2T1E=
-X-Gm-Gg: ASbGncsZjzywvF5xBqtABcH2e1PxzGdo9RkQ50sL6OGPAqi9P8G9Q6EG7FXU7as9jGa
-	szevpQ77gzO0khn5YZ72nKkG3pZ5+oU0zNZGYnAWyZTaMhtWh/YflSr33QHy56eA2q3HmvyUU+j
-	VJf0RcR50aYaOPrW74QfjGQJh1aVavcg+LD1ArcpbE
-X-Google-Smtp-Source: AGHT+IEEwO/CqHeyMnyHTRpRJ6eXvogyj930sk2AOCK0KsWI7FFDXTdN6K0KvTPsQKc1QtzQIycM5KZpcdjaiGrOfyU=
-X-Received: by 2002:a05:6820:2718:b0:60f:2051:6fbd with SMTP id
- 006d021491bc7-60f3ce433abmr12106756eaf.1.1749572110129; Tue, 10 Jun 2025
- 09:15:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749572129; x=1750176929;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SGmRJAWB9RdYxrzDZGLu8XN2tBT3An3sj/2b1cUQNXg=;
+        b=vJPxxUrtYyBnm5R5StqRcwHDplTRhZppJpVhXhCSShKfzZcUGBZYuErLNwwiTkZIfh
+         Fxfb4MzK+AO8n5ldNcy6DX4qi/91GDy6MDJgW8Hccf+VYTn6jC28P69DfLv3RQUXCXjH
+         GTeglx7SEwUFunDnLXSbAnRV5UsUcFVIIJF2aO5IJeGCSM2e9uU0Q2D7nhdxqrZt/PiR
+         1JK7j4+0SgHMC9vAlizbkNFybrJJba8+McwOdr/j9hkdJ3yelrgTAaXjo7FO4GVTWRap
+         //A2oyOuOg67FG4uz2yCwMp7QhfJjPix+3bCEo1iRFhH0lJAyvBx+nnhPe0R9ZRARyfZ
+         evuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXWURXMEdvvDIJNDY3mGdCT5Ooafrobe734L/h1kqmz7JldjPDCQ3RzjNGX14oUe8LWEZl78SSqUC4tVwk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxN2qYaxwtBNKVgRmnQwhvLvUqfQZdFgBmIert8Zs/7iBLPCWT1
+	xrgXraJYChWIny6ysXVTrI9q8nJ390g586iWgHMcTMkvbsmamUG61G7F
+X-Gm-Gg: ASbGncvixX4u8BX8uZFKhfNJsgww4YZmcvcxXJnjA9jUAlbRvPmk/U7bO3BLYxfpJwn
+	NSTu3qzgej65l797s9nat306ap5rHvCaxprVI3vmTI4wRJYaIgIAl93us2vePjBfRMbJq7/oUsX
+	Yk60mdg6dOfH03WKYPxtz2F50bEz/Upr5eI8R/rjtSD3xmMnGIkgIk4wxbwIsFDwI5P3QiojiEO
+	6PFadjltu7X99pSbBLXDGhuaWpzcHhraaEJUSx3LGBprLiEN8/PkGQ2tlkj6zNwF6eEjyYpwZbe
+	ZeRCk+Zx4E2/DDmSmaxnJBFxqA+26+OIqzUyYtAPvlfgQvzqq84DjoU775C4nz5NKdPB68L9Jcr
+	ocLneCEqS5SODhbVQevmXE4v29HQjaMPJ6WA=
+X-Google-Smtp-Source: AGHT+IHYQYM7G6bttifJeNfjnkDx1F8NGq5T9NLpKQPd57Ef2ALNRna0f38GlbUS9BZPkJm49q/Gfw==
+X-Received: by 2002:a05:6a00:2d15:b0:746:3200:620 with SMTP id d2e1a72fcca58-7486cb4ca2cmr227347b3a.9.1749572128739;
+        Tue, 10 Jun 2025 09:15:28 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482af38378sm7923696b3a.16.2025.06.10.09.15.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 09:15:28 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <c90c8bad-9c7a-4bf7-8282-ebefebba90a3@roeck-us.net>
+Date: Tue, 10 Jun 2025 09:15:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610145234.235005-1-igor.korotin.linux@gmail.com>
- <20250610150538.238007-1-igor.korotin.linux@gmail.com> <aEhMCVJG3c7zVbyU@cassiopeiae>
-In-Reply-To: <aEhMCVJG3c7zVbyU@cassiopeiae>
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-Date: Tue, 10 Jun 2025 17:14:59 +0100
-X-Gm-Features: AX0GCFtzpeo4A1lsjhJ7ZirXjU5U1qi_K1xwVCUmWKn3ASiV_UHgwOkDUJrXQdc
-Message-ID: <CAJxaTdN15vSGgserH+hnzxmhj_RkZ4gZwrg-DQwdeaoe=ttW6A@mail.gmail.com>
-Subject: Re: [PATCH v4 3/5] rust: driver: Consolidate `Adapter` methods using `#[cfg]`
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: ojeda@kernel.org, alex.gaynor@gmail.com, rafael@kernel.org, 
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com, 
-	tmgross@umich.edu, lenb@kernel.org, wedsonaf@gmail.com, 
-	viresh.kumar@linaro.org, alex.hung@amd.com, dingxiangfei2009@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 01/11] mtd: core: always create master device
+To: Richard Weinberger <richard@nod.at>,
+ Alexander Usyskin <alexander.usyskin@intel.com>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>,
+ Lucas De Marchi <lucas.demarchi@intel.com>,
+ =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>,
+ Karthik Poosa <karthik.poosa@intel.com>,
+ Reuven Abliyev <reuven.abliyev@intel.com>,
+ Oren Weil <oren.jer.weil@intel.com>,
+ linux-mtd <linux-mtd@lists.infradead.org>,
+ DRI mailing list <dri-devel@lists.freedesktop.org>,
+ intel-gfx <intel-gfx@lists.freedesktop.org>,
+ linux-kernel <linux-kernel@vger.kernel.org>
+References: <20250302140921.504304-1-alexander.usyskin@intel.com>
+ <87ikl5xnbc.fsf@bootlin.com>
+ <CY5PR11MB63660CFA966BCA1B44528BB1ED6BA@CY5PR11MB6366.namprd11.prod.outlook.com>
+ <4d55ac06-c357-4d78-b8b8-5b26486ce529@roeck-us.net>
+ <CY5PR11MB63662D21B2C7B1A1C2E6BC4BED6BA@CY5PR11MB6366.namprd11.prod.outlook.com>
+ <2e5ebbdd-2a57-4f1f-85c6-7c2dff127b50@roeck-us.net>
+ <1176847729.134356549.1749504429656.JavaMail.zimbra@nod.at>
+ <CY5PR11MB6366B2B40E0C357D6C0935C2ED6AA@CY5PR11MB6366.namprd11.prod.outlook.com>
+ <130790886.134361099.1749560056731.JavaMail.zimbra@nod.at>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
+ RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
+ nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
+ 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
+ gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
+ IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
+ kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
+ VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
+ jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
+ BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
+ ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
+ CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAmgrMyQFCSbODQkACgkQyx8mb86fmYGcWRAA
+ oRwrk7V8fULqnGGpBIjp7pvR187Yzx+lhMGUHuM5H56TFEqeVwCMLWB2x1YRolYbY4MEFlQg
+ VUFcfeW0OknSr1s6wtrtQm0gdkolM8OcCL9ptTHOg1mmXa4YpW8QJiL0AVtbpE9BroeWGl9v
+ 2TGILPm9mVp+GmMQgkNeCS7Jonq5f5pDUGumAMguWzMFEg+Imt9wr2YA7aGen7KPSqJeQPpj
+ onPKhu7O/KJKkuC50ylxizHzmGx+IUSmOZxN950pZUFvVZH9CwhAAl+NYUtcF5ry/uSYG2U7
+ DCvpzqOryJRemKN63qt1bjF6cltsXwxjKOw6CvdjJYA3n6xCWLuJ6yk6CAy1Ukh545NhgBAs
+ rGGVkl6TUBi0ixL3EF3RWLa9IMDcHN32r7OBhw6vbul8HqyTFZWY2ksTvlTl+qG3zV6AJuzT
+ WdXmbcKN+TdhO5XlxVlbZoCm7ViBj1+PvIFQZCnLAhqSd/DJlhaq8fFXx1dCUPgQDcD+wo65
+ qulV/NijfU8bzFfEPgYP/3LP+BSAyFs33y/mdP8kbMxSCjnLEhimQMrSSo/To1Gxp5C97fw5
+ 3m1CaMILGKCmfI1B8iA8zd8ib7t1Rg0qCwcAnvsM36SkrID32GfFbv873bNskJCHAISK3Xkz
+ qo7IYZmjk/IJGbsiGzxUhvicwkgKE9r7a1rOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
+ 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
+ pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
+ J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
+ pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
+ 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
+ ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
+ I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
+ nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
+ HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
+ JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAmgrMyQFCSbODQkACgkQyx8mb86fmYHlgg/9
+ H5JeDmB4jsreE9Bn621wZk7NMzxy9STxiVKSh8Mq4pb+IDu1RU2iLyetCY1TiJlcxnE362kj
+ njrfAdqyPteHM+LU59NtEbGwrfcXdQoh4XdMuPA5ADetPLma3YiRa3VsVkLwpnR7ilgwQw6u
+ dycEaOxQ7LUXCs0JaGVVP25Z2hMkHBwx6BlW6EZLNgzGI2rswSZ7SKcsBd1IRHVf0miwIFYy
+ j/UEfAFNW+tbtKPNn3xZTLs3quQN7GdYLh+J0XxITpBZaFOpwEKV+VS36pSLnNl0T5wm0E/y
+ scPJ0OVY7ly5Vm1nnoH4licaU5Y1nSkFR/j2douI5P7Cj687WuNMC6CcFd6j72kRfxklOqXw
+ zvy+2NEcXyziiLXp84130yxAKXfluax9sZhhrhKT6VrD45S6N3HxJpXQ/RY/EX35neH2/F7B
+ RgSloce2+zWfpELyS1qRkCUTt1tlGV2p+y2BPfXzrHn2vxvbhEn1QpQ6t+85FKN8YEhJEygJ
+ F0WaMvQMNrk9UAUziVcUkLU52NS9SXqpVg8vgrO0JKx97IXFPcNh0DWsSj/0Y8HO/RDkGXYn
+ FDMj7fZSPKyPQPmEHg+W/KzxSSfdgWIHF2QaQ0b2q1wOSec4Rti52ohmNSY+KNIW/zODhugJ
+ np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
+In-Reply-To: <130790886.134361099.1749560056731.JavaMail.zimbra@nod.at>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 10, 2025 at 4:15=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
-wrote:
->
-> On Tue, Jun 10, 2025 at 04:05:38PM +0100, Igor Korotin wrote:
-> > Refactor the `acpi_id_info` and `of_id_info` methods in the `Adapter` t=
-rait
-> > to reduce duplication. Previously, each method had two versions selecte=
-d
-> > via `#[cfg(...)]` and `#[cfg(not(...))]`. This change merges them into =
-a
-> > single method per case by using `#[cfg]` blocks within the method bodie=
-s.
-> >
-> > Suggested-by: Benno Lossin <lossin@kernel.org>
-> > Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
-> > ---
-> >  rust/kernel/driver.rs | 76 +++++++++++++++++++++----------------------
-> >  1 file changed, 38 insertions(+), 38 deletions(-)
-> >
-> > diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
-> > index 638f1d270af8..805f61bd4a50 100644
-> > --- a/rust/kernel/driver.rs
-> > +++ b/rust/kernel/driver.rs
-> > @@ -147,30 +147,30 @@ pub trait Adapter {
-> >      /// Returns the driver's private data from the matching entry in t=
-he [`acpi::IdTable`], if any.
-> >      ///
-> >      /// If this returns `None`, it means there is no match with an ent=
-ry in the [`acpi::IdTable`].
-> > -    #[cfg(CONFIG_ACPI)]
-> >      fn acpi_id_info(dev: &device::Device) -> Option<&'static Self::IdI=
-nfo> {
-> > -        let table =3D Self::acpi_id_table()?;
-> > +        #[cfg(not(CONFIG_ACPI))] {
-> > +            let _ =3D dev;
-> > +            return None;
-> > +        }
-> >
-> > -        // SAFETY:
-> > -        // - `table` has static lifetime, hence it's valid for read,
-> > -        // - `dev` is guaranteed to be valid while it's alive, and so =
-is `pdev.as_ref().as_raw()`.
-> > -        let raw_id =3D unsafe { bindings::acpi_match_device(table.as_p=
-tr(), dev.as_raw()) };
-> > +        #[cfg(CONFIG_ACPI)] {
-> > +            let table =3D Self::acpi_id_table()?;
-> >
-> > -        if raw_id.is_null() {
-> > -            None
-> > -        } else {
-> > -            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper o=
-f `struct of_device_id` and
-> > -            // does not add additional invariants, so it's safe to tra=
-nsmute.
-> > -            let id =3D unsafe { &*raw_id.cast::<acpi::DeviceId>() };
-> > +            // SAFETY:
-> > +            // - `table` has static lifetime, hence it's valid for rea=
-d,
-> > +            // - `dev` is guaranteed to be valid while it's alive, and=
- so is `pdev.as_ref().as_raw()`.
-> > +            let raw_id =3D unsafe { bindings::acpi_match_device(table.=
-as_ptr(), dev.as_raw()) };
-> >
-> > -            Some(table.info(<acpi::DeviceId as crate::device_id::RawDe=
-viceId>::index(id)))
-> > -        }
-> > -    }
-> > +            if raw_id.is_null() {
-> > +                None
-> > +            } else {
-> > +                // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapp=
-er of `struct of_device_id` and
-> > +                // does not add additional invariants, so it's safe to=
- transmute.
-> > +                let id =3D unsafe { &*raw_id.cast::<acpi::DeviceId>() =
-};
-> >
-> > -    #[cfg(not(CONFIG_ACPI))]
-> > -    #[allow(missing_docs)]
-> > -    fn acpi_id_info(_dev: &device::Device) -> Option<&'static Self::Id=
-Info> {
-> > -        None
-> > +                Some(table.info(<acpi::DeviceId as crate::device_id::R=
-awDeviceId>::index(id)))
-> > +            }
-> > +        }
-> >      }
->
-> It seems there has been a misunderstanding, the idea was to refactor
-> Adapter::of_id_info() in one patch and introduce Adapter::acpi_id_info() =
-in a
-> subsequent patch already being the suggested implementation by Benno.
->
-> We try to avoid introducing code, just to change it again in a subsequent=
- patch.
+On 6/10/25 05:54, Richard Weinberger wrote:
+> ----- Ursprüngliche Mail -----
+>> Von: "Alexander Usyskin" <alexander.usyskin@intel.com>
+>> Richard, I've reproduced your setup (modulo that I must load mtdram manually)
+>> and patch provided in this thread helps to fix the issue.
+>> Can you apply and confirm?
+> 
+> Yes, it fixes the issue here! :-)
+> 
 
-That does make perfect sense. My bad. I'll reorder changes in the v5.
+It doesn't seem to fix the issue if the partition data is in devicetree.
 
-Sorry for the mess. Thanks for the review.
+Here is my sample qemu command line:
 
-Best Regards
-Igor
+qemu-system-arm -M supermicro-x11spi-bmc,fmc-model=n25q256a13,spi-model=n25q256a13 \
+	-kernel arch/arm/boot/zImage -no-reboot \
+	-snapshot -audio none \
+	-drive file=/tmp/flash,format=raw,if=mtd \
+	-drive file=/tmp/flash,format=raw,if=mtd,index=1 \
+	-nic user \
+	--append "kunit.enable=0 root=/dev/mtdblock0 rootwait console=ttyS4,115200 earlycon=uart8250,mmio32,0x1e784000,115200n8" \
+	-dtb arch/arm/boot/dts/aspeed/aspeed-bmc-supermicro-x11spi.dtb \
+	-nographic -monitor null -serial stdio
+
+This does not create any mtd partitions, even after applying the
+patch suggested earlier.
+
+Guenter
+
