@@ -1,41 +1,51 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357FD1E9905
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 16:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E05F23717C;
+	Tue, 10 Jun 2025 16:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749571712; cv=none; b=toA++AIPgApxJUItLloXThXM2eLJj8z2zaHoGpqw363Q0vmeVVEVE7Kyrc/YbaQxvjpS7zulicMnImaXhXLcmsaC/dMtng8ucI0eFWkQSaPkdnXOayx18ZFTgRProKmIJtIfcr7OSjp2Ha0+7gMze0XP6GHKV7IiZWSz8/OvC0k=
+	t=1749571737; cv=none; b=aEvYy5qrJtfHCfmIl0Hw3mFe5S6YtmTpVPYZp9A6UzPYU9nS3l3ZRlhXHZk36SrVyNnkdAv3gnFoUbyuJsUT4tjoqvUJvWJSB46hpWiIUDpXWjtPOVvPS/T5pyCYLmyNy6SW9E64n2wIfTM2+LiwkWeS6+S2yUZYsDW5aGhwmqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749571712; c=relaxed/simple;
-	bh=USwOIsVhkg9+A/PdAnwHxSXCbsHxApVOGy15tnigTpU=;
+	s=arc-20240116; t=1749571737; c=relaxed/simple;
+	bh=oy3R+OQN5lqjjHR2lh3SlkiG+2hGqOcM7G7q89F8AvA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YOeNRx/pgdNAmFB2Opt3Nlf3RLt60yUv/lNbvr9INVpEOzvJzrWStO9YRQDZgYntb48QO/kWulhuqW0vQamXa1/2LGJ/ZuWZpZ2YPNhaDL5p2G5t4iysxSVb1x/DkbM3x+y8tz2o1bRANyQabS68CEPdSJ4r0nW7R8IyIXn/pxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nMzYR96F; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HcFfn3a5gitqIw/xycwSTY+QeoTGDEA20Z86bTeVQNA6dvVtMvQ4eHqJu6cZeyAL82THK9CJ5JOLXUtOylbnj1+20Ic8d34BhBiYbpq7bg8tH7AHfRkc0Hu5r4VQPfH4LvfofD/SICVJXKEdN0BMvzq159i/6xoEFyTXsK4ittc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=uqL934Hs; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nMzYR96F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42E0FC4CEF0;
-	Tue, 10 Jun 2025 16:08:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749571711;
-	bh=USwOIsVhkg9+A/PdAnwHxSXCbsHxApVOGy15tnigTpU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nMzYR96Fynzp3sQAzKNWvM5Z4VgwmmPLWIhJsUYmsy632UmWgluCPVruUCW6sRvuO
-	 s3ZyevWiEH3dmLRdHDKHapVNOpma34dD8NOmucqRnJ20rhQQ+vtuhxLO/OzoOykJxG
-	 PNREOVlBcNi4q2tcXQYOr0mn4n+hSmHDY4ngMku0BOwuBhHghpKe7VMvS9uWTsP7tT
-	 FnYawbySQa/ft0EgIJ07c5qwF86yMNM0taB/e/FS9EWI9qDEqMP9hgsPfLDs5afBPm
-	 +96kG9e0pWOrQoG/K6D4JaZsHW7ffVY/F7JIvQvAQQDGvoT3sCYkoo8g0tvsw88MYI
-	 Q7BPA5VdsuAiA==
-Date: Tue, 10 Jun 2025 16:08:29 +0000
-From: Jaegeuk Kim <jaegeuk@kernel.org>
-To: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org, niuzhiguo84@gmail.com,
-	ke.wang@unisoc.com, Hao_hao.Wang@unisoc.com, baocong.liu@unisoc.com
-Subject: Re: [PATCH v3] f2fs: compress: fix UAF of f2fs_inode_info in
- f2fs_free_dic
-Message-ID: <aEhYfYrknbNzT8Or@google.com>
-References: <1749107920-17958-1-git-send-email-zhiguo.niu@unisoc.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uqL934Hs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=52NYi1mWALW3LxhXJD+hvsQNqhKYCgbOKqMlh/SaiCI=; b=uqL934HsMkGWVZvayAg2oMaWkx
+	qArXYPOpKJznKIL77OaHLjhHHL1T1SvPYzYmMEmWlumLrCcuUiWbqFN4M+rIHVqKTLqC+Zefjt/Mf
+	pk/qZzeIkIun4qysFTD3q+PMOBZG7UNysaw5M2YPlQEuKpXivrbCedoBr/g/COpsBXRw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uP1Wj-00FIOW-NL; Tue, 10 Jun 2025 18:08:41 +0200
+Date: Tue, 10 Jun 2025 18:08:41 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Jian Shen <shenjian15@huawei.com>, Salil Mehta <salil.mehta@huawei.com>,
+	Jijie Shao <shaojijie@huawei.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, Hao Lan <lanhao@huawei.com>,
+	Guangwei Zhang <zhangwangwei6@huawei.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH] hns3: work around stack size warning
+Message-ID: <2a565f22-b8ba-409a-8551-91cf86788657@lunn.ch>
+References: <20250610092113.2639248-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,114 +54,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1749107920-17958-1-git-send-email-zhiguo.niu@unisoc.com>
+In-Reply-To: <20250610092113.2639248-1-arnd@kernel.org>
 
-Hi Zhiguo,
+On Tue, Jun 10, 2025 at 11:21:08AM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The hns3 debugfs functions all use an extra on-stack buffer to store
+> temporary text output before copying that to the debugfs file.
+> 
+> In some configurations with clang, this can trigger the warning limit
+> for the total stack size:
+> 
+>  drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c:788:12: error: stack frame size (1456) exceeds limit (1280) in 'hns3_dbg_tx_queue_info' [-Werror,-Wframe-larger-than]
+>
+> The problem here is that both hns3_dbg_tx_spare_info() and
+> hns3_dbg_tx_queue_info() have a large on-stack buffer, and clang decides
+> to inline them into a single function.
+> 
+> Annotate hns3_dbg_tx_spare_info() as noinline_for_stack to force the
+> behavior that gcc has, regardless of the compiler.
 
-This patch causes CPU hang when running fsstress on compressed/non-compressed
-files. Please check.
+This warning is about the potential to exceed the stack space. That
+potential still exists because of the tail call from
+hns3_dbg_tx_queue_info() to hns3_dbg_tx_spare_info(), preventing the
+compile from inlining does nothing against that.
 
-On 06/05, Zhiguo Niu wrote:
-> The decompress_io_ctx may be released asynchronously after
-> I/O completion. If this file is deleted immediately after read,
-> and the kworker of processing post_read_wq has not been executed yet
-> due to high workloads, It is possible that the inode(f2fs_inode_info)
-> is evicted and freed before it is used f2fs_free_dic.
-> 
->     The UAF case as below:
->     Thread A                                      Thread B
->     - f2fs_decompress_end_io
->      - f2fs_put_dic
->       - queue_work
->         add free_dic work to post_read_wq
->                                                    - do_unlink
->                                                     - iput
->                                                      - evict
->                                                       - call_rcu
->     This file is deleted after read.
-> 
->     Thread C                                 kworker to process post_read_wq
->     - rcu_do_batch
->      - f2fs_free_inode
->       - kmem_cache_free
->      inode is freed by rcu
->                                              - process_scheduled_works
->                                               - f2fs_late_free_dic
->                                                - f2fs_free_dic
->                                                 - f2fs_release_decomp_mem
->                                       read (dic->inode)->i_compress_algorithm
-> 
-> This patch use igrab before f2fs_free_dic and iput after free the dic when dic free
-> action is done by kworker.
-> 
-> Cc: Daeho Jeong <daehojeong@google.com>
-> Fixes: bff139b49d9f ("f2fs: handle decompress only post processing in softirq")
-> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-> Signed-off-by: Baocong Liu <baocong.liu@unisoc.com>
-> ---
-> v3: use igrab to replace __iget
-> v2: use __iget/iput function
-> ---
->  fs/f2fs/compress.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-> index b3c1df9..729ad16 100644
-> --- a/fs/f2fs/compress.c
-> +++ b/fs/f2fs/compress.c
-> @@ -1687,7 +1687,7 @@ static void f2fs_release_decomp_mem(struct decompress_io_ctx *dic,
->  }
->  
->  static void f2fs_free_dic(struct decompress_io_ctx *dic,
-> -		bool bypass_destroy_callback);
-> +		bool bypass_destroy_callback, bool late_free);
->  
->  struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
->  {
-> @@ -1743,12 +1743,12 @@ struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
->  	return dic;
->  
->  out_free:
-> -	f2fs_free_dic(dic, true);
-> +	f2fs_free_dic(dic, true, false);
->  	return ERR_PTR(ret);
->  }
->  
->  static void f2fs_free_dic(struct decompress_io_ctx *dic,
-> -		bool bypass_destroy_callback)
-> +		bool bypass_destroy_callback, bool late_free)
->  {
->  	int i;
->  
-> @@ -1775,6 +1775,8 @@ static void f2fs_free_dic(struct decompress_io_ctx *dic,
->  	}
->  
->  	page_array_free(dic->inode, dic->rpages, dic->nr_rpages);
-> +	if (late_free)
-> +		iput(dic->inode);
->  	kmem_cache_free(dic_entry_slab, dic);
->  }
->  
-> @@ -1783,16 +1785,18 @@ static void f2fs_late_free_dic(struct work_struct *work)
->  	struct decompress_io_ctx *dic =
->  		container_of(work, struct decompress_io_ctx, free_work);
->  
-> -	f2fs_free_dic(dic, false);
-> +	f2fs_free_dic(dic, false, true);
->  }
->  
->  static void f2fs_put_dic(struct decompress_io_ctx *dic, bool in_task)
->  {
->  	if (refcount_dec_and_test(&dic->refcnt)) {
->  		if (in_task) {
-> -			f2fs_free_dic(dic, false);
-> +			f2fs_free_dic(dic, false, false);
->  		} else {
->  			INIT_WORK(&dic->free_work, f2fs_late_free_dic);
-> +			/* use igrab to avoid inode is evicted simultaneously */
-> +			f2fs_bug_on(F2FS_I_SB(dic->inode), !igrab(dic->inode));
->  			queue_work(F2FS_I_SB(dic->inode)->post_read_wq,
->  					&dic->free_work);
->  		}
-> -- 
-> 1.9.1
+> Ideally all the functions in here would be changed to avoid on-stack
+> output buffers.
+
+That would be my preference as well. Lets give Huawei a bit of time to
+rewrite this code.
+
+	Andrew
