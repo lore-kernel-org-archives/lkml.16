@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4E324293F;
-	Tue, 10 Jun 2025 16:28:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A62A242D94;
+	Tue, 10 Jun 2025 16:28:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749572881; cv=none; b=HPESLnjRUQ1T+hN4IuRCNyD/XzASV5ngp7GZByH4jX69ZqkLa/6Q1srLdiwOzO71p+4pQ+yP4fQ7lQgr02XhTDCZnoSj3iWAXkubc+Tv5cqBmgIFB6QVNEmGqhrcjU+7RfRNbBtsEf+0+jjow3Aq0Yi/BzzIwGGYzHr0BBH9pl8=
+	t=1749572882; cv=none; b=thzhjAkk2KgzC4r0l5Wb/b79hKEj1T3/1Xj8lsgBn0UtqCWTt3kRqWdsU7sXBUujhVBLTQkkGVN60FXaLW5rprta1pWm8HbSN2udNQgfMR/sDuceMT9MVWryxaYpzo6M7tkr+ez/2pRzbdiqhQxHB8ilNGtv7joLDu0efYtEqCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749572881; c=relaxed/simple;
-	bh=UQg01saWHZ2SA/EHnfOE/P97kB6OOfXIeFxq0POFGoI=;
+	s=arc-20240116; t=1749572882; c=relaxed/simple;
+	bh=XpKG6U7SUEDx6WcwKev1QZDTNBiTYhfWnKPEGgxnf44=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=hebZZqF/bHfdpAJt5ULjME8vg82zyagsuXbhQR1CMzpCraAzVLzFAUMu3MY4sRLcCsCOAQ0eXmE5cxxPct/Hmoue33DrNXHCz02w3ADYjeVhrzuHALJX+75OQ2vkhyml/i08Y910YxxA5/+8pruJ6Qx3Y3+gDg6FGFz55kTKYMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MAhxn2YI; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=tadiVFA60pM/g0GIU3F1Or72YHJrsaBibq+91bOZ1DmKydzZCRn68X/J0STmUy5CxOgqokKgbcTXsz2ahrLx0NoAtu8HhrmeDRWCA6NRj0FFFLJ5jfuQoi+OAVfHgTx4S+j0Z3g32zelqxVyrs9UxgQv1KeoSjlhHlkeBCH6dus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dIGC3Ft0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MAhxn2YI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CE0DC4CEF0;
-	Tue, 10 Jun 2025 16:28:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dIGC3Ft0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEA8CC4CEED;
+	Tue, 10 Jun 2025 16:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749572880;
-	bh=UQg01saWHZ2SA/EHnfOE/P97kB6OOfXIeFxq0POFGoI=;
+	s=k20201202; t=1749572881;
+	bh=XpKG6U7SUEDx6WcwKev1QZDTNBiTYhfWnKPEGgxnf44=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=MAhxn2YI78qtGczPWBE83PlISURuIeOL+05W5FjQubzGvSi7EoCrhaQlwPloGgdbt
-	 m3KQqdhdZSPuMtJCkDrurouHSKc7fMYa7USoDs9rauIAVc2uignIg/8Sy4NlDhfGUL
-	 2ZzDxcXkt6DyW1Xswug8nfZIvyBR7fHBXbB/qj2Q+BTF+MxAdHQhNP7RlMkx5LiytS
-	 0l7bPsWJ6V911h0DIdyU6is3Rbv0e5J2y5zKehEDF/xbPd4d4KuIn43rtPPChcq/80
-	 O+WjTPhXswU5qYgeGIXQlX75e30BPG+ZBLM9h1aomo0GZSIHELeufuw+BEpU84uYoU
-	 HdoxaRU30SbfQ==
+	b=dIGC3Ft0E6fUFpwr5EO0a3vwKR/NPZcxmwIAFd++UTG7xF2tN8FNLwHMN13cM/jHH
+	 5U4ujPKj92PwceN5B04bQA3Diedc6LEKja3TlErcKgrHoqSEX/IEXNJSGOePMS904m
+	 9P4EKz+t4O7CjXuLpMTIA99/iaxMWrgvcyv0EgNyqhsw4kiBXJTCws/KV3RJHBmqOr
+	 h6fJ6t8o0E5+Gkv8h7SumAxho0F6pWXhbf9qWtRhy7Mja6ouSNVbgxTEzLOpC5nzmz
+	 pctGAzAajYZLL2jJoUiPnZNV0Z1xy8HkHBFYw7PClnQdPxIMIctEcFy8YNKu5LfBjr
+	 JQM4OCFhIxDlw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33C4339D6540;
-	Tue, 10 Jun 2025 16:28:32 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70B1C39D6540;
+	Tue, 10 Jun 2025 16:28:33 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,60 +37,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 00/12] riscv: Add vendor extensions support for SiFive
+Subject: Re: [PATCH 1/2] dt-bindings: Remove obsolete cpu-topology.txt
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <174957291100.2454024.4751197828124838504.git-patchwork-notify@kernel.org>
-Date: Tue, 10 Jun 2025 16:28:31 +0000
-References: <20250516030310.16950-1-cyan.yang@sifive.com>
-In-Reply-To: <20250516030310.16950-1-cyan.yang@sifive.com>
-To: Cyan Yang <cyan.yang@sifive.com>
-Cc: linux-riscv@lists.infradead.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, corbet@lwn.net, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- samuel.holland@sifive.com, linux-doc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+ <174957291224.2454024.11937218792717571483.git-patchwork-notify@kernel.org>
+Date: Tue, 10 Jun 2025 16:28:32 +0000
+References: <20250410201325.962203-1-robh@kernel.org>
+In-Reply-To: <20250410201325.962203-1-robh@kernel.org>
+To: Rob Herring (Arm) <robh@kernel.org>
+Cc: linux-riscv@lists.infradead.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ alex@ghiti.fr, samuel.holland@sifive.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
 This series was applied to riscv/linux.git (fixes)
-by Palmer Dabbelt <palmer@rivosinc.com>:
+by Rob Herring (Arm) <robh@kernel.org>:
 
-On Fri, 16 May 2025 11:02:58 +0800 you wrote:
-> This patch set adds four vendor-specific ISA extensions from SiFive:
-> "xsfvqmaccdod", "xsfvqmaccqoq", "xsfvfnrclipxfqf", and "xsfvfwmaccqqq".
+On Thu, 10 Apr 2025 15:13:22 -0500 you wrote:
+> The cpu topology binding is now covered by the dtschema cpu-map.yaml
+> schema with all the relevant descriptions moved to it.
 > 
-> Additionally, a new hwprobe key, RISCV_HWPROBE_KEY_VENDOR_EXT_SIFIVE_0,
-> has been added to query which SiFive vendor extensions are supported on
-> the current platform.
-> 
-> [...]
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/cpu/cpu-topology.txt  | 553 ------------------
+>  1 file changed, 553 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/cpu/cpu-topology.txt
 
 Here is the summary with links:
-  - [v2,01/12] dt-bindings: riscv: Add xsfvqmaccdod and xsfvqmaccqoq ISA extension description
-    https://git.kernel.org/riscv/c/0f733b5be965
-  - [v2,02/12] riscv: Add SiFive xsfvqmaccdod and xsfvqmaccqoq vendor extensions
-    (no matching commit)
-  - [v2,03/12] riscv: hwprobe: Document SiFive xsfvqmaccdod and xsfvqmaccqoq vendor extensions
-    https://git.kernel.org/riscv/c/e8fd215ed0eb
-  - [v2,04/12] riscv: hwprobe: Add SiFive vendor extension support and probe for xsfqmaccdod and xsfqmaccqoq
-    https://git.kernel.org/riscv/c/1a6274f03534
-  - [v2,05/12] dt-bindings: riscv: Add xsfvfnrclipxfqf ISA extension description
-    https://git.kernel.org/riscv/c/a5a15e07cbb9
-  - [v2,06/12] riscv: Add SiFive xsfvfnrclipxfqf vendor extension
-    (no matching commit)
-  - [v2,07/12] riscv: hwprobe: Document SiFive xsfvfnrclipxfqf vendor extension
-    https://git.kernel.org/riscv/c/659d664f7df8
-  - [v2,08/12] riscv: hwprobe: Add SiFive xsfvfnrclipxfqf vendor extension
-    https://git.kernel.org/riscv/c/1d91224394c9
-  - [v2,09/12] dt-bindings: riscv: Add xsfvfwmaccqqq ISA extension description
-    https://git.kernel.org/riscv/c/d5ca02b25f5d
-  - [v2,10/12] riscv: Add SiFive xsfvfwmaccqqq vendor extension
-    (no matching commit)
-  - [v2,11/12] riscv: hwprobe: Document SiFive xsfvfwmaccqqq vendor extension
-    https://git.kernel.org/riscv/c/a3ca43dc5271
-  - [v2,12/12] riscv: hwprobe: Add SiFive xsfvfwmaccqqq vendor extension
-    https://git.kernel.org/riscv/c/d9669e33c8fa
+  - [1/2] dt-bindings: Remove obsolete cpu-topology.txt
+    https://git.kernel.org/riscv/c/3fb7bebcb6e5
+  - [2/2] dt-bindings: Remove obsolete numa.txt
+    https://git.kernel.org/riscv/c/540994337d47
 
 You are awesome, thank you!
 -- 
