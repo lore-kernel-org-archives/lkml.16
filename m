@@ -1,423 +1,382 @@
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012060.outbound.protection.outlook.com [52.101.71.60])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2123227FD5D;
-	Tue, 10 Jun 2025 08:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749545410; cv=fail; b=T/252bymNonupzx5ZLOnYrSWxXonj2Of3TtWGM2bwuIoPi6ZYy0N9wjVmFcxcEO1xBv8yMmLm9NU6VoPnz9SFVGIuAgSEopc5S2hFt67EojgdWAU6Hkcc/KG2i6C7mqpxEZe4VjsCIkPcTuHrPr+yMsyahYw5aViFZLucTzz8G0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749545410; c=relaxed/simple;
-	bh=g0E+dgOBOKIvp0kx6ATzygaPxXW7KjZvqXIOeSGqIwg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=udZFi++V7DBdZOXfV1qxuXVUwFoq9xUTfaM5Qhe9zI1lNGxoBBnMmPIaNc0U38JU/pMRKPg5ajJ8pkg5ErBex/o1v5CzX1+dRCUJl3nGHMopCAZDq3GigRyD6/j6TBwqezNmPSlr5vOsHo/t2JdSqJb9AYn/A9DjhXwSbGoS3AI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=kB9VjUYL; arc=fail smtp.client-ip=52.101.71.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="kB9VjUYL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OjmuiGgbS7xv5Q/8/LwnBVfuqMl1MIOPpdIIPLVoLGaItAQG8v+tzINjEWFEOD9KnaQHSsZd3TbSwIYTLlArfZ16eakRZGE/jHaRwG5YTNyON6+vf+KH/0Z84+M5qV7bxySsFrRrku1vBtwu6gYGupShfdSY6U2zcSGJIv40gEMFiqOvgOgWBW2YG66nDUUiYl330NCbAN/JY+wHQOnIuWM090U3Z3ZbhcsV84vdU/go+bODLWXcab/FFSKfY4JUgCCmTWLnngxU3Kz64BGzIbX89VxT1phwOltf+kHdWJ9SPYKAF1n+NbCLtrQCPUEmA9lEGC7DKEcjnw0bRVTGWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=flHaqWaxC82Edjn6gpAQIn+tVQcTs8VVYnc7PpuRE0s=;
- b=glsBvPI3EL6L4nHY/Q2Plc2vgxW6O8e7Xz2MorpHLm83OiUJHR3mWF5fgE1Yq0cnunoPNHpl71TsId1cyQa4U5EtwcwexZZRTM204L2w4s8BLK2rCYBWQFb+niCB+/v13gEcDCGTcWYIqBSWLaSYC53TjOKu52IGkNp5XlRk6ItGqlA5xWshP9xqZHJVxTX9hRNR7co6eQbNyZ6T45zYLVkeAN2892h/Pmj+VyvNO10Tcavc30VCybPXNhPP5D9jmdC5DBIo/WM05lZcAQowoJexRbq686wE7Jt5WHMbWqVTUv3C95PDPlo3peUyeYqn4DfkMHXeN3AaFc6WNXbhLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=flHaqWaxC82Edjn6gpAQIn+tVQcTs8VVYnc7PpuRE0s=;
- b=kB9VjUYLUxZoBoeU9aRS8RMq7X19INFz82Qd3dc99Xtaa6tx52VHO4ydqOxeNshiC5Nwrc1d7FdAjWiJnTmDqvszfKg/nrMC27BvOJDmKK5HO3A32bQtchS62eNdod1SUhWD/cbqXHpSCI2uKW4qp46u/NkfAVuxQr197aC6pnMa3/fslZpajNSlmXo/4Yy4Fki99x552q+lfFeS5HRu1UtzB0pi5Ommdr50+XQ3G9PQQTyKL256ux6tDH4SPt9kC7gWrn4uKsLyL6yImAkR6Xy94uQwynFV3IdHVZ3ewls/LLz9av/RlDh94+Sguo/NJAps5GNlQ8SvbJQumNLfHA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
- by DB8PR04MB7132.eurprd04.prod.outlook.com (2603:10a6:10:12e::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.29; Tue, 10 Jun
- 2025 08:50:05 +0000
-Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
- ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
- ([fe80::7417:d17f:8d97:44d2%3]) with mapi id 15.20.8813.024; Tue, 10 Jun 2025
- 08:50:04 +0000
-Date: Tue, 10 Jun 2025 11:50:01 +0300
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
-To: MD Danish Anwar <danishanwar@ti.com>
-Cc: Meghana Malladi <m-malladi@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Simon Horman <horms@kernel.org>,
-	Guillaume La Roque <glaroque@baylibre.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Roger Quadros <rogerq@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, srk@ti.com,
-	Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH net-next v10] net: ti: icssg-prueth: add TAPRIO offload
- support
-Message-ID: <20250610085001.3upkj2wbmoasdcel@skbuf>
-References: <20250502104235.492896-1-danishanwar@ti.com>
- <20250506154631.gvzt75gl2saqdpqj@skbuf>
- <5e928ff0-e75b-4618-b84c-609138598801@ti.com>
- <b05cc264-44f1-42e9-ba38-d2ef587763f5@ti.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b05cc264-44f1-42e9-ba38-d2ef587763f5@ti.com>
-X-ClientProxiedBy: BE1P281CA0177.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:b10:66::6) To AM8PR04MB7779.eurprd04.prod.outlook.com
- (2603:10a6:20b:24b::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A233425E80A
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749545465; cv=none; b=brkkbwIoYb9K7Jsg74wblX+TmqDaniOZsxzXOpIrbiFcGooNJbSiIEJ/Q1nfPBWWZwriDlTs3qFh82+DpaztrbYQQIULvC+pXmRWJMK6+RyJJYwpcKHaJFe2X5Eg7Ngl+YjiDQ5Ps4FTLRhlbsZZEGHi+8CfmU3FTYfyetNbGf8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749545465; c=relaxed/simple;
+	bh=cZMFMbnANfOGp6G/85j9XlhUxeccdzVKiJJ6WRNFPZY=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=BoH+ENkaSwvpdlDiRj2k5HqdMja6FDf73S9JZDyMkT7Sr3F0+V1mXGX7RhLgeKdz/qoW9NiHyDbz0AVBy/KkygVFF5SvgehHffXe5ES7eRLoCKGPDjjXsz77gp28+vt2RI18zAq+3+thgf2AeLI8Pqq/sZ7TTje2xPKyjecB6uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddce94383bso21313925ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 01:51:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749545462; x=1750150262;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=73T0lfZ3kvQiYBnHANkABrzDOGL6CV/WmuHAW1Pj0Qw=;
+        b=okbPp/SUmeSEQnU5WFdkOvtzGHvHK0MxwqD5P/LL0/3Dm9fsm87algM/nuPfhpu6xg
+         xAVbqIYTCe7JwSnO3zEsbRHdXGvh91iBPwc0/3UiRpkklSWig0JvfiW45yRWhpKSZxLc
+         qPRUYI1RLgnEwLKKlc8t2cIiZlhc+m8mpxpnSTJYkC6gCjRF3/4GTkv+7WQI5GGqwQmK
+         wEuPoZ0BKVyKjGmKIWGd1N01Z7IR2scu8urA712cy/aFUZIfNnheRAckuWDfzpRdUY3n
+         FgZN9H4f50rAQP6xXTGoQX3L1oLUz5ErkIpG7h+jZcjHqCi1UGJucadTrVeK+hA20Stc
+         AE/g==
+X-Forwarded-Encrypted: i=1; AJvYcCVUq/RLVvRLoHQOAhJocI5lUKVmJbOF4AbTAbzMAryQsjvTz5FAmmJ7QEKLY83ZSdVH4f9owl350mAtMWw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5/AS5N2qju93b1pPVGdlYMXU8GdfUQO8xSfZMNTZb97Jw5+Ie
+	2B4m9asU53hr9MBvT484QCigCgSEqw0jgJehM+bx09RYeQBsIeaGAKXgsnKaFtSpr+JwlIuYAdF
+	KrJFOWbz7DoFPEoRvoaA4fjaA8YBlSXlY41DMeUhybEYUeNU8T0+EZK2zOsU=
+X-Google-Smtp-Source: AGHT+IF7+KKmH3zRLZFTPfNReHRoPcPKVSbU/VLCN4+/t2uMYScf6jGgJ8qSNjZBGxbIR9d6z5kh1mI+mgxNpdy+e/GdW/2Aztif
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM8PR04MB7779:EE_|DB8PR04MB7132:EE_
-X-MS-Office365-Filtering-Correlation-Id: 22f0215e-6c43-44d2-eefb-08dda7fbcb5f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?kVdo+ePB3JJ5El/V0dvNSEbNAVbMHa8TVdUuObvoScYkeNaLZB4ZRpERRvI7?=
- =?us-ascii?Q?ZlASE0K0IFrWvDzszCMoqmxJZ720+91fdOfJ59Yd1vaFla5nuEShEaRdGsi6?=
- =?us-ascii?Q?PAn2crRjTT8elwqZTK8YOoOAx6zSdTurmfbqYimgLE/sOYsTPfzpEe68LFfE?=
- =?us-ascii?Q?i3k73CtOBXwGdaW/8D0cKUyWXMhy4U2sqWYq+C18vEzz8IECxrevazl/n5px?=
- =?us-ascii?Q?BApt+iK+8KB2SL+5M56uIN/oN8mCA54JRVezfZRA3+a1nRj+AtokP8TX4KNa?=
- =?us-ascii?Q?15Dt7twNNpvd60ITvbqt2F+/hviBssHcd9hlbaEqlZBCiFK0Bp3RldKdLiCy?=
- =?us-ascii?Q?XwUvLcwLuzwxYCC6jFhQux0+NIV3ZRjsguwRpLm1ox99FAM4oPSQkIGnr969?=
- =?us-ascii?Q?TFppKOzNTn45LACZ+e63nEqR1lJ2WPQzxoLzSut6DCSyOEygZinEhqB6ecap?=
- =?us-ascii?Q?6/O5eUGnLZBYSolVtSpBh4OVfQ/cxD6Pns3jvA0Ubyd7PFE56pwyaArFuBtj?=
- =?us-ascii?Q?nyRFtJAeZo1FvEJtnR3U1wOjQeCmTuuniMgSh/TpsNa6/xd/BNyFNOLtQsSo?=
- =?us-ascii?Q?VNvjfH3I2BBZ9EDEAGMTVs0WsOEHORdoCB4YuIRO9bEI+SRfKRi4TJZ0qVU3?=
- =?us-ascii?Q?UjXEsvXtm1H99h3KUadog1r0DZD4erDTioYoTTk+dL3b1Mn7GIkiq/7+DcgR?=
- =?us-ascii?Q?ePJPbvCKOuFIYb8qMA1X1O8s98m0cxS2BcH7Y0Qmd2WB/M+rjxZ7PNDJpCCx?=
- =?us-ascii?Q?5aF7lHKxsJPw8yxo/SnnxMYStI22ipEc3DMBDgwVyqtnCas+wZBSks4RqCC/?=
- =?us-ascii?Q?YdrCzoXfPa1HHlzTN9ub/3MxF8WtPsmFIwc1s5LsjvKr9L0QOyBvCwuc4xzB?=
- =?us-ascii?Q?oi9H52xaUeaDmr/UG13WWjBJgu+S8L2oC+H493TYKEvgNTz5LXuaFvjCF64R?=
- =?us-ascii?Q?376nSnunOlWREE2/FT6ANepnFE2Ti0P5d3ovO9b2fkDNhKX1SaNYZocNpTM0?=
- =?us-ascii?Q?I1Tp6fPfUTLd3qJOAOrnlC6ryaa1SGShSu0h385WObKKAbz5oDGhovqxTWTV?=
- =?us-ascii?Q?4F7d0od3/RBqM8BFQn3UjxesoDuYLBfFmewEaUgshJ01xemskKl/ZiGwTyrr?=
- =?us-ascii?Q?fveCLiiT+KA6xIEO8MBFJnEad1fDP7bU4HgDigLCcm9vE1Ww4d+qkNcJi6do?=
- =?us-ascii?Q?Xqcn4rTFnYhlhTSDOjo0X9RyMjoRY9g3QLrcvU8/tZbrA+2YvvX6Sagwuw3u?=
- =?us-ascii?Q?oEKXJhQn+vL2tYpML6/NYQT3DVe7VWM2M5p/CMmONvSZXXuMamPLA9Vy4STz?=
- =?us-ascii?Q?eWGrHEb9qH3rSJsxhotG7DrEUM16eobMGGYFIm8Ld1viI+RTC9eFLUhB0TGF?=
- =?us-ascii?Q?b5drhbYHfz8bHhTKDX6WlF9rF4RUUza6KhVLATuwAio63biS35K/VnTYRHK2?=
- =?us-ascii?Q?xe5HFH3rnxw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?fw6+rCIZ6zUHoEh+iHom9DugV7wLzACC2gFbOqtqJRmdbK7j+S1YK26+/hfo?=
- =?us-ascii?Q?Z87TQkKYwfXOqusxuDJlPyOSv1CHYWqpc+erdnmUgx88vHoD+L/GlmMt6GgT?=
- =?us-ascii?Q?sxogpeq/VZ7UgqV1UpNOqxghRsGZ3yWVOZUiZT/DCL54fcVBtLG6aeV+wmCW?=
- =?us-ascii?Q?ai3uTAwRNtOn4VFUrkp73e0M0WsVfXnHLe6OPNKLllCk+49wTQYOX0NlPg5E?=
- =?us-ascii?Q?ipEZe/7vLvFgT4d5Aor9fLtq9EA36bTRUmqFiqCJcg+hWdnfsGForoWqN1pu?=
- =?us-ascii?Q?/XOETEFXpFiVjPg25OKqA1daCpYzVzp17PE2qQjS52K0ZrBq0Wn4cyTiHa3B?=
- =?us-ascii?Q?TXzZkRhFlwuqNHswLLw0zPf7wIlNfrQ15+zVRLKx3VOjVlMOPgw6vDS/oahg?=
- =?us-ascii?Q?z/o+cATwbM5xM7uz1GjtryLAzKmUjXW7cxiakPVmjt/lK9yU8adneA88Z7ej?=
- =?us-ascii?Q?2aNr+bDPshTTSjSOoPitYDA0Ayw3k8acfw1MGOFuLxETNVN1JOC6ysWTwQgS?=
- =?us-ascii?Q?+7Osv1d70i//NBqlqasxdck5DEivZ6B6iP8nz1BInNzprhOsz4xEpbgugIWJ?=
- =?us-ascii?Q?S59xSFT35/bOjxF08v35v6Tbw4dx9Of0F2HLQZmXZ6Wz5YtqWtMkth1m8DXY?=
- =?us-ascii?Q?JoQIm8dLMPnIjjygc6bZMxECvpJVCRrtnjIaIpuZds1L58T6enIJV6Q9t8mG?=
- =?us-ascii?Q?9I+U6P76WuNKAeAmRcwCNyXzUJPQ8qMfDmFbReA5x7rhcV2uMEN0p3NMvO69?=
- =?us-ascii?Q?w8KKGcax2bTJsKIpqvvDxslfxeR7N/pwM3qiGRhz/MWerp0toPLye/CkuOuW?=
- =?us-ascii?Q?bSMYJh2EbTUrdGa8oVdaHygn5Fe/mnIUaBsTddDkbL5Cv0U/iV8PE7FipEFo?=
- =?us-ascii?Q?STvRYcQTXyWwFbWk+BnW6KRR+oZbSEN1KgPQ/NPsAEJw1JHikNv4YebXO7fa?=
- =?us-ascii?Q?S6T2n65XsgnH+HEiAvrvaXtr0X4JPkYTWvo/8yAA8xFqcfcwRbJYzbYp6BUx?=
- =?us-ascii?Q?o755U+gOtNWiuWKGp2tMnEHmjHcL5ofa1HGxQE++ePe+Pg/XH/Mpb1epCEsQ?=
- =?us-ascii?Q?MewsyxDIm2m5qy11azTlA/wdL5Hk9jFcv9XFxTqsuxs47dbKlYHvh7pi9cAj?=
- =?us-ascii?Q?98NLo1DnpTmRBZInI5uWmoZvAbPm3SVzP7HQbhRIwo2Ly0kemklpNTqBD1NH?=
- =?us-ascii?Q?Labf9ttzkYGdffn5nDeV5Otbg5KcwmTWSEwIYgLWTv6RsKeF5O/FcQvdwL4V?=
- =?us-ascii?Q?BRXqB87Qf3XN0uGSF30sT+ZlJoRZN+V23Qxfbm0X410s2pcucQKvS3r/XES6?=
- =?us-ascii?Q?TObMcFJZbobywvfE21cUfjpAqRvBKXLCu0vdxK86E9h1N7kx7akAhjV2E6Hj?=
- =?us-ascii?Q?C9bS2jExe6wzAZjNOAtrjAx0JzrQq+f6OtD80nt4e6J0cFt0gPBTilTZqEdv?=
- =?us-ascii?Q?NjVjzo9ztnSTtSuRDIABiPN+ToARmoFxTiynvsRJD7SxXNUhee0bC76Vbxoh?=
- =?us-ascii?Q?jjLCtfdQ7WAeOGG2tPgLTLV8KmV1/LKgMboLkENSltkKjZKyBTb76f8i4Jvv?=
- =?us-ascii?Q?tytWEkUk3ngy14GWA/M3iFdcnGvHXJ139tklnhV89+dNgXKYjRvl/yhZWoLl?=
- =?us-ascii?Q?fA=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22f0215e-6c43-44d2-eefb-08dda7fbcb5f
-X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7779.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 08:50:04.9198
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AXJlZ1gR51291Dneo7AkwY2ojArA6T4LXdLjFFKZp9SM3HKF+DByrkKcv+CKjw/Ip/RZmOB6zF8oSKc34bCecQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7132
+X-Received: by 2002:a92:cdaa:0:b0:3dd:b569:6448 with SMTP id
+ e9e14a558f8ab-3ddce3e4cd3mr185586035ab.6.1749545462638; Tue, 10 Jun 2025
+ 01:51:02 -0700 (PDT)
+Date: Tue, 10 Jun 2025 01:51:02 -0700
+In-Reply-To: <20250610084126.1020-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6847f1f6.a70a0220.27c366.0061.GAE@google.com>
+Subject: Re: [syzbot] [net?] KASAN: use-after-free Read in __linkwatch_run_queue
+From: syzbot <syzbot+1ec2f6a450f0b54af8c8@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Danish,
+Hello,
 
-On Tue, Jun 10, 2025 at 01:13:38PM +0530, MD Danish Anwar wrote:
-> >> Please define the "cycle count" concept (local invention, not IEEE
-> > 
-> > cycle count here means number of cycles in the base-time.
-> > If base-time is 1747291156846086012 and cycle-time is 1000000 (1ms) then
-> > the cycle count is 1747291156846 where as extend will be 86012
-> > 
-> >> standard). Also, cross-checking with the code, base-time % cycle-time is
-> >> incorrect here, that's not how you calculate it.
-> > 
-> > That's actually a typo. It should be
-> > 
-> >  - Computes cycle count (base-time / cycle-time) and extend (base-time %
-> >    cycle-time)
-> > 
-> >>
-> >> I'm afraid you also need to define the "extend" concept. It is not at
-> >> all clear what it does and how it does it. Does it have any relationship
-> >> with the CycleTimeExtension variables as documented by IEEE 802.1Q annex
-> >> Q.5 definitions?
-> >>
-> > "extend" here is not same as `CycleTimeExtension`. The current firmware
-> > implementation always extends the next-to-last cycle so that it aligns
-> > with the new base-time.
-> > 
-> > Eg,
-> > existing schedule, base-time 125ms cycle-time 1ms
-> > New schedule, base-time 239.4ms cycle-time 1ms
-> > 
-> > Here the second-to-last cycle starts at 238ms and lasts for 1ms. The
-> > Last cycle starts at 239ms and is only lasting for 0.4ms.
-> > 
-> > In this case, the existing schedule will continue till 238ms. After that
-> > the next cycle will last for 1.4 ms instead of 1ms. And the new schedule
-> > will happen at 239.4 ms.
-> > 
-> > The extend variable can be anything between 0 to 1ms in this case and
-> > the second last cycle will be extended and the last cycle won't be
-> > executed at all.
+syzbot tried to test the proposed patch but the build/boot failed:
 
-Thanks for the explanation. It sounds like a custom spin on CycleTimeExtension.
+[  190.178605][ T3436]      task_work_run+0x78/0xd4
+[  190.178605][ T3436]      do_exit+0x24c/0x930
+[  190.178605][ T3436]      do_group_exit+0x34/0x90
+[  190.178605][ T3436]      pid_child_should_wake+0x0/0x5c
+[  190.178605][ T3436]      invoke_syscall+0x48/0x110
+[  190.178605][ T3436]      el0_svc_common.constprop.0+0x40/0xe0
+[  190.178605][ T3436]      do_el0_svc+0x1c/0x28
+[  190.178605][ T3436]      el0_svc+0xa8/0x124
+[  190.178605][ T3436]      el0t_64_sync_handler+0x10c/0x138
+[  190.178605][ T3436]      el0t_64_sync+0x1a4/0x1a8
+[  190.178605][ T3436]=20
+[  190.228833][ T2102] unregister_netdevice: waiting for netdevsim3 to beco=
+me free. Usage count =3D 2
+[  190.230735][ T2102] ref_tracker: eth%d@00000000c82ae5fb has 1/1 users at
+[  190.230735][ T2102]      linkwatch_fire_event+0x124/0x170
+[  190.230735][ T2102]      netif_carrier_off+0x3c/0x94
+[  190.230735][ T2102]      nsim_stop+0x20/0xd4
+[  190.230735][ T2102]      __dev_close_many+0xbc/0x208
+[  190.230735][ T2102]      dev_close_many+0xb0/0x184
+[  190.230735][ T2102]      unregister_netdevice_many_notify+0x194/0xadc
+[  190.230735][ T2102]      unregister_netdevice_queue+0xec/0x12c
+[  190.230735][ T2102]      nsim_destroy+0x60/0x150
+[  190.230735][ T2102]      __nsim_dev_port_del+0x58/0x8c
+[  190.230735][ T2102]      nsim_dev_reload_destroy+0x70/0x130
+[  190.230735][ T2102]      nsim_dev_reload_down+0x24/0x5c
+[  190.230735][ T2102]      devlink_reload+0x78/0x2cc
+[  190.230735][ T2102]      devlink_pernet_pre_exit+0xd4/0x148
+[  190.230735][ T2102]      ops_undo_list+0x8c/0x23c
+[  190.230735][ T2102]      cleanup_net+0x1f8/0x3d0
+[  190.230735][ T2102]      process_one_work+0x178/0x2cc
+[  190.230735][ T2102]=20
 
-In your example above, "extend", when specified as part of the "new" schedule,
-applies to the "existing" schedule. Whereas CycleTimeExtension extends
-the next-to-last cycle of the same schedule as the one it was applied to.
+VM DIAGNOSIS:
+08:49:39  Registers:
+info registers vcpu 0
 
-Questions based on the above:
+CPU#0
+ PC=3Dffff8000808cbe78 X00=3D0000000000000002 X01=3D0000000000000018
+X02=3Dffff800082cd5018 X03=3Dffff800082a93160 X04=3Df9f00000030dd080
+X05=3D0000000000000072 X06=3D000000000000000a X07=3D0000000000000000
+X08=3D7f7f7f7f7f7f7f7f X09=3Dffff800082a93190 X10=3D0000000000000001
+X11=3Dffff8000830b3e10 X12=3Dffff8000829e0168 X13=3Dffff8000830b3b7d
+X14=3Dffff8000830b3b88 X15=3Dffff8000830b39f0 X16=3D00000000b21b6dbc
+X17=3D00000000cb486fb5 X18=3D00000000ffffffff X19=3Df6f000000303b077
+X20=3Dffff8000808cbf28 X21=3Df9f00000030dd080 X22=3Df6f000000303b077
+X23=3Dffff8000808cbf28 X24=3D000000000000037d X25=3D0000000000000001
+X26=3Df2f00000032b5b40 X27=3D0000000000000000 X28=3D0000000000000000
+X29=3Dffff8000830b3c90 X30=3Dffff8000808cbf50  SP=3Dffff8000830b3c90
+PSTATE=3D814020c9 N--- EL2h  SVCR=3D00000000 --  BTYPE=3D0     FPCR=3D00000=
+000 FPSR=3D00000010
+P00=3D0000000000000000 P01=3D0000000000000000 P02=3D0000000000000000
+P03=3D0000000000000000 P04=3D0000000000000000 P05=3D0000000000000000
+P06=3D0000000000000000 P07=3D0000000000000000 P08=3D0000000000000000
+P09=3D0000000000000000 P10=3D0000000000000000 P11=3D0000000000000000
+P12=3D0000000000000000 P13=3D0000000000000000 P14=3D0000000000000000
+P15=3D0000000000000000 FFR=3D0000000000000000
+Z00=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:3fd040b9c43ccc73
+Z01=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:3fd3333333333333
+Z02=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:4192950384000000
+Z03=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:72f1afb4f1977729:f160d24104bbfccb
+Z04=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:bf898c0527c9d117:e9b5e5f6290a35f7
+Z05=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:155438e8b0885b01:6424fbf699fd98b4
+Z06=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:caac770d9cb4e7f1:2264182514179617
+Z07=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:6b9a14e76a498dfa:e66bf7d2cde7cab3
+Z08=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:c3e8b28178f8a364:28b175fbdd869837
+Z09=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:f1fd7ae76558d840:c289317c1109b285
+Z10=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:cd8eb63f771925cc:9c6f0f49a83bcb7f
+Z11=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:775e3ea536d2040f:099b24d7639968aa
+Z12=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:a58046e2fb7bf1bd:cb546256d4d6994f
+Z13=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:7d5540a18e90912b:66de107f74d3e462
+Z14=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:f9af977d8c41e6cf:6bb516ffe6268900
+Z15=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:612c18dc0ceed46d:f73a681b6535faac
+Z16=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:4ed35c21df472cd3
+Z17=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:8f1bbcdc8f1bbcdc
+Z18=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:ca62c1d6ca62c1d6
+Z19=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:6ed9eba15a827999
+Z20=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:6f453a7d6f453a7d:6f453a7d6f453a7d
+Z21=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:7402081e7402081e:7402081e7402081e
+Z22=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:62c20b1762c20b17:62c20b1762c20b17
+Z23=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:55799b9b55799b9b:55799b9b55799b9b
+Z24=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:2f21a6f82f21a6f8:2f21a6f82f21a6f8
+Z25=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:cfde6eb1cfde6eb1:cfde6eb1cfde6eb1
+Z26=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:6036fbdf6036fbdf:6036fbdf6036fbdf
+Z27=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:b09738e5b09738e5:b09738e5b09738e5
+Z28=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z29=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z30=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000002:7962a9c3309ca05e
+Z31=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0e0d0c0f0a09080b:0605040702010003
+info registers vcpu 1
 
-1. If there is no "existing" schedule, what does the "extend" variable
-   extend? The custom base-time mechanism has to work even for the first
-   taprio schedule. (this is an unanswered pre-existing question)
+CPU#1
+ PC=3Dffff800080020cfc X00=3D0000000000000001 X01=3Dffff8000891b3830
+X02=3Dffff8000891b3b30 X03=3D0000000000000040 X04=3Dffff8000891b4000
+X05=3Dffff8000891b32f8 X06=3Dffff8000891b3310 X07=3Dffff8000891b3d80
+X08=3Dffff8000891b3298 X09=3D0000000000002d40 X10=3Df4f000008866959a
+X11=3D0101010101010101 X12=3D0000000000000029 X13=3D0000000000000000
+X14=3Dffffffffffffffff X15=3Dffff8000891b3560 X16=3D0000000000000000
+X17=3D0000000000000000 X18=3D00000000ffffffff X19=3D0000000000002d40
+X20=3D0000000000000003 X21=3D0000000000002d40 X22=3D0000000000000050
+X23=3D0000000000136780 X24=3Dfff000007a336780 X25=3Dfff000007a200000
+X26=3Dfaf0000005a96ec0 X27=3Dffff800082c44180 X28=3D000000008a113678
+X29=3Dffff8000891b3290 X30=3Dffff800080135d8c  SP=3Dffff8000891b3280
+PSTATE=3D81402809 N--- EL2h  SVCR=3D00000000 --  BTYPE=3D2     FPCR=3D00000=
+000 FPSR=3D00000000
+P00=3D0000000000000000 P01=3D0000000000000000 P02=3D0000000000000000
+P03=3D0000000000000000 P04=3D0000000000000000 P05=3D0000000000000000
+P06=3D0000000000000000 P07=3D0000000000000000 P08=3D0000000000000000
+P09=3D0000000000000000 P10=3D0000000000000000 P11=3D0000000000000000
+P12=3D0000000000000000 P13=3D0000000000000000 P14=3D0000000000000000
+P15=3D0000000000000000 FFR=3D0000000000000000
+Z00=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:6b000a32203d2074:6e756f6320656761
+Z01=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:00ff000000000000:0000000000000000
+Z02=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0100000000000000
+Z03=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:000000ff0000ff00:00ff0000000000ff
+Z04=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:000f00f00f00000f
+Z05=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:726f6620676e6974:696177203a656369
+Z06=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:696177203a656369:76656474656e5f72
+Z07=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:6e75745f7a797320:726f6620676e6974
+Z08=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z09=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z10=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z11=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z12=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z13=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z14=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z15=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z16=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000ffffcb805360:0000ffffcb805360
+Z17=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:ffffff80ffffffd0:0000ffffcb805330
+Z18=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z19=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z20=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z21=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z22=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z23=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z24=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z25=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z26=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z27=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z28=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z29=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z30=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
+Z31=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
+000000000000000:0000000000000000:0000000000000000:0000000000000000
 
-2. Can you give me another (valid, i.e. confirmed working) example of
-   extension, where the cycle-time of the existing schedule is different
-   from the cycle-time of the new one? You calculate the extension of
-   the next-to-last cycle of the existing schedule based on the cycle
-   length of the new schedule. It is not obvious to me why that would be
-   correct.
 
-> >>>   - Writes cycle time, cycle count, and extend values to firmware memory.
-> >>>   - base-time being in past or base-time not being a multiple of
-> >>>     cycle-time is taken care by the firmware. Driver just writes these
-> >>>     variable for firmware and firmware takes care of the scheduling.
-> >>
-> >> "base-time not being a multiple of cycle-time is taken care by the firmware":
-> >> To what extent is this true? You don't actually pass the base-time to
-> >> the firmware, so how would it know that it's not a multiple of cycle-time?
-> >>
-> > 
-> > We pass cycle-count and extend. If extend is zero, it implies base-time
-> > is multiple of cycle-time. This way firmware knows whether base-time is
-> > multiple of cycle-time or not.
-> > 
-> >>>   - If base-time is not a multiple of cycle-time, the value of extend
-> >>>     (base-time % cycle-time) is used by the firmware to extend the last
-> >>>     cycle.
-> >>
-> >> I'm surprised to read this. Why does the firmware expect the base time
-> >> to be a multiple of the cycle time?
-> >>
-> > 
-> > Earlier the limitation was that firmware can only start schedules at
-> > multiple of cycle-times. If a base-time is not multiple of cycle-time
-> > then the schedule is started at next nearest multiple of cycle-time from
-> > the base-time. But now we have fix that, and schedule can be started at
-> > any time. No need for base-time to be multiple of cycle-time.
-> > 
-> >> Also, I don't understand what the workaround achieves. If the "extend"
-> >> feature is similar to CycleTimeExtension, then it applies at the _end_
-> >> of the cycle. I.o.w. if you never change the cycle, it never applies.
-> >> How does that help address a problem which exists since the very first
-> >> cycle of the schedule (that it may be shifted relative to integer
-> >> multiples of the cycle time)?
-> >>
-> >> And even assuming that a schedule change will take place - what's the
-> >> math that would suggest the "extend" feature does anything at all to
-> >> address the request to apply a phase-shifted schedule? The last cycle of
-> >> the oper schedule passes, the admin schedule becomes the new oper, and
-> >> then what? It still runs phase-aligned with its own cycle-time, but
-> >> misaligned with the user-provided base time, no?
-> >>
-> >> The expectation is for all cycles to be shifted relative to N *
-> >> base-time, not just the first or last one. It doesn't "sound" like you
-> >> can achieve that using CycleTimeExtension (assuming that's what this
-> > 
-> > Yes I understand that. All the cycles will be shifted not just the first
-> > or the last one. Let me explain with example.
-> > 
-> > Let's assume the existing schedule is as below,
-> > base-time 500ms cycle-time 1ms
-> > 
-> > The schedule will start at 500ms and keep going on. The cycles will
-> > start at 500ms, 501ms, 502ms ...
-> > 
-> > Now let's say new requested schedule is having base-time as 1000.821 ms
-> > and cycle-time as 1ms.
-> > 
-> > In this case the earlier schedule's second-to-last cycle will start at
-> > 999ms and end at 1000.821ms. The cycle gets extended by 0.821ms
-> > 
-> > It will look like this, 500ms, 501ms, 502ms ... 997ms, 998ms, 999ms,
-> > 1000.821ms.
-> > 
-> > Now our new schedule will start at 1000.821ms and continue with 1ms
-> > cycle-time.
-> > 
-> > The cycles will go on as 1000.821ms, 1001.821ms, 1002.821ms ......
-> > 
-> > Now in future some other schedule comes up with base-time as 1525.486ms
-> > then again the second last cycle of current schedule will extend.
-> > 
-> > So the cycles will be like 1000.821ms, 1001.821ms, 1002.821ms ...
-> > 1521.821ms, 1522.821ms, 1523.821ms, 1525.486ms. Here the second-to-last
-> > cycle will last for 1.665ms (extended by 0.665ms) where as all other
-> > cycles will be 1ms as requested by user.
-> > 
-> > Here all cycles are aligned with base-time (shifter by N*base-time).
-> > Only the last cycle is extended depending upon the base-time of new
-> > schedule.
-> > 
-> >> is), so better refuse those schedules which don't have the base-time you
-> >> need.
-> >>
-> > 
-> > That's what our first approach was. If it's okay with you I can drop all
-> > these changes and add below check in driver
-> > 
-> > if (taprio->base_time % taprio->cycle_time) {
-> > 	NL_SET_ERR_MSG_MOD(taprio->extack, "Base-time should be multiple of
-> > cycle-time");
-> > 	return -EOPNOTSUPP;
-> > }
+syzkaller build log:
+go env (err=3D<nil>)
+GO111MODULE=3D'auto'
+GOARCH=3D'amd64'
+GOBIN=3D''
+GOCACHE=3D'/syzkaller/.cache/go-build'
+GOENV=3D'/syzkaller/.config/go/env'
+GOEXE=3D''
+GOEXPERIMENT=3D''
+GOFLAGS=3D''
+GOHOSTARCH=3D'amd64'
+GOHOSTOS=3D'linux'
+GOINSECURE=3D''
+GOMODCACHE=3D'/syzkaller/jobs/linux/gopath/pkg/mod'
+GONOPROXY=3D''
+GONOSUMDB=3D''
+GOOS=3D'linux'
+GOPATH=3D'/syzkaller/jobs/linux/gopath'
+GOPRIVATE=3D''
+GOPROXY=3D'https://proxy.golang.org,direct'
+GOROOT=3D'/syzkaller/jobs/linux/gopath/pkg/mod/golang.org/toolchain@v0.0.1-=
+go1.23.7.linux-amd64'
+GOSUMDB=3D'sum.golang.org'
+GOTMPDIR=3D''
+GOTOOLCHAIN=3D'auto'
+GOTOOLDIR=3D'/syzkaller/jobs/linux/gopath/pkg/mod/golang.org/toolchain@v0.0=
+.1-go1.23.7.linux-amd64/pkg/tool/linux_amd64'
+GOVCS=3D''
+GOVERSION=3D'go1.23.7'
+GODEBUG=3D''
+GOTELEMETRY=3D'local'
+GOTELEMETRYDIR=3D'/syzkaller/.config/go/telemetry'
+GCCGO=3D'gccgo'
+GOAMD64=3D'v1'
+AR=3D'ar'
+CC=3D'gcc'
+CXX=3D'g++'
+CGO_ENABLED=3D'1'
+GOMOD=3D'/syzkaller/jobs/linux/gopath/src/github.com/google/syzkaller/go.mo=
+d'
+GOWORK=3D''
+CGO_CFLAGS=3D'-O2 -g'
+CGO_CPPFLAGS=3D''
+CGO_CXXFLAGS=3D'-O2 -g'
+CGO_FFLAGS=3D'-O2 -g'
+CGO_LDFLAGS=3D'-O2 -g'
+PKG_CONFIG=3D'pkg-config'
+GOGCCFLAGS=3D'-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=3D0=
+ -ffile-prefix-map=3D/tmp/go-build4094526140=3D/tmp/go-build -gno-record-gc=
+c-switches'
 
-I don't want to make a definitive statement on this just yet, I don't
-fully understand what was implemented in the firmware and what was the
-thinking.
+git status (err=3D<nil>)
+HEAD detached at 4826c28ef2
+nothing to commit, working tree clean
 
-> >>>   - Sets `config_change` and `config_pending` flags to notify firmware of
-> >>>     the new shadow list and its readiness for activation.
-> >>>   - Sends the `ICSSG_EMAC_PORT_TAS_TRIGGER` r30 command to ask firmware to
-> >>>     swap active and shadow lists.
-> >>> - Waits for the firmware to clear the `config_change` flag before
-> >>>   completing the update and returning successfully.
-> >>>
-> >>> This implementation ensures seamless TAS functionality by offloading
-> >>> scheduling complexities to the firmware.
-> >>>
-> >>> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> >>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> >>> Reviewed-by: Simon Horman <horms@kernel.org>
-> >>> Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
-> >>> ---
-> >>> Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
-> >>> v9 - v10:
-> >>> There has been significant changes since v9. I have tried to address all
-> >>> the comments given by Vladimir Oltean <vladimir.oltean@nxp.com> on v9
-> >>> *) Made the driver depend on NET_SCH_TAPRIO || NET_SCH_TAPRIO=n for TAS
-> >>> *) Used MACRO for max sdu size instead of magic number
-> >>> *) Kept `tas->state = state` outside of the switch case in `tas_set_state`
-> >>> *) Implemented TC_QUERY_CAPS case in `icssg_qos_ndo_setup_tc`
-> >>> *) Calling `tas_update_fw_list_pointers` only once in
-> >>>    `tas_update_oper_list` as the second call as unnecessary.
-> >>> *) Moved the check for TAS_MAX_CYCLE_TIME to beginning of
-> >>>    `emac_taprio_replace`
-> >>> *) Added `__packed` to structures in `icssg_qos.h`
-> >>> *) Modified implementation of `tas_set_trigger_list_change` to handle
-> >>>    cases where base-time isn't a multiple of cycle-time. For this a new
-> >>>    variable extend has to be calculated as base-time % cycle-time. This
-> >>>    variable is used by firmware to extend the last cycle.
-> >>> *) The API prueth_iep_gettime() and prueth_iep_settime() also needs to be
-> >>>    adjusted according to the cycle time extension. These changes are also
-> >>>    taken care in this patch.
-> >>
-> >> Why? Given the explanation of CycleTimeExtension above, it makes no
-> >> sense to me why you would alter the gettime() and settime() values.
-> >>
-> > 
-> > The Firmware has two counters
-> > 
-> > counter0 counts the number of miliseconds in current time
-> > counter1 counts the number of nanoseconds in the current ms.
-> > 
-> > Let's say the current time is 1747305807237749032 ns.
-> > counter0 will read 1747305807237 counter1 will read 749032.
-> > 
-> > The current time = counter0* 1ms + counter1
-> > 
-> > For taprio scheduling also counter0 is used.
 
-"Used" in the sense that taprio needs to know the current time, correct?
-But by that logic, taprio equally uses counter0 and counter1, no? For
-example, for a cycle-time of 1.23 ms.
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+go: downloading github.com/prometheus/client_golang v1.22.0
+go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sy=
+s/syz-sysgen
+make .descriptions
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+bin/syz-sysgen
+touch .descriptions
+GOOS=3Dlinux GOARCH=3Darm64 go build -ldflags=3D"-s -w -X github.com/google=
+/syzkaller/prog.GitRevision=3D4826c28ef2aca1ee7dba7111e48d3b6a9c83d9a8 -X g=
+ithub.com/google/syzkaller/prog.gitRevisionDate=3D20250606-171009"  -o ./bi=
+n/linux_arm64/syz-execprog github.com/google/syzkaller/tools/syz-execprog
+mkdir -p ./bin/linux_arm64
+aarch64-linux-gnu-g++ -o ./bin/linux_arm64/syz-executor executor/executor.c=
+c \
+	-O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wframe-l=
+arger-than=3D16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-format-ove=
+rflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -stati=
+c-pie -std=3Dc++17 -I. -Iexecutor/_include   -DGOOS_linux=3D1 -DGOARCH_arm6=
+4=3D1 \
+	-DHOSTGOOS_linux=3D1 -DGIT_REVISION=3D\"4826c28ef2aca1ee7dba7111e48d3b6a9c=
+83d9a8\"
+go: downloading github.com/klauspost/compress v1.18.0
+/usr/lib/gcc-cross/aarch64-linux-gnu/12/../../../../aarch64-linux-gnu/bin/l=
+d: /tmp/cc4lBGkG.o: in function `Connection::Connect(char const*, char cons=
+t*)':
+executor.cc:(.text._ZN10Connection7ConnectEPKcS1_[_ZN10Connection7ConnectEP=
+KcS1_]+0xd8): warning: Using 'gethostbyname' in statically linked applicati=
+ons requires at runtime the shared libraries from the glibc version used fo=
+r linking
 
-> > Now let's say below are the cycles of a schedule
-> > 
-> > cycles   = 500ms 501ms 502ms ... 997ms, 998ms, 999ms, 1000.821ms
-> > counter0 = 500   501   502   ... 997    998    999    1000
-> > curr_time= 500*1, 501*1, 502*2...997*1, 998*1, 999*1, 1000*1
-> > 
-> > Here you see after the last cycle the time is 1000.821 however our above
-> > formula will give us 1000 as the time since last cycle was extended.
 
-Wait a second. You compensate the time in prueth_iep_gettime(), which is
-called, among other places, from icss_iep_ptp_gettimeex() (aka struct
-ptp_clock_info :: gettimex64()).
+Error text is too large and was truncated, full error text is at:
+https://syzkaller.appspot.com/x/error.txt?x=3D1472aa82580000
 
-I don't know about the other call paths, but ptp_clock_info :: gettimex64()
-doesn't answer the question "what was the last time that a taprio cycle
-ended at?" but rather "what time is it according this clock, now?"
 
-I still fail to see why the taprio cycle extension would affect the
-current time. Or does TIMESYNC_CYCLE_EXTN_TIME extend the length of the
-millisecond?
+Tested on:
 
-> > To compensate this, whatever extension firmware applies need to be added
-> > during current time calculation. Below is the code for that.
-> > 
-> >       ts += readl(prueth->shram.va + TIMESYNC_CYCLE_EXTN_TIME);
-> > 
-> > Now the current time becomes,
-> > 	counter0* 1ms + counter1 + EXTEND
-> > 
-> > This is why change to set/get_time() APIs are needed. This will not be
-> > needed if we drop this extends implementation.
+commit:         f09079bd Merge tag 'powerpc-6.16-2' of git://git.kerne..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3D2f8ce980f626e3f=
+9
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D1ec2f6a450f0b54af=
+8c8
+compiler:       aarch64-linux-gnu-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GN=
+U Binutils for Debian) 2.40
+userspace arch: arm64
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D127669d45800=
+00
 
-What if the cycle that has to be extended has not arrived yet (is in the
-future)? Why is the current time compensated in that case?
-
-> > Let me know if above explanation makes sense and if I should continue
-> > with this approach or drop the extend feature at all and just refuse the
-> > schedules?
-> > 
-> 
-> I am not sure if you got the change to review my replies to your initial
-> comments. Let me know if I should continue with this approach or just
-> refuse the schedules that don't have the base time that we need.
-> 
-> > Thanks for the feedback.
-> > 
-> 
-> 
-> -- 
-> Thanks and Regards,
-> Danish
-
-As you can see, I still have trouble understanding the concepts proposed
-by the firmware.
