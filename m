@@ -1,81 +1,108 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C69028D8D5;
-	Tue, 10 Jun 2025 14:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9EA029DB8E;
+	Tue, 10 Jun 2025 14:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749564113; cv=none; b=qxRqLdWSHjuoN0+RliZaKJozukA364UucGbOYRpe2BvB7gtPZHuZu417vYbs6Pbb77Te7BAKzcZ3oQBhH0U1oUXjM60ldN1GeEcG3LDSt0KfKqpNVq/WXlhyrGZ2GRLoHSh/ho8Lk6GkjGk+xlLtgwp2mYb9XwsO1cmQbgNUSac=
+	t=1749564118; cv=none; b=Phi5XOQYekM5tTnfaenVce+Ys9l/hBh1k8TPyJVsSZWeVpABC5J7sq1sOJjmqBC0qAcaODTnNoQYqJ7qJRNgsMwLT8qf/u/jaolwii/m4lzguRZ6T+YFTRnGOxqd6rczIJg2Up+qSW6uEJOJU8OJWZ/P1XR/iHlq2Ad8n0Pstbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749564113; c=relaxed/simple;
-	bh=vBTYJTVXGVe80enUVVMZHQ5D5nonMPeMDLY2McUzn9A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g69S4D90b7ej5jzcQ06pjs2KrY4Ww3e4eGomuU/6VX3CVmvcSNFiXWHGMt3olaXk6dalqo/DHpHcnS1wCY2Zh7Bfe8VZGhreuTK+MhpnFoCxdS6Q0se2v+3NDor0EdNe6iS7k/2RiM36KvN1WLuee9qV6H2bBTVG0DngTMtM2cY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1MFM+BOm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ClCTpYWW; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749564118; c=relaxed/simple;
+	bh=dJAjnjVCBWFi59JPuEDE12I/eCLx4eSBmPOBQ3kkkBs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=a6MO1Nz3veG5NN0Wxt1vnOu9rvhnm22mUSyRYz3MACb5c7sdvPQytWAZHVRNmgtqqR+3K66YXGuLGliLf3OCTYroyxw5kUk7lHKr+dBrpe+wUnD384bbk9Xt0QLlxy+u6/DoFwWQAkVx4T8sGzXTfXaNJCOHw77vDvTSA6KHnak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=RcEPNm+9; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1MFM+BOm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ClCTpYWW"
-Date: Tue, 10 Jun 2025 16:01:47 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749564109;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="RcEPNm+9"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bGr7b4tGVz9sWN;
+	Tue, 10 Jun 2025 16:01:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1749564107; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vBTYJTVXGVe80enUVVMZHQ5D5nonMPeMDLY2McUzn9A=;
-	b=1MFM+BOmR6zsDwiwCfjlgPNsoKkRtx2Ye4IW2EN/lOQDc6gwO1PC1TbKugophXdfY1W22I
-	PC4l78mEl1JRNlUXiWU9xI2Z26HJUrUJXiswVL/rl1Hs4+h/mfIAnIFmyU+YZtWbYMAzNU
-	V0OqyqMHBDsWQgBWnPMFbpYA4MFrn4OgfTUlmJuwjbKWbCtbEk7MPIkGfn0vSJL/fQpk1b
-	1EHJTsb2XzVy7T9uPbWFduNjRJCnL3j0OBiWbfkd2lQW7uA7CcOSxmXlMajN3gSJRpAotU
-	5RM+dlsQzYjq8f5vX1AkXPtR7UJcVsQmYd0hr12UZF9ojCWKB7GuBM5eTvpkig==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749564109;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vBTYJTVXGVe80enUVVMZHQ5D5nonMPeMDLY2McUzn9A=;
-	b=ClCTpYWWSypVNcaIijVGXdwGUXkH6MhpQPvGsXpZDTDmuKLqF0PkjnUFvIANup/6qKOi0e
-	x+tKnQC6Z8YU4uDg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] sched: Fix preemption string of preempt_dynamic_none
-Message-ID: <20250610140147.Pu9gdE9C@linutronix.de>
-References: <20250603-preempt-str-none-v1-1-f0e9916dcf44@linutronix.de>
+	bh=V91fldRtjZGoREG79N9rf6WT/04EBxH6Xnys4sXjdGQ=;
+	b=RcEPNm+9v5FivHKhdSwyJsKYdWtre4nWizpbUqr25wjyt27a/rIW0lq6Wd7NsvZci4+7E+
+	cAUys5LUNbhtlSyaGpfKM1WQZ5oHuRMQc5n+mXj9oG/3MP/DkpwLQOzF87tfsyixcMYoZZ
+	TRzGIoYlg1Jfwh+DXGYqRkwTjBzuDldymnEfaSLoicfIM+CWZzVobE9hIL8V9sZ7GXN8cL
+	ciBr/IMD71zsPxbXIexbCg9tPNfT1K+nRGiJ5KE7ymzgFk0RcgUMuWg8nRdLbLytQJ21+m
+	knhcvD3WGTHNkJ8KqkDJ1dgX2czrcvYpLqg4+XL8oR3rgE3Kl+xO/LCPtG9kJA==
+Message-ID: <aade5fcc5bae0e2a04441388fd7f248704a33ae3.camel@mailbox.org>
+Subject: Re: [PATCH v2] ata: pata_macio: Fix PCI region leak
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Philipp Stanner <phasta@kernel.org>, Damien Le Moal
+ <dlemoal@kernel.org>,  Niklas Cassel <cassel@kernel.org>, Krzysztof
+ =?UTF-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Kuppuswamy Sathyanarayanan
+ <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 10 Jun 2025 16:01:43 +0200
+In-Reply-To: <20250610135413.35930-2-phasta@kernel.org>
+References: <20250610135413.35930-2-phasta@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250603-preempt-str-none-v1-1-f0e9916dcf44@linutronix.de>
+X-MBO-RS-META: 1hdic9gthff9ma5dm4sp1ikx8it6c7sy
+X-MBO-RS-ID: 480e5cbc4daf07b7ee3
 
-On 2025-06-03 11:52:13 [+0200], Thomas Wei=C3=9Fschuh wrote:
-> Zero is a valid value for "preempt_dynamic_mode", namely
-> "preempt_dynamic_none".
+On Tue, 2025-06-10 at 15:54 +0200, Philipp Stanner wrote:
+> pci_request_regions() became a managed devres functions if the PCI
+> device was enabled with pcim_enable_device(), which is the case for
+> pata_macio.
 >=20
-> Fix the off-by-one in preempt_model_str(), so that "preempty_dynamic_none"
-> is correctly formatted as PREEMPT(none) instead of PREEMPT(undef).
+> The PCI subsystem recently removed this hybrid feature from
+> pci_request_region(). When doing so, pata_macio was forgotten to be
+> ported to use pcim_request_all_regions(). If that function is not
+> used,
+> pata_macio will fail on driver-reload because the PCI regions will
+> remain blocked.
 >=20
-> Fixes: 8bdc5daaa01e ("sched: Add a generic function to return the preempt=
-ion string")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+> Fix the region leak by replacing pci_request_regions() with its
+> managed
+> counterpart, pcim_request_all_regions().
+>=20
+> Fixes: 51f6aec99cb0 ("PCI: Remove hybrid devres nature from request
+> functions")
+> Signed-off-by: Philipp Stanner <phasta@kernel.org>
 
-A gentle ping.
+Forgot Damien's Reviewed-by.
 
-Sebastian
+P.
+
+> ---
+> Changes in v2:
+> =C2=A0 - Add Fixes: tag and rephrase commit message, since the merge
+> window
+> =C2=A0=C2=A0=C2=A0 closed already. (Niklas)
+> ---
+> =C2=A0drivers/ata/pata_macio.c | 2 +-
+> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/ata/pata_macio.c b/drivers/ata/pata_macio.c
+> index fbf5f07ea357..f7a933eefe05 100644
+> --- a/drivers/ata/pata_macio.c
+> +++ b/drivers/ata/pata_macio.c
+> @@ -1298,7 +1298,7 @@ static int pata_macio_pci_attach(struct pci_dev
+> *pdev,
+> =C2=A0	priv->dev =3D &pdev->dev;
+> =C2=A0
+> =C2=A0	/* Get MMIO regions */
+> -	if (pci_request_regions(pdev, "pata-macio")) {
+> +	if (pcim_request_all_regions(pdev, "pata-macio")) {
+> =C2=A0		dev_err(&pdev->dev,
+> =C2=A0			"Cannot obtain PCI resources\n");
+> =C2=A0		return -EBUSY;
+
