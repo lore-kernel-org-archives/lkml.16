@@ -1,292 +1,128 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 938ED23A99D
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 16:11:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C6A241CB2
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 16:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749571897; cv=none; b=ikdSQXN38xp77z47eHnSU7gm1zVU9g99KUEv/Wg6rqxpSj4/dU3fvFkaQqPlFaPWY5ukK82u1o0Mh6uh6DFxkA3H8oodS2unUZldQwSJOtetCiy5T3gwtRjanwGfDp4HwPROnqZUdzSnMXvryCm7RUGoqDQJaLIAOPDinRRZzMk=
+	t=1749571948; cv=none; b=R8Q8cEx2nPmvl278WN6vVb8Sn5IOoRJ+SDCAS14zVYTElj5NEV4DRsvuy8qZLIQMcO4GvzFq4ohrKOeBybOCmpDH56TviUXoNuGFPy7SgvJpiyJhNXqBvLDGRiwV8O4x4vE00ZUAc1w9deoiTEyB9K9yaiwXl53rynqmcLW80iA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749571897; c=relaxed/simple;
-	bh=H6kKcbtQyCNsRpuQdzx1Ij4f1xHwXmSeJMEq6Npzo00=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jFHvfE+A1cS50ne5DmUaeGGoiSga4YYAmGdt1sdIzNw9buV34kG4vGNzHhnah6kBv0zSpAHi82E9eaZVlJAN8ZGAjcezu0xX+dFTIcZD7cWX6IhWQnxIbZLgEebhWccJIzr8V5djEcF3G3FWID/Hz1YTXOJetKh4/ppRrJZpG40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=umGu3KKN; arc=none smtp.client-ip=209.85.161.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1749571948; c=relaxed/simple;
+	bh=5WJNEkDIjQQz2okt4KOF8T62rDFTSGAdY4cYKkBLKAM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=P/PQAP9w6idSzxRdWckLGdDAS8otHkg5qgZC0NerovgCI+XPtBd4jU2FMTs8slOOjfW7BnEYMVGMyGZdajzQnmAzI752WZj6gN0K+f4eoabKxZ7dgPbU+rKJK6ogRZCEuG+qYGjL12q9A22krmciX1O4PsfUkV9O212njhLzu6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VkYQlwcE; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="umGu3KKN"
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-605f7d3215cso2684378eaf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:11:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VkYQlwcE"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-31215090074so7821202a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:12:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749571894; x=1750176694; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IjFNPLsLmPIFbKpYACH0ExKk8a2pmT3QZbM6wkI9HdI=;
-        b=umGu3KKNhYALIrRlldlf8kTq3fzDvimB2poZztA5A+JFRC7BiP3z8HtHtGUxY2eYcM
-         Mzo1Kq4emjXwJV6QSFzJM/TZE1/MrQm+hJdT5la9D9X1IHNVwKXxRMesDCkLcpeoonj1
-         CIIO4YjBxiPtclvM49L/JB005AHkkrpkVwTep38KW/C2JQeqcNUYR737KZnM3v6zwYw+
-         P0goi4RiLQfvNOvaJB07dgMI3PCkNX+EYKkIcQAlXqPkysJ3OCevACQf6b9QbY3K2nfw
-         dFLmo+R5XfEG+5QGVFsZXdDpyCri64IcZmkgt30NCHXUhHgBaCOgFdSE4yt/pEQfNgps
-         VBXw==
+        d=google.com; s=20230601; t=1749571946; x=1750176746; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tdst2AXEI4Imm1N+8aUcHMsoZp01dEp7fOzDZf0fTqo=;
+        b=VkYQlwcE6Gabdm0Q7BNy4Sel4WedZgCTG3pCAIRXdkA6O0GwFNVvtEK8iaDfIxwcXg
+         a5+6PWIHy0gUmcG8ljDl95pPZ/yQ2BxPskUxxla6hNVwau2tpkYZ+vEGsbaADSHv8KR/
+         h6pxSBtXFv5OdeMyYuQC1oc3z15OLzEZ+QOwC3yEtkKgOL7eFFkb3jw1vcPNRMU8+Jmt
+         m8SKqFeVit/Tj9pXGQ13MuFeXaO0djRyJFU5jgDmVclghlcGA4FR51z+PU0MiRUGKZ3e
+         MQ+V+u1nUaEQuQ7/CoiBUB1SlO9+UFCWmXuY4U+ciU9JHKp6soH1uxPtjZJ6Ox7AbCGG
+         Nv/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749571894; x=1750176694;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IjFNPLsLmPIFbKpYACH0ExKk8a2pmT3QZbM6wkI9HdI=;
-        b=V2EMulA9eHSJxKlXoIEsGuLZbijYjbquGCXJwX/DV4AYUO6wtN1BKDbhJT3qXcVoMF
-         pymkHLthj10FcQ4OohjG/Jj7/0dMwIuGsxA+L1/HyhKSfvkcdpkdiU478MyBxsuEimvw
-         is6Pckw9fIceUz9xefgCduBOiYS3e3bePDfGJRlH7gCTKiJbU4sEPb3bN3ux9l9HZm8I
-         eAeSNuGOmjzM2A8mMSil+jUt63T4Jz5UO1P3+j9DK3YD8BZSLPNVaEaWxUtSNYcn+Bd9
-         fZzOEIv9GKYxNNmvVKexV/83KkCxqIafgYp4YlA/ELIM/sZcCCgYT58sM6mwIk/k2yYJ
-         IS0w==
-X-Forwarded-Encrypted: i=1; AJvYcCVpa0/IiLy8GlaPlknhyTDqEMQKQV/PLnADnDo75rSN8VkpvVxvXDrKzmXQyRHai0xnjExLpbzbs3qnhe8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUBP6PhQbJqLU4OMQ8Uh9smcoQJ3oeeBqm8FdV2b/0d7eoKWvr
-	lUD0xIWolSJKdQMIWej4OcxTgIukaXo+RZt6p9DaCQXAXurrtH0PJYlPNtWOBz5t1dw=
-X-Gm-Gg: ASbGnctG/3uy9LqKaJEaDb4xSYZBWAsjziYMVCzRMm8lkIKqCKtKp9OqIYtLgAskLn0
-	GwdXYJ47m5Lr3Ra5iJ2bjtOfnOSsZKE1u3QZMPHNpPXFSK7+JsCLAS+6R2qMWS4W/x3fl5DL581
-	84N7Coo35BUiPCWVFdNF2BCbfNFAvOJMsavoWkn6hL11aYzawbPm8jBBqvbsyLcgrdZYpMpEyeg
-	hFZE94s1jYhDwc69FUlzB7EjWlbEp5k4e6Ow3Fkx6Axz/jw7WL4N6we8ZuKnYMyslibQX631vBC
-	iK93jDwAVOScYzwXgoE0zsUl/kwhxiKJDsJq4UORGMbgTVkIj3K4LCoDzMd7jytlER76/q28PDu
-	h7XIvp3sqSvnjs/kOSOyP2pVxtHREbJrwsYxZ
-X-Google-Smtp-Source: AGHT+IEe5j4VAuvAkgd3yNgpCuM13S6tjJh4vDjtrY7qQ16ReDKME1+DnXtNYfBdugeTmqYAaZF+8g==
-X-Received: by 2002:a05:6820:2604:b0:60e:d47d:f616 with SMTP id 006d021491bc7-610e2d24dc9mr1981664eaf.3.1749571893530;
-        Tue, 10 Jun 2025 09:11:33 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:a49:6255:d8db:1aea? ([2600:8803:e7e4:1d00:a49:6255:d8db:1aea])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7388a0704f4sm2066466a34.58.2025.06.10.09.11.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 09:11:33 -0700 (PDT)
-Message-ID: <3d95641d-c1c2-44bc-8478-c60734bcf420@baylibre.com>
-Date: Tue, 10 Jun 2025 11:11:32 -0500
+        d=1e100.net; s=20230601; t=1749571946; x=1750176746;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tdst2AXEI4Imm1N+8aUcHMsoZp01dEp7fOzDZf0fTqo=;
+        b=T9MB0I7gD5/ezJCGvNg/BxcJpiP2J7J4Pj9FWoH4ELKWUahlYtrAv0HGMqajuXrXwj
+         /2FhV5fArvky0SMmUAE85bxnTLjrqArtHIZc/0jcVqI8SUJCUGtorQt3MvyeZOYhJ2Zj
+         Givas4/wcNLTpcRSxF8uhTuBs21Jo4r2jO3gYl2S9hkvSRFekrcvYVom4SqGcqlLlN9p
+         J3UJl24NSg6R1y6UeKT4vHhyOaO/c2aa8bfAf2RBwwBlsZRUqJ6TWGoCZzKSXdDHJ6A/
+         RANFguhY85o050Kd06FuKCJZT54YCb2VYzDVc5O1Z+PFXhuTCV/SE1HB4+JmuG7Y/buT
+         2Qug==
+X-Gm-Message-State: AOJu0YzhJK7FoV5p7iFYTSmzUuQ06uZXUFmjrHQFQUxj/HjkA4jsbGqc
+	ClguuKJkz/+UCsqGNn2VUm/mV4Pun0yue4ui1rpwZTCHYwwTPQCPYVeXFe5c7g6odCCrbGb2mwU
+	dzoeb6A==
+X-Google-Smtp-Source: AGHT+IE71Jz/QhQNRZ8OzEh0DWxt/XrMZMCp0tDfjSa8QU6g08JvolhGnuLJkEQj3Yvonq7nqSu9ReSpHFU=
+X-Received: from pjbrr16.prod.google.com ([2002:a17:90b:2b50:b0:311:f699:df0a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3887:b0:311:e9ac:f5ce
+ with SMTP id 98e67ed59e1d1-313af23d84bmr171621a91.21.1749571946315; Tue, 10
+ Jun 2025 09:12:26 -0700 (PDT)
+Date: Tue, 10 Jun 2025 09:12:24 -0700
+In-Reply-To: <cc3df866-9144-42f0-a24c-fbdcedd48315@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] iio: adc: adding support for PAC194X
-To: Marius.Cristea@microchip.com, jic23@kernel.org, nuno.sa@analog.com,
- andy@kernel.org
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- broonie@kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250606093929.100118-1-marius.cristea@microchip.com>
- <20250606093929.100118-3-marius.cristea@microchip.com>
- <1c7946f1-d712-4baa-8243-be6a55eec528@baylibre.com>
- <1b8b10816d1f2f34724e77c68de869422d6c84b6.camel@microchip.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <1b8b10816d1f2f34724e77c68de869422d6c84b6.camel@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250429061004.205839-1-Neeraj.Upadhyay@amd.com>
+ <20250429061004.205839-2-Neeraj.Upadhyay@amd.com> <aBDlVF4qXeUltuju@google.com>
+ <cc3df866-9144-42f0-a24c-fbdcedd48315@amd.com>
+Message-ID: <aEhZaMuipi2qePHX@google.com>
+Subject: Re: [PATCH v5 01/20] KVM: x86: Move find_highest_vector() to a common header
+From: Sean Christopherson <seanjc@google.com>
+To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+Cc: linux-kernel@vger.kernel.org, bp@alien8.de, tglx@linutronix.de, 
+	mingo@redhat.com, dave.hansen@linux.intel.com, Thomas.Lendacky@amd.com, 
+	nikunj@amd.com, Santosh.Shukla@amd.com, Vasant.Hegde@amd.com, 
+	Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com, x86@kernel.org, 
+	hpa@zytor.com, peterz@infradead.org, pbonzini@redhat.com, kvm@vger.kernel.org, 
+	kirill.shutemov@linux.intel.com, huibo.wang@amd.com, naveen.rao@amd.com, 
+	francescolavra.fl@gmail.com
+Content-Type: text/plain; charset="us-ascii"
 
-On 6/10/25 10:07 AM, Marius.Cristea@microchip.com wrote:
-> On Fri, 2025-06-06 at 12:02 -0500, David Lechner wrote:
-
-...
-
->>> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-pac1944
->>> b/Documentation/ABI/testing/sysfs-bus-iio-adc-pac1944
->>> new file mode 100644
->>> index 000000000000..ae88eac354a4
->>> --- /dev/null
->>> +++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-pac1944
->>> @@ -0,0 +1,17 @@
->>> +What:               
->>> /sys/bus/iio/devices/iio:deviceX/slow_alert1_cfg
->>> +KernelVersion:       6.16
->>> +Contact:     linux-iio@vger.kernel.org
->>> +Description:
->>> +             A read/write property used to route, inside the PAC
->>> device, a specific ALERT
->>> +             signal to the SLOW/ALERT1 pin. The SLOW/ALERT1 pin
->>> must be configured for the
->>> +             ALERT function in order to control the device
->>> hardware pin (this is the default
->>> +             functionality of the device hardware pin).
->>> +
->>> +What:               
->>> /sys/bus/iio/devices/iio:deviceX/gpio_alert2_cfg
->>> +KernelVersion:       6.16
->>> +Contact:     linux-iio@vger.kernel.org
->>> +Description:
->>> +             A read/write property used to route, inside the PAC
->>> device, a specific ALERT
->>> +             signal to the GPIO/ALERT2 hardware pin. The
->>> GPIO/ALERT2 pin must be configured
->>> +             for ALERT function in order to control the device
->>> hardware pin (this is the
->>> +             default functionality of the device hardware pin).
->>
->>
->> What is the use case for needing these? In otherwords, why can't the
->> driver just
->> make best use of available resources as it sees fit?
->>
+On Tue, Jun 10, 2025, Neeraj Upadhyay wrote:
+> On 4/29/2025 8:12 PM, Sean Christopherson wrote:
+> > Please slot the below in.  And if there is any more code in this series that is
+> > duplicating existing functionality, try to figure out a clean way to share code
+> > instead of open coding yet another version.
+> > 
+> > --
+> > From: Sean Christopherson <seanjc@google.com>
+> > Date: Tue, 29 Apr 2025 07:30:47 -0700
+> > Subject: [PATCH] x86/apic: KVM: Deduplicate APIC vector => register+bit math
+> > 
+> > Consolidate KVM's {REG,VEC}_POS() macros and lapic_vector_set_in_irr()'s
+> > open coded equivalent logic in anticipation of the kernel gaining more
+> > usage of vector => reg+bit lookups.
+> > 
+> > Use lapic_vector_set_in_irr()'s math as using divides for both the bit
+> > number and register offset makes it easier to connect the dots, and for at
+> > least one user, fixup_irqs(), "/ 32 * 0x10" generates ever so slightly
+> > better code with gcc-14 (shaves a whole 3 bytes from the code stream):
+> > 
+> > ((v) >> 5) << 4:
+> >   c1 ef 05           shr    $0x5,%edi
+> >   c1 e7 04           shl    $0x4,%edi
+> >   81 c7 00 02 00 00  add    $0x200,%edi
+> > 
+> > (v) / 32 * 0x10:
+> >   c1 ef 05           shr    $0x5,%edi
+> >   83 c7 20           add    $0x20,%edi
+> >   c1 e7 04           shl    $0x4,%edi
+> > 
+> > Keep KVM's tersely named macros as "wrappers" to avoid unnecessary churn
+> > in KVM, and because the shorter names yield more readable code overall in
+> > KVM.
+> > 
+> > No functional change intended (clang-19 and gcc-14 generate bit-for-bit
+> > identical code for all of kvm.ko).
+> > 
 > 
-> Here inside the PAC the user could choose what limit to be routeed
-> outside the chip. For sure, all of the limits could be routed to the
-> same hardware pin, but there are some use cases where the user will
-> want to connect that output pin to a safety hardware (e.g. over-current
-> protection or over-voltage and over-current) and in this case we need a
-> way to allow the user to do the setup.
-> 
+> With this change, I am observing difference in generated assembly for VEC_POS
+> and REG_POS, as KVM code passes vector param with type "int" to these macros.
+> Type casting "v" param of APIC_VECTOR_TO_BIT_NUMBER and APIC_VECTOR_TO_REG_OFFSET
+> to "unsigned int" in the macro definition restores the original assembly. Can
+> you have a look at this once? Below is the updated patch for this. Can you please
+> share your feedback on this?
 
-This sounds like it depends on what is wired to the alert pin, so sounds
-like something that should be specified in the devicetree.
+LGTM.
 
-I.e. in the devicetree, have a bool property microchip,alert1-is-safety
-to indicate the ALERT1 pin is wired to the safety hardware. (It could
-still be also wired as an interrupt input at the same time - or not,
-doesn't really matter.)
+Ideally, KVM would probably pass around an "unsigned int", but some higher level
+APIs in KVM use -1 to indicate an invalid vector (e.g. no IRQ pending), and mixing
+and matching types would get a little weird and would require a decent amount of
+churn.  So casting in the macro where it matters seems like the best option, at
+least for now.
 
-Then, on the event attributes add a boolean "safety" attribute to allow
-routing the signal to either the pin that was flagged as the safety pin
-or not. This would allow the user to chose which signals control the
-safety hardware at runtime without them having to know how the hardware
-is actually wired up.
-
->>
->>> subsidiaries
->>> + *
->>> + * Author: Marius Cristea marius.cristea@microchip.com
->>> + *
->>> + * Datasheet for PAC1941, PAC1942, PAC1943 and PAC1944 can be
->>> found here:
->>> + *
->>> https://ww1.microchip.com/downloads/aemDocuments/documents/MSLD/ProductDocuments/DataSheets/PAC194X-Family-Data-Sheet-DS20006543.pdf
->>> + * Datasheet for PAC1951, PAC1952, PAC1953 and PAC1954 can be
->>> found here:
->>> + *
->>> https://ww1.microchip.com/downloads/aemDocuments/documents/MSLD/ProductDocuments/DataSheets/PAC195X-Family-Data-Sheet-DS20006539.pdf
->>> + */
->>> +
->>> +#include <linux/acpi.h>
->>> +#include <linux/bitfield.h>
->>> +#include <linux/delay.h>
->>> +#include <linux/err.h>
->>> +#include <linux/i2c.h>
->>> +#include <linux/iio/iio.h>
->>> +#include <linux/iio/events.h>
->>> +#include <linux/iio/sysfs.h>
->>> +#include <linux/unaligned.h>
->>
->> This seems incomplete. Expecting at least linux/module.h,
->> linux/property.h, etc.
-> 
-> I will double check. Most probably those module are already included by
-> a header.
-> 
-
-Even if some things happens to be indirectly included by another
-header, we still prefer to have the "primary" header included for
-everything that is actually used in this file. E.g. since this
-file uses the MODULE_DESCRIPTION() macro, we expect to see
-linux/module.h even if another header already includes that
-indirectly.
-
-Usually the "primary" header is the one where a symbol/macro is
-defined, but not always, e.g. if there is a linux/something.h
-that incldues asm/something.h, we would prefer the linux/ one
-rather than including the asm/ one directly.
-
-
->>
->> ...
->>
->>> +static IIO_DEVICE_ATTR(in_current1_shunt_resistor, 0644,
->>> +                    pac1944_shunt_value_show,
->>> pac1944_shunt_value_store, 0);
->>> +static IIO_DEVICE_ATTR(in_current2_shunt_resistor, 0644,
->>> +                    pac1944_shunt_value_show,
->>> pac1944_shunt_value_store, 1);
->>> +static IIO_DEVICE_ATTR(in_current3_shunt_resistor, 0644,
->>> +                    pac1944_shunt_value_show,
->>> pac1944_shunt_value_store, 2);
->>> +static IIO_DEVICE_ATTR(in_current4_shunt_resistor, 0644,
->>> +                    pac1944_shunt_value_show,
->>> pac1944_shunt_value_store, 3);
->>
->> These are specified in the devicetree. Why are there also sysfs
->> attribtes?
-> 
-> Yes, you could put a generic shunt resistor into the device tree but
-> this resistor will have a tolerance. Because the end user could
-> calibrate the system, it could also save the calculated/calibrated
-> shunt resistor somewhere and restore that calibrated value each time
-> the driver is loaded.
-> 
-
-If changing the resistor value changes the measured raw value, we
-could probably use one of the existing standard calibration attributes
-instead, like calibbias or calibscale.
-
-> 
->>
->>
->>> +/* Available Sample Modes */
->>> +static const char * const pac1944_frequency_avail[] = {
->>> +     "1024_ADAP",
->>> +     "256_ADAP",
->>> +     "64_ADAP",
->>> +     "8_ADAP",
->>> +     "1024",
->>> +     "256",
->>> +     "64",
->>> +     "8",
->>> +     "single_shot_1x",
->>> +     "single_shot_8x",
->>> +     "fast",
->>> +     "burst",
->>> +};
->>
->>>
-> ...
->>> +
->>> +static const struct iio_chan_spec_ext_info pac1944_ext_info[] = {
->>> +     IIO_ENUM("sampling_frequency", IIO_SHARED_BY_ALL,
->>> &sampling_mode_enum),
->>> +     {
->>> +             .name = "sampling_frequency_available",
->>> +             .shared = IIO_SHARED_BY_ALL,
->>> +             .read = iio_enum_available_read,
->>> +             .private = (uintptr_t)&sampling_mode_enum,
->>> +     },
->>> +     { }
->>> +};
->>
->> sampling_frequency{_avialable} are already standard attributes in IIO
->> and is
->> defined to be a number in Hz. So we will need to find a way to make
->> this
->> work with the standard attribute (can use IIO_CHAN_INFO_SAMPLE_FREQ,
->> by the way).
->> And figure out how the other parts fit into other existing IIO
->> features.
-> 
-> I can change to the standard attributes but I still have some question
-> related to how to handle the ADAPTIVE sampling frequency that the chip
-> supports and that it could be used to lower the power consumption of
-> the chip.
-> 
->>
-
-From a quick look at one of the datasheets, it sounds like this
-"adaptive" mode only applies when using an accumulator. And it doesn't
-actually change the sample rate, but rather other factors, like scale
-and the accumulator counter incitement. So it seems like it would be
-a separate custom boolean attribute.
-
-Also, I noticed that the fast mode and burst mode make the sampling
-frequency dependent on the number of enabled channels. So to handle
-this, normally, that would mean that IIO_CHAN_INFO_SAMP_FREQ would
-need to be IIO_SEPARATE rather than IIO_SHARED_BY_ALL.
-
-But since these chips support can work both ways (there are modes
-where sample rate doesn't depend on the number of channels enabled
-and there are modes where it does), I'm not sure what the right way
-to handle that would be here. Maybe Jonathan will have some suggestion?
-
+Thanks much for taking care of this!
