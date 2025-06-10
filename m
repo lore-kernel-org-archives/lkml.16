@@ -1,66 +1,97 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB3A260599;
-	Tue, 10 Jun 2025 23:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B98EB286D62;
+	Tue, 10 Jun 2025 23:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749599528; cv=none; b=Hbv/x75Oa4G/FMg1l5/WazIgX6qo//eAbFHQPKaFZe6OToaMJesERcjJEu8cajzIQ6SaIoJypMbkvnWp8youCcLq+wFLGUCvadFvFdHpKJylQRRuki3jT69KCHZDPSDijOMahpureE6FEwxESXgQo9EH7NhmMGyPkKn+bMknDXA=
+	t=1749599531; cv=none; b=GpM625+Pg0N/FgZXT1YhC0h5vK0BVUlQBB1kRXEyQ5xexk9HewkjyZ7vSFxGTUsw63G0LRnY9BfQxI30NVhSreBbycoTt/tlZAVp/Jpw1thY3CLQi0nUblVuruHynU2rCG7cFph/enLjXY5CY326eWGsoepy3Rypw9aSzshuCyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749599528; c=relaxed/simple;
-	bh=qQraJCypR7mocRiyD3fy0arC6tKe0jPdLYFn0fD38tM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PVg7k1F02lFQCYxAO0lQIE6GLjFgmUvubankZHPUMmbzO7oMajdlS0geXg9s/+EJ113r3LVBC7FydGDZVkkRJk2rUeGT7sPf61GSmzhTxw+R1+3rT7JFrgltXYtR6ZjZIlHtOx4KPA1t29RLDxGrZW/GAXJpeSoB5TcnPCPrOi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tPL2rbDg; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1749599531; c=relaxed/simple;
+	bh=VSAoBkrfh7e7VdGQnVWBbdS5pUsP4tk/wK6xLVyS/s4=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=W0DOlvlK8+roYYv5Mq/6R7b7eidpQjmpcO1LE6BMH03D5FRvq6yi/bjV4mZx0vTTn8Ihzf5sVaAj4HEZN5H3AE8a0X2GnGhWlZmuIjuqugN1lbt+7mWwpfSDyUQ/uVmY4bQ3jLDk5yp1Hf67kIfFqNMOyVWX3PYPFEF9VpAFYtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=KzWyrNuu; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tPL2rbDg"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=YvmedPYjPb9U6JbcwoYnTt7uRtk5MEk3P9tgcGZSkz4=; b=tPL2rbDgCrwSLBvA/Wb9q8dm77
-	yG/57nMEYnBDh7M8UiHMj2qDoMF8y6Tdg76pl4NCAtByi1iKk3fN29NbUlEyz1ugRlGPPf3zHN0A5
-	XesuZD4o83l01UGVA6zH3/E1I4K2FPJSkPFnWUGTdR//+muPDQA6iAo6dgezvu1yRa7eRnfArIMk2
-	O1iO5GuYEPXqWte9Q7z4JM4EdY34+qezCJLhAaf8PcauE9TbJl5ATqHtIuQRQGdl5k+VwJI3ZzEtM
-	vc7jFVJkZl1zB+Ptgbsq2djgelYwOZ3Ofi8G3kJYZ4Vd9ajBZnIO6Knc2eeSXnAW5F5mqpK4TBMpa
-	xBVdNhDw==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uP8l2-00000009zwH-0eJh;
-	Tue, 10 Jun 2025 23:51:56 +0000
-Date: Wed, 11 Jun 2025 00:51:55 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Documentation <linux-doc@vger.kernel.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Feng Tang <feng.tang@intel.com>, Christoph Lameter <cl@gentwo.org>,
-	David Rientjes <rientjes@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: Re: [PATCH] mm: slub: Wrap krealloc() __GFP_ZERO semantics diagram
- in literal code block
-Message-ID: <aEjFG6nFDW6rJ1Pu@casper.infradead.org>
-References: <20250610092153.55093-1-bagasdotme@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KzWyrNuu"
+Received: by linux.microsoft.com (Postfix, from userid 1032)
+	id 44FA32115183; Tue, 10 Jun 2025 16:52:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 44FA32115183
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749599529;
+	bh=VK/ALiX0Q/HSDJU7bgnAP14qLnrVV2Yfc9+uMRERrAA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KzWyrNuuZHz8lCacQh64UQN+lnwou7QcYZQkjZkH1iCRFUY5F7vkGg46xrdAoilR3
+	 wcF4LMmNt48BUSxcEGuCB92Fz9r/0hjLdaCcV8Gd+bv5g7+tzRV0IpNceeYqF+vZkx
+	 ve/QsVCo4K0k6ni69gNM4LMc1MGY3PVCfQjeH6I8=
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Cc: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	mhklinux@outlook.com,
+	decui@microsoft.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	hpa@zytor.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	jinankjain@linux.microsoft.com,
+	skinsburskii@linux.microsoft.com,
+	mrathor@linux.microsoft.com,
+	x86@kernel.org,
+	Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Subject: [PATCH 0/4] Nested virtualization fixes for root partition
+Date: Tue, 10 Jun 2025 16:52:02 -0700
+Message-Id: <1749599526-19963-1-git-send-email-nunodasneves@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250610092153.55093-1-bagasdotme@gmail.com>
 
-On Tue, Jun 10, 2025 at 04:21:53PM +0700, Bagas Sanjaya wrote:
-> Sphinx reports htmldocs warnings:
-> 
-> Documentation/core-api/mm-api:40: ./mm/slub.c:4936: WARNING: Block quote ends without a blank line; unexpected unindent. [docutils]
-> Documentation/core-api/mm-api:40: ./mm/slub.c:4936: ERROR: Undefined substitution referenced: "--------". [docutils]
+Fixes for running as nested root partition on the Microsoft Hypervisor.
 
-Jon already fixed this.  I've picked it up into my current set of slab
-patches.
+The first patch prevents the vmbus driver being registered on baremetal, since
+there's no vmbus in this scenario.
+
+The second patch changes vmbus to make hypercalls to the L0 hypervisor instead
+of the L1. This is needed because L0 hypervisor, not the L1, is the one hosting
+the Windows root partition with the VMM that provides vmbus.
+
+The 3rd and 4th patches fix interrupt unmasking on nested. In this scenario,
+the L1 (nested) hypervisor does the interrupt mapping to root partition cores.
+The vectors just need to be mapped with MAP_DEVICE_INTERRUPT instead of
+affinitized with RETARGET_INTERRUPT.
+
+Mukesh Rathor (1):
+  PCI: hv: Do not do vmbus initialization on baremetal
+
+Nuno Das Neves (1):
+  Drivers: hv: Use nested hypercall for post message and signal event
+
+Stanislav Kinsburskii (2):
+  x86: hyperv: Expose hv_map_msi_interrupt function
+  PCI: hv: Use the correct hypercall for unmasking interrupts on nested
+
+ arch/arm64/include/asm/mshyperv.h   | 10 ++++++
+ arch/x86/hyperv/irqdomain.c         | 47 +++++++++++++++++++++--------
+ arch/x86/include/asm/mshyperv.h     |  2 ++
+ drivers/hv/connection.c             |  3 ++
+ drivers/hv/hv.c                     |  3 ++
+ drivers/pci/controller/pci-hyperv.c | 21 +++++++++++--
+ 6 files changed, 71 insertions(+), 15 deletions(-)
+
+-- 
+2.34.1
+
