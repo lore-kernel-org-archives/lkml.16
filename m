@@ -1,98 +1,117 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80554226161
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970B322F173;
+	Tue, 10 Jun 2025 12:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749557039; cv=none; b=ePORwLVCOQ/vXvQXI05dev3ljyKgiRtzcsHKgrXOUlNO+pkkg386Ub9kQQZnwJHviQOGygbrwgQM+WJG1KxXfFslaS5EFPalBUW9eS7POEP7nA5f3qaQ3ZCWsSNiE1cEsgH1Oxrj2zuu6NLt8j5QuY9dAvxUA8yV0vwGu8InCbg=
+	t=1749557086; cv=none; b=B0QffD2/bXjD0WYt+23olK2HWt82xClo3Bw1W/kuHDhubLKQ7mUzU7gAHjM0ZXCUNs8mK3LCyUOCS4iUjLhQUxWwm0zq+gogoeMQTCT5IC9mLAxpfHab2xo7/dexk+mtJAk2rCPxL6VfCnSv8WvatLBodQ8nEmew2Pm+6/XrVtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749557039; c=relaxed/simple;
-	bh=6vfL8eHPLLPHKmUNbHGcD2zcB+Vk2/ZQs6Kq8DjnMIM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k5UzVl8Et5fnnZWLTUxU+u3S/wYLhMfFEKbtUMsedjpP84F1UbseJ+BHFZxcwz/KEluhCIQKGxUg0BPkK82WohTN1l9AMy/sM5iY96ZQC5b/9u098DRFniqyQE13a3Bzc8BsdavHwRZ5womLWSo+eLUOyWlv5BTgRRekJDuiiBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92B3014BF;
-	Tue, 10 Jun 2025 05:03:37 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D1B13F673;
-	Tue, 10 Jun 2025 05:03:56 -0700 (PDT)
-Date: Tue, 10 Jun 2025 13:03:51 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 6/9] coresight: Avoid enable programming clock
- duplicately
-Message-ID: <20250610120351.GQ8020@e132581.arm.com>
-References: <20250609-arm_cs_fix_clock_v3_public-v3-0-423b3f1f241d@arm.com>
- <20250609-arm_cs_fix_clock_v3_public-v3-6-423b3f1f241d@arm.com>
- <b30fc361-a04f-4a48-b8e2-f7c2da213e6c@arm.com>
- <20250609171413.GO8020@e132581.arm.com>
- <b20a6309-ae31-496d-a1ad-61ea358ad7a9@arm.com>
+	s=arc-20240116; t=1749557086; c=relaxed/simple;
+	bh=FOVvDRtH0mywtOO2+ed9IL39TL5QFltNabVbXA78hiY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=spgkqn3Z3FjnZ2h5uO5zKqJSVJAZVtci2DaSo3dygsg+7ZvsfD6+2EfDrawU9eSzZSEI3a6s+8eROcPM/Icug9sIoo1HSiPYXhBNOD886na+9qDzNs9jSAbuDiAkuKeBn7MNmMdiqxlqXkXKx9q5Dl+r5wwamI1xJvOATjB8JOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=uxkwqydq; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="uxkwqydq"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A9ILvm010710;
+	Tue, 10 Jun 2025 14:04:27 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	gqdWLmhlmvRAVAbQEmyb3OnvKFUT4lR61wher7OOzk8=; b=uxkwqydqfyLrmp7t
+	TJl3Ulbxd6zF2T+xkvCBu74SD8g9pfxIaq+Wx4f+3NsfoFn/aLhc/wEQ0W22K7qt
+	OzKjtrs7t++64ir1Z3zVov1dj3kFY6yVlBy30euB8rO+sUZUIgYwV9TaGGN+8C/n
+	p2HDupMKjgC5tITajvL/4tB0UMAGeKUUc6w6Nm36KVBrdKZaVDh+U2uErYt+qinW
+	eH/QibaZAAeyFICgO7TUz3Ycfp/1ZN1lhXoHugTDYpt6U7vxSSv3nvhU7UasK/WF
+	ib3EjRS/7SELBKfeh1X/Fw8ig3urGWYz4Nu2sV/taSA77PCIpdFb7hU46/a7ZClb
+	vfPkQg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474y052bdd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 14:04:27 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2495040044;
+	Tue, 10 Jun 2025 14:03:25 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D6EAAB35036;
+	Tue, 10 Jun 2025 14:02:35 +0200 (CEST)
+Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
+ 2025 14:02:35 +0200
+Message-ID: <714ad17d-53f1-4703-8e13-61c290a8da89@foss.st.com>
+Date: Tue, 10 Jun 2025 14:02:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b20a6309-ae31-496d-a1ad-61ea358ad7a9@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/9] ARM: dts: stm32: add Hardware debug port (HDP) on
+ stm32mp13
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime
+ Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+CC: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com>
+ <20250523-hdp-upstream-v3-5-bd6ca199466a@foss.st.com>
+ <5b7a2102-ff68-4aab-a88d-0c4f9195ef95@kernel.org>
+ <3c868c4b-8a0e-44b5-9d6e-3a0526d9deeb@foss.st.com>
+ <3ba588ed-1614-4877-b6fc-b5aa853b8c2e@kernel.org>
+Content-Language: en-US
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+In-Reply-To: <3ba588ed-1614-4877-b6fc-b5aa853b8c2e@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_04,2025-06-10_01,2025-03-28_01
 
-On Tue, Jun 10, 2025 at 04:09:32PM +0530, Anshuman Khandual wrote:
-> 
-> 
-> On 09/06/25 10:44 PM, Leo Yan wrote:
-> > On Mon, Jun 09, 2025 at 05:58:34PM +0100, Suzuki Kuruppassery Poulose wrote:
-> > 
-> > [...]
-> > 
-> >>>   static inline struct clk *coresight_get_enable_apb_pclk(struct device *dev)
-> >>>   {
-> >>> -	struct clk *pclk;
-> >>> +	struct clk *pclk = NULL;
-> >>> -	pclk = devm_clk_get_enabled(dev, "apb_pclk");
-> >>> -	if (IS_ERR(pclk))
-> >>> -		pclk = devm_clk_get_enabled(dev, "apb");
-> >>> +	if (!dev_is_amba(dev)) {
-> >>> +		pclk = devm_clk_get_enabled(dev, "apb_pclk");
-> >>> +		if (IS_ERR(pclk))
-> >>> +			pclk = devm_clk_get_enabled(dev, "apb");
-> >>
-> >> AMBA driver doesn't handle "apb" clock ? So we may need to retain that here
-> >> ?
-> > 
-> > Here checks the condition "if (!dev_is_amba(dev))", it means the device
-> > is not an AMBA device (e.g., a platform device), the APB clock is
-> > enabled at here.
-> 
-> Just exit early for AMBA devices when 'pclk' clock is still NULL ?
-> 
-> 	if (dev_is_amba(dev))
-> 		return pclk;
+On 5/29/25 11:01, Krzysztof Kozlowski wrote:
+> On 28/05/2025 14:14, Clement LE GOFFIC wrote:
+>>>
+>>>> +		};
+>>>> +
+>>>> +		hdp: pinctrl@5002a000 {
+>>>> +			compatible = "st,stm32mp131-hdp";
+>>>> +			reg = <0x5002a000 0x400>;
+>>>> +			clocks = <&rcc HDP>;
+>>>>    			status = "disabled";
+>>>
+>>> Why are you disabling it? What is missing?
+>>
+>> Nothing is missing just disabled by default.
+>> The node is then enabled when needed in board's dts file.
+> Nodes should not be disabled by default if they are complete. That's why
+> I asked what is missing. Drop.
 
-If it is an AMBA device, we should return a NULL pointer, as this
-indicates that the APB clock is not managed by the CoreSight driver.
+Hi Krzysztof, OK I better understand now.
+So yes the 'pinctrl-*' properties which are board dependent are lacking.
 
-In this patch, I did not perform any refactoring and simply made a
-straightforward changed.  The refactoring is done in the patch 07, as
-you suggested, where the function is refined as:
+In the last patch of my serie I add them (only for stm32mp157f-dk2) but 
+keep it disabled because the pin is on an external connector (the 
+Arduino connector of the board).
+This prevent any issue with a possible connected module.
 
-    if (dev_is_amba(dev)) {
-        return NULL;
-    } else {
-        pclk = devm_clk_get_enabled(dev, "apb_pclk");
-        ...
-    }
+> Best regards,
+> Krzysztof
 
-Would it be acceptable to keep this patch as it is?
-
-Thanks,
-Leo
