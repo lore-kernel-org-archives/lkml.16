@@ -1,138 +1,116 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2BA246BB8;
-	Tue, 10 Jun 2025 13:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF88246BC0;
+	Tue, 10 Jun 2025 13:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749562567; cv=none; b=Xp7zvYKu7ZwSCJRpjx0WdGR3KZqtD50q7E5CHRxoN2yVnYJCC7OMKywsr7SB96iAAf24RoeLwln2mhLXUU33YUU3AXtVrR8LE1aqs/E10ElcdLFqf5FSVlVrpolSCfWTSIyJm6WNmSgg25p1VT3TQvhUBHWJGHoC4J3uOqUMlao=
+	t=1749562636; cv=none; b=VyQwid3PNnw7Xdsp6sowHNcw3/ZbslRX+SA62T4wL9Kj9bONqEvzD/iJxiRIV74q6EqKim6qH3JeZIydWAjvAdddHRNb3VeX8sU9Qxzag2+vuFqmfu5VIuqF3AgMbeMwq/FkKDmEwoNTx0cn6LOeevbjq2HfU1Ec0tdlONJ3M+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749562567; c=relaxed/simple;
-	bh=fpHJTV2BNny41O0KRlvrEr5Kwkx/Fp9ZACNun1M2bKk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JFUgV214y9MxzdWrEXFC9bQLdyoeqVlTDsCk/Q4nDYIgke6w1i/iWYraq4zgzlUOXZHOR1oxbUHo4WSorECdMbwKky/gxhDFPaVZeEDWK3f4FU4lEg1IWVXTkqg/rsouEqV5KoTooMkQbVFShnwJ1GJdmcM12sOsGrJgcMfDNEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=6WUHSa73; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1749562636; c=relaxed/simple;
+	bh=FXI2MAeHUinlbQb7gSHVXNf8DUYi8tYUEMJCn9PAC5o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t12WoE/b87LS63k6nI/9ccjPfljQ2+hbynYnbTHE6O7aqd8mqINHQ02FFM5TLNzDE+r4dxy4CCRpbsT1tywddQVsv0xUSqEecPYUc3fevdVeZ2fYSyI3Xl/3aFvFxu5QS2NAfTKsJvWDflZ9Jf21+XbHm1rLxLq18Te/HV8O4EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Chl/Ylha; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="6WUHSa73"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55ACLF7Y032713;
-	Tue, 10 Jun 2025 15:35:51 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	42qeGfPPG3Jy7TK8jhUurPhAnYCLeXZebkDWKVesGp8=; b=6WUHSa73SzuDwV+S
-	TnHceYDj6QtlhgnwIjJFSqEPVZV/NELe5/hM+nEMjhe205l0mg3+ZHgnKeiRPcWb
-	Q8GqAQNLUvn2jf5pmrSGbz6K61eM5T2Rn1cyoIo4kuEn8WdsUugpp2W3OcbKmfL1
-	XD8zE9KrTm2b1mdoErCSlrhGeNDxNhkcc2NRnlHYW/b3a9cU8BgBRzBjeik9Ta1g
-	o5Z/NRI2lP0GZpt0v8t1mUzeehlGQ28N28ZQtUToVPIxdVDc+JfI5FRU813vvj4x
-	xxxmbP2+hoMbFzbrUDx61zVjD9VglNArYLkrmHUt8lbnr1o04MbQVJwePkiQUcwU
-	4zl3JA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4750cnt341-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Jun 2025 15:35:51 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5A9E140045;
-	Tue, 10 Jun 2025 15:34:42 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7F44EB5F91C;
-	Tue, 10 Jun 2025 15:33:54 +0200 (CEST)
-Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
- 2025 15:33:53 +0200
-Message-ID: <a49d0af2-07b7-4f51-941b-fa25b2879720@foss.st.com>
-Date: Tue, 10 Jun 2025 15:33:52 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Chl/Ylha"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
+	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=1NzR2rxPnpJMPP1YD7GZH2AVOTPhR96TImD7BWPOQN8=; b=Chl/YlhauFGOETLTvPnRnWBjfy
+	opTuncHILIemQPoRR7xSy319pBTxdofO0pGDv6D+Z/u0Nvp5k9X1CFLysi57iB8hf1EwyZE8JtVKb
+	qg2JLB0m1lye2E0nK2XnmciBR+kXGD0YalsfOrzvgwKrdrjuoIwYZ6x7SmRmeJ86S7lve2d5YL26Z
+	ifNFah2Z6Azx4cfPkthqawLP44c8oSJugAVCgkX8HHVhlvtAtNPrTZMb1+c2OA9EEWE/ZGBmSncza
+	GqrystEeMZHiuD/pdlwvBhq4XCRj+bXeudUZP8ZhrYZisNgT95QfAqx82riWKQMfAXy6sPama9g4a
+	UDyzxdgQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uOzA5-00000006zyQ-1iAC;
+	Tue, 10 Jun 2025 13:37:09 +0000
+Date: Tue, 10 Jun 2025 06:37:09 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc: wangtao <tao.wangtao@honor.com>, Christoph Hellwig <hch@infradead.org>,
+	"sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
+	"kraxel@redhat.com" <kraxel@redhat.com>,
+	"vivek.kasireddy@intel.com" <vivek.kasireddy@intel.com>,
+	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+	"brauner@kernel.org" <brauner@kernel.org>,
+	"hughd@google.com" <hughd@google.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"amir73il@gmail.com" <amir73il@gmail.com>,
+	"benjamin.gaignard@collabora.com" <benjamin.gaignard@collabora.com>,
+	"Brian.Starkey@arm.com" <Brian.Starkey@arm.com>,
+	"jstultz@google.com" <jstultz@google.com>,
+	"tjmercier@google.com" <tjmercier@google.com>,
+	"jack@suse.cz" <jack@suse.cz>,
+	"baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>,
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"wangbintian(BintianWang)" <bintian.wang@honor.com>,
+	yipengxiang <yipengxiang@honor.com>,
+	liulu 00013167 <liulu.liu@honor.com>,
+	hanfeng 00012985 <feng.han@honor.com>
+Subject: Re: [PATCH v4 0/4] Implement dmabuf direct I/O via copy_file_range
+Message-ID: <aEg1BZj-HzbgWKsx@infradead.org>
+References: <20250603095245.17478-1-tao.wangtao@honor.com>
+ <aD7x_b0hVyvZDUsl@infradead.org>
+ <09c8fb7c-a337-4813-9f44-3a538c4ee8b1@amd.com>
+ <aD72alIxu718uri4@infradead.org>
+ <5d36abace6bf492aadd847f0fabc38be@honor.com>
+ <a766fbf4-6cda-43a5-a1c7-61a3838f93f9@amd.com>
+ <aEZkjA1L-dP_Qt3U@infradead.org>
+ <761986ec0f404856b6f21c3feca67012@honor.com>
+ <d86a677b-e8a7-4611-9494-06907c661f05@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/9] ARM: dts: stm32: add Hardware debug port (HDP) on
- stm32mp13
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime
- Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com>
- <20250523-hdp-upstream-v3-5-bd6ca199466a@foss.st.com>
- <5b7a2102-ff68-4aab-a88d-0c4f9195ef95@kernel.org>
- <3c868c4b-8a0e-44b5-9d6e-3a0526d9deeb@foss.st.com>
- <3ba588ed-1614-4877-b6fc-b5aa853b8c2e@kernel.org>
- <714ad17d-53f1-4703-8e13-61c290a8da89@foss.st.com>
- <7000f63e-5e68-465d-9d7f-1a6ca0524222@kernel.org>
-Content-Language: en-US
-From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
-In-Reply-To: <7000f63e-5e68-465d-9d7f-1a6ca0524222@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_05,2025-06-10_01,2025-03-28_01
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d86a677b-e8a7-4611-9494-06907c661f05@amd.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On 6/10/25 14:38, Krzysztof Kozlowski wrote:
-> On 10/06/2025 14:02, Clement LE GOFFIC wrote:
->> On 5/29/25 11:01, Krzysztof Kozlowski wrote:
->>> On 28/05/2025 14:14, Clement LE GOFFIC wrote:
->>>>>
->>>>>> +		};
->>>>>> +
->>>>>> +		hdp: pinctrl@5002a000 {
->>>>>> +			compatible = "st,stm32mp131-hdp";
->>>>>> +			reg = <0x5002a000 0x400>;
->>>>>> +			clocks = <&rcc HDP>;
->>>>>>     			status = "disabled";
->>>>>
->>>>> Why are you disabling it? What is missing?
->>>>
->>>> Nothing is missing just disabled by default.
->>>> The node is then enabled when needed in board's dts file.
->>> Nodes should not be disabled by default if they are complete. That's why
->>> I asked what is missing. Drop.
->>
->> Hi Krzysztof, OK I better understand now.
->> So yes the 'pinctrl-*' properties which are board dependent are lacking.
+On Tue, Jun 10, 2025 at 12:52:18PM +0200, Christian König wrote:
+> >> dma_addr_t/len array now that the new DMA API supporting that has been
+> >> merged.  Is there any chance the dma-buf maintainers could start to kick this
+> >> off?  I'm of course happy to assist.
 > 
-> These are not properties of this node.
-
-Does this mean I should add 'pinctrl-*' properties in bindings yaml file ?
-I don't get it..
-
->>
->> In the last patch of my serie I add them (only for stm32mp157f-dk2) but
->> keep it disabled because the pin is on an external connector (the
->> Arduino connector of the board).
->> This prevent any issue with a possible connected module.
+> Work on that is already underway for some time.
 > 
-> Not relevant. Pin control for connector are board specific, but pinctrl
-> SoC part is SoC.
+> Most GPU drivers already do sg_table -> DMA array conversion, I need
+> to push on the remaining to clean up.
 
-I think we don't understand each other here too. I don't understand the 
-end of your sentence "pinctrl SoC part is SoC".
+Do you have a pointer?
 
-Maybe some informations that could help:
-The 'pinctrl-*' properties are used in the HDP case to select the 
-internal signal to output AND the alternate function on the pin to 
-output the HDP function.
+> >> Yes, that's really puzzling and should be addressed first.
+> > With high CPU performance (e.g., 3GHz), GUP (get_user_pages) overhead
+> > is relatively low (observed in 3GHz tests).
+> 
+> Even on a low end CPU walking the page tables and grabbing references
+> shouldn't be that much of an overhead.
 
-> Best regards,
-> Krzysztof
+Yes.
+
+> 
+> There must be some reason why you see so much CPU overhead. E.g.
+> compound pages are broken up or similar which should not happen in
+> the first place.
+
+pin_user_pages outputs an array of PAGE_SIZE (modulo offset and shorter
+last length) array strut pages unfortunately.  The block direct I/O
+code has grown code to reassemble folios from them fairly recently
+which did speed up some workloads.
+
+Is this test using the block device or iomap direct I/O code?  What
+kernel version is it run on?
 
