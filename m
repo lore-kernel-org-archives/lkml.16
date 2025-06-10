@@ -1,258 +1,118 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2052.outbound.protection.outlook.com [40.107.244.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBF12E336A
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:01:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749560475; cv=fail; b=fY8sbwjOlkwe3jWvm+T4t4ZgW5gttiVY0cD/omd26XKpCEEn+GAQJQm9IOUByymJrYtZlkgLmcWB1DS657YnpatNV1hFKwALXikjhR/S/FpBPhbBHQWf4oSWgFcFELs+LmJ2TPvNl0b88rgq4Y7sGQLoXzorDEaQkUxLqxPcN9I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749560475; c=relaxed/simple;
-	bh=3xeJfyWP6r1g7fOJPBtaRGwGvG2ZdSaSFAVLtVSJGYQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=EottK7M5nnaKjoFbsxQD4EbUh1H0Juveu4UjXsHPBliXrQVwClJCLJjnS7KiyW89/PUM/OLaGetJO1IjmpDasY5gIucXWgWARsBSbseTrDRsE3KAmtivcLDIy/K2OfnetfC3LoAaWk1I4ov7cQfFRR37yMShU5nbhnsc7zfc1N0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5VTmk4og; arc=fail smtp.client-ip=40.107.244.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BD3246BD8
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749560524; cv=none; b=ZgNul7ckYBMGCJsHIPwo1EW3R/8BfsFm649aWBaKN4H2v2kfklyrSlUAjhA6M6TF1PG8ZtZ4c/E0Ik9hRHCqhTx1ZCSIeeS/GcIWIr1VGh3RVBUBA0ODwh/MgSM0Yh89vcn4cLt7ChCowpJIMDti841QCexhUc6Tz5OT1T+tR4I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749560524; c=relaxed/simple;
+	bh=LLw1WVY7iM1gl3bHq8eSytlehWa9u57SPPp8NFt4Qt0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uCfUxNa5A/FurIBeeToptCQoIrtRPfzUE7yVM+d31rxE3iWjteXa18Dgj3fgbeFqjuv2RtcrF88u1NPZm9bkQwCkR7YSgzVZClxt1TfDA0q4Vb1ED0D8xD04CH1pV+fvPmiHk7yAD+3Z4PsyHnEyXN3Ja6gGMI5RtTOb4K7dlpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HvH+9U8X; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5VTmk4og"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ccmuQH97hoyu9NEdEh6+kSYyBj2WbNhrzkCZM/urWNcyyuK9MuaEgcBZB6KVAserpa8tojIIQPtnY8R00b1DwlP1CR4cQUT4x8kZDrJGIXdK5PlsYLWOL3cb4T/r9l6sgHT4vdgkJ3x7/Mw9HjjEtoxLV4iZ5UXhALFUna1wjZFBIwEeOdaVECkKiWnjo7jtgqFJpOBRRopUUZHtwxofaFet1vfysQg87q3a05fNAezCp49bupqNNpupzkFy7AmnZrUDAJkTpCR9WlFzVvMcfymDZYQ3ur9qaxwptnzhZsg7Oi48cmY87lVsgR7RoUm8TEjuvymI9iibsARbjLh6Yw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5ozjt0mUMFUWNvt+AW5BxmS/njaBa76oeNdplWtBiik=;
- b=BAZO9IXreFhjtp3eBSlIyA408lrGe3jBQWyA7K3vBwDUdiTPPMIpjtQOsof5A3UfNz1sfcm7rhh+u+DbzHa8psg5yTvjnAKGoeKio8JP4NPbTg9FTxIGIQjivAXkp7cogUEAIkHRL6AVNRnMCI7LiuNXg3ovrI5xIvDIaMVYmNOWqQxh5OSgq5ghwtydYM5thwCl6HiCbZjeNJbxqB5JPs5E5b4+d4t79wtWrfTtSYlFhfCLavLfZc3t9fWRRKjMuvU3qfNHwMFpQlfAnzWxg33lPfTxbKfgX8lukYdPpHEwfpZcIhQz+Ax/m41qB5Z6QingtsxE+1QT7SmpSF9VYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5ozjt0mUMFUWNvt+AW5BxmS/njaBa76oeNdplWtBiik=;
- b=5VTmk4ogIKFGzFdsbPlFgsnFkvWNS10lI1eMHjT54jxxrSmDz9JJogtoEnQV4ay41fJYzCNCRscq/VetZqGgJs0vmV2C9XWJM1j9Ip7TlupT3sa+qAArrpR9NBdxU0KdOS4/uIDCORQxtfs1z/rYdf8AcPUy0lXaP8wCb4AqXCY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by MW6PR12MB8951.namprd12.prod.outlook.com (2603:10b6:303:244::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Tue, 10 Jun
- 2025 13:01:09 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5%7]) with mapi id 15.20.8722.031; Tue, 10 Jun 2025
- 13:01:09 +0000
-Message-ID: <5668ab98-3ebe-4f02-a759-5dfb2e21134b@amd.com>
-Date: Tue, 10 Jun 2025 15:01:01 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/test: reduce stack size in drm_exec_test
-To: Arnd Bergmann <arnd@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Alex Deucher <alexander.deucher@amd.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20250610093350.2645965-1-arnd@kernel.org>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <20250610093350.2645965-1-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MN2PR16CA0021.namprd16.prod.outlook.com
- (2603:10b6:208:134::34) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HvH+9U8X"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-74800b81f1bso4155896b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:02:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749560522; x=1750165322; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3mr9Kkxjz3uVhC+CHfSBBb3SSQ2+EGeu87igD9Qo4SI=;
+        b=HvH+9U8XjCNnJ5LvjBjtmLVQikZYe3RcKDLFYDHlE8SL10nOF8SJdh6npV7vHFFjqp
+         2VSLZ1rPnIj2ZUJB4WIbLvQ39f3/yVG/cHSzspUtt9thAEZssADzby36CN9nXlHxo0sa
+         fWnfcn5oJlotljcTpO61xKD/gYz7KfzJByAMaI1t99zO0D5PqQ59dFJbIqm/XGZQ8yD5
+         d3f3MIzs5zeSk4dXMskU7XvH8xXOViN792P1jja9u1HD4u96buh+JjcvKec5h9p05KWN
+         NgLX4A7doO2krRC5atJeaqxXpIxQhhnpj2/I3mLQ6Cr6vY5jPBquwIByHmvAVZ7X82Ax
+         QkIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749560522; x=1750165322;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3mr9Kkxjz3uVhC+CHfSBBb3SSQ2+EGeu87igD9Qo4SI=;
+        b=r7QCTMS8nwuQWyg5FcHueDpWCfCN6KKQyCUYEHYvjfPLpWGPZy9Dn1N1LxeLe2B1BC
+         TTHGksG9OYD9Ob7grGgkznj4KGq44nrb16Bmt50pMF6wvsvTh/3m/uoy8pHXBnAdcplw
+         RUQ28U+I6FUbHDOex6oR/vLbq0NZ5AAdiVSwTlkyyL99Jy84lVgMzDDr9QgyYsBFKVdr
+         dNLdN4CbvkUIzH8wMYpMPBCcMDVcKGgWC+X32lEF/K7xmld22Bf2/DImJucZX0nr12AW
+         KQfE49h/8+gPtjlny7BHmKZKBC6yeBEepEdgv+RwxOWr/2yRN577CeSDCEuA3DqRcXca
+         lcgw==
+X-Gm-Message-State: AOJu0YyCATqs2+t982ihdSQtKLbrH5UhK7VXsldL/c0ENfKklKC+z9vY
+	njFINHcz3uSptIiVBoYeIG+7bWmNmgGSx1ff9tmyiD73eUiAgaPcbLaF
+X-Gm-Gg: ASbGncuAPJX/DTOpZK4KJVVXKZtwvkXewpMFOwL4gZxzv+TWfPMVZ60aweJo4SPrCsp
+	mtHnS6az/Qs9Vp2LIbXENy57AXfgO8FrlDtaHEUizC1aImPyTHyUj8JCDN8ga0XPrhswj53IbXH
+	Snudw49Of9rBiFLVwiJZhPwyj+T2xT+U86aqmOPDeUUWr5zJC4e1F+djp1+WNePDB+EwTBi56L0
+	VTbJXinhxDo4rA8+A7YHRoCJ5ShUp1ilFFdKqlTtRo19Qdo6d1imZj+r1++RfTU3b16HOUL8QrV
+	KdczIqNQLhl/CvAjAG/ieL7uLBohXyF0LVV0bSNUNoxk426WFsza7Pg7EfHFpvSKGEXL097Tpw=
+	=
+X-Google-Smtp-Source: AGHT+IGgjqR89jbAFAvmQDefPM47LN0oPyUNWwW5mmjYBaiRh/0OF7U43DScCO5p/t7yNA/skdUoFA==
+X-Received: by 2002:a05:6a21:600f:b0:1f3:418d:91b5 with SMTP id adf61e73a8af0-21ee256942amr27062065637.24.1749560521851;
+        Tue, 10 Jun 2025 06:02:01 -0700 (PDT)
+Received: from VM-16-38-fedora.. ([43.135.149.86])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482af3825bsm7368353b3a.24.2025.06.10.06.02.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 06:02:01 -0700 (PDT)
+From: alexjlzheng@gmail.com
+X-Google-Original-From: alexjlzheng@tencent.com
+To: peterz@infradead.org,
+	will@kernel.org,
+	boqun.feng@gmail.com,
+	longman@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	Jinliang Zheng <alexjlzheng@tencent.com>
+Subject: [PATCH] locking/rwsem: use OWNER_NONSPINNABLE directly instead of OWNER_SPINNABLE
+Date: Tue, 10 Jun 2025 21:01:58 +0800
+Message-ID: <20250610130158.4876-1-alexjlzheng@tencent.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|MW6PR12MB8951:EE_
-X-MS-Office365-Filtering-Correlation-Id: fa80b2f5-a390-4f69-d61f-08dda81ede34
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?emRDcm5CeThyTDJsNGtLcE5MekY4VHZHUTR1K0ZEUWpiR3E4SzdpeWZmWVhu?=
- =?utf-8?B?OWYzUnkvRnoyeldMWGFMTHZ2QkN4cWZmRm9HQkhUOVNTWlYxVlFrNXRDVUZ1?=
- =?utf-8?B?d2NoTS9xNk9JKzhNR1orM0lCK0hxSjhlT3pEN0lSVDBWbDNYTnJBL2hiZVdJ?=
- =?utf-8?B?RllCK0VJQUhQKy9wWHljcG5vbEt6MStYV2xBRzhEU2NHTXRNWHRFZzZrTUcv?=
- =?utf-8?B?Rjc4MElFV05xamQ4RVRsOUQxMGtFSGpPVHpKZ1Jna0FQbkNVOVBxK0N6TGJF?=
- =?utf-8?B?VCtUM3hmVURWc0l2ZnoxV2lrV3duOTI4TjEvcVdpSkVOWnVwamkzbkFITGVZ?=
- =?utf-8?B?VndVcDgvSVJ6aUtYTkFBSXJaSjgzV0Q3OURuNEJJRlBBSWlmMS9pSndrU1R0?=
- =?utf-8?B?Z05iUnkxNWFkeVgyQ3pmMEgvR3gyNytGeHc2a3ptdU5FOUs2TTZFV2FyMndj?=
- =?utf-8?B?d083RGlveGgyTU9HTDlnRWpvcFp2c3FtWHpvWEt5b2NMNzlhRTV2WWtXZURa?=
- =?utf-8?B?ZTFycWVSc3ZWWHFyMGc4di9kd1B0L2MwK2puRTVmZlZzWEFFTzczcndyRzd2?=
- =?utf-8?B?ZUZTUzdLZHVpbnFSVUZucFYyQ3ZpQlFFOWdkUDdnaUxwSzNxN0wvK1YwUkFz?=
- =?utf-8?B?VTBBOXNnVVlnNjFqVEdmZHI3UTZ4ZEtWai9udjZQV0RWTy9oY1YxSC84Wjdy?=
- =?utf-8?B?S1Q2OHpjTGIxaDgzZHRyd0wyM0tjamZuQ0FuazZxS2FXbGUyVERKQWpSZ1Fs?=
- =?utf-8?B?M3pXKzh4VW1mdGJ4VVdoWEJ1TC85OWpEOXNhRzdsbCs3ekF6WkltN1BIbjQz?=
- =?utf-8?B?TUIxUStRaGhETGpMWENxc09DRVhtVzhLa2IwblhpeW5LV0lkR1BNT2tiOHA3?=
- =?utf-8?B?MnRHTHVqblNieEg4MW1MVXBuTlV5b3FrMFJnSVhuVmlpZXFSTXRWMlMrdXh4?=
- =?utf-8?B?NWphdGtvSXBZajg0TjlTRlVMSjI3Mnc2MGMvS3I4RnRIdXZOK3VNVlBIaDR6?=
- =?utf-8?B?STdCRlVLcHEyanJnTktyc0ttRzJvVmJWVE5ZTDgvVS9RM212YmJCRTlJNGpC?=
- =?utf-8?B?aHZVbUhmMWFpNy9YbkhJbW1oa2RJUEY3Y21SSDFkSEJDVzVxVzUzK0c2V2Vt?=
- =?utf-8?B?VmtUQ1FzaHViTGxVTFFGZ0JEWjhBcVhxM09XQjV5anNlbE9NbXFNVzA2dW8r?=
- =?utf-8?B?Y1ZIbmNMNldrRWtNSmRiRDBnWFh3cVYyQXgxc3NSNWNpRlZjcHpVOFVGUEI1?=
- =?utf-8?B?aU9mMmp6K1hGcUI5RkxUVEJWRXlZLzNxNEYrN2Q3MjMyWHdCNnB1YVdJRE4v?=
- =?utf-8?B?c0l5VXFnQTBadFpvbnhIRHg3OUFhanBXazhjaGpKdzFkS2ozUjRRYlRtYThl?=
- =?utf-8?B?QnJTNHd5T0ZKQzM3UG15Vm80bU1yOGNlUEtHTjNDUGExcWNHOS9rdjZsTTBP?=
- =?utf-8?B?eXhYR01nMjloM1ZyZkdwemtxN0xMQmhtSE55RlMzLyttK1pYdnNkWWp1eWF6?=
- =?utf-8?B?VmRGdDVxNXFJWXdUUDNHbk5ScFNIL1JHSXcydUxDNXRQajJ6anlXc01OOGdE?=
- =?utf-8?B?a3RKa3E4T1AybDFDWjdnYlV6SUM5MnlKUlZoQkVUUWhtY0ZHL2hiNC9BaEVV?=
- =?utf-8?B?czRMZjhvL1FmVVNKSTBzeXZmVzk1Z1hiRVI4V1ZtZWlXNURMMHlBRm0vTEV4?=
- =?utf-8?B?dXNmRWRVSU1HeFJDRDZoWHR3Vm4vTzdBNW5YU1ZEMkxTSk1IaWhKK1QvTU9k?=
- =?utf-8?B?SVRoUUUwK0k5RFFVblFhMXdjYitHanAxYUVTd1VId0lIWEoyZG5zR2tZbDFq?=
- =?utf-8?B?bzg2OHh2QWcyQUExeFlOajZ6Z0xiZk5LNlNOM0txRmRrVlN5Z3BHVUQ2cDhu?=
- =?utf-8?B?MVdjdGI3Y1p5N3RidTVRczdYN3pXOHBad2ZDYU5BQjBXWmFqSmNSUkJWRE1k?=
- =?utf-8?Q?VvYYn02eOEk=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cnM4VUtOdjB1ZnVjcm12MUhFclkzcXVKeDBRd0VHNFpnREczMXNxQU1DV3hZ?=
- =?utf-8?B?OGc3WTRNemFWeVVib3pYVkhxa2hIWXZNQUo2OG9RQUUzVEFqZmVSMmxybnFW?=
- =?utf-8?B?dWZQR3ZiUnZjSjRYclg5Z2orY0hrZDNKcUh2NVN1N0lkeHZLalYwNW5yZ24r?=
- =?utf-8?B?Y2xZTkI0a2wvaTNJRDltTlc1OCtHMk4zUFlodHNRdXdrd3lFWFFmbVpXd3RF?=
- =?utf-8?B?cERBc3NWaG56VkxWSlZJY3NsbUYwQ2U0YmlGYW8rb1YxQ3RPU2ZORnlkK3Nw?=
- =?utf-8?B?ZXkwOGZKMGxNbUpjMlFVbk9NTGdYcWZ0bENjRzRFb09RWlpnSUZ3L3J0Q0tH?=
- =?utf-8?B?MVFxc0lWRVFncElsbjJBcy9TZHNHZ0JXM1dJM3ZHNDVCbWphL29HYUF4cHEz?=
- =?utf-8?B?QzkzWTZhYWJoSkdneEdsaGxJNm5zdjZsdTVCd1lUdm1MRTFCb2FyYkpaOUcr?=
- =?utf-8?B?dkVJRDRodWFMTXdoaVRxUFVnZ25OSzFwMGtMVnJuM0hqQmN2ci8xNVlGL1FZ?=
- =?utf-8?B?QWRKRE1PMlBZMkd6am11bmNLdmg3YlhrTk5uTzhjbTJWQThWTmk5MDRyc0lz?=
- =?utf-8?B?VUdmMUpWa0MwTTNUNHRhcklaUFRPdEpORk1oL3NpbWg0d1FMcDdhencyV05a?=
- =?utf-8?B?VDBHRFA4K0VEd01RY2FUWk9pZ2d4a2wzRnpnWDAvUWlHaE1PRDQ3ZGc2dkFL?=
- =?utf-8?B?bFBTL1RhZkNzdTY2dDMxWE9ZMHFuY1p1azByZXgxWHlsb0Y5UFVBN0dKVCt5?=
- =?utf-8?B?LzBwMXNZZVh2bVdSTGVxcWJTWjE1dkZPOWdXVGhDZGJIdW9VdE50SDRQTXZP?=
- =?utf-8?B?TzR2bjU4Qy9YcG03cnhnbTgwR1F2dlVjbGViUGNYWUxzbU9xOXVOcFNkV05t?=
- =?utf-8?B?T3VJcmYwa1pGWHFNRVpFcE5kalhsTC9RY1dTYkc5cmZVNUJoQnpGam1EZVB3?=
- =?utf-8?B?TTF6T3V5OEdhVE5Wak1xcE8vTW1mcWc2L2IzQ01RM3VMeGVENXhBU3VHZE1t?=
- =?utf-8?B?L2M3eHQ0RzM3NGJXK1BqZXppVWZYZFBXdG5la1hnaUFqZTNTUDlpS2xySXVW?=
- =?utf-8?B?T1hTR0ZkKzVVaHdCQWx3WjRUT0NybVRTU3pBSWpPVjJSRUN3STNZZTZYZS9I?=
- =?utf-8?B?YTJUSWVMZlcvT1A3RjNkR3ZKNUh3SUpxbVRuRWJJb3lWSThDYU5XMlBUQ250?=
- =?utf-8?B?M0lqdm9mdzVqU2J5blJwUjdrYjVIZGdoMFlWOTI3bEFteHhKYXg5TFVzSEdF?=
- =?utf-8?B?UDIrMVBHUUtnR080RmpIWVRTeWNKUm55NWVLQXJQMTlGOHN3L2pLcHJPM25F?=
- =?utf-8?B?U2xORXNlNjIwWlp0dHpWVDhhQzg4QkQrNzJYN0lxVEsrdlB0Y3l5amdLSkc4?=
- =?utf-8?B?OEdTdEQ4ZWRrSUVzb0V6c1hSNG43RU9XQ1A0b0Q2MGpJL2tnUTJXMnJETXk3?=
- =?utf-8?B?T0NWblA1VWRaeEFmbTZmNFg3WVBsWVk3d2NZelo4bDBYSkFpWXR2dlRCU2NH?=
- =?utf-8?B?QTNFNHhwa1hGYUhNRURXanhQNTFVWXA3RDE4VEtQNGJZWlJVeExxWlJwVEYw?=
- =?utf-8?B?Rkd1NldyNDRxMkpTaHpwU2UvTWswN1h2WnQ2dks3OGpkK2FEbU9vR3l1RGNO?=
- =?utf-8?B?c0E2YjFEaUZSVzIvanlsVnJ4dExGTHVGMUxHR1VSdUVGMWxYR2J4T1J4TXFv?=
- =?utf-8?B?Mm02Smh6S3djdnBhK0RFNXgxV21ORWx3MlVwbmtQTWhmcXl5T2ViMldUYWxh?=
- =?utf-8?B?OWJpMGY5YzcrQWlrbWhSeThrcWNiSHB5REZoQ3JscnR1Q1BxQWVvNW4yMTVU?=
- =?utf-8?B?cXduZCtKUDBKYkdzZ2F4Q1VXOUV1Q3VXU3VGdmtJTllXMU5SbnBnb3VsZ2hZ?=
- =?utf-8?B?dTlKSnUwN0lIZlpFa1IxbEVNZytsclFqOGhVQVRNNWdQN3AwQ0pYaWZ6ZXFm?=
- =?utf-8?B?N2JoMXZOck00UXFWU3ZVZVZ1TzJoTmV2T25ScjE4OG5wM0Fqb0ZGemVwWmEx?=
- =?utf-8?B?ZmttRmI0WDMvMUxWN2Q4WG1KdDFvcWM5djRaWXRrRmZjdUdxVDVhWVlQMVpa?=
- =?utf-8?B?VXVxb1d3MENlUG9FQ2g1aGh0MXJ1d0E5eFYzTUxWeWR4azcxdnMvNlJwemRL?=
- =?utf-8?Q?3BmytJFSD8fgHlZOpAWlm9zNz?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fa80b2f5-a390-4f69-d61f-08dda81ede34
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 13:01:08.9799
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4RvTW/46Ym3cYKtrvNIswvG0k+NJWGCrq/+Vhfp9QAOBxU4zpyYrkbNGG01mEwLw
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8951
+Content-Transfer-Encoding: 8bit
 
-On 6/10/25 11:33, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> test_prepare_array() is one of the functions that uses more than
-> a kilobyte of stack on 64-bit machines, though it stays under
-> the usual warning limit of 2KB:
-> 
-> drivers/gpu/drm/tests/drm_exec_test.c: In function 'test_prepare_array':
-> drivers/gpu/drm/tests/drm_exec_test.c:171:1: error: the frame size of 1304 bytes is larger than 1280 bytes [-Werror=frame-larger-than=]
-> 
-> In order to eventually lower that limit, change the two large
-> drm_gem_object objects to be statically allocated. This works here
-> because the tests are always called sequentially, and it is simpler than
-> using kzalloc().
-> 
-> Fixes: 9710631cc8f3 ("drm: add drm_exec selftests v4")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+From: Jinliang Zheng <alexjlzheng@tencent.com>
 
-Maybe kzalloc() would be cleaner, but it certainly isn't a must have.
+After commit 7d43f1ce9dd0 ("locking/rwsem: Enable time-based spinning on
+reader-owned rwsem"), OWNER_SPINNABLE contains all possible values except
+OWNER_NONSPINNABLE, namely OWNER_NULL | OWNER_WRITER | OWNER_READER.
 
-Acked-by: Christian König <christian.koenig@amd.com>
+Therefore, it is better to use OWNER_NONSPINNABLE directly to determine
+whether to exit optimistic spin.
 
-> ---
->  drivers/gpu/drm/tests/drm_exec_test.c | 14 +++++---------
->  1 file changed, 5 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/tests/drm_exec_test.c b/drivers/gpu/drm/tests/drm_exec_test.c
-> index d6c4dd1194a0..f2ac06a07707 100644
-> --- a/drivers/gpu/drm/tests/drm_exec_test.c
-> +++ b/drivers/gpu/drm/tests/drm_exec_test.c
-> @@ -18,6 +18,8 @@
->  
->  #include "../lib/drm_random.h"
->  
-> +static struct drm_gem_object gobj, gobj2;
-> +
->  struct drm_exec_priv {
->  	struct device *dev;
->  	struct drm_device *drm;
-> @@ -54,7 +56,6 @@ static void sanitycheck(struct kunit *test)
->  static void test_lock(struct kunit *test)
->  {
->  	struct drm_exec_priv *priv = test->priv;
-> -	struct drm_gem_object gobj = { };
->  	struct drm_exec exec;
->  	int ret;
->  
-> @@ -74,7 +75,6 @@ static void test_lock(struct kunit *test)
->  static void test_lock_unlock(struct kunit *test)
->  {
->  	struct drm_exec_priv *priv = test->priv;
-> -	struct drm_gem_object gobj = { };
->  	struct drm_exec exec;
->  	int ret;
->  
-> @@ -101,7 +101,6 @@ static void test_lock_unlock(struct kunit *test)
->  static void test_duplicates(struct kunit *test)
->  {
->  	struct drm_exec_priv *priv = test->priv;
-> -	struct drm_gem_object gobj = { };
->  	struct drm_exec exec;
->  	int ret;
->  
-> @@ -128,7 +127,6 @@ static void test_duplicates(struct kunit *test)
->  static void test_prepare(struct kunit *test)
->  {
->  	struct drm_exec_priv *priv = test->priv;
-> -	struct drm_gem_object gobj = { };
->  	struct drm_exec exec;
->  	int ret;
->  
-> @@ -150,13 +148,11 @@ static void test_prepare(struct kunit *test)
->  static void test_prepare_array(struct kunit *test)
->  {
->  	struct drm_exec_priv *priv = test->priv;
-> -	struct drm_gem_object gobj1 = { };
-> -	struct drm_gem_object gobj2 = { };
-> -	struct drm_gem_object *array[] = { &gobj1, &gobj2 };
-> +	struct drm_gem_object *array[] = { &gobj, &gobj2 };
->  	struct drm_exec exec;
->  	int ret;
->  
-> -	drm_gem_private_object_init(priv->drm, &gobj1, PAGE_SIZE);
-> +	drm_gem_private_object_init(priv->drm, &gobj, PAGE_SIZE);
->  	drm_gem_private_object_init(priv->drm, &gobj2, PAGE_SIZE);
->  
->  	drm_exec_init(&exec, DRM_EXEC_INTERRUPTIBLE_WAIT, 0);
-> @@ -166,7 +162,7 @@ static void test_prepare_array(struct kunit *test)
->  	KUNIT_EXPECT_EQ(test, ret, 0);
->  	drm_exec_fini(&exec);
->  
-> -	drm_gem_private_object_fini(&gobj1);
-> +	drm_gem_private_object_fini(&gobj);
->  	drm_gem_private_object_fini(&gobj2);
->  }
->  
+And, remove useless OWNER_SPINNABLE to simplify the code.
+
+Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
+---
+ kernel/locking/rwsem.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+index 2ddb827e3bea..8572dba95af4 100644
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -727,8 +727,6 @@ static inline bool rwsem_can_spin_on_owner(struct rw_semaphore *sem)
+ 	return ret;
+ }
+ 
+-#define OWNER_SPINNABLE		(OWNER_NULL | OWNER_WRITER | OWNER_READER)
+-
+ static inline enum owner_state
+ rwsem_owner_state(struct task_struct *owner, unsigned long flags)
+ {
+@@ -835,7 +833,7 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
+ 		enum owner_state owner_state;
+ 
+ 		owner_state = rwsem_spin_on_owner(sem);
+-		if (!(owner_state & OWNER_SPINNABLE))
++		if (owner_state == OWNER_NONSPINNABLE)
+ 			break;
+ 
+ 		/*
+-- 
+2.49.0
 
