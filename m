@@ -1,118 +1,205 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD4323C50E
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 16:35:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8035239E66
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 16:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749573316; cv=none; b=c9nzQPssLVeGO6og0ME+F2+ssngOf2nBgWIThA/PrpxWVR2qXS9Ogpdz+6oEbY2385/OHtBpIGlbXDXvyTg34rqhG4uybUivrR4FRNxZPTsJnSN8OppwEOycrCpGtSGzFTdkLuAFKMPKOzN1OT3aHJV9Dts52UxwkBI/74gWC8Q=
+	t=1749573349; cv=none; b=eXAbfxzMg9ykGrL4a6RLTtvMEdaW8JGtYzfzuTU+WJ4sEby3GgrSmvEZIUci5P/EHFMZiRpgGTUPDSMXm+aQ0NyMwJNO05yZF6VcPGhPHiCZRGtF2khKEcZH5f9VrO1vu8kqAp0TsVVhN7lwXMxMxgJxKDkYrhxk4uvCm6KCRCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749573316; c=relaxed/simple;
-	bh=E9uy+WeeyTRFWQAhgxLER4hMEEGRG4YhfQaDeAKuSp4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QcT6UeGTKCUu1BXy7ukhBzbqD49RTmpUd/80Ohu2/CQKe1eHU+kLYYbHX3678Zd1mzb7kDqZuee57z3mJ9qca87AhiYmrj0gbvpHbxhIfGZOi1u4KsaBA8cOEeG8g7QL6z8kcfIBi9VruLf0iBVnUu7v04qLuv44eZOLNLNzCZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DgpP/8dx; arc=none smtp.client-ip=209.85.167.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1749573349; c=relaxed/simple;
+	bh=BoFxGoKvLCwi0r5nMSq/smpqIiW/LFaahTEZQWqCIsE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nleo1xS0apzryTKS1PIQh6CSUaBJyZwJGAPt69y1pFjRjbhCEbK8UDVTduZMNM/pqqhztfjlG+RrkmfFa+jifd78ZaotZkc2VhG13yn9o4tjdBYpJTXXKXNntfvmxhm1WhzG5TZul+nuKpN4nQe9b9fw8l+cQvZwUaKPd6iqLks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=UJOzR9DV; arc=none smtp.client-ip=209.85.160.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DgpP/8dx"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-4067bab37a1so4802096b6e.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:35:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="UJOzR9DV"
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2cc57330163so4161976fac.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:35:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749573313; x=1750178113; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sRKty4r5poxGqV6J4DOkHwQy0EnjswzgP31JT1/VNiE=;
-        b=DgpP/8dximKpiZrny1GUVXOvXilQs2mIGbhSKJdCAVrGJB097EiyM72GTjg2QU2+Bm
-         Gi7muDXHS/UA/Zcy4n4nVDzF8s3775IEYXDQkbcYR3FUomk+qibRw35RXEb5N565BMHr
-         o+2LH+0t++GpuxMmFzex8uArAyeeh9v4VtgaQ=
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749573347; x=1750178147; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=337Fs/acVtHLrHpa6wOAa15lKx7cyXodEH1eYODanBI=;
+        b=UJOzR9DVbFRsywiuXRhkMEMV+8yicgL+hiIQnlsrO4x8aoB2N69/V+oxVJX+ErFye+
+         gYsMuLXm02AjmJGpppnSYcF9G5njjVo5PbWoXEbw9u3u8sJ7webEbi7uPcL34z8onkyy
+         P4mAucYKRbpRi58AAFyJTE2zBzit/w/du1EkzCR50ZpUy/twToU1XJDwRgczrXk3pWhF
+         6wiNbUzmJaulXdWNjSM9Ez5BwmhI7whtZrWwZpORO6iWMamLjgW5hdO25qycIskQbPO7
+         616Aqk0+NI7CbRKhHVH88M1ArM3BN5gDcycylvnT9iaYZP77WWZ/QBJibvfMkEq7jQEH
+         n/8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749573313; x=1750178113;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sRKty4r5poxGqV6J4DOkHwQy0EnjswzgP31JT1/VNiE=;
-        b=qXKFmM8L0uBC85oh28pMxlSvTl9kLexSwAOFzcKS8LpM+bbvJGun9imcbnsriGzWei
-         sPb0kx7gAn2QxQcWULG+27QJ4lvxamyZSZ6uruljXhTSqyR8F4cH5fvi+66zqDTojOtz
-         OkPfcj1295tPztPj/y7UZbIlsm91YIxFmpnRj1kJW+TRDTDK+koiAbCOiGvoEZZ2aBhI
-         xkFIDeM0UV9guAe8rxJqMYd9gl+1nBUns+b3InXUKfSHEYKwVhrQOV53U8lgHqt3lRXT
-         clx93j/iGYGyEB+JJ/9s5P5b/nWRSUruMpnC0YKNX9344RPZxvPTGiUOt6hwSWk9MQR9
-         N/Cg==
-X-Forwarded-Encrypted: i=1; AJvYcCXJVZNwFa9BTs9oD7MyxJaDRsvs34TgDCnvuD4PsvxMwIkZGgn7QpynxiT26wUbiP+PL9D0mtWfCW8eqW8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNIJlsJtDQPIpVRWPhqOscXL11SwoxFxZiVFWP9tw99BT5P+QX
-	uttIlRQ4foR1wst8izsVnBkXB74zAns4Ty01saYfYlEEyI5bd9vj799FeY4A51R5yQ61UTlUiWk
-	VTyoabQ==
-X-Gm-Gg: ASbGncuthIY60OJ+Hp7G8UonMtkpKdS/QIxBfCWy60tTWxQry8k5y/JOE8WuelS1gyS
-	jzLHt96XYDCsTWLBI4mI84rJXOhbFdHqnNuOY33PWXqpqgxgGCE3TNuLS415NpkxdFt+qzu/m1t
-	YQD2O9JuvYdqBHw1GViGo/KOtTcPyNixpLGI7UXK4f/mZjh7S+aYhBWZQiWVjv1rJMNmybpmR/b
-	d/nDWjpueH1P9/PKnJmVy2otoIT3SvCNaNkwiFnfHvnX06UUDik326sQsJ74bDHugoIlv7L1bVA
-	to45HzRydW2lUqCtDJxNK6ljzzJgilRCKSnnvfUNNZD+mH9C3S48SkZ3UQFSIxqxSg837+mhYp1
-	K2ufb/PH8JBz/bR7CpmpSu3PwdQ==
-X-Google-Smtp-Source: AGHT+IHRfPIzghVdk++vUccwWLrRSUuTdVKVJc7w01kRULgMunh5LAMrGUxC1z13qXbW7I6xP8QIOA==
-X-Received: by 2002:a05:6214:d6a:b0:6fa:fc96:d10a with SMTP id 6a1803df08f44-6fb2c365da6mr1903476d6.27.1749573301772;
-        Tue, 10 Jun 2025 09:35:01 -0700 (PDT)
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com. [209.85.219.52])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb09aba071sm68815966d6.24.2025.06.10.09.35.01
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1749573347; x=1750178147;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=337Fs/acVtHLrHpa6wOAa15lKx7cyXodEH1eYODanBI=;
+        b=ZQH584O6dMSjSKkOXHrRWAwy9Rp0L5eAJMsW/ybiezo23I3ixQ1vKmAYBSVZa8xkyG
+         RHNHxL+vSTWpyZP2EIiGyqCmdZH52CMRrQ2ZUco39HeyTH+5hoVW5jZvVZRz/KU/yAig
+         ZpKAS2ONxkPOPunluQmN737jdjEI1fNHmp2koF7/ZOlRY647I/LZQ1XEnAczivdvIbIh
+         BZiu+9IFu5lUs6RXzqZm+g7p17YjZd02ZzLsMXktY32Uqd9yozCIW89w0r+8wMnJXgUJ
+         LchuGNu+n3CUQSi5HiLQNEk0YfGrTy2nuQKMHS3M6a1+sTDNN+vJtTl86qV1k6MWOKhY
+         b4eQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWs55HqzfiQSkojm57IGpmvtQiFGHP8fb0zj1x77LaHaqRwSOh0YjKYEJaLhRsxnOGFxOvBz5sZMM4ZJtM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztRmUXnNoMZ6rtt1VNbqVZz+eL7+hGi4lOlamMxWJTc8o6j412
+	aUFL4YHM5ZIPy8j0IdT2W4FVKRSBHFSkD8qkMiphNRZGi45zSbp4TR01f6OHtBe/uHd2Ng8HyyH
+	siQAG
+X-Gm-Gg: ASbGncsr6VIrdS3inyrxmq4HzKU7ecUecsX7T/cHAzUxJ3vTUwkKMJJ5cADC8qgA2U5
+	Bpgvfp+9+hGQ61lBRq8TmxRfTZo0CvRBxiFPXSLrJx7Vyj6xM0AB16rcXfXv1VWTwaeXSfcpv0r
+	7BGgCimPzJRa7bq8THJ8MN2nIONycQu7wLfGznlixl/KFx431BUl3dzJAAJWK3i1kYk0SZ60o90
+	6yWHeX54As0SzIz4l2fY6g+4Qw2iVPu3yXtuUhzHBmBQOvg8u0103YDsF2M24GLge4/2TsBZDK1
+	S1dfnScAFqLB4BcJdWbPBIFZhwJ3bAk586GNdlKABI22eSy5ESA5oiQa5szk+g0z6IBivSsXS3k
+	4xTHQnfGTVCaFCtJqRTLz5GrjoRh1SV/vSH8A
+X-Google-Smtp-Source: AGHT+IFKN7q+KfnRdAYUgSFfIsNqsRvnCQQh5WKK0QN04pgRZrP7ovwBO6O0oZMuTYIpSjBWFhM7ig==
+X-Received: by 2002:a05:6871:5211:b0:2c2:3eb4:e53 with SMTP id 586e51a60fabf-2ea92c312efmr418737fac.37.1749573335756;
+        Tue, 10 Jun 2025 09:35:35 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:eb6c:30d1:632b:494? ([2600:8803:e7e4:1d00:eb6c:30d1:632b:494])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2ea073406c7sm2477362fac.36.2025.06.10.09.35.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 09:35:01 -0700 (PDT)
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6ecf99dd567so72275836d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:35:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWiY8KRjqOwN18Xz0uYp8c2J0pauj8VdEjgEuTawbB2/mS5nGhkVB/jXsO0dj6pfAJWXZ7FAOD7ql9yxNo=@vger.kernel.org
-X-Received: by 2002:a17:90b:3949:b0:313:1a8c:c2d3 with SMTP id
- 98e67ed59e1d1-313af21cf49mr214070a91.22.1749572858943; Tue, 10 Jun 2025
- 09:27:38 -0700 (PDT)
+        Tue, 10 Jun 2025 09:35:35 -0700 (PDT)
+Message-ID: <9fdbcb45-ed9a-4449-9248-9bc1d5593fa9@baylibre.com>
+Date: Tue, 10 Jun 2025 11:35:33 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610-gpiochip-set-rv-gpu-v1-1-ac0a21e74b71@linaro.org>
-In-Reply-To: <20250610-gpiochip-set-rv-gpu-v1-1-ac0a21e74b71@linaro.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Tue, 10 Jun 2025 09:27:25 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Unb1LdKV7iuPME1KJ35OBbP5OXD=_=A0ESQFCOzFBSXQ@mail.gmail.com>
-X-Gm-Features: AX0GCFvetYujnkiaHWr_4-CoTJH6_0-yjm9ImscbNd_BInX3tRbNZVj0ki_sWAE
-Message-ID: <CAD=FV=Unb1LdKV7iuPME1KJ35OBbP5OXD=_=A0ESQFCOzFBSXQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: use new GPIO line value setter callbacks
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Linus Walleij <linus.walleij@linaro.org>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dt-bindings: iio: adc: adding support for PAC194X
+To: Marius.Cristea@microchip.com, jic23@kernel.org, nuno.sa@analog.com,
+ andy@kernel.org
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ broonie@kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250606093929.100118-1-marius.cristea@microchip.com>
+ <20250606093929.100118-2-marius.cristea@microchip.com>
+ <92c36ad9-5f8e-4ba7-9af4-9cb640f0aa5c@baylibre.com>
+ <d364524bad53f5c665071287f55a96e28dc9b231.camel@microchip.com>
+ <db78ac20-9b58-49d1-ba38-cc269eaff254@baylibre.com>
+ <a9902463d1f29993f13ce0bc87fcfb05472624d5.camel@microchip.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <a9902463d1f29993f13ce0bc87fcfb05472624d5.camel@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi,
+On 6/10/25 11:04 AM, Marius.Cristea@microchip.com wrote:
+> On Tue, 2025-06-10 at 10:22 -0500, David Lechner wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you
+>> know the content is safe
+>>
+>> On 6/10/25 9:46 AM, Marius.Cristea@microchip.com wrote:
+>>> Hi David,
+>>>
+>>>    Thank you for the feedback. Please see my comments below...
+>>>
 
-On Tue, Jun 10, 2025 at 5:34=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
->
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
-> Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
-> values") added new line setter callbacks to struct gpio_chip. They allow
-> to indicate failures to callers. We're in the process of converting all
-> GPIO controllers to using them before removing the old ones.
-> ---
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 18 +++++++-----------
->  1 file changed, 7 insertions(+), 11 deletions(-)
+...
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+>>>>
+>>>> Using Jonathan's suggestion from v2 to just have a single
+>>>> property
+>>>> with 3 different
+>>>> ranges to chose from seems simpler that this. It would only
+>>>> require
+>>>> one property
+>>>> and would be self-documenting. The description could be shortened
+>>>> to
+>>>> just a couple
+>>>> of lines.
+>>>
+>>> I was thinking to add the range for this property, but it looks
+>>> (for me
+>>> at least) more complicated from the checking point of view. The
+>>> driver
+>>> is supporting two family of devices that has, each, 3 different
+>>> voltage
+>>> range as an input.
+>>>
+>>
+>> Usually, having a consistent binding for the same thing among similar
+>> devices is more important than how easy it is to implement in the
+>> driver.
+>>
+>> Since this seems to be a common pattern, we could probably justify an
+>> iio_property_match_ranges() helper function that would simplify the
+>> implementation in drivers that would need to use such a property.
+>> Then
+>> in each driver it would just be a matter of making a static const
+>> array
+>> lookup table of ranges for each device and calling the helper
+>> function.
+> 
+> Sorry for not explaining very well. I have implemented the range into
+> the driver and I was working well, but I had issues defining the range
+> into the device binding and the checker was failing. That was the
+> reason that I've dropped the range from the binding. Also I had some
+> issues enforcing a certain "available" ranges for a particular part
+> into the binding.
 
-Looks like this should be fine to go through drm-misc. I'll plan to
-apply it next week unless I get overly distracted.
+What did you try?
 
--Doug
+The usual way is to define all possibilities and then limit it by compatible.
+I think something like this should work:
+
+patternProperties:
+  "^channel@[1-4]$":
+    properties:
+      microchip,input-range-microvolt:
+       items:
+          - enum: [-32000000, -16000000, -9000000, -4500000, 0]
+          - enum: [4500000, 9000000, 16000000, 32000000]
+
+
+allOf:
+  - if:
+      properties:
+        compatible:
+          pattern: "^microchip,pac194"
+     then:
+       patternProperties:
+        "^channel@[1-4]$":
+          properties:
+            microchip,input-range-microvolt:
+              oneOf:
+                - items:
+                    - const: 0
+                    - const: 9000000
+                - items:
+                    - const: -9000000
+                    - const: 9000000
+                - items:
+                    - const: -4500000
+                    - const: 4500000
+              default:
+                items:
+                  - const: 0
+                  - const: 9000000
+  - if:
+      properties:
+        compatible:
+          pattern: "^microchip,pac195"
+     then:
+       patternProperties:
+        "^channel@[1-4]$":
+          properties:
+            microchip,input-range-microvolt:
+              oneOf:
+                - items:
+                    - const: 0
+                    - const: 32000000
+                - items:
+                    - const: -32000000
+                    - const: 32000000
+                - items:
+                    - const: -16000000
+                    - const: 16000000
+              default:
+                items:
+                  - const: 0
+                  - const: 32000000
+
+
