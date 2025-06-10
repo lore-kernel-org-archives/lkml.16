@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD7617597;
-	Tue, 10 Jun 2025 19:12:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F5D926159D;
+	Tue, 10 Jun 2025 19:12:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749582774; cv=none; b=REtNbVh5in66Vofe8bSQOEZWZVI5RP6CwOTFUTW9ZxIO6KqPvMRTMWpYfJJSla8k9J4kb23KrGKcCHErI3tr4iFptqayWxhnz6gtjex+fzy1NMp6vc3hKOPTHgFuwaJiBCxQnb63Rmzdu9FqjXP0xRn6pOPC93fbGmU9eOaAHbU=
+	t=1749582775; cv=none; b=SeIh8Qt1JWywNlj6yo2BxRrmCSqRzr/0z8TyPvHODOAEcPUTcBDKAYXjnF71kx1QXc2Q2/oGKwo2K2eXt8pM2fMFk1YHBBxAFgVEnRSc1KxUJDGGveotEFkDnc9HyTv2t71p6WmOKG4iZdt3gGzOckram4ongsMnPHuBF2oLGyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749582774; c=relaxed/simple;
-	bh=wz++l1yaux2JnXexyUIdq0mIG5nKuIU+1yPGLalEFBE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C8gDV+PdfqjKXzDYahWu9H0RFn85RDGYbcRmGSsSbY+Clwa+comwkqWBvAti4JkRjAaALknBMQdoJ8f/tdbupTt2CZa2aqBVb5HE2lhQ/ni1nnsq7y6r7xftjL0UOmTJyYbO9RrdBmmVbyrQ2fogwTNxzbP3kMaKldLyRyjAmcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pyH3fla5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749582775; c=relaxed/simple;
+	bh=MkL+yCkTlVRPMl3I1W8UosEvrkNCnEgFMpcNSMX4iYk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=k+umv7SKcmiW9nxGPkUsTqb/S4zZNM4zXDnbpXXPK1SstBzX4oh9rIK5lcuB7OV5oKGRCllAGQR81HLoNrzQRV4gyxerGDTAwhtdgSjSXSXWHsqdLhkR7LAQEf34KhCLShTEXfxizcEcVe7BORBbXfBNft55ikqBH0HaH/SXa7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MbkEg9dt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pyH3fla5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53F97C4CEED;
-	Tue, 10 Jun 2025 19:12:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MbkEg9dt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D65FC4CEED;
+	Tue, 10 Jun 2025 19:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749582773;
-	bh=wz++l1yaux2JnXexyUIdq0mIG5nKuIU+1yPGLalEFBE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pyH3fla5fwi/sdBTPciXVxga/2QyRQlf4Ux0EVcJcQWbZysOGgGSh7WCuV58sOTRa
-	 sigjvkhe0Ev44L+PfetMGbtIAkXoUiN1hujD4eDQWGM3D2qZ+qnGLS9ptTx0f9dGiA
-	 VFbpPPGQPNdvh/k3X40hEvyIuTZOXEOYfplmpPLDT72aTev1LmAAfX0CztkQ+lBGyW
-	 iV5AmDrcrelep707E5jEhovEU9wIIlGZi8Qc4AX2Ym+7Axn8PrGnmrv94v22BX/Yi0
-	 z9FkJrII4BR6mWx+9cajZEsr46FS1iLKbTwuG2BbH9EGkD8d38hoCYBkL0KH6GX5/q
-	 Zk4qaZT/ymgEg==
-Date: Tue, 10 Jun 2025 13:12:51 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Penglei Jiang <superman.xpt@gmail.com>, io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzbot+531502bbbe51d2f769f4@syzkaller.appspotmail.com
-Subject: Re: [PATCH v2] io_uring: fix use-after-free of sq->thread in
- __io_uring_show_fdinfo()
-Message-ID: <aEiDs5J3Uy3NSK3m@kbusch-mbp>
-References: <20250610171801.70960-1-superman.xpt@gmail.com>
- <aEh9DxZ0AQSSranB@kbusch-mbp>
- <48f61e8e-1de6-4737-9e58-145d4599b0c0@kernel.dk>
+	s=k20201202; t=1749582774;
+	bh=MkL+yCkTlVRPMl3I1W8UosEvrkNCnEgFMpcNSMX4iYk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=MbkEg9dthwa2baq75Dx0k/Ao34Hg+0Lps/kfKNtnUino7oCQ0MF1drypvKffIZQu0
+	 uiRTQ9av8P0Hx2NYRk3UAFk8i62vKtbgPUJa7yCPvQbqnfGOYyTG2vIBX0BgVgHKph
+	 GtUEbXPecCetvmHALutL7aVaIEkDF0Ej+3DrO6t3N/FPG+aVWHYuLxVmpX0+A2IIHb
+	 8JYsSfKW7lTkARyKIW1S5LJaa58QcMHMCg+T7XPSbX7LqdW+1KSvgc7viiC7Ziu9P9
+	 ycSnaZp8yG0WDbXsyHd2xwJJ9Ym9oxWnnXPtidAt9naJL59hbR5CDPKeC7yaGo2aD7
+	 x+8PJRxiQTbwg==
+Date: Tue, 10 Jun 2025 14:12:53 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Michal Simek <michal.simek@amd.com>, Rob Herring <robh@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] PCI: xilinx: Wait for link-up status during
+ initialization
+Message-ID: <20250610191253.GA820218@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,45 +46,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <48f61e8e-1de6-4737-9e58-145d4599b0c0@kernel.dk>
+In-Reply-To: <20250610143919.393168-1-mike.looijmans@topic.nl>
 
-On Tue, Jun 10, 2025 at 12:56:31PM -0600, Jens Axboe wrote:
-> On 6/10/25 12:44 PM, Keith Busch wrote:
-> > On Tue, Jun 10, 2025 at 10:18:01AM -0700, Penglei Jiang wrote:
-> >> @@ -379,7 +380,8 @@ static int io_sq_thread(void *data)
-> >>  		io_sq_tw(&retry_list, UINT_MAX);
-> >>  
-> >>  	io_uring_cancel_generic(true, sqd);
-> >> -	sqd->thread = NULL;
-> >> +	rcu_assign_pointer(sqd->thread, NULL);
-> > 
-> > I believe this will fail a sparse check without adding the "__rcu" type
-> > annotation on the struct's "thread" member.
-> 
-> I think that only happens the other way around, eg accessing them directly
-> when marked with __rcu. I could be entirely wrong, though...
+On Tue, Jun 10, 2025 at 04:39:03PM +0200, Mike Looijmans wrote:
+> When the driver loads, the transceiver and endpoint may still be setting
+> up a link. Wait for that to complete before continuing. This fixes that
+> the PCIe core does not work when loading the PL bitstream from
+> userspace. Existing reference designs worked because the endpoint and
+> PL were initialized by a bootloader. If the endpoint power and/or reset
+> is supplied by the kernel, or if the PL is programmed from within the
+> kernel, the link won't be up yet and the driver just has to wait for
+> link training to finish.
 
-I was just looking at rcu_assign_pointer():
+> +static int xilinx_pci_wait_link_up(struct xilinx_pcie *pcie)
+> +{
+> +	u32 val;
+> +
+> +	/*
+> +	 * PCIe r6.0, sec 6.6.1 provides 100ms timeout. Since this is FPGA
+> +	 * fabric, we're more lenient and allow 200 ms for link training.
 
-  #define rcu_assign_pointer(p, v)                                              \
-  do {                                                                          \
-          uintptr_t _r_a_p__v = (uintptr_t)(v);                                 \
-          rcu_check_sparse(p, __rcu);                                           \
+Does this FPGA fabric refer to the Root Port or to the Endpoint?  We
+should know whether this issue is common to all xilinx Root Ports or
+specific to certain Endpoints.
 
-And rcu_check_sparse expands to this when __CHECKER__ is enabled:
+I assume that even if we wait for the link to come up and then wait
+PCIE_T_RRS_READY_MS before sending config requests, this Endpoint is
+still not ready to return an RRS response?  I'm looking at this text
+from sec 6.6.1:
 
-  #define rcu_check_sparse(p, space) \
-          ((void)(((typeof(*p) space *)p) == p))
+  Unless Readiness Notifications mechanisms are used, the Root Complex
+  and/or system software must allow at least 1.0 s following exit from
+  a Conventional Reset of a device, before determining that the device
+  is broken if it fails to return a Successful Completion status for a
+  valid Configuration Request. This period is independent of how
+  quickly Link training completes.
 
-So whatever "p" is, rcu_assign_pointer's checker appears to want it to
-be of a type annotated with "__rcu".
+  Note: This delay is analogous to the Trhfa parameter specified for
+  PCI/PCI-X, and is intended to allow an adequate amount of time for
+  devices which require self initialization.
 
-But I don't know for sure, so let's just try it and see!
+It seems like the PCI core RRS handling should already account for
+this 1.0 s period.
 
-  # make C=1 io_uring/sqpoll.o
-  io_uring/sqpoll.c:273:17: error: incompatible types in comparison expression (different address spaces):
-  io_uring/sqpoll.c:273:17:    struct task_struct [noderef] __rcu *
-  io_uring/sqpoll.c:273:17:    struct task_struct *
-  io_uring/sqpoll.c:383:9: error: incompatible types in comparison expression (different address spaces):
-  io_uring/sqpoll.c:383:9:    struct task_struct [noderef] __rcu *
-  io_uring/sqpoll.c:383:9:    struct task_struct *
+> +	 */
+> +	return readl_poll_timeout(pcie->reg_base + XILINX_PCIE_REG_PSCR, val,
+> +			(val & XILINX_PCIE_REG_PSCR_LNKUP), 2 * USEC_PER_MSEC,
+> +			2 * PCIE_T_RRS_READY_MS * USEC_PER_MSEC);
+> +}
