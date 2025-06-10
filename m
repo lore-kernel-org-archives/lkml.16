@@ -1,35 +1,34 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477CD380;
-	Tue, 10 Jun 2025 05:30:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FB8225EF8F
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749533409; cv=none; b=sZ8fEd4V4fZ4bsVt2lahAxD05LzKVpJBqaQZp4aK8c8k0/PW3de9g30+yeGDb8zM2YyTTAInrVX6B1BCWdeUY9GFkj6PiVDeDAu1yVPnUSCkRPVsFk+q9V1aubTkZOdl48hRsFeE1ln5A9UTXPlqF2nYaF4vbof6b42xdtAc4EQ=
+	t=1749533508; cv=none; b=Hl3jQZTNiQUI98FMT0etpGziliPxWZKgci7+oGzrwkwrH2Nw1lAELBaJNCwH/xCncKVLp3PQToDdiwIX33/yCCSzdFyEPZuz2dFvQu3obIeLBN9v3p8ix3arToGThx82U+nYGOSX2jFWMPlNLEhSZh1iOdZ5jiSJrOFoeRyD2TY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749533409; c=relaxed/simple;
-	bh=AirqLxaAn1XDcww7YIT/2rzH+IYyH+8RkAxc6uGReYs=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=jMSQKMn0ADly4fIv59ycvAFXaRxLR/yGqzq5dll00KlU+V39Hyu59U+Xt+hfIdUKmxW2oF4zzRAd4SXbM0eR3bWXg5UdK2KCMkmV1fU722XX+UJOUtLpAJT7kiCmA9bPBsUO3DoI2ZuQi5rKvIDpD0iaRig5wlvkao55Koc3+rE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KVrYpges; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KVrYpges"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5CF0C4CEEF;
-	Tue, 10 Jun 2025 05:30:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749533408;
-	bh=AirqLxaAn1XDcww7YIT/2rzH+IYyH+8RkAxc6uGReYs=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=KVrYpgesvClwcE62Y4eoV7SPMtyy0KeY1N9kYJS6gk6L+ykyW0g4V/rmMlRwsHekm
-	 e5b/s6tAKzy+VIsxLBLkGQDD6LY1mkeIUKS9+BKAOVk1QV5Iu9Xl8/ymgkykmhyiIi
-	 qCF8YFGPF3nAqDWaBMaSQmhtnCIlJT1fZ6h7VLeMUv9/GR3IQL13mRFA8cv1/skCSI
-	 v1ObDw7MhTmaj9QOP+rsMT8ne4vhAbSuSm9bE2EYkO0jwY5H4lS+68vnt9mThfMih0
-	 AsujfctxEEua0TUSrPFraj3Ycg0QWLUnMJAMP896nShsL1RmqIy95R7nJ42gITAAHS
-	 T2NuytqPyee7A==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70C0C3822D49;
-	Tue, 10 Jun 2025 05:30:40 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1749533508; c=relaxed/simple;
+	bh=uO4/ickybqpPH68R03sd6AqtWPXqMsW2lxXy7SVyyl8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TpJI+t2Sx/c1UmjN+Yoqk8ZwoAbGIqDFhTqM2zfGRablTay7zsg5d35rbQ5+RaJBX4D0XzkGrh2kfFjeCihVzdJyp7z++6spY6aGVQY5G5HAWJPaX0Nn3pPHKNylZPUoCOuD2MImasHIza2E/wWDGW6XStubDjncmXvy6lsxcKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4AC8814BF;
+	Mon,  9 Jun 2025 22:31:20 -0700 (PDT)
+Received: from a076716.blr.arm.com (a076716.blr.arm.com [10.164.21.47])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0A8373F59E;
+	Mon,  9 Jun 2025 22:31:36 -0700 (PDT)
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ada Couprie Diaz <ada.coupriediaz@arm.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V3 0/2] arm64/debug: Drop redundant DBG_MDSCR_* macros
+Date: Tue, 10 Jun 2025 11:01:26 +0530
+Message-Id: <20250610053128.4118784-1-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,72 +36,50 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v4 0/9] bpf: Mitigate Spectre v1 using barriers
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174953343925.1751142.14175959764771904757.git-patchwork-notify@kernel.org>
-Date: Tue, 10 Jun 2025 05:30:39 +0000
-References: <20250603205800.334980-1-luis.gerhorst@fau.de>
-In-Reply-To: <20250603205800.334980-1-luis.gerhorst@fau.de>
-To: Luis Gerhorst <luis.gerhorst@fau.de>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, puranjay@kernel.org,
- xukuohai@huaweicloud.com, catalin.marinas@arm.com, will@kernel.org,
- hbathini@linux.ibm.com, christophe.leroy@csgroup.eu, naveen@kernel.org,
- maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, mykolal@fb.com,
- shuah@kernel.org, henriette.herzog@rub.de, skb99@linux.ibm.com,
- cupertino.miranda@oracle.com, mrpre@163.com, m.shachnai@gmail.com,
- dimitar.kanaliev@siteground.com, shung-hsi.yu@suse.com, dxu@dxuuu.xyz,
- bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-kselftest@vger.kernel.org
 
-Hello:
+MDSCR_EL1 has already been defined in tools sysreg format and hence can be
+used in all debug monitor related call paths. Subsequently all DBG_MDSCR_*
+macros become redundant and hence can be dropped off completely. While here
+convert all variables handling MDSCR_EL1 register as u64 which reflects its
+true width as well.
 
-This series was applied to bpf/bpf-next.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
+This series applies on v6.16-rc1
 
-On Tue,  3 Jun 2025 22:57:51 +0200 you wrote:
-> This improves the expressiveness of unprivileged BPF by inserting
-> speculation barriers instead of rejecting the programs.
-> 
-> The approach was previously presented at LPC'24 [1] and RAID'24 [2].
-> 
-> To mitigate the Spectre v1 (PHT) vulnerability, the kernel rejects
-> potentially-dangerous unprivileged BPF programs as of
-> commit 9183671af6db ("bpf: Fix leakage under speculation on mispredicted
-> branches"). In [2], we have analyzed 364 object files from open source
-> projects (Linux Samples and Selftests, BCC, Loxilb, Cilium, libbpf
-> Examples, Parca, and Prevail) and found that this affects 31% to 54% of
-> programs.
-> 
-> [...]
+Changes in V3:
 
-Here is the summary with links:
-  - [bpf-next,v4,1/9] bpf: Move insn if/else into do_check_insn()
-    https://git.kernel.org/bpf/bpf-next/c/8b7df50fd40d
-  - [bpf-next,v4,2/9] bpf: Return -EFAULT on misconfigurations
-    https://git.kernel.org/bpf/bpf-next/c/fd508bde5d64
-  - [bpf-next,v4,3/9] bpf: Return -EFAULT on internal errors
-    https://git.kernel.org/bpf/bpf-next/c/6b84d7895d78
-  - [bpf-next,v4,4/9] bpf, arm64, powerpc: Add bpf_jit_bypass_spec_v1/v4()
-    https://git.kernel.org/bpf/bpf-next/c/03c68a0f8c68
-  - [bpf-next,v4,5/9] bpf, arm64, powerpc: Change nospec to include v1 barrier
-    https://git.kernel.org/bpf/bpf-next/c/dff883d9e93a
-  - [bpf-next,v4,6/9] bpf: Rename sanitize_stack_spill to nospec_result
-    https://git.kernel.org/bpf/bpf-next/c/9124a4508007
-  - [bpf-next,v4,7/9] bpf: Fall back to nospec for Spectre v1
-    https://git.kernel.org/bpf/bpf-next/c/d6f1c85f2253
-  - [bpf-next,v4,8/9] selftests/bpf: Add test for Spectre v1 mitigation
-    https://git.kernel.org/bpf/bpf-next/c/4a8765d9a527
-  - [bpf-next,v4,9/9] bpf: Fall back to nospec for sanitization-failures
-    (no matching commit)
+- Split out the self test changes into a separate patch per Mark
+- Added RB tag from Ada
 
-You are awesome, thank you!
+Changes in V2:
+
+https://lore.kernel.org/all/20250508044752.234543-1-anshuman.khandual@arm.com/
+
+- Changed reg, val width to u64 in cortex_a76_erratum_1463225_svc_handler() per Ada
+- Changed mdscr register width to uint64_t in enable_monitor_debug_exceptions() and
+  install_ss() per Ada
+    
+Changes in V1:
+
+https://lore.kernel.org/all/20250417105253.3188976-1-anshuman.khandual@arm.com/
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ada Couprie Diaz <ada.coupriediaz@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+
+Anshuman Khandual (2):
+  arm64/debug: Drop redundant DBG_MDSCR_* macros
+  KVM: selftests: Change MDSCR_EL1 register holding variables as uint64_t
+
+ arch/arm64/include/asm/assembler.h            |  4 ++--
+ arch/arm64/include/asm/debug-monitors.h       |  6 -----
+ arch/arm64/kernel/debug-monitors.c            | 22 +++++++++----------
+ arch/arm64/kernel/entry-common.c              |  4 ++--
+ .../selftests/kvm/arm64/debug-exceptions.c    |  4 ++--
+ 5 files changed, 17 insertions(+), 23 deletions(-)
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.25.1
 
