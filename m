@@ -1,137 +1,172 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34BFC78F34;
-	Tue, 10 Jun 2025 22:54:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31CDE78F34
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:57:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749596090; cv=none; b=fSBwt7xeeDPnMAYFOrkJH5V7d95UEZ3opjM9eHrIi66zPIX+wFLDHJ9ahP/xVkcyS77TjFCIDdgxnAMLjodBQl6w9oBtNsBypwvnMtW9/GqRKw1h/G2XxkOS3kqCUC4qQp+cytL1QQ1MbF/Gt0MFQQYPe5JgEDLOe9vbtamw8eI=
+	t=1749596263; cv=none; b=pTBRnGyrBFxuSPjqhOHwpV5XaqN4isVc+Lka4w7lQlRtdxAJfSJ7WT83OI6x+O/Qe8YYdgMThAlW4R7J2wAJu7DzP6VJEHeHrtJZGuKaylyJ4vXeowptnR2QSdwfLdB+RxtRJNdTLZxLx/dzu4HJweYVAiBiZbHHamYDhyUOnpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749596090; c=relaxed/simple;
-	bh=GjJNDRHDSPTY4qbExjVJ1cRYRVbR+Duc+V5hfDwUHSA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bPUbQEcQrZ6qlpxNxiEw6lgG2VJ+BNJDDdqzMD2pj6MltqiUJSFBfWbVNaeBcpGWUlahHYrCPRFPNcvBtBSjyVdOgDUpHPcoCD+eolquIyR4d8IL5dBJK3+qKEcWUgmytwBWwQ74Y/qWJTc+d9iSFLUyfN3kABZLwunEOecSo/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=faoACHy8; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749596263; c=relaxed/simple;
+	bh=PU4CQ8UGMUEtv3G8ZEF/N2DVxNwtMrUkuUQB2V2j5zY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=rRiqt2pjlqgZXiYR5IKnXXlmyyzguu6LJmtMU2jw9WJ6g4icb3sM5802QWaGjU7CxrUgOsnXI1UxmfTPiszZfRco+iO8KWKpIo0qfMeu/VEIuAlA4qLjyCTQ3t4R9Qol2HgIDmcWbYjyxssrYFPVdCvFvhurMe1OX0kLA+kwdz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=reOVlS3M; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="faoACHy8"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-31329098ae8so282317a91.1;
-        Tue, 10 Jun 2025 15:54:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="reOVlS3M"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2c36d3f884so3720456a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:57:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749596088; x=1750200888; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GjJNDRHDSPTY4qbExjVJ1cRYRVbR+Duc+V5hfDwUHSA=;
-        b=faoACHy8nXPmd6kyHwn2WE7QxHyhXHfMFzX42PnpGMoPCTxhWt7jwJJMTaQB5e5MAX
-         /BMX3qkGgYEtvDuzZCAyjTRHXQ6Fsh4UHE07x2M+P8AsozRdKp81iJ/yaLGRuaYOig1H
-         xY6ZwXZEGacV84nx/Rz8geZ5YDP2DYnmGfncLXxd5Qq8sqaIuToSBVVjALLZRQcoC2u/
-         Pe0echX9oGQ027gLelF88AVXfU4b+N8A5AyIKke/FoDG9NMKnl6xJPeCp+3+cp8VuDWJ
-         hIGLs6RZOTXLq3Z0uimRRrgCnl3FgVcP4YqeMEpXulpr53GyUni1anWBqx4/qkNepvJS
-         o9RA==
+        d=google.com; s=20230601; t=1749596261; x=1750201061; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R6yaQM2l+AM1elKMoXhIjARR8lysmC+imGaGP22oyE4=;
+        b=reOVlS3MusRL0BYlk0adZnMePQrwXczAO0CjRgvXqaPj0+uThbDSI01fnhCyh2+xZl
+         Oc/PpKBRgaR/Y4IO1O7zxM6P+uiQuykNcXP4CZhoOdS8qX5H+rrYEsKJFmPLKv6g9D33
+         8FZSPG/W0stzvZEbqgfEy0peahjbp9WQEOG7htyuPplYLxjz1wUCOerMIg233XPiJXZO
+         HP2SpgQZN/b4Ta6YEKVSn1H38Sjw29r547lK1opIJ5n7BOkWfBm62udv2I4HQT5ADozr
+         7LJFM1/nFeLruwrw0m367kewJ6ip0KV9AeBe96W59ysJEwjTypSs8ImH/246Hjr3i0DD
+         cTlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749596088; x=1750200888;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GjJNDRHDSPTY4qbExjVJ1cRYRVbR+Duc+V5hfDwUHSA=;
-        b=KkKKNPH4vdpU4UOsNqj2l5+IRjutGQcxrFt8nP9sRVNeG1m2p7oqLDlNi3KmBhpKUz
-         fw3fEhepzCBMYs+qWGJk/BEyd9CNQRb7HQlDjZpRqAnpZ3leKWLzuOP9xZB7SVT8jHrP
-         zTbFZExagc2tfWLKZcsIkIKTchFNBjKjKxDJQC6Fg21pcZbVI1Cdbka9zFXLdFYmaFXq
-         aD1MisAQgbFHkwnTfTiW8A04ECKtAr9TEJdO3pAoLuB/vInp6fkcyQMIve3Hsjz9zpXu
-         fqeZ5iT2kaw/EqrtzGntBbkz/TEl8K7j4u9M1ohCRe+Kb5kAlZC5N1kCLnxQ4XieTlZj
-         o0TQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVKtM5u4fQqT3NoQRoO+9nDqYPANXLh1oVbdD2B+3h9byfh1gsXBuDL4G8TS3YLF80KmveM0P6s9ao=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrBm3N1Fka9GtXfxn3S0il2VdpVupaw8uNenBakKCggRunlYkX
-	l7l0c34v/hWZHQbfHvKKs7SY3xHMcXctCmmo93NxDc7oEEGmQR7LTB3n
-X-Gm-Gg: ASbGncvvB4wnSTDrSUiwdM9PMS/eQHwK9AWPTL5CAUysdjdmicZDQzIMaFgG5Fbgo7A
-	Xcc3zSIk8cMDGZEFYUB8xFCn/IpB7G8JsuTiudIiCrqKG33tQfjk9IU44XO9B8J+MsOMBIEhmsM
-	CXYDNE2JoLb7CMO8+kFK1rYRhCy19SqzImeFVy2KrrsX2pZhMKpNHty557yrl92K/KafISeJt7E
-	GzjtLhjvV5UCGWJGMyUYvkz0x/0FxM77668yBMPQCHR013dFSJGDUE7y4HU/3+tcObHS8KVVtaQ
-	TQOdPpZR7pIoPZ96xK1U/EgXXM2lQSZb6BfDOFjksd/gr6ENh8hPBAXECstowA==
-X-Google-Smtp-Source: AGHT+IFYQbzGkMxnLdttdH0C0UEyAC07I8+QKLbmKT/c2gH4xa9ESZ4V8XlwVs4gBqreKC2pV2Zsag==
-X-Received: by 2002:a17:90a:d410:b0:312:e73e:cded with SMTP id 98e67ed59e1d1-313af99193bmr1313804a91.16.1749596088256;
-        Tue, 10 Jun 2025 15:54:48 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313b204ce25sm111309a91.45.2025.06.10.15.54.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 15:54:46 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 266CF420AA82; Wed, 11 Jun 2025 05:54:43 +0700 (WIB)
-Date: Wed, 11 Jun 2025 05:54:43 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Harry Yoo <harry.yoo@oracle.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Documentation <linux-doc@vger.kernel.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Feng Tang <feng.tang@intel.com>, Christoph Lameter <cl@gentwo.org>,
-	David Rientjes <rientjes@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: Re: [PATCH] mm: slub: Wrap krealloc() __GFP_ZERO semantics diagram
- in literal code block
-Message-ID: <aEi3s7jvyPw9-SP5@archie.me>
-References: <20250610092153.55093-1-bagasdotme@gmail.com>
- <aEg_HtGuJ8Q8G_s8@hyeyoo>
+        d=1e100.net; s=20230601; t=1749596261; x=1750201061;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=R6yaQM2l+AM1elKMoXhIjARR8lysmC+imGaGP22oyE4=;
+        b=vi2zDYZ3XT2jjcpK0METNZx9HqDR172bqRbkuKoqDDs3RVBuiC/dfHBiqAPmCSxR8L
+         lr/ehayTG5WczkimDLTKO0xkRQUVQykrzxNXrZvNMKsMgPmOzBgNR777Xz8ygsTGdB6N
+         jv5xHtuRalDyC6JtoyWuYRMp4gzJFsu2TEONOpUGT3nKdAUss35u8lWVCAZW+TB4vNjn
+         xzwrWDvMnVokcgTMRRyDv6iXnEneoetMO66pTW22dDrYpINnQkv4CAcSQTCeFxE+2YUk
+         hfzf/r9gIIFC5qzpjqzKzKkcoB0vj/Aink1PG6l+GeYHR6MzHiZrGq9rS2Bkxb8RNWB0
+         3hGg==
+X-Forwarded-Encrypted: i=1; AJvYcCVvUsPpxE/RmIV1vRIa5kw0WBFlTpyBwOfM3Hnnp05utxLkDj/dt81s5m+dK4B6+PA1+nbov5JARKNOcb8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpCDMiqzGiVjyjL9Tgkfe8pOXoLT50jcoxIGIxa6Iy1WyVIkiT
+	UUXnQnVC/NkbbcsAy7Ukbu3UuPnGesjIGeKyB0ww7UXTeFIjcDGRQgZU6urzgUz9ctTAaWZahFD
+	5dJtd1A==
+X-Google-Smtp-Source: AGHT+IGd4UPEgvAEBxaQI6Sk3pDVyN+rdP3l7ICg6WOlvax69b/h/SHGLB5WfmCZLEE2basnUXJ9Crf7+VE=
+X-Received: from pgbdq15.prod.google.com ([2002:a05:6a02:f8f:b0:b2e:bad0:b462])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:728f:b0:215:db66:2a33
+ with SMTP id adf61e73a8af0-21f89013cd9mr697945637.16.1749596261517; Tue, 10
+ Jun 2025 15:57:41 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Tue, 10 Jun 2025 15:57:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="h4oSwMBGfaZhoS6j"
-Content-Disposition: inline
-In-Reply-To: <aEg_HtGuJ8Q8G_s8@hyeyoo>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
+Message-ID: <20250610225737.156318-1-seanjc@google.com>
+Subject: [PATCH v2 00/32] KVM: x86: Clean up MSR interception code
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Chao Gao <chao.gao@intel.com>, Borislav Petkov <bp@alien8.de>, Xin Li <xin@zytor.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Francesco Lavra <francescolavra.fl@gmail.com>, 
+	Manali Shukla <Manali.Shukla@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+
+Clean up KVM's MSR interception code (especially the SVM code, which is all
+kinds of ugly).  The main goals are to:
+
+ - Make the SVM and VMX APIs consistent (and sane; the current SVM APIs have
+   inverted polarity).
+
+ - Eliminate the shadow bitmaps that are used to determine intercepts on
+   userspace MSR filter update.
+
+v2:
+ - Add a patch to set MSR_IA32_SPEC_CTRL interception as appropriate. [Chao]
+ - Add a patch to cleanup {svm,vmx}_disable_intercept_for_msr() once the
+   dust has settled. [Dapeng]
+ - Return -ENOSPC if msrpm_offsets[] is full. [Chao]
+ - Free iopm_pages directly instead of bouncing through iopm_base. [Chao]
+ - Check for "offset == MSR_INVALID" before using offset. [Chao]
+ - Temporarily keep MSR_IA32_DEBUGCTLMSR in the nested list. [Chao]
+ - Add a comment to explain nested_svm_msrpm_merge_offsets. [Chao]
+ - Add a patch to shift the IOPM allocation to avoid having to unwind it.
+ - Init nested_svm_msrpm_merge_offsets iff nested=1. [Chao]
+ - Add a helper to dedup alloc+init of MSRPM and IOPM.
+ - Tag merge_msrs as "static" and "__initconst". [Paolo]
+ - Rework helpers to use fewer macros. [Paolo]
+ - Account for each MSRPM byte covering 4 MSRs. [Paolo]
+ - Opportunistically use cpu_feature_enabled(). [Xin]
+ - Fully remove MAX_DIRECT_ACCESS_MSRS, MSRPM_OFFSETS, and msrpm_offsets.
+   [Francesco]
+ - Fix typos. [Dapeng, Chao]
+ - Collect reviews. [Chao, Dapeng, Xin]
+
+v1: https://lore.kernel.org/all/20250529234013.3826933-1-seanjc@google.com
+
+v0: https://lore.kernel.org/kvm/20241127201929.4005605-1-aaronlewis@google.com
+
+Sean Christopherson (32):
+  KVM: SVM: Disable interception of SPEC_CTRL iff the MSR exists for the
+    guest
+  KVM: SVM: Allocate IOPM pages after initial setup in
+    svm_hardware_setup()
+  KVM: SVM: Don't BUG if setting up the MSR intercept bitmaps fails
+  KVM: SVM: Tag MSR bitmap initialization helpers with __init
+  KVM: SVM: Use ARRAY_SIZE() to iterate over direct_access_msrs
+  KVM: SVM: Kill the VM instead of the host if MSR interception is buggy
+  KVM: x86: Use non-atomic bit ops to manipulate "shadow" MSR intercepts
+  KVM: SVM: Massage name and param of helper that merges vmcb01 and
+    vmcb12 MSRPMs
+  KVM: SVM: Clean up macros related to architectural MSRPM definitions
+  KVM: nSVM: Use dedicated array of MSRPM offsets to merge L0 and L1
+    bitmaps
+  KVM: nSVM: Omit SEV-ES specific passthrough MSRs from L0+L1 bitmap
+    merge
+  KVM: nSVM: Don't initialize vmcb02 MSRPM with vmcb01's "always
+    passthrough"
+  KVM: SVM: Add helpers for accessing MSR bitmap that don't rely on
+    offsets
+  KVM: SVM: Implement and adopt VMX style MSR intercepts APIs
+  KVM: SVM: Pass through GHCB MSR if and only if VM is an SEV-ES guest
+  KVM: SVM: Drop "always" flag from list of possible passthrough MSRs
+  KVM: x86: Move definition of X2APIC_MSR() to lapic.h
+  KVM: VMX: Manually recalc all MSR intercepts on userspace MSR filter
+    change
+  KVM: SVM: Manually recalc all MSR intercepts on userspace MSR filter
+    change
+  KVM: x86: Rename msr_filter_changed() => recalc_msr_intercepts()
+  KVM: SVM: Rename init_vmcb_after_set_cpuid() to make it intercepts
+    specific
+  KVM: SVM: Fold svm_vcpu_init_msrpm() into its sole caller
+  KVM: SVM: Merge "after set CPUID" intercept recalc helpers
+  KVM: SVM: Drop explicit check on MSRPM offset when emulating SEV-ES
+    accesses
+  KVM: SVM: Move svm_msrpm_offset() to nested.c
+  KVM: SVM: Store MSRPM pointer as "void *" instead of "u32 *"
+  KVM: nSVM: Access MSRPM in 4-byte chunks only for merging L0 and L1
+    bitmaps
+  KVM: SVM: Return -EINVAL instead of MSR_INVALID to signal out-of-range
+    MSR
+  KVM: nSVM: Merge MSRPM in 64-bit chunks on 64-bit kernels
+  KVM: SVM: Add a helper to allocate and initialize permissions bitmaps
+  KVM: x86: Simplify userspace filter logic when disabling MSR
+    interception
+  KVM: selftests: Verify KVM disable interception (for userspace) on
+    filter change
+
+ arch/x86/include/asm/kvm-x86-ops.h            |   2 +-
+ arch/x86/include/asm/kvm_host.h               |   2 +-
+ arch/x86/kvm/lapic.h                          |   2 +
+ arch/x86/kvm/svm/nested.c                     | 126 +++--
+ arch/x86/kvm/svm/sev.c                        |  29 +-
+ arch/x86/kvm/svm/svm.c                        | 490 ++++++------------
+ arch/x86/kvm/svm/svm.h                        | 102 +++-
+ arch/x86/kvm/vmx/main.c                       |   6 +-
+ arch/x86/kvm/vmx/vmx.c                        | 202 ++------
+ arch/x86/kvm/vmx/vmx.h                        |   9 -
+ arch/x86/kvm/vmx/x86_ops.h                    |   2 +-
+ arch/x86/kvm/x86.c                            |   8 +-
+ .../kvm/x86/userspace_msr_exit_test.c         |   8 +
+ 13 files changed, 426 insertions(+), 562 deletions(-)
 
 
---h4oSwMBGfaZhoS6j
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+base-commit: 61374cc145f4a56377eaf87c7409a97ec7a34041
+-- 
+2.50.0.rc0.642.g800a2b2222-goog
 
-On Tue, Jun 10, 2025 at 11:20:14PM +0900, Harry Yoo wrote:
-> On Tue, Jun 10, 2025 at 04:21:53PM +0700, Bagas Sanjaya wrote:
-> > Sphinx reports htmldocs warnings:
-> >=20
-> > Documentation/core-api/mm-api:40: ./mm/slub.c:4936: WARNING: Block quot=
-e ends without a blank line; unexpected unindent. [docutils]
-> > Documentation/core-api/mm-api:40: ./mm/slub.c:4936: ERROR: Undefined su=
-bstitution referenced: "--------". [docutils]
-> >=20
-> > Fix the warning by wrapping krealloc() semantics diagram for __GFP_ZERO
-> > in literal code block.
-> >=20
-> > Fixes: 489a744e5fb1 ("mm: krealloc: clarify valid usage of __GFP_ZERO")
-> > Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
-> > ---
->=20
-> Hmm not sure what I am missing, but neither `make htmldocs` on my machine
-> nor docs.kernel.org [1] list kerneldoc for *_noprof() functions properly
-> (which should have been listed), so no errors show up...
->=20
-> [1] https://docs.kernel.org/core-api/mm-api.html
-
-I was encountering the warnings on docs-next (see MAINTAINERS), something t=
-hat
-I forget to mention when posting this patch.
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---h4oSwMBGfaZhoS6j
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaEi3sgAKCRD2uYlJVVFO
-owTRAP0Z2dOdBEmOjXllQJg2vhWjdiMaNOfYVPFJQVFxsLLfmgD/bLWK+ZJhMWNX
-IlYe4cP0wPpNHVC0fh8Lh7iBx46MqwE=
-=dQAJ
------END PGP SIGNATURE-----
-
---h4oSwMBGfaZhoS6j--
