@@ -1,163 +1,159 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F16239E84
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 493BC24293B
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:23:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749568980; cv=none; b=HtO0p7fblohr/irKWCtSPCbY3WusKv/Hly3vjsFwgWD0XtgLggaoAd9IOvE7IWpHXSnz9OIZ9sCaFPON862gnegE9pAIgUb1BVq5qVW7UF5TuRHPZwADldmNZVCNq3CQvIKbRRs0xftAgj9BJqutqCbjAJ2XNbVn1K22n+xyfbk=
+	t=1749569014; cv=none; b=lD5l8TY7X7dlL1HwebqOHuDNBjatDb8wBLAyTlKpYcVHNduqGeG5zA3b4h70sABvUgBg+yntG+OlVRkRHr9+lo5OK34f+ebKQcCg7QVxd37HIlnGZpbrFgI9ZwQX9C7AV3efGQ/JeaNX1bq8S62OA5z2XbNoBvFNkqlV2jtyEtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749568980; c=relaxed/simple;
-	bh=ZgS9YhjNsHBJl3Lvr4F9rM8TY19/yblIcAWcsduVrow=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NZk9ZmPRPu405fwVMfEJMG/DBfveMnpoChELV1kP8DogsGEKA3e37TckoCdMQtBlMfya4QVfDwuraR6Ihne8izNe4cjF5tmEy+lZqRFmxE2JRYqSUFAje2kZkndGAwvv5jSm+132AVyIHrIsZ46RpoVuJNYU0mDTxIWkKEnVJ0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=E7/7CAy/; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749569014; c=relaxed/simple;
+	bh=SmTNhAOGAIip/lVL+aZeJrx7rLBvuTmZXxhKmCJfKN0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=DeGBu/TehD2JpKZvUs79yFgur7mYXs+Y//XhmrbF4I6Z+v/YQQsnrqBm5u/aOAPKAkyOAbbe+tKR86+E4YedQIkjUr3jDAZ7peG3ruS0WSqJ2mrnZHn3s/2DCIaH6TVr7dj5Wb+UQ85+fth0/KgWHx7M8EkzT4/YnmDpz2Yn8B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (3072-bit key) header.d=posteo.net header.i=@posteo.net header.b=XRjbG5YJ; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="E7/7CAy/"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A9ZTK0009897
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:22:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	e114YZ488PyX5H8bdxjDah+KG/E0gP9d9huL6plo+H8=; b=E7/7CAy/wq7H5+zD
-	WnX8GlFw5fc5XZz1GaHLYnYgQYBlw9d7t/vvCNU7Ata6F2W7hZH0G0VEIhquY2FU
-	emqXoMl/Neq2Y2P20jr6UP58GPTSGEQTRyVhBaY40i64cCTKaKjFrJHksSQKQ/nh
-	xmeey4Z9nUX7NnAxMu5mXnjcmyyWyz8a6KvpNTZEkc2y4kLsbhsNfJenKcheklFV
-	Cct2stKsbtxIFebaJiPoNLcJ/samSt32ueGQbzbctSgy1KWp1/cUVNlu6Gq282+a
-	rAE/hFxC+WZtaIK/orhKBpYxaK/7zm1dGI6A6AZsVLuLSV5qt12sqNh8Cjh6ewCF
-	0wyToA==
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474d1221dm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:22:57 +0000 (GMT)
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-7391d68617cso4873644b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:22:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749568976; x=1750173776;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e114YZ488PyX5H8bdxjDah+KG/E0gP9d9huL6plo+H8=;
-        b=UlAUULhYxIAOtaQuK6nVk0hlIRsZag4rBV1E0PqtgJscpx/nWAPFv/2fSjXVO5cbV4
-         e2rlXdrVjM022nRapN07Xg+//wUjEsmTd+sZ6go2PaUiyPDLxE2LoC9XHrfsHIGHVM2L
-         TtTrQo78n8cJ3ykN8x5dVsegmGiiirpJLYTwMvewIz/mV6bRCLLaKtHRS3DWeaDcoPea
-         L9IQzDMAtCCDUgx7n/YOPeHu4k3QAX8wgtMrSpkxo4ZgaWef/HKz0kqvwHYL+C5Q5n7j
-         +1jZp+kCux/Np4BOl+VIlHVj9IJ7Wb7VZfHvbW2uRjJm0uiwbWjD4U1JYCjCSO+1m8Aw
-         26dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWjpIBQXfwHveC1wsQQBImlBViqq28KgPmlmJtMJsQIKycxa3zpaul48HQhiTIe8KVWUHh9+i4bgKVOe+U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxk+JjJtWBnuc01nbQjLzlqRKyKjdm8kMNJabe+sLBom6plii31
-	70QbjdchYwxzQPMguvWw8ualq3BpNqkOJypNQUlH8oJQVSiibaCQndLw2dVNQNCM8r7BuCuMxkH
-	DVEpVKSXzQkAQLGZii+fWxQusCBZQupX9+iVhdbm6PGqBkCBIDW6L35DlIQX3Md6Torw=
-X-Gm-Gg: ASbGncv7tVfJ9cQ+aJDZy+ZyQsWN3mbq/C/acYpK4/IFReDqF2lyO4SRJKWLeCETBPz
-	CACsxYoMEgtmELdWRP+z6kfmkfewiodKGU3QBPzoHsH/YDJ4q4zmsC1Er6NubJK3uq25TJEHibq
-	ozCxL6DkmB4hUakXzwThw3pkeK6BXIIONBEHeelZKUvV+wZlXtJiTOg75G4dLElSV1G2uxQJjJO
-	V1/KV2haHONivVkbkGaxjgdgDDGHCITQwHALBBXt9FY5AKUVY8VvdA5Wnwm3u+903DGljKcAvq3
-	kw0CPuSDOi+xQdsx2fIFxC/1KQCnvpGFjs1vtNJOCmIltGfcswFgaKsSEaLxhpvJw5SAzteQ
-X-Received: by 2002:a05:6a20:6a05:b0:21a:cc71:2894 with SMTP id adf61e73a8af0-21f7696b725mr5956496637.17.1749568975805;
-        Tue, 10 Jun 2025 08:22:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFRW9TAgrPxwCJk/o8eP9DoS0GIWBXXYaSbfoHboYL0uaKLdt5ZmSeDkSVqNYVQEjp5EHKv7w==
-X-Received: by 2002:a05:6a20:6a05:b0:21a:cc71:2894 with SMTP id adf61e73a8af0-21f7696b725mr5956462637.17.1749568975426;
-        Tue, 10 Jun 2025 08:22:55 -0700 (PDT)
-Received: from [10.226.59.182] (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482af7aa6esm7780346b3a.59.2025.06.10.08.22.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 08:22:55 -0700 (PDT)
-Message-ID: <c0bea584-10d1-4afa-a80d-594179f3a734@oss.qualcomm.com>
-Date: Tue, 10 Jun 2025 09:22:53 -0600
+	dkim=pass (3072-bit key) header.d=posteo.net header.i=@posteo.net header.b="XRjbG5YJ"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id AC05D240106
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:23:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net;
+	s=1984.ea087b; t=1749569004;
+	bh=SmTNhAOGAIip/lVL+aZeJrx7rLBvuTmZXxhKmCJfKN0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=XRjbG5YJSFBhe9cN3yB5/CnawZNTtXh/BSkgyk1JJFkPUMmSPey/IArAFYpVepx6a
+	 feohYEhUb5f2QRh0gfx6wPoxODSGKDafGf8JvSo3s52P44hnsUcQFpSWLAI6oJWM/D
+	 2McjbpEYG/5V9tfz5HNo0hOqsuqk3sf7NizwDStDHOqmGvfdestdm7ZQPyudU48j9s
+	 Q+fqpkT9AUIgTCgZYXGLzubZbid6OEZ69fGKRP5+XtxN80j20biP1gwftVOyptS+xg
+	 IsxLkh8PHnnsAYp7+fxMJ1aqGQlxofozO/9WrhHS4nlC3kKXamq4Tyk4PxYU+pVTiq
+	 4J1zMbmDbnFuSQyVodKzyBPBC54nt4lnACdbK1MRiVhkmEGuAyo2dx3iD00hHZ6GcZ
+	 8T68j476UQMTeeFNOAbvrXuHlIhQFaTByqqztdeVilnf/CX409RtmOTOkhnRujg2wD
+	 IKDncBsSgmnacs6ExcHVY1eI0maegdDeuCRTLQcmagsKFEisxw6
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4bGsxh35bsz6v1N;
+	Tue, 10 Jun 2025 17:23:20 +0200 (CEST)
+From: Charalampos Mitrodimas <charmitro@posteo.net>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>,  "David S. Miller"
+ <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>,  Jakub
+ Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>,  Simon
+ Horman <horms@kernel.org>,  Martin KaFai Lau <martin.lau@linux.dev>,  John
+ Fastabend <john.fastabend@gmail.com>,  Alexei Starovoitov
+ <ast@kernel.org>,  Andrii Nakryiko <andrii@kernel.org>,  Eduard Zingerman
+ <eddyz87@gmail.com>,  Song Liu <song@kernel.org>,  Yonghong Song
+ <yonghong.song@linux.dev>,  KP Singh <kpsingh@kernel.org>,  Stanislav
+ Fomichev <sdf@fomichev.me>,  Hao Luo <haoluo@google.com>,  Jiri Olsa
+ <jolsa@kernel.org>,  Feng Yang <yangfeng@kylinos.cn>,  Tejun Heo
+ <tj@kernel.org>,  Network Development <netdev@vger.kernel.org>,  LKML
+ <linux-kernel@vger.kernel.org>,  bpf <bpf@vger.kernel.org>,
+  syzbot+b4169a1cfb945d2ed0ec@syzkaller.appspotmail.com
+Subject: Re: [PATCH bpf-next] bpf: Fix RCU usage in
+ bpf_get_cgroup_classid_curr helper
+In-Reply-To: <CAADnVQK_k4ReDwS_urGtJPQ1SXaHdrGWYxJGd-QK=tAn60p4vw@mail.gmail.com>
+References: <20250608-rcu-fix-task_cls_state-v1-1-2a2025b4603b@posteo.net>
+	<CAADnVQLxaxVpCaK90FfePOKMLpH=axaK3gDwVZLp0L1+fNxgtA@mail.gmail.com>
+	<9eae82be-0900-44ea-b105-67fadc7d480d@iogearbox.net>
+	<CAADnVQK_k4ReDwS_urGtJPQ1SXaHdrGWYxJGd-QK=tAn60p4vw@mail.gmail.com>
+Date: Tue, 10 Jun 2025 15:23:00 +0000
+Message-ID: <87wm9jy623.fsf@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: semantic conflict between the drm-misc tree and
- Linus' tree
-To: Lukas Wunner <lukas@wunner.de>, Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Simona Vetter <simona.vetter@ffwll.ch>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Krzysztof Wilczy??ski <kwilczynski@kernel.org>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20250610124809.1e1ff0cd@canb.auug.org.au>
- <aEeqkw670ZcuDdZO@wunner.de>
-Content-Language: en-US
-From: Jeff Hugo <jeff.hugo@oss.qualcomm.com>
-In-Reply-To: <aEeqkw670ZcuDdZO@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: sZy8Jv1ibeWwLyAhLnr9Obj53bm_UkHP
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDEyMyBTYWx0ZWRfX0FrmBjgGJBUP
- yOVJpOYdDqIj2kl5Z+3jCUpOUPahYBhnRG91Ymt6hnLERuCQkseP3t4UUa+e1viJ7aUMETVaySk
- 5i2fWSHpZiFAAx71MZDGlVjACH/vR8y6cRxq/1T1byXMjll6E/H93JM/490J4Jsz89/8N/vYI6e
- Etlx+i5C43chqpqoC9y3q1w7Ob0pcyx0ggFMSFU79e340gmA1Vg1jd3xT/TY54jBTfI6bphus3Z
- SlbdNNBzuhMiAqHr1EEpFx9TQGzIyBZ8+aIF83y97ahyEgyYHBlnvFOSi+QaO+5B9kQ2kXEgua3
- Otiblvhv/+RweeBo9NvCaipniAdgZsoE3NMbSjexzHX5n6n+iC0tlY0x0MQ8Ie76TnaZTZv1dYf
- cuiNjx/jpxGOxzqhxt770lFQFGubn4yzKmdM5Dj/guYRHYRlg+KqqcPSsJabVuJ8ljxSEKEy
-X-Authority-Analysis: v=2.4 cv=GYkXnRXL c=1 sm=1 tr=0 ts=68484dd1 cx=c_pps
- a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=Ho3n10bA_UD04d3nvKkA:9
- a=QEXdDO2ut3YA:10 a=OpyuDcXvxspvyRM73sMx:22
-X-Proofpoint-ORIG-GUID: sZy8Jv1ibeWwLyAhLnr9Obj53bm_UkHP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_07,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 bulkscore=0
- impostorscore=0 clxscore=1015 malwarescore=0 priorityscore=1501 mlxscore=0
- adultscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506100123
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 6/9/2025 9:46 PM, Lukas Wunner wrote:
-> On Tue, Jun 10, 2025 at 12:48:09PM +1000, Stephen Rothwell wrote:
->> After merging the drm-misc tree, today's linux-next build (x86_64
->> allmodconfig) failed like this:
->>
->> drivers/accel/qaic/qaic_ras.c: In function 'decode_ras_msg':
->> drivers/accel/qaic/qaic_ras.c:325:17: error: implicit declaration of function 'pci_printk'; did you mean 'pci_intx'? [-Wimplicit-function-declaration]
->>    325 |                 pci_printk(level, qdev->pdev, "RAS event.\nClass:%s\nDescription:%s %s %s\nError Threshold for this report %d\nSyndrome:\n    0x%llx\n    0x%llx\n    0x%llx\n    0x%llx\n    0x%llx\n    0x%llx\n    0x%llx\n    0x%llx\n",
->>        |                 ^~~~~~~~~~
->>        |                 pci_intx
->>
->> Caused by commit
->>
->>    c11a50b170e7 ("accel/qaic: Add Reliability, Accessibility, Serviceability (RAS)")
->>
->> interacting with commit
->>
->>    1c8a0ed2043c ("PCI: Remove unused pci_printk()")
->>
->> from Linus' tree (in v6.16-rc1).
->>
->> As a fix up patch would be a bit of a mess, I have used the drm-misc
->> tree from next-20250606 for today.
-> 
-> The simplest fix is to use dev_printk() and replace qdev->pdev with
-> &qdev->pdev->dev.
+Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
 
-Ick. I agree, this is the quick fix. I'll implement it and try to get 
--next unblocked ASAP.
+> On Tue, Jun 10, 2025 at 5:58=E2=80=AFAM Daniel Borkmann <daniel@iogearbox=
+.net> wrote:
+>>
+>> On 6/9/25 5:51 PM, Alexei Starovoitov wrote:
+>> > On Sun, Jun 8, 2025 at 8:35=E2=80=AFAM Charalampos Mitrodimas
+>> > <charmitro@posteo.net> wrote:
+>> >>
+>> >> The commit ee971630f20f ("bpf: Allow some trace helpers for all prog
+>> >> types") made bpf_get_cgroup_classid_curr helper available to all BPF
+>> >> program types.  This helper used __task_get_classid() which calls
+>> >> task_cls_state() that requires rcu_read_lock_bh_held().
+>> >>
+>> >> This triggers an RCU warning when called from BPF syscall programs
+>> >> which run under rcu_read_lock_trace():
+>> >>
+>> >>    WARNING: suspicious RCU usage
+>> >>    6.15.0-rc4-syzkaller-g079e5c56a5c4 #0 Not tainted
+>> >>    -----------------------------
+>> >>    net/core/netclassid_cgroup.c:24 suspicious rcu_dereference_check()=
+ usage!
+>> >>
+>> >> Fix this by replacing __task_get_classid() with task_cls_classid()
+>> >> which handles RCU locking internally using regular rcu_read_lock() and
+>> >> is safe to call from any context.
+>> >>
+>> >> Reported-by: syzbot+b4169a1cfb945d2ed0ec@syzkaller.appspotmail.com
+>> >> Closes: https://syzkaller.appspot.com/bug?extid=3Db4169a1cfb945d2ed0ec
+>> >> Fixes: ee971630f20f ("bpf: Allow some trace helpers for all prog type=
+s")
+>> >> Signed-off-by: Charalampos Mitrodimas <charmitro@posteo.net>
+>> >> ---
+>> >>   net/core/filter.c | 2 +-
+>> >>   1 file changed, 1 insertion(+), 1 deletion(-)
+>> >>
+>> >> diff --git a/net/core/filter.c b/net/core/filter.c
+>> >> index 30e7d36790883b29174654315738e93237e21dd0..3b3f81cf674dde7d2bd83=
+488450edad4e129bdac 100644
+>> >> --- a/net/core/filter.c
+>> >> +++ b/net/core/filter.c
+>> >> @@ -3083,7 +3083,7 @@ static const struct bpf_func_proto bpf_msg_pop_=
+data_proto =3D {
+>> >>   #ifdef CONFIG_CGROUP_NET_CLASSID
+>> >>   BPF_CALL_0(bpf_get_cgroup_classid_curr)
+>> >>   {
+>> >> -       return __task_get_classid(current);
+>> >> +       return task_cls_classid(current);
+>> >>   }
+>> >
+>> > Daniel added this helper in
+>> > commit 5a52ae4e32a6 ("bpf: Allow to retrieve cgroup v1 classid from v2=
+ hooks")
+>> > with intention to use it from networking hooks.
+>> >
+>> > But task_cls_classid() has
+>> >          if (in_interrupt())
+>> >                  return 0;
+>> >
+>> > which will trigger in softirq and tc hooks.
+>> > So this might break Daniel's use case.
+>>
+>> Yeap, we cannot break tc(x) BPF programs. It probably makes sense to have
+>> a new helper implementation for the more generic, non-networking case wh=
+ich
+>> then internally uses task_cls_classid().
+>
+> Instead of forking the helper I think we can :
+> rcu_read_lock_bh_held() || rcu_read_lock_held()
+> in task_cls_state().
 
-> The PCI core already contains one occurrence of dev_printk() in
-> drivers/pci/tlp.c (introduced this cycle - 82013ff394ea).
-> 
-> Additionally drivers/pci/aer.c goes so far as to define a custom
-> aer_printk() for lack of a pci_printk().
-> 
-> drivers/pci/controller/dwc/pcie-tegra194.c contains further
-> occurrences of dev_printk() which could use pci_printk() instead.
-> 
-> Those occurrences suggest that the removal of pci_printk() was
-> perhaps uncalled for.
-> 
-> Thanks,
-> 
-> Lukas
+I tested your suggestion with,
 
+  rcu_read_lock_bh_held() || rcu_read_lock_held()
+
+but it still triggers the RCU warning because BPF syscall programs use
+rcu_read_lock_trace().
+
+Adding rcu_read_lock_trace_held() fixes it functionally but triggers a
+checkpatch warning:
+
+  WARNING: use of RCU tasks trace is incorrect outside BPF or core RCU code
+
+I think the best solution here would be to add
+local_bh_disable()/enable() protection directly in the BPF helper. This
+keeps the fix localized to where the problem exists, and avoids
+modifying core cgroup RCU.
+
+> And that will do it.
