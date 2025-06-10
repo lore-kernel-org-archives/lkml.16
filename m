@@ -1,81 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.manguebit.org (mx1.manguebit.org [143.255.12.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F3E1FAC34;
-	Tue, 10 Jun 2025 17:09:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A365242D73;
+	Tue, 10 Jun 2025 17:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=143.255.12.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749575399; cv=none; b=EQDT6mXzhGrRmzb2YHGKCcWK20RN1Q99eEc+TDhX6+TaoQ+BNFSMOcaL5lYcK9cDYlC260ylmiS+SFfjcsI9peu3qTwZraD8qUw3mKnv8XKHZDc1DFZ5I1TeKXS/NzeQAxVt+R7s9LCa9iFFaEjfMFcupMDTojBbDN2hxXJX+Io=
+	t=1749575414; cv=none; b=bCUHs5VZBTg1mvzl30lRkr7JcVVvLrcp6uLW3TjUhKBkdN1wdVs5PQNNne37RqPc5urUow+pbCU+hxAF69HjqDTFJ8tNm2CVoVSIRzzMdtgeBBOESoRyZ9utBq96z1a5VmD/ghO92t8/rBtPtZjF/mikOUFmpF3V9V1uxEMw7nA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749575399; c=relaxed/simple;
-	bh=92Pz6pj4TO5Cq4bz9dNFnrb+WOjBbXMZF/wKtdVuqQk=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=O2DA6fBrUWFqcfzUHyh7DC4Gm3mxXNVBexL9mrMo4jgZoMZkQlS2qpD2RTcN64pQhHiWUGQCY6S+eb2H/FSVn84YnoOt59VcdZreMFwH53T8cX0POnyxb4LNeg4RTL4IP5hE68isRZJ/GsTK348wpxFk9KMjC2L9SRKGLkRTRTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BVhf44G4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749575414; c=relaxed/simple;
+	bh=xtYL2RK0te9ZlBj3m+Vb6eAvKD67QR1pu+qsBXUhyOQ=;
+	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
+	 MIME-Version:Content-Type; b=jEXBvWLgOtyQ7znwAQP5TfTj4/vnKcDU5uGNWVi2YuBAQo2boQXb140wdb4Wr1nWg6XFSBZl7yAEdj6pj4rYlI2y6q1GNviDXsmJ2/VJYKPQ2TPIYb7s51sveUm6lbcTNgBHwewIPipWFKeyIu7JlkxkSdugPebFm3pXIp/sIGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.org; spf=pass smtp.mailfrom=manguebit.org; dkim=pass (2048-bit key) header.d=manguebit.org header.i=@manguebit.org header.b=R+fm+0na; arc=none smtp.client-ip=143.255.12.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BVhf44G4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ED4CC4CEED;
-	Tue, 10 Jun 2025 17:09:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749575398;
-	bh=92Pz6pj4TO5Cq4bz9dNFnrb+WOjBbXMZF/wKtdVuqQk=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=BVhf44G47lIsVjLvYmZ61KEvvflS7qCVvIRoJYpxmCjwQUqo13vaKXl0N8Y7X1CgW
-	 BTrW2Y35i8D9UmC26pw/kFAbMNf46fG/5CIL1MX+PKyH9teYOh3n7JkJzDpJg4RvMt
-	 /HmaIHKpR4A74Kvbc8afLr74AH9e4UTcZS0Lbs2nLooQObwHdYxhUurS2MrPJOWMOq
-	 yT7LtQeEci1Je+MjVImCZRQMqr+tltQsPCcgfOQRrgTsnOhx8SWf3oumvuHZ3MTkO5
-	 D/Rqau3np3piUyDLv8vrgcYpkOkHVO1JVoipQjF8uYEPl04m0Q4wExyTTsGFfo4OpN
-	 T0WXFSwX4UutA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33C1839D6540;
-	Tue, 10 Jun 2025 17:10:30 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=manguebit.org header.i=@manguebit.org header.b="R+fm+0na"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=manguebit.org; s=dkim; h=Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Date:References:In-Reply-To:Subject:Cc:To:From:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=xtYL2RK0te9ZlBj3m+Vb6eAvKD67QR1pu+qsBXUhyOQ=; b=R+fm+0napNWOeqakU+ktfbxl2P
+	b4IrPYroXjNRVdU5HTzMhfueVY6AmUD/txDlE1eMcf/BpS1VIvgZ3IENYbNpCItUNy2r+nls+DmKo
+	+u7DlBkRwrD+q9DxTT2729nWsto0ejANn2M4bN8EVrisu2a/PpRqKt18+eiq+q5n3sLfuj+aPQ8mR
+	IXTszQ+iZFuk69V6gWhYyynNlFkA7asy6xfTRYp3+IAB7v/KBkE72z0WH1jRDsoYYEOy+XbCe6FFa
+	23K6QW9lzBdxE1e5vI3bY3Q2MUyM7/vthb0agSW5FSFfvLb+G3hH4uuZbkCQEyU87o3HhfWwgOnji
+	qnY5OugQ==;
+Authentication-Results: mx1.manguebit.org;
+	iprev=fail smtp.remote-ip=143.255.12.172;
+	auth=pass (LOGIN) smtp.auth=pc;
+	dmarc=skipped
+Received: from pc by mx1.manguebit.org with local (Exim 4.98.2)
+	id 1uP2U5-00000000Bnw-2uZz;
+	Tue, 10 Jun 2025 14:10:03 -0300
+Message-ID: <b51772c542618b56cf0fed0cf95836f5@manguebit.org>
+From: Paulo Alcantara <pc@manguebit.org>
+To: Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>, Tom Talpey
+ <tom@talpey.com>
+Cc: Steve French <smfrench@gmail.com>, Steve French <sfrench@samba.org>,
+ linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cifs: Show reason why autodisabling serverino support
+In-Reply-To: <20250610165555.sekma4ybcl63flnw@pali>
+References: <20250608164453.6699-1-pali@kernel.org>
+ <3d644c3f8acb3dbcef395bd96e7e957c@manguebit.org>
+ <CAH2r5muuanOgjzQ8wgd+QoyrU_ZM4tATrfYYQj=b7MapGLMh5A@mail.gmail.com>
+ <20250609073650.kj6lxrykguhb7nuo@pali>
+ <ac80cb46-5787-4fc9-a405-fd38a505c613@talpey.com>
+ <20250610165555.sekma4ybcl63flnw@pali>
+Date: Tue, 10 Jun 2025 14:10:00 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2] tools/resolve_btfids: Fix build when cross compiling
- kernel with clang.
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174957542901.2523637.9194820826653322315.git-patchwork-notify@kernel.org>
-Date: Tue, 10 Jun 2025 17:10:29 +0000
-References: <20250606074538.1608546-1-suleiman@google.com>
-In-Reply-To: <20250606074538.1608546-1-suleiman@google.com>
-To: Suleiman Souhlal <suleiman@google.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, masahiroy@kernel.org,
- irogers@google.com, ssouhlal@freebsd.org, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev, stable@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Score: 1.1 (+)
 
-Hello:
+Pali Roh=C3=A1r <pali@kernel.org> writes:
 
-This patch was applied to bpf/bpf.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
+> For sure I can improve also existing text message. But Tom already sent
+> NACK so I'm not sure if I should continue with improvement or discard it.
 
-On Fri,  6 Jun 2025 16:45:38 +0900 you wrote:
-> When cross compiling the kernel with clang, we need to override
-> CLANG_CROSS_FLAGS when preparing the step libraries.
-> 
-> Prior to commit d1d096312176 ("tools: fix annoying "mkdir -p ..." logs
-> when building tools in parallel"), MAKEFLAGS would have been set to a
-> value that wouldn't set a value for CLANG_CROSS_FLAGS, hiding the
-> fact that we weren't properly overriding it.
-> 
-> [...]
+Oh, feel free to continue as I'm not the CIFS maintainer, so my NACK
+doesn't matter much.
 
-Here is the summary with links:
-  - [v2] tools/resolve_btfids: Fix build when cross compiling kernel with clang.
-    https://git.kernel.org/bpf/bpf/c/a298bbab903e
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Go ahead with Steve's suggestion to make those dynamic tracepoints.
+These VFS messages will simply flood dmesg when reconnecting,
+automounting DFS links or surrogate reparse points -- note that they
+expire after 10 minutes, so next access will print the VFS message
+again.
