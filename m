@@ -1,99 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170DD242927;
-	Tue, 10 Jun 2025 15:18:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC589239E98
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749568735; cv=none; b=V3cT9MvzEc59H86tbYJZQz34wypGAE9QmOZWmjmfp2tcGTeEuoanAE66AvkLx2EeBMHFYkJWxU6IspYY7obVXFLyr5RhNe+Ur5JeVzO7wzhIdgP5yZwV79tqKfR2/mPM6ADXqAkZ8nkIKGSf0kojU9sEQifHgw4tiTJcUsv9/TQ=
+	t=1749568783; cv=none; b=KfbbyAtunfQB6YSFzdruQlWmQOGm3CY+/v7hXbrGeb2m1ZzOB3Dcx7UWBteFhStGTyvzTXFpgSz7vndPE/LVXfOKOeZi8lRw/3x6RKesBSquF2IdAdx4j26s+jJ2AilHRjQdShBtFEot7YVK8u/NONgHlhO75oTuXA3K1oVic5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749568735; c=relaxed/simple;
-	bh=vtK4N2nV0cyw0wDbbUBhQ5HdwbhCZwPcY+S9Qz9vAuY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dONXJWtdR7dhyPXc2CsI4auu9sc4q72Tbt1UDqB6dcStVgq0HfMEZsRg9Ubl2LjqCOwELEDvLl/N9VTHQo5bNXpSo+L3DTRvNcMV0L/kXWUyzbdsoiQUGsTMLjqVQ5Stwpp9O+WcqDX0DLIkbl9LXZ9BsPtM/ciPBr12ovrfpEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sCdD1UIF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749568783; c=relaxed/simple;
+	bh=KNTwNJojHFp5A5rIHcOYYIryWECnrSG2W6CYmT9Fd0Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pm/JB9QRUH4LO1Of0/GONS/+J6l086zVxtvS3RKZS58eS6jOMBEXld7iywryXdFXvweKnuLAizw4ShXrZ/jXiuN3s78P2lpvWLln/gNeSgx3/F3mKOHspzRjWuJXM1CmXqAeF/F32tsrjdEfVqbHUsMPsnKEgvTVsy0897KjTvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ELSNAJq9; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sCdD1UIF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09CAFC4CEED;
-	Tue, 10 Jun 2025 15:18:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749568734;
-	bh=vtK4N2nV0cyw0wDbbUBhQ5HdwbhCZwPcY+S9Qz9vAuY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sCdD1UIF3pT9KlgGAozGLVfxpQY8eOmtWkSY4Z59Kck1u5g9v9xQ5uagNzvLhW3ZH
-	 uK2UY/wkqxFIsuelWSaxH2SlmYipdfb11/Y/e/AqfTuJaaKvwR0a0GIrnnn4rDiM0o
-	 WLRkI5i1I7aeD/UvW6QsgP7zBlSK3cQKkezSxFqu/bTXuSvhNDhxpaNWXVsh0ydEwD
-	 0NPzKlXb1xOQ/vImGoNO+SiR/Ov7gsLwzt/f5UxH9s8i4P7PyFyRCG3R4/Dg6Z+ufl
-	 WVmFD+kjZTHucIOqQfQutA+hAL//nPK/E39ud1svGLtV7X88+t1m2XLRReu1V//9wU
-	 cYl36aeUzSdIQ==
-Date: Tue, 10 Jun 2025 16:18:49 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Srinivas Kandagatla <srini@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-	Lala Lin <lala.lin@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Johnson Wang <johnson.wang@mediatek.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: nvmem: mediatek: efuse: split
- MT8186/MT8188 from base version
-Message-ID: <20250610-magnifier-petty-6c5a2703a05b@spud>
-References: <20250610063431.2955757-1-wenst@chromium.org>
- <20250610063431.2955757-2-wenst@chromium.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ELSNAJq9"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-442f4a3a4d6so30325385e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:19:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749568780; x=1750173580; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YW0nieYmsQXBJolx1s5UXdIQlKcolKiAvG7fZthRcUw=;
+        b=ELSNAJq9msr3C2HcHQeJtkPo9oyxbAeoIZwdpIChfbrXLYMsNHC73ijV4wAlP578ZF
+         GZCwTySz0zRuqUeRBQw8RPCmNWpinIQXFL+92J1Mws9x97nEv0zHhmVPhVRP8w+xldI+
+         lyS+oE50xzq6znL2iGXcpldL8odWnUJAFHEH6YmFDbWzYIitlHqVXvuJ6kHO97/nCI7M
+         CcO8ZJP2lLckjy3IO+1csJsEIA31L4GaTaK9bVlbhsgw7WReCd7M3vpoYGSEXllhGHle
+         AAwyhAQh09/Z7SG8ilQJgDg4HX4pdqbKkv+eHY/hjWai7XGD0mJPBOm2u+ikWrtryauO
+         wM1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749568780; x=1750173580;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YW0nieYmsQXBJolx1s5UXdIQlKcolKiAvG7fZthRcUw=;
+        b=KNGv/JurzI6bOz5+BhxcNHNSUmmvkewA/5iAdoybEEHWeZXqKQ83MHH04Cm/maXpiF
+         HLnM0E9adA/Ji3JLXBNQm2SziI0X7y13Cz76dmu1Fkfg6Xg8T0qG9ogk4b2xxFAJoVGp
+         rpcLPG5M6SzdLZKDw/43KfJa4wN62y1KdDlW5SWudTuUoTiO2oF2f8GEdTiY+ElsiGmk
+         5LcncDpbTn1Ra/YeW7STLwtCTJA3QzywNDnSO9xh2+AWJ1WVB9jzxF8kybUhaVsuj5n/
+         w8rM20B5HNgplxE0i0k3xk6H+vNTT9l3PWhFCssMA/MMdYWPrIu9mixmQPW7tGA5tLxa
+         Qedg==
+X-Forwarded-Encrypted: i=1; AJvYcCVR5uXIDmh0w5sVrgVL8QfeQd2M+q9XQ/SpO3ezZC3z+ZKYdV/37PgD4ZxY87rwJ3+pximw9nUkeEDH3Cw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzprqiSZ7WMUcYve5V0RvIiyIOjYkkIkGvtpqLuYODrBzsDSh+G
+	ePPkCcy0Q6ntQLyah83fupHr6blsCGKl3tiSRBWPt3TKh6ufVVRQGjjgoNW4sXqQ7vN7UeggGG0
+	OdO0cqMMM1vs5lcGa3gp/je9OOTJvVpyruS5NxWG2
+X-Gm-Gg: ASbGncveFE9O/fz/Fg7ou17xZuxSPXbzu8ATVBX9tdBW2omBU/1Uvtz/Z/xFdClABke
+	63fZq0fb4iYVQDp2sRZlpExEc9zEUzF0wkyf2KONJLom9JcOmPp0xiGGVzIOMA1Pco6RoIjnPxN
+	ZcgWctQ08CavJg2yLOlWU89zjUZyxfkpCFI2pioBg0NzGAmo9yKrhEIHA=
+X-Google-Smtp-Source: AGHT+IFqGxKvYzEDcfYdT/8Vzy9FGlaa7n2tG2xFHxGeuwx+nr4DrKPv7MAiiXUDiWkmUEyc+5fF/UA1OqkjuA0VaTY=
+X-Received: by 2002:a05:600c:8b6f:b0:439:4b23:9e8e with SMTP id
+ 5b1f17b1804b1-4531ceb5dffmr42177575e9.3.1749568780013; Tue, 10 Jun 2025
+ 08:19:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="DM5pv65IWOkWZD6g"
-Content-Disposition: inline
-In-Reply-To: <20250610063431.2955757-2-wenst@chromium.org>
-
-
---DM5pv65IWOkWZD6g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250605-pointed-to-v1-1-ee1e262912cc@kernel.org>
+In-Reply-To: <20250605-pointed-to-v1-1-ee1e262912cc@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 10 Jun 2025 17:19:28 +0200
+X-Gm-Features: AX0GCFtMwZY3Rr1XgWSXhrl7W6naEtd1_FQhRlmJt3qwR55UCc9vpUuFbY5gFKs
+Message-ID: <CAH5fLggzYQcMhcscuODR7cu__LLKAXhZ0A-tsBGc7gGyAA6Ofg@mail.gmail.com>
+Subject: Re: [PATCH] rust: types: add FOREIGN_ALIGN to ForeignOwnable
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Tamir Duberstein <tamird@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 10, 2025 at 02:34:29PM +0800, Chen-Yu Tsai wrote:
-> On MT8186 and MT8188 one of the NVMEM cells contains the GPU speed bin
-> value. In combination with the GPU OPP bindings, on these two platforms
-> there is an implied scheme of converting the cell value to what the GPU
-> OPP "opp-supported-hw" property matches. This does not apply to the base
-> mediatek,efuse hardware, nor does it apply to any of the other platforms
-> that do not have the GPU speed bin cell. The platform maintainer argues
-> that this makes the compatibles incompatible with the base
-> "mediatek,efuse" compatible, as shown in the link given.
->=20
-> Deprecate the MT8186/MT8188 + "mediatek,efuse" combination, and add
-> new entries with MT8186 being the base model and MT8188 falling back
-> to MT8186.
->=20
-> Link: https://lore.kernel.org/all/11028242-afe4-474a-9d76-cd1bd9208987@co=
-llabora.com/
-> Fixes: ff1df1886f43 ("dt-bindings: nvmem: mediatek: efuse: Add support fo=
-r MT8188")
-> Cc: Johnson Wang <johnson.wang@mediatek.com>
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+On Thu, Jun 5, 2025 at 10:00=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel=
+.org> wrote:
+>
+> The current implementation of `ForeignOwnable` is leaking the type of the
+> opaque pointer to consumers of the API. This allows consumers of the opaq=
+ue
+> pointer to rely on the information that can be extracted from the pointer
+> type.
+>
+> To prevent this, change the API to the version suggested by Maira
+> Canal (link below): Remove `ForeignOwnable::PointedTo` in favor of a
+> constant, which specifies the alignment of the pointers returned by
+> `into_foreign`.
+>
+> Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> Suggested-by: Ma=C3=ADra Canal <mcanal@igalia.com>
+> Link: https://lore.kernel.org/r/20240309235927.168915-3-mcanal@igalia.com
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+One nit below. With that and things other folks mentioned fixed, you may ad=
+d:
 
---DM5pv65IWOkWZD6g
-Content-Type: application/pgp-signature; name="signature.asc"
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 
------BEGIN PGP SIGNATURE-----
+> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+> index 22985b6f6982..025c619a2195 100644
+> --- a/rust/kernel/types.rs
+> +++ b/rust/kernel/types.rs
+> @@ -21,15 +21,11 @@
+>  ///
+>  /// # Safety
+>  ///
+> -/// Implementers must ensure that [`into_foreign`] returns a pointer whi=
+ch meets the alignment
+> -/// requirements of [`PointedTo`].
+> -///
+> -/// [`into_foreign`]: Self::into_foreign
+> -/// [`PointedTo`]: Self::PointedTo
+> +/// Implementers must ensure that [`Self::into_foreign`] return pointers=
+ with alignment that is an
+> +/// integer multiple of [`Self::FOREIGN_ALIGN`].
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEhM2QAKCRB4tDGHoIJi
-0oO9AP9azxR15Z4FWTzZIHXzTVLpSbkeveExJbyNmwEG9jz1YgEA7QM4o5Pznk8M
-kkIC1s0vwuNnCCBmMQrcnoicWNN5zQQ=
-=3doB
------END PGP SIGNATURE-----
+We should require non-null:
 
---DM5pv65IWOkWZD6g--
+Implementers must ensure that [`Self::into_foreign`] returns pointers
+that are non-null and with alignment that is an integer multiple of
+[`Self::FOREIGN_ALIGN`].
+
+Alice
