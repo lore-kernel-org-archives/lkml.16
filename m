@@ -1,75 +1,78 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B41283120
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:23:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE922857D5
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749543815; cv=none; b=gA6QCa8FTZO1CnQD4jEzUy2q7isyS17OWb6L1FVKFgW3vP4cc9iegh5ku+7ZSGlCHMKNAuocN73dgtu5wufDnWYflAumXJ2grDeoNldzFgUHC5tPmUwRd4O4QCgztoDqLdxaynBU6qA7FYm32bx3am0CQZb4DZkCEcsBBFHT7wg=
+	t=1749543820; cv=none; b=ScIIhW/ZkTAdyraR0yl452jSzgHXzqyAAwkc77lZuqiiCnQQygsW+91JBjvK6md9/32FM1a+JaYLd5BqCedVpMhOxwr9hEc3caRt3Uf/mn4FOSdGCbvZmncCnPafo+HKUwK4zALRgk9KKIzysLhQg82nZPiVSQz3tkHRfOl+w4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749543815; c=relaxed/simple;
-	bh=SL6XPe/Yo30TKebDlMiJ2hgSO2qPUQEt3jOi+MlzI3Q=;
+	s=arc-20240116; t=1749543820; c=relaxed/simple;
+	bh=DwofcxYmUouggtE8VyvYKPiM9x3OgSKS3Z+dbnuIrD8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=rdmOdzHaxqo5om1WzuFT3HDozSjqUxGWsIBMqbwe9DPYdPgm+a1I1g+PoK79WpsgwxrvwN0zfeJ7T2Y4gzi0mfgoFFrosUkVf1G1mh3S5vW4vWkT/O2rHMmf4q4cyDxRFfqwnVHlKkxNFDL8ouHktocWHFbvMXnibHCXqzLYteY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BYvdkSqu; arc=none smtp.client-ip=209.85.221.42
+	 MIME-Version:Content-Type; b=tBK/+vtPak5+eSTaemrfIawTI9kfxVDeTTHCGYMS9W3IBwSg1BLmfos4xmg4xLF4ocl39G8yURHRoBaMjKemM0yaabv8cxpjCAKCFCbcAE2rCczvTNdmHzRyxbgxYb8xl+uKErx3XSu0HCLEmax3q9eFDFUQ8cUauqVcnWWA9sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZqQmcE4f; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BYvdkSqu"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a524caf77eso685387f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 01:23:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZqQmcE4f"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-450ddb35583so2827535e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 01:23:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749543812; x=1750148612; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1749543814; x=1750148614; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OZ40nSv2sa867OYuo6sDTtT6TDdmiOb3whCWy8cFeR0=;
-        b=BYvdkSquk9AZQSDmORGUGURonA7QI9Su6HjbhlFC336kZz41yR2qj/pyFUJanoKP3o
-         ZpH+GqA6mgGkHmU7uVIhA+/ksTtPzp2wKQc8K1bvYz6RH/xegeaeI5KOjEbRC4D28xtB
-         KJueV8RSGRQ7s48Bqy0gKqoaSVCc3l/DCE38Dl6FlxlNrjWHzpJFIo0VOyZnksH1wzRX
-         kTtyd31nUGc62N1MX+fReU4uQta5bRZEpvgOB+H5xLTBkUkNf1+FCuORxQrhF3TXyifU
-         5cONS0BU0pL5DbYwJvXy2Ypm4Dx0gLMjoPd2M0ki25vwNOWZpuTzMvyvSWNDkQDUmjQV
-         ZTRw==
+        bh=8yVdDelh0G2g2TL5gxsNNSxDzJyW376EN3oDWRulMzs=;
+        b=ZqQmcE4fdANUYrgTMLVPhrnENExcUtb5XUSi1cPFZNFBowj63MIcGDhDu+1qnJcDnY
+         xGGQXNq7J08jj8ngFfck2KyHvXIR3JTlgqjxY82G8p0Qp/qIjd1wThRNx+/EMxTSTBC3
+         x4GPEz0ZR9qmQvsRGrskJCD//MA5X7ARRtfyCrp/JMyKu/ZtU2IckdVs/wzbF3La6JIA
+         e0ScNv0oi5lhj41R4KA4pPEylxjAjeK8+EckODpq2AjYUNaKjT/idOykqyg9UZMmrcPG
+         wLR/P3eTXXglCfS0v9Q35oWasjpLDUvlcZunIcLQFuNsFrdlViITcb3yQm0qIlguJ2/D
+         +DFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749543812; x=1750148612;
+        d=1e100.net; s=20230601; t=1749543814; x=1750148614;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OZ40nSv2sa867OYuo6sDTtT6TDdmiOb3whCWy8cFeR0=;
-        b=XuExZEOjb7tLK4AYJxfyhPSdyYgQfZljdgBTY6sSZDT7yafSpJEtSTEuAT1xiuQp7U
-         A5qrOeXLkByCITm0VB/8vrUeJAKk0jUD/J/alEvu/d0DBAI0ad99XMPohkPpph/G/ybz
-         p4kOiJE0fgxfudIJOfqEkxR8kU2JUhphG/2JShxi+C99YsMg2f0Zvxl/iWjD2hlGQURq
-         lEFXJQZTuZGJgZUBPX/2p1cDzdiqe0m0gDPJGCnjKYD4/7nz0gDik8h39/a9D2wj2z+s
-         ZYVTxXTkk7Xb3y1keaZILn9RiCg1ewU7reu34VaY7lJqNKYI53X9a+47TnFLU1d/rNWg
-         KREg==
-X-Forwarded-Encrypted: i=1; AJvYcCWuZ6oQeIWM/PtBuOrH+WaNFsFE6ssTNORtZMI1IuYum8DAvM3s+jGgk474lbWwn9EG8uEQX2agXgvy20Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyv/qbXGdhO/+gf/TT3FBXW9lPrC2eCISYSrJwFstl717vLtMnR
-	wbGsTVDapbzwBW7Tqix6WymZRc6NMDSN7I1mcusMtLf60RjKniQcOlVADgEt1bBuMqKBTgC5GI1
-	w+2mWFN8=
-X-Gm-Gg: ASbGncsbL/u/nbnPMU01HR5+o3wJSRE6mLUPfq148P9evu1fM63fSyUyhVqG8hMs1XD
-	EdskkOEaaKON5JIfBOdMBRW0KpoVo4DzPZq8L7xU3Id3EvyOVLFpsh0iyKWWkTuXumExBumi3Jx
-	Q3Xhadrvz4nWsiayDKNvlG1foAhaz7TS1JYoln5fpZt6G2qO0Dk9ogp9JqYL1h6tG2D9g9dYfh4
-	Q6zGiNF1Rrjupv7dkeJfUHQTl5TKfVDzqRm+UJ1xP4LhYPuaNG9Z9by6+07aLDROFoHZ+6xm+q6
-	FzRpI4TDSqWU2jQSlANE5Vzqa62/go55of5ARW07q7e2D43iN1TfCyn5KAKODDAFM5hl/S0cjUC
-	eL3RfdQ==
-X-Google-Smtp-Source: AGHT+IFT30y+SRpOPyTJLVOb3Pput91espNfxr6yB+Z1bKms3iz5xi8X0GSEoKM0vX/+7UuhNP+UqQ==
-X-Received: by 2002:a05:600c:1f16:b0:441:b397:e324 with SMTP id 5b1f17b1804b1-4529abf70bfmr47500895e9.9.1749543811934;
-        Tue, 10 Jun 2025 01:23:31 -0700 (PDT)
+        bh=8yVdDelh0G2g2TL5gxsNNSxDzJyW376EN3oDWRulMzs=;
+        b=Njcr92LrYQF+/OdaS0ksA++BqhTkEndmd+b6H1zy3DCfW6UR785otCtifNTMIO3dqC
+         w8a+XfXk8kl6U8S1GhAU5XPlaAydV1mD13hKl/r4Y7PbBD2pZyXF4Y6ZBnU1jI/ue8Tn
+         zQGDcQck6qrhVdF3aRYJaGDVtokMobVqmHwOLSstMvISa0h+QRpLTVplKf/kSo5IX5A+
+         3JR1CyJgdw4yKzoL5+RYyWWS7cjSNKouh12tFMoFHQHB8i+8AtLcKqRqQCymxMXDBpm9
+         qc2zMuoKWOoyTh5ZGD50F8MZ19iya1TS/UE+jeAKihpry7D7hJP62mUuhjFxb8dKNc1I
+         603A==
+X-Forwarded-Encrypted: i=1; AJvYcCWUlbo9PA+9iWz1exRJclNTZoUd37xkZHT/PnGlLq+alS8PKeeeKj8ef3B9z+zE3647YXpGaqKZxinUsPY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygSYC95gioGr3G2/WwqCAuLM6I8j+SLCpqQLOAO3tvU5IBYKh3
+	kNbmsrCNzFHDX30qKEWFQPCwcMJKoAoVEnRqm+ff0Yxmct3bSRSIEPrPXZ9RNyfKZMQ=
+X-Gm-Gg: ASbGncuBlnBKPDx6lMBaWxNvCDa6LccxawhsTPDwDxKFAd8bQ164kzmpLbuE0uWMKPD
+	xFu8akwtQe7/WZ6EI2oBs6yHLJhlndRaAn9FvOHqHVoX1qE80V+EsWXi2T9FvhROWLzPFyw8Uza
+	ZkgDGooKLVg3Vf9RIaveydKYQfres/7IvTPwgRtGjTyEPc54idLM7KLd4S5utRGZXBlXSJMivNs
+	scGUrQpoo4R0h2feoeFJPs6RR2JvEMQ/mQftgC4m+IYeBmTQ9XSVtEUMSa23rAE140ddmYIUj+s
+	x6/e3FNmA4RFYP/CXBz/Ki0tJPStoJi9RMYGbTzwgpsE5LY0LOBm9lSHoCjJYcO7yXa9r88PZPa
+	5IVlg9w==
+X-Google-Smtp-Source: AGHT+IH4Tx9uamsGrItBDI2u67txsm8PcW5JtSr8VTliqVeJ2KnCmT5Yh+EXBdeAxp8xz5LOXkLOJw==
+X-Received: by 2002:a05:600c:1c1c:b0:439:8294:2115 with SMTP id 5b1f17b1804b1-4531072ab88mr23950055e9.8.1749543814536;
+        Tue, 10 Jun 2025 01:23:34 -0700 (PDT)
 Received: from [192.168.1.28] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4526e155ce7sm131726125e9.10.2025.06.10.01.23.30
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4526e155ce7sm131726125e9.10.2025.06.10.01.23.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 01:23:31 -0700 (PDT)
+        Tue, 10 Jun 2025 01:23:32 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
-Cc: imx@lists.linux.dev
-In-Reply-To: <20250602141246.941448-1-Frank.Li@nxp.com>
-References: <20250602141246.941448-1-Frank.Li@nxp.com>
-Subject: Re: [PATCH 1/1] dt-bindings: memory-controllers: convert
- arm,pl172.txt to yaml format
-Message-Id: <174954381064.117761.3103173099824775147.b4-ty@linaro.org>
-Date: Tue, 10 Jun 2025 10:23:30 +0200
+To: Yong Wu <yong.wu@mediatek.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Friday Yang <friday.yang@mediatek.com>
+Cc: linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ Project_Global_Chrome_Upstream_Group@mediatek.com
+In-Reply-To: <20250521091626.4283-1-friday.yang@mediatek.com>
+References: <20250521091626.4283-1-friday.yang@mediatek.com>
+Subject: Re: [PATCH v1] memory: mtk-smi: Add ostd setting for mt8186
+Message-Id: <174954381208.117761.10620346119186400968.b4-ty@linaro.org>
+Date: Tue, 10 Jun 2025 10:23:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,18 +84,18 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Mon, 02 Jun 2025 10:12:45 -0400, Frank Li wrote:
-> Convert arm,pl172.txt to yaml format.
-> Additional changes:
-> - add mpmc,read-enable-delay property.
-> - allow gpio@addr and sram@addr as child node to match existed dts.
+On Wed, 21 May 2025 17:16:16 +0800, Friday Yang wrote:
+> Add initial ostd setting for mt8186. All the settings come from DE.
+> These settings help adjust Multimedia HW's bandwidth limits to achieve
+> a balanced bandwidth requirement. Without this, the VENC HW works
+> abnormal while stress testing.
 > 
 > 
 
 Applied, thanks!
 
-[1/1] dt-bindings: memory-controllers: convert arm,pl172.txt to yaml format
-      https://git.kernel.org/krzk/linux-mem-ctrl/c/04de50163466a0d11b24f6bb418889f3cc219dda
+[1/1] memory: mtk-smi: Add ostd setting for mt8186
+      https://git.kernel.org/krzk/linux-mem-ctrl/c/e18c3f5cbd0243c60777f7a3a02e4506f5196c31
 
 Best regards,
 -- 
