@@ -1,149 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31F728C5AB;
-	Tue, 10 Jun 2025 10:21:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16DB28CF77;
+	Tue, 10 Jun 2025 10:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749550893; cv=none; b=eWrq5lWVCORrL9C2SvjVrIDQYdYHU4seNgXpaLDAcUwbuQNx34rRzRABmdU4IxNxbpr1UTi26o9EVoKyuEDOf+6jhSK7K8Gr/yoFZeMPk335jZBzlOjtqllG4pyh8bsnatVmkjAR1bcQWkf2dOhayfg1U8wxruuPldICtVNtbqs=
+	t=1749550913; cv=none; b=T1wmW66zqVl4npvqrBeKfKf0qxD01oYwCLaB5myDf8u3fUMhUpeXK1umcLAdihAyZlLa+nE7p67LP9zVRA/3ankGr7m0mcsb/AMjFbXHye/mgUMYDvkiDnR0mpktWLwFH6IIrdn8YAgdgmRTEbTMF+mgex8vpucrUTOLQhLbC78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749550893; c=relaxed/simple;
-	bh=+j8zMJW2Wcl191iL6HqEJHAtauDOyM2xYMzu/jk0I2g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Elg2VP880OH7nt3I/dghybeyVcNMRbRIHxEMiIhdruOmVXQGN3koyeK8USRowTmMXjXFn2YBe/r6TnrlLCaPSdBiyLqCN0WVlaqxuqBlzPYuusnrCZKLofW96Gj9ODBioB1TiYYmhz/A3/6WQFUOBWzhinCqrX6sZ1B5VAm7fLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GGIES0IX; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749550913; c=relaxed/simple;
+	bh=4kpMBn6GQNFiEFjzGftMFhT2bJNpcgvm3M4m7notmzc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hZ5UEMmTwPZEEcIlgpeTwG87NvP0E/6bgnYDU5kQXFBIWQ3c/lwEU7ZX8vZODAW+vNH+E0D+cc9e17kecNaie3R4f1PD6EiCwHckn1fCimZe/Qk4va3BiT/gQhCZvIzYv1TrRD4T6Fn/S1SO7N+y+xZoIiK5N0n+22PcUTmRm+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZKkxDWVi; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GGIES0IX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749550892; x=1781086892;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=+j8zMJW2Wcl191iL6HqEJHAtauDOyM2xYMzu/jk0I2g=;
-  b=GGIES0IXyyhoQqYeSbE/3AZyjdK+8RaSPAhq2IPISwNXZyTX6k7cEJMw
-   skcwIcDCn13OCnl9SAhc9i0fLcjXWQ/xiPlRApBTrIw/kMlfdTRjUNDF6
-   0Ooc7U/Jb7FEqnm/T/DU0wPnkQg83Ip/hHF7D8L4W0aqBWodt48B2lJN6
-   BGESh6j0JgXS2uiZUiMQEm0CW8tuQFqZ6h9GUN/n7gb4TcdwrBxjdw2C8
-   AYq8UFjl5OfWxy6aG54p6qHDWjZc5UvSUKAF6OQXvoiigTVAGMNADph2B
-   f8omGFJMVoCF4KJ7kkXm9Bhi0Mg9+YxpVuyXLcyVL07rP28sw7tbN3Ygs
-   Q==;
-X-CSE-ConnectionGUID: Ho7Z4CxaReuR4N0IFYS8qQ==
-X-CSE-MsgGUID: M915R6yIQuaZvm3/Uz20oA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51739106"
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="51739106"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 03:21:32 -0700
-X-CSE-ConnectionGUID: 5HoJXnS4SZGzW5uZ3skH8g==
-X-CSE-MsgGUID: 1mkblKhkQTugaNQT0+OXJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="147370287"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.196])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 03:21:29 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Rio <rio@r26.me>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Subject: [PATCH 2/2] PCI: Fix pdev_resources_assignable() disparity
-Date: Tue, 10 Jun 2025 13:21:01 +0300
-Message-Id: <20250610102101.6496-3-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250610102101.6496-1-ilpo.jarvinen@linux.intel.com>
-References: <20250610102101.6496-1-ilpo.jarvinen@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZKkxDWVi"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-234eaea2e4eso9328805ad.0;
+        Tue, 10 Jun 2025 03:21:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749550911; x=1750155711; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4kpMBn6GQNFiEFjzGftMFhT2bJNpcgvm3M4m7notmzc=;
+        b=ZKkxDWVi/ACybNTJpanlzq6OaDRtjO6FEwTWvtxz4b4QyMrwFxvJMkEHNxv6Mm05BU
+         kD8/G5KBzqeaWPXvlGhEpEQka9mqOs9pn53y0RvlK+Bod1GSa3dL14BU9VMGa+U/fUNs
+         vy9RMIM+uNozmkQa6lDGntmEBt6xxrJrORgPsRV92sUjpPsV6gaH/WsUCluhBJ0BAytg
+         UxfCLksNbLSTXZQUrK2kGdMlCvcUG1DKrWLeQ+LYuXslTiq4WRRpBmxI6LU0yQBFhqUa
+         sEQzqxN/p1P138c3Kt5ARt1r2TbPAtUg6JHKstSxg1rKgzT5dZoPZTf3KDK2Zb+uL+Ta
+         3HLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749550911; x=1750155711;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4kpMBn6GQNFiEFjzGftMFhT2bJNpcgvm3M4m7notmzc=;
+        b=OT6r5AYPNe3E5yrTOfGSThiuAH+iD3bWzIXkyVXlArO72jU+g7d+/jhrUshjXAu4st
+         0hb6qMdYeMxR92hy7hIGJ7Vb6UFYhNJcZ0Es4/3M1qwLcBrufAF/ZFBhpLUebYWqFFST
+         sqE66VNIBtaq6i5IZIVvOnNxYoaNZP/bJR36mY6rTOlwnhuZLrO5UQ1gXMzq44gnQ8ap
+         9h88IjGEXsAhTV0308vwk7O1nViZ/C9qP9T/2YxgrLr1fgnSjttMukA3rXA8wL96eb7w
+         aNe6WwMWyuu38U38mSXkQm01zJF5M5+h32yq3phQOgYJ8Vy01zF2/lQTwTbw+eZjpAFG
+         7Ueg==
+X-Forwarded-Encrypted: i=1; AJvYcCXKzb2xsZQoDw5y6pi1yiWnSeOfFaGauKkqd8Ob+MYwolUDZy3QtCKlPc6fzwAPdAaBK8M6scWuJwuQrNs=@vger.kernel.org, AJvYcCXcHdORaydcNLnRGQ1OiM4/98I6bGrikyXPPvYo1+WYiDAJLOEGSOZRPDGvFdCicwi4v9P5Q0Lf11Nq1anqSp8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzb5AdsSS4ewsiPXS+eRRmYIdS4lBZz1QZG7Y3gcUG7ix1VTmrU
+	E41ls7IT3dEQcEhEyb/xD0HrO2Om6zfUoVvsob5AceBf/BjVLjqxKuo34n/ztUVgxkYI45m/QR2
+	eAo56sB1Y3T5lZE+g/nvngLgYWftdpTo=
+X-Gm-Gg: ASbGnctnpHXPXY+JPNY/qB808w5KWD++REwJj6YTJb9Tp7VmCP2970zc9C4H5oaxdnR
+	/nUUSWMkg7MdqZVIe8b8ZtPGF8YHDsU+0QgWdcPkTaX/44sbKvSQ/Q9YZCAIvJJ+CKD/HQIqh1s
+	yPw8iCiDZd/COJIB0Ygim1st22J3wbOnDg27lQWj/jmns=
+X-Google-Smtp-Source: AGHT+IFH6y7ooJkeSFFCIBLz19dfQF/jQDvp0F2GatZHa9JkxgpA0vpuQaRhr/I6u9tbv5I9qQmWS90ETMWJUse5iZA=
+X-Received: by 2002:a17:903:41c7:b0:234:ed31:fc9f with SMTP id
+ d9443c01a7336-2360407b7cemr93317855ad.11.1749550910982; Tue, 10 Jun 2025
+ 03:21:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cover.1749463570.git.viresh.kumar@linaro.org> <f10910c7585f5556869ea6f34b64d4136b8d5581.1749463570.git.viresh.kumar@linaro.org>
+ <CANiq72=WpuGELzLbH-fxdOeJy9fiDFwatz6ynERDh=HP2z2MBw@mail.gmail.com>
+ <20250610100025.e2jadqzlmimyq4rh@vireshk-i7> <CANiq72=dKx22CksQ_r7XuTrufTCh8ty-aAicPwFX62Q4JeAVTw@mail.gmail.com>
+In-Reply-To: <CANiq72=dKx22CksQ_r7XuTrufTCh8ty-aAicPwFX62Q4JeAVTw@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 10 Jun 2025 12:21:38 +0200
+X-Gm-Features: AX0GCFuSbqeqdE1ctXnplv2BJl5ueuM9KFOPQVuFSd-Rsv17ie4S38Jf4pmKVcI
+Message-ID: <CANiq72=uZLZ-ddUpyhPA8Kn-4DRKDgYT00wzc+zDRLOX3kv+dA@mail.gmail.com>
+Subject: Re: [PATCH V2 1/2] rust: cpu: Introduce CpuId abstraction
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Yury Norov <yury.norov@gmail.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-pdev_sort_resources() uses pdev_resources_assignable() helper to decide
-if device's resources cannot be assigned. pbus_size_mem(), on the other
-hand, does not do the same check. This could lead into a situation
-where a resource ends up on realloc_head list but is not on the head
-list, which is turn prevents emptying the resource from the
-realloc_head list in __assign_resources_sorted().
+On Tue, Jun 10, 2025 at 12:14=E2=80=AFPM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> But if you already did it, then please post it of course. (And maybe
+> you just don't want "good first issues" for files, of course).
 
-A non-empty realloc_head is unacceptable because it triggers an
-internal sanity check as show in this log with a device that has class
-0 (PCI_CLASS_NOT_DEFINED):
+I meant "for your files", I meant, sorry.
 
-pci 0001:01:00.0: [144d:a5a5] type 00 class 0x000000 PCIe Endpoint
-pci 0001:01:00.0: BAR 0 [mem 0x00000000-0x000fffff 64bit]
-pci 0001:01:00.0: ROM [mem 0x00000000-0x0000ffff pref]
-pci 0001:01:00.0: enabling Extended Tags
-pci 0001:01:00.0: PME# supported from D0 D3hot D3cold
-pci 0001:01:00.0: 15.752 Gb/s available PCIe bandwidth, limited by 8.0 GT/s PCIe x2 link at 0001:00:00.0 (capable of 31.506 Gb/s with 16.0 GT/s PCIe x2 link)
-pcieport 0001:00:00.0: bridge window [mem 0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 100000
-pcieport 0001:00:00.0: bridge window [mem 0x40000000-0x401fffff]: assigned
-------------[ cut here ]------------
-kernel BUG at drivers/pci/setup-bus.c:2532!
-Internal error: Oops - BUG: 00000000f2000800 [#1]  SMP
-...
-Call trace:
- pci_assign_unassigned_bus_resources+0x110/0x114 (P)
- pci_rescan_bus+0x28/0x48
+i.e. it takes some work to guide people and help them get their patch
+setup right etc., so it can be often quite more work than just doing
+it oneself. So it is understandable if a maintainer doesn't want
+those.
 
-Use pdev_resources_assignable() also within pbus_size_mem() to skip
-processing of non-assignable resources which removes the disparity in
-between what resources pdev_sort_resources() and pbus_size_mem()
-consider. As non-assignable resources are no longer processed, they are
-not added to the realloc_head list, thus the sanity check no longer
-triggers.
-
-This disparity problem is very old but only now became apparent after
-the commit 2499f5348431 ("PCI: Rework optional resource handling") that
-made the ROM resources optional when calculating bridge window sizes
-which required adding the resource to the realloc_head list.
-Previously, bridge windows were just sized larger than necessary.
-
-Fixes: 2499f5348431 ("PCI: Rework optional resource handling")
-Reported-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Cc: <stable@vger.kernel.org>
----
-
-The reporter was perhaps not happy with this fix as behavior of PCI core
-isn't identical after this fix even if this patch fixes the problem on
-the PCI core side which causes the internal sanity check to fire.
-
-It seems that in the reporter's case, an out-of-tree driver was involved
-that performed things and made assumptions a driver should not do in its
-probe function such as assuming a bridge window is assigned even if there
-are not child resources to be put into it (the child device in reporter's
-case doesn't have a valid class and gets therefore skipped by the resource
-fitting/assignment):
-
-https://lore.kernel.org/all/bd579412-d07c-476d-8932-55c1f69adc9f@linaro.org/
-
-In other words, the out-of-tree driver relies on the disparity in the
-PCI core's resource fitting code which is now eliminated by this fix.
-
- drivers/pci/setup-bus.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index f90d49cd07da..24863d8d0053 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1191,6 +1191,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 			resource_size_t r_size;
- 
- 			if (r->parent || (r->flags & IORESOURCE_PCI_FIXED) ||
-+			    !pdev_resources_assignable(dev) ||
- 			    ((r->flags & mask) != type &&
- 			     (r->flags & mask) != type2 &&
- 			     (r->flags & mask) != type3))
--- 
-2.39.5
-
+Cheers,
+Miguel
