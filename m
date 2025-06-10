@@ -1,102 +1,89 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E6A1FF5F9;
-	Tue, 10 Jun 2025 09:43:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC79628A703;
+	Tue, 10 Jun 2025 09:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749548602; cv=none; b=NDEY3RDcVeW4a/o12BqNScvXh6a8edKAn4UyGSdpRtvjrG1m+y9dX76IBIYKnekZNvqHBFrMiQOMMzjIz94C2G/AYPr3y7fuTd9TD1xjw4bA9H5pXZJFJRYskfUFMLBZt3Sy3xZbC6zrbemBRx1Y3JvRNbfGRi2DfZYVc+vKEgU=
+	t=1749548643; cv=none; b=sAxBYNRmbjCCcbilG8LONWyviN9oF+SUvKko2fyGGiHLffCWvff3RecEzmqtGfaxH6PK0iiD2nbloYjLxxWArVrwDGw/NX6mBQ67pNspHWlnFD9u0hh3kXAQpzPsi6PuHPsHM6nrxJnNWLJcgMByfUVa7JOsLP+IHTs2qDBeeFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749548602; c=relaxed/simple;
-	bh=q8DPayD2lvtgLiBeC6Hc0iKcrlH6S10VoZwf7CzolPA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BAQLMSHlfOtomV80Y6VCVLrX9aDtSgtTFEDW5bhdHnO6ABCktZqMmQ+JgKeZ2SCqfLWsRPTfouGEANAqxZhPhWr9uFhkEx+tNWNag/LptPLMjKGvc2bI3DBgkRILDqYeJbML3JIs474lUfVKy9E5XFS8ZGd7QgOZ56qYaLjLb+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X/OmDuZL; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749548643; c=relaxed/simple;
+	bh=E+QayCk+7TGNhlqlVJV5U1tQWwbLYd4XEKOSd37H82M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=P9Qu0sMne6uOqxRq/a99L8vfFcIAeEsuJs67o6MQ+qYP5kFvEgzSXhYNvIaEaONVBBGmfW9GkN+q2wAbIalkvUAUSp/+bBHMR0ZARtegK+Ov3PRVfjqWEMIBLG2gvw3sz27lYSnWSj6YG6t+q5KvwcFyKKzOldU105b144WBMS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1K/lxvY7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IVcoRFkA; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/OmDuZL"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-313756c602fso482136a91.3;
-        Tue, 10 Jun 2025 02:43:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749548599; x=1750153399; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q8DPayD2lvtgLiBeC6Hc0iKcrlH6S10VoZwf7CzolPA=;
-        b=X/OmDuZLm0CvT3GlmIgitobMeyjsf9pAcQ9FmgV7zF2Wk8zGycaGbU9KpHv526IAHi
-         2rEN1I5D/zEq8UpKrO5Q5lnEYNWltkILblYO8NdzDBw8P+qfrPl4aPM2MPyqTC8K+Zr7
-         6fGM9PmQkmGDuKlsVmP9m7nmip3GtcGx0VgsjPHlsZDsT+qa5qQ/JllCk49i0fmxY68i
-         aqWpFZS9vyuJlBkTRDVFUbXiiW/EFGDT3Cp5AK5A9G7Pb3wNIvbvStO5zbQSQOjnVEtc
-         umTKl04nwAXHvMsoYSx0rL6daBHk+i54kIBJvVfORvV7e/WKMdgQUB8DSyONwRjmOTco
-         xScQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749548599; x=1750153399;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q8DPayD2lvtgLiBeC6Hc0iKcrlH6S10VoZwf7CzolPA=;
-        b=lev9Gj5sLLHzNbr/WlI056VpErsZ/iSE5SK7cO0eSwtWbxnZIYmor5yofqaOeEJ+rq
-         kbYWjNP3RoffdjrNJhQS8erd3HojTQrMldCio/HVvzQeYGq2puBh7v7BCcBu063Uhr7Z
-         AY+xtasaHjrUnDbo0YWL3xCox7KygUyaYZ1by/nQayFECao/sisbkfEOm3mldHGbF/8n
-         r792xjpSbRWDHVPBftfM5opULUlLOHwoRGnqONuuN0lxDr0lLg4SpR4Ug28Ulm1IUWzb
-         HdodL+SFZp9HOQn1BAyf7fGGaMvG75AOBVEXuvoZWvQv8XA/tEB9AjQp5LnKSIJbPKY5
-         5/wQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUADWx57pUM3sX0XBLEkyU57g2H0Vx4FlQ2ME68Q3kHTCZxlaYEWKgefkdL8c2tZxC6HhLQGNxb78SHIsYzcdg=@vger.kernel.org, AJvYcCVshzakHhTZsj2zox8ODp+e36dxWxe178uayeht+l8R4ZKrK4k3PJCFTlBgtHlCS/QDaqyw9SKpisyBpZc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCqyVcdxsSzzZJAwBSdWKKOFGy3vBsS3Z6F+NjdiPBvpbLWK76
-	z8GZeurytK3LpeT6WOLkzkpke85w1ra1U/2DMagoH+tj8PjAIYqOnVyoVoHYdZA774detWK58La
-	K9Kdk/qPCx+/KpQfvvvnnrvIzj3AFEnc=
-X-Gm-Gg: ASbGncvOEb8S4lEe/0/fEqwyqRiTRNCwXpotWa0ORZMn5wQ7LZyvGE0bECgDg2uaSTi
-	9y7dK9t0jvuhGHo1P5d/ox0ZN2uwHU7MB2SBi+SX9eLXrgiQyttuyLW6jeV3wtNNyV+kHgflbIl
-	sdjl1zuIUbYEnsmXN04k4iN8fJNQmjYpulvvTDjogbEbWbgkYnJo/PBg==
-X-Google-Smtp-Source: AGHT+IHtwSpnIky6YUDKcRK/zDGLXCExE9ImXQ3ic2AWs5W1UELFP1znNDeqwAJ8ihsm4xL1+zu+MRqPeIR6jwzmWKo=
-X-Received: by 2002:a17:90b:3a82:b0:311:b0d3:851 with SMTP id
- 98e67ed59e1d1-3134e3e72eemr7524086a91.4.1749548599158; Tue, 10 Jun 2025
- 02:43:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1K/lxvY7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IVcoRFkA"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749548640;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E+QayCk+7TGNhlqlVJV5U1tQWwbLYd4XEKOSd37H82M=;
+	b=1K/lxvY76kGJUIjfFMRNeM/Kw8X/dcJKsiayJo/TBr9VzJdPejByimqq5PWcNxlPCQiY24
+	YdEEvt5xLO19GXwMuP4/7GR8ir3Fz1lXuqe/CsrErazmgClgI7/JFlVn0YriQiF6p/Gknu
+	8/j4FZsj8kEeCk1NAwrwwIxyKu5nmhYmFoFPCaVBdIlgW6mQHK/GDWoC6ISO8uhWtq+kpr
+	an1h/fPqmHxlxtSwJTgwML9rvAz4Ft220m46W5Wc0A2y+XcUCAD8Q5wes9otkLbyclI2uH
+	w4UvJgenR4UT1X4CuIx3tqeNISRKo8IU+NQ99KE5HR/a5kU7vMpjaVYvRgIwXA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749548640;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E+QayCk+7TGNhlqlVJV5U1tQWwbLYd4XEKOSd37H82M=;
+	b=IVcoRFkA59+bql8caG8Oxjjfyu/TDzfLow+CksrGJnkS/SN4G9FoleLsDtTtRNQpA4BKbp
+	tV6bDvoFKUy0FzDQ==
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: john.ogness@linutronix.de,
+	Nam Cao <namcao@linutronix.de>
+Subject: [PATCH v10 01/19] rv: Add #undef TRACE_INCLUDE_FILE
+Date: Tue, 10 Jun 2025 11:43:26 +0200
+Message-Id: <6801e07c98c28815501a1905300e11cbc28686ae.1749547399.git.namcao@linutronix.de>
+In-Reply-To: <cover.1749547399.git.namcao@linutronix.de>
+References: <cover.1749547399.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1749463570.git.viresh.kumar@linaro.org> <f10910c7585f5556869ea6f34b64d4136b8d5581.1749463570.git.viresh.kumar@linaro.org>
- <CANiq72=WpuGELzLbH-fxdOeJy9fiDFwatz6ynERDh=HP2z2MBw@mail.gmail.com> <20250610060711.zp6lua4kcwi2z777@vireshk-i7>
-In-Reply-To: <20250610060711.zp6lua4kcwi2z777@vireshk-i7>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 10 Jun 2025 11:43:06 +0200
-X-Gm-Features: AX0GCFsXs62gU6ti9YBQRF7p1UaFVfDU9iPib5UH6y4VFkNaY3Vlp_Tk0poYmOo
-Message-ID: <CANiq72kD9iQh6TPo3Rwk7AmPXEarogUrM2fmhkDn5XNfKrr_jw@mail.gmail.com>
-Subject: Re: [PATCH V2 1/2] rust: cpu: Introduce CpuId abstraction
-To: Viresh Kumar <viresh.kumar@linaro.org>, Danilo Krummrich <dakr@kernel.org>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Yury Norov <yury.norov@gmail.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 10, 2025 at 8:07=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.o=
-rg> wrote:
->
-> What do you suggest ?
+Without "#undef TRACE_INCLUDE_FILE", there could be a build error due to
+TRACE_INCLUDE_FILE being redefined. Therefore add it.
 
-I think you are right, we should keep both directions of conversion.
+Also fix a typo while at it.
 
-(By the way, as far as I understand there is no way we could wrap
-going to `i32`, but it may not hurt to add a `debug_assert!` in the
-`u32` constructors.)
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+---
+ kernel/trace/rv/rv_trace.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> Sorry, not sure I understood that. Are you talking about type of the
-> `cpu` argument ?
+diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
+index 422b75f58891e..99c3801616d40 100644
+--- a/kernel/trace/rv/rv_trace.h
++++ b/kernel/trace/rv/rv_trace.h
+@@ -129,8 +129,9 @@ DECLARE_EVENT_CLASS(error_da_monitor_id,
+ #endif /* CONFIG_DA_MON_EVENTS_ID */
+ #endif /* _TRACE_RV_H */
+=20
+-/* This part ust be outside protection */
++/* This part must be outside protection */
+ #undef TRACE_INCLUDE_PATH
+ #define TRACE_INCLUDE_PATH .
++#undef TRACE_INCLUDE_FILE
+ #define TRACE_INCLUDE_FILE rv_trace
+ #include <trace/define_trace.h>
+--=20
+2.39.5
 
-Yeah.
-
-Thanks!
-
-Cheers,
-Miguel
