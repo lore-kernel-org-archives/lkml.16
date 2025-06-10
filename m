@@ -1,191 +1,149 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F732281372;
-	Tue, 10 Jun 2025 08:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD2025DD01;
+	Tue, 10 Jun 2025 08:03:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749542597; cv=none; b=MGANyDb2PSa9OyDnGxTWQJN0WYZRN46nsoeEkGsCy0cyj9rtwbGgiYIpiYwPStEclIECas6OkveiUHx09aFggu73UrMs9hLD9jjKLnbb4yKVrkpieTd+DPVDJ4PyJejNw3d1p2a0zrMVRe0M/yHzo55eQXlID4AM9X0qXNK7xZg=
+	t=1749542636; cv=none; b=Te19PWncqiLXiHnRK15G3+t262QH8H9ky4l6aCjIFVFme111rKHd8K1WRMPqCmjC6XSP/TuRtPmJNhomTJmTUMPPlZEvJSZCxJPXS+rvRI6uzDBQYo+YToffa09WUN86xe/XuCedpbxYm0kqK105LQRyT/BvUUhsH0q+J4j24lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749542597; c=relaxed/simple;
-	bh=6hPSXxbiNB/r5d4vGayoujrUtSU2sknxGGmKP7Jc10I=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=u0ybaVZib5IPpqm5uRAyMHp6x2RxuRQt5qMo6TtKP5Ur8NL85HcqJODAmYjWFk5hbOa1qpqwen2sjeB30CxJNTl8uCGiRNCqz6ufuJX2HXfH2Imc4LJjs3CY9dk3o2/bTKJfvVEen/wt2jejqt14kDe/abkMbaFoJpnZPrMlGpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=BwVtu7KJ; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1749542636; c=relaxed/simple;
+	bh=FAtdwYBsvXPEoaHjvFc5YGiljKWciSkc5F7Z0z2W1uY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u9jf2QfGZTO9zu6KIh1UrFLMnt9SjD2rkqNLUf5qmY6by8UKDVHpnyaR1TzdTEbwysJKPgAJvtIdKIco0KnVbDJg3wH8aSVTtT9BCq6Cpl0ej3W04rCDhkfaOTAFOc0yn93hljkQns79T3ORWAWJ5cCYKKUQx7NaKLmVf/TJr9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=asf8Hhy6; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="BwVtu7KJ"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id ABC41A0403;
-	Tue, 10 Jun 2025 09:53:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=mail; bh=BrLuKpt34k4eRF8K2JaYhxjYQp6/DXYAraKWQecDxkU=; b=
-	BwVtu7KJvkZLq3NFQtQpoHxTkl0s5vlHRzOuRUJvlmEyDDto2+D0IumMAJcl1PwY
-	TBr/wQ1jakwI/FEkc37ggAlTnU5H1oqs5b/vdfgKalVi+ThJh6yM7nPC6QxwLuQe
-	IpoaCODCOE1+y/YEyyBmMClXcRGzNblntf6QXOg+dao2U0IxOvN4O5NR6ic4j+WF
-	Ck66dJh4IM1E6KItnYmYNNZeSV6OutEt2skJsLBxX49kllotGoXci1shVB3tW2ew
-	QyHozECvTTLQPLnTniqMTiMHEAw0+7okZEY0ybYhBd0bBIKrtkVeMTJBcHpyJg9/
-	3mY3vsuWZorLHGKOUqBffVLhQvELI1uoVTdIOmNXTahN/ROsErpzVK/g/XqhD/cu
-	FbT1B6FeZI3TFXEu+6g55dpHKzqF6/idU4pQHtXZmBR2iPGt+zcfMTdGNGZmIWAv
-	a9/jY4Ik1lI4ucBxI4qN5Bu/9H4bP9whPByO4UoXK61rY10JzKONqTP+KA4trd0g
-	ctdM9m4QBizNmAVX4DSQyMKRnXQxyKT1n5AuWjC5f5IP2VaOWVwqEO5Z3eFJi9RG
-	Qs10rHWwR11vbcy5OR5LRQ0BfO7et4clg/Ix9dEn2xbqQkjp0b24762/zwmVCfZB
-	f+ScuKwAybOmjRWvOiSrY0K6t1HXQGmEy1egCfkKw8E=
-From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-To: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-sunxi@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, "Chen-Yu
- Tsai" <wens@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, "Chen-Yu
- Tsai" <wens@csie.org>, Julian Calaby <julian.calaby@gmail.com>, Vinod Koul
-	<vkoul@kernel.org>, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v10] dma-engine: sun4i: Simplify error handling in probe()
-Date: Tue, 10 Jun 2025 09:53:13 +0200
-Message-ID: <20250610075315.397810-1-csokas.bence@prolan.hu>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asf8Hhy6"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a4fea34e07so2919443f8f.1;
+        Tue, 10 Jun 2025 01:03:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749542633; x=1750147433; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DwGvEtjKqTYeRC5wubNZzZpVFyth2ZZSuQ1hnRxcHZI=;
+        b=asf8Hhy6rhNsLmcG33qKz7wKHDf6ll4w7zlMet7HhToXKCEqZT6KelEDy3Iw7b8APw
+         cqKpnmV8geiEQdRURVG70cEkHemIQg4POtDv5UppGv10TCHghr4NjW+G4gxOi8erkQ9Y
+         lXbfJivrEdW1Q5tGuAdcDH1Jt6z22Kye2XLVwKnQZL9VxFm+ksapcUV7MISUtDxzLtdp
+         vsroS403Im2j7D8yAgCnoVasRObasf8VAkWlpHyHEm3gdxk+S8wTrvWPQJLjcF/8pjvR
+         Ml7uECj/k3LJSFpug2RaiJY1xYtqC9F/EnwsUnwfXtQ9F+N59oN/9OdNgqIQfE2qMCVU
+         3nUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749542633; x=1750147433;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DwGvEtjKqTYeRC5wubNZzZpVFyth2ZZSuQ1hnRxcHZI=;
+        b=DFbTzqQXA6UD20dgHL9eRhpp9e4N1bXa7zncBPtOXyJ1xY4XcipCHw7Nuyxxw1RlM0
+         FiRBMMmZxgW51P5nN/sp6k3KGjJO8i7zpZF9sA39B+A1wchqWyBOPjYVV5bOqrHvwLzO
+         uQWDWyqzr1NipwVlZjlGKN3X3vpCCw9mSQyyMgTQiZpuqMMkcVoxLnCZxV265DEfvq+H
+         Ztj1MOL03W55bpNtcxnJHnnDG/DEu8xe74za3QpEr+eGMoR7p8ES0LLzxQ2HCf8ZIPdq
+         5SFcbkoCbK/g96b3xU4Xj4jO+la+Te0zq0ZiHH7BNw0nvoAmcMXUULbQVM7rV6zqoe9w
+         frLg==
+X-Forwarded-Encrypted: i=1; AJvYcCVE/6taAP0u/Izod1vgDrUplppd6xi6xloNAKanKakbWKon9nEsrRfvwiX7TQYE8md3r9yGtYVnMyff@vger.kernel.org, AJvYcCWJMPDJhDZZMfi2LSh98tojRMfJETFh69ftMGwx92Zc3uWBZrVyn7jec9/OS8SGFr9qx8d0TYOgKPqg7tg=@vger.kernel.org, AJvYcCWh9qi23YXz/LPruLwozW3p3REDPNKC6Oii76vnSogRRvG8x+k0gk76KXMSNWL2y5V5V7KDvqP6EZzk@vger.kernel.org, AJvYcCWwkU5tp/t3xl8V5G6NSjoS1BZ042j++ncyB2dmHsZ0iz7IPUtToMOx10yrofewBHisUFuAH80tpcxoCz1S@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeO5RhwzDkllvcnqOFDIya2Ru27BlWVjefhTytTtl3w/jPNH9i
+	RaEsSQ8keWYcJJnRTO5RMl26oHr92UJ+IZU7WZhK3j3SdzQkccUcdU/C0QCQLg==
+X-Gm-Gg: ASbGncthXYA8IKC29bHdSiveRb8fn4gXDeO7poKLnCl3BF6KhH+/Lyke/nWyj0774/4
+	21GUCrSaWEQymQQUBHqjNNj8ozoIRKJG53YyNUA9qEn5Tb2m+l/Hn9hjMxuJnjCvJx8YyIa4T2D
+	vUAIn8qmhnaN/qnoe/dkjyRFT1Rh1jaJy5Dcw0WrxZHoiMgZTpkRcmBZVqU3NIPSOOu5s42N7rE
+	TUmmERBkZ7WiUkDkbG6O2ATw62+k7seRvcW9zw2XMDVVCrLbsUGacm82qGKMq2jL2EuCm1BBFFb
+	IXYe0YqpHvReDbydX0adBGcwRFMtIsg8eFAtxGWp0zkmmv2u/OZXax8s9eFwvz8PuHCNlbg+MLh
+	/zSahsCFj+kCkvlMZ9V3MGB56sw3VdSGi+m3vZe7sIi5c5HGhZYDPcsRecRE=
+X-Google-Smtp-Source: AGHT+IGO4ep1uHR7aNauRBBlU/RmREQAS1QtRrJVTcQ9PnzDcGl0Lg3A2/ATarqYpBeXhdDd7qUEIA==
+X-Received: by 2002:a05:6000:2dc1:b0:3a4:ef48:23db with SMTP id ffacd0b85a97d-3a531cc55bamr12501548f8f.59.1749542632547;
+        Tue, 10 Jun 2025 01:03:52 -0700 (PDT)
+Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53229ddebsm11676331f8f.17.2025.06.10.01.03.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 01:03:51 -0700 (PDT)
+Date: Tue, 10 Jun 2025 10:03:49 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Akhil R <akhilrajeev@nvidia.com>
+Cc: andi.shyti@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, jonathanh@nvidia.com, ldewangan@nvidia.com, digetx@gmail.com, 
+	p.zabel@pengutronix.de, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v4 3/3] i2c: tegra: Remove dma_sync_*() calls
+Message-ID: <t6lt7sazxaqf2qis55kjg65epcakoyj2cow5bbcjzyxj7ztywm@4r2oukvdhdu6>
+References: <20250603153022.39434-1-akhilrajeev@nvidia.com>
+ <20250603153022.39434-3-akhilrajeev@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1749541997;VERSION=7993;MC=1286228445;ID=452015;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A296767155D62776A
-
-Clean up error handling by using devm functions and dev_err_probe(). This
-should make it easier to add new code, as we can eliminate the "goto
-ladder" in sun4i_dma_probe().
-
-Suggested-by: Chen-Yu Tsai <wens@kernel.org>
-Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
-Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
----
-
-Notes:
-    Changes in v2:
-    * rebase on current next
-    Changes in v3:
-    * rebase on current next
-    * collect Jernej's tag
-    Changes in v4:
-    * rebase on current next
-    * collect Chen-Yu's tag
-    Changes in v5:
-    * reformat msg to 75 cols
-    * keep `\n`s in error messages
-    Changes in v6:
-    * remove redundant braces
-    * break lines to stay under 85 cols
-    * reword subject and message
-    Changes in v7:
-    * rebase onto current next
-    * collect Julian's tag
-    Changes in v8:
-    * rebase onto current next
-    Changes in v9:
-    * rebase onto current next
-    Changes in v10:
-    * rebase onto current next
-
- drivers/dma/sun4i-dma.c | 46 ++++++++++++-----------------------------
- 1 file changed, 13 insertions(+), 33 deletions(-)
-
-diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
-index 24796aaaddfa..00d2fd38d17f 100644
---- a/drivers/dma/sun4i-dma.c
-+++ b/drivers/dma/sun4i-dma.c
-@@ -1249,11 +1249,10 @@ static int sun4i_dma_probe(struct platform_device *pdev)
- 	if (priv->irq < 0)
- 		return priv->irq;
- 
--	priv->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(priv->clk)) {
--		dev_err(&pdev->dev, "No clock specified\n");
--		return PTR_ERR(priv->clk);
--	}
-+	priv->clk = devm_clk_get_enabled(&pdev->dev, NULL);
-+	if (IS_ERR(priv->clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(priv->clk),
-+				     "Couldn't start the clock\n");
- 
- 	if (priv->cfg->has_reset) {
- 		priv->rst = devm_reset_control_get_exclusive_deasserted(&pdev->dev, NULL);
-@@ -1328,12 +1327,6 @@ static int sun4i_dma_probe(struct platform_device *pdev)
- 		vchan_init(&vchan->vc, &priv->slave);
- 	}
- 
--	ret = clk_prepare_enable(priv->clk);
--	if (ret) {
--		dev_err(&pdev->dev, "Couldn't enable the clock\n");
--		return ret;
--	}
--
- 	/*
- 	 * Make sure the IRQs are all disabled and accounted for. The bootloader
- 	 * likes to leave these dirty
-@@ -1343,33 +1336,23 @@ static int sun4i_dma_probe(struct platform_device *pdev)
- 
- 	ret = devm_request_irq(&pdev->dev, priv->irq, sun4i_dma_interrupt,
- 			       0, dev_name(&pdev->dev), priv);
--	if (ret) {
--		dev_err(&pdev->dev, "Cannot request IRQ\n");
--		goto err_clk_disable;
--	}
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret, "Cannot request IRQ\n");
- 
--	ret = dma_async_device_register(&priv->slave);
--	if (ret) {
--		dev_warn(&pdev->dev, "Failed to register DMA engine device\n");
--		goto err_clk_disable;
--	}
-+	ret = dmaenginem_async_device_register(&priv->slave);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret,
-+				     "Failed to register DMA engine device\n");
- 
- 	ret = of_dma_controller_register(pdev->dev.of_node, sun4i_dma_of_xlate,
- 					 priv);
--	if (ret) {
--		dev_err(&pdev->dev, "of_dma_controller_register failed\n");
--		goto err_dma_unregister;
--	}
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret,
-+				     "Failed to register translation function\n");
- 
- 	dev_dbg(&pdev->dev, "Successfully probed SUN4I_DMA\n");
- 
- 	return 0;
--
--err_dma_unregister:
--	dma_async_device_unregister(&priv->slave);
--err_clk_disable:
--	clk_disable_unprepare(priv->clk);
--	return ret;
- }
- 
- static void sun4i_dma_remove(struct platform_device *pdev)
-@@ -1380,9 +1363,6 @@ static void sun4i_dma_remove(struct platform_device *pdev)
- 	disable_irq(priv->irq);
- 
- 	of_dma_controller_free(pdev->dev.of_node);
--	dma_async_device_unregister(&priv->slave);
--
--	clk_disable_unprepare(priv->clk);
- }
- 
- static struct sun4i_dma_config sun4i_a10_dma_cfg = {
-
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
--- 
-2.43.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="qmkq6so74rg53u3d"
+Content-Disposition: inline
+In-Reply-To: <20250603153022.39434-3-akhilrajeev@nvidia.com>
 
 
+--qmkq6so74rg53u3d
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 3/3] i2c: tegra: Remove dma_sync_*() calls
+MIME-Version: 1.0
+
+On Tue, Jun 03, 2025 at 09:00:22PM +0530, Akhil R wrote:
+> Calling dma_sync_*() on a buffer from dma_alloc_coherent() is pointless.
+> The driver should not be doing its own bounce-buffering if the buffer is
+> allocated through dma_alloc_coherent()
+>=20
+> Suggested-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+> ---
+> v3->v4: No change
+> v2->v3: No change
+> v1->v2: No change
+>=20
+>  drivers/i2c/busses/i2c-tegra.c | 20 +-------------------
+>  1 file changed, 1 insertion(+), 19 deletions(-)
+
+I've had a patch like this in my local tree for a while and never got
+around to send it out. It turns out that this is actually not just
+unnecessary but can also cause issues. We were seeing really strange
+crashes in the QSPI driver that seem related to this. I don't know
+exactly what causes it, but removing the dma_sync_*() calls (for memory
+that is also dma_alloc_coherent()-allocated) fixes things.
+
+For QSPI I'm thinking it would probably be better to move to streaming
+DMA mappings because the buffers in DMA mode are sufficiently large (at
+least 2 cache lines) that we might see some benefit from the caching. I
+don't know if this would apply for I2C as well? I vaguely recall that
+certain transfers can be quite large and I wonder if cached mappings
+would be advantageous here as well. Do you have good data on what the
+usage patterns are?
+
+That said, maybe the extra amount of work isn't worth it because both
+I2C and QSPI are fairly slow busses, so the impact of caches is probably
+minimal in comparison.
+
+Anyway:
+
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+
+--qmkq6so74rg53u3d
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmhH5uIACgkQ3SOs138+
+s6HvVg/9Eyg5/ttWDyh9UBRUi5nt8QKrx1syq1icibgq3/DVaLqNT3hKe8OqviSW
+KAFZKvSsKp+FFODwERdnlJSPW8vjQa1rfSV8GBtoYyzZ2UZgOOAL7sk6tb0re7Zu
+2FeajC2nrm5p+uEfB43PxK9qhsuydewV/Pw72MfsLiGOsGySFHgO01mXKINKx3RV
+xbUW+c1yWYqjNFt9i7c7YQew+NTqzoQXcgZdWqINYXeAKRDG5hxcwyI2ixZh60yk
+HIijcOXfOVlkH/ZlcJWOVpkBBwtiQamNJ6AKD5lDqSQnYnvlFE+2ueI8rWLUj8qt
+Axjhpocaits8H78e+rU/iYnb3On8EDeMs1Vr2WVs/q8kClfQeTJjBNS/ihD/l/NZ
+eDHK6YfytqfR7B1XDjn6vXKc3u0T9+GyZe4+7GXNyf+S6NlKtVVnHhlrnylcC682
+Vhr+rpC5FLYOS23hPCQdoiJKkZ1HtXEI9BtYVYeeuzm5C1/ApHCx2fi+f6gpAv3J
+uUVEYkrq2UHY010mL6myp//xh6L6W0tPCi/YqTmxOwEqVjD4U2piWXMabwynhiiB
+ikJimEw/+tzV1mYzLKoLoyjP6pZDli9ZgR76C4In7ochpnh1f+/1MXrfGVKyM1bs
+Ss5WfAMNQE0uxoi2eF5LzScESVohFn+TOgSCOedCaXCiGHpdzwU=
+=nEmN
+-----END PGP SIGNATURE-----
+
+--qmkq6so74rg53u3d--
