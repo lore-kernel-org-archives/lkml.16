@@ -1,132 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467FA2367D0;
-	Tue, 10 Jun 2025 15:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902DC22A4CC;
+	Tue, 10 Jun 2025 15:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749570122; cv=none; b=DahubWOUuOvxZ/mWB9vm++bIcbIPjDP0Esw3z7kZNMIqVYUtclp5Z9BurZ/4YSuMAg6OsXBePZm0w/0GPlKGOjuCvuRNx+6LRIViEAPb/iZA22G7godoKt1X99WgzG1fjrCdn1kkJK91Wg/tmXGqkzigjsrVCLI41po8rNk5J1A=
+	t=1749570137; cv=none; b=V3EuSaXNBenm8t51aniIgJxYNWZqMoun90SGd0ENBlp/saDkycWpCZBsFIU1NdDVx7sJeiBUvcFBa5Pe0PeRL2KAQ6pgx6POyxfJ7Eh/+LhAn+EFYSE/ZTyEnwYQv3ZQIrdmkUT60beIb7/HL6EYEtcNuUPhEwvIBxRdj1HOzvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749570122; c=relaxed/simple;
-	bh=OCX+PMXOnofivFIKf5B4TrKIDiVPaorIpAV/YEeu6NA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fwujv+nL4YRZxc3PZpHl+2m2gkHi2gDgRXapcNVrZv7iI18Mu++wuONbqaLuLx1ILqqYJRky9rCavCoqyMrfQ/OSj5VzcL1Lrx5UmnPxGDnTPZUZFByAqglFDpdz1j855oAZxY5YGdPsfk1trAnpb5EXBpI0pbMuwtWx/fzqFYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qpKPn/hX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749570137; c=relaxed/simple;
+	bh=yU5z7NVJf0ZGnk9RFyz5G+eeykduta97xm9PAycnmlo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pqmmyDpS6BOLljHEpvchB1/DCdrpovhoo9acgk6a3DO42w2F6ymoAQruKnDTujNxc7D26QlUUreyHpc6w4Vig2nVkoUmVYVmSNW6dbAjgBEqRi3OIxfmHENPIWcyMbpMR2qsOG5rNJ7LgcX7znOHJtXbnqwVYFBhI+n3+6ceLoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GSM+meW+; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qpKPn/hX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98718C4CEF0;
-	Tue, 10 Jun 2025 15:42:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749570122;
-	bh=OCX+PMXOnofivFIKf5B4TrKIDiVPaorIpAV/YEeu6NA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qpKPn/hXTpMKHurpAOYuvdyFWF2RKykP22wfL62XAqvyfVhTvhhhMjdqLh86MKBzM
-	 JtDc746E9N3lbyUvO5In6rn6/5TGFozVl7pVSYHRPsJwz43uiPjAF3JUndZjDUveFS
-	 z8hqpNCY9qB2XTPAjvralMFelri/ZJ8VgM/WYYhXSxmSPMUVYRetzMTsT7s74pcmYt
-	 Eq/3qMMYZCHJw6AZtA0XRU4yPu0mItmnCjO8oM4aAwKcRnOH2xitVfbWl+khIC03wH
-	 WQvj/oWSLTyBY3dOQmsnDZNAdVDUQAGcSSzjtWkOsAicYMlI82HyyDlE3nioLc068R
-	 W4Flwz4eYubFw==
-Date: Tue, 10 Jun 2025 17:41:59 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Anusha Srivatsa <asrivats@redhat.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, 
-	Jagan Teki <jagan@amarulasolutions.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Chen-Yu Tsai <wens@csie.org>, 
-	Samuel Holland <samuel@sholland.org>, Seung-Woo Kim <sw0312.kim@samsung.com>, 
-	Kyungmin Park <kyungmin.park@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH 2/4] drm/panel/samsung-dsicm: Keep up with refcounting
-Message-ID: <20250610-wildcat-of-marvelous-modernism-e4ce27@houat>
-References: <20250604-of_drm_find_panel_part1-v1-0-c632e12e131d@redhat.com>
- <20250604-of_drm_find_panel_part1-v1-2-c632e12e131d@redhat.com>
- <20250606-radical-rigorous-buzzard-ca09cd@houat>
- <CAN9Xe3Si6XwsGOesNKOx9M8PjBkMG2paWXV5gvAnujWih6sqtA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GSM+meW+"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-451d41e1ad1so44858875e9.1;
+        Tue, 10 Jun 2025 08:42:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749570134; x=1750174934; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=An0x98MW8GyvK9C4LlLhjzsNtEGQ7tKMYBI6UkPjrc4=;
+        b=GSM+meW+wBQ1U6oPkMdMOG3t88tJRzX4YO1/zR2sV5KsjBntgGGku4fCjjJSEf1Jrp
+         u6GjxYSb++rWnq9qiNvDwdrb/AtCsekA8a0E3bzNEs/Op30FZWmAgb+GQkftcyephtnP
+         gvZ7bqtU6pVS4aOyUIVjgCFvZre3h5wwKmbIv7S98ni50HNiHku4/kpc16eiF5xWu0LM
+         GbTSEf2Dmws+Ced0ESp3J33suzQDxjoh4wTJfGz+tUe/t1YeI/cyoi6tmwGtAqecX48y
+         nu+1l5Ndd4xoWP4wGNbQCbWAHhfC4GkIdAxknDxNwrpBqs6CF49x8RnZ/wby2+vh/WW9
+         dTqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749570134; x=1750174934;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=An0x98MW8GyvK9C4LlLhjzsNtEGQ7tKMYBI6UkPjrc4=;
+        b=La0n/5DJ2Eny07b2QWoYDYeD3UmyiyXgubEGihO3eG0aQnIHu1Dq/SPjZKZFpvF6z9
+         R1SIGoAxpQu9vC6ZhTXOA2WxW/E5mrLv5Wbupnl4fB3N8zZmgibrHr7r8mnoVAae38Nx
+         1nyxg1kVwRDzK01RAgvY2WSaqYCqMrUhU/+bnIK91E/+97+hEdDvVnD93AEExWoB6K1/
+         tNntYO8vlhLlFCRMAYj6WWsxxsUWk930cAovINoKfcaX8UDcu2lvCUOZtPpPIBzM5e1z
+         0QwCWsG0fyI+6DRsGB60WYTni9y0tj7YoEiZTm5tbYM+IfVdjPzTp3rArnDoZ6R1vLyz
+         XO4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUWVEXB8jz12JdvquGpAhwfZSM9HuwZZICA7fPkM62LYvBBhUdkiXcKZPCrY/THLcd9q2GxFfgo@vger.kernel.org, AJvYcCWIu3Iw62gOFHs7zFiOJoD4fOGQ4ReE/9lOCS4RdVcQVgRX8DM6s6lWXgjyHxe81vzuJs5DX49w88mMKISl@vger.kernel.org, AJvYcCWLd6ogkES6w86bnp4NqETISy+B6WnE6TRaqi5lYObitm9k41WwsWKrntpM8nlAk50W3NA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yya2/TT8HTBH6D+Z0Ir3GONaZxHUQv8ceWRF2ztyxnphLFWX4hu
+	N0H8jLqu5bVA7YApnIoaVl4XnGABbGRANoooEDLgsR25TrI78Pi73V4YsrUMroJ0Zhff5fBCksV
+	G+q2gmsaexyR0IQ3u5nbK8uJ8IYPxN0M=
+X-Gm-Gg: ASbGncvHEQUhifKkuB6wwI9TqfjfGVoftUcnDPwCyMTnHBs7u/UByf14Tr9/e8BSoUU
+	/Wpk0ePHDjfaTrKQb24QmJwKJ+6GSPW32vceUwAWIFZkJ++L51EM6+GdzsMFqUkedpVg6ZYhAsu
+	OO2RnwOLmetMhLiII147W2urW8V1INc5rMt/uFWf2X+Lg7KE8gUrA2RM2agdM=
+X-Google-Smtp-Source: AGHT+IHM8rnS0aNMuNoWI1TsLts/niaP28EmoxhfJfKkP1MgC1dyL6sDicQYrVvP0wjJ9asjPmkCUOIRk4YaahSUphs=
+X-Received: by 2002:a05:600c:8b57:b0:43c:f1b8:16ad with SMTP id
+ 5b1f17b1804b1-452014d5243mr182679485e9.30.1749570133345; Tue, 10 Jun 2025
+ 08:42:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="zwi57rvdrnu4faa3"
-Content-Disposition: inline
-In-Reply-To: <CAN9Xe3Si6XwsGOesNKOx9M8PjBkMG2paWXV5gvAnujWih6sqtA@mail.gmail.com>
-
-
---zwi57rvdrnu4faa3
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+References: <20250608-rcu-fix-task_cls_state-v1-1-2a2025b4603b@posteo.net>
+ <CAADnVQLxaxVpCaK90FfePOKMLpH=axaK3gDwVZLp0L1+fNxgtA@mail.gmail.com>
+ <9eae82be-0900-44ea-b105-67fadc7d480d@iogearbox.net> <CAADnVQK_k4ReDwS_urGtJPQ1SXaHdrGWYxJGd-QK=tAn60p4vw@mail.gmail.com>
+ <87wm9jy623.fsf@posteo.net>
+In-Reply-To: <87wm9jy623.fsf@posteo.net>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 10 Jun 2025 08:42:02 -0700
+X-Gm-Features: AX0GCFvYQfRa1BcQynirYNrkGMZ4GvpbY9FzJzUuCGW3o-tyfEZpFrhaxIx4DdM
+Message-ID: <CAADnVQ+mzrDH+8S=ddDCtyo6YUO4dUUsAS88Jza93pDQ2K3Bng@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: Fix RCU usage in bpf_get_cgroup_classid_curr
+ helper
+To: Charalampos Mitrodimas <charmitro@posteo.net>
+Cc: Daniel Borkmann <daniel@iogearbox.net>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Feng Yang <yangfeng@kylinos.cn>, Tejun Heo <tj@kernel.org>, 
+	Network Development <netdev@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	bpf <bpf@vger.kernel.org>, syzbot+b4169a1cfb945d2ed0ec@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 2/4] drm/panel/samsung-dsicm: Keep up with refcounting
-MIME-Version: 1.0
 
-On Mon, Jun 09, 2025 at 10:45:35AM -0500, Anusha Srivatsa wrote:
-> On Fri, Jun 6, 2025 at 7:03=E2=80=AFAM Maxime Ripard <mripard@kernel.org>=
- wrote:
->=20
-> > On Wed, Jun 04, 2025 at 10:45:11PM -0500, Anusha Srivatsa wrote:
-> > > Put the panel reference back when driver is no
-> > > longer using it.
-> > >
-> > > Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
-> > > ---
-> > >  drivers/gpu/drm/bridge/samsung-dsim.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c
-> > b/drivers/gpu/drm/bridge/samsung-dsim.c
-> > > index
-> > 0014c497e3fe7d8349a119dbdda30d65d816cccf..3667855ff0d6d1b608c579573de65=
-7af7fd14388
-> > 100644
-> > > --- a/drivers/gpu/drm/bridge/samsung-dsim.c
-> > > +++ b/drivers/gpu/drm/bridge/samsung-dsim.c
-> > > @@ -1748,6 +1748,7 @@ static int samsung_dsim_host_attach(struct
-> > mipi_dsi_host *host,
-> > >                       dsi->out_bridge =3D ERR_PTR(-EINVAL);
-> > >       }
-> > >
-> > > +     drm_panel_put(panel);
-> > >       of_node_put(remote);
-> > >
-> > >       if (IS_ERR(dsi->out_bridge)) {
-> >
-> > Explaining in your commit log why you think it's a good idea to put it
-> > there would be really nice. In particular, it looks super odd to me that
-> > you would put the panel reference in attach.
-> >
-> > Also, your patch doesn't work, and you have a reference inbalance. You
-> > have one taken by the panel driver, put in remove. You have one in
-> > drm_panel_add, put in drm_panel_remove. Which reference do you put here?
-> >
-> > This applies to your other patches too.
+On Tue, Jun 10, 2025 at 8:23=E2=80=AFAM Charalampos Mitrodimas
+<charmitro@posteo.net> wrote:
 >
-> Yes, I should get the ref in of_drm_find_panel() to put it here. With
-> that said, all callers of of_drm_find_panel() should be converted
-> instead of the small batch that this series addresses.
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
+>
+> > On Tue, Jun 10, 2025 at 5:58=E2=80=AFAM Daniel Borkmann <daniel@iogearb=
+ox.net> wrote:
+> >>
+> >> On 6/9/25 5:51 PM, Alexei Starovoitov wrote:
+> >> > On Sun, Jun 8, 2025 at 8:35=E2=80=AFAM Charalampos Mitrodimas
+> >> > <charmitro@posteo.net> wrote:
+> >> >>
+> >> >> The commit ee971630f20f ("bpf: Allow some trace helpers for all pro=
+g
+> >> >> types") made bpf_get_cgroup_classid_curr helper available to all BP=
+F
+> >> >> program types.  This helper used __task_get_classid() which calls
+> >> >> task_cls_state() that requires rcu_read_lock_bh_held().
+> >> >>
+> >> >> This triggers an RCU warning when called from BPF syscall programs
+> >> >> which run under rcu_read_lock_trace():
+> >> >>
+> >> >>    WARNING: suspicious RCU usage
+> >> >>    6.15.0-rc4-syzkaller-g079e5c56a5c4 #0 Not tainted
+> >> >>    -----------------------------
+> >> >>    net/core/netclassid_cgroup.c:24 suspicious rcu_dereference_check=
+() usage!
+> >> >>
+> >> >> Fix this by replacing __task_get_classid() with task_cls_classid()
+> >> >> which handles RCU locking internally using regular rcu_read_lock() =
+and
+> >> >> is safe to call from any context.
+> >> >>
+> >> >> Reported-by: syzbot+b4169a1cfb945d2ed0ec@syzkaller.appspotmail.com
+> >> >> Closes: https://syzkaller.appspot.com/bug?extid=3Db4169a1cfb945d2ed=
+0ec
+> >> >> Fixes: ee971630f20f ("bpf: Allow some trace helpers for all prog ty=
+pes")
+> >> >> Signed-off-by: Charalampos Mitrodimas <charmitro@posteo.net>
+> >> >> ---
+> >> >>   net/core/filter.c | 2 +-
+> >> >>   1 file changed, 1 insertion(+), 1 deletion(-)
+> >> >>
+> >> >> diff --git a/net/core/filter.c b/net/core/filter.c
+> >> >> index 30e7d36790883b29174654315738e93237e21dd0..3b3f81cf674dde7d2bd=
+83488450edad4e129bdac 100644
+> >> >> --- a/net/core/filter.c
+> >> >> +++ b/net/core/filter.c
+> >> >> @@ -3083,7 +3083,7 @@ static const struct bpf_func_proto bpf_msg_po=
+p_data_proto =3D {
+> >> >>   #ifdef CONFIG_CGROUP_NET_CLASSID
+> >> >>   BPF_CALL_0(bpf_get_cgroup_classid_curr)
+> >> >>   {
+> >> >> -       return __task_get_classid(current);
+> >> >> +       return task_cls_classid(current);
+> >> >>   }
+> >> >
+> >> > Daniel added this helper in
+> >> > commit 5a52ae4e32a6 ("bpf: Allow to retrieve cgroup v1 classid from =
+v2 hooks")
+> >> > with intention to use it from networking hooks.
+> >> >
+> >> > But task_cls_classid() has
+> >> >          if (in_interrupt())
+> >> >                  return 0;
+> >> >
+> >> > which will trigger in softirq and tc hooks.
+> >> > So this might break Daniel's use case.
+> >>
+> >> Yeap, we cannot break tc(x) BPF programs. It probably makes sense to h=
+ave
+> >> a new helper implementation for the more generic, non-networking case =
+which
+> >> then internally uses task_cls_classid().
+> >
+> > Instead of forking the helper I think we can :
+> > rcu_read_lock_bh_held() || rcu_read_lock_held()
+> > in task_cls_state().
+>
+> I tested your suggestion with,
+>
+>   rcu_read_lock_bh_held() || rcu_read_lock_held()
+>
+> but it still triggers the RCU warning because BPF syscall programs use
+> rcu_read_lock_trace().
+>
+> Adding rcu_read_lock_trace_held() fixes it functionally but triggers a
+> checkpatch warning:
+>
+>   WARNING: use of RCU tasks trace is incorrect outside BPF or core RCU co=
+de
 
-Then do the of_drm_find_panel() conversion before, because here you will
-free up the structure despite some callers still having a reference on
-it.
+It's safe to ignore checkpatch in this case.
 
-Maxime
+> I think the best solution here would be to add
+> local_bh_disable()/enable() protection directly in the BPF helper. This
+> keeps the fix localized to where the problem exists, and avoids
+> modifying core cgroup RCU.
 
---zwi57rvdrnu4faa3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJQEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaEhSRwAKCRAnX84Zoj2+
-dhb2AXd6k/XL3u9/OK5zj97VWmDQziONGHEsb3bDL6hJZj6l6EtMtZ9IDIPocg8T
-0UuXCwGA01sHkSg3AqDJPDYt8mzstpL8wcd8zKh9oy1niBidaedsQ6I+2mKYzaTS
-VdThoLbe
-=nzew
------END PGP SIGNATURE-----
-
---zwi57rvdrnu4faa3--
+That works, but it will add runtime overhead.
+I doubt the helper is in a critical path, so I don't mind.
