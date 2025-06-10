@@ -1,123 +1,159 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D768923ABBE
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:50:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9A3246BC7;
+	Tue, 10 Jun 2025 13:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749563460; cv=none; b=EcJgIrIvoI0p99NG1N/RPQYkY+m2PbVZvsCJmDJc1IJqzFZOjoHwFmcbgQEAFpYQY/btW3/CteN2S+U6faEBXBPRx7NCWRmRyuqk5CKoxXpCmahzlt6QQztm3UcUUi5od8s9+JzYtgu4nmqPAl448aoNsLxTMrP+p+/DSs0ZIUY=
+	t=1749563501; cv=none; b=MAHQIcLTUJ07lmVseWe6+celjNbSBBGdNnxVAht52FqKBgFbrBCWddW5qNyQcZzRXct9tmuH5QfvmYqTghLKrEE/X+Cf+bk3rgYFVPwpXvAVc3kv3QXNeZN1Et52GU1aMrgTsBTBVY66pQ2V8gFeNWzchERaQ4Ji/GP1429X7gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749563460; c=relaxed/simple;
-	bh=h4S4qXsxNClFRPavFrSL5VPIFTv8rXbohKWGXFSTiEI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=bWqrAQvf5Wpz7c910LAp9mQrwajWMQrseMvRkCdJGX7BHHJm87TI/KE6LRL+D5HRURf1MQkAMEpwl+C7DyfIBHAJj7Wc3zODs0jIwdrzQ1NhIpGExDe5C7opqXI94YoKnLpIlfv5ubBwcixsJGKyJjbKvj7tlfBue7I8K23rVWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C0Yn2Zwu; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749563501; c=relaxed/simple;
+	bh=2xpav1gssifbJiMTvuagJlH8sA2SHN3RwD3C3+ICz/s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CupjzndqmLGr1SfBMXM0GMI8lpICO5qatgv26IggDnm1baIfkfCJU2B946LnbKCm9OwxHXRXT7n8GhMPis84zeugmlzvcChdxj3kBkQJxbThDwADwDXnN19yt5wtvzzd85aQqZwdc2i+NWHdkC9qLQRxucpBlIyZQmrrFFk0VKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i0q/2EnS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C0Yn2Zwu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749563457;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8AZiv2BWFM4GhtysbZzbwwVGm/Lo1Gm6qrn3+2ylp4E=;
-	b=C0Yn2ZwulvUaDHql3SezRUSKmbP82HvHe8XZ9k5ZU/WD1kxbPyxVdOc6qoItg9h/9lgHOk
-	/CUGk6KxH/vaU65oEgR4kPSFP7eNzciDTBbViB2ZXAXzXqhEUyOSPOKriLJiUfUZcsGVk7
-	k42gFAozzvvDuBUBWRbMWVKZIipoXZ4=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-657-N0VTtoR_NdexmYwreD0ycA-1; Tue, 10 Jun 2025 09:50:56 -0400
-X-MC-Unique: N0VTtoR_NdexmYwreD0ycA-1
-X-Mimecast-MFC-AGG-ID: N0VTtoR_NdexmYwreD0ycA_1749563455
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f55ea44dso2519413f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:50:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749563455; x=1750168255;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8AZiv2BWFM4GhtysbZzbwwVGm/Lo1Gm6qrn3+2ylp4E=;
-        b=EoM/KR6SNZ/CnuqV9SXXDEA8YURW0Q4rLvUd+RZwDzvn626hEncVCRl8VNgGzcwZCo
-         vaoHzxjoPR99XHYGwLs+HPfB6Vkvs+hpsvwDx7SZviuWAUk1mcMLEKvkJPyZznYMWHKI
-         A18vQ5RL+Bzd0SieFGPp7SpcKUuenK9tDwavQ+nBX0IJNt5/3JrZduYRC1zho/E4vj3M
-         CemLNuWwi1UL6zpnooHQ+YEiW45rKA9rD3dwuMmHk6rhS9G2UiEZIRwyn54DEPMju8kJ
-         7ciKpzKijpKI50ZG0YVfkueYJJcpAQcsXX8S4TRtbFuAzbQ0OJ9D0wezrJOoLUro7/CI
-         JmPA==
-X-Forwarded-Encrypted: i=1; AJvYcCXpAHCoqn7hK1lNkMkjXI57lISVqfuE2UHjsSiEaYN2y+AIY7OzIhxOa/0+3nZw5Y8mDo/4Ev13uBvhESk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2M/nBaMCqzAz9NOnloVSB6F1+yXX3eEPFh/03vo47wi42qmai
-	6CP1cnVrMdejeDaNjPFDX+v69SOjlFkvdjRJQHeMsur/pNqppa5VmUpEHzrv2DEfAbPKd5A1GDo
-	SLga1bgxZXXGM5bq97pgIwOcVwA/o9vlh6PgydbSNszqzMoXM2J8rUdL06gjVWnrx7A==
-X-Gm-Gg: ASbGncuPqq4mBEdNIPNj45Dd794/Vql0GeW+RjfJfff//k4eS02fXnAUE9+Mg5nwPzK
-	dm/qODxnoPg61qNjuVeryt0/VYNCw+CrzdyvSm7c2O38Y3Ubyapp/jJ+CNgjrYZb3q5PgASYmo7
-	CI2hF6R+1L5auuzM/vA1v8mv9qaSQHw8qSn4DlLEhSGxyRVbZN2qb40NZHqa0dkcnQrbMQLOsV6
-	2Idfsnuj97JkHbhLzeyEr1DUoDV0iwyJeenQeEle31uL/nfIov1LieUjUMPNxLEE+8M+Wrx7o9e
-	ODinmNHOUy2/ct6RJKpw6fK5BGlf5aldAKFhnen8zKblOKYaRm4OVw5+nycUHsEaIPZRm2k=
-X-Received: by 2002:a05:6000:2389:b0:3a4:f786:4fa1 with SMTP id ffacd0b85a97d-3a5316841c4mr14614325f8f.2.1749563455528;
-        Tue, 10 Jun 2025 06:50:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHJKrB4JYjJGiymCLMDjzBOek1jTekdNGl4zWkT4PdFepViV8CQdeLU5rPmaZjMcFcjiosmIg==
-X-Received: by 2002:a05:6000:2389:b0:3a4:f786:4fa1 with SMTP id ffacd0b85a97d-3a5316841c4mr14614288f8f.2.1749563455083;
-        Tue, 10 Jun 2025 06:50:55 -0700 (PDT)
-Received: from rh (p200300f6af1bce00e6fe5f11c0a7f4a1.dip0.t-ipconnect.de. [2003:f6:af1b:ce00:e6fe:5f11:c0a7:f4a1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452fba4621csm131448645e9.13.2025.06.10.06.50.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 06:50:54 -0700 (PDT)
-Date: Tue, 10 Jun 2025 15:50:53 +0200 (CEST)
-From: Sebastian Ott <sebott@redhat.com>
-To: Miguel Luis <miguel.luis@oracle.com>
-cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-    Colton Lewis <coltonlewis@google.com>, 
-    Ricardo Koller <ricarkol@google.com>, Joey Gouly <joey.gouly@arm.com>, 
-    Suzuki K Poulose <suzuki.poulose@arm.com>, 
-    Zenghui Yu <yuzenghui@huawei.com>, Shuah Khan <shuah@kernel.org>, 
-    "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-    "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, 
-    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-    "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH v3 0/4] KVM: arm64: selftests: arch_timer_edge_cases
- fixes
-In-Reply-To: <B77F70F2-EECA-4E10-9F00-972F6AE27831@oracle.com>
-Message-ID: <8f15a5d6-0f73-194a-8fa2-b7ba8cc8c5b2@redhat.com>
-References: <20250605103613.14544-1-sebott@redhat.com> <B77F70F2-EECA-4E10-9F00-972F6AE27831@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i0q/2EnS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B18CC4CEED;
+	Tue, 10 Jun 2025 13:51:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749563501;
+	bh=2xpav1gssifbJiMTvuagJlH8sA2SHN3RwD3C3+ICz/s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i0q/2EnSQWJnZs3eHYfUdN9RsmsrF5oFiyG6W6foNdcY3DMpW52TXjQrQEDTctfQ3
+	 KObwHOz4QyJBf1i3yg3aoynhBn51cs1uDNvkmxiJt0bcPLQT+Lsmv1F5C4vgA/i8w2
+	 vvlWKXDtgsAA6rJ0rO9CgKNOne4QjKe82L6NNLEUNQqhHhaiyV3YPhhSy1yJSeBCjT
+	 Dc0LcrgXCNBRy/E0ol648jDWrjfSvcu7Dz5n7uqGndYpAaQTnqGZSMTG+6KEvOaZAa
+	 PmxQgQEUBysSCwKY2pN6/sv199m8BKOL9EkibW/u1242By6FQG38naChZgEaVbvj3R
+	 zn75MdgBQ15pg==
+Date: Tue, 10 Jun 2025 14:51:36 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	jens.glathe@oldschoolsolutions.biz, konrad.dybcio@oss.qualcomm.com
+Subject: Re: [RFC PATCH v1 0/2] Introduce dummy regulator consumer
+Message-ID: <6fcbedb3-eb41-449f-9b6d-10699153c9dc@sirena.org.uk>
+References: <20250607212654.126412-1-alex.vinarskis@gmail.com>
+ <8a688e9f-012e-461c-a916-f06b34fdd913@sirena.org.uk>
+ <CAMcHhXpVKaWX8guog_M+5wHfJ+6uxBteNnV1xCjcDJuGFWOCkg@mail.gmail.com>
+ <b481298e-319f-41ce-8a56-e3f78b8649ff@sirena.org.uk>
+ <CAMcHhXoioEJH+KnLYbXmnt5eyGT-tXg0-CzLQpvj=8Jy5sGXuw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-1463806286-426200590-1749563454=:18875"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3JbEwhaoPZrgoyLF"
+Content-Disposition: inline
+In-Reply-To: <CAMcHhXoioEJH+KnLYbXmnt5eyGT-tXg0-CzLQpvj=8Jy5sGXuw@mail.gmail.com>
+X-Cookie: When in doubt, follow your heart.
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
----1463806286-426200590-1749563454=:18875
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+--3JbEwhaoPZrgoyLF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hej Miguel,
+On Mon, Jun 09, 2025 at 11:15:09PM +0200, Aleksandrs Vinarskis wrote:
+> On Mon, 9 Jun 2025 at 22:50, Mark Brown <broonie@kernel.org> wrote:
 
-On Mon, 9 Jun 2025, Miguel Luis wrote:
->> On 5 Jun 2025, at 10:36, Sebastian Ott <sebott@redhat.com> wrote:
->>
->> Some small fixes for arch_timer_edge_cases that I stumbled upon
->> while debugging failures for this selftest on ampere-one.
->>
->
-> I’ve tested this test under three circumstances:
->
-> 1) Original (!HAS_EL2 && !HAS_EL2_E2H0)
->
-> 2) HAS_EL2 && HAS_EL2_E2H0
->
-> 3) HAS_EL2 && !HAS_EL2_E2H0
->
-> Tests 1) and 2) returned in approx. the same amount of real time (about 12s) although 3) doesn’t
-> seem to return at all.
+> > I don't see why not, and this can also be approached from the controller
+> > side - it's providing a USB bus which includes power as part of the
+> > specification.  That's just a question of where the binding happens
+> > though.
 
-I've never really looked at nested stuff, I'll try to set smth up and see
-if I can reproduce that..
+> That would be another option. Could you elaborate on this, please?
+> If I understand you correctly, you mean to extend controller binding
+> (and driver) to take in an additional supply? If yes - I'm afraid that
 
-Thanks,
-Sebastian
----1463806286-426200590-1749563454=:18875--
+Yes.
 
+> will be hard to justify to USB controller folks - as per my
+> understanding bindings (and device's driver) shall describe the
+> physical specification of the device, and in this case the root
+> controller does not in fact provide powered rail(s), nor a way to
+> control it - its an external addition controlled by SoC's GPIO for a
+> specific device, so it shall be described as such. Perhaps Konrad
+> could share his view on this?
+
+There's also the potential that there isn't a single 5V supply for the
+bus, depending on the system design.
+
+> > I'm also not clear what the relevance is here?  If we have a dummy
+> > consumer we're still going to need to work out how to instantiate it -
+> > that's the same problem no matter what's getting instantiated.  A dummy
+> > consumer is a userspace interface, not a firmware interface.
+
+> Ah perhaps I should have shared more examples, my bad.
+> Currently suggested solution, which in my opinion is not scalable:
+> * Add VID/PID (of every camera, iff known) to onboard usb driver [1]
+> * Define in DT as:
+> ```
+> camera {
+>   compatible =3D "usb5986,1198";
+>=20
+>   vdd-supply =3D <&vreg_cam_5p0>;
+> };
+
+That's what I'd understood.
+
+> Proposed solution with dummy regulator consumer:
+> * No need to explicitly set VID/PID. Define in DT as:
+> ```
+> camera {
+>   compatible =3D "regulator-dummy-consumer";
+>=20
+>   vdd-supply =3D <&vreg_cam_5p0>;
+> };
+> ```
+
+This is clearly not describing the hardware and therefore not a good fit
+for DT.
+
+> > > Having to add VID/PID for every device that does not in fact need a
+> > > dedicated driver has another issue - it was just confirmed that Lenovo
+> > > Ideapad 5 uses a similar setup with USB UVC webcam, but of course
+> > > VID/PID are different. That would require yet another driver change.
+
+> > We already need relatively large sets of quirks because laptops have
+> > firmwares built for Windows which is happy to enumerate things based on
+> > DMI information even when there is a perfectly good enumerable interface
+> > that could describe things directly, never mind the bits that aren't
+> > enumerable.  This doesn't seem particularly different.
+
+> But how would we approach the lack of particular information, in this
+> case all possible VID/PID for an embedded camera? VID/PID was
+> identified by checking the actual device, which does not rule out OEM
+> switching camera SKU on the next batch, same way they do with other
+> peripherals.
+
+I'm not saying this a particularly great or pleasant solution, just that
+it's where things are at.  You're trying to solve an OS problem with a
+firmware description which is a bit of a mismatch, ideally the firmware
+descriptions would be better but that's just not how ACPI laptops work
+unfortunately.
+
+It does seem a lot easier to just mark the supplies as always on if
+there's no integration with an actual client driver TBH.
+
+--3JbEwhaoPZrgoyLF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhIOGcACgkQJNaLcl1U
+h9DFAgf+Ig6Pk3xzKH/Flc4oxj6yfik8pQQR5k6Q+d0vmCRBVTHDBy35mSrlVK3B
+8kq0mjhguQXGyNunIyaXK8H9REm0rQb4L/+IGxfgHOUadqDIWFQd5AlLoCanWT+2
+NA75g1FhLuJsmPQjxx8ZG0Ai2/IbYFhjpLQQT5ZA7hC7Dnib31v1ermXfkBUPbqj
+bK17nmw9gVZFX+6H+00ecrgRRxXnVX2T4Pwt1+mshL2fF0LXIX/0yioWnDHCvjAi
+wrGPiYrcGQ8Xkvhh3MzYle1XSZ/koiND4rfsr1twPWEkFvkDEQQ+lkSWd6RZeYbr
+VAiU9Ma6c5KzBz3YQKWxRla7CMvEzQ==
+=NxSu
+-----END PGP SIGNATURE-----
+
+--3JbEwhaoPZrgoyLF--
