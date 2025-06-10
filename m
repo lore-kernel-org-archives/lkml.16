@@ -1,107 +1,97 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4222645038;
-	Tue, 10 Jun 2025 02:30:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80119219FC;
+	Tue, 10 Jun 2025 02:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749522618; cv=none; b=EE0MRUbLZ1xraTUouLvNNfV37qSbcMSF8CsP0DE15Zsgvgx0jIHGAayE+xmmFqv2cWGc9iGSHtAKy8WKOWiJ8RrudjmDQnoZOIHjunYx8W1xrFlDxAAy2ewxn1KQXJO/y87GRMxPAgoTv7DJ8Izfgan9+Felb3n0awnUFltbVL4=
+	t=1749522659; cv=none; b=EfspWV4l5nlhX4oCCUBk3HV0GoHCXMd6Rjoxx6uuawIZHUaQx0iPAr9njqjgc91kjCOXYVys15MycS2ggv5zMe02Vm7y7gdE5EwKjZVojZ+cEM4CsRNlI/77CvAPdPoj930qkBZgPuXB/1iwAjEDEjoNeQ2mUFfs9r1vzqzF0Lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749522618; c=relaxed/simple;
-	bh=v3LESvPLiUPkpigP+R05pYukPxN/Hh3UfMtabIzddaA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SI7NUfMYqyw81BBtTbTWNnasGw7CJX4JG13054u39mxRKRy89zOqC4TZaA4dCkeE7qttyJktar8LfADTSWEeHHmuV1RRG4sSKpp5i7DXC4+/x4C5Uu2CIxvHTr31SZFQCONW16NmVCjHwD5RYiAT+S8LjPPFti24ol7/QMHpA7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OTYe6FAP; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749522659; c=relaxed/simple;
+	bh=MF9eFED5nRvQBjnkQkaYBoOXrlZbPXE3oEhI6hM3hIM=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=jCmIBHnDp6LsUcnexYSs8Gze+iEQEHRMchhvj6CqriYmVL+BPYrLEcbPBUMDOVtLz3UdcZ0jkyyWjNeBD9NW1BP1xtOFdLIa+VXwMDp6c+8exXrk5jP2JlImVGwcwiput8Pfa72Fep768FJZwgahEVmk+XUVSyngf860xBoRMhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QtPCtTdA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OTYe6FAP"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7d09b0a5050so298332885a.3;
-        Mon, 09 Jun 2025 19:30:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749522616; x=1750127416; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SgElAs0y1ZJkhsU5o9mYZFAkDt+b5eZOursoEKVdA8M=;
-        b=OTYe6FAPOlaQkB9gVsTIX9OCEfCtigtEuv/lnG7+wOwcUvmfqre78rwnitldtaLjOi
-         fds/cnm2HY+VmdH7JHrCLgfcDS/ZZrJQ7uJBdhJ5BhQ1OcVOAuMhwk6IiWWaSJrWdchC
-         ZqRZu7PpYLz+RaXyDZENkGeHgdzD88XJ8eDIrCiFGhXLQBDL9KvwE+CHpx326bHSrdtw
-         XjKa4rofYS9cTEWFH79pAabqAtPCKJ+hkgItieijpcvbe/Z8W5hxYalaUNLf0dLsMdRn
-         +ewqh3ZTV3VG0ahH9oljS5TezZbaI8UuksGs1VpOhxwETIQ+aV70kyEWxA4rtk3D5t7N
-         /VNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749522616; x=1750127416;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SgElAs0y1ZJkhsU5o9mYZFAkDt+b5eZOursoEKVdA8M=;
-        b=uq2AJXdBEs81ZRHYYa147kmuNlj9V7XOVUK0LXF8y9AHQGcimxQk2sR3TpUI35kfRb
-         lSHkCWGsM+h2MOpIFIoubEpe2F6Qfgi8X6EXpQ4RAGketJBBOTqvDSDOuZCRLirXzzkg
-         6oOuU+WhRbCPo9pzc0/wPcawiIwDB5Oc07DK7hodwZ/+83dUAqzAMcdy8xIOy0onwmoH
-         /FteM9GyyoJSneg6VVUStU7jsGhvCRJTjTRYNP/IDivTa9h8cga3MsHgB2nNhdoyZZTX
-         yeViRcburzl7tMzUOZ9JLREq/3EGGQg+JjOOVEUkv9yu9Z+RlLYq+cmwFFhOeYjR2qOn
-         4dxw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMLAKkQFkPiKHjdRVhCzlFWEIJp7dJVwAqBPwkKbSuStjsoJnl6bUXdIlaPznnuRum/fYJG75q89+z@vger.kernel.org, AJvYcCXLRMy69Rzc4AtJNEEq/whf/JyaoMiaDVc8GmyK31J6rpxUX+7uBg+Y6hBugN9PJkEYcLjHG9j0nJm4TNyn@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJUbrSSRqHDGO2QkezOYJfftHaIVf4mt26E9TZArMJpFbZsz4K
-	BYpDYu8/xRcyZfcCJ5jnv2i2et+T50s7U1e61IqUVWEP9mpySiFAGZkz
-X-Gm-Gg: ASbGncsXewSYflritXpAiYtFwDnUqOUrn47HQPU9BqGPZtMlIIHf2FbzlTZUU+vE1Uy
-	BAUoB3OZDG9B/CfTirH73AZAAD6Z+4yzy++FB+iiJC1dcKSWuaP56m3Jt/a4SxkVpjJJRRY23Yn
-	yVMvpgnJ/xVuvvuTE+T9HMl/cQgmMJNgjPs4bjzqgwMXo7TJYNYmbFqGcPpD/C6uYSjZ2S8ZNRp
-	eIVtaczlmDp3vq1wbvsTv//B061XOTdHO2p5UCRjSWhYfM9dcQjzlKLWDItBoiHrLYgSbJo0BIl
-	K/iEe9roo6n8CAdDVX1NOCexAfUjZLMYTynl5g==
-X-Google-Smtp-Source: AGHT+IHGAP6xmALkZKuYBUNxKptzmmUckUcUQvkX0yXZ+9n+f0ZjvsKWM3DmWJRkyqr7YpGIbcY5lw==
-X-Received: by 2002:a05:620a:1d06:b0:7d3:99db:c4c with SMTP id af79cd13be357-7d399db0c51mr593864685a.6.1749522615969;
-        Mon, 09 Jun 2025 19:30:15 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7d2517fa678sm626750385a.22.2025.06.09.19.30.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 19:30:15 -0700 (PDT)
-Date: Tue, 10 Jun 2025 10:29:09 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Chen Wang <unicorn_wang@outlook.com>, sophgo@lists.linux.dev, 
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc: Inochi Amaoto <inochiama@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: dts: sophgo: cv18xx: Add RTCSYS device node
-Message-ID: <orrz4ibchqfiqbbhyxbvlt4ejtu2roankisfy7gfuza2b4phgl@5mbjjnmcm2si>
-References: <20250513203128.620731-1-alexander.sverdlin@gmail.com>
- <174952038849.949885.15347540485983948845.b4-ty@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QtPCtTdA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14B1BC4CEEB;
+	Tue, 10 Jun 2025 02:30:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749522659;
+	bh=MF9eFED5nRvQBjnkQkaYBoOXrlZbPXE3oEhI6hM3hIM=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=QtPCtTdAWiYNrWfnLL1Egie323Tgg630GTtlhtKZVSX9uBqa1Gr88E9RsbxDT91td
+	 g8N2E1mXP6KQ3i2S6j5SfrRj0MaXKnbtvuE83BlJUxGGpTiVbnl2rxiJMDCs4KEyTx
+	 8GoA9PljkQes7HFBNnlOgpA+P9Osn1lcp/7BumzmdOTDsooqKlOoMYKrU0N+NtBleL
+	 XDFNcpnclJnjOq5Ft8al8OYLgep4MJTJBH3B1r74QqveEOOgVHBzBa3R7cBj3KbHtg
+	 aOW4kofCS51lkO8XkZR1GLTWMCjnZ4wICUfyW4BwQFGxs5B6ZFfvE6OYVB/idqhdt2
+	 m/aI3IhosKoyA==
+Date: Mon, 09 Jun 2025 21:30:57 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <174952038849.949885.15347540485983948845.b4-ty@gmail.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: edumazet@google.com, netdev@vger.kernel.org, 
+ linux-aspeed@lists.ozlabs.org, mturquette@baylibre.com, 
+ BMC-SW@aspeedtech.com, linux-kernel@vger.kernel.org, kuba@kernel.org, 
+ krzk+dt@kernel.org, p.zabel@pengutronix.de, sboyd@kernel.org, 
+ linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ davem@davemloft.net, conor+dt@kernel.org, joel@jms.id.au, 
+ andrew+netdev@lunn.ch, devicetree@vger.kernel.org, pabeni@redhat.com, 
+ andrew@codeconstruct.com.au
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+In-Reply-To: <20250610012406.3703769-2-jacky_chou@aspeedtech.com>
+References: <20250610012406.3703769-1-jacky_chou@aspeedtech.com>
+ <20250610012406.3703769-2-jacky_chou@aspeedtech.com>
+Message-Id: <174952265793.3644019.286629373000016480.robh@kernel.org>
+Subject: Re: [net-next v2 1/4] dt-bindings: net: ftgmac100: Add resets
+ property
 
-On Tue, Jun 10, 2025 at 09:53:12AM +0800, Inochi Amaoto wrote:
-> On Tue, 13 May 2025 22:31:25 +0200, Alexander Sverdlin wrote:
-> > Add the RTCSYS MFD node: in Cvitek CV18xx and its successors RTC Subsystem
-> > is quite advanced and provides SoC power management functions as well.
-> > 
-> > The SoC family also contains DW8051 block (Intel 8051 compatible CPU core)
-> > and an associated SRAM. The corresponding control registers are mapped into
-> > RTCSYS address space as well.
-> > 
-> > [...]
+
+On Tue, 10 Jun 2025 09:24:03 +0800, Jacky Chou wrote:
+> Add optional resets property for Aspeed SoCs to reset the MAC and
+> RGMII/RMII.
 > 
-> Applied to fixes, thanks!
-> 
-> [1/1] riscv: dts: sophgo: cv18xx: Add RTCSYS device node
->       (no commit info)
-> 
-> Thanks,
-> Inochi
+> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
+> ---
+>  .../bindings/net/faraday,ftgmac100.yaml       | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 > 
 
-Should be for-next branch, I execute in a wrong branch....
-The url should be
-https://github.com/sophgo/linux/commit/3a8cef361be50c59013cdb2d804c12476c76e848
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Regards,
-Inochi
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/net/faraday,ftgmac100.yaml:82:1: [error] duplication of key "allOf" in mapping (key-duplicates)
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/faraday,ftgmac100.yaml: ignoring, error parsing file
+./Documentation/devicetree/bindings/net/faraday,ftgmac100.yaml:82:1: found duplicate key "allOf" with value "[]" (original value: "[]")
+make[2]: *** Deleting file 'Documentation/devicetree/bindings/net/faraday,ftgmac100.example.dts'
+Documentation/devicetree/bindings/net/faraday,ftgmac100.yaml:82:1: found duplicate key "allOf" with value "[]" (original value: "[]")
+make[2]: *** [Documentation/devicetree/bindings/Makefile:26: Documentation/devicetree/bindings/net/faraday,ftgmac100.example.dts] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1519: dt_binding_check] Error 2
+make: *** [Makefile:248: __sub-make] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250610012406.3703769-2-jacky_chou@aspeedtech.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
