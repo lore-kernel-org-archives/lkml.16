@@ -1,123 +1,102 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D9F9460
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 03:04:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4112E9460;
+	Tue, 10 Jun 2025 03:05:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749524665; cv=none; b=G8+VHAi0oPS6AwOt5pv1n/7SdfrCoy3XNpKsD25pj8D+ANVfb30ogUyTcAeSlp+wWqmPi45G3freAeWDXv9jZZ7yWTGNlgj6Z3yMrgH9JQD1gX4ig7AK0SNp8ONXXHcEmIhQfRb9DUtZBEfThQwUgYzWx7UkKFLouSvtd+h4T1s=
+	t=1749524744; cv=none; b=RRvQardFVWDLEuX4Tkt2IZAbL+iAvrK+cu4Lzzsv3vzyMQM2PMmqaghD88qpHuxN0VLV41Xr8FoEqchfTFjL7vl3q7rTZVBe/z6EMFG8oA8KsWeqhyICLq8L30qsZsOPPoIAUvQQxxAvIuIOEAmCu9kUyTftTeiSkgc49UcOun4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749524665; c=relaxed/simple;
-	bh=Sb0o9rWVXROjN959mgSf0zkMP9TqDqECGwDeHOFfN4w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KP5dDFhSr11AI2cIP3xy5Zv/e74ugClztnMIO3/evdUTg3rC6mdWdE2SVgyjluGKyjp4J9DO2uHq69D0n9lZncJ2YlHjOhWRhmFhZdPuyb71Ph651QQD2MzPuZf79N6HMgfxc6GHrbWnOG6k/dJlN65BKSqtqq1SVM1HtK8F4tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O2mZqPak; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749524744; c=relaxed/simple;
+	bh=avO+mpvfE5wXQHQ2LrbvaocbDPERuQtijditQmDk+9A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oT4Xb+ZDKsH+M89W9Q9NyTLPVNZWVKjMOb4NGP1xNfcG/qayByLp6VdMSO+dKLJqh+jFGl08ncLNV/eDhmubKKC/BFSu7TqTIlSPJXmWE+hDxfH/N123ll6Vg4NcEUJfC6XRQfl1OT4vtUG9EFxqeLUJ2lzXimQvXSrxtnQxWbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=T3fXJE10; arc=none smtp.client-ip=220.197.32.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O2mZqPak"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6fad4e6d949so28022446d6.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 20:04:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749524663; x=1750129463; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Sb0o9rWVXROjN959mgSf0zkMP9TqDqECGwDeHOFfN4w=;
-        b=O2mZqPakKZxeR0mPHukDN2ELkOdhrQVD0I8LVe6xWjBxKQX14v/zrexUMv/tL1gsIM
-         JsY+yPDkIqWEHBKBo/NFRRmLLbUeMsA15AwYpZm4piB/KXeIn4um7KAFHa4yP0tMtFir
-         wpOM/WDyA/w/6o47W/wT+DiGYrE5G346eNVojtRHCvi9UH7MEXMN4CIlUE6ySs1bDPLx
-         JmYN6bNDssyxPmGAA9Z8B3Ds7AZUc+vg4VcE+/cxurZuijI/KJmqSRoR70vQHSNte7LZ
-         5qsdfWgbEujPcuBrlw6mrhoAWdCFyToOfNd6SCcW2UUM8IbW2hiJLRggGoR7f/RVtjJK
-         Uzfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749524663; x=1750129463;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Sb0o9rWVXROjN959mgSf0zkMP9TqDqECGwDeHOFfN4w=;
-        b=F4A/1ekYAVHJMSmA0sOJyEAL5u5oB6mkK26JDvbut8+RvfBEafnA+PZIq2nqixmA2L
-         Op9v9WwlX3iDsflWzSBR8VIrbowwTckAq8LLEs/+A6BrLfFxd3hQ5YwzyVXHUtbDL0V4
-         +OmTdr/tvPGN2rKsIXFBKv1wo1cWbTOQtZsZKi2E6py02iiaBaCW2jGeynjEf/PDnKh5
-         4D1Unc0qunLPcvfl2DjyvGFd3nYgNjT8OE+mtkmKIQ5DFZw2SvULsMJYeav3iHHJWoSH
-         GtXwPl9WOPXgefOncwK5Zd/rovW33b8stx8NOH1Byqk3qRZaEVPZdZHGBDOpMyFEJt/f
-         GKMQ==
-X-Gm-Message-State: AOJu0Yx6v9G9NC7fSCAM1H+myEr1rHT2xP9/1BjvS30ZizW+tociXNIz
-	26gwMhffMsOGmNKboG+yCxmkcv1M4AyylGt8Q1T09iDnz6V+ezxq8BvqPFGMb44hB4YlJUWWMMc
-	u44NmZbPDxqAGhMmzWsPgRx2TzVNL9GSafYXiTEc=
-X-Gm-Gg: ASbGncvKrjYS6w5JilvyHcdVmXVgBLf9k1h8bc+iYbK5HB/xDBd+QXal0C8dNwrGb7c
-	ZgrZgxzm2B8s90MNARm1tgNpp1HUBh+CapcfnQ25T4Vcqfp+2wjFnW8mA5EiVj7B18d36n9YT1S
-	8L1OWseMfEfOFNnVAk1+LpLSk3SqLO/VL3c4zCr/HVr1mgzTJYJQTd
-X-Google-Smtp-Source: AGHT+IGvXG9MNWp2SNxIusTV8GenuzPm8gpU75as1bf2eTo4avog4w0okQk+qmFmUg4gGYsnhB/4RKbhsYgOSBH9dxI=
-X-Received: by 2002:ad4:5ba4:0:b0:6fb:14:5e82 with SMTP id 6a1803df08f44-6fb08f8d348mr215003186d6.29.1749524662796;
- Mon, 09 Jun 2025 20:04:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="T3fXJE10"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=bPCNvaiweglADLcDUZiaSHWSdRXaEgPafPmAEsUXP6w=;
+	b=T3fXJE10vejU41LKzdrPWuTUns6SjQOmeRrEvrVLgaqIwiKIYITKGz/9ph0Ai+
+	SwFdd1vMNo9CS4O2Jq9oe8fBNWttECuh9a+YO4tbkdX4bg57EX6TFJ56d226VDgV
+	4mkiQTOFF04SAc0BgQ1L6ZmDAy4Ha0+YNtT/7t2DEVSM8=
+Received: from dragon (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id M88vCgD3HzjXoEdoKoVPAA--.46618S3;
+	Tue, 10 Jun 2025 11:04:56 +0800 (CST)
+Date: Tue, 10 Jun 2025 11:04:54 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: John Ernberg <john.ernberg@actia.se>
+Cc: Xu Yang <xu.yang_2@nxp.com>, Peter Chen <peter.chen@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: i.MX kernel hangup caused by chipidea USB gadget driver
+Message-ID: <aEeg1s9A0F8x0U2+@dragon>
+References: <aEZxmlHmjeWcXiF3@dragon>
+ <c56pgxmfscg6tpqxjayu4mvxc2g5kgmfitpvp36lxulpq4jxmg@ces5l7ofab6s>
+ <aEbstxkQmji4tfjf@w447anl.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250609103535.780069-1-marco.crivellari@suse.com> <20250609103535.780069-3-marco.crivellari@suse.com>
-In-Reply-To: <20250609103535.780069-3-marco.crivellari@suse.com>
-From: Lai Jiangshan <jiangshanlai@gmail.com>
-Date: Tue, 10 Jun 2025 11:04:11 +0800
-X-Gm-Features: AX0GCFuY64oK3QesZTujjIJTYAGxiMPxpDC-fjXAg6ASZi71gUnWRyBmNAZJ-D4
-Message-ID: <CAJhGHyBVWDKXfMLT3LBKFUu9ot2uRk=1xLebGf_Grh_j1_VOSg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] Workqueue: add system_dfl_wq
-To: Marco Crivellari <marco.crivellari@suse.com>
-Cc: linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Michal Hocko <mhocko@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEbstxkQmji4tfjf@w447anl.localdomain>
+X-CM-TRANSID:M88vCgD3HzjXoEdoKoVPAA--.46618S3
+X-Coremail-Antispam: 1Uf129KBjvJXoWxJr4kZr1xtFyDJr4DZw1DJrb_yoW8XFyrpF
+	4fCr17AFsYqa4UJr1qqrsxuryrJa1kJrW8KFy2939YqrWa9w45Kr1UX3s5WF9rKry7W3W8
+	tFs8Jw1UC3WxCF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UjYL9UUUUU=
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiBBhoZWhHgimwwAAAsl
 
-On Mon, Jun 9, 2025 at 6:35=E2=80=AFPM Marco Crivellari
-<marco.crivellari@suse.com> wrote:
->
-> Currently if a user enqueue a work item using schedule_delayed_work() the
-> used wq is "system_wq" (per-cpu wq) while queue_delayed_work() use
-> WORK_CPU_UNBOUND (used when a cpu is not specified). The same applies to
-> schedule_work() that is using system_wq and queue_work(), that makes use
-> again of WORK_CPU_UNBOUND.
->
-> This lack of consistentcy cannot be addressed without refactoring the API=
-.
->
-> system_unbound_wq should be the default workqueue so as not to enforce
-> locality constraints for random work whenever it's not required.
->
-> Adding system_dfl_wq to encourage its use when unbound work should be use=
-d.
->
-> queue_work() / queue_delayed_work() / mod_delayed_work() will now use the
-> new unbound wq: whether the user still use the old wq a warn will be
-> printed along with a wq redirect to the new one.
->
-> The old system_unbound_wq will be kept for a few release cycles.
->
+Hi John,
 
-Hello, Macro
+On Mon, Jun 09, 2025 at 02:17:30PM +0000, John Ernberg wrote:
 
-What is the reason for removing system_unbound_wq? I believe system_unbound=
-_wq
-is a perfectly appropriate and descriptive name for its callers. I=E2=80=99=
-m not opposed
-to system_dfl_wq as long as it will be an alias for system_unbound_wq (or e=
-ven
-system_percpu_wq, if that can be configured at boot time by sysadim).
+<snip>
 
+> We probably ran into the same problem trying to bring onboard 6.12, going
+> from 6.1, on iMX8QXP. I managed to trace the hang to EP priming through a
+> combination of debug tracing and BUG_ON experiments. See if it starts
+> splatin with the below change.
+> 
+> ----------------->8------------------
+> 
+> From 092599ab6f9e20412a7ca1eb118dd2be80cd18ff Mon Sep 17 00:00:00 2001
+> From: John Ernberg <john.ernberg@actia.se>
+> Date: Mon, 5 May 2025 09:09:01 +0200
+> Subject: [PATCH] USB: ci: gadget: Panic if priming when gadget off
+> 
+> ---
+>  drivers/usb/chipidea/udc.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
+> index 2fea263a5e30..544aa4fa2d1d 100644
+> --- a/drivers/usb/chipidea/udc.c
+> +++ b/drivers/usb/chipidea/udc.c
+> @@ -203,8 +203,10 @@ static int hw_ep_prime(struct ci_hdrc *ci, int num, int dir, int is_ctrl)
+>  
+>     hw_write(ci, OP_ENDPTPRIME, ~0, BIT(n));
+>  
+> -   while (hw_read(ci, OP_ENDPTPRIME, BIT(n)))
+> +   while (hw_read(ci, OP_ENDPTPRIME, BIT(n))) {
+>         cpu_relax();
+> +       BUG_ON(dir == TX && !hw_read(ci, OP_ENDPTCTRL + num, ENDPTCTRL_TXE));
+> +   }
+>     if (is_ctrl && dir == RX && hw_read(ci, OP_ENDPTSETUPSTAT, BIT(num)))
+>         return -EAGAIN;
+>  
+> ----------------->8------------------
 
-If anyone feels that the term "unbound" in WORK_CPU_UNBOUND is not aligned =
-with
-the "unbound" in system_unbound_wq, I acknowledge that concern. In that cas=
-e,
-I would prefer to rename WORK_CPU_UNBOUND to WORK_CPU_UNSPECIFIC.
+Hmm, I just tested the change on i.MX8MM but didn't see the splatting.
+Maybe we are running into a slightly different problems?
 
+Shawn
 
-Many structures and functions underlying system_unbound_wq already use 'unb=
-ound'
-in their names, so simply renaming system_unbound_wq does not increase
-consistentcy.
-
-Thanks
-Lai
