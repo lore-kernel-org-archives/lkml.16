@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73F0E23A9B1;
-	Tue, 10 Jun 2025 15:02:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3468823BCFD;
+	Tue, 10 Jun 2025 15:02:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749567722; cv=none; b=iK4VlPBVxxF4YAwwQjz9QuH4KACAmI2bIWyQe7dbUSPHzAQm4nDzo/uRl75VHTEMRX1BDK4zkjdOVCihvMVk3da0TIzztpD+vfVpM6+Ftu4eDx5b698qx17WoNYlCIDlIADmf7w3nuGElhNtBB6z7Tr9OQd7wfLvl1WX/+FrEJY=
+	t=1749567724; cv=none; b=hQjT+bsOTxFP82AKeIiw2UemI4Qo8UG2PBWgleYa66YQOin4n5QcPIJenbFPdjUF4GHaSGRdYywFORmb4jCv9bmyu9KPwUw41i+kfeJuG6s0AQdz09TOcRO7vn2yj8imDo/BV9VZso0gxv+E4bTPzq1AEJRDYbb9Fx0dNrtV7lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749567722; c=relaxed/simple;
-	bh=PUV2rE/JlzOBU3SGyyRucb3Obn0aXwskI8nwY4ZCyIU=;
+	s=arc-20240116; t=1749567724; c=relaxed/simple;
+	bh=TWFzodArfUb56G2s5s6j00RgWcg438jjSrUiM05c4wU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=b9yZbVmu5Ab+s8U5z0dRa+CX4XII036iWz2b4GvwCw81SYpSH/R39BydWy0uMag7wpFmrvZOx8WGkfRAoDTpTPo7NCwYKPqF/ag27qf1VXXxrBNOdiR+lzR9XU0ScDTKqeJAsQqD2f9NV61vedk1fhltehs8QokUxroFusiH0AQ=
+	 MIME-Version; b=NXRIi6Iy1xEhCm41Kja0xKkTUDloe17eDC9Izj8/FnwEeVAYO06yiSRRuTbjfXCb2SGvrdgti8t+cgY3P6D2UDTufOutG/3z6mx9JzpwENQ82etwVkYzXLmrueY65HDenQc9zgCtQMMZ9h17sS8lM1P92TBbOqjVvB4JSyNsPBY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C7B0175A;
-	Tue, 10 Jun 2025 08:01:40 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3EA411EA6;
+	Tue, 10 Jun 2025 08:01:43 -0700 (PDT)
 Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 70F4F3F59E;
-	Tue, 10 Jun 2025 08:01:57 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 210F63F59E;
+	Tue, 10 Jun 2025 08:02:00 -0700 (PDT)
 From: Yeoreum Yun <yeoreum.yun@arm.com>
 To: catalin.marinas@arm.com,
 	pcc@google.com,
@@ -36,9 +36,9 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH v5 4/6] kselftest/arm64/mte: preparation for mtefar test
-Date: Tue, 10 Jun 2025 16:01:42 +0100
-Message-Id: <20250610150144.2523945-5-yeoreum.yun@arm.com>
+Subject: [PATCH v5 5/6] kselftest/arm64/mte: refactor check_mmap_option test
+Date: Tue, 10 Jun 2025 16:01:43 +0100
+Message-Id: <20250610150144.2523945-6-yeoreum.yun@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250610150144.2523945-1-yeoreum.yun@arm.com>
 References: <20250610150144.2523945-1-yeoreum.yun@arm.com>
@@ -50,340 +50,216 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If FEAT_MTE_TAGGED_FAR (Armv8.9) is supported, bits 63:60 of the fault address
-are preserved in response to synchronous tag check faults (SEGV_MTESERR).
-
-This patch is preparation for testing FEAT_MTE_TAGGED_FAR.
-It shouldn't change the test result.
+Before add mtefar testcase on check_mmap_option.c,
+refactor check_mmap_option.
 
 Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
 ---
- .../selftests/arm64/mte/check_buffer_fill.c   |  2 +-
- .../selftests/arm64/mte/check_child_memory.c  |  4 +-
- .../arm64/mte/check_hugetlb_options.c         |  4 +-
- .../selftests/arm64/mte/check_ksm_options.c   |  4 +-
- .../selftests/arm64/mte/check_mmap_options.c  |  4 +-
- .../arm64/mte/check_tags_inclusion.c          |  2 +-
- .../selftests/arm64/mte/check_user_mem.c      |  2 +-
- .../selftests/arm64/mte/mte_common_util.c     | 70 ++++++++++++++++---
- .../selftests/arm64/mte/mte_common_util.h     |  8 ++-
- tools/testing/selftests/arm64/mte/mte_def.h   |  8 +++
- 10 files changed, 85 insertions(+), 23 deletions(-)
+ .../selftests/arm64/mte/check_mmap_options.c  | 158 +++++++++++++-----
+ 1 file changed, 118 insertions(+), 40 deletions(-)
 
-diff --git a/tools/testing/selftests/arm64/mte/check_buffer_fill.c b/tools/testing/selftests/arm64/mte/check_buffer_fill.c
-index 2ee7f114d7fa..5248b5265aa4 100644
---- a/tools/testing/selftests/arm64/mte/check_buffer_fill.c
-+++ b/tools/testing/selftests/arm64/mte/check_buffer_fill.c
-@@ -415,7 +415,7 @@ int main(int argc, char *argv[])
- 		return err;
- 
- 	/* Register SIGSEGV handler */
--	mte_register_signal(SIGSEGV, mte_default_handler);
-+	mte_register_signal(SIGSEGV, mte_default_handler, false);
- 
- 	/* Set test plan */
- 	ksft_set_plan(20);
-diff --git a/tools/testing/selftests/arm64/mte/check_child_memory.c b/tools/testing/selftests/arm64/mte/check_child_memory.c
-index 7597fc632cad..b97ea3981c21 100644
---- a/tools/testing/selftests/arm64/mte/check_child_memory.c
-+++ b/tools/testing/selftests/arm64/mte/check_child_memory.c
-@@ -160,8 +160,8 @@ int main(int argc, char *argv[])
- 		return err;
- 
- 	/* Register SIGSEGV handler */
--	mte_register_signal(SIGSEGV, mte_default_handler);
--	mte_register_signal(SIGBUS, mte_default_handler);
-+	mte_register_signal(SIGSEGV, mte_default_handler, false);
-+	mte_register_signal(SIGBUS, mte_default_handler, false);
- 
- 	/* Set test plan */
- 	ksft_set_plan(12);
-diff --git a/tools/testing/selftests/arm64/mte/check_hugetlb_options.c b/tools/testing/selftests/arm64/mte/check_hugetlb_options.c
-index 3bfcd3848432..4e644a606394 100644
---- a/tools/testing/selftests/arm64/mte/check_hugetlb_options.c
-+++ b/tools/testing/selftests/arm64/mte/check_hugetlb_options.c
-@@ -235,8 +235,8 @@ int main(int argc, char *argv[])
- 		return err;
- 
- 	/* Register signal handlers */
--	mte_register_signal(SIGBUS, mte_default_handler);
--	mte_register_signal(SIGSEGV, mte_default_handler);
-+	mte_register_signal(SIGBUS, mte_default_handler, false);
-+	mte_register_signal(SIGSEGV, mte_default_handler, false);
- 
- 	allocate_hugetlb();
- 
-diff --git a/tools/testing/selftests/arm64/mte/check_ksm_options.c b/tools/testing/selftests/arm64/mte/check_ksm_options.c
-index 88c74bc46d4f..afea4e381862 100644
---- a/tools/testing/selftests/arm64/mte/check_ksm_options.c
-+++ b/tools/testing/selftests/arm64/mte/check_ksm_options.c
-@@ -141,8 +141,8 @@ int main(int argc, char *argv[])
- 		return KSFT_FAIL;
- 	}
- 	/* Register signal handlers */
--	mte_register_signal(SIGBUS, mte_default_handler);
--	mte_register_signal(SIGSEGV, mte_default_handler);
-+	mte_register_signal(SIGBUS, mte_default_handler, false);
-+	mte_register_signal(SIGSEGV, mte_default_handler, false);
- 
- 	/* Set test plan */
- 	ksft_set_plan(4);
 diff --git a/tools/testing/selftests/arm64/mte/check_mmap_options.c b/tools/testing/selftests/arm64/mte/check_mmap_options.c
-index 17694caaff53..b37bf481c9f9 100644
+index b37bf481c9f9..a784b3a31d4f 100644
 --- a/tools/testing/selftests/arm64/mte/check_mmap_options.c
 +++ b/tools/testing/selftests/arm64/mte/check_mmap_options.c
-@@ -201,8 +201,8 @@ int main(int argc, char *argv[])
- 	sizes[item - 1] = page_size + 1;
+@@ -3,6 +3,7 @@
  
- 	/* Register signal handlers */
--	mte_register_signal(SIGBUS, mte_default_handler);
--	mte_register_signal(SIGSEGV, mte_default_handler);
-+	mte_register_signal(SIGBUS, mte_default_handler, false);
-+	mte_register_signal(SIGSEGV, mte_default_handler, false);
+ #define _GNU_SOURCE
  
- 	/* Set test plan */
- 	ksft_set_plan(22);
-diff --git a/tools/testing/selftests/arm64/mte/check_tags_inclusion.c b/tools/testing/selftests/arm64/mte/check_tags_inclusion.c
-index a3d1e23fe02a..b96296ab9870 100644
---- a/tools/testing/selftests/arm64/mte/check_tags_inclusion.c
-+++ b/tools/testing/selftests/arm64/mte/check_tags_inclusion.c
-@@ -180,7 +180,7 @@ int main(int argc, char *argv[])
- 		return err;
- 
- 	/* Register SIGSEGV handler */
--	mte_register_signal(SIGSEGV, mte_default_handler);
-+	mte_register_signal(SIGSEGV, mte_default_handler, false);
- 
- 	/* Set test plan */
- 	ksft_set_plan(4);
-diff --git a/tools/testing/selftests/arm64/mte/check_user_mem.c b/tools/testing/selftests/arm64/mte/check_user_mem.c
-index f4ae5f87a3b7..d1d14aaaba16 100644
---- a/tools/testing/selftests/arm64/mte/check_user_mem.c
-+++ b/tools/testing/selftests/arm64/mte/check_user_mem.c
-@@ -211,7 +211,7 @@ int main(int argc, char *argv[])
- 		return err;
- 
- 	/* Register signal handlers */
--	mte_register_signal(SIGSEGV, mte_default_handler);
-+	mte_register_signal(SIGSEGV, mte_default_handler, false);
- 
- 	/* Set test plan */
- 	ksft_set_plan(64);
-diff --git a/tools/testing/selftests/arm64/mte/mte_common_util.c b/tools/testing/selftests/arm64/mte/mte_common_util.c
-index a1dc2fe5285b..47e5f940b804 100644
---- a/tools/testing/selftests/arm64/mte/mte_common_util.c
-+++ b/tools/testing/selftests/arm64/mte/mte_common_util.c
-@@ -6,6 +6,7 @@
++#include <assert.h>
+ #include <errno.h>
+ #include <fcntl.h>
  #include <signal.h>
- #include <stdio.h>
- #include <stdlib.h>
-+#include <time.h>
- #include <unistd.h>
+@@ -24,6 +25,12 @@
+ #define TAG_CHECK_ON		0
+ #define TAG_CHECK_OFF		1
  
- #include <linux/auxvec.h>
-@@ -19,20 +20,38 @@
- #include "mte_common_util.h"
- #include "mte_def.h"
- 
-+#ifndef SA_EXPOSE_TAGBITS
-+#define SA_EXPOSE_TAGBITS 0x00000800
-+#endif
++#define TEST_NAME_MAX		256
 +
- #define INIT_BUFFER_SIZE       256
++#define CHECK_ANON_MEM		0
++#define CHECK_FILE_MEM		1
++#define CHECK_CLEAR_PROT_MTE	2
++
+ static size_t page_size;
+ static int sizes[] = {
+ 	1, 537, 989, 1269, MT_GRANULE_SIZE - 1, MT_GRANULE_SIZE,
+@@ -183,10 +190,98 @@ static int check_clear_prot_mte_flag(int mem_type, int mode, int mapping)
+ 	return KSFT_PASS;
+ }
  
- struct mte_fault_cxt cur_mte_cxt;
-+bool mtefar_support;
- static unsigned int mte_cur_mode;
- static unsigned int mte_cur_pstate_tco;
- 
- void mte_default_handler(int signum, siginfo_t *si, void *uc)
++const char *format_test_name(int check_type, int mem_type, int sync,
++		       int mapping, int tag_check)
++{
++	static char test_name[TEST_NAME_MAX];
++	const char* check_type_str;
++	const char* mem_type_str;
++	const char* sync_str;
++	const char* mapping_str;
++	const char* tag_check_str;
++
++	switch (check_type) {
++	case CHECK_ANON_MEM:
++		check_type_str = "anonymous memory";
++		break;
++	case CHECK_FILE_MEM:
++		check_type_str = "file memory";
++		break;
++	case CHECK_CLEAR_PROT_MTE:
++		check_type_str = "clear PROT_MTE flags";
++		break;
++	default:
++		assert(0);
++		break;
++	}
++
++	switch (mem_type) {
++	case USE_MMAP:
++		mem_type_str = "mmap";
++		break;
++	case USE_MPROTECT:
++		mem_type_str = "mmap/mprotect";
++		break;
++	default:
++		assert(0);
++		break;
++	}
++
++	switch (sync) {
++	case MTE_NONE_ERR:
++		sync_str = "no error";
++		break;
++	case MTE_SYNC_ERR:
++		sync_str = "sync error";
++		break;
++	case MTE_ASYNC_ERR:
++		sync_str = "async error";
++		break;
++	default:
++		assert(0);
++		break;
++	}
++
++	switch (mapping) {
++	case MAP_SHARED:
++		mapping_str = "shared";
++		break;
++	case MAP_PRIVATE:
++		mapping_str = "private";
++		break;
++	default:
++		assert(0);
++		break;
++	}
++
++	switch (tag_check) {
++	case TAG_CHECK_ON:
++		tag_check_str = "tag check on";
++		break;
++	case TAG_CHECK_OFF:
++		tag_check_str = "tag check off";
++		break;
++	default:
++		assert(0);
++		break;
++	}
++
++	snprintf(test_name, TEST_NAME_MAX,
++	         "Check %s with %s mapping, %s mode, %s memory and %s\n",
++	         check_type_str, mapping_str, sync_str, mem_type_str, tag_check_str);
++
++	return test_name;
++}
++
+ int main(int argc, char *argv[])
  {
-+	struct sigaction sa;
- 	unsigned long addr = (unsigned long)si->si_addr;
-+	unsigned char si_tag, si_atag;
+ 	int err;
+ 	int item = ARRAY_SIZE(sizes);
++	int check_type[] = { CHECK_ANON_MEM, CHECK_FILE_MEM };
++	int mem_type[] = { USE_MMAP, USE_MPROTECT };
++	int mte_sync[] = { MTE_SYNC_ERR, MTE_ASYNC_ERR };
++	int mapping[] = { MAP_PRIVATE, MAP_SHARED };
++	int c, mt, s, m;
+ 
+ 	err = mte_default_setup();
+ 	if (err)
+@@ -210,54 +305,37 @@ int main(int argc, char *argv[])
+ 	mte_enable_pstate_tco();
+ 
+ 	evaluate_test(check_anonymous_memory_mapping(USE_MMAP, MTE_SYNC_ERR, MAP_PRIVATE, TAG_CHECK_OFF),
+-	"Check anonymous memory with private mapping, sync error mode, mmap memory and tag check off\n");
++		      format_test_name(CHECK_ANON_MEM, USE_MMAP, MTE_SYNC_ERR, MAP_PRIVATE, TAG_CHECK_OFF));
 +
-+	sigaction(signum, NULL, &sa);
+ 	evaluate_test(check_file_memory_mapping(USE_MPROTECT, MTE_SYNC_ERR, MAP_PRIVATE, TAG_CHECK_OFF),
+-	"Check file memory with private mapping, sync error mode, mmap/mprotect memory and tag check off\n");
++		      format_test_name(CHECK_FILE_MEM, USE_MPROTECT, MTE_SYNC_ERR, MAP_PRIVATE, TAG_CHECK_OFF));
+ 
+ 	mte_disable_pstate_tco();
 +
-+	if (sa.sa_flags & SA_EXPOSE_TAGBITS) {
-+		si_tag = MT_FETCH_TAG(addr);
-+		si_atag = MT_FETCH_ATAG(addr);
-+		addr = MT_CLEAR_TAGS(addr);
-+	} else {
-+		si_tag = 0;
-+		si_atag = 0;
+ 	evaluate_test(check_anonymous_memory_mapping(USE_MMAP, MTE_NONE_ERR, MAP_PRIVATE, TAG_CHECK_OFF),
+-	"Check anonymous memory with private mapping, no error mode, mmap memory and tag check off\n");
++		      format_test_name(CHECK_ANON_MEM, USE_MMAP, MTE_NONE_ERR, MAP_PRIVATE, TAG_CHECK_OFF));
+ 	evaluate_test(check_file_memory_mapping(USE_MPROTECT, MTE_NONE_ERR, MAP_PRIVATE, TAG_CHECK_OFF),
+-	"Check file memory with private mapping, no error mode, mmap/mprotect memory and tag check off\n");
+-
+-	evaluate_test(check_anonymous_memory_mapping(USE_MMAP, MTE_SYNC_ERR, MAP_PRIVATE, TAG_CHECK_ON),
+-	"Check anonymous memory with private mapping, sync error mode, mmap memory and tag check on\n");
+-	evaluate_test(check_anonymous_memory_mapping(USE_MPROTECT, MTE_SYNC_ERR, MAP_PRIVATE, TAG_CHECK_ON),
+-	"Check anonymous memory with private mapping, sync error mode, mmap/mprotect memory and tag check on\n");
+-	evaluate_test(check_anonymous_memory_mapping(USE_MMAP, MTE_SYNC_ERR, MAP_SHARED, TAG_CHECK_ON),
+-	"Check anonymous memory with shared mapping, sync error mode, mmap memory and tag check on\n");
+-	evaluate_test(check_anonymous_memory_mapping(USE_MPROTECT, MTE_SYNC_ERR, MAP_SHARED, TAG_CHECK_ON),
+-	"Check anonymous memory with shared mapping, sync error mode, mmap/mprotect memory and tag check on\n");
+-	evaluate_test(check_anonymous_memory_mapping(USE_MMAP, MTE_ASYNC_ERR, MAP_PRIVATE, TAG_CHECK_ON),
+-	"Check anonymous memory with private mapping, async error mode, mmap memory and tag check on\n");
+-	evaluate_test(check_anonymous_memory_mapping(USE_MPROTECT, MTE_ASYNC_ERR, MAP_PRIVATE, TAG_CHECK_ON),
+-	"Check anonymous memory with private mapping, async error mode, mmap/mprotect memory and tag check on\n");
+-	evaluate_test(check_anonymous_memory_mapping(USE_MMAP, MTE_ASYNC_ERR, MAP_SHARED, TAG_CHECK_ON),
+-	"Check anonymous memory with shared mapping, async error mode, mmap memory and tag check on\n");
+-	evaluate_test(check_anonymous_memory_mapping(USE_MPROTECT, MTE_ASYNC_ERR, MAP_SHARED, TAG_CHECK_ON),
+-	"Check anonymous memory with shared mapping, async error mode, mmap/mprotect memory and tag check on\n");
+-
+-	evaluate_test(check_file_memory_mapping(USE_MMAP, MTE_SYNC_ERR, MAP_PRIVATE, TAG_CHECK_ON),
+-	"Check file memory with private mapping, sync error mode, mmap memory and tag check on\n");
+-	evaluate_test(check_file_memory_mapping(USE_MPROTECT, MTE_SYNC_ERR, MAP_PRIVATE, TAG_CHECK_ON),
+-	"Check file memory with private mapping, sync error mode, mmap/mprotect memory and tag check on\n");
+-	evaluate_test(check_file_memory_mapping(USE_MMAP, MTE_SYNC_ERR, MAP_SHARED, TAG_CHECK_ON),
+-	"Check file memory with shared mapping, sync error mode, mmap memory and tag check on\n");
+-	evaluate_test(check_file_memory_mapping(USE_MPROTECT, MTE_SYNC_ERR, MAP_SHARED, TAG_CHECK_ON),
+-	"Check file memory with shared mapping, sync error mode, mmap/mprotect memory and tag check on\n");
+-	evaluate_test(check_file_memory_mapping(USE_MMAP, MTE_ASYNC_ERR, MAP_PRIVATE, TAG_CHECK_ON),
+-	"Check file memory with private mapping, async error mode, mmap memory and tag check on\n");
+-	evaluate_test(check_file_memory_mapping(USE_MPROTECT, MTE_ASYNC_ERR, MAP_PRIVATE, TAG_CHECK_ON),
+-	"Check file memory with private mapping, async error mode, mmap/mprotect memory and tag check on\n");
+-	evaluate_test(check_file_memory_mapping(USE_MMAP, MTE_ASYNC_ERR, MAP_SHARED, TAG_CHECK_ON),
+-	"Check file memory with shared mapping, async error mode, mmap memory and tag check on\n");
+-	evaluate_test(check_file_memory_mapping(USE_MPROTECT, MTE_ASYNC_ERR, MAP_SHARED, TAG_CHECK_ON),
+-	"Check file memory with shared mapping, async error mode, mmap/mprotect memory and tag check on\n");
++		      format_test_name(CHECK_FILE_MEM, USE_MPROTECT, MTE_NONE_ERR, MAP_PRIVATE, TAG_CHECK_OFF));
++
++	for (c = 0 ; c < ARRAY_SIZE(check_type); c++) {
++		for (s = 0; s < ARRAY_SIZE(mte_sync); s++) {
++			for (m = 0; m < ARRAY_SIZE(mapping); m++) {
++				for (mt = 0; mt < ARRAY_SIZE(mem_type); mt++) {
++					if (check_type[c] == CHECK_ANON_MEM)
++						evaluate_test(check_anonymous_memory_mapping(mem_type[mt], mte_sync[s], mapping[m], TAG_CHECK_ON),
++							format_test_name(CHECK_ANON_MEM, mem_type[mt], mte_sync[s], mapping[m], TAG_CHECK_ON));
++					else
++						evaluate_test(check_file_memory_mapping(mem_type[mt], mte_sync[s], mapping[m], TAG_CHECK_ON),
++							format_test_name(CHECK_FILE_MEM, mem_type[mt], mte_sync[s], mapping[m], TAG_CHECK_ON));
++				}
++			}
++		}
 +	}
  
- 	if (signum == SIGSEGV) {
- #ifdef DEBUG
--		ksft_print_msg("INFO: SIGSEGV signal at pc=%lx, fault addr=%lx, si_code=%lx\n",
--				((ucontext_t *)uc)->uc_mcontext.pc, addr, si->si_code);
-+		ksft_print_msg("INFO: SIGSEGV signal at pc=%lx, fault addr=%lx, si_code=%lx, si_tag=%x, si_atag=%x\n",
-+				((ucontext_t *)uc)->uc_mcontext.pc, addr, si->si_code, si_tag, si_atag);
- #endif
- 		if (si->si_code == SEGV_MTEAERR) {
- 			if (cur_mte_cxt.trig_si_code == si->si_code)
-@@ -45,13 +64,18 @@ void mte_default_handler(int signum, siginfo_t *si, void *uc)
- 		}
- 		/* Compare the context for precise error */
- 		else if (si->si_code == SEGV_MTESERR) {
-+		 	if ((!mtefar_support && si_atag) || (si_atag != MT_FETCH_ATAG(cur_mte_cxt.trig_addr))) {
-+			  ksft_print_msg("Invalid MTE synchronous exception caught for address tag! si_tag=%x, si_atag: %x\n", si_tag, si_atag);
-+			  exit(1);
-+			}
-+
- 			if (cur_mte_cxt.trig_si_code == si->si_code &&
- 			    ((cur_mte_cxt.trig_range >= 0 &&
--			      addr >= MT_CLEAR_TAG(cur_mte_cxt.trig_addr) &&
--			      addr <= (MT_CLEAR_TAG(cur_mte_cxt.trig_addr) + cur_mte_cxt.trig_range)) ||
-+			      addr >= MT_CLEAR_TAGS(cur_mte_cxt.trig_addr) &&
-+			      addr <= (MT_CLEAR_TAGS(cur_mte_cxt.trig_addr) + cur_mte_cxt.trig_range)) ||
- 			     (cur_mte_cxt.trig_range < 0 &&
--			      addr <= MT_CLEAR_TAG(cur_mte_cxt.trig_addr) &&
--			      addr >= (MT_CLEAR_TAG(cur_mte_cxt.trig_addr) + cur_mte_cxt.trig_range)))) {
-+			      addr <= MT_CLEAR_TAGS(cur_mte_cxt.trig_addr) &&
-+			      addr >= (MT_CLEAR_TAGS(cur_mte_cxt.trig_addr) + cur_mte_cxt.trig_range)))) {
- 				cur_mte_cxt.fault_valid = true;
- 				/* Adjust the pc by 4 */
- 				((ucontext_t *)uc)->uc_mcontext.pc += 4;
-@@ -67,11 +91,11 @@ void mte_default_handler(int signum, siginfo_t *si, void *uc)
- 		ksft_print_msg("INFO: SIGBUS signal at pc=%llx, fault addr=%lx, si_code=%x\n",
- 				((ucontext_t *)uc)->uc_mcontext.pc, addr, si->si_code);
- 		if ((cur_mte_cxt.trig_range >= 0 &&
--		     addr >= MT_CLEAR_TAG(cur_mte_cxt.trig_addr) &&
--		     addr <= (MT_CLEAR_TAG(cur_mte_cxt.trig_addr) + cur_mte_cxt.trig_range)) ||
-+		     addr >= MT_CLEAR_TAGS(cur_mte_cxt.trig_addr) &&
-+		     addr <= (MT_CLEAR_TAGS(cur_mte_cxt.trig_addr) + cur_mte_cxt.trig_range)) ||
- 		    (cur_mte_cxt.trig_range < 0 &&
--		     addr <= MT_CLEAR_TAG(cur_mte_cxt.trig_addr) &&
--		     addr >= (MT_CLEAR_TAG(cur_mte_cxt.trig_addr) + cur_mte_cxt.trig_range))) {
-+		     addr <= MT_CLEAR_TAGS(cur_mte_cxt.trig_addr) &&
-+		     addr >= (MT_CLEAR_TAGS(cur_mte_cxt.trig_addr) + cur_mte_cxt.trig_range))) {
- 			cur_mte_cxt.fault_valid = true;
- 			/* Adjust the pc by 4 */
- 			((ucontext_t *)uc)->uc_mcontext.pc += 4;
-@@ -79,12 +103,17 @@ void mte_default_handler(int signum, siginfo_t *si, void *uc)
- 	}
- }
+ 	evaluate_test(check_clear_prot_mte_flag(USE_MMAP, MTE_SYNC_ERR, MAP_PRIVATE),
+-	"Check clear PROT_MTE flags with private mapping, sync error mode and mmap memory\n");
++		      format_test_name(CHECK_CLEAR_PROT_MTE, USE_MMAP, MTE_SYNC_ERR, MAP_PRIVATE, TAG_CHECK_ON));
+ 	evaluate_test(check_clear_prot_mte_flag(USE_MPROTECT, MTE_SYNC_ERR, MAP_PRIVATE),
+-	"Check clear PROT_MTE flags with private mapping and sync error mode and mmap/mprotect memory\n");
++		      format_test_name(CHECK_CLEAR_PROT_MTE, USE_MPROTECT, MTE_SYNC_ERR, MAP_PRIVATE, TAG_CHECK_ON));
  
--void mte_register_signal(int signal, void (*handler)(int, siginfo_t *, void *))
-+void mte_register_signal(int signal, void (*handler)(int, siginfo_t *, void *),
-+			 bool export_tags)
- {
- 	struct sigaction sa;
- 
- 	sa.sa_sigaction = handler;
- 	sa.sa_flags = SA_SIGINFO;
-+
-+	if (export_tags && signal == SIGSEGV)
-+		sa.sa_flags |= SA_EXPOSE_TAGBITS;
-+
- 	sigemptyset(&sa.sa_mask);
- 	sigaction(signal, &sa, NULL);
- }
-@@ -120,6 +149,20 @@ void mte_clear_tags(void *ptr, size_t size)
- 	mte_clear_tag_address_range(ptr, size);
- }
- 
-+void *mte_insert_atag(void *ptr)
-+{
-+	unsigned char atag;
-+
-+	srandom(time(NULL));
-+	atag =  mtefar_support ? (random() % MT_ATAG_MASK) + 1 : 0;
-+	return (void *)MT_SET_ATAG((unsigned long)ptr, atag);
-+}
-+
-+void *mte_clear_atag(void *ptr)
-+{
-+	return (void *)MT_CLEAR_ATAG((unsigned long)ptr);
-+}
-+
- static void *__mte_allocate_memory_range(size_t size, int mem_type, int mapping,
- 					 size_t range_before, size_t range_after,
- 					 bool tags, int fd)
-@@ -264,6 +307,7 @@ void mte_initialize_current_context(int mode, uintptr_t ptr, ssize_t range)
- 	cur_mte_cxt.fault_valid = false;
- 	cur_mte_cxt.trig_addr = ptr;
- 	cur_mte_cxt.trig_range = range;
-+
- 	if (mode == MTE_SYNC_ERR)
- 		cur_mte_cxt.trig_si_code = SEGV_MTESERR;
- 	else if (mode == MTE_ASYNC_ERR)
-@@ -316,12 +360,16 @@ int mte_switch_mode(int mte_option, unsigned long incl_mask)
- int mte_default_setup(void)
- {
- 	unsigned long hwcaps2 = getauxval(AT_HWCAP2);
-+	unsigned long hwcaps3 = getauxval(AT_HWCAP3);
- 	unsigned long en = 0;
- 	int ret;
- 
- 	if (!(hwcaps2 & HWCAP2_MTE))
- 		ksft_exit_skip("MTE features unavailable\n");
- 
-+	if (hwcaps3 & HWCAP3_MTE_FAR)
-+		mtefar_support = true;
-+
- 	/* Get current mte mode */
- 	ret = prctl(PR_GET_TAGGED_ADDR_CTRL, en, 0, 0, 0);
- 	if (ret < 0) {
-diff --git a/tools/testing/selftests/arm64/mte/mte_common_util.h b/tools/testing/selftests/arm64/mte/mte_common_util.h
-index a0017a303beb..7dbb5e1046ae 100644
---- a/tools/testing/selftests/arm64/mte/mte_common_util.h
-+++ b/tools/testing/selftests/arm64/mte/mte_common_util.h
-@@ -34,13 +34,17 @@ struct mte_fault_cxt {
- 	unsigned long trig_si_code;
- 	/* Flag to denote if correct fault caught */
- 	bool fault_valid;
-+	/* Expected address tag when mte tag fault triggered */
-+	unsigned char address_tag;
- };
- 
- extern struct mte_fault_cxt cur_mte_cxt;
-+extern bool mtefar_support;
- 
- /* MTE utility functions */
- void mte_default_handler(int signum, siginfo_t *si, void *uc);
--void mte_register_signal(int signal, void (*handler)(int, siginfo_t *, void *));
-+void mte_register_signal(int signal, void (*handler)(int, siginfo_t *, void *),
-+			 bool export_tags);
- void mte_wait_after_trig(void);
- void *mte_allocate_memory(size_t size, int mem_type, int mapping, bool tags);
- void *mte_allocate_memory_tag_range(size_t size, int mem_type, int mapping,
-@@ -54,6 +58,8 @@ void mte_free_memory_tag_range(void *ptr, size_t size, int mem_type,
- 			       size_t range_before, size_t range_after);
- void *mte_insert_tags(void *ptr, size_t size);
- void mte_clear_tags(void *ptr, size_t size);
-+void *mte_insert_atag(void *ptr);
-+void *mte_clear_atag(void *ptr);
- int mte_default_setup(void);
- void mte_restore_setup(void);
- int mte_switch_mode(int mte_option, unsigned long incl_mask);
-diff --git a/tools/testing/selftests/arm64/mte/mte_def.h b/tools/testing/selftests/arm64/mte/mte_def.h
-index 9b188254b61a..6ad22f07c9b8 100644
---- a/tools/testing/selftests/arm64/mte/mte_def.h
-+++ b/tools/testing/selftests/arm64/mte/mte_def.h
-@@ -42,6 +42,8 @@
- #define MT_TAG_COUNT		16
- #define MT_INCLUDE_TAG_MASK	0xFFFF
- #define MT_EXCLUDE_TAG_MASK	0x0
-+#define MT_ATAG_SHIFT		60
-+#define MT_ATAG_MASK		0xFUL
- 
- #define MT_ALIGN_GRANULE	(MT_GRANULE_SIZE - 1)
- #define MT_CLEAR_TAG(x)		((x) & ~(MT_TAG_MASK << MT_TAG_SHIFT))
-@@ -49,6 +51,12 @@
- #define MT_FETCH_TAG(x)		((x >> MT_TAG_SHIFT) & (MT_TAG_MASK))
- #define MT_ALIGN_UP(x)		((x + MT_ALIGN_GRANULE) & ~(MT_ALIGN_GRANULE))
- 
-+#define MT_CLEAR_ATAG(x)	((x) & ~(MT_TAG_MASK << MT_ATAG_SHIFT))
-+#define MT_SET_ATAG(x, y)	((x) | (((y) & MT_ATAG_MASK) << MT_ATAG_SHIFT))
-+#define MT_FETCH_ATAG(x)	((x >> MT_ATAG_SHIFT) & (MT_ATAG_MASK))
-+
-+#define MT_CLEAR_TAGS(x) 	(MT_CLEAR_ATAG(MT_CLEAR_TAG(x)))
-+
- #define MT_PSTATE_TCO_SHIFT	25
- #define MT_PSTATE_TCO_MASK	~(0x1 << MT_PSTATE_TCO_SHIFT)
- #define MT_PSTATE_TCO_EN	1
+ 	mte_restore_setup();
+ 	ksft_print_cnts();
 -- 
 LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
