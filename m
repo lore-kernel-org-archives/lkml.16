@@ -1,101 +1,97 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAB929614B
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A62E28C5A6;
+	Tue, 10 Jun 2025 12:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749559277; cv=none; b=QXjAOxIOFS8THlVSAOyIgQ4UC5pe66L4Q2JVUISiLa9r5PMQl7CXa1v6unq1e/WurN626lJ/GPEU0tWt6xliqyYge2HysugjI5nI5c8+rUzZxzwkQsxiP4AB74M00E8X9JXzhVnuEu6Z6smqywwH2myY0aTMOw7dCyNfuFelHZk=
+	t=1749559349; cv=none; b=qFCmVERmvIG/ht3dyypWZ6Pjwn+xtkc2tQSKN4l0WEcsgDfBWZ7IkWtVDNIgJjejgUfYJtCaZwU8jJvOpoGWHj7kaw4d1q4usr7bjMkuXEYMCxpRQTxWzxQfj1Dmdl0fKUe9QANKUv5r8wl+eEgQD29PeFTcprrfP41m48QFPAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749559277; c=relaxed/simple;
-	bh=PYVfr4MzdRcAc8GZZqfTO+4NnznKF5DM0Ha6GQ9ktrM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
-	 References; b=sg4aGEKNQfw+CyB/HRtL39osu0fLhUyxUkW5iXZbH6Gcvm1pzoDKlOI4oMai2Mbl7u1lXqqWi3nFLE41ju4jWYxxwQrlNeNVKdNuuWxNmMF1yz2OKPNKqtd7APCipW8IFbsb6p4vWrHiTZTogC7vuWp/2iO2BqH/znX9Cks6RzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=fs6738ML; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1749559349; c=relaxed/simple;
+	bh=/1iUBspDEJPAm1syGxDL8nO0vqi84Psh/DKw5YFPtZY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CvPLHi+TGSDMVcYqztj0+4yrv31JusalcJq3Q5853mTJd65vFZcwGqBO71BoX3d3AKSgj6BgvIN/fn2ep7CUgOIfxUb3z4I3yTOyxxOjcBdbEReMyzRp1AGYhtS6TTT5sn5AsN23+V79d9bt+e0k7LybCYt/lquVR9/4pYaB8Yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S6W8ANdd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fs6738ML"
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250610124113epoutp0451536c51a5d5b46fbee0218e3590caf6~HruOxtb1E1278512785epoutp04a
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:41:13 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250610124113epoutp0451536c51a5d5b46fbee0218e3590caf6~HruOxtb1E1278512785epoutp04a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1749559273;
-	bh=XzsliogzO86/Q79QWe6n/Aszt7NA4JFz1tCGiPbDBOk=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=fs6738ML+jnhn2LfL3TKt5YcgEUHNnaJwEcrbUl0+GdfrW2UHMpT72UQ1txXCKbfQ
-	 DBA1OGL+LjkdyLw28Csh3zZRpv6IV1iZTH1zLw4h0fzh3HZuhpxd3D8RyxYwyksvDI
-	 YCPyB4ctTdmwJapEHq6qg0ccv9UhjT7uBFF8XhDE=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas1p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250610124112epcas1p4422da5fdf6b42ce37823fb943165b9e0~HruOanzKQ1127311273epcas1p4j;
-	Tue, 10 Jun 2025 12:41:12 +0000 (GMT)
-Received: from epcas1p1.samsung.com (unknown [182.195.36.225]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4bGpLc3MWyz6B9m5; Tue, 10 Jun
-	2025 12:41:12 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250610124111epcas1p18fe9fd8ab47a424c2143d4e2912a8179~HruNnfD5e1086510865epcas1p1j;
-	Tue, 10 Jun 2025 12:41:11 +0000 (GMT)
-Received: from yjjuny-lee03.tn.corp.samsungelectronics.net (unknown
-	[10.252.68.99]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250610124111epsmtip2034aa8240d6ff98f4180a63af5a47327~HruNisgcU1062110621epsmtip23;
-	Tue, 10 Jun 2025 12:41:11 +0000 (GMT)
-From: Youngjun Lee <yjjuny.lee@samsung.com>
-To: ribalda@chromium.org
-Cc: laurent.pinchart@ideasonboard.com, hdegoede@redhat.com,
-	mchehab@kernel.org, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Youngjun Lee <yjjuny.lee@samsung.com>
-Subject: [PATCH] usb: uvc: Fix 1-byte out-of-bounds read in
- uvc_parse_format()
-Date: Tue, 10 Jun 2025 21:41:07 +0900
-Message-ID: <20250610124107.37360-1-yjjuny.lee@samsung.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6W8ANdd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DF41C4CEED;
+	Tue, 10 Jun 2025 12:42:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749559349;
+	bh=/1iUBspDEJPAm1syGxDL8nO0vqi84Psh/DKw5YFPtZY=;
+	h=From:Subject:Date:To:Cc:From;
+	b=S6W8ANddI6Mxzhu+bXnGcpy8S6b5KZK+nZEs+R3mO2Auw38nnZC1tRvDbYZdoa1+0
+	 Hpw84ytsKQ6UMY3RRV/KpuP9rMKbz5z/VDVqfpA/FGAgQKBEjEt8xVp4m0HPidvSGV
+	 rlWFHjMs6YaD7pNrWyWC+0HX4Q5gFH7lzSCIOtHu8Dwg2EMFR8sWn72aaDRdAikOJw
+	 EI6QgZONtHdHf1uf+Vq4aah3loDxstGSWePBaHay6Kj9nIO9hBjGyL84cFpp9ODwu3
+	 WK47sJd+a+goDLNyagg+vBxTgzplTDmDiXhFFQJxdXvwVJj2kJGEArcbvXvm3SmqnK
+	 WXav1c4Uxba4Q==
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH v2 0/4] kselftest/arm64: Add coverage for the interaction
+ of vfork() and GCS
+Date: Tue, 10 Jun 2025 13:29:43 +0100
+Message-Id: <20250610-arm64-gcs-vfork-exit-v2-0-929443dfcf82@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250610124111epcas1p18fe9fd8ab47a424c2143d4e2912a8179
-X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-cpgsPolicy: CPGSC10-711,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250610124111epcas1p18fe9fd8ab47a424c2143d4e2912a8179
-References: <CGME20250610124111epcas1p18fe9fd8ab47a424c2143d4e2912a8179@epcas1p1.samsung.com>
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADglSGgC/22NQQ6CMBBFr2Jm7ZjSUIquvIdhUWEKE5SaKWkwh
+ LtbcevyveS/v0IkYYpwOawglDhymDLo4wHawU09IXeZQSttlNE1OnlWJfZtxOSDjEgLz1g62zl
+ vK6OJIE9fQp6XPXtrMg8c5yDv/SUVX/sLVur8P5gKVHh3rlNe1caW9jqSTPQ4Bemh2bbtA6YdR
+ OS5AAAA
+X-Change-ID: 20250528-arm64-gcs-vfork-exit-4a7daf7652ee
+To: Willy Tarreau <w@1wt.eu>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Christian Brauner <brauner@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kselftest@vger.kernel.org, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1234; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=/1iUBspDEJPAm1syGxDL8nO0vqi84Psh/DKw5YFPtZY=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoSCgu82PSVmQPG9g1oJQrsyvsTSf2h9mS1ONCsW21
+ mqjhbFOJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaEgoLgAKCRAk1otyXVSH0BMCB/
+ 98zbKt51BDbhAYnQSZMke8OJDPGCHrlTF1lGFJxPCARcuIDzBp0prKAYytmm00o9LOAKqSVTyCpegx
+ 36l/v8Ig3awVYYtpl5D3hnvGppd5weMjb59iEegi0cJaNRIHjnSYKjI8XjnlrRrRV+hkr1QsjDOdYE
+ OF4si6AwG9Nskqf/O295slJO/OyJZiy/Jn7aKHbpXQE8Ldw9KckocVneCaqLoBhxDs0MeigiSicVpN
+ 97h4+IpmCEA45bBJhCoZNTGDP000E5Fq3/bOuLfWZLbY8fbCEaHD7MeDP+QqAHAzowbXjJcirYclA1
+ FJ9v/u3BYt8jGyR6+o/ue1MRNC4WRw
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-The buffer length check before calling uvc_parse_format() only ensured
-that the buffer has at least 3 bytes (buflen > 2), buf the function
-accesses buffer[3], requiring at least 4 bytes.
+I had cause to look at the vfork() support for GCS and realised that we
+don't have any direct test coverage, this series does so by adding
+vfork() to nolibc and then using that in basic-gcs to provide some
+simple vfork() coverage.
 
-This can lead to an out-of-bounds read if the buffer has exactly 3 bytes.
-
-Fix it by checking that the buffer has at least 4 bytes in
-uvc_parse_format().
-
-Signed-off-by: Youngjun Lee <yjjuny.lee@samsung.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/media/usb/uvc/uvc_driver.c | 3 +++
- 1 file changed, 3 insertions(+)
+Changes in v2:
+- Add replacement of ifdef with if defined() in nolibc since the code
+  doesn't reflect the coding style.
+- Remove check for arch specific vfork().
+- Link to v1: https://lore.kernel.org/r/20250609-arm64-gcs-vfork-exit-v1-0-baad0f085747@kernel.org
 
-diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-index da24a655ab68..1100469a83a2 100644
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -344,6 +344,9 @@ static int uvc_parse_format(struct uvc_device *dev,
- 	u8 ftype;
- 	int ret;
- 
-+	if (buflen < 4)
-+		return -EINVAL;
-+
- 	format->type = buffer[2];
- 	format->index = buffer[3];
- 	format->frames = frames;
+---
+Mark Brown (4):
+      tools/nolibc: Replace ifdef with if defined() in sys.h
+      tools/nolibc: Provide vfork()
+      kselftest/arm64: Add a test for vfork() with GCS
+      selftests/nolibc: Add coverage of vfork()
+
+ tools/include/nolibc/sys.h                    | 57 +++++++++++++++++-------
+ tools/testing/selftests/arm64/gcs/basic-gcs.c | 63 +++++++++++++++++++++++++++
+ tools/testing/selftests/nolibc/nolibc-test.c  | 23 ++++++++--
+ 3 files changed, 124 insertions(+), 19 deletions(-)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250528-arm64-gcs-vfork-exit-4a7daf7652ee
+
+Best regards,
 -- 
-2.43.0
+Mark Brown <broonie@kernel.org>
 
