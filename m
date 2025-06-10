@@ -1,144 +1,154 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68E127FD73
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:22:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9B7289E3A
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749594169; cv=none; b=AEjKWe2dFypXpLN2vrP8taC7fzHSA39HdPXhJVNE/VJdriz2BbuF6DgdpUS6te4BqgPnA+E1EEXms+0qNXx2AMYOmV8ysFnmX69HSnJ5xRTZGhVgmjUUtC5byXcgztipXgkiSpiHQ31OISz/EXFwNgSkOLX2YI44OuzWlXahAfM=
+	t=1749594208; cv=none; b=bSilCCUSt++E6vvY53kGRgi29dnDpWpE33vXK+0lohDvrE3P4sZhjoieIiskyU/Pez0zUVF2NMl7L+eA+ajWD/2MNl18TsuPpjlJmTn+CHyngsmmW/CuY6cpIsBBrwfJMa8Phf8RCi0sq+v7Dmtv1xN2rinkzWIaTnFCai01e4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749594169; c=relaxed/simple;
-	bh=XjgsdEhFvFB0B+RbA+5aNhRmFbtruOCW5OEOXUP/KY8=;
+	s=arc-20240116; t=1749594208; c=relaxed/simple;
+	bh=npHB7Cz4fEyvzZ7FmcG0r7LLLmBlvaufPDf/mhV2evM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F0+4fYspyyqq3gc7LvUeMQDk4sL+3ipXLfKFUaaC5PrwtfP+AlO8dvnu7YSXRS/rgSNEkEWiQ9kj/c1JwSBc+q0mZeQq7AzROxlXBaPqebA2uPZUeIYY/VOeJOaiyeOif2sBDbPsMSbGDQOEf0hiaIz/IXTmqxsfNK2DhYmZu3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fCHTEcO5; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ooyQZWslgBv2nF7r+TrCxitTWGKR4HVhb1xor4vpd03lYeaP14fZwCtZYj1UbBaN5YjgrEnkT0crPIJ8BrC9yZVZ/Knmt/+ynfmG2xyP+ObcMdxp9lJtMd3KNuRz/pjW1qIMykR9lIJaz4FZhyHed9DRTRgKRke5PefgYCJ3890=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=TspI/1g2; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fCHTEcO5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749594166;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hLuQnm8GtR1mcurBIw5pIZijzYYYehwuFe+H/mrbon4=;
-	b=fCHTEcO5pW9LwkRY5BIV0ozxL95f4kltQoSIfGqTUyeYuTrUwweYeEZS6DTK6mUcN70spl
-	aEP/7/+dm9M/gCBsZ6wApSKV7CK++D5/LmbKldUVdMN/RZi6qBjaNssgCvvPvV/Hl23PAh
-	m4eSU2C35P3qx6SsJnoXfKESMmfQ9Nc=
-Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com
- [209.85.161.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-549-IlGM5Ay0Nja6orgvnySxkQ-1; Tue, 10 Jun 2025 18:22:44 -0400
-X-MC-Unique: IlGM5Ay0Nja6orgvnySxkQ-1
-X-Mimecast-MFC-AGG-ID: IlGM5Ay0Nja6orgvnySxkQ_1749594164
-Received: by mail-oo1-f69.google.com with SMTP id 006d021491bc7-60bf020e4a1so5117993eaf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:22:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="TspI/1g2"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55AIQ0X3012185
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:23:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=2hza23gY3coL4GLirsikjG3A
+	jHM2RQT+qzkG3p4icuA=; b=TspI/1g2OXSBthgYyOLRrh6omOIB1ysX+Ho0IDwa
+	UFE4/OLz1OkqKVRSYwuo3h70Z5kmmTaLsGtnMMY6Tmg4ObuVwIBR6+J/8Z5azzzE
+	9apr4NQuprzo2pR+1uHLxl4Je9JktEK3mCY+boeehrY4XAO02drVYETlCRrEsbgj
+	0joXd+igquKPoSJJH7UvrCCLtCZgIInP+dA2fvV9sn0syUuF5r3IoGs9+EiYOQeL
+	1PSlcjMxkfPsEVBeTiRjVzuR6Te5OHWx4y2KdWPr6yqL7diZdGWzGbszpYlFo7kz
+	mTnKpsnkjoxPI15BAEU5kQ7idKQnXKYLOKraxByxVqGwXw==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474dgxu7hq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:23:25 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c760637fe5so1080768285a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:23:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749594162; x=1750198962;
+        d=1e100.net; s=20230601; t=1749594204; x=1750199004;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hLuQnm8GtR1mcurBIw5pIZijzYYYehwuFe+H/mrbon4=;
-        b=pxqN+JaG6X4l5e84eITwRDf0gevfh/eRdoc/TppyrrKzgHdYh1Zhvt/pacWbzCCLqw
-         tXlYNhUN+mYRdz99QByZy1o+A7ZF+5gDIJHujhtfSUx+AwLuGw3L0wpb85Jrbiw+kJPz
-         qbDWOUxvSZv81tNJq4yXT5GfTsWlSolnC5aT9vZEhFUiVr43REYFc4NBNSzNMfNLC+l9
-         B6ADKU2RaFqFOrf+xkz534iskaktTPyqi2VXMVF6YBDmwEajieXkvG/OrlazTYUWLXS/
-         Xm3P/394gK+cHEBbf02Yq77wL3FBogbJJCNap8ZrnCIgttnekm3SNG+VBY7TUfC/MKY8
-         4tKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUnL8k0WteqEHCaGB/d39gLcbrsDwPaiIUd3QkVTEXHPIAD1REm9Ui6LJt18DsbYw/SwURfYu0U3AJ7zg4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyxi+K/Y97OkWyEl6CbI5oKyLxYqzvdfOiR43hNHY/vyI5M+4YZ
-	JrO355gwEVCIEMfxkgzswT+xXnht+oKteuy6fXABtUY6ZdO6gLjR1gYe/vsVNrW32iyaV7PwIIR
-	QHia2190i1UDXsXz9NqZj0mrOQz+XVRWNLLBBTHe+De8FKENtygYKotNxgtb8pA65PcBL05oHFg
-	==
-X-Gm-Gg: ASbGncuOnf7hvmgwZvdOXDhLyPFrWmFzgDEZOMrMRmHGG7KakzKH3byCA47TFyRCgc8
-	KC7vciGB0r01LT1VPmtcrTzfXre4gkVx15UQotSPoneFw/DrS+LMhCaja5O9f+XScGQU728zdlY
-	fkzagnmiC2JMCNgIWUEzwspWGhW2gIA7fOXyn1CHxmFTHB7Zmo+Gi2G7WRcGU9MXOnCodFluEwI
-	cq65qG77WXz2F0GoArcJuUWSPPHo0eZ5/YjdT2hNp4+G7zTf1nZvCssP4/XOfgQjWrQHFW4Z4iB
-	MidXmzxdIC72MQ==
-X-Received: by 2002:a05:6820:c83:b0:60b:d676:b666 with SMTP id 006d021491bc7-610ef71ebd1mr503240eaf.5.1749594161763;
-        Tue, 10 Jun 2025 15:22:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEZPFHzLV7Sg4ZkCQBoFbsxw1VThpMG4z5lPpBVju0VP9CmUB6NZzQ74WH9fhjymqKd3HA8wA==
-X-Received: by 2002:a05:622a:a18:b0:494:b924:1374 with SMTP id d75a77b69052e-4a713c4544cmr20646161cf.43.1749594147540;
-        Tue, 10 Jun 2025 15:22:27 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a611150cb0sm78624171cf.11.2025.06.10.15.22.25
+        bh=2hza23gY3coL4GLirsikjG3AjHM2RQT+qzkG3p4icuA=;
+        b=as0QBQNUPTEZz2QtTlXihUE7drz0vnsDFP8vu7s6khROLmJZYkfeGcXqKbqm6llcVR
+         78UP5RIrfwV7OMXrQN7Mp4zzFrRbjgAdOWss5q8Rvy3n8Kzv94qjOBI4H/2lNZTVeYT+
+         I4ZypR/nHvSTd98T6n3B2F2/gFEP5BXM1oU2YSOVKZ66/uJePEo13XIVAKTuZ+Z+Vja3
+         hxBb5p0CsqwW6OvQ63ziUgsP65nw6tEMs9+7+Kp1gXTVdfPZq2qjeVtvegRhx4FS9y0Q
+         n2OqcyvlcQLOX+g1U38qc4D7/AeTr4eJrUYJqmDr+FQEF+I8CC5ygh9kdHyBsW9HLJgN
+         engA==
+X-Forwarded-Encrypted: i=1; AJvYcCVZBQLSWnW3zTvlAPRB2Ihtr5tlleeU+OjW6jhdxBCeMy8Y4IWax3hNKs0RCHfv1UoW2UqkXrNMUn/Xrmo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBn2x3kE4w/LaRaG9cg8sPucHdZrB40w1X4jhmYkl7nyUYaKMX
+	ewlQ30ryzbPFCBvP5rr9ug3Br3nlG+e8v9Mc193/t7I7JhvCtjf/fSSMLMzZFP33FLkTsCx/XMG
+	BcyuwZAm7dP0Ja4sexoKrVbnGLu0EStYhVPzLGnjoogGXX6mQgJ7ress30lMbhgtONbI=
+X-Gm-Gg: ASbGnctciVZkAuG0DI9iq7rvH2mzqCoQxTyTc1XDA02mKm83Hugyy1pX227uGjCOApK
+	bypagwD9zblURMfeyZQMmGIE7jpwM/3UjLj33biRMFwp2GUpkO2tBRNXNbOFTQjV6Jd35Wno1mg
+	U9KirjOETyDW0tN32Qgbr6sPElwohtnzvDOyD+L+QkQS1nxoyAqdwxW/u7m3gZrzSjUyj+c9+Iu
+	v2+tRT+p7NqNixsI1BWjDE/3WFKlnY1yqt/4nekNpEn90xd5GtwIKMKNeymXk1kgb/OokeQZSc3
+	XncJ/xaZtScqeUANgYjZF9Lz90mOHj87Cr2FRITfe2Rv1SSnwJrevkWgUPx7qMYq1924fuRy6Y7
+	36fpJp5MmgV2FfJ8h7gcs6SgMGJKtCoajKGY=
+X-Received: by 2002:a05:620a:198e:b0:7c5:ee84:a575 with SMTP id af79cd13be357-7d3a89bb112mr168583885a.46.1749594204448;
+        Tue, 10 Jun 2025 15:23:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHCcqxVLVUJFrq+O0cQ9j5/TPx+SAaSrKInIQWb4KK+4mCxXHk5ZJ92VOUVg+qUAfhrlPtaxA==
+X-Received: by 2002:a05:620a:198e:b0:7c5:ee84:a575 with SMTP id af79cd13be357-7d3a89bb112mr168578585a.46.1749594204049;
+        Tue, 10 Jun 2025 15:23:24 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55379b2c854sm1321061e87.142.2025.06.10.15.23.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 15:22:26 -0700 (PDT)
-Date: Tue, 10 Jun 2025 18:22:22 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Nikita Kalyazin <kalyazin@amazon.com>
-Cc: akpm@linux-foundation.org, pbonzini@redhat.com, shuah@kernel.org,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, muchun.song@linux.dev,
-	hughd@google.com, kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, jack@suse.cz,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
-	jannh@google.com, ryan.roberts@arm.com, david@redhat.com,
-	jthoughton@google.com, graf@amazon.de, jgowans@amazon.com,
-	roypat@amazon.co.uk, derekmn@amazon.com, nsaenz@amazon.es,
-	xmarcalx@amazon.com
-Subject: Re: [PATCH v3 1/6] mm: userfaultfd: generic continue for non
- hugetlbfs
-Message-ID: <aEiwHjl4tsUt98sh@x1.local>
-References: <20250404154352.23078-1-kalyazin@amazon.com>
- <20250404154352.23078-2-kalyazin@amazon.com>
+        Tue, 10 Jun 2025 15:23:21 -0700 (PDT)
+Date: Wed, 11 Jun 2025 01:23:19 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Krishna Manikandan <quic_mkrishn@quicinc.com>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Kuogee Hsieh <quic_khsieh@quicinc.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Clark <robin.clark@oss.qualcomm.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Abel Vesa <abel.vesa@linaro.org>,
+        Srinivas Kandagatla <srini@kernel.org>
+Subject: Re: [PATCH v6 07/17] drm/msm/dsi/phy: Define PHY_CMN_CTRL_0 bitfields
+Message-ID: <w4napqk3loelkhl36gvhke6z6xg4g4xxymxsfjn3hmntkj2urv@bshk4l63nfrn>
+References: <20250610-b4-sm8750-display-v6-0-ee633e3ddbff@linaro.org>
+ <20250610-b4-sm8750-display-v6-7-ee633e3ddbff@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250404154352.23078-2-kalyazin@amazon.com>
+In-Reply-To: <20250610-b4-sm8750-display-v6-7-ee633e3ddbff@linaro.org>
+X-Proofpoint-GUID: U830-sbd7YHBWd_z76RIbdxa9DPrOmdT
+X-Authority-Analysis: v=2.4 cv=HMbDFptv c=1 sm=1 tr=0 ts=6848b05d cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=3n_StpEWJ1elpYQgr94A:9
+ a=CjuIK1q_8ugA:10 a=zZCYzV9kfG8A:10 a=NFOGd7dJGGMPyQGDc5-O:22
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: U830-sbd7YHBWd_z76RIbdxa9DPrOmdT
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDE4NCBTYWx0ZWRfXz8Ah+YEjo8Ov
+ X/jaD1H6fnHLZLmYwKo4wFfFY93azm4Z2tQoP+etVtwXYCWgAHN/BcYh4vbLQJTGij429eeI5vZ
+ 1/3w2QbRmb1vVNXdVc34JBfmroiIff1tRwstWZ3uQMFFGVNGwVJBbhKjAUNs0DLN/HFX3BtceQu
+ tyvP+PPlGm6OCp3bJ6VqGyIB3Vou4vZ05KzGaTpk3hItMjI6eAEdFuKG4tQI48i9q7/rRxS1DNI
+ mRXxuB5SaFe3M+8E/IdRWWe+sVqaJOLu0Vzal00RahMZ8Jv8GCp42pCpExzho63d+x5PY+Qlktd
+ xqhQrXQFoHcRZLse/qSreDJbnKWeUAaHABmQUQJ2cT58/tkhTYykj0cDtBW0w8Y8/OFcFnKvJVG
+ T1gmjnsc+mynryMDohhMy0uSx3QymKXfDy3O5W/UD4h70eJLS8E0nPUGeJ9JPCOF/x9b6dZY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_10,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 mlxlogscore=413 priorityscore=1501 impostorscore=0
+ suspectscore=0 malwarescore=0 phishscore=0 spamscore=0 lowpriorityscore=0
+ adultscore=0 mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506100184
 
-On Fri, Apr 04, 2025 at 03:43:47PM +0000, Nikita Kalyazin wrote:
-> Remove shmem-specific code from UFFDIO_CONTINUE implementation for
-> non-huge pages by calling vm_ops->fault().  A new VMF flag,
-> FAULT_FLAG_USERFAULT_CONTINUE, is introduced to avoid recursive call to
-> handle_userfault().
-
-It's not clear yet on why this is needed to be generalized out of the blue.
-
-Some mentioning of guest_memfd use case might help for other reviewers, or
-some mention of the need to introduce userfaultfd support in kernel
-modules.
-
+On Tue, Jun 10, 2025 at 04:05:45PM +0200, Krzysztof Kozlowski wrote:
+> Add bitfields for PHY_CMN_CTRL_0 registers to avoid hard-coding bit
+> masks and shifts and make the code a bit more readable.
 > 
-> Suggested-by: James Houghton <jthoughton@google.com>
-> Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
 > ---
->  include/linux/mm_types.h |  4 ++++
->  mm/hugetlb.c             |  2 +-
->  mm/shmem.c               |  9 ++++++---
->  mm/userfaultfd.c         | 37 +++++++++++++++++++++++++++----------
->  4 files changed, 38 insertions(+), 14 deletions(-)
 > 
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 0234f14f2aa6..2f26ee9742bf 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -1429,6 +1429,9 @@ enum tlb_flush_reason {
->   * @FAULT_FLAG_ORIG_PTE_VALID: whether the fault has vmf->orig_pte cached.
->   *                        We should only access orig_pte if this flag set.
->   * @FAULT_FLAG_VMA_LOCK: The fault is handled under VMA lock.
-> + * @FAULT_FLAG_USERFAULT_CONTINUE: The fault handler must not call userfaultfd
-> + *                                 minor handler as it is being called by the
-> + *                                 userfaultfd code itself.
+> Changes in v6:
+> 1. Add new line between declarations and actual code (Dmitry)
+> 
+> Changes in v5:
+> 1. New patch
+> ---
+>  drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c             | 16 +++++++++++-----
+>  drivers/gpu/drm/msm/registers/display/dsi_phy_7nm.xml | 11 ++++++++++-
+>  2 files changed, 21 insertions(+), 6 deletions(-)
+> 
 
-We probably shouldn't leak the "CONTINUE" concept to mm core if possible,
-as it's not easy to follow when without userfault minor context.  It might
-be better to use generic terms like NO_USERFAULT.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-Said that, I wonder if we'll need to add a vm_ops anyway in the latter
-patch, whether we can also avoid reusing fault() but instead resolve the
-page faults using the vm_ops hook too.  That might be helpful because then
-we can avoid this new FAULT_FLAG_* that is totally not useful to
-non-userfault users, meanwhile we also don't need to hand-cook the vm_fault
-struct below just to suite the current fault() interfacing.
-
-Thanks,
 
 -- 
-Peter Xu
-
+With best wishes
+Dmitry
