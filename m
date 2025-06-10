@@ -1,62 +1,63 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1607224635E;
-	Tue, 10 Jun 2025 17:43:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D57B2459FF;
+	Tue, 10 Jun 2025 17:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749577416; cv=none; b=nUhg5rzrjmvWHg5NBinUNYXXYR5zkWeDdV0RSDVbv1/aMjkIpdlfmMMg31xNoDhk2Pt+PF1IbkAuChHOd3GfJDpyJGd0GNkmw9QP71+nmZXVbKUHxvQf2j6gk29VzhlI4DkPYEJTmzXhdShuBg+7K5n1MVP5mN8HZwkXxW/Gd28=
+	t=1749577432; cv=none; b=Y8P5In72jLF9tLtKlofme6YJBLjUuFM+JJTIAL0ui17zUkpXfKCzhliAgoX25NRJq5zJgciRBbn5aapu8uwcPg+Ek9TG+ZtJAJCmL8q0hVOl8EVQrHzkBL0d1Hh6Iz48erD+5bk4AZ9bANc/RtgzgDe0NR6yjzUtnYgraDpupf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749577416; c=relaxed/simple;
-	bh=+FnsJCAw+Y00BGXJGVpMWl0ZhKyXNY4Zs++Tt7Qin5Y=;
+	s=arc-20240116; t=1749577432; c=relaxed/simple;
+	bh=3+rfcDoZCFrk55lbfI9aZigLV0dzeN6kfrnIK/bhL7Y=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U+fh2T9tMExG8f2sIPolsqoRUGYXWsZpfaJ1e029u0sA762zTTG13rk4QM+ByXzIuDVS1dum9hMGkUI5WlKXwk6J2wBaR8vYHskoXRSGpRvgdC56Exi2LHgsryxIzO78LHEGtRauKf0nupJbPv59Ni4QZr2pA8pjyYq/O30eDX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dMGFb3Rx; arc=none smtp.client-ip=209.85.216.52
+	 MIME-Version:Content-Type; b=QQ1zFdkygAu5P4TaW4s8Zroao2p34FiLBmkm0Vb4wTQFM0a46TS6zPVshMJ/ZhJ0caPeZLx5KdwrytQhvoqDsv3MB2k6i9ihmSAXEso4MMhVdiqT1oYg3BrbWZLU9ply9YqEfI+vo+20OE44V+ALx3WNnfXfI00EZjKWo3MpcPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SYtxDEaP; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dMGFb3Rx"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-313154270bbso5986864a91.2;
-        Tue, 10 Jun 2025 10:43:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SYtxDEaP"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-311e2cc157bso4201628a91.2;
+        Tue, 10 Jun 2025 10:43:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749577414; x=1750182214; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749577430; x=1750182230; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tOqalSSBpbsjNRDBOvwExLKuJwEg3BfW7bOGhTq3Dnc=;
-        b=dMGFb3RxDa4SU9tHqfTQoWRbQfk+X8YDVJoe3j2dXLjYW8odM/1yccTAB7puOsA+ip
-         +T0HJV/IUt8s8abmINBW8QemWbbxXxm/3VKt5H07vWPUwkkbRBlj9HfZ1QDak0jlFgA7
-         170XNklk75ya/857Coye68c7MDFwiCaUVtIK96aNszl48ZsnZdwArwFfF9po1WJSof4D
-         tG31LWjD7gCI79pnoC/ltTBXLLUObxGagFOg9eoe3MwN8NqOrBUwTSthY8BwP8nw22XS
-         88z/Do5y3HsB7F8lirrUhw6Qtxhu/krtdETO7NY1uET/4RbDu7AXrDOAA4+q+HnWpw/o
-         0wQA==
+        bh=K+WCECOIBnyg+qKnBvzOn3umPqjLKBXWvqmV6S2Rpcg=;
+        b=SYtxDEaPOZSvBiVyiKLNOAkd1mx2l85CpDZd3E55nAoYvNrwfYI7tSOD6e+nrCFtcn
+         E+bM282P7BGfYmHUCMAS93VvsTONVP0B9rgJufAnKs5bqzEtvNp2qGh2UHxwv/jQ04n3
+         SlaYelDdHLrYzlYQerDBehSZ6Hv1VzsR+XeJOMyPzNmnPUiLR+DPKZ3HA55M0lgJRLXJ
+         2eP/JAeIjyiDOSk3hTie5MG5frRiZ3HFBtsFA8kMpWhIyIl5pUXC6qESASECFX/MBy/8
+         eLpn29aoHzXk+Vh8cfHn4D0f+VN4AxpQGIr0iXwX/Fil+UMyYmE6Mjf0g1803AR8QwnC
+         orxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749577414; x=1750182214;
+        d=1e100.net; s=20230601; t=1749577430; x=1750182230;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tOqalSSBpbsjNRDBOvwExLKuJwEg3BfW7bOGhTq3Dnc=;
-        b=PusiwfA3Mw5lY+Oj3zDerZEjA+sH1wY+o7Yz8W42UI6Vcp40/aF1tMSqT6J5gt1XgN
-         GoO9Q3SEpmOny9Kw7cNJ7RisPXYH+R5JyvCm3IvJN4sv6ATlLugIAZvgM80fOmvr2ClS
-         iXDDePzmiw0WbRedc/qJZGf28IxReVHN+lFJNkRweYV/a3YM/TF4z69qDg9qQrz1XGli
-         B5dRVOuSknXDUtz6m7b1bB4Tzqh7Z7G/2Z+twt1bLYH3X4hn9GpNQXT4gOT+OVryLhgs
-         GSELh5glcRGfPwSIfd7ChZ9W6foMpMxLYMzEotlJVP+hsyjX8zgHWUvXur56aav5yKK8
-         a4eg==
-X-Forwarded-Encrypted: i=1; AJvYcCVb+fqvqVXZMMpcWBANZr5ZtAss6gQu/RCRupg9XJcoJl3tu9OmU1sZBA8jsd/dBmEXwrj/SHu1UiJAJdBS@vger.kernel.org, AJvYcCVxAoDwGkveHa9clEc3DoMxBtdm+2OAQ2Jk+k4+gD4J9FsIfGIMVfcsi/+lUKFo1D7xChmBk6W0MgB2@vger.kernel.org, AJvYcCWgB0w3LKphk9lHDNQF2ZlhJKXTgwwuDChzHFWLC7mROBW7lPyJvyT9txHCrLaR71QAw9zs+gWmjwbb@vger.kernel.org, AJvYcCXIvw34Rztj0a/SgKP3mBKznEEelhopzTd0W0+PNsrnPtOeIPLYKpZLq3AnGN1UJ7jPMjZgluNyhKRnzA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxbvo0Fi6AdVi+TJzGeSZlHyrv/4WwXXe+nMgR13M53ySb7Oq11
-	5wjbK+o63lHWDJquwMchLq2xF5v5J7ikQJrdL/SJew6NjxBoFPPoSkpL
-X-Gm-Gg: ASbGncsPEJ5HKPJlSrbeYLvOoxQ2oHPSIsZ7TL/quIrPk2BMLaYbquq1+vxhfUnkTP1
-	70SPC+MbGDTt55XpHOHJ5usrh26wHmNs8yv36YCB/BBO7I60yfJAK454MbOSAxAAGIFcIrEmkv5
-	DrAXGiwrIL7qRSmhUmcL/GvvywVbYXsnOM19GhtrVmVTd3PBRB8oyTtKO9rluL46F/7Ld++vGm2
-	8jMrUnIiKjhKFT90vkTGL+9Fk8r0ZuW2fto1vRifgHtXtYzK6XVbJzFD/ZevdWgL7GO3NSHDAKz
-	tWS78QGF3sXCmPtvSDZl3xjnObf5cA/SqYoWu13hQfbj05MfVeQAFEz6kEfCh3HYDnnFFtAM
-X-Google-Smtp-Source: AGHT+IHqKSXLEDIDvK1ewkGKwrTXtgongLwUTMsbD/SaHFNyxYGsWYrFBeu85E42gberp5i7LYNm4Q==
-X-Received: by 2002:a17:90b:3d90:b0:310:cea4:e3b9 with SMTP id 98e67ed59e1d1-313af1e4772mr493331a91.34.1749577414252;
-        Tue, 10 Jun 2025 10:43:34 -0700 (PDT)
+        bh=K+WCECOIBnyg+qKnBvzOn3umPqjLKBXWvqmV6S2Rpcg=;
+        b=c7RFzFvN30YSPZySOptBl1eBkHHIWxQmcx77A5a2U68phq3s3+QjbXXMDLFjqtOVi9
+         mRPLj0e6GRGoA/9e5c/69zZuvbuKgDB/KLr1DQXFcx+t8m7thK8fIYqF2K5/Y70/Ljcb
+         K8nq1lKYqPHPiJvcAt78y96wBupxgum6pogUGbf2lY7PNB0XoLsftByQV8VuKmc/aPKP
+         neGAsOTw9qMge4rfvhFn5C3i8mRm7v0NNNpXbUvYKOZrk1N8+W7xZRzG9DTQOiE78yxq
+         xFYnhopc3+Mddihp3i1KFTdDjrcHFLacll452b1ym/S73Nzb/5N20fV0nUDkZY6ZRzZ6
+         0Qxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUoAafBubacgqyqBwJKnh52F5F5thl4XyO8b0NQIlvXqVGc+5YFK1gSkMe21UIz95H4b9HpFdtF60r/Jg==@vger.kernel.org, AJvYcCVhY+5g1GRQhP5jlIfGtfnnKMUgX6KLmxerJFopR1IWZsZ1vvtWSPHrt2a2toClrCU323Oz3H7r89TjchYL@vger.kernel.org, AJvYcCW0kafrkiAB9TtB6Guczgx4Gy4YyC5wg1HjSk959OeXba+BFMBBw4lGdC99W/ymMjByO21OnupKvpdb@vger.kernel.org, AJvYcCWeBB8M1fPUWLcPIVk4nARoNtgn8G6puKdHFx+MspULj9S7n2YwwGPQ8Gi2bYgwzYrnp+IcYpaQGElT@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxq1Qq1AU+Rqn6MGX3CBuyJz6/YAObJt4IykIL2fIfudvMWHdfy
+	/+rjTiY3hcY39xwLToEbnYvRUNXqzNbS8QOvCc9Nu9vFfwSVYn6w2WK0P5EciQ==
+X-Gm-Gg: ASbGncvv7Rh0HtI8OFPK8jeHuKOu6c9J7s5vCaBqa0pln9sTcnSHs36eum79AbyEait
+	WqutvOtgxNdXDC4qVoKEsXtfbtZ4vLjFupohV4GlaKkUVAmCA67sp8WL1gcobqKU4ibK8aOxTVy
+	3WZrxFJr4edQeYh7+AwiWZWJV3aVAQxfe0mvFxSNxQNpav5FcH5vB6rUqR0hKObeRM0ik5Yo+qs
+	CNDxn3CEyDY5IdwevpWTwvFRcjOgIOWQkeadXK65+YUF55ox9GaIc1Kyin/JR68moFICSsiRd8a
+	5P2V99P8eu6V1VmYxwC6AQtMJ3qKYpppkqPXPifpdlMn3exJ+/zol9NMjlstvfFExHTZxHl/pnJ
+	ZShBg+dk=
+X-Google-Smtp-Source: AGHT+IGAsntME+TzMJWWEePamTIp44xjT1mZe4CvjyZO4HSV+43WW0r3YfNQL+WXAWSUak/H/dc6BA==
+X-Received: by 2002:a17:90b:5252:b0:311:fde5:e225 with SMTP id 98e67ed59e1d1-313af11d8e9mr697757a91.14.1749577429574;
+        Tue, 10 Jun 2025 10:43:49 -0700 (PDT)
 Received: from DESKTOP-P76LG1N.lan ([42.113.163.91])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3134b044d91sm7470668a91.2.2025.06.10.10.43.31
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3134b044d91sm7470668a91.2.2025.06.10.10.43.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 10:43:33 -0700 (PDT)
+        Tue, 10 Jun 2025 10:43:49 -0700 (PDT)
 From: Nam Tran <trannamatk@gmail.com>
 To: lee@kernel.org
 Cc: pavel@kernel.org,
@@ -69,9 +70,9 @@ Cc: pavel@kernel.org,
 	devicetree@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	Nam Tran <trannamatk@gmail.com>
-Subject: [PATCH v9 1/4] dt-bindings: leds: add TI/National Semiconductor LP5812 LED Driver
-Date: Wed, 11 Jun 2025 00:43:15 +0700
-Message-Id: <20250610174319.183375-2-trannamatk@gmail.com>
+Subject: [PATCH v9 3/4] docs: ABI: Document LP5812 LED sysfs interfaces
+Date: Wed, 11 Jun 2025 00:43:18 +0700
+Message-Id: <20250610174319.183375-5-trannamatk@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250610174319.183375-1-trannamatk@gmail.com>
 References: <20250610174319.183375-1-trannamatk@gmail.com>
@@ -84,305 +85,206 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The LP5812 is a 4×3 RGB LED driver with an autonomous animation
-engine and time-cross-multiplexing (TCM) support for up to 12 LEDs
-or 4 RGB LEDs. It supports both analog (256 levels) and PWM (8-bit)
-dimming, including exponential PWM for smooth brightness control.
+The LP5812 is a 4 × 3 matrix RGB LED driver with autonomous animation
+engine control.
+
+The driver provides interfaces to configure LED modes manual/autonomous,
+set PWM/DC values, and manage autonomous animation engines.
 
 Signed-off-by: Nam Tran <trannamatk@gmail.com>
 ---
- .../devicetree/bindings/leds/ti,lp5812.yaml   | 264 ++++++++++++++++++
- MAINTAINERS                                   |   6 +
- 2 files changed, 270 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/ti,lp5812.yaml
+ .../ABI/testing/sysfs-bus-i2c-devices-lp5812  |  40 ++++++
+ .../ABI/testing/sysfs-class-led-lp5812        | 120 ++++++++++++++++++
+ MAINTAINERS                                   |   2 +
+ 3 files changed, 162 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-lp5812
 
-diff --git a/Documentation/devicetree/bindings/leds/ti,lp5812.yaml b/Documentation/devicetree/bindings/leds/ti,lp5812.yaml
+diff --git a/Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812 b/Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
 new file mode 100644
-index 000000000000..bbb4e293dac3
+index 000000000000..a8b1d5c52a82
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/ti,lp5812.yaml
-@@ -0,0 +1,264 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/ti,lp5812.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
+@@ -0,0 +1,40 @@
++What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/dev_config
++Date:		July 2025
++KernelVersion:	6.17
++Contact:	Nam Tran <trannamatk@gmail.com>
++Description:
++		Configures drive mode and scan order. (WO)
++		Some valid values: tcmscan:4:0:1:2:3 (default), tcmscan:3:0:1:2, mixscan:2:2:0:3, mixscan:3:0:1:2:3
 +
-+title: TI LP5812 4×3 Matrix RGB LED Driver with Autonomous Control
++What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/device_command
++Date:		July 2025
++KernelVersion:	6.17
++Contact:	Nam Tran <trannamatk@gmail.com>
++Description:
++		Issues device-level commands. (WO)
++		Valid values: "update", "start", "stop", "pause", "continue"
 +
-+maintainers:
-+  - Nam Tran <trannamatk@gmail.com>
++What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/sw_reset
++Date:		July 2025
++KernelVersion:	6.17
++Contact:	Nam Tran <trannamatk@gmail.com>
++Description:
++		Triggers a software reset of the device. (WO)
++		1 - resets device
++		0 - does not reset device
 +
-+description: |
-+  The LP5812 is a 4×3 matrix RGB LED driver with I2C interface
-+  and autonomous animation engine control.
-+  For more product information please see the link below:
-+  https://www.ti.com/product/LP5812#tech-docs
++What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/fault_clear
++Date:		July 2025
++KernelVersion:	6.17
++Contact:	Nam Tran <trannamatk@gmail.com>
++Description:
++		Clears fault status. (WO)
++		1 - clears fault status
++		0 - does not clear fault status
 +
-+properties:
-+  compatible:
-+    const: ti,lp5812
++What:		/sys/bus/i2c/devices/.../lp5812_chip_setup/tsd_config_status
++Date:		July 2025
++KernelVersion:	6.17
++Contact:	Nam Tran <trannamatk@gmail.com>
++Description:
++		Report the current thermal shutdown config status. (RO)
+diff --git a/Documentation/ABI/testing/sysfs-class-led-lp5812 b/Documentation/ABI/testing/sysfs-class-led-lp5812
+new file mode 100644
+index 000000000000..a6cb49fb523f
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-class-led-lp5812
+@@ -0,0 +1,120 @@
++What:		/sys/class/leds/led_<id>/activate
++Date:		July 2025
++KernelVersion:	6.17
++Contact:	Nam Tran <trannamatk@gmail.com>
++Description:
++		Activate or deactivate the specified LED channel. (WO)
++		1 - Activate
++		0 - Deactivate
 +
-+  reg:
-+    maxItems: 1
++What:		/sys/class/leds/led_<id>/mode
++Date:		July 2025
++KernelVersion:	6.17
++Contact:	Nam Tran <trannamatk@gmail.com>
++Description:
++		Selects LED operation mode. (WO)
++		Valid values: "manual", "autonomous"
 +
-+  vcc-supply:
-+    description: Regulator providing power to the 'VCC' pin.
++What:		/sys/class/leds/led_<id>/led_current
++Date:		July 2025
++KernelVersion:	6.17
++Contact:	Nam Tran <trannamatk@gmail.com>
++Description:
++		DC current level. (WO)
++		Valid values: 0 - 255
 +
-+  '#address-cells':
-+    const: 1
++What:		/sys/class/leds/led_<id>/max_current
++Date:		July 2025
++KernelVersion:	6.17
++Contact:	Nam Tran <trannamatk@gmail.com>
++Description:
++		Shows maximum DC current bit setting. (RO)
++		0 (default) means the LED maximum current is set to 25.5 mA.
++		1 means the LED maximum current is set to 51 mA.
 +
-+  '#size-cells':
-+    const: 0
++What:		/sys/class/leds/led_<id>/pwm_dimming_scale
++Date:		July 2025
++KernelVersion:	6.17
++Contact:	Nam Tran <trannamatk@gmail.com>
++Description:
++		PWM dimming scale type. (WO)
++		Valid values: "linear", "exponential"
 +
-+patternProperties:
-+  "^led@[0-3]$":
-+    type: object
-+    $ref: common.yaml#
-+    unevaluatedProperties: false
++What:		/sys/class/leds/led_<id>/pwm_phase_align
++Date:		July 2025
++KernelVersion:	6.17
++Contact:	Nam Tran <trannamatk@gmail.com>
++Description:
++		Configures PWM phase alignment. (WO)
++		Valid values: "forward", "middle", "backward"
 +
-+    properties:
-+      led-cur:
-+        $ref: /schemas/types.yaml#/definitions/uint8
-+        description: |
-+          LED current in 0.1 mA steps (e.g., 150 = 15.0 mA; 0 if not connected)
-+        minimum: 0
-+        maximum: 255
++What:		/sys/class/leds/led_<id>/auto_time_pause_at_start
++Date:		July 2025
++KernelVersion:	6.17
++Contact:	Nam Tran <trannamatk@gmail.com>
++Description:
++		Controls start pause time. (WO)
++		Valid values: 0 - 15
 +
-+      max-cur:
-+        $ref: /schemas/types.yaml#/definitions/uint8
-+        description: Maximum allowed current in 0.1 mA steps
++What:		/sys/class/leds/led_<id>/auto_time_pause_at_stop
++Date:		July 2025
++KernelVersion:	6.17
++Contact:	Nam Tran <trannamatk@gmail.com>
++Description:
++		Controls stop pause time. (WO)
++		Valid values: 0 - 15
 +
-+      reg:
-+        minimum: 0
-+        maximum: 3
++What:		/sys/class/leds/led_<id>/auto_playback_eau_number
++Date:		July 2025
++KernelVersion:	6.17
++Contact:	Nam Tran <trannamatk@gmail.com>
++Description:
++		Active AEU number of led_<id> selection. (WO)
++		Valid values: 0 - 3
++		0 - only use AEU1
++		1 - use AEU1 and AEU2
++		2 - use AEU1, AEU2 and AEU3
++		3 - use AEU1, AEU2 and AEU3 (the same as 2)
 +
-+  '^multi-led@[4-7]$':
-+    type: object
-+    $ref: leds-class-multicolor.yaml#
-+    unevaluatedProperties: false
++What:		/sys/class/leds/led_<id>/auto_playback_time
++Date:		July 2025
++KernelVersion:	6.17
++Contact:	Nam Tran <trannamatk@gmail.com>
++Description:
++		Animation pattern playback times of led_<id>. (WO)
++		Valid values: 0 - 15
++		0 - 14 means 0 - 14 times, 15 means infinite times
 +
-+    properties:
-+      reg:
-+        minimum: 4
-+        maximum: 7
++What:		/sys/class/leds/led_<id>/aeu_playback_time
++Date:		July 2025
++KernelVersion:	6.17
++Contact:	Nam Tran <trannamatk@gmail.com>
++Description:
++		AEU pattern playback times of led_<id>. (WO)
++		Format: aeu<x>:<y> where x (1 - 3) indicates the AEU number,
++		y (0 - 3) indicates the number of playback times.
 +
-+      '#address-cells':
-+        const: 1
++What:		/sys/class/leds/led_<id>/aeu_pwm_<pwm_id>
++Date:		July 2025
++KernelVersion:	6.17
++Contact:	Nam Tran <trannamatk@gmail.com>
++Description:
++		AEU PWM duty cycle setting. (WO)
++		Format: aeu<x>:<y> where x (1 - 3) indicates the AEU number,
++		y (0 - 255) indicates pwm value.
 +
-+      '#size-cells':
-+        const: 0
++What:		/sys/class/leds/led_<id>/aeu_slop_time_<st_id>
++Date:		July 2025
++KernelVersion:	6.17
++Contact:	Nam Tran <trannamatk@gmail.com>
++Description:
++		AEU slop time setting. (WO)
++		Format: aeu<x>:<y> where x (1 - 3) indicates the AEU number,
++		y (0 - 15) indicates the slop time value.
 +
-+    patternProperties:
-+      "^led@[4-9a-f]$":
-+        type: object
-+        $ref: common.yaml#
-+        unevaluatedProperties: false
-+
-+        properties:
-+          led-cur:
-+            $ref: /schemas/types.yaml#/definitions/uint8
-+            description: |
-+              LED current in 0.1 mA steps (e.g., 150 = 15.0 mA; 0 if not connected)
-+            minimum: 0
-+            maximum: 255
-+
-+          max-cur:
-+            $ref: /schemas/types.yaml#/definitions/uint8
-+            description: Maximum allowed current in 0.1 mA steps
-+
-+          reg:
-+            minimum: 4
-+            maximum: 15
-+
-+        required:
-+          - reg
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/leds/common.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        led-controller@1b {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            compatible = "ti,lp5812";
-+            reg = <0x1b>;
-+            vcc-supply = <&vdd_3v3_reg>;
-+
-+            led@0 {
-+              reg = <0x0>;
-+              label = "LED0";
-+              led-cur = /bits/ 8 <0x96>;
-+              max-cur = /bits/ 8 <0xff>;
-+            };
-+
-+            led@1 {
-+              reg = <0x1>;
-+              label = "LED1";
-+              led-cur = /bits/ 8 <0x96>;
-+              max-cur = /bits/ 8 <0xff>;
-+            };
-+
-+            led@2 {
-+              reg = <0x2>;
-+              label = "LED2";
-+              led-cur = /bits/ 8 <0x96>;
-+              max-cur = /bits/ 8 <0xff>;
-+            };
-+
-+            led@3 {
-+              reg = <0x3>;
-+              label = "LED3";
-+              led-cur = /bits/ 8 <0x96>;
-+              max-cur = /bits/ 8 <0xff>;
-+            };
-+
-+            multi-led@4 {
-+              #address-cells = <1>;
-+              #size-cells = <0>;
-+              reg = <0x4>;
-+              color = <LED_COLOR_ID_RGB>;
-+              label = "LED_A";
-+
-+              led@4 {
-+                reg = <0x4>;
-+                color = <LED_COLOR_ID_GREEN>;
-+                led-cur = /bits/ 8 <0x96>;
-+                max-cur = /bits/ 8 <0xff>;
-+              };
-+
-+              led@5 {
-+                reg = <0x5>;
-+                color = <LED_COLOR_ID_RED>;
-+                led-cur = /bits/ 8 <0x96>;
-+                max-cur = /bits/ 8 <0xff>;
-+              };
-+
-+              led@6 {
-+                reg = <0x6>;
-+                color = <LED_COLOR_ID_BLUE>;
-+                led-cur = /bits/ 8 <0x96>;
-+                max-cur = /bits/ 8 <0xff>;
-+              };
-+            };
-+
-+            multi-led@5 {
-+              #address-cells = <1>;
-+              #size-cells = <0>;
-+              reg = <0x5>;
-+              color = <LED_COLOR_ID_RGB>;
-+              label = "LED_B";
-+
-+              led@7 {
-+                reg = <0x7>;
-+                color = <LED_COLOR_ID_GREEN>;
-+                led-cur = /bits/ 8 <0x96>;
-+                max-cur = /bits/ 8 <0xff>;
-+              };
-+
-+              led@8 {
-+                reg = <0x8>;
-+                color = <LED_COLOR_ID_RED>;
-+                led-cur = /bits/ 8 <0x96>;
-+                max-cur = /bits/ 8 <0xff>;
-+              };
-+
-+              led@9 {
-+                reg = <0x9>;
-+                color = <LED_COLOR_ID_BLUE>;
-+                led-cur = /bits/ 8 <0x96>;
-+                max-cur = /bits/ 8 <0xff>;
-+              };
-+            };
-+
-+            multi-led@6 {
-+              #address-cells = <1>;
-+              #size-cells = <0>;
-+              reg = <0x6>;
-+              color = <LED_COLOR_ID_RGB>;
-+              label = "LED_C";
-+
-+              led@a {
-+                reg = <0xa>;
-+                color = <LED_COLOR_ID_GREEN>;
-+                led-cur = /bits/ 8 <0x96>;
-+                max-cur = /bits/ 8 <0xff>;
-+              };
-+
-+              led@b {
-+                reg = <0xb>;
-+                color = <LED_COLOR_ID_RED>;
-+                led-cur = /bits/ 8 <0x96>;
-+                max-cur = /bits/ 8 <0xff>;
-+              };
-+
-+              led@c {
-+                reg = <0xc>;
-+                color = <LED_COLOR_ID_BLUE>;
-+                led-cur = /bits/ 8 <0x96>;
-+                max-cur = /bits/ 8 <0xff>;
-+              };
-+            };
-+
-+            multi-led@7 {
-+              #address-cells = <1>;
-+              #size-cells = <0>;
-+              reg = <0x7>;
-+              color = <LED_COLOR_ID_RGB>;
-+              label = "LED_D";
-+
-+              led@d {
-+                reg = <0xd>;
-+                color = <LED_COLOR_ID_GREEN>;
-+                led-cur = /bits/ 8 <0x96>;
-+                max-cur = /bits/ 8 <0xff>;
-+              };
-+
-+              led@e {
-+                reg = <0xe>;
-+                color = <LED_COLOR_ID_RED>;
-+                led-cur = /bits/ 8 <0x96>;
-+                max-cur = /bits/ 8 <0xff>;
-+              };
-+
-+              led@f {
-+                reg = <0xf>;
-+                color = <LED_COLOR_ID_BLUE>;
-+                led-cur = /bits/ 8 <0x96>;
-+                max-cur = /bits/ 8 <0xff>;
-+              };
-+            };
-+        };
-+    };
-+
-+...
++What:		/sys/class/leds/led_<id>/lod_lsd
++Date:		July 2025
++KernelVersion:	6.17
++Contact:	Nam Tran <trannamatk@gmail.com>
++Description:
++		0 0 mean no lod and lsd fault detected, 1 1 mean lod and lsd fault detected (RO)
 diff --git a/MAINTAINERS b/MAINTAINERS
-index a92290fffa16..83a779dc9bcd 100644
+index b4eb3265c800..cdba86f1768b 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -24561,6 +24561,12 @@ S:	Supported
- F:	Documentation/devicetree/bindings/iio/dac/ti,dac7612.yaml
- F:	drivers/iio/dac/ti-dac7612.c
- 
-+TEXAS INSTRUMENTS' LP5812 RGB LED DRIVER
-+M:	Nam Tran <trannamatk@gmail.com>
-+L:	linux-leds@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/leds/ti,lp5812.yaml
-+
- TEXAS INSTRUMENTS' LB8864 LED BACKLIGHT DRIVER
- M:	Alexander Sverdlin <alexander.sverdlin@siemens.com>
+@@ -24565,6 +24565,8 @@ TEXAS INSTRUMENTS' LP5812 RGB LED DRIVER
+ M:	Nam Tran <trannamatk@gmail.com>
  L:	linux-leds@vger.kernel.org
+ S:	Maintained
++F:	Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
++F:	Documentation/ABI/testing/sysfs-class-led-lp5812
+ F:	Documentation/devicetree/bindings/leds/ti,lp5812.yaml
+ F:	drivers/leds/rgb/Kconfig
+ F:	drivers/leds/rgb/Makefile
 -- 
 2.25.1
 
