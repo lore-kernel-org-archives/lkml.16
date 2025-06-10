@@ -1,104 +1,130 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D69265CAF;
-	Tue, 10 Jun 2025 20:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749588756; cv=none; b=PkSXqpzlMsW/XBvfXBfYX7VMn7tFLmY/Ufp7ujvMYrjwT+8frI6m9hMx90mxElanAoPMjq2ZZycHozZzn4FL6eMHUvUC8UmjWRYAfcrFwBxk7t0pg164eXT0j2l9h9/FBAaNjyk/2O2dZJBQEqh5fQA4AMzYt7/rwIzXZL0yXFE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749588756; c=relaxed/simple;
-	bh=N763iZbfwAJQbjkDRom82zHox2+OgmkLsu9JE8B7k+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UErmTAgHhVzbnXrMvKMsdF4XmgHKw70PgecLIBgHO9KXsLMsnNRt5ZheA54AW+yVEefoXZX3Kf4bOowpu7stPFfbkZTCEF9/Q0Fua19C07XuUb2PJV6yaJIHxgAcgrGJ9U2o6kzAq+1IZOzee1BGx+OFMXZ2cSGUthmJgC4ldEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TDteJcJm; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A2223909F;
+	Tue, 10 Jun 2025 20:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749588794; cv=pass; b=m7uH32qQKmQouAer/eqPDYDsAl9zqZgbIyK32YcCtzu7CLdFLuvJ9zJ2fczLXgRQ/OVtCFVR2bAjh2jEQA5YHG1HUVOx6dYUMBgW4VEoZGSId81vYyM/sy6LK91YW0zIRdDWjc9GTmkJ0wfq+w/rs1NcFn/7kFzoOw57uiA26N8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749588794; c=relaxed/simple;
+	bh=8BwPVmK64VFnrIhMKkDZ+DxVV442z8pfMi1pRltCTAE=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=KAG66KxKE9sdNkyY5U6PM6YT4sgTYcgqk3N7cq8EUoc5Em59LpKJgpWVq47JBa7snjFz3GxDJ6DJa6dGQu4Zqi9x5VG4/oCt8H2QI2WxCktyLikXE2OP58+oABgRmbE49v6PG20YgrpvAYfIV0NKv7JGI6j6s6h1K4cmZYULeVY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=lBK5Ym3F; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TDteJcJm"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7406c6dd2b1so256990b3a.0;
-        Tue, 10 Jun 2025 13:52:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749588755; x=1750193555; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lE9yaZP7m2IrYlE/IaMtVOw2rD5v2vU2kav7ruBWl0k=;
-        b=TDteJcJmPNGo9U8YstQZKeikyN4BL9ncDAqlRRJ5uyIscQN+DexKn1tdEaIgR2iFCD
-         YmJXdOWeHAzda6SXehDoGghSelHvqPLYLyyI+zeepjjHoxj5sAMWMm9jR+Um+efg/RC/
-         rPGWKjkX+lWUI1HD51LxFM/Zcp+tlnRZ4ng/pHQM4XP0WvWR8OSbklRWqCTQ9nVCW8ZM
-         9iRrVS+ETLS3Uy1FyQGBxQxxaLsPbWqkL3TnigLzN3Ow0oGzf/lNjvFtHLebN+/DoOiA
-         qw8k8Ew36p1JthFPPvLw8a4NseTZVDf6umuGJA6SasTsYtVo2QBdFqWqmAhT9q7umKP6
-         yogA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749588755; x=1750193555;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lE9yaZP7m2IrYlE/IaMtVOw2rD5v2vU2kav7ruBWl0k=;
-        b=baE3zwjZHp+ea828ZHkMVKirWXSs1+0Zyb5aSIEl6gGTuaQE5aJTJgcegw2Euzx6Hl
-         OsgxvfDrDscJ+d8oTYWZq0mtoJTInhnyGD4MynvdV5Rsk2pPPjO09ufIPJZH4svr95Up
-         +4VbVW8W4G/tLmgPLOSGHn1P02XP0N06bnzwec2Jsx+yBCbMnaz7IckRFvLIB7XCFCiT
-         DNynv8hX2pmB4fcLNV+smeLYVQJbDqdMYTDooPQqt3nmeZC/AxoC9G355B6OOhcc2irJ
-         otNjIa1oqt8zNy9Mbbeu+gCC0ZLJwUSRAX8zr73phw8rEQJwz+R+dWng/wHx/L2l/0xy
-         sz0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWgxqbat5kGM4c4sMZVj59/9q6Z7VSajatQfLzV6WQwhYZUW77bd13fU7YkUvfGwlZAXb3nLOzUHElnOg==@vger.kernel.org, AJvYcCXUjvT0SeQZAUumc1FkiJsGuC4FFiaPaNW6Szg9GFqf2BMPlBTFsPP21FLrkuXSYWpvK/b4B94nf0KwhdPG@vger.kernel.org
-X-Gm-Message-State: AOJu0YymckJyM0qCX2iaaehNoPpDbnhIMuK8+ZL7kkequa/T4KItjtmO
-	K9sNLP10TjUtg7tAfZilj+EickEKnuxIAKDkczhd/w0x4ms4DtJSj/pG
-X-Gm-Gg: ASbGnctupfW/wh5jEuysK6px2Zs3eVkUv5LhDM7G0s+nngQeCxIEcQvCGplMqTa31r5
-	I6amqskhiHSQhEDkpPJnVQK1meQqMbNCXRiK/LZH2kCKZ0HLTfRtNmZ8igaYmptHAw5anUXpqU+
-	Y2q+ZkLi3Ec/81YDodMDT+VAbNrkDEGQKsYX/v40LmJexqv9NGu2ZsDGnH/BVpj+n28HnwGoobO
-	7NrTmZ3gg5tZAovVPzHMdcW0ZMZHvY7kRJpQ4BiXGU5oJO4s452QtfjOVyA2gvwjmApD6OQrkzT
-	/fcKZsjznUyuidT1+yjaoUXXO9ejXefeT+BKerESyDneRi7Occi0aMgjkknBUGV3HUfrFpLRTe8
-	=
-X-Google-Smtp-Source: AGHT+IES+OJxDL4EfEYgAs/0gyh3pwXO1ZRiA9IclKpJpgSIAy/ySAcCmY6ks2+e5T6Rh2YZxSOoHA==
-X-Received: by 2002:a05:6a20:3d19:b0:21f:56d0:65dc with SMTP id adf61e73a8af0-21f86f27b8emr966321637.13.1749588754714;
-        Tue, 10 Jun 2025 13:52:34 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482af7abebsm7861513b3a.47.2025.06.10.13.52.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 13:52:34 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Tue, 10 Jun 2025 13:52:33 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Jean Delvare <jdelvare@suse.com>,
-	Eddie James <eajames@linux.vnet.ibm.com>,
-	Arnd Bergmann <arnd@arndb.de>, Al Viro <viro@zeniv.linux.org.uk>,
-	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon: occ: fix unaligned accesses
-Message-ID: <6eb501b7-501a-4e55-b340-88c387c1078c@roeck-us.net>
-References: <20250610092553.2641094-1-arnd@kernel.org>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="lBK5Ym3F"
+ARC-Seal: i=1; a=rsa-sha256; t=1749588771; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=AJGQRUHWBoJMr/xavwTXREsyQRIFay5qtRHGXq1D1XdrFQ/VfPTb2jvac4c/QKXowe+JYI246noHcUBMhdAHXiU4bP7WRtpTfg1xfR0fT9QvdDRR8HXavsHz8yEY0oztH6/LwIBbh+DjkWxHhNJ5diMiqMm39aXGOfPF62S2YHo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749588771; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=8ohbf0fVC2bweHQzX/NMFiOeF906+iaMjeRr67c5dI8=; 
+	b=ACKcKvZqV6gRXNll5SIUjJxCj23gSNkczoRTuz4D1vsQ1g8T8s3w4MSo6VQMrqGSfAdujiFvXN9OFMjrbSfI8vyGIJ6aPRLGSAoOWS+GZ/hmRH/VHYEMbNop4wqSYMc6AFvFCSWN0hMf81k0ngbUL3z3x8bYDdAxPnDhCn9sLhs=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749588771;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=8ohbf0fVC2bweHQzX/NMFiOeF906+iaMjeRr67c5dI8=;
+	b=lBK5Ym3FgAOfv22C+sDEn2e3yJywZJhB8CdO3Yt3oJfvi5ukS/+kTIQnD2J5W9Ea
+	+XfP8mR8/MiWeNmgYqnA9MzOQdMHRXEw87x642vSfCEfymWiYtlyfy8riW4le9cre8L
+	+k41ME7FsMNP2kWcztwjLictoYwfqBkPlxBl94pw=
+Received: by mx.zohomail.com with SMTPS id 1749588770444499.07877296780373;
+	Tue, 10 Jun 2025 13:52:50 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250610092553.2641094-1-arnd@kernel.org>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v6] rust: kernel: add support for bits/genmask macros
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <CANiq72nHzEN9D2yEkXNAWGySQADtUCW_V0YtpnCvHG=nxdeDCQ@mail.gmail.com>
+Date: Tue, 10 Jun 2025 17:52:34 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Alexandre Courbot <acourbot@nvidia.com>,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <79427200-D82D-4EC8-BE6A-A1964DACEB5C@collabora.com>
+References: <20250610-topic-panthor-rs-genmask-v6-1-50fa1a981bc1@collabora.com>
+ <CANiq72nHzEN9D2yEkXNAWGySQADtUCW_V0YtpnCvHG=nxdeDCQ@mail.gmail.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
+X-ZohoMailClient: External
 
-On Tue, Jun 10, 2025 at 11:25:49AM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> Passing a pointer to an unaligned integer as a function argument is
-> undefined behavior:
-> 
-> drivers/hwmon/occ/common.c:492:27: warning: taking address of packed member 'accumulator' of class or structure 'power_sensor_2' may result in an unaligned pointer value [-Waddress-of-packed-member]
->   492 |   val = occ_get_powr_avg(&power->accumulator,
->       |                           ^~~~~~~~~~~~~~~~~~
-> drivers/hwmon/occ/common.c:493:13: warning: taking address of packed member 'update_tag' of class or structure 'power_sensor_2' may result in an unaligned pointer value [-Waddress-of-packed-member]
->   493 |            &power->update_tag);
->       |             ^~~~~~~~~~~~~~~~~
-> 
-> Move the get_unaligned() calls out of the function and pass these
-> through argument registers instead.
-> 
-> Fixes: c10e753d43eb ("hwmon (occ): Add sensor types and versions")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Hi Miguel,
 
-Applied.
+> On 10 Jun 2025, at 15:08, Miguel Ojeda =
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>=20
+> On Tue, Jun 10, 2025 at 4:16=E2=80=AFPM Daniel Almeida
+> <daniel.almeida@collabora.com> wrote:
+>>=20
+>> +use crate::build_assert;
+>=20
+> You can include the prelude instead.
+>=20
+>> +            (1 as $ty) .checked_shl(n)
+>=20
+> Formatting.
+>=20
+>> +        pub fn $unbounded_name(n: u32) -> $ty {
+>=20
+> We may want to have a comment inside here to remind ourselves to
+> forward the call to the standard library one when available (1.87.0).
+>=20
+>> +        /// Creates a compile-time contiguous bitmask for the given =
+range by
+>> +        /// validating the range at runtime.
+>=20
+> I may be confused by what you are trying to do here, but how are these
+> `checked` and `unbounded` ones compile-time?
 
-Thanks,
-Guenter
+This is wrong indeed, thanks for catching that.
+
+>=20
+> Also, you can probably simplify the macro `impl` calls by removing
+> parameters by using `paste!`, e.g.
+>=20
+>    let high =3D ::kernel::macros::paste!([<checked_bit_ =
+$ty>])(range.end)?;
+
+I personally find paste=E2=80=99s syntax a bit hard to read, but sure, I =
+have nothing against this.
+
+>=20
+>> base-commit: cf25bc61f8aecad9b0c45fe32697e35ea4b13378
+>=20
+> This is a fairly old base now (the patch does not apply cleanly).
+
+Sorry about that.=20
+
+Anyways, let's see if others are happy with the direction this patch is =
+now
+taking. I will rebase on the next iteration :)
+
+>=20
+> Thanks!
+>=20
+> Cheers,
+> Miguel
+>=20
+
+=E2=80=94 Daniel=
