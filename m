@@ -1,91 +1,107 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57A6412CDAE;
-	Tue, 10 Jun 2025 16:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD251EFFB0;
+	Tue, 10 Jun 2025 16:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749571620; cv=none; b=ozyb1MEezWlqBW99Te8Gv0w1lZ8wLH2nwgep2hhoYhfbU8uM8PARXvu9aj+j3vctBZspkGbJ4Ll5+0M1ZEjX+1LsNIoYgozvNRhVtSBH59oyZD5ZIbjcaltIQ+99zvaHnK+mjyEFDzlxoq2usvADgJpW6Fwsg2uUNBrc7fZVpX8=
+	t=1749571643; cv=none; b=eR5Cm5dfkOLs/eQ0Jo0tS1jC23O4HZeq7meumTVVAHKBF/A1cK/eh4lTfLVYiYN8cl7YwdQun2KxIMMt0PVHyBDN65rkkrBexPQkzzqebhJFUvZqltkIeh6xebbBuLcwW5Ny+njzYlkvitf3NzT9GYNjZKE4WFo7lah3hWJ/pZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749571620; c=relaxed/simple;
-	bh=EF6+Ekp5LFOn/Da+vUOZnyB0ssktivNlZp8mV3L4hrs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SNn37Q9CcYn+YMWFj0ZkJe72W+Rj6n4k9OQdSvK4JKTw/tXJI9RvhgVuyKudBzRn35HaJiROjjqWf/Bsn1brocccfE6I4J9YTsuadfeY9VfwEM75JRx8+nf3i2UCH786yTU15tDicC9Anf0P6z8vdYywqGJ6Xw6fjU2sLLXxkC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=O51AOjvt; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1749571643; c=relaxed/simple;
+	bh=8zNGx+1TfyYD5oN1/GqIAxOb3rPE9mEmCyDVfCgaVus=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AWxeCFyV0EUj9NaCxLINV4dUHusbUPdeDKtSanO6YLy9I1koTEU40SV05qoTEHEaD8LwEb8m882MPY5ZyIodrA1rzE719csb7RN5GIGIsPs6txM4raOxOAhPPJPZJVe+1w6z7zETxcPaqA4O25EtXIfIY6aF+8iWR5MTGNytoxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MKrbBD4u; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="O51AOjvt"
-Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id C0A4D21175A4;
-	Tue, 10 Jun 2025 09:06:58 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C0A4D21175A4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749571618;
-	bh=EF6+Ekp5LFOn/Da+vUOZnyB0ssktivNlZp8mV3L4hrs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=O51AOjvtxzIfvKmh7tEijTRnn/KFclGPxRlbGJi/7DMCm2/914JouuKmN2ZR3p7pj
-	 zQhrDQVXBPTWDBLH/QVuZVmMdcurziTUwQge77GOf7nBMJAlWrHcVXcJ2//OLJ3yDR
-	 5X3Zj1w9sseHk+6K9ekaKxn4eKmglkCxmTcTHg3k=
-From: Roman Kisel <romank@linux.microsoft.com>
-To: sudeep.holla@arm.com
-Cc: anirudh@anirudhrb.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-hyperv@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MKrbBD4u"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-441d437cfaaso36045625e9.1;
+        Tue, 10 Jun 2025 09:07:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749571640; x=1750176440; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=z7ou2wgwMn8L50XyIhGS2KTQ/Rr3tzpT2R9E2FFdIyQ=;
+        b=MKrbBD4uyCM2MUoX/Yavg6BO3qCFz/YOVBAEs92hUxYwXjgOvSslegEi6KQW2qs64v
+         iJNKsa780BlKG+rh/ekLnjer7jkwlRSJPrAbAohbzPDBexKuMpG5PNSDQHSRez6QOVDK
+         oPo99Ce2cpT141rrpP4K1ucpP25pqz1tLAFr+kCMzmxtQgf6JdSMFvUKctnFqHZePHi3
+         JEq82fxSBZUJd3hU+f/CJhgQ6U5v6IGNqa0EYycFp24qgq3NsLzVKsYfpOxJeL0TkXeK
+         rUPmK2cHl4GVSRuGZB+f0/yd10yPXxm0Sd4FpGMrT6ysVE5L1+RRXO5l774XeFynNvRa
+         RlGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749571640; x=1750176440;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=z7ou2wgwMn8L50XyIhGS2KTQ/Rr3tzpT2R9E2FFdIyQ=;
+        b=YfMq3kG3k44Eflc5peSPFRVrFay7530gZAzXT52eHggjmjS6m5RzCpr/DM982p3o4y
+         v+9SD9spabnAD1NBC1JCsMrf1pJpPVGD3pNxaREeGtRkR+AbjXlILT5aY225d1zePcxF
+         Y8AEEVALgsarL5Ras10XSSS99SwmkdZQhHqrgN/eHTy4LJyD8RQ1ISAIpZ8HgNzBq0SQ
+         YYzt4TUfz4Czl0RMVV4qAOa3QDQI8iHnkBrw0qhxD+ynKtOyqfJItM2Sor81tBg9UmF0
+         oCku32TzkeIhID+1ed5aCSGW+oOOVqrCrMSOH3W5wrHb/zthEmLZM4mCdDZkPCpdiZog
+         P4wg==
+X-Forwarded-Encrypted: i=1; AJvYcCULjyK+wvSG0ttL21akqrtizo1oANKyl8l0VNWt1JhoH2Ep2abO63RSosVTxrCs1WwwxfhqvDWZ@vger.kernel.org, AJvYcCXQT9PEgSJmA4QVOuzY8tyjPtniVJSU7TLQ/NDHWXjdJZ1lJBnOJ8N8mpKM6zst3s7LFewD8frouZ6z3M0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaDCB1FK7sxeSdxK+BtFcmQsj5/5SV9eV+7+uXFmZVmx+km3E1
+	D9GC3HZcEMeRakfAV+u0fA+o5KMJ1g4P3gkoN3Hd87IxT6gTyU0KqNNtBtGVTrXD
+X-Gm-Gg: ASbGnct711dUyJaENTQRhfFb34iD5EAw4r2Cl+jcWmVwlSfpu1QEiGV7eVBbE3pQHNu
+	3qqF+n5pjxC6FNpZ5Qrk5o2yJyMS3zbrP40UYiRbuK1uN2pNwpZeueRfw9IXN6AknQvJ7DRYa4j
+	sIB3LqsW9fnM1oWDIJBKeXYAdVI1LmC/miJPgYHMihgwvpo8DplctElR93nxoqj/TkVXzf9aWeV
+	AiKc+dKCqC0INUQPJy8PU7+NlJFLaII3YMmJSMepBigNBbDxrw9wDR4DB8aaZuIVk8iEN6/y8/s
+	O1UFtz+cFl0A9Z+0D2QRNa0yafn5IKGHh2jk6gRHy8I7Y4gDiHZnI6jWm6QrjLNdG/NURLs/f10
+	c5NlPAEM=
+X-Google-Smtp-Source: AGHT+IG674JmgBiPcaB4UmFqjKGqkZ9XBcLDUGtubIQ1Xl+6o2MuAifxrpaudSCBVzIVfN2uHeDBtA==
+X-Received: by 2002:a05:600c:6207:b0:442:f4a3:b5ec with SMTP id 5b1f17b1804b1-452013fd6b5mr165358375e9.4.1749571639370;
+        Tue, 10 Jun 2025 09:07:19 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:3033:680:23f6:dd44:9038:c392:25a7])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452730b9b27sm141709185e9.23.2025.06.10.09.07.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 09:07:19 -0700 (PDT)
+From: RubenKelevra <rubenkelevra@gmail.com>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	kuba@kernel.org,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	horms@kernel.org,
 	linux-kernel@vger.kernel.org,
-	lpieralisi@kernel.org,
-	mark.rutland@arm.com
-Subject: Re: [PATCH] firmware: smccc: support both conduits for getting hyp UUID
-Date: Tue, 10 Jun 2025 09:06:48 -0700
-Message-ID: <20250610160656.11984-1-romank@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250605-kickass-cerulean-honeybee-aa0cba@sudeepholla>
-References: <20250605-kickass-cerulean-honeybee-aa0cba@sudeepholla>
+	stable@vger.kernel.org,
+	RubenKelevra <rubenkelevra@gmail.com>
+Subject: [PATCH] net: pfcp: fix typo in message_priority field name
+Date: Tue, 10 Jun 2025 18:06:12 +0200
+Message-ID: <20250610160612.268612-1-rubenkelevra@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-> (sorry for the delay, found the patch in the spam 🙁)
+Fix 'message_priprity' typo to 'message_priority' in big endian
+bitfield definition. This typo breaks compilation on big endian
+architectures.
 
-"b4" shows the the mail server used for the patch submission
-doesn't pass the DKIM check, so finding the patch in the spam seems
-expected :) Thanks for your help!
+Fixes: 6dd514f48110 ("pfcp: always set pfcp metadata")
+Cc: stable@vger.kernel.org # commit 6dd514f48110 ("pfcp: always set pfcp metadata")
+Signed-off-by: RubenKelevra <rubenkelevra@gmail.com>
+---
+ include/net/pfcp.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->
-> On Wed, May 21, 2025 at 09:40:48AM +0000, Anirudh Rayabharam wrote:
->> From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
->>
->> When Linux is running as the root partition under Microsoft Hypervisor
->> (MSHV) a.k.a Hyper-V, smc is used as the conduit for smc calls.
->>
->> Extend arm_smccc_hypervisor_has_uuid() to support this usecase. Use
->> arm_smccc_1_1_invoke to retrieve and use the appropriate conduit instead
->> of supporting only hvc.
->>
->> Boot tested on MSHV guest, MSHV root & KVM guest.
->>
->
-> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
->
-> Are they any dependent patches or series using this ? Do you plan to
-> route it via KVM tree if there are any dependency. Or else I can push
-> it through (arm-)soc tree. Let me know.
+diff --git a/include/net/pfcp.h b/include/net/pfcp.h
+index af14f970b80e1..639553797d3e4 100644
+--- a/include/net/pfcp.h
++++ b/include/net/pfcp.h
+@@ -45,7 +45,7 @@ struct pfcphdr_session {
+ 		reserved:4;
+ #elif defined(__BIG_ENDIAN_BITFIELD)
+ 	u8	reserved:4,
+-		message_priprity:4;
++		message_priority:4;
+ #else
+ #error "Please fix <asm/byteorder>"
+ #endif
+-- 
+2.49.0
 
-Anirudh had been OOF for some time and would be for another
-week iiuc so I thought I'd reply.
-
-The patch this depends on is 13423063c7cb
-("arm64: kvm, smccc: Introduce and use API for getting hypervisor UUID"),
-and this patch has already been pulled into the Linus'es tree.
-
-As for routing, (arm-)soc should be good it appears as the change
-is contained within the firmware drivers path. Although I'd trust more to your,
-Arnd's or Wei's opinion than mine!
-
->
-> --
-> Regards,
-> Sudeep
