@@ -1,388 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2080.outbound.protection.outlook.com [40.107.94.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F6B2980D0;
-	Tue, 10 Jun 2025 13:03:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749560623; cv=none; b=POuD2ZB2uBfeCDu/3bh1nQdpATQwuR/sGFl8qefGSx0SjN8mooMGmbkiJJltmMjEDOuk9pwpgyukvMz+jvFpvCOX0nNLzVj268mBgKUqfebLrs9D3vOCmdrl0q1qD/4KmGjlQfUR3i1Cu6gshKbOpVNBfHPLNDri/BMEusNMB2E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749560623; c=relaxed/simple;
-	bh=VtRG7DfzhJh56X3RJNGS6YUWTSlI7il++qkOZT/n2j0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Xh2p3HyHHBxnl79zkbWPDvWBhRznIU0i3yGmdXaRQzJ4SMCAl9Jf/bSGd1ltwxsP81p10iGdUPNe3nprFSjEUQKZr03jFmjnSS1t3M1LsmoC8LSX8VIcj1NIY5n4n53pj4wVhGhRd0KB/gW5VAfPnlklutq9TPHhlvoiLMl+yuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Liy1rDUv; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5EF299A83;
+	Tue, 10 Jun 2025 13:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749560665; cv=fail; b=sCHI3mmrI3K0fBHjRisXsIBJ9gLSkZnJEZsE+RVjH0r2iPNtN5VMHgHijzuHGEg0Wf9HETraKgaDOLjuPan3cEheysnik4++0ZkKfRXxE47hFsS7qHPDGhSPYBlAwChvcaRLNmK9fPJQIJEfBC/tMVtVYX3RvjUYZj15+X/cneA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749560665; c=relaxed/simple;
+	bh=gWS0Tag0sW62GSrqdWIgKRJad2pEasMgVMkedC+A/FQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=bhmYKZ2EoVkq+UckiAM1Ya5Pd5R/Pjw3rSmWQnznjIn57lZ6lP10GtNyWfSuyTaBFPoQIhueRM7Q5Ki+pZV9ZB96TPq2l4JUvEOcghCElDMGN3Qzk5R7tfehQw1BBq2IZd8TJ4fRLQ5NTHp/DwJDFR3gA0FhqcErgcwo8xmQpOc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Jz2ovjAg; arc=fail smtp.client-ip=40.107.94.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Liy1rDUv"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9C2B7C4CEED;
-	Tue, 10 Jun 2025 13:03:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749560623;
-	bh=VtRG7DfzhJh56X3RJNGS6YUWTSlI7il++qkOZT/n2j0=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=Liy1rDUv+UlTCCsd97xZODV/uK9bD0kU2uTpPkHI/Bol5SwnGVFxsDtrgVKpPTH4m
-	 lZhEmE+rGdxEvBl7E/2FxhO5l/OU+clxbVrammr9I1DOctl8uCBQXnQItvx7jLr7US
-	 nlMiLVKFQ0WerqITLsgQAIMP6wNj7XMHEdwX5MjikEtJdtqtw7wdWq6sC3E/BRc5mE
-	 Fsd135hgctWsY/irN+shC3Xv60ZzekgmRduzBMNNC+qw6aiVu4a7+dlyCRD2OE0VxZ
-	 CSpR5VeX8A+OWYJWlUmOgvHUyRpWfeuid67hAJX5KdO96QWvBx0G7KUxFHp4ty4Uow
-	 NBuXMw8WD8aVg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1F7C5B552;
-	Tue, 10 Jun 2025 13:03:43 +0000 (UTC)
-From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Date: Tue, 10 Jun 2025 17:03:34 +0400
-Subject: [PATCH v10] arm64: dts: qcom: ipq5018: Add tsens node
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Jz2ovjAg"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NKtrZeCHTDqaZqMOv8OaJeZtyLmKYYZSFXVeYbvXPrZGj/1SbyEiTgucDrol2kmzPZoG6cE8SXuFxL36E94gYEjTIeMIJLDyT6vALL2s3UiP2JyjA66fkljkntI1lh+UHtxeF+VH6LIY/gXwtBFy6kS62EhLXAHTwXXfK7NFHceBeewNINseGajr/N/wNQJA/+r3GgBf3FHq8YNi73ND2eGvAGNA16567QEaRM7Weq5WWDGE8FDwMTVMeW2sp6WgInRSgEhHaeW/zE5T07o5cqcrRA8trVPQowmiQMou9QJNKtCHCg3JHKAEtzGyLinzNqhlWJiATG9j3bkVB1A8HA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jVwuGjSzujyFs+aGPG/Mp9A/Xn3JFHmxkdNtAgbGJ3Q=;
+ b=dJeFp5Nat+0aPsEvZ+PNnW0nxZN3nCZtIkVOR++BwcwAFzUm0uU/q4rsPCqk6Y0bTkgtwol4dBxHL2pt3iTJKvZMULmCsAcAozvES7IBosTrPuZNK38zqUBLS6i5tuTmClXBeWEPohB7JagNOxjUtjf6inVNa5wrWvLgasxVNobTyJ2FJAllUi4aAoJjeiLEmlfrheHrdUfwRt79OfYFgoLe90ymhK1bScYr8R34R1k2maTBZclxnGkPePQfTCjRrwEQ788yqfX0B7KNUwI4AnAv9FL3a3tYiFdxfIWTBL/2ntIVlnOZLZTAORRUtosbE7hKZCMLCr/Gn87Al1yw2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jVwuGjSzujyFs+aGPG/Mp9A/Xn3JFHmxkdNtAgbGJ3Q=;
+ b=Jz2ovjAg4q0uzUM9RDby6ZuaW5d2WBHhGiN4BoHxu4ilqE2f3yymJQSoZ+vkxflE1txsVjqWgLHsaGBvwDFEh18alJei422673XgjdKWnZ8aMbW6y36BPtgmybFN+8V25UwoPxKNPFf1lDXAefRvhRTObPj4fzYEDA/Fb1F5xLgL9ug3yEnbE8X/oWnqJH6timf1x2pQQsGHMvfSr/K7R+IOusBDFhHi+63Iinzt1NFGfsEtLAvj0ntV+nI16nunJJgrO4RKJY+esYJt4CHk/pg2J6W8c36zF8NG2dxfwIHw9kyyXBrTDSWRQifYuxaj0S3WpDLcsE4oPhPct3q/ug==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by DM6PR12MB4124.namprd12.prod.outlook.com (2603:10b6:5:221::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.40; Tue, 10 Jun
+ 2025 13:04:18 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8792.038; Tue, 10 Jun 2025
+ 13:04:18 +0000
+Date: Tue, 10 Jun 2025 10:04:16 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: Baolu Lu <baolu.lu@linux.intel.com>, joro@8bytes.org, will@kernel.org,
+	robin.murphy@arm.com, bhelgaas@google.com, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	patches@lists.linux.dev, pjaroszynski@nvidia.com, vsethi@nvidia.com
+Subject: Re: [PATCH RFC v1 1/2] iommu: Introduce iommu_dev_reset_prepare()
+ and iommu_dev_reset_done()
+Message-ID: <20250610130416.GC543171@nvidia.com>
+References: <cover.1749494161.git.nicolinc@nvidia.com>
+ <4153fb7131dda901b13a2e90654232fe059c8f09.1749494161.git.nicolinc@nvidia.com>
+ <183a8466-578c-4305-a16b-924b41b97322@linux.intel.com>
+ <aEfZlKNk4xfb41RR@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEfZlKNk4xfb41RR@nvidia.com>
+X-ClientProxiedBy: YT1PR01CA0097.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:2c::6) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250610-ipq5018-tsens-v10-1-3a10a5a2642c@outlook.com>
-X-B4-Tracking: v=1; b=H4sIACUtSGgC/1WMQQ+CIABG/4rjHA5QFDo1oWNbq2PrYALJSiCw1
- ub87zlvHd+3770JJB2tTmCbTSDqj03WuwUw2mSg61t319CqZQAEEYpKVEIbXhRhBsekXYJVeTO
- cGlUUuAaLE6I29rsGL9eFTfQDHPuo27Uiz/XxhPmhYYwVlRQVryjFdI+JrFHTEMGlEGT3d8tdO
- 4SoMM9D9Cr37/Hp/SPv/ADm+QeMRN+4wQAAAA==
-X-Change-ID: 20250404-ipq5018-tsens-64bf95fd3317
-To: Amit Kucheria <amitk@kernel.org>, 
- Thara Gopinath <thara.gopinath@gmail.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
- George Moussalem <george.moussalem@outlook.com>, 
- Dmitry Baryshkov <lumag@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749560621; l=9602;
- i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=yu3qG3q34AVTZVwyPg7XgkDM9uBnXGU5mfAmQhOKUAo=;
- b=D8XiKy7N34c5iF/yKh41z9UXEkkUHv1N5i61xCQJWMg9OKdn6kZk8yn3liDmyqKBcrqhth1Ok
- ThaC6R2uaMJCmWVE6gAKR3wq/Jz9Q1xaJ/VPY9lvtD80eku9mPFn5Vs
-X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
- pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
-X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
- with auth_id=364
-X-Original-From: George Moussalem <george.moussalem@outlook.com>
-Reply-To: george.moussalem@outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DM6PR12MB4124:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6be36b20-db61-4712-ff2e-08dda81f4eea
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?UWq7QMsoxWRROa3gB5CAz+9eW27hRupw2u31ea5+MAQw4HNTiv28nsUl1DJL?=
+ =?us-ascii?Q?6m+UlIJDLtynY5jYkLYn3rl4kbm46oLPmQUJrGzt7KTiGGiAtJ9ZGsiTg55h?=
+ =?us-ascii?Q?hwY1ycH2NlqEUWL0ke7IMJem0edUTqEv6x/8/6QIJfEoF7z1/QjtFASod8cL?=
+ =?us-ascii?Q?nD8K8bIpR05rI/ujmGvPuYkQjDzXsVTMcQx5Y0+bhl1hjzR1NOsTJinPl768?=
+ =?us-ascii?Q?h3qkQZKfCyBcSvOje+ccfTO2j/omxKUiYSTZ/73eHCMRziOq8RQKq7oN5dUA?=
+ =?us-ascii?Q?0OCesv2Odg2ZQEciOj0eh4Z+gN1WCu230EYk4IbS04K9ftjsk16bHrYN/2Px?=
+ =?us-ascii?Q?T7Oa94iv2P5mCUg/0oNWIacmyedWwCM+xJ2UXxZaohNX5QejgbVejqZRPjy/?=
+ =?us-ascii?Q?iSGEYZ7AwXVaDasOaQRcWvyUwHsvpp8icAYOy+ceNaMfjgLVXqVSJFStch2W?=
+ =?us-ascii?Q?Sb6eiew/+BLXEUlNJWeu3IZZ8DbYKLWUyz/lAwI32hnk4TIALYGT8E/dIWRp?=
+ =?us-ascii?Q?dHFjv0f51RhMxif9IeOqp1IsFlYrNSqwLvLHm+/PdoPZNyRL+X+URmSJoGUl?=
+ =?us-ascii?Q?qwfwWi5APzfO21DtEMMwRL+7Gq+XGmgUg/GkGqZptKVgid9w0mUf1zGznuFE?=
+ =?us-ascii?Q?lyKq1bqxx2TvS1ZN6rieRuR7+TyCqSVPwT+K4T9KSgW8MHuBDDhMB55sZCCJ?=
+ =?us-ascii?Q?047WHc6yTG9OkrS9ELQ8hZp56uZsXyBHlQNH+9sH6IbiGJSm6auaCW86UkOF?=
+ =?us-ascii?Q?tcjAO5fUIaCkUTd7KWoioEXlIqtDIwY7j+Slh9Wmyq6xC2WyVkT8p+LwmCoU?=
+ =?us-ascii?Q?xHicTSF8/RLnfgpgRtVaQupKdBVnnT7CGKIHklOaolV8RoHrs2giJQVLWB9K?=
+ =?us-ascii?Q?D5c5V76wgGZbYjx89QOD+XtIpUd+mg9kARB5UrqP+gT4RikaJKknkH4YKyde?=
+ =?us-ascii?Q?wRhKmVKIP8PN4Ew+Gv92zvXNEG+taK0xZkkoQE9Hg26s7vyQP0wD0fV+/rDo?=
+ =?us-ascii?Q?bTeA7zNiRRpMSXJcnm2/1fmQmIriwQ3GLJTG424d5N4QXVdx8FcbhpYOev42?=
+ =?us-ascii?Q?R+Hed9fhSyruU9JRTF9fAD7kc5ELoF5Jp3N1LVMg3ZcDjarJrWey5PKrDDBS?=
+ =?us-ascii?Q?mN1NEQiwUmOZABBKN6wjVj3LFUK1kYMxVXypG5KTa21B6qpvtTYegIpgbd22?=
+ =?us-ascii?Q?tSEW0mf1nyXR7tSBbjUHMdZmgPfcCWQHT/FOBaP/pFLR4y6iJbXlmheXr5yM?=
+ =?us-ascii?Q?145VOVYnoNygPF988p2bRlhlx4otyfSVSi35FedS1K36PY5f4eQCbLt4Vidr?=
+ =?us-ascii?Q?AN2kkVorpCLqYkiZF19Jw+BA2IYQ3TWznVrGfhJneRGCLEFRVgy9JEH1QSSo?=
+ =?us-ascii?Q?WGjogYOoDFM0OvRP70iGMR06ndiwE/y4DKBrl3dm98Kyv2+nGA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?bf5xUhHKkjzW98VBekwzoS5t86g7TmiQLt34MufF3o5tSUm5pkbXdjwTlA74?=
+ =?us-ascii?Q?AgyTN0c/aHgXuyFZfPYIhw8gnIK6UOLuB/FBXUvA0Om+x8UV7D5RbvagCNyA?=
+ =?us-ascii?Q?TkemGZaUIiTTpV3X+FEaOklvKMf5IUJ6YYZMhPNW1Pd9iAdkHivax03m7q0a?=
+ =?us-ascii?Q?SxeyMbKqJuZwSny7zsi4Lo/crEnODkqG/M93au6kAfJMGX/hQmS4bp1gGPt9?=
+ =?us-ascii?Q?mbOO51D9GW8KroE9mZyhQEofWeN5QWEjUorkMZXYcZbqAlKsji5g2qrhZXPV?=
+ =?us-ascii?Q?CAlHKgMVGxIfUNZjgkxoKkiQoAgJNmFACDihFCNFc7JpXPjUSufn6qvzLR6L?=
+ =?us-ascii?Q?DKyn0OKDDaq4vEfhqWuq09VWAZpZJzDrDvHX7Q6chPigHVda0v7rWKWFTd0B?=
+ =?us-ascii?Q?J1sX3AIy/XNZAflYGRAlF6GYYTBfQyzyWtIwAC1zT8KmmiAo+NXrRyYvbEdh?=
+ =?us-ascii?Q?TJtRaz9L927k4wmcw5oIZzt4d6CPq4qv1vGV/DVHoRcZxkcgBkpwRnKEQRa+?=
+ =?us-ascii?Q?Uu3MsGlciEc4qw3MbULh8bN+Sil1xhhL49mmH3vU9wh3WfUf9cXTpod8XXBG?=
+ =?us-ascii?Q?RCil6qiZc/IBrGSivQ3907xGezy0CVza4wUqPX/iYcmQA1qlGN1URya232Pe?=
+ =?us-ascii?Q?4s1q2hLo+cF8ZDjBVup+Lz2dF70D8jHbAPteIR2A7aVhH4rl1cyxTsfpE6wo?=
+ =?us-ascii?Q?yG2Pk+fkQTzCPX3RmZ60DyFWbS4upo7U1dehG+djPTQ50rY0QS21tOsmLheE?=
+ =?us-ascii?Q?dklYrmyLzTaqLfkYO9RbOdbo9ptXA1HZuLAJVCwJ4siQt2NPy6dCNTuJwyYO?=
+ =?us-ascii?Q?PEDgVZBnH4ResbDia3O2EkJ2p4O8bnXPti1tDHKWxBG/vfRtC0AnAHabHQbg?=
+ =?us-ascii?Q?U4oWZ1WMdhGl3Ws1YKVMZDEOv7insjs/I8vZQzi0bK3hjtBgm/YMOVhI+7c5?=
+ =?us-ascii?Q?A2dyLlLs8FEp7tBoA99hchpuGoheYriNQiYReZ1JYkY0LJp9FrU2cvD2ry49?=
+ =?us-ascii?Q?RNumGrdAD2kBulS8D+NwnkmcWMZHflM1w7T17IQvI61mgUyn1ac3GWVd9wBg?=
+ =?us-ascii?Q?xCTrLhybqhgrgJOvePnVlpJvk2vRY/h7pPo+lBNS2HOKXZ9wEdouCYLxvimM?=
+ =?us-ascii?Q?EiuXmed4wO6vPxx3Sudk07h7xTLHrt2kfqWQSbLaz1sjG1KnUTAGehTcrZ6J?=
+ =?us-ascii?Q?X6Sd9it5oTo2SFOGgSD9KH15Q/XUxGBlTW45Lz03k6iq2VNTOSR9CbC0Inz5?=
+ =?us-ascii?Q?Uzyaec8DgKIw1Q/cYmKYSG/P+WRBGK8HrvX6oy7KmPMsaH1whrN/v1JOYobo?=
+ =?us-ascii?Q?/EnSYg5lYhJvyYDK6LKCX+AQaSJJ1lB69y+VHDZ1qcb9Tw3B70xO74cZscgB?=
+ =?us-ascii?Q?zd7iOQqqQSAxk0562ZNY6+WkoPtfwL6jU9rxFK+OovaQxNjoGOOjO9fbZLqN?=
+ =?us-ascii?Q?K11BnTeALlAFeCssat4I4dJZ6vddMrDEdBMdprHYzKOMuZqI2MnwFDvmtnxw?=
+ =?us-ascii?Q?DOdD2M3CBq4lifgBhUvcc79AR0MODMzaqaShE9pM/xYEOB4+urW8SLhFnX0H?=
+ =?us-ascii?Q?Z4hy1iKGc/JS/9cAHnmB6OBYWySZxouPTFUuF9TU?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6be36b20-db61-4712-ff2e-08dda81f4eea
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 13:04:18.0597
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WrV8kke+zwDQnVLwGhUXmRdDudwbJR3gDU5btY8+AjlOgr6kKXu0lujQvf5awyHg
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4124
 
-From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+On Tue, Jun 10, 2025 at 12:07:00AM -0700, Nicolin Chen wrote:
+> On Tue, Jun 10, 2025 at 12:26:07PM +0800, Baolu Lu wrote:
+> > On 6/10/25 02:45, Nicolin Chen wrote:
+> > > +	ops = dev_iommu_ops(dev);
+> > 
+> > Should this be protected by group->mutext?
+> 
+> Not seemingly, but should require the iommu_probe_device_lock I
+> think.
 
-IPQ5018 has tsens V1.0 IP with 5 sensors, though 4 are in use.
-There is no RPM, so tsens has to be manually enabled. Adding the tsens
-and nvmem nodes and adding 4 thermal sensors (zones). With the
-critical temperature being 120'C and action is to reboot.
+group and ops are not permitted to change while a driver is attached..
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-Signed-off-by: George Moussalem <george.moussalem@outlook.com>
----
-IPQ5018 has tsens V1.0 IP with 5 sensors, of which 4 are in use,
-and 1 interrupt. There is no RPM present in the soc to do tsens early
-enable. Adding support for the same here.
+IIRC the FLR code in PCI doesn't always ensure that (due to the sysfs
+paths), so yeah, this looks troubled. iommu_probe_device_lock perhaps
+would fix it.
 
-Last patch series sent by Qualcomm dates back to Sep 22, 2023.
-Since I'm working on OpenWrt support for IPQ5018 based boards (routers)
-and Sricharan Ramabadhran <quic_srichara@quicinc.com> in below email
-confirmed this SoC is still active, I'm continuing the efforts to send
-patches upstream for Linux kernel support.
-https://lore.kernel.org/all/63dc4054-b1e2-4e7a-94e7-643beb26a6f3@quicinc.com/
-
-[v10]
-	*) Rebased onto updated pull of master to resolve merge conflicts in the
-	   DTS patch
-	*) Link to v9: https://lore.kernel.org/all/DS7PR19MB88836DC6965515E12D70BB2C9DCC2@DS7PR19MB8883.namprd19.prod.outlook.com/
-
-[v9]
-	*) Updated checks in tsens to more strictly evaluate for v2+ upon enabling
-	   v2 features as suggsted by Dmitry.
-	*) Split patch 3 into two, one to update conditional statements as
-	   mentioned above and the other to implement tsens IP v1 without RPM.
-	*) Added back Dmitry's RB tag on patch 6 which wasn't carried over
-	   from v7 to v8
-	*) Link to v8: https://lore.kernel.org/all/DS7PR19MB88833F7A9C8F4FC484977BA69DCD2@DS7PR19MB8883.namprd19.prod.outlook.com/
-
-[v8]
-	*) Tsens V1 uses v1 interrupts and watchdog is not present (only on v2.3+).
-	   As such, replaced VER_1_X with VER_1_X_NO_RPM in conditons to ensure
-	   v1 interrupts are set and watchdog isn't enabled.
-	*) Tested on Linksys MX2000 and SPNMX56
-	*) Link to v7: https://lore.kernel.org/all/DS7PR19MB88831624F11516945C63400F9DC22@DS7PR19MB8883.namprd19.prod.outlook.com/
-
-[v7]
-	*) Updated cover letter
-	*) Replaced patch 3 with a new one to add support for tsens v1.0 with
-	   no RPM and removed Dmitry's 'Reviewed-by tag
-	*) Refactored patch 4 and split support for IPQ5018 from support for
-	   tsens v1.0 without RPM. As such, also removed Dmitry's RB tag.
-	*) Depends on patch 1 and 2 from patch series to add support for
-	   IQP5332 and IPQ5424 applied on Feb 11 2025:
-	   https://patchwork.kernel.org/project/linux-arm-msm/cover/20250210120436.821684-1-quic_mmanikan@quicinc.com/
-	*) Link to v6: https://lore.kernel.org/all/DS7PR19MB88838833C0A3BFC3C7FC481F9DC02@DS7PR19MB8883.namprd19.prod.outlook.com/
-
-[v6]
-	*) Include (this) cover letter
-	*) Picked up Dmitry's Reviewed-by tag on patch 5
-	*) Link to v5: https://lore.kernel.org/all/DS7PR19MB88832FDED68D3EBB0EE7E99F9DC72@DS7PR19MB8883.namprd19.prod.outlook.com/
-
-[v5]
-	*) Adjusted commit messages to indicate IPQ5018 has 5 sensors of
-	   which 4 are described and in use as per downstream driver and dts.
-	*) Padded addresses of tsens and qfprom nodes with leading zeros.
-	*) Link to v4: https://lore.kernel.org/all/DS7PR19MB8883BE38C2B500D03213747A9DC72@DS7PR19MB8883.namprd19.prod.outlook.com/
-
-[v4]
-	*) Documented ipq5018 in qcom,qfprom bindings
-	*) Constrained ipq5018-tsens to one interrupt with description
-	*) Added Rob's Acked-by tag
-	*) Added Dmitry's Reviewed-by tag
-	*) Fixed modpost warning: added __init to init_common
-	*) Sorted tsens nodes by address
-	*) Sorted thermal-zones nodes by name
-	*) Link to v3: https://lore.kernel.org/all/20230922115116.2748804-1-srichara@win-platform-upstream01.qualcomm.com/
-
-[v3]
-	*) Added the tsens-ipq5018 as  new binding without rpm
-	*) Added Dmitry's Reviewed tag
-	*) Fixed Dmitry's comments for error checks in init_ipq5018
-	*) Ordered the qfprom device node properties
-	*) Link to v2: https://lore.kernel.org/all/20230915121504.806672-1-quic_srichara@quicinc.com/
-
-[v2]
-	*) Sorted the compatible and removed example
-	*) Fixed the name for new tsens_feature
-	*) Used tsend_calibrate_common instead of legacy
-	   and addressed comments from Dmitry.
-	*) Squashed patch 3 & 4
-	*) Fixed node names, order and added qfprom cells
-            for points seprately
-	*) Squashed patch 6 & 7
-	*) Link to v1: https://lore.kernel.org/all/1693250307-8910-1-git-send-email-quic_srichara@quicinc.com/
-
-George Moussalem (2):
-  thermal: qcom: tsens: update conditions to strictly evaluate for IP
-    v2+
-  thermal: qcom: tsens: add support for tsens v1 without RPM
-
-Sricharan Ramabadhran (4):
-  dt-bindings: nvmem: Add compatible for IPQ5018
-  dt-bindings: thermal: qcom-tsens: Add ipq5018 compatible
-  thermal: qcom: tsens: Add support for IPQ5018 tsens
-  arm64: dts: qcom: ipq5018: Add tsens node
-
- .../bindings/nvmem/qcom,qfprom.yaml           |   1 +
- .../bindings/thermal/qcom-tsens.yaml          |   2 +
- arch/arm64/boot/dts/qcom/ipq5018.dtsi         | 169 ++++++++++++++++++
- drivers/thermal/qcom/tsens-v1.c               |  62 +++++++
- drivers/thermal/qcom/tsens.c                  |  27 ++-
- drivers/thermal/qcom/tsens.h                  |   4 +
- 6 files changed, 256 insertions(+), 9 deletions(-)
-
---
-2.48.1
----
- arch/arm64/boot/dts/qcom/ipq5018.dtsi | 169 ++++++++++++++++++++++++++++++++++
- 1 file changed, 169 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-index 130360014c5e14c778e348d37e601f60325b0b14..4677e1d19cdabefab44d9eaeae431150fd74abd5 100644
---- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-@@ -182,6 +182,117 @@ pcie0_phy: phy@86000 {
- 			status = "disabled";
- 		};
- 
-+		qfprom: qfprom@a0000 {
-+			compatible = "qcom,ipq5018-qfprom", "qcom,qfprom";
-+			reg = <0x000a0000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			tsens_mode: mode@249 {
-+				reg = <0x249 0x1>;
-+				bits = <0 3>;
-+			};
-+
-+			tsens_base1: base1@249 {
-+				reg = <0x249 0x2>;
-+				bits = <3 8>;
-+			};
-+
-+			tsens_base2: base2@24a {
-+				reg = <0x24a 0x2>;
-+				bits = <3 8>;
-+			};
-+
-+			tsens_s0_p1: s0-p1@24b {
-+				reg = <0x24b 0x2>;
-+				bits = <2 6>;
-+			};
-+
-+			tsens_s0_p2: s0-p2@24c {
-+				reg = <0x24c 0x1>;
-+				bits = <1 6>;
-+			};
-+
-+			tsens_s1_p1: s1-p1@24c {
-+				reg = <0x24c 0x2>;
-+				bits = <7 6>;
-+			};
-+
-+			tsens_s1_p2: s1-p2@24d {
-+				reg = <0x24d 0x2>;
-+				bits = <5 6>;
-+			};
-+
-+			tsens_s2_p1: s2-p1@24e {
-+				reg = <0x24e 0x2>;
-+				bits = <3 6>;
-+			};
-+
-+			tsens_s2_p2: s2-p2@24f {
-+				reg = <0x24f 0x1>;
-+				bits = <1 6>;
-+			};
-+
-+			tsens_s3_p1: s3-p1@24f {
-+				reg = <0x24f 0x2>;
-+				bits = <7 6>;
-+			};
-+
-+			tsens_s3_p2: s3-p2@250 {
-+				reg = <0x250 0x2>;
-+				bits = <5 6>;
-+			};
-+
-+			tsens_s4_p1: s4-p1@251 {
-+				reg = <0x251 0x2>;
-+				bits = <3 6>;
-+			};
-+
-+			tsens_s4_p2: s4-p2@254 {
-+				reg = <0x254 0x1>;
-+				bits = <0 6>;
-+			};
-+		};
-+
-+		tsens: thermal-sensor@4a9000 {
-+			compatible = "qcom,ipq5018-tsens";
-+			reg = <0x004a9000 0x1000>, /* TM */
-+			      <0x004a8000 0x1000>; /* SROT */
-+
-+			nvmem-cells = <&tsens_mode>,
-+				      <&tsens_base1>,
-+				      <&tsens_base2>,
-+				      <&tsens_s0_p1>,
-+				      <&tsens_s0_p2>,
-+				      <&tsens_s1_p1>,
-+				      <&tsens_s1_p2>,
-+				      <&tsens_s2_p1>,
-+				      <&tsens_s2_p2>,
-+				      <&tsens_s3_p1>,
-+				      <&tsens_s3_p2>,
-+				      <&tsens_s4_p1>,
-+				      <&tsens_s4_p2>;
-+
-+			nvmem-cell-names = "mode",
-+					   "base1",
-+					   "base2",
-+					   "s0_p1",
-+					   "s0_p2",
-+					   "s1_p1",
-+					   "s1_p2",
-+					   "s2_p1",
-+					   "s2_p2",
-+					   "s3_p1",
-+					   "s3_p2",
-+					   "s4_p1",
-+					   "s4_p2";
-+
-+			interrupts = <GIC_SPI 184 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "uplow";
-+			#qcom,sensors = <5>;
-+			#thermal-sensor-cells = <1>;
-+		};
-+
- 		tlmm: pinctrl@1000000 {
- 			compatible = "qcom,ipq5018-tlmm";
- 			reg = <0x01000000 0x300000>;
-@@ -631,6 +742,64 @@ pcie@0 {
- 		};
- 	};
- 
-+	thermal-zones {
-+		cpu-thermal {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens 2>;
-+
-+			trips {
-+				cpu-critical {
-+					temperature = <120000>;
-+					hysteresis = <2>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		gephy-thermal {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens 4>;
-+
-+			trips {
-+				gephy-critical {
-+					temperature = <120000>;
-+					hysteresis = <2>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		top-glue-thermal {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens 3>;
-+
-+			trips {
-+				top_glue-critical {
-+					temperature = <120000>;
-+					hysteresis = <2>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		ubi32-thermal {
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&tsens 1>;
-+
-+			trips {
-+				ubi32-critical {
-+					temperature = <120000>;
-+					hysteresis = <2>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-
----
-base-commit: afc582fb6563b8eb5cd73f9eca52e55da827567f
-change-id: 20250404-ipq5018-tsens-64bf95fd3317
-
-Best regards,
--- 
-George Moussalem <george.moussalem@outlook.com>
-
-
+Jason
