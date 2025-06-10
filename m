@@ -1,195 +1,168 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C881CDFCE;
-	Tue, 10 Jun 2025 00:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 803751779B8;
+	Tue, 10 Jun 2025 00:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749516546; cv=none; b=Hx5TjbNRjKxFrR5v2Jj+uS0QgAo+SBmocgGRsqUvFocpsvPddDVz3rbY0H8b9dMrASaO6l5GKCYVY/ADLRYLRlDPYRcgxWT4maZPe1R4MXzlk41dE8SkaliGvb0Opfk6zxzHurw/DgJMbdxHmL2qN0sOVYzTFswfbhCcBNcNmPM=
+	t=1749516587; cv=none; b=SyAyOr7LYB9CH1Fz55HynKIXSPrfo7dy+H5q9l2LRHLYkpevSukuzFitsFD+hWUDn8qqIIAu0NJHgwDNppuHLHBF1v6BUHLOHGPXmEMscalBDMCcvql8uLrwhxuDViWbQbOb9UL/Ul4V6yrQloROXAsHBrWpfPD2luxkQc/0CF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749516546; c=relaxed/simple;
-	bh=XT21aCq/7P6YAwPCKmY+1PKON7RZG9sndxfvvN+6Cl4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZcdfHYKK5Cn5U2Zeh1OR7lmjz4jKW4p5F/qwXBZrcLWH1MViEQiUFrERwSiVXm9QPXSoPC6y9312+CNBspwtp2+e5eevlWqJYbGOlwLwvcVm48YUpJ1bBXH2kqStuZhR2gQKW0ui/fR64yo97UYwtmWWWPEF9DwqCd2Slf52FgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KJd9GcHh; arc=none smtp.client-ip=209.85.214.171
+	s=arc-20240116; t=1749516587; c=relaxed/simple;
+	bh=eUli2SqlTIb3UGlk8K0rC/rAcihDxdAKUxBy6iGjm5A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bTM2+6jVy/HFMbhih/xrNwgWBSqRjuLYUB6HeNNM7OedYhaP4HfxEUfCpa8/Cga1M64LeUTpb3vEsnj2hJ+y81vPk20vNyYBRRGiRuxUp2sCc3D5gHb3HcQPtPmhIgCOmcRQOZj4jE1LCCZsDyNVdVNmhi7Eh238Xc0xac3Is9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SjGbiwDG; arc=none smtp.client-ip=209.85.222.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KJd9GcHh"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2352400344aso42091605ad.2;
-        Mon, 09 Jun 2025 17:49:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SjGbiwDG"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7cadd46ea9aso721598485a.1;
+        Mon, 09 Jun 2025 17:49:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749516544; x=1750121344; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vXR9OD2yujCvZ+wl33V69tZqfryb4aPHl7dMp9N7l2w=;
-        b=KJd9GcHhNdm1GqmlrHObqqoPi64zY2klZ3K6U51VYmuuAt/b//YhIfk9cqx/9c26kt
-         TNthUGMpu/xdEZy7RujzbTZT/KaA3MRGqYF6je3DqTai3bxs713+Axk71JI71TzXAArS
-         qyiEOnNFKle2vqb5R+HyyVnJlsl0wfC24Ju2dmxOxsEHb4YybyLbyLC31yf9ixxd3jTO
-         Xo0Bnm6QQlKO6TTJGropohNZUupW/vP2JObFwhb5P1bqg7ubNOG5mmheOtAfxDwUwqWF
-         jU0ZKrjFrqtUebPEZxl07OA1ftsrMGHeoFroOtA7hwxB1Y1oAELakJkHZdNB3IGCqD/a
-         XJbw==
+        d=gmail.com; s=20230601; t=1749516584; x=1750121384; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=RF+PSMIKcuWfr1fY4InaD+yJzxbAHclMlrTdn5/1QWU=;
+        b=SjGbiwDGa9js4rQXFDNyAWfkqrRliNkul1tmpy5EyFAoct+xdqsGNtasYaJWhgj+8B
+         u8maMI+FnstVyWrhQuXVbNe7YYtjsChVuUqLba5o4a0Dp/oPOkWq45z8RxneqIe0AXUO
+         elUJ9KEqb74BCiyxl9CHNik/BOntt380unqOsaEk7Ie6zrfCw5sZypHbutYYaqOA5W2b
+         7PI7U47FGUPuHDPLQsp8a8B/Ygmp3rJjCMRnSOxelRHM7AlAUQh7qvy7ALzArnLE2IEv
+         7WAFD3Sa0xW62DC48oZrBEolwQcmO2NgHJV8MGM9twrd20ei7kF5sbrvDZ6EoAB9ktEx
+         Vn5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749516544; x=1750121344;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vXR9OD2yujCvZ+wl33V69tZqfryb4aPHl7dMp9N7l2w=;
-        b=hKcPs+A4bueCnmQNaFkquUB4DY2q33jwuea6Zeq4ymvZoZ1o1HVWGMCGxvTZS9S1Tz
-         YsslWZfvTGFFtEFfKS3Sy4jhFtLzJWNtVtyXU/SGu7FntFZbgwh4/353dQxNR0MRbdhG
-         7SsIdaFawODUj+BGaN37zKDMhvtn8D89IvDsmi8XKgkqOu3RG2Y72LSq+B/3Jg/cVTng
-         JS8/drGOJD17uRzKs4+i1oL/3YaWf3983sYK0YbQoEiZQiawVveNPRyDsWeN3oZCjBKu
-         ORkRQKEs4DKMoT+6LkWQ/P6VmASKwxLNNmAT47bS6Z4eJzAir+/cRwHy2otf6Kt9tl0M
-         0Ulw==
-X-Forwarded-Encrypted: i=1; AJvYcCUNf+cVrMlWLZUDDiWjtl10lZ92XmW/1kHZ8VWe9xu0W90pREXbTsy9BKUHqWj1UAAtpZJNnb9zvIf0415lTwMwjRMH@vger.kernel.org, AJvYcCXJPFm0xGLSkz5MovVmXFkW711BpYYo4X7ufJNuio9i7SioW/8ZsgHj/QM4l1iqEl2t3D1hjaHFqQxvlw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXIdwPwyMaVlTrScpqN+4ghDjRv3MRl6GZ0+dkiSmJRVpNdbYE
-	rw0QSSk0bJg6E+ny62PO+shqfgFzSPgjdfMG8sR1Y3CCdIphaGCxWlfl
-X-Gm-Gg: ASbGncv7bAff7Ehz7wPwdNE16Ui7pTiI6VqmhNxalwQ1RGfWeEizLgel1tOktfNrEnn
-	OqelV7g28ZlgfxjACyzbk0NgT1HDbPtBLQh2PLB1EXnvJiAkbREW4uZBC/HdOX4vqopqZBiu7lB
-	L8atK7CE5/nSIH06Ges1nW+M4u/CCy1kVmGaB5gKLuFOcvxRibxPvYZsIOw6tn/uNbLTHnalRlj
-	L9wb0ZHqoIestRC/4XUfZGpYhfe/u+/fVp2YiXEmzNBG/dwWCQWYXPaXl6ctaFgmYPVHjsA6cUm
-	g6DbHnWvy5amsVRO+WW9/k6KRUhS8rNEXI28Ehe6Q6dQIqbPiFKI4od+skxG5lwvxr0NwldKHbG
-	lpFCD8crKdc3IStEdgYA45b9bS3uL9Uuw0g==
-X-Google-Smtp-Source: AGHT+IEoS2Por4ETOAkEPpz2Graj9iyaZRSNt4Xyb0p6VMbRRYiPv4YbAPHhi91Tr9IOHJB0+kXkfw==
-X-Received: by 2002:a17:903:987:b0:234:c8cf:a0e6 with SMTP id d9443c01a7336-23601d16b78mr236909555ad.24.1749516544453;
-        Mon, 09 Jun 2025 17:49:04 -0700 (PDT)
-Received: from KERNELXING-MC1.tencent.com ([43.132.141.21])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236032fcd58sm60713845ad.122.2025.06.09.17.49.02
+        d=1e100.net; s=20230601; t=1749516584; x=1750121384;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RF+PSMIKcuWfr1fY4InaD+yJzxbAHclMlrTdn5/1QWU=;
+        b=qrST7l+hcyOFZH/S8e7yf+FQpXGVPqSYyqlldWlr1RJfn++9wIAQ3wEq++LyKN4QL6
+         B9MvGJ/cx6zaK7vy53HJ1WwA5K5OK5B8GZzYhGOAGCFnKKf4txgj0sPXcdi+Yf+UbNFz
+         LW9KZWdfQMPw18E4fIF3FDdNeKx9B0mMuFvCYydpxZbluKARtECW4Zm/JQleoneYSsv8
+         cVTzhUrJElL8vdggcgXH83wWr9lKNNdonvK5ANCGHZoIOn9fzBeTlESan3VP+otcL+HE
+         roMUigtiYQl424YBvDEBxCiUM8m8ovvsTU0kwb3RLOTTqPwjc7QbAOQ+lJQPyJvDYL7Q
+         C6KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8n+eQ8/pesOzWzNLX3cZCvPJ5ztRMmMJuM5RCbn0W4zsXascnWR70H55cn7vOjtIHahZB@vger.kernel.org, AJvYcCUWLlC4BbkVCceGJSmlZyhVXGOZ+HgaljKPBxRY69wNIM1QJ/rKx9pxDw/MbqD5rPLUITlUu/MzvT2xufRw@vger.kernel.org, AJvYcCV53p5rRqx7Ku+DhiUwD4Foy/sQICkatMyZtsv/DygVHrbM8o5hjmDCsUMJhrz8sJ0bGcw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKcXZxQiLLfPRAQeTAD7UFkKXxwaLeWlRKz5E6gbNZpKsU6Dd9
+	kFTjLENl124z8n0DByCJJodnSCMr5P7iUMlf21Qbj/bajcci0D6tri0z
+X-Gm-Gg: ASbGncv3IYANxtMZV2Qgd5Kpa6NBcy1rdeb9iodvqw6hzAfXB0jDAy/kjRCrVb1tS/J
+	1SB0w6PNbS6judpObW8SxyX06qy0NzrVdpuVeqUIws4qc6ABXTYnLfGdoDYCFBD8Fm31x+uSs6R
+	6iCD6iVSiWyB53/zwWRpew8466rbPFZcdI39jF8sUilm25h64f5ccdVsHNoErjaJC3SIeBcAAU4
+	9uS5Nx8SidSM0BTpVpHeGmY9gcGSKKJwOCGnoZ0j6bsRa10bDwxIuBtIwAEvg6o5sI/wdBr0tq4
+	BJL/W4zmJrOX+kQXbdc6cMBpmLicXlc4uJ6rq0b12GPIysz3qOzDgfHARHd2wEFTXvpConPQijQ
+	S/S7GXqmHD6TVAnmbKcEhDEJMaNFAI71vUOyVFbX67zFX3lWvHPbL
+X-Google-Smtp-Source: AGHT+IGEy0YlhStd50i4t94VN7z4+D2puRlAeJ1apZkU2GngLeTxp86Im33dOmLnRIbI268qE/9c3Q==
+X-Received: by 2002:a05:620a:bd4:b0:7d3:8dda:3eb4 with SMTP id af79cd13be357-7d38dda3eb7mr1442685485a.45.1749516584246;
+        Mon, 09 Jun 2025 17:49:44 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d25a60ae88sm613800485a.72.2025.06.09.17.49.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 17:49:04 -0700 (PDT)
-From: Jason Xing <kerneljasonxing@gmail.com>
-To: axboe@kernel.dk,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Jason Xing <kernelxing@tencent.com>,
-	Yushan Zhou <katrinzhou@tencent.com>
-Subject: [PATCH v4 5/5] relayfs: support a counter tracking if data is too big to write
-Date: Tue, 10 Jun 2025 08:48:44 +0800
-Message-Id: <20250610004844.66688-6-kerneljasonxing@gmail.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20250610004844.66688-1-kerneljasonxing@gmail.com>
-References: <20250610004844.66688-1-kerneljasonxing@gmail.com>
+        Mon, 09 Jun 2025 17:49:43 -0700 (PDT)
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 18C751200066;
+	Mon,  9 Jun 2025 20:49:43 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Mon, 09 Jun 2025 20:49:43 -0400
+X-ME-Sender: <xms:JoFHaP5lvBmkPt6DvqY5nkGD-YBQA5yC0dyEW5DoGezDHR2BUktMqQ>
+    <xme:JoFHaE6998oTYx8rAsR455mp3gx89BDdAWgNQk-_-FWLLkNJz7Wzt4ckfOCQiE-cf
+    XAO_IYAJBjTBfFjWA>
+X-ME-Received: <xmr:JoFHaGcG2B4FOXiAx3n-ClmTw0VvmC6jnF07g9SJdovAHoZccZ5Jl-L1DPc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddutddtfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddt
+    udenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpedtgeehleevffdujeffgedvlefghffhleek
+    ieeifeegveetjedvgeevueffieehhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
+    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
+    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepudeipdhm
+    ohguvgepshhmthhpohhuthdprhgtphhtthhopehfrhgvuggvrhhitgeskhgvrhhnvghlrd
+    horhhgpdhrtghpthhtohepjhhovghlrghgnhgvlhhfsehnvhhiughirgdrtghomhdprhgt
+    phhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopehprghulhhmtghksehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnvggv
+    rhgrjhdruhhprgguhhihrgihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjohgvlh
+    esjhhovghlfhgvrhhnrghnuggvshdrohhrghdprhgtphhtthhopehjohhshhesjhhoshhh
+    thhrihhplhgvthhtrdhorhhgpdhrtghpthhtohepuhhrvgiikhhisehgmhgrihhlrdgtoh
+    hmpdhrtghpthhtoheprhhoshhtvgguthesghhoohgumhhishdrohhrgh
+X-ME-Proxy: <xmx:J4FHaAKwkrXg86lToDmCwLmGsoAvbwoaZarBoEHvbHStado4o8EfiQ>
+    <xmx:J4FHaDKBslPoikKT-fj9OFpybBAXHmCDpLhkEBbodSNox5WTR7i_KA>
+    <xmx:J4FHaJyKEvrZN_yB_N7zGZLEra7vJc57O73dclXJVC6AVvzx2Whkow>
+    <xmx:J4FHaPK92qSR6XDqPVVGR367T3Wju5Tt5mzcYrif9USDUC9leyh3Yg>
+    <xmx:J4FHaOYYk7fTpeC143KEwshwCR9y-b9sUy6iKTH8Wswc3x_iKr70jRp3>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 9 Jun 2025 20:49:42 -0400 (EDT)
+Date: Mon, 9 Jun 2025 17:49:41 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Joel Fernandes <joelagnelf@nvidia.com>, linux-kernel@vger.kernel.org,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Xiongfeng Wang <wangxiongfeng2@huawei.com>, rcu@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH 2/2] rcu: Fix lockup when RCU reader used while IRQ
+ exiting
+Message-ID: <aEeBJQ8go5wH1XCp@tardis.local>
+References: <20250609180125.2988129-1-joelagnelf@nvidia.com>
+ <20250609180125.2988129-2-joelagnelf@nvidia.com>
+ <aEc6sroqylvlfx_M@tardis.local>
+ <aEdttj_vcdIEsKxG@pavilion.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <aEdttj_vcdIEsKxG@pavilion.home>
 
-From: Jason Xing <kernelxing@tencent.com>
+On Tue, Jun 10, 2025 at 01:26:46AM +0200, Frederic Weisbecker wrote:
+> Le Mon, Jun 09, 2025 at 12:49:06PM -0700, Boqun Feng a écrit :
+> > Hi Joel,
+> > 
+> > On Mon, Jun 09, 2025 at 02:01:24PM -0400, Joel Fernandes wrote:
+> > > During rcu_read_unlock_special(), if this happens during irq_exit(), we
+> > > can lockup if an IPI is issued. This is because the IPI itself triggers
+> > > the irq_exit() path causing a recursive lock up.
+> > > 
+> > > This is precisely what Xiongfeng found when invoking a BPF program on
+> > > the trace_tick_stop() tracepoint As shown in the trace below. Fix by
+> > > using context-tracking to tell us if we're still in an IRQ.
+> > > context-tracking keeps track of the IRQ until after the tracepoint, so
+> > > it cures the issues.
+> > > 
+> > 
+> > This does fix the issue, but do we know when the CPU will eventually
+> > report a QS after this fix? I believe we still want to report a QS as
+> > early as possible in this case?
+> 
+> If !ct_in_irq(), we issue a self-IPI, then preempt_schedule_irq() will
+> call into schedule() and report a QS (if preempt/bh is not disabled, otherwise
+> this is delayed to preempt_enable() or local_bh_enable() issuing preempt_schedule())
+> 
+> If ct_in_irq(), we are already in an IRQ, then it's the same as above
+> eventually.
+> 
 
-It really doesn't matter if the user/admin knows what the last too
-big value is. Record how many times this case is triggered would be
-helpful.
+I see, I was missing this, thanks for pointing out ;-)
 
-Solve the existing issue where relay_reset() doesn't restore
-the value.
+Regards,
+Boqun
 
-Store the counter in the per-cpu buffer structure instead of the global
-buffer structure. It also solves the racy condition which is likely
-to happen when a few of per-cpu buffers encounter the too big data case
-and then access the global field last_toobig without lock protection.
-
-Remove the printk in relay_close() since kernel module can directly call
-relay_stats() as they want.
-
-Reviewed-by: Yushan Zhou <katrinzhou@tencent.com>
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Jason Xing <kernelxing@tencent.com>
----
- include/linux/relay.h |  5 +++--
- kernel/relay.c        | 18 ++++++++++--------
- 2 files changed, 13 insertions(+), 10 deletions(-)
-
-diff --git a/include/linux/relay.h b/include/linux/relay.h
-index 5310967f9d74..6772a7075840 100644
---- a/include/linux/relay.h
-+++ b/include/linux/relay.h
-@@ -33,13 +33,15 @@
-  */
- enum {
- 	RELAY_STATS_BUF_FULL = (1 << 0),
-+	RELAY_STATS_WRT_BIG = (1 << 1),
- 
--	RELAY_STATS_LAST = RELAY_STATS_BUF_FULL,
-+	RELAY_STATS_LAST = RELAY_STATS_WRT_BIG,
- };
- 
- struct rchan_buf_stats
- {
- 	unsigned int full_count;	/* counter for buffer full */
-+	unsigned int big_count;		/* counter for too big to write */
- };
- 
- /*
-@@ -79,7 +81,6 @@ struct rchan
- 	const struct rchan_callbacks *cb; /* client callbacks */
- 	struct kref kref;		/* channel refcount */
- 	void *private_data;		/* for user-defined data */
--	size_t last_toobig;		/* tried to log event > subbuf size */
- 	struct rchan_buf * __percpu *buf; /* per-cpu channel buffers */
- 	int is_global;			/* One global buffer ? */
- 	struct list_head list;		/* for channel list */
-diff --git a/kernel/relay.c b/kernel/relay.c
-index fd70d0e03216..bcc889dc0970 100644
---- a/kernel/relay.c
-+++ b/kernel/relay.c
-@@ -304,6 +304,7 @@ static void __relay_reset(struct rchan_buf *buf, unsigned int init)
- 	buf->data = buf->start;
- 	buf->offset = 0;
- 	buf->stats.full_count = 0;
-+	buf->stats.big_count = 0;
- 
- 	for (i = 0; i < buf->chan->n_subbufs; i++)
- 		buf->padding[i] = 0;
-@@ -603,7 +604,7 @@ size_t relay_switch_subbuf(struct rchan_buf *buf, size_t length)
- 	return length;
- 
- toobig:
--	buf->chan->last_toobig = length;
-+	buf->stats.big_count++;
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(relay_switch_subbuf);
-@@ -663,11 +664,6 @@ void relay_close(struct rchan *chan)
- 			if ((buf = *per_cpu_ptr(chan->buf, i)))
- 				relay_close_buf(buf);
- 
--	if (chan->last_toobig)
--		printk(KERN_WARNING "relay: one or more items not logged "
--		       "[item size (%zd) > sub-buffer size (%zd)]\n",
--		       chan->last_toobig, chan->subbuf_size);
--
- 	list_del(&chan->list);
- 	kref_put(&chan->kref, relay_destroy_channel);
- 	mutex_unlock(&relay_channels_mutex);
-@@ -720,11 +716,17 @@ size_t relay_stats(struct rchan *chan, int flags)
- 		rbuf = *per_cpu_ptr(chan->buf, 0);
- 		if (flags & RELAY_STATS_BUF_FULL)
- 			count = rbuf->stats.full_count;
-+		else if (flags & RELAY_STATS_WRT_BIG)
-+			count = rbuf->stats.big_count;
- 	} else {
- 		for_each_online_cpu(i) {
- 			rbuf = *per_cpu_ptr(chan->buf, i);
--			if (rbuf && flags & RELAY_STATS_BUF_FULL)
--				count += rbuf->stats.full_count;
-+			if (rbuf) {
-+				if (flags & RELAY_STATS_BUF_FULL)
-+					count += rbuf->stats.full_count;
-+				else if (flags & RELAY_STATS_WRT_BIG)
-+					count += rbuf->stats.big_count;
-+			}
- 		}
- 	}
- 
--- 
-2.43.5
-
+> Thanks.
+> 
+> -- 
+> Frederic Weisbecker
+> SUSE Labs
+> 
