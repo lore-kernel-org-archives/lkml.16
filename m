@@ -1,269 +1,115 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2081.outbound.protection.outlook.com [40.107.96.81])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81C625CC70;
-	Tue, 10 Jun 2025 04:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749529217; cv=fail; b=ZuxRMLYLhwj24F8GgD3YIdD5VoVf6/pen7LTgxBfyd8Q+5WWhldeUFL4ggQK7ENnd8x0maMBm5m96jje/ckI46U2Z9RfVMTm0eYkSmZg5P1l86RL4N0mr3KecJAmhyOssVwdgaIfJdeNgAsHFiv19yqIJoqR1O7KGBiX8BdLVsw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749529217; c=relaxed/simple;
-	bh=hhnyDnswzcVjuHvu9Whhw/VqUBjhQoAp89ALh5eqLt8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ucDaAG2ZByNn29uvr49/eNI4r0Xp+6N0RN7yLcNX//ejCFgIeKsrw0C8RsGMsh8DpWS4RX5po676nZxu0eu8r3RiCHKkxcRQTc7VABg08Mstyx2rdtf3dL+qN9/JHIUPByUO+TaYoaagzryOlViRUxF7W78wVhg/3bptEsD/rlQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BuGXkh41; arc=fail smtp.client-ip=40.107.96.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906DC25DB0A;
+	Tue, 10 Jun 2025 04:22:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749529354; cv=none; b=hsMUrrr8gaxBVAtXjd+wnFbS9b3Q5+W1Z0+U3+iogZ8JWo7nCWQQNu5KuOrda/Udqqmw60dUrFde/O+GS1fXxfjAZuNqwKNXj3HaySLOxJ9kaeme5QJwd23y38tNO5J67Uw70wfZlxdZfoUtS7gXwfXVY2Dq4d9Q56dxPKKZVYc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749529354; c=relaxed/simple;
+	bh=bTdKQ7Yu5BtdMp1M+Otes8MQvVaDSZQZkDlh+6jk8q4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=kR2FFW+6W9WtjbK+/KT+r4WHPPN6oN9iA9i7QR3hmm7ZmURuQY++dhTuMaplnivuKlC2tC1Kp3KydgQhYJjl2tN1dJ3iarQUS+HCOMDnzGlfRA8A5qgZ8eEPh58DT0q2Fi9wSbYOL+EQjRh1dob8gBPMheWje5X21nQROsNOOr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=P7o5hAOA; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BuGXkh41"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PbWeQuvB7zsQ9U6zsQwbLjR1UV6xh48Nw7LoowNgB+1G8AajnjKfq3zhsVAVybjA+BidCA5qs1Zli181JNfmwCK03PcKRHWfm8Km/PRUOaVaITmdVHuqL/bVZRuvm+P+WxY507ucBljT3F/XNUAcNVqPf5qz2nWWbsQT6fxBWP4WeHgKNKqBn73IGpZL9K4eJmdfCgsFo0ssyHvNkohzHpnuZdD/R3t+MbViyt8FgmsTYLrWYD+x4/k4JH2G3GBCYcfh+KV5YBUxnvKODFY7zl057Bxm5MfiCTtwLoqZkRzJZ9NbgjYE7b4Mr0JvNCQRfuWJHp3XYRG6UQeUBxdX2A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ilUn8SfmyVVrnjU2SGHxyDwdC7IFSXVgGhAtlG8PrSo=;
- b=biEA7sFdoFIaPEpayDc5bjIef1FNEE97FNM1DpZwuw7P4y62UDOzTS8xBKyLU+bNLsOZcqAr4eHBdKE85zoyQRtp4rdguB5s7okoXepqb1zRbjyN33ljE55cm3e/UdnLnax2nwcL2jNMwvsKRkl3XyQLJSthC3T8KJBdYvOxZJ1f4pxbPhZ94j6BVeXWkPx2Hd3QD0H7zAyfiEoD+3oKW8/exacLohjs/5kWfgGdllHebSWFbUR5VyZ3C712UZ76qwJpZ9DEr0pjGA66KuXp4XnOaXsO+08clns7pHzpRgVv+igBIuTWuS2YPxs902FhmKKN7ScXtgLsYeUtrams8Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ilUn8SfmyVVrnjU2SGHxyDwdC7IFSXVgGhAtlG8PrSo=;
- b=BuGXkh410ZrlHHzHjeX2bWrIBqca2d0yoDVJZn/DDU2+Q7b4U+HmcTt3zRKFN9TgOdV7Xegvgnfphc1kJqsUTLKg2E7SJiui8dsVCXmGMr5vPZwSMcVE8AHSlTOowudvIhl59g2Z8+4vDopmkKvusTtMX70dn+pzA2t9anNJKF4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by BY5PR12MB4276.namprd12.prod.outlook.com (2603:10b6:a03:20f::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.41; Tue, 10 Jun
- 2025 04:20:12 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f%5]) with mapi id 15.20.8792.038; Tue, 10 Jun 2025
- 04:20:12 +0000
-Message-ID: <bd0d8d69-78dd-44d8-9f32-d945bc6078c2@amd.com>
-Date: Tue, 10 Jun 2025 14:20:03 +1000
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [RFC PATCH 00/12] Private MMIO support for private assigned dev
-To: Xu Yilun <yilun.xu@linux.intel.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, kvm@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
- linaro-mm-sig@lists.linaro.org, sumit.semwal@linaro.org,
- christian.koenig@amd.com, pbonzini@redhat.com, seanjc@google.com,
- alex.williamson@redhat.com, vivek.kasireddy@intel.com,
- dan.j.williams@intel.com, yilun.xu@intel.com, linux-coco@lists.linux.dev,
- linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
- daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
- zhenzhong.duan@intel.com, tao1.su@intel.com
-References: <2c4713b0-3d6c-4705-841b-1cb58cd9a0f5@amd.com>
- <20250512140617.GA285583@nvidia.com> <aCRAHRCKP1s0Oi0c@yilunxu-OptiPlex-7050>
- <20250514163339.GD382960@nvidia.com> <aCYQdDrYYZRAgsen@yilunxu-OptiPlex-7050>
- <9dea400f-a57b-43be-a2e4-24a9f51e6ba0@amd.com>
- <aDE5SPzOAU0sNIt+@yilunxu-OptiPlex-7050>
- <ae16db07-5fca-4369-aa67-cbe2e0fd60fd@amd.com>
- <aDhyC73r149syMpc@yilunxu-OptiPlex-7050>
- <79872224-4e81-446b-a451-28260f449ea9@amd.com>
- <aDnbgBbxF8IkH/cq@yilunxu-OptiPlex-7050>
-Content-Language: en-US
-From: Alexey Kardashevskiy <aik@amd.com>
-In-Reply-To: <aDnbgBbxF8IkH/cq@yilunxu-OptiPlex-7050>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN2PR20CA0020.namprd20.prod.outlook.com
- (2603:10b6:208:e8::33) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P7o5hAOA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1749529351;
+	bh=bsaPcay13ZFyYtQXgCKHSrRqn1piIVWfq9+PQ1EGLMA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=P7o5hAOAnwumJr2jHQ6PhGr44b24oXvLeE41Rj50EL8fee72c+yE4t9Intx9ypi+Z
+	 5tpTrXsZVJLpu0UhFRrFNLgeQvTnOougc5qinUTn8jJX6diieMCY3x5a1JJlxqUGUv
+	 F0M/67xmZiRw+Hvel9RR5JhfCKTwu3ca7AM3yrt2RQLCIk93unY8M1LA7lKB3CGB72
+	 F1ZHJ2j9ubh8nd977W1nwhLQdNjRlrV+wKP6mDpUprHOoYoaO4HZ+DjT16vdknCZID
+	 Uao989oT2yRsVG2+8fmlOipEX+OdrZRZCG+lTaiYKvmxebMVd75QenXUA0JO4mRYfA
+	 taooxr9xS/9lQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bGbHB6ZN1z4wnp;
+	Tue, 10 Jun 2025 14:22:30 +1000 (AEST)
+Date: Tue, 10 Jun 2025 14:22:30 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Benno Lossin <lossin@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the rust-pin-init tree
+Message-ID: <20250610142230.001af1d3@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|BY5PR12MB4276:EE_
-X-MS-Office365-Filtering-Correlation-Id: 52dbfe4b-9e65-433d-d592-08dda7d617be
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WGhPb3RYbFlZWFphOWFTWEo0SnQxRnNZd044dWpKbU5EczFuQ0xOeFhqN0lY?=
- =?utf-8?B?WDJDa3cwRnBzSkdEdUh2QVlsV0JCMEhnN0p1SGZ3aDhOendqMUEwVldhc2hP?=
- =?utf-8?B?TnliODdQQTJPODdCZkc0YzJzczdRVGNNSndmTmRVY2M0b2JnZmtZc0NjU1dn?=
- =?utf-8?B?MkxjdVFlOFlPeEg0eEdsdEhZY3NFd1JIVnU3REw2andXOURBTDVUN0Z3K0l0?=
- =?utf-8?B?dW92dkJSb0R3RTFuUDhXeGEzZUVDK3V1T01pd1ljTEpDaThDWTRxOUt4TUpa?=
- =?utf-8?B?NVpNTUYvUUZRdzJPbmpkekFoQ1YvK3J0VEFqbGt1U3JDeUxnUExLSkoxdVRF?=
- =?utf-8?B?NWRJSVF0M2J2YnJQZWh3eTZ5M2ZQdityS1RnUUhGNjZYOW9ta203MkQ4Z1Qr?=
- =?utf-8?B?TkJXT2dIQWpTcC8zbkJVdE5oeUMrNEw1RWJZSEd1bTlpOEZJSExCNVJPY2Ro?=
- =?utf-8?B?YzhhNm5nWTFFaXhaV2ZWU3gwd1d2cmIraXJVcHFObTBBU1JVcWRDMllRZGE0?=
- =?utf-8?B?VGE3QTVndkdHY3JseFN1VGNCZVl2RlBTMTlpcSthTnowTFA4OTBCOUZ5VzFD?=
- =?utf-8?B?RFhVK1o4Mjdvc043OFoyU2pVN1QyT2NxTEUzTVBGMC9rZkppUW12amJXZmJO?=
- =?utf-8?B?dHRhbFFaelFWcE8yVXV2Q1ZTRnViYmEzR2NJck1xSTJNK1k0N0ExRGQzK0JW?=
- =?utf-8?B?ekltRGZFQTJDMFFGb2ozTWlnVFJTMit4Y1JVRWFRa05aM2FkL3NBWnpqR3d3?=
- =?utf-8?B?M1hFWk92YXlWZnJUUmdJdEFOcGIyRmVqQ0pkWjQyK1lsbXpERDF5RG5QbUR5?=
- =?utf-8?B?ZDNibTVNZkFlTS9ZZm8yZTMvNUhQWUJpVFVPdDJmZTEwQ0doVTlqTWJ0cWZ1?=
- =?utf-8?B?MjFzaVRsUlN0ZFFYVDQyTVRXOUpoZzYvcll4WDl1anNlWitWVVVyM25qRGs4?=
- =?utf-8?B?UktqWnkzNE1jbnQ1WEVTSjJGWmdyd0hNMjJSZHNHWHNtRmFBaDhxSFRZSVMz?=
- =?utf-8?B?U21LUzZGQmhlS1RKQ2tJempONWNrclVXOVNOZUNJMTlhMFdiWVd2SE9DUEFl?=
- =?utf-8?B?cUFYTmFWNzQyYmI0azhxM2o5dlJBVUpFamdCY0RucC9yZVk2RW5wakJYbjFP?=
- =?utf-8?B?SWNCYUFaYU9WV3Bibkd5RVZwVHBaZm9xQzNzS1JyVlppVHlZMk1QMVlhYU9J?=
- =?utf-8?B?N0RKVVA3UXdXaVpOT2hTUFN5OW15MzBVUG5TbDRQMnczcGp1Z0dxeXc1cW0z?=
- =?utf-8?B?TXJkRGs5MzV6VFhFZ1o3RjJjTk1jQlJWTlhNNnMxSGRQejVNRnpvVEZ2MWUv?=
- =?utf-8?B?bEY5OUw1NUZxNW95LzBXdm1sdFMvM01OaUI2bHdBclBxYXlHK05scmhxaHpv?=
- =?utf-8?B?bE9vK0NxRVQ2N042dHhiU0hRRlNqN0Q1RVZybllxUFh3L1ZtQmlBZEJkdmVm?=
- =?utf-8?B?Q0VUazNqODBXREU0QWRNSUFvTCt6R3hNTU93Ujg2N2RpWVUzWmV3RGZ6UFhh?=
- =?utf-8?B?OHNZczBVRDloYUNjcUZZelVtNjBXOTE5U1JxeUNBVWF1MGpxZ0d4TVhsNVhr?=
- =?utf-8?B?akRVdUdXMlpjVUdDeWFVR1FJY2piNXdHTGFrdkhXL0tObGUxRVFZUVNGcEFw?=
- =?utf-8?B?WVhVZlh6bGVQM25SZWl6RE96T1M1T3FFYTdzcTl3c25CT1ZnQVdDWXhPNitM?=
- =?utf-8?B?blRTaXo5cmg4OGJHTHQydnhwNFF6ZitjbVE1RUcyemswY2NuUzA5UHdMWE8z?=
- =?utf-8?B?MStqR0NURWVkUktodndVWU1nT0JaOCt0MTBpWXBadXFrMWtVZ0taZzRKVVo2?=
- =?utf-8?B?RnZrTUZEUVRxcUY1bjhVKzYzMnVnTEhTNU9aZFhQNmhVVGMwQmMvZncyVG5H?=
- =?utf-8?B?d0REcE1TTWxId05nQ3lWUklCSzlSSU55UkJXaWFKMnEvaWtEUWQ2bjgwd3g0?=
- =?utf-8?Q?UE6aUb0pR8o=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TW1HS1RyZGFHb1B6dk1oeGt3NDNQYUZ6cHRhRmZLSlZoSytvcVN6Q09VTG0y?=
- =?utf-8?B?WE5xMWo0NWhJTmZ1K3ZIOXlZUjlqMHpZZUlTT0ZtNmZpWlR2UUJkWHUyNEY2?=
- =?utf-8?B?NzZia3dOaEtHbmY4bC9QTW41SG9YMnFoS3JkQnF0QkNKRTZhMFMydTBRbE9a?=
- =?utf-8?B?OEY5N3ZPdzc3eEU1a1ZrbTBHbXN2L3VheXZISGJ6a2VkRk1kcFl4ODFCYmI3?=
- =?utf-8?B?Q05MQ0x5SHQ1N2dOYUpmK050QTdFUmVkb2RoZE43ZmY5NnZnYkZVbmNQUXN5?=
- =?utf-8?B?dUdjb2dSYlZOUVcxSVZ0VDhmRjhjZWRwY0huYit4N3JOMXI3bHQwMy82MU9N?=
- =?utf-8?B?bFkyVDBCclpxK2pWZDRrMys0Yk1xQnZqSXdENzBTK0gwV0o4aFU5TU0yOVdU?=
- =?utf-8?B?SCtUQUNnendQU2VoUng4NVhpeWsrUVJta1J5cTdUc1VkNUE2ZGNoQ2JzazNP?=
- =?utf-8?B?bWRtdmpyWGVOQ0s0RWFKbjdiT08wb0JFTnJGRWF4SVEySUFQQ0M2TVBQQXo1?=
- =?utf-8?B?Slh3Uk11aEhYWHM5TVpiMmRwYzE5ZzU2aEFIWTd6QklsU0Y0MG5zK0NWVC8y?=
- =?utf-8?B?aGNLUVk2bE1IZlZPY0JzVzZPZ05URmZNb2FFa3VWOFQxcithaU5zUm92NXpI?=
- =?utf-8?B?ekpaTnVIUkdUbktLOEg2bVV0dUdERi9mcWh3UnNLQ1hxQWs1K0FveS9RMita?=
- =?utf-8?B?TS9wVjVjQk82a1d0Ynp5TGpHY1N1eW9qRWNEZjZRK3QyUzAzR3EwU2NLcHBr?=
- =?utf-8?B?MUdwRlZtRlozNXFLa090dXBrSUNONzVoVDArcXI3L1FycGNpQ3VEemV2NkF0?=
- =?utf-8?B?NWlFZ1ZtMVNtZTh1YmxSbXR1V21sYURLZkpqWEpuTC9kRGFhQko5S1hDZmZl?=
- =?utf-8?B?MXduUzJnVWIzMmxTMzY4WVVOT2JCbk53L3BZd041cml0WWYyb1g4K1VLNUsx?=
- =?utf-8?B?N25KdmZFaTdSUmFjbWd2NVpQeGJoY3U0K1o4QXEvVlhGM0p1d2h1cXc0QTBh?=
- =?utf-8?B?cDdhVk5yWFk5ZndyNUNqZWlNN1NITlhOYUN4ZVdwZEgraEJBNjFGREZKSjJi?=
- =?utf-8?B?TzNyTElhMWM3VUtXbnNoVnBDZERXbk5XdTcvK00vNzlzVjBnS3JMdVkvQjlz?=
- =?utf-8?B?ZEhsL2h4WWp6dTJJbU9qR3U2dnVGTmtteUJFZTEzQ0RreFcvcVk2Y1NUOXF2?=
- =?utf-8?B?SjRqS1VGVUthWEUvVldrMjJqT3prbmdqRVg4M2VJdmYvb216NU9EOHVHU1VZ?=
- =?utf-8?B?WWxPM25EdUJqb3dYbWVIZ1BWL01EYUNRQllQVVVvZTMrV1NVV0NvZVR4U1Mw?=
- =?utf-8?B?VmMvMXNsTStDelYwZ0YyU2kwZ0NUQ2pRbmpqeWZ4ZFNCYkFMaEg4cDdXZDYz?=
- =?utf-8?B?Z3hVMG5sdFZOWloybVV2VDNqNDNGUlB2eEpydWRGVWV6MHM1b0NoaURsNmxD?=
- =?utf-8?B?cUVNWXIzRk5vNi83eFlHVVFyaTk2alNjcFgzb2NEbUVTTDM5Zkx3TUlpZUxl?=
- =?utf-8?B?cUtFazhCUExNcXdCMVlPS3hmaUNtWE1CSFVtYnJCOFlRWU9oQys5bDlLNDEy?=
- =?utf-8?B?RmtmS1BCcUo3aDFmalB3dWY4dkJUb0pKL2toUS9uUzk5MXRRbkxSbzRoSVNt?=
- =?utf-8?B?UHdwOXd5UEFuSS9LaTZ6cVZ5WHNGSkwxdW9xYlQ4enkxWUxHcTNaZ2dyY3pj?=
- =?utf-8?B?bkUzOCtxUnlna2J5bXRqYk42VFZISU02MkZTNzNNcHRwVmhtaUlHNkk0MDdo?=
- =?utf-8?B?dWkzajNiSlFUTU5PR2g4alFGaDg1N2RQZE13NUdTNnVLQ3BKQ0N3a2tVYm1a?=
- =?utf-8?B?VGNVZmxIZlA0bGF5clhTYWp3KzFGQWZJZGFOSlRCWmVmeld2eTFQN1FBd0cz?=
- =?utf-8?B?K2lNUTFDRlJXU1h1QUVsZTVkOTZEU3F6UURtZVFKUTZ6djdwQ0U2V2xFSUhF?=
- =?utf-8?B?RGk2anUwQ3lIa3Y4cVI0U0tVZXJMZ0lYVmF3cTlzYU1Qck1ZTWRlSmlFMWEy?=
- =?utf-8?B?RXllWDQ2QTJBMThkNGZNZ3hNaE5aa3RmcGZGNmUzTTBuRnBhdmdFZDRwdFBH?=
- =?utf-8?B?YUpqNThGY1Y5c2hBdi9tNjE1d0xVQnBpamlMNGZvVlVETE4rOVhmOEpYc3Bw?=
- =?utf-8?Q?ceclnonoXMThqK6CCsFvbRD7b?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 52dbfe4b-9e65-433d-d592-08dda7d617be
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 04:20:12.1747
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 221JAJE1qtKfJrmrj+I1fVGSBgk8iPHvkbmTPEkcOlGxQjUzxztCQvgd92GRUcFRkjjgAjyJVL0sHxfV6Ajfuw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4276
+Content-Type: multipart/signed; boundary="Sig_/2VpUJvJAOEhyBNG0f+OR1S1";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/2VpUJvJAOEhyBNG0f+OR1S1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 31/5/25 02:23, Xu Yilun wrote:
-> On Fri, May 30, 2025 at 12:29:30PM +1000, Alexey Kardashevskiy wrote:
->>
->>
->> On 30/5/25 00:41, Xu Yilun wrote:
->>>>>>>
->>>>>>> FLR to a bound device is absolutely fine, just break the CC state.
->>>>>>> Sometimes it is exactly what host need to stop CC immediately.
->>>>>>> The problem is in VFIO's pre-FLR handling so we need to patch VFIO, not
->>>>>>> PCI core.
->>>>>>
->>>>>> What is a problem here exactly?
->>>>>> FLR by the host which equals to any other PCI error? The guest may or may not be able to handle it, afaik it does not handle any errors now, QEMU just stops the guest.
->>>>>
->>>>> It is about TDX Connect.
->>>>>
->>>>> According to the dmabuf patchset, the dmabuf needs to be revoked before
->>>>> FLR. That means KVM unmaps MMIOs when the device is in LOCKED/RUN state.
->>>>> That is forbidden by TDX Module and will crash KVM.
->>>>
->>>>
->>>> FLR is something you tell the device to do, how/why would TDX know about it?
->>>
->>> I'm talking about FLR in VFIO driver. The VFIO driver would zap bar
->>> before FLR. The zapping would trigger KVM unmap MMIOs. See
->>> vfio_pci_zap_bars() for legacy case, and see [1] for dmabuf case.
->>
->> oh I did not know that we do this zapping, thanks for the pointer.
->>> [1] https://lore.kernel.org/kvm/20250307052248.405803-4-vivek.kasireddy@intel.com/
->>>
->>> A pure FLR without zapping bar is absolutely OK.
->>>
->>>> Or it check the TDI state on every map/unmap (unlikely)?
->>>
->>> Yeah, TDX Module would check TDI state on every unmapping.
->>
->> _every_? Reading the state from DOE mailbox is not cheap enough (imho) to do on every unmap.
-> 
-> Sorry for confusing. TDX firmware just checks if STOP TDI firmware call
-> is executed, will not check the real device state via DOE. That means
-> even if device has physically exited to UNLOCKED, TDX host should still
-> call STOP TDI fwcall first, then MMIO unmap.
-> 
->>
->>>>
->>>>> So the safer way is
->>>>> to unbind the TDI first, then revoke MMIOs, then do FLR.
->>>>>
->>>>> I'm not sure when p2p dma is involved AMD will have the same issue.
->>>>
->>>> On AMD, the host can "revoke" at any time, at worst it'll see RMP events from IOMMU. Thanks,
->>>
->>> Is the RMP event firstly detected by host or guest? If by host,
->>
->> Host.
->>
->>> host could fool guest by just suppress the event. Guest thought the
->>> DMA writting is successful but it is not and may cause security issue.
->>
->> An RMP event on the host is an indication that RMP check has failed and DMA to the guest did not complete so the guest won't see new data. Same as other PCI errors really. RMP acts like a firewall, things behind it do not need to know if something was dropped. Thanks,
-> 
-> Not really, guest thought the data is changed but it actually doesn't.
-> I.e. data integrity is broken.
+After merging the rust-pin-init tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-I am not following, sorry. Integrity is broken when something untrusted (== other than the SNP guest and the trusted device) manages to write to the guest encrypted memory successfully. If nothing is written - the guest can easily see this and do... nothing? Devices have bugs or spurious interrupts happen, the guest driver should be able to cope with that.
-   
-> Also please help check if the following relates to this issue:
-> 
-> SEV-TIO Firmware Interface SPEC, Section 2.11
-> 
-> If a bound TDI sends a request to the root complex, and the IOMMU detects a fault caused by host
-> configuration, the root complex fences the ASID from all further I/O to or from that guest. A host
-> fault is either a host page table fault or an RMP check violation. ASID fencing means that the
-> IOMMU blocks all further I/O from the root complex to the guest that the TDI was bound, and the
-> root complex blocks all MMIO accesses by the guest. When a guest writes to MMIO, the write is
-> silently dropped. When a guest reads from MMIO, the guest reads 1s.
+error[E0282]: type annotations needed
+   --> rust/kernel/configfs.rs:154:26
+    |
+154 |             subsystem <- pin_init::zeroed().chain(
+    |                          ^^^^^^^^^^^^^^^^ cannot infer type of the ty=
+pe parameter `T` declared on the function `zeroed`
+    |
+help: consider specifying the generic argument
+    |
+154 |             subsystem <- pin_init::zeroed::<T>().chain(
+    |                                          +++++
 
-Right, this is about not letting bad data through, i.e. integrity. Thanks,
+error[E0282]: type annotations needed
+   --> rust/kernel/configfs.rs:264:22
+    |
+264 |             group <- pin_init::zeroed().chain(|v: &mut Opaque<binding=
+s::config_group>| {
+    |                      ^^^^^^^^^^^^^^^^ cannot infer type of the type p=
+arameter `T` declared on the function `zeroed`
+    |
+help: consider specifying the generic argument
+    |
+264 |             group <- pin_init::zeroed::<T>().chain(|v: &mut Opaque<bi=
+ndings::config_group>| {
+    |                                      +++++
 
-> 
-> Thanks,
-> Yilun
-> 
->>
->>>
->>> Thanks,
->>> Yilun
->>
->> -- 
->> Alexey
->>
+error: aborting due to 2 previous errors
 
--- 
-Alexey
+For more information about this error, try `rustc --explain E0282`.
 
+Caused by commit
+
+  0bcaea04244b ("rust: pin-init: rename `zeroed` to `init_zeroed`")
+
+I have used the rust-pin-init tree from next-20250606 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/2VpUJvJAOEhyBNG0f+OR1S1
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhHswYACgkQAVBC80lX
+0GwVDwf8DLcyY0+Xy+wQsnAu3Qio5blq1F8obO+xmTpnW2c9Dam/V5nqjbmTMNOH
+y7O2ITgD2XMOpLTLj+AOP6L8u1r1UbydRc0QJ3GZWEddQ/nR3QlPmczneiQwlLjq
+M17XUOKSC9lBPw7h+8L+Z27JnB6Uv8KVLcM4RiTMEAM0P0pALqe9Iz4nMjnAb0ln
+SnHHBPeErKkLsAbFeX7vG9HPnd2wCZFVQDQEMqxOat5Edhwfxf25J8ZquhaPTxHE
+BbUVOF5ZrFL01ESnALNknJHwSjLXK0pySMCgqQvafX1ScqnHD1QMQ/lGxInpoLg/
+rfL+g90aceMAgCV6yw25SUF3IXvkZQ==
+=IkyT
+-----END PGP SIGNATURE-----
+
+--Sig_/2VpUJvJAOEhyBNG0f+OR1S1--
