@@ -1,184 +1,187 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43801D9A5F;
-	Tue, 10 Jun 2025 05:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA1125C813
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:20:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749532826; cv=none; b=dg4NB/MjJwYcVmKeE3K2kYybf52sfOQ+R4MOxp6iObHIhGmev4ThX8kk8ZBufomsDlke93oN95ZTMDrISFDiiFl6EyEF7+Xp6Jv6MmsU4tmIphBNBz62bo8fddjuKe1INUwn5wbkyJV5mvyd25H0I3l+L8m0OIG7olLBIeSxOqg=
+	t=1749532851; cv=none; b=Gdt7+izMiWaUaZ6iuVRmOHECz3x1jNYO4kFYz1POjkO6X+sr0E+9O3zEvnWnY5BkOQ7fEyHvGABMtS+p1d+8tOyT/g8bTSLtBKULove9UOPDSrNgPDBzwOnhY7fv7TvLNAP/zXAfKsbIn6kl8i9pVwIXkDfxEtQG8zNYmRvUisk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749532826; c=relaxed/simple;
-	bh=7UduM03vJniQZx0LIRBGRrRrB795yrEqhfwv6fFHnwg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QCXII6v9TNvuX2tMnSBI8ejXlqSkVIJSDNBsCKHEgiZAtY4fam7EWcfNjaA0xNAv/5xQqPbT8FJQX5WX02PWM8aZaS3Jw52ibn7YDFXL29Tp4UPCf96B0/tz2QRSRSeMZ4S5E4SRm96VMNKRiopF+lSNnx/jX/+aCcrMkvHelbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VOtvCzaJ; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749532851; c=relaxed/simple;
+	bh=2oite7cEAOqYfMc15nQ7u1+djDNCxUal8aR0webzx4A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VStF0FyL9P5uCPmis5qk6OApR9UkR4YfOWzgncgX1DUqYdbgxtHzOfeHaU7pzFDmMw0TTK67CbQqCgFRZzjX3C61HPNJfAGKQu++AsJD1lrwpXD4mVLgQn2rLQGPC87EDW2uQmwfRGio6ihJk5OiswxAOI/vR3Wb3YxQc81H7Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=EkRedGyP; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VOtvCzaJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749532825; x=1781068825;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=7UduM03vJniQZx0LIRBGRrRrB795yrEqhfwv6fFHnwg=;
-  b=VOtvCzaJXsyxuat/mlL4zguzfsDYyRFj8+gibqDeULN7Zli1tOVVolmi
-   zWLm9IcWvyKQoDTg6n4WA/jgIcPqt2GXynWxlqoySWCpq40GOTdbTxghc
-   EFkQFf94jFFpaXfbOTJWkm1BoJJqMJ/mFeMm5tt88jG1GEOkiE2M89hlW
-   M3G5YS1caixoI1uAFtPOHCl0JqwxaaB02s9j0WtwZtYpO1I5dLQjfaaeD
-   2vQVnsRLV2Qj5eckF6PwSfMrvQyr/YTueEQ2JQmZUtsTmcyO0/YCRmhE9
-   QX0voSa7A0HSNVDHfQeb+I3asC4XVbBLcqsTgUbrUf4ZFTfFqN7jsLi0o
-   g==;
-X-CSE-ConnectionGUID: /l/HURq7Rbu2qCi7jLGnew==
-X-CSE-MsgGUID: 3/pboYefRWOlQdQ7yh2dKg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51717366"
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="51717366"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 22:20:24 -0700
-X-CSE-ConnectionGUID: 11QiN1ZEQJmV5AHsUIjsrA==
-X-CSE-MsgGUID: zLDEvjNOR1SKdVeGzXzr1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="146701628"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 22:20:18 -0700
-Message-ID: <c3fbf6ac-92b9-4a14-9505-ab9e8f30b06b@linux.intel.com>
-Date: Tue, 10 Jun 2025 13:19:29 +0800
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="EkRedGyP"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5532a30ac45so4648586e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 22:20:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1749532847; x=1750137647; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gmTF4qV0RYmWw+ybuIh+3cVh2LX7i9DDgBKJzM2NILw=;
+        b=EkRedGyPsJ8OvpgBSnXKFTd+FxJ5xf/TSqTJks9lm436dJi1MJKRzGleMBxiQztrOz
+         9SQhjQJcVDtqDv6XiY8DxZUmDOBfpi1raH7EK7126zPCH4IoGcZBTLvQBH9IHpDVz3uu
+         dPvTF4LQbpKIhF6mPJgDjiYnJp6E5sD9iRz9UTW9mIZBbyxD8bpCeL0I8PEFZkBFgZgH
+         2p/q8brLUDTFgchiheuYevPtHdFO10xJLpU+NIVASQwjtMjgCfyJuR0TwyNHGx+C2P6j
+         TEeOQ+EMeXJLhcgZ6hYou/p3wZbVfGGa18CFM9zmsJeC/J5QQhW3AKYNYL5NyLyQi+g/
+         9VwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749532847; x=1750137647;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gmTF4qV0RYmWw+ybuIh+3cVh2LX7i9DDgBKJzM2NILw=;
+        b=ZpKtiWGKpVVF1qGdW3WW7wHFmYTeEZZ7bqjDDHgibKgP1QUG/LTVEpBqlfxTaclUjq
+         9W5GxZAz/DOohOh9oBnehtTOovO0A1E/P055MY3pXTumZLGoJXUvq29Zi7hyVhu+WZBC
+         071fsYbOCj7FYhNXJz9spsXa2cCfFvdNxvA0lP9YeqK1NFuJRYFXWvO36MyD4J2+YzPV
+         heI2Bvqj3nZJRzI5ccS91vpgJ7pBLAsRmcqqOT4Y7CZIjIBY7i3+0uQPSpHoHjsYFKgr
+         3ExWyFQr2AfisYQONxDgQLda6luUsSqH6RG9jA1wLZ/MQ0JzeEEAnzNGbh2jwY8iGRgn
+         QmsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUodJYGAJj3uAwkV9ftsL3WWHQF9GumOFJZq+VipDcA8MGv4b45XadhwF3A/YtRjiIA5RRom+/YB8+3PLc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaULx/gjAnMrYnKRmGgou7HNGjBrV0Wag14jcdAzQrOZv6NYnf
+	GzDGYSCk3weiNmQ1wW0HdX28daYAnuSAeeEzrFF3ENptQxd7rXtcwPl2Z7FZxu1vifnuyKFtwUq
+	4C0q347+QRiQv7C43/LmGJh/LOfttbmURYUqOr8PMlw==
+X-Gm-Gg: ASbGncsFr8ZE1S/Zeac5pbP5FTzNwRK23Zvmy0ABI3zakRZUzTphJhXOdsIFgl8/XPi
+	k0Vuu3WhAamTn71psPyx4HgRjMM0ENZ5zEgaozm2TduaP+iWIydc2s9uIA2WE+nHyLHuIoLiAde
+	oio5dkH42W83CPEAumQ6c9L9mPkcCKaTxhA6Ce9KvS45HF
+X-Google-Smtp-Source: AGHT+IE3kgKkVTatiXjLhBs2ID8jLzFcQgDLrCorEvfhipa1LZ7VqXob3i0ScHraWw7Nta7tAX4V3YYaxNtr4ZvTZ0E=
+X-Received: by 2002:a05:6512:ea0:b0:553:660a:4c9a with SMTP id
+ 2adb3069b0e04-5539316961dmr599951e87.9.1749532847227; Mon, 09 Jun 2025
+ 22:20:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 00/12] Private MMIO support for private assigned dev
-To: Alexey Kardashevskiy <aik@amd.com>, Xu Yilun <yilun.xu@linux.intel.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, kvm@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
- linaro-mm-sig@lists.linaro.org, sumit.semwal@linaro.org,
- christian.koenig@amd.com, pbonzini@redhat.com, seanjc@google.com,
- alex.williamson@redhat.com, vivek.kasireddy@intel.com,
- dan.j.williams@intel.com, yilun.xu@intel.com, linux-coco@lists.linux.dev,
- linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
- daniel.vetter@ffwll.ch, leon@kernel.org, zhenzhong.duan@intel.com,
- tao1.su@intel.com
-References: <2c4713b0-3d6c-4705-841b-1cb58cd9a0f5@amd.com>
- <20250512140617.GA285583@nvidia.com> <aCRAHRCKP1s0Oi0c@yilunxu-OptiPlex-7050>
- <20250514163339.GD382960@nvidia.com> <aCYQdDrYYZRAgsen@yilunxu-OptiPlex-7050>
- <9dea400f-a57b-43be-a2e4-24a9f51e6ba0@amd.com>
- <aDE5SPzOAU0sNIt+@yilunxu-OptiPlex-7050>
- <ae16db07-5fca-4369-aa67-cbe2e0fd60fd@amd.com>
- <aDhyC73r149syMpc@yilunxu-OptiPlex-7050>
- <79872224-4e81-446b-a451-28260f449ea9@amd.com>
- <aDnbgBbxF8IkH/cq@yilunxu-OptiPlex-7050>
- <bd0d8d69-78dd-44d8-9f32-d945bc6078c2@amd.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <bd0d8d69-78dd-44d8-9f32-d945bc6078c2@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250525084710.1665648-1-apatel@ventanamicro.com>
+ <20250525084710.1665648-10-apatel@ventanamicro.com> <20250530-squatting-chatroom-230f035f18ef@spud>
+In-Reply-To: <20250530-squatting-chatroom-230f035f18ef@spud>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Tue, 10 Jun 2025 10:50:34 +0530
+X-Gm-Features: AX0GCFuSkYjuAn0nKTg3vjMOZr-vbcntRpWviUWfwQSNW1KeC5eZy6YDX8Ko6Mc
+Message-ID: <CAK9=C2X1svSheL8KFF40vXT9Fc2a5_zyX4PzWRkcR44rd3KmBw@mail.gmail.com>
+Subject: Re: [PATCH v4 09/23] dt-bindings: clock: Add RPMI clock service
+ controller bindings
+To: Conor Dooley <conor@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jassi Brar <jassisinghbrar@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
+	Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
+	Atish Patra <atish.patra@linux.dev>, Andrew Jones <ajones@ventanamicro.com>, 
+	Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/10/25 12:20, Alexey Kardashevskiy wrote:
-> 
-> 
-> On 31/5/25 02:23, Xu Yilun wrote:
->> On Fri, May 30, 2025 at 12:29:30PM +1000, Alexey Kardashevskiy wrote:
->>>
->>>
->>> On 30/5/25 00:41, Xu Yilun wrote:
->>>>>>>>
->>>>>>>> FLR to a bound device is absolutely fine, just break the CC state.
->>>>>>>> Sometimes it is exactly what host need to stop CC immediately.
->>>>>>>> The problem is in VFIO's pre-FLR handling so we need to patch 
->>>>>>>> VFIO, not
->>>>>>>> PCI core.
->>>>>>>
->>>>>>> What is a problem here exactly?
->>>>>>> FLR by the host which equals to any other PCI error? The guest 
->>>>>>> may or may not be able to handle it, afaik it does not handle any 
->>>>>>> errors now, QEMU just stops the guest.
->>>>>>
->>>>>> It is about TDX Connect.
->>>>>>
->>>>>> According to the dmabuf patchset, the dmabuf needs to be revoked 
->>>>>> before
->>>>>> FLR. That means KVM unmaps MMIOs when the device is in LOCKED/RUN 
->>>>>> state.
->>>>>> That is forbidden by TDX Module and will crash KVM.
->>>>>
->>>>>
->>>>> FLR is something you tell the device to do, how/why would TDX know 
->>>>> about it?
->>>>
->>>> I'm talking about FLR in VFIO driver. The VFIO driver would zap bar
->>>> before FLR. The zapping would trigger KVM unmap MMIOs. See
->>>> vfio_pci_zap_bars() for legacy case, and see [1] for dmabuf case.
->>>
->>> oh I did not know that we do this zapping, thanks for the pointer.
->>>> [1] https://lore.kernel.org/kvm/20250307052248.405803-4- 
->>>> vivek.kasireddy@intel.com/
->>>>
->>>> A pure FLR without zapping bar is absolutely OK.
->>>>
->>>>> Or it check the TDI state on every map/unmap (unlikely)?
->>>>
->>>> Yeah, TDX Module would check TDI state on every unmapping.
->>>
->>> _every_? Reading the state from DOE mailbox is not cheap enough 
->>> (imho) to do on every unmap.
->>
->> Sorry for confusing. TDX firmware just checks if STOP TDI firmware call
->> is executed, will not check the real device state via DOE. That means
->> even if device has physically exited to UNLOCKED, TDX host should still
->> call STOP TDI fwcall first, then MMIO unmap.
->>
->>>
->>>>>
->>>>>> So the safer way is
->>>>>> to unbind the TDI first, then revoke MMIOs, then do FLR.
->>>>>>
->>>>>> I'm not sure when p2p dma is involved AMD will have the same issue.
->>>>>
->>>>> On AMD, the host can "revoke" at any time, at worst it'll see RMP 
->>>>> events from IOMMU. Thanks,
->>>>
->>>> Is the RMP event firstly detected by host or guest? If by host,
->>>
->>> Host.
->>>
->>>> host could fool guest by just suppress the event. Guest thought the
->>>> DMA writting is successful but it is not and may cause security issue.
->>>
->>> An RMP event on the host is an indication that RMP check has failed 
->>> and DMA to the guest did not complete so the guest won't see new 
->>> data. Same as other PCI errors really. RMP acts like a firewall, 
->>> things behind it do not need to know if something was dropped. Thanks,
->>
->> Not really, guest thought the data is changed but it actually doesn't.
->> I.e. data integrity is broken.
-> 
-> I am not following, sorry. Integrity is broken when something untrusted 
-> (== other than the SNP guest and the trusted device) manages to write to 
-> the guest encrypted memory successfully. If nothing is written - the 
-> guest can easily see this and do... nothing? Devices have bugs or 
-> spurious interrupts happen, the guest driver should be able to cope with 
-> that.
+On Fri, May 30, 2025 at 10:11=E2=80=AFPM Conor Dooley <conor@kernel.org> wr=
+ote:
+>
+> On Sun, May 25, 2025 at 02:16:56PM +0530, Anup Patel wrote:
+> > Add device tree bindings for the RPMI clock service group based
+> > controller for the supervisor software.
+> >
+> > The RPMI clock service group is defined by the RISC-V platform
+> > management interface (RPMI) specification.
+> >
+> > Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> > ---
+> >  .../bindings/clock/riscv,rpmi-clock.yaml      | 61 +++++++++++++++++++
+> >  1 file changed, 61 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/clock/riscv,rpmi-=
+clock.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/clock/riscv,rpmi-clock.y=
+aml b/Documentation/devicetree/bindings/clock/riscv,rpmi-clock.yaml
+> > new file mode 100644
+> > index 000000000000..9c672a38595a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/riscv,rpmi-clock.yaml
+> > @@ -0,0 +1,61 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/clock/riscv,rpmi-clock.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: RISC-V RPMI clock service group based clock controller
+> > +
+> > +maintainers:
+> > +  - Anup Patel <anup@brainfault.org>
+> > +
+> > +description: |
+> > +  The RISC-V Platform Management Interface (RPMI) [1] defines a
+> > +  messaging protocol which is modular and extensible. The supervisor
+> > +  software can send/receive RPMI messages via SBI MPXY extension [2]
+> > +  or some dedicated supervisor-mode RPMI transport.
+> > +
+> > +  The RPMI specification [1] defines clock service group for accessing
+> > +  system clocks managed by a platform microcontroller. The supervisor
+> > +  software can access RPMI clock service group via SBI MPXY channel or
+> > +  some dedicated supervisor-mode RPMI transport.
+> > +
+> > +  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +  References
+> > +  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +  [1] RISC-V Platform Management Interface (RPMI)
+> > +      https://github.com/riscv-non-isa/riscv-rpmi/releases
+> > +
+> > +  [2] RISC-V Supervisor Binary Interface (SBI)
+> > +      https://github.com/riscv-non-isa/riscv-sbi-doc/releases
+> > +
+> > +properties:
+> > +  compatible:
+> > +    description:
+> > +      Intended for use by the supervisor software.
+> > +    const: riscv,rpmi-clock
+> > +
+> > +  mboxes:
+> > +    maxItems: 1
+> > +    description:
+> > +      Mailbox channel of the underlying RPMI transport or SBI message =
+proxy channel.
+> > +
+> > +  "#clock-cells":
+> > +    const: 1
+>
+> Could you please add some description here as to what this clock-cell
+> actually does? On a normal clock controller someone might cite an
+> include file with a huge list of defines for what numbers map to what
+> clock. In this case, this value is CLOCK_ID in the spec, so it's
+> completely platform specific as to what they mean so citing some include
+> isn't helpful, so just mention that it is CLOCK_ID and the meanings are
+> platform specific.
+>
+> I suppose technically it can be something other than CLOCK_ID, if this is
+> used when the SBI message proxy extension is provided by an SBI
+> implementation that uses a non-RPMI transport, but I don't think that's a
+> can of worms worth bringing up in the binding. Anyone doing that can put
+> 2+2 together I think.
 
-Data integrity might not be the most accurate way to describe the
-situation here. If I understand correctly, the MMIO mapping was
-destroyed before the device was unbound (meaning the guest still sees
-the device). When the guest issues a P2P write to the device's MMIO, it
-will definitely fail, but the guest won't be aware of this failure.
+The #clock-cell value must be the platform specific CLOCK_ID as defined by
+the RISC-V Platform Management Interface (RPMI) specification irrespective
+of the underlying mechanism (e.g. SBI MPXY or RPMI transport) used to
+access the RPMI Clock service group.
 
-Imagine this on a bare-metal system: if a P2P access targets a device's
-MMIO but the device or platform considers it an illegal access, there
-should be a bus error or machine check exception. Alternatively, if the
-device supports out-of-band AER, the AER driver should then catch and
-process these errors.
+Each platform must publish their CLOCK_ID values as part of their SoC docs
+or as a header used by their SoC DTS files.
 
-Therefore, unbinding the device before MMIO invalidation could generally
-avoid this.
+I will add "description:" for clock-cells along these lines.
 
-Thanks,
-baolu
+Regards,
+Anup
