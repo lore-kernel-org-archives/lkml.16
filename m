@@ -1,222 +1,111 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D9212EBE7;
-	Tue, 10 Jun 2025 02:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749521800; cv=pass; b=rectnu50j02Zb6u6jJwZtx64qxYhhyigF2zt0QJ/XjR53Z49jacRTI71ZH4N0oLY9VW5YlGeWx03dwTK+GCQLgrmHD3m6O59cAdDLJbog85XROzBW6nki4WgmbTRf/+d6k3Acu3VWNaoEEmDxC5uJhiDWacWqIw61KmW+Q7nlTc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749521800; c=relaxed/simple;
-	bh=gLAFbhEoO4cBBM9tQOKHXFmnTK6AZzYchyLYvzAVBKw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tkaMSFizGdKgC2ARATxU3Q/kDEyfP3gv8tP/KLuZJswKPcriXHVtolIAMcoAh3j8Tz2qMaIduoEHJmUivJ+cGEFnO9UsAlDiq4GM/lVFfCfpaETPkEDcxNGrcaj+lAmO+NMt4PYjJ1s7UAs3mv2TT2VyrLU93BM8ufEyhqeN/dA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pigmoral.tech; spf=pass smtp.mailfrom=pigmoral.tech; dkim=pass (1024-bit key) header.d=pigmoral.tech header.i=junhui.liu@pigmoral.tech header.b=oJ/xji1b; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pigmoral.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pigmoral.tech
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB4A25B693
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 02:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749521953; cv=none; b=DGZ0DpJqNZAZNaFzKJ206s4NxTBWGc0vIXOxHmnjUymZivzRjVX/YHS3H5ZRLaM7oB404nSVuQHscCJc4V5vv0arySdmgMx87fyaCfTWG2ZrMbiIw/1MHJI1/FrwRfyZyt86OSpGrDGhjkFCavhTwBlHw3wJJecBTA+x0IlOeKQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749521953; c=relaxed/simple;
+	bh=iWFOP9WZlja72I3isuQU8gJM0V8eA2F3TVvhPtI8VDY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Fk+CMM7514yXh13xyj+vGuHDuczZU237KdxZKO3y5Kpw6lyHPCtOIwmEC65Rn0uLkJZj+/DAelgyT/xzYSYvcmOtGqyZTWdjgYrQyOvZ699vD/rK7HQL414B+bopkPLgVm9V9yUKk6iMf3eqx1jb5iw4cnOjdTLCS0aJlZnxOE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=dSeutUWM; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pigmoral.tech header.i=junhui.liu@pigmoral.tech header.b="oJ/xji1b"
-ARC-Seal: i=1; a=rsa-sha256; t=1749521749; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=WpRvctyo/jxngsmAbGBiA/2PjYgAWxyNHxkVwCWv1qhOZs9fkcbDUm0esdFfkc0meGbYCBp3qB8Jn1LxroqLdB1f/QjZaa1WpCho+AzVDo5xz3d/0RpuYDYPB4Pn2CmGAJyoFjmHhLgFdSjY5q5VeyZupTsifAh7bs4OfodaroI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749521749; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=XCvZr2SedUqbvvr8ZQreuN0CLWKZ7YrA855PyQRbJ90=; 
-	b=naGRAdfGU/xoBIpTneLtuu6RPIoxEzjsJygCaT2USZ50AUOtRBUsFk5SsIapWc3j4hvRJflTtt0kw7uUTbDge34406yIC8OESo41etNme/C9zadZLO6AJpEJspTViD2YekXTf6kKE+LK5Kyyp3HVwDn7YbnFt50tvbkW/UgBQvw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=pigmoral.tech;
-	spf=pass  smtp.mailfrom=junhui.liu@pigmoral.tech;
-	dmarc=pass header.from=<junhui.liu@pigmoral.tech>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749521749;
-	s=zmail; d=pigmoral.tech; i=junhui.liu@pigmoral.tech;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=XCvZr2SedUqbvvr8ZQreuN0CLWKZ7YrA855PyQRbJ90=;
-	b=oJ/xji1b0T66baoLpGV7JQrxF77sU/EA6qqgm4q5fEd1MiBGo9e1KFxPafhgEgJg
-	FbcUvYqgxA74Kob7uuZ3gohounHwejtNzTeOZ+N+Ktq2wCIPn+F6jc8xWno9d87IvSY
-	B/y8zCVTehiMgYS+6h+Pv3uPGdRwVIHMc03UCwOA=
-Received: by mx.zohomail.com with SMTPS id 1749521745831216.42443583394527;
-	Mon, 9 Jun 2025 19:15:45 -0700 (PDT)
-Message-ID: <ff7d26c2-47a4-4c39-84a6-f3e554f4009e@pigmoral.tech>
-Date: Tue, 10 Jun 2025 10:15:29 +0800
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="dSeutUWM"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6facacf521eso52457436d6.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 19:19:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749521949; x=1750126749; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LRLnIcpkOxwkeEtbycns6xLH/gYtJX4X9M+po25lPww=;
+        b=dSeutUWMZuAUJYK37xTYOTml4PucB5nqFMFt7al7jQR+k9GmPsTscWIbPDelXwPcjI
+         q+iLEgaK37yOP55fdMc6Py4DhB5uw6SeRwXXX/tvBhMiqRmf6bytHmfePW6HPWIBWGTz
+         TjVxwiZYQ6XCRchupc2gwUuegZajJljn/a9GOk/lwR+9wWXQzASRulzVzFaCYHXoPOKx
+         0/49sa6YA8UAgS6ju8Pkb1Oy4pq3Y0ymAeraJAU3nUoAO3+7DiRU9ZU7E865DPdempAV
+         KKCJ1b05rET49FesJukpUh96gQ5+0M6kIsJoDWnk0wD82wBtQUkwoepJQfhuqT6cISBr
+         Zipg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749521949; x=1750126749;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LRLnIcpkOxwkeEtbycns6xLH/gYtJX4X9M+po25lPww=;
+        b=oGRH3pB4CeLY4rSrysl3TjggYtIS/z0abR0JYr/oPS86MM5EW9ruuPJmuG0jkZAgwW
+         KiPkosH1NKkDVXxpdmJlrI4kD+f/Fu0wy2Vs2xtb6jbtqiLpUwEHJWVTzVSe2aA0w/uC
+         Ai6MPfJU+z5crTr9XSrJLN/KgzbjM4eOpir0BE98R0WC0WIncYmf78t4OAFOST2nymLX
+         fabzzMoX5f6krOp8iFLVdSduAjDR72yQYl43CRsUNDmxNMzm1aQnpkSvXNtaBlR4k2cV
+         FxV3bjHT24TSLk/Q9I9sLqGR9bKn3IIVJSTrzEvZSRT1W7NqG1XozejvcnWnmDKYGgVk
+         zUxA==
+X-Gm-Message-State: AOJu0Yz1twzEby8yE/KrINhh8CJA/qUuNdDD+wGMOXEiRsBqN/8rvIS3
+	Mzn4aHsWBTq7lAKo89u4XkaXXCYzP2Pbt1Qa36tZoUnRd/ALtqAoTMh+7avjc6NMFLU=
+X-Gm-Gg: ASbGncu8LJLjJyj/V2tMhouUJDSZUupp9Xufp+pZyhiNKhLa9NoXhtDWm0yi9JUtOxv
+	8rGCTnggO1n5UoB9A0gnKkzLfbzPDvIc4XePfPIouJEzpz8O1binFM28f3xBSDla/N/5JxW/Zqq
+	hNIMnRmAjBsioCNA15miI4mYPZ1Sre3EmAhVYilSlVG8YQ0VYyXE3cXTxHBWzLuPaF4TuGayvL/
+	6Yj7h6uIBflAYaCoEvB0m6zZW/3wzsYlZ3yk7VUQ9Xi/QjpsYSZz3bwF2IaWhNpAbBYg31J/aNU
+	3cifTeU9joiDoF4akJiKHJFifHyNGr0IglYAZGcHpabgTeUO4AELEbQpyrRIc9PtCT15Pmcc/tH
+	qJl8VB2GAJ27GB7fymxcmX6JIhq/be+ESpOI=
+X-Google-Smtp-Source: AGHT+IF55VFE5OHV9fkwOW70kmDImiJTC0v7JtnzSCoxcmtKHEv5DFBDHaeZWRIyBnJYWWiQyGQlAg==
+X-Received: by 2002:a05:6214:2623:b0:6fa:ba15:e7f with SMTP id 6a1803df08f44-6fb24c4f370mr12979286d6.9.1749521948941;
+        Mon, 09 Jun 2025 19:19:08 -0700 (PDT)
+Received: from xanadu (modemcable179.17-162-184.mc.videotron.ca. [184.162.17.179])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb09b1cc2fsm59712066d6.74.2025.06.09.19.19.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 19:19:08 -0700 (PDT)
+Date: Mon, 9 Jun 2025 22:19:07 -0400 (EDT)
+From: Nicolas Pitre <npitre@baylibre.com>
+To: Randy Dunlap <rdunlap@infradead.org>
+cc: linux-kernel@vger.kernel.org, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Jiri Slaby <jirislaby@kernel.org>, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v2] vt: fix kernel-doc warnings in ucs_get_fallback()
+In-Reply-To: <20250610000251.282760-1-rdunlap@infradead.org>
+Message-ID: <6rr665sp-3q45-66q8-snso-5071q34q71pr@onlyvoer.pbz>
+References: <20250610000251.282760-1-rdunlap@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] riscv: dts: sophgo: add reset generator for Sophgo
- CV1800 series SoC
-To: Inochi Amaoto <inochiama@gmail.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>,
- Alexander Sverdlin <alexander.sverdlin@gmail.com>,
- Yixun Lan <dlan@gentoo.org>,
- Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
- Ze Huang <huangze@whut.edu.cn>
-Cc: devicetree@vger.kernel.org, sophgo@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- Longbin Li <looong.bin@gmail.com>
-References: <20250608232214.771855-1-inochiama@gmail.com>
- <20250608232214.771855-4-inochiama@gmail.com>
-From: Junhui Liu <junhui.liu@pigmoral.tech>
-In-Reply-To: <20250608232214.771855-4-inochiama@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Inochi,
+On Mon, 9 Jun 2025, Randy Dunlap wrote:
 
-On 2025/6/9 07:22, Inochi Amaoto wrote:
-> Add reset generator node for all CV18XX series SoC.
->
-> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> Use the correct function parameter name in ucs_get_fallback() to prevent
+> kernel-doc warnings:
+> 
+> Warning: drivers/tty/vt/ucs.c:218 function parameter 'cp' not described in 'ucs_get_fallback'
+> Warning: drivers/tty/vt/ucs.c:218 Excess function parameter 'base' description in 'ucs_get_fallback'
+> 
+> Fixes: fe26933cf1e1 ("vt: add ucs_get_fallback()")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Nicolas Pitre <npitre@baylibre.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Jiri Slaby <jirislaby@kernel.org>
+> Cc: linux-serial@vger.kernel.org
 > ---
->   arch/riscv/boot/dts/sophgo/cv180x.dtsi    |  7 ++
->   arch/riscv/boot/dts/sophgo/cv18xx-reset.h | 98 +++++++++++++++++++++++
->   2 files changed, 105 insertions(+)
->   create mode 100644 arch/riscv/boot/dts/sophgo/cv18xx-reset.h
->
-> diff --git a/arch/riscv/boot/dts/sophgo/cv180x.dtsi b/arch/riscv/boot/dts/sophgo/cv180x.dtsi
-> index ed06c3609fb2..4c3d16764131 100644
-> --- a/arch/riscv/boot/dts/sophgo/cv180x.dtsi
-> +++ b/arch/riscv/boot/dts/sophgo/cv180x.dtsi
-> @@ -7,6 +7,7 @@
->   #include <dt-bindings/clock/sophgo,cv1800.h>
->   #include <dt-bindings/gpio/gpio.h>
->   #include <dt-bindings/interrupt-controller/irq.h>
-> +#include "cv18xx-reset.h"
->   
->   / {
->   	#address-cells = <1>;
-> @@ -24,6 +25,12 @@ soc {
->   		#size-cells = <1>;
->   		ranges;
->   
-> +		rst: reset-controller@3003000 {
-> +			compatible = "sophgo,cv1800b-reset";
-> +			reg = <0x3003000 0x1000>;
-> +			#reset-cells = <1>;
-> +		};
-> +
->   		gpio0: gpio@3020000 {
->   			compatible = "snps,dw-apb-gpio";
->   			reg = <0x3020000 0x1000>;
-> diff --git a/arch/riscv/boot/dts/sophgo/cv18xx-reset.h b/arch/riscv/boot/dts/sophgo/cv18xx-reset.h
-> new file mode 100644
-> index 000000000000..b9b6dd56a9e2
-> --- /dev/null
-> +++ b/arch/riscv/boot/dts/sophgo/cv18xx-reset.h
-> @@ -0,0 +1,98 @@
-> +/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-> +/*
-> + * Copyright (C) 2025 Inochi Amaoto <inochiama@outlook.com>
-> + */
-> +
-> +#ifndef _SOPHGO_CV18XX_RESET
-> +#define _SOPHGO_CV18XX_RESET
-> +
-> +#define RST_DDR				2
-> +#define RST_H264C			3
-> +#define RST_JPEG			4
-> +#define RST_H265C			5
-> +#define RST_VIPSYS			6
-> +#define RST_TDMA			7
-> +#define RST_TPU				8
-> +#define RST_TPUSYS			9
-> +#define RST_USB				11
-> +#define RST_ETH0			12
-> +#define RST_ETH1			13
-> +#define RST_NAND			14
-> +#define RST_EMMC			15
-> +#define RST_SD0				16
-> +#define RST_SDMA			18
-> +#define RST_I2S0			19
-> +#define RST_I2S1			20
-> +#define RST_I2S2			21
-> +#define RST_I2S3			22
-> +#define RST_UART0			23
-> +#define RST_UART1			24
-> +#define RST_UART2			25
-> +#define RST_UART3			26
-> +#define RST_I2C0			27
-> +#define RST_I2C1			28
-> +#define RST_I2C2			29
-> +#define RST_I2C3			30
-> +#define RST_I2C4			31
-> +#define RST_PWM0			32
-> +#define RST_PWM1			33
-> +#define RST_PWM2			34
-> +#define RST_PWM3			35
-> +#define RST_SPI0			40
-> +#define RST_SPI1			41
-> +#define RST_SPI2			42
-> +#define RST_SPI3			43
-> +#define RST_GPIO0			44
-> +#define RST_GPIO1			45
-> +#define RST_GPIO2			46
-> +#define RST_EFUSE			47
-> +#define RST_WDT				48
-> +#define RST_AHB_ROM			49
-> +#define RST_SPIC			50
-> +#define RST_TEMPSEN			51
-> +#define RST_SARADC			52
-> +#define RST_COMBO_PHY0			58
-> +#define RST_SPI_NAND			61
-> +#define RST_SE				62
-> +#define RST_UART4			74
-> +#define RST_GPIO3			75
-> +#define RST_SYSTEM			76
-> +#define RST_TIMER			77
-> +#define RST_TIMER0			78
-> +#define RST_TIMER1			79
-> +#define RST_TIMER2			80
-> +#define RST_TIMER3			81
-> +#define RST_TIMER4			82
-> +#define RST_TIMER5			83
-> +#define RST_TIMER6			84
-> +#define RST_TIMER7			85
-> +#define RST_WGN0			86
-> +#define RST_WGN1			87
-> +#define RST_WGN2			88
-> +#define RST_KEYSCAN			89
-> +#define RST_AUDDAC			91
-> +#define RST_AUDDAC_APB			92
-> +#define RST_AUDADC			93
-> +#define RST_VCSYS			95
-> +#define RST_ETHPHY			96
-> +#define RST_ETHPHY_APB			97
-> +#define RST_AUDSRC			98
-> +#define RST_VIP_CAM0			99
-> +#define RST_WDT1			100
-> +#define RST_WDT2			101
-> +#define RST_AUTOCLEAR_CPUCORE0		256
-> +#define RST_AUTOCLEAR_CPUCORE1		257
-> +#define RST_AUTOCLEAR_CPUCORE2		258
-> +#define RST_AUTOCLEAR_CPUCORE3		259
-> +#define RST_AUTOCLEAR_CPUSYS0		260
-> +#define RST_AUTOCLEAR_CPUSYS1		261
-> +#define RST_AUTOCLEAR_CPUSYS2		262
-> +#define RST_CPUCORE0			268
+> v2: add Jiri and linux-serial. Mea culpa.
+> 
+>  drivers/tty/vt/ucs.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- lnx-616-rc1.orig/drivers/tty/vt/ucs.c
+> +++ lnx-616-rc1/drivers/tty/vt/ucs.c
+> @@ -206,7 +206,7 @@ static int ucs_page_entry_cmp(const void
+>  
+>  /**
+>   * ucs_get_fallback() - Get a substitution for the provided Unicode character
+> - * @base: Base Unicode code point (UCS-4)
+> + * @cp: Base Unicode code point (UCS-4)
 
+Please delete the "Base" word from the definition as well.
+Then you can add Reviewed-by: Nicolas Pitre <npitre@baylibre.com>.
 
-Looks like this and the following still doesn't right. Since it’s bit 0
-at offset 0x024, it should be 0x24 * 8 = 0x120 = 288, not 268.
-
-> +#define RST_CPUCORE1			269
-> +#define RST_CPUCORE2			270
-> +#define RST_CPUCORE3			271
-> +#define RST_CPUSYS0			272
-> +#define RST_CPUSYS1			273
-> +#define RST_CPUSYS2			274
-> +
-> +#endif /* _SOPHGO_CV18XX_RESET */
-
--- 
-Best regards,
-Junhui Liu
-
+>   *
+>   * Get a simpler fallback character for the provided Unicode character.
+>   * This is used for terminal display when corresponding glyph is unavailable.
+> 
