@@ -1,119 +1,167 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47CA2D540F
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 23:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7CC2D5425;
+	Tue, 10 Jun 2025 23:12:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749597137; cv=none; b=VMj7OyXqX0DuO6xKkd5Z+L/Jf44fCEbd2GJqbR+G/VUtmy/qd6KNq5xKhEFMaFw5VipTnb6j/493rNO0tV/+eEaDrsXkzEcb15ZrQ2fYX32WDy7QYbf/FhbkBpeXFFnHRlhqw60p6Nf8cQZBWgxGV9XO7Dw7kenhXGxgy5fsczM=
+	t=1749597141; cv=none; b=WLEPEjrvwOx8gvyAwwnQs5sAUnK9gMIDebr3scd9eh1mAXDhkWEBF252oEzebud5CXha4O9vO1NzTwR884nbXFrtw9SNWoCkkdap2eatQMROzovndgIni6ai3WoPokln/uG/hX0SDmEyodeQmP2iyf8P0ROPybr4amXIZ9xl7/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749597137; c=relaxed/simple;
-	bh=IOh0QevXlTT/FfRbCC7y1VBSlVzPIrZPPZbTk1zGyv8=;
+	s=arc-20240116; t=1749597141; c=relaxed/simple;
+	bh=Cgr6g1oZeLgTJ/nFiurFjue4inCF6/bg0YK1nblxsck=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YMlajNemcBbC+8WRh/4LcWlnLCe8SBFxR1qo5dZ4PGdHLfZ33qIChn2kxzxkojNPJbrgta2v7YuKCxpOvKMuBQWw/BoK98lZanm/YE2ybZpOGGi7BEn53/5Pfta4gvCa7d2Nxbpf8AKxJwe6uOvmpzJCreSaBLUyVgsiIVYit9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y1tyN4JB; arc=none smtp.client-ip=209.85.128.169
+	 To:Cc:Content-Type; b=sZbVWkJPLQSkrtknjisV8PIRZOEOcfMghlhpRY+4W1paaF2VgCQmgDfWklxH5IwwztUpNCU5QcPPR4vM087EITWruRsyC5Y1DhXlapBbqgTX4G1p5TwksVq9oeyB/SjqWnI/Gk/cgpFqD4qw076C5iw4lcQGCLztuAnjn3hlI9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M8z+Nu7R; arc=none smtp.client-ip=209.85.215.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y1tyN4JB"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-70e64b430daso58554867b3.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 16:12:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8z+Nu7R"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b1ff9b276c2so3232849a12.1;
+        Tue, 10 Jun 2025 16:12:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749597134; x=1750201934; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749597138; x=1750201938; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MZHaVkiLrbaAoem+fJHSN03rlECJT5C5GzqrHElASHo=;
-        b=Y1tyN4JB6qxcqTUc1lfvA+CSRJ7y9ds77+qyhfoVAbMqGkU8WsGjxMXNay+b+WnUet
-         tjgT3AHoEdGIjY0UsOpQ/zvAn7/BPzYz+g7TO1yDSBbIPiQvxwpQfqErw/J8iUaaJR07
-         wWOpc9kXzECneOnPBTiE8pXQKhd3ygd2YG7sgV573pqAtd0GIs6sWZJybu0eFKC4KS6g
-         O9qEXZUfq8TNQFSRJ93GwG2tmwUwXRkbj8/cyGw6FVZdGbBzsW8StJbIo7QLCxw5+hda
-         Rw1F2BdgKvff2qYqmG7yzRgHJZ105MYotJdJF1vnFeYUx6INw9sRYvRKpgJ6NeteN6wk
-         IfqA==
+        bh=N416KmhiAsrTKHEjQsCFVuF2rSd5ohyVuu5qR9gElC8=;
+        b=M8z+Nu7RI2NyJVcY6dtSCvagWpi5x50Grufa8JVnlFA5cl4u9wnWVALVghOmoOg9MZ
+         xR1VFA9ObZOsoOXUO91MR7z6vLUj0APDvfqZX11mv+hWSxAD/1BzGXW68vQE2Sa+ejEf
+         y6hjBLwhi/TeO72kR8vCINc+SlHRNA8cMRbhRg3Kk5A5cW+4Y4BjNkfw4ozNu8cEXJvT
+         Rsxp6RiKobPdJmm7HX4M3eKw+NGUw1uWzA6I4oECIGT5RhtIICQ4VjN+AiNTgTU7TEPX
+         ImGxT1ipUFIytYeb96MK9+onlB/DqnMOzMunw72YBYNf7XT06Raw6yB7nmqRyiHMOE+F
+         AApA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749597134; x=1750201934;
+        d=1e100.net; s=20230601; t=1749597138; x=1750201938;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MZHaVkiLrbaAoem+fJHSN03rlECJT5C5GzqrHElASHo=;
-        b=gq2PnteV9sKuoJHXTzp+IAkAnMxW2VpFLXiOb8GzkARDYVdgsz/3C58UXDWDp/PIo0
-         reTNVkVI+SjUj7at/AU/WTNbvZzHI3uO8ctsQaT0ohVS21py+90ykBnyYANS1zQBENXG
-         gQFFkVN/xvDyzIzV/0vH64XLeFHoskfNq0URKF2QRjqQf9YvetxqRivybGwIEJlNDzur
-         7p31S4Xvu6dbMolmtwwa21zM1bhqUBc2YSG7KV0I/taeytuUhmTnkgLYOvaXd+T6cZ7L
-         ilA1RWmgmJ9WcAd9Gr/0T3oDGL5zkYasKeYVS8rEqP2sOgy1UdiILXi/vMBe9v4PnBF1
-         JOVA==
-X-Forwarded-Encrypted: i=1; AJvYcCVCtmG5ocitMzHGDURBrQJpg+HJboqn8MjPhUWhui50k/N2JKa834HTKKTX+MIxYIGBPB1krYmLYBZvYK4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjahSdAsUNfJQylOK7Ay5TQpyHaRsG7M7xgFQbcLhpagYu6Jc9
-	d4pm8Yzp1592gdUGz9CTT7PDPqTDEXcQEjkASAK+5ZqUIed48xb+A/1QPYQYOb9Exui+UWyTPfU
-	/HNQMoZeJBPCVDxc32X2XESvOCzBgBuI=
-X-Gm-Gg: ASbGncsPrS8Wv8YVnK+zx3nNftgVA262ZcQs9R5zx/q2aU1+rUM2ghjO74wx8EsFg5m
-	M2Ax4ItTsyc06nIZqdgeNKHrMjkn+nRWegz7JbOqmtVXDbavwPQ2BlcUAmCVob7/0V7HJjTyLDB
-	d7j96GmAyTS9Ij1JqiF0bkA/nanqqTaDLs/7LRLas7UWIgsd4ZPSntN+BVc2SGTcWr12EMzZEn9
-	I1F
-X-Google-Smtp-Source: AGHT+IEXDVnMUtCIHT0EzmIFREsVFhabB3kvSB6CwQcovD6visnkC9fl3iyGLCJk9zRI3gOuA6yIMYxXNcI0Rd99pD8=
-X-Received: by 2002:a05:690c:39d:b0:70e:7706:82c1 with SMTP id
- 00721157ae682-71140af1863mr18827157b3.34.1749597134588; Tue, 10 Jun 2025
- 16:12:14 -0700 (PDT)
+        bh=N416KmhiAsrTKHEjQsCFVuF2rSd5ohyVuu5qR9gElC8=;
+        b=wg4onNFGRjz/k8SozQD9YSCETwp2KBv2wI6y2sJVLwCahcVRZb3py6WTts0hBPoapN
+         U1rZUCD5lOrM+ZDEUOVnaR2KIlXfR2L3hlXkFVLJjFgsHTLTQvmh93a1KIn5BojbNlyv
+         Rx1MVpisZ1kyJf4XQQcTxLttLYgJvG3MI02uJ+v5r3mxoZSj24sq5SeaJ/p284Wxejh0
+         UNg+UwpTqllMVKUjgsDlUIsMle2sYxPARZy38SUqaUjpXQY9t2Rx5ER8OpVMVo7qcAtU
+         Yjgm96tbcz1q9PYBnJEhHpcvcTP2Y6kcbVobdZYJBmYVPYr8NdOljMSAkGNA5YGqWG2w
+         M/dA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6wSIaghEvwCkZuEvbMhLaWMtAF0ZwT6RWJ8H7/8uESiNKUfTz8S9zciNyQ4l0MD2Dukg=@vger.kernel.org, AJvYcCUd7tIVpo8/5zcCl7xKr5QuaUJHyC/dMB2I1igLJFVrh7rQsLNMbE60deTNBNTTOwJAUes1+Xe9FGqVQkPp@vger.kernel.org, AJvYcCXKep2V0K+mOPTlVsPzup3gBNCpTHeOA78FSWkW6yoN72TakZ25FS9LlVaZaD9o15P07nmTXNwXQS43/t0a/HExpQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5hHBqCZ9U5mExcmR9qLPTeBCS29Ayil9UhUm75OrnJZ57OrR/
+	8zW67igfmvjYJsEnSkkxVEDDNPw3ZO6PvQRlzxJeZC/d7UNrj+oBd6rVV5CTjM4AraKjXn+yYKO
+	USR3kALU0MViafd6c47N8wSd9QYXBzK4=
+X-Gm-Gg: ASbGncvIeV+W1hqfGrL8vOVv+VDoGtpVujT075tk3WlbQ4eb2rJsOXPEkKPNYSqSoRf
+	HolhagOth/cW8NrwMoB0ihg0ZP1b8f7Vmd0dv8pa0g8mHIg90qohLi92kTSoCeD78N/zBsp3GgZ
+	uyyGupE+Y8SR+UJO5x60uJuFTKTqrw642m3m1s3bP/ywYjVB7VG1U7zEWHZvU=
+X-Google-Smtp-Source: AGHT+IFq3fbzeXau6KGVIJtcrQOTlKY9Y0JrE+63DNpYFFIGXLiZV3sIGC3Hj8bwsoVB3ec2DwG2nhcbofLhqPf2sVw=
+X-Received: by 2002:a17:90b:4a50:b0:311:fc8b:31b5 with SMTP id
+ 98e67ed59e1d1-313af126d5cmr1912808a91.14.1749597137820; Tue, 10 Jun 2025
+ 16:12:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602143216.2621881-1-karunika.choo@arm.com> <20250602143216.2621881-2-karunika.choo@arm.com>
-In-Reply-To: <20250602143216.2621881-2-karunika.choo@arm.com>
-From: Chia-I Wu <olvaffe@gmail.com>
-Date: Tue, 10 Jun 2025 16:12:03 -0700
-X-Gm-Features: AX0GCFs0t2lD4ebPOfl_N7eCj67AHAfs5lteWu97IH0qtVxZ_pexAD0d0DDX1BI
-Message-ID: <CAPaKu7TbzqjF+q7McOS3JppiKfg=zKFr4aYQZGsmvOnR+jEN3g@mail.gmail.com>
-Subject: Re: [PATCH v4 1/7] drm/panthor: Add GPU specific initialization framework
-To: Karunika Choo <karunika.choo@arm.com>
-Cc: dri-devel@lists.freedesktop.org, nd@arm.com, 
-	Boris Brezillon <boris.brezillon@collabora.com>, Steven Price <steven.price@arm.com>, 
-	Liviu Dudau <liviu.dudau@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, linux-kernel@vger.kernel.org
+References: <aEMLU2li1x2bAO4w@x1> <20250606161406.GH8020@e132581.arm.com>
+ <CAEf4BzY2UEe9e53Ums=d-mMVgBdc5JnVAboKz1LLmvKRk5O=jA@mail.gmail.com>
+ <aENKD6yUCN9UXves@x1> <aEiVRcpvllECCrwS@x1>
+In-Reply-To: <aEiVRcpvllECCrwS@x1>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 10 Jun 2025 16:12:04 -0700
+X-Gm-Features: AX0GCFsBcVgUaq-xOEj1Q0X-xDwaS2cMceqSMMUu_tOQ7TRtUaE4X13tMuK9V6g
+Message-ID: <CAEf4BzaedhaWKJdfkj=UPA+fBq_8h9Z=_tN4FK=jvdHzeQ3NYA@mail.gmail.com>
+Subject: Re: BTF loading failing on perf
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Leo Yan <leo.yan@arm.com>, Lorenz Bauer <lmb@isovalent.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 2, 2025 at 7:33=E2=80=AFAM Karunika Choo <karunika.choo@arm.com=
-> wrote:
+On Tue, Jun 10, 2025 at 1:27=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> This patch provides an initialization framework for multiple Mali GPUs
-> by introducing a GPU support look-up table. Each entry contains, at
-> minimum, the architecture major version of the GPU, and may optionally
-> provide feature flags and register offset overrides.
-<snipped>
-> +/**
-> + * struct panthor_hw - GPU specific register mapping and functions
-> + */
-> +struct panthor_hw {
-> +       /** @arch_major: Architecture major to match against */
-> +       u32 arch_major;
-> +
-> +       /** @features: Bitmap containing panthor_hw_feature */
-> +       DECLARE_BITMAP(features, PANTHOR_HW_FEATURES_END);
-> +
-> +       /** @map: Panthor regmap */
-> +       struct panthor_hw_regmap map;
-> +
-> +       /** @ops: Panthor HW specific operations */
-> +       struct panthor_hw_ops ops;
-> +};
-None of the fields are really needed even at the end of this series.
-
-Can we merge patch 1 & 2, introduce just panthor_hw_init and nothing
-else, and let panthor_hw_init call panthor_gpu_init_info?
-
-
-> +
-> +int panthor_hw_init(struct panthor_device *ptdev);
-> +
-> +bool panthor_hw_supports(struct panthor_device *ptdev,
-> +                        enum panthor_hw_feature feature);
-> +
-> +#endif /* __PANTHOR_HW_H__ */
-> +
-> --
-> 2.49.0
+> On Fri, Jun 06, 2025 at 05:05:35PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Fri, Jun 06, 2025 at 09:20:57AM -0700, Andrii Nakryiko wrote:
+> > > On Fri, Jun 6, 2025 at 9:14=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrot=
+e:
+> > > > On Fri, Jun 06, 2025 at 12:37:55PM -0300, Arnaldo Carvalho de Melo =
+wrote:
+> > > > > root@number:~# perf trace -e openat --max-events=3D1
+> > > > > libbpf: failed to read kernel BTF from '/sys/kernel/btf/vmlinux':=
+ -ENODEV
+> > > > > libbpf: failed to read kernel BTF from '/sys/kernel/btf/vmlinux':=
+ -ENODEV
+> > > > >      0.000 ( 0.016 ms): ptyxis-agent/4375 openat(dfd: CWD, filena=
+me: "/proc/6593/cmdline", flags: RDONLY|CLOEXEC) =3D 13
+> > > > > root@number:~#
+> > > > >
+> > > > > openat(AT_FDCWD, "/sys/kernel/btf/vmlinux", O_RDONLY) =3D 258
+> > > > > mmap(NULL, 6519699, PROT_READ, MAP_PRIVATE, 258, 0) =3D -1 ENODEV=
+ (No such device)
+> > > > > libbpf: failed to read kernel BTF from '/sys/kernel/btf/vmlinux':=
+ -ENODEV
+> > > >
+> > > > Have you included the commit below in the kernel side?
+> > >
+> > > It doesn't matter, libbpf should silently fallback to non-mmap() way,
+> >
+> > Right, it has to work with older kernels, etc.
+> >
+> > > and it clearly doesn't.
+> >
+> > > We need something like this:
+> > > +++ b/tools/lib/bpf/btf.c
+> > > @@ -1384,12 +1384,12 @@ static struct btf *btf_parse_raw_mmap(const
+> > > char *path, struct btf *base_btf)
+> > >
+> > >         fd =3D open(path, O_RDONLY);
+> > >         if (fd < 0)
+> > > -               return libbpf_err_ptr(-errno);
+> > > +               return ERR_PTR(-errno);
+> > >
+> > >         if (fstat(fd, &st) < 0) {
+> > >                 err =3D -errno;
+> > >                 close(fd);
+> > > -               return libbpf_err_ptr(err);
+> > > +               return ERR_PTR(err);
+> > >         }
+> > >
+> > >         data =3D mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0=
+);
+> > > @@ -1397,7 +1397,7 @@ static struct btf *btf_parse_raw_mmap(const cha=
+r
+> > > *path, struct btf *base_btf)
+> > >         close(fd);
+> > >
+> > >         if (data =3D=3D MAP_FAILED)
+> > > -               return libbpf_err_ptr(err);
+> > > +               return ERR_PTR(err);
+> > >
+> > >         btf =3D btf_new(data, st.st_size, base_btf, true);
+> > >         if (IS_ERR(btf))
+> > >
+> > > libbpf_err_ptr() should be used for user-facing API functions, they
+> > > return NULL on error and set errno, so checking for IS_ERR() is wrong
+> > > here.
+> >
+> > And the only user of the above function is:
+> >
+> >                 btf =3D btf_parse_raw_mmap(sysfs_btf_path, NULL);
+> >                 if (IS_ERR(btf))
+> >                         btf =3D btf__parse(sysfs_btf_path, NULL);
+> >
+> > That expects ERR_PTR() to then use IS_ERR().
+> >
+> > I think this could be automated with something like coccinnele(sp)?
 >
+> > Anyway, I tested the patch above and it seems to fix the issue, so:
+>
+> > Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>
+> Was this fixed/merged?
+
+yes, this was applied to bpf tree (not bpf-next)
+
+>
+> - Arnaldo
