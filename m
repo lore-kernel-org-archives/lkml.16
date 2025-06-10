@@ -1,54 +1,79 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB9E411712
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 03:51:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D54D11712
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 03:56:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749527471; cv=none; b=ndJayDQIUgrfnvN1WGoUUcTicDfne+m6wYh3OZc+SBUyzGMa8HokE+bjj6e+s1pcf6zMs3qWQl+whJQc4Nzqk2WJT3wgydEELzM/6qAmItNzJbXVzB+e3EMJKtW8ZCZUURrAZpa51EBZKaNztFRx8bJovQIuqJp0l1M0FNsmuI8=
+	t=1749527779; cv=none; b=s3Is6wdH3264wyqont/kWN8cT/f8IVWDQLkNyzuSTtWX6mFiApuBWQclpPNmToqyU9bxpLXUNPdni/THTKpqzZXcDySXlt+y7691KbMM4NnKKiXMdT1dzYTqAmaWpY3wEzgPCE1TFG6qzR1SRtHuBpxuNe5ZP/amlfX9xq8xVC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749527471; c=relaxed/simple;
-	bh=K33aBlSZM2s8aovcnzMuvaa9PJqADPD9Al72bAky4+U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=k9sDrew52vWyUH3B2C+GjYJfDCC5mSkIOPI0HSrb1D3hqRQwIFFHL0/m72EuEthszZge2iRo6BQBwLo+w2X7cOtd7qwJn/3I1u75jOXVLe6fk9Vxp2vB9zNnR0E3ivCTYqMtXtbvJcyQKKERIQQw2kz8cMXPr+/QtW6G/263fH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0ED402680;
-	Mon,  9 Jun 2025 20:50:50 -0700 (PDT)
-Received: from MacBook-Pro.blr.arm.com (MacBook-Pro.blr.arm.com [10.164.18.48])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7D4493F59E;
-	Mon,  9 Jun 2025 20:51:02 -0700 (PDT)
-From: Dev Jain <dev.jain@arm.com>
-To: akpm@linux-foundation.org
-Cc: Liam.Howlett@oracle.com,
-	lorenzo.stoakes@oracle.com,
-	vbabka@suse.cz,
-	jannh@google.com,
-	pfalcato@suse.de,
-	linux-mm@kvack.org,
+	s=arc-20240116; t=1749527779; c=relaxed/simple;
+	bh=mk//4e0lexN75t3KGWtP4llZR5wKNTTSc4upny09zi0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nLU6CWDRliSb8HTGebuOfPVjaSTOsIvZwxQpbYXNGH1UopacNpoJvhAr67ppJHKX5qCbdCTB6mCa/JRAkqgyIPVQyWPEw6cYAiZdvAilb2j2eIY/o4WgGzuZa4h9ledTR20hiBLOMegLG5woHd7x1/QAEWvDmiurAGsG1RsB2N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=k9b1QOc4; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="k9b1QOc4"
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 26F69446F8
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 03:56:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1749527774;
+	bh=6f8UfXSCXcF/uODMP4YgdLJixKlcv1NebpTVVogDgYY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+	b=k9b1QOc42excHI6+rhvTa/2iAYz9AHYPhEEco9VAP8JHjEp8Uz6RTJei4VJuqr+c/
+	 zub4r5WSPLso/zKCJ36V8Xo7c0oEsj1Y7TkcD/cbFc7NPUVHbhRxA3zcglOCEBqTDY
+	 /Kn/lhWF9bVt3nuwDO7vl2jMGPLPKqrEE7Hj+69/1CxNGPzuT+WPXlH6WpfoTkx6M6
+	 muki1yHVzyTvQooDL62Q+n/Ro+zSYpsrfvUG3vH1JTx/3d2BciC6WD/2MA5e7D4kOo
+	 5dWkmo2/W9U3raPKU/2e7+BqCiulP6RpktkEKefuV/gKeLd+ttHuLlG60JvqPYZUQu
+	 1hND2VMjzoFpA==
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-747dd44048cso4044827b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 20:56:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749527772; x=1750132572;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6f8UfXSCXcF/uODMP4YgdLJixKlcv1NebpTVVogDgYY=;
+        b=vktCDo9gUJDZvVwAVcfowGBsjZAlplBjX2xQxPy1hz5ZoGI6U5a4JAUmjT789sSrKl
+         FNg85XzaO1ZbhP85rEhSIEkkcwASQ8da2sl5SLy0WcyLWHCl/IRHS7NAlQuAssprQYvJ
+         6sJjyCrTPqm01brRltKPZjkwr4+5Kb5bb/6qqQByuzFeqipnJHF/j3d7gtobsDwHQDIC
+         /bsixMT27xSIzx37yi36pk1RaNs9avSxfpoJp/ARcQ2by4FjktgnU4FJFhhIDNQ8NTgX
+         M3BNeo9dh7Rf0JPH/fe7W2YNNMNbtiA2mznLinA94CaN+2pzCfoePOwRHquOiNbbzLNo
+         29ZA==
+X-Forwarded-Encrypted: i=1; AJvYcCWYtRxcBiaiHOjKmsQmomlxU7Yxi2u86C0vC2sVVImrLNG4WSOL2wYwZ9tdIaTdCzcFtMMdsIWSqkl2G00=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzefmXxPAUpPFt3TDuSYi3bjMdCJat2KuSiiENo6RCce6xR1813
+	0gGfECq1b7lIO//rKC2msvEcA4HYfusOOykmlRB67qAVWiAdGp2z7RxJ7/6XldCRZ5UxVvtRjxU
+	W2s4Yy/gpC656nIME7YkhkiiL+ugjviw6SNFSZILVA3dwGic14e9VIivpm5Nom+dalT/6cggo56
+	psNgYvhnxgk23FeFQl
+X-Gm-Gg: ASbGncvBukgxghW4B0Xfsjk2c7gea0dwxD1Px6YRxLieimYH+sHVxfJIhSTKBkBnjZe
+	+ULiu2UvgQ9JV71PcsXRcOcpWqHmEaTlP7RrUiS3vPTAoBX0X5CjQn8ZDeAr111Qgl2pEgms+zI
+	MVMhNfRP79IV54eIsY9Kn7fChsaGoPsMtjvpMDt3schC7PbCSwPb1inOmkhloKmgFncQnw/2gCe
+	IXeLMaLgVYyGTUaipNLLUS89UGCJbKEiSKXAcfgYrUKPG1GZkyNVR6VgmvJcYTLDQQOdDRK+q3U
+	j6Rc5i5Xzdnj7miRHhTceyshUH7pYjcgYVzsLZ4mCi4VSsqC9Wtz9FpPYjkP7AYsMw==
+X-Received: by 2002:a05:6a20:6a1c:b0:20d:df67:4921 with SMTP id adf61e73a8af0-21ee250ce37mr22866999637.4.1749527772376;
+        Mon, 09 Jun 2025 20:56:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHbdZpn/RR12NhB5LgcOMPREv1z+WRxpq5szK6Ofm1MM4coyBQSPQd9Wv8KNZFI5ZUjhjd4AQ==
+X-Received: by 2002:a05:6a20:6a1c:b0:20d:df67:4921 with SMTP id adf61e73a8af0-21ee250ce37mr22866980637.4.1749527772030;
+        Mon, 09 Jun 2025 20:56:12 -0700 (PDT)
+Received: from u-XPS-9320.. (118-163-61-247.hinet-ip.hinet.net. [118.163.61.247])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0c23f6sm6468279b3a.119.2025.06.09.20.56.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 20:56:11 -0700 (PDT)
+From: Chris Chiu <chris.chiu@canonical.com>
+To: tiwai@suse.com,
+	kailang@realtek.com
+Cc: linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	david@redhat.com,
-	peterx@redhat.com,
-	ryan.roberts@arm.com,
-	mingo@kernel.org,
-	libang.li@antgroup.com,
-	maobibo@loongson.cn,
-	zhengqi.arch@bytedance.com,
-	baohua@kernel.org,
-	anshuman.khandual@arm.com,
-	willy@infradead.org,
-	ioworker0@gmail.com,
-	yang@os.amperecomputing.com,
-	baolin.wang@linux.alibaba.com,
-	ziy@nvidia.com,
-	hughd@google.com,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH v4 2/2] mm: Optimize mremap() by PTE batching
-Date: Tue, 10 Jun 2025 09:20:43 +0530
-Message-Id: <20250610035043.75448-3-dev.jain@arm.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20250610035043.75448-1-dev.jain@arm.com>
-References: <20250610035043.75448-1-dev.jain@arm.com>
+	Chris Chiu <chris.chiu@canonical.com>
+Subject: [PATCH] ALSA: hda/realtek: Fix built-in mic on ASUS VivoBook X513EA
+Date: Tue, 10 Jun 2025 11:56:07 +0800
+Message-Id: <20250610035607.690771-1-chris.chiu@canonical.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,116 +82,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use folio_pte_batch() to optimize move_ptes(). On arm64, if the ptes
-are painted with the contig bit, then ptep_get() will iterate through all 16
-entries to collect a/d bits. Hence this optimization will result in a 16x
-reduction in the number of ptep_get() calls. Next, ptep_get_and_clear()
-will eventually call contpte_try_unfold() on every contig block, thus
-flushing the TLB for the complete large folio range. Instead, use
-get_and_clear_full_ptes() so as to elide TLBIs on each contig block, and only
-do them on the starting and ending contig block.
+The built-in mic of ASUS VivoBook X513EA is broken recently by the
+fix of the pin sort. The fixup ALC256_FIXUP_ASUS_MIC_NO_PRESENCE
+is working for addressing the regression, too.
 
-For split folios, there will be no pte batching; nr_ptes will be 1. For
-pagetable splitting, the ptes will still point to the same large folio;
-for arm64, this results in the optimization described above, and for other
-arches (including the general case), a minor improvement is expected due to
-a reduction in the number of function calls.
-
-Signed-off-by: Dev Jain <dev.jain@arm.com>
+Signed-off-by: Chris Chiu <chris.chiu@canonical.com>
 ---
- mm/mremap.c | 39 ++++++++++++++++++++++++++++++++-------
- 1 file changed, 32 insertions(+), 7 deletions(-)
+ sound/pci/hda/patch_realtek.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/mm/mremap.c b/mm/mremap.c
-index 180b12225368..18b215521ada 100644
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -170,6 +170,23 @@ static pte_t move_soft_dirty_pte(pte_t pte)
- 	return pte;
- }
- 
-+static int mremap_folio_pte_batch(struct vm_area_struct *vma, unsigned long addr,
-+		pte_t *ptep, pte_t pte, int max_nr)
-+{
-+	const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
-+	struct folio *folio;
-+
-+	if (max_nr == 1)
-+		return 1;
-+
-+	folio = vm_normal_folio(vma, addr, pte);
-+	if (!folio || !folio_test_large(folio))
-+		return 1;
-+
-+	return folio_pte_batch(folio, addr, ptep, pte, max_nr, flags, NULL,
-+			       NULL, NULL);
-+}
-+
- static int move_ptes(struct pagetable_move_control *pmc,
- 		unsigned long extent, pmd_t *old_pmd, pmd_t *new_pmd)
- {
-@@ -177,7 +194,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
- 	bool need_clear_uffd_wp = vma_has_uffd_without_event_remap(vma);
- 	struct mm_struct *mm = vma->vm_mm;
- 	pte_t *old_ptep, *new_ptep;
--	pte_t pte;
-+	pte_t old_pte, pte;
- 	pmd_t dummy_pmdval;
- 	spinlock_t *old_ptl, *new_ptl;
- 	bool force_flush = false;
-@@ -185,6 +202,8 @@ static int move_ptes(struct pagetable_move_control *pmc,
- 	unsigned long new_addr = pmc->new_addr;
- 	unsigned long old_end = old_addr + extent;
- 	unsigned long len = old_end - old_addr;
-+	int max_nr_ptes;
-+	int nr_ptes;
- 	int err = 0;
- 
- 	/*
-@@ -236,14 +255,16 @@ static int move_ptes(struct pagetable_move_control *pmc,
- 	flush_tlb_batched_pending(vma->vm_mm);
- 	arch_enter_lazy_mmu_mode();
- 
--	for (; old_addr < old_end; old_ptep++, old_addr += PAGE_SIZE,
--				   new_ptep++, new_addr += PAGE_SIZE) {
-+	for (; old_addr < old_end; old_ptep += nr_ptes, old_addr += nr_ptes * PAGE_SIZE,
-+		new_ptep += nr_ptes, new_addr += nr_ptes * PAGE_SIZE) {
- 		VM_WARN_ON_ONCE(!pte_none(*new_ptep));
- 
--		if (pte_none(ptep_get(old_ptep)))
-+		nr_ptes = 1;
-+		max_nr_ptes = (old_end - old_addr) >> PAGE_SHIFT;
-+		old_pte = ptep_get(old_ptep);
-+		if (pte_none(old_pte))
- 			continue;
- 
--		pte = ptep_get_and_clear(mm, old_addr, old_ptep);
- 		/*
- 		 * If we are remapping a valid PTE, make sure
- 		 * to flush TLB before we drop the PTL for the
-@@ -255,8 +276,12 @@ static int move_ptes(struct pagetable_move_control *pmc,
- 		 * the TLB entry for the old mapping has been
- 		 * flushed.
- 		 */
--		if (pte_present(pte))
-+		if (pte_present(old_pte)) {
-+			nr_ptes = mremap_folio_pte_batch(vma, old_addr, old_ptep,
-+							 old_pte, max_nr_ptes);
- 			force_flush = true;
-+		}
-+		pte = get_and_clear_full_ptes(mm, old_addr, old_ptep, nr_ptes, 0);
- 		pte = move_pte(pte, old_addr, new_addr);
- 		pte = move_soft_dirty_pte(pte);
- 
-@@ -269,7 +294,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
- 				else if (is_swap_pte(pte))
- 					pte = pte_swp_clear_uffd_wp(pte);
- 			}
--			set_pte_at(mm, new_addr, new_ptep, pte);
-+			set_ptes(mm, new_addr, new_ptep, pte, nr_ptes);
- 		}
- 	}
- 
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 20ab1fb2195f..055fddb93982 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -10894,6 +10894,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x103c, 0x8e60, "HP Trekker ", ALC287_FIXUP_CS35L41_I2C_2),
+ 	SND_PCI_QUIRK(0x103c, 0x8e61, "HP Trekker ", ALC287_FIXUP_CS35L41_I2C_2),
+ 	SND_PCI_QUIRK(0x103c, 0x8e62, "HP Trekker ", ALC287_FIXUP_CS35L41_I2C_2),
++	SND_PCI_QUIRK(0x1043, 0x1032, "ASUS VivoBook X513EA", ALC256_FIXUP_ASUS_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x103f, "ASUS TX300", ALC282_FIXUP_ASUS_TX300),
+ 	SND_PCI_QUIRK(0x1043, 0x1054, "ASUS G614FH/FM/FP", ALC287_FIXUP_CS35L41_I2C_2),
 -- 
-2.30.2
+2.34.1
 
