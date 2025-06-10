@@ -1,157 +1,132 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E6251F8691;
-	Tue, 10 Jun 2025 04:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4661F8691;
+	Tue, 10 Jun 2025 04:41:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749530417; cv=none; b=fxizqA4mlN+EZyXgbJWC2cFmsC1/1T/LK97JXwq10Bn4Qhzk4KsTf7HNSy4MRyJMbi+dtVZa1xczAKkW+YW+vkJsp1TcQ0S/oqg8HLKTyIwocH0RNAFTDo06xcryo0YMG0bmNcowccF94OIp4RDhvULci/yi+xr1TnOw7JihULU=
+	t=1749530477; cv=none; b=sL+iP/pJZlzUlXn4U4Pdo1tZ9I7j6w9hwZjLIKG//Nbpk7G9jMRqOa8pVdY4ztA/NIssxdfM3heMVFaywj0ukf7CdoWmJgJpFC4OlCk4JOjsxWVHxwPB2g9E7zF1XAYXGxeLtrbFY4cvuzb7xcGEoFaxJGrPFLfabzD54EQeFeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749530417; c=relaxed/simple;
-	bh=XjQ3CDtMBnkk0BRptvtsBqN2rCFGOTvBfwKuX5eC58s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m4v2aeBCh/5fGQS+blE77PXOvnl//c591p7fASYW2/1c+2NEDwvYI1JQFPzLpKEQI/bS2HHLWn41e4sqhmn0u1Tgw3FHEBPvzaR8/k6b7vJ2WdfDAQftmJysGe3CVhz1XHlSLiJEod44Qrd0gpPHw+YvNEowvh3gLKuxvffVd4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=czLcgfcW; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749530477; c=relaxed/simple;
+	bh=Pyjffi+nSLucRE3vgdFGEa3GGlSbXak0lR4GOVC8Kpw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=UbZOXfFgi9MewbIp6RBuZyuLQ4rR2pJMmyRWSKYbuqBn3uVQNncSEhbFj78Px23Ob9A8WI3YWK4WLvihzZso6C2w8lsmWJPAVBEJtMHkTYxRmED0/Q2ibHvzzKozzsg4zx0dIT1XbQBpYotdK8hqBKY0vIhEmX/LmprvKBVnm2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LVurc5Da; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czLcgfcW"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7d0a2220fb0so533051585a.3;
-        Mon, 09 Jun 2025 21:40:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749530414; x=1750135214; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ruItdLhPj6rYuzrqjcoNX4GqgvobJlpmsgOq1JVT/X4=;
-        b=czLcgfcWvczEllV1JS9Kv8GO3vJNvuwQDkuzCW/mpjqbTsha69yds3ee5qMu9iBorU
-         4clTjQi/cObX+qxKyjTcZmgSPZ6nQ4rsl/xt657QRev8ijU98IcXlniVvJVxmoxn6eUP
-         Qa0k+27W69+topzhiVYV4P4Z+dmg7strg73ZxbDl1J/Ed8L9HZrvZnut6ueZRn506jiD
-         3vrTWOcX/S/f7HbpKv8dpqUu+k2GtnZMLQUgy8uom0Wnib8Me/jbOBFY07trdZjffom4
-         br3/K7z1VDsAbOE1mBkELWY0EIACT5yarjGNRDWR+XLs2W4ilnjWLjU/w0PyFgzH/RN7
-         h5Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749530414; x=1750135214;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ruItdLhPj6rYuzrqjcoNX4GqgvobJlpmsgOq1JVT/X4=;
-        b=TIt2bWLyqUb+eEvuh03Fv6amt1wdlRA+0fxIoOBpSuhwUceJ7H9/BOHOLWPhH+47Jd
-         yaDKeRwgebKRpKi2k72M762XYIDMva9+RaRrQ2ytVa5Lg06tDafLHZoegEd4NYa25SHk
-         ee80uTJ64QkRX+Sh4d2IWVF6RUhKIetPB8BYCW+Hb8DMff3PCBet0fPkPSjpg9T0yhpk
-         9J8hVcTmA3mswxZXjaG2ZKfM9imFcod0qiDpz8t7DgMZrU8vdo8eO5Ll2vS/HNqAS2YA
-         sFjDYfupr2/0dNEYQLlfKy+QGIn2Am6vMJFv7zQCvykFCdMk/UtrWkZYXalIhkvpxX+t
-         +2RQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVcofXog0mNEJ9Jxbr9D7twOjOqsaYTCvS2IAxUy14jqwUIliC5lE/TwK8A5FkizLOB1o4O00NYeaDmtg==@vger.kernel.org, AJvYcCXcO4zq9o4EoecQXvpi07nzHSFQaJs4OrKka6GnROx75eOeeoRIX/if/cbu9AmSu24j56AUOWPBwiPtxCEp@vger.kernel.org
-X-Gm-Message-State: AOJu0YzoJ1xeJ0CFNnXO7iOX7vFWEBxX9kshriomAAZTeoUZqRaZTvXy
-	CPwIIqH3AGwuILvVuPmeKcHSo4A3aLKYxwrkdDeLGtesokfgBmHBvdP6c7ZuuAjmsDiY/HfWDbZ
-	oy3pYvxDEjeP2uKTnA/eD4O/bEj02AjA=
-X-Gm-Gg: ASbGncskJVbGsQYL0p0wXKXDbxPora8YRBBGkmo3tuxDPmCxYKcLwlsKcMOB/eqf1tt
-	8RSQ0Xul3HNyLpwp2ch9Y025IAZ++3iOUex4C7/FE3Xi+/jFNTNw7bWciE0EyXRz8Q3neTEVlFW
-	FVkgvNlx/AdMUsl/V479SqCkpBK52I5ANxLIC2rY5DlHp8
-X-Google-Smtp-Source: AGHT+IHUPosBu5bIPaWQQNlnivk/yrYSEQdGZzwchQrOZpgw6Fc7FA9JlcAb0oDcXvTV9XIad/s1Ws/plrHNX4LG+uI=
-X-Received: by 2002:a05:620a:24c9:b0:7ce:be04:f838 with SMTP id
- af79cd13be357-7d229861062mr2317029285a.18.1749530414362; Mon, 09 Jun 2025
- 21:40:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LVurc5Da"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B956FC4CEEF;
+	Tue, 10 Jun 2025 04:41:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749530477;
+	bh=Pyjffi+nSLucRE3vgdFGEa3GGlSbXak0lR4GOVC8Kpw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=LVurc5Da7zoxb7qboPt7il++of/iF6QU4W6ngC9c9cH9Q5Zm3udHMWscCLozL/j85
+	 4wE9GPCewfsBRWY/U8pBfIS6emzt4I4nEZexQ/2Vd25NweixBY+HWoI+KHnKthbius
+	 F9yp8PG2S9bEFIJqz9zPveWqbADBzoqQUHwcsYoM1hngikMoB7HadHgeZzG311ss3m
+	 MK+YscFAOvLeGWsJbdSkAyb0DurXCHjGwtcWfoi23LQFMXYgoCTKh8NvYrARwnLQmd
+	 CT5BeuTSzCoPiYsd2NPwNo775+RP9ngcS9qRoKlrTJzmPVg3rLsfJGohBzUTO+NFH2
+	 tyNkq39TThvvg==
+Date: Tue, 10 Jun 2025 13:41:14 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Chaotian Jing <chaotian.jing@mediatek.com>, Matthias Brugger
+ <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, Sergey Senozhatsky
+ <senozhatsky@chromium.org>, linux-mmc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] mtk-sd: Fix a pagefault in dma_unmap_sg() for not
+ prepared data
+Message-Id: <20250610134114.5ce2c929b683be6e4f228f2b@kernel.org>
+In-Reply-To: <CAPDyKFrejbW1d+jSSJE4K8Zb08CeMHiH9pC=Sr=Y51Lyy4Fhow@mail.gmail.com>
+References: <174908565814.4056588.769599127120955383.stgit@mhiramat.tok.corp.google.com>
+	<CAPDyKFrejbW1d+jSSJE4K8Zb08CeMHiH9pC=Sr=Y51Lyy4Fhow@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250526-dualsense-hid-jack-v1-0-a65fee4a60cc@collabora.com> <20250526-dualsense-hid-jack-v1-9-a65fee4a60cc@collabora.com>
-In-Reply-To: <20250526-dualsense-hid-jack-v1-9-a65fee4a60cc@collabora.com>
-From: Roderick Colenbrander <thunderbird2k@gmail.com>
-Date: Mon, 9 Jun 2025 21:40:03 -0700
-X-Gm-Features: AX0GCFv2q4MWsnWNWknqadP7RtZvAVl7Z5KO--Al5KsMfK-2Zy_9HiqO5oyzKf0
-Message-ID: <CAEc3jaC-jm0kG3oM1z5BgW4FnXfgKztFg3rFyNUzKHieXxFh-Q@mail.gmail.com>
-Subject: Re: [PATCH 09/11] HID: playstation: Rename DualSense input report
- status field
-To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: Roderick Colenbrander <roderick.colenbrander@sony.com>, Jiri Kosina <jikos@kernel.org>, 
-	Benjamin Tissoires <bentiss@kernel.org>, Henrik Rydberg <rydberg@bitmath.org>, kernel@collabora.com, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Christian,
+On Mon, 9 Jun 2025 16:25:24 +0200
+Ulf Hansson <ulf.hansson@linaro.org> wrote:
 
-At the time I didn't document all parts of the HID report as not
-everything was needed. When adding in the audio stuff, let's call this
-one by its official name. There are officially 3 bytes of status, so
-the correct thing is to technically make it a 3 byte array of status.
-The official register names contain DS_STATUS0_.., DS_STATUS1_..,
-etcetera in the name, so I would like to keep things aligned with our
-datasheets.
+> On Thu, 5 Jun 2025 at 03:07, Masami Hiramatsu (Google)
+> <mhiramat@kernel.org> wrote:
+> >
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> >
+> > mtk-msdc driver causes a kernel crash after swiotlb buffer is full.
+> >
+> > ---
+> > mtk-msdc 11240000.mmc: swiotlb buffer is full (sz: 16384 bytes), total 32768 (slots), used 32732 (slots)
+> > mtk-msdc 11240000.mmc: msdc_track_cmd_data: cmd=18 arg=0397A6F8; host->error=0x00000004
+> > Unable to handle kernel paging request at virtual address ffffffffc0001fc0
+> > ---
+> >
+> > When swiotlb buffer is full, the dma_map_sg() returns 0 to
+> > msdc_prepare_data(), but it does not check it and sets the
+> > MSDC_PREPARE_FLAG.
+> >
+> > swiotlb_tbl_map_single() /* prints "swiotlb buffer is full" */
+> >   <-swiotlb_map()
+> >     <-dma_direct_map_page()
+> >       <-dma_direct_map_sg()
+> >         <-__dma_map_sg_attrs()
+> >           <-dma_map_sg_attrs()
+> >             <-dma_map_sg()  /* returns 0 (pages mapped) */
+> >               <-msdc_prepare_data()
+> >
+> > Then, the msdc_unprepare_data() checks MSDC_PREPARE_FLAG and calls
+> > dma_unmap_sg() with unmapped pages. It causes a page fault.
+> >
+> > To fix this problem, Do not set MSDC_PREPARE_FLAG if dma_map_sg()
+> > fails because this is not prepared.
+> >
+> > Fixes: 208489032bdd ("mmc: mediatek: Add Mediatek MMC driver")
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Applied for fixes and by adding a stable-tag, thanks!
+> 
+> Note that it looked like the patch was not entirely correctly
+> formatted, but I fixed it up when applying. Please have a look at the
+> fixes branch to make sure things look okay to you.
 
-Thanks,
-Roderick
+Thank for applying and fixing!
 
-On Mon, May 26, 2025 at 5:54=E2=80=AFAM Cristian Ciocaltea
-<cristian.ciocaltea@collabora.com> wrote:
->
-> The name of the 'status' member of struct dualsense_input_report is too
-> generic, since it is only used to provide battery data.
->
-> In preparation to support handling additional (non-battery) status
-> information and avoid ambiguity, rename the field to status_battery.
-> For consistency, also rename the related DS_STATUS_* bitfield macros.
->
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-> ---
->  drivers/hid/hid-playstation.c | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/hid/hid-playstation.c b/drivers/hid/hid-playstation.=
-c
-> index 937b14679c8b17c5d3d245eae1cc4e0e56dadb71..b7777d3230b2fe277a4a2217e=
-f6b1eff9cfad182 100644
-> --- a/drivers/hid/hid-playstation.c
-> +++ b/drivers/hid/hid-playstation.c
-> @@ -112,10 +112,10 @@ struct ps_led_info {
->  #define DS_BUTTONS2_TOUCHPAD   BIT(1)
->  #define DS_BUTTONS2_MIC_MUTE   BIT(2)
->
-> -/* Status field of DualSense input report. */
-> -#define DS_STATUS_BATTERY_CAPACITY     GENMASK(3, 0)
-> -#define DS_STATUS_CHARGING             GENMASK(7, 4)
-> -#define DS_STATUS_CHARGING_SHIFT       4
-> +/* Battery status field of DualSense input report. */
-> +#define DS_STATUS_BATTERY_CAPACITY             GENMASK(3, 0)
-> +#define DS_STATUS_BATTERY_CHARGING             GENMASK(7, 4)
-> +#define DS_STATUS_BATTERY_CHARGING_SHIFT       4
->
->  /* Feature version from DualSense Firmware Info report. */
->  #define DS_FEATURE_VERSION_MINOR               GENMASK(7, 0)
-> @@ -236,7 +236,7 @@ struct dualsense_input_report {
->         struct dualsense_touch_point points[2];
->
->         u8 reserved3[12];
-> -       u8 status;
-> +       u8 status_battery;
->         u8 reserved4[10];
->  } __packed;
->  /* Common input report size shared equals the size of the USB report min=
-us 1 byte for ReportID. */
-> @@ -1462,8 +1462,9 @@ static int dualsense_parse_report(struct ps_device =
-*ps_dev, struct hid_report *r
->         input_report_key(ds->touchpad, BTN_LEFT, ds_report->buttons[2] & =
-DS_BUTTONS2_TOUCHPAD);
->         input_sync(ds->touchpad);
->
-> -       battery_data =3D ds_report->status & DS_STATUS_BATTERY_CAPACITY;
-> -       charging_status =3D (ds_report->status & DS_STATUS_CHARGING) >> D=
-S_STATUS_CHARGING_SHIFT;
-> +       battery_data =3D ds_report->status_battery & DS_STATUS_BATTERY_CA=
-PACITY;
-> +       charging_status =3D ds_report->status_battery & DS_STATUS_BATTERY=
-_CHARGING;
-> +       charging_status >>=3D DS_STATUS_BATTERY_CHARGING_SHIFT;
->
->         switch (charging_status) {
->         case 0x0:
->
-> --
-> 2.49.0
->
->
+Thank you,
+
+> 
+> Kind regards
+> Uffe
+> 
+> 
+> 
+> > ---
+> >  drivers/mmc/host/mtk-sd.c |    3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+> > index 345ea91629e0..3594010bc229 100644
+> > --- a/drivers/mmc/host/mtk-sd.c
+> > +++ b/drivers/mmc/host/mtk-sd.c
+> > @@ -827,9 +827,10 @@ static inline void msdc_dma_setup(struct msdc_host *host, struct msdc_dma *dma,
+> >  static void msdc_prepare_data(struct msdc_host *host, struct mmc_data *data)
+> >  {
+> >         if (!(data->host_cookie & MSDC_PREPARE_FLAG)) {
+> > -               data->host_cookie |= MSDC_PREPARE_FLAG;
+> >                 data->sg_count = dma_map_sg(host->dev, data->sg, data->sg_len,
+> >                                             mmc_get_dma_dir(data));
+> > +               if (data->sg_count)
+> > +                       data->host_cookie |= MSDC_PREPARE_FLAG;
+> >         }
+> >  }
+> >
+> >
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
