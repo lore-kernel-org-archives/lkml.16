@@ -1,117 +1,119 @@
-Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E042D5402;
-	Tue, 10 Jun 2025 23:11:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47CA2D540F
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 23:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749597120; cv=none; b=gTONNgKTQP/wbN0JWvRCxRstcTED9zCyzInS5QEU16qfD0sdWrolaGZD9eTJbXswJh2aPHRFtb2R9YUTFoiV8EErSEa0qOFqo/KNMOstgK057G6ImZxLQa0BD32GtyzVcg1vp7OSVSGyfqqv4MSsN1/CVVrTJfTSxONSNg6jvmg=
+	t=1749597137; cv=none; b=VMj7OyXqX0DuO6xKkd5Z+L/Jf44fCEbd2GJqbR+G/VUtmy/qd6KNq5xKhEFMaFw5VipTnb6j/493rNO0tV/+eEaDrsXkzEcb15ZrQ2fYX32WDy7QYbf/FhbkBpeXFFnHRlhqw60p6Nf8cQZBWgxGV9XO7Dw7kenhXGxgy5fsczM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749597120; c=relaxed/simple;
-	bh=qDJgBUcJfJgiZmP8rmKonm+Khzfd7QP8iKE+QK3IZhM=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=a8Fu/aQyHW+AKcqJ4fvQxtsiIdUg4/rmlzg6toe3YA0Krl61j6D9Cydp1AoYRbnz6TKlxmlqeMkToaEVds22WYqk5DKK+G5PWyQJuOiONd4hcYfKuJhBdIYfMNEGtYrLxsTuRwe/jpV0CMLcm/ciLFn7E8YrzSVs0z93iSpWo9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=U6FbT/UJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=KqzwWuv2; arc=none smtp.client-ip=202.12.124.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1749597137; c=relaxed/simple;
+	bh=IOh0QevXlTT/FfRbCC7y1VBSlVzPIrZPPZbTk1zGyv8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YMlajNemcBbC+8WRh/4LcWlnLCe8SBFxR1qo5dZ4PGdHLfZ33qIChn2kxzxkojNPJbrgta2v7YuKCxpOvKMuBQWw/BoK98lZanm/YE2ybZpOGGi7BEn53/5Pfta4gvCa7d2Nxbpf8AKxJwe6uOvmpzJCreSaBLUyVgsiIVYit9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y1tyN4JB; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="U6FbT/UJ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KqzwWuv2"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 2706A2540106;
-	Tue, 10 Jun 2025 19:11:57 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-12.internal (MEProxy); Tue, 10 Jun 2025 19:11:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1749597117;
-	 x=1749683517; bh=qDJgBUcJfJgiZmP8rmKonm+Khzfd7QP8iKE+QK3IZhM=; b=
-	U6FbT/UJuUuMDXHNSX0eu51+tL4jbkR/Bm4jQPck57+6LUf7nwbq+bbvr/9HkMaA
-	8DjmeR3bHQjc4pZrsVv4KuV5O12dlSxG3E0Iy99KDQ5H33dEDkhZvTGFrtxVjbN1
-	tHjaw797VEIU4++5w7HUBvckQzxizluG7pZo2QI7YizbHPA4fSpz6HT5oEvV1PFO
-	rvcYW9r39nUXa7oLxA5OGd7t1AVaY3Kn19qdXcx8QmqFf6g2xYuoMZXkqIU7sZ7o
-	aXLEEu9ieMggVV31/k1HisecHxMT5Z0JNiFPtgKofStKR1lSNtSo8zyOxQKGc0T/
-	3D83lGo8Z31ryAnhc6Y/cg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749597117; x=
-	1749683517; bh=qDJgBUcJfJgiZmP8rmKonm+Khzfd7QP8iKE+QK3IZhM=; b=K
-	qzwWuv2hSqt/vZp7TnqVk7LwcsCZRBSh4+L5k1Evetj5/oKGEeeVZ5aW5W7N+eH/
-	MAPGh53XdN3tbesaVZDejICVzYGL4AK7GrMu5Pgmnsx4DcyfA+pZEhF9VkD6SIwS
-	DsmJpv7y3z/ij8MiAt2NazNoVrd2RhFssVrBRZjKgiiMHgmYeHo16csX6ymlGDiV
-	35In2wwtE8p09OdBi1C29ByktGAUaqTVCkGpzzQ276xdp0UO1L+SERR/XIB2BFeH
-	2cvxfky1WRwAgTJnH753Cq2DIlAj4pUW2MeY/I+hYDHTYNgSLSbLdg0qKYoYkbBk
-	MHoV7PMFA09yvAkRm5QKQ==
-X-ME-Sender: <xms:vLtIaGq6ewm0E1eqvnyWM2VGeRp7Cxclod77bkUsI-CkQWWDoqKKwA>
-    <xme:vLtIaEq310CHc6cHGk2KFraFWWvtTpfwza_rY7gMITtxg-zqYfM5ODdl58ZHRkcGL
-    kKxnizBWjFyOi9_jY8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduudefkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
-    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhephfeuvdehteeghedt
-    hedtveehuddvjeejgffgieejvdegkefhfeelheekhedvffehnecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhv
-    ohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouh
-    htpdhrtghpthhtohepihhkvghprghnhhgtsehgmhgrihhlrdgtohhmpdhrtghpthhtohep
-    figprghrmhhinhesghhmgidruggvpdhrtghpthhtohephhhmhheshhhmhhdrvghnghdrsg
-    hrpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhn
-    thgvlhdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrd
-    hinhhtvghlrdgtohhmpdhrtghpthhtohepihgsmhdqrggtphhiqdguvghvvghlsehlihhs
-    thhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtohephhguvghgohgvuggvse
-    hrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghr
-    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqd
-    igkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:vLtIaLPeHYaGpMIqiG6fhDRw5n6flB7bxdqkQ8VxSwCVb7Z9Aa8wvA>
-    <xmx:vLtIaF4QtLwbtmk6ejMcMSwn3pxiAYwHUYQ0VshppAbfRGT5S91_tQ>
-    <xmx:vLtIaF4wS_ZIIOEiqnRr_5dn1GfIXLmTW2P_Vh7CKgrSGhvN2HU25A>
-    <xmx:vLtIaFioBge3fL2CkhgxZkTON-9KyTclUTjuntBDmM9mC_NjswvmXA>
-    <xmx:vLtIaLHPG7Or6MiG3zjSc_VrnrPPMJKodRx_gpYdbwlqAYjU9ELH7FYv>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 5B12A2CE0063; Tue, 10 Jun 2025 19:11:56 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y1tyN4JB"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-70e64b430daso58554867b3.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 16:12:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749597134; x=1750201934; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MZHaVkiLrbaAoem+fJHSN03rlECJT5C5GzqrHElASHo=;
+        b=Y1tyN4JB6qxcqTUc1lfvA+CSRJ7y9ds77+qyhfoVAbMqGkU8WsGjxMXNay+b+WnUet
+         tjgT3AHoEdGIjY0UsOpQ/zvAn7/BPzYz+g7TO1yDSBbIPiQvxwpQfqErw/J8iUaaJR07
+         wWOpc9kXzECneOnPBTiE8pXQKhd3ygd2YG7sgV573pqAtd0GIs6sWZJybu0eFKC4KS6g
+         O9qEXZUfq8TNQFSRJ93GwG2tmwUwXRkbj8/cyGw6FVZdGbBzsW8StJbIo7QLCxw5+hda
+         Rw1F2BdgKvff2qYqmG7yzRgHJZ105MYotJdJF1vnFeYUx6INw9sRYvRKpgJ6NeteN6wk
+         IfqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749597134; x=1750201934;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MZHaVkiLrbaAoem+fJHSN03rlECJT5C5GzqrHElASHo=;
+        b=gq2PnteV9sKuoJHXTzp+IAkAnMxW2VpFLXiOb8GzkARDYVdgsz/3C58UXDWDp/PIo0
+         reTNVkVI+SjUj7at/AU/WTNbvZzHI3uO8ctsQaT0ohVS21py+90ykBnyYANS1zQBENXG
+         gQFFkVN/xvDyzIzV/0vH64XLeFHoskfNq0URKF2QRjqQf9YvetxqRivybGwIEJlNDzur
+         7p31S4Xvu6dbMolmtwwa21zM1bhqUBc2YSG7KV0I/taeytuUhmTnkgLYOvaXd+T6cZ7L
+         ilA1RWmgmJ9WcAd9Gr/0T3oDGL5zkYasKeYVS8rEqP2sOgy1UdiILXi/vMBe9v4PnBF1
+         JOVA==
+X-Forwarded-Encrypted: i=1; AJvYcCVCtmG5ocitMzHGDURBrQJpg+HJboqn8MjPhUWhui50k/N2JKa834HTKKTX+MIxYIGBPB1krYmLYBZvYK4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjahSdAsUNfJQylOK7Ay5TQpyHaRsG7M7xgFQbcLhpagYu6Jc9
+	d4pm8Yzp1592gdUGz9CTT7PDPqTDEXcQEjkASAK+5ZqUIed48xb+A/1QPYQYOb9Exui+UWyTPfU
+	/HNQMoZeJBPCVDxc32X2XESvOCzBgBuI=
+X-Gm-Gg: ASbGncsPrS8Wv8YVnK+zx3nNftgVA262ZcQs9R5zx/q2aU1+rUM2ghjO74wx8EsFg5m
+	M2Ax4ItTsyc06nIZqdgeNKHrMjkn+nRWegz7JbOqmtVXDbavwPQ2BlcUAmCVob7/0V7HJjTyLDB
+	d7j96GmAyTS9Ij1JqiF0bkA/nanqqTaDLs/7LRLas7UWIgsd4ZPSntN+BVc2SGTcWr12EMzZEn9
+	I1F
+X-Google-Smtp-Source: AGHT+IEXDVnMUtCIHT0EzmIFREsVFhabB3kvSB6CwQcovD6visnkC9fl3iyGLCJk9zRI3gOuA6yIMYxXNcI0Rd99pD8=
+X-Received: by 2002:a05:690c:39d:b0:70e:7706:82c1 with SMTP id
+ 00721157ae682-71140af1863mr18827157b3.34.1749597134588; Tue, 10 Jun 2025
+ 16:12:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T107eb5199b18744c
-Date: Tue, 10 Jun 2025 19:11:36 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Hans de Goede" <hdegoede@redhat.com>, ikepanhc@gmail.com,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Armin Wolf" <W_Armin@gmx.de>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Message-Id: <002d39fe-44ed-45a4-9410-4fecf1c2163f@app.fastmail.com>
-In-Reply-To: <aEiVHXI4vS9BDOPW@smile.fi.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250610192830.1731454-1-mpearson-lenovo@squebb.ca>
- <20250610192830.1731454-2-mpearson-lenovo@squebb.ca>
- <aEiVHXI4vS9BDOPW@smile.fi.intel.com>
-Subject: Re: [PATCH v4 2/2] platform/x86: Move Lenovo files into lenovo subdir
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20250602143216.2621881-1-karunika.choo@arm.com> <20250602143216.2621881-2-karunika.choo@arm.com>
+In-Reply-To: <20250602143216.2621881-2-karunika.choo@arm.com>
+From: Chia-I Wu <olvaffe@gmail.com>
+Date: Tue, 10 Jun 2025 16:12:03 -0700
+X-Gm-Features: AX0GCFs0t2lD4ebPOfl_N7eCj67AHAfs5lteWu97IH0qtVxZ_pexAD0d0DDX1BI
+Message-ID: <CAPaKu7TbzqjF+q7McOS3JppiKfg=zKFr4aYQZGsmvOnR+jEN3g@mail.gmail.com>
+Subject: Re: [PATCH v4 1/7] drm/panthor: Add GPU specific initialization framework
+To: Karunika Choo <karunika.choo@arm.com>
+Cc: dri-devel@lists.freedesktop.org, nd@arm.com, 
+	Boris Brezillon <boris.brezillon@collabora.com>, Steven Price <steven.price@arm.com>, 
+	Liviu Dudau <liviu.dudau@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 10, 2025, at 4:27 PM, Andy Shevchenko wrote:
-> On Tue, Jun 10, 2025 at 03:28:25PM -0400, Mark Pearson wrote:
->> Create lenovo subdirectory for holding Lenovo specific drivers.
+On Mon, Jun 2, 2025 at 7:33=E2=80=AFAM Karunika Choo <karunika.choo@arm.com=
+> wrote:
 >
-> Assuming Kconfig entries have mostly been copied'n'pasted, the rest LGTM,
+> This patch provides an initialization framework for multiple Mali GPUs
+> by introducing a GPU support look-up table. Each entry contains, at
+> minimum, the architecture major version of the GPU, and may optionally
+> provide feature flags and register offset overrides.
+<snipped>
+> +/**
+> + * struct panthor_hw - GPU specific register mapping and functions
+> + */
+> +struct panthor_hw {
+> +       /** @arch_major: Architecture major to match against */
+> +       u32 arch_major;
+> +
+> +       /** @features: Bitmap containing panthor_hw_feature */
+> +       DECLARE_BITMAP(features, PANTHOR_HW_FEATURES_END);
+> +
+> +       /** @map: Panthor regmap */
+> +       struct panthor_hw_regmap map;
+> +
+> +       /** @ops: Panthor HW specific operations */
+> +       struct panthor_hw_ops ops;
+> +};
+None of the fields are really needed even at the end of this series.
 
-Yes - no changes from what they were previously.
+Can we merge patch 1 & 2, introduce just panthor_hw_init and nothing
+else, and let panthor_hw_init call panthor_gpu_init_info?
 
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> +
+> +int panthor_hw_init(struct panthor_device *ptdev);
+> +
+> +bool panthor_hw_supports(struct panthor_device *ptdev,
+> +                        enum panthor_hw_feature feature);
+> +
+> +#endif /* __PANTHOR_HW_H__ */
+> +
+> --
+> 2.49.0
 >
-Thanks for the reviews and help with both patches
-
-Mark
