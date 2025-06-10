@@ -1,116 +1,109 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF88246BC0;
-	Tue, 10 Jun 2025 13:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78F5246BC0;
+	Tue, 10 Jun 2025 13:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749562636; cv=none; b=VyQwid3PNnw7Xdsp6sowHNcw3/ZbslRX+SA62T4wL9Kj9bONqEvzD/iJxiRIV74q6EqKim6qH3JeZIydWAjvAdddHRNb3VeX8sU9Qxzag2+vuFqmfu5VIuqF3AgMbeMwq/FkKDmEwoNTx0cn6LOeevbjq2HfU1Ec0tdlONJ3M+k=
+	t=1749562643; cv=none; b=j6VL+PunNSBBy7jjDoNtNKjmJ7FLMXBlLvlHo8ZU4zJz6dqHV6a9hTMk0Sc4lHFZ/R6Rjjy+VWaY8XG1PjC16kB5hyzIu/dG6FMUPUfdCCa2YVcOH9F9+guWqGIQew3BXzKxgDxeSTnbKR4AxTFtV2ijleIosBGBzOy8BSqxhBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749562636; c=relaxed/simple;
-	bh=FXI2MAeHUinlbQb7gSHVXNf8DUYi8tYUEMJCn9PAC5o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t12WoE/b87LS63k6nI/9ccjPfljQ2+hbynYnbTHE6O7aqd8mqINHQ02FFM5TLNzDE+r4dxy4CCRpbsT1tywddQVsv0xUSqEecPYUc3fevdVeZ2fYSyI3Xl/3aFvFxu5QS2NAfTKsJvWDflZ9Jf21+XbHm1rLxLq18Te/HV8O4EQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Chl/Ylha; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1749562643; c=relaxed/simple;
+	bh=oOWVuLO2T4RnSw7Vz1x2rYEpuImpONyqClwgxnMeXIY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qwtTcSszJhFfyFbtnc/88btBZ+CU7/SsULPyLw+e7F19McTPIG7in0pHdRDNqErLCHkpmQbURsQrHrtjOVMGK5l2HdCvi2k4zZBlvqhKBVUxM4An9JCebicntCp5FHofhqpCfY1j9aj05YUUzVKy21SYH+dtgjIRYjoIp0TWazc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gg7gc6O6; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Chl/Ylha"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
-	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=1NzR2rxPnpJMPP1YD7GZH2AVOTPhR96TImD7BWPOQN8=; b=Chl/YlhauFGOETLTvPnRnWBjfy
-	opTuncHILIemQPoRR7xSy319pBTxdofO0pGDv6D+Z/u0Nvp5k9X1CFLysi57iB8hf1EwyZE8JtVKb
-	qg2JLB0m1lye2E0nK2XnmciBR+kXGD0YalsfOrzvgwKrdrjuoIwYZ6x7SmRmeJ86S7lve2d5YL26Z
-	ifNFah2Z6Azx4cfPkthqawLP44c8oSJugAVCgkX8HHVhlvtAtNPrTZMb1+c2OA9EEWE/ZGBmSncza
-	GqrystEeMZHiuD/pdlwvBhq4XCRj+bXeudUZP8ZhrYZisNgT95QfAqx82riWKQMfAXy6sPama9g4a
-	UDyzxdgQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uOzA5-00000006zyQ-1iAC;
-	Tue, 10 Jun 2025 13:37:09 +0000
-Date: Tue, 10 Jun 2025 06:37:09 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: wangtao <tao.wangtao@honor.com>, Christoph Hellwig <hch@infradead.org>,
-	"sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
-	"kraxel@redhat.com" <kraxel@redhat.com>,
-	"vivek.kasireddy@intel.com" <vivek.kasireddy@intel.com>,
-	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-	"brauner@kernel.org" <brauner@kernel.org>,
-	"hughd@google.com" <hughd@google.com>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"amir73il@gmail.com" <amir73il@gmail.com>,
-	"benjamin.gaignard@collabora.com" <benjamin.gaignard@collabora.com>,
-	"Brian.Starkey@arm.com" <Brian.Starkey@arm.com>,
-	"jstultz@google.com" <jstultz@google.com>,
-	"tjmercier@google.com" <tjmercier@google.com>,
-	"jack@suse.cz" <jack@suse.cz>,
-	"baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"wangbintian(BintianWang)" <bintian.wang@honor.com>,
-	yipengxiang <yipengxiang@honor.com>,
-	liulu 00013167 <liulu.liu@honor.com>,
-	hanfeng 00012985 <feng.han@honor.com>
-Subject: Re: [PATCH v4 0/4] Implement dmabuf direct I/O via copy_file_range
-Message-ID: <aEg1BZj-HzbgWKsx@infradead.org>
-References: <20250603095245.17478-1-tao.wangtao@honor.com>
- <aD7x_b0hVyvZDUsl@infradead.org>
- <09c8fb7c-a337-4813-9f44-3a538c4ee8b1@amd.com>
- <aD72alIxu718uri4@infradead.org>
- <5d36abace6bf492aadd847f0fabc38be@honor.com>
- <a766fbf4-6cda-43a5-a1c7-61a3838f93f9@amd.com>
- <aEZkjA1L-dP_Qt3U@infradead.org>
- <761986ec0f404856b6f21c3feca67012@honor.com>
- <d86a677b-e8a7-4611-9494-06907c661f05@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gg7gc6O6"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-70e6bddc30aso44381097b3.0;
+        Tue, 10 Jun 2025 06:37:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749562641; x=1750167441; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xxIrKS/FqjNsM2xFokaxGJ/xqDLh5zv82FrSmAhAsqA=;
+        b=gg7gc6O60ehL72MlXfAL1e+OE34CgQicKulsxHm0M7cftC9h1g89OU1A9lRluBbgzZ
+         Xt+6HH6u2J/pmYxYqFuDXHQHYUuQvP7pG15Nd2qGE9Yt5G2rHjjigpxweKLDAVjKcu4D
+         0dB0apRP7rKQvxOwI/6bzDD1oz4FHtNBMW0iJEFche/uz+Wq4le9bjikDQHsQsw0dysE
+         uIztNU9y4AdSSxDSHbbYVI5D0u4DNm0DaJZoGeTsmv/W+ddbgeoLrWEddiVLJI3worbN
+         UBrkYaZ2wrC1+Tahtcfx5xLxC81LvG/h+UchqQmCjVLUYZM0oUvD0mjVYak+gQ5Sk4dD
+         zkCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749562641; x=1750167441;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xxIrKS/FqjNsM2xFokaxGJ/xqDLh5zv82FrSmAhAsqA=;
+        b=wLIuUR1XVdG94ZibIY7mkEi9BwdGyPFK4A80l5v5xDYKZ03v4MxBEWG2rQ0ulZqqsT
+         Vv42tyyA5dGGDpRZDyjHhoKW4Z50T4TEK9igpJtTDTP7dLi50YWvPsWBrhe56hmAsUwT
+         Xkj/S2nCAgpW2arTwUx+iBzf3lwViDYvhgW1Q7WFjE4SKpfXsSl5+x14TLwACWJs5BNc
+         2bU/786YVEuVdak2QyzFpTtBRkHvuTppe77cWpbWgV80/YGaLx7jRDiAy0aMu2MYsU8h
+         ZX6CDnvUZEp3YWhMj8GbmbW+u6L3Ivc2UvMJ61OwVdp47n5bCtBDfNrXnmPVAt3ebfev
+         iLFg==
+X-Forwarded-Encrypted: i=1; AJvYcCUE9kkKii/bSLqeZ6/uun3Cx1yJQgq8dg+nayqnfF21CJZby8+KcJM0YuCPru0CVjPQmYRCfv0t2BcwCtIO@vger.kernel.org, AJvYcCV1QA19AQOC2v7gUIGR+D8OhbPOGkr53I3f1vFNmjPDpU7EBzkKAeDz51OzBSvbg522ELVGm36ApgYW@vger.kernel.org, AJvYcCVvAKK9ga+KzR7fwZDAdrvB7srlAhpjJ31EU+f01aDMarinvEr3hWTv6X/bTP7iBmgiOtF9274C@vger.kernel.org, AJvYcCWHaaDLCUk8LRxgIbt6+3P2dTQbYSJN0I4UF6H9uV7mKSukpGWffZU8l+SP/0Lu6LFbTdQ7PpOT@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWV4d8PKZq1QtX3DsET+AEgqc0LXKSGIZVXTA8DEbb51gICmOv
+	SrZ4M7z20QBzJ1m3tjTJGOcko7jFrn6k9B8WaaPAci3nebXBhOtUu/hiLZG+qBx5/86YtMyMu73
+	sAfKftum2u6DGoEqxcc8nCBlVfdA99mo=
+X-Gm-Gg: ASbGncuzCfsy6C9qkbznRB1hUgypDOfEoO1XMsvWUy/ooeekPT9Eac9wXPLh9pidaB3
+	OeL3QmXA+BJsPv3fKJjzSkJn1dxaa6JXC9sxre2AsY8IMnB3jvS6pLHp72CyCg5CtoPaYCHOGBq
+	X/8LxqJbWbH7xMxEaAo7rex6OSugS7D2jO5QirgQgi3tJgydlbk0HWn0wHlgrDLIlTIf3iIKHdv
+	WE6Xz7oH1LALJE=
+X-Google-Smtp-Source: AGHT+IFM1XwmtOLu46/6hnB8HE+OYFSHJX6Sjmr/fbwlTVJpbAdiZS0DZi1jGEnlfK67xiMSjcPRgzR6HPYhzLNQ7ZQ=
+X-Received: by 2002:a05:6902:98f:b0:e81:86ae:2c40 with SMTP id
+ 3f1490d57ef6-e81a213224cmr24404325276.19.1749562640474; Tue, 10 Jun 2025
+ 06:37:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d86a677b-e8a7-4611-9494-06907c661f05@amd.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20250605105449.12803-1-arefev@swemel.ru> <20250609155729.7922836d@kernel.org>
+ <5f821879-6774-3dc2-e97d-e33b76513088@trinnet.net> <20250609162642.7cb49915@kernel.org>
+ <4cfc85af-c13a-aa9c-a57c-bf4b6e0f2186@trinnet.net>
+In-Reply-To: <4cfc85af-c13a-aa9c-a57c-bf4b6e0f2186@trinnet.net>
+From: Dan Cross <crossd@gmail.com>
+Date: Tue, 10 Jun 2025 09:36:44 -0400
+X-Gm-Features: AX0GCFvn-7qD2cihhzkYj_5iK1X4T6iJ_-iI3ppeXU5PRwGVUbNgolRtiKDGC9E
+Message-ID: <CAEoi9W57D-BfpYUAe5M3zjJvTUQUL4UUB+iWkpRO_o8JWfS7FQ@mail.gmail.com>
+Subject: Re: [PATCH net] netrom: fix possible deadlock in nr_rt_device_down
+To: David Ranch <linux-hams@trinnet.net>
+Cc: Jakub Kicinski <kuba@kernel.org>, Denis Arefev <arefev@swemel.ru>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Nikita Marushkin <hfggklm@gmail.com>, Ilya Shchipletsov <rabbelkin@mail.ru>, Hongbo Li <lihongbo22@huawei.com>, 
+	linux-hams@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org, 
+	stable@vger.kernel.org, syzbot+ccdfb85a561b973219c7@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 10, 2025 at 12:52:18PM +0200, Christian König wrote:
-> >> dma_addr_t/len array now that the new DMA API supporting that has been
-> >> merged.  Is there any chance the dma-buf maintainers could start to kick this
-> >> off?  I'm of course happy to assist.
-> 
-> Work on that is already underway for some time.
-> 
-> Most GPU drivers already do sg_table -> DMA array conversion, I need
-> to push on the remaining to clean up.
+On Mon, Jun 9, 2025 at 7:31=E2=80=AFPM David Ranch <linux-hams@trinnet.net>=
+ wrote:
+> That's unclear to me but maybe someone else knowing the code better than
+> myself can chime in.  I have to assume having these locks present
+> are for a reason.
 
-Do you have a pointer?
+The suggestion was not to remove locking, but rather, to fold multiple
+separate locks into one. That is, have a single lock that covers both
+the neighbor list and the node list. Naturally, there would be more
+contention around a single lock in contrast to multiple, more granular
+locks. But given that NETROM has very low performance requirements,
+and that the data that these locks protect doesn't change that often,
+that's probably fine and would eliminate the possibility of deadlock
+due to lock ordering issues.
 
-> >> Yes, that's really puzzling and should be addressed first.
-> > With high CPU performance (e.g., 3GHz), GUP (get_user_pages) overhead
-> > is relatively low (observed in 3GHz tests).
-> 
-> Even on a low end CPU walking the page tables and grabbing references
-> shouldn't be that much of an overhead.
+        - Dan C.
 
-Yes.
-
-> 
-> There must be some reason why you see so much CPU overhead. E.g.
-> compound pages are broken up or similar which should not happen in
-> the first place.
-
-pin_user_pages outputs an array of PAGE_SIZE (modulo offset and shorter
-last length) array strut pages unfortunately.  The block direct I/O
-code has grown code to reassemble folios from them fairly recently
-which did speed up some workloads.
-
-Is this test using the block device or iomap direct I/O code?  What
-kernel version is it run on?
-
+> On 06/09/2025 04:26 PM, Jakub Kicinski wrote:
+> > On Mon, 9 Jun 2025 16:16:32 -0700 David Ranch wrote:
+> >> I'm not sure what you mean by "the only user of this code".  There are
+> >> many people using the Linux AX.25 + NETROM stack but we unfortunately
+> >> don't have a active kernel maintainer for this code today.
+> >
+> > Alright, sorry. Either way - these locks are not performance critical
+> > for you, right?
+> >
+>
