@@ -1,78 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C62284B2E;
-	Tue, 10 Jun 2025 21:40:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F89266B6B;
+	Tue, 10 Jun 2025 21:40:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749591609; cv=none; b=pPUMsA4c+ePsxdaTMN/ed6aIAN7yJdVCTxRr1BSVaxzn9Q5HOzUS5sMD95l8PYe2Q20xUoru0ruSYeyODzSJFf6rqPw39vz6+lxPxHFJr3tgd7rfnOQOtQpGre6rjxbnYn8b7BMJFrnk/VoYQWNsTaXSEaxWYhiXWoAKCJkxvTQ=
+	t=1749591649; cv=none; b=k+ALiJaXnqe/BKJ9IClvIhnNZ2zztsLq7fgQIbKJZ8MMf0o89tYLkdk5fXEVx4e86he065LJLvrXIW+ajQBA96CzOHD18VloNLmVVM85WPT2nMwQwP+yEb537NOSGwSDKnY/pOTdtulUnpqFyrbfsS6AMSEatavmmqcQyoixr94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749591609; c=relaxed/simple;
-	bh=I3C23c35LbTCjt3P42E0c8wnjRpx2wGHYe3hD72e8gc=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=T9Pzejk9xZKKtUMsClNfkP6hK+UIanbKO2FOGN9fHh0AFmXgjP7johmCcV7rrUAi2tnr4VkYzIowjMEfyxuThRFzNIGzqF9SMszHVCBLyuuonMdIG8Ajhf2QPs3tgTflApSGewMctT7B1N8K+EAFZnn3q37FY2TB769+dznratw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NL9DGDTl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749591649; c=relaxed/simple;
+	bh=BZq6T1x4KIZtBIcys6uVoEwFxLpJVCHmantsmFcGQDs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q5FBasJ99GJ5+g17sChNtEWAVsROJrIFhvrgslUCGEO54bX9foHsjJ4QZr69SgOmeRI2MKOUE53u6NhLg5V8uj9mDBswk5XoQDMzxzZL4CJNvNTUxOJUzUJw1uPyTzfqniaILtnuVF9hqtCVlCqMQxg4N4OXi0fHzV5SJ3USWUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ft4a7voO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NL9DGDTl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F691C4CEED;
-	Tue, 10 Jun 2025 21:40:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ft4a7voO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADAF8C4CEED;
+	Tue, 10 Jun 2025 21:40:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749591609;
-	bh=I3C23c35LbTCjt3P42E0c8wnjRpx2wGHYe3hD72e8gc=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=NL9DGDTlaARUaLJZZTn7ksNOX+zLB3+6FZ+AuN5PSd86X7zQ8On4907vZTWM9G0kD
-	 A1hDfAPf+tfosN0GVSnu/Lw2fW8IJnwIY3bkiqZQ5S3A4yZHbSfvbjAbLsf6bqYQWz
-	 hpr0bRl8lt0MaPgDefcXl4fNqCDL52addHhmcGgGDeTAzH9/s4cEqxgMTy/jYNpIPn
-	 4jduecNRiW8ELZw7yN15z0soD2Xd064nZD+kWXwl323ASe/AICzANp/b8AqzfoURVx
-	 LHwhyiEb8uw6+2YoY1GEiOWwWYl/KI9A7mV29dnZ8ir8jo6Rxt1qzQFeR/9NPbeZAt
-	 mHpwnfzFniUlA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAEFC38111E3;
-	Tue, 10 Jun 2025 21:40:40 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1749591649;
+	bh=BZq6T1x4KIZtBIcys6uVoEwFxLpJVCHmantsmFcGQDs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Ft4a7voOspcJwOWlf2EJmAVYLdTwes/6C5mrPYEB+sfdxJnHknBXJDch63NcfTcya
+	 uw+ct359WqwFSpW0sL4Ap7YbemhUGP00JxAitl+L+b1D8ZBQQzy0ajLO0L0TzuJRye
+	 9mKDxnSpHoy4oXH51K1FDYuKPsqblCQ2S0FWOcXtBJpk4H046OHLD1wLZ0BeyCQ1Ni
+	 twP0D0mMA1f/eHtzCvB3Zk4J4qOEhYZY/24EU8IIIBylNkIwaNYok7PyxQIDkV6Cqn
+	 srrMJJtUnzfPXP6DSVfLeYDkb3oYr9zYDIEm3vijDdolOy1X+NHkyZZtMMEdO44ApE
+	 rtgj5rgUhxTcQ==
+Date: Tue, 10 Jun 2025 14:40:46 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>, Yury Norov
+ <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>, Jonathan Cameron
+ <Jonathan.Cameron@huwei.com>, Anna-Maria Behnsen
+ <anna-maria@linutronix.de>, Kevin Tian <kevin.tian@intel.com>, Long Li
+ <longli@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Bjorn Helgaas
+ <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, Krzysztof =?UTF-8?B?V2lsY3p577+9fkRz?=
+ =?UTF-8?B?a2k=?= <kw@linux.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Haiyang
+ Zhang <haiyangz@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Konstantin Taranov <kotaranov@microsoft.com>, Simon
+ Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>, Maxim
+ Levitsky <mlevitsk@redhat.com>, Erni Sri Satya Vennela
+ <ernis@linux.microsoft.com>, Peter Zijlstra <peterz@infradead.org>,
+ netdev@vger.kernel.org, linux-rdma@vger.kernel.org, Paul Rosswurm
+ <paulros@microsoft.com>, Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v5 0/5] Allow dyn MSI-X vector allocation of MANA
+Message-ID: <20250610144046.1deba9f3@kernel.org>
+In-Reply-To: <1749476901-27251-1-git-send-email-shradhagupta@linux.microsoft.com>
+References: <1749476901-27251-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv: vdso: Exclude .rodata from the PT_DYNAMIC segment
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <174959163949.2619474.5121888722070978371.git-patchwork-notify@kernel.org>
-Date: Tue, 10 Jun 2025 21:40:39 +0000
-References: <20250602-riscv-vdso-v1-1-0620cf63cff0@maskray.me>
-In-Reply-To: <20250602-riscv-vdso-v1-1-0620cf63cff0@maskray.me>
-To: Fangrui Song <i@maskray.me>
-Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, nathan@kernel.org,
- nick.desaulniers+lkml@gmail.com, morbo@google.com, justinstitt@google.com,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello:
+On Mon,  9 Jun 2025 06:48:21 -0700 Shradha Gupta wrote:
+> Since this patchset has patches from PCI and net tree, I am not entirely
+> sure what should be the target tree. Any suggestions/recommendations on
+> the same are welcomed.
 
-This patch was applied to riscv/linux.git (fixes)
-by Palmer Dabbelt <palmer@dabbelt.com>:
-
-On Mon, 02 Jun 2025 20:48:44 -0700 you wrote:
-> .rodata is implicitly included in the PT_DYNAMIC segment due to
-> inheriting the segment of the preceding .dynamic section (in both GNU ld
-> and LLD).  When the .rodata section's size is not a multiple of 16
-> bytes on riscv64, llvm-readelf will report a "PT_DYNAMIC dynamic table
-> is invalid" warning.  Note: in the presence of the .dynamic section, GNU
-> readelf and llvm-readelf's -d option decodes the dynamic section using
-> the section.
-> 
-> [...]
-
-Here is the summary with links:
-  - riscv: vdso: Exclude .rodata from the PT_DYNAMIC segment
-    https://git.kernel.org/riscv/c/e0eb1b6b0cd2
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Could you put these on a branch based on v6.16-rc1 ?
+That why if someone else needs them before the next merge window
+they can pull that branch. The patches look fine to me.
