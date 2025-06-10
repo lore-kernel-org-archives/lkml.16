@@ -1,129 +1,218 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39EE21C184
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A9E21C184;
+	Tue, 10 Jun 2025 06:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749538399; cv=none; b=RAc0SJqX5DXIl0cMwzTutcW1YjANfCp9uXlG6YIxhiIVGpYnWuEYmQKpsVgyMx7sXXHKg5VjFeTa8IPbVWGwZGzg6e0AioQex2YbVwOTH4FP68MqDny8go/FM1fXMc9+lGtJo2WzJiPRE45pgSHx9+IU3tyI010WRMiJpQ4V1wE=
+	t=1749538415; cv=none; b=s9/eNuwiG8MNgNIE0v0nO/WdRRrWOhjvtDXdASCTHv90mvZqo2pK7j14C0v2OAYBnQgAhwxFKnR2VFl1w+zwF/9Ao+owFZTeOuYg+fVT3ishpsT4hP+f5Lk+7bzhTiWA+x5NONje8Yk/XkJOWaHDM68BwA/2k7YaPkmeCSIlxjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749538399; c=relaxed/simple;
-	bh=iyOd4HQzsqPbgprGkTnbglacQu9F+l1LR/UEgFtPOLo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ieF7LL3wGbwB96OuVdSoGy59H4NdP4Nhn+7+ttvk0PQCIxPj955MaAK+5SlRGwOs0eTdi9wiz+95YWfivNtYAy/XoKET1JkBkNOLtxmhcfhoXc6Zg++RlFPzzkAAiDlezAKACyuCVIGMVy7etcAOHr8bsvUxXNhz2VJ8OR+nUcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=HVu56jNd; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1749538415; c=relaxed/simple;
+	bh=wZqwKho69kQlxvMvKdRzNSzFkPge27kU09M5UoArVmw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FuLKHs4bMokouryX6XTulRzJJijxhhhiGc5Kkeo5EnNZ2gylayXIE+tCKDYuDdAhEYaDr3tXgtJ3CBvxricuURvDWAVG8hAIiPLA719yWEU+SiaGOousG3sfidTBdBpTh2gy3sjPQN5dZmgZvkd4MtApith6xxo9I0DL4ZCgbn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=InIWy4xi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="HVu56jNd"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-451d3f72391so66013765e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 23:53:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749538396; x=1750143196; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iyOd4HQzsqPbgprGkTnbglacQu9F+l1LR/UEgFtPOLo=;
-        b=HVu56jNdzxlULSexBDvIrbnzf4Okj/ljPPA502WJ9rfdhvZq/VWyxi46uWpEcOET68
-         pqLN1Ei1Y+7ZQCSv9D02biWQflEviPuw/3Ly76ebzC3hBQQB6NQxxu2JETMYpwVhRAIh
-         elSaI6V9vIh4Z+4L0LSNhuQd2wp/b4I//gwhhdb6RKOjjs05Hs6lL/hBVql22YFdcnKU
-         mnNvuu/dVAAbwKI3avBA4A7nK8que2dbyH+rfpNHKhMDbKw7OKfjogrSO8ypS17VGED6
-         R1q2DnWjF1q0LzONAbmqeoN9YKTFtcCaXn82Cu4kMe8JqD8j9G8o55BVC/AzB/oOW9NV
-         K/Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749538396; x=1750143196;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iyOd4HQzsqPbgprGkTnbglacQu9F+l1LR/UEgFtPOLo=;
-        b=ZcnTNRkOxfhUxhUiiD9sH8+kzbMvjUeU8+B8SkK27I8YnVaPbM8a/NyKVasFd+YKjt
-         F0pOP6Roluu9K80nxwodyePpKegd/ByCXY32kAH7fdKza+5WJZ4s7ca0nv52nfQwnEnM
-         OI3btBxe6idrFkbJXCs2Z0URfCMiSGgBhzyGHJHj7MNrk2vtPRRQ5hlzkG2vp3zEDbxO
-         khApCJgQVOgisQWWa/Bq7pqUKAcYhbj6o6YpiTZwcvBtvHDprv/2wiQ79ZdpIgSwso3g
-         47CpyHfWE0yKt3x32BUPzh/cjMEujrb4cP2r2XWSk2qTUoRTB6P+xCHLtNzy4oq0k3HA
-         Xvmg==
-X-Gm-Message-State: AOJu0YyL0styW6lahjxSgbhhlTE67UUKQhImTmnlx72g8g7cuO9QPjNW
-	Z0y52Afrlp8hUSVlRCkMOWkf5K61fq3vrt/bBljUtu364mSn/P1roZ5FRbuF92E1k88=
-X-Gm-Gg: ASbGncvrqHsjA/9UGENAfv39JmfXgSS+hNrsFW/pt2kwkTRDTvPqL1+0oM1eY2SbDPi
-	yE0b4MtyoTLryOamYsOMrdSrWJDikIOnEhtRiF1aRzEvGGTlR9PTNjsxLY4LRR2++uQ1ZGrGTGe
-	ecRFPxxH5u4e7AGv9RkFnnZqKiEiG9YnHi0ByFdMeMK9jpgtxo/xIWF24hA+j2ufHpOl9auaMtb
-	+nIpbNlw0gVdsiKqCch5zb8eLQeE1jLyjfn/SSNbgw6lKMc5ylrFiyHZaLN8onF75iDuRdVOAgb
-	LZ6Lsj7fhjHK7rABWEy41f4jIKH5Cu53Hp3vU8aRCwBKha5ogg6/WeZ9dqs1Yy3/7NoAC/TwpC5
-	hCl1A4p9xHMdMgRCfr7WMJO8M6h4cSyv+cgph1vo=
-X-Google-Smtp-Source: AGHT+IEs+YhhJZoR/pGvAaYaeAcRyr5uezaIhHxVp1Crs8g4CqMjqFGehJlm2hhZ0ehAlxYyCfBfbw==
-X-Received: by 2002:a05:600c:b86:b0:450:cd25:e68f with SMTP id 5b1f17b1804b1-452014e9325mr128402985e9.27.1749538396165;
-        Mon, 09 Jun 2025 23:53:16 -0700 (PDT)
-Received: from localhost (p200300f65f13c80400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f13:c804::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-45209bc7391sm133955865e9.7.2025.06.09.23.53.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 23:53:15 -0700 (PDT)
-Date: Tue, 10 Jun 2025 08:53:13 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Documentation <linux-doc@vger.kernel.org>, Linux USB <linux-usb@vger.kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Daniel Scally <dan.scally@ideasonboard.com>, Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>, 
-	Felipe Balbi <balbi@kernel.org>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: Re: [PATCH] Documentation: usb: gadget: Wrap remaining usage
- snippets in literal code block
-Message-ID: <icl6osl67smwbaytqcelw4iwf75tvy5prkv5wx2t4n2xx2aybc@ec6keupto7dd>
-References: <20250610031705.32774-2-bagasdotme@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="InIWy4xi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BEB2C4CEEF;
+	Tue, 10 Jun 2025 06:52:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749538414;
+	bh=wZqwKho69kQlxvMvKdRzNSzFkPge27kU09M5UoArVmw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=InIWy4xizWFPC4COOj3bDP9F8L4MBxzxjTyG4Jl0NjFzmuc9EWE6eB8/yHJPSkEOD
+	 Kcg3f80TCllYPxvWcHqFjv8qjRjsqqs92h/zFQVv2LcSUYdpgjqrxtAN4F7Jy53cLd
+	 FIvWoZ46G6iFRISZ1f2LbkqsgvsoWhXmsDmArXvPhPKeJ5MrzpdkhMFkyzs1J7kGF9
+	 nwaxsQduYxMawJXgz5aWXbXXbbzGCKhvZ0NQr04+b4KCcJA7ajeta2A18GP7dLhaHJ
+	 UgxMYFUKDr/aM36Ld6iOuC90weGyTtBG3FYTzfU3+aHtzVYU73ICIFlqQtDHapQHl2
+	 7iCVE1b9K+L2g==
+From: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
+To: iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>
+Subject: [RFC PATCH] iommufd: Destroy vdevice on device unbind
+Date: Tue, 10 Jun 2025 12:21:46 +0530
+Message-ID: <20250610065146.1321816-1-aneesh.kumar@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="i3pyjm5b2q23ytxu"
-Content-Disposition: inline
-In-Reply-To: <20250610031705.32774-2-bagasdotme@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+The iommufd subsystem uses the VFIO character device descriptor to bind
+a device file to an iommufd context via the VFIO_DEVICE_BIND_IOMMUFD
+ioctl. This binding returns a bind_id, which is then used in subsequent
+iommufd ioctls such as IOMMU_HWPT_ALLOC, IOMMU_VIOMMU_ALLOC, and
+IOMMU_VDEVICE_ALLOC.
 
---i3pyjm5b2q23ytxu
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] Documentation: usb: gadget: Wrap remaining usage
- snippets in literal code block
-MIME-Version: 1.0
+Among these, IOMMU_VDEVICE_ALLOC is special—the lifetime of a virtual
+device (vdevice) should be tied to the bound state of its physical
+device.
 
-On Tue, Jun 10, 2025 at 10:17:06AM +0700, Bagas Sanjaya wrote:
-> Several configfs usage snippets forget to be formatted as literal code
-> blocks. These were outputted in htmldocs output as normal paragraph
-> instead. In particular, snippet for custom string descriptors as added
-> in 15a7cf8caabee4 ("usb: gadget: configfs: Support arbitrary string
-> descriptors") is shown as single combined paragraph, rather than two
-> command lines.
->=20
-> Wrap them like the rest of snippets.
->=20
-> Fixes: 5e654a4655c3 ("Documentation/usb: gadget_configfs")
-> Fixes: d80b5005c5dd ("docs: usb: convert documents to ReST")
-> Fixes: 15a7cf8caabe ("usb: gadget: configfs: Support arbitrary string des=
-criptors")
-> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+In the current kernel, there is no enforced dependency between
+iommufd_device and iommufd_vdevice. This patch introduces such a
+dependency: when the device is unbound, the associated vdevice is now
+automatically destroyed.
 
-Looks good,
+Although there is already an implicit dependency—vdevices can only be
+destroyed after the iommufd_device is unbound due to the VFIO cdev file
+descriptor holding a reference to the iommu file descriptor—this patch
+formalizes and extends that relationship. Now, the vdevice will be
+explicitly destroyed when its corresponding device is unbound.
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Kevin Tian <kevin.tian@intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
+---
+ drivers/iommu/iommufd/device.c          |  8 ++++++++
+ drivers/iommu/iommufd/iommufd_private.h |  5 +++++
+ drivers/iommu/iommufd/main.c            |  6 ++++++
+ drivers/iommu/iommufd/viommu.c          | 26 +++++++++++++++++++++++--
+ 4 files changed, 43 insertions(+), 2 deletions(-)
 
-Best regards
-Uwe
+diff --git a/drivers/iommu/iommufd/device.c b/drivers/iommu/iommufd/device.c
+index 86244403b532..a49b293bd516 100644
+--- a/drivers/iommu/iommufd/device.c
++++ b/drivers/iommu/iommufd/device.c
+@@ -221,6 +221,8 @@ struct iommufd_device *iommufd_device_bind(struct iommufd_ctx *ictx,
+ 	refcount_inc(&idev->obj.users);
+ 	/* igroup refcount moves into iommufd_device */
+ 	idev->igroup = igroup;
++	idev->vdev   = NULL;
++	mutex_init(&idev->lock);
+ 
+ 	/*
+ 	 * If the caller fails after this success it must call
+@@ -282,6 +284,12 @@ EXPORT_SYMBOL_NS_GPL(iommufd_ctx_has_group, "IOMMUFD");
+  */
+ void iommufd_device_unbind(struct iommufd_device *idev)
+ {
++	/* this will be unlocked while destroying the idev obj */
++	mutex_lock(&idev->lock);
++
++	if (idev->vdev)
++		/* extra refcount taken during vdevice alloc */
++		iommufd_object_destroy_user(idev->ictx, &idev->vdev->obj);
+ 	iommufd_object_destroy_user(idev->ictx, &idev->obj);
+ }
+ EXPORT_SYMBOL_NS_GPL(iommufd_device_unbind, "IOMMUFD");
+diff --git a/drivers/iommu/iommufd/iommufd_private.h b/drivers/iommu/iommufd/iommufd_private.h
+index 9ccc83341f32..d85bd8b38751 100644
+--- a/drivers/iommu/iommufd/iommufd_private.h
++++ b/drivers/iommu/iommufd/iommufd_private.h
+@@ -425,6 +425,10 @@ struct iommufd_device {
+ 	/* always the physical device */
+ 	struct device *dev;
+ 	bool enforce_cache_coherency;
++	/* to protect the following members*/
++	struct mutex lock;
++	/* if there is a vdevice mapping the idev */
++	struct iommufd_vdevice *vdev;
+ };
+ 
+ static inline struct iommufd_device *
+@@ -606,6 +610,7 @@ struct iommufd_vdevice {
+ 	struct iommufd_ctx *ictx;
+ 	struct iommufd_viommu *viommu;
+ 	struct device *dev;
++	struct iommufd_device *idev;
+ 	u64 id; /* per-vIOMMU virtual ID */
+ };
+ 
+diff --git a/drivers/iommu/iommufd/main.c b/drivers/iommu/iommufd/main.c
+index 3df468f64e7d..bf653d16138e 100644
+--- a/drivers/iommu/iommufd/main.c
++++ b/drivers/iommu/iommufd/main.c
+@@ -172,6 +172,12 @@ int iommufd_object_remove(struct iommufd_ctx *ictx,
+ 		ictx->vfio_ioas = NULL;
+ 	xa_unlock(&ictx->objects);
+ 
++	if (obj->type == IOMMUFD_OBJ_DEVICE) {
++		/* idevice should be freed with lock held */
++		struct iommufd_device *idev = container_of(obj, struct iommufd_device, obj);
++
++		mutex_unlock(&idev->lock);
++	}
+ 	/*
+ 	 * Since users is zero any positive users_shortterm must be racing
+ 	 * iommufd_put_object(), or we have a bug.
+diff --git a/drivers/iommu/iommufd/viommu.c b/drivers/iommu/iommufd/viommu.c
+index 01df2b985f02..17f189bc9e2c 100644
+--- a/drivers/iommu/iommufd/viommu.c
++++ b/drivers/iommu/iommufd/viommu.c
+@@ -84,15 +84,24 @@ int iommufd_viommu_alloc_ioctl(struct iommufd_ucmd *ucmd)
+ 	return rc;
+ }
+ 
++/* This will be called from iommufd_device_unbind  */
+ void iommufd_vdevice_destroy(struct iommufd_object *obj)
+ {
+ 	struct iommufd_vdevice *vdev =
+ 		container_of(obj, struct iommufd_vdevice, obj);
+ 	struct iommufd_viommu *viommu = vdev->viommu;
++	struct iommufd_device *idev = vdev->idev;
++
++	/*
++	 * since we have an refcount on idev, it can't be freed.
++	 */
++	lockdep_assert_held(&idev->lock);
+ 
+ 	/* xa_cmpxchg is okay to fail if alloc failed xa_cmpxchg previously */
+ 	xa_cmpxchg(&viommu->vdevs, vdev->id, vdev, NULL, GFP_KERNEL);
+ 	refcount_dec(&viommu->obj.users);
++	idev->vdev = NULL;
++	refcount_dec(&idev->obj.users);
+ 	put_device(vdev->dev);
+ }
+ 
+@@ -124,10 +133,15 @@ int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *ucmd)
+ 		goto out_put_idev;
+ 	}
+ 
++	mutex_lock(&idev->lock);
++	if (idev->vdev) {
++		rc = -EINVAL;
++		goto out_put_idev_unlock;
++	}
+ 	vdev = iommufd_object_alloc(ucmd->ictx, vdev, IOMMUFD_OBJ_VDEVICE);
+ 	if (IS_ERR(vdev)) {
+ 		rc = PTR_ERR(vdev);
+-		goto out_put_idev;
++		goto out_put_idev_unlock;
+ 	}
+ 
+ 	vdev->id = virt_id;
+@@ -147,10 +161,18 @@ int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *ucmd)
+ 	if (rc)
+ 		goto out_abort;
+ 	iommufd_object_finalize(ucmd->ictx, &vdev->obj);
+-	goto out_put_idev;
++	/* don't allow idev free without vdev free */
++	refcount_inc(&idev->obj.users);
++	vdev->idev = idev;
++	/* vdev lifecycle now managed by idev */
++	idev->vdev = vdev;
++	refcount_inc(&vdev->obj.users);
++	goto out_put_idev_unlock;
+ 
+ out_abort:
+ 	iommufd_object_abort_and_destroy(ucmd->ictx, &vdev->obj);
++out_put_idev_unlock:
++	mutex_unlock(&idev->lock);
+ out_put_idev:
+ 	iommufd_put_object(ucmd->ictx, &idev->obj);
+ out_put_viommu:
+-- 
+2.43.0
 
---i3pyjm5b2q23ytxu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhH1lcACgkQj4D7WH0S
-/k6R+gf/XuFME9waQUBbNlezcsZwYX9GBHRc4Tf3As1u1de0Sddp6pGqTQdZnKaF
-WRnRPeQ6vLnJEL4ng8q0ZDUSms2Kq1HVO8esuGb2FJxdbtSlh+bE8lFEoH5cxND2
-Of8pUR41cvkVYz0keVmk2TqEqM7B1GUotrUTu4mXo10+qwevDDLCSvyZlD271Hwn
-OVdakodfZsKZ/0nhiAeBvykYXyuuYLmeKevCQC3pRvLulErjTEA2sXloC3MueFCC
-GVdRY9ekj+Q4l6lSuwBrKK8lrXQw1RPOutCfGSJtCCvA+lqjjtIJ/esaR/ZwyfNZ
-cwTxQw4fq3m9imucca3lXK0ks1D80g==
-=2vMM
------END PGP SIGNATURE-----
-
---i3pyjm5b2q23ytxu--
