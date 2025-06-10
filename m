@@ -1,126 +1,138 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6347A2BDC14
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:37:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E42E2BE7BB
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749559078; cv=none; b=qoKlpV1HnYEJ0uwu6PoVugVUlgPp1W4/9yFkdf8L8J421v1A8AaZU2EcsK7txHp89QG/m7y/WKNAjgs5h3zuvIF2GUV7C0Pb39djpL13F7NR24REbJJ8utsQ1+HKHePXzf51aCGkwo+/8cUyxvYKzTXp5qN9AAFJTkP5xOpEIVY=
+	t=1749559083; cv=none; b=TpOxeMnKdZEBUpefQxAeTVjC5l2zAElzCvvToMvWBJQXHE3sBo7cVnrlF6O2ereIFKPI5/GiHQ1INECek9FvhWfRkBA73fu1TBNnhwE4rAT2QDyFwn+deCs9anJrME5pjP/fqv+Ojm5qVl6QYc3sOsfhgTXMXNgyJ6X+YBdM5sQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749559078; c=relaxed/simple;
-	bh=VOzkxpypoaAOmED5Y3QuE5bGmiiKDU7pwO5eKvb2ZuM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p9QT4ZfyplYS5SAj1da02EC2jCNYru/guB+PtUpx6Na9tez8Eqs5KJTElAA2goO+vDamygXVyn3NNwslKkNaeV8SwCi693MRoG2HEQrTwV8W+7RUTUOWEdjK5RRe3PFEsn9QQDkpYsRmg6Y+81FmZfCw1P3tW7WIj/+ZFcwzWE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=D76MU4v0; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1749559083; c=relaxed/simple;
+	bh=KwxEa/uJuk3pJvTN2X8lujDshvrYOWCdkyKc2L1pS/I=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DZZWRk/o/B6GqTdWAsfSrghhqBcZCYx/NSAe57SWW3/Dnh+Tnf8lQVx15/rBdgtlCEsBxxKmdHSV3YUfctd1copmDO7E7kjlipDUkDEb5Y1m37wluel24cD6oCbgSPG3mNI5hi0z5MIJXCl30m+NxVgcHU+HFUg3/ywHU/1NrYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xenBnU60; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D76MU4v0"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55365c63fa5so4605093e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:37:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xenBnU60"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-451dbe494d6so65835005e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:38:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749559071; x=1750163871; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=VErfzveBAbUjLmCpN+lf4azG2Ow/Gi7oziw0c95kQ9c=;
-        b=D76MU4v0x7KrvFIpmQoc15Ji/8GcEmESzluWpiVkOyZfK0bh1eds1JcvuhET3mAmHJ
-         Kb5bSVyqCeRQ/FpSzADOk9cpgJO7TTujuZxkVmqgHx3M3pp3HzklhIGEZE22iBWZJHon
-         PeKvTwvND4YJts4kPyMaB1qC678Ap7XN20LeA=
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749559080; x=1750163880; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=76J2LCVixashUDb/m2qpfx8ikv/ZEUvoe4KOmQxn0YQ=;
+        b=xenBnU60b9gQp90ap5DPzJhLcijnnQdsXm2JClJGNt/V4YeFS0PUSSsnpA1dXjpvrN
+         Gk3QlCfAEqP7ISc0YuVfRDOVMuy4fgnsMCUnZue4agx1vFIag8r2QopEKQFtyX+G46YP
+         CWCsfMIgFTAtbArmZTB1LsHOzshRzJGODf2IJpQ6195g7cniMhWaqJ1c6c30hd1Gxu/I
+         62S43YH15Jaeq7wvWlMWIyh3wiLTWBfcp38S4GnJKId40yrZbFY1rUDKZrUlUn1LbaWI
+         +GGPjn1QryGSU5hBbzZ6Flj+9DlycDJpw1ngOCnG9lp4uWEh7BmgqAusugVqNAlX7uj4
+         EFog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749559071; x=1750163871;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1749559080; x=1750163880;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=VErfzveBAbUjLmCpN+lf4azG2Ow/Gi7oziw0c95kQ9c=;
-        b=Pg1VtQ8Pg0EZkBDsqAjkR80wKYaLG+Y8G+TrXnSu0OWk0qVQWactiTBJqd/Rjz4fGg
-         xlgc1DJkkYUkJoCOqra3LgscH/gwyDjEeOQ3hh2M83cEqm1y71DbCcX/u5tNgQN1hcMA
-         iKRqFZg4ie3TtzuOmqm7ktlldoJ+4rUAbQnM4HSX/sXxIqkpat6a8ISxhs+6nXeKpXty
-         oakK6gggegCwOMEIHoKIZqYZTP1hizKxcx2C5cMI0xc+w2osYcVD64su4tNBCj3XrJvX
-         OgSRBMtvnTH+uln2aAkB98/YfFzvZWzyhqCFzdO7mmNdNb6zwYmOrS+6R08OvEeuaw3Z
-         Mmyg==
-X-Forwarded-Encrypted: i=1; AJvYcCVWgnLntX8UWWS123Nn2w8GmtEm90yWeu3/R0CvH8/UNToRPIAAin/uYvrMTpvGzgYo8CwjT7U33B8DnVQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzk/e+yAfHjkVCLLOaJpMIkgcXWSkFFQtfWLmo9DjpXrYNpKVNX
-	qThREVyzHeD4S5AGpq2M+5ztMbvuOqOTgE2p/z9QJCDPOD1EdMTtfP0AxkqNUVUfYQpHG7ITjKn
-	M75Y=
-X-Gm-Gg: ASbGncs9tV/Jxk9B6ORHiVVO544PmlI5dWk/CW6KQTgVb0L6+606QESOQEX0dTuKRdF
-	rTx8eXISjfD3bSQKB1OkxeOtsz7HBS4dsX8tdxs8q/tYjtjV5Gje8HCTbaUYtg+Zw//+1J5S77R
-	LVOc1Q/3VtvDmPEG1KTh67PSQA+BVkqZbvtuC6I7TkrLvrP8J2eOoNx7CRIp1MaUv1FfSUP2Xf1
-	1biNqAz6gc1ea5RILW07nIpo/NWZWvYWiB+BnQ4ZOMmojQLTiMy6yCfRWE/H01PDUki7XuuJzAT
-	meDqBEN1BV7grmgOcaW4dj3eu7pbEzLlSfcizS/b8nLV6wREJiuv6xFxPxi+FazOI+0QsdpJgMm
-	PTyTnVAdwH+9dPUEFqFoLhUUn
-X-Google-Smtp-Source: AGHT+IEdyz5baFF+tP7pwz1yZVjq2mVr3rMKWewc9niTOjr/vOOgB0vp/bFU+nij/ve0/kcQpv4ksg==
-X-Received: by 2002:a05:6512:2242:b0:553:3892:5ec3 with SMTP id 2adb3069b0e04-55366c354f4mr4291820e87.46.1749559071016;
-        Tue, 10 Jun 2025 05:37:51 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55367731785sm1534773e87.216.2025.06.10.05.37.50
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 05:37:50 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-551fc6d4a76so5787411e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:37:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXK3Vsh7dQtPYDV8cGr0fMSBuOU4c0hNBG97Wr3GClShJ+CE1pghs8i+K9M224GKG0c6+FT2K5b3ELvHCU=@vger.kernel.org
-X-Received: by 2002:a05:6512:3c8b:b0:553:279b:c55d with SMTP id
- 2adb3069b0e04-55366c2ff61mr4456065e87.45.1749559069957; Tue, 10 Jun 2025
- 05:37:49 -0700 (PDT)
+        bh=76J2LCVixashUDb/m2qpfx8ikv/ZEUvoe4KOmQxn0YQ=;
+        b=QQ5V04S7iSjAvMJUqSEqHyL1CIKsd9fLXytMPTiArPnqRxAy2dc1V5VP9RWmkRl5Dg
+         76uKIJY35C6Ir7furL4ThPU+YcCtHAn8CLWrD9nMtk0r175cXt+1+uCKGmqmxNsPbayk
+         cz4ejL5mjwtk6vkffSb9SEFFT0WaxyIy+jz0z4ZZwI9wIyiiRs/fGmmtR6TsREHgV1MK
+         zC5t8L8ydl7YVmZ+dIjPW0t0xZ+WftCHtPLOczaL0fiPngty+Hq84pGmVRFkxyvnshiA
+         PWjTs041v6VYDrLVIU56v0JlCxhyRDlciNrw7iWBFYSCklQbcUUYDnHoopVCmEjvDmZD
+         lThA==
+X-Forwarded-Encrypted: i=1; AJvYcCXGNK833GRTVG0LIrs2cukE+lUHkMP4FWiWgxZRz6Cq+scQAKOb06RBLhZlGspUlY6U0Kzpo5NPMsUEG9s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzW8f1mt+8Zi6RGIDjWfwXwjEVAjJeUMtJ1ZpvRIWt0vcGFZshS
+	ogLScLk5nwUuYOzqw6ksDphWhWdCh3Qlxs7wuRQfgjDgRTemKV9HT0DlWccgyrmfwvM=
+X-Gm-Gg: ASbGnct1BRogQdxxQh7pNqW3octaj/sfs1p3/AARkoaHjRA2sdsoxJVQSM46Y+Hzkgb
+	ECrAv4r66Q9v8amXswHrU7uIyvd/KmyaUV48pEYlm83T+YBuPV1oxeREmfjucujfOt1fzWpu1FF
+	kUEjYJOSMjdHFgQxuNCho/3pcJsPtiMih6KkhNRZZ5iDikP34FaDdPt7h2in7KfppS+5BqGktUn
+	ZMoYj93UpzBWOVwvyop9t6qHcmb/beIAwd4+mHUEx3eL1eYnlu9wlV+LTVN9vgSpT7tOXLWOMbL
+	8le53uzP5EUwkN9RIi9dfCoS/YBjhIFbemCpRgnmbbbPUX7zNSBHbxlH40GQ10y/
+X-Google-Smtp-Source: AGHT+IGsSDaRB1hqZwU1/G5MCu4Szr+Exf9GnhrFkMwxOumN0QR4RfbCMoZmzXDX0IpoSo9pzctkjw==
+X-Received: by 2002:a05:6000:26c8:b0:3a3:7077:aba1 with SMTP id ffacd0b85a97d-3a531ce677bmr13926248f8f.48.1749559080359;
+        Tue, 10 Jun 2025 05:38:00 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:4d:e52b:812d:eb7c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45213759fb2sm142476805e9.38.2025.06.10.05.37.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 05:38:00 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 0/4] net: use new GPIO line value setter callbacks
+Date: Tue, 10 Jun 2025 14:37:56 +0200
+Message-Id: <20250610-gpiochip-set-rv-net-v1-0-35668dd1c76f@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250610123532epcas1p24565e694897b17a36ad04752b7dd8678@epcas1p2.samsung.com>
- <20250610123526.37316-1-yjjuny.lee@samsung.com>
-In-Reply-To: <20250610123526.37316-1-yjjuny.lee@samsung.com>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Tue, 10 Jun 2025 14:37:37 +0200
-X-Gmail-Original-Message-ID: <CANiDSCsTm7-kxS0C6H_JY7NnC3z73Qg9L7d6M37p4Zao1+96EA@mail.gmail.com>
-X-Gm-Features: AX0GCFt5eSrh6Ot3mJNfS0FZ18dU3T5t8BB_D6IPh7jhlV2rISHnMB5fsHFWlWU
-Message-ID: <CANiDSCsTm7-kxS0C6H_JY7NnC3z73Qg9L7d6M37p4Zao1+96EA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] usb: uvc: Fix 1-byte out-of-bounds read in uvc_parse_format()
-To: Youngjun Lee <yjjuny.lee@samsung.com>
-Cc: laurent.pinchart@ideasonboard.com, hdegoede@redhat.com, mchehab@kernel.org, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACQnSGgC/x2MMQqAMAwAv1IyG9CgFP2KOGiNbZZaUimC+HeL0
+ 3HD3QOZVTjDZB5QLpLljFW6xoALa/SMslcHamloB7Lok5wuSMLMF2rBWDGy3cZu7emwDmqZlA+
+ 5/+u8vO8HXLWAMGUAAAA=
+X-Change-ID: 20250527-gpiochip-set-rv-net-9e7b91a42f7c
+To: Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ "Chester A. Unal" <chester.a.unal@arinc9.com>, 
+ Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
+ Sean Wang <sean.wang@mediatek.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Marc Kleine-Budde <mkl@pengutronix.de>, 
+ Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
+ Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-can@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1195;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=KwxEa/uJuk3pJvTN2X8lujDshvrYOWCdkyKc2L1pS/I=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoSCcm+33A95fkBlAJxBo1vos+qspK8wslT2V1V
+ Wh30tXt2cyJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaEgnJgAKCRARpy6gFHHX
+ cuYrD/44rRjrB6mmO6/fNfGeJctkPA103u6ffSW8zmiUHtgIJ5B1V5Qasz+jhTr2tg3lUTCnbYe
+ w34O88SipckwpEJoWpdvuB2hboyNKzPQQS1WPa2E39MYGaJw7fYPsbvFVVrtxBCZ7RzWFExW3MQ
+ 3TOsO1fEzH+UzzX4LwNR5DYvCTbc5uo6WA/tYEj2Cf5UdkI3ukiMfJB3cxEaZgW1Xhv0oVIOX0C
+ NpnbvH/9zY+5TwvO/xjSNoOdxotzl2H05KRpJ5Aa5WaeU68D/TlijfF/9pB3tsq0N0SK4uPITOk
+ 1nvjFoAGwO9zoPERN3DQ+sB0Tp5RHQXfrfpo11vUn9qqGhDExZAen6z8FlYixLirLMdzj+UvWxj
+ XBKO0O1hoZfuK4ZHjVYa5tdLT5ofLoIoKxVQd3n3UENerD2HXefvq4tvwtxQ4+MVk9r0Vwd8BZL
+ dweZ0tHZ/7Ntl8kGYNe7A7JtI42JgVzJXVV/t3fa7pzQBU+ulPgswxTSNIeYXYxETT7g4cYWjK7
+ 25FpJqsQrKFCE9mZbAaj+kQt6QKR7ceIUa3pe0x5mnErUjbysE7QUJcphFy2dh4QZ+YpI328z8P
+ Z8jaeoUcMeTqO8wIjnMJV4NBzsCznTgTgvtZ5EFwA8JfF2IN/tWFT0I8wKy1PwzioUBgGqzP1R3
+ QGBdUz7g9snOoDg==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-I think you mean v2 not 2/2
+Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
+values") added new line setter callbacks to struct gpio_chip. They allow
+to indicate failures to callers. We're in the process of converting all
+GPIO controllers to using them before removing the old ones. This series
+converts all GPIO chips implemented under drivers/net/.
 
-On Tue, 10 Jun 2025 at 14:35, Youngjun Lee <yjjuny.lee@samsung.com> wrote:
->
-> The buffer length check before calling uvc_parse_format() only ensured
-> that the buffer has at least 3 bytes (buflen > 2), buf the function
-> accesses buffer[3], requiring at least 4 bytes.
->
-> This can lead to an out-of-bounds read if the buffer has exactly 3 bytes.
->
-> Fix it by checking that the buffer has at least 4 bytes in
-> uvc_parse_format().
->
-Fixes: c0efd232929c ("V4L/DVB (8145a): USB Video Class driver")
-Cc: stable@vger.kernel.org
-Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
-> Signed-off-by: Youngjun Lee <yjjuny.lee@samsung.com>
-> ---
->  drivers/media/usb/uvc/uvc_driver.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-> index da24a655ab68..1100469a83a2 100644
-> --- a/drivers/media/usb/uvc/uvc_driver.c
-> +++ b/drivers/media/usb/uvc/uvc_driver.c
-> @@ -344,6 +344,9 @@ static int uvc_parse_format(struct uvc_device *dev,
->         u8 ftype;
->         int ret;
->
-> +       if (buflen < 4)
-> +               return -EINVAL;
-> +
->         format->type = buffer[2];
->         format->index = buffer[3];
->         format->frames = frames;
-> --
-> 2.43.0
->
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (4):
+      net: dsa: vsc73xx: use new GPIO line value setter callbacks
+      net: dsa: mt7530: use new GPIO line value setter callbacks
+      net: can: mcp251x: use new GPIO line value setter callbacks
+      net: phy: qca807x: use new GPIO line value setter callbacks
 
+ drivers/net/can/spi/mcp251x.c          | 16 ++++++++++------
+ drivers/net/dsa/mt7530.c               |  6 ++++--
+ drivers/net/dsa/vitesse-vsc73xx-core.c | 10 +++++-----
+ drivers/net/phy/qcom/qca807x.c         | 10 ++++------
+ 4 files changed, 23 insertions(+), 19 deletions(-)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250527-gpiochip-set-rv-net-9e7b91a42f7c
 
+Best regards,
 -- 
-Ricardo Ribalda
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
