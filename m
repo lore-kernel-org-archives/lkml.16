@@ -1,97 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80119219FC;
-	Tue, 10 Jun 2025 02:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980C224291E
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 02:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749522659; cv=none; b=EfspWV4l5nlhX4oCCUBk3HV0GoHCXMd6Rjoxx6uuawIZHUaQx0iPAr9njqjgc91kjCOXYVys15MycS2ggv5zMe02Vm7y7gdE5EwKjZVojZ+cEM4CsRNlI/77CvAPdPoj930qkBZgPuXB/1iwAjEDEjoNeQ2mUFfs9r1vzqzF0Lg=
+	t=1749522900; cv=none; b=hvwTBQITh/FkXL4uFKlc4fBbx0UIW8/1niaJTy4Wi4t0sW85XNi+TZVBgdL9ZwKhWoizga6bNYhHxP8QAVh5XZKVsgEwg/769TMZ5IAtqCg3XmSfrgZPFOSTCDIQEymJoi/aiL5RwM7RgmlH6tBHjuAW2/2dYNSv1yJZehjB2aM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749522659; c=relaxed/simple;
-	bh=MF9eFED5nRvQBjnkQkaYBoOXrlZbPXE3oEhI6hM3hIM=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=jCmIBHnDp6LsUcnexYSs8Gze+iEQEHRMchhvj6CqriYmVL+BPYrLEcbPBUMDOVtLz3UdcZ0jkyyWjNeBD9NW1BP1xtOFdLIa+VXwMDp6c+8exXrk5jP2JlImVGwcwiput8Pfa72Fep768FJZwgahEVmk+XUVSyngf860xBoRMhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QtPCtTdA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749522900; c=relaxed/simple;
+	bh=tp8L0BAtSL5ESq9LFjxdaRFJAyqYWmFXOftN6Knq36U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QbHOZ1AgblH5+5lV+rseJ0RR2B5RWoFbTjqyZscJ6R+B+MiV7nJ3EzJdIqorjw6nR8R8odfeI19hVqrmDUai6hNpKw40j7cLYPf2uhu2S2ShVbN5ZzD42fPabGbJnB57+vkzbh3m2tYzw/CaDlaMXK6V87Jl/z/EAs1wBSs7rjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WanczKjS; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QtPCtTdA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14B1BC4CEEB;
-	Tue, 10 Jun 2025 02:30:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749522659;
-	bh=MF9eFED5nRvQBjnkQkaYBoOXrlZbPXE3oEhI6hM3hIM=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=QtPCtTdAWiYNrWfnLL1Egie323Tgg630GTtlhtKZVSX9uBqa1Gr88E9RsbxDT91td
-	 g8N2E1mXP6KQ3i2S6j5SfrRj0MaXKnbtvuE83BlJUxGGpTiVbnl2rxiJMDCs4KEyTx
-	 8GoA9PljkQes7HFBNnlOgpA+P9Osn1lcp/7BumzmdOTDsooqKlOoMYKrU0N+NtBleL
-	 XDFNcpnclJnjOq5Ft8al8OYLgep4MJTJBH3B1r74QqveEOOgVHBzBa3R7cBj3KbHtg
-	 aOW4kofCS51lkO8XkZR1GLTWMCjnZ4wICUfyW4BwQFGxs5B6ZFfvE6OYVB/idqhdt2
-	 m/aI3IhosKoyA==
-Date: Mon, 09 Jun 2025 21:30:57 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WanczKjS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749522897;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JZMpQ5XItSawPL6rw4iOUVcSAdD3ZFNQ86Q+6qjE8vc=;
+	b=WanczKjSg/batmXwrTus3KaBLfjsJ1yO6VCAO4eWhGo077n/kAgI0k6VOfpSl42QnUmSqw
+	dgJYpZCplm792WkeQUmv+D7h113SrL3tZuKr1XrN3dEvdJ6NV6qOCgs4UKFM1qtcb0KS0K
+	WPTnEksMvzZGUzmYAChixAag1yriSjA=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-21-mkdENwJONKqVxRxg4ErcCg-1; Mon,
+ 09 Jun 2025 22:34:51 -0400
+X-MC-Unique: mkdENwJONKqVxRxg4ErcCg-1
+X-Mimecast-MFC-AGG-ID: mkdENwJONKqVxRxg4ErcCg_1749522890
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 375F719560AD;
+	Tue, 10 Jun 2025 02:34:49 +0000 (UTC)
+Received: from redhat.com (unknown [10.22.81.60])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0FBCC195608D;
+	Tue, 10 Jun 2025 02:34:45 +0000 (UTC)
+Date: Mon, 9 Jun 2025 22:34:43 -0400
+From: Joe Lawrence <joe.lawrence@redhat.com>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
+	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
+	Marcos Paulo de Souza <mpdesouza@suse.com>,
+	Weinan Liu <wnliu@google.com>,
+	Fazla Mehrab <a.mehrab@bytedance.com>,
+	Chen Zhongjin <chenzhongjin@huawei.com>,
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 59/62] livepatch/klp-build: Introduce klp-build script
+ for generating livepatch modules
+Message-ID: <aEeZw4PTeOIe-u_d@redhat.com>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <10ccbeb0f4bcd7d0a10cc9b9bd12fdc4894f83ee.1746821544.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: edumazet@google.com, netdev@vger.kernel.org, 
- linux-aspeed@lists.ozlabs.org, mturquette@baylibre.com, 
- BMC-SW@aspeedtech.com, linux-kernel@vger.kernel.org, kuba@kernel.org, 
- krzk+dt@kernel.org, p.zabel@pengutronix.de, sboyd@kernel.org, 
- linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- davem@davemloft.net, conor+dt@kernel.org, joel@jms.id.au, 
- andrew+netdev@lunn.ch, devicetree@vger.kernel.org, pabeni@redhat.com, 
- andrew@codeconstruct.com.au
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-In-Reply-To: <20250610012406.3703769-2-jacky_chou@aspeedtech.com>
-References: <20250610012406.3703769-1-jacky_chou@aspeedtech.com>
- <20250610012406.3703769-2-jacky_chou@aspeedtech.com>
-Message-Id: <174952265793.3644019.286629373000016480.robh@kernel.org>
-Subject: Re: [net-next v2 1/4] dt-bindings: net: ftgmac100: Add resets
- property
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <10ccbeb0f4bcd7d0a10cc9b9bd12fdc4894f83ee.1746821544.git.jpoimboe@kernel.org>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
+On Fri, May 09, 2025 at 01:17:23PM -0700, Josh Poimboeuf wrote:
+> +revert_patch() {
+> +	local patch="$1"
+> +	shift
+> +	local extra_args=("$@")
+> +	local tmp=()
+> +
+> +	( cd "$SRC" && git apply --reverse "${extra_args[@]}" "$patch" )
+> +	git_refresh "$patch"
+> +
+> +	for p in "${APPLIED_PATCHES[@]}"; do
+> +		[[ "$p" == "$patch" ]] && continue
+> +		tmp+=("$p")
+> +	done
+> +
+> +	APPLIED_PATCHES=("${tmp[@]}")
+> +}
 
-On Tue, 10 Jun 2025 09:24:03 +0800, Jacky Chou wrote:
-> Add optional resets property for Aspeed SoCs to reset the MAC and
-> RGMII/RMII.
-> 
-> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
-> ---
->  .../bindings/net/faraday,ftgmac100.yaml       | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
+You may consider a slight adjustment to revert_patch() to handle git
+format-patch generated .patches?  The reversal trips up on the git
+version trailer:
 
-My bot found errors running 'make dt_binding_check' on your patch:
+  warning: recount: unexpected line: 2.47.1
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/net/faraday,ftgmac100.yaml:82:1: [error] duplication of key "allOf" in mapping (key-duplicates)
+diff --git a/scripts/livepatch/klp-build b/scripts/livepatch/klp-build
+index f7d88726ed4f..8cf0cd8f5fd3 100755
+--- a/scripts/livepatch/klp-build
++++ b/scripts/livepatch/klp-build
+@@ -345,7 +345,8 @@ revert_patch() {
+ 	local extra_args=("$@")
+ 	local tmp=()
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/faraday,ftgmac100.yaml: ignoring, error parsing file
-./Documentation/devicetree/bindings/net/faraday,ftgmac100.yaml:82:1: found duplicate key "allOf" with value "[]" (original value: "[]")
-make[2]: *** Deleting file 'Documentation/devicetree/bindings/net/faraday,ftgmac100.example.dts'
-Documentation/devicetree/bindings/net/faraday,ftgmac100.yaml:82:1: found duplicate key "allOf" with value "[]" (original value: "[]")
-make[2]: *** [Documentation/devicetree/bindings/Makefile:26: Documentation/devicetree/bindings/net/faraday,ftgmac100.example.dts] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1519: dt_binding_check] Error 2
-make: *** [Makefile:248: __sub-make] Error 2
+-	( cd "$SRC" && git apply --reverse "${extra_args[@]}" "$patch" )
++	( cd "$SRC" && \
++	  git apply --reverse "${extra_args[@]}" <(sed -n '/^-- /q;p' "$patch") )
+ 	git_refresh "$patch"
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250610012406.3703769-2-jacky_chou@aspeedtech.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+ 	for p in "${APPLIED_PATCHES[@]}"; do
 
