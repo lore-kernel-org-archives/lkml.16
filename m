@@ -1,160 +1,276 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2064.outbound.protection.outlook.com [40.107.223.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F24221D88;
-	Tue, 10 Jun 2025 06:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749538566; cv=fail; b=Z3BHLwRS1epuS32Wfw6ov7dJZkQqpcUtyL1SPpmtcTgwjcEra2L+Gf7J6a2ITEyGaRclUVMSP66YxR+yP8djWQgocMOrJijx6d3STF2Dacz7Hr4WQYWSlwmXINr6B3pU6NifvahfSUBK+pL9t47GpxtIWbda/ZR7RfLLRIOwWhY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749538566; c=relaxed/simple;
-	bh=rHxcNI/jKQ/w09IaTqxGn+IVphFr/SqIjClot171EYA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dv69UA7yy3fg2vfPELk7gkf2hcFvTkyL8eXZQGLH41pX35BKCLncW8+qV/WxMLzkyjxUh8EGDrrj2XXb8DdPGvvtr/swLKf7qNzMJtdzzeDdyCmcWGtREz6qRM2YegGFz4ls86x08/QS/GfARUev1MOwmLxRyjH7Y03JInoyMR0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=m4n/Nu8l; arc=fail smtp.client-ip=40.107.223.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162B7221D88
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749538646; cv=none; b=eQ3DehUfVzfxFUS0TyW0qSYGAmwFqKTrlY0Zjv1UuSNq5G3LqBqKABL3ojoGgEHsHDflqe/DsiWXgw4dMv3FO1kgRfDU6qALgjKiLLmg/80GI2DVhZzKdE2Awd9q0T66zFG0vo8DmXU09qfGXHWTHoKmr4ZbYI2m4gwHxsN95iA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749538646; c=relaxed/simple;
+	bh=NJXio4QauoFkz2xa5jL1qxd0jPxxaL5PMYTl9r8XtoY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=juoYl1Noy/k23FwzmzZ5VFUqW08EyBFxfe/5ize+XVn74phq32MMg4Uh0bI+w7C1fmemrAQ+ByTWewbYl/8FMdMoiUPI3xm9q1z10kKG0JY3Kg2Q1Iu14gKuATx4FTRuUf/IQ2bNvumt/4+lxc/zOwvcl8ZDiax+ctGKQlcMPIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=astranis.com; spf=pass smtp.mailfrom=astranis.com; dkim=pass (2048-bit key) header.d=astranis.com header.i=@astranis.com header.b=QGTvmL6k; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=astranis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astranis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="m4n/Nu8l"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CUs8KR5wkcIekTMNfK/PpR9fgivmpQBkZQla5+j15OFHNpgaMdS+c9C6yZ7hl8tubJu3lsG71kk5loxrAyDiuOK/baqplCLI3Cfa6KJQaO16mTnO5Papudi3T7pCZ8Hg+w8txoro8CtXg1fyZ68evLbvHvwK5Tu5jbn+SEbeuMefW38mY4GoGxT3gawrtuS0yNE+TzeoXzwiftZ1OOnj27KL2ViXqntZBjrKTYtNlXrGYiWeA6rsVi2Fl8vKkTS3H7HR2g3tsFssw7LQoKJkQX6T/NktfnMtn9ihT3DWOj3zrjtver8ZOgeTCEjcL+e6F7CdCCiRtoTPSWs/lhMuLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zMGdeZBBihZD4qE5JZtjkAH9CktW4Fc9fEH6+dZoVZI=;
- b=cb6440m7n1XnuVJlNCkyBF8eK67wt5xDaMO2e/uwtBVJ3ebjky74FeKEazhpg/ABcvnRVqZfrkPRDOmFy/zIVlk8eorQ0YM9MAa/0TU52xJPu8Ji8n96wsxiEePfFA1JrEaqOdmKHypKbTltDzul1HOjB7jJzjyLFhg89vrVkwiTl6Jksj9vds6Xb1iqleQ6CEB/1hBoieJ/0EHDbYI62/pXhror3nmQunOJ3VwX8AMNrhHEt7Nj8pH1UkJ7z7PujbU5yfER96kzxhMiWlGfdHRUcfUkL125gV/fsG1pGCIbJw5SL7+aWb1J8IK+yzP6Q9yq34KRpVcSUB98RuP1+w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zMGdeZBBihZD4qE5JZtjkAH9CktW4Fc9fEH6+dZoVZI=;
- b=m4n/Nu8lRIiIsJy6GgejHOnSjAcIrj4dnMCvUk79xhAHSS1IAOo/h3gNRIhnHAdjmbrPp3Q5Td+7qYA0GbmD+k7KvnSrp7n4tT1Z3w/DcwypxNDO8dtIftuhfOY3yGWI5hSMPgOGrGSI2qii8KQHPBjWYPAtCb/92B2SGQYNdgpkKxbpafeLAcICi437jVeFSbMIChRnrXCKAet5jrylZEgb0C59Qi3HW3Q+bNOd0797511eXYGbtJg9MwkhhXu70MZcx6iRwpbh40w0sKTfMX4f4H1fIYpx0gvX9+xZngFO03LbVKLyAjhloZ+8JfUQQjUvwyDxSzlO/VIkrMQ6kg==
-Received: from BY3PR03CA0030.namprd03.prod.outlook.com (2603:10b6:a03:39a::35)
- by DS0PR12MB7559.namprd12.prod.outlook.com (2603:10b6:8:134::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.35; Tue, 10 Jun
- 2025 06:56:01 +0000
-Received: from SJ1PEPF00002318.namprd03.prod.outlook.com
- (2603:10b6:a03:39a:cafe::6f) by BY3PR03CA0030.outlook.office365.com
- (2603:10b6:a03:39a::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.35 via Frontend Transport; Tue,
- 10 Jun 2025 06:56:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- SJ1PEPF00002318.mail.protection.outlook.com (10.167.242.228) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.15 via Frontend Transport; Tue, 10 Jun 2025 06:56:00 +0000
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 9 Jun 2025
- 23:55:42 -0700
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail205.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 9 Jun
- 2025 23:55:41 -0700
-Received: from nvidia.com (10.127.8.12) by mail.nvidia.com (10.129.68.10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Mon, 9 Jun 2025 23:55:38 -0700
-Date: Mon, 9 Jun 2025 23:55:35 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Baolu Lu <baolu.lu@linux.intel.com>
-CC: <jgg@nvidia.com>, <joro@8bytes.org>, <will@kernel.org>,
-	<robin.murphy@arm.com>, <bhelgaas@google.com>, <iommu@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<patches@lists.linux.dev>, <pjaroszynski@nvidia.com>, <vsethi@nvidia.com>
-Subject: Re: [PATCH RFC v1 2/2] pci: Suspend ATS before doing FLR
-Message-ID: <aEfW53F8Gmb/NYs1@nvidia.com>
-References: <cover.1749494161.git.nicolinc@nvidia.com>
- <29cc1268dfdae2a836dbdeaa4eea3bedae564497.1749494161.git.nicolinc@nvidia.com>
- <34442ab9-08e1-4e9a-b08e-3b81a581fec3@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=astranis.com header.i=@astranis.com header.b="QGTvmL6k"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-747d59045a0so3530595b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 23:57:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=astranis.com; s=google; t=1749538644; x=1750143444; darn=vger.kernel.org;
+        h=mime-version:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=X3qMGFLHagyS9aANbZdxYcY5chH/c0eXebcd3qCsKuo=;
+        b=QGTvmL6kRbk1fipiZ2PitEW32ebTYjCK30VW8YypZC/qxlai+rPaMtxrsThf5KKFec
+         3QDE5wSDSm+gvc+ZZBAGrSCyGe2Iku2Z2LoAJT5hKA0/fEmY5lC5Ex52ZsxlMwXUWWRA
+         A25I/ljsQ5dChihb9TqYuCxLZSXlOP7pyhcncH15FmCl0g4OacJ3zad+d4ruo0M+1uzO
+         0WrwnzvylLMB6vHH1jIXzePCdeMo6yZVH8uUiLmAoO78A2Z0XGT+NPafP0rCu0MH+PfW
+         W2fACXQXpFZgPQM+BG0dam13i9rusNv8ZdQIo9yQWe1QoTT7+nD9FCWpvNCoLMU0oRMc
+         l//A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749538644; x=1750143444;
+        h=mime-version:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=X3qMGFLHagyS9aANbZdxYcY5chH/c0eXebcd3qCsKuo=;
+        b=NNZu8U8aCzfBTVHJrbrIuTXp2RiwxhZRxKpq3HJtiANx4sPZgEiMlBIf2FXbOxKfaJ
+         hXB5OcHhHR8PGtJFOuYFlEukiNQbK+9WUIgOnIuPi2/rrA19I4r/QpJ1TC5CmXOzepGO
+         G1lD4YUniCFcX9G1QU5EN2vXR6uhLynx6jeVUpwm34V+QyU4MUEV1Ani9e1AAsxMmR9O
+         DPy9YyLbh2uaNARdDS8hLF1+iR7HO2DzEmfIUey5TiKHtXfTRf2macbQeYFhZRR5gYUm
+         QrrW1mcB3wBtjHsV/UyRx6KhBPRGH+aDcQPCHIU/QPbCIBxM4i1Fi36mGLASCMo7r2y2
+         xORg==
+X-Gm-Message-State: AOJu0YzWpCXkapZxDSTE8WBQu9y35llHq9jJUfb9/sH3+gAoO3cIgXnh
+	yQ+vnjbLz+sftoKhpu4K6LAa2tz/sMC5EIIvg9CJXMHwHW/Y20zkV+qWZWkguLdQ2JEtCZrR1+5
+	Fq5BXm9CLSavmZSlatyORi/qA70vJlijGZk/+Co9UUr4chX0nK8uBViLuPBAT4SOdBvAcSAYH3X
+	w=
+X-Gm-Gg: ASbGncurtptUTGnsEhQs8TUrpbfCB9CggIq0bcxyqV2EgAblIGav1M3f3AUphZfylsc
+	iwcsH0HCihfxe1Kq/mATrjG/sQYEuB/lV5OOkrrw9n8GMbWZBVWfeyKTUc2QqEHaoENoREB6+H/
+	4OLFOblTQ5KXhpaqIabObFPQL86qCRD4w5l2yVrWh30jykzIyl8ynqLL3QnHVTkt/svXBodKnVN
+	JI88Q8Capt3oUMyC82jWqhq65dbMWTa5yEHImNO4g8EesIgTqRj6lAXfpANEKiyINGdA/asItNM
+	Ah2Qm36vI4/3B/zW6Zs4Nnj2KkZ7E9UZ43EqQ8vERs9uhcKEFKuR6D2vs5No2ceKauOUlmddfOn
+	/+Cki+TXlKvhWHg==
+X-Google-Smtp-Source: AGHT+IE/uFJARzySw8XTfJfoIXM9eq4DQp45vCYluSX1sb3ToIeAmeTH+ImqVWaqCAKDqCK9US52jg==
+X-Received: by 2002:a05:6a00:17a3:b0:748:33f3:8da3 with SMTP id d2e1a72fcca58-74833f38eaamr18567434b3a.19.1749538644251;
+        Mon, 09 Jun 2025 23:57:24 -0700 (PDT)
+Received: from 6GLGQW3.attlocal.net ([2600:1700:43b0:1fc0:f9fc:b80b:6b8:4edf])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0ea2b2sm6768024b3a.161.2025.06.09.23.57.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 23:57:23 -0700 (PDT)
+From: jtilahun@astranis.com
+To: gregkh@linuxfoundation.org,
+	jirislaby@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	Joseph Tilahun <jtilahun@astranis.com>
+Subject: [PATCH] tty: serial: fix print format specifiers
+Date: Mon,  9 Jun 2025 23:56:53 -0700
+Message-Id: <20250610065653.3750067-1-jtilahun@astranis.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <34442ab9-08e1-4e9a-b08e-3b81a581fec3@linux.intel.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002318:EE_|DS0PR12MB7559:EE_
-X-MS-Office365-Filtering-Correlation-Id: 01c366e1-a0dd-4347-4c7b-08dda7ebdc08
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?irQ/AJSoj0XmGmzfuqeBe0/k57EH+3qqTe5g7+zaUhuhdJZdBWrWVKYZWfQq?=
- =?us-ascii?Q?HyH+GybPLC0o5lZaWXexEIJ9uvYHx+6WQPT4x+w3hzD/K5s3g0gNZD4LTlqt?=
- =?us-ascii?Q?xZ7LeHmDFfx18+8PWGDEjpJShJ1yd+Lx/9JzaJNBIzXDzm/IDR01gHiYDENI?=
- =?us-ascii?Q?LDhqmDCAqyODgnRTlunYFk+HZ4O7H1ruKZf5kX5y2GEeHwW+q/Zcc6ZIiGsS?=
- =?us-ascii?Q?9BhGfPA8/WWkR3tWa8ttoSjci7bZP+tavZGQl7BdSSgWvfI8aJ0uH3TbuOC2?=
- =?us-ascii?Q?dW3p1e2jumvnF73/Hpu2hpWiFBIZsiJsWfjg26o9hJ7IFJYceB9f4QIsbaq7?=
- =?us-ascii?Q?JZJWcrcEZ6IIFQu7CO9CGrHCrLoEBd34ki2ByNTFGUaorP802csqKuVjbSc3?=
- =?us-ascii?Q?xeN0WX/M5kqV6hvlzElrBEBR8r8p3I/MDOyZDGMkICyXa3+S6o9WJQrqx5og?=
- =?us-ascii?Q?64Hkmv4L6LYGaAxTHBBSb4pJmbkAwqW0bgETFPsLzomaMRWTWg0S+je6FaTu?=
- =?us-ascii?Q?1t1UcLlz6R+t4RxXfaS0zDFxKUF+2XmycBQ8zkeT9FCoP2VNKmsxCoEXMCb8?=
- =?us-ascii?Q?dpwjaXJ+ZUgRGBQp1RZuLzDLZH0z3xoLMNgn2w5nLG3a9ov0iDyYx5c3YOLi?=
- =?us-ascii?Q?9zQYXavjkiiKeupqET0gsfNfeXAxwUvnX3DcPwKUzVe7mdkaKSWIEchNJoaS?=
- =?us-ascii?Q?L691QWft/k1ARmM3nsHToOeqMrOcA9cEQJJdJBs5BTBDJO8YZjjQm56AEhnl?=
- =?us-ascii?Q?5XWYmY34R+klQbuu/KvXYUD+bGwFaLsUv4AS67k/rJ3Y0D4SOccMi3bLIq3l?=
- =?us-ascii?Q?engIAtuYa5MYbSwtIXIK4blWL48TJamoqegucJh9WF3AaoLSSW0s5eD0YsXf?=
- =?us-ascii?Q?F39ft3ezrn4nykrYmVsdpO4nUYsKH6AZtd7fKy2hUABFk3TToyopIrEEY1sK?=
- =?us-ascii?Q?Mp0Bl2mt1xbiEY0Ff+yu9tbzO5POLGjutes+1P4c2qE/S2mXZ9zuv0BTfain?=
- =?us-ascii?Q?N0m7hUHyfZrfjuAYaubrbmvLklk16c7QnKzH3xMTrOlSoMODPWTpwNPSmYvJ?=
- =?us-ascii?Q?3Ciy4vgZT7DpZKVFgoJfPFCaRcLPeARFRS2t1NHZ2xX15D7m5qiWTwGJ3DAR?=
- =?us-ascii?Q?CITgAcAnhBvu6ZaYic9/ThIujwEzyJY6rPa2Y+hdOMLUzXs/wlurXBCBHz1k?=
- =?us-ascii?Q?jx4F5pYxXUr8TjLYif83POOEKb5Vy8eSHYxsybzYcueZvykR1MbNlNHpsdxQ?=
- =?us-ascii?Q?Kfa7XV0TwBaMWi4pfHlmXGPhvndZVuSMds4Dt1aRVXEfqQXrFug376RutaCY?=
- =?us-ascii?Q?fRg4FubhUd72mYImI8l9FqIvrA05FbUsdVZcu3cX0p2WHQ/iSQddDbOwdp36?=
- =?us-ascii?Q?Lz4T7GD+wzNenKgyaXvMPF2RaDhcoGIguYaw4ShoqnJogGP8A2Xw8+mXy+4X?=
- =?us-ascii?Q?pKyN5Qwfe9FxOCZ2IFYF4qmtZVqsESPRsvl5wgDBnnnsabY3YlouX7b4q79C?=
- =?us-ascii?Q?mCsWSEda5TVAAu0Je/VOzA4m+DfvWES9/7B+?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 06:56:00.6898
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 01c366e1-a0dd-4347-4c7b-08dda7ebdc08
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002318.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7559
+Content-Type: text/plain; charset="US-ASCII"
 
-On Tue, Jun 10, 2025 at 12:27:04PM +0800, Baolu Lu wrote:
-> On 6/10/25 02:45, Nicolin Chen wrote:
-> >   int pcie_flr(struct pci_dev *dev)
-> >   {
-> > +	int ret = 0;
-> > +
-> >   	if (!pci_wait_for_pending_transaction(dev))
-> >   		pci_err(dev, "timed out waiting for pending transaction; performing function level reset anyway\n");
-> > +	/*
-> > +	 * Per PCIe r6.3, sec 10.3.1 IMPLEMENTATION NOTE, software disables ATS
-> > +	 * before initiating a Function Level Reset. So notify the iommu driver
-> > +	 * that actually enabled ATS. Have to call it after waiting for pending
-> > +	 * DMA transaction.
-> > +	 */
-> > +	if (iommu_dev_reset_prepare(&dev->dev))
-> > +		pci_err(dev, "failed to stop IOMMU\n");
-> 
-> Need to abort here?
+From: Joseph Tilahun <jtilahun@astranis.com>
 
-Yea. I think it should abort.
+The serial info sometimes produces negative TX/RX counts. E.g.:
 
-Thanks!
-Nicolin
+3: uart:FSL_LPUART mmio:0x02970000 irq:46 tx:-1595870545 rx:339619
+RTS|CTS|DTR|DSR|CD
+
+It appears that the print format specifiers don't match with the types of
+the respective variables. E.g.: All of the fields in struct uart_icount
+are u32, but the format specifier used is %d, even though u32 is unsigned
+and %d is for signed integers. Update drivers/tty/serial/serial_core.c
+to use the proper format specifiers. Reference
+https://docs.kernel.org/core-api/printk-formats.html as the documentation
+for what format specifiers are the proper ones to use for a given C type.
+
+Signed-off-by: Joseph Tilahun <jtilahun@astranis.com>
+---
+ drivers/tty/serial/serial_core.c | 44 ++++++++++++++++----------------
+ 1 file changed, 22 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index 1f7708a91fc6..8a1482131257 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -1337,28 +1337,28 @@ static void uart_sanitize_serial_rs485_delays(struct uart_port *port,
+ 	if (!port->rs485_supported.delay_rts_before_send) {
+ 		if (rs485->delay_rts_before_send) {
+ 			dev_warn_ratelimited(port->dev,
+-				"%s (%d): RTS delay before sending not supported\n",
++				"%s (%u): RTS delay before sending not supported\n",
+ 				port->name, port->line);
+ 		}
+ 		rs485->delay_rts_before_send = 0;
+ 	} else if (rs485->delay_rts_before_send > RS485_MAX_RTS_DELAY) {
+ 		rs485->delay_rts_before_send = RS485_MAX_RTS_DELAY;
+ 		dev_warn_ratelimited(port->dev,
+-			"%s (%d): RTS delay before sending clamped to %u ms\n",
++			"%s (%u): RTS delay before sending clamped to %u ms\n",
+ 			port->name, port->line, rs485->delay_rts_before_send);
+ 	}
+ 
+ 	if (!port->rs485_supported.delay_rts_after_send) {
+ 		if (rs485->delay_rts_after_send) {
+ 			dev_warn_ratelimited(port->dev,
+-				"%s (%d): RTS delay after sending not supported\n",
++				"%s (%u): RTS delay after sending not supported\n",
+ 				port->name, port->line);
+ 		}
+ 		rs485->delay_rts_after_send = 0;
+ 	} else if (rs485->delay_rts_after_send > RS485_MAX_RTS_DELAY) {
+ 		rs485->delay_rts_after_send = RS485_MAX_RTS_DELAY;
+ 		dev_warn_ratelimited(port->dev,
+-			"%s (%d): RTS delay after sending clamped to %u ms\n",
++			"%s (%u): RTS delay after sending clamped to %u ms\n",
+ 			port->name, port->line, rs485->delay_rts_after_send);
+ 	}
+ }
+@@ -1388,14 +1388,14 @@ static void uart_sanitize_serial_rs485(struct uart_port *port, struct serial_rs4
+ 			rs485->flags &= ~SER_RS485_RTS_AFTER_SEND;
+ 
+ 			dev_warn_ratelimited(port->dev,
+-				"%s (%d): invalid RTS setting, using RTS_ON_SEND instead\n",
++				"%s (%u): invalid RTS setting, using RTS_ON_SEND instead\n",
+ 				port->name, port->line);
+ 		} else {
+ 			rs485->flags |= SER_RS485_RTS_AFTER_SEND;
+ 			rs485->flags &= ~SER_RS485_RTS_ON_SEND;
+ 
+ 			dev_warn_ratelimited(port->dev,
+-				"%s (%d): invalid RTS setting, using RTS_AFTER_SEND instead\n",
++				"%s (%u): invalid RTS setting, using RTS_AFTER_SEND instead\n",
+ 				port->name, port->line);
+ 		}
+ 	}
+@@ -1834,7 +1834,7 @@ static void uart_wait_until_sent(struct tty_struct *tty, int timeout)
+ 
+ 	expire = jiffies + timeout;
+ 
+-	pr_debug("uart_wait_until_sent(%d), jiffies=%lu, expire=%lu...\n",
++	pr_debug("uart_wait_until_sent(%u), jiffies=%lu, expire=%lu...\n",
+ 		port->line, jiffies, expire);
+ 
+ 	/*
+@@ -2028,7 +2028,7 @@ static void uart_line_info(struct seq_file *m, struct uart_state *state)
+ 		return;
+ 
+ 	mmio = uport->iotype >= UPIO_MEM;
+-	seq_printf(m, "%d: uart:%s %s%08llX irq:%d",
++	seq_printf(m, "%u: uart:%s %s%08llX irq:%u",
+ 			uport->line, uart_type(uport),
+ 			mmio ? "mmio:0x" : "port:",
+ 			mmio ? (unsigned long long)uport->mapbase
+@@ -2050,18 +2050,18 @@ static void uart_line_info(struct seq_file *m, struct uart_state *state)
+ 		if (pm_state != UART_PM_STATE_ON)
+ 			uart_change_pm(state, pm_state);
+ 
+-		seq_printf(m, " tx:%d rx:%d",
++		seq_printf(m, " tx:%u rx:%u",
+ 				uport->icount.tx, uport->icount.rx);
+ 		if (uport->icount.frame)
+-			seq_printf(m, " fe:%d",	uport->icount.frame);
++			seq_printf(m, " fe:%u",	uport->icount.frame);
+ 		if (uport->icount.parity)
+-			seq_printf(m, " pe:%d",	uport->icount.parity);
++			seq_printf(m, " pe:%u",	uport->icount.parity);
+ 		if (uport->icount.brk)
+-			seq_printf(m, " brk:%d", uport->icount.brk);
++			seq_printf(m, " brk:%u", uport->icount.brk);
+ 		if (uport->icount.overrun)
+-			seq_printf(m, " oe:%d", uport->icount.overrun);
++			seq_printf(m, " oe:%u", uport->icount.overrun);
+ 		if (uport->icount.buf_overrun)
+-			seq_printf(m, " bo:%d", uport->icount.buf_overrun);
++			seq_printf(m, " bo:%u", uport->icount.buf_overrun);
+ 
+ #define INFOBIT(bit, str) \
+ 	if (uport->mctrl & (bit)) \
+@@ -2553,7 +2553,7 @@ uart_report_port(struct uart_driver *drv, struct uart_port *port)
+ 		break;
+ 	}
+ 
+-	pr_info("%s%s%s at %s (irq = %d, base_baud = %d) is a %s\n",
++	pr_info("%s%s%s at %s (irq = %u, base_baud = %u) is a %s\n",
+ 	       port->dev ? dev_name(port->dev) : "",
+ 	       port->dev ? ": " : "",
+ 	       port->name,
+@@ -2561,7 +2561,7 @@ uart_report_port(struct uart_driver *drv, struct uart_port *port)
+ 
+ 	/* The magic multiplier feature is a bit obscure, so report it too.  */
+ 	if (port->flags & UPF_MAGIC_MULTIPLIER)
+-		pr_info("%s%s%s extra baud rates supported: %d, %d",
++		pr_info("%s%s%s extra baud rates supported: %u, %u",
+ 			port->dev ? dev_name(port->dev) : "",
+ 			port->dev ? ": " : "",
+ 			port->name,
+@@ -2960,7 +2960,7 @@ static ssize_t close_delay_show(struct device *dev,
+ 	struct tty_port *port = dev_get_drvdata(dev);
+ 
+ 	uart_get_info(port, &tmp);
+-	return sprintf(buf, "%d\n", tmp.close_delay);
++	return sprintf(buf, "%u\n", tmp.close_delay);
+ }
+ 
+ static ssize_t closing_wait_show(struct device *dev,
+@@ -2970,7 +2970,7 @@ static ssize_t closing_wait_show(struct device *dev,
+ 	struct tty_port *port = dev_get_drvdata(dev);
+ 
+ 	uart_get_info(port, &tmp);
+-	return sprintf(buf, "%d\n", tmp.closing_wait);
++	return sprintf(buf, "%u\n", tmp.closing_wait);
+ }
+ 
+ static ssize_t custom_divisor_show(struct device *dev,
+@@ -2990,7 +2990,7 @@ static ssize_t io_type_show(struct device *dev,
+ 	struct tty_port *port = dev_get_drvdata(dev);
+ 
+ 	uart_get_info(port, &tmp);
+-	return sprintf(buf, "%d\n", tmp.io_type);
++	return sprintf(buf, "%u\n", tmp.io_type);
+ }
+ 
+ static ssize_t iomem_base_show(struct device *dev,
+@@ -3010,7 +3010,7 @@ static ssize_t iomem_reg_shift_show(struct device *dev,
+ 	struct tty_port *port = dev_get_drvdata(dev);
+ 
+ 	uart_get_info(port, &tmp);
+-	return sprintf(buf, "%d\n", tmp.iomem_reg_shift);
++	return sprintf(buf, "%u\n", tmp.iomem_reg_shift);
+ }
+ 
+ static ssize_t console_show(struct device *dev,
+@@ -3146,7 +3146,7 @@ static int serial_core_add_one_port(struct uart_driver *drv, struct uart_port *u
+ 	state->pm_state = UART_PM_STATE_UNDEFINED;
+ 	uart_port_set_cons(uport, drv->cons);
+ 	uport->minor = drv->tty_driver->minor_start + uport->line;
+-	uport->name = kasprintf(GFP_KERNEL, "%s%d", drv->dev_name,
++	uport->name = kasprintf(GFP_KERNEL, "%s%u", drv->dev_name,
+ 				drv->tty_driver->name_base + uport->line);
+ 	if (!uport->name)
+ 		return -ENOMEM;
+@@ -3185,7 +3185,7 @@ static int serial_core_add_one_port(struct uart_driver *drv, struct uart_port *u
+ 		device_set_wakeup_capable(tty_dev, 1);
+ 	} else {
+ 		uport->flags |= UPF_DEAD;
+-		dev_err(uport->dev, "Cannot register tty device on line %d\n",
++		dev_err(uport->dev, "Cannot register tty device on line %u\n",
+ 		       uport->line);
+ 	}
+ 
+-- 
+2.34.1
+
+
+-- 
+
+
+________
+This email and any attachments may contain Astranis confidential 
+and/or proprietary information governed by a non-disclosure agreement, and 
+are intended solely for the individual or entity specified by the message.
