@@ -1,133 +1,129 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA43A22172F;
-	Tue, 10 Jun 2025 09:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E5D27FD56;
+	Tue, 10 Jun 2025 09:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749547904; cv=none; b=e5wuAC0+PplL/jmGKiD7UD5C8c8Ae2GYVhsNy4q49aIJbdcMuzPSkqFWwofRfUYzT0RhEV/bSxmIkAdIORnf6AdvTXHUT6V3RhjezTunF/VgbrcVwSCz0pqFz+2q2SBUJji7v1aaWclYDI1d1sdwCLM3zw8r7v8i5QH1j9vrfJI=
+	t=1749547926; cv=none; b=e/UNGl0JbiKuizNPzeqtDvjpWLOm26lFnBZK8WgRLRSy6ALjXpr5Ptf6yg159CnRzZbgPMM5hcSQHcZTEYnbRlI9qlICKdcMsaAZIYVbEkB0b+fhyI349Hq/ay02IYahodN9wNyG8mfTF800KmiEHqyjWiW2cJFt6lsLsVAiu74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749547904; c=relaxed/simple;
-	bh=nlxpi2PnQ5SZ9ogqAPF22K5CYjsnMtXK5uLglQbDjik=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JrsDBtJyVyQSM8chpC7Mq3DM2r2yApgvwedpv8JRi4SQGV6ZEtn3LG3Huhc6Y4TdP7NzzaekNI5RkWUpkIPnRIuGASJybktSlS0QbhD/qV0qq3/hat+MsnmlI7VCAzbPLbyqXZtrTxRZQB8AD9zdRg/smA1ViUlAEg7W10w0Oso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=poUOP6Hr; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749547926; c=relaxed/simple;
+	bh=UIVDYVCfkXYdQKg+JzIWbx5aKZWOpeiPIbE1ZtnzTh0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=haqe/7ANCY/4hH7y+O9+2SqL4VCMdnJDwwyPqqrvarCo/XlP2TeChfchoi+/ksUz3v6cavheO3Ze1IqWYbNlCC4xVMzKT1pwMOZn4t7H1uCIhNF0krR6k6b0/FyoavlIRCAtHOWMR4GDJM20dPsydF8fBX7Rmgtj2pQDdXl+rag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ODPsLHWn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="poUOP6Hr"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 559LJJF1018309;
-	Tue, 10 Jun 2025 09:31:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	u6MCGBTFAlYeCDEcyikw3UbgJy3uFEnmfAeco5v0psQ=; b=poUOP6HrXkF+j25n
-	3mXrWQnsyksvSPuOHAEukq8vni33BYL1zUb+qqXJpI4L9CIW00HxLSabboWLpZxe
-	n7DL+3jlw9UypmhjgnZAwJ9bY6VCGAoSaF9pTvsrbRPtfX9ZdUrs3IOgUSnkm1kD
-	xVrTa0p3Hm6L1VbIB8T/jRuYga/94Dk762ZDNl+iodHg9qQ4kSnwHUqAR3poAHsn
-	z1Buj8omPdpVybkN3S92nUjBUl4qW7b8lAVjbnY0H6HYBOk0c4qDRwXziygUz/xe
-	3WTSPn4TLFQVEp7ZhPk7AH7Odi7W3EpJ6u8Qxq0fFhW8NRuCAQBGoG9FA4/B/Y7r
-	NvZWxA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ce9rx5h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Jun 2025 09:31:39 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55A9UcQZ031994
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Jun 2025 09:30:38 GMT
-Received: from [10.217.217.109] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 10 Jun
- 2025 02:30:34 -0700
-Message-ID: <8bd87328-3e60-4f5a-b8ef-1825b0e94511@quicinc.com>
-Date: Tue, 10 Jun 2025 15:00:31 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ODPsLHWn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36A2DC4CEEF;
+	Tue, 10 Jun 2025 09:32:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749547925;
+	bh=UIVDYVCfkXYdQKg+JzIWbx5aKZWOpeiPIbE1ZtnzTh0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ODPsLHWnEGPj51M8X+WShetoHBGztO9IuHayMjIiqnA2/05Y8GZJrHm0J5htsVVgC
+	 rZ6kBVNz7NqYeHiZog9F5RZ2G56mKvM1Ey49nDO8+/x1Zq1PjeiXR6MSL6YzoYCRRF
+	 gqTs6W14flVOWO2prg69erRMmNajgMvxAL4W1vmNk0fm+0uN+BsNS+RowBG+4KGA7P
+	 aVYIsgIIgkZUCJr5dvK+afWgAnO8cBsiZkSDKHEMksAYCKaxuRQRxoDkQ4okrqewnk
+	 yhBEqy8WTy7C4nhpUHGNunRYxaqITPhl6kwYFsOACInMuRGYGdK/gr+SAeTl7bOZcI
+	 0PSrHLmoRTluw==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Hugues Fruchet <hugues.fruchet@foss.st.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Peter Griffin <peter.griffin@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] st-delta: avoid excessive stack usage
+Date: Tue, 10 Jun 2025 11:31:56 +0200
+Message-Id: <20250610093201.2645325-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: qcs615: Add CPU scaling clock
- node
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>
-CC: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250119-qcs615-mm-v2-dt-nodes-v2-0-c46ab4080989@quicinc.com>
- <20250119-qcs615-mm-v2-dt-nodes-v2-2-c46ab4080989@quicinc.com>
- <d34051c2-7b6a-4b33-af12-4bc6380afba8@oss.qualcomm.com>
-Content-Language: en-US
-From: Taniya Das <quic_tdas@quicinc.com>
-In-Reply-To: <d34051c2-7b6a-4b33-af12-4bc6380afba8@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: RQqKFDTkdDPokuVX2DoyApLpyFky_c3d
-X-Authority-Analysis: v=2.4 cv=drjbC0g4 c=1 sm=1 tr=0 ts=6847fb7b cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=p62qhQRY5rUVsZnOx4kA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: RQqKFDTkdDPokuVX2DoyApLpyFky_c3d
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDA3MiBTYWx0ZWRfXw3OPb8gGhD8Z
- LL2D9nO4SJhPudDpf63b8337c9Yo0a7+I4YHm9iydNrYlbM4V3222tyZXW9IGnJwi81UiFVJOGf
- JTMjVYh/DnQ6NMuqmhZqjV11EmQlSc/4ISRTMb1YPERXpMoZaeLM28PRCr2/iVYQkMydC5eKdot
- Zr+Q7j/dvBbdV4F1DJLY+wcNdzC5JdKeWdvHHhuVpzjDFzATVf2MEj53naFgK6C9Gu350LW2Boj
- JW/OLXsLSW1zmKAZcKgy3OIcSarpgPOyl19E2pN8OOxm3RHlC/DgMiXdS1NWQ99NVGsKe0of8bb
- O8q5FWCbfGuqz6F87ca/2hAVlvR/mxnT+zMbHQUIclARYW7FWoRHlLq2bfYBIGWtPfi5QdKHMAt
- FO/ScGjbnQk4z2eWhvkToIdTH3ZHlAwjoLKkVz1Lv4DBEC7f9NN9mEouLVBrghMk+hbn18zc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_03,2025-06-09_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1015
- priorityscore=1501 suspectscore=0 bulkscore=0 mlxlogscore=807 adultscore=0
- phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506100072
+Content-Transfer-Encoding: 8bit
 
+From: Arnd Bergmann <arnd@arndb.de>
 
+Building with a reduced stack warning limit shows that delta_mjpeg_decode()
+copies a giant structure to the stack each time but only uses three of
+its members:
 
-On 2/10/2025 11:28 PM, Konrad Dybcio wrote:
-> On 19.01.2025 1:00 PM, Taniya Das wrote:
->> Add cpufreq-hw node to support CPU frequency scaling.
->>
->> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
->> ---
-> 
-> [...]
-> 
->> +	cpufreq_hw: cpufreq@18323000 {
->> +		compatible = "qcom,sc7180-cpufreq-hw", qcom,cpufreq-hw";
->> +		reg = <0 0x18323000 0 0x1400>, <0 0x18325800 0 0x1400>;
->> +		reg-names = "freq-domain0", "freq-domain1";
->> +
->> +		clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
->> +		clock-names = "xo", "alternate";
->> +
->> +		#freq-domain-cells = <1>;
->> +		#clock-cells = <1>;
->> +	};
-> 
-> This should be a child of the /soc node
-> 
+drivers/media/platform/st/sti/delta/delta-mjpeg-dec.c: In function 'delta_mjpeg_decode':
+drivers/media/platform/st/sti/delta/delta-mjpeg-dec.c:427:1: error: the frame size of 1296 bytes is larger than 1280 bytes [-Werror=frame-larger-than=]
 
-My bad, I will move it under /soc.
+Open-code the passing of the structure members that are actually used here.
 
-> Konrad
+Fixes: 433ff5b4a29b ("[media] st-delta: add mjpeg support")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ .../platform/st/sti/delta/delta-mjpeg-dec.c   | 20 ++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/media/platform/st/sti/delta/delta-mjpeg-dec.c b/drivers/media/platform/st/sti/delta/delta-mjpeg-dec.c
+index 0533d4a083d2..a078f1107300 100644
+--- a/drivers/media/platform/st/sti/delta/delta-mjpeg-dec.c
++++ b/drivers/media/platform/st/sti/delta/delta-mjpeg-dec.c
+@@ -239,7 +239,7 @@ static int delta_mjpeg_ipc_open(struct delta_ctx *pctx)
+ 	return 0;
+ }
+ 
+-static int delta_mjpeg_ipc_decode(struct delta_ctx *pctx, struct delta_au *au)
++static int delta_mjpeg_ipc_decode(struct delta_ctx *pctx, dma_addr_t pstart, dma_addr_t pend)
+ {
+ 	struct delta_dev *delta = pctx->dev;
+ 	struct delta_mjpeg_ctx *ctx = to_ctx(pctx);
+@@ -256,8 +256,8 @@ static int delta_mjpeg_ipc_decode(struct delta_ctx *pctx, struct delta_au *au)
+ 
+ 	memset(params, 0, sizeof(*params));
+ 
+-	params->picture_start_addr_p = (u32)(au->paddr);
+-	params->picture_end_addr_p = (u32)(au->paddr + au->size - 1);
++	params->picture_start_addr_p = pstart;
++	params->picture_end_addr_p = pend;
+ 
+ 	/*
+ 	 * !WARNING!
+@@ -374,12 +374,14 @@ static int delta_mjpeg_decode(struct delta_ctx *pctx, struct delta_au *pau)
+ 	struct delta_dev *delta = pctx->dev;
+ 	struct delta_mjpeg_ctx *ctx = to_ctx(pctx);
+ 	int ret;
+-	struct delta_au au = *pau;
++	void *au_vaddr = pau->vaddr;
++	dma_addr_t au_dma = pau->paddr;
++	size_t au_size = pau->size;
+ 	unsigned int data_offset = 0;
+ 	struct mjpeg_header *header = &ctx->header_struct;
+ 
+ 	if (!ctx->header) {
+-		ret = delta_mjpeg_read_header(pctx, au.vaddr, au.size,
++		ret = delta_mjpeg_read_header(pctx, au_vaddr, au_size,
+ 					      header, &data_offset);
+ 		if (ret) {
+ 			pctx->stream_errors++;
+@@ -405,17 +407,17 @@ static int delta_mjpeg_decode(struct delta_ctx *pctx, struct delta_au *pau)
+ 			goto err;
+ 	}
+ 
+-	ret = delta_mjpeg_read_header(pctx, au.vaddr, au.size,
++	ret = delta_mjpeg_read_header(pctx, au_vaddr, au_size,
+ 				      ctx->header, &data_offset);
+ 	if (ret) {
+ 		pctx->stream_errors++;
+ 		goto err;
+ 	}
+ 
+-	au.paddr += data_offset;
+-	au.vaddr += data_offset;
++	au_dma += data_offset;
++	au_vaddr += data_offset;
+ 
+-	ret = delta_mjpeg_ipc_decode(pctx, &au);
++	ret = delta_mjpeg_ipc_decode(pctx, au_dma, au_dma + au_size - 1);
+ 	if (ret)
+ 		goto err;
+ 
+-- 
+2.39.5
 
