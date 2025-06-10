@@ -1,63 +1,63 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A46323ABAA;
-	Tue, 10 Jun 2025 13:28:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCB317A305;
+	Tue, 10 Jun 2025 13:28:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749562125; cv=none; b=NJ+alBCui79n1T/x7o7SJK314YUBG4X111Tsub3Xq4sBx61/Y/fpm+Akx8R2ZxTydugIKUnsIkgiA1cfoL7hv4j0jYO3jn5K/HQdqAd9IMhNU3FAM6WuuAGHjRxsEz7fwIBf1QAP9QNwEhslPzT3oqbgg+ckhqyP5hDkt6fTxR8=
+	t=1749562129; cv=none; b=qPKgOvrUJWd9bDLSzXs4W7w2kDh1DHjwHGNldIDwDGT6PP1ieGMIKhjfLe+PGh1zynKgyk+91z3e9OjY5Ed1dYxUOwyk8qJeR3fbsAbeK4G2ICQeoNKIcqvY8gpTf0EGZZ+79z6JzUOsAnX33PLAXyQ4agQCk0fPexb9vW4Gk8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749562125; c=relaxed/simple;
-	bh=NRoPuLsRJOm5rC5ZB155G6bpOMGKHlkV77L8xCoa4OE=;
+	s=arc-20240116; t=1749562129; c=relaxed/simple;
+	bh=2HKkeS+D/53hmI7d01xFjBfZF8ViSPG4/bm7I3oKskA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=De2Qv4xgoNFzYLkUHCnChQFXYKKtOefUui5wgbB/OYjGv/EWONbDk7GzRXVSBCgpmjQCufVSiUoAmXOZGDcBlcwZLRDpJUbdQXHUmv6uI3VZIGLjd2T1E6HnB4matcf3svvYXE1QQfywz27wB6+4SuX4m0izCQ11elipGUa+glA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HYLVuPZr; arc=none smtp.client-ip=209.85.215.174
+	 MIME-Version; b=p7y+gtYViauM2tD+nG2Kym6nt3YtjQGCSH7+A8rYiKmOMswiEoOo/2Ef4I0vhrH0iWeuCjEIX7DK8TvKQscgRmZBO/oPMiOIhXVzbQwoxClHqEkEFPEKfGRix2Sml5vv/PZOa+pGl1ufDpjMxCHSraWFIAUrjZ6Vs/u6Wzq2+88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iJY8KG5H; arc=none smtp.client-ip=209.85.216.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HYLVuPZr"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b0b2d0b2843so3636365a12.2;
-        Tue, 10 Jun 2025 06:28:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJY8KG5H"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3109f106867so6556852a91.1;
+        Tue, 10 Jun 2025 06:28:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749562122; x=1750166922; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749562127; x=1750166927; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1mvvzlMbDdYmXYPtcaFob3b+rqUp5cEbqhNbwJWVQeI=;
-        b=HYLVuPZrmQPGHKmGKhFoHGLhufytZoDTd//edxU+7OJgkHsZkBJO+/WGke32uf4Ydh
-         zLWOAUSr4Yj7FFsPFoP6ESlmPHf/eE+/Jgk2TSpchMFFVXZ/k2v0Pii9/G0KolxdfXIg
-         Sl7p0qUxgbQs/t9Th8YjLw17gmDKKWu1gkdi8QPNuj22NTGXd+xXi+9pzFbLUL45Ml6D
-         VwIvWpNjEsPR8qITEpcvZtC4or5h8efb5Z91ins/dZcrLwGhm/NL6g4TVZuCZaRqmHXN
-         9T4CGsbq5pz2vKEu3GcdfoNbgFprE8ZAZDaScgJ5597gz/7zKHwvLFigGE8dkWupLHE4
-         4rBQ==
+        bh=li/TEVC1pHmYwJ7Qq6x5hEv02gsKC/iDeTYpmuevE7o=;
+        b=iJY8KG5HMZghLhicSoVNv/AbAItUfrcYoiG6ePtXA/UkKLV7XjAo8GNcZPUxSIgxY9
+         fIxG92LC83keCYRrC5L+cgi/ayQ6kNDFQWmXQG2HaEbFvQlBHV9L4TyuKV1o6VwBqxNr
+         HMNQvdgPmqo5/JJEAjmtMkuKbPrbVjPqMKyATuLkyINdHnrJIQ0tbXlPUY10jYoHIfOP
+         kvO7O2abvJtr1EKflXLKOU73gq6YL6LBA1ZH74sQ0CoV/mAQhhVrQuYp9W/vg413mfXk
+         EB2ZWP80+ZBR6781ZxCiyvsasm122LUUS3mo5KmVRCwuzzYZLt8hF9gvsuAX3ZIF6xG3
+         wroQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749562122; x=1750166922;
+        d=1e100.net; s=20230601; t=1749562127; x=1750166927;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1mvvzlMbDdYmXYPtcaFob3b+rqUp5cEbqhNbwJWVQeI=;
-        b=hp4a1lMMXlqqlTPdSZGKvmq9iJnp0zUUUvBp1VAq+RWTJmVJp09pbAF1SwEMEN74vR
-         HG/VM2sioiNDrdLLuIZ5shA+50LCwDvf4qx8rwWcphf003UoOXwagQBbPtokipml8Fyg
-         621wDz1F1Fojjy8/7lS/NzRgPU79sfbUJZaL9mERU/N0ZoB8jO+hMtNk3IF7YeZGext3
-         9J8kF0NjGxCxQ535DqSVDslumWmt7xqoMVnivpdG6rggPEvf5jTVdDmr1FX1E6s5eZrC
-         Xk3nsW2s8F8N9wnRC4fupClbcOQFwjV3ltj+YQKYDc0PXD8zrNtG1QY35RPtV3uW7mfv
-         zG/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUzX5OMapcW6KJtTcg3ZOVn7qm75epkiMKpGdhvzYNxZPnPx49sT5c8C9UDOdmsnV2Z2w30c6PhWVSkBVjLuRg=@vger.kernel.org, AJvYcCXMuv4Cb0gTcbniq1vtRZ1sg0+mC0RtXYwFXm8daKZPQ12Y8neA/jpWCooBdYh19hKZynA0xbdSuqQF6YY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPHGmyLzEAl+ewD7oG1ogDgjUavVbqZPjZQ2KcC6Bel1JEAZ8n
-	R1zD3//+GGu9cmbcmX42r+oZicZANawusEy6Qi4TT5BsmnB5D9bN2+pP
-X-Gm-Gg: ASbGnctA4UY/KvkIHkO2j2HuHYFn0obNyZBdeoRluv4MBALyOMLz5FAYzt7IXf3CRyS
-	fLoxRWnJ2WB4UjT5UYqUL5RWwZQL3LfoVDISqjx8kvjTDhIzmh3PLf7RcQlFUE22Qh10ZclPlsP
-	H3uz1F2UE8EbuJomU+7xnPK9JMFRu5g4eg22KjDzZD5frXYO9lRChwtYnuGmiSu3YjTWN6XHH/e
-	55VXnPkK03LryaYXrEF2gq0IXfGuqwwt/Ilk0WFHYuBZyqSSHwgRORGdfMVjzP5Z3qboQNAVrk6
-	gzmy7Oj3+ojIUXQYI5sCJsVuU3Z0e9np9+RB/FZ2Hh9Jb+hof3gRQsETLGjDa61NyoAhxGjxZP+
-	A1E19YtAerHB9UyB/YAJyC7GHesCPbMSbaZ7zKoCOxBohGg==
-X-Google-Smtp-Source: AGHT+IFUfcGHUGTZuh8PBG3hJykgcW5tGM6RfatDYfdHDl9OEZ/cbEfIi2zoXQjK/bGAVEtGOGHpjQ==
-X-Received: by 2002:a17:90b:52c6:b0:311:b5ac:6f5d with SMTP id 98e67ed59e1d1-3134769e684mr24557616a91.29.1749562122490;
-        Tue, 10 Jun 2025 06:28:42 -0700 (PDT)
+        bh=li/TEVC1pHmYwJ7Qq6x5hEv02gsKC/iDeTYpmuevE7o=;
+        b=Vp/7II/L3lm+rjC9Q9i4+Aq73iH9PlTWVZlpwSUSvxN3CzUZ5dfoqY7HbGHfzspzuF
+         ElqXXiSORHjQn7xv1fp+e0P0kgsufRYhkDB1HXEupswRHn18sn2+z4G95mDWmbLbuHEo
+         41Nz6EEDSwD98IvXMU3ty83t/+djjC9ghfxM5F+2gTdYHEkC8BWmnT3JmHP5gGmAvgLP
+         UOpotteCD5/WlaeJGavnMzNLmIyIBCR0AX0jtxEkzgtPOec7IQ4gEUdbulD44EFy2t8S
+         Zps7cLTHOjqPGDXFgDA3VGwLFyMKYnZSJy5lMBAK4/q25sgksNgIFTKbOQFKJSXtDMUe
+         NKUg==
+X-Forwarded-Encrypted: i=1; AJvYcCUA8i375xiUjHLIfIB70uGAufQBEi2Awm305Sve4uHAbWUlibUQYahCIq4Ta6lUdFHDzwgErH+tBXqtzpo=@vger.kernel.org, AJvYcCUE6hH9/Hj57VFhDT3BeISbbZ483H9c9wbtOLicbwZvZlSHQ1W6N1fxJ3j8nsGPsJGWEwdFnsaPtsVr1VjKCzg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYEHsKqjTC7gZ5FmgTu5qnTsBucStx41CQX/OkFb/AQBtjfrA7
+	3XNZ93Xb5WIoj757g3+u1pZpLOpWDSJ3kSEj+Y9R+Q17o1QHagkm7WKJ
+X-Gm-Gg: ASbGncu2WwjmLgWoi62ECXHRqzhNOA9w6oTlxEG5uEEkrdiQjDNweZekKp1eNC7U/np
+	J5oOcO/OqWlh4UYoi2Enp1zqiZplnqxsRXe6vbsWK2V+/z8spW7/ElBrZ3jt68RSD6syzLV4pVs
+	5EX8V9zNjoL0+Z+28ixtbH9qqwZk9Uw501gMaYsWC6H9J4I9ANHufxZkmRdG+L580luuO4DlBGw
+	ExJI+RpoWLo/qo5nukBs05yIzKfSvku7CsH9dbo50NXFfuKvkohGD8TecfPZrE5FPuPLC4WVPLz
+	wTl6OcJWh2TTAVaIww/8wG+9SDnesl4LfgYOL7sqQiL8WPBdfD/AyJTTSshN7oHHe9VFiSfn6tA
+	lHuNJR00hk9Mo6qmc5Jq7mrhtvQUwKKSenWw=
+X-Google-Smtp-Source: AGHT+IFclABCfX/IC3J/vArRt3KWJm5NyGdrbWqQlZNl1/xizi1DEqwHkxrPFPW2RF8ZN0wSsLIZpg==
+X-Received: by 2002:a17:90b:1b09:b0:311:ff18:b83e with SMTP id 98e67ed59e1d1-313a1542b4dmr3834471a91.9.1749562126839;
+        Tue, 10 Jun 2025 06:28:46 -0700 (PDT)
 Received: from bee.. (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3134b128050sm7969276a91.25.2025.06.10.06.28.38
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3134b128050sm7969276a91.25.2025.06.10.06.28.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 06:28:42 -0700 (PDT)
+        Tue, 10 Jun 2025 06:28:46 -0700 (PDT)
 From: FUJITA Tomonori <fujita.tomonori@gmail.com>
 To: a.hindborg@kernel.org,
 	alex.gaynor@gmail.com,
@@ -77,9 +77,9 @@ Cc: aliceryhl@google.com,
 	sboyd@kernel.org,
 	tglx@linutronix.de,
 	tmgross@umich.edu
-Subject: [PATCH v3 2/5] rust: time: Replace HrTimerMode enum with trait-based mode types
-Date: Tue, 10 Jun 2025 22:28:20 +0900
-Message-ID: <20250610132823.3457263-3-fujita.tomonori@gmail.com>
+Subject: [PATCH v3 3/5] rust: time: Add HrTimerExpires trait
+Date: Tue, 10 Jun 2025 22:28:21 +0900
+Message-ID: <20250610132823.3457263-4-fujita.tomonori@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250610132823.3457263-1-fujita.tomonori@gmail.com>
 References: <20250610132823.3457263-1-fujita.tomonori@gmail.com>
@@ -91,225 +91,233 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace the `HrTimerMode` enum with a trait-based approach that uses
-zero-sized types to represent each mode of operation. Each mode now
-implements the `HrTimerMode` trait.
+Introduce the `HrTimerExpires` trait to represent types that can be
+used as expiration values for high-resolution timers. Define a
+required method, `into_nanos()`, which returns the expiration time as a
+raw nanosecond value suitable for use with C's hrtimer APIs.
 
-This refactoring is a preparation for replacing raw `Ktime` in HrTimer
-with the `Instant` and `Delta` types, and for making `HrTimer` generic
-over a `ClockSource`.
+Also extend the `HrTimerMode` to use the `HrTimerExpires` trait.
+
+This refactoring is a preparation for enabling hrtimer code to work
+uniformly with both absolute and relative expiration modes.
 
 Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
 Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
 ---
- rust/kernel/time/hrtimer.rs | 164 ++++++++++++++++++++----------------
- 1 file changed, 90 insertions(+), 74 deletions(-)
+ rust/kernel/time.rs         |   5 ++
+ rust/kernel/time/hrtimer.rs | 126 +++++++++++++++++++++++++-----------
+ 2 files changed, 95 insertions(+), 36 deletions(-)
 
+diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
+index 2a231c321afa..70bd3be0facc 100644
+--- a/rust/kernel/time.rs
++++ b/rust/kernel/time.rs
+@@ -194,6 +194,11 @@ pub fn now() -> Self {
+     pub fn elapsed(&self) -> Delta {
+         Self::now() - *self
+     }
++
++    #[inline]
++    pub(crate) fn into_nanos(self) -> i64 {
++        self.inner
++    }
+ }
+ 
+ impl<C: ClockSource> core::ops::Sub for Instant<C> {
 diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-index 280128d7e982..23f9f1ba8607 100644
+index 23f9f1ba8607..0ba87f1233cd 100644
 --- a/rust/kernel/time/hrtimer.rs
 +++ b/rust/kernel/time/hrtimer.rs
-@@ -98,7 +98,7 @@ pub fn to_ns(self) -> i64 {
- pub struct HrTimer<T> {
-     #[pin]
-     timer: Opaque<bindings::hrtimer>,
--    mode: HrTimerMode,
-+    mode: bindings::hrtimer_mode,
-     _t: PhantomData<T>,
+@@ -67,7 +67,7 @@
+ //! A `restart` operation on a timer in the **stopped** state is equivalent to a
+ //! `start` operation.
+ 
+-use super::ClockSource;
++use super::{ClockSource, Delta, Instant};
+ use crate::{prelude::*, types::Opaque};
+ use core::marker::PhantomData;
+ use pin_init::PinInit;
+@@ -411,94 +411,148 @@ fn into_c(self) -> bindings::hrtimer_restart {
+     }
  }
  
-@@ -112,7 +112,7 @@ unsafe impl<T> Sync for HrTimer<T> {}
- 
- impl<T> HrTimer<T> {
-     /// Return an initializer for a new timer instance.
--    pub fn new<U: ClockSource>(mode: HrTimerMode) -> impl PinInit<Self>
-+    pub fn new<U: ClockSource, M: HrTimerMode>() -> impl PinInit<Self>
-     where
-         T: HrTimerCallback,
-     {
-@@ -127,11 +127,11 @@ pub fn new<U: ClockSource>(mode: HrTimerMode) -> impl PinInit<Self>
-                         place,
-                         Some(T::Pointer::run),
-                         U::ID,
--                        mode.into_c(),
-+                        M::C_MODE,
-                     );
-                 }
-             }),
--            mode: mode,
-+            mode: M::C_MODE,
-             _t: PhantomData,
-         })
-     }
-@@ -389,7 +389,7 @@ unsafe fn start(this: *const Self, expires: Ktime) {
-                 Self::c_timer_ptr(this).cast_mut(),
-                 expires.to_ns(),
-                 0,
--                (*Self::raw_get_timer(this)).mode.into_c(),
-+                (*Self::raw_get_timer(this)).mode,
-             );
-         }
-     }
-@@ -412,77 +412,93 @@ fn into_c(self) -> bindings::hrtimer_restart {
- }
- 
++/// Time representations that can be used as expiration values in [`HrTimer`].
++pub trait HrTimerExpires {
++    /// Converts the expiration time into a nanosecond representation.
++    ///
++    /// This value corresponds to a raw ktime_t value, suitable for passing to kernel
++    /// timer functions. The interpretation (absolute vs relative) depends on the
++    /// associated [HrTimerMode] in use.
++    fn into_nanos(self) -> i64;
++}
++
++impl<C: ClockSource> HrTimerExpires for Instant<C> {
++    fn into_nanos(self) -> i64 {
++        Instant::<C>::into_nanos(self)
++    }
++}
++
++impl HrTimerExpires for Delta {
++    fn into_nanos(self) -> i64 {
++        Delta::into_nanos(self)
++    }
++}
++
  /// Operational mode of [`HrTimer`].
--// NOTE: Some of these have the same encoding on the C side, so we keep
--// `repr(Rust)` and convert elsewhere.
--#[derive(Clone, Copy, PartialEq, Eq, Debug)]
--pub enum HrTimerMode {
--    /// Timer expires at the given expiration time.
--    Absolute,
--    /// Timer expires after the given expiration time interpreted as a duration from now.
--    Relative,
--    /// Timer does not move between CPU cores.
--    Pinned,
--    /// Timer handler is executed in soft irq context.
--    Soft,
--    /// Timer handler is executed in hard irq context.
--    Hard,
--    /// Timer expires at the given expiration time.
--    /// Timer does not move between CPU cores.
--    AbsolutePinned,
--    /// Timer expires after the given expiration time interpreted as a duration from now.
--    /// Timer does not move between CPU cores.
--    RelativePinned,
--    /// Timer expires at the given expiration time.
--    /// Timer handler is executed in soft irq context.
--    AbsoluteSoft,
--    /// Timer expires after the given expiration time interpreted as a duration from now.
--    /// Timer handler is executed in soft irq context.
--    RelativeSoft,
--    /// Timer expires at the given expiration time.
--    /// Timer does not move between CPU cores.
--    /// Timer handler is executed in soft irq context.
--    AbsolutePinnedSoft,
--    /// Timer expires after the given expiration time interpreted as a duration from now.
--    /// Timer does not move between CPU cores.
--    /// Timer handler is executed in soft irq context.
--    RelativePinnedSoft,
--    /// Timer expires at the given expiration time.
--    /// Timer handler is executed in hard irq context.
--    AbsoluteHard,
--    /// Timer expires after the given expiration time interpreted as a duration from now.
--    /// Timer handler is executed in hard irq context.
--    RelativeHard,
--    /// Timer expires at the given expiration time.
--    /// Timer does not move between CPU cores.
--    /// Timer handler is executed in hard irq context.
--    AbsolutePinnedHard,
--    /// Timer expires after the given expiration time interpreted as a duration from now.
--    /// Timer does not move between CPU cores.
--    /// Timer handler is executed in hard irq context.
--    RelativePinnedHard,
-+pub trait HrTimerMode {
-+    /// The C representation of hrtimer mode.
-+    const C_MODE: bindings::hrtimer_mode;
+ pub trait HrTimerMode {
+     /// The C representation of hrtimer mode.
+     const C_MODE: bindings::hrtimer_mode;
++
++    /// Type representing the clock source.
++    type Clock: ClockSource;
++
++    /// Type representing the expiration specification (absolute or relative time).
++    type Expires: HrTimerExpires;
  }
  
--impl HrTimerMode {
--    fn into_c(self) -> bindings::hrtimer_mode {
--        use bindings::*;
--        match self {
--            HrTimerMode::Absolute => hrtimer_mode_HRTIMER_MODE_ABS,
--            HrTimerMode::Relative => hrtimer_mode_HRTIMER_MODE_REL,
--            HrTimerMode::Pinned => hrtimer_mode_HRTIMER_MODE_PINNED,
--            HrTimerMode::Soft => hrtimer_mode_HRTIMER_MODE_SOFT,
--            HrTimerMode::Hard => hrtimer_mode_HRTIMER_MODE_HARD,
--            HrTimerMode::AbsolutePinned => hrtimer_mode_HRTIMER_MODE_ABS_PINNED,
--            HrTimerMode::RelativePinned => hrtimer_mode_HRTIMER_MODE_REL_PINNED,
--            HrTimerMode::AbsoluteSoft => hrtimer_mode_HRTIMER_MODE_ABS_SOFT,
--            HrTimerMode::RelativeSoft => hrtimer_mode_HRTIMER_MODE_REL_SOFT,
--            HrTimerMode::AbsolutePinnedSoft => hrtimer_mode_HRTIMER_MODE_ABS_PINNED_SOFT,
--            HrTimerMode::RelativePinnedSoft => hrtimer_mode_HRTIMER_MODE_REL_PINNED_SOFT,
--            HrTimerMode::AbsoluteHard => hrtimer_mode_HRTIMER_MODE_ABS_HARD,
--            HrTimerMode::RelativeHard => hrtimer_mode_HRTIMER_MODE_REL_HARD,
--            HrTimerMode::AbsolutePinnedHard => hrtimer_mode_HRTIMER_MODE_ABS_PINNED_HARD,
--            HrTimerMode::RelativePinnedHard => hrtimer_mode_HRTIMER_MODE_REL_PINNED_HARD,
--        }
--    }
-+/// Timer that expires at a fixed point in time.
-+pub struct AbsoluteMode;
+ /// Timer that expires at a fixed point in time.
+-pub struct AbsoluteMode;
++pub struct AbsoluteMode<C: ClockSource>(PhantomData<C>);
+ 
+-impl HrTimerMode for AbsoluteMode {
++impl<C: ClockSource> HrTimerMode for AbsoluteMode<C> {
+     const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_ABS;
 +
-+impl HrTimerMode for AbsoluteMode {
-+    const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_ABS;
++    type Clock = C;
++    type Expires = Instant<C>;
+ }
+ 
+ /// Timer that expires after a delay from now.
+-pub struct RelativeMode;
++pub struct RelativeMode<C: ClockSource>(PhantomData<C>);
+ 
+-impl HrTimerMode for RelativeMode {
++impl<C: ClockSource> HrTimerMode for RelativeMode<C> {
+     const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_REL;
++
++    type Clock = C;
++    type Expires = Delta;
+ }
+ 
+ /// Timer with absolute expiration time, pinned to its current CPU.
+-pub struct AbsolutePinnedMode;
+-
+-impl HrTimerMode for AbsolutePinnedMode {
++pub struct AbsolutePinnedMode<C: ClockSource>(PhantomData<C>);
++impl<C: ClockSource> HrTimerMode for AbsolutePinnedMode<C> {
+     const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_ABS_PINNED;
++
++    type Clock = C;
++    type Expires = Instant<C>;
+ }
+ 
+ /// Timer with relative expiration time, pinned to its current CPU.
+-pub struct RelativePinnedMode;
+-
+-impl HrTimerMode for RelativePinnedMode {
++pub struct RelativePinnedMode<C: ClockSource>(PhantomData<C>);
++impl<C: ClockSource> HrTimerMode for RelativePinnedMode<C> {
+     const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_REL_PINNED;
++
++    type Clock = C;
++    type Expires = Delta;
+ }
+ 
+ /// Timer with absolute expiration, handled in soft irq context.
+-pub struct AbsoluteSoftMode;
+-
+-impl HrTimerMode for AbsoluteSoftMode {
++pub struct AbsoluteSoftMode<C: ClockSource>(PhantomData<C>);
++impl<C: ClockSource> HrTimerMode for AbsoluteSoftMode<C> {
+     const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_ABS_SOFT;
++
++    type Clock = C;
++    type Expires = Instant<C>;
+ }
+ 
+ /// Timer with relative expiration, handled in soft irq context.
+-pub struct RelativeSoftMode;
+-
+-impl HrTimerMode for RelativeSoftMode {
++pub struct RelativeSoftMode<C: ClockSource>(PhantomData<C>);
++impl<C: ClockSource> HrTimerMode for RelativeSoftMode<C> {
+     const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_REL_SOFT;
++
++    type Clock = C;
++    type Expires = Delta;
+ }
+ 
+ /// Timer with absolute expiration, pinned to CPU and handled in soft irq context.
+-pub struct AbsolutePinnedSoftMode;
+-
+-impl HrTimerMode for AbsolutePinnedSoftMode {
++pub struct AbsolutePinnedSoftMode<C: ClockSource>(PhantomData<C>);
++impl<C: ClockSource> HrTimerMode for AbsolutePinnedSoftMode<C> {
+     const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_ABS_PINNED_SOFT;
+-}
+ 
+-/// Timer with relative expiration, pinned to CPU and handled in soft irq context.
+-pub struct RelativePinnedSoftMode;
++    type Clock = C;
++    type Expires = Instant<C>;
 +}
-+
-+/// Timer that expires after a delay from now.
-+pub struct RelativeMode;
-+
-+impl HrTimerMode for RelativeMode {
-+    const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_REL;
-+}
-+
-+/// Timer with absolute expiration time, pinned to its current CPU.
-+pub struct AbsolutePinnedMode;
-+
-+impl HrTimerMode for AbsolutePinnedMode {
-+    const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_ABS_PINNED;
-+}
-+
-+/// Timer with relative expiration time, pinned to its current CPU.
-+pub struct RelativePinnedMode;
-+
-+impl HrTimerMode for RelativePinnedMode {
-+    const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_REL_PINNED;
-+}
-+
-+/// Timer with absolute expiration, handled in soft irq context.
-+pub struct AbsoluteSoftMode;
-+
-+impl HrTimerMode for AbsoluteSoftMode {
-+    const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_ABS_SOFT;
-+}
-+
-+/// Timer with relative expiration, handled in soft irq context.
-+pub struct RelativeSoftMode;
-+
-+impl HrTimerMode for RelativeSoftMode {
-+    const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_REL_SOFT;
-+}
-+
+ 
+-impl HrTimerMode for RelativePinnedSoftMode {
 +/// Timer with absolute expiration, pinned to CPU and handled in soft irq context.
-+pub struct AbsolutePinnedSoftMode;
++pub struct RelativePinnedSoftMode<C: ClockSource>(PhantomData<C>);
++impl<C: ClockSource> HrTimerMode for RelativePinnedSoftMode<C> {
+     const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_REL_PINNED_SOFT;
 +
-+impl HrTimerMode for AbsolutePinnedSoftMode {
-+    const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_ABS_PINNED_SOFT;
-+}
++    type Clock = C;
++    type Expires = Delta;
+ }
+ 
+ /// Timer with absolute expiration, handled in hard irq context.
+-pub struct AbsoluteHardMode;
+-
+-impl HrTimerMode for AbsoluteHardMode {
++pub struct AbsoluteHardMode<C: ClockSource>(PhantomData<C>);
++impl<C: ClockSource> HrTimerMode for AbsoluteHardMode<C> {
+     const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_ABS_HARD;
 +
-+/// Timer with relative expiration, pinned to CPU and handled in soft irq context.
-+pub struct RelativePinnedSoftMode;
++    type Clock = C;
++    type Expires = Instant<C>;
+ }
+ 
+ /// Timer with relative expiration, handled in hard irq context.
+-pub struct RelativeHardMode;
+-
+-impl HrTimerMode for RelativeHardMode {
++pub struct RelativeHardMode<C: ClockSource>(PhantomData<C>);
++impl<C: ClockSource> HrTimerMode for RelativeHardMode<C> {
+     const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_REL_HARD;
 +
-+impl HrTimerMode for RelativePinnedSoftMode {
-+    const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_REL_PINNED_SOFT;
-+}
++    type Clock = C;
++    type Expires = Delta;
+ }
+ 
+ /// Timer with absolute expiration, pinned to CPU and handled in hard irq context.
+-pub struct AbsolutePinnedHardMode;
+-
+-impl HrTimerMode for AbsolutePinnedHardMode {
++pub struct AbsolutePinnedHardMode<C: ClockSource>(PhantomData<C>);
++impl<C: ClockSource> HrTimerMode for AbsolutePinnedHardMode<C> {
+     const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_ABS_PINNED_HARD;
 +
-+/// Timer with absolute expiration, handled in hard irq context.
-+pub struct AbsoluteHardMode;
++    type Clock = C;
++    type Expires = Instant<C>;
+ }
+ 
+ /// Timer with relative expiration, pinned to CPU and handled in hard irq context.
+-pub struct RelativePinnedHardMode;
+-
+-impl HrTimerMode for RelativePinnedHardMode {
++pub struct RelativePinnedHardMode<C: ClockSource>(PhantomData<C>);
++impl<C: ClockSource> HrTimerMode for RelativePinnedHardMode<C> {
+     const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_REL_PINNED_HARD;
 +
-+impl HrTimerMode for AbsoluteHardMode {
-+    const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_ABS_HARD;
-+}
-+
-+/// Timer with relative expiration, handled in hard irq context.
-+pub struct RelativeHardMode;
-+
-+impl HrTimerMode for RelativeHardMode {
-+    const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_REL_HARD;
-+}
-+
-+/// Timer with absolute expiration, pinned to CPU and handled in hard irq context.
-+pub struct AbsolutePinnedHardMode;
-+
-+impl HrTimerMode for AbsolutePinnedHardMode {
-+    const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_ABS_PINNED_HARD;
-+}
-+
-+/// Timer with relative expiration, pinned to CPU and handled in hard irq context.
-+pub struct RelativePinnedHardMode;
-+
-+impl HrTimerMode for RelativePinnedHardMode {
-+    const C_MODE: bindings::hrtimer_mode = bindings::hrtimer_mode_HRTIMER_MODE_REL_PINNED_HARD;
++    type Clock = C;
++    type Expires = Delta;
  }
  
  /// Use to implement the [`HasHrTimer<T>`] trait.
