@@ -1,201 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC9C151985;
-	Tue, 10 Jun 2025 00:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9607112B71;
+	Tue, 10 Jun 2025 01:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749517063; cv=none; b=QF2fC7rYT9SfYWLIc3Pir/MJO6fmQKKbXGv/EMnjDKOW0ByohXizgS3v66j/lxiVa7bysGiWCqeDKYV4xvGOl13+QNFA2w/Ae16z0lJKO5+dwsLKrpcS8GcIq7wgd1+TzDJQi7fXXvVfgw0lV+43Ht2+1YR22iLvYKQeCfNYUEQ=
+	t=1749517329; cv=none; b=oA7B+jJTvap9d3UTNUmt2TUUQdQpMlAAwS0EN1Ss0oFAaB4YLZ1zZYHp9ZeIHDL9SRCq+oor6n06IjnsaxtSao9R7a+q9aktSYXiAh8pDK1Pp1AHyO8j4KM3K5GOwL73WHHe85wOjzDac4eVN9wrv0kJmJJkqvjwpf3+SquelIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749517063; c=relaxed/simple;
-	bh=+4CQSPMqTNQcE956N50cCEl2XjxjoVAzYnvINs2GZME=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AVkvR6Ish+BCEsqfiT3U52O6wSryjbrAK+Yv0zuXv3X6/rH1fnEUQh9fnfszLovq8rym3+FmgBXT3PMYu1obhtnmnwOL5nQmyBo3Q+Gm0WshInxTKLWTDG+t3YP/Bdkvk+T6rzdqMlFn/rbIS2EAWcIsw3zk4MKyH4htIIEDv4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MBpAEPOU; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MBpAEPOU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6371C4CEEB;
-	Tue, 10 Jun 2025 00:57:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749517063;
-	bh=+4CQSPMqTNQcE956N50cCEl2XjxjoVAzYnvINs2GZME=;
-	h=From:To:Cc:Subject:Date:From;
-	b=MBpAEPOUit4Bw5ymbT8exTZdBaANv9ON6RgT/skiHcf62mCPOyRjPead/L7SdaDKY
-	 w648U9t0nPqfUpSrIbpseUflapbc/0ZcrwmldS77TvxTeaNLgaoo683SETWMDJy0ba
-	 yTjKO7swbfyA7IrrFGGb4DMGo8BJ76nDBvEjqCFPSovpLj6k9Qly22iGeSTdCgIZys
-	 RaSsKZIzzN0T8iV1d/82QC77u3adR8O8aG753E+62JV+Z94F88tmUjEYvbEfgNaexX
-	 HctKexYunHCMdiR9z0d2k1gxnkZ/KwRcsxVHI0v8cO7VwEjf8iH1xySPYCCVh5YYtv
-	 4M367IRcp83RQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: [PATCH for-v6.16] perf mem: Describe the new output fields in the doc
-Date: Mon,  9 Jun 2025 17:57:42 -0700
-Message-ID: <20250610005742.2173050-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
+	s=arc-20240116; t=1749517329; c=relaxed/simple;
+	bh=EbuBy0E5ZafugyjYTKvCcXhyucSCaS/HtXQs04B82hc=;
+	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Uc7MFpXusDtjfQwtD+5KF9OAQFDrrEpMsf94761y53b8+XRUQnFXRa63+jqKmpeGAuWhsRTLMkgVOTlUOv3GxdmAOc2mpyAoM9oXS5t1IQ/icArr68OcZXfHyXwk9kA2RS3tyGdlN3CdjJCePHu3WbBOgGZCl9NB646QJkD2QEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bGVqv6QGPzYQvLT;
+	Tue, 10 Jun 2025 09:02:03 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id E26351A0DF9;
+	Tue, 10 Jun 2025 09:02:02 +0800 (CST)
+Received: from [10.174.99.169] (unknown [10.174.99.169])
+	by APP4 (Coremail) with SMTP id gCh0CgDnSF0JhEdo4IIqPA--.56772S2;
+	Tue, 10 Jun 2025 09:02:02 +0800 (CST)
+Subject: Re: [PATCH 1/7] mm: shmem: correctly pass alloced parameter to
+ shmem_recalc_inode() to avoid WARN_ON()
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>, hughd@google.com,
+ willy@infradead.org, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org
+References: <20250605221037.7872-1-shikemeng@huaweicloud.com>
+ <20250605221037.7872-2-shikemeng@huaweicloud.com>
+ <3d07c68f-da11-43d8-a2da-6b200b2fa40a@linux.alibaba.com>
+ <994283d9-2dc4-6887-5d46-247b834879b5@huaweicloud.com>
+Message-ID: <9e59f1f0-db3b-2182-4485-887ac7036bfd@huaweicloud.com>
+Date: Tue, 10 Jun 2025 09:02:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <994283d9-2dc4-6887-5d46-247b834879b5@huaweicloud.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDnSF0JhEdo4IIqPA--.56772S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxAw4xuw4rWw1kWw45uw1Utrb_yoWrKF1rpr
+	n5GFyDGr48JrZ7GF1xtr4kXry0qF4fAa1UJrnxAFyxKF47Gw18Kr13JrnFgr1DA34kAry7
+	tw1kK34IvayDCaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
+	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UK2N
+	tUUUUU=
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-Update the documentation of the new fields with examples and caveats.
-Also update the related documentation for AMD IBS.
 
-Cc: Ravi Bangoria <ravi.bangoria@amd.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/Documentation/perf-amd-ibs.txt | 59 ++++++++++++++++-------
- tools/perf/Documentation/perf-mem.txt     | 50 +++++++++++++++++++
- 2 files changed, 92 insertions(+), 17 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-amd-ibs.txt b/tools/perf/Documentation/perf-amd-ibs.txt
-index 55f80beae0375a72..54854993576070c3 100644
---- a/tools/perf/Documentation/perf-amd-ibs.txt
-+++ b/tools/perf/Documentation/perf-amd-ibs.txt
-@@ -171,23 +171,48 @@ Below is a simple example of the perf mem tool.
- 	# perf mem report
- 
- A normal perf mem report output will provide detailed memory access profile.
--However, it can also be aggregated based on output fields. For example:
--
--	# perf mem report -F mem,sample,snoop
--	Samples: 3M of event 'ibs_op//', Event count (approx.): 23524876
--	Memory access                                 Samples  Snoop
--	N/A                                           1903343  N/A
--	L1 hit                                        1056754  N/A
--	L2 hit                                          75231  N/A
--	L3 hit                                           9496  HitM
--	L3 hit                                           2270  N/A
--	RAM hit                                          8710  N/A
--	Remote node, same socket RAM hit                 3241  N/A
--	Remote core, same node Any cache hit             1572  HitM
--	Remote core, same node Any cache hit              514  N/A
--	Remote node, same socket Any cache hit           1216  HitM
--	Remote node, same socket Any cache hit            350  N/A
--	Uncached hit                                       18  N/A
-+New output fields will show related access info together.  For example:
-+
-+	# perf mem report -F overhead,cache,snoop,comm
-+	...
-+	# Samples: 92K of event 'ibs_op//'
-+	# Total weight : 531104
-+	#
-+	#           ---------- Cache -----------  --- Snoop ----
-+	# Overhead       L1     L2 L1-buf  Other     HitM  Other  Command
-+	# ........  ............................  ..............  ..........
-+	#
-+	    76.07%     5.8%  35.7%   0.0%  34.6%    23.3%  52.8%  cc1
-+	     5.79%     0.2%   0.0%   0.0%   5.6%     0.1%   5.7%  make
-+	     5.78%     0.1%   4.4%   0.0%   1.2%     0.5%   5.3%  gcc
-+	     5.33%     0.3%   3.9%   0.0%   1.1%     0.2%   5.2%  as
-+	     5.00%     0.1%   3.8%   0.0%   1.0%     0.3%   4.7%  sh
-+	     1.56%     0.1%   0.1%   0.0%   1.4%     0.6%   0.9%  ld
-+	     0.28%     0.1%   0.0%   0.0%   0.2%     0.1%   0.2%  pkg-config
-+	     0.09%     0.0%   0.0%   0.0%   0.1%     0.0%   0.1%  git
-+	     0.03%     0.0%   0.0%   0.0%   0.0%     0.0%   0.0%  rm
-+	     ...
-+
-+Also, it can be aggregated based on various memory access info using the
-+sort keys.  For example:
-+
-+	# perf mem report -s mem,snoop
-+	...
-+	# Samples: 92K of event 'ibs_op//'
-+	# Total weight : 531104
-+	# Sort order   : mem,snoop
-+	#
-+	# Overhead       Samples  Memory access                            Snoop
-+	# ........  ............  .......................................  ............
-+	#
-+	    47.99%          1509  L2 hit                                   N/A
-+	    25.08%           338  core, same node Any cache hit            HitM
-+	    10.24%         54374  N/A                                      N/A
-+	     6.77%         35938  L1 hit                                   N/A
-+	     6.39%           101  core, same node Any cache hit            N/A
-+	     3.50%            69  RAM hit                                  N/A
-+	     0.03%           158  LFB/MAB hit                              N/A
-+	     0.00%             2  Uncached hit                             N/A
- 
- Please refer to their man page for more detail.
- 
-diff --git a/tools/perf/Documentation/perf-mem.txt b/tools/perf/Documentation/perf-mem.txt
-index 965e73d377724607..4d164836d0943119 100644
---- a/tools/perf/Documentation/perf-mem.txt
-+++ b/tools/perf/Documentation/perf-mem.txt
-@@ -119,6 +119,22 @@ REPORT OPTIONS
- 	And the default sort keys are changed to local_weight, mem, sym, dso,
- 	symbol_daddr, dso_daddr, snoop, tlb, locked, blocked, local_ins_lat.
- 
-+-F::
-+--fields=::
-+	Specify output field - multiple keys can be specified in CSV format.
-+	Please see linkperf:perf-report[1] for details.
-+
-+	In addition to the default fields, 'perf mem report' will provide the
-+	following fields to break down sample periods.
-+
-+	- op: operation in the sample instruction (load, store, prefetch, ...)
-+	- cache: location in CPU cache (L1, L2, ...) where the sample hit
-+	- mem: location in memory or other places the sample hit
-+	- dtlb: location in Data TLB (L1, L2) where the sample hit
-+	- snoop: snoop result for the sampled data access
-+
-+	Please take a look at the OUTPUT FIELD SELECTION section for caveats.
-+
- -T::
- --type-profile::
- 	Show data-type profile result instead of code symbols.  This requires
-@@ -156,6 +172,40 @@ there are two samples in perf.data file, both with the same sample period,
-   90%   [k] memcpy
-   10%   [.] strcmp
- 
-+OUTPUT FIELD SELECTION
-+----------------------
-+"perf mem report" adds a number of new output fields specific to data source
-+information in the sample.  Some of them have the same name with the existing
-+sort keys ("mem" and "snoop").  So unlike other fields and sort keys, they'll
-+behave differently when it's used by -F/--fields or -s/--sort.
-+
-+Using those two as output fields will aggregate samples altogether and show
-+breakdown.
-+
-+  $ perf mem report -F mem,snoop
-+  ...
-+  # ------ Memory -------  --- Snoop ----
-+  #     RAM Uncach  Other     HitM  Other
-+  # .....................  ..............
-+  #
-+       3.5%   0.0%  96.5%    25.1%  74.9%
-+
-+But using the same name for sort keys will aggregate samples for each type
-+separately.
-+
-+  $ perf mem report -s mem,snoop
-+  # Overhead       Samples  Memory access                            Snoop
-+  # ........  ............  .......................................  ............
-+  #
-+      47.99%          1509  L2 hit                                   N/A
-+      25.08%           338  core, same node Any cache hit            HitM
-+      10.24%         54374  N/A                                      N/A
-+       6.77%         35938  L1 hit                                   N/A
-+       6.39%           101  core, same node Any cache hit            N/A
-+       3.50%            69  RAM hit                                  N/A
-+       0.03%           158  LFB/MAB hit                              N/A
-+       0.00%             2  Uncached hit                             N/A
-+
- SEE ALSO
- --------
- linkperf:perf-record[1], linkperf:perf-report[1], linkperf:perf-arm-spe[1]
--- 
-2.50.0.rc0.604.gd4ff7b7c86-goog
+on 6/9/2025 8:46 AM, Kemeng Shi wrote:
+> 
+> 
+> on 6/7/2025 2:11 PM, Baolin Wang wrote:
+>>
+>>
+>> On 2025/6/6 06:10, Kemeng Shi wrote:
+>>> As noted in the comments, we need to release block usage for swap entry
+>>> which was replaced with poisoned swap entry. However, no block usage is
+>>> actually freed by calling shmem_recalc_inode(inode, -nr_pages, -nr_pages).
+>>> Instead, call shmem_recalc_inode(inode, 0, -nr_pages) can correctly release
+>>> the block usage.
+>>>
+>>> Fixes: 6cec2b95dadf7 ("mm/shmem: fix infinite loop when swap in shmem error at swapoff time")
+>>> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+>>> ---
+>>>   mm/shmem.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/mm/shmem.c b/mm/shmem.c
+>>> index 4b42419ce6b2..e27d19867e03 100644
+>>> --- a/mm/shmem.c
+>>> +++ b/mm/shmem.c
+>>> @@ -2145,7 +2145,7 @@ static void shmem_set_folio_swapin_error(struct inode *inode, pgoff_t index,
+>>>        * won't be 0 when inode is released and thus trigger WARN_ON(i_blocks)
+>>>        * in shmem_evict_inode().
+>>>        */
+>>> -    shmem_recalc_inode(inode, -nr_pages, -nr_pages);
+>>> +    shmem_recalc_inode(inode, 0, -nr_pages);
+>>>       swap_free_nr(swap, nr_pages);
+>>>   }
+>>
+>> Have you tested your patch? When I inject an error to test your patch, the following issue will be triggered:As all issues are hard to trigger, I only run some simple test to ensure normal
+> process is fine. Could you share how to inject the error to trigger following
+> issue. I will have a deep look. Thanks
+Sorry that the message is truncated. I mean I only test normal process is fine.
+Besides, I think there is another long-standing issue which could trigger the
+following issue. Here is the issue which is possible to blame:
+When swap entry is replaced with error entry in shmem_set_folio_swapin_error(),
+we will reduce info->swapped. Afterwards, error entry could be deleted in
+shmem_undo_range() and the info->swapped is reduced again. As a result, we
+reduce info->swapped twice for a single swap entry.
+A simple way to confirm this is injecting error to original code. Could you
+share how to trigger the issue or could you do the same test to original code?
+Thanks.
+
+>>
+>> [  127.173330] ------------[ cut here ]------------
+>> [  127.173331] WARNING: CPU: 13 PID: 6860 at mm/shmem.c:1388 shmem_evict_inode+0xf0/0x348
+>> [  127.173920] CPU: 13 UID: 0 PID: 6860 Comm: shmem_swapin_er Kdump: loaded Tainted: G            E       6.15.0-rc6+ #54 VOLUNTARY
+>> [  127.173925] pstate: 63401005 (nZCv daif +PAN -UAO +TCO +DIT +SSBS BTYPE=--)
+>> [  127.173927] pc : shmem_evict_inode+0xf0/0x348
+>> [  127.173929] lr : shmem_evict_inode+0x68/0x348
+>> [  127.173931] sp : ffff8000895639e0
+>> [  127.173932] x29: ffff8000895639e0 x28: 0000000000000006 x27: ffff00013754bfc0
+>> [  127.173935] x26: ffff800080d8f160 x25: 0000000000000006 x24: ffff0000c0aab440
+>> [  127.173937] x23: ffff00013754b780 x22: ffff00013754b780 x21: ffff0000cbc9c6b0
+>> [  127.173940] x20: ffff0000c0aab440 x19: ffff0000cbc9c700 x18: 0000000000000030
+>> [  127.173942] x17: 0000ffffa1f4cfff x16: 0000000000000003 x15: 0000000000001000
+>> [  127.173945] x14: 00000000ffffffff x13: 0000000000000004 x12: ffff800089563108
+>> [  127.173947] x11: 0000000000000000 x10: 0000000000000002 x9 : ffff800080352080
+>> [  127.173949] x8 : fffffffffffffffe x7 : ffff800089563700 x6 : 0000000000000001
+>> [  127.173952] x5 : 0000000000000004 x4 : 0000000000000002 x3 : 0000000000000002
+>> [  127.173954] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffffffffffffff80
+>> [  127.173957] Call trace:
+>> [  127.173958]  shmem_evict_inode+0xf0/0x348 (P)
+>> [  127.173961]  evict+0x1c8/0x2c8
+>> [  127.173964]  iput_final+0x84/0x1a0
+>> [  127.173966]  iput.part.0+0xd0/0xf0
+>> [  127.173968]  iput+0x20/0x38
+>> [  127.173971]  dentry_unlink_inode+0xc0/0x158
+>> [  127.173973]  __dentry_kill+0x80/0x248
+>> [  127.173974]  dput+0xf0/0x240
+>> [  127.173976]  __fput+0x120/0x2f0
+>> [  127.173978]  ____fput+0x18/0x28
+>> [  127.173980]  task_work_run+0x88/0x120
+>> [  127.173983]  do_exit+0x198/0x3c0
+>> [  127.173986]  do_group_exit+0x38/0xa0
+>> [  127.173987]  get_signal+0x6ac/0x6b8
+>> [  127.173990]  do_signal+0x100/0x208
+>> [  127.173991]  do_notify_resume+0xc8/0x158
+>> [  127.173994]  el0_da+0xbc/0xc0
+>> [  127.173997]  el0t_64_sync_handler+0x70/0xc8
+>> [  127.173999]  el0t_64_sync+0x154/0x158
+>> [  127.174001] ---[ end trace 0000000000000000 ]---
+>>
 
