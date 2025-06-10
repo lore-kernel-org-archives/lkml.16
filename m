@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5B9238C34;
-	Tue, 10 Jun 2025 16:27:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C105B241670;
+	Tue, 10 Jun 2025 16:27:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749572878; cv=none; b=DWBRlQlv0KMevf4dYcrgxCYr2ilbrPppB/3l0dI9EwNgugoSQODRXz/wnZ2Y+3iF0n9GhRpJZ2w0aEYw5QPnnSdw4/SQ0/13rkJBfJs2zSiUwxQ4IEIceHq3TGBpR7GgXT5QbXVlI3s+BDJtGe5VesbJRNlP1HXWc4fMkxBHxM8=
+	t=1749572879; cv=none; b=ITlcXgVfOlBb31ajHkRt8EVhEL1GNWw87M4NUgrlfedPlFF8huPhWvw2EG3Vt8g4cVEk4f6Q8VQNzjjMPNwPJVj/7SUCeAwogRZ7HxV8F+srFT0ad7rNKTQ+s/sPw5Aayxz4hMnjvtcBU3HLQ5ljR4yTrqA5m7CWMqmJajhibvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749572878; c=relaxed/simple;
-	bh=mFxvI/kVZrzum73f4JuAnsQvQ7oMH5qbvvBDTrR8D+M=;
+	s=arc-20240116; t=1749572879; c=relaxed/simple;
+	bh=M7AR7P2Hp2v576w27gcBYA1QJAA51vBNSHPVxtZiM1s=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=agfIaX3SU6JKwRH64W9nWApxXjLe+SfygECRQCiktEIYZqIP3weJiFBJQIc31B4Mzl+L0/WvnoemdeQIH9BY17jSC7WFjC2WjBj11idNvgEvmtKdXgJ8uU/9FPtyxUcbIuscgRDQ6zrzJhsAvP4cPB1tjnATnKOK0MSfZFubaww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VQlxGt+F; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=uyDe03wHJ1zGz97nMCwPFNsCGjD5WNFzTqC3nUSsiZ/zHY+D2TYzUSCAsUdLyNvTeiQk639Lld8WNyh46WhN0qaTqyQYmokC+lTE73v46jeGx9shlpuAYHTvVGNIFokQzVhOSz6RE5LZh+eacwa7EN9vOeEwwG85iALF6jZR4TI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KFMK9Qrg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VQlxGt+F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F90EC4CEED;
-	Tue, 10 Jun 2025 16:27:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KFMK9Qrg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40E8CC4CEED;
+	Tue, 10 Jun 2025 16:27:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749572878;
-	bh=mFxvI/kVZrzum73f4JuAnsQvQ7oMH5qbvvBDTrR8D+M=;
+	s=k20201202; t=1749572879;
+	bh=M7AR7P2Hp2v576w27gcBYA1QJAA51vBNSHPVxtZiM1s=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=VQlxGt+FqI3gqtXadAFcUs97IUFFcFFoQNYIS1YMiCOwSw8fB/GQHW3sWVdyKgdtn
-	 A9h7kD4lIg/z42ZzV6iLq1g5+hdToOz613HUg0jc9ejXI3gOBwpLF5auyibwmxHj/y
-	 6ijU1n8/v5T9xkeScsbxE9VSa7vg7ojvmOmnYKGzWYzRqF3B6N/QWFU7U9ZhZ3P+Ry
-	 FugqWsvm1yFMJVeMSIHmPLExxcOeDibIVB25PcgtDmYVrINYjyzrlxleA+92+FKvID
-	 lC3xC5Ryva24Rv/ABPfx4G6MBufp3gcpx0OINvtiGz2nS6pyIguwKrl2Ad4IW9v+hO
-	 X8ytWgu7gICwg==
+	b=KFMK9QrgISSTDvxGudz6a85hexiOz9fN02iUkdTutBUXfp7ygyrWlMCX3ccpZPK2W
+	 KyPJaujZxGXU/fxxfBo/GpgldljWm/oRCN+O6S47EHw+r0x70PqoUq9KAHaNbp2vgH
+	 QQoBfMnMCwXLwDBYn3M1n3up7KpBSFu/QvhRU5FRX/3xQbnu3H7cvecri1C+npthOt
+	 Su3nbFFwtWfwq+nxld3jUukygNRn8ezdtekIXeYAIcMcqDdHn8gI8LwuRS0QLfghMo
+	 5vSD15iZiyo1+4z9QrEtDAAgTvZ8fD8H+kyKRr0AKuKh+U5M+miqArQa7nYKoSpz6g
+	 +BSqSPYz8Jykg==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD1A39D6540;
-	Tue, 10 Jun 2025 16:28:29 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EADC139D6540;
+	Tue, 10 Jun 2025 16:28:30 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,38 +37,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] kunit: qemu_configs: Add riscv32 config
+Subject: Re: [PATCH v5 0/6] KVM: lockdep improvements
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <174957290850.2454024.5667943279293290236.git-patchwork-notify@kernel.org>
-Date: Tue, 10 Jun 2025 16:28:28 +0000
-References: <20250407-kunit-qemu-riscv32-v1-1-7b9800034a35@linutronix.de>
-In-Reply-To: <20250407-kunit-qemu-riscv32-v1-1-7b9800034a35@linutronix.de>
-To: =?utf-8?q?Thomas_Wei=C3=9Fschuh_=3Cthomas=2Eweissschuh=40linutronix=2Ede=3E?=@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org
-Cc: linux-riscv@lists.infradead.org, brendan.higgins@linux.dev,
- davidgow@google.com, rmoar@google.com, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kunit-dev@googlegroups.com
+ <174957290974.2454024.11071746229021073521.git-patchwork-notify@kernel.org>
+Date: Tue, 10 Jun 2025 16:28:29 +0000
+References: <20250512180407.659015-1-mlevitsk@redhat.com>
+In-Reply-To: <20250512180407.659015-1-mlevitsk@redhat.com>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: linux-riscv@lists.infradead.org, kvm@vger.kernel.org,
+ suzuki.poulose@arm.com, jingzhangos@google.com, hpa@zytor.com,
+ sebott@redhat.com, lishusen2@huawei.com, longman@redhat.com,
+ tglx@linutronix.de, linux-arm-kernel@lists.infradead.org,
+ bhelgaas@google.com, bp@alien8.de, anup@brainfault.org, will@kernel.org,
+ palmer@dabbelt.com, glider@google.com, kvmarm@lists.linux.dev,
+ keisuke.nishimura@inria.fr, yuzenghui@huawei.com, peterz@infradead.org,
+ atishp@atishpatra.org, joey.gouly@arm.com, x86@kernel.org, maz@kernel.org,
+ seanjc@google.com, andre.przywara@arm.com, jiangkunkun@huawei.com,
+ rdunlap@infradead.org, pbonzini@redhat.com, boqun.feng@gmail.com,
+ catalin.marinas@arm.com, alex@ghiti.fr, linux-kernel@vger.kernel.org,
+ dave.hansen@linux.intel.com, oliver.upton@linux.dev,
+ kvm-riscv@lists.infradead.org, mingo@redhat.com, paul.walmsley@sifive.com,
+ aou@eecs.berkeley.edu
 
 Hello:
 
-This patch was applied to riscv/linux.git (fixes)
-by Shuah Khan <skhan@linuxfoundation.org>:
+This series was applied to riscv/linux.git (fixes)
+by Paolo Bonzini <pbonzini@redhat.com>:
 
-On Mon, 07 Apr 2025 10:17:12 +0200 you wrote:
-> Add a basic config to run kunit tests on riscv32.
+On Mon, 12 May 2025 14:04:01 -0400 you wrote:
+> This is	a continuation of my 'extract lock_all_vcpus/unlock_all_vcpus'
+> patch series.
 > 
-> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> ---
->  tools/testing/kunit/qemu_configs/riscv32.py | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
+> Implement the suggestion of using lockdep's "nest_lock" feature
+> when locking all KVM vCPUs by adding mutex_trylock_nest_lock() and
+> mutex_lock_killable_nest_lock() and use these functions	in the
+> implementation of the
+> kvm_trylock_all_vcpus()/kvm_lock_all_vcpus()/kvm_unlock_all_vcpus().
 > 
 > [...]
 
 Here is the summary with links:
-  - kunit: qemu_configs: Add riscv32 config
-    https://git.kernel.org/riscv/c/9aa08e761b67
+  - [v5,1/6] locking/mutex: implement mutex_trylock_nested
+    https://git.kernel.org/riscv/c/c5b6ababd21a
+  - [v5,2/6] locking/mutex: implement mutex_lock_killable_nest_lock
+    https://git.kernel.org/riscv/c/fb49f07ba1d9
+  - [v5,3/6] KVM: add kvm_lock_all_vcpus and kvm_trylock_all_vcpus
+    https://git.kernel.org/riscv/c/e4a454ced74c
+  - [v5,4/6] x86: KVM: SVM: use kvm_lock_all_vcpus instead of a custom implementation
+    https://git.kernel.org/riscv/c/c560bc9286e6
+  - [v5,5/6] KVM: arm64: use kvm_trylock_all_vcpus when locking all vCPUs
+    https://git.kernel.org/riscv/c/b586c5d21954
+  - [v5,6/6] RISC-V: KVM: use kvm_trylock_all_vcpus when locking all vCPUs
+    https://git.kernel.org/riscv/c/8f56770d114b
 
 You are awesome, thank you!
 -- 
