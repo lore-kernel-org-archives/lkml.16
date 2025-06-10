@@ -1,132 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E0B41AAC;
-	Tue, 10 Jun 2025 01:19:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23BCB29D19;
+	Tue, 10 Jun 2025 01:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749518394; cv=none; b=B/PXkplDNfHqUFSciwmRmWxn2fbfms2Q3xPaaTBaKo097PGGFPsiNWL6lTWupcqrPrGrkI46ldRn6kvA8Pa/52IkuJQbnZElRHA+mZb3/v4cUhuje9WY0p9DrWLor1sd6x7LIfNyH/hIiZZdHbp7XVQu8kYpWw0eiLTC1pblRGM=
+	t=1749518438; cv=none; b=Jh1URt6fcpQZe486j9spIVQzHDc4u+hkFT0H3HGib9U22oVaajQN/8hQ9QURn1u4gRY6OXjw+Tz1qhOSWLaBtXrwuYXx1hDRgj5ukSFNl8QB2PAWkD5Ng/Y/bg7mFiGyYOr2eHeErOBeFLbBR88+I7PdxOjhfC+5LkxTz0myCyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749518394; c=relaxed/simple;
-	bh=53Vo2R573voEg/pugPpL3dxKV+jtB1szute4QK9AIa4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K7S5ACSHC7P6uVW2jUENxVYo96qOC3/FGr9voXb//dxuKrYS7e9tP85AdKUDGdGJxOoZYj3gPkMzIJoptjkDcwC5kMB/1AH1rYmIAopVtNbRTVliu430G2AXcQ89jMhFJBPV+llaPXkHihlIE77RvpapLZiRTID+eYYwBY56FPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XfQahuhA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749518438; c=relaxed/simple;
+	bh=cM23n6uiyIm0rU+feuBCMfLiJRbypAe34gyr0xRyO7k=;
+	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
+	 Content-Type:Message-ID:Date; b=USOY7teXR2osyilrWBEaEdexIyY1e42U336Au7XgLuySfqjH1A+uGGB7VVgWM5g6olobLtqoqJKATCuso1jQ4613t+DU75hyou/nIe2Uc46zVkmppdR9Z5qon9WQeb+Q0kgM/U9rRaKFnj6uS+giMjzFSMGj2SD1czeFAy2b5D4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=mBXG587q; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XfQahuhA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39420C4CEEB;
-	Tue, 10 Jun 2025 01:19:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749518393;
-	bh=53Vo2R573voEg/pugPpL3dxKV+jtB1szute4QK9AIa4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XfQahuhA8Iu5JtWfeODCx+V73RWVOYFohGq2a05CRg0QrPfgENPLxGq3mleE/ZoSG
-	 HMlmMOM7ULrql75nbfvWLwEWaMzu+DZNyZ1v9ZaK/5by2XAPOwoDwFizWV2CT+CjCg
-	 Q0DpHCtfR1dmLfTdr8TUNIpEE7d2V258z1m+clZKTzmts/zzgxYrDUFGlacHWHw/jE
-	 ExhRgDCBOaifUZmkv7jwWkKW8gOoY/uDjPmQZxfGHEuKGVZmwrC6ru9ZPapS5u5emD
-	 7zQVdQz8AlKidB1UW0gU+s4FdptsbCDuXDlNEvmoXCfNA7Yohb3I2g3WRJ7/A0egPR
-	 Rau8ZHYEdALfw==
-Date: Mon, 9 Jun 2025 18:19:51 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Tianyou Li <tianyou.li@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>, wangyang.guo@intel.com,
-	pan.deng@intel.com, zhiguo.zhou@intel.com, tim.c.chen@intel.com,
-	tim.c.chen@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Minor improvements for perf script flamegraph
-Message-ID: <aEeIN_u4KpLZXDBx@google.com>
-References: <20250603071048.180674-1-tianyou.li@intel.com>
+	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="mBXG587q"
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 55A1KVYa81877506, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
+	t=1749518431; bh=f+C89OLNTJLqm7tctjLTcwKe3fypzJO2eXcQDk6EifE=;
+	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
+	 Content-Type:Message-ID:Date;
+	b=mBXG587qM5dAIMOF6nm2P7+Y01wwle133ZiJguyU7s/2kKWN4twG3Bi3X1qyZhSF+
+	 2IJUTRmSoiX24/mjY4reTFMaI0i0Wge7Y/7kDVpIhizN6rv+NvqIA28lzonKJKQoqS
+	 5rhsOKnDEtK1mliWZpfiEOIzAetJqILMVG+kn+JgL4M2OREjjedHjOXudxW4SJ8bLP
+	 3k1CES5zuGGKkI/KYfuBcBOQEdufRfbmoF2lTmu0YVEB+QbMlPun1EejyMg0CcOJZd
+	 5ZNlPq4r2ZytAtfPmIBMimbmhfj1tiEFwmX6qBzQZ/AieHUMc5fLRpEExMDtown6DG
+	 cD6vC7gAFziXg==
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 55A1KVYa81877506
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 10 Jun 2025 09:20:31 +0800
+Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 10 Jun 2025 09:20:31 +0800
+Received: from [127.0.1.1] (172.21.69.94) by RTEXDAG02.realtek.com.tw
+ (172.21.6.101) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 10 Jun
+ 2025 09:20:30 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Ping-Ke Shih
+	<pkshih@realtek.com>
+CC: <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        <linux-wireless@vger.kernel.org>
+Subject: Re: [PATCH] wifi: rtlwifi: Constify struct rtl_hal_ops and rtl_hal_cfg
+In-Reply-To: <2c3f3d8d8b2f7dcb8cc64cebe89e55720d1d733d.1747500351.git.christophe.jaillet@wanadoo.fr>
+References: <2c3f3d8d8b2f7dcb8cc64cebe89e55720d1d733d.1747500351.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250603071048.180674-1-tianyou.li@intel.com>
+Content-Type: text/plain
+Message-ID: <1573e244-e719-4e2f-9812-f9ba905387ff@RTEXDAG02.realtek.com.tw>
+Date: Tue, 10 Jun 2025 09:20:30 +0800
+X-ClientProxiedBy: RTEXMBS02.realtek.com.tw (172.21.6.95) To
+ RTEXDAG02.realtek.com.tw (172.21.6.101)
 
-Hello,
+Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
 
-On Tue, Jun 03, 2025 at 03:10:48PM +0800, Tianyou Li wrote:
-> When processing the perf data file generated with multiple events,
-> the flamegraph script will count all the events regardless of
-> different event names. If specify the perf data file with -i option,
-> the script will try to read the header information regardless of
-> the file name specified, instead it will try to access the perf.data.
+> 'struct rtl_hal_ops' and 'struct rtl_hal_cfg' are not modified in these
+> drivers.
 > 
-> This patch tries to add a -e option to specify the event name that
-> the flamegraph will be generated accordingly. If the -e option omitted,
-> the behavior remains unchanged. If the -i option specified, the header
-> information will be read from that file.
-
-Looks like two separate changes.  Can you please split them?
-
-Thanks,
-Namhyung
-
+> Constifying this structure moves some data to a read-only section, so
+> increase overall security, especially when the structure holds some
+> function pointers.
 > 
-> Signed-off-by: Tianyou Li <tianyou.li@intel.com>
-> Reviewed-by: Pan Deng <pan.deng@intel.com>
-> Reviewed-by: Zhiguo Zhou <zhiguo.zhou@intel.com>
-> Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
-> Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
-> ---
->  tools/perf/scripts/python/flamegraph.py | 21 +++++++++++++++++++--
->  1 file changed, 19 insertions(+), 2 deletions(-)
+> Constification of rtl_hal_cfg is only needed in rtl8192cu/sw.c
 > 
-> diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
-> index cf7ce8229a..eb78b93925 100755
-> --- a/tools/perf/scripts/python/flamegraph.py
-> +++ b/tools/perf/scripts/python/flamegraph.py
-> @@ -94,6 +94,11 @@ class FlameGraphCLI:
->          return child
->  
->      def process_event(self, event):
-> +        # ignore events where the event name does not match
-> +        # the one specified by the user
-> +        if self.args.event_name and event.get("ev_name") != self.args.event_name:
-> +            return
-> +
->          pid = event.get("sample", {}).get("pid", 0)
->          # event["dso"] sometimes contains /usr/lib/debug/lib/modules/*/vmlinux
->          # for user-space processes; let's use pid for kernel or user-space distinction
-> @@ -123,8 +128,15 @@ class FlameGraphCLI:
->              return ""
->  
->          try:
-> -            output = subprocess.check_output(["perf", "report", "--header-only"])
-> -            return output.decode("utf-8")
-> +            if self.args.input:
-> +                output = subprocess.check_output(["perf", "script", "--header-only", "-i", self.args.input])
-> +            else:
-> +                output = subprocess.check_output(["perf", "report", "--header-only"])
-> +
-> +            result = output.decode("utf-8")
-> +            if self.args.event_name:
-> +                result += "\nFocused event: " + self.args.event_name
-> +            return result
->          except Exception as err:  # pylint: disable=broad-except
->              print("Error reading report header: {}".format(err), file=sys.stderr)
->              return ""
-> @@ -235,6 +247,11 @@ if __name__ == "__main__":
->                          default=False,
->                          action="store_true",
->                          help="allow unprompted downloading of HTML template")
-> +    parser.add_argument("-e", "--event",
-> +                        default="",
-> +                        dest="event_name",
-> +                        type=str,
-> +                        help="specify the event to generate flamegraph for")
->  
->      cli_args = parser.parse_args()
->      cli = FlameGraphCLI(cli_args)
-> -- 
-> 2.43.5
+> On a x86_64, with allmodconfig, as an example:
+> Before:
+> ======
+>    text	   data	    bss	    dec	    hex	filename
+>   10167	   5512	    128	  15807	   3dbf	drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.o
 > 
+> After:
+> =====
+>    text	   data	    bss	    dec	    hex	filename
+>   10743	   4936	    128	  15807	   3dbf	drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.o
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+
+1 patch(es) applied to rtw-next branch of rtw.git, thanks.
+
+4c95423b6f01 wifi: rtlwifi: Constify struct rtl_hal_ops and rtl_hal_cfg
+
+---
+https://github.com/pkshih/rtw.git
+
