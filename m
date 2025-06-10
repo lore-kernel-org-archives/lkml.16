@@ -1,556 +1,320 @@
-Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C4E29A327
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.66
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749561595; cv=none; b=q3xZcqVG0NuQYqCA/ylDw3Hk+M7pIPELn12J4BpF94XUi4kkV9QBnKMbzuuok/jyWc1gtrr42/5RancGcXTKXkEC483E1Bwsz29pxp6dwITBonvmYH/a+v3zb1nmx/FHLZQv1GYZdRKIZqLjUBXCgmVBhLGlDNPUpycfSEMrNIc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D7A246BA5
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749561595; cv=fail; b=qKI87yOMGPNep+m1z6DZbU7gtckXtHIHiXx7sWEN0xngeypnMyFFCgY/1YPyU0qcIygE+4BkssW9ofw32Ac8k9ebcGBXa44cKjlZy90iYIt6AHd+oM+GQeEy2I9HzOFEgECdxZG/3kggFQgRiQoY0Jpl29n6q5SboBwf20kgzX0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749561595; c=relaxed/simple;
-	bh=Pjg91YdSL+wLnktv7WrsFvcR8TUCUCcXWJHly5IpKrI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pJrEG1G9c1XRZodpxyZnEXc6oxZnz48qF2GSnXSyj16pPdgZs7Xo2xABYbNmYwpO05zlREYhr5kKeEITS9hJk6Z4u9/CCb0TMKch5EAGhnD3WMGH90smMWO1WDrYq1+p9VkLj4YKdvsNVAfHVOwDF9fNkswCQBSCa763eWAypXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=monstr.eu; spf=none smtp.mailfrom=monstr.eu; dkim=pass (2048-bit key) header.d=monstr-eu.20230601.gappssmtp.com header.i=@monstr-eu.20230601.gappssmtp.com header.b=XzrIcYx8; arc=none smtp.client-ip=209.85.208.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=monstr.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=monstr.eu
+	bh=/V7ZlF1gHsoEh7YMLo7jiy0Zxd9xpnfewYeGaM2pSb4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=lTRbRll1Fso0Uon7W0iUpi1GAo0ulvrpx/DIZhbLByPhUp1Xvey3XTp2Y/CCf/b2WQYH4Euoa2tUlFLedcNAklB/DtzX2tpjxviGzPwHmPcYC0/ToLbbrqPv83XE1PA9BTLtGM5vzcf1ZRq3LKfR1tlfSRQ1YoQxZBUZX/ujAJk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=A1miAJWP; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=AwBx576g; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=monstr-eu.20230601.gappssmtp.com header.i=@monstr-eu.20230601.gappssmtp.com header.b="XzrIcYx8"
-Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-6077dea37easo6539961a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:19:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="A1miAJWP";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="AwBx576g"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55ADBgv9011336;
+	Tue, 10 Jun 2025 13:19:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=/Xs2iygU6kZaBbfYfr
+	yGlQ24Gd4IbbijfOoaD2oYEPY=; b=A1miAJWPuQ1fO2n0evt/Nq8jaWPGGeBEbN
+	sErMHCtr4UuiXsHuxwlXGNj1/Eu2Ki6KeaI1uV7yhII+Na4CK40SL9HLCwuhz9jE
+	7J6MqqlENL0aPUyRN3Ybj3leNUCm/yRDceDHf1JUBkzYC/ZI7IoiYm52vdVIYHWC
+	ut/Ytwd2R8vY4L2hwWquyZgXpPsM9REr2X4GnLAv3tgxNHVGbltnoc5IbYvo/aLU
+	rG4bXgJZlykzcJrSoKPVtOJXpwAw3zWxYdNZR/4H7TvMi5xbXTZYLOJ/fAJy1LPj
+	pvgQ6020b+rOUfm10pbcW8PT8iZOzMc5TAOic/Cjk4aiZ5o8TaHA==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 474dad4517-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 10 Jun 2025 13:19:07 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55AD0YSt003281;
+	Tue, 10 Jun 2025 13:19:05 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11on2044.outbound.protection.outlook.com [40.107.236.44])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 474bv8qsd1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 10 Jun 2025 13:19:05 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aS8eRRASifmbzBkyS0fycnpXU7Ry+gX7qXcQLlqD8RfMSvjqKn/a9DlGZZ85daOiTypAGanAljAEAP/FIOvLemHZyX6XD2TgTWFZsmvVJBrmLNbdhT0qetgBTtzNJIWPcRfSjjgWxWgDMyVMHOhreYKwTrwGK2dkCNpLGKeCsCpDn/GoJWrqE5ysOFkf9SvR6gJ2qF/5cXAxvV+Y96l3Cw8b9/vkIcTIBWuNOGX8aWvOsTCvgb3rufIyYvKL9u+teuo4OOJ1E3LR3Kd5xbCk4MU+F+nY9NOpLJyDc+1Q9ropR6cFgSLOm0k+VtjR6bhlgRJQoYUVyKoZxW3U91VmVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/Xs2iygU6kZaBbfYfryGlQ24Gd4IbbijfOoaD2oYEPY=;
+ b=vRNGnX71Q685CCUX4FCTbmP8GSIWi0TJ0rIHRD7D9knkwKmawHqf7sao/amKrD11w44UklIRfC5doiPPf/2k/8I19kfKMlkiJXC1phBJE+mIdKxD5CD2n/RqvJP5hM+Y9ftsCqV8K+Ls0iAMKrYKV1QTN6bp9tIpSprZmTcpdcPY6qcuNHfrnfjCXHf3TEZQ8BzNKZo5j5TaDkTcC/HTxUpVmrve7vLQdXj90zjKnboxq6sEM++RvYTIoFshZENl5AyG75xHu3IswSxzmhl6fDZpxH3ZiX+6wPaK3ueXrYX9oU/+9t5Sir6lqit/Di/DywZuxeurVcEveP8n9pn83Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20230601.gappssmtp.com; s=20230601; t=1749561591; x=1750166391; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EM43BQC9U3JXiC472poIh7gkLf3DhbY7VB+TZ5A8q2c=;
-        b=XzrIcYx8ig7RMngjvQZI6z8CDOLZjKTu+bgu+S58dIeSkKy26C/rzEWUynFCaKr0WC
-         BNH5ZJl/tIws/zU2zR9l/0CRwF77kMs7wkk4hDDWGU4wzOntIO0CkLi56qtyg9Dedgad
-         YWCej+HvJJ4WF1aR/XgZ6mTGQYtK5pyTh1W8pC9037/6enwbJlq07kotzwnzi4ux4jRi
-         hUiJ5uvvgEUS42vhCyfYooF6b6NZY588Qtd3uucv6T9oqQoQZu40RDlCH1QZYMOjtVjj
-         k+cksz+kAUwa4uPxBOAGJYi3rQhSJoA4OZt+zZx4f1dR5OoiQjzWFEs8KiCvSrauBwTC
-         zy0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749561591; x=1750166391;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EM43BQC9U3JXiC472poIh7gkLf3DhbY7VB+TZ5A8q2c=;
-        b=qSDVX2h2kL9+8GE60lMiqnXGJ7ssuGT/AVJ01Ql+oHMZIxEn0nkMUgC9HaGSEcOat7
-         NLOKBrM2sYIembNPKgZ9ZC4NzUgGKpf6o5sJBAHN2vdNHLcXHdMkqc+MSG0SZib+JPfh
-         5YjQU70rTKwzm0yfMSByjoV3Aed8CJlWMTjvhx94TO+3kBT6VJaIxaMg6o/7mnc4Wkql
-         tVzbvYPYfS0Tsf6Y1SrNjOrb+DHQ9xUx2grUB0KbV7YN/4RPaGlBN3DYQLj5vXpyMrET
-         1vCZ//Oi2Odg2Vx9kaNz17+WZVEzIkKHpqElSB5IiwD0hnPiossgFNIE/xglvZmXLumf
-         Lnxw==
-X-Forwarded-Encrypted: i=1; AJvYcCVLI+qkYeHuD74HXJpzcJ58UMl72dFW1yy922hRd9fb+ddvxrSuhkpo7J6qdM4JkarWcqt/ZFOxbYLFTGs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwV1Arc4Z6yis89a7ZtK6SIBKGWmDYYPGBynIDF+CQ9q73zATo4
-	7r067LDCfFElblGrgDElNyRE1nqBomQ4udvSoZmSs9qsa8EAkdhy5MxxSG1pLq+bnA==
-X-Gm-Gg: ASbGnctdzAj6LbaBWfrz4yS0xxPg9oc0ZMgz0SPWacX4RYSG6Xm3Cjuml9iPLsuLtNp
-	U9toqp4UQ6mj7kFHFjH6cbJbmN3hQXNAjHx5uWpvPQB6LdzzTSBj4fh2dt3g3pF1Hcd2mK+XzDP
-	ptK3DBuRtFa0S3+NxLa0sKv6SKzIHKV3gca+ukAtcxlsA1CuKpmgxku3YqsuO4IOZo/PDa/KfFy
-	ycOsWVX+6AgaCETo5XfFwjRG6W4FLPG6coEK5+LTlM215ydg+DOu6iVAprmnDS4Zz1vOfQTvczn
-	vmPCfqM7INJmrsyEpqRzvEyK/366lfdfwLzlqrjDsVPMUCWpPEJU7buFIphswhZLIosdIXvf/iP
-	oiI+T
-X-Google-Smtp-Source: AGHT+IHf1ftvEv+/owaXFX+brJ2ti9pvFVDus9AUtFJj/DQ/CJJ1flLkndy8QXRjWsBN55i+ZWAGsQ==
-X-Received: by 2002:a05:6402:2755:b0:608:330a:9f67 with SMTP id 4fb4d7f45d1cf-608330a9fe8mr1679158a12.32.1749561590341;
-        Tue, 10 Jun 2025 06:19:50 -0700 (PDT)
-Received: from [192.168.0.105] (nat-108.starnet.cz. [178.255.168.108])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-607783c06c3sm6147146a12.39.2025.06.10.06.19.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 06:19:49 -0700 (PDT)
-Message-ID: <300a48a0-d5e5-4705-b572-40a4ee8b1bd1@monstr.eu>
-Date: Tue, 10 Jun 2025 15:19:48 +0200
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/Xs2iygU6kZaBbfYfryGlQ24Gd4IbbijfOoaD2oYEPY=;
+ b=AwBx576gVzN4SSWg+HA/ZGlpcTkxujVhcdpjOAHvyLj6XWfQL+xD5/V7osqcrfyD6jjX2apTL6h1AplSlwmWnvw8h1gcIm5A3cNEhiq6eaghiU5ihBnvtCiRcap4tVcDSFY5FJrg3jzZDs0/EafLDjcc3omLNo0cZqJLRWntE4M=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by PH8PR10MB6671.namprd10.prod.outlook.com (2603:10b6:510:217::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.27; Tue, 10 Jun
+ 2025 13:19:02 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8813.024; Tue, 10 Jun 2025
+ 13:19:02 +0000
+Date: Tue, 10 Jun 2025 14:18:59 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Dev Jain <dev.jain@arm.com>
+Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, vbabka@suse.cz,
+        jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, david@redhat.com, peterx@redhat.com,
+        ryan.roberts@arm.com, mingo@kernel.org, libang.li@antgroup.com,
+        maobibo@loongson.cn, zhengqi.arch@bytedance.com, baohua@kernel.org,
+        anshuman.khandual@arm.com, willy@infradead.org, ioworker0@gmail.com,
+        yang@os.amperecomputing.com, baolin.wang@linux.alibaba.com,
+        ziy@nvidia.com, hughd@google.com
+Subject: Re: [PATCH v4 2/2] mm: Optimize mremap() by PTE batching
+Message-ID: <af75dbe7-b6fd-4288-8171-32fd6f09a850@lucifer.local>
+References: <20250610035043.75448-1-dev.jain@arm.com>
+ <20250610035043.75448-3-dev.jain@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250610035043.75448-3-dev.jain@arm.com>
+X-ClientProxiedBy: LNXP265CA0077.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:76::17) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 18/41] microblaze: Replace __ASSEMBLY__ with __ASSEMBLER__
- in non-uapi headers
-To: Thomas Huth <thuth@redhat.com>, linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org
-References: <20250314071013.1575167-1-thuth@redhat.com>
- <20250314071013.1575167-19-thuth@redhat.com>
-Content-Language: en-US
-From: Michal Simek <monstr@monstr.eu>
-In-Reply-To: <20250314071013.1575167-19-thuth@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|PH8PR10MB6671:EE_
+X-MS-Office365-Filtering-Correlation-Id: d541bde1-8b9b-493d-2200-08dda8215e5f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|366016|7416014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?zz1MTURHB1i84OfNj+UE7tnhBIRTAWrJvisGWh+1V41c3E9OmmHtx1aYxOYm?=
+ =?us-ascii?Q?EaHH1l04f2eVe1Sg2caw2hBQfA7mHwdw2V5mIqzNm8B1kH8ydU/wlv54YERn?=
+ =?us-ascii?Q?vP+iIQdeQzsQcIPWG6CZAWAEmY72Ac/oRVBs9HoxwGRa4lpQD9JAwkocLjiB?=
+ =?us-ascii?Q?J0qmC3S9ELX4chPY2Cl0r8AH58SQ4fwlzredznU9tm19NP6Lq8Jtx0j0McIX?=
+ =?us-ascii?Q?HSNeGIqJttAJc0Goc68tTjN9AW4CPopY51g9Wz32AphwYlNzv9tMsLuGcoH6?=
+ =?us-ascii?Q?mMXUZiq/knRpQKLs2rndJadAfyzVjshoKQUtRWfikx3sYkKVN8Bvrdu4wMMd?=
+ =?us-ascii?Q?4X0+TFkYVLtxb/4nyi6TYFVPte9HJOlP3yj6L2WMLGf2qh7M2VKlz7VZE5Cp?=
+ =?us-ascii?Q?rrgF/G6++oYAmSKb4mPvKoQudNj1LqMxg2s4t8Tr7eXHpBPdsrAtppHyTD6C?=
+ =?us-ascii?Q?DIJNTi91a8t7rCpSmSBakG1bAQCAk3DXee98R0M122JZUYwOW6PgdNgdpz49?=
+ =?us-ascii?Q?p5cK/ELlVgmMdJcw0+/V3oOFl2wS3YLmSEDPwQ8xpM0ycmfMUNRCxcT7CR33?=
+ =?us-ascii?Q?8iBXp1LIfW+0WjhuuVISVnM8E55576+XFwGPPDUaoGcanGCRCwj7s7KLxMtc?=
+ =?us-ascii?Q?0t+froJDRRVmIRAazxqQ27Sc9B/6A69xnal6VMJsX4NxnJQJ1LzgKlEbkijG?=
+ =?us-ascii?Q?dOeVOCPvdWApIe2bhyfED9t6nA7DLqvhnKCdqEECDnzA13AKLnJPg/qCjSTI?=
+ =?us-ascii?Q?p3R9k0Z2WsB42PyQVo14ZCWT8o9JfN7NhlPyjjnr8UWadh1nUa+FZOfnqKRK?=
+ =?us-ascii?Q?sLrX95RL2W0qhurjNxXriuofJck8tYK3EgFisklJrU8ek7Z6h7wn207RkqVT?=
+ =?us-ascii?Q?r2vtVkUgyxmj9kJO56KBPmpyVt7PcgqUpLKJswTcL8fU0haTHO00+k4aKR/Y?=
+ =?us-ascii?Q?nu3AZwDQQW0pK8ZnuJ1ZC1Lpg+PDWfogvMG0gXlKozcNI+ZtQQ9TbyeMWtVy?=
+ =?us-ascii?Q?iqyteyCgydK6rIMj+sWJIf8l1GZXv3SM9aQCKdh8gSqEO4nQY1aypzb3QgjA?=
+ =?us-ascii?Q?or1+sHEholCOWJK/N2QUYDsDmd3o0hPQ9zGmL9h8oTi/3E9JZaDK1cIqMRbR?=
+ =?us-ascii?Q?ZGpzWKvfqfTlfK6KIapcrft3Gr0Vmr92dtZ/BM3ptf1ZhqHAWP7fVDRJ1Vs6?=
+ =?us-ascii?Q?GAPdTwsQ+AoUCUyy4ebB0Hf1lyTXAQs2AiIaJAEiVoG/A7Tmh8LuZMrqMpp+?=
+ =?us-ascii?Q?WG6Ji9otjCF2uQ2T0WJaHm7+tqKB+wgRew5DskFByQYGUlhkgNmN6u2tmy0/?=
+ =?us-ascii?Q?N8asn/ufTmMJo5K31UKMX7alkvNeAit7zhxtOPPMYs8gKNLXYMMBH3I8/oMC?=
+ =?us-ascii?Q?62IS9dI8X1NNGRqpBxx7j1gL4/BmQlENMbuQNgcXq4Osv92Pog=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?iWYLvoWODDOrKHyAz94g7dZRMBGBksFTeY5g3RDpuPbyb80bnxaYo4HC730T?=
+ =?us-ascii?Q?Mj8FgzPClL56VZde0zPb0ac90BNKkxEON2uLT9aQmZHa1OcDFmkvwueQ+u8D?=
+ =?us-ascii?Q?hEIg141QdoTI3rmlvhqhmQh01CRWzuN0zzyqTeyhtxGR/iNqrzNr4/nVWgW7?=
+ =?us-ascii?Q?IXY//jwsl0MSCvqR2+i/qNV8F8sgXocXeGaovGcs36nP19gyUmPLFY48rshE?=
+ =?us-ascii?Q?wCWbGYMc2zfBAH+dvZaiiBBUPl6JwGD7ttJwI5SoBfq3DxYkfousf92Qno+v?=
+ =?us-ascii?Q?HbdWvnf71q9hKEwjiFp5e6ydfkgnKUaVXukjIIuFO+DOjTqsCxE78vBMIRcU?=
+ =?us-ascii?Q?WAiHH9PChcaVDPuC/26Aqpmb1lvcTAhmFKiQGqdx2n/SzzZ87MNYQ/7GaKSy?=
+ =?us-ascii?Q?kaoI+08y/F1vWYlx5Fa18LIXzbcV8Sd2jv7mSKRzCXEZqEMvPs52FUxLYyJz?=
+ =?us-ascii?Q?aXihNoI4vCNE4txS/NWFRqLOb9Djq7+sGz4L6eWV03s8RPit59knMTbJlWfJ?=
+ =?us-ascii?Q?pq7tcHKXA5ziqV0pImPwnoGHCkMHe/Q3aNOBlOtBDnFrqrocthADzv+romkU?=
+ =?us-ascii?Q?pJx35My0dQKXWgXvld/uVkYrn9TkC0N5WqfeuFUZNm7PC5qInSoc6W+iAdsW?=
+ =?us-ascii?Q?bnT5xe/qvKWlwKw7g0vfumWzPoDV64c43PJa4KGFgWY2+c/dbUOFfGB9W1X/?=
+ =?us-ascii?Q?xuDeSbsrMbSLA56vCmmCxNb4M1PTa6yGqthQVRONjrBWkjhPHQUmSLtDDsnm?=
+ =?us-ascii?Q?LTufhaYrqsgpeOeZB4yRYEvwd+yM7vWnRJLAvs5EDzXCZN8vmgK8b5I6ouoR?=
+ =?us-ascii?Q?TQXxnJuYg3mqtSibbDn+Q+w1Mqov4iW0qoWTmmJpltR8jvcXafcgMvZxGAzq?=
+ =?us-ascii?Q?MPpLqiAJ3s0HFGeAbx3Auaex3cAJmQFxTGoeQb3lshWHy3sfPMsOfyJrNkWG?=
+ =?us-ascii?Q?ENW3H8mIHoMvmrOM5yT3bhczHftQ3Y7izKqARECO0OqzVUx9wSU4cEmzl+B9?=
+ =?us-ascii?Q?SqpdLwdf+8nNm978tekIArRTKdKRgNT5hNKAvUTDOU58Mvo3W1ZiJ0JsUl6c?=
+ =?us-ascii?Q?fc7FW1PeWDMvE+3EyVXAzU5sMEaOFKh9LN/tbE4ZrqQAy1tdbPXIgS6wschC?=
+ =?us-ascii?Q?dzfNWqErBjaBWw3+/QTGhrcd2hs1IghLGH4YqdgOoSplnkP2dWxVhOtpknSQ?=
+ =?us-ascii?Q?nzgzMfz/hFLhaYT4eBbF8N+vvHkvTAkg0FCZRXSlpQ83iFULsaVUp28RLaqy?=
+ =?us-ascii?Q?vD1Q4+LdMLMweJ+py5RQ9wsBwVlmkxfK//kUrD8LpkZ0U/FJe7c73gLHCMiC?=
+ =?us-ascii?Q?kJawyIwYaMXzGSTyO7TguAQgnI31WMHPWRTqYFuLBiqWBgof668T6E3GPoRM?=
+ =?us-ascii?Q?59WDtoUrF2sHLwfNFiK0mOOoS9slW+qke1jMvg5RX91Y9dmgph+66UX1JnyF?=
+ =?us-ascii?Q?cwXQRXgiebBrQS0uddx2LbbrZJgwbVpsPecuua57G6w2vxCRhy3U6EA0kV/E?=
+ =?us-ascii?Q?6Yd5kHpmGULPySg2TWFlELMPs2mNHJNgiT6zOCR+I+/eQuE3A4eZiqZRVu3s?=
+ =?us-ascii?Q?PMf/0z9WG11R7qc8b42YZm7Tba9vDz+cMMtIMnFiqu5sAonSAoIr5igU+t4h?=
+ =?us-ascii?Q?tQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	9TkEBSAMoW8g60cNJmLRWSMNW6SnOw/oNZwHeuFT1iTCO77XrloZB2yT2fc1AQH2dbjutSQZKbUwooLYOudtIFw5HYOLXppK1hyyrJiQvng0AuMYIVA1G+B48xCJZIShsXvcV33GLkSwtd+6fiRXFkjxZVPM/hZ/UkRBvXfy+VfwPaLS0wCOMtMho8bvzFFSP0jisOz40a61usVqCee1xc08SLl90KxWgtlhjEWeVmBpS5XKTnh2cEZFCh8yENypE29v7DIXsEFCQ8v6zvq8t1qtXSuJFcCqtamcN8HBT/bsOUPB6dXTkq9FJ1uHQPr6ZoJwtGVEOEW6VhxLOMGufovwOCJozhVJPF8JkQgKiXsvX/tlqOFzAvYKsaYPEt1ItD41ONlDr3tTDoqR4Pkty6dMIHtNmrt7q9WEWFRXUhAB3uIaQ6x9aRs8MgDbJdn0hk4YvaCA5VGQpnyvHuqhEzo3tr5wYDg2wcxizmQKNNpM7pNv0ypT3o+PYeLqDYRU85hnkQyotFRl6h7+vXBVdeX6hESvhkVoqV7hG2ziqlqAAbVaY75gmbLABylHCrLxjubGXKbzGdpVpIeTecyb+CvenRe3lMlS/lYUJPi1ayc=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d541bde1-8b9b-493d-2200-08dda8215e5f
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 13:19:02.7944
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: V15z9cvxXfD+b2t5EuBOHjX6Iy1bMPCgr/ysIzrHb2vp3liPLHduUFX3/vDATRvjQ8SSt1npAejXG2O+2vxN3gRopnNDN4Sqrx/utOBC1l4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR10MB6671
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_05,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 mlxscore=0
+ mlxlogscore=958 phishscore=0 spamscore=0 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506100104
+X-Proofpoint-ORIG-GUID: OMfHQb-5tJOt3jxGll2sD1BwklfQl8E4
+X-Authority-Analysis: v=2.4 cv=EJwG00ZC c=1 sm=1 tr=0 ts=684830cb b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=7CQSdrXTAAAA:8 a=yPCof4ZbAAAA:8 a=Pq_2Wrnj-zEXneWydwAA:9 a=CjuIK1q_8ugA:10 a=a-qgeE7W1pNrGK8U0ZQC:22 cc=ntf awl=host:14714
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDEwNCBTYWx0ZWRfXzmCu5r+1DmT9 sHtXjm1a01XZnbamnDbONn+VTblKC9+HdzK42ujOnBD4ov1/x+gBz/WD9g49ku+c/iY1e846m94 +tAnbFUE6bUPUp/di3B8Q+edOJcoZ8nEhrsA0b7pxJGMVdGrQv3Ra4lYWHqb8APPHac6TgchVIH
+ 7o7A+VoDXLbVIL5kDt3ZV6x7mbexCsM5ypprBfu29Vu9A5Vc7q7Rehr4N6gjEDpsVhU7No4TFle QCjzunvVzbqR2EpFbgI58bs4N9w2UFD4mg4olhHA2VZLAk/dccFQpkTBStKEo77M1mQiQVkAHer RMWO5hEmHZOo7F4pticMJvfTPdY+yif9UEuB0ZqgYJRNyPs2fx+64z/r8AoV2pRra1/KJnD7IE8
+ Y3PefPMLLIgzrsPRycoz78P88ds+Kjp0H1XQwBjKecgp5YvssnFcF1QAD9lDhO2cIbq6O/ET
+X-Proofpoint-GUID: OMfHQb-5tJOt3jxGll2sD1BwklfQl8E4
 
+On Tue, Jun 10, 2025 at 09:20:43AM +0530, Dev Jain wrote:
+> Use folio_pte_batch() to optimize move_ptes(). On arm64, if the ptes
+> are painted with the contig bit, then ptep_get() will iterate through all 16
+> entries to collect a/d bits. Hence this optimization will result in a 16x
+> reduction in the number of ptep_get() calls. Next, ptep_get_and_clear()
+> will eventually call contpte_try_unfold() on every contig block, thus
+> flushing the TLB for the complete large folio range. Instead, use
+> get_and_clear_full_ptes() so as to elide TLBIs on each contig block, and only
+> do them on the starting and ending contig block.
+>
+> For split folios, there will be no pte batching; nr_ptes will be 1. For
+> pagetable splitting, the ptes will still point to the same large folio;
+> for arm64, this results in the optimization described above, and for other
+> arches (including the general case), a minor improvement is expected due to
+> a reduction in the number of function calls.
 
+This is a fantastic improvement on commit message, thank you very much!
 
-On 3/14/25 08:09, Thomas Huth wrote:
-> While the GCC and Clang compilers already define __ASSEMBLER__
-> automatically when compiling assembly code, __ASSEMBLY__ is a
-> macro that only gets defined by the Makefiles in the kernel.
-> This can be very confusing when switching between userspace
-> and kernelspace coding, or when dealing with uapi headers that
-> rather should use __ASSEMBLER__ instead. So let's standardize on
-> the __ASSEMBLER__ macro that is provided by the compilers now.
-> 
-> This is a completely mechanical patch (done with a simple "sed -i"
-> statement).
-> 
-> Cc: Michal Simek <monstr@monstr.eu>
-> Signed-off-by: Thomas Huth <thuth@redhat.com>
+>
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
+
+Looks good to me:
+
+Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+
 > ---
->   arch/microblaze/include/asm/asm-compat.h       |  2 +-
->   arch/microblaze/include/asm/current.h          |  4 ++--
->   arch/microblaze/include/asm/entry.h            |  4 ++--
->   arch/microblaze/include/asm/exceptions.h       |  4 ++--
->   arch/microblaze/include/asm/fixmap.h           |  4 ++--
->   arch/microblaze/include/asm/ftrace.h           |  2 +-
->   arch/microblaze/include/asm/kgdb.h             |  4 ++--
->   arch/microblaze/include/asm/mmu.h              |  4 ++--
->   arch/microblaze/include/asm/page.h             |  8 ++++----
->   arch/microblaze/include/asm/pgtable.h          | 18 +++++++++---------
->   arch/microblaze/include/asm/processor.h        |  8 ++++----
->   arch/microblaze/include/asm/ptrace.h           |  4 ++--
->   arch/microblaze/include/asm/sections.h         |  4 ++--
->   arch/microblaze/include/asm/setup.h            |  4 ++--
->   arch/microblaze/include/asm/thread_info.h      |  4 ++--
->   arch/microblaze/include/asm/unistd.h           |  4 ++--
->   .../microblaze/include/asm/xilinx_mb_manager.h |  4 ++--
->   17 files changed, 43 insertions(+), 43 deletions(-)
-> 
-> diff --git a/arch/microblaze/include/asm/asm-compat.h b/arch/microblaze/include/asm/asm-compat.h
-> index c05259ce2d2c2..9f04614762319 100644
-> --- a/arch/microblaze/include/asm/asm-compat.h
-> +++ b/arch/microblaze/include/asm/asm-compat.h
-> @@ -4,7 +4,7 @@
->   
->   #include <asm/types.h>
->   
-> -#ifdef __ASSEMBLY__
-> +#ifdef __ASSEMBLER__
->   #  define stringify_in_c(...)	__VA_ARGS__
->   #  define ASM_CONST(x)		x
->   #else
-> diff --git a/arch/microblaze/include/asm/current.h b/arch/microblaze/include/asm/current.h
-> index a4bb45be30e69..099e69f32bf97 100644
-> --- a/arch/microblaze/include/asm/current.h
-> +++ b/arch/microblaze/include/asm/current.h
-> @@ -14,13 +14,13 @@
->    * but check asm/microblaze/kernel/entry.S to be sure.
->    */
->   #define CURRENT_TASK	r31
-> -# ifndef __ASSEMBLY__
-> +# ifndef __ASSEMBLER__
->   /*
->    * Dedicate r31 to keeping the current task pointer
->    */
->   register struct task_struct *current asm("r31");
->   
->   # define get_current()	current
-> -# endif /* __ASSEMBLY__ */
-> +# endif /* __ASSEMBLER__ */
->   
->   #endif /* _ASM_MICROBLAZE_CURRENT_H */
-> diff --git a/arch/microblaze/include/asm/entry.h b/arch/microblaze/include/asm/entry.h
-> index 6c42bed411662..9efadf12397ca 100644
-> --- a/arch/microblaze/include/asm/entry.h
-> +++ b/arch/microblaze/include/asm/entry.h
-> @@ -21,7 +21,7 @@
->   
->   #define PER_CPU(var) var
->   
-> -# ifndef __ASSEMBLY__
-> +# ifndef __ASSEMBLER__
->   DECLARE_PER_CPU(unsigned int, KSP); /* Saved kernel stack pointer */
->   DECLARE_PER_CPU(unsigned int, KM); /* Kernel/user mode */
->   DECLARE_PER_CPU(unsigned int, ENTRY_SP); /* Saved SP on kernel entry */
-> @@ -29,6 +29,6 @@ DECLARE_PER_CPU(unsigned int, R11_SAVE); /* Temp variable for entry */
->   DECLARE_PER_CPU(unsigned int, CURRENT_SAVE); /* Saved current pointer */
->   
->   extern asmlinkage void do_notify_resume(struct pt_regs *regs, int in_syscall);
-> -# endif /* __ASSEMBLY__ */
-> +# endif /* __ASSEMBLER__ */
->   
->   #endif /* _ASM_MICROBLAZE_ENTRY_H */
-> diff --git a/arch/microblaze/include/asm/exceptions.h b/arch/microblaze/include/asm/exceptions.h
-> index 967f175173e14..c4591e4f7175b 100644
-> --- a/arch/microblaze/include/asm/exceptions.h
-> +++ b/arch/microblaze/include/asm/exceptions.h
-> @@ -11,7 +11,7 @@
->   #define _ASM_MICROBLAZE_EXCEPTIONS_H
->   
->   #ifdef __KERNEL__
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   
->   /* Macros to enable and disable HW exceptions in the MSR */
->   /* Define MSR enable bit for HW exceptions */
-> @@ -64,6 +64,6 @@ void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig);
->   void die(const char *str, struct pt_regs *fp, long err);
->   void _exception(int signr, struct pt_regs *regs, int code, unsigned long addr);
->   
-> -#endif /*__ASSEMBLY__ */
-> +#endif /*__ASSEMBLER__ */
->   #endif /* __KERNEL__ */
->   #endif /* _ASM_MICROBLAZE_EXCEPTIONS_H */
-> diff --git a/arch/microblaze/include/asm/fixmap.h b/arch/microblaze/include/asm/fixmap.h
-> index e6e9288bff761..f9797849e4d43 100644
-> --- a/arch/microblaze/include/asm/fixmap.h
-> +++ b/arch/microblaze/include/asm/fixmap.h
-> @@ -15,7 +15,7 @@
->   #ifndef _ASM_FIXMAP_H
->   #define _ASM_FIXMAP_H
->   
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   #include <linux/kernel.h>
->   #include <asm/page.h>
->   #ifdef CONFIG_HIGHMEM
-> @@ -62,5 +62,5 @@ extern void __set_fixmap(enum fixed_addresses idx,
->   
->   #include <asm-generic/fixmap.h>
->   
-> -#endif /* !__ASSEMBLY__ */
-> +#endif /* !__ASSEMBLER__ */
->   #endif
-> diff --git a/arch/microblaze/include/asm/ftrace.h b/arch/microblaze/include/asm/ftrace.h
-> index 4ca38b92a3a20..27c1bafb669c3 100644
-> --- a/arch/microblaze/include/asm/ftrace.h
-> +++ b/arch/microblaze/include/asm/ftrace.h
-> @@ -7,7 +7,7 @@
->   #define MCOUNT_ADDR		((unsigned long)(_mcount))
->   #define MCOUNT_INSN_SIZE	8 /* sizeof mcount call */
->   
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   extern void _mcount(void);
->   extern void ftrace_call_graph(void);
->   void prepare_ftrace_return(unsigned long *parent, unsigned long self_addr);
-> diff --git a/arch/microblaze/include/asm/kgdb.h b/arch/microblaze/include/asm/kgdb.h
-> index 8dc5ebb07fd5a..321c3c8bfcf27 100644
-> --- a/arch/microblaze/include/asm/kgdb.h
-> +++ b/arch/microblaze/include/asm/kgdb.h
-> @@ -3,7 +3,7 @@
->   #ifndef __MICROBLAZE_KGDB_H__
->   #define __MICROBLAZE_KGDB_H__
->   
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   
->   #define CACHE_FLUSH_IS_SAFE	1
->   #define BUFMAX			2048
-> @@ -27,6 +27,6 @@ static inline void arch_kgdb_breakpoint(void)
->   struct pt_regs;
->   asmlinkage void microblaze_kgdb_break(struct pt_regs *regs);
->   
-> -#endif /* __ASSEMBLY__ */
-> +#endif /* __ASSEMBLER__ */
->   #endif /* __MICROBLAZE_KGDB_H__ */
->   #endif /* __KERNEL__ */
-> diff --git a/arch/microblaze/include/asm/mmu.h b/arch/microblaze/include/asm/mmu.h
-> index b928a87c00766..7262dc4da3385 100644
-> --- a/arch/microblaze/include/asm/mmu.h
-> +++ b/arch/microblaze/include/asm/mmu.h
-> @@ -9,7 +9,7 @@
->   #define _ASM_MICROBLAZE_MMU_H
->   
->   #  ifdef __KERNEL__
-> -#   ifndef __ASSEMBLY__
-> +#   ifndef __ASSEMBLER__
->   
->   /* Default "unsigned long" context */
->   typedef unsigned long mm_context_t;
-> @@ -56,7 +56,7 @@ extern void _tlbia(void);		/* invalidate all TLB entries */
->    * mapping has to increase tlb_skip size.
->    */
->   extern u32 tlb_skip;
-> -#   endif /* __ASSEMBLY__ */
-> +#   endif /* __ASSEMBLER__ */
->   
->   /*
->    * The MicroBlaze processor has a TLB architecture identical to PPC-40x. The
-> diff --git a/arch/microblaze/include/asm/page.h b/arch/microblaze/include/asm/page.h
-> index 90fc9c81debda..90ac9f34b4b49 100644
-> --- a/arch/microblaze/include/asm/page.h
-> +++ b/arch/microblaze/include/asm/page.h
-> @@ -25,7 +25,7 @@
->   
->   #define PTE_SHIFT	(PAGE_SHIFT - 2)	/* 1024 ptes per page */
->   
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   
->   /*
->    * PAGE_OFFSET -- the first address of the first page of memory. With MMU
-> @@ -100,7 +100,7 @@ extern int page_is_ram(unsigned long pfn);
->   #  define page_to_virt(page)   __va(page_to_pfn(page) << PAGE_SHIFT)
->   
->   #  define ARCH_PFN_OFFSET	(memory_start >> PAGE_SHIFT)
-> -# endif /* __ASSEMBLY__ */
-> +# endif /* __ASSEMBLER__ */
->   
->   /* Convert between virtual and physical address for MMU. */
->   /* Handle MicroBlaze processor with virtual memory. */
-> @@ -113,7 +113,7 @@ extern int page_is_ram(unsigned long pfn);
->   #define tovirt(rd, rs) \
->   	addik rd, rs, (CONFIG_KERNEL_START - CONFIG_KERNEL_BASE_ADDR)
->   
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   
->   # define __pa(x)	__virt_to_phys((unsigned long)(x))
->   # define __va(x)	((void *)__phys_to_virt((unsigned long)(x)))
-> @@ -130,7 +130,7 @@ static inline const void *pfn_to_virt(unsigned long pfn)
->   
->   #define	virt_addr_valid(vaddr)	(pfn_valid(virt_to_pfn(vaddr)))
->   
-> -#endif /* __ASSEMBLY__ */
-> +#endif /* __ASSEMBLER__ */
->   
->   #define TOPHYS(addr)  __virt_to_phys(addr)
->   
-> diff --git a/arch/microblaze/include/asm/pgtable.h b/arch/microblaze/include/asm/pgtable.h
-> index e4ea2ec3642f0..eadc73d22dda6 100644
-> --- a/arch/microblaze/include/asm/pgtable.h
-> +++ b/arch/microblaze/include/asm/pgtable.h
-> @@ -10,14 +10,14 @@
->   
->   #include <asm/setup.h>
->   
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   extern int mem_init_done;
->   #endif
->   
->   #include <asm-generic/pgtable-nopmd.h>
->   
->   #ifdef __KERNEL__
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   
->   #include <linux/sched.h>
->   #include <linux/threads.h>
-> @@ -39,7 +39,7 @@ extern pte_t *va_to_pte(unsigned long address);
->   #define VMALLOC_START	(CONFIG_KERNEL_START + CONFIG_LOWMEM_SIZE)
->   #define VMALLOC_END	ioremap_bot
->   
-> -#endif /* __ASSEMBLY__ */
-> +#endif /* __ASSEMBLER__ */
->   
->   /*
->    * Macro to mark a page protection value as "uncacheable".
-> @@ -208,7 +208,7 @@ extern pte_t *va_to_pte(unsigned long address);
->    * Also, write permissions imply read permissions.
->    */
->   
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   /*
->    * ZERO_PAGE is a global shared page that is always zero: used
->    * for zero-mapped memory areas etc..
-> @@ -216,7 +216,7 @@ extern pte_t *va_to_pte(unsigned long address);
->   extern unsigned long empty_zero_page[1024];
->   #define ZERO_PAGE(vaddr) (virt_to_page(empty_zero_page))
->   
-> -#endif /* __ASSEMBLY__ */
-> +#endif /* __ASSEMBLER__ */
->   
->   #define pte_none(pte)		((pte_val(pte) & ~_PTE_NONE_MASK) == 0)
->   #define pte_present(pte)	(pte_val(pte) & _PAGE_PRESENT)
-> @@ -237,7 +237,7 @@ extern unsigned long empty_zero_page[1024];
->   #define pfn_pte(pfn, prot) \
->   	__pte(((pte_basic_t)(pfn) << PFN_PTE_SHIFT) | pgprot_val(prot))
->   
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   /*
->    * The following only work if pte_present() is true.
->    * Undefined behaviour if not..
-> @@ -444,13 +444,13 @@ extern int mem_init_done;
->   
->   asmlinkage void __init mmu_init(void);
->   
-> -#endif /* __ASSEMBLY__ */
-> +#endif /* __ASSEMBLER__ */
->   #endif /* __KERNEL__ */
->   
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   extern unsigned long ioremap_bot, ioremap_base;
->   
->   void setup_memory(void);
-> -#endif /* __ASSEMBLY__ */
-> +#endif /* __ASSEMBLER__ */
->   
->   #endif /* _ASM_MICROBLAZE_PGTABLE_H */
-> diff --git a/arch/microblaze/include/asm/processor.h b/arch/microblaze/include/asm/processor.h
-> index 4e193c7550dfa..d59bdfffca7cc 100644
-> --- a/arch/microblaze/include/asm/processor.h
-> +++ b/arch/microblaze/include/asm/processor.h
-> @@ -14,7 +14,7 @@
->   #include <asm/entry.h>
->   #include <asm/current.h>
->   
-> -# ifndef __ASSEMBLY__
-> +# ifndef __ASSEMBLER__
->   /* from kernel/cpu/mb.c */
->   extern const struct seq_operations cpuinfo_op;
->   
-> @@ -29,7 +29,7 @@ void start_thread(struct pt_regs *regs, unsigned long pc, unsigned long usp);
->   extern void ret_from_fork(void);
->   extern void ret_from_kernel_thread(void);
->   
-> -# endif /* __ASSEMBLY__ */
-> +# endif /* __ASSEMBLER__ */
->   
->   /*
->    * This is used to define STACK_TOP, and with MMU it must be below
-> @@ -45,7 +45,7 @@ extern void ret_from_kernel_thread(void);
->   
->   # define THREAD_KSP	0
->   
-> -#  ifndef __ASSEMBLY__
-> +#  ifndef __ASSEMBLER__
->   
->   /* If you change this, you must change the associated assembly-languages
->    * constants defined below, THREAD_*.
-> @@ -88,5 +88,5 @@ unsigned long __get_wchan(struct task_struct *p);
->   extern struct dentry *of_debugfs_root;
->   #endif
->   
-> -#  endif /* __ASSEMBLY__ */
-> +#  endif /* __ASSEMBLER__ */
->   #endif /* _ASM_MICROBLAZE_PROCESSOR_H */
-> diff --git a/arch/microblaze/include/asm/ptrace.h b/arch/microblaze/include/asm/ptrace.h
-> index bfcb89df5e26f..17982292a64fd 100644
-> --- a/arch/microblaze/include/asm/ptrace.h
-> +++ b/arch/microblaze/include/asm/ptrace.h
-> @@ -7,7 +7,7 @@
->   
->   #include <uapi/asm/ptrace.h>
->   
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   #define kernel_mode(regs)		((regs)->pt_mode)
->   #define user_mode(regs)			(!kernel_mode(regs))
->   
-> @@ -20,5 +20,5 @@ static inline long regs_return_value(struct pt_regs *regs)
->   	return regs->r3;
->   }
->   
-> -#endif /* __ASSEMBLY__ */
-> +#endif /* __ASSEMBLER__ */
->   #endif /* _ASM_MICROBLAZE_PTRACE_H */
-> diff --git a/arch/microblaze/include/asm/sections.h b/arch/microblaze/include/asm/sections.h
-> index a9311ad84a67f..f5008f5e7a5c1 100644
-> --- a/arch/microblaze/include/asm/sections.h
-> +++ b/arch/microblaze/include/asm/sections.h
-> @@ -10,11 +10,11 @@
->   
->   #include <asm-generic/sections.h>
->   
-> -# ifndef __ASSEMBLY__
-> +# ifndef __ASSEMBLER__
->   extern char _ssbss[], _esbss[];
->   extern unsigned long __ivt_start[], __ivt_end[];
->   
->   extern u32 _fdt_start[], _fdt_end[];
->   
-> -# endif /* !__ASSEMBLY__ */
-> +# endif /* !__ASSEMBLER__ */
->   #endif /* _ASM_MICROBLAZE_SECTIONS_H */
-> diff --git a/arch/microblaze/include/asm/setup.h b/arch/microblaze/include/asm/setup.h
-> index bf2600f759593..837ed0bbae4b5 100644
-> --- a/arch/microblaze/include/asm/setup.h
-> +++ b/arch/microblaze/include/asm/setup.h
-> @@ -9,7 +9,7 @@
->   
->   #include <uapi/asm/setup.h>
->   
-> -# ifndef __ASSEMBLY__
-> +# ifndef __ASSEMBLER__
->   extern char cmd_line[COMMAND_LINE_SIZE];
->   
->   extern char *klimit;
-> @@ -25,5 +25,5 @@ void machine_shutdown(void);
->   void machine_halt(void);
->   void machine_power_off(void);
->   
-> -# endif /* __ASSEMBLY__ */
-> +# endif /* __ASSEMBLER__ */
->   #endif /* _ASM_MICROBLAZE_SETUP_H */
-> diff --git a/arch/microblaze/include/asm/thread_info.h b/arch/microblaze/include/asm/thread_info.h
-> index a0ddd2a36fb94..0153f7c2717c9 100644
-> --- a/arch/microblaze/include/asm/thread_info.h
-> +++ b/arch/microblaze/include/asm/thread_info.h
-> @@ -13,7 +13,7 @@
->   #define THREAD_SIZE		(1 << THREAD_SHIFT)
->   #define THREAD_SIZE_ORDER	1
->   
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   # include <linux/types.h>
->   # include <asm/processor.h>
->   
-> @@ -86,7 +86,7 @@ static inline struct thread_info *current_thread_info(void)
->   }
->   
->   /* thread information allocation */
-> -#endif /* __ASSEMBLY__ */
-> +#endif /* __ASSEMBLER__ */
->   
->   /*
->    * thread information flags
-> diff --git a/arch/microblaze/include/asm/unistd.h b/arch/microblaze/include/asm/unistd.h
-> index cfe3f888b432b..fedda9908aa94 100644
-> --- a/arch/microblaze/include/asm/unistd.h
-> +++ b/arch/microblaze/include/asm/unistd.h
-> @@ -8,7 +8,7 @@
->   
->   #include <uapi/asm/unistd.h>
->   
-> -#ifndef __ASSEMBLY__
-> +#ifndef __ASSEMBLER__
->   
->   /* #define __ARCH_WANT_OLD_READDIR */
->   /* #define __ARCH_WANT_OLD_STAT */
-> @@ -33,6 +33,6 @@
->   #define __ARCH_WANT_SYS_VFORK
->   #define __ARCH_WANT_SYS_FORK
->   
-> -#endif /* __ASSEMBLY__ */
-> +#endif /* __ASSEMBLER__ */
->   
->   #endif /* _ASM_MICROBLAZE_UNISTD_H */
-> diff --git a/arch/microblaze/include/asm/xilinx_mb_manager.h b/arch/microblaze/include/asm/xilinx_mb_manager.h
-> index 7b6995722b0c0..121a3224882b2 100644
-> --- a/arch/microblaze/include/asm/xilinx_mb_manager.h
-> +++ b/arch/microblaze/include/asm/xilinx_mb_manager.h
-> @@ -5,7 +5,7 @@
->   #ifndef _XILINX_MB_MANAGER_H
->   #define _XILINX_MB_MANAGER_H
->   
-> -# ifndef __ASSEMBLY__
-> +# ifndef __ASSEMBLER__
->   
->   #include <linux/of_address.h>
->   
-> @@ -21,7 +21,7 @@ void xmb_manager_register(uintptr_t phys_baseaddr, u32 cr_val,
->   			  void *priv, void (*reset_callback)(void *data));
->   asmlinkage void xmb_inject_err(void);
->   
-> -# endif /* __ASSEMBLY__ */
-> +# endif /* __ASSEMBLER__ */
->   
->   /* Error injection offset */
->   #define XMB_INJECT_ERR_OFFSET	0x200
+>  mm/mremap.c | 39 ++++++++++++++++++++++++++++++++-------
+>  1 file changed, 32 insertions(+), 7 deletions(-)
+>
+> diff --git a/mm/mremap.c b/mm/mremap.c
+> index 180b12225368..18b215521ada 100644
+> --- a/mm/mremap.c
+> +++ b/mm/mremap.c
+> @@ -170,6 +170,23 @@ static pte_t move_soft_dirty_pte(pte_t pte)
+>  	return pte;
+>  }
+>
 
-Applied.
-M
+Just for ease of reviewing the review :P
 
--- 
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP/Versal ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal/Versal NET SoCs
-TF-A maintainer - Xilinx ZynqMP/Versal/Versal NET SoCs
+We dropped the comment here as agreed:
 
+> +static int mremap_folio_pte_batch(struct vm_area_struct *vma, unsigned long addr,
+> +		pte_t *ptep, pte_t pte, int max_nr)
+> +{
+> +	const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+> +	struct folio *folio;
+> +
+> +	if (max_nr == 1)
+> +		return 1;
+> +
+> +	folio = vm_normal_folio(vma, addr, pte);
+> +	if (!folio || !folio_test_large(folio))
+> +		return 1;
+> +
+> +	return folio_pte_batch(folio, addr, ptep, pte, max_nr, flags, NULL,
+> +			       NULL, NULL);
+> +}
+> +
+>  static int move_ptes(struct pagetable_move_control *pmc,
+>  		unsigned long extent, pmd_t *old_pmd, pmd_t *new_pmd)
+>  {
+> @@ -177,7 +194,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>  	bool need_clear_uffd_wp = vma_has_uffd_without_event_remap(vma);
+>  	struct mm_struct *mm = vma->vm_mm;
+>  	pte_t *old_ptep, *new_ptep;
+> -	pte_t pte;
+> +	pte_t old_pte, pte;
+>  	pmd_t dummy_pmdval;
+>  	spinlock_t *old_ptl, *new_ptl;
+>  	bool force_flush = false;
+> @@ -185,6 +202,8 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>  	unsigned long new_addr = pmc->new_addr;
+>  	unsigned long old_end = old_addr + extent;
+>  	unsigned long len = old_end - old_addr;
+> +	int max_nr_ptes;
+> +	int nr_ptes;
+>  	int err = 0;
+>
+>  	/*
+> @@ -236,14 +255,16 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>  	flush_tlb_batched_pending(vma->vm_mm);
+>  	arch_enter_lazy_mmu_mode();
+>
+> -	for (; old_addr < old_end; old_ptep++, old_addr += PAGE_SIZE,
+> -				   new_ptep++, new_addr += PAGE_SIZE) {
+> +	for (; old_addr < old_end; old_ptep += nr_ptes, old_addr += nr_ptes * PAGE_SIZE,
+> +		new_ptep += nr_ptes, new_addr += nr_ptes * PAGE_SIZE) {
+>  		VM_WARN_ON_ONCE(!pte_none(*new_ptep));
 
+We added this, which does in fact seem sane. We absolutely should not expect to
+see a new PTE here.
+
+The uprobe logic recently addressed actually made it possible for something to
+be there (ugh god) but that's now fixed.
+
+>
+> -		if (pte_none(ptep_get(old_ptep)))
+> +		nr_ptes = 1;
+> +		max_nr_ptes = (old_end - old_addr) >> PAGE_SHIFT;
+> +		old_pte = ptep_get(old_ptep);
+> +		if (pte_none(old_pte))
+>  			continue;
+>
+> -		pte = ptep_get_and_clear(mm, old_addr, old_ptep);
+>  		/*
+>  		 * If we are remapping a valid PTE, make sure
+>  		 * to flush TLB before we drop the PTL for the
+> @@ -255,8 +276,12 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>  		 * the TLB entry for the old mapping has been
+>  		 * flushed.
+>  		 */
+> -		if (pte_present(pte))
+> +		if (pte_present(old_pte)) {
+> +			nr_ptes = mremap_folio_pte_batch(vma, old_addr, old_ptep,
+> +							 old_pte, max_nr_ptes);
+>  			force_flush = true;
+> +		}
+> +		pte = get_and_clear_full_ptes(mm, old_addr, old_ptep, nr_ptes, 0);
+>  		pte = move_pte(pte, old_addr, new_addr);
+>  		pte = move_soft_dirty_pte(pte);
+>
+> @@ -269,7 +294,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>  				else if (is_swap_pte(pte))
+>  					pte = pte_swp_clear_uffd_wp(pte);
+>  			}
+> -			set_pte_at(mm, new_addr, new_ptep, pte);
+> +			set_ptes(mm, new_addr, new_ptep, pte, nr_ptes);
+>  		}
+>  	}
+>
+> --
+> 2.30.2
+>
