@@ -1,107 +1,121 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1851B4685;
-	Tue, 10 Jun 2025 07:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231114685;
+	Tue, 10 Jun 2025 07:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749539973; cv=none; b=m8VUtOQSMD83LpiEFU3tvaI//RPUez973UVDl/xdaHcU2iaP7RbDKFey+eKyICq0nrRnfBV8lYyfQ1N10IkhL5AfnY1OTHYNKSgWZ9BR8rsRumUsL6ZFZIG8u/hLMed1x/NoCboWOFddC7HqE9LfZIPEQZ1OGxbvluWPVTjXBIQ=
+	t=1749539992; cv=none; b=nXUAgzb3bAUp9vC9TyoyhbkAooHbjsUB+lAM2gN24MQrwAkEuFV9U0advZT0SMvDwW9/WenW87qbqWirnNc7pP9Ni1g5C8aNXrQwklOCBT4L89xU/yjzQzVNWw2Jgdt1VLZxsRlzCIQO6OEToisj03t7haqdNsRBFR8+kjMN9AQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749539973; c=relaxed/simple;
-	bh=wDddb1ld4SB4Zfz1RpLwVoYWot4JpeZ7vucqwJW5zoo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ESBweHOiqHDQnSdB0DNPZgsEQB7M092cr4iKvRThF6sG5tbxO9Ijv245uWzMIJjXD6ESOPA2io4ln+6pIO2UXhyylamgQdgV9gSNXlwYR0iYwASSMK6TpnGpBn+DX0K9MJpdP/DfoYpPzHgamkIWPx9g7iJjQpUPXuVhi/NzJms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KEzyCIi8; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749539992; c=relaxed/simple;
+	bh=ItcQtJolu+J789jhe4umM4IrWwdgR2F4NRZEe+mXbfs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M8/CxbbI8hHilNHYEkMmGr+vFyxAGh1CIGMzOV4JkyMAjxxRBeuOf7R2xhka0yhki5Yuv5W7ZPeRqnUVWCo289Btcft34WzYsBNlXQ+zUAjqhW46kGRJvCeQlRPZjj/64PlMI8O6O52Dtn5UrI28kgJytS+abjWa1AGyYdf1Qww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vVX88lGZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DZy3ZD5E; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KEzyCIi8"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-747fba9f962so4324984b3a.0;
-        Tue, 10 Jun 2025 00:19:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749539971; x=1750144771; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pDX4vPZViSmWx9XsZSFtm3JkGpSEHjpstS/gbSMAf4Q=;
-        b=KEzyCIi8qj1LXnX3UVOBI6Wx1DlU5E+BdnYNRdl+QC659u1jQ2pc9ok553mI3TIcUG
-         PPwsVUWifiVTG0Gk0CD5b4WLbbPE5qfvAXgP3RwH0YoKEHBVP/+bbDuo19ism1HHFlvD
-         +2HWiDwxi/VInrpqnEJ3M1OUCCTPOPFFpNBdKcuZgkRE6t/P+sSHf6KD8BC3q+rfz+Bg
-         1iSafrmaRPlQIH9UDB29vhsVtxcHMq59fZbjCRpz5535ndEnAWul9GTx3BX9Xuy/QWDu
-         nyDmGClMf5MLCNBa1fAb1IAabukOZpYuHlgNSq9vsuFtaEPmxNPSVXGUi1G2bAx4g4DQ
-         ZAcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749539971; x=1750144771;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pDX4vPZViSmWx9XsZSFtm3JkGpSEHjpstS/gbSMAf4Q=;
-        b=ajJEtZM1T+nG+C2tdINrYcti3Rq4BXj54AeV1p7O1BMNiZe9JCef6o1s6x1Q5OB0J+
-         emqIhFJ20RjVgd8OhhtCb9Az6OgKHKh2wW4BHtfcXIBGQIMkcmv6NjjJM6oADEeioOvY
-         m5TLU1tnWMDiC9nTt1224kgheBAjpWaMSIoy/S4osPU7bx/glVKxukpQSg1/FdGVDWCR
-         MdUO5M5ZE76P7a1THl0ebxbnw6jq+LXx6S4iFp3P3ZutH3xm4sFIVZIcSNlJtESdqr3i
-         7n+KsecPCW7zddca0Fs2HR/iHaPGkabgdkrI80YNwjA0hC4XlnXOPx181WjyedhOdcIt
-         RzxA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8+E3Wds2wZKA97jJXV7F3g6f60/+0HkKx1bO+DpS6jDZS6Fo+ghP6OQwqJSEJ+RvN3hQBt/jzxe83SBM=@vger.kernel.org, AJvYcCVPgxbSr9q8GRMkDZheH2yGKidxtBFey0aBFMHgX1lZlRxqvKudKFQqV4/YPQURLOTlK1km/qZYKUGbLx3naJXi@vger.kernel.org
-X-Gm-Message-State: AOJu0YxryFCWh/k29CpXChKuQmSEtUTpEZFIJrQFYeSM3p2ERZS7hMWj
-	mMKGgDfXoN+0+8gqW2wJpRZR1JkE2YaK4xF8LIBaXYi0ypPk6nLO9nIFl5ZHVfO7fSw=
-X-Gm-Gg: ASbGncuMlLzN6gU8fzzIEhPTLdhJYhHf8qhK6K1NZJfjlKbXW8lGRQTB/mRUNc1E6nW
-	lL/foolLv+GDKxvTGtWG+WFiA2+AzPpdhfDmTdJ5o9UqZ0/Z/qQONfMOXjVj01vv7sI8mgm2lqZ
-	3LhgQI63CkLQqBNZOZ6ozdO1ybT1mQublhgp7X8W5wpjWK8MtDTAdLzYPtpRzZu3DxRVrgLsd7C
-	oMvceXLXl7JW9NNrZgaOtCi6wlTWHm3MMRKzEukG0qzQCJU1NHhXkb2Xmmf0o/TTre5opGUXCuM
-	HPhxN3JB8ezWq+uKBZ0fVX4sk0cAwnKRooKFS7CGAz4EJSKXPqqkwbcfZ00sd2fxBcsKXW4ZfbT
-	/p3xp6a9TqUIRJALGHsg3QLo=
-X-Google-Smtp-Source: AGHT+IGx7RAYvNR+BCxplI7dwIlr4fCOsZQSAXxnui6LxNDDT4+1U7VYn/Ig6VAsuxLZagXdS0Oz5g==
-X-Received: by 2002:a05:6a00:61cc:b0:742:ccf9:317a with SMTP id d2e1a72fcca58-7485eaf793dmr2338597b3a.12.1749539971308;
-        Tue, 10 Jun 2025 00:19:31 -0700 (PDT)
-Received: from ankitchauhan-Legion-5-15ITH6.. ([2405:201:4042:d128:777c:e0e7:a5ab:8698])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-7482af3823esm7110224b3a.17.2025.06.10.00.19.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 00:19:30 -0700 (PDT)
-From: Ankit Chauhan <ankitchauhan2065@gmail.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	shuah@kernel.org
-Cc: netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ankit Chauhan <ankitchauhan2065@gmail.com>
-Subject: [PATCH net-next] selftests: tcp_ao: fix spelling in seq-ext.c comment
-Date: Tue, 10 Jun 2025 12:49:03 +0530
-Message-Id: <20250610071903.67180-1-ankitchauhan2065@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vVX88lGZ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DZy3ZD5E"
+Date: Tue, 10 Jun 2025 09:19:48 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749539989;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PP7spxVH7sLmjym4ThWhMog4sWfbU7quRM39gydlBGY=;
+	b=vVX88lGZ1h1PQ7EVgLSMjk5n2YsjdgSA87I9b2L/+Epdg75LMWJmrbES7JsGslfCNoxA3f
+	ASnhi/MzuLMw7G94d8iY42b9utKwY130oo625hqoXBTQjw+gIfRSeTN9B0feuKHFld82yo
+	GWJKJjeBaH4Dx0b6QVmB4K6Spu8wFD2DD1W0XOrCeM2NWB4k/D2DNSM3n0Z9r+/ScNA6/z
+	Yqlued7ZJ4QO22GlvO5GmjNaWSabKNkK7VdKADCtndZe9rIN9q+a2eHsRu0TwFbi33TYOJ
+	Zl86DTeY32kTD9X6AnI3ZrRKEBQ4F7qTSHWCzxZZZHTiwjMIw3Rm4uqiTSbJyQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749539989;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PP7spxVH7sLmjym4ThWhMog4sWfbU7quRM39gydlBGY=;
+	b=DZy3ZD5ExOnp9B9x3Irzzy1QzB7VBtwWAN2Jp5lnlF+2AaCcfD0ve40urbBx93IFqfUgJt
+	FQaZ3fx22S+1nAAg==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: I Hsin Cheng <richard120310@gmail.com>
+Cc: Yury Norov <yury.norov@gmail.com>, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Subject: Re: [PATCH] uapi: bitops: use UAPI-safe variant of BITS_PER_LONG
+ again
+Message-ID: <20250610091238-51888002-5c91-4716-b3bc-f6bd28cbee61@linutronix.de>
+References: <20250606-uapi-genmask-v1-1-e05cdc2e14c5@linutronix.de>
+ <aEL5SIIMxmnrzbDA@yury>
+ <20250606162758-f8393c93-0510-4d95-a5f8-caaf065b227a@linutronix.de>
+ <aEaRpf_sHip9wH3G@vaxr-BM6660-BM6360>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <aEaRpf_sHip9wH3G@vaxr-BM6660-BM6360>
 
-Spelling fix:
-conneciton --> connection
+Hi I Hsin Cheng,
 
-This is a non-functional change aimed at improving code clarity.
+On Mon, Jun 09, 2025 at 03:47:49PM +0800, I Hsin Cheng wrote:
+> On Fri, Jun 06, 2025 at 04:32:22PM +0200, Thomas Weiﬂschuh wrote:
+> > On Fri, Jun 06, 2025 at 10:20:56AM -0400, Yury Norov wrote:
+> > > On Fri, Jun 06, 2025 at 10:23:57AM +0200, Thomas Weiﬂschuh wrote:
+> > > > Commit 1e7933a575ed ("uapi: Revert "bitops: avoid integer overflow in GENMASK(_ULL)"")
+> > > > did not take in account that the usage of BITS_PER_LONG in __GENMASK() was
+> > > > changed to __BITS_PER_LONG for UAPI-safety in
+> > > > commit 3c7a8e190bc5 ("uapi: introduce uapi-friendly macros for GENMASK").
+> > > > BITS_PER_LONG can not be used in UAPI headers as it derives from the kernel
+> > > > configuration and not from the current compiler invocation.
+> > > > When building compat userspace code or a compat vDSO its value will be
+> > > > incorrect.
+> > > > 
+> > > > Switch back to __BITS_PER_LONG.
+> > > > 
+> > > > Fixes: 1e7933a575ed ("uapi: Revert "bitops: avoid integer overflow in GENMASK(_ULL)"")
+> > > > Cc: stable@vger.kernel.org
+> > > > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> > > 
+> > > Thanks Thomas. I applied it in bitmap-for-next. Is that issue critical
+> > > enough for you to send a pull request in -rc2?
+> > 
+> > I have some patches that depend on it. These will probably end up in linux-next
+> > soonish and would then break there.
+> > 
+> > So having it in -rc2 would be nice.
+> 
+> Thanks for pointing out the problem, may I ask in what config would
+> cause "BITS_PER_LONG" to work incorrectly ?
 
-Signed-off-by: Ankit Chauhan <ankitchauhan2065@gmail.com>
----
- tools/testing/selftests/net/tcp_ao/seq-ext.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In my specific usecase it was when building the powerpc compat vDSO.
+For an easy reproducer use:
 
-diff --git a/tools/testing/selftests/net/tcp_ao/seq-ext.c b/tools/testing/selftests/net/tcp_ao/seq-ext.c
-index f00245263b20..6478da6a71c3 100644
---- a/tools/testing/selftests/net/tcp_ao/seq-ext.c
-+++ b/tools/testing/selftests/net/tcp_ao/seq-ext.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- /* Check that after SEQ number wrap-around:
-  * 1. SEQ-extension has upper bytes set
-- * 2. TCP conneciton is alive and no TCPAOBad segments
-+ * 2. TCP connection is alive and no TCPAOBad segments
-  * In order to test (2), the test doesn't just adjust seq number for a queue
-  * on a connected socket, but migrates it to another sk+port number, so
-  * that there won't be any delayed packets that will fail to verify
--- 
-2.34.1
+diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
+index 93ef801a97ef..948619848a3b 100644
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -16,6 +16,9 @@
+ # define VDSO_DELTA_MASK(vd)   (vd->mask)
+ #endif
+ 
++_Static_assert(__BITS_PER_LONG == sizeof(long) * 8);
++_Static_assert(BITS_PER_LONG == sizeof(long) * 8);
++
+ #ifdef CONFIG_GENERIC_VDSO_OVERFLOW_PROTECT
+ static __always_inline bool vdso_delta_ok(const struct vdso_clock *vc, u64 delta)
+ {
 
+> I would love to test the difference between them and see what I can get,
+> thanks.
+
+Looking at this again, the UAPI headers don't even define BITS_PER_LONG.
+The vDSO just incorrectly ends up also using the regular kernel headers.
+
+
+Thomas
