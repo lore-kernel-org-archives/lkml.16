@@ -1,169 +1,212 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2084.outbound.protection.outlook.com [40.107.100.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C1F7244693;
-	Tue, 10 Jun 2025 17:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749578308; cv=fail; b=W4+Wjk8ZbzMMHryL3Z6sT7UmVV22JWsmL+vb86q77Z14B5lt+Rv2Idu/6d6jzM1LHR7QGVM1379mIfmWhg7dr6qdsVIofo19F5p2oTIUFww36GzJkVaW1Z9UOxp4iaZjmngab/YaerzJB/POfuuAnZp0A5PM0qz59mngda6r/EM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749578308; c=relaxed/simple;
-	bh=sk1j6J+dLI3X2VC7x9EPkYBnTz1nTiFszOnyFx0sFeQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N+kPzHz9kWGSfjzpIMXbvsHev2M0B/m6MuWEVp39DcSUsOuM4wDziFXepiHPmU45CwNJPQHfURqT2akgUQ0QzuYsVHTyIVprt38fS5qGJkcMq1wV720jy2nOFzdwkmCHAM0H4suidbNC3SFdu4rZhxPqPQjyxB9j/ocPb+T5w3o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DhuN3/Xh; arc=fail smtp.client-ip=40.107.100.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B9A244693;
+	Tue, 10 Jun 2025 17:58:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749578317; cv=none; b=sSop+0WgtyjVar5YUBV4INfNsbkutfBG7X9onkr6C5ZFuSm12Hmfezhs84kxtFk6SCInpeYj+mZHq5xW3wKRx4C3GWovjgkcjlWbsWWw1OLS29HbOFyckM9NzozbQazT3W1Wwf/2wGHOF3YcAetzgTLzgNHBOiIKQOJrq5nNdfs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749578317; c=relaxed/simple;
+	bh=WFSJOtGCy5DLWDZOUk7n++u9oB7z1T3ZkJpFtiZCWDY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZSxnT713gduBs/y7RerXG1TY/HoVnUaAfmvgh4228pPIg6+rYhemNhIx5mAYtfvzrSqIb0mKNQ3/aUhmqJPwgPOspTm2yzwT7LLE00moZxzcSgzQZMm/6Pd8yPpkKbzcnJDxrxd/kqyYvp9NECGt9jFmhryR4suAVMBNgPc76lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aLp5WiJV; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DhuN3/Xh"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=I3qnsLYBp0uie37JuF+VdCyUoEU0GsypLw8x55Kkz3rf7+Dpc0Y3mmD6nk4XRRCkOcXdanmiyxk7AUi9R7IBCX7c1VI47C8r30ur4T6B2whnFdwup0bqSNGTHkoHSkl5LOHAYzpHeqEGwphj0mhhpbwe15hU4eSvKE/G+XLfhBLADOY6S06gGN8SWTbW4NV/OgrYjVF65gk//N/PxTpoQBxV4DU6Zn3zfK51s3L8rKg+A9YO/AvfrJaoqI4yQ733P9JC2kSbOvNZ0cfYhibDaZe2c44OUw02poh8yNyc/BtexQYeEI8fOmlomk0GdeHatnFGxp7K5/Cz4u1nU9+9Ew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QfIodZbsNFCHoOQGRMpwxfSTsfuBBnMTLEVH1hdFWhQ=;
- b=Zd4Kw1CJKz3lB57aLK7Z8lJgovtNCP+zeyYhu5Sl+3ergHJcVxt3aMqHx+WTqdtL5cB5YflZdJghwJoBLdNg9iGG7x5MqFPUf5uIfwKrkKb/OgO1zTHsmcqr+r8V4arXYS9u1WxwHNNivOaGBqRsHiiP/Pqs1G48KLmLCQeuUJYzjWqkotDhdewbf+sUpTwL6mK9NgUqThJ8K+ngLLOSp+4q0uWw5JNHeRhR+beXS0sgx18bYya0qrUQzshtom/0dzIraxTzuajgn10QQr3VjoH0ICzDlQoa6K5JxWBjGi2Em0ahFHhj0TOqvoMshU+qonPRQQLF6IUnOAq9kRgNVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QfIodZbsNFCHoOQGRMpwxfSTsfuBBnMTLEVH1hdFWhQ=;
- b=DhuN3/XhANqrFM2EvKblk7ApXhs4yO5iDNfiegJJAcxuSqfyXmsQkG0LQPNKq1lVx7qWuR2CMLnv20DR+XYqrwAtT9RHp+5uUeLYYuTPPBo0bhjeXGrAqtzeeWnYv50YClBSorR/5ZlqJtCho70Rk6XREt+E0xwIL1U0HpwUj5k=
-Received: from CH5PR05CA0012.namprd05.prod.outlook.com (2603:10b6:610:1f0::10)
- by DM4PR12MB5746.namprd12.prod.outlook.com (2603:10b6:8:5d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.39; Tue, 10 Jun
- 2025 17:58:20 +0000
-Received: from CH1PEPF0000AD76.namprd04.prod.outlook.com
- (2603:10b6:610:1f0:cafe::af) by CH5PR05CA0012.outlook.office365.com
- (2603:10b6:610:1f0::10) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.17 via Frontend Transport; Tue,
- 10 Jun 2025 17:58:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH1PEPF0000AD76.mail.protection.outlook.com (10.167.244.53) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8835.15 via Frontend Transport; Tue, 10 Jun 2025 17:58:20 +0000
-Received: from BLR-L-NUPADHYA.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
- 2025 12:58:12 -0500
-From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <bp@alien8.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>, <nikunj@amd.com>,
-	<Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
-	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
-	<hpa@zytor.com>, <peterz@infradead.org>, <seanjc@google.com>,
-	<pbonzini@redhat.com>, <kvm@vger.kernel.org>,
-	<kirill.shutemov@linux.intel.com>, <huibo.wang@amd.com>,
-	<naveen.rao@amd.com>, <francescolavra.fl@gmail.com>, <tiala@microsoft.com>
-Subject: [RFC PATCH v7 10/37] KVM: lapic: Mark apic_find_highest_vector() inline
-Date: Tue, 10 Jun 2025 23:23:57 +0530
-Message-ID: <20250610175424.209796-11-Neeraj.Upadhyay@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250610175424.209796-1-Neeraj.Upadhyay@amd.com>
-References: <20250610175424.209796-1-Neeraj.Upadhyay@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aLp5WiJV"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6facacf521eso61204516d6.3;
+        Tue, 10 Jun 2025 10:58:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749578314; x=1750183114; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RFKC/VZAsPOtc+J1pi0LsDxSLSLhC1cMgwlK+mG2rRo=;
+        b=aLp5WiJVVZA4fAEhrJJTblPVRK3aAK/Gzv/V2Xo2XCLAr+wNVfaHxNFUuW+FRC621Q
+         P+opv3ieolhaAEnLS8QQuutzV2Etz8i6pOnwMkjF3XyvJBZPJjSA3M4bKD4VSU9veP6r
+         eNzMPGeWLpw+jLw16NHxAVLytTTFMRln+0c4Ub3rjrssPuU8/opI83QP/lKZjH4JpEM0
+         kbOz0qmbCnH4CORTIexpwh0sHDw5tqqNLyEPqqqSnbp3cJpG8ABkkyLxdLfa5wfPQz0t
+         fr8J5WBKBF1P9yAj/xtLA/x8j4t/PSK7w9pd+krFRhcxqV1+icIJkkuR5bGD2JXIl/Ro
+         OluA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749578314; x=1750183114;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RFKC/VZAsPOtc+J1pi0LsDxSLSLhC1cMgwlK+mG2rRo=;
+        b=ZNLFJNhC5UrV+vFNTUXDPo7zlnP3XPQcoN4CD/8yCghJiuoZhTLENiQ4XPPMT9k19L
+         g2eQEtrCK4aKP1wOEcR4nAuL5HdgyDmvIeqqSMKgh/io+q0oRKedoKLa0SVb7cIGT3cB
+         bpg8q8wMX048amXNhXTuNzILBXFy3RPZKC97OAjiu2eQHuIHpDxKKVSZRDt9dt5n2dPT
+         10zbUmWiIFnaC3/pCO7iLcxtHyC07YbiB2zedcgcAYwn8xpg6uqUWxFCpKrJtq5O7QLN
+         N4Oix2FHsMQKtSgk/9hVcfAOreYG/a8tv/BmtGUCWV3UjsOLDrULRazo6g/JSa9U+ml5
+         nhkA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQg71USRtV7P0EK8cReWqyd3ZeVl4HgfIgv1GmCCzFM0+2RJNn/xunkVKBddSbxlXH31E2MYSQLOkC@vger.kernel.org, AJvYcCVLPpXKNIt4exQn7C//SwXbA80qJSxfi0PdUe3QlZUxaug4ZGYdjqrP1NhnAthhz6g7ffGmWyEGHPQV//yAuxc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqciNXTIOSxUomKH7HznvxfY3PDA7nRBfuBmzhMn72ak7VLorF
+	ufVW059K7eXjiU1tVfOznHi2vHlcHmkloV+577m4MbwfgLqRLIhsvoSk
+X-Gm-Gg: ASbGncstxlxYdhBhnOTvXnfYELeBQry5YE84vlCZa3zqZk8gtzErWyxaUfTIqxMjGrn
+	EAFzsuRewzLZsq1UB5VeT1L6H5h4Ow9P1zpPD9wayPNQpmEVP7f7KTxfsq7PojMrIdRZzw4+n66
+	Fz1slaUvYiTtYKoFtBllMT6uCGL5RcB3HGUemxmGNn9YH/4badXriPvD62zjqIa8/zetMJE4ICK
+	KzKPhhf8uvEIY2EMw4r1o4v/PJCbL7uxvUNkPCFI3y5iLzBLYcd7a/Qq2CjcpUAhKWeWt/1JAQD
+	hIlJigVj/WI5YrddVPS4jyTTesx8+yNGkIIe+jDDWVCHcOQmOmaQbpmpTdPvBcoeTJZ98M+lVsp
+	DVn81+cGpMiZinpfr+YPuB1nmAlZGwfBvwmHPDAIMAam55v33oedabG/xxq3jwSw=
+X-Google-Smtp-Source: AGHT+IE1ZgmFQqI16FjmhRw0PUqrqN2GZWUt9lHT730+lp5RjXgeKiNOIijStPhoRxTKPLxmV0rguA==
+X-Received: by 2002:a05:6214:da5:b0:6ed:df6:cdcd with SMTP id 6a1803df08f44-6fb2c36a381mr5736416d6.21.1749578314169;
+        Tue, 10 Jun 2025 10:58:34 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d250f64bacsm732339885a.17.2025.06.10.10.58.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 10:58:33 -0700 (PDT)
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfauth.phl.internal (Postfix) with ESMTP id B85001200043;
+	Tue, 10 Jun 2025 13:58:32 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-11.internal (MEProxy); Tue, 10 Jun 2025 13:58:32 -0400
+X-ME-Sender: <xms:SHJIaPQQI9zvh93RJUdRYS_Vf2bTAbjq8qZNXTFDgJuRD98uJs_Z_g>
+    <xme:SHJIaAyMD7098r8q6arLE7prWGPuyg3o8JwOsiZ-ldU3t1kHDonPDfY_cfVHoVFBn
+    _fsDOzL1cs0jWFvKA>
+X-ME-Received: <xmr:SHJIaE3B4fHOZePCc-g2Yrw7-QiDHFNbBGvv-I-bGQUCDsd6iQq0fMzCgTzkOA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduuddtjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
+    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
+    drtghomheqnecuggftrfgrthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleel
+    ieevtdeguefhgeeuveeiudffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghl
+    ihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepgh
+    hmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopedviedpmhho
+    uggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhoshhsihhnsehkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehruhhsthdqfhhorhdqlhhinhhugiesvhhgvghrrdhkvghrnhgvlh
+    drohhrghdprhgtphhtthhopehlkhhmmheslhhishhtshdrlhhinhhugidruggvvhdprhgt
+    phhtthhopehlihhnuhigqdgrrhgthhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtph
+    htthhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgr
+    hihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhihguhhord
+    hnvghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhm
+X-ME-Proxy: <xmx:SHJIaPDnqQ5S_PkjW9IUVx-6hgS8ecikaaPuOyyIVBlZI1yxDd31Uw>
+    <xmx:SHJIaIglPRK0z-iPm-tuomEHtOTTYTAcu5T1BJgYD12YWeYHA8K60w>
+    <xmx:SHJIaDrHB74s9SNhoHtO1eb10T6C-QceOugS7UP6HkfZVgW9vwkU9Q>
+    <xmx:SHJIaDiBY046MUqKFF91MjbxinoZTrvFbF3VAKDI_0emvKgG4lR3gQ>
+    <xmx:SHJIaLQhx354PsPkGJRoPwWfFegPMSQOF7CI-MfwHtBk8_OM1w94oe35>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 10 Jun 2025 13:58:30 -0400 (EDT)
+Date: Tue, 10 Jun 2025 10:58:30 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Benno Lossin <lossin@kernel.org>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	lkmm@lists.linux.dev, linux-arch@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Lyude Paul <lyude@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+	Mitchell Levy <levymitchell0@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v4 03/10] rust: sync: atomic: Add ordering annotation
+ types
+Message-ID: <aEhyRhb71dIXzqSu@tardis.local>
+References: <20250609224615.27061-1-boqun.feng@gmail.com>
+ <20250609224615.27061-4-boqun.feng@gmail.com>
+ <DAIQG9ALK4QC.2P2C2MC4U9YVX@kernel.org>
+ <aEhrzxltkdnub_bR@tardis.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD76:EE_|DM4PR12MB5746:EE_
-X-MS-Office365-Filtering-Correlation-Id: 344bb0fa-cbf0-47a5-d5cc-08dda8486309
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|376014|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?7+8iDgzDs5VA+vdvzvYuNoOIcAKRPSqv1QgHroJeJ2y/kbRHHGeN25cTZQwT?=
- =?us-ascii?Q?Lr7oka1OlPSSudgLbm0kwUQk2rWGP02Y5qXNlLhNhG++dvv/QDc68IVqHnNr?=
- =?us-ascii?Q?fYf4sk2XAeIcytnrJXBBWCdICnLWIdcgjrSeA5cswBqQSd6gVdwBB/NfR2md?=
- =?us-ascii?Q?T21g3LdZ0CTwpyhmLiBfIcJiZg/152Xoyp8ctwOOcfJugOmuwBsk/hFC2eMu?=
- =?us-ascii?Q?/K5jg3El1iAJJm162xCmlOgDC4XuwFu5VxhEbVEjfbhInVdWuuzy7dl/tpCB?=
- =?us-ascii?Q?ijXPK8w5Mqjj3eT26J+q1oHlNOV/RxQb4Rtr8RIz+Oi+XRAA2WOoDb+khkFO?=
- =?us-ascii?Q?Mzj6s4J/InBDkgWyxPdAAcB63SAAw7dqtsNyewCkl3qNOo0x5Nq5n3MifF+c?=
- =?us-ascii?Q?5BdxGX69CWf5t78Z9ric4JgZi3/xfuwCc3NOORWunrStwBUkYyOQEt4zyDKd?=
- =?us-ascii?Q?66hVhklbYSxR/gE0giiV/zWdhylF/RIDwoBoq/LxYscvR1HXLZJwq6CGZf+l?=
- =?us-ascii?Q?oAN0pHDpzrb45nxdMmpUWWSk/cy4BtZ+gSrWwCnaY/GBrhBfv7Fgq5exI7FZ?=
- =?us-ascii?Q?fA724pZtfw1VbfUNdSREwhspZNVbFODcHXJHVQ994lruYqMY95ag6gYoHKUO?=
- =?us-ascii?Q?e6imUxdX0jTSUunNiFgqFq/xJeEKwwNWqqBF+BKU3C0CpkFH0R921ax1DdDW?=
- =?us-ascii?Q?trXfOKHXnFo42g5olpiKIKUBAKKAahAUXRB8EyPRmQaLdrk4fGLKKs1u2NAH?=
- =?us-ascii?Q?lQd4uRGjfZ2dbUfKmebjTPoU/m43FrrcypYinBZSGGpUXy4JXM5Rl0Qbo9TP?=
- =?us-ascii?Q?3JKX800ofo3NeyFj2pYEmx0Cz671f1l/QxUsq+cqB1NjEU4+3P1MjhPfc6qm?=
- =?us-ascii?Q?M8eaF1yIYdgdkeovp1HOwloRPFgSyHt+kJarY49iJeo9OeNFbtSlY3p9hGTN?=
- =?us-ascii?Q?cEzkDee2eeKr9214E5BCaQoM2P/A1ALmF0ch5/rEl7kyZf1x/ZUj50DbHuwR?=
- =?us-ascii?Q?WRzm9iu5sTHppPeyLIjD6bhZJV2oVv8/ZrhyCO8KG1kw6dzaB+q7K5YGtdE5?=
- =?us-ascii?Q?lwPDH7H8FHY8a7eGPg+u+jwk7x8r6uN5TD/u6E50DKSJPhTinUVjvleOkgWb?=
- =?us-ascii?Q?0cNoutVe+7AWAi0S3XOwcMcVEMI62O9XhWZoixjuRA3ZoHS3ZQocZ+AwPULP?=
- =?us-ascii?Q?119BlT2ge4V3sGigs1ElxqEeHoLWyRv0p45ZjohssUI0aofhi0srxgt17Rfd?=
- =?us-ascii?Q?iCF3esCKHqAL5a5NfgqSlik3ubusLxGJ1+vt9I5p3JhgkZxX19iiaDp4HMLK?=
- =?us-ascii?Q?TdU4g6WI7NWRaoTOa/QaW5Em60RyiYi2IwuiIsVM1ZlhFdBfOQQcmMm5mXrD?=
- =?us-ascii?Q?ZZV2k/DJacVgcE2CvWiYyv5VkjrwrVfKGMO/JGwyszzVkCjdZI3/+7lrnViU?=
- =?us-ascii?Q?/kAfe3UVy6Q6WdVivt8z4yPvZy8lLl++ztaS+9vsPu/JwjF+cd/nK86iDbzE?=
- =?us-ascii?Q?X60eUkD9qIak1rF8bbUt0y5MMEf5prj/kanT?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 17:58:20.8635
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 344bb0fa-cbf0-47a5-d5cc-08dda8486309
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000AD76.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5746
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEhrzxltkdnub_bR@tardis.local>
 
-In preparation for moving apic_find_highest_vector() to
-common apic.h header, annotate apic_find_highest_vector() as
-inline.
+On Tue, Jun 10, 2025 at 10:30:55AM -0700, Boqun Feng wrote:
+[...]
+> > > +/// Describes the exact memory ordering of an `impl` [`All`].
+> > > +pub enum OrderingDesc {
+> > 
+> > Why not name this `Ordering`?
+> > 
+> 
+> I was trying to avoid having an `Ordering` enum in a `ordering` mod.
+> Also I want to save the name "Ordering" for the generic type parameter
+> of an atomic operation, e.g.
+> 
+>     pub fn xchg<Ordering: ALL>(..)
+> 
+> this enum is more of an internal implementation detail, and users should
+> not use this enum directly, so I would like to avoid potential
+> confusion.
+> 
+> I have played a few sealed trait tricks on my end, but seems I cannot
+> achieve:
+> 
+> 1) `OrderingDesc` is only accessible in the atomic mod.
+> 2) `All` is only impl-able in the atomic mod, while it can be used as a
+> trait bound outside kernel crate.
+> 
+> Maybe there is a trick I'm missing?
+> 
 
-This results (on gcc-13) in slight increase in text size of the
-binaries:
+Something like this seems to work:
 
-Obj-file    Old-bytes    New-bytes
-lapic.o     28455        28563
-kvm.o       664638       664746
-kvm.ko      701907       702015
+    pub(super) mod private {
+        /// Describes the exact memory ordering of an `impl` [`All`].
+        pub enum Ordering {
+            /// Relaxed ordering.
+            Relaxed,
+            /// Acquire ordering.
+            Acquire,
+            /// Release ordering.
+            Release,
+            /// Fully-ordered.
+            Full,
+        }
+    
+        pub trait HasOrderingDesc {
+            /// Describes the exact memory ordering.
+            const ORDERING: Ordering;
+        }
+    }
 
-Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
----
-Changes since v6:
+    /// The trait bound for annotating operations that should support all orderings.
+    pub trait All: private::HasOrderingDesc { }
 
- - New change.
+    impl private::HasOrderingDesc for Relaxed {
+        const ORDERING: private::Ordering = private::Ordering::Relaxed;
+    }
 
- arch/x86/kvm/lapic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+the trick is to seal the enum and the trait together.
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 20e2ceb965b7..1f44bbc63f17 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -616,7 +616,7 @@ static const unsigned int apic_lvt_mask[KVM_APIC_MAX_NR_LVT_ENTRIES] = {
- 	[LVT_CMCI] = LVT_MASK | APIC_MODE_MASK
- };
- 
--static int apic_find_highest_vector(void *bitmap)
-+static inline int apic_find_highest_vector(void *bitmap)
- {
- 	int vec;
- 	u32 *reg;
--- 
-2.34.1
+Regards,
+Boqun
 
+> > > +    /// Relaxed ordering.
+> > > +    Relaxed,
+> > > +    /// Acquire ordering.
+> > > +    Acquire,
+> > > +    /// Release ordering.
+> > > +    Release,
+> > > +    /// Fully-ordered.
+> > > +    Full,
+> > > +}
+> > > +
+> > > +/// The trait bound for annotating operations that should support all orderings.
+> > > +pub trait All {
+> > > +    /// Describes the exact memory ordering.
+> > > +    const ORDER: OrderingDesc;
+> > 
+> > And then here: `ORDERING`.
+> 
+[..]
