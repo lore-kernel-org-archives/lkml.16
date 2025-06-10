@@ -1,146 +1,83 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F00A3218EA7
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.166.231])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4909A218EA7;
+	Tue, 10 Jun 2025 17:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749577763; cv=none; b=QCZlwdbujF1lLTNmInXZ35CdAWCqGTUW4KC7loCOLIXWslQWs10u8/HKjMcM/4q1xjVzCIgWKOM1rXVx2nYQ50/aBEgfH2eLsiEAM2njUUeHxZI02gL8jOC+J61pDjTJAQP4Oi0O8MUAewyH8QaG9jh9ggRp/M37dlllMEb7nnI=
+	t=1749577800; cv=none; b=E8kvPDtxbOA8qWONsN2IZrfmCyg8yL/pUBid49nQkU0GU/8edqHdMOkOT/4qNcQmd8JmtpoXvYUM3NgVilqs1ESql0QiUVeJEfrq27W1OMkYS/Eb0aciBZ0WV75s3rzua1W4scrdf0Rsu3G5ImLy0dc89UrFeSSpy7k6JlLbyMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749577763; c=relaxed/simple;
-	bh=VqWY3CHcf3Vt/NL3ZhL8kLp8b1SOBJtyQGcDDaw9ENY=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:References:From:To:
-	 In-Reply-To:Content-Type; b=hTqtox/rU9flZxiAbvXvjdu7HpEU5t2Btwh19CJCF0fakDLbpn7vHuWQoB3yXK4kb2/sVd81RJnaw2NrT5USTmrI9+W8B79RL6B/fAZX7NfKdFviccisqVKAJLLcQB0+6E4kSid9AuziuSk5aKFvp/hVuh7T5j2+adtE6OU5+qA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Amvd2k9j; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1749577800; c=relaxed/simple;
+	bh=pU2TVlS9NicsYGkGcp7LE0teQgsE61GXl4hYMMJ+Hso=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pW57sQtVknO4IK++Hqnc7dsgd5tQRc9irwOVnzhxFUhtBKWD0/ARu0IB3GemmlFApqfZIL5H4Nwvb6AVBrpp5evXBJd7zzrzr9i0nhF2SpHnlhM8xMHWmRFKbezwRNdhJIpG8lqqyrXT2Ydf0pPK3LnPTnj5rX3Yx5riqFxGy50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=AkXZAxeS; arc=none smtp.client-ip=192.19.166.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Amvd2k9j"
-Received: from [100.65.129.218] (unknown [20.236.11.29])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5AE8A2113091;
-	Tue, 10 Jun 2025 10:49:21 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5AE8A2113091
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749577761;
-	bh=FTHn6/xfwys+lrx2PwIo9Jrp/Uvzq79Fn9+PtwLxE5E=;
-	h=Date:Cc:Subject:References:From:To:In-Reply-To:From;
-	b=Amvd2k9jBCeg177sVrWdLDHxUbqaIxECM99fJ3cFBtsRrB+mXiEPV2z+rcLL5qstH
-	 D2Vq80ftLF6ACvcjf1T/OeSz4JQqvj+6bKR1OdHKXgCdRWR9RUQPqjHi6jT/pyWy6D
-	 MWsZfypaA+DnXGTXKHWlNUdRZ5LvZbCJGChiCamg=
-Message-ID: <00e40c21-4797-41df-b082-318f474f76ae@linux.microsoft.com>
-Date: Tue, 10 Jun 2025 10:49:21 -0700
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="AkXZAxeS"
+Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 92749C0000D0;
+	Tue, 10 Jun 2025 10:49:58 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 92749C0000D0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1749577798;
+	bh=pU2TVlS9NicsYGkGcp7LE0teQgsE61GXl4hYMMJ+Hso=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=AkXZAxeSTF7vkZR2y2qGfiH1/j1xhYv3XH6G6PCpaiOwgXhtvDdLNNarmnqkvPYcP
+	 5R4IvqyCX/R0/DS/36bP4NMWzORddlzJQxxSWVeQDyGXkF5wfh818a09O1OkI75v/6
+	 kBXBqw7waXQTwL5EPZyrN+BHjYldOFEOsPatHggw=
+Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 6DA2018000A5F;
+	Tue, 10 Jun 2025 10:49:58 -0700 (PDT)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: bcm-kernel-feedback-list@broadcom.com,
+	"Rob Herring (Arm)" <robh@kernel.org>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: broadcom: northstar2: Drop GIC V2M "interrupt-parent"
+Date: Tue, 10 Jun 2025 10:49:57 -0700
+Message-ID: <20250610174958.3482215-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250609203705.2852500-1-robh@kernel.org>
+References: <20250609203705.2852500-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: eahariha@linux.microsoft.com, Julia Lawall <Julia.Lawall@inria.fr>,
- Nicolas Palix <nicolas.palix@imag.fr>, "cocci@inria.fr" <cocci@inria.fr>,
- LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] coccinelle: misc: secs_to_jiffies: Implement context and
- report modes
-References: <20250610174521.12294-1-eahariha@linux.microsoft.com>
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-Content-Language: en-US
-To: Andrew Morton <akpm@linux-foundation.org>,
- Ricardo Ribalda <ribalda@chromium.org>, Jakub Kicinski <kuba@kernel.org>
-In-Reply-To: <20250610174521.12294-1-eahariha@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/10/2025 10:45 AM, Easwar Hariharan wrote:
-> As requested by Ricardo and Jakub, implement report and context  modes
-> for the secs_to_jiffies Coccinelle script. While here, add the option to
-> look for opportunities to use secs_to_jiffies() in headers.
+From: Florian Fainelli <f.fainelli@gmail.com>
+
+On Mon,  9 Jun 2025 15:37:04 -0500, "Rob Herring (Arm)" <robh@kernel.org> wrote:
+> The default interrupt parent is a parent node containing
+> "#interrupt-cells", so an explicit "interrupt-parent" is not necessary.
 > 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Ricardo Ribalda <ribalda@chromium.org>
-> Closes: https://lore.kernel.org/all/20250129-secs_to_jiffles-v1-1-35a5e16b9f03@chromium.org/
-> Closes: https://lore.kernel.org/all/20250221162107.409ae333@kernel.org/
-> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+> Fixes these dtschema warnings:
+> 
+> (arm,gic-400): v2m@70000: 'interrupt-parent' does not match any of the regexes: '^pinctrl-[0-9]+$'
+> (arm,gic-400): v2m@60000: 'interrupt-parent' does not match any of the regexes: '^pinctrl-[0-9]+$'
+> (arm,gic-400): v2m@50000: 'interrupt-parent' does not match any of the regexes: '^pinctrl-[0-9]+$'
+> (arm,gic-400): v2m@40000: 'interrupt-parent' does not match any of the regexes: '^pinctrl-[0-9]+$'
+> (arm,gic-400): v2m@30000: 'interrupt-parent' does not match any of the regexes: '^pinctrl-[0-9]+$'
+> (arm,gic-400): v2m@20000: 'interrupt-parent' does not match any of the regexes: '^pinctrl-[0-9]+$'
+> (arm,gic-400): v2m@10000: 'interrupt-parent' does not match any of the regexes: '^pinctrl-[0-9]+$'
+> (arm,gic-400): v2m@0: 'interrupt-parent' does not match any of the regexes: '^pinctrl-[0-9]+$'
+> 
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 > ---
->  scripts/coccinelle/misc/secs_to_jiffies.cocci | 49 +++++++++++++++++--
->  1 file changed, 44 insertions(+), 5 deletions(-)
-> 
-> diff --git a/scripts/coccinelle/misc/secs_to_jiffies.cocci b/scripts/coccinelle/misc/secs_to_jiffies.cocci
-> index 416f348174ca..f3241ce75a7b 100644
-> --- a/scripts/coccinelle/misc/secs_to_jiffies.cocci
-> +++ b/scripts/coccinelle/misc/secs_to_jiffies.cocci
-> @@ -7,26 +7,65 @@
->  // Confidence: High
->  // Copyright: (C) 2024 Easwar Hariharan, Microsoft
->  // Keywords: secs, seconds, jiffies
-> -//
-> +// Options: --include-headers
->  
->  virtual patch
-> +virtual report
-> +virtual context
->  
-> -@depends on patch@ constant C; @@
-> +@pconst depends on patch@ constant C; @@
->  
->  - msecs_to_jiffies(C * 1000)
->  + secs_to_jiffies(C)
->  
-> -@depends on patch@ constant C; @@
-> +@pconstms depends on patch@ constant C; @@
->  
->  - msecs_to_jiffies(C * MSEC_PER_SEC)
->  + secs_to_jiffies(C)
->  
-> -@depends on patch@ expression E; @@
-> +@pexpr depends on patch@ expression E; @@
->  
->  - msecs_to_jiffies(E * 1000)
->  + secs_to_jiffies(E)
->  
-> -@depends on patch@ expression E; @@
-> +@pexprms depends on patch@ expression E; @@
->  
->  - msecs_to_jiffies(E * MSEC_PER_SEC)
->  + secs_to_jiffies(E)
-> +
-> +@r depends on report && !patch@
-> +constant C;
-> +expression E;
-> +position p;
-> +@@
-> +
-> +(
-> +  msecs_to_jiffies(C@p * 1000)
-> +|
-> +  msecs_to_jiffies(C@p * MSEC_PER_SEC)
-> +|
-> +  msecs_to_jiffies(E@p * 1000)
-> +|
-> +  msecs_to_jiffies(E@p * MSEC_PER_SEC)
-> +)
-> +
-> +@c depends on context && !patch@
-> +constant C;
-> +expression E;
-> +@@
-> +
-> +(
-> +* msecs_to_jiffies(C * 1000)
-> +|
-> +* msecs_to_jiffies(C * MSEC_PER_SEC)
-> +|
-> +* msecs_to_jiffies(E * 1000)
-> +|
-> +* msecs_to_jiffies(E * MSEC_PER_SEC)
-> +)
-> +
-> +@script:python depends on report@
-> +p << r.p;
-> +@@
-> +
-> +coccilib.report.print_report(p[0], "WARNING opportunity for secs_to_jiffies()")
 
-Sorry, I was testing sending this to myself before sending to the list, I've added the mailing lists now.
-
-Thanks,
-Easwar (he/him)
-
+Applied to https://github.com/Broadcom/stblinux/commits/devicetree-arm64/next, thanks!
+--
+Florian
