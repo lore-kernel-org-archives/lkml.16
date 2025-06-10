@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008FA28B3F3
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:14:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9660628B519
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:14:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749546847; cv=none; b=r97+Ky68HRE5/P7aoir9TUX9ls5yOPAWnlNET/2OUIfMthoq3n+0452bNtXSRqkEt+WfA04xAFvHBdeLA58ZxEqSaUXt2PBnF58XKBtED2Z5tsAPgjbKj5GAeD58BBsEw4KGtcpiPWTKdwHThhUrUlunvsTcHm7waMu0xwe9Lag=
+	t=1749546850; cv=none; b=kPuRV68bjmWRd+cbj1pakq+0jlwjYMim2Wmp3CYrISiHwYsCuiP73JYbWi3N2PmuuDUBgBbsGWBXWEV992GL519aZH/75afVJZOi5lCBAv7nPnejhlDO+ALocY4Bhqa7Amqh+x9zbPuZVJDx1NrLCQ63xW+30mpvMAkRV2R1ykA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749546847; c=relaxed/simple;
-	bh=jcp4eerj1XChCtXCHwOWYkcIHjfLw1wRtRGAcyyO24E=;
+	s=arc-20240116; t=1749546850; c=relaxed/simple;
+	bh=u+aF9b6V2pUtD48hyOB5seudSASLfD6rWb1EbHeYoPg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RX0uhu2G/N1CWCJXlzz2XvrOaHA20JLgZhVDbuFdC5QFS7kHeNNCEQHPIwZrNkn0xmCgTpAI36D9k3fhRJ/XLQrVDD8+u8IyfiE7ts0M1nSK8zsjiu27FDMqXi+SPhc2CuSwPtxoIMHhK9M854DHem5Lq9HQkWd/7Z0UepmlXE4=
+	 MIME-Version:Content-Type; b=kadw12JagWmqPr9Pz2qyPIjz0c3bcjgt/RHOGZscsgzYa/5PdQ2ktjXv1Cq7TKppEdDkANIg3o/7XNCVAAA8bR4so4gh08zP0IK2F4HZMErZs95+69lPBUIt/HHdwISKaKS8R3O4FPSBkho2IJ2EDbPWcZ6/SVDyFksG3htb/n8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,16 +18,16 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1uOv3M-000488-VW; Tue, 10 Jun 2025 11:13:56 +0200
+	id 1uOv3M-00048A-VW; Tue, 10 Jun 2025 11:13:56 +0200
 Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1uOv3L-002kQI-1g;
+	id 1uOv3L-002kQK-1p;
 	Tue, 10 Jun 2025 11:13:55 +0200
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1uOv3L-00H2K5-1S;
+	id 1uOv3L-00H2KP-1Z;
 	Tue, 10 Jun 2025 11:13:55 +0200
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: Andrew Lunn <andrew@lunn.ch>,
@@ -41,9 +41,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	linux-kernel@vger.kernel.org,
 	Russell King <linux@armlinux.org.uk>,
 	netdev@vger.kernel.org
-Subject: [PATCH net-next v1 1/3] net: phy: micrel: add MDI/MDI-X control support for KSZ9477 switch-integrated PHYs
-Date: Tue, 10 Jun 2025 11:13:52 +0200
-Message-Id: <20250610091354.4060454-2-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v1 3/3] net: phy: micrel: add cable test support for KSZ9477-class PHYs
+Date: Tue, 10 Jun 2025 11:13:54 +0200
+Message-Id: <20250610091354.4060454-4-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250610091354.4060454-1-o.rempel@pengutronix.de>
 References: <20250610091354.4060454-1-o.rempel@pengutronix.de>
@@ -53,114 +53,79 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Add MDI/MDI-X configuration support for PHYs integrated in the KSZ9477
-family of Ethernet switches.
+Enable cable test support for KSZ9477-class PHYs by reusing the
+existing KSZ9131 implementation.
 
-All MDI/MDI-X configuration modes are supported:
-  - Automatic MDI/MDI-X (ETH_TP_MDI_AUTO)
-  - Forced MDI (ETH_TP_MDI)
-  - Forced MDI-X (ETH_TP_MDI_X)
+This also adds support for 100Mbit-only PHYs like KSZ8563, which are
+identified as KSZ9477. For these PHYs, only two wire pairs (A and B)
+are active, so the cable test logic limits the pair_mask accordingly.
 
-However, when operating in automatic mode, the PHY does not expose the
-resolved crossover status (i.e., whether MDI or MDI-X is active).
-Therefore, in auto mode, the driver reports ETH_TP_MDI_INVALID as
-the current status.
+Support for KSZ8563 is untested but added based on its register
+compatibility and PHY ID match.
+
+Tested on KSZ9893 (Gigabit): open and short conditions were correctly
+detected on all four pairs. Fault length reporting is functional and
+varies by pair. For example:
+- 2m cable: open faults reported ~1.2m (pairs B–D), 0.0m (pair A)
+- No cable: all pairs report 0.0m fault length
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- drivers/net/phy/micrel.c | 59 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+ drivers/net/phy/micrel.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index 64aa03aed770..a51010e64444 100644
+index 68d86383e6c7..d0429dc8f561 100644
 --- a/drivers/net/phy/micrel.c
 +++ b/drivers/net/phy/micrel.c
-@@ -1948,6 +1948,56 @@ static int ksz886x_read_status(struct phy_device *phydev)
- 	return genphy_read_status(phydev);
- }
+@@ -1723,7 +1723,8 @@ static int ksz9x31_cable_test_fault_length(struct phy_device *phydev, u16 stat)
+ 	 *
+ 	 * distance to fault = (VCT_DATA - 22) * 4 / cable propagation velocity
+ 	 */
+-	if (phydev_id_compare(phydev, PHY_ID_KSZ9131))
++	if (phydev_id_compare(phydev, PHY_ID_KSZ9131) ||
++	    phydev_id_compare(phydev, PHY_ID_KSZ9477))
+ 		dt = clamp(dt - 22, 0, 255);
  
-+static int ksz9477_mdix_update(struct phy_device *phydev)
-+{
-+	if (phydev->mdix_ctrl != ETH_TP_MDI_AUTO)
-+		phydev->mdix = phydev->mdix_ctrl;
+ 	return (dt * 400) / 10;
+@@ -1797,12 +1798,20 @@ static int ksz9x31_cable_test_get_status(struct phy_device *phydev,
+ 					 bool *finished)
+ {
+ 	struct kszphy_priv *priv = phydev->priv;
+-	unsigned long pair_mask = 0xf;
++	unsigned long pair_mask;
+ 	int retries = 20;
+ 	int pair, ret, rv;
+ 
+ 	*finished = false;
+ 
++	if (linkmode_test_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT,
++			      phydev->supported) ||
++	    linkmode_test_bit(ETHTOOL_LINK_MODE_1000baseT_Half_BIT,
++			      phydev->supported))
++		pair_mask = 0xf; /* All pairs */
 +	else
-+		phydev->mdix = ETH_TP_MDI_INVALID;
++		pair_mask = 0x3; /* Pairs A and B only */
 +
-+	return 0;
-+}
-+
-+static int ksz9477_read_mdix_ctrl(struct phy_device *phydev)
-+{
-+	int val;
-+
-+	val = phy_read(phydev, MII_KSZ9131_AUTO_MDIX);
-+	if (val < 0)
-+		return val;
-+
-+	if (!(val & MII_KSZ9131_AUTO_MDIX_SWAP_OFF))
-+		phydev->mdix_ctrl = ETH_TP_MDI_AUTO;
-+	else if (val & MII_KSZ9131_AUTO_MDI_SET)
-+		phydev->mdix_ctrl = ETH_TP_MDI;
-+	else
-+		phydev->mdix_ctrl = ETH_TP_MDI_X;
-+
-+	return 0;
-+}
-+
-+static int ksz9477_read_status(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	ret = ksz9477_mdix_update(phydev);
-+	if (ret)
-+		return ret;
-+
-+	return genphy_read_status(phydev);
-+}
-+
-+static int ksz9477_config_aneg(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	ret = ksz9131_config_mdix(phydev, phydev->mdix_ctrl);
-+	if (ret)
-+		return ret;
-+
-+	return genphy_config_aneg(phydev);
-+}
-+
- struct ksz9477_errata_write {
- 	u8 dev_addr;
- 	u8 reg_addr;
-@@ -2029,6 +2079,13 @@ static int ksz9477_config_init(struct phy_device *phydev)
- 			return err;
- 	}
- 
-+	/* Read initial MDI-X config state. So, we do not need to poll it
-+	 * later on.
-+	 */
-+	err = ksz9477_read_mdix_ctrl(phydev);
-+	if (err)
-+		return err;
-+
- 	return kszphy_config_init(phydev);
- }
- 
-@@ -5691,6 +5748,8 @@ static struct phy_driver ksphy_driver[] = {
- 	/* PHY_GBIT_FEATURES */
- 	.config_init	= ksz9477_config_init,
- 	.config_intr	= kszphy_config_intr,
-+	.config_aneg	= ksz9477_config_aneg,
-+	.read_status	= ksz9477_read_status,
- 	.handle_interrupt = kszphy_handle_interrupt,
- 	.suspend	= genphy_suspend,
+ 	/* Try harder if link partner is active */
+ 	while (pair_mask && retries--) {
+ 		for_each_set_bit(pair, &pair_mask, 4) {
+@@ -5790,6 +5799,8 @@ static struct phy_driver ksphy_driver[] = {
  	.resume		= ksz9477_resume,
+ 	.get_phy_stats	= kszphy_get_phy_stats,
+ 	.update_stats	= kszphy_update_stats,
++	.cable_test_start	= ksz9x31_cable_test_start,
++	.cable_test_get_status	= ksz9x31_cable_test_get_status,
+ } };
+ 
+ module_phy_driver(ksphy_driver);
 -- 
 2.39.5
 
