@@ -1,207 +1,179 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2058.outbound.protection.outlook.com [40.107.223.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD47927934E
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749536558; cv=none; b=G/C4c6oUs9r5e+6TCe6V4WyG2jFRXgrtb7y258C1qCA1qsee29au/PX53SvK8toeOwGO3yeZuh58CbUCoY0bHUEcMZ5BBc8J3Atura3J2Et57A66UQuU+/UReqOhMt8qaN7/CtKaeFe9Z/HlZz8ghjBH4t/6N/SUoz0C5WGYiNw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749536558; c=relaxed/simple;
-	bh=43KLnRsyvO0tiWhgbqvJeLpm30esHdsuJEJIl1OCoag=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Sl0Xed6Ni7wPpvopY++meVz34UABWy1NVQgVJ9/hHmXChi5MtCFnWtNzuz+QBzLXExaCCwIz0LQET8osrgHd3/+b5+XshJQztZY2JeRsjzcykdQhMKzSOBZPC0LloQHyAmGkKmEgVzIFYXNKUcguR8GHoA8t0iOJHu5ZedHVMeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=R73/pvEq; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E24213790B;
+	Tue, 10 Jun 2025 06:23:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749536582; cv=fail; b=JkccvlPLElDvXGJnPMT6jljwXZlYsjWr1ii8MaX0gCm30d5S30Txj9+GOHUrrMZWiXBrj5gtckrYd3kRHl82TisBYexSETlNt+r0c/epBG0JLeML8Cn71mCTrYT6ML/DXOn6f//LCMDSc70U1SkP5QLp8yAbMqaNM9J9PUqMXb4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749536582; c=relaxed/simple;
+	bh=KTTGtHKtVG+NTNPXmeFAdFpATncsPWeJJBHc1y/4/DU=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=naN9ELhGS6Xfumqd2kx1PKK/BL6fuP2j8lZ4hJln8cJ5qur/ktbsdg2lo/SPHDFOZO2lDzNvsO18uw8rUA0dKg8e87olYY85THZAGe+K//ahc7YAMjaqdmYlzfBAamcvZ92FI40J9fI6Q6LRm2x0UkPOdPrFsroAOp9pyT3DGl4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pY0hCJEQ; arc=fail smtp.client-ip=40.107.223.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="R73/pvEq"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55394ee39dfso295517e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 23:22:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1749536555; x=1750141355; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DB4ehjm6ObGiT+zk3hEYWsaNwCd4xVOzRB3uomCd3eo=;
-        b=R73/pvEqh92z7pHc36U5/hkARSD64xR6HxV69eCUdFmvUei3t5IR0vdVMKxi6nN8Kn
-         TO3ID1a3BeTSpCXGlCvgzw55oT3qiKChi8ah9z6YiQZ8kPPA23SqXYf0CnWXcup0qn6L
-         GMI8Q19R/DN8XFSlV0uNAPw/ecQUzPHHDAchW+13WcyEKqtmMI3elAvh3ttUpUvidxZZ
-         /3qG3DIvVZoy3ALyNjmGztBIr8oSu8qEyTlKvDLTt05For9g2qSb43zgCGvEyx+YSCSx
-         pkX1ubAyFHtPX1LpWg011S85J4/icQPqbr6HzGaXng4r2v26ZNV6kLaQMD5OhgA4u24T
-         2kAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749536555; x=1750141355;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DB4ehjm6ObGiT+zk3hEYWsaNwCd4xVOzRB3uomCd3eo=;
-        b=XIrVYdRIiW+sD835MqgmqGKxptjUTgcP6aLxk66iuFPHPbbMaBBpqRTTYhM0PIQnCv
-         e5Hg8jWW6KDLIm9LjqatpV61l5wMbQJu8KZQA6sjSBePm4v2l9EvNzF4h5TFInZyaLZn
-         ZEFZSuyfKvH/lHEZUOyiXpsD+jXtl5vANbWuiGp3ZH+mLmBxPHpAOK0cS6p8bafMiivh
-         7Ppmmox4OK688nOQzU/KOuilFoOsR3jRP7GKnCmRc7r1gucGe9AUwpyUgVCyk0+9Dzff
-         heZPNQcJuwBORiC1x9FXYq4PVzlhBj8arN7It8oY4PdqM3jiYBz3+0JP132dMc56oseS
-         sUYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1LXmPEHHxZpBPFVpDW09Cfd5ap8/xU+NOEr2lKqgh1p3siH6N3j+2rekC0CBr4f3Lxu7ElztVKszlUSM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNDh9TMwet+gZQsonR2UacN1Y22YDzQ0OI7mtI+pnzxkPpfAnP
-	bk7PtuvRpfzg5qrfPT+gn7eBKnH90TZMWo4Y6yd3LmtzPXxbcGLX8isIK6V+lZmWUh8aM+uiG++
-	bmAivedS5MV0IwHyGLcX/pyNiSQAFJom+bNhV+VNjIg==
-X-Gm-Gg: ASbGncvU2pm1Q4Ioa5AersPB840YBgthL8Ud54/LJDU8FFcEwUtdH7TB6L9E88m1fN1
-	2qPKszXn5KFcFErZ999it52HgyTRlO1V9SjrAbcW2xDlgq/90jJ0kKkBCi5jOLpqXvxvGa2waGv
-	uF5grGwnhj/2qYriQnPrTYxVNzL4+xjCupW21rusAjRD7F
-X-Google-Smtp-Source: AGHT+IFgemJZ7kG2F8XgEhfvR0SOkaw84uYimQM0ic6wTdIsKvJiAdX6chuiGxpnG0pLj9VEVULnGD9buu+lY7bXnsc=
-X-Received: by 2002:a05:6512:3d88:b0:553:29cc:c49c with SMTP id
- 2adb3069b0e04-55393181e5emr633542e87.7.1749536554598; Mon, 09 Jun 2025
- 23:22:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pY0hCJEQ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hqCPq9HHbuSUvD4C0Pd4DS9CMrhSFtlEn0O7AiXtCv6EU+niLDyWOWHW7pVCrQcppSAxDmBZ6ovaiTTeRRKT00/xiAFP5nsj9bocJ5MiH1crqFHefnmGhp/ueWRfSVcA7kv1YF+xs4s+GfL/CZAi+gs8PqEoJYVdvN34r7swovYYX9+b84qEJu4gNq0vbbNYvsVFHcaEYD664mTIt4PKFgbGdW3JRxhpLYvdBiA9nptJrzjVUutAzq9WHzNmafcSIprJvPmlxreC/QZxe6lbJj9X7AW4ZBKgWRBcgwz7GSvpbshAclo6ANQkArE12zatI4w4scM0jqDj/YSkVdgpMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VTFIUGZRisUhZSC6QkjUvEmoaRCK9U6cFuBdBTiwPoQ=;
+ b=wRstAp7YXTTYybbywFXQgSkYcrNsEwPg7bTo387FbH8TkbJU5krOSSkIz7ulLx+qXlNHLaJAmwCMB2avXxAtnjY4N/EaqeTigVEERdWrkhgISlr9nQPUsK/goIieK2kdgYPe7B8mWxKExZBrgH9z5QSuzS6q5SPN+MNuMhqg9l6qwKU/o6ccvoELRbAWVbbq2/NufLl92us+RScjbqYPLOX+MVUkljnHgvfU+px695WEzoYCuiLyRHbz5H/wYzqaJzIuTzXtXDRGcW/Ow5yi5Z4fCORR8ybnqDZeBrK5nvoNut3/krSYeSXbNWTWHmMX4V46WdIyI75h2VoZbRnEIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VTFIUGZRisUhZSC6QkjUvEmoaRCK9U6cFuBdBTiwPoQ=;
+ b=pY0hCJEQO/IZs/fTg7/WpOk4RqUw+m0tfjbiIinKCGdgBeIj3ab8P1cbkHByLILTbpMClGSZCaIBcNNu/rBhexOPaDbU6FVlOCYsMHUVc+ZPbx7nYn40FreR6ArrkO5rYnLGF2bEfbQPO6CTSQxnXgC5jmCxCFJuzIIjFkIbH9k=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by CY5PR12MB6273.namprd12.prod.outlook.com (2603:10b6:930:22::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Tue, 10 Jun
+ 2025 06:22:58 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39%3]) with mapi id 15.20.8792.034; Tue, 10 Jun 2025
+ 06:22:58 +0000
+Message-ID: <31aa6b64-f8c4-465e-a724-6c42ddb8ee5f@amd.com>
+Date: Tue, 10 Jun 2025 11:52:50 +0530
+User-Agent: Mozilla Thunderbird
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: Re: [PATCH for-v6.16] perf mem: Describe the new output fields in the
+ doc
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
+ Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20250610005742.2173050-1-namhyung@kernel.org>
+Content-Language: en-US
+In-Reply-To: <20250610005742.2173050-1-namhyung@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4PR01CA0003.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:272::11) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250525084710.1665648-1-apatel@ventanamicro.com>
- <20250525084710.1665648-13-apatel@ventanamicro.com> <c691cf5e-695e-4a29-b31a-76b3376442b2@linux.dev>
-In-Reply-To: <c691cf5e-695e-4a29-b31a-76b3376442b2@linux.dev>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Tue, 10 Jun 2025 11:52:22 +0530
-X-Gm-Features: AX0GCFvoavACeRUD8FpjiBKHCKwOiwWVItSFykOssn8ajeKua3l6UtUtY_QL-G4
-Message-ID: <CAK9=C2U-oFe6QpJZ36yqCzbvv0x6+m8nBYfPOjd61hRaW1cxZQ@mail.gmail.com>
-Subject: Re: [PATCH v4 12/23] dt-bindings: Add RPMI system MSI interrupt
- controller bindings
-To: Atish Patra <atish.patra@linux.dev>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|CY5PR12MB6273:EE_
+X-MS-Office365-Filtering-Correlation-Id: 58b93bf7-86f5-49c2-dfeb-08dda7e73e35
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZEdHK3FLb1djS0MxeDJTbm1CNGdMaGpOL1FaaWRkTkZ6aU4veHliRlUrWVpK?=
+ =?utf-8?B?dHdvdjhlOThDYlRobitVNEN3S3FZUXY5Y3c3R1o5Umw5UU8rZlhkbXZlQWlV?=
+ =?utf-8?B?eUhzaVh1dndaUzJMU3VwT1hJcTZJMy9qQ29icG5iZUZ1b2I4OWFQNEFzVXpV?=
+ =?utf-8?B?T3A5ZDloTmt6UmlUaWlQaGZoYXdaZjFIdGtsbG1KN250ZnY2Q0lwMDFzVFZ2?=
+ =?utf-8?B?eGpzU29IVGp3TTNwTmx5dlZYbllNRklSamNTaDJsSGpRNUlJajg2c25qVTFN?=
+ =?utf-8?B?MlEyT21FVVduVlFSbGRYQjJGdkhJS1lNNmUySS9Kak1JV2o0UHQ0K1g4dmNT?=
+ =?utf-8?B?OXJPdkI1eFNRWDI3cWJjUFRVYXBkSlprMFhsM1VWRGxSYlZSdGVEa0doTXhi?=
+ =?utf-8?B?cEd6SiszU2wrWGVNOU5sbFRENU5pOUxoUmNXcHUxb0QvVkF0TUlGZFFUZjll?=
+ =?utf-8?B?QzRaQ09IY0krcm05TjlPQ2U2bFF5VzF0WTJ1Ykc2a0UvSnFob05nTi9SUFZK?=
+ =?utf-8?B?SWZjemlScDZMWWJuRUpSVUt1d3FRUXVGWnhteU0wSzVkZ2JVb3lUQ29PcTlj?=
+ =?utf-8?B?enh4em1JNGZNMGxmY3gwcWR0cnlHVlN3UXhEdnJSdEFySkdDWGJPUVY2bjhl?=
+ =?utf-8?B?WGZKbEZYdDJpUmNVUFhMbGhmY2p4RkZmbGtlSTh4RW1wWWxGMnpzelY1RFVj?=
+ =?utf-8?B?Q1RrSVFxa2N0bkhCcnBrZVhEUEdDeEthcEZUbEZHenpQNFBwajBLcmVOektY?=
+ =?utf-8?B?QUZ1anJRVEQ3T3JiUmpobEhSZkhLb2xiQkZEMUEyV1ZDRGF1MlY3S1pJcHhL?=
+ =?utf-8?B?bGxRSDFNSlJnWXFIN0xwU3prZlBOODhEZGVlRGRvV2p5akdZeUlLSnA2eVNm?=
+ =?utf-8?B?cm1za1JyK2xxTVp6RWxkamhaODFpTjgzcUZuVXdsSkRQNFBlSVA1MmxrcGkx?=
+ =?utf-8?B?QllFbXkrMlZMaWFUY2l6TGFUZkNvYjRvMzlla0VaZjdZMklaQWZ2Q3VRR1JI?=
+ =?utf-8?B?S2dWZW02T2c0SmV0Q1FaSC9mYytYb21JVXV3OUVOb2xVeGpwZTdUbVVJbEh3?=
+ =?utf-8?B?ZzNVYXpUVWVESXJISy85NGhMQUVvTUtFSVBvb1RHdHY3Y1htTElUOXJsNWZY?=
+ =?utf-8?B?cmxBM1BiT0oxeW90UkJKV1pPTXlDOHN5Tm9KVUFOZWtjdkpXVy9qYng4bHBN?=
+ =?utf-8?B?cTF4Um5YZ1JzN285YmZkUVRrRjBmRFI0V3JCNlcveURZS0IzQmZpSUJpNWJv?=
+ =?utf-8?B?UUZvWTlNUUUxV2hBVk5kNVZwM05VZ0QxVTNtQTJtL3QzcHBnaENiVlNkcEgy?=
+ =?utf-8?B?L1AvVW9DV0R2bjA4SlQ0dExOY0N4VlllV2h1L2lpeHpBRytudGFvaXpwSll6?=
+ =?utf-8?B?RGwvWEFGZ01RQW92eGg5R2YzdmUwS01EMFJDK0h5K09McllDMGNicXVRTTBQ?=
+ =?utf-8?B?MkQ2WHZpVVdWTllTTVJJRGh3Z3hQak14cnVRd3MwZkRuTWFGQTh5b0pxamZm?=
+ =?utf-8?B?dHJyMXRxQkJiTnFGMnNaQ0pCcFIxS0JqZjB0YytSOVZPZlc3eURYNnZBbUJa?=
+ =?utf-8?B?eWVVN1NEVlFIeTUvZHpGWXdHTUpUMktYUFo2QlphbkRDeU5yWi9Hc0thQzZ0?=
+ =?utf-8?B?YzJ5VVJ6TUl6UTJwdWtuUUgzTFJ2YXo4NHpOVFdFdTZEdlRBV2xoT0J1YzFN?=
+ =?utf-8?B?T21sd2s3WWthMllWM0ZWNUVueXRwNy83UmhISk1NMWFCWlZ4SWt1WnlmSVVW?=
+ =?utf-8?B?Y0E4d2ZBNHJYd3ZuVEcrWlA5VEQyczB3R3R5Z1pkc05UVVhHV1ZFVGVGL3cw?=
+ =?utf-8?B?L2hLTmVhTkZNd2JURWVlWll3RThxakhRVmVnaFdSdFIzWmJ0ZCsvdjVWN1dy?=
+ =?utf-8?B?UkVseXBMSThoejlWeDNVOGtNdDdMMWYyUjQ3Y2U3QjJZeE5hUnhuMDZlYTRi?=
+ =?utf-8?Q?kzoVQvpAqsk=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Uk9GcnNFUzhNT1RTUXJ2MnQvMWNhdzBTOGY4dnFDR3MycnpmdGZxSER2bERS?=
+ =?utf-8?B?RVRaMWlwRG5PcHpoeURISkdIeXY0a2FmVFhiVUs3SXd2TG53TWFZQlZQMDNq?=
+ =?utf-8?B?Rm1zd3Ayc3RaQ3BXY1dYRDRWNlBxM3F0aC9BdXhqa0NWS28vT2J1RDE2TEVO?=
+ =?utf-8?B?RGxvY2kxMGtlSUM5eGMwRklOSmNUQ3RHU1M4dFJ6UllKOFVtdUlRRm9tSEZj?=
+ =?utf-8?B?VS9yVXRSVFltYk4wNW1wUlFlcTlWb0RRU1pxei9UYXZuaTdLV0hzTTQxM2tP?=
+ =?utf-8?B?NW5aZUIvSFdMOGlTRFMyaVRyR1l5b05pYWRZT3gwTVJ6UHM1bTg3SExmYXNB?=
+ =?utf-8?B?SHZHMEpieE10VmE5K2NNZVpzZ0dDZVo4RE43OWRPaXYvMHhGUkJzbHR1eXNO?=
+ =?utf-8?B?cGhVYXdGbWI2K1pISEowVUNDUERKczYxVUdTMVJYQTdqLzQwSFFNa1lSTUlI?=
+ =?utf-8?B?MXBpWmlKaGd6UndMUG00Y3l4WGVyT21KVTUrTVJHaFJ4L3dnUmZoRkVrUHFM?=
+ =?utf-8?B?WVdLVStsNFAyWXV6SkNiblYxaWI3UVV3eTNxMDREMndpMlMrQW9tOVViMVpi?=
+ =?utf-8?B?YTRUNlN1NUZjTm5td1g0RWRiZUhPaE9yUGNaZUhvdHEza2hwOTh6a3RCbjZl?=
+ =?utf-8?B?ZGhqNm9lYUxxakcvTnJISHpTWkdCU1dLbSsweE11RnVwd1R5N0kzMkpTdGxt?=
+ =?utf-8?B?aDVXMjRjYnpsdm5Fak82STJNRTJMZlJDdkwxSWZxa2lWUEc4VDdQYXpidFl6?=
+ =?utf-8?B?TFpyQVZ3WERISG1rbXpvS21uU3dSSytaMTF4Qld5ZlE4QmFiTGxsKzBteDds?=
+ =?utf-8?B?Tk5QL2NkTFhweWk0cDA2SklJa1RhS1ZYb09qdFpGTkpiRHdCQW9CT0dENU5W?=
+ =?utf-8?B?dU5TRzF3YjNWSjZwV3VIN0hBSllla3FIVGZkZG5zdjlxM3pyU2xmekNNSGJE?=
+ =?utf-8?B?SE1ucjcyUVZZSW5ITU83YWxVV243N25PT3dJYTEwNzdoZTFDUUNIRnd0WnZm?=
+ =?utf-8?B?NTVhUFh6QnNtaFpjQVNZdG5hbzF6SEk3cWh4Z09HcE1Mdk9LL0RCRnJHdVor?=
+ =?utf-8?B?SXNrYkpLditNUS9nSkQvZjhrWDBuY3B0NXpQNTVwUXBxWGZjaHQ3YUdqbkdQ?=
+ =?utf-8?B?Ymxmdnh5aDViOWR2SEw0MGcrUnBoREhaa2dqRUQ4Vm5VcDhFSm9tOWk3NVlC?=
+ =?utf-8?B?eG4xWTdwZElxMXVjZDZPL3VuNzI4MFovRjFDWUp5S0ZvMGRHNXpQNEVRMjFV?=
+ =?utf-8?B?UnhpWVNGWTFiMDcySU1jYlFNOGl4QkpLNlJwaVZtOGVaNE5XcytuSnNzQXQ4?=
+ =?utf-8?B?OHA5ajZrdVRHK2w2aExtT1VQS3M1eHZjTmdMaXVsMjVWVFhma1NhaDdHZWY2?=
+ =?utf-8?B?eWdleWtHeW9uTWZ3bisxQXlXVFNyQ1grMnUrNUQ2dVBNYmozZmRqRS9xK25v?=
+ =?utf-8?B?c3FmRlVyekVYU3dSejF4NE5HK2JaRXhETEpVUnVpWnNPN3l0aC9uWnFlMVpQ?=
+ =?utf-8?B?UDJaelB2NDN0VzZxMEUzOFpzRWlDdGdCZUFkMUdDa1MwUlhia0pYVkZsOTY2?=
+ =?utf-8?B?cFRZUlc4YmM5azk4SVF4OTVoemNNaGtrUGJZRzFWdGJMTG91dUJCeDAwdlNs?=
+ =?utf-8?B?R1pSSU1kQ0hxRDh6V0Z0OVYxTWdSUUg3TUl1T0ZNNmhVaGROeXAzNGZPRUNW?=
+ =?utf-8?B?T1FJWnV1dG5LS0tSVk8zN293RTRjNVhTYXFyUEY4eTBzekhLUFBlMDA1Sndr?=
+ =?utf-8?B?c1VRdTNzZGNyc1R0TkpSUHVKZ1hlVlY4V0IrZG5SRUQzY2VLMWozdFdrb0sy?=
+ =?utf-8?B?bGlyek1uV0ZneU9lUDFoc0trYlZmYm9QN2pINlRhT3F1K0o0a2Y2UmwyakV0?=
+ =?utf-8?B?Uzh3b05UcGlrU2huNDFMV0tzOGpZU0FEYytuRUl6RHFxOWtOaDkrK0djZ0Zq?=
+ =?utf-8?B?dWhsblIyTGplQjc4dnpYWXViZkNRc0RhZVdCbkxlZGJBYXd1elZFY1FIQkN5?=
+ =?utf-8?B?WERzNWZ4eFNqLzFGNVF2UzN5SVRhby9JdEtOckdUQnl0WDFUZWIyYm5vTnNy?=
+ =?utf-8?B?ME5MWGpQMk5mOE44aUVic3BCc1k4UG9YTzFSNVZPM0x5M3JWcWV0ZndVZ0Zw?=
+ =?utf-8?Q?rmTxmVWAC/I1J/6+2L0OlQDon?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 58b93bf7-86f5-49c2-dfeb-08dda7e73e35
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 06:22:58.3096
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: A3opyFrk4mefHjpgyBlBd8p/WBgIthFCnKMYZwsZSVzDR5Ttnmrhf8XDVOlTqf2Gcsvl7pPd62J6QryB0BBFvg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6273
 
-On Sat, Jun 7, 2025 at 4:33=E2=80=AFAM Atish Patra <atish.patra@linux.dev> =
-wrote:
->
->
-> On 5/25/25 1:46 AM, Anup Patel wrote:
-> > Add device tree bindings for the RPMI system MSI service group
-> > based interrupt controller for the supervisor software.
-> >
-> > The RPMI system MSI service group is defined by the RISC-V
-> > platform management interface (RPMI) specification.
-> >
-> > Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> > ---
-> >   .../riscv,rpmi-system-msi.yaml                | 74 ++++++++++++++++++=
-+
-> >   1 file changed, 74 insertions(+)
-> >   create mode 100644 Documentation/devicetree/bindings/interrupt-contro=
-ller/riscv,rpmi-system-msi.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/ris=
-cv,rpmi-system-msi.yaml b/Documentation/devicetree/bindings/interrupt-contr=
-oller/riscv,rpmi-system-msi.yaml
-> > new file mode 100644
-> > index 000000000000..ac13cec0666e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,rpmi=
--system-msi.yaml
-> > @@ -0,0 +1,74 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/interrupt-controller/riscv,rpmi-sys=
-tem-msi.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: RISC-V RPMI system MSI service group based interrupt controller
-> > +
-> > +maintainers:
-> > +  - Anup Patel <anup@brainfault.org>
-> > +
-> > +description: |
-> > +  The RISC-V Platform Management Interface (RPMI) [1] defines a
-> > +  messaging protocol which is modular and extensible. The supervisor
-> > +  software can send/receive RPMI messages via SBI MPXY extension [2]
-> > +  or some dedicated supervisor-mode RPMI transport.
-> > +
-> > +  The RPMI specification [1] defines system MSI service group which
-> > +  allow application processors to receive MSIs upon system events
-> > +  such as P2A doorbell, graceful shutdown/reboot request, CPU hotplug
-> > +  event, memory hotplug event, etc from the platform microcontroller.
-> > +  The supervisor software can access RPMI system MSI service group via
-> > +  SBI MPXY channel or some dedicated supervisor-mode RPMI transport.
-> > +
-> > +  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +  References
-> > +  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +  [1] RISC-V Platform Management Interface (RPMI)
-> > +      https://github.com/riscv-non-isa/riscv-rpmi/releases
-> > +
-> > +  [2] RISC-V Supervisor Binary Interface (SBI)
-> > +      https://github.com/riscv-non-isa/riscv-sbi-doc/releases
-> > +
-> nit: Same comment as previous patch.
+On 10-Jun-25 6:27 AM, Namhyung Kim wrote:
+> Update the documentation of the new fields with examples and caveats.
+> Also update the related documentation for AMD IBS.
+> 
+> Cc: Ravi Bangoria <ravi.bangoria@amd.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Like mentioned in the previous patch, I will add the spec version to the te=
-xt.
+Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
 
-> > +allOf:
-> > +  - $ref: /schemas/interrupt-controller.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    description:
-> > +      Intended for use by the supervisor software.
-> > +    const: riscv,rpmi-system-msi
-> > +
-> > +  mboxes:
-> > +    maxItems: 1
-> > +    description:
-> > +      Mailbox channel of the underlying RPMI transport or SBI message =
-proxy channel.
-> > +
-> > +  msi-parent: true
-> > +
-> > +  interrupt-controller: true
-> > +
-> > +  "#interrupt-cells":
-> > +    const: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - mboxes
-> > +  - msi-parent
-> > +  - interrupt-controller
-> > +  - "#interrupt-cells"
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    interrupt-controller {
-> > +        compatible =3D "riscv,rpmi-system-msi";
-> > +        mboxes =3D <&mpxy_mbox 0x2000 0x0>;
-> > +        msi-parent =3D <&imsic_slevel>;
-> > +        interrupt-controller;
-> > +        #interrupt-cells =3D <1>;
-> > +    };
-> > +...
->
-> Otherwise, LGTM.
-> Reviewed-by: Atish Patra <atishp@rivosinc.com>
->
->
->
+FWIW, this conflicts with:
+https://lore.kernel.org/r/20250529123456.1801-5-ravi.bangoria@amd.com
 
-Regards,
-Anup
+But I can resend those patches by dropping perf mem/c2c example hunk.
+
+Thanks,
+Ravi
