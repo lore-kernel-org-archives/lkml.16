@@ -1,106 +1,84 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7944928030F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A3928C2C9
 	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749551919; cv=none; b=H9LDQDReL68PuAH2ipNzrBdd+VzYABgodqshuBmXLrHglr4PQrENLisU/P+95Zdpl5JjFqU/JpTc24UaTXnQRGsEi5j+UenvOJ4QT152B+qpOcrmu4RoUpjfmaEdicAyjVV+jRy36clmPH1Wo+35SScwgtRZBn88HfG4RL0M/TU=
+	t=1749551921; cv=none; b=MqPTLZTy0SbG1AZ/L96ND8bxFTlir4dRcGVIIPkqeLVMse+7WyXAqCrcSwBiiGVqbR3kh+Twd2gjN/EnRx3JNw9rfsNVqa/o39fMWgAgNpiUizpirQtsWqgsvv01041BbtHyb0EbiD6SZIoKvCkVQOgJsu6Fn8HHTfH6JCWDcK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749551919; c=relaxed/simple;
-	bh=RtnMrmlXV9IDEuAe0xQcKNhw7/57Ldi7nJ2CsDZvIAA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rnN/EWERIm311JjYYqi9dar1Tg9K22Wpees6foTloiU30c50msLYbaiWTBPVmkEXzLtnA/VMXeFGNoe+lnqf+oDpigLoiuH26ahZDKiybpf4J/2dG17j9jZ52pcNcOj1iHP8Yhky5f2FKfb7dQA0kLOqtY5bQMpdQWp/DeAoJnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ls1ObZqB; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749551921; c=relaxed/simple;
+	bh=AE+sUP3HEMMYaALXgLosS4awSefOKL9VYbo4VC+NJbU=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=ouOaH2OvYiKkOIKGtZDn1twDhLyQfPOmvbWDKdXzbE0fatiOp92wuo446xlQuH4nyC4qajyBXKB1A52y82i5qKw6WZRxRrsn2uhuVDeg8I+Pvq6DzZi+DLPH4YG06giHXn8uPH0WZDClHo/aBjntDKviABCNdR26aoc7MR5TSzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=F/6y6aVY; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ls1ObZqB"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b26df8f44e6so5287299a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 03:38:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749551918; x=1750156718; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kXIjHn7dVanx/dh81apv7WxrCAGv0rouoOBBRWo8fJs=;
-        b=ls1ObZqBfoxEafiiAoRs4Viiowa2d76sy5WJIukUbGDOIK3bvdp0EoYxTWXHzNS2Dc
-         7TGdF6aL/8ex7qvc6bnSBTqDmaibQftspx7KJT34IJYyR5biZeO4DmWhSTqWSz8CA58g
-         MyQB3B7+hjuQqza1bnVFIsTFUyWO6c9eyGTLiRuhjiCn4vJd0FqrjUga2XoX56PWpj5G
-         wd9rgoyAYeFIoelk4ndyx7aNzxW763TyjNUAFKqGHwiC6QcIqNXhwjrup5LbjI8Ima1C
-         quYHOtasy133AaO3NTuH38jzagiYAt0NJkUUVyFMGO4LFQC+LQP7r3+53WvzLdwC6v6s
-         48Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749551918; x=1750156718;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kXIjHn7dVanx/dh81apv7WxrCAGv0rouoOBBRWo8fJs=;
-        b=mn86RI1iKlg6hhf8ybvPOw9kpeNwwCXQdzKqL8ygNYGREofaGg2cFmk6E4hrXelLvq
-         1YxZhDO5KBWgM9IQz3wb2AZqG0RoJ7U4+jIHyYKYEhNVRFKs7XuEGa40/80v9opzf6b+
-         IjR+j+qFj1kNNrZITqr3u5LeWTK05jOxezUIQPYwiBcVPjy8j9D9w8YUik/X3ZiOPtBz
-         FvvnOOzPrkwouoetUJa4nAQVPDrXPuy+uecKf89HtZdwjDZMcWJKedbUinWbw9KQmhaI
-         Bck1rtzhagn44ii5G8SuAkqHoIKKbsHMTmr+Z2TdYq9CEZn1+0QJ5YXNw2G42nwX5eRX
-         pOpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXpNNaoQX9J3WaR+TF3nYpLqppdLzHYfeYDqU7axoO3Ydp+65jTOFArjAjp1fK3vBSVgyF0EgKFtnbi3ng=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXPdy48UR02HZZq9JSQGTL0IPiCVBwZlNMuCH+DSaxJSys6LcJ
-	3XkkX/CSYgmjjnWuOAj7cjFg7tefKNd5lOwnyNFRwcaQOS84NxHwjS/JRTjbF5tmR4E=
-X-Gm-Gg: ASbGncvDwZCGVE2v8xMh4SHJMJ1pt9RdIfgSHVXh3PADXNXg3ti7acVIKaGgm4sT9On
-	6TbXLZ9Jff6M0bFES9k4xP0srOOpKwDIuJCNdlSxlgMiTgaRPQ61ivJK/+jlK4FEehYtl50aNFz
-	rj/yR/cIZJGk8XIkL/HGUOnAsG9wgY1P686+c0SwS0Y9Ixk5CMZU0UkNDbB+1yS3CsURhyaqd6t
-	zvbYRPlH2hkByYDeFy2J21tK4OHZJRPweyQMy5NRcSlGM9Xoh9hZHCzrkLebVnq1UArx6tJZEV9
-	mSWAOuM0QRf5eZtrikp4XiF5vp37QmXcZYLdVF49hm/ksaU3KUXauC+wHJT0p88=
-X-Google-Smtp-Source: AGHT+IEYxgFtuUO8rprFJtHGGMBI2ccjNlWeNIyHcQi7l22B1BFH/M5F5SPjP82SwQlO1/YYkJuhcw==
-X-Received: by 2002:a05:6a20:c991:b0:215:dbb0:2a85 with SMTP id adf61e73a8af0-21ee14c3a23mr26299879637.0.1749551917806;
-        Tue, 10 Jun 2025 03:38:37 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5ee70730sm6573730a12.22.2025.06.10.03.38.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 03:38:37 -0700 (PDT)
-Date: Tue, 10 Jun 2025 16:08:34 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Yury Norov <yury.norov@gmail.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 1/2] rust: cpu: Introduce CpuId abstraction
-Message-ID: <20250610103834.iqwuozp6mrgz2i5v@vireshk-i7>
-References: <cover.1749463570.git.viresh.kumar@linaro.org>
- <f10910c7585f5556869ea6f34b64d4136b8d5581.1749463570.git.viresh.kumar@linaro.org>
- <CANiq72=WpuGELzLbH-fxdOeJy9fiDFwatz6ynERDh=HP2z2MBw@mail.gmail.com>
- <20250610100025.e2jadqzlmimyq4rh@vireshk-i7>
- <CANiq72=dKx22CksQ_r7XuTrufTCh8ty-aAicPwFX62Q4JeAVTw@mail.gmail.com>
- <CANiq72=uZLZ-ddUpyhPA8Kn-4DRKDgYT00wzc+zDRLOX3kv+dA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="F/6y6aVY"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749551907;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YctFVp+NFks6JhouwOBSL22NHg6Z9MP2+A/tMRznPSo=;
+	b=F/6y6aVYzP3MPOKzQCrKOU//mTJiCWa5KTWPzCHz9iltyCE11PQ6KXXG6YR+RFcA7TqHKx
+	bftTeRy8ZDmSuyq0+QYu/URsrxxx1migbTNA4rU9xYxl9Ngfuc0n4GfwjdVNMc3HGMb86S
+	gvUDidQrX30QxT4kdKoAERo7RJgwNPs=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANiq72=uZLZ-ddUpyhPA8Kn-4DRKDgYT00wzc+zDRLOX3kv+dA@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.2\))
+Subject: Re: [RESEND PATCH] rpmsg: Use strscpy() instead of strscpy_pad()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <CANLsYkxBxt-fE-kV3yS7WDQuF4o7OSL045fMmXrTvfx3P=A+1A@mail.gmail.com>
+Date: Tue, 10 Jun 2025 12:38:14 +0200
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ linux-arm-msm@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <1F19F750-E9CF-4AC8-B14E-78C957869F75@linux.dev>
+References: <20250429104543.66927-2-thorsten.blum@linux.dev>
+ <CANLsYkxBxt-fE-kV3yS7WDQuF4o7OSL045fMmXrTvfx3P=A+1A@mail.gmail.com>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+X-Migadu-Flow: FLOW_OUT
 
-On 10-06-25, 12:21, Miguel Ojeda wrote:
-> I meant "for your files", I meant, sorry.
+Hi Mathieu,
+
+On 30. Apr 2025, at 16:59, Mathieu Poirier wrote:
+> On Tue, 29 Apr 2025 at 04:46, Thorsten Blum wrote:
+>> 
+>> kzalloc() already zero-initializes the destination buffer, making
+>> strscpy() sufficient for safely copying the name. The additional NUL-
+>> padding performed by strscpy_pad() is unnecessary.
+>> 
+>> The size parameter is optional, and strscpy() automatically determines
+>> the size of the destination buffer using sizeof() when the argument is
+>> omitted. RPMSG_NAME_SIZE is equal to sizeof(rpdev->id.name) and can be
+>> removed - remove it.
+>> 
+>> No functional changes intended.
+>> 
+>> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+>> ---
+>> drivers/rpmsg/qcom_glink_native.c | 2 +-
+>> drivers/rpmsg/qcom_smd.c          | 2 +-
+>> 2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> i.e. it takes some work to guide people and help them get their patch
-> setup right etc., so it can be often quite more work than just doing
-> it oneself. So it is understandable if a maintainer doesn't want
-> those.
+> 
+> I will let Bjorn take care of this one.
 
-Its perfectly fine and I am available to guide them and review patches
-:)
+This one didn't make it into the last merge window, did it?
 
--- 
-viresh
+Could you or Bjorn take care of it or should I resend it?
+
+Thanks,
+Thorsten
+
