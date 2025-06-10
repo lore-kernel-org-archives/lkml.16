@@ -1,74 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE8727AC45;
-	Tue, 10 Jun 2025 07:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BEAD3BBC9
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749539343; cv=none; b=HhbSgl8myHyzpWYrOI+2bmiJ9vWJSNC4blnjGmEle2486t5+D+ml4ty1t/zeK1c9i7r4mDQgU2UI8MTupkzbV/qje4JAc5MQ7/e6sVbXZxkndArcVYkDl6WEomTtAp6RspNwZFxNY6hmjsi4Z6Z570ztCERxBig8uSFhWvwfwyA=
+	t=1749539459; cv=none; b=K1nzEbLzWETkvRLxflEYOCPzu8OJEXFL+O0/z4WOoPNb1lBvChqSTcdkYmtGtY+vUhCIEnlHT0rswrCIWeTfWdn/CKYW+Wl7wrA3xTQlhbskm974Kj83KfhlXlSe8gEs/CSvPiWK2XJtTn6pbOnDfMvJk+Fn93UsD2PX+6kHwfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749539343; c=relaxed/simple;
-	bh=0hrlPg9RGZCoOBqsD37kKZfuBUR6TyOBeuE8tY1ffLg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gDOZSzRIlegwQ60XH8oasIEvH+oagvhLZ03ilGChV9XXDRENpTHSbNWvgrJMtGZL2HvDYrxDnHrcXvHfakqlcBDmsy65MTRlybKaAKxOYZlDMbnW1q19IiHIkG3eV+m1TVqRu36Yc+zVRgmPoyVeZO2tgqxLAAx3rrdE5hjJDW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sgs3Y2gx; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sgs3Y2gx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63DD8C4CEEF;
-	Tue, 10 Jun 2025 07:09:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749539343;
-	bh=0hrlPg9RGZCoOBqsD37kKZfuBUR6TyOBeuE8tY1ffLg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sgs3Y2gxxVxjase5MKEcCuoJxMLn3NrjTXg8Beng2580u0ay2ZWkQ6duDl+33T2Z1
-	 JryeUWEZkVkn4o44BxZsGB+S8dLDBLNz1jBYBFgmzBrTYW0676MID7PUjxKcwy5KEG
-	 o0m45vrvNjhUstmXwbaTh45egzeRls0UO4nOn1lvI/E9FWM1ilKuwbfHIglr/YshWW
-	 5wL+GTE2T7Z70I8Fi8hjUr/A7RxQ9oYcQqMQ5irsB1EtPPh8nyKyWUR9pLmQW+cmVL
-	 JZMeYXaGjiMZc4y0hPnlbsAQP8B7YmVnDBdlDDsLvWckjquqTYNqYhKADcVOUpWdHN
-	 atFHx2cS34lzw==
-Date: Tue, 10 Jun 2025 09:09:00 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	arnd@arndb.de, gregkh@linuxfoundation.org, W_Armin@gmx.de, 
-	luoyifan@cmss.chinamobile.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Subject: Re: [PATCH v4 1/3] dt-bindings: eeprom: Add ST M24LR support
-Message-ID: <20250610-spectral-passionate-chameleon-bc0b4b@kuoka>
-References: <20250608182714.3359441-1-abd.masalkhi@gmail.com>
- <20250608182714.3359441-2-abd.masalkhi@gmail.com>
+	s=arc-20240116; t=1749539459; c=relaxed/simple;
+	bh=v4UCoYHQgciSxhmGWQEI8MgUwZtGqXSfrCRo9fn6EFQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=MqqAOcDCD471EFaeZxW+T+XcWWzym++LC1Qc00YIWFauuF+oAqsygmJfDaw+cf7waKcBw7EotOO0XsZYlju7B6m9S6Jm/R65hLTaqHJBNs3Cqz4Bzdwb8WMjZQAffm2Y24kXPGIwuH+06imCsRmYpqQivu27Xu/nkHVpA5CyD3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddc9ee4794so67550675ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 00:10:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749539457; x=1750144257;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=v4UCoYHQgciSxhmGWQEI8MgUwZtGqXSfrCRo9fn6EFQ=;
+        b=M8TXYT/RUPaF3A4Kw4g7mCrKNiE4XAXzL0Skjn8kpuiJPSEWGQUDlgGVpWv9oxtc7w
+         pvEvwE+gJe9VCz8n6c/R1rIss54NyvcWtukQE45AKc4fnDIyyrZbzF03PJHSHxEllrr6
+         2/YbZ2WYLtkFp731IfTxim7AnpbNqOTI38Fed5209UNsVmm/iCk2CMEn0kAYkT2P6EdK
+         cyBjkzOeJnUbFbzvNnsEX9Jm8teZS/BbIppYm6cjjj5p5CN20C6fKxbSCQ1y/Xm9f9+L
+         FX1knRucs6BxBBi9d8pmR5l9hmWHIKsmGdz2mUFa3OlUUpdAp/zTSwi6Zhkf1E0Hu6qo
+         l7dg==
+X-Gm-Message-State: AOJu0Yxa88hagTIDvIkU7mYrxiWqzEq+QLBWiBxA4bKre4J18UH2uEOH
+	Ji2qRcYUp5al2mSwzzrzN3TNUylsc8y4Ziy/TaPktZ6dhXgPBvRPwryrKrdLZ6eP8WFpvUmunuk
+	K4XdlhmtGp2MyXrD6o21EV8g1NGivJ3T4Wbz75sWKLn5/IvRgfymH+OI9ELE=
+X-Google-Smtp-Source: AGHT+IEC6rUYBGy/fNkjkwFI0ub+WSVLgZB+hYp5fJAU5bdCqCm1Y82WOKTNllDnkglmPZi0uldgDUMyHUFQ9ll9qGj6zAKuSWab
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250608182714.3359441-2-abd.masalkhi@gmail.com>
+X-Received: by 2002:a05:6e02:b2e:b0:3dd:a3e4:2def with SMTP id
+ e9e14a558f8ab-3ddeddd4625mr14318165ab.16.1749539457232; Tue, 10 Jun 2025
+ 00:10:57 -0700 (PDT)
+Date: Tue, 10 Jun 2025 00:10:57 -0700
+In-Reply-To: <684392eb.a00a0220.29ac89.004f.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6847da81.050a0220.daf97.0b03.GAE@google.com>
+Subject: Re: [syzbot] #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+ 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+From: syzbot <syzbot+9a4aec827829942045ff@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Jun 08, 2025 at 06:27:12PM GMT, Abd-Alrhman Masalkhi wrote:
-> Add support for STMicroelectronics M24LR RFID/NFC EEPROM chips.
-> These devices use two I2C addresses: the primary address provides
-> access to control and system parameter registers, while the
-> secondary address is used for EEPROM access.
-> 
-> Signed-off-by: Abd-Alrhman Masalkhi <abd.masalkhi@gmail.com>
-> ---
-> Changes in v4:
->  - Moved the binding file to the eeprom/ directory
->  - Updated reg property to use items: with per-address descriptions
->    instead of minItems/maxItems
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-And the rest of the changelog? Where is v2, v3?
+***
 
+Subject: #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+Author: dmantipov@yandex.ru
 
-> ---
->  .../devicetree/bindings/eeprom/st,m24lr.yaml  | 52 +++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/eeprom/st,m24lr.yaml
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
-
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
