@@ -1,142 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0771EA84;
-	Tue, 10 Jun 2025 13:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01DCB293B5A
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749561157; cv=none; b=Hl8vwHC7EBlQtmpdMTrpA4qMCTxiqKAN8XLhS8aM/Ki32oMj/gnimSu+JSGhSdHLelmki+hqP1LpKROb1GXD26eBFEwu3uEAMwkPJx8hA6+2vbrw927rATXxFXB0JoDbYp9asla2sZvqU1R5JWzpwn8UQLL0kHHgz3bAp6Jg8Dk=
+	t=1749561170; cv=none; b=qd7v61iJ4yPenwhGTtm8a+4N4E4E2L0pBdwSzQunL1h2wihLm3H5hqB8jhTlVjUBhpId2VVCNra3o7p/4ESm4hCPj1b6vV9vK9kEgKKTfKlX0YdmcaXoozH9a8EwEUC40LHBeVBtC5uhKUhqL42JtRWVYGgRnvTJiEal/aSjrTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749561157; c=relaxed/simple;
-	bh=6oeZOytuYucvgLaM0ld/mM9EhcHGSBHO4kacpgrnfFs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KBoxSJQQ6GIYHknnnk7tufBmOta7IjZhSmfH9fOdyxkpbu1F0HqMfTVIZGvvNGMLd70t3tb6fQk/dMGhYMOVML2ptC8cEyXD0n3Y12/lsfutp9+7x73vhygtBVTcqWVZCWa9Ftq3V0HqWY57if7p4g3fAVVuj4mb2hm23N2B06I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cJrz0K17; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749561170; c=relaxed/simple;
+	bh=tSR7/fIjqV9+yyF1LGzAkWsi5rJ8eOhUaetz1Bfbz9Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aTlz6XlMH2silMJYO54LVE2jrEUTxMWgvQvOSaCwPUPIwRMiPoCQfdTGQSC06swHbUZCwvEI+aLYvMX3gsnHv6ENRxiaRxiD2ZUPknacpRLJpe0d3zeDObNBbTpHpZLDV36EwrVVDiVjbjsXacjqSxjFyJXoKTuSJDjXPSrRqQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CITwnkDi; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cJrz0K17"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0059CC4CEED;
-	Tue, 10 Jun 2025 13:12:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749561157;
-	bh=6oeZOytuYucvgLaM0ld/mM9EhcHGSBHO4kacpgrnfFs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cJrz0K17Y0hZnBOUk77bxf7bCBmMz9u5xDYUECv8lvhSejz5p3qZJo5+Y7aNsTSqY
-	 3ufUa7OQhdRckVp6+HKwR7RyPsR77ygrhwsEq4thghrn3WG0Wi5JyIdvLOr72Y1Z6g
-	 jywKOd54b333xJHejkdCSRfWXq6RINhD9q3zZ/PGYRve7ceZbzvPptPDtyQmxCIdgV
-	 3vR1sJVBdOYWc/siKUnPpXaTjwvmGzROu9dWKsFUlwU2z82PSlLnw4Y8o/Mh0z3sDn
-	 sXv8gN95onojXWTwYhYJtaGzIGuOa8V2zIYNCHHG51aeQx9N5m+bYAfcY3hWlHKFCu
-	 swW9Zz8EXPlFA==
-Message-ID: <2bed4569-27a9-4173-af32-e6016c88f2c9@kernel.org>
-Date: Tue, 10 Jun 2025 15:12:31 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CITwnkDi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749561168;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=xKBj4p2Vjm1RVX1kUZg3pFVIOXv8dd+d+30EbLY8ru4=;
+	b=CITwnkDip4IaOcvrgEZfez3JrGNi42isgpLDUsZIThM/9bnJmtYUFRbPWydLzwpNc7l5yV
+	VoWrOgHcN7OXOGla1xdTmyCbt5mWYaKHzykwt7ANw2wHy/FctF+e7j5Uij1m+17CdJt3Lf
+	ikRQUSQLr99DSW+ySKMhjmD57GEUzZg=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-653-Cc9MMdqhM5eYVXLxFIG2MQ-1; Tue, 10 Jun 2025 09:12:46 -0400
+X-MC-Unique: Cc9MMdqhM5eYVXLxFIG2MQ-1
+X-Mimecast-MFC-AGG-ID: Cc9MMdqhM5eYVXLxFIG2MQ_1749561166
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d21fc72219so377600185a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:12:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749561166; x=1750165966;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xKBj4p2Vjm1RVX1kUZg3pFVIOXv8dd+d+30EbLY8ru4=;
+        b=AlpsYfIizu8rQbUh4cC4dxfsn7Ao2gskaoLIDE+FON20PjTzWMrU5ePdBqj7VjDW3c
+         Eg14g20M1Evsg6XPGPmODELZ8c4JnN1iNtXzo+vywev53VV96Vxczgt+WvD9TCMIW2li
+         CL5pWpRjiyXkJjRBUOiRA1z+W/ELiqVdOkmLnJO8DPwgpoVIx8Ug1lbj97KwkA6Dd/M4
+         UrIEIZCHNkTu0Zc2LiDBsbiwyGBzY/NM7XlWIeG9/56NbfQvQGFH+Quu48fHyP5bzRsA
+         v9tfdZ1V4YRM7IAknHd/aXlL2HMf25l4+tDgwyRAJ6UZ7WldXtYMiFUD9nGDI86hqTb6
+         IKrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV57sHI5Ve6TJeYqi9gzRpCX7RvOPbwZsA7e7Ly3VzOUOeRL97YDSjmG54VMiKY+Nyapm3/oueh6AhfV/E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDIbN0R5wqiY4bQdH9Zgusf8ngg2ulOFJjHqE+Xy1GrR7JwqHA
+	weEU6RD/2aai2QLmy231xLqiS2+ReZwbOnVKG4eIAfamXIv4qc517H1VV50R4D5Z/VO1vNm54hf
+	SS/zQ2WhQp3u5e1r53eWsjJ3NSga+ubjuxv3BJ9EcF6aEDRbcjHdEqTgwANwgL33x4g==
+X-Gm-Gg: ASbGncsWVflrncBSnwWMhgIkDBwANBBRgdCWvXRBNBGhCFawUekFy2dYcATmof5RjAS
+	lS6Q+OiG1YO2CjcO8l1W2HtDfGpCKn3/e78z7IGOnRWt/30LymWaqCxx51wGOnB8ATCzbd1OlKh
+	BRW3jWxj1b/ENv4G5OEyyulo3asfXCTg78ezMEF6xtZRXHsojTINGy4rqNscJugJFjqmSuBdA0q
+	r1VwTbAumDExJBt9yIc3od3AVvcNH/H79ToCy5sN5X69Ie/I8mkHyIv6HAAXHyGmjjpNgzs5wEL
+	B3I+VWxC+e5ploq8TWBSoIF0YzJfxfxKhBdhtrxlio/QWFkTXp/e8g==
+X-Received: by 2002:a05:620a:8386:b0:7c9:5501:80d2 with SMTP id af79cd13be357-7d22995ec82mr2171099885a.15.1749561165978;
+        Tue, 10 Jun 2025 06:12:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFrYOJLYnD20Za7bwTGNM2Zhi1hWiuol78eHZNm8ukeun1kZlhQxetU40CFKtTARDHt7p13cw==
+X-Received: by 2002:a05:620a:8386:b0:7c9:5501:80d2 with SMTP id af79cd13be357-7d22995ec82mr2171094985a.15.1749561165513;
+        Tue, 10 Jun 2025 06:12:45 -0700 (PDT)
+Received: from jkangas-thinkpadp1gen3.rmtuswa.csb ([2601:1c2:4301:5e20:98fe:4ecb:4f14:576b])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d25170615bsm696832285a.9.2025.06.10.06.12.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 06:12:45 -0700 (PDT)
+From: Jared Kangas <jkangas@redhat.com>
+To: sumit.semwal@linaro.org,
+	benjamin.gaignard@collabora.com,
+	Brian.Starkey@arm.com,
+	jstultz@google.com,
+	tjmercier@google.com,
+	christian.koenig@amd.com
+Cc: mripard@kernel.org,
+	linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	linux-kernel@vger.kernel.org,
+	Jared Kangas <jkangas@redhat.com>
+Subject: [PATCH v4 0/3] dma-buf: heaps: Use constant name for CMA heap
+Date: Tue, 10 Jun 2025 06:12:28 -0700
+Message-ID: <20250610131231.1724627-1-jkangas@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 1/4] dt-bindings: mmc: Add dll-hsr-list for HS400 and
- HS200 modes
-To: Ram Prakash Gupta <quic_rampraka@quicinc.com>,
- Sachin Gupta <quic_sachgupt@quicinc.com>,
- Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- quic_cang@quicinc.com, quic_nguyenb@quicinc.com, quic_bhaskarv@quicinc.com,
- quic_mapa@quicinc.com, quic_nitirawa@quicinc.com, quic_sartgarg@quicinc.com,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-References: <20250122094707.24859-1-quic_sachgupt@quicinc.com>
- <20250122094707.24859-2-quic_sachgupt@quicinc.com>
- <72b02fd1-5195-4bb0-b01d-5481b49a5680@kernel.org>
- <e0f43fc7-2f38-335d-1515-c97594a55566@quicinc.com>
- <18053999-c337-47e5-b6df-72c2be6a72df@kernel.org>
- <3b75fe83-85c5-f0d3-c5db-481ef133d6de@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <3b75fe83-85c5-f0d3-c5db-481ef133d6de@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 10/06/2025 15:07, Ram Prakash Gupta wrote:
-> 
-> On 6/10/2025 6:23 PM, Krzysztof Kozlowski wrote:
->> On 10/06/2025 14:07, Ram Prakash Gupta wrote:
->>> Hi Krzysztof,
->>>
->>> Thanks for your comment, The Qualcomm Engineer who initiated this work,
->>> is no longer working on this and I am taking up the responsibility to continue
->>> on this work. I have started to check this and will start with addressing your
->>> comment next.
->>>
->>> Thanks,
->>> Ram
->>>
->>> On 1/22/2025 3:56 PM, Krzysztof Kozlowski wrote:
->>>> On 22/01/2025 10:47, Sachin Gupta wrote:
->> Above timeline is interesting:
->> 1. Patch sent on 22nd January.
->> 2. I provided comments few hours later, the same day.
->> 3. Silence.
->> 4. Employee changes job.
->> 5. Five months later...
->>
->> Not your fault Ram of course, but above timeline is not a responsible
->> way of upstreaming patches.
->>
->> Best regards,
->> Krzysztof
-> 
-> my apologies for this, I will give inputs internally to improve process
-> for changing hands.
+Hi all,
 
+This patch series is based on a previous discussion around CMA heap
+naming. [1] The heap's name depends on the device name, which is
+generally "reserved", "linux,cma", or "default-pool", but could be any
+arbitrary name given to the default CMA area in the devicetree. For a
+consistent userspace interface, the series introduces a constant name
+for the CMA heap, and for backwards compatibility, an additional Kconfig
+that controls the creation of a legacy-named heap with the same CMA
+backing.
 
-Not your fault, don't worry.
+The ideas to handle backwards compatibility in [1] are to either use a
+symlink or add a heap node with a duplicate minor. However, I assume
+that we don't want to create symlinks in /dev from module initcalls, and
+attempting to duplicate minors would cause device_create() to fail.
+Because of these drawbacks, after brainstorming with Maxime Ripard, I
+went with creating a new node in devtmpfs with its own minor. This
+admittedly makes it a little unclear that the old and new nodes are
+backed by the same heap when both are present. The only approach that I
+think would provide total clarity on this in userspace is symlinking,
+which seemed like a fairly involved solution for devtmpfs, but if I'm
+wrong on this, please let me know.
 
-Best regards,
-Krzysztof
+Changelog:
+
+v4:
+  - Fix ERR_PTR() usage for negative return value.
+
+v3:
+  - Extract documentation markup fix to separate patch.
+  - Adjust DEFAULT_CMA_NAME per discussion in [2].
+  - Warn if the legacy heap name and the default heap name are the same.
+  - Fix DMABUF_HEAPS_CMA_LEGACY prompt.
+  - Touch up commit log wording.
+
+v2:
+  - Use tabs instead of spaces for large vertical alignment.
+
+[1]: https://lore.kernel.org/all/f6412229-4606-41ad-8c05-7bbba2eb6e08@ti.com/
+[2]: https://lore.kernel.org/all/CANDhNCroe6ZBtN_o=c71kzFFaWK-fF5rCdnr9P5h1sgPOWSGSw@mail.gmail.com/
+
+Jared Kangas (3):
+  Documentation: dma-buf: heaps: Fix code markup
+  dma-buf: heaps: Parameterize heap name in __add_cma_heap()
+  dma-buf: heaps: Give default CMA heap a fixed name
+
+ Documentation/userspace-api/dma-buf-heaps.rst | 11 +++---
+ drivers/dma-buf/heaps/Kconfig                 | 10 ++++++
+ drivers/dma-buf/heaps/cma_heap.c              | 36 +++++++++++++++----
+ 3 files changed, 46 insertions(+), 11 deletions(-)
+
+-- 
+2.49.0
+
