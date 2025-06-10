@@ -1,138 +1,125 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2CA29DB84
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17872BCF6A
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:58:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749560322; cv=none; b=aobjQad52VTgRMAqPZZ455hHADS9o44TF8zQz0SHrY8fYaZVhhxvQdNrp1MnOTGbW/SNFMA+zSJGsvRnWBldWI5jBr/J9XPKjJed8wLwfBKIojgByahch8V49YXNpVEHGBE2+PU6jSJLaRSMWVPH53j7VlP1Ssw27TvyTTz6wzo=
+	t=1749560336; cv=none; b=jn3qbYLekG8p7joZxTFiOIcMcjhaQFKRk9Vl6Ohf+BnAHazwONeFTeCyMiovPpTsQ0s4R6j80Ged3HikOppUM2KNDzhmsMW68i62sPv/W0ZxuK8Y33/kfDg0g3CFFlQxt8i2CkUBhEyArNts+nD0gpJpxFHD4T6Tai6NRwWwtAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749560322; c=relaxed/simple;
-	bh=fvOlakXshbmzakRbTJCpEkrKBi0FeURoiGYCIMLBZgY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uWKk9ohfoNu/rDU1h3WlKn7uKVM/HrnFEjK2pUBDMHi36oVIBymyFZlTCrNMAmnwobmFlXPPYRpMnWJ8cwaQNag1zZQ7gUZC92soIL+ogG1sqgyKr2mF1U4pFF4qCo/v4kCAmGdZH77CcwlCwDUCALxVJPtDnqubHOaniHW2DQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jyafR0by; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1749560336; c=relaxed/simple;
+	bh=05OIsI59Mrk5Bva8tD3Tj97OCifK3I9bavdc5XUI98c=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MOmf3RYRiilbPcuF4Kv0PzyHjUhYky+rRJpvgBPk8+vAmMq2B85KJDc6qBiETNyh3wA3DlXXQJHbgogcAP8j+t8888XCP5mwCjz/gUwKLZC0ms8bQM8HIxAUdx7IiA85g3nd3QHLemqAoh4nCn7lccZfSpN2Pe3UTt7RRn8WrjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=UNPnTrAN; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jyafR0by"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-310447fe59aso52380501fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:58:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="UNPnTrAN"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so42252535e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:58:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749560318; x=1750165118; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PuNZG9GzYspsHj115f3YdhRzMM0n4xwJDNOA1CoppcQ=;
-        b=jyafR0by1Y9K7W4jDncALqMEbQOcaoK26EP6AM53I5ZkWaQnPCd25LhBfdlKzzbkLA
-         SCo73lXvl8CVLEuHU5QEA7ozirSTnxrT35mdWopiowhSL1nsUiSwMf8OlFX1Yj1sPHPk
-         stzEawwtiyAV4S66Ts9YjNXwYu7yyjxe8q4U8=
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749560333; x=1750165133; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5x+mnEUir4fkDc+MLWw6JgW3TRK970S3tDGL3/yrdqE=;
+        b=UNPnTrANHP+tbU4brgORZEYbqIkIZFC/oOQYz/qxyRmvB+DuTPgiyc2MEmeigRirok
+         DF7V47AxfOH6pvGhwX0CaXwXDdzR+n4VOG+wRqgozGLWWMsx0RSh1n/GZIfjFry8/xYV
+         /74v6k54Yi0Pj24XTZmk1svoxbvdCJA9TqCawoCdqpLgVHWKVIbmYefV+QzjlAVnzUHu
+         2OoLXLrCScMCXUvFkwDeJuh0Pm+Al1JfTahbZSPCWtRtE9L1QC/UjQWYkXTlq4hgRP/t
+         VhRyvG5IMSz08FTnhJvi4vHQMKqSt/G/u7Hv3ZEkeDze/JOwR/0enZTeHjRZghTfpyr5
+         Dw9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749560318; x=1750165118;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1749560333; x=1750165133;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=PuNZG9GzYspsHj115f3YdhRzMM0n4xwJDNOA1CoppcQ=;
-        b=dYw3UPnuF6lZEYkv5gn1fpPXYc1Ff5hZ+nOHJKqpt+DyfkzTJa++wFdnGWCIPHVOiC
-         7Kjw96e0GmfAY1EF/fzWMMzuKNa+6INXk4i3Mz4awBjUCyQERcV/Pmm4JyS1Rarb+QBh
-         RLvi+kU7cPTsvcRticFH/zjGeMt9g6U/BX27xRemOpAD2TGAl6lfjuptNx3+omuL6caG
-         DDyD/AQ+/I6HzcE6Y7xHFeYlgF4oX795r3PuCdUL8J13kaXZYYleBm6O8igXO4M6rRRV
-         0QBR/qcuUI/4M3b3dyd0k4+XY+lkv3KS09glQgBsnqWAhZ44/ZNHJd/b8QpJ+/cJwmUM
-         Zt+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVUo+TDDNq2LXl8chZYvEcLUogtTJO8xhajJYTmDJDe7CbzvK9d3uOqVLXCI7Gnzbyp02KVjltxAyUQF1Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxl0D50Tyl5lbxluEgOIWrIEXqBDVLnJA54C4dn83tnGWGcSA0M
-	nmTmgzBy35W3qGri1xkjvAl6sAvhOSF4pRjnTVRqDveY4SKjyIeagwxae1mP0apDpt/yks0KqYQ
-	cYck=
-X-Gm-Gg: ASbGncu8yGe8m1Pi1Go/PxN13LVU4F+a9mrkrZCAEwGdwuLnx24N51H0RVBOV6OLyg9
-	awlJbL7Qp6ujuXIcIHDXldlCh132lakgJvrZ0BqikW3jCzLcGA1+JTn/vE9cYRNy7eibezcxRrn
-	vtUMnW1CAChs3ArgVI6BwgwWr5aGkQ/EKWbksCQZK9103mVcv8KOMMYK4jBT4CfysmMCTR6GD8C
-	CjqeRea2P34Qmmxmtsjn80Nd6y3oeULOJl2QgFELc9yOVb++6utmzY/zRJcN7lgnPIjBbvtaFd+
-	fxq/xlHZwqGoP0+wroiOxeuSmTz12sHFzOehl6kw86A0HPZA4LWhldJ8UziJ8vjQNTWKwia/LoS
-	TyL445EFwMVO3ZjJwBUtoeMDc
-X-Google-Smtp-Source: AGHT+IEtMx4r93OeG2RWFhkjCHpczSO2t+ZTGsJxP2ukgZGfrEVFRdhRPuWvNPViQoh/MyHJP2rXgg==
-X-Received: by 2002:a2e:9c83:0:b0:30b:f0fd:fd19 with SMTP id 38308e7fff4ca-32adfc27738mr30523581fa.16.1749560318128;
-        Tue, 10 Jun 2025 05:58:38 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32ae1b36c8fsm14881701fa.45.2025.06.10.05.58.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 05:58:37 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54e98f73850so5797935e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:58:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUViPhoFMQqEVdEqwLw3er91QzU0Pv0NDkzIkppVawywRwK0we9iG9FbBoNW0cK5YTLNvlqAaaqWZGZagU=@vger.kernel.org
-X-Received: by 2002:a05:6512:3ca4:b0:553:2100:69c5 with SMTP id
- 2adb3069b0e04-55366c38f13mr4292643e87.56.1749560317177; Tue, 10 Jun 2025
- 05:58:37 -0700 (PDT)
+        bh=5x+mnEUir4fkDc+MLWw6JgW3TRK970S3tDGL3/yrdqE=;
+        b=hB50R1zpkUSNWKhf7zfeq6Xa2LS/Ie5V51/x1kACIndElP8D2SnURjMAGCMH1gvdiw
+         HV1NiLYYz6YZ2OnjPP5JuAehTbB7m5cJUqbG2jwtJcQepQkoxSNgwr4AbFDzcWeStXGr
+         D2i1tn1MJ47qLlAlQsniS6AMOPgnvhREBiIT07NolxL+efVgRSGJab7Djo5xR7DvcTlt
+         9c/oV+D2nyNUungXihYH9YlUJyZrb/GI4pgA9JSF6ZmsdiAUtTWYIrDnspuWcBBq36fH
+         Rdu7lck/pM7noxKOasOdvFmI2qWrYGR53IYfIxHabDIjK1+PO5b98KHz3i3MIoJxKKWY
+         VRoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVAi9RdVz/z/XDDxsAUBCi3rX/KIGITF1QvCAAaP6Cf08ROkGLyy9cXCjAEkQgQnt+TUQtSTMDeOPxubIU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnlmwTVUWWUyrGAueBVQjir8R+ZBB0MmWh9QI0qWjBW+sZbD+e
+	8o64o2djNAdwO9fjzp3ZjNl87N3RGIxvFdeXOA2XA4DxA1anwlKjQayg73T6LWIxJZ8=
+X-Gm-Gg: ASbGncs/ZWj5eE4OJf94JmyWOQbWDqWNFvjyzTaWwwz0u/nL+YIlB3tK5BWlF5d8Lmg
+	LPaqTo23qtTTX9YDaQw9+r0lEVc0MpYV4DA71uPK2KHJiecor+wHxzxmTmBmyONgs4sNF1rjkNz
+	1YVq8VWdkJrpl3Cltdxk3nJz5AiwlLUZzQscFGXaPOW/8XUMGgZYeaioqboNY0TBJZEP56D6vZ/
+	sFp2OEg6dDSNkOaI08cjbB5z6H7rbRnpMSPl1dZNtNsibbWeb3+LXK8EJ52m33ZRpv3q/0xrveV
+	9K/uruMke+4+KklpWA+0ZIcSq1epCTMXgOhAFjNpBKGEWyX5Zq1srg==
+X-Google-Smtp-Source: AGHT+IEDGhvv2nDonOgnsKogzyq+swTtYxyvrREWxOsZO7ZfnDXOt861Hu1/sqcb1L9f+E/RkUy0oA==
+X-Received: by 2002:a05:600c:6388:b0:43b:c857:e9d7 with SMTP id 5b1f17b1804b1-4531d6fdab8mr27771825e9.5.1749560333059;
+        Tue, 10 Jun 2025 05:58:53 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:4d:e52b:812d:eb7c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45209ce17f9sm143671135e9.11.2025.06.10.05.58.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 05:58:52 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 0/4] pinctrl: intel: use new GPIO line value setter
+ callbacks
+Date: Tue, 10 Jun 2025 14:58:46 +0200
+Message-Id: <20250610-gpiochip-set-rv-pinctrl-intel-v1-0-d7a773ff864e@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250610124111epcas1p18fe9fd8ab47a424c2143d4e2912a8179@epcas1p1.samsung.com>
- <20250610124107.37360-1-yjjuny.lee@samsung.com>
-In-Reply-To: <20250610124107.37360-1-yjjuny.lee@samsung.com>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Tue, 10 Jun 2025 14:58:25 +0200
-X-Gmail-Original-Message-ID: <CANiDSCsaQCJCzfjjnMvVRAde0ZrMZC753y7m2MPQJuK=dVqQBQ@mail.gmail.com>
-X-Gm-Features: AX0GCFujERdSe9Qt4dtGaH_A96BZ3xcvIQGmZPoA67-Hn8NMMl0VJUbIdlsL3To
-Message-ID: <CANiDSCsaQCJCzfjjnMvVRAde0ZrMZC753y7m2MPQJuK=dVqQBQ@mail.gmail.com>
-Subject: Re: [PATCH] usb: uvc: Fix 1-byte out-of-bounds read in uvc_parse_format()
-To: Youngjun Lee <yjjuny.lee@samsung.com>
-Cc: laurent.pinchart@ideasonboard.com, hdegoede@redhat.com, mchehab@kernel.org, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAYsSGgC/x3MQQqDMBAF0KvIrDuQBG3Vq5QuJE7iB4lhEqQg3
+ r2hy7d5FxVRSKG5u0jlRMGRGuyjI78tKQpjbSZn3GCe1nDMOPyGzEUq68kZyVfdGanKztL712S
+ Dm5axp3ZklYDv/39/7vsH9i9Hjm8AAAA=
+X-Change-ID: 20250610-gpiochip-set-rv-pinctrl-intel-e4c791f29a84
+To: Mika Westerberg <mika.westerberg@linux.intel.com>, 
+ Andy Shevchenko <andy@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1217;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=05OIsI59Mrk5Bva8tD3Tj97OCifK3I9bavdc5XUI98c=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoSCwIneW7R5vtD6ViY12SUc5xejQd1zdzdl6kq
+ JkcgsdGZ8aJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaEgsCAAKCRARpy6gFHHX
+ cp6qD/9MjPEZOmQOG41wPugteoUMZCe9ji/YPVIB6hjg7fEVeqvtgIHdllHZ8TCpTjzpR3t0pFk
+ JzCJnYI5d9xlRpRT+mvtcL5NDADpPBF9AARaWSNhhSC31Oh+4y+I/4buapM/IA+eWxgKT2jW9Dk
+ RNO1JNnmDWkShDyf0H0NetzDjQbKZ7GtFGORGjpmyXmHwX8L4PHFG7h7uFx4dp0at2iFNRTfFhM
+ FZGvuNpR/rcf5wm+ScScdRqDbmK/+lGhp5f9VIQH1jvgPcks897XRiQpFdBpYHWs3jQrizqt9R5
+ q2ZWeafbI3un1twJ3DxP0Ui7W9iCE/nHtRFpYY8mPxcHDl82Hjg+tMCE/ZgfSQ6YsEFe29Sgjij
+ Y90NMpeZ0shXHExstEBdEQi7Fe39TBRLT1em0Z25LwaP2kQnYR/+GaGd4BBc/ZOWdCEjk7UfFJM
+ thEGGx15Gmm23lsHSXM4rjE2DSiKHISzqUeBmZYTFlOEPnCqyh+rNFkbCPM68TGvVmPejB1iOAp
+ NmF494nukwcKtVrh/JG5+lMOHVr8+ITVMrvFth9fvtZNfuJIW3Pdjpw/USJ9iT/vnEuyaetJat2
+ bC9GEo8OVogqBJHcpS8kNV8LcIeSXFJzmvKYRDKHeYw0m7U6/6PhkLP+BD4+MXjTDBvEUoVYof1
+ VT10eaWljz+Sfig==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-Hi Youngjun
+Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
+values") added new line setter callbacks to struct gpio_chip. They allow
+to indicate failures to callers. We're in the process of converting all
+GPIO controllers to using them before removing the old ones. This series
+converts all GPIO chips in intel pin control drivers.
 
-You still miss the v2 (v3 in this case). and the trailers.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (4):
+      pinctrl: baytrail: use new GPIO line value setter callbacks
+      pinctrl: cherryview: use new GPIO line value setter callbacks
+      pinctrl: intel: use new GPIO line value setter callbacks
+      pinctrl: lynxpoint: use new GPIO line value setter callbacks
 
-In the future you can use the b4 tool to take care of most of the details.
-https://b4.docs.kernel.org/en/latest/contributor/overview.html
-It has "dry-run" option that let you review the mails before you send
-them to the mailing list
+ drivers/pinctrl/intel/pinctrl-baytrail.c   |  8 +++++---
+ drivers/pinctrl/intel/pinctrl-cherryview.c |  6 ++++--
+ drivers/pinctrl/intel/pinctrl-intel.c      | 19 +++++++++++++------
+ drivers/pinctrl/intel/pinctrl-lynxpoint.c  |  6 ++++--
+ 4 files changed, 26 insertions(+), 13 deletions(-)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250610-gpiochip-set-rv-pinctrl-intel-e4c791f29a84
 
-Please do not resubmit a new patch to fix this, only send a new patch
-to fix more comments for other people.
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Regards!
-
-On Tue, 10 Jun 2025 at 14:41, Youngjun Lee <yjjuny.lee@samsung.com> wrote:
->
-> The buffer length check before calling uvc_parse_format() only ensured
-> that the buffer has at least 3 bytes (buflen > 2), buf the function
-> accesses buffer[3], requiring at least 4 bytes.
->
-> This can lead to an out-of-bounds read if the buffer has exactly 3 bytes.
->
-> Fix it by checking that the buffer has at least 4 bytes in
-> uvc_parse_format().
->
-Fixes: c0efd232929c ("V4L/DVB (8145a): USB Video Class driver")
-Cc: stable@vger.kernel.org
-Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
-> Signed-off-by: Youngjun Lee <yjjuny.lee@samsung.com>
-> ---
->  drivers/media/usb/uvc/uvc_driver.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-> index da24a655ab68..1100469a83a2 100644
-> --- a/drivers/media/usb/uvc/uvc_driver.c
-> +++ b/drivers/media/usb/uvc/uvc_driver.c
-> @@ -344,6 +344,9 @@ static int uvc_parse_format(struct uvc_device *dev,
->         u8 ftype;
->         int ret;
->
-> +       if (buflen < 4)
-> +               return -EINVAL;
-> +
->         format->type = buffer[2];
->         format->index = buffer[3];
->         format->frames = frames;
-> --
-> 2.43.0
->
-
-
---
-Ricardo Ribalda
