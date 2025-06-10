@@ -1,160 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1B1211A1E;
-	Tue, 10 Jun 2025 15:42:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467FA2367D0;
+	Tue, 10 Jun 2025 15:42:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749570121; cv=none; b=LGcsF3ECnir8Ul7U0Gsn1hhkB03TrzhmTvqmunjwFnbNuI9uLZHbfniv8xqGEYqPgvmPOW9wJblRN5iRtuSenKQhetOQJXRFTfQP235mrWRCwUIQUI/3V7RX4FQk37JuGoXr2pKPc412XZmjBuZs5NeO4GVTTJpGsOq8Td2cqCc=
+	t=1749570122; cv=none; b=DahubWOUuOvxZ/mWB9vm++bIcbIPjDP0Esw3z7kZNMIqVYUtclp5Z9BurZ/4YSuMAg6OsXBePZm0w/0GPlKGOjuCvuRNx+6LRIViEAPb/iZA22G7godoKt1X99WgzG1fjrCdn1kkJK91Wg/tmXGqkzigjsrVCLI41po8rNk5J1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749570121; c=relaxed/simple;
-	bh=eEXAvPCSdlDVm0vDSvoWviXhEnVX240x3wlBNcfcZfU=;
+	s=arc-20240116; t=1749570122; c=relaxed/simple;
+	bh=OCX+PMXOnofivFIKf5B4TrKIDiVPaorIpAV/YEeu6NA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qTwfQqvxuRcZKP+0gZgLOEMRjXdGHioGVIVW59ws0CH/XtzAh1ZKkFjIU4mv3qfIVkTnbpowJTyM+6ME2as4V/V+4Vod57L077tNyK4UXtFEEpczEusscz5mzN4TT+VXkJlr3g9HY48WIvEAA9WhhQx+Mi/sO/MNXgs1hPEHJsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mSJhr4RF; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fwujv+nL4YRZxc3PZpHl+2m2gkHi2gDgRXapcNVrZv7iI18Mu++wuONbqaLuLx1ILqqYJRky9rCavCoqyMrfQ/OSj5VzcL1Lrx5UmnPxGDnTPZUZFByAqglFDpdz1j855oAZxY5YGdPsfk1trAnpb5EXBpI0pbMuwtWx/fzqFYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qpKPn/hX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mSJhr4RF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05FE7C4CEED;
-	Tue, 10 Jun 2025 15:41:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qpKPn/hX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98718C4CEF0;
+	Tue, 10 Jun 2025 15:42:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749570121;
-	bh=eEXAvPCSdlDVm0vDSvoWviXhEnVX240x3wlBNcfcZfU=;
+	s=k20201202; t=1749570122;
+	bh=OCX+PMXOnofivFIKf5B4TrKIDiVPaorIpAV/YEeu6NA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mSJhr4RFHyNxXQhRIp9c3TAV+6fFyMjQg5SXsXlsXfcpWbOjM0IA1yYP6xKsRIg9m
-	 mwGDxWwZWgQHWA3m0BcFdX/xgQ/gegOCprIFlx9JbwhsILbu+Q1VHBCNV4qEyxLUAW
-	 ZzsbLVCbz/oap/yxMhm+wx5g4etdJ6kB8kg1McVL3tsxudzm3iaYtc01gFHtrYHWWG
-	 WQwWUUu5/SBWmd1126H4iccoDYVWWSN3wAX5t+tbvRY+dysYPH5Lm/Ra/cf37GAoEu
-	 VT2PSz5zFQ+5I8Ic1qVgo8LFQmK1YHcep6KdbhBHcPJDs9vMw5QQ1cn/osNGVpk6Qw
-	 b1ZVdO9DdjRow==
-Date: Tue, 10 Jun 2025 08:41:58 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Joe Lawrence <joe.lawrence@redhat.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, live-patching@vger.kernel.org, 
-	Song Liu <song@kernel.org>, laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
-	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
-	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
-	Puranjay Mohan <puranjay@kernel.org>
-Subject: Re: [PATCH v2 59/62] livepatch/klp-build: Introduce klp-build script
- for generating livepatch modules
-Message-ID: <rizzd27l4t4yyvkzupn7ngjtfz7rzajr7cfsonmmyijhelrxv6@zp4uav5bwejl>
-References: <cover.1746821544.git.jpoimboe@kernel.org>
- <10ccbeb0f4bcd7d0a10cc9b9bd12fdc4894f83ee.1746821544.git.jpoimboe@kernel.org>
- <aEdQNbqg2YMBFB8H@redhat.com>
- <7uriarhovgf3fp7tiidwklopqqk34ybk6fnhu6kncwtjgz2ni6@2z7m42t4oerw>
- <aEeTAa9qwCSdK9AD@redhat.com>
+	b=qpKPn/hXTpMKHurpAOYuvdyFWF2RKykP22wfL62XAqvyfVhTvhhhMjdqLh86MKBzM
+	 JtDc746E9N3lbyUvO5In6rn6/5TGFozVl7pVSYHRPsJwz43uiPjAF3JUndZjDUveFS
+	 z8hqpNCY9qB2XTPAjvralMFelri/ZJ8VgM/WYYhXSxmSPMUVYRetzMTsT7s74pcmYt
+	 Eq/3qMMYZCHJw6AZtA0XRU4yPu0mItmnCjO8oM4aAwKcRnOH2xitVfbWl+khIC03wH
+	 WQvj/oWSLTyBY3dOQmsnDZNAdVDUQAGcSSzjtWkOsAicYMlI82HyyDlE3nioLc068R
+	 W4Flwz4eYubFw==
+Date: Tue, 10 Jun 2025 17:41:59 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Anusha Srivatsa <asrivats@redhat.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, 
+	Jagan Teki <jagan@amarulasolutions.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Chen-Yu Tsai <wens@csie.org>, 
+	Samuel Holland <samuel@sholland.org>, Seung-Woo Kim <sw0312.kim@samsung.com>, 
+	Kyungmin Park <kyungmin.park@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH 2/4] drm/panel/samsung-dsicm: Keep up with refcounting
+Message-ID: <20250610-wildcat-of-marvelous-modernism-e4ce27@houat>
+References: <20250604-of_drm_find_panel_part1-v1-0-c632e12e131d@redhat.com>
+ <20250604-of_drm_find_panel_part1-v1-2-c632e12e131d@redhat.com>
+ <20250606-radical-rigorous-buzzard-ca09cd@houat>
+ <CAN9Xe3Si6XwsGOesNKOx9M8PjBkMG2paWXV5gvAnujWih6sqtA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="zwi57rvdrnu4faa3"
 Content-Disposition: inline
-In-Reply-To: <aEeTAa9qwCSdK9AD@redhat.com>
+In-Reply-To: <CAN9Xe3Si6XwsGOesNKOx9M8PjBkMG2paWXV5gvAnujWih6sqtA@mail.gmail.com>
 
-On Mon, Jun 09, 2025 at 10:05:53PM -0400, Joe Lawrence wrote:
-> On Mon, Jun 09, 2025 at 04:59:37PM -0700, Josh Poimboeuf wrote:
-> > On Mon, Jun 09, 2025 at 05:20:53PM -0400, Joe Lawrence wrote:
-> > > If you touch sound/soc/sof/intel/, klp-build will error out with:
-> > > 
-> > >   Building patch module: livepatch-unCVE-2024-58012.ko
-> > >   ERROR: modpost: module livepatch-unCVE-2024-58012 uses symbol hda_dai_config from namespace SND_SOC_SOF_INTEL_HDA_COMMON, but does not import it.
-> > >   ERROR: modpost: module livepatch-unCVE-2024-58012 uses symbol hdac_bus_eml_sdw_map_stream_ch from namespace SND_SOC_SOF_HDA_MLINK, but does not import it.
-> > >   make[2]: *** [scripts/Makefile.modpost:145: /home/jolawren/src/centos-stream-10/klp-tmp/kmod/Module.symvers] Error 1
-> > >   make[1]: *** [/home/jolawren/src/centos-stream-10/Makefile:1936: modpost] Error 2
-> > >   make: *** [Makefile:236: __sub-make] Error 2
-> > > 
-> > > since the diff objects do not necessarily carry forward the namespace
-> > > import.
-> > 
-> > Nice, thanks for finding that.  I completely forgot about export
-> > namespaces.
-> > 
-> > Can you send me the patch for testing?  Is this the default centos10
-> > config?
-> > 
-> 
-> Yeah, cs-10 sets CONFIG_NAMESPACES=y.
-> 
-> The hack I posted earlier abused modinfo to get the namespaces.  You
-> could just dump the import_ns= strings in the .modinfo section with
-> readelf like (lightly tested):
 
-Sorry, I wasn't clear, I meant the original .patch for recreating the
-issue.  But that's ok, I think the below fix should work.
+--zwi57rvdrnu4faa3
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 2/4] drm/panel/samsung-dsicm: Keep up with refcounting
+MIME-Version: 1.0
 
-This is basically the same approach as yours, but in klp-diff.  It copies
-from the patched object instead of the orig object in case the patch
-needs to add an IMPORT_NS().
+On Mon, Jun 09, 2025 at 10:45:35AM -0500, Anusha Srivatsa wrote:
+> On Fri, Jun 6, 2025 at 7:03=E2=80=AFAM Maxime Ripard <mripard@kernel.org>=
+ wrote:
+>=20
+> > On Wed, Jun 04, 2025 at 10:45:11PM -0500, Anusha Srivatsa wrote:
+> > > Put the panel reference back when driver is no
+> > > longer using it.
+> > >
+> > > Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+> > > ---
+> > >  drivers/gpu/drm/bridge/samsung-dsim.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c
+> > b/drivers/gpu/drm/bridge/samsung-dsim.c
+> > > index
+> > 0014c497e3fe7d8349a119dbdda30d65d816cccf..3667855ff0d6d1b608c579573de65=
+7af7fd14388
+> > 100644
+> > > --- a/drivers/gpu/drm/bridge/samsung-dsim.c
+> > > +++ b/drivers/gpu/drm/bridge/samsung-dsim.c
+> > > @@ -1748,6 +1748,7 @@ static int samsung_dsim_host_attach(struct
+> > mipi_dsi_host *host,
+> > >                       dsi->out_bridge =3D ERR_PTR(-EINVAL);
+> > >       }
+> > >
+> > > +     drm_panel_put(panel);
+> > >       of_node_put(remote);
+> > >
+> > >       if (IS_ERR(dsi->out_bridge)) {
+> >
+> > Explaining in your commit log why you think it's a good idea to put it
+> > there would be really nice. In particular, it looks super odd to me that
+> > you would put the panel reference in attach.
+> >
+> > Also, your patch doesn't work, and you have a reference inbalance. You
+> > have one taken by the panel driver, put in remove. You have one in
+> > drm_panel_add, put in drm_panel_remove. Which reference do you put here?
+> >
+> > This applies to your other patches too.
+>
+> Yes, I should get the ref in of_drm_find_panel() to put it here. With
+> that said, all callers of of_drm_find_panel() should be converted
+> instead of the small batch that this series addresses.
 
-I also experimented with reading the namespaces from Module.symvers, and
-then adding them on demand for exported symbols in clone_symbol().  But
-this is simpler.
+Then do the of_drm_find_panel() conversion before, because here you will
+free up the structure despite some callers still having a reference on
+it.
 
-diff --git a/tools/objtool/klp-diff.c b/tools/objtool/klp-diff.c
-index a1c72824f442..3139f1ebacce 100644
---- a/tools/objtool/klp-diff.c
-+++ b/tools/objtool/klp-diff.c
-@@ -1490,6 +1490,51 @@ static int create_klp_sections(struct elfs *e)
- 	return 0;
- }
- 
-+/*
-+ * Copy all .modinfo import_ns= tags to ensure all namespaced exported symbols
-+ * can be accessed via normal relocs.
-+ */
-+static int copy_import_ns(struct elfs *e)
-+{
-+	struct section *patched_sec, *out_sec = NULL;
-+	char *import_ns, *data_end;
-+
-+	patched_sec = find_section_by_name(e->patched, ".modinfo");
-+	if (!patched_sec)
-+		return 0;
-+
-+	import_ns = patched_sec->data->d_buf;
-+	if (!import_ns)
-+		return 0;
-+
-+	for (data_end = import_ns + sec_size(patched_sec);
-+	     import_ns < data_end;
-+	     import_ns += strlen(import_ns) + 1) {
-+
-+		import_ns = memmem(import_ns, data_end - import_ns, "import_ns=", 10);
-+		if (!import_ns)
-+			return 0;
-+
-+		if (!out_sec) {
-+			out_sec = find_section_by_name(e->out, ".modinfo");
-+			if (!out_sec) {
-+				out_sec = elf_create_section(e->out, ".modinfo", 0,
-+							     patched_sec->sh.sh_entsize,
-+							     patched_sec->sh.sh_type,
-+							     patched_sec->sh.sh_addralign,
-+							     patched_sec->sh.sh_flags);
-+				if (!out_sec)
-+					return -1;
-+			}
-+		}
-+
-+		if (!elf_add_data(e->out, out_sec, import_ns, strlen(import_ns) + 1))
-+			return -1;
-+	}
-+
-+	return 0;
-+}
-+
- int cmd_klp_diff(int argc, const char **argv)
- {
- 	struct elfs e = {0};
-@@ -1539,6 +1584,9 @@ int cmd_klp_diff(int argc, const char **argv)
- 	if (create_klp_sections(&e))
- 		return -1;
- 
-+	if (copy_import_ns(&e))
-+		return -1;
-+
- 	if  (elf_write(e.out))
- 		return -1;
- 
+Maxime
+
+--zwi57rvdrnu4faa3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJQEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaEhSRwAKCRAnX84Zoj2+
+dhb2AXd6k/XL3u9/OK5zj97VWmDQziONGHEsb3bDL6hJZj6l6EtMtZ9IDIPocg8T
+0UuXCwGA01sHkSg3AqDJPDYt8mzstpL8wcd8zKh9oy1niBidaedsQ6I+2mKYzaTS
+VdThoLbe
+=nzew
+-----END PGP SIGNATURE-----
+
+--zwi57rvdrnu4faa3--
