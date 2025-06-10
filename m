@@ -1,296 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289EC21019C;
-	Tue, 10 Jun 2025 17:41:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C8E21019C;
+	Tue, 10 Jun 2025 17:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749577312; cv=none; b=HrQhh16ogcgSt/m/739Mh04VCJvqKEdnLc6GaDuJCrWyXvYcvvq+Akjagu++6TL6lqbDwtWJMjhYk/j3qxV1HhYRDFhC1F4ZZjPtmp2JUqkgESLLyQZ/2qCiOZrQXGh95cCIgDFFYDE1Nw9eCqntKv/t15b//tB0A0np5lW9s80=
+	t=1749577411; cv=none; b=g69oE/9EN4/S46OxPNoJzZHBt/MNlsbbgG2lS4julQNtuyG3hDzAGjZXUIrQuNCA4Cx0RuCeph/3a4/rCeOZP/3abN3qzQII/AZxqu+PxU8/X5QCzI+epryUb+fEBo62VBQVYkHQf9otW1v0oXgTOmg6jrHWa9IVHrO+OB+D2sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749577312; c=relaxed/simple;
-	bh=sRkw8ZsJ4kvpK7qB5Fr0oq2ZSj7pwh8y4ZDPoB3jyFk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ubx/DOPQQUxdrl0ya76t+i6ptxy/Q7B/yKesul1DPYRUA6u0xSGSt3uEYymwiNC8p5QK6fTuZ84d+gCavq6T1HZtQUzjW9hAsbkJRETROI9jzSQjzGh7Px9gF6bblVFhGEKzw9/dZP5IeOT/yqaZq7gg17F6cRHtKNejz1MbjFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UY4DIFWU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749577411; c=relaxed/simple;
+	bh=c5ruOmRMSA4MrtdljcdxTfshX30/2hgrToE3LK6is04=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=DNmxYA4viKyZ1G+C4uIyDignJSs5nXxWQi4lln+wbWZq8PGITnrgjdZNWZOIhj+hY9LZcIN1BOMklghHdtBMRJxCct2JRj5QIE+e+ScumgaznZrSKKGwB2Llcc0Xq9EiwrHx4oaxKyescirKrD1lqMlPy6V2HJtj5zwEnXbI0jE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VHAioZlJ; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UY4DIFWU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFBD2C4CEED;
-	Tue, 10 Jun 2025 17:41:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749577311;
-	bh=sRkw8ZsJ4kvpK7qB5Fr0oq2ZSj7pwh8y4ZDPoB3jyFk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UY4DIFWUk+S8Rlf6pVsaugp9+cz3GLQVU9yPCEPzUWsF8vKmL3sttS6Ir1DrALavT
-	 NO1/WTOseFT9whVFWayqR++eY/GAai+QX0HMX6foi+ARDlEdk2QQTNWk3/M+Zl+hfy
-	 AmjS63rB0IK7QVH8wqJjtWRtAmeanoZgyxl9Nx1RwwOScRRTY66c7MTvL2lfofo4TH
-	 31sbXjmpzQnyaX054hfs9hG6pC5DvWYiFsZc2muZMGexBMYLcTa1ZrLZtA7S09Xxcs
-	 vVKbxOD4lDdsZ2EBB9AHz1Nlpm31+NUJu1ToHjCifkfy2brxHeczg9BF+RT4d5RfST
-	 luFfQy2iHStaQ==
-Date: Tue, 10 Jun 2025 12:41:49 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Rameshkumar Sundaram <rameshkumar.sundaram@oss.qualcomm.com>
-Cc: bjorn.andersson@oss.qualcomm.com, Jeff Johnson <jjohnson@kernel.org>, 
-	Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>, Mahendran P <quic_mahep@quicinc.com>, 
-	linux-arm-msm@vger.kernel.org, Jeff Johnson <jeff.johnson@oss.qualcomm.com>, 
-	linux-wireless@vger.kernel.org, ath12k@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] wifi: ath12k: Avoid CPU busy-wait by handling VDEV_STAT
- and BCN_STAT
-Message-ID: <v44xnvqxjdqtonpfvnn6iblzmchgxbhtj7t25dhaxcimippba5@rbjf5roopwdx>
-References: <20250609-ath12k-fw-stats-done-v1-1-2b3624656697@oss.qualcomm.com>
- <c2d138ba-5b08-4daa-95b3-e1f95f05938d@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VHAioZlJ"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-312e747d2d8so83473a91.0;
+        Tue, 10 Jun 2025 10:43:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749577409; x=1750182209; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IToNvwe59mraE+d1bXdC19V0St+m5Lm8BJo/R/7MkmY=;
+        b=VHAioZlJe9fnOl0LR0JMfiiC32qMcDMC5+B9SRvrC3S4rW0EFY88fyP2YtLL6p5Q9i
+         XpJA6Dz5+sGpMB8tA1O+CkR2LCExq1HJzfJNAbeHQXlZsv93e8YQjX1iP8xK+eyze1BW
+         d1zf74tOElm8ohAUXlBAR6imfN6JfsqnQ/WCkLCqTy1euCm4MmyiHkttjr4XcdVtybec
+         0tRGZJ9YvFrQBmZfvd9YIqOwRFOZIeM/Fw57E6whyilPcEZ0SdbBi3YMYX258SKjMh+1
+         3DNN/EACfO6w+xz3KUVRp1ry8LrxEYQy+uLg8iZyIkCHAwxmzbAFVklt/iazHoHvXswH
+         yWTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749577409; x=1750182209;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IToNvwe59mraE+d1bXdC19V0St+m5Lm8BJo/R/7MkmY=;
+        b=F3KR2wCtsIayzt1L1CRy59qwbyrQfRxsol4KYMrcY4n+wUh3XasZDKQuzXlF/adNTY
+         ko76bkVPHSWhc8XSW/jfWkknQOUS+tI0LGGAzAqLcUfjBvJ9kfgktoLWKQ1w/EqA8qUg
+         qQkWORePWyEEBzeVeMAGxMLBMcQQP1h5cSrn64G+qMddf+E0fR6ZgUDZpXtKOMKajls+
+         ieFUfS1M2A0I7QY8kUhCmyJeQw6E1lgfuFezmUW5QtAQgqXyD4fmAQWLeZbvkmsF9EHC
+         RbZcFnYseQmFILt+BVe8ZXr6EwL2EAFUodskghe6/cYwLEwfBSsnLnXueWVxSxetqm4v
+         jT6g==
+X-Forwarded-Encrypted: i=1; AJvYcCULxylSWVCPw32+AaXC/aiA+9Ke1vI8qm7vT6X9PKYAVm7kVULdbHj8C3FfEjCBqa0wzCVZKDRs5fSA@vger.kernel.org, AJvYcCUQIonWsdhgD32sN+wtM9U/xsERp6kRSK2WCd68lXaxBQJSqAtYy03uoxklfwOnHxL6ic3dvirbTgjQXk6s@vger.kernel.org, AJvYcCUen6Hd9mEy/bzKTGXK8Pww5U28j7nw1gh/NjfKpXit2XBjXECdl36yL/R3doePefRt3/RGG5d7HgFM@vger.kernel.org, AJvYcCXatxXiwZX0vrF9GjvyHQcdykzzMGtpyWfkyaZGF33/hHPhcw041lyv+1HQ1BPKVKJPjK/vVxLWU4O04A==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjZqG2CxWblAWpQU6MLrKBdMhGuqyhJQuiHRJUdNzb0SPeZeLp
+	PSwVAYU6hKjBiibrJBzz89a6wKfLjqgdfKmbTzuyAlBgbeiyTYC9qRZEvCKOow==
+X-Gm-Gg: ASbGncvJU1wP092gCBjMEE4oOBLnzAuiPYJ3EEWyU+xDJy68n/B4qifFG9R7X4EjkSU
+	03xM3BqfT2YTeNfhuiG0f3Ig9gISRMLuVVGKJTZnylOOQxu8WcpyEUsCjlq+Kvi0i/U6AjFjNM+
+	lh5kwJkAQId/HynqvZDB5/q++5ePyV0sX5ihcYY/gFYdXHve4x3H/+XPZw7OXOowy7OABjyW55D
+	NqfBVl7HlhoecJlQdywQFyyNRKVwrsEYadoBA23DDS1vJD0vlc7FR2uWemh14bWYLRck8N8VwIs
+	wdrtXS1iSqJbOESWbcRn6PWXj9KE2MtrmoAIYMErXpsKWvvVftF0F8Ob0VKXO2ckstWqxyEi
+X-Google-Smtp-Source: AGHT+IHCQ/s3PZMtUHf6l1NsQrkq7qT/lplwvers3sTczAiKEfMEFba28BOY326bowDBL+VPLEV17A==
+X-Received: by 2002:a17:90b:4c4a:b0:313:17d0:b066 with SMTP id 98e67ed59e1d1-313af886227mr317256a91.7.1749577408987;
+        Tue, 10 Jun 2025 10:43:28 -0700 (PDT)
+Received: from DESKTOP-P76LG1N.lan ([42.113.163.91])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3134b044d91sm7470668a91.2.2025.06.10.10.43.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 10:43:28 -0700 (PDT)
+From: Nam Tran <trannamatk@gmail.com>
+To: lee@kernel.org
+Cc: pavel@kernel.org,
+	krzk+dt@kernel.org,
+	robh@kernel.org,
+	conor+dt@kernel.org,
+	corbet@lwn.net,
+	linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Nam Tran <trannamatk@gmail.com>
+Subject: [PATCH v9 0/4] leds: add new LED driver for TI LP5812
+Date: Wed, 11 Jun 2025 00:43:14 +0700
+Message-Id: <20250610174319.183375-1-trannamatk@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c2d138ba-5b08-4daa-95b3-e1f95f05938d@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 10, 2025 at 01:16:30PM +0530, Rameshkumar Sundaram wrote:
-> 
-> 
-> On 6/10/2025 8:36 AM, Bjorn Andersson via B4 Relay wrote:
-> > From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-> > 
-> > When the ath12k driver is built without CONFIG_ATH12K_DEBUG, the
-> > recently refactored stats code can cause any user space application
-> > (such at NetworkManager) to consume 100% CPU for 3 seconds, every time
-> > stats are read.
-> > 
-> > Commit 'b8a0d83fe4c7 ("wifi: ath12k: move firmware stats out of
-> > debugfs")' moved ath12k_debugfs_fw_stats_request() out of debugfs, by
-> > merging the additional logic into ath12k_mac_get_fw_stats().
-> > 
-> > Among the added responsibility of ath12k_mac_get_fw_stats() was the
-> > busy-wait for `fw_stats_done`.
-> > 
-> > Signalling of `fw_stats_done` happens when one of the
-> > WMI_REQUEST_PDEV_STAT, WMI_REQUEST_VDEV_STAT, and WMI_REQUEST_BCN_STAT
-> > messages are received, but the handling of the latter two commands remained
-> > in the debugfs code. As `fw_stats_done` isn't signalled, the calling
-> > processes will spin until the timeout (3 seconds) is reached.
-> > 
-> > Moving the handling of these two additional responses out of debugfs
-> > resolves the issue.
-> > 
-> > Fixes: b8a0d83fe4c7 ("wifi: ath12k: move firmware stats out of debugfs")
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-> > ---
-> >   drivers/net/wireless/ath/ath12k/debugfs.c | 58 --------------------------
-> >   drivers/net/wireless/ath/ath12k/debugfs.h |  7 ----
-> >   drivers/net/wireless/ath/ath12k/wmi.c     | 67 +++++++++++++++++++++++++++----
-> >   3 files changed, 60 insertions(+), 72 deletions(-)
-> > 
-> > diff --git a/drivers/net/wireless/ath/ath12k/debugfs.c b/drivers/net/wireless/ath/ath12k/debugfs.c
-> > index dd624d73b8b2714e77c9d89b5a52f7b3fcb02951..23da93afaa5c25e806c9859dbbdd796afd23d78a 100644
-> > --- a/drivers/net/wireless/ath/ath12k/debugfs.c
-> > +++ b/drivers/net/wireless/ath/ath12k/debugfs.c
-> > @@ -1251,64 +1251,6 @@ void ath12k_debugfs_soc_destroy(struct ath12k_base *ab)
-> >   	 */
-> >   }
-> > -void
-> > -ath12k_debugfs_fw_stats_process(struct ath12k *ar,
-> > -				struct ath12k_fw_stats *stats)
-> > -{
-> > -	struct ath12k_base *ab = ar->ab;
-> > -	struct ath12k_pdev *pdev;
-> > -	bool is_end;
-> > -	static unsigned int num_vdev, num_bcn;
-> > -	size_t total_vdevs_started = 0;
-> > -	int i;
-> > -
-> > -	if (stats->stats_id == WMI_REQUEST_VDEV_STAT) {
-> > -		if (list_empty(&stats->vdevs)) {
-> > -			ath12k_warn(ab, "empty vdev stats");
-> > -			return;
-> > -		}
-> > -		/* FW sends all the active VDEV stats irrespective of PDEV,
-> > -		 * hence limit until the count of all VDEVs started
-> > -		 */
-> > -		rcu_read_lock();
-> > -		for (i = 0; i < ab->num_radios; i++) {
-> > -			pdev = rcu_dereference(ab->pdevs_active[i]);
-> > -			if (pdev && pdev->ar)
-> > -				total_vdevs_started += pdev->ar->num_started_vdevs;
-> > -		}
-> > -		rcu_read_unlock();
-> > -
-> > -		is_end = ((++num_vdev) == total_vdevs_started);
-> > -
-> > -		list_splice_tail_init(&stats->vdevs,
-> > -				      &ar->fw_stats.vdevs);
-> > -
-> > -		if (is_end) {
-> > -			ar->fw_stats.fw_stats_done = true;
-> > -			num_vdev = 0;
-> > -		}
-> > -		return;
-> > -	}
-> > -	if (stats->stats_id == WMI_REQUEST_BCN_STAT) {
-> > -		if (list_empty(&stats->bcn)) {
-> > -			ath12k_warn(ab, "empty beacon stats");
-> > -			return;
-> > -		}
-> > -		/* Mark end until we reached the count of all started VDEVs
-> > -		 * within the PDEV
-> > -		 */
-> > -		is_end = ((++num_bcn) == ar->num_started_vdevs);
-> > -
-> > -		list_splice_tail_init(&stats->bcn,
-> > -				      &ar->fw_stats.bcn);
-> > -
-> > -		if (is_end) {
-> > -			ar->fw_stats.fw_stats_done = true;
-> > -			num_bcn = 0;
-> > -		}
-> > -	}
-> > -}
-> > -
-> >   static int ath12k_open_vdev_stats(struct inode *inode, struct file *file)
-> >   {
-> >   	struct ath12k *ar = inode->i_private;
-> > diff --git a/drivers/net/wireless/ath/ath12k/debugfs.h b/drivers/net/wireless/ath/ath12k/debugfs.h
-> > index ebef7dace3448e4bdf2d6cb155d089267315172c..21641a8a03460c6cc1b34929a353e5605bb834ce 100644
-> > --- a/drivers/net/wireless/ath/ath12k/debugfs.h
-> > +++ b/drivers/net/wireless/ath/ath12k/debugfs.h
-> > @@ -12,8 +12,6 @@ void ath12k_debugfs_soc_create(struct ath12k_base *ab);
-> >   void ath12k_debugfs_soc_destroy(struct ath12k_base *ab);
-> >   void ath12k_debugfs_register(struct ath12k *ar);
-> >   void ath12k_debugfs_unregister(struct ath12k *ar);
-> > -void ath12k_debugfs_fw_stats_process(struct ath12k *ar,
-> > -				     struct ath12k_fw_stats *stats);
-> >   void ath12k_debugfs_op_vif_add(struct ieee80211_hw *hw,
-> >   			       struct ieee80211_vif *vif);
-> >   void ath12k_debugfs_pdev_create(struct ath12k_base *ab);
-> > @@ -126,11 +124,6 @@ static inline void ath12k_debugfs_unregister(struct ath12k *ar)
-> >   {
-> >   }
-> > -static inline void ath12k_debugfs_fw_stats_process(struct ath12k *ar,
-> > -						   struct ath12k_fw_stats *stats)
-> > -{
-> > -}
-> > -
-> >   static inline bool ath12k_debugfs_is_extd_rx_stats_enabled(struct ath12k *ar)
-> >   {
-> >   	return false;
-> > diff --git a/drivers/net/wireless/ath/ath12k/wmi.c b/drivers/net/wireless/ath/ath12k/wmi.c
-> > index 60e2444fe08cefa39ae218d07eb9736d2a0c982b..2d2444417e2b2d9281754d113f2b073034e27739 100644
-> > --- a/drivers/net/wireless/ath/ath12k/wmi.c
-> > +++ b/drivers/net/wireless/ath/ath12k/wmi.c
-> > @@ -7626,6 +7626,63 @@ static int ath12k_wmi_pull_fw_stats(struct ath12k_base *ab, struct sk_buff *skb,
-> >   				   &parse);
-> >   }
-> > +static void ath12k_wmi_fw_stats_process(struct ath12k *ar,
-> > +					struct ath12k_fw_stats *stats)
-> > +{
-> > +	struct ath12k_base *ab = ar->ab;
-> > +	struct ath12k_pdev *pdev;
-> > +	bool is_end;
-> > +	static unsigned int num_vdev, num_bcn;
-> > +	size_t total_vdevs_started = 0;
-> > +	int i;
-> > +
-> > +	if (stats->stats_id == WMI_REQUEST_VDEV_STAT) {
-> > +		if (list_empty(&stats->vdevs)) {
-> > +			ath12k_warn(ab, "empty vdev stats");
-> > +			return;
-> > +		}
-> > +		/* FW sends all the active VDEV stats irrespective of PDEV,
-> > +		 * hence limit until the count of all VDEVs started
-> > +		 */
-> > +		rcu_read_lock();
-> > +		for (i = 0; i < ab->num_radios; i++) {
-> > +			pdev = rcu_dereference(ab->pdevs_active[i]);
-> > +			if (pdev && pdev->ar)
-> > +				total_vdevs_started += pdev->ar->num_started_vdevs;
-> > +		}
-> > +		rcu_read_unlock();
-> > +
-> > +		is_end = ((++num_vdev) == total_vdevs_started);
-> > +
-> > +		list_splice_tail_init(&stats->vdevs,
-> > +				      &ar->fw_stats.vdevs);
-> > +
-> > +		if (is_end) {
-> > +			ar->fw_stats.fw_stats_done = true;
-> > +			num_vdev = 0;
-> > +		}
-> > +		return;
-> > +	}
-> > +	if (stats->stats_id == WMI_REQUEST_BCN_STAT) {
-> > +		if (list_empty(&stats->bcn)) {
-> > +			ath12k_warn(ab, "empty beacon stats");
-> > +			return;
-> > +		}
-> > +		/* Mark end until we reached the count of all started VDEVs
-> > +		 * within the PDEV
-> > +		 */
-> > +		is_end = ((++num_bcn) == ar->num_started_vdevs);
-> > +
-> > +		list_splice_tail_init(&stats->bcn,
-> > +				      &ar->fw_stats.bcn);
-> > +
-> > +		if (is_end) {
-> > +			ar->fw_stats.fw_stats_done = true;
-> > +			num_bcn = 0;
-> > +		}
-> > +	}
-> > +}
-> > +
-> >   static void ath12k_update_stats_event(struct ath12k_base *ab, struct sk_buff *skb)
-> >   {
-> >   	struct ath12k_fw_stats stats = {};
-> > @@ -7655,19 +7712,15 @@ static void ath12k_update_stats_event(struct ath12k_base *ab, struct sk_buff *sk
-> >   	spin_lock_bh(&ar->data_lock);
-> > -	/* WMI_REQUEST_PDEV_STAT can be requested via .get_txpower mac ops or via
-> > -	 * debugfs fw stats. Therefore, processing it separately.
-> > -	 */
-> > +	/* Handle WMI_REQUEST_PDEV_STAT status update */
-> >   	if (stats.stats_id == WMI_REQUEST_PDEV_STAT) {
-> >   		list_splice_tail_init(&stats.pdevs, &ar->fw_stats.pdevs);
-> >   		ar->fw_stats.fw_stats_done = true;
-> >   		goto complete;
-> >   	}
-> > -	/* WMI_REQUEST_VDEV_STAT and WMI_REQUEST_BCN_STAT are currently requested only
-> > -	 * via debugfs fw stats. Hence, processing these in debugfs context.
-> > -	 */
-> > -	ath12k_debugfs_fw_stats_process(ar, &stats);
-> > +	/* Handle WMI_REQUEST_VDEV_STAT and WMI_REQUEST_BCN_STAT updates. */
-> > +	ath12k_wmi_fw_stats_process(ar, &stats);
-> >   complete:
-> >   	complete(&ar->fw_stats_complete);
-> > 
-> 
-> 
-> This look fine to me, Thanks for fixing this.
-> 
-> Apart from this we may also have to free up the stats buffer list maintained
-> when the stats is requested out of debugfs (like ath12k_mac_op_get_txpower()
-> and ath12k_mac_op_sta_statistics()) once its scope of usage is done, else
-> the memory will be held untill next fw stats request or module unload.
-> 
+This patch series adds support for the TI/National Semiconductor LP5812
+4x3 matrix RGB LED driver. The driver supports features such as autonomous
+animation and time-cross-multiplexing (TCM) for dynamic LED effects.
 
-I agree with this. In fact it seems to me that the majority of [1]
-should be considered for ath12k as well (and Jeff acknowledged the
-same).
+Following feedback from both the LED and auxdisplay subsystem maintainers,
+the driver has been moved back to the LED subsystem, under drivers/leds/rgb/.
+This version integrates with the existing multicolor LED APIs, avoiding custom
+sysfs where standard LED interfaces are sufficient.
 
-The purpose of this patch was solely to deal with the regression from
-the previous behavior introduced in v6.16-rc1, causing my X Elite laptop
-to idle about 10C warmer. (Afaict neither distros or upstream arm64
-defconfig has ATH12K_DEBUG enabled)
+Signed-off-by: Nam Tran <trannamatk@gmail.com>
+---
+Changes in v9:
+- Move driver back to drivers/leds/rgb/
+- Integrate with LED multicolor framework
+- Refactor and simplify custom sysfs handling
+- Extend Device Tree binding to support multi-led@ nodes using leds-class-multicolor.yaml
+- Update documentation to reflect the updated sysfs
+- Link to v8: https://lore.kernel.org/lkml/20250427082447.138359-1-trannamatk@gmail.com/
 
-The "also fix X, Y, Z" would at least be separate patches, and could be
-applied either to -rc or v6.17 on top of something like this.
+Changes in v8:
+- Move driver to drivers/auxdisplay/ instead of drivers/leds/.
+- Rename files from leds-lp5812.c/.h to lp5812.c/.h.
+- Move ti,lp5812.yaml binding to auxdisplay/ directory,
+  and update the title and $id to match new path.
+- No functional changes to the binding itself (keep Reviewed-by).
+- Update commit messages and patch titles to reflect the move.
+- Link to v7: https://lore.kernel.org/linux-leds/20250422190121.46839-1-trannamatk@gmail.com/
 
-[1] https://lore.kernel.org/ath11k/20250220082448.31039-1-quic_bqiang@quicinc.com/
+Changes in v7:
+- Mark `chip_leds_map` as const.
+- Use consistent `ret` initialization.
+- Simplify the function `set_mix_sel_led()`.
+- Refactor `dev_config_show()` and `led_auto_animation_show()` to avoid temp buffer, malloc/free.
+- Simplify the code and ensure consistent use of mutex lock/unlock in show/store functions.
+- Remove `total_leds` and `total_aeu`.
+- Link to v6: https://lore.kernel.org/linux-leds/20250419184333.56617-1-trannamatk@gmail.com/
 
-Regards,
-Bjorn
+Changes in v6:
+- Add `vcc-supply` property to describe the LP5812 power supply.
+- Remove `chan-name` property and entire LED subnodes, as they are not needed.
+- Update LP5812 LED driver node to Raspberry Pi 4 B Device Tree, based on updated binding.
+- Link to v5: https://lore.kernel.org/linux-leds/20250414145742.35713-1-trannamatk@gmail.com/
 
-> -- 
-> --
-> Ramesh
-> 
-> 
+Changes in v5:
+- Rebase on v6.15-rc2
+- Removed unused functions (lp5812_dump_regs, lp5812_update_bit).
+- Address Krzysztof's review comments
+- Link to v4: https://lore.kernel.org/linux-leds/20250405183246.198568-1-trannamatk@gmail.com/
+---
+
+Nam Tran (4):
+  dt-bindings: leds: add TI/National Semiconductor LP5812 LED Driver
+  leds: add TI/National Semiconductor LP5812 LED Driver
+  docs: ABI: Document LP5812 LED sysfs interfaces
+  docs: leds: Document TI LP5812 LED driver
+
+ .../ABI/testing/sysfs-bus-i2c-devices-lp5812  |   40 +
+ .../ABI/testing/sysfs-class-led-lp5812        |  120 +
+ .../devicetree/bindings/leds/ti,lp5812.yaml   |  264 +++
+ Documentation/leds/index.rst                  |    1 +
+ Documentation/leds/leds-lp5812.rst            |   84 +
+ MAINTAINERS                                   |   13 +
+ drivers/leds/rgb/Kconfig                      |   13 +
+ drivers/leds/rgb/Makefile                     |    1 +
+ drivers/leds/rgb/leds-lp5812.c                | 1946 +++++++++++++++++
+ drivers/leds/rgb/leds-lp5812.h                |  228 ++
+ 10 files changed, 2710 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-lp5812
+ create mode 100644 Documentation/devicetree/bindings/leds/ti,lp5812.yaml
+ create mode 100644 Documentation/leds/leds-lp5812.rst
+ create mode 100644 drivers/leds/rgb/leds-lp5812.c
+ create mode 100644 drivers/leds/rgb/leds-lp5812.h
+
+
+base-commit: f09079bd04a924c72d555cd97942d5f8d7eca98c
+-- 
+2.25.1
+
