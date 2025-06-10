@@ -1,145 +1,144 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9896F289E3A;
-	Tue, 10 Jun 2025 22:21:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68E127FD73
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:22:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749594121; cv=none; b=KfZqOd1lSCf2qkAKMmU5+vHKzQjjekYWrSxhOnqHaLE4rAgaVzLFtF5sgch+jNL4PwsVLytFep6gyIfBsS7/FkTkniD7QIGL2RM8mUxXfGjrt0t82AZdTH1iQmuXp/2TI2ItZaz3mkulX2VX2Z9yw8ZPNEUuX8XSj+FGzvPHCxk=
+	t=1749594169; cv=none; b=AEjKWe2dFypXpLN2vrP8taC7fzHSA39HdPXhJVNE/VJdriz2BbuF6DgdpUS6te4BqgPnA+E1EEXms+0qNXx2AMYOmV8ysFnmX69HSnJ5xRTZGhVgmjUUtC5byXcgztipXgkiSpiHQ31OISz/EXFwNgSkOLX2YI44OuzWlXahAfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749594121; c=relaxed/simple;
-	bh=+553V+xoY2utUtdrJC+CzdmLwVcBCLqqGFmM93WOhLY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XlmA43bGbzR2ACHVDgmvEPDR3GStlvIY9w9xq4V2Hsfl/84hat4CjmI6T0/bWQRe2/MmtrvyyrtqysNyzJ5NHPo8mvExA5zSEb0Mv8HQDauT6kJChr3xQ0re/s/Pq9O3wTlzXHBKq3dBsEIhbpdxq94Rz4HJzeHQsISW7ca30iQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S1+h5nnS; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749594169; c=relaxed/simple;
+	bh=XjgsdEhFvFB0B+RbA+5aNhRmFbtruOCW5OEOXUP/KY8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F0+4fYspyyqq3gc7LvUeMQDk4sL+3ipXLfKFUaaC5PrwtfP+AlO8dvnu7YSXRS/rgSNEkEWiQ9kj/c1JwSBc+q0mZeQq7AzROxlXBaPqebA2uPZUeIYY/VOeJOaiyeOif2sBDbPsMSbGDQOEf0hiaIz/IXTmqxsfNK2DhYmZu3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fCHTEcO5; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S1+h5nnS"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6084dfb4cd5so266950a12.0;
-        Tue, 10 Jun 2025 15:21:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749594118; x=1750198918; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LsWM7R9N9mCXSlQ8uRE3uxK724s10V+ald6NFxfWTt8=;
-        b=S1+h5nnSB6odCG3lHDUXFSvNAImw9PwKZ9wHpZIjPHTRpW2J4yKf8xHovcYxI8JBhs
-         EdC4vZ5ld1ReJWUx1GCiB2p+9ARgQ+N3dsXkUvwL9DvnSw7bGfZgqSFfjJ32lVzIuH0T
-         oCx1dlrKLaYTn2rARUGRY1vfQLw9gn1NbEZxVefJEpAKhZ7vKoP8BVOoDfP3OhRxxOJe
-         vL8kdvfDKeJCS/H1LnwrZREtCSbSBiOfBByP4vRQSKCiMCcM+pvwPMoCikIrkA3fxn0H
-         4mTBEsDXhRsRhkSIFPmaYzJo+NVQtEVy2Q9BY4ECYfg0wwOvXYnSrTXKjrtdR7m1p1Gr
-         VTXg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fCHTEcO5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749594166;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hLuQnm8GtR1mcurBIw5pIZijzYYYehwuFe+H/mrbon4=;
+	b=fCHTEcO5pW9LwkRY5BIV0ozxL95f4kltQoSIfGqTUyeYuTrUwweYeEZS6DTK6mUcN70spl
+	aEP/7/+dm9M/gCBsZ6wApSKV7CK++D5/LmbKldUVdMN/RZi6qBjaNssgCvvPvV/Hl23PAh
+	m4eSU2C35P3qx6SsJnoXfKESMmfQ9Nc=
+Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com
+ [209.85.161.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-549-IlGM5Ay0Nja6orgvnySxkQ-1; Tue, 10 Jun 2025 18:22:44 -0400
+X-MC-Unique: IlGM5Ay0Nja6orgvnySxkQ-1
+X-Mimecast-MFC-AGG-ID: IlGM5Ay0Nja6orgvnySxkQ_1749594164
+Received: by mail-oo1-f69.google.com with SMTP id 006d021491bc7-60bf020e4a1so5117993eaf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:22:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749594118; x=1750198918;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LsWM7R9N9mCXSlQ8uRE3uxK724s10V+ald6NFxfWTt8=;
-        b=YNjWZ55f883yG5qxLunRV6qTX2RipiKCTSCx8/FLw536eBQM5NfSaHD9ArjWSOpSLJ
-         CkXzcAn5jXIh5vE5f1W+YajA4Tj9sANg4By8l2PVpiWfe8E3rFQtWFQKJ+YozNbetO/2
-         vn1unif3e0tj+gkayT6IgPdNAiC/BUmUkVGwr5LPDzf2EHsQlufwOTpbl0UwIVPobreh
-         4P2+qTE9kRV2w+Ssg04D/+7qnRsMJjl0QJCco2kGs8/PIBEPid0k4fAlIcnhAR+N671h
-         OCrvly/mw5I/zOxzcYH20TiQs5mVp6T2BdrSu/iUw6rjAEpxrzXxDXx8pRTUDlVI3tVn
-         u02g==
-X-Forwarded-Encrypted: i=1; AJvYcCUvi6WxxHARXK8dWR5hp8zxYI5l6U9vA3gq06C/HihoOGCwGBwQbogOZVtx7QdSriMSThLNaTqDHsGCG9/3@vger.kernel.org, AJvYcCVO/lQbRKoplHPyNOLuW7NlrlY/L7yk6eFoKCwHTATSfwXnlzYnpiiLPATYRhfM62HxhoA8stHEb0I3UA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0aEFQI4h4eCShTA8JNzrikksjdd0Bj3HjttzoaxGM6cm4MOYw
-	9V0w/GnObOvI75w8vMacgajfN5ynp/Ux/mnkEvRewqIeFtXkPRCqZvldJAiBMQarqYk3LzLNjV8
-	rM+HztociaCRwjCZbUc9SihovOV0TmPc=
-X-Gm-Gg: ASbGncvvw6jViq+4/C58TWIjPZ+7IQoaq7SXWEScN34Fzz9rhxPyhGQZqzM+yw6OrhA
-	fet98y9KZiHYvrQu4+EjeF83RTTgdE5ayJlxLf5saCHRhIChiamXo3SQxpUhIN5bSShQ4uxdyJb
-	FMBNPlDrJnuqQeHiBnzYg+16jv11xRCImJBpCuFwOoSTnIUbNqmK5D3eNTX3hQjH+UDjXgxxbae
-	1FM
-X-Google-Smtp-Source: AGHT+IG/XyKTAwGibTRqiHQ80CFFUAnjYB6aSemo76CEMJrU/vKOsBRveiisA9z6MjPmp/LTCfWAXZT9yI8NYsxmjmE=
-X-Received: by 2002:a17:907:86ab:b0:ad8:91e4:a92b with SMTP id
- a640c23a62f3a-ade89a8063cmr87430266b.30.1749594117601; Tue, 10 Jun 2025
- 15:21:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749594162; x=1750198962;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hLuQnm8GtR1mcurBIw5pIZijzYYYehwuFe+H/mrbon4=;
+        b=pxqN+JaG6X4l5e84eITwRDf0gevfh/eRdoc/TppyrrKzgHdYh1Zhvt/pacWbzCCLqw
+         tXlYNhUN+mYRdz99QByZy1o+A7ZF+5gDIJHujhtfSUx+AwLuGw3L0wpb85Jrbiw+kJPz
+         qbDWOUxvSZv81tNJq4yXT5GfTsWlSolnC5aT9vZEhFUiVr43REYFc4NBNSzNMfNLC+l9
+         B6ADKU2RaFqFOrf+xkz534iskaktTPyqi2VXMVF6YBDmwEajieXkvG/OrlazTYUWLXS/
+         Xm3P/394gK+cHEBbf02Yq77wL3FBogbJJCNap8ZrnCIgttnekm3SNG+VBY7TUfC/MKY8
+         4tKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUnL8k0WteqEHCaGB/d39gLcbrsDwPaiIUd3QkVTEXHPIAD1REm9Ui6LJt18DsbYw/SwURfYu0U3AJ7zg4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyxi+K/Y97OkWyEl6CbI5oKyLxYqzvdfOiR43hNHY/vyI5M+4YZ
+	JrO355gwEVCIEMfxkgzswT+xXnht+oKteuy6fXABtUY6ZdO6gLjR1gYe/vsVNrW32iyaV7PwIIR
+	QHia2190i1UDXsXz9NqZj0mrOQz+XVRWNLLBBTHe+De8FKENtygYKotNxgtb8pA65PcBL05oHFg
+	==
+X-Gm-Gg: ASbGncuOnf7hvmgwZvdOXDhLyPFrWmFzgDEZOMrMRmHGG7KakzKH3byCA47TFyRCgc8
+	KC7vciGB0r01LT1VPmtcrTzfXre4gkVx15UQotSPoneFw/DrS+LMhCaja5O9f+XScGQU728zdlY
+	fkzagnmiC2JMCNgIWUEzwspWGhW2gIA7fOXyn1CHxmFTHB7Zmo+Gi2G7WRcGU9MXOnCodFluEwI
+	cq65qG77WXz2F0GoArcJuUWSPPHo0eZ5/YjdT2hNp4+G7zTf1nZvCssP4/XOfgQjWrQHFW4Z4iB
+	MidXmzxdIC72MQ==
+X-Received: by 2002:a05:6820:c83:b0:60b:d676:b666 with SMTP id 006d021491bc7-610ef71ebd1mr503240eaf.5.1749594161763;
+        Tue, 10 Jun 2025 15:22:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEZPFHzLV7Sg4ZkCQBoFbsxw1VThpMG4z5lPpBVju0VP9CmUB6NZzQ74WH9fhjymqKd3HA8wA==
+X-Received: by 2002:a05:622a:a18:b0:494:b924:1374 with SMTP id d75a77b69052e-4a713c4544cmr20646161cf.43.1749594147540;
+        Tue, 10 Jun 2025 15:22:27 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a611150cb0sm78624171cf.11.2025.06.10.15.22.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 15:22:26 -0700 (PDT)
+Date: Tue, 10 Jun 2025 18:22:22 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Nikita Kalyazin <kalyazin@amazon.com>
+Cc: akpm@linux-foundation.org, pbonzini@redhat.com, shuah@kernel.org,
+	viro@zeniv.linux.org.uk, brauner@kernel.org, muchun.song@linux.dev,
+	hughd@google.com, kvm@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, jack@suse.cz,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+	jannh@google.com, ryan.roberts@arm.com, david@redhat.com,
+	jthoughton@google.com, graf@amazon.de, jgowans@amazon.com,
+	roypat@amazon.co.uk, derekmn@amazon.com, nsaenz@amazon.es,
+	xmarcalx@amazon.com
+Subject: Re: [PATCH v3 1/6] mm: userfaultfd: generic continue for non
+ hugetlbfs
+Message-ID: <aEiwHjl4tsUt98sh@x1.local>
+References: <20250404154352.23078-1-kalyazin@amazon.com>
+ <20250404154352.23078-2-kalyazin@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aCrx1iRQ-9tXiyJp@x1.ze-it.at> <p4917005-n9n1-0577-q49n-o9639pos5o44@xreary.bet>
-In-Reply-To: <p4917005-n9n1-0577-q49n-o9639pos5o44@xreary.bet>
-From: Ping Cheng <pinglinux@gmail.com>
-Date: Tue, 10 Jun 2025 15:21:45 -0700
-X-Gm-Features: AX0GCFsgA2-aXLRhJmZcRk8weoROzVMe8LB0jEUBribSAZZ-z_7aW3To_hULe9Y
-Message-ID: <CAF8JNhKjXH+zD6-b=ym+Y8SPwPEUdUu+r8k25FBefYg+aEi6JQ@mail.gmail.com>
-Subject: Re: [PATCH] HID: wacom: fix crash in wacom_aes_battery_handler()
-To: Jiri Kosina <jikos@kernel.org>, stable@kernel.org
-Cc: Thomas Zeitlhofer <thomas.zeitlhofer+lkml@ze-it.at>, 
-	Jason Gerecke <jason.gerecke@wacom.com>, Benjamin Tissoires <bentiss@kernel.org>, 
-	Josh Dickens <joshua.dickens@wacom.com>, Tatsunosuke Tobita <tatsunosuke.wacom@gmail.com>, 
-	Aaron Skomra <aaron.skomra@wacom.com>, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250404154352.23078-2-kalyazin@amazon.com>
 
-On Tue, Jun 10, 2025 at 12:21=E2=80=AFPM Jiri Kosina <jikos@kernel.org> wro=
-te:
->
-> On Mon, 19 May 2025, Thomas Zeitlhofer wrote:
->
-> > Commit fd2a9b29dc9c ("HID: wacom: Remove AES power_supply after extende=
-d
-> > inactivity") introduced wacom_aes_battery_handler() which is scheduled
-> > as a delayed work (aes_battery_work).
-> >
-> > In wacom_remove(), aes_battery_work is not canceled. Consequently, if
-> > the device is removed while aes_battery_work is still pending, then har=
-d
-> > crashes or "Oops: general protection fault..." are experienced when
-> > wacom_aes_battery_handler() is finally called. E.g., this happens with
-> > built-in USB devices after resume from hibernate when aes_battery_work
-> > was still pending at the time of hibernation.
-> >
-> > So, take care to cancel aes_battery_work in wacom_remove().
-> >
-> > Fixes: fd2a9b29dc9c ("HID: wacom: Remove AES power_supply after extende=
-d inactivity")
-> > Signed-off-by: Thomas Zeitlhofer <thomas.zeitlhofer+lkml@ze-it.at>
+On Fri, Apr 04, 2025 at 03:43:47PM +0000, Nikita Kalyazin wrote:
+> Remove shmem-specific code from UFFDIO_CONTINUE implementation for
+> non-huge pages by calling vm_ops->fault().  A new VMF flag,
+> FAULT_FLAG_USERFAULT_CONTINUE, is introduced to avoid recursive call to
+> handle_userfault().
 
-Acked-by: Ping Cheng <ping.cheng@wacom.com>
+It's not clear yet on why this is needed to be generalized out of the blue.
 
-Thank you, Thomas, for the patch. Your support is greatly appreciated!
+Some mentioning of guest_memfd use case might help for other reviewers, or
+some mention of the need to introduce userfaultfd support in kernel
+modules.
 
-> This looks good to me, and I am planning to push it to Linus through
-> for-6.16/upstream-fixes.
->
-> Jason, Ping, any chance you could give your Ack to this one before I do
-> so, please?
+> 
+> Suggested-by: James Houghton <jthoughton@google.com>
+> Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>
+> ---
+>  include/linux/mm_types.h |  4 ++++
+>  mm/hugetlb.c             |  2 +-
+>  mm/shmem.c               |  9 ++++++---
+>  mm/userfaultfd.c         | 37 +++++++++++++++++++++++++++----------
+>  4 files changed, 38 insertions(+), 14 deletions(-)
+> 
+> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> index 0234f14f2aa6..2f26ee9742bf 100644
+> --- a/include/linux/mm_types.h
+> +++ b/include/linux/mm_types.h
+> @@ -1429,6 +1429,9 @@ enum tlb_flush_reason {
+>   * @FAULT_FLAG_ORIG_PTE_VALID: whether the fault has vmf->orig_pte cached.
+>   *                        We should only access orig_pte if this flag set.
+>   * @FAULT_FLAG_VMA_LOCK: The fault is handled under VMA lock.
+> + * @FAULT_FLAG_USERFAULT_CONTINUE: The fault handler must not call userfaultfd
+> + *                                 minor handler as it is being called by the
+> + *                                 userfaultfd code itself.
 
-The patch looks reasonable to me, too. My Acked-by is added above.
+We probably shouldn't leak the "CONTINUE" concept to mm core if possible,
+as it's not easy to follow when without userfault minor context.  It might
+be better to use generic terms like NO_USERFAULT.
 
-Thank you, both of you!
-Ping
+Said that, I wonder if we'll need to add a vm_ops anyway in the latter
+patch, whether we can also avoid reusing fault() but instead resolve the
+page faults using the vm_ops hook too.  That might be helpful because then
+we can avoid this new FAULT_FLAG_* that is totally not useful to
+non-userfault users, meanwhile we also don't need to hand-cook the vm_fault
+struct below just to suite the current fault() interfacing.
 
->
-> Thanks.
->
-> > ---
-> >  drivers/hid/wacom_sys.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/hid/wacom_sys.c b/drivers/hid/wacom_sys.c
-> > index eaf099b2efdb..e74c1a4c5b61 100644
-> > --- a/drivers/hid/wacom_sys.c
-> > +++ b/drivers/hid/wacom_sys.c
-> > @@ -2901,6 +2901,7 @@ static void wacom_remove(struct hid_device *hdev)
-> >       hid_hw_stop(hdev);
-> >
-> >       cancel_delayed_work_sync(&wacom->init_work);
-> > +     cancel_delayed_work_sync(&wacom->aes_battery_work);
-> >       cancel_work_sync(&wacom->wireless_work);
-> >       cancel_work_sync(&wacom->battery_work);
-> >       cancel_work_sync(&wacom->remote_work);
-> > --
-> > 2.39.5
-> >
->
-> --
-> Jiri Kosina
-> SUSE Labs
->
->
+Thanks,
+
+-- 
+Peter Xu
+
