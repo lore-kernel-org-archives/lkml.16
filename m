@@ -1,140 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849641DD9D3;
-	Tue, 10 Jun 2025 08:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5221DD9D3
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749543312; cv=none; b=HfN+KJ0/5hkcGYQnAMFbNnzkSLFInMdGAzofP+rQI7VW+pgyC4lAG/rH2fSaE7VY1eTLJsDlPOpOyp/wTeA3rSkmnIKixOwOldC2W6Iwogcq2i/oRgeX53VZIrL/hLOaPSyHxTboiz8LOM/ueW4akMJmqYfUL6DOUePBcJzW/AA=
+	t=1749543329; cv=none; b=Qlix/MpbhSF5Cqn3jTU96NJROwYq7nCqJgT0ivdQyNDn86grdeZVOXN4fW8IudO1tnDAJv1HWrWkw0C7jC/jwgoBB3MaBwDETGb2Ce2LNK9F/yeZqs+vl2t2AX0CISpIhfhydN5HmqG0KZrEDbq5e14brUwgxdPGuJ12QLZ217E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749543312; c=relaxed/simple;
-	bh=bTz2jD+cGt2XQ/Ega0J5lq5VYe60lHLquMDkJ3TPTh4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=dMX2fD1Fr7NsZl5aWQs4jsnkNgmuOS1nMVb356xBI62MrtkvAgJLf34qz13BNIwLcL4IfcPoKgbfWfYMhA4cxFRF0JAHfbQjizyH/D/865SV6KjVOnPgvBNdckzbJB8CqJsWULj+VSN2DO3XhSBVdoDueAofUoMgx6KVPAEMWq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CEGIj4mq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CEGIj4mq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD998C4CEEF;
-	Tue, 10 Jun 2025 08:15:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749543312;
-	bh=bTz2jD+cGt2XQ/Ega0J5lq5VYe60lHLquMDkJ3TPTh4=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=CEGIj4mq4tW1ToEzIVnsp8ZXU9S6QjDqYF2TM1c6YODY18mvNlszIZT8kNyWWwE1m
-	 wGLi/BlPKKYLqwP3hOHFZJOK68YZ+5G1ngd43RRKIKVrLEyKcPU92XUN6Tp2Hslz0d
-	 oYPPbjMzi1ivbh3FU96wxiFScZtGPCdk/YWvuZfpoDbyWgI9I14CAlpyklDiLQ7zSO
-	 epJvffFsRIZrl5cAtJ1Pwmebh/GubJK6ZAvqGL25lT+xuJjCTO9N30eHceAiOK/RKZ
-	 I7KAivRHbpt8wfKJ5uN8eaCsGdiYFSYrdNRrnd1YXxa8KV5VGJJpXlxi/vmPOa3uMx
-	 Om5JYKfu0osrw==
+	s=arc-20240116; t=1749543329; c=relaxed/simple;
+	bh=bs8hHYrJ2J5luP5ifRomqnXf1A+DitgxZLsrwXw0I7M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q26FqrcjGRZBXQwzK826Bd7gHlC4la7ZfcxFUqTB+SEjn42FBTyqsKkhCUxOvzB3B1Xwja3TGRJM64HhISocbHbgzsAK+qnqjoI38rAiy+1JJX7VMT+T6UjAT8jEzB/jbmxAA5CfuuGPhUryFfxbh+3kYZbwEctjNm2j9lv4CnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E1D554426A;
+	Tue, 10 Jun 2025 08:15:22 +0000 (UTC)
+Message-ID: <2e082beb-63dd-4395-a3ba-1be4acc28910@ghiti.fr>
+Date: Tue, 10 Jun 2025 10:15:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 10 Jun 2025 10:15:08 +0200
-Message-Id: <DAIPCCIHRLHW.1TDNY93G6UZM0@kernel.org>
-Cc: "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>, "Linux Next
- Mailing List" <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the rust-pin-init tree
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Stephen Rothwell" <sfr@canb.auug.org.au>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250610142230.001af1d3@canb.auug.org.au>
- <DAIP0NGMMM90.11JRFL5O1NAW9@kernel.org>
-In-Reply-To: <DAIP0NGMMM90.11JRFL5O1NAW9@kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] RISC-V: vDSO: Correct inline assembly constraints in
+ the getrandom syscall wrapper
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Xi Ruoyao <xry111@xry111.site>
+Cc: Vineet Gupta <vineetg@rivosinc.com>, Nathan Chancellor
+ <nathan@kernel.org>, "Jason A . Donenfeld" <Jason@zx2c4.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Guo Ren <guoren@kernel.org>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250605091112-7cd6b3bd-a466-486a-aebc-7bf0b2a8ac31@linutronix.de>
+ <20250606092443.73650-2-xry111@xry111.site>
+ <94f9af73-0b2d-484c-ba1d-d4435908336b@rivosinc.com>
+ <6163d55a1e7910f89dda114a2ee52c9df5235dad.camel@xry111.site>
+ <20250610090648-c6d4e08a-3efa-4c19-9a03-d04a65d18af2@linutronix.de>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250610090648-c6d4e08a-3efa-4c19-9a03-d04a65d18af2@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddutdegkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepgeelgfevteefheeuvdetueefhfeiueetkedvffduudekhfeuvdduhfdujeffkeehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpghhnuhdrohhrghdpghhithhhuhgsrdgtohhmpdhinhhfrhgruggvrggurdhorhhgnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemsgehvdgsmeehlegufhemkeefkegvmeegudelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmegshedvsgemheelughfmeekfeekvgemgeduledphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemsgehvdgsmeehlegufhemkeefkegvmeegudelngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedutddprhgtphhtthhopehthhhomhgrshdrfigvihhsshhstghhuhhhsehlihhnuhhtrhhonhhigidru
+ ggvpdhrtghpthhtohepgihrhiduudduseigrhihudduuddrshhithgvpdhrtghpthhtohepvhhinhgvvghtghesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepnhgrthhhrghnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeflrghsohhnseiigidvtgegrdgtohhmpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtohepghhuohhrvghnsehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: alex@ghiti.fr
 
-On Tue Jun 10, 2025 at 9:59 AM CEST, Benno Lossin wrote:
-> On Tue Jun 10, 2025 at 6:22 AM CEST, Stephen Rothwell wrote:
->> Hi all,
->>
->> After merging the rust-pin-init tree, today's linux-next build (x86_64
->> allmodconfig) failed like this:
->>
->> error[E0282]: type annotations needed
->>    --> rust/kernel/configfs.rs:154:26
->>     |
->> 154 |             subsystem <- pin_init::zeroed().chain(
->>     |                          ^^^^^^^^^^^^^^^^ cannot infer type of the=
- type parameter `T` declared on the function `zeroed`
->>     |
->> help: consider specifying the generic argument
->>     |
->> 154 |             subsystem <- pin_init::zeroed::<T>().chain(
->>     |                                          +++++
->>
->> error[E0282]: type annotations needed
->>    --> rust/kernel/configfs.rs:264:22
->>     |
->> 264 |             group <- pin_init::zeroed().chain(|v: &mut Opaque<bind=
-ings::config_group>| {
->>     |                      ^^^^^^^^^^^^^^^^ cannot infer type of the typ=
-e parameter `T` declared on the function `zeroed`
->>     |
->> help: consider specifying the generic argument
->>     |
->> 264 |             group <- pin_init::zeroed::<T>().chain(|v: &mut Opaque=
-<bindings::config_group>| {
->>     |                                      +++++
->>
->> error: aborting due to 2 previous errors
->>
->> For more information about this error, try `rustc --explain E0282`.
->>
->> Caused by commit
->>
->>   0bcaea04244b ("rust: pin-init: rename `zeroed` to `init_zeroed`")
->>
->> I have used the rust-pin-init tree from next-20250606 for today.
+Hi,
+
+On 6/10/25 09:11, Thomas Weißschuh wrote:
+> On Sat, Jun 07, 2025 at 10:16:34PM +0800, Xi Ruoyao wrote:
+>> On Fri, 2025-06-06 at 15:01 -0700, Vineet Gupta wrote:
+>>> On 6/6/25 02:24, Xi Ruoyao wrote:
+>>>> As recently pointed out by Thomas, if a register is forced for two
+>>>> different register variables, among them one is used as "+" (both input
+>>>> and output) and another is only used as input, Clang would treat the
+>>>> conflicting input parameters as undefined behaviour and optimize away
+>>>> the argument assignment.
+>>>>
+>>>> Per an example in the GCC documentation, for this purpose we can use "="
+>>>> (only output) for the output, and "0" for the input for that we must
+>>>> reuse the same register as the output.  And GCC developers have
+>>>> confirmed using a simple "r" (that we use for most vDSO implementations)
+>>>> instead of "0" is also fine.
+>>>>
+>>>> Link: https://lore.kernel.org/all/20250603-loongarch-vdso-syscall-v1-1-6d12d6dfbdd0@linutronix.de/
+>>>> Link: https://gcc.gnu.org/onlinedocs/gcc-15.1.0/gcc/Local-Register-Variables.html
+>>>> Link: https://gcc.gnu.org/pipermail/gcc-help/2025-June/144266.html
+>>>> Cc: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+>>>> Cc: Nathan Chancellor <nathan@kernel.org>
+>>>> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+>>>> ---
+>>>>
+>>>> v1 -> v2: Keep using "r" for buffer to follow the existing convention
+>>>> (that the GCC developers have confirmed fine).
+>>>>
+>>>>   arch/riscv/include/asm/vdso/getrandom.h | 2 +-
+>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/riscv/include/asm/vdso/getrandom.h b/arch/riscv/include/asm/vdso/getrandom.h
+>>>> index 8dc92441702a..c6d66895c1f5 100644
+>>>> --- a/arch/riscv/include/asm/vdso/getrandom.h
+>>>> +++ b/arch/riscv/include/asm/vdso/getrandom.h
+>>>> @@ -18,7 +18,7 @@ static __always_inline ssize_t getrandom_syscall(void *_buffer, size_t _len, uns
+>>>>   	register unsigned int flags asm("a2") = _flags;
+>>>>   
+>>>>   	asm volatile ("ecall\n"
+>>>> -		      : "+r" (ret)
+>>>> +		      : "=r" (ret)
+>>>>   		      : "r" (nr), "r" (buffer), "r" (len), "r" (flags)
+>>>>   		      : "memory");
+>>> My 2 cents as I've dabbled into this for ARC glibc syscall macros [1] where r0
+>>> is both the first syscall/function arg and also the function/syscall return.
+>>>
+>>> The v2 approach still keeps 2 different variables in same local reg which has
+>>> potential for any future compiler shenanigans.
+>>> Segher's example avoided specifying the same reg.
+>>> What about something like the following: seems to generate the right code (with
+>>> gcc 15)
+>>>
+>>>         register long ret asm("a0");
+>> Then it would be better to rename this variable to just "a0".  And I
+>> guess Thomas doesn't want a new convention different from all other
+>> syscall wrappers in vDSO...
+> Indeed. I want to keep it consistent. Especially for a bugfix.
+> Speaking of which, IMO this patch should have a Fixes tag.
+
+
+Yes, here it is:
+
+Fixes: ee0d03053e70 ("RISC-V: vDSO: Wire up getrandom() vDSO 
+implementation")
+
+
 >
-> Thanks for catching this! I didn't test with `CONFIG_CONFIGFS=3Dy`, so th=
-e
-> code was cfg'd out... I'll add it to my tests.
+> Then we could start a new discussion about changing it to something else everywhere.
+> Although I don't think that the single-variable variant is better.
+
+
+Vineet feel free to propose something for all architectures if you think 
+that's better.
+
+For now, I'll merge this version for inclusion in -rc2,
+
+Thanks,
+
+Alex
+
+
 >
-> @Andreas I'll send a new version of the commit above with configfs
-> changed.
-
-(sorry forgot to add your emails and also some new info)
-
-Actually, the correct change would be this in commit 0bcaea04244b
-("rust: pin-init: rename `zeroed` to `init_zeroed`"):
-
-diff --git a/rust/kernel/configfs.rs b/rust/kernel/configfs.rs
-index 34d0bea4f9a5..6d566a8bde74 100644
---- a/rust/kernel/configfs.rs
-+++ b/rust/kernel/configfs.rs
-@@ -151,7 +151,7 @@ pub fn new(
-         data: impl PinInit<Data, Error>,
-     ) -> impl PinInit<Self, Error> {
-         try_pin_init!(Self {
--            subsystem <- pin_init::zeroed().chain(
-+            subsystem <- pin_init::init_zeroed().chain(
-                 |place: &mut Opaque<bindings::configfs_subsystem>| {
-                     // SAFETY: We initialized the required fields of `plac=
-e.group` above.
-                     unsafe {
-@@ -261,7 +261,7 @@ pub fn new(
-         data: impl PinInit<Data, Error>,
-     ) -> impl PinInit<Self, Error> {
-         try_pin_init!(Self {
--            group <- pin_init::zeroed().chain(|v: &mut Opaque<bindings::co=
-nfig_group>| {
-+            group <- pin_init::init_zeroed().chain(|v: &mut Opaque<binding=
-s::config_group>| {
-                 let place =3D v.get();
-                 let name =3D name.as_bytes_with_nul().as_ptr();
-                 // SAFETY: It is safe to initialize a group once it has be=
-en zeroed.
-
-@Miguel, @Andreas, how should I go about this? Send the commit above
-augmented with the diff, or send a patch with just the diff to the list?
-Or apply the diff directly to the commit in the pin-init-next branch &
-rebasing (potentially adding an Acked-by from Andreas)? Or some other
-way?
-
----
-Cheers,
-Benno
+>>>         register long nr asm("a7") = __NR_getrandom;
+>>>         register size_t len asm("a1") = _len;
+>>>         register unsigned int flags asm("a2") = _flags;
+>>>         ret = (unsigned long) _buffer;
+>>>
+>>>         asm volatile ("ecall\n"
+>>>                       : "+r" (ret)                                 // keep "+r"
+>>> for input _buffer / output ret
+>>>                       : "r" (nr), "r" (len), "r" (flags)
+>>>                       : "memory");
+>>>
+>>>         return ret;
+>>>
+>>> Thx,
+>>> -Vineet
+>>>
+>>> [1] https://github.com/bminor/glibc/blob/master/sysdeps/unix/sysv/linux/arc/sysdep.h
+>> -- 
+>> Xi Ruoyao <xry111@xry111.site>
+>> School of Aerospace Science and Technology, Xidian University
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
