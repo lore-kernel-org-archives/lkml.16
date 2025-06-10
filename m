@@ -1,128 +1,97 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA60528F509;
-	Tue, 10 Jun 2025 12:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF81128F509
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749557827; cv=none; b=N7ZaVlounI8m5CxazM0uH0B9v6XYsxB5lvPD+nnTzcffFOwNoyzPhZFQiBEY5GnFKRHMiAYzo5bZ07t4rmzbLtB7/4EGAQeY3jpnoYFeLuxd9aWuJ8eILsCzRMMYnTEgndu01cdg2tZxdqPQqY446Y983sxWeO++2D1w1V0PwVs=
+	t=1749557836; cv=none; b=cJC0/jY5w77i9xRoQa7KmtYadksuaBNk+2JGUWiTQmCVMaHLBAAeO+DAdeuG2sbY85e3DI17o6MRWQK9kHeLoty6KKoUwE9zabCS3X8CC9Gz5z0V4oBguGdH+JOPKcBVt+pgGPDF7bkfnSHiXN8hgLHlmkapK+lI2ntqa7dgL3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749557827; c=relaxed/simple;
-	bh=omxUG8bbtsYAboaiJAE2LR4AXyYHGu7YqcfKF6Y8qZw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YotjftGEVpZ1ExF84uKtNM7upnSyZLMSA93ZXmAqZSVTfCYbJqKfFTaUOYYumgORoUrOUbks9pldWCin7bZIIGFZDuoWe/ODNzza72qFdldV/ppXkjoSwlfYQTobw4vusqxSpharGw8s+Y9YBJFiIq5G5ww6fBuLTOgGRewsOm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=U6LiZTq7; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1749557836; c=relaxed/simple;
+	bh=lwTyGeXdkHTWPJfBg7BjQV3UUjr/nweOwsfORFMzM90=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=cJf/a1uFWSlsdfxDCgoJi122XHeSG1gdIkoxt9qQdx/d+p9mFdjBIXS29j9OM1MEU0QakHHxJhMcKSPSCNXq4ptIUzwtYu9g221vuONuDY8MSJSSkE/A0Q5leXYrja16ypP8TGA18S9ocUeT7RL8faRfJk8g+wmEoBt7RwcJFk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bTjT75cM; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="U6LiZTq7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=EaIbOxWHGz4F6US80CpGSyzZKAY2qo/Md4Gb+B5yJdY=; b=U6LiZTq7nBCexaEQ/Ascd7UmU8
-	9ojqDaA3EJ6lbO/MBPC3N5sP4FW2TK/uUJoCTq/xK0kLRDnM/+MEtTtGUg8PGzUNluc7lAZaPvIOK
-	soKWiXpykte4UNMdzoH3i2Kaa0+sQm6NIpS6IsSWpLHw9WxH1eG5o8T4LkSzNDNaMPoc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uOxuB-00FFx1-7p; Tue, 10 Jun 2025 14:16:39 +0200
-Date: Tue, 10 Jun 2025 14:16:39 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	David Jander <david@protonic.nl>, kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH net-next v1 1/3] net: phy: dp83tg720: implement soft
- reset with asymmetric delay
-Message-ID: <534b3aed-bef5-410e-b970-495b62534d96@lunn.ch>
-References: <20250610081059.3842459-1-o.rempel@pengutronix.de>
- <20250610081059.3842459-2-o.rempel@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bTjT75cM"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so41873685e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:17:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749557833; x=1750162633; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IuRj0Ug6ZJKS4fqR2KpE5gyA/o+babJBVnYG2DvTa+g=;
+        b=bTjT75cMtrNTs3pgOQqiR0ze7Y32RVFrmmPU9dFl+7v3IzYRr3Glb7Jy5Za0ANldVi
+         oYUIyG1p4c9f1/dpBtoB0Rvu6qWUpLlxBffBKXLJCxqtDN6KFadEQLhCRJ/8yd+F4uJq
+         ztGPTxCBN4nvVH1jHUzp5FR7ld4Ybl+5FCVkNR2wLUwILsydGAgREhicYw2vDdlIh8Y8
+         1VypVRmqnKCb06z6RnBTcFNfmxYmtz+fOUaBBmO7dMktyn/IOejvr+dSHYTmNuqUKPRX
+         WLy5pQDNYI4LPaQZ0VYi8YjrqB1e5mpdnOWfNrs/vLj+UTEccF2oXQDbygKr6NT05Uf1
+         qgDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749557833; x=1750162633;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IuRj0Ug6ZJKS4fqR2KpE5gyA/o+babJBVnYG2DvTa+g=;
+        b=VEh6JJ0OVYHy1p/lumsv9mCpRoHaZNEimexLXluSv272rmgu8T5Wg6Ny43HDeGUJRI
+         ZMjdC+xvpyJYRoBvLIdfzY2PRyHyyA4q310VvA3JitoR707y4xbOqtI7kUsI5tA+xs/W
+         CIWbaAsv+JYyoFar8V8Dq5/Clcb1lgvtuYMp5YNrtx+0hwivV8rnQWMcUARtzXEYrdzH
+         hBbKzEpDrExYXfI3twNX2GjC9EcUYNDNzkoQzSIo4hGOrFu0Sl96gvzgbYSWrYwUTk2M
+         6yYGLxdKkr6U+iBfMW/dfT6442lbQbbPDyT/ks5pIL1qaGp2JAvjOWMOFIx4vDJsRS01
+         6kmA==
+X-Forwarded-Encrypted: i=1; AJvYcCUqqRIsxYCVGDRCXy/VXeFnJDrg2BhvT86vFABcJb61LBUi3bRBRZB1G1hb3aAXzcG3ciG+470oz4vJz64=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqHI5sLNyOyzt4BuF3IALYSv3g/p9OSg0vhE2uuZQcVLMl3UoD
+	PRoCvUIj9+hD6X6X9N8M6AOr/KIczsd/zRBUbS/ESbQ4OD3nxtSBdx11fkqnDr+fc5Q=
+X-Gm-Gg: ASbGncsVlTHJ2b4op9i82fWbVuOyQYEm5A2NrePrFN53DKv22CTUflA0MUly2N9HtDK
+	Ivq7R23pnKOlggXczrU4dtn+0HYPYNeJJXAmswzA1/lvCLWRomEOMNoPPry8/mWxKYGSyR02dMb
+	VXNqNegSApT+nED45AI2AmpfR3qSe4N5YkHvutVOIH8Gkn/fHBDAchckwksZMqw2vvwaKf0LYcV
+	+h/Ms60DwZuTJMPv5W/SoyH5j6owbJof265UFNZLxUhKQMAk1xDiCVkMygZLAnLht3O2yRZ2QnZ
+	wbrnhd+YjZYOlbK4LyFxG3IyjVE9OJtZgHUl+Ljd+xSAWCAbhTDcspLJ3y/zTr1HgN4ZRrHgTEB
+	F86r1QXo=
+X-Google-Smtp-Source: AGHT+IGZryHptsIAfWJgutrc/pv6q8jGoH1/bsVGr2feMOgq4/suOW7VZ43KFE9ciIcwtc866C4hEg==
+X-Received: by 2002:a05:600c:5251:b0:440:69f5:f179 with SMTP id 5b1f17b1804b1-4531ce9f6d9mr27818275e9.7.1749557833268;
+        Tue, 10 Jun 2025 05:17:13 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4526e1595d4sm136313625e9.16.2025.06.10.05.17.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 05:17:12 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250606203729.3311592-1-martin.blumenstingl@googlemail.com>
+References: <20250606203729.3311592-1-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH] drm/meson: fix debug log statement when setting the
+ HDMI clocks
+Message-Id: <174955783271.1721274.13898926968868576990.b4-ty@linaro.org>
+Date: Tue, 10 Jun 2025 14:17:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250610081059.3842459-2-o.rempel@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Tue, Jun 10, 2025 at 10:10:57AM +0200, Oleksij Rempel wrote:
-> From: David Jander <david@protonic.nl>
+Hi,
+
+On Fri, 06 Jun 2025 22:37:29 +0200, Martin Blumenstingl wrote:
+> The "phy" and "vclk" frequency labels were swapped, making it more
+> difficult to debug driver errors. Swap the label order to make them
+> match with the actual frequencies printed to correct this.
 > 
-> Add a .soft_reset callback for the DP83TG720 PHY that issues a hardware
-> reset followed by an asymmetric post-reset delay. The delay differs
-> based on the PHY's master/slave role to avoid synchronized reset
-> deadlocks, which are known to occur when both link partners use
-> identical reset intervals.
 > 
-> The delay includes:
-> - a fixed 1ms wait to satisfy MDC access timing per datasheet, and
-> - an empirically chosen extra delay (97ms for master, 149ms for slave).
-> 
-> Co-developed-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> Signed-off-by: David Jander <david@protonic.nl>
 
-Hi Oleksij
+Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-fixes)
 
-Since you are submitting it, your Signed-off-by should come last. The
-order signifies the developers who passed it along towards merging.
+[1/1] drm/meson: fix debug log statement when setting the HDMI clocks
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/d17e61ab63fb7747b340d6a66bf1408cd5c6562b
 
-> ---
->  drivers/net/phy/dp83tg720.c | 75 ++++++++++++++++++++++++++++++++-----
->  1 file changed, 65 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/net/phy/dp83tg720.c b/drivers/net/phy/dp83tg720.c
-> index 7e76323409c4..2c86d05bf857 100644
-> --- a/drivers/net/phy/dp83tg720.c
-> +++ b/drivers/net/phy/dp83tg720.c
-> @@ -12,6 +12,42 @@
->  
->  #include "open_alliance_helpers.h"
->  
-> +/*
-> + * DP83TG720 PHY Limitations and Workarounds
-> + *
-> + * The DP83TG720 1000BASE-T1 PHY has several limitations that require
-> + * software-side mitigations. These workarounds are implemented throughout
-> + * this driver. This section documents the known issues and their corresponding
-> + * mitigation strategies.
+-- 
+Neil
 
-Is there a public errata you can reference?
-
-> + *
-> + * 1. Unreliable Link Detection and Synchronized Reset Deadlock
-> + * ------------------------------------------------------------
-> + * After a link loss or during link establishment, the DP83TG720 PHY may fail
-> + * to detect or report link status correctly. To work around this, the PHY must
-> + * be reset periodically when no link is detected.
-> + *
-> + * However, in point-to-point setups where both link partners use the same
-> + * driver (e.g. Linux on both sides), a synchronized reset pattern may emerge.
-> + * This leads to a deadlock, where both PHYs reset at the same time and
-> + * continuously miss each other during auto-negotiation.
-> + *
-> + * To address this, the reset procedure includes two components:
-> + *
-> + * - A **fixed minimum delay of 1ms** after issuing a hardware reset, as
-> + *   required by the "DP83TG720S-Q1 1000BASE-T1 Automotive Ethernet PHY with
-> + *   SGMII and RGMII" datasheet. This ensures MDC access timing is respected
-> + *   before any further MDIO operations.
-> + *
-> + * - An **additional asymmetric delay**, empirically chosen based on
-> + *   master/slave role. This reduces the risk of synchronized resets on both
-> + *   link partners. Values are selected to avoid periodic overlap and ensure
-> + *   the link is re-established within a few cycles.
-
-Maybe there is more about this in the following patches, i've not read
-them yet. Does autoneg get as far as determining master/slave role? Or
-are you assuming the link partners are somehow set as
-prefer_master/prefer_slave?
-
-	Andrew
