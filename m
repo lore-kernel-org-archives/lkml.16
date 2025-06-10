@@ -1,229 +1,204 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC019246BA8
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB01B23AB9D
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749562733; cv=none; b=N2WFi98dAcLG/k+TwBA7FDrslSNkp2QFyvkgw7odGDPwnXrPZ/7IZkIcAmMBJ5i3pRywMzHN9EsohxsNcToB4a0o1ui1fQXV3qIyKeichN5/i/YdKxcwZXCL5Y/9v819lKzmDHMSBJA5OjZePJAzyu7WemB7MUR6gHruofWxveU=
+	t=1749562866; cv=none; b=Ii6/XF6U6ySXVwTNZxRDrRwQtaT5n58lI6rQwJ07QLCH7zVOukfFngNhIuuK5cU6J9m1B7zPpnK8caLafC8e71eVyba3N885NTnFsB9JabdmwO7IbuvyawLN34plDTnWFTQpfIrHTx/5sRh3+GFEXYJbyQwDh/5OTKbQhQMbUR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749562733; c=relaxed/simple;
-	bh=55DDuiOaro/SoFIoPOAKogqoXdCBebxNBcecJkFZFkw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JpRseIKbM2h7XPbA3KbcIkiU5Wx2/84hY/wLocwIKavkZwsQXHSb/sPNQZIGZ8cM6CEK8czb6XTItgNWrbVa3uFjeFn1T98KlxiT5N3W6OeZmVTFIKFuV2MCpUbGzWUV44sS63vCUdb1Cl3U6qa4Qe8PgvsEGVrqWgc6vY/yjvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CFh9PXzw; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="CFh9PXzw"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55AADDL5011182
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:38:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=VfbkD6ITLHOjUUf6T2RvScNE
-	AhIb47h0hB0wTslzk6w=; b=CFh9PXzwrTVv/Q10p+cexE7FbpiJsTVYv/g5AZaF
-	RSII9mhJCewX8smSnBB9tbn21xjEvB5Ir32l0X8JxTp6adUO55yBOq9TThZMQouG
-	xxPfcjtP9uxsoZCBKg7dodhztJQ0E3OoDoESu5XtAsHj2CY39MUgAp7uSfKjAvQy
-	434nyCOTyJ7m0mfGTa3X9H0rZlTJDzis5dTTZ38PA3Vng7wFIy61ktOwwVOpERI5
-	QqJk4QcUYl8J5xfPop6O0HW4zm+2MbGa580JjErEX4PBgWvpnOb+cc/rDfJMuiCu
-	vCa+aDkNoW++5TlAm8XoBETJk2A7IwWY0EonK4vfFWUPJA==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 476jrh8jqs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:38:50 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7d099c1779dso988806885a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:38:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749562715; x=1750167515;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VfbkD6ITLHOjUUf6T2RvScNEAhIb47h0hB0wTslzk6w=;
-        b=t1eONPbDOWNA0tibS1mz3dwhfO9G+5346JLSLSL/Je8kCCblCV22kqii9ky2FtCqVJ
-         A/XZH0iOjhzm9S2Eq688KvTkMtX7jQGb9ttwkIq1BC3OelAeMNMzn91gfMlLLSMYEWE8
-         kFf69WirRRfTsfJ6LysLyFIUISP7v6MIbcExIgO6oOrca9aSudoqyKluv+23C4s9TQGK
-         pVGyL1wlErjmjdviYNip5U3RYs92Jie/bFwxXe+Yn6ieheq9Pn47uoWm4NwkkfB13tzM
-         TI4ZQm4BtnGYzFNo3UjpO9QOUFm/LGBsnpFpS7x08tdX1ol6KArcdNtEJ9yafS4gR3wb
-         aTfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV1ezPgrGKtyCMOH9I4vTSmSpM+QDYopjqsqGO043gzcv4cm9ez95JFBqxOa3fNJdfSLl9KBZkn7rWxK6k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysOe6Sqyn5F2jyc5uo0tXVFu1yx1ko4BSrNDmFIgJWtNLThCl6
-	wEc3hGZ+Xv/SUEw5WfBsqOfwCoEOC8UH3hD8iRUWVE+2ObcNyFsOW3PDYv37M92pITRCPoAq6I9
-	vFAPKd/GkArMG4lJidZHJfFlZjlTBVbDqPC27WzcrWjVzI338Ai3lQN2b1H+P4vyPBaw=
-X-Gm-Gg: ASbGncsxRCf3N2mS98DFu7Nsaqd6MQwA+ar7vBUw5L7H+ZMnYpZSibD4ZQvrB290dvE
-	xDuEJ7a7Cw1QwDShkb8oeal3z1wqI4Kx9Lij5uJ5MdM/0E1z4/J4/ApU9KXjyPwYm8RZ2Sp60E9
-	k7tRpRFBou3RV/6CPqnL1DBv3sM3uoOsVXTjj0RgNxUnxPfs8h5DYq8+9Z86xWmYazx3FRoaZHB
-	2dpQcg631I1ByxHYSy1tjIwBJRzSidIdFNfa+F4rV6ILdwN1MSJmx8DOt61mJTCcnBKUux+l6Jb
-	dpv8lX0I/RZAqpZhUGCY00VJRhn5G0/fayz22OSSy0+cGauGBrEftcz1QBXhqxSDlyExUPxnBr+
-	Tg4kluryr0fW3YqZPq0Lr2F0Ma/xeFys0W4E=
-X-Received: by 2002:a05:620a:478d:b0:7d3:8dc9:f438 with SMTP id af79cd13be357-7d38dc9f43emr1021648085a.17.1749562715435;
-        Tue, 10 Jun 2025 06:38:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHfAM4VaNuFAie2Y6pq7R5HM0Fh9jAG10QS13nVqGILa1cGlh7pr3Ew62wRyjOoTLVSFBP2WQ==
-X-Received: by 2002:a05:620a:478d:b0:7d3:8dc9:f438 with SMTP id af79cd13be357-7d38dc9f43emr1021644785a.17.1749562714967;
-        Tue, 10 Jun 2025 06:38:34 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553676d04e9sm1548162e87.5.2025.06.10.06.38.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 06:38:34 -0700 (PDT)
-Date: Tue, 10 Jun 2025 16:38:32 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Ram Prakash Gupta <quic_rampraka@quicinc.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Sachin Gupta <quic_sachgupt@quicinc.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Bhupesh Sharma <bhupesh.sharma@linaro.org>, linux-mmc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, quic_cang@quicinc.com,
-        quic_nguyenb@quicinc.com, quic_bhaskarv@quicinc.com,
-        quic_mapa@quicinc.com, quic_nitirawa@quicinc.com,
-        quic_sartgarg@quicinc.com
-Subject: Re: [PATCH V3 4/4] mmc: sdhci-msm: Rectify DLL programming sequence
- for SDCC
-Message-ID: <sar4bvjd5ntniucgrqvpnorywlyifuzvta6h2nggqodxinj6d3@5zwwjjhc5ycn>
-References: <20250122094707.24859-1-quic_sachgupt@quicinc.com>
- <20250122094707.24859-5-quic_sachgupt@quicinc.com>
- <nmsm6bb5biptmzruggs4f3mweq7d7hcmwqjdidf6bi7gyoliw2@x4yitguzz6zx>
- <94f3e5e0-f04f-ca4a-6133-513223919c72@quicinc.com>
+	s=arc-20240116; t=1749562866; c=relaxed/simple;
+	bh=A8vrBBaRJHuMhCUSoFetsbSIHMK0ozpr1Nh33v0tUQs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fQjwBB3EFXIRLesbcs7ubN6AKfwEkCT2tEqN8SEgTdR6/kfN1cuf4cIRYUpmgiQhdFo1Qjazqn/CJZpUoqi70J57BAzw8UTBfsUNwlGx10u+ny5iezhhf9PxbElQquWApQCbtri2gd+yc2u3ze42kSHkHtrcReU0WUAJlqjTW1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE38914BF;
+	Tue, 10 Jun 2025 06:40:44 -0700 (PDT)
+Received: from [10.1.33.221] (XHFQ2J9959.cambridge.arm.com [10.1.33.221])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1CFB73F59E;
+	Tue, 10 Jun 2025 06:41:02 -0700 (PDT)
+Message-ID: <3cad01ea-b704-4156-807e-7a83643917a8@arm.com>
+Date: Tue, 10 Jun 2025 14:41:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <94f3e5e0-f04f-ca4a-6133-513223919c72@quicinc.com>
-X-Authority-Analysis: v=2.4 cv=EovSrTcA c=1 sm=1 tr=0 ts=6848356a cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=9sPEnqXd4bbI6Z3rhAAA:9 a=CjuIK1q_8ugA:10
- a=IoWCM6iH3mJn3m4BftBB:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: 4BbaeIPvOt3lmdsOAyzTHkyq23-w9cVi
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDEwOCBTYWx0ZWRfXzQCRgJg2CWwc
- kNg92dc87C4owIvE9eG+H23OPsu1aIEZs0SxAtz4CLLq+5M1EBHPha83ZXtPXvxrBYWlQ4jL6Yr
- BwfyRu96SnD2QALgy8fWrJpy1Ps8BM6TM1xzHm35OcG9rtyKm8SYT2l+hz4VA3Z3+2IWuO8JRn/
- 61b9NA72bQJYr0DPWcyjiqz47G4MHmi+02DzKsr9OBV6DQIdW9YPXJQOELt1RKIrTcJmLYIbEOZ
- 9YaVPWvpv3S7Dn8/HDMRd0ZBqOFFnK38lXM6yGc1jrolBaxNacmj1nsAyrbe2TvdYoHH7q0yGrV
- /8K2t8if0hrlMHH5gWFoutNQzoDb9nycIREdkYMIfm6zZqopdyn4MvWdQiVLjOnarjfzJ6rNfIY
- YrX5YQ3Co1LG4HDHq2zXJ0jhslEY4hxNYykFEGbjpanlXfL4X9Kbs8cqF9mH3Pdbmq/f3Ux4
-X-Proofpoint-GUID: 4BbaeIPvOt3lmdsOAyzTHkyq23-w9cVi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_05,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 spamscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=999
- mlxscore=0 clxscore=1015 malwarescore=0 adultscore=0 lowpriorityscore=0
- phishscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506100108
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] arm64/mm: Ensure lazy_mmu_mode never nests
+Content-Language: en-GB
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250606135654.178300-1-ryan.roberts@arm.com>
+ <aEgeQCCzRt-B8_nW@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <aEgeQCCzRt-B8_nW@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 10, 2025 at 05:52:02PM +0530, Ram Prakash Gupta wrote:
-> Hi Dmitry,
+On 10/06/2025 13:00, Catalin Marinas wrote:
+> On Fri, Jun 06, 2025 at 02:56:52PM +0100, Ryan Roberts wrote:
+>> Commit 1ef3095b1405 ("arm64/mm: Permit lazy_mmu_mode to be nested")
+>> provided a quick fix to ensure that lazy_mmu_mode continues to work when
+>> CONFIG_DEBUG_PAGEALLOC is enabled, which can cause lazy_mmu_mode to
+>> nest.
+>>
+>> The solution in that patch is the make the implementation tolerant to
 > 
-> I will start on this with addressing your comments in previous version as
-> suggested.
+> s/is the make/is to make/
+> 
+>> nesting; when the inner nest exits lazy_mmu_mode, we exit then the outer
+>> exit becomes a nop. But this sacrifices the optimization opportunity for
+>> the remainder of the outer user.
+> [...]
+>> I wonder if you might be willing to take this for v6.16? I think its a neater
+>> solution then my first attempt - Commit 1ef3095b1405 ("arm64/mm: Permit
+>> lazy_mmu_mode to be nested") - which is already in Linus's master.
+>>
+>> To be clear, the current solution is safe, I just think this is much neater.
+> 
+> Maybe better, though I wouldn't say much neater. One concern I have is
+> about whether we'll get other such nesting in the future and we need to
+> fix them in generic code. Here we control __kernel_map_pages() but we
+> may not for other cases.
+> 
+> Is it the fault of the arch code that uses apply_to_page_range() via
+> __kernel_map_pages()? It feels like it shouldn't care about the lazy
+> mode as that's some detail of the apply_to_page_range() implementation.
+> Maybe this API should just allow nesting.
 
-- Please don't top-post. Ever.
+I don't think it is possible to properly support nesting:
 
-- Please provide some actual response the comments where they were
-  posted. From the upstream community side that's more important than 'I
-  will address comments' announcement.
+enter_lazy_mmu
+    for_each_pte {
+        read/modify-write pte
+
+        alloc_page
+            enter_lazy_mmu
+                make page valid
+            exit_lazy_mmu
+
+        write_to_page
+    }
+exit_lazy_mmu
+
+This example only works because lazy_mmu doesn't support nesting. The "make page
+valid" operation is completed by the time of the inner exit_lazy_mmu so that the
+page can be accessed in write_to_page. If nesting was supported, the inner
+exit_lazy_mmu would become a nop and write_to_page would explode.
+
+So the conclusion I eventually came to (after being nudged by Mike Rapoport at
+[1]) is that this _is_ arm64's fault for creating a loop via
+apply_to_page_range(). So I'm trying to fix this by breaking the loop.
+
+[1] https://lore.kernel.org/all/aDqz7H-oBo35FRXe@kernel.org/
 
 > 
-> Thanks,
-> Ram
+>> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+>> index 88db8a0c0b37..9f387337ccc3 100644
+>> --- a/arch/arm64/include/asm/pgtable.h
+>> +++ b/arch/arm64/include/asm/pgtable.h
+>> @@ -83,21 +83,11 @@ static inline void queue_pte_barriers(void)
+>>  #define  __HAVE_ARCH_ENTER_LAZY_MMU_MODE
+>>  static inline void arch_enter_lazy_mmu_mode(void)
+>>  {
+>> -	/*
+>> -	 * lazy_mmu_mode is not supposed to permit nesting. But in practice this
+>> -	 * does happen with CONFIG_DEBUG_PAGEALLOC, where a page allocation
+>> -	 * inside a lazy_mmu_mode section (such as zap_pte_range()) will change
+>> -	 * permissions on the linear map with apply_to_page_range(), which
+>> -	 * re-enters lazy_mmu_mode. So we tolerate nesting in our
+>> -	 * implementation. The first call to arch_leave_lazy_mmu_mode() will
+>> -	 * flush and clear the flag such that the remainder of the work in the
+>> -	 * outer nest behaves as if outside of lazy mmu mode. This is safe and
+>> -	 * keeps tracking simple.
+>> -	 */
+>> -
+>>  	if (in_interrupt())
+>>  		return;
+>>
+>> +	VM_WARN_ON(test_thread_flag(TIF_LAZY_MMU));
 > 
-> On 1/22/2025 3:30 PM, Dmitry Baryshkov wrote:
-> > On Wed, Jan 22, 2025 at 03:17:07PM +0530, Sachin Gupta wrote:
-> >> With the current DLL sequence stability issues for data
-> >> transfer seen in HS400 and HS200 modes.
-> >>
-> >> "mmc0: cqhci: error IRQ status: 0x00000000 cmd error -84
-> >> data error 0"
-> >>
-> >> Rectify the DLL programming sequence as per latest hardware
-> >> programming guide
-> >>
-> >> Signed-off-by: Sachin Gupta <quic_sachgupt@quicinc.com>
-> >> ---
-> >>  drivers/mmc/host/sdhci-msm.c | 270 ++++++++++++++++++++++++++++++++---
-> >>  1 file changed, 252 insertions(+), 18 deletions(-)
-> >>
-> >> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> >> index cc7756a59c55..17f17a635d83 100644
-> >> --- a/drivers/mmc/host/sdhci-msm.c
-> >> +++ b/drivers/mmc/host/sdhci-msm.c
-> >> @@ -28,6 +28,7 @@
-> >>  #define CORE_VERSION_MAJOR_SHIFT	28
-> >>  #define CORE_VERSION_MAJOR_MASK		(0xf << CORE_VERSION_MAJOR_SHIFT)
-> >>  #define CORE_VERSION_MINOR_MASK		0xff
-> >> +#define SDHCI_MSM_MIN_V_7FF		0x6e
-> >>  
-> >>  #define CORE_MCI_GENERICS		0x70
-> >>  #define SWITCHABLE_SIGNALING_VOLTAGE	BIT(29)
-> >> @@ -118,7 +119,8 @@
-> >>  #define CORE_PWRSAVE_DLL	BIT(3)
-> >>  
-> >>  #define DDR_CONFIG_POR_VAL	0x80040873
-> >> -
-> >> +#define DLL_CONFIG_3_POR_VAL	0x10
-> >> +#define TCXO_FREQ               19200000
-> >>  
-> >>  #define INVALID_TUNING_PHASE	-1
-> >>  #define SDHCI_MSM_MIN_CLOCK	400000
-> >> @@ -309,6 +311,16 @@ struct sdhci_msm_host {
-> >>  	bool artanis_dll;
-> >>  };
-> >>  
-> >> +enum dll_init_context {
-> >> +	DLL_INIT_NORMAL,
-> >> +	DLL_INIT_FROM_CX_COLLAPSE_EXIT,
-> >> +};
-> >> +
-> >> +enum mode {
-> >> +	HS400, // equivalent to SDR104 mode for DLL.
-> >> +	HS200, // equivalent to SDR50 mode for DLL.
-> >> +};
-> >> +
-> >>  static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
-> >>  {
-> >>  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> >> @@ -793,6 +805,211 @@ static int msm_init_cm_dll(struct sdhci_host *host)
-> >>  	return 0;
-> >>  }
-> >>  
-> >> +static unsigned int sdhci_msm_get_min_clock(struct sdhci_host *host)
-> >> +{
-> >> +	return SDHCI_MSM_MIN_CLOCK;
-> >> +}
-> >> +
-> >> +static unsigned int sdhci_msm_get_clk_rate(struct sdhci_host *host, u32 req_clk)
-> >> +{
-> >> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> >> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-> >> +	struct clk *core_clk = msm_host->bulk_clks[0].clk;
-> >> +	unsigned int sup_clk;
-> >> +
-> >> +	if (req_clk < sdhci_msm_get_min_clock(host))
-> >> +		return sdhci_msm_get_min_clock(host);
-> >> +
-> >> +	sup_clk = clk_get_rate(core_clk);
-> >> +
-> >> +	if (host->clock != msm_host->clk_rate)
-> >> +		sup_clk = sup_clk / 2;
-> > Please resolve previous discussions before sending new versions. Just
-> > sending a response and then sending next iteration of the patchset is
-> > not a proper way to communicate.
-> >
-> > NAK until the discussion is resolved in the previous thread.
-> >
-> >> +
-> >> +	return sup_clk;
-> >> +}
-> >> +
+> This warning is good to have back.
+> 
+>> +
+>>  	set_thread_flag(TIF_LAZY_MMU);
+>>  }
+>>
+>> @@ -119,6 +109,14 @@ static inline void arch_leave_lazy_mmu_mode(void)
+>>  	clear_thread_flag(TIF_LAZY_MMU);
+>>  }
+>>
+>> +static inline bool arch_in_lazy_mmu_mode(void)
+>> +{
+>> +	if (in_interrupt())
+>> +		return false;
+>> +
+>> +	return test_thread_flag(TIF_LAZY_MMU);
+>> +}
+>> +
+>>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>>  #define __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
+>>
+>> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+>> index 04d4a8f676db..4da7a847d5f3 100644
+>> --- a/arch/arm64/mm/pageattr.c
+>> +++ b/arch/arm64/mm/pageattr.c
+>> @@ -293,18 +293,29 @@ int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid)
+>>  }
+>>
+>>  #ifdef CONFIG_DEBUG_PAGEALLOC
+>> -/*
+>> - * This is - apart from the return value - doing the same
+>> - * thing as the new set_direct_map_valid_noflush() function.
+>> - *
+>> - * Unify? Explain the conceptual differences?
+>> - */
+>>  void __kernel_map_pages(struct page *page, int numpages, int enable)
+>>  {
+>> +	bool lazy_mmu;
+>> +
+>>  	if (!can_set_direct_map())
+>>  		return;
+>>
+>> +	/*
+>> +	 * This is called during page alloc or free, and maybe called while in
+>> +	 * lazy mmu mode. Since set_memory_valid() may also enter lazy mmu mode,
+>> +	 * this would cause nesting which is not supported; the inner call to
+>> +	 * exit the mode would exit, meaning that the outer lazy mmu mode is no
+>> +	 * longer benefiting from the optimization. So temporarily leave lazy
+>> +	 * mmu mode for the duration of the call.
+>> +	 */
+>> +	lazy_mmu = arch_in_lazy_mmu_mode();
+>> +	if (lazy_mmu)
+>> +		arch_leave_lazy_mmu_mode();
+>> +
+>>  	set_memory_valid((unsigned long)page_address(page), numpages, enable);
+>> +
+>> +	if (lazy_mmu)
+>> +		arch_enter_lazy_mmu_mode();
+>>  }
+>>  #endif /* CONFIG_DEBUG_PAGEALLOC */
+> 
+> So basically you are flattening the enter/leave_lazy_mmu_mode() regions.
+> Ideally this could have been done by the nesting
+> arch_enter_lazy_mmu_mode() automatically but that means this function
+> returning the current mode and arch_leave_lazy_mmu_mode() taking an
+> argument - more like the irq saving/restoring (even better renaming it
+> to arch_restore_lazy_mmu_mode()). I guess this won't go well with the mm
+> folk who don't seem willing to changes in this area.
 
--- 
-With best wishes
-Dmitry
+We could alternatively use some per-cpu storage for a nest count, but that gets
+ugly quite quickly I suspect. But regardless, I'm not convinced the semantics of
+a properly nested lazy_mmu are safe.
+
+Thanks,
+Ryan
+
+> 
+> FWIW, this patch is correct.
+> 
+
