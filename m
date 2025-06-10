@@ -1,173 +1,173 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2054.outbound.protection.outlook.com [40.107.94.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A546129CB46
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:43:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749559434; cv=none; b=o6CWwk9mEm8ohveEETzMZ/t2IomkRxpLmL7eLSh7POgP9pDRdigKGYVwRJblyo+ok8FoIkY5mstMHatqrAIPNnxpi5L2pK6zFNCXQCxz4Sej1UHNqCruf+ytPbdBqzFAxpukwLcOsQL8gRLMlLc3IgKFBBqSj7H+N3zKADKBCkE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749559434; c=relaxed/simple;
-	bh=r4RwG6BMFebJJQQm/nElPujWnwGjcoRuHG9eSq+72y8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gssE+We2km21Tip7BxSrKYZITNSDmb6wFS6ZeCe8Mgr7lrHE9tjWQ9fHZdxsLWuoUyWmgw78XzrweV/EQo6TJg3CxMW0A+XxlmefnCin4L3E1YWaD9FSUFmR7FKAq4XnEDbN8p0xPtZoUqzZlUGlY7IhMxWedji+r4KHtYnNGBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=oXBj8nsG; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F740225787;
+	Tue, 10 Jun 2025 12:44:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749559451; cv=fail; b=k1HXAl9dZ0TJ3AdfrTIBZL6YnSAs4uXtdE94sAM8jS2twJ0OG2jUjXz39PMxl8svkVEf2xUTZWmk02iHcadlPyCLeMex6UsuW4omWmxdm+63wjk9DwRT5A2MQz2Zl8UkdKHzBjAa7r6bwYxboVaOJjAQKXx7+e3mcYJ3nRl3IxM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749559451; c=relaxed/simple;
+	bh=mfuysDkz9vbQ+ezfxp+GgBszNLyOzNhWJey0XqbN0F8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KhNCxG9MC3uX0XGxd5xhD2zu7jX69yvdF4iFk7lxmSRWKa62PlSkMAYaZUTSAPkwDMWFzXnSApXA4cczBM739DNrvcAwXYwdLJh32zDQFL9vZ5QOb4j78ZH4JW5w4pqSvM5MmUAT2cMhuow7lF+eSpqyXlw299n6bRVVeYpCSGQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gehealthcare.com; spf=pass smtp.mailfrom=gehealthcare.com; dkim=pass (2048-bit key) header.d=gehealthcare.com header.i=@gehealthcare.com header.b=RuYpR94Y; arc=fail smtp.client-ip=40.107.94.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gehealthcare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gehealthcare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="oXBj8nsG"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-441d437cfaaso34137305e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:43:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749559430; x=1750164230; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xLUtgRRBMOnouMm1iY8Dj6SXphTk6G+W8VyW6WqMYqM=;
-        b=oXBj8nsGHrJOjs996Eae0tfnTkud4DekyDKTeDTcjFrJonKbo1soH3fQhbonwvz7jR
-         EPjGFvz5YIO/G9xqW07NAUwEcQn15smXaKIizSqX9xAUQJx13ckrccXykFnkMM/90Ndm
-         tAlEdE8KLQ6sJWa9W6uLojiz8cf1F5BbQaFidHiIqCNtAyfUN1fkv8FVv3kBWrkBVoyx
-         FZdn+beOSmMvKinr66u8f9DwHOm+C7caKFLXv4nqI/fpj3YHMpyBu77DKPJbdWZkuCYm
-         Dua+3F2NsWWJGQo++qqf44mxgZorXiw8RfS1X8fbIF9QRMXtt6SSP0/qOpnSAmAuz4gt
-         kdHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749559430; x=1750164230;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xLUtgRRBMOnouMm1iY8Dj6SXphTk6G+W8VyW6WqMYqM=;
-        b=DMW6pYd/KzQa9ggm4ynElrI82ozJoFIpffngcjHKEVy5nAGkedeVfTZvXl8Y6yGRV8
-         KdizlqwBApaCxUN2w2yw9Jfi1+ChFw8r8XJ9/aw1PVcLye7es4De9ENj/aUPFZtKNlut
-         CBi3EaxafAqdW/ajFa9jfFkHripf3a64+o5N+wP4NXETBN+cQe46UpzGLO3BQPnT5PPZ
-         bxRPNYNrIyaxto+8tIRYckZRjnM758HnllIuS1+ynsNkWlTkvyz57gYGXTTkz/06LUgm
-         HnGtz/MqZ9w2x8z8t8jP6KKb2FhpgIKA//B1PsIZgAvPyJXCkZFzdIb226+4yJQPjk2l
-         WZpg==
-X-Forwarded-Encrypted: i=1; AJvYcCV/1Nn5kNTdZRlTULeFD7WghPstjehgXY1buKsugRo6Vm7ync08JzffPxikJooonLv/cvktAzVf3qTzLd0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzky9qd0UIKYGch2FmPj/8H7DFQImXseq7z0CSvGGcyjWglqbEL
-	9HqNlstqk3eReVK3U5vAxv+ILvGtDZFOWo6uiUtr7jzcq+ENb6xEuhOxH4BCKFcvQOs=
-X-Gm-Gg: ASbGncvtZ+ah7HSCe4O9kE5pfwNYJ6vMU5kaRGiLf2uM/oLFzyvygsAlf9mu7e4zua0
-	yA84+ObYCNAmazsZl2xBgjSD16onDCgVVxISow3vuUPKzQkuRqnIuWhgPrr3zb7HLkSgY8u7yAk
-	BI0mphFwdi2b7YXE8ql0UmBIdBY5O6J62lEz3t6+1ydvHrQOCE6+ePKzHtIYJjQ0ksV3XPgs+qs
-	x42bKLQ18F1QXTb+GgwtJSO5F/6pHlB1nT9u6JxvFalF1gakomfKqTZl/45/6q0EOqaGtJNnGJD
-	AsYAzIxAdpF6cZAdzQRy6sVJc7yHYEKPJAd8o5V/z2DOSmT4+7KT
-X-Google-Smtp-Source: AGHT+IG6O9b+F56lqI08lLY8XKEyZhqIaaup/c2qpYzgGQWIUV/qCJJUCoP124GbHllskWBK+K9W3A==
-X-Received: by 2002:a05:600c:8212:b0:450:cd50:3c66 with SMTP id 5b1f17b1804b1-452014b39dfmr152226005e9.29.1749559430015;
-        Tue, 10 Jun 2025 05:43:50 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:4d:e52b:812d:eb7c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53244d15asm12553064f8f.66.2025.06.10.05.43.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 05:43:49 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 10 Jun 2025 14:43:47 +0200
-Subject: [PATCH 2/2] USB: serial: cp210x: use new GPIO line value setter
- callbacks
+	dkim=pass (2048-bit key) header.d=gehealthcare.com header.i=@gehealthcare.com header.b="RuYpR94Y"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YC3N/vTu3uCjiFInxT3h/yvWSy9/HQHgB7PUOJncZDmDSAQdcrwdEsjpdb+XdKgcz/YmH0jTbGmjitB+df92GqwJfRN+PXENPZwhT/rAeHI/H9NQjAvXlxu+itfXUA/2UWU1grElJoPOWKvOtZpEBKAQtGYSrIcK4h/351QUyCq/2QnOiVtRYsHDYE8cIdEGKsaTbdChzxUsUY7gxIlXCBv/SQUMCmT0VvzzHaUwfvay5GoLG1CP5078+tKaoditWeO9jMBHPwrSBtw4UKRRjwN65UgR+kOwlHgKjOn39B+BjGUEw2EPFzheBIp8RArfNu0zutaCc+AOS3Zf5TLp3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5rvFG/s44dSh43jpN7X+yiaV6dbW7lt4BxMya6NDJbQ=;
+ b=jWqTXEHvO0XGzjJ1xPwpfjBsYw335b4ALZNf6G8sgZVPmu9I05vQnvJXgRKncpnbbBnafsXW37qdifXjGoyDrgXiVsYLIB2Pwu7gYIsJVbzCGwagvm1nmfBBUHEjkvFkfP5DBHm2VMNCQDYutKhgESea6i4grbLcCzXsKl0tBWSg4NWNkx0ZqLo74Taq7apWhxzlbYXlQHBqnjCwg69cQDfwhm1MRpcLN10mdDAwF+qznvEPUr/gtySSMCeOEgUpx073s8L3BRzpPITO6w2Pnfygy3F0SUW8lnuvMe4x/FOuSM8GSphJKS8XiJNwnIIC2WiUnPjXxWHrei8Ysm4aXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 165.85.157.49) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=gehealthcare.com; dmarc=fail (p=quarantine sp=quarantine
+ pct=100) action=quarantine header.from=gehealthcare.com; dkim=none (message
+ not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gehealthcare.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5rvFG/s44dSh43jpN7X+yiaV6dbW7lt4BxMya6NDJbQ=;
+ b=RuYpR94Yx/P6q6W5Brjh1HSVdBWdMzXNIK9n25LxOLJhxXl0SwDZDGWgKvA72NkK7kIyrnsP58A+sXXQx9qbElkT70jAo2O7qeM33dwYkEiUcUHBBk+jxo3YwN4b3QCvwLRguWPEUa7ji+u+YtL+3To3BbEySwdJZ7jXNewFIiuzNT2tIo5BuSQq18/OpUvgyEV7sSfizoyMTDct9x6bgowSkwv4cnL5r6dZw1ch5Gt0MEPvMj/uiU6P1he7pQJimkc9tWP9G7SHIUX7Pt95nM5K9+g9+1Nc2xX9xXka4GKuiOGYXwdscX87nH5uLo5e7sKkwllwAjibCGbtTFYp7g==
+Received: from MW4PR03CA0109.namprd03.prod.outlook.com (2603:10b6:303:b7::24)
+ by LV3PR22MB5051.namprd22.prod.outlook.com (2603:10b6:408:1dc::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.29; Tue, 10 Jun
+ 2025 12:44:06 +0000
+Received: from SJ1PEPF00001CE7.namprd03.prod.outlook.com
+ (2603:10b6:303:b7:cafe::38) by MW4PR03CA0109.outlook.office365.com
+ (2603:10b6:303:b7::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.34 via Frontend Transport; Tue,
+ 10 Jun 2025 12:44:05 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 165.85.157.49)
+ smtp.mailfrom=gehealthcare.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=quarantine header.from=gehealthcare.com;
+Received-SPF: Fail (protection.outlook.com: domain of gehealthcare.com does
+ not designate 165.85.157.49 as permitted sender)
+ receiver=protection.outlook.com; client-ip=165.85.157.49;
+ helo=mkerelay1.compute.ge-healthcare.net;
+Received: from mkerelay1.compute.ge-healthcare.net (165.85.157.49) by
+ SJ1PEPF00001CE7.mail.protection.outlook.com (10.167.242.23) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.15 via Frontend Transport; Tue, 10 Jun 2025 12:44:04 +0000
+Received: from 21d8f0102f10 (zoo13.fihel.lab.ge-healthcare.net [10.168.174.111])
+	by builder1.fihel.lab.ge-healthcare.net (Postfix) with SMTP id B877ECFB78;
+	Tue, 10 Jun 2025 15:44:01 +0300 (EEST)
+Date: Tue, 10 Jun 2025 15:44:01 +0300
+From: Ian Ray <ian.ray@gehealthcare.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: horms@kernel.org, Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	brian.ruley@gehealthcare.com, intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] igb: Fix watchdog_task race with shutdown
+Message-ID: <aEgokTyzDrZ6p4aL@21d8f0102f10>
+References: <20250603080949.1681-1-ian.ray@gehealthcare.com>
+ <20250605184339.7a4e0f96@kernel.org>
+ <aEaAGqP-KtcYCMs-@50995b80b0f4>
+ <20250609161039.00c73103@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250610-gpiochip-set-rv-usb-serial-v1-2-a9343ca109e8@linaro.org>
-References: <20250610-gpiochip-set-rv-usb-serial-v1-0-a9343ca109e8@linaro.org>
-In-Reply-To: <20250610-gpiochip-set-rv-usb-serial-v1-0-a9343ca109e8@linaro.org>
-To: Johan Hovold <johan@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2564;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=dVT8Nc93hQ3BpEvg5PDCdq8/g1ooqDkHB5uyuCp0NBk=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoSCiDSjilmUorKMsKsYngZATf+DMV+Uyi+3fd7
- 8IO1GoG4WeJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaEgogwAKCRARpy6gFHHX
- cqlbD/9XZ/lN8YDBGrUO3cZkulCFBny0CWaBk6oUi50KNpWUX9XPaoAyybYPiy+cgI9Fe6P8Wy9
- EzvGa/8+tszfiuIV/zafCbWYKqcnWeEK2xyalS+12UMxzdN8bkTtybCtHuruzzcfuRmZt3robLy
- Qv4hsuBvB9Brqz/w3MmEZ4Ii5CkhEMsMviXUElRdXQCahQeJUV6vXGUQsVdAh+bYniQeBy1xHAl
- 7d5vAYw1qf4H+yKf9479mc536CPThRqcvgE9S88DWt4n2TVUPwv+td8jYZL7+uHdDbNSCCpz0Oq
- 3oMiOImZ19oh0xKvvYwwsWhkM+2+EGyUdXGDCUle4i3Eewgj+1uPshbqazt1kB8ZdrTgt2t+LhS
- 3s6lNFclS3sJrckqBX6t24Po4s8lA/BwB79K6x4vWZIqqH5UL/BAVuXWl21WGAB+hjBKrNsmKLq
- ck0lIEC3DfQk4hOELytH8OSRnMHYT9Dg739GSKUlBhrIgxaxaZsbs7l9K62+aF7I7VUBvpgFsYC
- H/VlKeUMbXSbeqMF8YQp8xu62OmNjERDGwqkDhPVSr4ay63P2VCujrtzSQ1ubaNIkGeG4Oy0DFv
- 5VUMAzugCwexIdh9+9wwOEIMFV5QgRNx5SldrRnNCerXJhDhDCq2Ymq+XO6+1SMReWWNjqQ0fEa
- EUUn0vWMPBh2cTw==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250609161039.00c73103@kernel.org>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE7:EE_|LV3PR22MB5051:EE_
+X-MS-Office365-Filtering-Correlation-Id: fc303a27-caa9-48c8-4e70-08dda81c7c2e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Bgz3dzXpwSgSCCq9qkwmMrbNKg1eAnaliGULsQ7oB+tACwfEMx0TfbhhrV+z?=
+ =?us-ascii?Q?Mt1QwMfgfBthpe5ABDah4x4hE0M6G4Gbvy1JFTjgsTVrH5A3GYq5jaxYP3CN?=
+ =?us-ascii?Q?CmBrdSahLLxfEob2uR8rMY4HbTyq0MxI6hRWW+e8PA4kH9I4gkPmhA1416VN?=
+ =?us-ascii?Q?8hkdok7B3m9S7bnMBq2IkF+GxVANAnRlEVMw0WiXQ1+w8plF/ERe5GhLtw3G?=
+ =?us-ascii?Q?BOqKe0aY7S0s6GOka+wrC/yxE5HZJb4NzarSsqBzImUDv3A8tAKaYbxRKKxA?=
+ =?us-ascii?Q?hmBkPkvW2gNOy3T/GqEqzHQuA110js9smlEDBBdedJzudeBt8ZqBiAbH5smT?=
+ =?us-ascii?Q?bzzScar6pcHzpiGSm8y392QLF5XOBAuzUqhWF09AkS5mRay9D8A1sGseEgNg?=
+ =?us-ascii?Q?B6y02FJQrSKYIxKNyz4/UOoigFiYw7B5KXQk6ANAdQYQ+KwLBk0AAv6T2n8H?=
+ =?us-ascii?Q?ksRuaXJ88HN32t/jnXZsSrH+VBf14g6o6O4oMAdVsoNKhBjjCGlu56i5bUEM?=
+ =?us-ascii?Q?UtJSoo5ibEZRSl5rAdLI0uwypPMKVMUbH4X9VlFZoUXLr6bV+kR8UOa4skl9?=
+ =?us-ascii?Q?8ljLxCGeLZVTwwnKrkJHP8GY28lCpWz8H8ZvVrQFE3k68EOb6N4bZAJL63Ba?=
+ =?us-ascii?Q?jRW76BFaCRMCPTvMNyJsgmPI7jaQHAoGZnlCvaSCvnVAOwCMojPYIFSk9u6p?=
+ =?us-ascii?Q?cwIm/k+H1ZPeTeEIlRw5nRhz/mu2f0qFhumJjClKCxxGcCaZyfxru3QjI2hr?=
+ =?us-ascii?Q?3OuxVp6ejU7kfDYwApb/7W/Al0I7hRKbD3Lx8u+QSeHKv3cGu8r+hASbBoHm?=
+ =?us-ascii?Q?YgR5BpcfxJDX78vQqOHgAEaLTaF6vfXgUAKVmuOSMJmHzbBmoWFSYZ9LtBxh?=
+ =?us-ascii?Q?F4uTXFYW1Zw0/5kUo4SsQI7BEokYHLGDmFlV+R2lFuuZxlJbKJ5b9b4kATmD?=
+ =?us-ascii?Q?6BZHBOrVsZhZ6XxAT6/rX6uxw+IXxY+50Co7sZx6QnQoEUrCUln7LEHuKexs?=
+ =?us-ascii?Q?2ZNlZU+ODpDRbHJV56qDc+qzRE/SIzAy9qCNetm/cfbhQY3WoYrNpkeE16aq?=
+ =?us-ascii?Q?pjtPZCdMRKecdv0k1LbjF8yfo5q19sfY5LHXK7cJddhJs5VqlYcrC1b5A5bQ?=
+ =?us-ascii?Q?XAkLKEhn/Rb8jcmeJb50eB+HhY6dCHoU9P2XrrSpPLyVUfLA/kjFlWx3qoKz?=
+ =?us-ascii?Q?oIVFD8uyjbQ3iLRBkPZDtumdpZFx+GN32rEJHbba3rYBZjqLi2UK95AGiBvz?=
+ =?us-ascii?Q?/gkDoqG4qJx3LWpN+QhkK7f5tVIJnAZsDOqvJKlNHK/rVbWn0D0r6AzYbRys?=
+ =?us-ascii?Q?0xdzwvPep9eUhNS9tVuTf3y3DTEgy13evrRPt5IP6mRaKFwWTTyW/+XOAJFN?=
+ =?us-ascii?Q?dF19oZyIUaaRN2cx1Day98o4Ldz8/kCdQPBLjGmsvtMpVgyx4UjzCVHxg6LO?=
+ =?us-ascii?Q?mEI2mTXbc82HljzxmZB9poqFOh/QxAnZHZ2S92s6weAzelL7HgIAwlWaV+q/?=
+ =?us-ascii?Q?3LPyiAjUFH/AE3iGLmPqT3FKNdDRrvgC8K4l?=
+X-Forefront-Antispam-Report:
+	CIP:165.85.157.49;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mkerelay1.compute.ge-healthcare.net;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: gehealthcare.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 12:44:04.9210
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc303a27-caa9-48c8-4e70-08dda81c7c2e
+X-MS-Exchange-CrossTenant-Id: 9a309606-d6ec-4188-a28a-298812b4bbbf
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=9a309606-d6ec-4188-a28a-298812b4bbbf;Ip=[165.85.157.49];Helo=[mkerelay1.compute.ge-healthcare.net]
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-SJ1PEPF00001CE7.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR22MB5051
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Jun 09, 2025 at 04:10:39PM -0700, Jakub Kicinski wrote:
+> On Mon, 9 Jun 2025 09:32:58 +0300 Ian Ray wrote:
+> > On Thu, Jun 05, 2025 at 06:43:39PM -0700, Jakub Kicinski wrote:
+> > > On Tue,  3 Jun 2025 11:09:49 +0300 Ian Ray wrote:
+> > > >       set_bit(__IGB_DOWN, &adapter->state);
+> > > > +     timer_delete_sync(&adapter->watchdog_timer);
+> > > > +     timer_delete_sync(&adapter->phy_info_timer);
+> > > > +
+> > > > +     cancel_work_sync(&adapter->watchdog_task);
+> > >
+> > > This doesn't look very race-proof as watchdog_task
+> > > can schedule the timer as its last operation?
+> >
+> > Thanks for the reply.  __IGB_DOWN is the key to this design.
+> >
+> > If watchdog_task runs *before* __IGB_DOWN is set, then the
+> > timer is stopped (by this patch) as required.
+> >
+> > However, if watchdog_task runs *after* __IGB_DOWN is set,
+> > then the timer will not even be started (by watchdog_task).
+> 
+> Well, yes, but what if the two functions run *simultaneously*
+> There is no mutual exclusion between these two pieces of code AFAICT
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
+Thank you for clarifying.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/usb/serial/cp210x.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
+IIUC set_bit() is an atomic operation (via bitops.h), and so
+my previous comment still stands.
 
-diff --git a/drivers/usb/serial/cp210x.c b/drivers/usb/serial/cp210x.c
-index 9960ac2b10b719192dfbab0a6e81b2cf80f40d36..caeb2873a60451fb7a9a5b5d25071547b5401d52 100644
---- a/drivers/usb/serial/cp210x.c
-+++ b/drivers/usb/serial/cp210x.c
-@@ -1504,7 +1504,7 @@ static int cp210x_gpio_get(struct gpio_chip *gc, unsigned int gpio)
- 	return !!(mask & BIT(gpio));
- }
- 
--static void cp210x_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
-+static int cp210x_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
- {
- 	struct usb_serial *serial = gpiochip_get_data(gc);
- 	struct cp210x_serial_private *priv = usb_get_serial_data(serial);
-@@ -1522,8 +1522,8 @@ static void cp210x_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
- 	mask = BIT(gpio);
- 
- 	result = usb_autopm_get_interface(serial->interface);
--	if (result)
--		goto out;
-+	if (result < 0)
-+		return result;
- 
- 	switch (priv->partnum) {
- 	case CP210X_PARTNUM_CP2105:
-@@ -1555,11 +1555,8 @@ static void cp210x_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
- 	}
- 
- 	usb_autopm_put_interface(serial->interface);
--out:
--	if (result < 0) {
--		dev_err(&serial->interface->dev, "failed to set GPIO value: %d\n",
--				result);
--	}
-+
-+	return result < 0 ? result : 0;
- }
- 
- static int cp210x_gpio_direction_get(struct gpio_chip *gc, unsigned int gpio)
-@@ -1599,9 +1596,8 @@ static int cp210x_gpio_direction_output(struct gpio_chip *gc, unsigned int gpio,
- 	struct cp210x_serial_private *priv = usb_get_serial_data(serial);
- 
- 	priv->gpio_input &= ~BIT(gpio);
--	cp210x_gpio_set(gc, gpio, value);
- 
--	return 0;
-+	return cp210x_gpio_set(gc, gpio, value);
- }
- 
- static int cp210x_gpio_set_config(struct gpio_chip *gc, unsigned int gpio,
-@@ -1960,7 +1956,7 @@ static int cp210x_gpio_init(struct usb_serial *serial)
- 	priv->gc.direction_input = cp210x_gpio_direction_input;
- 	priv->gc.direction_output = cp210x_gpio_direction_output;
- 	priv->gc.get = cp210x_gpio_get;
--	priv->gc.set = cp210x_gpio_set;
-+	priv->gc.set_rv = cp210x_gpio_set;
- 	priv->gc.set_config = cp210x_gpio_set_config;
- 	priv->gc.init_valid_mask = cp210x_gpio_init_valid_mask;
- 	priv->gc.owner = THIS_MODULE;
+(Sorry if I have misunderstood your question.)
 
--- 
-2.48.1
+Either watchdog_task runs just before __IGB_DOWN is set (and
+the timer is stopped by this patch) -- or watchdog_task runs
+just after __IGB_DOWN is set (and thus the timer will not be
+restarted).
 
+In both cases, the final cancel_work_sync ensures that the
+watchdog_task completes before igb_down() continues.
+
+Regards,
+Ian
