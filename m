@@ -1,125 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from borehabit.cfd (ip160.ip-51-81-179.us [51.81.179.160])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB99921ADBA;
-	Tue, 10 Jun 2025 14:53:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7436221CC41
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 14:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.179.160
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749567224; cv=none; b=bFSBT4k+ckV21wli3YVurURRMh01HNUdbNucADEG+pUFigvYUrnVC03WYikPfdzaQmtEWOtvCz2/LOCmkEk545BQ83d4zVx4c78EQulY0PyV1dArYeM0zY3ayGf739d6xQPLnyWpRFqXrXGSLExmiVgN/TaIuNATBDGEDBPzn7Y=
+	t=1749567245; cv=none; b=nnSTG57pj0Duln+zOBYAidPl0tvYadM3viIxagrR3r0AUZe30TfrnOc+JQ/4t29AFN4jtLQY/NrlU5Aotc+69f1EfxAJ6zBxBTwdA3Qt2Hjp0K3xNKHuwknRfrgdGNV0+KYc/4kEtgczfrbRUbY0zJXZEfV4K1TBldIwq0vOcVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749567224; c=relaxed/simple;
-	bh=D8oBuhkz5TcYD7TDo/ChhAEaqGOauhMGzMwHg078OFo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PR7K4+nxZKjEpVvTXaGNXpyfhxfBor4OttVRmzMdOV+7MTRxU10hYDfmGGbudEe5oVX2rqCnRbztNus7eE8yYQuXN2nG80ssewFww6kSkVrKmvupsYqivIt5wlTA0numcCVGtMIMS6ijZx+sSwa4nt6TlCpdO+uZ85rzYNQRCMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T+qh8jev; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749567245; c=relaxed/simple;
+	bh=j/qZ6nCFDOcbnwIbag40JF9HDzOLw0n9TJz9U1mz3X8=;
+	h=To:Subject:Date:From:Message-ID:MIME-Version:Content-Type; b=hXTtVh55BsOvlJPUw8M5TTq5aLAeBkjQIDGNDBs4AHVS97ERObF2E1qXWZJYHqwDqVrctQPo7U5W5B5aSJ3F0pBdN1SqsQD54SORt1xsshz8HFx8mGak/7cU4izzYs91RDWsRmeBsRhhfzRa4e5+Kmc2CWOqdBDuFlvlobn3/Ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=borehabit.cfd; spf=pass smtp.mailfrom=borehabit.cfd; dkim=pass (1024-bit key) header.d=borehabit.cfd header.i=@borehabit.cfd header.b=Zwq1dPgR; arc=none smtp.client-ip=51.81.179.160
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=borehabit.cfd
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=borehabit.cfd
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T+qh8jev"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1C5CC4CEED;
-	Tue, 10 Jun 2025 14:53:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749567223;
-	bh=D8oBuhkz5TcYD7TDo/ChhAEaqGOauhMGzMwHg078OFo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=T+qh8jevVpXz6Ho7YmvXD8xON+9O31WEPh0rRdKrnR/ms5r6JwO2sYroEODP9pyZ5
-	 giR/XOWDXaDqgWOIIxCFhNQThnLbSojmKfDA+i4SXCG8EYgtTFLK1TCk7SqP0Mk7l4
-	 4dPhtDlYsm81rJ+KjBgsmUc/1q/SWPyT9UhlUW3Cyg2QziB+RtLZyxGFZ97+JGP//5
-	 EAA5RS9FxQOM8mikEXbTkF142n6K7HIm2pf0amkVuu637/KmiKZkWFTY7Wq2dgu08P
-	 M6QJwn8JWSZ06MiRMSPMQu9c/PFdId0iRsyw9M/R7bvG1TAjC/7zH8sRzdbYaat1Sz
-	 m5/wSeyeebkQg==
-Message-ID: <30a7f1a6-1e04-4fc5-9bea-e2b5956b28b7@kernel.org>
-Date: Tue, 10 Jun 2025 16:53:34 +0200
+	dkim=pass (1024-bit key) header.d=borehabit.cfd header.i=@borehabit.cfd header.b="Zwq1dPgR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=borehabit.cfd; s=mail; h=Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Message-ID:Reply-To:From:Date:Subject:To:Sender:Cc:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=CFYjPvEUim5mD5QwWelE+Axpgk7p2gwnF2M5gpb++Rg=; b=Zwq1dPgR2rgAJ5gFLz0TSaxgqM
+	bLNv/OoCyb9/eKFVNY4fsx31jYyOHzUtPpY0QVQjWaoaSaQB7SCGlQD/7ZzHcuJXpEVbeIahR6eks
+	Xv87lP9U71QxPBV6fwWzPLwGgOejOsJqrB137uNr5Il4Mx5fpLN5Mnpff1z6VFqd8A2E=;
+Received: from admin by borehabit.cfd with local (Exim 4.90_1)
+	(envelope-from <support@borehabit.cfd>)
+	id 1uP0MV-000Tm4-Ik
+	for linux-kernel@vger.kernel.org; Tue, 10 Jun 2025 21:54:03 +0700
+To: linux-kernel@vger.kernel.org
+Subject: WTS Available laptops and Memory
+Date: Tue, 10 Jun 2025 14:54:03 +0000
+From: Exceptional One PC <support@borehabit.cfd>
+Reply-To: info@exceptionalonepc.com
+Message-ID: <be909798a52c7620e996ad3117f942db@borehabit.cfd>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/5] i2c: piix4: Depends on X86
-To: Mario Limonciello <superm1@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Borislav Petkov <bp@alien8.de>, Jean Delvare <jdelvare@suse.com>,
- Andi Shyti <andi.shyti@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
- "H . Peter Anvin" <hpa@zytor.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Hans de Goede <hdegoede@redhat.com>,
- "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
- "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>,
- Ingo Molnar <mingo@kernel.org>, linux-mips@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <20250422234830.2840784-1-superm1@kernel.org>
- <20250422234830.2840784-3-superm1@kernel.org>
- <CAMuHMdVPQLjOox5sMp34Z5MTwKv2WOpHa=MpZr8hWG22fQKcjw@mail.gmail.com>
- <CAAhV-H70LXsDYMA7wz4x828rEFoJsNX0=m8F73Ge9=yfpzBpZQ@mail.gmail.com>
- <24febda9-6360-459f-82d3-6fba9ed9be83@kernel.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <24febda9-6360-459f-82d3-6fba9ed9be83@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Hello,
 
-On 10-Jun-25 16:12, Mario Limonciello wrote:
-> On 6/10/2025 2:24 AM, Huacai Chen wrote:
->> On Tue, Jun 10, 2025 at 5:16 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->>>
->>> Hi Mario,
->>>
->>> CC mips, loongarch
->>>
->>> On Wed, 23 Apr 2025 at 01:49, Mario Limonciello <superm1@kernel.org> wrote:
->>>> From: Mario Limonciello <mario.limonciello@amd.com>
->>>>
->>>> PIIX4 and compatible controllers are only for X86. As some headers are
->>>> being moved into x86 specific headers PIIX4 won't compile on non-x86.
->>>>
->>>> Suggested-by: Ingo Molnar <mingo@kernel.org>
->>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>>
->>> Thanks for your patch, which is now commit 7e173eb82ae97175
->>> ("i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86")
->>> in v6.16-rc1.
->>>
->>>> --- a/drivers/i2c/busses/Kconfig
->>>> +++ b/drivers/i2c/busses/Kconfig
->>>> @@ -200,7 +200,7 @@ config I2C_ISMT
->>>>
->>>>   config I2C_PIIX4
->>>>          tristate "Intel PIIX4 and compatible (ATI/AMD/Serverworks/Broadcom/SMSC)"
->>>> -       depends on PCI && HAS_IOPORT
->>>> +       depends on PCI && HAS_IOPORT && X86
->>>
->>> Are you sure this south-bridge is not used on non-x86 platforms?
->>> It is enabled in several non-x86 defconfigs:
->>>
->>>      arch/loongarch/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=y
->>>      arch/mips/configs/ip27_defconfig:CONFIG_I2C_PIIX4=m
->>>      arch/mips/configs/loongson2k_defconfig:CONFIG_I2C_PIIX4=y
->>>      arch/mips/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=y
->>>
->>> The loongarch and loongson entries are probably bogus, but I wouldn't
->>> be surprised if the SGI Onyx and Origin do use Intel south-bridges.
->> Loongson can use AMD SB700/SB800 south bridges, which have I2C_PIIX4.
-> 
-> Well we could revert this patch, but it's going to be a compile failure because of 624b0d5696a89b138408d385899dd35372db324b and other patches that go on top of that.
-> 
-> My current leaning is we make a dummy fch.h header for these archs with #defines for 0.
+Looking for a buyer to move any of the following Items located in USA.
 
-Move "fch.h" to include/linux/platform/x86/ so that it is available on all arches
-and if necessary ifdef out anything x86 specific in the C-code referencing it ?
 
-Regards,
+Used MICRON SSD 7300 PRO 3.84TB 
+U.2 HTFDHBE3T8TDF SSD 2.5" NVMe 3480GB
+Quantity 400, price $100 EACH 
 
-Hans
 
+ 005052112 _ 7.68TB HDD -$200 PER w/ caddies refurbished 
+ Quantity 76, price $100
+
+
+
+Brand New CISCO C9300-48UXM-E
+Available 5
+$2000 EACH
+
+
+Brand New C9200L-48T-4X-E
+$1,200 EACH
+QTY4
+
+HP 1040G3 Elite Book Folio Processor :- Intel Core i5
+◻Processor :- Intel Core i5
+◻Generation :- 6th
+◻RAM :- 16GB
+◻Storage :- 256G SSD
+◻Display :- 14 inch" Touch Screen 
+QTY 340 $90 EA
+
+
+
+SK HYNIX 16GB 2RX4 PC4 - 2133P-RAO-10
+HMA42GR7AFR4N-TF TD AB 1526
+QTY560 $20 EA
+
+
+Xeon Gold 6442Y (60M Cache, 2.60 GHz)	
+ PK8071305120500	 
+ QTY670 700 each 
+
+
+SAMSUNG 64GB 4DRX4 PC4-2666V-LD2-12-MAO
+M386A8K40BM2-CTD60 S
+QTY 320 $42 each
+
+
+
+Brand New CISCO C9300-48UXM-E
+Available 5
+$2500 EACH
+
+
+Core i3-1315U (10M Cache, up to 4.50 GHz)	
+ FJ8071505258601
+QTY50  $80 EA
+
+Intel Xeon Gold 5418Y Processors
+QTY28 $780 each
+
+
+Brand New C9200L-48T-4X-E  
+$1000 EACH
+QTY4
+
+
+Brand New Gigabyte NVIDIA GeForce RTX 5090 AORUS
+MASTER OC Graphics Card GPU 32GB GDDR7
+QTY50 $1,300
+
+
+ Brand New N9K-C93108TC-FX-24 Nexus
+9300-FX w/ 24p 100M/1/10GT & 6p 40/100G
+Available 4
+$3000 each
+
+
+
+Brand New NVIDIA GeForce RTX 4090 Founders
+Edition 24GB - QTY: 56 - $700 each
+
+
+
+
+Charles Lawson
+Exceptional One PC
+3645 Central Ave, Riverside
+CA 92506, United States
+www.exceptionalonepc.com
+info@exceptionalonepc.com
+Office: (951)-556-3104
 
