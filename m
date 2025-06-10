@@ -1,57 +1,57 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26FE82D1034
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:58:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D622F26E716
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:58:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749596313; cv=none; b=V6UmlkFodxEjAxVwhKaeLCNiz6rBBX97FLHHpLMoIgkUhpl3jgcyi7grhP5Wkpd50jKwcxo8BhoQzkmW1qLUrshxUOGbfw65PS7irto+YinnzDVfC1lSWFafJGD+JIOORsDMd2JZm1F5x0sO3J8Duf9aYtY0aX3qpyQuazWYCGc=
+	t=1749596315; cv=none; b=tRv23WpbSAIBrN5dsmI6L5zeHZS3GbWAu2Bd2BJOf84YyMlDEp9ujtJ39p5zQ/b15yvf0SGTIw70CElIZtFEMJzIFr67q1Vi5OvBJ0t0B2/6QI4gEyetgqVkEA/bvkSK429BU2XNrRaT9oLTxHK6k7no8kHYWTZnS+SmoQyjglI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749596313; c=relaxed/simple;
-	bh=VH8WRfFFUUs5JJlTZjXJW3PCCeZLDh78G1qzdoW4OoU=;
+	s=arc-20240116; t=1749596315; c=relaxed/simple;
+	bh=jiZmlQeeZHjv8j7JWaCkYOsUvUOPi3J9ClLWUxwWMQ4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Z23+zhtItxcYoOcN9gn4ctbrXP4AtBjbFlCcVf5NVkO5GHtgqoALfKrbT0gG88lKrK7z92fypdAXzxR11xAFqnNTgeGsy72PWUVf3b6r6q5+SlPg/o2V/vVbHJMmRDEWEHMJOMH+ioQUoLXsrPsbntCC0xGEwM86CwwvyQobPO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W3ymdE3r; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=hSE3oRreAJ9qStrOsjtn30HW3AiTUeSonVa4xvexo14KqJQvkRW/ipiYFa649nuht4S6n9q9w84vqUl/fM+KDJVt2UGfiBlBdlsKO3RnpdJo8/Ce8rUgTgMUzIQwRg+fUAVPEp7qyU7YYkTAvqcP3JFJ28u/9SUc4KhwTe+9N1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bPPtYFuJ; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W3ymdE3r"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74620e98ec8so234842b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:58:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bPPtYFuJ"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-23494a515e3so42809175ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:58:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749596312; x=1750201112; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749596313; x=1750201113; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=A6jp+MxEVwUWr2OGrLLa/UhZgsS9fBawhSOksR6+SUo=;
-        b=W3ymdE3rUHwwtQmNBZETi7DM3KoU9YnjkteSoOKFM+6okzOk1vj+YKx9fwTXkYmyC+
-         qZRE3w8+1pJESZwwI8OuYzvWXCs6HstBnzGFinNDUfmtydKdXoIBjRLwg006fpi+k8LO
-         urhVWp1a6zUVVY4a81EhddGrzl3W2wDHxI215NvdRSx3mbX4/OEVS2tGTUMSwwVlEBVe
-         /tynQa/9tAODoAy0r9Gn8hDpMfQ1HEyCMe8hMg2K+EbEzx3Pf0KKtW2x2RQ36sAG0is7
-         eN9+nsNEhs/tMgtIjV7UPuQqFfnfQjvpJan74G/9A3winCZj4DaULQV+zHooGvsomCdr
-         +0CQ==
+        bh=izOjJ2HeWMTKGvvKPd+weoqGV6BoeCSaINzg8XvWVDQ=;
+        b=bPPtYFuJjUpw01SILGj/p3x0pfYSoXpbP4gQLsbYxsvtlggpNDh8vgvQusIjwjc1UG
+         gKX6So54HjT/f2rYgfH8k3WxFMeNPNIQZTwtAOaQDtWPwHMchXndxRHPKP0z+whkaaHW
+         yPuvC8Ui0cd+FEZ4gc0QFgeO9lhbocWgL1O3y27KNhFbN1576vOtEJsUIMI2cUjPjLxk
+         64/P52I/IncG0H6w7dV3oacdOS39xfKtghGdjDFvtHNimtfcySePtfWMdbttf/OVfqRQ
+         H6sA+dv0LGShPElwt+ykxzYoCWIq5NT/3x73bWNH8KE8p+jxb4CxkwPQuoE/EfEX6IOH
+         hRjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749596312; x=1750201112;
+        d=1e100.net; s=20230601; t=1749596313; x=1750201113;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=A6jp+MxEVwUWr2OGrLLa/UhZgsS9fBawhSOksR6+SUo=;
-        b=un93o14yUwQ/ipMGZS44BuMbrRP9sZsc6BhJmTmR8vDq8G8ILVueTKm8RdEdPqt37C
-         wEYxwkQJ1C6dtBl4QCwqGdP1RJykH9pAPn+GcEjzoPP2BkG1/i8Dk9WtRuN+6AyG9gdn
-         MpXpZnSJZP3hkASV/FlZhP+v6FVvgOjmVQOHw7yJcOFVVxjaSIMHOacDuiIhMZd8+ThW
-         763D+1R2JVz4A5ByVQqkXJ4Zi3CRDgRtLy/L9KbJQ99KpUtOD6SA3NoFCemj5Zh5VDr7
-         1ihzbF0jBy1UX4aeUth1PE4iXW/x+kQjGn5w2NpO9qJedFEw1DNl5FkEAzgj+DWiXfAJ
-         NOMg==
-X-Forwarded-Encrypted: i=1; AJvYcCXdiuNn49p062XiEGFr6epjlXIF6V25mMjms4tYGWrF4ON3jOeerAdseJXN3OY2AahS6lvC4//VxZTciqM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrWCo8fgqrUisAOHv7l6ezIpXnR5iLLJUdEMho4iA1CZYUEYU9
-	RBf8i8LH3gkQzpNhF5FUxHHSGBn0BwaIFGf276lKo6xYaUv2dbdBTrch+bC6TnT0cfBxWi2irLC
-	5oDUvgA==
-X-Google-Smtp-Source: AGHT+IHUbTWEMdxOysQIgDGJSqdbtnuSvVC/t8qT8y4a8ukS+CVQAVwHYn3Az15lUwMqTPo8MV2aPVRifBI=
-X-Received: from pfax8.prod.google.com ([2002:aa7:9188:0:b0:746:fd4c:1fd0])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:17a3:b0:748:6a12:1b47
- with SMTP id d2e1a72fcca58-7486d3729a9mr1291570b3a.10.1749596311602; Tue, 10
- Jun 2025 15:58:31 -0700 (PDT)
+        bh=izOjJ2HeWMTKGvvKPd+weoqGV6BoeCSaINzg8XvWVDQ=;
+        b=D+v7Y38ryftXl8dRLkHKx0M/E+o52O52DgG5dWYsGrRFMJufqxaaJshCdYglSVvitm
+         h2Pn2MCds1eLfV+r92OnDww6LHdZxOElk+7U7RQJUSEki43VtqR7ndOeiduuAfsfEsWT
+         EojIdf06Ch5ohhpM8kT8i8jI1pGIYoIYdeCdu0VcgGRzPeXJfhJQ/nYOYl45I8h9cgCB
+         QPUuUAUmiTtGXBdgUdgeMNMatZlDXUBHAJ+uhqNFAG+j56BVkQSEl/MZbiZA1ytNKZip
+         Plkxrjo9EcktiM6JcHknSxYfQSXfh/m7HzeT81+WOaEboAIAuTLZ9mLmizXhBdxb3TIX
+         N5jw==
+X-Forwarded-Encrypted: i=1; AJvYcCXixcwq6+aFBZzqKV1b4stCfGkOkMd2n/w4l81H3/NvQR10g9gN5tmT2/E0Gf5jxiJvFNBV9RDpaTDBQLA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2I5Z+jdx5NSgMtQtnQ+r37phKYa7vStZlIRQmRl28DkyKPM0a
+	LkJvRueUFAfBAuDnTKOg7lfX501TH3liDAv8gNoEB3v+r+lfP4hMcubbV0We+PgQmUkatOL6UnA
+	42oIs2Q==
+X-Google-Smtp-Source: AGHT+IFGOj6HuWIr46kZTUddMM4ANW6v8OEb2ufDZkJPU2sF80cAp+a0btxYkhyYdPaDQ3eUlWL4PqPkgXg=
+X-Received: from plbmu14.prod.google.com ([2002:a17:903:b4e:b0:234:d7c5:a0e3])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:32c6:b0:234:9052:2be6
+ with SMTP id d9443c01a7336-23641b2919fmr13630285ad.41.1749596313412; Tue, 10
+ Jun 2025 15:58:33 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 10 Jun 2025 15:57:35 -0700
+Date: Tue, 10 Jun 2025 15:57:36 -0700
 In-Reply-To: <20250610225737.156318-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250610225737.156318-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
-Message-ID: <20250610225737.156318-31-seanjc@google.com>
-Subject: [PATCH v2 30/32] KVM: SVM: Add a helper to allocate and initialize
- permissions bitmaps
+Message-ID: <20250610225737.156318-32-seanjc@google.com>
+Subject: [PATCH v2 31/32] KVM: x86: Simplify userspace filter logic when
+ disabling MSR interception
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -72,105 +72,98 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Manali Shukla <Manali.Shukla@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add a helper to allocate and initialize an MSR or I/O permissions map, as
-the logic is identical between the two map types, the only difference is
-the size of the bitmap.  Opportunistically add a comment to explain why
-the bitmaps are initialized with 0xff, e.g. instead of the more common
-zero-initialized behavior, which is the main motivation for deduplicating
-the code.
+Refactor {svm,vmx}_disable_intercept_for_msr() to simplify the handling of
+userspace filters that disallow access to an MSR.  The more complicated
+logic is no longer needed or justified now that KVM recalculates all MSR
+intercepts on a userspace MSR filter change, i.e. now that KVM doesn't
+need to also update shadow bitmaps.
 
 No functional change intended.
 
+Suggested-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/svm/svm.c | 31 +++++++++++++++----------------
- arch/x86/kvm/svm/svm.h |  8 +++++++-
- 2 files changed, 22 insertions(+), 17 deletions(-)
+ arch/x86/kvm/svm/svm.c | 24 ++++++++++--------------
+ arch/x86/kvm/vmx/vmx.c | 24 ++++++++++--------------
+ 2 files changed, 20 insertions(+), 28 deletions(-)
 
 diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index fc41ec70b6de..e3c49c763225 100644
+index e3c49c763225..5453478d1ca3 100644
 --- a/arch/x86/kvm/svm/svm.c
 +++ b/arch/x86/kvm/svm/svm.c
-@@ -728,19 +728,23 @@ void svm_enable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
- 	svm->nested.force_msr_bitmap_recalc = true;
- }
+@@ -691,24 +691,20 @@ void svm_disable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
+ 	void *msrpm = svm->msrpm;
  
--void *svm_vcpu_alloc_msrpm(void)
-+void *svm_alloc_permissions_map(unsigned long size, gfp_t gfp_mask)
- {
--	unsigned int order = get_order(MSRPM_SIZE);
--	struct page *pages = alloc_pages(GFP_KERNEL_ACCOUNT, order);
--	void *msrpm;
-+	unsigned int order = get_order(size);
-+	struct page *pages = alloc_pages(gfp_mask, order);
-+	void *pm;
- 
- 	if (!pages)
- 		return NULL;
- 
--	msrpm = page_address(pages);
--	memset(msrpm, 0xff, PAGE_SIZE * (1 << order));
-+	/*
-+	 * Set all bits in the permissions map so that all MSR and I/O accesses
-+	 * are intercepted by default.
-+	 */
-+	pm = page_address(pages);
-+	memset(pm, 0xff, PAGE_SIZE * (1 << order));
- 
--	return msrpm;
-+	return pm;
- }
- 
- static void svm_recalc_lbr_msr_intercepts(struct kvm_vcpu *vcpu)
-@@ -5325,11 +5329,8 @@ static __init void svm_set_cpu_caps(void)
- 
- static __init int svm_hardware_setup(void)
- {
--	int cpu;
--	struct page *iopm_pages;
- 	void *iopm_va;
--	int r;
--	unsigned int order = get_order(IOPM_SIZE);
-+	int cpu, r;
- 
- 	/*
- 	 * NX is required for shadow paging and for NPT if the NX huge pages
-@@ -5410,13 +5411,11 @@ static __init int svm_hardware_setup(void)
- 			pr_info("LBR virtualization supported\n");
+ 	/* Don't disable interception for MSRs userspace wants to handle. */
+-	if ((type & MSR_TYPE_R) &&
+-	    !kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_READ)) {
+-		svm_set_msr_bitmap_read(msrpm, msr);
+-		type &= ~MSR_TYPE_R;
++	if (type & MSR_TYPE_R) {
++		if (kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_READ))
++			svm_clear_msr_bitmap_read(msrpm, msr);
++		else
++			svm_set_msr_bitmap_read(msrpm, msr);
  	}
  
--	iopm_pages = alloc_pages(GFP_KERNEL, order);
--	if (!iopm_pages)
-+	iopm_va = svm_alloc_permissions_map(IOPM_SIZE, GFP_KERNEL);
-+	if (!iopm_va)
- 		return -ENOMEM;
+-	if ((type & MSR_TYPE_W) &&
+-	    !kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_WRITE)) {
+-		svm_set_msr_bitmap_write(msrpm, msr);
+-		type &= ~MSR_TYPE_W;
++	if (type & MSR_TYPE_W) {
++		if (kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_WRITE))
++			svm_clear_msr_bitmap_write(msrpm, msr);
++		else
++			svm_set_msr_bitmap_write(msrpm, msr);
+ 	}
  
--	iopm_va = page_address(iopm_pages);
--	memset(iopm_va, 0xff, PAGE_SIZE * (1 << order));
--	iopm_base = __sme_page_pa(iopm_pages);
-+	iopm_base = __sme_set(__pa(iopm_va));
+-	if (type & MSR_TYPE_R)
+-		svm_clear_msr_bitmap_read(msrpm, msr);
+-
+-	if (type & MSR_TYPE_W)
+-		svm_clear_msr_bitmap_write(msrpm, msr);
+-
+ 	svm_hv_vmcb_dirty_nested_enlightenments(vcpu);
+ 	svm->nested.force_msr_bitmap_recalc = true;
+ }
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index bdff81f8288d..277c6b5b5d5f 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -3962,23 +3962,19 @@ void vmx_disable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
  
- 	/*
- 	 * Note, SEV setup consumes npt_enabled and enable_mmio_caching (which
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 489adc2ca3f5..8d3279563261 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -667,7 +667,13 @@ BUILD_SVM_MSR_BITMAP_HELPERS(void, set, __set)
- /* svm.c */
- extern bool dump_invalid_vmcb;
+ 	vmx_msr_bitmap_l01_changed(vmx);
  
--void *svm_vcpu_alloc_msrpm(void);
-+void *svm_alloc_permissions_map(unsigned long size, gfp_t gfp_mask);
-+
-+static inline void *svm_vcpu_alloc_msrpm(void)
-+{
-+	return svm_alloc_permissions_map(MSRPM_SIZE, GFP_KERNEL_ACCOUNT);
-+}
-+
- void svm_vcpu_free_msrpm(void *msrpm);
- void svm_copy_lbrs(struct vmcb *to_vmcb, struct vmcb *from_vmcb);
- void svm_enable_lbrv(struct kvm_vcpu *vcpu);
+-	if ((type & MSR_TYPE_R) &&
+-	    !kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_READ)) {
+-		vmx_set_msr_bitmap_read(msr_bitmap, msr);
+-		type &= ~MSR_TYPE_R;
++	if (type & MSR_TYPE_R) {
++		if (kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_READ))
++			vmx_clear_msr_bitmap_read(msr_bitmap, msr);
++		else
++			vmx_set_msr_bitmap_read(msr_bitmap, msr);
+ 	}
+ 
+-	if ((type & MSR_TYPE_W) &&
+-	    !kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_WRITE)) {
+-		vmx_set_msr_bitmap_write(msr_bitmap, msr);
+-		type &= ~MSR_TYPE_W;
++	if (type & MSR_TYPE_W) {
++		if (kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_WRITE))
++			vmx_clear_msr_bitmap_write(msr_bitmap, msr);
++		else
++			vmx_set_msr_bitmap_write(msr_bitmap, msr);
+ 	}
+-
+-	if (type & MSR_TYPE_R)
+-		vmx_clear_msr_bitmap_read(msr_bitmap, msr);
+-
+-	if (type & MSR_TYPE_W)
+-		vmx_clear_msr_bitmap_write(msr_bitmap, msr);
+ }
+ 
+ void vmx_enable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
 -- 
 2.50.0.rc0.642.g800a2b2222-goog
 
