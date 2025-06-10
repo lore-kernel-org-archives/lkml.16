@@ -1,150 +1,117 @@
-Received: from out.smtpout.orange.fr (out-72.smtpout.orange.fr [193.252.22.72])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F601EB5B;
-	Tue, 10 Jun 2025 15:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882A8235354;
+	Tue, 10 Jun 2025 15:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749570511; cv=none; b=RN2K58O9fnMwPjTDIEvi8ZgJqcY0Zjvd0j5tbKwU2hcpP/q938p8cA2En6mbXeFxjHUSDEG5K9g4NpH5G84Y1qtctwD1n+FDEqqMPoPQDa4uSJacJKmdmbET+oSsDkv7gB2lUQ5HlSCSfZQRzEWjSgOBwXllJpAY+RqEP1iDaPw=
+	t=1749570543; cv=none; b=Me7ZqfzV+YFslFG0s2AvUdITUTboCgANLZOar34M7bYfdeOsvAMt9l3CoAOb1VfbJcRTJfQ5/dJowPv/zRjPsuNmlvCs4yxFFn9ybEGpIMr2CYhLiPJMqKdX+UnmhKfE3gp8q2ZcglF0sDDe0Zzs53PzZIcj/AIMawxvg5qi2kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749570511; c=relaxed/simple;
-	bh=DPCZKmqe6KLsdpWRELAuTfIYliurAwbzWQccF/Ay6zk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WxBXOMre/rvsX+7DbV6xD9ZAWdEJKLCYscmNoGsChR8Q4JkcBlKatNMGo3Bmi26glHMilKIqf5+IB85OdCoCM+YcF9UoE71na0QfgyzL+MbCzHTd6mXgH1P9VnPCSt1KiXdBw+5GYKCXOsAnw9+nztkgCCbWkQsczvV3uud43VQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=EC83WCWq; arc=none smtp.client-ip=193.252.22.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1749570543; c=relaxed/simple;
+	bh=CF9pirNlJKKWScnB4iiSz1km2xm1OOfVg1OY6MAlK2g=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=ubpyqRvL127xpDZNfTqF3xHFU710X38aVg7HxVVTGlblePf96mHwH6Bl3U7Pen7WQRMzhbClPBaZL+uhhrEcX9mrye5FrkIU3BqINWIMlmob7RoyRKTWa5b9tcIlBvPCmUyCS0IiRRa51TLVPZQGCTJLjTN4Hpli6nxE88n0wU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=nfo7s0PC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MtHlk1cv; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="EC83WCWq"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id P1CsuQaoBVbicP1Cuu8707; Tue, 10 Jun 2025 17:48:25 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1749570505;
-	bh=hLNYfBAm8Db4RivC9m4UtJY5EbKQApeN/nL5cCj0Ugs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=EC83WCWq0Suc7xo7F75oL6tuLJhZcGgcA6T6SjE5M2HznAFXg+53/ja2YV2L9jlm4
-	 67XAJYZjzNIulLfpR9HbVmuA69kx2uRbqwRC7P4itIvQxYL7jWvnqZIqoFwUBoyCaG
-	 H3MPbtXKHrbdoEz3hjUlSsEwc2yUrPfZcdlFT5dWCWJJ/0qWSWULoXHqI8jwgTD9wt
-	 +88473ymjTW0O1lA5aOjECvA7xFkyKjOqMpuNk4fIXCc5bKmdofVWaX8JRwPiGBEKr
-	 AfmH/5enwlcQEMJBSCx3HPKFHMg8JhbUC/Q3N0I4p387Fb8+i1cIfr4CTBAhSvUx1/
-	 QTmOlFNpa0KAw==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 10 Jun 2025 17:48:25 +0200
-X-ME-IP: 124.33.176.97
-Message-ID: <b9ea7e0e-7dd1-460b-950a-083620dd52e9@wanadoo.fr>
-Date: Wed, 11 Jun 2025 00:48:09 +0900
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="nfo7s0PC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MtHlk1cv"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id A664F1140138;
+	Tue, 10 Jun 2025 11:49:00 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Tue, 10 Jun 2025 11:49:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1749570540;
+	 x=1749656940; bh=qhJ9rARWvXH6b5vxwlzrrjHa4TjKQAJ9KOsyecEZi9E=; b=
+	nfo7s0PC49ZuvoHue2elR1gN/qUizRRv4/TanVsoMDbmQzZuuJtdze6W49VVIKsv
+	ffjp4PjFwaFrRMKm+0IkgsT2RF5Jf6WhYuXRwFWg8z27ALbtpTcLCOGCb6YqzUPO
+	bMJ9dG/DM5zRg7Ks/YzbsQ8uLp8rv+F90DfzLhdj9hnhg/OtKlA3Dafho8wwNo/V
+	DRRtOJB0qKfFs31OL1arC9ChQhQzDE9hGWM2cYm9i17Ftt61AM5xGwKB5lsCZABd
+	4hV2oZfQ3gVyWXgqpysyXE0DGIN7B6x3dxrvk6K/s9LG5wLgYill/GiNZqiL15zc
+	PAv2vD/+r0WSszR5QRtcsQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749570540; x=
+	1749656940; bh=qhJ9rARWvXH6b5vxwlzrrjHa4TjKQAJ9KOsyecEZi9E=; b=M
+	tHlk1cv3uHHa7tzhq9qZNaeOGsv0m3F5ek6RcNRS8OTlWVT7G03rkMDF/EO9x0WV
+	g0TdHvJiWl36NK0SIpl+2yeG4LyM978stB/C6CSReNr5yYWnVtwCxVGBd4xskHW6
+	ZU/kwcWjGAOvrqvZAeN9k3iMV6h2dySTx0DSx4eBlRuVaYlqfGXG1SMdbobLembn
+	vzotDckXCSSylaJv0Cx4p4K5ndDS3dOUwJyAj1CVSall/+fjkFM8e98cfAwfjBWL
+	LCZuUye1vfTbfNHEA7Y9Ht+QGtx+i+f096RwzPzoq01yrUi8uQQRWhztNjiRHk3B
+	9dj6OBFf1bA/CbxkoYAzQ==
+X-ME-Sender: <xms:7FNIaOHmiIFc-0Wuv2T1zFxgTWE3Rz0prZabT7hv5y_LhFll7iKURg>
+    <xme:7FNIaPWPGmSSNGNpmvTVgAiSSnSwNihmwhMOYjgbVoSTYCzr2AIWydqOy-FUr_pYL
+    L-j0Lfz08lmOTMUxwg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddutdelgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
+    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeek
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeholhhtvggrnhhvsehgmhgrihhlrd
+    gtohhmpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthht
+    ohepjhgrmhgvshdrtghlrghrkheslhhinhgrrhhordhorhhgpdhrtghpthhtohepihhmgi
+    eslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehfrhgrnhhkrdhlihesnhig
+    phdrtghomhdprhgtphhtthhopehvlhgrughimhhirhdrohhlthgvrghnsehngihprdgtoh
+    hmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtoheplhhinhhugidqshhpihesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:7FNIaILB4Z-8DwwtSD2OhuQlPMfNz-w2_MJdKTjR6akamWZ6M8mzqQ>
+    <xmx:7FNIaIGctUtbNIXeFHjIcC82ILcjDwVEUXOilZrHDguuXuFrOu9bAQ>
+    <xmx:7FNIaEVNH8jjMQjI0ilB-7LT84YJs4SWUuIWGbAdQ0fdDRwiN1HqdA>
+    <xmx:7FNIaLOAQue49TFOnnQn7ToPemc5EAcW47ipu0h86tbl70leKFDtrQ>
+    <xmx:7FNIaPP2yl9vHD5X6Lul_tdRoUhkhSJ_5_dFn5f6dqjeageOmTYtm_1g>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 6AE6D700061; Tue, 10 Jun 2025 11:49:00 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] net: can: mcp251x: use new GPIO line value setter
- callbacks
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-can@vger.kernel.org,
- linux-arm-msm@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- "Chester A. Unal" <chester.a.unal@arinc9.com>,
- Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>,
- Sean Wang <sean.wang@mediatek.com>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Marc Kleine-Budde <mkl@pengutronix.de>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>
-References: <20250610-gpiochip-set-rv-net-v1-0-35668dd1c76f@linaro.org>
- <20250610-gpiochip-set-rv-net-v1-3-35668dd1c76f@linaro.org>
- <b2f87cff-3a81-482b-bfdd-389950b7ec8e@wanadoo.fr>
- <CAMRc=MfCwz3BV15aATr_5er7wU=AmKV=Z=sHJyrjEvLwx2cMjQ@mail.gmail.com>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <CAMRc=MfCwz3BV15aATr_5er7wU=AmKV=Z=sHJyrjEvLwx2cMjQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-ThreadId: T7ec8a5524929d219
+Date: Tue, 10 Jun 2025 17:48:40 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Frank Li" <Frank.li@nxp.com>, "James Clark" <james.clark@linaro.org>
+Cc: "Vladimir Oltean" <olteanv@gmail.com>, "Mark Brown" <broonie@kernel.org>,
+ "Vladimir Oltean" <vladimir.oltean@nxp.com>, linux-spi@vger.kernel.org,
+ imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Message-Id: <de7142ac-f1a3-412f-9f00-502222b20165@app.fastmail.com>
+In-Reply-To: <aEhMBsqlx9I4XqJS@lizhi-Precision-Tower-5810>
+References: <20250609-james-nxp-spi-dma-v1-0-2b831e714be2@linaro.org>
+ <20250609-james-nxp-spi-dma-v1-2-2b831e714be2@linaro.org>
+ <aEhMBsqlx9I4XqJS@lizhi-Precision-Tower-5810>
+Subject: Re: [PATCH 2/4] spi: spi-fsl-dspi: Use non-coherent memory for DMA
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On 10/06/2025 at 23:05, Bartosz Golaszewski wrote:
-> On Tue, Jun 10, 2025 at 3:55 PM Vincent Mailhol
-> <mailhol.vincent@wanadoo.fr> wrote:
->>
->> On 10/06/2025 at 21:37, Bartosz Golaszewski wrote:
->>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>>
->>> struct gpio_chip now has callbacks for setting line values that return
->>> an integer, allowing to indicate failures. Convert the driver to using
->>> them.
->>>
->>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->>
->> This does not match the address with which you sent the patch: brgl@bgdev.pl
->>
->>> ---
->>>  drivers/net/can/spi/mcp251x.c | 16 ++++++++++------
->>>  1 file changed, 10 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp251x.c
->>> index ec5c64006a16f703bc816983765584c5f3ac76e8..7545497d14b46c6388f3976c2bf7b9a99e959c1e 100644
->>> --- a/drivers/net/can/spi/mcp251x.c
->>> +++ b/drivers/net/can/spi/mcp251x.c
->>> @@ -530,8 +530,8 @@ static int mcp251x_gpio_get_multiple(struct gpio_chip *chip,
->>>       return 0;
->>>  }
->>>
->>> -static void mcp251x_gpio_set(struct gpio_chip *chip, unsigned int offset,
->>> -                          int value)
->>> +static int mcp251x_gpio_set(struct gpio_chip *chip, unsigned int offset,
->>> +                         int value)
->>>  {
->>>       struct mcp251x_priv *priv = gpiochip_get_data(chip);
->>>       u8 mask, val;
->>> @@ -545,9 +545,11 @@ static void mcp251x_gpio_set(struct gpio_chip *chip, unsigned int offset,
->>>
->>>       priv->reg_bfpctrl &= ~mask;
->>>       priv->reg_bfpctrl |= val;
->>> +
->>> +     return 0;
->>
->> mcp251x_gpio_set() calls mcp251x_write_bits() which calls mcp251x_spi_write()
->> which can fail.
->>
->> For this change to really make sense, the return value of mcp251x_spi_write()
->> should be propagated all the way around.
->>
-> 
-> I don't know this code so I followed the example of the rest of the
-> codebase where the result of this function is never checked - even in
-> functions that do return values. I didn't know the reason for this and
-> so didn't want to break anything as I have no means of testing it.
+On Tue, Jun 10, 2025, at 17:15, Frank Li wrote:
+> On Mon, Jun 09, 2025 at 04:32:39PM +0100, James Clark wrote:
+>> Using coherent memory here isn't functionally necessary.
+>> Because the
+>> change to use non-coherent memory isn't overly complex and only a few
+>> synchronization points are required, we might as well do it while fixing
+>> up some other DMA issues.
+>
+> Any beanfit by use on-coherent memory here?
 
-The return value of mcp251x_spi_write() is used in mcp251x_hw_reset(). In other
-locations, mcp251x_spi_write() is only used in functions which return void, so
-obviously, the return value is not checked.
+The driver copies data in and out of a coherent buffer by default. This is
+fine if the buffer is only a few bytes in size, but for large transfers
+this is quite slow because this bypasses the cache for any DMA master
+that is marked as not "dma-coherent" in devicetree.
 
-> Can you confirm that you really want the result to be checked here?
+Patch 3/4 changes the size from a few bytes to many pages of memory,
+so it's access the buffer in cache first and manually maintain
+coherency.
 
-That's the point of those new gpio setters, isn't it? If we do not check the
-result, I do not understand the purpose of the migration.
-
-
-Yours sincerely,
-Vincent Mailhol
-
+     Arnd
