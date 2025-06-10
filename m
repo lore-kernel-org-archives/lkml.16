@@ -1,160 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8D62367CC;
-	Tue, 10 Jun 2025 17:34:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29FA2165EA;
+	Tue, 10 Jun 2025 17:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749576860; cv=none; b=tvUQ9p9Ufvedf+T/hMIaDk3yXdtfU//HTQx60dDdTf4PWTTCuUsmaSzZ87gSQcSP2Wk8Mb+tSSzX+L5Go3GaztrxkSJV3SXs2H+/bzIAawI8cqpjN+rkbuuNgnDzKxG0kHWSqBBH8rqDEiNt7YsHmIOX8NrwqG9a4i6wrCF8Ilw=
+	t=1749576896; cv=none; b=pkj7frSaq19MVkSBNaJU9dODA3aly8uew3ln8oUS2IBxGw9SnLldk0rjsd5ClMCj7eLddsHLauMZPWcrn68YLyz9ObdLrg8kDFNNcaTz5rBdi2rR6hYfiy/luMtdYKHpp80yxd3viE/yvNF579/IiFWDu6IdZbeQVmyQVi0vefY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749576860; c=relaxed/simple;
-	bh=r0iZ2Pb8qBk4fg/2LTSgcyfMLeF15guSoN8V+6upqsg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZIJoe7yi78qFgJc/w12RPu1/4HQAv6iqH1MJ7OjOV6b6qTdggTw0gLGFhwolPzRi5Wtn12prTy2XfiTizUrm6DKtByIbECnYfdGlJ4HNHREFdXeUZ3TuqJhgqWECTl/JsECAffaRKALd7SS2XoAFbPLCj/yHJ5JA3EQviNeoHU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f7mTbqcV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749576896; c=relaxed/simple;
+	bh=ZIHQmbd8mZW/I/J4s7YLgy9S3Trx9A/+7wpfB+SmC34=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZeGGdQerPBNfD1gAKKofIwzZLtz8Fq8UQFFDlUiSSlyT/K3BrF2p/FAJq2SqAAFL4YUr9Lx45zwFvW6rCbBQVZE6HQ1Ok2sxIMBJ977NVmZ8OCE8in0jZdcLgW3x+kpFILU0shASd1a+U/ZYghr7Sa5Qm1Z78nwor7gkwqJAYAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=caz7KHHp; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f7mTbqcV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA3CCC4CEF2;
-	Tue, 10 Jun 2025 17:34:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749576859;
-	bh=r0iZ2Pb8qBk4fg/2LTSgcyfMLeF15guSoN8V+6upqsg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f7mTbqcVRdxIdlDpEjH4CeKNmi/aSrdr/0FOGFF6oAT0oV0t1LATT9qZIpqlJrFcC
-	 QKRdoUAbP+pYbLX9a0Y7xzPTsNUmRzJlD58wzyiRnrf4d/5Yv+E1Qmh9suleqhf0Bu
-	 3OR98SOWseL0tj9EsXV2F2cRdfEUIFpJdWn1K7aGsOGzgAQSr5KIMf27FxqoT99VWV
-	 1K4NnZM8cMNjVeI3bVzi6mCLsdRaDA1dAKA9R91AlHxqf58ai10uTIQAKe2mDY/hdB
-	 eI5+Kh+AsAS0DW/RNQe/Swqm+SBqmOYlM0o9b+9a3AK3G6tdZR6SFhJS6MaqlhWIod
-	 XogS65rOgY/6g==
-Date: Tue, 10 Jun 2025 12:34:17 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Konrad Dybcio <konradybcio@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, patches@lists.linux.dev, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Benson Leung <bleung@chromium.org>, devicetree@vger.kernel.org, chrome-platform@lists.linux.dev, 
-	Pin-yen Lin <treapking@chromium.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: usb: Add binding for ChromeOS Pogo
- pin keyboard connector
-Message-ID: <bskramnbdsoxdjuqmevt7mtcylottyd4jtwa5svz565ceqzflx@orivp6ypzksk>
-References: <20250225223038.879614-1-swboyd@chromium.org>
- <20250225223038.879614-2-swboyd@chromium.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="caz7KHHp"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-55365c63fa5so4921213e87.1;
+        Tue, 10 Jun 2025 10:34:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749576893; x=1750181693; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NZ0SzQALZKWzXSc+j3nisP3t6uYxEq3fuujkS0uppSQ=;
+        b=caz7KHHpK3WUADI+7FK8XuGkOfTd4ebK1LPaQg+YXT7U9VXxNhhPK0GwJB46puBaNj
+         fWcgnZMrRcmQxovnlDwqgXMEVAZc42AEWb3q5mtOQ/eeRX0KVTvKipIepGxExXBD75lh
+         Utx57ubuoB8Ocsn+emcEjfoP09mgg59wTnaqlmpk6QxfD4jK9xuvjbSr1Us0v74+Gc/U
+         qhEogk8a1Wi26zNducD5KjJ588RsZf3y3gX/lVnMraBeDzWYeI1+57Fyh1gvl34MY+2x
+         /Vt6EUjjLdUUEde7WlsCKBggWkBzobIvnp/GH9pRgBZdpXGPXd0g8nYzExc+s8v4Zmz9
+         H/7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749576893; x=1750181693;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NZ0SzQALZKWzXSc+j3nisP3t6uYxEq3fuujkS0uppSQ=;
+        b=phA8NG0iQlXdr2zeOiRq/+nG4Ky4PLE+u1t6TUxKYwr1c63qewT6bthoNAeKt8pKLe
+         5yrYTgYYXiM9pNgqoQWvqhms1xKC1RD5LmVBVvUXWmcpSdsPzeEt3AqW8Nz2KLPBtD8A
+         6BQmjvAGFaNK6kWGzrna2bzztX/YLbOOAQK/U1qhvEdzQufF/0b7e2ScPuInySk++3HT
+         3iZVuve5bzFMOa7c+VBogWsAnaj2wYe5K6vVbNlg9sSuJbLy2zHdOb+bzxwyBqipVJoG
+         5VA1n1yKcVmSG9CrTmxKj2E6Ae+DkTWYVzM84wnrmJfzLYuAqodTjmmu0QEo095cjCXH
+         yjbw==
+X-Forwarded-Encrypted: i=1; AJvYcCXmCLDV3NFzLWXA9c2owR29T6r+KyETo6gh5Bn+euQ7YLGR2AtYVNDrB6rUGr7WFGbuL83H5OYDeQB9M2Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxpa18q9MGxvlMVSP6xq4Ir0a8zQSpXhYCzEsyILt+NKLi6mPVZ
+	U34GDwLHsLIl4H0lqmSn0RXKUXMIA7qqyK9ppj3ipmC0IrerP3Zpdygt
+X-Gm-Gg: ASbGncvN1UbT2MBpeeweBMo1gsVx9WRA58XQFUreR/y+TPuX3gBB6G/IWACWPNBI17K
+	oGlKLl1zpir3ZBFNaGpmxm5GrnV8YctITPU/MpkHA2f3vra/NPnZageBnG3qJtpabKOvR1VEt2D
+	nXMPcNV1D1AyYxbwd8zLSN3WFeLnH+eFrGjFHZMKgt3lfiwdNWNZM9caXWvuh95hdVbdBYTGOBs
+	2TGcvM8fozfQh4/hBJQkKtWVc6ai6iz/DM6n86OLR/SIy7LlgZ6asetEZQAwBrLVdAFJ1AuvWTN
+	d41Vnd86UfXd2NxGlS7kDBn4R4H/SUVJyWpFhABK4JRrRWFLmTeMOyI9Dg==
+X-Google-Smtp-Source: AGHT+IEIUZWuFvLl2tLbz436lvIGIGwbpfPHMMh2XT0YfPCYJ3IXj9T/0u0E1d+Dys/s+FLY9tFbrg==
+X-Received: by 2002:a05:6512:6d5:b0:553:2cfe:9f1f with SMTP id 2adb3069b0e04-5539c106f7amr173900e87.6.1749576892565;
+        Tue, 10 Jun 2025 10:34:52 -0700 (PDT)
+Received: from pc638.lan ([2001:9b1:d5a0:a500:2d8:61ff:fec9:d743])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55367731754sm1624829e87.200.2025.06.10.10.34.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 10:34:51 -0700 (PDT)
+From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+To: "Paul E . McKenney" <paulmck@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>
+Cc: RCU <rcu@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
+Subject: [PATCH 1/3] rcu: Return early if callback is not specified
+Date: Tue, 10 Jun 2025 19:34:48 +0200
+Message-Id: <20250610173450.107293-1-urezki@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250225223038.879614-2-swboyd@chromium.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 25, 2025 at 02:30:36PM -0800, Stephen Boyd wrote:
-> Describe the set of pins used to connect the detachable keyboard on
-> detachable ChromeOS devices. The set of pins is called the "pogo pins".
-> It's basically USB 2.0 with an extra pin for base detection. We expect
-> to find a keyboard on the other side of this connector with a specific
-> vid/pid, so describe that as a child device at the port of the usb
-> device connected upstream.
-> 
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
-> Cc: Conor Dooley <conor+dt@kernel.org>
-> Cc: Benson Leung <bleung@chromium.org>
-> Cc: <devicetree@vger.kernel.org>
-> Cc: <chrome-platform@lists.linux.dev>
-> Cc: Pin-yen Lin <treapking@chromium.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Currently the call_rcu() API does not check whether a callback
+pointer is NULL. If NULL is passed, rcu_core() will try to invoke
+it, resulting in NULL pointer dereference and a kernel crash.
 
-Still waiting for the binding (patch 1) to be picked up in the USB
-subsystem, or an ack...so that I can pick the dts change.
+To prevent this and improve debuggability, this patch adds a check
+for NULL and emits a kernel stack trace to help identify a faulty
+caller.
 
-Binding looks good to me.
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+---
+ kernel/rcu/tree.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index e8a4b720d7d2..14d4499c6fc3 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3072,6 +3072,10 @@ __call_rcu_common(struct rcu_head *head, rcu_callback_t func, bool lazy_in)
+ 	/* Misaligned rcu_head! */
+ 	WARN_ON_ONCE((unsigned long)head & (sizeof(void *) - 1));
+ 
++	/* Avoid NULL dereference if callback is NULL. */
++	if (WARN_ON_ONCE(!func))
++		return;
++
+ 	if (debug_rcu_head_queue(head)) {
+ 		/*
+ 		 * Probable double call_rcu(), so leak the callback.
+-- 
+2.39.5
 
-Regards,
-Bjorn
-
-> ---
->  .../usb/google,usb-pogo-keyboard.yaml         | 68 +++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/google,usb-pogo-keyboard.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/google,usb-pogo-keyboard.yaml b/Documentation/devicetree/bindings/usb/google,usb-pogo-keyboard.yaml
-> new file mode 100644
-> index 000000000000..053c1cfed6d4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/google,usb-pogo-keyboard.yaml
-> @@ -0,0 +1,68 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/usb/google,usb-pogo-keyboard.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Google USB Pogo Pin Keyboard
-> +
-> +maintainers:
-> +  - Stephen Boyd <swboyd@chromium.org>
-> +
-> +description:
-> +  ChromeOS devices with a detachable keyboard have a set of five pogo pins that
-> +  are the typical four pins for USB (D+/D-, VBUS, GND) and an extra pin for
-> +  base detection. The detachable keyboard is a USB device that connects to the
-> +  four USB pogo pins.
-> +
-> +properties:
-> +  compatible:
-> +    const: google,usb-pogo-keyboard
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +  port:
-> +    $ref: /schemas/graph.yaml#/properties/port
-> +    description: Connection to USB2 port providing USB HS signals
-> +    required:
-> +      - endpoint
-> +
-> +patternProperties:
-> +  '^keyboard@[0-9a-f]{1,2}$':
-> +    description: The detachable keyboard
-> +    type: object
-> +    $ref: /schemas/usb/usb-device.yaml
-> +    unevaluatedProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - '#address-cells'
-> +  - '#size-cells'
-> +  - port
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    connector {
-> +      compatible = "google,usb-pogo-keyboard";
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      keyboard@2 {
-> +        compatible = "usb18d1,504c";
-> +        reg = <2>;
-> +      };
-> +
-> +      port {
-> +        pogo_connector_in: endpoint {
-> +          remote-endpoint = <&usb_hub_dsp3_hs>;
-> +        };
-> +      };
-> +    };
-> +
-> +...
-> -- 
-> https://chromeos.dev
-> 
