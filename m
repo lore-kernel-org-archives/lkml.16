@@ -1,148 +1,151 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7613184F;
-	Tue, 10 Jun 2025 04:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8349A184F;
+	Tue, 10 Jun 2025 04:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749528125; cv=none; b=hTE7HxVP5ve5FPESRq2qXbOV1SolLwuMl+lGluWsi/mlj1IlvUdYEfizadHgj4h3BwGYk4X6ohf1Hq85n6MssVXLlxwkmrwte+wH8oEotQSGm+FcGrI8juFTLqx1i5qUVPvWGaIU7YOz6WlkevDboWqWImzrLp9ijNZNO6K06s0=
+	t=1749528279; cv=none; b=thFCFOyVXFBce0lhLYNDW+WsnCCNzqtzS8ME0Pw01P2rBKiI4w2dqFD+DIFzBQWF75aFsphbgjbO4fcOVH1i5HJ397ZowYD8a7h0OyFR+VvMOIt3kI0RbXZ4a7h8iRHEetc4k4oKB3hL+duoo1g9sSISpdorJNmaLrgv7yWnM9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749528125; c=relaxed/simple;
-	bh=RSDBnhgSDB3LEzKcIyjb9Xjl1Cja0E622WzxOwPUV3A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yog2MtKJeS41+Pgy71w7NSV0WqQoAPx6kLaMtnikRoB9oai4E5+/r09IFULBVhgs58cXQivv0OU2HSK3OQoBt5xDRe2Z3lJQ/ctmS+/MqoAYjh5mr7PfLUNmzAJIBnun6iFWvvtl37yDpfBPuIrt8XTBvErfIsn1bIplLCBNUBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fBEwjnz0; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749528279; c=relaxed/simple;
+	bh=aVnJbC3z4nwrmfypL0Oi6Gf1QoMq9GB7sy1Q0NerLR8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XceUegN4JjqY+i2TvS/8HK23MZPCxmjr+L5QKFBrYXJlp+RJILQxrizOcCYHNpWFyY2qc1e6BeYRVm+sIi0A4F7GgeUNNJqHsPfxp6PA8Q0lgsfjQ8lVVN2wm6ePkehRuy90NKdFE2dWi/+8kRTCrQzb6kprokfT/ktZHFl8qqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wq0ePe08; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fBEwjnz0"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6fb01566184so40977796d6.1;
-        Mon, 09 Jun 2025 21:02:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749528122; x=1750132922; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XMrwRXbr8WIzpkfgacXKxR5z6ZnKHPCXT4UGv3T6iIM=;
-        b=fBEwjnz0+h1vTMCIc7DoFM3MhgLMxGYUuUyTjXVuHkwBqUt0C+EW7e7f0qBny4VTDT
-         Txgnjx+uCk8ttxhuVq18z30mo/yy5w1wb33Gm17CSsJIUVcI05TQrPs1XB2chQlGHQ+H
-         cua32XG+QMEJGjSfgipWMVB2ThiuPE0XyL7MLxYZgwOUgaWkVoQdRu886JYw6JnTryNV
-         R4G9hoRHUWPv9mO9mllcFE9N472s854rtUGNkh40FeYtnyaOmbB6fpsL9eRobqsyT8iz
-         Y0EfxO3vn/JXCGDz/O3GCka52Hw/lR5D/DizhpBxeX8jaBRy1RpisXA26iX0EiJffqgx
-         /XYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749528122; x=1750132922;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XMrwRXbr8WIzpkfgacXKxR5z6ZnKHPCXT4UGv3T6iIM=;
-        b=rTn4gQvnjmVpKJSsjp3ZsgUaCGFdg7fT0xQQBfaBucZwJvHtsTZRJLsTolwb6VGEHk
-         3zFUvRX6LTJJlj8s+IZvFAFe9DJtjgLhFt9LOpHgdhtK9RAdoozQD7S1yDHPwWyzkUp+
-         GhO/2fPdHC9rzsOPyDs8ftzGW39/Dq/+QhgAnHeu9GxYY3evZJyHtkewjV/Roy7+c41E
-         SYS1x9vn7Acsfu8lzdL+0Cg7nU9SQ0xwgvjnhLJQqIdEl4P6VvN+iMQtAjuxh4RVT5IA
-         F809+j0zI8ds18aB7rFNqVvfBnVW08Qpas8lC7vy6l4Jrb4/t19sjBEhXzbJGc2keZ8Z
-         jvoA==
-X-Forwarded-Encrypted: i=1; AJvYcCX6CHh/qwoPWJGE1bct2P0mYkpolx/hBjx1YTzHHoRTTl6G2Xi/gbJsQEDLaNAYXPrMtcau3bwFzBTDtw==@vger.kernel.org, AJvYcCXF3GEn9zVVrJjimHz4wERGuyJG43KZFT/UAAuCZa2j1YWwDaBtLYKT+0wzjafTScr2DXgc5GjFW9GAGxIS@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0mHrm3gQRNujNu1iUetMhnbZprB+FX/oG8qSEBTDNfwcrWtU6
-	KUsYwdg6oGSjfMeQjUvj6z+5sLveaEJKrmW3+06SjEea63J2WCGY/yEhPlR/LIgDtPNbFT7zH7B
-	U9HhBnrwqw6fIbhdhDeXGIs6rTeG7yUo=
-X-Gm-Gg: ASbGncupXkwXodXuMYmgbMKPmjITWKbPhhODN8LY1zsugudSDq8IddQA0Oqko6bHAr4
-	mgLlmtdu4L7+BLjGV7rEKQ58MXX2ve3VpdnAIW/gfYHORcqFzpxiVqyaB/qTZIrjTkfNExQzf63
-	poObCtS0VKUXVvwGSawap1Vj/MaDRTT4O25hjnxv5CVBk0
-X-Google-Smtp-Source: AGHT+IFkKUcxq9K3TvsZ0FSQ6z9aFHs7y3N1fYKBL8L9OYe5J71fBhdpiu/K3rvtcGkhcagNiThED5dyJXBGR1/IwYc=
-X-Received: by 2002:a05:6214:4107:b0:6fa:9e00:d458 with SMTP id
- 6a1803df08f44-6fb08fe1a53mr252519166d6.45.1749528122425; Mon, 09 Jun 2025
- 21:02:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wq0ePe08"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 002EEC4CEEF;
+	Tue, 10 Jun 2025 04:04:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749528277;
+	bh=aVnJbC3z4nwrmfypL0Oi6Gf1QoMq9GB7sy1Q0NerLR8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Wq0ePe08BqT+ES0gpcmY92ykXFtKKa+HuUt26Kfn0ERlyV9OUGnJ2OQwKuqgxwF91
+	 svtoihBgrR41xsCAkR6Dvec7dFKveCKHQN7PLYbhSFYXwu5DVXvnyjBU+8QlUJaOwP
+	 YIdeFa5fUJe6aYmS1+i3bHM4TwB14sbrJj4fhZ6oKvjIleGvkgQW5ExV2OcncGpAMw
+	 5rqkgEvOYu2joguoZgODKd85X3+DZmMQ8r3GtVopJ4zK5H46iOSqambHDDZFkPHl8s
+	 IrPDeI4ygHtfTmEflaXVkKxDvnAJe6DnSDAH0KxNNnJwKoiSMy65z73dBQu5GtSO08
+	 W2jLe8TPrOReg==
+Date: Mon, 9 Jun 2025 21:04:36 -0700
+From: Kees Cook <kees@kernel.org>
+To: Pranav Tyagi <pranav.tyagi03@gmail.com>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH] binfmt_elf: use check_mul_overflow() for size calc
+Message-ID: <202506092053.827AD89DC5@keescook>
+References: <20250607082844.8779-1-pranav.tyagi03@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250526-dualsense-hid-jack-v1-0-a65fee4a60cc@collabora.com>
-In-Reply-To: <20250526-dualsense-hid-jack-v1-0-a65fee4a60cc@collabora.com>
-From: Roderick Colenbrander <thunderbird2k@gmail.com>
-Date: Mon, 9 Jun 2025 21:01:51 -0700
-X-Gm-Features: AX0GCFspEeIQPAzdoMKf0rD0zb01CbCBMtp5pWRm7hsy4HbFty56yWyoLKvtEco
-Message-ID: <CAEc3jaCoVgP=0v73ZTeAhd0wb2LpGqguEedY6haNLi_HNA_Mng@mail.gmail.com>
-Subject: Re: [PATCH 00/11] HID: playstation: Add support for audio jack
- handling on DualSense
-To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: Roderick Colenbrander <roderick.colenbrander@sony.com>, Jiri Kosina <jikos@kernel.org>, 
-	Benjamin Tissoires <bentiss@kernel.org>, Henrik Rydberg <rydberg@bitmath.org>, kernel@collabora.com, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250607082844.8779-1-pranav.tyagi03@gmail.com>
 
-Hi Cristian,
-
-Thanks for sharing your patches around audio. I need to have a closer
-look at some of those and how the console also behaves (we try to keep
-things in-sync'ish when possible). I need to double check the
-datasheets as well.
-
-The series does contain some other patches around style and stuff.
-Some of them for me are entering that slippery slope of what to
-change. There are some different styles in use around the kernel (e.g.
-uint32_t etcetera is fine). But then if you use super strict mode on
-checkpatch half the kernel almost needs to be touched. I'm a bit
-skeptical on those kind of patches.
-
-Thanks,
-Roderick
-
-On Mon, May 26, 2025 at 5:52=E2=80=AFAM Cristian Ciocaltea
-<cristian.ciocaltea@collabora.com> wrote:
->
-> The Sony DualSense wireless controller (PS5) provides an internal mono
-> speaker, in addition to the 3.5mm jack socket for headphone output and
-> headset microphone input.  However, the default audio output path is set
-> to headphones, regardless of whether they are actually inserted or not.
->
-> This patch series aims to improve the audio support by implementing the
-> following changes:
->
-> * Detect when the plugged state of the audio jack changes and toggle
->   audio output between headphones and internal speaker, as required.
->   The latter is achieved by essentially routing the right channel of the
->   audio source to the mono speaker.
->
-> * Adjust the speaker volume since its default level is too low and,
->   therefore, cannot generate any audible sound.
->
-> * Register a dedicated input device for the audio jack and use it to
->   report all headphone and headset mic insert events.
->
-> It's worth noting the latter is necessary since the controller complies
-> with v1.0 of the USB Audio Class spec (UAC1) and, therefore, cannot
-> advertise any jack detection capability.  However, this feature can be
-> implemented in the generic USB audio driver via quirks, i.e. by
-> configuring an input handler to receive hotplug events from the HID
-> driver.
->
-> Unrelated to the above, also provide a few driver cleanup patches, e.g.
-> make use of bitfields macros, simplify locking, fix coding style.
->
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+On Sat, Jun 07, 2025 at 01:58:44PM +0530, Pranav Tyagi wrote:
+> Use check_mul_overflow() to safely compute the total size of ELF program
+> headers instead of relying on direct multiplication.
+> 
+> Directly multiplying sizeof(struct elf_phdr) with e_phnum risks integer
+> overflow, especially on 32-bit systems or with malformed ELF binaries
+> crafted to trigger wrap-around. If an overflow occurs, kmalloc() could
+> allocate insufficient memory, potentially leading to out-of-bound
+> accesses, memory corruption or security vulnerabilities.
+> 
+> Using check_mul_overflow() ensures the multiplication is performed
+> safely and detects overflows before memory allocation. This change makes
+> the function more robust when handling untrusted or corrupted binaries.
+> 
+> Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+> Link: https://github.com/KSPP/linux/issues/92
 > ---
-> Cristian Ciocaltea (11):
->       HID: playstation: Make use of bitfield macros
->       HID: playstation: Add spaces around arithmetic operators
->       HID: playstation: Simplify locking with guard() and scoped_guard()
->       HID: playstation: Replace uint{32,16,8}_t with u{32,16,8}
->       HID: playstation: Correct spelling in comment sections
->       HID: playstation: Fix all alignment and line length issues
->       HID: playstation: Document spinlock_t usage
->       HID: playstation: Prefer kzalloc(sizeof(*buf)...)
->       HID: playstation: Rename DualSense input report status field
->       HID: playstation: Support DualSense audio jack hotplug detection
->       HID: playstation: Support DualSense audio jack event reporting
->
->  drivers/hid/hid-playstation.c | 885 ++++++++++++++++++++++++------------=
-------
->  1 file changed, 500 insertions(+), 385 deletions(-)
-> ---
-> base-commit: 7bac2c97af4078d7a627500c9bcdd5b033f97718
-> change-id: 20250522-dualsense-hid-jack-d3cb65b75da1
->
->
+>  fs/binfmt_elf.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> index a43363d593e5..774e705798b8 100644
+> --- a/fs/binfmt_elf.c
+> +++ b/fs/binfmt_elf.c
+> @@ -518,7 +518,10 @@ static struct elf_phdr *load_elf_phdrs(const struct elfhdr *elf_ex,
+>  
+>  	/* Sanity check the number of program headers... */
+>  	/* ...and their total size. */
+> -	size = sizeof(struct elf_phdr) * elf_ex->e_phnum;
+
+size is unsigned int, which has a maximum value of 4,294,967,295.
+
+elf_ex->e_phnum is a u16 (2 bytes) and will not be changing:
+
+$ pahole -C elf64_hdr */fs/binfmt_elf.o
+struct elf64_hdr {
+	...
+        Elf64_Half                 e_phnum;              /*    56     2 */
+	...
+$ pahole -C Elf64_Half */fs/binfmt_elf.o
+typedef __u16 Elf64_Half;
+
+So it has a maximum value of 65,535.
+
+sizeof(struct elf_phdr) is a fixed value, 56:
+
+$ pahole -C elf64_phdr */fs/binfmt_elf.o
+struct elf64_phdr {
+	...
+        /* size: 56, cachelines: 1, members: 8 */
+        /* last cacheline: 56 bytes */
+};
+
+So the maximum product of the two is 3,669,960.
+
+It is not possible for this calculation to overflow.
+
+> +	
+> +	if (check_mul_overflow(sizeof(struct elf_phdr), elf_ex->e_phnum, &size))
+> +		goto out;
+> +
+
+You can even see that the entire check would be elided by the compiler:
+
+#include <elf.h>
+
+unsigned int unchecked(Elf64_Ehdr *elf_ex)
+{
+    unsigned int size;
+
+    size = sizeof(Elf64_Phdr) * elf_ex->e_phnum;
+
+    return size;
+}
+
+unsigned int checked(Elf64_Ehdr *elf_ex)
+{
+    unsigned int size;
+
+    if (__builtin_mul_overflow(sizeof(Elf64_Phdr), elf_ex->e_phnum, &size))
+        return 0;
+
+    return size;
+}
+
+...produces this assembler, identical for both functions:
+
+unchecked:
+        movzx   eax, WORD PTR [rdi+56]
+        imul    eax, eax, 56
+        ret
+checked:
+        movzx   eax, WORD PTR [rdi+56]
+        imul    eax, eax, 56
+        ret
+
+
+https://godbolt.org/z/hTEef8cT9
+
+-Kees
+
+-- 
+Kees Cook
