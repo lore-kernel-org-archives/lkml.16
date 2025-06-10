@@ -1,183 +1,143 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EF92868B
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8539F18024
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:16:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749554130; cv=none; b=CfuM5ONnZsZkC7B3Yh0jTzHycyye1oefEjoT7qKr+k/yuNI0Bj48AHOzwfTCgbkpklkyfz79RUvxt6Tuw0pGH13WHj/PQ7EV2HPiDQ6DghHjh4EXqGmJSwF0CNRMnwL1ahIW212btvRwvoIzX3z6oiNxMgLzLIXvvy/Kaks5T3U=
+	t=1749554168; cv=none; b=tTgdJKoOSBn671j0byt2//WVMRpx1hicPzIQYKKPkkTIUYc5yD7NIk3wWWRHz7AAt1J8dCjah36QoCCPuRbOYCDs5IbU+4mHMyAWYFML4G3SF/EQQ/8XxBp/Q9Tg+NAOHeTJVRxX9FgZ59Sr4dhG8cy/iWPOsIb/yStXDdEIgLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749554130; c=relaxed/simple;
-	bh=6O7TowWrW8RNsfaxEJIVwT/zpwPDOK3ZMQ5Kpq5kBeo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nzjzxlysLrTcHC3q5uedYQeaYstghIuBm2Vi5/7owqhrnuOdBiRjkYCV6GcuZa0nqnJ6YXx1hfbzDbbrEoa9TtGaESqVDsJI54GlrGdGCWTQJDW43p7ZwhBORtyQ+Nx9x9dcV8TiaGzVz2a5tLXTJV06c7PsxK4ZsYKYTyX0nTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BklAdfMP; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749554168; c=relaxed/simple;
+	bh=fcnHzi6v+9EpbwSnL3E+GkRGFqSn5R8OSCfwlWQf2qA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=l7DNuvXhllUZ43NrBp976WofMvyu5mbCu4XS8IHDtvvFUW7uOP+xpqT3F16d4phJQ2qkRfl3Jm1GzZFmFyKvFGiAml7OUeUz2h1hVJrsiH7EfpRnqEBFcEqjQY98MJvDiQzrrh7Nw6wvfuquSWmrczs4Hnu98HKGk55Wsixcj74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readmodwrite.com; spf=none smtp.mailfrom=readmodwrite.com; dkim=pass (2048-bit key) header.d=readmodwrite-com.20230601.gappssmtp.com header.i=@readmodwrite-com.20230601.gappssmtp.com header.b=AxGi5WUt; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readmodwrite.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=readmodwrite.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BklAdfMP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749554127;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=/NrHc0np9+RIheS43BkzhBXkoojAIRywKDBap8+J70M=;
-	b=BklAdfMP0SD/bUPWgBVgRzj+BfxvDSe7EKPlAUJCoEdlP9lOVC2SmJtA1+SQ7LCXXHeoJt
-	QnJFqKpRYEAJ1sUnHO7jzf7zhLRVGtELG6Yku+JnMuc4RMClygGgM5qsACR36J3J9bgXAS
-	GIcMztsk9sc+B6MSuEeMXKyqdi54Kcw=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-451-F4phkaajOaCAzUn8L4TUlw-1; Tue, 10 Jun 2025 07:15:26 -0400
-X-MC-Unique: F4phkaajOaCAzUn8L4TUlw-1
-X-Mimecast-MFC-AGG-ID: F4phkaajOaCAzUn8L4TUlw_1749554125
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4eb6fcd88so3492370f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 04:15:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=readmodwrite-com.20230601.gappssmtp.com header.i=@readmodwrite-com.20230601.gappssmtp.com header.b="AxGi5WUt"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a52874d593so5115875f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 04:16:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=readmodwrite-com.20230601.gappssmtp.com; s=20230601; t=1749554165; x=1750158965; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Uson3EWY6oZN9zMRgcHh8JRxG3AChngoxAGCNiZk/4I=;
+        b=AxGi5WUtkATyU9BmcI5zlYZ93LHhHz2tc7kY8EYFGCJsg7TiZys7hWPi2/vkZJaSjp
+         ESWv77foAJItRY1fFIcg3pS1Q2jQ0++4urVuVNAO8Gjkeh8iQ0EgGX/bQs0/8L/SSg4H
+         ldaLH1QIf2ZmwgntOK6OwlytXaySMFy8fUYSUJj46jQNCX3OHnksh8Wjg1w62ciZwTGv
+         0hLVbuI8ET0neWYqUwzHadPl5mpWzcVzf+t/L1kJSvf1sB1u5ZdITP0Z1yVxYWMDLywg
+         gyxuyNl3rUJtJk7zEEncaBGblAeuWTFyXnK4m7MY4NUlNcUkr8QQM+Ly3gE6nOlGjn1p
+         2vgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749554125; x=1750158925;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/NrHc0np9+RIheS43BkzhBXkoojAIRywKDBap8+J70M=;
-        b=cGJA2V5BQqqGTh2t+HP3/AHEGn9e2/aCeZ9xI47okt+YxgrMospiZI8A5HlHoGDFpO
-         xIRhOGUVQ7XcBDd6wnlzeyRwbSZ9/cQ4XGzNI0u+MTI72dLYDOCOk/bN62+VMe2+PeMF
-         7kNBdVAncLY8ujyd+7fsKtqU2seW8bJxd9hvzrTGzhofHwmUA4WMGPDS2lwfFOkVsi9x
-         8XqRydyH/yo369ok//Crzna9eQp43wuEGsbgFbkBbOJUyrR3Rc3grZYeYhV+o3rXvTJl
-         xrzc+iSQlLsNzLvOR5pcbquwXLzs0f6xpXIohNJmSBgGF7EyJNxqmPfA+VezeviEivES
-         R8JA==
-X-Forwarded-Encrypted: i=1; AJvYcCV/blFKTwkrv2VOGE1AXI0JImWlzhV+UifhxBtEHqY8iDJqHsfNoU1ohPnMUbUHeDZruKD9su0T1kgn3PA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxETgryAdHzhxMo4R/6QEnwQ1sYIvSRRgpiIzwqgsvo27T1nScK
-	71RCjv2CygkErXPHNpTk9f5F7icDOK4cHOBjk6STp6k8BDRlmDH9klY/tT+NxWZBt++p034FJ62
-	mHSGBl1zFregh9fOVb03NlFbtTFY0xqq4w0j8UFyxZ4ubCBI8dkfgL+wGCKpqSNuLgw==
-X-Gm-Gg: ASbGnctqKIfg8Bj8rHWbRsObIfcPNpd4lCNGFoWe3D3IjXJHz8jqR6IzBOgucXvvnp/
-	Pa79rKy4o1F0khMnOqX3m+KXiEtHW4PS8sdMbaHFpZUGho67+HefOFc+foZuUKaePJkXoeyVfRU
-	ouiWSD63gbO7nVNpwzmdfeTQvBdYIbSyUEtTgnn75mkRo1VsrkzqnQmkqm8A3KQkBVzOMQD7raS
-	AlD0XkbnA044FY6QJSeaedBIZ9lD4L4XMZ6UNdLu0380bPyQ2bG4OV4MSA9fKASIvbjD5Bbd/i9
-	Z2nd2uef41CnArpvUa+GPycAbQq4OeaNdIM8s2EJCC9j8yDs8eYBMeM=
-X-Received: by 2002:a05:6000:250f:b0:3a4:e7b7:3851 with SMTP id ffacd0b85a97d-3a531cf3622mr13074030f8f.58.1749554125286;
-        Tue, 10 Jun 2025 04:15:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGb7TpoI7QavnirWX2bw2oFs44j+xInfEFt55r8S38W/c8SoW7I3riRWPjYc5yrnZ1Xev10nA==
-X-Received: by 2002:a05:6000:250f:b0:3a4:e7b7:3851 with SMTP id ffacd0b85a97d-3a531cf3622mr13074011f8f.58.1749554124861;
-        Tue, 10 Jun 2025 04:15:24 -0700 (PDT)
-Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45209ce132csm138205255e9.12.2025.06.10.04.15.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 04:15:24 -0700 (PDT)
-Message-ID: <c08c2f5f-2607-42d3-8d68-4ea99c2d7e72@redhat.com>
-Date: Tue, 10 Jun 2025 13:15:23 +0200
+        d=1e100.net; s=20230601; t=1749554165; x=1750158965;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Uson3EWY6oZN9zMRgcHh8JRxG3AChngoxAGCNiZk/4I=;
+        b=gQxoZcenBNffv4/t51nMNBnNXA3kbLcuxSQbxHqVgWYqodqt2oWb2RTt1gDHuB8WlK
+         HY13K8PDQ0LpWQKjD713EdgYX57EuChtLma1e9QVRW9GGIGlHnGKOTQBKLCKEKg4I9wZ
+         P5tbYMEjbmfRuwdLzK+cNwd7LG+h/mqIKkS1EmshdAuWr/Z+U+4dUENskzK3/8IYqsb9
+         GwA+jXLDWK/WDSJKiHCdXLoCN8BGNfbsOUsAKyQkYRtW/tYp8dqVcm/5VhXIDt0RnkQj
+         UOiVkcDnpkw5NpmtMJcMfSa1b80eaSTOSvLh/1sG33T+AP1PMQE3CVkwKIJUfw6gMyCi
+         3s6A==
+X-Gm-Message-State: AOJu0YwYGNm6UYZfE8GBjoLtgb2kVR/zglexR0Zseo/Y+4Dj7q0sBf5j
+	jdqU0OHEnF4nqyLGdBG8p+8j0npADsJJky1CVH78LeztP/KGhKQZ3mbHFWfx3PNaTPE=
+X-Gm-Gg: ASbGnctqIEPsXM9atZKAkLBe/GfeI/sjep11qr+4/L5jAKTiC7CBr+u9tnSrGyHrK1T
+	4kucntTXyKG7Dt24fw1VwsNpPOp0s1MNf1Q1knxljPSJKyGuV3+AARYUh4fhlewYh9hNmHWsGFN
+	k09jfgixXHHgrfppEGrgpOX1nmoTAhrz1PJtxu9M1ihqY62f8UC8GttuwgV8IsBsjqCcVZDc8ML
+	gv0BwJR6iMlT8Krt/eEYDamV03qbTt2oL7nukuzBMh5KxrcCqSI6HfaF84kcyUcBqYuHgKmaBBd
+	ETO7JJtLqEKPVL28z+hFotHVgxNV2gbDe6W7r0luhlJCLi9SRMGXxJppyChTcT0=
+X-Google-Smtp-Source: AGHT+IEqrJ8jybyGePfvdAq/HBhOFGDbYjHnCHFG0IgFLBEztLZEbR+kXElL0h1hzqiBYJpzdqbUFA==
+X-Received: by 2002:a05:6000:2209:b0:3a4:f892:de7f with SMTP id ffacd0b85a97d-3a531ab6db9mr13931569f8f.36.1749554164678;
+        Tue, 10 Jun 2025 04:16:04 -0700 (PDT)
+Received: from matt-Precision-5490.. ([2a09:bac1:2880:f0::3df:65])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45322907546sm851615e9.7.2025.06.10.04.16.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 04:16:04 -0700 (PDT)
+From: Matt Fleming <matt@readmodwrite.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-team@cloudflare.com,
+	Marco Elver <elver@google.com>,
+	Alexander Potapenko <glider@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Matt Fleming <mfleming@cloudflare.com>
+Subject: [PATCH] stackdepot: Make max number of pools build-time configurable
+Date: Tue, 10 Jun 2025 12:15:59 +0100
+Message-Id: <20250610111559.1667156-1-matt@readmodwrite.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] /proc/pid/smaps: add mo info for vma in NOMMU system
-To: Andrew Morton <akpm@linux-foundation.org>,
- wangfushuai <wangfushuai@baidu.com>
-Cc: andrii@kernel.org, osalvador@suse.de, Liam.Howlett@Oracle.com,
- christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org
-References: <20250607165335.87054-1-wangfushuai@baidu.com>
- <20250607141857.40b912e164b8211b6d62eafd@linux-foundation.org>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250607141857.40b912e164b8211b6d62eafd@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 07.06.25 23:18, Andrew Morton wrote:
-> On Sun, 8 Jun 2025 00:53:35 +0800 wangfushuai <wangfushuai@baidu.com> wrote:
-> 
->> Add mo in /proc/[pid]/smaps to indicate vma is marked VM_MAYOVERLAY,
->> which means the file mapping may overlay in NOMMU system.
->>
->> ...
->>
->> Fixes: b6b7a8faf05c ("mm/nommu: don't use VM_MAYSHARE for MAP_PRIVATE mappings")
-> 
-> In what sense does this "fix" b6b7a8faf05c?  Which, after all, said "no
-> functional change intended".
-> 
-> It does appear to be an improvement to the NOMMU user interface.
-> However it is non-backward-compatible - perhaps there's existing
-> userspace which is looking for "um" and which now needs to be changed
-> to look for "mo".
+From: Matt Fleming <mfleming@cloudflare.com>
 
-Very likely no. Nobody should be caring about this kernel-internal thing.
+We're hitting the WARN in depot_init_pool() about reaching the stack
+depot limit. My assumption is because we have long stacks that don't
+dedup very well.
 
-But let's read the doc:
+Introduce a new config to allow users to set the number of maximum stack
+depot pools at build time. Also, turn the silent capping into a
+build-time assert to provide more obvious feedback when users set this
+value too high.
 
-"Note that there is no guarantee that every flag and associated mnemonic 
-will be present in all further kernel releases. Things get changed, the 
-flags may be vanished or the reverse -- new added. Interpretation of 
-their meaning might change in future as well. So each consumer of these 
-flags has to follow each specific kernel version for the exact semantic."
+Signed-off-by: Matt Fleming <mfleming@cloudflare.com>
+---
+ lib/Kconfig      | 6 ++++++
+ lib/stackdepot.c | 9 ++++-----
+ 2 files changed, 10 insertions(+), 5 deletions(-)
 
-So nobody should be relying on any of that, but the doc goes on
-
-"
-This file is only present if the CONFIG_MMU kernel configuration option 
-is enabled.
-"
-
-Huh?
-
-$ grep "task_mmu" fs/proc/Makefile
-CFLAGS_task_mmu.o       += -Wno-override-init
-proc-$(CONFIG_MMU)      := task_mmu.o
-
-NAK
-
+diff --git a/lib/Kconfig b/lib/Kconfig
+index b38849af6f13..2c5af89daff9 100644
+--- a/lib/Kconfig
++++ b/lib/Kconfig
+@@ -720,6 +720,12 @@ config STACKDEPOT_MAX_FRAMES
+ 	default 64
+ 	depends on STACKDEPOT
+ 
++config STACKDEPOT_MAX_POOLS
++	int "Maximum number of stack depot pools to store stack traces"
++	range 1024 131071
++	default 8192
++	depends on STACKDEPOT
++
+ config REF_TRACKER
+ 	bool
+ 	depends on STACKTRACE_SUPPORT
+diff --git a/lib/stackdepot.c b/lib/stackdepot.c
+index 245d5b416699..1c24230b4a37 100644
+--- a/lib/stackdepot.c
++++ b/lib/stackdepot.c
+@@ -36,11 +36,7 @@
+ #include <linux/memblock.h>
+ #include <linux/kasan-enabled.h>
+ 
+-#define DEPOT_POOLS_CAP 8192
+-/* The pool_index is offset by 1 so the first record does not have a 0 handle. */
+-#define DEPOT_MAX_POOLS \
+-	(((1LL << (DEPOT_POOL_INDEX_BITS)) - 1 < DEPOT_POOLS_CAP) ? \
+-	 (1LL << (DEPOT_POOL_INDEX_BITS)) - 1 : DEPOT_POOLS_CAP)
++#define DEPOT_MAX_POOLS CONFIG_STACKDEPOT_MAX_POOLS
+ 
+ static bool stack_depot_disabled;
+ static bool __stack_depot_early_init_requested __initdata = IS_ENABLED(CONFIG_STACKDEPOT_ALWAYS_INIT);
+@@ -245,6 +241,9 @@ static bool depot_init_pool(void **prealloc)
+ {
+ 	lockdep_assert_held(&pool_lock);
+ 
++	/* The pool_index is offset by 1 so the first record does not have a 0 handle. */
++	BUILD_BUG_ON((1LL << (DEPOT_POOL_INDEX_BITS)) - 1 < DEPOT_MAX_POOLS);
++
+ 	if (unlikely(pools_num >= DEPOT_MAX_POOLS)) {
+ 		/* Bail out if we reached the pool limit. */
+ 		WARN_ON_ONCE(pools_num > DEPOT_MAX_POOLS); /* should never happen */
 -- 
-Cheers,
-
-David / dhildenb
+2.34.1
 
