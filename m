@@ -1,157 +1,85 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2087229B02
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:27:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC6F227EA3;
+	Tue, 10 Jun 2025 11:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749554877; cv=none; b=qdYeLk8RivVL9sa8ismjDC4HWtyBMUoKfhPco2PEqqIBM9A4ZoQwBJwJi9bRQ1WH607XrSybmbrYnrVBdu/OAvfvKT+rdKFJUJXugmu/s/Tg2B0BE3IV0+eHBqh40pVKUOkZlj12Ijyr5QgplEC3Ab48zNJkLdvHFHnX1c7ZuAU=
+	t=1749555000; cv=none; b=EVA7ugL9x+8cyLgjlnDoc+H6PckHwXiVQ20XF2RRkYHjO7MSdV+URhcqPM6xl8f4pirs1C3YMN7khTZSlzcLJtGsyKbuv7MjRVUYVeap+D3BpgY2h54c5VWN3JukCiS1JMQ+hQ7DMiJzd9a5tFYQidynleaeoh6/dQlByCrslTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749554877; c=relaxed/simple;
-	bh=vZplNQpW4Kdm+uGw/ALGf60FNHHCr90goj7mCRdgSVk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fSDqg0Z6bieSJA9P206rrD+9OwW1IUGFDswDhGI0dzQMjnJAU2WPOxtwzcGilhemF5jLJczzAXmRNq5Bv3laiicwitTkQBIQs4Wa/QRfeSewHv4IevB3+AKCHCq8X0/8/vz58IeO+P3IizNlFngKDah+pj+ABdFHvVfeKRcDmcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Q3i/vWic; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749555000; c=relaxed/simple;
+	bh=b5nUIzqm3EUmBKYjt0opVpGPnsw1G6P3eA2WugutoP8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KpXC7G7F0LdRn8JtpEmBRrTQh7vHLFh67NVS8PI9ywWt73RJ0xYBt43QjHrb0WjhKzl1TtVInrG2JdrE3m3HSpa1xqKN9X5cDcr20HL6WmRwmrnrRBRQ/rrBc5apC0bHrLlJZge30sb69TbRu2OIBg/NdD18A+paMr8qqzMFGcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FuvPwHe1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q3i/vWic"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e81749142b3so4664569276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 04:27:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749554875; x=1750159675; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ghUgwcJRDF54uwI455ubpjB5C5gzyoTjCqDBFTWCMHk=;
-        b=Q3i/vWicUBv8ER9Q5fRxwKGrShrdh2uh9Qjlz9EXbptqtqnDNT+doXiRExXzlFWZIB
-         KKOky6E1HQ65p3H+thGgpQbvpfd9MUf3fTCE4Nz0yd8eQgES3UZNOg7s9yweMBe/Ts1a
-         c6mBn2zg1Zsmc7KZaLF00NHct1G+3zOT09lsFLhxPuUWb/zyqj2ZhAGoP2JBIGr9h6tB
-         yJDqk/a/HzaAIKHk26I4b38ow1hsjqBb74CedKCo5ylmd9JF3GBLsq6ZScczi4T4RLkH
-         qqeUmZvhmSe5KDv99uOyrRRPWV58dereuaNK3cKDd7RntyCF7TWBBq///ieuXgQiCeWj
-         pOSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749554875; x=1750159675;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ghUgwcJRDF54uwI455ubpjB5C5gzyoTjCqDBFTWCMHk=;
-        b=UV/xS1G0MI17ebdXox48eTOTTCcEUDvVv0Th4wK7DXerHkfMnaLdyr+zfoWmaq9Wio
-         EUf1G6BHYfK+TW1EMW5R7nfULi7Q+KWvNtWW+pMC+G5ymWyWdiPCddIK1xKsCrb3eEnt
-         t7tPC/yyiqlprT+yYeazp465YDJkn9E7MM3YGZj51l6OucpMMZuUfhprja2o5k18vuyK
-         9IT5tgwi/LE+HHXAvAs13ekqlJXEWUQP9Jb3KAzI/WUATKaKvE8KZCWgH4rSvAP8PjZ5
-         H8sNfoAp2xR5VslKvUNElMG5a2Dj+lqiwEbUlxpbWVqzxH1jeiRc0+QQ0+OYxLidxV3Z
-         DkIw==
-X-Gm-Message-State: AOJu0YzLHj0TWI0WeVaqigWNt3WICYA1hiRUVk+hZ/naCSZi5pX08U7l
-	+pNqe/utsdKJ9+PE5od2BNLhnEdZ2YAX3vqIySRptH0BUfKAkH+80uttObCjIkDeoDPnu/c4rVv
-	axtQbdgHeHXpbVgMWsodemI72V/BFWtbP0tudu9CnVw==
-X-Gm-Gg: ASbGncvtfnEIUPsUFCGSQoWgnW1yGpfkZ3bwL9tBnsSn1IhROtxS/b7w+8Rq09cfR5k
-	gZTm8L87KxLLX8N3wW12DlLDf3/DctYZ2lGmkw5frx/+IrO8pyWX6TLS9LSpe21h/STEWZZJf02
-	RpFo9V4PyYqPpovcyvOEX/VVHHL2HmC5UnZc8uN00m2PGkn07QH01JqN0=
-X-Google-Smtp-Source: AGHT+IHaXIQBlJX6AevUD9L1mnT0PM9CRgJ8oCkRDaWqwAf3jmN5DRjOXayJZtYpNPaGNd4bstUllo4nDy7qlFpYde8=
-X-Received: by 2002:a05:6902:2212:b0:e81:2740:2d96 with SMTP id
- 3f1490d57ef6-e81f35fb2abmr2798929276.17.1749554874790; Tue, 10 Jun 2025
- 04:27:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FuvPwHe1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48035C4CEED;
+	Tue, 10 Jun 2025 11:29:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749554999;
+	bh=b5nUIzqm3EUmBKYjt0opVpGPnsw1G6P3eA2WugutoP8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FuvPwHe1xCld1Q8ATLa4J8sn2DcS8xWs3+Kj5Uvn3Q/4nd3jXarHhvEInSuped4w2
+	 sIQyPLJbJuTWqAevPBbwKTXTTwgDqA0wOHBEfcDyu6od9jeEH/a15ItmZUcPcMkCYf
+	 vWQ+NNznSeTHp6GxWhQDZPVMiKbaxuzJrXnrfR2+29dnqXuEG2g24jIgtN2x6SE3+q
+	 UGBbxt+C95dKwjUVozaTZISOGdv5dBJWKj7ac8eqLv22tONXYS5P3JS/SR7sQP0myG
+	 xRTxh/GEHGo4Saf2sq3Qwsg0Dd0Ww5s/c1hrT+DAEazxMFSxfXc3T308tILHD5lWFH
+	 UA4huvjkfXCpQ==
+Message-ID: <2d7c6d00-692b-442c-931f-ace85f8b1477@kernel.org>
+Date: Tue, 10 Jun 2025 13:29:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606030545.1743961-1-ricky_wu@realtek.com>
-In-Reply-To: <20250606030545.1743961-1-ricky_wu@realtek.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 10 Jun 2025 13:27:19 +0200
-X-Gm-Features: AX0GCFsv-5-jjIFHT1wPanu_4OSSvcbRzjHkON4AWucIRUPqgmoGevTh0__rd_Q
-Message-ID: <CAPDyKFofk3LC1Qo4HSigDhdR2-iDwOze=sYftoRB5U9i9wqXsg@mail.gmail.com>
-Subject: Re: [PATCH v3] mmc: rtsx: usb add 74 clocks in poweron flow
-To: Ricky Wu <ricky_wu@realtek.com>
-Cc: linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] bpf: cpumap: report Rx queue index to xdp_rxq_info
+To: Ujwal Kundur <ujwal.kundur@gmail.com>, ast@kernel.org,
+ daniel@iogearbox.net, davem@davemloft.net, kuba@kernel.org,
+ john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
+ eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
+ kpsingh@kernel.org, sdf@fomichev.me, aoluo@google.com, jolsa@kernel.org
+Cc: netdev@vger.kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250609173851.778-1-ujwal.kundur@gmail.com>
+Content-Language: en-US
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+In-Reply-To: <20250609173851.778-1-ujwal.kundur@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 6 Jun 2025 at 05:05, Ricky Wu <ricky_wu@realtek.com> wrote:
->
-> SD spec definition:
-> "Host provides at least 74 Clocks before issuing first command"
->
-> add issue the clocks when power_mode is POWER_UP
-> and stop the signal when power_mode is POWER_up to POWER_ON
->
-> Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
 
-Thanks for trying to re-work the code according to my earlier
-suggestions. However, $subject patch still seems a bit messy in my
-opinion. I decided to try to help out a bit and posted a series [1],
-please try to re-base your patch on top of this.
 
-Kind regards
-Uffe
-
-[1]
-https://lore.kernel.org/all/20250610111633.504366-1-ulf.hansson@linaro.org/
-
+On 09/06/2025 19.38, Ujwal Kundur wrote:
+> Refer to the Rx queue using a XDP frame's attached netdev and ascertain
+> the queue index from it.
+> 
+> Signed-off-by: Ujwal Kundur <ujwal.kundur@gmail.com>
 > ---
-> v2: remove delay 100ms in power_on
-> v3: Use switch-case instead of if statements
-> ---
->  drivers/mmc/host/rtsx_usb_sdmmc.c | 36 ++++++++++++++++++++++---------
->  1 file changed, 26 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/mmc/host/rtsx_usb_sdmmc.c b/drivers/mmc/host/rtsx_usb_sdmmc.c
-> index d229c2b83ea9..1c808cfb44ff 100644
-> --- a/drivers/mmc/host/rtsx_usb_sdmmc.c
-> +++ b/drivers/mmc/host/rtsx_usb_sdmmc.c
-> @@ -1014,24 +1014,40 @@ static int sd_set_power_mode(struct rtsx_usb_sdmmc *host,
->                 unsigned char power_mode)
->  {
->         int err;
-> +       struct rtsx_ucr *ucr = host->ucr;
->
-> -       if (power_mode != MMC_POWER_OFF)
-> -               power_mode = MMC_POWER_ON;
-> -
-> -       if (power_mode == host->power_mode)
-> -               return 0;
-> -
-> -       if (power_mode == MMC_POWER_OFF) {
-> +       switch (power_mode) {
-> +       case MMC_POWER_OFF:
-> +               if (host->power_mode == MMC_POWER_OFF)
-> +                       return 0;
->                 err = sd_power_off(host);
->                 pm_runtime_put_noidle(sdmmc_dev(host));
-> -       } else {
-> +               break;
-> +       case MMC_POWER_UP:
-> +       case MMC_POWER_ON:
-> +               if (host->power_mode == MMC_POWER_ON) {
-> +                       return 0;
-> +               } else if (host->power_mode == MMC_POWER_UP) {
-> +                       /* stop to send the clock signals */
-> +                       rtsx_usb_write_register(ucr, SD_BUS_STAT, SD_CLK_TOGGLE_EN, 0x00);
-> +                       host->power_mode = power_mode;
-> +                       return 0;
-> +               }
->                 pm_runtime_get_noresume(sdmmc_dev(host));
->                 err = sd_power_on(host);
-> +               break;
-> +       default:
-> +               return 0;
->         }
-> +       if (!err) {
-> +               if (power_mode == MMC_POWER_UP) {
-> +                       /* issue the clock signals to card */
-> +                       rtsx_usb_write_register(ucr, SD_BUS_STAT, SD_CLK_TOGGLE_EN,
-> +                               SD_CLK_TOGGLE_EN);
-> +               }
->
-> -       if (!err)
->                 host->power_mode = power_mode;
-> -
-> +       }
->         return err;
->  }
->
-> --
-> 2.25.1
->
+>   kernel/bpf/cpumap.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
+> index 67e8a2fc1a99..8230292deac1 100644
+> --- a/kernel/bpf/cpumap.c
+> +++ b/kernel/bpf/cpumap.c
+> @@ -34,6 +34,7 @@
+>   #include <linux/btf_ids.h>
+>   
+>   #include <linux/netdevice.h>
+> +#include <net/netdev_rx_queue.h>
+>   #include <net/gro.h>
+>   
+>   /* General idea: XDP packets getting XDP redirected to another CPU,
+> @@ -196,7 +197,7 @@ static int cpu_map_bpf_prog_run_xdp(struct bpf_cpu_map_entry *rcpu,
+>   
+>   		rxq.dev = xdpf->dev_rx;
+>   		rxq.mem.type = xdpf->mem_type;
+> -		/* TODO: report queue_index to xdp_rxq_info */
+> +		rxq.queue_index = get_netdev_rx_queue_index(xdpf->dev_rx->_rx);
+
+This looks wrong...
+I think this will always return index 0
+
+--Jesper
