@@ -1,146 +1,153 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3248F20766E
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 14:55:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B2A230BDB;
+	Tue, 10 Jun 2025 14:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749567339; cv=none; b=l3P/Uvow458ISToBLUhcbeYrz+ZBUF/vTZcbuRfvvi6wZYcmxpBZ4zCd+5QjvR3yQQ1vwTMYvGSf/pLgMupZOI1QKwnunMZp4PRNP4XFIjNaXlbsSOnlIN0+6H7dHSdQkopoTqkJoZmw/EgiZxbFwY+dmAwK0ZdCDr5qiyv/DsY=
+	t=1749567423; cv=none; b=hNqn9ihRWBco7VAadHOMD6R0syedMpK73lymZoG79WWziozPGZICK2boPEPTb8qCi+YS30OdnxkgjiSDL54d9928gGRC/5w2kwmFf3BLymTJRZi7osbCNQfUkay/KIoG1JKk+2s3dBXhXKE5/Bdn02hVogrgfEScFardTCBBzy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749567339; c=relaxed/simple;
-	bh=Eh+iheJKwBVfOPh/9XPVIBHnKO/A10PgqY0AzI/9EZY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h5aVO0Bi6cfoLp1beHoNeBjnmS66FU7/qlY9VKz/bvVErN0KFnD8l2uHBPMjC17P7uCGbQXk2wzWHJLwVvPKKhTWlOcO7mVqkessRfoiDAHnVV1vinlLoJjv8BeXrQHW4lh2qN2EHap9NrmRUS3c0/rqiH6wqyZMT8hFJLGsllo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AK+Z14HQ; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749567423; c=relaxed/simple;
+	bh=zByWlDBNKckKw0jWBhDuGmYgOSZHHJq4mRZX1o/hghY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Xwjq7OksFpplkIcDmZ1MylXRTvv8xd5PNwQS+m3Y8pVf+l9KPgB7j7HyodgPLsT60jb7eSQe1gwI4Rd9iXi10fTChIfp5Xf49P6fg9osNBzfSBmOVCUOkv525iggi29ppNZf4xhb/WfOswUaIg+j6ISWKsydi3ngAAYfNLWAzYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bCxfZ8qX; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AK+Z14HQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749567338; x=1781103338;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Eh+iheJKwBVfOPh/9XPVIBHnKO/A10PgqY0AzI/9EZY=;
-  b=AK+Z14HQqRjNZHmsZVMuQ66ty8UHN1PynBZGbAH/pDz4tQyAG331xucc
-   I1dgNxcR9pRrqt5D+0UrGJMgmm5loYLxXEbziVYHd1xY7DZp7VktJHDAn
-   qhLmaXs7chNSGco7/fGN7k4Sq8A0EmsQkTJJPskvFj+gDqHOJ6RUHh5p2
-   VsLt7QbtAtJ2FNWVNAyq9OXwqywYxKViNbeRmYTz4T0C1iTPOrrh2D/29
-   /FU/LeNv9cyE8sFU51CExWaABFaSIH1bqW3tB5PmjJQLC/pQNF40a6iWT
-   34jI8JuvI97MrSKetbi2EYacL9y24mt0P3C8Qrr/99MwG8HxHKHzVfgjv
-   w==;
-X-CSE-ConnectionGUID: ONJvNFzdTpq3hQSgx82/TA==
-X-CSE-MsgGUID: GiwkzTQ2Q5mXOFvlOR8P1g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51536934"
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="51536934"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 07:55:37 -0700
-X-CSE-ConnectionGUID: N7xJj846RwiiZjpFXhzCgQ==
-X-CSE-MsgGUID: riD1qMt0RnusQVNq59w/yQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="146839722"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.111.131]) ([10.125.111.131])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 07:55:37 -0700
-Message-ID: <22cd0fa8-d14d-4d37-a6a1-5e6827d6182b@intel.com>
-Date: Tue, 10 Jun 2025 07:55:36 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bCxfZ8qX"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-442ea341570so36699095e9.1;
+        Tue, 10 Jun 2025 07:57:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749567420; x=1750172220; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1wwnqZvTHNK2o37LI8XbA5MfrvkJxRpCPBLeHJP3M5Y=;
+        b=bCxfZ8qXuICcUT8U+T8Wg58zqJl1NXXsgEnTJQXEpXg5EkAnhpdmpqMAmrzkg1jttC
+         wrpepb+jyGxds6pbh7RmkftrnPy3StZ2J4vNBWyts4hSPncugKjmj2+YGXlz9QDv/b84
+         p1pmiphEr3bOHiHiZMLl5f6xz7x3xDIU9TtZbdjb0EJ+NEP1qr0VK09Ll3taKbkgZZMu
+         ajnKXdBdXMp6dHwpZYQ0tWYmNHsggvOI+T0jVqvNr7k4O69YlO46eIlAOtok4r4X6tpI
+         UytjpnT8bKyz2pY6scp62U/7+tQ0fx1fTY1syMz8xnukuwL9lvVacHK21g9SfvWyf32w
+         9uYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749567420; x=1750172220;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1wwnqZvTHNK2o37LI8XbA5MfrvkJxRpCPBLeHJP3M5Y=;
+        b=xIt50AoehI7zo7tLckwLPk27jkN4tqD1ax+fM1rB/CS3+bIge+d/Zwi/hdJnYff7WK
+         HjXfKCZ0N3uJnSJaGMIy76lwVDRuwbCeLmbMT5vpStR0QjonZiwDsNWuCchEEMU5LlFy
+         Dpq1GTCsex8MkIGH8aHTLSGXwWxn0Ash/djAyiwF7JKK+uwbvO64iCFWR5nhHhNDTT+z
+         g58ETArtEBMQygh2DNRXv9MqPeXbkKjlppp+JH9v+69vb1Vh0BYXVkUFxRGPxY/CkPEm
+         0bKhHF455bIBbBYHnQyfFSmpVX0POP13O6gPWgZAP3I1UafcYVxK0tzuCtfhjCVItKFP
+         Uxjg==
+X-Forwarded-Encrypted: i=1; AJvYcCUzmXIF5APXP4QobpUYhpH3FhQ5vESmU5ZIjKH6APaundQcW8wRjr5LEL+wyqspoj02wtJFcXsD2MLoM/yI@vger.kernel.org, AJvYcCV7n+zr+V3EfkzP/QyiVoOtNl8QKUWz6OIpXwJeoqQrxqwdFj1iaVP7ogufGpo8B3ZD/E0CmvPS@vger.kernel.org, AJvYcCWUi7voOl0KHiwyfUcDb0THnHUu6R2Dlgnf29EDr5O6kb4J3h4HPgqTGlJZeh0l9hEe838=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3MUDEvIHAn0Oyxvuxi3v4c6ka/02ufpUr36tEmSwM7i6FSTLG
+	VYLWznZH3PLeokGDNDy7wrTLctXol/p6j5y9NjHElelwz8ZnNBWFY0IjSBse4H8eeh4Jad+qv6q
+	LCsxx5z4WdfFdtqU3/DhP57yLkmuSW28=
+X-Gm-Gg: ASbGncu08zpuA0F8+Src8slkArQZZfgq9m1krw/vPwGgThrl0msypAGppYp2Mt3M/5Z
+	2yxPYNA8Jyy/Jkfsk8fkSmJGl8Lb5e3YQbduRjhGHsSZTpcatQggCtD6gBc6303XPjb9yCKxHjV
+	p9wFMkfk5RYauK0cF3GmVL6UmNanKCbkd5FOAdZ3mUDFhwYdpx1LPL79Uqx0U=
+X-Google-Smtp-Source: AGHT+IGOc8bUJBDv99rCLy4M3C4rvYfoE2Z69jTNxoUGSp2dO9WBSZpZAI254X0QkV4e6nHos1ZmTZ1zDtdeYelCd1c=
+X-Received: by 2002:a5d:64e7:0:b0:3a4:f902:3872 with SMTP id
+ ffacd0b85a97d-3a531cab757mr13040330f8f.19.1749567419564; Tue, 10 Jun 2025
+ 07:56:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] x86/mm: Handle alloc failure in phys_*_init()
-To: Em Sharnoff <sharnoff@neon.tech>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-mm@kvack.org
-Cc: Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- Oleg Vasilev <oleg@neon.tech>, Arthur Petukhovsky <arthur@neon.tech>,
- Stefan Radig <stefan@neon.tech>, Misha Sakhnov <misha@neon.tech>
-References: <a31e3b89-5040-4426-9ce8-d674b8554aa1@neon.tech>
- <a404d023-e0bb-4dc8-8952-accba299ab50@neon.tech>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <a404d023-e0bb-4dc8-8952-accba299ab50@neon.tech>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250608-rcu-fix-task_cls_state-v1-1-2a2025b4603b@posteo.net>
+ <CAADnVQLxaxVpCaK90FfePOKMLpH=axaK3gDwVZLp0L1+fNxgtA@mail.gmail.com> <9eae82be-0900-44ea-b105-67fadc7d480d@iogearbox.net>
+In-Reply-To: <9eae82be-0900-44ea-b105-67fadc7d480d@iogearbox.net>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 10 Jun 2025 07:56:48 -0700
+X-Gm-Features: AX0GCFtnTqZig7dyW3PR0EKJRhUeFNWIpmwblpieZgztBjaVceUVGWpXU4TuBnI
+Message-ID: <CAADnVQK_k4ReDwS_urGtJPQ1SXaHdrGWYxJGd-QK=tAn60p4vw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: Fix RCU usage in bpf_get_cgroup_classid_curr
+ helper
+To: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Charalampos Mitrodimas <charmitro@posteo.net>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Feng Yang <yangfeng@kylinos.cn>, Tejun Heo <tj@kernel.org>, 
+	Network Development <netdev@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	bpf <bpf@vger.kernel.org>, syzbot+b4169a1cfb945d2ed0ec@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/10/25 03:16, Em Sharnoff wrote:
-> +		if (!pmd)
-> +			return (unsigned long)ERR_PTR(-ENOMEM);
+On Tue, Jun 10, 2025 at 5:58=E2=80=AFAM Daniel Borkmann <daniel@iogearbox.n=
+et> wrote:
+>
+> On 6/9/25 5:51 PM, Alexei Starovoitov wrote:
+> > On Sun, Jun 8, 2025 at 8:35=E2=80=AFAM Charalampos Mitrodimas
+> > <charmitro@posteo.net> wrote:
+> >>
+> >> The commit ee971630f20f ("bpf: Allow some trace helpers for all prog
+> >> types") made bpf_get_cgroup_classid_curr helper available to all BPF
+> >> program types.  This helper used __task_get_classid() which calls
+> >> task_cls_state() that requires rcu_read_lock_bh_held().
+> >>
+> >> This triggers an RCU warning when called from BPF syscall programs
+> >> which run under rcu_read_lock_trace():
+> >>
+> >>    WARNING: suspicious RCU usage
+> >>    6.15.0-rc4-syzkaller-g079e5c56a5c4 #0 Not tainted
+> >>    -----------------------------
+> >>    net/core/netclassid_cgroup.c:24 suspicious rcu_dereference_check() =
+usage!
+> >>
+> >> Fix this by replacing __task_get_classid() with task_cls_classid()
+> >> which handles RCU locking internally using regular rcu_read_lock() and
+> >> is safe to call from any context.
+> >>
+> >> Reported-by: syzbot+b4169a1cfb945d2ed0ec@syzkaller.appspotmail.com
+> >> Closes: https://syzkaller.appspot.com/bug?extid=3Db4169a1cfb945d2ed0ec
+> >> Fixes: ee971630f20f ("bpf: Allow some trace helpers for all prog types=
+")
+> >> Signed-off-by: Charalampos Mitrodimas <charmitro@posteo.net>
+> >> ---
+> >>   net/core/filter.c | 2 +-
+> >>   1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/net/core/filter.c b/net/core/filter.c
+> >> index 30e7d36790883b29174654315738e93237e21dd0..3b3f81cf674dde7d2bd834=
+88450edad4e129bdac 100644
+> >> --- a/net/core/filter.c
+> >> +++ b/net/core/filter.c
+> >> @@ -3083,7 +3083,7 @@ static const struct bpf_func_proto bpf_msg_pop_d=
+ata_proto =3D {
+> >>   #ifdef CONFIG_CGROUP_NET_CLASSID
+> >>   BPF_CALL_0(bpf_get_cgroup_classid_curr)
+> >>   {
+> >> -       return __task_get_classid(current);
+> >> +       return task_cls_classid(current);
+> >>   }
+> >
+> > Daniel added this helper in
+> > commit 5a52ae4e32a6 ("bpf: Allow to retrieve cgroup v1 classid from v2 =
+hooks")
+> > with intention to use it from networking hooks.
+> >
+> > But task_cls_classid() has
+> >          if (in_interrupt())
+> >                  return 0;
+> >
+> > which will trigger in softirq and tc hooks.
+> > So this might break Daniel's use case.
+>
+> Yeap, we cannot break tc(x) BPF programs. It probably makes sense to have
+> a new helper implementation for the more generic, non-networking case whi=
+ch
+> then internally uses task_cls_classid().
 
-All of this casting isn't great to look at. Just about every line of
-code that this patch touches also introduces has a cast.
-
-Could you please find a way to reduce the number of casts?
-
-> +		/*
-> +		 * We might have IS_ERR(paddr_last) if allocation failed, but we should
-> +		 * still update pud before bailing, so that subsequent retries can pick
-> +		 * up on progress (here and in phys_pmd_init) without leaking pmd.
-> +		 */
-
-Please write everything in imperative voice. No "we's", please.
-
-> -	for (i = 0; i < nr_range; i++)
-> +	for (i = 0; i < nr_range; i++) {
->  		ret = kernel_physical_mapping_init(mr[i].start, mr[i].end,
->  						   mr[i].page_size_mask,
->  						   prot);
-> +		if (IS_ERR((void *)ret))
-> +			return ret;
-> +	}
-
-Are there any _actual_ users of 'paddr_last'? I see a lot of setting it
-and passing it around, but I _think_ this is the only place it actually
-gets used. Here, the fact that it's an address doesn't even matter.
-
-
+Instead of forking the helper I think we can :
+rcu_read_lock_bh_held() || rcu_read_lock_held()
+in task_cls_state().
+And that will do it.
