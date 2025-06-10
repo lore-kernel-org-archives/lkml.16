@@ -1,95 +1,92 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C4628A1DD;
-	Tue, 10 Jun 2025 22:03:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ABBC288C37
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749593025; cv=none; b=Kke8pJS5lZK3uhKOdKc5OauBfLwRIvEdZ+pusqd1MjDcRAQ5id9VfUXJPxhOrBXWGEMjfjPNP+5Y2nC0ZBCjdwkTaXsJq+fd2Vzhq+/UtZDmwcU137HjRi3l5joDiLyfSXXbPvENkon0RvRxngaYi2XDNkAw9PWOkNq57lP70J4=
+	t=1749593039; cv=none; b=OOqA+9gwii77m+fiwwLDlp7dvLXJ6a4hlaT+WQ/pbdEqsWv6aBucgMpKQexN7GcIndEx+ZKpHV93OPxBDpxnTWBvO/SQ22bebqsMNKFPtSC2NViMr0dyiRd0mp5FaJsjZbo8iqnIcsPb5XHKe6vf0ITjOyXT6jk6O5H/+xKcBPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749593025; c=relaxed/simple;
-	bh=oxKec9aTDlYmg0HLbGa+lyFHsnNX3sd7Cx1P/oOxt8I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XKUqPT+oOsaPHWxAvzrAJ4C963cy3uIWVOdRAa4WEfrE77sWtLtKW8Sou6Tsl2OcIZcfoHGKRVEr4jg6RWlfytUaI5f1m6BDi15YhpoWJvVe/bZQVM7Y2lfOeBJ8p/D3PRcUa/n9TWrO4GpAZEa+jrvMVEnjUaztnOOlkRaAdqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FmG1vNiN; arc=none smtp.client-ip=209.85.160.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749593039; c=relaxed/simple;
+	bh=AQuSBUl4POx87aC0pz2dJ7RudtiNWawkc/IXHTTTSDI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B1bGM4++SkBjQffkfUa/sSJ/h+/FPM8YjLVEg9IsN0fB4Y2F/T2/wi6u5tkeSkMujq0TjOoM0qS/uOPqqbs+A0ha5zBtXx6fwyOweuCAMxGTsQRV3q/Au9KomHoadt8pf8mgzD+6ZzqzQn2oOjFd8PBysQ2D6vNf/gS7/g8QiS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Y/HS4efw; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FmG1vNiN"
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2e8f394bb75so3434100fac.3;
-        Tue, 10 Jun 2025 15:03:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Y/HS4efw"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-747fba9f962so292470b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:03:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749593022; x=1750197822; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EczlavLIRd1Z7GDaXRstMPS0Oc0Bcp8aSL0PIMU9kJo=;
-        b=FmG1vNiNF70MdkaB736cR4w3eH0kZyxxxcS6eXQk4eazw/EIv7iwrkizk7WCzdk+va
-         jiYEemGev8szxnrPYLQ8kGmIBvqvTabQjYzmHf3vuxCHUesnMzWJILs3gRCP24fVx87Z
-         gPOyazs9qtda/uXnaHg48Va+HszW58SByKa36u+7btx3PuTqb6cgzwrrKZvXiQdAdHNu
-         m5UgGLyZLL2PNYYcU57RGyGLXHlYdD8JLZoqWzT7mTlQZz+TXjSbxRbHP+usV1olgs8R
-         Avv6oSfD/2xSiF9HuDm1yaxLGMCFRhnSW8djIqpPeI0Fp2n99IGPkRya2Jb7xyoIJEzO
-         P/dw==
+        d=broadcom.com; s=google; t=1749593037; x=1750197837; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2HKAV4+QmX8qJ/5iVivDCfl+K8vVhwbVWIjZHILmwUw=;
+        b=Y/HS4efwsydpSzsBiCpBA2XRLSTV9mK2bmDXxdkFjk2NZB61wWPNGdcM6NCpzm3WQ/
+         +GhelhmUGq7+jN40iM8ReXhhhBCHP9hKMKhem6KM+07zJJCK0MVk1bEkm5mUCs/536HV
+         /8n9oRhXPiToLvMPFEhnxHXmdLAgpDb+OV6G4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749593022; x=1750197822;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EczlavLIRd1Z7GDaXRstMPS0Oc0Bcp8aSL0PIMU9kJo=;
-        b=SyH5pTdY3GlzUUk/vMtoT/aZSnG26DAcVcfHHifKnJThJHDrSAgR7/yuzUq/KmtoQs
-         bfClAE0CL3Jw4jGaVXOXXmdr5uuqAtgREfRZhBdy/wUugsXcVcZ/y1CRHTsXsfpeHzq5
-         hNnmPJzGPFUKWZKLBuNed9kVSKRDHlM7hkCUp99f5Kygsi/OP9lfXh6Q0OZWdEmpPzXD
-         On2RHfDLeiJHhZUcIztYXXl83x2v3G+jwHZ7EQAMK0ugemmimn3BaVqdZeTBx8iqT3xN
-         Sae/KDd03RY9LBeVSTThcCFuCnsztarvUr5tnHxx8iwj7pw4c0ApuIEr3mZJaeja4Z0Y
-         qytw==
-X-Forwarded-Encrypted: i=1; AJvYcCUmMwKh57OJBVe5NdPd7EIDubb0vuoIEkf27FD4LfLOtOFokWFTHUtAtxf7uCN58cRSZ4Iu2A4KXUcOcCE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaR2FVUkGwdgqqF17gsTnyr6Zbj0ZhLcTQN8EWmTzukOlfe6UV
-	2pwUe/3dy2J0StsTA44CeW5v89sDvQOXssHS4wM8y0nZkbbITZIuxFa0mQG9GA==
-X-Gm-Gg: ASbGncuJp0G8CXsh7awuqDZlt4waVu79aFY9MJNXzMzIiS1T04E+8rRrxnguNVCz9aN
-	zhYNds/xJtGjzeEhTauH+K859B3JebGx74j1tYWRaQgUJiKWlL5lRiT1T70BU4kMNxh2C3GwfDb
-	01fwLTdUrg+Qs04ib7Znn6CmMCJkm3EvWFmqd5KHx9M1Py7R4jZaeso+e5OgzRlg6D7da/v4+pE
-	PLXNsuuCo2QzOiWpDiYxuoLdyO4WaSr8SNwLZot9Fo8kaDlGlt7ZihfTFil0cHUrjlPs1QICK1N
-	IEzmgUyjBNJ3NBgWck+mLDYHmosg7eAzJAFR6MtSOsHzG4bp2HtS6w==
-X-Google-Smtp-Source: AGHT+IFN5acX0KX+9t3qz5TRwUPXDGWfGQtJv57bEsW7AExqKP66GjtucoDB8q7hl7w8owZC/IHZoQ==
-X-Received: by 2002:a05:6871:7293:b0:296:bbc8:4a82 with SMTP id 586e51a60fabf-2ea96f113ffmr681031fac.27.1749593021482;
-        Tue, 10 Jun 2025 15:03:41 -0700 (PDT)
-Received: from localhost ([2a03:2880:11ff:57::])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-610ef763098sm56645eaf.28.2025.06.10.15.03.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 15:03:40 -0700 (PDT)
-From: Tianyi Cui <1997cui@gmail.com>
-To: shuah@kernel.org
-Cc: linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org
-Subject: [PATCH v2] selftests: Add version file to kselftest 
-Date: Tue, 10 Jun 2025 15:00:53 -0700
-Message-ID: <20250610220319.405806-1-1997cui@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <328326d7-a72c-4fae-bd39-af4d89666a91@linuxfoundation.org>
-References: <328326d7-a72c-4fae-bd39-af4d89666a91@linuxfoundation.org>
+        d=1e100.net; s=20230601; t=1749593037; x=1750197837;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2HKAV4+QmX8qJ/5iVivDCfl+K8vVhwbVWIjZHILmwUw=;
+        b=hZb3wPHD/H3qZA8kkwYeALmMzTYCjqsjTIlGUftFNIjTx91A/0iX+JYfSizlB0gmNQ
+         oRUingnJRXJesIqAguIGD1HQArxunZLr0XhnLzXFDys6jGoJyR3bRL+KN6vTO/PQTt2Z
+         GAiwOctMZS/U8a6h/79nFKLeuuqtiDKEoSbTtxxP6syZZpkNBoXzz7PKsGj00EqJ6IIT
+         jeYC0JDNAcb9IZNzcEikEXfUP5T6gf/Run2yT7B8abTdO4d6fItHrClsbDluT3Kej8yR
+         pjQVlTWUmogs9b/96bEt3EkjPrY7dcaB7WRCiBaIRU/03C2jvGtYHhBsuCFAt0yEhh3Z
+         XF7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWgn0Ylhk+j+Z5tsjn8HPqqGdivzzshS9BBWfRX6TbijPbDj6tCAU4vsgFnrGHZIPy1UWRdGKVpaCIeF+w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWosake/hx4TTIEER/bKbZjg8fyt6GIOBxUYfYJKfUgtu54kMW
+	aULB/w8UUMUP4TfkssqgbtWTYFuu4YjECBY9L3IEfDyo6WhksAH3tGIIi56ugOE2BQ==
+X-Gm-Gg: ASbGncteLm/M+s4gmB4crPDiGEmo7GgAca6hU1+Wg67I2ZZaEQPMPp3lmQ+3pk3RX+P
+	7raw6fQeMSPKvUVh0oL5yoRh0Kz80BJ02nrz4Wl7odIcLmKwi1ova0odIDLHOEugR8DeJOz/GZp
+	3zELVy69vN+s+LXbd0DmhoiHGj1Ej8cGr97/R1ItotLKEL0WPWg/2m1hBvYSKOhKJSWAhA1vXRH
+	Jbae0BA1hspg/miAGoTcqznpd0ucfGJvw5NalyApP9WS1ttxSsgUHnQH9OLD7nVLZ0rr10Ltv6T
+	YmSvl63HGTl2aICcS7uLbnGgfbRpcdKVE5OQMeIDPK6n7r12tUyulTn0BuBTGWMJJd0HO6yv/96
+	CEHdHq+CIaBHdqtASRH7y6DCVVfck
+X-Google-Smtp-Source: AGHT+IEIXuOZsMuSoYb7hNyiQAFPY8BACk5AsaFz6nHTA8M6q+uL6HODxkPFfsAfvjEVf9+iPCaqeA==
+X-Received: by 2002:a05:6a00:2d26:b0:73d:fdd9:a55 with SMTP id d2e1a72fcca58-7486d351d34mr1345772b3a.8.1749593036803;
+        Tue, 10 Jun 2025 15:03:56 -0700 (PDT)
+Received: from [10.69.66.4] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b083abcsm8220869b3a.92.2025.06.10.15.03.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 15:03:56 -0700 (PDT)
+Message-ID: <5de9e799-bc01-4fa2-8b99-1e54c7007963@broadcom.com>
+Date: Tue, 10 Jun 2025 15:03:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 2/2] net: bcmasp: enable GRO software interrupt
+ coalescing by default
+To: Florian Fainelli <florian.fainelli@broadcom.com>, netdev@vger.kernel.org
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ "open list:BROADCOM ASP 2.0 ETHERNET DRIVER"
+ <bcm-kernel-feedback-list@broadcom.com>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20250610173835.2244404-1-florian.fainelli@broadcom.com>
+ <20250610173835.2244404-3-florian.fainelli@broadcom.com>
+Content-Language: en-US
+From: Justin Chen <justin.chen@broadcom.com>
+In-Reply-To: <20250610173835.2244404-3-florian.fainelli@broadcom.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thanks for your patience for review! I've updated the patch to make it
-easier to understand. Specifically, `stdout` of `git describe` is stored
-into `VERSION` variable, then write into `VERSION` file rather than
-print on-screen. Please refer below for the sample output and the
-content in `VERSION`.
 
-```
-Emit Tests for drivers/net
-Skipping non-existent dir: drivers/net/hw
-Version saved to /tmp/ksft-net-drv/VERSION
-make: Leaving directory
-'/home/tianyicui/test/nipa/net-next/tools/testing/selftests'
-➜  net-next git:(add_kversion) ✗ cat /tmp/ksft-net-drv/VERSION
-v6.15-12423-g7ebe76e39b4c
-```
 
+On 6/10/25 10:38 AM, Florian Fainelli wrote:
+> Utilize netdev_sw_irq_coalesce_default_on() to provide conservative
+> default settings for GRO software interrupt coalescing.
+> 
+> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+
+Reviewed-by: Justin Chen <justin.chen@broadcom.com>
