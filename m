@@ -1,99 +1,94 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0589284B4A
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE4B264A7C
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749592923; cv=none; b=uAbH8DsgPR5OeKYJwQfobRugUN8BJ6D42Xpn7SwyeUOYxJ0t16JUCFLNcofShVxjlEWLJm75VkDnavPre/TtKwrswb/YMTdif9NlHbfndjWJcCCY79DguAzqpLHQX2A/WB0uxZDxnKhcIJ1LunaGtsx8QNVTn8m8RIbxGogEsSg=
+	t=1749593007; cv=none; b=ayharq9b0qrx3gW1zX5AbMpBHGm6YN8r/jFA29TLnjOKubfPoUSrDa7fDjLORLmUr2rlF6u3X4LO22ln014S0uej0DbyXTgHcom+qk3uI+r7PuHgxn4i1WkK/7TWEVMDqS/X3eYCNbR+LgEara8NiRPLUjBCeHW7KTsyjDdYMdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749592923; c=relaxed/simple;
-	bh=WEjoFKJq1fwhLjJL/1LIboVF8pYHP56Xq9jI3aQ+dvM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bnQbkJ4UsoXp9KzSKwWuZBFDOMkDM7Cvjz6CiFAobyOPpD4McH2DB4kRSzOyE5wjnTdxgfeBXnmi3H0TZNx4gCgObzwwvvOdmFlZ8xb5FtTiXZ2rOPAG6uNE/R9nxj+oeFKuD/0mLxN6qDgYBWSjms4pk/NftwVTzBGD1wnQpqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=darL0WaF; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749593007; c=relaxed/simple;
+	bh=lAzkbZRsiYkiAFt594FQ0xW8AjZBW060MmReVLZSPEU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=avkWqnwG+01x6QnEPAVQPKHSdy+iire46MJRJnuegyJmtmf0JCZ99jDytPmDzlnjFhl9hvsjDeXI1DT9CALzbXXmCzDF4BVpApmK4mipz6tlsn9juTORgL9EjMTveyjdC8cgK7K/dgZu9KCo6dlKr3iT6kOSx48bngR/Nptjkog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Q5FmwdCP; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="darL0WaF"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-55394ee39dfso317439e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:02:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Q5FmwdCP"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-236377f00easo16846265ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:03:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749592920; x=1750197720; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WEjoFKJq1fwhLjJL/1LIboVF8pYHP56Xq9jI3aQ+dvM=;
-        b=darL0WaFnqXsN60//KyNJtt83dkUlHHZa7TiQytwBwMfvg8t0Bs5VmCa4OdUdkOKcK
-         3KCxkXaBD/KLi+JQ8KUhosrpIA1k9+tlptkt2QwxVgNGib31KzwFfYdc2jVqcLPN3JMC
-         hP0QjgBAIU2VbTSnTIzbG3f4boMFIPDnGka2gTEuLgpGhfUu+R4cPQLV1EeXJlSFf/j9
-         GAYJ6POlPW+B3Zzd4rbTI83BVhQi/WQilVQVuDz+adCtIPFVrjao3dJV7fA/zQrn/AL0
-         NWIPHwvEiRgeyNdi3Fs7eMMlnR2nVCFdGstfo0b/HPtgr5+I5ostEaAmybKca7b7g+Y0
-         kBmg==
+        d=broadcom.com; s=google; t=1749593005; x=1750197805; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CiAybgJTvUHDDHI0zOr7gnQJrjAwYePwjmyhAIO9NUc=;
+        b=Q5FmwdCPIB7iYeFN13TCbC1Nhv+q+y+Ccn3o54uV/9r00OOTtv9PPtiNPNSDTANKVi
+         t00lgGZnwEjb9s8vFqwEtPVyeMASvnBvzTVsRjIeKxEI7vfgpkkIUm6vDs98bhhVk7rV
+         vw/5IE0WUCBTBCWUeINqb1qXqpa4oOP3LST/k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749592920; x=1750197720;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WEjoFKJq1fwhLjJL/1LIboVF8pYHP56Xq9jI3aQ+dvM=;
-        b=MpIe+Y34pIJW2+W9iVDNU2OV0NHgBQJTvW471heSQqWzVrvaqFOWAqxMsYiyAvPtX+
-         3z8f1VDOaHJSz6OvXEBRmh06pizU+azb0yiG1n8aVe5zDA0sd+VWqFF6R7a/QHXUnGL0
-         /Up/bxyDRAZVrOtC8a60UT0aqgvzS8gVGBVgjiMecMYA+IrRGA88u5/8QZ2l0JxcM7ZT
-         amMCD3sceKfVXoBVQfhNkoCXOYLeoQJOFm3TtFut2pEk5le16zlK7ZuMl/KIm9pgXRxC
-         TGt1BqCvM9f5s13b3BA7yqaD8MOP+PhTmrniGGtXe0EXIK+u2237pIs1z2q1dWOvzZEb
-         NVNg==
-X-Forwarded-Encrypted: i=1; AJvYcCWIqPe6iD8sylqgmHKZLAwe1CneCPrxKriCrb2n+xmA0diKkiTAhVqFndgWSrmt5YN6ArIZEuI8IgkVQBQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzk7gD6lpcng9NZtP/m7ppWDQvfp6/9gjtRhGwlfGC0k8Rw19On
-	9M7ZkpCx9QlQcQAC4X8x7+/RLZnQOWQsGRaY+TUrSL5svMk0HplkVNs6YUpcCpXUdMZXHRDWhq+
-	iFR0h6wIZTD9Bh3xqFPvV1gqADJjAYlSRkfYLW9JiQg==
-X-Gm-Gg: ASbGncvApBF5P62TXEpdHysfn+scEniFxtehH+JV56OufoSqn9kaPFFaeiveCvB7ntc
-	BX/0/eWxO1Y8WDeoh/B69pUqCLSX1Gkzb16R0huGlFWIy+hQE3ggts3Jn8fxNYgGbzj25QKymb7
-	ZGgc/J63lmM/6/M8MrE9Lq+bJWmthU9PN7JCvc2hQD928=
-X-Google-Smtp-Source: AGHT+IHHOhOUj30OWDDSx+2F42g2fLc3I9bcRSXhW2UcQzuablZdDsnZ46Wc3GihsOmkn7ZczCyHo2K03K0tk80OU04=
-X-Received: by 2002:a05:6512:1504:10b0:551:f166:bbb with SMTP id
- 2adb3069b0e04-5539c5ff09amr174150e87.13.1749592919907; Tue, 10 Jun 2025
- 15:01:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749593005; x=1750197805;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CiAybgJTvUHDDHI0zOr7gnQJrjAwYePwjmyhAIO9NUc=;
+        b=kcxIlXEjgjjZNSxRAkyCiFood8ksSH82FoVsYxh66AF8ioJjLs9fkU72CpISk7QKbP
+         afpBSY1D7aYe/gCQyHGsIuaMFXLUOfJ7+RS1BnxiG1PrG9XKPDYwnxkedzPVfrjZLUsi
+         LQu3CzpC3KmqMOO16TcNfI4RkMBfvev/G+IqKwZrc2htLo/IstWSJzcWXA82hGwN9eHV
+         itFYiRPmBkyRt7Uz2Vzz/ZD6cSHQTWcGSZqjDQsYdNW+d/wpNxUfSjoBTf439b41C+L5
+         //o4IUR0dNxz7qmip8Szq33g3Gc1wnO+VTVvgqMILJH1Rk1N8lPJOphN+4dAT50haq8q
+         hAnA==
+X-Forwarded-Encrypted: i=1; AJvYcCUfRXkPPwyLDTn5nJDw1wo/bm8C9pHYuhIfuj+k2a+icEg3DoLHz/m0/iBxNo6gApIFs9Qc7bYBjQw4hjA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvNzRhbQnkKtMdso/O4wS2FXWoff2juhiaOuHtkCcjUev1b44+
+	w/KpN1lH1BD7+FIhvjOdkFX7q2o53WJtzTg49mYr90zArbO+cJbZ1sq5MALRCieKeA==
+X-Gm-Gg: ASbGncsMu33Fxt9IsPlH5dHPNZBIDZu+XKBE+NMOF//OU/nTdBoEpoGkk74IGLk1xp3
+	wt9nCSSZ3G3ZKYyFCMJ1qZATQuY1qb/Dm+B25Rg+oMdH25KFn5vRTgBz8QiBmNqvQy8AkbyTgrq
+	1l+q4WTy+4un7YGR9JnLoA8WhG0sEj10MrYwQmf/v+KAzU4co076U1dDE38VVgxrvCun2nceHIZ
+	voiq3uxjYtp2cSZ6glmvinzMDT7KnxrEa9pxVuApZG9qsYwo4VN8JWvyVj9lWwtQYCaNR83b5b1
+	hhZCGHCI9eTatw9ieJXdZk/vL3SINRnkpO7L1uJ9RPO/0mTd36Mxg57ZhBmGohKrelmzghMVvwu
+	8w+rWj3oAzcjXRVHC+C6dP3NqTmOVSLybq38gz9A=
+X-Google-Smtp-Source: AGHT+IHTZUfe9NgQX4fBB9+qXz05x3tkcD4vBuXAHP7YeCeJw7eNzZ9CYK40gUkuN3RyfnzZ7PjnFw==
+X-Received: by 2002:a17:903:41cf:b0:235:a9b:21e0 with SMTP id d9443c01a7336-2364255bc96mr6670475ad.0.1749593004825;
+        Tue, 10 Jun 2025 15:03:24 -0700 (PDT)
+Received: from [10.69.66.4] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236034065edsm75206445ad.185.2025.06.10.15.03.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 15:03:24 -0700 (PDT)
+Message-ID: <21c6abaf-b208-4cc0-874f-42bceed5c1b7@broadcom.com>
+Date: Tue, 10 Jun 2025 15:03:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610-gpiochip-set-rv-gpio-v1-0-3a9a3c1472ff@linaro.org> <20250610-gpiochip-set-rv-gpio-v1-2-3a9a3c1472ff@linaro.org>
-In-Reply-To: <20250610-gpiochip-set-rv-gpio-v1-2-3a9a3c1472ff@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 11 Jun 2025 00:01:49 +0200
-X-Gm-Features: AX0GCFufuH4LiWDSgWF_9h-zk6BcvJ0Do0hqFlGAZPq_9bZnp7tz4BcqtgZHIfw
-Message-ID: <CACRpkdaK=Ua0=Jgnff4xXxVx9W=LcLg7RykR7CozhqtAb+8XQw@mail.gmail.com>
-Subject: Re: [PATCH 02/12] gpio: mm-lantiq: use new GPIO line value setter callbacks
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>, 
-	Conor Dooley <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
-	Daniel Palmer <daniel@thingy.jp>, Romain Perier <romain.perier@gmail.com>, 
-	Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>, 
-	Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, 
-	Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, 
-	Grygorii Strashko <grygorii.strashko@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, 
-	Kevin Hilman <khilman@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org, 
-	linux-omap@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 1/2] net: bcmasp: Utilize napi_complete_done()
+ return value
+To: Florian Fainelli <florian.fainelli@broadcom.com>, netdev@vger.kernel.org
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ "open list:BROADCOM ASP 2.0 ETHERNET DRIVER"
+ <bcm-kernel-feedback-list@broadcom.com>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20250610173835.2244404-1-florian.fainelli@broadcom.com>
+ <20250610173835.2244404-2-florian.fainelli@broadcom.com>
+Content-Language: en-US
+From: Justin Chen <justin.chen@broadcom.com>
+In-Reply-To: <20250610173835.2244404-2-florian.fainelli@broadcom.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 10, 2025 at 2:33=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On 6/10/25 10:38 AM, Florian Fainelli wrote:
+> Make use of the return value from napi_complete_done(). This allows
+> users to use the gro_flush_timeout and napi_defer_hard_irqs sysfs
+> attributes for configuring software interrupt coalescing.
+> 
+> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
 
-Yours,
-Linus Walleij
+Reviewed-by: Justin Chen <justin.chen@broadcom.com>
+
