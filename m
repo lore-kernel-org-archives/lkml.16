@@ -1,72 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C3A23ABB1
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB0728D85A
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749561295; cv=none; b=YwzdUR4mWeXGavzzsk+lNYKuWoBxbdH6isDHuvk01d8OQItSI4lIkVIT2Z8L5W8U6oDw2XcpW9aDSNxJP8W3jeyzP6uifY7I0sV8kS6PD8kOBK8g1wf4NT3zQe+7XcNsIQ7z4PvFkGT0MqrjbkQ5v3g1oGAuNE4RImkXuxQgKw8=
+	t=1749561350; cv=none; b=NPEpOwcSIRj0D1iXW5xvetIINZXmY54AZY9X5hKJuQFHztIolTK2wP35X7UIZU9N5Ff1N27r1oqPDZwo4d0HkzS4fHksDkwIq8EuLgpXFzgAkLGZt6X4SbuA6vvSK1zfq3L1KafKIFnNi5xtCXpxgjgmLMgzxAvNN5X9NQPOKW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749561295; c=relaxed/simple;
-	bh=UnQCaazf+pZylD8kpUysK9B7Qkkbba5gTrmnEz0o0Zc=;
+	s=arc-20240116; t=1749561350; c=relaxed/simple;
+	bh=5KHtsypxTOEwH2hoppvEko6q+MsIdk4Z+d5NAh05LDI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VrH5fGE5T9sQE/CAz6m/DMY0165bUCBN3BZY5UwURZN3Dpr8fplM0DmiOWzd9uXYSGHbITEIWBHt3pIDvaCwDEDFeBKU8QWKZsQG7BZpSzJGKquXUeiXLAXSqXiczaMw7x1jdKuYY/PBbTTRukRC8ChwtnnNNhNfnSCFbjil9R8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UZZ95Xm+; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=JESnGDAJTlU4yaj33+scuYjyGgSyxWklhoIagABubkmeq0liXhrWQut9KI2jxwey8bt7E+m0FZ7cH9jpdkn55341O1nEGPojbrXStKRgnd3bCXRjIQqvhMeDd+ane4EsiTuYyHo1zAUzR6o+Ci7kOgCLINAipqIi1L6BSPXXzWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ijXudvW+; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UZZ95Xm+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749561292;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3ouH/PJFEkAjFGDBxmHkInwDz0FSY52fc2pNnFWKOY8=;
-	b=UZZ95Xm+7aeai12GysQs8tkTsn0aP8T9yLYHBH350Yc4Mpj9QVrmpK3MnXyt0phMLHRysp
-	f6slVN5+sHHcUh8lzy/64IrWfACeDCVIekYIIcbcIEuVhYI2RT860OkGc7Jv0eadkVhHp4
-	94y4d4EMDHlPBi1Ar0Dt9eNBMzUhebs=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-641-IT9-HahyMly9fA3lPJP0bQ-1; Tue, 10 Jun 2025 09:14:50 -0400
-X-MC-Unique: IT9-HahyMly9fA3lPJP0bQ-1
-X-Mimecast-MFC-AGG-ID: IT9-HahyMly9fA3lPJP0bQ_1749561290
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450eaae2934so48981085e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:14:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ijXudvW+"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A8hW4K012128
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:15:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	EwAmNEgz2U5R+Js4hjnEnVcfF/36zo6RLHZeqTJsg0s=; b=ijXudvW+2QCLsfen
+	AvCbBi9I3LSakxmN0oAsNGHvKAGVW4Mg/6zczjaVLxk64Xdc3TyE6+DaEkCzUqSy
+	Qxh8xhAbg+Xxx+6WkKkR+7MdWTJKxpp80fp9J4eJp8K3O9sVulnnNQ0MdHyuZa7f
+	b1ZuD7t7BriHB2U25cWUblM6kbMrT/Y31FxGkiBcRo9/PVm1kMeI9MbgAcAHikCs
+	0JFekTXbYZKXxCwGrdYWoxq/fprh7c1KqtIAJoRMCWNnynHFuQuGa08mrS9inTtH
+	14l1CKq+edM3PLL5IM07eS8Zf5WGtOZ0ghVvbU05ekFqR38s8jx39P8XE/SPeibo
+	wbT85g==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ccv9fbu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:15:48 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7d09a3b806aso97133985a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:15:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749561290; x=1750166090;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3ouH/PJFEkAjFGDBxmHkInwDz0FSY52fc2pNnFWKOY8=;
-        b=i7pQB13lMlhaTyX3RAAgNkmCMhYc1I7cfKaUnKjnSkDwLi93Xq1fC6NIAox2/foVKm
-         9J7ypqxkhIziUx0XgyEN76SzF73k2E826CsrZoNFur+C/2D5/F27tjgyv2DmXrvS20Zn
-         qyKuYFEZX0A7tbay4MxZtEqqBudYuuDESrrywTdt376zJu4NLw06rK09YG+pYYkCJPsw
-         eZ2DBjWpVk/RTY5Y5ivJejXVywDMULLYTMz2E7xWxLI5VgVLx7Aof9uwp644m4uOOj1F
-         +SDtmlEuiVzvNQ5Vf3yzecAgimq03LNx0YSDZ8yt6wk5+/1RAk/3xAxFPkK56aHgPGoY
-         51og==
-X-Forwarded-Encrypted: i=1; AJvYcCWCr3SjYMjcTcmdrKOzKY7Wx8GcMzjzNt25utJTlxe2dpZ3bJfhDdwdyfYYA6iAWfMm7cQl5aCJ6vyCVNA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3zkpnLJnNfl3hbW7lxlqpmLIr0dtIXkMVgdNHtIEcqbwl/+5H
-	N//2bUwxVl53QEnbSea5yD74V45Jyi9I/ScdMgfbmVHdDXAuiaT7721B8B1kIXNJYYAA7c6sZz0
-	4ylcOpMMrafBLGCtNdHqNMJxu0CLlzU/IrCYbeg2YxE49GUwMBkwRst+HNs80tgakHQ==
-X-Gm-Gg: ASbGncvca01Edg9SPjc+rpKWG8s7qn0y9zui9vsxV+VZxn0tT0OIHEDyoZxsW12RfLN
-	pv87FrXWkv2+CaSdd7avTbb91WMINscvR7G8vVsMccrjdxGesHyYJu5S47Df7iqp2zyAVhLDT18
-	Yyrre58PGY8zxa9u1f4LUCzhYZgwqlmjKGJ6g+msrTes8bG6LH4xttcjG5eIA45kxw4BvVWTv8+
-	SNkPCpdsPbh3Nlk4zQHpjUD6D37T7MH3mDJ87osj7xiDNAvZHSsAsNNNgx2B9ISdcX8rQH8NPry
-	igdv6ynIKfDxXI4RXjMoRthFbPh3uY1J6o4Stnp463gRAcAgtuM7UoI=
-X-Received: by 2002:a05:600c:8b6e:b0:450:d422:2092 with SMTP id 5b1f17b1804b1-452014557d1mr149407345e9.8.1749561289781;
-        Tue, 10 Jun 2025 06:14:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFbxtZldNzSnPZLU/kGR9eWXkVvoxMrfRnzlaElJKdZcYo4jd1SgsAP7wqzt6fVFzT3iNngtQ==
-X-Received: by 2002:a05:600c:8b6e:b0:450:d422:2092 with SMTP id 5b1f17b1804b1-452014557d1mr149406935e9.8.1749561289346;
-        Tue, 10 Jun 2025 06:14:49 -0700 (PDT)
-Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452137290b9sm141807225e9.34.2025.06.10.06.14.48
+        d=1e100.net; s=20230601; t=1749561347; x=1750166147;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EwAmNEgz2U5R+Js4hjnEnVcfF/36zo6RLHZeqTJsg0s=;
+        b=oO1bo5op/VIV+s2khSP3L+r5h4dO7Z63Jb9tjjwldrOSuIKhD7rvjm8HTnjoNTlycc
+         sGXn2QJrwvrBFxqUIRIL32ZPlcY+kIV1wowfbEE6d7cxn+OtZlEG77oPl6NIF2GtPrPy
+         ht0z0m4ULx/ptTwRpCfvetP+iEZVNVT1F1avrko5W2RnLr1rwlrPR0SRdVimSQrISTB+
+         gIUjloeicLGCrGyxg9sxyhmdIJLx6yxPPko9FBfwHgWwNJT1IP2TZOzWlDgCNEVzuMMN
+         h1wELUluC1jS9uDrMPMaIS4SSiBQQUhyucct0/BWvPARHQgy+eSKl/AXWJQztZ8CeRti
+         7t1g==
+X-Forwarded-Encrypted: i=1; AJvYcCV6B6he+Lio7/ZyHfqy4Qwqa8tQeTbALJH48uHk9EmG1rtsweu8YXyvqEek2ePpSvSqXUlRJ7Kt8DrHtto=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDAP42nup6VyC50P/yPTsgPznh4VBlx99OGcvHb52IS3e7jbij
+	ONrQBJanFuLoomWSd5TYbT/TaNwWNlAmqbzx8oLEbd3YVO2wyiYLu5entJhEoJMqj4oavsZXBUy
+	kXnCcVIsUGT1Qu0eL1F6JQsl1+W6k8x/ujFU/N87Hqo9bCJqiDCMgBffskveEwJgubYc=
+X-Gm-Gg: ASbGncvEUB1EQ42swQaUBym0nV4Einlc1iyu/X18gMI6R0ujDckEMGxUb9ssnbDeOOq
+	kcOV6ZA1yZTxAvEgBdzNynPuG4i+Z6BJPRnGhJ3oSFWCnmQbUoxha1akyZFuncX0tFfXbifBGMh
+	EQRTwwxm4XUaLprw6aCc4vTLU6JZMcYWxjsygn8XKv+H6+c+zsesGU0u3FflQKVY9V/CsIKQkxA
+	g3Of8afDUaGrVgh92z1RZ52VR8yzcN+XAg5IpQY3zi0NmOQrJ+PBK+P+FdiYERt3gETJiPDFmgu
+	gPTiuVKNvBhXTW+LqXCSa0qG5WM5w7sKblxGhmJAlE4ikxbdiSQA2io7MNsh3iyqJxgMwxpfw0D
+	0
+X-Received: by 2002:a05:620a:288d:b0:7ca:d396:1460 with SMTP id af79cd13be357-7d33df39118mr853769685a.14.1749561346905;
+        Tue, 10 Jun 2025 06:15:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHtqxF7J4fX5ZWQs38R17ip9jUcljtcIHttrdjrmoxx/VmubjbCQ1iXaj4T2zV2SHyjyVpQ1w==
+X-Received: by 2002:a05:620a:288d:b0:7ca:d396:1460 with SMTP id af79cd13be357-7d33df39118mr853767185a.14.1749561346394;
+        Tue, 10 Jun 2025 06:15:46 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-607783dd48esm6072351a12.56.2025.06.10.06.15.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 06:14:48 -0700 (PDT)
-Message-ID: <1b94d8ce-ab6c-417d-af4e-cd49bf297b60@redhat.com>
-Date: Tue, 10 Jun 2025 15:14:47 +0200
+        Tue, 10 Jun 2025 06:15:45 -0700 (PDT)
+Message-ID: <56eccdb0-c877-431d-9833-16254afa1a0c@oss.qualcomm.com>
+Date: Tue, 10 Jun 2025 15:15:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,120 +75,87 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] arm64: pageattr: Use walk_page_range_novma() to
- change memory permissions
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org,
- catalin.marinas@arm.com, will@kernel.org
-Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
- rppt@kernel.org, surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, suzuki.poulose@arm.com, steven.price@arm.com,
- gshan@redhat.com, linux-arm-kernel@lists.infradead.org,
- yang@os.amperecomputing.com, ryan.roberts@arm.com, anshuman.khandual@arm.com
-References: <20250610114401.7097-1-dev.jain@arm.com>
- <20250610114401.7097-3-dev.jain@arm.com>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v3 3/3] arm64: qcom: sc7280: Move phy, perst to root port
+ node
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Rob Herring
+ <robh@kernel.org>,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski
+ <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
+        quic_mrana@quicinc.com
+References: <20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com>
+ <20250419-perst-v3-3-1afec3c4ea62@oss.qualcomm.com>
+ <20250423153747.GA563929-robh@kernel.org>
+ <2ce28fb9-1184-4503-8f16-878d1fcb94cd@oss.qualcomm.com>
+ <ba107a41-5520-47fa-9943-6e33946f50b1@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250610114401.7097-3-dev.jain@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <ba107a41-5520-47fa-9943-6e33946f50b1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: 6c4rIJ4n3RNomnqb8x0ckUkll6BnAzr3
+X-Authority-Analysis: v=2.4 cv=TsLmhCXh c=1 sm=1 tr=0 ts=68483004 cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=IJG2AnB_qZu2HhMjgm4A:9
+ a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-GUID: 6c4rIJ4n3RNomnqb8x0ckUkll6BnAzr3
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDEwNCBTYWx0ZWRfX8kHnOVYD2cQH
+ wk55VG5Ar34XfYiMOQPmsf7zQKIr2PrJHNXMOUKTlxEmwAFI7WfFKiTar3dkyNbOCQ6AE4BaP5K
+ wLLk/SWMuqXiFuRu6ouLA7ixdgwnhM95YbaF6TjvLC1qRwG2qBk2/bNZcDgrncOcqlMsxFaN1f6
+ uAI+CkeTyVDazX33b6OsA46cbTQg1MH8aHsJYrSBhR5vTiPEqWTctwtvp4xq51UD2BN6T63pxK6
+ TBXLqkWrM0jSRtNS3n/UvqzBFPhnlDmGlkGah68sED5KQmlJzMxnEEVVziCPtiNyrtonKeSMP9H
+ 2roMZFFsgQIonD7rLUMe8cybcFbfGZXd7uvzER5+XyZBbxWsJXglQnLQ10DDyQvwnZBuJmJMvz2
+ rRlkXiwuGX75WNEH6EmCjdhu6b8e+1Ey9H+3DGJ5x3k6eYOHyJi1OZ8Iuoz2ds/t5K6lYlXF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_05,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
+ priorityscore=1501 bulkscore=0 adultscore=0 clxscore=1015 mlxscore=0
+ malwarescore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506100104
 
-On 10.06.25 13:44, Dev Jain wrote:
+On 6/2/25 3:01 PM, Krzysztof Kozlowski wrote:
+> On 08/05/2025 16:26, Konrad Dybcio wrote:
+>> On 4/23/25 5:37 PM, Rob Herring wrote:
+>>> On Sat, Apr 19, 2025 at 10:49:26AM +0530, Krishna Chaitanya Chundru wrote:
+>>>> There are many places we agreed to move the wake and perst gpio's
+>>>> and phy etc to the pcie root port node instead of bridge node[1].
+>>>>
+>>>> So move the phy, phy-names, wake-gpio's in the root port.
+>>>> There is already reset-gpio defined for PERST# in pci-bus-common.yaml,
+>>>> start using that property instead of perst-gpio.
+>>>
+>>> Moving the properties will break existing kernels. If that doesn't 
+>>> matter for these platforms, say so in the commit msg.
+>>
+>> I don't think we generally guarantee *forward* dt compatibility though, no?
+> We do not guarantee, comment was not about this, but we expect. This DTS
+> is supposed and is used by other projects. There was entire complain
+> last DT BoF about kernel breaking DTS users all the time.
 
-Subject seems outdated: walk_kernel_page_table_range()
+Yeah I get it.. we're in a constant cycle of adding new components and
+later coming to the conclusion that whoever came up with the initial
+binding had no clue what they're doing..
 
-> Since apply_to_page_range does not support operations on block mappings,
-> use the generic pagewalk API to enable changing permissions for kernel
-> block mappings. This paves the path for enabling huge mappings by default
-> on kernel space mappings, thus leading to more efficient TLB usage.
-> 
-> We only require that the start and end of a given range lie on leaf mapping
-> boundaries. Return EINVAL in case a partial block mapping is detected; add
-> a corresponding comment in ___change_memory_common() to warn that
-> eliminating such a condition is the responsibility of the caller.
-> 
-> apply_to_page_range ultimately uses the lazy MMU hooks at the pte level
-> function (apply_to_pte_range) - we want to use this functionality after
-> this patch too. Ryan says:
-> "The only reason we traditionally confine the lazy mmu mode to a single
-> page table is because we want to enclose it within the PTL. But that
-> requirement doesn't stand for kernel mappings. As long as the walker can
-> guarantee that it doesn't allocate any memory (because with certain debug
-> settings that can cause lazy mmu nesting) or try to sleep then I think we
-> can just bracket the entire call."
-> Therefore, wrap the call to walk_kernel_page_table_range() with the
-> lazy MMU helpers.
-> 
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> ---
->   arch/arm64/mm/pageattr.c | 158 +++++++++++++++++++++++++++++++--------
->   1 file changed, 126 insertions(+), 32 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-> index 04d4a8f676db..2c118c0922ef 100644
-> --- a/arch/arm64/mm/pageattr.c
-> +++ b/arch/arm64/mm/pageattr.c
-> @@ -8,6 +8,7 @@
->   #include <linux/mem_encrypt.h>
->   #include <linux/sched.h>
->   #include <linux/vmalloc.h>
-> +#include <linux/pagewalk.h>
->   
->   #include <asm/cacheflush.h>
->   #include <asm/pgtable-prot.h>
-> @@ -20,6 +21,100 @@ struct page_change_data {
->   	pgprot_t clear_mask;
->   };
->   
+That said, "absens carens".. if users or developers of other projects
+don't speak up on LKML (which serves as the de facto public square for
+DT development), we don't get any feedback to take into account when
+making potentially breaking changes (that may have a good reason behind
+them). We get a patch from OpenBSD people every now and then, but it's
+a drop in the ocean.
 
-The general idea looks sane to me.
-
--- 
-Cheers,
-
-David / dhildenb
-
+Konrad
