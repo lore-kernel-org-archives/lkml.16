@@ -1,85 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-10627.protonmail.ch (mail-10627.protonmail.ch [79.135.106.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC6F227EA3;
-	Tue, 10 Jun 2025 11:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5B31FC11F
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:31:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749555000; cv=none; b=EVA7ugL9x+8cyLgjlnDoc+H6PckHwXiVQ20XF2RRkYHjO7MSdV+URhcqPM6xl8f4pirs1C3YMN7khTZSlzcLJtGsyKbuv7MjRVUYVeap+D3BpgY2h54c5VWN3JukCiS1JMQ+hQ7DMiJzd9a5tFYQidynleaeoh6/dQlByCrslTc=
+	t=1749555120; cv=none; b=LoXZr9YNLC5tbHns8G/qEF8IoQbxBrbg2FimigSdFRwHDfWbvOKlMoM2mT0J4S0/QrYowpyAl7fOA6+6uQ+Bi3me5btTN46+3yrTd4BLVPePsejjj+5lmNBD90WY/cr3ieIOFR0P2okqS6RbEW7gJcrQaN6dRCNORIJMGUW2REQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749555000; c=relaxed/simple;
-	bh=b5nUIzqm3EUmBKYjt0opVpGPnsw1G6P3eA2WugutoP8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KpXC7G7F0LdRn8JtpEmBRrTQh7vHLFh67NVS8PI9ywWt73RJ0xYBt43QjHrb0WjhKzl1TtVInrG2JdrE3m3HSpa1xqKN9X5cDcr20HL6WmRwmrnrRBRQ/rrBc5apC0bHrLlJZge30sb69TbRu2OIBg/NdD18A+paMr8qqzMFGcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FuvPwHe1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749555120; c=relaxed/simple;
+	bh=FJW79ZdMdKNL6zCgg7tfX6bDI112/LbNHYHBeDlUH9k=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b0zgMb4+b6lYm+QeJtrGAoRQjB2m7NEgsN7VE51eDcoIH6EaxGDt2NEmIN7j8THgk0CszWxyTlqIQAoxJ/6Cb/f/Xbq3ep0dIGenx+CbHzf89HUtCDZenN3/kPQiqxAoS7O/IGKvhr/1sFzZtdYIAQkeRDt/mtKO5nlEb9hQ6Vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=r26.me; spf=pass smtp.mailfrom=r26.me; dkim=pass (2048-bit key) header.d=r26.me header.i=@r26.me header.b=BkcEX9Hf; arc=none smtp.client-ip=79.135.106.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=r26.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=r26.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FuvPwHe1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48035C4CEED;
-	Tue, 10 Jun 2025 11:29:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749554999;
-	bh=b5nUIzqm3EUmBKYjt0opVpGPnsw1G6P3eA2WugutoP8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FuvPwHe1xCld1Q8ATLa4J8sn2DcS8xWs3+Kj5Uvn3Q/4nd3jXarHhvEInSuped4w2
-	 sIQyPLJbJuTWqAevPBbwKTXTTwgDqA0wOHBEfcDyu6od9jeEH/a15ItmZUcPcMkCYf
-	 vWQ+NNznSeTHp6GxWhQDZPVMiKbaxuzJrXnrfR2+29dnqXuEG2g24jIgtN2x6SE3+q
-	 UGBbxt+C95dKwjUVozaTZISOGdv5dBJWKj7ac8eqLv22tONXYS5P3JS/SR7sQP0myG
-	 xRTxh/GEHGo4Saf2sq3Qwsg0Dd0Ww5s/c1hrT+DAEazxMFSxfXc3T308tILHD5lWFH
-	 UA4huvjkfXCpQ==
-Message-ID: <2d7c6d00-692b-442c-931f-ace85f8b1477@kernel.org>
-Date: Tue, 10 Jun 2025 13:29:52 +0200
+	dkim=pass (2048-bit key) header.d=r26.me header.i=@r26.me header.b="BkcEX9Hf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r26.me;
+	s=protonmail3; t=1749555115; x=1749814315;
+	bh=FJW79ZdMdKNL6zCgg7tfX6bDI112/LbNHYHBeDlUH9k=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=BkcEX9HfBNBBw0RaKi2UF5RfRYNNmdlNTd61mCJDaX0T8MfhQ1YOoZaUU4PyETJ6T
+	 6EBGfxhNwFJOr21ThTGtz+DznYjEukvSal2k2U9ir0WJamdRl7KCEcBWUiFQt1lcHd
+	 /3h5LAyGtOVC+bHD8+iYG8qnc6YvLQSTQSXvVavSygZ/g4ak1EbBR+4OQR8kgDxokI
+	 ujhlD/HgctRKOAkQI0Azvcodu5B7iwRUyYBxa4FYWVIjaa99E1Wt7Udzqd0jZA7mMM
+	 szo9ljQvZYZcjdPgEhzaEhf0sfhYpou3LnR8+QkWON04/0weB9VBALsT0XGjzvhlJO
+	 ymsVUIzhsPH4g==
+Date: Tue, 10 Jun 2025 11:31:49 +0000
+To: =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+From: Rio Liu <rio@r26.me>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Tudor Ambarus <tudor.ambarus@linaro.org>, =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] PCI: Relaxed tail alignment should never increase min_align
+Message-ID: <7bbcee36-4891-4b8e-8485-54f960f73580@r26.me>
+In-Reply-To: <20250610102101.6496-2-ilpo.jarvinen@linux.intel.com>
+References: <20250610102101.6496-1-ilpo.jarvinen@linux.intel.com> <20250610102101.6496-2-ilpo.jarvinen@linux.intel.com>
+Feedback-ID: 77429777:user:proton
+X-Pm-Message-ID: b736764fe474c22b47cd5c24bc503de71c8583e1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] bpf: cpumap: report Rx queue index to xdp_rxq_info
-To: Ujwal Kundur <ujwal.kundur@gmail.com>, ast@kernel.org,
- daniel@iogearbox.net, davem@davemloft.net, kuba@kernel.org,
- john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
- eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
- kpsingh@kernel.org, sdf@fomichev.me, aoluo@google.com, jolsa@kernel.org
-Cc: netdev@vger.kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250609173851.778-1-ujwal.kundur@gmail.com>
-Content-Language: en-US
-From: Jesper Dangaard Brouer <hawk@kernel.org>
-In-Reply-To: <20250609173851.778-1-ujwal.kundur@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Thanks for fixing the problem so quick!
+
+> Reported-by: Rio <rio@r26.me>
+> Tested-by: Rio <rio@r26.me>
 
 
+My full name is Rio Liu if you want to include it, sorry for not mentioning=
+ it earlier.
 
-On 09/06/2025 19.38, Ujwal Kundur wrote:
-> Refer to the Rx queue using a XDP frame's attached netdev and ascertain
-> the queue index from it.
-> 
-> Signed-off-by: Ujwal Kundur <ujwal.kundur@gmail.com>
-> ---
->   kernel/bpf/cpumap.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
-> index 67e8a2fc1a99..8230292deac1 100644
-> --- a/kernel/bpf/cpumap.c
-> +++ b/kernel/bpf/cpumap.c
-> @@ -34,6 +34,7 @@
->   #include <linux/btf_ids.h>
->   
->   #include <linux/netdevice.h>
-> +#include <net/netdev_rx_queue.h>
->   #include <net/gro.h>
->   
->   /* General idea: XDP packets getting XDP redirected to another CPU,
-> @@ -196,7 +197,7 @@ static int cpu_map_bpf_prog_run_xdp(struct bpf_cpu_map_entry *rcpu,
->   
->   		rxq.dev = xdpf->dev_rx;
->   		rxq.mem.type = xdpf->mem_type;
-> -		/* TODO: report queue_index to xdp_rxq_info */
-> +		rxq.queue_index = get_netdev_rx_queue_index(xdpf->dev_rx->_rx);
+Thanks,
+Rio
 
-This looks wrong...
-I think this will always return index 0
-
---Jesper
