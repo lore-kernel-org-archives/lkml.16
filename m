@@ -1,64 +1,69 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31CDE78F34
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB652874EA
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749596263; cv=none; b=pTBRnGyrBFxuSPjqhOHwpV5XaqN4isVc+Lka4w7lQlRtdxAJfSJ7WT83OI6x+O/Qe8YYdgMThAlW4R7J2wAJu7DzP6VJEHeHrtJZGuKaylyJ4vXeowptnR2QSdwfLdB+RxtRJNdTLZxLx/dzu4HJweYVAiBiZbHHamYDhyUOnpQ=
+	t=1749596265; cv=none; b=QCZKubKC90q1h7iWake7k8SUA57d6YIJoLEsxRf+9Kh1BKo+DjCcaOvk90knX2YSdr/wC5BF0/DzLc78o6V5lsigoIZUQfyhCo3KRPThUWhAaPTj0n/yR4Owxu8m7bOmaoaiWs9IKJZszJZyFyvMk6VZDjyUosLAxEW4tpyMg7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749596263; c=relaxed/simple;
-	bh=PU4CQ8UGMUEtv3G8ZEF/N2DVxNwtMrUkuUQB2V2j5zY=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=rRiqt2pjlqgZXiYR5IKnXXlmyyzguu6LJmtMU2jw9WJ6g4icb3sM5802QWaGjU7CxrUgOsnXI1UxmfTPiszZfRco+iO8KWKpIo0qfMeu/VEIuAlA4qLjyCTQ3t4R9Qol2HgIDmcWbYjyxssrYFPVdCvFvhurMe1OX0kLA+kwdz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=reOVlS3M; arc=none smtp.client-ip=209.85.215.201
+	s=arc-20240116; t=1749596265; c=relaxed/simple;
+	bh=tTEXLUd/zXDDLNY3MmnlVb5Gbwhb1Oifynpm05TtVX0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=QDQOhLw3JDKo4tZgX+4gVBAXL/cNuYuAh3lKHIP90zeONE0ip4+V2M4xm5B/8Jm598DrZ9P/k5ndkF0tKIAHgSAJ/MD3wtCibIjBL1i/gaw7zfGMu0kZ+ExGHDMAKz01/b+Oey9b0MQRIKWV49pJRslOQ7+oZKecfSKH+NhVt5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C9BRlTPM; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="reOVlS3M"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2c36d3f884so3720456a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:57:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C9BRlTPM"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-311f4f2e761so6377463a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:57:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749596261; x=1750201061; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=R6yaQM2l+AM1elKMoXhIjARR8lysmC+imGaGP22oyE4=;
-        b=reOVlS3MusRL0BYlk0adZnMePQrwXczAO0CjRgvXqaPj0+uThbDSI01fnhCyh2+xZl
-         Oc/PpKBRgaR/Y4IO1O7zxM6P+uiQuykNcXP4CZhoOdS8qX5H+rrYEsKJFmPLKv6g9D33
-         8FZSPG/W0stzvZEbqgfEy0peahjbp9WQEOG7htyuPplYLxjz1wUCOerMIg233XPiJXZO
-         HP2SpgQZN/b4Ta6YEKVSn1H38Sjw29r547lK1opIJ5n7BOkWfBm62udv2I4HQT5ADozr
-         7LJFM1/nFeLruwrw0m367kewJ6ip0KV9AeBe96W59ysJEwjTypSs8ImH/246Hjr3i0DD
-         cTlw==
+        d=google.com; s=20230601; t=1749596263; x=1750201063; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=LtGhffg+4qUCmhXz2Gv6Fzz7TJfhsSuBXbr9dL/TWnM=;
+        b=C9BRlTPM2S8QfPSLCg+AIVcHrhapeIJpxk8axTJxfEgvP9SsdD0VwDWGkzT1AsfkYV
+         Sd2vGpC+ZmoURI/vdvfAi/27hzejh7ls6VZ4jA6rvASzDxfwy6qZnGC3FXw//QKaVTTF
+         ochVrpQHqu1ipy4PUEHNU0vDubm/iZRqXD/Kn1W5IMcZZ5Zy3BrhHKs9K7OsDxZnLzok
+         NasXJfJWoUc1T82mL+zthkilBCqZmHVt7ZHX7QJ9NW0wdxZc2rnKkLYOEJFbX9mTYnXK
+         Uk7kfnx0IncNZyUlncZwHf+J8xKTOrhPLIrJE2bUuum3H2mgJ1t3GBwoh8c+V9ETxplq
+         ETgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749596261; x=1750201061;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=R6yaQM2l+AM1elKMoXhIjARR8lysmC+imGaGP22oyE4=;
-        b=vi2zDYZ3XT2jjcpK0METNZx9HqDR172bqRbkuKoqDDs3RVBuiC/dfHBiqAPmCSxR8L
-         lr/ehayTG5WczkimDLTKO0xkRQUVQykrzxNXrZvNMKsMgPmOzBgNR777Xz8ygsTGdB6N
-         jv5xHtuRalDyC6JtoyWuYRMp4gzJFsu2TEONOpUGT3nKdAUss35u8lWVCAZW+TB4vNjn
-         xzwrWDvMnVokcgTMRRyDv6iXnEneoetMO66pTW22dDrYpINnQkv4CAcSQTCeFxE+2YUk
-         hfzf/r9gIIFC5qzpjqzKzKkcoB0vj/Aink1PG6l+GeYHR6MzHiZrGq9rS2Bkxb8RNWB0
-         3hGg==
-X-Forwarded-Encrypted: i=1; AJvYcCVvUsPpxE/RmIV1vRIa5kw0WBFlTpyBwOfM3Hnnp05utxLkDj/dt81s5m+dK4B6+PA1+nbov5JARKNOcb8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpCDMiqzGiVjyjL9Tgkfe8pOXoLT50jcoxIGIxa6Iy1WyVIkiT
-	UUXnQnVC/NkbbcsAy7Ukbu3UuPnGesjIGeKyB0ww7UXTeFIjcDGRQgZU6urzgUz9ctTAaWZahFD
-	5dJtd1A==
-X-Google-Smtp-Source: AGHT+IGd4UPEgvAEBxaQI6Sk3pDVyN+rdP3l7ICg6WOlvax69b/h/SHGLB5WfmCZLEE2basnUXJ9Crf7+VE=
-X-Received: from pgbdq15.prod.google.com ([2002:a05:6a02:f8f:b0:b2e:bad0:b462])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:728f:b0:215:db66:2a33
- with SMTP id adf61e73a8af0-21f89013cd9mr697945637.16.1749596261517; Tue, 10
- Jun 2025 15:57:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749596263; x=1750201063;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LtGhffg+4qUCmhXz2Gv6Fzz7TJfhsSuBXbr9dL/TWnM=;
+        b=N7lmwAi7UWHxCD582ZgroIUMRUv5BmgHt2bd3n6wiV3jG9GXk7VkfWAg5rL2yfnoQ1
+         z2e2ZEnoelVpyXoLYKhhXGPeN1m5aZndOn+Vk00LIDNGITsK304LW5jN/tJoqa+hOVFY
+         hLwmocPVg8+WrKamEyE8vHBFH4VbU0K/1Zp8ONIjg1zgQePPrikq1Lv4nDuMYG6Dn6hL
+         A21faWiY6qLqg6PRtMy0Sci0+u9lYoUDiaFQiDlt6o93HRrxjZ2IypqD6/OI7cdd2cpg
+         O6maxRcDTp02G4WMFXN1LGhnyOJ8K2G89/9Fvp8tEpdIRgjfGd932RQ4xUZrN/PMza3K
+         +Iig==
+X-Forwarded-Encrypted: i=1; AJvYcCXQdwP4Tcg1wZsrfoz7plnSwSk0A2UbjN07LXJJibEVWS61VtMSAP53FPlsI/42A2WwFEizP0rlZ8pUE9g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwY3TCneruS7kYmbnQxc84MTNaH/itmk/gEGEfJpmuzRZMaSIdk
+	KZE+nSg3xpYcCOVCCp83saXYITxLHtMePYoVB5Uf53rUaim8NXWIFj+glnj6HZLR15asexzJmwM
+	/HN4x6w==
+X-Google-Smtp-Source: AGHT+IGRgtC4yLWdb8Itbiy3X/aS2mIMT2QE2jBxKl1uV/cOtKkRKfJGAlO+SD96Q9qtuFg+lfuRp8EUej4=
+X-Received: from pjb7.prod.google.com ([2002:a17:90b:2f07:b0:2fa:1803:2f9f])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5404:b0:311:a623:676c
+ with SMTP id 98e67ed59e1d1-313af243c3bmr1739474a91.27.1749596263290; Tue, 10
+ Jun 2025 15:57:43 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 10 Jun 2025 15:57:05 -0700
+Date: Tue, 10 Jun 2025 15:57:06 -0700
+In-Reply-To: <20250610225737.156318-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250610225737.156318-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
-Message-ID: <20250610225737.156318-1-seanjc@google.com>
-Subject: [PATCH v2 00/32] KVM: x86: Clean up MSR interception code
+Message-ID: <20250610225737.156318-2-seanjc@google.com>
+Subject: [PATCH v2 01/32] KVM: SVM: Disable interception of SPEC_CTRL iff the
+ MSR exists for the guest
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -67,106 +72,41 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Manali Shukla <Manali.Shukla@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Clean up KVM's MSR interception code (especially the SVM code, which is all
-kinds of ugly).  The main goals are to:
+Disable interception of SPEC_CTRL when the CPU virtualizes (i.e. context
+switches) SPEC_CTRL if and only if the MSR exists according to the vCPU's
+CPUID model.  Letting the guest access SPEC_CTRL is generally benign, but
+the guest would see inconsistent behavior if KVM happened to emulate an
+access to the MSR.
 
- - Make the SVM and VMX APIs consistent (and sane; the current SVM APIs have
-   inverted polarity).
+Fixes: d00b99c514b3 ("KVM: SVM: Add support for Virtual SPEC_CTRL")
+Reported-by: Chao Gao <chao.gao@intel.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/svm/svm.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
- - Eliminate the shadow bitmaps that are used to determine intercepts on
-   userspace MSR filter update.
-
-v2:
- - Add a patch to set MSR_IA32_SPEC_CTRL interception as appropriate. [Chao]
- - Add a patch to cleanup {svm,vmx}_disable_intercept_for_msr() once the
-   dust has settled. [Dapeng]
- - Return -ENOSPC if msrpm_offsets[] is full. [Chao]
- - Free iopm_pages directly instead of bouncing through iopm_base. [Chao]
- - Check for "offset == MSR_INVALID" before using offset. [Chao]
- - Temporarily keep MSR_IA32_DEBUGCTLMSR in the nested list. [Chao]
- - Add a comment to explain nested_svm_msrpm_merge_offsets. [Chao]
- - Add a patch to shift the IOPM allocation to avoid having to unwind it.
- - Init nested_svm_msrpm_merge_offsets iff nested=1. [Chao]
- - Add a helper to dedup alloc+init of MSRPM and IOPM.
- - Tag merge_msrs as "static" and "__initconst". [Paolo]
- - Rework helpers to use fewer macros. [Paolo]
- - Account for each MSRPM byte covering 4 MSRs. [Paolo]
- - Opportunistically use cpu_feature_enabled(). [Xin]
- - Fully remove MAX_DIRECT_ACCESS_MSRS, MSRPM_OFFSETS, and msrpm_offsets.
-   [Francesco]
- - Fix typos. [Dapeng, Chao]
- - Collect reviews. [Chao, Dapeng, Xin]
-
-v1: https://lore.kernel.org/all/20250529234013.3826933-1-seanjc@google.com
-
-v0: https://lore.kernel.org/kvm/20241127201929.4005605-1-aaronlewis@google.com
-
-Sean Christopherson (32):
-  KVM: SVM: Disable interception of SPEC_CTRL iff the MSR exists for the
-    guest
-  KVM: SVM: Allocate IOPM pages after initial setup in
-    svm_hardware_setup()
-  KVM: SVM: Don't BUG if setting up the MSR intercept bitmaps fails
-  KVM: SVM: Tag MSR bitmap initialization helpers with __init
-  KVM: SVM: Use ARRAY_SIZE() to iterate over direct_access_msrs
-  KVM: SVM: Kill the VM instead of the host if MSR interception is buggy
-  KVM: x86: Use non-atomic bit ops to manipulate "shadow" MSR intercepts
-  KVM: SVM: Massage name and param of helper that merges vmcb01 and
-    vmcb12 MSRPMs
-  KVM: SVM: Clean up macros related to architectural MSRPM definitions
-  KVM: nSVM: Use dedicated array of MSRPM offsets to merge L0 and L1
-    bitmaps
-  KVM: nSVM: Omit SEV-ES specific passthrough MSRs from L0+L1 bitmap
-    merge
-  KVM: nSVM: Don't initialize vmcb02 MSRPM with vmcb01's "always
-    passthrough"
-  KVM: SVM: Add helpers for accessing MSR bitmap that don't rely on
-    offsets
-  KVM: SVM: Implement and adopt VMX style MSR intercepts APIs
-  KVM: SVM: Pass through GHCB MSR if and only if VM is an SEV-ES guest
-  KVM: SVM: Drop "always" flag from list of possible passthrough MSRs
-  KVM: x86: Move definition of X2APIC_MSR() to lapic.h
-  KVM: VMX: Manually recalc all MSR intercepts on userspace MSR filter
-    change
-  KVM: SVM: Manually recalc all MSR intercepts on userspace MSR filter
-    change
-  KVM: x86: Rename msr_filter_changed() => recalc_msr_intercepts()
-  KVM: SVM: Rename init_vmcb_after_set_cpuid() to make it intercepts
-    specific
-  KVM: SVM: Fold svm_vcpu_init_msrpm() into its sole caller
-  KVM: SVM: Merge "after set CPUID" intercept recalc helpers
-  KVM: SVM: Drop explicit check on MSRPM offset when emulating SEV-ES
-    accesses
-  KVM: SVM: Move svm_msrpm_offset() to nested.c
-  KVM: SVM: Store MSRPM pointer as "void *" instead of "u32 *"
-  KVM: nSVM: Access MSRPM in 4-byte chunks only for merging L0 and L1
-    bitmaps
-  KVM: SVM: Return -EINVAL instead of MSR_INVALID to signal out-of-range
-    MSR
-  KVM: nSVM: Merge MSRPM in 64-bit chunks on 64-bit kernels
-  KVM: SVM: Add a helper to allocate and initialize permissions bitmaps
-  KVM: x86: Simplify userspace filter logic when disabling MSR
-    interception
-  KVM: selftests: Verify KVM disable interception (for userspace) on
-    filter change
-
- arch/x86/include/asm/kvm-x86-ops.h            |   2 +-
- arch/x86/include/asm/kvm_host.h               |   2 +-
- arch/x86/kvm/lapic.h                          |   2 +
- arch/x86/kvm/svm/nested.c                     | 126 +++--
- arch/x86/kvm/svm/sev.c                        |  29 +-
- arch/x86/kvm/svm/svm.c                        | 490 ++++++------------
- arch/x86/kvm/svm/svm.h                        | 102 +++-
- arch/x86/kvm/vmx/main.c                       |   6 +-
- arch/x86/kvm/vmx/vmx.c                        | 202 ++------
- arch/x86/kvm/vmx/vmx.h                        |   9 -
- arch/x86/kvm/vmx/x86_ops.h                    |   2 +-
- arch/x86/kvm/x86.c                            |   8 +-
- .../kvm/x86/userspace_msr_exit_test.c         |   8 +
- 13 files changed, 426 insertions(+), 562 deletions(-)
-
-
-base-commit: 61374cc145f4a56377eaf87c7409a97ec7a34041
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 0ad1a6d4fb6d..21e745acebc3 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -1362,11 +1362,14 @@ static void init_vmcb(struct kvm_vcpu *vcpu)
+ 	svm_recalc_instruction_intercepts(vcpu, svm);
+ 
+ 	/*
+-	 * If the host supports V_SPEC_CTRL then disable the interception
+-	 * of MSR_IA32_SPEC_CTRL.
++	 * If the CPU virtualizes MSR_IA32_SPEC_CTRL, i.e. KVM doesn't need to
++	 * manually context switch the MSR, immediately configure interception
++	 * of SPEC_CTRL, without waiting for the guest to access the MSR.
+ 	 */
+ 	if (boot_cpu_has(X86_FEATURE_V_SPEC_CTRL))
+-		set_msr_interception(vcpu, svm->msrpm, MSR_IA32_SPEC_CTRL, 1, 1);
++		set_msr_interception(vcpu, svm->msrpm, MSR_IA32_SPEC_CTRL,
++				     guest_has_spec_ctrl_msr(vcpu),
++				     guest_has_spec_ctrl_msr(vcpu));
+ 
+ 	if (kvm_vcpu_apicv_active(vcpu))
+ 		avic_init_vmcb(svm, vmcb);
 -- 
 2.50.0.rc0.642.g800a2b2222-goog
 
