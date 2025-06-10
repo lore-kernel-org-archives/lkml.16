@@ -1,120 +1,147 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B63A2206B7
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0971DD9D3;
+	Tue, 10 Jun 2025 08:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749544864; cv=none; b=gQQuWrDDeU6B5Xf2Bjx61xFfyWQLRhwZ+wrlbIZ0DfesZHVWE1bmuwYTQWcgnj/U0BOBGJtK/yo7VUeKF93WmwgPpI+ar4fEeMS2fJXLmbKvv/cLQY2a89jthYrLxyF2cYB1dGneGGF5x3zMuezjM+lumwIhX/pEgigTQ9bE/ic=
+	t=1749544900; cv=none; b=oaZEnBClHOUk84e3j85X0y8rCEXN5X5CsPmPAEohblmdgxh8UeN+9FI7DzwHNtXiWvxMaGg0X2xvCMdMF044T07qGeuz4bdtSyT/uYH2H4h8g++2mG0tsi9V9N1oOJ+ENnfRlN7WxhdfdyWDdQEz8BOxK2sHlLmcY3XihgCJ0QU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749544864; c=relaxed/simple;
-	bh=gEO7YSf8CgCFv4BTWdHJlWh3EwwkgVN5UPSYggIFAYs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cUmd3q9dGFq0u9TXEC8F/VEC0VaBfjGj43L2bWfVgj9HO8W/YO2px5Egn5U2vQSvzYVC28UFjkiVm6zmehrBOU6BsBtxGI1TlTK5EiXYGRdFiuf15w7fFPFpm4xIUc6HFvBXJ/UV8SHwwdKsQG43vaNzQbWdlQgkH80ApV902rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cvxheTvV; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749544900; c=relaxed/simple;
+	bh=ln5MjJzHQG7ZWw3NC74Hj688AJ7slzwp1oytTIRVk40=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=PJEea7K47tvWJ0Uy7HIzUg0w79r/GBIFEBluCvBOE+F/ZImPz9b/Oj7ipJ8zEocnf9HipVdHmJBDwZKu5pm/tUQHZ7mztCHm7Ky4HHSegvXAvqerK+kt4jTX7jJMpPvKF4/fyxF5szzHP2iCz9clsEfC+I4Dp4QZMzvyVxFonZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ltiS+IDc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cvxheTvV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749544861;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z1nu6hXyakj9Q2hsho1Wu8fu0clPVHtBrEDl2uCVUQQ=;
-	b=cvxheTvV8h28kD4ChiY6FfzGonqoOw+CsYi4uyrw5HWleMgO7NrsfODQMu7ulNXblLUn8M
-	hh3suH3HBSJdJFqFAgbp6xwe8PH/VJojSEI/rjDTLvr25rm3lx/r2ZtVYyYYvlON13zVex
-	aauQEH6gawUkE4ecBEPnYtI61weI5T0=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-90-qNu4ceHeMW-fo0rSekHH2w-1; Tue, 10 Jun 2025 04:41:00 -0400
-X-MC-Unique: qNu4ceHeMW-fo0rSekHH2w-1
-X-Mimecast-MFC-AGG-ID: qNu4ceHeMW-fo0rSekHH2w_1749544859
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-451ac1b43c4so29498335e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 01:41:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749544859; x=1750149659;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z1nu6hXyakj9Q2hsho1Wu8fu0clPVHtBrEDl2uCVUQQ=;
-        b=c6GvR7BM9m66ExdGodkcpQ97dXh6lab9l8/Z/RkHSZCrbw5hbQ0zR5GH5L5FRoigNA
-         XVH5DCmCilGGTvngYrcEMvW1BVuwCpTv9LorFfLVK/T2QlKEE+iMZBkGK589Y1MbRF6F
-         Oo/orVhtJx52TU9+F/7WLPjTcd2XER/RhQKosgXCdTZITC7oTgETgyaKQwOh7vm9YCGN
-         ETiIkZCbFnu0FPb2nfVlMg9UGruVSZhMBnnYpcfUtLkCbAWoYIJmxIH84AG3L/0Molc6
-         4wFPDvjCEn6uQvCEn4W+KcaXi9U/X72wbJYtEOai1bON9ZCtB8URcSH8cbY92CCFBB06
-         E1YQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW7V2Lkgv2TDch4bWwQp9QINK+pfq5G1zDv3MMn1svFG/iQJ/sp0uluHPE3vw+0Jo1n6DNarF4l8fbx6+Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypqVDFdjgqJZL1FxsCYVBBT669lbMHavdipTmpRGET8u80P485
-	QtgEFlcc7RrvXVcOVc9j8b/Kf7NirvRCc2QfGlKJZoDm54xXGNw/7VfMcwJlEAl3TJpjvhc5DE+
-	nzJDPnis2huLYwv66lgNS12RL0212F02BM6S5igHWlhy+3QochrjNbNbpu014HsSP1w==
-X-Gm-Gg: ASbGncv525UsXEoTl2tGEeiXpNk9LivXNLGUIlM4blmIPH9bKExu2VPEHur2OqrlPzd
-	nl2Qk6R/TiKe1XeN9kP6/6bYR5Z70fC85WR0C24EsbQI6gVjVDUlYQ1ll7OF/Zu9UvyGOQotoxP
-	BPRWBDazXUkO8rESJpHyc2xyFyGNT4qxUyjk9/kPgpToB7ctCo9wR9oAxDpi8CNo608oo9ZZLuZ
-	0OkFhof0jRROcfPKubV4nFA81esm7H7yVh9C2LI3CLJeLdp0wsBYBxw2t7SoHcPfPCqxvuSfPi+
-	VX5UsB+VxxWbNFHAyAFuDXArpfqSE6IHFiYr1n4LmC1/ReDZuTv7
-X-Received: by 2002:a05:600c:c4a2:b0:43c:eeee:b70a with SMTP id 5b1f17b1804b1-45201497bd2mr96643125e9.22.1749544859049;
-        Tue, 10 Jun 2025 01:40:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHbDWjdaVktXafNbiRualejse1wr9Mj0IkmxWs9mmMuIId2sSwZolgbJx9kTiDclLvu+Vijsw==
-X-Received: by 2002:a05:600c:c4a2:b0:43c:eeee:b70a with SMTP id 5b1f17b1804b1-45201497bd2mr96642905e9.22.1749544858663;
-        Tue, 10 Jun 2025 01:40:58 -0700 (PDT)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.57.104])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4526e155500sm130072765e9.9.2025.06.10.01.40.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 01:40:58 -0700 (PDT)
-Date: Tue, 10 Jun 2025 10:40:56 +0200
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Yuri Andriaccio <yurand2000@gmail.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	Luca Abeni <luca.abeni@santannapisa.it>,
-	Yuri Andriaccio <yuri.andriaccio@santannapisa.it>
-Subject: Re: [RFC PATCH 8/9] sched/rt: Remove support for cgroups-v1
-Message-ID: <aEfvmM-VpKru33Ql@jlelli-thinkpadt14gen4.remote.csb>
-References: <20250605071412.139240-1-yurand2000@gmail.com>
- <20250605071412.139240-9-yurand2000@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ltiS+IDc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6C79C4CEEF;
+	Tue, 10 Jun 2025 08:41:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749544899;
+	bh=ln5MjJzHQG7ZWw3NC74Hj688AJ7slzwp1oytTIRVk40=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ltiS+IDcUQAI0c5QSox1FawCBRerhP6by1wyMHss+mYDQUlBL9bl89WbWacxl9XpU
+	 F/ELM/mkYHI6mwY90t4hgyu1a31LOFdq2unS/Undgewq2N/R1gXzP9DyVpbCllrMuD
+	 mwU/wzjRXpiGGKBSJM0zgb2T4gOSAG++NDAoWAdYTyQ66p0OL1R0e2PSND2qaRJpK3
+	 V7fMOaBQtKFgytxN+vIXhno0Ng11a2t9Nc3AQIPepVOaS+4UJt2nuTWR2OIt1kx+jl
+	 4KToxlpP8Xmy7wyq9yNiCZg6e3r0SOgNvID7a1DYXkiZEDvXJF6wDngQVB51pHuEtc
+	 ikIIGt35xyOPw==
+Date: Tue, 10 Jun 2025 17:41:36 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list
+ <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, Stephen
+ Rothwell <sfr@canb.auug.org.au>, Arnd Bergmann <arnd@arndb.de>, Dan
+ Carpenter <dan.carpenter@linaro.org>, Anders Roxell
+ <anders.roxell@linaro.org>, Peter Zijlstra <peterz@infradead.org>, Ingo
+ Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Borislav
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org
+Subject: Re: next-20250605: Test regression: qemu-x86_64-compat mode ltp
+ tracing Oops int3 kernel panic
+Message-Id: <20250610174136.b88bd16959a4d7eff27cc3fa@kernel.org>
+In-Reply-To: <20250609220934.2c3ed98ba8c624fc7cb45172@kernel.org>
+References: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
+	<20250609220934.2c3ed98ba8c624fc7cb45172@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250605071412.139240-9-yurand2000@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Mon, 9 Jun 2025 22:09:34 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-On 05/06/25 09:14, Yuri Andriaccio wrote:
-> Disable control files for cgroups-v1, and allow only cgroups-v2. This should
-> simplify maintaining the code, also because cgroups-v1 is deprecated.
-
-I wonder if the change above and what below need to be split in separate
-patches. They look orthogonal and we would have a single separate patch
-disabling v1 support which is probably desirable.
-
-> Set the default rt-cgroups runtime to zero, otherwise a cgroup-v1 kernel will
-> not be able to start SCHED_DEADLINE tasks.
+[...]
+> Here is the compiled code of _raw_spin_lock.
 > 
-> Allow zeroing the runtime of the root control group. This runtime only affects
-> the available bandwidth of the rt-cgroup hierarchy but not the SCHED_FIFO /
-> SCHED_RR tasks on the global runqueue.
+> ffffffff825daa00 <_raw_spin_lock>:
+> ffffffff825daa00:       f3 0f 1e fa             endbr64
+> ffffffff825daa04:       e8 47 a6 d5 fe          call   ffffffff81335050 <__fentry__>
 > 
-> Notes:
-> Disabling the root control group bandwidth should not cause any side effect, as
-> SCHED_FIFO / SCHED_RR tasks do not depend on it since the introduction of
-> fair_servers.
+> Since int3 exception happens after decoded int3 (1 byte), the RIP
+> `_raw_spin_lock+0x05` is not an instruction boundary.
+> 
+> > <4>[   58.998563] Code: 5d e9 ff 12 00 00 66 66 2e 0f 1f 84 00 00 00
+> > 00 00 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3
+> > 0f 1e fa 0f <1f> 44 00 00 55 48 89 e5 53 48 89 fb bf 01 00 00 00 e8 15
+> > 12 e4 fe
+> 
+> And the call is already modified back to a 5-bytes nop when we
+> dump the code. Thus it may hit the intermediate int3 for transforming
+> code.
+> 
+> e8 47 a6 d5 fe
+>  (first step)
+> cc 47 a6 d5 fe
+>  (second step)
+> cc 1f 44 00 00 <- hit?
+>  (third step)
+> 0f 1f 44 00 00 <- handle int3
+> 
+> It is very unlikely scenario (and I'm not sure qemu can correctly
+> emulate it.) But if a CPU hits the int3 (cc) on _raw_spin_lock()+0x4
+> before anoter CPU' runs third step in smp_text_poke_batch_finish(),
+> and before the CPU runs smp_text_poke_int3_handler(), the CPU' runs
+> the thrid step and sets text_poke_array_refs 0, 
+> the smp_text_poke_int3_handler() returns 0 and causes the same
+> problem. 
+> 
+> <CPU0>					<CPU1>
+> 					Start smp_text_poke_batch_finish().
+> 					Finish second step.
+> Hit int3 (*)
+> 					Finish third step.
+> 					Run smp_text_poke_sync_each_cpu().(**)
+> 					Clear text_poke_array_refs[cpu0]
+> Start smp_text_poke_int3_handler()
+> Failed to get text_poke_array_refs[cpu0]
+> Oops: int3
+> 
+> 
+> But as I said it is very unlikely, because as far as I know;
+> 
+> (*) smp_text_poke_int3_handler() is called directly from exc_int3()
+>    which is a kind of NMI, so other interrupt should not run.
+> (**) In the third step, smp_text_poke_batch_finish() sends IPI for
+>    sync core after removing int3. Thus any int3 exception handling
+>    should be finished.
 
-Also, what summarized above needs to be well documented in the kernel
-docs, as I am pretty sure it will surprise people (actually surprised
-even myself while playing with the set :).
+Maybe one possible scenario is to hit the int3 after the third step
+somehow (on I-cache?).
 
-Thanks,
-Juri
+------
+<CPU0>					<CPU1>
+					Start smp_text_poke_batch_finish().
+					Start the third step. (remove INT3)
+					on_each_cpu(do_sync_core)
+do_sync_core(do SERIALIZE)
+					Finish the third step.
+Hit INT3 (from I-cache?)
+					Clear text_poke_array_refs[cpu0]
+Start smp_text_poke_int3_handler()
+Failed to get text_poke_array_refs[cpu0]
+Oops: int3
+------
 
+
+SERIALIZE instruction may flash pipeline, thus the processor needs
+to reload the instruction. But it is not ensured to reload it from
+memory because SERIALIZE does not invalidate the cache.
+
+If that hypotheses is correct, we need to invalidate the cache
+(flush TLB) in the third step, before the do_sync_core().
+
+Or, if it is unsure, we can just evacuate the kernel from die("int3")
+by retrying the new instruction, when the INT3 is disappeared.
+
+
+Thank you,
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
