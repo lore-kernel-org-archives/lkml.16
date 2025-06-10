@@ -1,165 +1,77 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3A5245007
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 21:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21EDD245007;
+	Tue, 10 Jun 2025 21:49:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749592169; cv=none; b=oxnrc7ncVNXZp0jOOL6lWBxk+6veZ+ftsvBl2MYh2bSjm02WZX7VJ3TCEzTNXuNJSu07gDF0Tje8f5g6nWy6/aGPepaMguiYVw+JsamMqDkCZG0ocAxxPig5lGrnRaITVkiAhC1gh1a48MKbb9RmvCJiQvLeRaSJxN4GYP/UCTc=
+	t=1749592199; cv=none; b=UnDqZUMDMYRP2GW6IBgpiDBNF27JF5Pu7KMnH4soItdIfJGqXbv31L3aF0VTCFw+n+y5Sqam5vJxYHsu5N1vC9qJdMcfxXthcWwcbcYxcfTpFV/cqq9NV/lNbuQF0dSeRlKfslk5mehP7ZuJPAQHE50iNSQaYkxcfaNa4Fyuai4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749592169; c=relaxed/simple;
-	bh=3PJrnlE9l7goenT1GqEvBmxqddP8k9h5GO0ovuesl7o=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=HAvPkkzXvbcKUyDaF7Y0FQF01NXwr8PMh8b+Cq5nEXEbBo2nDOSDFLgD0d7y7nRt/v8KJP+PBpMd48S3sYyVHVm0oJdHeIAFaoiA58X17MgWZvl5UElJsuf6YnSTUrEBshSvRNLew455W37leKeJBY8mmUfDZ34fAn48oGBMU/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=tha7glbG; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1749592199; c=relaxed/simple;
+	bh=3v3KDffzGVIHhQCWFOO/7kXK7VpNLiWoC7TKe7D8+ZA=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=n4wD/lunirSxQWx+Pm65aoy7M0zY1TQZHwauC9rx4SDoSp40ZLYAjqpvTJUQDjoFWpSuapvLjZBc+Vr1iC/vLBt9TRJbKDzdeqJaG5nRJv9imERxB338z26Ochxt5+7tUbEhIiusQUvkwrskBer6JyZdk/RkGsv7/ATOD5ZF6QU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/2kXy8w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="tha7glbG"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so4691948b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 14:49:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1749592166; x=1750196966; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TjJH9V4U9x9kcVvi7yh3O2o0xgnB/u5infpmLTK6+do=;
-        b=tha7glbGgJ7YatmQ4MAliX0jPTQQ0kbN6kF/lMBA8wydAcYyGvLYKgJqlCb2SXxkY9
-         cN5qIGcHJgYMGz6/nUTdKpM+hRjtCmUAug3HwSoWsX8IeM60WVAaU57gU2l2sG40zird
-         tP27RdkfBgzSVzMuOiWrfddB7Ug4CsRK58Km47eU8rlJLITpHKNdPZtnANlyEm1k3/v7
-         FtFAmVGYG3P2dEFehsIK8faufJnJ/hzUM/rJLFqRkahs5cpvvbAN6MMvD5YCWVVTqTNP
-         iSaDTPlpDiG05xApxien8arbgtiTn6crVjV+ZpixsYOy/vXRrSIHuLpckgmacKaqdSv7
-         EVZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749592166; x=1750196966;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TjJH9V4U9x9kcVvi7yh3O2o0xgnB/u5infpmLTK6+do=;
-        b=h6TNDnc9zHimNwDN3xbJHWo0yM0UPJErCG3AgzVZP9TtpX40reij7KWiSDoNFKG8Bd
-         BgiiZrgBTmhY9NvhJkO1x3ILrvRu3qCKBoNBZwZfb1JqaGnLTA0MbwY09fq0f3CNON6K
-         axh7DIJenBcUGx64hvaXBPHpp2+k/EY/CpOyP7LnKn+0+bLCIdkLLloOe8VkORJxUIuo
-         zqleg8oSezwYfEOq+f/PP3gDfXyq2Ki3gya6IPyyRLTGForntaLHE40kne+Ta394DQYF
-         d29WmAJXg3bvXSA+3XC094/Dp4XhAVga+3jzXbjVGWCiUtn/gnJPogTJ5OW25Bdl506x
-         C4xQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWcPvyymztsDk+xu7tyQ3FdmvoJxpG+3MwmWtGN5c4Kft3A29TSaDY8HLcb5yjahPwikBtZAbAPxybWESQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyi4K0O39xkikPwJawkIJ5J43I0N9C0VDqjlLbE4BoS5ncPWoqs
-	wFyQZ2+SKoP6fLr09jqtoBK7WG3/3afwgmHtdoex+X9gaJdRFdIYyPl7wtrz2IOslLk=
-X-Gm-Gg: ASbGncsEmpM7fcKQJgm6MqMRQMtCXIeha99R5Q3n+6IJEsExW98yojkV68kszvdfn+w
-	tg7GQ2ooMSq617LpQvgab4D1SgCHqsipMfMxeaqAX4aHSzbqCQdmPdw49om4WqLCYq0E/lY9lm6
-	cRdqOe0RLPogC8ZJGDWmpE8cP75fE1LD3+G8ay9pv0HJOS32PnuS3HPWRy3EZiuj28OS7RwxyFA
-	LDAACY/Hn6a6Oxvcr58kh02mtWhmw+Oa/RLSd5lehd5QC+H3GG2JJlJFv7lamUqtcvk0GCJwrxw
-	uRL27csE335MJ8Hiqmew3tgBDDgKmlJ3F37AOyJFaFSp4HjwbVDFeoLTQvei
-X-Google-Smtp-Source: AGHT+IFLPow5jYp5zMiGI3endsHgUoSX1Zhup9/kVCQx41lYvnTsdXa40pifHL03xoD2yGkUfXqlnA==
-X-Received: by 2002:a05:6a00:1490:b0:73e:2d7a:8fc0 with SMTP id d2e1a72fcca58-7486cb219b7mr1369977b3a.1.1749592166377;
-        Tue, 10 Jun 2025 14:49:26 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:500::7:116a])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7482af7aae7sm7871092b3a.49.2025.06.10.14.49.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 14:49:25 -0700 (PDT)
-Date: Tue, 10 Jun 2025 14:49:25 -0700 (PDT)
-X-Google-Original-Date: Tue, 10 Jun 2025 14:49:18 PDT (-0700)
-Subject:     Re: [PATCH 3/4] raid6: riscv: Allow code to be compiled in userspace
-In-Reply-To: <20250610101234.1100660-4-zhangchunyan@iscas.ac.cn>
-CC: Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-  Alexandre Ghiti <alex@ghiti.fr>, Charlie Jenkins <charlie@rivosinc.com>, song@kernel.org, yukuai3@huawei.com,
-  linux-riscv@lists.infradead.org, linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org, zhang.lyra@gmail.com
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: zhangchunyan@iscas.ac.cn
-Message-ID: <mhng-A7AD8208-FB68-4F06-9E71-15DD06E99579@palmerdabbelt-mac>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/2kXy8w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F73FC4CEED;
+	Tue, 10 Jun 2025 21:49:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749592198;
+	bh=3v3KDffzGVIHhQCWFOO/7kXK7VpNLiWoC7TKe7D8+ZA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=J/2kXy8wfSc5VREM5/rp6OlcwFkpNwr35MByowjDjJImTKIhiu6sHp4oJv1zM/gWG
+	 ldOegAUosq8s1V7DLTguiFCilktgfZ9Lwhm5uZMrzO4fUTJc9xjPIHDh0Ib0D2ImbN
+	 fw0lrqhHBXoRvNwY03mrvywhzMEI3s4kHdMgee6fCLp5Bs2QsiK4EviK2UwxuEoFig
+	 8cDLqozqYmjFKfUiIPZ22LhBrxhtb3dr48faWOhYWJ4Tpbc5FF1+3HZJ5V6IU3yEq3
+	 toitefVVrF2tSFc1h248UF5p6780T9stRESefiYh0K4253VpO12pkaksUCoG29OYcP
+	 C78mtbtoGaJUw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D8538111E3;
+	Tue, 10 Jun 2025 21:50:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] net: usb: r8152: Add device ID for TP-Link UE200
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174959222900.2621984.6053351569462412932.git-patchwork-notify@kernel.org>
+Date: Tue, 10 Jun 2025 21:50:29 +0000
+References: <20250609145536.26648-1-lucsansag@gmail.com>
+In-Reply-To: <20250609145536.26648-1-lucsansag@gmail.com>
+To: Lucas Sanchez Sagrado <lucsansag@gmail.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, linux-usb@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tue, 10 Jun 2025 03:12:33 PDT (-0700), zhangchunyan@iscas.ac.cn wrote:
-> To support userspace raid6test, this patch adds __KERNEL__ ifdef for kernel
-> header inclusions also userspace wrapper definitions to allow code to be
-> compiled in userspace.
->
-> Signed-off-by: Chunyan Zhang <zhangchunyan@iscas.ac.cn>
+Hello:
+
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Mon,  9 Jun 2025 16:55:36 +0200 you wrote:
+> The TP-Link UE200 is a RTL8152B based USB 2.0 Fast Ethernet adapter. This
+> patch adds its device ID. It has been tested on Ubuntu 22.04.5.
+> 
+> Signed-off-by: Lucas Sanchez Sagrado <lucsansag@gmail.com>
 > ---
->  lib/raid6/recov_rvv.c |  7 +------
->  lib/raid6/rvv.c       | 11 ++++-------
->  lib/raid6/rvv.h       | 15 +++++++++++++++
->  3 files changed, 20 insertions(+), 13 deletions(-)
->
-> diff --git a/lib/raid6/recov_rvv.c b/lib/raid6/recov_rvv.c
-> index 500da521a806..8f2be833c015 100644
-> --- a/lib/raid6/recov_rvv.c
-> +++ b/lib/raid6/recov_rvv.c
-> @@ -4,13 +4,8 @@
->   * Author: Chunyan Zhang <zhangchunyan@iscas.ac.cn>
->   */
->
-> -#include <asm/vector.h>
->  #include <linux/raid/pq.h>
-> -
-> -static int rvv_has_vector(void)
-> -{
-> -	return has_vector();
-> -}
-> +#include "rvv.h"
->
->  static void __raid6_2data_recov_rvv(int bytes, u8 *p, u8 *q, u8 *dp,
->  				    u8 *dq, const u8 *pbmul,
-> diff --git a/lib/raid6/rvv.c b/lib/raid6/rvv.c
-> index b193ea176d5d..99dfa16d37c7 100644
-> --- a/lib/raid6/rvv.c
-> +++ b/lib/raid6/rvv.c
-> @@ -9,16 +9,13 @@
->   *	Copyright 2002-2004 H. Peter Anvin
->   */
->
-> -#include <asm/vector.h>
-> -#include <linux/raid/pq.h>
->  #include "rvv.h"
->
-> +#ifdef __KERNEL__
->  #define NSIZE	(riscv_v_vsize / 32) /* NSIZE = vlenb */
-> -
-> -static int rvv_has_vector(void)
-> -{
-> -	return has_vector();
-> -}
-> +#else
-> +#define NSIZE  16
-> +#endif
->
->  static void raid6_rvv1_gen_syndrome_real(int disks, unsigned long bytes, void **ptrs)
->  {
-> diff --git a/lib/raid6/rvv.h b/lib/raid6/rvv.h
-> index 94044a1b707b..595dfbf95d4e 100644
-> --- a/lib/raid6/rvv.h
-> +++ b/lib/raid6/rvv.h
-> @@ -7,6 +7,21 @@
->   * Definitions for RISC-V RAID-6 code
->   */
->
-> +#ifdef __KERNEL__
-> +#include <asm/vector.h>
-> +#else
-> +#define kernel_vector_begin()
-> +#define kernel_vector_end()
-> +#define has_vector()		(1)
+>  drivers/net/usb/r8152.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> [...]
 
-This should be gated on something, as we don't have vector everywhere in 
-userspace.  We could dynamically check via hwprobe(), that's probably 
-best?
+Here is the summary with links:
+  - [net-next] net: usb: r8152: Add device ID for TP-Link UE200
+    https://git.kernel.org/netdev/net/c/dc9c67820f81
 
-> +#endif
-> +
-> +#include <linux/raid/pq.h>
-> +
-> +static int rvv_has_vector(void)
-> +{
-> +	return has_vector();
-> +}
-> +
->  #define RAID6_RVV_WRAPPER(_n)						\
->  	static void raid6_rvv ## _n ## _gen_syndrome(int disks,		\
->  					size_t bytes, void **ptrs)	\
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
